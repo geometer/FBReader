@@ -141,7 +141,7 @@ XHTMLTagImageAction::XHTMLTagImageAction(const std::string &nameAttribute) : myN
 }
 
 void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
-	const char *fileName = reader.attributeValue(xmlattributes, myNameAttribute);
+	const char *fileName = reader.attributeValue(xmlattributes, myNameAttribute.c_str());
 	if (fileName != 0) {
 		bool flag = reader.myModelReader.paragraphIsOpen();
 		if (flag) {

@@ -21,6 +21,7 @@
 #include <string.h>
 
 #include <ZLInputStream.h>
+#include <ZLStringUtil.h>
 
 #include <ZLTextParagraph.h>
 
@@ -55,22 +56,6 @@ void FB2BookReader::characterDataHandler(const char *text, int len) {
 	}
 }
 
-static const char *reference(const char **xmlattributes) {
-	while (*xmlattributes != 0) {
-		int len = strlen(*xmlattributes);
-		bool useNext = (len >= 5) && (strcmp((*xmlattributes) + len - 5, ":href") == 0);
-		++xmlattributes;
-		if (*xmlattributes == 0) {
-			return 0;
-		}
-		if (useNext) {
-			break;
-		}
-		++xmlattributes;
-	}
-	return *xmlattributes;
-}
-	
 void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 	const char *id = attributeValue(xmlattributes, "id");
 	if (id != 0) {
@@ -171,7 +156,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		case _A:
 		{
-			const char *ref = reference(xmlattributes);
+			const char *ref = attributeValue(xmlattributes, myHrefAttributeName.c_str());
 			if (ref != 0) {
 				if (ref[0] == '#') {
 					myHyperlinkType = FOOTNOTE;
@@ -188,7 +173,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		}
 		case _IMAGE:
 		{
-			const char *ref = reference(xmlattributes);
+			const char *ref = attributeValue(xmlattributes, myHrefAttributeName.c_str());
 			const char *vOffset = attributeValue(xmlattributes, "voffset");
 			char offset = (vOffset != 0) ? atoi(vOffset) : 0;
 			if ((ref != 0) && (*ref == '#')) {
@@ -206,7 +191,6 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		case _BINARY:
 		{
 			const char *contentType = attributeValue(xmlattributes, "content-type");
-			const char *id = attributeValue(xmlattributes, "id");
 			if ((contentType != 0) && (id != 0)) {
 				myCurrentImage = new Base64EncodedImage(contentType);
 				myModelReader.addImage(id, myCurrentImage);
@@ -325,6 +309,23 @@ void FB2BookReader::endElementHandler(int tag) {
 	}
 }
 
+bool FB2BookReader::processNamespaces() const {
+	return true;
+}
+
+void FB2BookReader::namespaceListChangedHandler() {
+	const std::string XLINK_REFERENCE = "http://www.w3.org/1999/xlink";
+	const std::map<std::string,std::string> namespaceMap = namespaces();
+	for (std::map<std::string,std::string>::const_iterator it = namespaceMap.begin(); it != namespaceMap.end(); ++it) {
+		if (ZLStringUtil::stringStartsWith(it->second, XLINK_REFERENCE)) {
+			myHrefAttributeName = it->first + ":href";
+			return;
+		}
+	}
+	myHrefAttributeName = "";
+}
+
 bool FB2BookReader::readBook(const std::string &fileName) {
+	myHrefAttributeName = "";
 	return readDocument(fileName);
 }

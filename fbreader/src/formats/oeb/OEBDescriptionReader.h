@@ -49,7 +49,6 @@ private:
 	} myReadState;
 
 	std::string myDCMetadataTag;
-	std::string myDCSchemeName;
 	std::string myCurrentAuthor;
 	std::vector<std::string> myAuthorList;
 	std::vector<std::string> myAuthorList2;

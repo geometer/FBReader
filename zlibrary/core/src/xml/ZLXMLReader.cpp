@@ -41,6 +41,9 @@ void ZLXMLReader::endElementHandler(const char*) {
 void ZLXMLReader::characterDataHandler(const char*, int) {
 }
 
+void ZLXMLReader::namespaceListChangedHandler() {
+}
+
 const std::map<std::string,std::string> &ZLXMLReader::namespaces() const {
 	return *myNamespaces.back();
 }
@@ -111,21 +114,6 @@ const std::vector<std::string> &ZLXMLReader::externalDTDs() const {
 const char *ZLXMLReader::attributeValue(const char **xmlattributes, const char *name) {
 	while (*xmlattributes != 0) {
 		bool useNext = strcmp(*xmlattributes, name) == 0;
-		++xmlattributes;
-		if (*xmlattributes == 0) {
-			return 0;
-		}
-		if (useNext) {
-			return *xmlattributes;
-		}
-		++xmlattributes;
-	}
-	return 0;
-}
-
-const char *ZLXMLReader::attributeValue(const char **xmlattributes, const std::string &name) {
-	while (*xmlattributes != 0) {
-		bool useNext = name == *xmlattributes;
 		++xmlattributes;
 		if (*xmlattributes == 0) {
 			return 0;

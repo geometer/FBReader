@@ -36,21 +36,23 @@ void ZLXMLReaderInternal::fStartElementHandler(void *userData, const char *name,
 	if (!reader.isInterrupted()) {
 		if (reader.processNamespaces()) {
 			int count = 0;
-			for (; (*attributes != 0) && (*(attributes + 1) != 0); attributes += 2) {
-				if (strncmp(*attributes, "xmlns:", 6) == 0) {
+			for (const char **a = attributes; (*a != 0) && (*(a + 1) != 0); a += 2) {
+				if (strncmp(*a, "xmlns:", 6) == 0) {
 					if (count == 0) {
 						reader.myNamespaces.push_back(
 							new std::map<std::string,std::string>(*reader.myNamespaces.back())
 						);
 					}
 					++count;
-					const std::string id(*attributes + 6);
-					const std::string reference(*(attributes + 1));
+					const std::string id(*a + 6);
+					const std::string reference(*(a + 1));
 					(*reader.myNamespaces.back())[id] = reference;
 				}
 			}
 			if (count == 0) {
 				reader.myNamespaces.push_back(reader.myNamespaces.back());
+			} else {
+				reader.namespaceListChangedHandler();
 			}
 		}
 		reader.startElementHandler(name, attributes);
@@ -62,7 +64,11 @@ void ZLXMLReaderInternal::fEndElementHandler(void *userData, const char *name) {
 	if (!reader.isInterrupted()) {
 		reader.endElementHandler(name);
 		if (reader.processNamespaces()) {
+			shared_ptr<std::map<std::string,std::string> > oldMap = reader.myNamespaces.back();
 			reader.myNamespaces.pop_back();
+			if (reader.myNamespaces.back() != oldMap) {
+				reader.namespaceListChangedHandler();
+			}
 		}
 	}
 }

@@ -47,42 +47,32 @@ void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
 	}
 }
 
-static const std::string XMLNS_PREFIX = "xmlns:";
 static const std::string DC_SCHEME_PREFIX = "http://purl.org/dc/elements";
 
 void OEBDescriptionReader::startElementHandler(const char *tag, const char **attributes) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if ((METADATA == tagString) || (DC_METADATA == tagString)) {
-		/*
-		if (attributes != 0) {
-			for (; *attributes != 0; attributes += 2) {
-				if (ZLStringUtil::stringStartsWith(*attributes, XMLNS_PREFIX) &&
-						ZLStringUtil::stringStartsWith(*(attributes + 1), DC_SCHEME_PREFIX)) {
-					myDCSchemeName = *attributes + 6;
-					myDCMetadataTag = tagString;
-					break;
-				}
-			}
-		}
-		*/
-		const std::map<std::string,std::string> &namespaceMap = namespaces();
-		for (std::map<std::string,std::string>::const_iterator it = namespaceMap.begin(); it != namespaceMap.end(); ++it) {
-			if (ZLStringUtil::stringStartsWith(it->second, DC_SCHEME_PREFIX)) {
-				myDCSchemeName = it->first;
-				break;
-			}
-		}
 		myDCMetadataTag = tagString;
 		myReadMetaData = true;
 	} else if (myReadMetaData) {
-		if (myDCSchemeName + TITLE == tagString) {
-			myReadState = READ_TITLE;
-		} else if (myDCSchemeName + AUTHOR_TAG == tagString) {
-			const char *role = attributeValue(attributes, "role");
-			if (role == 0) {
-				myReadState = READ_AUTHOR2;
-			} else if (AUTHOR_ROLE == role) {
-				myReadState = READ_AUTHOR;
+		if (ZLStringUtil::stringEndsWith(tagString, TITLE)) {
+			const std::string namespaceId = tagString.substr(0, tagString.length() - TITLE.length());
+			const std::map<std::string,std::string> &namespaceMap = namespaces();
+			const std::map<std::string,std::string>::const_iterator iter = namespaceMap.find(namespaceId);
+			if ((iter != namespaceMap.end()) && ZLStringUtil::stringStartsWith(iter->second, DC_SCHEME_PREFIX)) {
+				myReadState = READ_TITLE;
+			}
+		} else if (ZLStringUtil::stringEndsWith(tagString, AUTHOR_TAG)) {
+			const std::string namespaceId = tagString.substr(0, tagString.length() - AUTHOR_TAG.length());
+			const std::map<std::string,std::string> &namespaceMap = namespaces();
+			const std::map<std::string,std::string>::const_iterator iter = namespaceMap.find(namespaceId);
+			if ((iter != namespaceMap.end()) && ZLStringUtil::stringStartsWith(iter->second, DC_SCHEME_PREFIX)) {
+				const char *role = attributeValue(attributes, "role");
+				if (role == 0) {
+					myReadState = READ_AUTHOR2;
+				} else if (AUTHOR_ROLE == role) {
+					myReadState = READ_AUTHOR;
+				}
 			}
 		}
 	}

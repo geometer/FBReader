@@ -33,7 +33,6 @@ class ZLXMLReader {
 
 protected:
   static const char *attributeValue(const char **xmlattributes, const char *name);
-  static const char *attributeValue(const char **xmlattributes, const std::string &name);
 
 protected:
 	ZLXMLReader(const char *encoding = 0);
@@ -48,6 +47,7 @@ public:
 	virtual void endElementHandler(const char *tag);
 	virtual void characterDataHandler(const char *text, int len);
 	virtual bool processNamespaces() const;
+	virtual void namespaceListChangedHandler();
 	virtual const std::vector<std::string> &externalDTDs() const;
 
 	bool isInterrupted() const;

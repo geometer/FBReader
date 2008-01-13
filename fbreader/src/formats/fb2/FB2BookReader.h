@@ -36,6 +36,8 @@ public:
 	void startElementHandler(int tag, const char **attributes);
 	void endElementHandler(int tag);
 	void characterDataHandler(const char *text, int len);
+	bool processNamespaces() const;
+	void namespaceListChangedHandler();
 
 private:
 	int mySectionDepth;
@@ -55,6 +57,7 @@ private:
 	bool myInsideTitle;
 
 	FBTextKind myHyperlinkType;
+	std::string myHrefAttributeName;
 };
 
 inline FB2BookReader::~FB2BookReader() {}
