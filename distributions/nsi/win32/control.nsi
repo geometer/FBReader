@@ -39,9 +39,12 @@ Section "FBReader"
 	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "BookPath"
 	StrCmp $0 "" 0 +2
 	WriteRegStr HKCU "Software\FBReader\options\Options" "BookPath" "C:\Books;$PROFILE\Books" 
-	WriteRegStr HKCU "Software\FBReader\options\Options" "TouchScreenPresented" "true" 
-	WriteRegStr HKCU "Software\FBReader\options\Options" "MousePresented" "true" 
-	WriteRegStr HKCU "Software\FBReader\options\Options" "KeyboardPresented" "true" 
+	WriteRegStr HKCU "Software\FBReader\options\PlatformOptions" "TouchScreenPresented" "true" 
+	WriteRegStr HKCU "Software\FBReader\options\PlatformOptions" "MousePresented" "true" 
+	WriteRegStr HKCU "Software\FBReader\options\PlatformOptions" "KeyboardPresented" "true" 
+	WriteRegStr HKCU "Software\FBReader\options\Options" "KeyDelay" "0" 
+	WriteRegStr HKCU "Software\FBReader\options\SmallScrolling" "ScrollingDelay" "true" 
+	WriteRegStr HKCU "Software\FBReader\options\LargeScrolling" "ScrollingDelay" "true" 
 SectionEnd
 
 Section "Create Shortcut on Desktop"

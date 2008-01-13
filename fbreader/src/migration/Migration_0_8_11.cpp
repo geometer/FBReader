@@ -17,29 +17,13 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <map>
 
-#include <ZLOptions.h>
 #include <ZLStringUtil.h>
-#include "../options/FBOptions.h"
 
-#include "migrate.h"
+#include "Migration.h"
 
-static void moveOption(
-	const ZLCategoryKey &oldCategory, const std::string &oldGroup, const std::string &oldName,
-	const ZLCategoryKey &newCategory, const std::string &newGroup, const std::string &newName,
-	const std::string &defaultValue
-) {
-	ZLStringOption oldOption(oldCategory, oldGroup, oldName, defaultValue);
-	ZLStringOption newOption(newCategory, newGroup, newName, defaultValue);
-	if (newOption.value() != oldOption.value()) {
-		newOption.setValue(oldOption.value());
-		oldOption.setValue(defaultValue);
-	}
-}
-
-void changeActionNames(const std::map<std::string,std::string> map, const std::string &group) {
+static void changeActionNames(const std::map<std::string,std::string> map, const std::string &group) {
 	const int length = ZLIntegerOption(ZLCategoryKey::CONFIG, group, "Number", 0).value();
 	for (int i = 0; i < length; ++i) {
 		std::string optionName = "Action";
@@ -53,7 +37,7 @@ void changeActionNames(const std::map<std::string,std::string> map, const std::s
 	}
 }
 
-void changeActionNames() {
+static void changeActionNames() {
 	std::map<std::string,std::string> oldToNewNames;
 	oldToNewNames["0"] = "none";
 	oldToNewNames["1"] = "showLibrary";
@@ -95,22 +79,14 @@ void changeActionNames() {
 	changeActionNames(oldToNewNames, "Keys270");
 }
 
-void migrateTo_0_8_11() {
+Migration_0_8_11::Migration_0_8_11() : Migration("0.8.11") {
+}
+
+void Migration_0_8_11::doMigrationInternal() {
 	moveOption(
 		ZLCategoryKey::CONFIG, "Options", "ScrollingDelay",
 		ZLCategoryKey::CONFIG, "LargeScrolling", "ScrollingDelay",
 		"250"	
 	);
 	changeActionNames();
-}
-
-void migrateFromOldVersions() {
-	ZLStringOption versionOption(FBCategoryKey::SYSTEM, "Version", "FBReaderVersion", "0");
-	const std::string version = versionOption.value();
-
-	if (version < "0.8.11") {
-		migrateTo_0_8_11();
-	}
-
-	versionOption.setValue("0.8.11");
 }

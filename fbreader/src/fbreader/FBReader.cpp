@@ -40,7 +40,7 @@
 #include "BookInfoDialog.h"
 #include "TimeUpdater.h"
 
-#include "migrate.h"
+#include "../migration/migrate.h"
 
 #include "../options/FBOptions.h"
 #include "../bookmodel/BookModel.h"
