@@ -17,6 +17,7 @@ Package: libzlibrary-maemo2-dev
 Section: libdevel
 Priority: optional
 Architecture: armel
+Replaces: libzlibrary-dev
 Depends: libzlibrary-maemo2 (= ${Source-Version})
 Description: zlibrary - development files
  Home page: http://www.fbreader.org/

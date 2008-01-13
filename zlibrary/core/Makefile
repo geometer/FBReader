@@ -83,12 +83,12 @@ do_install:
 ifeq "$(ZLSHARED)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
+	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SONAME)
 endif
 
 do_install_dev:
 	@install -d $(DESTDIR)$(LIBDIR)
 ifeq "$(ZLSHARED)" "yes"
-	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SONAME)
 	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SHORTNAME)
 else
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
