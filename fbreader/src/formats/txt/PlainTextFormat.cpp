@@ -89,7 +89,6 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 	unsigned int emptyLinesBeforeShortStringTable[tableSize] = { 0 };
 
 	bool currentLineIsEmpty = true;
-	bool currentLineIsLikeToLibRuHeader = false;
 	unsigned int currentLineLength = 0;
 	unsigned int currentLineIndent = 0;
 	int currentNumberOfEmptyLines = -1;
@@ -124,7 +123,6 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 					stringIndentTable[std::min(currentLineIndent, tableSize - 1)]++;
 				}
 				
-				currentLineIsLikeToLibRuHeader = currentLineIsEmpty;
 				currentLineIsEmpty = true;
 				currentLineLength = 0;
 				currentLineIndent = 0;
@@ -134,9 +132,6 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 				}
 			} else {
 				currentLineIsEmpty = false;
-				if (*ptr != '-') {
-					currentLineIsLikeToLibRuHeader = false;
-				}
 			}
 			previous = *ptr;
 		}

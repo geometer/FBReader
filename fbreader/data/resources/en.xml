@@ -268,6 +268,10 @@
 			<node name="backward" value="&amp;Backward"/>
 			<node name="currentSection" value="&amp;This section only"/>
 		</node>
+		<node name="gotoPageDialog">
+			<node name="title" value="Go To Page"/>
+			<node name="pageNumber" value="Go to Page Number"/>
+		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Remove Book"/>
 			<node name="message" value="Remove Book &#13;&quot;%s&quot;&#13; from the Library?"/>

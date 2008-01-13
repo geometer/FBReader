@@ -269,6 +269,10 @@
 			<node name="backward" value="&amp;Vers l'arrière"/>
 			<node name="currentSection" value="&amp;Cette section seulement"/>
 		</node>
+		<node name="gotoPageDialog">
+			<node name="title" value="Go To Page" toBeTranslated="true"/>
+			<node name="pageNumber" value="Go to Page Number" toBeTranslated="true"/>
+		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Enlever un livre"/>
 			<node name="message" value="Enlever le livre &#13;&quot;%s&quot;&#13; de la bibliothèque ?"/>

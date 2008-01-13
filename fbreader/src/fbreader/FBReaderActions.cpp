@@ -18,7 +18,9 @@
  */
 
 #include <ZLDialogManager.h>
+#include <ZLDialog.h>
 #include <ZLOptionsDialog.h>
+#include <optionEntries/ZLSimpleOptionEntry.h>
 #include <ZLibrary.h>
 
 #include <ZLTextView.h>
@@ -350,6 +352,15 @@ GotoPageNumber::GotoPageNumber(FBReader &fbreader) : ModeDependentAction(fbreade
 }
 
 void GotoPageNumber::run() {
+	shared_ptr<ZLDialog> gotoPageDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("gotoPageDialog"));
+
+	ZLIntegerRangeOption pageNumberOption(ZLCategoryKey::CONFIG, "gotoPageDialog", "Number", 0, 100, 50);
+	gotoPageDialog->addOption(ZLResourceKey("pageNumber"), new ZLSimpleSpinOptionEntry(pageNumberOption, 1));
+	gotoPageDialog->addButton(ZLDialogManager::OK_BUTTON, true);
+	gotoPageDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
+
+	if (gotoPageDialog->run()) {
+	}
 }
 
 SelectionAction::SelectionAction(FBReader &fbreader) : FBAction(fbreader) {
