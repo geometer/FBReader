@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include <shared_ptr.h>
 
@@ -37,6 +38,7 @@ protected:
 protected:
 	ZLXMLReader(const char *encoding = 0);
 	virtual ~ZLXMLReader();
+	const std::map<std::string,std::string> &namespaces() const;
 
 public:
 	bool readDocument(shared_ptr<ZLInputStream> stream);
@@ -45,6 +47,7 @@ public:
 	virtual void startElementHandler(const char *tag, const char **attributes);
 	virtual void endElementHandler(const char *tag);
 	virtual void characterDataHandler(const char *text, int len);
+	virtual bool processNamespaces() const;
 	virtual const std::vector<std::string> &externalDTDs() const;
 
 	bool isInterrupted() const;
@@ -56,6 +59,9 @@ private:
 	bool myInterrupted;
 	ZLXMLReaderInternal *myInternalReader;
 	char *myParserBuffer;
+	std::vector<shared_ptr<std::map<std::string,std::string> > > myNamespaces;
+
+friend class ZLXMLReaderInternal;
 };
 
 inline bool ZLXMLReader::isInterrupted() const {

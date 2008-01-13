@@ -24,21 +24,46 @@
 #include "ZLXMLReaderInternal.h"
 #include "../ZLXMLReader.h"
 
-static void fCharacterDataHandler(void *userData, const char *text, int len) {
-	if (!((ZLXMLReader*)userData)->isInterrupted()) {
-		((ZLXMLReader*)userData)->characterDataHandler(text, len);
+void ZLXMLReaderInternal::fCharacterDataHandler(void *userData, const char *text, int len) {
+	ZLXMLReader &reader = *(ZLXMLReader*)userData;
+	if (!reader.isInterrupted()) {
+		reader.characterDataHandler(text, len);
 	}
 }
 
-static void fStartElementHandler(void *userData, const char *name, const char **attributes) {
-	if (!((ZLXMLReader*)userData)->isInterrupted()) {
-		((ZLXMLReader*)userData)->startElementHandler(name, attributes);
+void ZLXMLReaderInternal::fStartElementHandler(void *userData, const char *name, const char **attributes) {
+	ZLXMLReader &reader = *(ZLXMLReader*)userData;
+	if (!reader.isInterrupted()) {
+		if (reader.processNamespaces()) {
+			int count = 0;
+			for (; (*attributes != 0) && (*(attributes + 1) != 0); attributes += 2) {
+				if (strncmp(*attributes, "xmlns:", 6) == 0) {
+					if (count == 0) {
+						reader.myNamespaces.push_back(
+							new std::map<std::string,std::string>(*reader.myNamespaces.back())
+						);
+					}
+					++count;
+					const std::string id(*attributes + 6);
+					const std::string reference(*(attributes + 1));
+					(*reader.myNamespaces.back())[id] = reference;
+				}
+			}
+			if (count == 0) {
+				reader.myNamespaces.push_back(reader.myNamespaces.back());
+			}
+		}
+		reader.startElementHandler(name, attributes);
 	}
 }
 
-static void fEndElementHandler(void *userData, const char *name) {
-	if (!((ZLXMLReader*)userData)->isInterrupted()) {
-		((ZLXMLReader*)userData)->endElementHandler(name);
+void ZLXMLReaderInternal::fEndElementHandler(void *userData, const char *name) {
+	ZLXMLReader &reader = *(ZLXMLReader*)userData;
+	if (!reader.isInterrupted()) {
+		reader.endElementHandler(name);
+		if (reader.processNamespaces()) {
+			reader.myNamespaces.pop_back();
+		}
 	}
 }
 

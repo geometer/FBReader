@@ -27,7 +27,6 @@ OEBDescriptionReader::OEBDescriptionReader(BookDescription &description) : myDes
 	myDescription.title().erase();
 }
 
-// TODO: replace "dc" by real DC scheme name
 static const std::string METADATA = "metadata";
 static const std::string DC_METADATA = "dc-metadata";
 static const std::string TITLE = ":title";
@@ -54,6 +53,7 @@ static const std::string DC_SCHEME_PREFIX = "http://purl.org/dc/elements";
 void OEBDescriptionReader::startElementHandler(const char *tag, const char **attributes) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if ((METADATA == tagString) || (DC_METADATA == tagString)) {
+		/*
 		if (attributes != 0) {
 			for (; *attributes != 0; attributes += 2) {
 				if (ZLStringUtil::stringStartsWith(*attributes, XMLNS_PREFIX) &&
@@ -64,6 +64,15 @@ void OEBDescriptionReader::startElementHandler(const char *tag, const char **att
 				}
 			}
 		}
+		*/
+		const std::map<std::string,std::string> &namespaceMap = namespaces();
+		for (std::map<std::string,std::string>::const_iterator it = namespaceMap.begin(); it != namespaceMap.end(); ++it) {
+			if (ZLStringUtil::stringStartsWith(it->second, DC_SCHEME_PREFIX)) {
+				myDCSchemeName = it->first;
+				break;
+			}
+		}
+		myDCMetadataTag = tagString;
 		myReadMetaData = true;
 	} else if (myReadMetaData) {
 		if (myDCSchemeName + TITLE == tagString) {
@@ -94,6 +103,10 @@ void OEBDescriptionReader::endElementHandler(const char *tag) {
 		}
 		myReadState = READ_NONE;
 	}
+}
+
+bool OEBDescriptionReader::processNamespaces() const {
+	return true;
 }
 
 bool OEBDescriptionReader::readDescription(const std::string &fileName) {

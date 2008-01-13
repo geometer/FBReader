@@ -41,6 +41,10 @@ void ZLXMLReader::endElementHandler(const char*) {
 void ZLXMLReader::characterDataHandler(const char*, int) {
 }
 
+const std::map<std::string,std::string> &ZLXMLReader::namespaces() const {
+	return *myNamespaces.back();
+}
+
 ZLXMLReader::ZLXMLReader(const char *encoding) {
 	myInternalReader = new ZLXMLReaderInternal(*this, encoding);
 	myParserBuffer = new char[BUFFER_SIZE];
@@ -78,6 +82,8 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 
 	myInterrupted = false;
 
+	myNamespaces.push_back(new std::map<std::string, std::string>());
+
 	size_t length;
 	do {
 		length = stream->read(myParserBuffer, BUFFER_SIZE);
@@ -88,12 +94,17 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 
 	stream->close();
 
+	myNamespaces.clear();
+
 	return true;
 }
 
-static const std::vector<std::string> EMPTY_VECTOR;
+bool ZLXMLReader::processNamespaces() const {
+	return false;
+}
 
 const std::vector<std::string> &ZLXMLReader::externalDTDs() const {
+	static const std::vector<std::string> EMPTY_VECTOR;
 	return EMPTY_VECTOR;
 }
 

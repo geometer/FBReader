@@ -35,6 +35,7 @@ public:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
 	void characterDataHandler(const char *text, int len);
+	bool processNamespaces() const;
 
 private:
 	WritableBookDescription myDescription;

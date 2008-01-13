@@ -232,7 +232,7 @@ ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
 }
 
 void ZLWin32ApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
-	PostMessage(myToolbar, TB_CHECKBUTTON, button.actionId(), button.isPressed());
+	PostMessage(myToolbar, TB_CHECKBUTTON, myActionCodeById[button.actionId()], button.isPressed());
 }
 
 void ZLWin32ApplicationWindow::onToolbarButtonPress(int actionCode) {
@@ -298,7 +298,9 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr it
 
 		button.iBitmap = buttonCounter;
 		button.fsStyle = buttonItem.isToggleButton() ? TBSTYLE_CHECK : TBSTYLE_BUTTON;
-		button.idCommand = buttonItem.actionId();
+		const int actionCode = myActionCodeById.size() + 1;
+		myActionCodeById[buttonItem.actionId()] = actionCode;
+		button.idCommand = actionCode;
 		myButtonByActionCode[button.idCommand] = item;
 		button.dwData = 0;
 		button.iString = 0;
@@ -318,7 +320,7 @@ void ZLWin32ApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemP
 	if (item->type() == ZLApplication::Toolbar::Item::BUTTON) {
 		const ZLApplication::Toolbar::ButtonItem &buttonItem = (const ZLApplication::Toolbar::ButtonItem&)*item;
 		LPARAM state = (visible ? 0 : TBSTATE_HIDDEN) | (enabled ? TBSTATE_ENABLED : 0);
-		PostMessage(myToolbar, TB_SETSTATE, (WPARAM)buttonItem.actionId(), state);
+		PostMessage(myToolbar, TB_SETSTATE, (WPARAM)myActionCodeById[buttonItem.actionId()], state);
 		if (buttonItem.isToggleButton()) {
 			setToggleButtonState(buttonItem);
 		}

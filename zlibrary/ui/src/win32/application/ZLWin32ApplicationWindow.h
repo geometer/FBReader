@@ -89,6 +89,7 @@ private:
 
 	std::map<int,ZLApplication::Toolbar::ItemPtr> myButtonByActionCode;
 	std::map<ZLApplication::Toolbar::ItemPtr,int> mySeparatorNumbers;
+	std::map<std::string,int> myActionCodeById;
 
 	bool myBlockMouseEvents;
 	int myKeyboardModifierMask;

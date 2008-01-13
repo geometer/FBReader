@@ -26,6 +26,11 @@ class ZLXMLReader;
 
 class ZLXMLReaderInternal {
 
+private:
+	static void fStartElementHandler(void *userData, const char *name, const char **attributes);
+	static void fEndElementHandler(void *userData, const char *name);
+	static void fCharacterDataHandler(void *userData, const char *text, int len);
+
 public:
 	ZLXMLReaderInternal(ZLXMLReader &reader, const char *encoding);
 	~ZLXMLReaderInternal();
