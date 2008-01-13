@@ -46,15 +46,16 @@ void TxtReader::readDocument(ZLInputStream &stream) {
 		char *start = buffer;
 		const char *end = buffer + length;
 		for (char *ptr = start; ptr != end; ++ptr) {
-			if ((*ptr == '\r') || ((*ptr == '\n') && (previous != '\r'))) {
+			if (*ptr == '\n') {
 				if (start != ptr) {
 					str.erase();
-					myConverter->convert(str, start, ptr);
+					myConverter->convert(str, start, ptr + 1);
 					characterDataHandler(str);
 				}
 				start = ptr + 1;
 				newLineHandler();
 				previous = *ptr;
+			} else if (*ptr == '\r') {
 			} else if (isspace((unsigned char)*ptr)) {
 				previous = *ptr;
 				*ptr = ' ';

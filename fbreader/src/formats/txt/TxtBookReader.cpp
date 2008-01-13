@@ -58,7 +58,7 @@ bool TxtBookReader::characterDataHandler(std::string &str) {
 
 bool TxtBookReader::newLineHandler() {
 	if (!myLastLineIsEmpty) {
-		myLineFeedCounter = 0;
+		myLineFeedCounter = -1;
 	}
 	myLastLineIsEmpty = true;
 	++myLineFeedCounter;
@@ -99,7 +99,7 @@ void TxtBookReader::startDocumentHandler() {
 	setMainTextModel();
 	pushKind(REGULAR);
 	beginParagraph();
-	myLineFeedCounter = 1;
+	myLineFeedCounter = 0;
 	myInsideContentsParagraph = false;
 	enterTitle();
 	myLastLineIsEmpty = true;

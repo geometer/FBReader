@@ -34,11 +34,20 @@ void ZLTextParagraphCursor::AnyPlaceProcessor::processTextEntry(const ZLTextEntr
 	if (textEntry.dataLength() != 0) {
 		const char *start = textEntry.data();
 		const char *end = start + textEntry.dataLength();
+		bool addSpace = true;
 		for (const char *ptr = start; ptr < end;) {
 			ZLUnicodeUtil::Ucs2Char ch;
 			int len = ZLUnicodeUtil::firstChar(ch, ptr);
-			if (ptr + len <= end) {
-				addWord(ptr, myOffset + (ptr - start), len);
+			if (ZLUnicodeUtil::isSpace(ch)) {
+				if (addSpace && (ch != '\n') && (ch != '\r')) {
+					myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
+					addSpace = false;
+				}
+			} else {
+				if (ptr + len <= end) {
+					addWord(ptr, myOffset + (ptr - start), len);
+					addSpace = true;
+				}
 			}
 			ptr += len;
 		}

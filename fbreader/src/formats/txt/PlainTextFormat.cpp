@@ -82,8 +82,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 	const unsigned int tableSize = 10;
 
 	unsigned int lineCounter = 0;
-	unsigned int emptyLineCounter = 0;
-	unsigned int libRuHeaderLineCounter = 0;
+	int emptyLineCounter = -1;
 	unsigned int stringsWithLengthLessThan81Counter = 0;
 	unsigned int stringIndentTable[tableSize] = { 0 };
 	unsigned int emptyLinesTable[tableSize] = { 0 };
@@ -93,7 +92,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 	bool currentLineIsLikeToLibRuHeader = false;
 	unsigned int currentLineLength = 0;
 	unsigned int currentLineIndent = 0;
-	unsigned int currentNumberOfEmptyLines = 0;
+	int currentNumberOfEmptyLines = -1;
 	
 	char *buffer = new char[BUFFER_SIZE];
 	int length;
@@ -103,20 +102,20 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 		const char *end = buffer + length;
 		for (const char *ptr = buffer; ptr != end; ++ptr) {
 			++currentLineLength;
-			if ((*ptr == '\r') || ((*ptr == '\n') && (previous != '\r'))) {
+			if ((*ptr == '\n') || ((*ptr == '\r') && (previous != '\n'))) {
 				++lineCounter;
 				if (currentLineIsEmpty) {
 					++emptyLineCounter;
 					++currentNumberOfEmptyLines;
 				} else {
-					emptyLinesTable[std::min(currentNumberOfEmptyLines, tableSize - 1)]++;
-					if (currentLineLength < 51) {
-						emptyLinesBeforeShortStringTable[std::min(currentNumberOfEmptyLines, tableSize - 1)]++;
+					if (currentNumberOfEmptyLines >= 0) {
+						int index = std::min(currentNumberOfEmptyLines, (int)tableSize - 1);
+						emptyLinesTable[index]++;
+						if (currentLineLength < 51) {
+							emptyLinesBeforeShortStringTable[index]++;
+						}
 					}
-					currentNumberOfEmptyLines = 0;
-				}
-				if (currentLineIsLikeToLibRuHeader) {
-					++libRuHeaderLineCounter;
+					currentNumberOfEmptyLines = -1;
 				}
 				if (currentLineLength < 81) {
 					++stringsWithLengthLessThan81Counter;
