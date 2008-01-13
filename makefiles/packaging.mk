@@ -1,4 +1,5 @@
 VERSION = $(shell cat fbreader/VERSION)
+SOVERSION = $(shell cat zlibrary/SOVERSION)
 TMPDIR = $(CURDIR)/fbreader-$(VERSION)
 
 tarball:
@@ -19,7 +20,8 @@ debian:
 	@rm -rf `find $(TMPDIR) -name ".svn"`
 	@mkdir $(TMPDIR)/debian
 	@for file in $(DIST_DIR)/debian/$(ARCHITECTURE)/*; do \
-		sed -e "s#@VERSION@#$(VERSION)#g" $$file > $(TMPDIR)/debian/`basename $$file`; \
+		sed -e "s#@SOVERSION@#$(SOVERSION)#g" $$file | \
+		sed -e "s#@VERSION@#$(VERSION)#g" > $(TMPDIR)/debian/`basename $$file`; \
 		chmod --reference $$file $(TMPDIR)/debian/`basename $$file`; \
 	done
 	@cd $(TMPDIR); dpkg-buildpackage -rfakeroot -us -uc 1> $(CURDIR)/$(ARCHITECTURE)-debian.log 2>&1; cd $(CURDIR)

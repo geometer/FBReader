@@ -17,7 +17,7 @@ Package: libzlibrary-dev
 Section: libdevel
 Priority: optional
 Architecture: armel
-Depends: libzlibrary
+Depends: libzlibrary (= ${Source-Version})
 Description: zlibrary - development files
  Home page: http://www.fbreader.org/
 

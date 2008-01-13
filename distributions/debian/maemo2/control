@@ -13,11 +13,11 @@ Depends: hildon-libs0, libatk1.0-0 (>= 1.9.0), libbz2-1.0, libc6 (>= 2.3.5-1), l
 Description: Platform-dependent part of fbreader
  Home page: http://www.fbreader.org/
 
-Package: libzlibrary-dev
+Package: libzlibrary-maemo2-dev
 Section: libdevel
 Priority: optional
 Architecture: armel
-Depends: libzlibrary-maemo2
+Depends: libzlibrary-maemo2 (= ${Source-Version})
 Description: zlibrary - development files
  Home page: http://www.fbreader.org/
 

@@ -42,7 +42,7 @@ Package: libzltext
 Section: libs
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, libzlcore (= ${Source-Version})
 Description: zlibrary text model/viewer
  This package provides text model/viewer part of zlibrary.
 
@@ -50,7 +50,7 @@ Package: libzlui-gtk
 Section: libs
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, libzlcore (= ${Source-Version})
 Provides: libzlui
 Description: Gtk interface module for zlibrary
  This package provides a gtk+-based UI for zlibrary.
@@ -59,7 +59,7 @@ Package: libzlui-qt
 Section: libs
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, libzlcore (= ${Source-Version})
 Provides: libzlui
 Description: Qt3 interface module for zlibrary
  This package provides a qt3-based UI for zlibrary.
@@ -68,7 +68,7 @@ Package: libzlui-qt4
 Section: libs
 Priority: optional
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, libzlcore (= ${Source-Version})
 Provides: libzlui
 Description: Qt4 interface module for zlibrary
  This package provides a qt4-based UI for zlibrary.
@@ -77,7 +77,7 @@ Package: libzlcore-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: libzlcore
+Depends: libzlcore (= ${Source-Version})
 Description: zlibrary core - development files
  This is the core of zlibrary, the library that the fbreader e-book reader
  is based on.
@@ -86,6 +86,6 @@ Package: libzltext-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: libzltext
+Depends: libzltext (= ${Source-Version})
 Description: zlibrary text model/viewer -development files
  This package provides text model/viewer part of zlibrary.

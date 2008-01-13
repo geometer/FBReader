@@ -46,8 +46,8 @@ binary-arch: build install
 		dh_strip
 		dh_compress
 		dh_fixperms
-		dh_makeshlibs -plibzlcore -V"libzlcore (= $(VERSION))"
-		dh_makeshlibs -plibzltext -V"libzltext (= $(VERSION))"
+		dh_makeshlibs -plibzlcore -V"libzlcore (>= $(VERSION)),libzlcore(<< 0.10.0)"
+		dh_makeshlibs -plibzltext -V"libzltext (>= $(VERSION)),libzltext(<< 0.10.0)"
 		dh_installdeb
 		dh_shlibdeps -l debian/libzlcore/usr/lib:debian/libzltext/usr/lib
 		dh_gencontrol

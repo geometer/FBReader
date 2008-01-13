@@ -3,9 +3,11 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
 VERSION = $(shell cat ../VERSION)
+SOVERSION = $(shell cat ../SOVERSION)
 
 ifeq "$(ZLSHARED)" "yes"
   TARGET = libzltext.so.$(VERSION)
+  TARGET_SONAME = libzltext.so.$(SOVERSION)
   TARGET_SHORTNAME = libzltext.so
 else
   TARGET = libzltext.a
@@ -26,7 +28,8 @@ $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(ZLSHARED)" "yes"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS)) $(CORE_LIBS) 
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS)) $(CORE_LIBS) 
+	@ln -sf $(TARGET) $(TARGET_SONAME)
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else
 	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS))
@@ -46,6 +49,7 @@ endif
 do_install_dev:
 	@install -d $(DESTDIR)$(LIBDIR)
 ifeq "$(ZLSHARED)" "yes"
+	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SONAME)
 	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SHORTNAME)
 else
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
