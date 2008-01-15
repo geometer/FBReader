@@ -19,22 +19,21 @@
 
 #include <ZLDialogManager.h>
 #include <ZLibrary.h>
+#include <ZLOptions.h>
 
 #include "ZLApplication.h"
-
-#include "../options/ZLOptions_internal.h"
 
 class ConfigSaverRunnable : public ZLRunnable {
 
 public:
 	void run() {
-		ZLOptions::deleteInstance();
+		ZLOption::deleteInstance();
 	}
 };
 
 ZLApplicationBase::ZLApplicationBase(const std::string &name) {
 	ZLibrary::initApplication(name);
-	ZLOptions::createInstance();
+	ZLOption::createInstance();
 }
 
 ZLApplicationBase::~ZLApplicationBase() {

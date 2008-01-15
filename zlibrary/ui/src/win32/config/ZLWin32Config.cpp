@@ -145,6 +145,10 @@ const std::string &ZLWin32Config::getValue(const std::string &groupName, const s
 	return (jt != values.end()) ? jt->second.Value : defaultValue;
 }
 
+const std::string &ZLWin32Config::getDefaultValue(const std::string&, const std::string&, const std::string &defaultValue) const {
+	return defaultValue;
+}
+
 bool ZLWin32Config::isAutoSavingSupported() const {
 	return false;
 }

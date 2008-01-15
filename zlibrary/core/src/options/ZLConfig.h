@@ -51,7 +51,7 @@ protected:
 	static ZLConfigManager *ourInstance;
 	static bool ourIsInitialised;
 
-friend class ZLOptions;
+friend class ZLOption;
 };
 
 class ZLConfig {
@@ -61,6 +61,7 @@ public:
 
 	virtual void removeGroup(const std::string &name) = 0;
 
+	virtual const std::string &getDefaultValue(const std::string &group, const std::string &name, const std::string &defaultValue) const = 0;
 	virtual const std::string &getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const = 0;
 	virtual void setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category) = 0;
 	virtual void unsetValue(const std::string &group, const std::string &name) = 0;

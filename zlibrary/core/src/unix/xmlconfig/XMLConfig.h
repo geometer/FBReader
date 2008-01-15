@@ -70,6 +70,7 @@ public:
 
 	void removeGroup(const std::string &name);
 
+	const std::string &getDefaultValue(const std::string &group, const std::string &name, const std::string &defaultValue) const;
 	const std::string &getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const;
 	void setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category);
 	void unsetValue(const std::string &group, const std::string &name);
@@ -79,6 +80,7 @@ public:
 
 private:
 	XMLConfigGroup *getGroup(const std::string &name) const;
+	XMLConfigGroup *getDefaultGroup(const std::string &name) const;
 	XMLConfigGroup *getGroup(const std::string &name, bool createUnexisting);
 
 private:
@@ -90,6 +92,7 @@ private:
 	int changesCounter() const;
 
 private:
+	std::map<std::string,XMLConfigGroup*> myDefaultGroups;
 	std::map<std::string,XMLConfigGroup*> myGroups;
 	std::set<std::string> myCategories;
 	class XMLConfigDelta *myDelta;
@@ -103,6 +106,11 @@ friend class ConfigSaveTask;
 
 inline const std::string &XMLConfig::getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const {
 	XMLConfigGroup *configGroup = getGroup(group);
+	return (configGroup != 0) ? configGroup->getValue(name, defaultValue) : defaultValue;
+}
+
+inline const std::string &XMLConfig::getDefaultValue(const std::string &group, const std::string &name, const std::string &defaultValue) const {
+	XMLConfigGroup *configGroup = getDefaultGroup(group);
 	return (configGroup != 0) ? configGroup->getValue(name, defaultValue) : defaultValue;
 }
 

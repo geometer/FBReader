@@ -43,6 +43,8 @@ public:
 	static const std::string SMALL_SCROLL_BACKWARD;
 	static const std::string MOUSE_SCROLL_FORWARD;
 	static const std::string MOUSE_SCROLL_BACKWARD;
+	static const std::string TAP_SCROLL_FORWARD;
+	static const std::string TAP_SCROLL_BACKWARD;
 	static const std::string SCROLL_TO_HOME;
 	static const std::string SCROLL_TO_START_OF_TEXT;
 	static const std::string SCROLL_TO_END_OF_TEXT;
@@ -59,8 +61,6 @@ public:
 	static const std::string SHOW_LAST_BOOKS;
 	static const std::string QUIT;
 	static const std::string OPEN_PREVIOUS_BOOK;
-	static const std::string FINGER_TAP_SCROLL_FORWARD;
-	static const std::string FINGER_TAP_SCROLL_BACKWARD;
 	static const std::string GOTO_NEXT_TOC_SECTION;
 	static const std::string GOTO_PREVIOUS_TOC_SECTION;
 	static const std::string COPY_SELECTED_TEXT_TO_CLIPBOARD;

@@ -103,6 +103,9 @@ XMLConfig::~XMLConfig() {
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
 		delete it->second;
 	}
+	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myDefaultGroups.begin(); it != myDefaultGroups.end(); ++it) {
+		delete it->second;
+	}
 	if (myDelta != 0) {
 		delete myDelta;
 	}
@@ -124,6 +127,11 @@ XMLConfigGroup *XMLConfig::getGroup(const std::string &name, bool createUnexisti
 XMLConfigGroup *XMLConfig::getGroup(const std::string &name) const {
 	std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.find(name);
 	return (it != myGroups.end()) ? it-> second : 0;
+}
+
+XMLConfigGroup *XMLConfig::getDefaultGroup(const std::string &name) const {
+	std::map<std::string,XMLConfigGroup*>::const_iterator it = myDefaultGroups.find(name);
+	return (it != myDefaultGroups.end()) ? it-> second : 0;
 }
 
 void XMLConfig::removeGroup(const std::string &name) {

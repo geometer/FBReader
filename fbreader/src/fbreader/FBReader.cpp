@@ -54,7 +54,7 @@ static const std::string BOOK = "Book";
 const std::string LARGE_SCROLLING = "LargeScrolling";
 const std::string SMALL_SCROLLING = "SmallScrolling";
 const std::string MOUSE_SCROLLING = "MouseScrolling";
-const std::string FINGER_TAP_SCROLLING = "FingerTapScrolling";
+const std::string TAP_SCROLLING = "TapScrolling";
 
 const std::string DELAY = "ScrollingDelay";
 const std::string MODE = "Mode";
@@ -92,8 +92,9 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	LargeScrollingOptions(LARGE_SCROLLING, 250, ZLTextView::NO_OVERLAPPING, 1, 1, 50),
 	SmallScrollingOptions(SMALL_SCROLLING, 50, ZLTextView::SCROLL_LINES, 1, 1, 50),
 	MouseScrollingOptions(MOUSE_SCROLLING, 0, ZLTextView::SCROLL_LINES, 1, 1, 50),
-	FingerTapScrollingOptions(FINGER_TAP_SCROLLING, 0, ZLTextView::NO_OVERLAPPING, 1, 1, 50),
-	EnableFingerScrollingOption(ZLCategoryKey::CONFIG, FINGER_TAP_SCROLLING, "Enabled", true),
+	TapScrollingOptions(TAP_SCROLLING, 0, ZLTextView::NO_OVERLAPPING, 1, 1, 50),
+	EnableTapScrollingOption(ZLCategoryKey::CONFIG, TAP_SCROLLING, "Enabled", true),
+	TapScrollingOnFingerOnlyOption(ZLCategoryKey::CONFIG, TAP_SCROLLING, "FingerOnly", true),
 	SearchBackwardOption(FBCategoryKey::SEARCH, SEARCH, "Backward", false),
 	SearchIgnoreCaseOption(FBCategoryKey::SEARCH, SEARCH, "IgnoreCase", true),
 	SearchInWholeTextOption(FBCategoryKey::SEARCH, SEARCH, "WholeText", false),
@@ -140,8 +141,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::SMALL_SCROLL_BACKWARD, new ScrollingAction(*this, SmallScrollingOptions, false));
 	addAction(ActionCode::MOUSE_SCROLL_FORWARD, new ScrollingAction(*this, MouseScrollingOptions, true));
 	addAction(ActionCode::MOUSE_SCROLL_BACKWARD, new ScrollingAction(*this, MouseScrollingOptions, false));
-	addAction(ActionCode::FINGER_TAP_SCROLL_FORWARD, new ScrollingAction(*this, FingerTapScrollingOptions, true));
-	addAction(ActionCode::FINGER_TAP_SCROLL_BACKWARD, new ScrollingAction(*this, FingerTapScrollingOptions, false));
+	addAction(ActionCode::TAP_SCROLL_FORWARD, new ScrollingAction(*this, TapScrollingOptions, true));
+	addAction(ActionCode::TAP_SCROLL_BACKWARD, new ScrollingAction(*this, TapScrollingOptions, false));
 	addAction(ActionCode::INCREASE_FONT, new ChangeFontSizeAction(*this, 2));
 	addAction(ActionCode::DECREASE_FONT, new ChangeFontSizeAction(*this, -2));
 	addAction(ActionCode::ROTATE_SCREEN, new RotationAction(*this));

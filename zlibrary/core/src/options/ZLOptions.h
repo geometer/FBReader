@@ -44,7 +44,24 @@ public:
 	const std::string Name;
 };
 
+class ZLConfig;
+
 class ZLOption {
+
+private:
+	static ZLConfig *ourConfig;
+
+public:
+	static void createInstance();
+	static void deleteInstance();
+
+protected:
+	const std::string &getConfigValue(const std::string &defaultValue) const;
+	const std::string &getConfigValue() const;
+	const std::string &getDefaultConfigValue(const std::string &defaultValue) const;
+	const std::string &getDefaultConfigValue() const;
+	void setConfigValue(const std::string &value) const;
+	void unsetConfigValue() const;
 
 public:
 	static const std::string PLATFORM_GROUP;
@@ -65,10 +82,12 @@ protected:
 public:
 	virtual ~ZLOption();
 
-protected:
+private:
 	const ZLCategoryKey &myCategory;
-	std::string myGroup;
+	std::string myGroupName;
 	std::string myOptionName;
+
+protected:
 	mutable bool myIsSynchronized;
 
 private:
@@ -97,7 +116,6 @@ class ZLBooleanOption : public ZLSimpleOption {
 
 public:
 	ZLBooleanOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, bool defaultValue);
-	~ZLBooleanOption();
 	Type type() const;
 
 	bool value() const;
@@ -112,7 +130,6 @@ class ZLBoolean3Option : public ZLSimpleOption {
 
 public:
 	ZLBoolean3Option(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, ZLBoolean3 defaultValue);
-	~ZLBoolean3Option();
 	Type type() const;
 
 	ZLBoolean3 value() const;
@@ -127,7 +144,6 @@ class ZLIntegerOption : public ZLOption {
 
 public:
 	ZLIntegerOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, long defaultValue);
-	~ZLIntegerOption();
 
 	long value() const;
 	void setValue(long value);
@@ -141,7 +157,6 @@ class ZLIntegerRangeOption : public ZLOption {
 
 public:
 	ZLIntegerRangeOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, long minValue, long maxValue, long defaultValue);
-	~ZLIntegerRangeOption();
 
 	long value() const;
 	void setValue(long value);
@@ -159,7 +174,6 @@ class ZLColorOption : public ZLOption {
 
 public:
 	ZLColorOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, ZLColor defaultValue);
-	~ZLColorOption();
 
 	ZLColor value() const;
 	void setValue(ZLColor value);
@@ -173,7 +187,6 @@ class ZLDoubleOption : public ZLOption {
 
 public:
 	ZLDoubleOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, double defaultValue);
-	~ZLDoubleOption();
 
 	double value() const;
 	void setValue(double value);
@@ -187,7 +200,6 @@ class ZLStringOption : public ZLSimpleOption {
 
 public:
 	ZLStringOption(const ZLCategoryKey &category, const std::string &group, const std::string &optionName, const std::string &defaultValue);
-	~ZLStringOption();
 	Type type() const;
 
 	const std::string &value() const;

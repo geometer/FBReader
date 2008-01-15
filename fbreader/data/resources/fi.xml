@@ -89,7 +89,7 @@
 						<node name="large" value="Sivun vieritykselle"/>
 						<node name="small" value="Rivin vieritykselle"/>
 						<node name="mouse" value="Hiirellä vieritykselle"/>
-						<node name="finger" value="Sormi vieritykselle"/>
+						<node name="tap" value="Tap Scrollings" toBeTranslated="true"/>
 					</node>
 					<node name="delay" value="Vieritysten viive, msec"/>
 					<node name="mode" value="Vieritystila">
@@ -102,6 +102,7 @@
 					<node name="linesToKeep" value="Rivien määrä"/>
 					<node name="linesToScroll" value="Rivien määrä"/>
 					<node name="percentToScroll" value="Vieritysprosentti"/>
+					<node name="fingerOnly" value="Scroll on Finger Tap Only" toBeTranslated="true"/>
 				</node>
 				<node name="Selection" value="Valinta">
 					<node name="enableSelection" value="Ota käyttöön tekstin valinta"/>

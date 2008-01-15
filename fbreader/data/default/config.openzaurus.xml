@@ -3,4 +3,7 @@
   <group name="Options">
     <option name="BookPath" value="/media/cf/FBooks:~/FBooks"/>
   </group>
+  <group name="TapScrolling">
+    <option name="Enabled" value="false"/>
+  </group>
 </config>

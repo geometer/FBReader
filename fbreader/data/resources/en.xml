@@ -89,7 +89,7 @@
 						<node name="large" value="Large Scrollings"/>
 						<node name="small" value="Small Scrollings"/>
 						<node name="mouse" value="Mouse Scrollings"/>
-						<node name="finger" value="Finger Tap Scrollings"/>
+						<node name="tap" value="Tap Scrollings"/>
 					</node>
 					<node name="delay" value="Delay between Scrollings, msecs"/>
 					<node name="mode" value="Scrolling Mode">
@@ -102,6 +102,7 @@
 					<node name="linesToKeep" value="Lines to Keep"/>
 					<node name="linesToScroll" value="Lines to Scroll"/>
 					<node name="percentToScroll" value="Percent to Scroll"/>
+					<node name="fingerOnly" value="Scroll on Finger Tap Only"/>
 				</node>
 				<node name="Selection" value="Selection">
 					<node name="enableSelection" value="Enable Text Selection"/>

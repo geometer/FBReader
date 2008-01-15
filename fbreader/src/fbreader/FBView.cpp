@@ -98,12 +98,16 @@ shared_ptr<ZLTextPositionIndicatorInfo> FBView::indicatorInfo() const {
 	return ourIndicatorInfo;
 }
 
-bool FBView::onFingerTap(int, int y) {
+void FBView::doTapScrolling(int y) {
 	if (2 * y < context().height()) {
-		fbreader().doAction(ActionCode::FINGER_TAP_SCROLL_BACKWARD);
+		fbreader().doAction(ActionCode::TAP_SCROLL_BACKWARD);
 	} else {
-		fbreader().doAction(ActionCode::FINGER_TAP_SCROLL_FORWARD);
+		fbreader().doAction(ActionCode::TAP_SCROLL_FORWARD);
 	}
+}
+
+bool FBView::onFingerTap(int, int y) {
+	doTapScrolling(y);
 	return true;
 }
 
@@ -121,6 +125,13 @@ bool FBView::onStylusPress(int x, int y) {
 	}
 	
 	if (_onStylusPress(x, y)) {
+		return true;
+	}
+
+	if (fbreader().EnableTapScrollingOption.value() &&
+			(!ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value() ||
+			 !fbreader().TapScrollingOnFingerOnlyOption.value())) {
+		doTapScrolling(y);
 		return true;
 	}
 

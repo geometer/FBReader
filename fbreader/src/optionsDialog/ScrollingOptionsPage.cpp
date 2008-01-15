@@ -39,7 +39,7 @@ private:
 	std::string myLargeScrollingString;
 	std::string mySmallScrollingString;
 	std::string myMouseScrollingString;
-	std::string myFingerTapScrollingString;
+	std::string myTapScrollingString;
 
 private:
 	const ZLResource &myResource;
@@ -62,7 +62,7 @@ private:
 	static ZLTextView::ScrollingMode codeByName(const std::string &name);
 	
 public:
-	ScrollingModeEntry(FBReader &fbreader, ScrollingOptionsPage::ScrollingEntries &entries, ZLIntegerOption &option, bool isFingerTapOption);
+	ScrollingModeEntry(FBReader &fbreader, ScrollingOptionsPage::ScrollingEntries &entries, ZLIntegerOption &option, bool isTapOption);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -76,28 +76,28 @@ private:
 	ZLIntegerOption &myOption;
 	std::vector<std::string> myValues;
 	int myCurrentIndex;
-	bool myIsFingerTapOption;
+	bool myIsTapOption;
 };
 
 ScrollingTypeEntry::ScrollingTypeEntry(const ZLResource &resource, FBReader &fbreader, ScrollingOptionsPage &page) : myResource(resource), myFBReader(fbreader), myPage(page) {
 	myLargeScrollingString = resource["large"].value();
 	mySmallScrollingString = resource["small"].value();
 	myMouseScrollingString = resource["mouse"].value();
-	myFingerTapScrollingString = resource["finger"].value();
+	myTapScrollingString = resource["tap"].value();
 
 	myValues.push_back(myLargeScrollingString);
 	myValues.push_back(mySmallScrollingString);
 
 	const bool isMousePresented = 
 		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::MOUSE_PRESENTED, false).value();
-	const bool isFingerTapDetectionSupported = 
-		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value();
+	const bool hasTouchScreen = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::TOUCHSCREEN_PRESENTED, false).value();
 
 	if (isMousePresented) {
 		myValues.push_back(myMouseScrollingString);
 	}
-	if (isFingerTapDetectionSupported) {
-		myValues.push_back(myFingerTapScrollingString);
+	if (hasTouchScreen) {
+		myValues.push_back(myTapScrollingString);
 	}
 }
 
@@ -119,14 +119,14 @@ void ScrollingTypeEntry::onValueSelected(int index) {
 
 	const bool isMousePresented = 
 		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::MOUSE_PRESENTED, false).value();
-	const bool isFingerTapDetectionSupported = 
-		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value();
+	const bool hasTouchScreen = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::TOUCHSCREEN_PRESENTED, false).value();
 
 	if (isMousePresented) {
 		myPage.myMouseScrollingEntries.show(selectedValue == myMouseScrollingString);
 	}
-	if (isFingerTapDetectionSupported) {
-		myPage.myFingerTapScrollingEntries.show(selectedValue == myFingerTapScrollingString);
+	if (hasTouchScreen) {
+		myPage.myTapScrollingEntries.show(selectedValue == myTapScrollingString);
 	}
 }
 
@@ -162,18 +162,18 @@ ZLTextView::ScrollingMode ScrollingModeEntry::codeByName(const std::string &name
 	return ZLTextView::NO_OVERLAPPING;
 }
 
-ScrollingModeEntry::ScrollingModeEntry(FBReader &fbreader, ScrollingOptionsPage::ScrollingEntries &page, ZLIntegerOption &option, bool isFingerTapOption) : myFBReader(fbreader), myEntries(page), myOption(option), myIsFingerTapOption(isFingerTapOption) {
+ScrollingModeEntry::ScrollingModeEntry(FBReader &fbreader, ScrollingOptionsPage::ScrollingEntries &page, ZLIntegerOption &option, bool isTapOption) : myFBReader(fbreader), myEntries(page), myOption(option), myIsTapOption(isTapOption) {
 	myValues.push_back(ourNoOverlappingString);
 	myValues.push_back(ourKeepLinesString);
 	myValues.push_back(ourScrollLinesString);
 	myValues.push_back(ourScrollPercentageString);
-	if (myIsFingerTapOption) {
+	if (myIsTapOption) {
 		myValues.push_back(ourDisableString);
 	}
 }
 
 const std::string &ScrollingModeEntry::initialValue() const {
-	if (myIsFingerTapOption && !myFBReader.EnableFingerScrollingOption.value()) {
+	if (myIsTapOption && !myFBReader.EnableTapScrollingOption.value()) {
 		return ourDisableString;
 	}
 	return nameByCode(myOption.value());
@@ -184,10 +184,10 @@ const std::vector<std::string> &ScrollingModeEntry::values() const {
 }
 
 void ScrollingModeEntry::onAccept(const std::string &text) {
-	if (myIsFingerTapOption && (text == ourDisableString)) {
-		myFBReader.EnableFingerScrollingOption.setValue(false);
+	if (myIsTapOption && (text == ourDisableString)) {
+		myFBReader.EnableTapScrollingOption.setValue(false);
 	} else {
-		myFBReader.EnableFingerScrollingOption.setValue(true);
+		myFBReader.EnableTapScrollingOption.setValue(true);
 		myOption.setValue(codeByName(text));
 	}
 }
@@ -199,6 +199,9 @@ void ScrollingModeEntry::onMadeVisible() {
 void ScrollingModeEntry::onValueSelected(int index) {
 	myCurrentIndex = index;
 	const std::string &selectedValue = values()[index];
+	if (myEntries.myFingerOnlyEntry != 0) {
+		myEntries.myFingerOnlyEntry->setVisible(selectedValue != ourDisableString);
+	}
 	myEntries.myDelayEntry->setVisible(selectedValue != ourDisableString);
 	myEntries.myLinesToKeepEntry->setVisible(selectedValue == ourKeepLinesString);
 	myEntries.myLinesToScrollEntry->setVisible(selectedValue == ourScrollLinesString);
@@ -210,10 +213,19 @@ static const ZLResourceKey modeKey("mode");
 static const ZLResourceKey linesToKeepKey("linesToKeep");
 static const ZLResourceKey linesToScrollKey("linesToScroll");
 static const ZLResourceKey percentToScrollKey("percentToScroll");
+static const ZLResourceKey fingerOnlyKey("fingerOnly");
 
 void ScrollingOptionsPage::ScrollingEntries::init(FBReader &fbreader, FBReader::ScrollingOptions &options) {
+	const bool isTapOption = &options == &fbreader.TapScrollingOptions;
+	const bool isFingerTapDetectionSupported = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value();
+	if (isTapOption && isFingerTapDetectionSupported) {
+		myFingerOnlyEntry = new ZLSimpleBooleanOptionEntry(fbreader.TapScrollingOnFingerOnlyOption);
+	} else {
+		myFingerOnlyEntry = 0;
+	}
 	myDelayEntry = new ZLSimpleSpinOptionEntry(options.DelayOption, 50);
-	myModeEntry = new ScrollingModeEntry(fbreader, *this, options.ModeOption, &options == &fbreader.FingerTapScrollingOptions);
+	myModeEntry = new ScrollingModeEntry(fbreader, *this, options.ModeOption, isTapOption);
 	myLinesToKeepEntry = new ZLSimpleSpinOptionEntry(options.LinesToKeepOption, 1);
 	myLinesToScrollEntry = new ZLSimpleSpinOptionEntry(options.LinesToScrollOption, 1);
 	myPercentToScrollEntry = new ZLSimpleSpinOptionEntry(options.PercentToScrollOption, 5);
@@ -226,10 +238,16 @@ void ScrollingOptionsPage::ScrollingEntries::connect(ZLDialogContent &dialogTab)
 	dialogTab.addOption(linesToKeepKey, myLinesToKeepEntry);
 	dialogTab.addOption(linesToScrollKey, myLinesToScrollEntry);
 	dialogTab.addOption(percentToScrollKey, myPercentToScrollEntry);
+	if (myFingerOnlyEntry != 0) {
+		dialogTab.addOption(fingerOnlyKey, myFingerOnlyEntry);
+	}
 }
 
 void ScrollingOptionsPage::ScrollingEntries::show(bool visible) {
 	if (myDelayEntry != 0) {
+		if (myFingerOnlyEntry != 0) {
+			myFingerOnlyEntry->setVisible(visible);
+		}
 		myDelayEntry->setVisible(visible);
 		myModeEntry->setVisible(visible);
 		if (visible) {
@@ -259,14 +277,14 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader 
 
 	const bool isMousePresented = 
 		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::MOUSE_PRESENTED, false).value();
-	const bool isFingerTapDetectionSupported = 
-		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value();
+	const bool hasTouchScreen = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::TOUCHSCREEN_PRESENTED, false).value();
 
 	if (isMousePresented) {
 		myMouseScrollingEntries.init(fbreader, fbreader.MouseScrollingOptions);
 	}
-	if (isFingerTapDetectionSupported) {
-		myFingerTapScrollingEntries.init(fbreader, fbreader.FingerTapScrollingOptions);
+	if (hasTouchScreen) {
+		myTapScrollingEntries.init(fbreader, fbreader.TapScrollingOptions);
 	}
 
 	mainEntry->onStringValueSelected(mainEntry->initialValue());
@@ -276,7 +294,7 @@ ScrollingOptionsPage::ScrollingOptionsPage(ZLDialogContent &dialogTab, FBReader 
 	if (isMousePresented) {
 		myMouseScrollingEntries.connect(dialogTab);
 	}
-	if (isFingerTapDetectionSupported) {
-		myFingerTapScrollingEntries.connect(dialogTab);
+	if (hasTouchScreen) {
+		myTapScrollingEntries.connect(dialogTab);
 	}
 }

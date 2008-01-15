@@ -72,6 +72,7 @@ public:
 	void removeGroup(const std::string &name);
 
 	const std::string &getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const;
+	const std::string &getDefaultValue(const std::string &group, const std::string &name, const std::string &defaultValue) const;
 	void setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category);
 	void unsetValue(const std::string &group, const std::string &name);
 

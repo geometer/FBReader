@@ -42,6 +42,7 @@ static void setColor(GdkGC *gc, const ZLColor &zlColor) {
 
 ZLGtkPaintContext::ZLGtkPaintContext() {
 	myPixmap = 0;
+	myTilePixmap = 0;
 	myWidth = 0;
 	myHeight = 0;
 

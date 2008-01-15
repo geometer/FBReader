@@ -71,8 +71,9 @@ public:
 	ScrollingOptions LargeScrollingOptions;
 	ScrollingOptions SmallScrollingOptions;
 	ScrollingOptions MouseScrollingOptions;
-	ScrollingOptions FingerTapScrollingOptions;
-	ZLBooleanOption EnableFingerScrollingOption;
+	ScrollingOptions TapScrollingOptions;
+	ZLBooleanOption EnableTapScrollingOption;
+	ZLBooleanOption TapScrollingOnFingerOnlyOption;
 
 	ZLBooleanOption SearchBackwardOption;
 	ZLBooleanOption SearchIgnoreCaseOption;

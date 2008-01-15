@@ -178,8 +178,8 @@ ScrollingAction::ScrollingAction(FBReader &fbreader, const FBReader::ScrollingOp
 
 bool ScrollingAction::isEnabled() {
 	return
-		(&myOptions != &fbreader().FingerTapScrollingOptions) ||
-		fbreader().EnableFingerScrollingOption.value();
+		(&myOptions != &fbreader().TapScrollingOptions) ||
+		fbreader().EnableTapScrollingOption.value();
 }
 
 bool ScrollingAction::useKeyDelay() const {

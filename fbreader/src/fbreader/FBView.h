@@ -77,6 +77,9 @@ private:
 	static shared_ptr<FBMargins> ourMargins;
 	static shared_ptr<ZLBooleanOption> ourSelectionOption;
 
+protected:
+	void doTapScrolling(int y);
+
 public:
 	FBView(FBReader &reader, shared_ptr<ZLPaintContext> context);
 

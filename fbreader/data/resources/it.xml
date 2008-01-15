@@ -89,7 +89,7 @@
 						<node name="large" value="Scorrimenti Grandi"/>
 						<node name="small" value="Scorrimenti Piccoli"/>
 						<node name="mouse" value="Scorrimenti con Mouse"/>
-						<node name="finger" value="Scorrimenti con Tocco Dito"/>
+						<node name="tap" value="Tap Scrollings" toBeTranslated="true"/>
 					</node>
 					<node name="delay" value="Ritardo tra Scorrimenti, msec"/>
 					<node name="mode" value="Modalit&agrave; Scorrimento">
@@ -102,6 +102,7 @@
 					<node name="linesToKeep" value="Righe da Mantenere"/>
 					<node name="linesToScroll" value="Righe da Scorrere"/>
 					<node name="percentToScroll" value="Percentuale da Scorrere"/>
+					<node name="fingerOnly" value="Scroll on Finger Tap Only" toBeTranslated="true"/>
 				</node>
 				<node name="Selection" value="Selezione">
 					<node name="enableSelection" value="Enable Text Selection" toBeTranslated="true"/>

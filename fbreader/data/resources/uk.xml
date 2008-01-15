@@ -89,7 +89,7 @@
 						<node name="large" value="на велику відстань"/>
 						<node name="small" value="на невелику відстань"/>
 						<node name="mouse" value="колесом мишки"/>
-						<node name="finger" value="натисканням пальця"/>
+						<node name="tap" value="Tap Scrollings" toBeTranslated="true"/>
 					</node>
 					<node name="delay" value="Затримка, мілісекунд"/>
 					<node name="mode" value="Перегортання">
@@ -102,6 +102,7 @@
 					<node name="linesToKeep" value="Скільки рядків перекривати"/>
 					<node name="linesToScroll" value="Скільки рядків зсувати"/>
 					<node name="percentToScroll" value="Скільки відсотків зсувати"/>
+					<node name="fingerOnly" value="Scroll on Finger Tap Only" toBeTranslated="true"/>
 				</node>
 				<node name="Selection" value="Помітка">
 					<node name="enableSelection" value="Дозволити помiчати текст"/>

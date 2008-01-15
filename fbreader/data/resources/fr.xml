@@ -90,7 +90,7 @@
 						<node name="large" value="Grands défilements"/>
 						<node name="small" value="Petits défilements"/>
 						<node name="mouse" value="Défilements à la souris"/>
-						<node name="finger" value="Défilements au doigt"/>
+						<node name="tap" value="Tap Scrollings" toBeTranslated="true"/>
 					</node>
 					<node name="delay" value="Délai entre défilements, ms"/>
 					<node name="mode" value="Mode de défilement">
@@ -103,6 +103,7 @@
 					<node name="linesToKeep" value="Lignes à conserver"/>
 					<node name="linesToScroll" value="Lignes à défiler"/>
 					<node name="percentToScroll" value="Pourcentage à défiler"/>
+					<node name="fingerOnly" value="Scroll on Finger Tap Only" toBeTranslated="true"/>
 				</node>
 				<node name="Selection" value="Sélection">
 					<node name="enableSelection" value="Enable Text Selection" toBeTranslated="true"/>

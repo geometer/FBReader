@@ -45,6 +45,10 @@ std::string XMLConfig::configDirName() const {
 void XMLConfig::load() {
 	XMLConfigReader(*this, "").readDocument(ZLibrary::DefaultFilesPathPrefix() + "config.xml");
 	XMLConfigReader(*this, "").readDocument(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "default" + ZLibrary::FileNameDelimiter + "config.xml");
+	myDefaultGroups = myGroups;
+	for (std::map<std::string,XMLConfigGroup*>::iterator it = myDefaultGroups.begin(); it != myDefaultGroups.end(); ++it) {
+		it->second = new XMLConfigGroup(*it->second);
+	}
 	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(false);
 	if (configDir.isNull()) {
 		return;

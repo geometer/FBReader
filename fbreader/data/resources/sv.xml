@@ -86,10 +86,10 @@
 				</node>
 				<node name="Scrolling" value="Rullning">
 					<node name="optionsFor" value="Alternativ för">
-						<node name="large" value="Large Scrollings"/>
-						<node name="small" value="Small Scrollings"/>
-						<node name="mouse" value="Mouse Scrollings"/>
-						<node name="finger" value="Finger Tap Scrollings"/>
+						<node name="large" value="Large Scrollings" toBeTranslated="true"/>
+						<node name="small" value="Small Scrollings" toBeTranslated="true"/>
+						<node name="mouse" value="Mouse Scrollings" toBeTranslated="true"/>
+						<node name="tap" value="Tap Scrollings" toBeTranslated="true"/>
 					</node>
 					<node name="delay" value="Fördröjning mellan rullningar, ms"/>
 					<node name="mode" value="Rullningsläge">
@@ -102,6 +102,7 @@
 					<node name="linesToKeep" value="Rader att behålla"/>
 					<node name="linesToScroll" value="Rader att rulla"/>
 					<node name="percentToScroll" value="Procentandel att rulla"/>
+					<node name="fingerOnly" value="Scroll on Finger Tap Only" toBeTranslated="true"/>
 				</node>
 				<node name="Selection" value="Markering">
 					<node name="enableSelection" value="Aktivera textmarkering"/>

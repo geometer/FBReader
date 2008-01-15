@@ -6,6 +6,9 @@
   <group name="LargeScrolling">
     <option name="ScrollingDelay" value="0"/>
   </group>
+  <group name="TapScrolling">
+    <option name="Enabled" value="false"/>
+  </group>
   <group name="Options">
     <option name="KeyDelay" value="0"/>
     <option name="BookPath" value="~/FBooks:~/Books"/>

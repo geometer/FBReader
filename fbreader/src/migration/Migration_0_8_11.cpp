@@ -84,6 +84,36 @@ Migration_0_8_11::Migration_0_8_11() : Migration("0.8.11") {
 
 void Migration_0_8_11::doMigrationInternal() {
 	moveOption(
+		ZLCategoryKey::CONFIG, "FingerTapScrolling", "ScrollingDelay",
+		ZLCategoryKey::CONFIG, "TapScrolling", "ScrollingDelay",
+		"0"	
+	);
+	moveOption(
+		ZLCategoryKey::CONFIG, "FingerTapScrolling", "Mode",
+		ZLCategoryKey::CONFIG, "TapScrolling", "Mode",
+		"0"	
+	);
+	moveOption(
+		ZLCategoryKey::CONFIG, "FingerTapScrolling", "LinesToKeep",
+		ZLCategoryKey::CONFIG, "TapScrolling", "LinesToKeep",
+		"1"	
+	);
+	moveOption(
+		ZLCategoryKey::CONFIG, "FingerTapScrolling", "LinesToScroll",
+		ZLCategoryKey::CONFIG, "TapScrolling", "LinesToScroll",
+		"1"	
+	);
+	moveOption(
+		ZLCategoryKey::CONFIG, "FingerTapScrolling", "PercentToScroll",
+		ZLCategoryKey::CONFIG, "TapScrolling", "PercentToScroll",
+		"50"	
+	);
+	moveOption(
+		ZLCategoryKey::CONFIG, "FingerTapScrolling", "Enabled",
+		ZLCategoryKey::CONFIG, "TapScrolling", "Enabled",
+		"true"	
+	);
+	moveOption(
 		ZLCategoryKey::CONFIG, "Options", "ScrollingDelay",
 		ZLCategoryKey::CONFIG, "LargeScrolling", "ScrollingDelay",
 		"250"	

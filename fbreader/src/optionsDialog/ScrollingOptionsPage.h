@@ -23,6 +23,7 @@
 #include "../fbreader/FBReader.h"
 
 class ZLDialogContent;
+class ZLBooleanOptionEntry;
 class ZLSpinOptionEntry;
 class ZLComboOptionEntry;
 
@@ -34,6 +35,7 @@ public:
 private:
 
 	struct ScrollingEntries {
+		ZLBooleanOptionEntry *myFingerOnlyEntry;
 		ZLSpinOptionEntry *myDelayEntry;
 		ZLComboOptionEntry *myModeEntry;
 		ZLSpinOptionEntry *myLinesToKeepEntry;
@@ -48,7 +50,7 @@ private:
 	ScrollingEntries myLargeScrollingEntries;
 	ScrollingEntries mySmallScrollingEntries;
 	ScrollingEntries myMouseScrollingEntries;
-	ScrollingEntries myFingerTapScrollingEntries;
+	ScrollingEntries myTapScrollingEntries;
 
 friend class ScrollingTypeEntry;
 friend class ScrollingModeEntry;
