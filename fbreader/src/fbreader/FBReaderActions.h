@@ -280,6 +280,7 @@ class GotoPageNumber : public ModeDependentAction {
 
 public:
 	GotoPageNumber(FBReader &fbreader);
+	bool isEnabled();
 	void run();
 };
 

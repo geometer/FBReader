@@ -253,6 +253,11 @@ bool BookTextView::onStylusMove(int x, int y) {
 	return true;
 }
 
+int BookTextView::pageNumber() const {
+	// TODO: implement
+	return 0;
+}
+
 shared_ptr<ZLTextView::PositionIndicator> BookTextView::createPositionIndicator(const ZLTextPositionIndicatorInfo &info) {
 	return new PositionIndicatorWithLabels(*this, info);
 }

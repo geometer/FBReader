@@ -351,10 +351,15 @@ void GotoPreviousTOCSectionAction::run() {
 GotoPageNumber::GotoPageNumber(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE) {
 }
 
+bool GotoPageNumber::isEnabled() {
+	fbreader().bookTextView().pageNumber() > 0;
+}
+
 void GotoPageNumber::run() {
 	shared_ptr<ZLDialog> gotoPageDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("gotoPageDialog"));
 
-	ZLIntegerRangeOption pageNumberOption(ZLCategoryKey::CONFIG, "gotoPageDialog", "Number", 0, 100, 50);
+	const int pageNumber = fbreader().bookTextView().pageNumber();
+	ZLIntegerRangeOption pageNumberOption(ZLCategoryKey::CONFIG, "gotoPageDialog", "Number", 0, pageNumber, pageNumber);
 	gotoPageDialog->addOption(ZLResourceKey("pageNumber"), new ZLSimpleSpinOptionEntry(pageNumberOption, 1));
 	gotoPageDialog->addButton(ZLDialogManager::OK_BUTTON, true);
 	gotoPageDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);

@@ -103,6 +103,7 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 				myKeyboardModifierMask |= 0x4;
 			} else {
 				application().doActionByKey(ZLKeyUtil::keyName(wParam, wParam, myKeyboardModifierMask));
+				myKeyboardModifierMask = 0;
 			}
 			return 0;
 		case WM_KEYUP:
