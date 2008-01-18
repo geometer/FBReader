@@ -116,26 +116,36 @@ void BookTextView::saveState() {
 	}
 }
 
-void BookTextView::pushCurrentPositionIntoStack() {
+BookTextView::Position BookTextView::cursorPosition(const ZLTextWordCursor &cursor) const {
+	return Position(cursor.paragraphCursor().index(), cursor.wordNumber());
+}
+
+bool BookTextView::pushCurrentPositionIntoStack(bool doPushSamePosition) {
 	const ZLTextWordCursor &cursor = startCursor();
-	if (!cursor.isNull()) {
-		Position pos;
-		pos.first = cursor.paragraphCursor().index();
-		pos.second = cursor.wordNumber();
-		myPositionStack.push_back(pos);
-		while (myPositionStack.size() > myMaxStackSize) {
-			myPositionStack.erase(myPositionStack.begin());
-			if (myCurrentPointInStack > 0) {
-				--myCurrentPointInStack;
-			}
+	if (cursor.isNull()) {
+		return false;
+	}
+
+	Position pos = cursorPosition(cursor);
+	if (!doPushSamePosition && !myPositionStack.empty() && (myPositionStack.back() == pos)) {
+		return false;
+	}
+
+	myPositionStack.push_back(pos);
+	while (myPositionStack.size() > myMaxStackSize) {
+		myPositionStack.erase(myPositionStack.begin());
+		if (myCurrentPointInStack > 0) {
+			--myCurrentPointInStack;
 		}
 	}
+	return true;
 }
 
 void BookTextView::replaceCurrentPositionInStack() {
 	const ZLTextWordCursor &cursor = startCursor();
-	myPositionStack[myCurrentPointInStack].first = cursor.paragraphCursor().index();
-	myPositionStack[myCurrentPointInStack].second = cursor.wordNumber();
+	if (!cursor.isNull()) {
+		myPositionStack[myCurrentPointInStack] = cursorPosition(cursor);
+	}
 }
 
 void BookTextView::gotoParagraph(int num, bool last) {
@@ -144,8 +154,8 @@ void BookTextView::gotoParagraph(int num, bool last) {
 			if (myPositionStack.size() > myCurrentPointInStack) {
 				myPositionStack.erase(myPositionStack.begin() + myCurrentPointInStack, myPositionStack.end());
 			}
-			pushCurrentPositionIntoStack();
-			++myCurrentPointInStack;
+			pushCurrentPositionIntoStack(false);
+			myCurrentPointInStack = myPositionStack.size();
 		}
 
 		FBView::gotoParagraph(num, last);
@@ -153,13 +163,27 @@ void BookTextView::gotoParagraph(int num, bool last) {
 }
 
 bool BookTextView::canUndoPageMove() {
-	return !empty() && (myCurrentPointInStack > 0) && (myCurrentPointInStack <= myPositionStack.size());
+	if (empty()) {
+		return false;
+	}
+	if (myCurrentPointInStack == 0) {
+		return false;
+	}
+	if ((myCurrentPointInStack == 1) && (myPositionStack.size() == 1)) {
+		const ZLTextWordCursor &cursor = startCursor();
+		if (!cursor.isNull()) {
+			return myPositionStack.back() != cursorPosition(cursor);
+		}
+	}
+	return true;
 }
 
 void BookTextView::undoPageMove() {
 	if (canUndoPageMove()) {
 		if (myCurrentPointInStack == myPositionStack.size()) {
-			pushCurrentPositionIntoStack();
+			if (!pushCurrentPositionIntoStack(false)) {
+				-- myCurrentPointInStack;
+			}
 		} else {
 			replaceCurrentPositionInStack();
 		}

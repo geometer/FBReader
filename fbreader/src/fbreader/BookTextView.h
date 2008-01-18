@@ -53,7 +53,9 @@ public:
 	bool onStylusMove(int x, int y);
 
 private:
-	void pushCurrentPositionIntoStack();
+	typedef std::pair<int,int> Position;
+	Position cursorPosition(const ZLTextWordCursor &cursor) const;
+	bool pushCurrentPositionIntoStack(bool doPushSamePosition = true);
 	void replaceCurrentPositionInStack();
 
 	void preparePaintInfo();
@@ -79,7 +81,6 @@ private:
 
 	std::string myFileName;
 
-	typedef std::pair<int,int> Position;
 	typedef std::deque<Position> PositionStack;
 	PositionStack myPositionStack;
 	unsigned int myCurrentPointInStack;

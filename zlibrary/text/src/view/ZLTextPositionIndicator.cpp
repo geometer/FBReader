@@ -25,6 +25,46 @@
 #include "ZLTextView.h"
 #include "ZLTextStyle.h"
 
+/*
+ * Calculates m0 * m1 / d
+ *   We assume m0 < d or m1 < d so result is small enough for size_t
+ */
+static size_t muldiv(size_t m0, size_t m1, size_t d) {
+	static const size_t HALF = 1 << sizeof(size_t) / 2;
+	if ((m0 < HALF) && (m1 < HALF)) {
+		return m0 * m1 / d;
+	}
+
+	if (m0 > d) {
+		size_t swap = m0;
+		m0 = m1;
+		m1 = swap;
+	}
+
+	size_t result = 0;
+	size_t remainder = 0;
+
+	while ((m0 != 0) && (m1 != 0) && ((m0 >= HALF) || (m1 >= HALF))) {
+		const size_t mul = (d - 1) / m0 + 1;
+		const size_t rem = m0 * (m1 % mul);
+		if (remainder + rem < remainder) {
+			++result;
+		}
+		remainder += rem;
+		m1 /= mul;
+		result += m1;
+		m0 = m0 * mul - d;
+	}
+	const size_t product = m0 * m1;
+	result += product / d;
+	if (remainder + product % d < remainder) {
+		++result;
+	}
+	return result;
+}
+
+
+
 ZLTextPositionIndicatorInfo::ZLTextPositionIndicatorInfo() {
 }
 
@@ -104,7 +144,7 @@ size_t ZLTextView::PositionIndicator::sizeOfTextBeforeCursor() const {
 	} else {
 		return
 			sizeOfTextBeforeParagraph(paragraphNumber) +
-			sizeOfParagraph(paragraphNumber) * endCursor.wordNumber() / paragraphLength;
+			muldiv(sizeOfParagraph(paragraphNumber), endCursor.wordNumber(), paragraphLength);
 	}
 }
 
@@ -175,7 +215,7 @@ void ZLTextView::PositionIndicator::draw() {
 
 	if (!isEndOfText) {
 		fillWidth =
-			(size_t)(1.0 * fillWidth * sizeOfTextBeforeCursor() / sizeOfTextBeforeParagraph(endTextIndex()));
+			muldiv(fillWidth, sizeOfTextBeforeCursor(), sizeOfTextBeforeParagraph(endTextIndex()));
 	}
 
 	context.setColor(baseStyle.RegularTextColorOption.value());
@@ -209,25 +249,19 @@ bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 	const size_t endIndex = endTextIndex();
 
 	size_t fullTextSize = textSizeVector[endIndex] - textSizeVector[startIndex];
-	size_t textSize = (size_t)(1.0 * fullTextSize * (x - left + 1) / (right - left + 1)) + textSizeVector[startIndex];
+	size_t textSize = muldiv(fullTextSize, x - left + 1, right - left + 1) + textSizeVector[startIndex];
 	std::vector<size_t>::const_iterator it = std::lower_bound(textSizeVector.begin(), textSizeVector.end(), textSize);
 	size_t paragraphNumber = std::min((size_t)(it - textSizeVector.begin()), endIndex) - 1;
-	if (paragraphNumber == startIndex) {
-		myTextView.gotoParagraph(startIndex, false);
-	} else {
-		myTextView.gotoParagraph(paragraphNumber, true);
-		myTextView.preparePaintInfo();
-		const ZLTextWordCursor &endCursor = myTextView.endCursor();
-		if (!endCursor.isNull() && (paragraphNumber == endCursor.paragraphCursor().index())) {
-			if (!endCursor.paragraphCursor().isLast() || !endCursor.isEndOfParagraph()) {
-				size_t paragraphLength = endCursor.paragraphCursor().paragraphLength();
-				if (paragraphLength > 0) {
-					size_t wordNum =
-						(size_t)((1.0 * (x - left - 1) / (right - left - 1) * fullTextSize
-											- 1.0 * sizeOfTextBeforeParagraph(paragraphNumber))
-										 / sizeOfParagraph(paragraphNumber) * paragraphLength);
-					myTextView.moveEndCursor(endCursor.paragraphCursor().index(), wordNum, 0);
-				}
+	myTextView.gotoParagraph(paragraphNumber, true);
+	myTextView.preparePaintInfo();
+	const ZLTextWordCursor &endCursor = myTextView.endCursor();
+	if (!endCursor.isNull() && (paragraphNumber == endCursor.paragraphCursor().index())) {
+		if (!endCursor.paragraphCursor().isLast() || !endCursor.isEndOfParagraph()) {
+			size_t paragraphLength = endCursor.paragraphCursor().paragraphLength();
+			if (paragraphLength > 0) {
+				size_t wordNum =
+					muldiv(muldiv(fullTextSize, x - left - 1, right - left - 1) - sizeOfTextBeforeParagraph(paragraphNumber), paragraphLength, sizeOfParagraph(paragraphNumber));
+				myTextView.moveEndCursor(endCursor.paragraphCursor().index(), wordNum, 0);
 			}
 		}
 	}
