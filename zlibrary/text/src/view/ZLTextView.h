@@ -128,6 +128,8 @@ protected:
 public:
 	void clearCaches();
 
+	size_t pageNumber() const;
+
 	void scrollPage(bool forward, ScrollingMode mode, unsigned int value);
 	void scrollToStartOfText();
 	void scrollToEndOfText();

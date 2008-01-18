@@ -27,7 +27,7 @@
 
 /*
  * Calculates m0 * m1 / d
- *   We assume m0 < d or m1 < d so result is small enough for size_t
+ *   We assume m0 <= d or m1 <= d so result is small enough for size_t
  */
 static size_t muldiv(size_t m0, size_t m1, size_t d) {
 	static const size_t HALF = 1 << sizeof(size_t) / 2;
@@ -62,8 +62,6 @@ static size_t muldiv(size_t m0, size_t m1, size_t d) {
 	}
 	return result;
 }
-
-
 
 ZLTextPositionIndicatorInfo::ZLTextPositionIndicatorInfo() {
 }

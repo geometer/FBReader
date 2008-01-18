@@ -39,8 +39,6 @@ public:
 	void setContentsModel(shared_ptr<ZLTextModel> contentsModel);
 	void saveState();
 
-	int pageNumber() const;
-
 	void gotoParagraph(int num, bool last = false);
 	bool canUndoPageMove();
 	void undoPageMove();

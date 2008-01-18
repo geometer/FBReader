@@ -444,3 +444,13 @@ int ZLTextView::textAreaHeight() const {
 		return viewHeight();
 	}
 }
+
+size_t ZLTextView::pageNumber() const {
+	if (empty()) {
+		return 0;
+	}
+	std::vector<size_t>::const_iterator i = nextBreakIterator();
+	size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
+	size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
+	return (myTextSize[endIndex] - myTextSize[startIndex]) / 2048 + 1;
+}

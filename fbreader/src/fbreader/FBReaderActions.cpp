@@ -352,8 +352,8 @@ GotoPageNumber::GotoPageNumber(FBReader &fbreader) : ModeDependentAction(fbreade
 }
 
 bool GotoPageNumber::isEnabled() {
-	return true;
-	//return fbreader().bookTextView().pageNumber() > 0;
+	return false;
+	//return fbreader().bookTextView().pageNumber() > 1;
 }
 
 void GotoPageNumber::run() {
