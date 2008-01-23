@@ -1,7 +1,7 @@
 <!--
   What is automatic configuration file saving and why it's safe
   -->
-<h3><center>Automatic Configuration File Saving</center></h3>
+<h3><center>Configuration Files</center></h3>
 
 <h4>Configuration Files</h4>
 
@@ -17,10 +17,16 @@
 seconds FBReader tries to save any changed configuration data.  You can control this feature by
 opening "Preferences" dialog and going to "Config" page.  There are two options there:<dl>
   <dt>Save State Automatically</dt>
-  <dd>controls whether this option is enabled</dd>
+  <dd>controls whether this option is enabled.  The default value is 'enabled'.</dd>
   <dt>Timeout between Savings, seconds</dt>
-  <dd>controls how often FBReader tries to save the data</dd>
-</dl>
+  <dd>controls how often FBReader check if there is anything to save.  The default value is 5 seconds.</dd>
+</dl></p>
+
+<p>Cover thing 1: FBReader saves the only changed configuration files.  If nothing was changed,
+nothing is written.  <b>Note</b>: if you scroll through a book, then the state of the application is
+changing and, as result, that particular information will be stored.
+
+<p>Cover thing 2: auto saving and jffs.
 
 <!--
   vim:tw=100
