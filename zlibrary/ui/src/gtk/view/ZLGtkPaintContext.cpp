@@ -251,7 +251,12 @@ int ZLGtkPaintContext::stringHeight() const {
 		return 0;
 	}
 	if (myStringHeight == -1) {
-		myStringHeight = pango_font_description_get_size(myFontDescription) / PANGO_SCALE + 2;
+		if (pango_font_description_get_size_is_absolute(myFontDescription)) {
+			myStringHeight = pango_font_description_get_size(myFontDescription) / PANGO_SCALE + 2;
+		} else {
+			static const int resolution = gdk_screen_get_resolution(gdk_screen_get_default());
+			myStringHeight = pango_font_description_get_size(myFontDescription) * resolution / 72 / PANGO_SCALE + 2;
+		}
 	}
 	return myStringHeight;
 }
