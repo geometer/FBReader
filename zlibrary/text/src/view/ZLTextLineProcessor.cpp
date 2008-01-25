@@ -239,7 +239,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 					}
 				}
 				if ((hyphenationPosition == startCharNumber) &&
-						newInfo.End.equalWordNumber(info.RealStart)) {
+						(info.End.wordNumber() <= info.RealStart.wordNumber())) {
 					hyphenationPosition = word.Length - 1;
 					subwordWidth = myStyle.elementWidth(element, startCharNumber);
 				}
