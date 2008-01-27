@@ -22,14 +22,14 @@
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 
-#include "../filesystem/ZLWin32FSManager.h"
+#include "../../../../core/src/win32/filesystem/ZLWin32FSManager.h"
 #include "../time/ZLWin32Time.h"
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../image/ZLWin32ImageManager.h"
 #include "../view/ZLWin32PaintContext.h"
-#include "../message/ZLWin32Message.h"
-#include "../config/ZLWin32Config.h"
-#include "../encoding/ZLWin32EncodingConverter.h"
+#include "../../../../core/src/win32/message/ZLWin32Message.h"
+#include "../../../../core/src/win32/config/ZLWin32Config.h"
+#include "../../../../core/src/win32/encoding/ZLWin32EncodingConverter.h"
 
 const std::string ZLibrary::FileNameDelimiter("\\");
 const std::string ZLibrary::PathDelimiter(";");

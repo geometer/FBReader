@@ -24,7 +24,7 @@
 
 #include "W32Control.h"
 #include "W32ControlCollection.h"
-#include "W32WCHARUtil.h"
+#include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
 static const WORD CLASS_BUTTON = 0x0080;
 static const WORD CLASS_EDIT = 0x0081;

@@ -21,7 +21,7 @@
 
 #include "W32DialogPanel.h"
 #include "W32Control.h"
-#include "W32WCHARUtil.h"
+#include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
 static const int FirstControlId = 2001;
 

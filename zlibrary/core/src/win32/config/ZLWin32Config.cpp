@@ -83,6 +83,17 @@ ZLWin32ConfigGroup *ZLWin32Config::getGroup(const std::string &name, bool create
 	return 0;
 }
 
+void ZLWin32Config::listOptionNames(const std::string &groupName, std::vector<std::string> &names) {
+	std::map<std::string,ZLWin32ConfigGroup*>::const_iterator it = myGroups.find(groupName);
+	if (it == myGroups.end()) {
+		return;
+	}
+	const std::map<std::string,ZLWin32ConfigValue> &values = it->second->myValues;
+	for (std::map<std::string,ZLWin32ConfigValue>::const_iterator jt = values.begin(); jt != values.end(); ++jt) {
+		names.push_back(jt->first);
+	}
+}
+
 void ZLWin32Config::removeGroup(const std::string &name) {
 	std::map<std::string,ZLWin32ConfigGroup*>::iterator it = myGroups.find(name);
 	if (it != myGroups.end()) {

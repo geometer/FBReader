@@ -24,7 +24,7 @@
 #include <ZLDialogManager.h>
 
 #include "W32ColorComboBox.h"
-#include "W32WCHARUtil.h"
+#include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
 static const WORD CLASS_COMBOBOX = 0x0085;
 

@@ -29,7 +29,7 @@
 #include "ZLWin32ApplicationWindow.h"
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../view/ZLWin32ViewWidget.h"
-#include "../w32widgets/W32WCHARUtil.h"
+#include "../../../../core/src/win32/util/W32WCHARUtil.h"
 #include "../time/ZLWin32Time.h"
 
 const int ICON_SIZE = 32;

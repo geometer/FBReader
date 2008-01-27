@@ -24,7 +24,7 @@
 
 #include "W32DialogPanel.h"
 
-#include "W32WCHARUtil.h"
+#include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
 bool W32PropertySheet::ourPropertySheetStarted = false;
 

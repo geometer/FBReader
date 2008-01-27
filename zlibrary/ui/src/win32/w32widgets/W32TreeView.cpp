@@ -24,7 +24,7 @@
 #include <ZLFile.h>
 
 #include "W32TreeView.h"
-#include "W32WCHARUtil.h"
+#include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
 const std::string W32TreeView::ITEM_SELECTED_EVENT = "Tree View: Item Selected";
 const std::string W32TreeView::ITEM_DOUBLE_CLICKED_EVENT = "Tree View: Item Double-Clicked";

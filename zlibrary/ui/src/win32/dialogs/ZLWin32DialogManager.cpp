@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include "../w32widgets/W32WCHARUtil.h"
+#include "../../../../core/src/win32/util/W32WCHARUtil.h"
 #include "ZLWin32DialogManager.h"
 #include "ZLWin32Dialog.h"
 #include "../application/ZLWin32ApplicationWindow.h"
