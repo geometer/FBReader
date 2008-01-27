@@ -20,6 +20,7 @@
 #ifndef __ZLOPTIONS_H__
 #define __ZLOPTIONS_H__
 
+#include <vector>
 #include <string>
 
 #include <ZLColor.h>
@@ -73,6 +74,7 @@ public:
 
 public:
 	static void clearGroup(const std::string &group);
+	static void listOptionNames(const std::string &group, std::vector<std::string> &names);
 	static bool isAutoSavingSupported();
 	static void startAutoSave(int seconds);
 	

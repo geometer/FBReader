@@ -134,6 +134,18 @@ XMLConfigGroup *XMLConfig::getDefaultGroup(const std::string &name) const {
 	return (it != myDefaultGroups.end()) ? it-> second : 0;
 }
 
+void XMLConfig::listOptionNames(const std::string &groupName, std::vector<std::string> &names) {
+	std::map<std::string,XMLConfigGroup*>::iterator it = myGroups.find(groupName);
+	if (it == myGroups.end()) {
+		return;
+	}
+
+	const std::map<std::string,XMLConfigValue> &values = it->second->myValues;
+	for (std::map<std::string,XMLConfigValue>::const_iterator jt = values.begin(); jt != values.end(); ++jt) {
+		names.push_back(jt->first);
+	}
+}
+
 void XMLConfig::removeGroup(const std::string &name) {
 	std::map<std::string,XMLConfigGroup*>::iterator it = myGroups.find(name);
 	if (it != myGroups.end()) {

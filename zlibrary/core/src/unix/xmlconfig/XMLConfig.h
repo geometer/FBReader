@@ -68,6 +68,7 @@ public:
 	XMLConfig();
 	~XMLConfig();
 
+	void listOptionNames(const std::string &groupName, std::vector<std::string> &names);
 	void removeGroup(const std::string &name);
 
 	const std::string &getDefaultValue(const std::string &group, const std::string &name, const std::string &defaultValue) const;

@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <ZLPaintContext.h>
 
 #include "ZLTextStyleOptions.h"
@@ -32,6 +34,9 @@ std::vector<std::string> ZLTextFontFamilyWithBaseOptionEntry::ourAllFamilies;
 
 std::vector<std::string> ZLTextLineSpacingOptionEntry::ourAllValues;
 std::vector<std::string> ZLTextLineSpacingOptionEntry::ourAllValuesPlusBase;
+
+std::vector<std::string> ZLTextLineSpaceOptionEntry::ourAllValues;
+std::vector<std::string> ZLTextLineSpaceOptionEntry::ourAllValuesPlusBase;
 
 ZLTextFontFamilyWithBaseOptionEntry::ZLTextFontFamilyWithBaseOptionEntry(ZLStringOption &option, const ZLResource &resource, const ZLPaintContext &context) : ZLFontFamilyOptionEntry(option, context), myResource(resource) {
 }
@@ -90,6 +95,43 @@ void ZLTextLineSpacingOptionEntry::onAccept(const std::string &value) {
 		for (int i = 5; i <= 20; ++i) {
 			if (value == ourAllValues[i - 5]) {
 				myOption.setValue(i / 10.0);
+			}
+		}
+	}
+}
+
+ZLTextLineSpaceOptionEntry::ZLTextLineSpaceOptionEntry(ZLIntegerOption &option, const ZLResource &resource, bool allowBase) : myResource(resource), myOption(option), myAllowBase(allowBase) {
+	if (ourAllValuesPlusBase.empty()) {
+		for (int i = 5; i <= 20; ++i) {
+			ourAllValues.push_back(std::string() + (char)(i / 10 + '0') + '.' + (char)(i % 10 + '0'));
+		}
+		ourAllValuesPlusBase.push_back(myResource[KEY_UNCHANGED].value());
+		ourAllValuesPlusBase.insert(ourAllValuesPlusBase.end(), ourAllValues.begin(), ourAllValues.end());
+	}
+}
+
+ZLTextLineSpaceOptionEntry::~ZLTextLineSpaceOptionEntry() {
+}
+
+const std::vector<std::string> &ZLTextLineSpaceOptionEntry::values() const { return myAllowBase ? ourAllValuesPlusBase : ourAllValues; }
+
+const std::string &ZLTextLineSpaceOptionEntry::initialValue() const {
+	const int value = myOption.value();
+	if (value == -1) {
+		return ourAllValuesPlusBase[0];
+	}
+	const int index = std::max(0, std::min(15, (value + 5) / 10 - 5));
+	return ourAllValues[index];
+}
+
+void ZLTextLineSpaceOptionEntry::onAccept(const std::string &value) {
+	if (value == ourAllValuesPlusBase[0]) {
+		myOption.setValue(-1);
+	} else {
+		for (int i = 5; i <= 20; ++i) {
+			if (value == ourAllValues[i - 5]) {
+				myOption.setValue(10 * i);
+				break;
 			}
 		}
 	}

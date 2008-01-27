@@ -58,6 +58,8 @@ public:
 	virtual double lineSpace() const = 0;
 
 	virtual bool allowHyphenations() const = 0;
+
+	int lineSpacePercent() const;
 };
 
 typedef shared_ptr<ZLTextStyle> ZLTextStylePtr;
@@ -107,6 +109,7 @@ public:
 	ZLBooleanOption ItalicOption;
 	ZLIntegerOption AlignmentOption;
 	ZLDoubleOption LineSpaceOption;
+	ZLIntegerOption LineSpacePercentOption;
 };
 
 class ZLTextStyleDecoration {
@@ -165,6 +168,7 @@ public:
 	ZLIntegerOption AlignmentOption;
 
 	ZLDoubleOption LineSpaceOption;
+	ZLIntegerOption LineSpacePercentOption;
 };
 
 class ZLTextDecoratedStyle : public ZLTextStyle {
@@ -323,6 +327,7 @@ friend class ZLTextStyleReader;
 
 inline ZLTextStyle::ZLTextStyle() {}
 inline ZLTextStyle::~ZLTextStyle() {}
+inline int ZLTextStyle::lineSpacePercent() const { return (int)(lineSpace() * 100); }
 
 inline bool ZLTextBaseStyle::isDecorated() const { return false; }
 inline const std::string &ZLTextBaseStyle::fontFamily() const { return FontFamilyOption.value(); }
@@ -336,7 +341,7 @@ inline int ZLTextBaseStyle::rightIndent() const { return 0; }
 inline int ZLTextBaseStyle::firstLineIndentDelta() const { return 0; }
 inline int ZLTextBaseStyle::verticalShift() const { return 0; }
 inline ZLTextAlignmentType ZLTextBaseStyle::alignment() const { return (ZLTextAlignmentType)AlignmentOption.value(); }
-inline double ZLTextBaseStyle::lineSpace() const { return LineSpaceOption.value(); }
+inline double ZLTextBaseStyle::lineSpace() const { return LineSpacePercentOption.value() / 100.0; }
 inline bool ZLTextBaseStyle::allowHyphenations() const { return true; }
 
 inline ZLTextStyleDecoration::~ZLTextStyleDecoration() {}
@@ -385,7 +390,10 @@ inline int ZLTextFullDecoratedStyle::spaceAfter() const { return myDecoration.Sp
 inline int ZLTextFullDecoratedStyle::leftIndent() const { return base()->leftIndent() + myDecoration.LeftIndentOption.value(); }
 inline int ZLTextFullDecoratedStyle::rightIndent() const { return base()->rightIndent() + myDecoration.RightIndentOption.value(); }
 inline int ZLTextFullDecoratedStyle::verticalShift() const { return base()->verticalShift() + myDecoration.VerticalShiftOption.value(); }
-inline double ZLTextFullDecoratedStyle::lineSpace() const { double space = myDecoration.LineSpaceOption.value(); return (space == 0) ? base()->lineSpace() : space; }
+inline double ZLTextFullDecoratedStyle::lineSpace() const {
+	const int spacing = myDecoration.LineSpacePercentOption.value();
+	return (spacing == -1) ? base()->lineSpace() : (spacing / 100.0);
+}
 
 inline ZLTextStylePtr ZLTextStyleCollection::baseStylePtr() const { return myBaseStyle; }
 inline ZLTextBaseStyle &ZLTextStyleCollection::baseStyle() const { return (ZLTextBaseStyle&)*myBaseStyle; }

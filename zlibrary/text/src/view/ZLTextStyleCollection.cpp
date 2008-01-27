@@ -49,8 +49,7 @@ public:
 	void startElementHandler(const char *tag, const char **attributes);
 
 private:
-	static int intValue(const char **attributes, const char *name);
-	static double doubleValue(const char **attributes, const char *name);
+	static int intValue(const char **attributes, const char *name, int defaultValue = 0);
 	static bool booleanValue(const char **attributes, const char *name);
 	static ZLBoolean3 b3Value(const char **attributes, const char *name);
 
@@ -60,14 +59,9 @@ private:
 
 static const std::string TRUE_STRING = "true";
 
-inline int ZLTextStyleReader::intValue(const char **attributes, const char *name) {
+inline int ZLTextStyleReader::intValue(const char **attributes, const char *name, int defaultValue) {
 	const char *stringValue = attributeValue(attributes, name);
-	return (stringValue == 0) ? 0 : atoi(stringValue);
-}
-
-inline double ZLTextStyleReader::doubleValue(const char **attributes, const char *name) {
-	const char *stringValue = attributeValue(attributes, name);
-	return (stringValue == 0) ? 0 : atof(stringValue);
+	return (stringValue == 0) ? defaultValue : atoi(stringValue);
 }
 
 inline bool ZLTextStyleReader::booleanValue(const char **attributes, const char *name) {
@@ -133,7 +127,8 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 						alignment = ALIGN_JUSTIFY;
 					}
 				}
-				double lineSpace = doubleValue(attributes, "lineSpace");
+				const int lineSpacingPercent = intValue(attributes, "lineSpacingPercent", -1);
+				const double lineSpace = (lineSpacingPercent == -1) ? 0.0 : (lineSpacingPercent / 100.0);
 
 				decoration = new ZLTextFullStyleDecoration(name, fontSizeDelta, bold, italic, spaceBefore, spaceAfter, leftIndent, rightIndent, firstLineIndentDelta, verticalShift, alignment, lineSpace, allowHyphenations);
 			}

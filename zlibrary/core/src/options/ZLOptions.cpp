@@ -110,6 +110,10 @@ void ZLOption::clearGroup(const std::string &groupName) {
 	ourConfig->removeGroup(groupName);
 }
 
+void ZLOption::listOptionNames(const std::string &groupName, std::vector<std::string> &names) {
+	ourConfig->listOptionNames(groupName, names);
+}
+
 void ZLOption::startAutoSave(int seconds) {
 	ourConfig->startAutoSave(seconds);
 }

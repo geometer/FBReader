@@ -106,13 +106,13 @@ int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
 			if (myWordHeight == -1) {
-				myWordHeight = (int)(context().stringHeight() * textStyle()->lineSpace()) + textStyle()->verticalShift();
+				myWordHeight = context().stringHeight() * textStyle()->lineSpacePercent() / 100 + textStyle()->verticalShift();
 			}
 			return myWordHeight;
 		case ZLTextElement::IMAGE_ELEMENT:
 			return
 				context().imageHeight(((const ZLTextImageElement&)element).image()) +
-				std::max((int)(context().stringHeight() * (textStyle()->lineSpace() - 1)), 3);
+				std::max(context().stringHeight() * (textStyle()->lineSpacePercent() - 100) / 100, 3);
 		case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
 			return - textStyle()->spaceAfter();
 		case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:

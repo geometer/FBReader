@@ -69,6 +69,7 @@ public:
 	ZLWin32Config();
 	~ZLWin32Config();
 
+	void listOptionNames(const std::string &groupName, std::vector<std::string> &names);
 	void removeGroup(const std::string &name);
 
 	const std::string &getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const;

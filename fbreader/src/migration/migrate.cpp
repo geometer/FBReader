@@ -24,6 +24,7 @@
 
 void migrateFromOldVersions() {
 	Migration_0_8_11().doMigration();
+	Migration_0_8_13().doMigration();
 
 	ZLStringOption(FBCategoryKey::SYSTEM, "Version", "FBReaderVersion", "0").setValue(VERSION);
 }

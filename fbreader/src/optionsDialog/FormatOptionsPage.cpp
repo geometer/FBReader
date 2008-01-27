@@ -62,7 +62,7 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 		ZLTextBaseStyle &baseStyle = collection.baseStyle();
 
 		registerEntries(dialogTab,
-			KEY_LINESPACING, new ZLTextLineSpacingOptionEntry(baseStyle.LineSpaceOption, dialogTab.resource(KEY_LINESPACING), false),
+			KEY_LINESPACING, new ZLTextLineSpaceOptionEntry(baseStyle.LineSpacePercentOption, dialogTab.resource(KEY_LINESPACING), false),
 			KEY_DUMMY, 0,//new ZLSimpleSpinOptionEntry("First Line Indent", baseStyle.firstLineIndentDeltaOption(), -300, 300, 1),
 			name
 		);
@@ -93,7 +93,7 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 			);
 			
 			registerEntries(dialogTab,
-				KEY_LINESPACING, new ZLTextLineSpacingOptionEntry(decoration->LineSpaceOption, dialogTab.resource(KEY_LINESPACING), true),
+				KEY_LINESPACING, new ZLTextLineSpaceOptionEntry(decoration->LineSpacePercentOption, dialogTab.resource(KEY_LINESPACING), true),
 				KEY_FIRSTLINEINDENT, new ZLSimpleSpinOptionEntry(decoration->FirstLineIndentDeltaOption, 1),
 				name
 			);

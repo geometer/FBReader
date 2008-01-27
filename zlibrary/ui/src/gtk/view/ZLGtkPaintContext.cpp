@@ -19,6 +19,8 @@
 
 #include <algorithm>
 
+#include <gdk/gdkscreen.h>
+
 #include <ZLUnicodeUtil.h>
 #include <ZLImage.h>
 
@@ -251,12 +253,16 @@ int ZLGtkPaintContext::stringHeight() const {
 		return 0;
 	}
 	if (myStringHeight == -1) {
+#if GTK_CHECK_VERSION(2,10,0)
 		if (pango_font_description_get_size_is_absolute(myFontDescription)) {
 			myStringHeight = pango_font_description_get_size(myFontDescription) / PANGO_SCALE + 2;
 		} else {
 			static const int resolution = gdk_screen_get_resolution(gdk_screen_get_default());
 			myStringHeight = pango_font_description_get_size(myFontDescription) * resolution / 72 / PANGO_SCALE + 2;
 		}
+#else // GTK_CHECK_VERSION(2,10,0)
+		myStringHeight = pango_font_description_get_size(myFontDescription) / PANGO_SCALE + 2;
+#endif // GTK_CHECK_VERSION(2,10,0)
 	}
 	return myStringHeight;
 }
