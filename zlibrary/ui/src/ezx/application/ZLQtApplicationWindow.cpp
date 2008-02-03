@@ -38,10 +38,11 @@ class MyMenuBar : public QMenuBar, public ZLQtOptionViewHolder {
 
 public:
 	MyMenuBar(QWidget *parent, ZLQtApplicationWindow &window) : QMenuBar(parent), myWindow(window), myIndex(-1) {
-    QPalette pal(palette());
-    pal.setColor(QColorGroup::Button, QColor(77, 77, 77));
-    setPalette(pal);
-  }
+		QPalette pal(palette());
+		pal.setColor(QColorGroup::Button, QColor(77, 77, 77));
+		setPalette(pal);
+		setMinimumHeight(1);
+	}
 	~MyMenuBar();
 	void setItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
 	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
@@ -80,8 +81,8 @@ ToolBarButton::~ToolBarButton() {
 
 QPixmap &ToolBarButton::pixmap() {
 	if (myReleasedPixmap == 0) {
-    myReleasedPixmap = new QPixmap((std::string(IMAGEDIR)
-                + ZLibrary::FileNameDelimiter
+		myReleasedPixmap = new QPixmap((std::string(IMAGEDIR)
+								+ ZLibrary::FileNameDelimiter
 								+ ZLibrary::ApplicationName()
 								+ ZLibrary::FileNameDelimiter
 								+ myButton.iconName() + ".png").c_str());
@@ -112,25 +113,29 @@ bool ToolBarButton::toggle() {
 }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *a) : ZLApplicationWindow(a) {
-  QWallpaper::setAppWallpaperMode(QWallpaper::Off);
+	QWallpaper::setAppWallpaperMode(QWallpaper::Off);
 
 	myMainWindow = new MyMainWindow(this);
-  
+
 	myFullScreen = false;
 	myTitleHeight = -1;
 
 	myVerticalDelta = -1;
 
 	myToolBar = new MyMenuBar(myMainWindow, *this);
-	myMenu = new QPopupMenu(myToolBar);
-  QFont f(qApp->font());
-  f.setPointSize(15);
-  myMenu->setFont(f);
-  cst = 0;
-	myToolBar->insertItem(QString::null, myMenu, -1, 0);
+	myMenu = new QPopupMenu(myMainWindow);
+	QFont f(qApp->font());
+	f.setPointSize(15);
+	myMenu->setFont(f);
+	myCST = 0;
 
-	((ZApplication*)qApp)->showMainWidget(myMainWindow);
+	qApp->setMainWidget(myMainWindow);
+	myMainWindow->show();
 	myMainWindow->setWFlags(myMainWindow->getWFlags() | QObject::WStyle_Customize);
+}
+
+ZLQtApplicationWindow::~ZLQtApplicationWindow() {
+	delete myMainWindow;
 }
 
 MyMenuBar::~MyMenuBar() {
@@ -206,9 +211,9 @@ ZLQtApplicationWindow::MenuUpdater::MenuUpdater(ZLQtApplicationWindow &window) :
 
 void ZLQtApplicationWindow::MenuUpdater::processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu) {
 	QPopupMenu *qmenu = new QPopupMenu(myMenuStack.top());
-  QFont f(qApp->font());
-  f.setPointSize(15);
-  qmenu->setFont(f);
+	QFont f(qApp->font());
+	f.setPointSize(15);
+	qmenu->setFont(f);
 	myMenuStack.top()->insertItem(::qtString(submenu.menuName()), qmenu);
 	myMenuStack.push(qmenu);
 }
@@ -284,7 +289,7 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr 
 
 void ZLQtApplicationWindow::refresh() {
 	if (((MyMenuBar*)myToolBar)->myIndex == -1) {
-		((MyMenuBar*)myToolBar)->myIndex = 1;
+		((MyMenuBar*)myToolBar)->myIndex = 0;
 		ZLApplicationWindow::refresh();
 		((MyMenuBar*)myToolBar)->myIndex = -1;
 	}
@@ -310,20 +315,20 @@ void MyMainWindow::keyPressEvent(QKeyEvent *event) {
 }
 
 void MyMainWindow::focusInEvent(QFocusEvent*) {
-  if (myApplicationWindow == 0) return;
-  if (isDeactivated) {
-    myApplicationWindow->cst->hide();
-    myApplicationWindow->cst->show();
-    isDeactivated = false;
-  }
+	if (myApplicationWindow == 0) return;
+	if (myIsDeactivated) {
+		myApplicationWindow->myCST->hide();
+		myApplicationWindow->myCST->show();
+		myIsDeactivated = false;
+	}
 }
 
 void MyMainWindow::focusOutEvent(QFocusEvent *) {
-  if (myApplicationWindow == 0) return;
-  if (myApplicationWindow->isFullscreen()) {
-    myApplicationWindow->setFullscreen(false);
-    isDeactivated = true;
-  }
+	if (myApplicationWindow == 0) return;
+	if (myApplicationWindow->isFullscreen()) {
+		myApplicationWindow->setFullscreen(false);
+		myIsDeactivated = true;
+	}
 }
 
 int ZLQtApplicationWindow::verticalAdjustment() {
@@ -363,11 +368,11 @@ void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
 	myFullScreen = fullscreen;
 	if (myFullScreen) {
 		myToolBar->hide();
-    cst->hide();
+		myCST->hide();
 		myMainWindow->showFullScreen();
 	} else {
 		myToolBar->show();
-    cst->show();
+		myCST->show();
 		myMainWindow->showNormal();
 	}
 }
@@ -387,15 +392,13 @@ void MyMainWindow::closeEvent(QCloseEvent *event) {
 	}
 }
 
-#if 0
 void MyMainWindow::doActionQuit() {
-  myApplicationWindow->application().doActionQuit();
+	myApplicationWindow->application().closeView();
 }
 
 void MyMainWindow::connectQuitButton(UTIL_CST *cst) {
-  connect(cst->getRightBtn(), SIGNAL(clicked()), this, SLOT(doActionQuit()));
+	connect(cst->getRightBtn(), SIGNAL(clicked()), this, SLOT(doActionQuit()));
 }
-#endif
 
 void ZLQtApplicationWindow::fullScreenWorkaround() {
 	if (myFullScreen) {
@@ -416,21 +419,19 @@ void MyMainWindow::setDocument(const QString &fileName) {
 }
 
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
-  QWidget *main = new QWidget(myMainWindow);
+	QWidget *main = new QWidget(myMainWindow);
 	ZLQtViewWidget *viewWidget = new ZLQtViewWidget(main, *this);
 
-  QVBoxLayout *layout = new QVBoxLayout(main);
-  layout->addWidget(viewWidget->widget(), 1);
+	QVBoxLayout *layout = new QVBoxLayout(main);
+	layout->addWidget(viewWidget->widget(), 1);
 
-  cst = new UTIL_CST(main, ZLibrary::ApplicationName().c_str());
-  cst->setFixedSize(ZGlobal::getCstR().size());
-  layout->addWidget(cst);
-  cst->getMidBtn()->setEnabled(false);
-  cst->getLeftBtn()->setPopup(myMenu);
-  cst->getRightBtn()->setEnabled(false);
-#if 0
-  myMainWindow->connectQuitButton(cst);
-#endif
+	myCST = new UTIL_CST(main, ZLibrary::ApplicationName().c_str(), "CST_Menu", "CST_Exit");
+	myCST->setFixedSize(ZGlobal::getCstR().size());
+	layout->addWidget(myCST);
+	myCST->getMidBtn()->setEnabled(false);
+	myCST->getLeftBtn()->setPopup(myMenu);
+	myMainWindow->connectQuitButton(myCST);
+
 	myMainWindow->setCentralWidget(main);
 	return viewWidget;
 }

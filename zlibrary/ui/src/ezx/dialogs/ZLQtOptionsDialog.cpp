@@ -106,7 +106,6 @@ void ZLQtOptionsDialog::selectTab(int i) {
 }
 
 bool ZLQtOptionsDialog::runInternal() {
-	ZLQtDialogManager::ourDialogStarted = true;
 	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 		((ZLQtDialogContent&)**it).close();
 	}

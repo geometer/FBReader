@@ -41,6 +41,7 @@ private:
 		void mouseReleaseEvent(QMouseEvent *event);
 		void mouseMoveEvent(QMouseEvent *event);
     void timerEvent(QTimerEvent *event);
+    void leaveEvent(QEvent *event);
 
 		int x(const QMouseEvent *event) const;
 		int y(const QMouseEvent *event) const;
@@ -50,6 +51,7 @@ private:
     int myCurrentX;
     int myCurrentY;
     int myTimerId;
+		bool myWasLeaved;
 	};
 	
 public:

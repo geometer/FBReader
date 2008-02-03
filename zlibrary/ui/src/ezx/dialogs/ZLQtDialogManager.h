@@ -29,7 +29,6 @@ class ZLQtDialogManager : public ZLDialogManager {
 
 public:
 	static void createInstance() { ourInstance = new ZLQtDialogManager(); }
-	static bool ourDialogStarted;
 
 private:
 	ZLQtDialogManager() : myApplicationWindow(0) {}

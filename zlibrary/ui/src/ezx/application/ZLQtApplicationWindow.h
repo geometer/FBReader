@@ -43,41 +43,37 @@ class MyMainWindow : public QMainWindow {
 
 public:
 	MyMainWindow(ZLQtApplicationWindow *applicationWindow): QMainWindow(),
-        myApplicationWindow(applicationWindow) {
-    setGeometry(ZGlobal::mapFromGlobalR(this, ZGlobal::getHomeR()));
-    isDeactivated = false;
-  }
-  
+				myApplicationWindow(applicationWindow) {
+		setGeometry(ZGlobal::mapFromGlobalR(this, ZGlobal::getHomeR()));
+		myIsDeactivated = false;
+	}
+
 	WFlags getWFlags() { return QMainWindow::getWFlags(); }
 	void setWFlags(WFlags flags) { QMainWindow::setWFlags(flags); }
 
 	void focusInEvent(QFocusEvent *event);
-  void focusOutEvent(QFocusEvent *event);
+	void focusOutEvent(QFocusEvent *event);
 	void resizeEvent(QResizeEvent *event);
 	void closeEvent(QCloseEvent *event);
 	void keyPressEvent(QKeyEvent *event);
-
-#if 0
-  //void connectQuitButton(UTIL_CST *cst);
-#endif
+	void connectQuitButton(UTIL_CST *cst);
 
 public slots:
-#if 0
-  //void doActionQuit();
-#endif
+	void doActionQuit();
 
 private slots:
 	void setDocument(const QString &fileName);
 
 private:
 	ZLQtApplicationWindow *myApplicationWindow;
-  bool isDeactivated;
+	bool myIsDeactivated;
 };
 
 class ZLQtApplicationWindow : public ZLApplicationWindow {
 
 public:
 	ZLQtApplicationWindow(ZLApplication *application);
+	~ZLQtApplicationWindow();
 
 	void fullScreenWorkaround();
 	int verticalAdjustment();
@@ -151,7 +147,7 @@ private:
 	class MyMainWindow *myMainWindow;
 	QMenuBar *myToolBar;
 	QPopupMenu *myMenu;
-  UTIL_CST *cst;
+  UTIL_CST *myCST;
 
 friend class MyMainWindow;
 friend class MenuMaskCalculator;

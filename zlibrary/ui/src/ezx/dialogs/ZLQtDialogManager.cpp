@@ -32,8 +32,6 @@
 
 #include "../application/ZLQtApplicationWindow.h"
 
-bool ZLQtDialogManager::ourDialogStarted = false;
-
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myApplicationWindow = new ZLQtApplicationWindow(application);
 }
@@ -55,21 +53,18 @@ shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) c
 }
 
 void ZLQtDialogManager::informationBox(const ZLResourceKey&, const std::string &message) const {
-	ourDialogStarted = true;
 	RES_ICON_Reader reader;
 	ZMessageBox::information(myApplicationWindow->mainWindow(), reader.getIcon("Dialog_Exclamatory_Mark.gif", true), ::qtString(message), ::qtButtonName(OK_BUTTON));
 	fullScreenWorkaround();
 }
 
 void ZLQtDialogManager::errorBox(const ZLResourceKey&, const std::string &message) const {
-	ourDialogStarted = true;
 	RES_ICON_Reader reader;
 	ZMessageBox::information(myApplicationWindow->mainWindow(), reader.getIcon("Dialog_Error.gif", true), ::qtString(message), ::qtButtonName(OK_BUTTON));
 	fullScreenWorkaround();
 }
 
 int ZLQtDialogManager::questionBox(const ZLResourceKey&, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
-	ourDialogStarted = true;
 	RES_ICON_Reader reader;
 	int code = ZMessageBox::information(myApplicationWindow->mainWindow(), reader.getIcon("Dialog_Question_Mark.gif", true), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
 	fullScreenWorkaround();
@@ -77,14 +72,12 @@ int ZLQtDialogManager::questionBox(const ZLResourceKey&, const std::string &mess
 }
 
 bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
-	ourDialogStarted = true;
 	bool result = ZLQtSelectionDialog(dialogTitle(key), handler).run();
 	fullScreenWorkaround();
 	return result;
 }
 
 void ZLQtDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
-	ourDialogStarted = true;
 	ZLQtWaitMessage waitMessage(waitMessageText(key));
 	runnable.run();
 	fullScreenWorkaround();

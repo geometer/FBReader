@@ -30,7 +30,7 @@
 #include "../application/ZLQtApplicationWindow.h"
 #include "../dialogs/ZLQtDialogManager.h"
 
-ZLQtViewWidget::ZLQtViewWidgetInternal::ZLQtViewWidgetInternal(QWidget *parent, ZLQtViewWidget &holder) : QWidget(parent), myHolder(holder), myTimerId(-1) {
+ZLQtViewWidget::ZLQtViewWidgetInternal::ZLQtViewWidgetInternal(QWidget *parent, ZLQtViewWidget &holder) : QWidget(parent), myHolder(holder), myTimerId(0), myWasLeaved(false) {
 	setBackgroundMode(NoBackground);
 }
 
@@ -82,36 +82,41 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::paintEvent(QPaintEvent*) {
 }
 
 void ZLQtViewWidget::ZLQtViewWidgetInternal::mousePressEvent(QMouseEvent *event) {
-  if (myTimerId >= 0) {
-    killTimer(myTimerId);
-    myTimerId = -1;
-  }
+	myWasLeaved = false;
+	if (myTimerId > 0) {
+		killTimer(myTimerId);
+		myTimerId = 0;
+	}
 
-  myCurrentX = x(event);
-  myCurrentY = y(event);
+	myCurrentX = x(event);
+	myCurrentY = y(event);
 
-  myHolder.view()->onStylusMove(myCurrentX, myCurrentY);
+	myHolder.view()->onStylusMove(myCurrentX, myCurrentY);
 	myHolder.view()->onStylusPress(myCurrentX, myCurrentY);
 
-  myTimerId = startTimer(50);
-}
-
-void ZLQtViewWidget::ZLQtViewWidgetInternal::timerEvent(QTimerEvent*) {
-	if (ZLQtDialogManager::ourDialogStarted) {
-		killTimer(myTimerId);
-		myTimerId = -1;
-		ZLQtDialogManager::ourDialogStarted = false;
-	} else {
-  	myHolder.view()->onStylusPress(myCurrentX, myCurrentY);
+	if (!myWasLeaved) {
+		myTimerId = startTimer(50);
 	}
 }
 
+void ZLQtViewWidget::ZLQtViewWidgetInternal::timerEvent(QTimerEvent*) {
+	myHolder.view()->onStylusPress(myCurrentX, myCurrentY);
+}
+
+void ZLQtViewWidget::ZLQtViewWidgetInternal::leaveEvent(QEvent*) {
+	if (myTimerId > 0) {
+		killTimer(myTimerId);
+		myTimerId = 0;
+	}
+	myWasLeaved = true;
+}
+
 void ZLQtViewWidget::ZLQtViewWidgetInternal::mouseReleaseEvent(QMouseEvent *event) {
-  if (myTimerId >= 0) {
-    killTimer(myTimerId);
-    myTimerId = -1;
-  }
-  myHolder.view()->onStylusRelease(x(event), y(event));
+	if (myTimerId > 0) {
+		killTimer(myTimerId);
+		myTimerId = 0;
+	}
+	myHolder.view()->onStylusRelease(x(event), y(event));
 }
 
 void ZLQtViewWidget::ZLQtViewWidgetInternal::mouseMoveEvent(QMouseEvent *event) {
@@ -126,8 +131,8 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::mouseMoveEvent(QMouseEvent *event) 
 			break;
 	}
 
-  myCurrentX = x(event);
-  myCurrentY = y(event);
+	myCurrentX = x(event);
+	myCurrentY = y(event);
 }
 
 int ZLQtViewWidget::ZLQtViewWidgetInternal::x(const QMouseEvent *event) const {
