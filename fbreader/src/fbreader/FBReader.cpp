@@ -338,6 +338,8 @@ void FBReader::setMode(ViewMode mode) {
 	myPreviousMode = myMode;
 	myMode = mode;
 
+	setViewFinal(myMode == BOOK_TEXT_MODE);
+
 	switch (myMode) {
 		case BOOK_TEXT_MODE:
 			setView(myBookTextView);

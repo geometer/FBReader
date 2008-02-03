@@ -356,6 +356,11 @@ public:
 	virtual bool closeView();
 	virtual void openFile(const std::string &fileName);
 
+	// TODO in 1.0: replace by virtual method
+	bool isViewFinal() const;
+	// TODO in 1.0: remove
+	void setViewFinal(bool final);
+
 	void refreshWindow();
 	void presentWindow();
 
@@ -384,6 +389,7 @@ private:
 	class ZLApplicationWindow *myWindow;
 	ZLTime myLastKeyActionTime;
 	shared_ptr<ZLMessageHandler> myPresentWindowHandler;
+	bool myIsViewFinal;
 
 friend class ZLApplicationWindow;
 friend class MenuVisitor;

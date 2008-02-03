@@ -46,7 +46,8 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	ConfigAutoSaveTimeoutOption(ZLCategoryKey::CONFIG, CONFIG, TIMEOUT, 1, 6000, 30),
 	KeyDelayOption(ZLCategoryKey::CONFIG, "Options", "KeyDelay", 0, 5000, 250),
 	myViewWidget(0),
-	myWindow(0) {
+	myWindow(0),
+	myIsViewFinal(true) {
 	myContext = ZLibrary::createContext();
 	if (ConfigAutoSavingOption.value()) {
 		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
@@ -347,4 +348,12 @@ void ZLApplicationWindow::onButtonPress(ZLApplication::Toolbar::ButtonItem &butt
 		myToggleButtonLock = false;
 	}
 	application().doAction(button.actionId());
+}
+
+bool ZLApplication::isViewFinal() const {
+	return myIsViewFinal;
+}
+
+void ZLApplication::setViewFinal(bool final) {
+	myIsViewFinal = final;
 }

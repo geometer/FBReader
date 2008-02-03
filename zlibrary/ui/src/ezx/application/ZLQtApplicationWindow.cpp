@@ -288,6 +288,10 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr 
 }
 
 void ZLQtApplicationWindow::refresh() {
+	static const QString CLOSE_BUTTON = "CST_Exit";
+	static const QString BACK_BUTTON = "CST_Back";
+	myCST->getRightBtn()->setResourceID(application().isViewFinal() ? CLOSE_BUTTON : BACK_BUTTON);
+
 	if (((MyMenuBar*)myToolBar)->myIndex == -1) {
 		((MyMenuBar*)myToolBar)->myIndex = 0;
 		ZLApplicationWindow::refresh();
