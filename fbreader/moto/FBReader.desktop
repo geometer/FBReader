@@ -1,0 +1,9 @@
+[Desktop Entry]
+Comment=E-book reader
+Exec=bin/FBReader.sh
+BigIcon=pics/FBReader-b.png
+Icon=pics/FBReader-s.png
+Version=0.8.11
+Type=Application
+Name=FBReader
+Shared=2

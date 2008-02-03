@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <group name="Options">
+    <option name="BookPath" value="/mmc/mmca1/books/fiction"/>
+  </group>
+	<group name="TapScrolling">
+		<option name="Enabled" value="false"/>
+	</group>
+</config>
