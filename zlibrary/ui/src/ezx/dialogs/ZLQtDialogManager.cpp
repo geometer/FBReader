@@ -46,7 +46,7 @@ shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) c
 
 void ZLQtDialogManager::informationBox(const ZLResourceKey&, const std::string &message) const {
 	RES_ICON_Reader reader;
-	ZMessageBox::information(myApplicationWindow->mainWindow(), reader.getIcon("Dialog_Exclamatory_Mark.gif", true), ::qtString(message), ::qtButtonName(OK_BUTTON));
+	ZMessageBox::information(myApplicationWindow->mainWindow(), reader.getIcon("Dialog_Complete.gif", true), ::qtString(message), ::qtButtonName(OK_BUTTON));
 }
 
 void ZLQtDialogManager::errorBox(const ZLResourceKey&, const std::string &message) const {

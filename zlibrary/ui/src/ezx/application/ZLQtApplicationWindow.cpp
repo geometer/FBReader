@@ -31,7 +31,7 @@
 #include "../view/ZLQtViewWidget.h"
 #include "../../qt/util/ZLQtKeyUtil.h"
 #include "../dialogs/ZLQtUtil.h"
-#include "../../qtopia/optionView/ZLQtOptionViewHolder.h"
+#include "../optionView/ZLQtOptionViewHolder.h"
 #include "../../../../core/src/dialogs/ZLOptionView.h"
 
 class MyMenuBar : public QMenuBar, public ZLQtOptionViewHolder {
