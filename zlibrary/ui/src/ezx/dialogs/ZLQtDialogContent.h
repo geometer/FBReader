@@ -24,7 +24,7 @@
 
 #include <ZLDialogContent.h>
 
-#include "../optionView/ZLQtOptionViewHolder.h"
+#include "../../qtopia/optionView/ZLQtOptionViewHolder.h"
 
 class QWidget;
 class QGridLayout;

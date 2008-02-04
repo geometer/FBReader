@@ -1,1 +1,0 @@
-SRCMOC = ZLQtOptionView.moc.cpp

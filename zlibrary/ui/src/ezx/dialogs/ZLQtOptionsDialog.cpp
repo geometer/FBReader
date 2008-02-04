@@ -109,9 +109,7 @@ bool ZLQtOptionsDialog::runInternal() {
 	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 		((ZLQtDialogContent&)**it).close();
 	}
-	bool code = exec();
-	((ZLQtDialogManager&)ZLQtDialogManager::instance()).fullScreenWorkaround();
-	return code;
+	return exec();
 }
 
 void ZLQtOptionsDialog::keyPressEvent(QKeyEvent *event) {

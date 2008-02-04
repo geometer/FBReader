@@ -36,14 +36,6 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 	myApplicationWindow = new ZLQtApplicationWindow(application);
 }
 
-void ZLQtDialogManager::fullScreenWorkaround() const {
-#if 0
-	if (myApplicationWindow != 0) {
-		myApplicationWindow->fullScreenWorkaround();
-	}
-#endif
-}
-
 shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool) const {
   return new ZLQtOptionsDialog(resource()[key], applyAction);
 }
@@ -55,32 +47,25 @@ shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) c
 void ZLQtDialogManager::informationBox(const ZLResourceKey&, const std::string &message) const {
 	RES_ICON_Reader reader;
 	ZMessageBox::information(myApplicationWindow->mainWindow(), reader.getIcon("Dialog_Exclamatory_Mark.gif", true), ::qtString(message), ::qtButtonName(OK_BUTTON));
-	fullScreenWorkaround();
 }
 
 void ZLQtDialogManager::errorBox(const ZLResourceKey&, const std::string &message) const {
 	RES_ICON_Reader reader;
 	ZMessageBox::information(myApplicationWindow->mainWindow(), reader.getIcon("Dialog_Error.gif", true), ::qtString(message), ::qtButtonName(OK_BUTTON));
-	fullScreenWorkaround();
 }
 
 int ZLQtDialogManager::questionBox(const ZLResourceKey&, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
 	RES_ICON_Reader reader;
-	int code = ZMessageBox::information(myApplicationWindow->mainWindow(), reader.getIcon("Dialog_Question_Mark.gif", true), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
-	fullScreenWorkaround();
-	return code;
+	return ZMessageBox::information(myApplicationWindow->mainWindow(), reader.getIcon("Dialog_Question_Mark.gif", true), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
 }
 
 bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
-	bool result = ZLQtSelectionDialog(dialogTitle(key), handler).run();
-	fullScreenWorkaround();
-	return result;
+	return ZLQtSelectionDialog(dialogTitle(key), handler).run();
 }
 
 void ZLQtDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
 	ZLQtWaitMessage waitMessage(waitMessageText(key));
 	runnable.run();
-	fullScreenWorkaround();
 }
 
 bool ZLQtDialogManager::isClipboardSupported(ClipboardType type) const {

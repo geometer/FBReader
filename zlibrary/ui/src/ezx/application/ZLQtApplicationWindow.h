@@ -75,7 +75,6 @@ public:
 	ZLQtApplicationWindow(ZLApplication *application);
 	~ZLQtApplicationWindow();
 
-	void fullScreenWorkaround();
 	int verticalAdjustment();
 
 	QMainWindow *mainWindow();
@@ -148,6 +147,7 @@ private:
 	QMenuBar *myToolBar;
 	QPopupMenu *myMenu;
   UTIL_CST *myCST;
+	QString myRightButtonResource;
 
 friend class MyMainWindow;
 friend class MenuMaskCalculator;

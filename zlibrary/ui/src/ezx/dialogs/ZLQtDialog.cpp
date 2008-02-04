@@ -76,7 +76,5 @@ void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
 
 bool ZLQtDialog::run() {
 	((ZLQtDialogContent*)myTab)->close();
-	bool code = exec();
-	((ZLQtDialogManager&)ZLQtDialogManager::instance()).fullScreenWorkaround();
-	return code;
+	return exec();
 }

@@ -31,7 +31,7 @@
 #include "../view/ZLQtViewWidget.h"
 #include "../../qt/util/ZLQtKeyUtil.h"
 #include "../dialogs/ZLQtUtil.h"
-#include "../optionView/ZLQtOptionViewHolder.h"
+#include "../../qtopia/optionView/ZLQtOptionViewHolder.h"
 #include "../../../../core/src/dialogs/ZLOptionView.h"
 
 class MyMenuBar : public QMenuBar, public ZLQtOptionViewHolder {
@@ -287,10 +287,16 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr 
 	((MyMenuBar*)myToolBar)->setItemState(item, visible, enabled);
 }
 
+static const QString CLOSE_BUTTON = "CST_Exit";
+static const QString BACK_BUTTON = "CST_Back";
+
 void ZLQtApplicationWindow::refresh() {
-	static const QString CLOSE_BUTTON = "CST_Exit";
-	static const QString BACK_BUTTON = "CST_Back";
-	myCST->getRightBtn()->setResourceID(application().isViewFinal() ? CLOSE_BUTTON : BACK_BUTTON);
+	const QString &rightButtonResource =
+		application().isViewFinal() ? CLOSE_BUTTON : BACK_BUTTON;
+	if (myRightButtonResource != rightButtonResource) {
+		myRightButtonResource = rightButtonResource;
+		myCST->getRightBtn()->setResourceID(myRightButtonResource);
+	}
 
 	if (((MyMenuBar*)myToolBar)->myIndex == -1) {
 		((MyMenuBar*)myToolBar)->myIndex = 0;
@@ -404,14 +410,6 @@ void MyMainWindow::connectQuitButton(UTIL_CST *cst) {
 	connect(cst->getRightBtn(), SIGNAL(clicked()), this, SLOT(doActionQuit()));
 }
 
-void ZLQtApplicationWindow::fullScreenWorkaround() {
-	if (myFullScreen) {
-		myMainWindow->reparent(0, QObject::WType_TopLevel, QPoint(0,0));
-		myMainWindow->reparent(0, QObject::WType_TopLevel | QObject::WStyle_Customize | QObject::WStyle_NoBorderEx, QPoint(0,0));
-		myMainWindow->show();
-	}
-}
-
 void ZLQtApplicationWindow::close() {
 	myMainWindow->close();
 }
@@ -429,7 +427,8 @@ ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
 	QVBoxLayout *layout = new QVBoxLayout(main);
 	layout->addWidget(viewWidget->widget(), 1);
 
-	myCST = new UTIL_CST(main, ZLibrary::ApplicationName().c_str(), "CST_Menu", "CST_Exit");
+	myRightButtonResource = CLOSE_BUTTON;
+	myCST = new UTIL_CST(main, ZLibrary::ApplicationName().c_str(), "CST_Menu", myRightButtonResource);
 	myCST->setFixedSize(ZGlobal::getCstR().size());
 	layout->addWidget(myCST);
 	myCST->getMidBtn()->setEnabled(false);
