@@ -27,7 +27,6 @@
 #include "ZLQtDialog.h"
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtSelectionDialog.h"
-#include "ZLQtWaitMessage.h"
 #include "ZLQtUtil.h"
 
 #include "../application/ZLQtApplicationWindow.h"
@@ -64,8 +63,12 @@ bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler 
 }
 
 void ZLQtDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
-	ZLQtWaitMessage waitMessage(waitMessageText(key));
+	RES_ICON_Reader reader;
+	ZMessageBox waitMessage(0, reader.getIcon("Dialog_Waiting.gif", true), ::qtString(waitMessageText(key)), 0, 1);
+	waitMessage.adjustSize();
+	waitMessage.exec();
 	runnable.run();
+	waitMessage.hide();
 }
 
 bool ZLQtDialogManager::isClipboardSupported(ClipboardType type) const {
