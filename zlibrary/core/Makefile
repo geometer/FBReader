@@ -13,24 +13,20 @@ else
   TARGET = libzlcore.a
 endif
 
-SUBDIRS_ALL = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/splittedView src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/desktop/application src/desktop/dialogs src/posix/filesystem src/unix/time src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/message src/unix/library src/win32/encoding src/win32/filesystem src/win32/config src/win32/message
+SUBDIRS_ALL = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/splittedView src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/desktop/application src/desktop/dialogs src/posix/filesystem src/unix/time src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library src/win32/encoding src/win32/filesystem src/win32/config
 
 SUBDIRS = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/splittedView src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/posix/filesystem src/unix/time
 
 ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pepperpad3>)"
-  SUBDIRS += src/desktop/application src/desktop/dialogs src/unix/message
+  SUBDIRS += src/desktop/application src/desktop/dialogs
 endif
 
 ifeq "$(TARGET_ARCH)" "pdaxrom"
-  SUBDIRS += src/desktop/dialogs src/unix/message
-endif
-
-ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <openzaurus> <opensimpad-0.9.0> <qvfb>)"
-  SUBDIRS += src/unix/message
+  SUBDIRS += src/desktop/dialogs
 endif
 
 ifeq "$(TARGET_ARCH)" "win32"
-  SUBDIRS += src/desktop/application src/desktop/dialogs src/win32/encoding src/win32/filesystem src/win32/config src/win32/message
+  SUBDIRS += src/desktop/application src/desktop/dialogs src/win32/encoding src/win32/filesystem src/win32/config
 else
   SUBDIRS += src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library
 endif
@@ -65,9 +61,6 @@ endif
 
 do_install:
 	@install -d $(SHARE_ZLIBRARY)
-	@if [ -f data/messages.$(TARGET_ARCH).xml ]; then \
-		install -m 0644 data/messages.$(TARGET_ARCH).xml $(SHARE_ZLIBRARY)/messages.xml; \
-	fi
 	@install -d $(SHARE_ZLIBRARY)/encodings
 	@install -m 0644 $(ENCODING_FILES) $(SHARE_ZLIBRARY)/encodings
 	@install -d $(SHARE_ZLIBRARY)/resources

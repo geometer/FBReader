@@ -30,7 +30,7 @@
 #include "../dialogs/ZLGtkDialogManager.h"
 #include "../../gtk/image/ZLGtkImageManager.h"
 #include "../view/ZLGtkPaintContext.h"
-#include "../../../../core/src/unix/message/ZLUnixMessage.h"
+#include "../../unix/message/ZLUnixMessage.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 

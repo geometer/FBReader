@@ -29,7 +29,7 @@
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../../qt/image/ZLQtImageManager.h"
 #include "../view/ZLQtPaintContext.h"
-#include "../message/ZLEzxMessage.h"
+#include "../../unix/message/ZLUnixMessage.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 
@@ -54,7 +54,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	ZLQtTimeManager::createInstance();
 	ZLQtFSManager::createInstance();
 	ZLQtDialogManager::createInstance();
-	ZLEzxCommunicationManager::createInstance();
+	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
 	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
 }

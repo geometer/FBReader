@@ -27,7 +27,7 @@
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../image/ZLWin32ImageManager.h"
 #include "../view/ZLWin32PaintContext.h"
-#include "../../../../core/src/win32/message/ZLWin32Message.h"
+#include "../message/ZLWin32Message.h"
 #include "../../../../core/src/win32/config/ZLWin32Config.h"
 #include "../../../../core/src/win32/encoding/ZLWin32EncodingConverter.h"
 

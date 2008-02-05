@@ -22,7 +22,7 @@
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 
-#include "../../../../core/src/unix/library/ZLibraryImplementation.h"
+#include "../../unix/library/ZLibraryImplementation.h"
 
 #include "../filesystem/ZLQtFSManager.h"
 #include "../time/ZLQtTime.h"

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExternalPrograms>
 	<section name="Web Browser">
-		<program name="Opera" protocol="QCop" testFile="/usr/SYSqtapp/opera/opera">
-			<action="openLink" channel="EZX/Application/opera" method="setDocument(QString)"/>
+		<program name="%browser" protocol="execute">
+			<action name="openLink" command="/usr/SYSqtapp/opera/brwdaemon -d %1 &amp;"/>
 		</program>
 	</section>
 </ExternalPrograms>

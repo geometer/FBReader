@@ -29,7 +29,7 @@
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../../qt/image/ZLQtImageManager.h"
 #include "../view/ZLQtPaintContext.h"
-#include "../../../../core/src/unix/message/ZLUnixMessage.h"
+#include "../../unix/message/ZLUnixMessage.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 
