@@ -191,8 +191,8 @@
 						<node name="search" value="Показать диалог поиска"/>
 						<node name="findPrevious" value="Искать назад"/>
 						<node name="findNext" value="Искать вперед"/>
-						<node name="increaseFont" value="Увеличить размера шрифта"/>
-						<node name="decreaseFont" value="Уменьшить размера шрифта"/>
+						<node name="increaseFont" value="Увеличить размер шрифта"/>
+						<node name="decreaseFont" value="Уменьшить размер шрифта"/>
 						<node name="toggleIndicator" value="Показать/спрятать индикатор"/>
 						<node name="toggleFullscreen" value="Включить/выключить полноэкранный режим"/>
 						<node name="onFullscreen" value="Включить полноэкранный режим"/>

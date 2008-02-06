@@ -22,14 +22,14 @@
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 
-#include "../../unix/library/ZLibraryImplementation.h"
+#include "../../../../core/src/unix/library/ZLibraryImplementation.h"
 
 #include "../filesystem/ZLQtFSManager.h"
 #include "../time/ZLQtTime.h"
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../image/ZLQtImageManager.h"
 #include "../view/ZLQtPaintContext.h"
-#include "../../../../core/src/unix/message/ZLUnixMessage.h"
+#include "../../unix/message/ZLUnixMessage.h"
 #include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"

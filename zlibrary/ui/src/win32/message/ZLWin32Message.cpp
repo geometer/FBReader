@@ -22,7 +22,7 @@
 #include <ZLFile.h>
 
 #include "ZLWin32Message.h"
-#include "../util/W32WCHARUtil.h"
+#include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
 ZLWin32CommunicationManager::ZLWin32CommunicationManager() {
 }

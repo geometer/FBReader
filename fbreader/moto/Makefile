@@ -23,4 +23,5 @@ install:
 	@install -m 0644 ../icons/application/$(TARGET_ARCH)-b.png $(DESTDIR)$(INSTALLDIR)/$(PICS_TO)/FBReader-b.png
 	@install -m 0644 FBReader.desktop $(DESTDIR)$(INSTALLDIR)/FBReader.desktop
 	@install -m 0744 FBReader.sh $(DESTDIR)$(BINDIR)/FBReader.sh
+
 clean:
