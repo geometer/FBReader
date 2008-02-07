@@ -74,9 +74,8 @@ QPixmap &ZLQtSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	const std::string &pixmapName = node->pixmapName();
 	std::map<std::string,QPixmap*>::const_iterator it = myPixmaps.find(pixmapName);
 	if (it == myPixmaps.end()) {
-		QPixmap *pixmap = new QPixmap((std::string(IMAGEDIR)
-									+ ZLibrary::FileNameDelimiter
-									+ ZLibrary::ApplicationName()
+		QPixmap *pixmap = new QPixmap(
+									(ZLibrary::ApplicationImageDirectory()
 									+ ZLibrary::FileNameDelimiter
 									+ pixmapName + ".png").c_str());
 		myPixmaps[pixmapName] = pixmap;

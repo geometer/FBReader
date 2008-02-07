@@ -63,21 +63,12 @@ void ZLQtPaintContext::setSize(int w, int h) {
 	}
 }
 
-static const std::string HELVETICA = "SSong";
-
 void ZLQtPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
-	bool helveticaFlag = false;
 	QFontDatabase db;
 	QStringList qFamilies = db.families();
 	for (QStringList::Iterator it = qFamilies.begin(); it != qFamilies.end(); ++it) {
 		std::string family = (*it).ascii();
-		if (family == HELVETICA) {
-			helveticaFlag = true;
-		}
 		families.push_back(family);
-	}
-	if (!helveticaFlag) {
-		families.push_back(HELVETICA);
 	}
 }
 
@@ -86,7 +77,7 @@ const std::string ZLQtPaintContext::realFontFamilyName(std::string &fontFamily) 
 	if (fullName.isNull() || fullName.isEmpty()) {
 		fullName = QFontInfo(QFont::defaultFont()).family();
 		if (fullName.isNull() || fullName.isEmpty()) {
-			return HELVETICA;
+			return "SSong";
 		}
 	}
 	return fullName.left(fullName.find(" [")).ascii();

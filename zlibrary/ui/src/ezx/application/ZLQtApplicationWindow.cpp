@@ -81,9 +81,8 @@ ToolBarButton::~ToolBarButton() {
 
 QPixmap &ToolBarButton::pixmap() {
 	if (myReleasedPixmap == 0) {
-		myReleasedPixmap = new QPixmap((std::string(IMAGEDIR)
-								+ ZLibrary::FileNameDelimiter
-								+ ZLibrary::ApplicationName()
+		myReleasedPixmap = new QPixmap(
+								(ZLibrary::ApplicationImageDirectory()
 								+ ZLibrary::FileNameDelimiter
 								+ myButton.iconName() + ".png").c_str());
 	}
