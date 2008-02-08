@@ -9,5 +9,5 @@ install:
 	mkdir $(DESTDIR)/$(SRCDIR)
 	cp -r Makefile build_packages.sh zlibrary fbreader makefiles distributions README.build $(DESTDIR)/$(SRCDIR)
 
-tarball:
+package:
 	tar czf fbreader-sources-$(VERSION).tgz -C $(DESTDIR) $(SRCDIR)

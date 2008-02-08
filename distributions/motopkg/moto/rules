@@ -1,0 +1,35 @@
+PREFIX = /mmc/mmca1/.system/QTDownLoad
+
+LIBVERSION = $(shell cat zlibrary/VERSION)
+LIBSOVERSION = $(shell cat zlibrary/SOVERSION)
+APPVERSION = $(shell cat fbreader/VERSION)
+
+LIBDESTDIR = $(DESTDIR)/zlibrary
+APPDESTDIR = $(DESTDIR)/fbreader
+
+clean:
+	@make TARGET_ARCH=moto UI_TYPE=ezx clean
+
+build:
+	@make -C zlibrary/core TARGET_ARCH=moto UI_TYPE=ezx
+	@make -C zlibrary/text TARGET_ARCH=moto UI_TYPE=ezx
+	@make -C zlibrary/ui TARGET_ARCH=moto UI_TYPE=ezx
+	@make -C fbreader TARGET_ARCH=moto UI_TYPE=ezx
+
+install:
+	@install -d $(LIBDESTDIR)
+	@install -d $(APPDESTDIR)
+	@make -C zlibrary/core TARGET_ARCH=moto UI_TYPE=ezx DESTDIR=$(LIBDESTDIR) do_install
+	@make -C zlibrary/text TARGET_ARCH=moto UI_TYPE=ezx DESTDIR=$(LIBDESTDIR) do_install
+	@make -C zlibrary/ui TARGET_ARCH=moto UI_TYPE=ezx DESTDIR=$(LIBDESTDIR) do_install
+	@install ../libs/moto/libexpat.so.1.5.2 $(LIBDESTDIR)$(PREFIX)/zlibrary/lib/libexpat.so.1
+	@install ../libs/moto/libbz2.so.1.0.4 $(LIBDESTDIR)$(PREFIX)/zlibrary/lib/libbz2.so.1.0
+	@rm $(LIBDESTDIR)$(PREFIX)/zlibrary/lib/libzlcore.so.$(LIBSOVERSION)
+	@mv $(LIBDESTDIR)$(PREFIX)/zlibrary/lib/libzlcore.so.$(LIBVERSION) $(LIBDESTDIR)$(PREFIX)/zlibrary/lib/libzlcore.so.$(LIBSOVERSION)
+	@rm $(LIBDESTDIR)$(PREFIX)/zlibrary/lib/libzltext.so.$(LIBSOVERSION)
+	@mv $(LIBDESTDIR)$(PREFIX)/zlibrary/lib/libzltext.so.$(LIBVERSION) $(LIBDESTDIR)$(PREFIX)/zlibrary/lib/libzltext.so.$(LIBSOVERSION)
+	@make -C fbreader TARGET_ARCH=moto UI_TYPE=ezx DESTDIR=$(LIBDESTDIR) do_install
+
+package:
+	#@tar -czf zlibrary-$(LIBVERSION).pkg -C $(LIBDESTDIR)$(PREFIX) .
+	@tar -czf FBReader-$(APPVERSION).pkg -C $(LIBDESTDIR)$(PREFIX) .

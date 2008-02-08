@@ -2,12 +2,23 @@ VERSION = $(shell cat fbreader/VERSION)
 SOVERSION = $(shell cat zlibrary/SOVERSION)
 TMPDIR = $(CURDIR)/fbreader-$(VERSION)
 
+motopkg:
+	@echo -n "Building $(ARCHITECTURE) $@ package..."
+	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-$@.log 2>&1
+	@mkdir $(TMPDIR)
+	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-$@.log 2>&1
+	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) package 1>> $(ARCHITECTURE)-$@.log 2>&1
+	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
+	@rm -rf $(TMPDIR)
+	@rm -f $(CURDIR)/$(ARCHITECTURE)-$@.log
+	@echo " OK"
+
 tarball:
 	@echo -n "Building $(ARCHITECTURE) $@ package..."
 	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-$@.log 2>&1
 	@mkdir $(TMPDIR)
 	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-$@.log 2>&1
-	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) tarball 1>> $(ARCHITECTURE)-$@.log 2>&1
+	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) package 1>> $(ARCHITECTURE)-$@.log 2>&1
 	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
 	@rm -rf $(TMPDIR)
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-$@.log

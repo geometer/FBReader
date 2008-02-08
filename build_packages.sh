@@ -87,6 +87,11 @@ build_package() {
 			mkdirhier $pkgdir/$1
 			mv -f $tmpdir/*.ipk $pkgdir/$1
 			;;
+		motopkg)
+			$make_package ARCHITECTURE=$1 $2
+			mkdirhier $pkgdir/$1
+			mv -f $tmpdir/*.pkg $pkgdir/$1
+			;;
 		tarball)
 			$make_package ARCHITECTURE=$1 $2
 			mkdirhier $pkgdir/$1

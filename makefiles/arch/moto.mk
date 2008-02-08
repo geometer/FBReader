@@ -1,6 +1,6 @@
 include $(ROOTDIR)/makefiles/arch/unix.mk
 
-INSTALLDIR = /mmc/mmca1/.system/QTDownLoad/FBReader-0.8.12
+INSTALLDIR = /mmc/mmca1/.system/QTDownLoad/zlibrary
 IMAGEDIR = $(INSTALLDIR)/pics
 APPIMAGEDIR = $(IMAGEDIR)/%APPLICATION_NAME%
 

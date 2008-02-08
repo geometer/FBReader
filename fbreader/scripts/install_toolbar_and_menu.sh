@@ -18,7 +18,7 @@ case "$1" in
 esac;
 
 case "$1" in
-	maemo|zaurus_640x480|zaurus_240x320|pma400)
+	moto|maemo|zaurus_640x480|zaurus_240x320|pma400)
 		menubar_file=data/default/menubar.xml
 		;;
 	*)

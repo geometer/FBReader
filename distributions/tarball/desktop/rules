@@ -22,5 +22,5 @@ install:
 	make -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt4 DESTDIR=$(DESTDIR) do_install
 	make -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DESTDIR) do_install
 
-tarball:
+package:
 	tar czf fbreader-`cat fbreader/VERSION`.tgz -C $(DESTDIR) .
