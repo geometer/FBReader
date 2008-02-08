@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <group name="PlatformOptions">
+    <option name="FullKeyboardControlSupported" value="false"/>
+    <option name="TouchScreenPresented" value="true"/>
+    <option name="MousePresented" value="false"/>
+    <option name="KeyboardPresented" value="false"/>
+  </group>
+</config>

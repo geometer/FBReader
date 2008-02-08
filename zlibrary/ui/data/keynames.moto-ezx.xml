@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keynames>
+	<key code="0x1004" name="&lt;Return&gt;"/>
+	<key code="0x1005" name="&lt;Enter&gt;"/>
+	<key code="0x104d" name="&lt;Enter&gt;"/>
+	<key code="0x1013" name="&lt;Up&gt;"/>
+	<key code="0x1015" name="&lt;Down&gt;"/>
+	<key code="0x1012" name="&lt;Left&gt;"/>
+	<key code="0x1014" name="&lt;Right&gt;"/>
+	<key code="0x1016" name="&lt;VolUp&gt;"/>
+	<key code="0x1017" name="&lt;VolDown&gt;"/>
+	<key code="0x1034" name="&lt;Photo&gt;"/>
+	<key code="0x1030" name="&lt;Call&gt;"/>
+	<key code="0x1031" name="&lt;Cancel&gt;"/>
+	<key code="0x104b" name="&lt;Prev&gt;"/>
+	<key code="0x1049" name="&lt;Play&gt;"/>
+	<key code="0x104c" name="&lt;Next&gt;"/>
+	<key code="0x1033" name="&lt;Browser&gt;"/>
+</keynames>

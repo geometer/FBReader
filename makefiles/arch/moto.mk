@@ -1,6 +1,6 @@
 include $(ROOTDIR)/makefiles/arch/unix.mk
 
-INSTALLDIR = /mmc/mmca1/.system/QTDownLoad/zlibrary
+INSTALLDIR = /mmc/mmca1/.system/QTDownLoad/fbreader
 IMAGEDIR = $(INSTALLDIR)/pics
 APPIMAGEDIR = $(IMAGEDIR)/%APPLICATION_NAME%
 

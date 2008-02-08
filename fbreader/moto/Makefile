@@ -10,6 +10,7 @@ install:
 	@install -m 0644 ../icons/application/32x24.png $(DESTDIR)$(INSTALLDIR)/pics/FBReader-s.png
 	@install -m 0644 ../icons/application/64x43.png $(DESTDIR)$(INSTALLDIR)/pics/FBReader-b.png
 	@install -m 0644 FBReader.desktop $(DESTDIR)$(INSTALLDIR)/FBReader.desktop
-	@install FBReader.sh $(DESTDIR)$(BINDIR)/FBReader.sh
+	@install FBReader.sh $(DESTDIR)$(BINDIR)
+	@install util/language_detector $(DESTDIR)$(BINDIR)
 
 clean:
