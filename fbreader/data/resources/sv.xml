@@ -12,6 +12,7 @@
 		</node>
 		<node name="navigate" value="Navigation">
 			<node name="gotoHome" value="Gå till början av dokumentet"/>
+			<node name="gotoPageNumber" value="Go to Page..." toBeTranslated="true"/>
 			<node name="gotoSectionStart" value="Gå till början av textavsnitt"/>
 			<node name="gotoSectionEnd" value="Gå till slutet av textavsnitt"/>
 			<node name="nextTOCSection" value="Gå till nästa post i innehållsförteckning"/>

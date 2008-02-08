@@ -20,4 +20,5 @@
 	<binding key="&lt;I&gt;" action="bookInfo"/>
 	<binding key="&lt;Z&gt;" action="showRecent"/>
 	<binding key="&lt;Ctrl&gt;+&lt;C&gt;" action="copyToClipboard"/>
+	<binding key="&lt;G&gt;" action="gotoPageNumber"/>
 </keymap>

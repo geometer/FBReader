@@ -12,6 +12,7 @@
 		</node>
 		<node name="navigate" value="Navigoi">
 			<node name="gotoHome" value="Siirry dokumentin alkuun"/>
+			<node name="gotoPageNumber" value="Go to Page..." toBeTranslated="true"/>
 			<node name="gotoSectionStart" value="Siirry tekstiosion alkuun"/>
 			<node name="gotoSectionEnd" value="Siirry tekstiosion loppuun"/>
 			<node name="nextTOCSection" value="Sisällysluettelon seuraavaan kohtaan"/>

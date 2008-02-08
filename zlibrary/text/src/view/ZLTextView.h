@@ -128,6 +128,7 @@ protected:
 public:
 	void clearCaches();
 
+	void gotoPage(size_t index);
 	size_t pageNumber() const;
 
 	void scrollPage(bool forward, ScrollingMode mode, unsigned int value);

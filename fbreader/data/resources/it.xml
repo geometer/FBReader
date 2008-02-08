@@ -12,6 +12,7 @@
 		</node>
 		<node name="navigate" value="Navigazione">
 			<node name="gotoHome" value="Vai all'Inizio del Documento"/>
+			<node name="gotoPageNumber" value="Go to Page..." toBeTranslated="true"/>
 			<node name="gotoSectionStart" value="Vai all'Inizio di Sezione"/>
 			<node name="gotoSectionEnd" value="Vai alla Fine di Sezione"/>
 			<node name="nextTOCSection" value="Vai al Successivo Elemento dell'Indice"/>

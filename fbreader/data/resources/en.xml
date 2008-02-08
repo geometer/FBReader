@@ -12,6 +12,7 @@
 		</node>
 		<node name="navigate" value="Navigate">
 			<node name="gotoHome" value="Go to Start of Document"/>
+			<node name="gotoPageNumber" value="Go to Page..."/>
 			<node name="gotoSectionStart" value="Go to Start of Text Section"/>
 			<node name="gotoSectionEnd" value="Go to End of Text Section"/>
 			<node name="nextTOCSection" value="Go to Next TOC Item"/>

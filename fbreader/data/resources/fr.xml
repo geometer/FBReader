@@ -13,6 +13,7 @@
 		</node>
 		<node name="navigate" value="Navigation">
 			<node name="gotoHome" value="Aller au début du document"/>
+			<node name="gotoPageNumber" value="Go to Page..." toBeTranslated="true"/>
 			<node name="gotoSectionStart" value="Aller au début de la section"/>
 			<node name="gotoSectionEnd" value="Aller à la fin de la section"/>
 			<node name="nextTOCSection" value="Aller à l'entrée suivante de la TDM"/>

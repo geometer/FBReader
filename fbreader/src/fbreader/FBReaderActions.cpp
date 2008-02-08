@@ -352,8 +352,7 @@ GotoPageNumber::GotoPageNumber(FBReader &fbreader) : ModeDependentAction(fbreade
 }
 
 bool GotoPageNumber::isEnabled() {
-	return false;
-	//return fbreader().bookTextView().pageNumber() > 1;
+	return ModeDependentAction::isEnabled() && (fbreader().bookTextView().pageNumber() > 1);
 }
 
 void GotoPageNumber::run() {
@@ -366,6 +365,8 @@ void GotoPageNumber::run() {
 	gotoPageDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
 
 	if (gotoPageDialog->run()) {
+		gotoPageDialog->acceptValues();
+		fbreader().bookTextView().gotoPage(pageNumberOption.value());
 	}
 }
 

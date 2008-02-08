@@ -11,6 +11,7 @@
 	</submenu>
 	<submenu id="navigate">
 		<item id="gotoHome"/>
+		<item id="gotoPageNumber"/>
 		<item id="gotoSectionStart"/>
 		<item id="gotoSectionEnd"/>
 		<item id="nextTOCSection"/>

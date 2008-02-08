@@ -12,6 +12,7 @@
 		</node>
 		<node name="navigate" value="Переход">
 			<node name="gotoHome" value="В начало книги"/>
+			<node name="gotoPageNumber" value="На страницу..."/>
 			<node name="gotoSectionStart" value="В начало раздела"/>
 			<node name="gotoSectionEnd" value="В конец раздела"/>
 			<node name="nextTOCSection" value="К следующей главе"/>

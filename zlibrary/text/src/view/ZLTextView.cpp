@@ -444,13 +444,47 @@ int ZLTextView::textAreaHeight() const {
 		return viewHeight();
 	}
 }
+/*
+ *
+size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraphNumber) const {
+	return myTextView.myTextSize[paragraphNumber] - myTextView.myTextSize[startTextIndex()];
+}
+
+size_t ZLTextView::PositionIndicator::sizeOfParagraph(size_t paragraphNumber) const {
+	return myTextView.myTextSize[paragraphNumber + 1] - myTextView.myTextSize[paragraphNumber];
+}
+*/
+
+
+void ZLTextView::gotoPage(size_t index) {
+	const size_t symbolIndex = index * 2048 - 128;
+	std::vector<size_t>::const_iterator it = std::lower_bound(myTextSize.begin(), myTextSize.end(), symbolIndex);
+	std::vector<size_t>::const_iterator i = nextBreakIterator();
+	const size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
+	const size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
+	size_t paragraphNumber = std::min((size_t)(it - myTextSize.begin()), endIndex) - 1;
+	gotoParagraph(paragraphNumber, true);
+	preparePaintInfo();
+	const ZLTextWordCursor &cursor = endCursor();
+	if (!cursor.isNull() && (paragraphNumber == cursor.paragraphCursor().index())) {
+		if (!cursor.paragraphCursor().isLast() || !cursor.isEndOfParagraph()) {
+			size_t paragraphLength = cursor.paragraphCursor().paragraphLength();
+			if (paragraphLength > 0) {
+				size_t wordNum =
+					(myTextSize[startIndex] + symbolIndex - myTextSize[paragraphNumber]) *
+					paragraphLength / (myTextSize[endIndex] - myTextSize[startIndex]);
+				moveEndCursor(cursor.paragraphCursor().index(), wordNum, 0);
+			}
+		}
+	}
+}
 
 size_t ZLTextView::pageNumber() const {
 	if (empty()) {
 		return 0;
 	}
 	std::vector<size_t>::const_iterator i = nextBreakIterator();
-	size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
-	size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
+	const size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
+	const size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
 	return (myTextSize[endIndex] - myTextSize[startIndex]) / 2048 + 1;
 }
