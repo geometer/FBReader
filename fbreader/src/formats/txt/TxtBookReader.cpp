@@ -51,6 +51,9 @@ bool TxtBookReader::characterDataHandler(std::string &str) {
 			beginParagraph();
 		}
 		addData(str);
+		if (myInsideContentsParagraph) {
+			addContentsData(str);
+		}
 		myNewLine = false;
 	}
 	return true;
@@ -66,7 +69,7 @@ bool TxtBookReader::newLineHandler() {
 	mySpaceCounter = 0;
 	bool paragraphBreak =
 		(myFormat.breakType() & PlainTextFormat::BREAK_PARAGRAPH_AT_NEW_LINE) ||
-		((myFormat.breakType() & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) && (myLineFeedCounter > 1));
+		((myFormat.breakType() & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) && (myLineFeedCounter > 0));
 
 	if (myFormat.createContentsTable()) {
 		if (!myInsideContentsParagraph && (myLineFeedCounter == myFormat.emptyLinesBeforeNewSection() + 1)) {

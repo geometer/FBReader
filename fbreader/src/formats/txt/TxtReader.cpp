@@ -40,7 +40,6 @@ void TxtReader::readDocument(ZLInputStream &stream) {
 	char *buffer = new char[BUFSIZE];
 	std::string str;
 	size_t length;
-	char previous = 0;
 	do {
 		length = stream.read(buffer, BUFSIZE);
 		char *start = buffer;
@@ -54,13 +53,11 @@ void TxtReader::readDocument(ZLInputStream &stream) {
 				}
 				start = ptr + 1;
 				newLineHandler();
-				previous = *ptr;
 			} else if (*ptr == '\r') {
+				continue;
 			} else if (isspace((unsigned char)*ptr)) {
-				previous = *ptr;
 				*ptr = ' ';
 			} else {
-				previous = *ptr;
 			}
 		}
 		if (start != end) {

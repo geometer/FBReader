@@ -101,7 +101,7 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 		const char *end = buffer + length;
 		for (const char *ptr = buffer; ptr != end; ++ptr) {
 			++currentLineLength;
-			if ((*ptr == '\n') || ((*ptr == '\r') && (previous != '\n'))) {
+			if (*ptr == '\n') {
 				++lineCounter;
 				if (currentLineIsEmpty) {
 					++emptyLineCounter;
@@ -126,6 +126,8 @@ void PlainTextFormatDetector::detect(ZLInputStream &stream, PlainTextFormat &for
 				currentLineIsEmpty = true;
 				currentLineLength = 0;
 				currentLineIndent = 0;
+			} else if (*ptr == '\r') {
+				continue;
 			} else if (isspace((unsigned char)*ptr)) {
 				if (currentLineIsEmpty) {
 					++currentLineIndent;
