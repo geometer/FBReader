@@ -38,6 +38,8 @@ static const std::string CONFIG = "Config";
 static const std::string AUTO_SAVE = "AutoSave";
 static const std::string TIMEOUT = "Timeout";
 
+bool ZLApplication::myIsViewFinal = true;
+
 ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	RotationAngleOption(ZLCategoryKey::CONFIG, ROTATION, ANGLE, ZLViewWidget::DEGREES90),
 	AngleStateOption(ZLCategoryKey::CONFIG, STATE, ANGLE, ZLViewWidget::DEGREES0),
@@ -46,8 +48,8 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	ConfigAutoSaveTimeoutOption(ZLCategoryKey::CONFIG, CONFIG, TIMEOUT, 1, 6000, 30),
 	KeyDelayOption(ZLCategoryKey::CONFIG, "Options", "KeyDelay", 0, 5000, 250),
 	myViewWidget(0),
-	myWindow(0),
-	myIsViewFinal(true) {
+	myWindow(0) {
+	myIsViewFinal = true;
 	myContext = ZLibrary::createContext();
 	if (ConfigAutoSavingOption.value()) {
 		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());

@@ -367,6 +367,7 @@ void GotoPageNumber::run() {
 	if (gotoPageDialog->run()) {
 		gotoPageDialog->acceptValues();
 		fbreader().bookTextView().gotoPage(pageNumberOption.value());
+		fbreader().refreshWindow();
 	}
 }
 

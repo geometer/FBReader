@@ -389,7 +389,8 @@ private:
 	class ZLApplicationWindow *myWindow;
 	ZLTime myLastKeyActionTime;
 	shared_ptr<ZLMessageHandler> myPresentWindowHandler;
-	bool myIsViewFinal;
+	// TODO in 1.0: change to non-static
+	static bool myIsViewFinal;
 
 friend class ZLApplicationWindow;
 friend class MenuVisitor;
