@@ -480,7 +480,7 @@ void ZLTextView::gotoPage(size_t index) {
 }
 
 size_t ZLTextView::pageNumber() const {
-	if (empty()) {
+	if (empty() || endCursor().isNull()) {
 		return 0;
 	}
 	std::vector<size_t>::const_iterator i = nextBreakIterator();
