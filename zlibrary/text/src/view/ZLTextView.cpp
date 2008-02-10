@@ -89,7 +89,14 @@ void ZLTextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value
 }
 
 std::vector<size_t>::const_iterator ZLTextView::nextBreakIterator() const {
-	return std::lower_bound(myTextBreaks.begin(), myTextBreaks.end(), endCursor().paragraphCursor().index());
+	ZLTextWordCursor cursor = endCursor();
+	if (cursor.isNull()) {
+		cursor = startCursor();
+	}
+	if (cursor.isNull()) {
+		return myTextBreaks.begin();
+	}
+	return std::lower_bound(myTextBreaks.begin(), myTextBreaks.end(), cursor.paragraphCursor().index());
 }
 
 void ZLTextView::scrollToStartOfText() {
@@ -480,7 +487,7 @@ void ZLTextView::gotoPage(size_t index) {
 }
 
 size_t ZLTextView::pageNumber() const {
-	if (empty() || endCursor().isNull()) {
+	if (empty()) {
 		return 0;
 	}
 	std::vector<size_t>::const_iterator i = nextBreakIterator();
