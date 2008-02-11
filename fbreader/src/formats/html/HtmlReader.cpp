@@ -275,7 +275,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 						appendString(attributeValueString, currentString);
 						state = PS_SPECIAL_IN_ATTRIBUTEVALUE;
 						state_special = ST_UNKNOWN;
-					} else if ((quotationCounter != 1) && ((*ptr == '/') || (*ptr == '>') || isspace((unsigned char)*ptr))) {
+					} else if ((quotationCounter != 1) && ((*ptr == '>') || isspace((unsigned char)*ptr))) {
 						if ((ptr != start) || !currentString.empty()) {
 							currentString.append(start, ptr - start);
 							if (currentString[0] == '"') {
