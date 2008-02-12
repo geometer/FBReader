@@ -152,7 +152,7 @@ void ComboOptionView::_createItem() {
 	myWidgets.push_back(myComboBox);
 
 	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueSelected(int)));
-	connect(myComboBox, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
+	connect(myComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
 
 	int width = myToColumn - myFromColumn + 1;
 	myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 2 - 1);

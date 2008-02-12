@@ -46,7 +46,7 @@ ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLApplicatio
 	QSize size = icon.size();
 	setCheckable(item.isToggleButton());
 	setToolTip(QString::fromUtf8(myItem.tooltip().c_str()));
-	connect(this, SIGNAL(activated()), this, SLOT(onActivated()));
+	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
 }
 
 void ZLQtToolBarAction::onActivated() {
