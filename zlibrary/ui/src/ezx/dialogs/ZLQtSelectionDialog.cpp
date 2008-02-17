@@ -34,32 +34,60 @@ ZLQtSelectionDialogItem::ZLQtSelectionDialogItem(QListView *listView, QListViewI
 ZLQtSelectionDialogListView::ZLQtSelectionDialogListView(QWidget *parent) : QListView(parent) {
 }
 
-void ZLQtSelectionDialogListView::keyPressEvent(QKeyEvent *e) {
-  if(e->key() == Key_Down || e->key() == Key_Up)
-    return QListView::keyPressEvent(e);
-  if((e->key() == Key_Enter || e->key() == 0x1004) && e->type() == QEvent::KeyPress)
-    emit returnPressed(currentItem());
+void ZLQtSelectionDialogListView::keyPressEvent(QKeyEvent *event) {
+	QListViewItem *item = currentItem();
+	switch(event->key()) {
+		case Key_Enter:
+		case Key_Return:
+			if (item != 0)
+				emit returnPressed(item);
+			return;
+		case Key_Down:
+			item = item->itemBelow();
+			if (item == 0) {
+				item = firstChild();
+			}
+			break;
+		case Key_Up:
+			item = item->itemAbove();
+			if (item == 0) {
+				item = firstChild();
+				while (item->nextSibling() != 0) {
+					item = item->nextSibling();
+				}
+				while (item->itemBelow() != 0) {
+					item = item->itemBelow();
+				}
+			}		
+			break;
+		default:
+			QListView::keyPressEvent(event);
+	}
+
+	if (item != 0) {
+		setCurrentItem(item);
+		ensureItemVisible(item);
+	}
 }
 
 ZLQtSelectionDialog::ZLQtSelectionDialog(const std::string &caption, ZLTreeHandler &handler) : ZLFullScreenDialog(caption), ZLSelectionDialog(handler) {
 	myMainBox = new QVBox(this);
-  setContentWidget(myMainBox);
+	setContentWidget(myMainBox);
  
 	myStateLine = new QLineEdit(myMainBox);
 	myStateLine->setEnabled(!this->handler().isOpenHandler());
-  myStateLine->setFrame(false);
-  QFrame *f = new QFrame(myMainBox);
-  f->setFrameStyle(QFrame::HLine | QFrame::Plain);
+	myStateLine->setFrame(false);
+	QFrame *f = new QFrame(myMainBox);
+	f->setFrameStyle(QFrame::HLine | QFrame::Plain);
 	myListView = new ZLQtSelectionDialogListView(myMainBox);
 	myListView->addColumn("");
-  myListView->setFrameStyle(QFrame::NoFrame);
-	myListView->setColumnWidth(0, ZApplication::desktop()->width() -
-		ZApplication::style().scrollBarExtent().width());
+	myListView->setFrameStyle(QFrame::NoFrame);
+	myListView->setColumnWidth(0, ZApplication::desktop()->width() - ZApplication::style().scrollBarExtent().width());
 	myListView->header()->hide();
 	myListView->setSorting(-1, true);
 
- 	connect(myListView, SIGNAL(clicked(QListViewItem*)), this, SLOT(runNodeSlot()));
- 	connect(myListView, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(accept()));
+	connect(myListView, SIGNAL(clicked(QListViewItem*)), this, SLOT(runNodeSlot()));
+	connect(myListView, SIGNAL(returnPressed(QListViewItem*)), this, SLOT(accept()));
 
 	ZLSelectionDialog::update();
 }
@@ -83,19 +111,6 @@ QPixmap &ZLQtSelectionDialog::getPixmap(const ZLTreeNodePtr node) {
 	} else {
 		return *it->second;
 	}
-}
-
-void ZLQtSelectionDialog::keyPressEvent(QKeyEvent *event) {
-	if ((event == 0)) return;
-  if (event->key() == Key_Escape) {
-		reject();
-	}
-  else if (event->key() == Key_Enter) {
-    accept();
-  }
-  else {
-    event->ignore();
-  }
 }
 
 void ZLQtSelectionDialog::updateStateLine() {

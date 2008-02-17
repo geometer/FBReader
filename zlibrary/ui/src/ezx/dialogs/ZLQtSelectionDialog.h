@@ -60,8 +60,6 @@ private:
 	QPixmap &getPixmap(const ZLTreeNodePtr node);
 
 protected:
-	void keyPressEvent(QKeyEvent *event);
-
 	void exitDialog();
 	void updateStateLine();
 	void updateList();
