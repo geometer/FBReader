@@ -31,6 +31,8 @@
 #include <qlineedit.h>
 #include <qslider.h>
 #include <qlayout.h>
+
+#include <zapplication.h>
 #include <zglobal.h>
 
 #include <ZLStringUtil.h>
@@ -40,6 +42,22 @@
 #include "ZLQtOptionView.h"
 #include "../dialogs/ZLQtDialogContent.h"
 #include "../dialogs/ZLQtUtil.h"
+
+class MySpinBox : public QSpinBox
+{
+public:
+    MySpinBox(int minValue, int maxValue, int step = 1, QWidget* parent = 0)
+	: QSpinBox(minValue, maxValue, step, parent) {
+		setMaximumHeight(ZGlobal::getLineHeight());
+    }
+
+    MySpinBox::~MySpinBox() {
+    }
+
+    QLineEdit *lineEdit() const {
+	return editor();
+    }
+};
 
 void BooleanOptionView::_createItem() {
 	myCheckBox = new QCheckBox(::qtString(ZLOptionView::name()), myHolder.widget());
@@ -124,8 +142,12 @@ void Boolean3OptionView::onStateChanged(int state) const {
 
 void ChoiceOptionView::_createItem() {
 	myGroup = new QButtonGroup(::qtString(ZLOptionView::name()), myHolder.widget());
-	QVBoxLayout *layout = new QVBoxLayout(myGroup, 12);
+	myGroup->setFrameStyle(QFrame::NoFrame);
+	QVBoxLayout *layout = new QVBoxLayout(myGroup, 4);
 	layout->addSpacing(myGroup->fontMetrics().height());
+	QFrame *frame = new QFrame((QButtonGroup*)layout->parent());
+	frame->setFrameStyle(QFrame::HLine | QFrame::Sunken);
+	layout->addWidget(frame);
 	myButtons = new QRadioButton*[((ZLChoiceOptionEntry&)*myOption).choiceNumber()];
 	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
 		myButtons[i] = new QRadioButton((QButtonGroup*)layout->parent());
@@ -157,7 +179,10 @@ void ComboOptionView::_createItem() {
 	const ZLComboOptionEntry &comboOption = (ZLComboOptionEntry&)*myOption;
 	myLabel = new QLabel(::qtString(ZLOptionView::name()), myHolder.widget());
 	myComboBox = new QComboBox(myHolder.widget());
-	myComboBox->setEditable(comboOption.isEditable());
+	myComboBox->setMaximumHeight(ZGlobal::getLineHeight());
+	bool editable = comboOption.isEditable();
+	myComboBox->setEditable(editable);
+	ZApplication::setMouseMode(myComboBox->lineEdit(), editable);
 
 	if (myHolder.parentWidget() != 0) {
 		connect(myHolder.parentWidget(), SIGNAL(resized(const QSize&)), this, SLOT(onTabResized(const QSize&)));
@@ -231,11 +256,12 @@ void ComboOptionView::onValueEdited(const QString &value) {
 
 void SpinOptionView::_createItem() {
 	myLabel = new QLabel(::qtString(ZLOptionView::name()), myHolder.widget());
-	mySpinBox = new QSpinBox(
+	mySpinBox = new MySpinBox(
 		((ZLSpinOptionEntry&)*myOption).minValue(),
 		((ZLSpinOptionEntry&)*myOption).maxValue(),
 		((ZLSpinOptionEntry&)*myOption).step(), myHolder.widget()
 	);
+	ZApplication::setMouseMode(((MySpinBox*)mySpinBox)->lineEdit(), 1);
 	QPalette palette(mySpinBox->palette());
 	palette.setColor(QColorGroup::Button, QColor(177, 177, 177));
 	mySpinBox->setPalette(palette);
@@ -260,6 +286,8 @@ void SpinOptionView::_onAccept() const {
 
 void StringOptionView::_createItem() {
 	myLineEdit = new QLineEdit(myHolder.widget());
+	myLineEdit->setMaximumHeight(ZGlobal::getLineHeight());
+	ZApplication::setMouseMode(myLineEdit, 1);
 	connect(myLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
 	if (!ZLOptionView::name().empty()) {
 		myLabel = new QLabel(::qtString(ZLOptionView::name()), myHolder.widget());
@@ -311,6 +339,7 @@ void StringOptionView::onValueEdited(const QString &value) {
 
 void MultilineOptionView::_createItem() {
 	myMultiLineEdit = new QMultiLineEdit(myHolder.widget());
+	ZApplication::setMouseMode(myMultiLineEdit, 1);
 	myMultiLineEdit->setWordWrap(QMultiLineEdit::WidgetWidth);
 	myMultiLineEdit->setWrapPolicy(QMultiLineEdit::AtWhiteSpace);
 	connect(myMultiLineEdit, SIGNAL(textChanged()), this, SLOT(onValueEdited()));
@@ -366,6 +395,8 @@ private:
 
 KeyLineEdit::KeyLineEdit(KeyOptionView &keyView) : QLineEdit(keyView.myWidget), myKeyView(keyView) {
 	focusOutEvent(0);
+	setMaximumHeight(ZGlobal::getLineHeight());
+	((ZApplication*)qApp)->setAutoInvokeKb(this, false);
 }
 
 void KeyLineEdit::focusInEvent(QFocusEvent*) {
@@ -389,7 +420,7 @@ void KeyLineEdit::keyPressEvent(QKeyEvent *keyEvent) {
 
 void KeyOptionView::_createItem() {
 	myWidget = new QWidget(myHolder.widget());
-  QRect rect = ZGlobal::getHomeR();
+	QRect rect = ZGlobal::getHomeR();
 	QGridLayout *layout = new QGridLayout(myWidget, 2, 2, 0, 10);
 
 	myLabel = new QLabel(myWidget);
@@ -397,19 +428,20 @@ void KeyOptionView::_createItem() {
 	layout->addWidget(myLabel, 0, 0);
 
 	myKeyEditor = new KeyLineEdit(*this);
-  myKeyEditor->setMaximumWidth(rect.width() - 20);
-  myKeyEditor->setMinimumWidth(rect.width() - 20);
+	myKeyEditor->setMaximumWidth(rect.width() - 20);
+	myKeyEditor->setMinimumWidth(rect.width() - 20);
 	layout->addWidget(myKeyEditor, 0, 1, Qt::AlignRight);
 
 	myComboBox = new QComboBox(myWidget);
-  myComboBox->setMaximumWidth(rect.width() - 20);
-  myComboBox->setMinimumWidth(rect.width() - 20);
+	myComboBox->setMaximumHeight(ZGlobal::getLineHeight());
+	myComboBox->setMaximumWidth(rect.width() - 20);
+	myComboBox->setMinimumWidth(rect.width() - 20);
 	const std::vector<std::string> &actions = ((ZLKeyOptionEntry&)*myOption).actionNames();
 	for (std::vector<std::string>::const_iterator it = actions.begin(); it != actions.end(); ++it) {
-    myComboBox->insertItem(::qtString(*it));
+		myComboBox->insertItem(::qtString(*it));
 	}
 	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueChanged(int)));
-  layout->addWidget(myComboBox, 1, 1, Qt::AlignRight);
+	layout->addWidget(myComboBox, 1, 1, Qt::AlignRight);
 	myHolder.attachWidget(*this, myWidget);
 }
 
@@ -472,10 +504,18 @@ void ColorOptionView::_createItem() {
 	layout->addWidget(myGSlider, 1, 1);
 	layout->addWidget(myBSlider, 2, 1);
 	myColorBar = new QLabel("                  ", myWidget);
-	myColorBar->setBackgroundColor(QColor(color.Red, color.Green, color.Blue));
+	myPixmap = new QPixmap(1, 1);
+	myPixmap->fill(QColor(color.Red, color.Green, color.Blue));
+	myColorBar->setBackgroundPixmap(*myPixmap);
 	myColorBar->setFrameStyle(QFrame::Panel | QFrame::Plain);
 	layout->addMultiCellWidget(myColorBar, 0, 2, 2, 2);
 	myHolder.attachWidget(*this, myWidget);
+}
+
+ColorOptionView::~ColorOptionView() {
+	if (myPixmap != 0) {
+		delete myPixmap;
+	}
 }
 
 void ColorOptionView::reset() {
@@ -488,7 +528,8 @@ void ColorOptionView::reset() {
 	myRSlider->setValue(color.Red);
 	myGSlider->setValue(color.Green);
 	myBSlider->setValue(color.Blue);
-	myColorBar->setBackgroundColor(QColor(color.Red, color.Green, color.Blue));
+	myPixmap->fill(QColor(color.Red, color.Green, color.Blue));
+	myColorBar->setBackgroundPixmap(*myPixmap);
 }
 
 void ColorOptionView::_show() {
@@ -500,7 +541,8 @@ void ColorOptionView::_hide() {
 }
 
 void ColorOptionView::onSliderMove(int) {
-	myColorBar->setBackgroundColor(QColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
+	myPixmap->fill(QColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
+	myColorBar->setBackgroundPixmap(*myPixmap);
 }
 
 void ColorOptionView::_onAccept() const {

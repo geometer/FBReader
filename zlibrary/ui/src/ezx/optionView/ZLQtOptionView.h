@@ -227,6 +227,7 @@ Q_OBJECT
 
 public:
 	ColorOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {}
+	~ColorOptionView();
 
 private:
 	void _createItem();
@@ -242,6 +243,7 @@ private:
 	QWidget *myWidget;
 	QSlider *myRSlider, *myGSlider, *myBSlider;
 	QLabel *myColorBar;
+	QPixmap *myPixmap;
 };
 
 #endif /* __ZLQTOPTIONVIEW_H__ */
