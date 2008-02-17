@@ -35,9 +35,9 @@
 #include "ZLQtUtil.h"
 
 ZLQtDialog::ZLQtDialog(QWidget *parent, const ZLResource &resource) : ZBaseDialog(parent, 0, true), myButtonNumber(0) {
-  QFont f(qApp->font());
-  f.setPointSize(15);
-  setFont(f);
+	QFont f(qApp->font());
+	f.setPointSize(15);
+	setFont(f);
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	QWidget *widget = new QVBox(this);
@@ -46,8 +46,7 @@ ZLQtDialog::ZLQtDialog(QWidget *parent, const ZLResource &resource) : ZBaseDialo
 	QFrame *frmTitle = new QFrame(widget);
 	frmTitle->setFixedHeight(25);
 	QHBoxLayout *hblTitle = new QHBoxLayout(frmTitle);
-	QLabel *lblTitle = new QLabel(::qtString("  " +
-    resource[ZLDialogManager::DIALOG_TITLE].value()), frmTitle);
+	QLabel *lblTitle = new QLabel(::qtString("  " + resource[ZLDialogManager::DIALOG_TITLE].value()), frmTitle);
 	hblTitle->addWidget(lblTitle);
 	UTIL_Graph::makeTitle(lblTitle, 1);
 	
@@ -56,7 +55,7 @@ ZLQtDialog::ZLQtDialog(QWidget *parent, const ZLResource &resource) : ZBaseDialo
 	myButtonGroup = new QButtonGroup(this);
 	layout->add(myButtonGroup);
 
-	myButtonLayout = new QGridLayout(myButtonGroup, 1, 0, 4, 4);
+	myButtonLayout = new QGridLayout(myButtonGroup, 1, 0, 0, 0);
 }
 
 ZLQtDialog::~ZLQtDialog() {
