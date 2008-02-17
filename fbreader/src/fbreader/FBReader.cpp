@@ -121,8 +121,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
 
-	addAction(ActionCode::SHOW_COLLECTION, new ShowCollectionAction(*this));
-	addAction(ActionCode::SHOW_LAST_BOOKS, new ShowRecentBooksListAction(*this));
+	addAction(ActionCode::SHOW_COLLECTION, new SetModeAction(*this, FBReader::BOOK_COLLECTION_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::RECENT_BOOKS_MODE));
+	addAction(ActionCode::SHOW_LAST_BOOKS, new SetModeAction(*this, FBReader::RECENT_BOOKS_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::SHOW_OPTIONS, new ShowOptionsDialogAction(*this));
 	addAction(ActionCode::SHOW_CONTENTS, new ShowContentsAction(*this));
 	addAction(ActionCode::SHOW_BOOK_INFO, new ShowBookInfoAction(*this));

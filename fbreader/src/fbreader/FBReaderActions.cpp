@@ -46,11 +46,11 @@ bool ModeDependentAction::isVisible() {
 	return fbreader().getMode() & myVisibleInModes;
 }
 
-ShowCollectionAction::ShowCollectionAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::RECENT_BOOKS_MODE) {
+SetModeAction::SetModeAction(FBReader &fbreader, FBReader::ViewMode modeToSet, int visibleInModes) : ModeDependentAction(fbreader, visibleInModes), myModeToSet(modeToSet) {
 }
 
-void ShowCollectionAction::run() {
-	fbreader().setMode(FBReader::BOOK_COLLECTION_MODE);
+void SetModeAction::run() {
+	fbreader().setMode(myModeToSet);
 }
 
 ShowHelpAction::ShowHelpAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -68,13 +68,6 @@ void ShowHelpAction::run() {
 	} else {
 		ZLDialogManager::instance().errorBox(ZLResourceKey("noHelpBox"));
 	}
-}
-
-ShowRecentBooksListAction::ShowRecentBooksListAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE) {
-}
-
-void ShowRecentBooksListAction::run() {
-	fbreader().setMode(FBReader::RECENT_BOOKS_MODE);
 }
 
 ShowOptionsDialogAction::ShowOptionsDialogAction(FBReader &fbreader) : FBAction(fbreader) {
