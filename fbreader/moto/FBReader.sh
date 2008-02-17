@@ -5,4 +5,4 @@ cd $this/..
 . /home/native/.profile
 export HOME=`pwd`
 export LD_LIBRARY_PATH=`pwd`/lib:$LD_LIBRARY_PATH
-exec bin/FBReader -lang `bin/language_detector`
+exec bin/FBReader -lang `bin/language_detector` $2
