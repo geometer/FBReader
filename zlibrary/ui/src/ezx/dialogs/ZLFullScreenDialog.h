@@ -27,17 +27,20 @@
 class ZLFullScreenDialog : public ZMainWidget {
 	Q_OBJECT
 
+public:
+	enum DialogCode { Rejected, Accepted };
+
 protected:
 	ZLFullScreenDialog(const std::string &caption);
 	virtual ~ZLFullScreenDialog();
-  enum DialogCode { Rejected, Accepted };
-  void setResult(int r) { rescode = r; }
-	
+
+	void setResultCode(DialogCode code) { myResultCode = code; }	
 	void resizeEvent(QResizeEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 
 public:
-	int exec();
-  int result() const { return rescode; }
+	DialogCode exec();
+	DialogCode result() const { return myResultCode; }
 
 protected slots:
 	virtual void accept();
@@ -45,7 +48,7 @@ protected slots:
 
 private:
 	bool myInLoop;
-  int rescode;
+	DialogCode myResultCode;
 };
 
 #endif /* __ZLFULLSCREENDIALOG_H__ */

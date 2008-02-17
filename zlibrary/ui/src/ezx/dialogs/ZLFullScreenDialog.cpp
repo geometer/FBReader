@@ -25,30 +25,32 @@
 #include <ezxutilcst.h>
 #include <qwallpaper.h>
 
-ZLFullScreenDialog::ZLFullScreenDialog(const std::string &caption) :
-		ZMainWidget(::qtString(caption), false, qApp->mainWidget(), NULL,
-			WType_Modal | WType_TopLevel) {
-  QWallpaper::setAppWallpaperMode(QWallpaper::Off);
-  QFont f(qApp->font());
-  f.setPointSize(15);
-  setFont(f);
-  getTitleBarWidget()->setFont(f);
+#include "../../qt/util/ZLQtKeyUtil.h"
+
+ZLFullScreenDialog::ZLFullScreenDialog(const std::string &caption) : ZMainWidget(::qtString(caption), false, qApp->mainWidget(), NULL, WType_Modal | WType_TopLevel) {
+	QWallpaper::setAppWallpaperMode(QWallpaper::UseSysWallpaper);
+	QFont f(qApp->font());
+	f.setPointSize(15);
+	setFont(f);
+	getTitleBarWidget()->setFont(f);
 	myInLoop = false;
-	UTIL_CST *cst = new UTIL_CST(this, "OK", "CST_Menu", "CST_Back");
+	UTIL_CST *cst = new UTIL_CST(this, ::qtButtonName(ZLResourceKey("ok")), "CST_Menu", "CST_Back");
 	setCSTWidget(cst);
 	connect(cst->getRightBtn(), SIGNAL(clicked()), this, SLOT(reject()));
 	connect(cst->getMidBtn(), SIGNAL(clicked()), this, SLOT(accept()));
 	cst->getLeftBtn()->setEnabled(false);
+	cst->getLeftBtn()->setAccel(Key_F1);
 }
 
 ZLFullScreenDialog::~ZLFullScreenDialog() {
+	QWallpaper::setAppWallpaperMode(QWallpaper::Off);
 }
 
 void ZLFullScreenDialog::resizeEvent(QResizeEvent * /* event */) {
 }
 
-int ZLFullScreenDialog::exec() {
-	setResult(Rejected);
+ZLFullScreenDialog::DialogCode ZLFullScreenDialog::exec() {
+	setResultCode(Rejected);
 	show();
 	myInLoop = true;
 	qApp->enter_loop();
@@ -56,21 +58,35 @@ int ZLFullScreenDialog::exec() {
 }
 
 void ZLFullScreenDialog::accept() {
-  hide();
+	hide();
 	if (myInLoop) {
 		qApp->exit_loop();
 	}
-	setResult(Accepted);
-  if (qApp->mainWidget() == this)
-    qApp->quit();
+	setResultCode(Accepted);
+	if (qApp->mainWidget() == this) {
+		qApp->quit();
+	}
 }
 
 void ZLFullScreenDialog::reject() {
-  hide();
+	hide();
 	if (myInLoop) {
 		qApp->exit_loop();
 	}
-	setResult(Rejected);
-  if (qApp->mainWidget() == this)
-    qApp->quit();
+	setResultCode(Rejected);
+	if (qApp->mainWidget() == this) {
+		qApp->quit();
+	}
+}
+
+void ZLFullScreenDialog::keyPressEvent(QKeyEvent *event) {
+	if ((event == 0)) return;
+	// if (ZLQtKeyUtil::keyName(event) == "<Cancel>") {
+	if (event->key() == Key_F2) {
+		reject();
+	} else if (event->key() == Key_Enter || event->key() == Key_Return) {
+		accept();
+	} else {
+		event->ignore();
+	}
 }
