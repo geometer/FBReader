@@ -148,6 +148,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 	ZLTextElement::Kind elementKind = paragraphCursor[newInfo.End.wordNumber()].kind();
 
+	bool breakedAtFirstWord = false;
 	do {
 		const ZLTextElement &element = paragraphCursor[newInfo.End.wordNumber()];
 		newInfo.Width += myStyle.elementWidth(element, newInfo.End.charNumber());
@@ -186,6 +187,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 			}
 			if (useHyphenator && myStyle.textStyle()->allowHyphenations() &&
 					(elementKind == ZLTextElement::WORD_ELEMENT)) {
+				breakedAtFirstWord = true;
 				break;
 			}
 		}
@@ -224,7 +226,8 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 			newInfo.Width -= myStyle.elementWidth(element, startCharNumber);
 			const ZLTextWord &word = (ZLTextWord&)element;
 			int spaceLeft = maxWidth - newInfo.Width;
-			if ((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth())) {
+			if (breakedAtFirstWord ||
+					((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth()))) {
 				ZLUnicodeUtil::Ucs2String ucs2string;
 				ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
 				ZLTextHyphenationInfo hyphenationInfo = ZLTextHyphenator::instance().info(word);
@@ -240,7 +243,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 				}
 				if ((hyphenationPosition == startCharNumber) &&
 						(info.End.wordNumber() <= info.RealStart.wordNumber())) {
-					hyphenationPosition = word.Length - 1;
+					hyphenationPosition = word.Length;
 					subwordWidth = myStyle.elementWidth(element, startCharNumber);
 				}
 				if (hyphenationPosition > startCharNumber) {
