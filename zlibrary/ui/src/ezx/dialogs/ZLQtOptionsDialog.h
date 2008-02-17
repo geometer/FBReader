@@ -36,7 +36,7 @@ class ZLQtOptionsDialog : public ZLFullScreenDialog, public ZLOptionsDialog {
 
 public:
 	ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
-  ~ZLQtOptionsDialog();
+	~ZLQtOptionsDialog();
 	ZLDialogContent &createTab(const ZLResourceKey &key);
 
 protected:
@@ -45,8 +45,6 @@ protected:
 
 	bool runInternal();
 
-	void keyPressEvent(QKeyEvent *event);
-
 private slots:
 	void selectTab(int i);
 	void raiseTab(int i);
@@ -54,7 +52,6 @@ private slots:
 private:
 	MyQTabWidget *myTabWidget;
 	QPopupMenu *myMenu;
-  unsigned tabsCount;
 };
 
 class MyQTabWidget : public QWidgetStack {
@@ -62,7 +59,7 @@ class MyQTabWidget : public QWidgetStack {
 
 public:
 	MyQTabWidget(QWidget *parent);
-  int currentPageIndex() const;
+	int currentPageIndex() const;
 };
 
 #endif /* __ZLQTOPTIONSDIALOG_H__ */

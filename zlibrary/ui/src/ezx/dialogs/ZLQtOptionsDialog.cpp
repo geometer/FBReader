@@ -33,19 +33,19 @@ MyQTabWidget::MyQTabWidget(QWidget *parent) : QWidgetStack(parent) {
 }
 
 int MyQTabWidget::currentPageIndex() const {
-  return id(visibleWidget());
+	return id(visibleWidget());
 }
 
 ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : ZLFullScreenDialog(std::string("X3")), ZLOptionsDialog(resource, applyAction) {
-  QWidget *title = getTitleBarWidget();
-  if(title->isA("QLabel")) {
-    ((QLabel *)title)->setText(::qtString(ZLOptionsDialog::caption()));
-  }
-  
-  myTabWidget = new MyQTabWidget(this);
-  setContentWidget(myTabWidget);
+	QWidget *title = getTitleBarWidget();
+	if (title->isA("QLabel")) {
+		((QLabel *)title)->setText(::qtString(ZLOptionsDialog::caption()));
+	}
 
-	UTIL_CST *cst = (UTIL_CST *)getCSTWidget();
+	myTabWidget = new MyQTabWidget(this);
+	setContentWidget(myTabWidget);
+
+	UTIL_CST *cst = (UTIL_CST*)getCSTWidget();
 	myMenu = new QPopupMenu(cst);
 	QFont f(qApp->font());
 	f.setPointSize(15);
@@ -53,9 +53,6 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 	connect(myMenu, SIGNAL(activated(int)), this, SLOT(selectTab(int)));
 	cst->getLeftBtn()->setEnabled(true);
 	cst->getLeftBtn()->setPopup(myMenu);
-	cst->getMidBtn()->setText("OK");
-  
-  tabsCount = 0;
 }
 
 ZLQtOptionsDialog::~ZLQtOptionsDialog() {
@@ -68,14 +65,14 @@ ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
 	
 	ZLQtDialogContent *tab = new ZLQtDialogContent(sv->viewport(), tabResource(key));
 	sv->addChild(tab->widget());
-	myMenu->insertItem(::qtString(tab->displayName()), -1, tabsCount);
-  myTabWidget->addWidget(sv, tabsCount);
+	myMenu->insertItem(::qtString(tab->displayName()), -1, myTabs.size());
+	myTabWidget->addWidget(sv, myTabs.size());
 	myTabs.push_back(tab);
-  if(!tabsCount) {
-    raiseTab(0);
-  }
 
-  tabsCount++;
+	if(myTabs.size() == 1) {
+		raiseTab(0);
+	}
+
 	return *tab;
 }
 
@@ -85,24 +82,28 @@ const std::string &ZLQtOptionsDialog::selectedTabKey() const {
 
 void ZLQtOptionsDialog::raiseTab(int i) {
 	myTabWidget->raiseWidget(i);
-  QWidget *title = getTitleBarWidget();
-  if(title->isA("QLabel")) {
-    ((QLabel *)title)->setText(::qtString(ZLOptionsDialog::caption()) +
-      " (" + ::qtString((*myTabs[i]).displayName()) + ")");
-  }
+	QWidget *title = getTitleBarWidget();
+	if(title->isA("QLabel")) {
+		QString s = ::qtString(ZLOptionsDialog::caption());
+		s.append(" - ");
+		s.append(::qtString((*myTabs[i]).displayName()));
+		s.replace(QRegExp("[<]"), "&lt;");
+		s.replace(QRegExp("[>]"), "&gt;");
+		((QLabel *)title)->setText(s);
+	}
 }
 
 void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
 	for (std::vector<shared_ptr<ZLDialogContent> >::const_iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
 		if ((*it)->key() == key.Name) {
-      raiseTab(it - myTabs.begin());
+			raiseTab(it - myTabs.begin());
 			break;
 		}
 	}
 }
 
 void ZLQtOptionsDialog::selectTab(int i) {
-  raiseTab(myMenu->indexOf(i));
+	raiseTab(myMenu->indexOf(i));
 }
 
 bool ZLQtOptionsDialog::runInternal() {
@@ -110,12 +111,4 @@ bool ZLQtOptionsDialog::runInternal() {
 		((ZLQtDialogContent&)**it).close();
 	}
 	return exec();
-}
-
-void ZLQtOptionsDialog::keyPressEvent(QKeyEvent *event) {
-	if (event->key() == Key_Return) {
-		ZLFullScreenDialog::accept();
-	} else {
-		ZLFullScreenDialog::keyPressEvent(event);
-	}
 }
