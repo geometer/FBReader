@@ -46,6 +46,9 @@ create_tmpdir() {
 		echo -en "Removing Czech hyphenation patterns... ";
 		zip -dq zlibrary/text/data/hyphenationPatterns.zip cs.pattern;
 		echo OK;
+		echo -en "Removing Indonesian hyphenation patterns... ";
+		zip -dq zlibrary/text/data/hyphenationPatterns.zip id.pattern;
+		echo OK;
 		echo -en "Removing Qt-based interface... ";
 		rm -rf zlibrary/ui/src/qt zlibrary/ui/src/qt4
 		echo OK;
