@@ -20,7 +20,6 @@
 #include <algorithm>
 
 #include <ZLUnicodeUtil.h>
-#include <ZLImage.h>
 
 #include <ZLTextParagraph.h>
 
