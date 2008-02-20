@@ -150,8 +150,9 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 		if ((strlen(fileName) > 2) && strncmp(fileName, "./", 2) == 0) {
 			fileName +=2;
 		}
-		reader.myModelReader.addImageReference(fileName);
-		reader.myModelReader.addImage(fileName, new ZLFileImage("image/auto", reader.myPathPrefix + fileName, 0));
+		const std::string fullfileName = reader.myPathPrefix + fileName;
+		reader.myModelReader.addImageReference(fullfileName);
+		reader.myModelReader.addImage(fullfileName, new ZLFileImage("image/auto", fullfileName, 0));
 		if (flag) {
 			reader.myModelReader.beginParagraph();
 		}
