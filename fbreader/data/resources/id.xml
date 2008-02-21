@@ -12,16 +12,17 @@
 		</node>
 		<node name="navigate" value="Navigasi">
 			<node name="gotoHome" value="Ke Awal Dokumen"/>
+			<node name="gotoPageNumber" value="Ke Halaman..."/>
 			<node name="gotoSectionStart" value="Ke Bagian Awal Teks"/>
 			<node name="gotoSectionEnd" value="Ke Bagian Akhir Teks"/>
 			<node name="nextTOCSection" value="Ke Item Daftar Isi Berikutnya"/>
 			<node name="previousTOCSection" value="Ke Item Daftar Isi Sebelumnya"/>
-			<node name="undo" value="Kembali"/>
+			<node name="undo" value="Mundur"/>
 			<node name="redo" value="Maju"/>
 		</node>
 		<node name="selection" value="Seleksi">
 			<node name="copyToClipboard" value="Salin ke Clipboard"/>
-			<node name="openInDictionary" value="Buka di Dictionary"/>
+			<node name="openInDictionary" value="Buka di Kamus"/>
 			<node name="clearSelection" value="Bersihkan"/>
 		</node>
 		<node name="search" value="Cari">
@@ -35,14 +36,14 @@
 			<node name="toggleIndicator" value="Hidup/Matikan Indikator"/>
 		</node>
 		<node name="preferences" value="Pengaturan..."/>
-		<node name="quit" value="Tutup"/>
+		<node name="quit" value="Keluar"/>
 	</node>
 	<node name="toolbar">
 		<node name="showLibrary" value="Perlihatkan Daftar Pustaka"/>
-		<node name="showRecent" value="Perlihatkan Daftar Buku yang Sekarang"/>
+		<node name="showRecent" value="Perlihatkan Daftar Buku-buku Sebelumnya"/>
 		<node name="addBook" value="Tambahkan Berkas ke Pustaka"/>
 		<node name="gotoHome" value="Ke Bagian Awal Teks"/>
-		<node name="undo" value="Kembali"/>
+		<node name="undo" value="Mundur"/>
 		<node name="redo" value="Maju"/>
 		<node name="toc" value="Daftart Isi"/>
 		<node name="search" value="Pencarian Teks"/>
@@ -50,187 +51,186 @@
 		<node name="findPrevious" value="Pencarian Mundur"/>
 		<node name="bookInfo" value="Tampilkan Dialog Informasi Buku"/>
 		<node name="preferences" value="Tampilkan Dialog Pengaturan"/>
-		<node name="rotate" value="Putar Teks"/>
+		<node name="rotate" value="Putar Layar"/>
 		<node name="showHelp" value="Mengenai FBReader"/>
 	</node>
 	<node name="dialog">
 		<node name="button">
-			<node name="go" value="&amp;Cari!"/>
-			<node name="cancel" value="&amp;Batal"/>
+			<node name="go" value="&amp;Mulai!"/>
 		</node>
 		<node name="OptionsDialog">
-			<node name="title" value="Pengaturan"/>
+			<node name="title" value="FBReader - Pengaturan"/>
 			<node name="tab">
 				<node name="General" value="Umum">
-					<node name="bookPath" value="Book Path"/>
-					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
-					<node name="recentListSize" value="Recent Books List Size"/>
-					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
+					<node name="bookPath" value="Lokasi Buku"/>
+					<node name="lookInSubdirectories" value="Tampilkan Buku-buku yang Ada di Sub Direktori"/>
+					<node name="recentListSize" value="Jumlah Daftar Buku-buku yang dibuka sebelumnya"/>
+					<node name="keyDelay" value="Waktu Tunda Antara Penekanan Tombol"/>
 				</node>
 				<node name="Language" value="Bahasa">
-					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
-					<node name="defaultLanguage" value="Default Language"/>
-					<node name="defaultEncodingSet" value="Default Encoding Set"/>
-					<node name="defaultEncoding" value="Default Encoding"/>
-					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1"/>
-					<node name="chineseBreakAtAnyPosition" value="For Chinese Break Line at Any Position"/>
+					<node name="autoDetect" value="Deteksi Bahasa dan Enkode secara Otomatis"/>
+					<node name="defaultLanguage" value="Bahasa Standar"/>
+					<node name="defaultEncodingSet" value="Set Enkode Standar"/>
+					<node name="defaultEncoding" value="Enkode Standar"/>
+					<node name="useWindows1252Hack" value="Gunakan windows-1252 daripada iso-8859-1"/>
+					<node name="chineseBreakAtAnyPosition" value="Untuk Bahasa Cina, Penggal Baris di Sembarang Posisi"/>
 				</node>
 				<node name="Indicator" value="Indikator">
-					<node name="show" value="Show Position Indicator"/>
-					<node name="height" value="Indicator Height"/>
-					<node name="offset" value="Offset from Text"/>
-					<node name="pageNumber" value="Show Position as Numbers"/>
-					<node name="time" value="Show Time"/>
-					<node name="fontSize" value="Font Size"/>
-					<node name="tocMarks" value="Show TOC Marks"/>
-					<node name="navigation" value="Enable Navigation"/>
+					<node name="show" value="Tampilkan Indikator Posisi"/>
+					<node name="height" value="Tinggi Indikator"/>
+					<node name="offset" value="Jarak dari Teks"/>
+					<node name="pageNumber" value="Tampilkan Posisi sebagai Nomor"/>
+					<node name="time" value="Tampilkan Waktu"/>
+					<node name="fontSize" value="Ukuran Huruf"/>
+					<node name="tocMarks" value="Tampilkan Penanda Daftar Isi"/>
+					<node name="navigation" value="Aktifkan Navigasi"/>
 				</node>
-				<node name="Scrolling" value="Gulung Layar">
-					<node name="optionsFor" value="Options for">
-						<node name="large" value="Large Scrollings"/>
-						<node name="small" value="Small Scrollings"/>
-						<node name="mouse" value="Mouse Scrollings"/>
-						<node name="tap" value="Tap Scrollings"/>
+				<node name="Scrolling" value="Geser Layar">
+					<node name="optionsFor" value="Pengaturan untuk">
+						<node name="large" value="Pergeseran Besar"/>
+						<node name="small" value="Pergeseran Kecil"/>
+						<node name="mouse" value="Pergeseran Mouse"/>
+						<node name="tap" value="Pergeseran Layar Sentuh"/>
 					</node>
-					<node name="delay" value="Delay between Scrollings, msecs"/>
-					<node name="mode" value="Scrolling Mode">
-						<node name="noOverlapping" value="No Overlapping"/>
-						<node name="keepLines" value="Keep Lines"/>
-						<node name="scrollLines" value="Scroll Lines"/>
-						<node name="scrollPercentage" value="Scroll Percentage"/>
-						<node name="disable" value="Disable"/>
+					<node name="delay" value="Waktu Tunda antara Pergeseran, mdetik"/>
+					<node name="mode" value="Mode Pergeseran">
+						<node name="noOverlapping" value="Jangan Tumpang Tindih"/>
+						<node name="keepLines" value="Biarkan Baris"/>
+						<node name="scrollLines" value="Geser Baris"/>
+						<node name="scrollPercentage" value="Pensentase Pergeseran"/>
+						<node name="disable" value="Non-aktifkan"/>
 					</node>
-					<node name="linesToKeep" value="Lines to Keep"/>
-					<node name="linesToScroll" value="Lines to Scroll"/>
-					<node name="percentToScroll" value="Percent to Scroll"/>
-					<node name="fingerOnly" value="Scroll on Finger Tap Only"/>
+					<node name="linesToKeep" value="Baris yang Dibiarkan"/>
+					<node name="linesToScroll" value="Baris yang Digeser"/>
+					<node name="percentToScroll" value="Persentase yang Digeser"/>
+					<node name="fingerOnly" value="Geser Hanya Menggunakan Layar Sentuh"/>
 				</node>
 				<node name="Selection" value="Seleksi">
-					<node name="enableSelection" value="Enable Text Selection"/>
+					<node name="enableSelection" value="Aktifkan Seleksi Teks"/>
 				</node>
 				<node name="Margins" value="Margin">
-					<node name="left" value="Left Margin"/>
-					<node name="right" value="Right Margin"/>
-					<node name="top" value="Top Margin"/>
-					<node name="bottom" value="Bottom Margin"/>
+					<node name="left" value="Margin Kiri"/>
+					<node name="right" value="Margin Kanan"/>
+					<node name="top" value="Margin Atas"/>
+					<node name="bottom" value="Margin Bawah"/>
 				</node>
 				<node name="Format" value="Format">
-					<node name="optionsFor" value="Options for"/>
-					<node name="lineSpacing" value="Line Spacing">
-						<node name="unchanged" value="&lt;unchanged&gt;"/>
+					<node name="optionsFor" value="Pengaturan untuk"/>
+					<node name="lineSpacing" value="Jarak Baris">
+						<node name="unchanged" value="&lt;tidak diubah&gt;"/>
 					</node>
-					<node name="firstLineIndent" value="First Line Indent"/>
-					<node name="alignment" value="Alignment">
-						<node name="left" value="Left"/>
-						<node name="right" value="Right"/>
-						<node name="center" value="Center"/>
-						<node name="justify" value="Justify"/>
-						<node name="unchanged" value="&lt;unchanged&gt;"/>
+					<node name="firstLineIndent" value="Indentasi Baris Pertama"/>
+					<node name="alignment" value="Perataan Teks">
+						<node name="left" value="Kiri"/>
+						<node name="right" value="Kanan"/>
+						<node name="center" value="Tengah"/>
+						<node name="justify" value="Rata Kanan Kiri"/>
+						<node name="unchanged" value="&lt;tidak diubah&gt;"/>
 					</node>
-					<node name="spaceBefore" value="Space Before"/>
-					<node name="spaceAfter" value="Space After"/>
-					<node name="leftIndent" value="Left Indent"/>
-					<node name="rightIndent" value="Right Indent"/>
+					<node name="spaceBefore" value="Jarak Sebelumnya"/>
+					<node name="spaceAfter" value="Jarak Setelahnya"/>
+					<node name="leftIndent" value="Indentasi Kiri"/>
+					<node name="rightIndent" value="Indentasi Kanan"/>
 				</node>
 				<node name="Styles" value="Bentuk">
-					<node name="optionsFor" value="Options for"/>
-					<node name="fontFamily" value="Family">
-						<node name="unchanged" value="&lt;unchanged&gt;"/>
+					<node name="optionsFor" value="Pengaturan untuk"/>
+					<node name="fontFamily" value="Keluarga">
+						<node name="unchanged" value="&lt;tidak diubah&gt;"/>
 					</node>
-					<node name="fontSize" value="Size"/>
-					<node name="fontSizeDifference" value="Size Difference"/>
-					<node name="bold" value="Bold"/>
-					<node name="italic" value="Italic"/>
-					<node name="allowHyphenations" value="Allow Hyphenations"/>
-					<node name="autoHyphenations" value="Auto Hyphenations"/>
+					<node name="fontSize" value="Ukuran"/>
+					<node name="fontSizeDifference" value="Perbedaan Ukuran"/>
+					<node name="bold" value="Tebal"/>
+					<node name="italic" value="Miring"/>
+					<node name="allowHyphenations" value="Ijinkan Pemenggalan Kata"/>
+					<node name="autoHyphenations" value="Pemenggalan Kata Otomatis"/>
 				</node>
 				<node name="Rotation" value="Rotasi">
-					<node name="direction" value="Rotation Type">
-						<node name="disabled" value="Disabled"/>
-						<node name="clockwise" value="90 Degrees Clockwise"/>
-						<node name="counterclockwise" value="90 Degrees Counterclockwise"/>
-						<node name="180" value="180 Degrees"/>
-						<node name="cycle" value="Cycle Through All 4 Directions"/>
+					<node name="direction" value="Tipe Rotasi">
+						<node name="disabled" value="Non-aktifkan"/>
+						<node name="clockwise" value="90 Derajat Searah Jarum Jam"/>
+						<node name="counterclockwise" value="90 Derajat Berlawanan Jarum Jam"/>
+						<node name="180" value="180 Derajat"/>
+						<node name="cycle" value="Rotasi 4 Arah Bergantian"/>
 					</node>
 				</node>
 				<node name="Colors" value="Warna">
-					<node name="colorFor" value="Color for">
-						<node name="background" value="Background"/>
-						<node name="selectionBackground" value="Selection Background"/>
-						<node name="text" value="Regular Text"/>
-						<node name="internalLink" value="Internal Hyperlink Text"/>
-						<node name="externalLink" value="External Hyperlink Text"/>
-						<node name="highlighted" value="Highlighted Text"/>
-						<node name="treeLines" value="Tree Lines"/>
-						<node name="indicator" value="Position Indicator"/>
+					<node name="colorFor" value="Warna untuk">
+						<node name="background" value="Latar Belakang"/>
+						<node name="selectionBackground" value="Latar Belakang Seleksi"/>
+						<node name="text" value="Teks Biasa"/>
+						<node name="internalLink" value="Teks Hyperlink Internal"/>
+						<node name="externalLink" value="Teks Hyperlink Eksternal"/>
+						<node name="highlighted" value="Text Berwarna Cerah"/>
+						<node name="treeLines" value="Garis Diagram Pohon"/>
+						<node name="indicator" value="Indikator Posisi"/>
 					</node>
 				</node>
 				<node name="Keys" value="Tombol">
-					<node name="grabSystemKeys" value="Grab System Keys"/>
-					<node name="separate" value="Keybindings Depend on Orientation"/>
-					<node name="orientation" value="Orientation"/>
+					<node name="grabSystemKeys" value="Tangkap Tombol Sistem"/>
+					<node name="separate" value="Tombol Tergantung dari Orientasi"/>
+					<node name="orientation" value="Orientasi"/>
 					<node name="action">
-						<node name="none" value="None"/>
-						<node name="showLibrary" value="Show Library"/>
-						<node name="showRecent" value="Show Recent Books"/>
-						<node name="previousBook" value="Open Previous Book"/>
-						<node name="toc" value="Show Table of Contents"/>
-						<node name="gotoHome" value="Go to Home"/>
-						<node name="gotoSectionStart" value="Go to Start of Section"/>
-						<node name="gotoSectionEnd" value="Go to End of Section"/>
-						<node name="nextTOCSection" value="Go to Next TOC Section"/>
-						<node name="previousTOCSection" value="Go to Previous TOC Section"/>
-						<node name="largeScrollForward" value="Large Scroll Forward"/>
-						<node name="largeScrollBackward" value="Large Scroll Backward"/>
-						<node name="smallScrollForward" value="Small Scroll Forward"/>
-						<node name="smallScrollBackward" value="Small Scroll Backward"/>
-						<node name="undo" value="Undo"/>
-						<node name="redo" value="Redo"/>
-						<node name="copyToClipboard" value="Copy Selected Text to Clipboard"/>
-						<node name="openInDictionary" value="Open Selected Text in Dictionary"/>
-						<node name="clearSelection" value="Clear Selection"/>
-						<node name="search" value="Search"/>
-						<node name="findPrevious" value="Find Previous"/>
-						<node name="findNext" value="Find Next"/>
-						<node name="increaseFont" value="Increase Font Size"/>
-						<node name="decreaseFont" value="Decrease Font Size"/>
-						<node name="toggleIndicator" value="Toggle Position Indicator"/>
-						<node name="toggleFullscreen" value="Toggle Fullscreen Mode"/>
-						<node name="onFullscreen" value="Switch to Fullscreen Mode"/>
-						<node name="rotate" value="Rotate Screen"/>
-						<node name="preferences" value="Show Options Dialog"/>
-						<node name="bookInfo" value="Show Book Info Dialog"/>
-						<node name="addBook" value="Add Book"/>
-						<node name="cancel" value="Cancel"/>
-						<node name="quit" value="Quit"/>
+						<node name="none" value="Tidak Terpakai"/>
+						<node name="showLibrary" value="Tampilkan Pustaka"/>
+						<node name="showRecent" value="Tampilkan Buku-buku Sebelumnya"/>
+						<node name="previousBook" value="Buka Buku Sebelumnya"/>
+						<node name="toc" value="Tampilkan Daftar Isi"/>
+						<node name="gotoHome" value="Ke Awal Dokumen"/>
+						<node name="gotoSectionStart" value="Ke Awal Seksi"/>
+						<node name="gotoSectionEnd" value="Ke Akhir Seksi"/>
+						<node name="nextTOCSection" value="Ke Seksi Daftar Isi Berikutnya"/>
+						<node name="previousTOCSection" value="Ke Seksi Daftar Isi Sebelumnya"/>
+						<node name="largeScrollForward" value="Pergeseran Maju yang Besar"/>
+						<node name="largeScrollBackward" value="Pergeseran Mundur yang Besar"/>
+						<node name="smallScrollForward" value="Pergeseran Maju yang Kecil"/>
+						<node name="smallScrollBackward" value="Pergeseran Mundur yang Kecil"/>
+						<node name="undo" value="Mundur"/>
+						<node name="redo" value="Maju"/>
+						<node name="copyToClipboard" value="Salin Teks yang Diseleksi ke Clipboard"/>
+						<node name="openInDictionary" value="Buka Teks yang Diseleksi di Kamus"/>
+						<node name="clearSelection" value="Bersihkan Seleksi"/>
+						<node name="search" value="Pencarian"/>
+						<node name="findPrevious" value="Pencarian Mundur"/>
+						<node name="findNext" value="Pencarian Maju"/>
+						<node name="increaseFont" value="Besarkan Ukuran Huruf"/>
+						<node name="decreaseFont" value="Kecilkan Ukuran Huruf"/>
+						<node name="toggleIndicator" value="Hidup/Matikan Indikator"/>
+						<node name="toggleFullscreen" value="Hidup/Matikan Layar Penuh"/>
+						<node name="onFullscreen" value="Ubah ke Layar Penuh"/>
+						<node name="rotate" value="Putar Layar"/>
+						<node name="preferences" value="Tampilkan Dialog Pengaturan"/>
+						<node name="bookInfo" value="Tampilkan Dialog Informasi Buku"/>
+						<node name="addBook" value="Tambah Buku"/>
+						<node name="cancel" value="Batal"/>
+						<node name="quit" value="Keluar"/>
 					</node>
-					<node name="quitOnCancel" value="Quit Application on Cancel"/>
+					<node name="quitOnCancel" value="Keluar dari Aplikasi Ketika Pembatalan"/>
 				</node>
 				<node name="Config" value="Konfigurasi">
-					<node name="autoSave" value="Save State Automatically"/>
-					<node name="timeout" value="Timeout between Savings, seconds"/>
+					<node name="autoSave" value="Simpan Status Secara Otomatis"/>
+					<node name="timeout" value="Waktu Tunda Antara Penyimpanan, detik"/>
 				</node>
 				<node name="Dictionary" value="Kamus">
-					<node name="enableIntegration" value="Enable Integration with %s"/>
-					<node name="defaultText" value="Enable Integration with Dictionary"/>
-					<node name="choice" value="Integrate with"/>
-					<node name="singleClickOpen" value="Open by Single Click"/>
+					<node name="enableIntegration" value="Aktifkan Integrasi dengan %s"/>
+					<node name="defaultText" value="Aktifkan Integrasi dengan Kamus"/>
+					<node name="choice" value="Integrasikan dengan"/>
+					<node name="singleClickOpen" value="Buka dengan Klik Tunggal"/>
 				</node>
 				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Open External Links in %s"/>
-					<node name="defaultText" value="Open External Links in Browser"/>
-					<node name="choice" value="Use Browser"/>
-					<node name="command" value="Command to Execute"/>
+					<node name="enableIntegration" value="Buka Link Eksternal dengan %s"/>
+					<node name="defaultText" value="Buka Link Eksternal dengan Browser"/>
+					<node name="choice" value="Gunakan Browser"/>
+					<node name="command" value="Perintah yang Dieksekusi"/>
 				</node>
 				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Action on Key Release, not on Key Press"/>
-					<node name="minStylusPressure" value="Minimal Stylus Pressure"/>
-					<node name="maxStylusPressure" value="Maximal Stylus Pressure"/>
+					<node name="keyActionOnRelease" value="Tombol Aktif saat Dilepas, bukan saat Ditekan"/>
+					<node name="minStylusPressure" value="Tekanan Minimal Stylus"/>
+					<node name="maxStylusPressure" value="Tekanan Maksimal Stylus"/>
 				</node>
 			</node>
 		</node>
 		<node name="InfoDialog">
-			<node name="title" value="Informasi Buku"/>
+			<node name="title" value="FBReader - Informasi Buku"/>
 			<node name="tab">
 				<node name="Common" value="Umum">
 					<node name="file" value="Berkas"/>
@@ -238,8 +238,8 @@
 					<node name="authorDisplayName" value="Pengarang (Tertampil)"/>
 					<node name="authorSortKey" value="Pengarang (Pengurut)"/>
 					<node name="language" value="Bahasa"/>
-					<node name="encodingSet" value="Set Pengkodean"/>
-					<node name="encoding" value="Pengkodean"/>
+					<node name="encodingSet" value="Set Enkode"/>
+					<node name="encoding" value="Enkode"/>
 				</node>
 				<node name="Series" value="Seri">
 					<node name="seriesTitle" value="Judul Seri"/>
@@ -260,7 +260,7 @@
 			</node>
 		</node>
 		<node name="addFileDialog">
-			<node name="title" value="Tambahkan Buku ke Pustaka"/>
+			<node name="title" value="FBReader - Tambahkan Buku ke Pustaka"/>
 		</node>
 		<node name="textSearchDialog">
 			<node name="title" value="Pencarian Text"/>
@@ -292,48 +292,48 @@
 		</node>
 	</node>
 	<node name="style">
-		<node name="Base" value="Base"/>
-		<node name="Regular Paragraph" value="Regular Paragraph"/>
-		<node name="Title" value="Title"/>
-		<node name="Section Title" value="Section Title"/>
-		<node name="Poem Title" value="Poem Title"/>
-		<node name="Subtitle" value="Subtitle"/>
-		<node name="Annotation" value="Annotation"/>
-		<node name="Epigraph" value="Epigraph"/>
+		<node name="Base" value="Dasar"/>
+		<node name="Regular Paragraph" value="Paragraf Biasa"/>
+		<node name="Title" value="Judul"/>
+		<node name="Section Title" value="Judul Seksi"/>
+		<node name="Poem Title" value="Judul Poem"/>
+		<node name="Subtitle" value="Sub Judul"/>
+		<node name="Annotation" value="Anotasi"/>
+		<node name="Epigraph" value="Epigraf"/>
 		<node name="Stanza" value="Stanza"/>
 		<node name="Verse" value="Verse"/>
-		<node name="Preformatted text" value="Preformatted text"/>
-		<node name="Image" value="Image"/>
+		<node name="Preformatted text" value="Teks Terformat"/>
+		<node name="Image" value="Gambar"/>
 		<node name="Cite" value="Cite"/>
-		<node name="Author" value="Author"/>
-		<node name="Date" value="Date"/>
-		<node name="Internal Hyperlink" value="Internal Hyperlink"/>
-		<node name="Footnote" value="Footnote"/>
+		<node name="Author" value="Pengarang"/>
+		<node name="Date" value="Tanggal"/>
+		<node name="Internal Hyperlink" value="Hyperlink Internal"/>
+		<node name="Footnote" value="Catatan Kaki"/>
 		<node name="Emphasis" value="Emphasis"/>
 		<node name="Strong" value="Strong"/>
 		<node name="Subscript" value="Subscript"/>
 		<node name="Superscript" value="Superscript"/>
-		<node name="Code" value="Code"/>
-		<node name="StrikeThrough" value="StrikeThrough"/>
-		<node name="Contents Table" value="Contents Table"/>
-		<node name="Author in Library" value="Author in Library"/>
-		<node name="Book in Library" value="Book in Library"/>
-		<node name="Recent Book List" value="Recent Book List"/>
-		<node name="Italic" value="Italic"/>
-		<node name="Bold" value="Bold"/>
-		<node name="Definition" value="Definition"/>
-		<node name="Definition Description" value="Definition Description"/>
+		<node name="Code" value="Kode"/>
+		<node name="StrikeThrough" value="Teks Tercoret"/>
+		<node name="Contents Table" value="Daftar Isi"/>
+		<node name="Author in Library" value="Pengarang dalam Pustaka"/>
+		<node name="Book in Library" value="Buku dalam Pustaka"/>
+		<node name="Recent Book List" value="Daftar Buku-buku Sebelumnya"/>
+		<node name="Italic" value="Miring"/>
+		<node name="Bold" value="Tebal"/>
+		<node name="Definition" value="Definisi"/>
+		<node name="Definition Description" value="Deskripsi Definisi"/>
 		<node name="Header 1" value="Header 1"/>
 		<node name="Header 2" value="Header 2"/>
 		<node name="Header 3" value="Header 3"/>
 		<node name="Header 4" value="Header 4"/>
 		<node name="Header 5" value="Header 5"/>
 		<node name="Header 6" value="Header 6"/>
-		<node name="External Hyperlink" value="External Hyperlink"/>
+		<node name="External Hyperlink" value="Hyperlink Eksternal"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="Browser"/>
-		<node name="defaultBrowser" value="Default Browser"/>
+		<node name="defaultBrowser" value="Browser Standar"/>
 	</node>
 	<node name="mobipocketPlugin">
 		<node name="unknown" value="Ada Kesalahan"/>

@@ -28,7 +28,7 @@
 		<node name="lime" value="Lime"/>
 		<node name="yellow" value="Kuning"/>
 		<node name="magenta" value="Merah Keunguan"/>
-		<node name="cyan" value="Cyan"/>
+		<node name="cyan" value="Biru Muda"/>
 		<node name="custom..." value="Kustom..."/>
 	</node>
 	<node name="language">
@@ -40,7 +40,6 @@
 		<node name="es" value="Spanyol"/>
 		<node name="fi" value="Finlandia"/>
 		<node name="fr" value="Perancis"/>
-		<node name="id" value="Indonesian" toBeTranslated="true"/>
 		<node name="it" value="Italia"/>
 		<node name="no" value="Norwegia"/>
 		<node name="pt" value="Portugis"/>
@@ -48,6 +47,7 @@
 		<node name="sv" value="Swedia"/>
 		<node name="uk" value="Ukraina"/>
 		<node name="zh" value="Cina"/>
+		<node name="id" value="Indonesia"/>
 		<node name="other" value="Lainnya"/>
 	</node>
 	<node name="boolean3">
