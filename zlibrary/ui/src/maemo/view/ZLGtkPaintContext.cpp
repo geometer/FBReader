@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <ZLUnicodeUtil.h>
 #include <ZLImage.h>
 
