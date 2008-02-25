@@ -56,10 +56,11 @@ public:
 	void resizeEvent(QResizeEvent *event);
 	void closeEvent(QCloseEvent *event);
 	void keyPressEvent(QKeyEvent *event);
-	void connectQuitButton(UTIL_CST *cst);
+	void connectCSTButtons(UTIL_CST *cst);
 
 public slots:
-	void doActionQuit();
+	void doActionQuitSlot();
+  void setFullscreenSlot();
 
 private slots:
 	void setDocument(const QString &fileName);

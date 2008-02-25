@@ -401,12 +401,17 @@ void MyMainWindow::closeEvent(QCloseEvent *event) {
 	}
 }
 
-void MyMainWindow::doActionQuit() {
+void MyMainWindow::doActionQuitSlot() {
 	myApplicationWindow->application().closeView();
 }
 
-void MyMainWindow::connectQuitButton(UTIL_CST *cst) {
-	connect(cst->getRightBtn(), SIGNAL(clicked()), this, SLOT(doActionQuit()));
+void MyMainWindow::setFullscreenSlot() {
+	myApplicationWindow->application().setFullscreen(true);
+}
+
+void MyMainWindow::connectCSTButtons(UTIL_CST *cst) {
+	connect(cst->getMidBtn(), SIGNAL(clicked()), this, SLOT(setFullscreenSlot()));
+	connect(cst->getRightBtn(), SIGNAL(clicked()), this, SLOT(doActionQuitSlot()));
 }
 
 void ZLQtApplicationWindow::close() {
@@ -432,7 +437,7 @@ ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
 	layout->addWidget(myCST);
 	myCST->getMidBtn()->setEnabled(false);
 	myCST->getLeftBtn()->setPopup(myMenu);
-	myMainWindow->connectQuitButton(myCST);
+	myMainWindow->connectCSTButtons(myCST);
 
 	myMainWindow->setCentralWidget(main);
 	return viewWidget;
