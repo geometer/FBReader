@@ -40,6 +40,7 @@
 		<node name="es" value="Spanyol"/>
 		<node name="fi" value="Finlandia"/>
 		<node name="fr" value="Perancis"/>
+		<node name="id" value="Indonesia"/>
 		<node name="it" value="Italia"/>
 		<node name="no" value="Norwegia"/>
 		<node name="pt" value="Portugis"/>
@@ -47,15 +48,14 @@
 		<node name="sv" value="Swedia"/>
 		<node name="uk" value="Ukraina"/>
 		<node name="zh" value="Cina"/>
-		<node name="id" value="Indonesia"/>
 		<node name="other" value="Lainnya"/>
 	</node>
 	<node name="boolean3">
 		<node name="on" value="Hidup"/>
 		<node name="off" value="Mati"/>
-		<node name="unchanged" value="Tidak berubah"/>
+		<node name="unchanged" value="tidak berubah"/>
 	</node>
 	<node name="keyOptionView">
-		<node name="actionFor" value="Aksi tombol"/>
+		<node name="actionFor" value="Aksi Tombol"/>
 	</node>
 </resources>
