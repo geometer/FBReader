@@ -408,6 +408,9 @@ void KeyLineEdit::focusOutEvent(QFocusEvent*) {
 }
 
 void KeyLineEdit::keyPressEvent(QKeyEvent *keyEvent) {
+	if (keyEvent->key() == 0x1031) {
+		return;
+	}
 	std::string keyText = ZLQtKeyUtil::keyName(keyEvent);
 	setText(keyText.c_str());
 	if (!keyText.empty()) {
