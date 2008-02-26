@@ -171,7 +171,7 @@ private:
 class ComboOptionView : public ZLGtkOptionView {
 
 public:
-	ComboOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder), myListSize(0) {}
+	ComboOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder), myLabel(0), myComboBox(0), myListSize(0) {}
 
 private:
 	void _createItem();

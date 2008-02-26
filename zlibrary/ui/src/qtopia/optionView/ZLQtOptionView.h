@@ -174,7 +174,7 @@ class ComboOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	ComboOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder) {}
+	ComboOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLQtOptionViewHolder &holder) : ZLQtOptionView(name, tooltip, option, holder), myLabel(0), myComboBox(0) {}
 
 private:
 	void _createItem();

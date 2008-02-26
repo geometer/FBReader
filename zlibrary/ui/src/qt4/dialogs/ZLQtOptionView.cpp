@@ -144,19 +144,29 @@ void ChoiceOptionView::_onAccept() const {
 
 void ComboOptionView::_createItem() {
 	const ZLComboOptionEntry &comboOption = (ZLComboOptionEntry&)*myOption;
-	QLabel *label = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
+	QLabel *label = 0;
+	const std::string &name = ZLOptionView::name();
+	if (!name.empty()) {
+		label = new QLabel(::qtString(name), myTab->widget());
+	}
 	myComboBox = new QComboBox(myTab->widget());
 	myComboBox->setEditable(comboOption.isEditable());
 
-	myWidgets.push_back(label);
+	if (label != 0) {
+		myWidgets.push_back(label);
+	}
 	myWidgets.push_back(myComboBox);
 
 	connect(myComboBox, SIGNAL(activated(int)), this, SLOT(onValueSelected(int)));
 	connect(myComboBox, SIGNAL(editTextChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
 
-	int width = myToColumn - myFromColumn + 1;
-	myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 2 - 1);
-	myTab->addItem(myComboBox, myRow, myToColumn - width / 2 + 1, myToColumn);
+	if (label != 0) {
+		int width = myToColumn - myFromColumn + 1;
+		myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 2 - 1);
+		myTab->addItem(myComboBox, myRow, myToColumn - width / 2 + 1, myToColumn);
+	} else {
+		myTab->addItem(myComboBox, myRow, myFromColumn, myToColumn);
+	}
 
 	reset();
 }
