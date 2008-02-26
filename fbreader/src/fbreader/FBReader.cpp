@@ -47,7 +47,6 @@
 #include "../formats/FormatPlugin.h"
 
 static const std::string OPTIONS = "Options";
-static const std::string SEARCH = "Search";
 static const std::string STATE = "State";
 static const std::string BOOK = "Book";
 
@@ -95,11 +94,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	TapScrollingOptions(TAP_SCROLLING, 0, ZLTextView::NO_OVERLAPPING, 1, 1, 50),
 	EnableTapScrollingOption(ZLCategoryKey::CONFIG, TAP_SCROLLING, "Enabled", true),
 	TapScrollingOnFingerOnlyOption(ZLCategoryKey::CONFIG, TAP_SCROLLING, "FingerOnly", true),
-	SearchBackwardOption(FBCategoryKey::SEARCH, SEARCH, "Backward", false),
-	SearchIgnoreCaseOption(FBCategoryKey::SEARCH, SEARCH, "IgnoreCase", true),
-	SearchInWholeTextOption(FBCategoryKey::SEARCH, SEARCH, "WholeText", false),
-	SearchThisSectionOnlyOption(FBCategoryKey::SEARCH, SEARCH, "ThisSectionOnly", false),
-	SearchPatternOption(FBCategoryKey::SEARCH, SEARCH, "Pattern", ""),
 	UseSeparateBindingsOption(ZLCategoryKey::CONFIG, "KeysOptions", "UseSeparateBindings", false),
 	EnableSingleClickDictionaryOption(ZLCategoryKey::CONFIG, "Dictionary", "SingleClick", false),
 	myBindings0("Keys"),

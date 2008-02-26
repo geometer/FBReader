@@ -75,12 +75,6 @@ public:
 	ZLBooleanOption EnableTapScrollingOption;
 	ZLBooleanOption TapScrollingOnFingerOnlyOption;
 
-	ZLBooleanOption SearchBackwardOption;
-	ZLBooleanOption SearchIgnoreCaseOption;
-	ZLBooleanOption SearchInWholeTextOption;
-	ZLBooleanOption SearchThisSectionOnlyOption;
-	ZLStringOption SearchPatternOption;
-
 	ZLBooleanOption UseSeparateBindingsOption;
 
 	ZLBooleanOption EnableSingleClickDictionaryOption;

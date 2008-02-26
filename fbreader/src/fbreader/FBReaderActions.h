@@ -197,6 +197,15 @@ public:
 	SearchAction(FBReader &fbreader);
 	bool isVisible();
 	void run();
+
+private:
+	ZLBooleanOption SearchBackwardOption;
+	ZLBooleanOption SearchIgnoreCaseOption;
+	ZLBooleanOption SearchInWholeTextOption;
+	ZLBooleanOption SearchThisSectionOnlyOption;
+	ZLStringOption SearchPatternOption;
+
+friend class SearchPatternEntry;
 };
 
 class FindNextAction : public FBAction {

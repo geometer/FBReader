@@ -25,8 +25,73 @@
 
 #include "FBReader.h"
 #include "FBReaderActions.h"
+#include "../options/FBOptions.h"
 
-SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader) {
+#include <set>
+
+static const std::string SEARCH = "Search";
+static const std::string PATTERN = "Pattern";
+
+class SearchPatternEntry : public ZLComboOptionEntry {
+
+public:
+	SearchPatternEntry(SearchAction &action);
+
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
+
+private:
+	SearchAction &myAction;
+	mutable std::vector<std::string> myValues;
+};
+
+SearchPatternEntry::SearchPatternEntry(SearchAction &action) : ZLComboOptionEntry(true), myAction(action) {
+}
+
+const std::string &SearchPatternEntry::initialValue() const {
+	return values()[0];
+}
+
+const std::vector<std::string> &SearchPatternEntry::values() const {
+	if (myValues.empty()) {
+		// TODO: implement
+		myValues.push_back(myAction.SearchPatternOption.value());
+		for (int i = 1; i < 6; ++i) {
+			std::string pattern = PATTERN;
+			ZLStringUtil::appendNumber(pattern, i);
+			std::string value = ZLStringOption(FBCategoryKey::SEARCH, SEARCH, pattern, "").value();
+			if (!value.empty()) {
+				myValues.push_back(value);
+			}
+		}
+	}
+	return myValues;
+}
+
+void SearchPatternEntry::onAccept(const std::string &value) {
+	// TODO: implement
+	if (value != values()[0]) {
+		std::string v = value;
+		ZLStringUtil::stripWhiteSpaces(v);
+		myAction.SearchPatternOption.setValue(v);
+		int index = 1;
+		for (std::vector<std::string>::const_iterator it = myValues.begin(); (index < 6) && (it != myValues.end()); ++it) {
+			if (*it != v) {
+				std::string pattern = PATTERN;
+				ZLStringUtil::appendNumber(pattern, index++);
+				ZLStringOption(FBCategoryKey::SEARCH, SEARCH, pattern, "").setValue(*it);
+			}
+		}
+	}
+}
+
+SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader),
+	SearchBackwardOption(FBCategoryKey::SEARCH, SEARCH, "Backward", false),
+	SearchIgnoreCaseOption(FBCategoryKey::SEARCH, SEARCH, "IgnoreCase", true),
+	SearchInWholeTextOption(FBCategoryKey::SEARCH, SEARCH, "WholeText", false),
+	SearchThisSectionOnlyOption(FBCategoryKey::SEARCH, SEARCH, "ThisSectionOnly", false),
+	SearchPatternOption(FBCategoryKey::SEARCH, SEARCH, PATTERN, "") {
 }
 
 bool SearchAction::isVisible() {
@@ -38,27 +103,24 @@ void SearchAction::run() {
 
 	shared_ptr<ZLDialog> searchDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("textSearchDialog"));
 
-	searchDialog->addOption(ZLResourceKey("text"), fbreader().SearchPatternOption);
-	searchDialog->addOption(ZLResourceKey("ignoreCase"), fbreader().SearchIgnoreCaseOption);
-	searchDialog->addOption(ZLResourceKey("wholeText"), fbreader().SearchInWholeTextOption);
-	searchDialog->addOption(ZLResourceKey("backward"), fbreader().SearchBackwardOption);
+	searchDialog->addOption(ZLResourceKey("text"), new SearchPatternEntry(*this));
+	searchDialog->addOption(ZLResourceKey("ignoreCase"), SearchIgnoreCaseOption);
+	searchDialog->addOption(ZLResourceKey("wholeText"), SearchInWholeTextOption);
+	searchDialog->addOption(ZLResourceKey("backward"), SearchBackwardOption);
 	if (textView.hasMultiSectionModel()) {
-		searchDialog->addOption(ZLResourceKey("currentSection"), fbreader().SearchThisSectionOnlyOption);
+		searchDialog->addOption(ZLResourceKey("currentSection"), SearchThisSectionOnlyOption);
 	}
 	searchDialog->addButton(ZLResourceKey("go"), true);
 	searchDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
 
 	if (searchDialog->run()) {
 		searchDialog->acceptValues();
-		std::string pattern = fbreader().SearchPatternOption.value();
-		ZLStringUtil::stripWhiteSpaces(pattern);
-		fbreader().SearchPatternOption.setValue(pattern);
 		textView.search(
-			pattern,
-			fbreader().SearchIgnoreCaseOption.value(),
-			fbreader().SearchInWholeTextOption.value(),
-			fbreader().SearchBackwardOption.value(),
-			fbreader().SearchThisSectionOnlyOption.value()
+			SearchPatternOption.value(),
+			SearchIgnoreCaseOption.value(),
+			SearchInWholeTextOption.value(),
+			SearchBackwardOption.value(),
+			SearchThisSectionOnlyOption.value()
 		);
 	}
 }
