@@ -230,14 +230,14 @@ void ComboOptionView::onTabResized(const QSize &size) {
 }
 
 void ComboOptionView::_show() {
-	if (myLabel == 0) {
+	if (myLabel != 0) {
 		myLabel->show();
 	}
 	myComboBox->show();
 }
 
 void ComboOptionView::_hide() {
-	if (myLabel == 0) {
+	if (myLabel != 0) {
 		myLabel->hide();
 	}
 	myComboBox->hide();
