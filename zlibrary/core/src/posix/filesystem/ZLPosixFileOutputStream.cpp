@@ -38,7 +38,7 @@ bool ZLPosixFileOutputStream::open() {
 		return false;
 	}
 
-	myFile = fopen(myTemporaryName.c_str(), "w");
+	myFile = fopen(myTemporaryName.c_str(), "wb");
 	return myFile != 0;
 }
 
