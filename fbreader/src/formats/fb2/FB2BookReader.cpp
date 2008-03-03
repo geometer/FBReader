@@ -87,7 +87,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			myModelReader.beginParagraph();
 			break;
 		case _DATE:
-			myModelReader.pushKind(DATE);
+			myModelReader.pushKind(DATEKIND);
 			myModelReader.beginParagraph();
 			break;
 		case _CITE:
