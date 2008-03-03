@@ -174,7 +174,19 @@ void FBReader::initWindow() {
 	if (!myBookAlreadyOpen) {
 		BookDescriptionPtr description;
 		if (!myBookToOpen.empty()) {
-			description = createDescription(myBookToOpen);
+			FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(myBookToOpen), false);
+			if (plugin != 0) {
+				std::string error = plugin->tryOpen(myBookToOpen);
+				if (!error.empty()) {
+					ZLResourceKey boxKey("openBookErrorBox");
+					ZLDialogManager::instance().errorBox(
+						boxKey,
+						ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), error)
+					);
+				} else {
+					description = createDescription(myBookToOpen);
+				}
+			}
 		}
 		if (description.isNull()) {
 			ZLStringOption bookName(ZLCategoryKey::STATE, STATE, BOOK, "");
