@@ -47,7 +47,7 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 	myComboEntry->addValue(myComboEntry->initialValue());
 
 	ZLTextStyleCollection &collection = ZLTextStyleCollection::instance();
-	ZLTextKind styles[] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATE, POEM_TITLE, STANZA, VERSE };
+	ZLTextKind styles[] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATEKIND, POEM_TITLE, STANZA, VERSE };
 	const int STYLES_NUMBER = sizeof(styles) / sizeof(ZLTextKind);
 	for (int i = 0; i < STYLES_NUMBER; ++i) {
 		const ZLTextStyleDecoration *decoration = collection.decoration(styles[i]);
