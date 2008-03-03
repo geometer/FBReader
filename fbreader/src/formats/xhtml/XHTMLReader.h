@@ -36,18 +36,25 @@ public:
 	
 	virtual void doAtStart(XHTMLReader &reader, const char **xmlattributes) = 0;
 	virtual void doAtEnd(XHTMLReader &reader) = 0;
+
+protected:
+	static BookReader &bookReader(XHTMLReader &reader);	
+	const std::string &pathPrefix(XHTMLReader &reader);	
 };
 
 class XHTMLReader : public ZLXMLReader {
 
+public:
+	static XHTMLTagAction *addAction(const std::string &tag, XHTMLTagAction *action);
+	static void fillTagTable();
+
 private:
 	static std::map<std::string,XHTMLTagAction*> ourTagActions;
-	static void addAction(const std::string &tag, XHTMLTagAction *action);
-	static void fillTagTable();
 
 public:
 	XHTMLReader(BookReader &modelReader);
 	bool readFile(const std::string &pathPrefix, const std::string &fileName, const std::string &referenceName);
+	bool readFile(const std::string &pathPrefix, shared_ptr<ZLInputStream> stream, const std::string &referenceName);
 
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
@@ -62,13 +69,7 @@ private:
 	bool myPreformatted;
 
 	friend class XHTMLTagAction;
-	friend class XHTMLTagParagraphAction;
-	friend class XHTMLTagRestartParagraphAction;
-	friend class XHTMLTagControlAction;
 	friend class XHTMLTagHyperlinkAction;
-	friend class XHTMLTagItemAction;
-	friend class XHTMLTagImageAction;
-	friend class XHTMLTagParagraphWithControlAction;
 	friend class XHTMLTagPreAction;
 };
 
