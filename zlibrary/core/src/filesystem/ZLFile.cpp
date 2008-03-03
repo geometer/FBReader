@@ -140,8 +140,24 @@ void ZLFile::fillInfo() const {
 	if (index == -1) {
 		myInfo = ZLFSManager::instance().fileInfo(myPath);
 	} else {
-		myInfo = ZLFSManager::instance().fileInfo(myPath.substr(0, index));
-		myInfo.IsDirectory = false;
+		std::string archivePath = myPath.substr(0, index);
+		ZLFile archive(archivePath);
+		if (archive.exists()) {
+			std::string itemName = myPath.substr(index + 1);
+			myInfo = archive.myInfo;
+			myInfo.IsDirectory = false;
+			myInfo.Exists = false;
+			std::vector<std::string> items;
+			archive.directory()->collectFiles(items, true);
+			for (std::vector<std::string>::const_iterator it = items.begin(); it != items.end(); ++it) {
+				if (*it == itemName) {
+					myInfo.Exists = true;
+					break;
+				}
+			}
+		} else {
+			myInfo.Exists = false;
+		}
 	}
 	myInfoIsFilled = true;
 }
