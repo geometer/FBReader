@@ -55,6 +55,9 @@ size_t ZLZDecompressor::decompress(ZLInputStream &stream, char *buffer, size_t m
 		} else {
 			myAvailableSize = 0;
 		}
+		while (myZStream->avail_in == 0) {
+			break;
+		}
 		while (myZStream->avail_in > 0) {
 			myZStream->avail_out = OUT_BUFFER_SIZE;
 			myZStream->next_out = (Bytef*)myOutBuffer;
