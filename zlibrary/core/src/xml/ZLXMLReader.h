@@ -31,7 +31,7 @@ class ZLXMLReaderInternal;
 
 class ZLXMLReader {
 
-protected:
+public:
   static const char *attributeValue(const char **xmlattributes, const char *name);
 
 protected:
