@@ -27,7 +27,7 @@ class ZLFileImage : public ZLStreamImage {
 public:
 	ZLFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size = 0);
 
-private:
+protected:
 	shared_ptr<ZLInputStream> inputStream() const;
 
 private:
