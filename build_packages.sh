@@ -68,15 +68,15 @@ build_package() {
 			case "$1" in
 				maemo)
 					/scratchbox/login sb-conf se SDK_ARM
-					/scratchbox/login -d src/projects/fbreader $make_package ARCHITECTURE=$1 $2
+					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
 					;;
 				maemo2)
 					/scratchbox/login sb-conf se SDK_ARMEL
-					/scratchbox/login -d src/projects/fbreader $make_package ARCHITECTURE=$1 $2
+					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
 					;;
 				maemo4)
 					/scratchbox/login sb-conf se CHINOOK_ARMEL
-					/scratchbox/login -d src/projects/fbreader $make_package ARCHITECTURE=$1 $2
+					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
 					;;
 				*)
 					$make_package ARCHITECTURE=$1 $2
