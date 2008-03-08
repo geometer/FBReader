@@ -93,7 +93,7 @@
 						<node name="tap" value="Tap Scrollings" toBeTranslated="true"/>
 					</node>
 					<node name="delay" value="Ritardo tra Scorrimenti, msec"/>
-					<node name="mode" value="Modalit&agrave; Scorrimento">
+					<node name="mode" value="Modalit&#224; Scorrimento">
 						<node name="noOverlapping" value="Non Sovrapporre"/>
 						<node name="keepLines" value="Mantieni Righe"/>
 						<node name="scrollLines" value="Scorri Righe"/>
