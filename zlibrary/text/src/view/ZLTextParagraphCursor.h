@@ -95,6 +95,19 @@ private:
 		int myOffset;
 	};
 
+	class YongweiProcessor : public Processor {
+
+	public:
+		YongweiProcessor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
+		~YongweiProcessor();
+		void processTextEntry(const ZLTextEntry &textEntry);
+
+	private:
+		const std::string myLanguage;
+		char *myBreaksTable;
+		size_t myBreaksTableLength;
+	};
+
 	class StandardProcessor : public Processor {
 
 	public:
