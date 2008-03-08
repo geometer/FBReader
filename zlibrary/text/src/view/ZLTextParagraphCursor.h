@@ -97,6 +97,9 @@ private:
 
 	class YongweiProcessor : public Processor {
 
+	private:
+		static bool ourIndexIsInitialised;
+
 	public:
 		YongweiProcessor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
 		~YongweiProcessor();

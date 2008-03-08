@@ -17,7 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <algorithm>
 
 #include <linebreak.h>
@@ -29,7 +28,13 @@
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 
+bool ZLTextParagraphCursor::YongweiProcessor::ourIndexIsInitialised = false;
+
 ZLTextParagraphCursor::YongweiProcessor::YongweiProcessor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : Processor(paragraph, marks, paragraphNumber, elements), myLanguage(language), myBreaksTable(0) {
+	if (!ourIndexIsInitialised) {
+		init_linebreak_prop_index();
+		ourIndexIsInitialised = true;
+	}
 }
 
 ZLTextParagraphCursor::YongweiProcessor::~YongweiProcessor() {

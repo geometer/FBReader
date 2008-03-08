@@ -34,8 +34,10 @@ ZLSHARED ?= yes
 
 ifeq "$(ZLSHARED)" "yes"
   CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/core -lzlcore $(XML_LIB) $(ARCHIVER_LIB) -ldl
+	TEXT_LIBS = -lzltext
 else
   CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/ui -L$(ROOTDIR)/zlibrary/core -lzlcore -lzlui-$(UI_TYPE) -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
+	TEXT_LIBS = -lzltext -llinebreak
 endif
 
 ifneq "$(BUILD_RESOURCE_OBJECT)" "yes"
