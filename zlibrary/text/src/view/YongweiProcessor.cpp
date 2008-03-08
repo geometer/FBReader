@@ -79,7 +79,11 @@ void ZLTextParagraphCursor::YongweiProcessor::processTextEntry(const ZLTextEntry
 			} else {
 				switch (spaceState) {
 					case SPACE:
-						myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
+						if (myBreaksTable[index - 1] == LINEBREAK_NOBREAK) {
+							myElements.push_back(ZLTextElementPool::Pool.NBHSpaceElement);
+						} else {
+							myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
+						}
 						wordStart = ptr;
 						break;
 					case NON_BREAKABLE_SPACE:
