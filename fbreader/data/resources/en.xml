@@ -61,11 +61,12 @@
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Options"/>
 			<node name="tab">
-				<node name="General" value="General">
+				<node name="Library" value="Library">
 					<node name="bookPath" value="Book Path"/>
 					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
 					<node name="recentListSize" value="Recent Books List Size"/>
-					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
+					<node name="showTags" value="Sort Books by Tags"/>
+					<node name="showAllBooksList" value="Show List of All Books"/>
 				</node>
 				<node name="Language" value="Language">
 					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
@@ -205,6 +206,7 @@
 						<node name="quit" value="Quit"/>
 					</node>
 					<node name="quitOnCancel" value="Quit Application on Cancel"/>
+					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
 				</node>
 				<node name="Config" value="Config">
 					<node name="autoSave" value="Save State Automatically"/>
@@ -339,5 +341,10 @@
 		<node name="unknown" value="Unknown Error"/>
 		<node name="unsupportedCompressionMethod" value="Unsupported Compression Method"/>
 		<node name="encriptedFile" value="DRM-protected File"/>
+	</node>
+	<node name="library">
+		<node name="caption" value="Library"/>
+		<node name="allBooks" value="All Books"/>
+		<node name="booksWithoutTags" value="Books without Tags"/>
 	</node>
 </resources>

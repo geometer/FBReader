@@ -61,11 +61,10 @@
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Pengaturan"/>
 			<node name="tab">
-				<node name="General" value="Umum">
+				<node name="Library" value="Pustaka">
 					<node name="bookPath" value="Lokasi Buku"/>
 					<node name="lookInSubdirectories" value="Tampilkan Buku-buku yang Ada di Sub Direktori"/>
 					<node name="recentListSize" value="Jumlah Daftar Buku-buku yang dibuka sebelumnya"/>
-					<node name="keyDelay" value="Waktu Tunda Antara Penekanan Tombol"/>
 				</node>
 				<node name="Language" value="Bahasa">
 					<node name="autoDetect" value="Deteksi Bahasa dan Enkode secara Otomatis"/>
@@ -205,6 +204,7 @@
 						<node name="quit" value="Keluar"/>
 					</node>
 					<node name="quitOnCancel" value="Keluar dari Aplikasi Ketika Pembatalan"/>
+					<node name="keyDelay" value="Waktu Tunda Antara Penekanan Tombol"/>
 				</node>
 				<node name="Config" value="Konfigurasi">
 					<node name="autoSave" value="Simpan Status Secara Otomatis"/>

@@ -32,7 +32,26 @@
 #include "../description/Author.h"
 #include "../formats/FormatPlugin.h"
 
+class DescriptionComparator {
+
+public:
+	bool operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2);
+};
+
 bool DescriptionComparator::operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2) {
+	AuthorPtr author1 = d1->author();
+	AuthorPtr author2 = d2->author();
+	const std::string sortKey1 = author1->sortKey();
+	const std::string sortKey2 = author2->sortKey();
+	if (sortKey1 != sortKey2) {
+		return sortKey1 < sortKey2;
+	}
+	const std::string displayName1 = author1->displayName();
+	const std::string displayName2 = author2->displayName();
+	if (displayName1 != displayName2) {
+		return displayName1 < displayName2;
+	}
+
 	const std::string &sequenceName1 = d1->sequenceName();
 	const std::string &sequenceName2 = d2->sequenceName();
 	if (sequenceName1.empty() && sequenceName2.empty()) {
@@ -117,8 +136,8 @@ bool BookCollection::synchronize() const {
 	myDoStrongRebuild = false;
 
 	if (doStrongRebuild) {
+		myBooks.clear();
 		myAuthors.clear();
-		myCollection.clear();
 		myExternalBooks.clear();
 
 		std::set<std::string> fileNamesSet;
@@ -142,27 +161,20 @@ bool BookCollection::synchronize() const {
 		BookList bookList;
 		const std::set<std::string> &bookListSet = bookList.fileNames();
 		std::vector<std::string> fileNames;
-		for (std::map<AuthorPtr,Books>::const_iterator it = myCollection.begin(); it != myCollection.end(); ++it) {
-			const Books &books = it->second;
-			for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
-				if ((myExternalBooks.find(*jt) == myExternalBooks.end()) || 
-						(bookListSet.find((*jt)->fileName()) != bookListSet.end())) {
-					fileNames.push_back((*jt)->fileName());
-				}
+		for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
+			if ((myExternalBooks.find(*it) == myExternalBooks.end()) || 
+					(bookListSet.find((*it)->fileName()) != bookListSet.end())) {
+				fileNames.push_back((*it)->fileName());
 			}
 		}
-		myCollection.clear();
+		myBooks.clear();
 		myAuthors.clear();
 		for (std::vector<std::string>::iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
 			addDescription(BookDescription::getDescription(*it, false));
 		}
 	}
 
-	std::sort(myAuthors.begin(), myAuthors.end(), AuthorComparator());
-	DescriptionComparator descriptionComparator;
-	for (std::map<AuthorPtr,Books>::iterator it = myCollection.begin(); it != myCollection.end(); ++it) {
-		std::sort((*it).second.begin(), (*it).second.end(), descriptionComparator);
-	}
+	std::sort(myBooks.begin(), myBooks.end(), DescriptionComparator());
 	return true;
 }
 
@@ -203,27 +215,60 @@ BookCollection::~BookCollection() {
 }
 
 void BookCollection::addDescription(BookDescriptionPtr description) const {
-	if (description.isNull()) {
+	if (!description.isNull()) {
+		myBooks.push_back(description);
+	}
+}
+
+void BookCollection::collectSequenceNames(AuthorPtr author, std::set<std::string> &set) const {
+	synchronize();
+	if (myBooks.empty()) {
 		return;
 	}
-
-	AuthorPtr author = description->author();
-	const std::string &displayName = author->displayName();
-	const std::string &sortKey = author->sortKey();
-
-	std::map<AuthorPtr,Books>::iterator it = myCollection.begin();
-	for (; it != myCollection.end(); ++it) {
-		AuthorPtr author1 = (*it).first;
-		if ((author1->sortKey() == sortKey) && (author1->displayName() == displayName)) {
+	AuthorComparator comparator;
+	Books::const_iterator left = myBooks.begin();
+	if (comparator(author, (*left)->author())) {
+		return;
+	}
+	Books::const_iterator right = myBooks.end() - 1;
+	if (comparator((*right)->author(), author)) {
+		return;
+	}
+	while (right > left) {
+		Books::const_iterator middle = left + (right - left) / 2;
+		if (comparator((*middle)->author(), author)) {
+			left = middle + 1;
+		} else if (comparator(author, (*middle)->author())) {
+			right = middle;
+		} else {
+			for (Books::const_iterator it = middle; !comparator((*it)->author(), author); --it) {
+				set.insert((*it)->sequenceName());
+				if (it == left) {
+					break;
+				}
+			}
+			for (Books::const_iterator it = middle; !comparator(author, (*it)->author()); ++it) {
+				set.insert((*it)->sequenceName());
+				if (it == right) {
+					break;
+				}
+			}
 			break;
 		}
 	}
-	if (it != myCollection.end()) {
-		(*it).second.push_back(description);
-	} else {
-		Books books;
-		books.push_back(description);
-		myCollection.insert(std::pair<AuthorPtr,Books>(author, books));
-		myAuthors.push_back(author);
+}
+
+const std::vector<AuthorPtr> &BookCollection::authors() const {
+	synchronize();
+	if (myAuthors.empty() && !myBooks.empty()) {
+		AuthorPtr author;
+		for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
+			AuthorPtr newAuthor = (*it)->author();
+			if (author.isNull() || (author->sortKey() != newAuthor->sortKey()) || (author->displayName() != newAuthor->displayName())) {
+				author = newAuthor;
+				myAuthors.push_back(author);
+			}
+		}
 	}
+	return myAuthors;
 }

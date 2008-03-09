@@ -62,11 +62,10 @@
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Options"/>
 			<node name="tab">
-				<node name="General" value="Général">
+				<node name="Library" value="Bibliothèque">
 					<node name="bookPath" value="Chemin des livres"/>
 					<node name="lookInSubdirectories" value="Chercher des livres dans les sous-répertoires"/>
 					<node name="recentListSize" value="Taille de la liste de livres récents"/>
-					<node name="keyDelay" value="Délai entre appui sur les touches"/>
 				</node>
 				<node name="Language" value="Langue">
 					<node name="autoDetect" value="Detecter la langue et l'encodage automatiquement"/>
@@ -206,6 +205,7 @@
 						<node name="quit" value="Quitter"/>
 					</node>
 					<node name="quitOnCancel" value="Quitter l'application lors d'une annulation"/>
+					<node name="keyDelay" value="Délai entre appui sur les touches"/>
 				</node>
 				<node name="Config" value="Configuration">
 					<node name="autoSave" value="Enregistrer l'état automatiquement"/>

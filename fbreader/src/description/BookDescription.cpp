@@ -144,6 +144,10 @@ BookDescription::BookDescription(const std::string &fileName) {
 	myNumberInSequence = 0;
 }
 
+const std::vector<std::string> &BookDescription::tags() const {
+	return myTags;
+}
+
 void WritableBookDescription::clearAuthor() {
 	myDescription.myAuthor = 0;
 }

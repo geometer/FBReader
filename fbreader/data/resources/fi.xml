@@ -61,11 +61,10 @@
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Asetukset"/>
 			<node name="tab">
-				<node name="General" value="Yleinen">
+				<node name="Library" value="Kirjasto">
 					<node name="bookPath" value="Kirjaston polku"/>
 					<node name="lookInSubdirectories" value="Hae kirjoja alihakemistoista"/>
 					<node name="recentListSize" value="Viimeisimmät kirjat listan koko"/>
-					<node name="keyDelay" value="Hyväksyttyjen näppäinpainallusten viive"/>
 				</node>
 				<node name="Language" value="Kieli">
 					<node name="autoDetect" value="Tunnista kieli ja merkistö automaattisesti"/>
@@ -205,6 +204,7 @@
 						<node name="quit" value="Lopeta"/>
 					</node>
 					<node name="quitOnCancel" value="Sulje sovellus peruttaessa"/>
+					<node name="keyDelay" value="Hyväksyttyjen näppäinpainallusten viive"/>
 				</node>
 				<node name="Config" value="Tila">
 					<node name="autoSave" value="Tallenna tila automaattisesti"/>

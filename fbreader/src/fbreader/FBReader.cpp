@@ -392,6 +392,10 @@ BookTextView &FBReader::bookTextView() const {
 	return (BookTextView&)*myBookTextView;
 }
 
+CollectionView &FBReader::collectionView() const {
+	return (CollectionView&)*myCollectionView;
+}
+
 void FBReader::showBookTextView() {
 	setMode(BOOK_TEXT_MODE);
 }

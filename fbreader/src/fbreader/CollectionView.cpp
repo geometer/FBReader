@@ -45,7 +45,7 @@ static const std::string SERIES_ORDER_IMAGE_ID = "seriesOrder";
 class CollectionModel : public ZLTextTreeModel {
 
 public:
-	CollectionModel(BookCollection &collection);
+	CollectionModel(CollectionView &view, BookCollection &collection);
 	~CollectionModel();
 
 	BookDescriptionPtr bookByParagraphNumber(int num);
@@ -55,11 +55,16 @@ public:
 
 private:
 	void build();
+	void buildWithTags();
+	void buildWithoutTags();
+
+	void addBooks(const Books &books, ZLTextTreeParagraph *root);
 
 	void insertText(FBTextKind kind, const std::string &text);
 	void insertImage(const std::string &id);
 
 private:
+	CollectionView &myView;
 	BookCollection &myCollection;
 
 	ZLImageMap myImageMap;
@@ -67,7 +72,7 @@ private:
 	std::map<BookDescriptionPtr,int> myBookToParagraph;
 };
 
-CollectionModel::CollectionModel(BookCollection &collection) : ZLTextTreeModel(), myCollection(collection) {
+CollectionModel::CollectionModel(CollectionView &view, BookCollection &collection) : ZLTextTreeModel(), myView(view), myCollection(collection) {
 	const std::string prefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	myImageMap[DELETE_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-remove.png", 0);
 	myImageMap[BOOK_INFO_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-bookinfo.png", 0);
@@ -92,41 +97,93 @@ int CollectionModel::paragraphNumberByBook(BookDescriptionPtr book) {
 }
 
 void CollectionModel::build() {
-	const std::vector<AuthorPtr> &authors = myCollection.authors();
-	std::string currentSequenceName;
-	ZLTextTreeParagraph *sequenceParagraph;
-	for (std::vector<AuthorPtr>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
-		const Books &books = myCollection.books(*it);
-		if (!books.empty()) {
-			currentSequenceName.erase();
-			sequenceParagraph = 0;
+	if (myView.ShowTagsOption.value()) {
+		buildWithTags();
+	} else {
+		buildWithoutTags();
+	}
+}
 
-			ZLTextTreeParagraph *authorParagraph = createParagraph();
-			insertText(LIBRARY_AUTHOR_ENTRY, (*it)->displayName());
-			//insertImage(AUTHOR_INFO_IMAGE_ID);
-			for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
-				const std::string &sequenceName = (*jt)->sequenceName();
-				if (sequenceName.empty()) {
-					currentSequenceName.erase();
-					sequenceParagraph = 0;
-				} else if (sequenceName != currentSequenceName) {
-					currentSequenceName = sequenceName;
-					sequenceParagraph = createParagraph(authorParagraph);
-					insertText(LIBRARY_BOOK_ENTRY, sequenceName);
-					//insertImage(SERIES_ORDER_IMAGE_ID);
-				}
-				ZLTextTreeParagraph *bookParagraph = createParagraph(
-					(sequenceParagraph == 0) ? authorParagraph : sequenceParagraph
-				);
-				insertText(LIBRARY_BOOK_ENTRY, (*jt)->title());
-				insertImage(BOOK_INFO_IMAGE_ID);
-				if (myCollection.isBookExternal(*jt)) {
-					insertImage(DELETE_IMAGE_ID);
-				}
-				myParagraphToBook[bookParagraph] = *jt;
-				myBookToParagraph[*jt] = paragraphsNumber() - 1;
+void CollectionModel::buildWithTags() {
+	const ZLResource &resource = ZLResource::resource("library");
+
+	if (myView.ShowAllBooksTagOption.value()) {
+		ZLTextTreeParagraph *allBooksParagraph = createParagraph();
+		insertText(LIBRARY_AUTHOR_ENTRY, resource["allBooks"].value());
+		addBooks(myCollection.books(), allBooksParagraph);
+	}
+
+	std::map<std::string,Books> tagMap;
+	Books booksWithoutTags;
+
+	const Books &books = myCollection.books();
+	for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
+		const std::vector<std::string> &bookTags = (*it)->tags();
+		if (bookTags.empty()) {
+			booksWithoutTags.push_back(*it);
+		} else {
+			for (std::vector<std::string>::const_iterator jt = bookTags.begin(); jt != bookTags.end(); ++jt) {
+				tagMap[*jt].push_back(*it);
 			}
 		}
+	}
+
+	if (!booksWithoutTags.empty()) {
+		ZLTextTreeParagraph *booksWithoutTagsParagraph = createParagraph();
+		insertText(LIBRARY_AUTHOR_ENTRY, resource["booksWithoutTags"].value());
+		addBooks(booksWithoutTags, booksWithoutTagsParagraph);
+	}
+
+	for (std::map<std::string,Books>::const_iterator it = tagMap.begin(); it != tagMap.end(); ++it) {
+		ZLTextTreeParagraph *tagParagraph = createParagraph();
+		insertText(LIBRARY_AUTHOR_ENTRY, it->first);
+		addBooks(it->second, tagParagraph);
+	}
+}
+
+void CollectionModel::buildWithoutTags() {
+	addBooks(myCollection.books(), 0);
+}
+
+void CollectionModel::addBooks(const Books &books, ZLTextTreeParagraph *root) {
+	AuthorPtr author;
+	AuthorComparator comparator;
+	ZLTextTreeParagraph *authorParagraph = 0;
+	std::string currentSequenceName;
+	ZLTextTreeParagraph *sequenceParagraph = 0;
+
+	for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
+		BookDescriptionPtr description = *jt;
+
+		if (author.isNull() || comparator(author, description->author())) {
+			author = description->author();
+			authorParagraph = createParagraph(root);
+			insertText(LIBRARY_AUTHOR_ENTRY, author->displayName());
+			//insertImage(AUTHOR_INFO_IMAGE_ID);
+			currentSequenceName.erase();
+			sequenceParagraph = 0;
+		}
+
+		const std::string &sequenceName = description->sequenceName();
+		if (sequenceName.empty()) {
+			currentSequenceName.erase();
+			sequenceParagraph = 0;
+		} else if (sequenceName != currentSequenceName) {
+			currentSequenceName = sequenceName;
+			sequenceParagraph = createParagraph(authorParagraph);
+			insertText(LIBRARY_BOOK_ENTRY, sequenceName);
+			//insertImage(SERIES_ORDER_IMAGE_ID);
+		}
+		ZLTextTreeParagraph *bookParagraph = createParagraph(
+			(sequenceParagraph == 0) ? authorParagraph : sequenceParagraph
+		);
+		insertText(LIBRARY_BOOK_ENTRY, description->title());
+		insertImage(BOOK_INFO_IMAGE_ID);
+		if (myCollection.isBookExternal(description)) {
+			insertImage(DELETE_IMAGE_ID);
+		}
+		myParagraphToBook[bookParagraph] = description;
+		myBookToParagraph[description] = paragraphsNumber() - 1;
 	}
 }
 
@@ -149,8 +206,15 @@ void CollectionModel::insertImage(const std::string &id) {
 	addImage(id, myImageMap, 0);
 }
 
-CollectionView::CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context), myUpdateModel(true) {
-	setModel(new CollectionModel(myCollection));
+static const std::string LIBRARY = "Library";
+
+CollectionView::CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context),
+	ShowTagsOption(ZLCategoryKey::LOOK_AND_FEEL, LIBRARY, "ShowTags", true),
+	ShowAllBooksTagOption(ZLCategoryKey::LOOK_AND_FEEL, LIBRARY, "ShowAllBooksTag", true),
+	myUpdateModel(true) {
+	setModel(new CollectionModel(*this, myCollection));
+	myShowTags = ShowTagsOption.value();
+	myShowAllBooksList = ShowAllBooksTagOption.value();
 }
 
 CollectionView::~CollectionView() {
@@ -169,8 +233,7 @@ void CollectionView::synchronizeModel() {
 }
 
 const std::string &CollectionView::caption() const {
-	static const std::string LIBRARY = "Library";
-	return LIBRARY;
+	return ZLResource::resource("library")["caption"].value();
 }
 
 void CollectionView::selectBook(BookDescriptionPtr book) {
@@ -190,6 +253,12 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 }
 
 void CollectionView::paint() {
+	if ((myShowTags != ShowTagsOption.value()) ||
+			(myShowAllBooksList != ShowAllBooksTagOption.value())) {
+		myShowTags = ShowTagsOption.value();
+		myShowAllBooksList = ShowAllBooksTagOption.value();
+		myUpdateModel = true;
+	}
 	if (myUpdateModel) {
 		shared_ptr<ZLTextModel> oldModel = model();
 		setModel(0);

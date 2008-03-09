@@ -61,11 +61,12 @@
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Настройки"/>
 			<node name="tab">
-				<node name="General" value="Общие настройки">
+				<node name="Library" value="Библиотека">
 					<node name="bookPath" value="Каталоги с книгами"/>
 					<node name="lookInSubdirectories" value="Искать книги в подкаталогах"/>
 					<node name="recentListSize" value="Размер списка прочитанных книг"/>
-					<node name="keyDelay" value="Задержка между нажатиями на клавиши"/>
+					<node name="showTags" value="Сортировать книги по пометкам"/>
+					<node name="showAllBooksList" value="Показывать список всех книг"/>
 				</node>
 				<node name="Language" value="Язык">
 					<node name="autoDetect" value="Автоматически определять язык и кодировку"/>
@@ -205,6 +206,7 @@
 						<node name="quit" value="Выйти из программы"/>
 					</node>
 					<node name="quitOnCancel" value="Выходить из программы"/>
+					<node name="keyDelay" value="Задержка между нажатиями на клавиши"/>
 				</node>
 				<node name="Config" value="Настройки">
 					<node name="autoSave" value="Автоматически сохранять состояние"/>
@@ -339,5 +341,10 @@
 		<node name="unknown" value="неизвестная ошибка"/>
 		<node name="unsupportedCompressionMethod" value="неподдерживаемый метод сжатия"/>
 		<node name="encriptedFile" value="файл защищен DRM"/>
+	</node>
+	<node name="library">
+		<node name="caption" value="Библиотека"/>
+		<node name="allBooks" value="Все книги"/>
+		<node name="booksWithoutTags" value="Книги без пометок"/>
 	</node>
 </resources>

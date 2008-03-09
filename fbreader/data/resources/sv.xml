@@ -61,11 +61,10 @@
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Alternativ"/>
 			<node name="tab">
-				<node name="General" value="Allmänt">
+				<node name="Library" value="Bibliotek">
 					<node name="bookPath" value="Boksökväg"/>
 					<node name="lookInSubdirectories" value="Leta efter böcker i underkataloger"/>
 					<node name="recentListSize" value="Storlek på lista över tidigare böcker"/>
-					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
 				</node>
 				<node name="Language" value="Språk">
 					<node name="autoDetect" value="Upptäck automatiskt språk och kodning"/>
@@ -205,6 +204,7 @@
 						<node name="quit" value="Avsluta"/>
 					</node>
 					<node name="quitOnCancel" value="Avsluta programmet vid avbryt"/>
+					<node name="keyDelay" value="Delay Between Accepted Key Pressings" toBeTranslated="true"/>
 				</node>
 				<node name="Config" value="Konfiguration">
 					<node name="autoSave" value="Spara tillstånd automatiskt"/>

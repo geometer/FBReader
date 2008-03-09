@@ -61,11 +61,10 @@
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Налаштування"/>
 			<node name="tab">
-				<node name="General" value="Загальні налаштування">
+				<node name="Library" value="Бібліотека">
 					<node name="bookPath" value="Каталоги з книгами"/>
 					<node name="lookInSubdirectories" value="Шукати книги в підтеках"/>
 					<node name="recentListSize" value="Розмір списку прочитаних книг"/>
-					<node name="keyDelay" value="Затримка між натисканням на клавіші"/>
 				</node>
 				<node name="Language" value="Мова">
 					<node name="autoDetect" value="Визначити мову та кодувати автоматично"/>
@@ -205,6 +204,7 @@
 						<node name="quit" value="Вийти з програми"/>
 					</node>
 					<node name="quitOnCancel" value="Вийти з програми"/>
+					<node name="keyDelay" value="Затримка між натисканням на клавіші"/>
 				</node>
 				<node name="Config" value="Налаштування">
 					<node name="autoSave" value="Автоматично зберігати стан"/>

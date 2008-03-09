@@ -31,14 +31,6 @@
 
 typedef std::vector<BookDescriptionPtr> Books;
 
-class DescriptionComparator {
-
-public:
-	DescriptionComparator();
-	~DescriptionComparator();
-	bool operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2);
-};
-
 class BookCollection {
 
 public:
@@ -50,22 +42,22 @@ public:
 	~BookCollection();
 
 	const std::vector<AuthorPtr> &authors() const;
-	const Books &books(AuthorPtr author) const;
+	void collectSequenceNames(AuthorPtr author, std::set<std::string> &list) const;
+	const Books &books() const;
 	bool isBookExternal(BookDescriptionPtr description) const;
 
 	void rebuild(bool strong);
 	bool synchronize() const;
 	
 private:
-
 	void collectDirNames(std::set<std::string> &names) const;
 	void collectBookFileNames(std::set<std::string> &bookFileNames) const;
 
 	void addDescription(BookDescriptionPtr description) const;
 
 private:
+	mutable Books myBooks;
 	mutable std::vector<AuthorPtr> myAuthors;
-	mutable std::map<AuthorPtr,Books> myCollection;
 	mutable std::set<BookDescriptionPtr> myExternalBooks;
 
 	mutable std::string myPath;
@@ -89,17 +81,9 @@ private:
 	Books myBooks;
 };
 
-inline DescriptionComparator::DescriptionComparator() {}
-inline DescriptionComparator::~DescriptionComparator() {}
-
-inline const std::vector<AuthorPtr > &BookCollection::authors() const {
+inline const Books &BookCollection::books() const {
 	synchronize();
-	return myAuthors;
-}
-
-inline const Books &BookCollection::books(AuthorPtr author) const {
-	synchronize();
-	return (*myCollection.find(author)).second;
+	return myBooks;
 }
 
 inline bool BookCollection::isBookExternal(BookDescriptionPtr description) const {

@@ -279,4 +279,5 @@ KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab)
 	dialogTab.addOption(ZLResourceKey("quitOnCancel"), exitOnCancelEntry);
 	exitOnCancelEntry->setVisible(false);
 	useSeparateBindingsEntry->onStateChanged(useSeparateBindingsEntry->initialState());
+	dialogTab.addOption(ZLResourceKey("keyDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyDelayOption, 50));
 }

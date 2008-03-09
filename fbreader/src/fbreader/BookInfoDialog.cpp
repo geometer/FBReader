@@ -158,17 +158,23 @@ const std::vector<std::string> &SeriesTitleEntry::values() const {
 	valuesSet.insert(initialValue());
 	valuesSet.insert("");
 	if (!myOriginalAuthor.isNull()) {
+		myInfoDialog.myCollection.collectSequenceNames(myOriginalAuthor, valuesSet);
+		/*
 		const Books &books = myInfoDialog.myCollection.books(myOriginalAuthor);
 		for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
 			valuesSet.insert((*it)->sequenceName());
 		}
+		*/
 	}
 	AuthorPtr currentAuthor = myInfoDialog.myAuthorDisplayNameEntry->myCurrentAuthor;
 	if (!currentAuthor.isNull() && (currentAuthor != myOriginalAuthor)) {
+		myInfoDialog.myCollection.collectSequenceNames(currentAuthor, valuesSet);
+		/*
 		const Books &books = myInfoDialog.myCollection.books(currentAuthor);
 		for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
 			valuesSet.insert((*it)->sequenceName());
 		}
+		*/
 	}
 	for (std::set<std::string>::const_iterator it = valuesSet.begin(); it != valuesSet.end(); ++it) {
 		myValues.push_back(*it);

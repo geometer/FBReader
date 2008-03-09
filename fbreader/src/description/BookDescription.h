@@ -72,6 +72,7 @@ public:
 	const std::string &fileName() const;
 	const std::string &language() const;
 	const std::string &encoding() const;
+	const std::vector<std::string> &tags() const;
 
 private:
 	AuthorPtr myAuthor;
@@ -81,6 +82,7 @@ private:
 	std::string myFileName;
 	std::string myLanguage;
 	std::string myEncoding;
+	mutable std::vector<std::string> myTags;
 
 friend class WritableBookDescription;
 

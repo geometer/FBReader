@@ -22,6 +22,8 @@
 
 #include <map>
 
+#include <ZLOptions.h>
+
 #include "FBView.h"
 #include "../description/BookDescription.h"
 #include "../collection/BookCollection.h"
@@ -29,6 +31,10 @@
 class CollectionModel;
 
 class CollectionView : public FBView {
+
+public:
+	ZLBooleanOption ShowTagsOption;
+	ZLBooleanOption ShowAllBooksTagOption;
 
 public:
 	CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> context);
@@ -52,6 +58,9 @@ private:
 	BookCollection myCollection;
 	bool myTreeStateIsFrozen;
 	bool myUpdateModel;
+
+	bool myShowTags;
+	bool myShowAllBooksList;
 };
 
 inline BookCollection &CollectionView::collection() {
