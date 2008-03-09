@@ -304,6 +304,7 @@ bool CollectionView::_onStylusPress(int x, int y) {
 				ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
 				collectionModel().removeAllMarks();
 				BookList().removeFileName(book->fileName());
+				
 				ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)collectionModel()[imageArea->ParagraphNumber];
 				ZLTextTreeParagraph *parent = paragraph->parent();
 				if (parent->children().size() == 1) {
@@ -312,6 +313,7 @@ bool CollectionView::_onStylusPress(int x, int y) {
 				} else {
 					collectionModel().removeParagraph(imageArea->ParagraphNumber);
 				}
+
 				if (collectionModel().paragraphsNumber() == 0) {
 					setStartCursor(0);
 				}

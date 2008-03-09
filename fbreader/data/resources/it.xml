@@ -340,4 +340,9 @@
 		<node name="unsupportedCompressionMethod" value="Metodo di Compressione non Supportato"/>
 		<node name="encriptedFile" value="File Protetto da DRM"/>
 	</node>
+	<node name="library">
+		<node name="caption" value="Biblioteca"/>
+		<node name="allBooks" value="All Books" toBeTranslated="true"/>
+		<node name="booksWithoutTags" value="Books without Tags" toBeTranslated="true"/>
+	</node>
 </resources>

@@ -340,4 +340,9 @@
 		<node name="unsupportedCompressionMethod" value="Tiivistysmuodolle ei tukea"/>
 		<node name="encriptedFile" value="Digitaalisesti suojattu tiedosto"/>
 	</node>
+	<node name="library">
+		<node name="caption" value="Kirjasto"/>
+		<node name="allBooks" value="All Books" toBeTranslated="true"/>
+		<node name="booksWithoutTags" value="Books without Tags" toBeTranslated="true"/>
+	</node>
 </resources>

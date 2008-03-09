@@ -341,4 +341,9 @@
 		<node name="unsupportedCompressionMethod" value="Méthode de compression non supportée"/>
 		<node name="encriptedFile" value="Fichier protégé par MTP"/>
 	</node>
+	<node name="library">
+		<node name="caption" value="Bibliothèque"/>
+		<node name="allBooks" value="All Books" toBeTranslated="true"/>
+		<node name="booksWithoutTags" value="Books without Tags" toBeTranslated="true"/>
+	</node>
 </resources>

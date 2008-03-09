@@ -340,4 +340,9 @@
 		<node name="unsupportedCompressionMethod" value="Metode kompresi tidak didukung"/>
 		<node name="encriptedFile" value="Berkas terproteksi DRM"/>
 	</node>
+	<node name="library">
+		<node name="caption" value="Pustaka"/>
+		<node name="allBooks" value="All Books" toBeTranslated="true"/>
+		<node name="booksWithoutTags" value="Books without Tags" toBeTranslated="true"/>
+	</node>
 </resources>

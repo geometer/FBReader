@@ -340,4 +340,9 @@
 		<node name="unsupportedCompressionMethod" value="метод натискання, що не підтримується"/>
 		<node name="encriptedFile" value="файл захищений DRM"/>
 	</node>
+	<node name="library">
+		<node name="caption" value="Бібліотека"/>
+		<node name="allBooks" value="All Books" toBeTranslated="true"/>
+		<node name="booksWithoutTags" value="Books without Tags" toBeTranslated="true"/>
+	</node>
 </resources>
