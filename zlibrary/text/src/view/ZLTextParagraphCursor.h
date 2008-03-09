@@ -75,61 +75,29 @@ class ZLTextParagraphCursor {
 private:
 	class Processor {
 
-	protected:
-		Processor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
+	private:
+		static bool ourIndexIsInitialised;
 
 	public:
+		Processor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
 		virtual ~Processor();
 		void fill();
-		virtual void processTextEntry(const ZLTextEntry &textEntry) = 0;
 
-	protected:
+	private:
+		void processTextEntry(const ZLTextEntry &textEntry);
 		void addWord(const char *ptr, int offset, int len);
 
-	protected:
+	private:
 		const ZLTextParagraph &myParagraph;
 		ZLTextElementVector &myElements;
 
 		std::vector<ZLTextMark>::const_iterator myFirstMark;
 		std::vector<ZLTextMark>::const_iterator myLastMark;
 		int myOffset;
-	};
 
-	class YongweiProcessor : public Processor {
-
-	private:
-		static bool ourIndexIsInitialised;
-
-	public:
-		YongweiProcessor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
-		~YongweiProcessor();
-		void processTextEntry(const ZLTextEntry &textEntry);
-
-	private:
 		const std::string myLanguage;
 		char *myBreaksTable;
 		size_t myBreaksTableLength;
-	};
-
-	class StandardProcessor : public Processor {
-
-	public:
-		StandardProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
-		void processTextEntry(const ZLTextEntry &textEntry);
-	};
-
-	class ChineseProcessor : public Processor {
-
-	public:
-		ChineseProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
-		void processTextEntry(const ZLTextEntry &textEntry);
-	};
-
-	class AnyPlaceProcessor : public Processor {
-
-	public:
-		AnyPlaceProcessor(const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
-		void processTextEntry(const ZLTextEntry &textEntry);
 	};
 
 protected:

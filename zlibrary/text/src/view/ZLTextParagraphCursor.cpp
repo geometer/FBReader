@@ -212,18 +212,7 @@ void ZLTextParagraphCursor::fill() {
 		case ZLTextParagraph::TEXT_PARAGRAPH:
 		case ZLTextParagraph::TREE_PARAGRAPH:
 		{
-			YongweiProcessor(ZLTextHyphenator::instance().language(), paragraph, myModel.marks(), index(), myElements).fill();
-			/*
-			if (ZLTextHyphenator::instance().language() == "zh") {
-				if (ZLChineseBreakingAlgorithm::instance().AnyPositionBreakingOption.value()) {
-					AnyPlaceProcessor(paragraph, myModel.marks(), index(), myElements).fill();
-				} else {
-					ChineseProcessor(paragraph, myModel.marks(), index(), myElements).fill();
-				}
-			} else {
-				StandardProcessor(paragraph, myModel.marks(), index(), myElements).fill();
-			}
-			*/
+			Processor(ZLTextHyphenator::instance().language(), paragraph, myModel.marks(), index(), myElements).fill();
 			break;
 		}
 		case ZLTextParagraph::EMPTY_LINE_PARAGRAPH:

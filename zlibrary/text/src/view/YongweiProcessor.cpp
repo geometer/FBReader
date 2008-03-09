@@ -28,22 +28,26 @@
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 
-bool ZLTextParagraphCursor::YongweiProcessor::ourIndexIsInitialised = false;
+bool ZLTextParagraphCursor::Processor::ourIndexIsInitialised = false;
 
-ZLTextParagraphCursor::YongweiProcessor::YongweiProcessor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : Processor(paragraph, marks, paragraphNumber, elements), myLanguage(language), myBreaksTable(0) {
+ZLTextParagraphCursor::Processor::Processor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language), myBreaksTable(0) {
+	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphNumber, 0, 0));
+	myLastMark = myFirstMark;
+	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
+	myOffset = 0;
 	if (!ourIndexIsInitialised) {
 		init_linebreak_prop_index();
 		ourIndexIsInitialised = true;
 	}
 }
 
-ZLTextParagraphCursor::YongweiProcessor::~YongweiProcessor() {
+ZLTextParagraphCursor::Processor::~Processor() {
 	if (myBreaksTable != 0) {
 		delete[] myBreaksTable;
 	}
 }
 
-void ZLTextParagraphCursor::YongweiProcessor::processTextEntry(const ZLTextEntry &textEntry) {
+void ZLTextParagraphCursor::Processor::processTextEntry(const ZLTextEntry &textEntry) {
 	const size_t dataLength = textEntry.dataLength();
 	if (dataLength != 0) {
 		if ((myBreaksTable != 0) && (myBreaksTableLength < dataLength)) {
