@@ -61,7 +61,6 @@ void ZLTextModel::search(const std::string &text, size_t startIndex, size_t endI
 
 void ZLTextModel::selectParagraph(size_t index) const {
 	if (index < paragraphsNumber()) {
-		myMarks.clear();
 		myMarks.push_back(ZLTextMark(index, 0, (*this)[index]->textLength()));
 	}
 }

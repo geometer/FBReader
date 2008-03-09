@@ -49,7 +49,7 @@ public:
 	~CollectionModel();
 
 	BookDescriptionPtr bookByParagraphNumber(int num);
-	int paragraphNumberByBook(BookDescriptionPtr book);
+	const std::vector<int> &paragraphNumbersByBook(BookDescriptionPtr book);
 
 	void update();
 
@@ -69,7 +69,7 @@ private:
 
 	ZLImageMap myImageMap;
 	std::map<ZLTextParagraph*,BookDescriptionPtr> myParagraphToBook;
-	std::map<BookDescriptionPtr,int> myBookToParagraph;
+	std::map<BookDescriptionPtr,std::vector<int> > myBookToParagraph;
 };
 
 CollectionModel::CollectionModel(CollectionView &view, BookCollection &collection) : ZLTextTreeModel(), myView(view), myCollection(collection) {
@@ -91,9 +91,8 @@ BookDescriptionPtr CollectionModel::bookByParagraphNumber(int num) {
 	return (it != myParagraphToBook.end()) ? it->second : 0;
 }
 
-int CollectionModel::paragraphNumberByBook(BookDescriptionPtr book) {
-	std::map<BookDescriptionPtr,int>::iterator it = myBookToParagraph.find(book);
-	return (it != myBookToParagraph.end()) ? it->second : -1;
+const std::vector<int> &CollectionModel::paragraphNumbersByBook(BookDescriptionPtr book) {
+	return myBookToParagraph[book];
 }
 
 void CollectionModel::build() {
@@ -183,7 +182,7 @@ void CollectionModel::addBooks(const Books &books, ZLTextTreeParagraph *root) {
 			insertImage(DELETE_IMAGE_ID);
 		}
 		myParagraphToBook[bookParagraph] = description;
-		myBookToParagraph[description] = paragraphsNumber() - 1;
+		myBookToParagraph[description].push_back(paragraphsNumber() - 1);
 	}
 }
 
@@ -244,10 +243,13 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 		setModel(oldModel);
 		myUpdateModel = false;
 	}
-	int toSelect = collectionModel().paragraphNumberByBook(book);
-	if (toSelect >= 0) {
-		highlightParagraph(toSelect);
-		gotoParagraph(toSelect);
+	removeHighlightings();
+	const std::vector<int> &toSelect = collectionModel().paragraphNumbersByBook(book);
+	for (std::vector<int>::const_iterator it = toSelect.begin(); it != toSelect.end(); ++it) {
+		highlightParagraph(*it);
+	}
+	if (!toSelect.empty()) {
+		gotoParagraph(toSelect[0]);
 		scrollPage(false, ZLTextView::SCROLL_PERCENTAGE, 40);
 	}
 }

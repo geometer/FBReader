@@ -152,6 +152,7 @@ public:
 	bool canFindPrevious() const;
 	void findPrevious();
 
+	void removeHighlightings();
 	void highlightParagraph(int paragraphNumber);
 
 	ZLTextSelectionModel &selectionModel();

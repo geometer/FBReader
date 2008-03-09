@@ -79,6 +79,7 @@ size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
 }
 
 void ContentsView::gotoReference() {
+	removeHighlightings();
 	const size_t selected = currentTextViewParagraph();
 	highlightParagraph(selected);
 	gotoParagraph(selected);
