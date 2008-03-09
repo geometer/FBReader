@@ -66,6 +66,8 @@
 					<node name="bookPath" value="Chemin des livres"/>
 					<node name="lookInSubdirectories" value="Chercher des livres dans les sous-répertoires"/>
 					<node name="recentListSize" value="Taille de la liste de livres récents"/>
+					<node name="showTags" value="Sort Books by Tags" toBeTranslated="true"/>
+					<node name="showAllBooksList" value="Show List of All Books" toBeTranslated="true"/>
 				</node>
 				<node name="Language" value="Langue">
 					<node name="autoDetect" value="Detecter la langue et l'encodage automatiquement"/>
