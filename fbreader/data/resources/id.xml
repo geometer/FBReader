@@ -74,7 +74,6 @@
 					<node name="defaultEncodingSet" value="Set Enkode Standar"/>
 					<node name="defaultEncoding" value="Enkode Standar"/>
 					<node name="useWindows1252Hack" value="Gunakan windows-1252 daripada iso-8859-1"/>
-					<node name="chineseBreakAtAnyPosition" value="Untuk Bahasa Cina, Penggal Baris di Sembarang Posisi"/>
 				</node>
 				<node name="Indicator" value="Indikator">
 					<node name="show" value="Tampilkan Indikator Posisi"/>

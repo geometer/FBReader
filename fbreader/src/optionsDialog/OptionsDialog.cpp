@@ -20,7 +20,6 @@
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 #include <ZLPaintContext.h>
-#include <ZLChineseBreakingAlgorithm.h>
 #include <ZLLanguageList.h>
 #include <ZLEncodingConverter.h>
 
@@ -174,7 +173,6 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	encodingTab.addOption(ZLResourceKey("defaultEncodingSet"), encodingSetEntry);
 	encodingTab.addOption(ZLResourceKey("defaultEncoding"), encodingEntry);
 	encodingTab.addOption(ZLResourceKey("useWindows1252Hack"), new ZLSimpleBooleanOptionEntry(ZLEncodingCollection::useWindows1252HackOption()));
-	encodingTab.addOption(ZLResourceKey("chineseBreakAtAnyPosition"), new ZLSimpleBooleanOptionEntry(ZLChineseBreakingAlgorithm::instance().AnyPositionBreakingOption));
 
 	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab(ZLResourceKey("Scrolling")), fbreader);
 

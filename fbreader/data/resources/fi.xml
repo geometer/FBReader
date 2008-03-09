@@ -74,7 +74,6 @@
 					<node name="defaultEncodingSet" value="Oletusmerkistöalue"/>
 					<node name="defaultEncoding" value="Oletusmerkistö"/>
 					<node name="useWindows1252Hack" value="Käytä windows-1252 merkistöä iso-8859-1 sijaan"/>
-					<node name="chineseBreakAtAnyPosition" value="Katkaise Kiinaksi oleva teksti mistä tahansa kohdasta"/>
 				</node>
 				<node name="Indicator" value="Ilmaisin">
 					<node name="show" value="Näytä sijainninilmaisin"/>

@@ -74,7 +74,6 @@
 					<node name="defaultEncodingSet" value="Default Encoding Set"/>
 					<node name="defaultEncoding" value="Default Encoding"/>
 					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1"/>
-					<node name="chineseBreakAtAnyPosition" value="For Chinese Break Line at Any Position"/>
 				</node>
 				<node name="Indicator" value="Indicator">
 					<node name="show" value="Show Position Indicator"/>

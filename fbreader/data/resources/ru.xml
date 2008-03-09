@@ -74,7 +74,6 @@
 					<node name="defaultEncodingSet" value="Набор кодировок по умолчанию"/>
 					<node name="defaultEncoding" value="Кодировка по умолчанию"/>
 					<node name="useWindows1252Hack" value="Использовать windows-1252 вместо iso-8859-1"/>
-					<node name="chineseBreakAtAnyPosition" value="В китайском языке разрыв строки в любом месте"/>
 				</node>
 				<node name="Indicator" value="Индикатор">
 					<node name="show" value="Показывать индикатор"/>

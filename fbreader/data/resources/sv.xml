@@ -74,7 +74,6 @@
 					<node name="defaultEncodingSet" value="Standardteckenuppsättning"/>
 					<node name="defaultEncoding" value="Standardkodning"/>
 					<node name="useWindows1252Hack" value="Använd windows-1252 istället för iso-8859-1"/>
-					<node name="chineseBreakAtAnyPosition" value="För kinesiska radbrytningar på valfri position"/>
 				</node>
 				<node name="Indicator" value="Indikator">
 					<node name="show" value="Visa positionsindikator"/>

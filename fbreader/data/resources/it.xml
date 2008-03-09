@@ -74,7 +74,6 @@
 					<node name="defaultEncodingSet" value="Insieme Predefinito di Codifica"/>
 					<node name="defaultEncoding" value="Codifica Predefinita"/>
 					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1" toBeTranslated="true"/>
-					<node name="chineseBreakAtAnyPosition" value="In Cinese Interrompi Riga in Qualsiasi Posizione"/>
 				</node>
 				<node name="Indicator" value="Indicatore">
 					<node name="show" value="Mostra Indicatore di Posizione"/>

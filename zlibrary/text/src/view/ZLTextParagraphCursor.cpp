@@ -24,7 +24,6 @@
 
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
-#include "ZLChineseBreakingAlgorithm.h"
 
 ZLTextElementPool ZLTextElementPool::Pool;
 

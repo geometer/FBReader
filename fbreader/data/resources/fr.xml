@@ -75,7 +75,6 @@
 					<node name="defaultEncodingSet" value="Ensemble d'encodages par défaut"/>
 					<node name="defaultEncoding" value="Encodage par défaut"/>
 					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1" toBeTranslated="true"/>
-					<node name="chineseBreakAtAnyPosition" value="En chinois, passer à la ligne n'importe où"/>
 				</node>
 				<node name="Indicator" value="Indicateur">
 					<node name="show" value="Montrer l'indicateur de position"/>
