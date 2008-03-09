@@ -40,6 +40,8 @@ do_install:
 	@install -m 0644 data/formats/html/html.ent $(FBSHAREDIR)/formats/html
 	@install -d $(FBSHAREDIR)/formats/xhtml
 	@install -m 0644 $(wildcard data/formats/xhtml/*.ent) $(FBSHAREDIR)/formats/xhtml
+	@install -d $(FBSHAREDIR)/formats/fb2
+	@sed "s/VERSION/$(VERSION)/" data/formats/fb2/FBReaderVersion.ent > $(FBSHAREDIR)/formats/fb2/FBReaderVersion.ent
 	@install -d $(FBSHAREDIR)/default
 	@./scripts/install_toolbar_and_menu.sh $(VARIANT) $(FBSHAREDIR)/default
 	@install -m 0644 data/default/external.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/external.xml

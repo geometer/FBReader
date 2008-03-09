@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>À propos de FBReader</book-title> <lang>fr</lang></title-info></description>
 <body>
-<title><p>À propos de FBReader</p></title>
+<title><p>À propos de FBReader &FBReaderVersion;</p></title>
 <p>FBReader est un lecteur de livres électroniques (e-books) pour PDA, ordinateur de bureau et UMPC sous Linux ou Windows XP. FBReader supporte plusieurs formats de livres électroniques : <code>fb2</code>, <code>html</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, etc. La lecture directe à partir d'archives <code>zip</code>, <code>tar</code>, <code>gzip</code> et <code>bzip2</code> est également supportée.</p>
 <p>FBReader est distribué selon les termes de la licence <a l:href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a>. FBReader pour Windows XP est basé en partie sur le travail du Independent JPEG Group.</p>
 <empty-line/>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>Mengenai FBReader</book-title> <lang>id</lang></title-info></description>
 <body>
-<title><p>Mengenai FBReader</p></title>
+<title><p>Mengenai FBReader &FBReaderVersion;</p></title>
 <p>FBReader adalah aplikasi pembaca buku elektronik (e-book) untuk komputer PDA/UMPC/desktop dengan sistem operasi Linux/Windows XP. FBReader mendukung beberapa format buku elektronik: <code>fb2</code>, <code>html</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, dan lain-lain. Juga mendukung pembacaan langsung dari berkas terkompresi dalam format <code>zip</code>, <code>tar</code>, <code>gzip</code> dan <code>bzip2</code>.</p>
 <p>FBReader didistribusikan di bawah lisensi <a l:href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a>. FBReader untuk Windows XP sebagian berdasarkan pada hasil kerja Independent JPEG Group.</p>
 <empty-line/>

@@ -40,6 +40,8 @@ private:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
 
+	const std::vector<std::string> &externalDTDs() const;
+
 public:
 	enum TagCode {
 		_P,

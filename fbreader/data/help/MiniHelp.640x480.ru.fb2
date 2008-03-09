@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="koi8-r"?>
 <FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>О программе FBReader</book-title> <lang>ru</lang></title-info></description>
 <body>
-<title><p>О программе FBReader</p></title>
+<title><p>О программе FBReader &FBReaderVersion;</p></title>
 <p>FBReader &#8211; программа для чтения электронных книг, работающая под операционными системами Linux, FreeBSD, Windows XP. FBReader позволяет читать книги во многих форматах: <code>fb2</code>, <code>html</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, и&#160;т.&#160;д. Файлы можно читать напрямую из архивов <code>zip</code>, <code>tar</code>, <code>gzip</code> и <code>bzip2</code>.</p>
 <p>FBReader распространяется свободно, включая исходные тексты, под лицензией <a l:href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a>.</p>
 <empty-line/>

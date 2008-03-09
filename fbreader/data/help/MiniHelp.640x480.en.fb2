@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>About FBReader</book-title> <lang>en</lang></title-info></description>
 <body>
-<title><p>About FBReader</p></title>
+<title><p>About FBReader &FBReaderVersion;</p></title>
 <p>FBReader is an e-book reader for Linux/Windows XP PDA/UMPC/desktop computer. FBReader supports several e-book formats: <code>fb2</code>, <code>html</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, etc. Direct reading from <code>zip</code>, <code>tar</code>, <code>gzip</code> and <code>bzip2</code> archives is also supported.</p>
 <p>FBReader is distributed under the terms of the <a l:href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a>.</p>
 <empty-line/>
