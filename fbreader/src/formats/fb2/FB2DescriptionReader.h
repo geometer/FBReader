@@ -41,13 +41,20 @@ private:
 
 	bool myReturnCode;
 
-	bool myReadSomething;
-	bool myReadTitle;
-	bool myReadAuthor;
-	bool myReadAuthorName[3];
-	bool myReadLanguage;
+	enum {
+		READ_NOTHING,
+		READ_SOMETHING,
+		READ_TITLE,
+		READ_AUTHOR,
+		READ_AUTHOR_NAME_0,
+		READ_AUTHOR_NAME_1,
+		READ_AUTHOR_NAME_2,
+		READ_LANGUAGE,
+		READ_GENRE
+	} myReadState;
 
 	std::string myAuthorNames[3];
+	std::string myGenreBuffer;
 };
 
 inline FB2DescriptionReader::~FB2DescriptionReader() {}

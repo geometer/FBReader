@@ -114,6 +114,10 @@ void ZLOption::listOptionNames(const std::string &groupName, std::vector<std::st
 	ourConfig->listOptionNames(groupName, names);
 }
 
+void ZLOption::listOptionGroups(std::vector<std::string> &groups) {
+	ourConfig->listOptionGroups(groups);
+}
+
 void ZLOption::startAutoSave(int seconds) {
 	ourConfig->startAutoSave(seconds);
 }

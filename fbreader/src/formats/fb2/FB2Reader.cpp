@@ -63,6 +63,7 @@ static const FB2Reader::Tag TAGS[] = {
 	{"last-name", FB2Reader::_LAST_NAME},
 	{"coverpage", FB2Reader::_COVERPAGE},
 	{"sequence", FB2Reader::_SEQUENCE},
+	{"genre", FB2Reader::_GENRE},
 	{0, FB2Reader::_UNKNOWN}
 };
 

@@ -144,11 +144,6 @@ BookDescription::BookDescription(const std::string &fileName) {
 	myFileName = fileName;
 	myAuthor = 0;
 	myNumberInSequence = 0;
-
-	myTags.push_back("Fiction/Science Fiction");
-	myTags.push_back("Horror");
-	myTags.push_back("A/B/C");
-	myTags.push_back("Fiction/Fantasy");
 }
 
 void WritableBookDescription::clearAuthor() {

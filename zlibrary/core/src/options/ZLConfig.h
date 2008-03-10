@@ -61,6 +61,7 @@ public:
 	virtual ~ZLConfig();
 
 	virtual void listOptionNames(const std::string &groupName, std::vector<std::string> &names) = 0;
+	virtual void listOptionGroups(std::vector<std::string> &groups) = 0;
 	virtual void removeGroup(const std::string &name) = 0;
 
 	virtual const std::string &getDefaultValue(const std::string &group, const std::string &name, const std::string &defaultValue) const = 0;

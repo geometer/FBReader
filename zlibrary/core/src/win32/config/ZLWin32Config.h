@@ -70,6 +70,7 @@ public:
 	~ZLWin32Config();
 
 	void listOptionNames(const std::string &groupName, std::vector<std::string> &names);
+	void listOptionGroups(std::vector<std::string> &groups);
 	void removeGroup(const std::string &name);
 
 	const std::string &getValue(const std::string &group, const std::string &name, const std::string &defaultValue) const;

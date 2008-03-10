@@ -75,6 +75,7 @@ public:
 public:
 	static void clearGroup(const std::string &group);
 	static void listOptionNames(const std::string &group, std::vector<std::string> &names);
+	static void listOptionGroups(std::vector<std::string> &groups);
 	static bool isAutoSavingSupported();
 	static void startAutoSave(int seconds);
 	

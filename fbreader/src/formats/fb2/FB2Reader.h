@@ -76,6 +76,7 @@ public:
 		_LAST_NAME,
 		_COVERPAGE,
 		_SEQUENCE,
+		_GENRE,
 		_UNKNOWN
 	};
 

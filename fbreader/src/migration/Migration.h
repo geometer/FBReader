@@ -32,6 +32,7 @@ protected:
 		const ZLCategoryKey &newCategory, const std::string &newGroup, const std::string &newName,
 		const std::string &defaultValue
 	);
+	static bool isLikeToFileName(const std::string &str);
 
 public:
 	Migration(const std::string &version);
@@ -58,6 +59,15 @@ class Migration_0_8_13 : public Migration {
 
 public:
 	Migration_0_8_13();
+
+protected:
+	void doMigrationInternal();
+};
+
+class Migration_0_8_16 : public Migration {
+
+public:
+	Migration_0_8_16();
 
 protected:
 	void doMigrationInternal();

@@ -17,15 +17,32 @@
  * 02110-1301, USA.
  */
 
-#include "../options/FBOptions.h"
+#include <iostream>
+#include <vector>
+
+#include <ZLUnicodeUtil.h>
+#include <ZLFile.h>
 
 #include "Migration.h"
-#include "migrate.h"
 
-void migrateFromOldVersions() {
-	Migration_0_8_11().doMigration();
-	Migration_0_8_13().doMigration();
-	Migration_0_8_16().doMigration();
+#include "../description/BookDescription.h"
 
-	ZLStringOption(FBCategoryKey::SYSTEM, "Version", "FBReaderVersion", "0").setValue(VERSION);
+Migration_0_8_16::Migration_0_8_16() : Migration("0.8.16") {
+}
+
+void Migration_0_8_16::doMigrationInternal() {
+	std::vector<std::string> optionGroups;
+	ZLOption::listOptionGroups(optionGroups);
+
+	for (std::vector<std::string>::const_iterator it = optionGroups.begin(); it != optionGroups.end(); ++it) {
+		if (isLikeToFileName(*it)) {
+			ZLFile file(*it);
+			if (ZLUnicodeUtil::toLower(file.extension()) == "fb2") {
+				BookDescriptionPtr description = BookDescription::getDescription(*it);
+				if (!description.isNull()) {
+					std::cerr << *it << "\n";
+				}
+			}
+		}
+	}
 }

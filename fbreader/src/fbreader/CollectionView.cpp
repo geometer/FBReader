@@ -281,7 +281,7 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 		highlightParagraph(*it);
 	}
 	if (!toSelect.empty()) {
-		gotoParagraph(toSelect[0]);
+		gotoParagraph(toSelect[toSelect.size() - 1]);
 		scrollPage(false, ZLTextView::SCROLL_PERCENTAGE, 40);
 	}
 }

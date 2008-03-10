@@ -146,6 +146,12 @@ void XMLConfig::listOptionNames(const std::string &groupName, std::vector<std::s
 	}
 }
 
+void XMLConfig::listOptionGroups(std::vector<std::string> &groups) {
+	for (std::map<std::string,XMLConfigGroup*>::iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
+		groups.push_back(it->first);
+	}
+}
+
 void XMLConfig::removeGroup(const std::string &name) {
 	std::map<std::string,XMLConfigGroup*>::iterator it = myGroups.find(name);
 	if (it != myGroups.end()) {
