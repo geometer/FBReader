@@ -24,6 +24,7 @@
 #include <ZLFile.h>
 
 #include "Migration.h"
+#include "FB2MigrationReader.h"
 
 #include "../description/BookDescription.h"
 
@@ -40,7 +41,7 @@ void Migration_0_8_16::doMigrationInternal() {
 			if (ZLUnicodeUtil::toLower(file.extension()) == "fb2") {
 				BookDescriptionPtr description = BookDescription::getDescription(*it);
 				if (!description.isNull()) {
-					std::cerr << *it << "\n";
+					FB2MigrationReader(*description).doRead(*it);
 				}
 			}
 		}

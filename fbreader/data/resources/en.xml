@@ -65,7 +65,7 @@
 					<node name="bookPath" value="Book Path"/>
 					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
 					<node name="recentListSize" value="Recent Books List Size"/>
-					<node name="showTags" value="Sort Books by Categories"/>
+					<node name="showTags" value="Sort Books by Tags"/>
 					<node name="showAllBooksList" value="Show List of All Books"/>
 				</node>
 				<node name="Language" value="Language">
@@ -344,6 +344,6 @@
 	<node name="library">
 		<node name="caption" value="Library"/>
 		<node name="allBooks" value="All Books"/>
-		<node name="booksWithoutTags" value="Books without Categories"/>
+		<node name="booksWithoutTags" value="Books with no Tags"/>
 	</node>
 </resources>
