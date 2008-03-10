@@ -133,9 +133,33 @@ void CollectionModel::buildWithTags() {
 		addBooks(booksWithoutTags, booksWithoutTagsParagraph);
 	}
 
+	std::vector<std::string> tagStack;
+	ZLTextTreeParagraph *tagParagraph = 0;
 	for (std::map<std::string,Books>::const_iterator it = tagMap.begin(); it != tagMap.end(); ++it) {
-		ZLTextTreeParagraph *tagParagraph = createParagraph();
-		insertText(LIBRARY_AUTHOR_ENTRY, it->first);
+		const std::string &fullTagName = it->first;
+		bool useExistingTagStack = true;
+		for (int index = 0, depth = 0; index != -1; ++depth) {
+			int newIndex = fullTagName.find('/', index);
+			const std::string subTag = fullTagName.substr(index, newIndex - index);
+			index = (newIndex == -1) ? newIndex : newIndex + 1;
+
+			if (useExistingTagStack) {
+				if (tagStack.size() == (size_t)depth) {
+					useExistingTagStack = false;
+				} else if (tagStack[depth] != subTag) {
+					for (int i = tagStack.size() - depth; i > 0; --i) {
+						tagParagraph = tagParagraph->parent();
+					}
+					tagStack.resize(depth);
+					useExistingTagStack = false;
+				}
+			}
+			if (!useExistingTagStack) {
+				tagStack.push_back(subTag);
+				tagParagraph = createParagraph(tagParagraph);
+				insertText(LIBRARY_AUTHOR_ENTRY, subTag);
+			}
+		}
 		addBooks(it->second, tagParagraph);
 	}
 }

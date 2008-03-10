@@ -145,6 +145,12 @@ BookDescription::BookDescription(const std::string &fileName) {
 }
 
 const std::vector<std::string> &BookDescription::tags() const {
+	if (myTags.empty()) {
+		myTags.push_back("Fiction/Science Fiction");
+		myTags.push_back("Horror");
+		myTags.push_back("A/B/C");
+		myTags.push_back("Fiction/Fantasy");
+	}
 	return myTags;
 }
 
