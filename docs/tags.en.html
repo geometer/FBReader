@@ -1,0 +1,90 @@
+<html>
+<head>
+</head>
+<body>
+<!-- Based on tags.ru.html (2306) -->
+
+<h2><center>Book Tags in FBReader</center></h2>
+
+<h3>What is a book tag?</h3>
+<p>As of version 0.8.16 FBReader supports book tags.  This feature allows for organizing libraries
+in a way more convenient for the end user.</p>
+
+<p>A tag is just a text string, set of possible tags is not pre-defined, which means that the user
+can add a new tag at any moment.  Each book can have one or more tags.  These tags are listed in the
+book information dialog as a list.</p>
+
+<p>For example, if the dialog shows &laquo;Science Fiction, Fantasy, New&raquo;, it means that the
+book has three tags &mdash; &laquo;Science Fiction&raquo;, &laquo;Fantasy&raquo; and
+&laquo;New&raquo;.</p>
+
+<p>Tag name <b>must</b> not contain a comma symbol (&laquo;,&raquo;).</p>
+
+<p>Spaces and tab symbols at the beginning and the end of a tag name are ignored.</p>
+
+<h3>Hierarchical tags.</h3>
+<p>If tag name contains &laquo;/&raquo;, then this tag is considered hierarchical.  For example, tag
+list &laquo;Fiction/SF &amp; Fantasy/Fantasy&raquo;, will be interpreted as subtag
+&laquo;Fantasy&raquo; of subtag &laquo;SF &amp; Fantasy&raquo; of top level tag
+&laquo;Fiction&raquo;.</p>
+<p>Tag name <b>must</b> not contain a slash symbol (&laquo;/&raquo;).</p>
+
+<h3>Library Tree View.</h3>
+<p>Book library is shown as a tree. First levels of the tree a representing book tags (one or more),
+next levels are for the book author, book series (if present) and, finally, the book title.</p>
+
+<p>If a book has several tags, it will be available under each tag it has.</p>
+<p>If a book has no tags, it will be shown in the branch called &laquo;Books with no tags&raquo;.</p>
+<p>Besides, all books can be found in the branch called &laquo;All Books&raquo;.</p>
+
+<h3>Возможности настройки дерева книг.</h3>
+<p>Если вам не нравится дерево книг с разделением на категории, вы можете
+вернуться к традиционному виду, выключив опцию &laquo;Sort Books by
+Categoties&raquo; в табе &laquo;Library&raquo; диалога настроек.</p>
+
+<p>В том же табе вы можете немного изменить внешний вид дерева, отключив ветку
+&laquo;All Books&raquo;.</p>
+
+<h3>Выделение книги в дереве.</h3>
+<p>Когда вы открываете библиотеку FBReader'а, книга, которую вы перед этим
+читали, выделена в дереве. При этом выделены все вхождения книги в дерево,
+однако показано только последнее из них. Если вы хотите увидеть другие места,
+где книга встречается в дереве, воспользуйтесь кнопками &laquo;Find
+Next/Previous&raquo;.</p>
+
+<h3>Откуда берутся категории книги.</h3>
+<p>Категории для книг может задавать сам пользователь. Как это делается, описано в следующем пункте. Кроме этого, в некоторых форматах электронных книг есть возможность для указания списка категорий. Текущая версия FBReader понимает список категорий (жанров) формата <code>fb2</code>.</p>
+
+<h3>Как изменить набор категорий конкретной книги.</h3>
+<p>Вы можете в любой момент изменить список категорий книги. Для этого вызовите диалог информации о книге и в табе &laquo;Categoties&raquo; отредактируйте список. Названия категорий изменятся только для книги, информацию о которой вы меняли. Если при этом вы введете не существовавшее ранее название категории, оно автоматически появится в дереве. Если вы удалите название категории, к которой относилась только одна книга, эта категория автоматически исчезнет из дерева.</p>
+
+<h3>Как изменять, объединять и копировать категории.</h3>
+<p>Если вы хотите изменить что-нибудь не для отдельной книги, а для категории, в которую входит несколько книг, вам нужно вызвать диалог редактирования категории. Для этого нажмите на рисунок, изображающий лампочку, справа от названия категории в дереве.</p>
+<p>В открывшемся диалоге вы можете:<ul>
+<li>Редактировать название категории.</li>
+<p>Обратите внимание, что в названии категории нельзя использовать запятую -- такое название просто не сохранится.</p>
+<p>Если вы используете в названии символ '/', он будет воспринят как разделитель названия многоуровневой категории.</p>
+<p>Если вы укажете пустое имя категории, оно тоже не будет сохранено.</p>
+<p>Пробелы и символы табуляции в начале и конце названия категории будут удалены.</p>
+<li>Слить категорию с другой уже существующей.</li>
+<p>Для этого вам просто нужно изменить имя категории на имя той, с которой вы хотите ее слить. Для упрощения этой операции есть возможность не набирать имя существующей категории, а выбрать его из списка.</p>
+<li>Клонировать категорию.</li>
+<p>Поставьте флажок &laquo;Create clone&raquo; и введите имя для новой категории. Если имя новой категории совпадет с именем уже существующей категории, новая категория создана не будет, но все книги добавятся в указанную категорию.</p>
+<p>Эту операцию, в отличие от остальных, можно применить также и к категориям &laquo;All Books&raquo; и &laquo;Books without Categoties&raquo;.</p>
+</ul>
+</p>
+
+<h3>Как удалять категории.</h3>
+<p>Если вы хотите удалить категорию, нажмите на знак минус справа от названия
+категории в дереве. После дополнительного вопроса, категория будет удалена из
+списков всех книг, однако сами книги никуда не пропадут.</p>
+
+<p>Если у категории есть подкатегории, для их удаления нужно дополнительно
+поставить в диалоге удаления галочку "Remove All Subcategories".</p>
+
+</body>
+</html>
+
+<!--
+    vim:tw=100
+  -->
