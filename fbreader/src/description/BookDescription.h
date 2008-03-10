@@ -82,7 +82,7 @@ private:
 	std::string myFileName;
 	std::string myLanguage;
 	std::string myEncoding;
-	mutable std::vector<std::string> myTags;
+	std::vector<std::string> myTags;
 
 friend class WritableBookDescription;
 
@@ -107,6 +107,11 @@ public:
 	std::string &language();
 	std::string &encoding();
 
+	void addTag(const std::string &tag);
+	void removeTag(const std::string &tag, bool includeSubTags);
+	void renameTag(const std::string &from, const std::string &to);
+	void cloneTag(const std::string &from, const std::string &to);
+
 private:
 	BookDescription &myDescription;
 };
@@ -120,6 +125,7 @@ inline int BookDescription::numberInSequence() const { return myNumberInSequence
 inline const std::string &BookDescription::fileName() const { return myFileName; }
 inline const std::string &BookDescription::language() const { return myLanguage; }
 inline const std::string &BookDescription::encoding() const { return myEncoding; }
+inline const std::vector<std::string> &BookDescription::tags() const { return myTags; }
 
 inline WritableBookDescription::WritableBookDescription(BookDescription &description) : myDescription(description) {}
 inline WritableBookDescription::~WritableBookDescription() {}

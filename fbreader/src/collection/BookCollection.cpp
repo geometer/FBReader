@@ -272,3 +272,27 @@ const std::vector<AuthorPtr> &BookCollection::authors() const {
 	}
 	return myAuthors;
 }
+
+void BookCollection::removeTag(const std::string &tag, bool includeSubTags) {
+	synchronize();
+	for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
+		WritableBookDescription wbd(**it);
+		wbd.removeTag(tag, includeSubTags);
+	}
+}
+
+void BookCollection::renameTag(const std::string &from, const std::string &to) {
+	synchronize();
+	for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
+		WritableBookDescription wbd(**it);
+		wbd.renameTag(from, to);
+	}
+}
+
+void BookCollection::cloneTag(const std::string &from, const std::string &to) {
+	synchronize();
+	for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
+		WritableBookDescription wbd(**it);
+		wbd.cloneTag(from, to);
+	}
+}

@@ -142,16 +142,11 @@ BookDescription::BookDescription(const std::string &fileName) {
 	myFileName = fileName;
 	myAuthor = 0;
 	myNumberInSequence = 0;
-}
 
-const std::vector<std::string> &BookDescription::tags() const {
-	if (myTags.empty()) {
-		myTags.push_back("Fiction/Science Fiction");
-		myTags.push_back("Horror");
-		myTags.push_back("A/B/C");
-		myTags.push_back("Fiction/Fantasy");
-	}
-	return myTags;
+	myTags.push_back("Fiction/Science Fiction");
+	myTags.push_back("Horror");
+	myTags.push_back("A/B/C");
+	myTags.push_back("Fiction/Fantasy");
 }
 
 void WritableBookDescription::clearAuthor() {
@@ -187,5 +182,60 @@ void WritableBookDescription::addAuthor(const std::string &name, const std::stri
 			myDescription.myAuthor = MultiAuthor::create(myDescription.myAuthor);
 		}
 		((MultiAuthor&)*myDescription.myAuthor).addAuthor(author);
+	}
+}
+
+void WritableBookDescription::addTag(const std::string &tag) {
+	std::vector<std::string> &tags = myDescription.myTags;
+	std::vector<std::string>::const_iterator it = std::find(tags.begin(), tags.end(), tag);
+	if (it == tags.end()) {
+		tags.push_back(tag);
+		// TODO: save changed tag set
+	}
+}
+
+void WritableBookDescription::removeTag(const std::string &tag, bool includeSubTags) {
+	std::vector<std::string> &tags = myDescription.myTags;
+	if (includeSubTags) {
+		const std::string prefix = tag + '/';
+		for (std::vector<std::string>::iterator it = tags.begin(); it != tags.end();) {
+			if ((*it == tag) || ZLStringUtil::stringStartsWith(*it, prefix)) {
+				it = tags.erase(it);
+			} else {
+				++it;
+			}
+		}
+	} else {
+		std::vector<std::string>::iterator it = std::find(tags.begin(), tags.end(), tag);
+		if (it != tags.end()) {
+			tags.erase(it);
+			// TODO: save changed tag set
+		}
+	}
+}
+
+void WritableBookDescription::renameTag(const std::string &from, const std::string &to) {
+	std::vector<std::string> &tags = myDescription.myTags;
+	std::vector<std::string>::iterator it = std::find(tags.begin(), tags.end(), from);
+	if (it != tags.end()) {
+		std::vector<std::string>::const_iterator jt = std::find(tags.begin(), tags.end(), to);
+		if (jt == tags.end()) {
+			*it = to;
+		} else {
+			tags.erase(it);
+		}
+		// TODO: save changed tag set
+	}
+}
+
+void WritableBookDescription::cloneTag(const std::string &from, const std::string &to) {
+	std::vector<std::string> &tags = myDescription.myTags;
+	std::vector<std::string>::const_iterator it = std::find(tags.begin(), tags.end(), from);
+	if (it != tags.end()) {
+		std::vector<std::string>::const_iterator jt = std::find(tags.begin(), tags.end(), to);
+		if (jt == tags.end()) {
+			tags.push_back(to);
+			// TODO: save changed tag set
+		}
 	}
 }

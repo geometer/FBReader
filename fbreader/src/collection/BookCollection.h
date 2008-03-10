@@ -42,12 +42,16 @@ public:
 	~BookCollection();
 
 	const std::vector<AuthorPtr> &authors() const;
-	void collectSequenceNames(AuthorPtr author, std::set<std::string> &list) const;
 	const Books &books() const;
 	bool isBookExternal(BookDescriptionPtr description) const;
 
 	void rebuild(bool strong);
 	bool synchronize() const;
+
+	void collectSequenceNames(AuthorPtr author, std::set<std::string> &list) const;
+	void removeTag(const std::string &tag, bool includeSubTags);
+	void renameTag(const std::string &from, const std::string &to);
+	void cloneTag(const std::string &from, const std::string &to);
 	
 private:
 	void collectDirNames(std::set<std::string> &names) const;
