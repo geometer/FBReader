@@ -2,7 +2,7 @@
 <head>
 </head>
 <body>
-<!-- Based on tags.ru.html (2306) -->
+<!-- Based on tags.ru.html (2311) -->
 
 <h2><center>Book Tags in FBReader</center></h2>
 
@@ -24,63 +24,105 @@ book has three tags &mdash; &laquo;Science Fiction&raquo;, &laquo;Fantasy&raquo;
 
 <h3>Hierarchical tags.</h3>
 <p>If tag name contains &laquo;/&raquo;, then this tag is considered hierarchical.  For example, tag
-list &laquo;Fiction/SF &amp; Fantasy/Fantasy&raquo;, will be interpreted as subtag
+list &laquo;Fiction/SF &amp; Fantasy/Fantasy&raquo; will be interpreted as subtag
 &laquo;Fantasy&raquo; of subtag &laquo;SF &amp; Fantasy&raquo; of top level tag
 &laquo;Fiction&raquo;.</p>
 <p>Tag name <b>must</b> not contain a slash symbol (&laquo;/&raquo;).</p>
 
 <h3>Library Tree View.</h3>
-<p>Book library is shown as a tree. First levels of the tree a representing book tags (one or more),
-next levels are for the book author, book series (if present) and, finally, the book title.</p>
+<p>Book library is shown as a tree. First levels of the tree are representing book tags (one or
+more), next levels are for the book author, for the book series (if present) and the book
+title correspondently.</p>
 
 <p>If a book has several tags, it will be available under each tag it has.</p>
+
 <p>If a book has no tags, it will be shown in the branch called &laquo;Books with no tags&raquo;.</p>
+
 <p>Besides, all books can be found in the branch called &laquo;All Books&raquo;.</p>
 
-<h3>Возможности настройки дерева книг.</h3>
-<p>Если вам не нравится дерево книг с разделением на категории, вы можете
-вернуться к традиционному виду, выключив опцию &laquo;Sort Books by
-Categoties&raquo; в табе &laquo;Library&raquo; диалога настроек.</p>
+<h3>Library Tree View Settings.</h3>
+
+<p>If you open the preferences dialog and select &laquo;Library&raquo; tab, you can see two
+options:<dl>
+    <dt>&laquo;Sort Books by Tags&raquo;</dt>
+    <dd>By clearing this option you tell FBReader to show traditional tree with not tags</dd>
+    <dt>&laquo;</dt>
+    <dd>By clearing this option you tell FBReader to not show the branch called &laquo;All
+    Books&raquo;</dd>
+</dl>
+
+<!-- p>You can tell FBReader to use traditional tree view with no tags, in order to do so open the
+preferences dialog, select &laquo;Library&raquo; tab and clear the checkbox &laquo;Sort Books by
+Tags&raquo;.</p>
 
 <p>В том же табе вы можете немного изменить внешний вид дерева, отключив ветку
-&laquo;All Books&raquo;.</p>
+&laquo;All Books&raquo;.</p -->
 
-<h3>Выделение книги в дереве.</h3>
-<p>Когда вы открываете библиотеку FBReader'а, книга, которую вы перед этим
-читали, выделена в дереве. При этом выделены все вхождения книги в дерево,
-однако показано только последнее из них. Если вы хотите увидеть другие места,
-где книга встречается в дереве, воспользуйтесь кнопками &laquo;Find
-Next/Previous&raquo;.</p>
+<h3>Book Highlighting in the Library View Tree.</h3>
+<p>When you open library tree view, the book you are currently reading will be shown and highlighted
+in the tree.  While all locations where the book is available are highlighted, you will see the last
+appearance of the book in the view.  You can go through all the locations using &laquo;Find
+Next&raquo;/&laquo;Find Previous&raquo; buttons.</p>
 
-<h3>Откуда берутся категории книги.</h3>
-<p>Категории для книг может задавать сам пользователь. Как это делается, описано в следующем пункте. Кроме этого, в некоторых форматах электронных книг есть возможность для указания списка категорий. Текущая версия FBReader понимает список категорий (жанров) формата <code>fb2</code>.</p>
+<h3>How Tags are Defined.</h3>
+<p>All tags are defined by the user.  Following sections describe this in more details.  Besides,
+certain book formats support tags natively.  As of version 0.8.16, FBReader can extract tags from
+books in <code>fb2</code> and <code>oeb/epub</code> formats.</p>
 
-<h3>Как изменить набор категорий конкретной книги.</h3>
-<p>Вы можете в любой момент изменить список категорий книги. Для этого вызовите диалог информации о книге и в табе &laquo;Categoties&raquo; отредактируйте список. Названия категорий изменятся только для книги, информацию о которой вы меняли. Если при этом вы введете не существовавшее ранее название категории, оно автоматически появится в дереве. Если вы удалите название категории, к которой относилась только одна книга, эта категория автоматически исчезнет из дерева.</p>
+<h3>Settings/Changing Tags for a Book.</h3>
+<p>In order to set or to change list of tags for a book, open book information dialog, select
+&laquo;Tags&raquo; tab and edit the list.  Tag names will only be changed for the book you update.
+If you add a new tag, it will be automatically shown in the tree.  If you delete a tag that only
+this book had, the tag will be automatically removed from the tree.</p>
 
-<h3>Как изменять, объединять и копировать категории.</h3>
-<p>Если вы хотите изменить что-нибудь не для отдельной книги, а для категории, в которую входит несколько книг, вам нужно вызвать диалог редактирования категории. Для этого нажмите на рисунок, изображающий лампочку, справа от названия категории в дереве.</p>
-<p>В открывшемся диалоге вы можете:<ul>
-<li>Редактировать название категории.</li>
-<p>Обратите внимание, что в названии категории нельзя использовать запятую -- такое название просто не сохранится.</p>
-<p>Если вы используете в названии символ '/', он будет воспринят как разделитель названия многоуровневой категории.</p>
-<p>Если вы укажете пустое имя категории, оно тоже не будет сохранено.</p>
-<p>Пробелы и символы табуляции в начале и конце названия категории будут удалены.</p>
-<li>Слить категорию с другой уже существующей.</li>
-<p>Для этого вам просто нужно изменить имя категории на имя той, с которой вы хотите ее слить. Для упрощения этой операции есть возможность не набирать имя существующей категории, а выбрать его из списка.</p>
-<li>Клонировать категорию.</li>
-<p>Поставьте флажок &laquo;Create clone&raquo; и введите имя для новой категории. Если имя новой категории совпадет с именем уже существующей категории, новая категория создана не будет, но все книги добавятся в указанную категорию.</p>
-<p>Эту операцию, в отличие от остальных, можно применить также и к категориям &laquo;All Books&raquo; и &laquo;Books without Categoties&raquo;.</p>
+<h3>Changing/Merging/Copying Tags.</h3>
+<p>If you would like to change a tag, you can do it in the library tree view: navigate to the tag
+you'd like to change and click on the bulb that is to the right to the tag name.</p>
+
+<p>In the opened dialog you can:<ul>
+<li>Change the tag name</li>
+<p>NB: a tag name <b>must not</b> contain a comma: if you put it there by mistake, the name won't be
+changed.</p>
+<p>Empty name won't be changed either.</p>
+<p>If you use &laquo;/&raquo; in the tag name, it will be considered as a separator for a
+hierarchical tag.</p>
+<p>Spaces and tab symbols will removed from the beginning and the end of the tag name.</p>
+
+<li>Merge the tag with an existing one</li>
+<p>To merge the tag with another one, you just need to change the name of the latter or simply
+select it from the list of available tags.</p>
+
+<li>Cloning a tag.</li>
+<p>Check the box &laquo;Create clone&raquo; and specify the name of the new tag. If the tag you
+specified already exists, the books from with the current tags will be tag with the new tag.</p>
+
+<p>Unlike others, this operation can also be performed for the tags &laquo;All Books&raquo; and
+&laquo;Books with no Tags&raquo;.</p>
 </ul>
 </p>
 
-<h3>Как удалять категории.</h3>
-<p>Если вы хотите удалить категорию, нажмите на знак минус справа от названия
-категории в дереве. После дополнительного вопроса, категория будет удалена из
-списков всех книг, однако сами книги никуда не пропадут.</p>
+<h3>Deleting Tags.</h3>
+<p>If you would like to delete a tag, click on a minus sign right to the tag name.  You will need to
+confirm the operation when a dilog appears.  If you confirm the operations, the specified tag will
+be removed from all books you have.  <b>Note</b>: no books will be removed by this operation.</p>
 
-<p>Если у категории есть подкатегории, для их удаления нужно дополнительно
-поставить в диалоге удаления галочку "Remove All Subcategories".</p>
+<!-- MSS: this is really bad, need a good night sleep :) -->
+<p>If the tag you are about to delete has subtags, the confirmation dialog will have three buttons
+&mdash; &laquo;This Only&raquo;, &laquo;With Subtags&laquo; and &laquo;Cancel&raquo;.  If you click
+on the first one, exactly the selected tag will be removed (if there are any books tagged by it).  If
+you click on the second one, then the selected tag and all its subtags will be removed and the
+corresponding branch will not be shown in the tree.</p>
+
+<p>For example, if you have books tagged as &laquo;Fiction&raquo; and books tagged as
+&laquo;Fiction/Horror&raquo;, and you try to delete tag &laquo;Fiction;&raquo;, you can<ul>
+<li>Click on &laquo;This Only&raquo;</li>
+<p>In this case, the tag &laquo;Fiction&raquo; will disappear from the tag list of books that were
+tagged with it, while tag &laquo;Fiction/Horror&raquo; will remain. And while both tags will be shown
+in the library tree view, the first one will have no books.</p>
+<li>Click on &laquo;With Subtags&raquo;</li> 
+<p>In this case both tags &laquo;Fiction&raquo; and &laquo;Fiction/Horror&raquo; will be removed
+from the books that were tagged with them and the whole subtree that started with
+&laquo;Fiction&raquo; will not be shown.</p>
 
 </body>
 </html>
