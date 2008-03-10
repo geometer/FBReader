@@ -344,6 +344,6 @@
 	<node name="library">
 		<node name="caption" value="Kirjasto"/>
 		<node name="allBooks" value="All Books" toBeTranslated="true"/>
-		<node name="booksWithoutTags" value="Books without Tags" toBeTranslated="true"/>
+		<node name="booksWithoutTags" value="Books with no Tags" toBeTranslated="true"/>
 	</node>
 </resources>
