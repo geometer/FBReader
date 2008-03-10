@@ -7,9 +7,9 @@ install:
 	@install -m 0644 ../data/default/styles.$(TARGET_ARCH).xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
 	@install -d $(DESTDIR)$(INSTALLDIR)/pics
 	@install -d $(DESTDIR)$(INSTALLDIR)/.FBReader
-	@install -m 0644 ../icons/application/32x24.png $(DESTDIR)$(INSTALLDIR)/pics/FBReader-s.png
-	@install -m 0644 ../icons/application/64x43.png $(DESTDIR)$(INSTALLDIR)/pics/FBReader-b.png
-	@install -m 0644 ../icons/application/48x48.png $(DESTDIR)$(INSTALLDIR)/pics/FBReader.png
+	@install -m 0644 ../data/icons/application/32x24.png $(DESTDIR)$(INSTALLDIR)/pics/FBReader-s.png
+	@install -m 0644 ../data/icons/application/64x43.png $(DESTDIR)$(INSTALLDIR)/pics/FBReader-b.png
+	@install -m 0644 ../data/icons/application/48x48.png $(DESTDIR)$(INSTALLDIR)/pics/FBReader.png
 	@install -m 0644 FBReader.desktop $(DESTDIR)$(INSTALLDIR)/FBReader.desktop
 	@install FBReader.sh $(DESTDIR)$(BINDIR)
 	@install util/language_detector $(DESTDIR)$(BINDIR)

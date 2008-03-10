@@ -37,10 +37,12 @@
 #include "../description/BookDescription.h"
 #include "../description/Author.h"
 
-static const std::string DELETE_IMAGE_ID = "delete";
+static const std::string REMOVE_BOOK_IMAGE_ID = "removeBook";
 static const std::string BOOK_INFO_IMAGE_ID = "bookInfo";
 static const std::string AUTHOR_INFO_IMAGE_ID = "authorInfo";
 static const std::string SERIES_ORDER_IMAGE_ID = "seriesOrder";
+static const std::string TAG_INFO_IMAGE_ID = "tagInfo";
+static const std::string REMOVE_TAG_IMAGE_ID = "removeTag";
 
 class CollectionModel : public ZLTextTreeModel {
 
@@ -74,10 +76,12 @@ private:
 
 CollectionModel::CollectionModel(CollectionView &view, BookCollection &collection) : ZLTextTreeModel(), myView(view), myCollection(collection) {
 	const std::string prefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-	myImageMap[DELETE_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-remove.png", 0);
+	myImageMap[REMOVE_BOOK_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-remove.png", 0);
 	myImageMap[BOOK_INFO_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-bookinfo.png", 0);
 	myImageMap[AUTHOR_INFO_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-authorinfo.png", 0);
 	myImageMap[SERIES_ORDER_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-order.png", 0);
+	myImageMap[TAG_INFO_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-taginfo.png", 0);
+	myImageMap[REMOVE_TAG_IMAGE_ID] = new ZLFileImage("image/png", prefix + "tree-removetag.png", 0);
 }
 
 CollectionModel::~CollectionModel() {
@@ -109,6 +113,7 @@ void CollectionModel::buildWithTags() {
 	if (myView.ShowAllBooksTagOption.value()) {
 		ZLTextTreeParagraph *allBooksParagraph = createParagraph();
 		insertText(LIBRARY_AUTHOR_ENTRY, resource["allBooks"].value());
+		insertImage(TAG_INFO_IMAGE_ID);
 		addBooks(myCollection.books(), allBooksParagraph);
 	}
 
@@ -130,6 +135,7 @@ void CollectionModel::buildWithTags() {
 	if (!booksWithoutTags.empty()) {
 		ZLTextTreeParagraph *booksWithoutTagsParagraph = createParagraph();
 		insertText(LIBRARY_AUTHOR_ENTRY, resource["booksWithoutTags"].value());
+		insertImage(TAG_INFO_IMAGE_ID);
 		addBooks(booksWithoutTags, booksWithoutTagsParagraph);
 	}
 
@@ -158,6 +164,8 @@ void CollectionModel::buildWithTags() {
 				tagStack.push_back(subTag);
 				tagParagraph = createParagraph(tagParagraph);
 				insertText(LIBRARY_AUTHOR_ENTRY, subTag);
+				insertImage(TAG_INFO_IMAGE_ID);
+				insertImage(REMOVE_TAG_IMAGE_ID);
 			}
 		}
 		addBooks(it->second, tagParagraph);
@@ -203,7 +211,7 @@ void CollectionModel::addBooks(const Books &books, ZLTextTreeParagraph *root) {
 		insertText(LIBRARY_BOOK_ENTRY, description->title());
 		insertImage(BOOK_INFO_IMAGE_ID);
 		if (myCollection.isBookExternal(description)) {
-			insertImage(DELETE_IMAGE_ID);
+			insertImage(REMOVE_BOOK_IMAGE_ID);
 		}
 		myParagraphToBook[bookParagraph] = description;
 		myBookToParagraph[description].push_back(paragraphsNumber() - 1);
@@ -320,7 +328,7 @@ bool CollectionView::_onStylusPress(int x, int y) {
 				application().refreshWindow();
 			}
 			return true;
-		} else if (imageElement.id() == DELETE_IMAGE_ID) {
+		} else if (imageElement.id() == REMOVE_BOOK_IMAGE_ID) {
 			ZLResourceKey boxKey("removeBookBox");
 			const std::string message =
 				ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book->title());

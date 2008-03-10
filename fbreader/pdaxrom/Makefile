@@ -6,7 +6,7 @@ install:
 	@install -m 0644 ../data/default/keymap.pdaxrom.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
 	@install -m 0644 ../data/default/styles.640x480.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
 	@install -d $(DESTDIR)$(SHAREDIR)/pixmaps/FBReader
-	@install -m 0644 ../icons/application/$(TARGET_ARCH).png $(DESTDIR)$(SHAREDIR)/pixmaps/FBReader/FBReader.png
+	@install -m 0644 ../data/icons/application/$(TARGET_ARCH).png $(DESTDIR)$(SHAREDIR)/pixmaps/FBReader/FBReader.png
 	@install -d $(DESTDIR)/$(INSTALLDIR)/apps/Office/FBReader
 	@install -m 0644 data/apps/Office/FBReader/AppRun $(DESTDIR)$(INSTALLDIR)/apps/Office/FBReader
 	@install -m 0644 data/apps/Office/FBReader/AppInfo.xml $(DESTDIR)$(INSTALLDIR)/apps/Office/FBReader
