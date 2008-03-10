@@ -182,11 +182,14 @@ void WritableBookDescription::addAuthor(const std::string &name, const std::stri
 void WritableBookDescription::addTag(const std::string &tag) {
 	std::string checkedTag = tag;
 	BookDescriptionUtil::removeWhiteSpacesFromTag(checkedTag);
-	std::vector<std::string> &tags = myDescription.myTags;
-	std::vector<std::string>::const_iterator it = std::find(tags.begin(), tags.end(), checkedTag);
-	if (it == tags.end()) {
-		tags.push_back(checkedTag);
-		// TODO: save changed tag set
+
+	if (!checkedTag.empty()) {
+		std::vector<std::string> &tags = myDescription.myTags;
+		std::vector<std::string>::const_iterator it = std::find(tags.begin(), tags.end(), checkedTag);
+		if (it == tags.end()) {
+			tags.push_back(checkedTag);
+			// TODO: save changed tag set
+		}
 	}
 }
 
@@ -234,4 +237,9 @@ void WritableBookDescription::cloneTag(const std::string &from, const std::strin
 			// TODO: save changed tag set
 		}
 	}
+}
+
+void WritableBookDescription::removeAllTags() {
+	myDescription.myTags.clear();
+	// TODO: save changed tag set
 }

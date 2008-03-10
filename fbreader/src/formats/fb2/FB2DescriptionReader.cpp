@@ -28,6 +28,7 @@ FB2DescriptionReader::FB2DescriptionReader(BookDescription &description) : myDes
 	myDescription.clearAuthor();
 	myDescription.title().erase();
 	myDescription.language().erase();
+	myDescription.removeAllTags();
 }
 
 void FB2DescriptionReader::characterDataHandler(const char *text, int len) {

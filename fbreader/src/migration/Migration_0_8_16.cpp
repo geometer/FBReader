@@ -39,14 +39,15 @@ void Migration_0_8_16::doMigrationInternal() {
 	for (std::vector<std::string>::const_iterator it = optionGroups.begin(); it != optionGroups.end(); ++it) {
 		if (isLikeToFileName(*it)) {
 			ZLFile file(*it);
-			if (ZLUnicodeUtil::toLower(file.extension()) == "fb2") {
+			const std::string &extension = file.extension();
+			if (extension == "fb2") {
 				BookDescriptionPtr description = BookDescription::getDescription(*it);
 				if (!description.isNull()) {
 					ZLBooleanOption seriesOption(FBCategoryKey::BOOKS, *it, "SequenceDefined", false);
-					std::cerr << seriesOption.value() << "\n";
 					FB2MigrationReader(*description, !seriesOption.value()).doRead(*it);
 					seriesOption.setValue(true);
 				}
+			} else if ((extension == "opf") || (extension == "oebzip") || (extension == "epub")) {
 			}
 		}
 	}
