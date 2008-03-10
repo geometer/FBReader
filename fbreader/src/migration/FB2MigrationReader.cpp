@@ -24,7 +24,7 @@
 
 #include "FB2MigrationReader.h"
 
-FB2MigrationReader::FB2MigrationReader(BookDescription &description) : myDescription(description) {
+FB2MigrationReader::FB2MigrationReader(BookDescription &description, bool updateSeries) : myDescription(description), myUpdateSeries(updateSeries), myUpdateTags(description.tags().empty()) {
 }
 
 void FB2MigrationReader::characterDataHandler(const char *text, int len) {
@@ -42,12 +42,12 @@ void FB2MigrationReader::startElementHandler(int tag, const char **attributes) {
 			myReadState = READ_SOMETHING;
 			break;
 		case _GENRE:
-			if (myReadState == READ_SOMETHING) {
+			if ((myReadState == READ_SOMETHING) && myUpdateTags) {
 				myReadState = READ_GENRE;
 			}
 			break;
 		case _SEQUENCE:
-			if (myReadState == READ_SOMETHING) {
+			if ((myReadState == READ_SOMETHING) && myUpdateSeries) {
 				const char *name = attributeValue(attributes, "name");
 				if (name != 0) {
 					std::string sequenceName = name;

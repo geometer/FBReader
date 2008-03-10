@@ -42,8 +42,7 @@ BookInfo::BookInfo(const std::string &fileName) :
 	SequenceNameOption(FBCategoryKey::BOOKS, fileName, "Sequence", EMPTY),
 	NumberInSequenceOption(FBCategoryKey::BOOKS, fileName, "Number in seq", 0, 100, 0),
 	LanguageOption(FBCategoryKey::BOOKS, fileName, "Language", PluginCollection::instance().DefaultLanguageOption.value()),
-	EncodingOption(FBCategoryKey::BOOKS, fileName, "Encoding", EMPTY),
-	IsSequenceDefinedOption(FBCategoryKey::BOOKS, fileName, "SequenceDefined", ZLFile(fileName).extension() != "fb2") {
+	EncodingOption(FBCategoryKey::BOOKS, fileName, "Encoding", EMPTY) {
 	// this is just hack for compatibility with versions < 0.8.8
 	std::string language = LanguageOption.value();
 	if (language == "") {
@@ -72,8 +71,7 @@ bool BookInfo::isFull() const {
 		!AuthorDisplayNameOption.value().empty() &&
 		!AuthorSortKeyOption.value().empty() &&
 		!TitleOption.value().empty() &&
-		!EncodingOption.value().empty() &&
-		IsSequenceDefinedOption.value();
+		!EncodingOption.value().empty();
 }
 
 BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, bool checkFile) {
@@ -135,7 +133,6 @@ BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, 
 		info.NumberInSequenceOption.setValue(description->myNumberInSequence);
 		info.LanguageOption.setValue(description->myLanguage);
 		info.EncodingOption.setValue(description->myEncoding);
-		info.IsSequenceDefinedOption.setValue(true);
 	}
 	return description;
 }

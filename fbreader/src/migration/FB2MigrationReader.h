@@ -28,7 +28,7 @@
 class FB2MigrationReader : public FB2Reader {
 
 public:
-	FB2MigrationReader(BookDescription &description);
+	FB2MigrationReader(BookDescription &description, bool updateSeries);
 
 	void doRead(const std::string &fileName);
 
@@ -44,6 +44,9 @@ private:
 		READ_SOMETHING,
 		READ_GENRE
 	} myReadState;
+
+	bool myUpdateSeries;
+	bool myUpdateTags;
 
 	std::string myGenreBuffer;
 };

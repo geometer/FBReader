@@ -26,6 +26,7 @@
 #include "Migration.h"
 #include "FB2MigrationReader.h"
 
+#include "../options/FBOptions.h"
 #include "../description/BookDescription.h"
 
 Migration_0_8_16::Migration_0_8_16() : Migration("0.8.16") {
@@ -41,7 +42,10 @@ void Migration_0_8_16::doMigrationInternal() {
 			if (ZLUnicodeUtil::toLower(file.extension()) == "fb2") {
 				BookDescriptionPtr description = BookDescription::getDescription(*it);
 				if (!description.isNull()) {
-					FB2MigrationReader(*description).doRead(*it);
+					ZLBooleanOption seriesOption(FBCategoryKey::BOOKS, *it, "SequenceDefined", false);
+					std::cerr << seriesOption.value() << "\n";
+					FB2MigrationReader(*description, !seriesOption.value()).doRead(*it);
+					seriesOption.setValue(true);
 				}
 			}
 		}

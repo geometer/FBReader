@@ -46,11 +46,6 @@ struct BookInfo {
 	ZLIntegerRangeOption NumberInSequenceOption;
 	ZLStringOption LanguageOption;
 	ZLStringOption EncodingOption;
-
-// This option is used to fix problem with missing sequence-related options
-// in config in versions < 0.7.4k
-// It makes no sense if old fbreader was never used on your device.
-	ZLBooleanOption IsSequenceDefinedOption;
 };
 
 class BookDescription {
