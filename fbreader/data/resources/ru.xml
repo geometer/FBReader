@@ -65,7 +65,7 @@
 					<node name="bookPath" value="Каталоги с книгами"/>
 					<node name="lookInSubdirectories" value="Искать книги в подкаталогах"/>
 					<node name="recentListSize" value="Размер списка прочитанных книг"/>
-					<node name="showTags" value="Сортировать книги по пометкам"/>
+					<node name="showTags" value="Сортировать книги по категориям"/>
 					<node name="showAllBooksList" value="Показывать список всех книг"/>
 				</node>
 				<node name="Language" value="Язык">
@@ -344,6 +344,6 @@
 	<node name="library">
 		<node name="caption" value="Библиотека"/>
 		<node name="allBooks" value="Все книги"/>
-		<node name="booksWithoutTags" value="Книги без пометок"/>
+		<node name="booksWithoutTags" value="Книги без категорий"/>
 	</node>
 </resources>

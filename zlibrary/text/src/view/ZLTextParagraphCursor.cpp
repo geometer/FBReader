@@ -211,7 +211,8 @@ void ZLTextParagraphCursor::fill() {
 		case ZLTextParagraph::TEXT_PARAGRAPH:
 		case ZLTextParagraph::TREE_PARAGRAPH:
 		{
-			Processor(ZLTextHyphenator::instance().language(), paragraph, myModel.marks(), index(), myElements).fill();
+			Processor processor(ZLTextHyphenator::instance().language(), paragraph, myModel.marks(), index(), myElements);
+			processor.fill();
 			break;
 		}
 		case ZLTextParagraph::EMPTY_LINE_PARAGRAPH:
