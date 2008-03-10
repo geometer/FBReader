@@ -78,3 +78,29 @@ void BookDescriptionUtil::resetZipInfo(const ZLFile &zipFile) {
 		ZLIntegerOption(FBCategoryKey::BOOKS, zipFile.path(), ENTRIES_NUMBER, -1).setValue(counter);
 	}
 }
+
+void BookDescriptionUtil::removeWhiteSpacesFromTag(std::string &tag) {
+	int index = tag.find('/');
+	if (index == -1) {
+		ZLStringUtil::stripWhiteSpaces(tag);
+	} else {
+		std::string result;
+		int index0 = 0;
+		while (true) {
+			std::string subtag = tag.substr(index0, index - index0); 
+			ZLStringUtil::stripWhiteSpaces(subtag);
+			if (!subtag.empty()) {
+				if (!result.empty()) {
+					result += '/';
+				}
+				result += subtag;
+			}
+			if (index == -1) {
+				break;
+			}
+			index0 = index + 1;
+			index = tag.find('/', index0);
+		}
+		tag = result;
+	}
+}

@@ -32,6 +32,7 @@ public:
 	static void saveInfo(const ZLFile &file);
 	static void listZipEntries(const ZLFile &zipFile, std::vector<std::string> &entries);
 	static void resetZipInfo(const ZLFile &zipFile);
+	static void removeWhiteSpacesFromTag(std::string &tag);
 };
 
 #endif /* __BOOKDESCRIPTIONUTIL_H__ */
