@@ -27,6 +27,8 @@ HtmlMetainfoReader::HtmlMetainfoReader(BookDescription &description, ReadType re
 bool HtmlMetainfoReader::tagHandler(const HtmlReader::HtmlTag &tag) {
 	if (tag.Name == "BODY") {
 		return false;
+	} else if (((myReadType & TAGS) == TAGS) && (tag.Name == "DC:SUBJECT")) {
+		myReadTags = tag.Start;
 	} else if (((myReadType & TITLE) == TITLE) && (tag.Name == "DC:TITLE")) {
 		myReadTitle = tag.Start;
 		if (!tag.Start && !myTitle.empty()) {
