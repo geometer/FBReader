@@ -38,6 +38,9 @@ public:
 	bool processNamespaces() const;
 
 private:
+	bool isDublinCoreNamespace(const std::string &nsId) const;
+
+private:
 	WritableBookDescription myDescription;
 
 	bool myReadMetaData;
@@ -45,11 +48,12 @@ private:
 		READ_NONE,
 		READ_AUTHOR,
 		READ_AUTHOR2,
-		READ_TITLE
+		READ_TITLE,
+		READ_SUBJECT
 	} myReadState;
 
 	std::string myDCMetadataTag;
-	std::string myCurrentAuthor;
+	std::string myBuffer;
 	std::vector<std::string> myAuthorList;
 	std::vector<std::string> myAuthorList2;
 };

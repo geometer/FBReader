@@ -25,12 +25,14 @@
 OEBDescriptionReader::OEBDescriptionReader(BookDescription &description) : myDescription(description) {
 	myDescription.clearAuthor();
 	myDescription.title().erase();
+	myDescription.removeAllTags();
 }
 
 static const std::string METADATA = "metadata";
 static const std::string DC_METADATA = "dc-metadata";
-static const std::string TITLE = ":title";
+static const std::string TITLE_TAG = ":title";
 static const std::string AUTHOR_TAG = ":creator";
+static const std::string SUBJECT_TAG = ":subject";
 static const std::string AUTHOR_ROLE = "aut";
 
 void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
@@ -39,7 +41,8 @@ void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
 			break;
 		case READ_AUTHOR:
 		case READ_AUTHOR2:
-			myCurrentAuthor.append(text, len);
+		case READ_SUBJECT:
+			myBuffer.append(text, len);
 			break;
 		case READ_TITLE:
 			myDescription.title().append(text, len);
@@ -47,7 +50,14 @@ void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
 	}
 }
 
-static const std::string DC_SCHEME_PREFIX = "http://purl.org/dc/elements";
+bool OEBDescriptionReader::isDublinCoreNamespace(const std::string &nsId) const {
+	static const std::string DC_SCHEME_PREFIX = "http://purl.org/dc/elements";
+	const std::map<std::string,std::string> &namespaceMap = namespaces();
+	std::map<std::string,std::string>::const_iterator iter = namespaceMap.find(nsId);
+	return
+		(iter != namespaceMap.end()) &&
+		ZLStringUtil::stringStartsWith(iter->second, DC_SCHEME_PREFIX);
+}
 
 void OEBDescriptionReader::startElementHandler(const char *tag, const char **attributes) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
@@ -55,24 +65,22 @@ void OEBDescriptionReader::startElementHandler(const char *tag, const char **att
 		myDCMetadataTag = tagString;
 		myReadMetaData = true;
 	} else if (myReadMetaData) {
-		if (ZLStringUtil::stringEndsWith(tagString, TITLE)) {
-			const std::string namespaceId = tagString.substr(0, tagString.length() - TITLE.length());
-			const std::map<std::string,std::string> &namespaceMap = namespaces();
-			const std::map<std::string,std::string>::const_iterator iter = namespaceMap.find(namespaceId);
-			if ((iter != namespaceMap.end()) && ZLStringUtil::stringStartsWith(iter->second, DC_SCHEME_PREFIX)) {
+		if (ZLStringUtil::stringEndsWith(tagString, TITLE_TAG)) {
+			if (isDublinCoreNamespace(tagString.substr(0, tagString.length() - TITLE_TAG.length()))) {
 				myReadState = READ_TITLE;
 			}
 		} else if (ZLStringUtil::stringEndsWith(tagString, AUTHOR_TAG)) {
-			const std::string namespaceId = tagString.substr(0, tagString.length() - AUTHOR_TAG.length());
-			const std::map<std::string,std::string> &namespaceMap = namespaces();
-			const std::map<std::string,std::string>::const_iterator iter = namespaceMap.find(namespaceId);
-			if ((iter != namespaceMap.end()) && ZLStringUtil::stringStartsWith(iter->second, DC_SCHEME_PREFIX)) {
+			if (isDublinCoreNamespace(tagString.substr(0, tagString.length() - AUTHOR_TAG.length()))) {
 				const char *role = attributeValue(attributes, "role");
 				if (role == 0) {
 					myReadState = READ_AUTHOR2;
 				} else if (AUTHOR_ROLE == role) {
 					myReadState = READ_AUTHOR;
 				}
+			}
+		} else if (ZLStringUtil::stringEndsWith(tagString, SUBJECT_TAG)) {
+			if (isDublinCoreNamespace(tagString.substr(0, tagString.length() - SUBJECT_TAG.length()))) {
+				myReadState = READ_SUBJECT;
 			}
 		}
 	}
@@ -83,13 +91,16 @@ void OEBDescriptionReader::endElementHandler(const char *tag) {
 	if (myDCMetadataTag == tagString) {
 		interrupt();
 	} else {
-		if (!myCurrentAuthor.empty()) {
+		ZLStringUtil::stripWhiteSpaces(myBuffer);
+		if (!myBuffer.empty()) {
 			if (myReadState == READ_AUTHOR) {
-				myAuthorList.push_back(myCurrentAuthor);
-			} else /* if (myReadState == READ_AUTHOR2) */ {
-				myAuthorList2.push_back(myCurrentAuthor);
+				myAuthorList.push_back(myBuffer);
+			} else if (myReadState == READ_AUTHOR2) {
+				myAuthorList2.push_back(myBuffer);
+			} else if (myReadState == READ_SUBJECT) {
+				myDescription.addTag(myBuffer);
 			}
-			myCurrentAuthor.erase();
+			myBuffer.erase();
 		}
 		myReadState = READ_NONE;
 	}
