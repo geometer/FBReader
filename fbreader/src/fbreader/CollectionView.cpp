@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLibrary.h>
 #include <ZLFileImage.h>
 #include <ZLDialogManager.h>
@@ -52,6 +54,7 @@ public:
 
 	BookDescriptionPtr bookByParagraphNumber(int num);
 	const std::vector<int> &paragraphNumbersByBook(BookDescriptionPtr book);
+	const std::string &tagByParagraphNumber(int num);
 
 	void update();
 
@@ -71,6 +74,7 @@ private:
 
 	ZLImageMap myImageMap;
 	std::map<ZLTextParagraph*,BookDescriptionPtr> myParagraphToBook;
+	std::map<int,std::string> myParagraphToTag;
 	std::map<BookDescriptionPtr,std::vector<int> > myBookToParagraph;
 };
 
@@ -93,6 +97,10 @@ BookDescriptionPtr CollectionModel::bookByParagraphNumber(int num) {
 	}
 	std::map<ZLTextParagraph*,BookDescriptionPtr>::iterator it = myParagraphToBook.find((*this)[num]);
 	return (it != myParagraphToBook.end()) ? it->second : 0;
+}
+
+const std::string &CollectionModel::tagByParagraphNumber(int num) {
+	return myParagraphToTag[num];
 }
 
 const std::vector<int> &CollectionModel::paragraphNumbersByBook(BookDescriptionPtr book) {
@@ -163,6 +171,7 @@ void CollectionModel::buildWithTags() {
 			if (!useExistingTagStack) {
 				tagStack.push_back(subTag);
 				tagParagraph = createParagraph(tagParagraph);
+				myParagraphToTag[paragraphsNumber() - 1] = fullTagName.substr(0, newIndex);
 				insertText(LIBRARY_AUTHOR_ENTRY, subTag);
 				insertImage(TAG_INFO_IMAGE_ID);
 				insertImage(REMOVE_TAG_IMAGE_ID);
@@ -315,44 +324,64 @@ bool CollectionView::_onStylusPress(int x, int y) {
 		}
 		const ZLTextImageElement &imageElement = (ZLTextImageElement&)element;
 
-		BookDescriptionPtr book = collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber);
-		if (book.isNull()) {
-			return false;
-		}
+		const std::string &id = imageElement.id();
 
-		if (imageElement.id() == BOOK_INFO_IMAGE_ID) {
-			if (BookInfoDialog(myCollection, book->fileName()).dialog().run()) {
+		if (id == BOOK_INFO_IMAGE_ID) {
+			BookDescriptionPtr book =
+				collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber);
+			if (!book.isNull() && BookInfoDialog(myCollection, book->fileName()).dialog().run()) {
 				myCollection.rebuild(false);
 				myUpdateModel = true;
 				selectBook(book);
 				application().refreshWindow();
 			}
 			return true;
-		} else if (imageElement.id() == REMOVE_BOOK_IMAGE_ID) {
-			ZLResourceKey boxKey("removeBookBox");
-			const std::string message =
-				ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book->title());
-			if (ZLDialogManager::instance().questionBox(boxKey, message,
-				ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
-				collectionModel().removeAllMarks();
-				BookList().removeFileName(book->fileName());
-				
-				ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)collectionModel()[imageArea->ParagraphNumber];
-				ZLTextTreeParagraph *parent = paragraph->parent();
-				if (parent->children().size() == 1) {
-					collectionModel().removeParagraph(imageArea->ParagraphNumber);
-					collectionModel().removeParagraph(imageArea->ParagraphNumber - 1);
-				} else {
-					collectionModel().removeParagraph(imageArea->ParagraphNumber);
+		} else if (id == REMOVE_BOOK_IMAGE_ID) {
+			BookDescriptionPtr book =
+				collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber);
+			if (!book.isNull()) {
+				ZLResourceKey boxKey("removeBookBox");
+				const std::string message =
+					ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book->title());
+				if (ZLDialogManager::instance().questionBox(boxKey, message,
+					ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
+					collectionModel().removeAllMarks();
+					BookList().removeFileName(book->fileName());
+					
+					ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)collectionModel()[imageArea->ParagraphNumber];
+					ZLTextTreeParagraph *parent = paragraph->parent();
+					if (parent->children().size() == 1) {
+						collectionModel().removeParagraph(imageArea->ParagraphNumber);
+						collectionModel().removeParagraph(imageArea->ParagraphNumber - 1);
+					} else {
+						collectionModel().removeParagraph(imageArea->ParagraphNumber);
+					}
+      
+					if (collectionModel().paragraphsNumber() == 0) {
+						setStartCursor(0);
+					}
+					rebuildPaintInfo(true);
+					application().refreshWindow();
 				}
-
-				if (collectionModel().paragraphsNumber() == 0) {
-					setStartCursor(0);
-				}
-				rebuildPaintInfo(true);
-				application().refreshWindow();
+				return true;
 			}
-			return true;
+		} else if (id == REMOVE_TAG_IMAGE_ID) {
+			const std::string &tag = collectionModel().tagByParagraphNumber(imageArea->ParagraphNumber);
+			if (!tag.empty()) {
+				ZLResourceKey boxKey("removeTagBox");
+				const std::string message =
+					ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), tag);
+				if (myCollection.containsSubtags(tag)) {
+					ZLDialogManager::instance().questionBox(boxKey, message,
+						ZLResourceKey("thisOnly"),
+						ZLResourceKey("withSubtags"),
+						ZLDialogManager::CANCEL_BUTTON
+					);
+				} else {
+					ZLDialogManager::instance().questionBox(boxKey, message,
+						ZLDialogManager::YES_BUTTON, ZLDialogManager::CANCEL_BUTTON);
+				}
+			}
 		}
 		return false;
 	}

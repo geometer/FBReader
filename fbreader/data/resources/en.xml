@@ -57,6 +57,8 @@
 	<node name="dialog">
 		<node name="button">
 			<node name="go" value="&amp;Go!"/>
+			<node name="thisOnly" value="This only"/>
+			<node name="withSubtags" value="With subtags"/>
 		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Options"/>
@@ -277,11 +279,15 @@
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Remove Book"/>
-			<node name="message" value="Remove Book &#13;&quot;%s&quot;&#13; from the Library?"/>
+			<node name="message" value="Remove Book &#10;&#8220;%s&#8221;&#10; from the Library?"/>
+		</node>
+		<node name="removeTagBox">
+			<node name="title" value="Remove Tag"/>
+			<node name="message" value="Remove Tag &#8220;%s&#8221;?"/>
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Error"/>
-			<node name="message" value="Couldn't open:&#13;%s"/>
+			<node name="message" value="Couldn't open:&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Error"/>

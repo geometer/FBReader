@@ -296,3 +296,17 @@ void BookCollection::cloneTag(const std::string &from, const std::string &to) {
 		wbd.cloneTag(from, to);
 	}
 }
+
+bool BookCollection::containsSubtags(const std::string &tag) const {
+	synchronize();
+	const std::string prefix = tag + '/';
+	for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
+		const std::vector<std::string> &tags = (*it)->tags();
+		for (std::vector<std::string>::const_iterator jt = tags.begin(); jt != tags.end(); ++jt) {
+			if (ZLStringUtil::stringStartsWith(*jt, prefix)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
