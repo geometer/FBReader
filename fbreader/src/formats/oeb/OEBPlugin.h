@@ -25,15 +25,15 @@
 class OEBPlugin : public FormatPlugin {
 
 public:
+	static std::string opfFileName(const std::string &oebFileName);
+
+public:
 	~OEBPlugin();
 	bool providesMetaInfo() const;
 	bool acceptsFile(const ZLFile &file) const;
 	bool readDescription(const std::string &path, BookDescription &description) const;
 	bool readModel(const BookDescription &description, BookModel &model) const;
 	const std::string &iconName() const;
-
-private:
-	std::string opfFileName(const std::string &oebFileName) const;
 };
 
 #endif /* __OEBPLUGIN_H__ */

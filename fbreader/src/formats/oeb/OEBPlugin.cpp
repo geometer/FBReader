@@ -42,7 +42,7 @@ bool OEBPlugin::acceptsFile(const ZLFile &file) const {
 	return (extension == OPF) || (extension == OEBZIP) || (extension == EPUB);
 }
 
-std::string OEBPlugin::opfFileName(const std::string &oebFileName) const {
+std::string OEBPlugin::opfFileName(const std::string &oebFileName) {
 	ZLFile oebFile = ZLFile(oebFileName);
 	if (oebFile.extension() == OPF) {
 		return oebFileName;
