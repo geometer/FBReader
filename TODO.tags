@@ -7,7 +7,7 @@ DONE прочитать теги для уже находящихся в библиотеке книг в fb2 (1 раз, в Migrat
 DONE convert fb2 genre id to human readble tag name: различать язык
 DONE читать теги из oeb/epub
 DONE прочитать теги для уже находящихся в библиотеке книг в oeb/epub (1 раз, в Migration)
-читать теги из mobipocket
+DONE читать теги из mobipocket
 прочитать теги для уже находящихся в библиотеке книг в mobipocket (1 раз, в Migration)
 сохранять/читать список тегов
 редактирование списка тегов книги в диалоге

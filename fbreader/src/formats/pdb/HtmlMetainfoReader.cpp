@@ -29,11 +29,15 @@ bool HtmlMetainfoReader::tagHandler(const HtmlReader::HtmlTag &tag) {
 		return false;
 	} else if (((myReadType & TAGS) == TAGS) && (tag.Name == "DC:SUBJECT")) {
 		myReadTags = tag.Start;
+		if (!tag.Start && !myBuffer.empty()) {
+			myDescription.addTag(myBuffer);
+			myBuffer.erase();
+		}
 	} else if (((myReadType & TITLE) == TITLE) && (tag.Name == "DC:TITLE")) {
 		myReadTitle = tag.Start;
-		if (!tag.Start && !myTitle.empty()) {
-			myDescription.title() = myTitle;
-			myTitle.erase();
+		if (!tag.Start && !myBuffer.empty()) {
+			myDescription.title() = myBuffer;
+			myBuffer.erase();
 		}
 	} else if (((myReadType & AUTHOR) == AUTHOR) && (tag.Name == "DC:CREATOR")) {
 		if (tag.Start) {
@@ -45,16 +49,17 @@ bool HtmlMetainfoReader::tagHandler(const HtmlReader::HtmlTag &tag) {
 				}
 			}
 			if (flag) {
-				if (!myAuthor.empty()) {
-					myAuthor += ", ";
+				if (!myBuffer.empty()) {
+					myBuffer += ", ";
 				}
 				myReadAuthor = true;
 			}
 		} else {
 			myReadAuthor = false;
-			if (!myAuthor.empty()) {
-				myDescription.addAuthor(myAuthor);
+			if (!myBuffer.empty()) {
+				myDescription.addAuthor(myBuffer);
 			}
+			myBuffer.erase();
 		}
 	}
 	return true;
@@ -63,23 +68,18 @@ bool HtmlMetainfoReader::tagHandler(const HtmlReader::HtmlTag &tag) {
 void HtmlMetainfoReader::startDocumentHandler() {
 	myReadAuthor = false;
 	myReadTitle = false;
+	myReadTags = false;
 }
 
 void HtmlMetainfoReader::endDocumentHandler() {
 }
 
 bool HtmlMetainfoReader::characterDataHandler(const char *text, int len, bool convert) {
-	if (myReadTitle) {
+	if (myReadTitle || myReadAuthor || myReadTags) {
 		if (convert) {
-			myConverter->convert(myTitle, text, text + len);
+			myConverter->convert(myBuffer, text, text + len);
 		} else {
-			myTitle.append(text, len);
-		}
-	} else if (myReadAuthor) {
-		if (convert) {
-			myConverter->convert(myAuthor, text, text + len);
-		} else {
-			myAuthor.append(text, len);
+			myBuffer.append(text, len);
 		}
 	}
 	return true;
