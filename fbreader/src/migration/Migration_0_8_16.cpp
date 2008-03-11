@@ -24,9 +24,11 @@
 
 #include "Migration.h"
 #include "FB2MigrationReader.h"
+#include "OEBMigrationReader.h"
 
 #include "../options/FBOptions.h"
 #include "../description/BookDescription.h"
+#include "../formats/oeb/OEBPlugin.h"
 
 Migration_0_8_16::Migration_0_8_16() : Migration("0.8.16") {
 }
@@ -47,6 +49,10 @@ void Migration_0_8_16::doMigrationInternal() {
 					seriesOption.setValue(true);
 				}
 			} else if ((extension == "opf") || (extension == "oebzip") || (extension == "epub")) {
+				BookDescriptionPtr description = BookDescription::getDescription(*it);
+				if (!description.isNull() && description->tags().empty()) {
+					OEBMigrationReader(*description).doRead(OEBPlugin::opfFileName(*it));
+				}
 			}
 		}
 	}

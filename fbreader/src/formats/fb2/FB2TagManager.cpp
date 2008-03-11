@@ -39,9 +39,14 @@ private:
 	std::string myCategoryName;
 	std::string mySubCategoryName;
 	std::vector<std::string> myGenreIds;
+	std::string myLanguage;
 };
 
 FB2TagInfoReader::FB2TagInfoReader(std::map<std::string,std::vector<std::string> > &tagMap) : myTagMap(tagMap) {
+	myLanguage = ZLibrary::Language();
+	if (myLanguage != "ru") {
+		myLanguage = "en";
+	}
 }
 
 static const std::string CATEGORY_NAME_TAG = "root-descr";
@@ -57,16 +62,22 @@ void FB2TagInfoReader::startElementHandler(const char *tag, const char **attribu
 			myGenreIds.push_back(id);
 		}
 	} else if (CATEGORY_NAME_TAG == tag) {
-		const char *name = attributeValue(attributes, "genre-title");
-		if (name != 0) {
-			myCategoryName = name;
-			ZLStringUtil::stripWhiteSpaces(myCategoryName);
+		const char *lang = attributeValue(attributes, "lang");
+		if ((lang != 0) && (myLanguage == lang)) {
+			const char *name = attributeValue(attributes, "genre-title");
+			if (name != 0) {
+				myCategoryName = name;
+				ZLStringUtil::stripWhiteSpaces(myCategoryName);
+			}
 		}
 	} else if (SUBCATEGORY_NAME_TAG == tag) {
-		const char *name = attributeValue(attributes, "title");
-		if (name != 0) {
-			mySubCategoryName = name;
-			ZLStringUtil::stripWhiteSpaces(mySubCategoryName);
+		const char *lang = attributeValue(attributes, "lang");
+		if ((lang != 0) && (myLanguage == lang)) {
+			const char *name = attributeValue(attributes, "title");
+			if (name != 0) {
+				mySubCategoryName = name;
+				ZLStringUtil::stripWhiteSpaces(mySubCategoryName);
+			}
 		}
 	}
 }
