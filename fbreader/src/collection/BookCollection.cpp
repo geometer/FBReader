@@ -281,19 +281,19 @@ void BookCollection::removeTag(const std::string &tag, bool includeSubTags) {
 	}
 }
 
-void BookCollection::renameTag(const std::string &from, const std::string &to) {
+void BookCollection::renameTag(const std::string &from, const std::string &to, bool includeSubTags) {
 	synchronize();
 	for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
 		WritableBookDescription wbd(**it);
-		wbd.renameTag(from, to);
+		wbd.renameTag(from, to, includeSubTags);
 	}
 }
 
-void BookCollection::cloneTag(const std::string &from, const std::string &to) {
+void BookCollection::cloneTag(const std::string &from, const std::string &to, bool includeSubTags) {
 	synchronize();
 	for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
 		WritableBookDescription wbd(**it);
-		wbd.cloneTag(from, to);
+		wbd.cloneTag(from, to, includeSubTags);
 	}
 }
 

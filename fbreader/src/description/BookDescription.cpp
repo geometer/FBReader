@@ -215,28 +215,36 @@ void WritableBookDescription::removeTag(const std::string &tag, bool includeSubT
 	}
 }
 
-void WritableBookDescription::renameTag(const std::string &from, const std::string &to) {
+void WritableBookDescription::renameTag(const std::string &from, const std::string &to, bool includeSubTags) {
 	std::vector<std::string> &tags = myDescription.myTags;
-	std::vector<std::string>::iterator it = std::find(tags.begin(), tags.end(), from);
-	if (it != tags.end()) {
-		std::vector<std::string>::const_iterator jt = std::find(tags.begin(), tags.end(), to);
-		if (jt == tags.end()) {
-			*it = to;
-		} else {
-			tags.erase(it);
+	if (includeSubTags) {
+		// TODO: implement
+	} else {
+		std::vector<std::string>::iterator it = std::find(tags.begin(), tags.end(), from);
+		if (it != tags.end()) {
+			std::vector<std::string>::const_iterator jt = std::find(tags.begin(), tags.end(), to);
+			if (jt == tags.end()) {
+				*it = to;
+			} else {
+				tags.erase(it);
+			}
+			// TODO: save changed tag set
 		}
-		// TODO: save changed tag set
 	}
 }
 
-void WritableBookDescription::cloneTag(const std::string &from, const std::string &to) {
+void WritableBookDescription::cloneTag(const std::string &from, const std::string &to, bool includeSubTags) {
 	std::vector<std::string> &tags = myDescription.myTags;
-	std::vector<std::string>::const_iterator it = std::find(tags.begin(), tags.end(), from);
-	if (it != tags.end()) {
-		std::vector<std::string>::const_iterator jt = std::find(tags.begin(), tags.end(), to);
-		if (jt == tags.end()) {
-			tags.push_back(to);
-			// TODO: save changed tag set
+	if (includeSubTags) {
+		// TODO: implement
+	} else {
+		std::vector<std::string>::const_iterator it = std::find(tags.begin(), tags.end(), from);
+		if (it != tags.end()) {
+			std::vector<std::string>::const_iterator jt = std::find(tags.begin(), tags.end(), to);
+			if (jt == tags.end()) {
+				tags.push_back(to);
+				// TODO: save changed tag set
+			}
 		}
 	}
 }

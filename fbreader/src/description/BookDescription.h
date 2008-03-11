@@ -104,8 +104,8 @@ public:
 
 	void addTag(const std::string &tag, bool check = true);
 	void removeTag(const std::string &tag, bool includeSubTags);
-	void renameTag(const std::string &from, const std::string &to);
-	void cloneTag(const std::string &from, const std::string &to);
+	void renameTag(const std::string &from, const std::string &to, bool includeSubTags);
+	void cloneTag(const std::string &from, const std::string &to, bool includeSubTags);
 	void removeAllTags();
 
 private:
