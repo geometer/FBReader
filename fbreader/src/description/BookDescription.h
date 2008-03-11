@@ -102,7 +102,7 @@ public:
 	std::string &language();
 	std::string &encoding();
 
-	void addTag(const std::string &tag);
+	void addTag(const std::string &tag, bool check = true);
 	void removeTag(const std::string &tag, bool includeSubTags);
 	void renameTag(const std::string &from, const std::string &to);
 	void cloneTag(const std::string &from, const std::string &to);

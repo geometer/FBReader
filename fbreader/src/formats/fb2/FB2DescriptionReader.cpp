@@ -23,6 +23,7 @@
 #include <ZLStringUtil.h>
 
 #include "FB2DescriptionReader.h"
+#include "FB2TagManager.h"
 
 FB2DescriptionReader::FB2DescriptionReader(BookDescription &description) : myDescription(description) {
 	myDescription.clearAuthor();
@@ -129,8 +130,17 @@ void FB2DescriptionReader::endElementHandler(int tag) {
 			break;
 		case _GENRE:
 			if (myReadState == READ_GENRE) {
+				ZLStringUtil::stripWhiteSpaces(myGenreBuffer);
 				if (!myGenreBuffer.empty()) {
-					myDescription.addTag(myGenreBuffer);
+					const std::vector<std::string> &tags =
+						FB2TagManager::instance().humanReadableTags(myGenreBuffer);
+					if (!tags.empty()) {
+						for (std::vector<std::string>::const_iterator it = tags.begin(); it != tags.end(); ++it) {
+							myDescription.addTag(*it, false);
+						}
+					} else {
+						myDescription.addTag(myGenreBuffer);
+					}
 					myGenreBuffer.erase();
 				}
 				myReadState = READ_SOMETHING;

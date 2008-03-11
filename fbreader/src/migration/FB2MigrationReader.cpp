@@ -23,6 +23,7 @@
 #include <ZLStringUtil.h>
 
 #include "FB2MigrationReader.h"
+#include "../formats/fb2/FB2TagManager.h"
 
 FB2MigrationReader::FB2MigrationReader(BookDescription &description, bool updateSeries) : myDescription(description), myUpdateSeries(updateSeries), myUpdateTags(description.tags().empty()) {
 }
@@ -70,8 +71,17 @@ void FB2MigrationReader::endElementHandler(int tag) {
 			break;
 		case _GENRE:
 			if (myReadState == READ_GENRE) {
+				ZLStringUtil::stripWhiteSpaces(myGenreBuffer);
 				if (!myGenreBuffer.empty()) {
-					myDescription.addTag(myGenreBuffer);
+					const std::vector<std::string> &tags =
+						FB2TagManager::instance().humanReadableTags(myGenreBuffer);
+					if (!tags.empty()) {
+						for (std::vector<std::string>::const_iterator it = tags.begin(); it != tags.end(); ++it) {
+							myDescription.addTag(*it, false);
+						}
+					} else {
+						myDescription.addTag(myGenreBuffer);
+					}
 					myGenreBuffer.erase();
 				}
 				myReadState = READ_SOMETHING;

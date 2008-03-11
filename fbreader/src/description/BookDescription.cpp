@@ -179,9 +179,11 @@ void WritableBookDescription::addAuthor(const std::string &name, const std::stri
 	}
 }
 
-void WritableBookDescription::addTag(const std::string &tag) {
+void WritableBookDescription::addTag(const std::string &tag, bool check) {
 	std::string checkedTag = tag;
-	BookDescriptionUtil::removeWhiteSpacesFromTag(checkedTag);
+	if (check) {
+		BookDescriptionUtil::removeWhiteSpacesFromTag(checkedTag);
+	}
 
 	if (!checkedTag.empty()) {
 		std::vector<std::string> &tags = myDescription.myTags;
