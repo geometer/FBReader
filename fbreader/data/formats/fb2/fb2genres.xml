@@ -306,7 +306,7 @@
 	</genre>
 	<genre value="children">
 		<root-descr lang="en" genre-title="Children's" detailed="Fairy Tales, Fantasy, Detectives..."/>
-		<root-descr lang="ru" genre-title="Детское" detailed="Сказки, фантастика, детективы..."/>
+		<root-descr lang="ru" genre-title="Книги для детей" detailed="Сказки, фантастика, детективы..."/>
 		<subgenres>
 			<subgenre value="child_tale">
 				<genre-descr lang="en" title="Fairy Tales"/>
@@ -342,7 +342,7 @@
 			</subgenre>
 			<subgenre value="child_education">
 				<genre-descr lang="en" title="Education for Kids"/>
-				<genre-descr lang="ru" title="Детская Образовательная литература"/>
+				<genre-descr lang="ru" title="Детская Образовательная Литература"/>
 				<genre-alt value="child_edu" format="fb2.0"/>
 				<genre-alt value="child_nature" format="fb2.0"/>
 			</subgenre>
