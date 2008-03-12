@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include "../options/FBOptions.h"
 
 #include "Migration.h"
@@ -29,7 +27,6 @@ MigrationRunnable::MigrationRunnable() :
 }
 
 bool MigrationRunnable::shouldMigrate() const {
-	std::cerr << myVersionOption.value() << " ? " << VERSION << "\n";
 	return myVersionOption.value() < VERSION;
 }
 

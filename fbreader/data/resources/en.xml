@@ -296,6 +296,7 @@
 		<node name="waitMessage">
 			<node name="loadingBook" value="Loading book. Please, wait..."/>
 			<node name="loadingBookList" value="Loading book list. Please, wait..."/>
+			<node name="migrate" value="Upgrading to the new version. Please, wait..."/>
 		</node>
 	</node>
 	<node name="style">
