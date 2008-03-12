@@ -11,11 +11,8 @@
 in a way more convenient for the end user.</p>
 
 <p>A tag is just a text string, set of possible tags is not pre-defined, which means that the user
-can add a new tag at any moment.  Each book may have one or more<!-- may vs can, one/zero or more
---> tags.  These tags are listed in the
-book information dialog as a list.</p>
-<!-- Global: what one does with tags?  e.g. "book has tags" or "books are tagged" or "books are
-something..." -->
+can add a new tag at any moment.  Each book may have zero or more tags.  These tags are listed in
+the book information dialog as a list.</p>
 
 <p>For example, if the dialog shows &ldquo;Science Fiction, Fantasy, New&rdquo;, it means that the
 book has three tags &mdash; &ldquo;Science Fiction&rdquo;, &ldquo;Fantasy&rdquo; and
@@ -35,15 +32,15 @@ string &ldquo;Fiction/SF &amp; Fantasy/Fantasy&rdquo; will be interpreted as sub
 
 <!-- double check with the native speaker -->
 <h3>Library Tree View.</h3>
-<p>Book library is shown as a tree. First levels of the tree are representing book tags, next levels
-are for the book author, for the book series (if present) and for the book title
-correspondently.</p>
+<p>The boook library is shown as a tree. The first levels of the tree are representing book tags
+hierarchy. The next levels are for the book author, for the book series (if present), and for the
+book title correspondently.</p>
 
 <p>If a book has several tags, it will be shown in several branches.</p>
 
 <p>If a book has no tags, it will be shown in the branch called &ldquo;Books with no tags&rdquo;.</p>
 
-<p>Besides, all books can be found in the branch called &ldquo;All Books&rdquo;.</p>
+<p>Additionaly, all books can be found in the branch called &ldquo;All Books&rdquo;.</p>
 
 <h3>Library Tree View Settings.</h3>
 
@@ -67,7 +64,7 @@ Previous&rdquo;/&ldquo;Find Next&rdquo; buttons.</p>
 <h3>Automatic Extraction of Tags.</h3>
 <p>Certain book formats support tags natively.  As of version 0.8.16, FBReader can extract tags from
 books in <code>fb2</code>, <code>mobipocket</code> and <code>oeb/epub</code> formats.  Tags may be defined by the user.
-Following sections describe what operations can be performed on tags.</p>
+The following sections describe what operations can be performed on tags.</p>
 
 <h3>Setting/Changing Tags for a Book.</h3>
 <p>In order to set or to change list of tags for a book, open book information dialog, select
@@ -78,7 +75,7 @@ this book had, the tag will automatically disappear from the tree.</p>
 <!-- Copying vs Cloning: how often cloing is used? -->
 <h3>Changing/Merging/Copying Tags.</h3>
 <p>If you would like to change a tag, you can do it in the library tree view: navigate to the tag
-you'd like to change and click on the bulb that is to the right to the tag name.</p>
+you'd like to change and click on the bulb that is to the right of the tag name.</p>
 
 <p>In the opened dialog you can:<ul>
 <li>Change the tag name</li>
@@ -110,8 +107,8 @@ be removed from all books that had this tag.  <b>Note</b>: no books will be remo
 <!-- MSS: this is really bad, need a good night sleep :) -->
 <p>If the tag you are about to delete has subtags, the confirmation dialog will have three buttons
 &mdash; &ldquo;This Only&rdquo;, &ldquo;With Subtags&rdquo; and &ldquo;Cancel&rdquo;.  If you click
-on the first one, exactly the selected tag will be removed (if there are any books tagged by it).  If
-you click on the second one, then the selected tag and all its subtags will be removed and the
+on the &ldquo;This Only&rdquo;, exactly the selected tag will be removed (if there are any books tagged by it).  If
+you click on the &ldquo;With Subtags&rdquo;, then the selected tag and all its subtags will be removed and the
 corresponding branch will not be shown in the tree.</p>
 
 <p>For example, if you have books tagged as &ldquo;Fiction&rdquo; and books tagged as
