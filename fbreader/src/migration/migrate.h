@@ -20,6 +20,18 @@
 #ifndef __MIGRATE_H__
 #define __MIGRATE_H__
 
-void migrateFromOldVersions();
+#include <ZLOptions.h>
+#include <ZLRunnable.h>
+
+class MigrationRunnable : public ZLRunnable {
+
+public:
+	MigrationRunnable();
+	bool shouldMigrate() const;
+	void run();
+
+private:
+	ZLStringOption myVersionOption;
+};
 
 #endif /* __MIGRATE_H__ */

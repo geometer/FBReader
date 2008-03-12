@@ -45,7 +45,9 @@ void Migration_0_8_16::doMigrationInternal() {
 				BookDescriptionPtr description = BookDescription::getDescription(*it);
 				if (!description.isNull()) {
 					ZLBooleanOption seriesOption(FBCategoryKey::BOOKS, *it, "SequenceDefined", false);
-					FB2MigrationReader(*description, !seriesOption.value()).doRead(*it);
+					if (!seriesOption.value() || description->tags().empty()) {
+						FB2MigrationReader(*description, !seriesOption.value()).doRead(*it);
+					}
 					seriesOption.setValue(true);
 				}
 			} else if ((extension == "opf") || (extension == "oebzip") || (extension == "epub")) {

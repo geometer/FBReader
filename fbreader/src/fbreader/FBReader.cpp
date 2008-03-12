@@ -103,8 +103,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBookToOpen(bookToOpen),
 	myBookAlreadyOpen(false) {
 
-	migrateFromOldVersions();
-
 	myModel = 0;
 	myBookTextView = new BookTextView(*this, context());
 	myFootnoteView = new FootnoteView(*this, context());
@@ -170,6 +168,11 @@ FBReader::~FBReader() {
 void FBReader::initWindow() {
 	ZLApplication::initWindow();
 	trackStylus(true);
+
+	MigrationRunnable migration;
+	if (migration.shouldMigrate()) {
+		ZLDialogManager::instance().wait(ZLResourceKey("migrate"), migration);
+	}
 
 	if (!myBookAlreadyOpen) {
 		BookDescriptionPtr description;

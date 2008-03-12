@@ -17,15 +17,26 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include "../options/FBOptions.h"
 
 #include "Migration.h"
 #include "migrate.h"
 
-void migrateFromOldVersions() {
+MigrationRunnable::MigrationRunnable() :
+	myVersionOption(FBCategoryKey::SYSTEM, "Version", "FBReaderVersion", "0") {
+}
+
+bool MigrationRunnable::shouldMigrate() const {
+	std::cerr << myVersionOption.value() << " ? " << VERSION << "\n";
+	return myVersionOption.value() < VERSION;
+}
+
+void MigrationRunnable::run() {
 	Migration_0_8_11().doMigration();
 	Migration_0_8_13().doMigration();
 	Migration_0_8_16().doMigration();
 
-	ZLStringOption(FBCategoryKey::SYSTEM, "Version", "FBReaderVersion", "0").setValue(VERSION);
+	myVersionOption.setValue(VERSION);
 }
