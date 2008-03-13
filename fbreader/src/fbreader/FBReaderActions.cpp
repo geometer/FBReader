@@ -34,7 +34,6 @@
 
 #include "../bookmodel/BookModel.h"
 #include "../optionsDialog/OptionsDialog.h"
-#include "../collection/BookList.h"
 
 FBAction::FBAction(FBReader &fbreader) : myFBReader(fbreader) {
 }
@@ -104,8 +103,9 @@ void AddBookAction::run() {
 	FBFileHandler handler;
 	if (ZLDialogManager::instance().selectionDialog(ZLResourceKey("addFileDialog"), handler)) {
 		BookDescriptionPtr description = handler.description();
-		if (!description.isNull() && fbreader().runBookInfoDialog(description->fileName())) {
-			BookList().addFileName(description->fileName());
+		const std::string &fileName = description->fileName();
+		if (!description.isNull() && fbreader().runBookInfoDialog(fileName)) {
+			fbreader().openFile(fileName);
 			fbreader().setMode(FBReader::BOOK_TEXT_MODE);
 		}
 	}
@@ -136,7 +136,10 @@ ShowBookInfoAction::ShowBookInfoAction(FBReader &fbreader) : ModeDependentAction
 }
 
 void ShowBookInfoAction::run() {
-	fbreader().runBookInfoDialog(fbreader().myModel->fileName());
+	const std::string &fileName = fbreader().myModel->fileName();
+	if (fbreader().runBookInfoDialog(fileName)) {
+		fbreader().openFile(fileName);
+	}
 }
 
 UndoAction::UndoAction(FBReader &fbreader) : FBAction(fbreader) {

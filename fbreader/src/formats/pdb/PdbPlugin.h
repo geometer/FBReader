@@ -26,14 +26,14 @@
 
 class PdbPlugin : public FormatPlugin {
 
+public:
+	static std::string fileType(const ZLFile &file);
+
 protected:
 	PdbPlugin();
 
 public:
 	virtual ~PdbPlugin();
-
-protected:
-	std::string fileType(const ZLFile &file) const;
 };
 
 class PluckerPlugin : public PdbPlugin {

@@ -25,6 +25,7 @@
 #include <ZLDialogManager.h>
 #include <ZLStringUtil.h>
 
+#include "FBReader.h"
 #include "FBFileHandler.h"
 #include "../formats/FormatPlugin.h"
 
@@ -134,18 +135,6 @@ int FBFileHandler::selectedIndex() const {
 }
 
 bool FBFileHandler::accept(const ZLTreeNode &node) {
-	const std::string name = myDir->itemPath(node.id());
-	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(name), false);
-	const std::string message = (plugin == 0) ? "Unknown File Format" : plugin->tryOpen(name);
-	if (!message.empty()) {
-		ZLResourceKey boxKey("openBookErrorBox");
-		ZLDialogManager::instance().errorBox(
-			boxKey,
-			ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), message)
-		);
-		return false;
-	}
-
-	myDescription = BookDescription::getDescription(name);
-	return true;
+	FBReader::createDescription(myDir->itemPath(node.id()), myDescription);
+	return !myDescription.isNull();
 }
