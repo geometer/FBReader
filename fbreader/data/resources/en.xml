@@ -248,6 +248,9 @@
 					<node name="seriesTitle" value="Series Title"/>
 					<node name="bookNumber" value="Book Number"/>
 				</node>
+				<node name="Tags" value="Tags">
+					<node name="tags" value="Tag List"/>
+				</node>
 				<node name="Text" value="Text">
 					<node name="breakType" value="Break Paragraph at"/>
 					<node name="ignoreIndent" value="Ignore Indent Less than"/>

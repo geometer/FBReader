@@ -84,6 +84,18 @@ private:
 	mutable std::vector<std::string> myValues;
 };
 
+class TagsEntry : public ZLStringOptionEntry {
+
+public:
+	TagsEntry(BookInfo &info);
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
+
+private:
+	BookInfo &myInfo;
+	const std::string myInitialValue;
+};
+
 AuthorDisplayNameEntry::AuthorDisplayNameEntry(BookInfoDialog &dialog) : ZLComboOptionEntry(true), myInfoDialog(dialog) {
 }
 
@@ -159,22 +171,10 @@ const std::vector<std::string> &SeriesTitleEntry::values() const {
 	valuesSet.insert("");
 	if (!myOriginalAuthor.isNull()) {
 		myInfoDialog.myCollection.collectSequenceNames(myOriginalAuthor, valuesSet);
-		/*
-		const Books &books = myInfoDialog.myCollection.books(myOriginalAuthor);
-		for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
-			valuesSet.insert((*it)->sequenceName());
-		}
-		*/
 	}
 	AuthorPtr currentAuthor = myInfoDialog.myAuthorDisplayNameEntry->myCurrentAuthor;
 	if (!currentAuthor.isNull() && (currentAuthor != myOriginalAuthor)) {
 		myInfoDialog.myCollection.collectSequenceNames(currentAuthor, valuesSet);
-		/*
-		const Books &books = myInfoDialog.myCollection.books(currentAuthor);
-		for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
-			valuesSet.insert((*it)->sequenceName());
-		}
-		*/
 	}
 	for (std::set<std::string>::const_iterator it = valuesSet.begin(); it != valuesSet.end(); ++it) {
 		myValues.push_back(*it);
@@ -196,6 +196,18 @@ bool SeriesTitleEntry::useOnValueEdited() const {
 
 void SeriesTitleEntry::onValueEdited(const std::string &value) {
 	myInfoDialog.myBookNumberEntry->setVisible(!value.empty());
+}
+
+TagsEntry::TagsEntry(BookInfo &info) : myInfo(info), myInitialValue("tag list") {
+}
+
+const std::string &TagsEntry::initialValue() const {
+	return myInitialValue;
+}
+
+void TagsEntry::onAccept(const std::string &value) {
+	if (value != myInitialValue) {
+	}
 }
 
 BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::string &fileName) : myCollection(collection), myBookInfo(fileName) {
@@ -241,6 +253,9 @@ BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::stri
 	orderEntry->values().push_back("Fifth");
 	sequenceTab.addOption(orderEntry);
 	*/
+
+	ZLDialogContent &tagsTab = myDialog->createTab(ZLResourceKey("Tags"));
+	tagsTab.addOption(ZLResourceKey("tags"), new TagsEntry(myBookInfo));
 
 	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
 	if (plugin != 0) {
