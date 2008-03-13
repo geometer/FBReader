@@ -43,17 +43,6 @@ BookInfo::BookInfo(const std::string &fileName) :
 	NumberInSequenceOption(FBCategoryKey::BOOKS, fileName, "Number in seq", 0, 100, 0),
 	LanguageOption(FBCategoryKey::BOOKS, fileName, "Language", PluginCollection::instance().DefaultLanguageOption.value()),
 	EncodingOption(FBCategoryKey::BOOKS, fileName, "Encoding", EMPTY) {
-	// this is just hack for compatibility with versions < 0.8.8
-	std::string language = LanguageOption.value();
-	if (language == "") {
-		LanguageOption.setValue(PluginCollection::instance().DefaultLanguageOption.value());
-	} else if (language == "cz") {
-		LanguageOption.setValue("cs");
-	} else if (language == "none") {
-		LanguageOption.setValue("other");
-	} else if ((language == "chinese") || (language == "anycharacter")) {
-		LanguageOption.setValue("zh");
-	}
 }
 
 void BookInfo::reset() {
