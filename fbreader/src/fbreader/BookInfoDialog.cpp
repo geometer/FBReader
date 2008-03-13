@@ -84,18 +84,6 @@ private:
 	mutable std::vector<std::string> myValues;
 };
 
-class TagsEntry : public ZLStringOptionEntry {
-
-public:
-	TagsEntry(BookInfo &info);
-	const std::string &initialValue() const;
-	void onAccept(const std::string &value);
-
-private:
-	BookInfo &myInfo;
-	const std::string myInitialValue;
-};
-
 AuthorDisplayNameEntry::AuthorDisplayNameEntry(BookInfoDialog &dialog) : ZLComboOptionEntry(true), myInfoDialog(dialog) {
 }
 
@@ -196,18 +184,6 @@ bool SeriesTitleEntry::useOnValueEdited() const {
 
 void SeriesTitleEntry::onValueEdited(const std::string &value) {
 	myInfoDialog.myBookNumberEntry->setVisible(!value.empty());
-}
-
-TagsEntry::TagsEntry(BookInfo &info) : myInfo(info), myInitialValue("tag list") {
-}
-
-const std::string &TagsEntry::initialValue() const {
-	return myInitialValue;
-}
-
-void TagsEntry::onAccept(const std::string &value) {
-	if (value != myInitialValue) {
-	}
 }
 
 BookInfoDialog::BookInfoDialog(const BookCollection &collection, const std::string &fileName) : myCollection(collection), myBookInfo(fileName) {
