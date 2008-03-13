@@ -48,7 +48,7 @@ public:
 	void rebuild(bool strong);
 	bool synchronize() const;
 
-	void collectSequenceNames(AuthorPtr author, std::set<std::string> &list) const;
+	void collectSeriesNames(AuthorPtr author, std::set<std::string> &list) const;
 	void removeTag(const std::string &tag, bool includeSubTags);
 	void renameTag(const std::string &from, const std::string &to, bool includeSubTags);
 	void cloneTag(const std::string &from, const std::string &to, bool includeSubTags);

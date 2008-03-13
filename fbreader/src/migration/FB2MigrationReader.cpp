@@ -25,7 +25,7 @@
 #include "FB2MigrationReader.h"
 #include "../formats/fb2/FB2TagManager.h"
 
-FB2MigrationReader::FB2MigrationReader(BookDescription &description, bool updateSeries) : myDescription(description), myUpdateSeries(updateSeries), myUpdateTags(description.tags().empty()) {
+FB2MigrationReader::FB2MigrationReader(BookInfo &info, bool updateSeries) : myInfo(info), myUpdateSeries(updateSeries), myUpdateTags(info.TagsOption.value().empty()) {
 }
 
 void FB2MigrationReader::characterDataHandler(const char *text, int len) {
@@ -51,11 +51,11 @@ void FB2MigrationReader::startElementHandler(int tag, const char **attributes) {
 			if ((myReadState == READ_SOMETHING) && myUpdateSeries) {
 				const char *name = attributeValue(attributes, "name");
 				if (name != 0) {
-					std::string sequenceName = name;
-					ZLStringUtil::stripWhiteSpaces(sequenceName);
-					myDescription.sequenceName() = sequenceName;
+					std::string seriesName = name;
+					ZLStringUtil::stripWhiteSpaces(seriesName);
+					myInfo.SeriesNameOption.setValue(seriesName);
 					const char *number = attributeValue(attributes, "number");
-					myDescription.numberInSequence() = (number != 0) ? atoi(number) : 0;
+					myInfo.NumberInSeriesOption.setValue((number != 0) ? atoi(number) : 0);
 				}
 			}
 			break;
@@ -77,10 +77,16 @@ void FB2MigrationReader::endElementHandler(int tag) {
 						FB2TagManager::instance().humanReadableTags(myGenreBuffer);
 					if (!tags.empty()) {
 						for (std::vector<std::string>::const_iterator it = tags.begin(); it != tags.end(); ++it) {
-							myDescription.addTag(*it, false);
+							if (!myTagList.empty()) {
+								myTagList += ',';
+							}
+							myTagList += *it;
 						}
 					} else {
-						myDescription.addTag(myGenreBuffer);
+						if (!myTagList.empty()) {
+							myTagList += ',';
+						}
+						myTagList += myGenreBuffer;
 					}
 					myGenreBuffer.erase();
 				}
@@ -94,6 +100,10 @@ void FB2MigrationReader::endElementHandler(int tag) {
 
 void FB2MigrationReader::doRead(const std::string &fileName) {
 	myReadState = READ_NOTHING;
+	myTagList.erase();
 	myGenreBuffer.erase();
 	readDocument(fileName);
+	if (myUpdateTags) {
+		myInfo.TagsOption.setValue(myTagList);
+	}
 }

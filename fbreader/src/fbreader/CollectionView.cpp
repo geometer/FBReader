@@ -187,8 +187,8 @@ void CollectionModel::addBooks(const Books &books, ZLTextTreeParagraph *root) {
 	AuthorPtr author;
 	AuthorComparator comparator;
 	ZLTextTreeParagraph *authorParagraph = 0;
-	std::string currentSequenceName;
-	ZLTextTreeParagraph *sequenceParagraph = 0;
+	std::string currentSeriesName;
+	ZLTextTreeParagraph *seriesParagraph = 0;
 
 	for (Books::const_iterator jt = books.begin(); jt != books.end(); ++jt) {
 		BookDescriptionPtr description = *jt;
@@ -198,22 +198,22 @@ void CollectionModel::addBooks(const Books &books, ZLTextTreeParagraph *root) {
 			authorParagraph = createParagraph(root);
 			insertText(LIBRARY_AUTHOR_ENTRY, author->displayName());
 			//insertImage(AUTHOR_INFO_IMAGE_ID);
-			currentSequenceName.erase();
-			sequenceParagraph = 0;
+			currentSeriesName.erase();
+			seriesParagraph = 0;
 		}
 
-		const std::string &sequenceName = description->sequenceName();
-		if (sequenceName.empty()) {
-			currentSequenceName.erase();
-			sequenceParagraph = 0;
-		} else if (sequenceName != currentSequenceName) {
-			currentSequenceName = sequenceName;
-			sequenceParagraph = createParagraph(authorParagraph);
-			insertText(LIBRARY_BOOK_ENTRY, sequenceName);
+		const std::string &seriesName = description->seriesName();
+		if (seriesName.empty()) {
+			currentSeriesName.erase();
+			seriesParagraph = 0;
+		} else if (seriesName != currentSeriesName) {
+			currentSeriesName = seriesName;
+			seriesParagraph = createParagraph(authorParagraph);
+			insertText(LIBRARY_BOOK_ENTRY, seriesName);
 			//insertImage(SERIES_ORDER_IMAGE_ID);
 		}
 		ZLTextTreeParagraph *bookParagraph = createParagraph(
-			(sequenceParagraph == 0) ? authorParagraph : sequenceParagraph
+			(seriesParagraph == 0) ? authorParagraph : seriesParagraph
 		);
 		insertText(LIBRARY_BOOK_ENTRY, description->title());
 		insertImage(BOOK_INFO_IMAGE_ID);

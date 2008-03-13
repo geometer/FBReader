@@ -22,7 +22,7 @@
 
 #include "OEBMigrationReader.h"
 
-OEBMigrationReader::OEBMigrationReader(BookDescription &description) : myDescription(description) {
+OEBMigrationReader::OEBMigrationReader(BookInfo &info) : myInfo(info) {
 }
 
 static const std::string METADATA = "metadata";
@@ -44,7 +44,7 @@ bool OEBMigrationReader::isDublinCoreNamespace(const std::string &nsId) const {
 		ZLStringUtil::stringStartsWith(iter->second, DC_SCHEME_PREFIX);
 }
 
-void OEBMigrationReader::startElementHandler(const char *tag, const char **attributes) {
+void OEBMigrationReader::startElementHandler(const char *tag, const char**) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if ((METADATA == tagString) || (DC_METADATA == tagString)) {
 		myDCMetadataTag = tagString;
@@ -65,7 +65,10 @@ void OEBMigrationReader::endElementHandler(const char *tag) {
 	} else if (myReadSubject) {
 		ZLStringUtil::stripWhiteSpaces(myBuffer);
 		if (!myBuffer.empty()) {
-			myDescription.addTag(myBuffer);
+			if (!myTagList.empty()) {
+				myTagList += ',';
+			}
+			myTagList += myBuffer;
 			myBuffer.erase();
 		}
 		myReadSubject = false;
@@ -79,5 +82,8 @@ bool OEBMigrationReader::processNamespaces() const {
 void OEBMigrationReader::doRead(const std::string &fileName) {
 	myReadMetaData = false;
 	myReadSubject = false;
+	myBuffer.erase();
+	myTagList.erase();
 	readDocument(fileName);
+	myInfo.TagsOption.setValue(myTagList);
 }

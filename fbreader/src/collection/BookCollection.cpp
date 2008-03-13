@@ -52,21 +52,21 @@ bool DescriptionComparator::operator() (const BookDescriptionPtr d1, const BookD
 		return displayName1 < displayName2;
 	}
 
-	const std::string &sequenceName1 = d1->sequenceName();
-	const std::string &sequenceName2 = d2->sequenceName();
-	if (sequenceName1.empty() && sequenceName2.empty()) {
+	const std::string &seriesName1 = d1->seriesName();
+	const std::string &seriesName2 = d2->seriesName();
+	if (seriesName1.empty() && seriesName2.empty()) {
 		return d1->title() < d2->title();
 	}
-	if (sequenceName1.empty()) {
-		return d1->title() < sequenceName2;
+	if (seriesName1.empty()) {
+		return d1->title() < seriesName2;
 	}
-	if (sequenceName2.empty()) {
-		return sequenceName1 <= d2->title();
+	if (seriesName2.empty()) {
+		return seriesName1 <= d2->title();
 	}
-	if (sequenceName1 != sequenceName2) {
-		return sequenceName1 < sequenceName2;
+	if (seriesName1 != seriesName2) {
+		return seriesName1 < seriesName2;
 	}
-	return d1->numberInSequence() < d2->numberInSequence();
+	return d1->numberInSeries() < d2->numberInSeries();
 }
 
 static const std::string OPTIONS = "Options";
@@ -220,7 +220,7 @@ void BookCollection::addDescription(BookDescriptionPtr description) const {
 	}
 }
 
-void BookCollection::collectSequenceNames(AuthorPtr author, std::set<std::string> &set) const {
+void BookCollection::collectSeriesNames(AuthorPtr author, std::set<std::string> &set) const {
 	synchronize();
 	if (myBooks.empty()) {
 		return;
@@ -242,13 +242,13 @@ void BookCollection::collectSequenceNames(AuthorPtr author, std::set<std::string
 			right = middle;
 		} else {
 			for (Books::const_iterator it = middle; !comparator((*it)->author(), author); --it) {
-				set.insert((*it)->sequenceName());
+				set.insert((*it)->seriesName());
 				if (it == left) {
 					break;
 				}
 			}
 			for (Books::const_iterator it = middle; !comparator(author, (*it)->author()); ++it) {
-				set.insert((*it)->sequenceName());
+				set.insert((*it)->seriesName());
 				if (it == right) {
 					break;
 				}

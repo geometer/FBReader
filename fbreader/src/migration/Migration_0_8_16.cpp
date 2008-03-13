@@ -34,14 +34,15 @@ Migration_0_8_16::Migration_0_8_16() : Migration("0.8.16") {
 }
 
 void Migration_0_8_16::doMigrationInternal() {
+	PluginCollection &collection = PluginCollection::instance();
+
 	std::vector<std::string> optionGroups;
 	ZLOption::listOptionGroups(optionGroups);
 
 	for (std::vector<std::string>::const_iterator it = optionGroups.begin(); it != optionGroups.end(); ++it) {
 		if (isLikeToFileName(*it)) {
 			ZLFile file(*it);
-			BookDescriptionPtr description = BookDescription::getDescription(*it);
-			if (!description.isNull()) {
+			if (collection.plugin(file, false) != 0) {
 				BookInfo info(*it);
 				ZLStringOption &languageOption = info.LanguageOption;
 				const std::string &language = languageOption.value();
@@ -58,13 +59,13 @@ void Migration_0_8_16::doMigrationInternal() {
 				const std::string &extension = file.extension();
 				if (extension == "fb2") {
 					ZLBooleanOption seriesOption(FBCategoryKey::BOOKS, *it, "SequenceDefined", false);
-					if (!seriesOption.value() || description->tags().empty()) {
-						FB2MigrationReader(*description, !seriesOption.value()).doRead(*it);
+					if (!seriesOption.value() || info.TagsOption.value().empty()) {
+						FB2MigrationReader(info, !seriesOption.value()).doRead(*it);
 					}
 					seriesOption.setValue(true);
 				} else if ((extension == "opf") || (extension == "oebzip") || (extension == "epub")) {
-					if (description->tags().empty()) {
-						OEBMigrationReader(*description).doRead(OEBPlugin::opfFileName(*it));
+					if (info.TagsOption.value().empty()) {
+						OEBMigrationReader(info).doRead(OEBPlugin::opfFileName(*it));
 					}
 				}
 			}

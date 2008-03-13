@@ -105,11 +105,11 @@ void FB2DescriptionReader::startElementHandler(int tag, const char **attributes)
 			if (myReadState == READ_SOMETHING) {
 				const char *name = attributeValue(attributes, "name");
 				if (name != 0) {
-					std::string sequenceName = name;
-					ZLStringUtil::stripWhiteSpaces(sequenceName);
-					myDescription.sequenceName() = sequenceName;
+					std::string seriesName = name;
+					ZLStringUtil::stripWhiteSpaces(seriesName);
+					myDescription.seriesName() = seriesName;
 					const char *number = attributeValue(attributes, "number");
-					myDescription.numberInSequence() = (number != 0) ? atoi(number) : 0;
+					myDescription.numberInSeries() = (number != 0) ? atoi(number) : 0;
 				}
 			}
 			break;

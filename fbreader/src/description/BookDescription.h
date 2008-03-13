@@ -42,10 +42,11 @@ struct BookInfo {
 	ZLStringOption AuthorDisplayNameOption;
 	ZLStringOption AuthorSortKeyOption;
 	ZLStringOption TitleOption;
-	ZLStringOption SequenceNameOption;
-	ZLIntegerRangeOption NumberInSequenceOption;
+	ZLStringOption SeriesNameOption;
+	ZLIntegerRangeOption NumberInSeriesOption;
 	ZLStringOption LanguageOption;
 	ZLStringOption EncodingOption;
+	ZLStringOption TagsOption;
 };
 
 class BookDescription {
@@ -62,18 +63,23 @@ private:
 public:
 	const AuthorPtr author() const;
 	const std::string &title() const;
-	const std::string &sequenceName() const;
-	int numberInSequence() const;
+	const std::string &seriesName() const;
+	int numberInSeries() const;
 	const std::string &fileName() const;
 	const std::string &language() const;
 	const std::string &encoding() const;
 	const std::vector<std::string> &tags() const;
 
 private:
+	void addTag(const std::string &tag, bool check = true);
+	void saveTags() const;
+	void saveTags(ZLStringOption &tagsOption) const;
+
+private:
 	AuthorPtr myAuthor;
 	std::string myTitle;
-	std::string mySequenceName;
-	int myNumberInSequence;
+	std::string mySeriesName;
+	int myNumberInSeries;
 	std::string myFileName;
 	std::string myLanguage;
 	std::string myEncoding;
@@ -96,8 +102,8 @@ public:
 	void clearAuthor();
 	const AuthorPtr author() const;
 	std::string &title();
-	std::string &sequenceName();
-	int &numberInSequence();
+	std::string &seriesName();
+	int &numberInSeries();
 	std::string &fileName();
 	std::string &language();
 	std::string &encoding();
@@ -116,8 +122,8 @@ inline BookInfo::~BookInfo() {}
 
 inline const AuthorPtr BookDescription::author() const { return myAuthor; }
 inline const std::string &BookDescription::title() const { return myTitle; }
-inline const std::string &BookDescription::sequenceName() const { return mySequenceName; }
-inline int BookDescription::numberInSequence() const { return myNumberInSequence; }
+inline const std::string &BookDescription::seriesName() const { return mySeriesName; }
+inline int BookDescription::numberInSeries() const { return myNumberInSeries; }
 inline const std::string &BookDescription::fileName() const { return myFileName; }
 inline const std::string &BookDescription::language() const { return myLanguage; }
 inline const std::string &BookDescription::encoding() const { return myEncoding; }
@@ -127,8 +133,8 @@ inline WritableBookDescription::WritableBookDescription(BookDescription &descrip
 inline WritableBookDescription::~WritableBookDescription() {}
 inline const AuthorPtr WritableBookDescription::author() const { return myDescription.author(); }
 inline std::string &WritableBookDescription::title() { return myDescription.myTitle; }
-inline std::string &WritableBookDescription::sequenceName() { return myDescription.mySequenceName; }
-inline int &WritableBookDescription::numberInSequence() { return myDescription.myNumberInSequence; }
+inline std::string &WritableBookDescription::seriesName() { return myDescription.mySeriesName; }
+inline int &WritableBookDescription::numberInSeries() { return myDescription.myNumberInSeries; }
 inline std::string &WritableBookDescription::fileName() { return myDescription.myFileName; }
 inline std::string &WritableBookDescription::language() { return myDescription.myLanguage; }
 inline std::string &WritableBookDescription::encoding() { return myDescription.myEncoding; }

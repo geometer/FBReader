@@ -28,7 +28,7 @@
 class FB2MigrationReader : public FB2Reader {
 
 public:
-	FB2MigrationReader(BookDescription &description, bool updateSeries);
+	FB2MigrationReader(BookInfo &info, bool updateSeries);
 
 	void doRead(const std::string &fileName);
 
@@ -37,7 +37,7 @@ public:
 	void characterDataHandler(const char *text, int len);
 
 private:
-	WritableBookDescription myDescription;
+	BookInfo &myInfo;
 
 	enum {
 		READ_NOTHING,
@@ -49,6 +49,7 @@ private:
 	bool myUpdateTags;
 
 	std::string myGenreBuffer;
+	std::string myTagList;
 };
 
 #endif /* __FB2MIGRATIONREADER_H__ */

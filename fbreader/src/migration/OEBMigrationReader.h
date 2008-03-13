@@ -29,7 +29,7 @@
 class OEBMigrationReader : public ZLXMLReader {
 
 public:
-	OEBMigrationReader(BookDescription &description);
+	OEBMigrationReader(BookInfo &info);
 	void doRead(const std::string &fileName);
 
 	void startElementHandler(const char *tag, const char **attributes);
@@ -41,13 +41,14 @@ private:
 	bool isDublinCoreNamespace(const std::string &nsId) const;
 
 private:
-	WritableBookDescription myDescription;
+	BookInfo &myInfo;
 
 	bool myReadMetaData;
 	bool myReadSubject;
 
 	std::string myDCMetadataTag;
 	std::string myBuffer;
+	std::string myTagList;
 };
 
 #endif /* __OEBMIGRATIONREADER_H__ */
