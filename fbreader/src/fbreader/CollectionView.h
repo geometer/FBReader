@@ -54,6 +54,9 @@ public:
 private:
 	CollectionModel &collectionModel();
 
+	void removeBook(BookDescriptionPtr book);
+	void removeTag(const std::string &tag);
+
 private:
 	BookCollection myCollection;
 	bool myTreeStateIsFrozen;

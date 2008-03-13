@@ -336,67 +336,11 @@ bool CollectionView::_onStylusPress(int x, int y) {
 			}
 			return true;
 		} else if (id == REMOVE_BOOK_IMAGE_ID) {
-			BookDescriptionPtr book =
-				collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber);
-			if (!book.isNull()) {
-				ZLResourceKey boxKey("removeBookBox");
-				const std::string message =
-					ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book->title());
-				if (ZLDialogManager::instance().questionBox(boxKey, message,
-					ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
-					collectionModel().removeAllMarks();
-					BookList().removeFileName(book->fileName());
-					
-					ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)collectionModel()[imageArea->ParagraphNumber];
-					ZLTextTreeParagraph *parent = paragraph->parent();
-					if (parent->children().size() == 1) {
-						collectionModel().removeParagraph(imageArea->ParagraphNumber);
-						collectionModel().removeParagraph(imageArea->ParagraphNumber - 1);
-					} else {
-						collectionModel().removeParagraph(imageArea->ParagraphNumber);
-					}
-      
-					if (collectionModel().paragraphsNumber() == 0) {
-						setStartCursor(0);
-					}
-					rebuildPaintInfo(true);
-					application().refreshWindow();
-				}
-				return true;
-			}
+			removeBook(collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber));
+			return true;
 		} else if (id == REMOVE_TAG_IMAGE_ID) {
-			const std::string &tag = collectionModel().tagByParagraphNumber(imageArea->ParagraphNumber);
-			if (!tag.empty()) {
-				ZLResourceKey boxKey("removeTagBox");
-				const std::string message =
-					ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), tag);
-				enum { REMOVE_TAG, REMOVE_SUBTREE, DONT_REMOVE } code = DONT_REMOVE;
-				if (myCollection.containsSubtags(tag)) {
-					switch (ZLDialogManager::instance().questionBox(boxKey, message,
-										ZLResourceKey("thisOnly"),
-										ZLResourceKey("withSubtags"),
-										ZLDialogManager::CANCEL_BUTTON
-									)) {
-						case 0:
-							code = REMOVE_TAG;
-							break;
-						case 1:
-							code = REMOVE_SUBTREE;
-							break;
-					}
-				} else {
-					if (ZLDialogManager::instance().questionBox(boxKey, message,
-						ZLDialogManager::YES_BUTTON, ZLDialogManager::CANCEL_BUTTON) == 0) {
-						code = REMOVE_TAG;
-					}
-				}
-				if (code != DONT_REMOVE) {
-					myCollection.removeTag(tag, code == REMOVE_SUBTREE);
-					updateModel();
-					application().refreshWindow();
-				}
-				return true;
-			}
+			removeTag(collectionModel().tagByParagraphNumber(imageArea->ParagraphNumber));
+			return true;
 		}
 		return false;
 	}
@@ -414,6 +358,80 @@ bool CollectionView::_onStylusPress(int x, int y) {
 	}
 
 	return false;
+}
+
+void CollectionView::removeBook(BookDescriptionPtr book) {
+	if (book.isNull()) {
+		return;
+	}
+
+	ZLResourceKey boxKey("removeBookBox");
+	const std::string message =
+		ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book->title());
+	if (ZLDialogManager::instance().questionBox(boxKey, message,
+		ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
+		collectionModel().removeAllMarks();
+		BookList().removeFileName(book->fileName());
+		
+		const std::vector<int> &paragraphIndices = collectionModel().paragraphNumbersByBook(book);
+		for (int i = paragraphIndices.size() - 1; i >= 0; --i) {
+			int index = paragraphIndices[i];
+			ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)collectionModel()[index];
+			int count = 1;
+			for (ZLTextTreeParagraph *parent = paragraph->parent(); (parent != 0) && (parent->children().size() == 1); parent = parent->parent()) {
+				++count;
+			}
+
+			if (count > index) {
+				count = index;
+			}
+
+			for (; count > 0; --count) {
+				collectionModel().removeParagraph(index--);
+			}
+		}
+  
+		if (collectionModel().paragraphsNumber() == 0) {
+			setStartCursor(0);
+		}
+		rebuildPaintInfo(true);
+		application().refreshWindow();
+	}
+}
+
+void CollectionView::removeTag(const std::string &tag) {
+	if (tag.empty()) {
+		return;
+	}
+
+	ZLResourceKey boxKey("removeTagBox");
+	const std::string message =
+		ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), tag);
+	enum { REMOVE_TAG, REMOVE_SUBTREE, DONT_REMOVE } code = DONT_REMOVE;
+	if (myCollection.containsSubtags(tag)) {
+		switch (ZLDialogManager::instance().questionBox(boxKey, message,
+							ZLResourceKey("thisOnly"),
+							ZLResourceKey("withSubtags"),
+							ZLDialogManager::CANCEL_BUTTON
+						)) {
+			case 0:
+				code = REMOVE_TAG;
+				break;
+			case 1:
+				code = REMOVE_SUBTREE;
+				break;
+		}
+	} else {
+		if (ZLDialogManager::instance().questionBox(boxKey, message,
+			ZLDialogManager::YES_BUTTON, ZLDialogManager::CANCEL_BUTTON) == 0) {
+			code = REMOVE_TAG;
+		}
+	}
+	if (code != DONT_REMOVE) {
+		myCollection.removeTag(tag, code == REMOVE_SUBTREE);
+		updateModel();
+		application().refreshWindow();
+	}
 }
 
 CollectionModel &CollectionView::collectionModel() {
