@@ -46,6 +46,7 @@ public:
 	ChoiceOptionView(const std::string &name, const std::string &tooltip, ZLChoiceOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 protected:
+	void _setActive(bool active);
 	void _onAccept() const;
 	void _show();
 	void _hide();
@@ -60,6 +61,7 @@ public:
 	BooleanOptionView(const std::string &name, const std::string &tooltip, ZLBooleanOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 protected:
+	void _setActive(bool active);
 	void _onAccept() const;
 	void _show();
 	void _hide();
@@ -77,6 +79,7 @@ public:
 	Boolean3OptionView(const std::string &name, const std::string &tooltip, ZLBoolean3OptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
 
 protected:
+	void _setActive(bool active);
 	void _onAccept() const;
 	void _show();
 	void _hide();

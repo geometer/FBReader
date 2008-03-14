@@ -155,6 +155,8 @@ public:
 	WORD classId() const;
 	void init(HWND parent, W32ControlCollection *collection);
 
+	void setEditable(bool editable);
+
 	void setChecked(bool checked);
 	bool isChecked() const;
 
@@ -180,6 +182,8 @@ public:
 
 	WORD classId() const;
 	void init(HWND parent, W32ControlCollection *collection);
+
+	void setEditable(bool editable);
 
 	void setState(ZLBoolean3 state);
 	ZLBoolean3 state() const;
@@ -320,6 +324,8 @@ private:
 	void init(HWND parent, W32ControlCollection *collection);
 	void commandCallback(DWORD hiWParam);
 
+	void setEditable(bool editable);
+
 	void setChecked(bool checked);
 
 private:
@@ -334,6 +340,8 @@ class W32RadioButtonGroup : public W32StandardControl {
 public:
 	W32RadioButtonGroup(const std::string &caption, const std::vector<std::string> &buttonTexts);
 	Size minimumSize() const;
+
+	void setEditable(bool editable);
 
 	void setVisible(bool visible);
 	void setChecked(int index);

@@ -276,6 +276,18 @@ void W32CheckBox::init(HWND parent, W32ControlCollection *collection) {
 	SendMessage(myWindow, BM_SETCHECK, myChecked ? BST_CHECKED : BST_UNCHECKED, 0);
 }
 
+void W32CheckBox::setEditable(bool editable) {
+	if (editable) {
+		myStyle &= ~WS_DISABLED;
+	} else {
+		myStyle |= WS_DISABLED;
+	}
+	if (myWindow != 0) {
+		// TODO: check
+		SetWindowLong(myWindow, GWL_STYLE, myStyle);
+	}
+}
+
 void W32CheckBox::setChecked(bool checked) {
 	if (checked != myChecked) {
 		myChecked = checked;
@@ -336,6 +348,18 @@ void W32TristateBox::init(HWND parent, W32ControlCollection *collection) {
 	W32StandardControl::init(parent, collection);
 	::setWindowText(myWindow, myText);
 	SendMessage(myWindow, BM_SETCHECK, buttonState(myState), 0);
+}
+
+void W32TristateBox::setEditable(bool editable) {
+	if (editable) {
+		myStyle &= ~WS_DISABLED;
+	} else {
+		myStyle |= WS_DISABLED;
+	}
+	if (myWindow != 0) {
+		// TODO: check
+		SetWindowLong(myWindow, GWL_STYLE, myStyle);
+	}
 }
 
 void W32TristateBox::setState(ZLBoolean3 state) {
@@ -749,6 +773,18 @@ void W32RadioButton::commandCallback(DWORD hiWParam) {
 	}
 }
 
+void W32RadioButton::setEditable(bool editable) {
+	if (editable) {
+		myStyle &= ~WS_DISABLED;
+	} else {
+		myStyle |= WS_DISABLED;
+	}
+	if (myWindow != 0) {
+		// TODO: check
+		SetWindowLong(myWindow, GWL_STYLE, myStyle);
+	}
+}
+
 void W32RadioButton::setChecked(bool checked) {
 	if (myWindow != 0) {
 		SendMessage(myWindow, BM_SETCHECK, checked ? BST_CHECKED : BST_UNCHECKED, 0);
@@ -779,6 +815,21 @@ int W32RadioButtonGroup::allocationSize() const {
 		size += (*it)->allocationSize();
 	}
 	return size;
+}
+
+void W32RadioButtonGroup::setEditable(bool editable) {
+	if (editable) {
+		myStyle &= ~WS_DISABLED;
+	} else {
+		myStyle |= WS_DISABLED;
+	}
+	if (myWindow != 0) {
+		// TODO: check
+		SetWindowLong(myWindow, GWL_STYLE, myStyle);
+	}
+	for (W32WidgetList::const_iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
+		((W32RadioButton&)**it).setEditable(editable);
+	}
 }
 
 void W32RadioButtonGroup::setVisible(bool visible) {

@@ -27,6 +27,7 @@ DONE переименование и клонирование многоуровневых тегов: дописать документ
 DONE показывать сообщение "идет миграция" при старте программы
 проверить сообщение о миграции на maemo
 
+Что происходит с кнопками поиска на тулбаре при листании CollectionView?
 DONE добавлять в библиотеку книги, открываемые из командной строки
 DONE другое: перетащить все хаки из BookCollection и BookDescription в Migration
 gtk: код возврата из messagebox при нажатии Enter на клавиатуре
@@ -36,7 +37,7 @@ BooleanOptionView.setActive для всех платформ:
 DONE	qt
 DONE	gtk
 	ezx
-	win32
+DONE	win32
 DONE	qtopia
 	opie
 	maemo
@@ -46,7 +47,7 @@ ChoiceOptionView.setActive для всех платформ:
 DONE	qt
 DONE	gtk
 	ezx
-	win32
+DONE	win32
 DONE	qtopia
 	opie
 	maemo

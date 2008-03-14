@@ -44,6 +44,10 @@ void BooleanOptionView::onEvent(const std::string &event, W32EventSender&) {
 	}
 }
 
+void BooleanOptionView::_setActive(bool active) {
+	myCheckBox->setEditable(active);
+}
+
 void BooleanOptionView::_show() {
 	myCheckBox->setVisible(true);
 }
@@ -69,6 +73,10 @@ void Boolean3OptionView::onEvent(const std::string &event, W32EventSender&) {
 	}
 }
 
+void Boolean3OptionView::_setActive(bool active) {
+	myTristateBox->setEditable(active);
+}
+
 void Boolean3OptionView::_show() {
 	myTristateBox->setVisible(true);
 }
@@ -87,6 +95,10 @@ ChoiceOptionView::ChoiceOptionView(const std::string &name, const std::string &t
 	myButtonGroup = new W32RadioButtonGroup(name, names);
 	myButtonGroup->setChecked(option->initialCheckedIndex());
 	tab.insertWidget(myButtonGroup, from, to);
+}
+
+void ChoiceOptionView::_setActive(bool active) {
+	myButtonGroup->setEditable(active);
 }
 
 void ChoiceOptionView::_show() {

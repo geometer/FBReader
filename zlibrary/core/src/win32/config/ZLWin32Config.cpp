@@ -95,8 +95,8 @@ void ZLWin32Config::listOptionNames(const std::string &groupName, std::vector<st
 }
 
 void ZLWin32Config::listOptionGroups(std::vector<std::string> &groups) {
-	for (std::map<std::string,ZLWin32ConfigGroup*>::const_iterator it = myGroups.begin(groupName); it != myGroups.end(); ++it) {
-		names.push_back(it->first);
+	for (std::map<std::string,ZLWin32ConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
+		groups.push_back(it->first);
 	}
 }
 
