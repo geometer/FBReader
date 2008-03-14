@@ -51,6 +51,10 @@ void BooleanOptionView::_hide() {
 	gtk_widget_hide(GTK_WIDGET(myCheckBox));
 }
 
+void BooleanOptionView::_setActive(bool active) {
+	gtk_widget_set_sensitive(GTK_WIDGET(myCheckBox), active);
+}
+
 void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry&)*myOption).onAccept(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
 }
@@ -160,6 +164,13 @@ void ChoiceOptionView::_hide() {
 	gtk_widget_hide(GTK_WIDGET(myVBox));
 	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
 		gtk_widget_hide(GTK_WIDGET(myButtons[i]));
+	}
+}
+
+void ChoiceOptionView::_setActive(bool active) {
+	gtk_widget_set_sensitive(GTK_WIDGET(myFrame), active);
+	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
+		gtk_widget_set_sensitive(GTK_WIDGET(myButtons[i]), active);
 	}
 }
 
