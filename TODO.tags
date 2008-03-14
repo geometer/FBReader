@@ -32,26 +32,8 @@ DONE добавлять в библиотеку книги, открываемые из командной строки
 DONE другое: перетащить все хаки из BookCollection и BookDescription в Migration
 gtk: код возврата из messagebox при нажатии Enter на клавиатуре
 удаление книги из дерева: баг с отрисовкой, когда часть удаляемого дерева была за верхней границей экрана
-BooleanOptionView.setActive для всех платформ:
-DONE	gpe
-DONE	qt
-DONE	gtk
-	ezx
-DONE	win32
-DONE	qtopia
-DONE	opie
-DONE	maemo
-DONE	qt4
-ChoiceOptionView.setActive для всех платформ:
-DONE	gpe
-DONE	qt
-DONE	gtk
-	ezx
-DONE	win32
-DONE	qtopia
-DONE	opie
-DONE	maemo
-DONE	qt4
+DONE BooleanOptionView.setActive для всех платформ
+DONE ChoiceOptionView.setActive для всех платформ
 
 **** НЕ ПРОГРАММИРОВАНИЕ ****
 ресурсы: новый таб в диалоге информации о книге
