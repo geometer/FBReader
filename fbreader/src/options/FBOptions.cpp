@@ -25,3 +25,4 @@ FBCategoryKey::FBCategoryKey(const std::string &name) : ZLCategoryKey(name) {
 const FBCategoryKey FBCategoryKey::BOOKS("books");
 const FBCategoryKey FBCategoryKey::SEARCH("search");
 const FBCategoryKey FBCategoryKey::EXTERNAL("external");
+const FBCategoryKey FBCategoryKey::TAGS("tags");

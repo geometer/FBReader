@@ -28,6 +28,7 @@ public:
 	static const FBCategoryKey BOOKS;
 	static const FBCategoryKey SEARCH;
 	static const FBCategoryKey EXTERNAL;
+	static const FBCategoryKey TAGS;
 
 private:
 	FBCategoryKey(const std::string &name);

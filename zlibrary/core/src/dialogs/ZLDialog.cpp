@@ -41,3 +41,7 @@ void ZLDialog::addOption(const ZLResourceKey &key, ZLSimpleOption &option) {
 void ZLDialog::acceptValues() {
 	myTab->accept();
 }
+
+const ZLResource &ZLDialog::resource(const ZLResourceKey &key) const {
+	return myTab->resource(key);
+}

@@ -48,6 +48,10 @@ void BooleanOptionView::_hide() {
 	gtk_widget_hide(GTK_WIDGET(myCheckBox));
 }
 
+void BooleanOptionView::_setActive(bool active) {
+	gtk_widget_set_sensitive(GTK_WIDGET(myCheckBox), active);
+}
+
 void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry&)*myOption).onAccept(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(myCheckBox)));
 }
@@ -107,6 +111,10 @@ void Boolean3OptionView::_hide() {
 	gtk_widget_hide(GTK_WIDGET(myCheckBox));
 }
 
+void Boolean3OptionView::_setActive(bool active) {
+	gtk_widget_set_sensitive(GTK_WIDGET(myCheckBox), active);
+}
+
 void Boolean3OptionView::_onAccept() const {
 	((ZLBoolean3OptionEntry&)*myOption).onAccept(myState);
 }
@@ -126,7 +134,7 @@ void ChoiceOptionView::_createItem() {
 	for (int i = 0; i < num; ++i) {
 		myButtons[i] = GTK_RADIO_BUTTON(gtk_radio_button_new_with_label(group, ((ZLChoiceOptionEntry&)*myOption).text(i).c_str()));
 		group = gtk_radio_button_get_group(myButtons[i]);
-		gtk_box_pack_start (myVBox, GTK_WIDGET(myButtons[i]), true, true, 0);
+		gtk_box_pack_start(myVBox, GTK_WIDGET(myButtons[i]), true, true, 0);
 	}
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(myButtons[((ZLChoiceOptionEntry&)*myOption).initialCheckedIndex()]), true);
 	gtk_container_add(GTK_CONTAINER(myFrame), GTK_WIDGET(myVBox));
@@ -146,6 +154,13 @@ void ChoiceOptionView::_hide() {
 	gtk_widget_hide(GTK_WIDGET(myVBox));
 	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
 		gtk_widget_hide(GTK_WIDGET(myButtons[i]));
+	}
+}
+
+void ChoiceOptionView::_setActive(bool active) {
+	gtk_widget_set_sensitive(GTK_WIDGET(myFrame), active);
+	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
+		gtk_widget_set_sensitive(GTK_WIDGET(myButtons[i]), active);
 	}
 }
 

@@ -282,7 +282,7 @@
 		</node>
 		<node name="editTagInfoDialog">
 			<node name="title" value="Edit/Clone Tag"/>
-			<node name="editOrClone">
+			<node name="editOrClone" value="Action">
 				<node name="edit" value="Rename Tag"/>
 				<node name="clone" value="Clone Tag"/>
 			</node>

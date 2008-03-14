@@ -38,6 +38,8 @@ public:
 	void addOption(const ZLResourceKey &key, ZLOptionEntry *option);
 	void addOption(const ZLResourceKey &key, ZLSimpleOption &option);
 
+	const ZLResource &resource(const ZLResourceKey &key) const;
+
 	// TODO: change return type to int (or std::string?)
 	virtual bool run() = 0;
 	void acceptValues();

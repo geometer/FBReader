@@ -54,6 +54,10 @@ void BooleanOptionView::_hide() {
 	myCheckBox->hide();
 }
 
+void BooleanOptionView::_setActive(bool active) {
+	myCheckBox->setEnabled(active);
+}
+
 void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry&)*myOption).onAccept(myCheckBox->isChecked());
 }
@@ -86,6 +90,10 @@ void Boolean3OptionView::_show() {
 
 void Boolean3OptionView::_hide() {
 	myCheckBox->hide();
+}
+
+void Boolean3OptionView::_setActive(bool active) {
+	myCheckBox->setEnabled(active);
 }
 
 void Boolean3OptionView::_onAccept() const {
@@ -140,6 +148,10 @@ void ChoiceOptionView::_show() {
 
 void ChoiceOptionView::_hide() {
 	myGroup->hide();
+}
+
+void ChoiceOptionView::_setActive(bool active) {
+	myGroup->setEnabled(active);
 }
 
 void ChoiceOptionView::_onAccept() const {
