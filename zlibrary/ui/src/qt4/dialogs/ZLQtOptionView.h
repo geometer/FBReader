@@ -33,6 +33,7 @@ class QLabel;
 class QSpinBox;
 class QCheckBox;
 class QLineEdit;
+class QGroupBox;
 class QRadioButton;
 class QComboBox;
 class QSlider;
@@ -61,9 +62,11 @@ public:
 
 protected:
 	void _createItem();
+	void _setActive(bool active);
 	void _onAccept() const;
 
 private:
+	QGroupBox *myGroupBox;
 	QRadioButton **myButtons;
 };
 
@@ -76,6 +79,7 @@ public:
 
 protected:
 	void _createItem();
+	void _setActive(bool active);
 	void _onAccept() const;
 
 private Q_SLOTS:
@@ -94,6 +98,7 @@ public:
 
 protected:
 	void _createItem();
+	void _setActive(bool active);
 	void _onAccept() const;
 
 private Q_SLOTS:

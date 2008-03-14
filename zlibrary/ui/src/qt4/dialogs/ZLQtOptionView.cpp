@@ -58,6 +58,10 @@ void BooleanOptionView::_createItem() {
 	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onStateChanged(bool)));
 }
 
+void BooleanOptionView::_setActive(bool active) {
+	myCheckBox->setEnabled(active);
+}
+
 void BooleanOptionView::_onAccept() const {
 	((ZLBooleanOptionEntry&)*myOption).onAccept(myCheckBox->isChecked());
 }
@@ -85,6 +89,10 @@ void Boolean3OptionView::_createItem() {
 	myWidgets.push_back(myCheckBox);
 	myTab->addItem(myCheckBox, myRow, myFromColumn, myToColumn);
 	connect(myCheckBox, SIGNAL(stateChanged(int)), this, SLOT(onStateChanged(int)));
+}
+
+void Boolean3OptionView::_setActive(bool active) {
+	myCheckBox->setEnabled(active);
 }
 
 void Boolean3OptionView::_onAccept() const {
@@ -120,17 +128,21 @@ void Boolean3OptionView::onStateChanged(int state) const {
 }
 
 void ChoiceOptionView::_createItem() {
-	QGroupBox *groupBox = new QGroupBox(::qtString(ZLOptionView::name()));
-	myWidgets.push_back(groupBox);
-	QVBoxLayout *layout = new QVBoxLayout(groupBox);
+	myGroupBox = new QGroupBox(::qtString(ZLOptionView::name()));
+	myWidgets.push_back(myGroupBox);
+	QVBoxLayout *layout = new QVBoxLayout(myGroupBox);
 	myButtons = new QRadioButton*[((ZLChoiceOptionEntry&)*myOption).choiceNumber()];
 	for (int i = 0; i < ((ZLChoiceOptionEntry&)*myOption).choiceNumber(); ++i) {
-		myButtons[i] = new QRadioButton(groupBox);
+		myButtons[i] = new QRadioButton(myGroupBox);
 		myButtons[i]->setText(::qtString(((ZLChoiceOptionEntry&)*myOption).text(i)));
 		layout->addWidget(myButtons[i]);
 	}
 	myButtons[((ZLChoiceOptionEntry&)*myOption).initialCheckedIndex()]->setChecked(true);
-	myTab->addItem(groupBox, myRow, myFromColumn, myToColumn);
+	myTab->addItem(myGroupBox, myRow, myFromColumn, myToColumn);
+}
+
+void ChoiceOptionView::_setActive(bool active) {
+	myGroupBox->setEnabled(active);
 }
 
 void ChoiceOptionView::_onAccept() const {

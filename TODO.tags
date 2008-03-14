@@ -40,7 +40,7 @@ DONE	gtk
 DONE	qtopia
 	opie
 	maemo
-	qt4
+DONE	qt4
 ChoiceOptionView.setActive для всех платформ:
 	gpe
 DONE	qt
@@ -50,7 +50,7 @@ DONE	gtk
 DONE	qtopia
 	opie
 	maemo
-	qt4
+DONE	qt4
 
 **** НЕ ПРОГРАММИРОВАНИЕ ****
 ресурсы: новый таб в диалоге информации о книге
