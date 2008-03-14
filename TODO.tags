@@ -33,7 +33,7 @@ gtk: код возврата из messagebox при нажатии Enter на клавиатуре
 удаление книги из дерева: баг с отрисовкой, когда часть удаляемого дерева была за верхней границей экрана
 BooleanOptionView.setActive для всех платформ:
 	gpe
-	qt
+DONE	qt
 DONE	gtk
 	ezx
 	win32
@@ -43,7 +43,7 @@ DONE	qtopia
 	qt4
 ChoiceOptionView.setActive для всех платформ:
 	gpe
-	qt
+DONE	qt
 DONE	gtk
 	ezx
 	win32

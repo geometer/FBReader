@@ -62,6 +62,7 @@ protected:
 	void _createItem();
 	void _show();
 	void _hide();
+	void _setActive(bool active);
 	void _onAccept() const;
 
 private:
@@ -80,6 +81,7 @@ protected:
 	void _createItem();
 	void _show();
 	void _hide();
+	void _setActive(bool active);
 	void _onAccept() const;
 
 private slots:
@@ -100,6 +102,7 @@ protected:
 	void _createItem();
 	void _show();
 	void _hide();
+	void _setActive(bool active);
 	void _onAccept() const;
 
 private slots:
