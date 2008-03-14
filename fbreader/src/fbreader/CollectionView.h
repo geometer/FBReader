@@ -54,7 +54,9 @@ public:
 private:
 	CollectionModel &collectionModel();
 
+	void editBookInfo(BookDescriptionPtr book);
 	void removeBook(BookDescriptionPtr book);
+	void editTagInfo(const std::string &tag);
 	void removeTag(const std::string &tag);
 
 private:

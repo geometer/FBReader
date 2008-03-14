@@ -280,6 +280,15 @@
 			<node name="title" value="Go To Page"/>
 			<node name="pageNumber" value="Go to Page Number"/>
 		</node>
+		<node name="editTagInfoDialog">
+			<node name="title" value="Edit/Clone Tag"/>
+			<node name="editOrClone">
+				<node name="edit" value="Rename Tag"/>
+				<node name="clone" value="Clone Tag"/>
+			</node>
+			<node name="name" value="Tag Name"/>
+			<node name="includeSubtags" value="Include Subtags"/>
+		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Remove Book"/>
 			<node name="message" value="Remove Book &#10;&#8220;%s&#8221;&#10; from the Library?"/>
