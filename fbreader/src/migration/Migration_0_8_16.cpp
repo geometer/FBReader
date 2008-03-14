@@ -17,18 +17,19 @@
  * 02110-1301, USA.
  */
 
-#include <vector>
-
 #include <ZLUnicodeUtil.h>
 #include <ZLFile.h>
 
 #include "Migration.h"
 #include "FB2MigrationReader.h"
 #include "OEBMigrationReader.h"
+#include "HtmlDCTagsReader.h"
 
 #include "../options/FBOptions.h"
 #include "../description/BookDescription.h"
 #include "../formats/oeb/OEBPlugin.h"
+#include "../formats/pdb/PdbPlugin.h"
+#include "../formats/pdb/MobipocketStream.h"
 
 Migration_0_8_16::Migration_0_8_16() : Migration("0.8.16") {
 }
@@ -56,7 +57,7 @@ void Migration_0_8_16::doMigrationInternal() {
 					languageOption.setValue("zh");
 				}
 
-				const std::string &extension = file.extension();
+				const std::string extension = ZLUnicodeUtil::toLower(file.extension());
 				if (extension == "fb2") {
 					ZLBooleanOption seriesOption(FBCategoryKey::BOOKS, *it, "SequenceDefined", false);
 					if (!seriesOption.value() || info.TagsOption.value().empty()) {
@@ -66,6 +67,14 @@ void Migration_0_8_16::doMigrationInternal() {
 				} else if ((extension == "opf") || (extension == "oebzip") || (extension == "epub")) {
 					if (info.TagsOption.value().empty()) {
 						OEBMigrationReader(info).doRead(OEBPlugin::opfFileName(*it));
+					}
+				} else if ((extension == "prc") || (extension == "pdb") || (extension == "mobi")) {
+					const std::string fileType = PdbPlugin::fileType(file);
+					if (info.TagsOption.value().empty() && ((fileType == "BOOKMOBI") || (fileType == "TEXtREAd"))) {
+						shared_ptr<ZLInputStream> stream = new MobipocketStream(file);
+						if (!stream.isNull()) {
+							HtmlDCTagsReader(info).readDocument(*stream);
+						}
 					}
 				}
 			}

@@ -100,8 +100,6 @@ void FB2MigrationReader::endElementHandler(int tag) {
 
 void FB2MigrationReader::doRead(const std::string &fileName) {
 	myReadState = READ_NOTHING;
-	myTagList.erase();
-	myGenreBuffer.erase();
 	readDocument(fileName);
 	if (myUpdateTags) {
 		myInfo.TagsOption.setValue(myTagList);

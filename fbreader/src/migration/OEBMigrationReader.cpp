@@ -82,8 +82,6 @@ bool OEBMigrationReader::processNamespaces() const {
 void OEBMigrationReader::doRead(const std::string &fileName) {
 	myReadMetaData = false;
 	myReadSubject = false;
-	myBuffer.erase();
-	myTagList.erase();
 	readDocument(fileName);
 	myInfo.TagsOption.setValue(myTagList);
 }
