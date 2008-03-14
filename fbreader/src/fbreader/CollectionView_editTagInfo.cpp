@@ -71,6 +71,19 @@ int EditOrCloneEntry::initialCheckedIndex() const {
 void EditOrCloneEntry::onAccept(int index) {
 }
 
+class TagNameEntry : public ZLComboOptionEntry {
+
+public:
+	TagNameEntry();
+
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
+
+private:
+	std::vector<std::string> myValues;
+};
+
 void CollectionView::editTagInfo(const std::string &tag) {
 	if (tag.empty()) {
 		return;
