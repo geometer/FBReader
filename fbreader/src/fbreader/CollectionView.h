@@ -33,6 +33,10 @@ class CollectionModel;
 class CollectionView : public FBView {
 
 public:
+	static const std::string SpecialTagAllBooks;
+	static const std::string SpecialTagNoTagsBooks;
+
+public:
 	ZLBooleanOption ShowTagsOption;
 	ZLBooleanOption ShowAllBooksTagOption;
 

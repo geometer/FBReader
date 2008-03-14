@@ -20,9 +20,7 @@
 #include <ZLibrary.h>
 #include <ZLFileImage.h>
 #include <ZLDialogManager.h>
-#include <ZLDialog.h>
 #include <ZLOptionsDialog.h>
-#include <optionEntries/ZLStringInfoEntry.h>
 #include <ZLStringUtil.h>
 
 #include <ZLTextModel.h>
@@ -45,9 +43,6 @@ static const std::string AUTHOR_INFO_IMAGE_ID = "authorInfo";
 static const std::string SERIES_ORDER_IMAGE_ID = "seriesOrder";
 static const std::string TAG_INFO_IMAGE_ID = "tagInfo";
 static const std::string REMOVE_TAG_IMAGE_ID = "removeTag";
-
-static const std::string SPECIAL_TAG_ALL_BOOKS = ",AllBooks,";
-static const std::string SPECIAL_TAG_NO_TAGS = ",NoTags,";
 
 class CollectionModel : public ZLTextTreeModel {
 
@@ -125,7 +120,7 @@ void CollectionModel::buildWithTags() {
 		ZLTextTreeParagraph *allBooksParagraph = createParagraph();
 		insertText(LIBRARY_AUTHOR_ENTRY, resource["allBooks"].value());
 		insertImage(TAG_INFO_IMAGE_ID);
-		myParagraphToTag[paragraphsNumber() - 1] = SPECIAL_TAG_ALL_BOOKS;
+		myParagraphToTag[paragraphsNumber() - 1] = CollectionView::SpecialTagAllBooks;
 		addBooks(myCollection.books(), allBooksParagraph);
 	}
 
@@ -148,7 +143,7 @@ void CollectionModel::buildWithTags() {
 		ZLTextTreeParagraph *booksWithoutTagsParagraph = createParagraph();
 		insertText(LIBRARY_AUTHOR_ENTRY, resource["booksWithoutTags"].value());
 		insertImage(TAG_INFO_IMAGE_ID);
-		myParagraphToTag[paragraphsNumber() - 1] = SPECIAL_TAG_NO_TAGS;
+		myParagraphToTag[paragraphsNumber() - 1] = CollectionView::SpecialTagAllBooks;
 		addBooks(booksWithoutTags, booksWithoutTagsParagraph);
 	}
 
@@ -409,22 +404,6 @@ void CollectionView::removeBook(BookDescriptionPtr book) {
 		}
 		rebuildPaintInfo(true);
 		application().refreshWindow();
-	}
-}
-
-void CollectionView::editTagInfo(const std::string &tag) {
-	if (tag.empty()) {
-		return;
-	}
-
-	shared_ptr<ZLDialog> dialog = ZLDialogManager::instance().createDialog(ZLResourceKey("editTagInfoDialog"));
-
-	dialog->addOption(ZLResourceKey("name"), new ZLStringInfoEntry(tag));
-
-	dialog->addButton(ZLDialogManager::OK_BUTTON, true);
-	dialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
-
-	if (dialog->run()) {
 	}
 }
 
