@@ -33,23 +33,23 @@ DONE другое: перетащить все хаки из BookCollection и BookDescription в Migration
 gtk: код возврата из messagebox при нажатии Enter на клавиатуре
 удаление книги из дерева: баг с отрисовкой, когда часть удаляемого дерева была за верхней границей экрана
 BooleanOptionView.setActive для всех платформ:
-	gpe
+DONE	gpe
 DONE	qt
 DONE	gtk
 	ezx
 DONE	win32
 DONE	qtopia
-	opie
+DONE	opie
 DONE	maemo
 DONE	qt4
 ChoiceOptionView.setActive для всех платформ:
-	gpe
+DONE	gpe
 DONE	qt
 DONE	gtk
 	ezx
 DONE	win32
 DONE	qtopia
-	opie
+DONE	opie
 DONE	maemo
 DONE	qt4
 
