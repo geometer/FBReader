@@ -42,10 +42,12 @@ std::string gtkString(const std::string &str) {
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 	if (!((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).isKeyboardGrabbed() && (key->state == 0)) {
+		/*
 		if (key->keyval == GDK_Return) {
 			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
 			return true;
 		}
+		*/
 
 		if (key->keyval == GDK_Escape) {
 			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
