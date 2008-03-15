@@ -36,6 +36,7 @@ DONE gtk: код возврата из messagebox при нажатии Enter на клавиатуре
 DONE BooleanOptionView.setActive для всех платформ
 DONE ChoiceOptionView.setActive для всех платформ
 DONE пометка в дереве после удаления тега
+gtk: editable combobox: открывать его на набранном слове
 
 **** НЕ ПРОГРАММИРОВАНИЕ ****
 ресурсы: новый таб в диалоге информации о книге

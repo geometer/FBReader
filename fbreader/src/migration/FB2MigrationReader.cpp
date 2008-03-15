@@ -76,9 +76,7 @@ void FB2MigrationReader::endElementHandler(int tag) {
 					const std::vector<std::string> &tags =
 						FB2TagManager::instance().humanReadableTags(myGenreBuffer);
 					if (!tags.empty()) {
-						for (std::vector<std::string>::const_iterator it = tags.begin(); it != tags.end(); ++it) {
-							myTags.insert(*it);
-						}
+						myTags.insert(tags.begin(), tags.end());
 					} else {
 						myTags.insert(myGenreBuffer);
 					}

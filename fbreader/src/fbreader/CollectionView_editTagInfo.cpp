@@ -144,10 +144,14 @@ void CollectionView::editTagInfo(const std::string &tag) {
 	if (tagIsSpecial) {
 		names.push_back("");
 	}
-	names.push_back("A");
-	names.push_back("B");
-	names.push_back("C");
-	names.push_back(tag);
+
+	std::set<std::string> tagSet;
+	const Books &books = myCollection.books();
+	for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
+		const std::vector<std::string> &bookTags = (*it)->tags();
+		tagSet.insert(bookTags.begin(), bookTags.end());
+	}
+	names.insert(names.end(), tagSet.begin(), tagSet.end());
 	ZLOptionEntry *tagNameEntry = new TagNameEntry(names, tagIsSpecial ? "" : tag);
 	dialog->addOption(ZLResourceKey("name"), tagNameEntry);
 
