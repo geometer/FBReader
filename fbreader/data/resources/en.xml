@@ -305,6 +305,14 @@
 			<node name="title" value="Error"/>
 			<node name="message" value="Help file not found, sorry"/>
 		</node>
+		<node name="tagMustBeNonEmpty">
+			<node name="title" value="Error"/>
+			<node name="message" value="Tag name must be non-empty string"/>
+		</node>
+		<node name="tagMustNotContainComma">
+			<node name="title" value="Error"/>
+			<node name="message" value="Tag name must not contain a symbol &#8220;,&#8221;"/>
+		</node>
 		<node name="waitMessage">
 			<node name="loadingBook" value="Loading book. Please, wait..."/>
 			<node name="loadingBookList" value="Loading book list. Please, wait..."/>

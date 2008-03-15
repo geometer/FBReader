@@ -22,13 +22,15 @@
 
 #include <ZLDialogManager.h>
 
+class QWidget;
+
 class ZLQtDialogManager : public ZLDialogManager {
 
 public:
 	static void createInstance() { ourInstance = new ZLQtDialogManager(); }
 
 private:
-	ZLQtDialogManager() {}
+	ZLQtDialogManager() : myStoredWindow(0) {}
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
@@ -43,6 +45,9 @@ public:
 
 	bool isClipboardSupported(ClipboardType type) const;
 	void setClipboardText(const std::string &text, ClipboardType type) const;
+
+private:
+	mutable QWidget *myStoredWindow;
 };
 
 #endif /* __ZLQTDIALOGMANAGER_H__ */

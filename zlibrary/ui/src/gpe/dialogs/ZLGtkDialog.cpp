@@ -28,6 +28,7 @@
 ZLGtkDialog::ZLGtkDialog(const ZLResource &resource) {
 	myTab = new ZLGtkDialogContent(resource);
 	myDialog = createGtkDialog(resource[ZLDialogManager::DIALOG_TITLE].value().c_str());
+	myIsPacked = false;
 }
 
 ZLGtkDialog::~ZLGtkDialog() {
@@ -40,7 +41,10 @@ void ZLGtkDialog::addButton(const ZLResourceKey &key, bool accept) {
 }
 
 bool ZLGtkDialog::run() {
-	gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(((ZLGtkDialogContent*)myTab)->widget()), true, true, 0);
+	if (!myIsPacked) {
+		gtk_box_pack_start(GTK_BOX(myDialog->vbox), GTK_WIDGET(((ZLGtkDialogContent*)myTab)->widget()), true, true, 0);
+		myIsPacked = true;
+	}
 	gtk_widget_show_all(GTK_WIDGET(myDialog));
 	return gtk_dialog_run(GTK_DIALOG(myDialog)) == GTK_RESPONSE_ACCEPT;
 }

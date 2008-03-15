@@ -21,6 +21,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
 #include <QtGui/QClipboard>
+#include <QtGui/QDesktopWidget>
 
 #include "ZLQtDialogManager.h"
 #include "ZLQtDialog.h"
@@ -31,26 +32,41 @@
 #include "ZLQtUtil.h"
 
 shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
+	myStoredWindow = qApp->activeWindow();
 	return new ZLQtOptionsDialog(resource()[key], applyAction, showApplyButton);
 }
 
 shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
+	myStoredWindow = qApp->activeWindow();
 	return new ZLQtDialog(resource()[key]);
 }
 
 void ZLQtDialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
-	QMessageBox::information(qApp->activeWindow(), ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(OK_BUTTON));
+	QWidget *parent = qApp->activeWindow();
+	if (parent == 0) {
+		parent = myStoredWindow;
+	}
+	QMessageBox::information(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(OK_BUTTON));
 }
 
 void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
-	QMessageBox::critical(qApp->activeWindow(), ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(OK_BUTTON));
+	QWidget *parent = qApp->activeWindow();
+	if (parent == 0) {
+		parent = myStoredWindow;
+	}
+	QMessageBox::critical(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(OK_BUTTON));
 }
 
 int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
-	return QMessageBox::question(qApp->activeWindow(), ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
+	QWidget *parent = qApp->activeWindow();
+	if (parent == 0) {
+		parent = myStoredWindow;
+	}
+	return QMessageBox::question(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
 }
 
 bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
+	myStoredWindow = qApp->activeWindow();
 	return ZLQtSelectionDialog(dialogTitle(key), handler).runWithSize();
 }
 

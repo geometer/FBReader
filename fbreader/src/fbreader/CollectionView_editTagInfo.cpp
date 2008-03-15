@@ -21,7 +21,7 @@
 #include <ZLDialog.h>
 #include <ZLOptionEntry.h>
 #include <ZLApplication.h>
-#include <optionEntries/ZLSimpleOptionEntry.h>
+#include <ZLStringUtil.h>
 
 #include "CollectionView.h"
 #include "CollectionModel.h"
@@ -186,9 +186,18 @@ void CollectionView::editTagInfo(const std::string &tag) {
 	dialog->addButton(ZLDialogManager::OK_BUTTON, true);
 	dialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
 
-	if (dialog->run()) {
+	while (dialog->run()) {
 		dialog->acceptValues();
-		const std::string &newTag = tagNameEntry->initialValue();
+		std::string newTag = tagNameEntry->initialValue();
+		ZLStringUtil::stripWhiteSpaces(newTag);
+		if (newTag.empty()) {
+			ZLDialogManager::instance().errorBox(ZLResourceKey("tagMustBeNonEmpty"));
+			continue;
+		}
+		if (newTag.find(',') != (size_t)-1) {
+			ZLDialogManager::instance().errorBox(ZLResourceKey("tagMustNotContainComma"));
+			continue;
+		}
 		const bool includeSubtags = includeSubtagsEntry->initialState();
 		collectionModel().removeAllMarks();
 		if (tag == SpecialTagAllBooks) {
@@ -202,5 +211,6 @@ void CollectionView::editTagInfo(const std::string &tag) {
 		}
 		updateModel();
 		application().refreshWindow();
+		break;
 	}
 }

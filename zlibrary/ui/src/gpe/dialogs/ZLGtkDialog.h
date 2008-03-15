@@ -35,6 +35,7 @@ public:
 
 private:
 	GtkDialog *myDialog;
+	bool myIsPacked;
 };
 
 #endif /* __ZLGTKDIALOG_H__ */
