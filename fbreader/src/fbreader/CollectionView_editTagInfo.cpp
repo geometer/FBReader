@@ -20,9 +20,11 @@
 #include <ZLDialogManager.h>
 #include <ZLDialog.h>
 #include <ZLOptionEntry.h>
+#include <ZLApplication.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
 #include "CollectionView.h"
+#include "CollectionModel.h"
 
 #include "../options/FBOptions.h"
 #include "../collection/BookCollection.h"
@@ -41,10 +43,10 @@ public:
 
 private:
 	const ZLResource &myResource;
-	const int myInitialValue;
+	int myIndex;
 };
 
-EditOrCloneEntry::EditOrCloneEntry(const ZLResource &resource, int initialValue) : myResource(resource), myInitialValue(initialValue) {
+EditOrCloneEntry::EditOrCloneEntry(const ZLResource &resource, int initialValue) : myResource(resource), myIndex(initialValue) {
 }
 
 const std::string &EditOrCloneEntry::text(int index) const {
@@ -65,10 +67,11 @@ int EditOrCloneEntry::choiceNumber() const {
 }
 
 int EditOrCloneEntry::initialCheckedIndex() const {
-	return myInitialValue;
+	return myIndex;
 }
 
 void EditOrCloneEntry::onAccept(int index) {
+	myIndex = index;
 }
 
 class TagNameEntry : public ZLComboOptionEntry {
@@ -82,14 +85,14 @@ public:
 
 private:
 	const std::vector<std::string> &myValues;
-	const std::string &myInitialValue;
+	std::string myValue;
 };
 
-TagNameEntry::TagNameEntry(const std::vector<std::string> &values, const std::string &initialValue) : ZLComboOptionEntry(true), myValues(values), myInitialValue(initialValue) {
+TagNameEntry::TagNameEntry(const std::vector<std::string> &values, const std::string &initialValue) : ZLComboOptionEntry(true), myValues(values), myValue(initialValue) {
 }
 
 const std::string &TagNameEntry::initialValue() const {
-	return myInitialValue;
+	return myValue;
 }
 
 const std::vector<std::string> &TagNameEntry::values() const {
@@ -97,6 +100,7 @@ const std::vector<std::string> &TagNameEntry::values() const {
 }
 
 void TagNameEntry::onAccept(const std::string &value) {
+	myValue = value;
 }
 
 class IncludeSubtagsEntry : public ZLBooleanOptionEntry {
@@ -131,7 +135,7 @@ void CollectionView::editTagInfo(const std::string &tag) {
 	shared_ptr<ZLDialog> dialog = ZLDialogManager::instance().createDialog(ZLResourceKey("editTagInfoDialog"));
 
 	ZLResourceKey editOrCloneKey("editOrClone");
-	ZLOptionEntry *editOrCloneEntry;
+	EditOrCloneEntry *editOrCloneEntry;
 	if (tagIsSpecial) {
 		editOrCloneEntry = new EditOrCloneEntry(dialog->resource(editOrCloneKey), 1);
 		editOrCloneEntry->setActive(false);
@@ -152,10 +156,10 @@ void CollectionView::editTagInfo(const std::string &tag) {
 		tagSet.insert(bookTags.begin(), bookTags.end());
 	}
 	names.insert(names.end(), tagSet.begin(), tagSet.end());
-	ZLOptionEntry *tagNameEntry = new TagNameEntry(names, tagIsSpecial ? "" : tag);
+	TagNameEntry *tagNameEntry = new TagNameEntry(names, tagIsSpecial ? "" : tag);
 	dialog->addOption(ZLResourceKey("name"), tagNameEntry);
 
-	ZLOptionEntry *includeSubtagsEntry;
+	IncludeSubtagsEntry *includeSubtagsEntry;
 	if (!tagIsSpecial && myCollection.hasSubtags(tag)) {
 		includeSubtagsEntry = new IncludeSubtagsEntry(true);
 		if (!myCollection.hasBooks(tag)) {
@@ -170,5 +174,18 @@ void CollectionView::editTagInfo(const std::string &tag) {
 	dialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
 
 	if (dialog->run()) {
+		dialog->acceptValues();
+		const std::string &newTag = tagNameEntry->initialValue();
+		const bool includeSubtags = includeSubtagsEntry->initialState();
+		collectionModel().removeAllMarks();
+		if (tagIsSpecial) {
+			// TODO: implement
+		} else if (editOrCloneEntry->initialCheckedIndex() == 0) {
+			myCollection.renameTag(tag, newTag, includeSubtags);
+		} else {
+			myCollection.cloneTag(tag, newTag, includeSubtags);
+		}
+		updateModel();
+		application().refreshWindow();
 	}
 }
