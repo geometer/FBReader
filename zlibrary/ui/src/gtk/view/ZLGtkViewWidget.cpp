@@ -110,6 +110,7 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle)
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), this);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), this);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "expose_event", GTK_SIGNAL_FUNC(::doPaint), this);
+	myRepaintBlocked = false;
 }
 
 ZLGtkViewWidget::~ZLGtkViewWidget() {
@@ -136,9 +137,10 @@ void ZLGtkViewWidget::trackStylus(bool track) {
 	// TODO: implement
 }
 
-
 void ZLGtkViewWidget::repaint()	{
-	gtk_widget_queue_draw(myArea);
+	if (!myRepaintBlocked) {
+		gtk_widget_queue_draw(myArea);
+	}
 }
 
 void ZLGtkViewWidget::doPaint()	{
@@ -201,4 +203,7 @@ void ZLGtkViewWidget::doPaint()	{
 											0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
 			break;
 	}
+	myRepaintBlocked = true;
+	myApplication->refreshWindow();
+	myRepaintBlocked = false;
 }

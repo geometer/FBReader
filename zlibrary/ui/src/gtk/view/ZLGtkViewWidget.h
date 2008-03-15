@@ -50,6 +50,7 @@ private:
 	GdkPixbuf *myOriginalPixbuf;
 	GdkPixbuf *myRotatedPixbuf;
 	GdkImage *myImage;
+	bool myRepaintBlocked;
 };
 
 #endif /* __ZLGTKVIEWWIDGET_H__ */
