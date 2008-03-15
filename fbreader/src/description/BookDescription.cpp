@@ -18,6 +18,7 @@
  */
 
 #include <algorithm>
+#include <set>
 
 #include <ZLOptions.h>
 #include <ZLFile.h>
@@ -245,7 +246,25 @@ void WritableBookDescription::removeTag(const std::string &tag, bool includeSubT
 void WritableBookDescription::renameTag(const std::string &from, const std::string &to, bool includeSubTags) {
 	std::vector<std::string> &tags = myDescription.myTags;
 	if (includeSubTags) {
-		// TODO: implement
+		const std::string prefix = from + "/";
+		std::set<std::string> tagSet;
+		bool changed = false;
+		for (std::vector<std::string>::const_iterator it = tags.begin(); it != tags.end(); ++it) {
+			if (*it == from) {
+				tagSet.insert(to);
+				changed = true;
+			} else if (ZLStringUtil::stringStartsWith(*it, prefix)) {
+				tagSet.insert(to + "/" + it->substr(prefix.length()));
+				changed = true;
+			} else {
+				tagSet.insert(*it);
+			}
+		}
+		if (changed) {
+			tags.clear();
+			tags.insert(tags.end(), tagSet.begin(), tagSet.end());
+			myDescription.saveTags();
+		}
 	} else {
 		std::vector<std::string>::iterator it = std::find(tags.begin(), tags.end(), from);
 		if (it != tags.end()) {
@@ -263,7 +282,21 @@ void WritableBookDescription::renameTag(const std::string &from, const std::stri
 void WritableBookDescription::cloneTag(const std::string &from, const std::string &to, bool includeSubTags) {
 	std::vector<std::string> &tags = myDescription.myTags;
 	if (includeSubTags) {
-		// TODO: implement
+		const std::string prefix = from + "/";
+		std::set<std::string> tagSet;
+		for (std::vector<std::string>::const_iterator it = tags.begin(); it != tags.end(); ++it) {
+			if (*it == from) {
+				tagSet.insert(to);
+			} else if (ZLStringUtil::stringStartsWith(*it, prefix)) {
+				tagSet.insert(to + "/" + it->substr(prefix.length()));
+			}
+		}
+		if (!tagSet.empty()) {
+			tagSet.insert(tags.begin(), tags.end());
+			tags.clear();
+			tags.insert(tags.end(), tagSet.begin(), tagSet.end());
+			myDescription.saveTags();
+		}
 	} else {
 		std::vector<std::string>::const_iterator it = std::find(tags.begin(), tags.end(), from);
 		if (it != tags.end()) {

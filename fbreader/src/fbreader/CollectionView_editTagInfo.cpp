@@ -155,7 +155,17 @@ void CollectionView::editTagInfo(const std::string &tag) {
 		const std::vector<std::string> &bookTags = (*it)->tags();
 		tagSet.insert(bookTags.begin(), bookTags.end());
 	}
-	names.insert(names.end(), tagSet.begin(), tagSet.end());
+	std::set<std::string> fullTagSet = tagSet;
+	for (std::set<std::string>::const_iterator it = tagSet.begin(); it != tagSet.end(); ++it) {
+		for (int index = 0;;) {
+			index = it->find('/', index);
+			if (index == -1) {
+				break;
+			}
+			fullTagSet.insert(it->substr(0, index++));
+		}
+	}
+	names.insert(names.end(), fullTagSet.begin(), fullTagSet.end());
 	TagNameEntry *tagNameEntry = new TagNameEntry(names, tagIsSpecial ? "" : tag);
 	dialog->addOption(ZLResourceKey("name"), tagNameEntry);
 
