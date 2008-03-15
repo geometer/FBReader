@@ -71,7 +71,7 @@ public:
 	const std::vector<std::string> &tags() const;
 
 private:
-	void addTag(const std::string &tag, bool check = true);
+	bool addTag(const std::string &tag, bool check = true);
 	void saveTags() const;
 	void saveTags(ZLStringOption &tagsOption) const;
 

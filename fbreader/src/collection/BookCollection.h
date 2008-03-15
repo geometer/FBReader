@@ -52,6 +52,8 @@ public:
 	void removeTag(const std::string &tag, bool includeSubTags);
 	void renameTag(const std::string &from, const std::string &to, bool includeSubTags);
 	void cloneTag(const std::string &from, const std::string &to, bool includeSubTags);
+	void addTagToAllBooks(const std::string &to);
+	void addTagToBooksWithNoTags(const std::string &to);
 	bool hasBooks(const std::string &tag) const;
 	bool hasSubtags(const std::string &tag) const;
 	

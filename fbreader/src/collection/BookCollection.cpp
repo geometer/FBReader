@@ -281,6 +281,32 @@ void BookCollection::removeTag(const std::string &tag, bool includeSubTags) {
 	}
 }
 
+void BookCollection::addTagToAllBooks(const std::string &to) {
+	std::string checkedName = to;
+	BookDescriptionUtil::removeWhiteSpacesFromTag(checkedName);
+	if (!checkedName.empty()) {
+		synchronize();
+		for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
+			WritableBookDescription wbd(**it);
+			wbd.addTag(checkedName, false);
+		}
+	}
+}
+
+void BookCollection::addTagToBooksWithNoTags(const std::string &to) {
+	std::string checkedName = to;
+	BookDescriptionUtil::removeWhiteSpacesFromTag(checkedName);
+	if (!checkedName.empty()) {
+		synchronize();
+		for (Books::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
+			if ((*it)->tags().empty()) {
+				WritableBookDescription wbd(**it);
+				wbd.addTag(checkedName, false);
+			}
+		}
+	}
+}
+
 void BookCollection::renameTag(const std::string &from, const std::string &to, bool includeSubTags) {
 	std::string checkedName = to;
 	BookDescriptionUtil::removeWhiteSpacesFromTag(checkedName);

@@ -97,7 +97,7 @@ void CollectionModel::buildWithTags() {
 		ZLTextTreeParagraph *booksWithoutTagsParagraph = createParagraph();
 		insertText(LIBRARY_AUTHOR_ENTRY, resource["booksWithoutTags"].value());
 		insertImage(TagInfoImageId);
-		myParagraphToTag[paragraphsNumber() - 1] = CollectionView::SpecialTagAllBooks;
+		myParagraphToTag[paragraphsNumber() - 1] = CollectionView::SpecialTagNoTagsBooks;
 		addBooks(booksWithoutTags, booksWithoutTagsParagraph);
 	}
 

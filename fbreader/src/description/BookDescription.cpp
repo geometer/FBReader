@@ -183,7 +183,9 @@ void WritableBookDescription::addAuthor(const std::string &name, const std::stri
 }
 
 void WritableBookDescription::addTag(const std::string &tag, bool check) {
-	myDescription.addTag(tag, check);
+	if (myDescription.addTag(tag, check)) {
+		myDescription.saveTags();
+	}
 }
 
 void BookDescription::saveTags() const {
@@ -204,7 +206,7 @@ void BookDescription::saveTags(ZLStringOption &tagsOption) const {
 	tagsOption.setValue(tagList);
 }
 
-void BookDescription::addTag(const std::string &tag, bool check) {
+bool BookDescription::addTag(const std::string &tag, bool check) {
 	std::string checkedTag = tag;
 	if (check) {
 		BookDescriptionUtil::removeWhiteSpacesFromTag(checkedTag);
@@ -214,8 +216,10 @@ void BookDescription::addTag(const std::string &tag, bool check) {
 		std::vector<std::string>::const_iterator it = std::find(myTags.begin(), myTags.end(), checkedTag);
 		if (it == myTags.end()) {
 			myTags.push_back(checkedTag);
+			return true;
 		}
 	}
+	return false;
 }
 
 void WritableBookDescription::removeTag(const std::string &tag, bool includeSubTags) {

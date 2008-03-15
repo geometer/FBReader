@@ -130,14 +130,17 @@ void CollectionView::editTagInfo(const std::string &tag) {
 	if (tag.empty()) {
 		return;
 	}
-	const bool tagIsSpecial = tag[0] == ',';
+	const bool tagIsSpecial = (tag == SpecialTagAllBooks) || (tag == SpecialTagNoTagsBooks);
 
 	shared_ptr<ZLDialog> dialog = ZLDialogManager::instance().createDialog(ZLResourceKey("editTagInfoDialog"));
 
 	ZLResourceKey editOrCloneKey("editOrClone");
 	EditOrCloneEntry *editOrCloneEntry;
-	if (tagIsSpecial) {
+	if (tag == SpecialTagAllBooks) {
 		editOrCloneEntry = new EditOrCloneEntry(dialog->resource(editOrCloneKey), 1);
+		editOrCloneEntry->setActive(false);
+	} else if (tag == SpecialTagNoTagsBooks) {
+		editOrCloneEntry = new EditOrCloneEntry(dialog->resource(editOrCloneKey), 0);
 		editOrCloneEntry->setActive(false);
 	} else {
 		editOrCloneEntry = new EditOrCloneEntry(dialog->resource(editOrCloneKey), 0);
@@ -188,8 +191,10 @@ void CollectionView::editTagInfo(const std::string &tag) {
 		const std::string &newTag = tagNameEntry->initialValue();
 		const bool includeSubtags = includeSubtagsEntry->initialState();
 		collectionModel().removeAllMarks();
-		if (tagIsSpecial) {
-			// TODO: implement
+		if (tag == SpecialTagAllBooks) {
+			myCollection.addTagToAllBooks(newTag);
+		} else if (tag == SpecialTagNoTagsBooks) {
+			myCollection.addTagToBooksWithNoTags(newTag);
 		} else if (editOrCloneEntry->initialCheckedIndex() == 0) {
 			myCollection.renameTag(tag, newTag, includeSubtags);
 		} else {
