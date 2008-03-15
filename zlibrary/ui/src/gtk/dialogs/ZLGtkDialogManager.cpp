@@ -74,7 +74,7 @@ int ZLGtkDialogManager::internalBox(const gchar *icon, const ZLResourceKey &key,
 	gint response = gtk_dialog_run(dialog);
 	destroyGtkDialog(dialog);
 
-	return response == GTK_RESPONSE_REJECT ? -1 : response;
+	return (response < 0) ? -1 : response;
 }
 
 bool ZLGtkDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
