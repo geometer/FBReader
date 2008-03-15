@@ -74,15 +74,53 @@ void EditOrCloneEntry::onAccept(int index) {
 class TagNameEntry : public ZLComboOptionEntry {
 
 public:
-	TagNameEntry();
+	TagNameEntry(const std::vector<std::string> &values, const std::string &initialValue);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
 
 private:
-	std::vector<std::string> myValues;
+	const std::vector<std::string> &myValues;
+	const std::string &myInitialValue;
 };
+
+TagNameEntry::TagNameEntry(const std::vector<std::string> &values, const std::string &initialValue) : ZLComboOptionEntry(true), myValues(values), myInitialValue(initialValue) {
+}
+
+const std::string &TagNameEntry::initialValue() const {
+	return myInitialValue;
+}
+
+const std::vector<std::string> &TagNameEntry::values() const {
+	return myValues;
+}
+
+void TagNameEntry::onAccept(const std::string &value) {
+}
+
+class IncludeSubtagsEntry : public ZLBooleanOptionEntry {
+
+public:
+	IncludeSubtagsEntry(bool initialValue);
+
+	bool initialState() const;
+	void onAccept(bool state);
+
+private:
+	bool myValue;
+};
+
+IncludeSubtagsEntry::IncludeSubtagsEntry(bool initialValue) : myValue(initialValue) {
+}
+
+bool IncludeSubtagsEntry::initialState() const {
+	return myValue;
+}
+
+void IncludeSubtagsEntry::onAccept(bool state) {
+	myValue = state;
+}
 
 void CollectionView::editTagInfo(const std::string &tag) {
 	if (tag.empty()) {
@@ -102,22 +140,26 @@ void CollectionView::editTagInfo(const std::string &tag) {
 	}
 	dialog->addOption(editOrCloneKey, editOrCloneEntry);
 
-	ZLStringOption tagNameOption(FBCategoryKey::TAGS, "TagInfo", "Name", tag);
+	std::vector<std::string> names;
 	if (tagIsSpecial) {
-		tagNameOption.setValue("");
+		names.push_back("");
 	}
-	dialog->addOption(ZLResourceKey("name"), tagNameOption);
+	names.push_back("A");
+	names.push_back("B");
+	names.push_back("C");
+	names.push_back(tag);
+	ZLOptionEntry *tagNameEntry = new TagNameEntry(names, tagIsSpecial ? "" : tag);
+	dialog->addOption(ZLResourceKey("name"), tagNameEntry);
 
-	ZLBooleanOption includeSubtagsOption(FBCategoryKey::TAGS, "TagInfo", "IncludeSubtags", true);
+	ZLOptionEntry *includeSubtagsEntry;
 	if (!tagIsSpecial && myCollection.hasSubtags(tag)) {
-		includeSubtagsOption.setValue(true);
-		ZLOptionEntry *includeSubtagsEntry = new ZLSimpleBooleanOptionEntry(includeSubtagsOption);
+		includeSubtagsEntry = new IncludeSubtagsEntry(true);
 		if (!myCollection.hasBooks(tag)) {
 			includeSubtagsEntry->setActive(false);
 		}
 		dialog->addOption(ZLResourceKey("includeSubtags"), includeSubtagsEntry);
 	} else {
-		includeSubtagsOption.setValue(false);
+		includeSubtagsEntry = new IncludeSubtagsEntry(false);
 	}
 
 	dialog->addButton(ZLDialogManager::OK_BUTTON, true);
