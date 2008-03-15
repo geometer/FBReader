@@ -77,16 +77,10 @@ void FB2MigrationReader::endElementHandler(int tag) {
 						FB2TagManager::instance().humanReadableTags(myGenreBuffer);
 					if (!tags.empty()) {
 						for (std::vector<std::string>::const_iterator it = tags.begin(); it != tags.end(); ++it) {
-							if (!myTagList.empty()) {
-								myTagList += ',';
-							}
-							myTagList += *it;
+							myTags.insert(*it);
 						}
 					} else {
-						if (!myTagList.empty()) {
-							myTagList += ',';
-						}
-						myTagList += myGenreBuffer;
+						myTags.insert(myGenreBuffer);
 					}
 					myGenreBuffer.erase();
 				}
@@ -102,6 +96,13 @@ void FB2MigrationReader::doRead(const std::string &fileName) {
 	myReadState = READ_NOTHING;
 	readDocument(fileName);
 	if (myUpdateTags) {
-		myInfo.TagsOption.setValue(myTagList);
+		std::string tagList;
+		for (std::set<std::string>::const_iterator it = myTags.begin(); it != myTags.end(); ++it) {
+			if (it != myTags.begin()) {
+				tagList += ",";
+			}
+			tagList += *it;
+		}
+		myInfo.TagsOption.setValue(tagList);
 	}
 }

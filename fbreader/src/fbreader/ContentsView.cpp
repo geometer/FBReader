@@ -79,7 +79,7 @@ size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
 }
 
 void ContentsView::gotoReference() {
-	removeHighlightings();
+	model()->removeAllMarks();
 	const size_t selected = currentTextViewParagraph();
 	highlightParagraph(selected);
 	gotoParagraph(selected);

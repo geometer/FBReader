@@ -434,10 +434,6 @@ void ZLTextView::clearCaches() {
 	rebuildPaintInfo(true);
 }
 
-void ZLTextView::removeHighlightings() {
-	myModel->removeAllMarks();
-}
-
 void ZLTextView::highlightParagraph(int paragraphNumber) {
 	myModel->selectParagraph(paragraphNumber);
 	rebuildPaintInfo(true);

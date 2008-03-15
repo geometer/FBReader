@@ -42,16 +42,16 @@ std::string gtkString(const std::string &str) {
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
 	if (!((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).isKeyboardGrabbed() && (key->state == 0)) {
-		/*
-		if (key->keyval == GDK_Return) {
-			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
-			return true;
-		}
-		*/
-
-		if (key->keyval == GDK_Escape) {
-			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
-			return true;
+		switch (key->keyval) {
+			case GDK_Return:
+				if (!GTK_IS_BUTTON(gtk_window_get_focus(GTK_WINDOW(dialog)))) {
+					gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
+					return true;
+				}
+				break;
+			case GDK_Escape:
+				gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_REJECT);
+				return true;
 		}
 	}
 
@@ -69,7 +69,7 @@ GtkDialog *createGtkDialog(const std::string &title) {
 		gtk_window_set_transient_for(dialog, window);
 	}
 	gtk_window_set_modal(dialog, TRUE);
-	gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), NULL);
+	gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), 0);
 
 	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).myDialogs.push(dialog);
 	return GTK_DIALOG(dialog);

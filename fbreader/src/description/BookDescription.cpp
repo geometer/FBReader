@@ -221,12 +221,17 @@ void WritableBookDescription::removeTag(const std::string &tag, bool includeSubT
 	std::vector<std::string> &tags = myDescription.myTags;
 	if (includeSubTags) {
 		const std::string prefix = tag + '/';
+		bool changed = false;
 		for (std::vector<std::string>::iterator it = tags.begin(); it != tags.end();) {
 			if ((*it == tag) || ZLStringUtil::stringStartsWith(*it, prefix)) {
 				it = tags.erase(it);
+				changed = true;
 			} else {
 				++it;
 			}
+		}
+		if (changed) {
+			myDescription.saveTags();
 		}
 	} else {
 		std::vector<std::string>::iterator it = std::find(tags.begin(), tags.end(), tag);

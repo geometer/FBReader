@@ -20,6 +20,7 @@
 #ifndef __FB2MIGRATIONREADER_H__
 #define __FB2MIGRATIONREADER_H__
 
+#include <set>
 #include <string>
 
 #include "../formats/fb2/FB2Reader.h" 
@@ -49,7 +50,7 @@ private:
 	bool myUpdateTags;
 
 	std::string myGenreBuffer;
-	std::string myTagList;
+	std::set<std::string> myTags;
 };
 
 #endif /* __FB2MIGRATIONREADER_H__ */

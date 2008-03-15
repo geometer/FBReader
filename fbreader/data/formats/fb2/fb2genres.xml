@@ -2,7 +2,7 @@
 <fbgenrestransfer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://alexs.ru/fb2/genrestable/GT.xsd">
 	<genre value="sf">
 		<root-descr lang="en" genre-title="SF, Fantasy" detailed="Alternate History, Cyberpunk, Fantasy, Science Fiction"/>
-		<root-descr lang="ru" genre-title="Фантастика, Фэнтэзи" detailed="НФ, Фэнтези, Мистика, Киберпанк"/>
+		<root-descr lang="ru" genre-title="Фантастика, Фэнтези" detailed="НФ, Фэнтези, Мистика, Киберпанк"/>
 		<subgenres>
 			<subgenre value="sf_history">
 				<genre-descr lang="en" title="Alternative history"/>

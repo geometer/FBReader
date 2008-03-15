@@ -149,6 +149,7 @@ void CollectionModel::buildWithTags() {
 
 	std::vector<std::string> tagStack;
 	ZLTextTreeParagraph *tagParagraph = 0;
+	std::map<ZLTextTreeParagraph*,std::string> paragraphToTagMap;
 	for (std::map<std::string,Books>::const_iterator it = tagMap.begin(); it != tagMap.end(); ++it) {
 		const std::string &fullTagName = it->first;
 		bool useExistingTagStack = true;
@@ -162,6 +163,11 @@ void CollectionModel::buildWithTags() {
 					useExistingTagStack = false;
 				} else if (tagStack[depth] != subTag) {
 					for (int i = tagStack.size() - depth; i > 0; --i) {
+						std::map<ZLTextTreeParagraph*,std::string>::iterator jt =
+							paragraphToTagMap.find(tagParagraph);
+						if (jt != paragraphToTagMap.end()) {
+							addBooks(tagMap[jt->second], tagParagraph);
+						}
 						tagParagraph = tagParagraph->parent();
 					}
 					tagStack.resize(depth);
@@ -177,7 +183,14 @@ void CollectionModel::buildWithTags() {
 				insertImage(REMOVE_TAG_IMAGE_ID);
 			}
 		}
-		addBooks(it->second, tagParagraph);
+		paragraphToTagMap[tagParagraph] = fullTagName;
+	}
+	while (tagParagraph != 0) {
+		std::map<ZLTextTreeParagraph*,std::string>::iterator jt = paragraphToTagMap.find(tagParagraph);
+		if (jt != paragraphToTagMap.end()) {
+			addBooks(tagMap[jt->second], tagParagraph);
+		}
+		tagParagraph = tagParagraph->parent();
 	}
 }
 
@@ -285,7 +298,7 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 		setModel(oldModel);
 		myUpdateModel = false;
 	}
-	removeHighlightings();
+	collectionModel().removeAllMarks();
 	const std::vector<int> &toSelect = collectionModel().paragraphNumbersByBook(book);
 	for (std::vector<int>::const_iterator it = toSelect.begin(); it != toSelect.end(); ++it) {
 		highlightParagraph(*it);
@@ -443,6 +456,7 @@ void CollectionView::removeTag(const std::string &tag) {
 		}
 	}
 	if (code != DONT_REMOVE) {
+		collectionModel().removeAllMarks();
 		myCollection.removeTag(tag, code == REMOVE_SUBTREE);
 		updateModel();
 		application().refreshWindow();
