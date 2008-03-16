@@ -1,4 +1,4 @@
-This is very short description of FBReader build procedure.
+This is a very short description of FBReader build procedure.
 
 1. Compiler.
 
@@ -23,7 +23,7 @@ FBReader requires
 
 3. How to configure.
 
-Before building FBReader, you should check (and may be edit) 2 files:
+Before building FBReader, you should check (and maybe edit) 2 files:
   ** makefiles/target.mk
      In this file you should define 3 variables:
        TARGET_ARCH -- target platform for building FBReader
