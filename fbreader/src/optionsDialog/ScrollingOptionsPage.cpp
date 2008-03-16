@@ -184,10 +184,14 @@ const std::vector<std::string> &ScrollingModeEntry::values() const {
 }
 
 void ScrollingModeEntry::onAccept(const std::string &text) {
-	if (myIsTapOption && (text == ourDisableString)) {
-		myFBReader.EnableTapScrollingOption.setValue(false);
+	if (myIsTapOption) {
+		if (text == ourDisableString) {
+			myFBReader.EnableTapScrollingOption.setValue(false);
+		} else {
+			myFBReader.EnableTapScrollingOption.setValue(true);
+			myOption.setValue(codeByName(text));
+		}
 	} else {
-		myFBReader.EnableTapScrollingOption.setValue(true);
 		myOption.setValue(codeByName(text));
 	}
 }
