@@ -35,7 +35,7 @@ const std::string CollectionView::SpecialTagNoTagsBooks = ",NoTags,";
 class EditOrCloneEntry : public ZLChoiceOptionEntry {
 
 public:
-	EditOrCloneEntry(const ZLResource &resource, int initialValue);
+	EditOrCloneEntry(const ZLResource &resource, bool &editNotClone);
 	const std::string &text(int index) const;
 	int choiceNumber() const;
 	int initialCheckedIndex() const;
@@ -43,10 +43,10 @@ public:
 
 private:
 	const ZLResource &myResource;
-	int myIndex;
+	bool &myEditNotClone;
 };
 
-EditOrCloneEntry::EditOrCloneEntry(const ZLResource &resource, int initialValue) : myResource(resource), myIndex(initialValue) {
+EditOrCloneEntry::EditOrCloneEntry(const ZLResource &resource, bool &editNotClone) : myResource(resource), myEditNotClone(editNotClone) {
 }
 
 const std::string &EditOrCloneEntry::text(int index) const {
@@ -67,17 +67,17 @@ int EditOrCloneEntry::choiceNumber() const {
 }
 
 int EditOrCloneEntry::initialCheckedIndex() const {
-	return myIndex;
+	return myEditNotClone ? 0 : 1;
 }
 
 void EditOrCloneEntry::onAccept(int index) {
-	myIndex = index;
+	myEditNotClone = (index == 0);
 }
 
 class TagNameEntry : public ZLComboOptionEntry {
 
 public:
-	TagNameEntry(const std::vector<std::string> &values, const std::string &initialValue);
+	TagNameEntry(const std::vector<std::string> &values, std::string &initialValue);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -85,10 +85,10 @@ public:
 
 private:
 	const std::vector<std::string> &myValues;
-	std::string myValue;
+	std::string &myValue;
 };
 
-TagNameEntry::TagNameEntry(const std::vector<std::string> &values, const std::string &initialValue) : ZLComboOptionEntry(true), myValues(values), myValue(initialValue) {
+TagNameEntry::TagNameEntry(const std::vector<std::string> &values, std::string &initialValue) : ZLComboOptionEntry(true), myValues(values), myValue(initialValue) {
 }
 
 const std::string &TagNameEntry::initialValue() const {
@@ -131,20 +131,14 @@ void CollectionView::editTagInfo(const std::string &tag) {
 		return;
 	}
 	const bool tagIsSpecial = (tag == SpecialTagAllBooks) || (tag == SpecialTagNoTagsBooks);
+	std::string tagValue = tagIsSpecial ? "" : tag;
+	bool editNotClone = tag != SpecialTagAllBooks;
 
 	shared_ptr<ZLDialog> dialog = ZLDialogManager::instance().createDialog(ZLResourceKey("editTagInfoDialog"));
 
 	ZLResourceKey editOrCloneKey("editOrClone");
-	EditOrCloneEntry *editOrCloneEntry;
-	if (tag == SpecialTagAllBooks) {
-		editOrCloneEntry = new EditOrCloneEntry(dialog->resource(editOrCloneKey), 1);
-		editOrCloneEntry->setActive(false);
-	} else if (tag == SpecialTagNoTagsBooks) {
-		editOrCloneEntry = new EditOrCloneEntry(dialog->resource(editOrCloneKey), 0);
-		editOrCloneEntry->setActive(false);
-	} else {
-		editOrCloneEntry = new EditOrCloneEntry(dialog->resource(editOrCloneKey), 0);
-	}
+	EditOrCloneEntry *editOrCloneEntry = new EditOrCloneEntry(dialog->resource(editOrCloneKey), editNotClone);
+	editOrCloneEntry->setActive(!tagIsSpecial);
 	dialog->addOption(editOrCloneKey, editOrCloneEntry);
 
 	std::vector<std::string> names;
@@ -169,7 +163,7 @@ void CollectionView::editTagInfo(const std::string &tag) {
 		}
 	}
 	names.insert(names.end(), fullTagSet.begin(), fullTagSet.end());
-	TagNameEntry *tagNameEntry = new TagNameEntry(names, tagIsSpecial ? "" : tag);
+	TagNameEntry *tagNameEntry = new TagNameEntry(names, tagValue);
 	dialog->addOption(ZLResourceKey("name"), tagNameEntry);
 
 	IncludeSubtagsEntry *includeSubtagsEntry;
@@ -188,26 +182,25 @@ void CollectionView::editTagInfo(const std::string &tag) {
 
 	while (dialog->run()) {
 		dialog->acceptValues();
-		std::string newTag = tagNameEntry->initialValue();
-		ZLStringUtil::stripWhiteSpaces(newTag);
-		if (newTag.empty()) {
+		ZLStringUtil::stripWhiteSpaces(tagValue);
+		if (tagValue.empty()) {
 			ZLDialogManager::instance().errorBox(ZLResourceKey("tagMustBeNonEmpty"));
 			continue;
 		}
-		if (newTag.find(',') != (size_t)-1) {
+		if (tagValue.find(',') != (size_t)-1) {
 			ZLDialogManager::instance().errorBox(ZLResourceKey("tagMustNotContainComma"));
 			continue;
 		}
 		const bool includeSubtags = includeSubtagsEntry->initialState();
 		collectionModel().removeAllMarks();
 		if (tag == SpecialTagAllBooks) {
-			myCollection.addTagToAllBooks(newTag);
+			myCollection.addTagToAllBooks(tagValue);
 		} else if (tag == SpecialTagNoTagsBooks) {
-			myCollection.addTagToBooksWithNoTags(newTag);
-		} else if (editOrCloneEntry->initialCheckedIndex() == 0) {
-			myCollection.renameTag(tag, newTag, includeSubtags);
+			myCollection.addTagToBooksWithNoTags(tagValue);
+		} else if (editNotClone) {
+			myCollection.renameTag(tag, tagValue, includeSubtags);
 		} else {
-			myCollection.cloneTag(tag, newTag, includeSubtags);
+			myCollection.cloneTag(tag, tagValue, includeSubtags);
 		}
 		updateModel();
 		application().refreshWindow();
