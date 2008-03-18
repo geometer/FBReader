@@ -67,8 +67,8 @@
 					<node name="bookPath" value="Book Path"/>
 					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
 					<node name="recentListSize" value="Recent Books List Size"/>
-					<node name="showTags" value="Sort Books by Tags"/>
-					<node name="showAllBooksList" value="Show List of All Books"/>
+					<node name="showTags" value="Show Tag Hierarchies"/>
+					<node name="showAllBooksList" value="Show All Books Branch"/>
 				</node>
 				<node name="Language" value="Language">
 					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
@@ -307,11 +307,11 @@
 		</node>
 		<node name="tagMustBeNonEmpty">
 			<node name="title" value="Error"/>
-			<node name="message" value="Tag name must be non-empty string"/>
+			<node name="message" value="Tag name must be a non-empty string"/>
 		</node>
 		<node name="tagMustNotContainComma">
 			<node name="title" value="Error"/>
-			<node name="message" value="Tag name must not contain a symbol &#8220;,&#8221;"/>
+			<node name="message" value="Tag name must not contain a &#8220;,&#8221; symbol"/>
 		</node>
 		<node name="waitMessage">
 			<node name="loadingBook" value="Loading book. Please, wait..."/>
