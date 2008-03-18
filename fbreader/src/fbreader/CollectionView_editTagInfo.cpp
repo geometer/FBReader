@@ -106,16 +106,16 @@ void TagNameEntry::onAccept(const std::string &value) {
 class IncludeSubtagsEntry : public ZLBooleanOptionEntry {
 
 public:
-	IncludeSubtagsEntry(bool initialValue);
+	IncludeSubtagsEntry(bool &initialValue);
 
 	bool initialState() const;
 	void onAccept(bool state);
 
 private:
-	bool myValue;
+	bool &myValue;
 };
 
-IncludeSubtagsEntry::IncludeSubtagsEntry(bool initialValue) : myValue(initialValue) {
+IncludeSubtagsEntry::IncludeSubtagsEntry(bool &initialValue) : myValue(initialValue) {
 }
 
 bool IncludeSubtagsEntry::initialState() const {
@@ -126,25 +126,13 @@ void IncludeSubtagsEntry::onAccept(bool state) {
 	myValue = state;
 }
 
-void CollectionView::editTagInfo(const std::string &tag) {
-	if (tag.empty()) {
-		return;
-	}
-	const bool tagIsSpecial = (tag == SpecialTagAllBooks) || (tag == SpecialTagNoTagsBooks);
-	std::string tagValue = tagIsSpecial ? "" : tag;
-	bool editNotClone = tag != SpecialTagAllBooks;
-
+bool CollectionView::runEditTagInfoDialog(const bool tagIsSpecial, std::string &tagValue, bool &editNotClone, bool &includeSubtags, const bool showIncludeSubtagsEntry, const bool hasBooks) {
 	shared_ptr<ZLDialog> dialog = ZLDialogManager::instance().createDialog(ZLResourceKey("editTagInfoDialog"));
 
 	ZLResourceKey editOrCloneKey("editOrClone");
 	EditOrCloneEntry *editOrCloneEntry = new EditOrCloneEntry(dialog->resource(editOrCloneKey), editNotClone);
 	editOrCloneEntry->setActive(!tagIsSpecial);
 	dialog->addOption(editOrCloneKey, editOrCloneEntry);
-
-	std::vector<std::string> names;
-	if (tagIsSpecial) {
-		names.push_back("");
-	}
 
 	std::set<std::string> tagSet;
 	const Books &books = myCollection.books();
@@ -162,26 +150,45 @@ void CollectionView::editTagInfo(const std::string &tag) {
 			fullTagSet.insert(it->substr(0, index++));
 		}
 	}
+	std::vector<std::string> names;
+	if (fullTagSet.find(tagValue) == fullTagSet.end()) {
+		names.push_back(tagValue);
+	}
 	names.insert(names.end(), fullTagSet.begin(), fullTagSet.end());
 	TagNameEntry *tagNameEntry = new TagNameEntry(names, tagValue);
 	dialog->addOption(ZLResourceKey("name"), tagNameEntry);
 
-	IncludeSubtagsEntry *includeSubtagsEntry;
-	if (!tagIsSpecial && myCollection.hasSubtags(tag)) {
-		includeSubtagsEntry = new IncludeSubtagsEntry(true);
-		if (!myCollection.hasBooks(tag)) {
+	IncludeSubtagsEntry *includeSubtagsEntry = new IncludeSubtagsEntry(includeSubtags);
+	if (showIncludeSubtagsEntry) {
+		if (!hasBooks) {
 			includeSubtagsEntry->setActive(false);
 		}
 		dialog->addOption(ZLResourceKey("includeSubtags"), includeSubtagsEntry);
-	} else {
-		includeSubtagsEntry = new IncludeSubtagsEntry(false);
 	}
 
 	dialog->addButton(ZLDialogManager::OK_BUTTON, true);
 	dialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
 
-	while (dialog->run()) {
+	if (dialog->run()) {
 		dialog->acceptValues();
+		return true;
+	} else {
+		return false;
+	}
+}
+
+void CollectionView::editTagInfo(const std::string &tag) {
+	if (tag.empty()) {
+		return;
+	}
+	const bool tagIsSpecial = (tag == SpecialTagAllBooks) || (tag == SpecialTagNoTagsBooks);
+	std::string tagValue = tagIsSpecial ? "" : tag;
+	bool editNotClone = tag != SpecialTagAllBooks;
+	bool includeSubtags = !tagIsSpecial && myCollection.hasSubtags(tag);
+	const bool showIncludeSubtagsEntry = includeSubtags;
+	const bool hasBooks = myCollection.hasBooks(tag);
+
+	while (runEditTagInfoDialog(tagIsSpecial, tagValue, editNotClone, includeSubtags, showIncludeSubtagsEntry, hasBooks)) {
 		ZLStringUtil::stripWhiteSpaces(tagValue);
 		if (tagValue.empty()) {
 			ZLDialogManager::instance().errorBox(ZLResourceKey("tagMustBeNonEmpty"));
@@ -191,7 +198,6 @@ void CollectionView::editTagInfo(const std::string &tag) {
 			ZLDialogManager::instance().errorBox(ZLResourceKey("tagMustNotContainComma"));
 			continue;
 		}
-		const bool includeSubtags = includeSubtagsEntry->initialState();
 		collectionModel().removeAllMarks();
 		if (tag == SpecialTagAllBooks) {
 			myCollection.addTagToAllBooks(tagValue);

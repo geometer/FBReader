@@ -64,7 +64,7 @@ private:
 	void removeTag(const std::string &tag);
 
 	enum BranchType { THIS_TAG_ONLY, TREE, TAG_AND_SUBTREE };
-	bool runEditTagInfoDialog(const bool tagIsSpecial, std::string &tag, bool &editNotClone, bool &includeSubtags);
+	bool runEditTagInfoDialog(const bool tagIsSpecial, std::string &tag, bool &editNotClone, bool &includeSubtags, const bool showIncludeSubtagsEntry, const bool hasBooks);
 
 private:
 	BookCollection myCollection;
