@@ -2,7 +2,7 @@
 <head>
 </head>
 <body>
-<!-- Based on tags.ru.html (2311) -->
+<!-- Based on tags.ru.html (2372) -->
 
 <h2><center>Book Tags in FBReader</center></h2>
 
@@ -38,7 +38,7 @@ book title correspondently.</p>
 
 <p>If a book has several tags, it will be shown in several branches.</p>
 
-<p>If a book has no tags, it will be shown in the branch called &ldquo;Books with no tags&rdquo;.</p>
+<p>If a book has no tags, it will be shown in the branch called &ldquo;Books with no Tags&rdquo;.</p>
 
 <p>Additionaly, all books can be found in the branch called &ldquo;All Books&rdquo;.</p>
 
@@ -73,7 +73,7 @@ If you add a new tag, it will be automatically shown in the tree.  If you delete
 this book had, the tag will automatically disappear from the tree.</p>
 
 <!-- Copying vs Cloning: how often cloing is used? -->
-<h3>Changing/Merging/Copying Tags.</h3>
+<h3>Changing, Cloning, and Merging Tags.</h3>
 <p>If you would like to change a tag, you can do it in the library tree view: navigate to the tag
 you'd like to change and click on the bulb that is to the right of the tag name.</p>
 
@@ -84,18 +84,20 @@ changed.</p>
 <p>Empty name won't be changed either.</p>
 <p>If you use &ldquo;/&rdquo; in the tag name, it will be considered as a separator for a
 hierarchical tag.</p>
-<p>Spaces and tab symbols will removed from the beginning and the end of the tag name.</p>
-
-<li>Merge the tag with an existing one</li>
-<p>To merge the tag with another one, you just need to change the name of the latter or simply
-select it from the list of available tags.</p>
+<p>Spaces and tab symbols will be removed from the beginning and the end of the tag name.</p>
+<p>If a tag, you are editing, has subtags, in the dialog you can specify that the operation should
+affect subtags as well; that is control by &ldquo;With Subtags&rdquo; checkbox.</p>
 
 <li>Cloning a tag.</li>
 <p>Check the box &ldquo;Create clone&rdquo; and specify the name of the new tag. If the tag you
 specified already exists, the books from with the current tags will be tag with the new tag.</p>
 
-<p>Unlike others, this operation can also be performed for the branches &ldquo;All Books&rdquo; and
-&ldquo;Books with no Tags&rdquo;.</p>
+<li>Merging two tags</li>
+<p>If the tag name you specify already exists, this won't be considered as an error: renaming or
+cloning will be performed as usually.  As result, the corresponding branches of tag hierarchy will
+be merged.  Since this operation seems to be quite useful, instead of entering a tag name manually,
+you can just select it from the list.</p>
+
 </ul>
 </p>
 
