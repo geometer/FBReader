@@ -153,18 +153,20 @@ void CollectionView::removeBook(BookDescriptionPtr book) {
 		return;
 	}
 
+	CollectionModel &cModel = collectionModel();
+
 	ZLResourceKey boxKey("removeBookBox");
 	const std::string message =
 		ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book->title());
 	if (ZLDialogManager::instance().questionBox(boxKey, message,
 		ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
-		collectionModel().removeAllMarks();
+		cModel.removeAllMarks();
 		BookList().removeFileName(book->fileName());
 		
-		const std::vector<int> &paragraphIndices = collectionModel().paragraphNumbersByBook(book);
+		const std::vector<int> &paragraphIndices = cModel.paragraphNumbersByBook(book);
 		for (int i = paragraphIndices.size() - 1; i >= 0; --i) {
 			int index = paragraphIndices[i];
-			ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)collectionModel()[index];
+			ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)cModel[index];
 			int count = 1;
 			for (ZLTextTreeParagraph *parent = paragraph->parent(); (parent != 0) && (parent->children().size() == 1); parent = parent->parent()) {
 				++count;
@@ -175,12 +177,21 @@ void CollectionView::removeBook(BookDescriptionPtr book) {
 			}
 
 			for (; count > 0; --count) {
-				collectionModel().removeParagraph(index--);
+				cModel.removeParagraph(index--);
 			}
 		}
   
-		if (collectionModel().paragraphsNumber() == 0) {
+		if (cModel.paragraphsNumber() == 0) {
 			setStartCursor(0);
+		} else {
+			size_t index = startCursor().paragraphCursor().index();
+			if (index >= cModel.paragraphsNumber()) {
+				index = cModel.paragraphsNumber() - 1;
+			}
+			while (!((ZLTextTreeParagraph*)cModel[index])->parent()->isOpen()) {
+				--index;
+			}
+			gotoParagraph(index);
 		}
 		rebuildPaintInfo(true);
 		application().refreshWindow();
