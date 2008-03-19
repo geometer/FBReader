@@ -60,10 +60,15 @@ const std::vector<int> &CollectionModel::paragraphNumbersByBook(BookDescriptionP
 }
 
 void CollectionModel::build() {
-	if (myView.ShowTagsOption.value()) {
-		buildWithTags();
+	if (myCollection.books().empty()) {
+		createParagraph();
+		insertText(LIBRARY_AUTHOR_ENTRY, ZLResource::resource("library")["noBooks"].value());
 	} else {
-		buildWithoutTags();
+		if (myView.ShowTagsOption.value()) {
+			buildWithTags();
+		} else {
+			buildWithoutTags();
+		}
 	}
 }
 
