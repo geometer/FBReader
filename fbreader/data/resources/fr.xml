@@ -58,6 +58,8 @@
 	<node name="dialog">
 		<node name="button">
 			<node name="go" value="O&amp;k"/>
+			<node name="thisOnly" value="This only" toBeTranslated="true"/>
+			<node name="withSubtags" value="With subtags" toBeTranslated="true"/>
 		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Options"/>
@@ -66,8 +68,8 @@
 					<node name="bookPath" value="Chemin des livres"/>
 					<node name="lookInSubdirectories" value="Chercher des livres dans les sous-répertoires"/>
 					<node name="recentListSize" value="Taille de la liste de livres récents"/>
-					<node name="showTags" value="Sort Books by Tags" toBeTranslated="true"/>
-					<node name="showAllBooksList" value="Show List of All Books" toBeTranslated="true"/>
+					<node name="showTags" value="Show Tag Hierarchies" toBeTranslated="true"/>
+					<node name="showAllBooksList" value="Show All Books Branch" toBeTranslated="true"/>
 				</node>
 				<node name="Language" value="Langue">
 					<node name="autoDetect" value="Detecter la langue et l'encodage automatiquement"/>
@@ -247,6 +249,9 @@
 					<node name="seriesTitle" value="Titre de la série"/>
 					<node name="bookNumber" value="Numéro du livre"/>
 				</node>
+				<node name="Tags" value="Tags" toBeTranslated="true">
+					<node name="tags" value="Tag List" toBeTranslated="true"/>
+				</node>
 				<node name="Text" value="Texte">
 					<node name="breakType" value="Fin des paragraphes"/>
 					<node name="ignoreIndent" value="Ignorer une indentation inférieure à"/>
@@ -276,9 +281,22 @@
 			<node name="title" value="Go To Page" toBeTranslated="true"/>
 			<node name="pageNumber" value="Go to Page Number" toBeTranslated="true"/>
 		</node>
+		<node name="editTagInfoDialog">
+			<node name="title" value="Edit/Clone Tag" toBeTranslated="true"/>
+			<node name="editOrClone" value="Action" toBeTranslated="true">
+				<node name="edit" value="Rename Tag" toBeTranslated="true"/>
+				<node name="clone" value="Clone Tag" toBeTranslated="true"/>
+			</node>
+			<node name="name" value="Tag Name" toBeTranslated="true"/>
+			<node name="includeSubtags" value="Include Subtags" toBeTranslated="true"/>
+		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Enlever un livre"/>
 			<node name="message" value="Enlever le livre &#13;&quot;%s&quot;&#13; de la bibliothèque ?"/>
+		</node>
+		<node name="removeTagBox">
+			<node name="title" value="Remove Tag" toBeTranslated="true"/>
+			<node name="message" value="Remove Tag &#8220;%s&#8221;?" toBeTranslated="true"/>
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Erreur"/>
@@ -288,9 +306,18 @@
 			<node name="title" value="Erreur"/>
 			<node name="message" value="Fichier d'aide non trouvé, désolé"/>
 		</node>
+		<node name="tagMustBeNonEmpty">
+			<node name="title" value="Erreur"/>
+			<node name="message" value="Tag name must be a non-empty string" toBeTranslated="true"/>
+		</node>
+		<node name="tagMustNotContainComma">
+			<node name="title" value="Erreur"/>
+			<node name="message" value="Tag name must not contain a &#8220;,&#8221; symbol" toBeTranslated="true"/>
+		</node>
 		<node name="waitMessage">
 			<node name="loadingBook" value="Chargement du livre. Veuillez patienter..."/>
 			<node name="loadingBookList" value="Chargement de la liste des livres. Veuillez patienter..."/>
+			<node name="migrate" value="Upgrading to the new version. Please, wait..." toBeTranslated="true"/>
 		</node>
 	</node>
 	<node name="style">
@@ -346,5 +373,6 @@
 		<node name="caption" value="Bibliothèque"/>
 		<node name="allBooks" value="All Books" toBeTranslated="true"/>
 		<node name="booksWithoutTags" value="Books with no Tags" toBeTranslated="true"/>
+		<node name="noBooks" value="FBReader found no books in the configured locations. Please specify the path to your books in the Preferences Dialog (&#8220;Library&#8221; tab, &#8220;Book Path&#8221; entry). Alternatively, you can add books to your library using &#8220;Add Book&#8221; button." toBeTranslated="true"/>
 	</node>
 </resources>
