@@ -36,8 +36,8 @@ debian:
 		chmod --reference $$file $(TMPDIR)/debian/`basename $$file`; \
 	done
 	@cd $(TMPDIR); dpkg-buildpackage -rfakeroot -us -uc 1> $(CURDIR)/$(ARCHITECTURE)-debian.log 2>&1; cd $(CURDIR)
-	@rm -rf $(TMPDIR)
-	@rm -f $(CURDIR)/$(ARCHITECTURE)-debian.log
+	#@rm -rf $(TMPDIR)
+	#@rm -f $(CURDIR)/$(ARCHITECTURE)-debian.log
 	@echo " OK"
 
 ipk:

@@ -36,7 +36,7 @@ ZLTextParagraphCursor::Processor::Processor(const std::string &language, const Z
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
 	myOffset = 0;
 	if (!ourIndexIsInitialised) {
-		init_linebreak_prop_index();
+		init_linebreak();
 		ourIndexIsInitialised = true;
 	}
 }

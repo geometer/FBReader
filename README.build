@@ -19,6 +19,7 @@ FBReader requires
      OR
        GTK+ library, version >= 2.4 
      should be installed
+  ** liblinebreak (http://vimgadgets.cvs.sourceforge.net/vimgadgets/common/tools/linebreak/) -- library for line breaking in a Unicode sequence
   ** for win32 version, we use also libpng, libungif, libjpeg and libtiff
 
 3. How to configure.

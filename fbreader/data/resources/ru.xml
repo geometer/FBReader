@@ -275,6 +275,15 @@
 			<node name="title" value="Перейти на страницу"/>
 			<node name="pageNumber" value="Номер страницы"/>
 		</node>
+		<node name="editTagInfoDialog">
+			<node name="title" value="Редактирование/копирование категории"/>
+			<node name="editOrClone" value="Действие">
+				<node name="edit" value="Редактирование"/>
+				<node name="clone" value="Копирование"/>
+			</node>
+			<node name="name" value="Название"/>
+			<node name="includeSubtags" value="Включая подкатегории"/>
+		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Удаление книги"/>
 			<node name="message" value="Удалить книгу &#10;&#171;%s&#187;&#10; из библиотеки?"/>
