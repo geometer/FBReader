@@ -1,0 +1,20 @@
+Format: 1.7
+Date: Wed, 19 Mar 2008 15:52:00 +0300
+Source: liblinebreak
+Binary: liblinebreak-dev
+Architecture: source i386
+Version: 0.9.6-1
+Distribution: stable
+Urgency: low
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
+Changed-By: Nikolay Pultsin <geometer@fbreader.org>
+Description: 
+ liblinebreak-dev - Line breaking library
+Changes: 
+ liblinebreak (0.9.6-1) stable; urgency=low
+ .
+   * New upstream version.
+Files: 
+ 80765ff6f9f8bcb8f0dd512ee7302a33 283 text optional liblinebreak_0.9.6-1.dsc
+ f325a45ad8f4646cc0b04c97e6472a9f 20403 text optional liblinebreak_0.9.6-1.tar.gz
+ 35eb08680bf5572fa9bbbac8c325bb0c 13780 text optional liblinebreak-dev_0.9.6-1_i386.deb

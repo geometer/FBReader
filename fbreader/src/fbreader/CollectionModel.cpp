@@ -52,7 +52,9 @@ BookDescriptionPtr CollectionModel::bookByParagraphNumber(int num) {
 }
 
 const std::string &CollectionModel::tagByParagraphNumber(int num) {
-	return myParagraphToTag[num];
+	static const std::string EMPTY;
+	std::map<ZLTextParagraph*,std::string>::iterator it = myParagraphToTag.find((*this)[num]);
+	return (it != myParagraphToTag.end()) ? it->second : EMPTY;
 }
 
 const std::vector<int> &CollectionModel::paragraphNumbersByBook(BookDescriptionPtr book) {
@@ -79,7 +81,7 @@ void CollectionModel::buildWithTags() {
 		ZLTextTreeParagraph *allBooksParagraph = createParagraph();
 		insertText(LIBRARY_AUTHOR_ENTRY, resource["allBooks"].value());
 		insertImage(TagInfoImageId);
-		myParagraphToTag[paragraphsNumber() - 1] = CollectionView::SpecialTagAllBooks;
+		myParagraphToTag[allBooksParagraph] = CollectionView::SpecialTagAllBooks;
 		addBooks(myCollection.books(), allBooksParagraph);
 	}
 
@@ -102,7 +104,7 @@ void CollectionModel::buildWithTags() {
 		ZLTextTreeParagraph *booksWithoutTagsParagraph = createParagraph();
 		insertText(LIBRARY_AUTHOR_ENTRY, resource["booksWithoutTags"].value());
 		insertImage(TagInfoImageId);
-		myParagraphToTag[paragraphsNumber() - 1] = CollectionView::SpecialTagNoTagsBooks;
+		myParagraphToTag[booksWithoutTagsParagraph] = CollectionView::SpecialTagNoTagsBooks;
 		addBooks(booksWithoutTags, booksWithoutTagsParagraph);
 	}
 
@@ -136,7 +138,7 @@ void CollectionModel::buildWithTags() {
 			if (!useExistingTagStack) {
 				tagStack.push_back(subTag);
 				tagParagraph = createParagraph(tagParagraph);
-				myParagraphToTag[paragraphsNumber() - 1] = fullTagName.substr(0, newIndex);
+				myParagraphToTag[tagParagraph] = fullTagName.substr(0, newIndex);
 				insertText(LIBRARY_AUTHOR_ENTRY, subTag);
 				insertImage(TagInfoImageId);
 				insertImage(RemoveTagImageId);
@@ -217,4 +219,38 @@ void CollectionModel::insertText(FBTextKind kind, const std::string &text) {
 void CollectionModel::insertImage(const std::string &id) {
 	addFixedHSpace(1);
 	addImage(id, myImageMap, 0);
+}
+
+void CollectionModel::removeBook(BookDescriptionPtr book) {
+	std::map<BookDescriptionPtr,std::vector<int> >::iterator it = myBookToParagraph.find(book);
+	if (it == myBookToParagraph.end()) {
+		return;
+	}
+	const std::vector<int> paragraphIndices = it->second;
+	myBookToParagraph.erase(it);
+	for (int i = paragraphIndices.size() - 1; i >= 0; --i) {
+		int index = paragraphIndices[i];
+		ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)(*this)[index];
+		int count = 1;
+		for (ZLTextTreeParagraph *parent = paragraph->parent(); (parent != 0) && (parent->children().size() == 1); parent = parent->parent()) {
+			++count;
+		}
+
+		if (count > index) {
+			count = index;
+		}
+
+		for (std::map<BookDescriptionPtr,std::vector<int> >::iterator jt = myBookToParagraph.begin(); jt != myBookToParagraph.end(); ++jt) {
+			std::vector<int> &indices = jt->second;
+			for (std::vector<int>::iterator kt = indices.begin(); kt != indices.end(); ++kt) {
+				if (*kt > index) {
+					*kt -= count;
+				}
+			}
+		}
+
+		for (; count > 0; --count) {
+			removeParagraph(index--);
+		}
+	}
 }

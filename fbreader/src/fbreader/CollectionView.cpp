@@ -163,24 +163,7 @@ void CollectionView::removeBook(BookDescriptionPtr book) {
 		cModel.removeAllMarks();
 		BookList().removeFileName(book->fileName());
 		
-		const std::vector<int> &paragraphIndices = cModel.paragraphNumbersByBook(book);
-		for (int i = paragraphIndices.size() - 1; i >= 0; --i) {
-			int index = paragraphIndices[i];
-			ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)cModel[index];
-			int count = 1;
-			for (ZLTextTreeParagraph *parent = paragraph->parent(); (parent != 0) && (parent->children().size() == 1); parent = parent->parent()) {
-				++count;
-			}
-
-			if (count > index) {
-				count = index;
-			}
-
-			for (; count > 0; --count) {
-				cModel.removeParagraph(index--);
-			}
-		}
-  
+		cModel.removeBook(book);
 		if (cModel.paragraphsNumber() == 0) {
 			setStartCursor(0);
 		} else {

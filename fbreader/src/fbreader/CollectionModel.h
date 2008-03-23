@@ -49,6 +49,8 @@ public:
 
 	void update();
 
+	void removeBook(BookDescriptionPtr book);
+
 private:
 	void build();
 	void buildWithTags();
@@ -65,7 +67,7 @@ private:
 
 	ZLImageMap myImageMap;
 	std::map<ZLTextParagraph*,BookDescriptionPtr> myParagraphToBook;
-	std::map<int,std::string> myParagraphToTag;
+	std::map<ZLTextParagraph*,std::string> myParagraphToTag;
 	std::map<BookDescriptionPtr,std::vector<int> > myBookToParagraph;
 };
 

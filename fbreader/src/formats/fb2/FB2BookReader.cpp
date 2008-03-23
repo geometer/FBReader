@@ -159,7 +159,13 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			const char *ref = attributeValue(xmlattributes, myHrefAttributeName.c_str());
 			if (ref != 0) {
 				if (ref[0] == '#') {
-					myHyperlinkType = FOOTNOTE;
+					const char *type = attributeValue(xmlattributes, "type");
+					static const std::string NOTE = "note";
+					if ((type != 0) && (NOTE == type)) {
+						myHyperlinkType = FOOTNOTE;
+					} else {
+						myHyperlinkType = INTERNAL_HYPERLINK;
+					}
 					++ref;
 				} else {
 					myHyperlinkType = EXTERNAL_HYPERLINK;
