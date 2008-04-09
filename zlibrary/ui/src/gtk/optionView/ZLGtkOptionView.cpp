@@ -374,8 +374,8 @@ void ColorOptionView::reset() {
 	gtk_color_selection_get_current_color(myColorSelection, &gdkColor);
 	colorEntry.onReset(convertColor(gdkColor));
 
-	GdkColor initialColor = convertColor(((ZLColorOptionEntry&)*myOption).initialColor());
-	GdkColor currentColor = convertColor(((ZLColorOptionEntry&)*myOption).color());
+	GdkColor initialColor = convertColor(colorEntry.initialColor());
+	GdkColor currentColor = convertColor(colorEntry.color());
 	gtk_color_selection_set_current_color(myColorSelection, &currentColor);
 	gtk_color_selection_set_previous_color(myColorSelection, &initialColor);
 }
