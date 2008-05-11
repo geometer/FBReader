@@ -17,24 +17,30 @@
  * 02110-1301, USA.
  */
 
-#include <ZLInputStream.h>
+#ifndef __PdfDESCRIPTIONREADER_H__
+#define __PdfDESCRIPTIONREADER_H__
 
-#include "DummyDescriptionReader.h"
+#include <string>
 
-DummyDescriptionReader::DummyDescriptionReader(BookDescription &description) : myDescription(description) {
-}
+#include "../../description/BookDescription.h"
 
-/*
-void DummyDescriptionReader::characterDataHandler(const char *text, int len) {
-}
+class PdfDescriptionReader {
 
-void DummyDescriptionReader::startElementHandler(int tag, const char **) {
-}
+public:
+	PdfDescriptionReader(BookDescription &description);
+	~PdfDescriptionReader();
+	bool readDescription(shared_ptr<ZLInputStream> stream);
 
-void DummyDescriptionReader::endElementHandler(int tag) {
-}
-*/
+	/*
+	void startElementHandler(int tag, const char **attributes);
+	void endElementHandler(int tag);
+	void characterDataHandler(const char *text, int len);
+	*/
 
-bool DummyDescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
-	return false;
-}
+private:
+	WritableBookDescription myDescription;
+};
+
+inline PdfDescriptionReader::~PdfDescriptionReader() {}
+
+#endif /* __PdfDESCRIPTIONREADER_H__ */

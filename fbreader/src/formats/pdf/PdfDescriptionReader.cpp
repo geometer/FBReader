@@ -19,22 +19,22 @@
 
 #include <ZLInputStream.h>
 
-#include "DummyDescriptionReader.h"
+#include "PdfDescriptionReader.h"
 
-DummyDescriptionReader::DummyDescriptionReader(BookDescription &description) : myDescription(description) {
+PdfDescriptionReader::PdfDescriptionReader(BookDescription &description) : myDescription(description) {
 }
 
 /*
-void DummyDescriptionReader::characterDataHandler(const char *text, int len) {
+void PdfDescriptionReader::characterDataHandler(const char *text, int len) {
 }
 
-void DummyDescriptionReader::startElementHandler(int tag, const char **) {
+void PdfDescriptionReader::startElementHandler(int tag, const char **) {
 }
 
-void DummyDescriptionReader::endElementHandler(int tag) {
+void PdfDescriptionReader::endElementHandler(int tag) {
 }
 */
 
-bool DummyDescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
-	return false;
+bool PdfDescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
+	return true;
 }

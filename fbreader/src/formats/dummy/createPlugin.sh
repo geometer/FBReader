@@ -1,7 +1,7 @@
 #!/bin/sh
 
 if [ $# != 2 ]; then
-	echo "usage: ";
+	echo "usage: $0 <lower_case_format_name> <full_case_format_name>";
 	exit 0;
 fi;
 

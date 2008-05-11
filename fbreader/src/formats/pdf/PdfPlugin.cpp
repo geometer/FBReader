@@ -17,24 +17,28 @@
  * 02110-1301, USA.
  */
 
+#include <ZLFile.h>
 #include <ZLInputStream.h>
+#include <ZLUnicodeUtil.h>
 
-#include "DummyDescriptionReader.h"
+#include "PdfPlugin.h"
+#include "PdfDescriptionReader.h"
+#include "PdfBookReader.h"
+#include "../../description/BookDescription.h"
 
-DummyDescriptionReader::DummyDescriptionReader(BookDescription &description) : myDescription(description) {
+bool PdfPlugin::acceptsFile(const ZLFile &file) const {
+	return ZLUnicodeUtil::toLower(file.extension()) == "pdf";
 }
 
-/*
-void DummyDescriptionReader::characterDataHandler(const char *text, int len) {
+bool PdfPlugin::readDescription(const std::string &path, BookDescription &description) const {
+	return PdfDescriptionReader(description).readDescription(ZLFile(path).inputStream());
 }
 
-void DummyDescriptionReader::startElementHandler(int tag, const char **) {
+bool PdfPlugin::readModel(const BookDescription &description, BookModel &model) const {
+	return PdfBookReader(model).readBook(ZLFile(description.fileName()).inputStream());
 }
 
-void DummyDescriptionReader::endElementHandler(int tag) {
-}
-*/
-
-bool DummyDescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
-	return false;
+const std::string &PdfPlugin::iconName() const {
+	static const std::string ICON_NAME = "unknown";
+	return ICON_NAME;
 }

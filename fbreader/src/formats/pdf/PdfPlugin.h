@@ -17,24 +17,25 @@
  * 02110-1301, USA.
  */
 
-#include <ZLInputStream.h>
+#ifndef __PdfPLUGIN_H__
+#define __PdfPLUGIN_H__
 
-#include "DummyDescriptionReader.h"
+#include "../FormatPlugin.h"
 
-DummyDescriptionReader::DummyDescriptionReader(BookDescription &description) : myDescription(description) {
-}
+class PdfPlugin : public FormatPlugin {
 
-/*
-void DummyDescriptionReader::characterDataHandler(const char *text, int len) {
-}
+public:
+	PdfPlugin();
+	~PdfPlugin();
+	bool providesMetaInfo() const;
+	bool acceptsFile(const ZLFile &file) const;
+	bool readDescription(const std::string &path, BookDescription &description) const;
+	bool readModel(const BookDescription &description, BookModel &model) const;
+	const std::string &iconName() const;
+};
 
-void DummyDescriptionReader::startElementHandler(int tag, const char **) {
-}
+inline PdfPlugin::PdfPlugin() {}
+inline PdfPlugin::~PdfPlugin() {}
+inline bool PdfPlugin::providesMetaInfo() const { return true; }
 
-void DummyDescriptionReader::endElementHandler(int tag) {
-}
-*/
-
-bool DummyDescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
-	return false;
-}
+#endif /* __PdfPLUGIN_H__ */
