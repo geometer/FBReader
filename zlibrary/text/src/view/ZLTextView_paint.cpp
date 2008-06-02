@@ -220,10 +220,10 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 
 	switch (myStyle.textStyle()->alignment()) {
 		case ALIGN_RIGHT:
-			context().moveX(leftMargin() + viewWidth() - myStyle.textStyle()->rightIndent() - info.Width);
+			context().moveX(viewWidth() - myStyle.textStyle()->rightIndent() - info.Width);
 			break;
 		case ALIGN_CENTER:
-			context().moveX(leftMargin() + (viewWidth() - myStyle.textStyle()->rightIndent() - info.Width) / 2);
+			context().moveX((viewWidth() - myStyle.textStyle()->rightIndent() - info.Width) / 2);
 			break;
 		case ALIGN_JUSTIFY:
 			if (!endOfParagraph && (info.End.element().kind() != ZLTextElement::AFTER_PARAGRAPH_ELEMENT)) {
