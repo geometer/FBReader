@@ -218,16 +218,19 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 
 	context().moveXTo(leftMargin() + info.LeftIndent);
 
+	const short fullWidth = viewWidth();
+	const short fullHeight = textAreaHeight();
+
 	switch (myStyle.textStyle()->alignment()) {
 		case ALIGN_RIGHT:
-			context().moveX(viewWidth() - myStyle.textStyle()->rightIndent() - info.Width);
+			context().moveX(fullWidth - myStyle.textStyle()->rightIndent(fullWidth) - info.Width);
 			break;
 		case ALIGN_CENTER:
-			context().moveX((viewWidth() - myStyle.textStyle()->rightIndent() - info.Width) / 2);
+			context().moveX((fullWidth - myStyle.textStyle()->rightIndent(fullWidth) - info.Width) / 2);
 			break;
 		case ALIGN_JUSTIFY:
 			if (!endOfParagraph && (info.End.element().kind() != ZLTextElement::AFTER_PARAGRAPH_ELEMENT)) {
-				fullCorrection = viewWidth() - myStyle.textStyle()->rightIndent() - info.Width;
+				fullCorrection = fullWidth - myStyle.textStyle()->rightIndent(fullWidth) - info.Width;
 			}
 			break;
 		case ALIGN_LEFT:
@@ -241,13 +244,13 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 		const ZLTextElement &element = paragraph[pos.wordNumber()];
 		ZLTextElement::Kind kind = element.kind();
 		const int x = context().x();
-		int width = myStyle.elementWidth(element, pos.charNumber());
+		int width = myStyle.elementWidth(element, pos.charNumber(), fullWidth);
 	
 		switch (kind) {
 			case ZLTextElement::WORD_ELEMENT:
 			case ZLTextElement::IMAGE_ELEMENT:
 			{
-				const int height = myStyle.elementHeight(element);
+				const int height = myStyle.elementHeight(element, fullHeight);
 				const int descent = myStyle.elementDescent(element);
 				const int length = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length - pos.charNumber() : 0;
 				myTextElementMap.push_back(
@@ -302,7 +305,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			const bool addHyphenationSign = ucs2string[start + len - 1] != '-';
 			const int x = context().x(); 
 			const int width = myStyle.wordWidth(word, start, len, addHyphenationSign);
-			const int height = myStyle.elementHeight(word);
+			const int height = myStyle.elementHeight(word, fullHeight);
 			const int descent = myStyle.elementDescent(word);
 			myTextElementMap.push_back(
 				ZLTextElementArea(

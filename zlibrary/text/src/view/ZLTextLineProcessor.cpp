@@ -125,9 +125,11 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 	ZLTextStylePtr storedStyle = myStyle.textStyle();
 
-	info.LeftIndent = myStyle.textStyle()->leftIndent();
+	const short fullWidth = viewWidth();
+	const short fullHeight = textAreaHeight();
+	info.LeftIndent = myStyle.textStyle()->leftIndent(fullWidth);
 	if (isFirstLine) {
-		info.LeftIndent += myStyle.textStyle()->firstLineIndentDelta();
+		info.LeftIndent += myStyle.textStyle()->firstLineIndentDelta(fullWidth);
 	}
 	if (!info.NodeInfo.isNull()) {
 		info.LeftIndent += (myStyle.context().stringHeight() + 2) / 3 * 4 * (info.NodeInfo->VerticalLinesStack.size() + 1);
@@ -141,7 +143,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 	ZLTextPartialInfo newInfo(info, current);
 	bool allowBreakAtNBSpace = true;
-	const int maxWidth = viewWidth() - myStyle.textStyle()->rightIndent();
+	const int maxWidth = fullWidth - myStyle.textStyle()->rightIndent(fullWidth);
 	bool wordOccured = false;
 	int lastSpaceWidth = 0;
 	int removeLastSpace = false;
@@ -151,8 +153,8 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 	bool breakedAtFirstWord = false;
 	do {
 		const ZLTextElement &element = paragraphCursor[newInfo.End.wordNumber()];
-		newInfo.Width += myStyle.elementWidth(element, newInfo.End.charNumber());
-		newInfo.Height = std::max(newInfo.Height, myStyle.elementHeight(element));
+		newInfo.Width += myStyle.elementWidth(element, newInfo.End.charNumber(), fullWidth);
+		newInfo.Height = std::max(newInfo.Height, myStyle.elementHeight(element, fullHeight));
 		newInfo.Descent = std::max(newInfo.Descent, myStyle.elementDescent(element));
 		switch (elementKind) {
 			case ZLTextElement::CONTROL_ELEMENT:
@@ -223,7 +225,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		const ZLTextElement &element = paragraphCursor[newInfo.End.wordNumber()];
 		if (element.kind() == ZLTextElement::WORD_ELEMENT) {
 			const int startCharNumber = newInfo.End.charNumber();
-			newInfo.Width -= myStyle.elementWidth(element, startCharNumber);
+			newInfo.Width -= myStyle.elementWidth(element, startCharNumber, fullWidth);
 			const ZLTextWord &word = (ZLTextWord&)element;
 			int spaceLeft = maxWidth - newInfo.Width;
 			if (breakedAtFirstWord ||
@@ -244,7 +246,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 				if ((hyphenationPosition == startCharNumber) &&
 						(info.End.wordNumber() <= info.RealStart.wordNumber())) {
 					hyphenationPosition = word.Length;
-					subwordWidth = myStyle.elementWidth(element, startCharNumber);
+					subwordWidth = myStyle.elementWidth(element, startCharNumber, fullWidth);
 				}
 				if (hyphenationPosition > startCharNumber) {
 					newInfo.Width += subwordWidth;
@@ -265,10 +267,10 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 	myStyle.setTextStyle(storedStyle);
 
 	if (isFirstLine) {
-		info.Height += info.StartStyle->spaceBefore();
+		info.Height += info.StartStyle->spaceBefore(fullHeight);
 	}
 	if (info.End.isEndOfParagraph()) {
-		info.VSpaceAfter = myStyle.textStyle()->spaceAfter();
+		info.VSpaceAfter = myStyle.textStyle()->spaceAfter(fullHeight);
 	}
 
 	if (!info.End.equalWordNumber(end) || end.isEndOfParagraph()) {
