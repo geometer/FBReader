@@ -27,7 +27,7 @@
 #include "../txt/PlainTextFormat.h"
 #include "../util/MiscUtil.h"
 #include "../../bookmodel/BookModel.h"
-#include "StyleSheetParser.h"
+#include "../css/StyleSheetParser.h"
 
 HtmlTagAction::HtmlTagAction(HtmlBookReader &reader) : myReader(reader) {
 }

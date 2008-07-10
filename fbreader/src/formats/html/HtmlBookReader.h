@@ -26,7 +26,7 @@
 
 #include "HtmlReader.h"
 #include "../../bookmodel/BookReader.h"
-#include "StyleSheetTable.h"
+#include "../css/StyleSheetTable.h"
 
 class BookModel;
 class PlainTextFormat;
