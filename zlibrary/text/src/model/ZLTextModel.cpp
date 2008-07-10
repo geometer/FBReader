@@ -218,12 +218,35 @@ void ZLTextModel::addControl(ZLTextKind textKind, bool isStart) {
 }
 
 void ZLTextModel::addControl(const ZLTextForcedControlEntry &entry) {
-	myLastEntryStart = myAllocator.allocate(3 + 2 * sizeof(short));
-	*myLastEntryStart = ZLTextParagraphEntry::FORCED_CONTROL_ENTRY;
-	*(myLastEntryStart + 1) = entry.myMask;
-	memcpy(myLastEntryStart + 2, &entry.myLeftIndent, sizeof(short));
-	memcpy(myLastEntryStart + 2 + sizeof(short), &entry.myRightIndent, sizeof(short));
-	*(myLastEntryStart + 2 + 2 * sizeof(short)) = entry.myAlignmentType;
+	int len = sizeof(int) + 4 + ZLTextForcedControlEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
+	if (entry.fontFamilySupported()) {
+		len += entry.fontFamily().length() + 1;
+	}
+	myLastEntryStart = myAllocator.allocate(len);
+	char *address = myLastEntryStart;
+	*address++ = ZLTextParagraphEntry::FORCED_CONTROL_ENTRY;
+	memcpy(address, &entry.myMask, sizeof(int));
+	address += sizeof(int);
+	for (int i = 0; i < ZLTextForcedControlEntry::NUMBER_OF_LENGTHS; ++i) {
+		*address++ = entry.myLengths[i].Unit;
+		memcpy(address, &entry.myLengths[i].Size, sizeof(short));
+		address += sizeof(short);
+	}
+	char &mask = *address++;
+	mask = 0;
+	if (entry.myBold) {
+		mask |= 1;
+	}
+	if (entry.myItalic) {
+		mask |= 2;
+	}
+	*address++ = entry.myAlignmentType;
+	*address++ = entry.myFontSizeMag;
+	if (entry.fontFamilySupported()) {
+		memcpy(address, entry.fontFamily().data(), entry.fontFamily().length());
+		address += entry.fontFamily().length();
+		*address++ = '\0';
+	}
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
