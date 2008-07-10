@@ -19,15 +19,19 @@
 
 #include <string.h>
 
+#include <ZLFile.h>
 #include <ZLFileImage.h>
 #include <ZLUnicodeUtil.h>
 
 #include "XHTMLReader.h"
 #include "../util/EntityFilesCollector.h"
 #include "../util/MiscUtil.h"
+#include "../css/StyleSheetParser.h"
 
 #include "../../bookmodel/BookReader.h"
 #include "../../bookmodel/BookModel.h"
+
+static const bool USE_CSS = false;
 
 std::map<std::string,XHTMLTagAction*> XHTMLReader::ourTagActions;
 
@@ -41,6 +45,13 @@ BookReader &XHTMLTagAction::bookReader(XHTMLReader &reader) {
 const std::string &XHTMLTagAction::pathPrefix(XHTMLReader &reader) {
 	return reader.myPathPrefix;
 }
+
+class XHTMLTagLinkAction : public XHTMLTagAction {
+
+public:
+	void doAtStart(XHTMLReader &reader, const char **xmlattributes);
+	void doAtEnd(XHTMLReader &reader);
+};
 
 class XHTMLTagParagraphAction : public XHTMLTagAction {
 
@@ -116,8 +127,41 @@ public:
 	void doAtEnd(XHTMLReader &reader);
 };
 
+void XHTMLTagLinkAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+	static const std::string REL = "stylesheet";
+	const char *rel = reader.attributeValue(xmlattributes, "rel");
+	if ((rel == 0) || (REL != rel)) {
+		return;
+	}
+	static const std::string TYPE = "text/css";
+
+	const char *type = reader.attributeValue(xmlattributes, "type");
+	if ((type == 0) || (TYPE != type)) {
+		return;
+	}
+
+	const char *href = reader.attributeValue(xmlattributes, "href");
+	if (href == 0) {
+		return;
+	}
+
+	shared_ptr<ZLInputStream> cssStream = ZLFile(reader.myPathPrefix + href).inputStream();
+	if (cssStream.isNull()) {
+		return;
+	}
+	StyleSheetParser parser(reader.myStyleSheetTable);
+	parser.parse(*cssStream);
+	//reader.myStyleSheetTable.dump();
+}
+
+void XHTMLTagLinkAction::doAtEnd(XHTMLReader&) {
+}
+
 void XHTMLTagParagraphAction::doAtStart(XHTMLReader &reader, const char**) {
-	bookReader(reader).beginParagraph();
+	if (!reader.myNewParagraphInProgress) {
+		bookReader(reader).beginParagraph();
+		reader.myNewParagraphInProgress = true;
+	}
 }
 
 void XHTMLTagParagraphAction::doAtEnd(XHTMLReader &reader) {
@@ -297,7 +341,7 @@ void XHTMLReader::fillTagTable() {
 		//addAction("dt",	new XHTMLTagAction());
 		//addAction("head",	new XHTMLTagAction());
 		//addAction("hr",	new XHTMLTagAction());
-		//addAction("link",	new XHTMLTagAction());
+		addAction("link",	new XHTMLTagLinkAction());
 		//addAction("param",	new XHTMLTagAction());
 		//addAction("q",	new XHTMLTagAction());
 		//addAction("s",	new XHTMLTagAction());
@@ -341,6 +385,7 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, shared_ptr<ZLInputStre
 	myReferenceName = referenceName;
 
 	myPreformatted = false;
+	myNewParagraphInProgress = false;
 
 	return readDocument(stream);
 }
@@ -352,16 +397,54 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 		myModelReader.addHyperlinkLabel(myReferenceName + HASH + id);
 	}
 
-	XHTMLTagAction *action = ourTagActions[ZLUnicodeUtil::toLower(tag)];
+	const std::string sTag = ZLUnicodeUtil::toLower(tag);
+
+	const char *aClass = attributeValue(attributes, "class");
+	const std::string sClass = (aClass != 0) ? aClass : "";
+
+	if (myStyleSheetTable.doBreakBefore(sTag, sClass)) {
+		myModelReader.insertEndOfSectionParagraph();
+	}
+
+	XHTMLTagAction *action = ourTagActions[sTag];
 	if (action != 0) {
 		action->doAtStart(*this, attributes);
 	}
+
+	int count = 0;
+	{
+		const ZLTextForcedControlEntry &entry = myStyleSheetTable.control(sTag, "");
+		if (!entry.isEmpty()) {
+			++count;
+			myModelReader.addControl(entry);
+		}
+	}
+	{
+		const ZLTextForcedControlEntry &entry = myStyleSheetTable.control("", sClass);
+		if (!entry.isEmpty()) {
+			++count;
+			myModelReader.addControl(entry);
+		}
+	}
+	{
+		const ZLTextForcedControlEntry &entry = myStyleSheetTable.control(sTag, sClass);
+		if (!entry.isEmpty()) {
+			++count;
+			myModelReader.addControl(entry);
+		}
+	}
+	myCSSStack.push_back(count);
 }
 
 void XHTMLReader::endElementHandler(const char *tag) {
+	for (int i = myCSSStack.back(); i > 0; --i) {
+		myModelReader.addControl(REGULAR, false);
+	}
+	myCSSStack.pop_back();
 	XHTMLTagAction *action = ourTagActions[ZLUnicodeUtil::toLower(tag)];
 	if (action != 0) {
 		action->doAtEnd(*this);
+		myNewParagraphInProgress = false;
 	}
 }
 
@@ -374,15 +457,21 @@ void XHTMLReader::characterDataHandler(const char *text, int len) {
 			myModelReader.addControl(CODE, true);
 		}
 		int spaceCounter = 0;
-		while ((spaceCounter < len) && isspace((unsigned char)*text)) {
+		while ((spaceCounter < len) && isspace((unsigned char)*(text + spaceCounter))) {
 			++spaceCounter;
 		}
 		myModelReader.addFixedHSpace(spaceCounter);
 		text += spaceCounter;
 		len -= spaceCounter;
+	} else if (myNewParagraphInProgress) {
+		while ((len > 0) && isspace((unsigned char)*text)) {
+			--len;
+			++text;
+		}
 	}
 	if (len > 0) {
 		myModelReader.addData(std::string(text, len));
+		myNewParagraphInProgress = false;
 	}
 }
 

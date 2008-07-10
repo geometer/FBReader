@@ -26,6 +26,8 @@
 
 #include <ZLXMLReader.h>
 
+#include "../css/StyleSheetTable.h"
+
 class BookReader;
 class XHTMLReader;
 
@@ -67,10 +69,15 @@ private:
 	std::string myPathPrefix;
 	std::string myReferenceName;
 	bool myPreformatted;
+	bool myNewParagraphInProgress;
+	StyleSheetTable myStyleSheetTable;
+	std::vector<int> myCSSStack;
 
 	friend class XHTMLTagAction;
+	friend class XHTMLTagLinkAction;
 	friend class XHTMLTagHyperlinkAction;
 	friend class XHTMLTagPreAction;
+	friend class XHTMLTagParagraphAction;
 };
 
 #endif /* __XHTMLREADER_H__ */
