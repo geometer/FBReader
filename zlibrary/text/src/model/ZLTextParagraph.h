@@ -58,34 +58,74 @@ private: // disable copying
 class ZLTextForcedControlEntry : public ZLTextParagraphEntry {
 
 public:
+	enum SizeUnit {
+		SIZE_UNIT_PIXEL,
+		SIZE_UNIT_TEN_EM,
+		SIZE_UNIT_PERCENT
+	};
+
+	enum Length {
+		LENGTH_LEFT_INDENT = 0,
+		LENGTH_RIGHT_INDENT = 1,
+		LENGTH_FIRST_LINE_INDENT_DELTA = 2,
+		LENGTH_SPACE_BEFORE = 3,
+		LENGTH_SPACE_AFTER = 4,
+		NUMBER_OF_LENGTHS = 5,
+	};
+
+private:
+	struct LengthType {
+		SizeUnit Unit;
+		short Size;
+	};
+
+public:
 	ZLTextForcedControlEntry();
 	ZLTextForcedControlEntry(char *address);
 	~ZLTextForcedControlEntry();
 
-	bool leftIndentSupported() const;
-	short leftIndent() const;
-	void setLeftIndent(short leftIndent);
+	bool isEmpty() const;
 
-	bool rightIndentSupported() const;
-	short rightIndent() const;
-	void setRightIndent(short rightIndent);
+	bool lengthSupported(Length name) const;
+	short length(Length name, short fullSize) const;
+	void setLength(Length name, short length, SizeUnit unit);
 
 	bool alignmentTypeSupported() const;
 	ZLTextAlignmentType alignmentType() const;
 	void setAlignmentType(ZLTextAlignmentType alignmentType);
 
-	enum {
-		SUPPORT_LEFT_INDENT = 1 << 0,
-		SUPPORT_RIGHT_INDENT = 1 << 1,
-		SUPPORT_ALIGNMENT_TYPE = 1 << 2,
-	};
+	bool boldSupported() const;
+	bool bold() const;
+	void setBold(bool bold);
+
+	bool italicSupported() const;
+	bool italic() const;
+	void setItalic(bool italic);
+
+	bool fontSizeSupported() const;
+	signed char fontSizeMag() const;
+	void setFontSizeMag(signed char fontSizeMag);
+
+	bool fontFamilySupported() const;
+	const std::string &fontFamily() const;
+	void setFontFamily(const std::string &fontFamily);
+
+	static const int SUPPORT_BOLD = 1 << NUMBER_OF_LENGTHS;
+	static const int SUPPORT_ITALIC = 1 << (NUMBER_OF_LENGTHS + 1);
+	static const int SUPPORT_ALIGNMENT_TYPE = 1 << (NUMBER_OF_LENGTHS + 2);
+	static const int SUPPORT_FONT_SIZE = 1 << (NUMBER_OF_LENGTHS + 3);
+	static const int SUPPORT_FONT_FAMILY = 1 << (NUMBER_OF_LENGTHS + 4);
 
 private:
 	int myMask;
 
-	short myLeftIndent;
-	short myRightIndent;
+	LengthType myLengths[NUMBER_OF_LENGTHS];
+
 	ZLTextAlignmentType myAlignmentType;
+	bool myBold;
+	bool myItalic;
+	signed char myFontSizeMag;
+	std::string myFontFamily;
 
 friend class ZLTextModel;
 };
@@ -275,15 +315,31 @@ inline ZLTextParagraphEntry::~ZLTextParagraphEntry() {}
 
 inline ZLTextForcedControlEntry::ZLTextForcedControlEntry() : myMask(0) {}
 inline ZLTextForcedControlEntry::~ZLTextForcedControlEntry() {}
-inline bool ZLTextForcedControlEntry::leftIndentSupported() const { return myMask & SUPPORT_LEFT_INDENT; }
-inline short ZLTextForcedControlEntry::leftIndent() const { return myLeftIndent; }
-inline void ZLTextForcedControlEntry::setLeftIndent(short leftIndent) { myLeftIndent = leftIndent; myMask |= SUPPORT_LEFT_INDENT; }
-inline bool ZLTextForcedControlEntry::rightIndentSupported() const { return myMask & SUPPORT_RIGHT_INDENT; }
-inline short ZLTextForcedControlEntry::rightIndent() const { return myRightIndent; }
-inline void ZLTextForcedControlEntry::setRightIndent(short rightIndent) { myRightIndent = rightIndent; myMask |= SUPPORT_RIGHT_INDENT; }
+
+inline bool ZLTextForcedControlEntry::isEmpty() const { return myMask == 0; }
+
+inline bool ZLTextForcedControlEntry::lengthSupported(Length name) const { return myMask & (1 << name); }
+inline void ZLTextForcedControlEntry::setLength(Length name, short length, SizeUnit unit) { myLengths[name].Size = length; myLengths[name].Unit = unit; myMask |= 1 << name; }
+
 inline bool ZLTextForcedControlEntry::alignmentTypeSupported() const { return myMask & SUPPORT_ALIGNMENT_TYPE; }
 inline ZLTextAlignmentType ZLTextForcedControlEntry::alignmentType() const { return myAlignmentType; }
 inline void ZLTextForcedControlEntry::setAlignmentType(ZLTextAlignmentType alignmentType) { myAlignmentType = alignmentType; myMask |= SUPPORT_ALIGNMENT_TYPE; }
+
+inline bool ZLTextForcedControlEntry::boldSupported() const { return myMask & SUPPORT_BOLD; }
+inline bool ZLTextForcedControlEntry::bold() const { return myBold; }
+inline void ZLTextForcedControlEntry::setBold(bool bold) { myBold = bold; myMask |= SUPPORT_BOLD; }
+
+inline bool ZLTextForcedControlEntry::italicSupported() const { return myMask & SUPPORT_ITALIC; }
+inline bool ZLTextForcedControlEntry::italic() const { return myItalic; }
+inline void ZLTextForcedControlEntry::setItalic(bool italic) { myItalic = italic; myMask |= SUPPORT_ITALIC; }
+
+inline bool ZLTextForcedControlEntry::fontSizeSupported() const { return myMask & SUPPORT_FONT_SIZE; }
+inline signed char ZLTextForcedControlEntry::fontSizeMag() const { return myFontSizeMag; }
+inline void ZLTextForcedControlEntry::setFontSizeMag(signed char fontSizeMag) { myFontSizeMag = fontSizeMag; myMask |= SUPPORT_FONT_SIZE; }
+
+inline bool ZLTextForcedControlEntry::fontFamilySupported() const { return myMask & SUPPORT_FONT_FAMILY; }
+inline const std::string &ZLTextForcedControlEntry::fontFamily() const { return myFontFamily; }
+inline void ZLTextForcedControlEntry::setFontFamily(const std::string &fontFamily) { myFontFamily = fontFamily; myMask |= SUPPORT_FONT_FAMILY; }
 
 inline ZLTextControlEntry::ZLTextControlEntry(ZLTextKind kind, bool isStart) : myKind(kind), myStart(isStart) {}
 inline ZLTextControlEntry::~ZLTextControlEntry() {}
