@@ -31,7 +31,7 @@
 #include "chm/CHMPlugin.h"
 #include "rtf/RtfPlugin.h"
 #include "openreader/OpenReaderPlugin.h"
-#include "pdf/PdfPlugin.h"
+//#include "pdf/PdfPlugin.h"
 
 PluginCollection *PluginCollection::ourInstance = 0;
 
@@ -51,7 +51,7 @@ PluginCollection &PluginCollection::instance() {
 		ourInstance->myPlugins.push_back(new OEBPlugin());
 		ourInstance->myPlugins.push_back(new RtfPlugin());
 		ourInstance->myPlugins.push_back(new OpenReaderPlugin());
-		ourInstance->myPlugins.push_back(new PdfPlugin());
+		//ourInstance->myPlugins.push_back(new PdfPlugin());
 	}
 	return *ourInstance;
 }
