@@ -31,11 +31,34 @@ size_t ZLTextEntry::dataLength() const {
 	return len;
 }
 
+short ZLTextForcedControlEntry::length(Length name, short fullSize) const {
+	switch (myLengths[name].Unit) {
+		default:
+		case SIZE_UNIT_PIXEL:
+			return myLengths[name].Size;
+		case SIZE_UNIT_TEN_EM:
+			return myLengths[name].Size * 2;
+		case SIZE_UNIT_PERCENT:
+			return (myLengths[name].Size * (int)fullSize + 50) / 100;
+	}
+}
+
 ZLTextForcedControlEntry::ZLTextForcedControlEntry(char *address) {
-	myMask = *address;
-	memcpy(&myLeftIndent, address + 1, sizeof(short));
-	memcpy(&myRightIndent, address + 1 + sizeof(short), sizeof(short));
-	myAlignmentType = (ZLTextAlignmentType)*(address + 1 + 2 * sizeof(short));
+	memcpy(&myMask, address, sizeof(int));
+	address += sizeof(int);
+	for (int i = 0; i < NUMBER_OF_LENGTHS; ++i) {
+		myLengths[i].Unit = (SizeUnit)*address++;
+		memcpy(&myLengths[i].Size, address, sizeof(short));
+		address += sizeof(short);
+	}
+	const char mask = *address++;
+	myBold = mask & 1;
+	myItalic = mask & 2;
+	myAlignmentType = (ZLTextAlignmentType)*address++;
+	myFontSizeMag = (signed char)*address++;
+	if (fontFamilySupported()) {
+		myFontFamily = address;
+	}
 }
 
 const shared_ptr<ZLTextParagraphEntry> ZLTextParagraph::Iterator::entry() const {
@@ -103,8 +126,19 @@ void ZLTextParagraph::Iterator::next() {
 				++myPointer;
 				break;
 			case ZLTextParagraphEntry::FORCED_CONTROL_ENTRY:
-				myPointer += 2 * sizeof(short) + 3;
+			{
+				int mask;
+				memcpy(&mask, myPointer + 1, sizeof(int));
+				bool withFontFamily = mask & ZLTextForcedControlEntry::SUPPORT_FONT_FAMILY;
+				myPointer += sizeof(int) + ZLTextForcedControlEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 4;
+				if (withFontFamily) {
+					while (*myPointer != '\0') {
+						++myPointer;
+					}
+					++myPointer;
+				}
 				break;
+			}
 			case ZLTextParagraphEntry::FIXED_HSPACE_ENTRY:
 				myPointer += 2;
 				break;
