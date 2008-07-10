@@ -219,8 +219,14 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 				if (myForcedEntry == 0) {
 					myForcedEntry = new ZLTextForcedControlEntry();
 				}
-				myForcedEntry->setLeftIndent(*(ptr + 1));
-				myForcedEntry->setRightIndent(*(ptr + 2));
+				myForcedEntry->setLength(
+					ZLTextForcedControlEntry::LENGTH_LEFT_INDENT,
+					*(ptr + 1), ZLTextForcedControlEntry::SIZE_UNIT_PIXEL
+				);
+				myForcedEntry->setLength(
+					ZLTextForcedControlEntry::LENGTH_RIGHT_INDENT,
+					*(ptr + 2), ZLTextForcedControlEntry::SIZE_UNIT_PIXEL
+				);
 			}
 			break;
 		case 0x29:
