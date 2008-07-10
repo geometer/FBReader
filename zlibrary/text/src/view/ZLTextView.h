@@ -107,8 +107,8 @@ private:
 
 		const ZLPaintContext &context() const;
 		const ZLTextStylePtr textStyle() const;
-		int elementWidth(const ZLTextElement &element, unsigned int charNumber) const;
-		int elementHeight(const ZLTextElement &element) const;
+		int elementWidth(const ZLTextElement &element, unsigned int charNumber, short fullWidth) const;
+		int elementHeight(const ZLTextElement &element, short fullHeight) const;
 		int elementDescent(const ZLTextElement &element) const;
 
 		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
