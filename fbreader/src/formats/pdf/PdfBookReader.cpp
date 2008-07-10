@@ -28,31 +28,6 @@
 #include "PdfObject.h"
 #include "../../bookmodel/BookModel.h"
 
-enum PdfCharacterType {
-	PDF_CHAR_REGULAR,
-	PDF_CHAR_WHITESPACE,
-	PDF_CHAR_DELIMITER
-};
-
-static PdfCharacterType *PdfCharacterTypeTable = 0;
-
-static void skipWhiteSpaces(ZLInputStream &stream, char &ch) {
-	while ((PdfCharacterTypeTable[(unsigned char)ch] == PDF_CHAR_WHITESPACE) &&
-				 (stream.read(&ch, 1) == 1)) {
-	}
-}
-
-static void readToken(ZLInputStream &stream, std::string &buffer, char &ch) {
-	buffer.clear();
-	skipWhiteSpaces(stream, ch);
-	while (PdfCharacterTypeTable[(unsigned char)ch] == PDF_CHAR_REGULAR) {
-		buffer += ch;
-		if (stream.read(&ch, 1) != 1) {
-			break;
-		}
-	}
-}
-
 static void readLine(ZLInputStream &stream, std::string &buffer) {
 	buffer.clear();
 	char ch;
@@ -70,169 +45,6 @@ static void readLine(ZLInputStream &stream, std::string &buffer) {
 	}
 }
 
-shared_ptr<PdfObject> readObject(ZLInputStream &stream, char &ch) {
-	skipWhiteSpaces(stream, ch);
-
-	PdfObject::Type type = PdfObject::NIL;
-	bool hexString = false;
-	switch (ch) {
-		case '(':
-			hexString = false;
-			type = PdfObject::STRING;
-			break;
-		case '<':
-			stream.read(&ch, 1);
-			hexString = true;
-			type = (ch == '<') ? PdfObject::DICTIONARY : PdfObject::STRING;
-			break;
-		case '>': // end of dictionary
-			stream.read(&ch, 1);
-			if (ch == '>') {
-				stream.read(&ch, 1);
-			}
-			return 0;
-		case '/':
-			type = PdfObject::NAME;
-			break;
-		case '[':
-			type = PdfObject::ARRAY;
-			break;
-		case ']': // end of array
-			stream.read(&ch, 1);
-			return 0;
-		case '+':
-		case '-':
-		case '0':
-		case '1':
-		case '2':
-		case '3':
-		case '4':
-		case '5':
-		case '6':
-		case '7':
-		case '8':
-		case '9':
-			type = PdfObject::INTEGER_NUMBER;
-			break;
-		case 't':
-		case 'f':
-			type = PdfObject::BOOLEAN;
-			break;
-	}
-
-	switch (type) {
-		case PdfObject::DICTIONARY:
-		{
-			ch = 0;
-			shared_ptr<PdfObject> name;
-			shared_ptr<PdfObject> value;
-			shared_ptr<PdfObject> next;
-			PdfDictionaryObject *dictionary = new PdfDictionaryObject();
-			while (true) {
-				next = readObject(stream, ch);
-				if (next.isNull()) {
-					break;
-				}
-				PdfObject::Type oType = next->type();
-				if (oType == PdfObject::NAME) {
-					name = next;
-					value = readObject(stream, ch);
-					if (value.isNull()) {
-						break;
-					}
-					dictionary->setObject(name, value);
-				} else if (oType == PdfObject::INTEGER_NUMBER) {
-					if (value.isNull() || (value->type() != PdfObject::INTEGER_NUMBER)) {
-						break;
-					}
-					skipWhiteSpaces(stream, ch);
-					if (ch != 'R') {
-						break;
-					}
-					const int number = ((PdfIntegerObject&)*value).value();
-					const int generation = ((PdfIntegerObject&)*next).value();
-					dictionary->setObject(name, new PdfObjectReference(number, generation));
-					value = 0;
-					ch = 0;
-				} else {
-					break;
-				}
-			}
-			return dictionary;
-		}
-		case PdfObject::NAME:
-		{
-			std::string name;
-			stream.read(&ch, 1);
-			readToken(stream, name, ch);
-			return PdfNameObject::nameObject(name);
-		}
-		case PdfObject::BOOLEAN:
-		{
-			std::string name;
-			readToken(stream, name, ch);
-			return (name == "true") ? PdfBooleanObject::TRUE() : PdfBooleanObject::FALSE();
-		}
-		case PdfObject::INTEGER_NUMBER:
-		{
-			std::string str;
-			if ((ch == '+') || (ch == '-')) {
-				str += ch;
-				stream.read(&ch, 1);
-			}
-			while ((ch >= '0') && (ch <= '9')) {
-				str += ch;
-				stream.read(&ch, 1);
-			}
-			return PdfIntegerObject::integerObject(atoi(str.c_str()));
-		}
-		case PdfObject::STRING:
-		{
-			std::string value;
-			if (hexString) {
-				char num[3];
-				num[2] = '\0';
-				while (ch != '>') {
-					num[0] = ch;
-					stream.read(num + 1, 1);
-					value += (char)strtol(num, 0, 16);
-					stream.read(&ch, 1);
-				}
-				ch = 0;
-			} else {
-				// TODO: implement
-			}
-			return new PdfStringObject(value);
-		}
-		case PdfObject::ARRAY:
-		{
-			PdfArrayObject *array = new PdfArrayObject();
-			ch = 0;
-			while (true) {
-				shared_ptr<PdfObject> object = readObject(stream, ch);
-				if (object.isNull()) {
-					break;
-				}
-				array->addObject(object);
-			}
-			std::cerr << "PdfArrayObject " << array->size() << "\n";
-			return array;
-		}
-		default:
-			break;
-	}
-
-	std::string buffer;
-	stream.read(&ch, 1);
-	while (PdfCharacterTypeTable[(unsigned char)ch] == PDF_CHAR_REGULAR) {
-		buffer += ch;
-		stream.read(&ch, 1);
-	}
-	std::cerr << "buffer = " << buffer << "\n";
-
-	return 0;
-}
-
 PdfBookReader::PdfBookReader(BookModel &model) : myModelReader(model) {
 }
 
@@ -246,24 +58,24 @@ shared_ptr<PdfObject> PdfBookReader::readObjectFromLocation(ZLInputStream &strea
 	}
 	stream.seek(jt->second, true);
 	char ch = 0;
-	readToken(stream, myBuffer, ch);
+	PdfObject::readToken(stream, myBuffer, ch);
 	if (address.first != atoi(myBuffer.c_str())) {
 		return 0;
 	}
-	readToken(stream, myBuffer, ch);
+	PdfObject::readToken(stream, myBuffer, ch);
 	if (address.second != atoi(myBuffer.c_str())) {
 		return 0;
 	}
-	readToken(stream, myBuffer, ch);
+	PdfObject::readToken(stream, myBuffer, ch);
 	if (myBuffer != "obj") {
 		return 0;
 	}
-	return readObject(stream, ch);
+	return PdfObject::readObject(stream, ch);
 }
 
 shared_ptr<PdfObject> PdfBookReader::resolveReference(shared_ptr<PdfObject> ref, ZLInputStream &stream) {
 	if (ref.isNull() || (ref->type() != PdfObject::REFERENCE)) {
-		return 0;
+		return ref;
 	}
 	const PdfObjectReference &reference = (const PdfObjectReference&)*ref;
 	const std::pair<int,int>address(reference.number(), reference.generation());
@@ -318,7 +130,7 @@ bool PdfBookReader::readReferenceTable(ZLInputStream &stream, int xrefOffset) {
 			}
 		}
 		char ch = 0;
-		shared_ptr<PdfObject> trailer = readObject(stream, ch);
+		shared_ptr<PdfObject> trailer = PdfObject::readObject(stream, ch);
 		if (trailer.isNull() || (trailer->type() != PdfObject::DICTIONARY)) {
 			return false;
 		}
@@ -339,29 +151,6 @@ bool PdfBookReader::readReferenceTable(ZLInputStream &stream, int xrefOffset) {
 }
 
 bool PdfBookReader::readBook(shared_ptr<ZLInputStream> stream) {
-	if (PdfCharacterTypeTable == 0) {
-		PdfCharacterTypeTable = new PdfCharacterType[256];
-		for (int i = 0; i < 256; ++i) {
-			PdfCharacterTypeTable[i] = PDF_CHAR_REGULAR;
-		}
-		PdfCharacterTypeTable[0] = PDF_CHAR_WHITESPACE;
-		PdfCharacterTypeTable[9] = PDF_CHAR_WHITESPACE;
-		PdfCharacterTypeTable[10] = PDF_CHAR_WHITESPACE;
-		PdfCharacterTypeTable[12] = PDF_CHAR_WHITESPACE;
-		PdfCharacterTypeTable[13] = PDF_CHAR_WHITESPACE;
-		PdfCharacterTypeTable[32] = PDF_CHAR_WHITESPACE;
-		PdfCharacterTypeTable['('] = PDF_CHAR_DELIMITER;
-		PdfCharacterTypeTable[')'] = PDF_CHAR_DELIMITER;
-		PdfCharacterTypeTable['<'] = PDF_CHAR_DELIMITER;
-		PdfCharacterTypeTable['>'] = PDF_CHAR_DELIMITER;
-		PdfCharacterTypeTable['['] = PDF_CHAR_DELIMITER;
-		PdfCharacterTypeTable[']'] = PDF_CHAR_DELIMITER;
-		PdfCharacterTypeTable['{'] = PDF_CHAR_DELIMITER;
-		PdfCharacterTypeTable['}'] = PDF_CHAR_DELIMITER;
-		PdfCharacterTypeTable['/'] = PDF_CHAR_DELIMITER;
-		PdfCharacterTypeTable['%'] = PDF_CHAR_DELIMITER;
-	}
-
 	if (stream.isNull() || !stream->open()) {
 		return false;
 	}
@@ -421,10 +210,53 @@ bool PdfBookReader::readBook(shared_ptr<ZLInputStream> stream) {
 		return false;
 	}
 	
+	/*
 	shared_ptr<PdfObject> count = pageRootNodeDictionary["Count"];
 	if (!count.isNull() && (count->type() == PdfObject::INTEGER_NUMBER)) {
 		std::cerr << "count = " << ((PdfIntegerObject&)*count).value() << "\n";
 	}
+	*/
+	shared_ptr<PdfObject> pages = pageRootNodeDictionary["Kids"];
+	if (pages.isNull() || (pages->type() != PdfObject::ARRAY)) {
+		return false;
+	}
+	const PdfArrayObject& pagesArray = (const PdfArrayObject&)*pages;
+	const size_t pageNumber = pagesArray.size();
+	for (size_t i = 0; i < pageNumber; ++i) {
+		processPage(pagesArray[i], *stream);
+	}
 
 	return true;
+}
+
+void PdfBookReader::processContents(shared_ptr<PdfObject> contentsObject, ZLInputStream &stream) {
+	contentsObject = resolveReference(contentsObject, stream);
+}
+
+void PdfBookReader::processPage(shared_ptr<PdfObject> pageObject, ZLInputStream &stream) {
+	pageObject = resolveReference(pageObject, stream);
+	if (pageObject.isNull() || pageObject->type() != PdfObject::DICTIONARY) {
+		return;
+	}
+	const PdfDictionaryObject &pageDictionary = (const PdfDictionaryObject&)*pageObject;
+	shared_ptr<PdfObject> contents = pageDictionary["Contents"];
+	if (contents.isNull()) {
+		return;
+	}
+	switch (contents->type()) {
+		default:
+			break;
+		case PdfObject::REFERENCE:
+			processContents(contents, stream);
+			break;
+		case PdfObject::ARRAY:
+		{
+			const PdfArrayObject &array = (const PdfArrayObject&)*contents;
+			const size_t len = array.size();
+			for (size_t i = 0; i < len; ++i) {
+				processContents(array[i], stream);
+			}
+			break;
+		}
+	}
 }

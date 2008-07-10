@@ -38,6 +38,8 @@ private:
 	bool readReferenceTable(ZLInputStream &stream, int offset);
 	shared_ptr<PdfObject> resolveReference(shared_ptr<PdfObject> reference, ZLInputStream &stream);
 	shared_ptr<PdfObject> readObjectFromLocation(ZLInputStream &stream, const std::pair<int,int> &address);
+	void processPage(shared_ptr<PdfObject> pageObject, ZLInputStream &stream);
+	void processContents(shared_ptr<PdfObject> contentsObject, ZLInputStream &stream);
 
 private:
 	BookReader myModelReader;

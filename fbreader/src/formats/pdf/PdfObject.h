@@ -31,6 +31,13 @@ class ZLInputStream;
 class PdfObject {
 
 public:
+	static shared_ptr<PdfObject> readObject(ZLInputStream &stream, char &ch);
+	static void readToken(ZLInputStream &stream, std::string &buffer, char &ch);
+
+protected:
+	static void skipWhiteSpaces(ZLInputStream &stream, char &ch);
+
+public:
 	enum Type {
 		BOOLEAN,
 		INTEGER_NUMBER,
@@ -97,7 +104,7 @@ private:
 private:
 	std::string myValue;
 
-friend shared_ptr<PdfObject> readObject(ZLInputStream &stream, char &ch);
+friend shared_ptr<PdfObject> PdfObject::readObject(ZLInputStream &stream, char &ch);
 };
 
 class PdfNameObject : public PdfObject {
@@ -131,7 +138,28 @@ private:
 private:
 	std::map<shared_ptr<PdfObject>,shared_ptr<PdfObject> > myMap;
 
-friend shared_ptr<PdfObject> readObject(ZLInputStream &stream, char &ch);
+friend shared_ptr<PdfObject> PdfObject::readObject(ZLInputStream &stream, char &ch);
+};
+
+class PdfStreamObject : public PdfObject {
+
+private:
+	PdfStreamObject(const PdfDictionaryObject &dictionary, ZLInputStream &dataStream);
+
+private:
+	Type type() const;
+
+private:
+	std::string myData;
+	/*
+	enum EncodingType {
+		UNKNOWN,
+		FLATE,
+	};
+	std::vector<EncodingType> myFilters;
+	*/
+
+friend shared_ptr<PdfObject> PdfObject::readObject(ZLInputStream &stream, char &ch);
 };
 
 class PdfArrayObject : public PdfObject {
@@ -139,6 +167,7 @@ class PdfArrayObject : public PdfObject {
 private:
 	PdfArrayObject();
 	void addObject(shared_ptr<PdfObject> object);
+	shared_ptr<PdfObject> popLast();
 
 public:
 	int size() const;
@@ -150,7 +179,7 @@ private:
 private:
 	std::vector<shared_ptr<PdfObject> > myVector;
 
-friend shared_ptr<PdfObject> readObject(ZLInputStream &stream, char &ch);
+friend shared_ptr<PdfObject> PdfObject::readObject(ZLInputStream &stream, char &ch);
 };
 
 class PdfObjectReference : public PdfObject {
