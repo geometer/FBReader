@@ -179,6 +179,9 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	ZLDialogContent &selectionTab = myDialog->createTab(ZLResourceKey("Selection"));
 	selectionTab.addOption(ZLResourceKey("enableSelection"), FBView::selectionOption());
 
+	ZLDialogContent &cssTab = myDialog->createTab(ZLResourceKey("CSS"));
+	cssTab.addOption(ZLResourceKey("overrideSpecifiedFonts"), ZLTextStyleCollection::instance().OverrideSpecifiedFontsOption);
+
 	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("Margins"));
 	FBMargins &margins = FBView::margins();
 	marginTab.addOptions(
