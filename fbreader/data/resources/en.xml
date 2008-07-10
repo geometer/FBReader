@@ -110,6 +110,9 @@
 				<node name="Selection" value="Selection">
 					<node name="enableSelection" value="Enable Text Selection"/>
 				</node>
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Always Use My Own Fonts"/>
+				</node>
 				<node name="Margins" value="Margins">
 					<node name="left" value="Left Margin"/>
 					<node name="right" value="Right Margin"/>
