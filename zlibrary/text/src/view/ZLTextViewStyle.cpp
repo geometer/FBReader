@@ -63,7 +63,7 @@ void ZLTextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
 	}
 }
 
-void ZLTextView::ViewStyle::applyControl(const ZLTextForcedControlElement &control) {
+void ZLTextView::ViewStyle::applyControl(const ZLTextStyleElement &control) {
 	setTextStyle(new ZLTextForcedStyle(myTextStyle, control.entry()));
 }
 
@@ -73,26 +73,26 @@ void ZLTextView::ViewStyle::applyControls(const ZLTextWordCursor &begin, const Z
 		if (element.kind() == ZLTextElement::CONTROL_ELEMENT) {
 			applyControl((ZLTextControlElement&)element);
 		} else if (element.kind() == ZLTextElement::FORCED_CONTROL_ELEMENT) {
-			applyControl((ZLTextForcedControlElement&)element);
+			applyControl((ZLTextStyleElement&)element);
 		}
 	}
 }
 
-int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned int charNumber, short fullWidth) const {
+int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned int charNumber, const ZLTextStyleEntry::Metrics &metrics) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
 			return wordWidth((const ZLTextWord&)element, charNumber, -1, false);
 		case ZLTextElement::IMAGE_ELEMENT:
 			return context().imageWidth(((const ZLTextImageElement&)element).image());
 		case ZLTextElement::INDENT_ELEMENT:
-			return textStyle()->firstLineIndentDelta(fullWidth);
+			return textStyle()->firstLineIndentDelta(metrics);
 		case ZLTextElement::HSPACE_ELEMENT:
 		case ZLTextElement::NB_HSPACE_ELEMENT:
 			return 0;
 		case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
 		case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
 		case ZLTextElement::EMPTY_LINE_ELEMENT:
-			return fullWidth + abs(textStyle()->leftIndent(fullWidth)) + abs(textStyle()->rightIndent(fullWidth)) + abs(textStyle()->firstLineIndentDelta(fullWidth)) + 1;
+			return metrics.FullWidth + abs(textStyle()->leftIndent(metrics)) + abs(textStyle()->rightIndent(metrics)) + abs(textStyle()->firstLineIndentDelta(metrics)) + 1;
 		case ZLTextElement::FORCED_CONTROL_ELEMENT:
 		case ZLTextElement::CONTROL_ELEMENT:
 			return 0;
@@ -102,7 +102,7 @@ int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned i
 	return 0;
 }
 
-int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element, short fullHeight) const {
+int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element, const ZLTextStyleEntry::Metrics &metrics) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
 			if (myWordHeight == -1) {
@@ -114,9 +114,9 @@ int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element, short ful
 				context().imageHeight(((const ZLTextImageElement&)element).image()) +
 				std::max(context().stringHeight() * (textStyle()->lineSpacePercent() - 100) / 100, 3);
 		case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
-			return - textStyle()->spaceAfter(fullHeight);
+			return - textStyle()->spaceAfter(metrics);
 		case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
-			return - textStyle()->spaceBefore(fullHeight);
+			return - textStyle()->spaceBefore(metrics);
 		case ZLTextElement::EMPTY_LINE_ELEMENT:
 			return context().stringHeight();
 		case ZLTextElement::INDENT_ELEMENT:

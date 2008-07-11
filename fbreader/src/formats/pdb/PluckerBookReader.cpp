@@ -217,22 +217,22 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 		case 0x22:
 			if (!myParagraphStarted) {
 				if (myForcedEntry == 0) {
-					myForcedEntry = new ZLTextForcedControlEntry();
+					myForcedEntry = new ZLTextStyleEntry();
 				}
 				myForcedEntry->setLength(
-					ZLTextForcedControlEntry::LENGTH_LEFT_INDENT,
-					*(ptr + 1), ZLTextForcedControlEntry::SIZE_UNIT_PIXEL
+					ZLTextStyleEntry::LENGTH_LEFT_INDENT,
+					*(ptr + 1), ZLTextStyleEntry::SIZE_UNIT_PIXEL
 				);
 				myForcedEntry->setLength(
-					ZLTextForcedControlEntry::LENGTH_RIGHT_INDENT,
-					*(ptr + 2), ZLTextForcedControlEntry::SIZE_UNIT_PIXEL
+					ZLTextStyleEntry::LENGTH_RIGHT_INDENT,
+					*(ptr + 2), ZLTextStyleEntry::SIZE_UNIT_PIXEL
 				);
 			}
 			break;
 		case 0x29:
 			if (!myParagraphStarted) {
 				if (myForcedEntry == 0) {
-					myForcedEntry = new ZLTextForcedControlEntry();
+					myForcedEntry = new ZLTextStyleEntry();
 				}
 				switch (*(ptr + 1)) {
 					case 0: myForcedEntry->setAlignmentType(ALIGN_LEFT); break;

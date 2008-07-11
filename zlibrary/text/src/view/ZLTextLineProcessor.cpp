@@ -108,7 +108,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 					myStyle.applyControl((const ZLTextControlElement&)element);
 					break;
 				case ZLTextElement::FORCED_CONTROL_ELEMENT:
-					myStyle.applyControl((const ZLTextForcedControlElement&)element);
+					myStyle.applyControl((const ZLTextStyleElement&)element);
 					break;
 				default:
 					break;
@@ -125,11 +125,12 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 	ZLTextStylePtr storedStyle = myStyle.textStyle();
 
-	const short fullWidth = viewWidth();
-	const short fullHeight = textAreaHeight();
-	info.LeftIndent = myStyle.textStyle()->leftIndent(fullWidth);
+	const int fontSize = myStyle.textStyle()->fontSize();
+	// TODO: change metrics at font change
+	const ZLTextStyleEntry::Metrics metrics(fontSize, fontSize / 2, viewWidth(), textAreaHeight());
+	info.LeftIndent = myStyle.textStyle()->leftIndent(metrics);
 	if (isFirstLine) {
-		info.LeftIndent += myStyle.textStyle()->firstLineIndentDelta(fullWidth);
+		info.LeftIndent += myStyle.textStyle()->firstLineIndentDelta(metrics);
 	}
 	if (!info.NodeInfo.isNull()) {
 		info.LeftIndent += (myStyle.context().stringHeight() + 2) / 3 * 4 * (info.NodeInfo->VerticalLinesStack.size() + 1);
@@ -143,7 +144,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 	ZLTextPartialInfo newInfo(info, current);
 	bool allowBreakAtNBSpace = true;
-	const int maxWidth = fullWidth - myStyle.textStyle()->rightIndent(fullWidth);
+	const int maxWidth = metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics);
 	bool wordOccured = false;
 	int lastSpaceWidth = 0;
 	int removeLastSpace = false;
@@ -153,15 +154,15 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 	bool breakedAtFirstWord = false;
 	do {
 		const ZLTextElement &element = paragraphCursor[newInfo.End.wordNumber()];
-		newInfo.Width += myStyle.elementWidth(element, newInfo.End.charNumber(), fullWidth);
-		newInfo.Height = std::max(newInfo.Height, myStyle.elementHeight(element, fullHeight));
+		newInfo.Width += myStyle.elementWidth(element, newInfo.End.charNumber(), metrics);
+		newInfo.Height = std::max(newInfo.Height, myStyle.elementHeight(element, metrics));
 		newInfo.Descent = std::max(newInfo.Descent, myStyle.elementDescent(element));
 		switch (elementKind) {
 			case ZLTextElement::CONTROL_ELEMENT:
 				myStyle.applyControl((const ZLTextControlElement&)element);
 				break;
 			case ZLTextElement::FORCED_CONTROL_ELEMENT:
-				myStyle.applyControl((const ZLTextForcedControlElement&)element);
+				myStyle.applyControl((const ZLTextStyleElement&)element);
 				break;
 			case ZLTextElement::WORD_ELEMENT:
 			case ZLTextElement::IMAGE_ELEMENT:
@@ -225,7 +226,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		const ZLTextElement &element = paragraphCursor[newInfo.End.wordNumber()];
 		if (element.kind() == ZLTextElement::WORD_ELEMENT) {
 			const int startCharNumber = newInfo.End.charNumber();
-			newInfo.Width -= myStyle.elementWidth(element, startCharNumber, fullWidth);
+			newInfo.Width -= myStyle.elementWidth(element, startCharNumber, metrics);
 			const ZLTextWord &word = (ZLTextWord&)element;
 			int spaceLeft = maxWidth - newInfo.Width;
 			if (breakedAtFirstWord ||
@@ -246,7 +247,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 				if ((hyphenationPosition == startCharNumber) &&
 						(info.End.wordNumber() <= info.RealStart.wordNumber())) {
 					hyphenationPosition = word.Length;
-					subwordWidth = myStyle.elementWidth(element, startCharNumber, fullWidth);
+					subwordWidth = myStyle.elementWidth(element, startCharNumber, metrics);
 				}
 				if (hyphenationPosition > startCharNumber) {
 					newInfo.Width += subwordWidth;
@@ -267,10 +268,10 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 	myStyle.setTextStyle(storedStyle);
 
 	if (isFirstLine) {
-		info.Height += info.StartStyle->spaceBefore(fullHeight);
+		info.Height += info.StartStyle->spaceBefore(metrics);
 	}
 	if (info.End.isEndOfParagraph()) {
-		info.VSpaceAfter = myStyle.textStyle()->spaceAfter(fullHeight);
+		info.VSpaceAfter = myStyle.textStyle()->spaceAfter(metrics);
 	}
 
 	if (!info.End.equalWordNumber(end) || end.isEndOfParagraph()) {

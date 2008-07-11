@@ -413,21 +413,21 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 
 	int count = 0;
 	{
-		const ZLTextForcedControlEntry &entry = myStyleSheetTable.control(sTag, "");
+		const ZLTextStyleEntry &entry = myStyleSheetTable.control(sTag, "");
 		if (!entry.isEmpty()) {
 			++count;
 			myModelReader.addControl(entry);
 		}
 	}
 	{
-		const ZLTextForcedControlEntry &entry = myStyleSheetTable.control("", sClass);
+		const ZLTextStyleEntry &entry = myStyleSheetTable.control("", sClass);
 		if (!entry.isEmpty()) {
 			++count;
 			myModelReader.addControl(entry);
 		}
 	}
 	{
-		const ZLTextForcedControlEntry &entry = myStyleSheetTable.control(sTag, sClass);
+		const ZLTextStyleEntry &entry = myStyleSheetTable.control(sTag, sClass);
 		if (!entry.isEmpty()) {
 			++count;
 			myModelReader.addControl(entry);

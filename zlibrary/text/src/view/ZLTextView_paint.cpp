@@ -218,19 +218,20 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 
 	context().moveXTo(leftMargin() + info.LeftIndent);
 
-	const short fullWidth = viewWidth();
-	const short fullHeight = textAreaHeight();
+	const int fontSize = myStyle.textStyle()->fontSize();
+	// TODO: change metrics at font change
+	const ZLTextStyleEntry::Metrics metrics(fontSize, fontSize / 2, viewWidth(), textAreaHeight());
 
 	switch (myStyle.textStyle()->alignment()) {
 		case ALIGN_RIGHT:
-			context().moveX(fullWidth - myStyle.textStyle()->rightIndent(fullWidth) - info.Width);
+			context().moveX(metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics) - info.Width);
 			break;
 		case ALIGN_CENTER:
-			context().moveX((fullWidth - myStyle.textStyle()->rightIndent(fullWidth) - info.Width) / 2);
+			context().moveX((metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics) - info.Width) / 2);
 			break;
 		case ALIGN_JUSTIFY:
 			if (!endOfParagraph && (info.End.element().kind() != ZLTextElement::AFTER_PARAGRAPH_ELEMENT)) {
-				fullCorrection = fullWidth - myStyle.textStyle()->rightIndent(fullWidth) - info.Width;
+				fullCorrection = metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics) - info.Width;
 			}
 			break;
 		case ALIGN_LEFT:
@@ -244,13 +245,13 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 		const ZLTextElement &element = paragraph[pos.wordNumber()];
 		ZLTextElement::Kind kind = element.kind();
 		const int x = context().x();
-		int width = myStyle.elementWidth(element, pos.charNumber(), fullWidth);
+		int width = myStyle.elementWidth(element, pos.charNumber(), metrics);
 	
 		switch (kind) {
 			case ZLTextElement::WORD_ELEMENT:
 			case ZLTextElement::IMAGE_ELEMENT:
 			{
-				const int height = myStyle.elementHeight(element, fullHeight);
+				const int height = myStyle.elementHeight(element, metrics);
 				const int descent = myStyle.elementDescent(element);
 				const int length = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length - pos.charNumber() : 0;
 				myTextElementMap.push_back(
@@ -269,7 +270,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				changeStyle = true;
 				break;
 			case ZLTextElement::FORCED_CONTROL_ELEMENT:
-				myStyle.applyControl((const ZLTextForcedControlElement&)element);
+				myStyle.applyControl((const ZLTextStyleElement&)element);
 				changeStyle = true;
 				break;
 			case ZLTextElement::HSPACE_ELEMENT:
@@ -305,7 +306,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			const bool addHyphenationSign = ucs2string[start + len - 1] != '-';
 			const int x = context().x(); 
 			const int width = myStyle.wordWidth(word, start, len, addHyphenationSign);
-			const int height = myStyle.elementHeight(word, fullHeight);
+			const int height = myStyle.elementHeight(word, metrics);
 			const int descent = myStyle.elementDescent(word);
 			myTextElementMap.push_back(
 				ZLTextElementArea(

@@ -41,8 +41,8 @@ void ZLTextParagraphCursor::Processor::addWord(const char *ptr, int offset, int 
 void ZLTextParagraphCursor::Processor::fill() {
 	for (ZLTextParagraph::Iterator it = myParagraph; !it.isEnd(); it.next()) {
 		switch (it.entryKind()) {
-			case ZLTextParagraphEntry::FORCED_CONTROL_ENTRY:
-				myElements.push_back(new ZLTextForcedControlElement(it.entry()));
+			case ZLTextParagraphEntry::STYLE_ENTRY:
+				myElements.push_back(new ZLTextStyleElement(it.entry()));
 				break;
 			case ZLTextParagraphEntry::FIXED_HSPACE_ENTRY:
 				myElements.push_back(new ZLTextFixedHSpaceElement(((ZLTextFixedHSpaceEntry&)*it.entry()).length()));

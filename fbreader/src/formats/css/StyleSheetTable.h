@@ -35,15 +35,15 @@ private:
 
 	void addMap(const std::string &tag, const std::string &aClass, const AttributeMap &map);
 
-	shared_ptr<ZLTextForcedControlEntry> createControl(const AttributeMap &map) const;
+	shared_ptr<ZLTextStyleEntry> createControl(const AttributeMap &map) const;
 
-	static void setLength(ZLTextForcedControlEntry &entry, ZLTextForcedControlEntry::Length name, const AttributeMap &map, const std::string &attributeName);
+	static void setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Length name, const AttributeMap &map, const std::string &attributeName);
 	static const std::vector<std::string> &values(const AttributeMap &map, const std::string &name);
 
 public:
 	bool isEmpty() const;
 	bool doBreakBefore(const std::string &tag, const std::string &aClass) const;
-	const ZLTextForcedControlEntry &control(const std::string &tag, const std::string &aClass) const;
+	const ZLTextStyleEntry &control(const std::string &tag, const std::string &aClass) const;
 
 private:
 	struct Key {
@@ -55,7 +55,7 @@ private:
 		bool operator < (const Key &key) const;
 	};
 
-	std::map<Key,shared_ptr<ZLTextForcedControlEntry> > myControlMap;
+	std::map<Key,shared_ptr<ZLTextStyleEntry> > myControlMap;
 	std::map<Key,bool> myPageBreakMap;
 
 friend class StyleSheetParser;

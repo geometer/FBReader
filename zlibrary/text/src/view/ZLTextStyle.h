@@ -29,6 +29,7 @@
 
 #include <ZLTextKind.h>
 #include <ZLTextAlignmentType.h>
+#include <ZLTextParagraph.h>
 
 class ZLTextStyle {
 
@@ -48,11 +49,11 @@ public:
 
 	virtual ZLColor color() const = 0;
 
-	virtual short spaceBefore(short fullHeight) const = 0;
-	virtual short spaceAfter(short fullHeight) const = 0;
-	virtual short leftIndent(short fullWidth) const = 0;
-	virtual short rightIndent(short fullWidth) const = 0;
-	virtual short firstLineIndentDelta(short fullWidth) const = 0;
+	virtual short spaceBefore(const ZLTextStyleEntry::Metrics &metrics) const = 0;
+	virtual short spaceAfter(const ZLTextStyleEntry::Metrics &metrics) const = 0;
+	virtual short leftIndent(const ZLTextStyleEntry::Metrics &metrics) const = 0;
+	virtual short rightIndent(const ZLTextStyleEntry::Metrics &metrics) const = 0;
+	virtual short firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const = 0;
 	virtual int verticalShift() const = 0;
 	virtual ZLTextAlignmentType alignment() const = 0;
 	virtual double lineSpace() const = 0;
@@ -79,11 +80,11 @@ public:
 
 	ZLColor color() const;
 
-	short spaceBefore(short fullHeight) const;
-	short spaceAfter(short fullHeight) const;
-	short leftIndent(short fullWidth) const;
-	short rightIndent(short fullWidth) const;
-	short firstLineIndentDelta(short fullWidth) const;
+	short spaceBefore(const ZLTextStyleEntry::Metrics &metrics) const;
+	short spaceAfter(const ZLTextStyleEntry::Metrics &metrics) const;
+	short leftIndent(const ZLTextStyleEntry::Metrics &metrics) const;
+	short rightIndent(const ZLTextStyleEntry::Metrics &metrics) const;
+	short firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const;
 	int verticalShift() const;
 
 	ZLTextAlignmentType alignment() const;
@@ -186,12 +187,12 @@ private:
 	const ZLTextStylePtr myBase;
 };
 
-class ZLTextForcedControlEntry;
+class ZLTextStyleEntry;
 
 class ZLTextForcedStyle : public ZLTextDecoratedStyle {
 
 public:
-	ZLTextForcedStyle(ZLTextStylePtr base, const ZLTextForcedControlEntry &entry);
+	ZLTextForcedStyle(ZLTextStylePtr base, const ZLTextStyleEntry &entry);
 	~ZLTextForcedStyle();
 
 	const std::string &fontFamily() const;
@@ -202,11 +203,11 @@ public:
 
 	ZLColor color() const;
 
-	short spaceBefore(short fullHeight) const;
-	short spaceAfter(short fullHeight) const;
-	short leftIndent(short fullWidth) const;
-	short rightIndent(short fullWidth) const;
-	short firstLineIndentDelta(short fullWidth) const;
+	short spaceBefore(const ZLTextStyleEntry::Metrics &metrics) const;
+	short spaceAfter(const ZLTextStyleEntry::Metrics &metrics) const;
+	short leftIndent(const ZLTextStyleEntry::Metrics &metrics) const;
+	short rightIndent(const ZLTextStyleEntry::Metrics &metrics) const;
+	short firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const;
 	int verticalShift() const;
 	ZLTextAlignmentType alignment() const;
 	double lineSpace() const;
@@ -214,7 +215,7 @@ public:
 	bool allowHyphenations() const;
 
 private:
-	const ZLTextForcedControlEntry &myEntry;
+	const ZLTextStyleEntry &myEntry;
 };
 
 class ZLTextPartialDecoratedStyle : public ZLTextDecoratedStyle {
@@ -232,11 +233,11 @@ public:
 
 	ZLColor color() const;
 
-	short spaceBefore(short fullHeight) const;
-	short spaceAfter(short fullHeight) const;
-	short leftIndent(short fullWidth) const;
-	short rightIndent(short fullWidth) const;
-	short firstLineIndentDelta(short fullWidth) const;
+	short spaceBefore(const ZLTextStyleEntry::Metrics &metrics) const;
+	short spaceAfter(const ZLTextStyleEntry::Metrics &metrics) const;
+	short leftIndent(const ZLTextStyleEntry::Metrics &metrics) const;
+	short rightIndent(const ZLTextStyleEntry::Metrics &metrics) const;
+	short firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const;
 	int verticalShift() const;
 
 	ZLTextAlignmentType alignment() const;
@@ -263,11 +264,11 @@ public:
 
 	ZLColor color() const;
 
-	short spaceBefore(short fullHeight) const;
-	short spaceAfter(short fullHeight) const;
-	short leftIndent(short fullWidth) const;
-	short rightIndent(short fullWidth) const;
-	short firstLineIndentDelta(short fullWidth) const;
+	short spaceBefore(const ZLTextStyleEntry::Metrics &metrics) const;
+	short spaceAfter(const ZLTextStyleEntry::Metrics &metrics) const;
+	short leftIndent(const ZLTextStyleEntry::Metrics &metrics) const;
+	short rightIndent(const ZLTextStyleEntry::Metrics &metrics) const;
+	short firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const;
 	int verticalShift() const;
 
 	ZLTextAlignmentType alignment() const;
@@ -337,11 +338,11 @@ inline const std::string &ZLTextBaseStyle::fontFamily() const { return FontFamil
 inline int ZLTextBaseStyle::fontSize() const { return FontSizeOption.value(); }
 inline bool ZLTextBaseStyle::bold() const { return BoldOption.value(); }
 inline bool ZLTextBaseStyle::italic() const { return ItalicOption.value(); }
-inline short ZLTextBaseStyle::spaceBefore(short) const { return 0; }
-inline short ZLTextBaseStyle::spaceAfter(short) const { return 0; }
-inline short ZLTextBaseStyle::leftIndent(short) const { return 0; }
-inline short ZLTextBaseStyle::rightIndent(short) const { return 0; }
-inline short ZLTextBaseStyle::firstLineIndentDelta(short) const { return 0; }
+inline short ZLTextBaseStyle::spaceBefore(const ZLTextStyleEntry::Metrics&) const { return 0; }
+inline short ZLTextBaseStyle::spaceAfter(const ZLTextStyleEntry::Metrics&) const { return 0; }
+inline short ZLTextBaseStyle::leftIndent(const ZLTextStyleEntry::Metrics&) const { return 0; }
+inline short ZLTextBaseStyle::rightIndent(const ZLTextStyleEntry::Metrics&) const { return 0; }
+inline short ZLTextBaseStyle::firstLineIndentDelta(const ZLTextStyleEntry::Metrics&) const { return 0; }
 inline int ZLTextBaseStyle::verticalShift() const { return 0; }
 inline ZLTextAlignmentType ZLTextBaseStyle::alignment() const { return (ZLTextAlignmentType)AlignmentOption.value(); }
 inline double ZLTextBaseStyle::lineSpace() const { return LineSpacePercentOption.value() / 100.0; }
@@ -361,7 +362,7 @@ inline ZLTextDecoratedStyle::~ZLTextDecoratedStyle() {}
 inline bool ZLTextDecoratedStyle::isDecorated() const { return true; }
 inline const ZLTextStylePtr ZLTextDecoratedStyle::base() const { return myBase; }
 
-inline ZLTextForcedStyle::ZLTextForcedStyle(ZLTextStylePtr base, const ZLTextForcedControlEntry &entry) : ZLTextDecoratedStyle(base), myEntry(entry) {}
+inline ZLTextForcedStyle::ZLTextForcedStyle(ZLTextStylePtr base, const ZLTextStyleEntry &entry) : ZLTextDecoratedStyle(base), myEntry(entry) {}
 inline ZLTextForcedStyle::~ZLTextForcedStyle() {}
 inline ZLColor ZLTextForcedStyle::color() const { return base()->color(); }
 inline int ZLTextForcedStyle::verticalShift() const { return base()->verticalShift(); }
@@ -370,21 +371,21 @@ inline bool ZLTextForcedStyle::allowHyphenations() const { return base()->allowH
 
 inline ZLTextPartialDecoratedStyle::ZLTextPartialDecoratedStyle(const ZLTextStylePtr base, const ZLTextStyleDecoration &decoration) : ZLTextDecoratedStyle(base), myDecoration(decoration) {}
 inline ZLTextPartialDecoratedStyle::~ZLTextPartialDecoratedStyle() {}
-inline short ZLTextPartialDecoratedStyle::spaceBefore(short fullHeight) const { return base()->spaceBefore(fullHeight); }
-inline short ZLTextPartialDecoratedStyle::spaceAfter(short fullHeight) const { return base()->spaceAfter(fullHeight); }
-inline short ZLTextPartialDecoratedStyle::leftIndent(short fullWidth) const { return base()->leftIndent(fullWidth); }
-inline short ZLTextPartialDecoratedStyle::rightIndent(short fullWidth) const { return base()->rightIndent(fullWidth); }
-inline short ZLTextPartialDecoratedStyle::firstLineIndentDelta(short fullWidth) const { return base()->firstLineIndentDelta(fullWidth); }
+inline short ZLTextPartialDecoratedStyle::spaceBefore(const ZLTextStyleEntry::Metrics &metrics) const { return base()->spaceBefore(metrics); }
+inline short ZLTextPartialDecoratedStyle::spaceAfter(const ZLTextStyleEntry::Metrics &metrics) const { return base()->spaceAfter(metrics); }
+inline short ZLTextPartialDecoratedStyle::leftIndent(const ZLTextStyleEntry::Metrics &metrics) const { return base()->leftIndent(metrics); }
+inline short ZLTextPartialDecoratedStyle::rightIndent(const ZLTextStyleEntry::Metrics &metrics) const { return base()->rightIndent(metrics); }
+inline short ZLTextPartialDecoratedStyle::firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const { return base()->firstLineIndentDelta(metrics); }
 inline int ZLTextPartialDecoratedStyle::verticalShift() const { return base()->verticalShift() + myDecoration.VerticalShiftOption.value(); }
 inline ZLTextAlignmentType ZLTextPartialDecoratedStyle::alignment() const { return base()->alignment(); }
 inline double ZLTextPartialDecoratedStyle::lineSpace() const { return base()->lineSpace(); }
 
 inline ZLTextFullDecoratedStyle::ZLTextFullDecoratedStyle(const ZLTextStylePtr base, const ZLTextFullStyleDecoration &decoration) : ZLTextDecoratedStyle(base), myDecoration(decoration) {}
 inline ZLTextFullDecoratedStyle::~ZLTextFullDecoratedStyle() {}
-inline short ZLTextFullDecoratedStyle::spaceBefore(short) const { return myDecoration.SpaceBeforeOption.value(); }
-inline short ZLTextFullDecoratedStyle::spaceAfter(short) const { return myDecoration.SpaceAfterOption.value(); }
-inline short ZLTextFullDecoratedStyle::leftIndent(short fullWidth) const { return base()->leftIndent(fullWidth) + myDecoration.LeftIndentOption.value(); }
-inline short ZLTextFullDecoratedStyle::rightIndent(short fullWidth) const { return base()->rightIndent(fullWidth) + myDecoration.RightIndentOption.value(); }
+inline short ZLTextFullDecoratedStyle::spaceBefore(const ZLTextStyleEntry::Metrics&) const { return myDecoration.SpaceBeforeOption.value(); }
+inline short ZLTextFullDecoratedStyle::spaceAfter(const ZLTextStyleEntry::Metrics&) const { return myDecoration.SpaceAfterOption.value(); }
+inline short ZLTextFullDecoratedStyle::leftIndent(const ZLTextStyleEntry::Metrics &metrics) const { return base()->leftIndent(metrics) + myDecoration.LeftIndentOption.value(); }
+inline short ZLTextFullDecoratedStyle::rightIndent(const ZLTextStyleEntry::Metrics &metrics) const { return base()->rightIndent(metrics) + myDecoration.RightIndentOption.value(); }
 inline int ZLTextFullDecoratedStyle::verticalShift() const { return base()->verticalShift() + myDecoration.VerticalShiftOption.value(); }
 inline double ZLTextFullDecoratedStyle::lineSpace() const {
 	const int spacing = myDecoration.LineSpacePercentOption.value();

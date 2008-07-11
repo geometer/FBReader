@@ -80,13 +80,13 @@ private:
 	Kind myKind;
 };
 
-class ZLTextForcedControlElement : public ZLTextElement {
+class ZLTextStyleElement : public ZLTextElement {
 
 public:
-	ZLTextForcedControlElement(shared_ptr<ZLTextParagraphEntry> entry);
-	~ZLTextForcedControlElement();
+	ZLTextStyleElement(shared_ptr<ZLTextParagraphEntry> entry);
+	~ZLTextStyleElement();
 	Kind kind() const;
-	const ZLTextForcedControlEntry &entry() const;
+	const ZLTextStyleEntry &entry() const;
 
 private:
 	const shared_ptr<ZLTextParagraphEntry> myEntry;
@@ -134,10 +134,10 @@ inline ZLTextSpecialElement::ZLTextSpecialElement(Kind kind) : myKind(kind) {}
 inline ZLTextSpecialElement::~ZLTextSpecialElement() {}
 inline ZLTextElement::Kind ZLTextSpecialElement::kind() const { return myKind; };
 
-inline ZLTextForcedControlElement::ZLTextForcedControlElement(const shared_ptr<ZLTextParagraphEntry> entry) : myEntry(entry) {}
-inline ZLTextForcedControlElement::~ZLTextForcedControlElement() {}
-inline ZLTextElement::Kind ZLTextForcedControlElement::kind() const { return FORCED_CONTROL_ELEMENT; };
-inline const ZLTextForcedControlEntry &ZLTextForcedControlElement::entry() const { return (const ZLTextForcedControlEntry&)*myEntry; }
+inline ZLTextStyleElement::ZLTextStyleElement(const shared_ptr<ZLTextParagraphEntry> entry) : myEntry(entry) {}
+inline ZLTextStyleElement::~ZLTextStyleElement() {}
+inline ZLTextElement::Kind ZLTextStyleElement::kind() const { return FORCED_CONTROL_ELEMENT; };
+inline const ZLTextStyleEntry &ZLTextStyleElement::entry() const { return (const ZLTextStyleEntry&)*myEntry; }
 
 inline ZLTextControlElement::ZLTextControlElement(const shared_ptr<ZLTextParagraphEntry> entry) : myEntry(entry) {}
 inline ZLTextControlElement::~ZLTextControlElement() {}

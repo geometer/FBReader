@@ -80,8 +80,8 @@ bool ZLTextPartialDecoratedStyle::allowHyphenations() const {
 	return true;
 }
 
-short ZLTextFullDecoratedStyle::firstLineIndentDelta(short fullWidth) const {
-	return (alignment() == ALIGN_CENTER) ? 0 : base()->firstLineIndentDelta(fullWidth) + myDecoration.FirstLineIndentDeltaOption.value();
+short ZLTextFullDecoratedStyle::firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const {
+	return (alignment() == ALIGN_CENTER) ? 0 : base()->firstLineIndentDelta(metrics) + myDecoration.FirstLineIndentDeltaOption.value();
 }
 
 const std::string &ZLTextFullDecoratedStyle::fontFamily() const {
@@ -140,39 +140,39 @@ ZLColor ZLTextFullDecoratedStyle::color() const {
 	}
 }
 
-short ZLTextForcedStyle::leftIndent(short fullWidth) const {
+short ZLTextForcedStyle::leftIndent(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.lengthSupported(ZLTextForcedControlEntry::LENGTH_LEFT_INDENT) ?
-			myEntry.length(ZLTextForcedControlEntry::LENGTH_LEFT_INDENT, fullWidth) :
-			base()->leftIndent(fullWidth);
+		myEntry.lengthSupported(ZLTextStyleEntry::LENGTH_LEFT_INDENT) ?
+			myEntry.length(ZLTextStyleEntry::LENGTH_LEFT_INDENT, metrics) :
+			base()->leftIndent(metrics);
 }
 
-short ZLTextForcedStyle::rightIndent(short fullWidth) const {
+short ZLTextForcedStyle::rightIndent(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.lengthSupported(ZLTextForcedControlEntry::LENGTH_RIGHT_INDENT) ?
-			myEntry.length(ZLTextForcedControlEntry::LENGTH_RIGHT_INDENT, fullWidth) :
-			base()->rightIndent(fullWidth);
+		myEntry.lengthSupported(ZLTextStyleEntry::LENGTH_RIGHT_INDENT) ?
+			myEntry.length(ZLTextStyleEntry::LENGTH_RIGHT_INDENT, metrics) :
+			base()->rightIndent(metrics);
 }
 
-short ZLTextForcedStyle::spaceBefore(short fullHeight) const {
+short ZLTextForcedStyle::spaceBefore(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.lengthSupported(ZLTextForcedControlEntry::LENGTH_SPACE_BEFORE) ?
-			myEntry.length(ZLTextForcedControlEntry::LENGTH_SPACE_BEFORE, fullHeight) :
-			base()->spaceBefore(fullHeight);
+		myEntry.lengthSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE) ?
+			myEntry.length(ZLTextStyleEntry::LENGTH_SPACE_BEFORE, metrics) :
+			base()->spaceBefore(metrics);
 }
 
-short ZLTextForcedStyle::spaceAfter(short fullHeight) const {
+short ZLTextForcedStyle::spaceAfter(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.lengthSupported(ZLTextForcedControlEntry::LENGTH_SPACE_AFTER) ?
-			myEntry.length(ZLTextForcedControlEntry::LENGTH_SPACE_AFTER, fullHeight) :
-			base()->spaceAfter(fullHeight);
+		myEntry.lengthSupported(ZLTextStyleEntry::LENGTH_SPACE_AFTER) ?
+			myEntry.length(ZLTextStyleEntry::LENGTH_SPACE_AFTER, metrics) :
+			base()->spaceAfter(metrics);
 }
 
-short ZLTextForcedStyle::firstLineIndentDelta(short fullWidth) const {
+short ZLTextForcedStyle::firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.lengthSupported(ZLTextForcedControlEntry::LENGTH_FIRST_LINE_INDENT_DELTA) ?
-			myEntry.length(ZLTextForcedControlEntry::LENGTH_FIRST_LINE_INDENT_DELTA, fullWidth) :
-			base()->firstLineIndentDelta(fullWidth);
+		myEntry.lengthSupported(ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA) ?
+			myEntry.length(ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA, metrics) :
+			base()->firstLineIndentDelta(metrics);
 }
 
 ZLTextAlignmentType ZLTextForcedStyle::alignment() const {

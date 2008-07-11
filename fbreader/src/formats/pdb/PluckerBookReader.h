@@ -74,7 +74,7 @@ private:
 	std::string myConvertedTextBuffer;
 	bool myParagraphStarted;
 	bool myBufferIsEmpty;
-	ZLTextForcedControlEntry *myForcedEntry;
+	ZLTextStyleEntry *myForcedEntry;
 	std::vector<std::pair<FBTextKind,bool> > myDelayedControls;
 	std::vector<std::string> myDelayedHyperlinks;
 	unsigned short myCompressionVersion;

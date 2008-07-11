@@ -40,7 +40,7 @@ public:
 		IMAGE_ENTRY = 2,
 		CONTROL_ENTRY = 3,
 		HYPERLINK_CONTROL_ENTRY = 4,
-		FORCED_CONTROL_ENTRY = 5,
+		STYLE_ENTRY = 5,
 		FIXED_HSPACE_ENTRY = 6,
 	};
 
@@ -55,13 +55,23 @@ private: // disable copying
 	const ZLTextParagraphEntry &operator = (const ZLTextParagraphEntry &entry);
 };
 
-class ZLTextForcedControlEntry : public ZLTextParagraphEntry {
+class ZLTextStyleEntry : public ZLTextParagraphEntry {
 
 public:
 	enum SizeUnit {
 		SIZE_UNIT_PIXEL,
-		SIZE_UNIT_TEN_EM,
+		SIZE_UNIT_EM_100,
+		SIZE_UNIT_EX_100,
 		SIZE_UNIT_PERCENT
+	};
+
+	struct Metrics {
+		Metrics(int fontSize, int fontXHeight, int fullWidth, int fullHeight);
+
+		int FontSize;
+		int FontXHeight;
+		int FullWidth;
+		int FullHeight;
 	};
 
 	enum Length {
@@ -80,14 +90,14 @@ private:
 	};
 
 public:
-	ZLTextForcedControlEntry();
-	ZLTextForcedControlEntry(char *address);
-	~ZLTextForcedControlEntry();
+	ZLTextStyleEntry();
+	ZLTextStyleEntry(char *address);
+	~ZLTextStyleEntry();
 
 	bool isEmpty() const;
 
 	bool lengthSupported(Length name) const;
-	short length(Length name, short fullSize) const;
+	short length(Length name, const Metrics &metrics) const;
 	void setLength(Length name, short length, SizeUnit unit);
 
 	bool alignmentTypeSupported() const;
@@ -313,33 +323,35 @@ private:
 inline ZLTextParagraphEntry::ZLTextParagraphEntry() {}
 inline ZLTextParagraphEntry::~ZLTextParagraphEntry() {}
 
-inline ZLTextForcedControlEntry::ZLTextForcedControlEntry() : myMask(0) {}
-inline ZLTextForcedControlEntry::~ZLTextForcedControlEntry() {}
+inline ZLTextStyleEntry::ZLTextStyleEntry() : myMask(0) {}
+inline ZLTextStyleEntry::~ZLTextStyleEntry() {}
 
-inline bool ZLTextForcedControlEntry::isEmpty() const { return myMask == 0; }
+inline ZLTextStyleEntry::Metrics::Metrics(int fontSize, int fontXHeight, int fullWidth, int fullHeight) : FontSize(fontSize), FontXHeight(fontXHeight), FullWidth(fullWidth), FullHeight(fullHeight) {}
 
-inline bool ZLTextForcedControlEntry::lengthSupported(Length name) const { return myMask & (1 << name); }
-inline void ZLTextForcedControlEntry::setLength(Length name, short length, SizeUnit unit) { myLengths[name].Size = length; myLengths[name].Unit = unit; myMask |= 1 << name; }
+inline bool ZLTextStyleEntry::isEmpty() const { return myMask == 0; }
 
-inline bool ZLTextForcedControlEntry::alignmentTypeSupported() const { return myMask & SUPPORT_ALIGNMENT_TYPE; }
-inline ZLTextAlignmentType ZLTextForcedControlEntry::alignmentType() const { return myAlignmentType; }
-inline void ZLTextForcedControlEntry::setAlignmentType(ZLTextAlignmentType alignmentType) { myAlignmentType = alignmentType; myMask |= SUPPORT_ALIGNMENT_TYPE; }
+inline bool ZLTextStyleEntry::lengthSupported(Length name) const { return myMask & (1 << name); }
+inline void ZLTextStyleEntry::setLength(Length name, short length, SizeUnit unit) { myLengths[name].Size = length; myLengths[name].Unit = unit; myMask |= 1 << name; }
 
-inline bool ZLTextForcedControlEntry::boldSupported() const { return myMask & SUPPORT_BOLD; }
-inline bool ZLTextForcedControlEntry::bold() const { return myBold; }
-inline void ZLTextForcedControlEntry::setBold(bool bold) { myBold = bold; myMask |= SUPPORT_BOLD; }
+inline bool ZLTextStyleEntry::alignmentTypeSupported() const { return myMask & SUPPORT_ALIGNMENT_TYPE; }
+inline ZLTextAlignmentType ZLTextStyleEntry::alignmentType() const { return myAlignmentType; }
+inline void ZLTextStyleEntry::setAlignmentType(ZLTextAlignmentType alignmentType) { myAlignmentType = alignmentType; myMask |= SUPPORT_ALIGNMENT_TYPE; }
 
-inline bool ZLTextForcedControlEntry::italicSupported() const { return myMask & SUPPORT_ITALIC; }
-inline bool ZLTextForcedControlEntry::italic() const { return myItalic; }
-inline void ZLTextForcedControlEntry::setItalic(bool italic) { myItalic = italic; myMask |= SUPPORT_ITALIC; }
+inline bool ZLTextStyleEntry::boldSupported() const { return myMask & SUPPORT_BOLD; }
+inline bool ZLTextStyleEntry::bold() const { return myBold; }
+inline void ZLTextStyleEntry::setBold(bool bold) { myBold = bold; myMask |= SUPPORT_BOLD; }
 
-inline bool ZLTextForcedControlEntry::fontSizeSupported() const { return myMask & SUPPORT_FONT_SIZE; }
-inline signed char ZLTextForcedControlEntry::fontSizeMag() const { return myFontSizeMag; }
-inline void ZLTextForcedControlEntry::setFontSizeMag(signed char fontSizeMag) { myFontSizeMag = fontSizeMag; myMask |= SUPPORT_FONT_SIZE; }
+inline bool ZLTextStyleEntry::italicSupported() const { return myMask & SUPPORT_ITALIC; }
+inline bool ZLTextStyleEntry::italic() const { return myItalic; }
+inline void ZLTextStyleEntry::setItalic(bool italic) { myItalic = italic; myMask |= SUPPORT_ITALIC; }
 
-inline bool ZLTextForcedControlEntry::fontFamilySupported() const { return myMask & SUPPORT_FONT_FAMILY; }
-inline const std::string &ZLTextForcedControlEntry::fontFamily() const { return myFontFamily; }
-inline void ZLTextForcedControlEntry::setFontFamily(const std::string &fontFamily) { myFontFamily = fontFamily; myMask |= SUPPORT_FONT_FAMILY; }
+inline bool ZLTextStyleEntry::fontSizeSupported() const { return myMask & SUPPORT_FONT_SIZE; }
+inline signed char ZLTextStyleEntry::fontSizeMag() const { return myFontSizeMag; }
+inline void ZLTextStyleEntry::setFontSizeMag(signed char fontSizeMag) { myFontSizeMag = fontSizeMag; myMask |= SUPPORT_FONT_SIZE; }
+
+inline bool ZLTextStyleEntry::fontFamilySupported() const { return myMask & SUPPORT_FONT_FAMILY; }
+inline const std::string &ZLTextStyleEntry::fontFamily() const { return myFontFamily; }
+inline void ZLTextStyleEntry::setFontFamily(const std::string &fontFamily) { myFontFamily = fontFamily; myMask |= SUPPORT_FONT_FAMILY; }
 
 inline ZLTextControlEntry::ZLTextControlEntry(ZLTextKind kind, bool isStart) : myKind(kind), myStart(isStart) {}
 inline ZLTextControlEntry::~ZLTextControlEntry() {}

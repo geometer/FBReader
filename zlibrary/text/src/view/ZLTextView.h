@@ -34,6 +34,7 @@
 #include <ZLTextParagraphCursor.h>
 #include <ZLTextSelectionModel.h>
 #include <ZLTextArea.h>
+#include <ZLTextParagraph.h>
 
 class ZLTextModel;
 class ZLTextMark;
@@ -102,13 +103,13 @@ private:
 		void reset();
 		void setTextStyle(const ZLTextStylePtr style);
 		void applyControl(const ZLTextControlElement &control);
-		void applyControl(const ZLTextForcedControlElement &control);
+		void applyControl(const ZLTextStyleElement &control);
 		void applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end);
 
 		const ZLPaintContext &context() const;
 		const ZLTextStylePtr textStyle() const;
-		int elementWidth(const ZLTextElement &element, unsigned int charNumber, short fullWidth) const;
-		int elementHeight(const ZLTextElement &element, short fullHeight) const;
+		int elementWidth(const ZLTextElement &element, unsigned int charNumber, const ZLTextStyleEntry::Metrics &metrics) const;
+		int elementHeight(const ZLTextElement &element, const ZLTextStyleEntry::Metrics &metrics) const;
 		int elementDescent(const ZLTextElement &element) const;
 
 		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;

@@ -31,19 +31,30 @@ size_t ZLTextEntry::dataLength() const {
 	return len;
 }
 
-short ZLTextForcedControlEntry::length(Length name, short fullSize) const {
+short ZLTextStyleEntry::length(Length name, const Metrics &metrics) const {
 	switch (myLengths[name].Unit) {
 		default:
 		case SIZE_UNIT_PIXEL:
 			return myLengths[name].Size;
-		case SIZE_UNIT_TEN_EM:
-			return myLengths[name].Size * 2;
+		case SIZE_UNIT_EM_100:
+			return (myLengths[name].Size * metrics.FontSize + 50) / 100;
+		case SIZE_UNIT_EX_100:
+			return (myLengths[name].Size * metrics.FontXHeight + 50) / 100;
 		case SIZE_UNIT_PERCENT:
-			return (myLengths[name].Size * (int)fullSize + 50) / 100;
+			switch (name) {
+				default:
+				case LENGTH_LEFT_INDENT:
+				case LENGTH_RIGHT_INDENT:
+				case LENGTH_FIRST_LINE_INDENT_DELTA:
+					return (myLengths[name].Size * metrics.FullWidth + 50) / 100;
+				case LENGTH_SPACE_BEFORE:
+				case LENGTH_SPACE_AFTER:
+					return (myLengths[name].Size * metrics.FullHeight + 50) / 100;
+			}
 	}
 }
 
-ZLTextForcedControlEntry::ZLTextForcedControlEntry(char *address) {
+ZLTextStyleEntry::ZLTextStyleEntry(char *address) {
 	memcpy(&myMask, address, sizeof(int));
 	address += sizeof(int);
 	for (int i = 0; i < NUMBER_OF_LENGTHS; ++i) {
@@ -85,8 +96,8 @@ const shared_ptr<ZLTextParagraphEntry> ZLTextParagraph::Iterator::entry() const 
 				myEntry = new ImageEntry(myPointer + sizeof(const ZLImageMap*) + sizeof(short) + 1, imageMap, vOffset);
 				break;
 			}
-			case ZLTextParagraphEntry::FORCED_CONTROL_ENTRY:
-				myEntry = new ZLTextForcedControlEntry(myPointer + 1);
+			case ZLTextParagraphEntry::STYLE_ENTRY:
+				myEntry = new ZLTextStyleEntry(myPointer + 1);
 				break;
 			case ZLTextParagraphEntry::FIXED_HSPACE_ENTRY:
 				myEntry = new ZLTextFixedHSpaceEntry((unsigned char)*(myPointer + 1));
@@ -125,12 +136,12 @@ void ZLTextParagraph::Iterator::next() {
 				}
 				++myPointer;
 				break;
-			case ZLTextParagraphEntry::FORCED_CONTROL_ENTRY:
+			case ZLTextParagraphEntry::STYLE_ENTRY:
 			{
 				int mask;
 				memcpy(&mask, myPointer + 1, sizeof(int));
-				bool withFontFamily = mask & ZLTextForcedControlEntry::SUPPORT_FONT_FAMILY;
-				myPointer += sizeof(int) + ZLTextForcedControlEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 4;
+				bool withFontFamily = mask & ZLTextStyleEntry::SUPPORT_FONT_FAMILY;
+				myPointer += sizeof(int) + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 4;
 				if (withFontFamily) {
 					while (*myPointer != '\0') {
 						++myPointer;

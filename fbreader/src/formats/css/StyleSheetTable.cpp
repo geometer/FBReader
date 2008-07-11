@@ -34,20 +34,23 @@ void StyleSheetTable::addMap(const std::string &tag, const std::string &aClass, 
 	}
 }
 
-static void parseLength(const std::string &toParse, short &size, ZLTextForcedControlEntry::SizeUnit &unit) {
+static void parseLength(const std::string &toParse, short &size, ZLTextStyleEntry::SizeUnit &unit) {
 	if (ZLStringUtil::stringEndsWith(toParse, "%")) {
-		unit = ZLTextForcedControlEntry::SIZE_UNIT_PERCENT;
+		unit = ZLTextStyleEntry::SIZE_UNIT_PERCENT;
 		size = atoi(toParse.data());
 	} else if (ZLStringUtil::stringEndsWith(toParse, "em")) {
-		unit = ZLTextForcedControlEntry::SIZE_UNIT_TEN_EM;
-		size = (short)(10 * atof(toParse.data()));
+		unit = ZLTextStyleEntry::SIZE_UNIT_EM_100;
+		size = (short)(100 * atof(toParse.data()));
+	} else if (ZLStringUtil::stringEndsWith(toParse, "ex")) {
+		unit = ZLTextStyleEntry::SIZE_UNIT_EX_100;
+		size = (short)(100 * atof(toParse.data()));
 	} else {
-		unit = ZLTextForcedControlEntry::SIZE_UNIT_PIXEL;
+		unit = ZLTextStyleEntry::SIZE_UNIT_PIXEL;
 		size = atoi(toParse.data());
 	}
 }
 
-void StyleSheetTable::setLength(ZLTextForcedControlEntry &entry, ZLTextForcedControlEntry::Length name, const AttributeMap &map, const std::string &attributeName) {
+void StyleSheetTable::setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Length name, const AttributeMap &map, const std::string &attributeName) {
 	StyleSheetTable::AttributeMap::const_iterator it = map.find(attributeName);
 	if (it == map.end()) {
 		return;
@@ -55,7 +58,7 @@ void StyleSheetTable::setLength(ZLTextForcedControlEntry &entry, ZLTextForcedCon
 	const std::vector<std::string> &values = it->second;
 	if (!values.empty() && !values[0].empty()) {
 		short size;
-		ZLTextForcedControlEntry::SizeUnit unit;
+		ZLTextStyleEntry::SizeUnit unit;
 		parseLength(values[0], size, unit);
 		entry.setLength(name, size, unit);
 	}
@@ -80,11 +83,11 @@ bool StyleSheetTable::doBreakBefore(const std::string &tag, const std::string &a
 	return false;
 }
 
-const ZLTextForcedControlEntry &StyleSheetTable::control(const std::string &tag, const std::string &aClass) const {
-	std::map<Key,shared_ptr<ZLTextForcedControlEntry> >::const_iterator it =
+const ZLTextStyleEntry &StyleSheetTable::control(const std::string &tag, const std::string &aClass) const {
+	std::map<Key,shared_ptr<ZLTextStyleEntry> >::const_iterator it =
 		myControlMap.find(Key(tag, aClass));
 	if (it == myControlMap.end()) {
-		static const ZLTextForcedControlEntry emptyEntry;
+		static const ZLTextStyleEntry emptyEntry;
 		return emptyEntry;
 	}
 	return *it->second;
@@ -99,8 +102,8 @@ const std::vector<std::string> &StyleSheetTable::values(const AttributeMap &map,
 	return emptyVector;
 }
 
-shared_ptr<ZLTextForcedControlEntry> StyleSheetTable::createControl(const AttributeMap &styles) const {
-	shared_ptr<ZLTextForcedControlEntry> entry = new ZLTextForcedControlEntry();
+shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &styles) const {
+	shared_ptr<ZLTextStyleEntry> entry = new ZLTextStyleEntry();
 
 	const std::vector<std::string> &alignment = values(styles, "text-align");
 	if (!alignment.empty()) {
@@ -149,11 +152,11 @@ shared_ptr<ZLTextForcedControlEntry> StyleSheetTable::createControl(const Attrib
 		}
 	}
 
-	setLength(*entry, ZLTextForcedControlEntry::LENGTH_LEFT_INDENT, styles, "margin-left");
-	setLength(*entry, ZLTextForcedControlEntry::LENGTH_RIGHT_INDENT, styles, "margin-right");
-	setLength(*entry, ZLTextForcedControlEntry::LENGTH_SPACE_BEFORE, styles, "margin-top");
-	setLength(*entry, ZLTextForcedControlEntry::LENGTH_SPACE_AFTER, styles, "margin-bottom");
-	setLength(*entry, ZLTextForcedControlEntry::LENGTH_FIRST_LINE_INDENT_DELTA, styles, "text-indent");
+	setLength(*entry, ZLTextStyleEntry::LENGTH_LEFT_INDENT, styles, "margin-left");
+	setLength(*entry, ZLTextStyleEntry::LENGTH_RIGHT_INDENT, styles, "margin-right");
+	setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_BEFORE, styles, "margin-top");
+	setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_AFTER, styles, "margin-bottom");
+	setLength(*entry, ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA, styles, "text-indent");
 
 	return entry;
 }

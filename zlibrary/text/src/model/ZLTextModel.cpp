@@ -217,17 +217,17 @@ void ZLTextModel::addControl(ZLTextKind textKind, bool isStart) {
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
-void ZLTextModel::addControl(const ZLTextForcedControlEntry &entry) {
-	int len = sizeof(int) + 4 + ZLTextForcedControlEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
+void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
+	int len = sizeof(int) + 4 + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
 	if (entry.fontFamilySupported()) {
 		len += entry.fontFamily().length() + 1;
 	}
 	myLastEntryStart = myAllocator.allocate(len);
 	char *address = myLastEntryStart;
-	*address++ = ZLTextParagraphEntry::FORCED_CONTROL_ENTRY;
+	*address++ = ZLTextParagraphEntry::STYLE_ENTRY;
 	memcpy(address, &entry.myMask, sizeof(int));
 	address += sizeof(int);
-	for (int i = 0; i < ZLTextForcedControlEntry::NUMBER_OF_LENGTHS; ++i) {
+	for (int i = 0; i < ZLTextStyleEntry::NUMBER_OF_LENGTHS; ++i) {
 		*address++ = entry.myLengths[i].Unit;
 		memcpy(address, &entry.myLengths[i].Size, sizeof(short));
 		address += sizeof(short);

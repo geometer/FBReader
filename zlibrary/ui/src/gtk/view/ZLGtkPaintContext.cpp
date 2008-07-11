@@ -117,6 +117,7 @@ void ZLGtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 
 	if (myContext == 0) {
 		myContext = gtk_widget_get_pango_context(area);
+		//pango_context_set_base_dir(myContext, PANGO_DIRECTION_RTL);
 		if (myFontDescription != 0) {
 			myAnalysis.font = pango_context_load_font(myContext, myFontDescription);
 			myAnalysis.shape_engine = pango_font_find_shaper(myAnalysis.font, 0, 0);
@@ -276,6 +277,7 @@ void ZLGtkPaintContext::drawString(int x, int y, const char *str, int len) {
 		return;
 	}
 
+	//gtk_widget_set_default_direction(GTK_TEXT_DIR_RTL);
 	pango_shape(str, len, &myAnalysis, myString);
 	gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
 }
