@@ -120,7 +120,23 @@ shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &
 
 	const std::vector<std::string> &bold = values(styles, "font-weight");
 	if (!bold.empty()) {
-		entry->setBold(bold[0] == "bold");
+		int num = -1;
+		if (bold[0] == "bold") {
+			num = 700;
+		} else if (bold[0] == "normal") {
+			num = 400;
+		} else if ((bold[0].length() == 3) &&
+							 (bold[0][1] == '0') &&
+							 (bold[0][2] == '0') &&
+							 (bold[0][0] >= '1') &&
+							 (bold[0][0] <= '9')) {
+			num = 100 * (bold[0][0] - '0');
+		} else if (bold[0] == "bolder") {
+		} else if (bold[0] == "lighter") {
+		}
+		if (num != -1) {
+			entry->setBold(num >= 600);
+		}
 	}
 
 	const std::vector<std::string> &italic = values(styles, "font-style");
