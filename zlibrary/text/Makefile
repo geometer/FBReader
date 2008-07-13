@@ -3,7 +3,7 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
 VERSION = $(shell cat ../VERSION)
-SOVERSION = $(shell cat ../SOVERSION)
+SOVERSION = $(shell cat SOVERSION)
 
 ifeq "$(ZLSHARED)" "yes"
   TARGET = libzltext.so.$(VERSION)
