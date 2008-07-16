@@ -1,2 +1,2 @@
-libzlcore @SOVERSION@ libzlibrary (>= @VERSION@-1), libzlibrary (<< 0.10.0-1)
-libzltext @SOVERSION@ libzlibrary (>= @VERSION@-1), libzlibrary (<< 0.10.0-1)
+libzlcore @SOVERSIONCORE@ libzlibrary (>= @VERSION@-1), libzlibrary (<< 0.10.0-1)
+libzltext @SOVERSIONTEXT@ libzlibrary (>= @VERSION@-1), libzlibrary (<< 0.10.0-1)
