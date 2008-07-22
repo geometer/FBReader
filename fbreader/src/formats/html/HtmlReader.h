@@ -71,7 +71,9 @@ protected:
 	virtual void startDocumentHandler() = 0;
 	virtual void endDocumentHandler() = 0;
 
+	// returns false iff processing must be stopped
 	virtual bool tagHandler(const HtmlTag &tag) = 0;
+	// returns false iff processing must be stopped
 	virtual bool characterDataHandler(const char *text, int len, bool convert) = 0;
 
 private:

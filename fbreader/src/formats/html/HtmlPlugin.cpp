@@ -24,6 +24,7 @@
 #include "HtmlPlugin.h"
 #include "HtmlDescriptionReader.h"
 #include "HtmlBookReader.h"
+#include "HtmlReaderStream.h"
 #include "../txt/PlainTextFormat.h"
 #include "../../description/BookDescription.h"
 #include "../util/MiscUtil.h"
@@ -40,7 +41,8 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 		return false;
 	}
 
-	detectEncodingAndLanguage(description, *stream);
+	shared_ptr<ZLInputStream> htmlStream = new HtmlReaderStream(*stream);
+	detectEncodingAndLanguage(description, *htmlStream);
 	if (description.encoding().empty()) {
 		return false;
 	}

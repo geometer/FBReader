@@ -1,0 +1,122 @@
+/*
+ * Copyright (C) 2008 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
+#include <stdlib.h>
+#include <algorithm>
+
+#include "HtmlReaderStream.h"
+#include "HtmlReader.h"
+
+class HtmlTextOnlyReader : public HtmlReader {
+
+public:
+	HtmlTextOnlyReader(char *buffer, size_t maxSize);
+	size_t size() const;
+
+private:
+	void startDocumentHandler();
+	void endDocumentHandler();
+
+	bool tagHandler(const HtmlTag &tag);
+	bool characterDataHandler(const char *text, int len, bool convert);
+
+private:
+	char *myBuffer;
+	size_t myMaxSize;
+	size_t myFilledSize;
+};
+
+HtmlTextOnlyReader::HtmlTextOnlyReader(char *buffer, size_t maxSize) : HtmlReader(std::string()), myBuffer(buffer), myMaxSize(maxSize), myFilledSize(0) {
+}
+
+size_t HtmlTextOnlyReader::size() const {
+	return myFilledSize;
+}
+
+void HtmlTextOnlyReader::startDocumentHandler() {
+}
+
+void HtmlTextOnlyReader::endDocumentHandler() {
+}
+
+bool HtmlTextOnlyReader::tagHandler(const HtmlTag&) {
+	if ((myFilledSize < myMaxSize) && (myFilledSize > 0) && (myBuffer[myFilledSize - 1] != '\n')) {
+		myBuffer[myFilledSize++] = '\n';
+	}
+	return myFilledSize < myMaxSize;
+}
+
+bool HtmlTextOnlyReader::characterDataHandler(const char *text, int len, bool) {
+	len = std::min((size_t)len, myMaxSize - myFilledSize);
+	memcpy(myBuffer + myFilledSize, text, len);
+	myFilledSize += len;
+	return myFilledSize < myMaxSize;
+}
+
+HtmlReaderStream::HtmlReaderStream(ZLInputStream &base) : myBase(base), myBuffer(0) {
+}
+
+HtmlReaderStream::~HtmlReaderStream() {
+}
+
+#include <iostream>
+
+bool HtmlReaderStream::open() {
+	if (!myBase.open()) {
+		return false;
+	}
+	myBuffer = new char[50000];
+	HtmlTextOnlyReader reader(myBuffer, 50000);
+	reader.readDocument(myBase);
+	mySize = reader.size();
+	std::cerr << mySize << "\n";
+	std::cerr << std::string(myBuffer, mySize);
+	myOffset = 0;
+	myBase.close();
+	return true;
+}
+
+size_t HtmlReaderStream::read(char *buffer, size_t maxSize) {
+	maxSize = std::min(maxSize, mySize - myOffset);
+	memcpy(buffer, myBuffer, maxSize);
+	myOffset += maxSize;
+	return maxSize;
+}
+
+void HtmlReaderStream::close() {
+	if (myBuffer != 0) {
+		delete[] myBuffer;
+		myBuffer = 0;
+	}
+}
+
+void HtmlReaderStream::seek(int offset, bool absoluteOffset) {
+	if (!absoluteOffset) {
+		offset += myOffset;
+	}
+	myOffset = std::min(mySize, (size_t)std::max(0, offset));
+}
+
+size_t HtmlReaderStream::offset() const {
+	return myOffset;
+}
+
+size_t HtmlReaderStream::sizeOfOpened() {
+	return mySize;
+}
