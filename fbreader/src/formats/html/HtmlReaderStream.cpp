@@ -73,9 +73,8 @@ HtmlReaderStream::HtmlReaderStream(ZLInputStream &base) : myBase(base), myBuffer
 }
 
 HtmlReaderStream::~HtmlReaderStream() {
+	close();
 }
-
-#include <iostream>
 
 bool HtmlReaderStream::open() {
 	if (!myBase.open()) {
@@ -85,8 +84,6 @@ bool HtmlReaderStream::open() {
 	HtmlTextOnlyReader reader(myBuffer, 50000);
 	reader.readDocument(myBase);
 	mySize = reader.size();
-	std::cerr << mySize << "\n";
-	std::cerr << std::string(myBuffer, mySize);
 	myOffset = 0;
 	myBase.close();
 	return true;
