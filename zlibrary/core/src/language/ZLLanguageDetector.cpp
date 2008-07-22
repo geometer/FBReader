@@ -166,10 +166,12 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 		}
 	}
 
-	if (!info.isNull() &&
-			(encodingType == UTF8) &&
-			(info->Encoding != ZLLanguageMatcher::UTF8_ENCODING_NAME)) {
-		return new LanguageInfo(info->Language, ZLLanguageMatcher::UTF8_ENCODING_NAME);
+	if (encodingType == UTF8) {
+		if (info.isNull()) {
+			return new LanguageInfo("", ZLLanguageMatcher::UTF8_ENCODING_NAME);
+		} else if (info->Encoding != ZLLanguageMatcher::UTF8_ENCODING_NAME) {
+			return new LanguageInfo(info->Language, ZLLanguageMatcher::UTF8_ENCODING_NAME);
+		}
 	}
 	return info;
 }

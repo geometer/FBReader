@@ -44,7 +44,9 @@ void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInp
 				ZLLanguageDetector().findInfo(buffer, size);
 			delete[] buffer;
 			if (!info.isNull()) {
-				language = info->Language;
+				if (!info->Language.empty()) {
+					language = info->Language;
+				}
 				encoding = info->Encoding;
 				if ((encoding == "US-ASCII") || (encoding == "ISO-8859-1")) {
 					encoding = "windows-1252";

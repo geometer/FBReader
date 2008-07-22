@@ -106,9 +106,15 @@ HtmlIgnoreTagAction::HtmlIgnoreTagAction(HtmlBookReader &reader) : HtmlTagAction
 
 void HtmlIgnoreTagAction::run(const HtmlReader::HtmlTag &tag) {
 	if (tag.Start) {
-		++myReader.myIgnoreDataCounter;
+		if (myTagNames.find(tag.Name) == myTagNames.end()) {
+			++myReader.myIgnoreDataCounter;
+			myTagNames.insert(tag.Name);
+		}
 	} else {
-		--myReader.myIgnoreDataCounter;
+		if (myTagNames.find(tag.Name) != myTagNames.end()) {
+			--myReader.myIgnoreDataCounter;
+			myTagNames.erase(tag.Name);
+		}
 	}
 }
 

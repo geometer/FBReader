@@ -20,6 +20,8 @@
 #ifndef __HTMLTAGACTIONS_H__
 #define __HTMLTAGACTIONS_H__
 
+#include <set>
+
 #include "HtmlBookReader.h"
 
 class HtmlTagAction {
@@ -71,6 +73,9 @@ class HtmlIgnoreTagAction : public HtmlTagAction {
 public:
 	HtmlIgnoreTagAction(HtmlBookReader &reader);
 	void run(const HtmlReader::HtmlTag &tag);
+
+private:
+	std::set<std::string> myTagNames;
 };
 
 class HtmlHrefTagAction : public HtmlTagAction {
