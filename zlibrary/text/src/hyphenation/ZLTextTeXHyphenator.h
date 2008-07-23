@@ -28,7 +28,7 @@
 class ZLTextTeXHyphenationPattern {
 
 public:
-	ZLTextTeXHyphenationPattern(unsigned short *ucs2String, int length);
+	ZLTextTeXHyphenationPattern(ZLUnicodeUtil::Ucs4Char *ucs4String, int length);
 	ZLTextTeXHyphenationPattern(const std::string &utf8String);
 	~ZLTextTeXHyphenationPattern();
 
@@ -37,7 +37,7 @@ public:
 
 private:
 	int myLength;
-	unsigned short *mySymbols;
+	ZLUnicodeUtil::Ucs4Char *mySymbols;
 	unsigned char *myValues;
 
 friend class ZLTextTeXPatternComparator;
@@ -62,7 +62,7 @@ public:
 	const std::string &language() const;
 
 protected:
-	void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const;
+	void hyphenate(ZLUnicodeUtil::Ucs4String &ucs4String, std::vector<unsigned char> &mask, int length) const;
 
 private:
 	typedef std::vector<ZLTextTeXHyphenationPattern*>::const_iterator PatternIterator;

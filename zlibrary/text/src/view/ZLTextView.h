@@ -195,7 +195,7 @@ private:
 	void prepareTextLine(const ZLTextLineInfo &info);
 	void drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to);
 	void drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
-	void drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift);
+	void drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
 	void drawTreeLines(const ZLTextTreeNodeInfo &info, int height, int vSpaceAfter);
 
 	bool pageIsEmpty() const;
@@ -255,6 +255,9 @@ private:
 	shared_ptr<PositionIndicator> myPositionIndicator;
 
 	bool myTreeStateIsFrozen;
+
+	int myX;
+	int myY;
 
 friend class ZLTextSelectionModel;
 };

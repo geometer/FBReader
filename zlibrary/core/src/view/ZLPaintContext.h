@@ -38,20 +38,12 @@ public:
 		SOLID_FILL,
 		HALF_FILL,
 	};
-	
+
 protected:
 	ZLPaintContext();
 
 public:
 	virtual ~ZLPaintContext();
-
-	int x() const;
-	int y() const;
-
-	void moveXTo(int x);
-	void moveX(int deltaX);
-	void moveYTo(int y);
-	void moveY(int deltaY);
 
 	virtual void clear(ZLColor color) = 0;
 
@@ -62,11 +54,11 @@ public:
 	virtual int width() const = 0;
 	virtual int height() const = 0;
 	
-	virtual int stringWidth(const char *str, int len) const = 0;
+	virtual int stringWidth(const char *str, int len, bool rtl) const = 0;
 	virtual int spaceWidth() const = 0;
 	virtual int stringHeight() const = 0;
 	virtual int descent() const = 0;
-	virtual void drawString(int x, int y, const char *str, int len) = 0;
+	virtual void drawString(int x, int y, const char *str, int len, bool rtl) = 0;
 
 	int imageWidth(const ZLImageData &image) const;
 	int imageHeight(const ZLImageData &image) const;
@@ -83,8 +75,6 @@ protected:
 	virtual void fillFamiliesList(std::vector<std::string> &families) const = 0;
 
 private:
-	int myX, myY;
-
 	mutable std::vector<std::string> myFamilies;
 
 private:
@@ -93,14 +83,6 @@ private:
 
 friend class ZLPartialPaintContext;
 };
-
-inline int ZLPaintContext::x() const { return myX; }
-inline int ZLPaintContext::y() const { return myY; }
-
-inline void ZLPaintContext::moveXTo(int x) { myX = x; }
-inline void ZLPaintContext::moveX(int deltaX) { myX += deltaX; }
-inline void ZLPaintContext::moveYTo(int y) { myY = y; }
-inline void ZLPaintContext::moveY(int deltaY) { myY += deltaY; }
 
 inline int ZLPaintContext::imageWidth(const ZLImageData &image) const { return image.width(); }
 inline int ZLPaintContext::imageHeight(const ZLImageData &image) const { return image.height(); }

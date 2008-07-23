@@ -119,9 +119,9 @@ void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
 	context().setFont(baseStyle.fontFamily(), myInfo.fontSize(), false, false);
 	context().setColor(baseStyle.RegularTextColorOption.value());
 
-	int width = context().stringWidth(text.data(), text.length());
-	context().drawString(right() - width, bottom() - 2, text.data(), text.length());
-	myExtraWidth += text.length() * context().stringWidth("0", 1) + context().spaceWidth();
+	int width = context().stringWidth(text.data(), text.length(), false);
+	context().drawString(right() - width, bottom() - 2, text.data(), text.length(), false);
+	myExtraWidth += text.length() * context().stringWidth("0", 1, false) + context().spaceWidth();
 }
 
 size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraphNumber) const {

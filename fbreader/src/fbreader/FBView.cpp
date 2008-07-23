@@ -151,21 +151,21 @@ std::string FBView::word(const ZLTextElementArea &area) const {
 		cursor.moveToParagraph(area.ParagraphNumber);
 		cursor.moveTo(area.TextElementNumber, 0);
 		const ZLTextWord &word = (ZLTextWord&)cursor.element();
-		ZLUnicodeUtil::Ucs2String ucs2;
-		ZLUnicodeUtil::utf8ToUcs2(ucs2, word.Data, word.Size);
-		ZLUnicodeUtil::Ucs2String::iterator it = ucs2.begin();
-		while ((it != ucs2.end()) && !ZLUnicodeUtil::isLetter(*it)) {
+		ZLUnicodeUtil::Ucs4String ucs4;
+		ZLUnicodeUtil::utf8ToUcs4(ucs4, word.Data, word.Size);
+		ZLUnicodeUtil::Ucs4String::iterator it = ucs4.begin();
+		while ((it != ucs4.end()) && !ZLUnicodeUtil::isLetter(*it)) {
 			++it;
 		}
-		if (it != ucs2.end()) {
-			ucs2.erase(ucs2.begin(), it);
-			it = ucs2.end() - 1;
+		if (it != ucs4.end()) {
+			ucs4.erase(ucs4.begin(), it);
+			it = ucs4.end() - 1;
 			while (!ZLUnicodeUtil::isLetter(*it)) {
 				--it;
 			}
-			ucs2.erase(it + 1, ucs2.end());
+			ucs4.erase(it + 1, ucs4.end());
     
-			ZLUnicodeUtil::ucs2ToUtf8(txt, ucs2);
+			ZLUnicodeUtil::ucs4ToUtf8(txt, ucs4);
 		}
 	}
 	return txt;

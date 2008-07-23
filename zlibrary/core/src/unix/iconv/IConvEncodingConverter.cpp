@@ -135,7 +135,7 @@ bool IConvEncodingConverter::fillTable(int *map) {
 		iconv(myIConverter, &in, &inSize, &out, &outSize);
 #endif // DO_ICONV_CAST
 		if (inSize == 0) {
-			ZLUnicodeUtil::Ucs2Char ch;
+			ZLUnicodeUtil::Ucs4Char ch;
 			ZLUnicodeUtil::firstChar(ch, outBuffer);
 			map[i] = ch;
 		} else {

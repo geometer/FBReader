@@ -117,7 +117,6 @@ void ZLGtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 
 	if (myContext == 0) {
 		myContext = gtk_widget_get_pango_context(area);
-		//pango_context_set_base_dir(myContext, PANGO_DIRECTION_RTL);
 		if (myFontDescription != 0) {
 			myAnalysis.font = pango_context_load_font(myContext, myFontDescription);
 			myAnalysis.shape_engine = pango_font_find_shaper(myAnalysis.font, 0, 0);
@@ -227,7 +226,7 @@ void ZLGtkPaintContext::setFillColor(ZLColor color, FillStyle style) {
 	}
 }
 
-int ZLGtkPaintContext::stringWidth(const char *str, int len) const {
+int ZLGtkPaintContext::stringWidth(const char *str, int len, bool rtl) const {
 	if (myContext == 0) {
 		return 0;
 	}
@@ -236,6 +235,7 @@ int ZLGtkPaintContext::stringWidth(const char *str, int len) const {
 		return 0;
 	}
 
+	myAnalysis.level = rtl ? 1 : 0;
 	pango_shape(str, len, &myAnalysis, myString);
 	PangoRectangle logicalRectangle;
 	pango_glyph_string_extents(myString, myAnalysis.font, 0, &logicalRectangle);
@@ -244,7 +244,7 @@ int ZLGtkPaintContext::stringWidth(const char *str, int len) const {
 
 int ZLGtkPaintContext::spaceWidth() const {
 	if (mySpaceWidth == -1) {
-		mySpaceWidth = stringWidth(" ", 1);
+		mySpaceWidth = stringWidth(" ", 1, false);
 	}
 	return mySpaceWidth;
 }
@@ -272,12 +272,12 @@ int ZLGtkPaintContext::descent() const {
 	return myDescent;
 }
 
-void ZLGtkPaintContext::drawString(int x, int y, const char *str, int len) {
+void ZLGtkPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
 	if (!g_utf8_validate(str, len, 0)) {
 		return;
 	}
 
-	//gtk_widget_set_default_direction(GTK_TEXT_DIR_RTL);
+	myAnalysis.level = rtl ? 1 : 0;
 	pango_shape(str, len, &myAnalysis, myString);
 	gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
 }

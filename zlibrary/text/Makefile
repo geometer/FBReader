@@ -28,7 +28,7 @@ $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(ZLSHARED)" "yes"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS)) $(CORE_LIBS) -llinebreak
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS)) $(CORE_LIBS) -llinebreak -lfribidi
 	@ln -sf $(TARGET) $(TARGET_SONAME)
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else

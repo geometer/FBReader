@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include <ZLUnicodeUtil.h>
+
 class ZLTextWord;
 
 class ZLTextHyphenationInfo {
@@ -59,7 +61,7 @@ public:
 	ZLTextHyphenationInfo info(const ZLTextWord &word) const;
 
 protected:
-	virtual void hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const = 0;
+	virtual void hyphenate(ZLUnicodeUtil::Ucs4String &ucs4String, std::vector<unsigned char> &mask, int length) const = 0;
 
 protected:
 	static ZLTextHyphenator *ourInstance;

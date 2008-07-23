@@ -20,7 +20,6 @@
 #include <algorithm>
 #include <vector>
 
-#include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
@@ -45,34 +44,34 @@ const std::string ZLTextTeXHyphenator::PatternZip() {
 	return ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "hyphenationPatterns.zip";
 }
 
-ZLTextTeXHyphenationPattern::ZLTextTeXHyphenationPattern(unsigned short *ucs2String, int length) {
+ZLTextTeXHyphenationPattern::ZLTextTeXHyphenationPattern(ZLUnicodeUtil::Ucs4Char *ucs4String, int length) {
 	myLength = length;
-	mySymbols = ucs2String;
+	mySymbols = ucs4String;
 	myValues = NULL;
 }
 
 ZLTextTeXHyphenationPattern::ZLTextTeXHyphenationPattern(const std::string &utf8String) {
 	myLength = 0;
 
-	ZLUnicodeUtil::Ucs2String ucs2String;
-	ZLUnicodeUtil::utf8ToUcs2(ucs2String, utf8String);
+	ZLUnicodeUtil::Ucs4String ucs4String;
+	ZLUnicodeUtil::utf8ToUcs4(ucs4String, utf8String);
 
-	const int len = ucs2String.size();
+	const int len = ucs4String.size();
 	for (int i = 0; i < len; ++i) {
-		if ((ucs2String[i] < '0') || (ucs2String[i] > '9')) {
+		if ((ucs4String[i] < '0') || (ucs4String[i] > '9')) {
 			++myLength;
 		}
 	}
 
-	mySymbols = new unsigned short[myLength];
+	mySymbols = new ZLUnicodeUtil::Ucs4Char[myLength];
 	myValues = new unsigned char[myLength + 1];
 
 	myValues[0] = 0;
 	for (int j = 0, k = 0; j < len; ++j) {
-		if ((ucs2String[j] >= '0') && (ucs2String[j] <= '9')) {
-			myValues[k] = ucs2String[j] - '0';
+		if ((ucs4String[j] >= '0') && (ucs4String[j] <= '9')) {
+			myValues[k] = ucs4String[j] - '0';
 		} else {
-			mySymbols[k] = ucs2String[j];
+			mySymbols[k] = ucs4String[j];
 			++k;
 			myValues[k] = 0;
 		}
@@ -97,8 +96,8 @@ void ZLTextTeXHyphenationPattern::apply(unsigned char *values) const {
 bool ZLTextTeXPatternComparator::operator() (const ZLTextTeXHyphenationPattern *p1, const ZLTextTeXHyphenationPattern *p2) const {
 	bool firstIsShorter = p1->myLength < p2->myLength;
 	int minLength = firstIsShorter ? p1->myLength : p2->myLength;
-	unsigned short *symbols1 = p1->mySymbols;
-	unsigned short *symbols2 = p2->mySymbols;
+	const ZLUnicodeUtil::Ucs4Char *symbols1 = p1->mySymbols;
+	const ZLUnicodeUtil::Ucs4Char *symbols2 = p2->mySymbols;
 	for (int i = 0; i < minLength; ++i) {
 		if (symbols1[i] < symbols2[i]) {
 			return true;
@@ -112,7 +111,7 @@ bool ZLTextTeXPatternComparator::operator() (const ZLTextTeXHyphenationPattern *
 static std::vector<unsigned char> values;
 static ZLTextTeXPatternComparator comparator = ZLTextTeXPatternComparator();
 
-void ZLTextTeXHyphenator::hyphenate(std::vector<unsigned short> &ucs2String, std::vector<unsigned char> &mask, int length) const {
+void ZLTextTeXHyphenator::hyphenate(ZLUnicodeUtil::Ucs4String &ucs4String, std::vector<unsigned char> &mask, int length) const {
 	if (myPatternTable.empty()) {
 		for (int i = 0; i < length - 1; ++i) {
 			mask[i] = false;
@@ -125,7 +124,7 @@ void ZLTextTeXHyphenator::hyphenate(std::vector<unsigned short> &ucs2String, std
 	for (int j = 0; j < length - 2; ++j) {
 		ZLTextTeXHyphenator::PatternIterator dictionaryPattern = myPatternTable.begin();
 		for (int k = 1; k <= length - j; ++k) {
-			ZLTextTeXHyphenationPattern pattern(&ucs2String[j], k);
+			ZLTextTeXHyphenationPattern pattern(&ucs4String[j], k);
 			if (comparator(&pattern, *dictionaryPattern)) {
 				continue;
 			}

@@ -38,11 +38,11 @@ public:
 	int width() const;
 	int height() const;
 	
-	int stringWidth(const char *str, int len) const;
+	int stringWidth(const char *str, int len, bool rtl) const;
 	int spaceWidth() const;
 	int stringHeight() const;
 	int descent() const;
-	void drawString(int x, int y, const char *str, int len);
+	void drawString(int x, int y, const char *str, int len, bool rtl);
 
 	void drawImage(int x, int y, const ZLImageData &image);
 

@@ -36,13 +36,13 @@ void ZLTextView::paint() {
 	std::vector<size_t> labels;
 	labels.reserve(myLineInfos.size() + 1);
 	labels.push_back(0);
-	context().moveYTo(topMargin());
+	myY = topMargin();
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		prepareTextLine(**it);
 		labels.push_back(myTextElementMap.size());
 	}
 	mySelectionModel.update();
-	context().moveYTo(topMargin());
+	myY = topMargin();
 	int index = 0;
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		drawTextLine(**it, labels[index], labels[index + 1]);
@@ -140,8 +140,8 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 			}
 		}
 
-		const int top = context().y() + 1;
-		int bottom = context().y() + info.Height + info.Descent;
+		const int top = myY + 1;
+		int bottom = myY + info.Height + info.Descent;
 		int right = leftMargin();
 		if (info.End < range.second) {
 			right = viewWidth() + leftMargin() - 1;
@@ -161,12 +161,12 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 		}
 	}
 
-	context().moveY(info.Height);
+	myY += info.Height;
 	int maxY = topMargin() + textAreaHeight();
-	if (context().y() > maxY) {
-	  context().moveYTo(maxY);
+	if (myY > maxY) {
+	  myY = maxY;
 	}
-	context().moveXTo(leftMargin());
+	myX = leftMargin();
 	if (!info.NodeInfo.isNull()) {
 		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
 	}
@@ -204,19 +204,19 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 		const int y = it->YEnd - myStyle.elementDescent(word) - myStyle.textStyle()->verticalShift();
 		drawWord(x, y, word, start, len, it->AddHyphenationSign);
 	}
-	context().moveY(info.Descent + info.VSpaceAfter);
+	myY += info.Descent + info.VSpaceAfter;
 }
 
 void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 	myStyle.setTextStyle(info.StartStyle);
-	const int y = std::min(context().y() + info.Height, topMargin() + textAreaHeight());
+	const int y = std::min(myY + info.Height, topMargin() + textAreaHeight());
 	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
 	const bool endOfParagraph = info.End.isEndOfParagraph();
 	bool wordOccured = false;
 	bool changeStyle = true;
 
-	context().moveXTo(leftMargin() + info.LeftIndent);
+	myX = leftMargin() + info.LeftIndent;
 
 	const int fontSize = myStyle.textStyle()->fontSize();
 	// TODO: change metrics at font change
@@ -224,10 +224,10 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 
 	switch (myStyle.textStyle()->alignment()) {
 		case ALIGN_RIGHT:
-			context().moveX(metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics) - info.Width);
+			myX += metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics) - info.Width;
 			break;
 		case ALIGN_CENTER:
-			context().moveX((metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics) - info.Width) / 2);
+			myX += (metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics) - info.Width) / 2;
 			break;
 		case ALIGN_JUSTIFY:
 			if (!endOfParagraph && (info.End.element().kind() != ZLTextElement::AFTER_PARAGRAPH_ELEMENT)) {
@@ -244,7 +244,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 	for (ZLTextWordCursor pos = info.RealStart; !pos.equalWordNumber(info.End); pos.nextWord()) {
 		const ZLTextElement &element = paragraph[pos.wordNumber()];
 		ZLTextElement::Kind kind = element.kind();
-		const int x = context().x();
+		const int x = myX;
 		int width = myStyle.elementWidth(element, pos.charNumber(), metrics);
 	
 		switch (kind) {
@@ -277,7 +277,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			case ZLTextElement::NB_HSPACE_ELEMENT:
 				if (wordOccured && (spaceCounter > 0)) {
 					int correction = fullCorrection / spaceCounter;
-					context().moveX(context().spaceWidth() + correction);
+					myX += context().spaceWidth() + correction;
 					fullCorrection -= correction;
 					wordOccured = false;
 					--spaceCounter;
@@ -291,7 +291,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				break;
 		}
 
-		context().moveX(width);
+		myX += width;
 	}
 	if (!endOfParagraph && (info.End.element().kind() == ZLTextElement::WORD_ELEMENT)) {
 		int start = 0;
@@ -301,10 +301,10 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 		const int len = info.End.charNumber() - start;
 		if (len > 0) {
 			const ZLTextWord &word = (const ZLTextWord&)info.End.element();
-			ZLUnicodeUtil::Ucs2String ucs2string;
-			ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
-			const bool addHyphenationSign = ucs2string[start + len - 1] != '-';
-			const int x = context().x(); 
+			ZLUnicodeUtil::Ucs4String ucs4string;
+			ZLUnicodeUtil::utf8ToUcs4(ucs4string, word.Data, word.Size);
+			const bool addHyphenationSign = ucs4string[start + len - 1] != '-';
+			const int x = myX; 
 			const int width = myStyle.wordWidth(word, start, len, addHyphenationSign);
 			const int height = myStyle.elementHeight(word, metrics);
 			const int descent = myStyle.elementDescent(word);
@@ -318,5 +318,5 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 		}
 	}
 
-	context().moveY(info.Height + info.Descent + info.VSpaceAfter);
+	myY += info.Height + info.Descent + info.VSpaceAfter;
 }

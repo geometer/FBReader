@@ -231,14 +231,14 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 			int spaceLeft = maxWidth - newInfo.Width;
 			if (breakedAtFirstWord ||
 					((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth()))) {
-				ZLUnicodeUtil::Ucs2String ucs2string;
-				ZLUnicodeUtil::utf8ToUcs2(ucs2string, word.Data, word.Size);
+				ZLUnicodeUtil::Ucs4String ucs4string;
+				ZLUnicodeUtil::utf8ToUcs4(ucs4string, word.Data, word.Size);
 				ZLTextHyphenationInfo hyphenationInfo = ZLTextHyphenator::instance().info(word);
 				int hyphenationPosition = word.Length - 1;
 				int subwordWidth = 0;
 				for (; hyphenationPosition > startCharNumber; --hyphenationPosition) {
 					if (hyphenationInfo.isHyphenationPossible(hyphenationPosition)) {
-						subwordWidth = myStyle.wordWidth(word, startCharNumber, hyphenationPosition - startCharNumber, ucs2string[hyphenationPosition - 1] != '-');
+						subwordWidth = myStyle.wordWidth(word, startCharNumber, hyphenationPosition - startCharNumber, ucs4string[hyphenationPosition - 1] != '-');
 						if (subwordWidth <= spaceLeft) {
 							break;
 						}

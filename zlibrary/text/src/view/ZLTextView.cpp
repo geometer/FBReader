@@ -371,10 +371,10 @@ bool ZLTextView::onStylusRelease(int, int) {
 	return true;
 }
 
-void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift) {
+void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
 	context().setColor(myStyle.textStyle()->color());
 	if (mark == 0) {
-		context().drawString(x, y, str, len);
+		context().drawString(x, y, str, len, rtl);
 	} else {
 		int pos = 0;
 		for (; (mark != 0) && (pos < len); mark = mark->next()) {
@@ -392,15 +392,15 @@ void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLText
 
 			if (markStart > pos) {
 				int endPos = std::min(markStart, len);
-				context().drawString(x, y, str + pos, endPos - pos);
-				x += context().stringWidth(str + pos, endPos - pos);
+				context().drawString(x, y, str + pos, endPos - pos, rtl);
+				x += context().stringWidth(str + pos, endPos - pos, rtl);
 			}
 			if (markStart < len) {
 				context().setColor(ZLTextStyleCollection::instance().baseStyle().SelectedTextColorOption.value());
 				{
 					int endPos = std::min(markStart + markLen, len);
-					context().drawString(x, y, str + markStart, endPos - markStart);
-					x += context().stringWidth(str + markStart, endPos - markStart);
+					context().drawString(x, y, str + markStart, endPos - markStart, rtl);
+					x += context().stringWidth(str + markStart, endPos - markStart, rtl);
 				}
 				context().setColor(myStyle.textStyle()->color());
 			}
@@ -408,24 +408,24 @@ void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLText
 		}
 
 		if (pos < len) {
-			context().drawString(x, y, str + pos, len - pos);
+			context().drawString(x, y, str + pos, len - pos, rtl);
 		}
 	}
 }
 
 void ZLTextView::drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
 	if ((start == 0) && (length == -1)) {
-		drawString(x, y, word.Data, word.Size, word.mark(), 0);
+		drawString(x, y, word.Data, word.Size, word.mark(), 0, word.RTL);
 	} else {
 		int startPos = ZLUnicodeUtil::length(word.Data, start);
 		int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
 		if (!addHyphenationSign) {
-			drawString(x, y, word.Data + startPos, endPos - startPos, word.mark(), startPos);
+			drawString(x, y, word.Data + startPos, endPos - startPos, word.mark(), startPos, word.RTL);
 		} else {
 			std::string substr;
 			substr.append(word.Data + startPos, endPos - startPos);
 			substr += '-';
-			drawString(x, y, substr.data(), substr.length(), word.mark(), startPos);
+			drawString(x, y, substr.data(), substr.length(), word.mark(), startPos, word.RTL);
 		}
 	}
 }

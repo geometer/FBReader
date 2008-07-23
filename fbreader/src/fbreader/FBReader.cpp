@@ -340,6 +340,10 @@ FBReader::ViewMode FBReader::getMode() const {
 	return myMode;
 }
 
+bool FBReader::isViewFinal() const {
+	return myMode == BOOK_TEXT_MODE;
+}
+
 void FBReader::setMode(ViewMode mode) {
 	if (mode == myMode) {
 		return;
@@ -347,8 +351,6 @@ void FBReader::setMode(ViewMode mode) {
 
 	myPreviousMode = myMode;
 	myMode = mode;
-
-	setViewFinal(myMode == BOOK_TEXT_MODE);
 
 	switch (myMode) {
 		case BOOK_TEXT_MODE:

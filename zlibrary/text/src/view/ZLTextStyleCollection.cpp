@@ -145,8 +145,8 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 }
 
 ZLTextStyleCollection::ZLTextStyleCollection() :
-	myBaseStyle(0),
-	OverrideSpecifiedFontsOption(ZLCategoryKey::LOOK_AND_FEEL, "Style", "UseCustomFonts", false) {
+	OverrideSpecifiedFontsOption(ZLCategoryKey::LOOK_AND_FEEL, "Style", "UseCustomFonts", false),
+	myBaseStyle(0) {
 	ZLTextStyleReader(*this).readDocument(ZLibrary::DefaultFilesPathPrefix() + "styles.xml");
 	if (myBaseStyle.isNull()) {
 		myBaseStyle = new ZLTextBaseStyle("", 20);

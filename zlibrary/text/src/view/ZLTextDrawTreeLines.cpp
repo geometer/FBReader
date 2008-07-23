@@ -27,8 +27,8 @@
 void ZLTextView::drawTreeLines(const ZLTextTreeNodeInfo &info, int height, int vSpaceAfter) {
 	context().setColor(ZLTextStyleCollection::instance().baseStyle().TreeLinesColorOption.value());
 
-	int x = context().x();
-	int y = context().y();
+	int x = myX;
+	int y = myY;
 
 	const int qstep = (context().stringHeight() + 2) / 3;
 

@@ -184,7 +184,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 								}
 							} else if (number != 0) {
 								char buffer[4];
-								int len = ZLUnicodeUtil::ucs2ToUtf8(buffer, number);
+								int len = ZLUnicodeUtil::ucs4ToUtf8(buffer, number);
 								if (state == PS_SPECIAL) {
 									characterDataHandler(buffer, len, false);
 								} else {

@@ -49,8 +49,8 @@ int ZLPartialPaintContext::height() const {
 	return mySplittedView.context().height();
 }
 
-int ZLPartialPaintContext::stringWidth(const char *str, int len) const {
-	return mySplittedView.context().stringWidth(str, len);
+int ZLPartialPaintContext::stringWidth(const char *str, int len, bool rtl) const {
+	return mySplittedView.context().stringWidth(str, len, rtl);
 }
 
 int ZLPartialPaintContext::spaceWidth() const {
@@ -65,8 +65,8 @@ int ZLPartialPaintContext::descent() const {
 	return mySplittedView.context().descent();
 }
 
-void ZLPartialPaintContext::drawString(int x, int y, const char *str, int len) {
-	mySplittedView.context().drawString(x + xDelta(), y, str, len);
+void ZLPartialPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
+	mySplittedView.context().drawString(x + xDelta(), y, str, len, rtl);
 }
 
 void ZLPartialPaintContext::drawImage(int x, int y, const ZLImageData &image) {

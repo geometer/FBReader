@@ -29,8 +29,10 @@ private:
 	ZLUnicodeUtil();
 
 public:
-	typedef unsigned short Ucs2Char;
+	typedef uint16_t Ucs2Char;
 	typedef std::vector<Ucs2Char> Ucs2String;
+	typedef uint32_t Ucs4Char;
+	typedef std::vector<Ucs4Char> Ucs4String;
 
 	enum Breakable {
 		NO_BREAKABLE,
@@ -44,26 +46,30 @@ public:
 	static int utf8Length(const std::string &str);
 	static int length(const char *str, int utf8Length);
 	static int length(const std::string &str, int utf8Length);
+	static void utf8ToUcs4(Ucs4String &to, const char *from, int length, int toLength = -1);
+	static void utf8ToUcs4(Ucs4String &to, const std::string &from, int toLength = -1);
 	static void utf8ToUcs2(Ucs2String &to, const char *from, int length, int toLength = -1);
 	static void utf8ToUcs2(Ucs2String &to, const std::string &from, int toLength = -1);
-	static int firstChar(Ucs2Char &ch, const char *utf8String);
+	static int firstChar(Ucs4Char &ch, const char *utf8String);
+	static void ucs4ToUtf8(std::string &to, const Ucs4String &from, int toLength = -1);
+	static int ucs4ToUtf8(char *to, Ucs4Char ch);
 	static void ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLength = -1);
 	static int ucs2ToUtf8(char *to, Ucs2Char ch);
-	static bool isLetter(Ucs2Char ch);
-	static bool isSpace(Ucs2Char ch);
-	static bool isNBSpace(Ucs2Char ch);
-	static Breakable isBreakable(Ucs2Char ch);
+	static bool isLetter(Ucs4Char ch);
+	static bool isSpace(Ucs4Char ch);
+	static bool isNBSpace(Ucs4Char ch);
+	static Breakable isBreakable(Ucs4Char ch);
 
-	static Ucs2Char toLower(Ucs2Char ch);
-	static void toLower(Ucs2String &str);
+	static Ucs4Char toLower(Ucs4Char ch);
+	static void toLower(Ucs4String &str);
 	static std::string toLower(const std::string &utf8String);
 
-	static Ucs2Char toUpper(Ucs2Char ch);
-	static void toUpper(Ucs2String &str);
+	static Ucs4Char toUpper(Ucs4Char ch);
+	static void toUpper(Ucs4String &str);
 	static std::string toUpper(const std::string &utf8String);
 };
 
-inline bool ZLUnicodeUtil::isNBSpace(Ucs2Char ch) {
+inline bool ZLUnicodeUtil::isNBSpace(Ucs4Char ch) {
 	return ch == 160;
 }
 

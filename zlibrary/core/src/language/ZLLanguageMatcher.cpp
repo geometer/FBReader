@@ -127,7 +127,7 @@ void ZLChineseUtf8Matcher::processWord(const std::string &word, int length) {
 	};
 
 	const char *ptr = word.data();
-	ZLUnicodeUtil::Ucs2Char symbol;
+	ZLUnicodeUtil::Ucs4Char symbol;
 	for (int i = 0; i < length; ++i) {
 		ptr += ZLUnicodeUtil::firstChar(symbol, ptr);
 		if (symbol <= 0xFF) {

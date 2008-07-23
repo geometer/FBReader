@@ -143,7 +143,7 @@ void ZLQtPaintContext::setFillColor(ZLColor color, FillStyle style) {
 	));
 }
 
-int ZLQtPaintContext::stringWidth(const char *str, int len) const {
+int ZLQtPaintContext::stringWidth(const char *str, int len, bool) const {
 	return myPainter->fontMetrics().width(QString::fromUtf8(str, len));
 }
 
@@ -162,7 +162,8 @@ int ZLQtPaintContext::stringHeight() const {
 	return myPainter->font().pointSize() + 2;
 }
 
-void ZLQtPaintContext::drawString(int x, int y, const char *str, int len) {
+void ZLQtPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
+	// TODO: use rtl!!!
 	QString qStr = QString::fromUtf8(str, len);
 	myPainter->drawText(x, y, qStr);
 }

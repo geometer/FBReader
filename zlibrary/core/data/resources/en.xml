@@ -32,6 +32,7 @@
 		<node name="custom..." value="Custom..."/>
 	</node>
 	<node name="language">
+		<node name="ar" value="Arabic"/>
 		<node name="cs" value="Czech"/>
 		<node name="de" value="German"/>
 		<node name="de-traditional" value="German (traditional orthography)"/>

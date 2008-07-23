@@ -146,10 +146,10 @@ int ZLTextView::ViewStyle::wordWidth(const ZLTextWord &word, int start, int leng
 	int startPos = ZLUnicodeUtil::length(word.Data, start);
 	int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
 	if (!addHyphenationSign) {
-		return context().stringWidth(word.Data + startPos, endPos - startPos);
+		return context().stringWidth(word.Data + startPos, endPos - startPos, word.RTL);
 	}
 	std::string substr;
 	substr.append(word.Data + startPos, endPos - startPos);
 	substr += '-';
-	return context().stringWidth(substr.data(), substr.length());
+	return context().stringWidth(substr.data(), substr.length(), word.RTL);
 }

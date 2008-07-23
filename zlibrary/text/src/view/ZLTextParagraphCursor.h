@@ -24,6 +24,8 @@
 #include <map>
 #include <string>
 
+#include <fribidi/fribidi.h>
+
 #include <shared_ptr.h>
 #include <allocator.h>
 
@@ -57,7 +59,7 @@ public:
 	ZLTextElement *AfterParagraphElement;
 	ZLTextElement *EmptyLineElement;
 
-	ZLTextWord *getWord(const char *data, unsigned short length, size_t paragraphOffset);
+	ZLTextWord *getWord(const char *data, unsigned short length, size_t paragraphOffset, bool rtl);
 	void storeWord(ZLTextWord *word);
 	ZLTextControlElement *getControlElement(shared_ptr<ZLTextParagraphEntry> entry);
 	void storeControlElement(ZLTextControlElement *element);
@@ -85,7 +87,7 @@ private:
 
 	private:
 		void processTextEntry(const ZLTextEntry &textEntry);
-		void addWord(const char *ptr, int offset, int len);
+		void addWord(const char *ptr, int offset, int len, bool rtl);
 
 	private:
 		const ZLTextParagraph &myParagraph;
@@ -98,6 +100,7 @@ private:
 		const std::string myLanguage;
 		char *myBreaksTable;
 		size_t myBreaksTableLength;
+		FriBidiCharType myBidiCharType;
 	};
 
 protected:
@@ -231,8 +234,8 @@ friend class ZLTextParagraphCursor;
 
 inline ZLTextElementVector::ZLTextElementVector() {}
 
-inline ZLTextWord *ZLTextElementPool::getWord(const char *data, unsigned short length, size_t paragraphOffset) {
-	return new (myWordAllocator.allocate()) ZLTextWord(data, length, paragraphOffset);
+inline ZLTextWord *ZLTextElementPool::getWord(const char *data, unsigned short length, size_t paragraphOffset, bool rtl) {
+	return new (myWordAllocator.allocate()) ZLTextWord(data, length, paragraphOffset, rtl);
 }
 inline void ZLTextElementPool::storeWord(ZLTextWord *word) {
 	word->~ZLTextWord();
