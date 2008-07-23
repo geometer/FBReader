@@ -206,6 +206,9 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 					allowBreak = true;
 					nbspaceBreak = true;
 				}
+			} else if ((elementKind == ZLTextElement::WORD_ELEMENT) &&
+								 (previousKind == ZLTextElement::WORD_ELEMENT)) {
+				allowBreak = ((ZLTextWord&)element).RTL == ((ZLTextWord&)paragraphCursor[newInfo.End.wordNumber()]).RTL;
 			} else {
 				allowBreak =
 					((elementKind != ZLTextElement::WORD_ELEMENT) || (previousKind == ZLTextElement::WORD_ELEMENT)) &&

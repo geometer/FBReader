@@ -451,17 +451,6 @@ int ZLTextView::textAreaHeight() const {
 		return viewHeight();
 	}
 }
-/*
- *
-size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraphNumber) const {
-	return myTextView.myTextSize[paragraphNumber] - myTextView.myTextSize[startTextIndex()];
-}
-
-size_t ZLTextView::PositionIndicator::sizeOfParagraph(size_t paragraphNumber) const {
-	return myTextView.myTextSize[paragraphNumber + 1] - myTextView.myTextSize[paragraphNumber];
-}
-*/
-
 
 void ZLTextView::gotoPage(size_t index) {
 	const size_t symbolIndex = index * 2048 - 128;

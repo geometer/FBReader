@@ -146,7 +146,7 @@ void ZLWin32PaintContext::setFillColor(ZLColor color, FillStyle style) {
 			CreateHatchBrush(HS_DIAGCROSS, colorref);
 }
 
-int ZLWin32PaintContext::stringWidth(const char *str, int len) const {
+int ZLWin32PaintContext::stringWidth(const char *str, int len, bool rtl) const {
 	if (myDisplayContext == 0) {
 		return 0;
 	}
@@ -178,7 +178,7 @@ int ZLWin32PaintContext::descent() const {
 	return myTextMetric.tmDescent;
 }
 
-void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
+void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
 	if (myDisplayContext == 0) {
 		return;
 	}
@@ -186,12 +186,14 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len) {
 	y += myTextMetric.tmDescent;
 	int utf8len = ZLUnicodeUtil::utf8Length(str, len);
 	if (utf8len == len) {
-		TextOutA(myDisplayContext, x, y, str, len);
+		//TextOutA(myDisplayContext, x, y, str, len);
+		ExtTextOutA(myDisplayContext, x, y, rtl ? ETO_RTLREADING : 0, 0, str, utf8len, 0);
 	} else {
 		static ZLUnicodeUtil::Ucs2String ucs2Str;
 		ucs2Str.clear();
 		ZLUnicodeUtil::utf8ToUcs2(ucs2Str, str, len, utf8len);
-		TextOutW(myDisplayContext, x, y, ::wchar(ucs2Str), utf8len);
+		//TextOutW(myDisplayContext, x, y, ::wchar(ucs2Str), utf8len);
+		ExtTextOutW(myDisplayContext, x, y, rtl ? ETO_RTLREADING : 0, 0, ::wchar(ucs2Str), utf8len, 0);
 	}
 }
 
