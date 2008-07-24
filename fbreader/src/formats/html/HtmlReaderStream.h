@@ -25,7 +25,7 @@
 class HtmlReaderStream : public ZLInputStream {
 
 public:
-	HtmlReaderStream(ZLInputStream &base);
+	HtmlReaderStream(ZLInputStream &base, size_t maxSize);
 	~HtmlReaderStream();
 
 private:

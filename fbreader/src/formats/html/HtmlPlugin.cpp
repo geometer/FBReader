@@ -41,7 +41,7 @@ bool HtmlPlugin::readDescription(const std::string &path, BookDescription &descr
 		return false;
 	}
 
-	shared_ptr<ZLInputStream> htmlStream = new HtmlReaderStream(*stream);
+	shared_ptr<ZLInputStream> htmlStream = new HtmlReaderStream(*stream, 50000);
 	detectEncodingAndLanguage(description, *htmlStream);
 	if (description.encoding().empty()) {
 		return false;

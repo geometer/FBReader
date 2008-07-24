@@ -69,7 +69,7 @@ bool HtmlTextOnlyReader::characterDataHandler(const char *text, int len, bool) {
 	return myFilledSize < myMaxSize;
 }
 
-HtmlReaderStream::HtmlReaderStream(ZLInputStream &base) : myBase(base), myBuffer(0) {
+HtmlReaderStream::HtmlReaderStream(ZLInputStream &base, size_t maxSize) : myBase(base), myBuffer(0), mySize(maxSize) {
 }
 
 HtmlReaderStream::~HtmlReaderStream() {
@@ -80,8 +80,8 @@ bool HtmlReaderStream::open() {
 	if (!myBase.open()) {
 		return false;
 	}
-	myBuffer = new char[50000];
-	HtmlTextOnlyReader reader(myBuffer, 50000);
+	myBuffer = new char[mySize];
+	HtmlTextOnlyReader reader(myBuffer, mySize);
 	reader.readDocument(myBase);
 	mySize = reader.size();
 	myOffset = 0;
