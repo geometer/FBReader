@@ -41,6 +41,7 @@
 		<node name="es" value="Spanish"/>
 		<node name="fi" value="Finnish"/>
 		<node name="fr" value="French"/>
+		<node name="he" value="Hebrew"/>
 		<node name="id" value="Indonesian"/>
 		<node name="it" value="Italian"/>
 		<node name="no" value="Norwegian"/>
