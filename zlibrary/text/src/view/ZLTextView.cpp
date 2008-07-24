@@ -152,7 +152,7 @@ int ZLTextView::paragraphIndexByCoordinate(int y) const {
 
 const ZLTextElementArea *ZLTextView::elementByCoordinates(int x, int y) const {
 	ZLTextElementIterator it =
-		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextElementArea::RangeChecker(x, y));
+		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextElementArea::RangeChecker(myRTL ? context().width() - x : x, y));
 	return (it != myTextElementMap.end()) ? &*it : 0;
 }
 
@@ -344,13 +344,13 @@ bool ZLTextView::onStylusPress(int x, int y) {
 
 void ZLTextView::activateSelection(int x, int y) {
 	if (isSelectionEnabled()) {
-		mySelectionModel.activate(x, y);
+		mySelectionModel.activate(myRTL ? context().width() - x : x, y);
 		application().refreshWindow();
 	}
 }
 
 bool ZLTextView::onStylusMovePressed(int x, int y) {
-	if (mySelectionModel.extendTo(x, y)) {
+	if (mySelectionModel.extendTo(myRTL ? context().width() - x : x, y)) {
 		copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 		application().refreshWindow();
 	}

@@ -157,7 +157,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 
 		if (left < right) {
 			context().setFillColor(ZLTextStyleCollection::instance().baseStyle().SelectionBackgroundColorOption.value());
-			context().fillRectangle(left, top, right, bottom);
+			context().fillRectangle(myRTL ? context().width() - left : left, top, myRTL ? context().width() - right : right, bottom);
 		}
 	}
 
