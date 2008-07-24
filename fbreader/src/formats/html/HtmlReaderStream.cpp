@@ -40,9 +40,10 @@ private:
 	char *myBuffer;
 	size_t myMaxSize;
 	size_t myFilledSize;
+	bool myIgnoreText;
 };
 
-HtmlTextOnlyReader::HtmlTextOnlyReader(char *buffer, size_t maxSize) : HtmlReader(std::string()), myBuffer(buffer), myMaxSize(maxSize), myFilledSize(0) {
+HtmlTextOnlyReader::HtmlTextOnlyReader(char *buffer, size_t maxSize) : HtmlReader(std::string()), myBuffer(buffer), myMaxSize(maxSize), myFilledSize(0), myIgnoreText(false) {
 }
 
 size_t HtmlTextOnlyReader::size() const {
@@ -55,7 +56,10 @@ void HtmlTextOnlyReader::startDocumentHandler() {
 void HtmlTextOnlyReader::endDocumentHandler() {
 }
 
-bool HtmlTextOnlyReader::tagHandler(const HtmlTag&) {
+bool HtmlTextOnlyReader::tagHandler(const HtmlTag &tag) {
+	if (tag.Name == "SCRIPT") {
+		myIgnoreText = tag.Start;
+	}
 	if ((myFilledSize < myMaxSize) && (myFilledSize > 0) && (myBuffer[myFilledSize - 1] != '\n')) {
 		myBuffer[myFilledSize++] = '\n';
 	}
@@ -63,9 +67,11 @@ bool HtmlTextOnlyReader::tagHandler(const HtmlTag&) {
 }
 
 bool HtmlTextOnlyReader::characterDataHandler(const char *text, int len, bool) {
-	len = std::min((size_t)len, myMaxSize - myFilledSize);
-	memcpy(myBuffer + myFilledSize, text, len);
-	myFilledSize += len;
+	if (!myIgnoreText) {
+		len = std::min((size_t)len, myMaxSize - myFilledSize);
+		memcpy(myBuffer + myFilledSize, text, len);
+		myFilledSize += len;
+	}
 	return myFilledSize < myMaxSize;
 }
 
