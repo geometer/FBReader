@@ -163,7 +163,6 @@ int ZLQtPaintContext::stringHeight() const {
 }
 
 void ZLQtPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
-	// TODO: use rtl!!!
 	QString qStr = QString::fromUtf8(str, len);
 	myPainter->setLayoutDirection(rtl ? Qt::RightToLeft : Qt::LeftToRight);
 	myPainter->drawText(x, y, qStr);
