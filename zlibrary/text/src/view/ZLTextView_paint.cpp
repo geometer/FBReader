@@ -129,9 +129,9 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 	if (!mySelectionModel.isEmpty() && (from != to)) {
 		std::pair<ZLTextSelectionModel::BoundElement,ZLTextSelectionModel::BoundElement> range = mySelectionModel.range();
 
-		int left = viewWidth() + leftMargin() - 1;
+		int left = viewWidth() + lineStartMargin() - 1;
 		if (info.Start > range.first) {
-			left = leftMargin();
+			left = lineStartMargin();
 		} else if (info.End >= range.first) {
 			ZLTextElementIterator jt = findLast(fromIt, toIt, range.first);
 			left = jt->XStart;
@@ -142,9 +142,9 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 
 		const int top = myY + 1;
 		int bottom = myY + info.Height + info.Descent;
-		int right = leftMargin();
+		int right = lineStartMargin();
 		if (info.End < range.second) {
-			right = viewWidth() + leftMargin() - 1;
+			right = viewWidth() + lineStartMargin() - 1;
 			bottom += info.VSpaceAfter;
 		} else if (info.Start <= range.second) {
 			ZLTextElementIterator jt = findLast(fromIt, toIt, range.second);
@@ -166,7 +166,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 	if (myY > maxY) {
 	  myY = maxY;
 	}
-	myX = leftMargin();
+	myX = lineStartMargin();
 	if (!info.NodeInfo.isNull()) {
 		drawTreeLines(*info.NodeInfo, info.Height, info.Descent + info.VSpaceAfter);
 	}
@@ -179,7 +179,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 			if (it->ChangeStyle) {
 				myStyle.setTextStyle(it->Style);
 			}
-			const int x = it->XStart;
+			const int x = myRTL ? context().width() - it->XEnd : it->XStart;
 			const int y = it->YEnd - myStyle.elementDescent(element) - myStyle.textStyle()->verticalShift();
 			if (kind == ZLTextElement::WORD_ELEMENT) {
 				drawWord(x, y, (const ZLTextWord&)element, pos.charNumber(), -1, false);
@@ -200,7 +200,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 		int len = info.End.charNumber() - start;
 		const ZLTextWord &word = (const ZLTextWord&)info.End.element();
 		context().setColor(myStyle.textStyle()->color());
-		const int x = it->XStart;
+		const int x = myRTL ? context().width() - it->XEnd : it->XStart;
 		const int y = it->YEnd - myStyle.elementDescent(word) - myStyle.textStyle()->verticalShift();
 		drawWord(x, y, word, start, len, it->AddHyphenationSign);
 	}
@@ -216,7 +216,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 	bool wordOccured = false;
 	bool changeStyle = true;
 
-	myX = leftMargin() + info.LeftIndent;
+	myX = lineStartMargin() + info.LeftIndent;
 
 	const int fontSize = myStyle.textStyle()->fontSize();
 	// TODO: change metrics at font change

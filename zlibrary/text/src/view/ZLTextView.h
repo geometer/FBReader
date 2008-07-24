@@ -182,9 +182,13 @@ protected:
 	virtual int rightMargin() const = 0;
 	virtual int topMargin() const = 0;
 	virtual int bottomMargin() const = 0;
+
 	virtual bool isSelectionEnabled() const = 0;
 
 private:
+	int lineStartMargin() const;
+	int lineEndMargin() const;
+
 	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
 	void moveEndCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
 
@@ -259,6 +263,8 @@ private:
 	int myX;
 	int myY;
 
+	bool myRTL;
+
 friend class ZLTextSelectionModel;
 };
 
@@ -278,6 +284,14 @@ inline int ZLTextView::viewWidth() const {
 
 inline int ZLTextView::viewHeight() const {
 	return std::max(myStyle.context().height() - topMargin() - bottomMargin(), 1);
+}
+
+inline int ZLTextView::lineStartMargin() const {
+	return myRTL ? rightMargin() : leftMargin();
+}
+
+inline int ZLTextView::lineEndMargin() const {
+	return myRTL ? leftMargin() : rightMargin();
 }
 
 #endif /* __ZLTEXTVIEW_H__ */
