@@ -224,14 +224,14 @@ void ZLTextView::addAreaToTextMap(const ZLTextElementArea &area) {
 }
 
 void ZLTextView::flushRevertedElements(unsigned char bidiLevel) {
-	const unsigned char baseLevel = myStyle.baseBidiLevel();
-	if (baseLevel > bidiLevel) {
+	const int index = (int)bidiLevel - (int)myStyle.baseBidiLevel();
+	if ((index < 0) || (myTextElementsToRevert.size() <= (size_t)index)) {
 		return;
 	}
 	ZLTextElementMap &from =
-		myTextElementsToRevert[bidiLevel - baseLevel];
-	ZLTextElementMap &to = (bidiLevel > baseLevel) ?
-		myTextElementsToRevert[bidiLevel - baseLevel - 1] :
+		myTextElementsToRevert[index];
+	ZLTextElementMap &to = (index > 0) ?
+		myTextElementsToRevert[index - 1] :
 		myTextElementMap;
 	if (!from.empty()) {
 		const int sum = from[from.size() - 1].XEnd + from[0].XStart;
