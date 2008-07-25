@@ -24,12 +24,8 @@
 #include <map>
 #include <string>
 
-#include <fribidi/fribidi.h>
-
 #include <shared_ptr.h>
 #include <allocator.h>
-
-#include <ZLUnicodeUtil.h>
 
 #include <ZLTextModel.h>
 
@@ -75,32 +71,6 @@ class ZLTextParagraphCursor;
 typedef shared_ptr<ZLTextParagraphCursor> ZLTextParagraphCursorPtr;
 
 class ZLTextParagraphCursor {
-
-private:
-	class Processor {
-
-	public:
-		Processor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
-		void fill();
-
-	private:
-		void processTextEntry(const ZLTextEntry &textEntry);
-		void addWord(const char *ptr, int offset, int len, bool rtl);
-
-	private:
-		const ZLTextParagraph &myParagraph;
-		ZLTextElementVector &myElements;
-
-		std::vector<ZLTextMark>::const_iterator myFirstMark;
-		std::vector<ZLTextMark>::const_iterator myLastMark;
-		int myOffset;
-
-		const std::string myLanguage;
-		std::vector<char> myBreaksTable;
-		FriBidiCharType myBidiCharType;
-		ZLUnicodeUtil::Ucs4String myUcs4String;
-		std::vector<FriBidiLevel> myBidiLevels;
-	};
 
 protected:
 	ZLTextParagraphCursor(const ZLTextModel &model, size_t index);

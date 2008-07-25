@@ -24,6 +24,7 @@
 
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
+#include "ZLTextParagraphBuilder.h"
 
 ZLTextElementPool ZLTextElementPool::Pool;
 
@@ -212,8 +213,8 @@ void ZLTextParagraphCursor::fill() {
 		case ZLTextParagraph::TEXT_PARAGRAPH:
 		case ZLTextParagraph::TREE_PARAGRAPH:
 		{
-			Processor processor(ZLTextHyphenator::instance().language(), paragraph, myModel.marks(), index(), myElements);
-			processor.fill();
+			ZLTextParagraphBuilder builder(ZLTextHyphenator::instance().language(), paragraph, myModel.marks(), index(), myElements);
+			builder.fill();
 			break;
 		}
 		case ZLTextParagraph::EMPTY_LINE_PARAGRAPH:

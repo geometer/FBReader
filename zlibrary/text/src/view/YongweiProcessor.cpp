@@ -25,10 +25,10 @@
 
 #include <ZLTextParagraph.h>
 
-#include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
+#include "ZLTextParagraphBuilder.h"
 
-ZLTextParagraphCursor::Processor::Processor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language) {
+ZLTextParagraphBuilder::ZLTextParagraphBuilder(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language) {
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
@@ -41,7 +41,7 @@ ZLTextParagraphCursor::Processor::Processor(const std::string &language, const Z
 	}
 }
 
-void ZLTextParagraphCursor::Processor::addWord(const char *ptr, int offset, int len, bool rtl) {
+void ZLTextParagraphBuilder::addWord(const char *ptr, int offset, int len, bool rtl) {
 	ZLTextWord *word = ZLTextElementPool::Pool.getWord(ptr, len, offset, rtl);
 	for (std::vector<ZLTextMark>::const_iterator mit = myFirstMark; mit != myLastMark; ++mit) {
 		ZLTextMark mark = *mit;
@@ -52,7 +52,7 @@ void ZLTextParagraphCursor::Processor::addWord(const char *ptr, int offset, int 
 	myElements.push_back(word);
 }
 
-void ZLTextParagraphCursor::Processor::fill() {
+void ZLTextParagraphBuilder::fill() {
 	myBidiCharType = (myLanguage == "ar") ? FRIBIDI_TYPE_RTL : FRIBIDI_TYPE_LTR;
 
 	for (ZLTextParagraph::Iterator it = myParagraph; !it.isEnd(); it.next()) {
@@ -86,7 +86,7 @@ void ZLTextParagraphCursor::Processor::fill() {
 	}
 }
 
-void ZLTextParagraphCursor::Processor::processTextEntry(const ZLTextEntry &textEntry) {
+void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 	const size_t dataLength = textEntry.dataLength();
 	if (dataLength == 0) {
 		return;
@@ -105,6 +105,7 @@ void ZLTextParagraphCursor::Processor::processTextEntry(const ZLTextEntry &textE
 	const char *start = textEntry.data();
 	const char *end = start + dataLength;
 	set_linebreaks_utf8((const utf8_t*)start, dataLength, myLanguage.c_str(), &myBreaksTable[0]);
+
 	ZLUnicodeUtil::Ucs4Char ch;
 	enum { NO_SPACE, SPACE, NON_BREAKABLE_SPACE } spaceState = NO_SPACE;
 	int charLength = 0;
