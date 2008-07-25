@@ -21,7 +21,6 @@
 
 #include <linebreak.h>
 
-#include <ZLUnicodeUtil.h>
 #include <ZLImage.h>
 
 #include <ZLTextParagraph.h>
@@ -29,22 +28,16 @@
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 
-bool ZLTextParagraphCursor::Processor::ourIndexIsInitialised = false;
-
-ZLTextParagraphCursor::Processor::Processor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language), myBreaksTable(0) {
+ZLTextParagraphCursor::Processor::Processor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language) {
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
 	myOffset = 0;
-	if (!ourIndexIsInitialised) {
-		init_linebreak();
-		ourIndexIsInitialised = true;
-	}
-}
 
-ZLTextParagraphCursor::Processor::~Processor() {
-	if (myBreaksTable != 0) {
-		delete[] myBreaksTable;
+	static bool lineBreakInitialized = false;
+	if (!lineBreakInitialized) {
+		init_linebreak();
+		lineBreakInitialized = true;
 	}
 }
 
@@ -99,30 +92,25 @@ void ZLTextParagraphCursor::Processor::processTextEntry(const ZLTextEntry &textE
 		return;
 	}
 
-	ZLUnicodeUtil::Ucs4String ucs4String;
-	ZLUnicodeUtil::utf8ToUcs4(ucs4String, textEntry.data(), dataLength);
-	int len = ucs4String.size();
-	ucs4String.push_back(0);
-	FriBidiLevel *bidiLevels = new FriBidiLevel[len + 1];
-	fribidi_log2vis(&ucs4String[0], len, &myBidiCharType, 0, 0, 0, bidiLevels);
+	ZLUnicodeUtil::utf8ToUcs4(myUcs4String, textEntry.data(), dataLength);
+	int len = myUcs4String.size();
+	myUcs4String.push_back(0);
+	myBidiLevels.clear();
+	myBidiLevels.reserve(len + 1);
+	fribidi_log2vis(&myUcs4String[0], len, &myBidiCharType, 0, 0, 0, &myBidiLevels[0]);
+	myUcs4String.clear();
 
-	if ((myBreaksTable != 0) && (myBreaksTableLength < dataLength)) {
-		delete[] myBreaksTable;
-		myBreaksTable = 0;
-	}
-	if (myBreaksTable == 0) {
-		myBreaksTableLength = dataLength;
-		myBreaksTable = new char[dataLength];
-	}
+	myBreaksTable.clear();
+	myBreaksTable.reserve(dataLength);
 	const char *start = textEntry.data();
 	const char *end = start + dataLength;
-	set_linebreaks_utf8((const utf8_t*)start, dataLength, myLanguage.c_str(), myBreaksTable);
+	set_linebreaks_utf8((const utf8_t*)start, dataLength, myLanguage.c_str(), &myBreaksTable[0]);
 	ZLUnicodeUtil::Ucs4Char ch;
 	enum { NO_SPACE, SPACE, NON_BREAKABLE_SPACE } spaceState = NO_SPACE;
 	int charLength = 0;
 	int index = 0;
 	const char *wordStart = start;
-	bool rtl = bidiLevels[0] % 2 == 1;
+	bool rtl = myBidiLevels[0] % 2 == 1;
 	for (const char *ptr = start; ptr < end; ptr += charLength, ++index) {
 		charLength = ZLUnicodeUtil::firstChar(ch, ptr);
 		if (ZLUnicodeUtil::isSpace(ch)) {
@@ -146,20 +134,20 @@ void ZLTextParagraphCursor::Processor::processTextEntry(const ZLTextEntry &textE
 						myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
 					}
 					wordStart = ptr;
-					rtl = bidiLevels[index] % 2 == 1;
+					rtl = myBidiLevels[index] % 2 == 1;
 					break;
 				case NON_BREAKABLE_SPACE:
 					myElements.push_back(ZLTextElementPool::Pool.NBHSpaceElement);
 					wordStart = ptr;
-					rtl = bidiLevels[index] % 2 == 1;
+					rtl = myBidiLevels[index] % 2 == 1;
 					break;
 				case NO_SPACE:
 					if ((ptr > start) &&
 							(((myBreaksTable[ptr - start - 1] != LINEBREAK_NOBREAK) && (ptr != wordStart)) ||
-							 (bidiLevels[index - 1] != bidiLevels[index]))) {
+							 (myBidiLevels[index - 1] != myBidiLevels[index]))) {
 						addWord(wordStart, myOffset + (wordStart - start), ptr - wordStart, rtl);
 						wordStart = ptr;
-						rtl = bidiLevels[index] % 2 == 1;
+						rtl = myBidiLevels[index] % 2 == 1;
 					}
 					break;
 			}
@@ -178,6 +166,4 @@ void ZLTextParagraphCursor::Processor::processTextEntry(const ZLTextEntry &textE
 			break;
 	}
 	myOffset += dataLength;
-
-	delete[] bidiLevels;
 }

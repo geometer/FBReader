@@ -29,6 +29,8 @@
 #include <shared_ptr.h>
 #include <allocator.h>
 
+#include <ZLUnicodeUtil.h>
+
 #include <ZLTextModel.h>
 
 #include "ZLTextElement.h"
@@ -77,12 +79,8 @@ class ZLTextParagraphCursor {
 private:
 	class Processor {
 
-	private:
-		static bool ourIndexIsInitialised;
-
 	public:
 		Processor(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
-		virtual ~Processor();
 		void fill();
 
 	private:
@@ -98,9 +96,10 @@ private:
 		int myOffset;
 
 		const std::string myLanguage;
-		char *myBreaksTable;
-		size_t myBreaksTableLength;
+		std::vector<char> myBreaksTable;
 		FriBidiCharType myBidiCharType;
+		ZLUnicodeUtil::Ucs4String myUcs4String;
+		std::vector<FriBidiLevel> myBidiLevels;
 	};
 
 protected:

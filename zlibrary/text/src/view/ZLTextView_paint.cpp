@@ -149,7 +149,11 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 		} else if (info.Start <= range.second) {
 			ZLTextElementIterator jt = findLast(fromIt, toIt, range.second);
 			if (jt->Kind == ZLTextElement::WORD_ELEMENT) {
-				right = jt->XStart + areaLength(paragraph, *jt, range.second.CharNumber) - 1;
+				if (jt->RTL == myRTL) {
+					right = jt->XStart + areaLength(paragraph, *jt, range.second.CharNumber) - 1;
+				} else {
+					right = jt->XEnd - areaLength(paragraph, *jt, range.second.CharNumber) - 1;
+				}
 			} else {
 				right = jt->XEnd - 1;
 			}
@@ -254,11 +258,12 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				const int height = myStyle.elementHeight(element, metrics);
 				const int descent = myStyle.elementDescent(element);
 				const int length = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length - pos.charNumber() : 0;
+				const bool rtl = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).RTL : false;
 				myTextElementMap.push_back(
 					ZLTextElementArea(
 						paragraphNumber, pos.wordNumber(), pos.charNumber(), length, false,
 						changeStyle, myStyle.textStyle(), kind,
-						x, x + width - 1, y - height + 1, y + descent
+						x, x + width - 1, y - height + 1, y + descent, rtl
 					)
 				);
 				changeStyle = false;
@@ -312,7 +317,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				ZLTextElementArea(
 					paragraphNumber, info.End.wordNumber(), start, len, addHyphenationSign,
 					changeStyle, myStyle.textStyle(), ZLTextElement::WORD_ELEMENT,
-					x, x + width - 1, y - height + 1, y + descent
+					x, x + width - 1, y - height + 1, y + descent, word.RTL
 				)
 			);
 		}

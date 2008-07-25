@@ -54,7 +54,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 				ZLTextWordCursor cursor = myView.startCursor();
 				cursor.moveToParagraph(it->ParagraphNumber);
 				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->TextElementNumber];
-				const int deltaX = x - it->XStart;
+				const int deltaX = (word.RTL == myView.myRTL) ? x - it->XStart : it->XEnd - x;
 				const int len = it->Length;
 				const int start = it->StartCharNumber;
 				int diff = deltaX;

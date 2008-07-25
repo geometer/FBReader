@@ -42,6 +42,7 @@ ZLTextElementVector::~ZLTextElementVector() {
 			case ZLTextElement::IMAGE_ELEMENT:
 			case ZLTextElement::FORCED_CONTROL_ELEMENT:
 			case ZLTextElement::FIXED_HSPACE_ELEMENT:
+			case ZLTextElement::REVERSED_SEQUENCE_ELEMENT:
 				delete *it;
 				break;
 			case ZLTextElement::INDENT_ELEMENT:
