@@ -27,7 +27,7 @@
 #include "ZLTextStyle.h"
 #include "ZLTextElement.h"
 
-ZLTextView::ViewStyle::ViewStyle(shared_ptr<ZLPaintContext> context) : myContext(context) {
+ZLTextView::ViewStyle::ViewStyle(shared_ptr<ZLPaintContext> context) : myContext(context), myIsReverted(false) {
 	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr());
 	myWordHeight = -1;
 }
@@ -95,6 +95,8 @@ int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned i
 			return metrics.FullWidth + abs(textStyle()->leftIndent(metrics)) + abs(textStyle()->rightIndent(metrics)) + abs(textStyle()->firstLineIndentDelta(metrics)) + 1;
 		case ZLTextElement::FORCED_CONTROL_ELEMENT:
 		case ZLTextElement::CONTROL_ELEMENT:
+		case ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT:
+		case ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT:
 			return 0;
 		case ZLTextElement::FIXED_HSPACE_ELEMENT:
 			return context().spaceWidth() * ((const ZLTextFixedHSpaceElement&)element).length();
@@ -125,6 +127,8 @@ int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element, const ZLT
 		case ZLTextElement::FORCED_CONTROL_ELEMENT:
 		case ZLTextElement::CONTROL_ELEMENT:
 		case ZLTextElement::FIXED_HSPACE_ELEMENT:
+		case ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT:
+		case ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT:
 			return 0;
 	}
 	return 0;

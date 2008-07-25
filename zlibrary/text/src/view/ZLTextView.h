@@ -114,10 +114,14 @@ private:
 
 		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
 
+		void setReverted(bool reverted);
+		bool isReverted() const;
+
 	private:
 		ZLTextStylePtr myTextStyle;
 		shared_ptr<ZLPaintContext> myContext;
 		mutable int myWordHeight;
+		bool myIsReverted;
 	};
 
 protected:
@@ -226,6 +230,9 @@ private:
 	int viewHeight() const;
 	int textAreaHeight() const;
 
+	void addAreaToTextMap(const ZLTextElementArea &area);
+	void flushRevertedElements();
+
 private:
 	shared_ptr<ZLTextModel> myModel;
 
@@ -248,6 +255,7 @@ private:
 	int myOldWidth, myOldHeight;
 
 	ZLTextElementMap myTextElementMap;
+	ZLTextElementMap myTextElementsToRevert;
 	ZLTextTreeNodeMap myTreeNodeMap;
 
 	std::vector<size_t> myTextSize;
@@ -271,6 +279,8 @@ friend class ZLTextSelectionModel;
 inline ZLTextView::ViewStyle::~ViewStyle() {}
 inline const ZLPaintContext &ZLTextView::ViewStyle::context() const { return *myContext; }
 inline const ZLTextStylePtr ZLTextView::ViewStyle::textStyle() const { return myTextStyle; }
+inline void ZLTextView::ViewStyle::setReverted(bool reverted) { myIsReverted = reverted; }
+inline bool ZLTextView::ViewStyle::isReverted() const { return myIsReverted; }
 
 inline bool ZLTextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const ZLTextWordCursor &ZLTextView::startCursor() const { return myStartCursor; }

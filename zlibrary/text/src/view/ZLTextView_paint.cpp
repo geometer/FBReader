@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLUnicodeUtil.h>
 
 #include "ZLTextView.h"
@@ -211,6 +213,29 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 	myY += info.Descent + info.VSpaceAfter;
 }
 
+void ZLTextView::addAreaToTextMap(const ZLTextElementArea &area) {
+	if (myStyle.isReverted()) {
+		myTextElementsToRevert.push_back(area);
+	} else {
+		myTextElementMap.push_back(area);
+	}
+}
+
+void ZLTextView::flushRevertedElements() {
+	if (!myTextElementsToRevert.empty()) {
+		const int sum =
+			myTextElementsToRevert[myTextElementsToRevert.size() - 1].XEnd +
+			myTextElementsToRevert[0].XStart;
+		for (ZLTextElementMap::iterator it = myTextElementsToRevert.begin(); it != myTextElementsToRevert.end(); ++it) {
+			int tmp = sum - it->XStart;
+			it->XStart = sum - it->XEnd;
+			it->XEnd = tmp;
+			myTextElementMap.push_back(*it);
+		}
+		myTextElementsToRevert.clear();
+	}
+}
+
 void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 	myStyle.setTextStyle(info.StartStyle);
 	const int y = std::min(myY + info.Height, topMargin() + textAreaHeight());
@@ -259,7 +284,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				const int descent = myStyle.elementDescent(element);
 				const int length = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length - pos.charNumber() : 0;
 				const bool rtl = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).RTL : false;
-				myTextElementMap.push_back(
+				addAreaToTextMap(
 					ZLTextElementArea(
 						paragraphNumber, pos.wordNumber(), pos.charNumber(), length, false,
 						changeStyle, myStyle.textStyle(), kind,
@@ -295,10 +320,13 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			case ZLTextElement::FIXED_HSPACE_ELEMENT:
 				break;
 			case ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT:
+				myStyle.setReverted(true);
 				context().setColor(ZLColor(0, 255, 0));
 				context().drawLine(context().width() - x, y, context().width() - x, y - 20);
 				break;
 			case ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT:
+				myStyle.setReverted(false);
+				flushRevertedElements();
 				context().setColor(ZLColor(255, 0, 0));
 				context().drawLine(context().width() - x, y, context().width() - x, y - 20);
 				break;
@@ -321,7 +349,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			const int width = myStyle.wordWidth(word, start, len, addHyphenationSign);
 			const int height = myStyle.elementHeight(word, metrics);
 			const int descent = myStyle.elementDescent(word);
-			myTextElementMap.push_back(
+			addAreaToTextMap(
 				ZLTextElementArea(
 					paragraphNumber, info.End.wordNumber(), start, len, addHyphenationSign,
 					changeStyle, myStyle.textStyle(), ZLTextElement::WORD_ELEMENT,
@@ -330,6 +358,8 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			);
 		}
 	}
+
+	flushRevertedElements();
 
 	myY += info.Height + info.Descent + info.VSpaceAfter;
 }
