@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLUnicodeUtil.h>
 
 #include "ZLTextView.h"
@@ -151,7 +149,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 		} else if (info.Start <= range.second) {
 			ZLTextElementIterator jt = findLast(fromIt, toIt, range.second);
 			if (jt->Kind == ZLTextElement::WORD_ELEMENT) {
-				if (jt->RTL == myRTL) {
+				if (jt->Level % 2 == myStyle.baseBidiLevel() % 2) {
 					right = jt->XStart + areaLength(paragraph, *jt, range.second.CharNumber) - 1;
 				} else {
 					right = jt->XEnd - areaLength(paragraph, *jt, range.second.CharNumber) - 1;
@@ -163,7 +161,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 
 		if (left < right) {
 			context().setFillColor(ZLTextStyleCollection::instance().baseStyle().SelectionBackgroundColorOption.value());
-			context().fillRectangle(myRTL ? context().width() - left : left, top, myRTL ? context().width() - right : right, bottom);
+			context().fillRectangle(visualX(left), top, visualX(right), bottom);
 		}
 	}
 
@@ -185,7 +183,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 			if (it->ChangeStyle) {
 				myStyle.setTextStyle(it->Style);
 			}
-			const int x = myRTL ? context().width() - it->XEnd : it->XStart;
+			const int x = (myStyle.baseBidiLevel() % 2 == 1) ? context().width() - it->XEnd : it->XStart;
 			const int y = it->YEnd - myStyle.elementDescent(element) - myStyle.textStyle()->verticalShift();
 			if (kind == ZLTextElement::WORD_ELEMENT) {
 				drawWord(x, y, (const ZLTextWord&)element, pos.charNumber(), -1, false);
@@ -206,7 +204,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 		int len = info.End.charNumber() - start;
 		const ZLTextWord &word = (const ZLTextWord&)info.End.element();
 		context().setColor(myStyle.textStyle()->color());
-		const int x = myRTL ? context().width() - it->XEnd : it->XStart;
+		const int x = (myStyle.baseBidiLevel() % 2 == 1) ? context().width() - it->XEnd : it->XStart;
 		const int y = it->YEnd - myStyle.elementDescent(word) - myStyle.textStyle()->verticalShift();
 		drawWord(x, y, word, start, len, it->AddHyphenationSign);
 	}
@@ -214,25 +212,36 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 }
 
 void ZLTextView::addAreaToTextMap(const ZLTextElementArea &area) {
-	if (myStyle.isReverted()) {
-		myTextElementsToRevert.push_back(area);
+	const unsigned char index = myStyle.bidiLevel() - myStyle.baseBidiLevel();
+	if (index > 0) {
+		while (myTextElementsToRevert.size() < index) {
+			myTextElementsToRevert.push_back(ZLTextElementMap());
+		}
+		myTextElementsToRevert[index - 1].push_back(area);
 	} else {
 		myTextElementMap.push_back(area);
 	}
 }
 
-void ZLTextView::flushRevertedElements() {
-	if (!myTextElementsToRevert.empty()) {
-		const int sum =
-			myTextElementsToRevert[myTextElementsToRevert.size() - 1].XEnd +
-			myTextElementsToRevert[0].XStart;
-		for (ZLTextElementMap::iterator it = myTextElementsToRevert.begin(); it != myTextElementsToRevert.end(); ++it) {
+void ZLTextView::flushRevertedElements(unsigned char bidiLevel) {
+	const unsigned char baseLevel = myStyle.baseBidiLevel();
+	if (baseLevel > bidiLevel) {
+		return;
+	}
+	ZLTextElementMap &from =
+		myTextElementsToRevert[bidiLevel - baseLevel];
+	ZLTextElementMap &to = (bidiLevel > baseLevel) ?
+		myTextElementsToRevert[bidiLevel - baseLevel - 1] :
+		myTextElementMap;
+	if (!from.empty()) {
+		const int sum = from[from.size() - 1].XEnd + from[0].XStart;
+		for (ZLTextElementMap::iterator it = from.begin(); it != from.end(); ++it) {
 			int tmp = sum - it->XStart;
 			it->XStart = sum - it->XEnd;
 			it->XEnd = tmp;
-			myTextElementMap.push_back(*it);
+			to.push_back(*it);
 		}
-		myTextElementsToRevert.clear();
+		from.clear();
 	}
 }
 
@@ -283,12 +292,11 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				const int height = myStyle.elementHeight(element, metrics);
 				const int descent = myStyle.elementDescent(element);
 				const int length = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length - pos.charNumber() : 0;
-				const bool rtl = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).RTL : false;
 				addAreaToTextMap(
 					ZLTextElementArea(
 						paragraphNumber, pos.wordNumber(), pos.charNumber(), length, false,
 						changeStyle, myStyle.textStyle(), kind,
-						x, x + width - 1, y - height + 1, y + descent, rtl
+						x, x + width - 1, y - height + 1, y + descent, myStyle.bidiLevel()
 					)
 				);
 				changeStyle = false;
@@ -320,15 +328,15 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			case ZLTextElement::FIXED_HSPACE_ELEMENT:
 				break;
 			case ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT:
-				myStyle.setReverted(true);
-				context().setColor(ZLColor(0, 255, 0));
-				context().drawLine(context().width() - x, y, context().width() - x, y - 20);
+				myStyle.increaseBidiLevel();
+				//context().setColor(ZLColor(0, 255, 0));
+				//context().drawLine(context().width() - x, y, context().width() - x, y - 20);
 				break;
 			case ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT:
-				myStyle.setReverted(false);
-				flushRevertedElements();
-				context().setColor(ZLColor(255, 0, 0));
-				context().drawLine(context().width() - x, y, context().width() - x, y - 20);
+				myStyle.decreaseBidiLevel();
+				flushRevertedElements(myStyle.bidiLevel());
+				//context().setColor(ZLColor(255, 0, 0));
+				//context().drawLine(context().width() - x, y, context().width() - x, y - 20);
 				break;
 		}
 
@@ -353,13 +361,15 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				ZLTextElementArea(
 					paragraphNumber, info.End.wordNumber(), start, len, addHyphenationSign,
 					changeStyle, myStyle.textStyle(), ZLTextElement::WORD_ELEMENT,
-					x, x + width - 1, y - height + 1, y + descent, word.RTL
+					x, x + width - 1, y - height + 1, y + descent, word.Level
 				)
 			);
 		}
 	}
 
-	flushRevertedElements();
+	for (unsigned char i = myStyle.bidiLevel(); i > myStyle.baseBidiLevel(); --i) {
+		flushRevertedElements(i - 1);
+	}
 
 	myY += info.Height + info.Descent + info.VSpaceAfter;
 }

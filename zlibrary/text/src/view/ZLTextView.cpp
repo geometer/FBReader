@@ -19,6 +19,7 @@
 
 #include <algorithm>
 
+#include <ZLibrary.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLApplication.h>
 
@@ -31,7 +32,7 @@
 #include "ZLTextWord.h"
 #include "ZLTextSelectionModel.h"
 
-ZLTextView::ZLTextView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this, application), myTreeStateIsFrozen(false), myRTL(true) {
+ZLTextView::ZLTextView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this, application), myTreeStateIsFrozen(false) {
 }
 
 ZLTextView::~ZLTextView() {
@@ -59,13 +60,15 @@ void ZLTextView::clear() {
 	ZLTextParagraphCursorCache::clear();
 }
 
-void ZLTextView::setModel(shared_ptr<ZLTextModel> model) {
+void ZLTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &language) {
 	clear();
 
 	myModel = model;
+	myLanguage = language.empty() ? ZLibrary::Language() : language;
+	myStyle.setBaseBidiLevel(myLanguage == "ar" ? 1 : 0);
 
 	if (!myModel.isNull() && (myModel->paragraphsNumber() != 0)) {
-		setStartCursor(ZLTextParagraphCursor::cursor(*myModel));
+		setStartCursor(ZLTextParagraphCursor::cursor(*myModel, myLanguage));
 
 		size_t size = myModel->paragraphsNumber();
 		myTextSize.reserve(size + 1);
@@ -152,7 +155,7 @@ int ZLTextView::paragraphIndexByCoordinate(int y) const {
 
 const ZLTextElementArea *ZLTextView::elementByCoordinates(int x, int y) const {
 	ZLTextElementIterator it =
-		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextElementArea::RangeChecker(myRTL ? context().width() - x : x, y));
+		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextElementArea::RangeChecker(visualX(x), y));
 	return (it != myTextElementMap.end()) ? &*it : 0;
 }
 
@@ -344,13 +347,13 @@ bool ZLTextView::onStylusPress(int x, int y) {
 
 void ZLTextView::activateSelection(int x, int y) {
 	if (isSelectionEnabled()) {
-		mySelectionModel.activate(myRTL ? context().width() - x : x, y);
+		mySelectionModel.activate(visualX(x), y);
 		application().refreshWindow();
 	}
 }
 
 bool ZLTextView::onStylusMovePressed(int x, int y) {
-	if (mySelectionModel.extendTo(myRTL ? context().width() - x : x, y)) {
+	if (mySelectionModel.extendTo(visualX(x), y)) {
 		copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 		application().refreshWindow();
 	}
@@ -415,17 +418,17 @@ void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLText
 
 void ZLTextView::drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
 	if ((start == 0) && (length == -1)) {
-		drawString(x, y, word.Data, word.Size, word.mark(), 0, word.RTL);
+		drawString(x, y, word.Data, word.Size, word.mark(), 0, word.Level % 2 == 1);
 	} else {
 		int startPos = ZLUnicodeUtil::length(word.Data, start);
 		int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
 		if (!addHyphenationSign) {
-			drawString(x, y, word.Data + startPos, endPos - startPos, word.mark(), startPos, word.RTL);
+			drawString(x, y, word.Data + startPos, endPos - startPos, word.mark(), startPos, word.Level % 2 == 1);
 		} else {
 			std::string substr;
 			substr.append(word.Data + startPos, endPos - startPos);
 			substr += '-';
-			drawString(x, y, substr.data(), substr.length(), word.mark(), startPos, word.RTL);
+			drawString(x, y, substr.data(), substr.length(), word.mark(), startPos, word.Level % 2 == 1);
 		}
 	}
 }

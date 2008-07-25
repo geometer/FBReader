@@ -33,13 +33,13 @@ CollectionView::CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> cont
 	ShowTagsOption(ZLCategoryKey::LOOK_AND_FEEL, LIBRARY, "ShowTags", true),
 	ShowAllBooksTagOption(ZLCategoryKey::LOOK_AND_FEEL, LIBRARY, "ShowAllBooksTag", true),
 	myUpdateModel(true) {
-	setModel(new CollectionModel(*this, myCollection));
+	setModel(new CollectionModel(*this, myCollection), "");
 	myShowTags = ShowTagsOption.value();
 	myShowAllBooksList = ShowAllBooksTagOption.value();
 }
 
 CollectionView::~CollectionView() {
-	setModel(0);
+	setModel(0, "");
 }
 
 void CollectionView::updateModel() {
@@ -60,9 +60,9 @@ const std::string &CollectionView::caption() const {
 void CollectionView::selectBook(BookDescriptionPtr book) {
 	if (myUpdateModel) {
 		shared_ptr<ZLTextModel> oldModel = model();
-		setModel(0);
+		setModel(0, "");
 		((CollectionModel&)*oldModel).update();
-		setModel(oldModel);
+		setModel(oldModel, "");
 		myUpdateModel = false;
 	}
 	collectionModel().removeAllMarks();
@@ -85,9 +85,9 @@ void CollectionView::paint() {
 	}
 	if (myUpdateModel) {
 		shared_ptr<ZLTextModel> oldModel = model();
-		setModel(0);
+		setModel(0, "");
 		((CollectionModel&)*oldModel).update();
-		setModel(oldModel);
+		setModel(oldModel, "");
 		myUpdateModel = false;
 	}
 	FBView::paint();

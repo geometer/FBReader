@@ -27,7 +27,7 @@
 #include "ZLTextStyle.h"
 #include "ZLTextElement.h"
 
-ZLTextView::ViewStyle::ViewStyle(shared_ptr<ZLPaintContext> context) : myContext(context), myIsReverted(false) {
+ZLTextView::ViewStyle::ViewStyle(shared_ptr<ZLPaintContext> context) : myContext(context), myBaseBidiLevel(1), myBidiLevel(1) {
 	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr());
 	myWordHeight = -1;
 }
@@ -38,6 +38,7 @@ void ZLTextView::ViewStyle::setPaintContext(shared_ptr<ZLPaintContext> context) 
 
 void ZLTextView::ViewStyle::reset() {
 	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr());
+	myBidiLevel = myBaseBidiLevel;
 }
 
 void ZLTextView::ViewStyle::setTextStyle(const ZLTextStylePtr style) {
@@ -150,10 +151,10 @@ int ZLTextView::ViewStyle::wordWidth(const ZLTextWord &word, int start, int leng
 	int startPos = ZLUnicodeUtil::length(word.Data, start);
 	int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
 	if (!addHyphenationSign) {
-		return context().stringWidth(word.Data + startPos, endPos - startPos, word.RTL);
+		return context().stringWidth(word.Data + startPos, endPos - startPos, word.Level % 2 == 1);
 	}
 	std::string substr;
 	substr.append(word.Data + startPos, endPos - startPos);
 	substr += '-';
-	return context().stringWidth(substr.data(), substr.length(), word.RTL);
+	return context().stringWidth(substr.data(), substr.length(), word.Level % 2 == 1);
 }

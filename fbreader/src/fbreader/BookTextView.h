@@ -35,7 +35,7 @@ public:
 	BookTextView(FBReader &reader, shared_ptr<ZLPaintContext> context);
 	~BookTextView();
 
-	void setModel(shared_ptr<ZLTextModel> model, const std::string &fileName);
+	void setModel(shared_ptr<ZLTextModel> model, const std::string &language, const std::string &fileName);
 	void setContentsModel(shared_ptr<ZLTextModel> contentsModel);
 	void saveState();
 

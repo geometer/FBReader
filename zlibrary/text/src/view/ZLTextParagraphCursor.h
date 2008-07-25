@@ -59,7 +59,7 @@ public:
 	ZLTextElement *StartReversedSequenceElement;
 	ZLTextElement *EndReversedSequenceElement;
 
-	ZLTextWord *getWord(const char *data, unsigned short length, size_t paragraphOffset, bool rtl);
+	ZLTextWord *getWord(const char *data, unsigned short length, size_t paragraphOffset, unsigned char level);
 	void storeWord(ZLTextWord *word);
 	ZLTextControlElement *getControlElement(shared_ptr<ZLTextParagraphEntry> entry);
 	void storeControlElement(ZLTextControlElement *element);
@@ -75,10 +75,10 @@ typedef shared_ptr<ZLTextParagraphCursor> ZLTextParagraphCursorPtr;
 class ZLTextParagraphCursor {
 
 protected:
-	ZLTextParagraphCursor(const ZLTextModel &model, size_t index);
+	ZLTextParagraphCursor(const ZLTextModel &model, const std::string &language, size_t index);
 
 public:
-	static ZLTextParagraphCursorPtr cursor(const ZLTextModel &model, size_t index = 0);
+	static ZLTextParagraphCursorPtr cursor(const ZLTextModel &model, const std::string &language, size_t index = 0);
 	virtual ~ZLTextParagraphCursor();
 
 	bool isFirst() const;
@@ -108,6 +108,7 @@ private:
 	
 protected:
 	const ZLTextModel &myModel;
+	const std::string &myLanguage;
 	size_t myIndex;
 	ZLTextElementVector myElements;
 
@@ -176,7 +177,7 @@ private:
 class ZLTextPlainParagraphCursor : public ZLTextParagraphCursor {
 
 private:
-	ZLTextPlainParagraphCursor(const ZLTextModel &model, size_t index);
+	ZLTextPlainParagraphCursor(const ZLTextModel &model, const std::string &language, size_t index);
 
 public:
 	~ZLTextPlainParagraphCursor();
@@ -191,7 +192,7 @@ friend class ZLTextParagraphCursor;
 class ZLTextTreeParagraphCursor : public ZLTextParagraphCursor {
 
 private:
-	ZLTextTreeParagraphCursor(const ZLTextTreeModel &model, size_t index);
+	ZLTextTreeParagraphCursor(const ZLTextTreeModel &model, const std::string &language, size_t index);
 
 public:
 	~ZLTextTreeParagraphCursor();
@@ -205,8 +206,8 @@ friend class ZLTextParagraphCursor;
 
 inline ZLTextElementVector::ZLTextElementVector() {}
 
-inline ZLTextWord *ZLTextElementPool::getWord(const char *data, unsigned short length, size_t paragraphOffset, bool rtl) {
-	return new (myWordAllocator.allocate()) ZLTextWord(data, length, paragraphOffset, rtl);
+inline ZLTextWord *ZLTextElementPool::getWord(const char *data, unsigned short length, size_t paragraphOffset, unsigned char level) {
+	return new (myWordAllocator.allocate()) ZLTextWord(data, length, paragraphOffset, level);
 }
 inline void ZLTextElementPool::storeWord(ZLTextWord *word) {
 	word->~ZLTextWord();
@@ -265,10 +266,10 @@ inline const ZLTextParagraphCursor &ZLTextWordCursor::paragraphCursor() const { 
 inline void ZLTextWordCursor::nextWord() { ++myWordNumber; myCharNumber = 0; }
 inline void ZLTextWordCursor::previousWord() { --myWordNumber; myCharNumber = 0; }
 
-inline ZLTextPlainParagraphCursor::ZLTextPlainParagraphCursor(const ZLTextModel &model, size_t index) : ZLTextParagraphCursor(model, index) {}
+inline ZLTextPlainParagraphCursor::ZLTextPlainParagraphCursor(const ZLTextModel &model, const std::string &language, size_t index) : ZLTextParagraphCursor(model, language, index) {}
 inline ZLTextPlainParagraphCursor::~ZLTextPlainParagraphCursor() {}
 
-inline ZLTextTreeParagraphCursor::ZLTextTreeParagraphCursor(const ZLTextTreeModel &model, size_t index) : ZLTextParagraphCursor(model, index) {}
+inline ZLTextTreeParagraphCursor::ZLTextTreeParagraphCursor(const ZLTextTreeModel &model, const std::string &language, size_t index) : ZLTextParagraphCursor(model, language, index) {}
 inline ZLTextTreeParagraphCursor::~ZLTextTreeParagraphCursor() {}
 
 #endif /* __ZLTEXTPARAGRAPHCURSOR_H__ */

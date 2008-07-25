@@ -114,14 +114,19 @@ private:
 
 		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
 
-		void setReverted(bool reverted);
-		bool isReverted() const;
+		void setBaseBidiLevel(unsigned char base);
+		unsigned char baseBidiLevel() const;
+		
+		void increaseBidiLevel();
+		void decreaseBidiLevel();
+		unsigned char bidiLevel() const;
 
 	private:
 		ZLTextStylePtr myTextStyle;
 		shared_ptr<ZLPaintContext> myContext;
 		mutable int myWordHeight;
-		bool myIsReverted;
+		unsigned char myBaseBidiLevel;
+		unsigned char myBidiLevel;
 	};
 
 protected:
@@ -147,7 +152,7 @@ public:
 	const ZLTextWordCursor &startCursor() const;
 	const ZLTextWordCursor &endCursor() const;
 
-	virtual void setModel(shared_ptr<ZLTextModel> model);
+	virtual void setModel(shared_ptr<ZLTextModel> model, const std::string &language);
 	const shared_ptr<ZLTextModel> model() const;
 
 	bool hasMultiSectionModel() const;
@@ -192,6 +197,7 @@ protected:
 private:
 	int lineStartMargin() const;
 	int lineEndMargin() const;
+	int visualX(int logicalX) const;
 
 	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
 	void moveEndCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
@@ -231,10 +237,11 @@ private:
 	int textAreaHeight() const;
 
 	void addAreaToTextMap(const ZLTextElementArea &area);
-	void flushRevertedElements();
+	void flushRevertedElements(unsigned char bidiLevel);
 
 private:
 	shared_ptr<ZLTextModel> myModel;
+	std::string myLanguage;
 
 	enum {
 		NOTHING_TO_PAINT,
@@ -255,7 +262,7 @@ private:
 	int myOldWidth, myOldHeight;
 
 	ZLTextElementMap myTextElementMap;
-	ZLTextElementMap myTextElementsToRevert;
+	std::vector<ZLTextElementMap> myTextElementsToRevert;
 	ZLTextTreeNodeMap myTreeNodeMap;
 
 	std::vector<size_t> myTextSize;
@@ -271,16 +278,17 @@ private:
 	int myX;
 	int myY;
 
-	bool myRTL;
-
 friend class ZLTextSelectionModel;
 };
 
 inline ZLTextView::ViewStyle::~ViewStyle() {}
 inline const ZLPaintContext &ZLTextView::ViewStyle::context() const { return *myContext; }
 inline const ZLTextStylePtr ZLTextView::ViewStyle::textStyle() const { return myTextStyle; }
-inline void ZLTextView::ViewStyle::setReverted(bool reverted) { myIsReverted = reverted; }
-inline bool ZLTextView::ViewStyle::isReverted() const { return myIsReverted; }
+inline void ZLTextView::ViewStyle::setBaseBidiLevel(unsigned char base) { myBaseBidiLevel = base; myBidiLevel = base; }
+inline unsigned char ZLTextView::ViewStyle::baseBidiLevel() const { return myBaseBidiLevel; }
+inline void ZLTextView::ViewStyle::increaseBidiLevel() { ++myBidiLevel; }
+inline void ZLTextView::ViewStyle::decreaseBidiLevel() { if (myBidiLevel > myBaseBidiLevel) --myBidiLevel; }
+inline unsigned char ZLTextView::ViewStyle::bidiLevel() const { return myBidiLevel; }
 
 inline bool ZLTextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const ZLTextWordCursor &ZLTextView::startCursor() const { return myStartCursor; }
@@ -296,12 +304,16 @@ inline int ZLTextView::viewHeight() const {
 	return std::max(myStyle.context().height() - topMargin() - bottomMargin(), 1);
 }
 
+inline int ZLTextView::visualX(int logicalX) const {
+	return (myStyle.baseBidiLevel() % 2 == 1) ? context().width() - logicalX : logicalX;
+}
+
 inline int ZLTextView::lineStartMargin() const {
-	return myRTL ? rightMargin() : leftMargin();
+	return (myStyle.baseBidiLevel() % 2 == 1) ? rightMargin() : leftMargin();
 }
 
 inline int ZLTextView::lineEndMargin() const {
-	return myRTL ? leftMargin() : rightMargin();
+	return (myStyle.baseBidiLevel() % 2 == 1) ? leftMargin() : rightMargin();
 }
 
 #endif /* __ZLTEXTVIEW_H__ */

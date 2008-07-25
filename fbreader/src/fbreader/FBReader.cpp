@@ -271,21 +271,22 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 		RecentBooksView &recentBooksView = (RecentBooksView&)*myRecentBooksView;
 
 		bookTextView.saveState();
-		bookTextView.setModel(0, "");
+		bookTextView.setModel(0, "", "");
 		bookTextView.setContentsModel(0);
-		contentsView.setModel(0);
+		contentsView.setModel(0, "");
 		if (myModel != 0) {
 			delete myModel;
 		}
 		myModel = new BookModel(description);
 		ZLStringOption(ZLCategoryKey::STATE, STATE, BOOK, std::string()).setValue(myModel->fileName());
-		ZLTextHyphenator::instance().load(description->language());
-		bookTextView.setModel(myModel->bookTextModel(), description->fileName());
+		const std::string &lang = description->language();
+		ZLTextHyphenator::instance().load(lang);
+		bookTextView.setModel(myModel->bookTextModel(), lang, description->fileName());
 		bookTextView.setCaption(description->title());
 		bookTextView.setContentsModel(myModel->contentsModel());
-		footnoteView.setModel(0);
+		footnoteView.setModel(0, lang);
 		footnoteView.setCaption(description->title());
-		contentsView.setModel(myModel->contentsModel());
+		contentsView.setModel(myModel->contentsModel(), lang);
 		contentsView.setCaption(description->title());
 
 		recentBooksView.lastBooks().addBook(description->fileName());
@@ -309,7 +310,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
 					bookTextView().gotoParagraph(label.ParagraphNumber);
 				} else {
 					FootnoteView &view = ((FootnoteView&)*myFootnoteView);
-					view.setModel(label.Model);
+					view.setModel(label.Model, myModel->description()->language());
 					setMode(FOOTNOTE_MODE);
 					view.gotoParagraph(label.ParagraphNumber);
 				}

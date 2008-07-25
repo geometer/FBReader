@@ -29,7 +29,7 @@
 #include "ZLTextWord.h"
 #include "ZLTextParagraphBuilder.h"
 
-ZLTextParagraphBuilder::ZLTextParagraphBuilder(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language), myRTL(language == "ar") {
+ZLTextParagraphBuilder::ZLTextParagraphBuilder(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language), myBaseBidiLevel((language == "ar") ? 1 : 0) {
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphNumber, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
@@ -42,19 +42,23 @@ ZLTextParagraphBuilder::ZLTextParagraphBuilder(const std::string &language, cons
 	}
 }
 
-void ZLTextParagraphBuilder::updateRTLState(bool state) {
-	if (myCurrentRTL != state) {
-		myCurrentRTL = state;
-		myElements.push_back(
-			(myCurrentRTL != myRTL) ?
-				ZLTextElementPool::Pool.StartReversedSequenceElement :
-				ZLTextElementPool::Pool.EndReversedSequenceElement
-		);
+void ZLTextParagraphBuilder::updateBidiLevel(FriBidiLevel level) {
+	if (myCurrentBidiLevel != level) {
+		if (level > myCurrentBidiLevel) {
+			for (int i = level; i > myCurrentBidiLevel; --i) {
+				myElements.push_back(ZLTextElementPool::Pool.StartReversedSequenceElement);
+			}
+		} else {
+			for (int i = level; i < myCurrentBidiLevel; ++i) {
+				myElements.push_back(ZLTextElementPool::Pool.EndReversedSequenceElement);
+			}
+		}
+		myCurrentBidiLevel = level;
 	}
 }
 
 void ZLTextParagraphBuilder::addWord(const char *ptr, int offset, int len) {
-	ZLTextWord *word = ZLTextElementPool::Pool.getWord(ptr, len, offset, myCurrentRTL);
+	ZLTextWord *word = ZLTextElementPool::Pool.getWord(ptr, len, offset, myCurrentBidiLevel);
 	for (std::vector<ZLTextMark>::const_iterator mit = myFirstMark; mit != myLastMark; ++mit) {
 		ZLTextMark mark = *mit;
 		if ((mark.Offset < offset + len) && (mark.Offset + mark.Length > offset)) {
@@ -65,8 +69,9 @@ void ZLTextParagraphBuilder::addWord(const char *ptr, int offset, int len) {
 }
 
 void ZLTextParagraphBuilder::fill() {
-	myBidiCharType = myRTL ? FRIBIDI_TYPE_RTL : FRIBIDI_TYPE_LTR;
-	myCurrentRTL = myRTL;
+	myBidiCharType = (myBaseBidiLevel == 1) ? FRIBIDI_TYPE_RTL : FRIBIDI_TYPE_LTR;
+	myCurrentBidiLevel = myBaseBidiLevel;
+	myLatestBidiLevel = myBaseBidiLevel;
 
 	for (ZLTextParagraph::Iterator it = myParagraph; !it.isEnd(); it.next()) {
 		switch (it.entryKind()) {
@@ -98,7 +103,7 @@ void ZLTextParagraphBuilder::fill() {
 		}
 	}
 
-	updateRTLState(myRTL);
+	updateBidiLevel(myBaseBidiLevel);
 }
 
 void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
@@ -113,7 +118,22 @@ void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 	myUcs4String.push_back(0);
 	myBidiLevels.clear();
 	myBidiLevels.reserve(len + 1);
-	fribidi_log2vis(&myUcs4String[0], len, &myBidiCharType, 0, 0, 0, &myBidiLevels[0]);
+	int firstNonSpace = 0;
+	while ((firstNonSpace < len) &&
+				 ZLUnicodeUtil::isSpace(myUcs4String[firstNonSpace])) {
+		myBidiLevels[firstNonSpace++] = myLatestBidiLevel;
+	}
+	int lastNonSpace = len - 1;
+	if (lastNonSpace > firstNonSpace) {
+		while (ZLUnicodeUtil::isSpace(myUcs4String[lastNonSpace])) {
+			--lastNonSpace;
+		}
+		fribidi_log2vis(&myUcs4String[firstNonSpace], lastNonSpace - firstNonSpace + 1, &myBidiCharType, 0, 0, 0, &myBidiLevels[firstNonSpace]);
+	}
+	myLatestBidiLevel = myBidiLevels[lastNonSpace];
+	for (int i = lastNonSpace; i < len; ++i) {
+		myBidiLevels[i] = myLatestBidiLevel;
+	}
 
 	myBreaksTable.clear();
 	myBreaksTable.reserve(dataLength);
@@ -126,7 +146,7 @@ void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 	int charLength = 0;
 	int index = 0;
 	const char *wordStart = start;
-	updateRTLState(myBidiLevels[0] % 2 == 1);
+	updateBidiLevel(myBidiLevels[0]);
 	for (const char *ptr = start; ptr < end; ptr += charLength, ++index) {
 		charLength = ZLUnicodeUtil::firstChar(ch, ptr);
 		if (ZLUnicodeUtil::isSpace(ch)) {
@@ -166,7 +186,7 @@ void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 			}
 			spaceState = NO_SPACE;
 		}
-		updateRTLState(myBidiLevels[index] % 2 == 1);
+		updateBidiLevel(myBidiLevels[index]);
 	}
 	switch (spaceState) {
 		case SPACE:

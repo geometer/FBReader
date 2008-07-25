@@ -53,8 +53,8 @@ BookTextView::~BookTextView() {
 	saveState();
 }
 
-void BookTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &fileName) {
-	FBView::setModel(model);
+void BookTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &language, const std::string &fileName) {
+	FBView::setModel(model, language);
 
 	myFileName = fileName;
 

@@ -50,7 +50,7 @@ public:
 	};
 
 private:
-	ZLTextWord(const char *data, unsigned short size, size_t paragraphOffset, bool rtl);
+	ZLTextWord(const char *data, unsigned short size, size_t paragraphOffset, unsigned char level);
 	~ZLTextWord();
 
 public:
@@ -67,7 +67,7 @@ public:
 	/* number of characters */
 	const unsigned short Length;
 	const size_t ParagraphOffset;
-	const bool RTL;
+	const unsigned char Level;
 
 private:
 	Mark *myMark;
@@ -85,7 +85,7 @@ inline ZLTextElement::Kind ZLTextWord::kind() const { return WORD_ELEMENT; }
 inline ZLTextWord::Mark *ZLTextWord::mark() const { return myMark; }
 inline short ZLTextWord::width(const ZLPaintContext &context) const {
 	if (myWidth == -1) {
-		myWidth = context.stringWidth(Data, Size, RTL);
+		myWidth = context.stringWidth(Data, Size, Level % 2 == 1);
 	}
 	return myWidth;
 }

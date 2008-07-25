@@ -51,13 +51,13 @@ void RecentBooksView::paint() {
 			recentBooksModel->addControl(LIBRARY_BOOK_ENTRY, true);
 			recentBooksModel->addText((*it)->title());
 		}
-		setModel(recentBooksModel);
+		setModel(recentBooksModel, "");
 	}
 	FBView::paint();
 }
 
 void RecentBooksView::rebuild() {
-	setModel(0);
+	setModel(0, "");
 }
 
 bool RecentBooksView::_onStylusPress(int x, int y) {
