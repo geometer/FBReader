@@ -17,7 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <algorithm>
 
 #include <ZLUnicodeUtil.h>
@@ -202,7 +201,6 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		bool nbspaceBreak = false;
 		if (!allowBreak) {
 			elementKind = paragraphCursor[newInfo.End.wordNumber()].kind();
-			std::cerr << previousKind << ":" << elementKind << "\n";
 			if (elementKind == ZLTextElement::NB_HSPACE_ELEMENT) {
 				if (allowBreakAtNBSpace) {
 					allowBreak = true;
@@ -212,7 +210,6 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 								 (previousKind == ZLTextElement::WORD_ELEMENT)) {
 				allowBreak = ((ZLTextWord&)element).RTL == ((ZLTextWord&)paragraphCursor[newInfo.End.wordNumber()]).RTL;
 				const ZLTextWord &w = (const ZLTextWord&)element;
-				std::cerr << std::string(w.Data, w.Size) << " : " << allowBreak << "\n";
 			} else {
 				allowBreak =
 					((elementKind != ZLTextElement::WORD_ELEMENT) || (previousKind == ZLTextElement::WORD_ELEMENT)) &&
