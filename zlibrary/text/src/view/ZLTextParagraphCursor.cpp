@@ -43,7 +43,6 @@ ZLTextElementVector::~ZLTextElementVector() {
 			case ZLTextElement::IMAGE_ELEMENT:
 			case ZLTextElement::FORCED_CONTROL_ELEMENT:
 			case ZLTextElement::FIXED_HSPACE_ELEMENT:
-			case ZLTextElement::REVERSED_SEQUENCE_ELEMENT:
 				delete *it;
 				break;
 			case ZLTextElement::INDENT_ELEMENT:
@@ -52,6 +51,8 @@ ZLTextElementVector::~ZLTextElementVector() {
 			case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
 			case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
 			case ZLTextElement::EMPTY_LINE_ELEMENT:
+			case ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT:
+			case ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT:
 				break;
 		}
 	}
@@ -63,6 +64,8 @@ ZLTextElementPool::ZLTextElementPool() {
 	BeforeParagraphElement = new ZLTextSpecialElement(ZLTextElement::BEFORE_PARAGRAPH_ELEMENT);
 	AfterParagraphElement = new ZLTextSpecialElement(ZLTextElement::AFTER_PARAGRAPH_ELEMENT);
 	EmptyLineElement = new ZLTextSpecialElement(ZLTextElement::EMPTY_LINE_ELEMENT);
+	StartReversedSequenceElement = new ZLTextSpecialElement(ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT);
+	EndReversedSequenceElement = new ZLTextSpecialElement(ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT);
 }
 
 ZLTextElementPool::~ZLTextElementPool() {
