@@ -294,6 +294,14 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			case ZLTextElement::EMPTY_LINE_ELEMENT:
 			case ZLTextElement::FIXED_HSPACE_ELEMENT:
 				break;
+			case ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT:
+				context().setColor(ZLColor(0, 255, 0));
+				context().drawLine(context().width() - x, y, context().width() - x, y - 20);
+				break;
+			case ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT:
+				context().setColor(ZLColor(255, 0, 0));
+				context().drawLine(context().width() - x, y, context().width() - x, y - 20);
+				break;
 		}
 
 		myX += width;

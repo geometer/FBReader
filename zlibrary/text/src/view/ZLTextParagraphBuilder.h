@@ -39,7 +39,9 @@ public:
 
 private:
 	void processTextEntry(const ZLTextEntry &textEntry);
-	void addWord(const char *ptr, int offset, int len, bool rtl);
+	void addWord(const char *ptr, int offset, int len);
+	void updateRTLState(bool state);
+	void insertRSElement();
 
 private:
 	const ZLTextParagraph &myParagraph;
@@ -50,7 +52,11 @@ private:
 	int myOffset;
 
 	const std::string myLanguage;
+	const bool myRTL;
+	bool myCurrentRTL;
+
 	std::vector<char> myBreaksTable;
+
 	FriBidiCharType myBidiCharType;
 	ZLUnicodeUtil::Ucs4String myUcs4String;
 	std::vector<FriBidiLevel> myBidiLevels;
