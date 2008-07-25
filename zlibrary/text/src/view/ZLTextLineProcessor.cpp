@@ -206,13 +206,16 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 					allowBreak = true;
 					nbspaceBreak = true;
 				}
-			} else if ((elementKind == ZLTextElement::WORD_ELEMENT) &&
+			} else if (elementKind == ZLTextElement::WORD_ELEMENT) {
+				allowBreak = previousKind == ZLTextElement::WORD_ELEMENT;
+			} else if ((elementKind == ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT) &&
 								 (previousKind == ZLTextElement::WORD_ELEMENT)) {
-				allowBreak = ((ZLTextWord&)element).RTL == ((ZLTextWord&)paragraphCursor[newInfo.End.wordNumber()]).RTL;
-				const ZLTextWord &w = (const ZLTextWord&)element;
+				allowBreak = false;
+			} else if ((elementKind == ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT) &&
+								 (previousKind == ZLTextElement::WORD_ELEMENT)) {
+				allowBreak = false;
 			} else {
 				allowBreak =
-					((elementKind != ZLTextElement::WORD_ELEMENT) || (previousKind == ZLTextElement::WORD_ELEMENT)) &&
 					(elementKind != ZLTextElement::IMAGE_ELEMENT) &&
 					(elementKind != ZLTextElement::CONTROL_ELEMENT);
 			}
