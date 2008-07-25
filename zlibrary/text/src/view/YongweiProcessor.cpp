@@ -25,6 +25,7 @@
 
 #include <ZLTextParagraph.h>
 
+#include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 #include "ZLTextParagraphBuilder.h"
 
