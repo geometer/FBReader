@@ -244,7 +244,7 @@ int ZLGtkPaintContext::stringWidth(const char *str, int len, bool rtl) const {
 
 int ZLGtkPaintContext::spaceWidth() const {
 	if (mySpaceWidth == -1) {
-		mySpaceWidth = stringWidth(" ", 1);
+		mySpaceWidth = stringWidth(" ", 1, false);
 	}
 	return mySpaceWidth;
 }

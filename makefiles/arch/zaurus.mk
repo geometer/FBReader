@@ -19,7 +19,7 @@ CC = $(TOOLSPATH)/gcc
 AR = $(TOOLSPATH)/ar rsu
 LD = $(TOOLSPATH)/g++
 
-CFLAGS = -pipe -Duint16_t="unsigned short" -Duint32_t="unsigned_int" -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DUSE_ZAURUS_FONTHACK -ftemplate-depth-30
+CFLAGS = -pipe -Duint16_t="unsigned short" -Duint32_t="unsigned int" -DQT_QWS_EBX -DQT_QWS_CUSTOM -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DUSE_ZAURUS_FONTHACK -ftemplate-depth-30
 LDFLAGS = -Wl,-rpath,$(LIBDIR),-rpath,/usr/lib
 
 XML_LIB = -lexpat
