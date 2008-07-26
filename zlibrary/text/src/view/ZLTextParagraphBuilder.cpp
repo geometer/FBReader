@@ -117,7 +117,7 @@ void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 	int len = myUcs4String.size();
 	myUcs4String.push_back(0);
 	myBidiLevels.clear();
-	myBidiLevels.reserve(len + 1);
+	myBidiLevels.assign(len + 1, 0);
 	int firstNonSpace = 0;
 	while ((firstNonSpace < len) &&
 				 ZLUnicodeUtil::isSpace(myUcs4String[firstNonSpace])) {
@@ -136,7 +136,7 @@ void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 	}
 
 	myBreaksTable.clear();
-	myBreaksTable.reserve(dataLength);
+	myBreaksTable.assign(dataLength, 0);
 	const char *start = textEntry.data();
 	const char *end = start + dataLength;
 	set_linebreaks_utf8((const utf8_t*)start, dataLength, myLanguage.c_str(), &myBreaksTable[0]);
