@@ -121,6 +121,8 @@ int ZLTextView::areaLength(const ZLTextParagraphCursor &paragraph, const ZLTextE
 }
 
 void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to) {
+	myStyle.setTextStyle(info.StartStyle, info.StartBidiLevel);
+
 	const ZLTextParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 
 	const ZLTextElementIterator fromIt = myTextElementMap.begin() + from;
@@ -248,7 +250,6 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 	int fullCorrection = 0;
 	const bool endOfParagraph = info.End.isEndOfParagraph();
 	bool wordOccured = false;
-	bool changeStyle = true;
 
 	myX = lineStartMargin() + info.LeftIndent;
 
@@ -291,21 +292,18 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				addAreaToTextMap(
 					ZLTextElementArea(
 						paragraphNumber, pos.wordNumber(), pos.charNumber(), length, false,
-						changeStyle, myStyle.textStyle(), kind,
+						myStyle.textStyle(), kind,
 						x, x + width - 1, y - height + 1, y + descent, myStyle.bidiLevel()
 					)
 				);
-				changeStyle = false;
 				wordOccured = true;
 				break;
 			}
 			case ZLTextElement::CONTROL_ELEMENT:
 				myStyle.applyControl((const ZLTextControlElement&)element);
-				changeStyle = true;
 				break;
 			case ZLTextElement::FORCED_CONTROL_ELEMENT:
 				myStyle.applyControl((const ZLTextStyleElement&)element);
-				changeStyle = true;
 				break;
 			case ZLTextElement::HSPACE_ELEMENT:
 			case ZLTextElement::NB_HSPACE_ELEMENT:
@@ -356,7 +354,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 			addAreaToTextMap(
 				ZLTextElementArea(
 					paragraphNumber, info.End.wordNumber(), start, len, addHyphenationSign,
-					changeStyle, myStyle.textStyle(), ZLTextElement::WORD_ELEMENT,
+					myStyle.textStyle(), ZLTextElement::WORD_ELEMENT,
 					x, x + width - 1, y - height + 1, y + descent, word.Level
 				)
 			);
