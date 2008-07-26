@@ -92,11 +92,11 @@ int ZLTextView::PositionIndicator::top() const {
 }
 
 int ZLTextView::PositionIndicator::left() const {
-	return myTextView.leftMargin();
+	return myTextView.lineStartMargin();
 }
 
 int ZLTextView::PositionIndicator::right() const {
-	return myTextView.leftMargin() + myTextView.viewWidth() - myExtraWidth - 1;
+	return myTextView.lineStartMargin() + myTextView.viewWidth() - myExtraWidth - 1;
 }
 
 const std::vector<size_t> &ZLTextView::PositionIndicator::textSize() const {
@@ -120,7 +120,11 @@ void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
 	context().setColor(baseStyle.RegularTextColorOption.value());
 
 	int width = context().stringWidth(text.data(), text.length(), false);
-	context().drawString(right() - width, bottom() - 2, text.data(), text.length(), false);
+	if (myTextView.visualX(0) == 0) {
+		context().drawString(right() - width, bottom() - 2, text.data(), text.length(), false);
+	} else {
+		context().drawString(myTextView.visualX(right()), bottom() - 2, text.data(), text.length(), false);
+	}
 	myExtraWidth += text.length() * context().stringWidth("0", 1, false) + context().spaceWidth();
 }
 
@@ -218,14 +222,16 @@ void ZLTextView::PositionIndicator::draw() {
 
 	context.setColor(baseStyle.RegularTextColorOption.value());
 	context.setFillColor(myInfo.color());
-	context.fillRectangle(left + 1, top + 1, left + fillWidth + 1, bottom - 1);
-	context.drawLine(left, top, right, top);
-	context.drawLine(left, bottom, right, bottom);
-	context.drawLine(left, bottom, left, top);
-	context.drawLine(right, bottom, right, top);
+	context.fillRectangle(myTextView.visualX(left + 1), top + 1, myTextView.visualX(left + fillWidth + 1), bottom - 1);
+	context.drawLine(myTextView.visualX(left), top, myTextView.visualX(right), top);
+	context.drawLine(myTextView.visualX(left), bottom, myTextView.visualX(right), bottom);
+	context.drawLine(myTextView.visualX(left), bottom, myTextView.visualX(left), top);
+	context.drawLine(myTextView.visualX(right), bottom, myTextView.visualX(right), top);
 }
 
 bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
+	x = myTextView.visualX(x);
+
 	const long bottom = this->bottom();
 	const long top = this->top();
 	const long left = this->left();
