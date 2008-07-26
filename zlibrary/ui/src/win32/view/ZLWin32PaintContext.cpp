@@ -150,6 +150,7 @@ int ZLWin32PaintContext::stringWidth(const char *str, int len, bool rtl) const {
 	if (myDisplayContext == 0) {
 		return 0;
 	}
+	SetTextAlign(myDisplayContext, rtl ? TA_RTLREADING : 0);
 	SIZE size;
 	int utf8len = ZLUnicodeUtil::utf8Length(str, len);
 	if (utf8len == len) {
@@ -185,15 +186,14 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len, boo
 	y -= stringHeight();
 	y += myTextMetric.tmDescent;
 	int utf8len = ZLUnicodeUtil::utf8Length(str, len);
+	SetTextAlign(myDisplayContext, rtl ? TA_RTLREADING : 0);
 	if (utf8len == len) {
-		//TextOutA(myDisplayContext, x, y, str, len);
-		ExtTextOutA(myDisplayContext, x, y, rtl ? ETO_RTLREADING : 0, 0, str, utf8len, 0);
+		TextOutA(myDisplayContext, x, y, str, len);
 	} else {
 		static ZLUnicodeUtil::Ucs2String ucs2Str;
 		ucs2Str.clear();
 		ZLUnicodeUtil::utf8ToUcs2(ucs2Str, str, len, utf8len);
-		//TextOutW(myDisplayContext, x, y, ::wchar(ucs2Str), utf8len);
-		ExtTextOutW(myDisplayContext, x, y, rtl ? ETO_RTLREADING : 0, 0, ::wchar(ucs2Str), utf8len, 0);
+		TextOutW(myDisplayContext, x, y, ::wchar(ucs2Str), utf8len);
 	}
 }
 
