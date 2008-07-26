@@ -226,7 +226,7 @@ void ZLGtkPaintContext::setFillColor(ZLColor color, FillStyle style) {
 	}
 }
 
-int ZLGtkPaintContext::stringWidth(const char *str, int len) const {
+int ZLGtkPaintContext::stringWidth(const char *str, int len, bool rtl) const {
 	if (myContext == 0) {
 		return 0;
 	}
@@ -235,6 +235,7 @@ int ZLGtkPaintContext::stringWidth(const char *str, int len) const {
 		return 0;
 	}
 
+	myAnalysis.level = rtl ? 1 : 0;
 	pango_shape(str, len, &myAnalysis, myString);
 	PangoRectangle logicalRectangle;
 	pango_glyph_string_extents(myString, myAnalysis.font, 0, &logicalRectangle);
@@ -262,11 +263,12 @@ int ZLGtkPaintContext::descent() const {
 	return myDescent;
 }
 
-void ZLGtkPaintContext::drawString(int x, int y, const char *str, int len) {
+void ZLGtkPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
 	if (!g_utf8_validate(str, len, 0)) {
 		return;
 	}
 
+	myAnalysis.level = rtl ? 1 : 0;
 	pango_shape(str, len, &myAnalysis, myString);
 	gdk_draw_glyphs(myPixmap, myTextGC, myAnalysis.font, x, y, myString);
 }
