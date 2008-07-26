@@ -32,6 +32,7 @@
 		<node name="custom..." value="Настроить..."/>
 	</node>
 	<node name="language">
+		<node name="ar" value="арабский"/>
 		<node name="cs" value="чешский"/>
 		<node name="de" value="немецкий"/>
 		<node name="de-traditional" value="немецкий (старая орфография)"/>
@@ -40,6 +41,7 @@
 		<node name="es" value="испанский"/>
 		<node name="fi" value="финский"/>
 		<node name="fr" value="французский"/>
+		<node name="he" value="иврит"/>
 		<node name="id" value="индонезийский"/>
 		<node name="it" value="итальянский"/>
 		<node name="no" value="норвежский"/>

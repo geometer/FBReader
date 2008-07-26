@@ -32,6 +32,7 @@
 		<node name="custom..." value="مخصص..."/>
 	</node>
 	<node name="language">
+		<node name="ar" value="العربية"/>
 		<node name="cs" value="التشيكية"/>
 		<node name="de" value="الألمانية"/>
 		<node name="de-traditional" value="الألمانية (النظام التقليدي)"/>
