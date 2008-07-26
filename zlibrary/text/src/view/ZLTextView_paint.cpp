@@ -106,7 +106,7 @@ static ZLTextElementIterator findLast(ZLTextElementIterator from, ZLTextElementI
 }
 
 int ZLTextView::areaLength(const ZLTextParagraphCursor &paragraph, const ZLTextElementArea &area, int toCharNumber) {
-	myStyle.setTextStyle(area.Style);
+	myStyle.setTextStyle(area.Style, area.Level);
 	const ZLTextWord &word = (const ZLTextWord&)paragraph[area.TextElementNumber];
 	int length = toCharNumber - area.StartCharNumber;
 	bool selectHyphenationSign = false;
@@ -180,9 +180,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 		ZLTextElement::Kind kind = element.kind();
 	
 		if ((kind == ZLTextElement::WORD_ELEMENT) || (kind == ZLTextElement::IMAGE_ELEMENT)) {
-			if (it->ChangeStyle) {
-				myStyle.setTextStyle(it->Style);
-			}
+			myStyle.setTextStyle(it->Style, it->Level);
 			const int x = (myStyle.baseBidiLevel() % 2 == 1) ? context().width() - it->XEnd : it->XStart;
 			const int y = it->YEnd - myStyle.elementDescent(element) - myStyle.textStyle()->verticalShift();
 			if (kind == ZLTextElement::WORD_ELEMENT) {
@@ -194,9 +192,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to
 		}
 	}
 	if (it != toIt) {
-		if (it->ChangeStyle) {
-			myStyle.setTextStyle(it->Style);
-		}
+		myStyle.setTextStyle(it->Style, it->Level);
 		int start = 0;
 		if (info.Start.equalWordNumber(info.End)) {
 			start = info.Start.charNumber();
@@ -246,7 +242,7 @@ void ZLTextView::flushRevertedElements(unsigned char bidiLevel) {
 }
 
 void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
-	myStyle.setTextStyle(info.StartStyle);
+	myStyle.setTextStyle(info.StartStyle, info.StartBidiLevel);
 	const int y = std::min(myY + info.Height, topMargin() + textAreaHeight());
 	int spaceCounter = info.SpaceCounter;
 	int fullCorrection = 0;
@@ -329,14 +325,14 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info) {
 				break;
 			case ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT:
 				myStyle.increaseBidiLevel();
-				//context().setColor(ZLColor(0, 255, 0));
-				//context().drawLine(context().width() - x, y, context().width() - x, y - 20);
+				context().setColor(ZLColor(0, 255, 0));
+				context().drawLine(context().width() - x, y, context().width() - x, y - 20);
 				break;
 			case ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT:
 				myStyle.decreaseBidiLevel();
 				flushRevertedElements(myStyle.bidiLevel());
-				//context().setColor(ZLColor(255, 0, 0));
-				//context().drawLine(context().width() - x, y, context().width() - x, y - 20);
+				context().setColor(ZLColor(255, 0, 0));
+				context().drawLine(context().width() - x, y, context().width() - x, y - 20);
 				break;
 		}
 

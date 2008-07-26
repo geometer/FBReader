@@ -63,7 +63,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 	const bool useHyphenator =
 		ZLTextStyleCollection::instance().baseStyle().AutoHyphenationOption.value();
 
-	ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(start, myStyle.textStyle());
+	ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(start, myStyle.textStyle(), myStyle.bidiLevel());
 
 	std::set<ZLTextLineInfoPtr>::const_iterator it = myLineInfoCache.find(infoPtr);
 	if (it != myLineInfoCache.end()) {
@@ -120,10 +120,12 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 			elementKind = paragraphCursor[current.wordNumber()].kind();
 		}
 		info.StartStyle = myStyle.textStyle();
+		info.StartBidiLevel = myStyle.bidiLevel();
 		info.RealStart = current;
 	}
 
 	ZLTextStylePtr storedStyle = myStyle.textStyle();
+	unsigned char storedBidiLevel = myStyle.bidiLevel();
 
 	const int fontSize = myStyle.textStyle()->fontSize();
 	// TODO: change metrics at font change
@@ -224,6 +226,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 			newInfo.setTo(info);
 			allowBreakAtNBSpace = nbspaceBreak;
 			storedStyle = myStyle.textStyle();
+			storedBidiLevel = myStyle.bidiLevel();
 			removeLastSpace = !wordOccured && (info.SpaceCounter > 0);
 		}
 	} while (!newInfo.End.equalWordNumber(end));
@@ -260,6 +263,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 					newInfo.Width += subwordWidth;
 					newInfo.setTo(info);
 					storedStyle = myStyle.textStyle();
+					storedBidiLevel = myStyle.bidiLevel();
 					removeLastSpace = false;
 					info.End.setCharNumber(hyphenationPosition);
 				}
@@ -272,7 +276,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		--info.SpaceCounter;
 	}
 
-	myStyle.setTextStyle(storedStyle);
+	myStyle.setTextStyle(storedStyle, storedBidiLevel);
 
 	if (isFirstLine) {
 		info.Height += info.StartStyle->spaceBefore(metrics);

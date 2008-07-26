@@ -27,8 +27,8 @@
 #include "ZLTextStyle.h"
 #include "ZLTextElement.h"
 
-ZLTextView::ViewStyle::ViewStyle(shared_ptr<ZLPaintContext> context) : myContext(context), myBaseBidiLevel(1), myBidiLevel(1) {
-	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr());
+ZLTextView::ViewStyle::ViewStyle(shared_ptr<ZLPaintContext> context) : myContext(context), myBaseBidiLevel(0) {
+	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr(), myBaseBidiLevel);
 	myWordHeight = -1;
 }
 
@@ -37,11 +37,10 @@ void ZLTextView::ViewStyle::setPaintContext(shared_ptr<ZLPaintContext> context) 
 }
 
 void ZLTextView::ViewStyle::reset() {
-	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr());
-	myBidiLevel = myBaseBidiLevel;
+	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr(), myBaseBidiLevel);
 }
 
-void ZLTextView::ViewStyle::setTextStyle(const ZLTextStylePtr style) {
+void ZLTextView::ViewStyle::setTextStyle(const ZLTextStylePtr style, unsigned char bidiLevel) {
 	if (myTextStyle != style) {
 		myTextStyle = style;
 		myWordHeight = -1;
@@ -49,23 +48,24 @@ void ZLTextView::ViewStyle::setTextStyle(const ZLTextStylePtr style) {
 	if (!myContext.isNull()) {
 		myContext->setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
 	}
+	myBidiLevel = bidiLevel;
 }
 
 void ZLTextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
 	if (control.isStart()) {
 		const ZLTextStyleDecoration *decoration = ZLTextStyleCollection::instance().decoration(control.textKind());
 		if (decoration != 0) {
-			setTextStyle(decoration->createDecoratedStyle(myTextStyle));
+			setTextStyle(decoration->createDecoratedStyle(myTextStyle), myBidiLevel);
 		}
 	} else {
 		if (myTextStyle->isDecorated()) {
-			setTextStyle(((ZLTextDecoratedStyle&)*myTextStyle).base());
+			setTextStyle(((ZLTextDecoratedStyle&)*myTextStyle).base(), myBidiLevel);
 		}
 	}
 }
 
 void ZLTextView::ViewStyle::applyControl(const ZLTextStyleElement &control) {
-	setTextStyle(new ZLTextForcedStyle(myTextStyle, control.entry()));
+	setTextStyle(new ZLTextForcedStyle(myTextStyle, control.entry()), myBidiLevel);
 }
 
 void ZLTextView::ViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {

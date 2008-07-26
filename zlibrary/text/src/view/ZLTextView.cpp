@@ -65,7 +65,7 @@ void ZLTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &lang
 
 	myModel = model;
 	myLanguage = language.empty() ? ZLibrary::Language() : language;
-	myStyle.setBaseBidiLevel(myLanguage == "ar" ? 1 : 0);
+	myStyle.setBaseBidiLevel((myLanguage == "ar") ? 1 : 0);
 
 	if (!myModel.isNull() && (myModel->paragraphsNumber() != 0)) {
 		setStartCursor(ZLTextParagraphCursor::cursor(*myModel, myLanguage));

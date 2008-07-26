@@ -101,7 +101,7 @@ private:
 		void setPaintContext(shared_ptr<ZLPaintContext> context);
 
 		void reset();
-		void setTextStyle(const ZLTextStylePtr style);
+		void setTextStyle(const ZLTextStylePtr style, unsigned char bidiLevel);
 		void applyControl(const ZLTextControlElement &control);
 		void applyControl(const ZLTextStyleElement &control);
 		void applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end);
