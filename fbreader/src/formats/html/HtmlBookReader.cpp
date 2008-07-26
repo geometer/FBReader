@@ -321,6 +321,8 @@ shared_ptr<HtmlTagAction> HtmlBookReader::createAction(const std::string &tag) {
 		return new HtmlIgnoreTagAction(*this);
 	} else if (tag == "A") {
 		return new HtmlHrefTagAction(*this);
+	} else if (tag == "TD") {
+		return new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_END);
 	} else if (tag == "TR") {
 		return new HtmlBreakTagAction(*this, HtmlBreakTagAction::BREAK_AT_END);
 	} else if (tag == "DIV") {
