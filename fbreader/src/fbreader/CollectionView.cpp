@@ -66,7 +66,7 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 		myUpdateModel = false;
 	}
 	collectionModel().removeAllMarks();
-	const std::vector<int> &toSelect = collectionModel().paragraphNumbersByBook(book);
+	const std::vector<int> &toSelect = collectionModel().paragraphIndicesByBook(book);
 	for (std::vector<int>::const_iterator it = toSelect.begin(); it != toSelect.end(); ++it) {
 		highlightParagraph(*it);
 	}
@@ -97,8 +97,8 @@ bool CollectionView::_onStylusPress(int x, int y) {
 	const ZLTextElementArea *imageArea = elementByCoordinates(x, y);
 	if ((imageArea != 0) && (imageArea->Kind == ZLTextElement::IMAGE_ELEMENT)) {
 		ZLTextWordCursor cursor = startCursor();
-		cursor.moveToParagraph(imageArea->ParagraphNumber);
-		cursor.moveTo(imageArea->TextElementNumber, 0);
+		cursor.moveToParagraph(imageArea->ParagraphIndex);
+		cursor.moveTo(imageArea->ElementIndex, 0);
 		const ZLTextElement &element = cursor.element();
 		if (element.kind() != ZLTextElement::IMAGE_ELEMENT) {
 			return false;
@@ -108,16 +108,16 @@ bool CollectionView::_onStylusPress(int x, int y) {
 		const std::string &id = imageElement.id();
 
 		if (id == CollectionModel::BookInfoImageId) {
-			editBookInfo(collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber));
+			editBookInfo(collectionModel().bookByParagraphIndex(imageArea->ParagraphIndex));
 			return true;
 		} else if (id == CollectionModel::RemoveBookImageId) {
-			removeBook(collectionModel().bookByParagraphNumber(imageArea->ParagraphNumber));
+			removeBook(collectionModel().bookByParagraphIndex(imageArea->ParagraphIndex));
 			return true;
 		} else if (id == CollectionModel::RemoveTagImageId) {
-			removeTag(collectionModel().tagByParagraphNumber(imageArea->ParagraphNumber));
+			removeTag(collectionModel().tagByParagraphIndex(imageArea->ParagraphIndex));
 			return true;
 		} else if (id == CollectionModel::TagInfoImageId) {
-			editTagInfo(collectionModel().tagByParagraphNumber(imageArea->ParagraphNumber));
+			editTagInfo(collectionModel().tagByParagraphIndex(imageArea->ParagraphIndex));
 			return true;
 		} else {
 			return false;
@@ -129,7 +129,7 @@ bool CollectionView::_onStylusPress(int x, int y) {
 		return false;
 	}
 
-	BookDescriptionPtr book = collectionModel().bookByParagraphNumber(index);
+	BookDescriptionPtr book = collectionModel().bookByParagraphIndex(index);
 	if (!book.isNull()) {
 		fbreader().openBook(book);
 		fbreader().showBookTextView();

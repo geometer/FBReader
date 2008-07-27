@@ -21,11 +21,11 @@
 #define __ZLTEXTMARK_H__
 
 struct ZLTextMark {
-	int ParagraphNumber;
+	int ParagraphIndex;
 	int Offset, Length;
 
 	ZLTextMark();
-	ZLTextMark(int paragraphNumber, int offset, int length);
+	ZLTextMark(int paragraphIndex, int offset, int length);
 	ZLTextMark(const ZLTextMark &mark);
 	const ZLTextMark &operator = (const ZLTextMark &mark);
 	~ZLTextMark();
@@ -36,11 +36,11 @@ struct ZLTextMark {
 	bool operator >= (const ZLTextMark &mark) const;
 };
 
-inline ZLTextMark::ZLTextMark() : ParagraphNumber(-1), Offset(-1), Length(-1) {}
-inline ZLTextMark::ZLTextMark(int paragraphNumber, int offset, int length) : ParagraphNumber(paragraphNumber), Offset(offset), Length(length) {}
-inline ZLTextMark::ZLTextMark(const ZLTextMark &mark) : ParagraphNumber(mark.ParagraphNumber), Offset(mark.Offset), Length(mark.Length) {}
+inline ZLTextMark::ZLTextMark() : ParagraphIndex(-1), Offset(-1), Length(-1) {}
+inline ZLTextMark::ZLTextMark(int paragraphIndex, int offset, int length) : ParagraphIndex(paragraphIndex), Offset(offset), Length(length) {}
+inline ZLTextMark::ZLTextMark(const ZLTextMark &mark) : ParagraphIndex(mark.ParagraphIndex), Offset(mark.Offset), Length(mark.Length) {}
 inline const ZLTextMark &ZLTextMark::operator = (const ZLTextMark &mark) {
-	ParagraphNumber = mark.ParagraphNumber;
+	ParagraphIndex = mark.ParagraphIndex;
 	Offset = mark.Offset;
 	Length = mark.Length;
 	return *this;
@@ -48,8 +48,8 @@ inline const ZLTextMark &ZLTextMark::operator = (const ZLTextMark &mark) {
 inline ZLTextMark::~ZLTextMark() {}
 
 inline bool ZLTextMark::operator < (const ZLTextMark &mark) const {
-	return (ParagraphNumber < mark.ParagraphNumber) ||
-				 ((ParagraphNumber == mark.ParagraphNumber) && (Offset < mark.Offset));
+	return (ParagraphIndex < mark.ParagraphIndex) ||
+				 ((ParagraphIndex == mark.ParagraphIndex) && (Offset < mark.Offset));
 }
 inline bool ZLTextMark::operator > (const ZLTextMark &mark) const {
 	return mark < *this;

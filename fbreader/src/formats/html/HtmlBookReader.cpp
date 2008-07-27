@@ -425,6 +425,12 @@ void HtmlBookReader::addConvertedDataToBuffer(const char *text, int len, bool co
 bool HtmlBookReader::tagHandler(const HtmlTag &tag) {
 	myConverter->reset();
 
+	for (unsigned int i = 0; i < tag.Attributes.size(); ++i) {
+		if (tag.Attributes[i].Name == "ID") {
+			myBookReader.addHyperlinkLabel(tag.Attributes[i].Value);
+			break;
+		}	
+	}
 	shared_ptr<HtmlTagAction> action = myActionMap[tag.Name];
 	if (action.isNull()) {
 		action = createAction(tag.Name);

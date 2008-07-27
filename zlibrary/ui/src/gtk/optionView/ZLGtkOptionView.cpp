@@ -24,7 +24,7 @@
 #include "../util/ZLGtkKeyUtil.h"
 
 static GtkLabel *gtkLabel(const std::string &name) {
-	GtkLabel *label = GTK_LABEL(gtk_label_new((gtkString(name) + ":").c_str()));
+	GtkLabel *label = GTK_LABEL(gtk_label_new(gtkString(name).c_str()));
 	gtk_label_set_justify(label, GTK_JUSTIFY_RIGHT);
 	return label;
 }

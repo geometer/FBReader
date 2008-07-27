@@ -37,8 +37,8 @@ static const ZLResourceKey KEY_FIRSTLINEINDENT("firstLineIndent");
 static const ZLResourceKey KEY_ALIGNMENT("alignment");
 static const ZLResourceKey KEY_SPACEBEFORE("spaceBefore");
 static const ZLResourceKey KEY_SPACEAFTER("spaceAfter");
-static const ZLResourceKey KEY_LEFTINDENT("leftIndent");
-static const ZLResourceKey KEY_RIGHTINDENT("rightIndent");
+static const ZLResourceKey KEY_STARTINDENT("startIndent");
+static const ZLResourceKey KEY_ENDINDENT("endIndent");
 
 FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 	const ZLResource &styleResource = ZLResource::resource(KEY_STYLE);
@@ -82,13 +82,13 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 			
 			registerEntries(dialogTab,
 				KEY_SPACEBEFORE, new ZLSimpleSpinOptionEntry(decoration->SpaceBeforeOption, 1),
-				KEY_LEFTINDENT, new ZLSimpleSpinOptionEntry(decoration->LeftIndentOption, 1),
+				KEY_STARTINDENT, new ZLSimpleSpinOptionEntry(decoration->LeftIndentOption, 1),
 				name
 			);
 			
 			registerEntries(dialogTab,
 				KEY_SPACEAFTER, new ZLSimpleSpinOptionEntry(decoration->SpaceAfterOption, 1),
-				KEY_RIGHTINDENT, new ZLSimpleSpinOptionEntry(decoration->RightIndentOption, 1),
+				KEY_ENDINDENT, new ZLSimpleSpinOptionEntry(decoration->RightIndentOption, 1),
 				name
 			);
 			

@@ -25,6 +25,8 @@
 
 #include "ZLTextParagraph.h"
 
+const shared_ptr<ZLTextParagraphEntry> ResetBidiEntry::Instance = new ResetBidiEntry();
+
 size_t ZLTextEntry::dataLength() const {
 	size_t len;
 	memcpy(&len, myAddress, sizeof(size_t));
@@ -102,6 +104,9 @@ const shared_ptr<ZLTextParagraphEntry> ZLTextParagraph::Iterator::entry() const 
 			case ZLTextParagraphEntry::FIXED_HSPACE_ENTRY:
 				myEntry = new ZLTextFixedHSpaceEntry((unsigned char)*(myPointer + 1));
 				break;
+			case ZLTextParagraphEntry::RESET_BIDI_ENTRY:
+				myEntry = ResetBidiEntry::Instance;
+				break;
 		}
 	}
 	return myEntry;
@@ -152,6 +157,9 @@ void ZLTextParagraph::Iterator::next() {
 			}
 			case ZLTextParagraphEntry::FIXED_HSPACE_ENTRY:
 				myPointer += 2;
+				break;
+			case ZLTextParagraphEntry::RESET_BIDI_ENTRY:
+				++myPointer;
 				break;
 		}
 		if (*myPointer == 0) {
@@ -215,4 +223,7 @@ int ZLTextTreeParagraph::fullSize() const {
 		size += (*it)->fullSize();
 	}
 	return size;
+}
+
+ResetBidiEntry::ResetBidiEntry() {
 }

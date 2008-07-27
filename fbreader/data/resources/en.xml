@@ -134,8 +134,8 @@
 					</node>
 					<node name="spaceBefore" value="Space Before"/>
 					<node name="spaceAfter" value="Space After"/>
-					<node name="leftIndent" value="Left Indent"/>
-					<node name="rightIndent" value="Right Indent"/>
+					<node name="startIndent" value="Line Start Indent"/>
+					<node name="endIndent" value="Line End Indent"/>
 				</node>
 				<node name="Styles" value="Styles">
 					<node name="optionsFor" value="Options for"/>

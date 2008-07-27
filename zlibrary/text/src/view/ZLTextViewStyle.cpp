@@ -68,21 +68,35 @@ void ZLTextView::ViewStyle::applyControl(const ZLTextStyleElement &control) {
 	setTextStyle(new ZLTextForcedStyle(myTextStyle, control.entry()), myBidiLevel);
 }
 
-void ZLTextView::ViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {
-	for (ZLTextWordCursor cursor = begin; !cursor.equalWordNumber(end); cursor.nextWord()) {
-		const ZLTextElement &element = cursor.element();
-		if (element.kind() == ZLTextElement::CONTROL_ELEMENT) {
+void ZLTextView::ViewStyle::applySingleControl(const ZLTextElement &element) {
+	switch (element.kind()) {
+		case ZLTextElement::CONTROL_ELEMENT:
 			applyControl((ZLTextControlElement&)element);
-		} else if (element.kind() == ZLTextElement::FORCED_CONTROL_ELEMENT) {
+			break;
+		case ZLTextElement::FORCED_CONTROL_ELEMENT:
 			applyControl((ZLTextStyleElement&)element);
-		}
+			break;
+		case ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT:
+			increaseBidiLevel();
+			break;
+		case ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT:
+			decreaseBidiLevel();
+			break;
+		default:
+			break;
 	}
 }
 
-int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned int charNumber, const ZLTextStyleEntry::Metrics &metrics) const {
+void ZLTextView::ViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {
+	for (ZLTextWordCursor cursor = begin; !cursor.equalElementIndex(end); cursor.nextWord()) {
+		applySingleControl(cursor.element());
+	}
+}
+
+int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned int charIndex, const ZLTextStyleEntry::Metrics &metrics) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
-			return wordWidth((const ZLTextWord&)element, charNumber, -1, false);
+			return wordWidth((const ZLTextWord&)element, charIndex, -1, false);
 		case ZLTextElement::IMAGE_ELEMENT:
 			return context().imageWidth(((const ZLTextImageElement&)element).image());
 		case ZLTextElement::INDENT_ELEMENT:
@@ -151,10 +165,10 @@ int ZLTextView::ViewStyle::wordWidth(const ZLTextWord &word, int start, int leng
 	int startPos = ZLUnicodeUtil::length(word.Data, start);
 	int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
 	if (!addHyphenationSign) {
-		return context().stringWidth(word.Data + startPos, endPos - startPos, word.Level % 2 == 1);
+		return context().stringWidth(word.Data + startPos, endPos - startPos, word.BidiLevel % 2 == 1);
 	}
 	std::string substr;
 	substr.append(word.Data + startPos, endPos - startPos);
 	substr += '-';
-	return context().stringWidth(substr.data(), substr.length(), word.Level % 2 == 1);
+	return context().stringWidth(substr.data(), substr.length(), word.BidiLevel % 2 == 1);
 }

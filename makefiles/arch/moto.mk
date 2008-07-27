@@ -19,7 +19,7 @@ RM_QUIET = rm -rf
 QTINCLUDE = -I $(QT_PATH)/include -I $(QT_PATH)/include/ezx
 UILIBS = -L$(QT_PATH)/lib -L$(QT_PATH)/lib/ezx -lqte-mt -lezxappbase -lezxappsdk -lezxopenwindow -lipp-miscGen -lipp-jp -lezxjpeg -lezxpm
 
-CFLAGS = -pipe -DQWS -fno-exceptions -fno-rtti -Wall -W -O2 -mcpu=iwmmxt -mtune=iwmmxt -Wno-ctor-dtor-privacy -W -ftemplate-depth-30
+CFLAGS = -pipe -Duint16_t="unsigned short" -Duint32_t="unsigned int" -DQWS -fno-exceptions -fno-rtti -Wall -W -O2 -mcpu=iwmmxt -mtune=iwmmxt -Wno-ctor-dtor-privacy -W -ftemplate-depth-30
 LDFLAGS = 
 
 XML_LIB = -lexpat

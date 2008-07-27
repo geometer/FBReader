@@ -43,9 +43,9 @@ public:
 	CollectionModel(CollectionView &view, BookCollection &collection);
 	~CollectionModel();
 
-	BookDescriptionPtr bookByParagraphNumber(int num);
-	const std::vector<int> &paragraphNumbersByBook(BookDescriptionPtr book);
-	const std::string &tagByParagraphNumber(int num);
+	BookDescriptionPtr bookByParagraphIndex(int num);
+	const std::vector<int> &paragraphIndicesByBook(BookDescriptionPtr book);
+	const std::string &tagByParagraphIndex(int num);
 
 	void update();
 

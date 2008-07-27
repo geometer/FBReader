@@ -21,6 +21,7 @@
 
 #include <linebreak.h>
 
+#include <ZLLanguageUtil.h>
 #include <ZLImage.h>
 
 #include <ZLTextParagraph.h>
@@ -29,10 +30,10 @@
 #include "ZLTextWord.h"
 #include "ZLTextParagraphBuilder.h"
 
-ZLTextParagraphBuilder::ZLTextParagraphBuilder(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphNumber, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language), myBaseBidiLevel((language == "ar") ? 1 : 0) {
-	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphNumber, 0, 0));
+ZLTextParagraphBuilder::ZLTextParagraphBuilder(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphIndex, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language), myBaseBidiLevel(ZLLanguageUtil::isRTLLanguage(language) ? 1 : 0) {
+	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphIndex, 0, 0));
 	myLastMark = myFirstMark;
-	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphNumber == paragraphNumber); ++myLastMark);
+	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphIndex == paragraphIndex); ++myLastMark);
 	myOffset = 0;
 
 	static bool lineBreakInitialized = false;
@@ -42,18 +43,14 @@ ZLTextParagraphBuilder::ZLTextParagraphBuilder(const std::string &language, cons
 	}
 }
 
-void ZLTextParagraphBuilder::updateBidiLevel(FriBidiLevel level) {
-	if (myCurrentBidiLevel != level) {
-		if (level > myCurrentBidiLevel) {
-			for (int i = level; i > myCurrentBidiLevel; --i) {
-				myElements.push_back(ZLTextElementPool::Pool.StartReversedSequenceElement);
-			}
-		} else {
-			for (int i = level; i < myCurrentBidiLevel; ++i) {
-				myElements.push_back(ZLTextElementPool::Pool.EndReversedSequenceElement);
-			}
-		}
-		myCurrentBidiLevel = level;
+void ZLTextParagraphBuilder::updateBidiLevel(FriBidiLevel bidiLevel) {
+	while (myCurrentBidiLevel > bidiLevel) {
+		--myCurrentBidiLevel;
+		myElements.push_back(ZLTextElementPool::Pool.EndReversedSequenceElement);
+	}
+	while (myCurrentBidiLevel < bidiLevel) {
+		++myCurrentBidiLevel;
+		myElements.push_back(ZLTextElementPool::Pool.StartReversedSequenceElement);
 	}
 }
 
@@ -100,6 +97,10 @@ void ZLTextParagraphBuilder::fill() {
 			case ZLTextParagraphEntry::TEXT_ENTRY:
 				processTextEntry((const ZLTextEntry&)*it.entry());
 				break;
+			case ZLTextParagraphEntry::RESET_BIDI_ENTRY:
+				updateBidiLevel(myBaseBidiLevel);
+				myLatestBidiLevel = myBaseBidiLevel;
+				break;
 		}
 	}
 
@@ -124,7 +125,7 @@ void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 		myBidiLevels[firstNonSpace++] = myLatestBidiLevel;
 	}
 	int lastNonSpace = len - 1;
-	if (lastNonSpace > firstNonSpace) {
+	if (lastNonSpace > firstNonSpace - 1) {
 		while (ZLUnicodeUtil::isSpace(myUcs4String[lastNonSpace])) {
 			--lastNonSpace;
 		}

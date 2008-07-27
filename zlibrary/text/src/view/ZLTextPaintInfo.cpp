@@ -53,7 +53,7 @@ void ZLTextView::setStartCursor(ZLTextParagraphCursorPtr cursor) {
 	myPaintState = myStartCursor.isNull() ? NOTHING_TO_PAINT : START_IS_KNOWN;
 }
 
-void ZLTextView::moveStartCursor(int paragraphNumber, int wordNumber, int charNumber) {
+void ZLTextView::moveStartCursor(int paragraphIndex, int elementIndex, int charIndex) {
 	if (myPaintState == NOTHING_TO_PAINT) {
 		return;
 	}
@@ -61,14 +61,14 @@ void ZLTextView::moveStartCursor(int paragraphNumber, int wordNumber, int charNu
 	if (myStartCursor.isNull()) {
 		myStartCursor = myEndCursor;
 	}
-	myStartCursor.moveToParagraph(paragraphNumber);
-	myStartCursor.moveTo(wordNumber, charNumber);
+	myStartCursor.moveToParagraph(paragraphIndex);
+	myStartCursor.moveTo(elementIndex, charIndex);
 	myEndCursor = 0;
 	myLineInfos.clear();
 	myPaintState = START_IS_KNOWN;
 }
 
-void ZLTextView::moveEndCursor(int paragraphNumber, int wordNumber, int charNumber) {
+void ZLTextView::moveEndCursor(int paragraphIndex, int elementIndex, int charIndex) {
 	if (myPaintState == NOTHING_TO_PAINT) {
 		return;
 	}
@@ -76,12 +76,12 @@ void ZLTextView::moveEndCursor(int paragraphNumber, int wordNumber, int charNumb
 	if (myEndCursor.isNull()) {
 		myEndCursor = myStartCursor;
 	}
-	myEndCursor.moveToParagraph(paragraphNumber);
-	if ((paragraphNumber > 0) && (wordNumber == 0) && (charNumber == 0)) {
+	myEndCursor.moveToParagraph(paragraphIndex);
+	if ((paragraphIndex > 0) && (elementIndex == 0) && (charIndex == 0)) {
 		myEndCursor.previousParagraph();
 		myEndCursor.moveToParagraphEnd();
 	} else {
-		myEndCursor.moveTo(wordNumber, charNumber);
+		myEndCursor.moveTo(elementIndex, charIndex);
 	}
 	myStartCursor = 0;
 	myLineInfos.clear();
@@ -336,7 +336,7 @@ int ZLTextView::paragraphSize(const ZLTextWordCursor &cursor, bool beforeCurrent
 
 	int size = 0;
 
-	while (!word.equalWordNumber(end)) {
+	while (!word.equalElementIndex(end)) {
 		const ZLTextLineInfoPtr info = processTextLine(word, end);
 		word = info->End;
 		size += infoSize(*info, unit);

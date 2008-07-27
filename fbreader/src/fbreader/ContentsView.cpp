@@ -58,7 +58,7 @@ size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
 	const ZLTextWordCursor &cursor = fbreader().bookTextView().startCursor();
 	if (!cursor.isNull()) {
 		long reference = cursor.paragraphCursor().index();
-		bool startOfParagraph = cursor.wordNumber() == 0;
+		bool startOfParagraph = cursor.elementIndex() == 0;
 		if (cursor.isEndOfParagraph()) {
 			++reference;
 			startOfParagraph = true;

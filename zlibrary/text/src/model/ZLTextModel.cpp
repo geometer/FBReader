@@ -134,7 +134,7 @@ ZLTextTreeParagraph *ZLTextTreeModel::createParagraph(ZLTextTreeParagraph *paren
 void ZLTextTreeModel::search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const {
 	ZLTextModel::search(text, startIndex, endIndex, ignoreCase);
 	for (std::vector<ZLTextMark>::const_iterator it = marks().begin(); it != marks().end(); ++it) {
-		((ZLTextTreeParagraph*)(*this)[it->ParagraphNumber])->openTree();
+		((ZLTextTreeParagraph*)(*this)[it->ParagraphIndex])->openTree();
 	}
 }
 
@@ -267,5 +267,11 @@ void ZLTextModel::addImage(const std::string &id, const ZLImageMap &imageMap, sh
 	memcpy(myLastEntryStart + 1 + sizeof(const ZLImageMap*), &vOffset, sizeof(short));
 	memcpy(myLastEntryStart + 1 + sizeof(const ZLImageMap*) + sizeof(short), id.data(), id.length());
 	*(myLastEntryStart + 1 + sizeof(const ZLImageMap*) + sizeof(short) + id.length()) = '\0';
+	myParagraphs.back()->addEntry(myLastEntryStart);
+}
+
+void ZLTextModel::addBidiReset() {
+	myLastEntryStart = myAllocator.allocate(1);
+	*myLastEntryStart = ZLTextParagraphEntry::RESET_BIDI_ENTRY;
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }

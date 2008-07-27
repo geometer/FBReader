@@ -102,8 +102,15 @@ private:
 
 		void reset();
 		void setTextStyle(const ZLTextStylePtr style, unsigned char bidiLevel);
+
+	private:
 		void applyControl(const ZLTextControlElement &control);
 		void applyControl(const ZLTextStyleElement &control);
+		void increaseBidiLevel();
+		void decreaseBidiLevel();
+
+	public:
+		void applySingleControl(const ZLTextElement &element);
 		void applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end);
 
 		const ZLPaintContext &context() const;
@@ -117,8 +124,6 @@ private:
 		void setBaseBidiLevel(unsigned char base);
 		unsigned char baseBidiLevel() const;
 		
-		void increaseBidiLevel();
-		void decreaseBidiLevel();
 		unsigned char bidiLevel() const;
 
 	private:
@@ -204,13 +209,14 @@ private:
 
 	void clear();
 
-	int areaLength(const ZLTextParagraphCursor &paragraph, const ZLTextElementArea &area, int toCharNumber);
+	int areaBound(const ZLTextParagraphCursor &paragraph, const ZLTextElementArea &area, int toCharNumber, bool mainDir);
 	ZLTextLineInfoPtr processTextLine(const ZLTextWordCursor &start, const ZLTextWordCursor &end);
-	void prepareTextLine(const ZLTextLineInfo &info);
-	void drawTextLine(const ZLTextLineInfo &info, size_t from, size_t to);
+	void prepareTextLine(const ZLTextLineInfo &info, int y);
+	void drawTextLine(const ZLTextLineInfo &info, int y, size_t from, size_t to);
+	void drawSelectionRectangle(int left, int top, int right, int bottom);
 	void drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
 	void drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
-	void drawTreeLines(const ZLTextTreeNodeInfo &info, int height, int vSpaceAfter);
+	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
 
 	bool pageIsEmpty() const;
 	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;
@@ -274,9 +280,6 @@ private:
 	shared_ptr<PositionIndicator> myPositionIndicator;
 
 	bool myTreeStateIsFrozen;
-
-	int myX;
-	int myY;
 
 friend class ZLTextSelectionModel;
 };

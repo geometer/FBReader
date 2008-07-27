@@ -40,7 +40,7 @@ public:
 private:
 	void processTextEntry(const ZLTextEntry &textEntry);
 	void addWord(const char *ptr, int offset, int len);
-	void updateBidiLevel(FriBidiLevel level);
+	void updateBidiLevel(FriBidiLevel bidiLevel);
 	void insertRSElement();
 
 private:

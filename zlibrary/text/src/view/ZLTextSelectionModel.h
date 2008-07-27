@@ -35,6 +35,18 @@ class ZLApplication;
 class ZLTextSelectionModel {
 
 public:
+	struct BoundElement {
+		bool Exists;
+		int ParagraphIndex;
+		int ElementIndex;
+		size_t CharIndex;
+
+		bool operator == (const BoundElement &element) const;
+		bool operator != (const BoundElement &element) const;
+	};
+	typedef std::pair<BoundElement,BoundElement> Range;
+
+public:
 	ZLTextSelectionModel(ZLTextView &view, ZLApplication &application);
 
 	void activate(int x, int y);
@@ -43,19 +55,10 @@ public:
 	void deactivate();
 	void clear();
 
-	const std::string &getText() const;
+	const std::string &text() const;
+	const std::vector<Range> &ranges() const;
+
 	bool isEmpty() const;
-
-public:
-	struct BoundElement {
-		bool Exists;
-		int ParagraphNumber;
-		int TextElementNumber;
-		size_t CharNumber;
-
-		bool operator == (const BoundElement &element) const;
-		bool operator != (const BoundElement &element) const;
-	};
 
 private:
 	struct Bound {
@@ -65,10 +68,8 @@ private:
 		bool operator < (const Bound &bound) const;
 	};
 
-public:
-	std::pair<BoundElement,BoundElement> range() const;
-
 private:
+	Range internalRange() const;
 	void setBound(Bound &bound, int x, int y);
 	void startSelectionScrolling(bool forward);
 	void stopSelectionScrolling();
@@ -92,6 +93,9 @@ private:
 	mutable std::set<ZLTextParagraphCursorPtr> myCursors;
 	mutable std::string myText;
 	mutable bool myTextIsUpToDate;
+
+	mutable std::vector<Range> myRanges;
+	mutable bool myRangeVectorIsUpToDate;
 
 friend class ZLTextSelectionScroller;
 };

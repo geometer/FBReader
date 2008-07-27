@@ -148,8 +148,8 @@ std::string FBView::word(const ZLTextElementArea &area) const {
 
 	if (area.Kind == ZLTextElement::WORD_ELEMENT) {
 		ZLTextWordCursor cursor = startCursor();
-		cursor.moveToParagraph(area.ParagraphNumber);
-		cursor.moveTo(area.TextElementNumber, 0);
+		cursor.moveToParagraph(area.ParagraphIndex);
+		cursor.moveTo(area.ElementIndex, 0);
 		const ZLTextWord &word = (ZLTextWord&)cursor.element();
 		ZLUnicodeUtil::Ucs4String ucs4;
 		ZLUnicodeUtil::utf8ToUcs4(ucs4, word.Data, word.Size);

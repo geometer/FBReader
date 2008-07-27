@@ -42,6 +42,7 @@ public:
 		HYPERLINK_CONTROL_ENTRY = 4,
 		STYLE_ENTRY = 5,
 		FIXED_HSPACE_ENTRY = 6,
+		RESET_BIDI_ENTRY = 7,
 	};
 
 protected:
@@ -221,6 +222,15 @@ private:
 	const std::string myId;
 	const ZLImageMap *myMap;
 	const short myVOffset;
+};
+
+class ResetBidiEntry : public ZLTextParagraphEntry {
+
+public:
+	static const shared_ptr<ZLTextParagraphEntry> Instance;
+
+private:
+	ResetBidiEntry();
 };
 
 class ZLTextParagraph {

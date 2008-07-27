@@ -100,8 +100,8 @@ void BookTextView::saveState() {
 
 	if (!cursor.isNull()) {
 		ZLIntegerOption(ZLCategoryKey::STATE, myFileName, PARAGRAPH_OPTION_NAME, 0).setValue(cursor.paragraphCursor().index());
-		ZLIntegerOption(ZLCategoryKey::STATE, myFileName, WORD_OPTION_NAME, 0).setValue(cursor.wordNumber());
-		ZLIntegerOption(ZLCategoryKey::STATE, myFileName, CHAR_OPTION_NAME, 0).setValue(cursor.charNumber());
+		ZLIntegerOption(ZLCategoryKey::STATE, myFileName, WORD_OPTION_NAME, 0).setValue(cursor.elementIndex());
+		ZLIntegerOption(ZLCategoryKey::STATE, myFileName, CHAR_OPTION_NAME, 0).setValue(cursor.charIndex());
 		ZLIntegerOption(ZLCategoryKey::STATE, myFileName, BUFFER_SIZE, 0).setValue(myPositionStack.size());
 		ZLIntegerOption(ZLCategoryKey::STATE, myFileName, POSITION_IN_BUFFER, 0).setValue(myCurrentPointInStack);
 
@@ -117,7 +117,7 @@ void BookTextView::saveState() {
 }
 
 BookTextView::Position BookTextView::cursorPosition(const ZLTextWordCursor &cursor) const {
-	return Position(cursor.paragraphCursor().index(), cursor.wordNumber());
+	return Position(cursor.paragraphCursor().index(), cursor.elementIndex());
 }
 
 bool BookTextView::pushCurrentPositionIntoStack(bool doPushSamePosition) {
@@ -225,10 +225,10 @@ bool BookTextView::getHyperlinkId(const ZLTextElementArea &area, std::string &id
 		return false;
 	}
 	ZLTextWordCursor cursor = startCursor();
-	cursor.moveToParagraph(area.ParagraphNumber);
+	cursor.moveToParagraph(area.ParagraphIndex);
 	cursor.moveToParagraphStart();
 	ZLTextKind hyperlinkKind = REGULAR;
-	for (int i = 0; i < area.TextElementNumber; ++i) {
+	for (int i = 0; i < area.ElementIndex; ++i) {
 		const ZLTextElement &element = cursor.element();
 		if (element.kind() == ZLTextElement::CONTROL_ELEMENT) {
 			const ZLTextControlEntry &control = ((const ZLTextControlElement&)element).entry();

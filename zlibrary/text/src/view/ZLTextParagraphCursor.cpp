@@ -193,12 +193,12 @@ ZLTextMark ZLTextWordCursor::position() const {
 	}
 	const ZLTextParagraphCursor &paragraph = *myParagraphCursor;
 	size_t paragraphLength = paragraph.paragraphLength();
-	unsigned int wordNumber = myWordNumber;
-	while ((wordNumber != paragraphLength) && (paragraph[wordNumber].kind() != ZLTextElement::WORD_ELEMENT)) {
-		++wordNumber;
+	unsigned int elementIndex = myElementIndex;
+	while ((elementIndex != paragraphLength) && (paragraph[elementIndex].kind() != ZLTextElement::WORD_ELEMENT)) {
+		++elementIndex;
 	}
-	if (wordNumber != paragraphLength) {
-		return ZLTextMark(paragraph.index(), ((ZLTextWord&)paragraph[wordNumber]).ParagraphOffset, 0);
+	if (elementIndex != paragraphLength) {
+		return ZLTextMark(paragraph.index(), ((ZLTextWord&)paragraph[elementIndex]).ParagraphOffset, 0);
 	}
 	return ZLTextMark(paragraph.index() + 1, 0, 0);
 }
@@ -272,49 +272,49 @@ void ZLTextWordCursor::rebuild() {
 	}
 }
 
-void ZLTextWordCursor::setCharNumber(int charNumber) {
-	charNumber = std::max(charNumber, 0);
-	myCharNumber = 0;
-	if (charNumber > 0) {
-		const ZLTextElement &element = (*myParagraphCursor)[myWordNumber];
+void ZLTextWordCursor::setCharIndex(int charIndex) {
+	charIndex = std::max(charIndex, 0);
+	myCharIndex = 0;
+	if (charIndex > 0) {
+		const ZLTextElement &element = (*myParagraphCursor)[myElementIndex];
 		if (element.kind() == ZLTextElement::WORD_ELEMENT) {
-			if (charNumber <= (int)((const ZLTextWord&)element).Length) {
-				myCharNumber = charNumber;
+			if (charIndex <= (int)((const ZLTextWord&)element).Length) {
+				myCharIndex = charIndex;
 			}
 		}
 	}
 }
 
-void ZLTextWordCursor::moveTo(int wordNumber, int charNumber) {
+void ZLTextWordCursor::moveTo(int elementIndex, int charIndex) {
 	if (!isNull()) {
-		if ((wordNumber == 0) && (charNumber == 0)) {
-			myWordNumber = 0;
-			myCharNumber = 0;
+		if ((elementIndex == 0) && (charIndex == 0)) {
+			myElementIndex = 0;
+			myCharIndex = 0;
 		} else {
-			wordNumber = std::max(0, wordNumber);
+			elementIndex = std::max(0, elementIndex);
 			size_t size = myParagraphCursor->paragraphLength();
-			if ((size_t)wordNumber > size) {
-				myWordNumber = size;
-				myCharNumber = 0;
+			if ((size_t)elementIndex > size) {
+				myElementIndex = size;
+				myCharIndex = 0;
 			} else {
-				myWordNumber = wordNumber;
-				setCharNumber(charNumber);
+				myElementIndex = elementIndex;
+				setCharIndex(charIndex);
 			}
 		}
 	}
 }
 
 const ZLTextWordCursor &ZLTextWordCursor::operator = (ZLTextParagraphCursorPtr paragraphCursor) {
-	myWordNumber = 0;
-	myCharNumber = 0;
+	myElementIndex = 0;
+	myCharIndex = 0;
 	myParagraphCursor = paragraphCursor;
 	moveToParagraphStart();
 	return *this;
 }
 
-void ZLTextWordCursor::moveToParagraph(int paragraphNumber) {
-	if (!isNull() && (paragraphNumber != (int)myParagraphCursor->index())) {
-		myParagraphCursor = ZLTextParagraphCursor::cursor(myParagraphCursor->myModel, myParagraphCursor->myLanguage, paragraphNumber);
+void ZLTextWordCursor::moveToParagraph(int paragraphIndex) {
+	if (!isNull() && (paragraphIndex != (int)myParagraphCursor->index())) {
+		myParagraphCursor = ZLTextParagraphCursor::cursor(myParagraphCursor->myModel, myParagraphCursor->myLanguage, paragraphIndex);
 		moveToParagraphStart();
 	}
 }
@@ -343,15 +343,15 @@ bool ZLTextWordCursor::previousParagraph() {
 
 void ZLTextWordCursor::moveToParagraphStart() {
 	if (!isNull()) {
-		myWordNumber = 0;
-		myCharNumber = 0;
+		myElementIndex = 0;
+		myCharIndex = 0;
 	}
 }
 
 void ZLTextWordCursor::moveToParagraphEnd() {
 	if (!isNull()) {
-		myWordNumber = myParagraphCursor->paragraphLength();
-		myCharNumber = 0;
+		myElementIndex = myParagraphCursor->paragraphLength();
+		myCharIndex = 0;
 	}
 }
 
@@ -360,7 +360,7 @@ bool ZLTextWordCursor::operator < (const ZLTextWordCursor &cursor) const {
 	int pn1 = cursor.myParagraphCursor->index();
 	if (pn0 < pn1) return true;
 	if (pn1 < pn0) return false;
-	if (myWordNumber < cursor.myWordNumber) return true;
-	if (myWordNumber > cursor.myWordNumber) return false;
-	return myCharNumber < cursor.myCharNumber;
+	if (myElementIndex < cursor.myElementIndex) return true;
+	if (myElementIndex > cursor.myElementIndex) return false;
+	return myCharIndex < cursor.myCharIndex;
 }

@@ -21,7 +21,7 @@
 
 #include "ZLTextWord.h"
 
-ZLTextWord::ZLTextWord(const char *data, unsigned short size, size_t paragraphOffset, unsigned char level) : Data(data), Size(size), Length(ZLUnicodeUtil::utf8Length(Data, size)), ParagraphOffset(paragraphOffset), Level(level), myMark(0), myWidth(-1) {
+ZLTextWord::ZLTextWord(const char *data, unsigned short size, size_t paragraphOffset, unsigned char bidiLevel) : Data(data), Size(size), Length(ZLUnicodeUtil::utf8Length(Data, size)), ParagraphOffset(paragraphOffset), BidiLevel(bidiLevel), myMark(0), myWidth(-1) {
 }
 
 ZLTextWord::~ZLTextWord() {

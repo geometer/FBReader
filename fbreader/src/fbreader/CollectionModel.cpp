@@ -43,7 +43,7 @@ CollectionModel::CollectionModel(CollectionView &view, BookCollection &collectio
 CollectionModel::~CollectionModel() {
 }
 
-BookDescriptionPtr CollectionModel::bookByParagraphNumber(int num) {
+BookDescriptionPtr CollectionModel::bookByParagraphIndex(int num) {
 	if ((num < 0) || ((int)paragraphsNumber() <= num)) {
 		return 0;
 	}
@@ -51,13 +51,13 @@ BookDescriptionPtr CollectionModel::bookByParagraphNumber(int num) {
 	return (it != myParagraphToBook.end()) ? it->second : 0;
 }
 
-const std::string &CollectionModel::tagByParagraphNumber(int num) {
+const std::string &CollectionModel::tagByParagraphIndex(int num) {
 	static const std::string EMPTY;
 	std::map<ZLTextParagraph*,std::string>::iterator it = myParagraphToTag.find((*this)[num]);
 	return (it != myParagraphToTag.end()) ? it->second : EMPTY;
 }
 
-const std::vector<int> &CollectionModel::paragraphNumbersByBook(BookDescriptionPtr book) {
+const std::vector<int> &CollectionModel::paragraphIndicesByBook(BookDescriptionPtr book) {
 	return myBookToParagraph[book];
 }
 
@@ -80,6 +80,7 @@ void CollectionModel::buildWithTags() {
 	if (myView.ShowAllBooksTagOption.value()) {
 		ZLTextTreeParagraph *allBooksParagraph = createParagraph();
 		insertText(LIBRARY_AUTHOR_ENTRY, resource["allBooks"].value());
+		addBidiReset();
 		insertImage(TagInfoImageId);
 		myParagraphToTag[allBooksParagraph] = CollectionView::SpecialTagAllBooks;
 		addBooks(myCollection.books(), allBooksParagraph);
@@ -103,6 +104,7 @@ void CollectionModel::buildWithTags() {
 	if (!booksWithoutTags.empty()) {
 		ZLTextTreeParagraph *booksWithoutTagsParagraph = createParagraph();
 		insertText(LIBRARY_AUTHOR_ENTRY, resource["booksWithoutTags"].value());
+		addBidiReset();
 		insertImage(TagInfoImageId);
 		myParagraphToTag[booksWithoutTagsParagraph] = CollectionView::SpecialTagNoTagsBooks;
 		addBooks(booksWithoutTags, booksWithoutTagsParagraph);
@@ -140,6 +142,7 @@ void CollectionModel::buildWithTags() {
 				tagParagraph = createParagraph(tagParagraph);
 				myParagraphToTag[tagParagraph] = fullTagName.substr(0, newIndex);
 				insertText(LIBRARY_AUTHOR_ENTRY, subTag);
+				addBidiReset();
 				insertImage(TagInfoImageId);
 				insertImage(RemoveTagImageId);
 			}
@@ -173,6 +176,7 @@ void CollectionModel::addBooks(const Books &books, ZLTextTreeParagraph *root) {
 			author = description->author();
 			authorParagraph = createParagraph(root);
 			insertText(LIBRARY_AUTHOR_ENTRY, author->displayName());
+			addBidiReset();
 			//insertImage(AuthorInfoImageId);
 			currentSeriesName.erase();
 			seriesParagraph = 0;
@@ -186,12 +190,14 @@ void CollectionModel::addBooks(const Books &books, ZLTextTreeParagraph *root) {
 			currentSeriesName = seriesName;
 			seriesParagraph = createParagraph(authorParagraph);
 			insertText(LIBRARY_BOOK_ENTRY, seriesName);
+			addBidiReset();
 			//insertImage(SeriesOrderImageId);
 		}
 		ZLTextTreeParagraph *bookParagraph = createParagraph(
 			(seriesParagraph == 0) ? authorParagraph : seriesParagraph
 		);
 		insertText(LIBRARY_BOOK_ENTRY, description->title());
+		addBidiReset();
 		insertImage(BookInfoImageId);
 		if (myCollection.isBookExternal(description)) {
 			insertImage(RemoveBookImageId);

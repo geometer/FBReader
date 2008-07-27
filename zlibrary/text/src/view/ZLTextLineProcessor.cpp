@@ -84,7 +84,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		nodeInfo.IsLeaf = treeParagraph.children().empty();
 		nodeInfo.IsOpen = treeParagraph.isOpen();
 		nodeInfo.IsFirstLine = isFirstLine;
-		nodeInfo.ParagraphNumber = paragraphCursor.index();
+		nodeInfo.ParagraphIndex = paragraphCursor.index();
 
 		nodeInfo.VerticalLinesStack.reserve(treeParagraph.depth() - 1);
 		if (treeParagraph.depth() > 1) {
@@ -99,25 +99,15 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 	}
 
 	if (isFirstLine) {
-		ZLTextElement::Kind elementKind = paragraphCursor[current.wordNumber()].kind();
+		ZLTextElement::Kind elementKind = paragraphCursor[current.elementIndex()].kind();
 		while ((elementKind == ZLTextElement::CONTROL_ELEMENT) ||
 					 (elementKind == ZLTextElement::FORCED_CONTROL_ELEMENT)) {
-			const ZLTextElement &element = paragraphCursor[current.wordNumber()];
-			switch (elementKind) {
-				case ZLTextElement::CONTROL_ELEMENT:
-					myStyle.applyControl((const ZLTextControlElement&)element);
-					break;
-				case ZLTextElement::FORCED_CONTROL_ELEMENT:
-					myStyle.applyControl((const ZLTextStyleElement&)element);
-					break;
-				default:
-					break;
-			}
+			myStyle.applySingleControl(paragraphCursor[current.elementIndex()]);
 			current.nextWord();
-			if (current.equalWordNumber(end)) {
+			if (current.equalElementIndex(end)) {
 				break;
 			}
-			elementKind = paragraphCursor[current.wordNumber()].kind();
+			elementKind = paragraphCursor[current.elementIndex()].kind();
 		}
 		info.StartStyle = myStyle.textStyle();
 		info.StartBidiLevel = myStyle.bidiLevel();
@@ -139,7 +129,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 	}
 	info.Width = info.LeftIndent;
 
-	if (info.RealStart.equalWordNumber(end)) {
+	if (info.RealStart.equalElementIndex(end)) {
 	  info.End = info.RealStart;
 		return infoPtr;
 	}
@@ -151,21 +141,16 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 	int lastSpaceWidth = 0;
 	int removeLastSpace = false;
 
-	ZLTextElement::Kind elementKind = paragraphCursor[newInfo.End.wordNumber()].kind();
+	ZLTextElement::Kind elementKind = paragraphCursor[newInfo.End.elementIndex()].kind();
 
 	bool breakedAtFirstWord = false;
 	do {
-		const ZLTextElement &element = paragraphCursor[newInfo.End.wordNumber()];
-		newInfo.Width += myStyle.elementWidth(element, newInfo.End.charNumber(), metrics);
+		const ZLTextElement &element = paragraphCursor[newInfo.End.elementIndex()];
+		newInfo.Width += myStyle.elementWidth(element, newInfo.End.charIndex(), metrics);
 		newInfo.Height = std::max(newInfo.Height, myStyle.elementHeight(element, metrics));
 		newInfo.Descent = std::max(newInfo.Descent, myStyle.elementDescent(element));
+		myStyle.applySingleControl(element);
 		switch (elementKind) {
-			case ZLTextElement::CONTROL_ELEMENT:
-				myStyle.applyControl((const ZLTextControlElement&)element);
-				break;
-			case ZLTextElement::FORCED_CONTROL_ELEMENT:
-				myStyle.applyControl((const ZLTextStyleElement&)element);
-				break;
 			case ZLTextElement::WORD_ELEMENT:
 			case ZLTextElement::IMAGE_ELEMENT:
 				wordOccured = true;
@@ -182,12 +167,13 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 				break;
 			case ZLTextElement::EMPTY_LINE_ELEMENT:
 				newInfo.IsVisible = true;
+				break;
 			default:
 				break;
 		}
 
 		if (newInfo.Width > maxWidth) {
-			if (!info.End.equalWordNumber(start)) {
+			if (!info.End.equalElementIndex(start)) {
 				break;
 			}
 			if (useHyphenator && myStyle.textStyle()->allowHyphenations() &&
@@ -199,10 +185,10 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 		ZLTextElement::Kind previousKind = elementKind;
 		newInfo.End.nextWord();
-		bool allowBreak = newInfo.End.equalWordNumber(end);
+		bool allowBreak = newInfo.End.equalElementIndex(end);
 		bool nbspaceBreak = false;
 		if (!allowBreak) {
-			elementKind = paragraphCursor[newInfo.End.wordNumber()].kind();
+			elementKind = paragraphCursor[newInfo.End.elementIndex()].kind();
 			if (elementKind == ZLTextElement::NB_HSPACE_ELEMENT) {
 				if (allowBreakAtNBSpace) {
 					allowBreak = true;
@@ -229,14 +215,14 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 			storedBidiLevel = myStyle.bidiLevel();
 			removeLastSpace = !wordOccured && (info.SpaceCounter > 0);
 		}
-	} while (!newInfo.End.equalWordNumber(end));
+	} while (!newInfo.End.equalElementIndex(end));
 
-	if (!newInfo.End.equalWordNumber(end) && useHyphenator &&
+	if (!newInfo.End.equalElementIndex(end) && useHyphenator &&
 		 myStyle.textStyle()->allowHyphenations()) {
-		const ZLTextElement &element = paragraphCursor[newInfo.End.wordNumber()];
+		const ZLTextElement &element = paragraphCursor[newInfo.End.elementIndex()];
 		if (element.kind() == ZLTextElement::WORD_ELEMENT) {
-			const int startCharNumber = newInfo.End.charNumber();
-			newInfo.Width -= myStyle.elementWidth(element, startCharNumber, metrics);
+			const int startCharIndex = newInfo.End.charIndex();
+			newInfo.Width -= myStyle.elementWidth(element, startCharIndex, metrics);
 			const ZLTextWord &word = (ZLTextWord&)element;
 			int spaceLeft = maxWidth - newInfo.Width;
 			if (breakedAtFirstWord ||
@@ -246,26 +232,26 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 				ZLTextHyphenationInfo hyphenationInfo = ZLTextHyphenator::instance().info(word);
 				int hyphenationPosition = word.Length - 1;
 				int subwordWidth = 0;
-				for (; hyphenationPosition > startCharNumber; --hyphenationPosition) {
+				for (; hyphenationPosition > startCharIndex; --hyphenationPosition) {
 					if (hyphenationInfo.isHyphenationPossible(hyphenationPosition)) {
-						subwordWidth = myStyle.wordWidth(word, startCharNumber, hyphenationPosition - startCharNumber, ucs4string[hyphenationPosition - 1] != '-');
+						subwordWidth = myStyle.wordWidth(word, startCharIndex, hyphenationPosition - startCharIndex, ucs4string[hyphenationPosition - 1] != '-');
 						if (subwordWidth <= spaceLeft) {
 							break;
 						}
 					}
 				}
-				if ((hyphenationPosition == startCharNumber) &&
-						(info.End.wordNumber() <= info.RealStart.wordNumber())) {
+				if ((hyphenationPosition == startCharIndex) &&
+						(info.End.elementIndex() <= info.RealStart.elementIndex())) {
 					hyphenationPosition = word.Length;
-					subwordWidth = myStyle.elementWidth(element, startCharNumber, metrics);
+					subwordWidth = myStyle.elementWidth(element, startCharIndex, metrics);
 				}
-				if (hyphenationPosition > startCharNumber) {
+				if (hyphenationPosition > startCharIndex) {
 					newInfo.Width += subwordWidth;
 					newInfo.setTo(info);
 					storedStyle = myStyle.textStyle();
 					storedBidiLevel = myStyle.bidiLevel();
 					removeLastSpace = false;
-					info.End.setCharNumber(hyphenationPosition);
+					info.End.setCharIndex(hyphenationPosition);
 				}
 			}
 		}
@@ -285,7 +271,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		info.VSpaceAfter = myStyle.textStyle()->spaceAfter(metrics);
 	}
 
-	if (!info.End.equalWordNumber(end) || end.isEndOfParagraph()) {
+	if (!info.End.equalElementIndex(end) || end.isEndOfParagraph()) {
 		myLineInfoCache.insert(infoPtr);
 	}
 

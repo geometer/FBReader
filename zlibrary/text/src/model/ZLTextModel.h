@@ -68,6 +68,7 @@ public:
 	void addText(const std::vector<std::string> &text);
 	void addImage(const std::string &id, const ZLImageMap &imageMap, short vOffset);
 	void addFixedHSpace(unsigned char length);
+	void addBidiReset();
 
 protected:
 	void addParagraphInternal(ZLTextParagraph *paragraph);

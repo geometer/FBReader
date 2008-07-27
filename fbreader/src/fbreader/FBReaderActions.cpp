@@ -318,7 +318,7 @@ bool GotoPreviousTOCSectionAction::isEnabled() {
 		if (cursor.isNull()) {
 			return false;
 		}
-		if (cursor.wordNumber() > 0) {
+		if (cursor.elementIndex() > 0) {
 			return true;
 		}
 		return
@@ -336,7 +336,7 @@ void GotoPreviousTOCSectionAction::run() {
 	int reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current]));
 	const ZLTextWordCursor &cursor = fbreader().bookTextView().startCursor();
 	if (!cursor.isNull() &&
-			(cursor.wordNumber() == 0) &&
+			(cursor.elementIndex() == 0) &&
 			(reference == (int)cursor.paragraphCursor().index())) {
 		reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current - 1]));
 	}
@@ -375,7 +375,7 @@ bool SelectionAction::isVisible() {
 }
 
 bool SelectionAction::isEnabled() {
-	return isVisible() && !textView().selectionModel().getText().empty();
+	return isVisible() && !textView().selectionModel().text().empty();
 }
 
 ZLTextView &SelectionAction::textView() {
@@ -401,7 +401,7 @@ bool OpenSelectedTextInDictionaryAction::isVisible() {
 }
 
 void OpenSelectedTextInDictionaryAction::run() {
-	fbreader().openInDictionary(textView().selectionModel().getText());
+	fbreader().openInDictionary(textView().selectionModel().text());
 }
 
 ClearSelectionAction::ClearSelectionAction(FBReader &fbreader) : SelectionAction(fbreader) {

@@ -31,7 +31,7 @@ struct ZLTextTreeNodeInfo {
 	bool IsLeaf;
 	bool IsOpen;
 	bool IsFirstLine;
-	int ParagraphNumber;
+	int ParagraphIndex;
 	std::vector<bool> VerticalLinesStack;
 };
 
