@@ -20,6 +20,7 @@
 #include <ZLDialogManager.h>
 #include <ZLDialog.h>
 #include <ZLStringUtil.h>
+#include <ZLOptionEntry.h>
 
 #include <ZLTextView.h>
 
