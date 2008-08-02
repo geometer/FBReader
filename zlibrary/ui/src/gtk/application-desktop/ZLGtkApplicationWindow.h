@@ -26,11 +26,14 @@
 #include <gtk/gtkwidget.h>
 #include <gtk/gtkwindow.h>
 #include <gtk/gtktoolbar.h>
+#include <gtk/gtktoolitem.h>
+#include <gtk/gtkmenutoolbutton.h>
+#include <gtk/gtkentry.h>
 
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
-#include "../optionView/ZLGtkOptionViewHolder.h"
+#include "../../../../core/src/application/ZLToolbar.h"
 
-class ZLOptionView;
+class ZLGtkViewWidget;
 
 class ZLGtkApplicationWindow : public ZLDesktopApplicationWindow { 
 
@@ -40,8 +43,9 @@ public:
 
 private:
 	ZLViewWidget *createViewWidget();
-	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void init();
+	void refresh();
 	void close();
 
 	void grabAllKeys(bool grab);
@@ -53,49 +57,68 @@ private:
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
-	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
-	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
+	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
+	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 public:
 	bool handleKeyEventSlot(GdkEventKey *event);
 	void handleScrollEventSlot(GdkEventScroll *event);
-	void onGtkButtonPress(GtkWidget *gtkButton);
+	void onGtkButtonPress(GtkToolItem *gtkButton);
 
 	GtkWindow *getMainWindow() { return myMainWindow; }
+	void setFocusToMainWidget();
+
+public:
+	class GtkEntryParameter : public VisualParameter {
+
+	public:
+		GtkEntryParameter(ZLGtkApplicationWindow &window, const std::string &actionId, int maxWidth);
+		void onKeyPressed(const std::string &keyName);
+		GtkToolItem *createToolItem();
+
+	private:
+		std::string internalValue() const;
+		void internalSetValue(const std::string &value);
+
+	private:
+		ZLGtkApplicationWindow &myWindow;
+		const std::string myActionId;
+		GtkEntry *myEntry;
+	};
 
 private:
 	GtkWindow *myMainWindow;
+	ZLGtkViewWidget *myViewWidget;
 
 	GtkWidget *myVBox;
 
 	GdkCursor *myHyperlinkCursor;
 	bool myHyperlinkCursorIsUsed;
 
-	class Toolbar : public ZLGtkOptionViewHolder {
+	class Toolbar {
 
 	public:
 		Toolbar(ZLGtkApplicationWindow *window);
 
 		GtkWidget *toolbarWidget() const;
 
-		void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
-		void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
-		void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
-		ZLApplication::Toolbar::ButtonItem &buttonItemByWidget(GtkWidget *gtkButton);
+		void addToolbarItem(ZLToolbar::ItemPtr item);
+		void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
+		void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
+		ZLToolbar::AbstractButtonItem &buttonItemByWidget(GtkToolItem *gtkButton);
 
 	private:
-		void attachWidget(ZLOptionView &view, GtkWidget *widget);
-		void attachWidgets(ZLOptionView &view, GtkWidget *widget0, GtkWidget *widget1);
+		GtkToolItem *createGtkToolButton(const ZLToolbar::AbstractButtonItem &button);
+		void updatePopupData(GtkMenuToolButton *button, shared_ptr<ZLPopupData> data);
 
 	private:
 		ZLGtkApplicationWindow *myWindow;
 		GtkToolbar *myGtkToolbar;
-		std::map<const ZLApplication::Toolbar::Item*,GtkWidget*> myButtonToWidget;
-		std::map<GtkWidget*,ZLApplication::Toolbar::ItemPtr> myWidgetToButton;
-		std::map<ZLApplication::Toolbar::ItemPtr,int> mySeparatorMap;
-		std::vector<std::pair<ZLApplication::Toolbar::ItemPtr,bool> > mySeparatorVisibilityMap;
-		std::vector<shared_ptr<ZLOptionView> > myViews;
-		int myWidgetCounter;
+		std::map<const ZLToolbar::Item*,GtkToolItem*> myAbstractToGtk;
+		std::map<GtkToolItem*,ZLToolbar::ItemPtr> myGtkToAbstract;
+		std::map<GtkToolItem*,size_t> myPopupIdMap;
+
+	friend class ZLGtkApplicationWindow;
 	};
 
 	Toolbar myToolbar;
