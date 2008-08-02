@@ -22,6 +22,9 @@
 #include "ZLApplication.h"
 #include "ZLApplicationWindow.h"
 #include "ZLKeyBindings.h"
+#include "ZLToolbar.h"
+#include "ZLMenu.h"
+#include "ZLPopupData.h"
 #include "../view/ZLView.h"
 #include "../view/ZLPaintContext.h"
 
@@ -94,8 +97,8 @@ ZLApplicationWindow::ZLApplicationWindow(ZLApplication *application) : myApplica
 void ZLApplicationWindow::init() {
 	myApplication->myViewWidget = createViewWidget();
 
-	const ZLApplication::Toolbar::ItemVector &toolbarItems = myApplication->toolbar().items();
-	for (ZLApplication::Toolbar::ItemVector::const_iterator it = toolbarItems.begin(); it != toolbarItems.end(); ++it) {
+	const ZLToolbar::ItemVector &toolbarItems = myApplication->toolbar().items();
+	for (ZLToolbar::ItemVector::const_iterator it = toolbarItems.begin(); it != toolbarItems.end(); ++it) {
 		addToolbarItem(*it);
 	}
 
@@ -199,27 +202,16 @@ void ZLApplication::trackStylus(bool track) {
 }
 
 void ZLApplicationWindow::refresh() {
-	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
+	const ZLToolbar::ItemVector &items = application().toolbar().items();
 	bool enableToolbarSpace = false;
-	ZLApplication::Toolbar::ItemPtr lastSeparator = 0;
-	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+	ZLToolbar::ItemPtr lastSeparator = 0;
+	for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		switch ((*it)->type()) {
-			case ZLApplication::Toolbar::Item::OPTION_ENTRY:
+			case ZLToolbar::Item::TEXT_FIELD:
+			case ZLToolbar::Item::PLAIN_BUTTON:
+			case ZLToolbar::Item::MENU_BUTTON:
 				{
-					bool visible = ((const ZLApplication::Toolbar::OptionEntryItem&)**it).entry()->isVisible();
-					if (visible) {
-						if (!lastSeparator.isNull()) {
-							setToolbarItemState(lastSeparator, true, true);
-							lastSeparator = 0;
-						}
-						enableToolbarSpace = true;
-					}
-					setToolbarItemState(*it, visible, true);
-				}
-				break;
-			case ZLApplication::Toolbar::Item::BUTTON:
-				{
-					const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
+					ZLToolbar::ActionItem &button = (ZLToolbar::ActionItem&)**it;
 					const std::string &id = button.actionId();
         
 					const bool visible = application().isActionVisible(id);
@@ -232,18 +224,38 @@ void ZLApplicationWindow::refresh() {
 						}
 						enableToolbarSpace = true;
 					}
+					setToolbarItemState(*it, visible, enabled);
+				}
+				break;
+			case ZLToolbar::Item::TOGGLE_BUTTON:
+				{
+					ZLToolbar::ToggleButtonItem &button = (ZLToolbar::ToggleButtonItem&)**it;
+					const std::string &id = button.actionId();
+        
+					const bool visible = application().isActionVisible(id);
+					const bool enabled = application().isActionEnabled(id);
+        
+					if (visible) {
+						if (!lastSeparator.isNull()) {
+							setToolbarItemState(lastSeparator, true, true);
+							lastSeparator = 0;
+						}
+						enableToolbarSpace = true;
+					}
+					/*
 					if (!enabled && button.isPressed()) {
-						shared_ptr<ZLApplication::Toolbar::ButtonGroup> group = button.buttonGroup();
-						group->press(0);
-						application().doAction(group->UnselectAllButtonsActionId);
+						button.buttonGroup().press(0);
+						//application().doAction(group->UnselectAllButtonsActionId);
 						myToggleButtonLock = true;
 						setToggleButtonState(button);
 						myToggleButtonLock = false;
 					}
+					*/
 					setToolbarItemState(*it, visible, enabled);
+					setToggleButtonState(button);
 				}
 				break;
-			case ZLApplication::Toolbar::Item::SEPARATOR:
+			case ZLToolbar::Item::SEPARATOR:
 				if (enableToolbarSpace) {
 					lastSeparator = *it;
 					enableToolbarSpace = false;
@@ -326,21 +338,21 @@ shared_ptr<ZLPaintContext> ZLApplication::context() {
 	return myContext;
 }
 
-void ZLApplicationWindow::onButtonPress(ZLApplication::Toolbar::ButtonItem &button) {
+void ZLApplicationWindow::onButtonPress(ZLToolbar::AbstractButtonItem &button) {
 	if (myToggleButtonLock) {
 		return;
 	}
-	if (button.isToggleButton()) {
+	if (button.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
+		ZLToolbar::ToggleButtonItem &toggleButton = (ZLToolbar::ToggleButtonItem&)button;
 		myToggleButtonLock = true;
-		if (button.isPressed()) {
-			setToggleButtonState(button);
+		if (toggleButton.isPressed()) {
+			setToggleButtonState(toggleButton);
 			myToggleButtonLock = false;
 			return;
 		} else {
-			button.press();
-			shared_ptr<ZLApplication::Toolbar::ButtonGroup> group = button.buttonGroup();
-			const std::set<const ZLApplication::Toolbar::ButtonItem*> &items = group->Items;
-			for (std::set<const ZLApplication::Toolbar::ButtonItem*>::const_iterator it = items.begin(); it != items.end(); ++it) {
+			toggleButton.press();
+			const ZLToolbar::ButtonGroup::ItemSet &items = toggleButton.buttonGroup().Items;
+			for (ZLToolbar::ButtonGroup::ItemSet::const_iterator it = items.begin(); it != items.end(); ++it) {
 				setToggleButtonState(**it);
 			}
 		}
@@ -351,4 +363,55 @@ void ZLApplicationWindow::onButtonPress(ZLApplication::Toolbar::ButtonItem &butt
 
 bool ZLApplication::isViewFinal() const {
 	return true;
+}
+
+void ZLApplication::setVisualParameter(const std::string &id, const std::string &value) {
+	if (myWindow != 0) {
+		myWindow->setVisualParameter(id, value);
+	}
+}
+
+const std::string &ZLApplication::visualParameter(const std::string &id) {
+	if (myWindow != 0) {
+		return myWindow->visualParameter(id);
+	}
+	static const std::string EMPTY;
+	return EMPTY;
+}
+
+void ZLApplicationWindow::setVisualParameter(const std::string &id, const std::string &value) {
+	std::map<std::string,shared_ptr<VisualParameter> >::iterator it = myParameterMap.find(id);
+	if (it != myParameterMap.end()) {
+		it->second->setValue(value);
+	}
+}
+
+const std::string &ZLApplicationWindow::visualParameter(const std::string &id) {
+	std::map<std::string,shared_ptr<VisualParameter> >::const_iterator it = myParameterMap.find(id);
+	if (it != myParameterMap.end()) {
+		return it->second->value();
+	}
+	static const std::string EMPTY;
+	return EMPTY;
+}
+
+void ZLApplicationWindow::addVisualParameter(const std::string &id, shared_ptr<VisualParameter> parameter) {
+	if (!parameter.isNull()) {
+		myParameterMap[id] = parameter;
+	}
+}
+
+ZLApplicationWindow::VisualParameter::~VisualParameter() {
+}
+
+const std::string &ZLApplicationWindow::VisualParameter::value() const {
+	myValue = internalValue();
+	return myValue;
+}
+
+void ZLApplicationWindow::VisualParameter::setValue(const std::string &value) {
+	if (value != myValue) {
+		myValue = value;
+		internalSetValue(value);
+	}
 }

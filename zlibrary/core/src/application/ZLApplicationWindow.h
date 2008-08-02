@@ -22,12 +22,16 @@
 
 #include <string>
 
-#include <ZLApplication.h>
+#include "ZLApplication.h"
+#include "ZLToolbar.h"
 
 class ZLApplicationWindow {
 
 protected:
 	ZLApplicationWindow(ZLApplication *application);
+
+public:
+	virtual ~ZLApplicationWindow();
 
 public:
 	ZLApplication &application() const;
@@ -37,14 +41,13 @@ protected:
 	// TODO: change to pure virtual
 	virtual void initMenu() {}
 
-	void onButtonPress(ZLApplication::Toolbar::ButtonItem &button);
+	void onButtonPress(ZLToolbar::AbstractButtonItem &button);
+	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
 	// TODO: change to pure virtual
-	virtual void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem&) {}
-	// TODO: change to pure virtual
-	virtual void setToolbarItemState(ZLApplication::Toolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {}
+	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {}
 
 	virtual ZLViewWidget *createViewWidget() = 0;
-	virtual void addToolbarItem(ZLApplication::Toolbar::ItemPtr item) = 0;
+	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
 
 	// TODO: change to non-virtual (?)
 	virtual void refresh();
@@ -63,12 +66,33 @@ protected:
 	// TODO: change to pure virtual (?)
 	virtual void setHyperlinkCursor(bool) {}
 
-public:
-	virtual ~ZLApplicationWindow();
+	void setVisualParameter(const std::string &id, const std::string &value);
+	const std::string &visualParameter(const std::string &id);
+
+protected:
+	class VisualParameter {
+
+	public:
+		virtual ~VisualParameter();
+
+		const std::string &value() const;
+		void setValue(const std::string &value);
+
+	protected:
+		virtual std::string internalValue() const = 0;
+		virtual void internalSetValue(const std::string &value) = 0;
+
+	private:
+		mutable std::string myValue;
+	};
+
+protected:
+	void addVisualParameter(const std::string &id, shared_ptr<VisualParameter> parameter);
 
 private:
 	ZLApplication *myApplication;
 	bool myToggleButtonLock;
+	std::map<std::string,shared_ptr<VisualParameter> > myParameterMap;
 
 friend class ZLApplication;
 };
