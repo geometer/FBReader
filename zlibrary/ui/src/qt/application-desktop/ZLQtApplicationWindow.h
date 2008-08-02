@@ -37,7 +37,7 @@ public:
 
 private:
 	ZLViewWidget *createViewWidget();
-	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void init();
 	void refresh();
 	void close();
@@ -55,15 +55,15 @@ private:
 	void keyPressEvent(QKeyEvent *event);
 	void wheelEvent(QWheelEvent *event);
 
-	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
-	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
+	void setToggleButtonState(const ZLToolbar::ButtonItem &button);
+	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 private:
 	class QToolBar *myToolBar;
 
 friend class ZLQtToolBarAction;
-	std::map<const ZLApplication::Toolbar::Item*, class ZLQtToolBarAction*> myActions;
-	std::map<ZLApplication::Toolbar::ItemPtr,QWidget*> mySeparatorMap;
+	std::map<const ZLToolbar::Item*, class ZLQtToolBarAction*> myActions;
+	std::map<ZLToolbar::ItemPtr,QWidget*> mySeparatorMap;
 
 	bool myFullScreen;
 	bool myWasMaximized;
@@ -78,13 +78,13 @@ class ZLQtToolBarAction : public QAction {
 	Q_OBJECT
 
 public:
-	ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLApplication::Toolbar::ButtonItem &item);
+	ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::ButtonItem &item);
 
 private slots:
 	void onActivated();
 
 private:
-	ZLApplication::Toolbar::ButtonItem &myItem;
+	ZLToolbar::ButtonItem &myItem;
 };
 
 #endif /* __ZLQTAPPLICATIONWINDOW_H__ */
