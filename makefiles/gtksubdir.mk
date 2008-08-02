@@ -3,10 +3,17 @@ include $(ROOTDIR)/makefiles/config.mk
 INCLUDE = $(ZINCLUDE) $(EXTERNALINCLUDE) $(GTKINCLUDE)
 
 HEADERS = $(wildcard *.h)
+CSOURCES = $(wildcard *.c)
 SOURCES = $(wildcard *.cpp)
-OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
+OBJECTS = $(patsubst %.c, %.o, $(CSOURCES))
+OBJECTS += $(patsubst %.cpp, %.o, $(SOURCES))
 
-.SUFFIXES: .cpp .o .h
+.SUFFIXES: .c .cpp .o .h
+
+.c.o:
+	@echo -n "Compiling $@ ..."
+	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
+	@echo " OK"
 
 .cpp.o:
 	@echo -n "Compiling $@ ..."
