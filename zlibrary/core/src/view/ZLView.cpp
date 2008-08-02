@@ -20,7 +20,7 @@
 #include "ZLView.h"
 #include "../application/ZLApplication.h"
 
-ZLView::ZLView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : myApplication(application), myContext(context) {
+ZLView::ZLView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : myApplication(application), myViewWidget(0), myContext(context) {
 }
 
 ZLView::~ZLView() {
@@ -31,7 +31,11 @@ void ZLView::setPaintContext(shared_ptr<ZLPaintContext> context) {
 }
 
 void ZLViewWidget::setView(shared_ptr<ZLView> view) {
+	if (myView != 0) {
+		myView->myViewWidget = 0;
+	}
 	myView = view;
+	view->myViewWidget = this;
 }
 
 bool ZLView::onStylusPress(int, int) {
@@ -52,4 +56,25 @@ bool ZLView::onStylusMovePressed(int, int) {
 
 bool ZLView::onFingerTap(int, int) {
 	return false;
+}
+
+void ZLView::setVerticalScrollbarEnabled(bool enabled) {
+	if (myViewWidget != 0) {
+		myViewWidget->setVerticalScrollbarEnabled(enabled);
+	}
+}
+
+void ZLView::setVerticalScrollbarParameters(size_t full, size_t from, size_t to, size_t step) {
+	if (myViewWidget != 0) {
+		myViewWidget->setVerticalScrollbarParameters(full, from, to, step);
+	}
+}
+
+void ZLViewWidget::onVerticalScrollbarMoved(size_t startValue) {
+	if (!myView.isNull()) {
+		myView->onVerticalScrollbarMoved(startValue);
+	}
+}
+
+void ZLView::onVerticalScrollbarMoved(size_t) {
 }

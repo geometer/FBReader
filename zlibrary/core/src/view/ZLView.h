@@ -27,6 +27,7 @@
 #include <ZLPaintContext.h>
 
 class ZLApplication;
+class ZLViewWidget;
 
 class ZLView {
 
@@ -54,13 +55,20 @@ protected:
 
 	bool hasContext() const;
 
+	void setVerticalScrollbarEnabled(bool enabled);
+	void setVerticalScrollbarParameters(size_t full, size_t from, size_t to, size_t step);
+	virtual void onVerticalScrollbarMoved(size_t startValue);
+
 private:
 	ZLApplication &myApplication;
+	ZLViewWidget *myViewWidget;
 	shared_ptr<ZLPaintContext> myContext;
 
 private:
 	ZLView(const ZLView&);
 	const ZLView &operator=(const ZLView&);
+
+friend class ZLViewWidget;
 };
 
 class ZLViewWidget {
@@ -85,6 +93,10 @@ public:
 
 	void rotate(Angle rotation);
 	Angle rotation() const;
+
+	virtual void setVerticalScrollbarEnabled(bool enabled) = 0;
+	virtual void setVerticalScrollbarParameters(size_t full, size_t from, size_t to, size_t step) = 0;
+	void onVerticalScrollbarMoved(size_t startValue);
 
 protected:
 	virtual void repaint() = 0;
