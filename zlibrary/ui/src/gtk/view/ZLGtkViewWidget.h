@@ -35,11 +35,15 @@ public:
 	int height() const;
 	void doPaint();
 
-	GtkWidget *area() { return myArea; }
+	GtkWidget *area();
+	GtkWidget *areaWithScrollbar();
 
 private:
 	void trackStylus(bool track);
 	void repaint();
+
+	void setVerticalScrollbarEnabled(bool enabled);
+	void setVerticalScrollbarParameters(size_t full, size_t from, size_t to, size_t step);
 
 	void cleanOriginalPixbuf();
 	void cleanRotatedPixbuf();
@@ -47,6 +51,7 @@ private:
 private:
 	ZLApplication *myApplication;
 	GtkWidget *myArea;
+	GtkWidget *myScrollArea;
 	GdkPixbuf *myOriginalPixbuf;
 	GdkPixbuf *myRotatedPixbuf;
 	GdkImage *myImage;

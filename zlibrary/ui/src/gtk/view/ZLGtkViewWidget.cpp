@@ -79,7 +79,7 @@ static void mouseMoved(GtkWidget*, GdkEventMotion *event, gpointer data) {
 		state = (GdkModifierType)event->state;
 	}
 	updatePoint(viewWidget, x, y);
-	if (state == 0) {
+	if ((state & 0xFF00) == 0) {
 		viewWidget->view()->onStylusMove(x, y);
 	} else {
 		viewWidget->view()->onStylusMovePressed(x, y);
@@ -98,10 +98,23 @@ int ZLGtkViewWidget::height() const {
 	return (myArea != 0) ? myArea->allocation.height : 0;
 }
 
+static void scrollbarMoved(GtkAdjustment *adjustment, gpointer data) {
+	((ZLGtkViewWidget*)data)->onVerticalScrollbarMoved(gtk_adjustment_get_value(adjustment));
+}
+
 ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle) : ZLViewWidget(initialAngle) {
 	myApplication = application;
 	myArea = gtk_drawing_area_new();
 	GTK_OBJECT_SET_FLAGS(myArea, GTK_CAN_FOCUS);
+
+	myScrollArea = gtk_scrolled_window_new(0, 0);
+	GtkAdjustment *vAdjustment = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(myScrollArea));
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(vAdjustment), "value_changed", GTK_SIGNAL_FUNC(scrollbarMoved), this);
+	gtk_container_add(GTK_CONTAINER(myScrollArea), myArea);
+	//gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(myScrollArea), myArea);
+	setVerticalScrollbarEnabled(true);
+	setVerticalScrollbarParameters(1000, 490, 510, 20);
+
 	myOriginalPixbuf = 0;
 	myRotatedPixbuf = 0;
 	gtk_widget_set_double_buffered(myArea, false);
@@ -111,6 +124,24 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle)
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), this);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "expose_event", GTK_SIGNAL_FUNC(::doPaint), this);
 	myRepaintBlocked = false;
+}
+
+void ZLGtkViewWidget::setVerticalScrollbarEnabled(bool enabled) {
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(myScrollArea), GTK_POLICY_NEVER, enabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER);
+	gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(myScrollArea)));
+}
+
+void ZLGtkViewWidget::setVerticalScrollbarParameters(size_t full, size_t from, size_t to, size_t step) {
+	GtkAdjustment *vAdjustment =
+		gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(myScrollArea));
+	vAdjustment->lower = 0;
+	vAdjustment->upper = full;
+	vAdjustment->value = from;
+	vAdjustment->step_increment = step;
+	vAdjustment->page_increment = step;
+	vAdjustment->page_size = to - from;
+	gtk_scrolled_window_set_vadjustment(GTK_SCROLLED_WINDOW(myScrollArea), vAdjustment);
+	gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(myScrollArea)));
 }
 
 ZLGtkViewWidget::~ZLGtkViewWidget() {
@@ -206,4 +237,12 @@ void ZLGtkViewWidget::doPaint()	{
 	myRepaintBlocked = true;
 	myApplication->refreshWindow();
 	myRepaintBlocked = false;
+}
+
+GtkWidget *ZLGtkViewWidget::area() {
+	return myArea;
+}
+
+GtkWidget *ZLGtkViewWidget::areaWithScrollbar() {
+	return myScrollArea;
 }
