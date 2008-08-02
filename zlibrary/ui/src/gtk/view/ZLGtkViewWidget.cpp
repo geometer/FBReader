@@ -112,8 +112,7 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle)
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(vAdjustment), "value_changed", GTK_SIGNAL_FUNC(scrollbarMoved), this);
 	gtk_container_add(GTK_CONTAINER(myScrollArea), myArea);
 	//gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(myScrollArea), myArea);
-	setVerticalScrollbarEnabled(true);
-	setVerticalScrollbarParameters(1000, 490, 510, 20);
+	setVerticalScrollbarEnabled(false);
 
 	myOriginalPixbuf = 0;
 	myRotatedPixbuf = 0;
@@ -227,11 +226,9 @@ void ZLGtkViewWidget::doPaint()	{
 				myRotatedPixbuf = gdk_pixbuf_new(GDK_COLORSPACE_RGB, false, 8, h, w);
 			}
 			gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage, 0, 0, 0, 0, w, h);
-			gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()),
-																0, 0, 0, 0, w, h);
+			gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
 			::rotate90(myRotatedPixbuf, myOriginalPixbuf, angle == DEGREES90);
-			gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf,
-											0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
+			gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
 			break;
 	}
 	myRepaintBlocked = true;
