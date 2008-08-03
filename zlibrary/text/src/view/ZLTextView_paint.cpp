@@ -25,6 +25,12 @@
 #include "ZLTextLineInfo.h"
 
 void ZLTextView::paint() {
+	bool dontUpdateScrollbar =
+		!myForceScrollbarUpdate &&
+		(myScrollbarUpdateIsFrozen ||
+		 (myPaintState == NOTHING_TO_PAINT) ||
+		 (myPaintState == READY));
+
 	preparePaintInfo();
 
 	myTextElementMap.clear();
@@ -59,11 +65,25 @@ void ZLTextView::paint() {
 	}
 
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
-	if (!indicatorInfo.isNull() && indicatorInfo->isVisible()) {
+	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR)) {
 		positionIndicator()->draw();
 	}
 
 	ZLTextParagraphCursorCache::cleanup();
+
+	const size_t full = positionIndicator()->sizeOfTextBeforeParagraph(positionIndicator()->endTextIndex());
+	const size_t from = positionIndicator()->sizeOfTextBeforeCursor(startCursor());
+	const size_t to = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
+
+	if (!indicatorInfo.isNull() && !dontUpdateScrollbar) {
+		bool showScrollbar =
+			indicatorInfo->type() == ZLTextPositionIndicatorInfo::OS_SCROLLBAR;
+		setScrollbarEnabled(ZLView::VERTICAL, showScrollbar);
+		if (showScrollbar) {
+			setScrollbarParameters(ZLView::VERTICAL, full, from, to, to - from);
+		}
+		myForceScrollbarUpdate = false;
+	}
 }
 
 int ZLTextView::areaBound(const ZLTextParagraphCursor &paragraph, const ZLTextElementArea &area, int toCharIndex, bool mainDir) {

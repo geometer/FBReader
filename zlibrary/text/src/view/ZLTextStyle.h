@@ -288,7 +288,13 @@ protected:
 public:
 	virtual ~ZLTextPositionIndicatorInfo();
 
-	virtual bool isVisible() const = 0;
+	enum Type {
+		OS_SCROLLBAR = 0,
+		FB_INDICATOR = 1,
+		NONE = 2
+	};
+
+	virtual Type type() const = 0;
 	virtual bool isSensitive() const = 0;
 	virtual bool isTextPositionShown() const = 0;
 	virtual bool isTimeShown() const = 0;

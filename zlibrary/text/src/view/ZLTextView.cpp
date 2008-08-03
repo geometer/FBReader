@@ -33,7 +33,7 @@
 #include "ZLTextWord.h"
 #include "ZLTextSelectionModel.h"
 
-ZLTextView::ZLTextView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this, application), myTreeStateIsFrozen(false) {
+ZLTextView::ZLTextView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this, application), myTreeStateIsFrozen(false), myScrollbarUpdateIsFrozen(false), myForceScrollbarUpdate(false) {
 }
 
 ZLTextView::~ZLTextView() {
@@ -148,10 +148,10 @@ int ZLTextView::paragraphIndexByCoordinate(int y) const {
 		} else if ((it->YStart <= y) || (it->ParagraphIndex == indexBefore)) {
 			return it->ParagraphIndex;
 		} else {
-			return -1;
+			return 0;
 		}
 	}
-	return -1;
+	return 0;
 }
 
 const ZLTextElementArea *ZLTextView::elementByCoordinates(int x, int y) const {
@@ -191,7 +191,7 @@ void ZLTextView::gotoMark(ZLTextMark mark) {
 	}
 }
 
-void ZLTextView::gotoParagraph(int num, bool last) {
+void ZLTextView::gotoParagraph(int num, bool end) {
 	if (myModel.isNull()) {
 		return;
 	}
@@ -201,12 +201,16 @@ void ZLTextView::gotoParagraph(int num, bool last) {
 			ZLTextTreeParagraph *tp = (ZLTextTreeParagraph*)(*myModel)[num];
 			if (myTreeStateIsFrozen) {
 				int corrected = num;
-				ZLTextTreeParagraph *parent = tp->parent();
-				while ((corrected > 0) && (parent != 0) && !parent->isOpen()) {
-					for (--corrected; ((corrected > 0) && parent != (*myModel)[corrected]); --corrected);
-					parent = parent->parent();
+				ZLTextTreeParagraph *visible = tp;
+				for (ZLTextTreeParagraph *parent = tp->parent(); parent != 0; parent = parent->parent()) {
+					if (!parent->isOpen()) {
+						visible = parent;
+					}
 				}
-				if (last && (corrected != num)) {
+				if (visible != tp) {
+					for (--corrected; ((corrected > 0) && visible != (*myModel)[corrected]); --corrected);
+				}
+				if (end && (corrected != num)) {
 					++corrected;
 				}
 				num = corrected;
@@ -217,7 +221,7 @@ void ZLTextView::gotoParagraph(int num, bool last) {
 		}
 	}
 
-	if (last) {
+	if (end) {
 		if ((num > 0) && (num <= (int)myModel->paragraphsNumber())) {
 			moveEndCursor(num);
 		}
@@ -297,7 +301,7 @@ bool ZLTextView::onStylusPress(int x, int y) {
 
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() &&
-			indicatorInfo->isVisible() &&
+			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR) &&
 			indicatorInfo->isSensitive()) {
 		myTreeStateIsFrozen = true;
 		bool indicatorAnswer = positionIndicator()->onStylusPress(x, y);
@@ -465,34 +469,63 @@ int ZLTextView::infoSize(const ZLTextLineInfo &info, SizeUnit unit) {
 
 int ZLTextView::textAreaHeight() const {
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
-	if (!indicatorInfo.isNull() && indicatorInfo->isVisible()) {
+	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR)) {
 		return viewHeight() - indicatorInfo->height() - indicatorInfo->offset();
 	} else {
 		return viewHeight();
 	}
 }
 
-void ZLTextView::gotoPage(size_t index) {
-	const size_t symbolIndex = index * 2048 - 128;
-	std::vector<size_t>::const_iterator it = std::lower_bound(myTextSize.begin(), myTextSize.end(), symbolIndex);
+void ZLTextView::gotoCharIndex(size_t charIndex) {
+	if (positionIndicator().isNull()) {
+		return;
+	}
+
 	std::vector<size_t>::const_iterator i = nextBreakIterator();
-	const size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
-	const size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
-	size_t paragraphIndex = std::min((size_t)(it - myTextSize.begin()), endIndex) - 1;
-	gotoParagraph(paragraphIndex, true);
+	const size_t startParagraphIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
+	const size_t endParagraphIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
+	const size_t fullTextSize = myTextSize[endParagraphIndex] - myTextSize[startParagraphIndex];
+	charIndex = std::min(charIndex, fullTextSize - 1);
+
+	std::vector<size_t>::const_iterator j = std::lower_bound(myTextSize.begin(), myTextSize.end(), charIndex + myTextSize[startParagraphIndex]);
+	size_t paragraphIndex = j - myTextSize.begin();
+	if ((*myModel)[paragraphIndex]->kind() == ZLTextParagraph::END_OF_SECTION_PARAGRAPH) {
+		gotoParagraph(paragraphIndex, true);
+		return;
+	}
+
+	if (paragraphIndex > startParagraphIndex) {
+		--paragraphIndex;
+	}
+	gotoParagraph(paragraphIndex, false);
 	preparePaintInfo();
-	const ZLTextWordCursor &cursor = endCursor();
-	if (!cursor.isNull() && (paragraphIndex == cursor.paragraphCursor().index())) {
-		if (!cursor.paragraphCursor().isLast() || !cursor.isEndOfParagraph()) {
-			size_t paragraphLength = cursor.paragraphCursor().paragraphLength();
-			if (paragraphLength > 0) {
-				size_t wordNum =
-					(myTextSize[startIndex] + symbolIndex - myTextSize[paragraphIndex]) *
-					paragraphLength / (myTextSize[endIndex] - myTextSize[startIndex]);
-				moveEndCursor(cursor.paragraphCursor().index(), wordNum, 0);
+	if (!positionIndicator().isNull()) {
+		size_t endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
+		while (endCharIndex > charIndex) {
+			scrollPage(false, SCROLL_LINES, 1);
+			preparePaintInfo();
+			if (positionIndicator()->sizeOfTextBeforeCursor(startCursor()) <= myTextSize[startParagraphIndex]) {
+				break;
 			}
+			endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
+		}
+		if (endCharIndex < charIndex) {
+			scrollPage(true, SCROLL_LINES, 1);
 		}
 	}
+}
+
+void ZLTextView::gotoPage(size_t index) {
+	gotoCharIndex(index * 2048);
+	scrollPage(false, SCROLL_LINES, 3);
+	application().refreshWindow();
+}
+
+size_t ZLTextView::pageIndex() {
+	if (empty() || positionIndicator().isNull() || endCursor().isNull()) {
+		return 0;
+	}
+	return positionIndicator()->sizeOfTextBeforeCursor(endCursor()) / 2048 + 1;
 }
 
 size_t ZLTextView::pageNumber() const {
@@ -503,4 +536,36 @@ size_t ZLTextView::pageNumber() const {
 	const size_t startIndex = (i != myTextBreaks.begin()) ? *(i - 1) : 0;
 	const size_t endIndex = (i != myTextBreaks.end()) ? *i : myModel->paragraphsNumber();
 	return (myTextSize[endIndex] - myTextSize[startIndex]) / 2048 + 1;
+}
+
+void ZLTextView::onScrollbarMoved(Direction direction, size_t /*full*/, size_t from, size_t to) {
+	if (direction != VERTICAL) {
+		return;
+	}
+
+	mySelectionModel.deactivate();
+
+  if (myModel.isNull()) {
+	  return;
+	}
+
+	if (startCursor().isNull() || endCursor().isNull()) {
+		return;
+	}
+
+	myScrollbarUpdateIsFrozen = true;
+	myTreeStateIsFrozen = true;
+	if (from == 0) {
+		scrollToStartOfText();
+	} else {
+		gotoCharIndex(to);
+	}
+	preparePaintInfo();
+	myTreeStateIsFrozen = false;
+	myScrollbarUpdateIsFrozen = false;
+	application().refreshWindow();
+}
+
+void ZLTextView::forceScrollbarUpdate() {
+	myForceScrollbarUpdate = true;
 }

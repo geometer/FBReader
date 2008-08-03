@@ -26,6 +26,7 @@
 #include "ZLMenu.h"
 #include "ZLPopupData.h"
 #include "../view/ZLView.h"
+#include "../view/ZLViewWidget.h"
 #include "../view/ZLPaintContext.h"
 
 const std::string ZLApplication::MouseScrollDownKey = "<MouseScrollDown>";
@@ -42,8 +43,8 @@ static const std::string AUTO_SAVE = "AutoSave";
 static const std::string TIMEOUT = "Timeout";
 
 ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
-	RotationAngleOption(ZLCategoryKey::CONFIG, ROTATION, ANGLE, ZLViewWidget::DEGREES90),
-	AngleStateOption(ZLCategoryKey::CONFIG, STATE, ANGLE, ZLViewWidget::DEGREES0),
+	RotationAngleOption(ZLCategoryKey::CONFIG, ROTATION, ANGLE, ZLView::DEGREES90),
+	AngleStateOption(ZLCategoryKey::CONFIG, STATE, ANGLE, ZLView::DEGREES0),
 	KeyboardControlOption(ZLCategoryKey::CONFIG, KEYBOARD, FULL_CONTROL, false),
 	ConfigAutoSavingOption(ZLCategoryKey::CONFIG, CONFIG, AUTO_SAVE, true),
 	ConfigAutoSaveTimeoutOption(ZLCategoryKey::CONFIG, CONFIG, TIMEOUT, 1, 6000, 30),
@@ -414,4 +415,8 @@ void ZLApplicationWindow::VisualParameter::setValue(const std::string &value) {
 		myValue = value;
 		internalSetValue(value);
 	}
+}
+
+ZLView::Angle ZLApplication::rotation() const {
+	return (myViewWidget != 0) ? myViewWidget->rotation() : ZLView::DEGREES0;
 }

@@ -30,8 +30,8 @@
 #include <ZLTime.h>
 #include <ZLResource.h>
 #include <ZLMessage.h>
+#include <ZLView.h>
 
-class ZLView;
 class ZLViewWidget;
 class ZLPaintContext;
 class ZLKeyBindings;
@@ -127,6 +127,7 @@ protected:
 
 	void setView(shared_ptr<ZLView> view);
 	shared_ptr<ZLView> currentView() const;
+	ZLView::Angle rotation() const;
 
 	void setFullscreen(bool fullscreen);
 	bool isFullscreen() const;
@@ -174,10 +175,8 @@ private:
 	void createMenubar();
 	const ZLMenubar &menubar() const;
 
-protected:
-	ZLViewWidget *myViewWidget;
-
 private:
+	ZLViewWidget *myViewWidget;
 	shared_ptr<ZLView> myInitialView;
 	std::map<std::string,shared_ptr<Action> > myActionMap;
 	mutable shared_ptr<ZLToolbar> myToolbar;

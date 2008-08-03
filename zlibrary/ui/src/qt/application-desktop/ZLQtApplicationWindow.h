@@ -55,7 +55,7 @@ private:
 	void keyPressEvent(QKeyEvent *event);
 	void wheelEvent(QWheelEvent *event);
 
-	void setToggleButtonState(const ZLToolbar::ButtonItem &button);
+	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 private:
@@ -78,13 +78,13 @@ class ZLQtToolBarAction : public QAction {
 	Q_OBJECT
 
 public:
-	ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::ButtonItem &item);
+	ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item);
 
 private slots:
 	void onActivated();
 
 private:
-	ZLToolbar::ButtonItem &myItem;
+	ZLToolbar::AbstractButtonItem &myItem;
 };
 
 #endif /* __ZLQTAPPLICATIONWINDOW_H__ */

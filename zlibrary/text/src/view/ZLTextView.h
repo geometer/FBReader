@@ -82,15 +82,17 @@ public:
 		std::string timeString() const;
 		size_t sizeOfParagraph(size_t paragraphNumber) const;
 		size_t sizeOfTextBeforeParagraph(size_t paragraphNumber) const;
-		size_t sizeOfTextBeforeCursor() const;
+		size_t sizeOfTextBeforeCursor(const ZLTextWordCursor &cursor) const;
 
 	private:
 		ZLTextView &myTextView;
 		const ZLTextPositionIndicatorInfo &myInfo;
 		int myExtraWidth;
+
+	friend class ZLTextView;
 	};
 
-	friend class ZLTextView::PositionIndicator;
+friend class ZLTextView::PositionIndicator;
 	
 private:
 	class ViewStyle {
@@ -144,6 +146,7 @@ public:
 	void clearCaches();
 
 	void gotoPage(size_t index);
+	size_t pageIndex();
 	size_t pageNumber() const;
 
 	void scrollPage(bool forward, ScrollingMode mode, unsigned int value);
@@ -171,17 +174,22 @@ public:
 
 	ZLTextSelectionModel &selectionModel();
 	void copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const;
+
+	virtual bool isSelectionEnabled() const = 0;
+
+	void forceScrollbarUpdate();
 	
 protected:
 	bool onStylusPress(int x, int y);
 	bool onStylusMovePressed(int x, int y);
 	bool onStylusRelease(int x, int y);
+	void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
 	void activateSelection(int x, int y);
 
 	virtual void paint();
 
-	int paragraphIndexByCoordinate(int y) const;
 	const ZLTextElementArea *elementByCoordinates(int x, int y) const;
+	int paragraphIndexByCoordinate(int y) const;
 
 	void rebuildPaintInfo(bool strong);
 	virtual void preparePaintInfo();
@@ -196,8 +204,6 @@ protected:
 	virtual int rightMargin() const = 0;
 	virtual int topMargin() const = 0;
 	virtual int bottomMargin() const = 0;
-
-	virtual bool isSelectionEnabled() const = 0;
 
 private:
 	int lineStartMargin() const;
@@ -245,6 +251,8 @@ private:
 	void addAreaToTextMap(const ZLTextElementArea &area);
 	void flushRevertedElements(unsigned char bidiLevel);
 
+	void gotoCharIndex(size_t charIndex);
+
 private:
 	shared_ptr<ZLTextModel> myModel;
 	std::string myLanguage;
@@ -280,6 +288,8 @@ private:
 	shared_ptr<PositionIndicator> myPositionIndicator;
 
 	bool myTreeStateIsFrozen;
+	bool myScrollbarUpdateIsFrozen;
+	bool myForceScrollbarUpdate;
 
 friend class ZLTextSelectionModel;
 };

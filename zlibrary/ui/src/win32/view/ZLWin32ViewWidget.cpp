@@ -17,10 +17,12 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include "ZLWin32ViewWidget.h"
 #include "ZLWin32PaintContext.h"
 
-ZLWin32ViewWidget::ZLWin32ViewWidget(ZLWin32ApplicationWindow &window) : ZLViewWidget((ZLViewWidget::Angle)window.application().AngleStateOption.value()), myWindow(window), myMouseCaptured(false), myRotator(0) {
+ZLWin32ViewWidget::ZLWin32ViewWidget(ZLWin32ApplicationWindow &window) : ZLViewWidget((ZLView::Angle)window.application().AngleStateOption.value()), myWindow(window), myMouseCaptured(false), myRotator(0) {
 }
 
 void ZLWin32ViewWidget::trackStylus(bool track) {
@@ -110,12 +112,12 @@ void ZLWin32ViewWidget::doPaint()	{
 	const int height = rectangle.bottom - rectangle.top - offset;
 
 	switch (rotation()) {
-		case DEGREES0:
-		case DEGREES180:
+		case ZLView::DEGREES0:
+		case ZLView::DEGREES180:
 			win32Context.updateInfo(window, width, height);
 			break;
-		case DEGREES90:
-		case DEGREES270:
+		case ZLView::DEGREES90:
+		case ZLView::DEGREES270:
 			win32Context.updateInfo(window, height, width);
 			break;
 	}
@@ -124,7 +126,7 @@ void ZLWin32ViewWidget::doPaint()	{
 	PAINTSTRUCT paintStructure;
 	HDC dc = BeginPaint(window, &paintStructure);
 	switch (rotation()) {
-		case DEGREES0:
+		case ZLView::DEGREES0:
 			if (myRotator != 0) {
 				delete myRotator;
 				myRotator = 0;
@@ -132,7 +134,7 @@ void ZLWin32ViewWidget::doPaint()	{
 			SetMapMode(dc, MM_TEXT);
 			BitBlt(dc, 0, offset, width + 1, height + 1, win32Context.displayContext(), 0, 0, SRCCOPY);
 			break;
-		case DEGREES180:
+		case ZLView::DEGREES180:
 		{
 			if (myRotator != 0) {
 				delete myRotator;
@@ -146,15 +148,15 @@ void ZLWin32ViewWidget::doPaint()	{
 			BitBlt(dc, 0, offset, width + 1, height + 1, win32Context.displayContext(), 0, 0, SRCCOPY);
 			break;
 		}
-		case DEGREES90:
-		case DEGREES270:
+		case ZLView::DEGREES90:
+		case ZLView::DEGREES270:
 			if (myRotator == 0) {
 				myRotator = new Rotator(width + 1, height + 1);
 			} else {
 				myRotator->setSize(width + 1, height + 1);
 			}
 
-			myRotator->setRotation(rotation() == DEGREES90);
+			myRotator->setRotation(rotation() == ZLView::DEGREES90);
 			myRotator->retrieve(win32Context.displayContext(), win32Context.buffer());
 			myRotator->rotate();
 			myRotator->draw(dc, offset);
@@ -188,4 +190,30 @@ void ZLWin32ViewWidget::onMouseMovePressed(int x, int y) {
 		y = context.height() - 1;
 	}
 	view()->onStylusMovePressed(x, y);
+}
+
+void ZLWin32ViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
+	ShowScrollBar(myWindow.mainWindow(), (direction == ZLView::VERTICAL) ? SB_VERT : SB_HORZ, enabled);
+}
+
+void ZLWin32ViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t /*step*/) {
+	SCROLLINFO info;
+	info.cbSize = sizeof(SCROLLINFO);
+	info.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
+	info.nMin = 0;
+	info.nMax = full;
+	info.nPage = to - from;
+	info.nPos = from;
+	size_t extra = 0;
+	if (info.nPage < full / 20) {
+		extra = full / 20 - info.nPage;
+		info.nPage = full / 20;
+	}
+	info.nMax += extra;
+	if (direction == ZLView::VERTICAL) {
+		myVScrollBarExtra = extra;
+	} else {
+		myHScrollBarExtra = extra;
+	}
+	SetScrollInfo(myWindow.mainWindow(), (direction == ZLView::VERTICAL) ? SB_VERT : SB_HORZ, &info, true);
 }

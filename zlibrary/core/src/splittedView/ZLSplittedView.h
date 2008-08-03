@@ -20,6 +20,7 @@
 #ifndef __ZLSPLITTEDVIEW_H__
 #define __ZLSPLITTEDVIEW_H__
 
+#include <ZLColor.h>
 #include <ZLView.h>
 
 class ZLSplittedView : public ZLView {

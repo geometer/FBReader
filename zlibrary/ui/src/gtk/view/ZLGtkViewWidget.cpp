@@ -28,18 +28,18 @@ static void updatePoint(ZLGtkViewWidget *viewWidget, int &x, int &y) {
 	switch (viewWidget->rotation()) {
 		default:
 			break;
-		case ZLViewWidget::DEGREES90:
+		case ZLView::DEGREES90:
 		{
 			int tmp = x;
 			x = viewWidget->height() - y;
 			y = tmp;
 			break;
 		}
-		case ZLViewWidget::DEGREES180:
+		case ZLView::DEGREES180:
 			x = viewWidget->width() - x;
 			y = viewWidget->height() - y;
 			break;
-		case ZLViewWidget::DEGREES270:
+		case ZLView::DEGREES270:
 		{
 			int tmp = x;
 			x = y;
@@ -86,8 +86,8 @@ static void mouseMoved(GtkWidget*, GdkEventMotion *event, gpointer data) {
 	}
 }
 
-static void doPaint(GtkWidget*, GdkEventExpose *event, gpointer data) {
-	((ZLGtkViewWidget*)data)->doPaint();
+static void doPaint(GtkWidget*, GdkEventExpose*, ZLGtkViewWidget *data) {
+	data->doPaint();
 }
 
 int ZLGtkViewWidget::width() const {
@@ -98,21 +98,38 @@ int ZLGtkViewWidget::height() const {
 	return (myArea != 0) ? myArea->allocation.height : 0;
 }
 
-static void scrollbarMoved(GtkAdjustment *adjustment, gpointer data) {
-	((ZLGtkViewWidget*)data)->onVerticalScrollbarMoved(gtk_adjustment_get_value(adjustment));
+static void vScrollbarMoved(GtkAdjustment *adjustment, ZLGtkViewWidget *data) {
+	data->onScrollbarMoved(
+		ZLView::VERTICAL,
+		(size_t)adjustment->upper,
+		(size_t)adjustment->value,
+		(size_t)(adjustment->value + adjustment->page_size)
+	);
 }
 
-ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle) : ZLViewWidget(initialAngle) {
+static void hScrollbarMoved(GtkAdjustment *adjustment, ZLGtkViewWidget *data) {
+	data->onScrollbarMoved(
+		ZLView::HORIZONTAL,
+		(size_t)adjustment->upper,
+		(size_t)adjustment->value,
+		(size_t)(adjustment->value + adjustment->page_size)
+	);
+}
+
+ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initialAngle) : ZLViewWidget(initialAngle) {
 	myApplication = application;
 	myArea = gtk_drawing_area_new();
 	GTK_OBJECT_SET_FLAGS(myArea, GTK_CAN_FOCUS);
 
-	myScrollArea = gtk_scrolled_window_new(0, 0);
-	GtkAdjustment *vAdjustment = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(myScrollArea));
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(vAdjustment), "value_changed", GTK_SIGNAL_FUNC(scrollbarMoved), this);
+	myScrollArea = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
+	GtkAdjustment *hAdjustment = gtk_scrolled_window_get_hadjustment(myScrollArea);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(hAdjustment), "value_changed", GTK_SIGNAL_FUNC(hScrollbarMoved), this);
+	GtkAdjustment *vAdjustment = gtk_scrolled_window_get_vadjustment(myScrollArea);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(vAdjustment), "value_changed", GTK_SIGNAL_FUNC(vScrollbarMoved), this);
 	gtk_container_add(GTK_CONTAINER(myScrollArea), myArea);
-	//gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(myScrollArea), myArea);
-	setVerticalScrollbarEnabled(false);
+	//gtk_scrolled_window_add_with_viewport(myScrollArea, myArea);
+	setScrollbarEnabled(ZLView::VERTICAL, false);
+	setScrollbarEnabled(ZLView::HORIZONTAL, false);
 
 	myOriginalPixbuf = 0;
 	myRotatedPixbuf = 0;
@@ -125,22 +142,36 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, Angle initialAngle)
 	myRepaintBlocked = false;
 }
 
-void ZLGtkViewWidget::setVerticalScrollbarEnabled(bool enabled) {
-	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(myScrollArea), GTK_POLICY_NEVER, enabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER);
-	gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(myScrollArea)));
+void ZLGtkViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
+	const bool hEnabled = (direction == ZLView::HORIZONTAL) && enabled;
+	const bool vEnabled = (direction == ZLView::VERTICAL) && enabled;
+	gtk_scrolled_window_set_policy(myScrollArea, hEnabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER, vEnabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER);
+	if (hEnabled) {
+		gtk_widget_queue_draw(gtk_scrolled_window_get_hscrollbar(myScrollArea));
+	}
+	if (vEnabled) {
+		gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(myScrollArea));
+	}
 }
 
-void ZLGtkViewWidget::setVerticalScrollbarParameters(size_t full, size_t from, size_t to, size_t step) {
-	GtkAdjustment *vAdjustment =
-		gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(myScrollArea));
-	vAdjustment->lower = 0;
-	vAdjustment->upper = full;
-	vAdjustment->value = from;
-	vAdjustment->step_increment = step;
-	vAdjustment->page_increment = step;
-	vAdjustment->page_size = to - from;
-	gtk_scrolled_window_set_vadjustment(GTK_SCROLLED_WINDOW(myScrollArea), vAdjustment);
-	gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(GTK_SCROLLED_WINDOW(myScrollArea)));
+void ZLGtkViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) {
+	GtkAdjustment *adjustment =
+		(direction == ZLView::VERTICAL) ?
+			gtk_scrolled_window_get_vadjustment(myScrollArea) :
+			gtk_scrolled_window_get_hadjustment(myScrollArea);
+	adjustment->lower = 0;
+	adjustment->upper = full;
+	adjustment->value = from;
+	adjustment->step_increment = step;
+	adjustment->page_increment = step;
+	adjustment->page_size = to - from;
+	if (direction == ZLView::VERTICAL) {
+		gtk_scrolled_window_set_vadjustment(myScrollArea, adjustment);
+		gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(myScrollArea));
+	} else {
+		gtk_scrolled_window_set_hadjustment(myScrollArea, adjustment);
+		gtk_widget_queue_draw(gtk_scrolled_window_get_hscrollbar(myScrollArea));
+	}
 }
 
 ZLGtkViewWidget::~ZLGtkViewWidget() {
@@ -175,8 +206,8 @@ void ZLGtkViewWidget::repaint()	{
 
 void ZLGtkViewWidget::doPaint()	{
 	ZLGtkPaintContext &gtkContext = (ZLGtkPaintContext&)view()->context();
-	Angle angle = rotation();
-	bool isRotated = (angle == DEGREES90) || (angle == DEGREES270);
+	ZLView::Angle angle = rotation();
+	bool isRotated = (angle == ZLView::DEGREES90) || (angle == ZLView::DEGREES270);
 	int w = isRotated ? myArea->allocation.height : myArea->allocation.width;
 	int h = isRotated ? myArea->allocation.width : myArea->allocation.height;
 	gtkContext.updatePixmap(myArea, w, h);
@@ -188,7 +219,7 @@ void ZLGtkViewWidget::doPaint()	{
 			gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(),
 											0, 0, 0, 0, myArea->allocation.width, myArea->allocation.height);
 			break;
-		case DEGREES180:
+		case ZLView::DEGREES180:
 			cleanRotatedPixbuf();
 			if ((myOriginalPixbuf != 0) &&
 					((gdk_pixbuf_get_width(myOriginalPixbuf) != w) ||
@@ -206,8 +237,8 @@ void ZLGtkViewWidget::doPaint()	{
 			gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myOriginalPixbuf,
 											0, 0, 0, 0, w, h, GDK_RGB_DITHER_NONE, 0, 0);
 			break;
-		case DEGREES90:
-		case DEGREES270:
+		case ZLView::DEGREES90:
+		case ZLView::DEGREES270:
 			if ((myOriginalPixbuf != 0) &&
 					((gdk_pixbuf_get_width(myOriginalPixbuf) != w) ||
 					 (gdk_pixbuf_get_height(myOriginalPixbuf) != h))) {
@@ -227,7 +258,7 @@ void ZLGtkViewWidget::doPaint()	{
 			}
 			gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage, 0, 0, 0, 0, w, h);
 			gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
-			::rotate90(myRotatedPixbuf, myOriginalPixbuf, angle == DEGREES90);
+			::rotate90(myRotatedPixbuf, myOriginalPixbuf, angle == ZLView::DEGREES90);
 			gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
 			break;
 	}
@@ -241,5 +272,5 @@ GtkWidget *ZLGtkViewWidget::area() {
 }
 
 GtkWidget *ZLGtkViewWidget::areaWithScrollbar() {
-	return myScrollArea;
+	return GTK_WIDGET(myScrollArea);
 }

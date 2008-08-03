@@ -22,6 +22,7 @@
 #include <QtGui/QImage>
 #include <QtGui/QIcon>
 #include <QtGui/QToolBar>
+#include <QtGui/QLineEdit>
 #include <QtGui/QMenuBar>
 #include <QtGui/QAction>
 #include <QtGui/QLayout>
@@ -39,12 +40,14 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 	new ZLQtApplicationWindow(application);
 }
 
-ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLApplication::Toolbar::ButtonItem &item) : QAction(parent), myItem(item) {
+ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), myItem(item) {
 	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	QPixmap icon((imagePrefix + myItem.iconName() + ".png").c_str());
 	setIcon(QIcon(icon));
 	QSize size = icon.size();
-	setCheckable(item.isToggleButton());
+	if (item.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
+		setCheckable(true);
+	}
 	setToolTip(QString::fromUtf8(myItem.tooltip().c_str()));
 	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
 }
@@ -53,7 +56,7 @@ void ZLQtToolBarAction::onActivated() {
 	((ZLQtApplicationWindow*)parent())->onButtonPress(myItem);
 }
 
-void ZLQtApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
+void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
 	myActions[&button]->setChecked(button.isPressed());
 }
 
@@ -63,9 +66,9 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	myWasMaximized(false),
 	myCursorIsHyperlink(false) {
 
-	//const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
-	//QPixmap icon(iconFileName.c_str());
-	//setIcon(icon);
+	const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
+	QPixmap icon(iconFileName.c_str());
+	setWindowIcon(icon);
 
 	//setWFlags(getWFlags() | WStyle_Customize);
 
@@ -112,7 +115,7 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 		myWidthOption.setValue(width());
 		myHeightOption.setValue(height());
 	}
-	for (std::map<const ZLApplication::Toolbar::Item*,QAction*>::iterator it = myActions.begin(); it != myActions.end(); ++it) {
+	for (std::map<const ZLToolbar::Item*,QAction*>::iterator it = myActions.begin(); it != myActions.end(); ++it) {
 		if (it->second != 0) {
 			delete it->second;
 		}
@@ -163,19 +166,39 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 	}
 }
 
-void ZLQtApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
-	QAction *action;
-	if (item->type() == ZLApplication::Toolbar::Item::BUTTON) {
-		ZLApplication::Toolbar::ButtonItem &buttonItem = (ZLApplication::Toolbar::ButtonItem&)*item;
-		action = new ZLQtToolBarAction(this, buttonItem);
-		myToolBar->addAction(action);
-	} else {
-		action = myToolBar->addSeparator();
+void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
+	QAction *action = 0;
+
+	switch (item->type()) {
+		case ZLToolbar::Item::PLAIN_BUTTON:
+		case ZLToolbar::Item::MENU_BUTTON:
+		case ZLToolbar::Item::TOGGLE_BUTTON:
+		{
+			ZLToolbar::AbstractButtonItem &buttonItem = (ZLToolbar::AbstractButtonItem&)*item;
+			action = new ZLQtToolBarAction(this, buttonItem);
+			myToolBar->addAction(action);
+			break;
+		}
+		case ZLToolbar::Item::TEXT_FIELD:
+		{
+			//ZLToolbar::TextFieldItem &textFieldItem =
+			//	(ZLToolbar::TextFieldItem&)*item;
+			//QLineEdit *edit = new QLineEdit(myToolBar);
+			//edit->setMaxLength(textFieldItem.maxWidth());
+			//action = myToolBar->addWidget(edit);
+			break;
+		}
+		case ZLToolbar::Item::SEPARATOR:
+			action = myToolBar->addSeparator();
+			break;
 	}
-	myActions[&*item] = action;
+
+	if (action != 0) {
+		myActions[&*item] = action;
+	}
 }
 
-void ZLQtApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
+void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
 	QAction *action = myActions[&*item];
 	if (action != 0) {
 		action->setEnabled(enabled);

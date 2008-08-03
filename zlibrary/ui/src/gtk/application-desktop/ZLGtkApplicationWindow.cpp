@@ -167,7 +167,7 @@ void ZLGtkApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool v
 }
 
 ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
-	myViewWidget = new ZLGtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
+	myViewWidget = new ZLGtkViewWidget(&application(), (ZLView::Angle)application().AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(myVBox), myViewWidget->areaWithScrollbar());
 	gtk_widget_show_all(myVBox);
 	return myViewWidget;

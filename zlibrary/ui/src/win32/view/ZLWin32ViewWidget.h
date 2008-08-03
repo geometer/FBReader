@@ -20,7 +20,7 @@
 #ifndef __ZLWIN32VIEWWIDGET_H__
 #define __ZLWIN32VIEWWIDGET_H__
 
-#include <ZLView.h>
+#include "../../../../core/src/view/ZLViewWidget.h"
 #include <ZLApplication.h>
 
 #include "../application/ZLWin32ApplicationWindow.h"
@@ -38,6 +38,9 @@ public:
 private:
 	void repaint();
 	void trackStylus(bool track);
+
+	void setScrollbarEnabled(ZLView::Direction direction, bool enabled);
+	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step);
 
 	void doPaint();
 
@@ -66,6 +69,9 @@ private:
 	};
 
 	Rotator *myRotator;
+		
+	int myHScrollBarExtra;
+	int myVScrollBarExtra;
 
 friend class ZLWin32ApplicationWindow;
 };

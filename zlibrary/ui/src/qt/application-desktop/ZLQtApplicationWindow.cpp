@@ -73,14 +73,16 @@ QPixmap *MyIconFactory::createPixmap(const QIconSet &set, QIconSet::Size size, Q
 	return new QPixmap(image);
 }
 
-ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::ButtonItem &item) : QAction(parent), myItem(item) {
+ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), myItem(item) {
 	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	QPixmap icon((imagePrefix + myItem.iconName() + ".png").c_str());
 	setIconSet(QIconSet(icon));
 	QSize size = icon.size();
 	QIconSet::setIconSize(QIconSet::Large, size);
 	QIconSet::setIconSize(QIconSet::Small, size);
-	setToggleAction(item.isToggleButton());
+	if (item.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
+		setToggleAction(true);
+	}
 	setToolTip(QString::fromUtf8(myItem.tooltip().c_str()));
 	connect(this, SIGNAL(activated()), this, SLOT(onActivated()));
 }
@@ -89,7 +91,7 @@ void ZLQtToolBarAction::onActivated() {
 	((ZLQtApplicationWindow*)parent())->onButtonPress(myItem);
 }
 
-void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ButtonItem &button) {
+void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
 	myActions[&button]->setOn(button.isPressed());
 }
 
@@ -203,14 +205,21 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 }
 
 void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
-	if (item->type() == ZLToolbar::Item::BUTTON) {
-		ZLToolbar::ButtonItem &buttonItem = (ZLToolbar::ButtonItem&)*item;
-		ZLQtToolBarAction *action = new ZLQtToolBarAction(this, buttonItem);
-		action->addTo(myToolBar);
-		myActions[&*item] = action;
-	} else {
-		myToolBar->addSeparator();
-		mySeparatorMap[item] = (QWidget*)myToolBar->children()->getLast();
+	switch (item->type()) {
+		case ZLToolbar::Item::PLAIN_BUTTON:
+		case ZLToolbar::Item::MENU_BUTTON:
+		case ZLToolbar::Item::TOGGLE_BUTTON:
+		{
+			ZLToolbar::AbstractButtonItem &buttonItem = (ZLToolbar::AbstractButtonItem&)*item;
+			ZLQtToolBarAction *action = new ZLQtToolBarAction(this, buttonItem);
+			action->addTo(myToolBar);
+			myActions[&*item] = action;
+			break;
+		}
+		case ZLToolbar::Item::SEPARATOR:
+			myToolBar->addSeparator();
+			mySeparatorMap[item] = (QWidget*)myToolBar->children()->getLast();
+			break;
 	}
 }
 

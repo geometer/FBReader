@@ -46,7 +46,7 @@ public:
 
 private:
 	ZLViewWidget *createViewWidget();
-	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void close();
 
 	void grabAllKeys(bool grab);
@@ -60,8 +60,10 @@ private:
 
 	void init();
 
-	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
-	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
+	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
+	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
+
+	void updateTextField(int idCommand);
 
 public:
 	HWND mainWindow() const;
@@ -80,6 +82,20 @@ public:
 */
 
 private:
+	class TextEditParameter : public VisualParameter {
+
+	public:
+		TextEditParameter(HWND textEdit);
+
+	private:
+		std::string internalValue() const;
+		void internalSetValue(const std::string &value);
+
+	private:
+		HWND myTextEdit;
+	};
+
+private:
 	ZLUnicodeUtil::Ucs2String myClassName;
 
 	HWND myMainWindow;
@@ -87,9 +103,11 @@ private:
 
 	ZLWin32ViewWidget *myWin32ViewWidget;
 
-	std::map<int,ZLApplication::Toolbar::ItemPtr> myButtonByActionCode;
-	std::map<ZLApplication::Toolbar::ItemPtr,int> mySeparatorNumbers;
+	std::map<int,ZLToolbar::ItemPtr> myTBItemByActionCode;
+	std::map<ZLToolbar::ItemPtr,int> mySeparatorNumbers;
 	std::map<std::string,int> myActionCodeById;
+	std::map<std::string,int> myTextFieldCodeById;
+	std::map<int,HWND> myTextFields;
 
 	bool myBlockMouseEvents;
 	int myKeyboardModifierMask;

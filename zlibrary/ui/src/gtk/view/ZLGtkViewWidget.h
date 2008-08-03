@@ -22,13 +22,13 @@
 
 #include <gtk/gtk.h>
 
-#include <ZLView.h>
+#include "../../../../core/src/view/ZLViewWidget.h"
 #include <ZLApplication.h>
 
 class ZLGtkViewWidget : public ZLViewWidget {
 
 public:
-	ZLGtkViewWidget(ZLApplication *application, Angle initialAngle);
+	ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initialAngle);
 	~ZLGtkViewWidget();
 
 	int width() const;
@@ -42,8 +42,8 @@ private:
 	void trackStylus(bool track);
 	void repaint();
 
-	void setVerticalScrollbarEnabled(bool enabled);
-	void setVerticalScrollbarParameters(size_t full, size_t from, size_t to, size_t step);
+	void setScrollbarEnabled(ZLView::Direction direction, bool enabled);
+	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step);
 
 	void cleanOriginalPixbuf();
 	void cleanRotatedPixbuf();
@@ -51,7 +51,7 @@ private:
 private:
 	ZLApplication *myApplication;
 	GtkWidget *myArea;
-	GtkWidget *myScrollArea;
+	GtkScrolledWindow *myScrollArea;
 	GdkPixbuf *myOriginalPixbuf;
 	GdkPixbuf *myRotatedPixbuf;
 	GdkImage *myImage;
