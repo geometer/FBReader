@@ -107,7 +107,7 @@ private:
 
 public:
 	ZLKeyBindings &keyBindings();
-	ZLKeyBindings &keyBindings(ZLViewWidget::Angle angle);
+	ZLKeyBindings &keyBindings(ZLView::Angle angle);
 
 	bool isDictionarySupported() const;
 	void openInDictionary(const std::string &word);
