@@ -96,11 +96,11 @@ int RotationTypeEntry::initialCheckedIndex() const {
 	switch (myAngleOption.value()) {
 		default:
 			return 0;
-		case ZLViewWidget::DEGREES90:
+		case ZLView::DEGREES90:
 			return 1;
-		case ZLViewWidget::DEGREES180:
+		case ZLView::DEGREES180:
 			return 2;
-		case ZLViewWidget::DEGREES270:
+		case ZLView::DEGREES270:
 			return 3;
 		case -1:
 			return 4;
@@ -108,16 +108,16 @@ int RotationTypeEntry::initialCheckedIndex() const {
 }
 
 void RotationTypeEntry::onAccept(int index) {
-	int angle = ZLViewWidget::DEGREES0;
+	int angle = ZLView::DEGREES0;
 	switch (index) {
 		case 1:
-			angle = ZLViewWidget::DEGREES90;
+			angle = ZLView::DEGREES90;
 			break;
 		case 2:
-			angle = ZLViewWidget::DEGREES180;
+			angle = ZLView::DEGREES180;
 			break;
 		case 3:
-			angle = ZLViewWidget::DEGREES270;
+			angle = ZLView::DEGREES270;
 			break;
 		case 4:
 			angle = -1;

@@ -444,19 +444,19 @@ void FBReader::clearTextCaches() {
 
 ZLKeyBindings &FBReader::keyBindings() {
 	return UseSeparateBindingsOption.value() ?
-		keyBindings(myViewWidget->rotation()) : myBindings0;
+		keyBindings(rotation()) : myBindings0;
 }
 
-ZLKeyBindings &FBReader::keyBindings(ZLViewWidget::Angle angle) {
+ZLKeyBindings &FBReader::keyBindings(ZLView::Angle angle) {
 	switch (angle) {
-		case ZLViewWidget::DEGREES0:
+		case ZLView::DEGREES0:
 		default:
 			return myBindings0;
-		case ZLViewWidget::DEGREES90:
+		case ZLView::DEGREES90:
 			return myBindings90;
-		case ZLViewWidget::DEGREES180:
+		case ZLView::DEGREES180:
 			return myBindings180;
-		case ZLViewWidget::DEGREES270:
+		case ZLView::DEGREES270:
 			return myBindings270;
 	}
 }
