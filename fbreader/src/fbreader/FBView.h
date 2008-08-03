@@ -70,10 +70,12 @@ class FBView : public ZLTextView {
 public:
 	static FBMargins& margins();
 	static FBIndicatorStyle& commonIndicatorInfo();
+	static ZLBooleanOption &selectionOption();
 
 private:
 	static shared_ptr<ZLTextPositionIndicatorInfo> ourIndicatorInfo;
 	static shared_ptr<FBMargins> ourMargins;
+	static shared_ptr<ZLBooleanOption> ourSelectionOption;
 
 protected:
 	void doTapScrolling(int y);
