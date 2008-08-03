@@ -89,7 +89,7 @@ public:
 	~FBReader();
 
 	void setMode(ViewMode mode);
-	ViewMode getMode() const;
+	ViewMode mode() const;
 
 private:
 	void initWindow();

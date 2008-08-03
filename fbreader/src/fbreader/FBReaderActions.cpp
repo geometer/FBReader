@@ -41,7 +41,7 @@ ModeDependentAction::ModeDependentAction(FBReader &fbreader, int visibleInModes)
 }
 
 bool ModeDependentAction::isVisible() {
-	return fbreader().getMode() & myVisibleInModes;
+	return fbreader().mode() & myVisibleInModes;
 }
 
 SetModeAction::SetModeAction(FBReader &fbreader, FBReader::ViewMode modeToSet, int visibleInModes) : ModeDependentAction(fbreader, visibleInModes), myModeToSet(modeToSet) {
@@ -83,7 +83,7 @@ bool ShowContentsAction::isVisible() {
 	if (((ContentsView&)*fbreader().myContentsView).isEmpty()) {
 		return false;
 	}
-	FBReader::ViewMode mode = fbreader().getMode();
+	FBReader::ViewMode mode = fbreader().mode();
 	return (mode == FBReader::BOOK_TEXT_MODE) || (mode == FBReader::FOOTNOTE_MODE);
 }
 
@@ -95,7 +95,7 @@ AddBookAction::AddBookAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool AddBookAction::isVisible() {
-	return fbreader().getMode() != FBReader::FOOTNOTE_MODE;
+	return fbreader().mode() != FBReader::FOOTNOTE_MODE;
 }
 
 void AddBookAction::run() {
@@ -145,12 +145,12 @@ UndoAction::UndoAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 bool UndoAction::isEnabled() {
-	return (fbreader().getMode() != FBReader::BOOK_TEXT_MODE) ||
+	return (fbreader().mode() != FBReader::BOOK_TEXT_MODE) ||
 					fbreader().bookTextView().canUndoPageMove();
 }
 
 void UndoAction::run() {
-	if (fbreader().getMode() == FBReader::BOOK_TEXT_MODE) {
+	if (fbreader().mode() == FBReader::BOOK_TEXT_MODE) {
 		fbreader().bookTextView().undoPageMove();
 	} else {
 		fbreader().restorePreviousMode();
@@ -220,7 +220,7 @@ OpenPreviousBookAction::OpenPreviousBookAction(FBReader &fbreader) : FBAction(fb
 }
 
 bool OpenPreviousBookAction::isVisible() {
-	if ((fbreader().getMode() != FBReader::BOOK_TEXT_MODE) && (fbreader().getMode() != FBReader::CONTENTS_MODE)) {
+	if ((fbreader().mode() != FBReader::BOOK_TEXT_MODE) && (fbreader().mode() != FBReader::CONTENTS_MODE)) {
 		return false;
 	}
 	return fbreader().recentBooks().books().size() > 1;
@@ -237,7 +237,7 @@ CancelAction::CancelAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 void CancelAction::run() {
-	if (fbreader().getMode() != FBReader::BOOK_TEXT_MODE) {
+	if (fbreader().mode() != FBReader::BOOK_TEXT_MODE) {
 		fbreader().restorePreviousMode();
 	} else if (fbreader().isFullscreen()) {
 		fbreader().setFullscreen(false);
@@ -286,7 +286,7 @@ GotoNextTOCSectionAction::GotoNextTOCSectionAction(FBReader &fbreader) : FBActio
 }
 
 bool GotoNextTOCSectionAction::isVisible() {
-	if (fbreader().getMode() != FBReader::BOOK_TEXT_MODE) {
+	if (fbreader().mode() != FBReader::BOOK_TEXT_MODE) {
 		return false;
 	}
 	const ContentsView &contentsView = (const ContentsView&)*fbreader().myContentsView;
@@ -313,7 +313,7 @@ GotoPreviousTOCSectionAction::GotoPreviousTOCSectionAction(FBReader &fbreader) :
 }
 
 bool GotoPreviousTOCSectionAction::isVisible() {
-	if (fbreader().getMode() != FBReader::BOOK_TEXT_MODE) {
+	if (fbreader().mode() != FBReader::BOOK_TEXT_MODE) {
 		return false;
 	}
 	const ContentsView &contentsView = (const ContentsView&)*fbreader().myContentsView;

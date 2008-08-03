@@ -324,7 +324,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
 	}
 }
 
-FBReader::ViewMode FBReader::getMode() const {
+FBReader::ViewMode FBReader::mode() const {
 	return myMode;
 }
 
