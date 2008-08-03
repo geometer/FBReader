@@ -324,22 +324,6 @@ void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
 	}
 }
 
-class RebuildCollectionRunnable : public ZLRunnable {
-
-public:
-	RebuildCollectionRunnable(FBReader &reader) : myReader(reader) {}
-	void run() { myReader.rebuildCollectionInternal(); }
-
-private:
-	FBReader &myReader;
-};
-
-void FBReader::rebuildCollectionInternal() {
-	CollectionView &collectionView = (CollectionView&)*myCollectionView;
-	collectionView.updateModel();
-	collectionView.collection().authors();
-}
-
 FBReader::ViewMode FBReader::getMode() const {
 	return myMode;
 }
@@ -368,13 +352,7 @@ void FBReader::setMode(ViewMode mode) {
 			setView(myFootnoteView);
 			break;
 		case BOOK_COLLECTION_MODE:
-			{
-				RebuildCollectionRunnable runnable(*this);
-				ZLDialogManager::instance().wait(ZLResourceKey("loadingBookList"), runnable);
-			}
-			if (myModel != 0) {
-				((CollectionView&)*myCollectionView).selectBook(myModel->description());
-			}
+			collectionView().openWithBook((myModel != 0) ? myModel->description() : 0);
 			setView(myCollectionView);
 			break;
 		case RECENT_BOOKS_MODE:
