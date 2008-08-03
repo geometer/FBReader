@@ -63,6 +63,8 @@ const std::string LINES_TO_KEEP = "LinesToKeep";
 const std::string LINES_TO_SCROLL = "LinesToScroll";
 const std::string PERCENT_TO_SCROLL = "PercentToScroll";
 
+const std::string FBReader::PageIndexParameter = "pageIndex";
+
 FBReader::ScrollingOptions::ScrollingOptions(const std::string &groupName, long delayValue, long modeValue, long linesToKeepValue, long linesToScrollValue, long percentToScrollValue) :
 	DelayOption(ZLCategoryKey::CONFIG, groupName, DELAY, 0, 5000, delayValue),
 	ModeOption(ZLCategoryKey::CONFIG, groupName, MODE, modeValue),

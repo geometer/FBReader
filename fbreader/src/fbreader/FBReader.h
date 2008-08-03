@@ -49,6 +49,8 @@ public:
 	// returns true if description was found or error message was shown
 	static bool createDescription(const std::string &fileName, BookDescriptionPtr &description);
 
+	static const std::string PageIndexParameter;
+
 public:
 	enum ViewMode {
 		UNDEFINED_MODE = 0,
