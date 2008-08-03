@@ -250,10 +250,31 @@ void CancelAction::run() {
 ToggleIndicatorAction::ToggleIndicatorAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
+bool ToggleIndicatorAction::isVisible() {
+	ZLIntegerRangeOption &option = FBView::commonIndicatorInfo().TypeOption;
+	switch (option.value()) {
+		case FBIndicatorStyle::OS_SCROLLBAR:
+			return false;
+		case FBIndicatorStyle::FB_INDICATOR:
+		case FBIndicatorStyle::NONE:
+			return true;
+	}
+}
+
 void ToggleIndicatorAction::run() {
-	ZLBooleanOption &option = FBView::commonIndicatorInfo().ShowOption;
-	option.setValue(!option.value());
-	fbreader().refreshWindow();
+	ZLIntegerRangeOption &option = FBView::commonIndicatorInfo().TypeOption;
+	switch (option.value()) {
+		case FBIndicatorStyle::OS_SCROLLBAR:
+			break;
+		case FBIndicatorStyle::FB_INDICATOR:
+			option.setValue(FBIndicatorStyle::NONE);
+			fbreader().refreshWindow();
+			break;
+		case FBIndicatorStyle::NONE:
+			option.setValue(FBIndicatorStyle::FB_INDICATOR);
+			fbreader().refreshWindow();
+			break;
+	}
 }
 
 QuitAction::QuitAction(FBReader &fbreader) : FBAction(fbreader) {

@@ -245,6 +245,7 @@ class ToggleIndicatorAction : public FBAction {
 
 public:
 	ToggleIndicatorAction(FBReader &fbreader);
+	bool isVisible();
 	void run();
 };
 
