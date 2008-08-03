@@ -1,2 +1,2 @@
-libzlcore @SOVERSIONCORE@ libzlibrary-maemo2 (>= @VERSION@-1), libzlibrary-maemo2 (<< 0.10.0-1)
-libzltext @SOVERSIONTEXT@ libzlibrary-maemo2 (>= @VERSION@-1), libzlibrary-maemo2 (<< 0.10.0-1)
+libzlcore @SOVERSIONCORE@ libzlibrary-maemo2 (>= @VERSION@-1), libzlibrary-maemo2 (<< 0.11.0-1)
+libzltext @SOVERSIONTEXT@ libzlibrary-maemo2 (>= @VERSION@-1), libzlibrary-maemo2 (<< 0.11.0-1)
