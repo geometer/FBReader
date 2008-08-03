@@ -121,7 +121,7 @@ public:
 	void showBookTextView();
 	void openBook(BookDescriptionPtr description);
 
-	LastOpenedBooks &recentBooks();
+	RecentBooks &recentBooks();
 
 private:
 	shared_ptr<ProgramCollection> dictionaryCollection() const;
@@ -159,7 +159,7 @@ private:
 
 	shared_ptr<ZLMessageHandler> myOpenFileHandler;
 
-	LastOpenedBooks myRecentBooks;
+	RecentBooks myRecentBooks;
 
 friend class OpenFileHandler;
 

@@ -483,6 +483,6 @@ shared_ptr<ProgramCollection> FBReader::webBrowserCollection() const {
 	return myProgramCollectionMap.collection("Web Browser");
 }
 
-LastOpenedBooks &FBReader::recentBooks() {
+RecentBooks &FBReader::recentBooks() {
 	return myRecentBooks;
 }
