@@ -362,6 +362,7 @@ void FBReader::setMode(ViewMode mode) {
 		case BOOKMARKS_MODE:
 			break;
 		case UNDEFINED_MODE:
+		case ALL_MODES:
 			break;
 	}
 }
