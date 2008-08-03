@@ -24,7 +24,7 @@
 
 #include "BookCollection.h"
 
-const std::string GROUP = "RecentBooks";
+const std::string GROUP = "LastOpenedBooks";
 const std::string BOOK = "Book";
 
 RecentBooks::RecentBooks() :
