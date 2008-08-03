@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <toolbar>
-	<button id="showLibrary"/>
-	<button id="showRecent"/>
+	<menuButton id="showLibrary"/>
 	<button id="addBook"/>
 	<separator/>
 	<button id="gotoHome"/>
