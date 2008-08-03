@@ -227,3 +227,24 @@ void CollectionView::removeTag(const std::string &tag) {
 CollectionModel &CollectionView::collectionModel() {
 	return (CollectionModel&)*model();
 }
+
+class RebuildCollectionRunnable : public ZLRunnable {
+
+public:
+	RebuildCollectionRunnable(CollectionView &view) : myView(view) {}
+	void run() {
+		myView.updateModel();
+		myView.collection().authors();
+	}
+
+private:
+	CollectionView &myView;
+};
+
+void CollectionView::openWithBook(BookDescriptionPtr book) {
+	RebuildCollectionRunnable runnable(*this);
+	ZLDialogManager::instance().wait(ZLResourceKey("loadingBookList"), runnable);
+	if (book != 0) {
+		selectBook(book);
+	}
+}

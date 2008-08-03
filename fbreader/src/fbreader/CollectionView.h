@@ -51,11 +51,13 @@ public:
 	void updateModel();
 	void synchronizeModel();
 
-	void selectBook(BookDescriptionPtr book);
+	void openWithBook(BookDescriptionPtr book);
 
 	BookCollection &collection();
 
 private:
+	void selectBook(BookDescriptionPtr book);
+
 	CollectionModel &collectionModel();
 
 	void editBookInfo(BookDescriptionPtr book);
