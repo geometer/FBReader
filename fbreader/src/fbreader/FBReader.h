@@ -29,6 +29,7 @@
 #include <ZLApplication.h>
 #include <ZLKeyBindings.h>
 
+#include "../collection/BookCollection.h"
 #include "../description/BookDescription.h"
 #include "../external/ProgramCollection.h"
 
@@ -120,6 +121,8 @@ public:
 	void showBookTextView();
 	void openBook(BookDescriptionPtr description);
 
+	LastOpenedBooks &recentBooks();
+
 private:
 	shared_ptr<ProgramCollection> dictionaryCollection() const;
 
@@ -154,6 +157,8 @@ private:
 	ProgramCollectionMap myProgramCollectionMap;
 
 	shared_ptr<ZLMessageHandler> myOpenFileHandler;
+
+	LastOpenedBooks myRecentBooks;
 
 friend class OpenFileHandler;
 

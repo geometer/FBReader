@@ -35,7 +35,7 @@ FBMargins::FBMargins() :
 static const std::string INDICATOR = "Indicator";
 
 FBIndicatorStyle::FBIndicatorStyle() :
-	ShowOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Show", true),
+	TypeOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Type", 0, 2, ZLTextPositionIndicatorInfo::OS_SCROLLBAR),
 	IsSensitiveOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "TouchSensitive", true),
 	ShowTextPositionOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "PositionText", true),
 	ShowTimeOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Time", true),
@@ -45,8 +45,8 @@ FBIndicatorStyle::FBIndicatorStyle() :
 	FontSizeOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "FontSize", 4, 72, 14) {
 }
 
-bool FBIndicatorStyle::isVisible() const {
-	return ShowOption.value();
+ZLTextPositionIndicatorInfo::Type FBIndicatorStyle::type() const {
+	return (ZLTextPositionIndicatorInfo::Type)TypeOption.value();
 }
 
 bool FBIndicatorStyle::isSensitive() const {

@@ -479,3 +479,7 @@ void FBReader::openInDictionary(const std::string &word) {
 shared_ptr<ProgramCollection> FBReader::webBrowserCollection() const {
 	return myProgramCollectionMap.collection("Web Browser");
 }
+
+LastOpenedBooks &FBReader::recentBooks() {
+	return myRecentBooks;
+}
