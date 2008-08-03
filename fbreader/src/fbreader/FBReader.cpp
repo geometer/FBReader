@@ -291,7 +291,8 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 		contentsView.setModel(myModel->contentsModel(), lang);
 		contentsView.setCaption(description->title());
 
-		recentBooks().addBook(description->fileName());
+		myRecentBooks.addBook(description->fileName());
+		((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
 	}
 }
 
