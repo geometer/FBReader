@@ -58,6 +58,7 @@ public:
 		BOOKMARKS_MODE = 1 << 3,
 		BOOK_COLLECTION_MODE = 1 << 4,
 		RECENT_BOOKS_MODE = 1 << 5,
+		ALL_MODES = 0x3F
 	};
 
 	struct ScrollingOptions {
