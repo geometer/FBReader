@@ -271,7 +271,6 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 		BookTextView &bookTextView = (BookTextView&)*myBookTextView;
 		ContentsView &contentsView = (ContentsView&)*myContentsView;
 		FootnoteView &footnoteView = (FootnoteView&)*myFootnoteView;
-		RecentBooksView &recentBooksView = (RecentBooksView&)*myRecentBooksView;
 
 		bookTextView.saveState();
 		bookTextView.setModel(0, "", "");
@@ -292,7 +291,7 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 		contentsView.setModel(myModel->contentsModel(), lang);
 		contentsView.setCaption(description->title());
 
-		recentBooksView.lastBooks().addBook(description->fileName());
+		recentBooks().addBook(description->fileName());
 	}
 }
 

@@ -42,7 +42,6 @@
 #include "../fbreader/FBReader.h"
 #include "../fbreader/BookTextView.h"
 #include "../fbreader/CollectionView.h"
-#include "../fbreader/RecentBooksView.h"
 
 #include "../collection/BookCollection.h"
 #include "../external/ProgramCollection.h"
@@ -156,8 +155,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	CollectionView &collectionView = fbreader.collectionView();
 	generalTab.addOption(ZLResourceKey("bookPath"), collectionView.collection().PathOption);
 	generalTab.addOption(ZLResourceKey("lookInSubdirectories"), collectionView.collection().ScanSubdirsOption);
-	RecentBooksView &recentBooksView = (RecentBooksView&)*fbreader.myRecentBooksView;
-	generalTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(recentBooksView.lastBooks().MaxListSizeOption, 1));
+	generalTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(fbreader.recentBooks().MaxListSizeOption, 1));
 	ZLToggleBooleanOptionEntry *showTagsEntry = new ZLToggleBooleanOptionEntry(collectionView.ShowTagsOption);
 	ZLOptionEntry *showAllBooksTagEntry = new ZLSimpleBooleanOptionEntry(collectionView.ShowAllBooksTagOption);
 	showTagsEntry->addDependentEntry(showAllBooksTagEntry);

@@ -29,7 +29,6 @@
 #include "FBReaderActions.h"
 #include "BookTextView.h"
 #include "ContentsView.h"
-#include "RecentBooksView.h"
 #include "FBFileHandler.h"
 
 #include "../bookmodel/BookModel.h"
@@ -224,11 +223,11 @@ bool OpenPreviousBookAction::isVisible() {
 	if ((fbreader().getMode() != FBReader::BOOK_TEXT_MODE) && (fbreader().getMode() != FBReader::CONTENTS_MODE)) {
 		return false;
 	}
-	return ((RecentBooksView&)*fbreader().myRecentBooksView).lastBooks().books().size() > 1;
+	return fbreader().recentBooks().books().size() > 1;
 }
 
 void OpenPreviousBookAction::run() {
-	Books books = ((RecentBooksView&)*fbreader().myRecentBooksView).lastBooks().books();
+	Books books = fbreader().recentBooks().books();
 	fbreader().openBook(books[1]);
 	fbreader().refreshWindow();
 	fbreader().resetWindowCaption();
@@ -253,12 +252,11 @@ ToggleIndicatorAction::ToggleIndicatorAction(FBReader &fbreader) : FBAction(fbre
 bool ToggleIndicatorAction::isVisible() {
 	ZLIntegerRangeOption &option = FBView::commonIndicatorInfo().TypeOption;
 	switch (option.value()) {
-		case FBIndicatorStyle::OS_SCROLLBAR:
-			return false;
 		case FBIndicatorStyle::FB_INDICATOR:
 		case FBIndicatorStyle::NONE:
 			return true;
 	}
+	return false;
 }
 
 void ToggleIndicatorAction::run() {
