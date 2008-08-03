@@ -47,6 +47,7 @@
 		<node name="gotoHome" value="Go to Start of Text"/>
 		<node name="undo" value="Go Back"/>
 		<node name="redo" value="Go Forward"/>
+		<node name="gotoPageNumberWithParameter" value="Go to Page"/>
 		<node name="toc" value="Table of Contents"/>
 		<node name="search" value="Text Search"/>
 		<node name="findNext" value="Find Next"/>
