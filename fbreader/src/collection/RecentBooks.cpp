@@ -24,10 +24,10 @@
 
 #include "BookCollection.h"
 
-const std::string GROUP = "LastOpenedBooks";
+const std::string GROUP = "RecentBooks";
 const std::string BOOK = "Book";
 
-LastOpenedBooks::LastOpenedBooks() :
+RecentBooks::RecentBooks() :
 	MaxListSizeOption(ZLCategoryKey::STATE, GROUP, "MaxSize", 1, 100, 10) {
 
 	const int size = MaxListSizeOption.value();
@@ -44,7 +44,7 @@ LastOpenedBooks::LastOpenedBooks() :
 	}
 }
 
-LastOpenedBooks::~LastOpenedBooks() {
+RecentBooks::~RecentBooks() {
 	const int size = std::min(MaxListSizeOption.value(), (long)myBooks.size());
 	for (int i = 0; i < size; ++i) {
 		std::string num = BOOK;
@@ -53,7 +53,7 @@ LastOpenedBooks::~LastOpenedBooks() {
 	}
 }
 
-void LastOpenedBooks::addBook(const std::string &fileName) {
+void RecentBooks::addBook(const std::string &fileName) {
 	for (Books::iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
 		if ((*it)->fileName() == fileName) {
 			myBooks.erase(it);

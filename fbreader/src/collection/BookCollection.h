@@ -74,14 +74,14 @@ private:
 	mutable bool myDoWeakRebuild;
 };
 
-class LastOpenedBooks {
+class RecentBooks {
 
 public:
 	ZLIntegerRangeOption MaxListSizeOption;
 
 public:
-	LastOpenedBooks();
-	~LastOpenedBooks();
+	RecentBooks();
+	~RecentBooks();
 	void addBook(const std::string &fileName);
 	const Books &books() const;
 
@@ -99,6 +99,6 @@ inline bool BookCollection::isBookExternal(BookDescriptionPtr description) const
 	return myExternalBooks.find(description) != myExternalBooks.end();
 }
 
-inline const Books &LastOpenedBooks::books() const { return myBooks; }
+inline const Books &RecentBooks::books() const { return myBooks; }
 
 #endif /* __BOOKCOLLECTION_H__ */
