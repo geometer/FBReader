@@ -24,7 +24,6 @@
 
 #include "FBView.h"
 #include "../description/BookDescription.h"
-#include "../collection/BookCollection.h"
 
 class PlainTextModel;
 class Paragraph;
@@ -40,15 +39,6 @@ public:
 	bool _onStylusPress(int x, int y);
 
 	void paint();
-
-	LastOpenedBooks &lastBooks();
-
-private:
-	LastOpenedBooks myLastBooks;
 };
-
-inline LastOpenedBooks &RecentBooksView::lastBooks() {
-	return myLastBooks;
-}
 
 #endif /* __RECENTBOOKSVIEW_H__ */

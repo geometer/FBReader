@@ -41,7 +41,7 @@ const std::string &RecentBooksView::caption() const {
 void RecentBooksView::paint() {
 	if (model().isNull()) {
 		ZLTextPlainModel *recentBooksModel = new ZLTextPlainModel(8192);
-		const Books &books = myLastBooks.books();
+		const Books &books = fbreader().recentBooks().books();
 		for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
 			recentBooksModel->createParagraph(ZLTextParagraph::TEXT_PARAGRAPH);
 			recentBooksModel->addControl(RECENT_BOOK_LIST, true);
@@ -61,7 +61,7 @@ void RecentBooksView::rebuild() {
 }
 
 bool RecentBooksView::_onStylusPress(int x, int y) {
-	const Books &books = myLastBooks.books();
+	const Books &books = fbreader().recentBooks().books();
 
 	int index = paragraphIndexByCoordinate(y);
 	if ((index == -1) || (index >= (int)books.size())) {
