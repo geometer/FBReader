@@ -71,49 +71,101 @@ void SpecialFontSizeEntry::setVisible(bool) {
 	);
 }
 
+class IndicatorTypeEntry : public ZLComboOptionEntry {
+
+public:
+	IndicatorTypeEntry(const ZLResource &resource, ZLIntegerRangeOption &typeOption);
+	void addDependentEntry(ZLOptionEntry *entry);
+	const std::string &initialValue() const;
+
+private:
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
+	void onValueSelected(int index);
+
+private:
+	ZLIntegerRangeOption &myOption; 
+	std::vector<std::string> myValues;
+	std::vector<ZLOptionEntry*> myDependentEntries;
+};
+
+IndicatorTypeEntry::IndicatorTypeEntry(const ZLResource &resource, ZLIntegerRangeOption &typeOption) : myOption(typeOption) {
+	myValues.push_back(resource["osScrollbar"].value());
+	myValues.push_back(resource["fbIndicator"].value());
+	myValues.push_back(resource["none"].value());
+}
+
+const std::string &IndicatorTypeEntry::initialValue() const {
+	return myValues[myOption.value()];
+}
+
+const std::vector<std::string> &IndicatorTypeEntry::values() const {
+	return myValues;
+}
+
+void IndicatorTypeEntry::addDependentEntry(ZLOptionEntry *entry) {
+	myDependentEntries.push_back(entry);
+}
+
+void IndicatorTypeEntry::onAccept(const std::string &value) {
+	for (size_t index = 0; index != myValues.size(); ++index) {
+		if (myValues[index] == value) {
+			myOption.setValue(index);
+			break;
+		}
+	}
+}
+
+void IndicatorTypeEntry::onValueSelected(int index) {
+	for (std::vector<ZLOptionEntry*>::iterator it = myDependentEntries.begin(); it != myDependentEntries.end(); ++it) {
+		(*it)->setVisible(index == FBIndicatorStyle::FB_INDICATOR);
+	}
+}
+
 void OptionsDialog::createIndicatorTab(FBReader &fbreader) {
 	ZLDialogContent &indicatorTab = myDialog->createTab(ZLResourceKey("Indicator"));
 	FBIndicatorStyle &indicatorInfo = FBView::commonIndicatorInfo();
-	ZLToggleBooleanOptionEntry *showIndicatorEntry =
-		new ZLToggleBooleanOptionEntry(indicatorInfo.ShowOption);
-	indicatorTab.addOption(ZLResourceKey("show"), showIndicatorEntry);
+	static ZLResourceKey typeKey("type");
+	IndicatorTypeEntry *indicatorTypeEntry =
+		new IndicatorTypeEntry(indicatorTab.resource(typeKey), indicatorInfo.TypeOption);
+	indicatorTab.addOption(typeKey, indicatorTypeEntry);
 
 	ZLOptionEntry *heightEntry =
 		new ZLSimpleSpinOptionEntry(indicatorInfo.HeightOption, 1);
 	ZLOptionEntry *offsetEntry =
 		new ZLSimpleSpinOptionEntry(indicatorInfo.OffsetOption, 1);
 	indicatorTab.addOptions(ZLResourceKey("height"), heightEntry, ZLResourceKey("offset"), offsetEntry);
-	showIndicatorEntry->addDependentEntry(heightEntry);
-	showIndicatorEntry->addDependentEntry(offsetEntry);
+	indicatorTypeEntry->addDependentEntry(heightEntry);
+	indicatorTypeEntry->addDependentEntry(offsetEntry);
 
 	StateOptionEntry *showTextPositionEntry =
 		new StateOptionEntry(indicatorInfo.ShowTextPositionOption);
 	indicatorTab.addOption(ZLResourceKey("pageNumber"), showTextPositionEntry);
-	showIndicatorEntry->addDependentEntry(showTextPositionEntry);
+	indicatorTypeEntry->addDependentEntry(showTextPositionEntry);
 
 	StateOptionEntry *showTimeEntry =
 		new StateOptionEntry(indicatorInfo.ShowTimeOption);
 	indicatorTab.addOption(ZLResourceKey("time"), showTimeEntry);
-	showIndicatorEntry->addDependentEntry(showTimeEntry);
+	indicatorTypeEntry->addDependentEntry(showTimeEntry);
 
 	SpecialFontSizeEntry *fontSizeEntry =
 		new SpecialFontSizeEntry(indicatorInfo.FontSizeOption, 2, *showTextPositionEntry, *showTimeEntry);
 	indicatorTab.addOption(ZLResourceKey("fontSize"), fontSizeEntry);
-	showIndicatorEntry->addDependentEntry(fontSizeEntry);
+	indicatorTypeEntry->addDependentEntry(fontSizeEntry);
 	showTextPositionEntry->addDependentEntry(fontSizeEntry);
 	showTimeEntry->addDependentEntry(fontSizeEntry);
 
 	ZLOptionEntry *tocMarksEntry =
 		new ZLSimpleBooleanOptionEntry(fbreader.bookTextView().ShowTOCMarksOption);
 	indicatorTab.addOption(ZLResourceKey("tocMarks"), tocMarksEntry);
-	showIndicatorEntry->addDependentEntry(tocMarksEntry);
+	indicatorTypeEntry->addDependentEntry(tocMarksEntry);
 
 	ZLOptionEntry *navigationEntry =
 		new ZLSimpleBooleanOptionEntry(indicatorInfo.IsSensitiveOption);
 	indicatorTab.addOption(ZLResourceKey("navigation"), navigationEntry);
-	showIndicatorEntry->addDependentEntry(navigationEntry);
+	indicatorTypeEntry->addDependentEntry(navigationEntry);
 
-	showIndicatorEntry->onStateChanged(showIndicatorEntry->initialState());
+	indicatorTypeEntry->onStringValueSelected(indicatorTypeEntry->initialValue());
 	showTextPositionEntry->onStateChanged(showTextPositionEntry->initialState());
 	showTimeEntry->onStateChanged(showTimeEntry->initialState());
 }
