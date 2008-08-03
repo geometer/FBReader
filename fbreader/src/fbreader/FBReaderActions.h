@@ -126,11 +126,10 @@ public:
 	void run();
 };
 
-class AddBookAction : public FBAction {
+class AddBookAction : public ModeDependentAction {
 
 public:
-	AddBookAction(FBReader &fbreader);
-	bool isVisible();
+	AddBookAction(FBReader &fbreader, int visibleInModes);
 	void run();
 };
 

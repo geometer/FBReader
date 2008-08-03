@@ -122,7 +122,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::SHOW_OPTIONS, new ShowOptionsDialogAction(*this));
 	addAction(ActionCode::SHOW_CONTENTS, new ShowContentsAction(*this));
 	addAction(ActionCode::SHOW_BOOK_INFO, new ShowBookInfoAction(*this));
-	addAction(ActionCode::ADD_BOOK, new AddBookAction(*this));
+	addAction(ActionCode::ADD_BOOK, new AddBookAction(*this, FBReader::ALL_MODES & ~FBReader::FOOTNOTE_MODE));
 	addAction(ActionCode::UNDO, new UndoAction(*this));
 	addAction(ActionCode::REDO, new RedoAction(*this));
 	addAction(ActionCode::SEARCH, new SearchAction(*this));

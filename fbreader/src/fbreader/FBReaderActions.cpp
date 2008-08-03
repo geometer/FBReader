@@ -91,11 +91,7 @@ void ShowContentsAction::run() {
 	fbreader().setMode(FBReader::CONTENTS_MODE);
 }
 
-AddBookAction::AddBookAction(FBReader &fbreader) : FBAction(fbreader) {
-}
-
-bool AddBookAction::isVisible() {
-	return fbreader().mode() != FBReader::FOOTNOTE_MODE;
+AddBookAction::AddBookAction(FBReader &fbreader, int visibleInModes) : ModeDependentAction(fbreader, visibleInModes) {
 }
 
 void AddBookAction::run() {
