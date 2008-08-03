@@ -6,6 +6,7 @@
 	<button id="gotoHome"/>
 	<button id="undo"/>
 	<button id="redo"/>
+	<textField id="gotoPageNumberWithParameter" parameterId="pageIndex" maxWidth="5"/>
 	<separator/>
 	<button id="toc"/>
 	<separator/>

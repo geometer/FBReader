@@ -324,3 +324,10 @@ void BookTextView::scrollToHome() {
 	gotoParagraph(0, false);
 	fbreader().refreshWindow();
 }
+
+void BookTextView::paint() {
+	FBView::paint();
+	std::string pn;
+	ZLStringUtil::appendNumber(pn, pageIndex());
+	fbreader().setVisualParameter(FBReader::PageIndexParameter, pn);
+}

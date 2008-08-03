@@ -62,6 +62,8 @@ private:
 
 	shared_ptr<PositionIndicator> createPositionIndicator(const ZLTextPositionIndicatorInfo &info);
 
+	void paint();
+
 private:
 	class PositionIndicatorWithLabels : public PositionIndicator {
 

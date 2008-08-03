@@ -359,7 +359,7 @@ void GotoPreviousTOCSectionAction::run() {
 	fbreader().refreshWindow();
 }
 
-GotoPageNumber::GotoPageNumber(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE) {
+GotoPageNumber::GotoPageNumber(FBReader &fbreader, const std::string &parameter) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE), myParameter(parameter) {
 }
 
 bool GotoPageNumber::isEnabled() {
@@ -367,19 +367,32 @@ bool GotoPageNumber::isEnabled() {
 }
 
 void GotoPageNumber::run() {
-	shared_ptr<ZLDialog> gotoPageDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("gotoPageDialog"));
+	int pageIndex = 0;
 
-	const int pageNumber = fbreader().bookTextView().pageNumber();
-	ZLIntegerRangeOption pageNumberOption(ZLCategoryKey::CONFIG, "gotoPageDialog", "Number", 0, pageNumber, pageNumber);
-	gotoPageDialog->addOption(ZLResourceKey("pageNumber"), new ZLSimpleSpinOptionEntry(pageNumberOption, 1));
-	gotoPageDialog->addButton(ZLDialogManager::OK_BUTTON, true);
-	gotoPageDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
+	if (!myParameter.empty()) {
+		const std::string value = fbreader().visualParameter(myParameter);
+		if (value.empty()) {
+			return;
+		}
+		pageIndex = atoi(value.c_str());
+	} else {
+		shared_ptr<ZLDialog> gotoPageDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("gotoPageDialog"));
 
-	if (gotoPageDialog->run()) {
-		gotoPageDialog->acceptValues();
-		fbreader().bookTextView().gotoPage(pageNumberOption.value());
-		fbreader().refreshWindow();
+		const int pageNumber = fbreader().bookTextView().pageNumber();
+		ZLIntegerRangeOption pageIndexOption(ZLCategoryKey::CONFIG, "gotoPageDialog", "Index", 0, pageNumber, pageIndex);
+		gotoPageDialog->addOption(ZLResourceKey("pageNumber"), new ZLSimpleSpinOptionEntry(pageIndexOption, 1));
+		gotoPageDialog->addButton(ZLDialogManager::OK_BUTTON, true);
+		gotoPageDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
+		pageIndex = pageIndexOption.value();
+		if (gotoPageDialog->run()) {
+			gotoPageDialog->acceptValues();
+		} else {
+			return;
+		}
 	}
+
+	fbreader().bookTextView().gotoPage(pageIndex);
+	fbreader().refreshWindow();
 }
 
 SelectionAction::SelectionAction(FBReader &fbreader) : FBAction(fbreader) {

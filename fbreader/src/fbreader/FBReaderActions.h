@@ -67,6 +67,7 @@ public:
 	static const std::string CLEAR_SELECTION;
 	static const std::string OPEN_SELECTED_TEXT_IN_DICTIONARY;
 	static const std::string GOTO_PAGE_NUMBER;
+	static const std::string GOTO_PAGE_NUMBER_WITH_PARAMETER;
 
 private:
 	ActionCode();
@@ -284,9 +285,12 @@ public:
 class GotoPageNumber : public ModeDependentAction {
 
 public:
-	GotoPageNumber(FBReader &fbreader);
+	GotoPageNumber(FBReader &fbreader, const std::string &parameter);
 	bool isEnabled();
 	void run();
+
+private:
+	const std::string myParameter;
 };
 
 class SelectionAction : public FBAction {
