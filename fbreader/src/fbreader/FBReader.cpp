@@ -37,6 +37,7 @@
 #include "ContentsView.h"
 #include "CollectionView.h"
 #include "RecentBooksView.h"
+#include "RecentBooksPopupData.h"
 #include "BookInfoDialog.h"
 #include "TimeUpdater.h"
 
@@ -110,11 +111,13 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myContentsView = new ContentsView(*this, context());
 	myCollectionView = new CollectionView(*this, context());
 	myRecentBooksView = new RecentBooksView(*this, context());
+	myRecentBooksPopupData = new RecentBooksPopupData(*this);
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
 
 	addAction(ActionCode::SHOW_COLLECTION, new SetModeAction(*this, FBReader::BOOK_COLLECTION_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::RECENT_BOOKS_MODE));
+	registerPopupData(ActionCode::SHOW_COLLECTION, myRecentBooksPopupData);
 	addAction(ActionCode::SHOW_LAST_BOOKS, new SetModeAction(*this, FBReader::RECENT_BOOKS_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::SHOW_OPTIONS, new ShowOptionsDialogAction(*this));
 	addAction(ActionCode::SHOW_CONTENTS, new ShowContentsAction(*this));

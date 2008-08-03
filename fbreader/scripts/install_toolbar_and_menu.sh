@@ -6,7 +6,10 @@ if [ $# != 2 ]; then
 fi;
 
 case "$1" in
-	desktop|win32|pepperpad3)
+	desktop|win32)
+		toolbar_file=data/default/toolbar.desktop.xml
+		;;
+	pepperpad3)
 		toolbar_file=data/default/toolbar.full.xml
 		;;
 	zaurus_640x480)
