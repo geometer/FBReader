@@ -137,7 +137,7 @@ void ShowBookInfoAction::run() {
 	}
 }
 
-UndoAction::UndoAction(FBReader &fbreader) : FBAction(fbreader) {
+UndoAction::UndoAction(FBReader &fbreader, int visibleInModes) : ModeDependentAction(fbreader, visibleInModes) {
 }
 
 bool UndoAction::isEnabled() {

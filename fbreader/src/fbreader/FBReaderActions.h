@@ -29,6 +29,7 @@ class ZLTextView;
 class ActionCode {
 
 public:
+	static const std::string SHOW_READING;
 	static const std::string SHOW_COLLECTION;
 	static const std::string SHOW_OPTIONS;
 	static const std::string UNDO;
@@ -175,10 +176,10 @@ public:
 	void run();
 };
 
-class UndoAction : public FBAction {
+class UndoAction : public ModeDependentAction {
 
 public:
-	UndoAction(FBReader &fbreader);
+	UndoAction(FBReader &fbreader, int visibleInModes);
 	bool isEnabled();
 	void run();
 };

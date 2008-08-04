@@ -19,6 +19,7 @@
 
 #include "FBReaderActions.h"
 
+const std::string ActionCode::SHOW_READING = "showReading";
 const std::string ActionCode::SHOW_COLLECTION = "showLibrary";
 const std::string ActionCode::SHOW_OPTIONS = "preferences";
 const std::string ActionCode::UNDO = "undo";

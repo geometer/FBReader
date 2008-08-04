@@ -118,6 +118,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
 
+	addAction(ActionCode::SHOW_READING, new UndoAction(*this, FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::SHOW_COLLECTION, new SetModeAction(*this, FBReader::BOOK_COLLECTION_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::RECENT_BOOKS_MODE));
 	registerPopupData(ActionCode::SHOW_COLLECTION, myRecentBooksPopupData);
 	addAction(ActionCode::SHOW_LAST_BOOKS, new SetModeAction(*this, FBReader::RECENT_BOOKS_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
@@ -125,7 +126,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::SHOW_CONTENTS, new ShowContentsAction(*this));
 	addAction(ActionCode::SHOW_BOOK_INFO, new ShowBookInfoAction(*this));
 	addAction(ActionCode::ADD_BOOK, new AddBookAction(*this, FBReader::ALL_MODES & ~FBReader::FOOTNOTE_MODE));
-	addAction(ActionCode::UNDO, new UndoAction(*this));
+	addAction(ActionCode::UNDO, new UndoAction(*this, FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::REDO, new RedoAction(*this));
 	addAction(ActionCode::SEARCH, new SearchAction(*this));
 	addAction(ActionCode::FIND_NEXT, new FindNextAction(*this));

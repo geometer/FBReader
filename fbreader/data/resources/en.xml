@@ -39,6 +39,7 @@
 		<node name="quit" value="Close"/>
 	</node>
 	<node name="toolbar">
+		<node name="showReading" value="Show Reading Mode"/>
 		<node name="showLibrary" value="Show Library Tree">
 			<node name="popup" value="Show Recent Books List"/>
 		</node>
