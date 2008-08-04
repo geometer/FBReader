@@ -23,7 +23,7 @@
 #include <map>
 
 #include <qmainwindow.h>
-#include <qaction.h>
+#include <qtoolbutton.h>
 #include <qcursor.h>
 
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
@@ -61,8 +61,8 @@ private:
 private:
 	class QToolBar *myToolBar;
 
-friend class ZLQtToolBarAction;
-	std::map<const ZLToolbar::Item*, class ZLQtToolBarAction*> myActions;
+friend class ZLQtToolButton;
+	std::map<const ZLToolbar::Item*, class ZLQtToolButton*> myButtons;
 	std::map<ZLToolbar::ItemPtr,QWidget*> mySeparatorMap;
 
 	bool myFullScreen;
@@ -74,16 +74,17 @@ friend class ZLQtToolBarAction;
 friend class ZLQtViewWidgetPositionInfo;
 };
 
-class ZLQtToolBarAction : public QAction {
+class ZLQtToolButton : public QToolButton {
 	Q_OBJECT
 
 public:
-	ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item);
+	ZLQtToolButton(ZLQtApplicationWindow &window, ZLToolbar::AbstractButtonItem &item);
 
 private slots:
 	void onActivated();
 
 private:
+	ZLQtApplicationWindow &myWindow;
 	ZLToolbar::AbstractButtonItem &myItem;
 };
 

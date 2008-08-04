@@ -24,6 +24,7 @@
 #include <qaction.h>
 #include <qlayout.h>
 #include <qobjectlist.h>
+#include <qtooltip.h>
 
 #include <ZLibrary.h>
 
@@ -73,7 +74,7 @@ QPixmap *MyIconFactory::createPixmap(const QIconSet &set, QIconSet::Size size, Q
 	return new QPixmap(image);
 }
 
-ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), myItem(item) {
+ZLQtToolButton::ZLQtToolButton(ZLQtApplicationWindow &window, ZLToolbar::AbstractButtonItem &item) : QToolButton(window.myToolBar), myWindow(window), myItem(item) {
 	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	QPixmap icon((imagePrefix + myItem.iconName() + ".png").c_str());
 	setIconSet(QIconSet(icon));
@@ -81,18 +82,18 @@ ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::A
 	QIconSet::setIconSize(QIconSet::Large, size);
 	QIconSet::setIconSize(QIconSet::Small, size);
 	if (item.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
-		setToggleAction(true);
+		setToggleButton(true);
 	}
-	setToolTip(QString::fromUtf8(myItem.tooltip().c_str()));
-	connect(this, SIGNAL(activated()), this, SLOT(onActivated()));
+	QToolTip::add(this, QString::fromUtf8(myItem.tooltip().c_str()));
+	connect(this, SIGNAL(clicked()), this, SLOT(onActivated()));
 }
 
-void ZLQtToolBarAction::onActivated() {
-	((ZLQtApplicationWindow*)parent())->onButtonPress(myItem);
+void ZLQtToolButton::onActivated() {
+	myWindow.onButtonPress(myItem);
 }
 
 void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
-	myActions[&button]->setOn(button.isPressed());
+	myButtons[&button]->setOn(button.isPressed());
 }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
@@ -153,7 +154,7 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 		myWidthOption.setValue(width());
 		myHeightOption.setValue(height());
 	}
-	for (std::map<const ZLToolbar::Item*,ZLQtToolBarAction*>::iterator it = myActions.begin(); it != myActions.end(); ++it) {
+	for (std::map<const ZLToolbar::Item*,ZLQtToolButton*>::iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
 		if (it->second != 0) {
 			delete it->second;
 		}
@@ -211,9 +212,8 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		case ZLToolbar::Item::TOGGLE_BUTTON:
 		{
 			ZLToolbar::AbstractButtonItem &buttonItem = (ZLToolbar::AbstractButtonItem&)*item;
-			ZLQtToolBarAction *action = new ZLQtToolBarAction(this, buttonItem);
-			action->addTo(myToolBar);
-			myActions[&*item] = action;
+			ZLQtToolButton *button = new ZLQtToolButton(*this, buttonItem);
+			myButtons[&*item] = button;
 			break;
 		}
 		case ZLToolbar::Item::SEPARATOR:
@@ -224,10 +224,14 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 }
 
 void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	QAction *action = myActions[&*item];
-	if (action != 0) {
-		action->setEnabled(enabled);
-		action->setVisible(visible);
+	QToolButton *button = myButtons[&*item];
+	if (button != 0) {
+		button->setEnabled(enabled);
+		if (visible) {
+			button->show();
+		} else {
+			button->hide();
+		}
 	} else {
 		QWidget *separator = mySeparatorMap[item];
 		if (separator != 0) {
