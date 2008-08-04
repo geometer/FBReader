@@ -83,6 +83,8 @@ ZLQtToolButton::ZLQtToolButton(ZLQtApplicationWindow &window, ZLToolbar::Abstrac
 	QIconSet::setIconSize(QIconSet::Small, size);
 	if (item.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
 		setToggleButton(true);
+	} else if (item.type() == ZLToolbar::Item::MENU_BUTTON) {
+		QToolButton *arrow = new QToolButton(Qt::DownArrow, window.myToolBar, 0);
 	}
 	QToolTip::add(this, QString::fromUtf8(myItem.tooltip().c_str()));
 	connect(this, SIGNAL(clicked()), this, SLOT(onActivated()));
