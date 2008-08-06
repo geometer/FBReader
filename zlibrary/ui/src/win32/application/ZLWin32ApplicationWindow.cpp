@@ -272,13 +272,29 @@ void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 		SetWindowPlacement(myMainWindow, &mainPlacement);
 		SetWindowPlacement(myToolbar, &toolbarPlacement);
 	}
-	//myWin32ViewWidget->repaint();
 	refresh();
 }
 
 bool ZLWin32ApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
+
+class TextFieldData {
+
+private:
+	typedef LRESULT(CALLBACK *WndProc)(HWND, UINT, WPARAM, LPARAM);
+
+	static LRESULT CALLBACK Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+public:
+	TextFieldData(HWND textField, HWND mainWindow, ZLApplication &application, const std::string &actionId);
+
+private:
+	WndProc myOriginalCallback;
+	HWND myMainWindow;
+	ZLApplication &myApplication;
+	const std::string myActionId;
+};
 
 void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	if (myToolbar == 0) {
@@ -342,24 +358,24 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		}
 	}
 	SendMessage(myToolbar, TB_ADDBUTTONS, 1, (LPARAM)&button);
+
+	if (type == ZLToolbar::Item::TEXT_FIELD) {
+		TBBUTTONINFO buttonInfo;
+		buttonInfo.cbSize = sizeof(TBBUTTONINFO);
+		buttonInfo.dwMask = TBIF_SIZE;
+		buttonInfo.cx = 50;
+		SendMessage(myToolbar, TB_SETBUTTONINFO, button.idCommand, (LPARAM)&buttonInfo);
+		const int index = SendMessage(myToolbar, TB_COMMANDTOINDEX, button.idCommand, 0);
+		RECT rect;
+		SendMessage(myToolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
+		HWND handle = CreateWindow(WC_EDIT, 0, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NOHIDESEL | ES_CENTER | ES_NUMBER, rect.left + 5, rect.top + 12, rect.right - rect.left - 10, rect.bottom - rect.top - 15, myToolbar, (HMENU)button.idCommand, GetModuleHandle(0), 0);
+		myTextFields[button.idCommand] = handle;
+		ZLToolbar::ItemPtr item = myTBItemByActionCode[button.idCommand];
+		const ZLToolbar::TextFieldItem &textFieldItem = (ZLToolbar::TextFieldItem&)*item;
+		new TextFieldData(handle, myMainWindow, application(), textFieldItem.actionId());
+		addVisualParameter(textFieldItem.parameterId(), new TextEditParameter(handle));
+	}
 }
-
-class TextFieldData {
-
-private:
-	typedef LRESULT(CALLBACK *WndProc)(HWND, UINT, WPARAM, LPARAM);
-
-	static LRESULT CALLBACK Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-public:
-	TextFieldData(HWND textField, HWND mainWindow, ZLApplication &application, const std::string &actionId);
-
-private:
-	WndProc myOriginalCallback;
-	HWND myMainWindow;
-	ZLApplication &myApplication;
-	const std::string myActionId;
-};
 
 LRESULT CALLBACK TextFieldData::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	TextFieldData *data = (TextFieldData*)GetWindowLong(hWnd, GWL_USERDATA);
@@ -383,22 +399,9 @@ TextFieldData::TextFieldData(HWND textField, HWND mainWindow, ZLApplication &app
 }
 
 void ZLWin32ApplicationWindow::updateTextField(int idCommand) {
-	RECT rect;
-	const int index = SendMessage(myToolbar, TB_COMMANDTOINDEX, idCommand, 0);
-	if (myTextFields[idCommand] == 0) {
-		TBBUTTONINFO buttonInfo;
-		buttonInfo.cbSize = sizeof(TBBUTTONINFO);
-		buttonInfo.dwMask = TBIF_SIZE;
-		buttonInfo.cx = 50;
-		SendMessage(myToolbar, TB_SETBUTTONINFO, idCommand, (LPARAM)&buttonInfo);
-		SendMessage(myToolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
-		HWND handle = CreateWindow(WC_EDIT, 0, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NOHIDESEL | ES_CENTER | ES_NUMBER, rect.left + 5, rect.top + 12, rect.right - rect.left - 10, rect.bottom - rect.top - 15, myToolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
-		myTextFields[idCommand] = handle;
-		ZLToolbar::ItemPtr item = myTBItemByActionCode[idCommand];
-		const ZLToolbar::TextFieldItem &textFieldItem = (ZLToolbar::TextFieldItem&)*item;
-		new TextFieldData(handle, myMainWindow, application(), textFieldItem.actionId());
-		addVisualParameter(textFieldItem.parameterId(), new TextEditParameter(handle));
-	} else {
+	if (myTextFields[idCommand] != 0) {
+		RECT rect;
+		const int index = SendMessage(myToolbar, TB_COMMANDTOINDEX, idCommand, 0);
 		SendMessage(myToolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
 		SetWindowPos(
 			myTextFields[idCommand], 0, rect.left + 5, rect.top + 10, 0, 0,
