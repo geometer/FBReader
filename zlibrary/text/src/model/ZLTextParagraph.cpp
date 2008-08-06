@@ -21,6 +21,7 @@
 
 #include <algorithm>
 
+#include <ZLUnicodeUtil.h>
 #include <ZLImage.h>
 
 #include "ZLTextParagraph.h"
@@ -181,11 +182,22 @@ shared_ptr<ZLTextParagraphEntry> ZLTextControlEntryPool::controlEntry(ZLTextKind
 	return entry;
 }
 	
-size_t ZLTextParagraph::textLength() const {
+size_t ZLTextParagraph::textDataLength() const {
 	size_t len = 0;
 	for (Iterator it = *this; !it.isEnd(); it.next()) {
 		if (it.entryKind() == ZLTextParagraphEntry::TEXT_ENTRY) {
 			len += ((ZLTextEntry&)*it.entry()).dataLength();
+		}
+	}
+	return len;
+}
+
+size_t ZLTextParagraph::characterNumber() const {
+	size_t len = 0;
+	for (Iterator it = *this; !it.isEnd(); it.next()) {
+		if (it.entryKind() == ZLTextParagraphEntry::TEXT_ENTRY) {
+			const ZLTextEntry &entry = (ZLTextEntry&)*it.entry();
+			len += ZLUnicodeUtil::utf8Length(entry.data(), entry.dataLength());
 		}
 	}
 	return len;

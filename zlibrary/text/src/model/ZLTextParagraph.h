@@ -273,7 +273,8 @@ public:
 
 	size_t entryNumber() const;
 
-	size_t textLength() const;
+	size_t textDataLength() const;
+	size_t characterNumber() const;
 
 private:
 	void addEntry(char *address);

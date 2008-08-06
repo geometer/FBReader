@@ -75,7 +75,7 @@ void ZLTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &lang
 		myTextSize.reserve(size + 1);
 		myTextSize.push_back(0);
 		for (size_t i= 0; i < size; ++i) {
-			myTextSize.push_back(myTextSize.back() + (*myModel)[i]->textLength());
+			myTextSize.push_back(myTextSize.back() + (*myModel)[i]->characterNumber());
 			if ((*myModel)[i]->kind() == ZLTextParagraph::END_OF_TEXT_PARAGRAPH) {
 				myTextBreaks.push_back(i);
 			}
