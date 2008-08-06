@@ -154,7 +154,7 @@ public:
 	void scrollToEndOfText();
 
 	void gotoMark(ZLTextMark mark);
-	virtual void gotoParagraph(int num, bool last = false);
+	virtual void gotoParagraph(int num, bool end = false);
 	void gotoPosition(int paragraphNumber, int wordNumber, int charNumber);
 
 	const ZLTextWordCursor &startCursor() const;
@@ -318,7 +318,7 @@ inline int ZLTextView::viewHeight() const {
 }
 
 inline int ZLTextView::visualX(int logicalX) const {
-	return (myStyle.baseBidiLevel() % 2 == 1) ? context().width() - logicalX : logicalX;
+	return (myStyle.baseBidiLevel() % 2 == 1) ? context().width() - logicalX - 1 : logicalX;
 }
 
 inline int ZLTextView::lineStartMargin() const {

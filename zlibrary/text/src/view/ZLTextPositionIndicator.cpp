@@ -84,7 +84,7 @@ ZLPaintContext &ZLTextView::PositionIndicator::context() const {
 }
 
 int ZLTextView::PositionIndicator::bottom() const {
-	return context().height() - myTextView.bottomMargin();
+	return context().height() - myTextView.bottomMargin() - 1;
 }
 
 int ZLTextView::PositionIndicator::top() const {

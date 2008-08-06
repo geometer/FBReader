@@ -27,6 +27,10 @@
 
 class ZLWin32ViewWidget : public ZLViewWidget {
 
+private:
+	typedef LRESULT(CALLBACK *WndProc)(HWND, UINT, WPARAM, LPARAM);
+	static LRESULT CALLBACK ViewWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 public:
 	ZLWin32ViewWidget(ZLWin32ApplicationWindow &window);
 
@@ -34,6 +38,8 @@ public:
 	void onMouseRelease(int x, int y);
 	void onMouseMove(int x, int y);
 	void onMouseMovePressed(int x, int y);
+
+	HWND handle() const;
 
 private:
 	void repaint();
@@ -44,8 +50,11 @@ private:
 
 	void doPaint();
 
+	LRESULT Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 private:
 	ZLWin32ApplicationWindow &myWindow;
+	HWND myHandle;
 	bool myMouseCaptured;
 
 	class Rotator {
@@ -58,7 +67,7 @@ private:
 		void setRotation(bool counterClockWise);
 		void retrieve(HDC dc, HBITMAP bitmap);
 		void rotate();
-		void draw(HDC dc, int topOffset);
+		void draw(HDC dc);
 
 	private:
 		int myWidth;
@@ -73,7 +82,10 @@ private:
 	int myHScrollBarExtra;
 	int myVScrollBarExtra;
 
-friend class ZLWin32ApplicationWindow;
+	bool myHScrollBarIsEnabled;
+	bool myVScrollBarIsEnabled;
+
+	WndProc myOriginalCallback;
 };
 
 #endif /* __ZLWIN32VIEWWIDGET_H__ */

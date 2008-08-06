@@ -37,14 +37,6 @@ const int ICON_SIZE = 32;
 
 ZLWin32ApplicationWindow *ZLWin32ApplicationWindow::ourApplicationWindow = 0;
 
-int ZLWin32ApplicationWindow::x(WPARAM lParam) {
-	return LOWORD(lParam);
-}
-
-int ZLWin32ApplicationWindow::y(WPARAM lParam) {
-	return HIWORD(lParam) - ourApplicationWindow->topOffset();
-}
-
 LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	return ourApplicationWindow->mainLoopCallback(hWnd, uMsg, wParam, lParam);
 }
@@ -58,44 +50,6 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			myMainWindow = hWnd;
 			ZLApplicationWindow::init();
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
-		case WM_LBUTTONDOWN:
-			if (!myBlockMouseEvents) {
-				SetFocus(myMainWindow);
-				if (myWin32ViewWidget->myMouseCaptured) {
-					SetCapture(myMainWindow);
-				}
-				myWin32ViewWidget->onMousePress(x(lParam), y(lParam));
-			}
-			return 0;
-		case WM_LBUTTONUP:
-			if (!myBlockMouseEvents) {
-				myWin32ViewWidget->onMouseRelease(x(lParam), y(lParam));
-			}
-			if (myMainWindow == GetCapture()) {
-				ReleaseCapture();
-			}
-			return 0;
-		case WM_MOUSEMOVE:
-			if (!myBlockMouseEvents) {
-				if (wParam & MK_LBUTTON) {
-					myWin32ViewWidget->onMouseMovePressed(x(lParam), y(lParam));
-				} else {
-					myWin32ViewWidget->onMouseMove(x(lParam), y(lParam));
-				}
-			}
-			if (myCursor != 0) {
-				SetCursor(myCursor);
-			}
-			return 0;
-		case WM_MOUSEWHEEL:
-			if (!myBlockMouseEvents) {
-				application().doActionByKey(
-					((short)HIWORD(wParam) > 0) ?
-						ZLApplication::MouseScrollUpKey :
-						ZLApplication::MouseScrollDownKey
-				);
-			}
-			return 0;
 		case WM_KEYDOWN:
 			if (wParam == 0x10) {
 				myKeyboardModifierMask |= 0x1;
@@ -118,14 +72,20 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			}
 			return 0;
 		case WM_SIZE:
+		{
 			if (myToolbar != 0) {
 				SendMessage(myToolbar, TB_AUTOSIZE, 0, 0);
 			}
+			int offset = 0;
+			if (!myFullScreen) {
+				RECT toolbarRect;
+				GetWindowRect(myToolbar, &toolbarRect);
+				offset = toolbarRect.bottom - toolbarRect.top - 1;
+			}
+			MoveWindow(myWin32ViewWidget->handle(), 0, offset, LOWORD(lParam), HIWORD(lParam) - offset, true);
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
+		}
 		case WM_ERASEBKGND:
-			return 0;
-		case WM_PAINT:
-			myWin32ViewWidget->doPaint();
 			return 0;
 		case WM_CLOSE:
 			if (myFullScreen) {
@@ -218,53 +178,6 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			}
 			return 0;
 		}
-		case WM_HSCROLL:
-		case WM_VSCROLL:
-		{
-			const int dir = (uMsg == WM_VSCROLL) ? SB_VERT : SB_HORZ;
-			const size_t extra = 
-				(uMsg == WM_VSCROLL) ?
-					myWin32ViewWidget->myVScrollBarExtra :
-					myWin32ViewWidget->myHScrollBarExtra;
-			SCROLLINFO info;
-			info.cbSize = sizeof(SCROLLINFO);
-			info.fMask = SIF_ALL;
-			GetScrollInfo(myMainWindow, dir, &info);
-			switch (LOWORD(wParam)) {
-				case SB_TOP:
-					info.nPos = info.nMin;
-					break;
-				case SB_BOTTOM:
-					info.nPos = info.nMax - extra;
-					break;
-				case SB_LINEUP:
-					info.nPos -= 100;
-					break;
-				case SB_LINEDOWN:
-					info.nPos += 100;
-					break;
-				case SB_PAGEUP:
-					info.nPos -= info.nPage;
-					break;
-				case SB_PAGEDOWN:
-					info.nPos += info.nPage;
-					break;
-				case SB_THUMBTRACK:
-					info.nPos = info.nTrackPos;
-					break;
-			}
-			info.fMask = SIF_POS;
-			SetScrollInfo(myMainWindow, dir, &info, true);
-			info.fMask = SIF_ALL;
-			GetScrollInfo(myMainWindow, dir, &info);
-			myWin32ViewWidget->onScrollbarMoved(
-				(uMsg == WM_VSCROLL) ? ZLView::VERTICAL : ZLView::HORIZONTAL,
-				info.nMax - info.nMin - extra,
-				info.nPos,
-				info.nPos + info.nPage - extra
-			);
-			return DefWindowProc(hWnd, uMsg, wParam, lParam);
-		}
 		default:
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 	}
@@ -308,7 +221,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 
 void ZLWin32ApplicationWindow::init() {
 	const WCHAR *aName = ::wchar(myClassName);
-	CreateWindow(aName, aName, WS_VSCROLL | WS_OVERLAPPEDWINDOW, myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
+	CreateWindow(aName, aName, WS_OVERLAPPEDWINDOW, myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);
@@ -359,7 +272,8 @@ void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 		SetWindowPlacement(myMainWindow, &mainPlacement);
 		SetWindowPlacement(myToolbar, &toolbarPlacement);
 	}
-	myWin32ViewWidget->repaint();
+	//myWin32ViewWidget->repaint();
+	refresh();
 }
 
 bool ZLWin32ApplicationWindow::isFullscreen() const {
@@ -542,21 +456,12 @@ HWND ZLWin32ApplicationWindow::mainWindow() const {
 	return myMainWindow;
 }
 
-int ZLWin32ApplicationWindow::topOffset() const {
-	if ((myToolbar != 0) && (!myFullScreen)) {
-		RECT toolbarRectangle;
-		GetWindowRect(myToolbar, &toolbarRectangle);
-		POINT p;
-		p.x = toolbarRectangle.right;
-		p.y = toolbarRectangle.bottom;
-		ScreenToClient(myMainWindow, &p);
-		return p.y;
-	}
-	return 0;
-}
-
 void ZLWin32ApplicationWindow::blockMouseEvents(bool block) {
 	myBlockMouseEvents = block;
+}
+
+bool ZLWin32ApplicationWindow::mouseEventsAreBlocked() const {
+	return myBlockMouseEvents;
 }
 
 void ZLWin32ApplicationWindow::setHyperlinkCursor(bool hyperlink) {
@@ -591,4 +496,14 @@ void ZLWin32ApplicationWindow::TextEditParameter::internalSetValue(const std::st
 	static ZLUnicodeUtil::Ucs2String buffer;
 	::createNTWCHARString(buffer, value);
 	SetWindowTextW(myTextEdit, ::wchar(buffer));
+}
+
+void ZLWin32ApplicationWindow::resetFocus() {
+	SetFocus(myMainWindow);
+}
+
+void ZLWin32ApplicationWindow::updateCursor() const {
+	if (myCursor != 0) {
+		SetCursor(myCursor);
+	}
 }

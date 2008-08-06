@@ -185,6 +185,9 @@ void ZLWin32PaintContext::drawString(int x, int y, const char *str, int len, boo
 	}
 	y -= stringHeight();
 	y += myTextMetric.tmDescent;
+	if (rtl) {
+		x -= 1;
+	}
 	int utf8len = ZLUnicodeUtil::utf8Length(str, len);
 	SetTextAlign(myDisplayContext, rtl ? TA_RTLREADING : 0);
 	if (utf8len == len) {
