@@ -148,7 +148,7 @@ void BookTextView::replaceCurrentPositionInStack() {
 	}
 }
 
-void BookTextView::gotoParagraph(int num, bool last) {
+void BookTextView::gotoParagraph(int num, bool end) {
 	if (!empty()) {
 		if (!myLockUndoStackChanges) {
 			if (myPositionStack.size() > myCurrentPointInStack) {
@@ -158,7 +158,7 @@ void BookTextView::gotoParagraph(int num, bool last) {
 			myCurrentPointInStack = myPositionStack.size();
 		}
 
-		FBView::gotoParagraph(num, last);
+		FBView::gotoParagraph(num, end);
 	}
 }
 
