@@ -365,15 +365,12 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		buttonInfo.dwMask = TBIF_SIZE;
 		buttonInfo.cx = 50;
 		SendMessage(myToolbar, TB_SETBUTTONINFO, button.idCommand, (LPARAM)&buttonInfo);
-		const int index = SendMessage(myToolbar, TB_COMMANDTOINDEX, button.idCommand, 0);
-		RECT rect;
-		SendMessage(myToolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
-		HWND handle = CreateWindow(WC_EDIT, 0, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NOHIDESEL | ES_CENTER | ES_NUMBER, rect.left + 5, rect.top + 12, rect.right - rect.left - 10, rect.bottom - rect.top - 15, myToolbar, (HMENU)button.idCommand, GetModuleHandle(0), 0);
-		myTextFields[button.idCommand] = handle;
+		TextEditParameter *parameter = new TextEditParameter(myToolbar, button.idCommand);
+		myTextFields[button.idCommand] = parameter->handle();
 		ZLToolbar::ItemPtr item = myTBItemByActionCode[button.idCommand];
 		const ZLToolbar::TextFieldItem &textFieldItem = (ZLToolbar::TextFieldItem&)*item;
-		new TextFieldData(handle, myMainWindow, application(), textFieldItem.actionId());
-		addVisualParameter(textFieldItem.parameterId(), new TextEditParameter(handle));
+		new TextFieldData(parameter->handle(), myMainWindow, application(), textFieldItem.actionId());
+		addVisualParameter(textFieldItem.parameterId(), parameter);
 	}
 }
 
@@ -479,7 +476,15 @@ void ZLWin32ApplicationWindow::setWait(bool wait) {
 	myWait = wait;
 }
 
-ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(HWND textEdit) : myTextEdit(textEdit) {
+ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(HWND toolbar, int idCommand) {
+	const int index = SendMessage(toolbar, TB_COMMANDTOINDEX, idCommand, 0);
+	RECT rect;
+	SendMessage(toolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
+	myTextEdit = CreateWindow(WC_EDIT, 0, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NOHIDESEL | ES_CENTER | ES_NUMBER, rect.left + 5, rect.top + 12, rect.right - rect.left - 10, rect.bottom - rect.top - 15, toolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
+}
+
+HWND ZLWin32ApplicationWindow::TextEditParameter::handle() const {
+	return myTextEdit;
 }
 
 std::string ZLWin32ApplicationWindow::TextEditParameter::internalValue() const {

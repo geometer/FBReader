@@ -84,7 +84,8 @@ private:
 	class TextEditParameter : public VisualParameter {
 
 	public:
-		TextEditParameter(HWND textEdit);
+		TextEditParameter(HWND toolbar, int idCommand);
+		HWND handle() const;
 
 	private:
 		std::string internalValue() const;
