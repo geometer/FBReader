@@ -28,6 +28,7 @@
 #include <qmainwindow.h>
 
 #include "../../../../core/src/application/ZLApplicationWindow.h"
+#include "../../../../core/src/application/ZLMenu.h"
 
 class QMenuBar;
 class QPopupMenu;
@@ -69,19 +70,19 @@ public:
 private:
 	ZLViewWidget *createViewWidget();
 
-	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void initMenu();
-	class MenuMaskCalculator : public ZLApplication::MenuVisitor {
+	class MenuMaskCalculator : public ZLMenuVisitor {
 
 	public:
 		MenuMaskCalculator(ZLQtApplicationWindow &window);
 		bool shouldBeUpdated();
 
 	private:
-		void processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu);
-		void processSubmenuAfterItems(ZLApplication::Menubar::Submenu &submenu);
-		void processItem(ZLApplication::Menubar::PlainItem &item);
-		void processSepartor(ZLApplication::Menubar::Separator &separator);
+		void processSubmenuBeforeItems(ZLMenubar::Submenu &submenu);
+		void processSubmenuAfterItems(ZLMenubar::Submenu &submenu);
+		void processItem(ZLMenubar::PlainItem &item);
+		void processSepartor(ZLMenubar::Separator &separator);
 
 	private:
 		ZLQtApplicationWindow &myWindow;
@@ -89,16 +90,16 @@ private:
 		bool myShouldBeUpdated;
 		int myCounter;
 	};
-	class MenuUpdater : public ZLApplication::MenuVisitor {
+	class MenuUpdater : public ZLMenuVisitor {
 
 	public:
 		MenuUpdater(ZLQtApplicationWindow &window);
 
 	private:
-		void processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu);
-		void processSubmenuAfterItems(ZLApplication::Menubar::Submenu &submenu);
-		void processItem(ZLApplication::Menubar::PlainItem &item);
-		void processSepartor(ZLApplication::Menubar::Separator &separator);
+		void processSubmenuBeforeItems(ZLMenubar::Submenu &submenu);
+		void processSubmenuAfterItems(ZLMenubar::Submenu &submenu);
+		void processItem(ZLMenubar::PlainItem &item);
+		void processSepartor(ZLMenubar::Separator &separator);
 
 	private:
 		ZLQtApplicationWindow &myWindow;
@@ -117,8 +118,8 @@ private:
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
-	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
-	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
+	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
+	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 private:
 	std::vector<bool> myToolbarMask;
@@ -145,7 +146,7 @@ class ToolBarButton : public QObject {
 	Q_OBJECT
 
 public:	
-	ToolBarButton(ZLQtApplicationWindow &window, ZLApplication::Toolbar::ButtonItem &button);
+	ToolBarButton(ZLQtApplicationWindow &window, const ZLToolbar::AbstractButtonItem &button);
 	~ToolBarButton();
 
 	QPixmap &pixmap();
@@ -157,7 +158,7 @@ public slots:
 
 private:
 	ZLQtApplicationWindow &myWindow;
-	ZLApplication::Toolbar::ButtonItem &myButton;
+	const ZLToolbar::AbstractButtonItem &myButton;
 	QPixmap *myReleasedPixmap;
 	QPixmap *myPressedPixmap;
 	bool myIsPressed;

@@ -24,13 +24,15 @@
 
 #include <ZLApplication.h>
 
+#include "../../../../core/src/application/ZLMenu.h"
+
 class ZLQtApplicationWindow;
 
 class ZLQtMenuAction : public QAction {
 	Q_OBJECT
 
 public:
-	ZLQtMenuAction(ZLQtApplicationWindow &window, const ZLApplication::Menubar::PlainItem &item);
+	ZLQtMenuAction(ZLQtApplicationWindow &window, const ZLMenubar::PlainItem &item);
 
 private slots:
 	void doSlot();

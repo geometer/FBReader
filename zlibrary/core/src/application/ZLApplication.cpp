@@ -339,7 +339,7 @@ shared_ptr<ZLPaintContext> ZLApplication::context() {
 	return myContext;
 }
 
-void ZLApplicationWindow::onButtonPress(ZLToolbar::AbstractButtonItem &button) {
+void ZLApplicationWindow::onButtonPress(const ZLToolbar::AbstractButtonItem &button) {
 	if (myToggleButtonLock) {
 		return;
 	}

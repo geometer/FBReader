@@ -41,7 +41,7 @@ protected:
 	// TODO: change to pure virtual
 	virtual void initMenu() {}
 
-	void onButtonPress(ZLToolbar::AbstractButtonItem &button);
+	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);
 	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
 	// TODO: change to pure virtual
 	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {}
