@@ -44,7 +44,6 @@ static void setColor(GdkGC *gc, const ZLColor &zlColor) {
 
 ZLGtkPaintContext::ZLGtkPaintContext() {
 	myPixmap = 0;
-	myTilePixmap = 0;
 	myWidth = 0;
 	myHeight = 0;
 
@@ -60,6 +59,8 @@ ZLGtkPaintContext::ZLGtkPaintContext() {
 	myTextGC = 0;
 	myFillGC = 0;
 	myBackGC = 0;
+
+	myTilePixmap = 0;
 
 	myStringHeight = -1;
 	mySpaceWidth = -1;
@@ -88,8 +89,6 @@ ZLGtkPaintContext::~ZLGtkPaintContext() {
 
 void ZLGtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 	if ((myPixmap != 0) && ((myWidth != w) || (myHeight != h))) {
-		gdk_pixmap_unref(myPixmap);
-		myPixmap = 0;
 		if (myTextGC != 0) {
 			gdk_gc_unref(myTextGC);
 			gdk_gc_unref(myFillGC);
@@ -98,6 +97,8 @@ void ZLGtkPaintContext::updatePixmap(GtkWidget *area, int w, int h) {
 			myFillGC = 0;
 			myBackGC = 0;
 		}
+		gdk_pixmap_unref(myPixmap);
+		myPixmap = 0;
 	}
 
 	if (myPixmap == 0) {
@@ -343,3 +344,5 @@ int ZLGtkPaintContext::height() const {
 	}
 	return myHeight;
 }
+
+// vim:ts=2:sw=2:noet

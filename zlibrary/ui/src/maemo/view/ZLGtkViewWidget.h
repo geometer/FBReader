@@ -22,7 +22,7 @@
 
 #include <gtk/gtk.h>
 
-#include <ZLView.h>
+#include "../../../../core/src/view/ZLViewWidget.h"
 #include <ZLApplication.h>
 
 class ZLMaemoSpecificOptions;
@@ -34,21 +34,26 @@ public:
 	ZLIntegerRangeOption MaxPressureOption;
 
 public:
-	ZLGtkViewWidget(ZLApplication *application, Angle initialAngle);
+	ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initialAngle);
 	~ZLGtkViewWidget();
 
 	int width() const;
 	int height() const;
 
-	GtkWidget *area() { return myArea; }
+	void doPaint();
+
+	GtkWidget *area();
+	GtkWidget *areaWithScrollbars();
 	void onMousePressed(GdkEventButton *event);
 	void onMouseReleased(GdkEventButton *event);
 	void onMouseMoved(GdkEventMotion *event);
-	void doPaint();
 
 private:
 	void trackStylus(bool track);
 	void repaint();
+
+	void setScrollbarEnabled(ZLView::Direction direction, bool enabled);
+	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step);
 
 	void cleanOriginalPixbuf();
 	void cleanRotatedPixbuf();
@@ -58,6 +63,7 @@ private:
 private:
 	ZLApplication *myApplication;
 	GtkWidget *myArea;
+	GtkScrolledWindow *myScrollArea;
 	GdkPixbuf *myOriginalPixbuf;
 	GdkPixbuf *myRotatedPixbuf;
 	GdkImage *myImage;

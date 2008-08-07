@@ -63,9 +63,9 @@ private:
 	GdkPixmap *myPixmap;
 	int myWidth, myHeight;
 
-  PangoContext *myContext;
+	PangoContext *myContext;
 
-  PangoFontDescription *myFontDescription;
+	PangoFontDescription *myFontDescription;
 	mutable PangoAnalysis myAnalysis;
 	PangoGlyphString *myString;
 

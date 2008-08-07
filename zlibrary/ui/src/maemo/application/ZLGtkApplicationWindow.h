@@ -36,6 +36,7 @@
 #endif
 
 #include "../../../../core/src/application/ZLApplicationWindow.h"
+#include "../../../../core/src/application/ZLMenu.h"
 #include "../../../../core/src/dialogs/ZLDialogContentBuilder.h"
 
 class ZLGtkViewWidget;
@@ -52,19 +53,19 @@ public:
 private:
 	ZLViewWidget *createViewWidget();
 	void init();
-	void addToolbarItem(ZLApplication::Toolbar::ItemPtr item);
+	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void buildTabs(ZLOptionsDialog &dialog);
 
-	class MenuBuilder : public ZLApplication::MenuVisitor {
+	class MenuBuilder : public ZLMenuVisitor {
 
 	public:
 		MenuBuilder(ZLGtkApplicationWindow &window);
 
 	private:
-		void processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu);
-		void processSubmenuAfterItems(ZLApplication::Menubar::Submenu &submenu);
-		void processItem(ZLApplication::Menubar::PlainItem &item);
-		void processSepartor(ZLApplication::Menubar::Separator &separator);
+		void processSubmenuBeforeItems(ZLMenubar::Submenu &submenu);
+		void processSubmenuAfterItems(ZLMenubar::Submenu &submenu);
+		void processItem(ZLMenubar::PlainItem &item);
+		void processSepartor(ZLMenubar::Separator &separator);
 
 	private:
 		ZLGtkApplicationWindow &myWindow;
@@ -82,8 +83,8 @@ private:
 
 	void grabAllKeys(bool grab);
 
-	void setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button);
-	void setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled);
+	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
+	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 public:
 	void handleKeyEventSlot(GdkEventKey *event, bool isKeyRelease);
@@ -96,12 +97,12 @@ public:
 		void press(bool state);
 
 	private:
-		ToolbarButton(ZLApplication::Toolbar::ButtonItem &buttonItem, ZLGtkApplicationWindow &window);
+		ToolbarButton(ZLToolbar::AbstractButtonItem &buttonItem, ZLGtkApplicationWindow &window);
 		void forcePress(bool state);
 		GtkToolItem *toolItem() const { return myToolItem; }
 
 	private:
-		ZLApplication::Toolbar::ButtonItem &myButtonItem;
+		ZLToolbar::AbstractButtonItem &myButtonItem;
 		ZLGtkApplicationWindow &myWindow;
 		shared_ptr<ZLApplication::Action> myAction;
 
@@ -123,9 +124,9 @@ private:
 
 	bool myFullScreen;
 
-	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*> myToolItems;
+	std::map<ZLToolbar::ItemPtr,GtkToolItem*> myToolItems;
 	std::map<std::string,GtkMenuItem*> myMenuItems;
-	std::map<const ZLApplication::Toolbar::ButtonItem*,ToolbarButton*> myToolbarButtons;
+	std::map<const ZLToolbar::AbstractButtonItem*,ToolbarButton*> myToolbarButtons;
 	std::vector<shared_ptr<ZLOptionView> > myViews;
 
 friend class MenuBuilder;

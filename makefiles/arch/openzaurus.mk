@@ -32,5 +32,5 @@ else
 	UILIBS = -lgpewidget -lgtk-x11-2.0 -lgdk-x11-2.0 -lgdk_pixbuf-2.0
 endif
 
-CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale --param inline-unit-growth=200 --param large-function-growth=400 -Wall -Wno-ctor-dtor-privacy -W -Winline
+CFLAGS = -pipe -DOPIE_NO_DEBUG -DQT_NO_DEBUG -DQWS -fno-exceptions -fno-rtti -march=armv4 -mtune=xscale --param inline-unit-growth=200 --param large-function-growth=2000 -Wall -Wno-ctor-dtor-privacy -W -Winline
 LDFLAGS = -Wl,-rpath,$(LIBDIR)

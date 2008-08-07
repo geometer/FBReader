@@ -216,8 +216,7 @@ void ZLGtkViewWidget::doPaint()	{
 		default:
 			cleanOriginalPixbuf();
 			cleanRotatedPixbuf();
-			gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(),
-											0, 0, 0, 0, myArea->allocation.width, myArea->allocation.height);
+			gdk_draw_pixmap(myArea->window, myArea->style->white_gc, gtkContext.pixmap(), 0, 0, 0, 0, myArea->allocation.width, myArea->allocation.height);
 			break;
 		case ZLView::DEGREES180:
 			cleanRotatedPixbuf();
@@ -231,11 +230,9 @@ void ZLGtkViewWidget::doPaint()	{
 				myImage = gdk_image_new(GDK_IMAGE_FASTEST, gdk_drawable_get_visual(gtkContext.pixmap()), w, h);
 			}
 			gdk_drawable_copy_to_image(gtkContext.pixmap(), myImage, 0, 0, 0, 0, w, h);
-			gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()),
-																0, 0, 0, 0, w, h);
+			gdk_pixbuf_get_from_image(myOriginalPixbuf, myImage, gdk_drawable_get_colormap(gtkContext.pixmap()), 0, 0, 0, 0, w, h);
 			::rotate180(myOriginalPixbuf);
-			gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myOriginalPixbuf,
-											0, 0, 0, 0, w, h, GDK_RGB_DITHER_NONE, 0, 0);
+			gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myOriginalPixbuf, 0, 0, 0, 0, w, h, GDK_RGB_DITHER_NONE, 0, 0);
 			break;
 		case ZLView::DEGREES90:
 		case ZLView::DEGREES270:
@@ -271,6 +268,6 @@ GtkWidget *ZLGtkViewWidget::area() {
 	return myArea;
 }
 
-GtkWidget *ZLGtkViewWidget::areaWithScrollbar() {
+GtkWidget *ZLGtkViewWidget::areaWithScrollbars() {
 	return GTK_WIDGET(myScrollArea);
 }

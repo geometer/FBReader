@@ -36,7 +36,7 @@ public:
 	void doPaint();
 
 	GtkWidget *area();
-	GtkWidget *areaWithScrollbar();
+	GtkWidget *areaWithScrollbars();
 
 private:
 	void trackStylus(bool track);

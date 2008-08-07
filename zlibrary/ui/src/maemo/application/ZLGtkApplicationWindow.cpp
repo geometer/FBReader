@@ -131,7 +131,7 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 
 ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
 	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).setMainWindow(0);
-	for (std::map<const ZLApplication::Toolbar::ButtonItem*,ToolbarButton*>::iterator it = myToolbarButtons.begin(); it != myToolbarButtons.end(); ++it) {
+	for (std::map<const ZLToolbar::AbstractButtonItem*,ToolbarButton*>::iterator it = myToolbarButtons.begin(); it != myToolbarButtons.end(); ++it) {
 		delete it->second;
 	}
 
@@ -155,7 +155,7 @@ ZLGtkApplicationWindow::MenuBuilder::MenuBuilder(ZLGtkApplicationWindow &window)
 	myMenuStack.push(myWindow.myMenu);
 }
 
-void ZLGtkApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLApplication::Menubar::Submenu &submenu) {
+void ZLGtkApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLMenubar::Submenu &submenu) {
 	GtkMenuItem *gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(submenu.menuName().c_str()));
 	GtkMenu *gtkSubmenu = GTK_MENU(gtk_menu_new());
 	gtk_menu_item_set_submenu(gtkItem, GTK_WIDGET(gtkSubmenu));
@@ -164,11 +164,11 @@ void ZLGtkApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLApplicatio
 	myMenuStack.push(gtkSubmenu);
 }
 
-void ZLGtkApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLApplication::Menubar::Submenu&) {
+void ZLGtkApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLMenubar::Submenu&) {
 	myMenuStack.pop();
 }
 
-void ZLGtkApplicationWindow::MenuBuilder::processItem(ZLApplication::Menubar::PlainItem &item) {
+void ZLGtkApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
 	GtkMenuItem *gtkItem = GTK_MENU_ITEM(gtk_menu_item_new_with_label(item.name().c_str()));
 	const std::string &id = item.actionId();
 	shared_ptr<ZLApplication::Action> action = myWindow.application().action(id);
@@ -180,7 +180,7 @@ void ZLGtkApplicationWindow::MenuBuilder::processItem(ZLApplication::Menubar::Pl
 	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 }
 
-void ZLGtkApplicationWindow::MenuBuilder::processSepartor(ZLApplication::Menubar::Separator&) {
+void ZLGtkApplicationWindow::MenuBuilder::processSepartor(ZLMenubar::Separator&) {
 	GtkMenuItem *gtkItem = GTK_MENU_ITEM(gtk_separator_menu_item_new());
 	gtk_menu_shell_append(GTK_MENU_SHELL(myMenuStack.top()), GTK_WIDGET(gtkItem));
 	gtk_widget_show_all(GTK_WIDGET(gtkItem));
@@ -241,12 +241,13 @@ void ZLGtkToolItemWrapper::attachWidgets(ZLOptionView&, GtkWidget *widget0, int 
 	// TODO: implement
 }
 
-void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item) {
+void ZLGtkApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	GtkToolItem *gtkItem = 0;
 	switch (item->type()) {
-		case ZLApplication::Toolbar::Item::OPTION_ENTRY:
+		/*
+		case ZLToolbar::Item::OPTION_ENTRY:
 			{
-				shared_ptr<ZLOptionEntry> entry = ((const ZLApplication::Toolbar::OptionEntryItem&)*item).entry();
+				shared_ptr<ZLOptionEntry> entry = ((const ZLToolbar::OptionEntryItem&)*item).entry();
 				gtkItem = gtk_tool_item_new();
 				ZLGtkToolItemWrapper wrapper(gtkItem);
 				ZLOptionView *view = wrapper.createViewByEntry("", "", entry);
@@ -262,20 +263,21 @@ void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item
 				}
 			}
 			break;
-		case ZLApplication::Toolbar::Item::BUTTON:
-			{
-				ZLApplication::Toolbar::ButtonItem &buttonItem = (ZLApplication::Toolbar::ButtonItem&)*item;
-      
-				ToolbarButton *toolbarButton = new ToolbarButton(buttonItem, *this);
-				gtkItem = toolbarButton->toolItem();
-				myToolbarButtons[&buttonItem] = toolbarButton;
-			}
+		*/
+		case ZLToolbar::Item::PLAIN_BUTTON:
+		case ZLToolbar::Item::TOGGLE_BUTTON:
+		case ZLToolbar::Item::MENU_BUTTON:
+		{
+			ZLToolbar::AbstractButtonItem &buttonItem = (ZLToolbar::AbstractButtonItem&)*item;
+    
+			ToolbarButton *toolbarButton = new ToolbarButton(buttonItem, *this);
+			gtkItem = toolbarButton->toolItem();
+			myToolbarButtons[&buttonItem] = toolbarButton;
 			break;
-		case ZLApplication::Toolbar::Item::SEPARATOR:
-			{
-				gtkItem = gtk_separator_tool_item_new();
-				gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(gtkItem), false);
-			}
+		}
+		case ZLToolbar::Item::SEPARATOR:
+			gtkItem = gtk_separator_tool_item_new();
+			gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(gtkItem), false);
 			break;
 	}
 	if (gtkItem != 0) {
@@ -285,8 +287,8 @@ void ZLGtkApplicationWindow::addToolbarItem(ZLApplication::Toolbar::ItemPtr item
 	}
 }
 
-void ZLGtkApplicationWindow::setToolbarItemState(ZLApplication::Toolbar::ItemPtr item, bool visible, bool enabled) {
-	std::map<ZLApplication::Toolbar::ItemPtr,GtkToolItem*>::iterator it = myToolItems.find(item);
+void ZLGtkApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
+	std::map<ZLToolbar::ItemPtr,GtkToolItem*>::iterator it = myToolItems.find(item);
 	if (it != myToolItems.end()) {
 		GtkToolItem *toolItem = it->second;
 		gtk_tool_item_set_visible_horizontal(toolItem, visible);
@@ -324,7 +326,7 @@ void ZLGtkApplicationWindow::refresh() {
 }
 
 ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
-	myViewWidget = new ZLGtkViewWidget(&application(), (ZLViewWidget::Angle)application().AngleStateOption.value());
+	myViewWidget = new ZLGtkViewWidget(&application(), (ZLView::Angle)application().AngleStateOption.value());
 	GtkWidget *area = myViewWidget->area();
 	gtk_container_add(GTK_CONTAINER(myWindow), area);
 	GtkObject *areaObject = GTK_OBJECT(area);
@@ -354,7 +356,7 @@ static void onGtkButtonRelease(GtkWidget*, GdkEventButton*, gpointer data) {
 	}
 }
 
-ZLGtkApplicationWindow::ToolbarButton::ToolbarButton(ZLApplication::Toolbar::ButtonItem &buttonItem, ZLGtkApplicationWindow &window) : myButtonItem(buttonItem), myWindow(window) {
+ZLGtkApplicationWindow::ToolbarButton::ToolbarButton(ZLToolbar::AbstractButtonItem &buttonItem, ZLGtkApplicationWindow &window) : myButtonItem(buttonItem), myWindow(window) {
 	myAction = myWindow.application().action(buttonItem.actionId());
 
 	GdkPixbuf *filePixbuf = gdk_pixbuf_new_from_file((ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + buttonItem.iconName() + ".png").c_str(), 0);
@@ -407,12 +409,12 @@ void ZLGtkApplicationWindow::ToolbarButton::forcePress(bool state) {
 	gtk_image_set_from_pixbuf(myCurrentImage, gtk_image_get_pixbuf(state ? myPressedImage : myReleasedImage));
 }
 
-void ZLGtkApplicationWindow::setToggleButtonState(const ZLApplication::Toolbar::ButtonItem &button) {
+void ZLGtkApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
 	myToolbarButtons[&button]->forcePress(button.isPressed());
 }
 
 void ZLGtkApplicationWindow::ToolbarButton::press(bool state) {
-	if (!myButtonItem.isToggleButton()) {
+	if (myButtonItem.type() != ZLToolbar::Item::TOGGLE_BUTTON) {
 		forcePress(state);
 		if (state) {
 			return;

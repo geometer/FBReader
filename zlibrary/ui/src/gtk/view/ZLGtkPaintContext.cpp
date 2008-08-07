@@ -332,6 +332,7 @@ void ZLGtkPaintContext::drawFilledCircle(int x, int y, int r) {
 }
 
 void ZLGtkPaintContext::clear(ZLColor color) {
+	myBackColor = color;
 	if (myPixmap != 0) {
 		::setColor(myBackGC, color);
 		gdk_draw_rectangle(myPixmap, myBackGC, true, 0, 0, myWidth, myHeight);
