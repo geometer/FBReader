@@ -172,6 +172,7 @@ private:
 	std::map<std::string, shared_ptr<ZLPopupData> > myPopupDataMap;
 	std::map<std::string, shared_ptr<ButtonGroup> > myButtonGroups;
 
+friend class MenuButtonItem;
 friend class ZLApplication;
 };
 
