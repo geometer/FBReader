@@ -177,8 +177,6 @@ public:
 
 	virtual bool isSelectionEnabled() const = 0;
 
-	void forceScrollbarUpdate();
-	
 protected:
 	bool onStylusPress(int x, int y);
 	bool onStylusMovePressed(int x, int y);
@@ -288,8 +286,7 @@ private:
 	shared_ptr<PositionIndicator> myPositionIndicator;
 
 	bool myTreeStateIsFrozen;
-	bool myScrollbarUpdateIsFrozen;
-	bool myForceScrollbarUpdate;
+	bool myDoUpdateScrollbar;
 
 friend class ZLTextSelectionModel;
 };

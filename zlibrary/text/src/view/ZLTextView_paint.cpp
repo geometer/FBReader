@@ -65,13 +65,15 @@ void ZLTextView::paint() {
 
 	ZLTextParagraphCursorCache::cleanup();
 
-	const size_t full = positionIndicator()->sizeOfTextBeforeParagraph(positionIndicator()->endTextIndex());
-	const size_t from = positionIndicator()->sizeOfTextBeforeCursor(startCursor());
-	const size_t to = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
+	if (myDoUpdateScrollbar && !indicatorInfo.isNull()) {
+		myDoUpdateScrollbar = false;
+		const size_t full = positionIndicator()->sizeOfTextBeforeParagraph(positionIndicator()->endTextIndex());
+		const size_t from = positionIndicator()->sizeOfTextBeforeCursor(startCursor());
+		const size_t to = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
 
-	if (!indicatorInfo.isNull() && (myForceScrollbarUpdate || !myScrollbarUpdateIsFrozen)) {
 		bool showScrollbar =
-			indicatorInfo->type() == ZLTextPositionIndicatorInfo::OS_SCROLLBAR;
+			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::OS_SCROLLBAR) &&
+			(to - from < full);
 		if (showScrollbar) {
 			ZLView::Direction dir = ZLView::VERTICAL;
 			ZLView::Direction secondDir = ZLView::HORIZONTAL;
@@ -97,7 +99,7 @@ void ZLTextView::paint() {
 			}
 			setScrollbarEnabled(dir, true);
 			setScrollbarEnabled(secondDir, false);
-			setScrollbarPlacement(dir, !otherSide);
+			setScrollbarPlacement(dir, (myStyle.baseBidiLevel() == 1) == otherSide);
 			if (invert) {
 				setScrollbarParameters(dir, full, full - to, full - from, to - from);
 			} else {
@@ -107,7 +109,6 @@ void ZLTextView::paint() {
 			setScrollbarEnabled(ZLView::HORIZONTAL, false);
 			setScrollbarEnabled(ZLView::VERTICAL, false);
 		}
-		myForceScrollbarUpdate = false;
 	}
 }
 

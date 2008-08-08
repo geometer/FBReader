@@ -33,7 +33,7 @@
 #include "ZLTextWord.h"
 #include "ZLTextSelectionModel.h"
 
-ZLTextView::ZLTextView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this, application), myTreeStateIsFrozen(false), myScrollbarUpdateIsFrozen(false), myForceScrollbarUpdate(false) {
+ZLTextView::ZLTextView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : ZLView(application, context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(context), mySelectionModel(*this, application), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
 }
 
 ZLTextView::~ZLTextView() {
@@ -598,7 +598,6 @@ void ZLTextView::onScrollbarMoved(Direction direction, size_t full, size_t from,
 		return;
 	}
 
-	myScrollbarUpdateIsFrozen = true;
 	myTreeStateIsFrozen = true;
 	if (from == 0) {
 		scrollToStartOfText();
@@ -607,10 +606,6 @@ void ZLTextView::onScrollbarMoved(Direction direction, size_t full, size_t from,
 	}
 	preparePaintInfo();
 	myTreeStateIsFrozen = false;
-	myScrollbarUpdateIsFrozen = false;
+	myDoUpdateScrollbar = false;
 	application().refreshWindow();
-}
-
-void ZLTextView::forceScrollbarUpdate() {
-	myForceScrollbarUpdate = true;
 }

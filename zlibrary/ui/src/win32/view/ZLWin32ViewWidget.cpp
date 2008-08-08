@@ -1,3 +1,12 @@
+	int style = GetWindowLong(myMainWindow, GWL_STYLE);
+	static WINDOWPLACEMENT mainPlacement;
+	static WINDOWPLACEMENT toolbarPlacement;
+	if (myFullScreen) {
+		GetWindowPlacement(myMainWindow, &mainPlacement);
+		GetWindowPlacement(myToolbar, &toolbarPlacement);
+		ShowWindow(myMainWindow, SW_SHOWMAXIMIZED);
+		ShowWindow(myToolbar, SW_HIDE);
+		SetWindowLong(myMainWindow, GWL_STYLE, style & ~WS_CAPTION);
 /*
  * Copyright (C) 2007-2008 Geometer Plus <contact@geometerplus.com>
  *
@@ -309,6 +318,13 @@ void ZLWin32ViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool en
 	ShowScrollBar(myHandle, (direction == ZLView::VERTICAL) ? SB_VERT : SB_HORZ, enabled);
 
 	doPaint();
+}
+
+void ZLWin32ViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool standard) {
+	int style = GetWindowLong(xxx, GWL_STYLE);
+	if (direction == ZLView::VERTICAL) {
+		xxx 
+	SetWindowLong(myMainWindow, GWL_STYLE, style & ~WS_CAPTION);
 }
 
 void ZLWin32ViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t /*step*/) {

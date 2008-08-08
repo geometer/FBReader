@@ -164,6 +164,7 @@ void ZLTextView::preparePaintInfo() {
 	if ((myPaintState == NOTHING_TO_PAINT) || (myPaintState == READY)) {
 		return;
 	}
+	myDoUpdateScrollbar = true;
 
 	myLineInfoCache.insert(myLineInfos.begin(), myLineInfos.end());
 
