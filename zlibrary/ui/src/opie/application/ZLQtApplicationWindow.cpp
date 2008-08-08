@@ -94,11 +94,11 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 	}
 }
 
-void ZLQtApplicationWindow::addToolbarItem(shared_ptr<ZLApplication::Toolbar::Item>) {
+void ZLQtApplicationWindow::addToolbarItem(shared_ptr<ZLToolbar::Item>) {
 }
 
 void ZLQtApplicationWindow::refresh() {
-	const ZLApplication::Toolbar::ItemVector &items = application().toolbar().items();
+	const ZLToolbar::ItemVector &items = application().toolbar().items();
 
 	bool isVisibilityChanged = false;
 	if (myToolbarMask.size() != items.size()) {
@@ -107,50 +107,71 @@ void ZLQtApplicationWindow::refresh() {
 		myToolbarMask.assign(items.size(), false);
 	}
 	std::vector<bool>::iterator bt = myToolbarMask.begin();
-	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->type() == ZLApplication::Toolbar::Item::BUTTON) {
-			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-			if (application().isActionVisible(button.actionId()) != *bt) {
-				*bt = !*bt;
-				isVisibilityChanged = true;
+	for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		switch ((*it)->type()) {
+			case ZLToolbar::Item::PLAIN_BUTTON:
+			case ZLToolbar::Item::MENU_BUTTON:
+			case ZLToolbar::Item::TOGGLE_BUTTON:
+			{
+				const ZLToolbar::AbstractButtonItem &button =
+					(const ZLToolbar::AbstractButtonItem&)**it;
+				if (application().isActionVisible(button.actionId()) != *bt) {
+					*bt = !*bt;
+					isVisibilityChanged = true;
+				}
+				++bt;
+				break;
 			}
-			++bt;
 		}
 	}
 	if (isVisibilityChanged) {
 		bt = myToolbarMask.begin();
 		centralWidget()->hide();
 		menuBar()->clear();
-		for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-			if ((*it)->type() == ZLApplication::Toolbar::Item::BUTTON) {
-				const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-				if (*bt) {
-					const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLibrary::ApplicationName()) + ZLibrary::FileNameDelimiter + button.iconName()).c_str());
-					const std::string &actionId = button.actionId();
-					std::map<std::string,int>::const_iterator iter = myActionIndices.find(actionId);
-					int actionIndex;
-					if (iter != myActionIndices.end()) {
-						actionIndex = iter->second;
-					} else {
-						actionIndex = myActionIndices.size() + 1;
-						myActionIndices[actionId] = actionIndex;
-						myActionIds[actionIndex] = actionId;
+		for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+			switch ((*it)->type()) {
+				case ZLToolbar::Item::PLAIN_BUTTON:
+				case ZLToolbar::Item::MENU_BUTTON:
+				case ZLToolbar::Item::TOGGLE_BUTTON:
+				{
+					const ZLToolbar::AbstractButtonItem &button =
+						(const ZLToolbar::AbstractButtonItem&)**it;
+					if (*bt) {
+						const QPixmap &pixmap = Resource::loadPixmap((ZLUnicodeUtil::toLower(ZLibrary::ApplicationName()) + ZLibrary::FileNameDelimiter + button.iconName()).c_str());
+						const std::string &actionId = button.actionId();
+						std::map<std::string,int>::const_iterator iter = myActionIndices.find(actionId);
+						int actionIndex;
+						if (iter != myActionIndices.end()) {
+							actionIndex = iter->second;
+						} else {
+							actionIndex = myActionIndices.size() + 1;
+							myActionIndices[actionId] = actionIndex;
+							myActionIds[actionIndex] = actionId;
+						}
+						menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, actionIndex);
 					}
-					menuBar()->insertItem(pixmap, this, SLOT(emptySlot()), 0, actionIndex);
+					++bt;
+					break;
 				}
-				++bt;
 			}
 		}
 		centralWidget()->show();
 	}
 
-	for (ZLApplication::Toolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		if ((*it)->type() == ZLApplication::Toolbar::Item::BUTTON) {
-			const ZLApplication::Toolbar::ButtonItem &button = (const ZLApplication::Toolbar::ButtonItem&)**it;
-			const std::string &actionId = button.actionId();
-			const int id = myActionIndices[actionId];
-			if (menuBar()->findItem(id) != 0) {
-				menuBar()->setItemEnabled(id, application().isActionEnabled(actionId));
+	for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		switch ((*it)->type()) {
+			case ZLToolbar::Item::PLAIN_BUTTON:
+			case ZLToolbar::Item::MENU_BUTTON:
+			case ZLToolbar::Item::TOGGLE_BUTTON:
+			{
+				const ZLToolbar::AbstractButtonItem &button =
+					(const ZLToolbar::AbstractButtonItem&)**it;
+				const std::string &actionId = button.actionId();
+				const int id = myActionIndices[actionId];
+				if (menuBar()->findItem(id) != 0) {
+					menuBar()->setItemEnabled(id, application().isActionEnabled(actionId));
+				}
+				break;
 			}
 		}
 	}
@@ -186,4 +207,10 @@ ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
 void ZLQtApplicationWindow::close() {
 	myCloseFlag = true;
 	QMainWindow::close();
+}
+
+void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
+}
+
+void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
 }

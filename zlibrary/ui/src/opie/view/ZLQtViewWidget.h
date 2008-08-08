@@ -22,8 +22,8 @@
 
 #include <qwidget.h>
 
-#include <ZLView.h>
 #include <ZLApplication.h>
+#include "../../../../core/src/view/ZLViewWidget.h"
 
 class ZLQtViewWidget : public ZLViewWidget {
 
@@ -53,6 +53,9 @@ public:
 private:
 	void repaint();
 	void trackStylus(bool track);
+
+	void setScrollbarEnabled(ZLView::Direction direction, bool enabled);
+	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step);
 
 private:
 	ZLQtViewWidgetInternal *myQWidget;

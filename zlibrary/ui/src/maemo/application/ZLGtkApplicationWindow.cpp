@@ -328,7 +328,7 @@ void ZLGtkApplicationWindow::refresh() {
 ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
 	myViewWidget = new ZLGtkViewWidget(&application(), (ZLView::Angle)application().AngleStateOption.value());
 	GtkWidget *area = myViewWidget->area();
-	gtk_container_add(GTK_CONTAINER(myWindow), area);
+	gtk_container_add(GTK_CONTAINER(myWindow), myViewWidget->areaWithScrollbars());
 	GtkObject *areaObject = GTK_OBJECT(area);
 	ZLGtkSignalUtil::connectSignal(areaObject, "expose_event", GTK_SIGNAL_FUNC(repaint), myViewWidget);
 	ZLGtkSignalUtil::connectSignal(areaObject, "button_press_event", GTK_SIGNAL_FUNC(mousePressed), myViewWidget);

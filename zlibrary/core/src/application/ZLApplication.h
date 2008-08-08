@@ -169,6 +169,9 @@ public:
 
 private:
 	void createToolbar();
+
+// TODO: change access rights to private
+public:
 	const ZLToolbar &toolbar() const;
 
 private:

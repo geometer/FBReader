@@ -31,7 +31,7 @@ ZLQtViewWidget::ZLQtViewWidgetInternal::ZLQtViewWidgetInternal(QWidget *parent, 
 	setBackgroundMode(NoBackground);
 }
 
-ZLQtViewWidget::ZLQtViewWidget(QWidget *parent, ZLApplication *application) : ZLViewWidget((ZLViewWidget::Angle)application->AngleStateOption.value()), myApplication(application) {
+ZLQtViewWidget::ZLQtViewWidget(QWidget *parent, ZLApplication *application) : ZLViewWidget((ZLView::Angle)application->AngleStateOption.value()), myApplication(application) {
 	myQWidget = new ZLQtViewWidgetInternal(parent, *this);
 }
 
@@ -46,8 +46,8 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::paintEvent(QPaintEvent*) {
 		default:
 			((ZLQtPaintContext&)myHolder.view()->context()).setSize(w, h);
 			break;
-		case DEGREES90:
-		case DEGREES270:
+		case ZLView::DEGREES90:
+		case ZLView::DEGREES270:
 			((ZLQtPaintContext&)myHolder.view()->context()).setSize(h, w);
 			break;
 	}
@@ -57,13 +57,13 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::paintEvent(QPaintEvent*) {
 	switch (myHolder.rotation()) {
 		default:
 			break;
-		case DEGREES90:
+		case ZLView::DEGREES90:
 			angle = 270;
 			break;
-		case DEGREES180:
+		case ZLView::DEGREES180:
 			angle = 180;
 			break;
-		case DEGREES270:
+		case ZLView::DEGREES270:
 			angle = 90;
 			break;
 	}
@@ -106,11 +106,11 @@ int ZLQtViewWidget::ZLQtViewWidgetInternal::x(const QMouseEvent *event) const {
 	switch (myHolder.rotation()) {
 		default:
 			return std::min(std::max(event->x(), 0), maxX);
-		case DEGREES90:
+		case ZLView::DEGREES90:
 			return maxY - std::min(std::max(event->y(), 0), maxY);
-		case DEGREES180:
+		case ZLView::DEGREES180:
 			return maxX - std::min(std::max(event->x(), 0), maxX);
-		case DEGREES270:
+		case ZLView::DEGREES270:
 			return std::min(std::max(event->y(), 0), maxY);
 	}
 }
@@ -121,15 +121,21 @@ int ZLQtViewWidget::ZLQtViewWidgetInternal::y(const QMouseEvent *event) const {
 	switch (myHolder.rotation()) {
 		default:
 			return std::min(std::max(event->y(), 0), maxY);
-		case DEGREES90:
+		case ZLView::DEGREES90:
 			return std::min(std::max(event->x(), 0), maxX);
-		case DEGREES180:
+		case ZLView::DEGREES180:
 			return maxY - std::min(std::max(event->y(), 0), maxY);
-		case DEGREES270:
+		case ZLView::DEGREES270:
 			return maxX - std::min(std::max(event->x(), 0), maxX);
 	}
 }
 
 void ZLQtViewWidget::repaint()	{
 	myQWidget->repaint(false);
+}
+
+void ZLQtViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
+}
+
+void ZLQtViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) {
 }
