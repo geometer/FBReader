@@ -99,7 +99,7 @@ void ZLTextView::paint() {
 			}
 			setScrollbarEnabled(dir, true);
 			setScrollbarEnabled(secondDir, false);
-			setScrollbarPlacement(dir, (myStyle.baseBidiLevel() == 1) == otherSide);
+			setScrollbarPlacement(dir, !otherSide);
 			if (invert) {
 				setScrollbarParameters(dir, full, full - to, full - from, to - from);
 			} else {
