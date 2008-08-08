@@ -157,7 +157,9 @@ static void hScrollbarMoved(GtkAdjustment *adjustment, ZLGtkViewWidget *data) {
 ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initialAngle) :
 	ZLViewWidget(initialAngle),
 	MinPressureOption(ZLCategoryKey::CONFIG, GROUP, "Minimum", 0, 100, 0),
-	MaxPressureOption(ZLCategoryKey::CONFIG, GROUP, "Maximum", 0, 100, 40) {
+	MaxPressureOption(ZLCategoryKey::CONFIG, GROUP, "Maximum", 0, 100, 40),
+	myVerticalScrollbarPlacementIsStandard(true),
+	myHorizontalScrollbarPlacementIsStandard(true) {
 
 	myApplication = application;
 	myArea = gtk_drawing_area_new();
@@ -180,15 +182,38 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initi
 }
 
 void ZLGtkViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
-	const bool hEnabled = (direction == ZLView::HORIZONTAL) && enabled;
-	const bool vEnabled = (direction == ZLView::VERTICAL) && enabled;
-	gtk_scrolled_window_set_policy(myScrollArea, hEnabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER, vEnabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER);
-	if (hEnabled) {
+	GtkPolicyType hPolicy;
+	GtkPolicyType vPolicy;
+	gtk_scrolled_window_get_policy(myScrollArea, &hPolicy, &vPolicy);
+	if (direction == ZLView::VERTICAL) {
+		vPolicy = enabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER;
+	} else {
+		hPolicy = enabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER;
+	}
+	gtk_scrolled_window_set_policy(myScrollArea, hPolicy, vPolicy);
+	if (direction == ZLView::VERTICAL) {
+		gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(myScrollArea));
+	} else {
 		gtk_widget_queue_draw(gtk_scrolled_window_get_hscrollbar(myScrollArea));
 	}
-	if (vEnabled) {
-		gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(myScrollArea));
+}
+
+void ZLGtkViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool standard) {
+	if (direction == ZLView::VERTICAL) {
+		myVerticalScrollbarPlacementIsStandard = standard;
+	} else {
+		myHorizontalScrollbarPlacementIsStandard = standard;
 	}
+
+	GtkCornerType cornerType = GTK_CORNER_TOP_LEFT;
+	if (!myVerticalScrollbarPlacementIsStandard) {
+  	cornerType = myHorizontalScrollbarPlacementIsStandard ?
+			GTK_CORNER_TOP_RIGHT :
+  		GTK_CORNER_BOTTOM_RIGHT;
+	} else if (!myHorizontalScrollbarPlacementIsStandard) {
+  	cornerType = GTK_CORNER_BOTTOM_LEFT;
+	}
+	gtk_scrolled_window_set_placement(myScrollArea, cornerType);
 }
 
 void ZLGtkViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) {
