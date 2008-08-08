@@ -487,8 +487,6 @@ int ZLTextView::textAreaHeight() const {
 	}
 }
 
-#include <iostream>
-
 void ZLTextView::gotoCharIndex(size_t charIndex) {
 	if (positionIndicator().isNull()) {
 		return;

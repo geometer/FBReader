@@ -134,9 +134,9 @@ void ZLChineseUtf8Matcher::processWord(const std::string &word, int length) {
 			if (!ignorableSymbols[symbol]) {
 				++myNonChineseCharacterCounter;
 			}
-		} else if (symbol >= 0x2000) {
+		} else if (symbol >= 0x3000) {
 			++myChineseCharacterCounter;
-		} else {
+		} else if (symbol < 0x2000) {
 			++myNonChineseCharacterCounter;
 		}
 	}
