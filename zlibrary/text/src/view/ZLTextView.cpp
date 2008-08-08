@@ -607,3 +607,7 @@ void ZLTextView::onScrollbarMoved(Direction direction, size_t full, size_t from,
 	myDoUpdateScrollbar = false;
 	application().refreshWindow();
 }
+
+void ZLTextView::forceScrollbarUpdate() {
+	myDoUpdateScrollbar = true;
+}

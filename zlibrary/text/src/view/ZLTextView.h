@@ -144,6 +144,7 @@ protected:
 
 public:
 	void clearCaches();
+	void forceScrollbarUpdate();
 
 	void gotoPage(size_t index);
 	size_t pageIndex();

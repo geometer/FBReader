@@ -346,6 +346,7 @@ void FBReader::setMode(ViewMode mode) {
 
 	switch (myMode) {
 		case BOOK_TEXT_MODE:
+			((ZLTextView&)*myBookTextView).forceScrollbarUpdate();
 			setView(myBookTextView);
 			break;
 		case CONTENTS_MODE:
