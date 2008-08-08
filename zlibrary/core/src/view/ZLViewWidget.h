@@ -42,6 +42,7 @@ public:
 	ZLView::Angle rotation() const;
 
 	virtual void setScrollbarEnabled(ZLView::Direction direction, bool enabled) = 0;
+	virtual void setScrollbarPlacement(ZLView::Direction direction, bool standard) = 0;
 	virtual void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) = 0;
 	void onScrollbarMoved(ZLView::Direction direction, size_t full, size_t from, size_t to);
 
@@ -58,7 +59,5 @@ friend class ZLApplication;
 inline ZLViewWidget::ZLViewWidget(ZLView::Angle initialAngle) : myView(0), myRotation(initialAngle) {}
 inline ZLViewWidget::~ZLViewWidget() {}
 inline shared_ptr<ZLView> ZLViewWidget::view() const { return myView; }
-inline void ZLViewWidget::rotate(ZLView::Angle rotation) { myRotation = rotation; }
-inline ZLView::Angle ZLViewWidget::rotation() const { return myRotation; }
 
 #endif /* __ZLVIEWWIDGET_H__ */

@@ -116,7 +116,7 @@ static void hScrollbarMoved(GtkAdjustment *adjustment, ZLGtkViewWidget *data) {
 	);
 }
 
-ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initialAngle) : ZLViewWidget(initialAngle) {
+ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initialAngle) : ZLViewWidget(initialAngle), myVerticalScrollbarPlacementIsStandard(true), myHorizontalScrollbarPlacementIsStandard(true) {
 	myApplication = application;
 	myArea = gtk_drawing_area_new();
 	GTK_OBJECT_SET_FLAGS(myArea, GTK_CAN_FOCUS);
@@ -128,8 +128,7 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initi
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(vAdjustment), "value_changed", GTK_SIGNAL_FUNC(vScrollbarMoved), this);
 	gtk_container_add(GTK_CONTAINER(myScrollArea), myArea);
 	//gtk_scrolled_window_add_with_viewport(myScrollArea, myArea);
-	setScrollbarEnabled(ZLView::VERTICAL, false);
-	setScrollbarEnabled(ZLView::HORIZONTAL, false);
+	gtk_scrolled_window_set_policy(myScrollArea, GTK_POLICY_NEVER, GTK_POLICY_NEVER);
 
 	myOriginalPixbuf = 0;
 	myRotatedPixbuf = 0;
@@ -143,15 +142,38 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initi
 }
 
 void ZLGtkViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
-	const bool hEnabled = (direction == ZLView::HORIZONTAL) && enabled;
-	const bool vEnabled = (direction == ZLView::VERTICAL) && enabled;
-	gtk_scrolled_window_set_policy(myScrollArea, hEnabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER, vEnabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER);
-	if (hEnabled) {
+	GtkPolicyType hPolicy;
+	GtkPolicyType vPolicy;
+	gtk_scrolled_window_get_policy(myScrollArea, &hPolicy, &vPolicy);
+	if (direction == ZLView::VERTICAL) {
+		vPolicy = enabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER;
+	} else {
+		hPolicy = enabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER;
+	}
+	gtk_scrolled_window_set_policy(myScrollArea, hPolicy, vPolicy);
+	if (direction == ZLView::VERTICAL) {
+		gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(myScrollArea));
+	} else {
 		gtk_widget_queue_draw(gtk_scrolled_window_get_hscrollbar(myScrollArea));
 	}
-	if (vEnabled) {
-		gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(myScrollArea));
+}
+
+void ZLGtkViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool standard) {
+	if (direction == ZLView::VERTICAL) {
+		myVerticalScrollbarPlacementIsStandard = standard;
+	} else {
+		myHorizontalScrollbarPlacementIsStandard = standard;
 	}
+
+	GtkCornerType cornerType = GTK_CORNER_TOP_LEFT;
+	if (!myVerticalScrollbarPlacementIsStandard) {
+  	cornerType = myHorizontalScrollbarPlacementIsStandard ?
+			GTK_CORNER_TOP_RIGHT :
+  		GTK_CORNER_BOTTOM_RIGHT;
+	} else if (!myHorizontalScrollbarPlacementIsStandard) {
+  	cornerType = GTK_CORNER_BOTTOM_LEFT;
+	}
+	gtk_scrolled_window_set_placement(myScrollArea, cornerType);
 }
 
 void ZLGtkViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) {

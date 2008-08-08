@@ -562,9 +562,30 @@ size_t ZLTextView::pageNumber() const {
 	return (myTextSize[endIndex] - myTextSize[startIndex]) / 2048 + 1;
 }
 
-void ZLTextView::onScrollbarMoved(Direction direction, size_t /*full*/, size_t from, size_t to) {
-	if (direction != VERTICAL) {
+void ZLTextView::onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to) {
+	ZLView::Direction dir = ZLView::VERTICAL;
+	bool invert = false;
+	switch (rotation()) {
+		case DEGREES0:
+			break;
+		case DEGREES90:
+			dir = ZLView::HORIZONTAL;
+			break;
+		case DEGREES180:
+			invert = true;
+			break;
+		case DEGREES270:
+			dir = ZLView::HORIZONTAL;
+			invert = true;
+			break;
+	}
+	if (direction != dir) {
 		return;
+	}
+	if (invert) {
+		size_t tmp = full - from;
+		from = full - to;
+		to = tmp;
 	}
 
 	mySelectionModel.deactivate();

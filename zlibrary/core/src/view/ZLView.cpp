@@ -66,6 +66,12 @@ void ZLView::setScrollbarEnabled(Direction direction, bool enabled) {
 	}
 }
 
+void ZLView::setScrollbarPlacement(Direction direction, bool standard) {
+	if (myViewWidget != 0) {
+		myViewWidget->setScrollbarPlacement(direction, standard);
+	}
+}
+
 void ZLView::setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to, size_t step) {
 	if (myViewWidget != 0) {
 		myViewWidget->setScrollbarParameters(direction, full, from, to, step);
@@ -79,4 +85,16 @@ void ZLViewWidget::onScrollbarMoved(ZLView::Direction direction, size_t full, si
 }
 
 void ZLView::onScrollbarMoved(Direction, size_t, size_t, size_t) {
+}
+
+void ZLViewWidget::rotate(ZLView::Angle rotation) {
+	myRotation = rotation;
+}
+
+ZLView::Angle ZLViewWidget::rotation() const {
+	return myRotation;
+}
+
+ZLView::Angle ZLView::rotation() const {
+	return (myViewWidget != 0) ? myViewWidget->rotation() : DEGREES0;
 }

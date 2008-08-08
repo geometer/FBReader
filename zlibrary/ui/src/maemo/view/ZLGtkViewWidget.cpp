@@ -172,8 +172,7 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initi
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(vAdjustment), "value_changed", GTK_SIGNAL_FUNC(vScrollbarMoved), this);
 	gtk_container_add(GTK_CONTAINER(myScrollArea), myArea);
 	//gtk_scrolled_window_add_with_viewport(myScrollArea, myArea);
-	setScrollbarEnabled(ZLView::VERTICAL, false);
-	setScrollbarEnabled(ZLView::HORIZONTAL, false);
+	gtk_scrolled_window_set_policy(myScrollArea, GTK_POLICY_NEVER, GTK_POLICY_NEVER);
 
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK);
