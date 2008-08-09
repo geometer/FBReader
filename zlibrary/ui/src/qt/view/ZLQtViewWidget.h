@@ -26,6 +26,7 @@
 #include <ZLApplication.h>
 
 class ZLQtApplicationWindow;
+class QScrollView;
 
 class ZLQtViewWidgetPositionInfo {
 
@@ -65,7 +66,7 @@ private:
 	
 public:
 	ZLQtViewWidget(QWidget *parent, ZLApplication *application, const ZLQtViewWidgetPositionInfo &positionInfo);
-	QWidget *widget();
+	QWidget *widget() const;
 	const ZLQtViewWidgetPositionInfo &positionInfo() const;
 
 private:
@@ -73,14 +74,14 @@ private:
 	void trackStylus(bool track);
 
 	void setScrollbarEnabled(ZLView::Direction direction, bool enabled);
+	void setScrollbarPlacement(ZLView::Direction direction, bool standard);
 	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step);
 
 private:
 	ZLQtViewWidgetInternal *myQWidget;
+	QScrollView *myScrollWidget;
 	ZLApplication *myApplication;
 	const ZLQtViewWidgetPositionInfo myPositionInfo;
 };
-
-inline QWidget *ZLQtViewWidget::widget() { return myQWidget; }
 
 #endif /* __ZLQTVIEWWIDGET_H__ */

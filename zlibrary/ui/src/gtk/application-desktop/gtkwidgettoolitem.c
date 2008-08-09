@@ -170,7 +170,8 @@ gtk_widget_tool_item_init (GtkWidgetToolItem      *item,
 		      GtkWidgetToolItemClass *klass)
 {
   GtkToolItem *toolitem = GTK_TOOL_ITEM (item);
-  gtk_container_set_border_width(GTK_CONTAINER(item), 5);
+	
+  //gtk_container_set_border_width(GTK_CONTAINER(item), 5);
   
   item->priv = GTK_WIDGET_TOOL_ITEM_GET_PRIVATE (item);
 

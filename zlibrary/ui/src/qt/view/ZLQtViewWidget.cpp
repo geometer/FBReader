@@ -22,13 +22,18 @@
 
 #include <qpainter.h>
 #include <qpixmap.h>
+#include <qscrollview.h>
 
 ZLQtViewWidget::ZLQtViewWidgetInternal::ZLQtViewWidgetInternal(QWidget *parent, ZLQtViewWidget &holder) : QWidget(parent), myHolder(holder) {
 	setBackgroundMode(NoBackground);
 }
 
 ZLQtViewWidget::ZLQtViewWidget(QWidget *parent, ZLApplication *application, const ZLQtViewWidgetPositionInfo &positionInfo) : ZLViewWidget((ZLView::Angle)application->AngleStateOption.value()), myApplication(application), myPositionInfo(positionInfo) {
+	myScrollWidget = new QScrollView(parent);
 	myQWidget = new ZLQtViewWidgetInternal(parent, *this);
+	myScrollWidget->addChild(myQWidget);
+	myScrollWidget->setVScrollBarMode(QScrollView::AlwaysOn);
+	myScrollWidget->setHScrollBarMode(QScrollView::AlwaysOn);
 }
 
 const ZLQtViewWidgetPositionInfo &ZLQtViewWidget::positionInfo() const {
@@ -147,5 +152,12 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::resizeEvent(QResizeEvent*) {
 void ZLQtViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
 }
 
+void ZLQtViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool standard) {
+}
+
 void ZLQtViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) {
+}
+
+QWidget *ZLQtViewWidget::widget() const {
+	return myScrollWidget;
 }
