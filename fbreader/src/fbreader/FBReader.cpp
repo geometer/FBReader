@@ -207,11 +207,8 @@ void FBReader::initWindow() {
 bool FBReader::createDescription(const std::string& fileName, BookDescriptionPtr &description) {
 	ZLFile bookFile = ZLFile(fileName);
 
-	if (!bookFile.isArchive()) {
-		FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
-		if (plugin == 0) {
-			return false;
-		}
+	FormatPlugin *plugin = PluginCollection::instance().plugin(ZLFile(fileName), false);
+	if (plugin != 0) {
 		std::string error = plugin->tryOpen(fileName);
 		if (!error.empty()) {
 			ZLResourceKey boxKey("openBookErrorBox");
@@ -224,6 +221,10 @@ bool FBReader::createDescription(const std::string& fileName, BookDescriptionPtr
 			description = BookDescription::getDescription(bookFile.path());
 		}
 		return true;
+	}
+
+	if (!bookFile.isArchive()) {
+		return false;
 	}
 
 	std::queue<std::string> archiveNames;

@@ -46,6 +46,7 @@ public:
 	const std::string &caption() const;
 
 	bool _onStylusPress(int x, int y);
+	bool onStylusMove(int x, int y);
 
 	void paint();
 	void updateModel();
@@ -70,6 +71,7 @@ private:
 
 private:
 	BookCollection myCollection;
+	BookDescriptionPtr mySelectedBook;
 	bool myTreeStateIsFrozen;
 	bool myUpdateModel;
 

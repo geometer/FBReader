@@ -58,6 +58,8 @@ const std::string &CollectionView::caption() const {
 }
 
 void CollectionView::selectBook(BookDescriptionPtr book) {
+	mySelectedBook = book;
+
 	if (myUpdateModel) {
 		shared_ptr<ZLTextModel> oldModel = model();
 		setModel(0, "");
@@ -65,14 +67,17 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 		setModel(oldModel, "");
 		myUpdateModel = false;
 	}
-	collectionModel().removeAllMarks();
-	const std::vector<int> &toSelect = collectionModel().paragraphIndicesByBook(book);
-	for (std::vector<int>::const_iterator it = toSelect.begin(); it != toSelect.end(); ++it) {
-		highlightParagraph(*it);
-	}
-	if (!toSelect.empty()) {
-		gotoParagraph(toSelect[toSelect.size() - 1]);
-		scrollPage(false, ZLTextView::SCROLL_PERCENTAGE, 40);
+
+	if (!book.isNull()) {
+		collectionModel().removeAllMarks();
+		const std::vector<int> &toSelect = collectionModel().paragraphIndicesByBook(book);
+		for (std::vector<int>::const_iterator it = toSelect.begin(); it != toSelect.end(); ++it) {
+			highlightParagraph(*it);
+		}
+		if (!toSelect.empty()) {
+			gotoParagraph(toSelect[toSelect.size() - 1]);
+			scrollPage(false, ZLTextView::SCROLL_PERCENTAGE, 40);
+		}
 	}
 }
 
@@ -93,7 +98,33 @@ void CollectionView::paint() {
 	FBView::paint();
 }
 
+bool CollectionView::onStylusMove(int x, int y) {
+	if (FBView::onStylusMove(x, y)) {
+		return true;
+	}
+
+	const ZLTextElementArea *imageArea = elementByCoordinates(x, y);
+	if ((imageArea != 0) && (imageArea->Kind == ZLTextElement::IMAGE_ELEMENT)) {
+		fbreader().setHyperlinkCursor(true);
+		return true;
+	}
+
+	int index = paragraphIndexByCoordinate(y);
+	if (index != -1) {
+		BookDescriptionPtr book = collectionModel().bookByParagraphIndex(index);
+		if (!book.isNull()) {
+			fbreader().setHyperlinkCursor(true);
+			return true;
+		}
+	}
+
+	fbreader().setHyperlinkCursor(false);
+	return false;
+}
+
 bool CollectionView::_onStylusPress(int x, int y) {
+	fbreader().setHyperlinkCursor(false);
+
 	const ZLTextElementArea *imageArea = elementByCoordinates(x, y);
 	if ((imageArea != 0) && (imageArea->Kind == ZLTextElement::IMAGE_ELEMENT)) {
 		ZLTextWordCursor cursor = startCursor();
@@ -153,6 +184,10 @@ void CollectionView::removeBook(BookDescriptionPtr book) {
 		return;
 	}
 
+	if (book == mySelectedBook) {
+		mySelectedBook = 0;
+	}
+
 	CollectionModel &cModel = collectionModel();
 
 	ZLResourceKey boxKey("removeBookBox");
@@ -177,6 +212,7 @@ void CollectionView::removeBook(BookDescriptionPtr book) {
 			gotoParagraph(index);
 		}
 		rebuildPaintInfo(true);
+		selectBook(mySelectedBook);
 		application().refreshWindow();
 	}
 }
@@ -220,6 +256,7 @@ void CollectionView::removeTag(const std::string &tag) {
 		collectionModel().removeAllMarks();
 		myCollection.removeTag(tag, code == REMOVE_SUBTREE);
 		updateModel();
+		selectBook(mySelectedBook);
 		application().refreshWindow();
 	}
 }
