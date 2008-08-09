@@ -368,6 +368,19 @@ void ZLTextView::activateSelection(int x, int y) {
 	}
 }
 
+bool ZLTextView::onStylusMove(int x, int y) {
+	if (myModel->kind() == ZLTextModel::TREE_MODEL) {
+		ZLTextTreeNodeMap::const_iterator it =
+			std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextTreeNodeArea::RangeChecker(x, y));
+		if (it != myTreeNodeMap.end()) {
+			application().setHyperlinkCursor(true);
+			return true;
+		}
+	}
+	application().setHyperlinkCursor(false);
+	return false;
+}
+
 bool ZLTextView::onStylusMovePressed(int x, int y) {
 	if (mySelectionModel.extendTo(visualX(x), y)) {
 		copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
@@ -530,11 +543,11 @@ void ZLTextView::gotoPage(size_t index) {
 	size_t charIndex = (index - 1) * 2048;
 	std::vector<size_t>::const_iterator it = std::lower_bound(myTextSize.begin(), myTextSize.end(), charIndex);
 	const int paraIndex = it - myTextSize.begin();
-	const ZLTextParagraph &para = *(*myModel)[index];
+	const ZLTextParagraph &para = *(*myModel)[paraIndex];
 	switch (para.kind()) {
 		case ZLTextParagraph::END_OF_TEXT_PARAGRAPH:
 		case ZLTextParagraph::END_OF_SECTION_PARAGRAPH:
-			charIndex = myTextSize[index - 1];
+			charIndex = myTextSize[paraIndex - 1];
 			break;
 		default:
 			break;

@@ -180,6 +180,7 @@ public:
 
 protected:
 	bool onStylusPress(int x, int y);
+	bool onStylusMove(int x, int y);
 	bool onStylusMovePressed(int x, int y);
 	bool onStylusRelease(int x, int y);
 	void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
