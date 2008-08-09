@@ -137,5 +137,8 @@ void ZLQtViewWidget::repaint()	{
 void ZLQtViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
 }
 
+void ZLQtViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool standard) {
+}
+
 void ZLQtViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) {
 }

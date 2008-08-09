@@ -192,7 +192,6 @@ int ZLQtPaintContext::stringHeight() const {
 }
 
 void ZLQtPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
-	// TODO: mirror string
 	if (rtl) {
 		static ZLUnicodeUtil::Ucs2String ucs2Str;
 		ucs2Str.clear();

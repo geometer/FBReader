@@ -137,7 +137,7 @@ void ZLQtPaintContext::setFillColor(ZLColor color, FillStyle style) {
 	));
 }
 
-int ZLQtPaintContext::stringWidth(const char *str, int len) const {
+int ZLQtPaintContext::stringWidth(const char *str, int len, bool) const {
 	return myPainter->fontMetrics().width(QString::fromUtf8(str, len));
 }
 
@@ -156,9 +156,22 @@ int ZLQtPaintContext::stringHeight() const {
 	return myPainter->font().pointSize() + 2;
 }
 
-void ZLQtPaintContext::drawString(int x, int y, const char *str, int len) {
-	QString qStr = QString::fromUtf8(str, len);
-	myPainter->drawText(x, y, qStr);
+void ZLQtPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
+	if (rtl) {
+		static ZLUnicodeUtil::Ucs2String ucs2Str;
+		ucs2Str.clear();
+		ZLUnicodeUtil::utf8ToUcs2(ucs2Str, str, len);
+		QString qStr;
+		FriBidiChar ch;
+		for (int i = ucs2Str.size() - 1; i >= 0; --i) {
+			fribidi_get_mirror_char(ucs2Str[i], &ch);
+			qStr.append(QChar(ch));
+		}
+		myPainter->drawText(x, y, qStr);
+	} else {
+		QString qStr = QString::fromUtf8(str, len);
+		myPainter->drawText(x, y, qStr);
+	}
 }
 
 void ZLQtPaintContext::drawImage(int x, int y, const ZLImageData &image) {

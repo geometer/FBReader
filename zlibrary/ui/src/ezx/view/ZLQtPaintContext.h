@@ -48,11 +48,11 @@ public:
 	void setColor(ZLColor color, LineStyle style = SOLID_LINE);
 	void setFillColor(ZLColor color, FillStyle style = SOLID_FILL);
 
-	int stringWidth(const char *str, int len) const;
+	int stringWidth(const char *str, int len, bool rtl) const;
 	int spaceWidth() const;
 	int stringHeight() const;
 	int descent() const;
-	void drawString(int x, int y, const char *str, int len);
+	void drawString(int x, int y, const char *str, int len, bool rtl);
 
 	void drawImage(int x, int y, const ZLImageData &image);
 

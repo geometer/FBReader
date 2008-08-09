@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <fribidi/fribidi.h>
+
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qfontmetrics.h>
@@ -24,6 +26,7 @@
 #include <qimage.h>
 
 #include <ZLImage.h>
+#include <ZLUnicodeUtil.h>
 
 #include "ZLQtPaintContext.h"
 #include "../../qt/image/ZLQtImageManager.h"
@@ -165,9 +168,21 @@ int ZLQtPaintContext::stringHeight() const {
 }
 
 void ZLQtPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
-	QString qStr = QString::fromUtf8(str, len);
-	myPainter->drawText(x, y, qStr);
-	//myPainter->drawText(x, y, qStr, 0, len, rtl ? QPainter::RTL : QPainter::LTR);
+	if (rtl) {
+		static ZLUnicodeUtil::Ucs2String ucs2Str;
+		ucs2Str.clear();
+		ZLUnicodeUtil::utf8ToUcs2(ucs2Str, str, len);
+		QString qStr;
+		FriBidiChar ch;
+		for (int i = ucs2Str.size() - 1; i >= 0; --i) {
+			fribidi_get_mirror_char(ucs2Str[i], &ch);
+			qStr.append(QChar(ch));
+		}
+		myPainter->drawText(x, y, qStr);
+	} else {
+		QString qStr = QString::fromUtf8(str, len);
+		myPainter->drawText(x, y, qStr);
+	}
 }
 
 void ZLQtPaintContext::drawImage(int x, int y, const ZLImageData &image) {
