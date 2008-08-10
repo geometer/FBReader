@@ -120,7 +120,7 @@
 				<node name="Format" value="Format">
 					<node name="optionsFor" value="Options pour"/>
 					<node name="lineSpacing" value="Interligne">
-						<node name="inchangé" value="&lt;inchangé&gt;"/>
+						<node name="unchanged" value="&lt;inchangé&gt;"/>
 					</node>
 					<node name="firstLineIndent" value="Alinéa"/>
 					<node name="alignment" value="Alignement">
@@ -128,7 +128,7 @@
 						<node name="right" value="Droite"/>
 						<node name="center" value="Centré"/>
 						<node name="justify" value="Justifié"/>
-						<node name="inchangé" value="&lt;inchangé&gt;"/>
+						<node name="unchanged" value="&lt;inchangé&gt;"/>
 					</node>
 					<node name="spaceBefore" value="Espace avant"/>
 					<node name="spaceAfter" value="Espace après"/>
@@ -138,7 +138,7 @@
 				<node name="Styles" value="Styles">
 					<node name="optionsFor" value="Options pour"/>
 					<node name="fontFamily" value="Famille">
-						<node name="inchangée" value="&lt;unchanged&gt;"/>
+						<node name="unchanged" value="&lt;inchangé&gt;"/>
 					</node>
 					<node name="fontSize" value="Taille"/>
 					<node name="fontSizeDifference" value="Différence de taille"/>
