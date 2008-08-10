@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-  <node name="menu">
-	  <node name="bookInfo" value="Book Info..."/>
-	  <node name="toc" value="Table of Contents"/>
+	<node name="menu">
+		<node name="bookInfo" value="Book Info..."/>
+		<node name="toc" value="Table of Contents"/>
 		<node name="library" value="Library">
 			<node name="showLibrary" value="Open"/>
 			<node name="previousBook" value="Previous Book"/>
