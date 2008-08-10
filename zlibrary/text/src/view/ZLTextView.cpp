@@ -369,15 +369,17 @@ void ZLTextView::activateSelection(int x, int y) {
 }
 
 bool ZLTextView::onStylusMove(int x, int y) {
-	if (myModel->kind() == ZLTextModel::TREE_MODEL) {
-		ZLTextTreeNodeMap::const_iterator it =
-			std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextTreeNodeArea::RangeChecker(x, y));
-		if (it != myTreeNodeMap.end()) {
-			application().setHyperlinkCursor(true);
-			return true;
+	if (!myModel.isNull()) {
+		if (myModel->kind() == ZLTextModel::TREE_MODEL) {
+			ZLTextTreeNodeMap::const_iterator it =
+				std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextTreeNodeArea::RangeChecker(x, y));
+			if (it != myTreeNodeMap.end()) {
+				application().setHyperlinkCursor(true);
+				return true;
+			}
 		}
+		application().setHyperlinkCursor(false);
 	}
-	application().setHyperlinkCursor(false);
 	return false;
 }
 
