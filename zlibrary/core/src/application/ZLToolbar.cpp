@@ -92,10 +92,15 @@ void ZLToolbarCreator::startElementHandler(const char *tag, const char **attribu
 		const char *id = attributeValue(attributes, "id");
 		const char *parameterId = attributeValue(attributes, "parameterId");
 		const char *maxWidth = attributeValue(attributes, "maxWidth");
+		const char *symbolSet = attributeValue(attributes, "symbols");
 		if ((id != 0) && (parameterId != 0) && (maxWidth != 0)) {
 			int nMaxWidth = atoi(maxWidth);
+			ZLToolbar::TextFieldItem::SymbolSet sSet =
+				((symbolSet != 0) && (std::string(symbolSet) == "digits")) ?
+					ZLToolbar::TextFieldItem::SET_DIGITS :
+					ZLToolbar::TextFieldItem::SET_ANY;
 			if (nMaxWidth > 0) {
-				myToolbar.addTextField(id, parameterId, nMaxWidth);
+				myToolbar.addTextField(id, parameterId, nMaxWidth, sSet);
 			}
 		}
 	} else if (SEPARATOR == tag) {
@@ -201,8 +206,8 @@ ZLToolbar::ToggleButtonItem &ZLToolbar::addToggleButton(const std::string &actio
 	return *button;
 }
 
-void ZLToolbar::addTextField(const std::string &actionId, const std::string &parameterId, int maxWidth) {
-	myItems.push_back(new TextFieldItem(actionId, parameterId, maxWidth, myResource[ZLResourceKey(actionId)]));
+void ZLToolbar::addTextField(const std::string &actionId, const std::string &parameterId, int maxWidth, TextFieldItem::SymbolSet symbolSet) {
+	myItems.push_back(new TextFieldItem(actionId, parameterId, maxWidth, symbolSet, myResource[ZLResourceKey(actionId)]));
 }
 
 void ZLToolbar::addSeparator() {
@@ -232,7 +237,7 @@ ZLToolbar::Item::Type ZLToolbar::SeparatorItem::type() const {
 	return SEPARATOR;
 }
 
-ZLToolbar::TextFieldItem::TextFieldItem(const std::string &actionId, const std::string &parameterId, int maxWidth, const ZLResource &tooltip) : ActionItem(actionId, tooltip), myParameterId(parameterId), myMaxWidth(maxWidth) {
+ZLToolbar::TextFieldItem::TextFieldItem(const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip) : ActionItem(actionId, tooltip), myParameterId(parameterId), myMaxWidth(maxWidth), mySymbolSet(symbolSet) {
 }
 
 const std::string &ZLToolbar::TextFieldItem::parameterId() const {
@@ -241,6 +246,10 @@ const std::string &ZLToolbar::TextFieldItem::parameterId() const {
 
 int ZLToolbar::TextFieldItem::maxWidth() const {
 	return myMaxWidth;
+}
+
+ZLToolbar::TextFieldItem::SymbolSet ZLToolbar::TextFieldItem::symbolSet() const {
+	return mySymbolSet;
 }
 
 ZLToolbar::Item::Type ZLToolbar::TextFieldItem::type() const {

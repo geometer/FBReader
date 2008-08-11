@@ -138,14 +138,22 @@ public:
 	class TextFieldItem : public ActionItem {
 
 	public:
-		TextFieldItem(const std::string &actionId, const std::string &parameterId, int maxWidth, const ZLResource &tooltip);
+		enum SymbolSet {
+			SET_DIGITS,
+			SET_ANY
+		};
+
+	public:
+		TextFieldItem(const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip);
 		Type type() const;
-		int maxWidth() const;
 		const std::string &parameterId() const;
+		int maxWidth() const;
+		SymbolSet symbolSet() const;
 
 	private:
 		const std::string myParameterId;
 		const int myMaxWidth;
+		const SymbolSet mySymbolSet;
 	};
 
 public:
@@ -156,7 +164,7 @@ public:
 	void addPlainButton(const std::string &actionId);
 	void addMenuButton(const std::string &actionId);
 	ToggleButtonItem &addToggleButton(const std::string &actionId, const std::string &groupId);
-	void addTextField(const std::string &actionId, const std::string &parameterId, int maxWidth);
+	void addTextField(const std::string &actionId, const std::string &parameterId, int maxWidth, TextFieldItem::SymbolSet symbolSet);
 	void addSeparator();
 
 	const ItemVector &items() const;

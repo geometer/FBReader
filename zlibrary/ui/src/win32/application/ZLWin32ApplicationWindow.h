@@ -84,7 +84,7 @@ private:
 	class TextEditParameter : public VisualParameter {
 
 	public:
-		TextEditParameter(HWND toolbar, int idCommand, const std::string &tooltip);
+		TextEditParameter(HWND toolbar, int idCommand, const ZLToolbar::TextFieldItem &item);
 		HWND handle() const;
 
 	private:

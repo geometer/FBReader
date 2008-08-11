@@ -365,7 +365,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		buttonInfo.dwMask = TBIF_SIZE;
 		buttonInfo.cx = 50;
 		SendMessage(myToolbar, TB_SETBUTTONINFO, button.idCommand, (LPARAM)&buttonInfo);
-		TextEditParameter *parameter = new TextEditParameter(myToolbar, button.idCommand, ((ZLToolbar::TextFieldItem&)*item).tooltip());
+		TextEditParameter *parameter = new TextEditParameter(myToolbar, button.idCommand, ((const ZLToolbar::TextFieldItem&)*item));
 		myTextFields[button.idCommand] = parameter->handle();
 		ZLToolbar::ItemPtr item = myTBItemByActionCode[button.idCommand];
 		const ZLToolbar::TextFieldItem &textFieldItem = (ZLToolbar::TextFieldItem&)*item;
@@ -476,15 +476,19 @@ void ZLWin32ApplicationWindow::setWait(bool wait) {
 	myWait = wait;
 }
 
-ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(HWND toolbar, int idCommand, const std::string &tooltip) {
+ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(HWND toolbar, int idCommand, const ZLToolbar::TextFieldItem &item) {
 	const int index = SendMessage(toolbar, TB_COMMANDTOINDEX, idCommand, 0);
 	RECT rect;
 	SendMessage(toolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
-	myTextEdit = CreateWindow(WC_EDIT, 0, WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NOHIDESEL | ES_CENTER | ES_NUMBER, rect.left + 5, rect.top + 12, rect.right - rect.left - 10, rect.bottom - rect.top - 15, toolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
+	DWORD style = WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NOHIDESEL | ES_CENTER;
+	if (item.symbolSet() == ZLToolbar::TextFieldItem::SET_DIGITS) {
+		style |= ES_NUMBER;
+	}
+	myTextEdit = CreateWindow(WC_EDIT, 0, style, rect.left + 5, rect.top + 12, rect.right - rect.left - 10, rect.bottom - rect.top - 15, toolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
 
 	HWND tooltipHandle = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, 0, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, myTextEdit, 0, GetModuleHandle(0), 0);
 	ZLUnicodeUtil::Ucs2String buffer;
-	::createNTWCHARString(buffer, tooltip);
+	::createNTWCHARString(buffer, item.tooltip());
 	TOOLINFO tti;
 	tti.cbSize = sizeof(tti);
 	tti.uFlags = TTF_SUBCLASS;
