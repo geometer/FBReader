@@ -78,6 +78,7 @@ private:
 	int criterion() const;
 
 private:
+	unsigned int myNeutralCharacterCounter;
 	unsigned int myChineseCharacterCounter;
 	unsigned int myNonChineseCharacterCounter;
 };
@@ -93,6 +94,7 @@ public:
 	virtual void processBuffer(const unsigned char *start, const unsigned char *end) = 0;
 
 protected:
+	unsigned int myNeutralCharacterCounter;
 	unsigned int myChineseCharacterCounter;
 	unsigned int myNonChineseCharacterCounter;
 };

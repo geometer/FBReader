@@ -85,12 +85,15 @@ ZLChineseMatcher::ZLChineseMatcher(const std::string &encoding) : ZLLanguageMatc
 }
 
 void ZLChineseMatcher::reset() {
+	myNeutralCharacterCounter = 1;
 	myChineseCharacterCounter = 1;
 	myNonChineseCharacterCounter = 1;
 }
 
 int ZLChineseMatcher::criterion() const {
-	return (myChineseCharacterCounter * 2000) / (myChineseCharacterCounter + myNonChineseCharacterCounter) - 1000;
+	return
+		2000 * (myChineseCharacterCounter + myNeutralCharacterCounter) /
+		(myChineseCharacterCounter + myNonChineseCharacterCounter + 2 * myNeutralCharacterCounter) - 1000;
 }
 
 ZLChineseUtf8Matcher::ZLChineseUtf8Matcher() : ZLWordBasedMatcher(new ZLLanguageDetector::LanguageInfo("zh", UTF8_ENCODING_NAME)) {
@@ -98,12 +101,15 @@ ZLChineseUtf8Matcher::ZLChineseUtf8Matcher() : ZLWordBasedMatcher(new ZLLanguage
 }
 
 void ZLChineseUtf8Matcher::reset() {
+	myNeutralCharacterCounter = 1;
 	myChineseCharacterCounter = 1;
 	myNonChineseCharacterCounter = 1;
 }
 
 int ZLChineseUtf8Matcher::criterion() const {
-	return (myChineseCharacterCounter * 2000) / (myChineseCharacterCounter + myNonChineseCharacterCounter) - 1000;
+	return
+		2000 * (myChineseCharacterCounter + myNeutralCharacterCounter) /
+		(myChineseCharacterCounter + myNonChineseCharacterCounter + 2 * myNeutralCharacterCounter) - 1000;
 }
 
 void ZLChineseUtf8Matcher::processWord(const std::string &word, int length) {
@@ -131,13 +137,17 @@ void ZLChineseUtf8Matcher::processWord(const std::string &word, int length) {
 	for (int i = 0; i < length; ++i) {
 		ptr += ZLUnicodeUtil::firstChar(symbol, ptr);
 		if (symbol <= 0xFF) {
-			if (!ignorableSymbols[symbol]) {
+			if (ignorableSymbols[symbol]) {
+				++myNeutralCharacterCounter;
+			} else {
 				++myNonChineseCharacterCounter;
 			}
 		} else if (symbol >= 0x3000) {
 			++myChineseCharacterCounter;
 		} else if (symbol < 0x2000) {
 			++myNonChineseCharacterCounter;
+		} else {
+			++myNeutralCharacterCounter;
 		}
 	}
 }
@@ -148,6 +158,7 @@ ZLChineseBig5Matcher::ZLChineseBig5Matcher() : ZLChineseMatcher("Big5") {
 void ZLChineseBig5Matcher::processBuffer(const unsigned char *ptr, const unsigned char *end) {
 	for (; ptr < end; ++ptr) {
 		if (*ptr <= 0x7F) {
+			++myNeutralCharacterCounter;
 			continue;
 		}
 		if ((*ptr <= 0xA0) || (*ptr >= 0xFA)) {
@@ -175,6 +186,7 @@ ZLChineseGBKMatcher::ZLChineseGBKMatcher() : ZLChineseMatcher("GBK") {
 void ZLChineseGBKMatcher::processBuffer(const unsigned char *ptr, const unsigned char *end) {
 	for (; ptr < end; ++ptr) {
 		if (*ptr <= 0x7F) {
+			++myNeutralCharacterCounter;
 			continue;
 		}
 		if ((*ptr == 0x80) || (*ptr == 0xFF)) {
