@@ -31,6 +31,20 @@ ContentsView::ContentsView(FBReader &reader, shared_ptr<ZLPaintContext> context)
 ContentsView::~ContentsView() {
 }
 
+bool ContentsView::onStylusMove(int x, int y) {
+	int index = paragraphIndexByCoordinate(y);
+	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
+		fbreader().setHyperlinkCursor(false);
+		return true;
+	}
+
+	const ContentsModel &contentsModel = (const ContentsModel&)*model();
+	const ZLTextTreeParagraph *paragraph = (const ZLTextTreeParagraph*)contentsModel[index];
+	
+	fbreader().setHyperlinkCursor(contentsModel.reference(paragraph) >= 0);
+	return true;
+}
+
 bool ContentsView::_onStylusPress(int x, int y) {
 	int index = paragraphIndexByCoordinate(y);
 	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
@@ -42,7 +56,7 @@ bool ContentsView::_onStylusPress(int x, int y) {
 	
 	int reference = contentsModel.reference(paragraph);
 
-	if (reference != -1) {
+	if (reference >= 0) {
 		fbreader().bookTextView().gotoParagraph(reference);
 		fbreader().showBookTextView();
 	}

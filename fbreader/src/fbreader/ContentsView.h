@@ -34,6 +34,7 @@ public:
 
 private:
 	bool _onStylusPress(int x, int y);
+	bool onStylusMove(int x, int y);
 };
 
 #endif /* __CONTENTSVIEW_H__ */
