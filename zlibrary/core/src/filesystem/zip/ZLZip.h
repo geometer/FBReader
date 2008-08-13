@@ -20,17 +20,34 @@
 #ifndef __ZLZIP_H__
 #define __ZLZIP_H__
 
+#include <map>
+
 #include <shared_ptr.h>
 
 #include "../ZLInputStream.h"
 #include "../ZLDir.h"
 
 class ZLZDecompressor;
+class ZLFile;
+
+class ZLZipCache {
+
+public:
+	static ZLZipCache Instance;
+
+public:
+	void addToCache(const ZLFile &file);
+	bool contains(const std::string &fileName);
+	int offset(const std::string &fileName, const std::string &entryName);
+
+private:
+	std::map<std::string,std::map<std::string,int> > myMap;
+};
 
 class ZLZipInputStream : public ZLInputStream {
 
 private:
-	ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &name);
+	ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &fileName, const std::string &entryName);
 
 public:
 	~ZLZipInputStream();
@@ -44,7 +61,8 @@ public:
 
 private:
 	shared_ptr<ZLInputStream> myBaseStream;
-	std::string myCompressedFileName;
+	std::string myFileName;
+	std::string myEntryName;
 	bool myIsDeflated;
 
 	size_t myUncompressedSize;

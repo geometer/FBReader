@@ -24,7 +24,7 @@
 #include "ZLZDecompressor.h"
 #include "../ZLFSManager.h"
 
-ZLZipInputStream::ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &name) : myBaseStream(base), myCompressedFileName(name), myUncompressedSize(0) {
+ZLZipInputStream::ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &fileName, const std::string &entryName) : myBaseStream(base), myFileName(fileName), myEntryName(entryName), myUncompressedSize(0) {
 }
 
 ZLZipInputStream::~ZLZipInputStream() {
@@ -39,25 +39,42 @@ bool ZLZipInputStream::open() {
 	}
 
 	ZLZipHeader header;
-	while (true) {
+	const size_t len = myEntryName.length();
+	std::string nameBuffer(len, '\0');
+	if (ZLZipCache::Instance.contains(myFileName)) {
+		int offset = ZLZipCache::Instance.offset(myFileName, myEntryName);
+		if (offset == -1) {
+			close();
+			return false;
+		}
+		myBaseStream->seek(offset, true);
 		if (!header.readFrom(*myBaseStream)) {
 			close();
 			return false;
 		}
-		if (header.NameLength == myCompressedFileName.length()) {
-			char *buffer = new char[header.NameLength];
-			myBaseStream->read(buffer, header.NameLength);
-			std::string str;
-			str.append(buffer, header.NameLength);
-			delete[] buffer;
-			if (str == myCompressedFileName) {
-				myBaseStream->seek(header.ExtraLength, false);
-				break;
-			}
-		} else {
-			myBaseStream->seek(header.NameLength, false);
+		myBaseStream->read((char*)nameBuffer.data(), header.NameLength);
+		if (nameBuffer != myEntryName) {
+			close();
+			return false;
 		}
-		ZLZipHeader::skipEntry(*myBaseStream, header);
+		myBaseStream->seek(header.ExtraLength, false);
+	} else {
+		while (true) {
+			if (!header.readFrom(*myBaseStream)) {
+				close();
+				return false;
+			}
+			if (header.NameLength == len) {
+				myBaseStream->read((char*)nameBuffer.data(), header.NameLength);
+				if (nameBuffer == myEntryName) {
+					myBaseStream->seek(header.ExtraLength, false);
+					break;
+				}
+			} else {
+				myBaseStream->seek(header.NameLength, false);
+			}
+			ZLZipHeader::skipEntry(*myBaseStream, header);
+		}
 	}
 	if (header.CompressionMethod == 0) {
 		myIsDeflated = false;

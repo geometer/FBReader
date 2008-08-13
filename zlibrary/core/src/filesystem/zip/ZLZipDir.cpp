@@ -27,13 +27,10 @@ void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
 	if (!stream.isNull() && stream->open()) {
 		ZLZipHeader header;
 		while (header.readFrom(*stream)) {
-			char *buffer = new char[header.NameLength];
-			if ((unsigned int)stream->read(buffer, header.NameLength) == header.NameLength) {
-				std::string entryName;
-				entryName.append(buffer, header.NameLength);
+			std::string entryName(header.NameLength, '\0');
+			if ((unsigned int)stream->read((char*)entryName.data(), header.NameLength) == header.NameLength) {
 				names.push_back(entryName);
 			}
-			delete[] buffer;
 			ZLZipHeader::skipEntry(*stream, header);
 		}
 		stream->close();
