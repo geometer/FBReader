@@ -360,15 +360,15 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	SendMessage(myToolbar, TB_ADDBUTTONS, 1, (LPARAM)&button);
 
 	if (type == ZLToolbar::Item::TEXT_FIELD) {
+		const ZLToolbar::TextFieldItem &textFieldItem = (ZLToolbar::TextFieldItem&)*item;
 		TBBUTTONINFO buttonInfo;
 		buttonInfo.cbSize = sizeof(TBBUTTONINFO);
 		buttonInfo.dwMask = TBIF_SIZE;
-		buttonInfo.cx = 50;
+		buttonInfo.cx = 10 + 8 * textFieldItem.maxWidth();
 		SendMessage(myToolbar, TB_SETBUTTONINFO, button.idCommand, (LPARAM)&buttonInfo);
-		TextEditParameter *parameter = new TextEditParameter(myToolbar, button.idCommand, ((const ZLToolbar::TextFieldItem&)*item));
+		TextEditParameter *parameter = new TextEditParameter(myToolbar, button.idCommand, textFieldItem);
 		myTextFields[button.idCommand] = parameter->handle();
 		ZLToolbar::ItemPtr item = myTBItemByActionCode[button.idCommand];
-		const ZLToolbar::TextFieldItem &textFieldItem = (ZLToolbar::TextFieldItem&)*item;
 		new TextFieldData(parameter->handle(), myMainWindow, application(), textFieldItem.actionId());
 		addVisualParameter(textFieldItem.parameterId(), parameter);
 	}
