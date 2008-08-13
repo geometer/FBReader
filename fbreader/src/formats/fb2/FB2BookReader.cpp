@@ -28,6 +28,7 @@
 #include "FB2BookReader.h"
 #include "Base64EncodedImage.h"
 #include "../../bookmodel/BookModel.h"
+#include "../../constants/XMLNamespace.h"
 
 FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 	myInsideCoverpage = false;
@@ -180,8 +181,8 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		case _IMAGE:
 		{
 			const char *ref = attributeValue(xmlattributes, myHrefAttributeName.c_str());
-			const char *vOffset = attributeValue(xmlattributes, "voffset");
-			char offset = (vOffset != 0) ? atoi(vOffset) : 0;
+			//const char *vOffset = attributeValue(xmlattributes, "voffset");
+			//char offset = (vOffset != 0) ? atoi(vOffset) : 0;
 			if ((ref != 0) && (*ref == '#')) {
 				++ref;
 				if ((myCoverImageReference != ref) ||
@@ -320,10 +321,9 @@ bool FB2BookReader::processNamespaces() const {
 }
 
 void FB2BookReader::namespaceListChangedHandler() {
-	const std::string XLINK_REFERENCE = "http://www.w3.org/1999/xlink";
 	const std::map<std::string,std::string> namespaceMap = namespaces();
 	for (std::map<std::string,std::string>::const_iterator it = namespaceMap.begin(); it != namespaceMap.end(); ++it) {
-		if (ZLStringUtil::stringStartsWith(it->second, XLINK_REFERENCE)) {
+		if (ZLStringUtil::stringStartsWith(it->second, XMLNamespace::XLink)) {
 			myHrefAttributeName = it->first + ":href";
 			return;
 		}

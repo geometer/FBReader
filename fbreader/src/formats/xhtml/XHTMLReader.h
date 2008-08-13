@@ -58,6 +58,7 @@ public:
 	bool readFile(const std::string &pathPrefix, const std::string &fileName, const std::string &referenceName);
 	bool readFile(const std::string &pathPrefix, shared_ptr<ZLInputStream> stream, const std::string &referenceName);
 
+private:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
 	void characterDataHandler(const char *text, int len);

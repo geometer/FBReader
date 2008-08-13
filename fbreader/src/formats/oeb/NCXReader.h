@@ -17,48 +17,50 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OEBBOOKREADER_H__
-#define __OEBBOOKREADER_H__
+#ifndef __NCXREADER_H__
+#define __NCXREADER_H__
 
 #include <map>
 #include <vector>
-#include <string>
 
 #include <ZLXMLReader.h>
 
 #include "../../bookmodel/BookReader.h"
 
-class OEBBookReader : public ZLXMLReader {
+class NCXReader : public ZLXMLReader {
 
 public:
-	OEBBookReader(BookModel &model);
-	bool readBook(const std::string &fileName);
+	struct NavPoint {
+		NavPoint();
+		NavPoint(int order, size_t level);
+
+		int Order;
+		size_t Level;
+		std::string Text;
+		std::string ContentHRef;
+	};
+
+public:
+	NCXReader(BookReader &modelReader);
+	const std::map<int,NavPoint> &navigationMap() const;
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
 	void characterDataHandler(const char *text, int len);
 
-	void generateTOC();
-
 private:
-	enum ReaderState {
+	BookReader &myModelReader;
+	std::map<int,NavPoint> myNavigationMap;
+	std::vector<NavPoint> myPointStack;
+
+	enum {
 		READ_NONE,
-		READ_MANIFEST,
-		READ_SPINE,
-		READ_GUIDE,
-		READ_TOUR
-	};
-
-	BookReader myModelReader;
-	ReaderState myState;
-
-	std::string myFilePrefix;
-	std::map<std::string,std::string> myIdToHref;
-	std::vector<std::string> myHtmlFileNames;
-	std::string myNCXTOCFileName;
-	std::vector<std::pair<std::string,std::string> > myTourTOC;
-	std::vector<std::pair<std::string,std::string> > myGuideTOC;
+		READ_MAP,
+		READ_POINT,
+		READ_LABEL,
+		READ_TEXT
+	} myReadState;
 };
 
-#endif /* __OEBBOOKREADER_H__ */
+#endif /* __NCXREADER_H__ */

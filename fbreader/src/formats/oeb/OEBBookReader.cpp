@@ -23,6 +23,7 @@
 #include <ZLFileImage.h>
 
 #include "OEBBookReader.h"
+#include "NCXReader.h"
 #include "../xhtml/XHTMLReader.h"
 #include "../util/MiscUtil.h"
 #include "../../bookmodel/BookModel.h"
@@ -48,6 +49,10 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 	if (MANIFEST == tagString) {
 		myState = READ_MANIFEST;
 	} else if (SPINE == tagString) {
+		const char *toc = attributeValue(xmlattributes, "toc");
+		if (toc != 0) {
+			myNCXTOCFileName = myIdToHref[toc];
+		}
 		myState = READ_SPINE;
 	} else if (GUIDE == tagString) {
 		myState = READ_GUIDE;
@@ -103,6 +108,7 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 
 	myIdToHref.clear();
 	myHtmlFileNames.clear();
+	myNCXTOCFileName.erase();
 	myTourTOC.clear();
 	myGuideTOC.clear();
 	myState = READ_NONE;
@@ -118,6 +124,41 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 		XHTMLReader(myModelReader).readFile(myFilePrefix, *it, *it);
 	}
 
+	generateTOC();
+
+	return true;
+}
+
+void OEBBookReader::generateTOC() {
+	if (!myNCXTOCFileName.empty()) {
+		NCXReader ncxReader(myModelReader);
+		if (ncxReader.readDocument(myFilePrefix + myNCXTOCFileName)) {
+			const std::map<int,NCXReader::NavPoint> navigationMap = ncxReader.navigationMap();
+			if (!navigationMap.empty()) {
+				size_t level = 0;
+				for (std::map<int,NCXReader::NavPoint>::const_iterator it = navigationMap.begin(); it != navigationMap.end(); ++it) {
+					const NCXReader::NavPoint &point = it->second;
+					int index = myModelReader.model().label(point.ContentHRef).ParagraphNumber;
+					while (level > point.Level) {
+						myModelReader.endContentsParagraph();
+						--level;
+					}
+					while (++level <= point.Level) {
+						myModelReader.beginContentsParagraph(-2);
+						myModelReader.addContentsData("...");
+					}
+					myModelReader.beginContentsParagraph(index);
+					myModelReader.addContentsData(point.Text);
+				}
+				while (level > 0) {
+					myModelReader.endContentsParagraph();
+					--level;
+				}
+				return;
+			}
+		}
+	}
+
 	std::vector<std::pair<std::string,std::string> > &toc = myTourTOC.empty() ? myGuideTOC : myTourTOC;
 	for (std::vector<std::pair<std::string,std::string> >::const_iterator it = toc.begin(); it != toc.end(); ++it) {
 		int index = myModelReader.model().label(it->second).ParagraphNumber;
@@ -127,6 +168,4 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 			myModelReader.endContentsParagraph();
 		}
 	}
-
-	return true;
 }

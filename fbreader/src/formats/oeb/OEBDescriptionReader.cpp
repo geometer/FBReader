@@ -21,6 +21,7 @@
 #include <ZLUnicodeUtil.h>
 
 #include "OEBDescriptionReader.h"
+#include "../../constants/XMLNamespace.h"
 
 OEBDescriptionReader::OEBDescriptionReader(BookDescription &description) : myDescription(description) {
 	myDescription.clearAuthor();
@@ -51,12 +52,11 @@ void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
 }
 
 bool OEBDescriptionReader::isDublinCoreNamespace(const std::string &nsId) const {
-	static const std::string DC_SCHEME_PREFIX = "http://purl.org/dc/elements";
 	const std::map<std::string,std::string> &namespaceMap = namespaces();
 	std::map<std::string,std::string>::const_iterator iter = namespaceMap.find(nsId);
 	return
 		(iter != namespaceMap.end()) &&
-		ZLStringUtil::stringStartsWith(iter->second, DC_SCHEME_PREFIX);
+		(iter->second == XMLNamespace::DublinCore);
 }
 
 void OEBDescriptionReader::startElementHandler(const char *tag, const char **attributes) {
