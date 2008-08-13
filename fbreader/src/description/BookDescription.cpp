@@ -126,18 +126,24 @@ BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, 
 	if (description->myLanguage.empty()) {
 		description->myLanguage = PluginCollection::instance().DefaultLanguageOption.value();
 	}
-	{
-		BookInfo info(fileName);
-		info.AuthorDisplayNameOption.setValue(description->myAuthor->displayName());
-		info.AuthorSortKeyOption.setValue(description->myAuthor->sortKey());
-		info.TitleOption.setValue(description->myTitle);
-		info.SeriesNameOption.setValue(description->mySeriesName);
-		info.NumberInSeriesOption.setValue(description->myNumberInSeries);
-		info.LanguageOption.setValue(description->myLanguage);
-		info.EncodingOption.setValue(description->myEncoding);
-		description->saveTags(info.TagsOption);
-	}
+	description->saveInfo();
 	return description;
+}
+
+void BookDescription::saveInfo() {
+	BookInfo info(fileName());
+	info.AuthorDisplayNameOption.setValue(myAuthor->displayName());
+	info.AuthorSortKeyOption.setValue(myAuthor->sortKey());
+	info.TitleOption.setValue(myTitle);
+	info.SeriesNameOption.setValue(mySeriesName);
+	info.NumberInSeriesOption.setValue(myNumberInSeries);
+	info.LanguageOption.setValue(myLanguage);
+	info.EncodingOption.setValue(myEncoding);
+	saveTags(info.TagsOption);
+}
+
+void WritableBookDescription::saveInfo() {
+	myDescription.saveInfo();
 }
 
 BookDescription::BookDescription(const std::string &fileName) {

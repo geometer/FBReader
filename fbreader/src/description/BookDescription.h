@@ -74,6 +74,7 @@ private:
 	bool addTag(const std::string &tag, bool check = true);
 	void saveTags() const;
 	void saveTags(ZLStringOption &tagsOption) const;
+	void saveInfo();
 
 private:
 	AuthorPtr myAuthor;
@@ -113,6 +114,8 @@ public:
 	void renameTag(const std::string &from, const std::string &to, bool includeSubTags);
 	void cloneTag(const std::string &from, const std::string &to, bool includeSubTags);
 	void removeAllTags();
+
+	void saveInfo();
 
 private:
 	BookDescription &myDescription;
