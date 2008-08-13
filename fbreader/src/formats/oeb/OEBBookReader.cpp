@@ -21,6 +21,7 @@
 
 #include <ZLUnicodeUtil.h>
 #include <ZLFileImage.h>
+#include <ZLFile.h>
 
 #include "OEBBookReader.h"
 #include "NCXReader.h"
@@ -104,6 +105,8 @@ void OEBBookReader::endElementHandler(const char *tag) {
 }
 
 bool OEBBookReader::readBook(const std::string &fileName) {
+	shared_ptr<ZLInputStream> lock = ZLFile(fileName).inputStream();
+
 	myFilePrefix = MiscUtil::htmlDirectoryPrefix(fileName);
 
 	myIdToHref.clear();
@@ -120,8 +123,9 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 	myModelReader.setMainTextModel();
 	myModelReader.pushKind(REGULAR);
 
+	XHTMLReader xhtmlReader(myModelReader);
 	for (std::vector<std::string>::const_iterator it = myHtmlFileNames.begin(); it != myHtmlFileNames.end(); ++it) {
-		XHTMLReader(myModelReader).readFile(myFilePrefix, *it, *it);
+		xhtmlReader.readFile(myFilePrefix, *it, *it);
 	}
 
 	generateTOC();

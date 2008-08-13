@@ -113,24 +113,27 @@ ZLXMLReaderInternal::~ZLXMLReaderInternal() {
 }
 
 void ZLXMLReaderInternal::init(const char *encoding) {
-	if (!myInitialized) {
-		myInitialized = true;
-		XML_UseForeignDTD(myParser, XML_TRUE);
-
-		const std::vector<std::string> &dtds = myReader.externalDTDs();
-		for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); ++it) {
-			parseDTD(myParser, *it);
-		}
-
-		XML_SetUserData(myParser, &myReader);
-		if (encoding != 0) {
-			XML_SetEncoding(myParser, encoding);
-		}
-		XML_SetStartElementHandler(myParser, fStartElementHandler);
-		XML_SetEndElementHandler(myParser, fEndElementHandler);
-		XML_SetCharacterDataHandler(myParser, fCharacterDataHandler);
-		XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, 0);
+	if (myInitialized) {
+		XML_ParserReset(myParser, encoding);
 	}
+
+	myInitialized = true;
+	XML_UseForeignDTD(myParser, XML_TRUE);
+
+	const std::vector<std::string> &dtds = myReader.externalDTDs();
+	for (std::vector<std::string>::const_iterator it = dtds.begin(); it != dtds.end(); ++it) {
+		myDTDStreamLocks.insert(ZLFile(*it).inputStream());
+		parseDTD(myParser, *it);
+	}
+
+	XML_SetUserData(myParser, &myReader);
+	if (encoding != 0) {
+		XML_SetEncoding(myParser, encoding);
+	}
+	XML_SetStartElementHandler(myParser, fStartElementHandler);
+	XML_SetEndElementHandler(myParser, fEndElementHandler);
+	XML_SetCharacterDataHandler(myParser, fCharacterDataHandler);
+	XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, 0);
 }
 
 bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {

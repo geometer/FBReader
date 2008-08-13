@@ -24,12 +24,19 @@ ZLPosixFileInputStream::ZLPosixFileInputStream(const std::string &name) : myName
 }
 
 ZLPosixFileInputStream::~ZLPosixFileInputStream() {
-	close();
+	//close();
+	if (myFile != 0) {
+		fclose(myFile);
+	}
 }
 
 bool ZLPosixFileInputStream::open() {
-	close();
-	myFile = fopen(myName.c_str(), "rb");
+	//close();
+	if (myFile == 0) {
+		myFile = fopen(myName.c_str(), "rb");
+	} else {
+		fseek(myFile, 0, SEEK_SET);
+	}
 	return myFile != 0;
 }
 
@@ -44,10 +51,10 @@ size_t ZLPosixFileInputStream::read(char *buffer, size_t maxSize) {
 }
 
 void ZLPosixFileInputStream::close() {
-	if (myFile != 0) {
-		fclose(myFile);
-		myFile = 0;
-	}
+	//if (myFile != 0) {
+	//	fclose(myFile);
+	//	myFile = 0;
+	//}
 }
 
 size_t ZLPosixFileInputStream::sizeOfOpened() {

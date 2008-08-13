@@ -22,6 +22,8 @@
 
 #include <expat.h>
 
+#include <set>
+
 class ZLXMLReader;
 
 class ZLXMLReaderInternal {
@@ -41,6 +43,8 @@ private:
 	ZLXMLReader &myReader;
 	XML_Parser myParser;
 	bool myInitialized;
+
+	std::set<shared_ptr<ZLInputStream> > myDTDStreamLocks;
 };
 
 #endif /* __ZLXMLREADERINTERNAL_H__ */

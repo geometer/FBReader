@@ -28,6 +28,8 @@
 #include "bzip2/ZLBzip2InputStream.h"
 #include "ZLFSManager.h"
 
+std::map<std::string,weak_ptr<ZLInputStream> > ZLFile::ourPlainStreamCache;
+
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);
 	{
@@ -81,11 +83,15 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 		return 0;
 	}
 
-	ZLInputStream *stream = 0;
+	shared_ptr<ZLInputStream> stream;
 	
 	int index = ZLFSManager::instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
-		stream = ZLFSManager::instance().createPlainInputStream(myPath);
+		stream = ourPlainStreamCache[myPath];
+		if (stream.isNull()) {
+			stream = ZLFSManager::instance().createPlainInputStream(myPath);
+			ourPlainStreamCache[myPath] = stream;
+		}
 	} else {
 		ZLFile baseFile(myPath.substr(0, index));
 		shared_ptr<ZLInputStream> base = baseFile.inputStream();
