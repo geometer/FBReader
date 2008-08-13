@@ -30,6 +30,7 @@ public:
 	ZLPosixFileOutputStream(const std::string &name);
 	~ZLPosixFileOutputStream();
 	bool open();
+	void write(const char *data, size_t len);
 	void write(const std::string &str);
 	void close();
 

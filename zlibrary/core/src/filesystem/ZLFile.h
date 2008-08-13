@@ -54,6 +54,8 @@ public:
 	size_t size() const;	
 
 	void forceArchiveType(ArchiveType type);
+	void cacheArchiveInformation();
+
 	bool isCompressed() const;
 	bool isDirectory() const;
 	bool isArchive() const;

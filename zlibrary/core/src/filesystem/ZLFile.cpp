@@ -91,7 +91,7 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 		shared_ptr<ZLInputStream> base = baseFile.inputStream();
 		if (!base.isNull()) {
 			if (baseFile.myArchiveType & ZIP) {
-				stream = new ZLZipInputStream(base, myPath.substr(index + 1));
+				stream = new ZLZipInputStream(base, baseFile.path(), myPath.substr(index + 1));
 			} else if (baseFile.myArchiveType & TAR) {
 				stream = new ZLTarInputStream(base, myPath.substr(index + 1));
 			}
@@ -180,6 +180,12 @@ void ZLFile::forceArchiveType(ArchiveType type) {
 	if (myArchiveType != type) {
 		myArchiveType = type;
 		ZLFSManager::instance().myForcedFiles[myPath] = myArchiveType;
+	}
+}
+
+void ZLFile::cacheArchiveInformation() {
+	if (myArchiveType & ZIP) {
+		ZLZipCache::Instance.addToCache(*this);	
 	}
 }
 

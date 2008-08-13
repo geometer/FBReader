@@ -42,6 +42,12 @@ bool ZLPosixFileOutputStream::open() {
 	return myFile != 0;
 }
 
+void ZLPosixFileOutputStream::write(const char *data, size_t len) {
+	if (::fwrite(data, 1, len, myFile) != len) {
+		myHasErrors = true;
+	}
+}
+
 void ZLPosixFileOutputStream::write(const std::string &str) {
 	if (::fwrite(str.data(), 1, str.length(), myFile) != (size_t)str.length()) {
 		myHasErrors = true;

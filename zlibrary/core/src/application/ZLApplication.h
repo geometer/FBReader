@@ -131,7 +131,6 @@ protected:
 
 	void setFullscreen(bool fullscreen);
 	bool isFullscreen() const;
-	void resetWindowCaption();
 	void quit();
 
 public:
@@ -143,6 +142,7 @@ public:
 	void grabAllKeys(bool grab);
 	void trackStylus(bool track);
 
+	void resetWindowCaption();
 	void setHyperlinkCursor(bool hyperlink);
 
 	shared_ptr<Action> action(const std::string &actionId) const;

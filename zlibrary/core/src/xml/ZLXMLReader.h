@@ -43,6 +43,11 @@ public:
 	bool readDocument(shared_ptr<ZLInputStream> stream);
 	bool readDocument(const std::string &fileName);
 
+	void initialize(const char *encoding = 0);
+	void shutdown();
+	bool readFromBuffer(const char *data, int len);
+
+protected:
 	virtual void startElementHandler(const char *tag, const char **attributes);
 	virtual void endElementHandler(const char *tag);
 	virtual void characterDataHandler(const char *text, int len);
