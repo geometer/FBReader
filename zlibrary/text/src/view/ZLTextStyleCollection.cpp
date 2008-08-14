@@ -103,8 +103,8 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 				if (EXTERNAL_STRING == hyperlink) {
 					hyperlinkStyle = ZLTextStyleDecoration::EXTERNAL;
 				}
-				static const std::string EXTERNAL_STRING = "book";
-				if (EXTERNAL_STRING == hyperlink) {
+				static const std::string BOOK_STRING = "book";
+				if (BOOK_STRING == hyperlink) {
 					hyperlinkStyle = ZLTextStyleDecoration::BOOK;
 				}
 			}
