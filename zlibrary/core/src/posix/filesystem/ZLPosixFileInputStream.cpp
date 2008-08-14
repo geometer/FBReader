@@ -19,7 +19,7 @@
 
 #include "ZLPosixFileInputStream.h"
 
-ZLPosixFileInputStream::ZLPosixFileInputStream(const std::string &name) : myName(name) {
+ZLPosixFileInputStream::ZLPosixFileInputStream(const std::string &name) : myName(name), myNeedRepositionToStart(false) {
 	myFile = 0;
 }
 
@@ -35,18 +35,29 @@ bool ZLPosixFileInputStream::open() {
 	if (myFile == 0) {
 		myFile = fopen(myName.c_str(), "rb");
 	} else {
-		fseek(myFile, 0, SEEK_SET);
+		//fseek(myFile, 0, SEEK_SET);
+		myNeedRepositionToStart = true;
 	}
 	return myFile != 0;
 }
 
 size_t ZLPosixFileInputStream::read(char *buffer, size_t maxSize) {
 	if (buffer != 0) {
+		if (myNeedRepositionToStart) {
+			fseek(myFile, 0, SEEK_SET);
+			myNeedRepositionToStart = false;
+		}
 		return fread(buffer, 1, maxSize, myFile);
 	} else {
-		int pos = ftell(myFile);
-		fseek(myFile, maxSize, SEEK_CUR);
-		return ftell(myFile) - pos;
+		if (myNeedRepositionToStart) {
+			fseek(myFile, maxSize, SEEK_SET);
+			myNeedRepositionToStart = false;
+			return ftell(myFile);
+		} else {
+			int pos = ftell(myFile);
+			fseek(myFile, maxSize, SEEK_CUR);
+			return ftell(myFile) - pos;
+		}
 	}
 }
 
@@ -69,9 +80,13 @@ size_t ZLPosixFileInputStream::sizeOfOpened() {
 }
 
 void ZLPosixFileInputStream::seek(int offset, bool absoluteOffset) {
+	if (myNeedRepositionToStart) {
+		absoluteOffset = true;
+		myNeedRepositionToStart = false;
+	}
 	fseek(myFile, offset, absoluteOffset ? SEEK_SET : SEEK_CUR);
 }
 
 size_t ZLPosixFileInputStream::offset() const {
-	return ftell(myFile);
+	return myNeedRepositionToStart ? 0 : ftell(myFile);
 }

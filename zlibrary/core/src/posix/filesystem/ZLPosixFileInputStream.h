@@ -40,6 +40,7 @@ public:
 private:
 	std::string myName;
 	FILE *myFile;
+	bool myNeedRepositionToStart;
 };
 
 #endif /* __ZLPOSIXFILEINPUTSTREAM_H__ */
