@@ -64,7 +64,7 @@ const std::vector<int> &CollectionModel::paragraphIndicesByBook(BookDescriptionP
 void CollectionModel::build() {
 	if (myCollection.books().empty()) {
 		createParagraph();
-		insertText(LIBRARY_AUTHOR_ENTRY, ZLResource::resource("library")["noBooks"].value());
+		insertText(LIBRARY_ENTRY, ZLResource::resource("library")["noBooks"].value());
 	} else {
 		if (myView.ShowTagsOption.value()) {
 			buildWithTags();
@@ -79,7 +79,7 @@ void CollectionModel::buildWithTags() {
 
 	if (myView.ShowAllBooksTagOption.value()) {
 		ZLTextTreeParagraph *allBooksParagraph = createParagraph();
-		insertText(LIBRARY_AUTHOR_ENTRY, resource["allBooks"].value());
+		insertText(LIBRARY_ENTRY, resource["allBooks"].value());
 		addBidiReset();
 		insertImage(TagInfoImageId);
 		myParagraphToTag[allBooksParagraph] = CollectionView::SpecialTagAllBooks;
@@ -103,7 +103,7 @@ void CollectionModel::buildWithTags() {
 
 	if (!booksWithoutTags.empty()) {
 		ZLTextTreeParagraph *booksWithoutTagsParagraph = createParagraph();
-		insertText(LIBRARY_AUTHOR_ENTRY, resource["booksWithoutTags"].value());
+		insertText(LIBRARY_ENTRY, resource["booksWithoutTags"].value());
 		addBidiReset();
 		insertImage(TagInfoImageId);
 		myParagraphToTag[booksWithoutTagsParagraph] = CollectionView::SpecialTagNoTagsBooks;
@@ -141,7 +141,7 @@ void CollectionModel::buildWithTags() {
 				tagStack.push_back(subTag);
 				tagParagraph = createParagraph(tagParagraph);
 				myParagraphToTag[tagParagraph] = fullTagName.substr(0, newIndex);
-				insertText(LIBRARY_AUTHOR_ENTRY, subTag);
+				insertText(LIBRARY_ENTRY, subTag);
 				addBidiReset();
 				insertImage(TagInfoImageId);
 				insertImage(RemoveTagImageId);
@@ -175,7 +175,7 @@ void CollectionModel::addBooks(const Books &books, ZLTextTreeParagraph *root) {
 		if (author.isNull() || comparator(author, description->author())) {
 			author = description->author();
 			authorParagraph = createParagraph(root);
-			insertText(LIBRARY_AUTHOR_ENTRY, author->displayName());
+			insertText(LIBRARY_ENTRY, author->displayName());
 			addBidiReset();
 			//insertImage(AuthorInfoImageId);
 			currentSeriesName.erase();
@@ -189,14 +189,14 @@ void CollectionModel::addBooks(const Books &books, ZLTextTreeParagraph *root) {
 		} else if (seriesName != currentSeriesName) {
 			currentSeriesName = seriesName;
 			seriesParagraph = createParagraph(authorParagraph);
-			insertText(LIBRARY_BOOK_ENTRY, seriesName);
+			insertText(LIBRARY_ENTRY, seriesName);
 			addBidiReset();
 			//insertImage(SeriesOrderImageId);
 		}
 		ZLTextTreeParagraph *bookParagraph = createParagraph(
 			(seriesParagraph == 0) ? authorParagraph : seriesParagraph
 		);
-		insertText(LIBRARY_BOOK_ENTRY, description->title());
+		insertText(LIBRARY_ENTRY, description->title());
 		addBidiReset();
 		insertImage(BookInfoImageId);
 		if (myCollection.isBookExternal(description)) {
