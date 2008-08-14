@@ -100,6 +100,7 @@ public:
 	ZLColorOption RegularTextColorOption;
 	ZLColorOption InternalHyperlinkTextColorOption;
 	ZLColorOption ExternalHyperlinkTextColorOption;
+	ZLColorOption BookHyperlinkTextColorOption;
 	ZLColorOption TreeLinesColorOption;
 
 	ZLBooleanOption AutoHyphenationOption;

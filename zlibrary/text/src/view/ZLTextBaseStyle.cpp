@@ -31,6 +31,7 @@ ZLTextBaseStyle::ZLTextBaseStyle(const std::string &fontFamily, int fontSize) :
 	RegularTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Text", ZLColor(0, 0, 0)),
 	InternalHyperlinkTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Hyperlink", ZLColor(33, 96, 180)),
 	ExternalHyperlinkTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "ExternalHyperlink", ZLColor(98, 174, 26)),
+	BookHyperlinkTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "BookHyperlink", ZLColor(143, 89, 2)),
 	TreeLinesColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "TreeLines", ZLColor(127, 127, 127)),
 	AutoHyphenationOption(ZLCategoryKey::LOOK_AND_FEEL, "Options", "AutoHyphenation", true),
 	FontFamilyOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontFamily", fontFamily),
