@@ -129,7 +129,8 @@ public:
 	enum HyperlinkStyle {
 		NONE,
 		INTERNAL,
-		EXTERNAL
+		EXTERNAL,
+		BOOK
 	};
 	HyperlinkStyle hyperlinkStyle() const;
 	void setHyperlinkStyle(HyperlinkStyle hyperlinkStyle);

@@ -115,15 +115,15 @@ bool ZLTextFullDecoratedStyle::allowHyphenations() const {
 }
 
 ZLColor ZLTextPartialDecoratedStyle::color() const {
-	ZLTextStyleDecoration::HyperlinkStyle hyperlinkStyle = myDecoration.hyperlinkStyle();
-	if (hyperlinkStyle == ZLTextStyleDecoration::NONE) {
-		return base()->color();
-	}
-	ZLTextBaseStyle &baseStyle = ZLTextStyleCollection::instance().baseStyle();
-	if (hyperlinkStyle == ZLTextStyleDecoration::INTERNAL) {
-		return baseStyle.InternalHyperlinkTextColorOption.value();
-	} else {
-		return baseStyle.ExternalHyperlinkTextColorOption.value();
+	switch (myDecoration.hyperlinkStyle()) {
+		case ZLTextStyleDecoration::NONE:
+			return base()->color();
+		case ZLTextStyleDecoration::INTERNAL:
+			return ZLTextStyleCollection::instance().baseStyle().InternalHyperlinkTextColorOption.value();
+		case ZLTextStyleDecoration::EXTERNAL:
+			return ZLTextStyleCollection::instance().baseStyle().ExternalHyperlinkTextColorOption.value();
+		case ZLTextStyleDecoration::BOOK:
+			return ZLTextStyleCollection::instance().baseStyle().BookHyperlinkTextColorOption.value();
 	}
 }
 
