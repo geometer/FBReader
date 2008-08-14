@@ -45,11 +45,8 @@ void RecentBooksView::paint() {
 		for (Books::const_iterator it = books.begin(); it != books.end(); ++it) {
 			recentBooksModel->createParagraph(ZLTextParagraph::TEXT_PARAGRAPH);
 			recentBooksModel->addControl(RECENT_BOOK_LIST, true);
-			recentBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, true);
-			recentBooksModel->addText((*it)->author()->displayName() + ". ");
-			recentBooksModel->addControl(LIBRARY_AUTHOR_ENTRY, false);
-			recentBooksModel->addControl(LIBRARY_BOOK_ENTRY, true);
-			recentBooksModel->addText((*it)->title());
+			recentBooksModel->addControl(LIBRARY_ENTRY, true);
+			recentBooksModel->addText((*it)->author()->displayName() + ". " + (*it)->title());
 		}
 		setModel(recentBooksModel, "");
 	}
