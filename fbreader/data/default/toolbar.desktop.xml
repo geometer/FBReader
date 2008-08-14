@@ -4,11 +4,14 @@
 	<separator/>
 	<menuButton id="showLibrary"/>
 	<button id="addBook"/>
+	<button id="showNetLibrary"/>
 	<separator/>
 	<button id="gotoHome"/>
 	<button id="undo"/>
 	<button id="redo"/>
 	<textField id="gotoPageNumberWithParameter" parameterId="pageIndex" maxWidth="5" symbols="digits"/>
+	<separator/>
+	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>
 	<separator/>
 	<button id="toc"/>
 	<separator/>
