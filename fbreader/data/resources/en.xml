@@ -355,8 +355,7 @@
 		<node name="Code" value="Code"/>
 		<node name="StrikeThrough" value="StrikeThrough"/>
 		<node name="Contents Table" value="Contents Table"/>
-		<node name="Author in Library" value="Author in Library"/>
-		<node name="Book in Library" value="Book in Library"/>
+		<node name="Library Entry" value="Library Entry"/>
 		<node name="Recent Book List" value="Recent Book List"/>
 		<node name="Italic" value="Italic"/>
 		<node name="Bold" value="Bold"/>
@@ -369,6 +368,7 @@
 		<node name="Header 5" value="Header 5"/>
 		<node name="Header 6" value="Header 6"/>
 		<node name="External Hyperlink" value="External Hyperlink"/>
+		<node name="Link to Another Book" value="Link to Another Book"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="Browser"/>
