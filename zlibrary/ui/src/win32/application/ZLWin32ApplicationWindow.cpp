@@ -85,8 +85,6 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			MoveWindow(myWin32ViewWidget->handle(), 0, offset, LOWORD(lParam), HIWORD(lParam) - offset, true);
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
 		}
-		case WM_ERASEBKGND:
-			return 0;
 		case WM_CLOSE:
 			if (myFullScreen) {
 				myWindowStateOption.setValue(FULLSCREEN);
