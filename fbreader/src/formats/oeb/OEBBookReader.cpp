@@ -105,8 +105,6 @@ void OEBBookReader::endElementHandler(const char *tag) {
 }
 
 bool OEBBookReader::readBook(const std::string &fileName) {
-	shared_ptr<ZLInputStream> lock = ZLFile(fileName).inputStream();
-
 	myFilePrefix = MiscUtil::htmlDirectoryPrefix(fileName);
 
 	myIdToHref.clear();

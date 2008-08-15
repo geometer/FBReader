@@ -65,10 +65,12 @@ std::string OEBPlugin::opfFileName(const std::string &oebFileName) {
 }
 
 bool OEBPlugin::readDescription(const std::string &path, BookDescription &description) const {
+	shared_ptr<ZLInputStream> lock = ZLFile(path).inputStream();
 	return OEBDescriptionReader(description).readDescription(opfFileName(path));
 }
 
 bool OEBPlugin::readModel(const BookDescription &description, BookModel &model) const {
+	shared_ptr<ZLInputStream> lock = ZLFile(description.fileName()).inputStream();
 	return OEBBookReader(model).readBook(opfFileName(description.fileName()));
 }
 
