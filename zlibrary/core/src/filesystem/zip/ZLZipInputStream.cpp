@@ -38,27 +38,18 @@ bool ZLZipInputStream::open() {
 		return false;
 	}
 
-	ZLZipHeader header;
-	const size_t len = myEntryName.length();
-	std::string nameBuffer(len, '\0');
+	ZLZipCache::Info info;
 	if (ZLZipCache::Instance.contains(myFileName)) {
-		int offset = ZLZipCache::Instance.offset(myFileName, myEntryName);
-		if (offset == -1) {
+		info = ZLZipCache::Instance.info(myFileName, myEntryName);
+		if (info.Offset == -1) {
 			close();
 			return false;
 		}
-		myBaseStream->seek(offset, true);
-		if (!header.readFrom(*myBaseStream)) {
-			close();
-			return false;
-		}
-		myBaseStream->read((char*)nameBuffer.data(), header.NameLength);
-		if (nameBuffer != myEntryName) {
-			close();
-			return false;
-		}
-		myBaseStream->seek(header.ExtraLength, false);
+		myBaseStream->seek(info.Offset, true);
 	} else {
+		ZLZipHeader header;
+		const size_t len = myEntryName.length();
+		std::string nameBuffer(len, '\0');
 		while (true) {
 			if (!header.readFrom(*myBaseStream)) {
 				close();
@@ -75,17 +66,20 @@ bool ZLZipInputStream::open() {
 			}
 			ZLZipHeader::skipEntry(*myBaseStream, header);
 		}
+		info.CompressionMethod = header.CompressionMethod;
+		info.CompressedSize = header.CompressedSize;
+		info.UncompressedSize = header.UncompressedSize;
 	}
-	if (header.CompressionMethod == 0) {
+	if (info.CompressionMethod == 0) {
 		myIsDeflated = false;
-	} else if (header.CompressionMethod == 8) {
+	} else if (info.CompressionMethod == 8) {
 		myIsDeflated = true;
 	} else {
 		close();
 		return false;
 	}
-	myUncompressedSize = header.UncompressedSize;
-	myAvailableSize = header.CompressedSize;
+	myUncompressedSize = info.UncompressedSize;
+	myAvailableSize = info.CompressedSize;
 	if (myAvailableSize == 0) {
 		myAvailableSize = (size_t)-1;
 	}

@@ -35,13 +35,22 @@ class ZLZipCache {
 public:
 	static ZLZipCache Instance;
 
+	struct Info {
+		Info();
+
+		int Offset;
+		int CompressionMethod;
+		int CompressedSize;
+		int UncompressedSize;
+	};
+
 public:
 	void addToCache(const ZLFile &file);
-	bool contains(const std::string &fileName);
-	int offset(const std::string &fileName, const std::string &entryName);
+	bool contains(const std::string &fileName) const;
+	Info info(const std::string &fileName, const std::string &entryName) const;
 
 private:
-	std::map<std::string,std::map<std::string,int> > myMap;
+	std::map<std::string,std::map<std::string,Info> > myMap;
 };
 
 class ZLZipInputStream : public ZLInputStream {

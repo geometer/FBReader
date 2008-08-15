@@ -24,12 +24,15 @@
 
 ZLZipCache ZLZipCache::Instance;
 
+ZLZipCache::Info::Info() : Offset(-1) {
+}
+
 void ZLZipCache::addToCache(const ZLFile &file) {
 	if (contains(file.path())) {
 		return;
 	}
 
-	std::map<std::string,int> &offsetMap = myMap[file.path()];
+	std::map<std::string,Info> &infoMap = myMap[file.path()];
 
 	shared_ptr<ZLInputStream> stream = file.inputStream();
 
@@ -38,28 +41,30 @@ void ZLZipCache::addToCache(const ZLFile &file) {
 	}
 
 	ZLZipHeader header;
-	int offset = stream->offset();
 	while (header.readFrom(*stream)) {
 		std::string entryName(header.NameLength, '\0');
 		if ((unsigned int)stream->read((char*)entryName.data(), header.NameLength) == header.NameLength) {
-			offsetMap[entryName] = offset;
+			Info &info = infoMap[entryName];
+			info.Offset = stream->offset() + header.ExtraLength;
+			info.CompressionMethod = header.CompressionMethod;
+			info.CompressedSize = header.CompressedSize;
+			info.UncompressedSize = header.UncompressedSize;
 		}
 		ZLZipHeader::skipEntry(*stream, header);
-		offset = stream->offset();
 	}
 	stream->close();
 }
 
-bool ZLZipCache::contains(const std::string &fileName) {
+bool ZLZipCache::contains(const std::string &fileName) const {
 	return myMap.find(fileName) != myMap.end();
 }
 
-int ZLZipCache::offset(const std::string &fileName, const std::string &entryName) {
-	std::map<std::string,std::map<std::string,int> >::const_iterator it = myMap.find(fileName);
+ZLZipCache::Info ZLZipCache::info(const std::string &fileName, const std::string &entryName) const {
+	std::map<std::string,std::map<std::string,Info> >::const_iterator it = myMap.find(fileName);
 	if (it == myMap.end()) {
-		return -1;
+		return Info();
 	}
 
-	std::map<std::string,int>::const_iterator jt = it->second.find(entryName);
-	return (jt != it->second.end()) ? jt->second : -1;
+	std::map<std::string,Info>::const_iterator jt = it->second.find(entryName);
+	return (jt != it->second.end()) ? jt->second : Info();
 }
