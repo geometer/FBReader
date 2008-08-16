@@ -21,7 +21,6 @@
 
 #include <ZLUnicodeUtil.h>
 #include <ZLFileImage.h>
-#include <ZLFile.h>
 
 #include "OEBBookReader.h"
 #include "NCXReader.h"
