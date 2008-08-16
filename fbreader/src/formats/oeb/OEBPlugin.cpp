@@ -20,6 +20,7 @@
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
 #include <ZLDir.h>
+#include <ZLInputStream.h>
 
 #include "OEBPlugin.h"
 #include "OEBDescriptionReader.h"
