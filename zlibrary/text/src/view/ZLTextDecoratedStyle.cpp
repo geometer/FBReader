@@ -116,6 +116,7 @@ bool ZLTextFullDecoratedStyle::allowHyphenations() const {
 
 ZLColor ZLTextPartialDecoratedStyle::color() const {
 	switch (myDecoration.hyperlinkStyle()) {
+		default:
 		case ZLTextStyleDecoration::NONE:
 			return base()->color();
 		case ZLTextStyleDecoration::INTERNAL:
