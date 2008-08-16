@@ -31,6 +31,7 @@
 #include "zip/ZLZip.h"
 
 std::map<std::string,weak_ptr<ZLInputStream> > ZLFile::ourPlainStreamCache;
+std::map<std::string,ZLFileInfo> ZLFile::ourInfoCache;
 
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);
@@ -144,6 +145,12 @@ shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
 }
 
 void ZLFile::fillInfo() const {
+	std::map<std::string,ZLFileInfo>::const_iterator it = ourInfoCache.find(myPath);
+	if (it != ourInfoCache.end()) {
+		myInfo = it->second;
+		return;
+	}
+
 	int index = ZLFSManager::instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
 		myInfo = ZLFSManager::instance().fileInfo(myPath);
@@ -200,9 +207,15 @@ void ZLFile::forceArchiveType(ArchiveType type) {
 	}
 }
 
-void ZLFile::cacheArchiveInformation() {
+void ZLFile::cacheFileInformation() {
 	if (myArchiveType & ZIP) {
 		ZLZipCache::Instance.addToCache(*this);	
+	}
+	if (ourInfoCache.find(myPath) == ourInfoCache.end()) {
+		if (!myInfoIsFilled) {
+			fillInfo();
+		}
+		ourInfoCache[myPath] = myInfo;
 	}
 }
 
