@@ -23,7 +23,6 @@
 struct ZLFileInfo {
 	bool Exists;
 	bool IsDirectory;
-	unsigned long MTime;
 	unsigned long Size;
 };
 

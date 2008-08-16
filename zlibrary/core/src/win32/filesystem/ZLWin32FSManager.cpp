@@ -138,7 +138,6 @@ ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 		ZLFileInfo info;
 		info.Exists = true;
 		info.Size = 0;
-		info.MTime = 0;
 		info.IsDirectory = true;
 		return info;
 	} else {

@@ -55,7 +55,6 @@ public:
 	~ZLFile();
 
 	bool exists() const;
-	unsigned long mTime() const;
 	size_t size() const;	
 
 	void forceArchiveType(ArchiveType type);
@@ -92,12 +91,7 @@ private:
 
 inline ZLFile::~ZLFile() {}
 
-inline bool ZLFile::exists() const { if (!myInfoIsFilled) fillInfo(); return myInfo.Exists; }
-inline unsigned long ZLFile::mTime() const { if (!myInfoIsFilled) fillInfo(); return myInfo.MTime; }
-inline size_t ZLFile::size() const { if (!myInfoIsFilled) fillInfo(); return myInfo.Size; }
-	
 inline bool ZLFile::isCompressed() const { return myArchiveType & COMPRESSED; }
-inline bool ZLFile::isDirectory() const { if (!myInfoIsFilled) fillInfo(); return myInfo.IsDirectory; }
 inline bool ZLFile::isArchive() const { return myArchiveType & ARCHIVE; }
 
 inline const std::string &ZLFile::path() const { return myPath; }

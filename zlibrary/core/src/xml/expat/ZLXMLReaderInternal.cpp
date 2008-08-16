@@ -89,7 +89,6 @@ static int fUnknownEncodingHandler(void*, const XML_Char *name, XML_Encoding *en
 static void parseDTD(XML_Parser parser, const std::string &fileName) {
 	XML_Parser entityParser = XML_ExternalEntityParserCreate(parser, 0, 0);
 	ZLFile dtdFile(fileName);
-	dtdFile.cacheFileInformation();
 	shared_ptr<ZLInputStream> entityStream = dtdFile.inputStream();
 	if (!entityStream.isNull() && entityStream->open()) {
 		const size_t BUFSIZE = 2048;
