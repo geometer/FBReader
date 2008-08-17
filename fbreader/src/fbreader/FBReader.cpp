@@ -471,3 +471,7 @@ shared_ptr<ProgramCollection> FBReader::webBrowserCollection() const {
 RecentBooks &FBReader::recentBooks() {
 	return myRecentBooks;
 }
+
+const RecentBooks &FBReader::recentBooks() const {
+	return myRecentBooks;
+}

@@ -70,8 +70,8 @@ public:
 
 	public:
 		virtual ~Action();
-		virtual bool isVisible();
-		virtual bool isEnabled();
+		virtual bool isVisible() const;
+		virtual bool isEnabled() const;
 		void checkAndRun();
 		virtual bool useKeyDelay() const;
 
@@ -84,7 +84,7 @@ protected:
 
 	public:
 		RotationAction(ZLApplication &application);
-		bool isVisible();
+		bool isVisible() const;
 		void run();
 
 	private:
@@ -96,7 +96,7 @@ protected:
 
 	public:
 		FullscreenAction(ZLApplication &application, bool toggle);
-		bool isVisible();
+		bool isVisible() const;
 		void run();
 
 	private:

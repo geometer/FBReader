@@ -174,6 +174,7 @@ public:
 	void highlightParagraph(int paragraphNumber);
 
 	ZLTextSelectionModel &selectionModel();
+	const ZLTextSelectionModel &selectionModel() const;
 	void copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const;
 
 	virtual bool isSelectionEnabled() const = 0;
@@ -307,6 +308,7 @@ inline const ZLTextWordCursor &ZLTextView::startCursor() const { return myStartC
 inline const ZLTextWordCursor &ZLTextView::endCursor() const { return myEndCursor; }
 inline const shared_ptr<ZLTextModel> ZLTextView::model() const { return myModel; }
 inline ZLTextSelectionModel &ZLTextView::selectionModel() { return mySelectionModel; }
+inline const ZLTextSelectionModel &ZLTextView::selectionModel() const { return mySelectionModel; }
 
 inline int ZLTextView::viewWidth() const {
 	return std::max(myStyle.context().width() - leftMargin() - rightMargin(), 1);

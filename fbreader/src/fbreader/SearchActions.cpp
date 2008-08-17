@@ -94,7 +94,7 @@ SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader),
 	SearchPatternOption(FBCategoryKey::SEARCH, SEARCH, PATTERN, "") {
 }
 
-bool SearchAction::isVisible() {
+bool SearchAction::isVisible() const {
 	return !fbreader().currentView().isNull();
 }
 
@@ -128,7 +128,7 @@ void SearchAction::run() {
 FindNextAction::FindNextAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FindNextAction::isEnabled() {
+bool FindNextAction::isEnabled() const {
 	shared_ptr<ZLView> view = fbreader().currentView();
 	return (!view.isNull()) && ((ZLTextView&)*view).canFindNext();
 }
@@ -140,7 +140,7 @@ void FindNextAction::run() {
 FindPreviousAction::FindPreviousAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool FindPreviousAction::isEnabled() {
+bool FindPreviousAction::isEnabled() const {
 	shared_ptr<ZLView> view = fbreader().currentView();
 	return (!view.isNull()) && ((ZLTextView&)*view).canFindPrevious();
 }

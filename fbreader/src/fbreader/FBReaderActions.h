@@ -79,6 +79,7 @@ class FBAction : public ZLApplication::Action {
 protected:
 	FBAction(FBReader &fbreader);
 	FBReader &fbreader();
+	const FBReader &fbreader() const;
 
 private:
 	FBReader &myFBReader;
@@ -90,7 +91,7 @@ protected:
 	ModeDependentAction(FBReader &fbreader, int visibleInModes);
 
 public:
-	bool isVisible();
+	bool isVisible() const;
 
 private:
 	int myVisibleInModes;
@@ -124,7 +125,7 @@ class ShowContentsAction : public FBAction {
 
 public:
 	ShowContentsAction(FBReader &fbreader);
-	bool isVisible();
+	bool isVisible() const;
 	void run();
 };
 
@@ -146,7 +147,7 @@ class ScrollingAction : public FBAction {
 
 public:
 	ScrollingAction(FBReader &fbreader, const FBReader::ScrollingOptions &options, bool forward);
-	bool isEnabled();
+	bool isEnabled() const;
 	bool useKeyDelay() const;
 	void run();
 
@@ -180,7 +181,7 @@ class UndoAction : public ModeDependentAction {
 
 public:
 	UndoAction(FBReader &fbreader, int visibleInModes);
-	bool isEnabled();
+	bool isEnabled() const;
 	void run();
 };
 
@@ -188,7 +189,7 @@ class RedoAction : public ModeDependentAction {
 
 public:
 	RedoAction(FBReader &fbreader);
-	bool isEnabled();
+	bool isEnabled() const;
 	void run();
 };
 
@@ -196,7 +197,7 @@ class SearchAction : public FBAction {
 
 public:
 	SearchAction(FBReader &fbreader);
-	bool isVisible();
+	bool isVisible() const;
 	void run();
 
 private:
@@ -213,7 +214,7 @@ class FindNextAction : public FBAction {
 
 public:
 	FindNextAction(FBReader &fbreader);
-	bool isEnabled();
+	bool isEnabled() const;
 	void run();
 };
 
@@ -221,7 +222,7 @@ class FindPreviousAction : public FBAction {
 
 public:
 	FindPreviousAction(FBReader &fbreader);
-	bool isEnabled();
+	bool isEnabled() const;
 	void run();
 };
 
@@ -229,6 +230,7 @@ class ChangeFontSizeAction : public FBAction {
 
 public:
 	ChangeFontSizeAction(FBReader &fbreader, int delta);
+	bool isEnabled() const;
 	void run();
 
 private:
@@ -246,7 +248,7 @@ class ToggleIndicatorAction : public FBAction {
 
 public:
 	ToggleIndicatorAction(FBReader &fbreader);
-	bool isVisible();
+	bool isVisible() const;
 	void run();
 };
 
@@ -261,7 +263,7 @@ class OpenPreviousBookAction : public FBAction {
 
 public:
 	OpenPreviousBookAction(FBReader &fbreader);
-	bool isVisible();
+	bool isVisible() const;
 	void run();
 };
 
@@ -269,8 +271,8 @@ class GotoNextTOCSectionAction : public FBAction {
 
 public:
 	GotoNextTOCSectionAction(FBReader &fbreader);
-	bool isVisible();
-	bool isEnabled();
+	bool isVisible() const;
+	bool isEnabled() const;
 	void run();
 };
 
@@ -278,8 +280,8 @@ class GotoPreviousTOCSectionAction : public FBAction {
 
 public:
 	GotoPreviousTOCSectionAction(FBReader &fbreader);
-	bool isVisible();
-	bool isEnabled();
+	bool isVisible() const;
+	bool isEnabled() const;
 	void run();
 };
 
@@ -287,7 +289,7 @@ class GotoPageNumber : public ModeDependentAction {
 
 public:
 	GotoPageNumber(FBReader &fbreader, const std::string &parameter);
-	bool isEnabled();
+	bool isEnabled() const;
 	void run();
 
 private:
@@ -298,18 +300,19 @@ class SelectionAction : public FBAction {
 
 public:
 	SelectionAction(FBReader &fbreader);
-	bool isVisible();
-	bool isEnabled();
+	bool isVisible() const;
+	bool isEnabled() const;
 
 protected:
 	ZLTextView &textView();
+	const ZLTextView &textView() const;
 };
 
 class CopySelectedTextAction : public SelectionAction {
 
 public:
 	CopySelectedTextAction(FBReader &fbreader);
-	bool isVisible();
+	bool isVisible() const;
 	void run();
 };
 
@@ -317,7 +320,7 @@ class OpenSelectedTextInDictionaryAction : public SelectionAction {
 
 public:
 	OpenSelectedTextInDictionaryAction(FBReader &fbreader);
-	bool isVisible();
+	bool isVisible() const;
 	void run();
 };
 
@@ -329,6 +332,10 @@ public:
 };
 
 inline FBReader &FBAction::fbreader() {
+	return myFBReader;
+}
+
+inline const FBReader &FBAction::fbreader() const {
 	return myFBReader;
 }
 

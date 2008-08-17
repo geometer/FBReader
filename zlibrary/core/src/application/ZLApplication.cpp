@@ -184,11 +184,11 @@ void ZLApplication::resetWindowCaption() {
 ZLApplication::Action::~Action() {
 }
 
-bool ZLApplication::Action::isVisible() {
+bool ZLApplication::Action::isVisible() const {
 	return true;
 }
 
-bool ZLApplication::Action::isEnabled() {
+bool ZLApplication::Action::isEnabled() const {
 	return isVisible();
 }
 

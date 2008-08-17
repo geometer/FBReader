@@ -40,7 +40,7 @@ FBAction::FBAction(FBReader &fbreader) : myFBReader(fbreader) {
 ModeDependentAction::ModeDependentAction(FBReader &fbreader, int visibleInModes) : FBAction(fbreader), myVisibleInModes(visibleInModes) {
 }
 
-bool ModeDependentAction::isVisible() {
+bool ModeDependentAction::isVisible() const {
 	return fbreader().mode() & myVisibleInModes;
 }
 
@@ -79,7 +79,7 @@ void ShowOptionsDialogAction::run() {
 ShowContentsAction::ShowContentsAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool ShowContentsAction::isVisible() {
+bool ShowContentsAction::isVisible() const {
 	if (((ContentsView&)*fbreader().myContentsView).isEmpty()) {
 		return false;
 	}
@@ -140,7 +140,7 @@ void ShowBookInfoAction::run() {
 UndoAction::UndoAction(FBReader &fbreader, int visibleInModes) : ModeDependentAction(fbreader, visibleInModes) {
 }
 
-bool UndoAction::isEnabled() {
+bool UndoAction::isEnabled() const {
 	return (fbreader().mode() != FBReader::BOOK_TEXT_MODE) ||
 					fbreader().bookTextView().canUndoPageMove();
 }
@@ -156,7 +156,7 @@ void UndoAction::run() {
 RedoAction::RedoAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE) {
 }
 
-bool RedoAction::isEnabled() {
+bool RedoAction::isEnabled() const {
 	return isVisible() && fbreader().bookTextView().canRedoPageMove();
 }
 
@@ -167,7 +167,7 @@ void RedoAction::run() {
 ScrollingAction::ScrollingAction(FBReader &fbreader, const FBReader::ScrollingOptions &options, bool forward) : FBAction(fbreader), myOptions(options), myForward(forward) {
 }
 
-bool ScrollingAction::isEnabled() {
+bool ScrollingAction::isEnabled() const {
 	return
 		(&myOptions != &fbreader().TapScrollingOptions) ||
 		fbreader().EnableTapScrollingOption.value();
@@ -205,6 +205,15 @@ void ScrollingAction::run() {
 ChangeFontSizeAction::ChangeFontSizeAction(FBReader &fbreader, int delta) : FBAction(fbreader), myDelta(delta) {
 }
 
+bool ChangeFontSizeAction::isEnabled() const {
+	ZLIntegerRangeOption &option = ZLTextStyleCollection::instance().baseStyle().FontSizeOption;
+	if (myDelta < 0) {
+		return option.value() > option.minValue();
+	} else {
+		return option.value() < option.maxValue();
+	}
+}
+
 void ChangeFontSizeAction::run() {
 	ZLIntegerRangeOption &option = ZLTextStyleCollection::instance().baseStyle().FontSizeOption;
 	option.setValue(option.value() + myDelta);
@@ -215,7 +224,7 @@ void ChangeFontSizeAction::run() {
 OpenPreviousBookAction::OpenPreviousBookAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool OpenPreviousBookAction::isVisible() {
+bool OpenPreviousBookAction::isVisible() const {
 	if ((fbreader().mode() != FBReader::BOOK_TEXT_MODE) && (fbreader().mode() != FBReader::CONTENTS_MODE)) {
 		return false;
 	}
@@ -245,7 +254,7 @@ void CancelAction::run() {
 ToggleIndicatorAction::ToggleIndicatorAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool ToggleIndicatorAction::isVisible() {
+bool ToggleIndicatorAction::isVisible() const {
 	ZLIntegerRangeOption &option = FBView::commonIndicatorInfo().TypeOption;
 	switch (option.value()) {
 		case FBIndicatorStyle::FB_INDICATOR:
@@ -281,7 +290,7 @@ void QuitAction::run() {
 GotoNextTOCSectionAction::GotoNextTOCSectionAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool GotoNextTOCSectionAction::isVisible() {
+bool GotoNextTOCSectionAction::isVisible() const {
 	if (fbreader().mode() != FBReader::BOOK_TEXT_MODE) {
 		return false;
 	}
@@ -290,7 +299,7 @@ bool GotoNextTOCSectionAction::isVisible() {
 	return !model.isNull() && (model->paragraphsNumber() > 1);
 }
 
-bool GotoNextTOCSectionAction::isEnabled() {
+bool GotoNextTOCSectionAction::isEnabled() const {
 	const ContentsView &contentsView = (const ContentsView&)*fbreader().myContentsView;
 	shared_ptr<ZLTextModel> model = contentsView.model();
 	return !model.isNull() && ((int)contentsView.currentTextViewParagraph() < (int)model->paragraphsNumber() - 1);
@@ -308,7 +317,7 @@ void GotoNextTOCSectionAction::run() {
 GotoPreviousTOCSectionAction::GotoPreviousTOCSectionAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool GotoPreviousTOCSectionAction::isVisible() {
+bool GotoPreviousTOCSectionAction::isVisible() const {
 	if (fbreader().mode() != FBReader::BOOK_TEXT_MODE) {
 		return false;
 	}
@@ -317,7 +326,7 @@ bool GotoPreviousTOCSectionAction::isVisible() {
 	return !model.isNull() && (model->paragraphsNumber() > 1);
 }
 
-bool GotoPreviousTOCSectionAction::isEnabled() {
+bool GotoPreviousTOCSectionAction::isEnabled() const {
 	const ContentsView &contentsView = (const ContentsView&)*fbreader().myContentsView;
 	shared_ptr<ZLTextModel> model = contentsView.model();
 	if (model.isNull()) {
@@ -362,7 +371,7 @@ void GotoPreviousTOCSectionAction::run() {
 GotoPageNumber::GotoPageNumber(FBReader &fbreader, const std::string &parameter) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE), myParameter(parameter) {
 }
 
-bool GotoPageNumber::isEnabled() {
+bool GotoPageNumber::isEnabled() const {
 	return ModeDependentAction::isEnabled() && (fbreader().bookTextView().pageNumber() > 1);
 }
 
@@ -398,11 +407,11 @@ void GotoPageNumber::run() {
 SelectionAction::SelectionAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
-bool SelectionAction::isVisible() {
+bool SelectionAction::isVisible() const {
 	return !fbreader().currentView().isNull();
 }
 
-bool SelectionAction::isEnabled() {
+bool SelectionAction::isEnabled() const {
 	return isVisible() && !textView().selectionModel().text().empty();
 }
 
@@ -410,10 +419,14 @@ ZLTextView &SelectionAction::textView() {
 	return (ZLTextView&)*fbreader().currentView();
 }
 
+const ZLTextView &SelectionAction::textView() const {
+	return (ZLTextView&)*fbreader().currentView();
+}
+
 CopySelectedTextAction::CopySelectedTextAction(FBReader &fbreader) : SelectionAction(fbreader) {
 }
 
-bool CopySelectedTextAction::isVisible() {
+bool CopySelectedTextAction::isVisible() const {
 	return SelectionAction::isVisible() && ZLDialogManager::instance().isClipboardSupported(ZLDialogManager::CLIPBOARD_MAIN);
 }
 
@@ -424,7 +437,7 @@ void CopySelectedTextAction::run() {
 OpenSelectedTextInDictionaryAction::OpenSelectedTextInDictionaryAction(FBReader &fbreader) : SelectionAction(fbreader) {
 }
 
-bool OpenSelectedTextInDictionaryAction::isVisible() {
+bool OpenSelectedTextInDictionaryAction::isVisible() const {
 	return SelectionAction::isVisible() && fbreader().isDictionarySupported();
 }
 

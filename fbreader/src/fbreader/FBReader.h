@@ -125,6 +125,7 @@ public:
 	void openBook(BookDescriptionPtr description);
 
 	RecentBooks &recentBooks();
+	const RecentBooks &recentBooks() const;
 
 private:
 	shared_ptr<ProgramCollection> dictionaryCollection() const;

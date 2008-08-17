@@ -24,7 +24,7 @@
 ZLApplication::RotationAction::RotationAction(ZLApplication &application) : myApplication(application) {
 }
 
-bool ZLApplication::RotationAction::isVisible() {
+bool ZLApplication::RotationAction::isVisible() const {
 	return (myApplication.myViewWidget != 0) &&
 				 ((myApplication.RotationAngleOption.value() != ZLView::DEGREES0) ||
 					(myApplication.myViewWidget->rotation() != ZLView::DEGREES0));
@@ -61,7 +61,7 @@ void ZLApplication::RotationAction::run() {
 ZLApplication::FullscreenAction::FullscreenAction(ZLApplication &application, bool toggle) : myApplication(application), myIsToggle(toggle) {
 }
 
-bool ZLApplication::FullscreenAction::isVisible() {
+bool ZLApplication::FullscreenAction::isVisible() const {
 	return myIsToggle || !myApplication.isFullscreen();
 }
 
