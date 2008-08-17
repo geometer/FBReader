@@ -27,10 +27,8 @@
 
 std::vector<std::string> ZLLanguageList::ourLanguageCodes;
 
-shared_ptr<ZLDir> ZLLanguageList::patternsDirectory() {
-	const std::string dirName =
-		ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "languagePatterns.zip";
-	return ZLFile(dirName).directory(false);
+std::string ZLLanguageList::patternsDirectoryPath() {
+	return ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "languagePatterns.zip";
 }
 
 std::string ZLLanguageList::languageName(const std::string &code) {
@@ -41,7 +39,7 @@ const std::vector<std::string> &ZLLanguageList::languageCodes() {
 	if (ourLanguageCodes.empty()) {
 		std::set<std::string> codes;
 		codes.insert("zh");
-		shared_ptr<ZLDir> dir = patternsDirectory();
+		shared_ptr<ZLDir> dir = ZLFile(patternsDirectoryPath()).directory(false);
 		if (!dir.isNull()) {
 			std::vector<std::string> fileNames;
 			dir->collectFiles(fileNames, false);

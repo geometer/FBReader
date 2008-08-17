@@ -28,10 +28,7 @@
 #include "bzip2/ZLBzip2InputStream.h"
 #include "ZLFSManager.h"
 
-#include "zip/ZLZip.h"
-
 std::map<std::string,weak_ptr<ZLInputStream> > ZLFile::ourPlainStreamCache;
-std::map<std::string,ZLFileInfo> ZLFile::ourInfoCache;
 
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	ZLFSManager::instance().normalize(myPath);
@@ -99,7 +96,7 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 		shared_ptr<ZLInputStream> base = baseFile.inputStream();
 		if (!base.isNull()) {
 			if (baseFile.myArchiveType & ZIP) {
-				stream = new ZLZipInputStream(base, baseFile.path(), myPath.substr(index + 1));
+				stream = new ZLZipInputStream(base, myPath.substr(index + 1));
 			} else if (baseFile.myArchiveType & TAR) {
 				stream = new ZLTarInputStream(base, myPath.substr(index + 1));
 			}
@@ -146,47 +143,32 @@ shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
 void ZLFile::fillInfo() const {
 	myInfoIsFilled = true;
 
-	std::map<std::string,ZLFileInfo>::const_iterator it = ourInfoCache.find(myPath);
-	if (it != ourInfoCache.end()) {
-		myInfo = it->second;
-		return;
-	}
-
 	int index = ZLFSManager::instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
 		myInfo = ZLFSManager::instance().fileInfo(myPath);
 	} else {
-		std::string archivePath = myPath.substr(0, index);
-		if (ZLZipCache::Instance.contains(archivePath)) {
-			if (ZLZipCache::Instance.info(archivePath, myPath.substr(index + 1)).Offset != -1) {
+		const std::string archivePath = myPath.substr(0, index);
+		ZLFile archive(archivePath);
+		if (archive.exists()) {
+			shared_ptr<ZLDir> dir = archive.directory();
+			if (!dir.isNull()) {
+				std::string itemName = myPath.substr(index + 1);
+				myInfo = archive.myInfo;
 				myInfo.IsDirectory = false;
-				myInfo.Exists = true;
-			} else {
 				myInfo.Exists = false;
-			}
-		} else {
-			ZLFile archive(archivePath);
-			if (archive.exists()) {
-				shared_ptr<ZLDir> dir = archive.directory();
-				if (!dir.isNull()) {
-					std::string itemName = myPath.substr(index + 1);
-					myInfo = archive.myInfo;
-					myInfo.IsDirectory = false;
-					myInfo.Exists = false;
-					std::vector<std::string> items;
-					dir->collectFiles(items, true);
-					for (std::vector<std::string>::const_iterator it = items.begin(); it != items.end(); ++it) {
-						if (*it == itemName) {
-							myInfo.Exists = true;
-							break;
-						}
+				std::vector<std::string> items;
+				dir->collectFiles(items, true);
+				for (std::vector<std::string>::const_iterator it = items.begin(); it != items.end(); ++it) {
+					if (*it == itemName) {
+						myInfo.Exists = true;
+						break;
 					}
-				} else {
-					myInfo.Exists = false;
 				}
 			} else {
 				myInfo.Exists = false;
 			}
+		} else {
+			myInfo.Exists = false;
 		}
 	}
 }
@@ -204,18 +186,6 @@ void ZLFile::forceArchiveType(ArchiveType type) {
 	if (myArchiveType != type) {
 		myArchiveType = type;
 		ZLFSManager::instance().myForcedFiles[myPath] = myArchiveType;
-	}
-}
-
-void ZLFile::cacheFileInformation() {
-	if (myArchiveType & ZIP) {
-		ZLZipCache::Instance.addToCache(*this);	
-	}
-	if (ourInfoCache.find(myPath) == ourInfoCache.end()) {
-		if (!myInfoIsFilled) {
-			fillInfo();
-		}
-		ourInfoCache[myPath] = myInfo;
 	}
 }
 

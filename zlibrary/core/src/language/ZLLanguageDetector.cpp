@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLFile.h>
+#include <ZLInputStream.h>
 #include <ZLDir.h>
 #include <ZLUnicodeUtil.h>
 
@@ -51,7 +53,9 @@ ZLLanguageDetector::LanguageInfo::LanguageInfo(const std::string &language, cons
 }
 
 ZLLanguageDetector::ZLLanguageDetector() {
-	shared_ptr<ZLDir> dir = ZLLanguageList::patternsDirectory();
+	const ZLFile patternsArchive(ZLLanguageList::patternsDirectoryPath());
+	shared_ptr<ZLInputStream> lock = patternsArchive.inputStream();
+	shared_ptr<ZLDir> dir = patternsArchive.directory(false);
 	if (!dir.isNull()) {
 		std::vector<std::string> fileNames;
 		dir->collectFiles(fileNames, false);

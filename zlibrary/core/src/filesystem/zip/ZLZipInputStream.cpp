@@ -24,7 +24,55 @@
 #include "ZLZDecompressor.h"
 #include "../ZLFSManager.h"
 
-ZLZipInputStream::ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &fileName, const std::string &entryName) : myBaseStream(base), myFileName(fileName), myEntryName(entryName), myUncompressedSize(0) {
+class ZLZipEntryCache : public ZLUserData {
+
+public:
+	struct Info {
+		Info();
+
+		int Offset;
+		int CompressionMethod;
+		int CompressedSize;
+		int UncompressedSize;
+	};
+
+public:
+	ZLZipEntryCache(ZLInputStream &baseStream);
+	Info info(const std::string &entryName) const;
+
+private:
+	std::map<std::string,Info> myInfoMap;
+};
+
+ZLZipEntryCache::Info::Info() : Offset(-1) {
+}
+
+ZLZipEntryCache::ZLZipEntryCache(ZLInputStream &baseStream) {
+	if (!baseStream.open()) {
+		return;
+	}
+
+	ZLZipHeader header;
+	while (header.readFrom(baseStream)) {
+		std::string entryName(header.NameLength, '\0');
+		if ((unsigned int)baseStream.read((char*)entryName.data(), header.NameLength) == header.NameLength) {
+			Info &info = myInfoMap[entryName];
+			info.Offset = baseStream.offset() + header.ExtraLength;
+			info.CompressionMethod = header.CompressionMethod;
+			info.CompressedSize = header.CompressedSize;
+			info.UncompressedSize = header.UncompressedSize;
+		}
+		ZLZipHeader::skipEntry(baseStream, header);
+	}
+	baseStream.close();
+}
+
+ZLZipEntryCache::Info ZLZipEntryCache::info(const std::string &entryName) const {
+	std::map<std::string,Info>::const_iterator it = myInfoMap.find(entryName);
+	return (it != myInfoMap.end()) ? it->second : Info();
+}
+
+ZLZipInputStream::ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &entryName) : myBaseStream(base), myEntryName(entryName), myUncompressedSize(0) {
 }
 
 ZLZipInputStream::~ZLZipInputStream() {
@@ -34,42 +82,24 @@ ZLZipInputStream::~ZLZipInputStream() {
 bool ZLZipInputStream::open() {
 	close();
 
+	static const std::string zipEntryMapKey = "zipEntryMap";
+	shared_ptr<ZLUserData> data = myBaseStream->getUserData(zipEntryMapKey);
+	if (data.isNull()) {
+		data = new ZLZipEntryCache(*myBaseStream);
+		myBaseStream->addUserData(zipEntryMapKey, data);
+	}
+
 	if (!myBaseStream->open()) {
 		return false;
 	}
 
-	ZLZipCache::Info info;
-	if (ZLZipCache::Instance.contains(myFileName)) {
-		info = ZLZipCache::Instance.info(myFileName, myEntryName);
-		if (info.Offset == -1) {
-			close();
-			return false;
-		}
-		myBaseStream->seek(info.Offset, true);
-	} else {
-		ZLZipHeader header;
-		const size_t len = myEntryName.length();
-		std::string nameBuffer(len, '\0');
-		while (true) {
-			if (!header.readFrom(*myBaseStream)) {
-				close();
-				return false;
-			}
-			if (header.NameLength == len) {
-				myBaseStream->read((char*)nameBuffer.data(), header.NameLength);
-				if (nameBuffer == myEntryName) {
-					myBaseStream->seek(header.ExtraLength, false);
-					break;
-				}
-			} else {
-				myBaseStream->seek(header.NameLength, false);
-			}
-			ZLZipHeader::skipEntry(*myBaseStream, header);
-		}
-		info.CompressionMethod = header.CompressionMethod;
-		info.CompressedSize = header.CompressedSize;
-		info.UncompressedSize = header.UncompressedSize;
+	ZLZipEntryCache::Info info = ((const ZLZipEntryCache&)*data).info(myEntryName);
+	if (info.Offset == -1) {
+		close();
+		return false;
 	}
+	myBaseStream->seek(info.Offset, true);
+
 	if (info.CompressionMethod == 0) {
 		myIsDeflated = false;
 	} else if (info.CompressionMethod == 8) {

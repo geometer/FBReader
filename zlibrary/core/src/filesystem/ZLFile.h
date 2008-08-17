@@ -34,7 +34,6 @@ class ZLFile {
 
 private:
 	static std::map<std::string,weak_ptr<ZLInputStream> > ourPlainStreamCache;
-	static std::map<std::string,ZLFileInfo> ourInfoCache;
 
 public:
 	static std::string fileNameToUtf8(const std::string &fileName);
@@ -58,7 +57,6 @@ public:
 	size_t size() const;	
 
 	void forceArchiveType(ArchiveType type);
-	void cacheFileInformation();
 
 	bool isCompressed() const;
 	bool isDirectory() const;

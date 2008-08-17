@@ -27,10 +27,9 @@
 class ZLLanguageList {
 
 public:
+	static std::string patternsDirectoryPath();
 	static const std::vector<std::string> &languageCodes();
 	static std::string languageName(const std::string &code);
-
-	static shared_ptr<ZLDir> patternsDirectory();
 
 private:
 	static std::vector<std::string> ourLanguageCodes;

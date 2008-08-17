@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2008 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,23 @@
  * 02110-1301, USA.
  */
 
-#ifndef __MYENCODINGCONVERTER_H__
-#define __MYENCODINGCONVERTER_H__
+#include "ZLUserData.h"
 
-#include "ZLEncodingConverter.h"
-#include "ZLEncodingConverterProvider.h"
+ZLUserData::~ZLUserData() {
+}
 
-#include <set>
+ZLUserDataHolder::~ZLUserDataHolder() {
+}
 
-class MyEncodingConverterProvider : public ZLEncodingConverterProvider {
+void ZLUserDataHolder::addUserData(const std::string &key, shared_ptr<ZLUserData> data) {
+	myDataMap[key] = data;
+}
 
-public:
-	MyEncodingConverterProvider();
-	bool providesConverter(const std::string &encoding);
-	shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
+void ZLUserDataHolder::removeUserData(const std::string &key) {
+	myDataMap.erase(key);
+}
 
-private:
-	std::set<std::string> myProvidedEncodings;
-};
-
-#endif /* __MYENCODINGCONVERTER_H__ */
+shared_ptr<ZLUserData> ZLUserDataHolder::getUserData(const std::string &key) const {
+	std::map<std::string,shared_ptr<ZLUserData> >::const_iterator it = myDataMap.find(key);
+	return (it != myDataMap.end()) ? it->second : 0;
+}

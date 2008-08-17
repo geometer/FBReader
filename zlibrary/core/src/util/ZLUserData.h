@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2008 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,32 @@
  * 02110-1301, USA.
  */
 
-#ifndef __MYENCODINGCONVERTER_H__
-#define __MYENCODINGCONVERTER_H__
+#ifndef __ZLUSERDATA_H__
+#define __ZLUSERDATA_H__
 
-#include "ZLEncodingConverter.h"
-#include "ZLEncodingConverterProvider.h"
+#include <map>
+#include <string>
 
-#include <set>
+#include <shared_ptr.h>
 
-class MyEncodingConverterProvider : public ZLEncodingConverterProvider {
+class ZLUserData {
 
 public:
-	MyEncodingConverterProvider();
-	bool providesConverter(const std::string &encoding);
-	shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
-
-private:
-	std::set<std::string> myProvidedEncodings;
+	virtual ~ZLUserData();
 };
 
-#endif /* __MYENCODINGCONVERTER_H__ */
+class ZLUserDataHolder {
+
+protected:
+	virtual ~ZLUserDataHolder();
+
+public:
+	void addUserData(const std::string &key, shared_ptr<ZLUserData> data);
+	void removeUserData(const std::string &key);
+	shared_ptr<ZLUserData> getUserData(const std::string &key) const;
+
+private:
+	std::map<std::string,shared_ptr<ZLUserData> > myDataMap;
+};
+
+#endif /* __ZLUSERDATA_H__ */

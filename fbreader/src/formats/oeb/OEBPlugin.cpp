@@ -26,6 +26,7 @@
 #include "OEBDescriptionReader.h"
 #include "OEBBookReader.h"
 #include "../../description/BookDescription.h"
+#include "../../bookmodel/BookModel.h"
 
 static const std::string OPF = "opf";
 static const std::string OEBZIP = "oebzip";
@@ -50,7 +51,6 @@ std::string OEBPlugin::opfFileName(const std::string &oebFileName) {
 	}
 
 	oebFile.forceArchiveType(ZLFile::ZIP);
-	oebFile.cacheFileInformation();
 	shared_ptr<ZLDir> zipDir = oebFile.directory(false);
 	if (zipDir.isNull()) {
 		return "";
@@ -70,8 +70,23 @@ bool OEBPlugin::readDescription(const std::string &path, BookDescription &descri
 	return OEBDescriptionReader(description).readDescription(opfFileName(path));
 }
 
+class InputStreamLock : public ZLUserData {
+
+public:
+	InputStreamLock(shared_ptr<ZLInputStream> stream);
+
+private:
+	shared_ptr<ZLInputStream> myStream;
+};
+
+InputStreamLock::InputStreamLock(shared_ptr<ZLInputStream> stream) : myStream(stream) {
+}
+
 bool OEBPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	shared_ptr<ZLInputStream> lock = ZLFile(description.fileName()).inputStream();
+	model.addUserData(
+		"inputStreamLock",
+		new InputStreamLock(ZLFile(description.fileName()).inputStream())
+	);
 	return OEBBookReader(model).readBook(opfFileName(description.fileName()));
 }
 

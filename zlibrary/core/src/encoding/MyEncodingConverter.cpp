@@ -23,6 +23,7 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLibrary.h>
 #include <ZLFile.h>
+#include <ZLDir.h>
 #include <ZLXMLReader.h>
 
 #include "MyEncodingConverter.h"
@@ -111,8 +112,18 @@ private:
 	char myBuffer[3];
 };
 
+MyEncodingConverterProvider::MyEncodingConverterProvider() {
+	shared_ptr<ZLDir> dir =
+		ZLFile(ZLEncodingCollection::encodingDescriptionPath()).directory();
+	if (!dir.isNull()) {
+		std::vector<std::string> files;
+		dir->collectFiles(files, false);
+		myProvidedEncodings.insert(files.begin(), files.end());
+	}
+}
+
 bool MyEncodingConverterProvider::providesConverter(const std::string &encoding) {
-	return ZLFile(ZLEncodingCollection::encodingDescriptionPath() + ZLibrary::FileNameDelimiter + encoding).exists();
+	return myProvidedEncodings.find(encoding) != myProvidedEncodings.end();
 }
 
 shared_ptr<ZLEncodingConverter> MyEncodingConverterProvider::createConverter(const std::string &encoding) {
