@@ -275,7 +275,7 @@ void ZLWin32ViewWidget::rotateXY(int &x, int &y) const {
 			break;
 		case ZLView::DEGREES90:
 		{
-			int tmp = maxY - y;
+			int tmp = maxX - y;
 			y = x;
 			x = tmp;
 			break;
@@ -287,7 +287,7 @@ void ZLWin32ViewWidget::rotateXY(int &x, int &y) const {
 		case ZLView::DEGREES270:
 		{
 			int tmp = y;
-			y = maxX - x;
+			y = maxY - x;
 			x = tmp;
 			break;
 		}
@@ -295,18 +295,22 @@ void ZLWin32ViewWidget::rotateXY(int &x, int &y) const {
 }
 
 void ZLWin32ViewWidget::onMousePress(int x, int y) {
+	rotateXY(x, y);
 	view()->onStylusPress(x, y);
 }
 
 void ZLWin32ViewWidget::onMouseRelease(int x, int y) {
+	rotateXY(x, y);
 	view()->onStylusRelease(x, y);
 }
 
 void ZLWin32ViewWidget::onMouseMove(int x, int y) {
+	rotateXY(x, y);
 	view()->onStylusMove(x, y);
 }
 
 void ZLWin32ViewWidget::onMouseMovePressed(int x, int y) {
+	rotateXY(x, y);
 	ZLPaintContext &context = view()->context();
 	if (x < 0) {
 		x = 0;
