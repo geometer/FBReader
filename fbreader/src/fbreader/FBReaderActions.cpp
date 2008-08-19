@@ -242,11 +242,27 @@ CancelAction::CancelAction(FBReader &fbreader) : FBAction(fbreader) {
 }
 
 void CancelAction::run() {
-	if (fbreader().mode() != FBReader::BOOK_TEXT_MODE) {
-		fbreader().restorePreviousMode();
-	} else if (fbreader().isFullscreen()) {
-		fbreader().setFullscreen(false);
-	} else if (fbreader().QuitOnCancelOption.value()) {
+	switch (fbreader().myActionOnCancel) {
+		case FBReader::UNFULLSCREEN:
+			if (fbreader().isFullscreen()) {
+				fbreader().setFullscreen(false);
+				return;
+			} else if (fbreader().mode() != FBReader::BOOK_TEXT_MODE) {
+				fbreader().restorePreviousMode();
+				return;
+			}
+			break;
+		case FBReader::RETURN_TO_TEXT_MODE:
+			if (fbreader().mode() != FBReader::BOOK_TEXT_MODE) {
+				fbreader().restorePreviousMode();
+				return;
+			} else if (fbreader().isFullscreen()) {
+				fbreader().setFullscreen(false);
+				return;
+			}
+			break;
+	}
+	if (fbreader().QuitOnCancelOption.value()) {
 		fbreader().quit();
 	}
 }
@@ -451,4 +467,14 @@ ClearSelectionAction::ClearSelectionAction(FBReader &fbreader) : SelectionAction
 void ClearSelectionAction::run() {
 	textView().selectionModel().clear();
 	fbreader().refreshWindow();
+}
+
+FBFullscreenAction::FBFullscreenAction(FBReader &fbreader, bool toggle) : ZLApplication::FullscreenAction(fbreader, toggle), myFBReader(fbreader) {
+}
+
+void FBFullscreenAction::run() {
+	if (!myFBReader.isFullscreen()) {
+		myFBReader.myActionOnCancel = FBReader::UNFULLSCREEN;
+	}
+	FullscreenAction::run();
 }

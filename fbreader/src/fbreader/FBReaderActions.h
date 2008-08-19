@@ -331,6 +331,16 @@ public:
 	void run();
 };
 
+class FBFullscreenAction : public ZLApplication::FullscreenAction {
+
+public:
+	FBFullscreenAction(FBReader &fbreader, bool toggle);
+	void run();
+
+private:
+	FBReader &myFBReader;
+};
+
 inline FBReader &FBAction::fbreader() {
 	return myFBReader;
 }

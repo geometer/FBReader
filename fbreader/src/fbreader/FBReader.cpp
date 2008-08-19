@@ -105,7 +105,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBindings180("Keys180"),
 	myBindings270("Keys270"),
 	myBookToOpen(bookToOpen),
-	myBookAlreadyOpen(false) {
+	myBookAlreadyOpen(false),
+	myActionOnCancel(UNFULLSCREEN) {
 
 	myModel = 0;
 	myBookTextView = new BookTextView(*this, context());
@@ -145,8 +146,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::INCREASE_FONT, new ChangeFontSizeAction(*this, 2));
 	addAction(ActionCode::DECREASE_FONT, new ChangeFontSizeAction(*this, -2));
 	addAction(ActionCode::ROTATE_SCREEN, new RotationAction(*this));
-	addAction(ActionCode::TOGGLE_FULLSCREEN, new FullscreenAction(*this, true));
-	addAction(ActionCode::FULLSCREEN_ON, new FullscreenAction(*this, false));
+	addAction(ActionCode::TOGGLE_FULLSCREEN, new FBFullscreenAction(*this, true));
+	addAction(ActionCode::FULLSCREEN_ON, new FBFullscreenAction(*this, false));
 	addAction(ActionCode::CANCEL, new CancelAction(*this));
 	addAction(ActionCode::SHOW_HIDE_POSITION_INDICATOR, new ToggleIndicatorAction(*this));
 	addAction(ActionCode::QUIT, new QuitAction(*this));
@@ -340,6 +341,10 @@ bool FBReader::isViewFinal() const {
 void FBReader::setMode(ViewMode mode) {
 	if (mode == myMode) {
 		return;
+	}
+
+	if (mode != BOOK_TEXT_MODE) {
+		myActionOnCancel = RETURN_TO_TEXT_MODE;
 	}
 
 	myPreviousMode = myMode;

@@ -92,6 +92,7 @@ protected:
 	};
 	friend class RotationAction;
 	
+public:
 	class FullscreenAction : public Action {
 
 	public:
@@ -105,7 +106,6 @@ protected:
 	};
 	friend class FullscreenAction;
 	
-public:
 	class PresentWindowHandler : public ZLMessageHandler {
 
 	public:

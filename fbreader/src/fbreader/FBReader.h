@@ -165,6 +165,11 @@ private:
 
 	RecentBooks myRecentBooks;
 
+	enum {
+		RETURN_TO_TEXT_MODE,
+		UNFULLSCREEN
+	} myActionOnCancel;
+
 friend class OpenFileHandler;
 
 friend class OptionsDialog;
@@ -195,6 +200,7 @@ friend class GotoNextTOCSectionAction;
 friend class GotoPreviousTOCSectionAction;
 //friend class GotoPageNumber;
 friend class SelectionAction;
+friend class FBFullscreenAction;
 };
 
 #endif /* __FBREADER_H__ */
