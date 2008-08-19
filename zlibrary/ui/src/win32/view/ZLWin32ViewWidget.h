@@ -51,6 +51,8 @@ private:
 
 	void doPaint();
 
+	void rotateXY(int &x, int &y) const;
+
 	LRESULT Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
