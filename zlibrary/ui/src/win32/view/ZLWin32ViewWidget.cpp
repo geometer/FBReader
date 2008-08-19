@@ -266,6 +266,34 @@ void ZLWin32ViewWidget::doPaint()	{
 	EndPaint(myHandle, &paintStructure);
 }
 
+void ZLWin32ViewWidget::rotateXY(int &x, int &y) const {
+	ZLPaintContext &context = view()->context();
+	const int maxX = context.width() - 1;
+	const int maxY = context.height() - 1;
+	switch (rotation()) {
+		case DEGREES0:
+			break;
+		case DEGREES90:
+		{
+			int tmp = maxY - y;
+			y = x;
+			x = tmp;
+			break;
+		}
+		case DEGREES180:
+			x = maxX - x;
+			y = maxY - y;
+			break;
+		case DEGREES270:
+		{
+			int tmp = y;
+			y = maxX - x;
+			x = tmp;
+			break;
+		}
+	}
+}
+
 void ZLWin32ViewWidget::onMousePress(int x, int y) {
 	view()->onStylusPress(x, y);
 }
