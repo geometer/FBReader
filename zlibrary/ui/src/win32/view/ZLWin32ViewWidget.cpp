@@ -271,20 +271,20 @@ void ZLWin32ViewWidget::rotateXY(int &x, int &y) const {
 	const int maxX = context.width() - 1;
 	const int maxY = context.height() - 1;
 	switch (rotation()) {
-		case DEGREES0:
+		case ZLView::DEGREES0:
 			break;
-		case DEGREES90:
+		case ZLView::DEGREES90:
 		{
 			int tmp = maxY - y;
 			y = x;
 			x = tmp;
 			break;
 		}
-		case DEGREES180:
+		case ZLView::DEGREES180:
 			x = maxX - x;
 			y = maxY - y;
 			break;
-		case DEGREES270:
+		case ZLView::DEGREES270:
 		{
 			int tmp = y;
 			y = maxX - x;
