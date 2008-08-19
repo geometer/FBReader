@@ -14,7 +14,7 @@ else
 	prepare_nonGPL=false
 fi
 
-if [ $# != 1 ]; then
+if [ $# -lt 1 ]; then
 	echo "usage:"
 	echo "  $0 [-non-GPL] <architecture>"
 	echo "or"
@@ -120,15 +120,18 @@ if [ $1 == all ]; then
 	done;
 	remove_tmpdir
 else
-	archtype=`echo $1 | cut -d "-" -f 1`;
-	pkgtype=`echo $1 | cut -d "-" -f 2`;
-	extra=`echo $1 | cut -d "-" -f 3`;
+	while [ $# -gt 0 ] ; do
+		archtype=`echo $1 | cut -d "-" -f 1`;
+		pkgtype=`echo $1 | cut -d "-" -f 2`;
+		extra=`echo $1 | cut -d "-" -f 3`;
 
-	if [ "$pkgtype" != "" -a "$extra" == "" -a -d $distdir/$pkgtype/$archtype ]; then
-		create_tmpdir
-		build_package $archtype $pkgtype
-		remove_tmpdir
-	else 
-		echo "unknown architecture: $1"
-	fi;
+		if [ "$pkgtype" != "" -a "$extra" == "" -a -d $distdir/$pkgtype/$archtype ]; then
+			create_tmpdir
+			build_package $archtype $pkgtype
+			remove_tmpdir
+		else 
+			echo "unknown architecture: $1"
+		fi;
+		shift;
+	done;
 fi;
