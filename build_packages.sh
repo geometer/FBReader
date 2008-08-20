@@ -1,4 +1,4 @@
-#!/bin/sh
+#! /bin/bash
 
 version=`cat fbreader/VERSION`
 tmpdir=fbreader-$version
@@ -82,27 +82,27 @@ build_package() {
 					$make_package ARCHITECTURE=$1 $2
 					;;
 			esac;
-			mkdirhier $pkgdir/$1
+			mkdir -p $pkgdir/$1
 			mv -f $tmpdir/*.deb $tmpdir/*.dsc $tmpdir/*.changes $tmpdir/*.tar.gz $pkgdir/$1
 			;;
 		ipk|debipk)
 			$make_package ARCHITECTURE=$1 $2
-			mkdirhier $pkgdir/$1
+			mkdir -p $pkgdir/$1
 			mv -f $tmpdir/*.ipk $pkgdir/$1
 			;;
 		motopkg)
 			$make_package ARCHITECTURE=$1 $2
-			mkdirhier $pkgdir/$1
+			mkdir -p $pkgdir/$1
 			mv -f $tmpdir/*.pkg $pkgdir/$1
 			;;
 		tarball)
 			$make_package ARCHITECTURE=$1 $2
-			mkdirhier $pkgdir/$1
+			mkdir -p $pkgdir/$1
 			mv -f $tmpdir/*.tgz $pkgdir/$1
 			;;
 		nsi)
 			$make_package ARCHITECTURE=$1 $2
-			mkdirhier $pkgdir/$1
+			mkdir -p $pkgdir/$1
 			mv -f $tmpdir/*.exe $pkgdir/$1
 			;;
 		*)
