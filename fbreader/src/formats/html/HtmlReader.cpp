@@ -278,10 +278,10 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 					} else if ((quotationCounter != 1) && ((*ptr == '>') || isspace((unsigned char)*ptr))) {
 						if ((ptr != start) || !currentString.empty()) {
 							currentString.append(start, ptr - start);
-							if (currentString[0] == '"') {
-								currentString = currentString.substr(1, currentString.length() - 2);
-							}
 							appendString(attributeValueString, currentString);
+							if (attributeValueString[0] == '"') {
+								attributeValueString = attributeValueString.substr(1, attributeValueString.length() - 2);
+							}
 							currentTag.setLastAttributeValue(attributeValueString);
 							attributeValueString.erase();
 							quotationCounter = 0;

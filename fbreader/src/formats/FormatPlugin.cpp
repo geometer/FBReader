@@ -60,6 +60,33 @@ void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInp
 	WritableBookDescription(description).language() = language;
 }
 
+void FormatPlugin::detectLanguage(BookDescription &description, ZLInputStream &stream) {
+	std::string language = description.language();
+	if (!language.empty()) {
+		return;
+	}
+
+	PluginCollection &collection = PluginCollection::instance();
+	if (language.empty()) {
+		language = collection.DefaultLanguageOption.value();
+	}
+	if (collection.LanguageAutoDetectOption.value() && stream.open()) {
+		static const int BUFSIZE = 65536;
+		char *buffer = new char[BUFSIZE];
+		const size_t size = stream.read(buffer, BUFSIZE);
+		stream.close();
+		shared_ptr<ZLLanguageDetector::LanguageInfo> info =
+			ZLLanguageDetector().findInfo(buffer, size);
+		delete[] buffer;
+		if (!info.isNull()) {
+			if (!info->Language.empty()) {
+				language = info->Language;
+			}
+		}
+	}
+	WritableBookDescription(description).language() = language;
+}
+
 const std::string &FormatPlugin::tryOpen(const std::string &path) const {
 	static const std::string EMPTY = "";
 	return EMPTY;

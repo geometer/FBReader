@@ -17,32 +17,29 @@
  * 02110-1301, USA.
  */
 
-#ifndef __HTMLREADERSTREAM_H__
-#define __HTMLREADERSTREAM_H__
+#ifndef __HHCREFERENCECOLLECTOR_H__
+#define __HHCREFERENCECOLLECTOR_H__
 
-#include <shared_ptr.h>
-#include <ZLInputStream.h>
+#include <vector>
 
-class HtmlReaderStream : public ZLInputStream {
+#include "../html/HtmlReader.h"
+
+class CHMReferenceCollection;
+
+class HHCReferenceCollector : public HtmlReader {
 
 public:
-	HtmlReaderStream(shared_ptr<ZLInputStream> base, size_t maxSize);
-	~HtmlReaderStream();
+	HHCReferenceCollector(CHMReferenceCollection &collection);
 
 private:
-	bool open();
-	size_t read(char *buffer, size_t maxSize);
-	void close();
+	void startDocumentHandler();
+	void endDocumentHandler();
 
-	void seek(int offset, bool absoluteOffset);
-	size_t offset() const;
-	size_t sizeOfOpened();
+	bool tagHandler(const HtmlTag &tag);
+	bool characterDataHandler(const char*, size_t, bool);
 
 private:
-	shared_ptr<ZLInputStream> myBase;
-	char *myBuffer;
-	size_t mySize;
-	size_t myOffset;
+	CHMReferenceCollection &myReferenceCollection;
 };
 
-#endif /* __HTMLREADERSTREAM_H__ */
+#endif /* __HHCREFERENCECOLLECTOR_H__ */

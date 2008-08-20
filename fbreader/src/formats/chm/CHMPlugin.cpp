@@ -27,13 +27,73 @@
 #include "CHMFileImage.h"
 #include "CHMReferenceCollection.h"
 #include "HHCReader.h"
+#include "HHCReferenceCollector.h"
 #include "../txt/PlainTextFormat.h"
 #include "HtmlSectionReader.h"
 #include "../../description/BookDescription.h"
+#include "../util/MergedStream.h"
+#include "../html/HtmlReaderStream.h"
 
 bool CHMPlugin::acceptsFile(const ZLFile &file) const {
 	const std::string &extension = file.extension();
 	return (extension == "CHM") || (extension == "chm");
+}
+
+class CHMTextStream : public MergedStream {
+
+public:
+	CHMTextStream(CHMFileInfo &chmFile, shared_ptr<ZLInputStream> base);
+
+private:
+	void resetToStart();
+	shared_ptr<ZLInputStream> nextStream();
+
+private:
+	CHMFileInfo &myCHMFile;
+	shared_ptr<ZLInputStream> myBase;
+	std::vector<std::string> myEntryNames;
+	size_t myIndex;
+};
+
+CHMTextStream::CHMTextStream(CHMFileInfo &chmFile, shared_ptr<ZLInputStream> base) : myCHMFile(chmFile), myBase(base) {
+}
+
+void CHMTextStream::resetToStart() {
+	myIndex = 0;
+
+	if (!myEntryNames.empty()) {
+		return;
+	}
+
+	CHMFileInfo::FileNames names = myCHMFile.sectionNames(myBase);
+	if (names.empty()) {
+		return;
+	}
+
+	CHMReferenceCollection referenceCollection;
+
+	referenceCollection.addReference(names.Start, false);
+	referenceCollection.addReference(names.Home, false);
+
+	shared_ptr<ZLInputStream> tocStream = myCHMFile.entryStream(myBase, names.TOC);
+	if (!tocStream.isNull() && tocStream->open()) {
+		referenceCollection.setPrefix(names.TOC);
+		HHCReferenceCollector(referenceCollection).readDocument(*tocStream);
+	}
+
+	while (referenceCollection.containsNonProcessedReferences()) {
+		myEntryNames.push_back(referenceCollection.nextReference());
+	}
+}
+
+shared_ptr<ZLInputStream> CHMTextStream::nextStream() {
+	while (myIndex < myEntryNames.size()) {
+		shared_ptr<ZLInputStream> stream = myCHMFile.entryStream(myBase, myEntryNames[myIndex++]);
+		if (!stream.isNull()) {
+			return new HtmlReaderStream(stream, 50000);
+		}
+	}
+	return 0;
 }
 
 bool CHMPlugin::readDescription(const std::string &path, BookDescription &description) const {
@@ -53,6 +113,7 @@ bool CHMPlugin::readDescription(const std::string &path, BookDescription &descri
 		return false;
 	}
 
+	/*
 	shared_ptr<ZLInputStream> entryStream = chmFile.entryStream(stream, names.Start);
 	if (entryStream.isNull()) {
 		entryStream = chmFile.entryStream(stream, names.Home);
@@ -60,16 +121,18 @@ bool CHMPlugin::readDescription(const std::string &path, BookDescription &descri
 	if (entryStream.isNull()) {
 		entryStream = chmFile.entryStream(stream, names.TOC);
 	}
-	/*
+	/ *
 	if (entryStream.isNull()) {
 		chmFile.entryStream(stream, names.Index);
 	}
-	*/
+	* /
 	if (entryStream.isNull()) {
 		return false;
 	}
+	*/
 
-	detectEncodingAndLanguage(description, *entryStream);
+	CHMTextStream textStream(chmFile, stream);
+	detectEncodingAndLanguage(description, textStream);
 	if (description.encoding().empty()) {
 		return false;
 	}

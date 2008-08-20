@@ -70,7 +70,7 @@ bool OEBPlugin::readDescription(const std::string &path, BookDescription &descri
 	shared_ptr<ZLInputStream> lock = ZLFile(path).inputStream();
 	const std::string opf = opfFileName(path);
 	shared_ptr<ZLInputStream> oebStream = new OEBTextStream(opf);
-	detectEncodingAndLanguage(description, *oebStream);
+	detectLanguage(description, *oebStream);
 	return OEBDescriptionReader(description).readDescription(opf);
 }
 

@@ -60,6 +60,7 @@ public:
 
 protected:
 	static void detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream);
+	static void detectLanguage(BookDescription &description, ZLInputStream &stream);
 };
 
 class PluginCollection {
