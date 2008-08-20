@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLFile.h>
 #include <ZLInputStream.h>
 #include <ZLDir.h>
@@ -154,7 +152,6 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 	shared_ptr<LanguageInfo> info;
 	for (WBVector::const_iterator it = wbMatchers.begin(); it != wbMatchers.end(); ++it) {
 		int criterion = (*it)->criterion();
-		std::cerr << (*it)->info()->Language << " " << criterion << "\n";
 		if (criterion > matchingCriterion) {
 			info = (*it)->info();
 			matchingCriterion = criterion;

@@ -18,30 +18,42 @@
  */
 
 #include <ZLXMLReader.h>
+#include <ZLUnicodeUtil.h>
 
 #include "XMLTextStream.h"
 
 class XMLTextReader : public ZLXMLReader {
 
 public:
-	XMLTextReader(std::string &buffer);
+	XMLTextReader(std::string &buffer, const std::string &startTag);
 
 private:
+	void startElementHandler(const char *tag, const char **attributes);
 	void characterDataHandler(const char *text, size_t len);
 
 private:
+	const std::string myStartTag;
 	std::string &myBuffer;
+	bool myStarted;
 };
 
-XMLTextReader::XMLTextReader(std::string &buffer) : myBuffer(buffer) {
+XMLTextReader::XMLTextReader(std::string &buffer, const std::string &startTag) : myStartTag(ZLUnicodeUtil::toLower(startTag)), myBuffer(buffer), myStarted(myStartTag.empty()) {
+}
+
+void XMLTextReader::startElementHandler(const char *tag, const char **attributes) {
+	if (!myStarted && (myStartTag == ZLUnicodeUtil::toLower(tag))) {
+		myStarted = true;
+	}
 }
 
 void XMLTextReader::characterDataHandler(const char *text, size_t len) {
-	myBuffer.append(text, len);
+	if (myStarted) {
+		myBuffer.append(text, len);
+	}
 }
 
-XMLTextStream::XMLTextStream(shared_ptr<ZLInputStream> base) : myBase(base), myStreamBuffer(2048, '\0') {
-	myReader = new XMLTextReader(myDataBuffer);
+XMLTextStream::XMLTextStream(shared_ptr<ZLInputStream> base, const std::string &startTag) : myBase(base), myStreamBuffer(2048, '\0') {
+	myReader = new XMLTextReader(myDataBuffer, startTag);
 }
 
 XMLTextStream::~XMLTextStream() {

@@ -97,5 +97,5 @@ shared_ptr<ZLInputStream> OEBTextStream::nextStream() {
 		return 0;
 	}
 	ZLFile xhtmlFile(myFilePrefix + myXHTMLFileNames[myIndex++]);
-	return new XMLTextStream(xhtmlFile.inputStream());
+	return new XMLTextStream(xhtmlFile.inputStream(), "body");
 }

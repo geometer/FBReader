@@ -28,7 +28,7 @@ class XMLTextReader;
 class XMLTextStream : public ZLInputStream {
 
 public:
-	XMLTextStream(shared_ptr<ZLInputStream> base);
+	XMLTextStream(shared_ptr<ZLInputStream> base, const std::string &startTag);
 	~XMLTextStream();
 
 private:
