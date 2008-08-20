@@ -35,7 +35,7 @@ public:
 
 	void startElementHandler(int tag, const char **attributes);
 	void endElementHandler(int tag);
-	void characterDataHandler(const char *text, int len);
+	void characterDataHandler(const char *text, size_t len);
 
 private:
 	BookInfo &myInfo;

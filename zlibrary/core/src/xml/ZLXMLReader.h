@@ -50,7 +50,7 @@ public:
 protected:
 	virtual void startElementHandler(const char *tag, const char **attributes);
 	virtual void endElementHandler(const char *tag);
-	virtual void characterDataHandler(const char *text, int len);
+	virtual void characterDataHandler(const char *text, size_t len);
 	virtual bool processNamespaces() const;
 	virtual void namespaceListChangedHandler();
 	virtual const std::vector<std::string> &externalDTDs() const;

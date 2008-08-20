@@ -74,7 +74,7 @@ void HtmlMetainfoReader::startDocumentHandler() {
 void HtmlMetainfoReader::endDocumentHandler() {
 }
 
-bool HtmlMetainfoReader::characterDataHandler(const char *text, int len, bool convert) {
+bool HtmlMetainfoReader::characterDataHandler(const char *text, size_t len, bool convert) {
 	if (myReadTitle || myReadAuthor || myReadTags) {
 		if (convert) {
 			myConverter->convert(myBuffer, text, text + len);

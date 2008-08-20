@@ -32,7 +32,7 @@ FB2DescriptionReader::FB2DescriptionReader(BookDescription &description) : myDes
 	myDescription.removeAllTags();
 }
 
-void FB2DescriptionReader::characterDataHandler(const char *text, int len) {
+void FB2DescriptionReader::characterDataHandler(const char *text, size_t len) {
 	switch (myReadState) {
 		case READ_TITLE:
 			myDescription.title().append(text, len);

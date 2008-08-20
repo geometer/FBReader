@@ -34,7 +34,7 @@ private:
 	void endDocumentHandler();
 
 	bool tagHandler(const HtmlTag &tag);
-	bool characterDataHandler(const char *text, int len, bool convert);
+	bool characterDataHandler(const char *text, size_t len, bool convert);
 
 private:
 	char *myBuffer;
@@ -66,7 +66,7 @@ bool HtmlTextOnlyReader::tagHandler(const HtmlTag &tag) {
 	return myFilledSize < myMaxSize;
 }
 
-bool HtmlTextOnlyReader::characterDataHandler(const char *text, int len, bool) {
+bool HtmlTextOnlyReader::characterDataHandler(const char *text, size_t len, bool) {
 	if (!myIgnoreText) {
 		len = std::min((size_t)len, myMaxSize - myFilledSize);
 		memcpy(myBuffer + myFilledSize, text, len);

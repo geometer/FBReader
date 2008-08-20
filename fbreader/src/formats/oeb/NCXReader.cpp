@@ -98,7 +98,7 @@ void NCXReader::endElementHandler(const char *tag) {
 	}
 }
 
-void NCXReader::characterDataHandler(const char *text, int len) {
+void NCXReader::characterDataHandler(const char *text, size_t len) {
 	if (myReadState == READ_TEXT) {
 		myPointStack.back().Text.append(text, len);
 	}

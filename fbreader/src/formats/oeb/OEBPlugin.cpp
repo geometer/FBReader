@@ -25,6 +25,7 @@
 #include "OEBPlugin.h"
 #include "OEBDescriptionReader.h"
 #include "OEBBookReader.h"
+#include "OEBTextStream.h"
 #include "../../description/BookDescription.h"
 #include "../../bookmodel/BookModel.h"
 
@@ -67,7 +68,10 @@ std::string OEBPlugin::opfFileName(const std::string &oebFileName) {
 
 bool OEBPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	shared_ptr<ZLInputStream> lock = ZLFile(path).inputStream();
-	return OEBDescriptionReader(description).readDescription(opfFileName(path));
+	const std::string opf = opfFileName(path);
+	shared_ptr<ZLInputStream> oebStream = new OEBTextStream(opf);
+	detectEncodingAndLanguage(description, *oebStream);
+	return OEBDescriptionReader(description).readDescription(opf);
 }
 
 class InputStreamLock : public ZLUserData {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2008 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,30 +17,34 @@
  * 02110-1301, USA.
  */
 
-#ifndef __DUMMYDESCRIPTIONREADER_H__
-#define __DUMMYDESCRIPTIONREADER_H__
+#ifndef __XMLTEXTSTREAM_H__
+#define __XMLTEXTSTREAM_H__
 
-#include <string>
+#include <shared_ptr.h>
+#include <ZLInputStream.h>
 
-#include "../../description/BookDescription.h"
+class XMLTextReader;
 
-class DummyDescriptionReader {
+class XMLTextStream : public ZLInputStream {
 
 public:
-	DummyDescriptionReader(BookDescription &description);
-	~DummyDescriptionReader();
-	bool readDescription(shared_ptr<ZLInputStream> stream);
-
-	/*
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int tag);
-	void characterDataHandler(const char *text, size_t len);
-	*/
+	XMLTextStream(shared_ptr<ZLInputStream> base);
+	~XMLTextStream();
 
 private:
-	WritableBookDescription myDescription;
+	bool open();
+	size_t read(char *buffer, size_t maxSize);
+	void close();
+	void seek(int offset, bool absoluteOffset);
+	size_t offset() const;
+	size_t sizeOfOpened();
+
+private:
+	shared_ptr<ZLInputStream> myBase;
+	shared_ptr<XMLTextReader> myReader;
+	std::string myStreamBuffer;
+	std::string myDataBuffer;
+	size_t myOffset;
 };
 
-inline DummyDescriptionReader::~DummyDescriptionReader() {}
-
-#endif /* __DUMMYDESCRIPTIONREADER_H__ */
+#endif /* __XMLTEXTSTREAM_H__ */

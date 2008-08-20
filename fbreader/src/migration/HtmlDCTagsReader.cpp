@@ -49,7 +49,7 @@ void HtmlDCTagsReader::endDocumentHandler() {
 	myInfo.TagsOption.setValue(myTagList);
 }
 
-bool HtmlDCTagsReader::characterDataHandler(const char *text, int len, bool convert) {
+bool HtmlDCTagsReader::characterDataHandler(const char *text, size_t len, bool convert) {
 	if (myReadTag) {
 		if (convert) {
 			myConverter->convert(myBuffer, text, text + len);

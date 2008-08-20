@@ -74,7 +74,7 @@ protected:
 	// returns false iff processing must be stopped
 	virtual bool tagHandler(const HtmlTag &tag) = 0;
 	// returns false iff processing must be stopped
-	virtual bool characterDataHandler(const char *text, int len, bool convert) = 0;
+	virtual bool characterDataHandler(const char *text, size_t len, bool convert) = 0;
 
 private:
 	void appendString(std::string &to, std::string &from);

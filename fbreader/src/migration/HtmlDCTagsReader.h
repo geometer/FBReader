@@ -33,7 +33,7 @@ private:
 	void endDocumentHandler();
 
 	bool tagHandler(const HtmlTag &tag);
-	bool characterDataHandler(const char *text, int len, bool convert);
+	bool characterDataHandler(const char *text, size_t len, bool convert);
 
 private:
 	BookInfo &myInfo;

@@ -61,7 +61,7 @@ public:
 private:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
-	void characterDataHandler(const char *text, int len);
+	void characterDataHandler(const char *text, size_t len);
 
 	const std::vector<std::string> &externalDTDs() const;
 

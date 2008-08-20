@@ -31,9 +31,6 @@
 OEBBookReader::OEBBookReader(BookModel &model) : myModelReader(model) {
 }
 
-void OEBBookReader::characterDataHandler(const char*, int) {
-}
-
 static const std::string MANIFEST = "manifest";
 static const std::string SPINE = "spine";
 static const std::string GUIDE = "guide";

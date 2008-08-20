@@ -31,7 +31,7 @@ DocBookDescriptionReader::DocBookDescriptionReader(BookDescription &description)
 	myDepth = 0;
 }
 
-void DocBookDescriptionReader::characterDataHandler(const char *text, int len) {
+void DocBookDescriptionReader::characterDataHandler(const char *text, size_t len) {
 	if (myReadTitle) {
 		myDescription.title().append(text, len);
 	} else {

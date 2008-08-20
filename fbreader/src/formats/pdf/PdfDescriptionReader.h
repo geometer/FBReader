@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __PdfDESCRIPTIONREADER_H__
-#define __PdfDESCRIPTIONREADER_H__
+#ifndef __PDFDESCRIPTIONREADER_H__
+#define __PDFDESCRIPTIONREADER_H__
 
 #include <string>
 
@@ -31,16 +31,10 @@ public:
 	~PdfDescriptionReader();
 	bool readDescription(shared_ptr<ZLInputStream> stream);
 
-	/*
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int tag);
-	void characterDataHandler(const char *text, int len);
-	*/
-
 private:
 	WritableBookDescription myDescription;
 };
 
 inline PdfDescriptionReader::~PdfDescriptionReader() {}
 
-#endif /* __PdfDESCRIPTIONREADER_H__ */
+#endif /* __PDFDESCRIPTIONREADER_H__ */

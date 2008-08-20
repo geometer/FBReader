@@ -33,7 +33,7 @@
 ORBookReader::ORBookReader(BookModel &model) : myModelReader(model) {
 }
 
-void ORBookReader::characterDataHandler(const char *data, int len) {
+void ORBookReader::characterDataHandler(const char *data, size_t len) {
 	if (myState == READ_TOCTITLE) {
 		myTOCTitle.append(data, len);
 	}

@@ -33,7 +33,7 @@ public:
 private:
 	void startDocumentHandler();
 	bool tagHandler(const HtmlTag &tag);
-	bool characterDataHandler(const char *text, int len, bool convert);
+	bool characterDataHandler(const char *text, size_t len, bool convert);
 	shared_ptr<HtmlTagAction> createAction(const std::string &tag);
 
 public:

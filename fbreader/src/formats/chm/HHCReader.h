@@ -41,7 +41,7 @@ private:
 	void endDocumentHandler();
 
 	bool tagHandler(const HtmlTag &tag);
-	bool characterDataHandler(const char*, int, bool);
+	bool characterDataHandler(const char*, size_t, bool);
 
 private:
 	CHMReferenceCollection &myReferenceCollection;

@@ -25,7 +25,7 @@ DummyDescriptionReader::DummyDescriptionReader(BookDescription &description) : m
 }
 
 /*
-void DummyDescriptionReader::characterDataHandler(const char *text, int len) {
+void DummyDescriptionReader::characterDataHandler(const char *text, size_t len) {
 }
 
 void DummyDescriptionReader::startElementHandler(int tag, const char **) {

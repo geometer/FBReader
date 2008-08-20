@@ -30,7 +30,7 @@ static const std::string METADATA = "metadata";
 static const std::string DC_METADATA = "dc-metadata";
 static const std::string SUBJECT_TAG = ":subject";
 
-void OEBMigrationReader::characterDataHandler(const char *text, int len) {
+void OEBMigrationReader::characterDataHandler(const char *text, size_t len) {
 	if (myReadSubject) {
 		myBuffer.append(text, len);
 	}

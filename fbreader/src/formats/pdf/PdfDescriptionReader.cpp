@@ -24,17 +24,6 @@
 PdfDescriptionReader::PdfDescriptionReader(BookDescription &description) : myDescription(description) {
 }
 
-/*
-void PdfDescriptionReader::characterDataHandler(const char *text, int len) {
-}
-
-void PdfDescriptionReader::startElementHandler(int tag, const char **) {
-}
-
-void PdfDescriptionReader::endElementHandler(int tag) {
-}
-*/
-
 bool PdfDescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
 	return true;
 }

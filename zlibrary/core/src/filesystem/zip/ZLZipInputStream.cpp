@@ -137,7 +137,9 @@ size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
 
 void ZLZipInputStream::close() {
 	myDecompressor = 0;
-	myBaseStream->close();
+	if (!myBaseStream.isNull()) {
+		myBaseStream->close();
+	}
 }
 
 void ZLZipInputStream::seek(int offset, bool absoluteOffset) {

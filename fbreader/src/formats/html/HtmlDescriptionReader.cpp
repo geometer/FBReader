@@ -45,7 +45,7 @@ bool HtmlDescriptionReader::tagHandler(const HtmlTag &tag) {
 	return tag.Name != "BODY";
 }
 
-bool HtmlDescriptionReader::characterDataHandler(const char *text, int len, bool) {
+bool HtmlDescriptionReader::characterDataHandler(const char *text, size_t len, bool) {
 	if (myReadTitle) {
 		myDescription.title().append(text, len);
 	}

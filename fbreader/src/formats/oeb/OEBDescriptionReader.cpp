@@ -36,7 +36,7 @@ static const std::string AUTHOR_TAG = ":creator";
 static const std::string SUBJECT_TAG = ":subject";
 static const std::string AUTHOR_ROLE = "aut";
 
-void OEBDescriptionReader::characterDataHandler(const char *text, int len) {
+void OEBDescriptionReader::characterDataHandler(const char *text, size_t len) {
 	switch (myReadState) {
 		case READ_NONE:
 			break;

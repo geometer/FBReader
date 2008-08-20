@@ -96,7 +96,7 @@ bool HHCReader::tagHandler(const HtmlTag &tag) {
 	return true;
 }
 
-bool HHCReader::characterDataHandler(const char*, int, bool) {
+bool HHCReader::characterDataHandler(const char*, size_t, bool) {
 	return true;
 }
 

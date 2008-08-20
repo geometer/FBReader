@@ -42,7 +42,7 @@ BookInfo::BookInfo(const std::string &fileName) :
 	TitleOption(FBCategoryKey::BOOKS, fileName, "Title", EMPTY),
 	SeriesNameOption(FBCategoryKey::BOOKS, fileName, "Sequence", EMPTY),
 	NumberInSeriesOption(FBCategoryKey::BOOKS, fileName, "Number in seq", 0, 100, 0),
-	LanguageOption(FBCategoryKey::BOOKS, fileName, "Language", PluginCollection::instance().DefaultLanguageOption.value()),
+	LanguageOption(FBCategoryKey::BOOKS, fileName, "Language", EMPTY),
 	EncodingOption(FBCategoryKey::BOOKS, fileName, "Encoding", EMPTY),
 	TagsOption(FBCategoryKey::BOOKS, fileName, "TagList", EMPTY) {
 }
@@ -53,7 +53,7 @@ void BookInfo::reset() {
 	TitleOption.setValue(EMPTY);
 	SeriesNameOption.setValue(EMPTY);
 	NumberInSeriesOption.setValue(0);
-	LanguageOption.setValue(PluginCollection::instance().DefaultLanguageOption.value());
+	LanguageOption.setValue(EMPTY);
 	EncodingOption.setValue(EMPTY);
 	TagsOption.setValue(EMPTY);
 }

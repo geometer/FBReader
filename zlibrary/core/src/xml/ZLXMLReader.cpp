@@ -38,7 +38,7 @@ void ZLXMLReader::startElementHandler(const char*, const char**) {
 void ZLXMLReader::endElementHandler(const char*) {
 }
 
-void ZLXMLReader::characterDataHandler(const char*, int) {
+void ZLXMLReader::characterDataHandler(const char*, size_t) {
 }
 
 void ZLXMLReader::namespaceListChangedHandler() {

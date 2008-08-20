@@ -448,7 +448,7 @@ void XHTMLReader::endElementHandler(const char *tag) {
 	}
 }
 
-void XHTMLReader::characterDataHandler(const char *text, int len) {
+void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 	if (myPreformatted) {
 		if ((*text == '\r') || (*text == '\n')) {
 			myModelReader.addControl(CODE, false);
@@ -456,7 +456,7 @@ void XHTMLReader::characterDataHandler(const char *text, int len) {
 			myModelReader.beginParagraph();
 			myModelReader.addControl(CODE, true);
 		}
-		int spaceCounter = 0;
+		size_t spaceCounter = 0;
 		while ((spaceCounter < len) && isspace((unsigned char)*(text + spaceCounter))) {
 			++spaceCounter;
 		}
@@ -464,9 +464,11 @@ void XHTMLReader::characterDataHandler(const char *text, int len) {
 		text += spaceCounter;
 		len -= spaceCounter;
 	} else if (myNewParagraphInProgress) {
-		while ((len > 0) && isspace((unsigned char)*text)) {
-			--len;
+		while (isspace((unsigned char)*text)) {
 			++text;
+			if (--len == 0) {
+				break;
+			}
 		}
 	}
 	if (len > 0) {
