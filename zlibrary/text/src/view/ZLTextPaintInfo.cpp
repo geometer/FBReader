@@ -247,11 +247,14 @@ void ZLTextView::preparePaintInfo() {
 		case START_IS_KNOWN:
 			myEndCursor = buildInfos(myStartCursor);
 			if (pageIsEmpty()) {
-				myStartCursor = findLineFromStart(1);
-				if (myStartCursor.isEndOfParagraph()) {
-					myStartCursor.nextParagraph();
+				ZLTextWordCursor startCursor = findLineFromStart(1);
+				if (!startCursor.isNull()) {
+					myStartCursor = startCursor;
+					if (myStartCursor.isEndOfParagraph()) {
+						myStartCursor.nextParagraph();
+					}
+					myEndCursor = buildInfos(myStartCursor);
 				}
-				myEndCursor = buildInfos(myStartCursor);
 			}
 			break;
 		case END_IS_KNOWN:
