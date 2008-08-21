@@ -65,6 +65,7 @@ private:
 	void updateToolbarInfo();
 	void setTooltip(TOOLTIPTEXT &tooltip);
 	void runPopup(const NMTOOLBAR &nmToolbar);
+	void processChevron(const NMREBARCHEVRON &chevron);
 
 public:
 	HWND mainWindow() const;
