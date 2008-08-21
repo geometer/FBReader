@@ -210,9 +210,11 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 				miInfo.wID = info.idCommand;
 				InsertMenuItem(popup, count++, true, &miInfo);
 			} else if (info.idCommand >= -200) /* is a separator */ {
-				miInfo.fMask = MIIM_TYPE;
-				miInfo.fType = MFT_SEPARATOR;
-				InsertMenuItem(popup, count++, true, &miInfo);
+				if (count > 0) {
+					miInfo.fMask = MIIM_TYPE;
+					miInfo.fType = MFT_SEPARATOR;
+					InsertMenuItem(popup, count++, true, &miInfo);
+				}
 			}
 		}
 	}
