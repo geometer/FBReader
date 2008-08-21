@@ -195,7 +195,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 
 	INITCOMMONCONTROLSEX icex;
 	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-	icex.dwICC = ICC_WIN95_CLASSES;
+	icex.dwICC = ICC_WIN95_CLASSES | ICC_BAR_CLASSES | ICC_COOL_CLASSES | ICC_USEREX_CLASSES;
 	InitCommonControlsEx(&icex);
 
 	WNDCLASSEX wc;
