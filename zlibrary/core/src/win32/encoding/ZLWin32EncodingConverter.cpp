@@ -108,7 +108,9 @@ void ZLWin32EncodingConverter::convert(std::string &dst, const char *srcStart, c
 		}
 	}
 
-	ZLUnicodeUtil::ucs2ToUtf8(dst, myBuffer);
+	std::string toAppend;
+	ZLUnicodeUtil::ucs2ToUtf8(toAppend, myBuffer);
+	dst += toAppend;
 	myBuffer.clear();
 }
 
