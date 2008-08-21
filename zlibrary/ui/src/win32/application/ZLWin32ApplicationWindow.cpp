@@ -260,9 +260,12 @@ void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 	if (myFullScreen) {
 		GetWindowPlacement(myMainWindow, &mainPlacement);
 		GetWindowPlacement(myToolbar, &toolbarPlacement);
+		SetWindowLong(myMainWindow, GWL_STYLE, style & ~WS_CAPTION);
+		int cx = GetSystemMetrics(SM_CXSCREEN);
+		int cy = GetSystemMetrics(SM_CYSCREEN);
+		SetWindowPos(myMainWindow, HWND_TOP, 0, 0, cx, cy, SWP_SHOWWINDOW);
 		ShowWindow(myMainWindow, SW_SHOWMAXIMIZED);
 		ShowWindow(myToolbar, SW_HIDE);
-		SetWindowLong(myMainWindow, GWL_STYLE, style & ~WS_CAPTION);
 	} else {
 		SetWindowLong(myMainWindow, GWL_STYLE, style | WS_CAPTION);
 		ShowWindow(myToolbar, SW_SHOWNORMAL);
