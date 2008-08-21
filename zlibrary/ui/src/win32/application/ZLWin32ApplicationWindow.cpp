@@ -143,65 +143,14 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			const NMHDR *notificationHeader = (const NMHDR*)lParam;
 			switch (notificationHeader->code) {
 				case TTN_NEEDTEXT:
-				{
-					TOOLTIPTEXT &tooltip = *(TOOLTIPTEXT*)lParam;
-					ZLToolbar::ItemPtr item = myTBItemByActionCode[tooltip.hdr.idFrom];
-					if (!item.isNull()) {
-						const ZLToolbar::AbstractButtonItem &button =
-							(const ZLToolbar::AbstractButtonItem&)*item;
-						ZLUnicodeUtil::Ucs2String tooltipBuffer;
-						::createNTWCHARString(tooltipBuffer, button.tooltip());
-						size_t length = std::max(tooltipBuffer.size(), (size_t)80);
-						memcpy((char*)tooltip.szText, (char*)::wchar(tooltipBuffer), 2 * length);
-						tooltip.uFlags = TTF_DI_SETITEM;
-					}
+					setTooltip(*(TOOLTIPTEXT*)lParam);
 					break;
-				}
 				case NM_CUSTOMDRAW:
-					for (size_t i = 0; i < myTextFieldCodeById.size(); ++i) {
-						updateTextField(-200 + i);
-					}
+					updateTextFields();
 					break;
 				case TBN_DROPDOWN:
-				{
-					NMTOOLBAR &nmToolbar = *(NMTOOLBAR*)lParam;
-					ZLToolbar::ItemPtr item = myTBItemByActionCode[nmToolbar.iItem];
-					if (!item.isNull()) {
-						const ZLToolbar::MenuButtonItem &button =
-							(const ZLToolbar::MenuButtonItem&)*item;
-						shared_ptr<ZLPopupData> popupData = button.popupData();
-						if (!popupData.isNull()) {
-							const int count = popupData->count();
-							if (count != 0) {
-								HMENU popup = CreatePopupMenu();
-								ZLUnicodeUtil::Ucs2String buffer;
-								MENUITEMINFO miInfo;
-								miInfo.cbSize = sizeof(MENUITEMINFO);
-								miInfo.fMask = MIIM_STATE | MIIM_STRING | MIIM_ID;
-								miInfo.fType = MFT_STRING;
-								miInfo.fState = MFS_ENABLED;
-								for (int i = 0; i < count; ++i) {
-									miInfo.wID = i + 1;
-									const std::string text = popupData->text(i);
-									miInfo.dwTypeData = (WCHAR*)::wchar(::createNTWCHARString(buffer, text));
-									miInfo.cch = text.size();
-									InsertMenuItem(popup, i, true, &miInfo);
-								}
-								POINT p;
-								p.x = nmToolbar.rcButton.left;
-								p.y = nmToolbar.rcButton.bottom + 8;
-								ClientToScreen(myMainWindow, &p);
-								int code = TrackPopupMenu(popup, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, p.x, p.y, 0, myMainWindow, 0);
-								if (code > 0) {
-									popupData->run(code - 1);
-								}
-								PostMessage(myMainWindow, WM_NULL, 0, 0);
-								DestroyMenu(popup);
-							}
-						}
-					}
+					runPopup(*(const NMTOOLBAR*)lParam);
 					break;
-				}
 			}
 			return 0;
 		}
@@ -210,7 +159,56 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 	}
 }
 
-static const std::string OPTIONS = "Options";
+void ZLWin32ApplicationWindow::setTooltip(TOOLTIPTEXT &tooltip) {
+	ZLToolbar::ItemPtr item = myTBItemByActionCode[tooltip.hdr.idFrom];
+	if (!item.isNull()) {
+		const ZLToolbar::AbstractButtonItem &button =
+			(const ZLToolbar::AbstractButtonItem&)*item;
+		ZLUnicodeUtil::Ucs2String tooltipBuffer;
+		::createNTWCHARString(tooltipBuffer, button.tooltip());
+		size_t length = std::max(tooltipBuffer.size(), (size_t)80);
+		memcpy((char*)tooltip.szText, (char*)::wchar(tooltipBuffer), 2 * length);
+		tooltip.uFlags = TTF_DI_SETITEM;
+	}
+}
+
+void ZLWin32ApplicationWindow::runPopup(const NMTOOLBAR &nmToolbar) {
+	ZLToolbar::ItemPtr item = myTBItemByActionCode[nmToolbar.iItem];
+	if (!item.isNull()) {
+		const ZLToolbar::MenuButtonItem &button =
+			(const ZLToolbar::MenuButtonItem&)*item;
+		shared_ptr<ZLPopupData> popupData = button.popupData();
+		if (!popupData.isNull()) {
+			const int count = popupData->count();
+			if (count != 0) {
+				HMENU popup = CreatePopupMenu();
+				ZLUnicodeUtil::Ucs2String buffer;
+				MENUITEMINFO miInfo;
+				miInfo.cbSize = sizeof(MENUITEMINFO);
+				miInfo.fMask = MIIM_STATE | MIIM_STRING | MIIM_ID;
+				miInfo.fType = MFT_STRING;
+				miInfo.fState = MFS_ENABLED;
+				for (int i = 0; i < count; ++i) {
+					miInfo.wID = i + 1;
+					const std::string text = popupData->text(i);
+					miInfo.dwTypeData = (WCHAR*)::wchar(::createNTWCHARString(buffer, text));
+					miInfo.cch = text.size();
+					InsertMenuItem(popup, i, true, &miInfo);
+				}
+				POINT p;
+				p.x = nmToolbar.rcButton.left;
+				p.y = nmToolbar.rcButton.bottom + 8;
+				ClientToScreen(myMainWindow, &p);
+				int code = TrackPopupMenu(popup, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, p.x, p.y, 0, myMainWindow, 0);
+				if (code > 0) {
+					popupData->run(code - 1);
+				}
+				PostMessage(myMainWindow, WM_NULL, 0, 0);
+				DestroyMenu(popup);
+			}
+		}
+	}
+}
 
 ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	ZLDesktopApplicationWindow(application),
@@ -451,15 +449,19 @@ TextFieldData::TextFieldData(HWND textField, HWND mainWindow, ZLApplication &app
 	SetWindowLong(textField, GWL_USERDATA, (LONG)this);
 }
 
-void ZLWin32ApplicationWindow::updateTextField(int idCommand) {
-	if (myTextFields[idCommand] != 0) {
-		RECT rect;
-		const int index = SendMessage(myToolbar, TB_COMMANDTOINDEX, idCommand, 0);
-		SendMessage(myToolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
-		SetWindowPos(
-			myTextFields[idCommand], 0, rect.left + 5, rect.top + 10, 0, 0,
-			SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOSIZE
-		);
+void ZLWin32ApplicationWindow::updateTextFields() {
+	const size_t len = myTextFieldCodeById.size();
+	for (size_t i = 0; i < len; ++i) {
+		const size_t idCommand = -200 + i;
+		if (myTextFields[idCommand] != 0) {
+			RECT rect;
+			const int index = SendMessage(myToolbar, TB_COMMANDTOINDEX, idCommand, 0);
+			SendMessage(myToolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
+			SetWindowPos(
+				myTextFields[idCommand], 0, rect.left + 5, rect.top + 10, 0, 0,
+				SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOSIZE
+			);
+		}
 	}
 }
 

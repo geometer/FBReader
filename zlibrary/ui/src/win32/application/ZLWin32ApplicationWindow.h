@@ -61,7 +61,10 @@ private:
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
-	void updateTextField(int idCommand);
+	void updateTextFields();
+	void updateToolbarInfo();
+	void setTooltip(TOOLTIPTEXT &tooltip);
+	void runPopup(const NMTOOLBAR &nmToolbar);
 
 public:
 	HWND mainWindow() const;
@@ -95,9 +98,6 @@ private:
 	private:
 		HWND myTextEdit;
 	};
-
-private:
-	void updateToolbarInfo();
 
 private:
 	ZLUnicodeUtil::Ucs2String myClassName;
