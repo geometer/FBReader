@@ -41,10 +41,36 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 	return ourApplicationWindow->mainLoopCallback(hWnd, uMsg, wParam, lParam);
 }
 
+void ZLWin32ApplicationWindow::updateToolbarInfo() {
+	if (myToolbarInfo.cxIdeal != 0) {
+		return;
+	}
+
+	myToolbarInfo.cxIdeal = 10;
+	const int len = SendMessage(myToolbar, TB_BUTTONCOUNT, 0, 0);
+	TBBUTTON info;
+	for (int index = 0; index < len; ++index) {
+		SendMessage(myToolbar, TB_GETBUTTON, index, (LPARAM)&info);
+		if ((info.fsState & TBSTATE_HIDDEN) == 0) {
+			RECT rect;
+			SendMessage(myToolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
+			myToolbarInfo.cxIdeal += rect.right - rect.left;
+		}
+	}
+  
+	SendMessage(myRebar, RB_SETBANDINFO, 0, (LPARAM)&myToolbarInfo);
+}
+
 LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
 		case WM_ERASEBKGND:
 			return 0;
+		case WM_PAINT:
+		{
+			LRESULT code = DefWindowProc(hWnd, uMsg, wParam, lParam);
+			updateToolbarInfo();
+			return code;
+		}
 		case WM_TIMER:
 			((ZLWin32TimeManager&)ZLTimeManager::instance()).execute(wParam);
 			return 0;
@@ -75,14 +101,15 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			return 0;
 		case WM_SIZE:
 		{
-			if (myToolbar != 0) {
-				SendMessage(myToolbar, TB_AUTOSIZE, 0, 0);
-			}
 			int offset = 0;
 			if (!myFullScreen) {
-				RECT toolbarRect;
-				GetWindowRect(myToolbar, &toolbarRect);
-				offset = toolbarRect.bottom - toolbarRect.top - 1;
+				SendMessage(myToolbar, TB_AUTOSIZE, 0, 0);
+
+				RECT rebarRect;
+				GetWindowRect(myRebar, &rebarRect);
+				offset = rebarRect.bottom - rebarRect.top - 1;
+
+				MoveWindow(myRebar, 0, 0, LOWORD(lParam), rebarRect.bottom - rebarRect.top, true);
 			}
 			MoveWindow(myWin32ViewWidget->handle(), 0, offset, LOWORD(lParam), HIWORD(lParam) - offset, true);
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -188,6 +215,7 @@ static const std::string OPTIONS = "Options";
 ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	ZLDesktopApplicationWindow(application),
 	myMainWindow(0),
+	myRebar(0),
 	myToolbar(0),
 	myBlockMouseEvents(false),
 	myKeyboardModifierMask(0),
@@ -238,6 +266,14 @@ void ZLWin32ApplicationWindow::init() {
 	}
 }
 
+void ZLWin32ApplicationWindow::refresh() {
+	ZLDesktopApplicationWindow::refresh();
+
+	if (!isFullscreen()) {
+		myToolbarInfo.cxIdeal = 0;
+	}
+}
+
 ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
 	ourApplicationWindow = 0;
 }
@@ -261,19 +297,19 @@ void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 	static WINDOWPLACEMENT toolbarPlacement;
 	if (myFullScreen) {
 		GetWindowPlacement(myMainWindow, &mainPlacement);
-		GetWindowPlacement(myToolbar, &toolbarPlacement);
+		GetWindowPlacement(myRebar, &toolbarPlacement);
 		SetWindowLong(myMainWindow, GWL_STYLE, style & ~WS_CAPTION);
 		int cx = GetSystemMetrics(SM_CXSCREEN);
 		int cy = GetSystemMetrics(SM_CYSCREEN);
 		SetWindowPos(myMainWindow, HWND_TOP, 0, 0, cx, cy, SWP_SHOWWINDOW);
 		ShowWindow(myMainWindow, SW_SHOWMAXIMIZED);
-		ShowWindow(myToolbar, SW_HIDE);
+		ShowWindow(myRebar, SW_HIDE);
 	} else {
 		SetWindowLong(myMainWindow, GWL_STYLE, style | WS_CAPTION);
-		ShowWindow(myToolbar, SW_SHOWNORMAL);
+		ShowWindow(myRebar, SW_SHOWNORMAL);
 		ShowWindow(myMainWindow, SW_SHOWNORMAL);
 		SetWindowPlacement(myMainWindow, &mainPlacement);
-		SetWindowPlacement(myToolbar, &toolbarPlacement);
+		SetWindowPlacement(myRebar, &toolbarPlacement);
 	}
 	refresh();
 }
@@ -300,13 +336,30 @@ private:
 };
 
 void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
-	if (myToolbar == 0) {
-  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | WS_BORDER | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
-		SendMessage(myToolbar, TB_SETEXTENDEDSTYLE, 0, (LPARAM)TBSTYLE_EX_DRAWDDARROWS);
+	if (myRebar == 0) {
+  	myRebar = CreateWindowEx(WS_EX_TOOLWINDOW, REBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | WS_BORDER | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CCS_NODIVIDER | CCS_NOPARENTALIGN | RBS_VARHEIGHT | RBS_BANDBORDERS, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
+
+  	myToolbar = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS | CCS_NORESIZE, 0, 0, 0, 0, myMainWindow, (HMENU)1, GetModuleHandle(0), 0);
+		SendMessage(myToolbar, TB_SETEXTENDEDSTYLE, 0, (LPARAM)TBSTYLE_EX_DRAWDDARROWS | TBSTYLE_EX_HIDECLIPPEDBUTTONS);
 		SendMessage(myToolbar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 		SendMessage(myToolbar, TB_SETBITMAPSIZE, 0, MAKELONG(ICON_SIZE, ICON_SIZE));
 		SendMessage(myToolbar, TB_SETINDENT, 3, 0);
 		SendMessage(myToolbar, TB_SETIMAGELIST, 0, (LPARAM)ImageList_Create(ICON_SIZE, ICON_SIZE, ILC_COLOR32 | ILC_MASK, 0, 100));
+
+		ZeroMemory(&myToolbarInfo, sizeof(myToolbarInfo));
+		myToolbarInfo.cbSize = sizeof(myToolbarInfo);
+		myToolbarInfo.fMask = RBBIM_STYLE | RBBIM_CHILD | RBBIM_CHILDSIZE | RBBIM_SIZE | RBBIM_IDEALSIZE | RBBIM_ID; 
+		myToolbarInfo.fStyle = RBBS_USECHEVRON | RBBS_NOGRIPPER;
+		myToolbarInfo.hwndChild = myToolbar;
+		myToolbarInfo.wID = 1;
+		myToolbarInfo.cxMinChild = 0;
+		myToolbarInfo.cyIntegral = 1;
+		myToolbarInfo.cyMinChild = 44;
+		myToolbarInfo.cyMaxChild = 44;
+		myToolbarInfo.cx = 0;
+		myToolbarInfo.cxIdeal = 0;
+		SendMessage(myRebar, RB_INSERTBAND, (WPARAM)0, (LPARAM)&myToolbarInfo);
+		myToolbarInfo.fMask = RBBIM_IDEALSIZE; 
 	}
 
 	TBBUTTON button;
@@ -418,7 +471,8 @@ void ZLWin32ApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool
 			const ZLToolbar::TextFieldItem &textFieldItem = (const ZLToolbar::TextFieldItem&)*item;
 			HWND handle = myTextFields[myTextFieldCodeById[textFieldItem.actionId()]];
 			if (handle != 0) {
-				PostMessage(myToolbar, TB_SETSTATE, (WPARAM)myTextFieldCodeById[textFieldItem.actionId()], visible ? 0 : TBSTATE_HIDDEN);
+				const int idCommand = myTextFieldCodeById[textFieldItem.actionId()];
+				PostMessage(myToolbar, TB_SETSTATE, idCommand, visible ? 0 : TBSTATE_HIDDEN);
 				ShowWindow(handle, visible ? SW_SHOW : SW_HIDE);
 				PostMessage(handle, EM_SETREADONLY, !enabled, 0);
 			}
@@ -430,7 +484,8 @@ void ZLWin32ApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool
 		{
 			ZLToolbar::AbstractButtonItem &buttonItem = (ZLToolbar::AbstractButtonItem&)*item;
 			LPARAM state = (visible ? 0 : TBSTATE_HIDDEN) | (enabled ? TBSTATE_ENABLED : 0);
-			PostMessage(myToolbar, TB_SETSTATE, (WPARAM)myActionCodeById[buttonItem.actionId()], state);
+			const int idCommand = myActionCodeById[buttonItem.actionId()];
+			PostMessage(myToolbar, TB_SETSTATE, (WPARAM)idCommand, state);
 			break;
 		}
 		case ZLToolbar::Item::SEPARATOR:

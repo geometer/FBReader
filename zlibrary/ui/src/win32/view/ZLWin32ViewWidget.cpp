@@ -246,7 +246,7 @@ void ZLWin32ViewWidget::doPaint()	{
 			GetViewportExtEx(dc, &size);
 			SetViewportExtEx(dc, -size.cx, -size.cy, 0);
 			SetViewportOrgEx(dc, width - 1, height - 1, 0);
-			BitBlt(dc, 0, 0, width + 1, height + 1, win32Context.displayContext(), 0, 0, SRCCOPY);
+			BitBlt(dc, 0, 0, width + 1, height + 1, win32Context.displayContext(), 0, -1, SRCCOPY);
 			break;
 		}
 		case ZLView::DEGREES90:

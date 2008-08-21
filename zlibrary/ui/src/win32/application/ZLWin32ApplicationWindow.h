@@ -56,6 +56,7 @@ private:
 	void setFullscreen(bool fullscreen);
 
 	void init();
+	void refresh();
 
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
@@ -96,10 +97,15 @@ private:
 	};
 
 private:
+	void updateToolbarInfo();
+
+private:
 	ZLUnicodeUtil::Ucs2String myClassName;
 
 	HWND myMainWindow;
+	HWND myRebar;
 	HWND myToolbar;
+	REBARBANDINFO myToolbarInfo;
 
 	ZLWin32ViewWidget *myWin32ViewWidget;
 
