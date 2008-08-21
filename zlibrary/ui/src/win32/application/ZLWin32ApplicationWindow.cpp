@@ -43,6 +43,8 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 
 LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
+		case WM_ERASEBKGND:
+			return 0;
 		case WM_TIMER:
 			((ZLWin32TimeManager&)ZLTimeManager::instance()).execute(wParam);
 			return 0;
