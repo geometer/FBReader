@@ -527,16 +527,27 @@ void ZLTextView::gotoCharIndex(size_t charIndex) {
 	preparePaintInfo();
 	if (!positionIndicator().isNull()) {
 		size_t endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
-		while (endCharIndex > charIndex) {
-			scrollPage(false, SCROLL_LINES, 1);
-			preparePaintInfo();
-			if (positionIndicator()->sizeOfTextBeforeCursor(startCursor()) <= myTextSize[startParagraphIndex]) {
-				break;
+		if (endCharIndex > charIndex) {
+			while (endCharIndex > charIndex) {
+				scrollPage(false, SCROLL_LINES, 1);
+				preparePaintInfo();
+				if (positionIndicator()->sizeOfTextBeforeCursor(startCursor()) <= myTextSize[startParagraphIndex]) {
+					break;
+				}
+				endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
 			}
-			endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
-		}
-		if (endCharIndex < charIndex) {
-			scrollPage(true, SCROLL_LINES, 1);
+			if (endCharIndex < charIndex) {
+				scrollPage(true, SCROLL_LINES, 1);
+			}
+		} else {
+			while (endCharIndex < charIndex) {
+				scrollPage(true, SCROLL_LINES, 1);
+				preparePaintInfo();
+				endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
+			}
+			if (endCharIndex > charIndex) {
+				scrollPage(false, SCROLL_LINES, 1);
+			}
 		}
 	}
 }
@@ -614,6 +625,8 @@ void ZLTextView::onScrollbarMoved(Direction direction, size_t full, size_t from,
 	myTreeStateIsFrozen = true;
 	if (from == 0) {
 		scrollToStartOfText();
+	} else if (to == full) {
+		scrollToEndOfText();
 	} else {
 		gotoCharIndex(to);
 	}
