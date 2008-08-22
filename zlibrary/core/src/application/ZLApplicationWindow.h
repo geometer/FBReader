@@ -49,7 +49,6 @@ protected:
 	virtual ZLViewWidget *createViewWidget() = 0;
 	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
 
-	// TODO: change to non-virtual (?)
 	virtual void refresh();
 	// TODO: change to pure virtual
 	virtual void present() {}
