@@ -61,15 +61,16 @@ GtkToolItem *ZLGtkApplicationWindow::Toolbar::createGtkToolButton(const ZLToolba
 
 	switch (button.type()) {
 		case ZLToolbar::Item::PLAIN_BUTTON:
-			gtkItem = gtk_tool_button_new(image, 0);
+			gtkItem = gtk_tool_button_new(image, button.tooltip().c_str());
 			break;
 		case ZLToolbar::Item::TOGGLE_BUTTON:
 			gtkItem = gtk_toggle_tool_button_new();
+			gtk_tool_button_set_label(GTK_TOOL_BUTTON(gtkItem), button.tooltip().c_str());
 			gtk_tool_button_set_icon_widget(GTK_TOOL_BUTTON(gtkItem), image);
 			break;
 		case ZLToolbar::Item::MENU_BUTTON:
 		{
-			gtkItem = gtk_menu_tool_button_new(image, 0);
+			gtkItem = gtk_menu_tool_button_new(image, button.tooltip().c_str());
 			const ZLToolbar::MenuButtonItem &menuButton =
 				(const ZLToolbar::MenuButtonItem&)button;
 			shared_ptr<ZLPopupData> popupData = menuButton.popupData();
