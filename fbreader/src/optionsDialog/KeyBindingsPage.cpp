@@ -140,7 +140,6 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource, FBReader &f
 	addAction(ActionCode::DECREASE_FONT);
 	addAction(ActionCode::SHOW_HIDE_POSITION_INDICATOR);
 	addAction(ActionCode::TOGGLE_FULLSCREEN);
-	addAction(ActionCode::FULLSCREEN_ON);
 	addAction(ActionCode::ROTATE_SCREEN);
 
 	// dialogs

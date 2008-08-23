@@ -209,7 +209,6 @@
 						<node name="decreaseFont" value="Decrease Font Size"/>
 						<node name="toggleIndicator" value="Toggle Position Indicator"/>
 						<node name="toggleFullscreen" value="Toggle Fullscreen Mode"/>
-						<node name="onFullscreen" value="Switch to Fullscreen Mode"/>
 						<node name="rotate" value="Rotate Screen"/>
 						<node name="preferences" value="Show Options Dialog"/>
 						<node name="bookInfo" value="Show Book Info Dialog"/>
