@@ -69,8 +69,6 @@ void ZLWin32ApplicationWindow::updateToolbarInfo() {
 
 LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
-		case WM_ERASEBKGND:
-			return 0;
 		case WM_PAINT:
 		{
 			LRESULT code = DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -317,7 +315,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 
 void ZLWin32ApplicationWindow::init() {
 	const WCHAR *aName = ::wchar(myClassName);
-	CreateWindow(aName, aName, WS_OVERLAPPEDWINDOW, myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
+	CreateWindow(aName, aName, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);
