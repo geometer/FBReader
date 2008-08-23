@@ -96,13 +96,11 @@ public:
 	class FullscreenAction : public Action {
 
 	public:
-		FullscreenAction(ZLApplication &application, bool toggle);
-		bool isVisible() const;
+		FullscreenAction(ZLApplication &application);
 		void run();
 
 	private:
 		ZLApplication &myApplication;
-		bool myIsToggle;
 	};
 	friend class FullscreenAction;
 	

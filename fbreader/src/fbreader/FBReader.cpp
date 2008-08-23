@@ -146,8 +146,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::INCREASE_FONT, new ChangeFontSizeAction(*this, 2));
 	addAction(ActionCode::DECREASE_FONT, new ChangeFontSizeAction(*this, -2));
 	addAction(ActionCode::ROTATE_SCREEN, new RotationAction(*this));
-	addAction(ActionCode::TOGGLE_FULLSCREEN, new FBFullscreenAction(*this, true));
-	addAction(ActionCode::FULLSCREEN_ON, new FBFullscreenAction(*this, false));
+	addAction(ActionCode::TOGGLE_FULLSCREEN, new FBFullscreenAction(*this));
+	addAction(ActionCode::FULLSCREEN_ON, new FBFullscreenAction(*this));
 	addAction(ActionCode::CANCEL, new CancelAction(*this));
 	addAction(ActionCode::SHOW_HIDE_POSITION_INDICATOR, new ToggleIndicatorAction(*this));
 	addAction(ActionCode::QUIT, new QuitAction(*this));

@@ -58,11 +58,7 @@ void ZLApplication::RotationAction::run() {
 	myApplication.refreshWindow();
 }
 
-ZLApplication::FullscreenAction::FullscreenAction(ZLApplication &application, bool toggle) : myApplication(application), myIsToggle(toggle) {
-}
-
-bool ZLApplication::FullscreenAction::isVisible() const {
-	return myIsToggle || !myApplication.isFullscreen();
+ZLApplication::FullscreenAction::FullscreenAction(ZLApplication &application) : myApplication(application) {
 }
 
 void ZLApplication::FullscreenAction::run() {

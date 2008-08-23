@@ -334,7 +334,7 @@ public:
 class FBFullscreenAction : public ZLApplication::FullscreenAction {
 
 public:
-	FBFullscreenAction(FBReader &fbreader, bool toggle);
+	FBFullscreenAction(FBReader &fbreader);
 	void run();
 
 private:

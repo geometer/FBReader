@@ -469,7 +469,7 @@ void ClearSelectionAction::run() {
 	fbreader().refreshWindow();
 }
 
-FBFullscreenAction::FBFullscreenAction(FBReader &fbreader, bool toggle) : ZLApplication::FullscreenAction(fbreader, toggle), myFBReader(fbreader) {
+FBFullscreenAction::FBFullscreenAction(FBReader &fbreader) : ZLApplication::FullscreenAction(fbreader), myFBReader(fbreader) {
 }
 
 void FBFullscreenAction::run() {
