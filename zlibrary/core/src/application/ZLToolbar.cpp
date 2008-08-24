@@ -237,7 +237,7 @@ void ZLToolbar::addSeparator() {
 	myItems.push_back(new SeparatorItem(*this));
 }
 
-ZLToolbar::ButtonGroup::ButtonGroup(const std::string &groupId) : myPressedItem(0), myDefaultButtonOption(ZLCategoryKey::LOOK_AND_FEEL, "toggleButtonGroup", groupId, "") {
+ZLToolbar::ButtonGroup::ButtonGroup(const std::string &groupId) : myPressedItem(0), myDefaultButtonOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", groupId, "") {
 }
 
 void ZLToolbar::ButtonGroup::press(const ToggleButtonItem *item) {
