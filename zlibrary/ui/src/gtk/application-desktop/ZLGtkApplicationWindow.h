@@ -29,6 +29,7 @@
 #include <gtk/gtktoolitem.h>
 #include <gtk/gtkmenutoolbutton.h>
 #include <gtk/gtkentry.h>
+#include <gtk/gtkhandlebox.h>
 
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 #include "../../../../core/src/application/ZLToolbar.h"
@@ -45,7 +46,6 @@ private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void init();
-	void refresh();
 	void close();
 
 	void grabAllKeys(bool grab);
@@ -121,7 +121,14 @@ private:
 	friend class ZLGtkApplicationWindow;
 	};
 
-	Toolbar myToolbar;
+	Toolbar myWindowToolbar;
+	Toolbar myFullscreenToolbar;
+
+	Toolbar &toolbar(ToolbarType type) {
+		return (type == WINDOW_TOOLBAR) ? myWindowToolbar : myFullscreenToolbar;
+	}
+
+	GtkHandleBox *myHandleBox;
 };
 
 #endif /* __ZLGTKAPPLICATIONWINDOW_H__ */

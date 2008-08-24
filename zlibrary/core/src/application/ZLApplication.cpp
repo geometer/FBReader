@@ -59,7 +59,8 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	myPresentWindowHandler = new PresentWindowHandler(*this);
 	ZLCommunicationManager::instance().registerHandler("present", myPresentWindowHandler);
 
-	createToolbar();
+	createToolbar(ZLApplicationWindow::WINDOW_TOOLBAR);
+	createToolbar(ZLApplicationWindow::FULLSCREEN_TOOLBAR);
 	createMenubar();
 }
 
@@ -98,12 +99,16 @@ ZLApplicationWindow::ZLApplicationWindow(ZLApplication *application) : myApplica
 void ZLApplicationWindow::init() {
 	myApplication->myViewWidget = createViewWidget();
 
-	const ZLToolbar::ItemVector &toolbarItems = myApplication->toolbar().items();
+	initToolbar(WINDOW_TOOLBAR);
+	initToolbar(FULLSCREEN_TOOLBAR);
+	initMenu();
+}
+
+void ZLApplicationWindow::initToolbar(ToolbarType type) {
+	const ZLToolbar::ItemVector &toolbarItems = myApplication->toolbar(type).items();
 	for (ZLToolbar::ItemVector::const_iterator it = toolbarItems.begin(); it != toolbarItems.end(); ++it) {
 		addToolbarItem(*it);
 	}
-
-	initMenu();
 }
 
 void ZLApplication::addAction(const std::string &actionId, shared_ptr<Action> action) {
@@ -203,7 +208,12 @@ void ZLApplication::trackStylus(bool track) {
 }
 
 void ZLApplicationWindow::refresh() {
-	const ZLToolbar::ItemVector &items = application().toolbar().items();
+	refreshToolbar(WINDOW_TOOLBAR);
+	refreshToolbar(FULLSCREEN_TOOLBAR);
+}
+
+void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
+	const ZLToolbar::ItemVector &items = application().toolbar(type).items();
 	bool enableToolbarSpace = false;
 	ZLToolbar::ItemPtr lastSeparator = 0;
 	for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
@@ -337,6 +347,16 @@ void ZLApplication::resetLastCaller() {
 
 shared_ptr<ZLPaintContext> ZLApplication::context() {
 	return myContext;
+}
+
+ZLApplicationWindow::ToolbarType ZLApplicationWindow::type(const ZLToolbar::Item &item) const {
+	return
+		(&item.toolbar() == &application().toolbar(WINDOW_TOOLBAR)) ?
+			WINDOW_TOOLBAR : FULLSCREEN_TOOLBAR;
+}
+
+bool ZLApplicationWindow::hasFullscreenToolbar() const {
+	return !application().toolbar(FULLSCREEN_TOOLBAR).items().empty();
 }
 
 void ZLApplicationWindow::onButtonPress(const ZLToolbar::AbstractButtonItem &button) {

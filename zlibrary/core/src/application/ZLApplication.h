@@ -166,11 +166,11 @@ public:
 	const std::string &visualParameter(const std::string &id);
 
 private:
-	void createToolbar();
+	void createToolbar(int index);
 
 // TODO: change access rights to private
 public:
-	const ZLToolbar &toolbar() const;
+	const ZLToolbar &toolbar(int index) const;
 
 private:
 	void createMenubar();
@@ -181,6 +181,7 @@ private:
 	shared_ptr<ZLView> myInitialView;
 	std::map<std::string,shared_ptr<Action> > myActionMap;
 	mutable shared_ptr<ZLToolbar> myToolbar;
+	mutable shared_ptr<ZLToolbar> myFullscreenToolbar;
 	mutable shared_ptr<ZLMenubar> myMenubar;
 	shared_ptr<ZLPaintContext> myContext;
 	class ZLApplicationWindow *myWindow;

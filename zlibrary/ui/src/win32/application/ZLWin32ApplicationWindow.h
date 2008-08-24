@@ -34,6 +34,8 @@ class ZLWin32ViewWidget;
 class ZLWin32ApplicationWindow : public ZLDesktopApplicationWindow { 
 
 private:
+	static const int IconSize;
+
 	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	static ZLWin32ApplicationWindow *ourApplicationWindow;
 
@@ -43,7 +45,6 @@ public:
 
 private:
 	ZLViewWidget *createViewWidget();
-	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void close();
 
 	void grabAllKeys(bool grab);
@@ -58,11 +59,16 @@ private:
 	void init();
 	void refresh();
 
+	void createWindowToolbar();
+	void createFloatingToolbar();
+
+	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 	void updateTextFields();
-	void updateToolbarInfo();
+	void updateWindowToolbarInfo();
+	void updateFullscreenToolbarSize();
 	void setTooltip(TOOLTIPTEXT &tooltip);
 	void runPopup(const NMTOOLBAR &nmToolbar);
 	void processChevron(const NMREBARCHEVRON &chevron);
@@ -103,18 +109,27 @@ private:
 private:
 	ZLUnicodeUtil::Ucs2String myClassName;
 
+	struct Toolbar {
+		HWND hwnd;
+		std::map<ZLToolbar::ItemPtr,int> SeparatorNumbers;
+		std::map<std::string,int> ActionCodeById;
+		std::map<std::string,int> TextFieldCodeById;
+	};
+
 	HWND myMainWindow;
 	HWND myRebar;
-	HWND myToolbar;
+	Toolbar myWindowToolbar;
+	HWND myDockWindow;
+	Toolbar myFullscreenToolbar;
+	Toolbar &toolbar(ToolbarType type) {
+		return (type == WINDOW_TOOLBAR) ? myWindowToolbar : myFullscreenToolbar;
+	}
 	REBARBANDINFO myToolbarInfo;
 
-	ZLWin32ViewWidget *myWin32ViewWidget;
-
 	std::map<int,ZLToolbar::ItemPtr> myTBItemByActionCode;
-	std::map<ZLToolbar::ItemPtr,int> mySeparatorNumbers;
-	std::map<std::string,int> myActionCodeById;
-	std::map<std::string,int> myTextFieldCodeById;
 	std::map<int,HWND> myTextFields;
+
+	ZLWin32ViewWidget *myWin32ViewWidget;
 
 	bool myBlockMouseEvents;
 	int myKeyboardModifierMask;

@@ -45,16 +45,21 @@ public:
 		};
 
 	public:
-		Item();
+		Item(const ZLToolbar &toolbar);
 		virtual ~Item();
 
 		virtual Type type() const = 0;
+
+		const ZLToolbar &toolbar() const;
+
+	private:
+		const ZLToolbar &myToolbar;
 	};
 
 	class ActionItem : public Item {
 
 	public:
-		ActionItem(const std::string &actionId, const ZLResource &tooltip);
+		ActionItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip);
 		const std::string &actionId() const;
 		const std::string &tooltip() const;
 
@@ -68,14 +73,14 @@ public:
 	class AbstractButtonItem : public ActionItem {
 
 	public:
-		AbstractButtonItem(const std::string &actionId, const ZLResource &tooltip);
+		AbstractButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip);
 		const std::string &iconName() const;
 	};
 
 	class PlainButtonItem : public AbstractButtonItem {
 
 	public:
-		PlainButtonItem(const std::string &actionId, const ZLResource &tooltip);
+		PlainButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip);
 
 		Type type() const;
 	};
@@ -90,9 +95,6 @@ public:
 	
 	private:
 		Type type() const;
-
-	private:
-		const ZLToolbar &myToolbar;
 	};
 
 	class ButtonGroup;
@@ -100,7 +102,7 @@ public:
 	class ToggleButtonItem : public AbstractButtonItem {
 
 	public:
-		ToggleButtonItem(const std::string &actionId, ButtonGroup &group, const ZLResource &tooltip);
+		ToggleButtonItem(const ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group, const ZLResource &tooltip);
 
 		Type type() const;
 
@@ -132,6 +134,7 @@ public:
 	class SeparatorItem : public Item {
 
 	public:
+		SeparatorItem(const ZLToolbar &toolbar);
 		Type type() const;
 	};
 
@@ -144,7 +147,7 @@ public:
 		};
 
 	public:
-		TextFieldItem(const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip);
+		TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip);
 		Type type() const;
 		const std::string &parameterId() const;
 		int maxWidth() const;

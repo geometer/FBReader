@@ -48,7 +48,9 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	myViewWidget(0),
 	myHyperlinkCursor(0),
 	myHyperlinkCursorIsUsed(false),
-	myToolbar(this) {
+	myWindowToolbar(this),
+	myHandleBox(0),
+	myFullscreenToolbar(this) {
 	myMainWindow = GTK_WINDOW(gtk_window_new(GTK_WINDOW_TOPLEVEL));
 	const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
 	gtk_window_set_icon(myMainWindow, gdk_pixbuf_new_from_file(iconFileName.c_str(), 0));
@@ -57,7 +59,14 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	myVBox = gtk_vbox_new(false, 0);
 	gtk_container_add(GTK_CONTAINER(myMainWindow), myVBox);
 
-	gtk_box_pack_start(GTK_BOX(myVBox), myToolbar.toolbarWidget(), false, false, 0);
+	if (hasFullscreenToolbar()) {
+		myHandleBox = GTK_HANDLE_BOX(gtk_handle_box_new());
+		gtk_toolbar_set_show_arrow(GTK_TOOLBAR(myFullscreenToolbar.toolbarWidget()), false);
+		gtk_container_add(GTK_CONTAINER(myHandleBox), myFullscreenToolbar.toolbarWidget());
+		gtk_box_pack_start(GTK_BOX(myVBox), GTK_WIDGET(myHandleBox), false, false, 0);
+	}
+
+	gtk_box_pack_start(GTK_BOX(myVBox), myWindowToolbar.toolbarWidget(), false, false, 0);
 
 	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
 	gtk_window_move(myMainWindow, myXOption.value(), myYOption.value());
@@ -81,11 +90,6 @@ void ZLGtkApplicationWindow::init() {
 			gtk_window_maximize(myMainWindow);
 			break;
 	}
-}
-
-void ZLGtkApplicationWindow::refresh() {
-	ZLDesktopApplicationWindow::refresh();
-	gtk_widget_queue_draw(myToolbar.toolbarWidget());
 }
 
 ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
@@ -129,11 +133,16 @@ void ZLGtkApplicationWindow::handleScrollEventSlot(GdkEventScroll *event) {
 }
 
 void ZLGtkApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
-	myToolbar.setToggleButtonState(button);
+	toolbar(type(button)).setToggleButtonState(button);
 }
 
 void ZLGtkApplicationWindow::onGtkButtonPress(GtkToolItem *gtkButton) {
-	onButtonPress(myToolbar.buttonItemByWidget(gtkButton));
+	ToolbarType type =
+		isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR;
+	onButtonPress(toolbar(type).buttonItemByWidget(gtkButton));
+	if (isFullscreen()) {
+		gtk_window_present(myMainWindow);
+	}
 }
 
 void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
@@ -143,10 +152,16 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 
 	if (fullscreen) {
 		gtk_window_fullscreen(myMainWindow);
-		gtk_widget_hide(myToolbar.toolbarWidget());
+		gtk_widget_hide(myWindowToolbar.toolbarWidget());
+		if (myHandleBox != 0) {
+			gtk_widget_show_all(GTK_WIDGET(myHandleBox));
+		}
 	} else {
 		gtk_window_unfullscreen(myMainWindow);
-		gtk_widget_show(myToolbar.toolbarWidget());
+		if (myHandleBox != 0) {
+			gtk_widget_hide(GTK_WIDGET(myHandleBox));
+		}
+		gtk_widget_show(myWindowToolbar.toolbarWidget());
 	}
 
 	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));
@@ -159,17 +174,20 @@ bool ZLGtkApplicationWindow::isFullscreen() const {
 }
 
 void ZLGtkApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
-	myToolbar.addToolbarItem(item);
+	toolbar(type(*item)).addToolbarItem(item);
 }
 
 void ZLGtkApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	myToolbar.setToolbarItemState(item, visible, enabled);
+	toolbar(type(*item)).setToolbarItemState(item, visible, enabled);
 }
 
 ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
 	myViewWidget = new ZLGtkViewWidget(&application(), (ZLView::Angle)application().AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(myVBox), myViewWidget->areaWithScrollbars());
 	gtk_widget_show_all(myVBox);
+	if (myHandleBox != 0) {
+		gtk_widget_hide(GTK_WIDGET(myHandleBox));
+	}
 	return myViewWidget;
 }
 

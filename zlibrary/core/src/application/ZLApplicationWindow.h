@@ -37,19 +37,36 @@ public:
 	ZLApplication &application() const;
 
 protected:
-	virtual void init();
-	// TODO: change to pure virtual
-	virtual void initMenu() {}
-
-	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);
-	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
-	// TODO: change to pure virtual
-	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {}
-
 	virtual ZLViewWidget *createViewWidget() = 0;
+
+	virtual void init();
+
+	enum ToolbarType {
+		WINDOW_TOOLBAR,
+		FULLSCREEN_TOOLBAR
+	};
+
+private:
+	void initToolbar(ToolbarType type);
+
+protected:
+	// TODO: change to pure virtual
+	virtual void initMenu() {};
+
+	ToolbarType type(const ZLToolbar::Item &item) const;
+	bool hasFullscreenToolbar() const;
+	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);
 	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
+	// TODO: change to pure virtual
+	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {};
+	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
 
 	virtual void refresh();
+
+private:
+	void refreshToolbar(ToolbarType type);
+
+protected:
 	// TODO: change to pure virtual
 	virtual void present() {}
 
