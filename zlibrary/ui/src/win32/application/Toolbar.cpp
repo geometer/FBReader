@@ -99,7 +99,7 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 		TBBUTTON info;
 		SendMessage(myWindowToolbar.hwnd, TB_GETBUTTON, index, (LPARAM)&info);
 		if ((info.fsState & TBSTATE_HIDDEN) == 0) {
-			ZLToolbar::ItemPtr item = myTBItemByActionCode[info.idCommand];
+			ZLToolbar::ItemPtr item = myWindowToolbar.TBItemByActionCode[info.idCommand];
 			if (!item.isNull()) {
 				const ZLToolbar::AbstractButtonItem &button =
 					(const ZLToolbar::AbstractButtonItem&)*item;
