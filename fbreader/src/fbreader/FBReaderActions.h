@@ -69,6 +69,8 @@ public:
 	static const std::string OPEN_SELECTED_TEXT_IN_DICTIONARY;
 	static const std::string GOTO_PAGE_NUMBER;
 	static const std::string GOTO_PAGE_NUMBER_WITH_PARAMETER;
+	static const std::string ORGANIZE_BOOKS_BY_AUTHOR;
+	static const std::string ORGANIZE_BOOKS_BY_TAG;
 
 private:
 	ActionCode();
@@ -339,6 +341,13 @@ public:
 
 private:
 	FBReader &myFBReader;
+};
+
+class BooksOrderAction : public ModeDependentAction {
+
+public:
+	BooksOrderAction(FBReader &fbreader);
+	void run();
 };
 
 inline FBReader &FBAction::fbreader() {

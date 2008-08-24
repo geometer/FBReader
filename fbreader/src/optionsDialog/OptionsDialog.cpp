@@ -156,12 +156,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	generalTab.addOption(ZLResourceKey("bookPath"), collectionView.collection().PathOption);
 	generalTab.addOption(ZLResourceKey("lookInSubdirectories"), collectionView.collection().ScanSubdirsOption);
 	generalTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(fbreader.recentBooks().MaxListSizeOption, 1));
-	ZLToggleBooleanOptionEntry *showTagsEntry = new ZLToggleBooleanOptionEntry(collectionView.ShowTagsOption);
-	ZLOptionEntry *showAllBooksTagEntry = new ZLSimpleBooleanOptionEntry(collectionView.ShowAllBooksTagOption);
-	showTagsEntry->addDependentEntry(showAllBooksTagEntry);
-	generalTab.addOption(ZLResourceKey("showTags"), showTagsEntry);
-	generalTab.addOption(ZLResourceKey("showAllBooksList"), showAllBooksTagEntry);
-	showTagsEntry->onStateChanged(showTagsEntry->initialState());
+	generalTab.addOption(ZLResourceKey("showAllBooksTag"), collectionView.ShowAllBooksTagOption);
 
 	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
 	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::instance().LanguageAutoDetectOption));

@@ -53,10 +53,12 @@ public:
 
 private:
 	void build();
-	void buildWithTags();
-	void buildWithoutTags();
+	void buildOrganizedByTags(bool buildAuthorTree);
+	void buildOrganizedByAuthors();
 
-	void addBooks(const Books &books, ZLTextTreeParagraph *root);
+	void addBooks(bool asTree, const Books &books, ZLTextTreeParagraph *root);
+	void addBooksTree(const Books &books, ZLTextTreeParagraph *root);
+	void addBooksPlain(const Books &books, ZLTextTreeParagraph *root);
 
 	void insertText(FBTextKind kind, const std::string &text);
 	void insertImage(const std::string &id);

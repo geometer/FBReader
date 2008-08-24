@@ -37,7 +37,6 @@ public:
 	static const std::string SpecialTagNoTagsBooks;
 
 public:
-	ZLBooleanOption ShowTagsOption;
 	ZLBooleanOption ShowAllBooksTagOption;
 
 public:
@@ -55,6 +54,8 @@ public:
 	void openWithBook(BookDescriptionPtr book);
 
 	BookCollection &collection();
+
+	bool organizeByTags() const;
 
 private:
 	void selectBook(BookDescriptionPtr book);
@@ -75,7 +76,7 @@ private:
 	bool myTreeStateIsFrozen;
 	bool myUpdateModel;
 
-	bool myShowTags;
+	bool myOrganizeByTags;
 	bool myShowAllBooksList;
 };
 

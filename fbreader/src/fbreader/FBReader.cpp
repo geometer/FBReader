@@ -160,6 +160,9 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::CLEAR_SELECTION, new ClearSelectionAction(*this));
 	addAction(ActionCode::GOTO_PAGE_NUMBER, new GotoPageNumber(*this, std::string()));
 	addAction(ActionCode::GOTO_PAGE_NUMBER_WITH_PARAMETER, new GotoPageNumber(*this, PageIndexParameter));
+	shared_ptr<Action> booksOrderAction = new BooksOrderAction(*this);
+	addAction(ActionCode::ORGANIZE_BOOKS_BY_AUTHOR, booksOrderAction);
+	addAction(ActionCode::ORGANIZE_BOOKS_BY_TAG, booksOrderAction);
 
 	myOpenFileHandler = new OpenFileHandler(*this);
 	ZLCommunicationManager::instance().registerHandler("openFile", myOpenFileHandler);

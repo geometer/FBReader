@@ -59,3 +59,5 @@ const std::string ActionCode::CLEAR_SELECTION = "clearSelection";
 const std::string ActionCode::OPEN_SELECTED_TEXT_IN_DICTIONARY = "openInDictionary";
 const std::string ActionCode::GOTO_PAGE_NUMBER = "gotoPageNumber";
 const std::string ActionCode::GOTO_PAGE_NUMBER_WITH_PARAMETER = "gotoPageNumberWithParameter";
+const std::string ActionCode::ORGANIZE_BOOKS_BY_AUTHOR = "byAuthor";
+const std::string ActionCode::ORGANIZE_BOOKS_BY_TAG = "byTag";

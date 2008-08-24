@@ -5,6 +5,9 @@
 	<menuButton id="showLibrary"/>
 	<button id="addBook"/>
 	<separator/>
+	<toggleButton id="byAuthor" group="booksOrder" default="yes"/>
+	<toggleButton id="byTag" group="booksOrder"/>
+	<separator/>
 	<button id="gotoHome"/>
 	<button id="undo"/>
 	<button id="redo"/>

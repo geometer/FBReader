@@ -23,6 +23,7 @@
 #include "CollectionView.h"
 #include "CollectionModel.h"
 #include "FBReader.h"
+#include "FBReaderActions.h"
 #include "BookInfoDialog.h"
 
 #include "../collection/BookList.h"
@@ -30,11 +31,10 @@
 static const std::string LIBRARY = "Library";
 
 CollectionView::CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context),
-	ShowTagsOption(ZLCategoryKey::LOOK_AND_FEEL, LIBRARY, "ShowTags", true),
 	ShowAllBooksTagOption(ZLCategoryKey::LOOK_AND_FEEL, LIBRARY, "ShowAllBooksTag", true),
 	myUpdateModel(true) {
 	setModel(new CollectionModel(*this, myCollection), "");
-	myShowTags = ShowTagsOption.value();
+	myOrganizeByTags = organizeByTags();
 	myShowAllBooksList = ShowAllBooksTagOption.value();
 }
 
@@ -82,9 +82,9 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 }
 
 void CollectionView::paint() {
-	if ((myShowTags != ShowTagsOption.value()) ||
+	if ((myOrganizeByTags != organizeByTags()) ||
 			(myShowAllBooksList != ShowAllBooksTagOption.value())) {
-		myShowTags = ShowTagsOption.value();
+		myOrganizeByTags = organizeByTags();
 		myShowAllBooksList = ShowAllBooksTagOption.value();
 		myUpdateModel = true;
 	}
@@ -94,6 +94,7 @@ void CollectionView::paint() {
 		((CollectionModel&)*oldModel).update();
 		setModel(oldModel, "");
 		myUpdateModel = false;
+		selectBook(mySelectedBook);
 	}
 	FBView::paint();
 }
@@ -284,4 +285,8 @@ void CollectionView::openWithBook(BookDescriptionPtr book) {
 	if (book != 0) {
 		selectBook(book);
 	}
+}
+
+bool CollectionView::organizeByTags() const {
+	return ZLStringOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", "booksOrder", "").value() == ActionCode::ORGANIZE_BOOKS_BY_TAG;
 }
