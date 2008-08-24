@@ -49,8 +49,8 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	myHyperlinkCursor(0),
 	myHyperlinkCursorIsUsed(false),
 	myWindowToolbar(this),
-	myHandleBox(0),
-	myFullscreenToolbar(this) {
+	myFullscreenToolbar(this),
+	myHandleBox(0) {
 	myMainWindow = GTK_WINDOW(gtk_window_new(GTK_WINDOW_TOPLEVEL));
 	const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
 	gtk_window_set_icon(myMainWindow, gdk_pixbuf_new_from_file(iconFileName.c_str(), 0));
