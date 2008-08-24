@@ -2,11 +2,11 @@
 <toolbar>
 	<button id="showReading"/>
 	<separator/>
-	<menuButton id="showLibrary"/>
-	<button id="addBook"/>
-	<separator/>
 	<toggleButton id="byAuthor" group="booksOrder" default="yes"/>
 	<toggleButton id="byTag" group="booksOrder"/>
+	<separator/>
+	<menuButton id="showLibrary"/>
+	<button id="addBook"/>
 	<separator/>
 	<button id="gotoHome"/>
 	<button id="undo"/>
