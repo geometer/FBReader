@@ -142,7 +142,8 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 }
 
 void ZLWin32ApplicationWindow::setTooltip(TOOLTIPTEXT &tooltip) {
-	ZLToolbar::ItemPtr item = myTBItemByActionCode[tooltip.hdr.idFrom];
+	Toolbar &tb = toolbar(isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR);
+	ZLToolbar::ItemPtr item = tb.TBItemByActionCode[tooltip.hdr.idFrom];
 	if (!item.isNull()) {
 		const ZLToolbar::AbstractButtonItem &button =
 			(const ZLToolbar::AbstractButtonItem&)*item;
@@ -155,7 +156,8 @@ void ZLWin32ApplicationWindow::setTooltip(TOOLTIPTEXT &tooltip) {
 }
 
 void ZLWin32ApplicationWindow::runPopup(const NMTOOLBAR &nmToolbar) {
-	ZLToolbar::ItemPtr item = myTBItemByActionCode[nmToolbar.iItem];
+	Toolbar &tb = toolbar(isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR);
+	ZLToolbar::ItemPtr item = tb.TBItemByActionCode[nmToolbar.iItem];
 	if (!item.isNull()) {
 		const ZLToolbar::MenuButtonItem &button =
 			(const ZLToolbar::MenuButtonItem&)*item;
@@ -265,7 +267,8 @@ void ZLWin32ApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButto
 }
 
 void ZLWin32ApplicationWindow::onToolbarButtonPress(int actionCode) {
-	ZLToolbar::ItemPtr item = myTBItemByActionCode[actionCode];
+	Toolbar &tb = toolbar(isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR);
+	ZLToolbar::ItemPtr item = tb.TBItemByActionCode[actionCode];
 	if (!item.isNull()) {
 		onButtonPress((ZLToolbar::AbstractButtonItem&)*item);
 	}
@@ -347,7 +350,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			button.iBitmap = I_IMAGENONE;
 			button.fsStyle = TBSTYLE_BUTTON | BTNS_AUTOSIZE | BTNS_SHOWTEXT;
 			button.fsState = 0;
-			myTBItemByActionCode[button.idCommand] = item;
+			tb.TBItemByActionCode[button.idCommand] = item;
 			break;
 		}
 		case ZLToolbar::Item::PLAIN_BUTTON:
@@ -371,7 +374,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			const int actionCode = tb.ActionCodeById.size() + 1;
 			tb.ActionCodeById[buttonItem.actionId()] = actionCode;
 			button.idCommand = actionCode;
-			myTBItemByActionCode[button.idCommand] = item;
+			tb.TBItemByActionCode[button.idCommand] = item;
 			button.dwData = 0;
 			button.iString = 0;
     
@@ -397,7 +400,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		SendMessage(tb.hwnd, TB_SETBUTTONINFO, button.idCommand, (LPARAM)&buttonInfo);
 		TextEditParameter *parameter = new TextEditParameter(tb.hwnd, button.idCommand, textFieldItem);
 		myTextFields[button.idCommand] = parameter->handle();
-		ZLToolbar::ItemPtr item = myTBItemByActionCode[button.idCommand];
+		ZLToolbar::ItemPtr item = tb.TBItemByActionCode[button.idCommand];
 		new TextFieldData(parameter->handle(), myMainWindow, application(), textFieldItem.actionId());
 		addVisualParameter(textFieldItem.parameterId(), parameter);
 	}

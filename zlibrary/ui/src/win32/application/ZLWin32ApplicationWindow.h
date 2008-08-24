@@ -114,6 +114,7 @@ private:
 		std::map<ZLToolbar::ItemPtr,int> SeparatorNumbers;
 		std::map<std::string,int> ActionCodeById;
 		std::map<std::string,int> TextFieldCodeById;
+		std::map<int,ZLToolbar::ItemPtr> TBItemByActionCode;
 	};
 
 	HWND myMainWindow;
@@ -126,7 +127,6 @@ private:
 	}
 	REBARBANDINFO myToolbarInfo;
 
-	std::map<int,ZLToolbar::ItemPtr> myTBItemByActionCode;
 	std::map<int,HWND> myTextFields;
 
 	ZLWin32ViewWidget *myWin32ViewWidget;
