@@ -372,7 +372,7 @@ void ZLApplicationWindow::onButtonPress(const ZLToolbar::AbstractButtonItem &but
 			return;
 		} else {
 			toggleButton.press();
-			const ZLToolbar::ButtonGroup::ItemSet &items = toggleButton.buttonGroup().Items;
+			const ZLToolbar::ButtonGroup::ItemSet &items = toggleButton.buttonGroup().myItems;
 			for (ZLToolbar::ButtonGroup::ItemSet::const_iterator it = items.begin(); it != items.end(); ++it) {
 				setToggleButtonState(**it);
 			}

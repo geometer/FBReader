@@ -26,6 +26,7 @@
 #include <set>
 
 #include <shared_ptr.h>
+#include <ZLOptions.h>
 
 class ZLResource;
 class ZLPopupData;
@@ -117,14 +118,19 @@ public:
 	class ButtonGroup {
 
 	private:
-		ButtonGroup();
+		ButtonGroup(const std::string &groupId);
 		void press(const ToggleButtonItem *item);
+
+		void setDefaultAction(const std::string &actionId);
+		const std::string &defaultAction() const;
 
 	private:
 		typedef std::set<const ToggleButtonItem*> ItemSet;
 
-		ItemSet Items;
-		const ToggleButtonItem *PressedItem;
+		ItemSet myItems;
+		const ToggleButtonItem *myPressedItem;
+
+		ZLStringOption myDefaultButtonOption;
 
 	friend class ToggleButtonItem;
 	friend class ZLToolbar;
@@ -166,7 +172,7 @@ public:
 	ZLToolbar();
 	void addPlainButton(const std::string &actionId);
 	void addMenuButton(const std::string &actionId);
-	ToggleButtonItem &addToggleButton(const std::string &actionId, const std::string &groupId);
+	void addToggleButton(const std::string &actionId, const std::string &groupId, bool isDefault);
 	void addTextField(const std::string &actionId, const std::string &parameterId, int maxWidth, TextFieldItem::SymbolSet symbolSet);
 	void addSeparator();
 
