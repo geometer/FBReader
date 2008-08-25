@@ -268,9 +268,16 @@ void ZLWin32ApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButto
 
 void ZLWin32ApplicationWindow::onToolbarButtonPress(int actionCode) {
 	Toolbar &tb = toolbar(isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR);
-	ZLToolbar::ItemPtr item = tb.TBItemByActionCode[actionCode];
-	if (!item.isNull()) {
-		onButtonPress((ZLToolbar::AbstractButtonItem&)*item);
+	std::map<int,ZLToolbar::ItemPtr>::const_iterator it = tb.TBItemByActionCode.find(actionCode);
+	if ((it == tb.TBItemByActionCode.end()) || it->isNull()) {
+		return;
+	}
+		
+	switch ((*it)->type) {
+		case ZLToolbar::Item::PLAIN_BUTTON:
+		case ZLToolbar::Item::MENU_BUTTON:
+		case ZLToolbar::Item::TOGGLE_BUTTON:
+			onButtonPress((ZLToolbar::AbstractButtonItem&)**it);
 	}
 }
 
