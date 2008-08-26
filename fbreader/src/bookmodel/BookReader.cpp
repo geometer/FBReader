@@ -77,7 +77,7 @@ void BookReader::beginParagraph(ZLTextParagraph::Kind kind) {
 			myCurrentTextModel->addControl(*it, true);
 		}
 		if (!myHyperlinkReference.empty()) {
-			myCurrentTextModel->addHyperlinkControl(myHyperlinkKind, myHyperlinkReference);
+			myCurrentTextModel->addHyperlinkControl(myHyperlinkKind, myHyperlinkReference, myHyperlinkType);
 		}
 		myTextParagraphExists = true;
 	}
@@ -114,11 +114,25 @@ void BookReader::addControl(const ZLTextStyleEntry &entry) {
 }
 
 void BookReader::addHyperlinkControl(FBTextKind kind, const std::string &label) {
+	myHyperlinkKind = kind;
+	switch (myHyperlinkKind) {
+		case INTERNAL_HYPERLINK:
+			myHyperlinkType = "internal";
+			break;
+		case EXTERNAL_HYPERLINK:
+			myHyperlinkType = "external";
+			break;
+		case BOOK_HYPERLINK:
+			myHyperlinkType = "book";
+			break;
+		default:
+			myHyperlinkType.erase();
+			break;
+	}
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
-		myCurrentTextModel->addHyperlinkControl(kind, label);
+		myCurrentTextModel->addHyperlinkControl(kind, label, myHyperlinkType);
 	}
-	myHyperlinkKind = kind;
 	myHyperlinkReference = label;
 }
 

@@ -134,6 +134,10 @@ void ZLTextParagraph::Iterator::next() {
 					++myPointer;
 				}
 				++myPointer;
+				while (*myPointer != '\0') {
+					++myPointer;
+				}
+				++myPointer;
 				break;
 			case ZLTextParagraphEntry::IMAGE_ENTRY:
 				myPointer += sizeof(const ZLImageMap*) + sizeof(short) + 1;

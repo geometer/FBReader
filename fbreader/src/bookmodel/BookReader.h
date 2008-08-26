@@ -99,6 +99,7 @@ private:
 	std::vector<std::string> myContentsBuffer;
 
 	std::string myHyperlinkReference;
+	std::string myHyperlinkType;
 	FBTextKind myHyperlinkKind;
 };
 
