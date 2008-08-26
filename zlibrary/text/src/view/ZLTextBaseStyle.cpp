@@ -29,9 +29,6 @@ ZLTextBaseStyle::ZLTextBaseStyle(const std::string &fontFamily, int fontSize) :
 	SelectionBackgroundColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "SelectionBackground", ZLColor(82, 131, 194)),
 	SelectedTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "SelectedText", ZLColor(60, 139, 255)),
 	RegularTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Text", ZLColor(0, 0, 0)),
-	InternalHyperlinkTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Hyperlink", ZLColor(33, 96, 180)),
-	ExternalHyperlinkTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "ExternalHyperlink", ZLColor(98, 174, 26)),
-	BookHyperlinkTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "BookHyperlink", ZLColor(143, 89, 2)),
 	TreeLinesColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "TreeLines", ZLColor(127, 127, 127)),
 	AutoHyphenationOption(ZLCategoryKey::LOOK_AND_FEEL, "Options", "AutoHyphenation", true),
 	FontFamilyOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontFamily", fontFamily),
@@ -41,8 +38,19 @@ ZLTextBaseStyle::ZLTextBaseStyle(const std::string &fontFamily, int fontSize) :
 	AlignmentOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:alignment", ALIGN_JUSTIFY),
 	LineSpaceOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:lineSpacing", 1.2),
 	LineSpacePercentOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:lineSpacingPercent", 120) {
+	myHyperlinkColorOptions["internal"] = new ZLColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Hyperlink", ZLColor(33, 96, 180));
+	myHyperlinkColorOptions["external"] = new ZLColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "ExternalHyperlink", ZLColor(98, 174, 26));
+	myHyperlinkColorOptions["book"] = new ZLColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "BookHyperlink", ZLColor(143, 89, 2));
 }
 
 ZLColor ZLTextBaseStyle::color() const {
 	return RegularTextColorOption.value();
+}
+
+bool ZLTextBaseStyle::hasHyperlinkColorOption(const std::string &type) {
+	return myHyperlinkColorOptions.find(type) != myHyperlinkColorOptions.end();
+}
+
+ZLColorOption &ZLTextBaseStyle::hyperlinkColorOption(const std::string &type) {
+	return *myHyperlinkColorOptions[type];
 }

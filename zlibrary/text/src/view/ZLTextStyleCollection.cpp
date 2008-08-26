@@ -92,22 +92,6 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 			ZLBoolean3 italic = b3Value(attributes, "italic");
 			int verticalShift = intValue(attributes, "vShift");
 			ZLBoolean3 allowHyphenations = b3Value(attributes, "allowHyphenations");
-			ZLTextStyleDecoration::HyperlinkStyle hyperlinkStyle = ZLTextStyleDecoration::NONE;
-			const char *hyperlink = attributeValue(attributes, "hyperlink");
-			if (hyperlink != 0) {
-				static const std::string INTERNAL_STRING = "internal";
-				if (INTERNAL_STRING == hyperlink) {
-					hyperlinkStyle = ZLTextStyleDecoration::INTERNAL;
-				}
-				static const std::string EXTERNAL_STRING = "external";
-				if (EXTERNAL_STRING == hyperlink) {
-					hyperlinkStyle = ZLTextStyleDecoration::EXTERNAL;
-				}
-				static const std::string BOOK_STRING = "book";
-				if (BOOK_STRING == hyperlink) {
-					hyperlinkStyle = ZLTextStyleDecoration::BOOK;
-				}
-			}
 
 			if (booleanValue(attributes, "partial")) {
 				decoration = new ZLTextStyleDecoration(name, fontSizeDelta, bold, italic, verticalShift, allowHyphenations);
@@ -136,7 +120,10 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 
 				decoration = new ZLTextFullStyleDecoration(name, fontSizeDelta, bold, italic, spaceBefore, spaceAfter, leftIndent, rightIndent, firstLineIndentDelta, verticalShift, alignment, lineSpace, allowHyphenations);
 			}
-			decoration->setHyperlinkStyle(hyperlinkStyle);
+			const char *hyperlink = attributeValue(attributes, "hyperlink");
+			if (hyperlink != 0) {
+				decoration->setHyperlinkStyle(hyperlink);
+			}
 
 			const char *fontFamily = attributeValue(attributes, "family");
 			if (fontFamily != 0) {

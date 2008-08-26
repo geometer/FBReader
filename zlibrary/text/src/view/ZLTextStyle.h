@@ -98,10 +98,10 @@ public:
 	ZLColorOption SelectionBackgroundColorOption;
 	ZLColorOption SelectedTextColorOption;
 	ZLColorOption RegularTextColorOption;
-	ZLColorOption InternalHyperlinkTextColorOption;
-	ZLColorOption ExternalHyperlinkTextColorOption;
-	ZLColorOption BookHyperlinkTextColorOption;
 	ZLColorOption TreeLinesColorOption;
+
+	bool hasHyperlinkColorOption(const std::string &type);
+	ZLColorOption &hyperlinkColorOption(const std::string &type);
 
 	ZLBooleanOption AutoHyphenationOption;
 
@@ -112,6 +112,9 @@ public:
 	ZLIntegerOption AlignmentOption;
 	ZLDoubleOption LineSpaceOption;
 	ZLIntegerOption LineSpacePercentOption;
+
+private:
+	std::map<std::string,shared_ptr<ZLColorOption> > myHyperlinkColorOptions;
 };
 
 class ZLTextStyleDecoration {
@@ -126,14 +129,8 @@ public:
 
 	const std::string &name() const;
 
-	enum HyperlinkStyle {
-		NONE,
-		INTERNAL,
-		EXTERNAL,
-		BOOK
-	};
-	HyperlinkStyle hyperlinkStyle() const;
-	void setHyperlinkStyle(HyperlinkStyle hyperlinkStyle);
+	const std::string &hyperlinkStyle() const;
+	void setHyperlinkStyle(const std::string &hyperlinkStyle);
 
 public:
 	ZLStringOption FontFamilyOption;
@@ -148,7 +145,7 @@ public:
 private:
 	std::string myName;
 
-	HyperlinkStyle myHyperlinkStyle;
+	std::string myHyperlinkStyle;
 };
 
 class ZLTextFullStyleDecoration : public ZLTextStyleDecoration {
@@ -359,8 +356,6 @@ inline bool ZLTextBaseStyle::allowHyphenations() const { return true; }
 inline ZLTextStyleDecoration::~ZLTextStyleDecoration() {}
 inline bool ZLTextStyleDecoration::isFullDecoration() const { return false; }
 inline const std::string &ZLTextStyleDecoration::name() const { return myName; }
-inline ZLTextStyleDecoration::HyperlinkStyle ZLTextStyleDecoration::hyperlinkStyle() const { return myHyperlinkStyle; }
-inline void ZLTextStyleDecoration::setHyperlinkStyle(HyperlinkStyle hyperlinkStyle) { myHyperlinkStyle = hyperlinkStyle; }
 
 inline ZLTextFullStyleDecoration::~ZLTextFullStyleDecoration() {}
 inline bool ZLTextFullStyleDecoration::isFullDecoration() const { return true; }
