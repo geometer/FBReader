@@ -203,8 +203,8 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	builder.addOption(BACKGROUND, baseStyle.BackgroundColorOption);
 	builder.addOption(resource["selectionBackground"].value(), baseStyle.SelectionBackgroundColorOption);
 	builder.addOption(resource["text"].value(), baseStyle.RegularTextColorOption);
-	builder.addOption(resource["internalLink"].value(), baseStyle.InternalHyperlinkTextColorOption);
-	builder.addOption(resource["externalLink"].value(), baseStyle.ExternalHyperlinkTextColorOption);
+	builder.addOption(resource["internalLink"].value(), baseStyle.hyperlinkColorOption("internal"));
+	builder.addOption(resource["externalLink"].value(), baseStyle.hyperlinkColorOption("external"));
 	builder.addOption(resource["highlighted"].value(), baseStyle.SelectedTextColorOption);
 	builder.addOption(resource["treeLines"].value(), baseStyle.TreeLinesColorOption);
 	builder.addOption(resource["indicator"].value(), (FBView::commonIndicatorInfo().ColorOption));
