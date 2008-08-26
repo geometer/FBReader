@@ -88,7 +88,7 @@ size_t XMLTextStream::read(char *buffer, size_t maxSize) {
 void XMLTextStream::close() {
 	myReader->shutdown();
 	myBase->close();
-	myDataBuffer.clear();
+	myDataBuffer.erase();
 }
 
 void XMLTextStream::seek(int offset, bool absoluteOffset) {
