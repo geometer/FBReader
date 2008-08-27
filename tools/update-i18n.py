@@ -17,7 +17,8 @@ this program; if not, write to the Free Software Foundation, Inc., 51 Franklin
 Street, Fifth Floor, Boston, MA 02110-1301, USA.
 '''
 
-import sys
+import sys, os
+from optparse import OptionParser
 
 from elementtree.ElementTree import Element, SubElement, ElementTree
 
@@ -33,14 +34,16 @@ def fix_it(elem):
         last.tail = last.tail[:-len(SPACES)]
 
 class Collector:
-    def __init__(self):
+    def __init__(self, dirname='.'):
+        self._dirname = dirname
+
         self._resources = {}
         self._resources_order = []
 
     def process(self, lang):
         assert len(lang) == 2, 'Language name must be two letters long'
 
-        doc = ElementTree(file='%s.xml' % lang)
+        doc = ElementTree(file=os.path.join(self._dirname, '%s.xml' % lang))
 
         root = doc.getroot()
 
@@ -104,15 +107,24 @@ class Collector:
         ElementTree(root).write(output, 'utf-8')
 
 def main():
-    if len(sys.argv) == 1:
-        print 'Usage: update.py <lang>'
-        sys.exit(1)
+    '''actual worker'''
 
-    coll = Collector()
+    parser = OptionParser()
+
+    options, args = parser.parse_args()
+    parser.add_option('-d', '--dir', dest='dirname', default='.', help='specify directory where files reside')
+
+    if len(args) == 0:
+        parser.error('Invalid number of arguments')
+
+    if not os.path.isdir(options.dirname):
+        parser.error('Directory "%s" does not exist' % options.dirname)
+
+    coll = Collector(options.dirname)
 
     coll.process('en')
-    coll.process(sys.argv[1])
-    coll.dump(sys.stdout, sys.argv[1])
+    coll.process(args[0])
+    coll.dump(sys.stdout, args[0])
 
 if __name__ == '__main__':
     main()
