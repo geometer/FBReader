@@ -32,7 +32,7 @@ ContentsView::~ContentsView() {
 }
 
 bool ContentsView::onStylusMove(int x, int y) {
-	int index = paragraphIndexByCoordinate(y);
+	int index = paragraphIndexByCoordinates(x, y);
 	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
 		fbreader().setHyperlinkCursor(false);
 		return true;
@@ -46,7 +46,7 @@ bool ContentsView::onStylusMove(int x, int y) {
 }
 
 bool ContentsView::_onStylusPress(int x, int y) {
-	int index = paragraphIndexByCoordinate(y);
+	int index = paragraphIndexByCoordinates(x, y);
 	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
 		return false;
 	}

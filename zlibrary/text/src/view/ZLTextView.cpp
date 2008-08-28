@@ -151,18 +151,26 @@ void ZLTextView::scrollToEndOfText() {
 	application().refreshWindow();
 }
 
-int ZLTextView::paragraphIndexByCoordinate(int y) const {
-	int indexBefore = -1;
+int ZLTextView::paragraphIndexByCoordinates(int x, int y) const {
+	int storedIndex = -1;
 	for (ZLTextElementIterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
 		if (it->YEnd < y) {
-			indexBefore = it->ParagraphIndex;
-		} else if ((it->YStart <= y) || (it->ParagraphIndex == indexBefore)) {
-			return it->ParagraphIndex;
-		} else {
-			return 0;
+			storedIndex = it->ParagraphIndex;
+			continue;
 		}
+		if (it->YStart > y) {
+			return (storedIndex == it->ParagraphIndex) ? storedIndex : -1;
+		}
+		if (it->XEnd < x) {
+			storedIndex = it->ParagraphIndex;
+			continue;
+		}
+		if (it->XStart > x) {
+			return (storedIndex == it->ParagraphIndex) ? storedIndex : -1;
+		}
+		return it->ParagraphIndex;
 	}
-	return 0;
+	return -1;
 }
 
 const ZLTextElementArea *ZLTextView::elementByCoordinates(int x, int y) const {

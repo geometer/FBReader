@@ -190,7 +190,7 @@ protected:
 	virtual void paint();
 
 	const ZLTextElementArea *elementByCoordinates(int x, int y) const;
-	int paragraphIndexByCoordinate(int y) const;
+	int paragraphIndexByCoordinates(int x, int y) const;
 
 	void rebuildPaintInfo(bool strong);
 	virtual void preparePaintInfo();

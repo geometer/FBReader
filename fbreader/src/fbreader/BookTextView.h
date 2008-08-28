@@ -49,6 +49,7 @@ public:
 
 	bool _onStylusPress(int x, int y);
 	bool onStylusMove(int x, int y);
+	bool onStylusRelease(int x, int y);
 
 private:
 	typedef std::pair<int,int> Position;
@@ -87,6 +88,9 @@ private:
 	unsigned int myMaxStackSize;
 
 	bool myLockUndoStackChanges;
+
+	int myPressedX;
+	int myPressedY;
 };
 
 inline void BookTextView::preparePaintInfo() {

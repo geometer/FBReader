@@ -60,8 +60,8 @@ void RecentBooksView::rebuild() {
 bool RecentBooksView::_onStylusPress(int x, int y) {
 	const Books &books = fbreader().recentBooks().books();
 
-	int index = paragraphIndexByCoordinate(y);
-	if ((index == -1) || (index >= (int)books.size())) {
+	int index = paragraphIndexByCoordinates(x, y);
+	if ((index < 0) || (index >= (int)books.size())) {
 		return false;
 	}
 

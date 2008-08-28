@@ -247,6 +247,22 @@ bool BookTextView::getHyperlinkId(const ZLTextElementArea &area, std::string &id
 }
 
 bool BookTextView::_onStylusPress(int x, int y) {
+	myPressedX = x;
+	myPressedY = y;
+
+	return false;
+}
+
+bool BookTextView::onStylusRelease(int x, int y) {
+	const int deltaX = x - myPressedX;
+	if ((deltaX > 5) or (deltaX < -5)) {
+		return false;
+	}
+	const int deltaY = y - myPressedY;
+	if ((deltaY > 5) or (deltaY < -5)) {
+		return false;
+	}
+
 	const ZLTextElementArea *area = elementByCoordinates(x, y);
 	if (area != 0) {
 		std::string id;

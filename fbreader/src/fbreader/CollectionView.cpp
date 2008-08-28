@@ -110,7 +110,7 @@ bool CollectionView::onStylusMove(int x, int y) {
 		return true;
 	}
 
-	int index = paragraphIndexByCoordinate(y);
+	int index = paragraphIndexByCoordinates(x, y);
 	if (index != -1) {
 		BookDescriptionPtr book = collectionModel().bookByParagraphIndex(index);
 		if (!book.isNull()) {
@@ -156,7 +156,7 @@ bool CollectionView::_onStylusPress(int x, int y) {
 		}
 	}
 
-	int index = paragraphIndexByCoordinate(y);
+	int index = paragraphIndexByCoordinates(x, y);
 	if (index == -1) {
 		return false;
 	}
