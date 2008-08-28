@@ -22,18 +22,41 @@
 
 #include <qpainter.h>
 #include <qpixmap.h>
-#include <qscrollview.h>
+#include <qlayout.h>
+#include <qframe.h>
+#include <qscrollbar.h>
 
 ZLQtViewWidget::ZLQtViewWidgetInternal::ZLQtViewWidgetInternal(QWidget *parent, ZLQtViewWidget &holder) : QWidget(parent), myHolder(holder) {
 	setBackgroundMode(NoBackground);
 }
 
+QScrollBar *ZLQtViewWidget::addScrollBar(QGridLayout *layout, Qt::Orientation orientation, int x, int y, const char *slot) {
+	QScrollBar *scrollBar = new QScrollBar(orientation, myFrame);
+	layout->addWidget(scrollBar, x, y);
+	scrollBar->hide();
+	connect(scrollBar, SIGNAL(sliderMoved(int)), this, slot);
+	return scrollBar;
+}
+
 ZLQtViewWidget::ZLQtViewWidget(QWidget *parent, ZLApplication *application, const ZLQtViewWidgetPositionInfo &positionInfo) : ZLViewWidget((ZLView::Angle)application->AngleStateOption.value()), myApplication(application), myPositionInfo(positionInfo) {
-	myScrollWidget = new QScrollView(parent);
-	myQWidget = new ZLQtViewWidgetInternal(parent, *this);
-	myScrollWidget->addChild(myQWidget);
-	myScrollWidget->setVScrollBarMode(QScrollView::AlwaysOn);
-	myScrollWidget->setHScrollBarMode(QScrollView::AlwaysOn);
+	myFrame = new QFrame(parent);
+	QGridLayout *layout = new QGridLayout(myFrame, 3, 3);
+	layout->setRowStretch(0, 0);
+	layout->setRowStretch(1, 1);
+	layout->setRowStretch(2, 0);
+	layout->setColStretch(0, 0);
+	layout->setColStretch(1, 1);
+	layout->setColStretch(2, 0);
+	myQWidget = new ZLQtViewWidgetInternal(myFrame, *this);
+  layout->addWidget(myQWidget, 1, 1);
+
+	myRightScrollBar = addScrollBar(layout, Qt::Vertical, 1, 2, SLOT(onVerticalSliderMoved(int)));
+	myLeftScrollBar = addScrollBar(layout, Qt::Vertical, 1, 0, SLOT(onVerticalSliderMoved(int)));
+	myShowScrollBarAtRight = true;
+
+	myBottomScrollBar = addScrollBar(layout, Qt::Horizontal, 2, 1, SLOT(onHorizontalSliderMoved(int)));
+	myTopScrollBar = addScrollBar(layout, Qt::Horizontal, 0, 1, SLOT(onHorizontalSliderMoved(int)));
+	myShowScrollBarAtBottom = true;
 }
 
 const ZLQtViewWidgetPositionInfo &ZLQtViewWidget::positionInfo() const {
@@ -71,7 +94,7 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::paintEvent(QPaintEvent*) {
 			break;
 		case ZLView::DEGREES270:
 			realPainter.rotate(90);
-			realPainter.drawPixmap(-1, 1 - width(), context.pixmap());
+			realPainter.drawPixmap(0, 1 - width(), context.pixmap());
 			break;
 	}
 }
@@ -133,6 +156,7 @@ void ZLQtViewWidget::repaint()	{
 }
 
 void ZLQtViewWidget::ZLQtViewWidgetInternal::resizeEvent(QResizeEvent*) {
+	/*
 	const ZLQtViewWidgetPositionInfo &info = myHolder.positionInfo();
 
 	const int x = info.x();
@@ -147,17 +171,80 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::resizeEvent(QResizeEvent*) {
 	if ((width != this->width()) || (height != this->height())) {
 		resize(width, height);
 	}
+	*/
 }
 
 void ZLQtViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
+	if (direction == ZLView::VERTICAL) {
+		myRightScrollBar->setShown(enabled && myShowScrollBarAtRight);
+		myLeftScrollBar->setShown(enabled && !myShowScrollBarAtRight);
+	} else {
+		myBottomScrollBar->setShown(enabled && myShowScrollBarAtBottom);
+		myTopScrollBar->setShown(enabled && !myShowScrollBarAtBottom);
+	}
 }
 
 void ZLQtViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool standard) {
+	if (direction == ZLView::VERTICAL) {
+		if (standard != myShowScrollBarAtRight) {
+			myShowScrollBarAtRight = standard;
+			QScrollBar *old = standard ? myLeftScrollBar : myRightScrollBar;
+			QScrollBar *current = standard ? myRightScrollBar : myLeftScrollBar;
+			if (old->isShown()) {
+				old->hide();
+				current->show();
+			}
+		}
+	} else {
+		if (standard != myShowScrollBarAtBottom) {
+			myShowScrollBarAtBottom = standard;
+			QScrollBar *old = standard ? myTopScrollBar : myBottomScrollBar;
+			QScrollBar *current = standard ? myBottomScrollBar : myTopScrollBar;
+			if (old->isShown()) {
+				old->hide();
+				current->show();
+			}
+		}
+	}
 }
 
 void ZLQtViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) {
+	QScrollBar *bar =
+		(direction == ZLView::VERTICAL) ?
+			(myShowScrollBarAtRight ? myRightScrollBar : myLeftScrollBar) :
+			(myShowScrollBarAtBottom ? myBottomScrollBar : myTopScrollBar);
+	bar->setMinValue(0);
+	bar->setMaxValue(full + from - to);
+	bar->setValue(from);
+	bar->setPageStep(to - from);
 }
 
 QWidget *ZLQtViewWidget::widget() const {
-	return myScrollWidget;
+	return myFrame;
+}
+
+void ZLQtViewWidget::onVerticalSliderMoved(int value) {
+	QScrollBar *bar =
+		myShowScrollBarAtRight ? myRightScrollBar : myLeftScrollBar;
+	size_t maxValue = bar->maxValue();
+	size_t pageStep = bar->pageStep();
+	onScrollbarMoved(
+		ZLView::VERTICAL,
+		maxValue + pageStep,
+		(size_t)value,
+		(size_t)value + pageStep
+	);
+}
+
+void ZLQtViewWidget::onHorizontalSliderMoved(int value) {
+	QScrollBar *bar =
+		myShowScrollBarAtBottom ? myBottomScrollBar : myTopScrollBar;
+	size_t maxValue = bar->maxValue();
+	size_t pageStep = bar->pageStep();
+	onScrollbarMoved(
+		ZLView::HORIZONTAL,
+		maxValue + pageStep,
+		(size_t)value,
+		(size_t)value + pageStep
+	);
 }

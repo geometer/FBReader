@@ -86,7 +86,10 @@ ZLQtToolButton::ZLQtToolButton(ZLQtApplicationWindow &window, ZLToolbar::Abstrac
 	} else if (item.type() == ZLToolbar::Item::MENU_BUTTON) {
 		QToolButton *arrow = new QToolButton(Qt::DownArrow, window.myToolBar, 0);
 	}
-	QToolTip::add(this, QString::fromUtf8(myItem.tooltip().c_str()));
+	QString text = QString::fromUtf8(myItem.tooltip().c_str());
+	setTextLabel(text);
+	setUsesTextLabel(false);
+	QToolTip::add(this, text);
 	connect(this, SIGNAL(clicked()), this, SLOT(onActivated()));
 }
 

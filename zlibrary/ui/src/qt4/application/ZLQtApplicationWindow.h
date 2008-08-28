@@ -26,6 +26,9 @@
 #include <QtGui/QAction>
 #include <QtGui/QCursor>
 
+class QDockWidget;
+class QToolBar;
+
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 
 class ZLQtApplicationWindow : public QMainWindow, public ZLDesktopApplicationWindow {
@@ -51,15 +54,19 @@ private:
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
+	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
+	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
+
+public:
 	void closeEvent(QCloseEvent *event);
 	void keyPressEvent(QKeyEvent *event);
 	void wheelEvent(QWheelEvent *event);
 
-	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
-	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
-
 private:
-	class QToolBar *myToolBar;
+	QToolBar *myWindowToolBar;
+	QToolBar *myFullscreenToolBar;
+	QDockWidget *myDocWidget;
+	QToolBar *toolbar(ToolbarType type) { return (type == WINDOW_TOOLBAR) ? myWindowToolBar : myFullscreenToolBar; }
 
 friend class ZLQtToolBarAction;
 	std::map<const ZLToolbar::Item*, QAction*> myActions;

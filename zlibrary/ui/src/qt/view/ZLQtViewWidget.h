@@ -26,7 +26,9 @@
 #include <ZLApplication.h>
 
 class ZLQtApplicationWindow;
-class QScrollView;
+class QFrame;
+class QScrollBar;
+class QGridLayout;
 
 class ZLQtViewWidgetPositionInfo {
 
@@ -42,7 +44,8 @@ private:
 	const ZLQtApplicationWindow &myWindow;
 };
 
-class ZLQtViewWidget : public ZLViewWidget {
+class ZLQtViewWidget : public QObject, public ZLViewWidget {
+	Q_OBJECT
 
 private:
 	class ZLQtViewWidgetInternal : public QWidget {
@@ -77,9 +80,24 @@ private:
 	void setScrollbarPlacement(ZLView::Direction direction, bool standard);
 	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step);
 
+	QScrollBar *addScrollBar(QGridLayout *layout, Qt::Orientation orientation, int x, int y, const char *slot);
+
+private slots:
+	void onVerticalSliderMoved(int value);
+	void onHorizontalSliderMoved(int value);
+
 private:
 	ZLQtViewWidgetInternal *myQWidget;
-	QScrollView *myScrollWidget;
+	QFrame *myFrame;
+
+	QScrollBar *myRightScrollBar;
+	QScrollBar *myLeftScrollBar;
+	bool myShowScrollBarAtRight;
+
+	QScrollBar *myBottomScrollBar;
+	QScrollBar *myTopScrollBar;
+	bool myShowScrollBarAtBottom;
+
 	ZLApplication *myApplication;
 	const ZLQtViewWidgetPositionInfo myPositionInfo;
 };

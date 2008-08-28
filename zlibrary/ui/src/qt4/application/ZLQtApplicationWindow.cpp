@@ -27,6 +27,7 @@
 #include <QtGui/QAction>
 #include <QtGui/QLayout>
 #include <QtGui/QWheelEvent>
+#include <QtGui/QDockWidget>
 #include <QtCore/QObjectList>
 
 #include <ZLibrary.h>
@@ -48,7 +49,9 @@ ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::A
 	if (item.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
 		setCheckable(true);
 	}
-	setToolTip(QString::fromUtf8(myItem.tooltip().c_str()));
+	QString text = QString::fromUtf8(myItem.tooltip().c_str());
+	setText(text);
+	setToolTip(text);
 	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
 }
 
@@ -62,6 +65,8 @@ void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonIt
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	ZLDesktopApplicationWindow(application),
+	myFullscreenToolBar(0),
+	myDocWidget(0),
 	myFullScreen(false),
 	myWasMaximized(false),
 	myCursorIsHyperlink(false) {
@@ -72,10 +77,17 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 	//setWFlags(getWFlags() | WStyle_Customize);
 
-	myToolBar = new QToolBar(this);
-	myToolBar->setMovable(false);
-	addToolBar(myToolBar);
-	myToolBar->setIconSize(QSize(32, 32));
+	myWindowToolBar = new QToolBar(this);
+	myWindowToolBar->setMovable(false);
+	addToolBar(myWindowToolBar);
+	myWindowToolBar->setIconSize(QSize(32, 32));
+
+	if (hasFullscreenToolbar()) {
+		myFullscreenToolBar = new QToolBar();
+		myFullscreenToolBar->setMovable(false);
+		myFullscreenToolBar->setIconSize(QSize(32, 32));
+		myFullscreenToolBar->hide();
+	}
 
 	resize(myWidthOption.value(), myHeightOption.value());
 	move(myXOption.value(), myYOption.value());
@@ -129,13 +141,29 @@ void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
 	myFullScreen = fullscreen;
 	if (myFullScreen) {
 		myWasMaximized = isMaximized();
-		myToolBar->hide();
+		myWindowToolBar->hide();
 		showFullScreen();
+		if (myFullscreenToolBar != 0) {
+			if (myDocWidget == 0) {
+				myDocWidget = new QDockWidget(this);
+				myDocWidget->setWidget(myFullscreenToolBar);
+				myDocWidget->setFloating(true);
+				myDocWidget->setAllowedAreas(Qt::NoDockWidgetArea);
+			}
+			myDocWidget->show();
+			myFullscreenToolBar->show();
+			myDocWidget->setMinimumSize(myDocWidget->size());
+			myDocWidget->setMaximumSize(myDocWidget->size());
+		}
 	} else {
-		myToolBar->show();
+		myWindowToolBar->show();
 		showNormal();
 		if (myWasMaximized) {
 			showMaximized();
+		}
+		if (myDocWidget != 0) {
+			//myFullscreenToolBar->hide();
+			myDocWidget->hide();
 		}
 	}
 }
@@ -144,7 +172,10 @@ bool ZLQtApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
+#include <iostream>
+
 void ZLQtApplicationWindow::keyPressEvent(QKeyEvent *event) {
+	std::cerr << "ZLQtApplicationWindow::keyPressEvent\n";
 	application().doActionByKey(ZLQtKeyUtil::keyName(event));
 }
 
@@ -176,20 +207,20 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		{
 			ZLToolbar::AbstractButtonItem &buttonItem = (ZLToolbar::AbstractButtonItem&)*item;
 			action = new ZLQtToolBarAction(this, buttonItem);
-			myToolBar->addAction(action);
+			toolbar(type(buttonItem))->addAction(action);
 			break;
 		}
 		case ZLToolbar::Item::TEXT_FIELD:
 		{
 			//ZLToolbar::TextFieldItem &textFieldItem =
 			//	(ZLToolbar::TextFieldItem&)*item;
-			//QLineEdit *edit = new QLineEdit(myToolBar);
+			//QLineEdit *edit = new QLineEdit(toolbar(type(buttonItem)));
 			//edit->setMaxLength(textFieldItem.maxWidth());
-			//action = myToolBar->addWidget(edit);
+			//action = toolbar(type(buttonItem))->addWidget(edit);
 			break;
 		}
 		case ZLToolbar::Item::SEPARATOR:
-			action = myToolBar->addSeparator();
+			action = toolbar(type(*item))->addSeparator();
 			break;
 	}
 
