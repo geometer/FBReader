@@ -24,7 +24,8 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QLineEdit>
 #include <QtGui/QMenuBar>
-#include <QtGui/QAction>
+#include <QtGui/QMenu>
+#include <QtGui/QToolButton>
 #include <QtGui/QLayout>
 #include <QtGui/QWheelEvent>
 #include <QtGui/QDockWidget>
@@ -202,12 +203,25 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 
 	switch (item->type()) {
 		case ZLToolbar::Item::PLAIN_BUTTON:
-		case ZLToolbar::Item::MENU_BUTTON:
 		case ZLToolbar::Item::TOGGLE_BUTTON:
 		{
 			ZLToolbar::AbstractButtonItem &buttonItem = (ZLToolbar::AbstractButtonItem&)*item;
 			action = new ZLQtToolBarAction(this, buttonItem);
 			toolbar(type(buttonItem))->addAction(action);
+			break;
+		}
+		case ZLToolbar::Item::MENU_BUTTON:
+		{
+			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
+			action = new ZLQtToolBarAction(this, buttonItem);
+			QToolBar *tb = toolbar(type(buttonItem));
+			QToolButton *button = new QToolButton(tb);
+			button->setDefaultAction(action);
+			button->setPopupMode(QToolButton::MenuButtonPopup);
+			QMenu *popupMenu = new QMenu(button);
+			button->setMenu(popupMenu);
+			tb->addWidget(button);
+			myMenus[&buttonItem] = popupMenu;
 			break;
 		}
 		case ZLToolbar::Item::TEXT_FIELD:
@@ -234,6 +248,9 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool vi
 	if (action != 0) {
 		action->setEnabled(enabled);
 		action->setVisible(visible);
+	}
+	if (item->type() == ZLToolbar::Item::MENU_BUTTON) {
+		
 	}
 }
 
