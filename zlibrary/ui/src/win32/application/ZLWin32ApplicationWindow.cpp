@@ -205,6 +205,15 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	myWait(false),
 	myCursor(0) {
 
+	::createNTWCHARString(myClassName, ZLibrary::ApplicationName());
+
+	HWND existingWindow = FindWindow(::wchar(myClassName), 0);
+	if (existingWindow != 0) {
+		ShowWindow(existingWindow, SW_SHOW);
+		SetForegroundWindow(existingWindow);
+		exit(0);
+	}
+
 	INITCOMMONCONTROLSEX icex;
 	icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
 	icex.dwICC = ICC_WIN95_CLASSES | ICC_BAR_CLASSES | ICC_COOL_CLASSES | ICC_USEREX_CLASSES;
@@ -221,7 +230,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	wc.hCursor = LoadCursor(0, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	wc.lpszMenuName = 0;
-	wc.lpszClassName = ::wchar(::createNTWCHARString(myClassName, ZLibrary::ApplicationName()));
+	wc.lpszClassName = ::wchar(myClassName);
 	wc.hIconSm = wc.hIcon;
 
 	RegisterClassEx(&wc);
