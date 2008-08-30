@@ -218,7 +218,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			button->setPopupMode(QToolButton::MenuButtonPopup);
 			QMenu *popupMenu = new QMenu(button);
 			button->setMenu(popupMenu);
-			tb->addWidget(button);
+			action = tb->addWidget(button);
 			myMenuButtons[&buttonItem] = button;
 			shared_ptr<ZLPopupData> popupData = buttonItem.popupData();
 			myPopupIdMap[&buttonItem] =
@@ -227,11 +227,15 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		}
 		case ZLToolbar::Item::TEXT_FIELD:
 		{
-			//ZLToolbar::TextFieldItem &textFieldItem =
-			//	(ZLToolbar::TextFieldItem&)*item;
-			//QLineEdit *edit = new QLineEdit(toolbar(type(buttonItem)));
-			//edit->setMaxLength(textFieldItem.maxWidth());
-			//action = toolbar(type(buttonItem))->addWidget(edit);
+			/*
+			ZLToolbar::TextFieldItem &textFieldItem =
+				(ZLToolbar::TextFieldItem&)*item;
+			QToolBar *tb = toolbar(type(textFieldItem));
+			QLineEdit *edit = new QLineEdit(tb);
+			edit->setMaxLength(textFieldItem.maxWidth());
+			edit->setMaximumWidth(textFieldItem.maxWidth() * 10);
+			action = tb->addWidget(edit);
+			*/
 			break;
 		}
 		case ZLToolbar::Item::SEPARATOR:
@@ -257,25 +261,21 @@ void ZLQtRunPopupAction::onActivated() {
 }
 
 void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
+	QAction *action = myActions[&*item];
+	if (action != 0) {
+		action->setEnabled(enabled);
+		action->setVisible(visible);
+	}
 	switch (item->type()) {
 		default:
-		{
-			QAction *action = myActions[&*item];
-			if (action != 0) {
-				action->setEnabled(enabled);
-				action->setVisible(visible);
-			}
 			break;
-		}
 		case ZLToolbar::Item::MENU_BUTTON:
 		{
 			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
-			QToolButton *button = myMenuButtons[&buttonItem];
-			button->setEnabled(enabled);
-			button->setVisible(visible);
 			shared_ptr<ZLPopupData> data = buttonItem.popupData();
 			if (!data.isNull() && (data->id() != myPopupIdMap[&buttonItem])) {
 				myPopupIdMap[&buttonItem] = data->id();
+				QToolButton *button = myMenuButtons[&buttonItem];
 				QMenu *menu = button->menu();
 				menu->clear();
 				const size_t count = data->count();
