@@ -219,7 +219,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			QMenu *popupMenu = new QMenu(button);
 			button->setMenu(popupMenu);
 			tb->addWidget(button);
-			myMenus[&buttonItem] = popupMenu;
+			myMenuButtons[&buttonItem] = button;
 			shared_ptr<ZLPopupData> popupData = buttonItem.popupData();
 			myPopupIdMap[&buttonItem] =
 				popupData.isNull() ? (size_t)-1 : (popupData->id() - 1);
@@ -257,22 +257,33 @@ void ZLQtRunPopupAction::onActivated() {
 }
 
 void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	QAction *action = myActions[&*item];
-	if (action != 0) {
-		action->setEnabled(enabled);
-		action->setVisible(visible);
-	}
-	if (item->type() == ZLToolbar::Item::MENU_BUTTON) {
-		ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
-		shared_ptr<ZLPopupData> data = buttonItem.popupData();
-		if (!data.isNull() && (data->id() != myPopupIdMap[&buttonItem])) {
-			myPopupIdMap[&buttonItem] = data->id();
-			QMenu *menu = myMenus[&buttonItem];
-			menu->clear();
-			const size_t count = data->count();
-			for (size_t i = 0; i < count; ++i) {
-				menu->addAction(new ZLQtRunPopupAction(menu, data, i));
+	switch (item->type()) {
+		default:
+		{
+			QAction *action = myActions[&*item];
+			if (action != 0) {
+				action->setEnabled(enabled);
+				action->setVisible(visible);
 			}
+			break;
+		}
+		case ZLToolbar::Item::MENU_BUTTON:
+		{
+			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
+			QToolButton *button = myMenuButtons[&buttonItem];
+			button->setEnabled(enabled);
+			button->setVisible(visible);
+			shared_ptr<ZLPopupData> data = buttonItem.popupData();
+			if (!data.isNull() && (data->id() != myPopupIdMap[&buttonItem])) {
+				myPopupIdMap[&buttonItem] = data->id();
+				QMenu *menu = button->menu();
+				menu->clear();
+				const size_t count = data->count();
+				for (size_t i = 0; i < count; ++i) {
+					menu->addAction(new ZLQtRunPopupAction(menu, data, i));
+				}
+			}
+			break;
 		}
 	}
 }

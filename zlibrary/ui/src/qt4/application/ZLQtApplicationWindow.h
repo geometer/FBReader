@@ -28,6 +28,7 @@
 
 class QDockWidget;
 class QToolBar;
+class QToolButton;
 
 class ZLPopupData;
 
@@ -72,7 +73,7 @@ private:
 
 friend class ZLQtToolBarAction;
 	std::map<const ZLToolbar::Item*,QAction*> myActions;
-	std::map<const ZLToolbar::MenuButtonItem*,QMenu*> myMenus;
+	std::map<const ZLToolbar::MenuButtonItem*,QToolButton*> myMenuButtons;
 	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
 
 	bool myFullScreen;
