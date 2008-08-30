@@ -29,6 +29,8 @@
 class QDockWidget;
 class QToolBar;
 
+class ZLPopupData;
+
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 
 class ZLQtApplicationWindow : public QMainWindow, public ZLDesktopApplicationWindow {
@@ -59,7 +61,7 @@ private:
 
 public:
 	void closeEvent(QCloseEvent *event);
-	void keyPressEvent(QKeyEvent *event);
+	void keyReleaseEvent(QKeyEvent *event);
 	void wheelEvent(QWheelEvent *event);
 
 private:
@@ -93,5 +95,19 @@ private:
 	ZLToolbar::AbstractButtonItem &myItem;
 };
 
+class ZLQtRunPopupAction : public QAction {
+	Q_OBJECT
+
+public:
+	ZLQtRunPopupAction(QObject *parent, shared_ptr<ZLPopupData> data, size_t index);
+	~ZLQtRunPopupAction();
+
+private Q_SLOTS:
+	void onActivated();
+
+private:
+	shared_ptr<ZLPopupData> myData;
+	const size_t myIndex;
+};
 
 #endif /* __ZLQTAPPLICATIONWINDOW_H__ */

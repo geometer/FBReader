@@ -24,19 +24,19 @@
 #include <QtGui/QPixmap>
 #include <QtGui/QMouseEvent>
 
-ZLQtViewWidget::ZLQtViewWidgetInternal::ZLQtViewWidgetInternal(QWidget *parent, ZLQtViewWidget &holder) : QWidget(parent), myHolder(holder) {
+ZLQtViewWidget::Widget::Widget(QWidget *parent, ZLQtViewWidget &holder) : QWidget(parent), myHolder(holder) {
 	//setBackgroundMode(NoBackground);
 }
 
 ZLQtViewWidget::ZLQtViewWidget(QWidget *parent, ZLApplication *application) : ZLViewWidget((ZLView::Angle)application->AngleStateOption.value()), myApplication(application) {
-	myQWidget = new ZLQtViewWidgetInternal(parent, *this);
+	myQWidget = new Widget(parent, *this);
 }
 
 void ZLQtViewWidget::trackStylus(bool track) {
 	myQWidget->setMouseTracking(track);
 }
 
-void ZLQtViewWidget::ZLQtViewWidgetInternal::paintEvent(QPaintEvent*) {
+void ZLQtViewWidget::Widget::paintEvent(QPaintEvent*) {
 	ZLQtPaintContext &context = (ZLQtPaintContext&)myHolder.view()->context();
 	switch (myHolder.rotation()) {
 		default:
@@ -68,16 +68,16 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::paintEvent(QPaintEvent*) {
 	}
 }
 
-void ZLQtViewWidget::ZLQtViewWidgetInternal::mousePressEvent(QMouseEvent *event) {
+void ZLQtViewWidget::Widget::mousePressEvent(QMouseEvent *event) {
 	myHolder.view()->onStylusMove(x(event), y(event));
 	myHolder.view()->onStylusPress(x(event), y(event));
 }
 
-void ZLQtViewWidget::ZLQtViewWidgetInternal::mouseReleaseEvent(QMouseEvent *event) {
+void ZLQtViewWidget::Widget::mouseReleaseEvent(QMouseEvent *event) {
 	myHolder.view()->onStylusRelease(x(event), y(event));
 }
 
-void ZLQtViewWidget::ZLQtViewWidgetInternal::mouseMoveEvent(QMouseEvent *event) {
+void ZLQtViewWidget::Widget::mouseMoveEvent(QMouseEvent *event) {
 	switch (event->buttons()) {
 		case Qt::LeftButton:
 			myHolder.view()->onStylusMovePressed(x(event), y(event));
@@ -90,7 +90,7 @@ void ZLQtViewWidget::ZLQtViewWidgetInternal::mouseMoveEvent(QMouseEvent *event) 
 	}
 }
 
-int ZLQtViewWidget::ZLQtViewWidgetInternal::x(const QMouseEvent *event) const {
+int ZLQtViewWidget::Widget::x(const QMouseEvent *event) const {
 	const int maxX = width() - 1;
 	const int maxY = height() - 1;
 	switch (myHolder.rotation()) {
@@ -105,7 +105,7 @@ int ZLQtViewWidget::ZLQtViewWidgetInternal::x(const QMouseEvent *event) const {
 	}
 }
 
-int ZLQtViewWidget::ZLQtViewWidgetInternal::y(const QMouseEvent *event) const {
+int ZLQtViewWidget::Widget::y(const QMouseEvent *event) const {
 	const int maxX = width() - 1;
 	const int maxY = height() - 1;
 	switch (myHolder.rotation()) {

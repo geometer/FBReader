@@ -28,10 +28,10 @@
 class ZLQtViewWidget : public ZLViewWidget {
 
 private:
-	class ZLQtViewWidgetInternal : public QWidget {
+	class Widget : public QWidget {
 
 	public:
-		ZLQtViewWidgetInternal(QWidget *parent, ZLQtViewWidget &holder);
+		Widget(QWidget *parent, ZLQtViewWidget &holder);
 
 	private:
 		void paintEvent(QPaintEvent *event);
@@ -59,7 +59,7 @@ private:
 	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step);
 
 private:
-	ZLQtViewWidgetInternal *myQWidget;
+	Widget *myQWidget;
 	ZLApplication *myApplication;
 };
 

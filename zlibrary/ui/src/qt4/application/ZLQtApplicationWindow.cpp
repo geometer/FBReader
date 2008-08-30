@@ -32,6 +32,7 @@
 #include <QtCore/QObjectList>
 
 #include <ZLibrary.h>
+#include <ZLPopupData.h>
 
 #include "ZLQtApplicationWindow.h"
 #include "../dialogs/ZLQtDialogManager.h"
@@ -173,10 +174,7 @@ bool ZLQtApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-#include <iostream>
-
-void ZLQtApplicationWindow::keyPressEvent(QKeyEvent *event) {
-	std::cerr << "ZLQtApplicationWindow::keyPressEvent\n";
+void ZLQtApplicationWindow::keyReleaseEvent(QKeyEvent *event) {
 	application().doActionByKey(ZLQtKeyUtil::keyName(event));
 }
 
@@ -222,6 +220,9 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			button->setMenu(popupMenu);
 			tb->addWidget(button);
 			myMenus[&buttonItem] = popupMenu;
+			shared_ptr<ZLPopupData> popupData = buttonItem.popupData();
+			myPopupIdMap[&buttonItem] =
+				popupData.isNull() ? (size_t)-1 : (popupData->id() - 1);
 			break;
 		}
 		case ZLToolbar::Item::TEXT_FIELD:
@@ -243,6 +244,18 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	}
 }
 
+ZLQtRunPopupAction::ZLQtRunPopupAction(QObject *parent, shared_ptr<ZLPopupData> data, size_t index) : QAction(parent), myData(data), myIndex(index) {
+	setText(QString::fromUtf8(myData->text(myIndex).c_str()));
+	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
+}
+
+ZLQtRunPopupAction::~ZLQtRunPopupAction() {
+}
+
+void ZLQtRunPopupAction::onActivated() {
+	myData->run(myIndex);
+}
+
 void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
 	QAction *action = myActions[&*item];
 	if (action != 0) {
@@ -250,7 +263,17 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool vi
 		action->setVisible(visible);
 	}
 	if (item->type() == ZLToolbar::Item::MENU_BUTTON) {
-		
+		ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
+		shared_ptr<ZLPopupData> data = buttonItem.popupData();
+		if (!data.isNull() && (data->id() != myPopupIdMap[&buttonItem])) {
+			myPopupIdMap[&buttonItem] = data->id();
+			QMenu *menu = myMenus[&buttonItem];
+			menu->clear();
+			const size_t count = data->count();
+			for (size_t i = 0; i < count; ++i) {
+				menu->addAction(new ZLQtRunPopupAction(menu, data, i));
+			}
+		}
 	}
 }
 
