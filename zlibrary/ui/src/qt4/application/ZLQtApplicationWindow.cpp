@@ -197,27 +197,22 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 }
 
 void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
+	QToolBar *tb = toolbar(type(*item));
 	QAction *action = 0;
 
 	switch (item->type()) {
 		case ZLToolbar::Item::PLAIN_BUTTON:
 		case ZLToolbar::Item::TOGGLE_BUTTON:
-		{
-			ZLToolbar::AbstractButtonItem &buttonItem = (ZLToolbar::AbstractButtonItem&)*item;
-			action = new ZLQtToolBarAction(this, buttonItem);
-			toolbar(type(buttonItem))->addAction(action);
+			action = new ZLQtToolBarAction(this, (ZLToolbar::AbstractButtonItem&)*item);
+			tb->addAction(action);
 			break;
-		}
 		case ZLToolbar::Item::MENU_BUTTON:
 		{
 			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
-			action = new ZLQtToolBarAction(this, buttonItem);
-			QToolBar *tb = toolbar(type(buttonItem));
 			QToolButton *button = new QToolButton(tb);
-			button->setDefaultAction(action);
+			button->setDefaultAction(new ZLQtToolBarAction(this, buttonItem));
+			button->setMenu(new QMenu(button));
 			button->setPopupMode(QToolButton::MenuButtonPopup);
-			QMenu *popupMenu = new QMenu(button);
-			button->setMenu(popupMenu);
 			action = tb->addWidget(button);
 			myMenuButtons[&buttonItem] = button;
 			shared_ptr<ZLPopupData> popupData = buttonItem.popupData();
@@ -230,16 +225,15 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			/*
 			ZLToolbar::TextFieldItem &textFieldItem =
 				(ZLToolbar::TextFieldItem&)*item;
-			QToolBar *tb = toolbar(type(textFieldItem));
 			QLineEdit *edit = new QLineEdit(tb);
 			edit->setMaxLength(textFieldItem.maxWidth());
-			edit->setMaximumWidth(textFieldItem.maxWidth() * 10);
+			edit->setFixedWidth(textFieldItem.maxWidth() * 10 + 10);
 			action = tb->addWidget(edit);
 			*/
 			break;
 		}
 		case ZLToolbar::Item::SEPARATOR:
-			action = toolbar(type(*item))->addSeparator();
+			action = tb->addSeparator();
 			break;
 	}
 
