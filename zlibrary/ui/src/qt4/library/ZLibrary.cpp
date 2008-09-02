@@ -21,6 +21,7 @@
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
+#include <ZLLanguageUtil.h>
 
 #include "../../../../core/src/unix/library/ZLibraryImplementation.h"
 
@@ -67,6 +68,9 @@ ZLPaintContext *ZLQtLibraryImplementation::createContext() {
 }
 
 void ZLQtLibraryImplementation::run(ZLApplication *application) {
+	if (ZLLanguageUtil::isRTLLanguage(ZLibrary::Language())) {
+		qApp->setLayoutDirection(Qt::RightToLeft);
+	}
 	ZLDialogManager::instance().createApplicationWindow(application);
 	application->initWindow();
 	qApp->exec();

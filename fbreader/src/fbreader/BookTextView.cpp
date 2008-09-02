@@ -254,6 +254,10 @@ bool BookTextView::_onStylusPress(int x, int y) {
 }
 
 bool BookTextView::onStylusRelease(int x, int y) {
+	if (FBView::onStylusRelease(x, y)) {
+		return true;
+	}
+
 	const int deltaX = x - myPressedX;
 	if ((deltaX > 5) or (deltaX < -5)) {
 		return false;

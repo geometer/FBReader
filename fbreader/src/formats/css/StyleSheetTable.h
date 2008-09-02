@@ -43,6 +43,7 @@ private:
 public:
 	bool isEmpty() const;
 	bool doBreakBefore(const std::string &tag, const std::string &aClass) const;
+	bool doBreakAfter(const std::string &tag, const std::string &aClass) const;
 	const ZLTextStyleEntry &control(const std::string &tag, const std::string &aClass) const;
 
 private:
@@ -56,7 +57,8 @@ private:
 	};
 
 	std::map<Key,shared_ptr<ZLTextStyleEntry> > myControlMap;
-	std::map<Key,bool> myPageBreakMap;
+	std::map<Key,bool> myPageBreakBeforeMap;
+	std::map<Key,bool> myPageBreakAfterMap;
 
 friend class StyleSheetParser;
 };

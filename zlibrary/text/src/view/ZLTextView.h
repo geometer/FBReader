@@ -25,6 +25,7 @@
 #include <string>
 #include <algorithm>
 
+#include <ZLTime.h>
 #include <ZLOptions.h>
 #include <ZLView.h>
 #include <ZLDialogManager.h>
@@ -290,6 +291,16 @@ private:
 
 	bool myTreeStateIsFrozen;
 	bool myDoUpdateScrollbar;
+
+	struct DoubleClickInfo {
+		DoubleClickInfo();
+		void update(int x, int y, bool press);
+
+		int Count;
+		ZLTime Time;
+		int X;
+		int Y;
+	} myDoubleClickInfo;
 
 friend class ZLTextSelectionModel;
 };

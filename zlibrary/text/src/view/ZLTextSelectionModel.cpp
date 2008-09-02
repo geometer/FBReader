@@ -453,6 +453,87 @@ const std::string &ZLTextSelectionModel::text() const {
 	return myText;
 }
 
+bool ZLTextSelectionModel::selectWord(int x, int y) {
+	clear();
+
+	ZLTextElementMap::const_iterator it = myView.myTextElementMap.begin();
+	for (; it != myView.myTextElementMap.end(); ++it) {
+		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
+			break;
+		}
+	}
+	if (ZLTextElementArea::RangeChecker(x, y)(*it) &&
+			(it->Kind == ZLTextElement::WORD_ELEMENT)) {
+		myView.myStyle.setTextStyle(it->Style, it->BidiLevel);
+		ZLTextWordCursor cursor = myView.startCursor();
+		cursor.moveToParagraph(it->ParagraphIndex);
+		const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->ElementIndex];
+		ZLUnicodeUtil::Ucs4String ucs4string;
+		ZLUnicodeUtil::utf8ToUcs4(ucs4string, word.Data, word.Size);
+		int startIndex = 0;
+		int endIndex = word.Length;
+		while (startIndex < endIndex) {
+			ZLUnicodeUtil::Ucs4Char ch = ucs4string[startIndex];
+			if (!ZLUnicodeUtil::isLetter(ch) && ((ch < '0') || (ch > '9'))) {
+				++startIndex;
+			} else {
+				break;
+			}
+		}
+		while (endIndex > startIndex) {
+			ZLUnicodeUtil::Ucs4Char ch = ucs4string[endIndex - 1];
+			if (!ZLUnicodeUtil::isLetter(ch) && ((ch < '0') || (ch > '9'))) {
+				--endIndex;
+			} else {
+				break;
+			}
+		}
+		if (startIndex == endIndex) {
+			startIndex = 0;
+			endIndex = word.Length;
+		}
+
+		myFirstBound.Before.Exists = true;
+		myFirstBound.Before.ParagraphIndex = it->ParagraphIndex;
+		myFirstBound.Before.ElementIndex = it->ElementIndex;
+		myFirstBound.Before.CharIndex = startIndex;
+		myFirstBound.After = myFirstBound.Before;
+
+		mySecondBound.Before = myFirstBound.Before;
+		mySecondBound.Before.CharIndex = endIndex;
+		mySecondBound.After = mySecondBound.Before;
+
+		myIsEmpty = false;
+		myTextIsUpToDate = false;
+		myRangeVectorIsUpToDate = false;
+		myDoUpdate = false;
+
+		return true;
+	}
+	return false;
+}
+
+void ZLTextSelectionModel::extendWordSelectionToParagraph() {
+	clear();
+
+	myFirstBound.Before.ElementIndex = 0;
+	myFirstBound.Before.CharIndex = 0;
+	myFirstBound.After = myFirstBound.Before;
+
+	ZLTextWordCursor cursor = myView.startCursor();
+	cursor.moveToParagraph(myFirstBound.Before.ParagraphIndex);
+	cursor.moveToParagraphEnd();
+
+	mySecondBound.Before.ElementIndex = cursor.elementIndex();
+	mySecondBound.Before.CharIndex = 0;
+	mySecondBound.After = mySecondBound.Before;
+
+	myIsEmpty = false;
+	myTextIsUpToDate = false;
+	myRangeVectorIsUpToDate = false;
+	myDoUpdate = false;
+}
+
 ZLTextSelectionScroller::ZLTextSelectionScroller(ZLTextSelectionModel &selectionModel) : mySelectionModel(selectionModel), myDirection(DONT_SCROLL) {
 }
 

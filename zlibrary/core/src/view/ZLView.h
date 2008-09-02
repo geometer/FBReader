@@ -52,8 +52,6 @@ public:
 	virtual void paint() = 0;
 	ZLPaintContext &context() const;
 
-	Angle rotation() const;
-
 	/*
 	 * returns true iff stylus/finger event was processed
 	 */
@@ -70,14 +68,32 @@ protected:
 	bool hasContext() const;
 
 	void setScrollbarEnabled(Direction direction, bool enabled);
-	void setScrollbarPlacement(Direction direction, bool standard);
 	void setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to, size_t step);
 	virtual void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
+
+private:
+	struct ScrollBarInfo {
+		ScrollBarInfo();
+
+		bool Enabled;
+		bool StandardLocation;
+		size_t Full;
+		size_t From;
+		size_t To;
+		size_t Step;
+	};
+
+	void updateScrollbarState();
+	void updateScrollbarPlacement();
+	void updateScrollbarParameters();
+	void updateScrollbarParameters(Direction direction, const ScrollBarInfo &info, bool invert);
 
 private:
 	ZLApplication &myApplication;
 	ZLViewWidget *myViewWidget;
 	shared_ptr<ZLPaintContext> myContext;
+	ScrollBarInfo myVerticalScrollbarInfo;
+	ScrollBarInfo myHorizontalScrollbarInfo;
 
 private:
 	ZLView(const ZLView&);

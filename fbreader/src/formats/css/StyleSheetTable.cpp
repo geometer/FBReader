@@ -24,7 +24,7 @@
 #include "StyleSheetTable.h"
 
 bool StyleSheetTable::isEmpty() const {
-	return myControlMap.empty() && myPageBreakMap.empty();
+	return myControlMap.empty() && myPageBreakBeforeMap.empty() && myPageBreakAfterMap.empty();
 }
 
 void StyleSheetTable::addMap(const std::string &tag, const std::string &aClass, const AttributeMap &map) {
@@ -32,7 +32,15 @@ void StyleSheetTable::addMap(const std::string &tag, const std::string &aClass, 
 		Key key(tag, aClass);
 		myControlMap[key] = createControl(map);
 		const std::vector<std::string> &pbb = values(map, "page-break-before");
-		myPageBreakMap[key] = !pbb.empty() && (pbb[0] == "always");
+		myPageBreakBeforeMap[key] = !pbb.empty() &&
+			((pbb[0] == "always") ||
+			 (pbb[0] == "left") ||
+			 (pbb[0] == "right"));
+		const std::vector<std::string> &pba = values(map, "page-break-after");
+		myPageBreakAfterMap[key] = !pba.empty() &&
+			((pba[0] == "always") ||
+			 (pba[0] == "left") ||
+			 (pba[0] == "right"));
 	}
 }
 
@@ -67,18 +75,37 @@ void StyleSheetTable::setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Lengt
 }
 
 bool StyleSheetTable::doBreakBefore(const std::string &tag, const std::string &aClass) const {
-	std::map<Key,bool>::const_iterator it = myPageBreakMap.find(Key(tag, aClass));
-	if (it != myPageBreakMap.end()) {
+	std::map<Key,bool>::const_iterator it = myPageBreakBeforeMap.find(Key(tag, aClass));
+	if (it != myPageBreakBeforeMap.end()) {
 		return it->second;
 	}
 
-	it = myPageBreakMap.find(Key("", aClass));
-	if (it != myPageBreakMap.end()) {
+	it = myPageBreakBeforeMap.find(Key("", aClass));
+	if (it != myPageBreakBeforeMap.end()) {
 		return it->second;
 	}
 
-	it = myPageBreakMap.find(Key(tag, ""));
-	if (it != myPageBreakMap.end()) {
+	it = myPageBreakBeforeMap.find(Key(tag, ""));
+	if (it != myPageBreakBeforeMap.end()) {
+		return it->second;
+	}
+
+	return false;
+}
+
+bool StyleSheetTable::doBreakAfter(const std::string &tag, const std::string &aClass) const {
+	std::map<Key,bool>::const_iterator it = myPageBreakAfterMap.find(Key(tag, aClass));
+	if (it != myPageBreakAfterMap.end()) {
+		return it->second;
+	}
+
+	it = myPageBreakAfterMap.find(Key("", aClass));
+	if (it != myPageBreakAfterMap.end()) {
+		return it->second;
+	}
+
+	it = myPageBreakAfterMap.find(Key(tag, ""));
+	if (it != myPageBreakAfterMap.end()) {
 		return it->second;
 	}
 

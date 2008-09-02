@@ -75,39 +75,10 @@ void ZLTextView::paint() {
 			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::OS_SCROLLBAR) &&
 			(to - from < full);
 		if (showScrollbar) {
-			ZLView::Direction dir = ZLView::VERTICAL;
-			ZLView::Direction secondDir = ZLView::HORIZONTAL;
-			bool otherSide = false;
-			bool invert = false;
-			switch (rotation()) {
-				case DEGREES0:
-					break;
-				case DEGREES90:
-					dir = ZLView::HORIZONTAL;
-					secondDir = ZLView::VERTICAL;
-					otherSide = true;
-					break;
-				case DEGREES180:
-					otherSide = true;
-					invert = true;
-					break;
-				case DEGREES270:
-					dir = ZLView::HORIZONTAL;
-					secondDir = ZLView::VERTICAL;
-					invert = true;
-					break;
-			}
-			setScrollbarEnabled(dir, true);
-			setScrollbarEnabled(secondDir, false);
-			setScrollbarPlacement(dir, !otherSide);
-			if (invert) {
-				setScrollbarParameters(dir, full, full - to, full - from, to - from);
-			} else {
-				setScrollbarParameters(dir, full, from, to, to - from);
-			}
+			setScrollbarEnabled(VERTICAL, true);
+			setScrollbarParameters(VERTICAL, full, from, to, to - from);
 		} else {
-			setScrollbarEnabled(ZLView::HORIZONTAL, false);
-			setScrollbarEnabled(ZLView::VERTICAL, false);
+			setScrollbarEnabled(VERTICAL, false);
 		}
 	}
 }

@@ -73,6 +73,7 @@ private:
 	bool myNewParagraphInProgress;
 	StyleSheetTable myStyleSheetTable;
 	std::vector<int> myCSSStack;
+	std::vector<bool> myDoPageBreakAfterStack;
 
 	friend class XHTMLTagAction;
 	friend class XHTMLTagLinkAction;

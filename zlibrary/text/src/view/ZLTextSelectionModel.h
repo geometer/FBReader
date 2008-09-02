@@ -55,6 +55,9 @@ public:
 	void deactivate();
 	void clear();
 
+	bool selectWord(int x, int y);
+	void extendWordSelectionToParagraph();
+
 	const std::string &text() const;
 	const std::vector<Range> &ranges() const;
 

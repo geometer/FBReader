@@ -259,7 +259,17 @@ bool ZLUnicodeUtil::isLetter(Ucs4Char ch) {
 		// cyrillic
 		((0x410 <= ch) && (ch <= 0x44F)) ||
 		// cyrillic YO & yo
-		(ch == 0x401) || (ch == 0x451);
+		(ch == 0x401) || (ch == 0x451) ||
+		// hebrew
+		((0x5D0 <= ch) && (ch <= 0x5EA)) ||
+		// arabic
+		((0x621 <= ch) && (ch <= 0x64A)) ||
+		(ch == 0x679) || (ch == 0x67E) ||
+		(ch == 0x686) || (ch == 0x688) ||
+		(ch == 0x691) || (ch == 0x698) ||
+		(ch == 0x6A9) || (ch == 0x6AF) ||
+		(ch == 0x6BA) || (ch == 0x6BE) ||
+		(ch == 0x6C1) || (ch == 0x6D2);
 }
 
 bool ZLUnicodeUtil::isSpace(Ucs4Char ch) {

@@ -19,6 +19,9 @@
 
 #include <gtk/gtkwindow.h>
 
+#include <ZLibrary.h>
+#include <ZLLanguageUtil.h>
+
 #include "ZLGtkViewWidget.h"
 #include "ZLGtkPaintContext.h"
 #include "../util/ZLGtkSignalUtil.h"
@@ -159,6 +162,12 @@ void ZLGtkViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enab
 }
 
 void ZLGtkViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool standard) {
+	if ((rotation() == ZLView::DEGREES90) || (rotation() == ZLView::DEGREES270)) {
+		if (ZLLanguageUtil::isRTLLanguage(ZLibrary::Language())) {
+			standard = !standard;
+		}
+	}
+
 	if (direction == ZLView::VERTICAL) {
 		myVerticalScrollbarPlacementIsStandard = standard;
 	} else {

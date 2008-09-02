@@ -326,8 +326,10 @@ void GotoNextTOCSectionAction::run() {
 	size_t current = contentsView.currentTextViewParagraph();
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.model();
 	int reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current + 1]));
-	((ZLTextView&)*fbreader().myBookTextView).gotoParagraph(reference);
-	fbreader().refreshWindow();
+	if (reference != -1) {
+		((ZLTextView&)*fbreader().myBookTextView).gotoParagraph(reference);
+		fbreader().refreshWindow();
+	}
 }
 
 GotoPreviousTOCSectionAction::GotoPreviousTOCSectionAction(FBReader &fbreader) : FBAction(fbreader) {
@@ -362,7 +364,7 @@ bool GotoPreviousTOCSectionAction::isEnabled() const {
 			return true;
 		}
 		return
-			contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[tocIndex])) >
+			contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[0])) >
 			(int)cursor.paragraphCursor().index();
 	}
 	return false;
@@ -376,12 +378,22 @@ void GotoPreviousTOCSectionAction::run() {
 	int reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current]));
 	const ZLTextWordCursor &cursor = fbreader().bookTextView().startCursor();
 	if (!cursor.isNull() &&
-			(cursor.elementIndex() == 0) &&
-			(reference == (int)cursor.paragraphCursor().index())) {
-		reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current - 1]));
+			(cursor.elementIndex() == 0)) {
+		int paragraphIndex = cursor.paragraphCursor().index();
+		if (reference == paragraphIndex) {
+			reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current - 1]));
+		} else if (reference == paragraphIndex - 1) {
+			const ZLTextModel &textModel = *fbreader().bookTextView().model();
+			const ZLTextParagraph *para = textModel[paragraphIndex];
+			if ((para != 0) && (para->kind() == ZLTextParagraph::END_OF_SECTION_PARAGRAPH)) {
+				reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current - 1]));
+			}
+		}
 	}
-	((ZLTextView&)*fbreader().myBookTextView).gotoParagraph(reference);
-	fbreader().refreshWindow();
+	if (reference != -1) {
+		((ZLTextView&)*fbreader().myBookTextView).gotoParagraph(reference);
+		fbreader().refreshWindow();
+	}
 }
 
 GotoPageNumber::GotoPageNumber(FBReader &fbreader, const std::string &parameter) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE), myParameter(parameter) {

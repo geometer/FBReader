@@ -405,6 +405,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 	if (myStyleSheetTable.doBreakBefore(sTag, sClass)) {
 		myModelReader.insertEndOfSectionParagraph();
 	}
+	myDoPageBreakAfterStack.push_back(myStyleSheetTable.doBreakAfter(sTag, sClass));
 
 	XHTMLTagAction *action = ourTagActions[sTag];
 	if (action != 0) {
@@ -446,6 +447,10 @@ void XHTMLReader::endElementHandler(const char *tag) {
 		action->doAtEnd(*this);
 		myNewParagraphInProgress = false;
 	}
+	if (myDoPageBreakAfterStack.back()) {
+		myModelReader.insertEndOfSectionParagraph();
+	}
+	myDoPageBreakAfterStack.pop_back();
 }
 
 void XHTMLReader::characterDataHandler(const char *text, size_t len) {

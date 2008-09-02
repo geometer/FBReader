@@ -17,14 +17,17 @@
  * 02110-1301, USA.
  */
 
-#include "ZLQtViewWidget.h"
-#include "ZLQtPaintContext.h"
-
 #include <qpainter.h>
 #include <qpixmap.h>
 #include <qlayout.h>
 #include <qframe.h>
 #include <qscrollbar.h>
+
+#include <ZLibrary.h>
+#include <ZLLanguageUtil.h>
+
+#include "ZLQtViewWidget.h"
+#include "ZLQtPaintContext.h"
 
 ZLQtViewWidget::ZLQtViewWidgetInternal::ZLQtViewWidgetInternal(QWidget *parent, ZLQtViewWidget &holder) : QWidget(parent), myHolder(holder) {
 	setBackgroundMode(NoBackground);
@@ -185,6 +188,11 @@ void ZLQtViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabl
 }
 
 void ZLQtViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool standard) {
+	if ((rotation() == ZLView::DEGREES90) || (rotation() == ZLView::DEGREES270)) {
+		if (ZLLanguageUtil::isRTLLanguage(ZLibrary::Language())) {
+			standard = !standard;
+		}
+	}
 	if (direction == ZLView::VERTICAL) {
 		if (standard != myShowScrollBarAtRight) {
 			myShowScrollBarAtRight = standard;

@@ -312,6 +312,11 @@ void ZLTextView::findPrevious() {
 }
 
 bool ZLTextView::onStylusPress(int x, int y) {
+	myDoubleClickInfo.update(x, y, true);
+	if (myDoubleClickInfo.Count > 10) {
+		return true;
+	}
+
 	mySelectionModel.deactivate();
 
   if (myModel.isNull()) {
@@ -408,9 +413,28 @@ void ZLTextView::copySelectedTextToClipboard(ZLDialogManager::ClipboardType type
 	}
 }
 
-bool ZLTextView::onStylusRelease(int, int) {
+bool ZLTextView::onStylusRelease(int x, int y) {
+	myDoubleClickInfo.update(x, y, false);
+
+	if (myDoubleClickInfo.Count > 20) {
+		return true;
+	} else if (myDoubleClickInfo.Count > 10) {
+		mySelectionModel.extendWordSelectionToParagraph();
+		application().refreshWindow();
+		myDoubleClickInfo.Count = 20;
+		return true;
+	} else if (myDoubleClickInfo.Count > 2) {
+		if (mySelectionModel.selectWord(visualX(x), y)) {
+			application().refreshWindow();
+			myDoubleClickInfo.Count = 10;
+			return true;
+		} else {
+			myDoubleClickInfo.Count = 0;
+		}
+	}
+
 	mySelectionModel.deactivate();
-	return true;
+	return false;
 }
 
 void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
@@ -548,9 +572,15 @@ void ZLTextView::gotoCharIndex(size_t charIndex) {
 				scrollPage(true, SCROLL_LINES, 1);
 			}
 		} else {
+			int startCharIndex = positionIndicator()->sizeOfTextBeforeCursor(startCursor());
 			while (endCharIndex < charIndex) {
 				scrollPage(true, SCROLL_LINES, 1);
 				preparePaintInfo();
+				const int newStartCharIndex = positionIndicator()->sizeOfTextBeforeCursor(startCursor());
+				if (newStartCharIndex <= startCharIndex) {
+					break;
+				}
+				startCharIndex = newStartCharIndex;
 				endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
 			}
 			if (endCharIndex > charIndex) {
@@ -595,29 +625,8 @@ size_t ZLTextView::pageNumber() const {
 }
 
 void ZLTextView::onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to) {
-	ZLView::Direction dir = ZLView::VERTICAL;
-	bool invert = false;
-	switch (rotation()) {
-		case DEGREES0:
-			break;
-		case DEGREES90:
-			dir = ZLView::HORIZONTAL;
-			break;
-		case DEGREES180:
-			invert = true;
-			break;
-		case DEGREES270:
-			dir = ZLView::HORIZONTAL;
-			invert = true;
-			break;
-	}
-	if (direction != dir) {
+	if (direction != VERTICAL) {
 		return;
-	}
-	if (invert) {
-		size_t tmp = full - from;
-		from = full - to;
-		to = tmp;
 	}
 
 	mySelectionModel.deactivate();
@@ -646,4 +655,24 @@ void ZLTextView::onScrollbarMoved(Direction direction, size_t full, size_t from,
 
 void ZLTextView::forceScrollbarUpdate() {
 	myDoUpdateScrollbar = true;
+}
+
+ZLTextView::DoubleClickInfo::DoubleClickInfo() {
+	Count = 0;
+}
+
+void ZLTextView::DoubleClickInfo::update(int x, int y, bool press) {
+	ZLTime current;
+	int dcDeltaX = X - x;
+	int dcDeltaY = Y - y;
+	if ((current.millisecondsFrom(Time) < 200) &&
+			(dcDeltaX > -5) && (dcDeltaX < 5) &&
+			(dcDeltaY > -5) && (dcDeltaY < 5)) {
+		++Count;
+	} else {
+		Count = press ? 1 : 0;
+	}
+	X = x;
+	Y = y;
+	Time = current;
 }

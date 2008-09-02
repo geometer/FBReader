@@ -28,6 +28,9 @@ ZLView::ZLView(ZLApplication &application, shared_ptr<ZLPaintContext> context) :
 ZLView::~ZLView() {
 }
 
+ZLView::ScrollBarInfo::ScrollBarInfo() : Enabled(false), StandardLocation(true), Full(100), From(0), To(100), Step(1) {
+}
+
 void ZLView::setPaintContext(shared_ptr<ZLPaintContext> context) {
 	myContext = context;
 }
@@ -38,6 +41,7 @@ void ZLViewWidget::setView(shared_ptr<ZLView> view) {
 	}
 	myView = view;
 	view->myViewWidget = this;
+	rotate(myRotation);
 }
 
 bool ZLView::onStylusPress(int, int) {
@@ -61,25 +65,142 @@ bool ZLView::onFingerTap(int, int) {
 }
 
 void ZLView::setScrollbarEnabled(Direction direction, bool enabled) {
-	if (myViewWidget != 0) {
-		myViewWidget->setScrollbarEnabled(direction, enabled);
+	if (direction == VERTICAL) {
+		myVerticalScrollbarInfo.Enabled = enabled;
+	} else {
+		myHorizontalScrollbarInfo.Enabled = enabled;
 	}
-}
-
-void ZLView::setScrollbarPlacement(Direction direction, bool standard) {
-	if (myViewWidget != 0) {
-		myViewWidget->setScrollbarPlacement(direction, standard);
-	}
+	updateScrollbarState();
 }
 
 void ZLView::setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to, size_t step) {
-	if (myViewWidget != 0) {
-		myViewWidget->setScrollbarParameters(direction, full, from, to, step);
+	ScrollBarInfo &info = (direction == VERTICAL) ? myVerticalScrollbarInfo : myHorizontalScrollbarInfo;
+	info.Full = full;
+	info.From = from;
+	info.To = to;
+	info.Step = step;
+	updateScrollbarParameters();
+}
+
+void ZLView::updateScrollbarState() {
+	if (myViewWidget == 0) {
+		return;
+	}
+	switch (myViewWidget->rotation()) {
+		case DEGREES0:
+		case DEGREES180:
+			myViewWidget->setScrollbarEnabled(VERTICAL, myVerticalScrollbarInfo.Enabled);
+			myViewWidget->setScrollbarEnabled(HORIZONTAL, myHorizontalScrollbarInfo.Enabled);
+			break;
+		case DEGREES90:
+		case DEGREES270:
+			myViewWidget->setScrollbarEnabled(VERTICAL, myHorizontalScrollbarInfo.Enabled);
+			myViewWidget->setScrollbarEnabled(HORIZONTAL, myVerticalScrollbarInfo.Enabled);
+			break;
+	}
+}
+
+void ZLView::updateScrollbarPlacement() {
+	if (myViewWidget == 0) {
+		return;
+	}
+	bool v = true;
+	bool h = true;
+	switch (myViewWidget->rotation()) {
+		case DEGREES0:
+			v = myVerticalScrollbarInfo.StandardLocation;
+			h = myHorizontalScrollbarInfo.StandardLocation;
+			break;
+		case DEGREES90:
+			v = myHorizontalScrollbarInfo.StandardLocation;
+			h = !myVerticalScrollbarInfo.StandardLocation;
+			break;
+		case DEGREES180:
+			v = !myVerticalScrollbarInfo.StandardLocation;
+			h = !myHorizontalScrollbarInfo.StandardLocation;
+			break;
+		case DEGREES270:
+			v = !myHorizontalScrollbarInfo.StandardLocation;
+			h = myVerticalScrollbarInfo.StandardLocation;
+			break;
+	}
+	myViewWidget->setScrollbarPlacement(VERTICAL, v);
+	myViewWidget->setScrollbarPlacement(HORIZONTAL, h);
+}
+
+void ZLView::updateScrollbarParameters(Direction direction, const ScrollBarInfo &info, bool invert) {
+	if (invert) {
+		myViewWidget->setScrollbarParameters(
+			direction,
+			info.Full,
+			info.Full - info.To,
+			info.Full - info.From,
+			info.Step
+		);
+	} else {
+		myViewWidget->setScrollbarParameters(
+			direction,
+			info.Full,
+			info.From,
+			info.To,
+			info.Step
+		);
+	}
+}
+
+void ZLView::updateScrollbarParameters() {		
+	if (myViewWidget == 0) {
+		return;
+	}
+
+	switch (myViewWidget->rotation()) {
+		case DEGREES0:
+			updateScrollbarParameters(VERTICAL, myVerticalScrollbarInfo, false);
+			updateScrollbarParameters(HORIZONTAL, myHorizontalScrollbarInfo, false);
+			break;
+		case DEGREES90:
+			updateScrollbarParameters(VERTICAL, myHorizontalScrollbarInfo, true);
+			updateScrollbarParameters(HORIZONTAL, myVerticalScrollbarInfo, false);
+			break;
+		case DEGREES180:
+			updateScrollbarParameters(VERTICAL, myVerticalScrollbarInfo, true);
+			updateScrollbarParameters(HORIZONTAL, myHorizontalScrollbarInfo, true);
+			break;
+		case DEGREES270:
+			updateScrollbarParameters(VERTICAL, myHorizontalScrollbarInfo, false);
+			updateScrollbarParameters(HORIZONTAL, myVerticalScrollbarInfo, true);
+			break;
 	}
 }
 
 void ZLViewWidget::onScrollbarMoved(ZLView::Direction direction, size_t full, size_t from, size_t to) {
 	if (!myView.isNull()) {
+		bool invert = false;
+		switch (rotation()) {
+			case ZLView::DEGREES0:
+				break;
+			case ZLView::DEGREES90:
+				direction =
+					(direction == ZLView::HORIZONTAL) ?
+						ZLView::VERTICAL :
+						ZLView::HORIZONTAL;
+				break;
+			case ZLView::DEGREES180:
+				invert = true;
+				break;
+			case ZLView::DEGREES270:
+				direction =
+					(direction == ZLView::HORIZONTAL) ?
+						ZLView::VERTICAL :
+						ZLView::HORIZONTAL;
+				invert = true;
+				break;
+		}
+		if (invert) {
+			size_t tmp = full - from;
+			from = full - to;
+			to = tmp;
+		}
 		myView->onScrollbarMoved(direction, full, from, to);
 	}
 }
@@ -89,12 +210,13 @@ void ZLView::onScrollbarMoved(Direction, size_t, size_t, size_t) {
 
 void ZLViewWidget::rotate(ZLView::Angle rotation) {
 	myRotation = rotation;
+	if (myView != 0) {
+		myView->updateScrollbarState();
+		myView->updateScrollbarPlacement();
+		myView->updateScrollbarParameters();
+	}
 }
 
 ZLView::Angle ZLViewWidget::rotation() const {
 	return myRotation;
-}
-
-ZLView::Angle ZLView::rotation() const {
-	return (myViewWidget != 0) ? myViewWidget->rotation() : DEGREES0;
 }
