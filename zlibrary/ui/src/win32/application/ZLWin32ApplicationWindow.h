@@ -85,7 +85,7 @@ private:
 	LRESULT mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 public:
-	void onToolbarButtonPress(int index);
+	void onToolbarButtonRelease(int index);
 /*
 	void handleKeyEventSlot(GdkEventKey *event);
 	void handleScrollEventSlot(GdkEventScroll *event);

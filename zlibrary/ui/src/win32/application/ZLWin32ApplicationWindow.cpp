@@ -115,7 +115,7 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			PostQuitMessage(0);
 			return 0;
 		case WM_COMMAND:
-			onToolbarButtonPress(LOWORD(wParam));
+			onToolbarButtonRelease(LOWORD(wParam));
 			return 0;
 		case WM_NOTIFY:
 		{
@@ -275,7 +275,7 @@ void ZLWin32ApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButto
 	PostMessage(tb.hwnd, TB_CHECKBUTTON, tb.ActionCodeById[button.actionId()], button.isPressed());
 }
 
-void ZLWin32ApplicationWindow::onToolbarButtonPress(int actionCode) {
+void ZLWin32ApplicationWindow::onToolbarButtonRelease(int actionCode) {
 	Toolbar &tb = toolbar(isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR);
 	std::map<int,ZLToolbar::ItemPtr>::const_iterator it = tb.TBItemByActionCode.find(actionCode);
 	if ((it == tb.TBItemByActionCode.end()) || it->second.isNull()) {
