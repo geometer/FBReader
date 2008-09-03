@@ -117,10 +117,30 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 					(WCHAR*)::wchar(::createNTWCHARString(buffer, button.tooltip()));
 				miInfo.cch = buffer.size();
 				miInfo.wID = info.idCommand;
-				HICON icon = ImageList_GetIcon(imageList, imageIndex, ILD_NORMAL);
+
+				/*
+				IMAGEINFO imageInfo;
+				ImageList_GetImageInfo(imageList, imageIndex, &imageInfo);
+				miInfo.hbmpItem = imageInfo.hbmImage;
+				*/
+
+				HICON hIcon = ImageList_GetIcon(imageList, imageIndex, ILD_NORMAL);
+				HDC dc = ::GetDC(myMainWindow);
+				HDC hDC = ::CreateCompatibleDC(0);
+				//HBITMAP hBitmap = ::CreateCompatibleBitmap(hDC, IconSize, IconSize);
+				BYTE *array = new BYTE[4 * IconSize * IconSize];
+				::memset(array, 0xFF, 4 * IconSize * IconSize);
+				HBITMAP hBitmap = ::CreateBitmap(IconSize, IconSize, 4, 8, array);
+				::ReleaseDC(myMainWindow, dc);
+				HBITMAP oldBitmap = (HBITMAP)::SelectObject(hDC, hBitmap);
+				::DrawIcon(hDC, 0, 0, hIcon);
+				::SelectObject(hDC, oldBitmap);
+				miInfo.hbmpItem = hBitmap;
+				/*
 				ICONINFO iconInfo;
-				GetIconInfo(icon, &iconInfo);
+				GetIconInfo(hIcon, &iconInfo);
 				miInfo.hbmpItem = iconInfo.hbmColor;
+				*/
 				InsertMenuItem(popup, count++, true, &miInfo);
 			} else if (info.idCommand >= -200) /* is a separator */ {
 				if (count > 0) {
@@ -140,7 +160,7 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 	p.y = chevron.rc.bottom;
 	ClientToScreen(myMainWindow, &p);
 	const int code = TrackPopupMenu(popup, TPM_RIGHTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, p.x, p.y, 0, myMainWindow, 0);
-	onToolbarButtonPress(code);
+	onToolbarButtonRelease(code);
 	PostMessage(myMainWindow, WM_NULL, 0, 0);
 	DestroyMenu(popup);
 }
