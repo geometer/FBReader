@@ -115,6 +115,7 @@ private:
 		std::map<std::string,int> ActionCodeById;
 		std::map<std::string,int> TextFieldCodeById;
 		std::map<int,ZLToolbar::ItemPtr> TBItemByActionCode;
+		std::map<HICON,HBITMAP> BitmapByIcon;
 	};
 
 	HWND myMainWindow;

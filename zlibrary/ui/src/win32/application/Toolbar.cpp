@@ -114,33 +114,24 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 					MFS_ENABLED :
 					(MFS_DISABLED | MFS_GRAYED);
 				miInfo.dwTypeData =
-					(WCHAR*)::wchar(::createNTWCHARString(buffer, button.tooltip()));
+					(WCHAR*)::wchar(::createNTWCHARString(buffer, "  " + button.tooltip()));
 				miInfo.cch = buffer.size();
 				miInfo.wID = info.idCommand;
 
-				/*
-				IMAGEINFO imageInfo;
-				ImageList_GetImageInfo(imageList, imageIndex, &imageInfo);
-				miInfo.hbmpItem = imageInfo.hbmImage;
-				*/
-
 				HICON hIcon = ImageList_GetIcon(imageList, imageIndex, ILD_NORMAL);
-				HDC dc = ::GetDC(myMainWindow);
-				HDC hDC = ::CreateCompatibleDC(0);
-				//HBITMAP hBitmap = ::CreateCompatibleBitmap(hDC, IconSize, IconSize);
-				BYTE *array = new BYTE[4 * IconSize * IconSize];
-				::memset(array, 0xFF, 4 * IconSize * IconSize);
-				HBITMAP hBitmap = ::CreateBitmap(IconSize, IconSize, 4, 8, array);
-				::ReleaseDC(myMainWindow, dc);
-				HBITMAP oldBitmap = (HBITMAP)::SelectObject(hDC, hBitmap);
-				::DrawIcon(hDC, 0, 0, hIcon);
-				::SelectObject(hDC, oldBitmap);
+				HBITMAP hBitmap = myWindowToolbar.BitmapByIcon[hIcon];
+				if (hBitmap == 0) {
+					HDC hDC = ::CreateCompatibleDC(0);
+					BYTE *array = new BYTE[4 * IconSize * IconSize];
+					::memset(array, 0xFF, 4 * IconSize * IconSize);
+					hBitmap = ::CreateBitmap(IconSize, IconSize, 4, 8, array);
+					::SelectObject(hDC, hBitmap);
+					::DrawIcon(hDC, 0, 0, hIcon);
+					::DeleteDC(hDC);
+					myWindowToolbar.BitmapByIcon[hIcon] = hBitmap;
+				}
 				miInfo.hbmpItem = hBitmap;
-				/*
-				ICONINFO iconInfo;
-				GetIconInfo(hIcon, &iconInfo);
-				miInfo.hbmpItem = iconInfo.hbmColor;
-				*/
+
 				InsertMenuItem(popup, count++, true, &miInfo);
 			} else if (info.idCommand >= -200) /* is a separator */ {
 				if (count > 0) {
