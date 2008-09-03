@@ -29,6 +29,7 @@
 class QDockWidget;
 class QToolBar;
 class QToolButton;
+class QLineEdit;
 
 class ZLPopupData;
 
@@ -40,6 +41,8 @@ class ZLQtApplicationWindow : public QMainWindow, public ZLDesktopApplicationWin
 public:
 	ZLQtApplicationWindow(ZLApplication *application);
 	~ZLQtApplicationWindow();
+
+	void setFocusToMainWidget();
 
 private:
 	ZLViewWidget *createViewWidget();
@@ -60,7 +63,6 @@ private:
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
-public:
 	void closeEvent(QCloseEvent *event);
 	void keyReleaseEvent(QKeyEvent *event);
 	void wheelEvent(QWheelEvent *event);
@@ -81,6 +83,22 @@ friend class ZLQtToolBarAction;
 
 	bool myCursorIsHyperlink;
 	QCursor myStoredCursor;
+
+private:
+	class LineEditParameter : public VisualParameter {
+
+	public:
+		LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::TextFieldItem &textFieldItem);
+		QAction *action() const;
+
+	private:
+		std::string internalValue() const;
+		void internalSetValue(const std::string &value);
+
+	private:
+		QLineEdit *myEdit;
+		QAction *myAction;
+	};
 };
 
 class ZLQtToolBarAction : public QAction {

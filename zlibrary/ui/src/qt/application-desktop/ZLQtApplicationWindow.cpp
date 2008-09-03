@@ -27,8 +27,10 @@
 #include <qtooltip.h>
 
 #include <ZLibrary.h>
+#include <ZLPopupData.h>
 
 #include "ZLQtApplicationWindow.h"
+#include "ZLQtPopupMenu.h"
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../view/ZLQtViewWidget.h"
 #include "../util/ZLQtKeyUtil.h"
@@ -84,7 +86,11 @@ ZLQtToolButton::ZLQtToolButton(ZLQtApplicationWindow &window, ZLToolbar::Abstrac
 	if (item.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
 		setToggleButton(true);
 	} else if (item.type() == ZLToolbar::Item::MENU_BUTTON) {
-		QToolButton *arrow = new QToolButton(Qt::DownArrow, window.myToolBar, 0);
+		ZLToolbar::MenuButtonItem &menuButtonItem = (ZLToolbar::MenuButtonItem&)myItem;
+		shared_ptr<ZLPopupData> popupData = menuButtonItem.popupData();
+		myWindow.myPopupIdMap[&menuButtonItem] =
+			popupData.isNull() ? (size_t)-1 : (popupData->id() - 1);
+		setPopup(new ZLQtPopupMenu(this));
 	}
 	QString text = QString::fromUtf8(myItem.tooltip().c_str());
 	setTextLabel(text);
@@ -98,7 +104,7 @@ void ZLQtToolButton::onActivated() {
 }
 
 void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
-	myButtons[&button]->setOn(button.isPressed());
+	((QToolButton*)myItemToWidgetMap[&button])->setOn(button.isPressed());
 }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
@@ -159,11 +165,6 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 		myWidthOption.setValue(width());
 		myHeightOption.setValue(height());
 	}
-	for (std::map<const ZLToolbar::Item*,ZLQtToolButton*>::iterator it = myButtons.begin(); it != myButtons.end(); ++it) {
-		if (it->second != 0) {
-			delete it->second;
-		}
-	}
 }
 
 void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
@@ -188,7 +189,7 @@ bool ZLQtApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-void ZLQtApplicationWindow::keyPressEvent(QKeyEvent *event) {
+void ZLQtApplicationWindow::keyReleaseEvent(QKeyEvent *event) {
 	application().doActionByKey(ZLQtKeyUtil::keyName(event));
 }
 
@@ -210,43 +211,72 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 	}
 }
 
+ZLQtApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::TextFieldItem &textFieldItem) : QLineEdit(toolbar), myWindow(window), myActionId(textFieldItem.actionId()) {
+	setAlignment(Qt::AlignHCenter);
+	setMaxLength(textFieldItem.maxWidth());
+	setMaximumWidth(textFieldItem.maxWidth() * 12 + 12);
+	QToolTip::add(this, QString::fromUtf8(textFieldItem.tooltip().c_str()));
+	myWindow.addVisualParameter(textFieldItem.parameterId(), this);
+}
+
+void ZLQtApplicationWindow::LineEditParameter::keyReleaseEvent(QKeyEvent *event) {
+	event->accept();
+	const std::string key = ZLQtKeyUtil::keyName(event);
+	if (key == "<Return>") {
+		myWindow.application().doAction(myActionId);
+		myWindow.setFocusToMainWidget();
+	} else if (key == "<Esc>") {
+		myWindow.setFocusToMainWidget();
+	}
+}
+
+std::string ZLQtApplicationWindow::LineEditParameter::internalValue() const {
+	return (const char*)text().utf8();
+}
+
+void ZLQtApplicationWindow::LineEditParameter::internalSetValue(const std::string &value) {
+	setText(QString::fromUtf8(value.c_str()));
+}
+
 void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	switch (item->type()) {
+		case ZLToolbar::Item::TEXT_FIELD:
+			myItemToWidgetMap[&*item] = new LineEditParameter(myToolBar, *this, (ZLToolbar::TextFieldItem&)*item);
+			break;
 		case ZLToolbar::Item::PLAIN_BUTTON:
 		case ZLToolbar::Item::MENU_BUTTON:
 		case ZLToolbar::Item::TOGGLE_BUTTON:
-		{
-			ZLToolbar::AbstractButtonItem &buttonItem = (ZLToolbar::AbstractButtonItem&)*item;
-			ZLQtToolButton *button = new ZLQtToolButton(*this, buttonItem);
-			myButtons[&*item] = button;
+			myItemToWidgetMap[&*item] = new ZLQtToolButton(*this, (ZLToolbar::AbstractButtonItem&)*item);
 			break;
-		}
 		case ZLToolbar::Item::SEPARATOR:
 			myToolBar->addSeparator();
-			mySeparatorMap[item] = (QWidget*)myToolBar->children()->getLast();
+			myItemToWidgetMap[&*item] = (QWidget*)myToolBar->children()->getLast();
 			break;
 	}
 }
 
 void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	QToolButton *button = myButtons[&*item];
-	if (button != 0) {
-		button->setEnabled(enabled);
-		if (visible) {
-			button->show();
-		} else {
-			button->hide();
-		}
-	} else {
-		QWidget *separator = mySeparatorMap[item];
-		if (separator != 0) {
-			separator->setShown(visible);
+	QWidget *widget = myItemToWidgetMap[&*item];
+	if (widget == 0) {
+		return;
+	}
+	widget->setEnabled(enabled);
+	widget->setShown(visible);
+
+	switch (item->type()) {
+		default:
+			break;
+		case ZLToolbar::Item::MENU_BUTTON:
+		{
+			ZLToolbar::MenuButtonItem &menuButtonItem = (ZLToolbar::MenuButtonItem&)*item;
+			shared_ptr<ZLPopupData> data = menuButtonItem.popupData();
+			if (!data.isNull() && (data->id() != myPopupIdMap[&menuButtonItem])) {
+				myPopupIdMap[&menuButtonItem] = data->id();
+				((ZLQtPopupMenu*)((QToolButton*)widget)->popup())->reset(data);
+			}
+			break;
 		}
 	}
-}
-
-void ZLQtApplicationWindow::refresh() {
-	ZLApplicationWindow::refresh();
 }
 
 ZLQtViewWidgetPositionInfo::ZLQtViewWidgetPositionInfo(const ZLQtApplicationWindow &window) : myWindow(window) {
@@ -299,4 +329,8 @@ void ZLQtApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 	} else {
 		setCursor(myStoredCursor);
 	}
+}
+
+void ZLQtApplicationWindow::setFocusToMainWidget() {
+	centralWidget()->setFocus();
 }

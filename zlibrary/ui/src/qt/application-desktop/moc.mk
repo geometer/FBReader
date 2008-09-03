@@ -1,1 +1,1 @@
-SRCMOC = ZLQtApplicationWindow.moc.cpp
+SRCMOC = ZLQtApplicationWindow.moc.cpp ZLQtPopupMenu.moc.cpp

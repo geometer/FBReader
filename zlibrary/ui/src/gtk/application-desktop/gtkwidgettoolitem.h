@@ -17,14 +17,6 @@
  * 02110-1301, USA.
  */
 
-/*
- * This code is based on the gtktoolbutton code from Gtk+ library:
- *
- * Copyright (C) 2002 Anders Carlsson <andersca@gnome.org>
- * Copyright (C) 2002 James Henstridge <james@daa.com.au>
- * Copyright (C) 2003 Soeren Sandmann <sandmann@daimi.au.dk>
- */
-
 #ifndef __GTKWIDGETTOOLITEM_H__
 #define __GTKWIDGETTOOLITEM_H__
 
@@ -41,31 +33,20 @@ G_BEGIN_DECLS
 
 typedef struct _GtkWidgetToolItem        GtkWidgetToolItem;
 typedef struct _GtkWidgetToolItemClass   GtkWidgetToolItemClass;
-typedef struct _GtkWidgetToolItemPrivate GtkWidgetToolItemPrivate;
 
-struct _GtkWidgetToolItem
-{
-  GtkToolItem parent;
+struct _GtkWidgetToolItem {
+	GtkToolItem parent;
 
-  /*< private >*/
-  GtkWidgetToolItemPrivate *priv;
+	GtkWidget *widget;
 };
 
-struct _GtkWidgetToolItemClass
-{
-  GtkToolItemClass parent_class;
- 
-  /* Padding for future expansion */
-  void (* _gtk_reserved1) (void);
-  void (* _gtk_reserved2) (void);
-  void (* _gtk_reserved3) (void);
-  void (* _gtk_reserved4) (void);
+struct _GtkWidgetToolItemClass {
+	GtkToolItemClass parent_class;
 };
 
-GType        gtk_widget_tool_item_get_type       (void) G_GNUC_CONST;
-GtkToolItem *gtk_widget_tool_item_new            (GtkWidget   *widget);
-
-GtkWidget *           gtk_widget_tool_item_get_widget   (GtkWidgetToolItem *item);
+GType          gtk_widget_tool_item_get_type(void) G_GNUC_CONST;
+GtkToolItem   *gtk_widget_tool_item_new(GtkWidget *widget);
+GtkWidget     *gtk_widget_tool_item_get_widget(GtkWidgetToolItem *item);
 
 G_END_DECLS
 

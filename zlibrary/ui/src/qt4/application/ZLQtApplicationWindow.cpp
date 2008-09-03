@@ -22,7 +22,6 @@
 #include <QtGui/QImage>
 #include <QtGui/QIcon>
 #include <QtGui/QToolBar>
-#include <QtGui/QLineEdit>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMenu>
 #include <QtGui/QToolButton>
@@ -76,8 +75,6 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
 	QPixmap icon(iconFileName.c_str());
 	setWindowIcon(icon);
-
-	//setWFlags(getWFlags() | WStyle_Customize);
 
 	myWindowToolBar = new QToolBar(this);
 	myWindowToolBar->setMovable(false);
@@ -222,14 +219,11 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		}
 		case ZLToolbar::Item::TEXT_FIELD:
 		{
-			/*
 			ZLToolbar::TextFieldItem &textFieldItem =
 				(ZLToolbar::TextFieldItem&)*item;
-			QLineEdit *edit = new QLineEdit(tb);
-			edit->setMaxLength(textFieldItem.maxWidth());
-			edit->setFixedWidth(textFieldItem.maxWidth() * 10 + 10);
-			action = tb->addWidget(edit);
-			*/
+			LineEditParameter *para = new LineEditParameter(tb, *this, textFieldItem);
+			addVisualParameter(textFieldItem.parameterId(), para);
+			action = para->action();
 			break;
 		}
 		case ZLToolbar::Item::SEPARATOR:
@@ -315,4 +309,8 @@ void ZLQtApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 	} else {
 		setCursor(myStoredCursor);
 	}
+}
+
+void ZLQtApplicationWindow::setFocusToMainWidget() {
+	centralWidget()->setFocus();
 }

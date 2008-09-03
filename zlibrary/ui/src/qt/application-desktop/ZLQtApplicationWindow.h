@@ -25,6 +25,7 @@
 #include <qmainwindow.h>
 #include <qtoolbutton.h>
 #include <qcursor.h>
+#include <qlineedit.h>
 
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 
@@ -35,11 +36,12 @@ public:
 	ZLQtApplicationWindow(ZLApplication *application);
 	~ZLQtApplicationWindow();
 
+	void setFocusToMainWidget();
+
 private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void init();
-	void refresh();
 	void close();
 
 	void grabAllKeys(bool grab);
@@ -52,7 +54,7 @@ private:
 	void setFullscreen(bool fullscreen);
 
 	void closeEvent(QCloseEvent *event);
-	void keyPressEvent(QKeyEvent *event);
+	void keyReleaseEvent(QKeyEvent *event);
 	void wheelEvent(QWheelEvent *event);
 
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
@@ -62,8 +64,8 @@ private:
 	class QToolBar *myToolBar;
 
 friend class ZLQtToolButton;
-	std::map<const ZLToolbar::Item*, class ZLQtToolButton*> myButtons;
-	std::map<ZLToolbar::ItemPtr,QWidget*> mySeparatorMap;
+	std::map<const ZLToolbar::Item*,QWidget*> myItemToWidgetMap;
+	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
 
 	bool myFullScreen;
 	bool myWasMaximized;
@@ -72,6 +74,23 @@ friend class ZLQtToolButton;
 	QCursor myStoredCursor;
 
 friend class ZLQtViewWidgetPositionInfo;
+
+private:
+	class LineEditParameter : public QLineEdit, public VisualParameter {
+
+	public:
+		LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::TextFieldItem &textFieldItem);
+
+	private:
+		void keyReleaseEvent(QKeyEvent *event);
+
+		std::string internalValue() const;
+		void internalSetValue(const std::string &value);
+
+	private:
+		ZLQtApplicationWindow &myWindow;
+		const std::string &myActionId;
+	};
 };
 
 class ZLQtToolButton : public QToolButton {

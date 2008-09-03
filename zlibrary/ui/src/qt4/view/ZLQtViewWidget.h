@@ -25,7 +25,11 @@
 #include "../../../../core/src/view/ZLViewWidget.h"
 #include <ZLApplication.h>
 
-class ZLQtViewWidget : public ZLViewWidget {
+class QGridLayout;
+class QScrollBar;
+
+class ZLQtViewWidget : public QObject, public ZLViewWidget {
+	Q_OBJECT
 
 private:
 	class Widget : public QWidget {
@@ -50,6 +54,10 @@ public:
 	ZLQtViewWidget(QWidget *parent, ZLApplication *application);
 	QWidget *widget();
 
+private Q_SLOTS:
+	void onVerticalSliderMoved(int value);
+	void onHorizontalSliderMoved(int value);
+
 private:
 	void repaint();
 	void trackStylus(bool track);
@@ -58,11 +66,21 @@ private:
 	void setScrollbarPlacement(ZLView::Direction direction, bool standard);
 	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step);
 
+	QScrollBar *addScrollBar(QGridLayout *layout, Qt::Orientation orientation, int x, int y, const char *slot);
+
 private:
+	QWidget *myFrame;
 	Widget *myQWidget;
+
+	QScrollBar *myRightScrollBar;
+	QScrollBar *myLeftScrollBar;
+	bool myShowScrollBarAtRight;
+
+	QScrollBar *myBottomScrollBar;
+	QScrollBar *myTopScrollBar;
+	bool myShowScrollBarAtBottom;
+
 	ZLApplication *myApplication;
 };
-
-inline QWidget *ZLQtViewWidget::widget() { return myQWidget; }
 
 #endif /* __ZLQTVIEWWIDGET_H__ */
