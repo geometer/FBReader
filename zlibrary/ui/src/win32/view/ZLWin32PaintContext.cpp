@@ -96,6 +96,9 @@ const std::string ZLWin32PaintContext::realFontFamilyName(std::string &fontFamil
 }
 
 void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
+	if (size < 4) {
+		size = 4;
+	}
 	if (myDisplayContext == 0) {
 		return;
 	}

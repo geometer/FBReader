@@ -75,6 +75,8 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 	GetClientRect(myWindowToolbar.hwnd, &toolbarRect);
 
 	HMENU popup = CreatePopupMenu();
+	HIMAGELIST imageList = (HIMAGELIST)SendMessage(myWindowToolbar.hwnd, TB_GETIMAGELIST, 0, 0);
+	int imageIndex = 0;
 
 	const int len = SendMessage(myWindowToolbar.hwnd, TB_BUTTONCOUNT, 0, 0);
 	int index = 0;
@@ -87,6 +89,9 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 			if (rect.right > toolbarRect.right) {
 				break;
 			}
+		}
+		if (info.idCommand > -100) {
+			++imageIndex;
 		}
 	}
 
@@ -103,7 +108,7 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 			if (!item.isNull()) {
 				const ZLToolbar::AbstractButtonItem &button =
 					(const ZLToolbar::AbstractButtonItem&)*item;
-				miInfo.fMask = MIIM_STATE | MIIM_STRING | MIIM_ID;
+				miInfo.fMask = MIIM_STATE | MIIM_STRING | MIIM_ID | MIIM_BITMAP;
 				miInfo.fType = MFT_STRING;
 				miInfo.fState = (info.fsState & TBSTATE_ENABLED) ?
 					MFS_ENABLED :
@@ -112,6 +117,10 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 					(WCHAR*)::wchar(::createNTWCHARString(buffer, button.tooltip()));
 				miInfo.cch = buffer.size();
 				miInfo.wID = info.idCommand;
+				HICON icon = ImageList_GetIcon(imageList, imageIndex, ILD_NORMAL);
+				ICONINFO iconInfo;
+				GetIconInfo(icon, &iconInfo);
+				miInfo.hbmpItem = iconInfo.hbmColor;
 				InsertMenuItem(popup, count++, true, &miInfo);
 			} else if (info.idCommand >= -200) /* is a separator */ {
 				if (count > 0) {
@@ -120,6 +129,9 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 					InsertMenuItem(popup, count++, true, &miInfo);
 				}
 			}
+		}
+		if (info.idCommand > -100) {
+			++imageIndex;
 		}
 	}
 
