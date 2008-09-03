@@ -353,6 +353,16 @@ void ZLWin32ViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool 
 }
 
 void ZLWin32ViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t /*step*/) {
+	if (direction == ZLView::VERTICAL) {
+		if (!myVScrollBarIsEnabled) {
+			return;
+		}
+	} else {
+		if (!myHScrollBarIsEnabled) {
+			return;
+		}
+	}
+
 	SCROLLINFO info;
 	info.cbSize = sizeof(SCROLLINFO);
 	info.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
