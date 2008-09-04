@@ -32,15 +32,25 @@ void StyleSheetTable::addMap(const std::string &tag, const std::string &aClass, 
 		Key key(tag, aClass);
 		myControlMap[key] = createControl(map);
 		const std::vector<std::string> &pbb = values(map, "page-break-before");
-		myPageBreakBeforeMap[key] = !pbb.empty() &&
-			((pbb[0] == "always") ||
-			 (pbb[0] == "left") ||
-			 (pbb[0] == "right"));
+		if (!pbb.empty()) {
+			if ((pbb[0] == "always") ||
+					(pbb[0] == "left") ||
+					(pbb[0] == "right")) {
+				myPageBreakBeforeMap[key] = true;
+			} else if (pbb[0] == "avoid") {
+				myPageBreakBeforeMap[key] = false;
+			}
+		}
 		const std::vector<std::string> &pba = values(map, "page-break-after");
-		myPageBreakAfterMap[key] = !pba.empty() &&
-			((pba[0] == "always") ||
-			 (pba[0] == "left") ||
-			 (pba[0] == "right"));
+		if (!pba.empty()) {
+			if ((pba[0] == "always") ||
+					(pba[0] == "left") ||
+					(pba[0] == "right")) {
+				myPageBreakAfterMap[key] = true;
+			} else if (pba[0] == "avoid") {
+				myPageBreakAfterMap[key] = false;
+			}
+		}
 	}
 }
 
