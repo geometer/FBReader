@@ -74,39 +74,41 @@ LRESULT ZLWin32ViewWidget::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 			info.cbSize = sizeof(SCROLLINFO);
 			info.fMask = SIF_ALL;
 			GetScrollInfo(myHandle, dir, &info);
+			ZLView::Direction direction =
+				(uMsg == WM_VSCROLL) ? ZLView::VERTICAL : ZLView::HORIZONTAL;
 			switch (LOWORD(wParam)) {
 				case SB_TOP:
-					info.nPos = info.nMin;
+					onScrollbarPageStep(direction, -1);
 					break;
 				case SB_BOTTOM:
-					info.nPos = info.nMax - extra;
+					onScrollbarPageStep(direction, 1);
 					break;
 				case SB_LINEUP:
-					info.nPos -= 100;
+					onScrollbarStep(direction, -1);
 					break;
 				case SB_LINEDOWN:
-					info.nPos += 100;
+					onScrollbarStep(direction, 1);
 					break;
 				case SB_PAGEUP:
-					info.nPos -= info.nPage;
+					onScrollbarPageStep(direction, -1);
 					break;
 				case SB_PAGEDOWN:
-					info.nPos += info.nPage;
+					onScrollbarPageStep(direction, 1);
 					break;
 				case SB_THUMBTRACK:
 					info.nPos = info.nTrackPos;
+					info.fMask = SIF_POS;
+					SetScrollInfo(myHandle, dir, &info, true);
+					info.fMask = SIF_ALL;
+					GetScrollInfo(myHandle, dir, &info);
+					onScrollbarMoved(
+						direction,
+						info.nMax - info.nMin - extra,
+						info.nPos,
+						info.nPos + info.nPage - extra
+					);
 					break;
 			}
-			info.fMask = SIF_POS;
-			SetScrollInfo(myHandle, dir, &info, true);
-			info.fMask = SIF_ALL;
-			GetScrollInfo(myHandle, dir, &info);
-			onScrollbarMoved(
-				(uMsg == WM_VSCROLL) ? ZLView::VERTICAL : ZLView::HORIZONTAL,
-				info.nMax - info.nMin - extra,
-				info.nPos,
-				info.nPos + info.nPage - extra
-			);
 			return orig(hWnd, uMsg, wParam, lParam);
 		}
 		default:
