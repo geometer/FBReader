@@ -125,6 +125,7 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 					BYTE *array = new BYTE[4 * IconSize * IconSize];
 					::memset(array, 0xFF, 4 * IconSize * IconSize);
 					hBitmap = ::CreateBitmap(IconSize, IconSize, 4, 8, array);
+					delete[] array;
 					::SelectObject(hDC, hBitmap);
 					::DrawIcon(hDC, 0, 0, hIcon);
 					::DeleteDC(hDC);

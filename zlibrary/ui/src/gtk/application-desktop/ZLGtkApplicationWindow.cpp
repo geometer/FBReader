@@ -184,7 +184,8 @@ void ZLGtkApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool v
 ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
 	myViewWidget = new ZLGtkViewWidget(&application(), (ZLView::Angle)application().AngleStateOption.value());
 	gtk_container_add(GTK_CONTAINER(myVBox), myViewWidget->areaWithScrollbars());
-	gtk_widget_show_all(myVBox);
+	gtk_widget_show(myVBox);
+	gtk_widget_show(myWindowToolbar.toolbarWidget());
 	if (myHandleBox != 0) {
 		gtk_widget_hide(GTK_WIDGET(myHandleBox));
 	}
@@ -209,9 +210,9 @@ void ZLGtkApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 		if (myHyperlinkCursor == 0) {
 			myHyperlinkCursor = gdk_cursor_new(GDK_HAND1);
 		}
-		gdk_window_set_cursor(GTK_WIDGET(myMainWindow)->window, myHyperlinkCursor);
+		gdk_window_set_cursor(myViewWidget->area()->window, myHyperlinkCursor);
 	} else {
-		gdk_window_set_cursor(GTK_WIDGET(myMainWindow)->window, 0);
+		gdk_window_set_cursor(myViewWidget->area()->window, 0);
 	}
 }
 

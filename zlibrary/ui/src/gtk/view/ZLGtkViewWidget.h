@@ -52,14 +52,23 @@ private:
 private:
 	ZLApplication *myApplication;
 	GtkWidget *myArea;
-	GtkScrolledWindow *myScrollArea;
+	GtkTable *myTable;
 	GdkPixbuf *myOriginalPixbuf;
 	GdkPixbuf *myRotatedPixbuf;
 	GdkImage *myImage;
 	bool myRepaintBlocked;
 
-	bool myVerticalScrollbarPlacementIsStandard;
-	bool myHorizontalScrollbarPlacementIsStandard;
+	GtkAdjustment *myVerticalAdjustment;
+	GtkWidget *myRightScrollBar;
+	GtkWidget *myLeftScrollBar;
+	bool myShowScrollBarAtRight;
+	bool myVerticalScrollbarIsVisible;
+
+	GtkAdjustment *myHorizontalAdjustment;
+	GtkWidget *myBottomScrollBar;
+	GtkWidget *myTopScrollBar;
+	bool myShowScrollBarAtBottom;
+	bool myHorizontalScrollbarIsVisible;
 };
 
 #endif /* __ZLGTKVIEWWIDGET_H__ */

@@ -109,6 +109,14 @@ void AddBookAction::run() {
 ScrollToHomeAction::ScrollToHomeAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE) {
 }
 
+bool ScrollToHomeAction::isEnabled() const {
+	if (!isVisible()) {
+		return false;
+	}
+	ZLTextWordCursor cursor = fbreader().bookTextView().startCursor();
+	return cursor.isNull() || !cursor.isStartOfParagraph() || !cursor.paragraphCursor().isFirst();
+}
+
 void ScrollToHomeAction::run() {
 	fbreader().bookTextView().scrollToHome();
 }
@@ -116,11 +124,27 @@ void ScrollToHomeAction::run() {
 ScrollToStartOfTextAction::ScrollToStartOfTextAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE) {
 }
 
+bool ScrollToStartOfTextAction::isEnabled() const {
+	if (!isVisible()) {
+		return false;
+	}
+	ZLTextWordCursor cursor = fbreader().bookTextView().startCursor();
+	return cursor.isNull() || !cursor.isStartOfParagraph() || !cursor.paragraphCursor().isFirst();
+}
+
 void ScrollToStartOfTextAction::run() {
 	fbreader().bookTextView().scrollToStartOfText();
 }
 
 ScrollToEndOfTextAction::ScrollToEndOfTextAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE) {
+}
+
+bool ScrollToEndOfTextAction::isEnabled() const {
+	if (!isVisible()) {
+		return false;
+	}
+	ZLTextWordCursor cursor = fbreader().bookTextView().endCursor();
+	return cursor.isNull() || !cursor.isEndOfParagraph() || !cursor.paragraphCursor().isLast();
 }
 
 void ScrollToEndOfTextAction::run() {

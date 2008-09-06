@@ -162,6 +162,7 @@ class ScrollToHomeAction : public ModeDependentAction {
 
 public:
 	ScrollToHomeAction(FBReader &fbreader);
+	bool isEnabled() const;
 	void run();
 };
 
@@ -169,6 +170,7 @@ class ScrollToStartOfTextAction : public ModeDependentAction {
 
 public:
 	ScrollToStartOfTextAction(FBReader &fbreader);
+	bool isEnabled() const;
 	void run();
 };
 
@@ -176,6 +178,7 @@ class ScrollToEndOfTextAction : public ModeDependentAction {
 
 public:
 	ScrollToEndOfTextAction(FBReader &fbreader);
+	bool isEnabled() const;
 	void run();
 };
 

@@ -326,7 +326,7 @@ void ZLQtApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 	if (hyperlink) {
 		myStoredCursor = cursor();
 		setCursor(Qt::pointingHandCursor);
-	} else {
+	} else if (&myStoredCursor != &Qt::waitCursor) {
 		setCursor(myStoredCursor);
 	}
 }
