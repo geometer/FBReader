@@ -59,15 +59,6 @@ LRESULT ZLWin32ViewWidget::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 			}
 			myWindow.updateCursor();
 			return 0;
-		case WM_MOUSEWHEEL:
-			if (!myWindow.mouseEventsAreBlocked()) {
-				myWindow.application().doActionByKey(
-					((short)HIWORD(wParam) > 0) ?
-						ZLApplication::MouseScrollUpKey :
-						ZLApplication::MouseScrollDownKey
-				);
-			}
-			return 0;
 		case WM_ERASEBKGND:
 			return 0;
 		case WM_PAINT:

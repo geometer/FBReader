@@ -45,6 +45,15 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM 
 
 LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
+		case WM_MOUSEWHEEL:
+			if (!mouseEventsAreBlocked()) {
+				application().doActionByKey(
+					((short)HIWORD(wParam) > 0) ?
+						ZLApplication::MouseScrollUpKey :
+						ZLApplication::MouseScrollDownKey
+				);
+			}
+			return 0;
 		case WM_PAINT:
 		{
 			LRESULT code = DefWindowProc(hWnd, uMsg, wParam, lParam);
