@@ -345,7 +345,7 @@ void ZLWin32ViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool 
 	*/
 }
 
-void ZLWin32ViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t /*step*/) {
+void ZLWin32ViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to) {
 	if (direction == ZLView::VERTICAL) {
 		if (!myVScrollBarIsEnabled) {
 			return;

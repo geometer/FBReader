@@ -76,7 +76,7 @@ void ZLTextView::paint() {
 			(to - from < full);
 		if (showScrollbar) {
 			setScrollbarEnabled(VERTICAL, true);
-			setScrollbarParameters(VERTICAL, full, from, to, to - from);
+			setScrollbarParameters(VERTICAL, full, from, to);
 		} else {
 			setScrollbarEnabled(VERTICAL, false);
 		}

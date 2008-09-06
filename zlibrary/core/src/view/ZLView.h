@@ -68,7 +68,7 @@ protected:
 	bool hasContext() const;
 
 	void setScrollbarEnabled(Direction direction, bool enabled);
-	void setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to, size_t step);
+	void setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to);
 	virtual void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
 	virtual void onScrollbarStep(Direction direction, int steps);
 	virtual void onScrollbarPageStep(Direction direction, int steps);
@@ -82,7 +82,6 @@ private:
 		size_t Full;
 		size_t From;
 		size_t To;
-		size_t Step;
 	};
 
 	void updateScrollbarState();

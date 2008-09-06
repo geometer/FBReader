@@ -28,7 +28,7 @@ ZLView::ZLView(ZLApplication &application, shared_ptr<ZLPaintContext> context) :
 ZLView::~ZLView() {
 }
 
-ZLView::ScrollBarInfo::ScrollBarInfo() : Enabled(false), StandardLocation(true), Full(100), From(0), To(100), Step(1) {
+ZLView::ScrollBarInfo::ScrollBarInfo() : Enabled(false), StandardLocation(true), Full(100), From(0), To(100) {
 }
 
 void ZLView::setPaintContext(shared_ptr<ZLPaintContext> context) {
@@ -73,12 +73,11 @@ void ZLView::setScrollbarEnabled(Direction direction, bool enabled) {
 	updateScrollbarState();
 }
 
-void ZLView::setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to, size_t step) {
+void ZLView::setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to) {
 	ScrollBarInfo &info = (direction == VERTICAL) ? myVerticalScrollbarInfo : myHorizontalScrollbarInfo;
 	info.Full = full;
 	info.From = from;
 	info.To = to;
-	info.Step = step;
 	updateScrollbarParameters();
 }
 
@@ -134,16 +133,14 @@ void ZLView::updateScrollbarParameters(Direction direction, const ScrollBarInfo 
 			direction,
 			info.Full,
 			info.Full - info.To,
-			info.Full - info.From,
-			info.Step
+			info.Full - info.From
 		);
 	} else {
 		myViewWidget->setScrollbarParameters(
 			direction,
 			info.Full,
 			info.From,
-			info.To,
-			info.Step
+			info.To
 		);
 	}
 }

@@ -233,14 +233,14 @@ void ZLGtkViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool st
 	}
 }
 
-void ZLGtkViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) {
+void ZLGtkViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to) {
 	GtkAdjustment *adjustment =
 		(direction == ZLView::VERTICAL) ? myVerticalAdjustment : myHorizontalAdjustment;
 	adjustment->lower = 0;
 	adjustment->upper = full;
 	adjustment->value = from;
-	adjustment->step_increment = step;
-	adjustment->page_increment = step;
+	adjustment->step_increment = to - from;
+	adjustment->page_increment = to - from;
 	adjustment->page_size = to - from;
 
 	GtkWidget *scrollbar = (direction == ZLView::VERTICAL) ?

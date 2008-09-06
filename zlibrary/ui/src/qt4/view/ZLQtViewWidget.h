@@ -57,6 +57,8 @@ public:
 private Q_SLOTS:
 	void onVerticalSliderMoved(int value);
 	void onHorizontalSliderMoved(int value);
+	void onVerticalSliderClicked(int value);
+	void onHorizontalSliderClicked(int value);
 
 private:
 	void repaint();
@@ -64,9 +66,9 @@ private:
 
 	void setScrollbarEnabled(ZLView::Direction direction, bool enabled);
 	void setScrollbarPlacement(ZLView::Direction direction, bool standard);
-	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step);
+	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to);
 
-	QScrollBar *addScrollBar(QGridLayout *layout, Qt::Orientation orientation, int x, int y, const char *slot);
+	QScrollBar *addScrollBar(QGridLayout *layout, Qt::Orientation orientation, int x, int y);
 
 private:
 	QWidget *myFrame;
