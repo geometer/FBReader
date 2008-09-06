@@ -101,22 +101,42 @@ int ZLGtkViewWidget::height() const {
 	return (myArea != 0) ? myArea->allocation.height : 0;
 }
 
-static void vScrollbarMoved(GtkAdjustment *adjustment, ZLGtkViewWidget *data) {
-	data->onScrollbarMoved(
-		ZLView::VERTICAL,
-		(size_t)adjustment->upper,
-		(size_t)adjustment->value,
-		(size_t)(adjustment->value + adjustment->page_size)
-	);
+static bool scrollbarEvent(ZLView::Direction direction, GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
+	switch (type) {
+		default:
+			return false;
+  	case GTK_SCROLL_JUMP:
+		{
+			GtkAdjustment *adjustment = gtk_range_get_adjustment(range);
+			data->onScrollbarMoved(
+				direction,
+				(size_t)adjustment->upper,
+				(size_t)newValue,
+				(size_t)(newValue + adjustment->page_size)
+			);
+			return false;
+		}
+  	case GTK_SCROLL_STEP_BACKWARD:
+			data->onScrollbarStep(direction, -1);
+			return true;
+  	case GTK_SCROLL_STEP_FORWARD:
+			data->onScrollbarStep(direction, 1);
+			return true;
+  	case GTK_SCROLL_PAGE_BACKWARD:
+			data->onScrollbarPageStep(direction, -1);
+			return true;
+  	case GTK_SCROLL_PAGE_FORWARD:
+			data->onScrollbarPageStep(direction, 1);
+			return true;
+	}
 }
 
-static void hScrollbarMoved(GtkAdjustment *adjustment, ZLGtkViewWidget *data) {
-	data->onScrollbarMoved(
-		ZLView::HORIZONTAL,
-		(size_t)adjustment->upper,
-		(size_t)adjustment->value,
-		(size_t)(adjustment->value + adjustment->page_size)
-	);
+static bool vScrollbarEvent(GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
+	scrollbarEvent(ZLView::VERTICAL, range, type, newValue, data);
+}
+
+static bool hScrollbarEvent(GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
+	scrollbarEvent(ZLView::HORIZONTAL, range, type, newValue, data);
 }
 
 ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initialAngle) : ZLViewWidget(initialAngle) {
@@ -130,26 +150,32 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initi
 	gtk_widget_show(myArea);
 
 	myVerticalAdjustment = GTK_ADJUSTMENT(gtk_adjustment_new(100, 0, 100, 1, 1, 1));
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myVerticalAdjustment), "value_changed", GTK_SIGNAL_FUNC(vScrollbarMoved), this);
-	myLeftScrollBar = gtk_vscrollbar_new(myVerticalAdjustment);
-	gtk_table_attach(myTable, myLeftScrollBar, 0, 1, 1, 2, GTK_FILL, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0);
-	myRightScrollBar = gtk_vscrollbar_new(myVerticalAdjustment);
-	gtk_table_attach(myTable, myRightScrollBar, 2, 3, 1, 2, GTK_FILL, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0);
 	myShowScrollBarAtRight = true;
-	gtk_widget_hide(myLeftScrollBar);
-	gtk_widget_hide(myRightScrollBar);
 	myVerticalScrollbarIsVisible = false;
 
+	myLeftScrollBar = gtk_vscrollbar_new(myVerticalAdjustment);
+	gtk_table_attach(myTable, myLeftScrollBar, 0, 1, 1, 2, GTK_FILL, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myLeftScrollBar), "change_value", GTK_SIGNAL_FUNC(vScrollbarEvent), this);
+	gtk_widget_hide(myLeftScrollBar);
+
+	myRightScrollBar = gtk_vscrollbar_new(myVerticalAdjustment);
+	gtk_table_attach(myTable, myRightScrollBar, 2, 3, 1, 2, GTK_FILL, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myRightScrollBar), "change_value", GTK_SIGNAL_FUNC(vScrollbarEvent), this);
+	gtk_widget_hide(myRightScrollBar);
+
 	myHorizontalAdjustment = GTK_ADJUSTMENT(gtk_adjustment_new(100, 0, 100, 1, 1, 1));
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myHorizontalAdjustment), "value_changed", GTK_SIGNAL_FUNC(hScrollbarMoved), this);
+	myShowScrollBarAtBottom = true;
+	myHorizontalScrollbarIsVisible = false;
+
 	myTopScrollBar = gtk_hscrollbar_new(myHorizontalAdjustment);
 	gtk_table_attach(myTable, myTopScrollBar, 1, 2, 0, 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 0, 0);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myTopScrollBar), "change_value", GTK_SIGNAL_FUNC(hScrollbarEvent), this);
+	gtk_widget_hide(myTopScrollBar);
+
 	myBottomScrollBar = gtk_hscrollbar_new(myHorizontalAdjustment);
 	gtk_table_attach(myTable, myBottomScrollBar, 1, 2, 2, 3, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 0, 0);
-	myShowScrollBarAtBottom = true;
-	gtk_widget_hide(myTopScrollBar);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myBottomScrollBar), "change_value", GTK_SIGNAL_FUNC(hScrollbarEvent), this);
 	gtk_widget_hide(myBottomScrollBar);
-	myHorizontalScrollbarIsVisible = false;
 
 	myOriginalPixbuf = 0;
 	myRotatedPixbuf = 0;

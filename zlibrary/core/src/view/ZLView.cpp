@@ -173,29 +173,35 @@ void ZLView::updateScrollbarParameters() {
 	}
 }
 
+void ZLViewWidget::correctDirection(ZLView::Direction &direction, bool &invert) {
+	switch (rotation()) {
+		case ZLView::DEGREES0:
+			invert = false;
+			return;
+		case ZLView::DEGREES90:
+			invert = false;
+			direction =
+				(direction == ZLView::HORIZONTAL) ?
+					ZLView::VERTICAL :
+					ZLView::HORIZONTAL;
+			return;
+		case ZLView::DEGREES180:
+			invert = true;
+			return;
+		case ZLView::DEGREES270:
+			direction =
+				(direction == ZLView::HORIZONTAL) ?
+					ZLView::VERTICAL :
+					ZLView::HORIZONTAL;
+			invert = true;
+			return;
+	}
+}
+
 void ZLViewWidget::onScrollbarMoved(ZLView::Direction direction, size_t full, size_t from, size_t to) {
 	if (!myView.isNull()) {
-		bool invert = false;
-		switch (rotation()) {
-			case ZLView::DEGREES0:
-				break;
-			case ZLView::DEGREES90:
-				direction =
-					(direction == ZLView::HORIZONTAL) ?
-						ZLView::VERTICAL :
-						ZLView::HORIZONTAL;
-				break;
-			case ZLView::DEGREES180:
-				invert = true;
-				break;
-			case ZLView::DEGREES270:
-				direction =
-					(direction == ZLView::HORIZONTAL) ?
-						ZLView::VERTICAL :
-						ZLView::HORIZONTAL;
-				invert = true;
-				break;
-		}
+		bool invert;
+		correctDirection(direction, invert);
 		if (invert) {
 			size_t tmp = full - from;
 			from = full - to;
@@ -205,7 +211,29 @@ void ZLViewWidget::onScrollbarMoved(ZLView::Direction direction, size_t full, si
 	}
 }
 
+void ZLViewWidget::onScrollbarStep(ZLView::Direction direction, int steps) {
+	if (!myView.isNull()) {
+		bool invert;
+		correctDirection(direction, invert);
+		myView->onScrollbarStep(direction, invert ? -steps : steps);
+	}
+}
+
+void ZLViewWidget::onScrollbarPageStep(ZLView::Direction direction, int steps) {
+	if (!myView.isNull()) {
+		bool invert;
+		correctDirection(direction, invert);
+		myView->onScrollbarPageStep(direction, invert ? -steps : steps);
+	}
+}
+
 void ZLView::onScrollbarMoved(Direction, size_t, size_t, size_t) {
+}
+
+void ZLView::onScrollbarStep(Direction, int) {
+}
+
+void ZLView::onScrollbarPageStep(Direction, int) {
 }
 
 void ZLViewWidget::rotate(ZLView::Angle rotation) {

@@ -653,6 +653,22 @@ void ZLTextView::onScrollbarMoved(Direction direction, size_t full, size_t from,
 	application().refreshWindow();
 }
 
+void ZLTextView::onScrollbarStep(Direction direction, int steps) {
+	if (direction == VERTICAL) {
+		const bool forward = steps > 0;
+		scrollPage(forward, SCROLL_LINES, forward ? steps : -steps);
+		application().refreshWindow();
+	}
+}
+
+void ZLTextView::onScrollbarPageStep(Direction direction, int steps) {
+	if (direction == VERTICAL) {
+		const bool forward = steps > 0;
+		scrollPage(forward, NO_OVERLAPPING, forward ? steps : -steps);
+		application().refreshWindow();
+	}
+}
+
 void ZLTextView::forceScrollbarUpdate() {
 	myDoUpdateScrollbar = true;
 }

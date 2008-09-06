@@ -186,6 +186,8 @@ protected:
 	bool onStylusMovePressed(int x, int y);
 	bool onStylusRelease(int x, int y);
 	void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
+	void onScrollbarStep(Direction direction, int steps);
+	void onScrollbarPageStep(Direction direction, int steps);
 	void activateSelection(int x, int y);
 
 	virtual void paint();

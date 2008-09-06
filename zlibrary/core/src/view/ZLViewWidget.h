@@ -45,6 +45,11 @@ public:
 	virtual void setScrollbarPlacement(ZLView::Direction direction, bool standard) = 0;
 	virtual void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) = 0;
 	void onScrollbarMoved(ZLView::Direction direction, size_t full, size_t from, size_t to);
+	void onScrollbarStep(ZLView::Direction direction, int steps);
+	void onScrollbarPageStep(ZLView::Direction direction, int steps);
+
+private:
+	void correctDirection(ZLView::Direction &direction, bool &invert);
 
 protected:
 	virtual void repaint() = 0;

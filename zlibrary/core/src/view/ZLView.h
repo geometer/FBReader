@@ -70,6 +70,8 @@ protected:
 	void setScrollbarEnabled(Direction direction, bool enabled);
 	void setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to, size_t step);
 	virtual void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
+	virtual void onScrollbarStep(Direction direction, int steps);
+	virtual void onScrollbarPageStep(Direction direction, int steps);
 
 private:
 	struct ScrollBarInfo {
