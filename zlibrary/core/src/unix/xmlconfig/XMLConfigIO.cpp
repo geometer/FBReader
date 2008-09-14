@@ -50,21 +50,22 @@ void XMLConfig::load() {
 		it->second = new XMLConfigGroup(*it->second);
 	}
 	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(false);
-	if (configDir.isNull()) {
-		return;
-	}
-	std::vector<std::string> fileNames;
-	configDir->collectFiles(fileNames, true);
-	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
-		ZLFile configFile(configDir->itemPath(*it));
-		if (configFile.extension() == "xml") {
-			XMLConfigReader(*this, configFile.name(true)).readDocument(configFile.inputStream());
+	if (!configDir.isNull()) {
+		std::vector<std::string> fileNames;
+		configDir->collectFiles(fileNames, true);
+		for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
+			ZLFile configFile(configDir->itemPath(*it));
+			if (configFile.extension() == "xml") {
+				XMLConfigReader(*this, configFile.name(true)).readDocument(configFile.inputStream());
+			}
 		}
 	}
 	if (myDelta == 0) {
 		myDelta = new XMLConfigDelta();
 	}
-	XMLConfigReader(*this, UNKNOWN_CATEGORY).readDocument(configDir->itemPath(CHANGES_FILE));
+	if (!configDir.isNull()) {
+		XMLConfigReader(*this, UNKNOWN_CATEGORY).readDocument(configDir->itemPath(CHANGES_FILE));
+	}
 }
 
 void XMLConfig::saveAll() {
