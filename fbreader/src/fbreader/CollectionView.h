@@ -48,7 +48,6 @@ public:
 	bool onStylusMove(int x, int y);
 
 	void paint();
-	void updateModel();
 	void synchronizeModel();
 
 	void openWithBook(BookDescriptionPtr book);
@@ -74,10 +73,13 @@ private:
 	BookCollection myCollection;
 	BookDescriptionPtr mySelectedBook;
 	bool myTreeStateIsFrozen;
-	bool myUpdateModel;
+	bool myDoSynchronizeCollection;
+	bool myDoUpdateModel;
 
 	bool myOrganizeByTags;
 	bool myShowAllBooksList;
+
+friend class RebuildCollectionRunnable;
 };
 
 inline BookCollection &CollectionView::collection() {

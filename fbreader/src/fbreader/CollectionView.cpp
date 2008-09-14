@@ -28,11 +28,31 @@
 
 #include "../collection/BookList.h"
 
+class RebuildCollectionRunnable : public ZLRunnable {
+
+public:
+	RebuildCollectionRunnable(CollectionView &view) : myView(view) {}
+	void run() {
+		if (myView.myDoSynchronizeCollection) {
+			if (!myView.collection().synchronize()) {
+				return;
+			}
+		}
+		myView.collection().rebuild(true);
+		myView.myDoUpdateModel = true;
+		myView.collection().authors();
+	}
+
+private:
+	CollectionView &myView;
+};
+
 static const std::string LIBRARY = "Library";
 
 CollectionView::CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context),
 	ShowAllBooksTagOption(ZLCategoryKey::LOOK_AND_FEEL, LIBRARY, "ShowAllBooksTag", true),
-	myUpdateModel(true) {
+	myDoSynchronizeCollection(false),
+	myDoUpdateModel(true) {
 	setModel(new CollectionModel(*this, myCollection), "");
 	myOrganizeByTags = organizeByTags();
 	myShowAllBooksList = ShowAllBooksTagOption.value();
@@ -42,15 +62,8 @@ CollectionView::~CollectionView() {
 	setModel(0, "");
 }
 
-void CollectionView::updateModel() {
-	myCollection.rebuild(true);
-	myUpdateModel = true;
-}
-
 void CollectionView::synchronizeModel() {
-	if (myCollection.synchronize()) {
-		updateModel();
-	}
+	myDoSynchronizeCollection = true;
 }
 
 const std::string &CollectionView::caption() const {
@@ -60,12 +73,12 @@ const std::string &CollectionView::caption() const {
 void CollectionView::selectBook(BookDescriptionPtr book) {
 	mySelectedBook = book;
 
-	if (myUpdateModel) {
+	if (myDoUpdateModel) {
 		shared_ptr<ZLTextModel> oldModel = model();
 		setModel(0, "");
 		((CollectionModel&)*oldModel).update();
 		setModel(oldModel, "");
-		myUpdateModel = false;
+		myDoUpdateModel = false;
 	}
 
 	if (!book.isNull()) {
@@ -82,18 +95,23 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 }
 
 void CollectionView::paint() {
+	if (myDoSynchronizeCollection) {
+		RebuildCollectionRunnable runnable(*this);
+		ZLDialogManager::instance().wait(ZLResourceKey("loadingBookList"), runnable);
+		myDoSynchronizeCollection = false;
+	}
 	if ((myOrganizeByTags != organizeByTags()) ||
 			(myShowAllBooksList != ShowAllBooksTagOption.value())) {
 		myOrganizeByTags = organizeByTags();
 		myShowAllBooksList = ShowAllBooksTagOption.value();
-		myUpdateModel = true;
+		myDoUpdateModel = true;
 	}
-	if (myUpdateModel) {
+	if (myDoUpdateModel) {
 		shared_ptr<ZLTextModel> oldModel = model();
 		setModel(0, "");
 		((CollectionModel&)*oldModel).update();
 		setModel(oldModel, "");
-		myUpdateModel = false;
+		myDoUpdateModel = false;
 		selectBook(mySelectedBook);
 	}
 	FBView::paint();
@@ -174,7 +192,7 @@ bool CollectionView::_onStylusPress(int x, int y) {
 void CollectionView::editBookInfo(BookDescriptionPtr book) {
 	if (!book.isNull() && BookInfoDialog(myCollection, book->fileName()).dialog().run()) {
 		myCollection.rebuild(false);
-		myUpdateModel = true;
+		myDoUpdateModel = true;
 		selectBook(book);
 		application().refreshWindow();
 	}
@@ -256,7 +274,8 @@ void CollectionView::removeTag(const std::string &tag) {
 	if (code != DONT_REMOVE) {
 		collectionModel().removeAllMarks();
 		myCollection.removeTag(tag, code == REMOVE_SUBTREE);
-		updateModel();
+		myCollection.rebuild(true);
+		myDoUpdateModel = true;
 		selectBook(mySelectedBook);
 		application().refreshWindow();
 	}
@@ -265,19 +284,6 @@ void CollectionView::removeTag(const std::string &tag) {
 CollectionModel &CollectionView::collectionModel() {
 	return (CollectionModel&)*model();
 }
-
-class RebuildCollectionRunnable : public ZLRunnable {
-
-public:
-	RebuildCollectionRunnable(CollectionView &view) : myView(view) {}
-	void run() {
-		myView.updateModel();
-		myView.collection().authors();
-	}
-
-private:
-	CollectionView &myView;
-};
 
 void CollectionView::openWithBook(BookDescriptionPtr book) {
 	RebuildCollectionRunnable runnable(*this);

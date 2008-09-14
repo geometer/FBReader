@@ -208,7 +208,8 @@ void CollectionView::editTagInfo(const std::string &tag) {
 		} else {
 			myCollection.cloneTag(tag, tagValue, includeSubtags);
 		}
-		updateModel();
+		myCollection.rebuild(true);
+		myDoUpdateModel = true;
 		selectBook(mySelectedBook);
 		application().refreshWindow();
 		break;
