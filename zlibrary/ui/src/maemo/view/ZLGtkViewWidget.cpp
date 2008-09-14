@@ -169,11 +169,11 @@ static bool scrollbarEvent(ZLView::Direction direction, GtkRange *range, GtkScro
 }
 
 static bool vScrollbarEvent(GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
-	scrollbarEvent(ZLView::VERTICAL, range, type, newValue, data);
+	return scrollbarEvent(ZLView::VERTICAL, range, type, newValue, data);
 }
 
 static bool hScrollbarEvent(GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
-	scrollbarEvent(ZLView::HORIZONTAL, range, type, newValue, data);
+	return scrollbarEvent(ZLView::HORIZONTAL, range, type, newValue, data);
 }
 
 ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initialAngle) :
