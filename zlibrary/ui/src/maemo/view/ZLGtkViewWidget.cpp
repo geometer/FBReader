@@ -18,6 +18,8 @@
  */
 
 #include <ZLOptions.h>
+#include <ZLibrary.h>
+#include <ZLLanguageUtil.h>
 
 #include "../dialogs/ZLGtkOptionsDialog.h"
 #include "ZLGtkViewWidget.h"
@@ -136,30 +138,48 @@ int ZLGtkViewWidget::height() const {
 
 static const std::string GROUP = "StylusPressure";
 
-static void vScrollbarMoved(GtkAdjustment *adjustment, ZLGtkViewWidget *data) {
-	data->onScrollbarMoved(
-		ZLView::VERTICAL,
-		(size_t)adjustment->upper,
-		(size_t)adjustment->value,
-		(size_t)(adjustment->value + adjustment->page_size)
-	);
+static bool scrollbarEvent(ZLView::Direction direction, GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
+	switch (type) {
+		default:
+			return false;
+  	case GTK_SCROLL_JUMP:
+		{
+			GtkAdjustment *adjustment = gtk_range_get_adjustment(range);
+			data->onScrollbarMoved(
+				direction,
+				(size_t)adjustment->upper,
+				(size_t)newValue,
+				(size_t)(newValue + adjustment->page_size)
+			);
+			return false;
+		}
+  	case GTK_SCROLL_STEP_BACKWARD:
+			data->onScrollbarStep(direction, -1);
+			return true;
+  	case GTK_SCROLL_STEP_FORWARD:
+			data->onScrollbarStep(direction, 1);
+			return true;
+  	case GTK_SCROLL_PAGE_BACKWARD:
+			data->onScrollbarPageStep(direction, -1);
+			return true;
+  	case GTK_SCROLL_PAGE_FORWARD:
+			data->onScrollbarPageStep(direction, 1);
+			return true;
+	}
 }
 
-static void hScrollbarMoved(GtkAdjustment *adjustment, ZLGtkViewWidget *data) {
-	data->onScrollbarMoved(
-		ZLView::HORIZONTAL,
-		(size_t)adjustment->upper,
-		(size_t)adjustment->value,
-		(size_t)(adjustment->value + adjustment->page_size)
-	);
+static bool vScrollbarEvent(GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
+	scrollbarEvent(ZLView::VERTICAL, range, type, newValue, data);
+}
+
+static bool hScrollbarEvent(GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
+	scrollbarEvent(ZLView::HORIZONTAL, range, type, newValue, data);
 }
 
 ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initialAngle) :
 	ZLViewWidget(initialAngle),
 	MinPressureOption(ZLCategoryKey::CONFIG, GROUP, "Minimum", 0, 100, 0),
-	MaxPressureOption(ZLCategoryKey::CONFIG, GROUP, "Maximum", 0, 100, 40),
-	myVerticalScrollbarPlacementIsStandard(true),
-	myHorizontalScrollbarPlacementIsStandard(true) {
+	MaxPressureOption(ZLCategoryKey::CONFIG, GROUP, "Maximum", 0, 100, 40) {
 
 	myApplication = application;
 	myArea = gtk_drawing_area_new();
@@ -167,14 +187,38 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initi
 	myRotatedPixbuf = 0;
 	GTK_OBJECT_SET_FLAGS(myArea, GTK_CAN_FOCUS);
 
-	myScrollArea = GTK_SCROLLED_WINDOW(gtk_scrolled_window_new(0, 0));
-	GtkAdjustment *hAdjustment = gtk_scrolled_window_get_hadjustment(myScrollArea);
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(hAdjustment), "value_changed", GTK_SIGNAL_FUNC(hScrollbarMoved), this);
-	GtkAdjustment *vAdjustment = gtk_scrolled_window_get_vadjustment(myScrollArea);
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(vAdjustment), "value_changed", GTK_SIGNAL_FUNC(vScrollbarMoved), this);
-	gtk_container_add(GTK_CONTAINER(myScrollArea), myArea);
-	//gtk_scrolled_window_add_with_viewport(myScrollArea, myArea);
-	gtk_scrolled_window_set_policy(myScrollArea, GTK_POLICY_NEVER, GTK_POLICY_NEVER);
+	myTable = GTK_TABLE(gtk_table_new(3, 3, false));
+	gtk_table_attach(myTable, myArea, 1, 2, 1, 2, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0);
+	gtk_widget_show(GTK_WIDGET(myTable));
+	gtk_widget_show(myArea);
+
+	myVerticalAdjustment = GTK_ADJUSTMENT(gtk_adjustment_new(100, 0, 100, 1, 1, 1));
+	myShowScrollBarAtRight = true;
+	myVerticalScrollbarIsVisible = false;
+
+	myLeftScrollBar = gtk_vscrollbar_new(myVerticalAdjustment);
+	gtk_table_attach(myTable, myLeftScrollBar, 0, 1, 1, 2, GTK_FILL, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myLeftScrollBar), "change_value", GTK_SIGNAL_FUNC(vScrollbarEvent), this);
+	gtk_widget_hide(myLeftScrollBar);
+
+	myRightScrollBar = gtk_vscrollbar_new(myVerticalAdjustment);
+	gtk_table_attach(myTable, myRightScrollBar, 2, 3, 1, 2, GTK_FILL, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myRightScrollBar), "change_value", GTK_SIGNAL_FUNC(vScrollbarEvent), this);
+	gtk_widget_hide(myRightScrollBar);
+
+	myHorizontalAdjustment = GTK_ADJUSTMENT(gtk_adjustment_new(100, 0, 100, 1, 1, 1));
+	myShowScrollBarAtBottom = true;
+	myHorizontalScrollbarIsVisible = false;
+
+	myTopScrollBar = gtk_hscrollbar_new(myHorizontalAdjustment);
+	gtk_table_attach(myTable, myTopScrollBar, 1, 2, 0, 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 0, 0);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myTopScrollBar), "change_value", GTK_SIGNAL_FUNC(hScrollbarEvent), this);
+	gtk_widget_hide(myTopScrollBar);
+
+	myBottomScrollBar = gtk_hscrollbar_new(myHorizontalAdjustment);
+	gtk_table_attach(myTable, myBottomScrollBar, 1, 2, 2, 3, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 0, 0);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myBottomScrollBar), "change_value", GTK_SIGNAL_FUNC(hScrollbarEvent), this);
+	gtk_widget_hide(myBottomScrollBar);
 
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK);
@@ -182,58 +226,64 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initi
 }
 
 void ZLGtkViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
-	GtkPolicyType hPolicy;
-	GtkPolicyType vPolicy;
-	gtk_scrolled_window_get_policy(myScrollArea, &hPolicy, &vPolicy);
+	GtkWidget *scrollbar = (direction == ZLView::VERTICAL) ?
+		(myShowScrollBarAtRight ? myRightScrollBar : myLeftScrollBar) :
+		(myShowScrollBarAtBottom ? myBottomScrollBar : myTopScrollBar);
+
 	if (direction == ZLView::VERTICAL) {
-		vPolicy = enabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER;
+		myVerticalScrollbarIsVisible = enabled;
 	} else {
-		hPolicy = enabled ? GTK_POLICY_ALWAYS : GTK_POLICY_NEVER;
+		myHorizontalScrollbarIsVisible = enabled;
 	}
-	gtk_scrolled_window_set_policy(myScrollArea, hPolicy, vPolicy);
-	if (direction == ZLView::VERTICAL) {
-		gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(myScrollArea));
+
+	if (enabled) {
+		gtk_widget_show(scrollbar);
+		gtk_widget_queue_draw(scrollbar);
 	} else {
-		gtk_widget_queue_draw(gtk_scrolled_window_get_hscrollbar(myScrollArea));
+		gtk_widget_hide(scrollbar);
 	}
 }
 
 void ZLGtkViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool standard) {
-	if (direction == ZLView::VERTICAL) {
-		myVerticalScrollbarPlacementIsStandard = standard;
-	} else {
-		myHorizontalScrollbarPlacementIsStandard = standard;
+	if ((rotation() == ZLView::DEGREES90) || (rotation() == ZLView::DEGREES270)) {
+		if (ZLLanguageUtil::isRTLLanguage(ZLibrary::Language())) {
+			standard = !standard;
+		}
 	}
 
-	GtkCornerType cornerType = GTK_CORNER_TOP_LEFT;
-	if (!myVerticalScrollbarPlacementIsStandard) {
-  	cornerType = myHorizontalScrollbarPlacementIsStandard ?
-			GTK_CORNER_TOP_RIGHT :
-  		GTK_CORNER_BOTTOM_RIGHT;
-	} else if (!myHorizontalScrollbarPlacementIsStandard) {
-  	cornerType = GTK_CORNER_BOTTOM_LEFT;
+	if (direction == ZLView::VERTICAL) {
+		if (myVerticalScrollbarIsVisible) {
+			gtk_widget_hide(myShowScrollBarAtRight ? myRightScrollBar : myLeftScrollBar);
+		}
+		myShowScrollBarAtRight = standard;
+		if (myVerticalScrollbarIsVisible) {
+			gtk_widget_show(myShowScrollBarAtRight ? myRightScrollBar : myLeftScrollBar);
+		}
+	} else {
+		if (myHorizontalScrollbarIsVisible) {
+			gtk_widget_hide(myShowScrollBarAtBottom ? myBottomScrollBar : myTopScrollBar);
+		}
+		myShowScrollBarAtBottom = standard;
+		if (myHorizontalScrollbarIsVisible) {
+			gtk_widget_show(myShowScrollBarAtBottom ? myBottomScrollBar : myTopScrollBar);
+		}
 	}
-	gtk_scrolled_window_set_placement(myScrollArea, cornerType);
 }
 
-void ZLGtkViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step) {
+void ZLGtkViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to) {
 	GtkAdjustment *adjustment =
-		(direction == ZLView::VERTICAL) ?
-			gtk_scrolled_window_get_vadjustment(myScrollArea) :
-			gtk_scrolled_window_get_hadjustment(myScrollArea);
+		(direction == ZLView::VERTICAL) ? myVerticalAdjustment : myHorizontalAdjustment;
 	adjustment->lower = 0;
 	adjustment->upper = full;
 	adjustment->value = from;
-	adjustment->step_increment = step;
-	adjustment->page_increment = step;
+	adjustment->step_increment = to - from;
+	adjustment->page_increment = to - from;
 	adjustment->page_size = to - from;
-	if (direction == ZLView::VERTICAL) {
-		gtk_scrolled_window_set_vadjustment(myScrollArea, adjustment);
-		gtk_widget_queue_draw(gtk_scrolled_window_get_vscrollbar(myScrollArea));
-	} else {
-		gtk_scrolled_window_set_hadjustment(myScrollArea, adjustment);
-		gtk_widget_queue_draw(gtk_scrolled_window_get_hscrollbar(myScrollArea));
-	}
+
+	GtkWidget *scrollbar = (direction == ZLView::VERTICAL) ?
+		(myShowScrollBarAtRight ? myRightScrollBar : myLeftScrollBar) :
+		(myShowScrollBarAtBottom ? myBottomScrollBar : myTopScrollBar);
+	gtk_widget_queue_draw(scrollbar);
 }
 
 ZLGtkViewWidget::~ZLGtkViewWidget() {
@@ -326,5 +376,5 @@ GtkWidget *ZLGtkViewWidget::area() {
 }
 
 GtkWidget *ZLGtkViewWidget::areaWithScrollbars() {
-	return GTK_WIDGET(myScrollArea);
+	return GTK_WIDGET(myTable);
 }

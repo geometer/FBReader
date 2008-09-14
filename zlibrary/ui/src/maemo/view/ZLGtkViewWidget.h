@@ -54,7 +54,7 @@ private:
 
 	void setScrollbarEnabled(ZLView::Direction direction, bool enabled);
 	void setScrollbarPlacement(ZLView::Direction direction, bool standard);
-	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to, size_t step);
+	void setScrollbarParameters(ZLView::Direction direction, size_t full, size_t from, size_t to);
 
 	void cleanOriginalPixbuf();
 	void cleanRotatedPixbuf();
@@ -64,13 +64,22 @@ private:
 private:
 	ZLApplication *myApplication;
 	GtkWidget *myArea;
-	GtkScrolledWindow *myScrollArea;
+	GtkTable *myTable;
 	GdkPixbuf *myOriginalPixbuf;
 	GdkPixbuf *myRotatedPixbuf;
 	GdkImage *myImage;
 
-	bool myVerticalScrollbarPlacementIsStandard;
-	bool myHorizontalScrollbarPlacementIsStandard;
+	GtkAdjustment *myVerticalAdjustment;
+	GtkWidget *myRightScrollBar;
+	GtkWidget *myLeftScrollBar;
+	bool myShowScrollBarAtRight;
+	bool myVerticalScrollbarIsVisible;
+
+	GtkAdjustment *myHorizontalAdjustment;
+	GtkWidget *myBottomScrollBar;
+	GtkWidget *myTopScrollBar;
+	bool myShowScrollBarAtBottom;
+	bool myHorizontalScrollbarIsVisible;
 
 	ZLMaemoSpecificOptions *mySpecificOptions;
 };

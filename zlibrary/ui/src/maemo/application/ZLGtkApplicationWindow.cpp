@@ -334,7 +334,7 @@ ZLViewWidget *ZLGtkApplicationWindow::createViewWidget() {
 	ZLGtkSignalUtil::connectSignal(areaObject, "button_press_event", GTK_SIGNAL_FUNC(mousePressed), myViewWidget);
 	ZLGtkSignalUtil::connectSignal(areaObject, "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), myViewWidget);
 	ZLGtkSignalUtil::connectSignal(areaObject, "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), myViewWidget);
-	gtk_widget_show_all(GTK_WIDGET(myWindow));
+	gtk_widget_show(GTK_WIDGET(myWindow));
 
 	ZLGtkOptionsDialog::addMaemoBuilder(this);
 
