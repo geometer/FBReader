@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <string.h>
+
 #include <ZLXMLReader.h>
 #include <ZLUnicodeUtil.h>
 
