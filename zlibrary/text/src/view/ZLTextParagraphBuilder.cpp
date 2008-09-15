@@ -129,7 +129,7 @@ void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 		while (ZLUnicodeUtil::isSpace(myUcs4String[lastNonSpace])) {
 			--lastNonSpace;
 		}
-		fribidi_log2vis(&myUcs4String[firstNonSpace], lastNonSpace - firstNonSpace + 1, &myBidiCharType, 0, 0, 0, &myBidiLevels[firstNonSpace]);
+		fribidi_log2vis((FriBidiChar*)&myUcs4String[firstNonSpace], lastNonSpace - firstNonSpace + 1, &myBidiCharType, 0, 0, 0, &myBidiLevels[firstNonSpace]);
 	}
 	myLatestBidiLevel = myBidiLevels[lastNonSpace];
 	for (int i = lastNonSpace; i < len; ++i) {

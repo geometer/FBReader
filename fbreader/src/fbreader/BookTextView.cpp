@@ -259,11 +259,11 @@ bool BookTextView::onStylusRelease(int x, int y) {
 	}
 
 	const int deltaX = x - myPressedX;
-	if ((deltaX > 5) or (deltaX < -5)) {
+	if ((deltaX > 5) || (deltaX < -5)) {
 		return false;
 	}
 	const int deltaY = y - myPressedY;
-	if ((deltaY > 5) or (deltaY < -5)) {
+	if ((deltaY > 5) || (deltaY < -5)) {
 		return false;
 	}
 

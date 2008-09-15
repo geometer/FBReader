@@ -18,6 +18,7 @@
  */
 
 #include <stdlib.h>
+#include <string.h>
 #include <algorithm>
 
 #include "HtmlReaderStream.h"
