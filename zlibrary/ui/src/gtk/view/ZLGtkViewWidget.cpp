@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <gtk/gtkwindow.h>
 
 #include <ZLibrary.h>
@@ -108,11 +110,12 @@ static bool scrollbarEvent(ZLView::Direction direction, GtkRange *range, GtkScro
   	case GTK_SCROLL_JUMP:
 		{
 			GtkAdjustment *adjustment = gtk_range_get_adjustment(range);
+			const int upper = (int)adjustment->upper;
 			data->onScrollbarMoved(
 				direction,
-				(size_t)adjustment->upper,
-				(size_t)newValue,
-				(size_t)(newValue + adjustment->page_size)
+				upper,
+				std::max(std::min((int)newValue, upper), 0),
+				std::max(std::min((int)(newValue + adjustment->page_size), upper), 0)
 			);
 			return false;
 		}
