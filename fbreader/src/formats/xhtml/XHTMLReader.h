@@ -41,7 +41,8 @@ public:
 
 protected:
 	static BookReader &bookReader(XHTMLReader &reader);	
-	const std::string &pathPrefix(XHTMLReader &reader);	
+	static const std::string &pathPrefix(XHTMLReader &reader);	
+	static void beginParagraph(XHTMLReader &reader);
 };
 
 class XHTMLReader : public ZLXMLReader {
@@ -65,6 +66,8 @@ private:
 
 	const std::vector<std::string> &externalDTDs() const;
 
+	void beginParagraph();
+
 private:
 	BookReader &myModelReader;
 	std::string myPathPrefix;
@@ -73,6 +76,7 @@ private:
 	bool myNewParagraphInProgress;
 	StyleSheetTable myStyleSheetTable;
 	std::vector<int> myCSSStack;
+	std::vector<const ZLTextStyleEntry*> myStyleEntryStack;
 	std::vector<bool> myDoPageBreakAfterStack;
 
 	friend class XHTMLTagAction;
@@ -80,6 +84,7 @@ private:
 	friend class XHTMLTagHyperlinkAction;
 	friend class XHTMLTagPreAction;
 	friend class XHTMLTagParagraphAction;
+	friend class XHTMLTagRestartParagraphAction;
 };
 
 #endif /* __XHTMLREADER_H__ */

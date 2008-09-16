@@ -99,6 +99,7 @@ bool ZLZipInputStream::open() {
 		return false;
 	}
 	myBaseStream->seek(info.Offset, true);
+	myBaseOffset = myBaseStream->offset();
 
 	if (info.CompressionMethod == 0) {
 		myIsDeflated = false;
@@ -123,16 +124,18 @@ bool ZLZipInputStream::open() {
 }
 
 size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
+	size_t realSize = 0;
+	myBaseStream->seek(myBaseOffset, true);
 	if (myIsDeflated) {
-		size_t realSize = myDecompressor->decompress(*myBaseStream, buffer, maxSize);
+		realSize = myDecompressor->decompress(*myBaseStream, buffer, maxSize);
 		myOffset += realSize;
-		return realSize;
 	} else {
-		size_t realSize = std::min(maxSize, myAvailableSize);
+		realSize = myBaseStream->read(buffer, std::min(maxSize, myAvailableSize));
 		myAvailableSize -= realSize;
 		myOffset += realSize;
-		return myBaseStream->read(buffer, realSize);
 	}
+	myBaseOffset = myBaseStream->offset();
+	return realSize;
 }
 
 void ZLZipInputStream::close() {

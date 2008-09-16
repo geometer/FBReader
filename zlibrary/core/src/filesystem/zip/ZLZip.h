@@ -47,6 +47,7 @@ public:
 
 private:
 	shared_ptr<ZLInputStream> myBaseStream;
+	size_t myBaseOffset;
 	std::string myEntryName;
 	bool myIsDeflated;
 

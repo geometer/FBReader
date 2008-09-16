@@ -46,6 +46,10 @@ const std::string &XHTMLTagAction::pathPrefix(XHTMLReader &reader) {
 	return reader.myPathPrefix;
 }
 
+void XHTMLTagAction::beginParagraph(XHTMLReader &reader) {
+	reader.beginParagraph();
+}
+
 class XHTMLTagLinkAction : public XHTMLTagAction {
 
 public:
@@ -159,7 +163,7 @@ void XHTMLTagLinkAction::doAtEnd(XHTMLReader&) {
 
 void XHTMLTagParagraphAction::doAtStart(XHTMLReader &reader, const char**) {
 	if (!reader.myNewParagraphInProgress) {
-		bookReader(reader).beginParagraph();
+		beginParagraph(reader);
 		reader.myNewParagraphInProgress = true;
 	}
 }
@@ -169,8 +173,19 @@ void XHTMLTagParagraphAction::doAtEnd(XHTMLReader &reader) {
 }
 
 void XHTMLTagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char**) {
+	static ZLTextStyleEntry startEntry;
+	static ZLTextStyleEntry endEntry;
+	if (startEntry.isEmpty()) {
+		startEntry.setLength(ZLTextStyleEntry::LENGTH_SPACE_BEFORE, 0, ZLTextStyleEntry::SIZE_UNIT_PIXEL);
+		endEntry.setLength(ZLTextStyleEntry::LENGTH_SPACE_AFTER, 0, ZLTextStyleEntry::SIZE_UNIT_PIXEL);
+	}
+	bookReader(reader).addControl(endEntry);
 	bookReader(reader).endParagraph();
-	bookReader(reader).beginParagraph();
+	if (!reader.myCSSStack.empty()) {
+		++reader.myCSSStack.back();
+		reader.myStyleEntryStack.push_back(&startEntry);
+	}
+	beginParagraph(reader);
 }
 
 void XHTMLTagRestartParagraphAction::doAtEnd(XHTMLReader&) {
@@ -179,7 +194,7 @@ void XHTMLTagRestartParagraphAction::doAtEnd(XHTMLReader&) {
 void XHTMLTagItemAction::doAtStart(XHTMLReader &reader, const char**) {
 	bookReader(reader).endParagraph();
 	// TODO: increase left indent
-	bookReader(reader).beginParagraph();
+	beginParagraph(reader);
 	// TODO: replace bullet sign by number inside OL tag
 	const std::string bullet = "\xE2\x80\xA2\xC0\xA0";
 	bookReader(reader).addData(bullet);
@@ -206,7 +221,7 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 		bookReader(reader).addImageReference(fullfileName);
 		bookReader(reader).addImage(fullfileName, new ZLFileImage("image/auto", fullfileName, 0));
 		if (flag) {
-			bookReader(reader).beginParagraph();
+			beginParagraph(reader);
 		}
 	}
 }
@@ -259,7 +274,7 @@ void XHTMLTagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const ch
 		bookReader(reader).insertEndOfSectionParagraph();
 	}
 	bookReader(reader).pushKind(myControl);
-	bookReader(reader).beginParagraph();
+	beginParagraph(reader);
 }
 
 void XHTMLTagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
@@ -269,7 +284,7 @@ void XHTMLTagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
 
 void XHTMLTagPreAction::doAtStart(XHTMLReader &reader, const char**) {
 	reader.myPreformatted = true;
-	bookReader(reader).beginParagraph();
+	beginParagraph(reader);
 	bookReader(reader).addControl(CODE, true);
 }
 
@@ -418,6 +433,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 		if (!entry.isEmpty()) {
 			++count;
 			myModelReader.addControl(entry);
+			myStyleEntryStack.push_back(&entry);
 		}
 	}
 	{
@@ -425,6 +441,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 		if (!entry.isEmpty()) {
 			++count;
 			myModelReader.addControl(entry);
+			myStyleEntryStack.push_back(&entry);
 		}
 	}
 	{
@@ -432,6 +449,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 		if (!entry.isEmpty()) {
 			++count;
 			myModelReader.addControl(entry);
+			myStyleEntryStack.push_back(&entry);
 		}
 	}
 	myCSSStack.push_back(count);
@@ -440,6 +458,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 void XHTMLReader::endElementHandler(const char *tag) {
 	for (int i = myCSSStack.back(); i > 0; --i) {
 		myModelReader.addControl(REGULAR, false);
+		myStyleEntryStack.pop_back();
 	}
 	myCSSStack.pop_back();
 	XHTMLTagAction *action = ourTagActions[ZLUnicodeUtil::toLower(tag)];
@@ -453,12 +472,19 @@ void XHTMLReader::endElementHandler(const char *tag) {
 	myDoPageBreakAfterStack.pop_back();
 }
 
+void XHTMLReader::beginParagraph() {
+	myModelReader.beginParagraph();
+	for (std::vector<const ZLTextStyleEntry*>::const_iterator it = myStyleEntryStack.begin(); it != myStyleEntryStack.end(); ++it) {
+		myModelReader.addControl(**it);
+	}
+}
+
 void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 	if (myPreformatted) {
 		if ((*text == '\r') || (*text == '\n')) {
 			myModelReader.addControl(CODE, false);
 			myModelReader.endParagraph();
-			myModelReader.beginParagraph();
+			beginParagraph();
 			myModelReader.addControl(CODE, true);
 		}
 		size_t spaceCounter = 0;
