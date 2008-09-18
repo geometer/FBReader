@@ -221,7 +221,6 @@ void ScrollingAction::run() {
 				break;
 		}
 		((FBView&)*view).scrollAndUpdatePage(myForward, oType, oValue);
-		fbreader().refreshWindow();
 		fbreader().myLastScrollingTime = ZLTime();
 	}
 }
