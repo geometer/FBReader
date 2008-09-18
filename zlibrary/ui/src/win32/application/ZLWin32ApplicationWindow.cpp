@@ -22,6 +22,7 @@
 #define RBN_CHEVRONPUSHED (RBN_FIRST - 10)
 
 #include <ZLibrary.h>
+#include <ZLLanguageUtil.h>
 #include <ZLFile.h>
 #include <ZLOptionEntry.h>
 #include <ZLDialog.h>
@@ -256,7 +257,8 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 
 void ZLWin32ApplicationWindow::init() {
 	const WCHAR *aName = ::wchar(myClassName);
-	CreateWindow(aName, aName, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
+	const DWORD layoutStyle = ZLLanguageUtil::isRTLLanguage(ZLibrary::Language()) ? WS_EX_LAYOUTRTL : 0;
+	CreateWindowEx(layoutStyle, aName, aName, WS_OVERLAPPEDWINDOW | WS_CLIPCHILDREN, myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value(), (HWND)0, (HMENU)0, GetModuleHandle(0), 0);
 
 	// TODO: Hmm, replace SW_SHOWDEFAULT by nCmdShow?
 	ShowWindow(myMainWindow, SW_SHOWDEFAULT);

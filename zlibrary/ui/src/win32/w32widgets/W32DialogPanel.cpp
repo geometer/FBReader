@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
+#include <ZLLanguageUtil.h>
 #include <ZLUnicodeUtil.h>
 
 #include "W32DialogPanel.h"
@@ -96,11 +98,13 @@ DLGTEMPLATE *W32DialogPanel::dialogTemplate() {
 	size += size % 2;
 	myAddress = new WORD[size];
 
+	static const DWORD extendedStyle = ZLLanguageUtil::isRTLLanguage(ZLibrary::Language()) ? WS_EX_LAYOUTRTL : 0;
+
 	WORD *p = myAddress;
 	*p++ = LOWORD(style());
 	*p++ = HIWORD(style());
-	*p++ = 0;
-	*p++ = 0;
+	*p++ = LOWORD(extendedStyle);
+	*p++ = HIWORD(extendedStyle);
 	*p++ = myElement->controlNumber();
 	*p++ = 0; // X
 	*p++ = 0; // Y

@@ -20,6 +20,8 @@
 #include <windows.h>
 #include <prsht.h>
 
+#include <ZLibrary.h>
+#include <ZLLanguageUtil.h>
 #include <ZLDialogManager.h>
 
 #include "W32DialogPanel.h"
@@ -94,6 +96,10 @@ bool W32PropertySheet::run(const std::string &selectedTabName) {
 int CALLBACK W32PropertySheet::PSCallback(HWND hDialog, UINT message, LPARAM lParam) {
 	if (message == PSCB_INITIALIZED) {
 		SendMessage(hDialog, PSM_CHANGED, 0, 0);
+		if (ZLLanguageUtil::isRTLLanguage(ZLibrary::Language())) {
+			int exStyle = GetWindowLong(hDialog, GWL_EXSTYLE);
+			SetWindowLong(hDialog, GWL_EXSTYLE, exStyle | WS_EX_LAYOUTRTL);
+		}
 	}
 	return 0;
 }
