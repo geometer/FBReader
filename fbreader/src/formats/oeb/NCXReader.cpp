@@ -21,7 +21,7 @@
 
 #include "NCXReader.h"
 
-NCXReader::NCXReader(BookReader &modelReader) : myModelReader(modelReader), myReadState(READ_NONE) {
+NCXReader::NCXReader(BookReader &modelReader) : myModelReader(modelReader), myReadState(READ_NONE), myPlayIndex(-65535) {
 }
 
 static const std::string TAG_NAVMAP = "navMap";
@@ -40,14 +40,14 @@ void NCXReader::startElementHandler(const char *tag, const char **attributes) {
 		case READ_MAP:
 			if (TAG_NAVPOINT == tag) {
 				const char *order = attributeValue(attributes, "playOrder");
-				myPointStack.push_back(NavPoint((order != 0) ? atoi(order) : -1, myPointStack.size()));
+				myPointStack.push_back(NavPoint((order != 0) ? atoi(order) : myPlayIndex++, myPointStack.size()));
 				myReadState = READ_POINT;
 			}
 			break;
 		case READ_POINT:
 			if (TAG_NAVPOINT == tag) {
 				const char *order = attributeValue(attributes, "playOrder");
-				myPointStack.push_back(NavPoint((order != 0) ? atoi(order) : -1, myPointStack.size()));
+				myPointStack.push_back(NavPoint((order != 0) ? atoi(order) : myPlayIndex++, myPointStack.size()));
 			} if (TAG_NAVLABEL == tag) {
 				myReadState = READ_LABEL;
 			} else if (TAG_CONTENT == tag) {

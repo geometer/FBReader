@@ -61,6 +61,8 @@ private:
 
 	void createWindowToolbar();
 	void createFloatingToolbar();
+	void destroyFloatingToolbar();
+	void registerFloatingToolbarClass();
 
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
@@ -86,10 +88,6 @@ private:
 
 public:
 	void onToolbarButtonRelease(int index);
-/*
-	void handleKeyEventSlot(GdkEventKey *event);
-	void handleScrollEventSlot(GdkEventScroll *event);
-*/
 
 private:
 	class TextEditParameter : public VisualParameter {
@@ -110,6 +108,10 @@ private:
 	ZLUnicodeUtil::Ucs2String myClassName;
 
 	struct Toolbar {
+		Toolbar() : hwnd(0) {
+		}
+		void clear();
+
 		HWND hwnd;
 		std::map<ZLToolbar::ItemPtr,int> SeparatorNumbers;
 		std::map<std::string,int> ActionCodeById;
@@ -123,10 +125,12 @@ private:
 	Toolbar myWindowToolbar;
 	HWND myDockWindow;
 	Toolbar myFullscreenToolbar;
+	bool myFloatingToolbarClassRegistered;
 	Toolbar &toolbar(ToolbarType type) {
 		return (type == WINDOW_TOOLBAR) ? myWindowToolbar : myFullscreenToolbar;
 	}
 	REBARBANDINFO myToolbarInfo;
+	std::vector<ZLToolbar::ItemPtr> myFloatingToolbarItems;
 
 	std::map<int,HWND> myTextFields;
 

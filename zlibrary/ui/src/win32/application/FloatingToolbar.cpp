@@ -42,8 +42,8 @@ static LRESULT CALLBACK DockProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	}
 }
 
-void ZLWin32ApplicationWindow::createFloatingToolbar() {
-	if (!hasFullscreenToolbar()) {
+void ZLWin32ApplicationWindow::registerFloatingToolbarClass() {
+	if (myFloatingToolbarClassRegistered) {
 		return;
 	}
 
@@ -58,15 +58,38 @@ void ZLWin32ApplicationWindow::createFloatingToolbar() {
 	dockc.hCursor = LoadCursor(0, IDC_ARROW);
 	dockc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	dockc.lpszMenuName = 0;
-	dockc.lpszClassName = L"DockWnd";
+	dockc.lpszClassName = L"FloatingToolbar";
 	dockc.hIconSm = 0;
 	RegisterClassEx(&dockc);
 
-	myDockWindow = CreateWindowEx(WS_EX_TOOLWINDOW, L"DockWnd", 0, WS_CAPTION | WS_SYSMENU | WS_POPUP | WS_CLIPCHILDREN, 200, 200, 400, 164, myMainWindow, 0, GetModuleHandle(0), 0);
+	myFloatingToolbarClassRegistered = true;
+}
+
+void ZLWin32ApplicationWindow::createFloatingToolbar() {
+	if (!hasFullscreenToolbar()) {
+		return;
+	}
+
+	registerFloatingToolbarClass();
+
+	myDockWindow = CreateWindowEx(WS_EX_TOOLWINDOW, L"FloatingToolbar", 0, WS_CAPTION | WS_SYSMENU | WS_POPUP | WS_CLIPCHILDREN, 200, 200, 400, 164, myMainWindow, 0, GetModuleHandle(0), 0);
   myFullscreenToolbar.hwnd = CreateWindowEx(0, TOOLBARCLASSNAME, 0, WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | CCS_NODIVIDER | TBSTYLE_FLAT | TBSTYLE_TOOLTIPS | BTNS_AUTOSIZE, 0, 0, 0, 0, myDockWindow, (HMENU)1, GetModuleHandle(0), 0);
 	SendMessage(myFullscreenToolbar.hwnd, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
 	SendMessage(myFullscreenToolbar.hwnd, TB_SETBITMAPSIZE, 0, MAKELONG(IconSize, IconSize));
 	SendMessage(myFullscreenToolbar.hwnd, TB_SETIMAGELIST, 0, (LPARAM)ImageList_Create(IconSize, IconSize, ILC_COLOR32 | ILC_MASK, 0, 100));
+
+	for (std::vector<ZLToolbar::ItemPtr>::const_iterator it = myFloatingToolbarItems.begin(); it != myFloatingToolbarItems.end(); ++it) {
+		addToolbarItem(*it);
+	}
+}
+
+void ZLWin32ApplicationWindow::destroyFloatingToolbar() {
+	if (myDockWindow != 0) {
+		ShowWindow(myDockWindow, SW_HIDE);
+		myFullscreenToolbar.clear();
+		DestroyWindow(myDockWindow);
+		myDockWindow = 0;
+	}
 }
 
 void ZLWin32ApplicationWindow::updateFullscreenToolbarSize() {

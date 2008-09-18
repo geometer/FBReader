@@ -72,6 +72,8 @@ public:
 	static FBIndicatorStyle& commonIndicatorInfo();
 	static ZLBooleanOption &selectionOption();
 
+	void scrollAndUpdatePage(bool forward, ScrollingMode mode, unsigned int value);
+
 private:
 	static shared_ptr<ZLTextPositionIndicatorInfo> ourIndicatorInfo;
 	static shared_ptr<FBMargins> ourMargins;

@@ -197,3 +197,9 @@ ZLBooleanOption &FBView::selectionOption() {
 bool FBView::isSelectionEnabled() const {
 	return selectionOption().value();
 }
+
+void FBView::scrollAndUpdatePage(bool forward, ScrollingMode mode, unsigned int value) {
+	scrollPage(forward, mode, value);
+	preparePaintInfo();
+	fbreader().refreshWindow();
+}

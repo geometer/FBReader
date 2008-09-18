@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <QtGui/QLayout>
 #include <QtGui/QScrollBar>
 #include <QtGui/QPainter>
@@ -29,12 +31,35 @@
 #include "ZLQtViewWidget.h"
 #include "ZLQtPaintContext.h"
 
+class MyQScrollBar : public QScrollBar {
+
+public:
+	MyQScrollBar(Qt::Orientation orientation, QWidget *parent) : QScrollBar(orientation, parent) {
+	}
+
+private:
+	void mouseMoveEvent(QMouseEvent *event) {
+		if (orientation() == Qt::Vertical) {
+			const int y = event->y();
+			if ((y <= 0) || (y >= height())) {
+				return;
+			}
+		} else {
+			const int x = event->x();
+			if ((x <= 0) || (x >= width())) {
+				return;
+			}
+		}
+		QScrollBar::mouseMoveEvent(event);
+	}
+};
+
 ZLQtViewWidget::Widget::Widget(QWidget *parent, ZLQtViewWidget &holder) : QWidget(parent), myHolder(holder) {
 	//setBackgroundMode(NoBackground);
 }
 
 QScrollBar *ZLQtViewWidget::addScrollBar(QGridLayout *layout, Qt::Orientation orientation, int x, int y) {
-	QScrollBar *scrollBar = new QScrollBar(orientation, myFrame);
+	QScrollBar *scrollBar = new MyQScrollBar(orientation, myFrame);
 	layout->addWidget(scrollBar, x, y);
 	scrollBar->hide();
 	if (orientation == Qt::Vertical) {
@@ -210,26 +235,28 @@ void ZLQtViewWidget::setScrollbarParameters(ZLView::Direction direction, size_t 
 void ZLQtViewWidget::onVerticalSliderMoved(int value) {
 	QScrollBar *bar =
 		myShowScrollBarAtRight ? myRightScrollBar : myLeftScrollBar;
-	size_t maxValue = bar->maximum();
-	size_t pageStep = bar->pageStep();
+	int maxValue = bar->maximum();
+	int pageStep = bar->pageStep();
+	value = std::max(std::min(value, maxValue), 0);
 	onScrollbarMoved(
 		ZLView::VERTICAL,
 		maxValue + pageStep,
-		(size_t)value,
-		(size_t)value + pageStep
+		value,
+		value + pageStep
 	);
 }
 
 void ZLQtViewWidget::onHorizontalSliderMoved(int value) {
 	QScrollBar *bar =
 		myShowScrollBarAtBottom ? myBottomScrollBar : myTopScrollBar;
-	size_t maxValue = bar->maximum();
-	size_t pageStep = bar->pageStep();
+	int maxValue = bar->maximum();
+	int pageStep = bar->pageStep();
+	value = std::max(std::min(value, maxValue), 0);
 	onScrollbarMoved(
 		ZLView::HORIZONTAL,
 		maxValue + pageStep,
-		(size_t)value,
-		(size_t)value + pageStep
+		value,
+		value + pageStep
 	);
 }
 

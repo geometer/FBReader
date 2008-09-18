@@ -220,7 +220,7 @@ void ScrollingAction::run() {
 			default:
 				break;
 		}
-		((ZLTextView&)*view).scrollPage(myForward, oType, oValue);
+		((FBView&)*view).scrollAndUpdatePage(myForward, oType, oValue);
 		fbreader().refreshWindow();
 		fbreader().myLastScrollingTime = ZLTime();
 	}

@@ -61,6 +61,8 @@ private:
 		READ_LABEL,
 		READ_TEXT
 	} myReadState;
+
+	int myPlayIndex;
 };
 
 #endif /* __NCXREADER_H__ */

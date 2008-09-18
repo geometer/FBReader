@@ -152,6 +152,9 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 
 void ZLWin32ApplicationWindow::setTooltip(TOOLTIPTEXT &tooltip) {
 	Toolbar &tb = toolbar(isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR);
+	if (tb.hwnd == 0) {
+		return;
+	}
 	ZLToolbar::ItemPtr item = tb.TBItemByActionCode[tooltip.hdr.idFrom];
 	if (!item.isNull()) {
 		const ZLToolbar::AbstractButtonItem &button =
@@ -166,6 +169,9 @@ void ZLWin32ApplicationWindow::setTooltip(TOOLTIPTEXT &tooltip) {
 
 void ZLWin32ApplicationWindow::runPopup(const NMTOOLBAR &nmToolbar) {
 	Toolbar &tb = toolbar(isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR);
+	if (tb.hwnd == 0) {
+		return;
+	}
 	ZLToolbar::ItemPtr item = tb.TBItemByActionCode[nmToolbar.iItem];
 	if (!item.isNull()) {
 		const ZLToolbar::MenuButtonItem &button =
@@ -208,6 +214,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	myMainWindow(0),
 	myRebar(0),
 	myDockWindow(0),
+	myFloatingToolbarClassRegistered(false),
 	myBlockMouseEvents(false),
 	myKeyboardModifierMask(0),
 	myFullScreen(false),
@@ -280,12 +287,18 @@ ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
 
 void ZLWin32ApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
 	Toolbar &tb = toolbar(type(button));
+	if (tb.hwnd == 0) {
+		return;
+	}
 
 	PostMessage(tb.hwnd, TB_CHECKBUTTON, tb.ActionCodeById[button.actionId()], button.isPressed());
 }
 
 void ZLWin32ApplicationWindow::onToolbarButtonRelease(int actionCode) {
 	Toolbar &tb = toolbar(isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR);
+	if (tb.hwnd == 0) {
+		return;
+	}
 	std::map<int,ZLToolbar::ItemPtr>::const_iterator it = tb.TBItemByActionCode.find(actionCode);
 	if ((it == tb.TBItemByActionCode.end()) || it->second.isNull()) {
 		return;
@@ -320,6 +333,7 @@ void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 		SetWindowPos(myMainWindow, HWND_TOP, 0, 0, cx, cy, SWP_SHOWWINDOW);
 		ShowWindow(myMainWindow, SW_SHOWMAXIMIZED);
 		ShowWindow(myRebar, SW_HIDE);
+		createFloatingToolbar();
 		if (myDockWindow != 0) {
 			ShowWindow(myDockWindow, SW_SHOWDEFAULT);
 			updateFullscreenToolbarSize();
@@ -330,9 +344,7 @@ void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 		ShowWindow(myMainWindow, SW_SHOWNORMAL);
 		SetWindowPlacement(myMainWindow, &mainPlacement);
 		SetWindowPlacement(myRebar, &toolbarPlacement);
-		if (myDockWindow != 0) {
-			ShowWindow(myDockWindow, SW_HIDE);
-		}
+		destroyFloatingToolbar();
 	}
 	refresh();
 }
@@ -361,10 +373,13 @@ private:
 void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	if (myRebar == 0) {
 		createWindowToolbar();
-		createFloatingToolbar();
 	}
 
 	Toolbar &tb = toolbar(type(*item));
+	if (tb.hwnd == 0) {
+		myFloatingToolbarItems.push_back(item);
+		return;
+	}
 
 	TBBUTTON button;
 	button.fsState = TBSTATE_ENABLED;
@@ -473,6 +488,9 @@ void ZLWin32ApplicationWindow::updateTextFields() {
 
 void ZLWin32ApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
 	Toolbar &tb = toolbar(type(*item));
+	if (tb.hwnd == 0) {
+		return;
+	}
 
 	const ZLToolbar::Item::Type type = item->type();
 	switch (type) {
@@ -599,4 +617,17 @@ void ZLWin32ApplicationWindow::updateCursor() const {
 	if (myCursor != 0) {
 		SetCursor(myCursor);
 	}
+}
+
+void ZLWin32ApplicationWindow::Toolbar::clear() {
+	hwnd = 0;
+	SeparatorNumbers.clear();
+	ActionCodeById.clear();
+	TextFieldCodeById.clear();
+	TBItemByActionCode.clear();
+	for (std::map<HICON,HBITMAP>::const_iterator it = BitmapByIcon.begin(); it != BitmapByIcon.end(); ++it) {
+		DestroyIcon(it->first);
+		DeleteBitmap(it->second);
+	}
+	BitmapByIcon.clear();
 }
