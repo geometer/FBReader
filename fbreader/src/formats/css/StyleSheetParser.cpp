@@ -161,10 +161,19 @@ void StyleSheetParser::processWordWithoutComments(const std::string &word) {
 		{
 			int index = word.find('.');
 			if (index == -1) {
-				myTagName += word;
+				if (myTagName.empty()) {
+					myTagName = word;
+				} else {
+					myTagName += ' ' + word;
+				}
 			} else {
-				myTagName += word.substr(0, index);
-				myClassName += word.substr(index + 1);
+				if (myTagName.empty()) {
+					myTagName = word.substr(0, index);
+					myClassName = word.substr(index + 1);
+				} else {
+					myTagName += ' ' + word.substr(0, index);
+					myClassName += ' ' + word.substr(index + 1);
+				}
 			}
 			myMap.clear();
 			break;
