@@ -29,8 +29,8 @@ class StyleSheetParser {
 public:
 	StyleSheetParser(StyleSheetTable &table);
 	void reset();
-	void parse(const char *text, int len);
 	void parse(ZLInputStream &stream);
+	void parse(const char *text, int len);
 
 private:
 	bool isControlSymbol(const char symbol);

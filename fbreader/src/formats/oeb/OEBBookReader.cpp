@@ -120,6 +120,7 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 	XHTMLReader xhtmlReader(myModelReader);
 	for (std::vector<std::string>::const_iterator it = myHtmlFileNames.begin(); it != myHtmlFileNames.end(); ++it) {
 		xhtmlReader.readFile(myFilePrefix, *it, *it);
+		myModelReader.insertEndOfSectionParagraph();
 	}
 
 	generateTOC();

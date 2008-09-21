@@ -78,6 +78,7 @@ private:
 	std::vector<int> myCSSStack;
 	std::vector<const ZLTextStyleEntry*> myStyleEntryStack;
 	std::vector<bool> myDoPageBreakAfterStack;
+	bool myCurrentParagraphIsEmpty;
 
 	friend class XHTMLTagAction;
 	friend class XHTMLTagLinkAction;

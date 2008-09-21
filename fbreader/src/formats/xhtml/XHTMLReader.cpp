@@ -22,6 +22,7 @@
 #include <ZLFile.h>
 #include <ZLFileImage.h>
 #include <ZLUnicodeUtil.h>
+#include <ZLStringUtil.h>
 
 #include "XHTMLReader.h"
 #include "../util/EntityFilesCollector.h"
@@ -178,6 +179,9 @@ void XHTMLTagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char**
 	if (startEntry.isEmpty()) {
 		startEntry.setLength(ZLTextStyleEntry::LENGTH_SPACE_BEFORE, 0, ZLTextStyleEntry::SIZE_UNIT_PIXEL);
 		endEntry.setLength(ZLTextStyleEntry::LENGTH_SPACE_AFTER, 0, ZLTextStyleEntry::SIZE_UNIT_PIXEL);
+	}
+	if (reader.myCurrentParagraphIsEmpty) {
+		bookReader(reader).addData(" ");
 	}
 	bookReader(reader).addControl(endEntry);
 	bookReader(reader).endParagraph();
@@ -473,6 +477,7 @@ void XHTMLReader::endElementHandler(const char *tag) {
 }
 
 void XHTMLReader::beginParagraph() {
+	myCurrentParagraphIsEmpty = true;
 	myModelReader.beginParagraph();
 	for (std::vector<const ZLTextStyleEntry*>::const_iterator it = myStyleEntryStack.begin(); it != myStyleEntryStack.end(); ++it) {
 		myModelReader.addControl(**it);
@@ -503,6 +508,7 @@ void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 		}
 	}
 	if (len > 0) {
+		myCurrentParagraphIsEmpty = false;
 		myModelReader.addData(std::string(text, len));
 		myNewParagraphInProgress = false;
 	}

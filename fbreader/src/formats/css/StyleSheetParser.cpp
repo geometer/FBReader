@@ -139,10 +139,10 @@ void StyleSheetParser::processWordWithoutComments(const std::string &word) {
 		{
 			int index = word.find('.');
 			if (index == -1) {
-				myTagName = word;
+				myTagName += word;
 			} else {
-				myTagName = word.substr(0, index);
-				myClassName = word.substr(index + 1);
+				myTagName += word.substr(0, index);
+				myClassName += word.substr(index + 1);
 			}
 			myMap = new StyleSheetTable::AttributeMap();
 			break;
