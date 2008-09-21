@@ -121,6 +121,7 @@ int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned i
 
 int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element, const ZLTextStyleEntry::Metrics &metrics) const {
 	switch (element.kind()) {
+		case ZLTextElement::NB_HSPACE_ELEMENT:
 		case ZLTextElement::WORD_ELEMENT:
 			if (myWordHeight == -1) {
 				myWordHeight = context().stringHeight() * textStyle()->lineSpacePercent() / 100 + textStyle()->verticalShift();
@@ -138,7 +139,6 @@ int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element, const ZLT
 			return context().stringHeight();
 		case ZLTextElement::INDENT_ELEMENT:
 		case ZLTextElement::HSPACE_ELEMENT:
-		case ZLTextElement::NB_HSPACE_ELEMENT:
 		case ZLTextElement::FORCED_CONTROL_ELEMENT:
 		case ZLTextElement::CONTROL_ELEMENT:
 		case ZLTextElement::FIXED_HSPACE_ELEMENT:
