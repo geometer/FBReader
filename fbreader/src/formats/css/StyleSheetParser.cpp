@@ -18,13 +18,32 @@
  */
 
 #include <cctype>
+#include <string.h>
 
 #include <ZLStringUtil.h>
 #include <ZLInputStream.h>
 
 #include "StyleSheetParser.h"
 
-StyleSheetParser::StyleSheetParser(StyleSheetTable &table) : myTable(table), myReadState(TAG_NAME), myInsideComment(false) {
+StyleSheetTableParser::StyleSheetTableParser(StyleSheetTable &table) : myTable(table) {
+}
+
+void StyleSheetTableParser::storeData(const std::string &tagName, const std::string &className, const StyleSheetTable::AttributeMap &map) {
+	myTable.addMap(tagName, className, map);
+}
+
+shared_ptr<ZLTextStyleEntry> StyleSheetSingleStyleParser::parseString(const char *text) {
+	myReadState = ATTRIBUTE_NAME;
+	parse(text, strlen(text));
+	shared_ptr<ZLTextStyleEntry> control = StyleSheetTable::createControl(myMap);
+	reset();
+	return control;
+}
+
+StyleSheetParser::StyleSheetParser() : myReadState(TAG_NAME), myInsideComment(false) {
+}
+
+StyleSheetParser::~StyleSheetParser() {
 }
 
 void StyleSheetParser::reset() {
@@ -34,7 +53,7 @@ void StyleSheetParser::reset() {
 	myInsideComment = false;
 	myTagName.erase();
 	myClassName.erase();
-	myMap.reset();
+	myMap.clear();
 }
 
 void StyleSheetParser::parse(ZLInputStream &stream) {
@@ -90,6 +109,9 @@ bool StyleSheetParser::isControlSymbol(const char symbol) {
 	}
 }
 
+void StyleSheetParser::storeData(const std::string&, const std::string&, const StyleSheetTable::AttributeMap&) {
+}
+
 void StyleSheetParser::processControl(const char control) {
 	switch (control) {
 		case '{':
@@ -97,12 +119,12 @@ void StyleSheetParser::processControl(const char control) {
 			break;
 		case '}':
 			if (myReadState != BROKEN) {
-				myTable.addMap(myTagName, myClassName, *myMap);
+				storeData(myTagName, myClassName, myMap);
 			}
 			myReadState = TAG_NAME;
 			myTagName.erase();
 			myClassName.erase();
-			myMap.reset();
+			myMap.clear();
 			break;
 		case ';':
 			myReadState =
@@ -144,15 +166,15 @@ void StyleSheetParser::processWordWithoutComments(const std::string &word) {
 				myTagName += word.substr(0, index);
 				myClassName += word.substr(index + 1);
 			}
-			myMap = new StyleSheetTable::AttributeMap();
+			myMap.clear();
 			break;
 		}
 		case ATTRIBUTE_NAME:
 			myAttributeName = word;
-			(*myMap)[myAttributeName].clear();
+			myMap[myAttributeName].clear();
 			break;
 		case ATTRIBUTE_VALUE:
-			(*myMap)[myAttributeName].push_back(word);
+			myMap[myAttributeName].push_back(word);
 			break;
 		case BROKEN:
 			break;

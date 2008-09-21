@@ -30,12 +30,12 @@
 
 class StyleSheetTable {
 
-private:
+public:
 	typedef std::map<std::string,std::vector<std::string> > AttributeMap;
+	static shared_ptr<ZLTextStyleEntry> createControl(const AttributeMap &map);
 
+private:
 	void addMap(const std::string &tag, const std::string &aClass, const AttributeMap &map);
-
-	shared_ptr<ZLTextStyleEntry> createControl(const AttributeMap &map) const;
 
 	static void setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Length name, const AttributeMap &map, const std::string &attributeName);
 	static const std::vector<std::string> &values(const AttributeMap &map, const std::string &name);
@@ -44,7 +44,7 @@ public:
 	bool isEmpty() const;
 	bool doBreakBefore(const std::string &tag, const std::string &aClass) const;
 	bool doBreakAfter(const std::string &tag, const std::string &aClass) const;
-	const ZLTextStyleEntry &control(const std::string &tag, const std::string &aClass) const;
+	shared_ptr<ZLTextStyleEntry> control(const std::string &tag, const std::string &aClass) const;
 
 private:
 	struct Key {
@@ -60,7 +60,7 @@ private:
 	std::map<Key,bool> myPageBreakBeforeMap;
 	std::map<Key,bool> myPageBreakAfterMap;
 
-friend class StyleSheetParser;
+friend class StyleSheetTableParser;
 };
 
 inline StyleSheetTable::Key::Key(const std::string &tag, const std::string &aClass) : TagName(tag), ClassName(aClass) {

@@ -154,7 +154,7 @@ void XHTMLTagLinkAction::doAtStart(XHTMLReader &reader, const char **xmlattribut
 	if (cssStream.isNull()) {
 		return;
 	}
-	StyleSheetParser parser(reader.myStyleSheetTable);
+	StyleSheetTableParser parser(reader.myStyleSheetTable);
 	parser.parse(*cssStream);
 	//reader.myStyleSheetTable.dump();
 }
@@ -185,11 +185,8 @@ void XHTMLTagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char**
 	}
 	bookReader(reader).addControl(endEntry);
 	bookReader(reader).endParagraph();
-	if (!reader.myCSSStack.empty()) {
-		++reader.myCSSStack.back();
-		reader.myStyleEntryStack.push_back(&startEntry);
-	}
 	beginParagraph(reader);
+	bookReader(reader).addControl(startEntry);
 }
 
 void XHTMLTagRestartParagraphAction::doAtEnd(XHTMLReader&) {
@@ -432,30 +429,34 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 	}
 
 	int count = 0;
-	{
-		const ZLTextStyleEntry &entry = myStyleSheetTable.control(sTag, "");
-		if (!entry.isEmpty()) {
+	shared_ptr<ZLTextStyleEntry> entry = myStyleSheetTable.control(sTag, "");
+	if (!entry.isNull()) {
+		++count;
+		myModelReader.addControl(*entry);
+		myStyleEntryStack.push_back(entry);
+	}
+	entry = myStyleSheetTable.control("", sClass);
+	if (!entry.isNull()) {
+		++count;
+		myModelReader.addControl(*entry);
+		myStyleEntryStack.push_back(entry);
+	}
+	entry = myStyleSheetTable.control(sTag, sClass);
+	if (!entry.isNull()) {
+		++count;
+		myModelReader.addControl(*entry);
+		myStyleEntryStack.push_back(entry);
+	}
+	const char *style = attributeValue(attributes, "style");
+	if (style != 0) {
+		entry = myStyleParser.parseString(style);
+		if (!entry.isNull()) {
 			++count;
-			myModelReader.addControl(entry);
-			myStyleEntryStack.push_back(&entry);
+			myModelReader.addControl(*entry);
+			myStyleEntryStack.push_back(entry);
 		}
 	}
-	{
-		const ZLTextStyleEntry &entry = myStyleSheetTable.control("", sClass);
-		if (!entry.isEmpty()) {
-			++count;
-			myModelReader.addControl(entry);
-			myStyleEntryStack.push_back(&entry);
-		}
-	}
-	{
-		const ZLTextStyleEntry &entry = myStyleSheetTable.control(sTag, sClass);
-		if (!entry.isEmpty()) {
-			++count;
-			myModelReader.addControl(entry);
-			myStyleEntryStack.push_back(&entry);
-		}
-	}
+
 	myCSSStack.push_back(count);
 }
 
@@ -465,6 +466,7 @@ void XHTMLReader::endElementHandler(const char *tag) {
 		myStyleEntryStack.pop_back();
 	}
 	myCSSStack.pop_back();
+
 	XHTMLTagAction *action = ourTagActions[ZLUnicodeUtil::toLower(tag)];
 	if (action != 0) {
 		action->doAtEnd(*this);
@@ -479,7 +481,7 @@ void XHTMLReader::endElementHandler(const char *tag) {
 void XHTMLReader::beginParagraph() {
 	myCurrentParagraphIsEmpty = true;
 	myModelReader.beginParagraph();
-	for (std::vector<const ZLTextStyleEntry*>::const_iterator it = myStyleEntryStack.begin(); it != myStyleEntryStack.end(); ++it) {
+	for (std::vector<shared_ptr<ZLTextStyleEntry> >::const_iterator it = myStyleEntryStack.begin(); it != myStyleEntryStack.end(); ++it) {
 		myModelReader.addControl(**it);
 	}
 }

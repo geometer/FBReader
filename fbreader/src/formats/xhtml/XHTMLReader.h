@@ -22,11 +22,12 @@
 
 #include <string>
 #include <map>
-#include <stack>
+#include <vector>
 
 #include <ZLXMLReader.h>
 
 #include "../css/StyleSheetTable.h"
+#include "../css/StyleSheetParser.h"
 
 class BookReader;
 class XHTMLReader;
@@ -76,9 +77,10 @@ private:
 	bool myNewParagraphInProgress;
 	StyleSheetTable myStyleSheetTable;
 	std::vector<int> myCSSStack;
-	std::vector<const ZLTextStyleEntry*> myStyleEntryStack;
+	std::vector<shared_ptr<ZLTextStyleEntry> > myStyleEntryStack;
 	std::vector<bool> myDoPageBreakAfterStack;
 	bool myCurrentParagraphIsEmpty;
+	StyleSheetSingleStyleParser myStyleParser;
 
 	friend class XHTMLTagAction;
 	friend class XHTMLTagLinkAction;

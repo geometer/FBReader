@@ -122,14 +122,10 @@ bool StyleSheetTable::doBreakAfter(const std::string &tag, const std::string &aC
 	return false;
 }
 
-const ZLTextStyleEntry &StyleSheetTable::control(const std::string &tag, const std::string &aClass) const {
+shared_ptr<ZLTextStyleEntry> StyleSheetTable::control(const std::string &tag, const std::string &aClass) const {
 	std::map<Key,shared_ptr<ZLTextStyleEntry> >::const_iterator it =
 		myControlMap.find(Key(tag, aClass));
-	if (it == myControlMap.end()) {
-		static const ZLTextStyleEntry emptyEntry;
-		return emptyEntry;
-	}
-	return *it->second;
+	return (it != myControlMap.end()) ? it->second : 0;
 }
 
 const std::vector<std::string> &StyleSheetTable::values(const AttributeMap &map, const std::string &name) {
@@ -141,7 +137,7 @@ const std::vector<std::string> &StyleSheetTable::values(const AttributeMap &map,
 	return emptyVector;
 }
 
-shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &styles) const {
+shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &styles) {
 	shared_ptr<ZLTextStyleEntry> entry = new ZLTextStyleEntry();
 
 	const std::vector<std::string> &alignment = values(styles, "text-align");

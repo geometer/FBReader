@@ -26,11 +26,17 @@ class ZLInputStream;
 
 class StyleSheetParser {
 
+protected:
+	StyleSheetParser();
+
 public:
-	StyleSheetParser(StyleSheetTable &table);
+	virtual ~StyleSheetParser();
 	void reset();
 	void parse(ZLInputStream &stream);
 	void parse(const char *text, int len);
+
+protected:
+	virtual void storeData(const std::string &tagName, const std::string &className, const StyleSheetTable::AttributeMap &map);
 
 private:
 	bool isControlSymbol(const char symbol);
@@ -39,8 +45,6 @@ private:
 	void processControl(const char control);
 
 private:
-	StyleSheetTable &myTable;
-
 	std::string myWord;
 	std::string myAttributeName;
 	enum {
@@ -52,7 +56,27 @@ private:
 	bool myInsideComment;
 	std::string myTagName;
 	std::string myClassName;
-	shared_ptr<StyleSheetTable::AttributeMap> myMap;
+	StyleSheetTable::AttributeMap myMap;
+
+friend class StyleSheetSingleStyleParser;
+};
+
+class StyleSheetTableParser : public StyleSheetParser {
+
+public:
+	StyleSheetTableParser(StyleSheetTable &table);
+
+private:
+	void storeData(const std::string &tagName, const std::string &className, const StyleSheetTable::AttributeMap &map);
+
+private:
+	StyleSheetTable &myTable;
+};
+
+class StyleSheetSingleStyleParser : public StyleSheetParser {
+
+public:
+	shared_ptr<ZLTextStyleEntry> parseString(const char *text);
 };
 
 #endif /* __STYLESHEETPARSER_H__ */
