@@ -32,17 +32,19 @@ void ZLTextView::rebuildPaintInfo(bool strong) {
 		ZLTextParagraphCursorCache::clear();
 		myLineInfoCache.clear();
 	}
-	if (!myStartCursor.isNull()) {
-		if (strong) {
-			myStartCursor.rebuild();
+	if (myPaintState == READY) {
+		if (!myStartCursor.isNull()) {
+			if (strong) {
+				myStartCursor.rebuild();
+			}
+			myEndCursor = 0;
+			myPaintState = START_IS_KNOWN;
+		} else if (!myEndCursor.isNull()) {
+			if (strong) {
+				myEndCursor.rebuild();
+			}
+			myPaintState = END_IS_KNOWN;
 		}
-		myEndCursor = 0;
-		myPaintState = START_IS_KNOWN;
-	} else if (!myEndCursor.isNull()) {
-		if (strong) {
-			myEndCursor.rebuild();
-		}
-		myPaintState = END_IS_KNOWN;
 	}
 }
 

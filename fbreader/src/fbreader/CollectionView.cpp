@@ -233,6 +233,7 @@ void CollectionView::removeBook(BookDescriptionPtr book) {
 		rebuildPaintInfo(true);
 		selectBook(mySelectedBook);
 		application().refreshWindow();
+		myCollection.rebuild(false);
 	}
 }
 
