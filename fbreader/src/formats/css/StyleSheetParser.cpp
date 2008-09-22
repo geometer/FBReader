@@ -32,12 +32,18 @@ void StyleSheetTableParser::storeData(const std::string &tagName, const std::str
 	myTable.addMap(tagName, className, map);
 }
 
-shared_ptr<ZLTextStyleEntry> StyleSheetSingleStyleParser::parseString(const char *text) {
+void StyleSheetSingleStyleParser::parseString(const char *text) {
 	myReadState = ATTRIBUTE_NAME;
 	parse(text, strlen(text));
-	shared_ptr<ZLTextStyleEntry> control = StyleSheetTable::createControl(myMap);
+	shared_ptr<ZLTextStyleEntry> startControl = StyleSheetTable::createControl(myMap, true);
+	myControls[StyleSheetTable::START] = startControl;
+	myControls[StyleSheetTable::START_AND_INHERITED] = StyleSheetTable::createControlToInherit(startControl);
+	myControls[StyleSheetTable::END] = StyleSheetTable::createControl(myMap, false);
 	reset();
-	return control;
+}
+
+shared_ptr<ZLTextStyleEntry> StyleSheetSingleStyleParser::control(StyleSheetTable::ControlType type) {
+	return myControls[type];
 }
 
 StyleSheetParser::StyleSheetParser() : myReadState(TAG_NAME), myInsideComment(false) {

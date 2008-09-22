@@ -398,6 +398,20 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, shared_ptr<ZLInputStre
 	return readDocument(stream);
 }
 
+void XHTMLReader::addStyleEntry(const std::string tag, const std::string aClass) {
+	shared_ptr<ZLTextStyleEntry> entry =
+		myStyleSheetTable.control(tag, aClass, StyleSheetTable::START);
+	if (!entry.isNull()) {
+		myModelReader.addControl(*entry);
+		myStyleInheritedEntryStack.push_back(
+			myStyleSheetTable.control(tag, aClass, StyleSheetTable::START_AND_INHERITED)
+		);
+		myStyleEndEntryStack.push_back(
+			myStyleSheetTable.control(tag, aClass, StyleSheetTable::END)
+		);
+	}
+}
+
 void XHTMLReader::startElementHandler(const char *tag, const char **attributes) {
 	static const std::string HASH = "#";
 	const char *id = attributeValue(attributes, "id");
@@ -420,50 +434,50 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 		action->doAtStart(*this, attributes);
 	}
 
-	int count = 0;
-	shared_ptr<ZLTextStyleEntry> entry = myStyleSheetTable.control(sTag, "", false);
-	if (!entry.isNull()) {
-		++count;
-		myModelReader.addControl(*entry);
-		myStyleEntryStack.push_back(myStyleSheetTable.control(sTag, "", true));
-	}
-	entry = myStyleSheetTable.control("", sClass, false);
-	if (!entry.isNull()) {
-		++count;
-		myModelReader.addControl(*entry);
-		myStyleEntryStack.push_back(myStyleSheetTable.control("", sClass, true));
-	}
-	entry = myStyleSheetTable.control(sTag, sClass, false);
-	if (!entry.isNull()) {
-		++count;
-		myModelReader.addControl(*entry);
-		myStyleEntryStack.push_back(myStyleSheetTable.control(sTag, sClass, true));
-	}
+	const int sizeBefore = myStyleInheritedEntryStack.size();
+	addStyleEntry(sTag, "");
+	addStyleEntry("", sClass);
+	addStyleEntry(sTag, sClass);
 	const char *style = attributeValue(attributes, "style");
 	if (style != 0) {
-		entry = myStyleParser.parseString(style);
-		if (!entry.isNull()) {
-			++count;
-			myModelReader.addControl(*entry);
-			myStyleEntryStack.push_back(StyleSheetTable::createControlToInherit(entry));
-		}
+		myStyleParser.parseString(style);
+		shared_ptr<ZLTextStyleEntry> entry = myStyleParser.control(StyleSheetTable::START);
+		myModelReader.addControl(*entry);
+		myStyleInheritedEntryStack.push_back(
+			StyleSheetTable::createControlToInherit(myStyleParser.control(StyleSheetTable::START_AND_INHERITED))
+		);
+		myStyleEndEntryStack.push_back(
+			StyleSheetTable::createControlToInherit(myStyleParser.control(StyleSheetTable::END))
+		);
 	}
 
-	myCSSStack.push_back(count);
+	myCSSStack.push_back(myStyleInheritedEntryStack.size() - sizeBefore);
 }
 
 void XHTMLReader::endElementHandler(const char *tag) {
-	for (int i = myCSSStack.back(); i > 0; --i) {
-		myModelReader.addControl(REGULAR, false);
-		myStyleEntryStack.pop_back();
-	}
+	const int styleCount = myCSSStack.back();
 	myCSSStack.pop_back();
+
+	for (int i = styleCount; i > 0; --i) {
+		myModelReader.addControl(REGULAR, false);
+		myStyleInheritedEntryStack.pop_back();
+	}
+
+	for (int i = styleCount; i > 0; --i) {
+		myModelReader.addControl(*myStyleEndEntryStack.back());
+		myStyleEndEntryStack.pop_back();
+	}
 
 	XHTMLTagAction *action = ourTagActions[ZLUnicodeUtil::toLower(tag)];
 	if (action != 0) {
 		action->doAtEnd(*this);
 		myNewParagraphInProgress = false;
 	}
+
+	for (int i = styleCount; i > 0; --i) {
+		myModelReader.addControl(REGULAR, false);
+	}
+
 	if (myDoPageBreakAfterStack.back()) {
 		myModelReader.insertEndOfSectionParagraph();
 	}
@@ -473,7 +487,7 @@ void XHTMLReader::endElementHandler(const char *tag) {
 void XHTMLReader::beginParagraph() {
 	myCurrentParagraphIsEmpty = true;
 	myModelReader.beginParagraph();
-	for (std::vector<shared_ptr<ZLTextStyleEntry> >::const_iterator it = myStyleEntryStack.begin(); it != myStyleEntryStack.end(); ++it) {
+	for (std::vector<shared_ptr<ZLTextStyleEntry> >::const_iterator it = myStyleInheritedEntryStack.begin(); it != myStyleInheritedEntryStack.end(); ++it) {
 		myModelReader.addControl(**it);
 	}
 }

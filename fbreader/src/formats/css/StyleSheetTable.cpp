@@ -24,15 +24,16 @@
 #include "StyleSheetTable.h"
 
 bool StyleSheetTable::isEmpty() const {
-	return myControlMap.empty() && myControlToInheritMap.empty() && myPageBreakBeforeMap.empty() && myPageBreakAfterMap.empty();
+	return myControlMap[0].empty() && myPageBreakBeforeMap.empty() && myPageBreakAfterMap.empty();
 }
 
 void StyleSheetTable::addMap(const std::string &tag, const std::string &aClass, const AttributeMap &map) {
 	if ((!tag.empty() || !aClass.empty()) && !map.empty()) {
 		Key key(tag, aClass);
-		shared_ptr<ZLTextStyleEntry> control = createControl(map);
-		myControlMap[key] = control;
-		myControlToInheritMap[key] = createControlToInherit(control);
+		shared_ptr<ZLTextStyleEntry> control = createControl(map, true);
+		myControlMap[START][key] = control;
+		myControlMap[START_AND_INHERITED][key] = createControlToInherit(control);
+		myControlMap[END][key] = createControl(map, false);
 		const std::vector<std::string> &pbb = values(map, "page-break-before");
 		if (!pbb.empty()) {
 			if ((pbb[0] == "always") ||
@@ -124,10 +125,10 @@ bool StyleSheetTable::doBreakAfter(const std::string &tag, const std::string &aC
 	return false;
 }
 
-shared_ptr<ZLTextStyleEntry> StyleSheetTable::control(const std::string &tag, const std::string &aClass, bool toInherit) const {
+shared_ptr<ZLTextStyleEntry> StyleSheetTable::control(const std::string &tag, const std::string &aClass, ControlType type) const {
 	std::map<Key,shared_ptr<ZLTextStyleEntry> >::const_iterator it =
-		(toInherit ? myControlToInheritMap : myControlMap).find(Key(tag, aClass));
-	return (it != myControlMap.end()) ? it->second : 0;
+		myControlMap[type].find(Key(tag, aClass));
+	return (it != myControlMap[type].end()) ? it->second : 0;
 }
 
 const std::vector<std::string> &StyleSheetTable::values(const AttributeMap &map, const std::string &name) {
@@ -139,79 +140,82 @@ const std::vector<std::string> &StyleSheetTable::values(const AttributeMap &map,
 	return emptyVector;
 }
 
-shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &styles) {
+shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &styles, bool start) {
 	shared_ptr<ZLTextStyleEntry> entry = new ZLTextStyleEntry();
 
-	const std::vector<std::string> &alignment = values(styles, "text-align");
-	if (!alignment.empty()) {
-		if (alignment[0] == "justify") {
-			entry->setAlignmentType(ALIGN_JUSTIFY);
-		} else if (alignment[0] == "left") {
-			entry->setAlignmentType(ALIGN_LEFT);
-		} else if (alignment[0] == "right") {
-			entry->setAlignmentType(ALIGN_RIGHT);
-		} else if (alignment[0] == "center") {
-			entry->setAlignmentType(ALIGN_CENTER);
+	if (start) {
+		const std::vector<std::string> &alignment = values(styles, "text-align");
+		if (!alignment.empty()) {
+			if (alignment[0] == "justify") {
+				entry->setAlignmentType(ALIGN_JUSTIFY);
+			} else if (alignment[0] == "left") {
+				entry->setAlignmentType(ALIGN_LEFT);
+			} else if (alignment[0] == "right") {
+				entry->setAlignmentType(ALIGN_RIGHT);
+			} else if (alignment[0] == "center") {
+				entry->setAlignmentType(ALIGN_CENTER);
+			}
 		}
-	}
 
-	const std::vector<std::string> &bold = values(styles, "font-weight");
-	if (!bold.empty()) {
-		int num = -1;
-		if (bold[0] == "bold") {
-			num = 700;
-		} else if (bold[0] == "normal") {
-			num = 400;
-		} else if ((bold[0].length() == 3) &&
-							 (bold[0][1] == '0') &&
-							 (bold[0][2] == '0') &&
-							 (bold[0][0] >= '1') &&
-							 (bold[0][0] <= '9')) {
-			num = 100 * (bold[0][0] - '0');
-		} else if (bold[0] == "bolder") {
-		} else if (bold[0] == "lighter") {
+		const std::vector<std::string> &bold = values(styles, "font-weight");
+		if (!bold.empty()) {
+			int num = -1;
+			if (bold[0] == "bold") {
+				num = 700;
+			} else if (bold[0] == "normal") {
+				num = 400;
+			} else if ((bold[0].length() == 3) &&
+								 (bold[0][1] == '0') &&
+								 (bold[0][2] == '0') &&
+								 (bold[0][0] >= '1') &&
+								 (bold[0][0] <= '9')) {
+				num = 100 * (bold[0][0] - '0');
+			} else if (bold[0] == "bolder") {
+			} else if (bold[0] == "lighter") {
+			}
+			if (num != -1) {
+				entry->setBold(num >= 600);
+			}
 		}
-		if (num != -1) {
-			entry->setBold(num >= 600);
+
+		const std::vector<std::string> &italic = values(styles, "font-style");
+		if (!italic.empty()) {
+			entry->setItalic(italic[0] == "italic");
 		}
-	}
 
-	const std::vector<std::string> &italic = values(styles, "font-style");
-	if (!italic.empty()) {
-		entry->setItalic(italic[0] == "italic");
-	}
-
-	const std::vector<std::string> &fontFamily = values(styles, "font-family");
-	if (!fontFamily.empty() && !fontFamily[0].empty()) {
-		entry->setFontFamily(fontFamily[0]);
-	}
-
-	const std::vector<std::string> &fontSize = values(styles, "font-size");
-	if (!fontSize.empty()) {
-		if (fontSize[0] == "xx-small") {
-			entry->setFontSizeMag(-3);
-		} else if (fontSize[0] == "x-small") {
-			entry->setFontSizeMag(-2);
-		} else if (fontSize[0] == "small") {
-			entry->setFontSizeMag(-1);
-		} else if (fontSize[0] == "medium") {
-			entry->setFontSizeMag(0);
-		} else if (fontSize[0] == "large") {
-			entry->setFontSizeMag(1);
-		} else if (fontSize[0] == "x-large") {
-			entry->setFontSizeMag(2);
-		} else if (fontSize[0] == "xx-large") {
-			entry->setFontSizeMag(3);
+		const std::vector<std::string> &fontFamily = values(styles, "font-family");
+		if (!fontFamily.empty() && !fontFamily[0].empty()) {
+			entry->setFontFamily(fontFamily[0]);
 		}
-	}
 
-	setLength(*entry, ZLTextStyleEntry::LENGTH_LEFT_INDENT, styles, "margin-left");
-	setLength(*entry, ZLTextStyleEntry::LENGTH_RIGHT_INDENT, styles, "margin-right");
-	setLength(*entry, ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA, styles, "text-indent");
-	setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_BEFORE, styles, "margin-top");
-	setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_BEFORE, styles, "padding-top");
-	setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_AFTER, styles, "margin-bottom");
-	setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_AFTER, styles, "padding-bottom");
+		const std::vector<std::string> &fontSize = values(styles, "font-size");
+		if (!fontSize.empty()) {
+			if (fontSize[0] == "xx-small") {
+				entry->setFontSizeMag(-3);
+			} else if (fontSize[0] == "x-small") {
+				entry->setFontSizeMag(-2);
+			} else if (fontSize[0] == "small") {
+				entry->setFontSizeMag(-1);
+			} else if (fontSize[0] == "medium") {
+				entry->setFontSizeMag(0);
+			} else if (fontSize[0] == "large") {
+				entry->setFontSizeMag(1);
+			} else if (fontSize[0] == "x-large") {
+				entry->setFontSizeMag(2);
+			} else if (fontSize[0] == "xx-large") {
+				entry->setFontSizeMag(3);
+			}
+		}
+
+		setLength(*entry, ZLTextStyleEntry::LENGTH_LEFT_INDENT, styles, "margin-left");
+		setLength(*entry, ZLTextStyleEntry::LENGTH_RIGHT_INDENT, styles, "margin-right");
+		setLength(*entry, ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA, styles, "text-indent");
+		setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_BEFORE, styles, "margin-top");
+		setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_BEFORE, styles, "padding-top");
+	} else {
+		setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_AFTER, styles, "margin-bottom");
+		setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_AFTER, styles, "padding-bottom");
+	}
 
 	return entry;
 }

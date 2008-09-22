@@ -68,6 +68,7 @@ private:
 	const std::vector<std::string> &externalDTDs() const;
 
 	void beginParagraph();
+	void addStyleEntry(const std::string tag, const std::string aClass);
 
 private:
 	BookReader &myModelReader;
@@ -77,7 +78,8 @@ private:
 	bool myNewParagraphInProgress;
 	StyleSheetTable myStyleSheetTable;
 	std::vector<int> myCSSStack;
-	std::vector<shared_ptr<ZLTextStyleEntry> > myStyleEntryStack;
+	std::vector<shared_ptr<ZLTextStyleEntry> > myStyleEndEntryStack;
+	std::vector<shared_ptr<ZLTextStyleEntry> > myStyleInheritedEntryStack;
 	std::vector<bool> myDoPageBreakAfterStack;
 	bool myCurrentParagraphIsEmpty;
 	StyleSheetSingleStyleParser myStyleParser;
