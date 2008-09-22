@@ -44,6 +44,7 @@ protected:
 	static BookReader &bookReader(XHTMLReader &reader);	
 	static const std::string &pathPrefix(XHTMLReader &reader);	
 	static void beginParagraph(XHTMLReader &reader);
+	static void endParagraph(XHTMLReader &reader);
 };
 
 class XHTMLReader : public ZLXMLReader {
@@ -68,6 +69,7 @@ private:
 	const std::vector<std::string> &externalDTDs() const;
 
 	void beginParagraph();
+	void endParagraph();
 	void addStyleEntry(const std::string tag, const std::string aClass);
 
 private:
@@ -78,8 +80,8 @@ private:
 	bool myNewParagraphInProgress;
 	StyleSheetTable myStyleSheetTable;
 	std::vector<int> myCSSStack;
-	std::vector<shared_ptr<ZLTextStyleEntry> > myStyleEndEntryStack;
-	std::vector<shared_ptr<ZLTextStyleEntry> > myStyleInheritedEntryStack;
+	std::vector<shared_ptr<ZLTextStyleEntry> > myStyleEntryStack;
+	int myStylesToRemove;
 	std::vector<bool> myDoPageBreakAfterStack;
 	bool myCurrentParagraphIsEmpty;
 	StyleSheetSingleStyleParser myStyleParser;

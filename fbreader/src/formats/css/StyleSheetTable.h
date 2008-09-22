@@ -32,8 +32,7 @@ class StyleSheetTable {
 
 public:
 	typedef std::map<std::string,std::vector<std::string> > AttributeMap;
-	static shared_ptr<ZLTextStyleEntry> createControl(const AttributeMap &map, bool start);
-	static shared_ptr<ZLTextStyleEntry> createControlToInherit(shared_ptr<ZLTextStyleEntry> original);
+	static shared_ptr<ZLTextStyleEntry> createControl(const AttributeMap &map);
 
 private:
 	void addMap(const std::string &tag, const std::string &aClass, const AttributeMap &map);
@@ -45,14 +44,7 @@ public:
 	bool isEmpty() const;
 	bool doBreakBefore(const std::string &tag, const std::string &aClass) const;
 	bool doBreakAfter(const std::string &tag, const std::string &aClass) const;
-
-	enum ControlType {
-		START,
-		START_AND_INHERITED,
-		END,
-		LAST_CONTROL_TYPE
-	};
-	shared_ptr<ZLTextStyleEntry> control(const std::string &tag, const std::string &aClass, ControlType type) const;
+	shared_ptr<ZLTextStyleEntry> control(const std::string &tag, const std::string &aClass) const;
 
 private:
 	struct Key {
@@ -64,7 +56,7 @@ private:
 		bool operator < (const Key &key) const;
 	};
 
-	std::map<Key,shared_ptr<ZLTextStyleEntry> > myControlMap[LAST_CONTROL_TYPE];
+	std::map<Key,shared_ptr<ZLTextStyleEntry> > myControlMap;
 	std::map<Key,bool> myPageBreakBeforeMap;
 	std::map<Key,bool> myPageBreakAfterMap;
 

@@ -76,11 +76,7 @@ private:
 class StyleSheetSingleStyleParser : public StyleSheetParser {
 
 public:
-	void parseString(const char *text);
-	shared_ptr<ZLTextStyleEntry> control(StyleSheetTable::ControlType type);
-
-private:
-	shared_ptr<ZLTextStyleEntry> myControls[StyleSheetTable::LAST_CONTROL_TYPE];
+	shared_ptr<ZLTextStyleEntry> parseString(const char *text);
 };
 
 #endif /* __STYLESHEETPARSER_H__ */
