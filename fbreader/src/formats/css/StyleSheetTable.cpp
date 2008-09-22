@@ -24,13 +24,15 @@
 #include "StyleSheetTable.h"
 
 bool StyleSheetTable::isEmpty() const {
-	return myControlMap.empty() && myPageBreakBeforeMap.empty() && myPageBreakAfterMap.empty();
+	return myControlMap.empty() && myControlToInheritMap.empty() && myPageBreakBeforeMap.empty() && myPageBreakAfterMap.empty();
 }
 
 void StyleSheetTable::addMap(const std::string &tag, const std::string &aClass, const AttributeMap &map) {
 	if ((!tag.empty() || !aClass.empty()) && !map.empty()) {
 		Key key(tag, aClass);
-		myControlMap[key] = createControl(map);
+		shared_ptr<ZLTextStyleEntry> control = createControl(map);
+		myControlMap[key] = control;
+		myControlToInheritMap[key] = createControlToInherit(control);
 		const std::vector<std::string> &pbb = values(map, "page-break-before");
 		if (!pbb.empty()) {
 			if ((pbb[0] == "always") ||
@@ -122,9 +124,9 @@ bool StyleSheetTable::doBreakAfter(const std::string &tag, const std::string &aC
 	return false;
 }
 
-shared_ptr<ZLTextStyleEntry> StyleSheetTable::control(const std::string &tag, const std::string &aClass) const {
+shared_ptr<ZLTextStyleEntry> StyleSheetTable::control(const std::string &tag, const std::string &aClass, bool toInherit) const {
 	std::map<Key,shared_ptr<ZLTextStyleEntry> >::const_iterator it =
-		myControlMap.find(Key(tag, aClass));
+		(toInherit ? myControlToInheritMap : myControlMap).find(Key(tag, aClass));
 	return (it != myControlMap.end()) ? it->second : 0;
 }
 
@@ -205,11 +207,25 @@ shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &
 
 	setLength(*entry, ZLTextStyleEntry::LENGTH_LEFT_INDENT, styles, "margin-left");
 	setLength(*entry, ZLTextStyleEntry::LENGTH_RIGHT_INDENT, styles, "margin-right");
+	setLength(*entry, ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA, styles, "text-indent");
 	setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_BEFORE, styles, "margin-top");
 	setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_BEFORE, styles, "padding-top");
 	setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_AFTER, styles, "margin-bottom");
 	setLength(*entry, ZLTextStyleEntry::LENGTH_SPACE_AFTER, styles, "padding-bottom");
-	setLength(*entry, ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA, styles, "text-indent");
 
 	return entry;
+}
+
+shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControlToInherit(shared_ptr<ZLTextStyleEntry> original) {
+	if (original.isNull()) {
+		return original;
+	}
+	if (!original->lengthSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE) &&
+			!original->lengthSupported(ZLTextStyleEntry::LENGTH_SPACE_AFTER)) {
+		return original;
+	}
+	shared_ptr<ZLTextStyleEntry> copy = new ZLTextStyleEntry(*original);
+	copy->unsetLength(ZLTextStyleEntry::LENGTH_SPACE_BEFORE);
+	copy->unsetLength(ZLTextStyleEntry::LENGTH_SPACE_AFTER);
+	return copy;
 }

@@ -34,6 +34,18 @@ size_t ZLTextEntry::dataLength() const {
 	return len;
 }
 
+ZLTextStyleEntry::ZLTextStyleEntry(const ZLTextStyleEntry &original) : ZLTextParagraphEntry() {
+	myMask = original.myMask;
+	for (int i = 0; i < NUMBER_OF_LENGTHS; ++i) {
+		myLengths[i] = original.myLengths[i];
+	}
+	myAlignmentType = original.myAlignmentType;
+	myBold = original.myBold;
+	myItalic = original.myItalic;
+	myFontSizeMag = original.myFontSizeMag;
+	myFontFamily = original.myFontFamily;
+}
+
 short ZLTextStyleEntry::length(Length name, const Metrics &metrics) const {
 	switch (myLengths[name].Unit) {
 		default:

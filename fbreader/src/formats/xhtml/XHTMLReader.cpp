@@ -174,19 +174,11 @@ void XHTMLTagParagraphAction::doAtEnd(XHTMLReader &reader) {
 }
 
 void XHTMLTagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char**) {
-	static ZLTextStyleEntry startEntry;
-	static ZLTextStyleEntry endEntry;
-	if (startEntry.isEmpty()) {
-		startEntry.setLength(ZLTextStyleEntry::LENGTH_SPACE_BEFORE, 0, ZLTextStyleEntry::SIZE_UNIT_PIXEL);
-		endEntry.setLength(ZLTextStyleEntry::LENGTH_SPACE_AFTER, 0, ZLTextStyleEntry::SIZE_UNIT_PIXEL);
-	}
 	if (reader.myCurrentParagraphIsEmpty) {
 		bookReader(reader).addData(" ");
 	}
-	bookReader(reader).addControl(endEntry);
 	bookReader(reader).endParagraph();
 	beginParagraph(reader);
-	bookReader(reader).addControl(startEntry);
 }
 
 void XHTMLTagRestartParagraphAction::doAtEnd(XHTMLReader&) {
@@ -429,23 +421,23 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 	}
 
 	int count = 0;
-	shared_ptr<ZLTextStyleEntry> entry = myStyleSheetTable.control(sTag, "");
+	shared_ptr<ZLTextStyleEntry> entry = myStyleSheetTable.control(sTag, "", false);
 	if (!entry.isNull()) {
 		++count;
 		myModelReader.addControl(*entry);
-		myStyleEntryStack.push_back(entry);
+		myStyleEntryStack.push_back(myStyleSheetTable.control(sTag, "", true));
 	}
-	entry = myStyleSheetTable.control("", sClass);
+	entry = myStyleSheetTable.control("", sClass, false);
 	if (!entry.isNull()) {
 		++count;
 		myModelReader.addControl(*entry);
-		myStyleEntryStack.push_back(entry);
+		myStyleEntryStack.push_back(myStyleSheetTable.control("", sClass, true));
 	}
-	entry = myStyleSheetTable.control(sTag, sClass);
+	entry = myStyleSheetTable.control(sTag, sClass, false);
 	if (!entry.isNull()) {
 		++count;
 		myModelReader.addControl(*entry);
-		myStyleEntryStack.push_back(entry);
+		myStyleEntryStack.push_back(myStyleSheetTable.control(sTag, sClass, true));
 	}
 	const char *style = attributeValue(attributes, "style");
 	if (style != 0) {
@@ -453,7 +445,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 		if (!entry.isNull()) {
 			++count;
 			myModelReader.addControl(*entry);
-			myStyleEntryStack.push_back(entry);
+			myStyleEntryStack.push_back(StyleSheetTable::createControlToInherit(entry));
 		}
 	}
 

@@ -92,6 +92,7 @@ private:
 
 public:
 	ZLTextStyleEntry();
+	ZLTextStyleEntry(const ZLTextStyleEntry &original);
 	ZLTextStyleEntry(char *address);
 	~ZLTextStyleEntry();
 
@@ -100,6 +101,7 @@ public:
 	bool lengthSupported(Length name) const;
 	short length(Length name, const Metrics &metrics) const;
 	void setLength(Length name, short length, SizeUnit unit);
+	void unsetLength(Length name);
 
 	bool alignmentTypeSupported() const;
 	ZLTextAlignmentType alignmentType() const;
@@ -344,7 +346,14 @@ inline ZLTextStyleEntry::Metrics::Metrics(int fontSize, int fontXHeight, int ful
 inline bool ZLTextStyleEntry::isEmpty() const { return myMask == 0; }
 
 inline bool ZLTextStyleEntry::lengthSupported(Length name) const { return myMask & (1 << name); }
-inline void ZLTextStyleEntry::setLength(Length name, short length, SizeUnit unit) { myLengths[name].Size = length; myLengths[name].Unit = unit; myMask |= 1 << name; }
+inline void ZLTextStyleEntry::setLength(Length name, short length, SizeUnit unit) {
+	myLengths[name].Size = length;
+	myLengths[name].Unit = unit;
+	myMask |= 1 << name;
+}
+inline void ZLTextStyleEntry::unsetLength(Length name) {
+	myMask &= ~(1 << name);
+}
 
 inline bool ZLTextStyleEntry::alignmentTypeSupported() const { return myMask & SUPPORT_ALIGNMENT_TYPE; }
 inline ZLTextAlignmentType ZLTextStyleEntry::alignmentType() const { return myAlignmentType; }
