@@ -27,24 +27,27 @@ void ZLTextView::rebuildPaintInfo(bool strong) {
 		return;
 	}
 
+	if ((myPaintState == TO_SCROLL_FORWARD) || (myPaintState == TO_SCROLL_BACKWARD)) {
+		preparePaintInfo();
+	}
+
 	myLineInfos.clear();
 	if (strong) {
 		ZLTextParagraphCursorCache::clear();
 		myLineInfoCache.clear();
 	}
-	if (myPaintState == READY) {
-		if (!myStartCursor.isNull()) {
-			if (strong) {
-				myStartCursor.rebuild();
-			}
-			myEndCursor = 0;
-			myPaintState = START_IS_KNOWN;
-		} else if (!myEndCursor.isNull()) {
-			if (strong) {
-				myEndCursor.rebuild();
-			}
-			myPaintState = END_IS_KNOWN;
+
+	if (!myStartCursor.isNull()) {
+		if (strong) {
+			myStartCursor.rebuild();
 		}
+		myEndCursor = 0;
+		myPaintState = START_IS_KNOWN;
+	} else if (!myEndCursor.isNull()) {
+		if (strong) {
+			myEndCursor.rebuild();
+		}
+		myPaintState = END_IS_KNOWN;
 	}
 }
 
