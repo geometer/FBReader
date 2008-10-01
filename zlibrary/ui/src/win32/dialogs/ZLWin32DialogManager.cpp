@@ -21,6 +21,7 @@
 #include "ZLWin32DialogManager.h"
 #include "ZLWin32Dialog.h"
 #include "../application/ZLWin32ApplicationWindow.h"
+#include "../image/ZLWin32ImageManager.h"
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32SelectionDialog.h"
 #include "ZLWin32MessageBox.h"
@@ -96,6 +97,42 @@ void ZLWin32DialogManager::setClipboardText(const std::string &text, ClipboardTy
 			EmptyClipboard();
 			SetClipboardData(CF_UNICODETEXT, hData);
 			CloseClipboard();
+		}
+	}
+}
+
+void ZLWin32DialogManager::setClipboardImage(const ZLImageData &image, ClipboardType type) const {
+	if (type == CLIPBOARD_MAIN) {
+		ZLWin32ImageData &win32Image = (ZLWin32ImageData&)image;
+		const BYTE *pixels = win32Image.pixels(ZLColor(255, 255, 255));
+		if (pixels != 0) {
+			if (OpenClipboard(myApplicationWindow->mainWindow())) {
+				EmptyClipboard();
+				HDC dc = GetDC(myApplicationWindow->mainWindow());
+				BITMAPINFOHEADER header;
+				ZeroMemory(&header, sizeof(header));
+				header.biSize = sizeof(header);
+				header.biWidth = image.width();
+				header.biHeight = image.height();
+				header.biPlanes = 1;
+				header.biBitCount = 24;
+				header.biCompression = BI_RGB;
+				header.biSizeImage = 0;
+				HBITMAP bitmap = CreateDIBitmap(
+					dc, &header,
+					CBM_INIT,
+					pixels, win32Image.info(),
+					DIB_RGB_COLORS
+				);
+					/*
+					x, y - height, width, height,
+					0, 0, width, height,
+					pixels, win32Image.info(), DIB_RGB_COLORS, SRCCOPY);
+					*/
+				SetClipboardData(CF_BITMAP, bitmap);
+				ReleaseDC(myApplicationWindow->mainWindow(), dc);
+				CloseClipboard();
+			}
 		}
 	}
 }
