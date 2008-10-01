@@ -283,7 +283,7 @@ void ZLGtkPaintContext::drawString(int x, int y, const char *str, int len, bool 
 }
 
 void ZLGtkPaintContext::drawImage(int x, int y, const ZLImageData &image) {
-	GdkPixbuf *imageRef = ((ZLGtkImageData&)image).pixbuf();
+	GdkPixbuf *imageRef = ((const ZLGtkImageData&)image).pixbuf();
 	if (imageRef != 0) {
 		gdk_pixbuf_render_to_drawable(
 			imageRef, myPixmap,
