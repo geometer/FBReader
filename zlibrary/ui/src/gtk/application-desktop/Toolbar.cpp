@@ -95,18 +95,14 @@ void ZLGtkApplicationWindow::Toolbar::addToolbarItem(ZLToolbar::ItemPtr item) {
 
 	switch (item->type()) {
 		case ZLToolbar::Item::TEXT_FIELD:
+		case ZLToolbar::Item::COMBO_BOX:
 			{
-				const ZLToolbar::TextFieldItem &textFieldItem = (const ZLToolbar::TextFieldItem&)*item;
+				const ZLToolbar::ParameterItem &parameterItem = (const ZLToolbar::ParameterItem&)*item;
 				GtkEntryParameter *parameter =
-					new GtkEntryParameter(
-						*myWindow,
-						textFieldItem.actionId(),
-						textFieldItem.maxWidth()
-					);
-				myWindow->addVisualParameter(textFieldItem.parameterId(), parameter);
+					new GtkEntryParameter(*myWindow, parameterItem);
+				myWindow->addVisualParameter(parameterItem.parameterId(), parameter);
 				gtkItem = parameter->createToolItem();
-				gtk_tool_item_set_homogeneous(gtkItem, false);
-				gtk_tool_item_set_tooltip(gtkItem, myGtkToolbar->tooltips, textFieldItem.tooltip().c_str(), 0);
+				gtk_tool_item_set_tooltip(gtkItem, myGtkToolbar->tooltips, parameterItem.tooltip().c_str(), 0);
 			}
 			break;
 		case ZLToolbar::Item::PLAIN_BUTTON:
