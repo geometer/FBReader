@@ -25,9 +25,10 @@
 
 void ZLGtkApplicationWindow::GtkEntryParameter::onKeyPressed(const std::string &keyName) {
 	if (keyName == "<Return>") {
-		myWindow.application().doAction(myActionId);
+		myWindow.application().doAction(myItem.actionId());
 		myWindow.setFocusToMainWidget();
 	} else if (keyName == "<Esc>") {
+		restoreOldValue();
 		myWindow.setFocusToMainWidget();
 	}
 }
@@ -37,16 +38,44 @@ static bool onKeyPressed(GtkEntry*, GdkEventKey *event, ZLGtkApplicationWindow::
 	return false;
 }
 
-ZLGtkApplicationWindow::GtkEntryParameter::GtkEntryParameter(ZLGtkApplicationWindow &window, const std::string &actionId, int maxWidth) : myWindow(window), myActionId(actionId) {
-	myEntry = GTK_ENTRY(gtk_entry_new());
+void ZLGtkApplicationWindow::GtkEntryParameter::onValueChanged() {
+	GtkComboBox *comboBox = GTK_COMBO_BOX(myWidget);
+	const int index = gtk_combo_box_get_active(comboBox);
+	const int size = gtk_tree_model_iter_n_children(gtk_combo_box_get_model(comboBox), 0);
+	if ((index >= 0) && (index < size)) {
+		const char *text = gtk_combo_box_get_active_text(comboBox);
+		if (text != 0) {
+			std::string sText = text;
+			if (!sText.empty()) {
+				myWindow.application().doAction(myItem.actionId());
+				myWindow.setFocusToMainWidget();
+			}
+		}
+	}
+}
+
+static bool onValueChanged(GtkComboBox*, ZLGtkApplicationWindow::GtkEntryParameter *parameter) {
+	parameter->onValueChanged();
+	return true;
+}
+
+ZLGtkApplicationWindow::GtkEntryParameter::GtkEntryParameter(ZLGtkApplicationWindow &window, const ZLToolbar::ParameterItem &item) : myWindow(window), myItem(item) {
+	if (item.type() == ZLToolbar::Item::COMBO_BOX) {
+		myWidget = gtk_combo_box_entry_new_text();
+		myEntry = *(GtkEntry**)(GTK_COMBO_BOX_ENTRY(myWidget))->priv;
+		ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myEntry), "changed", GTK_SIGNAL_FUNC(::onValueChanged), this);
+	} else {
+		myWidget = gtk_entry_new();
+		myEntry = GTK_ENTRY(myWidget);
+	}
 	gtk_entry_set_alignment(myEntry, 0.5);
-	gtk_entry_set_width_chars(myEntry, maxWidth);
-	gtk_entry_set_max_length(myEntry, maxWidth);
+	gtk_entry_set_width_chars(myEntry, item.maxWidth());
+	gtk_entry_set_max_length(myEntry, item.maxWidth());
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myEntry), "key_press_event", GTK_SIGNAL_FUNC(::onKeyPressed), this);
 }
 
 GtkToolItem *ZLGtkApplicationWindow::GtkEntryParameter::createToolItem() {
-	return gtk_widget_tool_item_new(GTK_WIDGET(myEntry));
+	return gtk_widget_tool_item_new(myWidget);
 }
 
 void ZLGtkApplicationWindow::GtkEntryParameter::internalSetValue(const std::string &value) {
@@ -55,4 +84,21 @@ void ZLGtkApplicationWindow::GtkEntryParameter::internalSetValue(const std::stri
 
 std::string ZLGtkApplicationWindow::GtkEntryParameter::internalValue() const {
 	return gtk_entry_get_text(myEntry);
+}
+
+void ZLGtkApplicationWindow::GtkEntryParameter::setValueList(const std::vector<std::string> &values) {
+	if (myItem.type() == ZLToolbar::Item::TEXT_FIELD) {
+		return;
+	}
+
+	GtkComboBox *comboBox = GTK_COMBO_BOX(myWidget);
+
+	int size = gtk_tree_model_iter_n_children(gtk_combo_box_get_model(comboBox), 0);
+	for (; size > 0; --size) {
+		gtk_combo_box_remove_text(comboBox, 0);
+	}
+
+	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it) {
+		gtk_combo_box_append_text(comboBox, it->c_str());
+	}
 }
