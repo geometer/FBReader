@@ -440,11 +440,10 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 				buttonInfo.cx += 15;
 			}
 			SendMessage(tb.hwnd, TB_SETBUTTONINFO, button.idCommand, (LPARAM)&buttonInfo);
-			TextEditParameter *parameter = new TextEditParameter(tb.hwnd, button.idCommand, textFieldItem);
-			myParameters[button.idCommand] = parameter->handle();
-			ZLToolbar::ItemPtr item = tb.TBItemByActionCode[button.idCommand];
-			new ParameterData(parameter->handle(), myMainWindow, application(), textFieldItem.actionId());
+			TextEditParameter *parameter = new TextEditParameter(application(), myMainWindow, tb.hwnd, button.idCommand, textFieldItem);
 			addVisualParameter(textFieldItem.parameterId(), parameter);
+			myParameters[button.idCommand] = parameter->handle();
+			break;
 		}
 	}
 }
