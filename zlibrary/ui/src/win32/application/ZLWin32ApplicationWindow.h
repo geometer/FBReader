@@ -132,7 +132,7 @@ private:
 	REBARBANDINFO myToolbarInfo;
 	std::vector<ZLToolbar::ItemPtr> myFloatingToolbarItems;
 
-	std::map<int,HWND> myTextFields;
+	std::map<int,HWND> myParameters;
 
 	ZLWin32ViewWidget *myWin32ViewWidget;
 

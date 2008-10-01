@@ -444,7 +444,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		buttonInfo.cx = 10 + 8 * textFieldItem.maxWidth();
 		SendMessage(tb.hwnd, TB_SETBUTTONINFO, button.idCommand, (LPARAM)&buttonInfo);
 		TextEditParameter *parameter = new TextEditParameter(tb.hwnd, button.idCommand, textFieldItem);
-		myTextFields[button.idCommand] = parameter->handle();
+		myParameters[button.idCommand] = parameter->handle();
 		ZLToolbar::ItemPtr item = tb.TBItemByActionCode[button.idCommand];
 		new TextFieldData(parameter->handle(), myMainWindow, application(), textFieldItem.actionId());
 		addVisualParameter(textFieldItem.parameterId(), parameter);
@@ -476,12 +476,12 @@ void ZLWin32ApplicationWindow::updateTextFields() {
 	const size_t len = myWindowToolbar.TextFieldCodeById.size();
 	for (size_t i = 0; i < len; ++i) {
 		const size_t idCommand = -200 + i;
-		if (myTextFields[idCommand] != 0) {
+		if (myParameters[idCommand] != 0) {
 			RECT rect;
 			const int index = SendMessage(myWindowToolbar.hwnd, TB_COMMANDTOINDEX, idCommand, 0);
 			SendMessage(myWindowToolbar.hwnd, TB_GETITEMRECT, index, (LPARAM)&rect);
 			SetWindowPos(
-				myTextFields[idCommand], 0, rect.left + 5, rect.top + 10, 0, 0,
+				myParameters[idCommand], 0, rect.left + 5, rect.top + 10, 0, 0,
 				SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOSIZE
 			);
 		}
@@ -499,7 +499,7 @@ void ZLWin32ApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool
 		case ZLToolbar::Item::TEXT_FIELD:
 		{
 			const ZLToolbar::TextFieldItem &textFieldItem = (const ZLToolbar::TextFieldItem&)*item;
-			HWND handle = myTextFields[tb.TextFieldCodeById[textFieldItem.actionId()]];
+			HWND handle = myParameters[tb.TextFieldCodeById[textFieldItem.actionId()]];
 			if (handle != 0) {
 				const int idCommand = tb.TextFieldCodeById[textFieldItem.actionId()];
 				PostMessage(tb.hwnd, TB_SETSTATE, idCommand, visible ? 0 : TBSTATE_HIDDEN);
