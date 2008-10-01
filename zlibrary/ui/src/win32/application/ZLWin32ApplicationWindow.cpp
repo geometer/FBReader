@@ -376,6 +376,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	const ZLToolbar::Item::Type type = item->type();
 	switch (type) {
 		case ZLToolbar::Item::TEXT_FIELD:
+		case ZLToolbar::Item::COMBO_BOX:
 		{
 			const ZLToolbar::ParameterItem &textFieldItem = (ZLToolbar::ParameterItem&)*item;
 			button.idCommand = -200 + tb.ParameterCodeById.size();
@@ -424,18 +425,27 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	}
 	SendMessage(tb.hwnd, TB_ADDBUTTONS, 1, (LPARAM)&button);
 
-	if (type == ZLToolbar::Item::TEXT_FIELD) {
-		const ZLToolbar::ParameterItem &textFieldItem = (ZLToolbar::ParameterItem&)*item;
-		TBBUTTONINFO buttonInfo;
-		buttonInfo.cbSize = sizeof(TBBUTTONINFO);
-		buttonInfo.dwMask = TBIF_SIZE;
-		buttonInfo.cx = 10 + 8 * textFieldItem.maxWidth();
-		SendMessage(tb.hwnd, TB_SETBUTTONINFO, button.idCommand, (LPARAM)&buttonInfo);
-		TextEditParameter *parameter = new TextEditParameter(tb.hwnd, button.idCommand, textFieldItem);
-		myParameters[button.idCommand] = parameter->handle();
-		ZLToolbar::ItemPtr item = tb.TBItemByActionCode[button.idCommand];
-		new ParameterData(parameter->handle(), myMainWindow, application(), textFieldItem.actionId());
-		addVisualParameter(textFieldItem.parameterId(), parameter);
+	switch (type) {
+		default:
+			break;
+		case ZLToolbar::Item::TEXT_FIELD:
+		case ZLToolbar::Item::COMBO_BOX:
+		{
+			const ZLToolbar::ParameterItem &textFieldItem = (ZLToolbar::ParameterItem&)*item;
+			TBBUTTONINFO buttonInfo;
+			buttonInfo.cbSize = sizeof(TBBUTTONINFO);
+			buttonInfo.dwMask = TBIF_SIZE;
+			buttonInfo.cx = 10 + 8 * textFieldItem.maxWidth();
+			if (type == ZLToolbar::Item::COMBO_BOX) {
+				buttonInfo.cx += 15;
+			}
+			SendMessage(tb.hwnd, TB_SETBUTTONINFO, button.idCommand, (LPARAM)&buttonInfo);
+			TextEditParameter *parameter = new TextEditParameter(tb.hwnd, button.idCommand, textFieldItem);
+			myParameters[button.idCommand] = parameter->handle();
+			ZLToolbar::ItemPtr item = tb.TBItemByActionCode[button.idCommand];
+			new ParameterData(parameter->handle(), myMainWindow, application(), textFieldItem.actionId());
+			addVisualParameter(textFieldItem.parameterId(), parameter);
+		}
 	}
 }
 
