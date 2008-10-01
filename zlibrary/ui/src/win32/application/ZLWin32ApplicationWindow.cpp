@@ -40,6 +40,14 @@ const int ZLWin32ApplicationWindow::IconSize = 32;
 
 ZLWin32ApplicationWindow *ZLWin32ApplicationWindow::ourApplicationWindow = 0;
 
+static HWND getTextItem(HWND comboBox) {
+	COMBOBOXINFO cbi;
+	ZeroMemory(&cbi, sizeof(cbi));
+	cbi.cbSize = sizeof(cbi);
+	GetComboBoxInfo(comboBox, &cbi);
+	return cbi.hwndItem;
+}
+
 LRESULT CALLBACK ZLWin32ApplicationWindow::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	return ourApplicationWindow->mainLoopCallback(hWnd, uMsg, wParam, lParam);
 }
