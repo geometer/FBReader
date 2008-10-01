@@ -92,6 +92,11 @@ public:
 private:
 	class TextEditParameter : public VisualParameter {
 
+	private:
+		typedef LRESULT(CALLBACK *WndProc)(HWND, UINT, WPARAM, LPARAM);
+		static LRESULT CALLBACK ComboBoxCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+		static LRESULT CALLBACK TextEditCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 	public:
 		TextEditParameter(HWND toolbar, int idCommand, const ZLToolbar::ParameterItem &item);
 		HWND handle() const;
@@ -99,9 +104,15 @@ private:
 	private:
 		std::string internalValue() const;
 		void internalSetValue(const std::string &value);
+		void setValueList(const std::vector<std::string> &values);
 
 	private:
-		HWND myTextEdit;
+		ZLApplication &myApplication;
+		HWND myMainWindow;
+		HWND myComboBox;
+		WndProc myComboBoxOriginalCallback;
+		WndProc myTextEditOriginalCallback;
+		const ZLToolbar::ParameterItem &myParameterItem;
 	};
 
 private:

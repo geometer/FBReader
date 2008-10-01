@@ -360,23 +360,6 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-class ParameterData {
-
-private:
-	typedef LRESULT(CALLBACK *WndProc)(HWND, UINT, WPARAM, LPARAM);
-
-	static LRESULT CALLBACK Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-public:
-	ParameterData(HWND textField, HWND mainWindow, ZLApplication &application, const std::string &actionId);
-
-private:
-	WndProc myOriginalCallback;
-	HWND myMainWindow;
-	ZLApplication &myApplication;
-	const std::string myActionId;
-};
-
 void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	if (myRebar == 0) {
 		createWindowToolbar();
