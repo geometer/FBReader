@@ -98,7 +98,7 @@ private:
 		static LRESULT CALLBACK TextEditCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	public:
-		TextEditParameter(HWND toolbar, int idCommand, const ZLToolbar::ParameterItem &item);
+		TextEditParameter(ZLApplication &application, HWND mainWindow, HWND toolbar, int idCommand, const ZLToolbar::ParameterItem &item);
 		HWND handle() const;
 
 	private:
@@ -110,8 +110,8 @@ private:
 		ZLApplication &myApplication;
 		HWND myMainWindow;
 		HWND myComboBox;
-		WndProc myComboBoxOriginalCallback;
-		WndProc myTextEditOriginalCallback;
+		WndProc myOriginalComboBoxCallback;
+		WndProc myOriginalTextEditCallback;
 		const ZLToolbar::ParameterItem &myParameterItem;
 	};
 
