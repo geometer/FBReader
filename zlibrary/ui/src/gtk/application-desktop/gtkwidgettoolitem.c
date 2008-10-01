@@ -27,6 +27,7 @@ GtkToolItem *gtk_widget_tool_item_new(GtkWidget *widget) {
 	widgetItem = g_object_new(GTK_TYPE_WIDGET_TOOL_ITEM, NULL);
 
 	widgetItem->widget = widget;
+	gtk_container_set_border_width(GTK_CONTAINER(widgetItem), 8);
 	gtk_container_add(GTK_CONTAINER(widgetItem), widgetItem->widget);
 	gtk_widget_show(widgetItem->widget);
 
