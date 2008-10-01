@@ -53,8 +53,13 @@ Section "Create Shortcut on Desktop"
 SectionEnd
 
 Section "Uninstall"
-	RMDir /r "$INSTDIR\share"
+	ClearErrors
 	Delete "$INSTDIR\FBReader.exe"
+	IfErrors 0 ContinueUninstallation
+		MessageBox MB_OK "Cannot uninstall FBReader while the program is running.$\nPlease quit FBReader and try again."
+		Quit
+	ContinueUninstallation:
+	RMDir /r "$INSTDIR\share"
 	Delete "$INSTDIR\*.dll"
 	Delete "$INSTDIR\*.license"
 	Delete "$INSTDIR\uninstall.exe"

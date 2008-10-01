@@ -159,6 +159,14 @@ void CollectionModel::buildOrganizedByTags(bool buildAuthorTree) {
 }
 
 void CollectionModel::buildOrganizedByAuthors() {
+	if (myView.ShowAllBooksTagOption.value()) {
+		const ZLResource &resource = ZLResource::resource("library");
+		ZLTextTreeParagraph *allBooksParagraph = createParagraph();
+		insertText(LIBRARY_ENTRY, resource["allBooks"].value());
+		myParagraphToTag[allBooksParagraph] = CollectionView::SpecialTagAllBooks;
+		addBooks(false, myCollection.books(), allBooksParagraph);
+	}
+
 	addBooksTree(myCollection.books(), 0);
 }
 
