@@ -42,6 +42,7 @@ public:
 			MENU_BUTTON,
 			TOGGLE_BUTTON,
 			TEXT_FIELD,
+			COMBO_BOX,
 			SEPARATOR
 		};
 
@@ -144,7 +145,7 @@ public:
 		Type type() const;
 	};
 
-	class TextFieldItem : public ActionItem {
+	class ParameterItem : public ActionItem {
 
 	public:
 		enum SymbolSet {
@@ -153,8 +154,7 @@ public:
 		};
 
 	public:
-		TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip);
-		Type type() const;
+		ParameterItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip);
 		const std::string &parameterId() const;
 		int maxWidth() const;
 		SymbolSet symbolSet() const;
@@ -165,6 +165,20 @@ public:
 		const SymbolSet mySymbolSet;
 	};
 
+	class TextFieldItem : public ParameterItem {
+
+	public:
+		TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip);
+		Type type() const;
+	};
+
+	class ComboBoxItem : public ParameterItem {
+
+	public:
+		ComboBoxItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip);
+		Type type() const;
+	};
+
 public:
 	typedef shared_ptr<Item> ItemPtr;
 	typedef std::vector<ItemPtr> ItemVector;
@@ -173,7 +187,7 @@ public:
 	void addPlainButton(const std::string &actionId);
 	void addMenuButton(const std::string &actionId);
 	void addToggleButton(const std::string &actionId, const std::string &groupId, bool isDefault);
-	void addTextField(const std::string &actionId, const std::string &parameterId, int maxWidth, TextFieldItem::SymbolSet symbolSet);
+	void addParameterItem(Item::Type type, const std::string &actionId, const std::string &parameterId, int maxWidth, ParameterItem::SymbolSet symbolSet);
 	void addSeparator();
 
 	const ItemVector &items() const;

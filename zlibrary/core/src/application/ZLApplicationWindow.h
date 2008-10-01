@@ -83,6 +83,7 @@ protected:
 	virtual void setHyperlinkCursor(bool) {}
 
 	void setVisualParameter(const std::string &id, const std::string &value);
+	void setParameterValueList(const std::string &id, const std::vector<std::string> &values);
 	const std::string &visualParameter(const std::string &id);
 
 protected:
@@ -93,10 +94,12 @@ protected:
 
 		const std::string &value() const;
 		void setValue(const std::string &value);
+		virtual void setValueList(const std::vector<std::string> &values) = 0;
 
 	protected:
 		virtual std::string internalValue() const = 0;
 		virtual void internalSetValue(const std::string &value) = 0;
+		void restoreOldValue();
 
 	private:
 		mutable std::string myValue;

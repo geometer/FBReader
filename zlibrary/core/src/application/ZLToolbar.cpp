@@ -78,6 +78,7 @@ void ZLToolbarCreator::startElementHandler(const char *tag, const char **attribu
 	static const std::string MENU_BUTTON = "menuButton";
 	static const std::string TOGGLE_BUTTON = "toggleButton";
 	static const std::string TEXT_FIELD = "textField";
+	static const std::string COMBO_BOX = "comboBox";
 	static const std::string SEPARATOR = "separator";
 	if (BUTTON == tag) {
 		const char *id = attributeValue(attributes, "id");
@@ -101,19 +102,24 @@ void ZLToolbarCreator::startElementHandler(const char *tag, const char **attribu
 			}
 			*/
 		}
-	} else if (TEXT_FIELD == tag) {
+	} else if ((TEXT_FIELD == tag) || (COMBO_BOX == tag)) {
 		const char *id = attributeValue(attributes, "id");
 		const char *parameterId = attributeValue(attributes, "parameterId");
 		const char *maxWidth = attributeValue(attributes, "maxWidth");
 		const char *symbolSet = attributeValue(attributes, "symbols");
 		if ((id != 0) && (parameterId != 0) && (maxWidth != 0)) {
 			int nMaxWidth = atoi(maxWidth);
-			ZLToolbar::TextFieldItem::SymbolSet sSet =
+			ZLToolbar::ParameterItem::SymbolSet sSet =
 				((symbolSet != 0) && (std::string(symbolSet) == "digits")) ?
-					ZLToolbar::TextFieldItem::SET_DIGITS :
-					ZLToolbar::TextFieldItem::SET_ANY;
+					ZLToolbar::ParameterItem::SET_DIGITS :
+					ZLToolbar::ParameterItem::SET_ANY;
 			if (nMaxWidth > 0) {
-				myToolbar.addTextField(id, parameterId, nMaxWidth, sSet);
+				myToolbar.addParameterItem(
+					(TEXT_FIELD == tag) ?
+						ZLToolbar::Item::TEXT_FIELD :
+						ZLToolbar::Item::COMBO_BOX,
+					id, parameterId, nMaxWidth, sSet
+				);
 			}
 		}
 	} else if (SEPARATOR == tag) {
@@ -229,8 +235,11 @@ void ZLToolbar::addToggleButton(const std::string &actionId, const std::string &
 	}
 }
 
-void ZLToolbar::addTextField(const std::string &actionId, const std::string &parameterId, int maxWidth, TextFieldItem::SymbolSet symbolSet) {
-	myItems.push_back(new TextFieldItem(*this, actionId, parameterId, maxWidth, symbolSet, myResource[ZLResourceKey(actionId)]));
+void ZLToolbar::addParameterItem(Item::Type type, const std::string &actionId, const std::string &parameterId, int maxWidth, ParameterItem::SymbolSet symbolSet) {
+	ParameterItem *item = (type == Item::TEXT_FIELD) ?
+		(ParameterItem*)new TextFieldItem(*this, actionId, parameterId, maxWidth, symbolSet, myResource[ZLResourceKey(actionId)]) :
+		(ParameterItem*)new ComboBoxItem(*this, actionId, parameterId, maxWidth, symbolSet, myResource[ZLResourceKey(actionId)]);
+	myItems.push_back(item);
 }
 
 void ZLToolbar::addSeparator() {
@@ -274,21 +283,31 @@ ZLToolbar::Item::Type ZLToolbar::SeparatorItem::type() const {
 	return SEPARATOR;
 }
 
-ZLToolbar::TextFieldItem::TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip) : ActionItem(toolbar, actionId, tooltip), myParameterId(parameterId), myMaxWidth(maxWidth), mySymbolSet(symbolSet) {
+ZLToolbar::ParameterItem::ParameterItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip) : ActionItem(toolbar, actionId, tooltip), myParameterId(parameterId), myMaxWidth(maxWidth), mySymbolSet(symbolSet) {
 }
 
-const std::string &ZLToolbar::TextFieldItem::parameterId() const {
+const std::string &ZLToolbar::ParameterItem::parameterId() const {
 	return myParameterId;
 }
 
-int ZLToolbar::TextFieldItem::maxWidth() const {
+int ZLToolbar::ParameterItem::maxWidth() const {
 	return myMaxWidth;
 }
 
-ZLToolbar::TextFieldItem::SymbolSet ZLToolbar::TextFieldItem::symbolSet() const {
+ZLToolbar::ParameterItem::SymbolSet ZLToolbar::ParameterItem::symbolSet() const {
 	return mySymbolSet;
+}
+
+ZLToolbar::TextFieldItem::TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip) : ParameterItem(toolbar, actionId, parameterId, maxWidth, symbolSet, tooltip) {
 }
 
 ZLToolbar::Item::Type ZLToolbar::TextFieldItem::type() const {
 	return TEXT_FIELD;
+}
+
+ZLToolbar::ComboBoxItem::ComboBoxItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip) : ParameterItem(toolbar, actionId, parameterId, maxWidth, symbolSet, tooltip) {
+}
+
+ZLToolbar::Item::Type ZLToolbar::ComboBoxItem::type() const {
+	return COMBO_BOX;
 }

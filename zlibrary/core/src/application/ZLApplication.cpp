@@ -219,6 +219,7 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 	for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		switch ((*it)->type()) {
 			case ZLToolbar::Item::TEXT_FIELD:
+			case ZLToolbar::Item::COMBO_BOX:
 			case ZLToolbar::Item::PLAIN_BUTTON:
 			case ZLToolbar::Item::MENU_BUTTON:
 				{
@@ -392,6 +393,12 @@ void ZLApplication::setVisualParameter(const std::string &id, const std::string 
 	}
 }
 
+void ZLApplication::setParameterValueList(const std::string &id, const std::vector<std::string> &values) {
+	if (myWindow != 0) {
+		myWindow->setParameterValueList(id, values);
+	}
+}
+
 const std::string &ZLApplication::visualParameter(const std::string &id) {
 	if (myWindow != 0) {
 		return myWindow->visualParameter(id);
@@ -404,6 +411,13 @@ void ZLApplicationWindow::setVisualParameter(const std::string &id, const std::s
 	std::map<std::string,shared_ptr<VisualParameter> >::iterator it = myParameterMap.find(id);
 	if (it != myParameterMap.end()) {
 		it->second->setValue(value);
+	}
+}
+
+void ZLApplicationWindow::setParameterValueList(const std::string &id, const std::vector<std::string> &values) {
+	std::map<std::string,shared_ptr<VisualParameter> >::iterator it = myParameterMap.find(id);
+	if (it != myParameterMap.end()) {
+		it->second->setValueList(values);
 	}
 }
 
@@ -435,6 +449,10 @@ void ZLApplicationWindow::VisualParameter::setValue(const std::string &value) {
 		myValue = value;
 		internalSetValue(value);
 	}
+}
+
+void ZLApplicationWindow::VisualParameter::restoreOldValue() {
+	internalSetValue(myValue);
 }
 
 ZLView::Angle ZLApplication::rotation() const {

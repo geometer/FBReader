@@ -30,6 +30,7 @@ class ZLDialog;
 class ZLOptionsDialog;
 class ZLTreeHandler;
 class ZLApplication;
+class ZLImageData;
 
 class ZLDialogManager {
 
@@ -85,6 +86,7 @@ public:
 	};
 	virtual bool isClipboardSupported(ClipboardType type) const = 0;
 	virtual void setClipboardText(const std::string &text, ClipboardType type) const = 0;
+	virtual void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const = 0;
 };
 
 #endif /* __ZLDIALOGMANAGER_H__ */

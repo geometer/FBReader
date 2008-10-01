@@ -163,6 +163,7 @@ public:
 	void resetLastCaller();
 
 	void setVisualParameter(const std::string &id, const std::string &value);
+	void setParameterValueList(const std::string &id, const std::vector<std::string> &values);
 	const std::string &visualParameter(const std::string &id);
 
 private:
