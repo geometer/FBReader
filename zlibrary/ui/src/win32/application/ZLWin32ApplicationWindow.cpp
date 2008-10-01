@@ -585,6 +585,21 @@ void ZLWin32ApplicationWindow::setWait(bool wait) {
 	myWait = wait;
 }
 
+static void addTooltipToWindow(HWND window, const std::string &tooltip) {
+	HWND tooltipHandle = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, 0, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, window, 0, GetModuleHandle(0), 0);
+	TOOLINFO tti;
+	tti.cbSize = sizeof(tti);
+	tti.uFlags = TTF_SUBCLASS;
+	tti.hwnd = window;
+	tti.hinst = GetModuleHandle(0);
+	tti.uId = 0;
+	ZLUnicodeUtil::Ucs2String buffer;
+	::createNTWCHARString(buffer, tooltip);
+	tti.lpszText = (WCHAR*)::wchar(buffer);
+	GetClientRect(window, &tti.rect);
+	SendMessage(tooltipHandle, TTM_ADDTOOL, 0, (LPARAM)&tti);
+}
+
 ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(ZLApplication &application, HWND mainWindow, HWND toolbar, int idCommand, const ZLToolbar::ParameterItem &item) : myApplication(application), myMainWindow(mainWindow), myParameterItem(item) {
 	const int index = SendMessage(toolbar, TB_COMMANDTOINDEX, idCommand, 0);
 	RECT rect;
@@ -635,13 +650,13 @@ void ZLWin32ApplicationWindow::TextEditParameter::setValueList(const std::vector
 }
 
 std::string ZLWin32ApplicationWindow::TextEditParameter::internalValue() const {
-	int len = GetWindowTextLengthW(myTextEdit);
+	int len = GetWindowTextLengthW(myComboBox);
 	if (len == 0) {
 		return "";
 	}
 	static ZLUnicodeUtil::Ucs2String buffer;
 	buffer.assign(len + 1, '\0');
-	GetWindowTextW(myTextEdit, (WCHAR*)::wchar(buffer), len + 1);
+	GetWindowTextW(myComboBox, (WCHAR*)::wchar(buffer), len + 1);
 	std::string text;
 	ZLUnicodeUtil::ucs2ToUtf8(text, buffer);
 	return text;
@@ -650,7 +665,7 @@ std::string ZLWin32ApplicationWindow::TextEditParameter::internalValue() const {
 void ZLWin32ApplicationWindow::TextEditParameter::internalSetValue(const std::string &value) {
 	static ZLUnicodeUtil::Ucs2String buffer;
 	::createNTWCHARString(buffer, value);
-	SetWindowTextW(myTextEdit, ::wchar(buffer));
+	SetWindowTextW(getTextItem(myComboBox), ::wchar(buffer));
 }
 
 void ZLWin32ApplicationWindow::resetFocus() {
