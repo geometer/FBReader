@@ -19,6 +19,7 @@
 
 #include <gtk/gtk.h>
 
+#include "../image/ZLGtkImageManager.h"
 #include "ZLGtkDialogManager.h"
 #include "ZLGtkDialog.h"
 #include "ZLGtkOptionsDialog.h"
@@ -95,5 +96,14 @@ void ZLGtkDialogManager::setClipboardText(const std::string &text, ClipboardType
 		GdkAtom atom = (type == CLIPBOARD_MAIN) ? GDK_SELECTION_CLIPBOARD : GDK_SELECTION_PRIMARY;
 		GtkClipboard *clipboard = gtk_clipboard_get(atom);
 		gtk_clipboard_set_text(clipboard, text.data(), text.length());
+	}
+}
+
+void ZLGtkDialogManager::setClipboardImage(const ZLImageData &image, ClipboardType type) const {
+	GdkPixbuf *imageRef = ((const ZLGtkImageData&)image).pixbuf();
+	if (imageRef != 0) {
+		GdkAtom atom = (type == CLIPBOARD_MAIN) ? GDK_SELECTION_CLIPBOARD : GDK_SELECTION_PRIMARY;
+		GtkClipboard *clipboard = gtk_clipboard_get(atom);
+		gtk_clipboard_set_image(clipboard, imageRef);
 	}
 }
