@@ -72,17 +72,20 @@ public:
 	class GtkEntryParameter : public VisualParameter {
 
 	public:
-		GtkEntryParameter(ZLGtkApplicationWindow &window, const std::string &actionId, int maxWidth);
+		GtkEntryParameter(ZLGtkApplicationWindow &window, const ZLToolbar::ParameterItem &item);
 		void onKeyPressed(const std::string &keyName);
+		void onValueChanged();
 		GtkToolItem *createToolItem();
 
 	private:
 		std::string internalValue() const;
 		void internalSetValue(const std::string &value);
+		void setValueList(const std::vector<std::string> &values);
 
 	private:
 		ZLGtkApplicationWindow &myWindow;
-		const std::string myActionId;
+		const ZLToolbar::ParameterItem &myItem;
+		GtkWidget *myWidget;
 		GtkEntry *myEntry;
 	};
 

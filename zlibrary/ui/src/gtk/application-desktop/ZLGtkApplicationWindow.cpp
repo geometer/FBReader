@@ -30,17 +30,22 @@ void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) con
 	myWindow = (new ZLGtkApplicationWindow(application))->getMainWindow();
 }
 
-static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
-	((ZLGtkApplicationWindow*)data)->application().closeView();
+static bool applicationQuit(GtkWidget*, GdkEvent*, ZLGtkApplicationWindow *data) {
+	data->application().closeView();
 	return true;
 }
 
-static bool handleKeyEvent(GtkWidget*, GdkEventKey *event, gpointer data) {
-	return ((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(event);
+static bool presentHandler(GtkWidget*, GdkEvent*, GtkWindow *data) {
+	gtk_window_present(data);
+	return false;
 }
 
-static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, gpointer data) {
-	((ZLGtkApplicationWindow*)data)->handleScrollEventSlot(event);
+static bool handleKeyEvent(GtkWidget*, GdkEventKey *event, ZLGtkApplicationWindow *data) {
+	return data->handleKeyEventSlot(event);
+}
+
+static void handleScrollEvent(GtkWidget*, GdkEventScroll *event, ZLGtkApplicationWindow *data) {
+	data->handleScrollEventSlot(event);
 }
 
 ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
@@ -64,6 +69,7 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 		gtk_toolbar_set_show_arrow(GTK_TOOLBAR(myFullscreenToolbar.toolbarWidget()), false);
 		gtk_container_add(GTK_CONTAINER(myHandleBox), myFullscreenToolbar.toolbarWidget());
 		gtk_box_pack_start(GTK_BOX(myVBox), GTK_WIDGET(myHandleBox), false, false, 0);
+		ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myHandleBox), "event", GTK_SIGNAL_FUNC(presentHandler), myMainWindow);
 	}
 
 	gtk_box_pack_start(GTK_BOX(myVBox), myWindowToolbar.toolbarWidget(), false, false, 0);
