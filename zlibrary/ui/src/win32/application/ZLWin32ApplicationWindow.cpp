@@ -448,25 +448,48 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	}
 }
 
-LRESULT CALLBACK ParameterData::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	ParameterData *data = (ParameterData*)GetWindowLong(hWnd, GWL_USERDATA);
-	if (uMsg == WM_CHAR) {
-		if (wParam == 13) {
-			data->myApplication.doAction(data->myActionId);
-			SetFocus(data->myMainWindow);
-			return 0;
-		} else if (wParam == 27) {
-			SetFocus(data->myMainWindow);
-			return 0;
+LRESULT CALLBACK ZLWin32ApplicationWindow::TextEditParameter::ComboBoxCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	TextEditParameter &parameter =
+		*(TextEditParameter*)GetWindowLong(hWnd, GWL_USERDATA);
+
+	if ((uMsg == WM_COMMAND) && (HIWORD(wParam) == CBN_SELCHANGE)) {
+		HWND comboBox = parameter.myComboBox;
+		const int index = SendMessage(comboBox, CB_GETCURSEL, 0, 0);
+		const int length = SendMessage(comboBox, CB_GETLBTEXTLEN, index, 0);
+		ZLUnicodeUtil::Ucs2String buffer;
+		buffer.assign(length + 1, '\0');
+		if (length > 0) {
+			SendMessage(comboBox, CB_GETLBTEXT, index, (LPARAM)&buffer.front());
 		}
+		std::string value;
+		ZLUnicodeUtil::ucs2ToUtf8(value, buffer);
+		parameter.setValue(value);
+
+		parameter.myApplication.doAction(parameter.myParameterItem.actionId());
+		SetFocus(parameter.myMainWindow);
 	}
-	WndProc orig = data->myOriginalCallback;
+
+	WndProc orig = parameter.myOriginalComboBoxCallback;
 	return orig(hWnd, uMsg, wParam, lParam);
 }
 
-ParameterData::ParameterData(HWND textField, HWND mainWindow, ZLApplication &application, const std::string &actionId) : myMainWindow(mainWindow), myApplication(application), myActionId(actionId) {
-	myOriginalCallback = (WndProc)SetWindowLong(textField, GWL_WNDPROC, (LONG)Callback);
-	SetWindowLong(textField, GWL_USERDATA, (LONG)this);
+LRESULT CALLBACK ZLWin32ApplicationWindow::TextEditParameter::TextEditCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	TextEditParameter &parameter =
+		*(TextEditParameter*)GetWindowLong(hWnd, GWL_USERDATA);
+
+	if (uMsg == WM_CHAR) {
+		if (wParam == 13) {
+			parameter.myApplication.doAction(parameter.myParameterItem.actionId());
+			SetFocus(parameter.myMainWindow);
+			return 0;
+		} else if (wParam == 27) {
+			parameter.restoreOldValue();
+			SetFocus(parameter.myMainWindow);
+			return 0;
+		}
+	}
+	WndProc orig = parameter.myOriginalTextEditCallback;
+	return orig(hWnd, uMsg, wParam, lParam);
 }
 
 void ZLWin32ApplicationWindow::updateParameters() {
