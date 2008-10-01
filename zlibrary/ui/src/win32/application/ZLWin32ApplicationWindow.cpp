@@ -517,6 +517,7 @@ void ZLWin32ApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool
 	const ZLToolbar::Item::Type type = item->type();
 	switch (type) {
 		case ZLToolbar::Item::TEXT_FIELD:
+		case ZLToolbar::Item::COMBO_BOX:
 		{
 			const ZLToolbar::ParameterItem &textFieldItem = (const ZLToolbar::ParameterItem&)*item;
 			HWND handle = myParameters[tb.ParameterCodeById[textFieldItem.actionId()]];
@@ -584,32 +585,53 @@ void ZLWin32ApplicationWindow::setWait(bool wait) {
 	myWait = wait;
 }
 
-ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(HWND toolbar, int idCommand, const ZLToolbar::ParameterItem &item) {
+ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(ZLApplication &application, HWND mainWindow, HWND toolbar, int idCommand, const ZLToolbar::ParameterItem &item) : myApplication(application), myMainWindow(mainWindow), myParameterItem(item) {
 	const int index = SendMessage(toolbar, TB_COMMANDTOINDEX, idCommand, 0);
 	RECT rect;
 	SendMessage(toolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
-	DWORD style = WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NOHIDESEL | ES_CENTER;
-	if (item.symbolSet() == ZLToolbar::ParameterItem::SET_DIGITS) {
-		style |= ES_NUMBER;
+	DWORD style = WS_CHILD | WS_VISIBLE | WS_BORDER;
+	if (item.type() == ZLToolbar::Item::COMBO_BOX) {
+		style |= CBS_DROPDOWN | WS_VSCROLL;
 	}
-	myTextEdit = CreateWindow(WC_EDIT, 0, style, rect.left + 5, rect.top + 12, rect.right - rect.left - 10, rect.bottom - rect.top - 15, toolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
+	myComboBox = CreateWindow(WC_COMBOBOX, 0, style, rect.left + 5, rect.top + 12, rect.right - rect.left - 10, rect.bottom - rect.top - 15, toolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
+	HWND textItem = getTextItem(myComboBox);
+	DWORD textItemStyle = GetWindowLong(textItem, GWL_STYLE);
+	textItemStyle |= ES_CENTER | ES_NOHIDESEL;
+	if (item.symbolSet() == ZLToolbar::ParameterItem::SET_DIGITS) {
+		textItemStyle |= ES_NUMBER;
+	}
+	SetWindowLong(textItem, GWL_STYLE, textItemStyle);
 
-	HWND tooltipHandle = CreateWindowEx(WS_EX_TOPMOST, TOOLTIPS_CLASS, 0, WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, myTextEdit, 0, GetModuleHandle(0), 0);
-	ZLUnicodeUtil::Ucs2String buffer;
-	::createNTWCHARString(buffer, item.tooltip());
-	TOOLINFO tti;
-	tti.cbSize = sizeof(tti);
-	tti.uFlags = TTF_SUBCLASS;
-	tti.hwnd = myTextEdit;
-	tti.hinst = GetModuleHandle(0);
-	tti.uId = 0;
-	tti.lpszText = (WCHAR*)::wchar(buffer);
-	GetClientRect(myTextEdit, &tti.rect);
-	SendMessage(tooltipHandle, TTM_ADDTOOL, 0, (LPARAM)&tti);
+	addTooltipToWindow(myComboBox, item.tooltip());
+	addTooltipToWindow(getTextItem(myComboBox), item.tooltip());
+
+	myOriginalComboBoxCallback = (WndProc)SetWindowLong(myComboBox, GWL_WNDPROC, (LONG)ComboBoxCallback);
+	SetWindowLong(myComboBox, GWL_USERDATA, (LONG)this);
+
+	HWND textEdit = getTextItem(myComboBox);
+	myOriginalTextEditCallback = (WndProc)SetWindowLong(textEdit, GWL_WNDPROC, (LONG)TextEditCallback);
+	SetWindowLong(textEdit, GWL_USERDATA, (LONG)this);
 }
 
 HWND ZLWin32ApplicationWindow::TextEditParameter::handle() const {
-	return myTextEdit;
+	return myComboBox;
+}
+
+void ZLWin32ApplicationWindow::TextEditParameter::setValueList(const std::vector<std::string> &values) {
+	if (myParameterItem.type() == ZLToolbar::Item::TEXT_FIELD) {
+		return;
+	}
+
+	SendMessage(myComboBox, CB_RESETCONTENT, 0, 0);
+
+	ZLUnicodeUtil::Ucs2String buffer;
+	for (std::vector<std::string>::const_iterator it = values.begin(); it != values.end(); ++it) {
+		SendMessage(myComboBox, CB_ADDSTRING, 0, (LPARAM)::wchar(::createNTWCHARString(buffer, *it)));
+	}
+
+	if (values.size() > 0) {
+		SendMessage(myComboBox, CB_SETMINVISIBLE, std::min((int)values.size(), 7), 0);
+	}
 }
 
 std::string ZLWin32ApplicationWindow::TextEditParameter::internalValue() const {
