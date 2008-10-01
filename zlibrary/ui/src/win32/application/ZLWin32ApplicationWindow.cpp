@@ -40,7 +40,7 @@ const int ZLWin32ApplicationWindow::IconSize = 32;
 
 ZLWin32ApplicationWindow *ZLWin32ApplicationWindow::ourApplicationWindow = 0;
 
-LRESULT CALLBACK ZLWin32ApplicationWindow::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LRESULT CALLBACK ZLWin32ApplicationWindow::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	return ourApplicationWindow->mainLoopCallback(hWnd, uMsg, wParam, lParam);
 }
 
@@ -239,7 +239,7 @@ ZLWin32ApplicationWindow::ZLWin32ApplicationWindow(ZLApplication *application) :
 	WNDCLASSEX wc;
 	wc.cbSize = sizeof(wc);
 	wc.style = CS_HREDRAW | CS_VREDRAW;
-	wc.lpfnWndProc = WndProc;
+	wc.lpfnWndProc = Callback;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetModuleHandle(0);

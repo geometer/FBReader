@@ -36,7 +36,7 @@ class ZLWin32ApplicationWindow : public ZLDesktopApplicationWindow {
 private:
 	static const int IconSize;
 
-	static LRESULT CALLBACK WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	static ZLWin32ApplicationWindow *ourApplicationWindow;
 
 public:
