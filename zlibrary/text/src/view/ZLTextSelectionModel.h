@@ -31,6 +31,8 @@
 
 class ZLTextView;
 class ZLApplication;
+class ZLImageData;
+class ZLTextElementArea;
 
 class ZLTextSelectionModel {
 
@@ -59,6 +61,7 @@ public:
 	void extendWordSelectionToParagraph();
 
 	const std::string &text() const;
+	shared_ptr<ZLImageData> image() const;
 	const std::vector<Range> &ranges() const;
 
 	bool isEmpty() const;
@@ -72,12 +75,17 @@ private:
 	};
 
 private:
+	int charIndex(const ZLTextElementArea &area, int x);
+
 	Range internalRange() const;
 	void setBound(Bound &bound, int x, int y);
 	void startSelectionScrolling(bool forward);
 	void stopSelectionScrolling();
 
 	void scrollAndExtend();
+
+	void clearData() const;
+	void createData() const;
 
 private:
 	ZLTextView &myView;
@@ -95,6 +103,7 @@ private:
 
 	mutable std::set<ZLTextParagraphCursorPtr> myCursors;
 	mutable std::string myText;
+	mutable shared_ptr<ZLImageData> myImage;
 	mutable bool myTextIsUpToDate;
 
 	mutable std::vector<Range> myRanges;

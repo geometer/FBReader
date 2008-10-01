@@ -252,7 +252,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, si
 			if (kind == ZLTextElement::WORD_ELEMENT) {
 				drawWord(wx, wy, (const ZLTextWord&)element, it->StartCharIndex, -1, false);
 			} else {
-				context().drawImage(wx, wy, ((const ZLTextImageElement&)element).image());
+				context().drawImage(wx, wy, *((const ZLTextImageElement&)element).image());
 			}
 		}
 	}

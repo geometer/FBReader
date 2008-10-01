@@ -60,9 +60,9 @@ private:
 class ZLTextImageElement : public ZLTextElement {
 
 public:
-	ZLTextImageElement(const std::string &id, const shared_ptr<ZLImageData> image);
+	ZLTextImageElement(const std::string &id, shared_ptr<ZLImageData> image);
 	~ZLTextImageElement();
-	const ZLImageData &image() const;
+	shared_ptr<ZLImageData> image() const;
 	const std::string &id() const;
 
 private:
@@ -70,7 +70,7 @@ private:
 
 private:
 	const std::string myId;
-	const shared_ptr<ZLImageData> myImage;
+	shared_ptr<ZLImageData> myImage;
 };
 
 class ZLTextSpecialElement : public ZLTextElement {
@@ -138,7 +138,7 @@ inline ZLTextElement::~ZLTextElement() {}
 
 inline ZLTextImageElement::ZLTextImageElement(const std::string &id, const shared_ptr<ZLImageData> image) : myId(id), myImage(image) {}
 inline ZLTextImageElement::~ZLTextImageElement() {}
-inline const ZLImageData &ZLTextImageElement::image() const { return *myImage; }
+inline shared_ptr<ZLImageData> ZLTextImageElement::image() const { return myImage; }
 inline const std::string &ZLTextImageElement::id() const { return myId; }
 
 inline ZLTextSpecialElement::ZLTextSpecialElement(Kind kind) : myKind(kind) {}

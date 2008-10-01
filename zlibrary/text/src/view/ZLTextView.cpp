@@ -152,21 +152,43 @@ void ZLTextView::scrollToEndOfText() {
 }
 
 int ZLTextView::paragraphIndexByCoordinates(int x, int y) const {
-	int storedIndex = -1;
+	int paragraphIndex = -1;
+	int yBottom = -1;
+	int xLeft = context().width() + 1;
+	int xRight = -1;
+
 	for (ZLTextElementIterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
 		if (it->YEnd < y) {
-			storedIndex = it->ParagraphIndex;
+			paragraphIndex = it->ParagraphIndex;
+			if (it->YStart > yBottom) {
+				yBottom = it->YEnd;
+				xLeft = it->XStart;
+				xRight = -1;
+			}
+			xRight = it->XEnd;
 			continue;
 		}
 		if (it->YStart > y) {
-			return (storedIndex == it->ParagraphIndex) ? storedIndex : -1;
+			return
+				((paragraphIndex == it->ParagraphIndex) &&
+				 (xLeft <= x) && (x <= xRight)) ?
+				paragraphIndex : -1;
 		}
 		if (it->XEnd < x) {
-			storedIndex = it->ParagraphIndex;
+			paragraphIndex = it->ParagraphIndex;
+			if (it->YStart > yBottom) {
+				yBottom = it->YEnd;
+				xLeft = it->XStart;
+				xRight = -1;
+			}
+			xRight = it->XEnd;
 			continue;
 		}
 		if (it->XStart > x) {
-			return (storedIndex == it->ParagraphIndex) ? storedIndex : -1;
+			return
+				((paragraphIndex == it->ParagraphIndex) &&
+				 (it->YStart <= yBottom) && (xLeft < x)) ?
+				paragraphIndex : -1;
 		}
 		return it->ParagraphIndex;
 	}
@@ -409,6 +431,11 @@ void ZLTextView::copySelectedTextToClipboard(ZLDialogManager::ClipboardType type
 		std::string text = mySelectionModel.text();
 		if (!text.empty()) {
 			ZLDialogManager::instance().setClipboardText(text, type);
+		} else {
+			shared_ptr<ZLImageData> image = mySelectionModel.image();
+			if (!image.isNull()) {
+				ZLDialogManager::instance().setClipboardImage(*image, type);
+			}
 		}
 	}
 }

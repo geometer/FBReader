@@ -28,6 +28,34 @@
 ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view, ZLApplication &application) : myView(view), myApplication(application), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
 }
 
+void ZLTextSelectionModel::clearData() const {
+	myText.erase();
+	myImage.reset();
+}
+
+int ZLTextSelectionModel::charIndex(const ZLTextElementArea &area, int x) {
+	myView.myStyle.setTextStyle(area.Style, area.BidiLevel);
+	ZLTextWordCursor cursor = myView.startCursor();
+	cursor.moveToParagraph(area.ParagraphIndex);
+	const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[area.ElementIndex];
+	const bool mainDir =
+		area.BidiLevel % 2 == myView.myStyle.baseBidiLevel() % 2;
+	const int deltaX = mainDir ? x - area.XStart : area.XEnd - x;
+	const int len = area.Length;
+	const int start = area.StartCharIndex;
+	int diff = deltaX;
+	int previousDiff = diff;
+	int index;
+	for (index = 0; (index < len) && (diff > 0); ++index) {
+		previousDiff = diff;
+		diff = deltaX - myView.myStyle.wordWidth(word, start, index + 1);
+	}
+	if (previousDiff + diff < 0) {
+		--index;
+	}
+	return start + index;
+}
+
 void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 	if (myView.myTextElementMap.empty()) {
 		return;
@@ -54,24 +82,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 			bound.Before.ElementIndex = bound.After.ElementIndex;
 			bound.Before.Exists = true;
 			if (it->Kind == ZLTextElement::WORD_ELEMENT) {
-				myView.myStyle.setTextStyle(it->Style, it->BidiLevel);
-				ZLTextWordCursor cursor = myView.startCursor();
-				cursor.moveToParagraph(it->ParagraphIndex);
-				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->ElementIndex];
-				const int deltaX = mainDir ? x - it->XStart : it->XEnd - x;
-				const int len = it->Length;
-				const int start = it->StartCharIndex;
-				int diff = deltaX;
-				int previousDiff = diff;
-				int index;
-				for (index = 0; (index < len) && (diff > 0); ++index) {
-					previousDiff = diff;
-					diff = deltaX - myView.myStyle.wordWidth(word, start, index + 1);
-				}
-				if (previousDiff + diff < 0) {
-					--index;
-				}
-				bound.After.CharIndex = start + index;
+				bound.After.CharIndex = charIndex(*it, x);
 				bound.Before.CharIndex = bound.After.CharIndex;
 			}
 		} else if (it == myView.myTextElementMap.begin()) {
@@ -105,7 +116,7 @@ void ZLTextSelectionModel::activate(int x, int y) {
 	setBound(myFirstBound, x, y);
 	mySecondBound = myFirstBound;
 	myCursors.clear();
-	myText.erase();
+	clearData();
 	myTextIsUpToDate = true;
 	myRanges.clear();
 	myRangeVectorIsUpToDate = true;
@@ -144,7 +155,7 @@ bool ZLTextSelectionModel::extendTo(int x, int y) {
 
 	if ((oldRange.first != newRange.first) || (oldRange.second != newRange.second)) {
 		myTextIsUpToDate = false;
-		myText.erase();
+		clearData();
 		myRangeVectorIsUpToDate = false;
 		myRanges.clear();
 		return true;
@@ -164,7 +175,7 @@ void ZLTextSelectionModel::clear() {
 	myIsActive = false;
 	myDoUpdate = false;
 	myCursors.clear();
-	myText.erase();
+	clearData();
 	myTextIsUpToDate = true;
 	myRanges.clear();
 	myRangeVectorIsUpToDate = true;
@@ -377,7 +388,7 @@ void ZLTextSelectionModel::update() {
 		setBound(mySecondBound, myStoredX, myStoredY);
 		myView.copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 		myTextIsUpToDate = false;
-		myText.erase();
+		clearData();
 		myRangeVectorIsUpToDate = false;
 		myRanges.clear();
 	}
@@ -393,7 +404,7 @@ void ZLTextSelectionModel::scrollAndExtend() {
 	}
 }
 
-const std::string &ZLTextSelectionModel::text() const {
+void ZLTextSelectionModel::createData() const {
 	if (!myTextIsUpToDate && !isEmpty()) {
 		Range r = internalRange();
 
@@ -408,8 +419,9 @@ const std::string &ZLTextSelectionModel::text() const {
 		std::set<ZLTextParagraphCursorPtr> pcursors;
 		pcursors.insert(start.paragraphCursorPtr());
 
-		for (ZLTextWordCursor cursor = start; cursor < end; ) {
-			if ((cursor < end) && cursor.isEndOfParagraph()) {
+		ZLTextWordCursor cursor = start;
+		while (cursor < end) {
+			if (cursor.isEndOfParagraph()) {
 				cursor.nextParagraph();
 				pcursors.insert(cursor.paragraphCursorPtr());
 				myText.append(ZLibrary::EndOfLine);
@@ -436,6 +448,11 @@ const std::string &ZLTextSelectionModel::text() const {
 					}
 					break;
 				}
+				case ZLTextElement::IMAGE_ELEMENT:
+					if (myImage.isNull()) {
+						myImage = ((const ZLTextImageElement&)element).image();
+					}
+					break;
 				case ZLTextElement::HSPACE_ELEMENT:
 				case ZLTextElement::NB_HSPACE_ELEMENT:
 					myText += ' ';
@@ -445,12 +462,26 @@ const std::string &ZLTextSelectionModel::text() const {
 			}
 			cursor.nextWord();
 		}
+		if ((cursor == end) && !cursor.isEndOfParagraph() && myImage.isNull()) {
+			const ZLTextElement &element = cursor.element();
+			if (element.kind() == ZLTextElement::IMAGE_ELEMENT) {
+				myImage = ((const ZLTextImageElement&)element).image();
+			}
+		}
 
 		myCursors.swap(pcursors);
 		myTextIsUpToDate = true;
 	}
+}
 
+const std::string &ZLTextSelectionModel::text() const {
+	createData();
 	return myText;
+}
+
+shared_ptr<ZLImageData> ZLTextSelectionModel::image() const {
+	createData();
+	return myImage;
 }
 
 bool ZLTextSelectionModel::selectWord(int x, int y) {
@@ -462,35 +493,44 @@ bool ZLTextSelectionModel::selectWord(int x, int y) {
 			break;
 		}
 	}
-	if (ZLTextElementArea::RangeChecker(x, y)(*it) &&
-			(it->Kind == ZLTextElement::WORD_ELEMENT)) {
-		myView.myStyle.setTextStyle(it->Style, it->BidiLevel);
-		ZLTextWordCursor cursor = myView.startCursor();
-		cursor.moveToParagraph(it->ParagraphIndex);
-		const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->ElementIndex];
-		ZLUnicodeUtil::Ucs4String ucs4string;
-		ZLUnicodeUtil::utf8ToUcs4(ucs4string, word.Data, word.Size);
+	if (ZLTextElementArea::RangeChecker(x, y)(*it)) {
 		int startIndex = 0;
-		int endIndex = word.Length;
-		while (startIndex < endIndex) {
-			ZLUnicodeUtil::Ucs4Char ch = ucs4string[startIndex];
-			if (!ZLUnicodeUtil::isLetter(ch) && ((ch < '0') || (ch > '9'))) {
-				++startIndex;
-			} else {
+		int endIndex = 1;
+		switch (it->Kind) {
+			default:
+				return false;
+			case ZLTextElement::IMAGE_ELEMENT:
 				break;
+			case ZLTextElement::WORD_ELEMENT:
+			{
+				ZLTextWordCursor cursor = myView.startCursor();
+				cursor.moveToParagraph(it->ParagraphIndex);
+				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->ElementIndex];
+				ZLUnicodeUtil::Ucs4String ucs4string;
+				ZLUnicodeUtil::utf8ToUcs4(ucs4string, word.Data, word.Size);
+				startIndex = charIndex(*it, x);
+				if (startIndex == word.Length) {
+					--startIndex;
+				}
+				endIndex = startIndex + 1;
+				ZLUnicodeUtil::Ucs4Char ch = ucs4string[startIndex];
+				if (ZLUnicodeUtil::isLetter(ch) || (('0' <= ch) && (ch <= '9'))) {
+					while (--startIndex >= 0) {
+						ch = ucs4string[startIndex];
+						if (!ZLUnicodeUtil::isLetter(ch) && ((ch < '0') || (ch > '9'))) {
+							break;
+						}
+					}
+					++startIndex;
+					while (++endIndex <= word.Length) {
+						ch = ucs4string[endIndex - 1];
+						if (!ZLUnicodeUtil::isLetter(ch) && ((ch < '0') || (ch > '9'))) {
+							break;
+						}
+					}
+					--endIndex;
+				}
 			}
-		}
-		while (endIndex > startIndex) {
-			ZLUnicodeUtil::Ucs4Char ch = ucs4string[endIndex - 1];
-			if (!ZLUnicodeUtil::isLetter(ch) && ((ch < '0') || (ch > '9'))) {
-				--endIndex;
-			} else {
-				break;
-			}
-		}
-		if (startIndex == endIndex) {
-			startIndex = 0;
-			endIndex = word.Length;
 		}
 
 		myFirstBound.Before.Exists = true;
