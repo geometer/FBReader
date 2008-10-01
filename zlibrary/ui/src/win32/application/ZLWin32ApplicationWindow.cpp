@@ -100,15 +100,12 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			return 0;
 		case WM_SIZE:
 		{
-			int offset = 0;
-			if (!myFullScreen) {
-				//SendMessage(myToolbar, TB_AUTOSIZE, 0, 0);
-
-				RECT rebarRect;
-				GetWindowRect(myRebar, &rebarRect);
-				offset = rebarRect.bottom - rebarRect.top - 1;
-
-				MoveWindow(myRebar, 0, 0, LOWORD(lParam), rebarRect.bottom - rebarRect.top, true);
+			RECT rebarRect;
+			GetWindowRect(myRebar, &rebarRect);
+			int offset = rebarRect.bottom - rebarRect.top - 1;
+			MoveWindow(myRebar, 0, 0, LOWORD(lParam), rebarRect.bottom - rebarRect.top, true);
+			if (myFullScreen) {
+				offset = 0;
 			}
 			MoveWindow(myWin32ViewWidget->handle(), 0, offset, LOWORD(lParam), HIWORD(lParam) - offset, true);
 			return DefWindowProc(hWnd, uMsg, wParam, lParam);
