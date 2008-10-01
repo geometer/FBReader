@@ -68,7 +68,7 @@ private:
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
-	void updateTextFields();
+	void updateParameters();
 	void updateWindowToolbarInfo();
 	void updateFullscreenToolbarSize();
 	void setTooltip(TOOLTIPTEXT &tooltip);
@@ -93,7 +93,7 @@ private:
 	class TextEditParameter : public VisualParameter {
 
 	public:
-		TextEditParameter(HWND toolbar, int idCommand, const ZLToolbar::TextFieldItem &item);
+		TextEditParameter(HWND toolbar, int idCommand, const ZLToolbar::ParameterItem &item);
 		HWND handle() const;
 
 	private:
@@ -115,7 +115,7 @@ private:
 		HWND hwnd;
 		std::map<ZLToolbar::ItemPtr,int> SeparatorNumbers;
 		std::map<std::string,int> ActionCodeById;
-		std::map<std::string,int> TextFieldCodeById;
+		std::map<std::string,int> ParameterCodeById;
 		std::map<int,ZLToolbar::ItemPtr> TBItemByActionCode;
 		std::map<HICON,HBITMAP> BitmapByIcon;
 	};

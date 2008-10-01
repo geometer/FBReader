@@ -135,7 +135,7 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 					setTooltip(*(TOOLTIPTEXT*)lParam);
 					break;
 				case NM_CUSTOMDRAW:
-					updateTextFields();
+					updateParameters();
 					break;
 				case TBN_DROPDOWN:
 					runPopup(*(const NMTOOLBAR*)lParam);
@@ -355,7 +355,7 @@ bool ZLWin32ApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-class TextFieldData {
+class ParameterData {
 
 private:
 	typedef LRESULT(CALLBACK *WndProc)(HWND, UINT, WPARAM, LPARAM);
@@ -363,7 +363,7 @@ private:
 	static LRESULT CALLBACK Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 public:
-	TextFieldData(HWND textField, HWND mainWindow, ZLApplication &application, const std::string &actionId);
+	ParameterData(HWND textField, HWND mainWindow, ZLApplication &application, const std::string &actionId);
 
 private:
 	WndProc myOriginalCallback;
@@ -389,9 +389,9 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	switch (type) {
 		case ZLToolbar::Item::TEXT_FIELD:
 		{
-			const ZLToolbar::TextFieldItem &textFieldItem = (ZLToolbar::TextFieldItem&)*item;
-			button.idCommand = -200 + tb.TextFieldCodeById.size();
-			tb.TextFieldCodeById[textFieldItem.actionId()] = button.idCommand;
+			const ZLToolbar::ParameterItem &textFieldItem = (ZLToolbar::ParameterItem&)*item;
+			button.idCommand = -200 + tb.ParameterCodeById.size();
+			tb.ParameterCodeById[textFieldItem.actionId()] = button.idCommand;
 			button.iBitmap = I_IMAGENONE;
 			button.fsStyle = TBSTYLE_BUTTON | BTNS_AUTOSIZE | BTNS_SHOWTEXT;
 			button.fsState = 0;
@@ -437,7 +437,7 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	SendMessage(tb.hwnd, TB_ADDBUTTONS, 1, (LPARAM)&button);
 
 	if (type == ZLToolbar::Item::TEXT_FIELD) {
-		const ZLToolbar::TextFieldItem &textFieldItem = (ZLToolbar::TextFieldItem&)*item;
+		const ZLToolbar::ParameterItem &textFieldItem = (ZLToolbar::ParameterItem&)*item;
 		TBBUTTONINFO buttonInfo;
 		buttonInfo.cbSize = sizeof(TBBUTTONINFO);
 		buttonInfo.dwMask = TBIF_SIZE;
@@ -446,13 +446,13 @@ void ZLWin32ApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		TextEditParameter *parameter = new TextEditParameter(tb.hwnd, button.idCommand, textFieldItem);
 		myParameters[button.idCommand] = parameter->handle();
 		ZLToolbar::ItemPtr item = tb.TBItemByActionCode[button.idCommand];
-		new TextFieldData(parameter->handle(), myMainWindow, application(), textFieldItem.actionId());
+		new ParameterData(parameter->handle(), myMainWindow, application(), textFieldItem.actionId());
 		addVisualParameter(textFieldItem.parameterId(), parameter);
 	}
 }
 
-LRESULT CALLBACK TextFieldData::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	TextFieldData *data = (TextFieldData*)GetWindowLong(hWnd, GWL_USERDATA);
+LRESULT CALLBACK ParameterData::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+	ParameterData *data = (ParameterData*)GetWindowLong(hWnd, GWL_USERDATA);
 	if (uMsg == WM_CHAR) {
 		if (wParam == 13) {
 			data->myApplication.doAction(data->myActionId);
@@ -467,13 +467,13 @@ LRESULT CALLBACK TextFieldData::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LP
 	return orig(hWnd, uMsg, wParam, lParam);
 }
 
-TextFieldData::TextFieldData(HWND textField, HWND mainWindow, ZLApplication &application, const std::string &actionId) : myMainWindow(mainWindow), myApplication(application), myActionId(actionId) {
+ParameterData::ParameterData(HWND textField, HWND mainWindow, ZLApplication &application, const std::string &actionId) : myMainWindow(mainWindow), myApplication(application), myActionId(actionId) {
 	myOriginalCallback = (WndProc)SetWindowLong(textField, GWL_WNDPROC, (LONG)Callback);
 	SetWindowLong(textField, GWL_USERDATA, (LONG)this);
 }
 
-void ZLWin32ApplicationWindow::updateTextFields() {
-	const size_t len = myWindowToolbar.TextFieldCodeById.size();
+void ZLWin32ApplicationWindow::updateParameters() {
+	const size_t len = myWindowToolbar.ParameterCodeById.size();
 	for (size_t i = 0; i < len; ++i) {
 		const size_t idCommand = -200 + i;
 		if (myParameters[idCommand] != 0) {
@@ -498,10 +498,10 @@ void ZLWin32ApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool
 	switch (type) {
 		case ZLToolbar::Item::TEXT_FIELD:
 		{
-			const ZLToolbar::TextFieldItem &textFieldItem = (const ZLToolbar::TextFieldItem&)*item;
-			HWND handle = myParameters[tb.TextFieldCodeById[textFieldItem.actionId()]];
+			const ZLToolbar::ParameterItem &textFieldItem = (const ZLToolbar::ParameterItem&)*item;
+			HWND handle = myParameters[tb.ParameterCodeById[textFieldItem.actionId()]];
 			if (handle != 0) {
-				const int idCommand = tb.TextFieldCodeById[textFieldItem.actionId()];
+				const int idCommand = tb.ParameterCodeById[textFieldItem.actionId()];
 				PostMessage(tb.hwnd, TB_SETSTATE, idCommand, visible ? 0 : TBSTATE_HIDDEN);
 				ShowWindow(handle, visible ? SW_SHOW : SW_HIDE);
 				PostMessage(handle, EM_SETREADONLY, !enabled, 0);
@@ -564,12 +564,12 @@ void ZLWin32ApplicationWindow::setWait(bool wait) {
 	myWait = wait;
 }
 
-ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(HWND toolbar, int idCommand, const ZLToolbar::TextFieldItem &item) {
+ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(HWND toolbar, int idCommand, const ZLToolbar::ParameterItem &item) {
 	const int index = SendMessage(toolbar, TB_COMMANDTOINDEX, idCommand, 0);
 	RECT rect;
 	SendMessage(toolbar, TB_GETITEMRECT, index, (LPARAM)&rect);
 	DWORD style = WS_CHILD | WS_VISIBLE | WS_BORDER | ES_NOHIDESEL | ES_CENTER;
-	if (item.symbolSet() == ZLToolbar::TextFieldItem::SET_DIGITS) {
+	if (item.symbolSet() == ZLToolbar::ParameterItem::SET_DIGITS) {
 		style |= ES_NUMBER;
 	}
 	myTextEdit = CreateWindow(WC_EDIT, 0, style, rect.left + 5, rect.top + 12, rect.right - rect.left - 10, rect.bottom - rect.top - 15, toolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
@@ -625,7 +625,7 @@ void ZLWin32ApplicationWindow::Toolbar::clear() {
 	hwnd = 0;
 	SeparatorNumbers.clear();
 	ActionCodeById.clear();
-	TextFieldCodeById.clear();
+	ParameterCodeById.clear();
 	TBItemByActionCode.clear();
 	for (std::map<HICON,HBITMAP>::const_iterator it = BitmapByIcon.begin(); it != BitmapByIcon.end(); ++it) {
 		DestroyIcon(it->first);
