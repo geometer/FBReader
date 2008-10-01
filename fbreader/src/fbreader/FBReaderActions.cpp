@@ -76,15 +76,11 @@ void ShowOptionsDialogAction::run() {
 	OptionsDialog(f).dialog().run();
 }
 
-ShowContentsAction::ShowContentsAction(FBReader &fbreader) : FBAction(fbreader) {
+ShowContentsAction::ShowContentsAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE) {
 }
 
 bool ShowContentsAction::isVisible() const {
-	if (((ContentsView&)*fbreader().myContentsView).isEmpty()) {
-		return false;
-	}
-	FBReader::ViewMode mode = fbreader().mode();
-	return (mode == FBReader::BOOK_TEXT_MODE) || (mode == FBReader::FOOTNOTE_MODE);
+	return ModeDependentAction::isVisible() && !((ContentsView&)*fbreader().myContentsView).isEmpty();
 }
 
 void ShowContentsAction::run() {

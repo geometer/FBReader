@@ -123,7 +123,7 @@ public:
 	void run();
 };
 
-class ShowContentsAction : public FBAction {
+class ShowContentsAction : public ModeDependentAction {
 
 public:
 	ShowContentsAction(FBReader &fbreader);
