@@ -48,18 +48,41 @@ static void gtk_widget_tool_item_finalize(GObject *object) {
 	parent_class->finalize(object);
 }
 
+static void gtk_widget_tool_item_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
+  GtkWidgetToolItem *toolitem = GTK_WIDGET_TOOL_ITEM(widget);
+  GtkAllocation child_allocation;
+  gint border_width;
+  GtkWidget *child = toolitem->widget;
+
+  widget->allocation = *allocation;
+  border_width = GTK_CONTAINER (widget)->border_width;
+  
+  if (child && GTK_WIDGET_VISIBLE(child)) {
+    child_allocation.x = allocation->x + border_width;
+    child_allocation.y = allocation->y + border_width;
+    child_allocation.width = allocation->width - 2 * border_width;
+    child_allocation.height = allocation->height - 2 * border_width;
+    
+		if ((child_allocation.width > 0) && (child_allocation.height > 0)) {
+    	gtk_widget_size_allocate (child, &child_allocation);
+		}
+  }
+}
+
 static void gtk_widget_tool_item_class_init(GtkWidgetToolItemClass *klass) {
 	GObjectClass *object_class;
-	//GtkWidgetClass *widget_class;
+	GtkWidgetClass *widget_class;
 	//GtkToolItemClass *tool_item_class;
 
 	parent_class = g_type_class_peek_parent(klass);
 
 	object_class = (GObjectClass*)klass;
-	//widget_class = (GtkWidgetClass*)klass;
+	widget_class = (GtkWidgetClass*)klass;
 	//tool_item_class = (GtkToolItemClass*)klass;
 
 	object_class->finalize = gtk_widget_tool_item_finalize;
+
+  widget_class->size_allocate = gtk_widget_tool_item_size_allocate;
 
 	//tool_item_class->create_menu_proxy = gtk_widget_tool_item_create_menu_proxy;
 	//tool_item_class->toolbar_reconfigured = gtk_widget_tool_item_toolbar_reconfigured;
