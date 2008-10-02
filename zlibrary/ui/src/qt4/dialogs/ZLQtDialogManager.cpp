@@ -31,6 +31,8 @@
 #include "ZLQtWaitMessage.h"
 #include "ZLQtUtil.h"
 
+#include "../image/ZLQtImageManager.h"
+
 shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
 	myStoredWindow = qApp->activeWindow();
 	return new ZLQtOptionsDialog(resource()[key], applyAction, showApplyButton);
@@ -86,4 +88,11 @@ void ZLQtDialogManager::setClipboardText(const std::string &text, ClipboardType 
 			(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
 		);
 	}
+}
+
+void ZLQtDialogManager::setClipboardImage(const ZLImageData &imageData, ClipboardType type) const {
+	qApp->clipboard()->setImage(
+		(ZLQtImageData&)imageData,
+		(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
+	);
 }

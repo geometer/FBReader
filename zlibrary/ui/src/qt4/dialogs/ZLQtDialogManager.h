@@ -45,6 +45,7 @@ public:
 
 	bool isClipboardSupported(ClipboardType type) const;
 	void setClipboardText(const std::string &text, ClipboardType type) const;
+	void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const;
 
 private:
 	mutable QWidget *myStoredWindow;

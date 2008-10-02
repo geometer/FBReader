@@ -86,6 +86,7 @@ private:
 
 		std::string internalValue() const;
 		void internalSetValue(const std::string &value);
+		void setValueList(const std::vector<std::string> &values) {}
 
 	private:
 		ZLQtApplicationWindow &myWindow;
