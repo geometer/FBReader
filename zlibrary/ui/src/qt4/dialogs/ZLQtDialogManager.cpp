@@ -92,7 +92,7 @@ void ZLQtDialogManager::setClipboardText(const std::string &text, ClipboardType 
 
 void ZLQtDialogManager::setClipboardImage(const ZLImageData &imageData, ClipboardType type) const {
 	qApp->clipboard()->setImage(
-		(ZLQtImageData&)imageData,
+		*((ZLQtImageData&)imageData).image(),
 		(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
 	);
 }
