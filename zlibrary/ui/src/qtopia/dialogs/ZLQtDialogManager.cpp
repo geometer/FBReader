@@ -29,6 +29,7 @@
 #include "ZLQtUtil.h"
 
 #include "../application/ZLQtApplicationWindow.h"
+#include "../../qt/image/ZLQtImageManager.h"
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myApplicationWindow = new ZLQtApplicationWindow(application);
@@ -84,4 +85,12 @@ void ZLQtDialogManager::setClipboardText(const std::string &text, ClipboardType 
 	if ((type == CLIPBOARD_MAIN) && !text.empty()) {
 		qApp->clipboard()->setText(::qtString(text));
 	}
+}
+
+void ZLQtDialogManager::setClipboardImage(const ZLImageData &imageData, ClipboardType type) const {
+#ifndef QT_NO_MIMECLIPBOARD
+	if (type == CLIPBOARD_MAIN) {
+		qApp->clipboard()->setImage((ZLQtImageData&)imageData);
+	}
+#endif // QT_NO_MIMECLIPBOARD
 }
