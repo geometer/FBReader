@@ -32,6 +32,9 @@ class ZLWin32PopupMenu {
 private:
 	static HFONT menuFont();
 
+private:
+	static int ourMenuHeight;
+
 public:
 	ZLWin32PopupMenu(HWND mainWindow);
 	~ZLWin32PopupMenu();

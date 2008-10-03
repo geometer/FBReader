@@ -30,6 +30,7 @@
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 
 class ZLWin32ViewWidget;
+class ZLWin32PopupMenu;
 
 class ZLWin32ApplicationWindow : public ZLDesktopApplicationWindow { 
 
@@ -154,6 +155,8 @@ private:
 	bool myWait;
 
 	HCURSOR myCursor;
+
+	shared_ptr<ZLWin32PopupMenu> myPopupMenu;
 
 friend class ZLWin32TimeManager;
 };

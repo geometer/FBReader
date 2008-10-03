@@ -18,6 +18,7 @@
  */
 
 #include "ZLWin32ApplicationWindow.h"
+#include "ZLWin32PopupMenu.h"
 #include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
 void ZLWin32ApplicationWindow::createWindowToolbar() {
@@ -74,7 +75,6 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 	RECT toolbarRect;
 	GetClientRect(myWindowToolbar.hwnd, &toolbarRect);
 
-	HMENU popup = CreatePopupMenu();
 	HIMAGELIST imageList = (HIMAGELIST)SendMessage(myWindowToolbar.hwnd, TB_GETIMAGELIST, 0, 0);
 	int imageIndex = 0;
 
@@ -95,11 +95,7 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 		}
 	}
 
-	ZLUnicodeUtil::Ucs2String buffer;
-	MENUITEMINFO miInfo;
-	miInfo.cbSize = sizeof(MENUITEMINFO);
-	miInfo.wID = 1;
-	int count = 0;
+	myPopupMenu = new ZLWin32PopupMenu(myMainWindow);
 	for (; index < len; ++index) {
 		TBBUTTON info;
 		SendMessage(myWindowToolbar.hwnd, TB_GETBUTTON, index, (LPARAM)&info);
@@ -108,51 +104,24 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 			if (!item.isNull()) {
 				const ZLToolbar::AbstractButtonItem &button =
 					(const ZLToolbar::AbstractButtonItem&)*item;
-				miInfo.fMask = MIIM_STATE | MIIM_STRING | MIIM_ID | MIIM_BITMAP;
-				miInfo.fType = MFT_STRING;
-				miInfo.fState = (info.fsState & TBSTATE_ENABLED) ?
-					MFS_ENABLED :
-					(MFS_DISABLED | MFS_GRAYED);
-				miInfo.dwTypeData =
-					(WCHAR*)::wchar(::createNTWCHARString(buffer, "  " + button.tooltip()));
-				miInfo.cch = buffer.size();
-				miInfo.wID = info.idCommand;
-
-				HICON hIcon = ImageList_GetIcon(imageList, imageIndex, ILD_NORMAL);
-				HBITMAP hBitmap = myWindowToolbar.BitmapByIcon[hIcon];
-				if (hBitmap == 0) {
-					HDC hDC = ::CreateCompatibleDC(0);
-					BYTE *array = new BYTE[4 * IconSize * IconSize];
-					::memset(array, 0xFF, 4 * IconSize * IconSize);
-					hBitmap = ::CreateBitmap(IconSize, IconSize, 4, 8, array);
-					delete[] array;
-					::SelectObject(hDC, hBitmap);
-					::DrawIcon(hDC, 0, 0, hIcon);
-					::DeleteDC(hDC);
-					myWindowToolbar.BitmapByIcon[hIcon] = hBitmap;
-				}
-				miInfo.hbmpItem = hBitmap;
-
-				InsertMenuItem(popup, count++, true, &miInfo);
+				myPopupMenu->addItem(
+					"  " + button.tooltip(),
+					ImageList_GetIcon(imageList, imageIndex, ILD_NORMAL),
+					info.fsState & TBSTATE_ENABLED,
+					info.idCommand
+				);
 			} else if (info.idCommand >= -200) /* is a separator */ {
-				if (count > 0) {
-					miInfo.fMask = MIIM_TYPE;
-					miInfo.fType = MFT_SEPARATOR;
-					InsertMenuItem(popup, count++, true, &miInfo);
-				}
+				myPopupMenu->addSeparator();
 			}
 		}
 		if (info.idCommand > -100) {
 			++imageIndex;
 		}
 	}
-
 	POINT p;
 	p.x = chevron.rc.right - 2;
 	p.y = chevron.rc.bottom;
 	ClientToScreen(myMainWindow, &p);
-	const int code = TrackPopupMenu(popup, TPM_RIGHTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, p.x, p.y, 0, myMainWindow, 0);
-	onToolbarButtonRelease(code);
-	PostMessage(myMainWindow, WM_NULL, 0, 0);
-	DestroyMenu(popup);
+	onToolbarButtonRelease(myPopupMenu->run(p, true));
+	myPopupMenu.reset();
 }

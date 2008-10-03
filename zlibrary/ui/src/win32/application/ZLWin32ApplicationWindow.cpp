@@ -29,8 +29,9 @@
 #include <ZLPaintContext.h>
 #include <ZLPopupData.h>
 
-#include "../../../../core/src/util/ZLKeyUtil.h"
 #include "ZLWin32ApplicationWindow.h"
+#include "ZLWin32PopupMenu.h"
+#include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../dialogs/ZLWin32DialogManager.h"
 #include "../view/ZLWin32ViewWidget.h"
 #include "../../../../core/src/win32/util/W32WCHARUtil.h"
@@ -186,30 +187,19 @@ void ZLWin32ApplicationWindow::runPopup(const NMTOOLBAR &nmToolbar) {
 		if (!popupData.isNull()) {
 			const int count = popupData->count();
 			if (count != 0) {
-				HMENU popup = CreatePopupMenu();
-				ZLUnicodeUtil::Ucs2String buffer;
-				MENUITEMINFO miInfo;
-				miInfo.cbSize = sizeof(MENUITEMINFO);
-				miInfo.fMask = MIIM_STATE | MIIM_STRING | MIIM_ID;
-				miInfo.fType = MFT_STRING;
-				miInfo.fState = MFS_ENABLED;
+				myPopupMenu = new ZLWin32PopupMenu(myMainWindow);
 				for (int i = 0; i < count; ++i) {
-					miInfo.wID = i + 1;
-					const std::string text = popupData->text(i);
-					miInfo.dwTypeData = (WCHAR*)::wchar(::createNTWCHARString(buffer, text));
-					miInfo.cch = buffer.size();
-					InsertMenuItem(popup, i, true, &miInfo);
+					myPopupMenu->addItem(popupData->text(i), 0, true);
 				}
 				POINT p;
 				p.x = nmToolbar.rcButton.left;
 				p.y = nmToolbar.rcButton.bottom + 6;
 				ClientToScreen(myMainWindow, &p);
-				int code = TrackPopupMenu(popup, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, p.x, p.y, 0, myMainWindow, 0);
+				int code = myPopupMenu->run(p);
 				if (code > 0) {
 					popupData->run(code - 1);
 				}
-				PostMessage(myMainWindow, WM_NULL, 0, 0);
-				DestroyMenu(popup);
+				myPopupMenu.reset();
 			}
 		}
 	}

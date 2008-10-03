@@ -19,18 +19,19 @@
 
 #include "ZLWin32PopupMenu.h"
 
+int ZLWin32PopupMenu::ourMenuHeight = 15;
+
 #include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
 HFONT ZLWin32PopupMenu::menuFont() {
 	static HFONT font = 0;
 	if (font == 0) {
-		LOGFONT logicalFont;
-		ZeroMemory(&logicalFont, sizeof(logicalFont));
-		logicalFont.lfHeight = 20;
-		logicalFont.lfWeight = FW_REGULAR;
-		logicalFont.lfItalic = false;
-		logicalFont.lfQuality = 3;
-		font = CreateFontIndirect(&logicalFont);
+		NONCLIENTMETRICS metrics;
+		ZeroMemory(&metrics, sizeof(metrics));
+		metrics.cbSize = sizeof(metrics);
+		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(metrics), &metrics, 0);
+		font = CreateFontIndirect(&metrics.lfMenuFont);
+		ourMenuHeight = metrics.iMenuHeight;
 	}
 	return font;
 }
@@ -56,7 +57,6 @@ int ZLWin32PopupMenu::run(POINT pt, bool right) {
 }
 
 void ZLWin32PopupMenu::measureItem(MEASUREITEMSTRUCT &mi) {
-	mi.itemHeight = 36;
 	HDC dc = ::GetDC(myMainWindow);
 	HFONT font = menuFont();
 	HFONT oldFont = (HFONT)SelectObject(dc, font);
@@ -71,6 +71,7 @@ void ZLWin32PopupMenu::measureItem(MEASUREITEMSTRUCT &mi) {
 		mi.itemWidth += 42;
 	}
 	::ReleaseDC(myMainWindow, dc);
+	mi.itemHeight = myShowIcons ? 36 : ourMenuHeight;
 }
 
 void ZLWin32PopupMenu::drawItem(DRAWITEMSTRUCT &di) {
