@@ -55,6 +55,16 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::Callback(HWND hWnd, UINT uMsg, WPARAM
 
 LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
+		case WM_MEASUREITEM:
+			if (!myPopupMenu.isNull()) {
+				myPopupMenu->measureItem(*(MEASUREITEMSTRUCT*)lParam);
+			}
+			return 1;
+		case WM_DRAWITEM:
+			if (!myPopupMenu.isNull()) {
+				myPopupMenu->drawItem(*(DRAWITEMSTRUCT*)lParam);
+			}
+			return 1;
 		case WM_MOUSEWHEEL:
 			if (!mouseEventsAreBlocked()) {
 				application().doActionByKey(
@@ -491,7 +501,7 @@ void ZLWin32ApplicationWindow::updateParameters() {
 			const int index = SendMessage(myWindowToolbar.hwnd, TB_COMMANDTOINDEX, idCommand, 0);
 			SendMessage(myWindowToolbar.hwnd, TB_GETITEMRECT, index, (LPARAM)&rect);
 			SetWindowPos(
-				myParameters[idCommand], 0, rect.left + 5, rect.top + 10, 0, 0,
+				myParameters[idCommand], 0, rect.left + 5, rect.top + 8, 0, 0,
 				SWP_NOZORDER | SWP_NOOWNERZORDER | SWP_NOSIZE
 			);
 		}
@@ -598,7 +608,7 @@ ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(ZLApplication &ap
 	if (item.type() == ZLToolbar::Item::COMBO_BOX) {
 		style |= CBS_DROPDOWN | WS_VSCROLL;
 	}
-	myComboBox = CreateWindow(WC_COMBOBOX, 0, style, rect.left + 5, rect.top + 12, rect.right - rect.left - 10, rect.bottom - rect.top - 15, toolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
+	myComboBox = CreateWindow(WC_COMBOBOX, 0, style, rect.left + 5, rect.top + 8, rect.right - rect.left - 10, rect.bottom - rect.top - 15, toolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
 	HWND textItem = getTextItem(myComboBox);
 	DWORD textItemStyle = GetWindowLong(textItem, GWL_STYLE);
 	textItemStyle |= ES_CENTER | ES_NOHIDESEL;
