@@ -608,7 +608,7 @@ ZLWin32ApplicationWindow::TextEditParameter::TextEditParameter(ZLApplication &ap
 	if (item.type() == ZLToolbar::Item::COMBO_BOX) {
 		style |= CBS_DROPDOWN | WS_VSCROLL;
 	}
-	myComboBox = CreateWindow(WC_COMBOBOX, 0, style, rect.left + 5, rect.top + 8, rect.right - rect.left - 10, rect.bottom - rect.top - 15, toolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
+	myComboBox = CreateWindow(WC_COMBOBOX, 0, style, rect.left + 5, rect.top + 8, rect.right - rect.left - 10, rect.bottom - rect.top - 14, toolbar, (HMENU)idCommand, GetModuleHandle(0), 0);
 	HWND textItem = getTextItem(myComboBox);
 	DWORD textItemStyle = GetWindowLong(textItem, GWL_STYLE);
 	textItemStyle |= ES_CENTER | ES_NOHIDESEL;

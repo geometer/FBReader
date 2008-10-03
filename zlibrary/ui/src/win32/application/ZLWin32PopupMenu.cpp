@@ -26,10 +26,10 @@ HFONT ZLWin32PopupMenu::menuFont() {
 	if (font == 0) {
 		LOGFONT logicalFont;
 		ZeroMemory(&logicalFont, sizeof(logicalFont));
-		logicalFont.lfHeight = 20;
+		logicalFont.lfHeight = 16;
 		logicalFont.lfWeight = FW_REGULAR;
 		logicalFont.lfItalic = false;
-		logicalFont.lfQuality = 3;
+		logicalFont.lfQuality = 5;
 		font = CreateFontIndirect(&logicalFont);
 	}
 	return font;
@@ -115,7 +115,7 @@ void ZLWin32PopupMenu::drawItem(DRAWITEMSTRUCT &di) {
 		DrawIcon(di.hDC, di.rcItem.left + 10, di.rcItem.top + 2, icon);
 	}
 	const int left = myShowIcons ? di.rcItem.left + 52 : di.rcItem.left + 10;
-	TextOutW(di.hDC, left, di.rcItem.top + ((icon != 0) ? 8 : 2), textData(index), textSize(index));
+	TextOutW(di.hDC, left, di.rcItem.top + ((icon != 0) ? 10 : 4), textData(index), textSize(index));
 }
 
 void ZLWin32PopupMenu::addItem(const std::string &str, HICON icon, bool active, int id) {
