@@ -32,6 +32,7 @@ HFONT ZLWin32PopupMenu::menuFont() {
 		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(metrics), &metrics, 0);
 		ourFontSize = metrics.lfMenuFont.lfHeight * (-3) / 2;
 		metrics.lfMenuFont.lfHeight = ourFontSize;
+		metrics.lfMenuFont.lfQuality = 5;
 		/*
 		LOGFONT logicalFont;
 		ZeroMemory(&logicalFont, sizeof(logicalFont));
