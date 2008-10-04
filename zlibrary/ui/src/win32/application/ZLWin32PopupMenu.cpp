@@ -21,16 +21,27 @@
 
 #include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
+int ZLWin32PopupMenu::ourFontSize;
+
 HFONT ZLWin32PopupMenu::menuFont() {
 	static HFONT font = 0;
 	if (font == 0) {
+		NONCLIENTMETRICS metrics;
+		ZeroMemory(&metrics, sizeof(metrics));
+		metrics.cbSize = sizeof(metrics);
+		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(metrics), &metrics, 0);
+		ourFontSize = metrics.lfMenuFont.lfHeight * (-3) / 2;
+		metrics.lfMenuFont.lfHeight = ourFontSize;
+		/*
 		LOGFONT logicalFont;
 		ZeroMemory(&logicalFont, sizeof(logicalFont));
-		logicalFont.lfHeight = 16;
+		logicalFont.lfHeight = ourFontSize;
 		logicalFont.lfWeight = FW_REGULAR;
 		logicalFont.lfItalic = false;
 		logicalFont.lfQuality = 5;
 		font = CreateFontIndirect(&logicalFont);
+		*/
+		font = CreateFontIndirect(&metrics.lfMenuFont);
 	}
 	return font;
 }
@@ -70,7 +81,10 @@ void ZLWin32PopupMenu::measureItem(MEASUREITEMSTRUCT &mi) {
 		mi.itemWidth += 42;
 	}
 	::ReleaseDC(myMainWindow, dc);
-	mi.itemHeight = myShowIcons ? 36 : 24;
+	mi.itemHeight = ourFontSize * 4 / 3;
+	if (myShowIcons && (mi.itemHeight < 36)) {
+		mi.itemHeight = 36;
+	}
 }
 
 void ZLWin32PopupMenu::drawItem(DRAWITEMSTRUCT &di) {
@@ -110,12 +124,16 @@ void ZLWin32PopupMenu::drawItem(DRAWITEMSTRUCT &di) {
 	}
 	SetBkMode(di.hDC, TRANSPARENT);
 	const int index = di.itemID - 1;
+	int itemHeight = ourFontSize * 4 / 3;
+	if (myShowIcons && (itemHeight < 36)) {
+		itemHeight = 36;
+	}
 	HICON icon = myIcons[index];
 	if (icon != 0) {
-		DrawIcon(di.hDC, di.rcItem.left + 10, di.rcItem.top + 2, icon);
+		DrawIcon(di.hDC, di.rcItem.left + 10, di.rcItem.top + (itemHeight - 32) / 2, icon);
 	}
 	const int left = myShowIcons ? di.rcItem.left + 52 : di.rcItem.left + 10;
-	TextOutW(di.hDC, left, di.rcItem.top + ((icon != 0) ? 10 : 4), textData(index), textSize(index));
+	TextOutW(di.hDC, left, di.rcItem.top + (itemHeight - ourFontSize) / 2, textData(index), textSize(index));
 }
 
 void ZLWin32PopupMenu::addItem(const std::string &str, HICON icon, bool active, int id) {
