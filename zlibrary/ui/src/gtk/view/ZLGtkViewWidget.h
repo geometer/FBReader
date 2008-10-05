@@ -38,9 +38,14 @@ public:
 	GtkWidget *area();
 	GtkWidget *areaWithScrollbars();
 
+	bool scrollbarEvent(ZLView::Direction direction, GtkRange *range, GtkScrollType type, double newValue);
+
 private:
 	void trackStylus(bool track);
 	void repaint();
+
+	GtkWidget *createVScrollbar(int pos);
+	GtkWidget *createHScrollbar(int pos);
 
 	void setScrollbarEnabled(ZLView::Direction direction, bool enabled);
 	void setScrollbarPlacement(ZLView::Direction direction, bool standard);

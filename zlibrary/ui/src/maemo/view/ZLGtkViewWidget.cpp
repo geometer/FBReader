@@ -176,6 +176,24 @@ static bool hScrollbarEvent(GtkRange *range, GtkScrollType type, double newValue
 	return scrollbarEvent(ZLView::HORIZONTAL, range, type, newValue, data);
 }
 
+GtkWidget *ZLGtkViewWidget::createVScrollbar(int pos) {
+	GtkWidget *vScrollbar = gtk_vscrollbar_new(myVerticalAdjustment);
+	gtk_range_set_update_policy(GTK_RANGE(vScrollbar), GTK_UPDATE_CONTINUOUS);
+	gtk_table_attach(myTable, vScrollbar, pos, pos + 1, 1, 2, GTK_FILL, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(vScrollbar), "change_value", GTK_SIGNAL_FUNC(vScrollbarEvent), this);
+	gtk_widget_hide(vScrollbar);
+	return vScrollbar;
+}
+
+GtkWidget *ZLGtkViewWidget::createHScrollbar(int pos) {
+	GtkWidget *hScrollbar = gtk_hscrollbar_new(myHorizontalAdjustment);
+	gtk_range_set_update_policy(GTK_RANGE(hScrollbar), GTK_UPDATE_CONTINUOUS);
+	gtk_table_attach(myTable, hScrollbar, 1, 2, pos, pos + 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 0, 0);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(hScrollbar), "change_value", GTK_SIGNAL_FUNC(hScrollbarEvent), this);
+	gtk_widget_hide(hScrollbar);
+	return hScrollbar;
+}
+
 ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initialAngle) :
 	ZLViewWidget(initialAngle),
 	MinPressureOption(ZLCategoryKey::CONFIG, GROUP, "Minimum", 0, 100, 0),
@@ -195,30 +213,14 @@ ZLGtkViewWidget::ZLGtkViewWidget(ZLApplication *application, ZLView::Angle initi
 	myVerticalAdjustment = GTK_ADJUSTMENT(gtk_adjustment_new(100, 0, 100, 1, 1, 1));
 	myShowScrollBarAtRight = true;
 	myVerticalScrollbarIsVisible = false;
-
-	myLeftScrollBar = gtk_vscrollbar_new(myVerticalAdjustment);
-	gtk_table_attach(myTable, myLeftScrollBar, 0, 1, 1, 2, GTK_FILL, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0);
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myLeftScrollBar), "change_value", GTK_SIGNAL_FUNC(vScrollbarEvent), this);
-	gtk_widget_hide(myLeftScrollBar);
-
-	myRightScrollBar = gtk_vscrollbar_new(myVerticalAdjustment);
-	gtk_table_attach(myTable, myRightScrollBar, 2, 3, 1, 2, GTK_FILL, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), 0, 0);
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myRightScrollBar), "change_value", GTK_SIGNAL_FUNC(vScrollbarEvent), this);
-	gtk_widget_hide(myRightScrollBar);
+	myLeftScrollBar = createVScrollbar(0);
+	myRightScrollBar = createVScrollbar(2);
 
 	myHorizontalAdjustment = GTK_ADJUSTMENT(gtk_adjustment_new(100, 0, 100, 1, 1, 1));
 	myShowScrollBarAtBottom = true;
 	myHorizontalScrollbarIsVisible = false;
-
-	myTopScrollBar = gtk_hscrollbar_new(myHorizontalAdjustment);
-	gtk_table_attach(myTable, myTopScrollBar, 1, 2, 0, 1, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 0, 0);
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myTopScrollBar), "change_value", GTK_SIGNAL_FUNC(hScrollbarEvent), this);
-	gtk_widget_hide(myTopScrollBar);
-
-	myBottomScrollBar = gtk_hscrollbar_new(myHorizontalAdjustment);
-	gtk_table_attach(myTable, myBottomScrollBar, 1, 2, 2, 3, (GtkAttachOptions)(GTK_FILL | GTK_EXPAND), GTK_FILL, 0, 0);
-	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myBottomScrollBar), "change_value", GTK_SIGNAL_FUNC(hScrollbarEvent), this);
-	gtk_widget_hide(myBottomScrollBar);
+	myTopScrollBar = createHScrollbar(0);
+	myBottomScrollBar = createHScrollbar(2);
 
 	gtk_widget_set_double_buffered(myArea, false);
 	gtk_widget_set_events(myArea, GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_POINTER_MOTION_MASK | GDK_POINTER_MOTION_HINT_MASK);

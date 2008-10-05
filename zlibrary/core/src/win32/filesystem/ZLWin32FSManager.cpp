@@ -20,6 +20,7 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <windows.h>
+#include <shlobj.h>
 
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
@@ -27,14 +28,18 @@
 #include "ZLWin32FSManager.h"
 #include "ZLWin32RootDir.h"
 
+#define CSIDL_MYDOCUMENTS 5
+
 static std::string getPwdDir() {
 	char pwd[2048];
 	return (getcwd(pwd, 2047) != 0) ? pwd : "";
 }
 
 static std::string getHomeDir() {
-	char *home = getenv("USERPROFILE");
-	return (home != 0) ? home : "";
+	std::string buffer(2048, '\0');
+	SHGetFolderPathA(0, CSIDL_MYDOCUMENTS, 0, 0, (char*)buffer.data());
+	buffer.erase(buffer.find('\0'));
+	return buffer;
 }
 
 ZLFSDir *ZLWin32FSManager::createPlainDirectory(const std::string &path) const {

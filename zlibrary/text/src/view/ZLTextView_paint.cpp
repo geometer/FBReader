@@ -63,8 +63,6 @@ void ZLTextView::paint() {
 		positionIndicator()->draw();
 	}
 
-	ZLTextParagraphCursorCache::cleanup();
-
 	if (myDoUpdateScrollbar && !indicatorInfo.isNull()) {
 		myDoUpdateScrollbar = false;
 		const size_t full = positionIndicator()->sizeOfTextBeforeParagraph(positionIndicator()->endTextIndex());
@@ -81,6 +79,8 @@ void ZLTextView::paint() {
 			setScrollbarEnabled(VERTICAL, false);
 		}
 	}
+
+	ZLTextParagraphCursorCache::cleanup();
 }
 
 int ZLTextView::areaBound(const ZLTextParagraphCursor &paragraph, const ZLTextElementArea &area, int toCharIndex, bool mainDir) {

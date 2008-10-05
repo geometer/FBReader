@@ -105,7 +105,7 @@ const std::vector<size_t> &ZLTextView::PositionIndicator::textSize() const {
 
 size_t ZLTextView::PositionIndicator::startTextIndex() const {
 	std::vector<size_t>::const_iterator i = myTextView.nextBreakIterator();
-	return (i != myTextView.myTextBreaks.begin()) ? *(i - 1) : 0;
+	return (i != myTextView.myTextBreaks.begin()) ? *(i - 1) + 1 : 0;
 }
 
 size_t ZLTextView::PositionIndicator::endTextIndex() const {
@@ -128,7 +128,34 @@ void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
 	myExtraWidth += text.length() * context().stringWidth("0", 1, false) + context().spaceWidth();
 }
 
+#include <iostream>
+
 size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraphIndex) const {
+	if (myTextView.myModel->kind() == ZLTextModel::TREE_MODEL) {
+		ZLTextWordCursor cursor = myTextView.startCursor();
+		if (cursor.isNull()) {
+			cursor = myTextView.endCursor();
+		}
+		if (!cursor.isNull()) {
+			size_t index = startTextIndex();
+			const size_t endIndex = endTextIndex();
+			cursor.moveToParagraph(index);
+			size_t sum = 0;
+			while (index < endIndex) {
+				if (index >= paragraphIndex) {
+					break;
+				}
+				sum += sizeOfParagraph(index);
+				cursor.nextParagraph();
+				const size_t newIndex = cursor.paragraphCursor().index();
+				if (newIndex == index) {
+					break;
+				}
+				index = newIndex;
+			}
+			return sum;
+		}
+	}
 	return myTextView.myTextSize[paragraphIndex] - myTextView.myTextSize[startTextIndex()];
 }
 
@@ -137,16 +164,15 @@ size_t ZLTextView::PositionIndicator::sizeOfParagraph(size_t paragraphIndex) con
 }
 
 size_t ZLTextView::PositionIndicator::sizeOfTextBeforeCursor(const ZLTextWordCursor &cursor) const {
-	ZLTextWordCursor endCursor = cursor;
-	const size_t paragraphIndex = endCursor.paragraphCursor().index();
-	const size_t paragraphLength = endCursor.paragraphCursor().paragraphLength();
+	const size_t paragraphIndex = cursor.paragraphCursor().index();
+	const size_t paragraphLength = cursor.paragraphCursor().paragraphLength();
 
 	if (paragraphLength == 0) {
 		return sizeOfTextBeforeParagraph(paragraphIndex);
 	} else {
 		return
 			sizeOfTextBeforeParagraph(paragraphIndex) +
-			muldiv(sizeOfParagraph(paragraphIndex), endCursor.elementIndex(), paragraphLength);
+			muldiv(sizeOfParagraph(paragraphIndex), cursor.elementIndex(), paragraphLength);
 	}
 }
 
@@ -249,10 +275,7 @@ bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 	if (myTextView.endCursor().isNull()) {
 		return false;
 	}
-	const size_t startIndex = startTextIndex();
-	const size_t endIndex = endTextIndex();
-
-	size_t fullTextSize = textSizeVector[endIndex] - textSizeVector[startIndex];
+	size_t fullTextSize = sizeOfTextBeforeParagraph(endTextIndex());
 	size_t textSize = muldiv(fullTextSize, x - left + 1, right - left + 1);
 
 	myTextView.gotoCharIndex(textSize);

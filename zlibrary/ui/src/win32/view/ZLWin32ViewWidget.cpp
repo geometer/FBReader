@@ -109,6 +109,7 @@ LRESULT ZLWin32ViewWidget::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 					);
 					break;
 			}
+			SendMessage(hWnd, WM_PAINT, 0, 0);
 			return orig(hWnd, uMsg, wParam, lParam);
 		}
 		default:
