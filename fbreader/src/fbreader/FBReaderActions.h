@@ -294,6 +294,7 @@ class GotoPageNumber : public ModeDependentAction {
 
 public:
 	GotoPageNumber(FBReader &fbreader, const std::string &parameter);
+	bool isVisible() const;
 	bool isEnabled() const;
 	void run();
 

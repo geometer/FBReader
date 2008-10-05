@@ -418,12 +418,19 @@ void GotoPreviousTOCSectionAction::run() {
 GotoPageNumber::GotoPageNumber(FBReader &fbreader, const std::string &parameter) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE), myParameter(parameter) {
 }
 
+bool GotoPageNumber::isVisible() const {
+	return
+		ModeDependentAction::isVisible() &&
+		!fbreader().bookTextView().hasMultiSectionModel();
+}
+
 bool GotoPageNumber::isEnabled() const {
 	return ModeDependentAction::isEnabled() && (fbreader().bookTextView().pageNumber() > 1);
 }
 
 void GotoPageNumber::run() {
 	int pageIndex = 0;
+	const int pageNumber = fbreader().bookTextView().pageNumber();
 
 	if (!myParameter.empty()) {
 		const std::string value = fbreader().visualParameter(myParameter);
@@ -434,7 +441,6 @@ void GotoPageNumber::run() {
 	} else {
 		shared_ptr<ZLDialog> gotoPageDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("gotoPageDialog"));
 
-		const int pageNumber = fbreader().bookTextView().pageNumber();
 		ZLIntegerRangeOption pageIndexOption(ZLCategoryKey::CONFIG, "gotoPageDialog", "Index", 0, pageNumber, pageIndex);
 		gotoPageDialog->addOption(ZLResourceKey("pageNumber"), new ZLSimpleSpinOptionEntry(pageIndexOption, 1));
 		gotoPageDialog->addButton(ZLDialogManager::OK_BUTTON, true);
@@ -447,7 +453,7 @@ void GotoPageNumber::run() {
 		}
 	}
 
-	fbreader().bookTextView().gotoPage(pageIndex);
+	fbreader().bookTextView().gotoPage(std::max(1, std::min(pageIndex, pageNumber)));
 	fbreader().refreshWindow();
 }
 
