@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <ZLDialogManager.h>
 #include <ZLDialog.h>
 #include <ZLOptionsDialog.h>
@@ -441,7 +443,7 @@ void GotoPageNumber::run() {
 	} else {
 		shared_ptr<ZLDialog> gotoPageDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("gotoPageDialog"));
 
-		ZLIntegerRangeOption pageIndexOption(ZLCategoryKey::CONFIG, "gotoPageDialog", "Index", 0, pageNumber, pageIndex);
+		ZLIntegerRangeOption pageIndexOption(ZLCategoryKey::CONFIG, "gotoPageDialog", "Index", 1, pageNumber, pageIndex);
 		gotoPageDialog->addOption(ZLResourceKey("pageNumber"), new ZLSimpleSpinOptionEntry(pageIndexOption, 1));
 		gotoPageDialog->addButton(ZLDialogManager::OK_BUTTON, true);
 		gotoPageDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
