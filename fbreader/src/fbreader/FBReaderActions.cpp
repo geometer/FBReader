@@ -467,7 +467,11 @@ bool SelectionAction::isVisible() const {
 }
 
 bool SelectionAction::isEnabled() const {
-	return isVisible() && !textView().selectionModel().text().empty();
+	if (!isVisible()) {
+		return false;
+	}
+	const ZLTextSelectionModel &selectionModel = textView().selectionModel();
+	return !selectionModel.text().empty() || !selectionModel.image().isNull();
 }
 
 ZLTextView &SelectionAction::textView() {
