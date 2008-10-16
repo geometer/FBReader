@@ -36,8 +36,8 @@ ZLTextBaseStyle::ZLTextBaseStyle(const std::string &fontFamily, int fontSize) :
 	BoldOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:bold", false),
 	ItalicOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:italic", false),
 	AlignmentOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:alignment", ALIGN_JUSTIFY),
-	LineSpaceOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:lineSpacing", 1.2),
-	LineSpacePercentOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:lineSpacingPercent", 120) {
+	LineSpaceOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:lineSpacing", 1.4),
+	LineSpacePercentOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:lineSpacingPercent", 140) {
 	myHyperlinkColorOptions["internal"] = new ZLColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Hyperlink", ZLColor(33, 96, 180));
 	myHyperlinkColorOptions["external"] = new ZLColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "ExternalHyperlink", ZLColor(98, 174, 26));
 	myHyperlinkColorOptions["book"] = new ZLColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "BookHyperlink", ZLColor(143, 89, 2));
