@@ -62,7 +62,7 @@ static bool onValueChanged(GtkComboBox*, ZLGtkApplicationWindow::GtkEntryParamet
 ZLGtkApplicationWindow::GtkEntryParameter::GtkEntryParameter(ZLGtkApplicationWindow &window, const ZLToolbar::ParameterItem &item) : myWindow(window), myItem(item) {
 	if (item.type() == ZLToolbar::Item::COMBO_BOX) {
 		myWidget = gtk_combo_box_entry_new_text();
-		myEntry = *(GtkEntry**)(GTK_COMBO_BOX_ENTRY(myWidget))->priv;
+		myEntry = GTK_ENTRY(GTK_BIN(myWidget)->child);
 		ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myEntry), "changed", GTK_SIGNAL_FUNC(::onValueChanged), this);
 	} else {
 		myWidget = gtk_entry_new();
