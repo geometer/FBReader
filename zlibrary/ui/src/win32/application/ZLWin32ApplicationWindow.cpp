@@ -351,6 +351,13 @@ void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 		ShowWindow(myMainWindow, SW_SHOWNORMAL);
 		SetWindowPlacement(myMainWindow, &mainPlacement);
 		SetWindowPlacement(myRebar, &toolbarPlacement);
+
+		RECT mainRect;
+		GetClientRect(myMainWindow, &mainRect);
+		RECT rebarRect;
+		GetWindowRect(myRebar, &rebarRect);
+		MoveWindow(myRebar, 0, 0, mainRect.right - mainRect.left, rebarRect.bottom - rebarRect.top, true);
+
 		destroyFloatingToolbar();
 	}
 	refresh();
