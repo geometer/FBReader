@@ -36,10 +36,11 @@ public:
 
 protected:
 	ZLXMLReader(const char *encoding = 0);
-	virtual ~ZLXMLReader();
 	const std::map<std::string,std::string> &namespaces() const;
 
 public:
+	virtual ~ZLXMLReader();
+
 	bool readDocument(shared_ptr<ZLInputStream> stream);
 	bool readDocument(const std::string &fileName);
 
