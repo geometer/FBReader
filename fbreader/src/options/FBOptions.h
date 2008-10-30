@@ -26,6 +26,7 @@ class FBCategoryKey : public ZLCategoryKey {
 
 public:
 	static const FBCategoryKey BOOKS;
+	static const FBCategoryKey NETWORK;
 	static const FBCategoryKey SEARCH;
 	static const FBCategoryKey EXTERNAL;
 
