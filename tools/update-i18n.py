@@ -112,7 +112,8 @@ def main():
     parser = OptionParser()
 
     options, args = parser.parse_args()
-    parser.add_option('-d', '--dir', dest='dirname', default='.', help='specify directory where files reside')
+    #parser.add_option('-d', '--dir', dest='dirname', default='.', help='specify directory where files reside')
+    options.dirname = '.'
 
     if len(args) == 0:
         parser.error('Invalid number of arguments')
