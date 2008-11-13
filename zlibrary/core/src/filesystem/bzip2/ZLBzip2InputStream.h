@@ -20,7 +20,7 @@
 #ifndef __ZLBZIP2INPUTSTREAM_H__
 #define __ZLBZIP2INPUTSTREAM_H__
 
-#include "bzlib.h"
+#include <bzlib.h>
 
 #include <shared_ptr.h>
 
