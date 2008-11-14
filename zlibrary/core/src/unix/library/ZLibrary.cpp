@@ -33,23 +33,25 @@ const std::string ZLibrary::FileNameDelimiter("/");
 const std::string ZLibrary::PathDelimiter(":");
 const std::string ZLibrary::EndOfLine("\n");
 
-std::string ZLibrary::Language() {
-	if (!ourLanguage.empty()) {
-		return ourLanguage;
-	}
-
+void ZLibrary::initLocale() {
 	const char *locale = setlocale(LC_MESSAGES, ""); 
 	if (locale != 0) {
-		std::string lang = locale;
-		int index = std::min(lang.find('.'), std::min(lang.find('_'), lang.find('-')));
-		if (index != -1) {
-			lang = lang.substr(0, index);
+		std::string sLocale = locale;
+		const int dotIndex = sLocale.find('.');
+		if (dotIndex != -1) {
+			sLocale = sLocale.substr(0, dotIndex);
 		}
-		if (!lang.empty()) {
-			return lang;
+		const int dashIndex = std::min(sLocale.find('_'), sLocale.find('-'));
+		if (dashIndex == -1) {
+			ourLanguage = sLocale;
+		} else {
+			ourLanguage = sLocale.substr(0, dashIndex);
+			ourCountry = sLocale.substr(dashIndex + 1);
+			if ((ourLanguage == "es") && (ourCountry != "ES")) {
+				ourCountry = "LA";
+			}
 		}
 	}
-	return "en";
 }
 
 ZLibraryImplementation *ZLibraryImplementation::Instance = 0;

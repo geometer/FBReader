@@ -132,6 +132,10 @@ void ZLTreeResource::buildTree() {
 		if (language != "en") {
 			loadData(language);
 		}
+		const std::string country = ZLibrary::Country();
+		if (!country.empty()) {
+			loadData(language + '_' + country);
+		}
 	}
 }
 

@@ -32,6 +32,7 @@ public:
 	static const std::string PathDelimiter;
 	static const std::string EndOfLine;
 	static std::string Language();
+	static std::string Country();
 
 	static const std::string BaseDirectory;
 	static const std::string &ZLibraryDirectory();
@@ -50,7 +51,12 @@ public:
 	static void shutdown();
 
 private:
+	static void initLocale();
+
+private:
+	static bool ourLocaleIsInitialized;
 	static std::string ourLanguage;
+	static std::string ourCountry;
 	static std::string ourZLibraryDirectory;
 
 	static std::string ourImageDirectory;
