@@ -41,8 +41,8 @@ shared_ptr<ZLOptionsDialog> ZLWin32DialogManager::createOptionsDialog(const ZLRe
 	return new ZLWin32OptionsDialog(*myApplicationWindow, resource()[key], applyAction, showApplyButton);
 }
 
-void ZLWin32DialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
-	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_INFORMATION, dialogTitle(key), message);
+void ZLWin32DialogManager::informationBox(const std::string &title, const std::string &message) const {
+	ZLWin32MessageBox box(*myApplicationWindow, W32StandardIcon::ID_INFORMATION, title, message);
 	box.addButton(buttonName(OK_BUTTON));
 	box.run();
 }
