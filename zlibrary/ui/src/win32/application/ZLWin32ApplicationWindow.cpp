@@ -649,6 +649,8 @@ HWND ZLWin32ApplicationWindow::TextEditParameter::handle() const {
 }
 
 void ZLWin32ApplicationWindow::TextEditParameter::setValueList(const std::vector<std::string> &values) {
+	std::string oldValue = internalValue();
+
 	if (myParameterItem.type() == ZLToolbar::Item::TEXT_FIELD) {
 		return;
 	}
@@ -663,6 +665,8 @@ void ZLWin32ApplicationWindow::TextEditParameter::setValueList(const std::vector
 	if (values.size() > 0) {
 		SendMessage(myComboBox, CB_SETMINVISIBLE, std::min((int)values.size(), 7), 0);
 	}
+
+	internalSetValue(oldValue);
 }
 
 std::string ZLWin32ApplicationWindow::TextEditParameter::internalValue() const {
