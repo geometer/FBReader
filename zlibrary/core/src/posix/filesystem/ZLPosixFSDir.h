@@ -22,8 +22,6 @@
 
 #include "../../filesystem/ZLFSDir.h"
 
-#include <sys/stat.h>
-
 class ZLPosixFSDir : public ZLFSDir {
 
 public:

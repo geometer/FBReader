@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <sys/stat.h>
 #include <dirent.h>
 #include <stdio.h>
 
