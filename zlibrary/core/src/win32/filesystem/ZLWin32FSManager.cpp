@@ -27,6 +27,9 @@
 
 #include "ZLWin32FSManager.h"
 #include "ZLWin32RootDir.h"
+#include "ZLWin32FSDir.h"
+#include "ZLWin32FileInputStream.h"
+#include "../util/W32WCHARUtil.h"
 
 #define CSIDL_MYDOCUMENTS 5
 
@@ -46,8 +49,12 @@ ZLFSDir *ZLWin32FSManager::createPlainDirectory(const std::string &path) const {
 	if (path.empty()) {
 		return new ZLWin32RootDir();
 	} else {
-		return ZLPosixFSManager::createPlainDirectory(path);
+		return new ZLWin32FSDir(path);
 	}
+}
+
+ZLInputStream *ZLWin32FSManager::createPlainInputStream(const std::string &path) const {
+	return new ZLWin32FileInputStream(path);
 }
 
 void ZLWin32FSManager::normalize(std::string &path) const {
@@ -98,15 +105,7 @@ ZLFSDir *ZLWin32FSManager::createNewDirectory(const std::string &path) const {
 }
 
 std::string ZLWin32FSManager::convertFilenameToUtf8(const std::string &name) const {
-	int len = name.length();
-	ZLUnicodeUtil::Ucs2String ucs2String;
-	ucs2String.insert(ucs2String.end(), len, 0);
-	int ucs2Len = MultiByteToWideChar(GetACP(), MB_PRECOMPOSED, name.c_str(), len, (WCHAR*)&ucs2String.front(), len);
-	ucs2String.erase(ucs2String.begin() + ucs2Len, ucs2String.end());
-
-	std::string utf8String;
-	ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
-	return utf8String;
+	return name;
 }
 
 int ZLWin32FSManager::findArchiveFileNameDelimiter(const std::string &path) const {
@@ -139,15 +138,23 @@ void ZLWin32FSManager::moveFile(const std::string &oldName, const std::string &n
 }
 
 ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
+	ZLFileInfo info;
 	if (path.empty()) {
-		ZLFileInfo info;
 		info.Exists = true;
 		info.Size = 0;
 		info.IsDirectory = true;
-		return info;
 	} else {
-		return ZLPosixFSManager::fileInfo(path);
+		std::string pathWithPrefix = "\\\\?\\" + path;
+		ZLUnicodeUtil::Ucs2String wPath;
+		::createNTWCHARString(wPath, pathWithPrefix);
+		WIN32_FILE_ATTRIBUTE_DATA data;
+		info.Exists = GetFileAttributesEx(::wchar(wPath), GetFileExInfoStandard, &data);
+		if (info.Exists) {
+			info.IsDirectory = data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+			info.Size = info.IsDirectory ? 0 : data.nFileSizeLow;
+		}
 	}
+	return info;
 }
 
 void ZLWin32FSManager::getStat(const std::string &path, bool /*includeSymlinks*/, struct stat &fileInfo) const {

@@ -33,6 +33,7 @@ private:
 protected:
 	void normalize(std::string &path) const;
 	ZLFSDir *createPlainDirectory(const std::string &path) const;
+	ZLInputStream *createPlainInputStream(const std::string &path) const;
 	ZLFSDir *createNewDirectory(const std::string &path) const;
 
 	ZLFileInfo fileInfo(const std::string &path) const;
@@ -45,6 +46,8 @@ protected:
 
 	void moveFile(const std::string &oldName, const std::string &newName);
 	void getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const;
+
+friend class ZLWin32FSDir;
 };
 
 #endif /* __ZLWIN32FSMANAGER_H__ */
