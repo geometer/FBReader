@@ -72,9 +72,12 @@ public:
 	virtual bool selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const = 0;
 
 	void informationBox(const ZLResourceKey &key) const;
-	virtual void informationBox(const ZLResourceKey &key, const std::string &message) const = 0;
+	void informationBox(const ZLResourceKey &key, const std::string &message) const;
+	virtual void informationBox(const std::string &title, const std::string &message) const = 0;
+
 	void errorBox(const ZLResourceKey &key) const;
 	virtual void errorBox(const ZLResourceKey &key, const std::string &message) const = 0;
+
 	int questionBox(const ZLResourceKey &key, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const;
 	virtual int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const = 0;
 

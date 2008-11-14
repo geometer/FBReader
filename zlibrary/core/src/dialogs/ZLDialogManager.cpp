@@ -75,6 +75,10 @@ void ZLDialogManager::informationBox(const ZLResourceKey &key) const {
 	informationBox(key, dialogMessage(key));
 }
 
+void ZLDialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
+	informationBox(dialogTitle(key), message);
+}
+
 void ZLDialogManager::errorBox(const ZLResourceKey &key) const {
 	errorBox(key, dialogMessage(key));
 }
