@@ -335,8 +335,17 @@ void ZLWin32ApplicationWindow::setFullscreen(bool fullscreen) {
 		GetWindowPlacement(myMainWindow, &mainPlacement);
 		GetWindowPlacement(myRebar, &toolbarPlacement);
 		SetWindowLong(myMainWindow, GWL_STYLE, style & ~WS_CAPTION);
-		int cx = GetSystemMetrics(SM_CXSCREEN);
-		int cy = GetSystemMetrics(SM_CYSCREEN);
+		int cx;
+		int cy;
+		HDC displayDC = GetDC(0);
+		if (displayDC != 0) {
+			cx = GetDeviceCaps(displayDC, HORZRES);
+			cy = GetDeviceCaps(displayDC, VERTRES);
+			ReleaseDC(0, displayDC);
+		} else {
+			cx = GetSystemMetrics(SM_CXSCREEN);
+			cy = GetSystemMetrics(SM_CYSCREEN);
+		}
 		SetWindowPos(myMainWindow, HWND_TOP, 0, 0, cx, cy, SWP_SHOWWINDOW);
 		ShowWindow(myMainWindow, SW_SHOWMAXIMIZED);
 		ShowWindow(myRebar, SW_HIDE);
