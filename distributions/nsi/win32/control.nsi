@@ -39,6 +39,9 @@ Section "FBReader"
 	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "BookPath"
 	StrCmp $0 "" 0 +2
 	WriteRegStr HKCU "Software\FBReader\options\Options" "BookPath" "C:\Books;$PROFILE\Books" 
+	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "DownloadDirectory"
+	StrCmp $0 "" 0 +2
+	WriteRegStr HKCU "Software\FBReader\options\Options" "DownloadDirectory" "$PROFILE\Books" 
 	WriteRegStr HKCU "Software\FBReader\options\PlatformOptions" "TouchScreenPresented" "true" 
 	WriteRegStr HKCU "Software\FBReader\options\PlatformOptions" "MousePresented" "true" 
 	WriteRegStr HKCU "Software\FBReader\options\PlatformOptions" "KeyboardPresented" "true" 
