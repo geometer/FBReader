@@ -70,175 +70,254 @@ void ZLibrary::initLocale() {
 	switch (id & 0xFF) {
 		case LANG_ARABIC:
 			ourLanguage = "ar";
+			break;
 		case LANG_BULGARIAN:
 			ourLanguage = "bg";
+			break;
 		case LANG_CATALAN:
 			ourLanguage = "ca";
+			break;
 		case LANG_CHINESE:
 			ourLanguage = "zh";
+			break;
 		case LANG_CZECH:
 			ourLanguage = "cs";
+			break;
 		case LANG_DANISH:
 			ourLanguage = "da";
+			break;
 		case LANG_GERMAN:
 			ourLanguage = "de";
+			break;
 		case LANG_GREEK:
 			ourLanguage = "el";
+			break;
 		case LANG_ENGLISH:
 			ourLanguage = "en";
+			break;
 		case LANG_SPANISH:
 			ourLanguage = "es";
 			switch ((id >> 16) & 0xFF) {
 				case 0x01:
 					ourCountry = "ES";
+					break;
 				default:
 					ourCountry = "LA";
+					break;
 			}
+			break;
 		case LANG_FINNISH:
 			ourLanguage = "fi";
+			break;
 		case LANG_FRENCH:
 			ourLanguage = "fr";
+			break;
 		case LANG_HEBREW:
 			ourLanguage = "he";
+			break;
 		case LANG_HUNGARIAN:
 			ourLanguage = "hu";
+			break;
 		case LANG_ICELANDIC:
 			ourLanguage = "is";
+			break;
 		case LANG_ITALIAN:
 			ourLanguage = "it";
+			break;
 		case LANG_JAPANESE:
 			ourLanguage = "ja";
+			break;
 		case LANG_KOREAN:
 			ourLanguage = "ko";
+			break;
 		case LANG_DUTCH:
 			ourLanguage = "nl";
+			break;
 		case LANG_NORWEGIAN:
 			ourLanguage = "no";
+			break;
 		case LANG_POLISH:
 			ourLanguage = "pl";
+			break;
 		case LANG_PORTUGUESE:
 			ourLanguage = "pt";
 			switch ((id >> 16) & 0xFF) {
 				case 0x01:
 					ourCountry = "BR";
+					break;
 				default:
 					ourCountry = "PT";
+					break;
 			}
+			break;
 		case LANG_ROMANIAN:
 			ourLanguage = "ro";
+			break;
 		case LANG_RUSSIAN:
 			ourLanguage = "ru";
+			break;
 		case LANG_SERBIAN:
 			switch ((id >> 16) & 0xFF) {
 				case 0x04:
 				case 0x10:
 					ourLanguage = "hr";
+					break;
 				case 0x14:
 				case 0x20:
 				case 0x78:
 					ourLanguage = "bs";
+					break;
 				default:
 					ourLanguage = "sr";
+					break;
 			}
+			break;
 		case LANG_SLOVAK:
 			ourLanguage = "sk";
+			break;
 		case LANG_ALBANIAN:
 			ourLanguage = "sq";
+			break;
 		case LANG_SWEDISH:
 			ourLanguage = "sv";
+			break;
 		case LANG_THAI:
 			ourLanguage = "th";
+			break;
 		case LANG_TURKISH:
 			ourLanguage = "tr";
+			break;
 		case LANG_URDU:
 			ourLanguage = "ur";
+			break;
 		case LANG_INDONESIAN:
 			ourLanguage = "id";
+			break;
 		case LANG_UKRAINIAN:
 			ourLanguage = "uk";
+			break;
 		case LANG_BELARUSIAN:
 			ourLanguage = "be";
+			break;
 		case LANG_SLOVENIAN:
 			ourLanguage = "sl";
+			break;
 		case LANG_ESTONIAN:
 			ourLanguage = "et";
+			break;
 		case LANG_LATVIAN:
 			ourLanguage = "lv";
+			break;
 		case LANG_LITHUANIAN:
 			ourLanguage = "lt";
+			break;
 		case LANG_FARSI:
 			ourLanguage = "fa";
+			break;
 		case LANG_VIETNAMESE:
 			ourLanguage = "vi";
+			break;
 		case LANG_ARMENIAN:
 			ourLanguage = "hy";
+			break;
 		case LANG_AZERI:
 			ourLanguage = "az";
+			break;
 		case LANG_BASQUE:
 			ourLanguage = "eu";
+			break;
 		case LANG_MACEDONIAN:
 			ourLanguage = "mk";
+			break;
 		case LANG_AFRIKAANS:
 			ourLanguage = "af";
+			break;
 		case LANG_GEORGIAN:
 			ourLanguage = "ka";
+			break;
 		case LANG_FAEROESE:
 			ourLanguage = "fo";
+			break;
 		case LANG_HINDI:
 			ourLanguage = "hi";
+			break;
 		case LANG_MALAY:
 			ourLanguage = "ms";
+			break;
 		case LANG_KAZAK:
 			ourLanguage = "kk";
+			break;
 		case LANG_KYRGYZ:
 			ourLanguage = "ky";
+			break;
 		case LANG_SWAHILI:
 			ourLanguage = "sw";
+			break;
 		case LANG_UZBEK:
 			ourLanguage = "uz";
+			break;
 		case LANG_TATAR:
 			ourLanguage = "tt";
+			break;
 		case LANG_BENGALI:
 			ourLanguage = "bn";
+			break;
 		case LANG_PUNJABI:
 			ourLanguage = "pa";
+			break;
 		case LANG_GUJARATI:
 			ourLanguage = "gu";
+			break;
 		case LANG_ORIYA:
 			ourLanguage = "or";
+			break;
 		case LANG_TAMIL:
 			ourLanguage = "ta";
+			break;
 		case LANG_TELUGU:
 			ourLanguage = "te";
+			break;
 		case LANG_KANNADA:
 			ourLanguage = "kn";
+			break;
 		case LANG_MALAYALAM:
 			ourLanguage = "ml";
+			break;
 		case LANG_ASSAMESE:
 			ourLanguage = "as";
+			break;
 		case LANG_MARATHI:
 			ourLanguage = "mr";
+			break;
 		case LANG_SANSKRIT:
 			ourLanguage = "sa";
+			break;
 		case LANG_MONGOLIAN:
 			ourLanguage = "mn";
+			break;
 		case LANG_GALICIAN:
 			ourLanguage = "gl";
+			break;
 		case LANG_KONKANI:
 			ourLanguage = "kok";
+			break;
 		//case LANG_MANIPURI:
 			//ourLanguage = "";
 		//case LANG_SINDHI:
 			//ourLanguage = "";
 		case LANG_SYRIAC:
 			ourLanguage = "syr";
+			break;
 		//case LANG_KASHMIRI:
 			//ourLanguage = "";
 		case LANG_NEPALI:
 			ourLanguage = "ne";
+			break;
 		case LANG_DIVEHI:
 			ourLanguage = "dv";
+			break;
 		default:
 			ourLanguage = "en";
+			break;
 	}
 }
