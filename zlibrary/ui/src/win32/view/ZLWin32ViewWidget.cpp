@@ -32,6 +32,9 @@ LRESULT ZLWin32ViewWidget::Callback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	WndProc orig = myOriginalCallback;
 
 	switch (uMsg) {
+		case WM_RBUTTONDOWN:
+		case WM_RBUTTONUP:
+			return 0;
 		case WM_LBUTTONDOWN:
 			if (!myWindow.mouseEventsAreBlocked()) {
 				myWindow.resetFocus();
