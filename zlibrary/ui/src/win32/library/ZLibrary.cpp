@@ -67,7 +67,7 @@ void ZLibrary::run(ZLApplication *application) {
 
 void ZLibrary::initLocale() {
 	LANGID id = GetUserDefaultUILanguage();
-	switch (id & 0xFF) {
+	switch (PRIMARYLANGID(id)) {
 		case LANG_ARABIC:
 			ourLanguage = "ar";
 			break;
@@ -97,8 +97,8 @@ void ZLibrary::initLocale() {
 			break;
 		case LANG_SPANISH:
 			ourLanguage = "es";
-			switch ((id >> 16) & 0xFF) {
-				case 0x01:
+			switch (SUBLANGID(id)) {
+				case SUBLANG_SPANISH:
 					ourCountry = "ES";
 					break;
 				default:
@@ -141,8 +141,8 @@ void ZLibrary::initLocale() {
 			break;
 		case LANG_PORTUGUESE:
 			ourLanguage = "pt";
-			switch ((id >> 16) & 0xFF) {
-				case 0x01:
+			switch (SUBLANGID(id)) {
+				case SUBLANG_PORTUGUESE_BRAZILIAN:
 					ourCountry = "BR";
 					break;
 				default:
@@ -157,7 +157,7 @@ void ZLibrary::initLocale() {
 			ourLanguage = "ru";
 			break;
 		case LANG_SERBIAN:
-			switch ((id >> 16) & 0xFF) {
+			switch (SUBLANGID(id)) {
 				case 0x04:
 				case 0x10:
 					ourLanguage = "hr";
