@@ -98,10 +98,10 @@ void MultiKeyOptionEntry::addAction(const std::string &actionId) {
 MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource, FBReader &fbreader) :
 	ZLKeyOptionEntry(),
 	myResource(resource),
-	myEntry0(myBimap, fbreader.keyBindings(ZLView::DEGREES0)),
-	myEntry90(myBimap, fbreader.keyBindings(ZLView::DEGREES90)),
-	myEntry180(myBimap, fbreader.keyBindings(ZLView::DEGREES180)),
-	myEntry270(myBimap, fbreader.keyBindings(ZLView::DEGREES270)),
+	myEntry0(myBimap, *fbreader.keyBindings(ZLView::DEGREES0)),
+	myEntry90(myBimap, *fbreader.keyBindings(ZLView::DEGREES90)),
+	myEntry180(myBimap, *fbreader.keyBindings(ZLView::DEGREES180)),
+	myEntry270(myBimap, *fbreader.keyBindings(ZLView::DEGREES270)),
 	myCurrentEntry(&myEntry0),
 	myExitOnCancelEntry(0) {
 	addAction(ZLApplication::NoAction);

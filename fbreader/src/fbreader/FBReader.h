@@ -110,8 +110,8 @@ private:
 	bool isViewFinal() const;
 
 public:
-	ZLKeyBindings &keyBindings();
-	ZLKeyBindings &keyBindings(ZLView::Angle angle);
+	shared_ptr<ZLKeyBindings> keyBindings();
+	shared_ptr<ZLKeyBindings> keyBindings(ZLView::Angle angle);
 
 	bool isDictionarySupported() const;
 	void openInDictionary(const std::string &word);
@@ -151,10 +151,10 @@ private:
 
 	BookModel *myModel;
 
-	ZLKeyBindings myBindings0;
-	ZLKeyBindings myBindings90;
-	ZLKeyBindings myBindings180;
-	ZLKeyBindings myBindings270;
+	shared_ptr<ZLKeyBindings> myBindings0;
+	shared_ptr<ZLKeyBindings> myBindings90;
+	shared_ptr<ZLKeyBindings> myBindings180;
+	shared_ptr<ZLKeyBindings> myBindings270;
 
 	std::string myBookToOpen;
 	bool myBookAlreadyOpen;

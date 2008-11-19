@@ -100,10 +100,10 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	TapScrollingOnFingerOnlyOption(ZLCategoryKey::CONFIG, TAP_SCROLLING, "FingerOnly", true),
 	UseSeparateBindingsOption(ZLCategoryKey::CONFIG, "KeysOptions", "UseSeparateBindings", false),
 	EnableSingleClickDictionaryOption(ZLCategoryKey::CONFIG, "Dictionary", "SingleClick", false),
-	myBindings0("Keys"),
-	myBindings90("Keys90"),
-	myBindings180("Keys180"),
-	myBindings270("Keys270"),
+	myBindings0(new ZLKeyBindings("Keys")),
+	myBindings90(new ZLKeyBindings("Keys90")),
+	myBindings180(new ZLKeyBindings("Keys180")),
+	myBindings270(new ZLKeyBindings("Keys270")),
 	myBookToOpen(bookToOpen),
 	myBookAlreadyOpen(false),
 	myActionOnCancel(UNFULLSCREEN) {
@@ -438,15 +438,14 @@ void FBReader::clearTextCaches() {
 	((ZLTextView&)*myRecentBooksView).clearCaches();
 }
 
-ZLKeyBindings &FBReader::keyBindings() {
+shared_ptr<ZLKeyBindings> FBReader::keyBindings() {
 	return UseSeparateBindingsOption.value() ?
 		keyBindings(rotation()) : myBindings0;
 }
 
-ZLKeyBindings &FBReader::keyBindings(ZLView::Angle angle) {
+shared_ptr<ZLKeyBindings> FBReader::keyBindings(ZLView::Angle angle) {
 	switch (angle) {
 		case ZLView::DEGREES0:
-		default:
 			return myBindings0;
 		case ZLView::DEGREES90:
 			return myBindings90;
@@ -455,6 +454,7 @@ ZLKeyBindings &FBReader::keyBindings(ZLView::Angle angle) {
 		case ZLView::DEGREES270:
 			return myBindings270;
 	}
+	return 0;
 }
 
 shared_ptr<ProgramCollection> FBReader::dictionaryCollection() const {
