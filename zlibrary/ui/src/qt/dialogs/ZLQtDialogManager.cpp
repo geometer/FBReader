@@ -40,10 +40,10 @@ shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) c
 	return new ZLQtDialog(resource()[key]);
 }
 
-void ZLQtDialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
+void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
 	QMessageBox::information(
 		qApp->mainWidget(),
-		::qtString(dialogTitle(key)),
+		::qtString(title),
 		::qtString(message),
 		::qtButtonName(OK_BUTTON)
 	);

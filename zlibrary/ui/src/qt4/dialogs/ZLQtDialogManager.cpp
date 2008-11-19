@@ -43,12 +43,12 @@ shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) c
 	return new ZLQtDialog(resource()[key]);
 }
 
-void ZLQtDialogManager::informationBox(const ZLResourceKey &key, const std::string &message) const {
+void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
 	QWidget *parent = qApp->activeWindow();
 	if (parent == 0) {
 		parent = myStoredWindow;
 	}
-	QMessageBox::information(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(OK_BUTTON));
+	QMessageBox::information(parent, ::qtString(title), ::qtString(message), ::qtButtonName(OK_BUTTON));
 }
 
 void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {

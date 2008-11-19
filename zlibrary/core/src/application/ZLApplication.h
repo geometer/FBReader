@@ -148,7 +148,7 @@ public:
 	bool isActionEnabled(const std::string &actionId) const;
 	void doAction(const std::string &actionId);
 
-	virtual ZLKeyBindings &keyBindings() = 0;	
+	virtual shared_ptr<ZLKeyBindings> keyBindings();	
 	void doActionByKey(const std::string &key);
 
 	virtual bool closeView();

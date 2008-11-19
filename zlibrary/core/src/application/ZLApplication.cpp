@@ -283,7 +283,11 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 }
 
 void ZLApplication::doActionByKey(const std::string &key) {
-	shared_ptr<Action> a = action(keyBindings().getBinding(key));
+	shared_ptr<ZLKeyBindings> bindings = keyBindings();
+	if (bindings.isNull()) {
+		return;
+	}
+	shared_ptr<Action> a = action(bindings->getBinding(key));
 	if (!a.isNull() &&
 			(!a->useKeyDelay() ||
 			 (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value()))) {
@@ -457,4 +461,8 @@ void ZLApplicationWindow::VisualParameter::restoreOldValue() {
 
 ZLView::Angle ZLApplication::rotation() const {
 	return (myViewWidget != 0) ? myViewWidget->rotation() : ZLView::DEGREES0;
+}
+
+shared_ptr<ZLKeyBindings> ZLApplication::keyBindings() {
+	return 0;
 }
