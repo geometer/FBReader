@@ -33,7 +33,7 @@
 		<node name="custom..." value="Personnalisé..." />
 	</node>
 	<node name="language">
-		<node name="ar" toBeTranslated="true" value="Arabic" />
+		<node name="ar" value="Arabe" />
 		<node name="cs" value="Tchèque" />
 		<node name="de" value="Allemand" />
 		<node name="de-traditional" value="Allemand (l&apos;orthographie traditionelle)" />
@@ -42,13 +42,13 @@
 		<node name="es" value="Espagnol" />
 		<node name="fi" value="Finnois" />
 		<node name="fr" value="Français" />
-		<node name="he" toBeTranslated="true" value="Hebrew" />
-		<node name="id" toBeTranslated="true" value="Indonesian" />
+		<node name="he" value="Hébreu" />
+		<node name="id" value="Indonésien" />
 		<node name="it" value="Italien" />
 		<node name="no" value="Norvégien" />
 		<node name="pt" value="Portugais" />
 		<node name="ru" value="Russe" />
-		<node name="tr" toBeTranslated="true" value="Turkish" />
+		<node name="tr" value="Turc" />
 		<node name="sv" value="Suédois" />
 		<node name="uk" value="Ukrainien" />
 		<node name="zh" value="Chinois" />
