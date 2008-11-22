@@ -243,7 +243,17 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 	const char *href = reader.attributeValue(xmlattributes, "href");
 	if (href != 0) {
 		const std::string link = (*href == '#') ? (reader.myReferenceName + href) : href;
-		FBTextKind hyperlinkType = MiscUtil::isReference(link) ? EXTERNAL_HYPERLINK : INTERNAL_HYPERLINK;
+		FBTextKind hyperlinkType;
+		if (MiscUtil::isReference(link)) {
+			if (ZLStringUtil::stringEndsWith(link, ".epub") ||
+					ZLStringUtil::stringEndsWith(link, ".mobi")) {
+				hyperlinkType = BOOK_HYPERLINK;
+			} else {
+				hyperlinkType = EXTERNAL_HYPERLINK;
+			}
+		} else {
+			hyperlinkType = INTERNAL_HYPERLINK;
+		}
 		myHyperlinkStack.push(hyperlinkType);
 		bookReader(reader).addHyperlinkControl(hyperlinkType, link);
 	} else {

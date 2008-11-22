@@ -43,6 +43,7 @@
 #include "../fbreader/BookTextView.h"
 #include "../fbreader/CollectionView.h"
 
+#include "../network/NetworkLink.h"
 #include "../collection/BookCollection.h"
 #include "../external/ProgramCollection.h"
 #include "../formats/FormatPlugin.h"
@@ -151,12 +152,21 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 
 	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("OptionsDialog"), new OptionsApplyRunnable(fbreader), true);
 
-	ZLDialogContent &generalTab = myDialog->createTab(ZLResourceKey("Library"));
+	ZLDialogContent &libraryTab = myDialog->createTab(ZLResourceKey("Library"));
 	CollectionView &collectionView = fbreader.collectionView();
-	generalTab.addOption(ZLResourceKey("bookPath"), collectionView.collection().PathOption);
-	generalTab.addOption(ZLResourceKey("lookInSubdirectories"), collectionView.collection().ScanSubdirsOption);
-	generalTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(fbreader.recentBooks().MaxListSizeOption, 1));
-	generalTab.addOption(ZLResourceKey("showAllBooksTag"), collectionView.ShowAllBooksTagOption);
+	libraryTab.addOption(ZLResourceKey("bookPath"), collectionView.collection().PathOption);
+	libraryTab.addOption(ZLResourceKey("lookInSubdirectories"), collectionView.collection().ScanSubdirsOption);
+	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::instance().DirectoryOption);
+	libraryTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(fbreader.recentBooks().MaxListSizeOption, 1));
+	libraryTab.addOption(ZLResourceKey("showAllBooksTag"), collectionView.ShowAllBooksTagOption);
+
+	ZLDialogContent &networkTab = myDialog->createTab(ZLResourceKey("NetworkLibrary"));
+	NetworkLinkCollection &linkCollection = NetworkLinkCollection::instance();
+	const size_t linkCollectionSize = linkCollection.size();
+	for (size_t i = 0; i < linkCollectionSize; ++i) {
+		NetworkLink &link = linkCollection.link(i);
+		networkTab.addOption(link.SiteName, "", new ZLSimpleBooleanOptionEntry(link.OnOption));
+	}
 
 	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
 	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::instance().LanguageAutoDetectOption));
@@ -205,6 +215,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	builder.addOption(resource["text"].value(), baseStyle.RegularTextColorOption);
 	builder.addOption(resource["internalLink"].value(), baseStyle.hyperlinkColorOption("internal"));
 	builder.addOption(resource["externalLink"].value(), baseStyle.hyperlinkColorOption("external"));
+	builder.addOption(resource["bookLink"].value(), baseStyle.hyperlinkColorOption("book"));
 	builder.addOption(resource["highlighted"].value(), baseStyle.SelectedTextColorOption);
 	builder.addOption(resource["treeLines"].value(), baseStyle.TreeLinesColorOption);
 	builder.addOption(resource["indicator"].value(), (FBView::commonIndicatorInfo().ColorOption));

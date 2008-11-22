@@ -47,10 +47,8 @@ private:
 	CollectionView &myView;
 };
 
-static const std::string LIBRARY = "Library";
-
 CollectionView::CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context),
-	ShowAllBooksTagOption(ZLCategoryKey::LOOK_AND_FEEL, LIBRARY, "ShowAllBooksTag", true),
+	ShowAllBooksTagOption(ZLCategoryKey::LOOK_AND_FEEL, "Library", "ShowAllBooksTag", true),
 	myDoSynchronizeCollection(false),
 	myDoUpdateModel(true) {
 	setModel(new CollectionModel(*this, myCollection), "");
@@ -88,6 +86,7 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 			highlightParagraph(*it);
 		}
 		if (!toSelect.empty()) {
+			preparePaintInfo();
 			gotoParagraph(toSelect[toSelect.size() - 1]);
 			scrollPage(false, ZLTextView::SCROLL_PERCENTAGE, 40);
 		}

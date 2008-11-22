@@ -21,6 +21,7 @@
 
 const std::string ActionCode::SHOW_READING = "showReading";
 const std::string ActionCode::SHOW_COLLECTION = "showLibrary";
+const std::string ActionCode::SHOW_NET_LIBRARY = "showNetLibrary";
 const std::string ActionCode::SHOW_OPTIONS = "preferences";
 const std::string ActionCode::UNDO = "undo";
 const std::string ActionCode::REDO = "redo";
@@ -59,5 +60,7 @@ const std::string ActionCode::CLEAR_SELECTION = "clearSelection";
 const std::string ActionCode::OPEN_SELECTED_TEXT_IN_DICTIONARY = "openInDictionary";
 const std::string ActionCode::GOTO_PAGE_NUMBER = "gotoPageNumber";
 const std::string ActionCode::GOTO_PAGE_NUMBER_WITH_PARAMETER = "gotoPageNumberWithParameter";
+const std::string ActionCode::SEARCH_ON_NETWORK = "searchOnNetwork";
+const std::string ActionCode::ADVANCED_SEARCH_ON_NETWORK = "advancedSearchOnNetwork";
 const std::string ActionCode::ORGANIZE_BOOKS_BY_AUTHOR = "byAuthor";
 const std::string ActionCode::ORGANIZE_BOOKS_BY_TAG = "byTag";

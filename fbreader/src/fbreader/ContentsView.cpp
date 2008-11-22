@@ -96,6 +96,7 @@ void ContentsView::gotoReference() {
 	model()->removeAllMarks();
 	const size_t selected = currentTextViewParagraph();
 	highlightParagraph(selected);
+	preparePaintInfo();
 	gotoParagraph(selected);
 	scrollPage(false, ZLTextView::SCROLL_PERCENTAGE, 40);
 }

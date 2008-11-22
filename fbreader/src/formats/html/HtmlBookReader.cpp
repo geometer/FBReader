@@ -138,8 +138,15 @@ void HtmlHrefTagAction::run(const HtmlReader::HtmlTag &tag) {
 						setHyperlinkType(INTERNAL_HYPERLINK);
 						bookReader().addHyperlinkControl(INTERNAL_HYPERLINK, value.substr(1));
 					} else if (MiscUtil::isReference(value)) {
-						setHyperlinkType(EXTERNAL_HYPERLINK);
-						bookReader().addHyperlinkControl(EXTERNAL_HYPERLINK, value);
+						FBTextKind hyperlinkType;
+						if (ZLStringUtil::stringEndsWith(value, ".epub") ||
+								ZLStringUtil::stringEndsWith(value, ".mobi")) {
+							hyperlinkType = BOOK_HYPERLINK;
+						} else {
+							hyperlinkType = EXTERNAL_HYPERLINK;
+						}
+						setHyperlinkType(hyperlinkType);
+						bookReader().addHyperlinkControl(hyperlinkType, value);
 					}
 				}
 			}

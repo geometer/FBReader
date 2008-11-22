@@ -108,7 +108,7 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource, FBReader &f
 
 	// switch view
 	addAction(ActionCode::SHOW_COLLECTION);
-	addAction(ActionCode::SHOW_LAST_BOOKS);
+	addAction(ActionCode::SHOW_NET_LIBRARY);
 	addAction(ActionCode::OPEN_PREVIOUS_BOOK);
 	addAction(ActionCode::SHOW_CONTENTS);
 

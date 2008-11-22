@@ -37,6 +37,7 @@
 #include "ContentsView.h"
 #include "CollectionView.h"
 #include "RecentBooksView.h"
+#include "NetLibraryView.h"
 #include "RecentBooksPopupData.h"
 #include "BookInfoDialog.h"
 #include "TimeUpdater.h"
@@ -114,6 +115,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myContentsView = new ContentsView(*this, context());
 	myCollectionView = new CollectionView(*this, context());
 	myRecentBooksView = new RecentBooksView(*this, context());
+	myNetLibraryView = new NetLibraryView(*this, context());
 	myRecentBooksPopupData = new RecentBooksPopupData(*this);
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
@@ -121,12 +123,15 @@ FBReader::FBReader(const std::string &bookToOpen) :
 
 	addAction(ActionCode::SHOW_READING, new UndoAction(*this, FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::SHOW_COLLECTION, new SetModeAction(*this, FBReader::BOOK_COLLECTION_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::RECENT_BOOKS_MODE));
+	addAction(ActionCode::SHOW_NET_LIBRARY, new SetModeAction(*this, FBReader::NET_LIBRARY_MODE, FBReader::BOOK_TEXT_MODE));
+	addAction(ActionCode::SEARCH_ON_NETWORK, new SearchOnNetworkAction(*this));
+	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction(*this));
 	registerPopupData(ActionCode::SHOW_COLLECTION, myRecentBooksPopupData);
 	addAction(ActionCode::SHOW_LAST_BOOKS, new SetModeAction(*this, FBReader::RECENT_BOOKS_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::SHOW_OPTIONS, new ShowOptionsDialogAction(*this));
 	addAction(ActionCode::SHOW_CONTENTS, new ShowContentsAction(*this));
 	addAction(ActionCode::SHOW_BOOK_INFO, new ShowBookInfoAction(*this));
-	addAction(ActionCode::ADD_BOOK, new AddBookAction(*this, FBReader::ALL_MODES & ~FBReader::FOOTNOTE_MODE));
+	addAction(ActionCode::ADD_BOOK, new AddBookAction(*this, FBReader::BOOK_TEXT_MODE | FBReader::BOOK_COLLECTION_MODE | FBReader::RECENT_BOOKS_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::UNDO, new UndoAction(*this, FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::REDO, new RedoAction(*this));
 	addAction(ActionCode::SEARCH, new SearchAction(*this));
@@ -305,8 +310,10 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 	}
 }
 
-void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
-	if (external) {
+#include <iostream>
+
+void FBReader::tryShowFootnoteView(const std::string &id, const std::string &type) {
+	if (type == "external") {
 		shared_ptr<ProgramCollection> collection = webBrowserCollection();
 		if (!collection.isNull()) {
 			shared_ptr<Program> program = collection->currentProgram();
@@ -314,7 +321,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
 				program->run("openLink", id);
 			}
 		}
-	} else {
+	} else if (type == "internal") {
 		if ((myMode == BOOK_TEXT_MODE) && (myModel != 0)) {
 			BookModel::Label label = myModel->label(id);
 			if (!label.Model.isNull()) {
@@ -330,6 +337,8 @@ void FBReader::tryShowFootnoteView(const std::string &id, bool external) {
 				refreshWindow();
 			}
 		}
+	} else if (type == "book") {
+		std::cerr << id << "\n";
 	}
 }
 
@@ -374,6 +383,9 @@ void FBReader::setMode(ViewMode mode) {
 			setView(myRecentBooksView);
 			break;
 		case BOOKMARKS_MODE:
+			break;
+		case NET_LIBRARY_MODE:
+			setView(myNetLibraryView);
 			break;
 		case UNDEFINED_MODE:
 		case ALL_MODES:
@@ -436,6 +448,7 @@ void FBReader::clearTextCaches() {
 	((ZLTextView&)*myContentsView).clearCaches();
 	((ZLTextView&)*myCollectionView).clearCaches();
 	((ZLTextView&)*myRecentBooksView).clearCaches();
+	((ZLTextView&)*myNetLibraryView).clearCaches();
 }
 
 shared_ptr<ZLKeyBindings> FBReader::keyBindings() {

@@ -31,6 +31,7 @@ class ActionCode {
 public:
 	static const std::string SHOW_READING;
 	static const std::string SHOW_COLLECTION;
+	static const std::string SHOW_NET_LIBRARY;
 	static const std::string SHOW_OPTIONS;
 	static const std::string UNDO;
 	static const std::string REDO;
@@ -69,6 +70,8 @@ public:
 	static const std::string OPEN_SELECTED_TEXT_IN_DICTIONARY;
 	static const std::string GOTO_PAGE_NUMBER;
 	static const std::string GOTO_PAGE_NUMBER_WITH_PARAMETER;
+	static const std::string SEARCH_ON_NETWORK;
+	static const std::string ADVANCED_SEARCH_ON_NETWORK;
 	static const std::string ORGANIZE_BOOKS_BY_AUTHOR;
 	static const std::string ORGANIZE_BOOKS_BY_TAG;
 
@@ -334,6 +337,20 @@ class ClearSelectionAction : public SelectionAction {
 
 public:
 	ClearSelectionAction(FBReader &fbreader);
+	void run();
+};
+
+class SearchOnNetworkAction : public ModeDependentAction {
+
+public:
+	SearchOnNetworkAction(FBReader &fbreader);
+	void run();
+};
+
+class AdvancedSearchOnNetworkAction : public ModeDependentAction {
+
+public:
+	AdvancedSearchOnNetworkAction(FBReader &fbreader);
 	void run();
 };
 

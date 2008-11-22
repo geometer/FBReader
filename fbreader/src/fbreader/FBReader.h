@@ -38,8 +38,6 @@ class ZLMessageHandler;
 
 class BookModel;
 class BookTextView;
-class FootnoteView;
-class ContentsView;
 class CollectionView;
 class RecentBooksView;
 
@@ -60,7 +58,8 @@ public:
 		BOOKMARKS_MODE = 1 << 3,
 		BOOK_COLLECTION_MODE = 1 << 4,
 		RECENT_BOOKS_MODE = 1 << 5,
-		ALL_MODES = 0x3F
+		NET_LIBRARY_MODE = 1 << 6,
+		ALL_MODES = 0x7F
 	};
 
 	struct ScrollingOptions {
@@ -118,7 +117,7 @@ public:
 
 	shared_ptr<ProgramCollection> webBrowserCollection() const;
 
-	void tryShowFootnoteView(const std::string &id, bool external);
+	void tryShowFootnoteView(const std::string &id, const std::string &type);
 	BookTextView &bookTextView() const;
 	CollectionView &collectionView() const;
 	void showBookTextView();
@@ -145,6 +144,7 @@ private:
 	shared_ptr<ZLView> myContentsView;	
 	shared_ptr<ZLView> myCollectionView;	
 	shared_ptr<ZLView> myRecentBooksView;	
+	shared_ptr<ZLView> myNetLibraryView;	
 	shared_ptr<ZLPopupData> myRecentBooksPopupData;	
 
 	ZLTime myLastScrollingTime;
@@ -174,6 +174,7 @@ friend class OpenFileHandler;
 
 friend class OptionsDialog;
 friend class FBView;
+friend class NetLibraryView;
 
 //friend class ShowCollectionAction;
 friend class ShowHelpAction;
@@ -200,6 +201,8 @@ friend class GotoNextTOCSectionAction;
 friend class GotoPreviousTOCSectionAction;
 //friend class GotoPageNumber;
 friend class SelectionAction;
+friend class SearchOnNetworkAction;
+friend class AdvancedSearchOnNetworkAction;
 friend class FBFullscreenAction;
 };
 

@@ -219,7 +219,7 @@ void BookTextView::redoPageMove() {
 	}
 }
 
-bool BookTextView::getHyperlinkId(const ZLTextElementArea &area, std::string &id, bool &isExternal) const {
+bool BookTextView::getHyperlinkInfo(const ZLTextElementArea &area, std::string &id, std::string &type) const {
 	if ((area.Kind != ZLTextElement::WORD_ELEMENT) &&
 			(area.Kind != ZLTextElement::IMAGE_ELEMENT)) {
 		return false;
@@ -235,6 +235,7 @@ bool BookTextView::getHyperlinkId(const ZLTextElementArea &area, std::string &id
 			if (control.isHyperlink()) {
 				hyperlinkKind = control.kind();
 				id = ((const ZLTextHyperlinkControlEntry&)control).label();
+				type = ((const ZLTextHyperlinkControlEntry&)control).hyperlinkType();
 			} else if (!control.isStart() && (control.kind() == hyperlinkKind)) {
 				hyperlinkKind = REGULAR;
 			}
@@ -242,7 +243,6 @@ bool BookTextView::getHyperlinkId(const ZLTextElementArea &area, std::string &id
 		cursor.nextWord();
 	}
 
-	isExternal = hyperlinkKind == EXTERNAL_HYPERLINK;
 	return hyperlinkKind != REGULAR;
 }
 
@@ -270,9 +270,9 @@ bool BookTextView::onStylusRelease(int x, int y) {
 	const ZLTextElementArea *area = elementByCoordinates(x, y);
 	if (area != 0) {
 		std::string id;
-		bool isExternal;
-		if (getHyperlinkId(*area, id, isExternal)) {
-			fbreader().tryShowFootnoteView(id, isExternal);
+		std::string type;
+		if (getHyperlinkInfo(*area, id, type)) {
+			fbreader().tryShowFootnoteView(id, type);
 			return true;
 		}
 		
@@ -292,8 +292,8 @@ bool BookTextView::onStylusRelease(int x, int y) {
 bool BookTextView::onStylusMove(int x, int y) {
 	const ZLTextElementArea *area = elementByCoordinates(x, y);
 	std::string id;
-	bool isExternal;
-	fbreader().setHyperlinkCursor((area != 0) && getHyperlinkId(*area, id, isExternal));
+	std::string type;
+	fbreader().setHyperlinkCursor((area != 0) && getHyperlinkInfo(*area, id, type));
 	return true;
 }
 

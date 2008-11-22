@@ -59,7 +59,7 @@ private:
 
 	void preparePaintInfo();
 
-	bool getHyperlinkId(const ZLTextElementArea &area, std::string &id, bool &isExternal) const;
+	bool getHyperlinkInfo(const ZLTextElementArea &area, std::string &id, std::string &type) const;
 
 	shared_ptr<PositionIndicator> createPositionIndicator(const ZLTextPositionIndicatorInfo &info);
 

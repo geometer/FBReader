@@ -41,15 +41,14 @@ public:
 bool DescriptionComparator::operator() (const BookDescriptionPtr d1, const BookDescriptionPtr d2) {
 	AuthorPtr author1 = d1->author();
 	AuthorPtr author2 = d2->author();
-	const std::string sortKey1 = author1->sortKey();
-	const std::string sortKey2 = author2->sortKey();
-	if (sortKey1 != sortKey2) {
-		return sortKey1 < sortKey2;
+
+	int comp = author1->sortKey().compare(author2->sortKey());
+	if (comp != 0) {
+		return comp < 0;
 	}
-	const std::string displayName1 = author1->displayName();
-	const std::string displayName2 = author2->displayName();
-	if (displayName1 != displayName2) {
-		return displayName1 < displayName2;
+	comp = author1->displayName().compare(author2->displayName());
+	if (comp != 0) {
+		return comp < 0;
 	}
 
 	const std::string &seriesName1 = d1->seriesName();
