@@ -66,8 +66,8 @@
 	<node name="dialog">
 		<node name="button">
 			<node name="go" value="&amp;Mulai!" />
-			<node name="thisOnly" toBeTranslated="true" value="This only" />
-			<node name="withSubtags" toBeTranslated="true" value="With subtags" />
+			<node name="thisOnly" value="Hanya ini"/>
+			<node name="withSubtags" value="Dengan subtag"/>
 		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Pengaturan" />
@@ -77,7 +77,7 @@
 					<node name="lookInSubdirectories" value="Tampilkan Buku-buku yang Ada di Sub Direktori" />
 					<node name="downloadDirectory" toBeTranslated="true" value="Directory for Downloaded Books" />
 					<node name="recentListSize" value="Jumlah Daftar Buku-buku yang dibuka sebelumnya" />
-					<node name="showAllBooksTag" toBeTranslated="true" value="All Books Branch in Tag Hierarchy" />
+					<node name="showAllBooksTag" value="Tampilkan Semua Cabang Buku"/>
 				</node>
 				<node name="NetworkLibrary" toBeTranslated="true" value="Network Search" />
 				<node name="Language" value="Bahasa">
@@ -269,8 +269,8 @@
 					<node name="seriesTitle" value="Judul Seri" />
 					<node name="bookNumber" value="Nomor Buku" />
 				</node>
-				<node name="Tags" toBeTranslated="true" value="Tags">
-					<node name="tags" toBeTranslated="true" value="Tag List" />
+				<node name="Tags" value="Tag">
+					<node name="tags" value="Daftar Tag"/>
 				</node>
 				<node name="Text" value="Teks">
 					<node name="breakType" value="Penggal Paragraf pada" />
@@ -310,13 +310,13 @@
 			<node name="pageNumber" value="Ke Nomor Halaman" />
 		</node>
 		<node name="editTagInfoDialog">
-			<node name="title" toBeTranslated="true" value="Edit/Clone Tag" />
-			<node name="editOrClone" toBeTranslated="true" value="Action">
-				<node name="edit" toBeTranslated="true" value="Rename Tag" />
-				<node name="clone" toBeTranslated="true" value="Clone Tag" />
+			<node name="title" value="Ubah/Gandakan Tag"/>
+			<node name="editOrClone" value="Aksi">
+				<node name="edit" value="Ubah Nama Tag"/>
+				<node name="clone" value="Gandakan Tag"/>
 			</node>
-			<node name="name" toBeTranslated="true" value="Tag Name" />
-			<node name="includeSubtags" toBeTranslated="true" value="Include Subtags" />
+			<node name="name" value="Nama Tag"/>
+			<node name="includeSubtags" value="Termasuk Sub Tag"/>
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Hapus Buku" />
@@ -325,8 +325,8 @@
  dari Pustaka?" />
 		</node>
 		<node name="removeTagBox">
-			<node name="title" toBeTranslated="true" value="Remove Tag" />
-			<node name="message" toBeTranslated="true" value="Remove Tag “%s”?" />
+			<node name="title" value="Hapus Tag"/>
+			<node name="message" value="Hapus Tag &#8220;%s&#8221;?"/>
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Ada Kesalahan" />
@@ -339,11 +339,11 @@
 		</node>
 		<node name="tagMustBeNonEmpty">
 			<node name="title" value="Ada Kesalahan" />
-			<node name="message" toBeTranslated="true" value="Tag name must be a non-empty string" />
+			<node name="message" value="Nama tag tidak boleh kosong"/>
 		</node>
 		<node name="tagMustNotContainComma">
 			<node name="title" value="Ada Kesalahan" />
-			<node name="message" toBeTranslated="true" value="Tag name must not contain a “,” symbol" />
+			<node name="message" value="Nama tag tidak boleh mengandung sebuah simbol &#8220;,&#8221;"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" toBeTranslated="true" value="Error while downloading" />
@@ -352,7 +352,7 @@
 		<node name="waitMessage">
 			<node name="loadingBook" value="Membaca buku. Silakan tunggu..." />
 			<node name="loadingBookList" value="Membaca daftar buku. Silakan tunggu..." />
-			<node name="migrate" toBeTranslated="true" value="Upgrading to the new version. Please, wait..." />
+			<node name="migrate" value="Melakukan pembaruan ke versi baru. Silakan tunggu..."/>
 			<node name="downloadBookList" toBeTranslated="true" value="Downloading book list. Please, wait..." />
 			<node name="downloadBook" toBeTranslated="true" value="Downloading book. Please, wait..." />
 		</node>
@@ -415,8 +415,8 @@
 	</node>
 	<node name="library">
 		<node name="caption" value="Pustaka" />
-		<node name="allBooks" toBeTranslated="true" value="All Books" />
-		<node name="booksWithoutTags" toBeTranslated="true" value="Books with no Tags" />
-		<node name="noBooks" toBeTranslated="true" value="FBReader found no books in the configured locations. Please specify the path to your books in the Preferences Dialog (“Library” tab, “Book Path” entry). Alternatively, you can add books to your library using “Add Book” button." />
+		<node name="allBooks" value="Semua Buku"/>
+		<node name="booksWithoutTags" value="Buku Tanpa Tag"/>
+		<node name="noBooks" value="FBReader tidak menemukan satupun buku di lokasi yang telah dikonfigurasi. Tentukan lokasi buku dalam Dialog Pengaturan (tab &#8220;Pustaka&#8221;, entri &#8220;Lokasi Buku&#8221;). Alternatifnya, Anda dapat menambahkan buku ke pustaka menggunakan tombol &#8220;Tambah Buku&#8221;."/>
 	</node>
 </resources>
