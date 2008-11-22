@@ -47,7 +47,7 @@
 		<node name="no" value="Норвезька" />
 		<node name="pt" value="Португальська" />
 		<node name="ru" value="Російська" />
-		<node name="tr" toBeTranslated="true" value="Turkish" />
+		<node name="tr" value="Турецька" />
 		<node name="sv" value="Шведська" />
 		<node name="uk" value="Українська" />
 		<node name="zh" value="Китайська" />
