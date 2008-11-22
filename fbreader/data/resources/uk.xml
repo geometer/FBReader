@@ -238,8 +238,8 @@
 				<node name="Common" value="Основна інформація">
 					<node name="file" value="Файл"/>
 					<node name="title" value="Назва"/>
-					<node name="authorDisplayName" value="Ім'я автора"/>
-					<node name="authorSortKey" value="Ім'я для сортування"/>
+					<node name="authorDisplayName" value="Ім&apos;я автора"/>
+					<node name="authorSortKey" value="Ім&apos;я для сортування"/>
 					<node name="language" value="Мова"/>
 					<node name="encodingSet" value="Набір кодувань"/>
 					<node name="encoding" value="Кодування"/>

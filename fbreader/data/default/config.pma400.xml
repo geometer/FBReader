@@ -2,6 +2,7 @@
 <config>
   <group name="Options">
     <option name="BookPath" value="~/Documents/FBooks:~/Documents/Books"/>
+    <option name="DownloadDirectory" value="~/Documents/FBooks"/>
   </group>
   <group name="TapScrolling">
     <option name="Enabled" value="false"/>

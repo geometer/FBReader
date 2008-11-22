@@ -47,6 +47,9 @@
 		<node name="byAuthor" value="Organize Books by Author"/>
 		<node name="byTag" value="Organize Books by Tag"/>
 		<node name="addBook" value="Add File to Library"/>
+		<node name="showNetLibrary" value="Search in Network Libraries"/>
+		<node name="searchOnNetwork" value="Network Search"/>
+		<node name="advancedSearchOnNetwork" value="Advanced Network Search"/>
 		<node name="gotoHome" value="Go to Start of Text"/>
 		<node name="undo" value="Go Back"/>
 		<node name="redo" value="Go Forward"/>
@@ -72,9 +75,11 @@
 				<node name="Library" value="Library">
 					<node name="bookPath" value="Book Path"/>
 					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
+					<node name="downloadDirectory" value="Directory for Downloaded Books"/>
 					<node name="recentListSize" value="Recent Books List Size"/>
 					<node name="showAllBooksTag" value="All Books Branch in Tag Hierarchy"/>
 				</node>
+				<node name="NetworkLibrary" value="Network Search"/>
 				<node name="Language" value="Language">
 					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
 					<node name="defaultLanguage" value="Default Language"/>
@@ -86,7 +91,7 @@
 					<node name="type" value="Show as">
 						<node name="osScrollbar" value="OS Scrollbar"/>
 						<node name="fbIndicator" value="Old Style Indicator"/>
-						<node name="none" value="Don't Show"/>
+						<node name="none" value="Don&apos;t Show"/>
 					</node>
 					<node name="height" value="Indicator Height"/>
 					<node name="offset" value="Offset from Text"/>
@@ -174,6 +179,7 @@
 						<node name="text" value="Regular Text"/>
 						<node name="internalLink" value="Internal Hyperlink Text"/>
 						<node name="externalLink" value="External Hyperlink Text"/>
+						<node name="bookLink" value="Link to Another Book"/>
 						<node name="highlighted" value="Highlighted Text"/>
 						<node name="treeLines" value="Tree Lines"/>
 						<node name="indicator" value="Position Indicator"/>
@@ -287,6 +293,14 @@
 			<node name="backward" value="&amp;Backward"/>
 			<node name="currentSection" value="&amp;This section only"/>
 		</node>
+		<node name="networkSearchDialog">
+			<node name="title" value="Network Search"/>
+			<node name="bookTitle" value="Title"/>
+			<node name="author" value="Author"/>
+			<node name="category" value="Category"/>
+			<node name="series" value="Series"/>
+			<node name="description" value="Description"/>
+		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Go To Page"/>
 			<node name="pageNumber" value="Go to Page Number"/>
@@ -310,7 +324,7 @@
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Error"/>
-			<node name="message" value="Couldn't open:&#10;%s"/>
+			<node name="message" value="Couldn&apos;t open:&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Error"/>
@@ -324,10 +338,16 @@
 			<node name="title" value="Error"/>
 			<node name="message" value="Tag name must not contain a &#8220;,&#8221; symbol"/>
 		</node>
+		<node name="downloadError">
+			<node name="title" value="Error while downloading"/>
+			<node name="message" value="Can&apos;t download this book at the moment"/>
+		</node>
 		<node name="waitMessage">
 			<node name="loadingBook" value="Loading book. Please, wait..."/>
 			<node name="loadingBookList" value="Loading book list. Please, wait..."/>
 			<node name="migrate" value="Upgrading to the new version. Please, wait..."/>
+			<node name="downloadBookList" value="Downloading book list. Please, wait..."/>
+			<node name="downloadBook" value="Downloading book. Please, wait..."/>
 		</node>
 	</node>
 	<node name="style">
@@ -378,6 +398,11 @@
 		<node name="unknown" value="Unknown Error"/>
 		<node name="unsupportedCompressionMethod" value="Unsupported Compression Method"/>
 		<node name="encriptedFile" value="DRM-protected File"/>
+	</node>
+	<node name="networkLibrary">
+		<node name="caption" value="Network Library"/>
+		<node name="startText" value="Please enter a search pattern in the text field on the toolbar and press &lt;Return&gt;."/>
+		<node name="notFound" value="Sorry, no suitable books were found."/>
 	</node>
 	<node name="library">
 		<node name="caption" value="Library"/>

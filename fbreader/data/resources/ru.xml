@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-  <node name="menu">
-	  <node name="bookInfo" value="Информация о книге..."/>
-	  <node name="toc" value="Содержание"/>
+	<node name="menu">
+		<node name="bookInfo" value="Информация о книге..."/>
+		<node name="toc" value="Содержание"/>
 		<node name="library" value="Библиотека">
 			<node name="showLibrary" value="Открыть библиотеку"/>
 			<node name="previousBook" value="Предыдущая книга"/>
@@ -39,12 +39,21 @@
 		<node name="quit" value="Закрыть"/>
 	</node>
 	<node name="toolbar">
-		<node name="showLibrary" value="Библиотека"/>
+		<node name="showReading" value="Вернуться к чтению"/>
+		<node name="showLibrary" value="Библиотека">
+			<node name="popup" value="Прочитанные книги"/>
+		</node>
 		<node name="showRecent" value="Прочитанные книги"/>
+		<node name="byAuthor" value="По авторам"/>
+		<node name="byTag" value="По категориям"/>
 		<node name="addBook" value="Добавить файл в библиотеку"/>
+		<node name="showNetLibrary" value="Поиск по сетевым библиотекам"/>
+		<node name="searchOnNetwork" value="Быстрый поиск в сети"/>
+		<node name="advancedSearchOnNetwork" value="Поиск в сети"/>
 		<node name="gotoHome" value="В начало книги"/>
 		<node name="undo" value="Назад"/>
 		<node name="redo" value="Вперед"/>
+		<node name="gotoPageNumberWithParameter" value="Перейти на страницу"/>
 		<node name="toc" value="Оглавление"/>
 		<node name="search" value="Поиск"/>
 		<node name="findNext" value="Найти следующий"/>
@@ -66,10 +75,11 @@
 				<node name="Library" value="Библиотека">
 					<node name="bookPath" value="Каталоги с книгами"/>
 					<node name="lookInSubdirectories" value="Искать книги в подкаталогах"/>
+					<node name="downloadDirectory" value="Каталог для загружаемых книг"/>
 					<node name="recentListSize" value="Размер списка прочитанных книг"/>
-					<node name="showTags" value="Сортировать книги по категориям"/>
-					<node name="showAllBooksList" value="Показывать список всех книг"/>
+					<node name="showAllBooksTag" value="Показывать список всех книг"/>
 				</node>
+				<node name="NetworkLibrary" value="Поиск в сети"/>
 				<node name="Language" value="Язык">
 					<node name="autoDetect" value="Автоматически определять язык и кодировку"/>
 					<node name="defaultLanguage" value="Язык по умолчанию"/>
@@ -78,7 +88,11 @@
 					<node name="useWindows1252Hack" value="Использовать windows-1252 вместо iso-8859-1"/>
 				</node>
 				<node name="Indicator" value="Индикатор">
-					<node name="show" value="Показывать индикатор"/>
+					<node name="type" value="Внешний вид">
+						<node name="osScrollbar" value="полоса прокрутки"/>
+						<node name="fbIndicator" value="индикатор внизу"/>
+						<node name="none" value="не показывать"/>
+					</node>
 					<node name="height" value="Высота индикатора"/>
 					<node name="offset" value="Отступ от текста"/>
 					<node name="pageNumber" value="Показывать номера страниц"/>
@@ -110,6 +124,9 @@
 				<node name="Selection" value="Пометка">
 					<node name="enableSelection" value="Разрешить помечать текст"/>
 				</node>
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Всегда использовать собственные шрифты"/>
+				</node>
 				<node name="Margins" value="Отступы">
 					<node name="left" value="Отступ слева"/>
 					<node name="right" value="Отступ справа"/>
@@ -131,8 +148,8 @@
 					</node>
 					<node name="spaceBefore" value="Пропуск перед"/>
 					<node name="spaceAfter" value="Пропуск после"/>
-					<node name="leftIndent" value="Отступ слева"/>
-					<node name="rightIndent" value="Отступ справа"/>
+					<node name="startIndent" value="Отступ в начале строки"/>
+					<node name="endIndent" value="Отступ в конце строки"/>
 				</node>
 				<node name="Styles" value="Стили">
 					<node name="optionsFor" value="Настройки для"/>
@@ -162,6 +179,7 @@
 						<node name="text" value="обычного текста"/>
 						<node name="internalLink" value="ссылки"/>
 						<node name="externalLink" value="внешней ссылки"/>
+						<node name="bookLink" value="ссылки на книгу"/>
 						<node name="highlighted" value="подсвеченного текста"/>
 						<node name="treeLines" value="линий"/>
 						<node name="indicator" value="индикатора"/>
@@ -198,7 +216,6 @@
 						<node name="decreaseFont" value="Уменьшить размер шрифта"/>
 						<node name="toggleIndicator" value="Показать/спрятать индикатор"/>
 						<node name="toggleFullscreen" value="Включить/выключить полноэкранный режим"/>
-						<node name="onFullscreen" value="Включить полноэкранный режим"/>
 						<node name="rotate" value="Повернуть текст"/>
 						<node name="preferences" value="Показать диалог настроек"/>
 						<node name="bookInfo" value="Показать информацию о книге"/>
@@ -276,6 +293,14 @@
 			<node name="backward" value="Назад"/>
 			<node name="currentSection" value="Только в этом разделе"/>
 		</node>
+		<node name="networkSearchDialog">
+			<node name="title" value="Поиск в сети"/>
+			<node name="bookTitle" value="Название книги"/>
+			<node name="author" value="Автор"/>
+			<node name="category" value="Категория"/>
+			<node name="series" value="Серия"/>
+			<node name="description" value="Описание"/>
+		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Перейти на страницу"/>
 			<node name="pageNumber" value="Номер страницы"/>
@@ -291,11 +316,11 @@
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Удаление книги"/>
-			<node name="message" value="Удалить книгу &#10;&#171;%s&#187;&#10; из библиотеки?"/>
+			<node name="message" value="Удалить книгу&#10;«%s»&#10;из библиотеки?"/>
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Удаление категории"/>
-			<node name="message" value="Удалить категорию &#171;%s&#187;?"/>
+			<node name="message" value="Удалить категорию «%s»?"/>
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Ошибка"/>
@@ -313,10 +338,16 @@
 			<node name="title" value="Ошибка"/>
 			<node name="message" value="В названии категории не может быть запятой"/>
 		</node>
+		<node name="downloadError">
+			<node name="title" value="Ошибка при загрузке"/>
+			<node name="message" value="Не удалось загрузить книгу из сети"/>
+		</node>
 		<node name="waitMessage">
 			<node name="loadingBook" value="Загрузка книги. Подождите, пожалуйста..."/>
 			<node name="loadingBookList" value="Загрузка списка книг. Подождите, пожалуйста..."/>
 			<node name="migrate" value="Переход на новую версию. Подождите, пожалуйста..."/>
+			<node name="downloadBookList" value="Загрузка списка книг. Подождите, пожалуйста..."/>
+			<node name="downloadBook" value="Загрузка книги. Подождите, пожалуйста..."/>
 		</node>
 	</node>
 	<node name="style">
@@ -344,8 +375,7 @@
 		<node name="Code" value="текста программы"/>
 		<node name="StrikeThrough" value="зачеркнутого текста"/>
 		<node name="Contents Table" value="оглавления"/>
-		<node name="Author in Library" value="имени автора в библиотеке"/>
-		<node name="Book in Library" value="библиотеки"/>
+		<node name="Library Entry" value="библиотеки"/>
 		<node name="Recent Book List" value="списка книг"/>
 		<node name="Italic" value="курсива"/>
 		<node name="Bold" value="жирного текста"/>
@@ -358,6 +388,7 @@
 		<node name="Header 5" value="текста внутри &lt;h5&gt;"/>
 		<node name="Header 6" value="текста внутри &lt;h6&gt;"/>
 		<node name="External Hyperlink" value="внешней ссылки"/>
+		<node name="Link to Another Book" value="ссылки на книгу"/>
 	</node>
 	<node name="external">
 		<node name="browser" value="браузере"/>
@@ -368,10 +399,15 @@
 		<node name="unsupportedCompressionMethod" value="неподдерживаемый метод сжатия"/>
 		<node name="encriptedFile" value="файл защищен DRM"/>
 	</node>
+	<node name="networkLibrary">
+		<node name="caption" toBeTranslated="true" value="Network Library"/>
+		<node name="startText" toBeTranslated="true" value="Please enter a search pattern in the text field on the toolbar and press &lt;Return&gt;."/>
+		<node name="notFound" toBeTranslated="true" value="Sorry, no suitable books were found."/>
+	</node>
 	<node name="library">
 		<node name="caption" value="Библиотека"/>
 		<node name="allBooks" value="Все книги"/>
 		<node name="booksWithoutTags" value="Книги без категорий"/>
-		<node name="noBooks" value="В библиотеке нет ни одной книги. Введите, пожалуйста, список каталогов, содержащих книги в диалоге настроек (вкладка &#171;Библиотека&#187;, поле &#171;Путь к книгам&#187;), либо добавьте книги вручную с помощью кнопки &#171;Добавить книгу&#187;."/>
+		<node name="noBooks" value="В библиотеке нет ни одной книги. Введите, пожалуйста, список каталогов, содержащих книги в диалоге настроек (вкладка «Библиотека», поле «Путь к книгам»), либо добавьте книги вручную с помощью кнопки «Добавить книгу»."/>
 	</node>
 </resources>

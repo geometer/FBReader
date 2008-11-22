@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
   <group name="Options">
-    <option name="BookPath" value="~/MyDocs/Books:/media/mmc1/Books"/>
+    <option name="BookPath" value="~/MyDocs/Books:/media/mmc1/Books:/media/mmc2/Books"/>
+    <option name="DownloadDirectory" value="~/MyDocs/Books"/>
   </group>
 </config>

@@ -291,7 +291,7 @@
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Hapus Buku"/>
-			<node name="message" value="Hapus buku &#13;&quot;%s&quot;&#13; dari Pustaka?"/>
+			<node name="message" value="Hapus buku &#10;&quot;%s&quot;&#10; dari Pustaka?"/>
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Remove Tag" toBeTranslated="true"/>
@@ -299,7 +299,7 @@
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Ada Kesalahan"/>
-			<node name="message" value="Tidak dapat membuka:&#13;%s"/>
+			<node name="message" value="Tidak dapat membuka:&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Ada Kesalahan"/>

@@ -291,7 +291,7 @@
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Poista kirja"/>
-			<node name="message" value="Poista &#13;&quot;%s&quot;&#13; kirjastosta?"/>
+			<node name="message" value="Poista &#10;&quot;%s&quot;&#10; kirjastosta?"/>
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Poista luokka"/>
@@ -299,7 +299,7 @@
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Virhe"/>
-			<node name="message" value="Ei voitu avata:&#13;%s"/>
+			<node name="message" value="Ei voitu avata:&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Virhe"/>

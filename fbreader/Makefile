@@ -7,10 +7,10 @@ include $(MAKEFILESDIR)/config.mk
 TARGET = FBReader
 target = fbreader
 
-ALL_SUBDIRS = src src/migration src/constants src/options src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/docbook src/formats/css src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/xhtml src/formats/oeb src/formats/rtf src/formats/openreader src/formats/pdf src/formats/dummy src/formats/util src/external src/optionsDialog src/fbreader src/encodingOption
+ALL_SUBDIRS = src src/migration src/constants src/options src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/docbook src/formats/css src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/xhtml src/formats/oeb src/formats/rtf src/formats/openreader src/formats/pdf src/formats/dummy src/formats/util src/external src/optionsDialog src/fbreader src/encodingOption src/network src/network/feedbooks src/network/fbreaderOrg
 ALL_ARCHSUBDIRS = desktop pdaxrom opie zaurus maemo openzaurus pma400 win32
 
-SUBDIRS = src/migration src/constants src/options src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/css src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/xhtml src/formats/oeb src/formats/rtf src/formats/openreader src/formats/util src/external src/optionsDialog src/fbreader src/encodingOption
+SUBDIRS = src/migration src/constants src/options src/description src/collection src/bookmodel src/formats src/formats/fb2 src/formats/css src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/xhtml src/formats/oeb src/formats/rtf src/formats/openreader src/formats/util src/external src/optionsDialog src/fbreader src/encodingOption src/network src/network/feedbooks src/network/fbreaderOrg
 
 all: .resources
 	@for subdir in $(SUBDIRS); do \
@@ -19,7 +19,7 @@ all: .resources
 		fi; \
 	done;
 	@echo -n "Linking $(TARGET) ..."
-	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` -L$(ROOTDIR)/zlibrary/text $(TEXT_LIBS) $(CORE_LIBS)
+	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` -L$(ROOTDIR)/zlibrary/text $(TEXT_LIBS) $(CORE_LIBS) -lcurl
 	@echo " OK"
 
 FBSHAREDIR = $(DESTDIR)$(subst %APPLICATION_PATH%\\\\,/,$(SHAREDIR))/FBReader

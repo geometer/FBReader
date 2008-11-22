@@ -11,12 +11,12 @@
 			<node name="showHelp" value="Informazioni su FBReader"/>
 		</node>
 		<node name="navigate" value="Navigazione">
-			<node name="gotoHome" value="Vai all'Inizio del Documento"/>
+			<node name="gotoHome" value="Vai all&apos;Inizio del Documento"/>
 			<node name="gotoPageNumber" value="Go to Page..." toBeTranslated="true"/>
-			<node name="gotoSectionStart" value="Vai all'Inizio di Sezione"/>
+			<node name="gotoSectionStart" value="Vai all&apos;Inizio di Sezione"/>
 			<node name="gotoSectionEnd" value="Vai alla Fine di Sezione"/>
-			<node name="nextTOCSection" value="Vai al Successivo Elemento dell'Indice"/>
-			<node name="previousTOCSection" value="Vai al Precedente Elemento dell'Indice"/>
+			<node name="nextTOCSection" value="Vai al Successivo Elemento dell&apos;Indice"/>
+			<node name="previousTOCSection" value="Vai al Precedente Elemento dell&apos;Indice"/>
 			<node name="undo" value="Vai Indietro"/>
 			<node name="redo" value="Vai Avanti"/>
 		</node>
@@ -42,7 +42,7 @@
 		<node name="showLibrary" value="Mostra Albero Biblioteca"/>
 		<node name="showRecent" value="Mostra Elenco Libri Recenti"/>
 		<node name="addBook" value="Aggiungi File alla Biblioteca"/>
-		<node name="gotoHome" value="Vai all'Inizio del Testo"/>
+		<node name="gotoHome" value="Vai all&apos;Inizio del Testo"/>
 		<node name="undo" value="Vai Indietro"/>
 		<node name="redo" value="Vai Avanti"/>
 		<node name="toc" value="Indice"/>
@@ -169,7 +169,7 @@
 				</node>
 				<node name="Keys" value="Tasti">
 					<node name="grabSystemKeys" value="Intercetta Tasti di Sistema"/>
-					<node name="separate" value="Funzione Tasti Dipendente dall'Orientamento"/>
+					<node name="separate" value="Funzione Tasti Dipendente dall&apos;Orientamento"/>
 					<node name="orientation" value="Orientamento"/>
 					<node name="action">
 						<node name="none" value="Nessuno"/>
@@ -178,10 +178,10 @@
 						<node name="previousBook" value="Apri Libro Precedente"/>
 						<node name="toc" value="Mostra Indice"/>
 						<node name="gotoHome" value="Vai alla Pagina Principale"/>
-						<node name="gotoSectionStart" value="Vai all'Inizio di Sezione"/>
+						<node name="gotoSectionStart" value="Vai all&apos;Inizio di Sezione"/>
 						<node name="gotoSectionEnd" value="Vai alla Fine di Seziona"/>
-						<node name="nextTOCSection" value="Vai alla Sezione Successiva dell'Indice"/>
-						<node name="previousTOCSection" value="Vai alla Sezione Precedente dell'Indice"/>
+						<node name="nextTOCSection" value="Vai alla Sezione Successiva dell&apos;Indice"/>
+						<node name="previousTOCSection" value="Vai alla Sezione Precedente dell&apos;Indice"/>
 						<node name="largeScrollForward" value="Scorrimento Grande in Avanti"/>
 						<node name="largeScrollBackward" value="Scorrimento Grande Indietro"/>
 						<node name="smallScrollForward" value="Scorrimento Piccolo in Avanti"/>
@@ -206,7 +206,7 @@
 						<node name="cancel" value="Annulla"/>
 						<node name="quit" value="Esci"/>
 					</node>
-					<node name="quitOnCancel" value="Esci dall'Applicazione su Annullamento"/>
+					<node name="quitOnCancel" value="Esci dall&apos;Applicazione su Annullamento"/>
 					<node name="keyDelay" value="Ritardo Tra Pressione Tasti Accettati"/>
 				</node>
 				<node name="Config" value="Configurazione">
@@ -273,7 +273,7 @@
 			<node name="text" value=""/>
 			<node name="ignoreCase" value="&amp;Ignora maiuscole/minuscole"/>
 			<node name="wholeText" value="In &amp;tutto il testo"/>
-			<node name="backward" value="&amp;All'indietro"/>
+			<node name="backward" value="&amp;All&apos;indietro"/>
 			<node name="currentSection" value="&amp;Solo questa sezione"/>
 		</node>
 		<node name="gotoPageDialog">
@@ -291,7 +291,7 @@
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Elimina Libro"/>
-			<node name="message" value="Elimina Libro &#13;&quot;%s&quot;&#13; dalla Biblioteca?"/>
+			<node name="message" value="Elimina Libro &#10;&quot;%s&quot;&#10; dalla Biblioteca?"/>
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Remove Tag" toBeTranslated="true"/>
@@ -299,7 +299,7 @@
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Errore"/>
-			<node name="message" value="Impossibile aprire:&#13;%s"/>
+			<node name="message" value="Impossibile aprire:&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Errore"/>

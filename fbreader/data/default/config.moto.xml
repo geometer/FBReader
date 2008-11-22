@@ -2,6 +2,7 @@
 <config>
 	<group name="Options">
 		<option name="BookPath" value="/mmc/mmca1/books/fiction"/>
+		<option name="DownloadDirectory" value="/mmc/mmca1/books/fiction"/>
 		<option name="IsSelectionEnabled" value="false"/>
 		<option name="BottomMargin" value="3"/>
 		<option name="LeftMargin" value="3"/>
