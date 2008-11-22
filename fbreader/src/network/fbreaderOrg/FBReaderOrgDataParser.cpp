@@ -42,6 +42,7 @@ void FBReaderOrgDataParser::namespaceListChangedHandler() {
 
 static const std::string BOOK_TAG = "book";
 static const std::string COVER_TAG = "cover";
+static const std::string SERIES_TAG = "series";
 static const std::string BUY_URL_TAG = "buyURL";
 
 static const std::string SUBJECT_DC_TAG = "subject";
@@ -86,6 +87,8 @@ void FBReaderOrgDataParser::endElementHandler(const char *tag) {
 				myCurrentBook.reset();
 			} else if (COVER_TAG == sTag) {
 				myCurrentBook->Cover = myBuffer;
+			} else if (SERIES_TAG == sTag) {
+				myCurrentBook->Series = myBuffer;
 			} else if (BUY_URL_TAG == sTag) {
 				myCurrentBook->URLByType[NetworkBookInfo::LINK_HTTP] = myBuffer;
 			}

@@ -49,10 +49,15 @@ struct NetworkBookInfo {
 	std::vector<std::string> Tags;
 	std::string Cover;
 	std::string Date;
+	std::string Series;
 	std::map<URLType,std::string> URLByType;
 
 	NetworkBookInfo(const std::string &id);
 	std::string fileName(URLType format) const;
+
+	struct Comparator {
+		bool operator () (const shared_ptr<NetworkBookInfo> &first, const shared_ptr<NetworkBookInfo> &second);
+	};
 };
 
 typedef std::vector<shared_ptr<NetworkBookInfo> > NetworkBookList;
