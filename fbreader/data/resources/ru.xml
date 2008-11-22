@@ -400,9 +400,9 @@
 		<node name="encriptedFile" value="файл защищен DRM"/>
 	</node>
 	<node name="networkLibrary">
-		<node name="caption" toBeTranslated="true" value="Network Library"/>
-		<node name="startText" toBeTranslated="true" value="Please enter a search pattern in the text field on the toolbar and press &lt;Return&gt;."/>
-		<node name="notFound" toBeTranslated="true" value="Sorry, no suitable books were found."/>
+		<node name="caption" value="Поиск в сетевых библиотеках"/>
+		<node name="startText" value="Введите строку для поиска в поле на панели инструментов и нажмите &lt;Return&gt;."/>
+		<node name="notFound" value="Не удалось найти подходящих книг."/>
 	</node>
 	<node name="library">
 		<node name="caption" value="Библиотека"/>
