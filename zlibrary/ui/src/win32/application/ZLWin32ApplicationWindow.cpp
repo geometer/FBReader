@@ -20,6 +20,7 @@
 #include <windowsx.h>
 
 #define RBN_CHEVRONPUSHED (RBN_FIRST - 10)
+#define MY_WM_FULLSCREEN (WM_USER + 200)
 
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
@@ -55,6 +56,9 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::Callback(HWND hWnd, UINT uMsg, WPARAM
 
 LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 	switch (uMsg) {
+		case MY_WM_FULLSCREEN:
+			setFullscreen(true);
+			return 0;
 		case WM_MEASUREITEM:
 			if (!myPopupMenu.isNull()) {
 				myPopupMenu->measureItem(*(MEASUREITEMSTRUCT*)lParam);
@@ -272,7 +276,7 @@ void ZLWin32ApplicationWindow::init() {
 		case NORMAL:
 			break;
 		case FULLSCREEN:
-			setFullscreen(true);
+			PostMessage(myMainWindow, MY_WM_FULLSCREEN, 0, 0);
 			break;
 		case MAXIMIZED:
 			ShowWindow(myMainWindow, SW_SHOWMAXIMIZED);
