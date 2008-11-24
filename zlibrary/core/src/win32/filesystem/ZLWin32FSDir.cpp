@@ -51,7 +51,9 @@ void ZLWin32FSDir::collectSubDirs(std::vector<std::string> &names, bool includeS
 				}
 			}
 			ZLUnicodeUtil::ucs2ToUtf8(fileName, wFileName);
-			names.push_back(fileName);
+			if ((fileName != ".") && (fileName != "..")) {
+				names.push_back(fileName);
+			}
 		} while (FindNextFileW(handle, &findData));
 	}
 }
