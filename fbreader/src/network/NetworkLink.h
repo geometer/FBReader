@@ -32,7 +32,7 @@ class CurlData;
 
 class NetworkLink {
 
-protected:
+public:
 	static std::string htmlEncode(const std::string &stringToEncode);
 
 protected:

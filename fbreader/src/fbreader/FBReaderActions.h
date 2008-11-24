@@ -60,7 +60,6 @@ public:
 	static const std::string SHOW_BOOK_INFO;
 	static const std::string SHOW_HELP;
 	static const std::string ROTATE_SCREEN;
-	static const std::string SHOW_LAST_BOOKS;
 	static const std::string QUIT;
 	static const std::string OPEN_PREVIOUS_BOOK;
 	static const std::string GOTO_NEXT_TOC_SECTION;

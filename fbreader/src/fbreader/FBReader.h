@@ -39,7 +39,6 @@ class ZLMessageHandler;
 class BookModel;
 class BookTextView;
 class CollectionView;
-class RecentBooksView;
 
 class FBReader : public ZLApplication {
 
@@ -57,9 +56,8 @@ public:
 		CONTENTS_MODE = 1 << 2,
 		BOOKMARKS_MODE = 1 << 3,
 		BOOK_COLLECTION_MODE = 1 << 4,
-		RECENT_BOOKS_MODE = 1 << 5,
-		NET_LIBRARY_MODE = 1 << 6,
-		ALL_MODES = 0x7F
+		NET_LIBRARY_MODE = 1 << 5,
+		ALL_MODES = 0x3F
 	};
 
 	struct ScrollingOptions {
@@ -143,7 +141,6 @@ private:
 	shared_ptr<ZLView> myBookTextView;	
 	shared_ptr<ZLView> myContentsView;	
 	shared_ptr<ZLView> myCollectionView;	
-	shared_ptr<ZLView> myRecentBooksView;	
 	shared_ptr<ZLView> myNetLibraryView;	
 	shared_ptr<ZLPopupData> myRecentBooksPopupData;	
 
@@ -178,7 +175,6 @@ friend class NetLibraryView;
 
 //friend class ShowCollectionAction;
 friend class ShowHelpAction;
-//friend class ShowRecentBooksListAction;
 //friend class ShowOptionsDialogAction;
 friend class ShowContentsAction;
 friend class AddBookAction;

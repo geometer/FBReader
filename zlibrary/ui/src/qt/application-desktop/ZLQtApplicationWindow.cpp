@@ -122,6 +122,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	setWFlags(getWFlags() | WStyle_Customize);
 
 	myToolBar = new QToolBar(this);
+	myToolBar->setFocusPolicy(NoFocus);
 	myToolBar->boxLayout()->setMargin(5);
 	myToolBar->boxLayout()->setSpacing(3);
 	setToolBarsMovable(false);
@@ -213,6 +214,7 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 
 ZLQtApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::TextFieldItem &textFieldItem) : QLineEdit(toolbar), myWindow(window), myActionId(textFieldItem.actionId()) {
 	setAlignment(Qt::AlignHCenter);
+	setFocusPolicy(ClickFocus);
 	setMaxLength(textFieldItem.maxWidth());
 	setMaximumWidth(textFieldItem.maxWidth() * 12 + 12);
 	QToolTip::add(this, QString::fromUtf8(textFieldItem.tooltip().c_str()));
@@ -226,6 +228,7 @@ void ZLQtApplicationWindow::LineEditParameter::keyReleaseEvent(QKeyEvent *event)
 		myWindow.application().doAction(myActionId);
 		myWindow.setFocusToMainWidget();
 	} else if (key == "<Esc>") {
+		restoreOldValue();
 		myWindow.setFocusToMainWidget();
 	}
 }

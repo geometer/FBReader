@@ -41,6 +41,7 @@ private:
 	std::string myBuffer;
 	shared_ptr<NetworkBookInfo> myCurrentBook;
 	std::string myDCPrefix;
+	std::string myURLType;
 };
 
 #endif /* __FBREADERORGDATAPARSER_H__ */

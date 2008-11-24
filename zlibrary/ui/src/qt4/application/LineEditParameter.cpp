@@ -28,17 +28,18 @@
 class ZLQtLineEdit : public QLineEdit {
 
 public:
-	ZLQtLineEdit(QToolBar *toolbar, ZLQtApplicationWindow &window, const std::string &actionId);
+	ZLQtLineEdit(QToolBar *toolbar, ZLQtApplicationWindow &window, ZLQtApplicationWindow::LineEditParameter &parameter, const std::string &actionId);
 
 private:
 	void keyReleaseEvent(QKeyEvent *event);
 
 private:
 	ZLQtApplicationWindow &myWindow;
+	ZLQtApplicationWindow::LineEditParameter &myParameter;
 	const std::string myActionId;
 };
 
-ZLQtLineEdit::ZLQtLineEdit(QToolBar *toolbar, ZLQtApplicationWindow &window, const std::string &actionId) : QLineEdit(toolbar), myWindow(window), myActionId(actionId) {
+ZLQtLineEdit::ZLQtLineEdit(QToolBar *toolbar, ZLQtApplicationWindow &window, ZLQtApplicationWindow::LineEditParameter &parameter, const std::string &actionId) : QLineEdit(toolbar), myWindow(window), myParameter(parameter), myActionId(actionId) {
 }
 
 void ZLQtLineEdit::keyReleaseEvent(QKeyEvent *event) {
@@ -48,12 +49,13 @@ void ZLQtLineEdit::keyReleaseEvent(QKeyEvent *event) {
 		myWindow.application().doAction(myActionId);
 		myWindow.setFocusToMainWidget();
 	} else if (key == "<Esc>") {
+		myParameter.restoreOldValue();
 		myWindow.setFocusToMainWidget();
 	}
 }
 
 ZLQtApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::TextFieldItem &textFieldItem) {
-	myEdit = new ZLQtLineEdit(toolbar, window, textFieldItem.actionId());
+	myEdit = new ZLQtLineEdit(toolbar, window, *this, textFieldItem.actionId());
 	myEdit->setAlignment(Qt::AlignHCenter);
 	myEdit->setMaxLength(textFieldItem.maxWidth());
 	myEdit->setFixedWidth(textFieldItem.maxWidth() * 10 + 10);
@@ -75,4 +77,8 @@ std::string ZLQtApplicationWindow::LineEditParameter::internalValue() const {
 
 void ZLQtApplicationWindow::LineEditParameter::internalSetValue(const std::string &value) {
 	myEdit->setText(QString::fromUtf8(value.c_str()));
+}
+
+void ZLQtApplicationWindow::LineEditParameter::restoreOldValue() {
+	VisualParameter::restoreOldValue();
 }

@@ -31,6 +31,7 @@
 
 ZLQtViewWidget::ZLQtViewWidgetInternal::ZLQtViewWidgetInternal(QWidget *parent, ZLQtViewWidget &holder) : QWidget(parent), myHolder(holder) {
 	setBackgroundMode(NoBackground);
+	setFocusPolicy(ClickFocus);
 }
 
 QScrollBar *ZLQtViewWidget::addScrollBar(QGridLayout *layout, Qt::Orientation orientation, int x, int y) {

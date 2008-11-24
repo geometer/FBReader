@@ -30,7 +30,7 @@ static const std::string URL_PREFIX = "http://www.fbreader.org/library/";
 
 shared_ptr<CurlData> FBReaderOrgLink::simpleSearchData(NetworkBookList &books, const std::string &pattern) {
 	return new XMLParserCurlData(
-		URL_PREFIX + "simple_query.php?type=xml&pattern=" + htmlEncode(pattern),
+		URL_PREFIX + "simple_query.php?type=xml&library=1&pattern=" + htmlEncode(pattern),
 		new FBReaderOrgDataParser(books)
 	);
 }
@@ -42,7 +42,7 @@ void FBReaderOrgLink::addSubPattern(std::string &url, const std::string &name, c
 }
 
 shared_ptr<CurlData> FBReaderOrgLink::advancedSearchData(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) {
-	std::string request = URL_PREFIX + "advanced_query.php?type=xml";
+	std::string request = URL_PREFIX + "advanced_query.php?type=xml&library=1";
 	addSubPattern(request, "title", title);
 	addSubPattern(request, "author", author);
 	addSubPattern(request, "series", series);

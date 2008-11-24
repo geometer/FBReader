@@ -36,7 +36,6 @@
 #include "FootnoteView.h"
 #include "ContentsView.h"
 #include "CollectionView.h"
-#include "RecentBooksView.h"
 #include "NetLibraryView.h"
 #include "RecentBooksPopupData.h"
 #include "BookInfoDialog.h"
@@ -114,7 +113,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myFootnoteView = new FootnoteView(*this, context());
 	myContentsView = new ContentsView(*this, context());
 	myCollectionView = new CollectionView(*this, context());
-	myRecentBooksView = new RecentBooksView(*this, context());
 	myNetLibraryView = new NetLibraryView(*this, context());
 	myRecentBooksPopupData = new RecentBooksPopupData(*this);
 	myMode = UNDEFINED_MODE;
@@ -122,16 +120,15 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	setMode(BOOK_TEXT_MODE);
 
 	addAction(ActionCode::SHOW_READING, new UndoAction(*this, FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
-	addAction(ActionCode::SHOW_COLLECTION, new SetModeAction(*this, FBReader::BOOK_COLLECTION_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::RECENT_BOOKS_MODE));
+	addAction(ActionCode::SHOW_COLLECTION, new SetModeAction(*this, FBReader::BOOK_COLLECTION_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::SHOW_NET_LIBRARY, new SetModeAction(*this, FBReader::NET_LIBRARY_MODE, FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::SEARCH_ON_NETWORK, new SearchOnNetworkAction(*this));
 	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction(*this));
 	registerPopupData(ActionCode::SHOW_COLLECTION, myRecentBooksPopupData);
-	addAction(ActionCode::SHOW_LAST_BOOKS, new SetModeAction(*this, FBReader::RECENT_BOOKS_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::SHOW_OPTIONS, new ShowOptionsDialogAction(*this));
 	addAction(ActionCode::SHOW_CONTENTS, new ShowContentsAction(*this));
 	addAction(ActionCode::SHOW_BOOK_INFO, new ShowBookInfoAction(*this));
-	addAction(ActionCode::ADD_BOOK, new AddBookAction(*this, FBReader::BOOK_TEXT_MODE | FBReader::BOOK_COLLECTION_MODE | FBReader::RECENT_BOOKS_MODE | FBReader::CONTENTS_MODE));
+	addAction(ActionCode::ADD_BOOK, new AddBookAction(*this, FBReader::BOOK_TEXT_MODE | FBReader::BOOK_COLLECTION_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::UNDO, new UndoAction(*this, FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::REDO, new RedoAction(*this));
 	addAction(ActionCode::SEARCH, new SearchAction(*this));
@@ -378,10 +375,6 @@ void FBReader::setMode(ViewMode mode) {
 			collectionView().openWithBook((myModel != 0) ? myModel->description() : 0);
 			setView(myCollectionView);
 			break;
-		case RECENT_BOOKS_MODE:
-			((RecentBooksView&)*myRecentBooksView).rebuild();
-			setView(myRecentBooksView);
-			break;
 		case BOOKMARKS_MODE:
 			break;
 		case NET_LIBRARY_MODE:
@@ -447,7 +440,6 @@ void FBReader::clearTextCaches() {
 	((ZLTextView&)*myFootnoteView).clearCaches();
 	((ZLTextView&)*myContentsView).clearCaches();
 	((ZLTextView&)*myCollectionView).clearCaches();
-	((ZLTextView&)*myRecentBooksView).clearCaches();
 	((ZLTextView&)*myNetLibraryView).clearCaches();
 }
 

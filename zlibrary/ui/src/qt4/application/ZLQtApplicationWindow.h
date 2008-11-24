@@ -90,6 +90,7 @@ private:
 	public:
 		LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::TextFieldItem &textFieldItem);
 		QAction *action() const;
+		void restoreOldValue();
 
 	private:
 		std::string internalValue() const;
@@ -100,6 +101,8 @@ private:
 		QLineEdit *myEdit;
 		QAction *myAction;
 	};
+
+friend class ZLQtLineEdit;
 };
 
 class ZLQtToolBarAction : public QAction {

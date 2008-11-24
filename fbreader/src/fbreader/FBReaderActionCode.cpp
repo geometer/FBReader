@@ -50,7 +50,6 @@ const std::string ActionCode::ADD_BOOK = "addBook";
 const std::string ActionCode::SHOW_BOOK_INFO = "bookInfo";
 const std::string ActionCode::SHOW_HELP = "showHelp";
 const std::string ActionCode::ROTATE_SCREEN = "rotate";
-const std::string ActionCode::SHOW_LAST_BOOKS = "showRecent";
 const std::string ActionCode::QUIT = "quit";
 const std::string ActionCode::OPEN_PREVIOUS_BOOK = "previousBook";
 const std::string ActionCode::GOTO_NEXT_TOC_SECTION = "nextTOCSection";

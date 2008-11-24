@@ -41,20 +41,30 @@ void FBReaderOrgDataParser::namespaceListChangedHandler() {
 }
 
 static const std::string BOOK_TAG = "book";
-static const std::string COVER_TAG = "cover";
-static const std::string SERIES_TAG = "series";
-static const std::string BUY_URL_TAG = "buyURL";
+static const std::string URL_TAG = "url";
 
 static const std::string SUBJECT_DC_TAG = "subject";
 static const std::string TITLE_DC_TAG = "title";
 static const std::string AUTHOR_DC_TAG = "author";
 static const std::string DATE_DC_TAG = "date";
 
+static const std::string COVER_URL_TYPE = "cover";
+static const std::string BUY_URL_TYPE = "buy";
+static const std::string EPUB_URL_TYPE = "epub";
+static const std::string MOBIPOCKET_URL_TYPE = "mobipocket";
+
 void FBReaderOrgDataParser::startElementHandler(const char *tag, const char **attributes) {
 	if (BOOK_TAG == tag) {
 		const char *id = attributeValue(attributes, "id");
 		if (id != 0) {
 			myCurrentBook = new NetworkBookInfo(id);
+		}
+	} else if ((myCurrentBook != 0) && (URL_TAG == tag)) {
+		const char *type = attributeValue(attributes, "type");
+		if (type != 0) {
+			myURLType = type;
+		} else {
+			myURLType.erase();
 		}
 	}
 	myBuffer.clear();
@@ -85,12 +95,16 @@ void FBReaderOrgDataParser::endElementHandler(const char *tag) {
 			if (BOOK_TAG == sTag) {
 				myBooks.push_back(myCurrentBook);
 				myCurrentBook.reset();
-			} else if (COVER_TAG == sTag) {
-				myCurrentBook->Cover = myBuffer;
-			} else if (SERIES_TAG == sTag) {
-				myCurrentBook->Series = myBuffer;
-			} else if (BUY_URL_TAG == sTag) {
-				myCurrentBook->URLByType[NetworkBookInfo::LINK_HTTP] = myBuffer;
+			} else if (URL_TAG == sTag) {
+				if (COVER_URL_TYPE == myURLType) {
+					myCurrentBook->Cover = myBuffer;
+				} else if (BUY_URL_TYPE == myURLType) {
+					myCurrentBook->URLByType[NetworkBookInfo::LINK_HTTP] = myBuffer;
+				} else if (EPUB_URL_TYPE == myURLType) {
+					myCurrentBook->URLByType[NetworkBookInfo::BOOK_EPUB] = myBuffer;
+				} else if (MOBIPOCKET_URL_TYPE == myURLType) {
+					myCurrentBook->URLByType[NetworkBookInfo::BOOK_MOBIPOCKET] = myBuffer;
+				}
 			}
 		}
 	}

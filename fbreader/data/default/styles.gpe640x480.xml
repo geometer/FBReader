@@ -19,7 +19,6 @@
 	<style id="10" name="Image" spaceBefore="8" alignment="center"/>
 	<style id="23" name="Contents Table" spaceAfter="7" leftIndent="22" firstLineIndentDelta="-22" alignment="left"/>
 	<style id="25" name="Library Entry" fontSizeDelta="-2" alignment="left" allowHyphenations="false"/>
-	<style id="26" name="Recent Book List" spaceAfter="3" leftIndent="22" firstLineIndentDelta="-22" alignment="left" lineSpacingPercent="120"/>
 	<style id="9" name="Preformatted text" italic="true" alignment="left" allowHyphenations="false"/>
 
 	<style id="12" partial="true" name="Cite" italic="true"/>
