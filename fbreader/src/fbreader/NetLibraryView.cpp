@@ -212,6 +212,8 @@ bool DownloadBookRunnable::wasSuccessful() {
 }
 
 std::string NetLibraryView::fileName(const NetworkBookInfo &book, NetworkBookInfo::URLType format) const {
+	ZLFile dirFile(NetworkLinkCollection::instance().DirectoryOption.value());
+	dirFile.directory(true);
 	return NetworkLinkCollection::instance().DirectoryOption.value() + ZLibrary::FileNameDelimiter + book.fileName(format);
 }
 
