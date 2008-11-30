@@ -25,6 +25,7 @@
 #include <ZLTextView.h>
 
 #include "FBReader.h"
+#include "FBView.h"
 #include "FBReaderActions.h"
 #include "../options/FBOptions.h"
 
@@ -36,18 +37,18 @@ static const std::string PATTERN = "Pattern";
 class SearchPatternEntry : public ZLComboOptionEntry {
 
 public:
-	SearchPatternEntry(SearchAction &action);
+	SearchPatternEntry(SearchPatternAction &action);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
 
 private:
-	SearchAction &myAction;
+	SearchPatternAction &myAction;
 	mutable std::vector<std::string> myValues;
 };
 
-SearchPatternEntry::SearchPatternEntry(SearchAction &action) : ZLComboOptionEntry(true), myAction(action) {
+SearchPatternEntry::SearchPatternEntry(SearchPatternAction &action) : ZLComboOptionEntry(true), myAction(action) {
 }
 
 const std::string &SearchPatternEntry::initialValue() const {
@@ -86,7 +87,15 @@ void SearchPatternEntry::onAccept(const std::string &value) {
 	}
 }
 
-SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader),
+SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader) {
+}
+
+bool SearchAction::isVisible() const {
+	shared_ptr<ZLView> view = fbreader().currentView();
+	return !view.isNull() && ((FBView&)*view).hasContents();
+}
+
+SearchPatternAction::SearchPatternAction(FBReader &fbreader) : SearchAction(fbreader),
 	SearchBackwardOption(FBCategoryKey::SEARCH, SEARCH, "Backward", false),
 	SearchIgnoreCaseOption(FBCategoryKey::SEARCH, SEARCH, "IgnoreCase", true),
 	SearchInWholeTextOption(FBCategoryKey::SEARCH, SEARCH, "WholeText", false),
@@ -94,11 +103,7 @@ SearchAction::SearchAction(FBReader &fbreader) : FBAction(fbreader),
 	SearchPatternOption(FBCategoryKey::SEARCH, SEARCH, PATTERN, "") {
 }
 
-bool SearchAction::isVisible() const {
-	return !fbreader().currentView().isNull();
-}
-
-void SearchAction::run() {
+void SearchPatternAction::run() {
 	ZLTextView &textView = (ZLTextView&)*fbreader().currentView();
 
 	shared_ptr<ZLDialog> searchDialog = ZLDialogManager::instance().createDialog(ZLResourceKey("textSearchDialog"));
@@ -125,7 +130,7 @@ void SearchAction::run() {
 	}
 }
 
-FindNextAction::FindNextAction(FBReader &fbreader) : FBAction(fbreader) {
+FindNextAction::FindNextAction(FBReader &fbreader) : SearchAction(fbreader) {
 }
 
 bool FindNextAction::isEnabled() const {
@@ -137,7 +142,7 @@ void FindNextAction::run() {
 	((ZLTextView&)*fbreader().currentView()).findNext();
 }
 
-FindPreviousAction::FindPreviousAction(FBReader &fbreader) : FBAction(fbreader) {
+FindPreviousAction::FindPreviousAction(FBReader &fbreader) : SearchAction(fbreader) {
 }
 
 bool FindPreviousAction::isEnabled() const {

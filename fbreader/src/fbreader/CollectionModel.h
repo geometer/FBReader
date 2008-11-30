@@ -38,6 +38,7 @@ public:
 	static const std::string SeriesOrderImageId;
 	static const std::string TagInfoImageId;
 	static const std::string RemoveTagImageId;
+	static const std::string StrutImageId;
 
 public:
 	CollectionModel(CollectionView &view, BookCollection &collection);
@@ -50,6 +51,8 @@ public:
 	void update();
 
 	void removeBook(BookDescriptionPtr book);
+
+	bool empty() const;
 
 private:
 	void build();

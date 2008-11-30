@@ -9,8 +9,8 @@
 	<button id="addBook"/>
 	<button id="showNetLibrary"/>
 	<separator/>
-	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>
 	<button id="advancedSearchOnNetwork"/>
+	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>
 	<separator/>
 	<button id="gotoHome"/>
 	<button id="undo"/>

@@ -74,6 +74,8 @@ public:
 
 	void scrollAndUpdatePage(bool forward, ScrollingMode mode, unsigned int value);
 
+	virtual bool hasContents() const;
+
 private:
 	static shared_ptr<ZLTextPositionIndicatorInfo> ourIndicatorInfo;
 	static shared_ptr<FBMargins> ourMargins;

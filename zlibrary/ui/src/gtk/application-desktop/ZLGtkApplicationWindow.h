@@ -46,6 +46,7 @@ private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void init();
+	void refresh();
 	void close();
 
 	void grabAllKeys(bool grab);

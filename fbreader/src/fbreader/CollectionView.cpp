@@ -296,3 +296,7 @@ void CollectionView::openWithBook(BookDescriptionPtr book) {
 bool CollectionView::organizeByTags() const {
 	return ZLStringOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", "booksOrder", "").value() == ActionCode::ORGANIZE_BOOKS_BY_TAG;
 }
+
+bool CollectionView::hasContents() const {
+	return !((CollectionModel&)*model()).empty();
+}

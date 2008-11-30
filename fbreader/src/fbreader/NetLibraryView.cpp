@@ -42,9 +42,9 @@ const std::string NetLibraryView::OpenInBrowser = "openInBrowser";
 
 NetLibraryView::NetLibraryView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context), myResource(ZLResource::resource("networkLibrary")) {
 	const std::string prefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-	myImageMap[DownloadMobi] = new ZLFileImage("image/png", prefix + "tree-feedbooks-mobi.png", 0);
+	myImageMap[DownloadMobi] = new ZLFileImage("image/png", prefix + "tree-download-mobi.png", 0);
 	myImageMap[ReadLocalMobi] = new ZLFileImage("image/png", prefix + "tree-local-mobi.png", 0);
-	myImageMap[DownloadEpub] = new ZLFileImage("image/png", prefix + "tree-feedbooks-epub.png", 0);
+	myImageMap[DownloadEpub] = new ZLFileImage("image/png", prefix + "tree-download-epub.png", 0);
 	myImageMap[ReadLocalEpub] = new ZLFileImage("image/png", prefix + "tree-local-epub.png", 0);
 	myImageMap[OpenInBrowser] = new ZLFileImage("image/png", prefix + "tree-open-in-browser.png", 0);
 
@@ -301,4 +301,8 @@ bool NetLibraryView::onStylusMove(int x, int y) {
 
 	fbreader().setHyperlinkCursor(false);
 	return false;
+}
+
+bool NetLibraryView::hasContents() const {
+	return !myBookList.empty();
 }

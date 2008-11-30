@@ -185,6 +185,7 @@ friend class ShowBookInfoAction;
 friend class UndoAction;
 //friend class RedoAction;
 friend class SearchAction;
+friend class SearchPatternAction;
 friend class FindNextAction;
 friend class FindPreviousAction;
 friend class ScrollingAction;

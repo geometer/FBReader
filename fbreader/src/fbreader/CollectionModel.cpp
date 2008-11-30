@@ -29,15 +29,17 @@ const std::string CollectionModel::AuthorInfoImageId = "authorInfo";
 const std::string CollectionModel::SeriesOrderImageId = "seriesOrder";
 const std::string CollectionModel::TagInfoImageId = "tagInfo";
 const std::string CollectionModel::RemoveTagImageId = "removeTag";
+const std::string CollectionModel::StrutImageId = "strut";
 
 CollectionModel::CollectionModel(CollectionView &view, BookCollection &collection) : ZLTextTreeModel(), myView(view), myCollection(collection) {
 	const std::string prefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-	myImageMap[RemoveBookImageId] = new ZLFileImage("image/png", prefix + "tree-remove.png", 0);
+	myImageMap[RemoveBookImageId] = new ZLFileImage("image/png", prefix + "tree-removebook.png", 0);
 	myImageMap[BookInfoImageId] = new ZLFileImage("image/png", prefix + "tree-bookinfo.png", 0);
 	myImageMap[AuthorInfoImageId] = new ZLFileImage("image/png", prefix + "tree-authorinfo.png", 0);
-	myImageMap[SeriesOrderImageId] = new ZLFileImage("image/png", prefix + "tree-order.png", 0);
+	myImageMap[SeriesOrderImageId] = new ZLFileImage("image/png", prefix + "tree-order-series.png", 0);
 	myImageMap[TagInfoImageId] = new ZLFileImage("image/png", prefix + "tree-taginfo.png", 0);
 	myImageMap[RemoveTagImageId] = new ZLFileImage("image/png", prefix + "tree-removetag.png", 0);
+	myImageMap[StrutImageId] = new ZLFileImage("image/png", prefix + "tree-strut.png", 0);
 }
 
 CollectionModel::~CollectionModel() {
@@ -163,6 +165,8 @@ void CollectionModel::buildOrganizedByAuthors() {
 		const ZLResource &resource = ZLResource::resource("library");
 		ZLTextTreeParagraph *allBooksParagraph = createParagraph();
 		insertText(LIBRARY_ENTRY, resource["allBooks"].value());
+		addBidiReset();
+		insertImage(StrutImageId);
 		myParagraphToTag[allBooksParagraph] = CollectionView::SpecialTagAllBooks;
 		addBooks(false, myCollection.books(), allBooksParagraph);
 	}
@@ -221,6 +225,7 @@ void CollectionModel::addBooksTree(const Books &books, ZLTextTreeParagraph *root
 			authorParagraph = createParagraph(root);
 			insertText(LIBRARY_ENTRY, author->displayName());
 			addBidiReset();
+			insertImage(StrutImageId);
 			//insertImage(AuthorInfoImageId);
 			currentSeriesName.erase();
 			seriesParagraph = 0;
@@ -235,6 +240,7 @@ void CollectionModel::addBooksTree(const Books &books, ZLTextTreeParagraph *root
 			seriesParagraph = createParagraph(authorParagraph);
 			insertText(LIBRARY_ENTRY, seriesName);
 			addBidiReset();
+			insertImage(StrutImageId);
 			//insertImage(SeriesOrderImageId);
 		}
 		ZLTextTreeParagraph *bookParagraph = createParagraph(
@@ -303,4 +309,8 @@ void CollectionModel::removeBook(BookDescriptionPtr book) {
 			removeParagraph(index--);
 		}
 	}
+}
+
+bool CollectionModel::empty() const {
+	return myCollection.books().empty();
 }

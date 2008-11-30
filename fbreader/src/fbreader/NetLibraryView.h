@@ -47,6 +47,8 @@ public:
 	void search(const std::string &title, const std::string &author, const std::string &series, const std::string &category, const std::string &description);
 
 private:
+	bool hasContents() const;
+
 	bool _onStylusPress(int x, int y);
 	bool onStylusMove(int x, int y);
 

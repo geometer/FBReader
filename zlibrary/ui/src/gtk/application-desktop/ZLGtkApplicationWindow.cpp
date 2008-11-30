@@ -116,6 +116,16 @@ ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
 	}
 }
 
+void ZLGtkApplicationWindow::refresh() {
+	ZLApplicationWindow::refresh();
+	while (gtk_events_pending()) {
+		gtk_main_iteration();
+	}
+	ToolbarType type =
+		isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR;
+	gtk_widget_queue_resize(toolbar(type).toolbarWidget());
+}
+
 bool ZLGtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {
 	GtkWidget *widget = gtk_window_get_focus(myMainWindow);
 	if ((widget == 0) || !GTK_WIDGET_CAN_FOCUS(widget) || GTK_IS_DRAWING_AREA(widget)) {

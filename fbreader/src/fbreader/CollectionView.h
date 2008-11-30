@@ -57,6 +57,8 @@ public:
 	bool organizeByTags() const;
 
 private:
+	bool hasContents() const;
+
 	void selectBook(BookDescriptionPtr book);
 
 	CollectionModel &collectionModel();

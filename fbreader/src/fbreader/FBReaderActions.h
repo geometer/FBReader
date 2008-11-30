@@ -205,6 +205,12 @@ class SearchAction : public FBAction {
 public:
 	SearchAction(FBReader &fbreader);
 	bool isVisible() const;
+};
+
+class SearchPatternAction : public SearchAction {
+
+public:
+	SearchPatternAction(FBReader &fbreader);
 	void run();
 
 private:
@@ -217,7 +223,7 @@ private:
 friend class SearchPatternEntry;
 };
 
-class FindNextAction : public FBAction {
+class FindNextAction : public SearchAction {
 
 public:
 	FindNextAction(FBReader &fbreader);
@@ -225,7 +231,7 @@ public:
 	void run();
 };
 
-class FindPreviousAction : public FBAction {
+class FindPreviousAction : public SearchAction {
 
 public:
 	FindPreviousAction(FBReader &fbreader);

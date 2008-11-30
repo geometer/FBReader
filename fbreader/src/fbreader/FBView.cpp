@@ -203,3 +203,7 @@ void FBView::scrollAndUpdatePage(bool forward, ScrollingMode mode, unsigned int 
 	preparePaintInfo();
 	fbreader().refreshWindow();
 }
+
+bool FBView::hasContents() const {
+	return true;
+}

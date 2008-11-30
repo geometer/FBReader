@@ -17,7 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <algorithm>
 
 #include <gtk/gtkwindow.h>
@@ -135,6 +134,7 @@ bool ZLGtkViewWidget::scrollbarEvent(ZLView::Direction direction, GtkRange *rang
 			onScrollbarPageStep(direction, 1);
 			break;
 	}
+	gtk_widget_send_expose(myArea, gdk_event_new(GDK_EXPOSE));
 	return code;
 }
 
