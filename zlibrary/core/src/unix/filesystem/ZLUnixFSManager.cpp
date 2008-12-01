@@ -39,6 +39,17 @@ static std::string getHomeDir() {
 	return (home != 0) ? home : "";
 }
 
+ZLFileInfo ZLUnixFSManager::fileInfo(const std::string &path) const {
+	ZLFileInfo info;
+	struct stat fileStat;
+	info.Exists = stat(path.c_str(), &fileStat) == 0;
+	if (info.Exists) {
+		info.Size = fileStat.st_size;
+		info.IsDirectory = S_ISDIR(fileStat.st_mode);
+	}
+	return info;
+}
+
 void ZLUnixFSManager::normalize(std::string &path) const {
 	static std::string HomeDir = getHomeDir();
 	static std::string PwdDir = getPwdDir();

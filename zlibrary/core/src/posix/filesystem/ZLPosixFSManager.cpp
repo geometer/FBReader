@@ -30,17 +30,6 @@ ZLFSDir *ZLPosixFSManager::createPlainDirectory(const std::string &path) const {
 	return new ZLPosixFSDir(path);
 }
 
-ZLFileInfo ZLPosixFSManager::fileInfo(const std::string &path) const {
-	ZLFileInfo info;
-	struct stat fileStat;
-	info.Exists = stat(path.c_str(), &fileStat) == 0;
-	if (info.Exists) {
-		info.Size = fileStat.st_size;
-		info.IsDirectory = S_ISDIR(fileStat.st_mode);
-	}
-	return info;
-}
-
 bool ZLPosixFSManager::removeFile(const std::string &path) const {
 	return unlink(path.c_str()) == 0;
 }

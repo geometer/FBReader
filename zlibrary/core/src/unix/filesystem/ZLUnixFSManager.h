@@ -24,11 +24,13 @@
 
 class ZLUnixFSManager : public ZLPosixFSManager {
 
-protected:
+private:
 	void normalize(std::string &path) const;
 	ZLFSDir *createNewDirectory(const std::string &path) const;
 	ZLInputStream *createPlainInputStream(const std::string &path) const;
 	ZLOutputStream *createOutputStream(const std::string &path) const;
+
+	ZLFileInfo fileInfo(const std::string &path) const;
 
 	int findArchiveFileNameDelimiter(const std::string &path) const;
 	shared_ptr<ZLDir> rootDirectory() const;
