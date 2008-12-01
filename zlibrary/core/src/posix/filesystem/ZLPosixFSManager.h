@@ -26,15 +26,12 @@ class ZLPosixFSManager : public ZLFSManager {
 
 protected:
 	ZLFSDir *createPlainDirectory(const std::string &path) const;
-	ZLInputStream *createPlainInputStream(const std::string &path) const;
-	ZLOutputStream *createOutputStream(const std::string &path) const;
 	ZLFileInfo fileInfo(const std::string &path) const;
 	bool removeFile(const std::string &path) const;
 
 	int findLastFileNameDelimiter(const std::string &path) const;
 
 public:
-	virtual void moveFile(const std::string &oldName, const std::string &newName) = 0;
 	virtual void getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const = 0;
 };
 

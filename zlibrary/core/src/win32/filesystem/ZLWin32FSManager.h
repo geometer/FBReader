@@ -45,7 +45,6 @@ protected:
 	const std::string &rootDirectoryPath() const;
 	std::string parentPath(const std::string &path) const;
 
-	void moveFile(const std::string &oldName, const std::string &newName);
 	void getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const;
 
 friend class ZLWin32FSDir;

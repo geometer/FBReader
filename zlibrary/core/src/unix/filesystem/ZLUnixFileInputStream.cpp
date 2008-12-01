@@ -17,20 +17,20 @@
  * 02110-1301, USA.
  */
 
-#include "ZLPosixFileInputStream.h"
+#include "ZLUnixFileInputStream.h"
 
-ZLPosixFileInputStream::ZLPosixFileInputStream(const std::string &name) : myName(name), myNeedRepositionToStart(false) {
+ZLUnixFileInputStream::ZLUnixFileInputStream(const std::string &name) : myName(name), myNeedRepositionToStart(false) {
 	myFile = 0;
 }
 
-ZLPosixFileInputStream::~ZLPosixFileInputStream() {
+ZLUnixFileInputStream::~ZLUnixFileInputStream() {
 	//close();
 	if (myFile != 0) {
 		fclose(myFile);
 	}
 }
 
-bool ZLPosixFileInputStream::open() {
+bool ZLUnixFileInputStream::open() {
 	//close();
 	if (myFile == 0) {
 		myFile = fopen(myName.c_str(), "rb");
@@ -41,7 +41,7 @@ bool ZLPosixFileInputStream::open() {
 	return myFile != 0;
 }
 
-size_t ZLPosixFileInputStream::read(char *buffer, size_t maxSize) {
+size_t ZLUnixFileInputStream::read(char *buffer, size_t maxSize) {
 	if (buffer != 0) {
 		if (myNeedRepositionToStart) {
 			fseek(myFile, 0, SEEK_SET);
@@ -61,14 +61,14 @@ size_t ZLPosixFileInputStream::read(char *buffer, size_t maxSize) {
 	}
 }
 
-void ZLPosixFileInputStream::close() {
+void ZLUnixFileInputStream::close() {
 	//if (myFile != 0) {
 	//	fclose(myFile);
 	//	myFile = 0;
 	//}
 }
 
-size_t ZLPosixFileInputStream::sizeOfOpened() {
+size_t ZLUnixFileInputStream::sizeOfOpened() {
 	if (myFile == 0) {
 		return 0;
 	}
@@ -79,7 +79,7 @@ size_t ZLPosixFileInputStream::sizeOfOpened() {
 	return size;
 }
 
-void ZLPosixFileInputStream::seek(int offset, bool absoluteOffset) {
+void ZLUnixFileInputStream::seek(int offset, bool absoluteOffset) {
 	if (myNeedRepositionToStart) {
 		absoluteOffset = true;
 		myNeedRepositionToStart = false;
@@ -87,6 +87,6 @@ void ZLPosixFileInputStream::seek(int offset, bool absoluteOffset) {
 	fseek(myFile, offset, absoluteOffset ? SEEK_SET : SEEK_CUR);
 }
 
-size_t ZLPosixFileInputStream::offset() const {
+size_t ZLUnixFileInputStream::offset() const {
 	return myNeedRepositionToStart ? 0 : ftell(myFile);
 }

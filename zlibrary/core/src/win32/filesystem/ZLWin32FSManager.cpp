@@ -137,11 +137,6 @@ std::string ZLWin32FSManager::parentPath(const std::string &path) const {
 	return (result.length() == 2) ? result + '\\' : result;
 }
 
-void ZLWin32FSManager::moveFile(const std::string &oldName, const std::string &newName) {
-	remove(newName.c_str());
-	rename(oldName.c_str(), newName.c_str());
-}
-
 ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 	ZLFileInfo info;
 	if (path.empty()) {

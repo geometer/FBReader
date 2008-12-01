@@ -27,13 +27,14 @@ class ZLUnixFSManager : public ZLPosixFSManager {
 protected:
 	void normalize(std::string &path) const;
 	ZLFSDir *createNewDirectory(const std::string &path) const;
+	ZLInputStream *createPlainInputStream(const std::string &path) const;
+	ZLOutputStream *createOutputStream(const std::string &path) const;
 
 	int findArchiveFileNameDelimiter(const std::string &path) const;
 	shared_ptr<ZLDir> rootDirectory() const;
 	const std::string &rootDirectoryPath() const;
 	std::string parentPath(const std::string &path) const;
 
-	void moveFile(const std::string &oldName, const std::string &newName);
 	void getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const;
 };
 

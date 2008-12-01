@@ -26,6 +26,8 @@
 
 #include "ZLUnixFSManager.h"
 #include "../../filesystem/ZLFSDir.h"
+#include "ZLUnixFileInputStream.h"
+#include "ZLUnixFileOutputStream.h"
 
 static std::string getPwdDir() {
 	char *pwd = getenv("PWD");
@@ -105,6 +107,14 @@ ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
 	return createPlainDirectory(path);
 }
 
+ZLInputStream *ZLUnixFSManager::createPlainInputStream(const std::string &path) const {
+	return new ZLUnixFileInputStream(path);
+}
+
+ZLOutputStream *ZLUnixFSManager::createOutputStream(const std::string &path) const {
+	return new ZLUnixFileOutputStream(path);
+}
+
 int ZLUnixFSManager::findArchiveFileNameDelimiter(const std::string &path) const {
 	return path.rfind(':');
 }
@@ -125,10 +135,6 @@ std::string ZLUnixFSManager::parentPath(const std::string &path) const {
 	}
 	int index = findLastFileNameDelimiter(path);
 	return (index <= 0) ? RootPath : path.substr(0, index);
-}
-
-void ZLUnixFSManager::moveFile(const std::string &oldName, const std::string &newName) {
-	rename(oldName.c_str(), newName.c_str());
 }
 
 void ZLUnixFSManager::getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const {

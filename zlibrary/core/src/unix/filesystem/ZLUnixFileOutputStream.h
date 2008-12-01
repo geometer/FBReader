@@ -17,30 +17,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLPOSIXFILEINPUTSTREAM_H__
-#define __ZLPOSIXFILEINPUTSTREAM_H__
+#ifndef __ZLUNIXFILEOUTPUTSTREAM_H__
+#define __ZLUNIXFILEOUTPUTSTREAM_H__
 
 #include <stdio.h>
 
-#include <ZLInputStream.h>
+#include <ZLOutputStream.h>
 
-class ZLPosixFileInputStream : public ZLInputStream {
+class ZLUnixFileOutputStream : public ZLOutputStream {
 
 public:
-	ZLPosixFileInputStream(const std::string &name);
-	~ZLPosixFileInputStream();
+	ZLUnixFileOutputStream(const std::string &name);
+	~ZLUnixFileOutputStream();
 	bool open();
-	size_t read(char *buffer, size_t maxSize);
+	void write(const char *data, size_t len);
+	void write(const std::string &str);
 	void close();
-
-	void seek(int offset, bool absoluteOffset);
-	size_t offset() const;
-	size_t sizeOfOpened();
 
 private:
 	std::string myName;
+	std::string myTemporaryName;
+	bool myHasErrors;
 	FILE *myFile;
-	bool myNeedRepositionToStart;
 };
 
-#endif /* __ZLPOSIXFILEINPUTSTREAM_H__ */
+#endif /* __ZLUNIXFILEOUTPUTSTREAM_H__ */
