@@ -21,10 +21,10 @@
 #include <dirent.h>
 #include <stdio.h>
 
-#include "ZLPosixFSDir.h"
-#include "ZLPosixFSManager.h"
+#include "ZLUnixFSDir.h"
+#include "ZLUnixFSManager.h"
 
-void ZLPosixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
+void ZLUnixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(path().c_str());
 	if (dir != 0) {
 		const std::string namePrefix = path() + delimiter();
@@ -36,7 +36,12 @@ void ZLPosixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeS
 			if ((shortName == ".") || (shortName == "..")) {
 				continue;
 			}
-			((ZLPosixFSManager&)ZLFSManager::instance()).getStat(namePrefix + shortName, includeSymlinks, fileInfo);
+			const std::string path = namePrefix + shortName;
+			if (includeSymlinks) {
+				stat(path.c_str(), &fileInfo);
+			} else {
+				lstat(path.c_str(), &fileInfo);
+			}
 			if (S_ISDIR(fileInfo.st_mode)) {
 				names.push_back(shortName);
 			}
@@ -45,7 +50,7 @@ void ZLPosixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeS
 	}
 }
 
-void ZLPosixFSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
+void ZLUnixFSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(path().c_str());
 	if (dir != 0) {
 		const std::string namePrefix = path() + delimiter();
@@ -57,7 +62,12 @@ void ZLPosixFSDir::collectFiles(std::vector<std::string> &names, bool includeSym
 			if ((shortName == ".") || (shortName == "..")) {
 				continue;
 			}
-			((ZLPosixFSManager&)ZLFSManager::instance()).getStat(namePrefix + shortName, includeSymlinks, fileInfo);
+			const std::string path = namePrefix + shortName;
+			if (includeSymlinks) {
+				stat(path.c_str(), &fileInfo);
+			} else {
+				lstat(path.c_str(), &fileInfo);
+			}
 			if (S_ISREG(fileInfo.st_mode)) {
 				names.push_back(shortName);
 			}

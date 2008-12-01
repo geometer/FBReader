@@ -31,6 +31,14 @@ void ZLFSManager::deleteInstance() {
 	}
 }
 
+int ZLFSManager::findLastFileNameDelimiter(const std::string &path) const {
+	int index = findArchiveFileNameDelimiter(path);
+	if (index == -1) {
+		index = path.rfind(ZLibrary::FileNameDelimiter);
+	}
+	return index;
+}
+
 std::string ZLFSDir::delimiter() const {
 	return ZLibrary::FileNameDelimiter;
 }

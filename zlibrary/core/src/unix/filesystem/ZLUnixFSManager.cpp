@@ -25,7 +25,7 @@
 #include <ZLStringUtil.h>
 
 #include "ZLUnixFSManager.h"
-#include "../../filesystem/ZLFSDir.h"
+#include "ZLUnixFSDir.h"
 #include "ZLUnixFileInputStream.h"
 #include "ZLUnixFileOutputStream.h"
 
@@ -118,6 +118,10 @@ ZLFSDir *ZLUnixFSManager::createNewDirectory(const std::string &path) const {
 	return createPlainDirectory(path);
 }
 
+ZLFSDir *ZLUnixFSManager::createPlainDirectory(const std::string &path) const {
+	return new ZLUnixFSDir(path);
+}
+
 ZLInputStream *ZLUnixFSManager::createPlainInputStream(const std::string &path) const {
 	return new ZLUnixFileInputStream(path);
 }
@@ -146,12 +150,4 @@ std::string ZLUnixFSManager::parentPath(const std::string &path) const {
 	}
 	int index = findLastFileNameDelimiter(path);
 	return (index <= 0) ? RootPath : path.substr(0, index);
-}
-
-void ZLUnixFSManager::getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const {
-	if (includeSymlinks) {
-		stat(path.c_str(), &fileInfo);
-	} else {
-		lstat(path.c_str(), &fileInfo);
-	}
 }

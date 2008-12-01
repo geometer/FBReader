@@ -20,10 +20,9 @@
 #include <windows.h>
 
 #include "ZLWin32FSDir.h"
-#include "ZLWin32FSManager.h"
 #include "../util/W32WCHARUtil.h"
 
-void ZLWin32FSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
+void ZLWin32FSDir::collectSubDirs(std::vector<std::string> &names, bool /*includeSymlinks*/) {
 	std::string pattern = path();
 	if (pattern[pattern.length() - 1] != '\\') {
 		pattern += '\\';
@@ -58,7 +57,7 @@ void ZLWin32FSDir::collectSubDirs(std::vector<std::string> &names, bool includeS
 	}
 }
 
-void ZLWin32FSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
+void ZLWin32FSDir::collectFiles(std::vector<std::string> &names, bool /*includeSymlinks*/) {
 	std::string pattern = path();
 	if (pattern[pattern.length() - 1] != '\\') {
 		pattern += '\\';

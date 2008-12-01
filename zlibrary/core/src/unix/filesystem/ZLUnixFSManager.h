@@ -27,6 +27,7 @@ class ZLUnixFSManager : public ZLPosixFSManager {
 private:
 	void normalize(std::string &path) const;
 	ZLFSDir *createNewDirectory(const std::string &path) const;
+	ZLFSDir *createPlainDirectory(const std::string &path) const;
 	ZLInputStream *createPlainInputStream(const std::string &path) const;
 	ZLOutputStream *createOutputStream(const std::string &path) const;
 
@@ -36,8 +37,6 @@ private:
 	shared_ptr<ZLDir> rootDirectory() const;
 	const std::string &rootDirectoryPath() const;
 	std::string parentPath(const std::string &path) const;
-
-	void getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const;
 };
 
 #endif /* __ZLUNIXFSMANAGER_H__ */

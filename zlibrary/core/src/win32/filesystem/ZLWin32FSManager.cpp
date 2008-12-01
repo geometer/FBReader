@@ -18,7 +18,6 @@
  */
 
 #include <unistd.h>
-#include <sys/stat.h>
 #include <windows.h>
 #include <shlobj.h>
 
@@ -155,8 +154,4 @@ ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 		}
 	}
 	return info;
-}
-
-void ZLWin32FSManager::getStat(const std::string &path, bool /*includeSymlinks*/, struct stat &fileInfo) const {
-	stat(path.c_str(), &fileInfo);
 }

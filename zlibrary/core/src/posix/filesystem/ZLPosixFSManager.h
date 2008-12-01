@@ -25,13 +25,7 @@
 class ZLPosixFSManager : public ZLFSManager {
 
 protected:
-	ZLFSDir *createPlainDirectory(const std::string &path) const;
 	bool removeFile(const std::string &path) const;
-
-	int findLastFileNameDelimiter(const std::string &path) const;
-
-public:
-	virtual void getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const = 0;
 };
 
 #endif /* __ZLPOSIXFSMANAGER_H__ */

@@ -57,7 +57,7 @@ protected:
 	virtual std::string convertFilenameToUtf8(const std::string &name) const = 0;
 
 	virtual int findArchiveFileNameDelimiter(const std::string &path) const = 0;
-	virtual int findLastFileNameDelimiter(const std::string &path) const = 0;
+	int findLastFileNameDelimiter(const std::string &path) const;
 	virtual shared_ptr<ZLDir> rootDirectory() const = 0;
 	virtual const std::string &rootDirectoryPath() const = 0;
 	virtual std::string parentPath(const std::string &path) const = 0;

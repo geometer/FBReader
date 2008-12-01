@@ -24,20 +24,7 @@
 #include <ZLStringUtil.h>
 
 #include "ZLPosixFSManager.h"
-#include "ZLPosixFSDir.h"
-
-ZLFSDir *ZLPosixFSManager::createPlainDirectory(const std::string &path) const {
-	return new ZLPosixFSDir(path);
-}
 
 bool ZLPosixFSManager::removeFile(const std::string &path) const {
 	return unlink(path.c_str()) == 0;
-}
-
-int ZLPosixFSManager::findLastFileNameDelimiter(const std::string &path) const {
-	int index = findArchiveFileNameDelimiter(path);
-	if (index == -1) {
-		index = path.rfind(ZLibrary::FileNameDelimiter);
-	}
-	return index;
 }

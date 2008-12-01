@@ -30,7 +30,7 @@ public:
 private:
 	ZLWin32FSManager() {}
 	
-protected:
+private:
 	void normalize(std::string &path) const;
 	ZLFSDir *createPlainDirectory(const std::string &path) const;
 	ZLInputStream *createPlainInputStream(const std::string &path) const;
@@ -44,11 +44,6 @@ protected:
 	shared_ptr<ZLDir> rootDirectory() const;
 	const std::string &rootDirectoryPath() const;
 	std::string parentPath(const std::string &path) const;
-
-	void getStat(const std::string &path, bool includeSymlinks, struct stat &fileInfo) const;
-
-friend class ZLWin32FSDir;
-friend class ZLWin32FileOutputStream;
 };
 
 #endif /* __ZLWIN32FSMANAGER_H__ */
