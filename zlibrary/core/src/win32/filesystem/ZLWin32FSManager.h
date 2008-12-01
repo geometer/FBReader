@@ -20,12 +20,16 @@
 #ifndef __ZLWIN32FSMANAGER_H__
 #define __ZLWIN32FSMANAGER_H__
 
+#include <ZLUnicodeUtil.h>
+
 #include "../../filesystem/ZLFSManager.h"
 
 class ZLWin32FSManager : public ZLFSManager {
 
 public:
 	static void createInstance() { ourInstance = new ZLWin32FSManager(); }
+
+	static ZLUnicodeUtil::Ucs2String longFilePath(const std::string &path);
 	
 private:
 	ZLWin32FSManager() {}

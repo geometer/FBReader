@@ -32,10 +32,8 @@ bool ZLWin32FileOutputStream::open() {
 	close();
 
 	myTemporaryName = myName + ".XYZT";
-	std::string nameWithPrefix = "\\\\?\\" + myTemporaryName;
-	ZLUnicodeUtil::Ucs2String wName;
-	::createNTWCHARString(wName, nameWithPrefix);
-	myFile = CreateFileW(::wchar(wName), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+	ZLUnicodeUtil::Ucs2String wPath = ZLWin32FSManager::longFilePath(myTemporaryName);
+	myFile = CreateFileW(::wchar(wPath), GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 
 	return myFile != 0;
 }
@@ -54,14 +52,9 @@ void ZLWin32FileOutputStream::close() {
 		CloseHandle(myFile);
 		myFile = 0;
 		if (!myHasErrors) {
-			std::string nameWithPrefix = "\\\\?\\" + myName;
-			ZLUnicodeUtil::Ucs2String wName;
-			::createNTWCHARString(wName, nameWithPrefix);
-
-			nameWithPrefix = "\\\\?\\" + myTemporaryName;
-			ZLUnicodeUtil::Ucs2String wTName;
-			::createNTWCHARString(wTName, nameWithPrefix);
-			MoveFileExW(::wchar(wTName), ::wchar(wName), MOVEFILE_REPLACE_EXISTING);
+			ZLUnicodeUtil::Ucs2String wPath = ZLWin32FSManager::longFilePath(myName);
+			ZLUnicodeUtil::Ucs2String wTPath = ZLWin32FSManager::longFilePath(myTemporaryName);
+			MoveFileExW(::wchar(wTPath), ::wchar(wPath), MOVEFILE_REPLACE_EXISTING);
 		}
 	}
 }

@@ -18,6 +18,7 @@
  */
 
 #include "ZLWin32FileInputStream.h"
+#include "ZLWin32FSManager.h"
 #include "../util/W32WCHARUtil.h"
 
 ZLWin32FileInputStream::ZLWin32FileInputStream(const std::string &name) : myName(name), myNeedRepositionToStart(false) {
@@ -34,10 +35,8 @@ ZLWin32FileInputStream::~ZLWin32FileInputStream() {
 bool ZLWin32FileInputStream::open() {
 	//close();
 	if (myFile == 0) {
-		std::string nameWithPrefix = "\\\\?\\" + myName;
-		ZLUnicodeUtil::Ucs2String wName;
-		::createNTWCHARString(wName, nameWithPrefix);
-		myFile = CreateFileW(::wchar(wName), GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
+		ZLUnicodeUtil::Ucs2String wPath = ZLWin32FSManager::longFilePath(myName);
+		myFile = CreateFileW(::wchar(wPath), GENERIC_READ, FILE_SHARE_READ, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 		myOffset = 0;
 	} else {
 		//fseek(myFile, 0, SEEK_SET);

@@ -45,6 +45,12 @@ static std::string getHomeDir() {
 	return buffer;
 }
 
+ZLUnicodeUtil::Ucs2String ZLWin32FSManager::longFilePath(const std::string &path) {
+	ZLUnicodeUtil::Ucs2String lfp;
+	::createNTWCHARString(lfp, "\\\\?\\" + path);
+	return lfp;
+}
+
 ZLFSDir *ZLWin32FSManager::createPlainDirectory(const std::string &path) const {
 	if (path.empty()) {
 		return new ZLWin32RootDir();
@@ -62,10 +68,8 @@ ZLOutputStream *ZLWin32FSManager::createOutputStream(const std::string &path) co
 }
 
 bool ZLWin32FSManager::removeFile(const std::string &path) const {
-	std::string pathWithPrefix = "\\\\?\\" + path;
-	ZLUnicodeUtil::Ucs2String wName;
-	::createNTWCHARString(wName, pathWithPrefix);
-	return DeleteFileW(::wchar(wName));
+	ZLUnicodeUtil::Ucs2String wPath = longFilePath(path);
+	return DeleteFileW(::wchar(wPath));
 }
 
 void ZLWin32FSManager::normalize(std::string &path) const {
@@ -112,7 +116,30 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 }
 
 ZLFSDir *ZLWin32FSManager::createNewDirectory(const std::string &path) const {
-	return (mkdir(path.c_str()) == 0) ? createPlainDirectory(path) : 0;
+	std::vector<ZLUnicodeUtil::Ucs2String> subpaths;
+	std::string current = path;
+
+	while (current.length() > 3) {
+		WIN32_FILE_ATTRIBUTE_DATA data;
+		ZLUnicodeUtil::Ucs2String wPath = longFilePath(current);
+		const bool exists = GetFileAttributesEx(::wchar(wPath), GetFileExInfoStandard, &data);
+		if (exists && ((data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)) {
+			return 0;
+		}
+		subpaths.push_back(wPath);
+		int index = current.rfind('\\');
+		if (index == -1) {
+			return 0;
+		}
+		current.erase(index);
+	}
+
+	for (int i = subpaths.size() - 1; i >= 0; --i) {
+		if (!CreateDirectory(::wchar(subpaths[i]), 0) && (GetLastError() != ERROR_ALREADY_EXISTS)) {
+			return 0;
+		}
+	}
+	return createPlainDirectory(path);
 }
 
 std::string ZLWin32FSManager::convertFilenameToUtf8(const std::string &name) const {
@@ -150,9 +177,7 @@ ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 		info.Size = 0;
 		info.IsDirectory = true;
 	} else {
-		std::string pathWithPrefix = "\\\\?\\" + path;
-		ZLUnicodeUtil::Ucs2String wPath;
-		::createNTWCHARString(wPath, pathWithPrefix);
+		ZLUnicodeUtil::Ucs2String wPath = longFilePath(path);
 		WIN32_FILE_ATTRIBUTE_DATA data;
 		info.Exists = GetFileAttributesEx(::wchar(wPath), GetFileExInfoStandard, &data);
 		if (info.Exists) {
