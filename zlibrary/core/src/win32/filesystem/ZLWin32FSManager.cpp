@@ -61,6 +61,13 @@ ZLOutputStream *ZLWin32FSManager::createOutputStream(const std::string &path) co
 	return new ZLWin32FileOutputStream(path);
 }
 
+bool ZLWin32FSManager::removeFile(const std::string &path) const {
+	std::string pathWithPrefix = "\\\\?\\" + path;
+	ZLUnicodeUtil::Ucs2String wName;
+	::createNTWCHARString(wName, pathWithPrefix);
+	return DeleteFileW(::wchar(wName));
+}
+
 void ZLWin32FSManager::normalize(std::string &path) const {
 	if (path.empty()) {
 		return;

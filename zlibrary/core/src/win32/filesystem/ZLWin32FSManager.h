@@ -20,9 +20,9 @@
 #ifndef __ZLWIN32FSMANAGER_H__
 #define __ZLWIN32FSMANAGER_H__
 
-#include "../../../../core/src/posix/filesystem/ZLPosixFSManager.h"
+#include "../../filesystem/ZLFSManager.h"
 
-class ZLWin32FSManager : public ZLPosixFSManager {
+class ZLWin32FSManager : public ZLFSManager {
 
 public:
 	static void createInstance() { ourInstance = new ZLWin32FSManager(); }
@@ -36,6 +36,7 @@ private:
 	ZLInputStream *createPlainInputStream(const std::string &path) const;
 	ZLOutputStream *createOutputStream(const std::string &path) const;
 	ZLFSDir *createNewDirectory(const std::string &path) const;
+	bool removeFile(const std::string &path) const;
 
 	ZLFileInfo fileInfo(const std::string &path) const;
 

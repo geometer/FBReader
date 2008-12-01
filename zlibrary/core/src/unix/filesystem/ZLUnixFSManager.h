@@ -20,9 +20,9 @@
 #ifndef __ZLUNIXFSMANAGER_H__
 #define __ZLUNIXFSMANAGER_H__
 
-#include "../../posix/filesystem/ZLPosixFSManager.h"
+#include "../../filesystem/ZLFSManager.h"
 
-class ZLUnixFSManager : public ZLPosixFSManager {
+class ZLUnixFSManager : public ZLFSManager {
 
 private:
 	void normalize(std::string &path) const;
@@ -30,6 +30,7 @@ private:
 	ZLFSDir *createPlainDirectory(const std::string &path) const;
 	ZLInputStream *createPlainInputStream(const std::string &path) const;
 	ZLOutputStream *createOutputStream(const std::string &path) const;
+	bool removeFile(const std::string &path) const;
 
 	ZLFileInfo fileInfo(const std::string &path) const;
 

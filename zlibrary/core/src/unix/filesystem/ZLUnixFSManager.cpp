@@ -130,6 +130,10 @@ ZLOutputStream *ZLUnixFSManager::createOutputStream(const std::string &path) con
 	return new ZLUnixFileOutputStream(path);
 }
 
+bool ZLUnixFSManager::removeFile(const std::string &path) const {
+	return unlink(path.c_str()) == 0;
+}
+
 int ZLUnixFSManager::findArchiveFileNameDelimiter(const std::string &path) const {
 	return path.rfind(':');
 }
