@@ -72,6 +72,8 @@ bool ZLWin32FSManager::removeFile(const std::string &path) const {
 	return DeleteFileW(::wchar(wPath));
 }
 
+#include <iostream>
+
 void ZLWin32FSManager::normalize(std::string &path) const {
 	if (path.empty()) {
 		return;
@@ -93,6 +95,7 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 		path = HomeDir + path.substr(1);
 	} else if (ZLStringUtil::stringStartsWith(path, APPattern)) {
 		path = AP + path.substr(APPattern.length());
+		std::cerr << path << "\n";
 	} else if ((path.length() > 1) && (path[1] != ':') &&
 							!ZLStringUtil::stringStartsWith(path, "\\\\")) {
 		path = PwdDir + "\\" + path;

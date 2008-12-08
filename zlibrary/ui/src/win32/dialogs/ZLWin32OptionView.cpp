@@ -302,8 +302,8 @@ void ColorOptionView::onEvent(const std::string &event, W32EventSender&) {
 			refs[i] = RGB(color.Red, color.Green, color.Blue);
 		}
 		chooser.lStructSize = sizeof(chooser);
-		chooser.hwndOwner = 0; // TODO: !!!
-		//chooser.hInstance = 0;
+		chooser.hwndOwner = GetActiveWindow();
+		chooser.hInstance = 0;
 		ZLColor currentColor = myStandardColorComboBox->selectedColor();
 		chooser.rgbResult = RGB(currentColor.Red, currentColor.Green, currentColor.Blue);
 		chooser.lpCustColors = refs;

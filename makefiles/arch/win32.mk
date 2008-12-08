@@ -10,7 +10,8 @@ LD = i586-mingw32msvc-g++
 RESOURCE_COMPILER = i586-mingw32msvc-windres
 
 CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DUNICODE -D_WIN32_IE=0x0501 -D_WIN32_WINNT=0x0501 -DWINVER=0x0500
-LDFLAGS = -mwindows
+#LDFLAGS = -mwindows
+LDFLAGS = -mconsole
 
 UILIBS = -lgdi32 -lcomctl32 -lcomdlg32 -lpng12 -ljpeg -lungif -ltiff
 XML_LIB = -lexpat

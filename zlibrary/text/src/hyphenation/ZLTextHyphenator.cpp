@@ -46,7 +46,8 @@ ZLTextHyphenationInfo ZLTextHyphenator::info(const ZLTextWord &word) const {
 	pattern.push_back(' ');
 	for (unsigned int i = 0; i < ucs4Vector.size(); ++i) {
 		ZLUnicodeUtil::Ucs4Char symbol = ucs4Vector[i];
-		bool letter = ZLUnicodeUtil::isLetter(symbol);
+		// TODO: get special symbols from pattern file
+		bool letter = (symbol == '\'') || (symbol == '^') || ZLUnicodeUtil::isLetter(symbol);
 		isLetter.push_back(letter);
 		pattern.push_back(letter ? ZLUnicodeUtil::toLower(symbol) : ' ');
 	}

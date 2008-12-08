@@ -152,6 +152,7 @@ void ZLTextView::scrollToEndOfText() {
 }
 
 int ZLTextView::paragraphIndexByCoordinates(int x, int y) const {
+	x = visualX(x);
 	int paragraphIndex = -1;
 	int yBottom = -1;
 	int xLeft = context().width() + 1;

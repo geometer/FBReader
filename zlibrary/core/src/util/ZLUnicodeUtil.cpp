@@ -17,7 +17,71 @@
  * 02110-1301, USA.
  */
 
+#include <stdlib.h>
+#include <map>
+
+#include <ZLibrary.h>
+#include <ZLXMLReader.h>
+
 #include "ZLUnicodeUtil.h"
+
+struct ZLUnicodeData {
+	enum SymbolType {
+		LETTER_LOWERCASE,
+		LETTER_UPPERCASE,
+		UNKNOWN
+	};
+
+	const SymbolType Type;
+	const ZLUnicodeUtil::Ucs4Char LowerCase;
+	const ZLUnicodeUtil::Ucs4Char UpperCase;
+
+	ZLUnicodeData(const SymbolType type, ZLUnicodeUtil::Ucs4Char lowerCase, ZLUnicodeUtil::Ucs4Char upperCase);
+};
+
+ZLUnicodeData::ZLUnicodeData(const SymbolType type, ZLUnicodeUtil::Ucs4Char lowerCase, ZLUnicodeUtil::Ucs4Char upperCase) : Type(type), LowerCase(lowerCase), UpperCase(upperCase) {
+}
+
+static std::map<ZLUnicodeUtil::Ucs4Char,ZLUnicodeData> UNICODE_TABLE;
+
+class ZLUnicodeTableReader : public ZLXMLReader {
+
+private:
+	void startElementHandler(const char *tag, const char **attributes);
+};
+
+void ZLUnicodeTableReader::startElementHandler(const char *tag, const char **attributes) {
+	static std::string SYMBOL_TAG = "symbol";
+	static std::string LETTER_LOWERCASE_TYPE = "Ll";
+	static std::string LETTER_UPPERCASE_TYPE = "Lu";
+
+	if (SYMBOL_TAG == tag) {
+		const char *codeS = attributeValue(attributes, "code");
+		const ZLUnicodeUtil::Ucs4Char code = strtol(codeS, 0, 16);
+		const char *typeS = attributeValue(attributes, "type");
+		ZLUnicodeData::SymbolType type = ZLUnicodeData::UNKNOWN;
+		if (LETTER_LOWERCASE_TYPE == typeS) {
+			type = ZLUnicodeData::LETTER_LOWERCASE;
+		} else if (LETTER_UPPERCASE_TYPE == typeS) {
+			type = ZLUnicodeData::LETTER_UPPERCASE;
+		}
+		const char *lowerS = attributeValue(attributes, "lower");
+		const ZLUnicodeUtil::Ucs4Char lower = (lowerS != 0) ? strtol(lowerS, 0, 16) : code;
+		const char *upperS = attributeValue(attributes, "upper");
+		const ZLUnicodeUtil::Ucs4Char upper = (upperS != 0) ? strtol(upperS, 0, 16) : code;
+		UNICODE_TABLE.insert(std::pair<ZLUnicodeUtil::Ucs4Char,ZLUnicodeData>(code, ZLUnicodeData(type, lower, upper)));
+	}
+}
+
+static void initUnicodeTable() {
+	static bool inProgress = false;
+	if (!inProgress && UNICODE_TABLE.empty()) {
+		inProgress = true;
+		ZLUnicodeTableReader reader;
+		reader.readDocument(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "unicode.xml.gz");
+		inProgress = false;
+	}
+}
 
 bool ZLUnicodeUtil::isUtf8String(const char *str, int len) {
 	const char *last = str + len;
@@ -245,31 +309,18 @@ void ZLUnicodeUtil::ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLe
 }
 
 bool ZLUnicodeUtil::isLetter(Ucs4Char ch) {
-	return
-		(('a' <= ch) && (ch <= 'z')) ||
-		(('A' <= ch) && (ch <= 'Z')) ||
-		// ' is "letter" (in French, for example)
-		(ch == '\'') ||
-		// ^ is "letter" (in Esperanto)
-		(ch == '^') ||
-		// latin1
-		((0xC0 <= ch) && (ch <= 0xFF) && (ch != 0xD7) && (ch != 0xF7)) ||
-		// extended latin1
-		((0x100 <= ch) && (ch <= 0x178)) ||
-		// cyrillic
-		((0x410 <= ch) && (ch <= 0x44F)) ||
-		// cyrillic YO & yo
-		(ch == 0x401) || (ch == 0x451) ||
-		// hebrew
-		((0x5D0 <= ch) && (ch <= 0x5EA)) ||
-		// arabic
-		((0x621 <= ch) && (ch <= 0x64A)) ||
-		(ch == 0x679) || (ch == 0x67E) ||
-		(ch == 0x686) || (ch == 0x688) ||
-		(ch == 0x691) || (ch == 0x698) ||
-		(ch == 0x6A9) || (ch == 0x6AF) ||
-		(ch == 0x6BA) || (ch == 0x6BE) ||
-		(ch == 0x6C1) || (ch == 0x6D2);
+	initUnicodeTable();
+	std::map<ZLUnicodeUtil::Ucs4Char,ZLUnicodeData>::const_iterator it = UNICODE_TABLE.find(ch);
+	if (it == UNICODE_TABLE.end()) {
+		return false;
+	}
+	switch (it->second.Type) {
+		case ZLUnicodeData::LETTER_LOWERCASE:
+		case ZLUnicodeData::LETTER_UPPERCASE:
+			return true;
+		default:
+			return false;
+	}
 }
 
 bool ZLUnicodeUtil::isSpace(Ucs4Char ch) {
@@ -343,31 +394,9 @@ ZLUnicodeUtil::Breakable ZLUnicodeUtil::isBreakable(Ucs4Char c) {
 }
 
 ZLUnicodeUtil::Ucs4Char ZLUnicodeUtil::toLower(Ucs4Char ch) {
-	if (('A' <= ch) && (ch <= 'Z')) {
-		return ch + 'a' - 'A';
-	}
-
-	// latin1
-	if ((0xC0 <= ch) && (ch <= 0xDE) && (ch != 0xD7)) {
-		return ch + 0x20;
-	}
-
-	// extended latin1
-	if ((0x100 <= ch) && (ch <= 0x178)) {
-		return (ch & 0x01) ? ch : (ch + 1);
-	}
-
-	// cyrillic
-	if ((0x410 <= ch) && (ch <= 0x42F)) {
-		return ch + 0x20;
-	}
-
-	// cyrillic yo
-	if (ch == 0x401) {
-		return 0x451;
-	}
-
-	return ch;
+	initUnicodeTable();
+	std::map<ZLUnicodeUtil::Ucs4Char,ZLUnicodeData>::const_iterator it = UNICODE_TABLE.find(ch);
+	return (it != UNICODE_TABLE.end()) ? it->second.LowerCase : ch;
 }
 
 void ZLUnicodeUtil::toLower(Ucs4String &str) {
@@ -388,31 +417,9 @@ std::string ZLUnicodeUtil::toLower(const std::string &utf8String) {
 }
 
 ZLUnicodeUtil::Ucs4Char ZLUnicodeUtil::toUpper(Ucs4Char ch) {
-	if (('a' <= ch) && (ch <= 'z')) {
-		return ch + 'A' - 'a';
-	}
-
-	// latin1
-	if ((0xE0 <= ch) && (ch <= 0xFE) && (ch != 0xF7)) {
-		return ch - 0x20;
-	}
-
-	// extended latin1
-	if ((0x100 <= ch) && (ch <= 0x178)) {
-		return (ch & 0x01) ? (ch - 1) : ch;
-	}
-
-	// cyrillic
-	if ((0x430 <= ch) && (ch <= 0x44F)) {
-		return ch - 0x20;
-	}
-
-	// cyrillic yo
-	if (ch == 0x451) {
-		return 0x401;
-	}
-
-	return ch;
+	initUnicodeTable();
+	std::map<ZLUnicodeUtil::Ucs4Char,ZLUnicodeData>::const_iterator it = UNICODE_TABLE.find(ch);
+	return (it != UNICODE_TABLE.end()) ? it->second.UpperCase : ch;
 }
 
 void ZLUnicodeUtil::toUpper(Ucs4String &str) {

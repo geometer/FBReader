@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
 #include <ZLStringUtil.h>
 
 #include "FormatPlugin.h"
@@ -65,8 +66,8 @@ void PluginCollection::deleteInstance() {
 
 PluginCollection::PluginCollection() :
 	LanguageAutoDetectOption(ZLCategoryKey::CONFIG, "Format", "AutoDetect", true),
-	DefaultLanguageOption(ZLCategoryKey::CONFIG, "Format", "DefaultLanguageS", "en"),
-	DefaultEncodingOption(ZLCategoryKey::CONFIG, "Format", "DefaultEncoding", "windows-1252") {
+	DefaultLanguageOption(ZLCategoryKey::CONFIG, "Format", "DefaultLanguageS", ZLibrary::Language()),
+	DefaultEncodingOption(ZLCategoryKey::CONFIG, "Format", "DefaultEncoding", "UTF-8") {
 }
 
 PluginCollection::~PluginCollection() {

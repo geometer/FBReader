@@ -65,7 +65,8 @@ do_install:
 	@install -m 0644 $(ENCODING_FILES) $(SHARE_ZLIBRARY)/encodings
 	@install -d $(SHARE_ZLIBRARY)/resources
 	@install -m 0644 $(wildcard data/resources/*.xml) $(SHARE_ZLIBRARY)/resources
-	@install -m 0644 $(wildcard data/languagePatterns.zip) $(SHARE_ZLIBRARY)
+	@install -m 0644 data/languagePatterns.zip $(SHARE_ZLIBRARY)
+	@install -m 0644 data/unicode.xml.gz $(SHARE_ZLIBRARY)
 	@install -d $(SHARE_ZLIBRARY)/default
 	@if [ -e data/default/config.$(TARGET_ARCH).xml ]; then \
 		install -m 0644 data/default/config.$(TARGET_ARCH).xml $(SHARE_ZLIBRARY)/default/config.xml; \
