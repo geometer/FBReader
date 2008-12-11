@@ -31,12 +31,15 @@ fi
 
 create_tmpdir() {
 	mkdir $tmpdir
-	cp -r Makefile build_packages.sh zlibrary fbreader makefiles README.build $distdir $tmpdir
+	cp -r Makefile build_packages.sh zlibrary fbreader makefiles README.build distributions distributions-nonGPL $tmpdir
 	rm -rf `find $tmpdir -name ".svn"`
 	make -C $tmpdir distclean 1> /dev/null 2>&1
 
 	if [ "$prepare_nonGPL" == "true" ]; then
 		pushd $tmpdir > /dev/null;
+		echo -en "Removing Arabic localization... ";
+		rm -rf fbreader/data/resources/ar.xml zlibrary/core/data/resources/ar.xml fbreader/data/help/MiniHelp.*.ar.fb2;
+		echo OK;
 		echo -en "Removing Finnish localization... ";
 		rm -rf fbreader/data/resources/fi.xml zlibrary/core/data/resources/fi.xml fbreader/data/help/MiniHelp.*.fi.fb2;
 		echo OK;
@@ -50,7 +53,7 @@ create_tmpdir() {
 		zip -dq zlibrary/text/data/hyphenationPatterns.zip id.pattern;
 		echo OK;
 		echo -en "Removing Qt-based interface... ";
-		rm -rf zlibrary/ui/src/qt zlibrary/ui/src/qt4
+		rm -rf zlibrary/ui/src/opie zlibrary/ui/src/qtopia zlibrary/ui/src/qt zlibrary/ui/src/qt4
 		echo OK;
 		popd > /dev/null;
 	fi;

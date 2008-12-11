@@ -28,7 +28,8 @@ private:
 	XMLNamespace();
 
 public:
-	static const std::string DublinCore;
+	static const std::string DublinCorePrefix;
+	static const std::string DublinCoreLegacyPrefix;
 	static const std::string XLink;
 };
 

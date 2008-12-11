@@ -40,8 +40,9 @@ bool OEBMigrationReader::isDublinCoreNamespace(const std::string &nsId) const {
 	const std::map<std::string,std::string> &namespaceMap = namespaces();
 	std::map<std::string,std::string>::const_iterator iter = namespaceMap.find(nsId);
 	return
-		(iter != namespaceMap.end()) &&
-		(iter->second == XMLNamespace::DublinCore);
+		((iter != namespaceMap.end()) &&
+		 (ZLStringUtil::stringStartsWith(iter->second, XMLNamespace::DublinCorePrefix) ||
+		  ZLStringUtil::stringStartsWith(iter->second, XMLNamespace::DublinCoreLegacyPrefix)));
 }
 
 void OEBMigrationReader::startElementHandler(const char *tag, const char**) {

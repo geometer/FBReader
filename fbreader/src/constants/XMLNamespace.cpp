@@ -19,5 +19,6 @@
 
 #include "XMLNamespace.h"
 
-const std::string XMLNamespace::DublinCore = "http://purl.org/dc/elements/1.1/";
+const std::string XMLNamespace::DublinCorePrefix = "http://purl.org/dc/elements";
+const std::string XMLNamespace::DublinCoreLegacyPrefix = "http://purl.org/metadata/dublin_core";
 const std::string XMLNamespace::XLink = "http://www.w3.org/1999/xlink";

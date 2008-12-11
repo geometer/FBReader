@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>Om FBReader</book-title> <lang>sv</lang></title-info></description>
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>About FBReader</book-title> <lang>cs</lang></title-info></description>
 <body>
-<title><p>Om FBReader &FBReaderVersion;</p></title>
-<p>FBReader är en e-boksläsare för Linux/Windows XP PDA/UMPC/skrivbordsdator. FBReader har stöd för flera e-boksformat: <code>fb2</code>, <code>html</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, etc. Direktläsning från arkivformaten <code>zip</code>, <code>tar</code>, <code>gzip</code> och <code>bzip2</code> stöds också.</p>
-<p>FBReader distribueras under villkoren för <a l:href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a>.</p>
+<title><p>O programu FBReader &FBReaderVersion;</p></title>
+<p>FBReader je program pro čtení elektronických knih, který pracuje pod Linuxem/Windows XP PDA/UMPC/PC. FBReader podporuje následující formáty elektronických knih: <code>fb2</code>, <code>html</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, atd. Přímé čtení archivů <code>zip</code>, <code>tar</code>, <code>gzip</code> and <code>bzip2</code> je též podporováno.</p>
+<p>FBReader je šířen pod licencí <a l:href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a>.</p>
+<p>Máte-li zájem o tento program a chcete-li podpořit jeho vývoj, navštivte prosím <a l:href="http://www.fbreader.org/donation/make.php">stránku příspěvků</a>.</p>
 <empty-line/>
-<subtitle><p>Hur man kommer igång</p></subtitle>
-<p>FBReader letar efter böcker i formaten <code>fb2</code>, <code>oeb</code> och <code>OpenReader</code> i kataloger som listas i alternativet <code>Boksökväg</code>. Först måste du ange denna sökväg. Öppna alternativdialogrutan (klicka helt enkelt på <image l:href="#settings.png" voffset="-6"/> i verktygsraden) och ändra värdet för alternativet <code>Boksökväg</code> under fliken <code>Bibliotek</code>. Detta alternativ innehåller listan över kataloger som innehåller <code>*.fb2</code>, <code>*.oebzip</code>, <code>*.orb</code> eller arkivfiler. Kataloger i listan separeras med kolon.</p>
-<p>Öppna <code>biblioteket</code> (klicka på <image l:href="#books.png" voffset="-6"/>), välj en bok från listan och läs den.</p>
-<p>För att läsa en fil i ett annat format måste du lägga till den till biblioteket. Starta <code>Lägg till i biblioteket</code> (<image l:href="#addbook.png"/>), välj en fil och redigera filinformationen. Nästa gång så kan du öppna denna fil med <code>biblioteket</code> (<image l:href="#books.png" voffset="-6"/>).</p>
+<subtitle><p>Jak začít</p></subtitle>
+<p>FBReader hledá knihy ve formátech <code>fb2</code>, <code>oeb</code> a <code>OpenReader</code> v cestě zadané v parametru <code>Složka s knihami</code>. Nejprve nastavte tento parametr. Otevřete dialog s nastavením (kliknutím na položku <image l:href="#settings.png" voffset="-6"/> v panelu nástrojů) a změňte hodnotu parametru <code>Složka s knihami</code> v záložce <code>Knihovna</code>. Uvedený parametr obsahuje seznam adresářů se soubory <code>*.fb2</code>, <code>*.oebzip</code>, <code>*.orb</code> nebo soubory archivů. Adresáře jsou v seznamu zařazeny do oddělených sloupců.</p>
+<p>Otevřete <code>knihovnu</code> (kliknutím na <image l:href="#books.png" voffset="-6"/>), vyberte knihu, kterou chcete číst ze seznamu.</p>
+<p>Pro čtení souboru v jiném formátu je nezbytné jeho zařazení do knihovny. Začněte <code>na vložení knihy do knihovny</code> (<image l:href="#addbook.png"/>), vyberte soubor a editujte informace o něm. Další otevření souboru uskutečněte pomocí <code>knihovny</code> (<image l:href="#books.png" voffset="-6"/>).</p>
 <empty-line/>
-<subtitle><p>Relaterade webbplatser</p></subtitle>
-<p>Mer information om det här programmet kan hittas på <a l:href="http://www.fbreader.org">FBReaders webbplats</a>.</p>
-<p>Om du vill bli informerad om nya utgåvor kan du prenumerera på <a l:href="http://freshmeat.net/projects/fbreader">FBReaders projektsida på Freshmeat</a>.</p>
-<p>Om du har några frågor eller förslag kan du använda <a l:href="http://groups.google.com/group/fbreader">FBReaders grupp hos Google Groups</a>.</p>
+<subtitle><p>Odkazy</p></subtitle>
+<p>Více informací o programu najdete na <a l:href="http://www.fbreader.org">Domovské stránce programu FBReader</a>.</p>
+<p>Pro upozornění na nové verze se prosím přihlaste <a l:href="http://freshmeat.net/projects/fbreader">FBReader projekt na freshmeatu</a>.</p>
+<p>Pro vaše otázky a návrhy použijte prosím <a l:href="http://groups.google.com/group/fbreader">skupinu věnovanou programu FBReader na googlegroups</a>.</p>
+<empty-line/>
+<subtitle><p>Knihovny třetích stran</p></subtitle>
+<p>Distribuce programu FBReader pro Windows XP obsahuje knihonvny třetích stran. Tyto knihovny nejsou uvolněny pod licencí GPL.</p>
+<p><a l:href="http://expat.sourceforge.net">Expat</a> &#8211; XML parsing library. Copyright &#169; 1998, 1999, 2000 Thai Open Source Software Center Ltd and Clark Cooper.</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p><a l:href="http://libungif.sourceforge.net">Libungif</a> &#8211; library for working with GIF images. Copyright &#169; 1997 Eric S. Raymond &lt;<a l:href="mailto:esr@thyrsus.com">esr@thyrsus.com</a>&gt;.</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
+<p><a l:href="http://www.remotesensing.org/libtiff">Libtiff</a> &#8211; Tag Image File Format (TIFF) library. Copyright &#169; 1988-1997 Sam Leffler. Copyright &#169; 1991-1997 Silicon Graphics, Inc. Portions Copyright &#169; 1985-1987, 1990 Regents of the University of California. Portions Copyright &#169; 1990, 1991 Digital Equipment Corporation. Portions Copyright &#169; 1990 Sun Microsystems, Inc. Portions Copyright &#169; 1990, 1995 Frank D. Cringle. Portions Copyright &#169; 1996 BancTec AB. Portions Copyright &#169; 1996 Mike Johnson. Portions Copyright &#169; 1996 Pixar. Portions Copyright &#169; 1997 Greg Ward Larson. Portions Copyright &#169; 2000 Frank Warmerdam.</p>
+<p>Permission to use, copy, modify, distribute, and sell this software and its documentation for any purpose is hereby granted without fee, provided that (i) the above copyright notices and this permission notice appear in all copies of the software and related documentation, and (ii) the names of Sam Leffler and Silicon Graphics may not be used in any advertising or publicity relating to the software without the specific, prior written permission of Sam Leffler and Silicon Graphics.</p>
+<p><a l:href="http://www.ijg.org">Libjpeg</a> &#8211; The Independent JPEG Group's JPEG library. Copyright &#169; 1991-1998, Thomas G. Lane.</p>
 </body>
 <binary content-type="image/png" id="settings.png">
 iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/

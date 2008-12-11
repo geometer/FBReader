@@ -157,11 +157,11 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 	} else {
 		myWindowStateOption.setValue(NORMAL);
 		QPoint position = pos();
-		if (position.x() != -1) {
-			myXOption.setValue(position.x());
+		if (x() != -1) {
+			myXOption.setValue(x());
 		}
-		if (position.y() != -1) {
-			myYOption.setValue(position.y());
+		if (y() != -1) {
+			myYOption.setValue(y());
 		}
 		myWidthOption.setValue(width());
 		myHeightOption.setValue(height());

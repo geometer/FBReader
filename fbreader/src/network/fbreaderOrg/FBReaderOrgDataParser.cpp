@@ -33,7 +33,7 @@ void FBReaderOrgDataParser::namespaceListChangedHandler() {
 	myDCPrefix.erase();
 	const std::map<std::string,std::string> &nsMap = namespaces();
 	for (std::map<std::string,std::string>::const_iterator it = nsMap.begin(); it != nsMap.end(); ++it) {
-		if (it->second == XMLNamespace::DublinCore) {
+		if (ZLStringUtil::stringStartsWith(it->second, XMLNamespace::DublinCorePrefix)) {
 			myDCPrefix = it->first + ':';
 			break;
 		}
