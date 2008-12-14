@@ -23,9 +23,16 @@
  * 3. This notice may not be removed or altered from any source
  *    distribution.
  *
- * The main reference is Unicode 5.0.0 Standard Annex 14, Revision 19,
- * available at
+ * The main reference is Unicode Standard Annex 14 (UAX #14):
+ *		<URL:http://www.unicode.org/reports/tr14/>
+ *
+ * When this library was designed, this annex was at Revision 19, for
+ * Unicode 5.0.0:
  *		<URL:http://www.unicode.org/reports/tr14/tr14-19.html>
+ *
+ * This library has been updated according to Revision 22, for
+ * Unicode 5.1.0:
+ *		<URL:http://www.unicode.org/reports/tr14/tr14-22.html>
  *
  * The Unicode Terms of Use are available at
  *		<URL:http://www.unicode.org/copyright.html>
@@ -37,7 +44,7 @@
  * Definitions of internal data structures, declarations of global
  * variables, and function prototypes for the line breaking algorithm.
  *
- * @version	0.6, 2008/03/16
+ * @version	0.9.7, 2008/12/13
  * @author	Wu Yongwei
  */
 

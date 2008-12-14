@@ -1,0 +1,12 @@
+New in 1.0
+
+- Update the line breaking data according to UAX #14-22 and
+  LineBreak-5.1.0.txt
+- Add autoconfiscation support (./configure, make, make install)
+- Add Makefile for MSVC
+
+First public release (0.9.6, or 20080421)
+
+- Implement line breaking algorithm according to UAX #14-19
+- Line breaking data is generated from LineBreak-5.0.0.txt
+- Makefile only supports GCC

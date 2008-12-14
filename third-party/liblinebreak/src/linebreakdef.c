@@ -23,9 +23,16 @@
  * 3. This notice may not be removed or altered from any source
  *    distribution.
  *
- * The main reference is Unicode 5.0.0 Standard Annex 14, Revision 19,
- * available at
+ * The main reference is Unicode Standard Annex 14 (UAX #14):
+ *		<URL:http://www.unicode.org/reports/tr14/>
+ *
+ * When this library was designed, this annex was at Revision 19, for
+ * Unicode 5.0.0:
  *		<URL:http://www.unicode.org/reports/tr14/tr14-19.html>
+ *
+ * This library has been updated according to Revision 22, for
+ * Unicode 5.1.0:
+ *		<URL:http://www.unicode.org/reports/tr14/tr14-22.html>
  *
  * The Unicode Terms of Use are available at
  *		<URL:http://www.unicode.org/copyright.html>
@@ -36,7 +43,7 @@
  *
  * Definition of language-specific data.
  *
- * @version	0.5.3, 2008/04/04
+ * @version	0.9.7, 2008/12/13
  * @author	Wu Yongwei
  */
 
@@ -71,10 +78,8 @@ static struct LineBreakProperties lb_prop_German[] = {
  * Spanish-specifc data over the default Unicode rules.
  */
 static struct LineBreakProperties lb_prop_Spanish[] = {
-	{ 0x00A1, 0x00A1, LBP_OP },	/* Inverted exclamation mark: opening */
 	{ 0x00AB, 0x00AB, LBP_OP },	/* Left double angle quotation mark: opening */
 	{ 0x00BB, 0x00BB, LBP_CL },	/* Right double angle quotation mark: closing */
-	{ 0x00BF, 0x00BF, LBP_OP },	/* Inverted question mark: opening */
 	{ 0x2018, 0x2018, LBP_OP },	/* Left single quotation mark: opening */
 	{ 0x2019, 0x2019, LBP_CL },	/* Right single quotation mark: closing */
 	{ 0x201C, 0x201C, LBP_OP },	/* Left double quotation mark: opening */
