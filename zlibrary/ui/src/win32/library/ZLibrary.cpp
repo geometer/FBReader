@@ -21,6 +21,7 @@
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
+#include <ZUnicodeUtil.h>
 
 #include "../../../../core/src/win32/filesystem/ZLWin32FSManager.h"
 #include "../time/ZLWin32Time.h"
@@ -36,6 +37,25 @@ const std::string ZLibrary::PathDelimiter(";");
 const std::string ZLibrary::EndOfLine("\r\n");
 
 bool ZLibrary::init(int &argc, char **&argv) {
+	WCHAR **wArgv = CommandLineToArgvW(GetCommandLineW(), &argc);
+	static std::string arguments;
+	std::vector<int> offsets;
+	offsets.push_back(0);
+	for (int i = 0; i < argc; ++i) {
+		ZLUnicodeUtil::Ucs2String wArg;
+		for (int j = 0; wArgv[i][j] != 0; ++j) {
+			wArg.push_back(wArgv[i][j]);
+		}
+		std::string arg;
+		ZLUnicodeUtil::ucs2ToUtf8(arg, wArg);
+		arguments += arg + '\0';
+		offsets.push_back(arguments.length());
+	}
+	argv = new char*[argc];
+	for (int i = 0; i < argc; ++i) {
+		argv[i] = (char*)arguments.data() + offsets[i];
+	}
+
 	parseArguments(argc, argv);
 
 	ZLWin32ConfigManager::createInstance();
@@ -67,6 +87,7 @@ void ZLibrary::run(ZLApplication *application) {
 
 void ZLibrary::initLocale() {
 	LANGID id = GetUserDefaultUILanguage();
+	LCID lcid = GetUserDefaultLCID();
 	switch (PRIMARYLANGID(id)) {
 		case LANG_ARABIC:
 			ourLanguage = "ar";
@@ -97,8 +118,9 @@ void ZLibrary::initLocale() {
 			break;
 		case LANG_SPANISH:
 			ourLanguage = "es";
-			switch (SUBLANGID(id)) {
-				case SUBLANG_SPANISH:
+			switch (lcid) {
+				case 0x040A:
+				case 0x0C0A:
 					ourCountry = "ES";
 					break;
 				default:
