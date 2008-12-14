@@ -29,6 +29,7 @@
 #include "../w32widgets/W32Control.h"
 
 #include "../application/ZLWin32ApplicationWindow.h"
+#include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
 const int ICON_SIZE = 22;
 
@@ -79,7 +80,8 @@ HICON ZLWin32SelectionDialog::getIcon(const ZLTreeNodePtr node) {
 	if (it == myIcons.end()) {
 		std::string imageFileName = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + pixmapName + ".ico";
 		ZLFile file(imageFileName);
-		HICON icon = (HICON)LoadImageA(0, file.path().c_str(), IMAGE_ICON, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
+		ZLUnicodeUtil::Ucs2String wPath;
+		HICON icon = (HICON)LoadImageW(0, ::wchar(::createNTWCHARString(wPath, file.path())), IMAGE_ICON, ICON_SIZE, ICON_SIZE, LR_LOADFROMFILE);
 		myIcons[pixmapName] = icon;
 		return icon;
 	} else {

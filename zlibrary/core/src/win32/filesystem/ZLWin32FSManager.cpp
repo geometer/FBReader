@@ -18,6 +18,7 @@
  */
 
 #include <unistd.h>
+#include <sys/stat.h>
 #include <windows.h>
 #include <shlobj.h>
 
@@ -28,27 +29,38 @@
 #include "ZLWin32RootDir.h"
 #include "ZLWin32FSDir.h"
 #include "ZLWin32FileInputStream.h"
-#include "ZLWin32FileOutputStream.h"
 #include "../util/W32WCHARUtil.h"
 
 #define CSIDL_MYDOCUMENTS 5
 
 static std::string getPwdDir() {
-	char pwd[2048];
-	return (getcwd(pwd, 2047) != 0) ? pwd : "";
+	ZLUnicodeUtil::Ucs2String buffer;
+	buffer.assign(2048, 0);
+	GetCurrentDirectoryW(2047, (WCHAR*)&buffer[0]);
+	std::string result;
+	ZLUnicodeUtil::ucs2ToUtf8(result, buffer);
+	result.erase(result.find('\0'));
+	return result;
 }
 
 static std::string getHomeDir() {
-	std::string buffer(2048, '\0');
-	SHGetFolderPathA(0, CSIDL_MYDOCUMENTS, 0, 0, (char*)buffer.data());
-	buffer.erase(buffer.find('\0'));
-	return buffer;
+	ZLUnicodeUtil::Ucs2String buffer;
+	buffer.assign(2048, 0);
+	SHGetFolderPathW(0, CSIDL_MYDOCUMENTS, 0, 0, (WCHAR*)&buffer[0]);
+	std::string result;
+	ZLUnicodeUtil::ucs2ToUtf8(result, buffer);
+	result.erase(result.find('\0'));
+	return result;
 }
 
-ZLUnicodeUtil::Ucs2String ZLWin32FSManager::longFilePath(const std::string &path) {
-	ZLUnicodeUtil::Ucs2String lfp;
-	::createNTWCHARString(lfp, "\\\\?\\" + path);
-	return lfp;
+static std::string getAppDir() {
+	ZLUnicodeUtil::Ucs2String buffer;
+	buffer.assign(2048, 0);
+	GetModuleFileNameW(0, (WCHAR*)&buffer[0], 2047);
+	std::string result;
+	ZLUnicodeUtil::ucs2ToUtf8(result, buffer);
+	result.erase(result.rfind('\\'));
+	return result;
 }
 
 ZLFSDir *ZLWin32FSManager::createPlainDirectory(const std::string &path) const {
@@ -63,17 +75,6 @@ ZLInputStream *ZLWin32FSManager::createPlainInputStream(const std::string &path)
 	return new ZLWin32FileInputStream(path);
 }
 
-ZLOutputStream *ZLWin32FSManager::createOutputStream(const std::string &path) const {
-	return new ZLWin32FileOutputStream(path);
-}
-
-bool ZLWin32FSManager::removeFile(const std::string &path) const {
-	ZLUnicodeUtil::Ucs2String wPath = longFilePath(path);
-	return DeleteFileW(::wchar(wPath));
-}
-
-#include <iostream>
-
 void ZLWin32FSManager::normalize(std::string &path) const {
 	if (path.empty()) {
 		return;
@@ -82,7 +83,8 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 	static std::string HomeDir = getHomeDir();
 	static std::string PwdDir = getPwdDir();
 	static std::string APPattern = "%APPLICATION_PATH%";
-	static std::string AP;
+	static std::string AP = getAppDir();
+	/*
 	if (AP.empty()) {
 		AP = _pgmptr;
 		int index = AP.rfind('\\');
@@ -90,12 +92,12 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 			AP = AP.substr(0, index);
 		}
 	}
+	*/
 
 	if (path[0] == '~') {
 		path = HomeDir + path.substr(1);
 	} else if (ZLStringUtil::stringStartsWith(path, APPattern)) {
 		path = AP + path.substr(APPattern.length());
-		std::cerr << path << "\n";
 	} else if ((path.length() > 1) && (path[1] != ':') &&
 							!ZLStringUtil::stringStartsWith(path, "\\\\")) {
 		path = PwdDir + "\\" + path;
@@ -119,30 +121,7 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 }
 
 ZLFSDir *ZLWin32FSManager::createNewDirectory(const std::string &path) const {
-	std::vector<ZLUnicodeUtil::Ucs2String> subpaths;
-	std::string current = path;
-
-	while (current.length() > 3) {
-		WIN32_FILE_ATTRIBUTE_DATA data;
-		ZLUnicodeUtil::Ucs2String wPath = longFilePath(current);
-		const bool exists = GetFileAttributesEx(::wchar(wPath), GetFileExInfoStandard, &data);
-		if (exists && ((data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)) {
-			return 0;
-		}
-		subpaths.push_back(wPath);
-		int index = current.rfind('\\');
-		if (index == -1) {
-			return 0;
-		}
-		current.erase(index);
-	}
-
-	for (int i = subpaths.size() - 1; i >= 0; --i) {
-		if (!CreateDirectory(::wchar(subpaths[i]), 0) && (GetLastError() != ERROR_ALREADY_EXISTS)) {
-			return 0;
-		}
-	}
-	return createPlainDirectory(path);
+	return (mkdir(path.c_str()) == 0) ? createPlainDirectory(path) : 0;
 }
 
 std::string ZLWin32FSManager::convertFilenameToUtf8(const std::string &name) const {
@@ -173,6 +152,11 @@ std::string ZLWin32FSManager::parentPath(const std::string &path) const {
 	return (result.length() == 2) ? result + '\\' : result;
 }
 
+void ZLWin32FSManager::moveFile(const std::string &oldName, const std::string &newName) {
+	remove(newName.c_str());
+	rename(oldName.c_str(), newName.c_str());
+}
+
 ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 	ZLFileInfo info;
 	if (path.empty()) {
@@ -180,7 +164,9 @@ ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 		info.Size = 0;
 		info.IsDirectory = true;
 	} else {
-		ZLUnicodeUtil::Ucs2String wPath = longFilePath(path);
+		std::string pathWithPrefix = "\\\\?\\" + path;
+		ZLUnicodeUtil::Ucs2String wPath;
+		::createNTWCHARString(wPath, pathWithPrefix);
 		WIN32_FILE_ATTRIBUTE_DATA data;
 		info.Exists = GetFileAttributesEx(::wchar(wPath), GetFileExInfoStandard, &data);
 		if (info.Exists) {
@@ -189,4 +175,8 @@ ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 		}
 	}
 	return info;
+}
+
+void ZLWin32FSManager::getStat(const std::string &path, bool /*includeSymlinks*/, struct stat &fileInfo) const {
+	stat(path.c_str(), &fileInfo);
 }
