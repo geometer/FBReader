@@ -185,9 +185,7 @@ ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 		info.Size = 0;
 		info.IsDirectory = true;
 	} else {
-		std::string pathWithPrefix = "\\\\?\\" + path;
-		ZLUnicodeUtil::Ucs2String wPath;
-		::createNTWCHARString(wPath, pathWithPrefix);
+		ZLUnicodeUtil::Ucs2String wPath = longFilePath(path);
 		WIN32_FILE_ATTRIBUTE_DATA data;
 		info.Exists = GetFileAttributesEx(::wchar(wPath), GetFileExInfoStandard, &data);
 		if (info.Exists) {
