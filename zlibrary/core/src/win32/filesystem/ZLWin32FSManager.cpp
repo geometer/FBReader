@@ -29,6 +29,7 @@
 #include "ZLWin32RootDir.h"
 #include "ZLWin32FSDir.h"
 #include "ZLWin32FileInputStream.h"
+#include "ZLWin32FileOutputStream.h"
 #include "../util/W32WCHARUtil.h"
 
 #define CSIDL_MYDOCUMENTS 5
@@ -73,6 +74,10 @@ ZLFSDir *ZLWin32FSManager::createPlainDirectory(const std::string &path) const {
 
 ZLInputStream *ZLWin32FSManager::createPlainInputStream(const std::string &path) const {
 	return new ZLWin32FileInputStream(path);
+}
+
+ZLOutputStream *ZLWin32FSManager::createOutputStream(const std::string &path) const {
+	return new ZLWin32FileOutputStream(path);
 }
 
 void ZLWin32FSManager::normalize(std::string &path) const {
@@ -152,11 +157,6 @@ std::string ZLWin32FSManager::parentPath(const std::string &path) const {
 	return (result.length() == 2) ? result + '\\' : result;
 }
 
-void ZLWin32FSManager::moveFile(const std::string &oldName, const std::string &newName) {
-	remove(newName.c_str());
-	rename(oldName.c_str(), newName.c_str());
-}
-
 ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 	ZLFileInfo info;
 	if (path.empty()) {
@@ -177,6 +177,13 @@ ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 	return info;
 }
 
-void ZLWin32FSManager::getStat(const std::string &path, bool /*includeSymlinks*/, struct stat &fileInfo) const {
-	stat(path.c_str(), &fileInfo);
+bool ZLWin32FSManager::removeFile(const std::string &path) const {
+	ZLUnicodeUtil::Ucs2String wPath = longFilePath(path);
+	return DeleteFileW(::wchar(wPath));
+}
+
+ZLUnicodeUtil::Ucs2String ZLWin32FSManager::longFilePath(const std::string &path) {
+	ZLUnicodeUtil::Ucs2String lfp;
+	::createNTWCHARString(lfp, "\\\\?\\" + path);
+	return lfp;
 }
