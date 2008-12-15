@@ -87,15 +87,6 @@ void ZLWin32FSManager::normalize(std::string &path) const {
 	static std::string PwdDir = getPwdDir();
 	static std::string APPattern = "%APPLICATION_PATH%";
 	static std::string AP = getAppDir();
-	/*
-	if (AP.empty()) {
-		AP = _pgmptr;
-		int index = AP.rfind('\\');
-		if (index != -1) {
-			AP = AP.substr(0, index);
-		}
-	}
-	*/
 
 	if (path[0] == '~') {
 		path = HomeDir + path.substr(1);
