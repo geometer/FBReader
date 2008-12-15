@@ -51,9 +51,7 @@ bool ZLWin32EncodingConverterProvider::providesConverter(const std::string &enco
 
 	static const std::string TEST = "TEST";
 	int len = TEST.length();
-	ZLUnicodeUtil::Ucs2String ucs2String;
-	ucs2String.insert(ucs2String.end(), len, 0);
-	return MultiByteToWideChar(code, MB_PRECOMPOSED, TEST.c_str(), len, (WCHAR*)&ucs2String.front(), len) == len;
+	return MultiByteToWideChar(code, 0, TEST.c_str(), len, 0, 0) == len;
 }
 
 shared_ptr<ZLEncodingConverter> ZLWin32EncodingConverterProvider::createConverter(const std::string &encoding) {
@@ -77,7 +75,7 @@ void ZLWin32EncodingConverter::convert(std::string &dst, const char *srcStart, c
 	if (myUseStoredCharacter) {
 		WCHAR symbol;
 		char buf[2] = { myStoredCharacter, *srcStart };
-		if (MultiByteToWideChar(myCode, MB_PRECOMPOSED, buf, 2, &symbol, 1) == 1) {
+		if (MultiByteToWideChar(myCode, 0, buf, 2, &symbol, 1) == 1) {
 			hasFirstChar = true;
 			myBuffer.push_back(symbol);
 			srcStart++;
@@ -92,14 +90,14 @@ void ZLWin32EncodingConverter::convert(std::string &dst, const char *srcStart, c
 		if (hasFirstChar) {
 			bufferStart++;
 		}
-		int ucs2Len = MultiByteToWideChar(myCode, MB_PRECOMPOSED, srcStart, len, bufferStart, len);
+		int ucs2Len = MultiByteToWideChar(myCode, 0, srcStart, len, bufferStart, len);
 		myBuffer.erase(myBuffer.begin() + ucs2Len + (hasFirstChar ? 1 : 0), myBuffer.end());
 
 		if (ucs2Len != len) {
 			myRBuffer.append(len, '\0');
 			char defaultChar = 'X';
 			BOOL usedDefaultChar = false;
-			int len1 = WideCharToMultiByte(myCode, MB_PRECOMPOSED, bufferStart, ucs2Len, (char*)myRBuffer.data(), len, &defaultChar, &usedDefaultChar);
+			int len1 = WideCharToMultiByte(myCode, 0, bufferStart, ucs2Len, (char*)myRBuffer.data(), len, &defaultChar, &usedDefaultChar);
 			if (len1 == len - 1) {
 				myUseStoredCharacter = true;
 				myStoredCharacter = *(srcEnd - 1);
@@ -127,7 +125,7 @@ bool ZLWin32EncodingConverter::fillTable(int *map) {
 	WCHAR out;
 	for (int i = 0; i < 256; ++i) {
 		in = i;
-		if (MultiByteToWideChar(myCode, MB_PRECOMPOSED, &in, 1, &out, 1) == 1) {
+		if (MultiByteToWideChar(myCode, 0, &in, 1, &out, 1) == 1) {
 			map[i] = out;
 		} else {
 			map[i] = i;

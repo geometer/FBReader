@@ -74,7 +74,7 @@ const std::vector<std::string> &SearchPatternEntry::values() const {
 void SearchPatternEntry::onAccept(const std::string &value) {
 	std::string v = value;
 	ZLStringUtil::stripWhiteSpaces(v);
-	if (!v.empty() && (v != values()[0])) {
+	if (v != values()[0]) {
 		myAction.SearchPatternOption.setValue(v);
 		int index = 1;
 		for (std::vector<std::string>::const_iterator it = myValues.begin(); (index < 6) && (it != myValues.end()); ++it) {

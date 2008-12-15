@@ -104,6 +104,12 @@ int ZLGtkViewWidget::height() const {
 }
 
 bool ZLGtkViewWidget::scrollbarEvent(ZLView::Direction direction, GtkRange *range, GtkScrollType type, double newValue) {
+	static bool alreadyProcessed = false;
+	if (alreadyProcessed) {
+		return true;
+	}
+	alreadyProcessed = true;
+
 	bool code = true;
 	switch (type) {
 		default:
@@ -135,6 +141,7 @@ bool ZLGtkViewWidget::scrollbarEvent(ZLView::Direction direction, GtkRange *rang
 			break;
 	}
 	gtk_widget_send_expose(myArea, gdk_event_new(GDK_EXPOSE));
+	alreadyProcessed = false;
 	return code;
 }
 
