@@ -90,6 +90,15 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 	const char *start = buffer;
 	const char *end = start + length;
 
+	if (end >= start + 2) {
+		if ((*start == (const char)0xFF) && (*(start + 1) == (const char)0xFE)) {
+			return new LanguageInfo("", "UTF-16");
+		}
+		if ((*start == (const char)0xFE) && (*(start + 1) == (const char)0xFF)) {
+			return new LanguageInfo("", "UTF-16BE");
+		}
+	}
+
 	enum { ASCII, UTF8, OTHER } encodingType = ASCII;
 	int nonLeadingCharsCounter = 0;
 	for (const char *ptr = start; ptr != end; ++ptr) {

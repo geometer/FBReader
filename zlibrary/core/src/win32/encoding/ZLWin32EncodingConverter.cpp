@@ -27,7 +27,6 @@ class ZLWin32EncodingConverter : public ZLEncodingConverter {
 
 private:
 	ZLWin32EncodingConverter(UINT code);
-	~ZLWin32EncodingConverter();
 
 	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
 	void reset();
@@ -43,7 +42,32 @@ private:
 friend class ZLWin32EncodingConverterProvider;
 };
 
+class ZLWin32Utf16EncodingConverter : public ZLEncodingConverter {
+
+private:
+	ZLWin32Utf16EncodingConverter(bool littleEndian);
+
+	void convert(std::string &dst, const char *srcStart, const char *srcEnd);
+	void reset();
+	bool fillTable(int *map);
+
+private:
+	bool myLittleEndian;
+	ZLUnicodeUtil::Ucs2String myBuffer;
+	bool myUseStoredCharacter;
+	unsigned char myStoredCharacter;
+
+friend class ZLWin32EncodingConverterProvider;
+};
+
 bool ZLWin32EncodingConverterProvider::providesConverter(const std::string &encoding) {
+	if (encoding == "UTF-16") {
+		return true;
+	}
+	if (encoding == "UTF-16BE") {
+		return true;
+	}
+
 	UINT code = atoi(encoding.c_str());
 	if (code == 0) {
 		return false;
@@ -55,13 +79,16 @@ bool ZLWin32EncodingConverterProvider::providesConverter(const std::string &enco
 }
 
 shared_ptr<ZLEncodingConverter> ZLWin32EncodingConverterProvider::createConverter(const std::string &encoding) {
+	if (encoding == "UTF-16") {
+		return new ZLWin32Utf16EncodingConverter(true);
+	}
+	if (encoding == "UTF-16BE") {
+		return new ZLWin32Utf16EncodingConverter(false);
+	}
 	return new ZLWin32EncodingConverter(atoi(encoding.c_str()));
 }
 
 ZLWin32EncodingConverter::ZLWin32EncodingConverter(UINT code) : myCode(code), myUseStoredCharacter(false) {
-}
-
-ZLWin32EncodingConverter::~ZLWin32EncodingConverter() {
 }
 
 void ZLWin32EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
@@ -132,4 +159,64 @@ bool ZLWin32EncodingConverter::fillTable(int *map) {
 		}
 	}
 	return true;
+}
+
+ZLWin32Utf16EncodingConverter::ZLWin32Utf16EncodingConverter(bool littleEndian) : myLittleEndian(littleEndian), myUseStoredCharacter(false) {
+}
+
+void ZLWin32Utf16EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
+	if (srcStart == srcEnd) {
+		return;
+	}
+
+	const unsigned char *ptr = (const unsigned char*)srcStart;
+	ZLUnicodeUtil::Ucs2Char ch;
+
+	myBuffer.clear();
+
+	if (myUseStoredCharacter) {
+		if (myLittleEndian) {
+			ch = *ptr;
+			ch <<= 8;
+			ch += myStoredCharacter;
+		} else {
+			ch = myStoredCharacter;
+			ch <<= 8;
+			ch += *ptr;
+		}
+		myBuffer.push_back(ch);
+		++ptr;
+	}
+
+	const unsigned char *end = (const unsigned char*)srcEnd;
+	if ((end - ptr) % 2 == 1) {
+		myStoredCharacter = *end;
+		myUseStoredCharacter = true;
+		--end;
+	} else {
+		myUseStoredCharacter = false;
+	}
+
+	if (myLittleEndian) {
+		for (; ptr < end; ptr += 2) {
+			myBuffer.push_back((((ZLUnicodeUtil::Ucs2Char)*(ptr + 1)) << 8) + *ptr);
+		}
+	} else {
+		for (; ptr < end; ptr += 2) {
+			myBuffer.push_back((((ZLUnicodeUtil::Ucs2Char)*ptr) << 8) + *(ptr + 1));
+		}
+	}
+
+	std::string toAppend;
+	ZLUnicodeUtil::ucs2ToUtf8(toAppend, myBuffer);
+	dst += toAppend;
+	myBuffer.clear();
+}
+
+void ZLWin32Utf16EncodingConverter::reset() {
+	myUseStoredCharacter = false;
+}
+
+bool ZLWin32Utf16EncodingConverter::fillTable(int *map) {
+	return false;
 }
