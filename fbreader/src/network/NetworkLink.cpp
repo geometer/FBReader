@@ -33,7 +33,7 @@ std::string NetworkLink::htmlEncode(const std::string &stringToEncode) {
 	std::string encodedString;
 	const char *data = stringToEncode.data();
 	const char *end = data + stringToEncode.length();
-	for (; data < end; ++data) {
+	while (data < end) {
 		/*
 		const char ch = *data;
 		if (isalnum(ch) ||
