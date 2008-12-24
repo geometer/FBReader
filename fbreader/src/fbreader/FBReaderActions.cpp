@@ -447,9 +447,9 @@ void GotoPageNumber::run() {
 		gotoPageDialog->addOption(ZLResourceKey("pageNumber"), new ZLSimpleSpinOptionEntry(pageIndexOption, 1));
 		gotoPageDialog->addButton(ZLDialogManager::OK_BUTTON, true);
 		gotoPageDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
-		pageIndex = pageIndexOption.value();
 		if (gotoPageDialog->run()) {
 			gotoPageDialog->acceptValues();
+			pageIndex = pageIndexOption.value();
 		} else {
 			return;
 		}

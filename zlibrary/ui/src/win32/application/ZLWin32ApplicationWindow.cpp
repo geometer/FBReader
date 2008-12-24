@@ -478,9 +478,10 @@ LRESULT CALLBACK ZLWin32ApplicationWindow::TextEditParameter::ComboBoxCallback(H
 		const int index = SendMessage(comboBox, CB_GETCURSEL, 0, 0);
 		const int length = SendMessage(comboBox, CB_GETLBTEXTLEN, index, 0);
 		ZLUnicodeUtil::Ucs2String buffer;
-		buffer.assign(length + 1, '\0');
 		if (length > 0) {
+			buffer.assign(length + 1, '\0');
 			SendMessage(comboBox, CB_GETLBTEXT, index, (LPARAM)&buffer.front());
+			buffer.pop_back();
 		}
 		std::string value;
 		ZLUnicodeUtil::ucs2ToUtf8(value, buffer);
@@ -682,6 +683,7 @@ std::string ZLWin32ApplicationWindow::TextEditParameter::internalValue() const {
 	static ZLUnicodeUtil::Ucs2String buffer;
 	buffer.assign(len + 1, '\0');
 	GetWindowTextW(myComboBox, (WCHAR*)::wchar(buffer), len + 1);
+	buffer.pop_back();
 	std::string text;
 	ZLUnicodeUtil::ucs2ToUtf8(text, buffer);
 	return text;
