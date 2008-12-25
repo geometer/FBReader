@@ -38,6 +38,9 @@ NetworkLinkCollection &NetworkLinkCollection::instance() {
 }
 
 NetworkLinkCollection::NetworkLinkCollection() :
+	UseProxyOption(FBCategoryKey::NETWORK, "Options", "UseProxy", false),
+	ProxyHostOption(FBCategoryKey::NETWORK, "Options", "ProxyHost", ""),
+	ProxyPortOption(FBCategoryKey::NETWORK, "Options", "ProxyPort", "3128"),
 	DirectoryOption(FBCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 	myLinks.push_back(new FeedBooksLink());
 	myLinks.push_back(new FBReaderOrgLink());
@@ -129,6 +132,11 @@ bool NetworkLinkCollection::downloadFile(const std::string &url, const std::stri
 		return false;
 	}
 	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
+	std::string proxy;
+	if (instance().UseProxyOption.value()) {
+		proxy = instance().ProxyHostOption.value() + ':' + instance().ProxyPortOption.value();
+		curl_easy_setopt(curl, CURLOPT_PROXY, proxy.c_str());
+	}
 
 	ZLFile fileToWrite(fileName);
 	shared_ptr<ZLOutputStream> stream = fileToWrite.outputStream();

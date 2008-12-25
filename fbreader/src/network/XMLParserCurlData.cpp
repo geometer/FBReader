@@ -20,6 +20,7 @@
 #include <ZLXMLReader.h>
 
 #include "XMLParserCurlData.h"
+#include "NetworkLink.h"
 
 static size_t parseXML(void *ptr, size_t size, size_t nmemb, void *data) {
 	((ZLXMLReader*)data)->readFromBuffer((const char*)ptr, size * nmemb);
@@ -34,6 +35,10 @@ XMLParserCurlData::XMLParserCurlData(const std::string &url, shared_ptr<ZLXMLRea
 	}
 
 	curl_easy_setopt(myHandle, CURLOPT_URL, myURL.c_str());
+	if (NetworkLinkCollection::instance().UseProxyOption.value()) {
+		myProxy = NetworkLinkCollection::instance().ProxyHostOption.value() + ':' + NetworkLinkCollection::instance().ProxyPortOption.value();
+		curl_easy_setopt(myHandle, CURLOPT_PROXY, myProxy.c_str());
+	}
 
 	curl_easy_setopt(myHandle, CURLOPT_WRITEFUNCTION, parseXML);
 	curl_easy_setopt(myHandle, CURLOPT_WRITEDATA, &*myReader);

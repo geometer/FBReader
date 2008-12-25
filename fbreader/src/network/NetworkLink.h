@@ -62,6 +62,9 @@ private:
 	static bool downloadFile(const std::string &url, const std::string &fileName);
 
 public:
+	ZLBooleanOption UseProxyOption;
+	ZLStringOption ProxyHostOption;
+	ZLStringOption ProxyPortOption;
 	ZLStringOption DirectoryOption;
 
 private:

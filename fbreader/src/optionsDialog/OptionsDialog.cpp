@@ -167,6 +167,15 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 		NetworkLink &link = linkCollection.link(i);
 		networkTab.addOption(link.SiteName, "", new ZLSimpleBooleanOptionEntry(link.OnOption));
 	}
+	ZLToggleBooleanOptionEntry *useProxyEntry = new ZLToggleBooleanOptionEntry(linkCollection.UseProxyOption);
+	networkTab.addOption(ZLResourceKey("useProxy"), useProxyEntry);
+	ZLSimpleStringOptionEntry *proxyHostEntry = new ZLSimpleStringOptionEntry(linkCollection.ProxyHostOption);
+	networkTab.addOption(ZLResourceKey("proxyHost"), proxyHostEntry);
+	ZLSimpleStringOptionEntry *proxyPortEntry = new ZLSimpleStringOptionEntry(linkCollection.ProxyPortOption);
+	networkTab.addOption(ZLResourceKey("proxyPort"), proxyPortEntry);
+	useProxyEntry->addDependentEntry(proxyHostEntry);
+	useProxyEntry->addDependentEntry(proxyPortEntry);
+	useProxyEntry->onStateChanged(useProxyEntry->initialState());
 
 	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
 	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::instance().LanguageAutoDetectOption));

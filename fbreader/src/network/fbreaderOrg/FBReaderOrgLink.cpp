@@ -25,8 +25,8 @@
 FBReaderOrgLink::FBReaderOrgLink() : NetworkLink("LitRes.Ru", "litres.ru") {
 }
 
-static const std::string URL_PREFIX = "http://www.fbreader.org/library/";
-//static const std::string URL_PREFIX = "http://10.211.55.8/library/";
+//static const std::string URL_PREFIX = "http://www.fbreader.org/library/";
+static const std::string URL_PREFIX = "http://10.211.55.8/library/";
 
 shared_ptr<CurlData> FBReaderOrgLink::simpleSearchData(NetworkBookList &books, const std::string &pattern) {
 	return new XMLParserCurlData(

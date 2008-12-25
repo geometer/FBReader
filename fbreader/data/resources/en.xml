@@ -79,7 +79,11 @@
 					<node name="recentListSize" value="Recent Books List Size"/>
 					<node name="showAllBooksTag" value="All Books Branch in Tag Hierarchy"/>
 				</node>
-				<node name="NetworkLibrary" value="Network Search"/>
+				<node name="NetworkLibrary" value="Network Search">
+					<node name="useProxy" value="Use Proxy"/>
+					<node name="proxyHost" value="Proxy Host"/>
+					<node name="proxyPort" value="Proxy Port"/>
+				</node>
 				<node name="Language" value="Language">
 					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
 					<node name="defaultLanguage" value="Default Language"/>

@@ -33,6 +33,7 @@ public:
 
 private:
 	const std::string myURL;
+	std::string myProxy;
 	shared_ptr<ZLXMLReader> myReader;
 	CURL *myHandle;
 };
