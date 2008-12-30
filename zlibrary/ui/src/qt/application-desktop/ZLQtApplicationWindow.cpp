@@ -156,7 +156,6 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 		myWindowStateOption.setValue(MAXIMIZED);
 	} else {
 		myWindowStateOption.setValue(NORMAL);
-		QPoint position = pos();
 		if (x() != -1) {
 			myXOption.setValue(x());
 		}
@@ -175,6 +174,16 @@ void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
 	myFullScreen = fullscreen;
 	if (myFullScreen) {
 		myWasMaximized = isMaximized();
+		if (!myWasMaximized) {
+			if (x() != -1) {
+				myXOption.setValue(x());
+			}
+			if (y() != -1) {
+				myYOption.setValue(y());
+			}
+			myWidthOption.setValue(width());
+			myHeightOption.setValue(height());
+		}
 		myToolBar->hide();
 		showFullScreen();
 	} else {
@@ -182,6 +191,9 @@ void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
 		showNormal();
 		if (myWasMaximized) {
 			showMaximized();
+		} else {
+			resize(myWidthOption.value(), myHeightOption.value());
+			move(myXOption.value(), myYOption.value());
 		}
 	}
 }

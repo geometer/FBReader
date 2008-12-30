@@ -64,6 +64,14 @@ ZLGtkWaitMessage::ZLGtkWaitMessage(GtkWindow *parent, const std::string& message
 	while (gtk_events_pending()) {
 		gtk_main_iteration();
 	}
+
+	if (myParent != 0) {
+		gtk_widget_queue_draw(GTK_WIDGET(myParent));
+	}
+
+	while (gtk_events_pending()) {
+		gtk_main_iteration();
+	}
 }
 
 ZLGtkWaitMessage::~ZLGtkWaitMessage() {

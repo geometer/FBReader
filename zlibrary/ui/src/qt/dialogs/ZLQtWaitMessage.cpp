@@ -56,8 +56,10 @@ ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, 0, WSt
 	);
 
 	qApp->processEvents();
-	usleep(5000);
-	qApp->processEvents();
+	for (int i = 0; i < 6; ++i) {
+		usleep(5000);
+		qApp->processEvents();
+	}
 }
 
 ZLQtWaitMessage::~ZLQtWaitMessage() {
