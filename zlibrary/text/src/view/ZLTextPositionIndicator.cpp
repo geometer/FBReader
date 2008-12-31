@@ -128,8 +128,6 @@ void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
 	myExtraWidth += text.length() * context().stringWidth("0", 1, false) + context().spaceWidth();
 }
 
-#include <iostream>
-
 size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraphIndex) const {
 	if (myTextView.myModel->kind() == ZLTextModel::TREE_MODEL) {
 		ZLTextWordCursor cursor = myTextView.startCursor();
@@ -137,21 +135,13 @@ size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraph
 			cursor = myTextView.endCursor();
 		}
 		if (!cursor.isNull()) {
-			size_t index = startTextIndex();
-			const size_t endIndex = endTextIndex();
-			cursor.moveToParagraph(index);
+			const ZLTextTreeModel &treeModel = (const ZLTextTreeModel&)*myTextView.myModel;
 			size_t sum = 0;
-			while (index < endIndex) {
-				if (index >= paragraphIndex) {
-					break;
+			for (size_t i = 0; i < paragraphIndex; ++i) {
+				const ZLTextTreeParagraph *para = (const ZLTextTreeParagraph*)treeModel[i];
+				if (para->parent()->isOpen()) {
+					sum += sizeOfParagraph(i);
 				}
-				sum += sizeOfParagraph(index);
-				cursor.nextParagraph();
-				const size_t newIndex = cursor.paragraphCursor().index();
-				if (newIndex == index) {
-					break;
-				}
-				index = newIndex;
 			}
 			return sum;
 		}

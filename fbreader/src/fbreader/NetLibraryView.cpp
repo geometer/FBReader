@@ -27,6 +27,7 @@
 #include "NetLibraryView.h"
 #include "CollectionView.h"
 #include "FBReader.h"
+#include "DownloadBookRunnable.h"
 
 #include "../bookmodel/FBTextKind.h"
 
@@ -102,6 +103,18 @@ void AdvancedSearchRunnable::run() {
 	NetworkLinkCollection::instance().advancedSearch(myBookList, myTitle, myAuthor, mySeries, myCategory, myDescription);
 }
 
+void NetLibraryView::addBookIcon(ZLTextTreeModel &model, const NetworkBookInfo &book, NetworkBookInfo::URLType format, const std::string &localIcon, const std::string &downloadIcon) {
+	const std::map<NetworkBookInfo::URLType,std::string>::const_iterator it = book.URLByType.find(format);
+	if (it == book.URLByType.end()) {
+		return;
+	}
+
+	const std::string &fileName = NetworkLinkCollection::instance().bookFileName(it->second);
+	const std::string &icon = (!fileName.empty() && ZLFile(fileName).exists()) ? localIcon : downloadIcon;
+	model.addFixedHSpace(1);
+	model.addImage(icon, myImageMap, 0);
+}
+
 void NetLibraryView::rebuildModel() {
 	ZLTextTreeModel *resultsModel = new ZLTextTreeModel();
 	myParagraphToBookMap.clear();
@@ -132,20 +145,8 @@ void NetLibraryView::rebuildModel() {
 			resultsModel->createParagraph(para);
 			resultsModel->addControl(LIBRARY_ENTRY, true);
 			resultsModel->addText(book.Title);
-			if (ZLFile(fileName(book, NetworkBookInfo::BOOK_EPUB)).exists()) {
-				resultsModel->addFixedHSpace(1);
-				resultsModel->addImage(ReadLocalEpub, myImageMap, 0);
-			} else if (book.URLByType.find(NetworkBookInfo::BOOK_EPUB) != book.URLByType.end()) {
-				resultsModel->addFixedHSpace(1);
-				resultsModel->addImage(DownloadEpub, myImageMap, 0);
-			}
-			if (ZLFile(fileName(book, NetworkBookInfo::BOOK_MOBIPOCKET)).exists()) {
-				resultsModel->addFixedHSpace(1);
-				resultsModel->addImage(ReadLocalMobi, myImageMap, 0);
-			} else if (book.URLByType.find(NetworkBookInfo::BOOK_MOBIPOCKET) != book.URLByType.end()) {
-				resultsModel->addFixedHSpace(1);
-				resultsModel->addImage(DownloadMobi, myImageMap, 0);
-			}
+			addBookIcon(*resultsModel, book, NetworkBookInfo::BOOK_EPUB, ReadLocalEpub, DownloadEpub);
+			addBookIcon(*resultsModel, book, NetworkBookInfo::BOOK_MOBIPOCKET, ReadLocalMobi, DownloadMobi);
 			if (book.URLByType.find(NetworkBookInfo::LINK_HTTP) != book.URLByType.end()) {
 				resultsModel->addFixedHSpace(1);
 				resultsModel->addImage(OpenInBrowser, myImageMap, 0);
@@ -186,37 +187,6 @@ void NetLibraryView::search() {
 	search(runnable);
 }
 
-class DownloadBookRunnable : public ZLRunnable {
-
-public:
-	DownloadBookRunnable(const NetworkBookInfo &book, NetworkBookInfo::URLType format, const std::string &fileName);
-	void run();
-	bool wasSuccessful();
-
-private:
-	const NetworkBookInfo &myBook;
-	const NetworkBookInfo::URLType myFormat;
-	const std::string myFileName;
-	bool myWasSuccessful;
-};
-
-DownloadBookRunnable::DownloadBookRunnable(const NetworkBookInfo &book, NetworkBookInfo::URLType format, const std::string &fileName) : myBook(book), myFormat(format), myFileName(fileName), myWasSuccessful(false) {
-}
-
-void DownloadBookRunnable::run() {
-	myWasSuccessful = NetworkLinkCollection::instance().downloadBook(myBook, myFormat, myFileName);
-}
-
-bool DownloadBookRunnable::wasSuccessful() {
-	return myWasSuccessful;
-}
-
-std::string NetLibraryView::fileName(const NetworkBookInfo &book, NetworkBookInfo::URLType format) const {
-	ZLFile dirFile(NetworkLinkCollection::instance().DirectoryOption.value());
-	dirFile.directory(true);
-	return NetworkLinkCollection::instance().DirectoryOption.value() + ZLibrary::FileNameDelimiter + book.fileName(format);
-}
-
 bool NetLibraryView::_onStylusPress(int x, int y) {
 	fbreader().setHyperlinkCursor(false);
 
@@ -247,11 +217,9 @@ bool NetLibraryView::_onStylusPress(int x, int y) {
 
 	if ((id == DownloadEpub) || (id == DownloadMobi)) {
 		NetworkBookInfo::URLType format = (id == DownloadEpub) ? NetworkBookInfo::BOOK_EPUB : NetworkBookInfo::BOOK_MOBIPOCKET;
-		const std::string fName = fileName(*book, format);
-		DownloadBookRunnable runnable(*book, format, fName);
-		ZLDialogManager::instance().wait(ZLResourceKey("downloadBook"), runnable);
-		if (runnable.wasSuccessful()) {
-			BookDescriptionPtr description = BookDescription::getDescription(fName);
+		const std::string fileName = DownloadBookRunnable(*book, format).executeWithUI();
+		if (!fileName.empty()) {
+			BookDescriptionPtr description = BookDescription::getDescription(fileName);
 			WritableBookDescription wDescription(*description);
 			wDescription.clearAuthor();
 			wDescription.addAuthor(book->Author.DisplayName, book->Author.SortKey);
@@ -271,7 +239,7 @@ bool NetLibraryView::_onStylusPress(int x, int y) {
 		return true;
 	} else if ((id == ReadLocalEpub) || (id == ReadLocalMobi)) {
 		NetworkBookInfo::URLType format = (id == DownloadEpub) ? NetworkBookInfo::BOOK_EPUB : NetworkBookInfo::BOOK_MOBIPOCKET;
-		fbreader().openFile(fileName(*book, format));
+		fbreader().openFile(NetworkLinkCollection::instance().bookFileName(book->URLByType[format]));
 		fbreader().setMode(FBReader::BOOK_TEXT_MODE);
 		return true;
 	} else if (id == OpenInBrowser) {

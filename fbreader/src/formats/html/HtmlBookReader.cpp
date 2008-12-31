@@ -137,16 +137,12 @@ void HtmlHrefTagAction::run(const HtmlReader::HtmlTag &tag) {
 					if (value[0] == '#') {
 						setHyperlinkType(INTERNAL_HYPERLINK);
 						bookReader().addHyperlinkControl(INTERNAL_HYPERLINK, value.substr(1));
-					} else if (MiscUtil::isReference(value)) {
-						FBTextKind hyperlinkType;
-						if (ZLStringUtil::stringEndsWith(value, ".epub") ||
-								ZLStringUtil::stringEndsWith(value, ".mobi")) {
-							hyperlinkType = BOOK_HYPERLINK;
-						} else {
-							hyperlinkType = EXTERNAL_HYPERLINK;
+					} else {
+						FBTextKind hyperlinkType = MiscUtil::referenceType(value);
+						if (hyperlinkType != INTERNAL_HYPERLINK) {
+							setHyperlinkType(hyperlinkType);
+							bookReader().addHyperlinkControl(hyperlinkType, value);
 						}
-						setHyperlinkType(hyperlinkType);
-						bookReader().addHyperlinkControl(hyperlinkType, value);
 					}
 				}
 			}

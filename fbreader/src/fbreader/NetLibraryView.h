@@ -54,7 +54,7 @@ private:
 
 	void search(ZLRunnable &runnable);
 
-	std::string fileName(const NetworkBookInfo &book, NetworkBookInfo::URLType format) const;
+	void addBookIcon(ZLTextTreeModel &model, const NetworkBookInfo &book, NetworkBookInfo::URLType format, const std::string &localIcon, const std::string &downloadIcon);
 	void rebuildModel();
 
 private:

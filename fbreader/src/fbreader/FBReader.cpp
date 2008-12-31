@@ -40,6 +40,7 @@
 #include "RecentBooksPopupData.h"
 #include "BookInfoDialog.h"
 #include "TimeUpdater.h"
+#include "DownloadBookRunnable.h"
 
 #include "../migration/migrate.h"
 
@@ -307,8 +308,6 @@ void FBReader::openBookInternal(BookDescriptionPtr description) {
 	}
 }
 
-#include <iostream>
-
 void FBReader::tryShowFootnoteView(const std::string &id, const std::string &type) {
 	if (type == "external") {
 		shared_ptr<ProgramCollection> collection = webBrowserCollection();
@@ -335,7 +334,10 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 			}
 		}
 	} else if (type == "book") {
-		std::cerr << id << "\n";
+		std::string fileName = DownloadBookRunnable(id).executeWithUI();
+		if (!fileName.empty()) {
+			openFile(fileName);
+		}
 	}
 }
 
@@ -361,6 +363,7 @@ void FBReader::setMode(ViewMode mode) {
 
 	switch (myMode) {
 		case BOOK_TEXT_MODE:
+			setHyperlinkCursor(false);
 			((ZLTextView&)*myBookTextView).forceScrollbarUpdate();
 			setView(myBookTextView);
 			break;

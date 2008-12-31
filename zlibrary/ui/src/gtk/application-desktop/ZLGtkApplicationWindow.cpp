@@ -166,7 +166,17 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 		return;
 	}
 
+	GdkWindowState state = gdk_window_get_state(GTK_WIDGET(myMainWindow)->window);
 	if (fullscreen) {
+		if ((state & GDK_WINDOW_STATE_MAXIMIZED) == 0) {
+			int x, y, width, height;
+			gtk_window_get_position(myMainWindow, &x, &y);
+			gtk_window_get_size(myMainWindow, &width, &height);
+			myXOption.setValue(x);
+			myYOption.setValue(y);
+			myWidthOption.setValue(width);
+			myHeightOption.setValue(height);
+		}
 		gtk_window_fullscreen(myMainWindow);
 		gtk_widget_hide(myWindowToolbar.toolbarWidget());
 		if (myHandleBox != 0) {
@@ -178,6 +188,10 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 			gtk_widget_hide(GTK_WIDGET(myHandleBox));
 		}
 		gtk_widget_show(myWindowToolbar.toolbarWidget());
+		if ((state & GDK_WINDOW_STATE_MAXIMIZED) == 0) {
+			gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
+			gtk_window_move(myMainWindow, myXOption.value(), myYOption.value());
+		}
 	}
 
 	gtk_widget_queue_resize(GTK_WIDGET(myMainWindow));

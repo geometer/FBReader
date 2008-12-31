@@ -18,7 +18,9 @@
  */
 
 #include <ZLFile.h>
+#include <ZLDir.h>
 #include <ZLOutputStream.h>
+#include <ZLStringUtil.h>
 
 #include "NetworkLink.h"
 #include "CurlData.h"
@@ -49,13 +51,55 @@ NetworkLinkCollection::NetworkLinkCollection() :
 NetworkLinkCollection::~NetworkLinkCollection() {
 }
 
-bool NetworkLinkCollection::downloadBook(const NetworkBookInfo &book, NetworkBookInfo::URLType format, const std::string &fileName) {
-	std::map<NetworkBookInfo::URLType,std::string>::const_iterator it = book.URLByType.find(format);
-	if (it == book.URLByType.end()) {
-		return false;
+static std::string normalize(const std::string &url) {
+	static const std::string PREFIX0 = "http://feedbooks.com/";
+	static const std::string PREFIX1 = "http://www.feedbooks.com/";
+	static const std::string STANZA_PREFIX = "http://feedbooks.com/book/stanza/";
+
+	std::string nURL = url;
+	if (ZLStringUtil::stringStartsWith(nURL, PREFIX1)) {
+		nURL = PREFIX0 + nURL.substr(PREFIX1.length());
+	}
+	if (ZLStringUtil::stringStartsWith(nURL, STANZA_PREFIX)) {
+		nURL = PREFIX0 + "book/" + nURL.substr(STANZA_PREFIX.length()) + ".epub";
+	}
+	return nURL;
+}
+
+std::string NetworkLinkCollection::bookFileName(const std::string &url) const {
+	return ZLStringOption(FBCategoryKey::NETWORK, "Files", ::normalize(url), "").value();
+}
+
+std::string NetworkLinkCollection::downloadBook(const std::string &url, const std::string &proposedFileName) const {
+	const std::string nURL = ::normalize(url);
+	ZLStringOption fileNameOption(FBCategoryKey::NETWORK, "Files", nURL, "");
+	std::string fileName = fileNameOption.value();
+	if (!fileName.empty() && ZLFile(fileName).exists()) {
+		return fileName;
 	}
 
-	return downloadFile(it->second, fileName);
+	shared_ptr<ZLDir> dir = ZLFile(DirectoryOption.value()).directory(true);
+	if (dir.isNull()) {
+		return "";
+	}
+
+	fileName = proposedFileName;
+	if (fileName.empty()) {
+		size_t index = nURL.rfind('/');
+		if (index >= nURL.length() - 1) {
+			return "";
+		}
+		fileName = nURL.substr(index + 1);
+	}
+	fileName = dir->itemPath(fileName);
+	if (ZLFile(fileName).exists()) {
+		ZLFile(fileName).remove();
+	}
+	if (!downloadFile(nURL, fileName)) {
+		return "";
+	}
+	fileNameOption.setValue(fileName);
+	return fileName;
 }
 
 bool NetworkLinkCollection::perform(const std::vector<shared_ptr<CurlData> > &dataList) {

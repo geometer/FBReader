@@ -72,7 +72,8 @@ private:
 	~NetworkLinkCollection();
 
 public:
-	bool downloadBook(const NetworkBookInfo &book, NetworkBookInfo::URLType format, const std::string &fileName);
+	std::string bookFileName(const std::string &url) const;
+	std::string downloadBook(const std::string &url, const std::string &proposedFileName = std::string()) const;
 
 	bool simpleSearch(NetworkBookList &books, const std::string &pattern);
 	bool advancedSearch(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation);

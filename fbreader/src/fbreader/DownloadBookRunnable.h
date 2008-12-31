@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2008 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __MISCUTIL_H__
-#define __MISCUTIL_H__
+#ifndef __DOWNLOADBOOKRUNNABLE_H__
+#define __DOWNLOADBOOKRUNNABLE_H__
 
 #include <string>
 
-#include "../../bookmodel/FBTextKind.h"
+#include <ZLRunnable.h>
 
-class MiscUtil {
+#include "../network/NetworkBookInfo.h"
 
-private:
-	MiscUtil();
+class DownloadBookRunnable : public ZLRunnable {
 
 public:
-	static FBTextKind referenceType(const std::string &link);
-	static std::string htmlDirectoryPrefix(const std::string &fileName);
-	static std::string htmlFileName(const std::string &fileName);
-	static std::string decodeHtmlURL(const std::string &encodedURL);
+	DownloadBookRunnable(const NetworkBookInfo &book, NetworkBookInfo::URLType format);
+	DownloadBookRunnable(const std::string &url);
+	void run();
+
+	std::string executeWithUI();
+
+private:
+	std::string myURL;
+	std::string myFileName;
+	std::string myDownloadedFileName;
 };
 
-#endif /* __MISCUTIL_H__ */
+#endif /* __DOWNLOADBOOKRUNNABLE_H__ */
