@@ -221,6 +221,7 @@
 	</group>
 	<group name="Unicode">
 		<encoding region="Unicode" name="UTF-8">
+			<code number="65001"/>
 		</encoding>
 		<encoding region="Unicode" name="UTF-7">
 			<code number="65000"/>

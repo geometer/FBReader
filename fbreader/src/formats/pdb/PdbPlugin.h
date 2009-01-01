@@ -84,6 +84,7 @@ class MobipocketPlugin : public PalmDocLikePlugin {
 public:
 	bool acceptsFile(const ZLFile &file) const;
 	const std::string &iconName() const;
+	bool readDescription(const std::string &path, BookDescription &description) const;
 
 	void readDocumentInternal(const std::string &fileName, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
 };

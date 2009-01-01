@@ -63,8 +63,8 @@ ZLQtApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, Z
 	myEdit->setToolTip(QString::fromUtf8(textFieldItem.tooltip().c_str()));
 	myAction = toolbar->addWidget(myEdit);
 	// I don't understand why this code does work but it does.
-	QBoxLayout *layout = (QBoxLayout*)toolbar->layout();
-	layout->addStretch();
+	//QBoxLayout *layout = (QBoxLayout*)toolbar->layout();
+	//layout->addStretch();
 }
 
 QAction *ZLQtApplicationWindow::LineEditParameter::action() const {
