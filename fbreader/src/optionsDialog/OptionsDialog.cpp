@@ -156,8 +156,8 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	CollectionView &collectionView = fbreader.collectionView();
 	libraryTab.addOption(ZLResourceKey("bookPath"), collectionView.collection().PathOption);
 	libraryTab.addOption(ZLResourceKey("lookInSubdirectories"), collectionView.collection().ScanSubdirsOption);
+	libraryTab.addOption(ZLResourceKey("collectBooksWithoutMetaInfo"), collectionView.collection().CollectAllBooksOption);
 	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::instance().DirectoryOption);
-	libraryTab.addOption(ZLResourceKey("recentListSize"), new ZLSimpleSpinOptionEntry(fbreader.recentBooks().MaxListSizeOption, 1));
 	libraryTab.addOption(ZLResourceKey("showAllBooksTag"), collectionView.ShowAllBooksTagOption);
 
 	ZLDialogContent &networkTab = myDialog->createTab(ZLResourceKey("NetworkLibrary"));

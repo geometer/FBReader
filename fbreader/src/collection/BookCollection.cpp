@@ -73,6 +73,7 @@ static const std::string OPTIONS = "Options";
 BookCollection::BookCollection() :
 	PathOption(ZLCategoryKey::CONFIG, OPTIONS, "BookPath", ""),
 	ScanSubdirsOption(ZLCategoryKey::CONFIG, OPTIONS, "ScanSubdirs", false),
+	CollectAllBooksOption(ZLCategoryKey::CONFIG, OPTIONS, "CollectAllBooks", false),
 	myDoStrongRebuild(true),
 	myDoWeakRebuild(false) {
 }
@@ -97,10 +98,11 @@ void BookCollection::collectBookFileNames(std::set<std::string> &bookFileNames) 
 		}
 		dir->collectFiles(files, false);
 		if (!files.empty()) {
+			const bool collectBookWithoutMetaInfo = CollectAllBooksOption.value();
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); ++jt) {
 				const std::string fileName = dir->itemPath(*jt);
 				ZLFile file(fileName);
-				if (PluginCollection::instance().plugin(file, true) != 0) {
+				if (PluginCollection::instance().plugin(file, !collectBookWithoutMetaInfo) != 0) {
 					bookFileNames.insert(fileName);
 				// TODO: zip -> any archive
 				} else if (file.extension() == "zip") {

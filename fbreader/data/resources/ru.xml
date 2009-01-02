@@ -75,9 +75,9 @@
 				<node name="Library" value="Библиотека">
 					<node name="bookPath" value="Каталоги с книгами"/>
 					<node name="lookInSubdirectories" value="Искать книги в подкаталогах"/>
+					<node name="collectBooksWithoutMetaInfo" value="Сканировать книги без метаинформации"/>
 					<node name="downloadDirectory" value="Каталог для загружаемых книг"/>
-					<node name="recentListSize" value="Размер списка прочитанных книг"/>
-					<node name="showAllBooksTag" value="Показывать список всех книг"/>
+					<node name="showAllBooksTag" value="Показывать ветвь «Все книги» в дереве"/>
 				</node>
 				<node name="NetworkLibrary" value="Поиск в сети"/>
 				<node name="Language" value="Язык">

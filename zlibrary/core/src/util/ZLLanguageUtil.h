@@ -28,6 +28,7 @@ private:
 	ZLLanguageUtil();
 
 public:
+	static std::string languageByCode(unsigned char languageCode, unsigned char subLanguageCode);
 	static bool isRTLLanguage(const std::string &languageCode);
 };
 

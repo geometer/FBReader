@@ -36,6 +36,7 @@ class BookCollection {
 public:
 	ZLStringOption PathOption;
 	ZLBooleanOption ScanSubdirsOption;
+	ZLBooleanOption CollectAllBooksOption;
 
 public:
 	BookCollection();
@@ -77,7 +78,7 @@ private:
 class RecentBooks {
 
 public:
-	ZLIntegerRangeOption MaxListSizeOption;
+	static const size_t MaxListSize;
 
 public:
 	RecentBooks();

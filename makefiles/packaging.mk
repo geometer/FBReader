@@ -32,10 +32,14 @@ debian:
 	@rm -rf `find $(TMPDIR) -name ".svn"`
 	@mkdir $(TMPDIR)/debian
 	@for file in $(DIST_DIR)/debian/$(ARCHITECTURE)/*; do \
-		sed -e "s#@SOVERSIONCORE@#$(SOVERSIONCORE)#g" $$file | \
-		sed -e "s#@SOVERSIONTEXT@#$(SOVERSIONTEXT)#g" | \
-		sed -e "s#@VERSION@#$(VERSION)#g" > $(TMPDIR)/debian/`basename $$file`; \
-		chmod --reference $$file $(TMPDIR)/debian/`basename $$file`; \
+		if [ -f $$file ]; then \
+			sed -e "s#@SOVERSIONCORE@#$(SOVERSIONCORE)#g" $$file | \
+			sed -e "s#@SOVERSIONTEXT@#$(SOVERSIONTEXT)#g" | \
+			sed -e "s#@VERSION@#$(VERSION)#g" > $(TMPDIR)/debian/`basename $$file`; \
+			chmod --reference $$file $(TMPDIR)/debian/`basename $$file`; \
+		else \
+			cp -r $$file $(TMPDIR)/debian/`basename $$file`; \
+		fi; \
 	done
 	@cd $(TMPDIR); dpkg-buildpackage -rfakeroot -us -uc 1> $(CURDIR)/$(ARCHITECTURE)-debian.log 2>&1; cd $(CURDIR)
 	@rm -rf $(TMPDIR)

@@ -21,6 +21,7 @@
 #include <ZLInputStream.h>
 #include <ZLEncodingConverter.h>
 #include <ZLStringUtil.h>
+#include <ZLLanguageUtil.h>
 
 #include "PdbPlugin.h"
 #include "MobipocketStream.h"
@@ -40,8 +41,6 @@ const std::string &MobipocketPlugin::iconName() const {
 	static const std::string ICON_NAME = "mobipocket";
 	return ICON_NAME;
 }
-
-#include <iostream>
 
 bool MobipocketPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	shared_ptr<ZLInputStream> stream = ZLFile(path).inputStream();
@@ -86,18 +85,7 @@ bool MobipocketPlugin::readDescription(const std::string &path, BookDescription 
 
 	unsigned long languageCode;
 	PdbUtil::readUnsignedLong(*stream, languageCode);
-	switch (languageCode & 0xFF) {
-		// TODO: more languages
-		case 0x09:
-			wDescription.language() = "en";
-			break;
-		case 0x0A:
-			wDescription.language() = "es";
-			break;
-		case 0x19:
-			wDescription.language() = "ru";
-			break;
-	}
+	wDescription.language() = ZLLanguageUtil::languageByCode(languageCode & 0xFF, (languageCode >> 8) & 0xFF);
 
 	stream->seek(32, false);
 

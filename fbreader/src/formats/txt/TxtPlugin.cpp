@@ -19,6 +19,7 @@
 
 #include <ZLFile.h>
 #include <ZLInputStream.h>
+#include <ZLUnicodeUtil.h>
 
 #include "TxtPlugin.h"
 #include "TxtBookReader.h"
@@ -33,7 +34,7 @@ bool TxtPlugin::providesMetaInfo() const {
 }
 
 bool TxtPlugin::acceptsFile(const ZLFile &file) const {
-	return (file.extension() == "txt") || (file.extension() == "TXT");
+	return ZLUnicodeUtil::toLower(file.extension()) == "txt";
 }
 
 bool TxtPlugin::readDescription(const std::string &path, BookDescription &description) const {

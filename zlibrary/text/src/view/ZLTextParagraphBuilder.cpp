@@ -33,7 +33,8 @@
 ZLTextParagraphBuilder::ZLTextParagraphBuilder(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphIndex, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language), myBaseBidiLevel(ZLLanguageUtil::isRTLLanguage(language) ? 1 : 0) {
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphIndex, 0, 0));
 	myLastMark = myFirstMark;
-	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphIndex == paragraphIndex); ++myLastMark);
+	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphIndex == paragraphIndex); ++myLastMark) {
+	}
 	myOffset = 0;
 
 	static bool lineBreakInitialized = false;
@@ -142,13 +143,14 @@ void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 	const char *end = start + dataLength;
 	set_linebreaks_utf8((const utf8_t*)start, dataLength, myLanguage.c_str(), &myBreaksTable[0]);
 
-	ZLUnicodeUtil::Ucs4Char ch;
+	ZLUnicodeUtil::Ucs4Char ch = 0, previousCh;
 	enum { NO_SPACE, SPACE, NON_BREAKABLE_SPACE } spaceState = NO_SPACE;
 	int charLength = 0;
 	int index = 0;
 	const char *wordStart = start;
 	updateBidiLevel(myBidiLevels[0]);
 	for (const char *ptr = start; ptr < end; ptr += charLength, ++index) {
+		previousCh = ch;
 		charLength = ZLUnicodeUtil::firstChar(ch, ptr);
 		if (ZLUnicodeUtil::isSpace(ch)) {
 			if ((spaceState == NO_SPACE) && (ptr != wordStart)) {
@@ -165,7 +167,7 @@ void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 		} else {
 			switch (spaceState) {
 				case SPACE:
-					if (myBreaksTable[ptr - start - 1] == LINEBREAK_NOBREAK) {
+					if ((myBreaksTable[ptr - start - 1] == LINEBREAK_NOBREAK) || (previousCh == '-')) {
 						myElements.push_back(ZLTextElementPool::Pool.NBHSpaceElement);
 					} else {
 						myElements.push_back(ZLTextElementPool::Pool.HSpaceElement);
@@ -178,7 +180,7 @@ void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
 					break;
 				case NO_SPACE:
 					if ((ptr > start) &&
-							(((myBreaksTable[ptr - start - 1] != LINEBREAK_NOBREAK) && (ptr != wordStart)) ||
+							((((myBreaksTable[ptr - start - 1] != LINEBREAK_NOBREAK) && (previousCh != '-')) && (ptr != wordStart)) ||
 							 (myBidiLevels[index - 1] != myBidiLevels[index]))) {
 						addWord(wordStart, myOffset + (wordStart - start), ptr - wordStart);
 						wordStart = ptr;

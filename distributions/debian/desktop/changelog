@@ -1,6 +1,10 @@
 fbreader (0.10.0-1) stable; urgency=low
 
   * new upstream version
+  * add-missing-headers.patch integrated into the upstream
+  * fix-centering-with-margins.patch integrated into the upstream
+  * use-sensible-browser.patch added to the upstream debian fileset
+  * remove-deprecated-fields-in-desktop-file.patch intgerated into the upstream
 
  -- Nikolay Pultsin <geometer@fbreader.org>  Sun, 3 Aug 2008 19:01:00 +0400
 

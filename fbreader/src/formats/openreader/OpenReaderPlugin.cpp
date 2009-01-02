@@ -19,6 +19,7 @@
 
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLDir.h>
 
 #include "OpenReaderPlugin.h"
@@ -33,7 +34,7 @@ bool OpenReaderPlugin::providesMetaInfo() const {
 }
 
 bool OpenReaderPlugin::acceptsFile(const ZLFile &file) const {
-	return file.extension() == "orb";
+	return ZLUnicodeUtil::toLower(file.extension()) == "orb";
 }
 
 bool OpenReaderPlugin::readDescription(const std::string &path, BookDescription &description) const {

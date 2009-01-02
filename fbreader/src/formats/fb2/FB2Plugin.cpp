@@ -18,6 +18,7 @@
  */
 
 #include <ZLFile.h>
+#include <ZLUnicodeUtil.h>
 
 #include "FB2Plugin.h"
 #include "FB2DescriptionReader.h"
@@ -25,7 +26,7 @@
 #include "../../description/BookDescription.h"
 
 bool FB2Plugin::acceptsFile(const ZLFile &file) const {
-	return file.extension() == "fb2";
+	return ZLUnicodeUtil::toLower(file.extension()) == "fb2";
 }
 
 bool FB2Plugin::readDescription(const std::string &path, BookDescription &description) const {

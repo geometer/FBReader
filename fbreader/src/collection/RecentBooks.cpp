@@ -27,11 +27,10 @@
 const std::string GROUP = "LastOpenedBooks";
 const std::string BOOK = "Book";
 
-RecentBooks::RecentBooks() :
-	MaxListSizeOption(ZLCategoryKey::STATE, GROUP, "MaxSize", 1, 100, 10) {
+const size_t RecentBooks::MaxListSize = 10;
 
-	const int size = MaxListSizeOption.value();
-	for (int i = 0; i < size; ++i) {
+RecentBooks::RecentBooks() {
+	for (size_t i = 0; i < MaxListSize; ++i) {
 		std::string num = BOOK;
 		ZLStringUtil::appendNumber(num, i);
 		std::string name = ZLStringOption(ZLCategoryKey::STATE, GROUP, num, "").value();
@@ -45,8 +44,8 @@ RecentBooks::RecentBooks() :
 }
 
 RecentBooks::~RecentBooks() {
-	const int size = std::min(MaxListSizeOption.value(), (long)myBooks.size());
-	for (int i = 0; i < size; ++i) {
+	const size_t size = std::min(MaxListSize, myBooks.size());
+	for (size_t i = 0; i < size; ++i) {
 		std::string num = BOOK;
 		ZLStringUtil::appendNumber(num, i);
 		ZLStringOption(ZLCategoryKey::STATE, GROUP, num, "").setValue(myBooks[i]->fileName());
@@ -64,8 +63,7 @@ void RecentBooks::addBook(const std::string &fileName) {
 	if (!description.isNull()) {
 		myBooks.insert(myBooks.begin(), description);
 	}
-	const size_t maxSize = MaxListSizeOption.value();
-	if (myBooks.size() > maxSize) {
-		myBooks.erase(myBooks.begin() + maxSize, myBooks.end());
+	if (myBooks.size() > MaxListSize) {
+		myBooks.erase(myBooks.begin() + MaxListSize, myBooks.end());
 	}
 }

@@ -1,12 +1,12 @@
 #!/usr/bin/make -f
 
-clean:
+clean: unpatch
 		dh_testdir
 		dh_testroot
 		[ ! -f Makefile ] || $(MAKE) distclean
 		dh_clean build-stamp install-stamp
 
-build: build-stamp
+build: patch build-stamp
 build-stamp:
 		dh_testdir
 		$(MAKE) -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy
@@ -17,9 +17,8 @@ build-stamp:
 		$(MAKE) -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy
 		touch build-stamp 
 
-install: install-stamp
-install-stamp: DEB_DIR = $(CURDIR)/debian
-install-stamp: build
+install: DEB_DIR = $(CURDIR)/debian
+install: build
 		dh_testdir
 		dh_testroot
 		dh_clean -k
@@ -54,8 +53,6 @@ binary-arch: build install
 		dh_md5sums
 		dh_builddeb
 
-binary-indep:
+binary:	binary-arch
 
-binary:	binary-indep binary-arch
-
-.PHONY: clean build install binary-indep binary-arch binary
+include /usr/share/quilt/quilt.make

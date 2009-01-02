@@ -19,6 +19,7 @@
 
 #include <ZLFile.h>
 #include <ZLInputStream.h>
+#include <ZLUnicodeUtil.h>
 
 #include "TcrPlugin.h"
 #include "TcrStream.h"
@@ -30,7 +31,7 @@
 #include "../txt/PlainTextFormat.h"
 
 bool TcrPlugin::acceptsFile(const ZLFile &file) const {
-	return (file.extension() == "tcr") || (file.extension() == "TCR");
+	return ZLUnicodeUtil::toLower(file.extension()) == "tcr";
 }
 
 bool TcrPlugin::readDescription(const std::string &path, BookDescription &description) const {

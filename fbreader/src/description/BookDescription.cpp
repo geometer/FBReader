@@ -81,7 +81,10 @@ BookDescriptionPtr BookDescription::getDescription(const std::string &fileName, 
 
 	if (!checkFile || BookDescriptionUtil::checkInfo(file)) {
 		BookInfo info(fileName);
-		description->myAuthor = SingleAuthor::create(info.AuthorDisplayNameOption.value(), info.AuthorSortKeyOption.value());
+		const std::string &authorDisplayName = info.AuthorDisplayNameOption.value();
+		if (!authorDisplayName.empty()) {
+			description->myAuthor = SingleAuthor::create(authorDisplayName, info.AuthorSortKeyOption.value());
+		}
 		description->myTitle = info.TitleOption.value();
 		description->mySeriesName = info.SeriesNameOption.value();
 		description->myNumberInSeries = info.NumberInSeriesOption.value();

@@ -75,9 +75,9 @@
 				<node name="Library" value="Library">
 					<node name="bookPath" value="Book Path"/>
 					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
+					<node name="collectBooksWithoutMetaInfo" value="Collect Books without MetaInfo"/>
 					<node name="downloadDirectory" value="Directory for Downloaded Books"/>
-					<node name="recentListSize" value="Recent Books List Size"/>
-					<node name="showAllBooksTag" value="All Books Branch in Tag Hierarchy"/>
+					<node name="showAllBooksTag" value="All Books Branch in Book Tree"/>
 				</node>
 				<node name="NetworkLibrary" value="Network Search">
 					<node name="useProxy" value="Use Proxy"/>

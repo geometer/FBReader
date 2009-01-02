@@ -17,9 +17,8 @@
  * 02110-1301, USA.
  */
 
-#include <ZLTime.h>
-
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLFile.h>
 #include <ZLInputStream.h>
 
@@ -33,8 +32,7 @@ bool RtfPlugin::providesMetaInfo() const {
 }
 
 bool RtfPlugin::acceptsFile(const ZLFile &file) const {
-	const std::string &extension = file.extension();
-	return (extension == "rtf");
+	return ZLUnicodeUtil::toLower(file.extension()) == "rtf";
 }
 
 bool RtfPlugin::readDescription(const std::string &path, BookDescription &description) const {
