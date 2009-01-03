@@ -35,15 +35,8 @@ XMLParserCurlData::XMLParserCurlData(const std::string &url, shared_ptr<ZLXMLRea
 	}
 
 	curl_easy_setopt(myHandle, CURLOPT_URL, myURL.c_str());
-	if (NetworkLinkCollection::instance().UseProxyOption.value()) {
-		myProxy = NetworkLinkCollection::instance().ProxyHostOption.value() + ':' + NetworkLinkCollection::instance().ProxyPortOption.value();
-		curl_easy_setopt(myHandle, CURLOPT_PROXY, myProxy.c_str());
-	}
-
 	curl_easy_setopt(myHandle, CURLOPT_WRITEFUNCTION, parseXML);
 	curl_easy_setopt(myHandle, CURLOPT_WRITEDATA, &*myReader);
-	curl_easy_setopt(myHandle, CURLOPT_TIMEOUT, 10);
-	curl_easy_setopt(myHandle, CURLOPT_CONNECTTIMEOUT, 5);
 	myReader->initialize();
 }
 

@@ -29,25 +29,24 @@ NetworkLink::NetworkLink(const std::string &siteName, const std::string &optionN
 NetworkLink::~NetworkLink() {
 }
 
+std::string NetworkLink::hostFromUrl(const std::string &url) {
+	std::string host = url;
+	int index = host.find("://");
+	if (index != -1) {
+		host.erase(0, index + 3);
+	}
+	index = host.find("/");
+	if (index != -1) {
+		host.erase(index);
+	}
+	return host;
+}
+
 std::string NetworkLink::htmlEncode(const std::string &stringToEncode) {
 	std::string encodedString;
 	const char *data = stringToEncode.data();
 	const char *end = data + stringToEncode.length();
 	while (data < end) {
-		/*
-		const char ch = *data;
-		if (isalnum(ch) ||
-				(ch == '.') ||
-				(ch == '~') ||
-				(ch == '-') ||
-				(ch == '_')) {
-			encodedString += ch;
-		} else {
-			static const char hexDigits[] = "0123456789ABCDEF";
-			encodedString += hexDigits[((unsigned char)ch) / 16];
-			encodedString += hexDigits[((unsigned char)ch) % 16];
-		}
-		*/
 		ZLUnicodeUtil::Ucs4Char ch;
 		int count = ZLUnicodeUtil::firstChar(ch, data);
 		if (ZLUnicodeUtil::isLetter(ch) ||

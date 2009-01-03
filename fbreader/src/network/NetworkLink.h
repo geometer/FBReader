@@ -27,13 +27,13 @@
 #include <ZLOptions.h>
 
 #include "NetworkBookInfo.h"
-
-class CurlData;
+#include "CurlData.h"
 
 class NetworkLink {
 
 public:
 	static std::string htmlEncode(const std::string &stringToEncode);
+	static std::string hostFromUrl(const std::string &url);
 
 protected:
 	NetworkLink(const std::string &siteName, const std::string &optionName);
@@ -59,9 +59,12 @@ private:
 	static NetworkLinkCollection *ourInstance;
 
 private:
-	static bool downloadFile(const std::string &url, const std::string &fileName);
+	std::string downloadFile(const std::string &url, const std::string &fileName) const;
+	void setStandardOptions(CURL *handle, const std::string &proxy) const;
 
 public:
+	ZLIntegerRangeOption ConnectTimeoutOption;
+	ZLIntegerRangeOption TimeoutOption;
 	ZLBooleanOption UseProxyOption;
 	ZLStringOption ProxyHostOption;
 	ZLStringOption ProxyPortOption;
@@ -73,7 +76,7 @@ private:
 
 public:
 	std::string bookFileName(const std::string &url) const;
-	std::string downloadBook(const std::string &url, const std::string &proposedFileName = std::string()) const;
+	std::string downloadBook(const std::string &url, std::string &errorMessage, const std::string &proposedFileName = std::string()) const;
 
 	bool simpleSearch(NetworkBookList &books, const std::string &pattern);
 	bool advancedSearch(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation);

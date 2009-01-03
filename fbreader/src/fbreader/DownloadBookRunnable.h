@@ -33,11 +33,13 @@ public:
 	DownloadBookRunnable(const std::string &url);
 	void run();
 
-	std::string executeWithUI();
+	const std::string &executeWithUI();
+	const std::string &errorMessage();
 
 private:
 	std::string myURL;
 	std::string myFileName;
+	std::string myErrorMessage;
 	std::string myDownloadedFileName;
 };
 

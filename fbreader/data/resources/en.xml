@@ -83,6 +83,7 @@
 					<node name="useProxy" value="Use Proxy"/>
 					<node name="proxyHost" value="Proxy Host"/>
 					<node name="proxyPort" value="Proxy Port"/>
+					<node name="timeout" value="Network Operations Timeout"/>
 				</node>
 				<node name="Language" value="Language">
 					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
@@ -341,6 +342,17 @@
 		<node name="tagMustNotContainComma">
 			<node name="title" value="Error"/>
 			<node name="message" value="Tag name must not contain a &#8220;,&#8221; symbol"/>
+		</node>
+		<node name="networkError">
+			<node name="title" value="Network error"/>
+			<node name="unknownErrorMessage" value="Unknown error"/>
+			<node name="couldntCreateDirectoryMessage" value="Couldn&apos;t create a directory&#10;%s"/>
+			<node name="couldntCreateFileMessage" value="Couldn&apos;t create a file&#10;%s"/>
+			<node name="couldntConnectMessage" value="Couldn&apos;t connect to host %s"/>
+			<node name="couldntResolveHostMessage" value="Couldn&apos;t resolve host %s"/>
+			<node name="couldntResolveProxyMessage" value="Couldn&apos;t resolve proxy %s"/>
+			<node name="operationTimedOutMessage" value="Operation is timed out"/>
+			<node name="errorDuringProcessingMessage" value="Error during processing URL&#10;%s"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Error while downloading"/>

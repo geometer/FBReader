@@ -217,7 +217,8 @@ bool NetLibraryView::_onStylusPress(int x, int y) {
 
 	if ((id == DownloadEpub) || (id == DownloadMobi)) {
 		NetworkBookInfo::URLType format = (id == DownloadEpub) ? NetworkBookInfo::BOOK_EPUB : NetworkBookInfo::BOOK_MOBIPOCKET;
-		const std::string fileName = DownloadBookRunnable(*book, format).executeWithUI();
+		DownloadBookRunnable downloader(*book, format);
+		const std::string &fileName = downloader.executeWithUI();
 		if (!fileName.empty()) {
 			BookDescriptionPtr description = BookDescription::getDescription(fileName);
 			WritableBookDescription wDescription(*description);
@@ -234,7 +235,10 @@ bool NetLibraryView::_onStylusPress(int x, int y) {
 			fbreader().setMode(FBReader::BOOK_TEXT_MODE);
 			rebuildModel();
 		} else {
-			ZLDialogManager::instance().errorBox(ZLResourceKey("downloadError"));
+			ZLDialogManager::instance().errorBox(
+				ZLResourceKey("networkError"),
+				downloader.errorMessage()
+			);
 		}
 		return true;
 	} else if ((id == ReadLocalEpub) || (id == ReadLocalMobi)) {

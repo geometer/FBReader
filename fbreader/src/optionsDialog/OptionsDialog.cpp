@@ -176,6 +176,7 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	useProxyEntry->addDependentEntry(proxyHostEntry);
 	useProxyEntry->addDependentEntry(proxyPortEntry);
 	useProxyEntry->onStateChanged(useProxyEntry->initialState());
+	networkTab.addOption(ZLResourceKey("timeout"), new ZLSimpleSpinOptionEntry(linkCollection.TimeoutOption, 5));
 
 	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
 	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::instance().LanguageAutoDetectOption));

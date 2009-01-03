@@ -34,10 +34,14 @@ DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : myURL(url) 
 }
 
 void DownloadBookRunnable::run() {
-	myDownloadedFileName = NetworkLinkCollection::instance().downloadBook(myURL, myFileName);
+	myDownloadedFileName = NetworkLinkCollection::instance().downloadBook(myURL, myErrorMessage, myFileName);
 }
 
-std::string DownloadBookRunnable::executeWithUI() {
+const std::string &DownloadBookRunnable::executeWithUI() {
 	ZLDialogManager::instance().wait(ZLResourceKey("downloadBook"), *this);
 	return myDownloadedFileName;
+}
+
+const std::string &DownloadBookRunnable::errorMessage() {
+	return myErrorMessage;
 }

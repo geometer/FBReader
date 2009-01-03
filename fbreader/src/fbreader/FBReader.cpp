@@ -334,9 +334,15 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 			}
 		}
 	} else if (type == "book") {
-		std::string fileName = DownloadBookRunnable(id).executeWithUI();
+		DownloadBookRunnable downloader(id);
+		const std::string &fileName = downloader.executeWithUI();
 		if (!fileName.empty()) {
 			openFile(fileName);
+		} else {
+			ZLDialogManager::instance().errorBox(
+				ZLResourceKey("networkError"),
+				downloader.errorMessage()
+			);
 		}
 	}
 }
