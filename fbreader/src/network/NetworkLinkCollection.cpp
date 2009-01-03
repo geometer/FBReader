@@ -117,7 +117,7 @@ bool NetworkLinkCollection::perform(const std::vector<shared_ptr<CurlData> > &da
 	for (std::vector<shared_ptr<CurlData> >::const_iterator it = dataList.begin(); it != dataList.end(); ++it) {
 		CURL *easyHandle = (*it)->handle();
 		if (easyHandle != 0) {
-			setStandardOptions(handle, proxy);
+			setStandardOptions(easyHandle, proxy);
 			curl_multi_add_handle(handle, easyHandle);
 		}
 	}
