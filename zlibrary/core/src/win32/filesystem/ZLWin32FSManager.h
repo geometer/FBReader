@@ -36,6 +36,7 @@ private:
 	
 private:
 	void normalize(std::string &path) const;
+	std::string resolveSymlink(const std::string &path) const;
 	ZLFSDir *createPlainDirectory(const std::string &path) const;
 	ZLInputStream *createPlainInputStream(const std::string &path) const;
 	ZLOutputStream *createOutputStream(const std::string &path) const;

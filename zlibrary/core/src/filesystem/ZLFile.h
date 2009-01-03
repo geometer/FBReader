@@ -69,6 +69,7 @@ public:
 	const std::string &extension() const;
 
 	std::string physicalFilePath() const;
+	std::string resolvedPath() const;
 
 	shared_ptr<ZLInputStream> inputStream() const;
 	shared_ptr<ZLOutputStream> outputStream() const;

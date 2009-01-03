@@ -22,6 +22,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <set>
+
 #include <ZLStringUtil.h>
 
 #include "ZLUnixFSManager.h"
@@ -50,6 +52,31 @@ ZLFileInfo ZLUnixFSManager::fileInfo(const std::string &path) const {
 	return info;
 }
 
+std::string ZLUnixFSManager::resolveSymlink(const std::string &path) const {
+	struct stat fileStat;
+	std::set<std::string> names;
+	std::string current = path;
+	for (int i = 0; i < 256; ++i) {
+		names.insert(current);
+
+		std::string buffer(2048, '\0');
+		int len = readlink(current.c_str(), (char*)buffer.data(), 2048);
+		if ((len == 2048) || (len <= 0)) {
+			return current;
+		}
+		buffer.erase(len);
+		if (buffer[0] != '/') {
+			buffer = parentPath(current) + '/' + buffer;
+		}
+		normalize(buffer);
+		if (names.find(buffer) != names.end()) {
+			return buffer;
+		}
+		current = buffer;
+	}
+	return "";
+}
+
 void ZLUnixFSManager::normalize(std::string &path) const {
 	static std::string HomeDir = getHomeDir();
 	static std::string PwdDir = getPwdDir();
@@ -76,13 +103,17 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 		int prevIndex = std::max((int)path.rfind('/', index - 1), 0);
 		path.erase(prevIndex, index + 3 - prevIndex);
 	}
-	const int len = path.length();
+	int len = path.length();
 	if ((len >= 3) && (path.substr(len - 3) == "/..")) {
 		int prevIndex = std::max((int)path.rfind('/', len - 4), 0);
-		path.erase(prevIndex, len - prevIndex);
+		path.erase(prevIndex);
 	}
 	while ((index = path.find("/./")) != -1) {
 		path.erase(index, 2);
+	}
+	len = path.length();
+	if ((len >= 2) && (path.substr(len - 2) == "/.")) {
+		path.erase(len - 2);
 	}
 	while ((index = path.find("//")) != -1) {
 		path.erase(index, 1);

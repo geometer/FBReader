@@ -192,10 +192,17 @@ void ZLFile::forceArchiveType(ArchiveType type) {
 std::string ZLFile::physicalFilePath() const {
 	std::string path = myPath;
 	int index;
-	while ((index = ZLFSManager::instance().findArchiveFileNameDelimiter(path)) != -1) {
+	const ZLFSManager &manager = ZLFSManager::instance();
+	while ((index = manager.findArchiveFileNameDelimiter(path)) != -1) {
 		path = path.substr(0, index);
 	}
 	return path;
+}
+
+std::string ZLFile::resolvedPath() const {
+	std::string physical = physicalFilePath();
+	std::string postfix = myPath.substr(physical.length());
+	return ZLFSManager::instance().resolveSymlink(physical) + postfix;
 }
 
 std::string ZLFile::fileNameToUtf8(const std::string &fileName) {

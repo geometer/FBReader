@@ -96,7 +96,7 @@ void BookCollection::collectBookFileNames(std::set<std::string> &bookFileNames) 
 		if (dir.isNull()) {
 			continue;
 		}
-		dir->collectFiles(files, false);
+		dir->collectFiles(files, true);
 		if (!files.empty()) {
 			const bool collectBookWithoutMetaInfo = CollectAllBooksOption.value();
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); ++jt) {
@@ -196,18 +196,20 @@ void BookCollection::collectDirNames(std::set<std::string> &nameSet) const {
 	while (!nameQueue.empty()) {
 		std::string name = nameQueue.front();
 		nameQueue.pop();
-		if (nameSet.find(name) == nameSet.end()) {
+		ZLFile f(name);
+		const std::string resolvedName = f.resolvedPath();
+		if (nameSet.find(resolvedName) == nameSet.end()) {
 			if (myScanSubdirs) {
-				shared_ptr<ZLDir> dir = ZLFile(name).directory();
+				shared_ptr<ZLDir> dir = f.directory();
 				if (!dir.isNull()) {
 					std::vector<std::string> subdirs;
-					dir->collectSubDirs(subdirs, false);
+					dir->collectSubDirs(subdirs, true);
 					for (std::vector<std::string>::const_iterator it = subdirs.begin(); it != subdirs.end(); ++it) {
 						nameQueue.push(dir->itemPath(*it));
 					}
 				}
 			}
-			nameSet.insert(name);
+			nameSet.insert(resolvedName);
 		}
 	}
 }

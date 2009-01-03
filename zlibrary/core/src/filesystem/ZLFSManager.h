@@ -45,7 +45,8 @@ protected:
 	virtual ~ZLFSManager();
 	
 public:
-	virtual void normalize(std::string &path) const;
+	virtual void normalize(std::string &path) const = 0;
+	virtual std::string resolveSymlink(const std::string &path) const = 0;
 
 protected:
 	virtual ZLInputStream *createPlainInputStream(const std::string &path) const = 0;
@@ -72,6 +73,5 @@ friend class ZLDir;
 inline ZLFSManager &ZLFSManager::instance() { return *ourInstance; }
 inline ZLFSManager::ZLFSManager() {}
 inline ZLFSManager::~ZLFSManager() {}
-inline void ZLFSManager::normalize(std::string&) const {}
 
 #endif /* __ZLFSMANAGER_H__ */

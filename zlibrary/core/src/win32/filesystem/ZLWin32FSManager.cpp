@@ -78,6 +78,10 @@ ZLOutputStream *ZLWin32FSManager::createOutputStream(const std::string &path) co
 	return new ZLWin32FileOutputStream(path);
 }
 
+std::string ZLWin32FSManager::resolveSymlink(const std::string &path) const {
+	return path;
+}
+
 void ZLWin32FSManager::normalize(std::string &path) const {
 	if (path.empty()) {
 		return;
