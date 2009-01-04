@@ -29,12 +29,9 @@ class XMLParserCurlData : public CurlData {
 public:
 	XMLParserCurlData(const std::string &url, shared_ptr<ZLXMLReader> reader);
 	~XMLParserCurlData();
-	CURL *handle();
 
 private:
-	const std::string myURL;
 	shared_ptr<ZLXMLReader> myReader;
-	CURL *myHandle;
 };
 
 #endif /* __XMLPARSERCURLDATA_H__ */

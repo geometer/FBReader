@@ -17,6 +17,9 @@
  * 02110-1301, USA.
  */
 
+#include <map>
+#include <set>
+
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLOutputStream.h>
@@ -111,20 +114,61 @@ std::string NetworkLinkCollection::perform(const std::vector<shared_ptr<CurlData
 
 	const std::string proxy = ProxyHostOption.value() + ':' + ProxyPortOption.value();
 	CURLM *handle = curl_multi_init();
+	std::map<CURL*,shared_ptr<CurlData> > handleToData; 
 	for (std::vector<shared_ptr<CurlData> >::const_iterator it = dataList.begin(); it != dataList.end(); ++it) {
 		CURL *easyHandle = (*it)->handle();
 		if (easyHandle != 0) {
+			handleToData[easyHandle] = *it;
 			setStandardOptions(easyHandle, proxy);
 			curl_multi_add_handle(handle, easyHandle);
 		}
 	}
 
 	int counter;
-	while ((curl_multi_perform(handle, &counter) == CURLM_CALL_MULTI_PERFORM) || (counter > 0)) {
-	}
+	CURLMcode res;
+	do {
+		res = curl_multi_perform(handle, &counter);
+	} while ((res == CURLM_CALL_MULTI_PERFORM) || (counter > 0));
+
+	CURLMsg *message;
+	std::set<std::string> errors;
+	do {
+		int queueSize;
+		message = curl_multi_info_read(handle, &queueSize);
+		if ((message != 0) &&
+		    (message->msg == CURLMSG_DONE) &&
+		    (message->data.result != CURLE_OK)) {
+			const std::string &url = handleToData[message->easy_handle]->url();
+			switch (message->data.result) {
+				default:
+					errors.insert(ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), NetworkLink::hostFromUrl(url)));
+					break;
+				case CURLE_COULDNT_RESOLVE_PROXY:
+					errors.insert(ZLStringUtil::printf(errorResource["couldntResolveProxyMessage"].value(), ProxyHostOption.value()));
+					break;
+				case CURLE_COULDNT_RESOLVE_HOST:
+					errors.insert(ZLStringUtil::printf(errorResource["couldntResolveHostMessage"].value(), NetworkLink::hostFromUrl(url)));
+					break;
+				case CURLE_COULDNT_CONNECT:
+					errors.insert(ZLStringUtil::printf(errorResource["couldntConnectMessage"].value(), NetworkLink::hostFromUrl(url)));
+					break;
+				case CURLE_OPERATION_TIMEDOUT:
+					errors.insert(errorResource["operationTimedOutMessage"].value());
+					break;
+			}
+		}
+	} while ((message != 0) && (errors.size() < 3));
+
 	curl_multi_cleanup(handle);
 
-	return "";
+	std::string result;
+	for (std::set<std::string>::const_iterator et = errors.begin(); et != errors.end(); ++et) {
+		if (!result.empty()) {
+			result += '\n';
+		}
+		result += *et;
+	}
+	return result;
 }
 
 std::string NetworkLinkCollection::simpleSearch(NetworkBookList &books, const std::string &pattern) {
@@ -215,7 +259,7 @@ std::string NetworkLinkCollection::downloadFile(const std::string &url, const st
 
 	switch (res) {
 		default:
-			return ZLStringUtil::printf(errorResource["errorDuringProcessingMessage"].value(), NetworkLink::hostFromUrl(url));
+			return ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), url);
 		case CURLE_COULDNT_RESOLVE_PROXY:
 			return ZLStringUtil::printf(errorResource["couldntResolveProxyMessage"].value(), ProxyHostOption.value());
 		case CURLE_COULDNT_RESOLVE_HOST:

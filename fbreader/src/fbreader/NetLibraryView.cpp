@@ -117,7 +117,7 @@ AdvancedSearchRunnable::AdvancedSearchRunnable(const std::string &title, const s
 }
 
 void AdvancedSearchRunnable::run() {
-	NetworkLinkCollection::instance().advancedSearch(myBookList, myTitle, myAuthor, mySeries, myCategory, myDescription);
+	myErrorMessage = NetworkLinkCollection::instance().advancedSearch(myBookList, myTitle, myAuthor, mySeries, myCategory, myDescription);
 }
 
 void NetLibraryView::addBookIcon(ZLTextTreeModel &model, const NetworkBookInfo &book, NetworkBookInfo::URLType format, const std::string &localIcon, const std::string &downloadIcon) {

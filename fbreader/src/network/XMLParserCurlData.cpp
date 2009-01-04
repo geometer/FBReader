@@ -27,28 +27,17 @@ static size_t parseXML(void *ptr, size_t size, size_t nmemb, void *data) {
 	return size * nmemb;
 }
 
-XMLParserCurlData::XMLParserCurlData(const std::string &url, shared_ptr<ZLXMLReader> reader) : myURL(url), myReader(reader) {
-	myHandle = curl_easy_init();
-
-	if (myHandle == 0) {
-		return;
+XMLParserCurlData::XMLParserCurlData(const std::string &url, shared_ptr<ZLXMLReader> reader) : CurlData(url), myReader(reader) {
+	CURL *h = handle();
+	if (h != 0) {
+		curl_easy_setopt(h, CURLOPT_WRITEFUNCTION, parseXML);
+		curl_easy_setopt(h, CURLOPT_WRITEDATA, &*myReader);
+		myReader->initialize();
 	}
-
-	curl_easy_setopt(myHandle, CURLOPT_URL, myURL.c_str());
-	curl_easy_setopt(myHandle, CURLOPT_WRITEFUNCTION, parseXML);
-	curl_easy_setopt(myHandle, CURLOPT_WRITEDATA, &*myReader);
-	myReader->initialize();
 }
 
 XMLParserCurlData::~XMLParserCurlData() {
-	if (myHandle == 0) {
-		return;
+	if (handle() != 0) {
+		myReader->shutdown();
 	}
-
-	myReader->shutdown();
-	curl_easy_cleanup(myHandle);
-}
-
-CURL *XMLParserCurlData::handle() {
-	return myHandle;
 }

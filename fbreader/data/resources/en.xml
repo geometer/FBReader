@@ -83,7 +83,7 @@
 					<node name="useProxy" value="Use Proxy"/>
 					<node name="proxyHost" value="Proxy Host"/>
 					<node name="proxyPort" value="Proxy Port"/>
-					<node name="timeout" value="Network Operations Timeout"/>
+					<node name="timeout" value="Network Operations Timeout, seconds"/>
 				</node>
 				<node name="Language" value="Language">
 					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
@@ -352,7 +352,7 @@
 			<node name="couldntResolveHostMessage" value="Couldn&apos;t resolve host %s"/>
 			<node name="couldntResolveProxyMessage" value="Couldn&apos;t resolve proxy %s"/>
 			<node name="operationTimedOutMessage" value="Operation is timed out"/>
-			<node name="errorDuringProcessingMessage" value="Error during processing URL&#10;%s"/>
+			<node name="somethingWrongMessage" value="Something goes wrong for&#10;%s"/>
 			<node name="emptyLibrariesList" value="Empty libraries list"/>
 		</node>
 		<node name="downloadError">

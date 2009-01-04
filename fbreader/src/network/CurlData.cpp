@@ -19,5 +19,23 @@
 
 #include "CurlData.h"
 
+CurlData::CurlData(const std::string &url) : myURL(url) {
+	myHandle = curl_easy_init();
+	if (myHandle != 0) {
+		curl_easy_setopt(myHandle, CURLOPT_URL, myURL.c_str());
+	}
+}
+
 CurlData::~CurlData() {
+	if (myHandle != 0) {
+		curl_easy_cleanup(myHandle);
+	}
+}
+
+const std::string &CurlData::url() const {
+	return myURL;
+}
+
+CURL *CurlData::handle() {
+	return myHandle;
 }

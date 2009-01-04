@@ -22,11 +22,21 @@
 
 #include <curl/curl.h>
 
+#include <string>
+
 class CurlData {
+
+protected:
+	CurlData(const std::string &url);
 
 public:
 	virtual ~CurlData();
-	virtual CURL *handle() = 0;
+	const std::string &url() const;
+	CURL *handle();
+
+private:
+	const std::string myURL;
+	CURL *myHandle;
 };
 
 #endif /* __CURLDATA_H__ */
