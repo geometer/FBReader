@@ -125,12 +125,18 @@ public:
 	void run();
 };
 
-class ShowContentsAction : public ModeDependentAction {
+class ShowContentsAction : public SetModeAction {
 
 public:
 	ShowContentsAction(FBReader &fbreader);
 	bool isVisible() const;
-	void run();
+};
+
+class ShowNetworkLibraryAction : public SetModeAction {
+
+public:
+	ShowNetworkLibraryAction(FBReader &fbreader);
+	bool isVisible() const;
 };
 
 class AddBookAction : public ModeDependentAction {

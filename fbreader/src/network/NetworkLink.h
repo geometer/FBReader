@@ -90,9 +90,11 @@ public:
 
 	size_t size() const;
 	NetworkLink &link(size_t index) const;
+	bool containsEnabledLinks() const;
 
 private:
-	std::vector<shared_ptr<NetworkLink> > myLinks;
+	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
+	LinkVector myLinks;
 };
 
 #endif /* __NETWORKLINK_H__ */

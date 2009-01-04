@@ -24,6 +24,14 @@
 #include "../options/FBOptions.h"
 #include "FBReaderActions.h"
 #include "NetLibraryView.h"
+#include "../network/NetworkLink.h"
+
+ShowNetworkLibraryAction::ShowNetworkLibraryAction(FBReader &fbreader) : SetModeAction(fbreader, FBReader::NET_LIBRARY_MODE, FBReader::BOOK_TEXT_MODE) {
+}
+
+bool ShowNetworkLibraryAction::isVisible() const {
+	return NetworkLinkCollection::instance().containsEnabledLinks();
+}
 
 SearchOnNetworkAction::SearchOnNetworkAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::NET_LIBRARY_MODE) {
 }

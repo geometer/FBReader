@@ -78,15 +78,11 @@ void ShowOptionsDialogAction::run() {
 	OptionsDialog(f).dialog().run();
 }
 
-ShowContentsAction::ShowContentsAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_TEXT_MODE) {
+ShowContentsAction::ShowContentsAction(FBReader &fbreader) : SetModeAction(fbreader, FBReader::CONTENTS_MODE, FBReader::BOOK_TEXT_MODE) {
 }
 
 bool ShowContentsAction::isVisible() const {
 	return ModeDependentAction::isVisible() && !((ContentsView&)*fbreader().myContentsView).isEmpty();
-}
-
-void ShowContentsAction::run() {
-	fbreader().setMode(FBReader::CONTENTS_MODE);
 }
 
 AddBookAction::AddBookAction(FBReader &fbreader, int visibleInModes) : ModeDependentAction(fbreader, visibleInModes) {

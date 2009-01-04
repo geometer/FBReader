@@ -128,19 +128,20 @@ std::string NetworkLinkCollection::perform(const std::vector<shared_ptr<CurlData
 std::string NetworkLinkCollection::simpleSearch(NetworkBookList &books, const std::string &pattern) {
 	std::vector<shared_ptr<CurlData> > dataList;
 
-	const size_t size = myLinks.size();
-	std::vector<NetworkBookList> bookLists(size);
+	std::vector<NetworkBookList> bookLists(myLinks.size());
+	int count = 0;
 
-	for (size_t i = 0; i < size; ++i) {
-		if (myLinks[i]->OnOption.value()) {
-			dataList.push_back(myLinks[i]->simpleSearchData(bookLists[i], pattern));
+	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+		NetworkLink &link = **it;
+		if (link.OnOption.value()) {
+			dataList.push_back(link.simpleSearchData(bookLists[count++], pattern));
 		}
 	}
 
 	std::string result = perform(dataList);
 
-	for (size_t i = 0; i < size; ++i) {
-		books.insert(books.end(), bookLists[i].begin(), bookLists[i].end());
+	for (std::vector<NetworkBookList>::const_iterator jt = bookLists.begin(); jt != bookLists.end(); ++jt) {
+		books.insert(books.end(), jt->begin(), jt->end());
 	}
 
 	return result;
@@ -149,19 +150,20 @@ std::string NetworkLinkCollection::simpleSearch(NetworkBookList &books, const st
 std::string NetworkLinkCollection::advancedSearch(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) {
 	std::vector<shared_ptr<CurlData> > dataList;
 
-	const size_t size = myLinks.size();
-	std::vector<NetworkBookList> bookLists(size);
+	std::vector<NetworkBookList> bookLists(myLinks.size());
+	int count = 0;
 
-	for (size_t i = 0; i < size; ++i) {
-		if (myLinks[i]->OnOption.value()) {
-			dataList.push_back(myLinks[i]->advancedSearchData(books, title, author, series, tag, annotation));
+	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+		NetworkLink &link = **it;
+		if (link.OnOption.value()) {
+			dataList.push_back(link.advancedSearchData(bookLists[count++], title, author, series, tag, annotation));
 		}
 	}
 
 	std::string result = perform(dataList);
 
-	for (size_t i = 0; i < size; ++i) {
-		books.insert(books.end(), bookLists[i].begin(), bookLists[i].end());
+	for (std::vector<NetworkBookList>::const_iterator jt = bookLists.begin(); jt != bookLists.end(); ++jt) {
+		books.insert(books.end(), jt->begin(), jt->end());
 	}
 
 	return result;
@@ -229,4 +231,13 @@ size_t NetworkLinkCollection::size() const {
 
 NetworkLink &NetworkLinkCollection::link(size_t index) const {
 	return *myLinks[index];
+}
+
+bool NetworkLinkCollection::containsEnabledLinks() const {
+	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+		if ((*it)->OnOption.value()) {
+			return true;
+		}
+	}
+	return false;
 }
