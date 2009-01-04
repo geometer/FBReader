@@ -75,13 +75,16 @@
 				<node name="Library" value="المكتبة">
 					<node name="bookPath" value="مسار الكتاب" />
 					<node name="lookInSubdirectories" value="ابحث عن الكتب في المجلدات الفرعية" />
+					<node name="collectBooksWithoutMetaInfo" toBeTranslated="true" value="Collect Books without MetaInfo" />
 					<node name="downloadDirectory" toBeTranslated="true" value="Directory for Downloaded Books" />
-					<node name="recentListSize" value="حجم قائمة آخر الكتب" />
-					<node name="showAllBooksTag" toBeTranslated="true" value="All Books Branch in Tag Hierarchy" />
-					<node name="showTags" obsolete="true" value="اعرض شجرة الوسوم" />
-					<node name="showAllBooksList" obsolete="true" value="اعرض كل الكتب في الفرع" />
+					<node name="showAllBooksTag" value="اعرض كل الكتب في الفرع" />
 				</node>
-				<node name="NetworkLibrary" toBeTranslated="true" value="Network Search" />
+				<node name="NetworkLibrary" toBeTranslated="true" value="Network Search">
+					<node name="useProxy" toBeTranslated="true" value="Use Proxy" />
+					<node name="proxyHost" toBeTranslated="true" value="Proxy Host" />
+					<node name="proxyPort" toBeTranslated="true" value="Proxy Port" />
+					<node name="timeout" toBeTranslated="true" value="Network Operations Timeout, seconds" />
+				</node>
 				<node name="Language" value="اللغة">
 					<node name="autoDetect" value="تعرّف هلى اللغة والترميز آليا" />
 					<node name="defaultLanguage" value="اللغة الافتراضية" />
@@ -102,7 +105,6 @@
 					<node name="fontSize" value="حجم" />
 					<node name="tocMarks" value="اعرض علامات جدول المحتويات" />
 					<node name="navigation" value="فعّل التصفّح" />
-					<node name="show" obsolete="true" value="أظهر موضّح المكان" />
 				</node>
 				<node name="Scrolling" value="التقليب">
 					<node name="optionsFor" value="خيارات">
@@ -153,8 +155,6 @@
 					<node name="spaceAfter" value="المسافة بعد" />
 					<node name="startIndent" toBeTranslated="true" value="Line Start Indent" />
 					<node name="endIndent" toBeTranslated="true" value="Line End Indent" />
-					<node name="leftIndent" obsolete="true" value="الإزاحة اليسرى" />
-					<node name="rightIndent" obsolete="true" value="الإزاحة اليمنى" />
 				</node>
 				<node name="Styles" value="الطرز">
 					<node name="optionsFor" value="خيارات" />
@@ -227,7 +227,6 @@
 						<node name="addBook" value="أضف كتابا" />
 						<node name="cancel" value="ألغ" />
 						<node name="quit" value="اخرج" />
-						<node name="onFullscreen" obsolete="true" value="Switch to Fullscreen Mode" />
 					</node>
 					<node name="quitOnCancel" value="Quit Application on Cancel" />
 					<node name="keyDelay" value="Delay Between Accepted Key Pressings" />
@@ -322,7 +321,7 @@
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="احذف الكتاب" />
-			<node name="message" value="أأحذف الكتاب  “%s”  من المكتبة؟" />
+			<node name="message" value="أأحذف الكتاب &#10;“%s”&#10; من المكتبة؟" />
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="احذف الوسم" />
@@ -330,7 +329,7 @@
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="خطأ" />
-			<node name="message" value="تعذّر فتح: %s" />
+			<node name="message" value="تعذّر فتح:&#10;%s" />
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="خطأ" />
@@ -343,6 +342,18 @@
 		<node name="tagMustNotContainComma">
 			<node name="title" value="خطأ" />
 			<node name="message" value="يجب ألا يحتوي اسم الوسم على العلامة “,”" />
+		</node>
+		<node name="networkError">
+			<node name="title" toBeTranslated="true" value="Network error" />
+			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error" />
+			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn&apos;t create a directory&#10;%s" />
+			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn&apos;t create a file&#10;%s" />
+			<node name="couldntConnectMessage" toBeTranslated="true" value="Couldn&apos;t connect to host %s" />
+			<node name="couldntResolveHostMessage" toBeTranslated="true" value="Couldn&apos;t resolve host %s" />
+			<node name="couldntResolveProxyMessage" toBeTranslated="true" value="Couldn&apos;t resolve proxy %s" />
+			<node name="operationTimedOutMessage" toBeTranslated="true" value="Operation is timed out" />
+			<node name="somethingWrongMessage" toBeTranslated="true" value="Something goes wrong for&#10;%s" />
+			<node name="emptyLibrariesList" toBeTranslated="true" value="Empty libraries list" />
 		</node>
 		<node name="downloadError">
 			<node name="title" toBeTranslated="true" value="Error while downloading" />
@@ -395,8 +406,6 @@
 		<node name="Header 6" value="رأس 6" />
 		<node name="External Hyperlink" value="الوصلات الخارجية" />
 		<node name="Link to Another Book" toBeTranslated="true" value="Link to Another Book" />
-		<node name="Author in Library" obsolete="true" value="مؤلف في المكتبة" />
-		<node name="Book in Library" obsolete="true" value="كتاب في المكتبة" />
 	</node>
 	<node name="external">
 		<node name="browser" value="المتصفح" />

@@ -36,6 +36,7 @@
 		<node name="cs" value="Tsekki" />
 		<node name="de" value="Saksa" />
 		<node name="de-traditional" value="Saksa (perinteinen oikeinkirjoitus)" />
+		<node name="el" toBeTranslated="true" value="Greek" />
 		<node name="en" value="Englanti" />
 		<node name="eo" value="Esperanto" />
 		<node name="es" value="Espanja" />

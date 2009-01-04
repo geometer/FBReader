@@ -36,6 +36,7 @@
 		<node name="cs" value="Ceco" />
 		<node name="de" value="Tedesco" />
 		<node name="de-traditional" value="Tedesco (ortografia tradizionale)" />
+		<node name="el" toBeTranslated="true" value="Greek" />
 		<node name="en" value="Inglese" />
 		<node name="eo" value="Esperanto" />
 		<node name="es" value="Spagnolo" />

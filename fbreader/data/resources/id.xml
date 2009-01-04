@@ -66,8 +66,8 @@
 	<node name="dialog">
 		<node name="button">
 			<node name="go" value="&amp;Mulai!" />
-			<node name="thisOnly" value="Hanya ini"/>
-			<node name="withSubtags" value="Dengan subtag"/>
+			<node name="thisOnly" value="Hanya ini" />
+			<node name="withSubtags" value="Dengan subtag" />
 		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Pengaturan" />
@@ -75,11 +75,16 @@
 				<node name="Library" value="Pustaka">
 					<node name="bookPath" value="Lokasi Buku" />
 					<node name="lookInSubdirectories" value="Tampilkan Buku-buku yang Ada di Sub Direktori" />
+					<node name="collectBooksWithoutMetaInfo" toBeTranslated="true" value="Collect Books without MetaInfo" />
 					<node name="downloadDirectory" toBeTranslated="true" value="Directory for Downloaded Books" />
-					<node name="recentListSize" value="Jumlah Daftar Buku-buku yang dibuka sebelumnya" />
-					<node name="showAllBooksTag" value="Tampilkan Semua Cabang Buku"/>
+					<node name="showAllBooksTag" value="Tampilkan Semua Cabang Buku" />
 				</node>
-				<node name="NetworkLibrary" toBeTranslated="true" value="Network Search" />
+				<node name="NetworkLibrary" toBeTranslated="true" value="Network Search">
+					<node name="useProxy" toBeTranslated="true" value="Use Proxy" />
+					<node name="proxyHost" toBeTranslated="true" value="Proxy Host" />
+					<node name="proxyPort" toBeTranslated="true" value="Proxy Port" />
+					<node name="timeout" toBeTranslated="true" value="Network Operations Timeout, seconds" />
+				</node>
 				<node name="Language" value="Bahasa">
 					<node name="autoDetect" value="Deteksi Bahasa dan Enkode secara Otomatis" />
 					<node name="defaultLanguage" value="Bahasa Standar" />
@@ -100,7 +105,6 @@
 					<node name="fontSize" value="Ukuran Huruf" />
 					<node name="tocMarks" value="Tampilkan Penanda Daftar Isi" />
 					<node name="navigation" value="Aktifkan Navigasi" />
-					<node name="show" obsolete="true" value="Tampilkan Indikator Posisi" />
 				</node>
 				<node name="Scrolling" value="Geser Layar">
 					<node name="optionsFor" value="Pengaturan untuk">
@@ -151,8 +155,6 @@
 					<node name="spaceAfter" value="Jarak Setelahnya" />
 					<node name="startIndent" toBeTranslated="true" value="Line Start Indent" />
 					<node name="endIndent" toBeTranslated="true" value="Line End Indent" />
-					<node name="leftIndent" obsolete="true" value="Indentasi Kiri" />
-					<node name="rightIndent" obsolete="true" value="Indentasi Kanan" />
 				</node>
 				<node name="Styles" value="Bentuk">
 					<node name="optionsFor" value="Pengaturan untuk" />
@@ -225,7 +227,6 @@
 						<node name="addBook" value="Tambah Buku" />
 						<node name="cancel" value="Batal" />
 						<node name="quit" value="Keluar" />
-						<node name="onFullscreen" obsolete="true" value="Ubah ke Layar Penuh" />
 					</node>
 					<node name="quitOnCancel" value="Keluar dari Aplikasi Ketika Pembatalan" />
 					<node name="keyDelay" value="Waktu Tunda Antara Penekanan Tombol" />
@@ -270,7 +271,7 @@
 					<node name="bookNumber" value="Nomor Buku" />
 				</node>
 				<node name="Tags" value="Tag">
-					<node name="tags" value="Daftar Tag"/>
+					<node name="tags" value="Daftar Tag" />
 				</node>
 				<node name="Text" value="Teks">
 					<node name="breakType" value="Penggal Paragraf pada" />
@@ -310,28 +311,25 @@
 			<node name="pageNumber" value="Ke Nomor Halaman" />
 		</node>
 		<node name="editTagInfoDialog">
-			<node name="title" value="Ubah/Gandakan Tag"/>
+			<node name="title" value="Ubah/Gandakan Tag" />
 			<node name="editOrClone" value="Aksi">
-				<node name="edit" value="Ubah Nama Tag"/>
-				<node name="clone" value="Gandakan Tag"/>
+				<node name="edit" value="Ubah Nama Tag" />
+				<node name="clone" value="Gandakan Tag" />
 			</node>
-			<node name="name" value="Nama Tag"/>
-			<node name="includeSubtags" value="Termasuk Sub Tag"/>
+			<node name="name" value="Nama Tag" />
+			<node name="includeSubtags" value="Termasuk Sub Tag" />
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Hapus Buku" />
-			<node name="message" value="Hapus buku 
-&quot;%s&quot;
- dari Pustaka?" />
+			<node name="message" value="Hapus buku&#10;&quot;%s&quot;&#10;dari Pustaka?" />
 		</node>
 		<node name="removeTagBox">
-			<node name="title" value="Hapus Tag"/>
-			<node name="message" value="Hapus Tag &#8220;%s&#8221;?"/>
+			<node name="title" value="Hapus Tag" />
+			<node name="message" value="Hapus Tag “%s”?" />
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Ada Kesalahan" />
-			<node name="message" value="Tidak dapat membuka:
-%s" />
+			<node name="message" value="Tidak dapat membuka:&#10;%s" />
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Ada Kesalahan" />
@@ -339,11 +337,23 @@
 		</node>
 		<node name="tagMustBeNonEmpty">
 			<node name="title" value="Ada Kesalahan" />
-			<node name="message" value="Nama tag tidak boleh kosong"/>
+			<node name="message" value="Nama tag tidak boleh kosong" />
 		</node>
 		<node name="tagMustNotContainComma">
 			<node name="title" value="Ada Kesalahan" />
-			<node name="message" value="Nama tag tidak boleh mengandung sebuah simbol &#8220;,&#8221;"/>
+			<node name="message" value="Nama tag tidak boleh mengandung sebuah simbol “,”" />
+		</node>
+		<node name="networkError">
+			<node name="title" toBeTranslated="true" value="Network error" />
+			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error" />
+			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn&apos;t create a directory&#10;%s" />
+			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn&apos;t create a file&#10;%s" />
+			<node name="couldntConnectMessage" toBeTranslated="true" value="Couldn&apos;t connect to host %s" />
+			<node name="couldntResolveHostMessage" toBeTranslated="true" value="Couldn&apos;t resolve host %s" />
+			<node name="couldntResolveProxyMessage" toBeTranslated="true" value="Couldn&apos;t resolve proxy %s" />
+			<node name="operationTimedOutMessage" toBeTranslated="true" value="Operation is timed out" />
+			<node name="somethingWrongMessage" toBeTranslated="true" value="Something goes wrong for&#10;%s" />
+			<node name="emptyLibrariesList" toBeTranslated="true" value="Empty libraries list" />
 		</node>
 		<node name="downloadError">
 			<node name="title" toBeTranslated="true" value="Error while downloading" />
@@ -352,7 +362,7 @@
 		<node name="waitMessage">
 			<node name="loadingBook" value="Membaca buku. Silakan tunggu..." />
 			<node name="loadingBookList" value="Membaca daftar buku. Silakan tunggu..." />
-			<node name="migrate" value="Melakukan pembaruan ke versi baru. Silakan tunggu..."/>
+			<node name="migrate" value="Melakukan pembaruan ke versi baru. Silakan tunggu..." />
 			<node name="downloadBookList" toBeTranslated="true" value="Downloading book list. Please, wait..." />
 			<node name="downloadBook" toBeTranslated="true" value="Downloading book. Please, wait..." />
 		</node>
@@ -396,8 +406,6 @@
 		<node name="Header 6" value="Header 6" />
 		<node name="External Hyperlink" value="Hyperlink Eksternal" />
 		<node name="Link to Another Book" toBeTranslated="true" value="Link to Another Book" />
-		<node name="Author in Library" obsolete="true" value="Pengarang dalam Pustaka" />
-		<node name="Book in Library" obsolete="true" value="Buku dalam Pustaka" />
 	</node>
 	<node name="external">
 		<node name="browser" value="Browser" />
@@ -415,8 +423,8 @@
 	</node>
 	<node name="library">
 		<node name="caption" value="Pustaka" />
-		<node name="allBooks" value="Semua Buku"/>
-		<node name="booksWithoutTags" value="Buku Tanpa Tag"/>
-		<node name="noBooks" value="FBReader tidak menemukan satupun buku di lokasi yang telah dikonfigurasi. Tentukan lokasi buku dalam Dialog Pengaturan (tab &#8220;Pustaka&#8221;, entri &#8220;Lokasi Buku&#8221;). Alternatifnya, Anda dapat menambahkan buku ke pustaka menggunakan tombol &#8220;Tambah Buku&#8221;."/>
+		<node name="allBooks" value="Semua Buku" />
+		<node name="booksWithoutTags" value="Buku Tanpa Tag" />
+		<node name="noBooks" value="FBReader tidak menemukan satupun buku di lokasi yang telah dikonfigurasi. Tentukan lokasi buku dalam Dialog Pengaturan (tab “Pustaka”, entri “Lokasi Buku”). Alternatifnya, Anda dapat menambahkan buku ke pustaka menggunakan tombol “Tambah Buku”." />
 	</node>
 </resources>

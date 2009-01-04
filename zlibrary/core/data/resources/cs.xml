@@ -2,63 +2,64 @@
 <resources>
 	<node name="dialog">
 		<node name="button">
-			<node name="ok" value="&amp;OK"/>
-			<node name="cancel" value="&amp;Zrušit"/>
-			<node name="yes" value="&amp;Ano"/>
-			<node name="no" value="&amp;Ne"/>
-			<node name="apply" value="&amp;Provést"/>
+			<node name="ok" value="&amp;OK" />
+			<node name="cancel" value="&amp;Zrušit" />
+			<node name="yes" value="&amp;Ano" />
+			<node name="no" value="&amp;Ne" />
+			<node name="apply" value="&amp;Provést" />
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Ukládám nastavení..."/>
+			<node name="savingConfig" value="Ukládám nastavení..." />
 		</node>
 	</node>
 	<node name="color">
-		<node name="red" value="Červená"/>
-		<node name="green" value="Zelená"/>
-		<node name="blue" value="Modrá"/>
-		<node name="black" value="Černá"/>
-		<node name="white" value="Bílá"/>
-		<node name="maroon" value="Kaštanová"/>
-		<node name="olive" value="Olivová"/>
-		<node name="navy" value="Tmavě šedá"/>
-		<node name="purple" value="Purpurová"/>
-		<node name="teal" value="Teal"/>
-		<node name="silver" value="Stříbrná"/>
-		<node name="gray" value="Šedá"/>
-		<node name="lime" value="Světle zelená"/>
-		<node name="yellow" value="Žlutá"/>
-		<node name="magenta" value="Purpurová"/>
-		<node name="cyan" value="Modrozelená"/>
-		<node name="custom..." value="Uživatelská..."/>
+		<node name="red" value="Červená" />
+		<node name="green" value="Zelená" />
+		<node name="blue" value="Modrá" />
+		<node name="black" value="Černá" />
+		<node name="white" value="Bílá" />
+		<node name="maroon" value="Kaštanová" />
+		<node name="olive" value="Olivová" />
+		<node name="navy" value="Tmavě šedá" />
+		<node name="purple" value="Purpurová" />
+		<node name="teal" value="Teal" />
+		<node name="silver" value="Stříbrná" />
+		<node name="gray" value="Šedá" />
+		<node name="lime" value="Světle zelená" />
+		<node name="yellow" value="Žlutá" />
+		<node name="magenta" value="Purpurová" />
+		<node name="cyan" value="Modrozelená" />
+		<node name="custom..." value="Uživatelská..." />
 	</node>
 	<node name="language">
-		<node name="ar" value="Arabsky"/>
-		<node name="cs" value="Česky"/>
-		<node name="de" value="Německy"/>
-		<node name="de-traditional" value="Německy (tradiční pravopis)"/>
-		<node name="en" value="Anglicky"/>
-		<node name="eo" value="Esperanto"/>
-		<node name="es" value="Španělsky"/>
-		<node name="fi" value="Finsky"/>
-		<node name="fr" value="Francouzsky"/>
-		<node name="he" value="Hebrejsky"/>
-		<node name="id" value="Indonézsky"/>
-		<node name="it" value="Italsky"/>
-		<node name="no" value="Norsky"/>
-		<node name="pt" value="Portugalsky"/>
-		<node name="ru" value="Rusky"/>
-		<node name="tr" value="Turecky"/>
-		<node name="sv" value="Švédsky"/>
-		<node name="uk" value="Ukrajinsky"/>
-		<node name="zh" value="Čínsky"/>
-		<node name="other" value="Jiný"/>
+		<node name="ar" value="Arabsky" />
+		<node name="cs" value="Česky" />
+		<node name="de" value="Německy" />
+		<node name="de-traditional" value="Německy (tradiční pravopis)" />
+		<node name="el" toBeTranslated="true" value="Greek" />
+		<node name="en" value="Anglicky" />
+		<node name="eo" value="Esperanto" />
+		<node name="es" value="Španělsky" />
+		<node name="fi" value="Finsky" />
+		<node name="fr" value="Francouzsky" />
+		<node name="he" value="Hebrejsky" />
+		<node name="id" value="Indonézsky" />
+		<node name="it" value="Italsky" />
+		<node name="no" value="Norsky" />
+		<node name="pt" value="Portugalsky" />
+		<node name="ru" value="Rusky" />
+		<node name="tr" value="Turecky" />
+		<node name="sv" value="Švédsky" />
+		<node name="uk" value="Ukrajinsky" />
+		<node name="zh" value="Čínsky" />
+		<node name="other" value="Jiný" />
 	</node>
 	<node name="boolean3">
-		<node name="on" value="zapnuto"/>
-		<node name="off" value="vypnuto"/>
-		<node name="unchanged" value="beze změn"/>
+		<node name="on" value="zapnuto" />
+		<node name="off" value="vypnuto" />
+		<node name="unchanged" value="beze změn" />
 	</node>
 	<node name="keyOptionView">
-		<node name="actionFor" value="Akce pro"/>
+		<node name="actionFor" value="Akce pro" />
 	</node>
 </resources>

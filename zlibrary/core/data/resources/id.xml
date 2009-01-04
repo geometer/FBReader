@@ -36,6 +36,7 @@
 		<node name="cs" value="Cekoslowakia" />
 		<node name="de" value="Jerman" />
 		<node name="de-traditional" value="Jerman (tradisionil)" />
+		<node name="el" toBeTranslated="true" value="Greek" />
 		<node name="en" value="Inggris" />
 		<node name="eo" value="Esperanto" />
 		<node name="es" value="Spanyol" />
