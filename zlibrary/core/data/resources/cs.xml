@@ -36,7 +36,7 @@
 		<node name="cs" value="Česky" />
 		<node name="de" value="Německy" />
 		<node name="de-traditional" value="Německy (tradiční pravopis)" />
-		<node name="el" toBeTranslated="true" value="Greek" />
+		<node name="el" value="Řecky" />
 		<node name="en" value="Anglicky" />
 		<node name="eo" value="Esperanto" />
 		<node name="es" value="Španělsky" />

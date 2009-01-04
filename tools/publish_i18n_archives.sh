@@ -18,5 +18,5 @@ for file in fbreader/data/resources/*; do
 	build_language_archive `basename $file .xml`;
 done;
 
-scp FBReader-i18n-*.zip only.mawhrin.net:www/docs
+scp FBReader-i18n-*.zip geometer@only.mawhrin.net:www/docs
 rm FBReader-i18n-*.zip
