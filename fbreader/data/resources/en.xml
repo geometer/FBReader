@@ -353,6 +353,7 @@
 			<node name="couldntResolveProxyMessage" value="Couldn&apos;t resolve proxy %s"/>
 			<node name="operationTimedOutMessage" value="Operation is timed out"/>
 			<node name="errorDuringProcessingMessage" value="Error during processing URL&#10;%s"/>
+			<node name="emptyLibrariesList" value="Empty libraries list"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Error while downloading"/>

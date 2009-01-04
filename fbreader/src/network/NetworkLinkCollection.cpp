@@ -103,8 +103,10 @@ std::string NetworkLinkCollection::downloadBook(const std::string &url, std::str
 }
 
 std::string NetworkLinkCollection::perform(const std::vector<shared_ptr<CurlData> > &dataList) {
+	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
+
 	if (dataList.empty()) {
-		return "XXX";
+		return errorResource["emptyLibrariesList"].value();
 	}
 
 	const std::string proxy = ProxyHostOption.value() + ':' + ProxyPortOption.value();
