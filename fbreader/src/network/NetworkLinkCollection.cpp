@@ -41,7 +41,7 @@ NetworkLinkCollection &NetworkLinkCollection::instance() {
 
 NetworkLinkCollection::NetworkLinkCollection() :
 	ConnectTimeoutOption(FBCategoryKey::NETWORK, "Options", "ConnectTimeout", 1, 1000, 10),
-	TimeoutOption(FBCategoryKey::NETWORK, "Options", "Timeout", 1, 1000, 30),
+	TimeoutOption(FBCategoryKey::NETWORK, "Options", "Timeout", 1, 1000, 15),
 	UseProxyOption(FBCategoryKey::NETWORK, "Options", "UseProxy", false),
 	ProxyHostOption(FBCategoryKey::NETWORK, "Options", "ProxyHost", ""),
 	ProxyPortOption(FBCategoryKey::NETWORK, "Options", "ProxyPort", "3128"),
@@ -72,26 +72,25 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url) const {
 	return ZLStringOption(FBCategoryKey::NETWORK, "Files", ::normalize(url), "").value();
 }
 
-std::string NetworkLinkCollection::downloadBook(const std::string &url, std::string &errorMessage, const std::string &proposedFileName) const {
+std::string NetworkLinkCollection::downloadBook(const std::string &url, std::string &fileName) const {
 	const std::string nURL = ::normalize(url);
 	ZLStringOption fileNameOption(FBCategoryKey::NETWORK, "Files", nURL, "");
-	std::string fileName = fileNameOption.value();
-	if (!fileName.empty() && ZLFile(fileName).exists()) {
-		return fileName;
+	std::string storedFileName = fileNameOption.value();
+	if (!storedFileName.empty() && ZLFile(storedFileName).exists()) {
+		fileName = storedFileName;
+		return "";
 	}
 
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 	shared_ptr<ZLDir> dir = ZLFile(DirectoryOption.value()).directory(true);
 	if (dir.isNull()) {
-		errorMessage = ZLStringUtil::printf(errorResource["couldntCreateDirectoryMessage"].value(), DirectoryOption.value());
-		return "";
+		return ZLStringUtil::printf(errorResource["couldntCreateDirectoryMessage"].value(), DirectoryOption.value());
 	}
 
-	fileName = proposedFileName;
 	if (fileName.empty()) {
 		size_t index = nURL.rfind('/');
 		if (index >= nURL.length() - 1) {
-			return "";
+			return errorResource["unknownErrorMessage"].value();
 		}
 		fileName = nURL.substr(index + 1);
 	}
@@ -99,17 +98,13 @@ std::string NetworkLinkCollection::downloadBook(const std::string &url, std::str
 	if (ZLFile(fileName).exists()) {
 		ZLFile(fileName).remove();
 	}
-	errorMessage = downloadFile(nURL, fileName);
-	if (!errorMessage.empty()) {
-		return "";
-	}
 	fileNameOption.setValue(fileName);
-	return fileName;
+	return downloadFile(nURL, fileName);
 }
 
-bool NetworkLinkCollection::perform(const std::vector<shared_ptr<CurlData> > &dataList) {
+std::string NetworkLinkCollection::perform(const std::vector<shared_ptr<CurlData> > &dataList) {
 	if (dataList.empty()) {
-		return false;
+		return "XXX";
 	}
 
 	const std::string proxy = ProxyHostOption.value() + ':' + ProxyPortOption.value();
@@ -127,10 +122,10 @@ bool NetworkLinkCollection::perform(const std::vector<shared_ptr<CurlData> > &da
 	}
 	curl_multi_cleanup(handle);
 
-	return true;
+	return "";
 }
 
-bool NetworkLinkCollection::simpleSearch(NetworkBookList &books, const std::string &pattern) {
+std::string NetworkLinkCollection::simpleSearch(NetworkBookList &books, const std::string &pattern) {
 	std::vector<shared_ptr<CurlData> > dataList;
 
 	const size_t size = myLinks.size();
@@ -142,16 +137,16 @@ bool NetworkLinkCollection::simpleSearch(NetworkBookList &books, const std::stri
 		}
 	}
 
-	bool code = perform(dataList);
+	std::string result = perform(dataList);
 
 	for (size_t i = 0; i < size; ++i) {
 		books.insert(books.end(), bookLists[i].begin(), bookLists[i].end());
 	}
 
-	return code;
+	return result;
 }
 
-bool NetworkLinkCollection::advancedSearch(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) {
+std::string NetworkLinkCollection::advancedSearch(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) {
 	std::vector<shared_ptr<CurlData> > dataList;
 
 	const size_t size = myLinks.size();
@@ -163,13 +158,13 @@ bool NetworkLinkCollection::advancedSearch(NetworkBookList &books, const std::st
 		}
 	}
 
-	bool code = perform(dataList);
+	std::string result = perform(dataList);
 
 	for (size_t i = 0; i < size; ++i) {
 		books.insert(books.end(), bookLists[i].begin(), bookLists[i].end());
 	}
 
-	return code;
+	return result;
 }
 
 static size_t writeToStream(void *ptr, size_t size, size_t nmemb, void *data) {

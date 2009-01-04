@@ -27,7 +27,7 @@
 #include "NetLibraryView.h"
 #include "CollectionView.h"
 #include "FBReader.h"
-#include "DownloadBookRunnable.h"
+#include "NetworkOperationRunnable.h"
 
 #include "../bookmodel/FBTextKind.h"
 
@@ -63,28 +63,46 @@ const std::string &NetLibraryView::caption() const {
 NetLibraryView::~NetLibraryView() {
 }
 
-class SimpleSearchRunnable : public ZLRunnable {
+class SearchRunnable : public NetworkOperationRunnable {
+
+protected:
+	SearchRunnable();
 
 public:
-	SimpleSearchRunnable(const std::string &pattern, NetworkBookList &bookList);
+	const NetworkBookList &bookList() const;
+
+protected:
+	NetworkBookList myBookList;
+};
+
+SearchRunnable::SearchRunnable() : NetworkOperationRunnable("downloadBookList") {
+}
+
+const NetworkBookList &SearchRunnable::bookList() const {
+	return myBookList;
+}
+
+class SimpleSearchRunnable : public SearchRunnable {
+
+public:
+	SimpleSearchRunnable(const std::string &pattern);
 	void run();
 
 private:
 	const std::string myPattern;
-	NetworkBookList &myBookList;
 };
 
-SimpleSearchRunnable::SimpleSearchRunnable(const std::string &pattern, NetworkBookList &bookList) : myPattern(pattern), myBookList(bookList) {
+SimpleSearchRunnable::SimpleSearchRunnable(const std::string &pattern) : myPattern(pattern) {
 }
 
 void SimpleSearchRunnable::run() {
-	NetworkLinkCollection::instance().simpleSearch(myBookList, myPattern);
+	myErrorMessage = NetworkLinkCollection::instance().simpleSearch(myBookList, myPattern);
 }
 
-class AdvancedSearchRunnable : public ZLRunnable {
+class AdvancedSearchRunnable : public SearchRunnable {
 
 public:
-	AdvancedSearchRunnable(const std::string &title, const std::string &author, const std::string &series, const std::string &category, const std::string &description, NetworkBookList &bookList);
+	AdvancedSearchRunnable(const std::string &title, const std::string &author, const std::string &series, const std::string &category, const std::string &description);
 	void run();
 
 private:
@@ -93,10 +111,9 @@ private:
 	const std::string mySeries;
 	const std::string myCategory;
 	const std::string myDescription;
-	NetworkBookList &myBookList;
 };
 
-AdvancedSearchRunnable::AdvancedSearchRunnable(const std::string &title, const std::string &author, const std::string &series, const std::string &category, const std::string &description, NetworkBookList &bookList) : myTitle(title), myAuthor(author), mySeries(series), myCategory(category), myDescription(description), myBookList(bookList) {
+AdvancedSearchRunnable::AdvancedSearchRunnable(const std::string &title, const std::string &author, const std::string &series, const std::string &category, const std::string &description) : myTitle(title), myAuthor(author), mySeries(series), myCategory(category), myDescription(description) {
 }
 
 void AdvancedSearchRunnable::run() {
@@ -156,13 +173,16 @@ void NetLibraryView::rebuildModel() {
 	setModel(resultsModel, ZLibrary::Language());
 }
 
-void NetLibraryView::search(ZLRunnable &runnable) {
-	myBookList.clear();
-	ZLDialogManager::instance().wait(ZLResourceKey("downloadBookList"), runnable);
+void NetLibraryView::search(SearchRunnable &runnable) {
+	runnable.executeWithUI();
 
-	if (!myBookList.empty()) {
+	runnable.showErrorMessage();
+
+	const NetworkBookList &bookList = runnable.bookList();
+	if (!bookList.empty()) {
+		myBookList = bookList;
 		rebuildModel();
-	} else {
+	} else if (myBookList.empty()) {
 		ZLTextPlainModel *resultsModel = new ZLTextPlainModel(8192);
 		resultsModel->createParagraph(ZLTextParagraph::TEXT_PARAGRAPH);
 		resultsModel->addControl(LIBRARY_ENTRY, true);
@@ -172,7 +192,7 @@ void NetLibraryView::search(ZLRunnable &runnable) {
 }
 
 void NetLibraryView::search(const std::string &title, const std::string &author, const std::string &series, const std::string &category, const std::string &description) {
-	AdvancedSearchRunnable runnable(title, author, series, category, description, myBookList);
+	AdvancedSearchRunnable runnable(title, author, series, category, description);
 	search(runnable);
 }
 
@@ -183,7 +203,7 @@ void NetLibraryView::search() {
 		return;
 	}
 
-	SimpleSearchRunnable runnable(pattern, myBookList);
+	SimpleSearchRunnable runnable(pattern);
 	search(runnable);
 }
 
@@ -218,9 +238,11 @@ bool NetLibraryView::_onStylusPress(int x, int y) {
 	if ((id == DownloadEpub) || (id == DownloadMobi)) {
 		NetworkBookInfo::URLType format = (id == DownloadEpub) ? NetworkBookInfo::BOOK_EPUB : NetworkBookInfo::BOOK_MOBIPOCKET;
 		DownloadBookRunnable downloader(*book, format);
-		const std::string &fileName = downloader.executeWithUI();
-		if (!fileName.empty()) {
-			BookDescriptionPtr description = BookDescription::getDescription(fileName);
+		downloader.executeWithUI();
+		if (downloader.hasErrors()) {
+			downloader.showErrorMessage();
+		} else {
+			BookDescriptionPtr description = BookDescription::getDescription(downloader.fileName());
 			WritableBookDescription wDescription(*description);
 			wDescription.clearAuthor();
 			wDescription.addAuthor(book->Author.DisplayName, book->Author.SortKey);
@@ -234,11 +256,6 @@ bool NetLibraryView::_onStylusPress(int x, int y) {
 			fbreader().openBook(description);
 			fbreader().setMode(FBReader::BOOK_TEXT_MODE);
 			rebuildModel();
-		} else {
-			ZLDialogManager::instance().errorBox(
-				ZLResourceKey("networkError"),
-				downloader.errorMessage()
-			);
 		}
 		return true;
 	} else if ((id == ReadLocalEpub) || (id == ReadLocalMobi)) {

@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __DOWNLOADBOOKRUNNABLE_H__
-#define __DOWNLOADBOOKRUNNABLE_H__
+#ifndef __NETWORKOPERATIONRUNNABLE_H__
+#define __NETWORKOPERATIONRUNNABLE_H__
 
 #include <string>
 
@@ -26,21 +26,35 @@
 
 #include "../network/NetworkBookInfo.h"
 
-class DownloadBookRunnable : public ZLRunnable {
+class NetworkOperationRunnable : public ZLRunnable {
+
+protected:
+	NetworkOperationRunnable(const std::string &uiMessageKey);
+
+public:
+	void executeWithUI();
+	bool hasErrors() const;
+	void showErrorMessage() const;
+
+protected:
+	std::string myErrorMessage;
+
+private:
+	const std::string myUiMessageKey;
+};
+
+class DownloadBookRunnable : public NetworkOperationRunnable {
 
 public:
 	DownloadBookRunnable(const NetworkBookInfo &book, NetworkBookInfo::URLType format);
 	DownloadBookRunnable(const std::string &url);
 	void run();
 
-	const std::string &executeWithUI();
-	const std::string &errorMessage();
+	const std::string &fileName() const;
 
 private:
 	std::string myURL;
 	std::string myFileName;
-	std::string myErrorMessage;
-	std::string myDownloadedFileName;
 };
 
-#endif /* __DOWNLOADBOOKRUNNABLE_H__ */
+#endif /* __NETWORKOPERATIONRUNNABLE_H__ */

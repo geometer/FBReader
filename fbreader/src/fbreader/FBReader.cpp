@@ -40,7 +40,7 @@
 #include "RecentBooksPopupData.h"
 #include "BookInfoDialog.h"
 #include "TimeUpdater.h"
-#include "DownloadBookRunnable.h"
+#include "NetworkOperationRunnable.h"
 
 #include "../migration/migrate.h"
 
@@ -335,14 +335,11 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 		}
 	} else if (type == "book") {
 		DownloadBookRunnable downloader(id);
-		const std::string &fileName = downloader.executeWithUI();
-		if (!fileName.empty()) {
-			openFile(fileName);
+		downloader.executeWithUI();
+		if (downloader.hasErrors()) {
+			downloader.showErrorMessage();
 		} else {
-			ZLDialogManager::instance().errorBox(
-				ZLResourceKey("networkError"),
-				downloader.errorMessage()
-			);
+			openFile(downloader.fileName());
 		}
 	}
 }

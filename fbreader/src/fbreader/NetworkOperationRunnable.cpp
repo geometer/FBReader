@@ -19,10 +19,30 @@
 
 #include <ZLDialogManager.h>
 
-#include "DownloadBookRunnable.h"
+#include "NetworkOperationRunnable.h"
 #include "../network/NetworkLink.h"
 
-DownloadBookRunnable::DownloadBookRunnable(const NetworkBookInfo &book, NetworkBookInfo::URLType format) {
+NetworkOperationRunnable::NetworkOperationRunnable(const std::string &uiMessageKey) : myUiMessageKey(uiMessageKey) {
+}
+
+void NetworkOperationRunnable::executeWithUI() {
+	ZLDialogManager::instance().wait(ZLResourceKey(myUiMessageKey), *this);
+}
+
+bool NetworkOperationRunnable::hasErrors() const {
+	return !myErrorMessage.empty();
+}
+
+void NetworkOperationRunnable::showErrorMessage() const {
+	if (!myErrorMessage.empty()) {
+		ZLDialogManager::instance().errorBox(
+			ZLResourceKey("networkError"),
+			myErrorMessage
+		);
+	}
+}
+
+DownloadBookRunnable::DownloadBookRunnable(const NetworkBookInfo &book, NetworkBookInfo::URLType format) : NetworkOperationRunnable("downloadBook") {
 	const std::map<NetworkBookInfo::URLType,std::string>::const_iterator it = book.URLByType.find(format);
 	if (it != book.URLByType.end()) {
 		myURL = it->second;
@@ -30,18 +50,13 @@ DownloadBookRunnable::DownloadBookRunnable(const NetworkBookInfo &book, NetworkB
 	}
 }
 
-DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : myURL(url) {
+DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook"), myURL(url) {
 }
 
 void DownloadBookRunnable::run() {
-	myDownloadedFileName = NetworkLinkCollection::instance().downloadBook(myURL, myErrorMessage, myFileName);
+	myErrorMessage = NetworkLinkCollection::instance().downloadBook(myURL, myFileName);
 }
 
-const std::string &DownloadBookRunnable::executeWithUI() {
-	ZLDialogManager::instance().wait(ZLResourceKey("downloadBook"), *this);
-	return myDownloadedFileName;
-}
-
-const std::string &DownloadBookRunnable::errorMessage() {
-	return myErrorMessage;
+const std::string &DownloadBookRunnable::fileName() const {
+	return myFileName;
 }

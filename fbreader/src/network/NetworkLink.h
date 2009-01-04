@@ -59,7 +59,11 @@ private:
 	static NetworkLinkCollection *ourInstance;
 
 private:
+	// returns error message
 	std::string downloadFile(const std::string &url, const std::string &fileName) const;
+	// returns error message
+	std::string perform(const std::vector<shared_ptr<CurlData> > &dataList);
+
 	void setStandardOptions(CURL *handle, const std::string &proxy) const;
 
 public:
@@ -76,16 +80,16 @@ private:
 
 public:
 	std::string bookFileName(const std::string &url) const;
-	std::string downloadBook(const std::string &url, std::string &errorMessage, const std::string &proposedFileName = std::string()) const;
+	// returns error message
+	std::string downloadBook(const std::string &url, std::string &fileName) const;
 
-	bool simpleSearch(NetworkBookList &books, const std::string &pattern);
-	bool advancedSearch(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation);
+	// returns error message
+	std::string simpleSearch(NetworkBookList &books, const std::string &pattern);
+	// returns error message
+	std::string advancedSearch(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation);
 
 	size_t size() const;
 	NetworkLink &link(size_t index) const;
-
-private:
-	bool perform(const std::vector<shared_ptr<CurlData> > &dataList);
 
 private:
 	std::vector<shared_ptr<NetworkLink> > myLinks;

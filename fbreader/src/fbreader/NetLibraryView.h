@@ -26,7 +26,7 @@
 
 #include "../network/NetworkBookInfo.h"
 
-class ZLRunnable;
+class SearchRunnable;
 
 class NetLibraryView : public FBView {
 
@@ -52,7 +52,7 @@ private:
 	bool _onStylusPress(int x, int y);
 	bool onStylusMove(int x, int y);
 
-	void search(ZLRunnable &runnable);
+	void search(SearchRunnable &runnable);
 
 	void addBookIcon(ZLTextTreeModel &model, const NetworkBookInfo &book, NetworkBookInfo::URLType format, const std::string &localIcon, const std::string &downloadIcon);
 	void rebuildModel();
