@@ -1,0 +1,53 @@
+DONE [5] in Dan Brown (A&D)
+	fixed BookReader.cpp
+DONE Gtk fs->ufs => reduce window size      same problem in qt3 version, looks like wm bug
+	fixed for gtk: ZLGtkApplicationWindow.cpp
+	fixed for qt3: ZLQtApplicationWindow.cpp
+DONE hyphenation in word '80-х' (Задорнов)
+	fixed in ZLTextParagraphBuilder.cpp
+DONE wait message in fullscreen
+	fixed ZLGtkWaitMessage.cpp
+	fixed ZLQtWaitMessage.cpp
+DONE browser name in debian
+DONE deb package for liblinebreak
+DONE slow repaint in library mode
+	fixed ZLTextPositionIndicator.cpp
+DONE author && title for feedbooks mobi books
+	fixed MobipocketPlugin.cpp, ZLLanguageUtil.{h,cpp}, Encodings.xml
+DONE www.feedbooks.org = feedbooks.org
+DONE book links in feedbooks epub files
+DONE more languages in MobipocketPlugin.cpp
+DONE author duplication
+	fixed BookDescription.cpp
+DONE option: add automatically all books/books with metainfo only
+DONE error during loading "Adventures of Sherlock Holmes".mobi
+DONE common place for curl timeout values
+DONE errors during link downloading
+DONE option: network operation timeout
+DONE copyright: 2008->2009
+	fixed in all source files
+DONE error messages for network operations
+DONE "toBeTranslated/obsolete" attributes for resourse files
+
+ENGLISH
+	network/index.php
+
+DOCS
+	renew documentation about formats
+	renew documentation about tags
+	navigation document
+	command line document
+	README.Build
+
+QT4
+	qt4 crash on start
+
+TEST
+	test proxy list/book download
+	check file removing under Windows
+	check 65001 code under Windows
+
+SERVER
+	quick search at fbreader.org
+	advanced search at fbreader.org: different result for first and second searches for "лук" author pattern
+	extra lfrom in litres search results
