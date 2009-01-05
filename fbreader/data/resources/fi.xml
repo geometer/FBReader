@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Finnish FBReader resources, by Marko Vertainen -->
 <resources>
 	<node name="menu">
 		<node name="bookInfo" value="Kirjan tiedot..." />
-		<node name="toc" value="Sisällysluettolo" />
+		<node name="toc" value="Sisällysluettelo" />
 		<node name="library" value="Kirjasto">
-			<node name="showLibrary" value="Avaa" />
+			<node name="showLibrary" value="Avaa kirjasto" />
 			<node name="previousBook" value="Edellinen kirja" />
-			<node name="showRecent" value="Viimeisin" />
+			<node name="showRecent" value="Viimeisimmät kirjat" />
 			<node name="addBook" value="Lisää kirja..." />
 			<node name="showHelp" value="Tietoja FBReaderista" />
 		</node>
@@ -33,27 +34,27 @@
 		<node name="view" value="Näytä">
 			<node name="rotate" value="Kierrä näyttö" />
 			<node name="toggleFullscreen" value="Koko näyttö" />
-			<node name="toggleIndicator" value="Sijainninilmaisin päällä/pois" />
+			<node name="toggleIndicator" value="Sijainninilmaisin" />
 		</node>
 		<node name="preferences" value="Asetukset..." />
 		<node name="quit" value="Sulje" />
 	</node>
 	<node name="toolbar">
-		<node name="showReading" toBeTranslated="true" value="Show Reading Mode" />
+		<node name="showReading" value="Näytä lukutila" />
 		<node name="showLibrary" value="Näytä kirjastopuu">
-			<node name="popup" toBeTranslated="true" value="Show Recent Books List" />
+			<node name="popup" value="Näytä viimeisimmät kirjat lista" />
 		</node>
 		<node name="showRecent" value="Näytä viimeisimmät kirjat" />
-		<node name="byAuthor" toBeTranslated="true" value="Organize Books by Author" />
-		<node name="byTag" toBeTranslated="true" value="Organize Books by Tag" />
+		<node name="byAuthor" value="Lajittele kirjat tekijän mukaan" />
+		<node name="byTag" value="Lajittele kirjat luokan mukaan" />
 		<node name="addBook" value="Lisää tiedosto kirjastoon" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Search in Network Libraries" />
-		<node name="searchOnNetwork" toBeTranslated="true" value="Network Search" />
-		<node name="advancedSearchOnNetwork" toBeTranslated="true" value="Advanced Network Search" />
+		<node name="showNetLibrary" value="Etsi verkkokirjastoista" />
+		<node name="searchOnNetwork" value="Verkkohaku" />
+		<node name="advancedSearchOnNetwork" value="Tarkennettu verkkohaku" />
 		<node name="gotoHome" value="Siirry tekstin alkuun" />
 		<node name="undo" value="Siirry edelliseen kohtaan" />
 		<node name="redo" value="Siirry eteenpäin" />
-		<node name="gotoPageNumberWithParameter" toBeTranslated="true" value="Go to Page" />
+		<node name="gotoPageNumberWithParameter" value="Siirry sivulle" />
 		<node name="toc" value="Sisällysluettelo" />
 		<node name="search" value="Etsi teksti" />
 		<node name="findNext" value="Etsi seuraava" />
@@ -73,17 +74,17 @@
 			<node name="title" value="FBReader - Asetukset" />
 			<node name="tab">
 				<node name="Library" value="Kirjasto">
-					<node name="bookPath" value="Kirjaston polku" />
+					<node name="bookPath" value="Kirjaston hakemisto" />
 					<node name="lookInSubdirectories" value="Hae kirjoja alihakemistoista" />
-					<node name="collectBooksWithoutMetaInfo" toBeTranslated="true" value="Collect Books without MetaInfo" />
-					<node name="downloadDirectory" toBeTranslated="true" value="Directory for Downloaded Books" />
-					<node name="showAllBooksTag" value="Näytä kaikki kirjat haara" />
+					<node name="collectBooksWithoutMetaInfo" value="Ryhmitä ilman metatietoja olevat kirjat" />
+					<node name="downloadDirectory" value="Ladattujen kirjojen hakemisto" />
+					<node name="showAllBooksTag" value="Näytä kaikki kirjat ryhmä" />
 				</node>
-				<node name="NetworkLibrary" toBeTranslated="true" value="Network Search">
-					<node name="useProxy" toBeTranslated="true" value="Use Proxy" />
-					<node name="proxyHost" toBeTranslated="true" value="Proxy Host" />
-					<node name="proxyPort" toBeTranslated="true" value="Proxy Port" />
-					<node name="timeout" toBeTranslated="true" value="Network Operations Timeout, seconds" />
+				<node name="NetworkLibrary" value="Verkkohaku">
+					<node name="useProxy" value="Käytä välityspalvelinta" />
+					<node name="proxyHost" value="Välityspalvelimen osoite" />
+					<node name="proxyPort" value="Välityspalvelimen portti" />
+					<node name="timeout" value="Verkkotoimintojen aikakatkaisu sekunteina" />
 				</node>
 				<node name="Language" value="Kieli">
 					<node name="autoDetect" value="Tunnista kieli ja merkistö automaattisesti" />
@@ -93,10 +94,10 @@
 					<node name="useWindows1252Hack" value="Käytä windows-1252 merkistöä iso-8859-1 sijaan" />
 				</node>
 				<node name="Indicator" value="Ilmaisin">
-					<node name="type" toBeTranslated="true" value="Show as">
-						<node name="osScrollbar" toBeTranslated="true" value="OS Scrollbar" />
-						<node name="fbIndicator" toBeTranslated="true" value="Old Style Indicator" />
-						<node name="none" toBeTranslated="true" value="Don&apos;t Show" />
+					<node name="type" value="Näytä">
+						<node name="osScrollbar" value="Vierityspalkki" />
+						<node name="fbIndicator" value="Perinteinen ilmaisin" />
+						<node name="none" value="Ei ilmaisinta" />
 					</node>
 					<node name="height" value="Ilmaisimen korkeus" />
 					<node name="offset" value="Etäisyys tekstistä" />
@@ -108,10 +109,10 @@
 				</node>
 				<node name="Scrolling" value="Vieritys">
 					<node name="optionsFor" value="Valinnat">
-						<node name="large" value="Sivun vieritykselle" />
-						<node name="small" value="Rivin vieritykselle" />
+						<node name="large" value="Suurelle vieritykselle" />
+						<node name="small" value="Pienelle vieritykselle" />
 						<node name="mouse" value="Hiirellä vieritykselle" />
-						<node name="tap" value="Kosketusnäyttö vieritykselle" />
+						<node name="tap" value="Kosketus vieritykselle" />
 					</node>
 					<node name="delay" value="Vieritysten viive, msec" />
 					<node name="mode" value="Vieritystila">
@@ -124,13 +125,13 @@
 					<node name="linesToKeep" value="Rivien määrä" />
 					<node name="linesToScroll" value="Rivien määrä" />
 					<node name="percentToScroll" value="Vieritysprosentti" />
-					<node name="fingerOnly" value="Vieritä ainoastaan kosketusnäytöstä" />
+					<node name="fingerOnly" value="Vieritä ainoastaan kosketuksesta" />
 				</node>
 				<node name="Selection" value="Valinta">
-					<node name="enableSelection" value="Ota käyttöön tekstin valinta" />
+					<node name="enableSelection" value="Ota käyttöön tekstinvalinta" />
 				</node>
-				<node name="CSS" toBeTranslated="true" value="CSS">
-					<node name="overrideSpecifiedFonts" toBeTranslated="true" value="Always Use My Own Fonts" />
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Käytä aina omaa kirjasinta" />
 				</node>
 				<node name="Margins" value="Reunus">
 					<node name="left" value="Vasenreunus" />
@@ -153,8 +154,8 @@
 					</node>
 					<node name="spaceBefore" value="Väli ennen" />
 					<node name="spaceAfter" value="Väli jälkeen" />
-					<node name="startIndent" toBeTranslated="true" value="Line Start Indent" />
-					<node name="endIndent" toBeTranslated="true" value="Line End Indent" />
+					<node name="startIndent" value="Rivin alun sisennys" />
+					<node name="endIndent" value="Rivin lopun sisennys" />
 				</node>
 				<node name="Styles" value="Tyylit">
 					<node name="optionsFor" value="Asetukset" />
@@ -184,13 +185,13 @@
 						<node name="text" value="Normaalille tekstille" />
 						<node name="internalLink" value="Sisäisen linkin tekstille" />
 						<node name="externalLink" value="Ulkoisen linkin tekstille" />
-						<node name="bookLink" toBeTranslated="true" value="Link to Another Book" />
+						<node name="bookLink" value="Linkille toiseen kirjaan" />
 						<node name="highlighted" value="Korostetulle tekstille" />
-						<node name="treeLines" value="Kirjapuun viivoille" />
-						<node name="indicator" value="Sijainnin ilmaisimelle" />
+						<node name="treeLines" value="Kirjastopuun viivoille" />
+						<node name="indicator" value="Sijainninilmaisimelle" />
 					</node>
 				</node>
-				<node name="Keys" value="Näpäimet">
+				<node name="Keys" value="Näppäimet">
 					<node name="grabSystemKeys" value="Valitse järjestelmänäppäimet" />
 					<node name="separate" value="Näytön suunnasta riippuvat näppäintoiminnot" />
 					<node name="orientation" value="Näytön suuntaus" />
@@ -213,7 +214,7 @@
 						<node name="redo" value="Palauta" />
 						<node name="copyToClipboard" value="Kopioi valittu teksti leikepöydälle" />
 						<node name="openInDictionary" value="Avaa valittu teksti sanakirjassa" />
-						<node name="clearSelection" value="Tyjennä valinta" />
+						<node name="clearSelection" value="Tyhjennä valinta" />
 						<node name="search" value="Etsi" />
 						<node name="findPrevious" value="Etsi edellinen" />
 						<node name="findNext" value="Etsi seuraava" />
@@ -223,7 +224,7 @@
 						<node name="toggleFullscreen" value="Koko näyttö päällä/pois" />
 						<node name="rotate" value="Kierrä näyttöä" />
 						<node name="preferences" value="Näytä asetukset valintaikkuna" />
-						<node name="bookInfo" value="Näytä kirjantidot valintaikkuna" />
+						<node name="bookInfo" value="Näytä kirjantiedot valintaikkuna" />
 						<node name="addBook" value="Lisää kirja" />
 						<node name="cancel" value="Peru" />
 						<node name="quit" value="Lopeta" />
@@ -237,7 +238,7 @@
 				</node>
 				<node name="Dictionary" value="Sanakirja">
 					<node name="enableIntegration" value="Käytä sanakirjaa: %s" />
-					<node name="defaultText" value="Käyttöönotettava sanakirja" />
+					<node name="defaultText" value="Käytettävä sanakirja" />
 					<node name="choice" value="Integroi seuraavan kanssa:" />
 					<node name="singleClickOpen" value="Avaa yhdellä kosketuksella" />
 				</node>
@@ -260,8 +261,8 @@
 				<node name="Common" value="Yleiset">
 					<node name="file" value="Tiedosto" />
 					<node name="title" value="Nimi" />
-					<node name="authorDisplayName" value="Tekijä (Näytä nimi)" />
-					<node name="authorSortKey" value="Tekijä (Lajitteluavain)" />
+					<node name="authorDisplayName" value="Tekijä (nimi)" />
+					<node name="authorSortKey" value="Tekijä (lajitteluavain)" />
 					<node name="language" value="Kieli" />
 					<node name="encodingSet" value="Merkistöalue" />
 					<node name="encoding" value="Merkistö" />
@@ -299,12 +300,12 @@
 			<node name="currentSection" value="&amp;Vain tästä osasta" />
 		</node>
 		<node name="networkSearchDialog">
-			<node name="title" toBeTranslated="true" value="Network Search" />
-			<node name="bookTitle" toBeTranslated="true" value="Title" />
-			<node name="author" toBeTranslated="true" value="Author" />
-			<node name="category" toBeTranslated="true" value="Category" />
-			<node name="series" toBeTranslated="true" value="Series" />
-			<node name="description" toBeTranslated="true" value="Description" />
+			<node name="title" value="Verkkohaku" />
+			<node name="bookTitle" value="Nimi" />
+			<node name="author" value="Tekijä" />
+			<node name="category" value="Kategoria" />
+			<node name="series" value="Sarja" />
+			<node name="description" value="Kuvaus" />
 		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Siirry sivulle" />
@@ -337,34 +338,34 @@
 		</node>
 		<node name="tagMustBeNonEmpty">
 			<node name="title" value="Virhe" />
-			<node name="message" value="Luoka nimi ei saa olla tyhjä merkkijono" />
+			<node name="message" value="Luokan nimi ei saa olla tyhjä merkkijono" />
 		</node>
 		<node name="tagMustNotContainComma">
 			<node name="title" value="Virhe" />
 			<node name="message" value="Luokan nimi ei saa sisältää “,” symbolia" />
 		</node>
 		<node name="networkError">
-			<node name="title" toBeTranslated="true" value="Network error" />
-			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error" />
-			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn&apos;t create a directory&#10;%s" />
-			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn&apos;t create a file&#10;%s" />
-			<node name="couldntConnectMessage" toBeTranslated="true" value="Couldn&apos;t connect to host %s" />
-			<node name="couldntResolveHostMessage" toBeTranslated="true" value="Couldn&apos;t resolve host %s" />
-			<node name="couldntResolveProxyMessage" toBeTranslated="true" value="Couldn&apos;t resolve proxy %s" />
-			<node name="operationTimedOutMessage" toBeTranslated="true" value="Operation is timed out" />
-			<node name="somethingWrongMessage" toBeTranslated="true" value="Something goes wrong for&#10;%s" />
-			<node name="emptyLibrariesList" toBeTranslated="true" value="Empty libraries list" />
+			<node name="title" value="Verkkovirhe" />
+			<node name="unknownErrorMessage" value="Tuntematon virhe" />
+			<node name="couldntCreateDirectoryMessage" value="Ei voitu luoda hakemistoa&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Ei voitu luoda tiedostoa&#10;%s" />
+			<node name="couldntConnectMessage" value="Ei voitu yhdistää palvelimeen %s" />
+			<node name="couldntResolveHostMessage" value="Ei tunnistettu palvelinta %s" />
+			<node name="couldntResolveProxyMessage" value="Ei tunnistettu välityspalvelinta %s" />
+			<node name="operationTimedOutMessage" value="Toiminto aikakatkaistiin" />
+			<node name="somethingWrongMessage" value="Jokin meni pieleen&#10;%s" />
+			<node name="emptyLibrariesList" value="Tyhjä kirjastolista" />
 		</node>
 		<node name="downloadError">
-			<node name="title" toBeTranslated="true" value="Error while downloading" />
-			<node name="message" toBeTranslated="true" value="Can&apos;t download this book at the moment" />
+			<node name="title" value="Virhe latauksessa" />
+			<node name="message" value="Kirjaa ei voida ladata tällähekellä" />
 		</node>
 		<node name="waitMessage">
 			<node name="loadingBook" value="Avataan kirjaa..." />
 			<node name="loadingBookList" value="Avataan kirjalistaa..." />
-			<node name="migrate" value="Päivitetään uuteen versioon. Olehyvä ja odota..." />
-			<node name="downloadBookList" toBeTranslated="true" value="Downloading book list. Please, wait..." />
-			<node name="downloadBook" toBeTranslated="true" value="Downloading book. Please, wait..." />
+			<node name="migrate" value="Päivitetään uuteen versioon. Ole hyvä ja odota..." />
+			<node name="downloadBookList" value="Ladataan kirjalistaa. Odota..." />
+			<node name="downloadBook" value="Ladataan kirjaa. Odota..." />
 		</node>
 	</node>
 	<node name="style">
@@ -392,7 +393,7 @@
 		<node name="Code" value="Koodille" />
 		<node name="StrikeThrough" value="Yliviivatulle" />
 		<node name="Contents Table" value="Sisällysluettelolle" />
-		<node name="Library Entry" toBeTranslated="true" value="Library Entry" />
+		<node name="Library Entry" value="Kirjaston merkinnälle" />
 		<node name="Recent Book List" value="Viimeisimmät kirjat listalle" />
 		<node name="Italic" value="Kursivoidulle" />
 		<node name="Bold" value="Lihavoidulle" />
@@ -405,7 +406,7 @@
 		<node name="Header 5" value="Otsikolle 5" />
 		<node name="Header 6" value="Otsikolle 6" />
 		<node name="External Hyperlink" value="Ulkoiselle linkille" />
-		<node name="Link to Another Book" toBeTranslated="true" value="Link to Another Book" />
+		<node name="Link to Another Book" value="Linkille " />
 	</node>
 	<node name="external">
 		<node name="browser" value="Selain" />
@@ -417,9 +418,9 @@
 		<node name="encriptedFile" value="Digitaalisesti suojattu tiedosto" />
 	</node>
 	<node name="networkLibrary">
-		<node name="caption" toBeTranslated="true" value="Network Library" />
-		<node name="startText" toBeTranslated="true" value="Please enter a search pattern in the text field on the toolbar and press &lt;Return&gt;." />
-		<node name="notFound" toBeTranslated="true" value="Sorry, no suitable books were found." />
+		<node name="caption" value="Verkkokirjasto" />
+		<node name="startText" value="Syötä hakuehdot tekstikenttään ja paina &lt;Enter&gt;." />
+		<node name="notFound" value="Hakuehtojen mukaisia kirjoja ei löytynyt." />
 	</node>
 	<node name="library">
 		<node name="caption" value="Kirjasto" />
