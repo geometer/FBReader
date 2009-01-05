@@ -1,4 +1,4 @@
-#! /usr/bin/python
+#! /usr/bin/python2.4
 
 __copyright__ = '''\
 Copyright (C) 2008 Geometer Plus <contact@geometerplus.com>
