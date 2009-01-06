@@ -17,7 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <ZLUnicodeUtil.h>
 #include <ZLFile.h>
 
 #include "Migration.h"
@@ -57,7 +56,7 @@ void Migration_0_8_16::doMigrationInternal() {
 					languageOption.setValue("zh");
 				}
 
-				const std::string extension = ZLUnicodeUtil::toLower(file.extension());
+				const std::string extension = file.extension();
 				if (extension == "fb2") {
 					ZLBooleanOption seriesOption(FBCategoryKey::BOOKS, *it, "SequenceDefined", false);
 					if (!seriesOption.value() || info.TagsOption.value().empty()) {

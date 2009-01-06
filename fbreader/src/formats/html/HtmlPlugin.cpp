@@ -20,7 +20,6 @@
 #include <ZLStringUtil.h>
 #include <ZLFile.h>
 #include <ZLInputStream.h>
-#include <ZLUnicodeUtil.h>
 
 #include "HtmlPlugin.h"
 #include "HtmlDescriptionReader.h"
@@ -31,7 +30,7 @@
 #include "../util/MiscUtil.h"
 
 bool HtmlPlugin::acceptsFile(const ZLFile &file) const {
-	const std::string extension = ZLUnicodeUtil::toLower(file.extension());
+	const std::string extension = file.extension();
 	return ZLStringUtil::stringEndsWith(extension, "html") || (extension == "htm");
 }
 

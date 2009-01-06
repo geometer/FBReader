@@ -73,7 +73,7 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 
 	int index = myNameWithoutExtension.rfind('.');
 	if (index > 0) {
-		myExtension = myNameWithoutExtension.substr(index + 1);
+		myExtension = ZLUnicodeUtil::toLower(myNameWithoutExtension.substr(index + 1));
 		myNameWithoutExtension = myNameWithoutExtension.substr(0, index);
 	}
 }

@@ -18,7 +18,6 @@
  */
 
 #include <ZLStringUtil.h>
-#include <ZLUnicodeUtil.h>
 #include <ZLFile.h>
 #include <ZLInputStream.h>
 
@@ -32,7 +31,7 @@ bool RtfPlugin::providesMetaInfo() const {
 }
 
 bool RtfPlugin::acceptsFile(const ZLFile &file) const {
-	return ZLUnicodeUtil::toLower(file.extension()) == "rtf";
+	return file.extension() == "rtf";
 }
 
 bool RtfPlugin::readDescription(const std::string &path, BookDescription &description) const {

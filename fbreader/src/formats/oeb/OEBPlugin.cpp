@@ -19,7 +19,6 @@
 
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
-#include <ZLUnicodeUtil.h>
 #include <ZLDir.h>
 #include <ZLInputStream.h>
 
@@ -42,7 +41,7 @@ bool OEBPlugin::providesMetaInfo() const {
 }
 
 bool OEBPlugin::acceptsFile(const ZLFile &file) const {
-	const std::string &extension = ZLUnicodeUtil::toLower(file.extension());
+	const std::string &extension = file.extension();
 	return (extension == OPF) || (extension == OEBZIP) || (extension == EPUB);
 }
 

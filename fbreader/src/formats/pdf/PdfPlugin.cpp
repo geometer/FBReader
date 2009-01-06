@@ -19,7 +19,6 @@
 
 #include <ZLFile.h>
 #include <ZLInputStream.h>
-#include <ZLUnicodeUtil.h>
 
 #include "PdfPlugin.h"
 #include "PdfDescriptionReader.h"
@@ -27,7 +26,7 @@
 #include "../../description/BookDescription.h"
 
 bool PdfPlugin::acceptsFile(const ZLFile &file) const {
-	return ZLUnicodeUtil::toLower(file.extension()) == "pdf";
+	return file.extension() == "pdf";
 }
 
 bool PdfPlugin::readDescription(const std::string &path, BookDescription &description) const {

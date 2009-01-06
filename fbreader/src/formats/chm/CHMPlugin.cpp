@@ -35,7 +35,7 @@
 #include "../html/HtmlReaderStream.h"
 
 bool CHMPlugin::acceptsFile(const ZLFile &file) const {
-	return ZLUnicodeUtil::toLower(file.extension()) == "chm";
+	return file.extension() == "chm";
 }
 
 class CHMTextStream : public MergedStream {
