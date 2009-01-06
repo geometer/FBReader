@@ -37,7 +37,7 @@
 		<node name="cs" value="Tchèque" />
 		<node name="de" value="Allemand" />
 		<node name="de-traditional" value="Allemand (l&apos;orthographie traditionelle)" />
-		<node name="el" value="Grecque" />
+		<node name="el" value="Grec" />
 		<node name="en" value="Anglais" />
 		<node name="eo" value="Espéranto" />
 		<node name="es" value="Espagnol" />
