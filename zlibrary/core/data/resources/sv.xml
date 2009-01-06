@@ -32,18 +32,18 @@
 		<node name="custom..." value="Anpassad..." />
 	</node>
 	<node name="language">
-		<node name="ar" toBeTranslated="true" value="Arabic" />
+		<node name="ar" value="Arabiska" />
 		<node name="cs" value="Tjeckiska" />
 		<node name="de" value="Tyska" />
 		<node name="de-traditional" value="Tyska (traditionell ortografi)" />
-		<node name="el" toBeTranslated="true" value="Greek" />
+		<node name="el" value="Grekiska" />
 		<node name="en" value="Engelska" />
 		<node name="eo" value="Esperanto" />
 		<node name="es" value="Spanska" />
 		<node name="fi" value="Finska" />
 		<node name="fr" value="Franska" />
-		<node name="he" toBeTranslated="true" value="Hebrew" />
-		<node name="id" toBeTranslated="true" value="Indonesian" />
+		<node name="he" value="Hebreiska" />
+		<node name="id" value="Indonesiska" />
 		<node name="it" value="Italienska" />
 		<node name="no" value="Norska" />
 		<node name="pt" value="Portugisiska" />
