@@ -32,23 +32,23 @@
 		<node name="custom..." value="Kustom..." />
 	</node>
 	<node name="language">
-		<node name="ar" toBeTranslated="true" value="Arabic" />
+		<node name="ar" value="Arab" />
 		<node name="cs" value="Cekoslowakia" />
 		<node name="de" value="Jerman" />
 		<node name="de-traditional" value="Jerman (tradisionil)" />
-		<node name="el" toBeTranslated="true" value="Greek" />
+		<node name="el" value="Yunani" />
 		<node name="en" value="Inggris" />
 		<node name="eo" value="Esperanto" />
 		<node name="es" value="Spanyol" />
 		<node name="fi" value="Finlandia" />
 		<node name="fr" value="Perancis" />
-		<node name="he" toBeTranslated="true" value="Hebrew" />
+		<node name="he" value="Ibrani" />
 		<node name="id" value="Indonesia" />
 		<node name="it" value="Italia" />
 		<node name="no" value="Norwegia" />
 		<node name="pt" value="Portugis" />
 		<node name="ru" value="Rusia" />
-		<node name="tr" toBeTranslated="true" value="Turkish" />
+		<node name="tr" value="Turki" />
 		<node name="sv" value="Swedia" />
 		<node name="uk" value="Ukraina" />
 		<node name="zh" value="Cina" />
