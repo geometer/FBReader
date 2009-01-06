@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Indonesian FBReader resources, by Ketut Putu Kumajaya -->
 <resources>
 	<node name="menu">
 		<node name="bookInfo" value="Informasi Buku..." />
