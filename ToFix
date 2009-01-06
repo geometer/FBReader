@@ -30,9 +30,10 @@ DONE error messages for network operations
 DONE "toBeTranslated/obsolete" attributes for resourse files
 
 ENGLISH
-	network/index.php
+DONE	network/index.php
 
 DOCS
+	new dialog screenshot in network/index.php
 	renew documentation about formats
 	renew documentation about tags
 	navigation document
