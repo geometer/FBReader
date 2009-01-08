@@ -32,7 +32,7 @@
 			<node name="findPrevious" value="Najít předchozí" />
 		</node>
 		<node name="view" value="Zobrazit">
-			<node name="rotate" value="Otočit obrazovkku" />
+			<node name="rotate" value="Otočit obrazovku" />
 			<node name="toggleFullscreen" value="Celá obrazovka" />
 			<node name="toggleIndicator" value="Natočení obrazovky" />
 		</node>
@@ -59,7 +59,7 @@
 		<node name="search" value="Hledat text" />
 		<node name="findNext" value="Najít další" />
 		<node name="findPrevious" value="Najít předchozí" />
-		<node name="bookInfo" value="Informace o knizee" />
+		<node name="bookInfo" value="Informace o knize" />
 		<node name="preferences" value="Nastavení" />
 		<node name="rotate" value="Změna směru textu" />
 		<node name="showHelp" value="O programu FBReader" />
@@ -76,15 +76,15 @@
 				<node name="Library" value="Knihovna">
 					<node name="bookPath" value="Složka s knihami" />
 					<node name="lookInSubdirectories" value="Knihy v podadresáři" />
-					<node name="collectBooksWithoutMetaInfo" toBeTranslated="true" value="Collect Books without MetaInfo" />
+					<node name="collectBooksWithoutMetaInfo" value="Shromáždit knihy bez meta informací" />
 					<node name="downloadDirectory" value="Prohledávat podadresáře" />
 					<node name="showAllBooksTag" value="Hierarchicky seřazený seznam knih" />
 				</node>
 				<node name="NetworkLibrary" value="Hledání knih na síti">
-					<node name="useProxy" toBeTranslated="true" value="Use Proxy" />
-					<node name="proxyHost" toBeTranslated="true" value="Proxy Host" />
-					<node name="proxyPort" toBeTranslated="true" value="Proxy Port" />
-					<node name="timeout" toBeTranslated="true" value="Network Operations Timeout, seconds" />
+					<node name="useProxy" value="Použít Proxy" />
+					<node name="proxyHost" value="Proxy server" />
+					<node name="proxyPort" value="Port Proxy serveru" />
+					<node name="timeout" value="Vypršení časového intervalu sítě v sekundách" />
 				</node>
 				<node name="Language" value="Jazyk">
 					<node name="autoDetect" value="Automatická detekce jazyka o kódování znaků" />
@@ -97,7 +97,7 @@
 					<node name="type" value="Zobraz jako">
 						<node name="osScrollbar" value="Posuvník OS" />
 						<node name="fbIndicator" value="Indikátor ve starém stylu" />
-						<node name="none" value="Nezobrazova&apos;t" />
+						<node name="none" value="Nezobrazovat" />
 					</node>
 					<node name="height" value="Výška indikátoru" />
 					<node name="offset" value="Vzdálenost od textu" />
@@ -293,7 +293,7 @@
 		</node>
 		<node name="textSearchDialog">
 			<node name="title" value="Hledat text" />
-			<node name="text" value="" />
+			<node name="text" value="Text" />
 			<node name="ignoreCase" value="&amp;Ignorovat registr knih" />
 			<node name="wholeText" value="&amp;V celém textu" />
 			<node name="backward" value="&amp;Zpět" />
@@ -345,16 +345,16 @@
 			<node name="message" value="Jméno kategorie neobsahuje “,” znak" />
 		</node>
 		<node name="networkError">
-			<node name="title" toBeTranslated="true" value="Network error" />
-			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error" />
-			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn&apos;t create a directory&#10;%s" />
-			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn&apos;t create a file&#10;%s" />
-			<node name="couldntConnectMessage" toBeTranslated="true" value="Couldn&apos;t connect to host %s" />
-			<node name="couldntResolveHostMessage" toBeTranslated="true" value="Couldn&apos;t resolve host %s" />
-			<node name="couldntResolveProxyMessage" toBeTranslated="true" value="Couldn&apos;t resolve proxy %s" />
-			<node name="operationTimedOutMessage" toBeTranslated="true" value="Operation is timed out" />
-			<node name="somethingWrongMessage" toBeTranslated="true" value="Something goes wrong for&#10;%s" />
-			<node name="emptyLibrariesList" toBeTranslated="true" value="Empty libraries list" />
+			<node name="title" value="Chyba sítě" />
+			<node name="unknownErrorMessage" value="Neznámá chyba" />
+			<node name="couldntCreateDirectoryMessage" value="Nepodařilo se vytvořit složku&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Nepodařilo se vytvořit soubor&#10;%s" />
+			<node name="couldntConnectMessage" value="Nepodařilo se připojit k serveru %s" />
+			<node name="couldntResolveHostMessage" value="Nepodařilo se najít server %s" />
+			<node name="couldntResolveProxyMessage" value="Nepodařilo se najít proxy %s" />
+			<node name="operationTimedOutMessage" value="Vypršel čas operace" />
+			<node name="somethingWrongMessage" value="Něco se nepodařilo&#10;%s" />
+			<node name="emptyLibrariesList" value="Vyprázdnit seznam knihovny" />
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Chyba při stahování" />
