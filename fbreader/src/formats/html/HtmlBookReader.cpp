@@ -19,6 +19,7 @@
 
 #include <cctype>
 
+#include <ZLFile.h>
 #include <ZLFileImage.h>
 #include <ZLStringUtil.h>
 
@@ -173,11 +174,14 @@ void HtmlImageTagAction::run(const HtmlReader::HtmlTag &tag) {
 		bookReader().endParagraph();
 		for (unsigned int i = 0; i < tag.Attributes.size(); ++i) {
 			if (tag.Attributes[i].Name == "SRC") {
-				std::string fileName = MiscUtil::decodeHtmlURL(tag.Attributes[i].Value);
-				bookReader().addImageReference(fileName);
-				bookReader().addImage(fileName,
-					new ZLFileImage("image/auto", myReader.myBaseDirPath + fileName, 0)
-				);
+				const std::string fileName = MiscUtil::decodeHtmlURL(tag.Attributes[i].Value);
+				const std::string filePath = myReader.myBaseDirPath + fileName;
+				if (ZLFile(filePath).exists()) {
+					bookReader().addImageReference(fileName);
+					bookReader().addImage(fileName,
+						new ZLFileImage("image/auto", filePath, 0)
+					);
+				}
 				break;
 			}
 		}

@@ -33,7 +33,7 @@ ENGLISH
 DONE	network/index.php
 
 DOCS
-	new dialog screenshot in network/index.php
+DONE	new dialog screenshot in network/index.php
 	renew documentation about formats
 	renew documentation about tags
 	navigation document
@@ -49,6 +49,6 @@ TEST
 	check 65001 code under Windows
 
 SERVER
-	quick search at fbreader.org
+DONE	quick search at fbreader.org
 	advanced search at fbreader.org: different result for first and second searches for "лук" author pattern
-	extra lfrom in litres search results
+DONE	extra lfrom in litres search results

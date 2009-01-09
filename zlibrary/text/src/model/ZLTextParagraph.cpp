@@ -199,9 +199,18 @@ size_t ZLTextParagraph::textDataLength() const {
 size_t ZLTextParagraph::characterNumber() const {
 	size_t len = 0;
 	for (Iterator it = *this; !it.isEnd(); it.next()) {
-		if (it.entryKind() == ZLTextParagraphEntry::TEXT_ENTRY) {
-			const ZLTextEntry &entry = (ZLTextEntry&)*it.entry();
-			len += ZLUnicodeUtil::utf8Length(entry.data(), entry.dataLength());
+		switch (it.entryKind()) {
+			case ZLTextParagraphEntry::TEXT_ENTRY:
+			{
+				const ZLTextEntry &entry = (ZLTextEntry&)*it.entry();
+				len += ZLUnicodeUtil::utf8Length(entry.data(), entry.dataLength());
+				break;
+			}
+			case ZLTextParagraphEntry::IMAGE_ENTRY:
+				len += 10;
+				break;
+			default:
+				break;
 		}
 	}
 	return len;
