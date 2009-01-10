@@ -48,8 +48,8 @@ QT4
 
 TEST
 	test proxy list/book download
-	check file removing under Windows
-	check 65001 code under Windows
+DONE	check file removing under Windows
+DONE	check 65001 code under Windows
 
 SERVER
 DONE	quick search at fbreader.org
