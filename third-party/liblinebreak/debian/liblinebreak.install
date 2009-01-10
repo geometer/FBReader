@@ -1,0 +1,5 @@
+usr/lib/*.so.*
+../../AUTHORS	usr/share/doc/liblinebreak/
+../../LICENCE	usr/share/doc/liblinebreak/
+../../NEWS	usr/share/doc/liblinebreak/
+../../README	usr/share/doc/liblinebreak/

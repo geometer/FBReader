@@ -1,0 +1,64 @@
+liblinebreak (1.0-1) unstable; urgency=low
+
+  * new upstream release
+  * standard configure-based build system is used now
+  * both static and shared library versions will bebuilded from now
+  * separate packages for runtime and development files
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thu, 1 Jan 2009 20:12:00 +0200
+
+liblinebreak (0.9.6-6) unstable; urgency=low
+
+  * debian/rules:
+    - Removed empty 'clean' and 'binary-indep', lintian became more clever.
+    - Fixed mistake leading to double-building the package.
+    - Added support for 'noopt' in DEB_BUILD_OPTIONS.
+    - Library now builds with '-D_REENTRANT' flag.
+  * debian/control:
+    - Bumped 'Standards-Version' to 3.8.0.
+  * debian/watch:
+    - Added (comments only).
+
+ -- Eugene V. Lyubimkin <jackyf.devel@gmail.com>  Sun, 13 Jul 2008 22:00:06 +0300
+
+liblinebreak (0.9.6-5) unstable; urgency=low
+
+  * New maintainer. (Closes: #483258)
+  * debian/control:
+    - Updated 'Maintainer' field.
+    - Removed 'Vcs-Git' field.
+  * debian/rules:
+    - Added 'clean' and 'binary-indep' rules to satisfy lintian.
+
+ -- Eugene V. Lyubimkin <jackyf.devel@gmail.com>  Fri, 30 May 2008 00:59:40 +0300
+
+liblinebreak (0.9.6-4) unstable; urgency=low
+
+  * Orphaned the package.
+  * debhelper v7; rules file minimisation.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 27 May 2008 19:28:39 -0400
+
+liblinebreak (0.9.6-3) unstable; urgency=low
+
+  * Build the library -fPIC so that it can be linked into libzltext.
+
+ -- Joey Hess <joeyh@debian.org>  Tue, 08 Apr 2008 19:48:56 -0400
+
+liblinebreak (0.9.6-2) unstable; urgency=low
+
+  * First upload to debian.
+
+ -- Joey Hess <joeyh@debian.org>  Sat, 22 Mar 2008 19:21:02 -0400
+
+liblinebreak (0.9.6-1) stable; urgency=low
+
+  * New upstream version.
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Wed, 19 Mar 2008 15:52:00 +0300
+
+liblinebreak (0.9-1) stable; urgency=low
+
+  * Initial release.
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sun, 9 Mar 2008 03:19:00 +0300

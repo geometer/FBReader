@@ -1,0 +1,103 @@
+#!/usr/bin/make -f
+## ----------------------------------------------------------------------
+## debian/rules : package script for liblinebreak
+## ----------------------------------------------------------------------
+
+## ----------------------------------------------------------------------
+## uncomment this to turn on verbose mode
+#export DH_VERBOSE=1
+
+## ----------------------------------------------------------------------
+DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+
+## ----------------------------------------------------------------------
+CONFFLAGS	=
+ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
+    CONFFLAGS	+= --build $(DEB_HOST_GNU_TYPE)
+else
+    CONFFLAGS	+= --build=$(DEB_BUILD_GNU_TYPE) --host=$(DEB_HOST_GNU_TYPE)
+endif
+
+## ----------------------------------------------------------------------
+INSTALL		= install
+INSTALL_FILE	= $(INSTALL) -p -o root -g root -m  644
+INSTALL_PROGRAM	= $(INSTALL) -p -o root -g root -m  755
+INSTALL_SCRIPT	= $(INSTALL) -p -o root -g root -m  755
+INSTALL_DIR	= $(INSTALL) -p -o root -g root -m  755 -d
+
+## ----------------------------------------------------------------------
+CFLAGS		= -Wall -g -D_REENTRANT
+
+## ----------------------------------------------------------------------
+ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
+    CFLAGS	+= -O0
+else
+    CFLAGS	+= -O2
+endif
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+    INSTALL_PROGRAM += -s
+endif
+
+## ----------------------------------------------------------------------
+TMP_DIR		= $(CURDIR)/debian/tmp
+
+## ----------------------------------------------------------------------
+## targets
+
+clean:		configure
+		dh_testdir
+		dh_testroot
+		[ ! -f Makefile ] || $(MAKE) distclean
+		dh_clean configure-stamp build-stamp install-stamp
+
+configure:
+
+configure-stamp:	
+		dh_testdir
+		touch configure.in && touch aclocal.m4 && touch configure
+		CFLAGS="$(CFLAGS)" \
+		./configure $(CONFFLAGS) --prefix=/usr
+		touch configure-stamp 
+
+build:		build-stamp
+build-stamp:	configure-stamp
+		dh_testdir
+		$(MAKE)
+		touch build-stamp 
+
+install:	install-stamp
+install-stamp:	build
+		dh_testdir
+		dh_testroot
+		dh_clean -k
+		dh_installdirs
+		$(MAKE) install prefix=$(TMP_DIR)/usr \
+			man1dir=$(TMP_DIR)/usr/share/man/man1
+		touch install-stamp
+
+binary-indep:
+
+binary-arch:	build install
+		dh_testdir
+		dh_testroot
+		dh_install -a --sourcedir=$(TMP_DIR)
+		dh_installdocs -a
+		dh_installexamples -a
+		dh_installchangelogs -a ChangeLog
+		dh_link -a
+		dh_strip -a
+		dh_compress -a
+		dh_fixperms -a
+		dh_makeshlibs -a -V
+		dh_installdeb -a
+		dh_shlibdeps -a -l $(PWD)/debian/liblinebreak/usr/lib
+		dh_gencontrol -a
+		dh_md5sums -a
+		dh_builddeb -a
+
+binary:		binary-indep binary-arch
+
+.PHONY:		clean build install binary-indep binary-arch binary
+
+## ----------------------------------------------------------------------

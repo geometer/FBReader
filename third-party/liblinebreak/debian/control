@@ -1,0 +1,22 @@
+Source: liblinebreak
+Section: text
+Priority: optional
+Maintainer: Eugene V. Lyubimkin <jackyf.devel@gmail.com>
+Standards-Version: 3.8.0
+Build-Depends: debhelper (>= 7)
+
+Package: liblinebreak
+Priority: optional
+Section: libs
+Architecture: any
+Description: line breaking library
+ liblinebreak is an implementation of the Unicode line breaking algorithm
+ described at http://www.unicode.org/reports/tr14/tr14-19.html
+
+Package: liblinebreak-dev
+Priority: optional
+Section: libdevel
+Architecture: any
+Description: line breaking library (development files)
+ liblinebreak is an implementation of the Unicode line breaking algorithm
+ described at http://www.unicode.org/reports/tr14/tr14-19.html

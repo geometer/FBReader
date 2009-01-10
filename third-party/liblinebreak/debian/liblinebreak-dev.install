@@ -1,0 +1,9 @@
+usr/include
+usr/lib/*.a
+usr/lib/*.la
+usr/lib/*.so
+../../doc/html	usr/share/doc/liblinebreak-dev/html/
+../../AUTHORS	usr/share/doc/liblinebreak-dev/
+../../LICENCE	usr/share/doc/liblinebreak-dev/
+../../NEWS	usr/share/doc/liblinebreak-dev/
+../../README	usr/share/doc/liblinebreak-dev/

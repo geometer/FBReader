@@ -1,0 +1,4 @@
+This is the Debian package of liblinebreak, an implementation of the line
+breaking algorithm as described in Unicode 5.1.0 Standard.
+
+For licensing information please read the file LICENSE.
