@@ -36,19 +36,19 @@
 		<node name="cs" value="التشيكية" />
 		<node name="de" value="الألمانية" />
 		<node name="de-traditional" value="الألمانية (النظام التقليدي)" />
-		<node name="el" toBeTranslated="true" value="Greek" />
+		<node name="el" value="اليونانية" />
 		<node name="en" value="الإنجليزية" />
 		<node name="eo" value="الإسبر انتو" />
 		<node name="es" value="الأسبانية" />
 		<node name="fi" value="الفنلندية" />
 		<node name="fr" value="الفرنسية" />
-		<node name="he" toBeTranslated="true" value="Hebrew" />
+		<node name="he" value="العبرية" />
 		<node name="id" value="الإندونيسية" />
 		<node name="it" value="الإيطالية" />
 		<node name="no" value="النرويجية" />
 		<node name="pt" value="البرتغالية" />
 		<node name="ru" value="الروسية" />
-		<node name="tr" toBeTranslated="true" value="Turkish" />
+		<node name="tr" value="التركية" />
 		<node name="sv" value="السويدية" />
 		<node name="uk" value="الأكرانية" />
 		<node name="zh" value="الصينية" />

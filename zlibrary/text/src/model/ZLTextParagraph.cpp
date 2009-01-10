@@ -207,7 +207,7 @@ size_t ZLTextParagraph::characterNumber() const {
 				break;
 			}
 			case ZLTextParagraphEntry::IMAGE_ENTRY:
-				len += 10;
+				len += 100;
 				break;
 			default:
 				break;

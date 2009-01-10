@@ -30,7 +30,7 @@
 #include "../util/MiscUtil.h"
 
 bool HtmlPlugin::acceptsFile(const ZLFile &file) const {
-	const std::string extension = file.extension();
+	const std::string &extension = file.extension();
 	return ZLStringUtil::stringEndsWith(extension, "html") || (extension == "htm");
 }
 

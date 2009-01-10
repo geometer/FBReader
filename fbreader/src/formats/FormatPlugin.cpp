@@ -87,7 +87,7 @@ void FormatPlugin::detectLanguage(BookDescription &description, ZLInputStream &s
 	WritableBookDescription(description).language() = language;
 }
 
-const std::string &FormatPlugin::tryOpen(const std::string &path) const {
+const std::string &FormatPlugin::tryOpen(const std::string&) const {
 	static const std::string EMPTY = "";
 	return EMPTY;
 }

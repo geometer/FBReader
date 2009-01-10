@@ -48,8 +48,8 @@
 		<node name="no" value="Norwegian" />
 		<node name="pt" value="Portuguese" />
 		<node name="ru" value="Russian" />
-		<node name="tr" value="Turkish" />
 		<node name="sv" value="Swedish" />
+		<node name="tr" value="Turkish" />
 		<node name="uk" value="Ukrainian" />
 		<node name="zh" value="Chinese" />
 		<node name="other" value="Other" />

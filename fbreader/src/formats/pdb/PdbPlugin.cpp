@@ -29,7 +29,7 @@ PdbPlugin::~PdbPlugin() {
 }
 
 std::string PdbPlugin::fileType(const ZLFile &file) {
-	const std::string extension = file.extension();
+	const std::string &extension = file.extension();
 	if ((extension != "prc") && (extension != "pdb") && (extension != "mobi")) {
 		return "";
 	}

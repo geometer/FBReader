@@ -24,6 +24,32 @@
 
 #include "../util/ZLGtkSignalUtil.h"
 
+static const char *menuId = "gtk-tool-button-menu-id";
+static const char *menuKey = "gtk-tool-button-menu-key";
+
+static void runMenuItem(GtkImageMenuItem *menuItem, ZLGtkApplicationWindow *data) {
+	data->onGtkButtonPress(GTK_TOOL_ITEM(gtk_object_get_data(GTK_OBJECT(menuItem), menuKey)));
+}
+
+static bool createMenuProxy(GtkToolItem *toolItem, ZLGtkApplicationWindow *data) {
+	GtkToolButton *button = GTK_TOOL_BUTTON(toolItem);
+
+	GtkWidget *menuItem = gtk_image_menu_item_new_with_label(gtk_tool_button_get_label(button));
+	gtk_image_menu_item_set_image(
+		GTK_IMAGE_MENU_ITEM(menuItem),
+		gtk_image_new_from_pixbuf(
+			gtk_image_get_pixbuf(
+				GTK_IMAGE(gtk_tool_button_get_icon_widget(button))
+			)
+		)
+	);
+	gtk_object_set_data(GTK_OBJECT(menuItem), menuKey, toolItem);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(menuItem), "activate", GTK_SIGNAL_FUNC(runMenuItem), data);
+	gtk_tool_item_set_proxy_menu_item(toolItem, menuId, menuItem);
+
+	return true;
+}
+
 ZLGtkApplicationWindow::Toolbar::Toolbar(ZLGtkApplicationWindow *window) : myWindow(window) {
 	myGtkToolbar = GTK_TOOLBAR(gtk_toolbar_new());
 	gtk_toolbar_set_style(myGtkToolbar, GTK_TOOLBAR_ICONS);
@@ -85,6 +111,7 @@ GtkToolItem *ZLGtkApplicationWindow::Toolbar::createGtkToolButton(const ZLToolba
 	}
 
 	gtk_tool_item_set_tooltip(gtkItem, myGtkToolbar->tooltips, button.tooltip().c_str(), 0);
+	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(gtkItem), "create_menu_proxy", GTK_SIGNAL_FUNC(createMenuProxy), myWindow);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(gtkItem), "clicked", GTK_SIGNAL_FUNC(onButtonClicked), myWindow);
 
 	return gtkItem;

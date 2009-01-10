@@ -22,7 +22,6 @@
 #include <ZLApplication.h>
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
-#include <ZLUnicodeUtil.h>
 
 #include "MiscUtil.h"
 

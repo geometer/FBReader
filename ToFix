@@ -1,33 +1,36 @@
 DONE [5] in Dan Brown (A&D)
-	fixed BookReader.cpp
+MERGED	fixed BookReader.cpp
 DONE Gtk fs->ufs => reduce window size      same problem in qt3 version, looks like wm bug
-	fixed for gtk: ZLGtkApplicationWindow.cpp
-	fixed for qt3: ZLQtApplicationWindow.cpp
+MERGED	fixed for gtk: ZLGtkApplicationWindow.cpp
+MERGED	fixed for qt3: ZLQtApplicationWindow.cpp
 DONE hyphenation in word '80-х' (Задорнов)
-	fixed in ZLTextParagraphBuilder.cpp
+MERGED	fixed in ZLTextParagraphBuilder.cpp
 DONE wait message in fullscreen
-	fixed ZLGtkWaitMessage.cpp
-	fixed ZLQtWaitMessage.cpp
+DONE	fixed ZLGtkWaitMessage.cpp
+MERGED	fixed ZLQtWaitMessage.cpp
 DONE browser name in debian
 DONE deb package for liblinebreak
 DONE slow repaint in library mode
-	fixed ZLTextPositionIndicator.cpp
+MERGED	fixed ZLTextPositionIndicator.cpp
 DONE author && title for feedbooks mobi books
-	fixed MobipocketPlugin.cpp, ZLLanguageUtil.{h,cpp}, Encodings.xml
+MERGED	fixed MobipocketPlugin.cpp, ZLLanguageUtil.{h,cpp}, Encodings.xml
 DONE www.feedbooks.org = feedbooks.org
 DONE book links in feedbooks epub files
 DONE more languages in MobipocketPlugin.cpp
 DONE author duplication
-	fixed BookDescription.cpp
+MERGED	fixed BookDescription.cpp
 DONE option: add automatically all books/books with metainfo only
 DONE error during loading "Adventures of Sherlock Holmes".mobi
 DONE common place for curl timeout values
 DONE errors during link downloading
 DONE option: network operation timeout
 DONE copyright: 2008->2009
-	fixed in all source files
+MERGED	fixed in all source files
 DONE error messages for network operations
 DONE "toBeTranslated/obsolete" attributes for resourse files
+DONE html images
+MERGED	fixed in HtmlBookReader.cpp
+MERGED	fixed in ZLTextParagraph.cpp
 
 ENGLISH
 DONE	network/index.php
