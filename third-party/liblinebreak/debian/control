@@ -3,7 +3,7 @@ Section: text
 Priority: optional
 Maintainer: Eugene V. Lyubimkin <jackyf.devel@gmail.com>
 Standards-Version: 3.8.0
-Build-Depends: debhelper (>= 7)
+Build-Depends: debhelper (>= 5)
 
 Package: liblinebreak
 Priority: optional
