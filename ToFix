@@ -6,7 +6,7 @@ MERGED	fixed for qt3: ZLQtApplicationWindow.cpp
 DONE hyphenation in word '80-х' (Задорнов)
 MERGED	fixed in ZLTextParagraphBuilder.cpp
 DONE wait message in fullscreen
-DONE	fixed ZLGtkWaitMessage.cpp
+MERGED	fixed ZLGtkWaitMessage.cpp
 MERGED	fixed ZLQtWaitMessage.cpp
 DONE browser name in debian
 DONE deb package for liblinebreak
