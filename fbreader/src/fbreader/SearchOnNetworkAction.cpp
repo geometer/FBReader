@@ -30,7 +30,7 @@ ShowNetworkLibraryAction::ShowNetworkLibraryAction(FBReader &fbreader) : SetMode
 }
 
 bool ShowNetworkLibraryAction::isVisible() const {
-	return NetworkLinkCollection::instance().containsEnabledLinks();
+	return SetModeAction::isVisible() && NetworkLinkCollection::instance().containsEnabledLinks();
 }
 
 SearchOnNetworkAction::SearchOnNetworkAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::NET_LIBRARY_MODE) {

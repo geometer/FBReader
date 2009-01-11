@@ -34,6 +34,7 @@
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkSelectionDialog.h"
 #include "ZLGtkUtil.h"
+#include "../../gtk/image/ZLGtkImageManager.h"
 
 shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const ZLResourceKey &key) const {
 	return new ZLGtkDialog(resource()[key]);
@@ -43,7 +44,7 @@ shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const ZLReso
 	return new ZLGtkOptionsDialog(resource()[key], applyAction);
 }
 
-void ZLGtkDialogManager::informationBox(const ZLResourceKey&, const std::string &message) const {
+void ZLGtkDialogManager::informationBox(const std::string&, const std::string &message) const {
 	GtkDialog *dialog = GTK_DIALOG(hildon_note_new_information(myWindow, message.c_str()));
 	gtk_dialog_run(dialog);
 	gtk_widget_destroy(GTK_WIDGET(dialog));
@@ -133,5 +134,14 @@ void ZLGtkDialogManager::setClipboardText(const std::string &text, ClipboardType
 		GdkAtom atom = (type == CLIPBOARD_MAIN) ? GDK_SELECTION_CLIPBOARD : GDK_SELECTION_PRIMARY;
 		GtkClipboard *clipboard = gtk_clipboard_get(atom);
 		gtk_clipboard_set_text(clipboard, text.data(), text.length());
+	}
+}
+
+void ZLGtkDialogManager::setClipboardImage(const ZLImageData &image, ClipboardType type) const {
+	GdkPixbuf *imageRef = ((const ZLGtkImageData&)image).pixbuf();
+	if (imageRef != 0) {
+		GdkAtom atom = (type == CLIPBOARD_MAIN) ? GDK_SELECTION_CLIPBOARD : GDK_SELECTION_PRIMARY;
+		GtkClipboard *clipboard = gtk_clipboard_get(atom);
+		gtk_clipboard_set_image(clipboard, imageRef);
 	}
 }

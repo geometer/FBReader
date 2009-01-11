@@ -10,6 +10,9 @@ case "$1" in
 		toolbar_file=data/default/toolbar.desktop.xml
 		fullscreen_toolbar_file=data/default/fullscreen_toolbar.desktop.xml
 		;;
+	maemo)
+		toolbar_file=data/default/toolbar.maemo.xml
+		;;
 	pepperpad3)
 		toolbar_file=data/default/toolbar.full.xml
 		;;
