@@ -35,6 +35,7 @@
 #include "../message/ZLMaemoMessage.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
+#include "../network/ZLMaemoNetworkManager.h"
 
 class ZLGtkLibraryImplementation : public ZLibraryImplementation {
 
@@ -59,6 +60,7 @@ void ZLGtkLibraryImplementation::init(int &argc, char **&argv) {
 	ZLGtkDialogManager::createInstance();
 	ZLMaemoCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
+	ZLMaemoNetworkManager::createInstance();
 
 	if (!ZLFile("/usr/lib/more-gconv").directory(false).isNull()) {
 		setenv("GCONV_PATH", "/usr/lib/more-gconv", 1);

@@ -13,9 +13,9 @@ else
   TARGET = libzlcore.a
 endif
 
-SUBDIRS_ALL = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/splittedView src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/desktop/application src/desktop/dialogs src/unix/time src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library src/win32/encoding src/win32/filesystem src/win32/config
+SUBDIRS_ALL = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/splittedView src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/network src/desktop/application src/desktop/dialogs src/unix/time src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library src/win32/encoding src/win32/filesystem src/win32/config
 
-SUBDIRS = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/splittedView src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/unix/time
+SUBDIRS = src/library src/util src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/splittedView src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/unix/time src/network
 
 ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pepperpad3>)"
   SUBDIRS += src/desktop/application src/desktop/dialogs
@@ -44,7 +44,7 @@ $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(ZLSHARED)" "yes"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIB) $(ARCHIVER_LIB) -ldl
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS) -ldl
 	@ln -sf $(TARGET) $(TARGET_SONAME)
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else

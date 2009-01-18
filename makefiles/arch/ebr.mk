@@ -14,8 +14,6 @@ CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG -
 LDFLAGS = -L $(ROOTDIR)/../ebr/microwin/lib/jpeg -L $(ROOTDIR)/../ebr/microwin/lib/mfont -L $(ROOTDIR)/../ebr/microwin/src/lib -L $(ROOTDIR)/../ebr/ext/lib
 
 UILIBS = -lnano-X -ljpeg -lmfont
-XML_LIB = -lexpat
-ARCHIVER_LIB = -lz -lbz2
 
 RM = rm -rvf
 RM_QUIET = rm -rf

@@ -34,6 +34,7 @@ public:
 	static const ZLCategoryKey CONFIG;
 	static const ZLCategoryKey STATE;
 	static const ZLCategoryKey SYSTEM;
+	static const ZLCategoryKey NETWORK;
 
 protected:
 	explicit ZLCategoryKey(const std::string &name);

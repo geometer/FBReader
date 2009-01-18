@@ -197,6 +197,7 @@
 					<node name="action">
 						<node name="none" value="None" />
 						<node name="showLibrary" value="Show Library" />
+						<node name="showNetLibrary" value="Show Network Library" />
 						<node name="showRecent" value="Show Recent Books" />
 						<node name="previousBook" value="Open Previous Book" />
 						<node name="toc" value="Show Table of Contents" />
@@ -344,15 +345,6 @@
 			<node name="message" value="Tag name must not contain a &#8220;,&#8221; symbol" />
 		</node>
 		<node name="networkError">
-			<node name="title" value="Network error" />
-			<node name="unknownErrorMessage" value="Unknown error" />
-			<node name="couldntCreateDirectoryMessage" value="Couldn&apos;t create a directory&#10;%s" />
-			<node name="couldntCreateFileMessage" value="Couldn&apos;t create a file&#10;%s" />
-			<node name="couldntConnectMessage" value="Couldn&apos;t connect to host %s" />
-			<node name="couldntResolveHostMessage" value="Couldn&apos;t resolve host %s" />
-			<node name="couldntResolveProxyMessage" value="Couldn&apos;t resolve proxy %s" />
-			<node name="operationTimedOutMessage" value="Operation is timed out" />
-			<node name="somethingWrongMessage" value="Something goes wrong for&#10;%s" />
 			<node name="emptyLibrariesList" value="Empty libraries list" />
 		</node>
 		<node name="downloadError">

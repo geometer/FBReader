@@ -95,9 +95,9 @@ void CollectionView::selectBook(BookDescriptionPtr book) {
 
 void CollectionView::paint() {
 	if (myDoSynchronizeCollection) {
+		myDoSynchronizeCollection = false;
 		RebuildCollectionRunnable runnable(*this);
 		ZLDialogManager::instance().wait(ZLResourceKey("loadingBookList"), runnable);
-		myDoSynchronizeCollection = false;
 	}
 	if ((myOrganizeByTags != organizeByTags()) ||
 			(myShowAllBooksList != ShowAllBooksTagOption.value())) {

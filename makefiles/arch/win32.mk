@@ -14,8 +14,6 @@ LDFLAGS = -mwindows
 #LDFLAGS = -mconsole
 
 UILIBS = -lgdi32 -lcomctl32 -lcomdlg32 -lpng12 -ljpeg -lungif -ltiff
-XML_LIB = -lexpat
-ARCHIVER_LIB = -lz -lbz2
 
 RM = rm -rvf
 RM_QUIET = rm -rf

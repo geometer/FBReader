@@ -17,30 +17,32 @@
  * 02110-1301, USA.
  */
 
+#include <ZLNetworkUtil.h>
+#include <ZLNetworkXMLParserData.h>
+
 #include "FBReaderOrgLink.h"
 #include "FBReaderOrgDataParser.h"
 #include "../NetworkBookInfo.h"
-#include "../XMLParserCurlData.h"
 
 FBReaderOrgLink::FBReaderOrgLink() : NetworkLink("LitRes.Ru", "litres.ru") {
 }
 
 static const std::string URL_PREFIX = "http://www.fbreader.org/library/";
 
-shared_ptr<CurlData> FBReaderOrgLink::simpleSearchData(NetworkBookList &books, const std::string &pattern) {
-	return new XMLParserCurlData(
-		URL_PREFIX + "simple_query.php?type=xml&library=1&pattern=" + htmlEncode(pattern),
+shared_ptr<ZLNetworkData> FBReaderOrgLink::simpleSearchData(NetworkBookList &books, const std::string &pattern) {
+	return new ZLNetworkXMLParserData(
+		URL_PREFIX + "simple_query.php?type=xml&library=1&pattern=" + ZLNetworkUtil::htmlEncode(pattern),
 		new FBReaderOrgDataParser(books)
 	);
 }
 
 void FBReaderOrgLink::addSubPattern(std::string &url, const std::string &name, const std::string &value) {
 	if (!value.empty()) {
-		url += "&" + name + "=" + htmlEncode(value);
+		url += "&" + name + "=" + ZLNetworkUtil::htmlEncode(value);
 	}
 }
 
-shared_ptr<CurlData> FBReaderOrgLink::advancedSearchData(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) {
+shared_ptr<ZLNetworkData> FBReaderOrgLink::advancedSearchData(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) {
 	std::string request = URL_PREFIX + "advanced_query.php?type=xml&library=1";
 	addSubPattern(request, "title", title);
 	addSubPattern(request, "author", author);
@@ -48,5 +50,5 @@ shared_ptr<CurlData> FBReaderOrgLink::advancedSearchData(NetworkBookList &books,
 	addSubPattern(request, "tag", tag);
 	addSubPattern(request, "annotation", annotation);
 
-	return new XMLParserCurlData(request, new FBReaderOrgDataParser(books));
+	return new ZLNetworkXMLParserData(request, new FBReaderOrgDataParser(books));
 }

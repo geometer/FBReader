@@ -26,6 +26,7 @@
 #include "ZLibrary.h"
 #include "../filesystem/ZLFSManager.h"
 #include "../options/ZLConfig.h"
+#include "../network/ZLNetworkManager.h"
 
 bool ZLibrary::ourLocaleIsInitialized = false;
 std::string ZLibrary::ourLanguage;
@@ -63,6 +64,7 @@ void ZLibrary::parseArguments(int &argc, char **&argv) {
 }
 
 void ZLibrary::shutdown() {
+	ZLNetworkManager::deleteInstance();
 	ZLImageManager::deleteInstance();
 	ZLCommunicationManager::deleteInstance();
 	ZLDialogManager::deleteInstance();

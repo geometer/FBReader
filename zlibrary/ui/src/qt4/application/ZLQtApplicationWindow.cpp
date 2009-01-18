@@ -77,6 +77,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	setWindowIcon(icon);
 
 	myWindowToolBar = new QToolBar(this);
+	myWindowToolBar->setFocusPolicy(Qt::NoFocus);
 	myWindowToolBar->setMovable(false);
 	addToolBar(myWindowToolBar);
 	myWindowToolBar->setIconSize(QSize(32, 32));
@@ -207,6 +208,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		{
 			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
 			QToolButton *button = new QToolButton(tb);
+			button->setFocusPolicy(Qt::NoFocus);
 			button->setDefaultAction(new ZLQtToolBarAction(this, buttonItem));
 			button->setMenu(new QMenu(button));
 			button->setPopupMode(QToolButton::MenuButtonPopup);

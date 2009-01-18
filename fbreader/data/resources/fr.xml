@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- French FBReader resources, by Pierre Senellart -->
 <resources>
 	<node name="menu">
 		<node name="bookInfo" value="Informations sur le livre..." />
@@ -197,6 +198,7 @@
 					<node name="action">
 						<node name="none" value="Aucune" />
 						<node name="showLibrary" value="Afficher la bibliothèque" />
+						<node name="showNetLibrary" toBeTranslated="true" value="Show Network Library" />
 						<node name="showRecent" value="Afficher les livres récents" />
 						<node name="previousBook" value="Ouvrir le livre précédent" />
 						<node name="toc" value="Afficher la table des matières" />
@@ -321,7 +323,7 @@
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Enlever un livre" />
-			<node name="message" value="Enlever le livreXXXXX&quot;%s&quot;XXXXXde la bibliothèque ?" />
+			<node name="message" value="Enlever le livre&#10;&quot;%s&quot;&#10;de la bibliothèque ?" />
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Enlever un tag" />
@@ -329,7 +331,7 @@
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Erreur" />
-			<node name="message" value="Impossible d&apos;ouvrirXXXXX%s" />
+			<node name="message" value="Impossible d&apos;ouvrir&#10;%s" />
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Erreur" />
@@ -344,15 +346,6 @@
 			<node name="message" value="Le nom du tag ne peut contenir un symbole “,”" />
 		</node>
 		<node name="networkError">
-			<node name="title" value="Erreur réseau" />
-			<node name="unknownErrorMessage" value="Erreur inconnue" />
-			<node name="couldntCreateDirectoryMessage" value="Impossible de créer un répertoireXXXXX%s" />
-			<node name="couldntCreateFileMessage" value="Impossible de créer un fichierXXXXX%s" />
-			<node name="couldntConnectMessage" value="Impossible de se connecter à l&apos;hôte %s" />
-			<node name="couldntResolveHostMessage" value="Résolution du nom %s impossible" />
-			<node name="couldntResolveProxyMessage" value="Résolution du proxy %s impossible" />
-			<node name="operationTimedOutMessage" value="Le délai réseau a expiré" />
-			<node name="somethingWrongMessage" value="Il y a un problème avecXXXXX%s" />
 			<node name="emptyLibrariesList" value="Liste de bibliothèques vide" />
 		</node>
 		<node name="downloadError">

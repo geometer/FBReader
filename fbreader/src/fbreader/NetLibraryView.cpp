@@ -159,7 +159,7 @@ void NetLibraryView::rebuildModel() {
 			}
 			myParagraphToBookMap[resultsModel->paragraphsNumber()] = *kt;
 			seriesName = book.Series;
-			resultsModel->createParagraph(para);
+			ZLTextTreeParagraph *bookPara = resultsModel->createParagraph(para);
 			resultsModel->addControl(LIBRARY_ENTRY, true);
 			resultsModel->addText(book.Title);
 			addBookIcon(*resultsModel, book, NetworkBookInfo::BOOK_EPUB, ReadLocalEpub, DownloadEpub);
@@ -167,6 +167,23 @@ void NetLibraryView::rebuildModel() {
 			if (book.URLByType.find(NetworkBookInfo::LINK_HTTP) != book.URLByType.end()) {
 				resultsModel->addFixedHSpace(1);
 				resultsModel->addImage(OpenInBrowser, myImageMap, 0);
+			}
+			if (book.Annotation.length() > 6) {
+				resultsModel->createParagraph(bookPara);
+				//resultsModel->addControl(LIBRARY_ENTRY, true);
+				int start = 0;
+				int end;
+				while ((end = book.Annotation.find('<', start)) >= 0) {
+					resultsModel->addText(book.Annotation.substr(start, end - start));
+					start = book.Annotation.find('>', end);
+					if (start >= 0) {
+						++start;
+						resultsModel->addText(" ");
+					}
+				}
+				if (start >= 0) {
+					resultsModel->addText(book.Annotation.substr(start));
+				}
 			}
 		}
 	}

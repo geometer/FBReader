@@ -17,26 +17,19 @@
  * 02110-1301, USA.
  */
 
-#ifndef __CURLDATA_H__
-#define __CURLDATA_H__
-
-#include <curl/curl.h>
+#ifndef __ZLNETWORKUTIL_H__
+#define __ZLNETWORKUTIL_H__
 
 #include <string>
 
-class CurlData {
-
-protected:
-	CurlData(const std::string &url);
+class ZLNetworkUtil {
 
 public:
-	virtual ~CurlData();
-	const std::string &url() const;
-	CURL *handle();
+	static std::string htmlEncode(const std::string &stringToEncode);
+	static std::string hostFromUrl(const std::string &url);
 
 private:
-	const std::string myURL;
-	CURL *myHandle;
+	ZLNetworkUtil();
 };
 
-#endif /* __CURLDATA_H__ */
+#endif /* __ZLNETWORKUTIL_H__ */

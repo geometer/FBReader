@@ -198,6 +198,7 @@
 					<node name="action">
 						<node name="none" value="Ei mitään" />
 						<node name="showLibrary" value="Näytä kirjasto" />
+						<node name="showNetLibrary" toBeTranslated="true" value="Show Network Library" />
 						<node name="showRecent" value="Näytä viimeisimmät kirjat" />
 						<node name="previousBook" value="Avaa edellinen kirja" />
 						<node name="toc" value="Näytä sisällysluettelo" />
@@ -345,15 +346,6 @@
 			<node name="message" value="Luokan nimi ei saa sisältää “,” symbolia" />
 		</node>
 		<node name="networkError">
-			<node name="title" value="Verkkovirhe" />
-			<node name="unknownErrorMessage" value="Tuntematon virhe" />
-			<node name="couldntCreateDirectoryMessage" value="Ei voitu luoda hakemistoa&#10;%s" />
-			<node name="couldntCreateFileMessage" value="Ei voitu luoda tiedostoa&#10;%s" />
-			<node name="couldntConnectMessage" value="Ei voitu yhdistää palvelimeen %s" />
-			<node name="couldntResolveHostMessage" value="Ei tunnistettu palvelinta %s" />
-			<node name="couldntResolveProxyMessage" value="Ei tunnistettu välityspalvelinta %s" />
-			<node name="operationTimedOutMessage" value="Toiminto aikakatkaistiin" />
-			<node name="somethingWrongMessage" value="Jokin meni pieleen&#10;%s" />
 			<node name="emptyLibrariesList" value="Tyhjä kirjastolista" />
 		</node>
 		<node name="downloadError">

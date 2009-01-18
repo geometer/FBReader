@@ -24,6 +24,7 @@ const ZLCategoryKey ZLCategoryKey::LOOK_AND_FEEL("ui");
 const ZLCategoryKey ZLCategoryKey::CONFIG("options");
 const ZLCategoryKey ZLCategoryKey::STATE("state");
 const ZLCategoryKey ZLCategoryKey::SYSTEM("system");
+const ZLCategoryKey ZLCategoryKey::NETWORK("network");
 
 ZLCategoryKey::ZLCategoryKey(const std::string &name) : Name(name) {
 }

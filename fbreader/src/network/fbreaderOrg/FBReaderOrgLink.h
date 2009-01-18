@@ -27,8 +27,8 @@ class FBReaderOrgLink : public NetworkLink {
 public:
 	FBReaderOrgLink();
 
-	shared_ptr<CurlData> simpleSearchData(NetworkBookList &books, const std::string &pattern);
-	shared_ptr<CurlData> advancedSearchData(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation);
+	shared_ptr<ZLNetworkData> simpleSearchData(NetworkBookList &books, const std::string &pattern);
+	shared_ptr<ZLNetworkData> advancedSearchData(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation);
 
 private:
 	void addSubPattern(std::string &url, const std::string &name, const std::string &value);

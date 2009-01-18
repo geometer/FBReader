@@ -21,6 +21,3 @@ UILIBS = -L$(QT_PATH)/lib -L$(QT_PATH)/lib/ezx -lqte-mt -lezxappbase -lezxappsdk
 
 CFLAGS = -pipe -Duint16_t="unsigned short" -Duint32_t="unsigned int" -DQWS -fno-exceptions -fno-rtti -Wall -W -O2 -mcpu=iwmmxt -mtune=iwmmxt -Wno-ctor-dtor-privacy -W -ftemplate-depth-30
 LDFLAGS = 
-
-XML_LIB = -lexpat
-ARCHIVER_LIB = -lz -lbz2

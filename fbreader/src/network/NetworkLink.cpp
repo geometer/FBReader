@@ -18,52 +18,15 @@
  */
 
 #include <ZLUnicodeUtil.h>
+#include <ZLNetworkData.h>
+#include <ZLNetworkUtil.h>
 
 #include "NetworkLink.h"
 
 #include "../options/FBOptions.h"
 
-NetworkLink::NetworkLink(const std::string &siteName, const std::string &optionName) : SiteName(siteName), OnOption(FBCategoryKey::NETWORK, optionName, "on", true) {
+NetworkLink::NetworkLink(const std::string &siteName, const std::string &optionName) : SiteName(siteName), OnOption(ZLCategoryKey::NETWORK, optionName, "on", true) {
 }
 
 NetworkLink::~NetworkLink() {
-}
-
-std::string NetworkLink::hostFromUrl(const std::string &url) {
-	std::string host = url;
-	int index = host.find("://");
-	if (index != -1) {
-		host.erase(0, index + 3);
-	}
-	index = host.find("/");
-	if (index != -1) {
-		host.erase(index);
-	}
-	return host;
-}
-
-std::string NetworkLink::htmlEncode(const std::string &stringToEncode) {
-	std::string encodedString;
-	const char *data = stringToEncode.data();
-	const char *end = data + stringToEncode.length();
-	while (data < end) {
-		ZLUnicodeUtil::Ucs4Char ch;
-		int count = ZLUnicodeUtil::firstChar(ch, data);
-		if (ZLUnicodeUtil::isLetter(ch) ||
-				(ch == '.') ||
-				(ch == '~') ||
-				(ch == '-') ||
-				(ch == '_')) {
-			encodedString.append(data, count);
-		} else {
-			static const char hexDigits[] = "0123456789ABCDEF";
-			for (int i = 0; i < count; ++i) {
-				encodedString += '%';
-				encodedString += hexDigits[((unsigned char)data[i]) / 16];
-				encodedString += hexDigits[((unsigned char)data[i]) % 16];
-			}
-		}
-		data += count;
-	}
-	return encodedString;
 }

@@ -17,25 +17,26 @@
  * 02110-1301, USA.
  */
 
-#include "CurlData.h"
+#include <ZLXMLReader.h>
 
-CurlData::CurlData(const std::string &url) : myURL(url) {
-	myHandle = curl_easy_init();
-	if (myHandle != 0) {
-		curl_easy_setopt(myHandle, CURLOPT_URL, myURL.c_str());
+#include "ZLNetworkXMLParserData.h"
+
+static size_t parseXML(void *ptr, size_t size, size_t nmemb, void *data) {
+	((ZLXMLReader*)data)->readFromBuffer((const char*)ptr, size * nmemb);
+	return size * nmemb;
+}
+
+ZLNetworkXMLParserData::ZLNetworkXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) : ZLNetworkData(url), myReader(reader) {
+	CURL *h = handle();
+	if (h != 0) {
+		curl_easy_setopt(h, CURLOPT_WRITEFUNCTION, parseXML);
+		curl_easy_setopt(h, CURLOPT_WRITEDATA, &*myReader);
+		myReader->initialize();
 	}
 }
 
-CurlData::~CurlData() {
-	if (myHandle != 0) {
-		curl_easy_cleanup(myHandle);
+ZLNetworkXMLParserData::~ZLNetworkXMLParserData() {
+	if (handle() != 0) {
+		myReader->shutdown();
 	}
-}
-
-const std::string &CurlData::url() const {
-	return myURL;
-}
-
-CURL *CurlData::handle() {
-	return myHandle;
 }

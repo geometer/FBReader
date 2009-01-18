@@ -52,6 +52,7 @@ static const std::string TITLE_DC_TAG = "title";
 static const std::string AUTHOR_DC_TAG = "author";
 static const std::string LANGUAGE_DC_TAG = "language";
 static const std::string DATE_DC_TAG = "date";
+static const std::string DESCRIPTION_DC_TAG = "description";
 
 void FeedBooksDataParser::startElementHandler(const char *tag, const char **attributes) {
 	if (BOOK_TAG == tag) {
@@ -73,6 +74,8 @@ void FeedBooksDataParser::endElementHandler(const char *tag) {
 				myCurrentBook->Tags.push_back(myBuffer);
 			} else if (TITLE_DC_TAG == dcTag) {
 				myCurrentBook->Title = myBuffer;
+			} else if (DESCRIPTION_DC_TAG == dcTag) {
+				myCurrentBook->Annotation = myBuffer;
 			} else if (AUTHOR_DC_TAG == dcTag) {
 				int index = myBuffer.find(',');
 				if (index >= 0) {

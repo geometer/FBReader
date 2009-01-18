@@ -11,6 +11,17 @@
 		<node name="waitMessage">
 			<node name="savingConfig" value="يجري حفظ الإعدادات..." />
 		</node>
+		<node name="networkError">
+			<node name="title" toBeTranslated="true" value="Network error" />
+			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error" />
+			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn&apos;t create a directory&#10;%s" />
+			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn&apos;t create a file&#10;%s" />
+			<node name="couldntConnectMessage" toBeTranslated="true" value="Couldn&apos;t connect to host %s" />
+			<node name="couldntResolveHostMessage" toBeTranslated="true" value="Couldn&apos;t resolve host %s" />
+			<node name="couldntResolveProxyMessage" toBeTranslated="true" value="Couldn&apos;t resolve proxy %s" />
+			<node name="operationTimedOutMessage" toBeTranslated="true" value="Operation is timed out" />
+			<node name="somethingWrongMessage" toBeTranslated="true" value="Something goes wrong for&#10;%s" />
+		</node>
 	</node>
 	<node name="color">
 		<node name="red" value="أحمر" />

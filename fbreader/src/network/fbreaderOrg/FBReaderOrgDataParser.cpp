@@ -47,6 +47,7 @@ static const std::string SUBJECT_DC_TAG = "subject";
 static const std::string TITLE_DC_TAG = "title";
 static const std::string AUTHOR_DC_TAG = "author";
 static const std::string DATE_DC_TAG = "date";
+static const std::string DESCRIPTION_DC_TAG = "description";
 
 static const std::string COVER_URL_TYPE = "cover";
 static const std::string BUY_URL_TYPE = "buy";
@@ -80,6 +81,8 @@ void FBReaderOrgDataParser::endElementHandler(const char *tag) {
 				myCurrentBook->Tags.push_back(myBuffer);
 			} else if (TITLE_DC_TAG == dcTag) {
 				myCurrentBook->Title = myBuffer;
+			} else if (DESCRIPTION_DC_TAG == dcTag) {
+				myCurrentBook->Annotation = myBuffer;
 			} else if (AUTHOR_DC_TAG == dcTag) {
 				myCurrentBook->Author.DisplayName = myBuffer;
 				int index = myBuffer.rfind(' ');

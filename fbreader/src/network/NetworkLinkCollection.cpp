@@ -17,14 +17,11 @@
  * 02110-1301, USA.
  */
 
-#include <map>
-#include <set>
-
 #include <ZLFile.h>
 #include <ZLDir.h>
-#include <ZLOutputStream.h>
 #include <ZLStringUtil.h>
 #include <ZLResource.h>
+#include <ZLNetworkManager.h>
 
 #include "NetworkLink.h"
 
@@ -43,12 +40,7 @@ NetworkLinkCollection &NetworkLinkCollection::instance() {
 }
 
 NetworkLinkCollection::NetworkLinkCollection() :
-	ConnectTimeoutOption(FBCategoryKey::NETWORK, "Options", "ConnectTimeout", 1, 1000, 10),
-	TimeoutOption(FBCategoryKey::NETWORK, "Options", "Timeout", 1, 1000, 15),
-	UseProxyOption(FBCategoryKey::NETWORK, "Options", "UseProxy", false),
-	ProxyHostOption(FBCategoryKey::NETWORK, "Options", "ProxyHost", ""),
-	ProxyPortOption(FBCategoryKey::NETWORK, "Options", "ProxyPort", "3128"),
-	DirectoryOption(FBCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
+	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 	myLinks.push_back(new FeedBooksLink());
 	myLinks.push_back(new FBReaderOrgLink());
 }
@@ -72,12 +64,12 @@ static std::string normalize(const std::string &url) {
 }
 
 std::string NetworkLinkCollection::bookFileName(const std::string &url) const {
-	return ZLStringOption(FBCategoryKey::NETWORK, "Files", ::normalize(url), "").value();
+	return ZLStringOption(ZLCategoryKey::NETWORK, "Files", ::normalize(url), "").value();
 }
 
 std::string NetworkLinkCollection::downloadBook(const std::string &url, std::string &fileName) const {
 	const std::string nURL = ::normalize(url);
-	ZLStringOption fileNameOption(FBCategoryKey::NETWORK, "Files", nURL, "");
+	ZLStringOption fileNameOption(ZLCategoryKey::NETWORK, "Files", nURL, "");
 	std::string storedFileName = fileNameOption.value();
 	if (!storedFileName.empty() && ZLFile(storedFileName).exists()) {
 		fileName = storedFileName;
@@ -102,77 +94,11 @@ std::string NetworkLinkCollection::downloadBook(const std::string &url, std::str
 		ZLFile(fileName).remove();
 	}
 	fileNameOption.setValue(fileName);
-	return downloadFile(nURL, fileName);
-}
-
-std::string NetworkLinkCollection::perform(const std::vector<shared_ptr<CurlData> > &dataList) {
-	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
-
-	if (dataList.empty()) {
-		return errorResource["emptyLibrariesList"].value();
-	}
-
-	const std::string proxy = ProxyHostOption.value() + ':' + ProxyPortOption.value();
-	CURLM *handle = curl_multi_init();
-	std::map<CURL*,shared_ptr<CurlData> > handleToData; 
-	for (std::vector<shared_ptr<CurlData> >::const_iterator it = dataList.begin(); it != dataList.end(); ++it) {
-		CURL *easyHandle = (*it)->handle();
-		if (easyHandle != 0) {
-			handleToData[easyHandle] = *it;
-			setStandardOptions(easyHandle, proxy);
-			curl_multi_add_handle(handle, easyHandle);
-		}
-	}
-
-	int counter;
-	CURLMcode res;
-	do {
-		res = curl_multi_perform(handle, &counter);
-	} while ((res == CURLM_CALL_MULTI_PERFORM) || (counter > 0));
-
-	CURLMsg *message;
-	std::set<std::string> errors;
-	do {
-		int queueSize;
-		message = curl_multi_info_read(handle, &queueSize);
-		if ((message != 0) &&
-		    (message->msg == CURLMSG_DONE) &&
-		    (message->data.result != CURLE_OK)) {
-			const std::string &url = handleToData[message->easy_handle]->url();
-			switch (message->data.result) {
-				default:
-					errors.insert(ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), NetworkLink::hostFromUrl(url)));
-					break;
-				case CURLE_COULDNT_RESOLVE_PROXY:
-					errors.insert(ZLStringUtil::printf(errorResource["couldntResolveProxyMessage"].value(), ProxyHostOption.value()));
-					break;
-				case CURLE_COULDNT_RESOLVE_HOST:
-					errors.insert(ZLStringUtil::printf(errorResource["couldntResolveHostMessage"].value(), NetworkLink::hostFromUrl(url)));
-					break;
-				case CURLE_COULDNT_CONNECT:
-					errors.insert(ZLStringUtil::printf(errorResource["couldntConnectMessage"].value(), NetworkLink::hostFromUrl(url)));
-					break;
-				case CURLE_OPERATION_TIMEDOUT:
-					errors.insert(errorResource["operationTimedOutMessage"].value());
-					break;
-			}
-		}
-	} while ((message != 0) && (errors.size() < 3));
-
-	curl_multi_cleanup(handle);
-
-	std::string result;
-	for (std::set<std::string>::const_iterator et = errors.begin(); et != errors.end(); ++et) {
-		if (!result.empty()) {
-			result += '\n';
-		}
-		result += *et;
-	}
-	return result;
+	return ZLNetworkManager::instance().downloadFile(nURL, fileName);
 }
 
 std::string NetworkLinkCollection::simpleSearch(NetworkBookList &books, const std::string &pattern) {
-	std::vector<shared_ptr<CurlData> > dataList;
+	std::vector<shared_ptr<ZLNetworkData> > dataList;
 
 	std::vector<NetworkBookList> bookLists(myLinks.size());
 	int count = 0;
@@ -184,7 +110,7 @@ std::string NetworkLinkCollection::simpleSearch(NetworkBookList &books, const st
 		}
 	}
 
-	std::string result = perform(dataList);
+	std::string result = ZLNetworkManager::instance().perform(dataList);
 
 	for (std::vector<NetworkBookList>::const_iterator jt = bookLists.begin(); jt != bookLists.end(); ++jt) {
 		books.insert(books.end(), jt->begin(), jt->end());
@@ -194,7 +120,7 @@ std::string NetworkLinkCollection::simpleSearch(NetworkBookList &books, const st
 }
 
 std::string NetworkLinkCollection::advancedSearch(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) {
-	std::vector<shared_ptr<CurlData> > dataList;
+	std::vector<shared_ptr<ZLNetworkData> > dataList;
 
 	std::vector<NetworkBookList> bookLists(myLinks.size());
 	int count = 0;
@@ -206,69 +132,13 @@ std::string NetworkLinkCollection::advancedSearch(NetworkBookList &books, const 
 		}
 	}
 
-	std::string result = perform(dataList);
+	std::string result = ZLNetworkManager::instance().perform(dataList);
 
 	for (std::vector<NetworkBookList>::const_iterator jt = bookLists.begin(); jt != bookLists.end(); ++jt) {
 		books.insert(books.end(), jt->begin(), jt->end());
 	}
 
 	return result;
-}
-
-static size_t writeToStream(void *ptr, size_t size, size_t nmemb, void *data) {
-	((ZLOutputStream*)data)->write((const char*)ptr, size * nmemb);
-	return size * nmemb;
-}
-
-void NetworkLinkCollection::setStandardOptions(CURL *handle, const std::string &proxy) const {
-	if (UseProxyOption.value()) {
-		curl_easy_setopt(handle, CURLOPT_PROXY, proxy.c_str());
-	}
-	curl_easy_setopt(handle, CURLOPT_TIMEOUT, TimeoutOption.value());
-	curl_easy_setopt(handle, CURLOPT_CONNECTTIMEOUT, ConnectTimeoutOption.value());
-}
-
-std::string NetworkLinkCollection::downloadFile(const std::string &url, const std::string &fileName) const {
-	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
-
-	CURL *curl = curl_easy_init();
-	if (!curl) {
-		return errorResource["unknownErrorMessage"].value();
-	}
-	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-	const std::string proxy = ProxyHostOption.value() + ':' + ProxyPortOption.value();
-	setStandardOptions(curl, proxy);
-
-	ZLFile fileToWrite(fileName);
-	shared_ptr<ZLOutputStream> stream = fileToWrite.outputStream();
-	if (stream.isNull() || !stream->open()) {
-		return ZLStringUtil::printf(errorResource["couldntCreateFileMessage"].value(), fileName);
-	}
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToStream);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &*stream);
-
-	CURLcode res = curl_easy_perform(curl);
-	curl_easy_cleanup(curl);
-	stream->close();
-
-	if (res == CURLE_OK) {
-		return "";
-	}
-
-	fileToWrite.remove();
-
-	switch (res) {
-		default:
-			return ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), url);
-		case CURLE_COULDNT_RESOLVE_PROXY:
-			return ZLStringUtil::printf(errorResource["couldntResolveProxyMessage"].value(), ProxyHostOption.value());
-		case CURLE_COULDNT_RESOLVE_HOST:
-			return ZLStringUtil::printf(errorResource["couldntResolveHostMessage"].value(), NetworkLink::hostFromUrl(url));
-		case CURLE_COULDNT_CONNECT:
-			return ZLStringUtil::printf(errorResource["couldntConnectMessage"].value(), NetworkLink::hostFromUrl(url));
-		case CURLE_OPERATION_TIMEDOUT:
-			return errorResource["operationTimedOutMessage"].value();
-	}
 }
 
 size_t NetworkLinkCollection::size() const {

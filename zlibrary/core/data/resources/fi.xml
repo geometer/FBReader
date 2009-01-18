@@ -12,6 +12,17 @@
 		<node name="waitMessage">
 			<node name="savingConfig" value="Tallennetaan asetuksia..." />
 		</node>
+		<node name="networkError">
+			<node name="title" value="Verkkovirhe" />
+			<node name="unknownErrorMessage" value="Tuntematon virhe" />
+			<node name="couldntCreateDirectoryMessage" value="Ei voitu luoda hakemistoa&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Ei voitu luoda tiedostoa&#10;%s" />
+			<node name="couldntConnectMessage" value="Ei voitu yhdistää palvelimeen %s" />
+			<node name="couldntResolveHostMessage" value="Ei tunnistettu palvelinta %s" />
+			<node name="couldntResolveProxyMessage" value="Ei tunnistettu välityspalvelinta %s" />
+			<node name="operationTimedOutMessage" value="Toiminto aikakatkaistiin" />
+			<node name="somethingWrongMessage" value="Jokin meni pieleen&#10;%s" />
+		</node>
 	</node>
 	<node name="color">
 		<node name="red" value="Punainen" />

@@ -12,6 +12,10 @@ INCDIR ?= $(INSTALLDIR)/include
 SHAREDIR ?= $(INSTALLDIR)/share
 BASEDIR ?= $(SHAREDIR)
 
+XML_LIBS ?= -lexpat
+ARCHIVER_LIBS ?= -lz -lbz2
+NETWORK_LIBS ?= -lcurl
+
 CFLAGS += -DINSTALLDIR=\"$(INSTALLDIR)\" -DBASEDIR=\"$(BASEDIR)\" -DLIBDIR=\"$(LIBDIR)\" -DIMAGEDIR=\"$(IMAGEDIR)\" -DAPPIMAGEDIR=\"$(APPIMAGEDIR)\" -DVERSION=\"$(VERSION)\"
 ifeq "$(ZLSHARED)" "yes"
   CFLAGS += -fPIC -DZLSHARED
@@ -33,10 +37,10 @@ ZINCLUDE = -I $(ROOTDIR)/zlibrary/core/include -I $(ROOTDIR)/zlibrary/text/inclu
 ZLSHARED ?= yes
 
 ifeq "$(ZLSHARED)" "yes"
-  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/core -lzlcore $(XML_LIB) $(ARCHIVER_LIB) -ldl
+  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/core -lzlcore -ldl
 	TEXT_LIBS = -lzltext
 else
-  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/ui -L$(ROOTDIR)/zlibrary/core -lzlcore -lzlui-$(UI_TYPE) -lzlcore $(UILIBS) $(XML_LIB) $(ARCHIVER_LIB)
+  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/ui -L$(ROOTDIR)/zlibrary/core -lzlcore -lzlui-$(UI_TYPE) -lzlcore $(UILIBS) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS)
 	TEXT_LIBS = -lzltext -llinebreak -lfribidi
 endif
 

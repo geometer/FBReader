@@ -27,13 +27,10 @@
 #include <ZLOptions.h>
 
 #include "NetworkBookInfo.h"
-#include "CurlData.h"
+
+class ZLNetworkData;
 
 class NetworkLink {
-
-public:
-	static std::string htmlEncode(const std::string &stringToEncode);
-	static std::string hostFromUrl(const std::string &url);
 
 protected:
 	NetworkLink(const std::string &siteName, const std::string &optionName);
@@ -46,8 +43,8 @@ public:
 	ZLBooleanOption OnOption;
 
 public:
-	virtual shared_ptr<CurlData> simpleSearchData(NetworkBookList &books, const std::string &pattern) = 0;
-	virtual shared_ptr<CurlData> advancedSearchData(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) = 0;
+	virtual shared_ptr<ZLNetworkData> simpleSearchData(NetworkBookList &books, const std::string &pattern) = 0;
+	virtual shared_ptr<ZLNetworkData> advancedSearchData(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) = 0;
 };
 
 class NetworkLinkCollection {
@@ -58,20 +55,7 @@ public:
 private:
 	static NetworkLinkCollection *ourInstance;
 
-private:
-	// returns error message
-	std::string downloadFile(const std::string &url, const std::string &fileName) const;
-	// returns error message
-	std::string perform(const std::vector<shared_ptr<CurlData> > &dataList);
-
-	void setStandardOptions(CURL *handle, const std::string &proxy) const;
-
 public:
-	ZLIntegerRangeOption ConnectTimeoutOption;
-	ZLIntegerRangeOption TimeoutOption;
-	ZLBooleanOption UseProxyOption;
-	ZLStringOption ProxyHostOption;
-	ZLStringOption ProxyPortOption;
 	ZLStringOption DirectoryOption;
 
 private:

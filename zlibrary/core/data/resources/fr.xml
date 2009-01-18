@@ -12,6 +12,17 @@
 		<node name="waitMessage">
 			<node name="savingConfig" value="Enregistrement de la configuration..." />
 		</node>
+		<node name="networkError">
+			<node name="title" value="Erreur réseau" />
+			<node name="unknownErrorMessage" value="Erreur inconnue" />
+			<node name="couldntCreateDirectoryMessage" value="Impossible de créer un répertoire&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Impossible de créer un fichier&#10;%s" />
+			<node name="couldntConnectMessage" value="Impossible de se connecter à l&apos;hôte %s" />
+			<node name="couldntResolveHostMessage" value="Résolution du nom %s impossible" />
+			<node name="couldntResolveProxyMessage" value="Résolution du proxy %s impossible" />
+			<node name="operationTimedOutMessage" value="Le délai réseau a expiré" />
+			<node name="somethingWrongMessage" value="Il y a un problème avec&#10;%s" />
+		</node>
 	</node>
 	<node name="color">
 		<node name="red" value="Rouge" />

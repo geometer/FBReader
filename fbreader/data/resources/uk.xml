@@ -198,6 +198,7 @@
 					<node name="action">
 						<node name="none" value="Ніяких дій" />
 						<node name="showLibrary" value="Показати бібліотеку" />
+						<node name="showNetLibrary" toBeTranslated="true" value="Show Network Library" />
 						<node name="showRecent" value="Показати прочитані книги" />
 						<node name="previousBook" value="Відкрити попередню книгу" />
 						<node name="toc" value="Показати зміст" />
@@ -345,15 +346,6 @@
 			<node name="message" toBeTranslated="true" value="Tag name must not contain a “,” symbol" />
 		</node>
 		<node name="networkError">
-			<node name="title" toBeTranslated="true" value="Network error" />
-			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error" />
-			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn&apos;t create a directory&#10;%s" />
-			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn&apos;t create a file&#10;%s" />
-			<node name="couldntConnectMessage" toBeTranslated="true" value="Couldn&apos;t connect to host %s" />
-			<node name="couldntResolveHostMessage" toBeTranslated="true" value="Couldn&apos;t resolve host %s" />
-			<node name="couldntResolveProxyMessage" toBeTranslated="true" value="Couldn&apos;t resolve proxy %s" />
-			<node name="operationTimedOutMessage" toBeTranslated="true" value="Operation is timed out" />
-			<node name="somethingWrongMessage" toBeTranslated="true" value="Something goes wrong for&#10;%s" />
 			<node name="emptyLibrariesList" toBeTranslated="true" value="Empty libraries list" />
 		</node>
 		<node name="downloadError">

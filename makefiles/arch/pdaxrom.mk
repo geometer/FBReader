@@ -19,9 +19,6 @@ QTINCLUDE = -I $(USRPATH)/qt/include
 INCPATH = $(USRPATH)/include
 GTKINCLUDE = -I$(INCPATH)/libxml2 -I$(INCPATH)/libglade-2.0 -I$(INCPATH)/gtk-2.0 -I$(USRPATH)/lib/gtk-2.0/include -I$(USRPATH)/X11R6/include -I$(INCPATH)/atk-1.0 -I$(INCPATH)/pango-1.0 -I$(INCPATH)/freetype2 -I$(INCPATH)/glib-2.0 -I$(USRPATH)/lib/glib-2.0/include
 
-XML_LIB = -lexpat
-ARCHIVER_LIB = -lz -lbz2
-
 ifeq "$(UI_TYPE)" "qt"
 	UILIBS = -L $(USRPATH)/qt/lib -lqt-mt -L $(USRPATH)/X11R6/lib -lXext -lXrender -lXrandr -lXcursor -lX11 -lXft -lSM -lICE
 else

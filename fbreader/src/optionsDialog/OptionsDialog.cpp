@@ -22,6 +22,7 @@
 #include <ZLPaintContext.h>
 #include <ZLLanguageList.h>
 #include <ZLEncodingConverter.h>
+#include <ZLNetworkManager.h>
 
 #include <optionEntries/ZLToggleBooleanOptionEntry.h>
 #include <optionEntries/ZLColorOptionBuilder.h>
@@ -167,16 +168,19 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 		NetworkLink &link = linkCollection.link(i);
 		networkTab.addOption(link.SiteName, "", new ZLSimpleBooleanOptionEntry(link.OnOption));
 	}
-	ZLToggleBooleanOptionEntry *useProxyEntry = new ZLToggleBooleanOptionEntry(linkCollection.UseProxyOption);
-	networkTab.addOption(ZLResourceKey("useProxy"), useProxyEntry);
-	ZLSimpleStringOptionEntry *proxyHostEntry = new ZLSimpleStringOptionEntry(linkCollection.ProxyHostOption);
-	networkTab.addOption(ZLResourceKey("proxyHost"), proxyHostEntry);
-	ZLSimpleStringOptionEntry *proxyPortEntry = new ZLSimpleStringOptionEntry(linkCollection.ProxyPortOption);
-	networkTab.addOption(ZLResourceKey("proxyPort"), proxyPortEntry);
-	useProxyEntry->addDependentEntry(proxyHostEntry);
-	useProxyEntry->addDependentEntry(proxyPortEntry);
-	useProxyEntry->onStateChanged(useProxyEntry->initialState());
-	networkTab.addOption(ZLResourceKey("timeout"), new ZLSimpleSpinOptionEntry(linkCollection.TimeoutOption, 5));
+	ZLNetworkManager &networkManager = ZLNetworkManager::instance();
+	if (!networkManager.providesProxyInfo()) {
+		ZLToggleBooleanOptionEntry *useProxyEntry = new ZLToggleBooleanOptionEntry(networkManager.UseProxyOption);
+		networkTab.addOption(ZLResourceKey("useProxy"), useProxyEntry);
+		ZLSimpleStringOptionEntry *proxyHostEntry = new ZLSimpleStringOptionEntry(networkManager.ProxyHostOption);
+		networkTab.addOption(ZLResourceKey("proxyHost"), proxyHostEntry);
+		ZLSimpleStringOptionEntry *proxyPortEntry = new ZLSimpleStringOptionEntry(networkManager.ProxyPortOption);
+		networkTab.addOption(ZLResourceKey("proxyPort"), proxyPortEntry);
+		useProxyEntry->addDependentEntry(proxyHostEntry);
+		useProxyEntry->addDependentEntry(proxyPortEntry);
+		useProxyEntry->onStateChanged(useProxyEntry->initialState());
+	}
+	networkTab.addOption(ZLResourceKey("timeout"), new ZLSimpleSpinOptionEntry(networkManager.TimeoutOption, 5));
 
 	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
 	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::instance().LanguageAutoDetectOption));

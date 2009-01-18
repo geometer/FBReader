@@ -50,6 +50,7 @@ struct NetworkBookInfo {
 	std::string Cover;
 	std::string Date;
 	std::string Series;
+	std::string Annotation;
 	std::map<URLType,std::string> URLByType;
 
 	NetworkBookInfo(const std::string &id);

@@ -12,6 +12,17 @@
 		<node name="waitMessage">
 			<node name="savingConfig" value="Ukládám nastavení..." />
 		</node>
+		<node name="networkError">
+			<node name="title" value="Chyba sítě" />
+			<node name="unknownErrorMessage" value="Neznámá chyba" />
+			<node name="couldntCreateDirectoryMessage" value="Nepodařilo se vytvořit složku&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Nepodařilo se vytvořit soubor&#10;%s" />
+			<node name="couldntConnectMessage" value="Nepodařilo se připojit k serveru %s" />
+			<node name="couldntResolveHostMessage" value="Nepodařilo se najít server %s" />
+			<node name="couldntResolveProxyMessage" value="Nepodařilo se najít proxy %s" />
+			<node name="operationTimedOutMessage" value="Vypršel čas operace" />
+			<node name="somethingWrongMessage" value="Něco se nepodařilo&#10;%s" />
+		</node>
 	</node>
 	<node name="color">
 		<node name="red" value="Červená" />

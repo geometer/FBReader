@@ -12,6 +12,17 @@
 		<node name="waitMessage">
 			<node name="savingConfig" value="Salvataggio configurazione..." />
 		</node>
+		<node name="networkError">
+			<node name="title" value="Errore di rete" />
+			<node name="unknownErrorMessage" value="Errore sconosciuto" />
+			<node name="couldntCreateDirectoryMessage" value="Impossibile creare una cartella&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Impossibile creare un file&#10;%s" />
+			<node name="couldntConnectMessage" value="Impossibile connettersi all&apos;host %s" />
+			<node name="couldntResolveHostMessage" value="Impossibile trovare l&apos;host %s" />
+			<node name="couldntResolveProxyMessage" value="Impossibile trovare il proxy %s" />
+			<node name="operationTimedOutMessage" value="Tempo scaduto per l&apos;operazione" />
+			<node name="somethingWrongMessage" value="Qualcosa va storto per&#10;%s" />
+		</node>
 	</node>
 	<node name="color">
 		<node name="red" value="Rosso" />

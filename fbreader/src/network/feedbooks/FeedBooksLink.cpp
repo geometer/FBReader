@@ -19,31 +19,33 @@
 
 #include <cctype>
 
+#include <ZLNetworkUtil.h>
+#include <ZLNetworkXMLParserData.h>
+
 #include "FeedBooksLink.h"
 #include "FeedBooksDataParser.h"
 #include "../fbreaderOrg/FBReaderOrgDataParser.h"
 #include "../NetworkBookInfo.h"
-#include "../XMLParserCurlData.h"
 
 static const std::string URL_PREFIX = "http://www.fbreader.org/library/";
 
 static void addSubPattern(std::string &url, const std::string &name, const std::string &value) {
 	if (!value.empty()) {
-		url += "&" + name + "=" + FeedBooksLink::htmlEncode(value);
+		url += "&" + name + "=" + ZLNetworkUtil::htmlEncode(value);
 	}
 }
 
 FeedBooksLink::FeedBooksLink() : NetworkLink("FeedBooks.Com", "feedbooks.com") {
 }
 
-shared_ptr<CurlData> FeedBooksLink::simpleSearchData(NetworkBookList &books, const std::string &pattern) {
-	return new XMLParserCurlData(
-		"http://feedbooks.com/books/search.xml?query=" + htmlEncode(pattern),
+shared_ptr<ZLNetworkData> FeedBooksLink::simpleSearchData(NetworkBookList &books, const std::string &pattern) {
+	return new ZLNetworkXMLParserData(
+		"http://feedbooks.com/books/search.xml?query=" + ZLNetworkUtil::htmlEncode(pattern),
 		new FeedBooksDataParser(books)
 	);
 }
 
-shared_ptr<CurlData> FeedBooksLink::advancedSearchData(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) {
+shared_ptr<ZLNetworkData> FeedBooksLink::advancedSearchData(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) {
 	std::string request = URL_PREFIX + "advanced_query.php?type=xml&library=2";
 	addSubPattern(request, "title", title);
 	addSubPattern(request, "author", author);
@@ -51,5 +53,5 @@ shared_ptr<CurlData> FeedBooksLink::advancedSearchData(NetworkBookList &books, c
 	addSubPattern(request, "tag", tag);
 	addSubPattern(request, "annotation", annotation);
 
-	return new XMLParserCurlData(request, new FBReaderOrgDataParser(books));
+	return new ZLNetworkXMLParserData(request, new FBReaderOrgDataParser(books));
 }

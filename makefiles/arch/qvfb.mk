@@ -15,8 +15,5 @@ CC = gcc
 AR = ar rsu
 LD = g++
 
-XML_LIB = -lexpat
-ARCHIVER_LIB = -lz -lbz2
-
 CFLAGS = -pipe -DOPIE_NO_DEBUG -DOPIE_NO_BUILTIN_SHUTDOWN -DUSE_FILE_NOTIFICATION -DOPIE_SOUND_FRAGMENT_SHIFT=16 -DQT_NO_DEBUG -DQWS -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
 DEPGEN = $(CC) -MM

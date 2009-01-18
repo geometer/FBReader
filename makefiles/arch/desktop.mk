@@ -35,8 +35,5 @@ ifeq "$(UI_TYPE)" "gtk"
   UILIBS = $(shell pkg-config --libs gtk+-2.0) -lpng -ljpeg
 endif
 
-XML_LIB = -lexpat
-ARCHIVER_LIB = -lz -lbz2
-
 RM = rm -rvf
 RM_QUIET = rm -rf
