@@ -301,11 +301,12 @@ void MobipocketHtmlBookReader::readDocument(ZLInputStream &stream) {
 		std::pair<int,int> firstImageLocation = ((MobipocketStream&)stream).imageLocation(0);
 		fileStream->seek(firstImageLocation.first, false);
 		while ((firstImageLocation.first > 0) && (firstImageLocation.second > 0)) {
-			if (firstImageLocation.second > 10) {
-				fileStream->read(bu, 10);
+			if (firstImageLocation.second > 4) {
+				fileStream->read(bu, 4);
+				static const char jpegStart[2] = { (char)0xFF, (char)0xd8 };
 				if ((strncmp(bu, "BM", 2) == 0) ||
 						(strncmp(bu, "GIF8", 4) == 0) ||
-						(strncmp(bu + 6, "JFIF", 4) == 0)) {
+						(strncmp(bu, jpegStart, 2) == 0)) {
 					found = true;
 					break;
 				}
