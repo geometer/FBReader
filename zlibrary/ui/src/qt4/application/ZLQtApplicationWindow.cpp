@@ -278,8 +278,8 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool vi
 	}
 }
 
-void ZLQtApplicationWindow::refresh() {
-	ZLApplicationWindow::refresh();
+void ZLQtApplicationWindow::processAllEvents() {
+	qApp->processEvents();
 }
 
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {

@@ -48,7 +48,7 @@ private:
 };
 
 CollectionView::CollectionView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context),
-	ShowAllBooksTagOption(ZLCategoryKey::LOOK_AND_FEEL, "Library", "ShowAllBooksTag", true),
+	ShowAllBooksTagOption(ZLCategoryKey::LOOK_AND_FEEL, "Library", "ShowAllBooksTag", false),
 	myDoSynchronizeCollection(false),
 	myDoUpdateModel(true) {
 	setModel(new CollectionModel(*this, myCollection), "");

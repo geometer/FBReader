@@ -62,6 +62,7 @@ protected:
 	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
 
 	virtual void refresh();
+	virtual void processAllEvents() = 0;
 
 private:
 	void refreshToolbar(ToolbarType type);

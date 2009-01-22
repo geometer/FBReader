@@ -537,7 +537,7 @@ void W32KeyNameEditor::setEditable(bool editable) {
 	}
 }
 
-W32SpinBox::W32SpinBox(WORD min, WORD max, WORD initial) : W32AbstractEditor(ES_NUMBER), myMin(min), myMax(max), myValue(initial) {
+W32SpinBox::W32SpinBox(WORD min, WORD max, WORD initial) : W32AbstractEditor(ES_NUMBER), myMin(min), myMax(max), myValue(initial), myControlWindow(0) {
 }
 
 W32Widget::Size W32SpinBox::minimumSize() const {

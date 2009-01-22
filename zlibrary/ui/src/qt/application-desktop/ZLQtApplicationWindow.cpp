@@ -149,6 +149,10 @@ void ZLQtApplicationWindow::init() {
 	}
 }
 
+void ZLQtApplicationWindow::processAllEvents() {
+	qApp->processEvents();
+}
+
 ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 	if (isFullscreen()) {
 		myWindowStateOption.setValue(FULLSCREEN);

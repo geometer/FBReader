@@ -292,6 +292,10 @@ void ZLWin32ApplicationWindow::refresh() {
 	}
 }
 
+void ZLWin32ApplicationWindow::processAllEvents() {
+	// TODO: implement
+}
+
 ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
 	ourApplicationWindow = 0;
 }

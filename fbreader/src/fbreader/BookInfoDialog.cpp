@@ -116,7 +116,7 @@ void AuthorDisplayNameEntry::onAccept(const std::string &value) {
 
 void AuthorDisplayNameEntry::onValueSelected(int index) {
 	const std::vector<AuthorPtr> &authors = myInfoDialog.myCollection.authors();
-	myCurrentAuthor = authors[index];
+	myCurrentAuthor = (((size_t)index) < authors.size()) ? authors[index] : 0;
 	myInfoDialog.myAuthorSortKeyEntry->resetView();
 	myInfoDialog.mySeriesTitleEntry->resetView();
 }

@@ -59,6 +59,7 @@ private:
 
 	void init();
 	void refresh();
+	void processAllEvents();
 
 	void createWindowToolbar();
 	void createFloatingToolbar();

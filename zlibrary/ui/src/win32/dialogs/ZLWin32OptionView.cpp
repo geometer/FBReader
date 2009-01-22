@@ -180,17 +180,7 @@ void ComboOptionView::onEvent(const std::string &event, W32EventSender&) {
 			o.onValueEdited(myComboBox->text());
 		}
 	} else if (event == W32ComboBox::SELECTION_CHANGED_EVENT) {
-		const std::string text = myComboBox->text();
-		size_t index;
-		const std::vector<std::string> &values = o.values();
-		for (index = 0; index < values.size(); ++index) {
-			if (values[index] == text) {
-				break;
-			}
-		}
-		if (index < values.size()) {
-  		o.onValueSelected(index);
-		}
+		o.onStringValueSelected(myComboBox->text());
 	}
 }
 

@@ -117,13 +117,16 @@ ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
 }
 
 void ZLGtkApplicationWindow::refresh() {
-	ZLApplicationWindow::refresh();
-	while (gtk_events_pending()) {
-		gtk_main_iteration();
-	}
+	ZLDesktopApplicationWindow::refresh();
 	ToolbarType type =
 		isFullscreen() ? FULLSCREEN_TOOLBAR : WINDOW_TOOLBAR;
 	gtk_widget_queue_resize(toolbar(type).toolbarWidget());
+}
+
+void ZLGtkApplicationWindow::processAllEvents() {
+	while (gtk_events_pending()) {
+		gtk_main_iteration();
+	}
 }
 
 bool ZLGtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event) {

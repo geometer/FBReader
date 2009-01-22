@@ -210,6 +210,7 @@ void ZLApplication::trackStylus(bool track) {
 void ZLApplicationWindow::refresh() {
 	refreshToolbar(WINDOW_TOOLBAR);
 	refreshToolbar(FULLSCREEN_TOOLBAR);
+	processAllEvents();
 }
 
 void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
