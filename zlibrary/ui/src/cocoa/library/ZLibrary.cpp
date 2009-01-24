@@ -17,4 +17,9 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
 
+#include "../../../../core/src/unix/library/ZLibraryImplementation.h"
+
+void initLibrary() {
+}
