@@ -6,9 +6,15 @@ VERSION = $(shell cat ../VERSION)
 SOVERSION = $(shell cat SOVERSION)
 
 ifeq "$(ZLSHARED)" "yes"
-  TARGET = libzlcore.so.$(VERSION)
-  TARGET_SONAME = libzlcore.so.$(SOVERSION)
-  TARGET_SHORTNAME = libzlcore.so
+  ifeq "$(TARGET_ARCH)" "macosx"
+    TARGET = libzlcore.$(VERSION).dylib
+    TARGET_SONAME = libzlcore.$(SOVERSION).dylib
+    TARGET_SHORTNAME = libzlcore.dylib
+  else
+    TARGET = libzlcore.so.$(VERSION)
+    TARGET_SONAME = libzlcore.so.$(SOVERSION)
+    TARGET_SHORTNAME = libzlcore.so
+  endif
 else
   TARGET = libzlcore.a
 endif
@@ -45,6 +51,7 @@ $(TARGET): .objects
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(ZLSHARED)" "yes"
 	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS) -ldl
+	#@$(LD) $(LDFLAGS) -dynamiclib -dylinker_install_name $(TARGET_SONAME) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS) -ldl -liconv
 	@ln -sf $(TARGET) $(TARGET_SONAME)
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else
@@ -98,4 +105,4 @@ clean:
 			$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
 		fi; \
 	done;
-	@$(RM) *.so *.so.* *.a
+	@$(RM) *.so *.so.* *.dylib *.a

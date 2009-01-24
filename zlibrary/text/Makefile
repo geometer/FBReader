@@ -6,9 +6,15 @@ VERSION = $(shell cat ../VERSION)
 SOVERSION = $(shell cat SOVERSION)
 
 ifeq "$(ZLSHARED)" "yes"
-  TARGET = libzltext.so.$(VERSION)
-  TARGET_SONAME = libzltext.so.$(SOVERSION)
-  TARGET_SHORTNAME = libzltext.so
+  ifeq "$(TARGET_ARCH)" "macosx"
+    TARGET = libzltext.$(VERSION).dylib
+    TARGET_SONAME = libzltext.$(SOVERSION).dylib
+    TARGET_SHORTNAME = libzltext.dylib
+  else
+    TARGET = libzltext.so.$(VERSION)
+    TARGET_SONAME = libzltext.so.$(SOVERSION)
+    TARGET_SHORTNAME = libzltext.so
+  endif
 else
   TARGET = libzltext.a
 endif
@@ -29,6 +35,7 @@ $(TARGET): .objects
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(ZLSHARED)" "yes"
 	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS)) $(CORE_LIBS) -llinebreak -lfribidi
+	#@$(LD) $(LDFLAGS) -dynamiclib -dylinker_install_name $(TARGET_SONAME) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS)) $(CORE_LIBS) $(EXTERNAL_LIBS) -llinebreak -lfribidi
 	@ln -sf $(TARGET) $(TARGET_SONAME)
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else
@@ -63,4 +70,4 @@ clean:
 			$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
 		fi; \
 	done;
-	@$(RM) *.so *.so.* *.a
+	@$(RM) *.so *.so.* *.dylib *.a

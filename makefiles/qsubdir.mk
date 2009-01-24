@@ -1,7 +1,7 @@
 include $(ROOTDIR)/makefiles/config.mk
 -include moc.mk
 
-INCLUDE = $(QTINCLUDE) $(ZINCLUDE) $(EXTERNALINCLUDE)
+INCLUDE = $(QTINCLUDE) $(ZINCLUDE) $(EXTERNAL_INCLUDE)
 
 HEADERS = $(wildcard *.h)
 SOURCES =	$(wildcard *.cpp)

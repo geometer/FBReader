@@ -1,6 +1,6 @@
 include $(ROOTDIR)/makefiles/config.mk
 
-INCLUDE = $(ZINCLUDE) $(EXTERNALINCLUDE) $(GTKINCLUDE)
+INCLUDE = $(ZINCLUDE) $(EXTERNAL_INCLUDE) $(GTKINCLUDE)
 
 HEADERS = $(wildcard *.h)
 CSOURCES = $(wildcard *.c)
