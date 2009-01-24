@@ -13,15 +13,15 @@
 			<node name="savingConfig" value="Menyimpan pengaturan..." />
 		</node>
 		<node name="networkError">
-			<node name="title" toBeTranslated="true" value="Network error" />
-			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error" />
-			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn&apos;t create a directory&#10;%s" />
-			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn&apos;t create a file&#10;%s" />
-			<node name="couldntConnectMessage" toBeTranslated="true" value="Couldn&apos;t connect to host %s" />
-			<node name="couldntResolveHostMessage" toBeTranslated="true" value="Couldn&apos;t resolve host %s" />
-			<node name="couldntResolveProxyMessage" toBeTranslated="true" value="Couldn&apos;t resolve proxy %s" />
-			<node name="operationTimedOutMessage" toBeTranslated="true" value="Operation is timed out" />
-			<node name="somethingWrongMessage" toBeTranslated="true" value="Something goes wrong for&#10;%s" />
+			<node name="title" value="Jaringan bermasalah" />
+			<node name="unknownErrorMessage" value="Masalah tidak diketahui" />
+			<node name="couldntCreateDirectoryMessage" value="Tidak dapat membuat direktori&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Tidak dapat membuat berkas&#10;%s" />
+			<node name="couldntConnectMessage" value="Tidak dapat menghubungi alamat %s" />
+			<node name="couldntResolveHostMessage" value="Tidak dapat menerjemahkan alamat %s" />
+			<node name="couldntResolveProxyMessage" value="Tidak dapat menerjemahkan proxy %s" />
+			<node name="operationTimedOutMessage" value="Waktu tunggu operasi terlampaui" />
+			<node name="somethingWrongMessage" value="Terjadi sesuatu yang salah pada&#10;%s" />
 		</node>
 	</node>
 	<node name="color">
@@ -30,17 +30,17 @@
 		<node name="blue" value="Biru" />
 		<node name="black" value="Hitam" />
 		<node name="white" value="Putih" />
-		<node name="maroon" value="Merah Tua" />
+		<node name="maroon" value="Merah Gelap" />
 		<node name="olive" value="Hijau Kekuningan" />
-		<node name="navy" value="Biru Tua" />
+		<node name="navy" value="Biru Gelap" />
 		<node name="purple" value="Ungu" />
-		<node name="teal" value="Teal" />
+		<node name="teal" value="Hijau Kebiruan" />
 		<node name="silver" value="Perak" />
 		<node name="gray" value="Abu-abu" />
-		<node name="lime" value="Lime" />
+		<node name="lime" value="Hijau Terang" />
 		<node name="yellow" value="Kuning" />
 		<node name="magenta" value="Merah Keunguan" />
-		<node name="cyan" value="Biru Muda" />
+		<node name="cyan" value="Biru Terang" />
 		<node name="custom..." value="Kustom..." />
 	</node>
 	<node name="language">
@@ -60,8 +60,8 @@
 		<node name="no" value="Norwegia" />
 		<node name="pt" value="Portugis" />
 		<node name="ru" value="Rusia" />
-		<node name="tr" value="Turki" />
 		<node name="sv" value="Swedia" />
+		<node name="tr" value="Turki" />
 		<node name="uk" value="Ukraina" />
 		<node name="zh" value="Cina" />
 		<node name="other" value="Lainnya" />

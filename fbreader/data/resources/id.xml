@@ -40,21 +40,21 @@
 		<node name="quit" value="Keluar" />
 	</node>
 	<node name="toolbar">
-		<node name="showReading" toBeTranslated="true" value="Show Reading Mode" />
-		<node name="showLibrary" value="Perlihatkan Daftar Pustaka">
-			<node name="popup" toBeTranslated="true" value="Show Recent Books List" />
+		<node name="showReading" value="Tampilkan Mode Baca" />
+		<node name="showLibrary" value="Tampilkan Daftar Pustaka">
+			<node name="popup" value="Tampilkan Daftar Buku-buku Sebelumnya" />
 		</node>
-		<node name="showRecent" value="Perlihatkan Daftar Buku-buku Sebelumnya" />
-		<node name="byAuthor" toBeTranslated="true" value="Organize Books by Author" />
-		<node name="byTag" toBeTranslated="true" value="Organize Books by Tag" />
+		<node name="showRecent" value="Tampilkan Daftar Buku-buku Sebelumnya" />
+		<node name="byAuthor" value="Atur Buku-buku berdasarkan Pengarang" />
+		<node name="byTag" value="Atur Buku-buku berdasarkan Tag" />
 		<node name="addBook" value="Tambahkan Berkas ke Pustaka" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Search in Network Libraries" />
-		<node name="searchOnNetwork" toBeTranslated="true" value="Network Search" />
-		<node name="advancedSearchOnNetwork" toBeTranslated="true" value="Advanced Network Search" />
+		<node name="showNetLibrary" value="Cari dalam Pustaka Jaringan" />
+		<node name="searchOnNetwork" value="Pencarian dalam Jaringan" />
+		<node name="advancedSearchOnNetwork" value="Pencarian dalam Jaringan Tingkat Lanjut" />
 		<node name="gotoHome" value="Ke Bagian Awal Teks" />
 		<node name="undo" value="Mundur" />
 		<node name="redo" value="Maju" />
-		<node name="gotoPageNumberWithParameter" toBeTranslated="true" value="Go to Page" />
+		<node name="gotoPageNumberWithParameter" value="Ke Halaman" />
 		<node name="toc" value="Daftart Isi" />
 		<node name="search" value="Pencarian Teks" />
 		<node name="findNext" value="Pencarian Maju" />
@@ -76,15 +76,15 @@
 				<node name="Library" value="Pustaka">
 					<node name="bookPath" value="Lokasi Buku" />
 					<node name="lookInSubdirectories" value="Tampilkan Buku-buku yang Ada di Sub Direktori" />
-					<node name="collectBooksWithoutMetaInfo" toBeTranslated="true" value="Collect Books without MetaInfo" />
-					<node name="downloadDirectory" toBeTranslated="true" value="Directory for Downloaded Books" />
+					<node name="collectBooksWithoutMetaInfo" value="Kumpulkan Buku-buku tanpa MetaInfo" />
+					<node name="downloadDirectory" value="Direktori Buku-buku hasil Download" />
 					<node name="showAllBooksTag" value="Tampilkan Semua Cabang Buku" />
 				</node>
-				<node name="NetworkLibrary" toBeTranslated="true" value="Network Search">
-					<node name="useProxy" toBeTranslated="true" value="Use Proxy" />
-					<node name="proxyHost" toBeTranslated="true" value="Proxy Host" />
-					<node name="proxyPort" toBeTranslated="true" value="Proxy Port" />
-					<node name="timeout" toBeTranslated="true" value="Network Operations Timeout, seconds" />
+				<node name="NetworkLibrary" value="Pencarian Jaringan">
+					<node name="useProxy" value="Gunakan Proxy" />
+					<node name="proxyHost" value="Alamat Proxy" />
+					<node name="proxyPort" value="Nomor Port Proxy" />
+					<node name="timeout" value="Waktu Tunggu Operasi Jaringan, detik" />
 				</node>
 				<node name="Language" value="Bahasa">
 					<node name="autoDetect" value="Deteksi Bahasa dan Enkode secara Otomatis" />
@@ -94,10 +94,10 @@
 					<node name="useWindows1252Hack" value="Gunakan windows-1252 daripada iso-8859-1" />
 				</node>
 				<node name="Indicator" value="Indikator">
-					<node name="type" toBeTranslated="true" value="Show as">
-						<node name="osScrollbar" toBeTranslated="true" value="OS Scrollbar" />
-						<node name="fbIndicator" toBeTranslated="true" value="Old Style Indicator" />
-						<node name="none" toBeTranslated="true" value="Don&apos;t Show" />
+					<node name="type" value="Tampilkan sebagai">
+						<node name="osScrollbar" value="Scrollbar OS" />
+						<node name="fbIndicator" value="Indikator Model Lama" />
+						<node name="none" value="Jangan Ditampilkan" />
 					</node>
 					<node name="height" value="Tinggi Indikator" />
 					<node name="offset" value="Jarak dari Teks" />
@@ -130,8 +130,8 @@
 				<node name="Selection" value="Seleksi">
 					<node name="enableSelection" value="Aktifkan Seleksi Teks" />
 				</node>
-				<node name="CSS" toBeTranslated="true" value="CSS">
-					<node name="overrideSpecifiedFonts" toBeTranslated="true" value="Always Use My Own Fonts" />
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Gunakan Selalu Bentuk Huruf Milik Saya" />
 				</node>
 				<node name="Margins" value="Margin">
 					<node name="left" value="Margin Kiri" />
@@ -154,8 +154,8 @@
 					</node>
 					<node name="spaceBefore" value="Jarak Sebelumnya" />
 					<node name="spaceAfter" value="Jarak Setelahnya" />
-					<node name="startIndent" toBeTranslated="true" value="Line Start Indent" />
-					<node name="endIndent" toBeTranslated="true" value="Line End Indent" />
+					<node name="startIndent" value="Indentasi Baris Awal" />
+					<node name="endIndent" value="Indentasi Baris Akhir" />
 				</node>
 				<node name="Styles" value="Bentuk">
 					<node name="optionsFor" value="Pengaturan untuk" />
@@ -183,10 +183,10 @@
 						<node name="background" value="Latar Belakang" />
 						<node name="selectionBackground" value="Latar Belakang Seleksi" />
 						<node name="text" value="Teks Biasa" />
-						<node name="internalLink" value="Teks Hyperlink Internal" />
-						<node name="externalLink" value="Teks Hyperlink Eksternal" />
-						<node name="bookLink" toBeTranslated="true" value="Link to Another Book" />
-						<node name="highlighted" value="Text Berwarna Cerah" />
+						<node name="internalLink" value="Tautan Teks Internal" />
+						<node name="externalLink" value="Tautan Teks Eksternal" />
+						<node name="bookLink" value="Tautan ke Buku Lainnya" />
+						<node name="highlighted" value="Teks Berwarna Cerah" />
 						<node name="treeLines" value="Garis Diagram Pohon" />
 						<node name="indicator" value="Indikator Posisi" />
 					</node>
@@ -198,7 +198,7 @@
 					<node name="action">
 						<node name="none" value="Tidak Terpakai" />
 						<node name="showLibrary" value="Tampilkan Pustaka" />
-						<node name="showNetLibrary" toBeTranslated="true" value="Show Network Library" />
+						<node name="showNetLibrary" value="Tampilkan Pustaka Jaringan" />
 						<node name="showRecent" value="Tampilkan Buku-buku Sebelumnya" />
 						<node name="previousBook" value="Buka Buku Sebelumnya" />
 						<node name="toc" value="Tampilkan Daftar Isi" />
@@ -244,8 +244,8 @@
 					<node name="singleClickOpen" value="Buka dengan Klik Tunggal" />
 				</node>
 				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Buka Link Eksternal dengan %s" />
-					<node name="defaultText" value="Buka Link Eksternal dengan Browser" />
+					<node name="enableIntegration" value="Buka Tautan Eksternal dengan %s" />
+					<node name="defaultText" value="Buka Tautan Eksternal dengan Browser" />
 					<node name="choice" value="Gunakan Browser" />
 					<node name="command" value="Perintah yang Dieksekusi" />
 				</node>
@@ -301,12 +301,12 @@
 			<node name="currentSection" value="&amp;Hanya dalam seksi ini" />
 		</node>
 		<node name="networkSearchDialog">
-			<node name="title" toBeTranslated="true" value="Network Search" />
-			<node name="bookTitle" toBeTranslated="true" value="Title" />
-			<node name="author" toBeTranslated="true" value="Author" />
-			<node name="category" toBeTranslated="true" value="Category" />
-			<node name="series" toBeTranslated="true" value="Series" />
-			<node name="description" toBeTranslated="true" value="Description" />
+			<node name="title" value="Pencarian Jaringan" />
+			<node name="bookTitle" value="Judul" />
+			<node name="author" value="Pengarang" />
+			<node name="category" value="Kategori" />
+			<node name="series" value="Seri" />
+			<node name="description" value="Deskripsi" />
 		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Ke Halaman" />
@@ -346,18 +346,18 @@
 			<node name="message" value="Nama tag tidak boleh mengandung sebuah simbol “,”" />
 		</node>
 		<node name="networkError">
-			<node name="emptyLibrariesList" toBeTranslated="true" value="Empty libraries list" />
+			<node name="emptyLibrariesList" value="Daftar pustaka kosong" />
 		</node>
 		<node name="downloadError">
-			<node name="title" toBeTranslated="true" value="Error while downloading" />
-			<node name="message" toBeTranslated="true" value="Can&apos;t download this book at the moment" />
+			<node name="title" value="Bermasalah waktu melakukan download" />
+			<node name="message" value="Sementara tidak dapat melakukan download buku ini" />
 		</node>
 		<node name="waitMessage">
 			<node name="loadingBook" value="Membaca buku. Silakan tunggu..." />
 			<node name="loadingBookList" value="Membaca daftar buku. Silakan tunggu..." />
 			<node name="migrate" value="Melakukan pembaruan ke versi baru. Silakan tunggu..." />
-			<node name="downloadBookList" toBeTranslated="true" value="Downloading book list. Please, wait..." />
-			<node name="downloadBook" toBeTranslated="true" value="Downloading book. Please, wait..." />
+			<node name="downloadBookList" value="Daftar buku sedang di-download. Harap tunggu..." />
+			<node name="downloadBook" value="Buku sedang di-download. Harap tunggu..." />
 		</node>
 	</node>
 	<node name="style">
@@ -365,27 +365,27 @@
 		<node name="Regular Paragraph" value="Paragraf Biasa" />
 		<node name="Title" value="Judul" />
 		<node name="Section Title" value="Judul Seksi" />
-		<node name="Poem Title" value="Judul Poem" />
+		<node name="Poem Title" value="Judul Syair" />
 		<node name="Subtitle" value="Sub Judul" />
 		<node name="Annotation" value="Anotasi" />
-		<node name="Epigraph" value="Epigraf" />
-		<node name="Stanza" value="Stanza" />
-		<node name="Verse" value="Verse" />
+		<node name="Epigraph" value="Inskripsi" />
+		<node name="Stanza" value="Bait" />
+		<node name="Verse" value="Ayat" />
 		<node name="Preformatted text" value="Teks Terformat" />
 		<node name="Image" value="Gambar" />
-		<node name="Cite" value="Cite" />
+		<node name="Cite" value="Cuplikan" />
 		<node name="Author" value="Pengarang" />
 		<node name="Date" value="Tanggal" />
-		<node name="Internal Hyperlink" value="Hyperlink Internal" />
+		<node name="Internal Hyperlink" value="Tautan Internal" />
 		<node name="Footnote" value="Catatan Kaki" />
-		<node name="Emphasis" value="Emphasis" />
+		<node name="Emphasis" value="Aksentuasi" />
 		<node name="Strong" value="Strong" />
 		<node name="Subscript" value="Subscript" />
 		<node name="Superscript" value="Superscript" />
 		<node name="Code" value="Kode" />
 		<node name="StrikeThrough" value="Teks Tercoret" />
 		<node name="Contents Table" value="Daftar Isi" />
-		<node name="Library Entry" toBeTranslated="true" value="Library Entry" />
+		<node name="Library Entry" value="Entri Pustaka" />
 		<node name="Recent Book List" value="Daftar Buku-buku Sebelumnya" />
 		<node name="Italic" value="Miring" />
 		<node name="Bold" value="Tebal" />
@@ -397,8 +397,8 @@
 		<node name="Header 4" value="Header 4" />
 		<node name="Header 5" value="Header 5" />
 		<node name="Header 6" value="Header 6" />
-		<node name="External Hyperlink" value="Hyperlink Eksternal" />
-		<node name="Link to Another Book" toBeTranslated="true" value="Link to Another Book" />
+		<node name="External Hyperlink" value="Tautan Eksternal" />
+		<node name="Link to Another Book" value="Tautan ke Buku Lain" />
 	</node>
 	<node name="external">
 		<node name="browser" value="Browser" />
@@ -410,9 +410,9 @@
 		<node name="encriptedFile" value="Berkas terproteksi DRM" />
 	</node>
 	<node name="networkLibrary">
-		<node name="caption" toBeTranslated="true" value="Network Library" />
-		<node name="startText" toBeTranslated="true" value="Please enter a search pattern in the text field on the toolbar and press &lt;Return&gt;." />
-		<node name="notFound" toBeTranslated="true" value="Sorry, no suitable books were found." />
+		<node name="caption" value="Pustaka Jaringan" />
+		<node name="startText" value="Harap masukkan sebuah pola pencarian pada editor teks di toolbar dan tekan &lt;Return&gt;." />
+		<node name="notFound" value="Maaf, buku yang sesuai tidak ditemukan." />
 	</node>
 	<node name="library">
 		<node name="caption" value="Pustaka" />

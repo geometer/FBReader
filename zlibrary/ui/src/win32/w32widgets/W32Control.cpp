@@ -495,6 +495,7 @@ LRESULT CALLBACK W32KeyNameEditor::Callback(HWND hWnd, UINT uMsg, WPARAM wParam,
 		case WM_GETDLGCODE:
 			return DLGC_WANTALLKEYS;	
 		case WM_KEYDOWN:
+		case WM_SYSKEYDOWN:
 			if (wParam == 0x10) {
 				mask |= 0x1;
 			} else if (wParam == 0x11) {
@@ -506,6 +507,7 @@ LRESULT CALLBACK W32KeyNameEditor::Callback(HWND hWnd, UINT uMsg, WPARAM wParam,
 			}
 			return 0;
 		case WM_KEYUP:
+		case WM_SYSKEYUP:
 			if (wParam == 0x10) {
 				mask &= ~0x1;
 			} else if (wParam == 0x11) {
