@@ -5,7 +5,8 @@ include $(MAKEFILESDIR)/config.mk
 VERSION = $(shell cat ../VERSION)
 
 ifeq "$(ZLSHARED)" "yes"
-  TARGET = zlui-$(UI_TYPE).dylib
+  #TARGET = zlui-$(UI_TYPE).dylib
+  TARGET = zlui-$(UI_TYPE).so
 else
   TARGET = libzlui-$(UI_TYPE).a
 endif
@@ -87,7 +88,7 @@ $(TARGET): .objects
 	@echo -n "Creating $@ ..."
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(ZLSHARED)" "yes"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname $(TARGET) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(CORE_LIBS)
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(CORE_LIBS)
 	#@$(LD) $(LDFLAGS) -dynamiclib -dylinker_install_name $(TARGET) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(CORE_LIBS)
 else
 	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
