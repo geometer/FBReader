@@ -11,14 +11,14 @@ OBJECTS += $(patsubst %.cpp, %.o, $(SOURCES))
 .SUFFIXES: .c .cpp .o .h
 
 .c.o:
-	@echo -n "Compiling $@ ..."
+	@echo -n 'Compiling $@ ...'
 	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
-	@echo " OK"
+	@echo ' OK'
 
 .cpp.o:
-	@echo -n "Compiling $@ ..."
+	@echo -n 'Compiling $@ ...'
 	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
-	@echo " OK"
+	@echo ' OK'
 
 all: $(OBJECTS)
 

@@ -4,7 +4,7 @@ SOVERSIONTEXT = $(shell cat zlibrary/text/SOVERSION)
 TMPDIR = $(CURDIR)/fbreader-$(VERSION)
 
 motopkg:
-	@echo -n "Building $(ARCHITECTURE) $@ package..."
+	@echo -n 'Building $(ARCHITECTURE) $@ package...'
 	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-$@.log 2>&1
 	@mkdir $(TMPDIR)
 	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-$@.log 2>&1
@@ -12,10 +12,10 @@ motopkg:
 	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
 	@rm -rf $(TMPDIR)
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-$@.log
-	@echo " OK"
+	@echo ' OK'
 
 tarball:
-	@echo -n "Building $(ARCHITECTURE) $@ package..."
+	@echo -n 'Building $(ARCHITECTURE) $@ package...'
 	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-$@.log 2>&1
 	@mkdir $(TMPDIR)
 	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-$@.log 2>&1
@@ -23,10 +23,10 @@ tarball:
 	@make -f $(DIST_DIR)/$@/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
 	@rm -rf $(TMPDIR)
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-$@.log
-	@echo " OK"
+	@echo ' OK'
 
 debian:
-	@echo -n "Building $(ARCHITECTURE) debian package..."
+	@echo -n 'Building $(ARCHITECTURE) debian package...'
 	@mkdir $(TMPDIR)
 	@cp -a Makefile zlibrary fbreader makefiles $(TMPDIR)
 	@rm -rf `find $(TMPDIR) -name ".svn"`
@@ -44,10 +44,10 @@ debian:
 	@cd $(TMPDIR); dpkg-buildpackage -rfakeroot -us -uc 1> $(CURDIR)/$(ARCHITECTURE)-debian.log 2>&1; cd $(CURDIR)
 	@rm -rf $(TMPDIR)
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-debian.log
-	@echo " OK"
+	@echo ' OK'
 
 ipk:
-	@echo -n "Building $(ARCHITECTURE) ipk package..."
+	@echo -n 'Building $(ARCHITECTURE) ipk package...'
 	@make -f $(DIST_DIR)/ipk/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-ipk.log 2>&1
 	@for controlfile in $(DIST_DIR)/ipk/$(ARCHITECTURE)/*.control; do \
 		controlname=`basename $$controlfile .control`; \
@@ -66,10 +66,10 @@ ipk:
 	done
 	@make -f $(DIST_DIR)/ipk/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1;
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-ipk.log
-	@echo " OK"
+	@echo ' OK'
 
 debipk:
-	@echo -n "Building $(ARCHITECTURE) debipk package..."
+	@echo -n 'Building $(ARCHITECTURE) debipk package...'
 	@make -f $(DIST_DIR)/debipk/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-debipk.log 2>&1
 	@for controlfile in $(DIST_DIR)/debipk/$(ARCHITECTURE)/*.control; do \
 		controlname=`basename $$controlfile .control`; \
@@ -85,10 +85,10 @@ debipk:
 	done
 	@make -f $(DIST_DIR)/debipk/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-debipk.log
-	@echo " OK"
+	@echo ' OK'
 
 nsi:
-	@echo -n "Building $(ARCHITECTURE) nsi package..."
+	@echo -n 'Building $(ARCHITECTURE) nsi package...'
 	@make -f $(DIST_DIR)/nsi/$(ARCHITECTURE)/rules build 1> $(ARCHITECTURE)-nsi.log 2>&1
 	@mkdir $(TMPDIR)
 	@make -f $(DIST_DIR)/nsi/$(ARCHITECTURE)/rules DESTDIR=$(TMPDIR) install 1>> $(ARCHITECTURE)-nsi.log 2>&1
@@ -98,4 +98,4 @@ nsi:
 	@make -f $(DIST_DIR)/nsi/$(ARCHITECTURE)/rules clean 1> /dev/null 2>&1
 	@rm -rf $(TMPDIR)
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-nsi.log
-	@echo " OK"
+	@echo ' OK'
