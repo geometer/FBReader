@@ -14,8 +14,8 @@ LD = g++
 
 CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
 LDFLAGS =
-EXTERNAL_INCLUDE = -I/sw/include
-EXTERNAL_LIBS = -L/sw/lib
+EXTERNAL_INCLUDE = -I/sw/include -I/opt/local/include
+EXTERNAL_LIBS = -L/sw/lib -L/opt/local/lib
 
 RM = rm -rvf
 RM_QUIET = rm -rf
