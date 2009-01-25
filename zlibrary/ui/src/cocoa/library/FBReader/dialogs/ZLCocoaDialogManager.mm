@@ -43,7 +43,7 @@ int ZLCocoaDialogManager::questionBox(const ZLResourceKey &key, const std::strin
 												Message:[Utils stringWithCxxString:message]
 												Button0:[Utils cocoaButtonName:button0]
 												Button1:[Utils cocoaButtonName:button1]
-												Button2:[Utils cocoaButtonname:button2]];	
+												Button2:[Utils cocoaButtonName:button2]];	
 }
 
 void ZLCocoaDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
