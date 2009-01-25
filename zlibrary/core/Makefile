@@ -47,7 +47,7 @@ endif
 	done;
 
 $(TARGET): .objects
-	@echo -n "Creating $@ ..."
+	@echo -n 'Creating $@ ...'
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(ZLSHARED)" "yes"
 	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS) -ldl
@@ -57,7 +57,7 @@ ifeq "$(ZLSHARED)" "yes"
 else
 	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS))
 endif
-	@echo " OK"
+	@echo ' OK'
 
 SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
 

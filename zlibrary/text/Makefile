@@ -31,7 +31,7 @@ SUBDIRS = src/model src/view src/hyphenation
 	done;
 
 $(TARGET): .objects
-	@echo -n "Creating $@ ..."
+	@echo -n 'Creating $@ ...'
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(ZLSHARED)" "yes"
 	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS)) $(CORE_LIBS) -llinebreak -lfribidi
@@ -41,7 +41,7 @@ ifeq "$(ZLSHARED)" "yes"
 else
 	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS))
 endif
-	@echo " OK"
+	@echo ' OK'
 
 SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
 
