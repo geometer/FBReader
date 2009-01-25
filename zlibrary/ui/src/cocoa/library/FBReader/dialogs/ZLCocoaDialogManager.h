@@ -44,12 +44,13 @@ public:
 	void setClipboardText(const std::string &text, ClipboardType type) const {}
 	void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const {}
 	
-	// NOK
-	shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const;
-	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &id, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
 	void informationBox(const std::string &title, const std::string &message) const;
 	void errorBox(const ZLResourceKey &key, const std::string &message) const;
 	int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const;
+	
+	// NOK
+	shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const;
+	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &id, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
 	bool selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const;
 	void wait(const ZLResourceKey &key, ZLRunnable &runnable) const;
 
