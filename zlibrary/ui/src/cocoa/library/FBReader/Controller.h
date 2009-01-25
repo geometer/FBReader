@@ -21,6 +21,6 @@
 					 Button1:(NSString *)button1
 					 Button2:(NSString *)button2;
 
-+ (Controller *)ourController;
++ (Controller *)instance;
 
 @end

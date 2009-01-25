@@ -7,9 +7,11 @@
 //
 #import "Controller.h"
 
-static Controller* myController;
+static Controller* ourInstance;
 
 @implementation Controller
+
+// TODO awakeFromNib
 
 - (void)showDialogWithTitle:(NSString *)title
 				   Message:(NSString *)message
@@ -60,8 +62,8 @@ static Controller* myController;
 	
 }
 
-+ (Controller *)ourController {
-	return myController;
++ (Controller *)instance {
+	return ourInstance;
 }
 
 

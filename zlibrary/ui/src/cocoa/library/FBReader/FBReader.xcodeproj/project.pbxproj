@@ -15,9 +15,9 @@
 		8A07DB8D0F2C6D9500C9C793 /* ZLUnixMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A07DB8B0F2C6D9500C9C793 /* ZLUnixMessage.cpp */; };
 		8A07DBE70F2C77B900C9C793 /* ZLCocoaFSManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A07DBE60F2C77B900C9C793 /* ZLCocoaFSManager.cpp */; };
 		8A07DC380F2C7A7D00C9C793 /* ZLCocoaTimeManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8A07DC370F2C7A7D00C9C793 /* ZLCocoaTimeManager.cpp */; };
-		8A07DC720F2C85D100C9C793 /* ZLCocoaDialogManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A07DC700F2C85D100C9C793 /* ZLCocoaDialogManager.mm */; };
 		8A07DCB60F2C89B500C9C793 /* Controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A07DCB50F2C89B500C9C793 /* Controller.mm */; };
 		8A07DD550F2C968D00C9C793 /* Utils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A07DD540F2C968D00C9C793 /* Utils.mm */; };
+		8A4EF9110F2CE92D0016B84D /* ZLCocoaDialogManager.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8A07DC700F2C85D100C9C793 /* ZLCocoaDialogManager.mm */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* cocoaMain.mm in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* cocoaMain.mm */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -279,12 +279,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8A4EF9110F2CE92D0016B84D /* ZLCocoaDialogManager.mm in Sources */,
 				8D11072D0486CEB800E47090 /* cocoaMain.mm in Sources */,
 				8A07DAC00F2C5D6B00C9C793 /* ZLibrary.mm in Sources */,
 				8A07DB8D0F2C6D9500C9C793 /* ZLUnixMessage.cpp in Sources */,
 				8A07DBE70F2C77B900C9C793 /* ZLCocoaFSManager.cpp in Sources */,
 				8A07DC380F2C7A7D00C9C793 /* ZLCocoaTimeManager.cpp in Sources */,
-				8A07DC720F2C85D100C9C793 /* ZLCocoaDialogManager.mm in Sources */,
 				8A07DCB60F2C89B500C9C793 /* Controller.mm in Sources */,
 				8A07DD550F2C968D00C9C793 /* Utils.mm in Sources */,
 			);

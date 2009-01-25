@@ -22,37 +22,32 @@
 #import "Controller.h"
 #import "Utils.h"
 
-#define STR_TO_COCOA(s)	[Utils stringWithCxxString:(s)]
-#define BTN_TO_COCOA(b) [Utils cocoaButtonName:(b)]
-#define GLUE [Controller ourController]
-
 void ZLCocoaDialogManager::createApplicationWindow(ZLApplication *application) const {
 	cocoaMain(0, NULL);
 }
 
 void ZLCocoaDialogManager::informationBox(const std::string &title, const std::string &message) const {
-	[GLUE showDialogWithTitle:STR_TO_COCOA(title)
-					  Message:STR_TO_COCOA(message)
-						Style:NSInformationalAlertStyle];
+	[[Controller instance] showDialogWithTitle:[Utils stringWithCxxString:title]
+									   Message:[Utils stringWithCxxString:message]
+										 Style:NSInformationalAlertStyle];
 }
 
 void ZLCocoaDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
-	[GLUE showDialogWithTitle:STR_TO_COCOA(dialogTitle(key))
-					  Message:STR_TO_COCOA(message)
-						Style:NSWarningAlertStyle];
+	[[Controller instance] showDialogWithTitle:[Utils stringWithCxxString:dialogTitle(key)]
+									   Message:[Utils stringWithCxxString:message]
+										 Style:NSWarningAlertStyle];
 }
 
 int ZLCocoaDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
-	return [GLUE showQuestionWithTitle:STR_TO_COCOA(dialogTitle(key))
-							   Message:STR_TO_COCOA(message)
-							   Button0:BTN_TO_COCOA(button0)
-							   Button1:BTN_TO_COCOA(button1)
-							   Button2:BTN_TO_COCOA(button2)];
-	
+	return [[Controller instance] showQuestionWithTitle:[Utils stringWithCxxString:dialogTitle(key)]
+												Message:[Utils stringWithCxxString:message]
+												Button0:[Utils cocoaButtonName:button0]
+												Button1:[Utils cocoaButtonName:button1]
+												Button2:[Utils cocoaButtonname:button2]];	
 }
 
 void ZLCocoaDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
-	// FIXME
+	// TODO
 	runnable.run();
 }
 
