@@ -3,7 +3,6 @@
 //  FBReader
 //
 //  Created by Alexey Vyskubov on 25.01.09.
-//  Copyright 2009 Teleca. All rights reserved.
 //
 #import "Controller.h"
 
