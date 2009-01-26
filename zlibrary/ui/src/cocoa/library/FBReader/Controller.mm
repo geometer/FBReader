@@ -11,7 +11,9 @@ static Controller* ourInstance;
 
 @implementation Controller
 
-// TODO awakeFromNib
+- (void)awakeFromNib {
+	ourInstance = self;
+}
 
 - (void)showDialogWithTitle:(NSString *)title
 				   Message:(NSString *)message
