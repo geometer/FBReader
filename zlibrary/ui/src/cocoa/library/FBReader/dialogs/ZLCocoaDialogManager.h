@@ -30,6 +30,7 @@ public:
 	static void createInstance() { ourInstance = new ZLCocoaDialogManager(); }
 
 private:
+	ZLCocoaDialogManager() : myIsKeyboardGrabbed(false) {}
 #if 0
 	ZLCocoaDialogManager() : myWindow(0), myIsKeyboardGrabbed(false) {}
 #endif
