@@ -12,8 +12,8 @@
 }
 
 - (void)showDialogWithTitle:(NSString *)title
-				   Message:(NSString *)message
-					 Style:(NSAlertStyle)style;
+					Message:(NSString *)message
+					  Style:(NSAlertStyle)style;
 - (int)showQuestionWithTitle:(NSString *)title
 					 Message:(NSString *)message
 					 Button0:(NSString *)button0
