@@ -15,8 +15,8 @@ static Controller* ourInstance;
 }
 
 - (void)showDialogWithTitle:(NSString *)title
-				   Message:(NSString *)message
-					 Style:(NSAlertStyle)style {
+					Message:(NSString *)message
+					  Style:(NSAlertStyle)style {
 	
 	NSAlert *alert = [[NSAlert alloc] init];
 	
