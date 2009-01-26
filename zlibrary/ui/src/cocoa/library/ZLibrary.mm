@@ -20,6 +20,7 @@
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 #include <ZLDialogManager.h>
+#import <Cocoa/Cocoa.h>
 #import "cocoaMain.h"
 
 
