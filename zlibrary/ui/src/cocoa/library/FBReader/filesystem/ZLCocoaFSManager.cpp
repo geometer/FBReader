@@ -9,5 +9,6 @@
 #include "ZLCocoaFSManager.h"
 
 std::string ZLCocoaFSManager::convertFilenameToUtf8(const std::string &name) const {
+	// TO FIX
 	return name;
 }
