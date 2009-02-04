@@ -30,6 +30,30 @@
 class ZLZDecompressor;
 class ZLFile;
 
+class ZLZipEntryCache : public ZLUserData {
+
+public:
+	static const ZLZipEntryCache &cache(ZLInputStream &baseStream);
+
+public:
+	struct Info {
+		Info();
+
+		int Offset;
+		int CompressionMethod;
+		int CompressedSize;
+		int UncompressedSize;
+	};
+
+public:
+	ZLZipEntryCache(ZLInputStream &baseStream);
+	Info info(const std::string &entryName) const;
+	void collectFileNames(std::vector<std::string> &names) const;
+
+private:
+	std::map<std::string,Info> myInfoMap;
+};
+
 class ZLZipInputStream : public ZLInputStream {
 
 private:

@@ -23,18 +23,8 @@
 
 void ZLZipDir::collectFiles(std::vector<std::string> &names, bool) {
 	shared_ptr<ZLInputStream> stream = ZLFile(path()).inputStream();
-
-	if (!stream.isNull() && stream->open()) {
-		ZLZipHeader header;
-		while (header.readFrom(*stream)) {
-			std::string entryName(header.NameLength, '\0');
-			if ((unsigned int)stream->read((char*)entryName.data(), header.NameLength) == header.NameLength) {
-				names.push_back(entryName);
-			}
-			ZLZipHeader::skipEntry(*stream, header);
-		}
-		stream->close();
-	}
+	const ZLZipEntryCache &cache = ZLZipEntryCache::cache(*stream);
+	cache.collectFileNames(names);
 }
 
 std::string ZLZipDir::delimiter() const {

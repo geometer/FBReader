@@ -24,54 +24,6 @@
 #include "ZLZDecompressor.h"
 #include "../ZLFSManager.h"
 
-class ZLZipEntryCache : public ZLUserData {
-
-public:
-	struct Info {
-		Info();
-
-		int Offset;
-		int CompressionMethod;
-		int CompressedSize;
-		int UncompressedSize;
-	};
-
-public:
-	ZLZipEntryCache(ZLInputStream &baseStream);
-	Info info(const std::string &entryName) const;
-
-private:
-	std::map<std::string,Info> myInfoMap;
-};
-
-ZLZipEntryCache::Info::Info() : Offset(-1) {
-}
-
-ZLZipEntryCache::ZLZipEntryCache(ZLInputStream &baseStream) {
-	if (!baseStream.open()) {
-		return;
-	}
-
-	ZLZipHeader header;
-	while (header.readFrom(baseStream)) {
-		std::string entryName(header.NameLength, '\0');
-		if ((unsigned int)baseStream.read((char*)entryName.data(), header.NameLength) == header.NameLength) {
-			Info &info = myInfoMap[entryName];
-			info.Offset = baseStream.offset() + header.ExtraLength;
-			info.CompressionMethod = header.CompressionMethod;
-			info.CompressedSize = header.CompressedSize;
-			info.UncompressedSize = header.UncompressedSize;
-		}
-		ZLZipHeader::skipEntry(baseStream, header);
-	}
-	baseStream.close();
-}
-
-ZLZipEntryCache::Info ZLZipEntryCache::info(const std::string &entryName) const {
-	std::map<std::string,Info>::const_iterator it = myInfoMap.find(entryName);
-	return (it != myInfoMap.end()) ? it->second : Info();
-}
-
 ZLZipInputStream::ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &entryName) : myBaseStream(new ZLInputStreamDecorator(base)), myEntryName(entryName), myUncompressedSize(0) {
 }
 
@@ -82,18 +34,13 @@ ZLZipInputStream::~ZLZipInputStream() {
 bool ZLZipInputStream::open() {
 	close();
 
-	static const std::string zipEntryMapKey = "zipEntryMap";
-	shared_ptr<ZLUserData> data = myBaseStream->getUserData(zipEntryMapKey);
-	if (data.isNull()) {
-		data = new ZLZipEntryCache(*myBaseStream);
-		myBaseStream->addUserData(zipEntryMapKey, data);
-	}
+	const ZLZipEntryCache &cache = ZLZipEntryCache::cache(*myBaseStream);
+	ZLZipEntryCache::Info info = cache.info(myEntryName);
 
 	if (!myBaseStream->open()) {
 		return false;
 	}
 
-	ZLZipEntryCache::Info info = ((const ZLZipEntryCache&)*data).info(myEntryName);
 	if (info.Offset == -1) {
 		close();
 		return false;
