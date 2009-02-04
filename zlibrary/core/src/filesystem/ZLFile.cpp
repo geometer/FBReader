@@ -78,6 +78,18 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	}
 }
 
+shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStream> &base) const {
+	if (base != 0) {
+		if (myArchiveType & GZIP) {
+			return new ZLGzipInputStream(base);
+		}
+		if (myArchiveType & BZIP2) {
+			return new ZLBzip2InputStream(base);
+		}
+	}
+	return base;
+}
+
 shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 	shared_ptr<ZLInputStream> stream;
 	
@@ -89,6 +101,7 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 				return 0;
 			}
 			stream = ZLFSManager::instance().createPlainInputStream(myPath);
+			stream = envelopeCompressedStream(stream);
 			ourPlainStreamCache[myPath] = stream;
 		}
 	} else {
@@ -101,16 +114,9 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 				stream = new ZLTarInputStream(base, myPath.substr(index + 1));
 			}
 		}
+		stream = envelopeCompressedStream(stream);
 	}
 
-	if (stream != 0) {
-		if (myArchiveType & GZIP) {
-			return new ZLGzipInputStream(stream);
-		}
-		if (myArchiveType & BZIP2) {
-			return new ZLBzip2InputStream(stream);
-		}
-	}
 	return stream;
 }
 

@@ -77,6 +77,7 @@ public:
 
 private:
 	void fillInfo() const;
+	shared_ptr<ZLInputStream> envelopeCompressedStream(shared_ptr<ZLInputStream> &base) const;
 
 private:
 	std::string myPath;

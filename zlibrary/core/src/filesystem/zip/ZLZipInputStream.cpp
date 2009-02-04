@@ -72,7 +72,7 @@ ZLZipEntryCache::Info ZLZipEntryCache::info(const std::string &entryName) const 
 	return (it != myInfoMap.end()) ? it->second : Info();
 }
 
-ZLZipInputStream::ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &entryName) : myBaseStream(base), myEntryName(entryName), myUncompressedSize(0) {
+ZLZipInputStream::ZLZipInputStream(shared_ptr<ZLInputStream> &base, const std::string &entryName) : myBaseStream(new ZLInputStreamDecorator(base)), myEntryName(entryName), myUncompressedSize(0) {
 }
 
 ZLZipInputStream::~ZLZipInputStream() {
@@ -99,7 +99,6 @@ bool ZLZipInputStream::open() {
 		return false;
 	}
 	myBaseStream->seek(info.Offset, true);
-	myBaseOffset = myBaseStream->offset();
 
 	if (info.CompressionMethod == 0) {
 		myIsDeflated = false;
@@ -125,7 +124,6 @@ bool ZLZipInputStream::open() {
 
 size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
 	size_t realSize = 0;
-	myBaseStream->seek(myBaseOffset, true);
 	if (myIsDeflated) {
 		realSize = myDecompressor->decompress(*myBaseStream, buffer, maxSize);
 		myOffset += realSize;
@@ -134,7 +132,6 @@ size_t ZLZipInputStream::read(char *buffer, size_t maxSize) {
 		myAvailableSize -= realSize;
 		myOffset += realSize;
 	}
-	myBaseOffset = myBaseStream->offset();
 	return realSize;
 }
 

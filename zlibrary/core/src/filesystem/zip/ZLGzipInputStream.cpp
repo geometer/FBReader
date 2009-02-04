@@ -20,7 +20,7 @@
 #include "ZLZip.h"
 #include "ZLZDecompressor.h"
 
-ZLGzipInputStream::ZLGzipInputStream(shared_ptr<ZLInputStream> stream) : myFileStream(stream), myFileSize(0) {
+ZLGzipInputStream::ZLGzipInputStream(shared_ptr<ZLInputStream> stream) : myBaseStream(new ZLInputStreamDecorator(stream)), myFileSize(0) {
 }
 
 ZLGzipInputStream::~ZLGzipInputStream() {
@@ -30,21 +30,21 @@ ZLGzipInputStream::~ZLGzipInputStream() {
 bool ZLGzipInputStream::open() {
 	close();
 
-	if (!myFileStream->open()) {
+	if (!myBaseStream->open()) {
 		return false;
 	}
 
-	myFileSize = myFileStream->sizeOfOpened();
+	myFileSize = myBaseStream->sizeOfOpened();
 
 	unsigned char id1;
 	unsigned char id2;
 	unsigned char cm;
 
-	myFileStream->read((char*)&id1, 1);
-	myFileStream->read((char*)&id2, 1);
-	myFileStream->read((char*)&cm, 1);
+	myBaseStream->read((char*)&id1, 1);
+	myBaseStream->read((char*)&id2, 1);
+	myBaseStream->read((char*)&cm, 1);
 	if ((id1 != 31) || (id2 != 139) || (cm != 8)) {
-		myFileStream->close();
+		myBaseStream->close();
 		return false;
 	}
 
@@ -54,46 +54,46 @@ bool ZLGzipInputStream::open() {
 	const unsigned char FNAME = 1 << 3;
 	const unsigned char FCOMMENT = 1 << 4;
 	unsigned char flg;
-	myFileStream->read((char*)&flg, 1);
-	myFileStream->seek(6, false);
+	myBaseStream->read((char*)&flg, 1);
+	myBaseStream->seek(6, false);
 	if (flg & FEXTRA) {
 		unsigned char b0, b1;
-		myFileStream->read((char*)&b0, 1);
-		myFileStream->read((char*)&b1, 1);
+		myBaseStream->read((char*)&b0, 1);
+		myBaseStream->read((char*)&b1, 1);
 		unsigned short xlen = (((unsigned short)b1) << 8) + b0;
-		myFileStream->seek(xlen, false);
+		myBaseStream->seek(xlen, false);
 	}
 	if (flg & FNAME) {
 		unsigned char b;
 		do {
-			myFileStream->read((char*)&b, 1);
+			myBaseStream->read((char*)&b, 1);
 		} while (b != 0);
 	}
 	if (flg & FCOMMENT) {
 		unsigned char b;
 		do {
-			myFileStream->read((char*)&b, 1);
+			myBaseStream->read((char*)&b, 1);
 		} while (b != 0);
 	}
 	if (flg & FHCRC) {
-		myFileStream->seek(2, false);
+		myBaseStream->seek(2, false);
 	}
 
-	myDecompressor = new ZLZDecompressor(myFileSize - myFileStream->offset() - 8);
+	myDecompressor = new ZLZDecompressor(myFileSize - myBaseStream->offset() - 8);
 	myOffset = 0;
 
 	return true;
 }
 
 size_t ZLGzipInputStream::read(char *buffer, size_t maxSize) {
-	size_t realSize = myDecompressor->decompress(*myFileStream, buffer, maxSize);
+	size_t realSize = myDecompressor->decompress(*myBaseStream, buffer, maxSize);
 	myOffset += realSize;
 	return realSize;
 }
 
 void ZLGzipInputStream::close() {
 	myDecompressor = 0;
-	myFileStream->close();
+	myBaseStream->close();
 }
 
 void ZLGzipInputStream::seek(int offset, bool absoluteOffset) {

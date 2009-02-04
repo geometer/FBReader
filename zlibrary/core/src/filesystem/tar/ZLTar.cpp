@@ -27,16 +27,68 @@ struct ZLTarHeader {
 	std::string Name;
 	size_t Size;
 	bool IsRegularFile;
+	size_t DataOffset;
 
-	bool read(shared_ptr<ZLInputStream> stream);
+	bool read(ZLInputStream &stream);
 	void erase();
 };
 
-bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
-	size_t startOffset = stream->offset();
+class ZLTarHeaderCache : public ZLUserData {
+
+public:
+	static const ZLTarHeaderCache &cache(ZLInputStream &baseStream);
+
+public:
+	ZLTarHeaderCache(ZLInputStream &baseStream);
+	ZLTarHeader header(const std::string &entryName) const;
+	void collectFileNames(std::vector<std::string> &names) const;
+
+private:
+	std::map<std::string,ZLTarHeader> myHeaderMap;
+};
+
+ZLTarHeaderCache::ZLTarHeaderCache(ZLInputStream &baseStream) {
+	if (!baseStream.open()) {
+		return;
+	}
+
+	ZLTarHeader header;
+	while (header.read(baseStream)) {
+		if (header.IsRegularFile) {
+			myHeaderMap[header.Name] = header;
+		}
+		baseStream.seek((header.Size + 0x1ff) & -0x200, false);
+		header.erase();
+	}
+	baseStream.close();
+}
+
+ZLTarHeader ZLTarHeaderCache::header(const std::string &entryName) const {
+	std::map<std::string,ZLTarHeader>::const_iterator it = myHeaderMap.find(entryName);
+	return (it != myHeaderMap.end()) ? it->second : ZLTarHeader();
+}
+
+void ZLTarHeaderCache::collectFileNames(std::vector<std::string> &names) const {
+	for (std::map<std::string,ZLTarHeader>::const_iterator it = myHeaderMap.begin(); it != myHeaderMap.end(); ++it) {
+		names.push_back(it->first);
+	}
+}
+
+const ZLTarHeaderCache &ZLTarHeaderCache::cache(ZLInputStream &baseStream) {
+	static const std::string tarHeaderMapKey = "tarHeaderMap";
+	shared_ptr<ZLUserData> data = baseStream.getUserData(tarHeaderMapKey);
+	if (data.isNull()) {
+		data = new ZLTarHeaderCache(baseStream);
+		baseStream.addUserData(tarHeaderMapKey, data);
+	}
+	return (const ZLTarHeaderCache&)*data;
+}
+
+bool ZLTarHeader::read(ZLInputStream &stream) {
+	size_t startOffset = stream.offset();
 
 	char fileName[101];
-	stream->read(fileName, 100);
+	stream.read(fileName, 100);
 	if (fileName[0] == '\0') {
 		return false;
 	}
@@ -45,10 +97,10 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 		Name = fileName;
 	}
 
-	stream->seek(24, false);
+	stream.seek(24, false);
 	
 	char fileSizeString[12];
-	stream->read(fileSizeString, 12);
+	stream.read(fileSizeString, 12);
 	Size = 0;
 	for (int i = 0; i < 12; ++i) {
 		if (!isdigit(fileSizeString[i])) {
@@ -58,23 +110,24 @@ bool ZLTarHeader::read(shared_ptr<ZLInputStream> stream) {
 		Size += fileSizeString[i] - '0';
 	}
 	
-	stream->seek(20, false);
+	stream.seek(20, false);
 	char linkFlag;
-	stream->read(&linkFlag, 1);
+	stream.read(&linkFlag, 1);
 	
 	IsRegularFile = (linkFlag == '\0') || (linkFlag == '0');
 
-	stream->seek(355, false);
+	stream.seek(355, false);
 	
 	if (((linkFlag == 'L') || (linkFlag == 'K')) && (Name == "././@LongLink") && (Size < 10240)) {
 		Name.erase();
 		Name.append(Size - 1, '\0');
-		stream->read(const_cast<char*>(Name.data()), Size - 1);
+		stream.read(const_cast<char*>(Name.data()), Size - 1);
 		const int skip = 512 - (Size & 0x1ff);
-		stream->seek(skip + 1, false);
-		return (stream->offset() == startOffset + Size + skip + 512) && read(stream);
+		stream.seek(skip + 1, false);
+		return (stream.offset() == startOffset + Size + skip + 512) && read(stream);
 	} else {
-		return stream->offset() == startOffset + 512;
+		DataOffset = stream.offset();
+		return DataOffset == startOffset + 512;
 	}
 }
 
@@ -82,7 +135,7 @@ void ZLTarHeader::erase() {
 	Name.erase();
 }
 
-ZLTarInputStream::ZLTarInputStream(shared_ptr<ZLInputStream> &base, const std::string &name) : myBaseStream(base), myCompressedFileName(name) {
+ZLTarInputStream::ZLTarInputStream(shared_ptr<ZLInputStream> &base, const std::string &name) : myBaseStream(new ZLInputStreamDecorator(base)), myCompressedFileName(name) {
 }
 
 ZLTarInputStream::~ZLTarInputStream() {
@@ -94,19 +147,20 @@ bool ZLTarInputStream::open() {
 	if (!myBaseStream->open()) {
 		return false;
 	}
-	myOffset = 0;
 
-	ZLTarHeader header;
-	while (header.read(myBaseStream)) {
-		if ((header.IsRegularFile) && (header.Name == myCompressedFileName)) {
-			myCompressedFileSize = header.Size;
-			return true;
-		}
-		myBaseStream->seek((header.Size + 0x1ff) & -0x200, false);
-		header.erase();
+	const ZLTarHeaderCache &cache = ZLTarHeaderCache::cache(*myBaseStream);
+	const ZLTarHeader header = cache.header(myCompressedFileName);
+	if (header.Name.empty()) {
+		return false;
 	}
-	myBaseStream->close();
-	return false;
+
+	if (!myBaseStream->open()) {
+		return false;
+	}
+	myOffset = 0;
+	myCompressedFileSize = header.Size;
+	myBaseStream->seek(header.DataOffset, true);
+	return true;
 }
 
 size_t ZLTarInputStream::read(char *buffer, size_t maxSize) {
@@ -139,18 +193,8 @@ size_t ZLTarInputStream::sizeOfOpened() {
 
 void ZLTarDir::collectFiles(std::vector<std::string> &names, bool) {
 	shared_ptr<ZLInputStream> stream = ZLFile(path()).inputStream();
-
-	if (!stream.isNull() && stream->open()) {
-		ZLTarHeader header;
-		while (header.read(stream)) {
-			if (header.IsRegularFile) {
-				names.push_back(header.Name);
-			}
-			stream->seek((header.Size + 0x1ff) & -0x200, false);
-			header.erase();
-		}
-		stream->close();
-	}
+	const ZLTarHeaderCache &cache = ZLTarHeaderCache::cache(*stream);
+	cache.collectFileNames(names);
 }
 
 std::string ZLTarDir::delimiter() const {

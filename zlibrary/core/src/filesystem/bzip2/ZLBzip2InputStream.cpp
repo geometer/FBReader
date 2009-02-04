@@ -21,7 +21,7 @@
 
 #include "ZLBzip2InputStream.h"
 
-ZLBzip2InputStream::ZLBzip2InputStream(shared_ptr<ZLInputStream> base) : myBaseStream(base), myBaseBuffer(0) {
+ZLBzip2InputStream::ZLBzip2InputStream(shared_ptr<ZLInputStream> base) : myBaseStream(new ZLInputStreamDecorator(base)), myBaseBuffer(0) {
 	myBzStream.bzalloc = 0;
 	myBzStream.bzfree = 0;
 	myBzStream.opaque = 0;

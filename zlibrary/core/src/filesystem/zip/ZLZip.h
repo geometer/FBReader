@@ -47,7 +47,6 @@ public:
 
 private:
 	shared_ptr<ZLInputStream> myBaseStream;
-	size_t myBaseOffset;
 	std::string myEntryName;
 	bool myIsDeflated;
 
@@ -76,7 +75,7 @@ public:
 	size_t sizeOfOpened();
 
 private:
-	shared_ptr<ZLInputStream> myFileStream;
+	shared_ptr<ZLInputStream> myBaseStream;
 	size_t myFileSize;
 
 	size_t myOffset;
