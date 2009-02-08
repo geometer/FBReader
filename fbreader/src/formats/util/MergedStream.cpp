@@ -36,7 +36,9 @@ size_t MergedStream::read(char *buffer, size_t maxSize) {
 			buffer += len;
 		}
 		if (bytesToRead != 0) {
-			*buffer++ = '\n';
+			if (buffer != 0) {
+				*buffer++ = '\n';
+			}
 			bytesToRead--;
 			myCurrentStream = nextStream();
 			if (myCurrentStream.isNull() || !myCurrentStream->open()) {

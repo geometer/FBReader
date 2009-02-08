@@ -46,7 +46,7 @@ class ZLTextElementPool {
 public:
 	static ZLTextElementPool Pool;
 
-public:
+private:
 	ZLTextElementPool();
 	~ZLTextElementPool();
 	

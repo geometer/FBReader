@@ -73,6 +73,8 @@ ZLTextElementPool::~ZLTextElementPool() {
 	delete BeforeParagraphElement;
 	delete AfterParagraphElement;
 	delete EmptyLineElement;
+	delete StartReversedSequenceElement;
+	delete EndReversedSequenceElement;
 }
 
 ZLTextParagraphCursorPtr ZLTextParagraphCursor::cursor(const ZLTextModel &model, const std::string &language, size_t index) {

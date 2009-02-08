@@ -493,6 +493,9 @@ bool ZLTextSelectionModel::selectWord(int x, int y) {
 			break;
 		}
 	}
+	if (it == myView.myTextElementMap.end()) {
+		return false;
+	}
 	if (ZLTextElementArea::RangeChecker(x, y)(*it)) {
 		int startIndex = 0;
 		int endIndex = 1;

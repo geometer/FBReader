@@ -98,7 +98,9 @@ bool HtmlReaderStream::open() {
 
 size_t HtmlReaderStream::read(char *buffer, size_t maxSize) {
 	maxSize = std::min(maxSize, mySize - myOffset);
-	memcpy(buffer, myBuffer, maxSize);
+	if (buffer != 0) {
+		memcpy(buffer, myBuffer, maxSize);
+	}
 	myOffset += maxSize;
 	return maxSize;
 }
