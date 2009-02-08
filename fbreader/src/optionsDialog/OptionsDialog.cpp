@@ -170,17 +170,17 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	}
 	ZLNetworkManager &networkManager = ZLNetworkManager::instance();
 	if (!networkManager.providesProxyInfo()) {
-		ZLToggleBooleanOptionEntry *useProxyEntry = new ZLToggleBooleanOptionEntry(networkManager.UseProxyOption);
+		ZLToggleBooleanOptionEntry *useProxyEntry = new ZLToggleBooleanOptionEntry(networkManager.UseProxyOption());
 		networkTab.addOption(ZLResourceKey("useProxy"), useProxyEntry);
-		ZLSimpleStringOptionEntry *proxyHostEntry = new ZLSimpleStringOptionEntry(networkManager.ProxyHostOption);
+		ZLSimpleStringOptionEntry *proxyHostEntry = new ZLSimpleStringOptionEntry(networkManager.ProxyHostOption());
 		networkTab.addOption(ZLResourceKey("proxyHost"), proxyHostEntry);
-		ZLSimpleStringOptionEntry *proxyPortEntry = new ZLSimpleStringOptionEntry(networkManager.ProxyPortOption);
+		ZLSimpleStringOptionEntry *proxyPortEntry = new ZLSimpleStringOptionEntry(networkManager.ProxyPortOption());
 		networkTab.addOption(ZLResourceKey("proxyPort"), proxyPortEntry);
 		useProxyEntry->addDependentEntry(proxyHostEntry);
 		useProxyEntry->addDependentEntry(proxyPortEntry);
 		useProxyEntry->onStateChanged(useProxyEntry->initialState());
 	}
-	networkTab.addOption(ZLResourceKey("timeout"), new ZLSimpleSpinOptionEntry(networkManager.TimeoutOption, 5));
+	networkTab.addOption(ZLResourceKey("timeout"), new ZLSimpleSpinOptionEntry(networkManager.TimeoutOption(), 5));
 
 	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
 	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::instance().LanguageAutoDetectOption));

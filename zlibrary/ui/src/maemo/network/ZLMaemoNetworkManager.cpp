@@ -33,6 +33,10 @@ void ZLMaemoNetworkManager::connect() {
 	// TODO: implement
 }
 
+void ZLMaemoNetworkManager::release() {
+	// TODO: implement
+}
+
 bool ZLMaemoNetworkManager::providesProxyInfo() const {
 	return true;
 }

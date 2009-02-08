@@ -53,6 +53,7 @@ public:
 private:
 	ZLViewWidget *createViewWidget();
 	void init();
+	GtkToolItem *createGtkToolButton(const ZLToolbar::AbstractButtonItem &button);
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void buildTabs(ZLOptionsDialog &dialog);
 
@@ -73,6 +74,7 @@ private:
 	};
 	void initMenu();
 	void refresh();
+	void processAllEvents();
 	void present();
 	void close();
 
@@ -88,32 +90,8 @@ private:
 
 public:
 	void handleKeyEventSlot(GdkEventKey *event, bool isKeyRelease);
+	void onGtkButtonPress(GtkToolItem *gtkButton);
 	HildonWindow *getMainWindow() const { return myWindow; }
-
-public:
-	class ToolbarButton {
-
-	public:
-		void press(bool state);
-
-	private:
-		ToolbarButton(ZLToolbar::AbstractButtonItem &buttonItem, ZLGtkApplicationWindow &window);
-		void forcePress(bool state);
-		GtkToolItem *toolItem() const { return myToolItem; }
-
-	private:
-		ZLToolbar::AbstractButtonItem &myButtonItem;
-		ZLGtkApplicationWindow &myWindow;
-		shared_ptr<ZLApplication::Action> myAction;
-
-		GtkToolItem *myToolItem;
-		GtkWidget *myEventBox;
-		GtkImage *myCurrentImage;
-		GtkImage *myReleasedImage;
-		GtkImage *myPressedImage;
-
-	friend class ZLGtkApplicationWindow;
-	};
 
 private:
 	HildonProgram *myProgram;
@@ -126,11 +104,10 @@ private:
 
 	std::map<ZLToolbar::ItemPtr,GtkToolItem*> myToolItems;
 	std::map<std::string,GtkMenuItem*> myMenuItems;
-	std::map<const ZLToolbar::AbstractButtonItem*,ToolbarButton*> myToolbarButtons;
+	std::map<GtkToolItem*,const ZLToolbar::AbstractButtonItem*> myToolbarButtons;
 	std::vector<shared_ptr<ZLOptionView> > myViews;
 
 friend class MenuBuilder;
-friend class ToolbarButton;
 };
 
 #endif /* __ZLGTKAPPLICATIONWINDOW_H__ */

@@ -24,8 +24,5 @@
 	<button id="findPrevious"/>
 	<button id="findNext"/>
 	<separator/>
-	<button id="bookInfo"/>
-	<button id="preferences"/>
-	<separator/>
 	<button id="rotate"/>
 </toolbar>

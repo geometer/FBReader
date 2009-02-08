@@ -43,14 +43,54 @@ ZLNetworkManager &ZLNetworkManager::instance() {
 	return *ourInstance;
 }
 
+ZLNetworkManager::ZLNetworkManager() {
+}
+
 static const std::string OPTIONS = "Options";
 
-ZLNetworkManager::ZLNetworkManager() :
-	ConnectTimeoutOption(ZLCategoryKey::NETWORK, OPTIONS, "ConnectTimeout", 1, 1000, 10),
-	TimeoutOption(ZLCategoryKey::NETWORK, OPTIONS, "Timeout", 1, 1000, 15),
-	UseProxyOption(ZLCategoryKey::NETWORK, OPTIONS, "UseProxy", false),
-	ProxyHostOption(ZLCategoryKey::NETWORK, OPTIONS, "ProxyHost", ""),
-	ProxyPortOption(ZLCategoryKey::NETWORK, OPTIONS, "ProxyPort", "3128") {
+ZLIntegerRangeOption &ZLNetworkManager::ConnectTimeoutOption() const {
+	if (myConnectTimeoutOption.isNull()) {
+		myConnectTimeoutOption = new ZLIntegerRangeOption(
+			ZLCategoryKey::NETWORK, OPTIONS, "ConnectTimeout", 1, 1000, 10
+		);
+	}
+	return *myConnectTimeoutOption;
+}
+
+ZLIntegerRangeOption &ZLNetworkManager::TimeoutOption() const {
+	if (myTimeoutOption.isNull()) {
+		myTimeoutOption = new ZLIntegerRangeOption(
+			ZLCategoryKey::NETWORK, OPTIONS, "Timeout", 1, 1000, 15
+		);
+	}
+	return *myTimeoutOption;
+}
+
+ZLBooleanOption &ZLNetworkManager::UseProxyOption() const {
+	if (myUseProxyOption.isNull()) {
+		myUseProxyOption = new ZLBooleanOption(
+			ZLCategoryKey::NETWORK, OPTIONS, "UseProxy", false
+		);
+	}
+	return *myUseProxyOption;
+}
+
+ZLStringOption &ZLNetworkManager::ProxyHostOption() const {
+	if (myProxyHostOption.isNull()) {
+		myProxyHostOption = new ZLStringOption(
+			ZLCategoryKey::NETWORK, OPTIONS, "ProxyHost", ""
+		);
+	}
+	return *myProxyHostOption;
+}
+
+ZLStringOption &ZLNetworkManager::ProxyPortOption() const {
+	if (myProxyPortOption.isNull()) {
+		myProxyPortOption = new ZLStringOption(
+			ZLCategoryKey::NETWORK, OPTIONS, "ProxyPort", "3128"
+		);
+	}
+	return *myProxyPortOption;
 }
 
 ZLNetworkManager::~ZLNetworkManager() {
@@ -67,23 +107,23 @@ bool ZLNetworkManager::providesProxyInfo() const {
 }
 
 bool ZLNetworkManager::useProxy() const {
-	return UseProxyOption.value();
+	return UseProxyOption().value();
 }
 
 std::string ZLNetworkManager::proxyHost() const {
-	return ProxyHostOption.value();
+	return ProxyHostOption().value();
 }
 
 std::string ZLNetworkManager::proxyPort() const {
-	return ProxyPortOption.value();
+	return ProxyPortOption().value();
 }
 
 void ZLNetworkManager::setStandardOptions(CURL *handle, const std::string &proxy) const {
 	if (useProxy()) {
 		curl_easy_setopt(handle, CURLOPT_PROXY, proxy.c_str());
 	}
-	curl_easy_setopt(handle, CURLOPT_TIMEOUT, TimeoutOption.value());
-	curl_easy_setopt(handle, CURLOPT_CONNECTTIMEOUT, ConnectTimeoutOption.value());
+	curl_easy_setopt(handle, CURLOPT_TIMEOUT, TimeoutOption().value());
+	curl_easy_setopt(handle, CURLOPT_CONNECTTIMEOUT, ConnectTimeoutOption().value());
 }
 
 static size_t writeToStream(void *ptr, size_t size, size_t nmemb, void *data) {
