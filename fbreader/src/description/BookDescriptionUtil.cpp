@@ -24,7 +24,6 @@
 
 #include "BookDescriptionUtil.h"
 #include "BookDescription.h"
-#include "../formats/FormatPlugin.h"
 #include "../options/FBOptions.h"
 
 static const std::string SIZE = "Size";
@@ -66,14 +65,12 @@ void BookDescriptionUtil::resetZipInfo(const ZLFile &zipFile) {
 		int counter = 0;
 		zipDir->collectFiles(entries, false);
 		for (std::vector<std::string>::iterator zit = entries.begin(); zit != entries.end(); ++zit) {
-			if (PluginCollection::instance().plugin(ZLFile(*zit), true) != 0) {
-				std::string optionName = ENTRY;
-				ZLStringUtil::appendNumber(optionName, counter);
-				std::string fullName = zipPrefix + *zit;
-				ZLStringOption(FBCategoryKey::BOOKS, zipFile.path(), optionName, "").setValue(fullName);
-				BookInfo(fullName).reset();
-				++counter;
-			}
+			std::string optionName = ENTRY;
+			ZLStringUtil::appendNumber(optionName, counter);
+			std::string fullName = zipPrefix + *zit;
+			ZLStringOption(FBCategoryKey::BOOKS, zipFile.path(), optionName, "").setValue(fullName);
+			BookInfo(fullName).reset();
+			++counter;
 		}
 		ZLIntegerOption(FBCategoryKey::BOOKS, zipFile.path(), ENTRIES_NUMBER, -1).setValue(counter);
 	}

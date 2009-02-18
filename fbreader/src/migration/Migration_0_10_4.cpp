@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2009 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,26 @@
  * 02110-1301, USA.
  */
 
-#include "../options/FBOptions.h"
+#include <vector>
+
+#include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "Migration.h"
-#include "migrate.h"
+#include "../options/FBOptions.h"
 
-MigrationRunnable::MigrationRunnable() :
-	myVersionOption(FBCategoryKey::SYSTEM, "Version", "FBReaderVersion", "0") {
+Migration_0_10_4::Migration_0_10_4() : Migration("0.10.4") {
 }
 
-bool MigrationRunnable::shouldMigrate() const {
-	return myVersionOption.value() < VERSION;
-}
-
-void MigrationRunnable::run() {
-	Migration_0_8_11().doMigration();
-	Migration_0_8_13().doMigration();
-	Migration_0_8_16().doMigration();
-	Migration_0_10_4().doMigration();
-
-	myVersionOption.setValue(VERSION);
+void Migration_0_10_4::doMigrationInternal() {
+	std::vector<std::string> groups;
+	ZLOption::listOptionGroups(groups);
+	for (std::vector<std::string>::const_iterator it = groups.begin(); it != groups.end(); ++it) {
+		static const std::string zipPostfix = ".zip";
+		static const std::string sizeName = "Size";
+		if (ZLStringUtil::stringEndsWith(ZLUnicodeUtil::toLower(*it), zipPostfix)) {
+			ZLIntegerOption option(FBCategoryKey::BOOKS, *it, sizeName, -1);
+			option.setValue(-1);
+		}
+	}
 }

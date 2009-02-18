@@ -113,7 +113,9 @@ void BookCollection::collectBookFileNames(std::set<std::string> &bookFileNames) 
 					std::vector<std::string> zipEntries;
 					BookDescriptionUtil::listZipEntries(file, zipEntries);
 					for (std::vector<std::string>::const_iterator zit = zipEntries.begin(); zit != zipEntries.end(); ++zit) {
-						bookFileNames.insert(*zit);
+						if (PluginCollection::instance().plugin(ZLFile(*zit), !collectBookWithoutMetaInfo) != 0) {
+							bookFileNames.insert(*zit);
+						}
 					}
 				}
 			}
