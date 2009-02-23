@@ -22,3 +22,4 @@
 const std::string XMLNamespace::DublinCorePrefix = "http://purl.org/dc/elements";
 const std::string XMLNamespace::DublinCoreLegacyPrefix = "http://purl.org/metadata/dublin_core";
 const std::string XMLNamespace::XLink = "http://www.w3.org/1999/xlink";
+const std::string XMLNamespace::OpenPackagingFormat = "http://www.idpf.org/2007/opf";

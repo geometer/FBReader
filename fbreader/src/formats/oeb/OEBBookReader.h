@@ -37,6 +37,8 @@ public:
 private:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
+	bool processNamespaces() const;
+	void namespaceListChangedHandler();
 
 	void generateTOC();
 
@@ -51,6 +53,8 @@ private:
 
 	BookReader myModelReader;
 	ReaderState myState;
+
+	std::string myOPFSchemePrefix;
 
 	std::string myFilePrefix;
 	std::map<std::string,std::string> myIdToHref;

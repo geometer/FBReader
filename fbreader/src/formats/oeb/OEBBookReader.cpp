@@ -19,6 +19,7 @@
 
 #include <algorithm>
 
+#include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLFileImage.h>
 
@@ -27,6 +28,7 @@
 #include "../xhtml/XHTMLReader.h"
 #include "../util/MiscUtil.h"
 #include "../../bookmodel/BookModel.h"
+#include "../../constants/XMLNamespace.h"
 
 OEBBookReader::OEBBookReader(BookModel &model) : myModelReader(model) {
 }
@@ -42,7 +44,11 @@ static const std::string ITEMREF = "itemref";
 static const std::string REFERENCE = "reference";
 
 void OEBBookReader::startElementHandler(const char *tag, const char **xmlattributes) {
-	const std::string tagString = ZLUnicodeUtil::toLower(tag);
+	std::string tagString = ZLUnicodeUtil::toLower(tag);
+	if (!myOPFSchemePrefix.empty() &&
+			ZLStringUtil::stringStartsWith(tagString, myOPFSchemePrefix)) {
+		tagString = tagString.substr(myOPFSchemePrefix.length());
+	}
 	if (MANIFEST == tagString) {
 		myState = READ_MANIFEST;
 	} else if (SPINE == tagString) {
@@ -94,7 +100,11 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 }
 
 void OEBBookReader::endElementHandler(const char *tag) {
-	const std::string tagString = ZLUnicodeUtil::toLower(tag);
+	std::string tagString = ZLUnicodeUtil::toLower(tag);
+	if (!myOPFSchemePrefix.empty() &&
+			ZLStringUtil::stringStartsWith(tagString, myOPFSchemePrefix)) {
+		tagString = tagString.substr(myOPFSchemePrefix.length());
+	}
 	if ((MANIFEST == tagString) || (SPINE == tagString) || (GUIDE == tagString) || (TOUR == tagString)) {
 		myState = READ_NONE;
 	}
@@ -168,5 +178,24 @@ void OEBBookReader::generateTOC() {
 			myModelReader.addContentsData(it->first);
 			myModelReader.endContentsParagraph();
 		}
+	}
+}
+
+bool OEBBookReader::processNamespaces() const {
+	return true;
+}
+
+void OEBBookReader::namespaceListChangedHandler() {
+	const std::map<std::string,std::string> &namespaceMap = namespaces();
+	std::map<std::string,std::string>::const_iterator iter = namespaceMap.begin();
+	for (; iter != namespaceMap.end(); ++iter) {
+		if (iter->second == XMLNamespace::OpenPackagingFormat) {
+			break;
+		}
+	}
+	if (iter != namespaceMap.end()) {
+		myOPFSchemePrefix = iter->first + ":";
+	} else {
+		myOPFSchemePrefix.erase();
 	}
 }

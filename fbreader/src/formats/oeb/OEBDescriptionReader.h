@@ -39,6 +39,7 @@ public:
 
 private:
 	bool isDublinCoreNamespace(const std::string &nsId) const;
+	bool isOPFNamespace(const std::string &nsId) const;
 
 private:
 	WritableBookDescription myDescription;
@@ -49,7 +50,8 @@ private:
 		READ_AUTHOR,
 		READ_AUTHOR2,
 		READ_TITLE,
-		READ_SUBJECT
+		READ_SUBJECT,
+		READ_LANGUAGE,
 	} myReadState;
 
 	std::string myDCMetadataTag;

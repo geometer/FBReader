@@ -69,9 +69,12 @@ std::string OEBPlugin::opfFileName(const std::string &oebFileName) {
 bool OEBPlugin::readDescription(const std::string &path, BookDescription &description) const {
 	shared_ptr<ZLInputStream> lock = ZLFile(path).inputStream();
 	const std::string opf = opfFileName(path);
-	shared_ptr<ZLInputStream> oebStream = new OEBTextStream(opf);
-	detectLanguage(description, *oebStream);
-	return OEBDescriptionReader(description).readDescription(opf);
+	bool code = OEBDescriptionReader(description).readDescription(opf);
+	if (code && description.language().empty()) {
+		shared_ptr<ZLInputStream> oebStream = new OEBTextStream(opf);
+		detectLanguage(description, *oebStream);
+	}
+	return code;
 }
 
 class InputStreamLock : public ZLUserData {
