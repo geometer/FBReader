@@ -322,17 +322,23 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info, int y) {
 
 	switch (myStyle.textStyle()->alignment()) {
 		case ALIGN_RIGHT:
-			x += metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics) - info.Width;
-			break;
-		case ALIGN_CENTER:
-			x += (metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics) - info.Width) / 2;
-			break;
-		case ALIGN_JUSTIFY:
-			if (!endOfParagraph && (info.End.element().kind() != ZLTextElement::AFTER_PARAGRAPH_ELEMENT)) {
-				fullCorrection = metrics.FullWidth - myStyle.textStyle()->rightIndent(metrics) - info.Width;
+			if (myStyle.baseBidiLevel() % 2 == 0) {
+				x += metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics) - info.Width;
 			}
 			break;
 		case ALIGN_LEFT:
+			if (myStyle.baseBidiLevel() % 2 == 1) {
+				x += metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics) - info.Width;
+			}
+			break;
+		case ALIGN_CENTER:
+			x += (metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics) - info.Width) / 2;
+			break;
+		case ALIGN_JUSTIFY:
+			if (!endOfParagraph && (info.End.element().kind() != ZLTextElement::AFTER_PARAGRAPH_ELEMENT)) {
+				fullCorrection = metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics) - info.Width;
+			}
+			break;
 		case ALIGN_UNDEFINED:
 			break;
 	}

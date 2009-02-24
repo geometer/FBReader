@@ -118,7 +118,18 @@ void OEBDescriptionReader::endElementHandler(const char *tag) {
 			} else if (myReadState == READ_SUBJECT) {
 				myDescription.addTag(myBuffer);
 			} else if (myReadState == READ_LANGUAGE) {
-				myDescription.language() = (myBuffer == "cz") ? "cs" : myBuffer;
+				int index = myBuffer.find('-');
+				if (index >= 0) {
+					myBuffer = myBuffer.substr(0, index);
+				}
+				index = myBuffer.find('_');
+				if (index >= 0) {
+					myBuffer = myBuffer.substr(0, index);
+				}
+				if (myBuffer == "cz") {
+					myBuffer = "cs";
+				}
+				myDescription.language() = myBuffer;
 			}
 			myBuffer.erase();
 		}

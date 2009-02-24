@@ -82,13 +82,13 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 			
 			registerEntries(dialogTab,
 				KEY_SPACEBEFORE, new ZLSimpleSpinOptionEntry(decoration->SpaceBeforeOption, 1),
-				KEY_STARTINDENT, new ZLSimpleSpinOptionEntry(decoration->LeftIndentOption, 1),
+				KEY_STARTINDENT, new ZLSimpleSpinOptionEntry(decoration->LineStartIndentOption, 1),
 				name
 			);
 			
 			registerEntries(dialogTab,
 				KEY_SPACEAFTER, new ZLSimpleSpinOptionEntry(decoration->SpaceAfterOption, 1),
-				KEY_ENDINDENT, new ZLSimpleSpinOptionEntry(decoration->RightIndentOption, 1),
+				KEY_ENDINDENT, new ZLSimpleSpinOptionEntry(decoration->LineEndIndentOption, 1),
 				name
 			);
 			
