@@ -20,6 +20,7 @@
 #ifndef __ZLUNICODEUTIL_H__
 #define __ZLUNICODEUTIL_H__
 
+#include <stdint.h>
 #include <string>
 #include <vector>
 
