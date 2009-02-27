@@ -135,18 +135,24 @@ ZLColor ZLTextFullDecoratedStyle::color() const {
 	return base()->color();
 }
 
-short ZLTextForcedStyle::lineStartIndent(const ZLTextStyleEntry::Metrics &metrics) const {
+short ZLTextForcedStyle::lineStartIndent(const ZLTextStyleEntry::Metrics &metrics, bool rtl) const {
+	ZLTextStyleEntry::Length lengthType = rtl ?
+		ZLTextStyleEntry::LENGTH_RIGHT_INDENT :
+		ZLTextStyleEntry::LENGTH_LEFT_INDENT;
 	return
-		myEntry.lengthSupported(ZLTextStyleEntry::LENGTH_LEFT_INDENT) ?
-			myEntry.length(ZLTextStyleEntry::LENGTH_LEFT_INDENT, metrics) :
-			base()->lineStartIndent(metrics);
+		myEntry.lengthSupported(lengthType) ?
+			myEntry.length(lengthType, metrics) :
+			base()->lineStartIndent(metrics, rtl);
 }
 
-short ZLTextForcedStyle::lineEndIndent(const ZLTextStyleEntry::Metrics &metrics) const {
+short ZLTextForcedStyle::lineEndIndent(const ZLTextStyleEntry::Metrics &metrics, bool rtl) const {
+	ZLTextStyleEntry::Length lengthType = rtl ?
+		ZLTextStyleEntry::LENGTH_LEFT_INDENT :
+		ZLTextStyleEntry::LENGTH_RIGHT_INDENT;
 	return
-		myEntry.lengthSupported(ZLTextStyleEntry::LENGTH_RIGHT_INDENT) ?
-			myEntry.length(ZLTextStyleEntry::LENGTH_RIGHT_INDENT, metrics) :
-			base()->lineEndIndent(metrics);
+		myEntry.lengthSupported(lengthType) ?
+			myEntry.length(lengthType, metrics) :
+			base()->lineEndIndent(metrics, rtl);
 }
 
 short ZLTextForcedStyle::spaceBefore(const ZLTextStyleEntry::Metrics &metrics) const {

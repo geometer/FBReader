@@ -42,7 +42,7 @@ struct ZLTextLineInfo {
 	ZLTextWordCursor RealStart;
 	ZLTextWordCursor End;
 	bool IsVisible;
-	int LeftIndent;
+	int StartIndent;
 	int Width;
 	int Height;
 	int Descent;
@@ -66,7 +66,7 @@ public:
 	bool operator < (const ZLTextLineInfoPtr &info) const;
 };
 
-inline ZLTextLineInfo::ZLTextLineInfo(const ZLTextWordCursor &word, ZLTextStylePtr style, unsigned char bidiLevel) : Start(word), RealStart(word), End(word), IsVisible(false), LeftIndent(0), Width(0), Height(0), Descent(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style), StartBidiLevel(bidiLevel) {}
+inline ZLTextLineInfo::ZLTextLineInfo(const ZLTextWordCursor &word, ZLTextStylePtr style, unsigned char bidiLevel) : Start(word), RealStart(word), End(word), IsVisible(false), StartIndent(0), Width(0), Height(0), Descent(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style), StartBidiLevel(bidiLevel) {}
 
 inline ZLTextLineInfoPtr::ZLTextLineInfoPtr(ZLTextLineInfo *ptr) : shared_ptr<ZLTextLineInfo>(ptr) {}
 inline bool ZLTextLineInfoPtr::operator < (const ZLTextLineInfoPtr &info) const { return (*this)->Start < info->Start; }

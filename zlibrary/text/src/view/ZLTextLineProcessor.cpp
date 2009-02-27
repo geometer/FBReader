@@ -34,7 +34,7 @@ struct ZLTextPartialInfo {
 	//ZLTextWordCursor RealStart;
 	ZLTextWordCursor End;
 	bool IsVisible;
-	//int LeftIndent;
+	//int StartIndent;
 	int Width;
 	int Height;
 	int Descent;
@@ -120,14 +120,14 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 	const int fontSize = myStyle.textStyle()->fontSize();
 	// TODO: change metrics at font change
 	const ZLTextStyleEntry::Metrics metrics(fontSize, fontSize / 2, viewWidth(), textAreaHeight());
-	info.LeftIndent = myStyle.textStyle()->lineStartIndent(metrics);
+	info.StartIndent = myStyle.textStyle()->lineStartIndent(metrics, myStyle.baseIsRtl());
 	if (isFirstLine) {
-		info.LeftIndent += myStyle.textStyle()->firstLineIndentDelta(metrics);
+		info.StartIndent += myStyle.textStyle()->firstLineIndentDelta(metrics);
 	}
 	if (!info.NodeInfo.isNull()) {
-		info.LeftIndent += (myStyle.context().stringHeight() + 2) / 3 * 4 * (info.NodeInfo->VerticalLinesStack.size() + 1);
+		info.StartIndent += (myStyle.context().stringHeight() + 2) / 3 * 4 * (info.NodeInfo->VerticalLinesStack.size() + 1);
 	}
-	info.Width = info.LeftIndent;
+	info.Width = info.StartIndent;
 
 	if (info.RealStart.equalElementIndex(end)) {
 	  info.End = info.RealStart;
@@ -136,7 +136,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 	ZLTextPartialInfo newInfo(info, current);
 	bool allowBreakAtNBSpace = true;
-	const int maxWidth = metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics);
+	const int maxWidth = metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myStyle.baseIsRtl());
 	bool wordOccured = false;
 	int lastSpaceWidth = 0;
 	int removeLastSpace = false;

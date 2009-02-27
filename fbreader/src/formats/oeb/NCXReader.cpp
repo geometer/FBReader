@@ -48,7 +48,7 @@ void NCXReader::startElementHandler(const char *tag, const char **attributes) {
 			if (TAG_NAVPOINT == tag) {
 				const char *order = attributeValue(attributes, "playOrder");
 				myPointStack.push_back(NavPoint((order != 0) ? atoi(order) : myPlayIndex++, myPointStack.size()));
-			} if (TAG_NAVLABEL == tag) {
+			} else if (TAG_NAVLABEL == tag) {
 				myReadState = READ_LABEL;
 			} else if (TAG_CONTENT == tag) {
 				const char *src = attributeValue(attributes, "src");
