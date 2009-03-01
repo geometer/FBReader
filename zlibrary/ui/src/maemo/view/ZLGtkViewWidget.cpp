@@ -138,42 +138,55 @@ int ZLGtkViewWidget::height() const {
 
 static const std::string GROUP = "StylusPressure";
 
-static bool scrollbarEvent(ZLView::Direction direction, GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
+bool ZLGtkViewWidget::scrollbarEvent(ZLView::Direction direction, GtkRange *range, GtkScrollType type, double newValue) {
+	static bool alreadyProcessed = false;
+	if (alreadyProcessed) {
+		return true;
+	}
+	alreadyProcessed = true;
+
+	bool code = true;
 	switch (type) {
 		default:
-			return false;
+			code = false;
+			break;
   	case GTK_SCROLL_JUMP:
 		{
 			GtkAdjustment *adjustment = gtk_range_get_adjustment(range);
-			data->onScrollbarMoved(
+			const int upper = (int)adjustment->upper;
+			onScrollbarMoved(
 				direction,
-				(size_t)adjustment->upper,
-				(size_t)newValue,
-				(size_t)(newValue + adjustment->page_size)
+				upper,
+				std::max(std::min((int)newValue, upper), 0),
+				std::max(std::min((int)(newValue + adjustment->page_size), upper), 0)
 			);
-			return false;
+			code = false;
+			break;
 		}
   	case GTK_SCROLL_STEP_BACKWARD:
-			data->onScrollbarStep(direction, -1);
-			return true;
+			onScrollbarStep(direction, -1);
+			break;
   	case GTK_SCROLL_STEP_FORWARD:
-			data->onScrollbarStep(direction, 1);
-			return true;
+			onScrollbarStep(direction, 1);
+			break;
   	case GTK_SCROLL_PAGE_BACKWARD:
-			data->onScrollbarPageStep(direction, -1);
-			return true;
+			onScrollbarPageStep(direction, -1);
+			break;
   	case GTK_SCROLL_PAGE_FORWARD:
-			data->onScrollbarPageStep(direction, 1);
-			return true;
+			onScrollbarPageStep(direction, 1);
+			break;
 	}
+	gtk_widget_send_expose(myArea, gdk_event_new(GDK_EXPOSE));
+	alreadyProcessed = false;
+	return code;
 }
 
 static bool vScrollbarEvent(GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
-	return scrollbarEvent(ZLView::VERTICAL, range, type, newValue, data);
+	return data->scrollbarEvent(ZLView::VERTICAL, range, type, newValue);
 }
 
 static bool hScrollbarEvent(GtkRange *range, GtkScrollType type, double newValue, ZLGtkViewWidget *data) {
-	return scrollbarEvent(ZLView::HORIZONTAL, range, type, newValue, data);
+	return data->scrollbarEvent(ZLView::HORIZONTAL, range, type, newValue);
 }
 
 GtkWidget *ZLGtkViewWidget::createVScrollbar(int pos) {

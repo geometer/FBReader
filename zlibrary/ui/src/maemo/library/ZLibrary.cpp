@@ -22,6 +22,7 @@
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
+#include <ZLLanguageUtil.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
 
@@ -75,6 +76,7 @@ ZLPaintContext *ZLGtkLibraryImplementation::createContext() {
 void ZLGtkLibraryImplementation::run(ZLApplication *application) {
 	ZLDialogManager::instance().createApplicationWindow(application);
 	application->initWindow();
+	gtk_widget_set_default_direction(ZLLanguageUtil::isRTLLanguage(ZLibrary::Language()) ? GTK_TEXT_DIR_RTL : GTK_TEXT_DIR_LTR);
 	gtk_main();
 	delete application;
 	pthread_exit(0);

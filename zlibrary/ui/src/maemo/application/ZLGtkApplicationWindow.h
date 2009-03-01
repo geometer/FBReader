@@ -93,6 +93,27 @@ public:
 	void onGtkButtonPress(GtkToolItem *gtkButton);
 	HildonWindow *getMainWindow() const { return myWindow; }
 
+public:
+	class GtkEntryParameter : public VisualParameter {
+
+	public:
+		GtkEntryParameter(ZLGtkApplicationWindow &window, const ZLToolbar::ParameterItem &item);
+		void onKeyPressed(const std::string &keyName);
+		void onValueChanged();
+		GtkToolItem *createToolItem();
+
+	private:
+		std::string internalValue() const;
+		void internalSetValue(const std::string &value);
+		void setValueList(const std::vector<std::string> &values);
+
+	private:
+		ZLGtkApplicationWindow &myWindow;
+		const ZLToolbar::ParameterItem &myItem;
+		GtkWidget *myWidget;
+		GtkEntry *myEntry;
+	};
+
 private:
 	HildonProgram *myProgram;
 	HildonWindow *myWindow;
@@ -102,10 +123,9 @@ private:
 
 	bool myFullScreen;
 
-	std::map<ZLToolbar::ItemPtr,GtkToolItem*> myToolItems;
+	std::map<const ZLToolbar::Item*,GtkToolItem*> myAbstractToGtk;
+	std::map<GtkToolItem*,ZLToolbar::ItemPtr> myGtkToAbstract;
 	std::map<std::string,GtkMenuItem*> myMenuItems;
-	std::map<GtkToolItem*,const ZLToolbar::AbstractButtonItem*> myToolbarButtons;
-	std::vector<shared_ptr<ZLOptionView> > myViews;
 
 friend class MenuBuilder;
 };

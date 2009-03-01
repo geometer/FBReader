@@ -99,13 +99,10 @@ static void mouseMoved(GtkWidget*, GdkEventMotion *event, gpointer data) {
 	}
 }
 
-#include <iostream>
-
 ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
 	KeyActionOnReleaseNotOnPressOption(ZLCategoryKey::CONFIG, "KeyAction", "OnRelease", false),
 	myFullScreen(false) {
-	std::cerr << "ZLGtkApplicationWindow:0\n";
 	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
 
@@ -131,7 +128,6 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myWindow), "delete_event", GTK_SIGNAL_FUNC(applicationQuit), this);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myWindow), "key_press_event", GTK_SIGNAL_FUNC(handleKeyPress), this);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myWindow), "key_release_event", GTK_SIGNAL_FUNC(handleKeyRelease), this);
-	std::cerr << "ZLGtkApplicationWindow:1\n";
 }
 
 ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
@@ -257,7 +253,6 @@ GtkToolItem *ZLGtkApplicationWindow::createGtkToolButton(const ZLToolbar::Abstra
 	gtk_tool_item_set_tooltip(gtkItem, myToolbar->tooltips, button.tooltip().c_str(), 0);
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(gtkItem), "clicked", GTK_SIGNAL_FUNC(onButtonClicked), this);
 	//GTK_WIDGET_UNSET_FLAGS(gtkItem, GTK_CAN_FOCUS);
-	myToolbarButtons[gtkItem] = &button;
 
 	return gtkItem;
 }
@@ -265,26 +260,17 @@ GtkToolItem *ZLGtkApplicationWindow::createGtkToolButton(const ZLToolbar::Abstra
 void ZLGtkApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	GtkToolItem *gtkItem = 0;
 	switch (item->type()) {
-		/*
-		case ZLToolbar::Item::OPTION_ENTRY:
+		case ZLToolbar::Item::TEXT_FIELD:
+		case ZLToolbar::Item::COMBO_BOX:
 			{
-				shared_ptr<ZLOptionEntry> entry = ((const ZLToolbar::OptionEntryItem&)*item).entry();
-				gtkItem = gtk_tool_item_new();
-				ZLGtkToolItemWrapper wrapper(gtkItem);
-				ZLOptionView *view = wrapper.createViewByEntry("", "", entry);
-				if (view != 0) {
-					gtk_tool_item_set_homogeneous(gtkItem, false);
-					gtk_tool_item_set_expand(gtkItem, false);
-					GTK_WIDGET_UNSET_FLAGS(gtkItem, GTK_CAN_FOCUS);
-					myViews.push_back(view);
-					entry->setVisible(true);
-				} else {
-					// TODO: remove *gtkItem
-					gtkItem = 0;
-				}
+				const ZLToolbar::ParameterItem &parameterItem = (const ZLToolbar::ParameterItem&)*item;
+				GtkEntryParameter *parameter =
+					new GtkEntryParameter(*this, parameterItem);
+				addVisualParameter(parameterItem.parameterId(), parameter);
+				gtkItem = parameter->createToolItem();
+				gtk_tool_item_set_tooltip(gtkItem, myToolbar->tooltips, parameterItem.tooltip().c_str(), 0);
 			}
 			break;
-		*/
 		case ZLToolbar::Item::PLAIN_BUTTON:
 		case ZLToolbar::Item::TOGGLE_BUTTON:
 		case ZLToolbar::Item::MENU_BUTTON:
@@ -297,24 +283,27 @@ void ZLGtkApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	}
 	if (gtkItem != 0) {
 		gtk_toolbar_insert(myToolbar, gtkItem, -1);
-		myToolItems[item] = gtkItem;
+		myAbstractToGtk[&*item] = gtkItem;
+		myGtkToAbstract[gtkItem] = item;
 		gtk_widget_show_all(GTK_WIDGET(gtkItem));
 	}
 }
 
 void ZLGtkApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	std::map<ZLToolbar::ItemPtr,GtkToolItem*>::iterator it = myToolItems.find(item);
-	if (it != myToolItems.end()) {
-		GtkToolItem *toolItem = it->second;
-		gtk_tool_item_set_visible_horizontal(toolItem, visible);
-		/*
-		 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
-		 * does something strange if WIDGET is already insensitive.
-		 */
-		bool alreadyEnabled = GTK_WIDGET_STATE(toolItem) != GTK_STATE_INSENSITIVE;
-		if (enabled != alreadyEnabled) {
-			gtk_widget_set_sensitive(GTK_WIDGET(toolItem), enabled);
-		}
+	std::map<const ZLToolbar::Item*,GtkToolItem*>::const_iterator it = myAbstractToGtk.find(&*item);
+	if (it == myAbstractToGtk.end()) {
+		return;
+	}
+
+	GtkToolItem *toolItem = it->second;
+	gtk_tool_item_set_visible_horizontal(toolItem, visible);
+	/*
+	 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
+	 * does something strange if WIDGET is already insensitive.
+	 */
+	bool alreadyEnabled = GTK_WIDGET_STATE(toolItem) != GTK_STATE_INSENSITIVE;
+	if (enabled != alreadyEnabled) {
+		gtk_widget_set_sensitive(GTK_WIDGET(toolItem), enabled);
 	}
 }
 
@@ -366,11 +355,16 @@ void ZLGtkApplicationWindow::grabAllKeys(bool) {
 }
 
 void ZLGtkApplicationWindow::onGtkButtonPress(GtkToolItem *gtkItem) {
-	onButtonPress(*myToolbarButtons[gtkItem]);
+	onButtonPress((ZLToolbar::AbstractButtonItem&)*myGtkToAbstract[gtkItem]);
 }
 
 void ZLGtkApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
-	//myToolbarButtons[&button]->forcePress(button.isPressed());
+	GtkToggleToolButton *gtkButton =
+		GTK_TOGGLE_TOOL_BUTTON(myAbstractToGtk[&(ZLToolbar::Item&)button]);
+	const bool isPressed = button.isPressed();
+	if (gtk_toggle_tool_button_get_active(gtkButton) != isPressed) {
+		gtk_toggle_tool_button_set_active(gtkButton, isPressed);
+	}
 }
 
 void ZLGtkApplicationWindow::buildTabs(ZLOptionsDialog &dialog) {

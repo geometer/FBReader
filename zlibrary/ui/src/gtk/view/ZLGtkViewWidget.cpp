@@ -113,7 +113,8 @@ bool ZLGtkViewWidget::scrollbarEvent(ZLView::Direction direction, GtkRange *rang
 	bool code = true;
 	switch (type) {
 		default:
-			return false;
+			code = false;
+			break;
   	case GTK_SCROLL_JUMP:
 		{
 			GtkAdjustment *adjustment = gtk_range_get_adjustment(range);

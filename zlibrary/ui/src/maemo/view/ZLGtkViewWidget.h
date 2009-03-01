@@ -44,6 +44,9 @@ public:
 
 	GtkWidget *area();
 	GtkWidget *areaWithScrollbars();
+
+	bool scrollbarEvent(ZLView::Direction direction, GtkRange *range, GtkScrollType type, double newValue);
+
 	void onMousePressed(GdkEventButton *event);
 	void onMouseReleased(GdkEventButton *event);
 	void onMouseMoved(GdkEventMotion *event);

@@ -16,7 +16,7 @@
 	<button id="gotoHome"/>
 	<button id="undo"/>
 	<button id="redo"/>
-	<textField id="gotoPageNumberWithParameter" parameterId="pageIndex" maxWidth="5" symbols="digits"/>
+	<textField id="gotoPageNumberWithParameter" parameterId="pageIndex" maxWidth="4" symbols="digits"/>
 	<separator/>
 	<button id="toc"/>
 	<separator/>
