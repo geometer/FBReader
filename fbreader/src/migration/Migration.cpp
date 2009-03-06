@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <cstdlib>
+
 #include <ZLStringUtil.h>
 
 #include "../options/FBOptions.h"
@@ -42,7 +44,7 @@ bool Migration::isLikeToFileName(const std::string &str) {
 	return
 		ZLStringUtil::stringStartsWith(str, "/") ||
 		ZLStringUtil::stringStartsWith(str, "\\\\") ||
-		(str.length() > 2) && (str.substr(1, 2) == ":\\");
+		((str.length() > 2) && (str.substr(1, 2) == ":\\"));
 }
 
 Migration::Migration(const std::string &version) : myVersion(version) {

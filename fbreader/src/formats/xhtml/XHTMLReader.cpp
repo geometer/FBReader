@@ -17,7 +17,9 @@
  * 02110-1301, USA.
  */
 
-#include <string.h>
+#include <iostream>
+
+#include <cstring>
 
 #include <ZLFile.h>
 #include <ZLFileImage.h>
@@ -63,6 +65,13 @@ public:
 };
 
 class XHTMLTagParagraphAction : public XHTMLTagAction {
+
+public:
+	void doAtStart(XHTMLReader &reader, const char **xmlattributes);
+	void doAtEnd(XHTMLReader &reader);
+};
+
+class XHTMLTagBodyAction : public XHTMLTagAction {
 
 public:
 	void doAtStart(XHTMLReader &reader, const char **xmlattributes);
@@ -177,6 +186,15 @@ void XHTMLTagParagraphAction::doAtEnd(XHTMLReader &reader) {
 	endParagraph(reader);
 }
 
+void XHTMLTagBodyAction::doAtStart(XHTMLReader &reader, const char**) {
+	reader.myInsideBody = true;
+}
+
+void XHTMLTagBodyAction::doAtEnd(XHTMLReader &reader) {
+	endParagraph(reader);
+	reader.myInsideBody = false;
+}
+
 void XHTMLTagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char**) {
 	if (reader.myCurrentParagraphIsEmpty) {
 		bookReader(reader).addData(" ");
@@ -206,20 +224,26 @@ XHTMLTagImageAction::XHTMLTagImageAction(const std::string &nameAttribute) : myN
 
 void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
 	const char *fileName = reader.attributeValue(xmlattributes, myNameAttribute.c_str());
-	if (fileName != 0) {
-		bool flag = bookReader(reader).paragraphIsOpen();
-		if (flag) {
-			endParagraph(reader);
-		}
-		if ((strlen(fileName) > 2) && strncmp(fileName, "./", 2) == 0) {
-			fileName +=2;
-		}
-		const std::string fullfileName = pathPrefix(reader) + fileName;
-		bookReader(reader).addImageReference(fullfileName);
-		bookReader(reader).addImage(fullfileName, new ZLFileImage("image/auto", fullfileName, 0));
-		if (flag) {
-			beginParagraph(reader);
-		}
+	if (fileName == 0) {
+		return;
+	}
+
+	const std::string fullfileName = pathPrefix(reader) + fileName;
+	if (!ZLFile(fullfileName).exists()) {
+		return;
+	}
+
+	bool flag = bookReader(reader).paragraphIsOpen();
+	if (flag) {
+		endParagraph(reader);
+	}
+	if ((strlen(fileName) > 2) && strncmp(fileName, "./", 2) == 0) {
+		fileName +=2;
+	}
+	bookReader(reader).addImageReference(fullfileName);
+	bookReader(reader).addImage(fullfileName, new ZLFileImage("image/auto", fullfileName, 0));
+	if (flag) {
+		beginParagraph(reader);
 	}
 }
 
@@ -300,7 +324,7 @@ XHTMLTagAction *XHTMLReader::addAction(const std::string &tag, XHTMLTagAction *a
 void XHTMLReader::fillTagTable() {
 	if (ourTagActions.empty()) {
 		//addAction("html",	new XHTMLTagAction());
-		addAction("body",	new XHTMLTagParagraphAction());
+		addAction("body",	new XHTMLTagBodyAction());
 		//addAction("title",	new XHTMLTagAction());
 		//addAction("meta",	new XHTMLTagAction());
 		//addAction("script",	new XHTMLTagAction());
@@ -384,6 +408,8 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &fil
 	myReferenceName = referenceName;
 
 	myPreformatted = false;
+	myNewParagraphInProgress = false;
+	myInsideBody = false;
 
 	myCSSStack.clear();
 	myStyleEntryStack.clear();
@@ -402,6 +428,7 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, shared_ptr<ZLInputStre
 
 	myPreformatted = false;
 	myNewParagraphInProgress = false;
+	myInsideBody = false;
 
 	return readDocument(stream);
 }
@@ -532,7 +559,7 @@ void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 		myModelReader.addFixedHSpace(spaceCounter);
 		text += spaceCounter;
 		len -= spaceCounter;
-	} else if (myNewParagraphInProgress) {
+	} else if ((myNewParagraphInProgress) || !myModelReader.paragraphIsOpen()) {
 		while (isspace((unsigned char)*text)) {
 			++text;
 			if (--len == 0) {
@@ -542,6 +569,9 @@ void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 	}
 	if (len > 0) {
 		myCurrentParagraphIsEmpty = false;
+		if (myInsideBody && !myModelReader.paragraphIsOpen()) {
+			myModelReader.beginParagraph();
+		}
 		myModelReader.addData(std::string(text, len));
 		myNewParagraphInProgress = false;
 	}

@@ -85,12 +85,14 @@ private:
 	std::vector<bool> myDoPageBreakAfterStack;
 	bool myCurrentParagraphIsEmpty;
 	StyleSheetSingleStyleParser myStyleParser;
+	bool myInsideBody;
 
 	friend class XHTMLTagAction;
 	friend class XHTMLTagLinkAction;
 	friend class XHTMLTagHyperlinkAction;
 	friend class XHTMLTagPreAction;
 	friend class XHTMLTagParagraphAction;
+	friend class XHTMLTagBodyAction;
 	friend class XHTMLTagRestartParagraphAction;
 };
 
