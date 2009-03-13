@@ -70,14 +70,14 @@ static bool handleKeyPress(GtkWidget*, GdkEventKey *key, gpointer data) {
 	if (acceptAction()) {
 		((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key, false);
 	}
-	return false;
+	return true;
 }
 
 static bool handleKeyRelease(GtkWidget*, GdkEventKey *key, gpointer data) {
 	if (acceptAction()) {
 		((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key, true);
 	}
-	return false;
+	return true;
 }
 
 static void mousePressed(GtkWidget *area, GdkEventButton *event, gpointer data) {
@@ -240,8 +240,8 @@ GtkToolItem *ZLGtkApplicationWindow::createGtkToolButton(const ZLToolbar::Abstra
 			const ZLToolbar::MenuButtonItem &menuButton =
 				(const ZLToolbar::MenuButtonItem&)button;
 			shared_ptr<ZLPopupData> popupData = menuButton.popupData();
-			//myPopupIdMap[gtkItem] =
-			//	popupData.isNull() ? (size_t)-1 : (popupData->id() - 1);
+			myPopupIdMap[gtkItem] =
+				popupData.isNull() ? (size_t)-1 : (popupData->id() - 1);
 			gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(gtkItem), gtk_menu_new());
 			gtk_menu_tool_button_set_arrow_tooltip(GTK_MENU_TOOL_BUTTON(gtkItem), myToolbar->tooltips, menuButton.popupTooltip().c_str(), 0);
 			break;
@@ -289,6 +289,45 @@ void ZLGtkApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	}
 }
 
+static bool itemActivated(GtkWidget *menuItem, gpointer data) {
+	GtkMenu *menu = GTK_MENU(gtk_widget_get_parent(menuItem));
+	GList *children = gtk_container_get_children(GTK_CONTAINER(menu));
+	int index = g_list_index(children, (gconstpointer)menuItem);
+	((ZLPopupData*)data)->run(index);
+	return true;
+}
+
+void ZLGtkApplicationWindow::updatePopupData(GtkMenuToolButton *button, shared_ptr<ZLPopupData> data) {
+	if (data.isNull()) {
+		return;
+	}
+
+	const size_t id = data->id();
+	if (id == myPopupIdMap[GTK_TOOL_ITEM(button)]) {
+		return;
+	}
+	myPopupIdMap[GTK_TOOL_ITEM(button)] = id;
+
+	GtkMenu *menu = GTK_MENU(gtk_menu_tool_button_get_menu(button));
+	GList *children = gtk_container_get_children(GTK_CONTAINER(menu));
+	if (children != 0) {
+		for (GList *ptr =  g_list_last(children); ; ptr = g_list_previous(ptr)) {
+			gtk_container_remove(GTK_CONTAINER(menu), GTK_WIDGET(ptr->data));
+			if (ptr == children) {
+				break;
+			}
+		}
+	}
+
+	const size_t count = data->count();
+	for (size_t i = 0; i < count; ++i) {
+		GtkWidget *item = gtk_menu_item_new_with_label(data->text(i).c_str());
+		gtk_widget_show_all(item);
+		gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+		ZLGtkSignalUtil::connectSignal(GTK_OBJECT(item), "activate", GTK_SIGNAL_FUNC(itemActivated), &*data);
+	}
+}
+
 void ZLGtkApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
 	std::map<const ZLToolbar::Item*,GtkToolItem*>::const_iterator it = myAbstractToGtk.find(&*item);
 	if (it == myAbstractToGtk.end()) {
@@ -304,6 +343,13 @@ void ZLGtkApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool v
 	bool alreadyEnabled = GTK_WIDGET_STATE(toolItem) != GTK_STATE_INSENSITIVE;
 	if (enabled != alreadyEnabled) {
 		gtk_widget_set_sensitive(GTK_WIDGET(toolItem), enabled);
+	}
+
+	if (item->type() == ZLToolbar::Item::MENU_BUTTON) {
+		updatePopupData(
+			GTK_MENU_TOOL_BUTTON(toolItem),
+			((ZLToolbar::MenuButtonItem&)*item).popupData()
+		);
 	}
 }
 

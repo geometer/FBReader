@@ -18,7 +18,7 @@
  */
 
 #include "ZLGtkApplicationWindow.h"
-#include "gtkwidgettoolitem.h"
+//#include "gtkwidgettoolitem.h"
 
 #include "../util/ZLGtkKeyUtil.h"
 #include "../util/ZLGtkSignalUtil.h"
@@ -75,7 +75,10 @@ ZLGtkApplicationWindow::GtkEntryParameter::GtkEntryParameter(ZLGtkApplicationWin
 }
 
 GtkToolItem *ZLGtkApplicationWindow::GtkEntryParameter::createToolItem() {
-	return gtk_widget_tool_item_new(myWidget);
+	GtkToolItem *toolItem = gtk_tool_item_new();
+	gtk_container_add(GTK_CONTAINER(toolItem), myWidget);
+	return toolItem;
+	//return gtk_widget_tool_item_new(myWidget);
 }
 
 void ZLGtkApplicationWindow::GtkEntryParameter::internalSetValue(const std::string &value) {

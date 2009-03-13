@@ -54,6 +54,7 @@ private:
 	ZLViewWidget *createViewWidget();
 	void init();
 	GtkToolItem *createGtkToolButton(const ZLToolbar::AbstractButtonItem &button);
+	void updatePopupData(GtkMenuToolButton *button, shared_ptr<ZLPopupData> data);
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void buildTabs(ZLOptionsDialog &dialog);
 
@@ -125,6 +126,7 @@ private:
 
 	std::map<const ZLToolbar::Item*,GtkToolItem*> myAbstractToGtk;
 	std::map<GtkToolItem*,ZLToolbar::ItemPtr> myGtkToAbstract;
+	std::map<GtkToolItem*,size_t> myPopupIdMap;
 	std::map<std::string,GtkMenuItem*> myMenuItems;
 
 friend class MenuBuilder;

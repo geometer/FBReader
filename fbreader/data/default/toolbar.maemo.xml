@@ -5,8 +5,7 @@
 	<toggleButton id="byAuthor" group="booksOrder" default="yes"/>
 	<toggleButton id="byTag" group="booksOrder"/>
 	<separator/>
-	<button id="showLibrary"/>
-	<button id="showRecent"/>
+	<menuButton id="showLibrary"/>
 	<button id="addBook"/>
 	<button id="showNetLibrary"/>
 	<separator/>
@@ -17,12 +16,10 @@
 	<button id="undo"/>
 	<button id="redo"/>
 	<textField id="gotoPageNumberWithParameter" parameterId="pageIndex" maxWidth="4" symbols="digits"/>
-	<separator/>
 	<button id="toc"/>
 	<separator/>
 	<button id="search"/>
 	<button id="findPrevious"/>
 	<button id="findNext"/>
-	<separator/>
 	<button id="rotate"/>
 </toolbar>
