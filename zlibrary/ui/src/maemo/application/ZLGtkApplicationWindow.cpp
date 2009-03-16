@@ -68,14 +68,14 @@ static void menuActionSlot(GtkWidget*, gpointer data) {
 
 static bool handleKeyPress(GtkWidget*, GdkEventKey *key, gpointer data) {
 	if (acceptAction()) {
-		((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key, false);
+		return ((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key, false);
 	}
 	return true;
 }
 
 static bool handleKeyRelease(GtkWidget*, GdkEventKey *key, gpointer data) {
 	if (acceptAction()) {
-		((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key, true);
+		return ((ZLGtkApplicationWindow*)data)->handleKeyEventSlot(key, true);
 	}
 	return true;
 }
@@ -183,10 +183,12 @@ void ZLGtkApplicationWindow::MenuBuilder::processSepartor(ZLMenubar::Separator&)
 	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 }
 
-void ZLGtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event, bool isKeyRelease) {
+bool ZLGtkApplicationWindow::handleKeyEventSlot(GdkEventKey *event, bool isKeyRelease) {
+	const std::string &keyName = ZLGtkKeyUtil::keyName(event);
 	if ((myViewWidget != 0) && (KeyActionOnReleaseNotOnPressOption.value() == isKeyRelease)) {
-		application().doActionByKey(ZLGtkKeyUtil::keyName(event));
+		application().doActionByKey(keyName);
 	}
+	return keyName == "<Escape>";
 }
 
 void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {

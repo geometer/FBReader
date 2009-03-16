@@ -90,7 +90,7 @@ private:
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 public:
-	void handleKeyEventSlot(GdkEventKey *event, bool isKeyRelease);
+	bool handleKeyEventSlot(GdkEventKey *event, bool isKeyRelease);
 	void onGtkButtonPress(GtkToolItem *gtkButton);
 	HildonWindow *getMainWindow() const { return myWindow; }
 
