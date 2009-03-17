@@ -197,8 +197,9 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		}
 		case _BINARY:
 		{
+			static const std::string STRANGE_MIME_TYPE = "text/xml";
 			const char *contentType = attributeValue(xmlattributes, "content-type");
-			if ((contentType != 0) && (id != 0)) {
+			if ((contentType != 0) && (id != 0) && (STRANGE_MIME_TYPE != contentType)) {
 				myCurrentImage = new Base64EncodedImage(contentType);
 				myModelReader.addImage(id, myCurrentImage);
 				myProcessingImage = true;

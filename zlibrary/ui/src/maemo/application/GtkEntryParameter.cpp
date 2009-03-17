@@ -70,6 +70,11 @@ ZLGtkApplicationWindow::GtkEntryParameter::GtkEntryParameter(ZLGtkApplicationWin
 	gtk_entry_set_alignment(myEntry, 0.5);
 	gtk_entry_set_width_chars(myEntry, item.maxWidth());
 	gtk_entry_set_max_length(myEntry, item.maxWidth());
+	if (item.symbolSet() == ZLToolbar::ParameterItem::SET_DIGITS) {
+		hildon_gtk_entry_set_input_mode(myEntry, HILDON_GTK_INPUT_MODE_NUMERIC);
+	} else {
+		hildon_gtk_entry_set_input_mode(myEntry, HILDON_GTK_INPUT_MODE_FULL);
+	}
 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myEntry), "key_press_event", GTK_SIGNAL_FUNC(::onKeyPressed), this);
 }
 
