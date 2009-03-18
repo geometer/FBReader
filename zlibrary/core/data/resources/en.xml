@@ -16,6 +16,7 @@
 			<node name="unknownErrorMessage" value="Unknown error" />
 			<node name="couldntCreateDirectoryMessage" value="Couldn&apos;t create a directory&#10;%s" />
 			<node name="couldntCreateFileMessage" value="Couldn&apos;t create a file&#10;%s" />
+			<node name="couldntConnectToNetworkMessage" value="Couldn&apos;t connect to the network" />
 			<node name="couldntConnectMessage" value="Couldn&apos;t connect to host %s" />
 			<node name="couldntResolveHostMessage" value="Couldn&apos;t resolve host %s" />
 			<node name="couldntResolveProxyMessage" value="Couldn&apos;t resolve proxy %s" />

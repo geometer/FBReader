@@ -60,9 +60,11 @@ private:
 	mutable GtkWindow *myWindow;
 	bool myIsKeyboardGrabbed;
 
-	mutable bool myIsWaiting;
+	volatile mutable bool myIsWaiting;
 
 friend GtkDialog *createGtkDialog(const std::string &caption);
+
+friend class ZLMaemoNetworkManager;
 };
 
 #endif /* __ZLGTKDIALOGMANAGER_H__ */

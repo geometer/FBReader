@@ -48,7 +48,7 @@ protected:
 	virtual ~ZLNetworkManager();
 
 public:
-	virtual void connect() const;
+	virtual bool connect() const;
 	virtual void release() const;
 
 	virtual bool providesProxyInfo() const;

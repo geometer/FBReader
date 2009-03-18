@@ -17,6 +17,9 @@
  * 02110-1301, USA.
  */
 
+#include <gtk/gtkmenutoolbutton.h>
+#include <gtk/gtkentry.h>
+
 #include "ZLGtkApplicationWindow.h"
 
 #include "../../gtk/util/ZLGtkKeyUtil.h"

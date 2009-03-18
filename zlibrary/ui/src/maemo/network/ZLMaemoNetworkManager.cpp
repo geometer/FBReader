@@ -17,24 +17,52 @@
  * 02110-1301, USA.
  */
 
+#include <gtk/gtk.h>
+
 #include <ZLStringUtil.h>
 
 #include "ZLMaemoNetworkManager.h"
+#include "../dialogs/ZLGtkDialogManager.h"
 
 void ZLMaemoNetworkManager::createInstance() {
 	ourInstance = new ZLMaemoNetworkManager();
 }
 
+static void connectionEventHandler(ConIcConnection*, ConIcConnectionEvent *event, ZLMaemoNetworkManager *connectionManager) {
+	connectionManager->onStatusChanged(con_ic_connection_event_get_status(event));
+}
+
+void ZLMaemoNetworkManager::onStatusChanged(ConIcConnectionStatus status) {
+	switch(status) {
+		case CON_IC_STATUS_CONNECTED:
+			myConnectionStatus = CONNECTED;
+			break;
+		case CON_IC_STATUS_DISCONNECTING:
+		case CON_IC_STATUS_DISCONNECTED:
+			myConnectionStatus = FAILED;
+			break;
+	}
+}
+
 ZLMaemoNetworkManager::ZLMaemoNetworkManager() {
 	myConnection = con_ic_connection_new();
+	g_signal_connect(G_OBJECT(myConnection), "connection-event", G_CALLBACK(connectionEventHandler), this);
 }
 
 ZLMaemoNetworkManager::~ZLMaemoNetworkManager() {
 	g_object_unref(myConnection);
 }
 
-void ZLMaemoNetworkManager::connect() const {
+bool ZLMaemoNetworkManager::connect() const {
+	volatile bool &waitingFlag = ((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).myIsWaiting;
+	waitingFlag = true;
+	myConnectionStatus = IN_PROGRESS;
 	con_ic_connection_connect(myConnection, CON_IC_CONNECT_FLAG_UNMANAGED);
+	while (myConnectionStatus == IN_PROGRESS) {
+		gtk_main_iteration();
+	}
+	waitingFlag = false;
+	return myConnectionStatus == CONNECTED;
 }
 
 void ZLMaemoNetworkManager::release() const {

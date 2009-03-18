@@ -33,12 +33,16 @@ bool NetworkOperationRunnable::hasErrors() const {
 	return !myErrorMessage.empty();
 }
 
+void NetworkOperationRunnable::showErrorMessage(const std::string &message) {
+	ZLDialogManager::instance().errorBox(
+		ZLResourceKey("networkError"),
+		message
+	);
+}
+
 void NetworkOperationRunnable::showErrorMessage() const {
 	if (!myErrorMessage.empty()) {
-		ZLDialogManager::instance().errorBox(
-			ZLResourceKey("networkError"),
-			myErrorMessage
-		);
+		showErrorMessage(myErrorMessage);
 	}
 }
 

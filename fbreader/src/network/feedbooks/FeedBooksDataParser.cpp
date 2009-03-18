@@ -86,7 +86,9 @@ void FeedBooksDataParser::endElementHandler(const char *tag) {
 					myCurrentBook->Author.SortKey = before;
 					myCurrentBook->Author.DisplayName = after + ' ' + before;
 				} else {
-					myCurrentBook->Author.SortKey = myBuffer;
+					ZLStringUtil::stripWhiteSpaces(myBuffer);
+					index = myBuffer.rfind(' ');
+					myCurrentBook->Author.SortKey = myBuffer.substr(index + 1);
 					myCurrentBook->Author.DisplayName = myBuffer;
 				}
 			} else if (LANGUAGE_DC_TAG == dcTag) {

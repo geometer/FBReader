@@ -28,6 +28,9 @@
 
 class NetworkOperationRunnable : public ZLRunnable {
 
+public:
+	static void showErrorMessage(const std::string &message);
+
 protected:
 	NetworkOperationRunnable(const std::string &uiMessageKey);
 

@@ -96,7 +96,8 @@ ZLStringOption &ZLNetworkManager::ProxyPortOption() const {
 ZLNetworkManager::~ZLNetworkManager() {
 }
 
-void ZLNetworkManager::connect() const {
+bool ZLNetworkManager::connect() const {
+	return true;
 }
 
 void ZLNetworkManager::release() const {
@@ -132,8 +133,6 @@ static size_t writeToStream(void *ptr, size_t size, size_t nmemb, void *data) {
 }
 
 std::string ZLNetworkManager::downloadFile(const std::string &url, const std::string &fileName) const {
-	connect();
-
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 
 	CURL *curl = curl_easy_init();
@@ -182,8 +181,6 @@ std::string ZLNetworkManager::perform(const std::vector<shared_ptr<ZLNetworkData
 	if (dataList.empty()) {
 		return errorResource["emptyLibrariesList"].value();
 	}
-
-	connect();
 
 	const std::string proxy = proxyHost() + ':' + proxyPort();
 	CURLM *handle = curl_multi_init();

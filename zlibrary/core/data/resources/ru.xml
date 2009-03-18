@@ -16,6 +16,7 @@
 			<node name="unknownErrorMessage" value="Неизвестная ошибка" />
 			<node name="couldntCreateDirectoryMessage" value="Не удалось создать каталог&#10;%s" />
 			<node name="couldntCreateFileMessage" value="Не удалось создать файл&#10;%s" />
+			<node name="couldntConnectToNetworkMessage" value="Не удалось соединиться с сетью" />
 			<node name="couldntConnectMessage" value="Не удалось соединиться с сайтом %s" />
 			<node name="couldntResolveHostMessage" value="Не удается найти сайт %s" />
 			<node name="couldntResolveProxyMessage" value="Не удается найти прокси-сервер %s" />

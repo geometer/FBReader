@@ -23,6 +23,7 @@
 #include <ZLFileImage.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
+#include <ZLNetworkManager.h>
 
 #include "NetLibraryView.h"
 #include "CollectionView.h"
@@ -191,6 +192,15 @@ void NetLibraryView::rebuildModel() {
 }
 
 void NetLibraryView::search(SearchRunnable &runnable) {
+	if (!ZLNetworkManager::instance().connect()) {
+		NetworkOperationRunnable::showErrorMessage(
+			ZLResource::resource("dialog")
+				["networkError"]
+				["couldntConnectToNetworkMessage"].value()
+		);
+		return;
+	}
+
 	runnable.executeWithUI();
 
 	runnable.showErrorMessage();
@@ -253,6 +263,15 @@ bool NetLibraryView::_onStylusPress(int x, int y) {
 	}
 
 	if ((id == DownloadEpub) || (id == DownloadMobi)) {
+		if (!ZLNetworkManager::instance().connect()) {
+			NetworkOperationRunnable::showErrorMessage(
+				ZLResource::resource("dialog")
+					["networkError"]
+					["couldntConnectToNetworkMessage"].value()
+			);
+			return false;
+		}
+
 		NetworkBookInfo::URLType format = (id == DownloadEpub) ? NetworkBookInfo::BOOK_EPUB : NetworkBookInfo::BOOK_MOBIPOCKET;
 		DownloadBookRunnable downloader(*book, format);
 		downloader.executeWithUI();

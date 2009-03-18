@@ -82,7 +82,7 @@ bool ZLGtkDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler
 
 struct RunnableWithFlag {
 	ZLRunnable *runnable;
-	bool flag;
+	volatile bool flag;
 };
 
 static void *runRunnable(void *data) {
