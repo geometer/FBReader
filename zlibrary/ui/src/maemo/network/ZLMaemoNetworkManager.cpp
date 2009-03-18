@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLStringUtil.h>
+
 #include "ZLMaemoNetworkManager.h"
 
 void ZLMaemoNetworkManager::createInstance() {
@@ -24,17 +26,18 @@ void ZLMaemoNetworkManager::createInstance() {
 }
 
 ZLMaemoNetworkManager::ZLMaemoNetworkManager() {
+	myConnection = con_ic_connection_new();
 }
 
 ZLMaemoNetworkManager::~ZLMaemoNetworkManager() {
+	g_object_unref(myConnection);
 }
 
-void ZLMaemoNetworkManager::connect() {
-	// TODO: implement
+void ZLMaemoNetworkManager::connect() const {
+	con_ic_connection_connect(myConnection, CON_IC_CONNECT_FLAG_UNMANAGED);
 }
 
-void ZLMaemoNetworkManager::release() {
-	// TODO: implement
+void ZLMaemoNetworkManager::release() const {
 }
 
 bool ZLMaemoNetworkManager::providesProxyInfo() const {
@@ -42,16 +45,18 @@ bool ZLMaemoNetworkManager::providesProxyInfo() const {
 }
 
 bool ZLMaemoNetworkManager::useProxy() const {
-	// TODO: implement
-	return false;
+	return
+		con_ic_connection_get_proxy_mode(myConnection) != CON_IC_PROXY_MODE_NONE;
 }
 
 std::string ZLMaemoNetworkManager::proxyHost() const {
-	// TODO: implement
-	return "";
+	const char *host = con_ic_connection_get_proxy_host(myConnection, CON_IC_PROXY_PROTOCOL_HTTP);
+	return (host != 0) ? host : std::string();
 }
 
 std::string ZLMaemoNetworkManager::proxyPort() const {
-	// TODO: implement
-	return 0;
+	int port = con_ic_connection_get_proxy_port(myConnection, CON_IC_PROXY_PROTOCOL_HTTP);
+	std::string portString;
+	ZLStringUtil::appendNumber(portString, port);
+	return portString;
 }

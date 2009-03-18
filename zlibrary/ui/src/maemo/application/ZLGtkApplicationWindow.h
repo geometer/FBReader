@@ -93,6 +93,7 @@ public:
 	bool handleKeyEventSlot(GdkEventKey *event, bool isKeyRelease);
 	void onGtkButtonPress(GtkToolItem *gtkButton);
 	HildonWindow *getMainWindow() const { return myWindow; }
+	void setFocusToMainWidget();
 
 public:
 	class GtkEntryParameter : public VisualParameter {

@@ -6,16 +6,16 @@ if [ $# != 2 ]; then
 fi;
 
 case "$1" in
-	desktop|maemo|openzaurus_640x480|pdaxrom|pepperpad3|zaurus_640x480)
+	desktop|openzaurus_640x480|pdaxrom|pepperpad3|zaurus_640x480)
 		platform=desktop;
 		;;
-	moto)
-		platform=desktop;
+	maemo)
+		platform=maemo;
 		;;
 	opensimpad-0.9.0|qvfb)
 		platform=640x480;
 		;;
-	openzaurus_240x320|pma400|zaurus_240x320)
+	openzaurus_240x320|pma400|zaurus_240x320|moto)
 		platform=240x320;
 		;;
 	win32)

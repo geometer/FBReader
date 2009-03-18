@@ -35,7 +35,7 @@ RecentBooks::RecentBooks() {
 		ZLStringUtil::appendNumber(num, i);
 		std::string name = ZLStringOption(ZLCategoryKey::STATE, GROUP, num, "").value();
 		if (!name.empty()) {
-			BookDescriptionPtr description = BookDescription::getDescription(name);
+			BookDescriptionPtr description = BookDescription::getDescription(name, false);
 			if (!description.isNull()) {
 				myBooks.push_back(description);
 			}
@@ -52,17 +52,17 @@ RecentBooks::~RecentBooks() {
 	}
 }
 
-void RecentBooks::addBook(const std::string &fileName) {
+void RecentBooks::addBook(BookDescriptionPtr description) {
+	if (description.isNull()) {
+		return;
+	}
 	for (Books::iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
-		if ((*it)->fileName() == fileName) {
+		if ((*it)->fileName() == description->fileName()) {
 			myBooks.erase(it);
 			break;
 		}
 	}
-	BookDescriptionPtr description = BookDescription::getDescription(fileName);
-	if (!description.isNull()) {
-		myBooks.insert(myBooks.begin(), description);
-	}
+	myBooks.insert(myBooks.begin(), description);
 	if (myBooks.size() > MaxListSize) {
 		myBooks.erase(myBooks.begin() + MaxListSize, myBooks.end());
 	}

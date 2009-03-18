@@ -83,7 +83,7 @@ public:
 public:
 	RecentBooks();
 	~RecentBooks();
-	void addBook(const std::string &fileName);
+	void addBook(BookDescriptionPtr description);
 	const Books &books() const;
 
 private:

@@ -34,8 +34,8 @@ private:
 	~ZLMaemoNetworkManager();
 
 private:
-	void connect();
-	void release();
+	void connect() const;
+	void release() const;
 
 	bool providesProxyInfo() const;
 
@@ -44,7 +44,7 @@ private:
 	std::string proxyPort() const;
 
 private:
-	ConIcConnection *myConnection;
+	mutable ConIcConnection *myConnection;
 };
 
 #endif /* __ZLMAEMONETWORKMANAGER_H__ */

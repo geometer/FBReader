@@ -23,12 +23,12 @@
 #include "../../gtk/util/ZLGtkSignalUtil.h"
 
 void ZLGtkApplicationWindow::GtkEntryParameter::onKeyPressed(const std::string &keyName) {
-	if (keyName == "<Return>") {
+	if (keyName == "<Enter>") {
 		myWindow.application().doAction(myItem.actionId());
-		//myWindow.setFocusToMainWidget();
-	} else if (keyName == "<Esc>") {
+		myWindow.setFocusToMainWidget();
+	} else if (keyName == "<Escape>") {
 		restoreOldValue();
-		//myWindow.setFocusToMainWidget();
+		myWindow.setFocusToMainWidget();
 	}
 }
 

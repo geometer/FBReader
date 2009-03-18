@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <keynames>
+	<key code="0xFF8D" name="&lt;Enter&gt;"/>
 	<key code="0xFF1B" name="&lt;Escape&gt;"/>
 	<key code="0xFF0D" name="&lt;ScrollKey Center&gt;"/>
 	<key code="0xFF51" name="&lt;ScrollKey Left&gt;"/>

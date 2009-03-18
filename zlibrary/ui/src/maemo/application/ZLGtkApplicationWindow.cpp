@@ -430,3 +430,7 @@ void ZLGtkApplicationWindow::buildTabs(ZLOptionsDialog &dialog) {
 		new ZLSimpleSpinOptionEntry(myViewWidget->MaxPressureOption, 1)
 	);
 }
+
+void ZLGtkApplicationWindow::setFocusToMainWidget() {
+	gtk_window_set_focus(GTK_WINDOW(myWindow), myViewWidget->area());
+}

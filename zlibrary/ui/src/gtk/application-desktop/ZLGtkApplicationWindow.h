@@ -75,7 +75,7 @@ public:
 
 	public:
 		GtkEntryParameter(ZLGtkApplicationWindow &window, const ZLToolbar::ParameterItem &item);
-		void onKeyPressed(const std::string &keyName);
+		bool onKeyPressed(const std::string &keyName);
 		void onValueChanged();
 		GtkToolItem *createToolItem();
 

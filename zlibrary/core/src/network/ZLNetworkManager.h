@@ -48,8 +48,8 @@ protected:
 	virtual ~ZLNetworkManager();
 
 public:
-	virtual void connect();
-	virtual void release();
+	virtual void connect() const;
+	virtual void release() const;
 
 	virtual bool providesProxyInfo() const;
 
