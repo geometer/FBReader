@@ -27,7 +27,9 @@ MigrationRunnable::MigrationRunnable() :
 }
 
 bool MigrationRunnable::shouldMigrate() const {
-	return myVersionOption.value() < VERSION;
+	return
+		Migration::extractVersionInformation(myVersionOption.value()) <
+		Migration::extractVersionInformation(VERSION);
 }
 
 void MigrationRunnable::run() {

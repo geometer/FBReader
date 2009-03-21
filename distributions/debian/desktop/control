@@ -1,7 +1,7 @@
 Source: fbreader
 Section: text
 Priority: optional
-Maintainer: Joey Hess <joeyh@debian.org>
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
 Standards-Version: 3.8.0
 Build-Depends: debhelper (>= 5), libgtk2.0-dev, libqt3-mt-dev, libqt4-dev, libexpat1-dev, libbz2-dev, libz-dev, liblinebreak-dev (>= 1.0-1), libjpeg-dev, libfribidi-dev, libcurl3-dev, quilt (>= 0.40)
 
@@ -34,6 +34,7 @@ Section: libs
 Priority: optional
 Architecture: any
 Conflicts: fbreader-gtk, fbreader-qt, fbreader-qt4
+Replaces: libzlcore-data
 Depends: ${shlibs:Depends}
 Description: ZLibrary core
  This is the core of ZLibrary, the library that the fbreader e-book reader
@@ -46,6 +47,7 @@ Package: libzltext
 Section: libs
 Priority: optional
 Architecture: any
+Replaces: libzltext-data
 Depends: ${shlibs:Depends}, libzlcore (= ${binary:Version})
 Description: ZLibrary text model/viewer
  This package provides text model/viewer part of ZLibrary.
@@ -104,7 +106,7 @@ Package: libzltext-dev
 Section: libdevel
 Priority: optional
 Architecture: any
-Depends: libzltext, ${shlibs:Depends}, libzlcore (= ${binary:Version})
+Depends: libzltext, ${shlibs:Depends}, libzltext (= ${binary:Version})
 Description: ZLibrary text model/viewer - development files
  This package contains development files for the ZLibrary text model/viewer
  library.

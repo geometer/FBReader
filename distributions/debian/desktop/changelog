@@ -1,3 +1,11 @@
+fbreader (0.10.5-1) stable; urgency=low
+
+  * new upstream version
+  * conflicts with ubuntu fbreader packages have been resolved
+  * dependencies for libzltext-dev have been fixed
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Fri, 20 Mar 2009 18:12:00 +0200
+
 fbreader (0.10.4-1) stable; urgency=low
 
   * new upstream version

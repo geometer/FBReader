@@ -53,7 +53,7 @@ Migration::Migration(const std::string &version) : myVersion(version) {
 Migration::~Migration() {
 }
 
-static int extractVersionInformation(const std::string &name) {
+int Migration::extractVersionInformation(const std::string &name) {
 	int major = atoi(name.c_str());
 	int minor = 0;
 	int point = 0;
