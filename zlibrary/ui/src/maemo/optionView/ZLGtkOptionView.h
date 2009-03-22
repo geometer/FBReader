@@ -22,7 +22,7 @@
 
 #include <gtk/gtk.h>
 
-#if MAEMO_VERSION == 2
+#if MAEMO_VERSION <= 3
 	#include <hildon-controlbar.h>
 	#include <hildon-number-editor.h>
 #elif MAEMO_VERSION == 4

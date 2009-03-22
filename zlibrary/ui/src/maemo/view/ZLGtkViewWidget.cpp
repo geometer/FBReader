@@ -53,7 +53,7 @@ void ZLGtkViewWidget::updateCoordinates(int &x, int &y) {
 }
 
 bool ZLGtkViewWidget::isStylusEvent(GtkWidget *widget, GdkEventButton *event) {
-#if MAEMO_VERSION == 2
+#if MAEMO_VERSION <= 3
 	if (event->button == 8) {
 		return false;
 	}

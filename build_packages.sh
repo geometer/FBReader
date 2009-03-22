@@ -73,7 +73,7 @@ build_package() {
 					/scratchbox/login sb-conf se SDK_ARM
 					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
 					;;
-				maemo2)
+				maemo2|maemo3)
 					/scratchbox/login sb-conf se SDK_ARMEL
 					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
 					;;

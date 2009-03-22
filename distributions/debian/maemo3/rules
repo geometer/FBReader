@@ -38,9 +38,9 @@ install-stamp:	build
 		dh_testroot
 		dh_clean -k
 		dh_installdirs
-		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2-noconic do_install
-		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2-noconic do_install
-		$(MAKE) -C zlibrary/ui TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2-noconic do_install
+		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2 do_install
+		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2 do_install
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2 do_install
 		$(MAKE) -C fbreader TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/fbreader-maemo2 do_install
 		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2-dev do_install_dev
 		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo2 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2-dev do_install_dev

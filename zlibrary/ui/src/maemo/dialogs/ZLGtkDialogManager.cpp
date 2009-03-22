@@ -19,7 +19,7 @@
 
 #include <gtk/gtk.h>
 
-#if MAEMO_VERSION == 2
+#if MAEMO_VERSION <= 3
 	#include <hildon-widgets/gtk-infoprint.h>
 	#include <hildon-note.h>
 #elif MAEMO_VERSION == 4
@@ -98,7 +98,7 @@ void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) co
 		runnable.run();
 	} else {
 		myIsWaiting = true;
-#if MAEMO_VERSION == 2
+#if MAEMO_VERSION <= 3
 		gtk_banner_show_animation(myWindow, waitMessageText(key).c_str());
 #elif MAEMO_VERSION == 4
 		GtkWidget *banner = hildon_banner_show_animation(GTK_WIDGET(myWindow), NULL, waitMessageText(key).c_str());
@@ -114,7 +114,7 @@ void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) co
 			gtk_main_iteration();
 		}
 		pthread_join(thread, 0);
-#if MAEMO_VERSION == 2
+#if MAEMO_VERSION <= 3
 		gtk_banner_close(myWindow);
 #elif MAEMO_VERSION == 4
 		gtk_widget_destroy(banner);
