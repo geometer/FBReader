@@ -1,2 +1,2 @@
-libzlcore @SOVERSIONCORE@ libzlibrary-maemo2 (>= @VERSION@-3) | libzlibrary-maemo2-noconic (>= @VERSION@-3), libzlibrary-maemo2 (<< 0.11.0-3) | libzlibrary-maemo2-noconic (<< 0.11.0-3)
-libzltext @SOVERSIONCORE@ libzlibrary-maemo2 (>= @VERSION@-3) | libzlibrary-maemo2-noconic (>= @VERSION@-3), libzlibrary-maemo2 (<< 0.11.0-3) | libzlibrary-maemo2-noconic (<< 0.11.0-3)
+libzlcore @SOVERSIONCORE@ libzlibrary-maemo2 (>= @VERSION@-1) | libzlibrary-maemo2-noconic (>= @VERSION@-1), libzlibrary-maemo2 (<< 0.11.0) | libzlibrary-maemo2-noconic (<< 0.11.0)
+libzltext @SOVERSIONCORE@ libzlibrary-maemo2 (>= @VERSION@-1) | libzlibrary-maemo2-noconic (>= @VERSION@-1), libzlibrary-maemo2 (<< 0.11.0) | libzlibrary-maemo2-noconic (<< 0.11.0)
