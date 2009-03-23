@@ -1,0 +1,79 @@
+Source: fbreader
+Priority: optional
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
+Standards-Version: 3.6.1
+Build-Depends: debhelper, libexpat1-dev, libbz2-dev, libz-dev, libhildon1-dev, libosso-dev, liblinebreak-dev, libfribidi-dev, libcurl3-dev
+
+Package: libzlibrary
+Section: user/libs
+Priority: optional
+Architecture: armel i386
+Conflicts: fbreader (<< 0.8.0)
+Depends: ${shlibs:Depends}
+Description: Platform-dependent part of fbreader
+ Home page: http://www.fbreader.org/
+
+Package: libzlibrary-dev
+Section: libdevel
+Priority: optional
+Architecture: armel i386
+Depends: libzlibrary (= ${Source-Version})
+Description: zlibrary - development files
+ Home page: http://www.fbreader.org/
+
+Package: fbreader
+Section: user/tools
+Priority: optional
+Architecture: armel i386
+Depends: ${shlibs:Depends}
+Description: e-book reader
+ FBReader is an e-book reader for UNIX/Windows computers.
+ .
+ Main features:
+  * supports several open e-book formats: fb2, html, chm, plucker,
+    palmdoc, ztxt, tcr (psion text), rtf, oeb, openreader, non-DRM'ed
+    mobipocket, plain text
+  * reads directly from tar, zip, gzip, bzip2 archives (you can have
+    several books in one archive)
+  * supports structured view for your e-book collection
+  * automatically determines encoding
+  * automatically generates table of contents
+  * keeps the last open book and the last read positions for all open books
+    between runs
+  * automatic hyphenation (patterns for several languages are included)
+ .
+ Home page: http://www.fbreader.org/
+XB-Maemo-Icon-26:
+ iVBORw0KGgoAAAANSUhEUgAAABoAAAAaCAYAAACpSkzOAAAABmJLR0QA/wD/
+ AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH2QEKFjEFBaQC
+ bAAABStJREFUSMftlsmPXFcVh79zhzfX0Gm3y+20GwcnDomMEJEVAXIk2CAG
+ YaYVEUhs2WWTRRbsQCzZgGADKyT2RkLKAgkiYaJsIkAx3R7iEbvT6a4eqrte
+ Vb07ZFHV7W6TPwAkrnSk867OO997v3N07oX/r//2JQfOlT+9ZT+xdLqXhiBl
+ WTYhENc2Hsn2j9/49MI4LKjLX7u9cPmr7zz9yRf90QTr+7uiXaoGdS1b21uy
+ v9VnY+1RlNCEb3732+E/QN//2a9/+qVLn3/9QmLlxFNt70PD8MN1Vl/7UbJ0
+ 77Ysd8rQPPvstb9++RtXRifPP1VuPlgmNr25qlVOTp1Ni7LU7XbLdMqCTqvw
+ mzvbk9/+4c+j8eLp3/zyB1//uTkAPZr4Z665wr75q5+wt71pyiKn1+pQzs1z
+ dXWV17ulym/fupC9+ccL409tcHH0kPTUaf6tc/bEkmlDqhRaKZI0ocpzbHTs
+ mnwJ4BA09JFoDSsr17hz8zpoQYBQO85OFN/r72CMYrhyHbf4PH2nKUc5e16z
+ s7FJkIi1lixJIQoQiTEiRADUASjPC3yIKGUQLWgRtGhERVCRXQn4xjHyEU9k
+ f+xogiIqM9U/ggiIHKYkxgjyBKjKMyYxYo3BKIM1ljzLKfOCEzi8g2Hj6HuH
+ pMn0a5VCRRCtpr5SKA1KTUtflOUB57F0mTWMG48gJDYlzTKyrCBVwvm9XULj
+ 2PeeD7SmlVXEuEkwBiOC0hpRgiCIKESmvjEJ+CdAIpHBYAgiZFlBVbVotzpk
+ ecqp+zfZH48JUdhpzSPtDlEZnPMYQBmDPG5gEEFESIxlEvxx6SyKwf4eRZ5T
+ lS263S7tToeyrKiMxUdQEhh3u4Q0Q0JAxTBNavSs+LNiAdpoqqrE+SdqZIKj
+ HjWkSUpRlFRVSVHk5EWBa1WUEqmAKNM+SgUSPFpAqWmaOIMIoJWmVRSznSPS
+ RTyT8Zhet8u4HpHlOXmeYWzCZl7RU5okETKtic2YNDqsimA1WmsAQpy2dIwR
+ rYQ0fSzpIagZjXEywugEY+ysIQqKvGA9BpL5ORYTz9lmj2TjIa1OSt7O+SAx
+ s+JD8B7nAsEHtNbkWQZhcFy6wdbONEAprDUYM21xrYXGGv5y5jnM/AlefWaR
+ xa0HlN0MFye4rJjKpYQQPK6Z4BqHKEWZ58gMcfhHdV1Dy9GZn6PfXwcUzjtC
+ tGSfe4V3rr7FP3pPUyc9Xj73AlY79PwSae8EfjxNbLQBEaJERCBJ7KxBjoC0
+ NnSU49IXXqH32UvUJmVdlfTrPfxwh/iZL1KlmnqiWY2OUW+R83MZ81UbY0aI
+ gLEWmySIKEKIpEaBhOOgIkvwSuGLioEkDCYNy8rR155+XlDfvcmWUYgWfFIx
+ HA3pDyFpJqjop1NBCTFmTLwD0YhAnB0UhzVSCKUEnBh6MmK5GdAUBec6GUux
+ Yb9oMxlssPfuVXqjXc5XCWfaOd1OSVEUlGWJtVOpvPf4EDBaMxrVT4ygxPhW
+ YlGDD+kkHVwzonP3PaIQ9drDcXbtn2s3Htx59+b1f71968bKuYsvXXzphedf
+ XDpzZrnd6XSTVquljDGilCARYgj+/dWVv6/+/hdXjh58cvnVH37n5a9863f1
+ yoqcXJjfvv/w3q17d99/e2Xlvb/dv3/vxs7Odj+E4GfvqJnpJEkypXSxsHCy
+ yLM8ESXWWuvrerh2587tW977GggHICUiutXunLLG6MFgUDfNpIkxTgDHdDSG
+ j7kCyMfsxVlsPGLHAg+eD+xY4P/M+ght8RxOZDxGnAAAAABJRU5ErkJggg==
+ ====

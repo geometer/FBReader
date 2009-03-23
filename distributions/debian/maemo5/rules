@@ -26,10 +26,10 @@ clean:
 build:		build-stamp
 build-stamp:
 		dh_testdir
-		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=maemo3
-		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo3
-		$(MAKE) -C zlibrary/ui TARGET_ARCH=maemo UI_TYPE=maemo3
-		$(MAKE) -C fbreader TARGET_ARCH=maemo UI_TYPE=maemo3
+		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=maemo5
+		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo5
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=maemo UI_TYPE=maemo5
+		$(MAKE) -C fbreader TARGET_ARCH=maemo UI_TYPE=maemo5
 		touch build-stamp 
 
 install:	install-stamp
@@ -38,12 +38,12 @@ install-stamp:	build
 		dh_testroot
 		dh_clean -k
 		dh_installdirs
-		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=maemo3 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2 do_install
-		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo3 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2 do_install
-		$(MAKE) -C zlibrary/ui TARGET_ARCH=maemo UI_TYPE=maemo3 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2 do_install
-		$(MAKE) -C fbreader TARGET_ARCH=maemo UI_TYPE=maemo3 DESTDIR=$(DEB_DIR)/fbreader-maemo2 do_install
-		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=maemo3 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2-dev do_install_dev
-		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo3 DESTDIR=$(DEB_DIR)/libzlibrary-maemo2-dev do_install_dev
+		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=maemo5 DESTDIR=$(DEB_DIR)/libzlibrary do_install
+		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo5 DESTDIR=$(DEB_DIR)/libzlibrary do_install
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=maemo UI_TYPE=maemo5 DESTDIR=$(DEB_DIR)/libzlibrary do_install
+		$(MAKE) -C fbreader TARGET_ARCH=maemo UI_TYPE=maemo5 DESTDIR=$(DEB_DIR)/fbreader do_install
+		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=maemo5 DESTDIR=$(DEB_DIR)/libzlibrary-dev do_install_dev
+		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=maemo5 DESTDIR=$(DEB_DIR)/libzlibrary-dev do_install_dev
 		touch install-stamp
 
 binary-indep:
@@ -54,7 +54,7 @@ binary-arch:	build install
 		dh_compress -a
 		dh_fixperms -a
 		dh_installdeb -a
-		dh_shlibdeps -a -l $(PWD)/debian/libzlibrary-maemo2/usr/lib
+		dh_shlibdeps -a -l $(DEB_DIR)/libzlibrary/usr/lib
 		dh_gencontrol -a
 		dh_md5sums -a
 		dh_builddeb -a
