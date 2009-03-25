@@ -117,7 +117,9 @@ bool ZLibrary::init(int &argc, char **&argv) {
 
 	void (*initLibrary)();
 	*(void**)&initLibrary = dlsym(handle, "initLibrary");
-	if (dlerror() != 0) {
+	const char *error = dlerror();
+	if (error != 0) {
+		std::cerr << error << "\n";
 		return false;
 	}
 #endif /* ZLSHARED */

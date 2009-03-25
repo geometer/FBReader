@@ -53,11 +53,11 @@ ifeq "$(UI_TYPE)" "ezx"
   QTSUBDIRS = src/unix/message src/ezx/library src/qt/time src/ezx/application src/ezx/dialogs src/ezx/optionView src/ezx/view src/qt/util src/qt/image src/qt/filesystem
 endif
 
-ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <maemo2> <maemo3> <maemo4>)"
+ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <maemo2> <maemo3> <maemo4> <maemo5>)"
   GTKSUBDIRS = src/gtk/time src/maemo/dialogs src/maemo/optionView src/maemo/view src/gtk/image src/gtk/util src/maemo/application src/maemo/library src/gtk/filesystem src/maemo/message src/gtk/pixbuf
 endif
 
-ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <maemo3> <maemo4>)"
+ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <maemo3> <maemo4> <maemo5>)"
   GTKSUBDIRS += src/maemo/network
 endif
 
