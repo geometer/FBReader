@@ -151,7 +151,7 @@ bool ORBookReader::readBook(const std::string &fileName) {
 
 	for (std::vector<std::string>::const_iterator it = myHtmlFilesOrder.begin(); it != myHtmlFilesOrder.end(); ++it) {
 		myHtmlFileIDs.erase(*it);
-		XHTMLReader(myModelReader).readFile(myFilePrefix, myResources[*it], *it);
+		XHTMLReader(myModelReader).readFile(myFilePrefix + myResources[*it], *it);
 	}
 
 	int level = 1;
@@ -173,7 +173,7 @@ bool ORBookReader::readBook(const std::string &fileName) {
 	for (std::set<std::string>::const_iterator it = myHtmlFileIDs.begin(); it != myHtmlFileIDs.end(); ++it) {
 		myModelReader.setFootnoteTextModel(*it);
 		myModelReader.pushKind(REGULAR);
-		XHTMLReader(myModelReader).readFile(myFilePrefix, myResources[*it], *it);
+		XHTMLReader(myModelReader).readFile(myFilePrefix + myResources[*it], *it);
 	}
 
 	for (std::map<std::string,std::string>::const_iterator it = myImageIDs.begin(); it != myImageIDs.end(); ++it) {

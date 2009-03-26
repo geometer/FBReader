@@ -399,12 +399,12 @@ void XHTMLReader::fillTagTable() {
 XHTMLReader::XHTMLReader(BookReader &modelReader) : myModelReader(modelReader) {
 }
 
-bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &fileName, const std::string &referenceName) {
+bool XHTMLReader::readFile(const std::string &filePath, const std::string &referenceName) {
 	myModelReader.addHyperlinkLabel(referenceName);
 
 	fillTagTable();
 
-	myPathPrefix = pathPrefix;
+	myPathPrefix = MiscUtil::htmlDirectoryPrefix(filePath);
 	myReferenceName = referenceName;
 
 	myPreformatted = false;
@@ -415,22 +415,7 @@ bool XHTMLReader::readFile(const std::string &pathPrefix, const std::string &fil
 	myStyleEntryStack.clear();
 	myStylesToRemove = 0;
 
-	return readDocument(pathPrefix + fileName);
-}
-
-bool XHTMLReader::readFile(const std::string &pathPrefix, shared_ptr<ZLInputStream> stream, const std::string &referenceName) {
-	myModelReader.addHyperlinkLabel(referenceName);
-
-	fillTagTable();
-
-	myPathPrefix = pathPrefix;
-	myReferenceName = referenceName;
-
-	myPreformatted = false;
-	myNewParagraphInProgress = false;
-	myInsideBody = false;
-
-	return readDocument(stream);
+	return readDocument(filePath);
 }
 
 void XHTMLReader::addStyleEntry(const std::string tag, const std::string aClass) {

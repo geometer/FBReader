@@ -132,7 +132,7 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 		if (it != myHtmlFileNames.begin()) {
 			myModelReader.insertEndOfSectionParagraph();
 		}
-		xhtmlReader.readFile(myFilePrefix, *it, *it);
+		xhtmlReader.readFile(myFilePrefix + *it, *it);
 	}
 
 	generateTOC();
