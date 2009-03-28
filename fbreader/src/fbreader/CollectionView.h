@@ -45,7 +45,7 @@ public:
 	const std::string &caption() const;
 
 	bool _onStylusPress(int x, int y);
-	bool onStylusMove(int x, int y);
+	bool _onStylusMove(int x, int y);
 
 	void paint();
 	void synchronizeModel();

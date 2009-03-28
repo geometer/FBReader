@@ -453,18 +453,16 @@ void ZLTextView::copySelectedTextToClipboard(ZLDialogManager::ClipboardType type
 	}
 }
 
-bool ZLTextView::onStylusRelease(int x, int y) {
-	myDoubleClickInfo.update(x, y, false);
-
-	if (myDoubleClickInfo.Count > 20) {
+bool ZLTextView::onStylusClick(int x, int y, int count) {
+	if (count > 20) {
 		return true;
-	} else if (myDoubleClickInfo.Count > 10) {
+	} else if (count > 10) {
 		mySelectionModel.extendWordSelectionToParagraph();
 		application().refreshWindow();
 		copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 		myDoubleClickInfo.Count = 20;
 		return true;
-	} else if (myDoubleClickInfo.Count > 2) {
+	} else if (count > 2) {
 		if (mySelectionModel.selectWord(visualX(x), y)) {
 			application().refreshWindow();
 			copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
@@ -473,6 +471,16 @@ bool ZLTextView::onStylusRelease(int x, int y) {
 		} else {
 			myDoubleClickInfo.Count = 0;
 		}
+	}
+
+	return true;
+}
+
+bool ZLTextView::onStylusRelease(int x, int y) {
+	myDoubleClickInfo.update(x, y, false);
+
+	if (myDoubleClickInfo.Count > 0) {
+		return onStylusClick(x, y, myDoubleClickInfo.Count);
 	}
 
 	mySelectionModel.deactivate();

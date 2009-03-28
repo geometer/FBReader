@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <cmath>
+
 #include <ZLUnicodeUtil.h>
 
 #include "FBView.h"
@@ -120,6 +122,10 @@ void FBView::setCaption(const std::string &caption) {
 }
 
 bool FBView::onStylusPress(int x, int y) {
+	myPressedX = x;
+	myPressedY = y;
+	myIsReleasedWithoutMotion = true;
+
 	if (ZLTextView::onStylusPress(x, y)) {
 		return true;
 	}
@@ -128,14 +134,6 @@ bool FBView::onStylusPress(int x, int y) {
 		return true;
 	}
 
-	if (fbreader().EnableTapScrollingOption.value() &&
-			(!ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value() ||
-			 !fbreader().TapScrollingOnFingerOnlyOption.value())) {
-		doTapScrolling(y);
-		return true;
-	}
-
-	activateSelection(x, y);
 	return true;
 }
 
@@ -151,9 +149,60 @@ bool FBView::onStylusRelease(int x, int y) {
 	if (_onStylusRelease(x, y)) {
 		return true;
 	}
+
+	myIsReleasedWithoutMotion =
+		myIsReleasedWithoutMotion && (abs(x - pressedX()) <= 5) && (abs(y - pressedY()) <= 5);
+	if (isReleasedWithoutMotion() &&
+			fbreader().EnableTapScrollingOption.value() &&
+			(!ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value() ||
+			 !fbreader().TapScrollingOnFingerOnlyOption.value())) {
+		doTapScrolling(y);
+		return true;
+	}
+
+	return false;
 }
 
 bool FBView::_onStylusRelease(int, int) {
+	return false;
+}
+
+bool FBView::onStylusMove(int x, int y) {
+	if (ZLTextView::onStylusMove(x, y)) {
+		return true;
+	}
+	
+	if (_onStylusMove(x, y)) {
+		return true;
+	}
+
+	return false;
+}
+
+bool FBView::_onStylusMove(int, int) {
+	return false;
+}
+
+bool FBView::onStylusMovePressed(int x, int y) {
+	if (myIsReleasedWithoutMotion) {
+		if ((abs(x - pressedX()) > 5) || (abs(y - pressedY()) > 5)) {
+			myIsReleasedWithoutMotion = false;
+			activateSelection(pressedX(), pressedY());
+		}
+	}
+
+	if (ZLTextView::onStylusMovePressed(x, y)) {
+		return true;
+	}
+	
+	if (_onStylusMovePressed(x, y)) {
+		return true;
+	}
+
+	return false;
+}
+
+bool FBView::_onStylusMovePressed(int, int) {
 	return false;
 }
 

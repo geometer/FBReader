@@ -31,7 +31,7 @@ ContentsView::ContentsView(FBReader &reader, shared_ptr<ZLPaintContext> context)
 ContentsView::~ContentsView() {
 }
 
-bool ContentsView::onStylusMove(int x, int y) {
+bool ContentsView::_onStylusMove(int x, int y) {
 	int index = paragraphIndexByCoordinates(x, y);
 	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
 		fbreader().setHyperlinkCursor(false);

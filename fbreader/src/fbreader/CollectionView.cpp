@@ -116,11 +116,7 @@ void CollectionView::paint() {
 	FBView::paint();
 }
 
-bool CollectionView::onStylusMove(int x, int y) {
-	if (FBView::onStylusMove(x, y)) {
-		return true;
-	}
-
+bool CollectionView::_onStylusMove(int x, int y) {
 	const ZLTextElementArea *imageArea = elementByCoordinates(x, y);
 	if ((imageArea != 0) && (imageArea->Kind == ZLTextElement::IMAGE_ELEMENT)) {
 		fbreader().setHyperlinkCursor(true);

@@ -247,23 +247,34 @@ bool BookTextView::getHyperlinkInfo(const ZLTextElementArea &area, std::string &
 }
 
 bool BookTextView::_onStylusPress(int x, int y) {
-	myPressedX = x;
-	myPressedY = y;
-
 	return false;
 }
 
-bool BookTextView::onStylusRelease(int x, int y) {
-	if (FBView::onStylusRelease(x, y)) {
-		return true;
+bool BookTextView::onStylusClick(int x, int y, int count) {
+	const ZLTextElementArea *area = elementByCoordinates(x, y);
+	if (area != 0) {
+		std::string id;
+		std::string type;
+		if (getHyperlinkInfo(*area, id, type)) {
+			fbreader().tryShowFootnoteView(id, type);
+			return true;
+		}
+		
+		if (fbreader().isDictionarySupported() &&
+				fbreader().EnableSingleClickDictionaryOption.value()) {
+			const std::string txt = word(*area);
+			if (!txt.empty()) {
+				fbreader().openInDictionary(txt);
+				return true;
+			}
+		}
 	}
 
-	const int deltaX = x - myPressedX;
-	if ((deltaX > 5) || (deltaX < -5)) {
-		return false;
-	}
-	const int deltaY = y - myPressedY;
-	if ((deltaY > 5) || (deltaY < -5)) {
+	return FBView::onStylusClick(x, y, count);
+}
+
+bool BookTextView::_onStylusRelease(int x, int y) {
+	if (!isReleasedWithoutMotion()) {
 		return false;
 	}
 
@@ -289,7 +300,7 @@ bool BookTextView::onStylusRelease(int x, int y) {
 	return false;
 }
 
-bool BookTextView::onStylusMove(int x, int y) {
+bool BookTextView::_onStylusMove(int x, int y) {
 	const ZLTextElementArea *area = elementByCoordinates(x, y);
 	std::string id;
 	std::string type;

@@ -313,11 +313,7 @@ bool NetLibraryView::_onStylusPress(int x, int y) {
 	return false;
 }
 
-bool NetLibraryView::onStylusMove(int x, int y) {
-	if (FBView::onStylusMove(x, y)) {
-		return true;
-	}
-
+bool NetLibraryView::_onStylusMove(int x, int y) {
 	if (!model().isNull()) {
 		const ZLTextElementArea *imageArea = elementByCoordinates(x, y);
 		if ((imageArea != 0) && (imageArea->Kind == ZLTextElement::IMAGE_ELEMENT)) {

@@ -107,6 +107,14 @@ protected:
 	virtual bool _onStylusPress(int x, int y);
 	bool onStylusRelease(int x, int y);
 	virtual bool _onStylusRelease(int x, int y);
+	bool onStylusMove(int x, int y);
+	virtual bool _onStylusMove(int x, int y);
+	bool onStylusMovePressed(int x, int y);
+	virtual bool _onStylusMovePressed(int x, int y);
+
+	int pressedX() const;
+	int pressedY() const;
+	bool isReleasedWithoutMotion() const;
 
 	std::string word(const ZLTextElementArea &area) const;
 
@@ -114,6 +122,10 @@ protected:
 
 private:
 	std::string myCaption;
+
+	int myPressedX;
+	int myPressedY;
+	bool myIsReleasedWithoutMotion;
 };
 
 inline FBReader &FBView::fbreader() { return (FBReader&)application(); }
@@ -125,5 +137,9 @@ inline FBMargins& FBView::margins() {
 	}
 	return *ourMargins;
 }
+
+inline int FBView::pressedX() const { return myPressedX; }
+inline int FBView::pressedY() const { return myPressedY; }
+inline bool FBView::isReleasedWithoutMotion() const { return myIsReleasedWithoutMotion; }
 
 #endif /* __FBVIEW_H__ */
