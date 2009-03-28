@@ -143,6 +143,20 @@ bool FBView::_onStylusPress(int, int) {
 	return false;
 }
 
+bool FBView::onStylusRelease(int x, int y) {
+	if (ZLTextView::onStylusRelease(x, y)) {
+		return true;
+	}
+	
+	if (_onStylusRelease(x, y)) {
+		return true;
+	}
+}
+
+bool FBView::_onStylusRelease(int, int) {
+	return false;
+}
+
 std::string FBView::word(const ZLTextElementArea &area) const {
 	std::string txt;
 

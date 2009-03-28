@@ -105,6 +105,8 @@ protected:
 
 	bool onStylusPress(int x, int y);
 	virtual bool _onStylusPress(int x, int y);
+	bool onStylusRelease(int x, int y);
+	virtual bool _onStylusRelease(int x, int y);
 
 	std::string word(const ZLTextElementArea &area) const;
 
