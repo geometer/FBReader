@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
   <group name="Options">
+    <option name="Timeout" value="30"/>
     <option name="LeftMargin" value="20"/>
     <option name="TopMargin" value="4"/>
     <option name="BookPath" value="~/MyDocs/Books:/media/mmc1/Books:/media/mmc2/Books"/>

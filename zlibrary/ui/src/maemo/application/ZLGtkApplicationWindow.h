@@ -129,6 +129,7 @@ private:
 	std::map<GtkToolItem*,ZLToolbar::ItemPtr> myGtkToAbstract;
 	std::map<GtkToolItem*,size_t> myPopupIdMap;
 	std::map<std::string,GtkMenuItem*> myMenuItems;
+	std::vector<GtkMenuItem*> mySubmenuItems;
 
 friend class MenuBuilder;
 };

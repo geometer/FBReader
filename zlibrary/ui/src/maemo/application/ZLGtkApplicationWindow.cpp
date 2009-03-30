@@ -159,6 +159,7 @@ void ZLGtkApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLMenubar::S
 	gtk_menu_shell_append(GTK_MENU_SHELL(myMenuStack.top()), GTK_WIDGET(gtkItem));
 	gtk_widget_show_all(GTK_WIDGET(gtkItem));
 	myMenuStack.push(gtkSubmenu);
+	myWindow.mySubmenuItems.push_back(gtkItem);
 }
 
 void ZLGtkApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLMenubar::Submenu&) {
@@ -342,7 +343,7 @@ void ZLGtkApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool v
 	 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
 	 * does something strange if WIDGET is already insensitive.
 	 */
-	bool alreadyEnabled = GTK_WIDGET_STATE(toolItem) != GTK_STATE_INSENSITIVE;
+	bool alreadyEnabled = (GTK_WIDGET_STATE(toolItem) & GTK_STATE_INSENSITIVE) == 0;
 	if (enabled != alreadyEnabled) {
 		gtk_widget_set_sensitive(GTK_WIDGET(toolItem), enabled);
 	}
@@ -370,9 +371,35 @@ void ZLGtkApplicationWindow::refresh() {
 		} else {
 			gtk_widget_hide(gtkItem);
 		}
-		bool alreadyEnabled = GTK_WIDGET_STATE(gtkItem) != GTK_STATE_INSENSITIVE;
+		bool alreadyEnabled = (GTK_WIDGET_STATE(gtkItem) & GTK_STATE_INSENSITIVE) == 0;
 		if (application().isActionEnabled(id) != alreadyEnabled) {
 			gtk_widget_set_sensitive(gtkItem, !alreadyEnabled);
+		}
+	}
+	for (std::vector<GtkMenuItem*>::reverse_iterator rit = mySubmenuItems.rbegin(); rit != mySubmenuItems.rend(); ++rit) {
+		bool isVisible = false;
+		bool isEnabled = false;
+		GtkMenu *menu = GTK_MENU(gtk_menu_item_get_submenu(*rit));
+		GList *children = gtk_container_get_children(GTK_CONTAINER(menu));
+		if (children != 0) {
+			for (GList *ptr =  g_list_first(children); ptr != 0; ptr = g_list_next(ptr)) {
+				GtkMenuItem *item = GTK_MENU_ITEM(ptr->data);
+				if (GTK_WIDGET_VISIBLE(item)) {
+					isVisible = true;
+					isEnabled = (GTK_WIDGET_STATE(item) & GTK_STATE_INSENSITIVE) == 0;
+					if (isEnabled) {
+						break;
+					}
+				}
+			}
+		}
+		if (isEnabled != ((GTK_WIDGET_STATE(*rit) & GTK_STATE_INSENSITIVE) == 0)) {
+			gtk_widget_set_sensitive(GTK_WIDGET(*rit), isEnabled);
+		}
+		if (isVisible) {
+			gtk_widget_show(GTK_WIDGET(*rit));
+		} else {
+			gtk_widget_hide(GTK_WIDGET(*rit));
 		}
 	}
 }
