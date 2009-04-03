@@ -68,17 +68,15 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {
 	}
 
 	bool useWindows1252 = false;
-	if (ZLEncodingCollection::useWindows1252Hack()) {
-		stream->read(myParserBuffer, 256);
-		std::string stringBuffer(myParserBuffer, 256);
-		stream->seek(0, true);
-		int index = stringBuffer.find('>');
+	stream->read(myParserBuffer, 256);
+	std::string stringBuffer(myParserBuffer, 256);
+	stream->seek(0, true);
+	int index = stringBuffer.find('>');
+	if (index > 0) {
+		stringBuffer = ZLUnicodeUtil::toLower(stringBuffer.substr(0, index));
+		int index = stringBuffer.find("\"iso-8859-1\"");
 		if (index > 0) {
-			stringBuffer = ZLUnicodeUtil::toLower(stringBuffer.substr(0, index));
-			int index = stringBuffer.find("\"iso-8859-1\"");
-			if (index > 0) {
-				useWindows1252 = true;
-			}
+			useWindows1252 = true;
 		}
 	}
 	initialize(useWindows1252 ? "windows-1252" : 0);

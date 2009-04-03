@@ -30,25 +30,12 @@
 #include "EncodingCollectionReader.h"
 
 ZLEncodingCollection *ZLEncodingCollection::ourInstance = 0;
-ZLBooleanOption *ZLEncodingCollection::ourUseWindows1252HackOption = 0;
 
 ZLEncodingCollection &ZLEncodingCollection::instance() {
 	if (ourInstance == 0) {
 		ourInstance = new ZLEncodingCollection();
 	}
 	return *ourInstance;
-}
-
-ZLBooleanOption &ZLEncodingCollection::useWindows1252HackOption() {
-	if (ourUseWindows1252HackOption == 0) {
-		ourUseWindows1252HackOption =
-			new ZLBooleanOption(ZLCategoryKey::CONFIG, "Encoding", "UseWindows1252Hack", true);
-	}
-	return *ourUseWindows1252HackOption;
-}
-
-bool ZLEncodingCollection::useWindows1252Hack() {
-	return ZLConfigManager::isInitialised() && useWindows1252HackOption().value();
 }
 
 std::string ZLEncodingCollection::encodingDescriptionPath() {
@@ -86,7 +73,7 @@ const std::vector<shared_ptr<ZLEncodingSet> > &ZLEncodingCollection::sets() {
 ZLEncodingConverterInfoPtr ZLEncodingCollection::info(const std::string &name) {
 	init();
 	std::string lowerCaseName = ZLUnicodeUtil::toLower(name);
-	if (useWindows1252Hack() && (lowerCaseName == "iso-8859-1")) {
+	if (lowerCaseName == "iso-8859-1") {
 		lowerCaseName = "windows-1252";
 	}
 	return myInfosByName[lowerCaseName];
