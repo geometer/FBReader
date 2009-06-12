@@ -137,13 +137,6 @@ void ZLXMLReaderInternal::init(const char *encoding) {
 	XML_SetUnknownEncodingHandler(myParser, fUnknownEncodingHandler, 0);
 }
 
-#include <iostream>
-
 bool ZLXMLReaderInternal::parseBuffer(const char *buffer, size_t len) {
-	int code = XML_Parse(myParser, buffer, len, 0);
-	if (code == XML_STATUS_ERROR) {
-		std::cerr << XML_GetErrorCode(myParser) << " error\n";
-	}
-	return code != XML_STATUS_ERROR;
-	//return XML_Parse(myParser, buffer, len, 0) != XML_STATUS_ERROR;
+	return XML_Parse(myParser, buffer, len, 0) != XML_STATUS_ERROR;
 }
