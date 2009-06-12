@@ -120,6 +120,10 @@ std::string ZLNetworkManager::proxyPort() const {
 }
 
 void ZLNetworkManager::setStandardOptions(CURL *handle, const std::string &proxy) const {
+	static const char *AGENT_NAME = "FBReader";
+
+	curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, true);
+	curl_easy_setopt(handle, CURLOPT_USERAGENT, AGENT_NAME);
 	if (useProxy()) {
 		curl_easy_setopt(handle, CURLOPT_PROXY, proxy.c_str());
 	}
