@@ -108,7 +108,7 @@ void ZLWin32DialogManager::setClipboardImage(const ZLImageData &image, Clipboard
 		if (pixels != 0) {
 			if (OpenClipboard(myApplicationWindow->mainWindow())) {
 				EmptyClipboard();
-				HDC dc = GetDC(myApplicationWindow->mainWindow());
+				HDC dc = GetDC(0);
 				BITMAPINFOHEADER header;
 				ZeroMemory(&header, sizeof(header));
 				header.biSize = sizeof(header);
@@ -124,13 +124,8 @@ void ZLWin32DialogManager::setClipboardImage(const ZLImageData &image, Clipboard
 					pixels, win32Image.info(),
 					DIB_RGB_COLORS
 				);
-					/*
-					x, y - height, width, height,
-					0, 0, width, height,
-					pixels, win32Image.info(), DIB_RGB_COLORS, SRCCOPY);
-					*/
 				SetClipboardData(CF_BITMAP, bitmap);
-				ReleaseDC(myApplicationWindow->mainWindow(), dc);
+				ReleaseDC(0, dc);
 				CloseClipboard();
 			}
 		}
