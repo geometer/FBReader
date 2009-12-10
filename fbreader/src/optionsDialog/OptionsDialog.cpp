@@ -22,30 +22,30 @@
 #include <ZLPaintContext.h>
 #include <ZLLanguageList.h>
 #include <ZLEncodingConverter.h>
-#include <ZLNetworkManager.h>
 
-#include <optionEntries/ZLToggleBooleanOptionEntry.h>
 #include <optionEntries/ZLColorOptionBuilder.h>
 #include <optionEntries/ZLLanguageOptionEntry.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
+#include <optionEntries/ZLToggleBooleanOptionEntry.h>
 
 #include <ZLTextView.h>
 #include <ZLTextStyle.h>
+#include <ZLTextStyleCollection.h>
 #include <ZLTextStyleOptions.h>
 
 #include "OptionsDialog.h"
 #include "FormatOptionsPage.h"
-#include "ScrollingOptionsPage.h"
 #include "StyleOptionsPage.h"
 #include "KeyBindingsPage.h"
 #include "ConfigPage.h"
+#include "NetworkLibraryPage.h"
 
 #include "../fbreader/FBReader.h"
+#include "../options/FBOptions.h"
 #include "../fbreader/BookTextView.h"
-#include "../fbreader/CollectionView.h"
 
-#include "../network/NetworkLink.h"
-#include "../collection/BookCollection.h"
+#include "../network/NetworkLinkCollection.h"
+#include "../library/Library.h"
 #include "../external/ProgramCollection.h"
 #include "../formats/FormatPlugin.h"
 #include "../encodingOption/EncodingOptionEntry.h"
@@ -130,89 +130,90 @@ void RotationTypeEntry::onAccept(int index) {
 class OptionsApplyRunnable : public ZLRunnable {
 
 public:
-	OptionsApplyRunnable(FBReader &fbreader);
+	OptionsApplyRunnable(OptionsDialog &dialog);
 	void run();
 
 private:
-	FBReader &myFBReader;
+	OptionsDialog &myDialog;
 };
 
-OptionsApplyRunnable::OptionsApplyRunnable(FBReader &fbreader) : myFBReader(fbreader) {
+OptionsApplyRunnable::OptionsApplyRunnable(OptionsDialog &dialog) : myDialog(dialog) {
 }
 
 void OptionsApplyRunnable::run() {
-	myFBReader.grabAllKeys(myFBReader.KeyboardControlOption.value());
-	myFBReader.clearTextCaches();
-	((CollectionView&)*myFBReader.myCollectionView).synchronizeModel();
-	myFBReader.refreshWindow();
+	FBReader &fbreader = FBReader::Instance();
+	fbreader.grabAllKeys(fbreader.KeyboardControlOption.value());
+	fbreader.clearTextCaches();
+	if (myDialog.myNetworkLibraryPage->onApply()) {
+		FBReader::Instance().invalidateNetworkView();
+	}
+	fbreader.refreshWindow();
 }
 
-OptionsDialog::OptionsDialog(FBReader &fbreader) {
-	ZLTextStyleCollection &collection = ZLTextStyleCollection::instance();
-	ZLTextBaseStyle &baseStyle = collection.baseStyle();
+OptionsDialog::OptionsDialog() {
+	FBReader &fbreader = FBReader::Instance();
 
-	myDialog = ZLDialogManager::instance().createOptionsDialog(ZLResourceKey("OptionsDialog"), new OptionsApplyRunnable(fbreader), true);
+	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("OptionsDialog"), new OptionsApplyRunnable(*this), true);
 
 	ZLDialogContent &libraryTab = myDialog->createTab(ZLResourceKey("Library"));
-	CollectionView &collectionView = fbreader.collectionView();
-	libraryTab.addOption(ZLResourceKey("bookPath"), collectionView.collection().PathOption);
-	libraryTab.addOption(ZLResourceKey("lookInSubdirectories"), collectionView.collection().ScanSubdirsOption);
-	libraryTab.addOption(ZLResourceKey("collectBooksWithoutMetaInfo"), collectionView.collection().CollectAllBooksOption);
-	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::instance().DirectoryOption);
-	libraryTab.addOption(ZLResourceKey("showAllBooksTag"), collectionView.ShowAllBooksTagOption);
+	Library &library = Library::Instance();
+	libraryTab.addOption(ZLResourceKey("bookPath"), library.PathOption);
+	libraryTab.addOption(ZLResourceKey("lookInSubdirectories"), library.ScanSubdirsOption);
+	libraryTab.addOption(ZLResourceKey("collectBooksWithoutMetaInfo"), library.CollectAllBooksOption);
+	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
 
-	ZLDialogContent &networkTab = myDialog->createTab(ZLResourceKey("NetworkLibrary"));
-	NetworkLinkCollection &linkCollection = NetworkLinkCollection::instance();
-	const size_t linkCollectionSize = linkCollection.size();
-	for (size_t i = 0; i < linkCollectionSize; ++i) {
-		NetworkLink &link = linkCollection.link(i);
-		networkTab.addOption(link.SiteName, "", new ZLSimpleBooleanOptionEntry(link.OnOption));
-	}
-	ZLNetworkManager &networkManager = ZLNetworkManager::instance();
-	if (!networkManager.providesProxyInfo()) {
-		ZLToggleBooleanOptionEntry *useProxyEntry = new ZLToggleBooleanOptionEntry(networkManager.UseProxyOption());
-		networkTab.addOption(ZLResourceKey("useProxy"), useProxyEntry);
-		ZLSimpleStringOptionEntry *proxyHostEntry = new ZLSimpleStringOptionEntry(networkManager.ProxyHostOption());
-		networkTab.addOption(ZLResourceKey("proxyHost"), proxyHostEntry);
-		ZLSimpleStringOptionEntry *proxyPortEntry = new ZLSimpleStringOptionEntry(networkManager.ProxyPortOption());
-		networkTab.addOption(ZLResourceKey("proxyPort"), proxyPortEntry);
-		useProxyEntry->addDependentEntry(proxyHostEntry);
-		useProxyEntry->addDependentEntry(proxyPortEntry);
-		useProxyEntry->onStateChanged(useProxyEntry->initialState());
-	}
-	networkTab.addOption(ZLResourceKey("timeout"), new ZLSimpleSpinOptionEntry(networkManager.TimeoutOption(), 5));
+	myNetworkLibraryPage = new NetworkLibraryPage(myDialog->createTab(ZLResourceKey("NetworkLibrary")));
 
 	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
-	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::instance().LanguageAutoDetectOption));
-	encodingTab.addOption(ZLResourceKey("defaultLanguage"), new ZLLanguageOptionEntry(PluginCollection::instance().DefaultLanguageOption, ZLLanguageList::languageCodes()));
-	EncodingEntry *encodingEntry = new EncodingEntry(PluginCollection::instance().DefaultEncodingOption);
+	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::Instance().LanguageAutoDetectOption));
+	encodingTab.addOption(ZLResourceKey("defaultLanguage"), new ZLLanguageOptionEntry(PluginCollection::Instance().DefaultLanguageOption, ZLLanguageList::languageCodes()));
+	EncodingEntry *encodingEntry = new EncodingEntry(PluginCollection::Instance().DefaultEncodingOption);
 	EncodingSetEntry *encodingSetEntry = new EncodingSetEntry(*encodingEntry);
 	encodingTab.addOption(ZLResourceKey("defaultEncodingSet"), encodingSetEntry);
 	encodingTab.addOption(ZLResourceKey("defaultEncoding"), encodingEntry);
 
-	myScrollingPage = new ScrollingOptionsPage(myDialog->createTab(ZLResourceKey("Scrolling")), fbreader);
+	ZLDialogContent &scrollingTab = myDialog->createTab(ZLResourceKey("Scrolling"));
+	scrollingTab.addOption(ZLResourceKey("keyLinesToScroll"), new ZLSimpleSpinOptionEntry(fbreader.LinesToScrollOption, 1));
+	scrollingTab.addOption(ZLResourceKey("keyLinesToKeep"), new ZLSimpleSpinOptionEntry(fbreader.LinesToKeepOption, 1));
+	scrollingTab.addOption(ZLResourceKey("keyScrollDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyScrollingDelayOption, 50));
+	const bool hasTouchScreen = 
+		ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::TOUCHSCREEN_PRESENTED, false).value();
+	if (hasTouchScreen) {
+		ZLToggleBooleanOptionEntry *enableTapScrollingEntry =
+			new ZLToggleBooleanOptionEntry(fbreader.EnableTapScrollingOption);
+		scrollingTab.addOption(ZLResourceKey("enableTapScrolling"), enableTapScrollingEntry);
+		const bool isFingerTapDetectionSupported = 
+			ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value();
+		if (isFingerTapDetectionSupported) {
+			ZLOptionEntry *fingerOnlyEntry =
+				new ZLSimpleBooleanOptionEntry(fbreader.TapScrollingOnFingerOnlyOption);
+			scrollingTab.addOption(ZLResourceKey("fingerOnly"), fingerOnlyEntry);
+			enableTapScrollingEntry->addDependentEntry(fingerOnlyEntry);
+			enableTapScrollingEntry->onStateChanged(enableTapScrollingEntry->initialState());
+		}
+	}
 
 	ZLDialogContent &selectionTab = myDialog->createTab(ZLResourceKey("Selection"));
 	selectionTab.addOption(ZLResourceKey("enableSelection"), FBView::selectionOption());
 
 	ZLDialogContent &cssTab = myDialog->createTab(ZLResourceKey("CSS"));
-	cssTab.addOption(ZLResourceKey("overrideSpecifiedFonts"), ZLTextStyleCollection::instance().OverrideSpecifiedFontsOption);
+	cssTab.addOption(ZLResourceKey("overrideSpecifiedFonts"), ZLTextStyleCollection::Instance().OverrideSpecifiedFontsOption);
 
 	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("Margins"));
-	FBMargins &margins = FBView::margins();
+	FBOptions &options = FBOptions::Instance();
 	marginTab.addOptions(
-		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(margins.LeftMarginOption, 1),
-		ZLResourceKey("right"), new ZLSimpleSpinOptionEntry(margins.RightMarginOption, 1)
+		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(options.LeftMarginOption, 1),
+		ZLResourceKey("right"), new ZLSimpleSpinOptionEntry(options.RightMarginOption, 1)
 	);
 	marginTab.addOptions(
-		ZLResourceKey("top"), new ZLSimpleSpinOptionEntry(margins.TopMarginOption, 1),
-		ZLResourceKey("bottom"), new ZLSimpleSpinOptionEntry(margins.BottomMarginOption, 1)
+		ZLResourceKey("top"), new ZLSimpleSpinOptionEntry(options.TopMarginOption, 1),
+		ZLResourceKey("bottom"), new ZLSimpleSpinOptionEntry(options.BottomMarginOption, 1)
 	);
 
 	myFormatPage = new FormatOptionsPage(myDialog->createTab(ZLResourceKey("Format")));
 	myStylePage = new StyleOptionsPage(myDialog->createTab(ZLResourceKey("Styles")), *fbreader.context());
 
-	createIndicatorTab(fbreader);
+	createIndicatorTab();
 
 	ZLDialogContent &rotationTab = myDialog->createTab(ZLResourceKey("Rotation"));
 	ZLResourceKey directionKey("direction");
@@ -223,22 +224,22 @@ OptionsDialog::OptionsDialog(FBReader &fbreader) {
 	const ZLResource &resource = colorsTab.resource(colorKey);
 	ZLColorOptionBuilder builder;
 	const std::string BACKGROUND = resource["background"].value();
-	builder.addOption(BACKGROUND, baseStyle.BackgroundColorOption);
-	builder.addOption(resource["selectionBackground"].value(), baseStyle.SelectionBackgroundColorOption);
-	builder.addOption(resource["text"].value(), baseStyle.RegularTextColorOption);
-	builder.addOption(resource["internalLink"].value(), baseStyle.hyperlinkColorOption("internal"));
-	builder.addOption(resource["externalLink"].value(), baseStyle.hyperlinkColorOption("external"));
-	builder.addOption(resource["bookLink"].value(), baseStyle.hyperlinkColorOption("book"));
-	builder.addOption(resource["highlighted"].value(), baseStyle.SelectedTextColorOption);
-	builder.addOption(resource["treeLines"].value(), baseStyle.TreeLinesColorOption);
+	builder.addOption(BACKGROUND, options.BackgroundColorOption);
+	builder.addOption(resource["selectionBackground"].value(), options.colorOption(ZLTextStyle::SELECTION_BACKGROUND));
+	builder.addOption(resource["text"].value(), options.RegularTextColorOption);
+	builder.addOption(resource["internalLink"].value(), options.colorOption("internal"));
+	builder.addOption(resource["externalLink"].value(), options.colorOption("external"));
+	builder.addOption(resource["bookLink"].value(), options.colorOption("book"));
+	builder.addOption(resource["highlighted"].value(), options.colorOption(ZLTextStyle::HIGHLIGHTED_TEXT));
+	builder.addOption(resource["treeLines"].value(), options.colorOption(ZLTextStyle::TREE_LINES));
 	builder.addOption(resource["indicator"].value(), (FBView::commonIndicatorInfo().ColorOption));
 	builder.setInitial(BACKGROUND);
 	colorsTab.addOption(colorKey, builder.comboEntry());
 	colorsTab.addOption("", "", builder.colorEntry());
 
-	myKeyBindingsPage = new KeyBindingsPage(fbreader, myDialog->createTab(ZLResourceKey("Keys")));
+	myKeyBindingsPage = new KeyBindingsPage(myDialog->createTab(ZLResourceKey("Keys")));
 	if (ZLOption::isAutoSavingSupported()) {
-		myConfigPage = new ConfigPage(fbreader, myDialog->createTab(ZLResourceKey("Config")));
+		myConfigPage = new ConfigPage(myDialog->createTab(ZLResourceKey("Config")));
 	}
 
 	std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > additional;

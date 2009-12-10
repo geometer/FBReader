@@ -17,9 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <stdlib.h>
-#include <string.h>
-
+#include <cstdlib>
 #include <algorithm>
 
 #include <ZLFile.h>
@@ -28,7 +26,7 @@
 #include <ZLUnicodeUtil.h>
 
 #include "MobipocketHtmlBookReader.h"
-#include "MobipocketStream.h"
+#include "PalmDocStream.h"
 #include "../html/HtmlTagActions.h"
 #include "../../bookmodel/BookModel.h"
 
@@ -64,6 +62,13 @@ class MobipocketHtmlReferenceTagAction : public HtmlTagAction {
 
 public:
 	MobipocketHtmlReferenceTagAction(HtmlBookReader &reader);
+	void run(const HtmlReader::HtmlTag &tag);
+};
+
+class MobipocketHtmlPagebreakTagAction : public HtmlTagAction {
+
+public:
+	MobipocketHtmlPagebreakTagAction(HtmlBookReader &reader);
 	void run(const HtmlReader::HtmlTag &tag);
 };
 
@@ -109,6 +114,19 @@ void MobipocketHtmlHrTagAction::run(const HtmlReader::HtmlTag &tag) {
 }
 
 MobipocketHtmlHrefTagAction::MobipocketHtmlHrefTagAction(HtmlBookReader &reader) : HtmlHrefTagAction(reader) {
+}
+
+MobipocketHtmlPagebreakTagAction::MobipocketHtmlPagebreakTagAction(HtmlBookReader &reader) : HtmlTagAction(reader) {
+}
+
+void MobipocketHtmlPagebreakTagAction::run(const HtmlReader::HtmlTag &tag) {
+	if (tag.Start) {
+		if (bookReader().contentsParagraphIsOpen()) {
+			bookReader().endContentsParagraph();
+			bookReader().exitTitle();
+		}
+		bookReader().insertEndOfSectionParagraph();
+	}
 }
 
 MobipocketHtmlBookReader::TOCReader::TOCReader(MobipocketHtmlBookReader &reader) : myReader(reader) {
@@ -258,6 +276,8 @@ shared_ptr<HtmlTagAction> MobipocketHtmlBookReader::createAction(const std::stri
 		return new MobipocketHtmlGuideTagAction(*this);
 	} else if (tag == "REFERENCE") {
 		return new MobipocketHtmlReferenceTagAction(*this);
+	} else if (tag == "MBP:PAGEBREAK") {
+		return new MobipocketHtmlPagebreakTagAction(*this);
 	}
 	return HtmlBookReader::createAction(tag);
 }
@@ -293,36 +313,12 @@ bool MobipocketHtmlBookReader::characterDataHandler(const char *text, size_t len
 void MobipocketHtmlBookReader::readDocument(ZLInputStream &stream) {
 	HtmlBookReader::readDocument(stream);
 
-	shared_ptr<ZLInputStream> fileStream = ZLFile(myFileName).inputStream();
-	bool found = false;
-	int index = 0;
-	if (!fileStream.isNull() && fileStream->open()) {
-		char bu[10];
-		std::pair<int,int> firstImageLocation = ((MobipocketStream&)stream).imageLocation(0);
-		fileStream->seek(firstImageLocation.first, false);
-		while ((firstImageLocation.first > 0) && (firstImageLocation.second > 0)) {
-			if (firstImageLocation.second > 4) {
-				fileStream->read(bu, 4);
-				static const char jpegStart[2] = { (char)0xFF, (char)0xd8 };
-				if ((strncmp(bu, "BM", 2) == 0) ||
-						(strncmp(bu, "GIF8", 4) == 0) ||
-						(strncmp(bu, jpegStart, 2) == 0)) {
-					found = true;
-					break;
-				}
-				fileStream->seek(firstImageLocation.second - 10, false);
-			} else {
-				fileStream->seek(firstImageLocation.second, false);
-			}
-			index++;
-			firstImageLocation = ((MobipocketStream&)stream).imageLocation(index);
-		}
-		fileStream->close();
-	}
+	PalmDocStream &pdStream = (PalmDocStream&)stream;
+	int index = pdStream.firstImageLocationIndex(myFileName);
 
-	if (found) {
+	if (index >= 0) {
 		for (int i = 0; i < myImageCounter; i++) {
-			std::pair<int,int> imageLocation = ((MobipocketStream&)stream).imageLocation(i + index);
+			std::pair<int,int> imageLocation = pdStream.imageLocation(pdStream.header(), i + index);
 			if ((imageLocation.first > 0) && (imageLocation.second > 0)) {
 				std::string id;
 				ZLStringUtil::appendNumber(id, i + 1);

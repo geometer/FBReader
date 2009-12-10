@@ -29,7 +29,7 @@
 #include "ZLTextTeXHyphenator.h"
 #include "ZLTextHyphenationReader.h"
 
-ZLTextHyphenator &ZLTextHyphenator::instance() {
+ZLTextHyphenator &ZLTextHyphenator::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new ZLTextTeXHyphenator();
 	}

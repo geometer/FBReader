@@ -22,17 +22,17 @@
 
 #include <string>
 
-#include "../../description/BookDescription.h"
+class Book;
 
 class PdfDescriptionReader {
 
 public:
-	PdfDescriptionReader(BookDescription &description);
+	PdfDescriptionReader(Book &book);
 	~PdfDescriptionReader();
-	bool readDescription(shared_ptr<ZLInputStream> stream);
+	bool readMetaInfo(shared_ptr<ZLInputStream> stream);
 
 private:
-	WritableBookDescription myDescription;
+	Book &myBook;
 };
 
 inline PdfDescriptionReader::~PdfDescriptionReader() {}

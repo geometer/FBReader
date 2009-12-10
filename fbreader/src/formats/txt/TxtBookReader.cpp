@@ -38,7 +38,11 @@ bool TxtBookReader::characterDataHandler(std::string &str) {
 	const char *end = ptr + str.length();
 	for (; ptr != end; ++ptr) {
 		if (isspace((unsigned char)*ptr)) {
-			++mySpaceCounter;
+			if (*ptr != '\t') {
+				++mySpaceCounter;
+			} else {
+				mySpaceCounter += myFormat.ignoredIndent() + 1; // TODO: implement single option in PlainTextFormat
+			}
 		} else {
 			myLastLineIsEmpty = false;
 			break;

@@ -179,7 +179,7 @@ void ComboOptionView::_createItem() {
 	if (myLabel != 0) {
 		int width = myToColumn - myFromColumn + 1;
 		myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 2 - 1);
-		myTab->addItem(myComboBox, myRow, myToColumn - width / 2 + 1, myToColumn);
+		myTab->addItem(myComboBox, myRow, myFromColumn + width / 2, myToColumn);
 	} else {
 		myTab->addItem(myComboBox, myRow, myFromColumn, myToColumn);
 	}
@@ -262,8 +262,8 @@ void SpinOptionView::_createItem() {
 	);
 	mySpinBox->setValue(((ZLSpinOptionEntry&)*myOption).initialValue());
 	int width = myToColumn - myFromColumn + 1;
-	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width * 2 / 3 - 1);
-	myTab->addItem(mySpinBox, myRow, myFromColumn + width * 2 / 3, myToColumn);
+	myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 2 - 1);
+	myTab->addItem(mySpinBox, myRow, myFromColumn + width / 2, myToColumn);
 }
 
 void SpinOptionView::_show() {
@@ -282,12 +282,13 @@ void SpinOptionView::_onAccept() const {
 
 void StringOptionView::_createItem() {
 	myLineEdit = new QLineEdit(myTab->widget());
+	myLineEdit->setEchoMode(myPasswordMode ? QLineEdit::Password : QLineEdit::Normal);
 	connect(myLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
 	if (!ZLOptionView::name().empty()) {
 		myLabel = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 		int width = myToColumn - myFromColumn + 1;
-		myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 4 - 1);
-		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
+		myTab->addItem(myLabel, myRow, myFromColumn, myFromColumn + width / 2 - 1);
+		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 2, myToColumn);
 	} else {
 		myLabel = 0;
 		myTab->addItem(myLineEdit, myRow, myFromColumn, myToColumn);
@@ -559,4 +560,21 @@ void OrderOptionView::_onAccept() const {
 	for (int i = 0; i < size; ++i) {
 		values.push_back((const char*)myListBox->text(i).utf8());
 	}
+}
+
+void StaticTextOptionView::_createItem() {
+	const std::string &text = ((ZLStaticTextOptionEntry&)*myOption).initialValue();
+	myLabel = new QLabel(::qtString(text), myTab->widget());
+	myTab->addItem(myLabel, myRow, myFromColumn, myToColumn);
+}
+
+void StaticTextOptionView::_show() {
+	myLabel->show();
+}
+
+void StaticTextOptionView::_hide() {
+	myLabel->hide();
+}
+
+void StaticTextOptionView::_onAccept() const {
 }

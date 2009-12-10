@@ -24,9 +24,12 @@
 #include <ZLFile.h>
 #include <ZLOutputStream.h>
 #include <ZLResource.h>
+#include <ZLibrary.h>
 
 #include "ZLNetworkManager.h"
+#include "ZLNetworkData.h"
 #include "ZLNetworkUtil.h"
+#include "ZLNetworkDownloadData.h"
 
 ZLNetworkManager *ZLNetworkManager::ourInstance = 0;
 
@@ -36,11 +39,18 @@ void ZLNetworkManager::deleteInstance() {
 	}
 }
 
-ZLNetworkManager &ZLNetworkManager::instance() {
+ZLNetworkManager &ZLNetworkManager::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new ZLNetworkManager();
 	}
 	return *ourInstance;
+}
+
+std::string ZLNetworkManager::CacheDirectory() {
+	return
+		ZLibrary::ApplicationWritableDirectory() +
+		ZLibrary::FileNameDelimiter +
+		"cache";
 }
 
 ZLNetworkManager::ZLNetworkManager() {
@@ -119,7 +129,8 @@ std::string ZLNetworkManager::proxyPort() const {
 	return ProxyPortOption().value();
 }
 
-void ZLNetworkManager::setStandardOptions(CURL *handle, const std::string &proxy) const {
+void ZLNetworkManager::setStandardOptions(void *curlHandle, const std::string &proxy) const {
+	CURL *handle = (CURL*)curlHandle;
 	static const char *AGENT_NAME = "FBReader";
 
 	curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, true);
@@ -127,59 +138,36 @@ void ZLNetworkManager::setStandardOptions(CURL *handle, const std::string &proxy
 	if (useProxy()) {
 		curl_easy_setopt(handle, CURLOPT_PROXY, proxy.c_str());
 	}
-	curl_easy_setopt(handle, CURLOPT_TIMEOUT, TimeoutOption().value());
+	curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1L);
+	curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, TimeoutOption().value());
 	curl_easy_setopt(handle, CURLOPT_CONNECTTIMEOUT, ConnectTimeoutOption().value());
+	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 1L);
+	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYHOST, 2L);
 }
 
-static size_t writeToStream(void *ptr, size_t size, size_t nmemb, void *data) {
-	((ZLOutputStream*)data)->write((const char*)ptr, size * nmemb);
-	return size * nmemb;
+std::string ZLNetworkManager::downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLSlowProcessListener> listener) const {
+	return downloadFile(url, fileName, "", listener);
 }
 
-std::string ZLNetworkManager::downloadFile(const std::string &url, const std::string &fileName) const {
-	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
-
-	CURL *curl = curl_easy_init();
-	if (!curl) {
-		return errorResource["unknownErrorMessage"].value();
-	}
-	curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
-	const std::string proxy = proxyHost() + ':' + proxyPort();
-	setStandardOptions(curl, proxy);
-
+std::string ZLNetworkManager::downloadFile(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLSlowProcessListener> listener) const {
 	ZLFile fileToWrite(fileName);
-	shared_ptr<ZLOutputStream> stream = fileToWrite.outputStream();
+	shared_ptr<ZLOutputStream> stream = fileToWrite.outputStream(true);
 	if (stream.isNull() || !stream->open()) {
-		return ZLStringUtil::printf(errorResource["couldntCreateFileMessage"].value(), fileName);
+		const ZLResource &errorResource =
+			ZLResource::resource("dialog")["networkError"];
+		return
+			ZLStringUtil::printf(
+				errorResource["couldntCreateFileMessage"].value(), fileName
+			);
 	}
-	curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToStream);
-	curl_easy_setopt(curl, CURLOPT_WRITEDATA, &*stream);
-
-	CURLcode res = curl_easy_perform(curl);
-	curl_easy_cleanup(curl);
-	stream->close();
-
-	if (res == CURLE_OK) {
-		return "";
-	}
-
-	fileToWrite.remove();
-
-	switch (res) {
-		default:
-			return ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), url);
-		case CURLE_COULDNT_RESOLVE_PROXY:
-			return ZLStringUtil::printf(errorResource["couldntResolveProxyMessage"].value(), proxyHost());
-		case CURLE_COULDNT_RESOLVE_HOST:
-			return ZLStringUtil::printf(errorResource["couldntResolveHostMessage"].value(), ZLNetworkUtil::hostFromUrl(url));
-		case CURLE_COULDNT_CONNECT:
-			return ZLStringUtil::printf(errorResource["couldntConnectMessage"].value(), ZLNetworkUtil::hostFromUrl(url));
-		case CURLE_OPERATION_TIMEDOUT:
-			return errorResource["operationTimedOutMessage"].value();
-	}
+	ZLExecutionData::Vector dataVector;
+	ZLNetworkDownloadData *data = new ZLNetworkDownloadData(url, fileName, sslCertificate, stream);
+	data->setListener(listener);
+	dataVector.push_back(data);
+	return perform(dataVector);
 }
 
-std::string ZLNetworkManager::perform(const std::vector<shared_ptr<ZLNetworkData> > &dataList) const {
+std::string ZLNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 
 	if (dataList.empty()) {
@@ -188,9 +176,16 @@ std::string ZLNetworkManager::perform(const std::vector<shared_ptr<ZLNetworkData
 
 	const std::string proxy = proxyHost() + ':' + proxyPort();
 	CURLM *handle = curl_multi_init();
-	std::map<CURL*,shared_ptr<ZLNetworkData> > handleToData; 
-	for (std::vector<shared_ptr<ZLNetworkData> >::const_iterator it = dataList.begin(); it != dataList.end(); ++it) {
-		CURL *easyHandle = (*it)->handle();
+	std::map<CURL*,shared_ptr<ZLExecutionData> > handleToData; 
+	for (ZLExecutionData::Vector::const_iterator it = dataList.begin(); it != dataList.end(); ++it) {
+		if (it->isNull() || (*it)->type() != ZLNetworkData::TYPE_ID) {
+			continue;
+		}
+		ZLNetworkData &nData = (ZLNetworkData&)**it;
+		if (!nData.doBefore()) {
+			continue;
+		}
+		CURL *easyHandle = nData.handle();
 		if (easyHandle != 0) {
 			handleToData[easyHandle] = *it;
 			setStandardOptions(easyHandle, proxy);
@@ -209,11 +204,20 @@ std::string ZLNetworkManager::perform(const std::vector<shared_ptr<ZLNetworkData
 	do {
 		int queueSize;
 		message = curl_multi_info_read(handle, &queueSize);
-		if ((message != 0) &&
-		    (message->msg == CURLMSG_DONE) &&
-		    (message->data.result != CURLE_OK)) {
-			const std::string &url = handleToData[message->easy_handle]->url();
+		if ((message != 0) && (message->msg == CURLMSG_DONE)) {
+			ZLNetworkData &nData = (ZLNetworkData&)*handleToData[message->easy_handle];
+			nData.doAfter(message->data.result == CURLE_OK);
+			const std::string &url = nData.url();
 			switch (message->data.result) {
+				case CURLE_OK:
+					break;
+				case CURLE_WRITE_ERROR:
+					/* check nData's error message here:
+					 *     - if it isn't empty => return that message;
+					 *     - otherwise => return somethingWrongMessage message.
+					 */
+					errors.insert(ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					break;
 				default:
 					errors.insert(ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
 					break;
@@ -228,6 +232,21 @@ std::string ZLNetworkManager::perform(const std::vector<shared_ptr<ZLNetworkData
 					break;
 				case CURLE_OPERATION_TIMEDOUT:
 					errors.insert(errorResource["operationTimedOutMessage"].value());
+					break;
+				case CURLE_SSL_CONNECT_ERROR:
+					errors.insert(ZLStringUtil::printf(errorResource["sslConnectErrorMessage"].value(), curl_easy_strerror(CURLE_SSL_CONNECT_ERROR)));
+					break;
+				case CURLE_PEER_FAILED_VERIFICATION:
+					errors.insert(ZLStringUtil::printf(errorResource["peerFailedVerificationMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					break;
+				case CURLE_SSL_CACERT:
+					errors.insert(ZLStringUtil::printf(errorResource["sslCertificateAuthorityMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					break;
+				case CURLE_SSL_CACERT_BADFILE:
+					errors.insert(ZLStringUtil::printf(errorResource["sslBadCertificateFileMessage"].value(), nData.sslCertificate()));
+					break;
+				case CURLE_SSL_SHUTDOWN_FAILED:
+					errors.insert(ZLStringUtil::printf(errorResource["sslShutdownFailedMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
 					break;
 			}
 		}

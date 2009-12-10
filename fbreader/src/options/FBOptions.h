@@ -20,17 +20,46 @@
 #ifndef __FBOPTIONS_H__
 #define __FBOPTIONS_H__
 
-#include <ZLOptions.h>
+#include <string>
+#include <map>
 
-class FBCategoryKey : public ZLCategoryKey {
+#include <shared_ptr.h>
+
+#include <ZLOptions.h>
+#include <ZLTextStyle.h>
+
+class FBOptions {
 
 public:
-	static const FBCategoryKey BOOKS;
-	static const FBCategoryKey SEARCH;
-	static const FBCategoryKey EXTERNAL;
+	static FBOptions& Instance();
 
 private:
-	FBCategoryKey(const std::string &name);
+	static FBOptions *ourInstance;
+
+public:
+	ZLIntegerRangeOption LeftMarginOption;
+	ZLIntegerRangeOption RightMarginOption;
+	ZLIntegerRangeOption TopMarginOption;
+	ZLIntegerRangeOption BottomMarginOption;
+	ZLColorOption BackgroundColorOption;
+	ZLColorOption RegularTextColorOption;
+
+	ZLColorOption &colorOption(const std::string &style);
+
+private:
+	FBOptions();
+	FBOptions(const FBOptions&);
+	const FBOptions& operator = (const FBOptions&);
+
+private:
+	std::map<std::string,shared_ptr<ZLColorOption> > myColorOptions;
 };
+
+inline FBOptions& FBOptions::Instance() {
+	if (ourInstance == 0) {
+		ourInstance = new FBOptions();
+	}
+	return *ourInstance;
+}
 
 #endif /* __FBOPTIONS_H__ */

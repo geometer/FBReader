@@ -29,6 +29,7 @@ class ZLGtkSignalUtil {
 
 public:
 	static void connectSignal(GtkObject *object, const char *name, GtkSignalFunc function, void *data);
+	static void connectSignalAfter(GtkObject *object, const char *name, GtkSignalFunc function, void *data);
 	static void removeAllSignals();
 
 private:

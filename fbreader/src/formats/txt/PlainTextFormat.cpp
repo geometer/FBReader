@@ -27,7 +27,7 @@
 
 #include "PlainTextFormat.h"
 
-#include "../../options/FBOptions.h"
+#include "../../options/FBCategoryKey.h"
 
 const std::string OPTION_Initialized = "Initialized";
 const std::string OPTION_BreakType = "BreakType";

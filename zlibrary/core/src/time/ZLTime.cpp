@@ -22,7 +22,7 @@
 ZLTimeManager *ZLTimeManager::ourInstance = 0;
 
 ZLTime::ZLTime() {
-	*this = ZLTimeManager::instance().currentTime();
+	*this = ZLTimeManager::Instance().currentTime();
 }
 
 ZLTime::ZLTime(long seconds, long milliseconds) : mySeconds(seconds), myMilliseconds(milliseconds) {
@@ -40,14 +40,26 @@ long ZLTime::millisecondsFrom(const ZLTime &time) const {
 }
 
 short ZLTime::hours() const {
-	return ZLTimeManager::instance().hoursBySeconds(mySeconds);
+	return ZLTimeManager::Instance().hoursBySeconds(mySeconds);
 }
 
 short ZLTime::minutes() const {
-	return ZLTimeManager::instance().minutesBySeconds(mySeconds);
+	return ZLTimeManager::Instance().minutesBySeconds(mySeconds);
 }
 
-ZLTimeManager &ZLTimeManager::instance() {
+short ZLTime::dayOfMonth() const {
+	return ZLTimeManager::Instance().dayOfMonthBySeconds(mySeconds);
+}
+
+short ZLTime::month() const {
+	return ZLTimeManager::Instance().monthBySeconds(mySeconds);
+}
+
+short ZLTime::year() const {
+	return ZLTimeManager::Instance().yearBySeconds(mySeconds);
+}
+
+ZLTimeManager &ZLTimeManager::Instance() {
 	return *ourInstance;
 }
 
@@ -62,4 +74,42 @@ ZLTimeManager::ZLTimeManager() {
 }
 
 ZLTimeManager::~ZLTimeManager() {
+}
+
+class ZLTimeManager::AutoRemovableTask : public ZLRunnable {
+
+public:
+	AutoRemovableTask(shared_ptr<ZLRunnable> task);
+
+private:
+	void run();
+
+private:
+	shared_ptr<ZLRunnable> myTask;
+};
+
+ZLTimeManager::AutoRemovableTask::AutoRemovableTask(shared_ptr<ZLRunnable> task) : myTask(task) {
+}
+
+void ZLTimeManager::AutoRemovableTask::run() {
+	//ZLTimeManager::Instance().removeAutoRemovableTask(this);
+	ZLTimeManager &timeManager = ZLTimeManager::Instance();
+	std::set<shared_ptr<ZLRunnable> > &taskList = timeManager.myAutoRemovableTasks;
+	std::set<shared_ptr<ZLRunnable> >::iterator it = taskList.begin();
+	for (; it != taskList.end(); ++it) {
+		if (this == &**it) {
+			break;
+		}
+	}
+	if (it != taskList.end()) {
+		timeManager.removeTask(*it);
+		myTask->run();
+		taskList.erase(it);
+	}
+}
+
+void ZLTimeManager::addAutoRemovableTask(shared_ptr<ZLRunnable> task, int delay) {
+	shared_ptr<ZLRunnable> wrapper = new AutoRemovableTask(task);
+	myAutoRemovableTasks.insert(wrapper);
+	addTask(wrapper, delay > 0 ? delay : 1);
 }

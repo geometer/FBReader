@@ -24,20 +24,17 @@
 #include "../../bookmodel/BookReader.h"
 
 class BookModel;
-class Base64EncodedImage;
+class ZLBase64EncodedImage;
 
 class FB2BookReader : public FB2Reader {
 
 public:
 	FB2BookReader(BookModel &model);
-	~FB2BookReader();
-	bool readBook(const std::string &fileName);
+	bool readBook();
 
 	void startElementHandler(int tag, const char **attributes);
 	void endElementHandler(int tag);
 	void characterDataHandler(const char *text, size_t len);
-	bool processNamespaces() const;
-	void namespaceListChangedHandler();
 
 private:
 	int mySectionDepth;
@@ -49,7 +46,7 @@ private:
 	bool myInsidePoem;
 	BookReader myModelReader;
 
-	Base64EncodedImage *myCurrentImage;
+	ZLBase64EncodedImage *myCurrentImage;
 	bool myProcessingImage;
 	std::vector<std::string> myImageBuffer;
 
@@ -57,9 +54,6 @@ private:
 	bool myInsideTitle;
 
 	FBTextKind myHyperlinkType;
-	std::string myHrefAttributeName;
 };
-
-inline FB2BookReader::~FB2BookReader() {}
 
 #endif /* __FB2BOOKREADER_H__ */

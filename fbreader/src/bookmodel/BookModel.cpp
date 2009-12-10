@@ -24,25 +24,30 @@
 #include "BookReader.h"
 
 #include "../formats/FormatPlugin.h"
+#include "../library/Book.h"
 
-BookModel::BookModel(const BookDescriptionPtr description) : myDescription(description) {
+BookModel::BookModel(const shared_ptr<Book> book) : myBook(book) {
 	myBookTextModel = new ZLTextPlainModel(102400);
 	myContentsModel = new ContentsModel();
-	ZLFile file(description->fileName());
-	FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
-	if (plugin != 0) {
-		plugin->readModel(*description, *this);
+	ZLFile file(book->filePath());
+	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(file, false);
+	if (!plugin.isNull()) {
+		plugin->readModel(*this);
 	}
 }
 
 BookModel::~BookModel() {
 }
 
-const std::string &BookModel::fileName() const {
-	return myDescription->fileName();
+void BookModel::setHyperlinkMatcher(shared_ptr<HyperlinkMatcher> matcher) {
+	myHyperlinkMatcher = matcher;
 }
-
+	
 BookModel::Label BookModel::label(const std::string &id) const {
+	if (!myHyperlinkMatcher.isNull()) {
+		return myHyperlinkMatcher->match(myInternalHyperlinks, id);
+	}
+
 	std::map<std::string,Label>::const_iterator it = myInternalHyperlinks.find(id);
 	return (it != myInternalHyperlinks.end()) ? it->second : Label(0, -1);
 }
@@ -54,4 +59,8 @@ void ContentsModel::setReference(const ZLTextTreeParagraph *paragraph, int refer
 int ContentsModel::reference(const ZLTextTreeParagraph *paragraph) const {
 	std::map<const ZLTextTreeParagraph*,int>::const_iterator it = myReferenceByParagraph.find(paragraph);
 	return (it != myReferenceByParagraph.end()) ? it->second : -1;
+}
+
+const shared_ptr<Book> BookModel::book() const {
+	return myBook;
 }

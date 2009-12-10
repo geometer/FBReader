@@ -19,19 +19,20 @@
 
 #include <ZLInputStream.h>
 #include <ZLLanguageDetector.h>
+#include <ZLImage.h>
 
 #include "FormatPlugin.h"
 
-#include "../description/BookDescription.h"
+#include "../library/Book.h"
 
-void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream) {
-	std::string language = description.language();
-	std::string encoding = description.encoding();
+void FormatPlugin::detectEncodingAndLanguage(Book &book, ZLInputStream &stream) {
+	std::string language = book.language();
+	std::string encoding = book.encoding();
 	if (!encoding.empty() && !language.empty()) {
 		return;
 	}
 
-	PluginCollection &collection = PluginCollection::instance();
+	PluginCollection &collection = PluginCollection::Instance();
 	if (language.empty()) {
 		language = collection.DefaultLanguageOption.value();
 	}
@@ -56,17 +57,17 @@ void FormatPlugin::detectEncodingAndLanguage(BookDescription &description, ZLInp
 			}
 		}
 	}
-	WritableBookDescription(description).encoding() = encoding;
-	WritableBookDescription(description).language() = language;
+	book.setEncoding(encoding);
+	book.setLanguage(language);
 }
 
-void FormatPlugin::detectLanguage(BookDescription &description, ZLInputStream &stream) {
-	std::string language = description.language();
+void FormatPlugin::detectLanguage(Book &book, ZLInputStream &stream) {
+	std::string language = book.language();
 	if (!language.empty()) {
 		return;
 	}
 
-	PluginCollection &collection = PluginCollection::instance();
+	PluginCollection &collection = PluginCollection::Instance();
 	if (language.empty()) {
 		language = collection.DefaultLanguageOption.value();
 	}
@@ -84,10 +85,14 @@ void FormatPlugin::detectLanguage(BookDescription &description, ZLInputStream &s
 			}
 		}
 	}
-	WritableBookDescription(description).language() = language;
+	book.setLanguage(language);
 }
 
 const std::string &FormatPlugin::tryOpen(const std::string&) const {
 	static const std::string EMPTY = "";
 	return EMPTY;
+}
+
+shared_ptr<ZLImage> FormatPlugin::coverImage(const Book &book) const {
+	return 0;
 }

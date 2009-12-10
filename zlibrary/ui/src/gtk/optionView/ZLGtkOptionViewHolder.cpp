@@ -31,7 +31,9 @@ ZLOptionView *ZLGtkOptionViewHolder::createViewByEntry(const std::string &name, 
 		case ZLOptionEntry::BOOLEAN3:
 			return new Boolean3OptionView(name, tooltip, option, *this);
 		case ZLOptionEntry::STRING:
-			return new StringOptionView(name, tooltip, option, *this);
+			return new StringOptionView(name, tooltip, option, *this, false);
+		case ZLOptionEntry::PASSWORD:
+			return new StringOptionView(name, tooltip, option, *this, true);
 		case ZLOptionEntry::CHOICE:
 			return new ChoiceOptionView(name, tooltip, option, *this);
 		case ZLOptionEntry::SPIN:
@@ -42,6 +44,8 @@ ZLOptionView *ZLGtkOptionViewHolder::createViewByEntry(const std::string &name, 
 			return new ColorOptionView(name, tooltip, option, *this);
 		case ZLOptionEntry::KEY:
 			return new KeyOptionView(name, tooltip, option, *this);
+		case ZLOptionEntry::STATIC:
+			return new StaticTextOptionView(name, tooltip, option, *this);
 	}
 
 	return 0;

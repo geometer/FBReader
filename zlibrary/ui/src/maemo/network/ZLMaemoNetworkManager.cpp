@@ -54,7 +54,7 @@ ZLMaemoNetworkManager::~ZLMaemoNetworkManager() {
 }
 
 bool ZLMaemoNetworkManager::connect() const {
-	volatile bool &waitingFlag = ((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).myIsWaiting;
+	volatile bool &waitingFlag = ((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).myIsWaiting;
 	waitingFlag = true;
 	myConnectionStatus = IN_PROGRESS;
 	con_ic_connection_connect(myConnection, CON_IC_CONNECT_FLAG_UNMANAGED);

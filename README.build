@@ -21,7 +21,7 @@ FBReader requires
      should be installed
   ** liblinebreak (http://vimgadgets.cvs.sourceforge.net/vimgadgets/common/tools/linebreak/) -- library for line breaking in a Unicode sequence
   ** libfribidi -- for bidirectional text support
-  ** lincurl -- for network libraries integration
+  ** lincurl, version >= 7.17 -- for network libraries integration
   ** for win32 version, we use also libpng, libungif, libjpeg and libtiff
 
 3. How to configure.

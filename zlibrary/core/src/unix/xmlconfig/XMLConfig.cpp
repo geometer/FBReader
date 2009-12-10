@@ -98,7 +98,7 @@ XMLConfig::XMLConfig() : myDelta(0) {
 }
 
 XMLConfig::~XMLConfig() {
-	ZLTimeManager::instance().removeTask(mySaver);
+	ZLTimeManager::Instance().removeTask(mySaver);
 	saveAll();
 	for (std::map<std::string,XMLConfigGroup*>::const_iterator it = myGroups.begin(); it != myGroups.end(); ++it) {
 		delete it->second;
@@ -197,5 +197,5 @@ bool XMLConfig::isAutoSavingSupported() const {
 }
 
 void XMLConfig::startAutoSave(int seconds) {
-	ZLTimeManager::instance().addTask(mySaver, 1000 * seconds);
+	ZLTimeManager::Instance().addTask(mySaver, 1000 * seconds);
 }

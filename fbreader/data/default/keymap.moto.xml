@@ -2,8 +2,8 @@
 <keymap>
 	<binding key="&lt;Left&gt;" action="gotoSectionStart"/>
 	<binding key="&lt;Right&gt;" action="gotoSectionEnd"/>
-	<binding key="&lt;Down&gt;" action="largeScrollForward"/>
-	<binding key="&lt;Up&gt;" action="largeScrollBackward"/>
+	<binding key="&lt;Down&gt;" action="pageForward"/>
+	<binding key="&lt;Up&gt;" action="pageBackward"/>
 	<binding key="&lt;Cancel&gt;" action="cancel"/>
 	<binding key="&lt;VolUp&gt;" action="increaseFont"/>
 	<binding key="&lt;VolDown&gt;" action="decreaseFont"/>

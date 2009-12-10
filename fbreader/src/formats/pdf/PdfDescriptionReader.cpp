@@ -21,9 +21,9 @@
 
 #include "PdfDescriptionReader.h"
 
-PdfDescriptionReader::PdfDescriptionReader(BookDescription &description) : myDescription(description) {
+PdfDescriptionReader::PdfDescriptionReader(Book &book) : myBook(book) {
 }
 
-bool PdfDescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
+bool PdfDescriptionReader::readMetaInfo(shared_ptr<ZLInputStream> stream) {
 	return true;
 }

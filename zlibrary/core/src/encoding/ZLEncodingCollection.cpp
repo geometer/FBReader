@@ -31,7 +31,7 @@
 
 ZLEncodingCollection *ZLEncodingCollection::ourInstance = 0;
 
-ZLEncodingCollection &ZLEncodingCollection::instance() {
+ZLEncodingCollection &ZLEncodingCollection::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new ZLEncodingCollection();
 	}

@@ -47,10 +47,10 @@ struct ZLTextElementArea : public ZLTextRectangularArea {
 	int StartCharIndex;
 	int Length;
 	bool AddHyphenationSign;
-	ZLTextStylePtr Style;
+	shared_ptr<ZLTextStyle> Style;
 	ZLTextElement::Kind Kind;
 	unsigned char BidiLevel;
-	ZLTextElementArea(int paragraphIndex, int elementIndex, int startCharIndex, int length, bool addHyphenationSign, ZLTextStylePtr style, ZLTextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd, unsigned char bidiLevel);
+	ZLTextElementArea(int paragraphIndex, int elementIndex, int startCharIndex, int length, bool addHyphenationSign, shared_ptr<ZLTextStyle> style, ZLTextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd, unsigned char bidiLevel);
 };
 
 struct ZLTextTreeNodeArea : public ZLTextRectangularArea {
@@ -64,7 +64,7 @@ typedef ZLTextElementMap::const_iterator ZLTextElementIterator;
 
 inline ZLTextRectangularArea::ZLTextRectangularArea(int xStart, int xEnd, int yStart, int yEnd) : XStart(xStart), XEnd(xEnd), YStart(yStart), YEnd(yEnd) {}
 
-inline ZLTextElementArea::ZLTextElementArea(int paragraphIndex, int elementIndex, int startCharIndex, int length, bool addHyphenationSign, ZLTextStylePtr style, ZLTextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd, unsigned char bidiLevel) : ZLTextRectangularArea(xStart, xEnd, yStart, yEnd), ParagraphIndex(paragraphIndex), ElementIndex(elementIndex), StartCharIndex(startCharIndex), Length(length), AddHyphenationSign(addHyphenationSign), Style(style), Kind(kind), BidiLevel(bidiLevel) {}
+inline ZLTextElementArea::ZLTextElementArea(int paragraphIndex, int elementIndex, int startCharIndex, int length, bool addHyphenationSign, shared_ptr<ZLTextStyle> style, ZLTextElement::Kind kind, int xStart, int xEnd, int yStart, int yEnd, unsigned char bidiLevel) : ZLTextRectangularArea(xStart, xEnd, yStart, yEnd), ParagraphIndex(paragraphIndex), ElementIndex(elementIndex), StartCharIndex(startCharIndex), Length(length), AddHyphenationSign(addHyphenationSign), Style(style), Kind(kind), BidiLevel(bidiLevel) {}
 
 inline ZLTextTreeNodeArea::ZLTextTreeNodeArea(int paragraphIndex, int xStart, int xEnd, int yStart, int yEnd) : ZLTextRectangularArea(xStart, xEnd, yStart, yEnd), ParagraphIndex(paragraphIndex) {}
 

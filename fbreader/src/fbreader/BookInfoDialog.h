@@ -24,39 +24,55 @@
 
 #include <ZLOptionEntry.h>
 
-#include "../collection/BookCollection.h"
-#include "../description/BookDescription.h"
 #include "../formats/FormatPlugin.h"
 
 class ZLOptionsDialog;
+class ZLDialogContent;
 class AuthorDisplayNameEntry;
-class AuthorSortKeyEntry;
 class SeriesTitleEntry;
+class BookIndexEntry;
+class BookTagEntry;
 
 class BookInfoDialog {
 
 public:
-	BookInfoDialog(const BookCollection &collection, const std::string &fileName);
+	BookInfoDialog(shared_ptr<Book> book);
 
 	ZLOptionsDialog &dialog();
 
 private:
+	void initAuthorEntries();
+	void initTagEntries();
+
+private:
 	shared_ptr<ZLOptionsDialog> myDialog;
-	const BookCollection &myCollection;
-	BookInfo myBookInfo;
+	shared_ptr<Book> myBook;
 	shared_ptr<FormatInfoPage> myFormatInfoPage;
 
-	AuthorDisplayNameEntry *myAuthorDisplayNameEntry;
-	AuthorSortKeyEntry *myAuthorSortKeyEntry;
 	ZLComboOptionEntry *myEncodingSetEntry;
 	ZLComboOptionEntry *myEncodingEntry;
 	ZLComboOptionEntry *myLanguageEntry;
 	SeriesTitleEntry *mySeriesTitleEntry;
-	ZLSpinOptionEntry *myBookNumberEntry;
+	BookIndexEntry *myBookIndexEntry;
+
+	ZLDialogContent *myTagsTab;
+	std::vector<BookTagEntry *> myTagEntries;
+	bool myTagsDone;
+
+	std::vector<std::string> myNewTags;
+
+	ZLDialogContent *myAuthorsTab;
+	std::vector<AuthorDisplayNameEntry *> myAuthorEntries;
+	bool myAuthorsDone;
 
 friend class AuthorDisplayNameEntry;
-friend class AuthorSortKeyEntry;
 friend class SeriesTitleEntry;
+friend class BookIndexEntry;
+friend class BookTitleEntry;
+friend class BookEncodingEntry;
+friend class BookLanguageEntry;
+friend class BookTagEntry;
+friend class BookInfoApplyAction;
 };
 
 inline ZLOptionsDialog &BookInfoDialog::dialog() { return *myDialog; }

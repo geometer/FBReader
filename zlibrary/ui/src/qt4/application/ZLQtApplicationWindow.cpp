@@ -172,7 +172,7 @@ bool ZLQtApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
-void ZLQtApplicationWindow::keyReleaseEvent(QKeyEvent *event) {
+void ZLQtApplicationWindow::keyPressEvent(QKeyEvent *event) {
 	application().doActionByKey(ZLQtKeyUtil::keyName(event));
 }
 

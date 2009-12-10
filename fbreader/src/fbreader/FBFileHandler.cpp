@@ -28,6 +28,7 @@
 #include "FBReader.h"
 #include "FBFileHandler.h"
 #include "../formats/FormatPlugin.h"
+#include "../library/Book.h"
 
 FBFileHandler::FBFileHandler() :
 	DirectoryOption(ZLCategoryKey::LOOK_AND_FEEL, "OpenFileDialog", "Directory", "~"), myIsUpToDate(false), mySelectedIndex(0) {
@@ -75,7 +76,7 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 	static const std::string UpFolderIcon = "upfolder";
 	static const std::string FolderIcon = "folder";
 	static const std::string ZipFolderIcon = "zipfolder";
-	static std::map<FormatPlugin*,std::string> PluginIcons;
+	static std::map<shared_ptr<FormatPlugin>,std::string> PluginIcons;
 
 	if (!myIsUpToDate) {
 		if (!myDir->isRoot()) {
@@ -105,8 +106,9 @@ const std::vector<ZLTreeNodePtr> &FBFileHandler::subnodes() const {
 			if (displayName.empty()) {
 				continue;
 			}
-			FormatPlugin *plugin = PluginCollection::instance().plugin(file, false);
-			if (plugin != 0) {
+			shared_ptr<FormatPlugin> plugin =
+				PluginCollection::Instance().plugin(file, false);
+			if (!plugin.isNull()) {
 				std::string icon = PluginIcons[plugin];
 				if (icon.empty()) {
 					icon = plugin->iconName();
@@ -135,6 +137,10 @@ int FBFileHandler::selectedIndex() const {
 }
 
 bool FBFileHandler::accept(const ZLTreeNode &node) {
-	FBReader::createDescription(myDir->itemPath(node.id()), myDescription);
+	FBReader::createBook(myDir->itemPath(node.id()), myDescription);
 	return !myDescription.isNull();
+}
+
+shared_ptr<Book> FBFileHandler::description() const {
+	return myDescription;
 }

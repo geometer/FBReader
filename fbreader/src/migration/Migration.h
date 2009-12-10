@@ -21,7 +21,9 @@
 #define __MIGRATION_H__
 
 #include <string>
+#include <map>
 
+#include <shared_ptr.h>
 #include <ZLOptions.h>
 
 class Migration {
@@ -47,6 +49,8 @@ protected:
 
 private:
 	const std::string myVersion;
+
+friend class Migration_0_11_0_Runnable;
 };
 
 class Migration_0_8_11 : public Migration {
@@ -80,6 +84,15 @@ class Migration_0_10_4 : public Migration {
 
 public:
 	Migration_0_10_4();
+
+protected:
+	void doMigrationInternal();
+};
+
+class Migration_0_11_0 : public Migration {
+
+public:
+	Migration_0_11_0();
 
 protected:
 	void doMigrationInternal();

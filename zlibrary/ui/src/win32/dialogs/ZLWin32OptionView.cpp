@@ -214,8 +214,8 @@ void SpinOptionView::_hide() {
 	}
 }
 
-StringOptionView::StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
-	myLineEditor = new W32LineEditor(option->initialValue());
+StringOptionView::StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLWin32DialogContent &tab, bool passwordMode, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
+	myLineEditor = new W32LineEditor(option->initialValue(), passwordMode);
 	myLineEditor->addListener(this);
 	if (name.empty()) {
 		myLabel = 0;
@@ -269,7 +269,7 @@ ColorOptionView::ColorOptionView(const std::string &name, const std::string &too
 		ZLResource::resource("color")["custom..."].value()
 	);
 	myCustomColorButton->addListener(this);
-	int mid = (from + to) / 2 + 1;
+	int mid = (from + to) / 2;
 	tab.insertWidget(myStandardColorComboBox, from, mid);
 	tab.insertWidget(myCustomColorButton, mid + 1, to);
 }
@@ -394,3 +394,19 @@ void KeyOptionView::reset() {
 	myComboBox->setVisible(false);
 }
 
+
+StaticTextOptionView::StaticTextOptionView(const std::string &name, const std::string &tooltip, ZLStaticTextOptionEntry *option, ZLWin32DialogContent &tab, int from, int to) : ZLWin32OptionView(name, tooltip, option) {
+	myLabel = new W32Label(option->initialValue(), W32Label::ALIGN_LEFT);
+	tab.insertWidget(myLabel, from, to);
+}
+
+void StaticTextOptionView::_onAccept() const {
+}
+
+void StaticTextOptionView::_show() {
+	myLabel->setVisible(true);
+}
+
+void StaticTextOptionView::_hide() {
+	myLabel->setVisible(false);
+}

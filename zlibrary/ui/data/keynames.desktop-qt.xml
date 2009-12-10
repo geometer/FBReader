@@ -79,6 +79,8 @@
 	<key code="0x58" name="&lt;X&gt;"/>
 	<key code="0x59" name="&lt;Y&gt;"/>
 	<key code="0x5A" name="&lt;Z&gt;"/>
+	<key code="0x2D" name="&lt;-&gt;"/>
+	<key code="0x3D" name="&lt;=&gt;"/>
 	<modifier code="0x400" name="&lt;Alt&gt;"/>
 	<modifier code="0x200" name="&lt;Ctrl&gt;"/>
 </keynames>

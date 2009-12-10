@@ -45,7 +45,7 @@ std::string gtkButtonName(const ZLResourceKey &key) {
 }
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
-	if (!((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).isKeyboardGrabbed() && (key->state == 0)) {
+	if (!((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).isKeyboardGrabbed() && (key->state == 0)) {
 		if (key->keyval == GDK_Return) {
 			gtk_dialog_response(GTK_DIALOG(dialog), GTK_RESPONSE_ACCEPT);
 			return true;
@@ -64,7 +64,7 @@ GtkDialog *createGtkDialog(const std::string& title) {
 	GtkWindow *dialog = GTK_WINDOW(gtk_dialog_new());
 	gtk_window_set_title(dialog, title.c_str());
 	
-	GtkWindow *window = ((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).myWindow;
+	GtkWindow *window = ((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).myWindow;
 	if (window != 0) {
 		gtk_window_set_transient_for(dialog, window);
 	}

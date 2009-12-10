@@ -39,6 +39,8 @@ private:
 	shared_ptr<ZLDir> rootDirectory() const;
 	const std::string &rootDirectoryPath() const;
 	std::string parentPath(const std::string &path) const;
+
+	bool canRemoveFile(const std::string &path) const;
 };
 
 #endif /* __ZLUNIXFSMANAGER_H__ */

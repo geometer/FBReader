@@ -23,7 +23,7 @@
 #include "../dialogs/GtkDialogManager.h"
 
 static bool taskFunction(gpointer *data) {
-	if (!((GtkDialogManager&)GtkDialogManager::instance()).isWaiting()) {
+	if (!((GtkDialogManager&)GtkDialogManager::Instance()).isWaiting()) {
 		((ZLRunnable*)data)->run();
 	}
 	return true;

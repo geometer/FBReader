@@ -30,19 +30,21 @@ class ActionCode {
 
 public:
 	static const std::string SHOW_READING;
-	static const std::string SHOW_COLLECTION;
-	static const std::string SHOW_NET_LIBRARY;
-	static const std::string SHOW_OPTIONS;
+	static const std::string SHOW_LIBRARY;
+	static const std::string SHOW_NETWORK_LIBRARY;
+	static const std::string SHOW_TOC;
+	static const std::string SHOW_HELP;
+	static const std::string SHOW_OPTIONS_DIALOG;
+	static const std::string SHOW_BOOK_INFO_DIALOG;
 	static const std::string UNDO;
 	static const std::string REDO;
-	static const std::string SHOW_CONTENTS;
 	static const std::string SEARCH;
 	static const std::string FIND_PREVIOUS;
 	static const std::string FIND_NEXT;
-	static const std::string LARGE_SCROLL_FORWARD;
-	static const std::string LARGE_SCROLL_BACKWARD;
-	static const std::string SMALL_SCROLL_FORWARD;
-	static const std::string SMALL_SCROLL_BACKWARD;
+	static const std::string PAGE_SCROLL_FORWARD;
+	static const std::string PAGE_SCROLL_BACKWARD;
+	static const std::string LINE_SCROLL_FORWARD;
+	static const std::string LINE_SCROLL_BACKWARD;
 	static const std::string MOUSE_SCROLL_FORWARD;
 	static const std::string MOUSE_SCROLL_BACKWARD;
 	static const std::string TAP_SCROLL_FORWARD;
@@ -57,8 +59,6 @@ public:
 	static const std::string TOGGLE_FULLSCREEN;
 	static const std::string FULLSCREEN_ON;
 	static const std::string ADD_BOOK;
-	static const std::string SHOW_BOOK_INFO;
-	static const std::string SHOW_HELP;
 	static const std::string ROTATE_SCREEN;
 	static const std::string QUIT;
 	static const std::string OPEN_PREVIOUS_BOOK;
@@ -78,21 +78,10 @@ private:
 	ActionCode();
 };
 
-class FBAction : public ZLApplication::Action {
+class ModeDependentAction : public ZLApplication::Action {
 
 protected:
-	FBAction(FBReader &fbreader);
-	FBReader &fbreader();
-	const FBReader &fbreader() const;
-
-private:
-	FBReader &myFBReader;
-};
-
-class ModeDependentAction : public FBAction {
-
-protected:
-	ModeDependentAction(FBReader &fbreader, int visibleInModes);
+	ModeDependentAction(int visibleInModes);
 
 public:
 	bool isVisible() const;
@@ -104,72 +93,57 @@ private:
 class SetModeAction : public ModeDependentAction {
 
 public:
-	SetModeAction(FBReader &fbreader, FBReader::ViewMode modeToSet, int visibleInModes);
+	SetModeAction(FBReader::ViewMode modeToSet, int visibleInModes);
 	void run();
 
 private:
 	FBReader::ViewMode myModeToSet;
 };
 
-class ShowHelpAction : public FBAction {
+class ShowHelpAction : public ZLApplication::Action {
 
 public:
-	ShowHelpAction(FBReader &fbreader);
 	void run();
 };
 
-class ShowOptionsDialogAction : public FBAction {
+class ShowOptionsDialogAction : public ZLApplication::Action {
 
 public:
-	ShowOptionsDialogAction(FBReader &fbreader);
 	void run();
 };
 
 class ShowContentsAction : public SetModeAction {
 
 public:
-	ShowContentsAction(FBReader &fbreader);
+	ShowContentsAction();
 	bool isVisible() const;
 };
 
 class ShowNetworkLibraryAction : public SetModeAction {
 
 public:
-	ShowNetworkLibraryAction(FBReader &fbreader);
+	ShowNetworkLibraryAction();
 	bool isVisible() const;
 };
 
 class AddBookAction : public ModeDependentAction {
 
 public:
-	AddBookAction(FBReader &fbreader, int visibleInModes);
+	AddBookAction(int visibleInModes);
 	void run();
 };
 
 class ShowBookInfoAction : public ModeDependentAction {
 
 public:
-	ShowBookInfoAction(FBReader &fbreader);
+	ShowBookInfoAction();
 	void run();
-};
-
-class ScrollingAction : public FBAction {
-
-public:
-	ScrollingAction(FBReader &fbreader, const FBReader::ScrollingOptions &options, bool forward);
-	bool isEnabled() const;
-	bool useKeyDelay() const;
-	void run();
-
-private:
-	const FBReader::ScrollingOptions &myOptions;
-	const bool myForward;
 };
 
 class ScrollToHomeAction : public ModeDependentAction {
 
 public:
-	ScrollToHomeAction(FBReader &fbreader);
+	ScrollToHomeAction();
 	bool isEnabled() const;
 	void run();
 };
@@ -177,7 +151,7 @@ public:
 class ScrollToStartOfTextAction : public ModeDependentAction {
 
 public:
-	ScrollToStartOfTextAction(FBReader &fbreader);
+	ScrollToStartOfTextAction();
 	bool isEnabled() const;
 	void run();
 };
@@ -185,7 +159,7 @@ public:
 class ScrollToEndOfTextAction : public ModeDependentAction {
 
 public:
-	ScrollToEndOfTextAction(FBReader &fbreader);
+	ScrollToEndOfTextAction();
 	bool isEnabled() const;
 	void run();
 };
@@ -193,7 +167,7 @@ public:
 class UndoAction : public ModeDependentAction {
 
 public:
-	UndoAction(FBReader &fbreader, int visibleInModes);
+	UndoAction(int visibleInModes);
 	bool isEnabled() const;
 	void run();
 };
@@ -201,22 +175,21 @@ public:
 class RedoAction : public ModeDependentAction {
 
 public:
-	RedoAction(FBReader &fbreader);
+	RedoAction();
 	bool isEnabled() const;
 	void run();
 };
 
-class SearchAction : public FBAction {
+class SearchAction : public ZLApplication::Action {
 
 public:
-	SearchAction(FBReader &fbreader);
 	bool isVisible() const;
 };
 
 class SearchPatternAction : public SearchAction {
 
 public:
-	SearchPatternAction(FBReader &fbreader);
+	SearchPatternAction();
 	void run();
 
 private:
@@ -232,7 +205,6 @@ friend class SearchPatternEntry;
 class FindNextAction : public SearchAction {
 
 public:
-	FindNextAction(FBReader &fbreader);
 	bool isEnabled() const;
 	void run();
 };
@@ -240,15 +212,14 @@ public:
 class FindPreviousAction : public SearchAction {
 
 public:
-	FindPreviousAction(FBReader &fbreader);
 	bool isEnabled() const;
 	void run();
 };
 
-class ChangeFontSizeAction : public FBAction {
+class ChangeFontSizeAction : public ZLApplication::Action {
 
 public:
-	ChangeFontSizeAction(FBReader &fbreader, int delta);
+	ChangeFontSizeAction(int delta);
 	bool isEnabled() const;
 	void run();
 
@@ -256,49 +227,43 @@ private:
 	const int myDelta;
 };
 
-class CancelAction : public FBAction {
+class CancelAction : public ZLApplication::Action {
 
 public:
-	CancelAction(FBReader &fbreader);
 	void run();
 };
 
-class ToggleIndicatorAction : public FBAction {
+class ToggleIndicatorAction : public ZLApplication::Action {
 
 public:
-	ToggleIndicatorAction(FBReader &fbreader);
 	bool isVisible() const;
 	void run();
 };
 
-class QuitAction : public FBAction {
+class QuitAction : public ZLApplication::Action {
 
 public:
-	QuitAction(FBReader &fbreader);
 	void run();
 };
 
-class OpenPreviousBookAction : public FBAction {
+class OpenPreviousBookAction : public ZLApplication::Action {
 
 public:
-	OpenPreviousBookAction(FBReader &fbreader);
 	bool isVisible() const;
 	void run();
 };
 
-class GotoNextTOCSectionAction : public FBAction {
+class GotoNextTOCSectionAction : public ZLApplication::Action {
 
 public:
-	GotoNextTOCSectionAction(FBReader &fbreader);
 	bool isVisible() const;
 	bool isEnabled() const;
 	void run();
 };
 
-class GotoPreviousTOCSectionAction : public FBAction {
+class GotoPreviousTOCSectionAction : public ZLApplication::Action {
 
 public:
-	GotoPreviousTOCSectionAction(FBReader &fbreader);
 	bool isVisible() const;
 	bool isEnabled() const;
 	void run();
@@ -307,7 +272,7 @@ public:
 class GotoPageNumber : public ModeDependentAction {
 
 public:
-	GotoPageNumber(FBReader &fbreader, const std::string &parameter);
+	GotoPageNumber(const std::string &parameter);
 	bool isVisible() const;
 	bool isEnabled() const;
 	void run();
@@ -316,10 +281,9 @@ private:
 	const std::string myParameter;
 };
 
-class SelectionAction : public FBAction {
+class SelectionAction : public ZLApplication::Action {
 
 public:
-	SelectionAction(FBReader &fbreader);
 	bool isVisible() const;
 	bool isEnabled() const;
 
@@ -331,7 +295,6 @@ protected:
 class CopySelectedTextAction : public SelectionAction {
 
 public:
-	CopySelectedTextAction(FBReader &fbreader);
 	bool isVisible() const;
 	void run();
 };
@@ -339,7 +302,6 @@ public:
 class OpenSelectedTextInDictionaryAction : public SelectionAction {
 
 public:
-	OpenSelectedTextInDictionaryAction(FBReader &fbreader);
 	bool isVisible() const;
 	void run();
 };
@@ -347,47 +309,45 @@ public:
 class ClearSelectionAction : public SelectionAction {
 
 public:
-	ClearSelectionAction(FBReader &fbreader);
 	void run();
 };
 
 class SearchOnNetworkAction : public ModeDependentAction {
 
 public:
-	SearchOnNetworkAction(FBReader &fbreader);
+	SearchOnNetworkAction();
 	void run();
+
+private:
+	virtual void doSearch() = 0;
 };
 
-class AdvancedSearchOnNetworkAction : public ModeDependentAction {
+class SimpleSearchOnNetworkAction : public SearchOnNetworkAction {
 
-public:
-	AdvancedSearchOnNetworkAction(FBReader &fbreader);
-	void run();
+private:
+	void doSearch();
+	std::string makeSummary(const std::string &pattern);
+};
+
+class AdvancedSearchOnNetworkAction : public SearchOnNetworkAction {
+
+private:
+	void doSearch();
+	std::string makeSummary(const std::string &titleAndSeries, const std::string &author, const std::string &category, const std::string &description);
+	void appendQueryValue(std::string &query, const std::string &name, const std::string &value);
 };
 
 class FBFullscreenAction : public ZLApplication::FullscreenAction {
 
 public:
-	FBFullscreenAction(FBReader &fbreader);
 	void run();
-
-private:
-	FBReader &myFBReader;
 };
 
 class BooksOrderAction : public ModeDependentAction {
 
 public:
-	BooksOrderAction(FBReader &fbreader);
+	BooksOrderAction();
 	void run();
 };
-
-inline FBReader &FBAction::fbreader() {
-	return myFBReader;
-}
-
-inline const FBReader &FBAction::fbreader() const {
-	return myFBReader;
-}
 
 #endif /* __FBREADERACTIONS_H__ */

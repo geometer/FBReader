@@ -22,6 +22,7 @@
 #include <ZLStringUtil.h>
 
 #include "Migration.h"
+#include "../fbreader/FBReaderActions.h"
 
 static void changeActionNames(const std::map<std::string,std::string> map, const std::string &group) {
 	const int length = ZLIntegerOption(ZLCategoryKey::CONFIG, group, "Number", 0).value();
@@ -40,38 +41,37 @@ static void changeActionNames(const std::map<std::string,std::string> map, const
 static void changeActionNames() {
 	std::map<std::string,std::string> oldToNewNames;
 	oldToNewNames["0"] = "none";
-	oldToNewNames["1"] = "showLibrary";
-	oldToNewNames["28"] = "showRecent";
-	oldToNewNames["30"] = "previousBook";
-	oldToNewNames["5"] = "toc";
-	oldToNewNames["15"] = "gotoHome";
-	oldToNewNames["16"] = "gotoSectionStart";
-	oldToNewNames["17"] = "gotoSectionEnd";
-	oldToNewNames["33"] = "nextTOCSection";
-	oldToNewNames["34"] = "previousTOCSection";
-	oldToNewNames["9"] = "largeScrollForward";
-	oldToNewNames["10"] = "largeScrollBackward";
-	oldToNewNames["11"] = "smallScrollForward";
-	oldToNewNames["12"] = "smallScrollBackward";
-	oldToNewNames["3"] = "undo";
-	oldToNewNames["4"] = "redo";
-	oldToNewNames["35"] = "copyToClipboard";
-	oldToNewNames["37"] = "openInDictionary";
-	oldToNewNames["36"] = "clearSelection";
-	oldToNewNames["6"] = "search";
-	oldToNewNames["7"] = "findPrevious";
-	oldToNewNames["8"] = "findNext";
-	oldToNewNames["19"] = "increaseFont";
-	oldToNewNames["20"] = "decreaseFont";
-	oldToNewNames["21"] = "toggleIndicator";
-	oldToNewNames["22"] = "toggleFullscreen";
-	oldToNewNames["23"] = "onFullscreen";
-	oldToNewNames["27"] = "rotate";
-	oldToNewNames["2"] = "preferences";
-	oldToNewNames["25"] = "bookInfo";
-	oldToNewNames["24"] = "addBook";
-	oldToNewNames["18"] = "cancel";
-	oldToNewNames["29"] = "quit";
+	oldToNewNames["1"] = ActionCode::SHOW_LIBRARY;
+	oldToNewNames["30"] = ActionCode::OPEN_PREVIOUS_BOOK;
+	oldToNewNames["5"] = ActionCode::SHOW_TOC;
+	oldToNewNames["15"] = ActionCode::SCROLL_TO_HOME;
+	oldToNewNames["16"] = ActionCode::SCROLL_TO_START_OF_TEXT;
+	oldToNewNames["17"] = ActionCode::SCROLL_TO_END_OF_TEXT;
+	oldToNewNames["33"] = ActionCode::GOTO_NEXT_TOC_SECTION;
+	oldToNewNames["34"] = ActionCode::GOTO_PREVIOUS_TOC_SECTION;
+	oldToNewNames["9"] = ActionCode::PAGE_SCROLL_FORWARD;
+	oldToNewNames["10"] = ActionCode::PAGE_SCROLL_BACKWARD;
+	oldToNewNames["11"] = ActionCode::LINE_SCROLL_FORWARD;
+	oldToNewNames["12"] = ActionCode::LINE_SCROLL_BACKWARD;
+	oldToNewNames["3"] = ActionCode::UNDO;
+	oldToNewNames["4"] = ActionCode::REDO;
+	oldToNewNames["35"] = ActionCode::COPY_SELECTED_TEXT_TO_CLIPBOARD;
+	oldToNewNames["37"] = ActionCode::OPEN_SELECTED_TEXT_IN_DICTIONARY;
+	oldToNewNames["36"] = ActionCode::CLEAR_SELECTION;
+	oldToNewNames["6"] = ActionCode::SEARCH;
+	oldToNewNames["7"] = ActionCode::FIND_PREVIOUS;
+	oldToNewNames["8"] = ActionCode::FIND_NEXT;
+	oldToNewNames["19"] = ActionCode::INCREASE_FONT;
+	oldToNewNames["20"] = ActionCode::DECREASE_FONT;
+	oldToNewNames["21"] = ActionCode::SHOW_HIDE_POSITION_INDICATOR;
+	oldToNewNames["22"] = ActionCode::TOGGLE_FULLSCREEN;
+	oldToNewNames["23"] = ActionCode::FULLSCREEN_ON;
+	oldToNewNames["27"] = ActionCode::ROTATE_SCREEN;
+	oldToNewNames["2"] = ActionCode::SHOW_OPTIONS_DIALOG;
+	oldToNewNames["25"] = ActionCode::SHOW_BOOK_INFO_DIALOG;
+	oldToNewNames["24"] = ActionCode::ADD_BOOK;
+	oldToNewNames["18"] = ActionCode::CANCEL;
+	oldToNewNames["29"] = ActionCode::QUIT;
 
 	changeActionNames(oldToNewNames, "Keys");
 	changeActionNames(oldToNewNames, "Keys90");

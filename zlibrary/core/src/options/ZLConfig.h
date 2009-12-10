@@ -28,7 +28,7 @@ class ZLConfig;
 class ZLConfigManager {
 
 private:
-	static ZLConfigManager &instance() {
+	static ZLConfigManager &Instance() {
 		return *ourInstance;
 	}
 

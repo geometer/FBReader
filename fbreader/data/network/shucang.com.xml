@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog type="opds">
+	<site>shucang.com</site>
+	<link type="main">http://shucang.com/s/index.php</link>
+	<link type="search">http://shucang.com/s/doclist.php?skey=%s</link>
+	<title>Shucang Catalog</title>
+	<summary>Shucang: a Chinese bookshelf.</summary>
+	<icon>feed-shucang.png</icon>
+</catalog>

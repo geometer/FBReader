@@ -20,19 +20,14 @@
 #include "ZLView.h"
 #include "ZLViewWidget.h"
 #include "ZLPaintContext.h"
-#include "../application/ZLApplication.h"
 
-ZLView::ZLView(ZLApplication &application, shared_ptr<ZLPaintContext> context) : myApplication(application), myViewWidget(0), myContext(context) {
+ZLView::ZLView(ZLPaintContext &context) : myViewWidget(0), myContext(context) {
 }
 
 ZLView::~ZLView() {
 }
 
 ZLView::ScrollBarInfo::ScrollBarInfo() : Enabled(false), StandardLocation(true), Full(100), From(0), To(100) {
-}
-
-void ZLView::setPaintContext(shared_ptr<ZLPaintContext> context) {
-	myContext = context;
 }
 
 void ZLViewWidget::setView(shared_ptr<ZLView> view) {

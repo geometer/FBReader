@@ -89,6 +89,7 @@ ZLGtkSelectionDialog::ZLGtkSelectionDialog(const std::string &caption, ZLTreeHan
 	g_signal_connect(myView, "row-activated", G_CALLBACK(activatedHandler), 0);
 
 	GtkWidget *scrolledWindow = gtk_scrolled_window_new(0, 0);
+	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolledWindow), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 	gtk_container_add(GTK_CONTAINER(scrolledWindow), GTK_WIDGET(myView));
 	gtk_box_pack_start(GTK_BOX(myDialog->vbox), scrolledWindow, true, true, 2);
 	gtk_widget_show_all(scrolledWindow);
@@ -159,6 +160,7 @@ void ZLGtkSelectionDialog::selectItem(int index) {
 	gtk_tree_selection_select_iter(selection, &iter);
 	GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(myStore), &iter);
 	gtk_tree_view_scroll_to_cell(myView, path, 0, false, 0, 0);
+	gtk_tree_view_set_cursor(myView, path, 0, false);
 	gtk_tree_path_free(path);
 }
 

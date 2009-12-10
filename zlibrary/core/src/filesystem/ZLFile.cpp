@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <cstring>
+
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
 
@@ -31,9 +33,9 @@
 std::map<std::string,weak_ptr<ZLInputStream> > ZLFile::ourPlainStreamCache;
 
 ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
-	ZLFSManager::instance().normalize(myPath);
+	ZLFSManager::Instance().normalize(myPath);
 	{
-		size_t index = ZLFSManager::instance().findLastFileNameDelimiter(myPath);
+		size_t index = ZLFSManager::Instance().findLastFileNameDelimiter(myPath);
 		if (index < myPath.length() - 1) {
 			myNameWithExtension = myPath.substr(index + 1);
 		} else {
@@ -42,7 +44,7 @@ ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
 	}
 	myNameWithoutExtension = myNameWithExtension;
 
-	std::map<std::string,ArchiveType> &forcedFiles = ZLFSManager::instance().myForcedFiles;
+	std::map<std::string,ArchiveType> &forcedFiles = ZLFSManager::Instance().myForcedFiles;
 	std::map<std::string,ArchiveType>::iterator it = forcedFiles.find(myPath);
 	if (it != forcedFiles.end()) {
 		myArchiveType = it->second;
@@ -93,14 +95,14 @@ shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStr
 shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 	shared_ptr<ZLInputStream> stream;
 	
-	int index = ZLFSManager::instance().findArchiveFileNameDelimiter(myPath);
+	int index = ZLFSManager::Instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
 		stream = ourPlainStreamCache[myPath];
 		if (stream.isNull()) {
 			if (isDirectory()) {
 				return 0;
 			}
-			stream = ZLFSManager::instance().createPlainInputStream(myPath);
+			stream = ZLFSManager::Instance().createPlainInputStream(myPath);
 			stream = envelopeCompressedStream(stream);
 			ourPlainStreamCache[myPath] = stream;
 		}
@@ -120,20 +122,20 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 	return stream;
 }
 
-shared_ptr<ZLOutputStream> ZLFile::outputStream() const {
-	if (isCompressed()) {
+shared_ptr<ZLOutputStream> ZLFile::outputStream(bool writeThrough) const {
+	if (!writeThrough && isCompressed()) {
 		return 0;
 	}
-	if (ZLFSManager::instance().findArchiveFileNameDelimiter(myPath) != -1) {
+	if (ZLFSManager::Instance().findArchiveFileNameDelimiter(myPath) != -1) {
 		return 0;
 	}
-	return ZLFSManager::instance().createOutputStream(myPath);
+	return ZLFSManager::Instance().createOutputStream(myPath);
 }
 
 shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
 	if (exists()) {
 		if (isDirectory()) {
-			return ZLFSManager::instance().createPlainDirectory(myPath);
+			return ZLFSManager::Instance().createPlainDirectory(myPath);
 		} else if (myArchiveType & ZIP) {
 			return new ZLZipDir(myPath);
 		} else if (myArchiveType & TAR) {
@@ -141,7 +143,7 @@ shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
 		}
 	} else if (createUnexisting) {
 		myInfoIsFilled = false;
-		return ZLFSManager::instance().createNewDirectory(myPath);
+		return ZLFSManager::Instance().createNewDirectory(myPath);
 	}
 	return 0;
 }
@@ -149,9 +151,9 @@ shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
 void ZLFile::fillInfo() const {
 	myInfoIsFilled = true;
 
-	int index = ZLFSManager::instance().findArchiveFileNameDelimiter(myPath);
+	int index = ZLFSManager::Instance().findArchiveFileNameDelimiter(myPath);
 	if (index == -1) {
-		myInfo = ZLFSManager::instance().fileInfo(myPath);
+		myInfo = ZLFSManager::Instance().fileInfo(myPath);
 	} else {
 		const std::string archivePath = myPath.substr(0, index);
 		ZLFile archive(archivePath);
@@ -180,7 +182,7 @@ void ZLFile::fillInfo() const {
 }
 
 bool ZLFile::remove() const {
-	if (ZLFSManager::instance().removeFile(myPath)) {
+	if (ZLFSManager::Instance().removeFile(myPath)) {
 		myInfoIsFilled = false;
 		return true;
 	} else {
@@ -191,14 +193,14 @@ bool ZLFile::remove() const {
 void ZLFile::forceArchiveType(ArchiveType type) {
 	if (myArchiveType != type) {
 		myArchiveType = type;
-		ZLFSManager::instance().myForcedFiles[myPath] = myArchiveType;
+		ZLFSManager::Instance().myForcedFiles[myPath] = myArchiveType;
 	}
 }
 
 std::string ZLFile::physicalFilePath() const {
 	std::string path = myPath;
 	int index;
-	const ZLFSManager &manager = ZLFSManager::instance();
+	const ZLFSManager &manager = ZLFSManager::Instance();
 	while ((index = manager.findArchiveFileNameDelimiter(path)) != -1) {
 		path = path.substr(0, index);
 	}
@@ -208,11 +210,11 @@ std::string ZLFile::physicalFilePath() const {
 std::string ZLFile::resolvedPath() const {
 	std::string physical = physicalFilePath();
 	std::string postfix = myPath.substr(physical.length());
-	return ZLFSManager::instance().resolveSymlink(physical) + postfix;
+	return ZLFSManager::Instance().resolveSymlink(physical) + postfix;
 }
 
 std::string ZLFile::fileNameToUtf8(const std::string &fileName) {
-	return ZLFSManager::instance().convertFilenameToUtf8(fileName);
+	return ZLFSManager::Instance().convertFilenameToUtf8(fileName);
 }
 
 bool ZLFile::exists() const {
@@ -234,4 +236,24 @@ bool ZLFile::isDirectory() const {
 		fillInfo();
 	}
 	return myInfo.IsDirectory;
+}
+
+bool ZLFile::canRemove() const {
+	return ZLFSManager::Instance().canRemoveFile(path());
+}
+
+std::string ZLFile::replaceIllegalCharacters(const std::string &fileName, char replaceWith) {
+	static const char charsToReplace[] = ":;<|>+\\/\"*?";
+	const size_t len = fileName.length();
+	char *data = new char[len];
+	memcpy(data, fileName.data(), len);
+	char *end = data + len;
+	for (char *ptr = data; ptr != end; ++ptr) {
+		if (strchr(charsToReplace, *ptr) != 0) {
+			*ptr = replaceWith;
+		}
+	}
+	std::string result(data, len);
+	delete[] data;
+	return result;
 }

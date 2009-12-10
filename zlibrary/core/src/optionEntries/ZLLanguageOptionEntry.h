@@ -24,20 +24,34 @@
 
 #include <ZLOptionEntry.h>
 
-class ZLLanguageOptionEntry : public ZLComboOptionEntry {
+class ZLAbstractLanguageOptionEntry : public ZLComboOptionEntry {
 
 public:
-	ZLLanguageOptionEntry(ZLStringOption &languageOption, const std::vector<std::string> &languageCodes);
+	ZLAbstractLanguageOptionEntry(const std::string &initialCode, const std::vector<std::string> &languageCodes);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
 
+	virtual void onAcceptCode(const std::string &code) = 0;
+
 private:
 	std::vector<std::string> myValues;
 	std::map<std::string,std::string> myValuesToCodes;
 	std::string myInitialValue;
+};
+
+
+class ZLLanguageOptionEntry : public ZLAbstractLanguageOptionEntry {
+
+public:
+	ZLLanguageOptionEntry(ZLStringOption &languageOption, const std::vector<std::string> &languageCodes);
+
+	void onAcceptCode(const std::string &value);
+
+private:
 	ZLStringOption &myLanguageOption;
 };
+
 
 #endif /* __ZLLANGUAGEOPTIONENTRY_H__ */

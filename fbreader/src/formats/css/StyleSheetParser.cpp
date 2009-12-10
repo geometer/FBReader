@@ -18,7 +18,7 @@
  */
 
 #include <cctype>
-#include <string.h>
+#include <cstring>
 
 #include <ZLStringUtil.h>
 #include <ZLInputStream.h>

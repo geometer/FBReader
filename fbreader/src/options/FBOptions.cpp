@@ -19,9 +19,46 @@
 
 #include "FBOptions.h"
 
-FBCategoryKey::FBCategoryKey(const std::string &name) : ZLCategoryKey(name) {
+FBOptions* FBOptions::ourInstance = 0;
+
+static const std::string OPTIONS = "Options";
+static const std::string COLORS = "Colors";
+
+FBOptions::FBOptions() :
+	LeftMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "LeftMargin", 0, 1000, 4),
+	RightMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "RightMargin", 0, 1000, 4),
+	TopMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "TopMargin", 0, 1000, 0),
+	BottomMarginOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "BottomMargin", 0, 1000, 4),
+	BackgroundColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Background", ZLColor(255, 255, 255)),
+	RegularTextColorOption(ZLCategoryKey::LOOK_AND_FEEL, COLORS, "Text", ZLColor(0, 0, 0)) {
+	myColorOptions["internal"] = new ZLColorOption(
+		ZLCategoryKey::LOOK_AND_FEEL, COLORS,
+		"Hyperlink", ZLColor(33, 96, 180)
+	);
+	myColorOptions["external"] = new ZLColorOption(
+		ZLCategoryKey::LOOK_AND_FEEL, COLORS,
+		"ExternalHyperlink", ZLColor(33, 96, 180)
+	);
+	myColorOptions["book"] = new ZLColorOption(
+		ZLCategoryKey::LOOK_AND_FEEL, COLORS,
+		"BookHyperlink", ZLColor(23, 68, 128)
+	);
+	myColorOptions[ZLTextStyle::SELECTION_BACKGROUND] = new ZLColorOption(
+		ZLCategoryKey::LOOK_AND_FEEL, COLORS,
+		"SelectionBackground", ZLColor(82, 131, 194)
+	);
+	myColorOptions[ZLTextStyle::HIGHLIGHTED_TEXT] = new ZLColorOption(
+		ZLCategoryKey::LOOK_AND_FEEL, COLORS,
+		"SelectedText", ZLColor(60, 139, 255)
+	);
+	myColorOptions[ZLTextStyle::TREE_LINES] = new ZLColorOption(
+		ZLCategoryKey::LOOK_AND_FEEL, COLORS, 
+		"TreeLines", ZLColor(127, 127, 127)
+	);
 }
 
-const FBCategoryKey FBCategoryKey::BOOKS("books");
-const FBCategoryKey FBCategoryKey::SEARCH("search");
-const FBCategoryKey FBCategoryKey::EXTERNAL("external");
+ZLColorOption &FBOptions::colorOption(const std::string &style) {
+	std::map<std::string,shared_ptr<ZLColorOption> >::const_iterator it =
+		myColorOptions.find(style);
+	return it != myColorOptions.end() ? *it->second : RegularTextColorOption;
+}

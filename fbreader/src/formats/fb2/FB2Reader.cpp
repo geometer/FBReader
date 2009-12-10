@@ -17,10 +17,13 @@
  * 02110-1301, USA.
  */
 
-#include <string.h>
+#include <cstring>
+
+#include <ZLStringUtil.h>
 
 #include "FB2Reader.h"
 #include "../util/EntityFilesCollector.h"
+#include "../../constants/XMLNamespace.h"
 
 void FB2Reader::startElementHandler(const char *t, const char **attributes) {
 	startElementHandler(tag(t), attributes);
@@ -52,6 +55,7 @@ static const FB2Reader::Tag TAGS[] = {
 	{"a", FB2Reader::_A},
 	{"image", FB2Reader::_IMAGE},
 	{"binary", FB2Reader::_BINARY},
+	{"description", FB2Reader::_DESCRIPTION},
 	{"body", FB2Reader::_BODY},
 	{"empty-line", FB2Reader::_EMPTY_LINE},
 	{"title-info", FB2Reader::_TITLE_INFO},
@@ -75,6 +79,21 @@ int FB2Reader::tag(const char *name) {
 	}
 }
 
+bool FB2Reader::processNamespaces() const {
+	return true;
+}
+
+void FB2Reader::namespaceListChangedHandler() {
+	const std::map<std::string,std::string> namespaceMap = namespaces();
+	for (std::map<std::string,std::string>::const_iterator it = namespaceMap.begin(); it != namespaceMap.end(); ++it) {
+		if (ZLStringUtil::stringStartsWith(it->second, XMLNamespace::XLink)) {
+			myXLinkNamespace = it->first;
+			return;
+		}
+	}
+	myXLinkNamespace.erase();
+}
+
 const std::vector<std::string> &FB2Reader::externalDTDs() const {
-	return EntityFilesCollector::instance().externalDTDs("fb2");
+	return EntityFilesCollector::Instance().externalDTDs("fb2");
 }

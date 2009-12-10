@@ -21,7 +21,7 @@
 #define __HTMLDCTAGSREADER_H__
 
 #include "../formats/html/HtmlReader.h"
-#include "../description/BookDescription.h"
+#include "BookInfo.h"
 
 class HtmlDCTagsReader : public HtmlReader {
 

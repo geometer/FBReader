@@ -22,6 +22,7 @@
 #include <ZLImageManager.h>
 #include <ZLMessage.h>
 #include <ZLUnicodeUtil.h>
+#include <ZLLogger.h>
 
 #include "ZLibrary.h"
 #include "../filesystem/ZLFSManager.h"
@@ -37,14 +38,17 @@ std::string ZLibrary::ourApplicationName;
 std::string ZLibrary::ourImageDirectory;
 std::string ZLibrary::ourApplicationImageDirectory;
 std::string ZLibrary::ourApplicationDirectory;
+std::string ZLibrary::ourApplicationWritableDirectory;
 std::string ZLibrary::ourDefaultFilesPathPrefix;
 
 const std::string ZLibrary::BaseDirectory = std::string(BASEDIR);
 
 void ZLibrary::parseArguments(int &argc, char **&argv) {
+	static const std::string LANGUAGE_OPTION = "-lang";
+	static const std::string LOGGER_OPTION = "-log";
 	while ((argc > 2) && (argv[1] != 0) && (argv[2] != 0)) {
-		static const std::string LANGUAGE_OPTION = "-lang";
-		if (LANGUAGE_OPTION == argv[1]) {
+		const std::string argument = argv[1];
+		if (LANGUAGE_OPTION == argument) {
 			ourLocaleIsInitialized = true;
 			std::string locale = argv[2];
 			int index = locale.find('_');
@@ -54,8 +58,15 @@ void ZLibrary::parseArguments(int &argc, char **&argv) {
 			} else {
 				ourLanguage = locale;
 			}
+		} else if (LOGGER_OPTION == argument) {
+			std::string loggerClasses = argv[2];
+			while (size_t index = loggerClasses.find(':') != std::string::npos) {
+				ZLLogger::Instance().registerClass(loggerClasses.substr(0, index));
+				loggerClasses.erase(0, index + 1);
+			}
+			ZLLogger::Instance().registerClass(loggerClasses);
 		} else {
-			break;
+			ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "unknown argument: " + argument);
 		}
 		argc -= 2;
 		argv += 2;
@@ -94,6 +105,12 @@ void ZLibrary::initApplication(const std::string &name) {
 	ourImageDirectory = replaceRegExps(IMAGEDIR);
 	ourApplicationImageDirectory = replaceRegExps(APPIMAGEDIR);
 	ourApplicationDirectory = BaseDirectory + FileNameDelimiter + ourApplicationName;
+	ourApplicationWritableDirectory =
+#ifdef XMLCONFIGHOMEDIR
+		XMLCONFIGHOMEDIR + FileNameDelimiter + "." + name;
+#else
+		"~" + FileNameDelimiter + "." + name;
+#endif
 	ourDefaultFilesPathPrefix = ourApplicationDirectory + FileNameDelimiter + "default" + FileNameDelimiter;
 }
 

@@ -37,7 +37,7 @@ public:
 	static void setKeyNamesFileName(const std::string &fileName);
 
 private:
-	// instance creation is disabled
+	// Instance creation is disabled
 	ZLKeyUtil();
 
 friend class KeyNamesReader;

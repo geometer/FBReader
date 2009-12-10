@@ -14,12 +14,12 @@
 	<style id="34" name="Header 4" bold="true" allowHyphenations="true"/>
 	<style id="13" name="Author" leftIndent="20" allowHyphenations="false"/>
 	<style id="14" name="Date" leftIndent="40" allowHyphenations="false"/>
-	<style id="7" name="Stanza" spaceBefore="6" spaceAfter="6" alignment="left" allowHyphenations="false"/>
-	<style id="8" name="Verse" leftIndent="20" alignment="left" allowHyphenations="false"/>
+	<style id="7" name="Stanza" spaceBefore="6" spaceAfter="6" alignment="linestart" allowHyphenations="false"/>
+	<style id="8" name="Verse" leftIndent="20" alignment="linestart" allowHyphenations="false"/>
 	<style id="10" name="Image" spaceBefore="8" alignment="center"/>
-	<style id="23" name="Contents Table" spaceAfter="7" leftIndent="30" firstLineIndentDelta="-30" alignment="left"/>
-	<style id="25" name="Library Entry" fontSizeDelta="-2" alignment="left" allowHyphenations="false"/>
-	<style id="9" name="Preformatted text" italic="true" alignment="left" allowHyphenations="false"/>
+	<style id="23" name="Contents Table" spaceAfter="7" leftIndent="30" firstLineIndentDelta="-30" alignment="linestart"/>
+	<style id="25" name="Library Entry" fontSizeDelta="-2" alignment="linestart" allowHyphenations="false"/>
+	<style id="9" name="Preformatted text" italic="true" alignment="linestart" allowHyphenations="false"/>
 
 	<style id="12" partial="true" name="Cite" italic="true"/>
 	<style id="15" partial="true" name="Internal Hyperlink" allowHyphenations="false" hyperlink="internal"/>

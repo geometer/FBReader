@@ -53,7 +53,6 @@ ZLFileInfo ZLUnixFSManager::fileInfo(const std::string &path) const {
 }
 
 std::string ZLUnixFSManager::resolveSymlink(const std::string &path) const {
-	struct stat fileStat;
 	std::set<std::string> names;
 	std::string current = path;
 	for (int i = 0; i < 256; ++i) {
@@ -186,3 +185,8 @@ std::string ZLUnixFSManager::parentPath(const std::string &path) const {
 	int index = findLastFileNameDelimiter(path);
 	return (index <= 0) ? RootPath : path.substr(0, index);
 }
+
+bool ZLUnixFSManager::canRemoveFile(const std::string &path) const {
+	return access(parentPath(path).c_str(), W_OK) == 0;
+}
+

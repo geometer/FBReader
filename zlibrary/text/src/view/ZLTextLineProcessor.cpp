@@ -22,11 +22,12 @@
 #include <ZLUnicodeUtil.h>
 
 #include <ZLTextHyphenator.h>
+#include <ZLTextStyle.h>
+#include <ZLTextStyleCollection.h>
 
 #include "ZLTextView.h"
 #include "ZLTextLineInfo.h"
 #include "ZLTextParagraphCursor.h"
-#include "ZLTextStyle.h"
 #include "ZLTextWord.h"
 
 struct ZLTextPartialInfo {
@@ -40,7 +41,7 @@ struct ZLTextPartialInfo {
 	int Descent;
 	//int VSpaceAfter;
 	int SpaceCounter;
-	//ZLTextStylePtr StartStyle;
+	//shared_ptr<ZLTextStyle> StartStyle;
 	//shared_ptr<ZLTextTreeNodeInfo> NodeInfo;
 
 	ZLTextPartialInfo(const ZLTextLineInfo &lineInfo, const ZLTextWordCursor &end);
@@ -61,7 +62,7 @@ void ZLTextPartialInfo::setTo(ZLTextLineInfo &lineInfo) const {
 
 ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, const ZLTextWordCursor &end) {
 	const bool useHyphenator =
-		ZLTextStyleCollection::instance().baseStyle().AutoHyphenationOption.value();
+		ZLTextStyleCollection::Instance().AutoHyphenationOption.value();
 
 	ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(start, myStyle.textStyle(), myStyle.bidiLevel());
 
@@ -114,7 +115,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		info.RealStart = current;
 	}
 
-	ZLTextStylePtr storedStyle = myStyle.textStyle();
+	shared_ptr<ZLTextStyle> storedStyle = myStyle.textStyle();
 	unsigned char storedBidiLevel = myStyle.bidiLevel();
 
 	const int fontSize = myStyle.textStyle()->fontSize();
@@ -229,7 +230,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 					((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth()))) {
 				ZLUnicodeUtil::Ucs4String ucs4string;
 				ZLUnicodeUtil::utf8ToUcs4(ucs4string, word.Data, word.Size);
-				ZLTextHyphenationInfo hyphenationInfo = ZLTextHyphenator::instance().info(word);
+				ZLTextHyphenationInfo hyphenationInfo = ZLTextHyphenator::Instance().info(word);
 				int hyphenationPosition = word.Length - 1;
 				int subwordWidth = 0;
 				for (; hyphenationPosition > startCharIndex; --hyphenationPosition) {

@@ -19,7 +19,7 @@ else
   TARGET = libzltext.a
 endif
 
-SUBDIRS = src/model src/view src/hyphenation
+SUBDIRS = src/model src/view src/style src/styleOptions src/hyphenation
 
 .objects:
 	@for subdir in $(SUBDIRS); do \

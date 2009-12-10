@@ -28,8 +28,8 @@ public:
 	~TxtPlugin();
 	bool providesMetaInfo() const;
 	bool acceptsFile(const ZLFile &file) const;
-	bool readDescription(const std::string &path, BookDescription &description) const;
-	bool readModel(const BookDescription &description, BookModel &model) const;
+	bool readMetaInfo(Book &book) const;
+	bool readModel(BookModel &model) const;
 	const std::string &iconName() const;
 	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
 };

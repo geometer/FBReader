@@ -180,7 +180,7 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM 
 		{
 			W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
 			if (panel != 0) {
-				panel->hScroll(LOWORD(wParam));
+				panel->scroll(LOWORD(wParam), SB_HORZ);
 			}
 			return true;
 		}
@@ -188,7 +188,7 @@ BOOL CALLBACK W32PropertySheet::StaticCallback(HWND hPage, UINT message, WPARAM 
 		{
 			W32DialogPanel *panel = W32DialogPanel::ourPanels[hPage];
 			if (panel != 0) {
-				panel->vScroll(LOWORD(wParam));
+				panel->scroll(LOWORD(wParam), SB_VERT);
 			}
 			return true;
 		}

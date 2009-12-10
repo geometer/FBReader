@@ -22,13 +22,12 @@
 
 #include <ZLOptionEntry.h>
 
-class FBReader;
 class ZLDialogContent;
 
 class KeyBindingsPage {
 
 public:
-	KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab);
+	KeyBindingsPage(ZLDialogContent &dialogTab);
 };
 
 #endif /* __KEYBINDINGSPAGE_H__ */

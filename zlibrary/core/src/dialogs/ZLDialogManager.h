@@ -31,6 +31,7 @@ class ZLOptionsDialog;
 class ZLTreeHandler;
 class ZLApplication;
 class ZLImageData;
+class ZLProgressDialog;
 
 class ZLDialogManager {
 
@@ -54,7 +55,7 @@ protected:
 
 public:
 	static bool isInitialized();
-	static ZLDialogManager &instance();
+	static ZLDialogManager &Instance();
 	static void deleteInstance();
 
 protected:
@@ -81,7 +82,8 @@ public:
 	int questionBox(const ZLResourceKey &key, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const;
 	virtual int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const = 0;
 
-	virtual void wait(const ZLResourceKey &key, ZLRunnable &runnable) const = 0;
+	virtual shared_ptr<ZLProgressDialog> createProgressDialog(const ZLResourceKey &key) const = 0;
+	void wait(const ZLResourceKey &key, ZLRunnable &runnable) const;
 
 	enum ClipboardType {
 		CLIPBOARD_MAIN,

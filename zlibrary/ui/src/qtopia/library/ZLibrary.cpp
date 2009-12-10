@@ -56,7 +56,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	ZLQtDialogManager::createInstance();
 	ZLQtopiaCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
-	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
+	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 }
 
 ZLPaintContext *ZLQtLibraryImplementation::createContext() {
@@ -64,7 +64,7 @@ ZLPaintContext *ZLQtLibraryImplementation::createContext() {
 }
 
 void ZLQtLibraryImplementation::run(ZLApplication *application) {
-	ZLDialogManager::instance().createApplicationWindow(application);
+	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
 	qApp->exec();
 }

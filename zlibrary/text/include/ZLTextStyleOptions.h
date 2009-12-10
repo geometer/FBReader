@@ -1,1 +1,1 @@
-../src/view/ZLTextStyleOptions.h
+../src/styleOptions/ZLTextStyleOptions.h

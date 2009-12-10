@@ -1,0 +1,81 @@
+It have been read 483712 bytes from file zh_UTF-8.txt
+mat [] 0
+
+pattern             [2]            [3]            [4]            [5]            
+es_ISO-8859-1       316            797            634            268            
+pt_ISO-8859-1       369            809            551            208            
+de_ISO-8859-1       369            647            264            53             
+ru_IBM866           297            160            4              0              
+it_UTF-8            307            699            528            177            
+fi_UTF-8            201            383            100            6              
+en_UTF-8            433            1093           1006           565            
+ru_MAC-CYRILLIC     55             0              0              0              
+ru_WINDOWS-1251     6              0              0              0              
+fr_ISO-8859-1       339            815            594            239            
+en_US-ASCII         433            1093           1006           565            
+it_ISO-8859-1       307            699            528            177            
+ru_UTF-8            6              0              0              0              
+zh_UTF-8            2051           8973           7660           5708           
+ru_ISO-8859-5       16             0              0              0              
+fi_ISO-8859-1       201            383            100            6              
+de_UTF-8            369            647            264            53             
+fr_UTF-8            339            815            594            239            
+ru_KOI8-R           6              0              0              0              
+pt_UTF-8            369            809            551            208            
+zh_BIG5             105            1              0              0              
+es_UTF-8            316            797            634            268            
+
+It have been read 483712 bytes from file zh_UTF-8.txt
+mat [-] 100
+
+pattern             [2]            [3]            [4]            [5]            
+es_ISO-8859-1       93             68             23             6              
+pt_ISO-8859-1       95             69             31             13             
+de_ISO-8859-1       96             65             19             1              
+ru_IBM866           38             2              0              0              
+it_UTF-8            97             78             27             3              
+fi_UTF-8            76             40             8              0              
+en_UTF-8            100            94             76             68             
+ru_MAC-CYRILLIC     1              0              0              0              
+ru_WINDOWS-1251     1              0              0              0              
+fr_ISO-8859-1       91             75             30             14             
+en_US-ASCII         100            94             76             68             
+it_ISO-8859-1       97             78             27             4              
+ru_UTF-8            1              0              0              0              
+zh_UTF-8            100            100            100            100            
+ru_ISO-8859-5       1              0              0              0              
+fi_ISO-8859-1       78             48             9              2              
+de_UTF-8            92             64             17             1              
+fr_UTF-8            88             68             26             13             
+ru_KOI8-R           1              0              0              0              
+pt_UTF-8            91             67             27             13             
+zh_BIG5             14             1              0              0              
+es_UTF-8            88             63             20             3              
+
+It have been read 483712 bytes from file zh_UTF-8.txt
+mat [-] 1000
+
+pattern             [2]            [3]            [4]            [5]            
+es_ISO-8859-1       316            477            180            62             
+pt_ISO-8859-1       369            498            236            115            
+de_ISO-8859-1       369            380            101            19             
+ru_IBM866           297            35             0              0              
+it_UTF-8            307            502            216            63             
+fi_UTF-8            201            304            56             5              
+en_UTF-8            433            721            533            387            
+ru_MAC-CYRILLIC     55             0              0              0              
+ru_WINDOWS-1251     6              0              0              0              
+fr_ISO-8859-1       339            481            214            108            
+en_US-ASCII         433            721            533            387            
+it_ISO-8859-1       307            507            218            64             
+ru_UTF-8            6              0              0              0              
+zh_UTF-8            1000           998            1000           995            
+ru_ISO-8859-5       16             0              0              0              
+fi_ISO-8859-1       201            304            60             5              
+de_UTF-8            369            372            98             18             
+fr_UTF-8            339            469            197            97             
+ru_KOI8-R           6              0              0              0              
+pt_UTF-8            369            489            228            111            
+zh_BIG5             105            1              0              0              
+es_UTF-8            316            453            168            58             
+

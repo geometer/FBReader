@@ -21,7 +21,7 @@
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
-#include <ZUnicodeUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "../../../../core/src/win32/filesystem/ZLWin32FSManager.h"
 #include "../time/ZLWin32Time.h"
@@ -64,7 +64,7 @@ bool ZLibrary::init(int &argc, char **&argv) {
 	ZLWin32DialogManager::createInstance();
 	ZLWin32CommunicationManager::createInstance();
 	ZLWin32ImageManager::createInstance();
-	ZLEncodingCollection::instance().registerProvider(new ZLWin32EncodingConverterProvider());
+	ZLEncodingCollection::Instance().registerProvider(new ZLWin32EncodingConverterProvider());
 
 	return true;
 }
@@ -74,7 +74,7 @@ ZLPaintContext *ZLibrary::createContext() {
 }
 
 void ZLibrary::run(ZLApplication *application) {
-	ZLDialogManager::instance().createApplicationWindow(application);
+	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
 
 	MSG msg;

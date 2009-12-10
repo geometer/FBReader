@@ -122,7 +122,7 @@ void IndicatorTypeEntry::onValueSelected(int index) {
 	}
 }
 
-void OptionsDialog::createIndicatorTab(FBReader &fbreader) {
+void OptionsDialog::createIndicatorTab() {
 	ZLDialogContent &indicatorTab = myDialog->createTab(ZLResourceKey("Indicator"));
 	FBIndicatorStyle &indicatorInfo = FBView::commonIndicatorInfo();
 	static ZLResourceKey typeKey("type");
@@ -156,7 +156,7 @@ void OptionsDialog::createIndicatorTab(FBReader &fbreader) {
 	showTimeEntry->addDependentEntry(fontSizeEntry);
 
 	ZLOptionEntry *tocMarksEntry =
-		new ZLSimpleBooleanOptionEntry(fbreader.bookTextView().ShowTOCMarksOption);
+		new ZLSimpleBooleanOptionEntry(FBReader::Instance().bookTextView().ShowTOCMarksOption);
 	indicatorTab.addOption(ZLResourceKey("tocMarks"), tocMarksEntry);
 	indicatorTypeEntry->addDependentEntry(tocMarksEntry);
 

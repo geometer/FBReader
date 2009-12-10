@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <keymap>
 	<binding key="&lt;L&gt;" action="showLibrary"/>
+	<binding key="&lt;W&gt;" action="showNetLibrary"/>
 	<binding key="&lt;O&gt;" action="preferences"/>
 	<binding key="&lt;LeftArrow&gt;" action="undo"/>
 	<binding key="&lt;RightArrow&gt;" action="redo"/>
@@ -10,10 +11,10 @@
 	<binding key="&lt;P&gt;" action="findPrevious"/>
 	<binding key="&lt;F3&gt;" action="findNext"/>
 	<binding key="&lt;N&gt;" action="findNext"/>
-	<binding key="&lt;PageDown&gt;" action="largeScrollForward"/>
-	<binding key="&lt;PageUp&gt;" action="largeScrollBackward"/>
-	<binding key="&lt;DownArrow&gt;" action="smallScrollForward"/>
-	<binding key="&lt;UpArrow&gt;" action="smallScrollBackward"/>
+	<binding key="&lt;PageDown&gt;" action="pageForward"/>
+	<binding key="&lt;PageUp&gt;" action="pageBackward"/>
+	<binding key="&lt;DownArrow&gt;" action="lineForward"/>
+	<binding key="&lt;UpArrow&gt;" action="lineBackward"/>
 	<binding key="&lt;MouseScrollDown&gt;" action="mouseScrollForward"/>
 	<binding key="&lt;MouseScrollUp&gt;" action="mouseScrollBackward"/>
 	<binding key="&lt;Ctrl&gt;+&lt;Home&gt;" action="gotoHome"/>

@@ -24,7 +24,7 @@
 #include "ZLGtkDialog.h"
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkSelectionDialog.h"
-#include "ZLGtkWaitMessage.h"
+#include "ZLGtkProgressDialog.h"
 #include "ZLGtkUtil.h"
 
 shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const ZLResourceKey &key) const {
@@ -82,9 +82,10 @@ bool ZLGtkDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler
 	return ZLGtkSelectionDialog(dialogTitle(key), handler).runWithSize();
 }
 
-void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
-	ZLGtkWaitMessage waitMessage(!myDialogs.empty() ? myDialogs.top() : myWindow, waitMessageText(key));
-	runnable.run();
+shared_ptr<ZLProgressDialog> ZLGtkDialogManager::createProgressDialog(const ZLResourceKey &key) const {
+	return new ZLGtkProgressDialog(
+		!myDialogs.empty() ? myDialogs.top() : myWindow, key
+	);
 }
 
 bool ZLGtkDialogManager::isClipboardSupported(ClipboardType) const {

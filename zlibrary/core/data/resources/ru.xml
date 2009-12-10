@@ -22,6 +22,11 @@
 			<node name="couldntResolveProxyMessage" value="Не удается найти прокси-сервер %s" />
 			<node name="operationTimedOutMessage" value="Отведенное время истекло" />
 			<node name="somethingWrongMessage" value="Ошибка при работе с&#10;%s" />
+			<node name="sslConnectErrorMessage" value="Проблема установления SSL/TLS соединения:&#10;%s" />
+			<node name="peerFailedVerificationMessage" value="SSL сертификат %s&#10;не в порядке" />
+			<node name="sslCertificateAuthorityMessage" value="SSL сертификат %s&#10;не может быть подтвержден известными сертификатами SSL CA" />
+			<node name="sslBadCertificateFileMessage" value="Не могу прочитать файл сертификата SSL CA:&#10;%s" />
+			<node name="sslShutdownFailedMessage" value="Не удалось закрыть SSL соединение с&#10;%s" />
 		</node>
 	</node>
 	<node name="color">

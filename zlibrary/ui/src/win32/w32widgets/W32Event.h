@@ -39,6 +39,11 @@ class W32EventSender {
 
 public:
 	W32EventSender();
+
+protected:
+	virtual ~W32EventSender();
+
+public:
 	void addListener(W32Listener *listener);
 	void removeListener(W32Listener *listener);
 

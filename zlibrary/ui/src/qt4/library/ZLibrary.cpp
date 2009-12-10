@@ -58,7 +58,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	ZLQtDialogManager::createInstance();
 	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
-	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
+	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 
 	ZLKeyUtil::setKeyNamesFileName("keynames-qt4.xml");
 }
@@ -71,7 +71,7 @@ void ZLQtLibraryImplementation::run(ZLApplication *application) {
 	if (ZLLanguageUtil::isRTLLanguage(ZLibrary::Language())) {
 		qApp->setLayoutDirection(Qt::RightToLeft);
 	}
-	ZLDialogManager::instance().createApplicationWindow(application);
+	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
 	qApp->exec();
 	delete application;

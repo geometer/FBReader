@@ -31,7 +31,7 @@ public:
 
 ZLCommunicationManager *ZLCommunicationManager::ourInstance = 0;
 
-ZLCommunicationManager &ZLCommunicationManager::instance() {
+ZLCommunicationManager &ZLCommunicationManager::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new ZLDummyCommunicationManager();
 	}

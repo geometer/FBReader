@@ -1,0 +1,81 @@
+It have been read 1172 bytes from file description
+mat [] 0
+
+pattern             [2]            [3]            [4]            [5]            
+es_ISO-8859-1       80             60             18             3              
+pt_ISO-8859-1       79             55             18             5              
+de_ISO-8859-1       93             55             14             1              
+ru_IBM866           5              0              0              0              
+it_UTF-8            74             57             14             1              
+fi_UTF-8            51             31             4              0              
+en_UTF-8            84             60             24             6              
+ru_MAC-CYRILLIC     5              0              0              0              
+ru_WINDOWS-1251     5              0              0              0              
+fr_ISO-8859-1       77             56             17             1              
+en_US-ASCII         84             60             24             6              
+it_ISO-8859-1       74             57             14             1              
+ru_UTF-8            5              0              0              0              
+zh_UTF-8            0              0              0              0              
+ru_ISO-8859-5       5              0              0              0              
+fi_ISO-8859-1       51             31             4              0              
+de_UTF-8            93             55             14             1              
+fr_UTF-8            77             56             17             1              
+ru_KOI8-R           5              0              0              0              
+pt_UTF-8            79             55             18             5              
+zh_BIG5             1              0              0              0              
+es_UTF-8            80             60             18             3              
+
+It have been read 1172 bytes from file description
+mat [-] 100
+
+pattern             [2]            [3]            [4]            [5]            
+es_ISO-8859-1       33             6              0              0              
+pt_ISO-8859-1       31             4              4              4              
+de_ISO-8859-1       38             5              0              0              
+ru_IBM866           0              0              0              0              
+it_UTF-8            36             8              0              0              
+fi_UTF-8            29             3              0              0              
+en_UTF-8            36             7              1              0              
+ru_MAC-CYRILLIC     0              0              0              0              
+ru_WINDOWS-1251     0              0              0              0              
+fr_ISO-8859-1       32             5              0              0              
+en_US-ASCII         36             7              1              0              
+it_ISO-8859-1       36             8              0              0              
+ru_UTF-8            0              0              0              0              
+zh_UTF-8            0              0              0              0              
+ru_ISO-8859-5       0              0              0              0              
+fi_ISO-8859-1       29             3              0              0              
+de_UTF-8            36             5              0              0              
+fr_UTF-8            31             5              0              0              
+ru_KOI8-R           0              0              0              0              
+pt_UTF-8            30             4              4              4              
+zh_BIG5             0              0              0              0              
+es_UTF-8            32             6              0              0              
+
+It have been read 1172 bytes from file description
+mat [-] 1000
+
+pattern             [2]            [3]            [4]            [5]            
+es_ISO-8859-1       80             37             4              1              
+pt_ISO-8859-1       79             43             7              4              
+de_ISO-8859-1       93             39             5              0              
+ru_IBM866           5              0              0              0              
+it_UTF-8            74             44             6              1              
+fi_UTF-8            51             29             1              0              
+en_UTF-8            84             42             12             3              
+ru_MAC-CYRILLIC     5              0              0              0              
+ru_WINDOWS-1251     5              0              0              0              
+fr_ISO-8859-1       77             36             4              0              
+en_US-ASCII         84             42             12             3              
+it_ISO-8859-1       74             44             6              1              
+ru_UTF-8            5              0              0              0              
+zh_UTF-8            0              0              0              0              
+ru_ISO-8859-5       5              0              0              0              
+fi_ISO-8859-1       51             29             1              0              
+de_UTF-8            93             39             5              0              
+fr_UTF-8            77             36             4              0              
+ru_KOI8-R           5              0              0              0              
+pt_UTF-8            79             43             7              4              
+zh_BIG5             1              0              0              0              
+es_UTF-8            80             34             3              1              
+

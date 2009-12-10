@@ -1,9 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- French FBReader resources, by Pierre Senellart -->
 <resources>
+	<node name="libraryView">
+		<node name="authorNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="edit" toBeTranslated="true" value="Edit information" />
+			<node name="unknownAuthor" toBeTranslated="true" value="Unknown Author" />
+		</node>
+		<node name="tagNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="edit" toBeTranslated="true" value="Edit tag" />
+			<node name="clone" toBeTranslated="true" value="Clone tag" />
+			<node name="delete" toBeTranslated="true" value="Remove tag" />
+			<node name="noTags" toBeTranslated="true" value="Books with no tags" />
+		</node>
+		<node name="seriesNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+		</node>
+		<node name="bookNode">
+			<node name="read" toBeTranslated="true" value="Read book" />
+			<node name="edit" toBeTranslated="true" value="Edit information" />
+			<node name="delete" toBeTranslated="true" value="Remove book" />
+		</node>
+	</node>
+	<node name="networkView">
+		<node name="libraryItemNode">
+			<node name="expandTree" toBeTranslated="true" value="Expand" />
+			<node name="collapseTree" toBeTranslated="true" value="Collapse" />
+			<node name="reload" toBeTranslated="true" value="Reload" />
+			<node name="openInBrowser" toBeTranslated="true" value="Open in browser" />
+		</node>
+		<node name="libraryItemRootNode">
+			<node name="expandTree" toBeTranslated="true" value="Open catalog" />
+			<node name="collapseTree" toBeTranslated="true" value="Close catalog" />
+			<node name="login" toBeTranslated="true" value="Login" />
+			<node name="logout" toBeTranslated="true" value="Logout (%s)" />
+			<node name="reload" toBeTranslated="true" value="Reload" />
+			<node name="dontShow" toBeTranslated="true" value="Don&apos;t show this catalog" />
+			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)" />
+		</node>
+		<node name="searchResultNode">
+			<node name="title" toBeTranslated="true" value="Search results" />
+			<node name="expandTree" toBeTranslated="true" value="Show results" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide results" />
+		</node>
+		<node name="authorNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+		</node>
+		<node name="seriesNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+		</node>
+		<node name="bookNode">
+			<node name="read" toBeTranslated="true" value="Read local copy"/>
+			<node name="delete" toBeTranslated="true" value="Delete local copy"/>
+			<node name="download" toBeTranslated="true" value="Download" />
+			<node name="readDemo" toBeTranslated="true" value="Read demo" />
+			<node name="downloadDemo" toBeTranslated="true" value="Download demo" />
+			<node name="buy" toBeTranslated="true" value="Buy (%s)" />
+		</node>
+	</node>
 	<node name="menu">
 		<node name="bookInfo" value="Informations sur le livre..." />
 		<node name="toc" value="Table des matières" />
+		<node name="showLibrary" toBeTranslated="true" value="Open library" />
 		<node name="library" value="Bibliothèque">
 			<node name="showLibrary" value="Ouvrir" />
 			<node name="previousBook" value="Livre précédent" />
@@ -11,6 +75,12 @@
 			<node name="addBook" value="Ajouter un livre..." />
 			<node name="showHelp" value="À propos de FBReader" />
 		</node>
+		<node name="gotoHome" value="Aller au début du document" />
+		<node name="gotoPageNumber" value="Aller page..." />
+		<node name="gotoSectionStart" value="Aller au début de la section" />
+		<node name="gotoSectionEnd" value="Aller à la fin de la section" />
+		<node name="nextTOCSection" value="Aller à l&apos;entrée suivante de la TDM" />
+		<node name="previousTOCSection" value="Aller à l&apos;entrée précédente de la TDM" />
 		<node name="navigate" value="Navigation">
 			<node name="gotoHome" value="Aller au début du document" />
 			<node name="gotoPageNumber" value="Aller page..." />
@@ -69,6 +139,11 @@
 			<node name="go" value="O&amp;k" />
 			<node name="thisOnly" value="Seulement ceci" />
 			<node name="withSubtags" value="Sous-tags compris" />
+			<node name="removeLink" toBeTranslated="true" value="Remove from library" />
+			<node name="removeFile" toBeTranslated="true" value="Remove from disk" />
+			<node name="yesToAll" toBeTranslated="true" value="Yes to &amp;all" />
+			<node name="buy" toBeTranslated="true" value="&amp;Buy" />
+			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download" />
 		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Options" />
@@ -78,7 +153,6 @@
 					<node name="lookInSubdirectories" value="Chercher des livres dans les sous-répertoires" />
 					<node name="collectBooksWithoutMetaInfo" value="Rassembler les livres sans métainformation" />
 					<node name="downloadDirectory" value="Répertoire des livres téléchargés" />
-					<node name="showAllBooksTag" value="Branche “Tous les livres” dans l&apos;arbre" />
 				</node>
 				<node name="NetworkLibrary" value="Recherche réseau">
 					<node name="useProxy" value="Utiliser un proxy" />
@@ -109,8 +183,8 @@
 				</node>
 				<node name="Scrolling" value="Défilement">
 					<node name="optionsFor" value="Options pour">
-						<node name="large" value="Grands défilements" />
-						<node name="small" value="Petits défilements" />
+						<node name="page" toBeTranslated="true" value="Page Scrollings" />
+						<node name="line" toBeTranslated="true" value="Line Scrollings" />
 						<node name="mouse" value="Défilements à la souris" />
 						<node name="tap" value="Défilements tactiles" />
 					</node>
@@ -262,18 +336,19 @@
 				<node name="Common" value="Général">
 					<node name="file" value="Fichier" />
 					<node name="title" value="Titre" />
-					<node name="authorDisplayName" value="Auteur (nom affiché)" />
-					<node name="authorSortKey" value="Auteur (clef de tri)" />
 					<node name="language" value="Langue" />
 					<node name="encodingSet" value="Ensemble d&apos;encodages" />
 					<node name="encoding" value="Encodage" />
 				</node>
+				<node name="Authors" toBeTranslated="true" value="Authors">
+					<node name="authorDisplayName" toBeTranslated="true" value="Author Name" />
+				</node>
 				<node name="Series" value="Série">
 					<node name="seriesTitle" value="Titre de la série" />
-					<node name="bookNumber" value="Numéro du livre" />
+					<node name="bookIndex" value="Numéro du livre" />
 				</node>
 				<node name="Tags" value="Tags">
-					<node name="tags" value="Liste de tags" />
+					<node name="tags" toBeTranslated="true" value="Tag Name" />
 				</node>
 				<node name="Text" value="Texte">
 					<node name="breakType" value="Fin des paragraphes" />
@@ -289,6 +364,11 @@
 				</node>
 			</node>
 		</node>
+		<node name="AuthorInfoDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Author Info" />
+			<node name="name" toBeTranslated="true" value="Author Name" />
+			<node name="sortKey" toBeTranslated="true" value="Author Sort Key" />
+		</node>
 		<node name="addFileDialog">
 			<node name="title" value="FBReader - Ajouter un livre à la bibliothèque" />
 		</node>
@@ -302,28 +382,30 @@
 		</node>
 		<node name="networkSearchDialog">
 			<node name="title" value="Recherche réseau" />
-			<node name="bookTitle" value="Titre" />
+			<node name="titleAndSeries" value="Titre/Série" />
 			<node name="author" value="Auteur" />
 			<node name="category" value="Catégorie" />
-			<node name="series" value="Série" />
 			<node name="description" value="Description" />
+			<node name="annotation" toBeTranslated="true" value="Search results for: %s" />
 		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Aller à la page" />
 			<node name="pageNumber" value="Aller page" />
 		</node>
-		<node name="editTagInfoDialog">
-			<node name="title" value="Éditer/Cloner un tag" />
-			<node name="editOrClone" value="Action">
-				<node name="edit" value="Renommer le tag" />
-				<node name="clone" value="Cloner le tag" />
-			</node>
+		<node name="editTagDialog">
+			<node name="title" value="Éditer un tag" />
+			<node name="name" value="Nom du tag" />
+			<node name="includeSubtags" value="Inclure les sous-tags" />
+		</node>
+		<node name="cloneTagDialog">
+			<node name="title" value="Cloner un tag" />
 			<node name="name" value="Nom du tag" />
 			<node name="includeSubtags" value="Inclure les sous-tags" />
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Enlever un livre" />
 			<node name="message" value="Enlever le livre&#10;&quot;%s&quot;&#10;de la bibliothèque ?" />
+			<node name="deleteFile" toBeTranslated="true" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?" />
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Enlever un tag" />
@@ -333,20 +415,24 @@
 			<node name="title" value="Erreur" />
 			<node name="message" value="Impossible d&apos;ouvrir&#10;%s" />
 		</node>
+		<node name="removeFileErrorBox">
+			<node name="title" toBeTranslated="true" value="Error" />
+			<node name="message" toBeTranslated="true" value="Couldn&apos;t remove file&#10;%s" />
+		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Erreur" />
 			<node name="message" value="Fichier d&apos;aide non trouvé, désolé" />
 		</node>
-		<node name="tagMustBeNonEmpty">
-			<node name="title" value="Erreur" />
-			<node name="message" value="Le nom du tag ne peut être vide" />
-		</node>
-		<node name="tagMustNotContainComma">
-			<node name="title" value="Erreur" />
-			<node name="message" value="Le nom du tag ne peut contenir un symbole “,”" />
-		</node>
 		<node name="networkError">
 			<node name="emptyLibrariesList" value="Liste de bibliothèques vide" />
+			<node name="authenticationFailed" toBeTranslated="true" value="Authentication failed" />
+			<node name="internalError" toBeTranslated="true" value="Internal server error" />
+			<node name="purchaseNotEnoughMoney" toBeTranslated="true" value="Not enough money" />
+			<node name="purchaseMissingBook" toBeTranslated="true" value="Missing book" />
+			<node name="purchaseAlreadyPurchased" toBeTranslated="true" value="Already purchased" />
+			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased" />
+			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded" />
+			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation" />
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Erreur de téléchargement" />
@@ -358,6 +444,34 @@
 			<node name="migrate" value="Mise à jour en cours. Veuillez patienter..." />
 			<node name="downloadBookList" value="Téléchargement de la liste de livres en cours. Veuillez patienter..." />
 			<node name="downloadBook" value="Téléchargement du livre. Veuillez patienter..." />
+			<node name="downloadImages" toBeTranslated="true" value="Downloading images. Please, wait..." />
+			<node name="authentication" toBeTranslated="true" value="Authentication. Please, wait..." />
+			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..." />
+			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..." />
+			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..." />
+		</node>
+		<node name="purchaseConfirmBox">
+			<node name="title" toBeTranslated="true" value="Purchase book" />
+			<node name="message" toBeTranslated="true" value="Are you sure you want to buy&#10;“%s”&#10;book?" />
+		</node>
+		<node name="AuthenticationDialog">
+			<node name="title" toBeTranslated="true" value="Authentication" />
+			<node name="login" toBeTranslated="true" value="Login" />
+			<node name="password" toBeTranslated="true" value="Password" />
+			<node name="skipIP" toBeTranslated="true" value="Don&apos;t bound to ip-address" />
+			<node name="loginIsEmpty" toBeTranslated="true" value="Login must not be empty" />
+		</node>
+		<node name="emptyCatalogBox">
+			<node name="title" toBeTranslated="true" value="Information" />
+			<node name="message" toBeTranslated="true" value="Catalog is empty." />
+		</node>
+		<node name="dontShowConfirmBox">
+			<node name="title" toBeTranslated="true" value="Disable catalog" />
+			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;You can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
+		</node>
+		<node name="deleteLocalCopyBox">
+			<node name="title" toBeTranslated="true" value="Delete Book" />
+			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;&#8220;%s&#8221; book&#10;from the disk?" />
 		</node>
 	</node>
 	<node name="style">
@@ -407,17 +521,12 @@
 	<node name="mobipocketPlugin">
 		<node name="unknown" value="Erreur inconnue" />
 		<node name="unsupportedCompressionMethod" value="Méthode de compression non supportée" />
-		<node name="encriptedFile" value="Fichier protégé par MTP" />
+		<node name="encryptedFile" value="Fichier protégé par MTP" />
 	</node>
 	<node name="networkLibrary">
 		<node name="caption" value="Bibliothèque réseau" />
-		<node name="startText" value="Veuillez entrer un motif de recherche dans le champ textuel de la barre d&apos;outils et presser &lt;Entrée&gt;." />
-		<node name="notFound" value="Désolé, aucun livre correspondant n&apos;a été trouvé." />
 	</node>
 	<node name="library">
 		<node name="caption" value="Bibliothèque" />
-		<node name="allBooks" value="Tous les livres" />
-		<node name="booksWithoutTags" value="Livres sans tags" />
-		<node name="noBooks" value="FBReader n&apos;a pas trouvé de livres dans les emplacements configurés. Veuillez spécifier le chemin de vos livres dans la boîte de dialogue de préférences (onglet “Bibliothèque”, “Chemin des livres”). Vous pouvez également ajouter des livres à votre bibliothèque avec le bouton “Ajouter un livre”." />
 	</node>
 </resources>

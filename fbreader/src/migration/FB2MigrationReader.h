@@ -24,7 +24,8 @@
 #include <string>
 
 #include "../formats/fb2/FB2Reader.h" 
-#include "../description/BookDescription.h"
+
+#include "BookInfo.h"
 
 class FB2MigrationReader : public FB2Reader {
 

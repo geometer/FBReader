@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- German zlibrary resources, by Rainer Paul -->
+<resources>
+	<node name="dialog">
+		<node name="button">
+			<node name="ok" value="&amp;OK" />
+			<node name="cancel" value="&amp;Abbruch" />
+			<node name="yes" value="&amp;Ja" />
+			<node name="no" value="&amp;Nein" />
+			<node name="apply" value="&amp;&#220;bernehmen" />
+		</node>
+		<node name="waitMessage">
+			<node name="savingConfig" value="Einstellungen speichern..." />
+		</node>
+		<node name="networkError">
+			<node name="title" value="Netzwerk Fehler" />
+			<node name="unknownErrorMessage" value="Unbekannter Fehler" />
+			<node name="couldntCreateDirectoryMessage" value="Verzeichnis&#10;%s konnte nicht erzeugt werden" />
+			<node name="couldntCreateFileMessage" value="Datei&#10;%s konnte nicht erzeugt werden" />
+			<node name="couldntConnectToNetworkMessage" value="Keine Verbindung zum Netzwerk" />
+			<node name="couldntConnectMessage" value="Keine Verbindung zum Host %s" />
+			<node name="couldntResolveHostMessage" value="Konnte Host %s nicht aufl&#246;sen" />
+			<node name="couldntResolveProxyMessage" value="Konnte Proxy %s nicht aufl&#246;sen" />
+			<node name="operationTimedOutMessage" value="Zeit&#252;berschreitung" />
+			<node name="somethingWrongMessage" value="Etwas l&#228;uft verkehrt bei&#10;%s" />
+			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s" />
+			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK" />
+			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates" />
+			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn&apos;t read the SSL CA certificate file:&#10;%s" />
+			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s" />
+		</node>
+	</node>
+	<node name="color">
+		<node name="red" value="Rot" />
+		<node name="green" value="Gr&#252;n" />
+		<node name="blue" value="Blau" />
+		<node name="black" value="Schwarz" />
+		<node name="white" value="Wei&#223;" />
+		<node name="maroon" value="Braun" />
+		<node name="olive" value="Oliv" />
+		<node name="navy" value="Marine" />
+		<node name="purple" value="Violett" />
+		<node name="teal" value="T&#252;rkis" />
+		<node name="silver" value="Silber" />
+		<node name="gray" value="Grau" />
+		<node name="lime" value="Limone" />
+		<node name="yellow" value="Gelb" />
+		<node name="magenta" value="Magenta" />
+		<node name="cyan" value="Cyan" />
+		<node name="custom..." value="Weitere..." />
+	</node>
+	<node name="language">
+		<node name="ar" value="Arabisch" />
+		<node name="cs" value="Tschechisch" />
+		<node name="de" value="Deutsch" />
+		<node name="de-traditional" value="Deutsch (traditionelle Orthographie)" />
+		<node name="el" value="Griechisch" />
+		<node name="en" value="Englisch" />
+		<node name="eo" value="Esperanto" />
+		<node name="es" value="Spanisch" />
+		<node name="fi" value="Finnisch" />
+		<node name="fr" value="Franz&#246;sisch" />
+		<node name="he" value="Hebr&#228;isch"/>
+		<node name="id" value="Indonesisch" />
+		<node name="it" value="Italienisch" />
+		<node name="no" value="Norwegisch" />
+		<node name="pt" value="Portugisisch" />
+		<node name="ru" value="Russisch" />
+		<node name="sv" value="Swedisch" />
+		<node name="tr" value="T&#252;rkisch" />
+		<node name="uk" value="Ukrainisch" />
+		<node name="zh" value="Chinesisch" />
+		<node name="other" value="Andere" />
+	</node>
+	<node name="boolean3">
+		<node name="on" value="ein" />
+		<node name="off" value="aus" />
+		<node name="unchanged" value="unver&#228;dnert" />
+	</node>
+	<node name="keyOptionView">
+		<node name="actionFor" value="Aktion f&#252;r Taste" />
+	</node>
+</resources>

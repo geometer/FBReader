@@ -1,9 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Indonesian FBReader resources, by Ketut Putu Kumajaya -->
 <resources>
+	<node name="libraryView">
+		<node name="authorNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="edit" toBeTranslated="true" value="Edit information" />
+			<node name="unknownAuthor" toBeTranslated="true" value="Unknown Author" />
+		</node>
+		<node name="tagNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="edit" toBeTranslated="true" value="Edit tag" />
+			<node name="clone" toBeTranslated="true" value="Clone tag" />
+			<node name="delete" toBeTranslated="true" value="Remove tag" />
+			<node name="noTags" toBeTranslated="true" value="Books with no tags" />
+		</node>
+		<node name="seriesNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+		</node>
+		<node name="bookNode">
+			<node name="read" toBeTranslated="true" value="Read book" />
+			<node name="edit" toBeTranslated="true" value="Edit information" />
+			<node name="delete" toBeTranslated="true" value="Remove book" />
+		</node>
+	</node>
+	<node name="networkView">
+		<node name="libraryItemNode">
+			<node name="expandTree" toBeTranslated="true" value="Expand" />
+			<node name="collapseTree" toBeTranslated="true" value="Collapse" />
+			<node name="reload" toBeTranslated="true" value="Reload" />
+			<node name="openInBrowser" toBeTranslated="true" value="Open in browser" />
+		</node>
+		<node name="libraryItemRootNode">
+			<node name="expandTree" toBeTranslated="true" value="Open catalog" />
+			<node name="collapseTree" toBeTranslated="true" value="Close catalog" />
+			<node name="login" toBeTranslated="true" value="Login" />
+			<node name="logout" toBeTranslated="true" value="Logout (%s)" />
+			<node name="reload" toBeTranslated="true" value="Reload" />
+			<node name="dontShow" toBeTranslated="true" value="Don&apos;t show this catalog" />
+			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)" />
+		</node>
+		<node name="searchResultNode">
+			<node name="title" toBeTranslated="true" value="Search results" />
+			<node name="expandTree" toBeTranslated="true" value="Show results" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide results" />
+		</node>
+		<node name="authorNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+		</node>
+		<node name="seriesNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+		</node>
+		<node name="bookNode">
+			<node name="read" toBeTranslated="true" value="Read local copy"/>
+			<node name="delete" toBeTranslated="true" value="Delete local copy"/>
+			<node name="download" toBeTranslated="true" value="Download" />
+			<node name="readDemo" toBeTranslated="true" value="Read demo" />
+			<node name="downloadDemo" toBeTranslated="true" value="Download demo" />
+			<node name="buy" toBeTranslated="true" value="Buy (%s)" />
+		</node>
+	</node>
 	<node name="menu">
 		<node name="bookInfo" value="Informasi Buku..." />
 		<node name="toc" value="Daftar Isi" />
+		<node name="showLibrary" toBeTranslated="true" value="Open library" />
 		<node name="library" value="Pustaka">
 			<node name="showLibrary" value="Buka" />
 			<node name="previousBook" value="Buku Sebelumnya" />
@@ -11,6 +75,12 @@
 			<node name="addBook" value="Tambah Buku..." />
 			<node name="showHelp" value="Mengenai FBReader" />
 		</node>
+		<node name="gotoHome" value="Ke Awal Dokumen" />
+		<node name="gotoPageNumber" value="Ke Halaman..." />
+		<node name="gotoSectionStart" value="Ke Bagian Awal Teks" />
+		<node name="gotoSectionEnd" value="Ke Bagian Akhir Teks" />
+		<node name="nextTOCSection" value="Ke Item Daftar Isi Berikutnya" />
+		<node name="previousTOCSection" value="Ke Item Daftar Isi Sebelumnya" />
 		<node name="navigate" value="Navigasi">
 			<node name="gotoHome" value="Ke Awal Dokumen" />
 			<node name="gotoPageNumber" value="Ke Halaman..." />
@@ -69,6 +139,11 @@
 			<node name="go" value="&amp;Mulai!" />
 			<node name="thisOnly" value="Hanya ini" />
 			<node name="withSubtags" value="Dengan subtag" />
+			<node name="removeLink" toBeTranslated="true" value="Remove from library" />
+			<node name="removeFile" toBeTranslated="true" value="Remove from disk" />
+			<node name="yesToAll" toBeTranslated="true" value="Yes to &amp;all" />
+			<node name="buy" toBeTranslated="true" value="&amp;Buy" />
+			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download" />
 		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Pengaturan" />
@@ -78,7 +153,6 @@
 					<node name="lookInSubdirectories" value="Tampilkan Buku-buku yang Ada di Sub Direktori" />
 					<node name="collectBooksWithoutMetaInfo" value="Kumpulkan Buku-buku tanpa MetaInfo" />
 					<node name="downloadDirectory" value="Direktori Buku-buku hasil Download" />
-					<node name="showAllBooksTag" value="Tampilkan Semua Cabang Buku" />
 				</node>
 				<node name="NetworkLibrary" value="Pencarian Jaringan">
 					<node name="useProxy" value="Gunakan Proxy" />
@@ -109,8 +183,8 @@
 				</node>
 				<node name="Scrolling" value="Geser Layar">
 					<node name="optionsFor" value="Pengaturan untuk">
-						<node name="large" value="Pergeseran Besar" />
-						<node name="small" value="Pergeseran Kecil" />
+						<node name="page" toBeTranslated="true" value="Page Scrollings" />
+						<node name="line" toBeTranslated="true" value="Line Scrollings" />
 						<node name="mouse" value="Pergeseran Mouse" />
 						<node name="tap" value="Pergeseran Layar Sentuh" />
 					</node>
@@ -262,18 +336,19 @@
 				<node name="Common" value="Umum">
 					<node name="file" value="Berkas" />
 					<node name="title" value="Judul" />
-					<node name="authorDisplayName" value="Pengarang (Tertampil)" />
-					<node name="authorSortKey" value="Pengarang (Pengurut)" />
 					<node name="language" value="Bahasa" />
 					<node name="encodingSet" value="Set Enkode" />
 					<node name="encoding" value="Enkode" />
 				</node>
+				<node name="Authors" toBeTranslated="true" value="Authors">
+					<node name="authorDisplayName" toBeTranslated="true" value="Author Name" />
+				</node>
 				<node name="Series" value="Seri">
 					<node name="seriesTitle" value="Judul Seri" />
-					<node name="bookNumber" value="Nomor Buku" />
+					<node name="bookIndex" value="Nomor Buku" />
 				</node>
 				<node name="Tags" value="Tag">
-					<node name="tags" value="Daftar Tag" />
+					<node name="tags" toBeTranslated="true" value="Tag Name" />
 				</node>
 				<node name="Text" value="Teks">
 					<node name="breakType" value="Penggal Paragraf pada" />
@@ -289,6 +364,11 @@
 				</node>
 			</node>
 		</node>
+		<node name="AuthorInfoDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Author Info" />
+			<node name="name" toBeTranslated="true" value="Author Name" />
+			<node name="sortKey" toBeTranslated="true" value="Author Sort Key" />
+		</node>
 		<node name="addFileDialog">
 			<node name="title" value="FBReader - Tambahkan Buku ke Pustaka" />
 		</node>
@@ -302,28 +382,30 @@
 		</node>
 		<node name="networkSearchDialog">
 			<node name="title" value="Pencarian Jaringan" />
-			<node name="bookTitle" value="Judul" />
+			<node name="titleAndSeries" value="Judul/Seri" />
 			<node name="author" value="Pengarang" />
 			<node name="category" value="Kategori" />
-			<node name="series" value="Seri" />
 			<node name="description" value="Deskripsi" />
+			<node name="annotation" toBeTranslated="true" value="Search results for: %s" />
 		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Ke Halaman" />
 			<node name="pageNumber" value="Ke Nomor Halaman" />
 		</node>
-		<node name="editTagInfoDialog">
-			<node name="title" value="Ubah/Gandakan Tag" />
-			<node name="editOrClone" value="Aksi">
-				<node name="edit" value="Ubah Nama Tag" />
-				<node name="clone" value="Gandakan Tag" />
-			</node>
+		<node name="editTagDialog">
+			<node name="title" value="Ubah Tag" />
+			<node name="name" value="Nama Tag" />
+			<node name="includeSubtags" value="Termasuk Sub Tag" />
+		</node>
+		<node name="cloneTagDialog">
+			<node name="title" value="Gandakan Tag" />
 			<node name="name" value="Nama Tag" />
 			<node name="includeSubtags" value="Termasuk Sub Tag" />
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Hapus Buku" />
 			<node name="message" value="Hapus buku&#10;&quot;%s&quot;&#10;dari Pustaka?" />
+			<node name="deleteFile" toBeTranslated="true" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?" />
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Hapus Tag" />
@@ -333,20 +415,24 @@
 			<node name="title" value="Ada Kesalahan" />
 			<node name="message" value="Tidak dapat membuka:&#10;%s" />
 		</node>
+		<node name="removeFileErrorBox">
+			<node name="title" toBeTranslated="true" value="Error" />
+			<node name="message" toBeTranslated="true" value="Couldn&apos;t remove file&#10;%s" />
+		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Ada Kesalahan" />
 			<node name="message" value="Berkas tidak ditemukan, maaf" />
 		</node>
-		<node name="tagMustBeNonEmpty">
-			<node name="title" value="Ada Kesalahan" />
-			<node name="message" value="Nama tag tidak boleh kosong" />
-		</node>
-		<node name="tagMustNotContainComma">
-			<node name="title" value="Ada Kesalahan" />
-			<node name="message" value="Nama tag tidak boleh mengandung sebuah simbol “,”" />
-		</node>
 		<node name="networkError">
 			<node name="emptyLibrariesList" value="Daftar pustaka kosong" />
+			<node name="authenticationFailed" toBeTranslated="true" value="Authentication failed" />
+			<node name="internalError" toBeTranslated="true" value="Internal server error" />
+			<node name="purchaseNotEnoughMoney" toBeTranslated="true" value="Not enough money" />
+			<node name="purchaseMissingBook" toBeTranslated="true" value="Missing book" />
+			<node name="purchaseAlreadyPurchased" toBeTranslated="true" value="Already purchased" />
+			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased" />
+			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded" />
+			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation" />
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Bermasalah waktu melakukan download" />
@@ -358,6 +444,34 @@
 			<node name="migrate" value="Melakukan pembaruan ke versi baru. Silakan tunggu..." />
 			<node name="downloadBookList" value="Daftar buku sedang di-download. Harap tunggu..." />
 			<node name="downloadBook" value="Buku sedang di-download. Harap tunggu..." />
+			<node name="downloadImages" toBeTranslated="true" value="Downloading images. Please, wait..." />
+			<node name="authentication" toBeTranslated="true" value="Authentication. Please, wait..." />
+			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..." />
+			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..." />
+			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..." />
+		</node>
+		<node name="purchaseConfirmBox">
+			<node name="title" toBeTranslated="true" value="Purchase book" />
+			<node name="message" toBeTranslated="true" value="Are you sure you want to buy&#10;“%s”&#10;book?" />
+		</node>
+		<node name="AuthenticationDialog">
+			<node name="title" toBeTranslated="true" value="Authentication" />
+			<node name="login" toBeTranslated="true" value="Login" />
+			<node name="password" toBeTranslated="true" value="Password" />
+			<node name="skipIP" toBeTranslated="true" value="Don&apos;t bound to ip-address" />
+			<node name="loginIsEmpty" toBeTranslated="true" value="Login must not be empty" />
+		</node>
+		<node name="emptyCatalogBox">
+			<node name="title" toBeTranslated="true" value="Information" />
+			<node name="message" toBeTranslated="true" value="Catalog is empty." />
+		</node>
+		<node name="dontShowConfirmBox">
+			<node name="title" toBeTranslated="true" value="Disable catalog" />
+			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;You can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
+		</node>
+		<node name="deleteLocalCopyBox">
+			<node name="title" toBeTranslated="true" value="Delete Book" />
+			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;&#8220;%s&#8221; book&#10;from the disk?" />
 		</node>
 	</node>
 	<node name="style">
@@ -407,17 +521,12 @@
 	<node name="mobipocketPlugin">
 		<node name="unknown" value="Ada Kesalahan" />
 		<node name="unsupportedCompressionMethod" value="Metode kompresi tidak didukung" />
-		<node name="encriptedFile" value="Berkas terproteksi DRM" />
+		<node name="encryptedFile" value="Berkas terproteksi DRM" />
 	</node>
 	<node name="networkLibrary">
 		<node name="caption" value="Pustaka Jaringan" />
-		<node name="startText" value="Harap masukkan sebuah pola pencarian pada editor teks di toolbar dan tekan &lt;Return&gt;." />
-		<node name="notFound" value="Maaf, buku yang sesuai tidak ditemukan." />
 	</node>
 	<node name="library">
 		<node name="caption" value="Pustaka" />
-		<node name="allBooks" value="Semua Buku" />
-		<node name="booksWithoutTags" value="Buku Tanpa Tag" />
-		<node name="noBooks" value="FBReader tidak menemukan satupun buku di lokasi yang telah dikonfigurasi. Tentukan lokasi buku dalam Dialog Pengaturan (tab “Pustaka”, entri “Lokasi Buku”). Alternatifnya, Anda dapat menambahkan buku ke pustaka menggunakan tombol “Tambah Buku”." />
 	</node>
 </resources>

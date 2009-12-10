@@ -26,9 +26,44 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLEncodingConverter.h>
 
+#include <ZLAsynchronousInputStream.h>
+
 #include "ZLXMLReader.h"
 
 #include "expat/ZLXMLReaderInternal.h"
+
+
+
+class ZLXMLReaderHandler : public ZLAsynchronousInputStream::Handler {
+
+public:
+	ZLXMLReaderHandler(ZLXMLReader &reader);
+
+	void initialize(const char *encoding);
+	void shutdown();
+	bool handleBuffer(const char *data, size_t len);
+
+private:
+	ZLXMLReader &myReader;
+};
+
+ZLXMLReaderHandler::ZLXMLReaderHandler(ZLXMLReader &reader) : myReader(reader) {
+}
+
+void ZLXMLReaderHandler::initialize(const char *encoding) {
+	myReader.initialize(encoding);
+}
+
+void ZLXMLReaderHandler::shutdown() {
+	myReader.shutdown();
+}
+
+bool ZLXMLReaderHandler::handleBuffer(const char *data, size_t len) {
+	return myReader.readFromBuffer(data, len);
+}
+
+
+
 
 static const size_t BUFFER_SIZE = 2048;
 
@@ -106,7 +141,7 @@ void ZLXMLReader::shutdown() {
 	myNamespaces.clear();
 }
 
-bool ZLXMLReader::readFromBuffer(const char *data, int len) {
+bool ZLXMLReader::readFromBuffer(const char *data, size_t len) {
 	return myInternalReader->parseBuffer(data, len);
 }
 
@@ -133,3 +168,9 @@ const char *ZLXMLReader::attributeValue(const char **xmlattributes, const char *
 	}
 	return 0;
 }
+
+bool ZLXMLReader::readDocument(shared_ptr<ZLAsynchronousInputStream> stream) {
+	ZLXMLReaderHandler handler(*this);
+	return stream->processInput(handler);
+}
+

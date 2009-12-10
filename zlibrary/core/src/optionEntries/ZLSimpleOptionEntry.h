@@ -83,4 +83,15 @@ private:
 };
 */
 
+class ZLSimpleStaticTextOptionEntry : public ZLStaticTextOptionEntry {
+
+public:
+	ZLSimpleStaticTextOptionEntry(const std::string &text);
+
+	const std::string &initialValue() const;
+
+private:
+	std::string myText;
+};
+
 #endif /* __ZLSIMPLEOPTIONENTRY_H__ */

@@ -30,8 +30,11 @@ private:
 public:
 	static const std::string DublinCorePrefix;
 	static const std::string DublinCoreLegacyPrefix;
+	static const std::string DublinCoreTermsPrefix;
 	static const std::string XLink;
 	static const std::string OpenPackagingFormat;
+	static const std::string Atom;
+	static const std::string OpenSearchPrefix;
 };
 
 #endif /* __XMLNAMESPACE_H__ */

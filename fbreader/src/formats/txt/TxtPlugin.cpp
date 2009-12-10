@@ -23,7 +23,9 @@
 #include "TxtPlugin.h"
 #include "TxtBookReader.h"
 #include "PlainTextFormat.h"
-#include "../../description/BookDescription.h"
+
+#include "../../bookmodel/BookModel.h"
+#include "../../library/Book.h"
 
 TxtPlugin::~TxtPlugin() {
 }
@@ -36,34 +38,36 @@ bool TxtPlugin::acceptsFile(const ZLFile &file) const {
 	return file.extension() == "txt";
 }
 
-bool TxtPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	ZLFile file(path);
+bool TxtPlugin::readMetaInfo(Book &book) const {
+	ZLFile file(book.filePath());
 
 	shared_ptr<ZLInputStream> stream = file.inputStream();
 	if (stream.isNull()) {
 		return false;
 	}
-	detectEncodingAndLanguage(description, *stream);
-	if (description.encoding().empty()) {
+	detectEncodingAndLanguage(book, *stream);
+	if (book.encoding().empty()) {
 		return false;
 	}
 
 	return true;
 }
 
-bool TxtPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	shared_ptr<ZLInputStream> stream = ZLFile(description.fileName()).inputStream();
+bool TxtPlugin::readModel(BookModel &model) const {
+	const Book &book = *model.book();
+	const std::string &filePath = book.filePath();
+	shared_ptr<ZLInputStream> stream = ZLFile(filePath).inputStream();
 	if (stream.isNull()) {
 		return false;
 	}
 
-	PlainTextFormat format(description.fileName());
+	PlainTextFormat format(filePath);
 	if (!format.initialized()) {
 		PlainTextFormatDetector detector;
 		detector.detect(*stream, format);
 	}
 
-	TxtBookReader(model, format, description.encoding()).readDocument(*stream);
+	TxtBookReader(model, format, book.encoding()).readDocument(*stream);
 	return true;
 }
 

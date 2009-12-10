@@ -41,16 +41,16 @@ class PluckerPlugin : public PdbPlugin {
 public:
 	bool providesMetaInfo() const;
 	bool acceptsFile(const ZLFile &file) const;
-	bool readDescription(const std::string &path, BookDescription &description) const;
-	bool readModel(const BookDescription &description, BookModel &model) const;
+	bool readMetaInfo(Book &book) const;
+	bool readModel(BookModel &model) const;
 	const std::string &iconName() const;
 };
 
 class SimplePdbPlugin : public PdbPlugin {
 
 public:
-	bool readDescription(const std::string &path, BookDescription &description) const;
-	bool readModel(const BookDescription &description, BookModel &model) const;
+	bool readMetaInfo(Book &book) const;
+	bool readModel(BookModel &model) const;
 
 protected:
 	virtual shared_ptr<ZLInputStream> createStream(ZLFile &file) const = 0;
@@ -81,12 +81,27 @@ private:
 
 class MobipocketPlugin : public PalmDocLikePlugin {
 
-public:
+private:
 	bool acceptsFile(const ZLFile &file) const;
 	const std::string &iconName() const;
-	bool readDescription(const std::string &path, BookDescription &description) const;
+	bool readMetaInfo(Book &book) const;
 
 	void readDocumentInternal(const std::string &fileName, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
+	shared_ptr<ZLImage> coverImage(const Book &book) const;
+};
+
+class EReaderPlugin : public SimplePdbPlugin {
+
+public:
+	bool providesMetaInfo() const;
+	bool acceptsFile(const ZLFile &file) const;
+	const std::string &iconName() const;
+	bool readMetaInfo(Book &book) const;
+	const std::string &tryOpen(const std::string &path) const;
+
+	void readDocumentInternal(const std::string &fileName, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
+protected:
+	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;
 };
 
 class ZTXTPlugin : public SimplePdbPlugin {

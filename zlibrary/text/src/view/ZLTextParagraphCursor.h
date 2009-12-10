@@ -129,7 +129,7 @@ private:
 	static ZLTextParagraphCursorPtr ourLastAdded;
 
 private:
-	// instance creation is disabled
+	// Instance creation is disabled
 	ZLTextParagraphCursorCache();
 };
 

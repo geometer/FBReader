@@ -510,12 +510,12 @@ void ColorOptionView::_onAccept() const {
 
 static bool key_view_focus_in_event(GtkWidget *entry, GdkEventFocus*, gpointer) {
 	gdk_keyboard_grab(entry->window, true, GDK_CURRENT_TIME);
-	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(true);
+	((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).grabKeyboard(true);
 	return true;
 }
 
 static bool key_view_focus_out_event(GtkWidget*, GdkEventFocus*, gpointer) {
-	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(false);
+	((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).grabKeyboard(false);
 	gdk_keyboard_ungrab(GDK_CURRENT_TIME);
 	return false;
 }

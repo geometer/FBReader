@@ -41,7 +41,8 @@ void TimeoutEntry::onAccept(int value) {
 	ZLSimpleSpinOptionEntry::onAccept(value);
 }
 
-ConfigPage::ConfigPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
+ConfigPage::ConfigPage(ZLDialogContent &dialogTab) {
+	FBReader &fbreader = FBReader::Instance();
 	ZLToggleBooleanOptionEntry *enableEntry =
 		new ZLToggleBooleanOptionEntry(fbreader.ConfigAutoSavingOption);
 	dialogTab.addOption(ZLResourceKey("autoSave"), enableEntry);

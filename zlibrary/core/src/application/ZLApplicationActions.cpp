@@ -21,18 +21,18 @@
 #include "../view/ZLView.h"
 #include "../view/ZLViewWidget.h"
 
-ZLApplication::RotationAction::RotationAction(ZLApplication &application) : myApplication(application) {
-}
-
 bool ZLApplication::RotationAction::isVisible() const {
-	return (myApplication.myViewWidget != 0) &&
-				 ((myApplication.RotationAngleOption.value() != ZLView::DEGREES0) ||
-					(myApplication.myViewWidget->rotation() != ZLView::DEGREES0));
+	ZLApplication &application = ZLApplication::Instance();
+	return (application.myViewWidget != 0) &&
+				 ((application.RotationAngleOption.value() != ZLView::DEGREES0) ||
+					(application.myViewWidget->rotation() != ZLView::DEGREES0));
 }
 
 void ZLApplication::RotationAction::run() {
-	int optionValue = myApplication.RotationAngleOption.value();
-	ZLView::Angle oldAngle = myApplication.myViewWidget->rotation();
+	ZLApplication &application = ZLApplication::Instance();
+
+	const int optionValue = application.RotationAngleOption.value();
+	ZLView::Angle oldAngle = application.myViewWidget->rotation();
 	ZLView::Angle newAngle = ZLView::DEGREES0;
 	if (optionValue == -1) {
 		switch (oldAngle) {
@@ -53,14 +53,12 @@ void ZLApplication::RotationAction::run() {
 		newAngle = (oldAngle == ZLView::DEGREES0) ?
 			(ZLView::Angle)optionValue : ZLView::DEGREES0;
 	}
-	myApplication.myViewWidget->rotate(newAngle);
-	myApplication.AngleStateOption.setValue(newAngle);
-	myApplication.refreshWindow();
-}
-
-ZLApplication::FullscreenAction::FullscreenAction(ZLApplication &application) : myApplication(application) {
+	application.myViewWidget->rotate(newAngle);
+	application.AngleStateOption.setValue(newAngle);
+	application.refreshWindow();
 }
 
 void ZLApplication::FullscreenAction::run() {
-	myApplication.setFullscreen(!myApplication.isFullscreen());
+	ZLApplication &application = ZLApplication::Instance();
+	application.setFullscreen(!application.isFullscreen());
 }

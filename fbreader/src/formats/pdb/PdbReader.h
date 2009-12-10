@@ -25,13 +25,14 @@
 #include <shared_ptr.h>
 #include <ZLInputStream.h>
 
-class BookModel;
+//class BookModel;
 
 class PdbUtil {
 
 public:
 	static void readUnsignedShort(ZLInputStream &stream, unsigned short &N);
-	static void readUnsignedLong(ZLInputStream &stream, unsigned long &N);
+	static void readUnsignedLongBE(ZLInputStream &stream, unsigned long &N);
+	static void readUnsignedLongLE(ZLInputStream &stream, unsigned long &N);
 };
 
 struct PdbHeader {
@@ -41,6 +42,41 @@ struct PdbHeader {
 	std::vector<unsigned long> Offsets;
 
 	bool read(shared_ptr<ZLInputStream> stream);
+};
+
+struct PdbRecord0 {
+	unsigned short CompressionType;		//[0..2]	PalmDoc, Mobipocket, Ereader:version
+	unsigned short Spare;				//[2..4]	PalmDoc, Mobipocket
+	unsigned long  TextLength;			//[4..8]	PalmDoc, Mobipocket
+	unsigned short TextRecords;			//[8..10]	PalmDoc, Mobipocket
+	unsigned short MaxRecordSize; 		//[10..12]	PalmDoc, Mobipocket
+	unsigned short NontextOffset;		//[12..14]	Ereader
+	unsigned short NontextOffset2;		//[14..16]	Ereader  //PalmDoc, Mobipocket: encrypted - there is conflict !!!!
+	
+	unsigned long  MobipocketID;		//[16..20]	Mobipocket
+	unsigned long  MobipocketHeaderSize;//[20..24]	Mobipocket
+	unsigned long  Unknown24;			//[24..28]
+	unsigned short FootnoteRecs;		//[28..30]	Ereader
+	unsigned short SidebarRecs;			//[30..32]	Ereader
+
+// Following fields are specific for EReader pdb document specification
+	
+	unsigned short BookmarkOffset;		//[32..34] 
+	unsigned short Unknown34;			//[34..36]
+	unsigned short NontextOffset3;		//[36..38]
+	unsigned short Unknown38;			//[38..40]
+	unsigned short ImagedataOffset;		//[40..42]
+	unsigned short ImagedataOffset2;	//[42..44]
+	unsigned short MetadataOffset;		//[44..46]
+	unsigned short MetadataOffset2;		//[46..48]
+	unsigned short FootnoteOffset;		//[48..50]
+	unsigned short SidebarOffset;		//[50..52]
+	unsigned short LastDataOffset;		//[52..54]
+	unsigned short Unknown54;			//[54..56]
+
+	bool read(shared_ptr<ZLInputStream> stream);
+//private:
+//	static bool readNumberBE(unsigned char* buffer, size_t offset, size_t size); 
 };
 
 #endif /* __PDBREADER_H__ */

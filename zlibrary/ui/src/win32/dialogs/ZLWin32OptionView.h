@@ -94,7 +94,7 @@ private:
 class StringOptionView : public ZLWin32OptionView, public W32Listener {
 
 public:
-	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
+	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLWin32DialogContent &tab, bool passwordMode, int from, int to);
 
 private:
 	void _setActive(bool active);
@@ -184,6 +184,20 @@ private:
 	W32KeyNameEditor *myKeyNameEditor;
 	W32ComboBox *myComboBox;
 	std::string myCurrentKey;
+};
+
+class StaticTextOptionView : public ZLWin32OptionView {
+
+public:
+	StaticTextOptionView(const std::string &name, const std::string &tooltip, ZLStaticTextOptionEntry *option, ZLWin32DialogContent &tab, int from, int to);
+
+protected:
+	void _onAccept() const;
+	void _show();
+	void _hide();
+
+private:
+	W32Label *myLabel;
 };
 
 #endif /* __ZLWIN32OPTIONVIEW_H__ */

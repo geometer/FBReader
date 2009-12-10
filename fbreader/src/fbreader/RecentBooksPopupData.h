@@ -22,12 +22,10 @@
 
 #include <ZLPopupData.h>
 
-class FBReader;
-
 class RecentBooksPopupData : public ZLPopupData {
 
 public:
-	RecentBooksPopupData(FBReader &fbreader);
+	RecentBooksPopupData();
 	void updateId();
 
 private:
@@ -37,7 +35,6 @@ private:
 	void run(size_t index);
 
 private:
-	FBReader &myFBReader;
 	size_t myId;
 };
 

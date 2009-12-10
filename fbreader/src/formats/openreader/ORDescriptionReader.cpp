@@ -20,11 +20,13 @@
 #include <ZLUnicodeUtil.h>
 
 #include "ORDescriptionReader.h"
-#include "../util/EntityFilesCollector.h"
 
-ORDescriptionReader::ORDescriptionReader(BookDescription &description) : myDescription(description) {
-	myDescription.clearAuthor();
-	myDescription.title().erase();
+#include "../util/EntityFilesCollector.h"
+#include "../../library/Book.h"
+
+ORDescriptionReader::ORDescriptionReader(Book &book) : myBook(book) {
+	myBook.removeAllAuthors();
+	myBook.setTitle("");
 }
 
 // TODO: replace "dc" by real DC scheme name
@@ -41,7 +43,7 @@ void ORDescriptionReader::characterDataHandler(const char *text, size_t len) {
 			myCurrentAuthor.append(text, len);
 			break;
 		case READ_TITLE:
-			myDescription.title().append(text, len);
+			myBook.setTitle(myBook.title() + std::string(text, len));
 			break;
 	}
 }
@@ -68,19 +70,19 @@ void ORDescriptionReader::endElementHandler(const char *tag) {
 		interrupt();
 	} else {
 		if (!myCurrentAuthor.empty()) {
-			myDescription.addAuthor(myCurrentAuthor);
+			myBook.addAuthor(myCurrentAuthor);
 			myCurrentAuthor.erase();
 		}
 		myReadState = READ_NONE;
 	}
 }
 
-bool ORDescriptionReader::readDescription(const std::string &fileName) {
+bool ORDescriptionReader::readMetaInfo() {
 	myReadMetaData = false;
 	myReadState = READ_NONE;
-	return readDocument(fileName);
+	return readDocument(myBook.filePath());
 }
 
 const std::vector<std::string> &ORDescriptionReader::externalDTDs() const {
-	return EntityFilesCollector::instance().externalDTDs("xhtml");
+	return EntityFilesCollector::Instance().externalDTDs("xhtml");
 }

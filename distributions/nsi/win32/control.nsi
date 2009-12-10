@@ -1,4 +1,4 @@
-Name "FBReader for Windows XP"
+Name "FBReader for Windows"
 
 OutFile "FBReaderSetup-@VERSION@.exe"
 
@@ -26,18 +26,20 @@ Section "FBReader"
   Delete "$INSTDIR\share\FBReader\help\MiniHelp.fb2"
   Delete "$INSTDIR\share\FBReader\hyphenationPatterns.zip"
 
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "DisplayName" "FBReader for Windows XP"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "UninstallString" '"$INSTDIR\uninstall.exe"'
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "NoModify" 1
-  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP" "NoRepair" 1
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows" "DisplayName" "FBReader for Windows"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows" "UninstallString" '"$INSTDIR\uninstall.exe"'
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows" "NoModify" 1
+  WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows" "NoRepair" 1
   WriteUninstaller "uninstall.exe"
 
-  CreateDirectory "$SMPROGRAMS\FBReader for Windows XP"
-  CreateShortCut "$SMPROGRAMS\FBReader for Windows XP\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
-  CreateShortCut "$SMPROGRAMS\FBReader for Windows XP\FBReader.lnk" "$INSTDIR\FBReader.exe" "" "$INSTDIR\FBReader.exe" 0
+  CreateDirectory "$SMPROGRAMS\FBReader for Windows"
+  CreateShortCut "$SMPROGRAMS\FBReader for Windows\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
+  CreateShortCut "$SMPROGRAMS\FBReader for Windows\FBReader.lnk" "$INSTDIR\FBReader.exe" "" "$INSTDIR\FBReader.exe" 0
 
 	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "BookPath"
 	StrCmp $0 "" 0 +2
+	WriteRegStr HKCU "Software\FBReader\options\Style" "Base:fontFamily" "Georgia" 
+	WriteRegStr HKCU "Software\FBReader\options\Style" "Base:fontSize" "20" 
 	WriteRegStr HKCU "Software\FBReader\options\Options" "BookPath" "C:\Books;$PROFILE\Books" 
 	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "DownloadDirectory"
 	StrCmp $0 "" 0 +2
@@ -48,8 +50,7 @@ Section "FBReader"
 	WriteRegStr HKCU "Software\FBReader\options\Options" "LeftMargin" "50" 
 	WriteRegStr HKCU "Software\FBReader\options\Options" "RightMargin" "50" 
 	WriteRegStr HKCU "Software\FBReader\options\Options" "KeyDelay" "0" 
-	WriteRegStr HKCU "Software\FBReader\options\SmallScrolling" "ScrollingDelay" "true" 
-	WriteRegStr HKCU "Software\FBReader\options\LargeScrolling" "ScrollingDelay" "true" 
+	WriteRegStr HKCU "Software\FBReader\options\Scrollings" "Delay" "0" 
 	WriteRegStr HKCU "Software\FBReader\options\TapScrolling" "Enabled" "false" 
 SectionEnd
 
@@ -70,13 +71,17 @@ Section "Uninstall"
 	Delete "$INSTDIR\uninstall.exe"
 	RMDir "$INSTDIR"
 
-	RMDir /r "$SMPROGRAMS\FBReader for Windows XP"
+	RMDir /r "$SMPROGRAMS\FBReader for Windows"
   Delete "$DESKTOP\FBReader.lnk"
 
-  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows XP"
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\FBReader for Windows"
 	DeleteRegKey /ifempty HKCU "Software\FBReader"
 
-	MessageBox MB_YESNO "Delete FBReader configuration from registry?" IDNO Skip
+	MessageBox MB_YESNO "Remove FBReader configuration from registry?" IDNO SkipConfigDeletion
 		DeleteRegKey HKCU "Software\FBReader"
-	Skip:
+	SkipConfigDeletion:
+
+	MessageBox MB_YESNO "Remove FBReader library information?" IDNO SkipLibraryDeletion
+	  RMDir /r "$PROFILE\.FBReader"
+	SkipLibraryDeletion:
 SectionEnd

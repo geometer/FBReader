@@ -51,7 +51,7 @@ public:
 class ZLImageManager {
 
 public:
-	static const ZLImageManager &instance();
+	static const ZLImageManager &Instance();
 	static void deleteInstance();
 
 protected:
@@ -74,6 +74,6 @@ private:
 
 inline void ZLImageData::setGrayPixel(unsigned char c) { setPixel(c, c, c); }
 
-inline const ZLImageManager &ZLImageManager::instance() { return *ourInstance; }
+inline const ZLImageManager &ZLImageManager::Instance() { return *ourInstance; }
 
 #endif /* __IMAGEMANAGER_H__ */

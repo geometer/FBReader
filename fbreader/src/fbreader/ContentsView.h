@@ -25,7 +25,7 @@
 class ContentsView : public FBView {
 
 public:
-	ContentsView(FBReader &reader, shared_ptr<ZLPaintContext> context);
+	ContentsView(ZLPaintContext &context);
 	~ContentsView();
 
 	bool isEmpty() const;

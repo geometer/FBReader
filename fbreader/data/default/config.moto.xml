@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
+	<group name="Style">
+		<option name="Base:fontFamily" value="SSong"/>
+		<option name="Base:fontSize" value="18"/>
+	</group>
 	<group name="Options">
 		<option name="BookPath" value="/mmc/mmca1/books/fiction"/>
 		<option name="DownloadDirectory" value="/mmc/mmca1/books/fiction"/>
@@ -17,8 +21,8 @@
 	<group name="Keys180">
 		<option name="Action0" value="gotoSectionStart"/>
 		<option name="Action1" value="gotoSectionEnd"/>
-		<option name="Action2" value="largeScrollForward"/>
-		<option name="Action3" value="largeScrollBackward"/>
+		<option name="Action2" value="pageForward"/>
+		<option name="Action3" value="pageBackward"/>
 		<option name="Key0" value="&lt;Right&gt;"/>
 		<option name="Key1" value="&lt;Left&gt;"/>
 		<option name="Key2" value="&lt;Up&gt;"/>
@@ -26,8 +30,8 @@
 		<option name="Number" value="4"/>
 	</group>
 	<group name="Keys90">
-		<option name="Action0" value="largeScrollBackward"/>
-		<option name="Action1" value="largeScrollForward"/>
+		<option name="Action0" value="pageBackward"/>
+		<option name="Action1" value="pageForward"/>
 		<option name="Action2" value="gotoSectionStart"/>
 		<option name="Action3" value="gotoSectionEnd"/>
 		<option name="Key0" value="&lt;Left&gt;"/>
@@ -37,8 +41,8 @@
 		<option name="Number" value="4"/>
 	</group>
 	<group name="Keys270">
-		<option name="Action0" value="largeScrollBackward"/>
-		<option name="Action1" value="largeScrollForward"/>
+		<option name="Action0" value="pageBackward"/>
+		<option name="Action1" value="pageForward"/>
 		<option name="Action2" value="gotoSectionStart"/>
 		<option name="Action3" value="gotoSectionEnd"/>
 		<option name="Key0" value="&lt;Right&gt;"/>

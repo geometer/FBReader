@@ -1,0 +1,81 @@
+It have been read 51316 bytes from file pt_UTF-8.txt
+mat [] 0
+
+pattern             [2]            [3]            [4]            [5]            
+es_ISO-8859-1       461            1550           1829           1070           
+pt_ISO-8859-1       504            1591           1715           982            
+de_ISO-8859-1       466            1002           495            91             
+ru_IBM866           17             1              0              0              
+it_UTF-8            441            1316           1235           512            
+fi_UTF-8            264            658            263            29             
+en_UTF-8            548            1605           1423           712            
+ru_MAC-CYRILLIC     9              1              0              0              
+ru_WINDOWS-1251     9              1              0              0              
+fr_ISO-8859-1       460            1333           1081           459            
+en_US-ASCII         548            1605           1423           712            
+it_ISO-8859-1       418            1278           1219           508            
+ru_UTF-8            14             1              0              0              
+zh_UTF-8            3              1              0              0              
+ru_ISO-8859-5       9              1              0              0              
+fi_ISO-8859-1       249            633            252            27             
+de_UTF-8            493            1034           505            92             
+fr_UTF-8            526            1484           1191           485            
+ru_KOI8-R           9              1              0              0              
+pt_UTF-8            571            1747           1858           1084           
+zh_BIG5             17             1              0              0              
+es_UTF-8            544            1799           2052           1177           
+
+It have been read 51316 bytes from file pt_UTF-8.txt
+mat [-] 100
+
+pattern             [2]            [3]            [4]            [5]            
+es_ISO-8859-1       97             91             57             38             
+pt_ISO-8859-1       98             97             92             78             
+de_ISO-8859-1       97             83             31             5              
+ru_IBM866           2              1              0              0              
+it_UTF-8            100            92             50             21             
+fi_UTF-8            89             55             17             0              
+en_UTF-8            100            98             80             69             
+ru_MAC-CYRILLIC     2              1              0              0              
+ru_WINDOWS-1251     2              1              0              0              
+fr_ISO-8859-1       96             84             47             23             
+en_US-ASCII         100            98             80             69             
+it_ISO-8859-1       100            92             50             22             
+ru_UTF-8            2              0              0              0              
+zh_UTF-8            0              0              0              0              
+ru_ISO-8859-5       2              1              0              0              
+fi_ISO-8859-1       84             59             17             5              
+de_UTF-8            93             83             28             4              
+fr_UTF-8            98             84             46             22             
+ru_KOI8-R           2              1              0              0              
+pt_UTF-8            100            100            97             81             
+zh_BIG5             2              1              0              0              
+es_UTF-8            100            95             54             34             
+
+It have been read 51316 bytes from file pt_UTF-8.txt
+mat [-] 1000
+
+pattern             [2]            [3]            [4]            [5]            
+es_ISO-8859-1       461            784            520            279            
+pt_ISO-8859-1       504            889            734            511            
+de_ISO-8859-1       466            537            179            39             
+ru_IBM866           17             1              0              0              
+it_UTF-8            441            782            450            190            
+fi_UTF-8            264            498            130            20             
+en_UTF-8            548            861            651            464            
+ru_MAC-CYRILLIC     9              1              0              0              
+ru_WINDOWS-1251     9              1              0              0              
+fr_ISO-8859-1       460            688            362            182            
+en_US-ASCII         548            861            651            464            
+it_ISO-8859-1       418            787            451            193            
+ru_UTF-8            14             1              0              0              
+zh_UTF-8            1              0              0              0              
+ru_ISO-8859-5       9              1              0              0              
+fi_ISO-8859-1       249            478            132            19             
+de_UTF-8            493            533            172            37             
+fr_UTF-8            526            738            365            174            
+ru_KOI8-R           9              1              0              0              
+pt_UTF-8            571            929            769            556            
+zh_BIG5             17             1              0              0              
+es_UTF-8            544            823            529            273            
+

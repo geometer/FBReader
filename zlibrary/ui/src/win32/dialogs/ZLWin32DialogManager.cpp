@@ -19,15 +19,13 @@
 
 #include "../../../../core/src/win32/util/W32WCHARUtil.h"
 #include "ZLWin32DialogManager.h"
+#include "ZLWin32ProgressDialog.h"
 #include "ZLWin32Dialog.h"
 #include "../application/ZLWin32ApplicationWindow.h"
 #include "../image/ZLWin32ImageManager.h"
 #include "ZLWin32OptionsDialog.h"
 #include "ZLWin32SelectionDialog.h"
 #include "ZLWin32MessageBox.h"
-/*
-#include "ZLWin32WaitMessage.h"
-*/
 
 void ZLWin32DialogManager::createApplicationWindow(ZLApplication *application) const {
 	myApplicationWindow = new ZLWin32ApplicationWindow(application);
@@ -71,14 +69,8 @@ bool ZLWin32DialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandl
 	return ZLWin32SelectionDialog(*myApplicationWindow, dialogTitle(key), handler).runWithSize();
 }
 
-void ZLWin32DialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
-	if (myApplicationWindow != 0) {
-		myApplicationWindow->setWait(true);
-	}
-	runnable.run();
-	if (myApplicationWindow != 0) {
-		myApplicationWindow->setWait(false);
-	}
+shared_ptr<ZLProgressDialog> ZLWin32DialogManager::createProgressDialog(const ZLResourceKey &key) const {
+	return new ZLWin32ProgressDialog(myApplicationWindow, key);
 }
 
 bool ZLWin32DialogManager::isClipboardSupported(ClipboardType type) const {

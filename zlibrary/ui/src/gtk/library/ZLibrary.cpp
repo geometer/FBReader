@@ -58,7 +58,7 @@ void ZLGtkLibraryImplementation::init(int &argc, char **&argv) {
 	ZLGtkDialogManager::createInstance();
 	ZLUnixCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
-	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
+	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 
 	ZLKeyUtil::setKeyNamesFileName("keynames-gtk.xml");
 }
@@ -68,7 +68,7 @@ ZLPaintContext *ZLGtkLibraryImplementation::createContext() {
 }
 
 void ZLGtkLibraryImplementation::run(ZLApplication *application) {
-	ZLDialogManager::instance().createApplicationWindow(application);
+	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
 	gtk_widget_set_default_direction(ZLLanguageUtil::isRTLLanguage(ZLibrary::Language()) ? GTK_TEXT_DIR_RTL : GTK_TEXT_DIR_LTR);
 	gtk_main();

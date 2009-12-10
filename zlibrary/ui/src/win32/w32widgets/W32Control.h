@@ -210,7 +210,7 @@ public:
 	static const std::string VALUE_EDITED_EVENT;
 
 public:
-	W32LineEditor(const std::string &text);
+	W32LineEditor(const std::string &text, bool passwordMode = false);
 	Size minimumSize() const;
 	void init(HWND parent, W32ControlCollection *collection);
 

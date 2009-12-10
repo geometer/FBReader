@@ -44,7 +44,7 @@ void ZLGtkDialogManager::createApplicationWindow(ZLApplication *application) con
 static bool acceptAction() {
 	return
 		ZLGtkDialogManager::isInitialized() &&
-		!((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).isWaiting();
+		!((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).isWaiting();
 }
 
 static bool applicationQuit(GtkWidget*, GdkEvent*, gpointer data) {
@@ -103,12 +103,12 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
 	KeyActionOnReleaseNotOnPressOption(ZLCategoryKey::CONFIG, "KeyAction", "OnRelease", false),
 	myFullScreen(false) {
-	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
+	myProgram = HILDON_PROGRAM(hildon_program_get_Instance());
 	g_set_application_name("");
 
 	myWindow = HILDON_WINDOW(hildon_window_new());
 
-	((ZLMaemoCommunicationManager&)ZLCommunicationManager::instance()).init();
+	((ZLMaemoCommunicationManager&)ZLCommunicationManager::Instance()).init();
 
 	myToolbar = GTK_TOOLBAR(gtk_toolbar_new());
 	gtk_toolbar_set_show_arrow(myToolbar, false);
@@ -131,8 +131,8 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 }
 
 ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
-	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).setMainWindow(0);
-	((ZLMaemoCommunicationManager&)ZLCommunicationManager::instance()).shutdown();
+	((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).setMainWindow(0);
+	((ZLMaemoCommunicationManager&)ZLCommunicationManager::Instance()).shutdown();
 }
 
 void ZLGtkApplicationWindow::init() {

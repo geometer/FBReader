@@ -76,7 +76,7 @@ void ZLXMLReaderInternal::fEndElementHandler(void *userData, const char *name) {
 }
 
 static int fUnknownEncodingHandler(void*, const XML_Char *name, XML_Encoding *encoding) {
-	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::instance().info(name);
+	ZLEncodingConverterInfoPtr info = ZLEncodingCollection::Instance().info(name);
 	if (!info.isNull()) {
 		shared_ptr<ZLEncodingConverter> converter = info->createConverter();
 		if (!converter.isNull() && converter->fillTable(encoding->map)) {

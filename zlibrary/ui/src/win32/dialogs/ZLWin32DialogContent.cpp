@@ -64,7 +64,10 @@ void ZLWin32DialogContent::createViewByEntry(const std::string &name, const std:
 			view = new Boolean3OptionView(name, tooltip, (ZLBoolean3OptionEntry*)option, *this, from, to);
 			break;
 		case ZLOptionEntry::STRING:
-			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, *this, from, to);
+			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, *this, false, from, to);
+			break;
+		case ZLOptionEntry::PASSWORD:
+			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, *this, true, from, to);
 			break;
 		case ZLOptionEntry::CHOICE:
 			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, *this, from, to);
@@ -86,6 +89,9 @@ void ZLWin32DialogContent::createViewByEntry(const std::string &name, const std:
 			break;
 		case ZLOptionEntry::MULTILINE:
 			// TODO: implement
+			break;
+		case ZLOptionEntry::STATIC:
+			view = new StaticTextOptionView(name, tooltip, (ZLStaticTextOptionEntry*)option, *this, from, to);
 			break;
 	}
 

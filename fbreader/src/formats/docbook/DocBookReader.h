@@ -28,6 +28,12 @@ public:
 	static std::string DTDDirectory;
 
 public:
+	struct Tag {
+		const char *tagName;
+		int tagCode;
+	};
+
+public:
 //protected:
 	enum TagCode {
 		_ARTICLE,

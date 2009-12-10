@@ -48,6 +48,7 @@ public:
 	virtual void clear(ZLColor color) = 0;
 
 	virtual void setFont(const std::string &family, int size, bool bold, bool italic) = 0;
+	virtual int fontSizeToPixels(int fontSize);
 	virtual void setColor(ZLColor color, LineStyle style = SOLID_LINE) = 0;
 	virtual void setFillColor(ZLColor color, FillStyle style = SOLID_FILL) = 0;
 
@@ -60,9 +61,17 @@ public:
 	virtual int descent() const = 0;
 	virtual void drawString(int x, int y, const char *str, int len, bool rtl) = 0;
 
+	enum ScalingType {
+		SCALE_FIT_TO_SIZE,
+		SCALE_REDUCE_SIZE
+	};
+
 	int imageWidth(const ZLImageData &image) const;
 	int imageHeight(const ZLImageData &image) const;
+	int imageWidth(const ZLImageData &image, int width, int height, ScalingType type) const;
+	int imageHeight(const ZLImageData &image, int width, int height, ScalingType type) const;
 	virtual void drawImage(int x, int y, const ZLImageData &image) = 0;
+	virtual void drawImage(int x, int y, const ZLImageData &image, int width, int height, ScalingType type) = 0;
 
 	virtual void drawLine(int x0, int y0, int x1, int y1) = 0;
 	virtual void fillRectangle(int x0, int y0, int x1, int y1) = 0;

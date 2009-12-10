@@ -30,7 +30,7 @@ private:
 	static FB2TagManager *ourInstance;
 
 public:
-	static const FB2TagManager &instance();
+	static const FB2TagManager &Instance();
 
 private:
 	FB2TagManager();

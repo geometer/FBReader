@@ -83,6 +83,7 @@ static void mouseMoved(GtkWidget*, GdkEventMotion *event, gpointer data) {
 		y = (int)event->y;
 		state = (GdkModifierType)event->state;
 	}
+	state = (GdkModifierType) (state & GDK_MODIFIER_MASK);
 	updatePoint(viewWidget, x, y);
 	if ((state & 0xFF00) == 0) {
 		viewWidget->view()->onStylusMove(x, y);

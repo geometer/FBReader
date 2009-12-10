@@ -91,7 +91,7 @@ class ZLEncodingConverterProvider;
 class ZLEncodingCollection {
 
 public:
-	static ZLEncodingCollection &instance();
+	static ZLEncodingCollection &Instance();
 	static std::string encodingDescriptionPath();
 
 private:

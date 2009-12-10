@@ -24,7 +24,8 @@
 
 #include <shared_ptr.h>
 
-class ZLApplication;
+#include <ZLColor.h>
+
 class ZLViewWidget;
 class ZLPaintContext;
 
@@ -44,9 +45,10 @@ public:
 	};
 
 public:
-	ZLView(ZLApplication &application, shared_ptr<ZLPaintContext> context = 0);
+	ZLView(ZLPaintContext &context);
 	virtual ~ZLView();
-	virtual void setPaintContext(shared_ptr<ZLPaintContext> context);
+
+	virtual const std::string &typeId() const = 0;
 
 	virtual const std::string &caption() const = 0;
 	virtual void paint() = 0;
@@ -62,10 +64,7 @@ public:
 	virtual bool onFingerTap(int x, int y);
 
 protected:
-	ZLApplication &application();
-	const ZLApplication &application() const;
-
-	bool hasContext() const;
+	virtual ZLColor backgroundColor() const = 0;
 
 	void setScrollbarEnabled(Direction direction, bool enabled);
 	void setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to);
@@ -90,9 +89,8 @@ private:
 	void updateScrollbarParameters(Direction direction, const ScrollBarInfo &info, bool invert);
 
 private:
-	ZLApplication &myApplication;
 	ZLViewWidget *myViewWidget;
-	shared_ptr<ZLPaintContext> myContext;
+	ZLPaintContext &myContext;
 	ScrollBarInfo myVerticalScrollbarInfo;
 	ScrollBarInfo myHorizontalScrollbarInfo;
 
@@ -103,9 +101,6 @@ private:
 friend class ZLViewWidget;
 };
 
-inline bool ZLView::hasContext() const { return !myContext.isNull(); }
-inline ZLPaintContext &ZLView::context() const { return *myContext; }
-inline ZLApplication &ZLView::application() { return myApplication; }
-inline const ZLApplication &ZLView::application() const { return myApplication; }
+inline ZLPaintContext &ZLView::context() const { return myContext; }
 
 #endif /* __ZLVIEW_H__ */

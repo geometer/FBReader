@@ -25,7 +25,7 @@
 
 static GtkLabel *gtkLabel(const std::string &name) {
 	GtkLabel *label = GTK_LABEL(gtk_label_new(gtkString(name).c_str()));
-	gtk_label_set_justify(label, GTK_JUSTIFY_RIGHT);
+	gtk_misc_set_alignment(GTK_MISC(label), 1.0f, 0.5f);
 	return label;
 }
 
@@ -280,6 +280,7 @@ void SpinOptionView::_onAccept() const {
 
 void StringOptionView::_createItem() {
 	myLineEdit = GTK_ENTRY(gtk_entry_new());
+	gtk_entry_set_visibility(myLineEdit, !myPasswordMode);
 	g_signal_connect(myLineEdit, "changed", G_CALLBACK(_onValueChanged), this);
 
 	if (!name().empty()) {
@@ -396,12 +397,12 @@ void ColorOptionView::_onAccept() const {
 
 static bool key_view_focus_in_event(GtkWidget *entry, GdkEventFocus*, gpointer) {
 	gdk_keyboard_grab(entry->window, true, GDK_CURRENT_TIME);
-	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(true);
+	((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).grabKeyboard(true);
 	return false;
 }
 
 static bool key_view_focus_out_event(GtkWidget*, GdkEventFocus*, gpointer) {
-	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).grabKeyboard(false);
+	((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).grabKeyboard(false);
 	gdk_keyboard_ungrab(GDK_CURRENT_TIME);
 	return false;
 }
@@ -486,4 +487,22 @@ void KeyOptionView::_hide() {
 
 void KeyOptionView::_onAccept() const {
 	((ZLKeyOptionEntry&)*myOption).onAccept();
+}
+
+void StaticTextOptionView::_createItem() {
+	const std::string &name = ((ZLStaticTextOptionEntry&)*myOption).initialValue();
+	myLabel = GTK_LABEL(gtk_label_new(gtkString(name).c_str()));
+	gtk_misc_set_alignment(GTK_MISC(myLabel), 0.0f, 0.0f);
+	myHolder.attachWidget(*this, GTK_WIDGET(myLabel));
+}
+
+void StaticTextOptionView::_onAccept() const {
+}
+
+void StaticTextOptionView::_show() {
+	gtk_widget_show(GTK_WIDGET(myLabel));
+}
+
+void StaticTextOptionView::_hide() {
+	gtk_widget_hide(GTK_WIDGET(myLabel));
 }

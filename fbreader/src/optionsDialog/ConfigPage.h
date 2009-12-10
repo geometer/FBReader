@@ -20,13 +20,12 @@
 #ifndef __CONFIGPAGE_H__
 #define __CONFIGPAGE_H__
 
-class FBReader;
 class ZLDialogContent;
 
 class ConfigPage {
 
 public:
-	ConfigPage(FBReader &fbreader, ZLDialogContent &dialogTab);
+	ConfigPage(ZLDialogContent &dialogTab);
 };
 
 #endif /* __CONFIGPAGE_H__ */

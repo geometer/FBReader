@@ -33,7 +33,7 @@ public:
 	~ZTXTStream();
 	bool open();
 
-protected:
+private:
 	bool fillBuffer();
 
 private:

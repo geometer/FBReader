@@ -17,8 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <string.h>
-
+#include <cstring>
 #include <algorithm>
 
 #include <ZLSearchUtil.h>
@@ -107,19 +106,6 @@ ZLTextTreeModel::~ZLTextTreeModel() {
 void ZLTextModel::addParagraphInternal(ZLTextParagraph *paragraph) {
 	myParagraphs.push_back(paragraph);
 	myLastEntryStart = 0;
-}
-
-void ZLTextModel::removeParagraphInternal(int index) {
-	if ((index >= 0) && (index < (int)myParagraphs.size())) {
-		myParagraphs.erase(myParagraphs.begin() + index);
-	}
-}
-
-void ZLTextTreeModel::removeParagraph(int index) {
-	ZLTextTreeParagraph *p = (ZLTextTreeParagraph*)(*this)[index];
-	p->removeFromParent();
-	removeParagraphInternal(index);
-	delete p;
 }
 
 ZLTextTreeParagraph *ZLTextTreeModel::createParagraph(ZLTextTreeParagraph *parent) {

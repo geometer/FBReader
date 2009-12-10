@@ -26,7 +26,7 @@
 
 EntityFilesCollector *EntityFilesCollector::ourInstance = 0;
 
-EntityFilesCollector &EntityFilesCollector::instance() {
+EntityFilesCollector &EntityFilesCollector::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new EntityFilesCollector();
 	}

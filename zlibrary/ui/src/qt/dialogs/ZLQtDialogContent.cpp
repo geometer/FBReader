@@ -66,7 +66,10 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 			view = new Boolean3OptionView(name, tooltip, (ZLBoolean3OptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::STRING:
-			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, this, false, myRowCounter, fromColumn, toColumn);
+			break;
+		case ZLOptionEntry::PASSWORD:
+			view = new StringOptionView(name, tooltip, (ZLStringOptionEntry*)option, this, true, myRowCounter, fromColumn, toColumn);
 			break;
 		case ZLOptionEntry::CHOICE:
 			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
@@ -85,6 +88,9 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 			break;
 		case ZLOptionEntry::ORDER:
 			view = new OrderOptionView(name, tooltip, (ZLOrderOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
+			break;
+		case ZLOptionEntry::STATIC:
+			view = new StaticTextOptionView(name, tooltip, (ZLStaticTextOptionEntry*)option, this, myRowCounter, fromColumn, toColumn);
 			break;
 	}
 

@@ -28,6 +28,10 @@ private:
 	ZLTime currentTime() const;
 	short hoursBySeconds(long seconds) const;
 	short minutesBySeconds(long seconds) const;
+
+	short yearBySeconds(long seconds) const;
+	short monthBySeconds(long seconds) const;
+	short dayOfMonthBySeconds(long seconds) const;
 };
 
 #endif /* __ZLUNIXTIME_H__ */

@@ -21,7 +21,7 @@
 
 #include <ZLStringUtil.h>
 
-#include "../options/FBOptions.h"
+#include "../options/FBCategoryKey.h"
 
 #include "Migration.h"
 

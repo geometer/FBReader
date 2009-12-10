@@ -62,7 +62,7 @@ bool ZLQtOptionsDialog::runInternal() {
 		((ZLQtDialogContent&)**it).close();
 	}
 	bool code = exec();
-	((ZLQtDialogManager&)ZLQtDialogManager::instance()).fullScreenWorkaround();
+	((ZLQtDialogManager&)ZLQtDialogManager::Instance()).fullScreenWorkaround();
 	return code;
 }
 

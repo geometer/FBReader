@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog type="opds">
+	<site>smashwords.com</site>
+	<link type="main">http://smashwords.com/atom</link>
+	<link type="search">http://smashwords.com/atom/search/books?query=%s</link>
+	<title>Smashwords</title>
+	<summary>Ebooks from independent authors and publishers</summary>
+	<icon>feed-smashwords.png</icon>
+	<advancedSearch style="quoted">
+		<part name="author">authorFullName</part>
+		<part name="titleOrSeries">title</part>
+		<part name="tag">categories</part>
+		<part name="annotation">description</part>
+	</advancedSearch>
+</catalog>

@@ -8,8 +8,8 @@
 	<binding key="&lt;F&gt;" action="search"/>
 	<binding key="&lt;P&gt;" action="findPrevious"/>
 	<binding key="&lt;N&gt;" action="findNext"/>
-	<binding key="&lt;DownArrow&gt;" action="largeScrollForward"/>
-	<binding key="&lt;UpArrow&gt;" action="largeScrollBackward"/>
+	<binding key="&lt;DownArrow&gt;" action="pageForward"/>
+	<binding key="&lt;UpArrow&gt;" action="pageBackward"/>
 	<binding key="&lt;Esc&gt;" action="cancel"/>
 	<binding key="&lt;Font +&gt;" action="increaseFont"/>
 	<binding key="&lt;Font -&gt;" action="decreaseFont"/>

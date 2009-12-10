@@ -20,101 +20,32 @@
 #ifndef __ZLLANGUAGEMATCHER_H__
 #define __ZLLANGUAGEMATCHER_H__
 
-#include <set>
-
 #include "ZLLanguageDetector.h"
 
-class ZLLanguageMatcher {
+#include "ZLStatistics.h"
 
-public:
-	static const std::string UTF8_ENCODING_NAME;
+class ZLLanguageMatcher {
 
 public:
 	ZLLanguageMatcher(shared_ptr<ZLLanguageDetector::LanguageInfo> info);
 	virtual ~ZLLanguageMatcher();
 
-	virtual void reset() = 0;
-
-	virtual int criterion() const = 0;
 	shared_ptr<ZLLanguageDetector::LanguageInfo> info() const;
 
 private:
 	shared_ptr<ZLLanguageDetector::LanguageInfo> myInfo;
 };
 
-class ZLWordBasedMatcher : public ZLLanguageMatcher {
+class ZLStatisticsBasedMatcher : public ZLLanguageMatcher {
 
 public:
-	ZLWordBasedMatcher(shared_ptr<ZLLanguageDetector::LanguageInfo> info);
+	ZLStatisticsBasedMatcher(const std::string &fileName, shared_ptr<ZLLanguageDetector::LanguageInfo> info);
+	~ZLStatisticsBasedMatcher(); // надо ли его объявлять, если он ничего не делает??
 
-	virtual void processWord(const std::string &word, int length) = 0;
-};
-
-class ZLLanguagePatternBasedMatcher : public ZLWordBasedMatcher {
-
-public:
-	ZLLanguagePatternBasedMatcher(const std::string &fileName, shared_ptr<ZLLanguageDetector::LanguageInfo> info);
+	int criterion(const ZLStatistics &otherStatistics);
 
 private:
-	void reset();
-	void processWord(const std::string &word, int length);
-
-	int criterion() const;
-
-private:
-	unsigned int myProCounter;
-	unsigned int myContraCounter;
-	std::set<std::string> myDictionary;
-};
-
-class ZLChineseUtf8Matcher : public ZLWordBasedMatcher {
-
-public:
-	ZLChineseUtf8Matcher();
-
-private:
-	void processWord(const std::string &word, int length);
-	void reset();
-	int criterion() const;
-
-private:
-	unsigned int myNeutralCharacterCounter;
-	unsigned int myChineseCharacterCounter;
-	unsigned int myNonChineseCharacterCounter;
-};
-
-class ZLChineseMatcher : public ZLLanguageMatcher {
-
-public:
-	ZLChineseMatcher(const std::string &encoding);
-
-public:
-	void reset();
-	int criterion() const;
-	virtual void processBuffer(const unsigned char *start, const unsigned char *end) = 0;
-
-protected:
-	unsigned int myNeutralCharacterCounter;
-	unsigned int myChineseCharacterCounter;
-	unsigned int myNonChineseCharacterCounter;
-};
-
-class ZLChineseBig5Matcher : public ZLChineseMatcher {
-
-public:
-	ZLChineseBig5Matcher();
-
-private:
-	void processBuffer(const unsigned char *start, const unsigned char *end);
-};
-
-class ZLChineseGBKMatcher : public ZLChineseMatcher {
-
-public:
-	ZLChineseGBKMatcher();
-
-private:
-	void processBuffer(const unsigned char *start, const unsigned char *end);
+	shared_ptr<ZLArrayBasedStatistics> myStatisticsPtr;
 };
 
 #endif /* __ZLLANGUAGEMATCHER_H__ */

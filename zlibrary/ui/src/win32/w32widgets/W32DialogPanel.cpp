@@ -181,22 +181,20 @@ void W32DialogPanel::layout() {
 			bool vOversized = rectangle.bottom > realRectangle.bottom + 1;
 			int rightBound = realRectangle.right;
 			int bottomBound = realRectangle.bottom;
-			if (hOversized || vOversized) {
-				if (!hOversized || !vOversized) {
-					SCROLLBARINFO info;
-					info.cbSize = sizeof(info);
+			if (hOversized != vOversized) {
+				SCROLLBARINFO info;
+				info.cbSize = sizeof(info);
+				if (hOversized) {
+					GetScrollBarInfo(myPanelWindow, OBJID_HSCROLL, &info);
+					vOversized = rectangle.bottom >= info.rcScrollBar.top;
+					if (vOversized) {
+						bottomBound = info.rcScrollBar.top - 1;
+					}
+				} else {
+					GetScrollBarInfo(myPanelWindow, OBJID_VSCROLL, &info);
+					hOversized = rectangle.right >= info.rcScrollBar.left;
 					if (hOversized) {
-						GetScrollBarInfo(myPanelWindow, OBJID_HSCROLL, &info);
-						vOversized = rectangle.bottom >= info.rcScrollBar.top;
-						if (vOversized) {
-							bottomBound = info.rcScrollBar.top - 1;
-						}
-					} else {
-						GetScrollBarInfo(myPanelWindow, OBJID_VSCROLL, &info);
-						hOversized = rectangle.right >= info.rcScrollBar.left;
-						if (hOversized) {
-							rightBound = info.rcScrollBar.left - 1;
-						}
+						rightBound = info.rcScrollBar.left - 1;
 					}
 				}
 			}
@@ -206,18 +204,18 @@ void W32DialogPanel::layout() {
 				info.cbSize = sizeof(info);
 				info.fMask = SIF_RANGE | SIF_PAGE;
 				info.nMin = 0;
-				info.nMax = rectangle.right - rightBound;
-				info.nPage = 1;
+				info.nMax = rectangle.right;
+				info.nPage = rightBound;
 				SetScrollInfo(myPanelWindow, SB_HORZ, &info, true);
 			}
 			ShowScrollBar(myPanelWindow, SB_VERT, vOversized);
-			if (hOversized) {
+			if (vOversized) {
 				SCROLLINFO info;
 				info.cbSize = sizeof(info);
 				info.fMask = SIF_RANGE | SIF_PAGE;
 				info.nMin = 0;
-				info.nMax = rectangle.bottom - bottomBound;
-				info.nPage = 1;
+				info.nMax = rectangle.bottom;
+				info.nPage = bottomBound;
 				SetScrollInfo(myPanelWindow, SB_VERT, &info, true);
 			}
 		}
@@ -230,61 +228,29 @@ const std::string &W32DialogPanel::caption() const {
 	return myCaption;
 }
 
-void W32DialogPanel::hScroll(WORD command) {
+void W32DialogPanel::scroll(WORD command, int direction) {
 	SCROLLINFO info;
 	info.cbSize = sizeof(info);
 	info.fMask = SIF_ALL;
-	GetScrollInfo(myPanelWindow, SB_HORZ, &info);
+	GetScrollInfo(myPanelWindow, direction, &info);
 	int position = info.nPos;
 	switch (command) {
-		case SB_LINELEFT:
-			info.nPos -= 1;
-			break;
-		case SB_LINERIGHT:
-			info.nPos += 1;
-			break;
-		case SB_PAGELEFT:
-			info.nPos -= info.nPage;
-			break;
-		case SB_PAGERIGHT:
-			info.nPos += info.nPage;
-			break;
-		case SB_THUMBTRACK:
-			info.nPos = info.nTrackPos;
-			break;
-	}
-	info.fMask = SIF_POS;
-	SetScrollInfo(myPanelWindow, SB_HORZ, &info, true);
-	GetScrollInfo(myPanelWindow, SB_HORZ, &info);
-	if (info.nPos != position) {
-		ScrollWindow(myPanelWindow, position - info.nPos, 0, 0, 0);
-		UpdateWindow(myPanelWindow);
-	}
-}
-
-void W32DialogPanel::vScroll(WORD command) {
-	SCROLLINFO info;
-	info.cbSize = sizeof(info);
-	info.fMask = SIF_ALL;
-	GetScrollInfo(myPanelWindow, SB_HORZ, &info);
-	int position = info.nPos;
-	switch (command) {
-		case SB_TOP:
+		case SB_LEFT: // == SB_TOP
 			info.nPos = info.nMin;
 			break;
-		case SB_BOTTOM:
+		case SB_RIGHT: // == SB_BOTTOM
 			info.nPos = info.nMax;
 			break;
-		case SB_LINEUP:
+		case SB_LINELEFT: // == SB_LINEUP
 			info.nPos -= 1;
 			break;
-		case SB_LINEDOWN:
+		case SB_LINERIGHT: // == SB_LINEDOWN
 			info.nPos += 1;
 			break;
-		case SB_PAGEUP:
+		case SB_PAGELEFT: // == SB_PAGEUP
 			info.nPos -= info.nPage;
 			break;
-		case SB_PAGEDOWN:
+		case SB_PAGERIGHT: // == SB_PAGEDOWN
 			info.nPos += info.nPage;
 			break;
 		case SB_THUMBTRACK:
@@ -292,10 +258,14 @@ void W32DialogPanel::vScroll(WORD command) {
 			break;
 	}
 	info.fMask = SIF_POS;
-	SetScrollInfo(myPanelWindow, SB_VERT, &info, true);
-	GetScrollInfo(myPanelWindow, SB_VERT, &info);
+	SetScrollInfo(myPanelWindow, direction, &info, true);
+	GetScrollInfo(myPanelWindow, direction, &info);
 	if (info.nPos != position) {
-		ScrollWindow(myPanelWindow, 0, position - info.nPos, 0, 0);
+		if (direction == SB_HORZ) {
+			ScrollWindow(myPanelWindow, position - info.nPos, 0, 0, 0);
+		} else {
+			ScrollWindow(myPanelWindow, 0, position - info.nPos, 0, 0);
+		}
 		UpdateWindow(myPanelWindow);
 	}
 }

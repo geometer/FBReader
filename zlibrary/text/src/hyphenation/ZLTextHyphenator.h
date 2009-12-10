@@ -45,7 +45,7 @@ friend class ZLTextHyphenator;
 class ZLTextHyphenator {
 
 public:
-	static ZLTextHyphenator &instance();
+	static ZLTextHyphenator &Instance();
 	static void deleteInstance();
 	
 protected:

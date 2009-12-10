@@ -57,7 +57,7 @@ void ZLGtkLibraryImplementation::init(int &argc, char **&argv) {
 	ZLGtkDialogManager::createInstance();
 	ZLUnixCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
-	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
+	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 }
 
 ZLPaintContext *ZLGtkLibraryImplementation::createContext() {
@@ -65,7 +65,7 @@ ZLPaintContext *ZLGtkLibraryImplementation::createContext() {
 }
 
 void ZLGtkLibraryImplementation::run(ZLApplication *application) {
-	ZLDialogManager::instance().createApplicationWindow(application);
+	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
 	gtk_main();
 	delete application;

@@ -23,8 +23,7 @@
 
 #include "ZLLanguageOptionEntry.h"
 
-ZLLanguageOptionEntry::ZLLanguageOptionEntry(ZLStringOption &languageOption, const std::vector<std::string> &languageCodes) : myLanguageOption(languageOption) {
-	const std::string initialCode = myLanguageOption.value();
+ZLAbstractLanguageOptionEntry::ZLAbstractLanguageOptionEntry(const std::string &initialCode, const std::vector<std::string> &languageCodes) {
 	for (std::vector<std::string>::const_iterator it = languageCodes.begin(); it != languageCodes.end(); ++it) {
 		const std::string name = ZLLanguageList::languageName(*it);
 		myValuesToCodes[name] = *it;
@@ -44,14 +43,26 @@ ZLLanguageOptionEntry::ZLLanguageOptionEntry(ZLStringOption &languageOption, con
 	}
 }
 
-const std::string &ZLLanguageOptionEntry::initialValue() const {
+const std::string &ZLAbstractLanguageOptionEntry::initialValue() const {
 	return myInitialValue;
 }
 
-const std::vector<std::string> &ZLLanguageOptionEntry::values() const {
+const std::vector<std::string> &ZLAbstractLanguageOptionEntry::values() const {
 	return myValues;
 }
 
-void ZLLanguageOptionEntry::onAccept(const std::string &value) {
-	myLanguageOption.setValue(myValuesToCodes[value]);
+void ZLAbstractLanguageOptionEntry::onAccept(const std::string &value) {
+	onAcceptCode(myValuesToCodes[value]);
 }
+
+
+
+ZLLanguageOptionEntry::ZLLanguageOptionEntry(ZLStringOption &languageOption, const std::vector<std::string> &languageCodes) : 
+	ZLAbstractLanguageOptionEntry(languageOption.value(), languageCodes),
+	myLanguageOption(languageOption) {
+}
+
+void ZLLanguageOptionEntry::onAcceptCode(const std::string &code) {
+	myLanguageOption.setValue(code);
+}
+

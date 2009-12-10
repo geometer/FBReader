@@ -24,7 +24,7 @@
 #include <ZLResource.h>
 
 #include "ProgramCollection.h"
-#include "../options/FBOptions.h"
+#include "../options/FBCategoryKey.h"
 
 class ProgramCollectionBuilder : public ZLXMLReader {
 
@@ -69,7 +69,7 @@ void ProgramCollectionBuilder::startElementHandler(const char *tag, const char *
 		const char *testFile = attributeValue(attributes, "testFile");
 		if ((name != 0) && (protocol != 0)) {
 			shared_ptr<ZLMessageOutputChannel> channel =
-				ZLCommunicationManager::instance().createMessageOutputChannel(protocol, (testFile != 0) ? testFile : "");
+				ZLCommunicationManager::Instance().createMessageOutputChannel(protocol, (testFile != 0) ? testFile : "");
 			if (!channel.isNull()) {
 				std::string sName = name;
 				if (!sName.empty()) {

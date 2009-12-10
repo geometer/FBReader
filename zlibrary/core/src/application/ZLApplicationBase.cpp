@@ -38,5 +38,5 @@ ZLApplicationBase::ZLApplicationBase(const std::string &name) {
 
 ZLApplicationBase::~ZLApplicationBase() {
 	ConfigSaverRunnable configSaver;
-	ZLDialogManager::instance().wait(ZLResourceKey("savingConfig"), configSaver);
+	ZLDialogManager::Instance().wait(ZLResourceKey("savingConfig"), configSaver);
 }

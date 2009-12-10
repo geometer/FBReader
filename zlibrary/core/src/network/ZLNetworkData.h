@@ -24,18 +24,30 @@
 
 #include <string>
 
-class ZLNetworkData {
+#include <ZLExecutionData.h>
+
+class ZLNetworkData : public ZLExecutionData {
+
+public:
+	static const std::string TYPE_ID;
 
 protected:
-	ZLNetworkData(const std::string &url);
+	ZLNetworkData(const std::string &url, const std::string &sslCertificate = std::string());
 
 public:
 	virtual ~ZLNetworkData();
+	const std::string &type() const;
+
 	const std::string &url() const;
+	const std::string &sslCertificate() const;
 	CURL *handle();
+
+	virtual bool doBefore() = 0;
+	virtual void doAfter(bool success) = 0;
 
 private:
 	const std::string myURL;
+	const std::string mySSLCertificate;
 	CURL *myHandle;
 };
 

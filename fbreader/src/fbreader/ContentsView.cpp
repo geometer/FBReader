@@ -25,27 +25,31 @@
 
 #include "../bookmodel/BookModel.h"
 
-ContentsView::ContentsView(FBReader &reader, shared_ptr<ZLPaintContext> context) : FBView(reader, context) {
+ContentsView::ContentsView(ZLPaintContext &context) : FBView(context) {
 }
 
 ContentsView::~ContentsView() {
 }
 
 bool ContentsView::_onStylusMove(int x, int y) {
+	FBReader &fbreader = FBReader::Instance();
+
 	int index = paragraphIndexByCoordinates(x, y);
 	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
-		fbreader().setHyperlinkCursor(false);
+		fbreader.setHyperlinkCursor(false);
 		return true;
 	}
 
 	const ContentsModel &contentsModel = (const ContentsModel&)*model();
 	const ZLTextTreeParagraph *paragraph = (const ZLTextTreeParagraph*)contentsModel[index];
 	
-	fbreader().setHyperlinkCursor(contentsModel.reference(paragraph) >= 0);
+	fbreader.setHyperlinkCursor(contentsModel.reference(paragraph) >= 0);
 	return true;
 }
 
 bool ContentsView::_onStylusPress(int x, int y) {
+	FBReader &fbreader = FBReader::Instance();
+
 	int index = paragraphIndexByCoordinates(x, y);
 	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
 		return false;
@@ -57,8 +61,8 @@ bool ContentsView::_onStylusPress(int x, int y) {
 	int reference = contentsModel.reference(paragraph);
 
 	if (reference >= 0) {
-		fbreader().bookTextView().gotoParagraph(reference);
-		fbreader().showBookTextView();
+		fbreader.bookTextView().gotoParagraph(reference);
+		fbreader.showBookTextView();
 	}
 
 	return true;
@@ -69,7 +73,7 @@ bool ContentsView::isEmpty() const {
 }
 
 size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
-	const ZLTextWordCursor &cursor = fbreader().bookTextView().startCursor();
+	const ZLTextWordCursor &cursor = FBReader::Instance().bookTextView().startCursor();
 	if (!cursor.isNull()) {
 		long reference = cursor.paragraphCursor().index();
 		bool startOfParagraph = cursor.elementIndex() == 0;

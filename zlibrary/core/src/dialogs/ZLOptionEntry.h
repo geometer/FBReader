@@ -35,12 +35,14 @@ public:
 		BOOLEAN,
 		BOOLEAN3,
 		STRING,
+		PASSWORD,
 		SPIN,
 		COMBO,
 		COLOR,
 		KEY,
 		ORDER,
 		MULTILINE,
+		STATIC,
 	};
 
 public:
@@ -92,6 +94,15 @@ class ZLStringOptionEntry : public ZLTextOptionEntry {
 
 protected:
 	ZLStringOptionEntry();
+
+public:
+	ZLOptionKind kind() const;
+};
+
+class ZLPasswordOptionEntry : public ZLTextOptionEntry {
+
+protected:
+	ZLPasswordOptionEntry();
 
 public:
 	ZLOptionKind kind() const;
@@ -217,6 +228,15 @@ private:
 	std::vector<std::string> myValues;
 };
 
+class ZLStaticTextOptionEntry : public ZLOptionEntry {
+
+public:
+	virtual ZLOptionKind kind() const;
+
+	virtual const std::string &initialValue() const = 0;
+};
+
+
 inline ZLOptionEntry::ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
 inline ZLOptionEntry::~ZLOptionEntry() {}
 inline void ZLOptionEntry::setView(ZLOptionView *view) { myView = view; }
@@ -231,6 +251,9 @@ inline void ZLTextOptionEntry::onValueEdited(const std::string&) {}
 
 inline ZLStringOptionEntry::ZLStringOptionEntry() {}
 inline ZLOptionEntry::ZLOptionKind ZLStringOptionEntry::kind() const { return STRING; }
+
+inline ZLPasswordOptionEntry::ZLPasswordOptionEntry() {}
+inline ZLOptionEntry::ZLOptionKind ZLPasswordOptionEntry::kind() const { return PASSWORD; }
 
 inline ZLMultilineOptionEntry::ZLMultilineOptionEntry() {}
 inline ZLOptionEntry::ZLOptionKind ZLMultilineOptionEntry::kind() const { return MULTILINE; }
@@ -265,5 +288,7 @@ inline ZLOptionEntry::ZLOptionKind ZLKeyOptionEntry::kind() const { return KEY; 
 inline ZLOrderOptionEntry::ZLOrderOptionEntry() {}
 inline ZLOptionEntry::ZLOptionKind ZLOrderOptionEntry::kind() const { return ORDER; }
 inline std::vector<std::string> &ZLOrderOptionEntry::values() { return myValues; }
+
+inline ZLOptionEntry::ZLOptionKind ZLStaticTextOptionEntry::kind() const { return STATIC; }
 
 #endif /* __ZLOPTIONENTRY_H__ */

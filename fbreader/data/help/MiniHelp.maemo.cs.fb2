@@ -2,12 +2,12 @@
 <FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>About FBReader</book-title> <lang>cs</lang></title-info></description>
 <body>
 <title><p>O programu FBReader &FBReaderVersion;</p></title>
-<p>FBReader je program pro čtení elektronických knih, který pracuje pod Linuxem/Windows XP PDA/UMPC/PC. FBReader podporuje následující formáty elektronických knih: <code>fb2</code>, <code>html</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, atd. Přímé čtení archivů <code>zip</code>, <code>tar</code>, <code>gzip</code> and <code>bzip2</code> je též podporováno.</p>
+<p>FBReader je program pro čtení elektronických knih, který pracuje pod Linuxem/Windows XP PDA/UMPC/PC. FBReader podporuje následující formáty elektronických knih: <code>ePub</code>, <code>fb2</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, atd. Přímé čtení archivů <code>zip</code>, <code>tar</code>, <code>gzip</code> and <code>bzip2</code> je též podporováno.</p>
 <p>FBReader je šířen pod licencí <a l:href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a>.</p>
 <p>Máte-li zájem o tento program a chcete-li podpořit jeho vývoj, navštivte prosím <a l:href="http://www.fbreader.org/donation/make.php">stránku příspěvků</a>.</p>
 <empty-line/>
 <subtitle><p>Jak začít</p></subtitle>
-<p>FBReader hledá knihy ve formátech <code>fb2</code>, <code>oeb</code> a <code>OpenReader</code> v cestě zadaných v parametru <code>Složka s knihami</code>. Nejprve nastavte tento parametr. Otevřete dialog s nastavením a změňte hodnotu parametru <code>Složka s knihami</code> v záložce <code>Knihovna</code>. Uvedený parametr obsahuje seznam adresářů se soubory <code>*.fb2</code>, <code>*.oebzip</code>, <code>*.orb</code> nebo soubory archivů. Adresáře jsou v seznamu zařazeny do oddělených sloupců.</p>
+<p>FBReader hledá knihy ve formátech <code>ePub</code>, <code>fb2</code> a <code>OpenReader</code> v cestě zadaných v parametru <code>Složka s knihami</code>. Nejprve nastavte tento parametr. Otevřete dialog s nastavením a změňte hodnotu parametru <code>Složka s knihami</code> v záložce <code>Knihovna</code>. Uvedený parametr obsahuje seznam adresářů se soubory <code>*.epub</code>, <code>*.fb2</code>, <code>*.orb</code> nebo soubory archivů. Adresáře jsou v seznamu zařazeny do oddělených sloupců.</p>
 <p>Otevřete <code>knihovnu</code> (kliknutím na <image l:href="#books.png" voffset="-6"/>), vyberte knihu, kterou chcete číst ze seznamu.</p>
 <p>Pro čtení souboru v jiném formátu je nezbytné jeho zařazení do knihovny. Začněte <code>na vložení knihy do knihovny</code> (<image l:href="#addbook.png"/>), vyberte soubor a editujte informace o něm. Další otevření souboru uskutečněte pomocí <code>knihovny</code> (<image l:href="#books.png" voffset="-6"/>).</p>
 <empty-line/>
@@ -58,7 +58,7 @@ v/vYznvNjJdLXOVRn4pocrPIpgahCEgCH8uxsYRFWA1pnd3GmvVreP7AdsLz
 IcOj/Z/73tt3NW48eu3vTsYnvqi0AEvjxinqokJsh8jYICcKRCJmPDdML2/T
 FrQSOJM0zUyRbU0hH/ibBwdS5OckAZUoikZSDTcXJrGt0prE0YSRwrQdGkaI
 KgraO9pwcg5WkyQ/L71QFcObIoIZtmkRqxihYlKGgFgRS5c4NPASG60VdVMT
-mYqju4fonOjkG1d/+4EP9YT3Hrxz6fb3nttWz1enua5L2sxCoPA8D09mUWZE
+mYqju4fonOjkG1d/+4EP9YT3Hrxz6fb2nttWz1enua5L2sxCoPA8D09mUWZE
 YARYWYmyEkIdkE6nMU2TQAtM0SBxEpTnoquKVulRiyYIcgp1PM3I3jOszK19
 +Zdffuq6i5rS5b+68oHR/NAjsRuTdly01pgWEKewUybKBtMFLAMhNK7tIYRB
 wc5Rq56hInwC00ZNGSzrvPqlyclyX9VOmH2iM5xbnLd3+Yxrn12WX+5f1JIV

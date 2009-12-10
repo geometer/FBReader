@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>&#220;ber FBReader</book-title> <lang>de</lang></title-info></description>
+<body>
+<title><p>&#220;ber FBReader &FBReaderVersion;</p></title>
+<p>FBReader ist ein Leseprogramm f&#252;r E-Books f&#252;r Linux/Windows XP bzw PDA/UMPC/Desktop Computer. FBReader unterst&#252;tzt verschiedene Formate: <code>ePub</code>, <code>fb2</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, usw. Er kann diese auch direkt aus <code>zip</code>, <code>tar</code>, <code>gzip</code> und <code>bzip2</code> - Archiven lesen.</p>
+<p>FBReader wird unter den Bedingungen der <a l:href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a> vertrieben.</p>
+<p>Wenn Sie das Programm m&#246;gen und die Weiterentwicklung unterst&#252;tzen wollen, besuchen Sie bitte die <a l:href="http://www.fbreader.org/donation/make.php">Make Donation</a> - Seite.</p>
+<empty-line/>
+<subtitle><p>Die ersten Schritte</p></subtitle>
+<p>FBReader sucht im <code>E-Book Verzeichnis</code> nach <code>ePub</code>, <code>fb2</code> und <code>OpenReader</code> B&#252;chern. Zuerst m&#252;ssen Sie daher diesen Pfad setzen. &#214;ffnen Sie dazu die Einstellungen (einfach auf <image l:href="#settings.png" voffset="-6"/> in der Symbolleiste klicken) und &#228;ndern Sie den Inhalt der Option <code>E-Book Verzeichnis</code>, die sich im Reiter <code>Bibliothek</code> befindet. Es k&#246;nnen mehrere Verzeichnisse eingetragen werden, die <code>*.epub</code>, <code>*.fb2</code>, <code>*.orb</code> oder Archivdateien enthalten, getrennt durch Colons.</p>
+<p>&#214;ffnen Sie nun die <code>Bibliothek</code> (auf <image l:href="#books.png" voffset="-6"/> klicken), w&#228;hlen Sie ein Buch aus der Liste aus und schon k&#246;nnen Sie es lesen.</p>
+<p>Um eine Datei in einem anderen Format zu lesen, m&#252;ssen Sie diese der Bibliothek hinzuf&#252;gen. &#214;ffnen Sie <code>Datei zur Bibliothek hinzuf&#252;gen</code> (<image l:href="#addbook.png"/>), w&#228;hlen Sie eine Datei aus und editieren Sie die Datei-Informationen. Beim n&#228;chsten Mal k&#246;nnen Sie diese Datei einfach in der <code>Bibliothek</code> (<image l:href="#books.png" voffset="-6"/>) &#246;ffnen.</p>
+<subtitle><p>Verwandte Internetseiten</p></subtitle>
+<p>Weitere Informationen &#252;ber dieses Programm finden Sie auf der <a l:href="http://www.fbreader.org">FBReader Homepage</a>.</p>
+<p>Wenn Sie &#252;ber neue Releases informiert werden wollen, tragen Sie sich bitte bei <a l:href="http://freshmeat.net/projects/fbreader">FBReader project at freshmeat</a> ein.</p>
+<p>Falls Sie Fragen oder Anregungen haben, benutzen Sie bitte die <a l:href="http://groups.google.com/group/fbreader">FBReader group at googlegroups</a>.</p>
+</body>
+<binary content-type="image/png" id="settings.png">
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAPEAYAAAC945NsAAAABmJLR0T/////
+//8JWPfcAAAACXBIWXMAAABIAAAASABGyWs+AAAAjUlEQVQ4y72V3Q3AIAiE
+e42rOYszOYvDXZ9IWxID4s+9GAnKJ2cU10/kdVRA0qHWat1ZMudSvvN71YZ6
+Y6/CAFKQJMl3HAWZ7oDWKEgYQO4KAABxEBPA8tgCCXdglceW0ugCAdEnlrg3
+3+yA1+Ne4V6+G8ALMiu3Bd6ObAPQIFoCNgqy7CGKWqVSz/+GD2hhfA/LrEW8
+AAAAAElFTkSuQmCC
+====
+</binary>
+<binary content-type="image/png" id="books.png">
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAPEAYAAAC945NsAAAABmJLR0T/////
+//8JWPfcAAAACXBIWXMAAABIAAAASABGyWs+AAAApElEQVQ4y+2UPQ6AMAiF
+qXH2CJ7HtVv3JhzKxN3NtefxCL1AnUgNCUH8W/Rt0JLvAWkBjAphGABKOZrX
+5Kzgrut7xJrPeV3HscbznBKAc7xOyjdXwTF6f6QOERGxFD4pp4Glcw6epmXZ
+x5phut9qE9BAPJZWI01KXYEkAvNOCSQBbzMgdWrVaQPWTh+bwFX9Br5ngJ4v
+fc2vGeBgyp/+iq3iYNIG2+BvhA4vPaAAAAAASUVORK5CYII=
+====
+</binary>
+<binary content-type="image/png" id="addbook.png">
+iVBORw0KGgoAAAANSUhEUgAAABAAAAAPEAYAAAC945NsAAAABmJLR0T/////
+//8JWPfcAAAACXBIWXMAAABIAAAASABGyWs+AAAAl0lEQVQ4y2NgIAAiIjw8
+GBj+/ydWnFTASMhiPj45ubQ0hPinT48ezZqF4K9YsWMHAwMjIwOZgIlUi5OT
+AwMp9TUyYMEVpOg+pbbFOEMAZhGtLCToAHqDUQfQ1AEHDkASNYwelCHAQrkR
+mD4mVt7BgZFx6IXA3Lnr1zMwYC+CHRxQ+dh8jG4e0SGAz2JKANwgQrUbtS2G
+AQDUKU1FNtQ7mgAAAABJRU5ErkJggg==
+====
+</binary>
+</FictionBook>

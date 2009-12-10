@@ -20,17 +20,20 @@
 #include <ZLInputStream.h>
 
 #include "RtfDescriptionReader.h"
-#include "../FormatPlugin.h"
 
-RtfDescriptionReader::RtfDescriptionReader(BookDescription &description) : RtfReader(description.encoding()), myDescription(description) {
+#include "../FormatPlugin.h"
+#include "../../library/Book.h"
+#include "../../library/Author.h"
+
+RtfDescriptionReader::RtfDescriptionReader(Book &book) : RtfReader(book.encoding()), myBook(book) {
 }
 
 void RtfDescriptionReader::setEncoding(int code) {
-	ZLEncodingCollection &collection = ZLEncodingCollection::instance();
+	ZLEncodingCollection &collection = ZLEncodingCollection::Instance();
 	ZLEncodingConverterInfoPtr info = collection.info(code);
 	if (!info.isNull()) {
 		myConverter = info->createConverter();
-		myDescription.encoding() = info->name();
+		myBook.setEncoding(info->name());
 	} else {
 		myConverter = collection.defaultConverter();
 	}
@@ -39,8 +42,8 @@ void RtfDescriptionReader::setEncoding(int code) {
 bool RtfDescriptionReader::readDocument(const std::string &fileName) {
 	myDoRead = false;
 	bool code = RtfReader::readDocument(fileName);
-	if (myDescription.encoding().empty()) {
-		myDescription.encoding() = PluginCollection::instance().DefaultEncodingOption.value();
+	if (myBook.encoding().empty()) {
+		myBook.setEncoding(PluginCollection::Instance().DefaultEncodingOption.value());
 	}
 	return code;
 }
@@ -65,23 +68,21 @@ void RtfDescriptionReader::switchDestination(DestinationType destination, bool o
 		case DESTINATION_TITLE:
 			myDoRead = on;
 			if (!on) {
-				myDescription.title() = myBuffer;
+				myBook.setTitle(myBuffer);
 				myBuffer.erase();
 			}
 			break;
 		case DESTINATION_AUTHOR:
 			myDoRead = on;
 			if (!on) {
-				myDescription.addAuthor(myBuffer);
+				myBook.addAuthor(myBuffer);
 				myBuffer.erase();
 			}
 			break;
 		default:
 			break;
 	}
-	if (!myDescription.title().empty() &&
-			(myDescription.author() != 0) &&
-			!myDescription.encoding().empty()) {
+	if (!myBook.title().empty() && !myBook.authors().empty() && !myBook.encoding().empty()) {
 		interrupt();
 	}
 }

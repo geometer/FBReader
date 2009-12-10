@@ -23,12 +23,13 @@
 #include <string>
 
 #include "RtfReader.h"
-#include "../../description/BookDescription.h"
+
+class Book;
 
 class RtfDescriptionReader : public RtfReader {
 
 public:
-	RtfDescriptionReader(BookDescription &description);
+	RtfDescriptionReader(Book &book);
 	~RtfDescriptionReader();
 
 	bool readDocument(const std::string &fileName);
@@ -43,7 +44,7 @@ public:
 	void newParagraph();
 
 private:
-	WritableBookDescription myDescription;
+	Book &myBook;
 
 	bool myDoRead;
 	std::string myBuffer;

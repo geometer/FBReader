@@ -31,7 +31,7 @@
 class PluckerBookReader : public BookReader, public EncodedTextReader {
 
 public:
-	PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding);
+	PluckerBookReader(BookModel &model);
 	~PluckerBookReader();
 
 	bool readDocument();

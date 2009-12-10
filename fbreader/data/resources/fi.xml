@@ -1,9 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Finnish FBReader resources, by Marko Vertainen -->
 <resources>
+	<node name="libraryView">
+		<node name="authorNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="edit" toBeTranslated="true" value="Edit information" />
+			<node name="unknownAuthor" toBeTranslated="true" value="Unknown Author" />
+		</node>
+		<node name="tagNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="edit" toBeTranslated="true" value="Edit tag" />
+			<node name="clone" toBeTranslated="true" value="Clone tag" />
+			<node name="delete" toBeTranslated="true" value="Remove tag" />
+			<node name="noTags" toBeTranslated="true" value="Books with no tags" />
+		</node>
+		<node name="seriesNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+		</node>
+		<node name="bookNode">
+			<node name="read" toBeTranslated="true" value="Read book" />
+			<node name="edit" toBeTranslated="true" value="Edit information" />
+			<node name="delete" toBeTranslated="true" value="Remove book" />
+		</node>
+	</node>
+	<node name="networkView">
+		<node name="libraryItemNode">
+			<node name="expandTree" toBeTranslated="true" value="Expand" />
+			<node name="collapseTree" toBeTranslated="true" value="Collapse" />
+			<node name="reload" toBeTranslated="true" value="Reload" />
+			<node name="openInBrowser" toBeTranslated="true" value="Open in browser" />
+		</node>
+		<node name="libraryItemRootNode">
+			<node name="expandTree" toBeTranslated="true" value="Open catalog" />
+			<node name="collapseTree" toBeTranslated="true" value="Close catalog" />
+			<node name="login" toBeTranslated="true" value="Login" />
+			<node name="logout" toBeTranslated="true" value="Logout (%s)" />
+			<node name="reload" toBeTranslated="true" value="Reload" />
+			<node name="dontShow" toBeTranslated="true" value="Don&apos;t show this catalog" />
+			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)" />
+		</node>
+		<node name="searchResultNode">
+			<node name="title" toBeTranslated="true" value="Search results" />
+			<node name="expandTree" toBeTranslated="true" value="Show results" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide results" />
+		</node>
+		<node name="authorNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+		</node>
+		<node name="seriesNode">
+			<node name="expandTree" toBeTranslated="true" value="Show books" />
+			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+		</node>
+		<node name="bookNode">
+			<node name="read" toBeTranslated="true" value="Read local copy"/>
+			<node name="delete" toBeTranslated="true" value="Delete local copy"/>
+			<node name="download" toBeTranslated="true" value="Download" />
+			<node name="readDemo" toBeTranslated="true" value="Read demo" />
+			<node name="downloadDemo" toBeTranslated="true" value="Download demo" />
+			<node name="buy" toBeTranslated="true" value="Buy (%s)" />
+		</node>
+	</node>
 	<node name="menu">
 		<node name="bookInfo" value="Kirjan tiedot..." />
 		<node name="toc" value="Sisällysluettelo" />
+		<node name="showLibrary" value="Avaa kirjasto" />
 		<node name="library" value="Kirjasto">
 			<node name="showLibrary" value="Avaa kirjasto" />
 			<node name="previousBook" value="Edellinen kirja" />
@@ -11,6 +75,12 @@
 			<node name="addBook" value="Lisää kirja..." />
 			<node name="showHelp" value="Tietoja FBReaderista" />
 		</node>
+		<node name="gotoHome" value="Siirry dokumentin alkuun" />
+		<node name="gotoPageNumber" value="Siirry sivulle..." />
+		<node name="gotoSectionStart" value="Siirry tekstiosion alkuun" />
+		<node name="gotoSectionEnd" value="Siirry tekstiosion loppuun" />
+		<node name="nextTOCSection" value="Sisällysluettelon seuraavaan kohtaan" />
+		<node name="previousTOCSection" value="Sisällysluettelon edelliseen kohtaan" />
 		<node name="navigate" value="Navigoi">
 			<node name="gotoHome" value="Siirry dokumentin alkuun" />
 			<node name="gotoPageNumber" value="Siirry sivulle..." />
@@ -69,6 +139,11 @@
 			<node name="go" value="&amp;Siirry" />
 			<node name="thisOnly" value="Vain tämä" />
 			<node name="withSubtags" value="Alaluokalliset" />
+			<node name="removeLink" toBeTranslated="true" value="Remove from library" />
+			<node name="removeFile" toBeTranslated="true" value="Remove from disk" />
+			<node name="yesToAll" toBeTranslated="true" value="Yes to &amp;all" />
+			<node name="buy" toBeTranslated="true" value="&amp;Buy" />
+			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download" />
 		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Asetukset" />
@@ -78,7 +153,6 @@
 					<node name="lookInSubdirectories" value="Hae kirjoja alihakemistoista" />
 					<node name="collectBooksWithoutMetaInfo" value="Ryhmitä ilman metatietoja olevat kirjat" />
 					<node name="downloadDirectory" value="Ladattujen kirjojen hakemisto" />
-					<node name="showAllBooksTag" value="Näytä kaikki kirjat ryhmä" />
 				</node>
 				<node name="NetworkLibrary" value="Verkkohaku">
 					<node name="useProxy" value="Käytä välityspalvelinta" />
@@ -109,8 +183,8 @@
 				</node>
 				<node name="Scrolling" value="Vieritys">
 					<node name="optionsFor" value="Valinnat">
-						<node name="large" value="Suurelle vieritykselle" />
-						<node name="small" value="Pienelle vieritykselle" />
+						<node name="page" toBeTranslated="true" value="Page Scrollings" />
+						<node name="line" toBeTranslated="true" value="Line Scrollings" />
 						<node name="mouse" value="Hiirellä vieritykselle" />
 						<node name="tap" value="Kosketus vieritykselle" />
 					</node>
@@ -262,18 +336,19 @@
 				<node name="Common" value="Yleiset">
 					<node name="file" value="Tiedosto" />
 					<node name="title" value="Nimi" />
-					<node name="authorDisplayName" value="Tekijä (nimi)" />
-					<node name="authorSortKey" value="Tekijä (lajitteluavain)" />
 					<node name="language" value="Kieli" />
 					<node name="encodingSet" value="Merkistöalue" />
 					<node name="encoding" value="Merkistö" />
 				</node>
+				<node name="Authors" toBeTranslated="true" value="Authors">
+					<node name="authorDisplayName" toBeTranslated="true" value="Author Name" />
+				</node>
 				<node name="Series" value="Kirjasarja">
 					<node name="seriesTitle" value="Sarjan nimi" />
-					<node name="bookNumber" value="Kirjan numero" />
+					<node name="bookIndex" value="Kirjan numero" />
 				</node>
 				<node name="Tags" value="Luokka">
-					<node name="tags" value="Luokkalista" />
+					<node name="tags" toBeTranslated="true" value="Tag Name" />
 				</node>
 				<node name="Text" value="Teksti">
 					<node name="breakType" value="Katkaise kappale" />
@@ -289,6 +364,11 @@
 				</node>
 			</node>
 		</node>
+		<node name="AuthorInfoDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Author Info" />
+			<node name="name" toBeTranslated="true" value="Author Name" />
+			<node name="sortKey" toBeTranslated="true" value="Author Sort Key" />
+		</node>
 		<node name="addFileDialog">
 			<node name="title" value="FBReader - Lisää kirja kirjastoon" />
 		</node>
@@ -302,28 +382,30 @@
 		</node>
 		<node name="networkSearchDialog">
 			<node name="title" value="Verkkohaku" />
-			<node name="bookTitle" value="Nimi" />
+			<node name="titleAndSeries" value="Nimi/Sarja" />
 			<node name="author" value="Tekijä" />
 			<node name="category" value="Kategoria" />
-			<node name="series" value="Sarja" />
 			<node name="description" value="Kuvaus" />
+			<node name="annotation" toBeTranslated="true" value="Search results for: %s" />
 		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Siirry sivulle" />
 			<node name="pageNumber" value="Siirry sivunumerolle" />
 		</node>
-		<node name="editTagInfoDialog">
-			<node name="title" value="Muokkaa/kloonaa luokka" />
-			<node name="editOrClone" value="Toiminto">
-				<node name="edit" value="Uudelleennimeä luokka" />
-				<node name="clone" value="Kloonaa luokka" />
-			</node>
+		<node name="editTagDialog">
+			<node name="title" value="Muokkaa luokka" />
+			<node name="name" value="Luokan nimi" />
+			<node name="includeSubtags" value="Sisällytä alaluokat" />
+		</node>
+		<node name="cloneTagDialog">
+			<node name="title" value="Kloonaa luokka" />
 			<node name="name" value="Luokan nimi" />
 			<node name="includeSubtags" value="Sisällytä alaluokat" />
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Poista kirja" />
 			<node name="message" value="Poista&#10;&quot;%s&quot;&#10;kirjastosta?" />
+			<node name="deleteFile" toBeTranslated="true" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?" />
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Poista luokka" />
@@ -333,20 +415,24 @@
 			<node name="title" value="Virhe" />
 			<node name="message" value="Ei voitu avata:&#10;%s" />
 		</node>
+		<node name="removeFileErrorBox">
+			<node name="title" toBeTranslated="true" value="Error" />
+			<node name="message" toBeTranslated="true" value="Couldn&apos;t remove file&#10;%s" />
+		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Virhe" />
 			<node name="message" value="Ohjetiedostoa ei löytynyt" />
 		</node>
-		<node name="tagMustBeNonEmpty">
-			<node name="title" value="Virhe" />
-			<node name="message" value="Luokan nimi ei saa olla tyhjä merkkijono" />
-		</node>
-		<node name="tagMustNotContainComma">
-			<node name="title" value="Virhe" />
-			<node name="message" value="Luokan nimi ei saa sisältää “,” symbolia" />
-		</node>
 		<node name="networkError">
 			<node name="emptyLibrariesList" value="Tyhjä kirjastolista" />
+			<node name="authenticationFailed" toBeTranslated="true" value="Authentication failed" />
+			<node name="internalError" toBeTranslated="true" value="Internal server error" />
+			<node name="purchaseNotEnoughMoney" toBeTranslated="true" value="Not enough money" />
+			<node name="purchaseMissingBook" toBeTranslated="true" value="Missing book" />
+			<node name="purchaseAlreadyPurchased" toBeTranslated="true" value="Already purchased" />
+			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased" />
+			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded" />
+			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation" />
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Virhe latauksessa" />
@@ -358,6 +444,34 @@
 			<node name="migrate" value="Päivitetään uuteen versioon. Ole hyvä ja odota..." />
 			<node name="downloadBookList" value="Ladataan kirjalistaa. Odota..." />
 			<node name="downloadBook" value="Ladataan kirjaa. Odota..." />
+			<node name="downloadImages" toBeTranslated="true" value="Downloading images. Please, wait..." />
+			<node name="authentication" toBeTranslated="true" value="Authentication. Please, wait..." />
+			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..." />
+			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..." />
+			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..." />
+		</node>
+		<node name="purchaseConfirmBox">
+			<node name="title" toBeTranslated="true" value="Purchase book" />
+			<node name="message" toBeTranslated="true" value="Are you sure you want to buy&#10;“%s”&#10;book?" />
+		</node>
+		<node name="AuthenticationDialog">
+			<node name="title" toBeTranslated="true" value="Authentication" />
+			<node name="login" toBeTranslated="true" value="Login" />
+			<node name="password" toBeTranslated="true" value="Password" />
+			<node name="skipIP" toBeTranslated="true" value="Don&apos;t bound to ip-address" />
+			<node name="loginIsEmpty" toBeTranslated="true" value="Login must not be empty" />
+		</node>
+		<node name="emptyCatalogBox">
+			<node name="title" toBeTranslated="true" value="Information" />
+			<node name="message" toBeTranslated="true" value="Catalog is empty." />
+		</node>
+		<node name="dontShowConfirmBox">
+			<node name="title" toBeTranslated="true" value="Disable catalog" />
+			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;You can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
+		</node>
+		<node name="deleteLocalCopyBox">
+			<node name="title" toBeTranslated="true" value="Delete Book" />
+			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;&#8220;%s&#8221; book&#10;from the disk?" />
 		</node>
 	</node>
 	<node name="style">
@@ -407,17 +521,12 @@
 	<node name="mobipocketPlugin">
 		<node name="unknown" value="Tuntematon virhe" />
 		<node name="unsupportedCompressionMethod" value="Tiivistysmuodolle ei tukea" />
-		<node name="encriptedFile" value="Digitaalisesti suojattu tiedosto" />
+		<node name="encryptedFile" value="Digitaalisesti suojattu tiedosto" />
 	</node>
 	<node name="networkLibrary">
 		<node name="caption" value="Verkkokirjasto" />
-		<node name="startText" value="Syötä hakuehdot tekstikenttään ja paina &lt;Enter&gt;." />
-		<node name="notFound" value="Hakuehtojen mukaisia kirjoja ei löytynyt." />
 	</node>
 	<node name="library">
 		<node name="caption" value="Kirjasto" />
-		<node name="allBooks" value="Kaikki kirjat" />
-		<node name="booksWithoutTags" value="Kirjat ilman luokkaa" />
-		<node name="noBooks" value="FBReader ei löytänyt kirjoja määritellyistä sijainneista. Määrittele polku e-kirjastoosi Asetukset valintaikkunan (“Kirjasto” välilehdellä, “Kirjaston polku” kohdassa). Vaihtoehtoisesti voit lisätä kirjoja kirjastoosi käyttämällä “Lisää kirja” nappia." />
 	</node>
 </resources>

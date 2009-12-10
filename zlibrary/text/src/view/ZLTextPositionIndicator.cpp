@@ -21,9 +21,9 @@
 
 #include <ZLTime.h>
 #include <ZLStringUtil.h>
+#include <ZLTextStyle.h>
 
 #include "ZLTextView.h"
-#include "ZLTextStyle.h"
 
 /*
  * Calculates m0 * m1 / d
@@ -114,10 +114,8 @@ size_t ZLTextView::PositionIndicator::endTextIndex() const {
 }
 
 void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
-	ZLTextBaseStyle &baseStyle = ZLTextStyleCollection::instance().baseStyle();
-
-	context().setFont(baseStyle.fontFamily(), myInfo.fontSize(), false, false);
-	context().setColor(baseStyle.RegularTextColorOption.value());
+	context().setFont(myTextView.baseStyle()->fontFamily(), myInfo.fontSize(), false, false);
+	context().setColor(myTextView.color());
 
 	int width = context().stringWidth(text.data(), text.length(), false);
 	if (myTextView.visualX(0) == 0) {
@@ -202,8 +200,6 @@ std::string ZLTextView::PositionIndicator::timeString() const {
 }
 
 void ZLTextView::PositionIndicator::draw() {
-	ZLTextBaseStyle &baseStyle = ZLTextStyleCollection::instance().baseStyle();
-
 	ZLPaintContext &context = this->context();
 
 	ZLTextWordCursor endCursor = myTextView.endCursor();
@@ -236,7 +232,7 @@ void ZLTextView::PositionIndicator::draw() {
 			muldiv(fillWidth, sizeOfTextBeforeCursor(myTextView.endCursor()), sizeOfTextBeforeParagraph(endTextIndex()));
 	}
 
-	context.setColor(baseStyle.RegularTextColorOption.value());
+	context.setColor(myTextView.color());
 	context.setFillColor(myInfo.color());
 	context.fillRectangle(myTextView.visualX(left + 1), top + 1, myTextView.visualX(left + fillWidth + 1), bottom - 1);
 	context.drawLine(myTextView.visualX(left), top, myTextView.visualX(right), top);

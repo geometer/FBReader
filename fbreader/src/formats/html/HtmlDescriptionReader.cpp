@@ -19,8 +19,10 @@
 
 #include "HtmlDescriptionReader.h"
 
-HtmlDescriptionReader::HtmlDescriptionReader(BookDescription &description) : HtmlReader(description.encoding()), myDescription(description) {
-	myDescription.title().erase();
+#include "../../library/Book.h"
+
+HtmlDescriptionReader::HtmlDescriptionReader(Book &book) : HtmlReader(book.encoding()), myBook(book) {
+	myBook.setTitle("");
 }
 
 void HtmlDescriptionReader::startDocumentHandler() {
@@ -28,26 +30,53 @@ void HtmlDescriptionReader::startDocumentHandler() {
 }
 
 void HtmlDescriptionReader::endDocumentHandler() {
-	if (!myDescription.title().empty()) {
-		const char *titleStart = myDescription.title().data();
-		const char *titleEnd = titleStart + myDescription.title().length();
+	if (!myBook.title().empty()) {
+		const char *titleStart = myBook.title().data();
+		const char *titleEnd = titleStart + myBook.title().length();
 		std::string newTitle;
 		myConverter->convert(newTitle, titleStart, titleEnd);
-		myDescription.title() = newTitle;
+		myBook.setTitle(newTitle);
 	}
 }
 
 bool HtmlDescriptionReader::tagHandler(const HtmlTag &tag) {
 	if (tag.Name == "TITLE") {
-		myReadTitle = tag.Start && myDescription.title().empty();
+		if (myReadTitle && !tag.Start) {
+			myBook.setTitle(myBuffer);
+			myBuffer.erase();
+		}
+		myReadTitle = tag.Start && myBook.title().empty();
 		return true;
+	} else if (tag.Start && tag.Name == "META") {
+		std::vector<HtmlAttribute>::const_iterator it = tag.Attributes.begin();
+		for (; it != tag.Attributes.end(); ++it) {
+			if (it->Name == "CONTENT") {
+				break;
+			}
+		}
+		if (it != tag.Attributes.end()) {
+			const std::string prefix = "charset=";
+			size_t index = it->Value.find(prefix);
+			if (index != std::string::npos) {
+				std::string charset = it->Value.substr(index + prefix.length());
+				index = charset.find(';');
+				if (index != std::string::npos) {
+					charset = charset.substr(0, index);
+				}
+				index = charset.find(' ');
+				if (index != std::string::npos) {
+					charset = charset.substr(0, index);
+				}
+				myBook.setEncoding(charset);
+			}
+		}
 	}
 	return tag.Name != "BODY";
 }
 
 bool HtmlDescriptionReader::characterDataHandler(const char *text, size_t len, bool) {
 	if (myReadTitle) {
-		myDescription.title().append(text, len);
+		myBuffer.append(text, len);
 	}
 	return true;
 }

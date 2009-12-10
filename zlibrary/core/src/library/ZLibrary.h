@@ -43,6 +43,8 @@ public:
 	static const std::string &ApplicationDirectory();
 	static const std::string &DefaultFilesPathPrefix();
 
+	static const std::string &ApplicationWritableDirectory();
+
 public:
 	static bool init(int &argc, char **&argv);
 	static void parseArguments(int &argc, char **&argv);
@@ -63,6 +65,7 @@ private:
 	static std::string ourApplicationImageDirectory;
 	static std::string ourApplicationName;
 	static std::string ourApplicationDirectory;
+	static std::string ourApplicationWritableDirectory;
 	static std::string ourDefaultFilesPathPrefix;
 
 private:
@@ -80,6 +83,7 @@ inline const std::string &ZLibrary::ApplicationName() { return ourApplicationNam
 inline const std::string &ZLibrary::ImageDirectory() { return ourImageDirectory; }
 inline const std::string &ZLibrary::ApplicationImageDirectory() { return ourApplicationImageDirectory; }
 inline const std::string &ZLibrary::ApplicationDirectory() { return ourApplicationDirectory; }
+inline const std::string &ZLibrary::ApplicationWritableDirectory() { return ourApplicationWritableDirectory; }
 inline const std::string &ZLibrary::DefaultFilesPathPrefix() { return ourDefaultFilesPathPrefix; }
 
 #endif /* __ZLIBRARY_H__ */

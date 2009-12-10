@@ -36,7 +36,7 @@ struct ZLTextTreeNodeInfo {
 };
 
 struct ZLTextLineInfo {
-	ZLTextLineInfo(const ZLTextWordCursor &word, ZLTextStylePtr style, unsigned char bidiLevel);
+	ZLTextLineInfo(const ZLTextWordCursor &word, shared_ptr<ZLTextStyle> style, unsigned char bidiLevel);
 
 	ZLTextWordCursor Start;
 	ZLTextWordCursor RealStart;
@@ -48,7 +48,7 @@ struct ZLTextLineInfo {
 	int Descent;
 	int VSpaceAfter;
 	int SpaceCounter;
-	ZLTextStylePtr StartStyle;
+	shared_ptr<ZLTextStyle> StartStyle;
 	unsigned char StartBidiLevel;
 	shared_ptr<ZLTextTreeNodeInfo> NodeInfo;
 
@@ -66,7 +66,7 @@ public:
 	bool operator < (const ZLTextLineInfoPtr &info) const;
 };
 
-inline ZLTextLineInfo::ZLTextLineInfo(const ZLTextWordCursor &word, ZLTextStylePtr style, unsigned char bidiLevel) : Start(word), RealStart(word), End(word), IsVisible(false), StartIndent(0), Width(0), Height(0), Descent(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style), StartBidiLevel(bidiLevel) {}
+inline ZLTextLineInfo::ZLTextLineInfo(const ZLTextWordCursor &word, shared_ptr<ZLTextStyle> style, unsigned char bidiLevel) : Start(word), RealStart(word), End(word), IsVisible(false), StartIndent(0), Width(0), Height(0), Descent(0), VSpaceAfter(0), SpaceCounter(0), StartStyle(style), StartBidiLevel(bidiLevel) {}
 
 inline ZLTextLineInfoPtr::ZLTextLineInfoPtr(ZLTextLineInfo *ptr) : shared_ptr<ZLTextLineInfo>(ptr) {}
 inline bool ZLTextLineInfoPtr::operator < (const ZLTextLineInfoPtr &info) const { return (*this)->Start < info->Start; }

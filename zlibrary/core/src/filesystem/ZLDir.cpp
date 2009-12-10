@@ -21,11 +21,11 @@
 #include "ZLDir.h"
 
 shared_ptr<ZLDir> ZLDir::root() {
-	return ZLFSManager::instance().rootDirectory();
+	return ZLFSManager::Instance().rootDirectory();
 }
 
 ZLDir::ZLDir(const std::string &path) : myPath(path) {
-	ZLFSManager::instance().normalize(myPath);
+	ZLFSManager::Instance().normalize(myPath);
 }
 
 ZLDir::~ZLDir() {
@@ -36,15 +36,15 @@ const std::string &ZLDir::path() const {
 }
 
 std::string ZLDir::parentPath() const {
-	return ZLFSManager::instance().parentPath(myPath);
+	return ZLFSManager::Instance().parentPath(myPath);
 }
 
 bool ZLDir::isRoot() const {
-	return myPath == ZLFSManager::instance().rootDirectoryPath();
+	return myPath == ZLFSManager::Instance().rootDirectoryPath();
 }
 
 std::string ZLDir::name() const {
-	int index = ZLFSManager::instance().findLastFileNameDelimiter(myPath);
+	int index = ZLFSManager::Instance().findLastFileNameDelimiter(myPath);
 	return myPath.substr(index + 1);
 }
 

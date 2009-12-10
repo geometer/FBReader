@@ -21,7 +21,7 @@
 
 #include "DummyDescriptionReader.h"
 
-DummyDescriptionReader::DummyDescriptionReader(BookDescription &description) : myDescription(description) {
+DummyDescriptionReader::DummyDescriptionReader(Book &book) : myBook(book) {
 }
 
 /*
@@ -35,6 +35,6 @@ void DummyDescriptionReader::endElementHandler(int tag) {
 }
 */
 
-bool DummyDescriptionReader::readDescription(shared_ptr<ZLInputStream> stream) {
+bool DummyDescriptionReader::readMetaInfo(shared_ptr<ZLInputStream> stream) {
 	return false;
 }

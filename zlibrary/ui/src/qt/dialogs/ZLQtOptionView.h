@@ -117,7 +117,7 @@ class StringOptionView : public QObject, public ZLQtOptionView {
 Q_OBJECT
 
 public:
-	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0) {}
+	StringOptionView(const std::string &name, const std::string &tooltip, ZLStringOptionEntry *option, ZLQtDialogContent *tab, bool passwordMode, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0), myLineEdit(0), myPasswordMode(passwordMode) {}
 
 private:
 	void _createItem();
@@ -133,6 +133,7 @@ private slots:
 private:
 	QLabel *myLabel;
 	QLineEdit *myLineEdit;
+	const bool myPasswordMode;
 };
 
 class SpinOptionView : public ZLQtOptionView {
@@ -248,6 +249,21 @@ private:
 	QWidget *myWidget;
 	QListBox *myListBox;
 	QPushButton *myUpButton, *myDownButton;
+};
+
+class StaticTextOptionView : public ZLQtOptionView {
+
+public:
+	StaticTextOptionView(const std::string &name, const std::string &tooltip, ZLStaticTextOptionEntry *option, ZLQtDialogContent *tab, int row, int fromColumn, int toColumn) : ZLQtOptionView(name, tooltip, option, tab, row, fromColumn, toColumn), myLabel(0) {}
+
+private:
+	void _createItem();
+	void _show();
+	void _hide();
+	void _onAccept() const;
+
+private:
+	QLabel *myLabel;
 };
 
 #endif /* __ZLQTOPTIONVIEW_H__ */

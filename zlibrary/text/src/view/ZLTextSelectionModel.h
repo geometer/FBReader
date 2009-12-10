@@ -30,7 +30,6 @@
 #include "ZLTextParagraphCursor.h"
 
 class ZLTextView;
-class ZLApplication;
 class ZLImageData;
 class ZLTextElementArea;
 
@@ -49,7 +48,7 @@ public:
 	typedef std::pair<BoundElement,BoundElement> Range;
 
 public:
-	ZLTextSelectionModel(ZLTextView &view, ZLApplication &application);
+	ZLTextSelectionModel(ZLTextView &view);
 
 	void activate(int x, int y);
 	bool extendTo(int x, int y);
@@ -89,7 +88,6 @@ private:
 
 private:
 	ZLTextView &myView;
-	ZLApplication &myApplication;
 	bool myIsActive;
 	bool myIsEmpty;
 

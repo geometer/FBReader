@@ -1,0 +1,40 @@
+Version 0.11.0
+
+New features:
+	* A support for eReader (Peanut reader) book format has been added
+	* Mobipocket support has been improved: files compressed with Huffdic algorithm are now supported
+  * German localization (by Rainer Paul) has been added
+
+Important changes:
+	* An information about books (like title, author name, language, etc.) is now stored in SQLite database files instead of the old books.xml file
+	* Library tree (organized by authors) has been modified: all authors are displayed separately
+	* Tags logic has been essentially changed
+	* Authors and Tags editing has been changed in the "Book Info" dialog
+	* New "Author Info" dialog has been added to edit information about single author: author sortKey managment is moved there
+	* Zip-archives are processed recursively like folders when "Look for Books in Subdirectories" obtion is enabled
+	* Language and encoding recognition has been totally rewritten; patterns for Arabic and Indonesian are temporarily missing
+
+Important fixes:
+	* An interaction with the feedbooks.com online library has been fixed
+
+Migration notes:
+
+	Information on all books is moved from XML files to the SQLite database. This work (that further is called Migration) is executed on the first launch of the new version of FBReader.
+
+	In previous versions of FBReader Tags handling sometimes was carried out incorrectly. This problem basically appeared when working with books in fb2 format. The matter is that FBReader did not support the tags containing a comma earlier, however some books contained a comma in tags, therefore FBReader handled such tag as a number of tags. Let's give an example:
+
+	Tag in the book file: 
+		Science, Education/Cultural Science
+
+	Tags associated with the book in the program:
+		Science
+		Education/Cultural Science
+
+	Thus, while it was supposed that the book should belong to a subcategory "Cultural Science" within a category "Science, Education", actually the book was associated with a category "Science", and also with a subcategory "Cultural Science" within a category "Education".
+  
+	FBReader needs access to the books files while migration to correct described errors. If the book file is inaccessible while migration (for example, it is placed on the not attached removable mass storage), than corresponding book tags are moved to the SQLite database in that form, in which they were stored in XML files; later on these tags can be corrected only manually.
+
+	Thus, before the first launch of the FBReader version 0.11.0 it is strongly recommended to attach all removable mass storages on which books are stored to give FBReader an access to books files in order to correct described error.
+
+	IMPORTANT NOTE: Initial information about all books will be removed from the program XML files after migration by the FBReader. Since you download the beta-version of the FBReader which can contain errors, it is strongly recommended to make a backup of the program XML files before the first launch of the new version of the FBReaeder. It will save manually edited information about books if there will be an error during program execution. In order to save program XML files from loss it's required to make a backup of the "~/.FBReader" folder.
+

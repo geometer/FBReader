@@ -32,7 +32,7 @@ public:
 	bool open();
 	void close();
 
-protected:
+private:
 	bool fillBuffer();
 
 private:

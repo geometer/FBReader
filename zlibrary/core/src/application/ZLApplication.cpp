@@ -42,6 +42,12 @@ static const std::string CONFIG = "Config";
 static const std::string AUTO_SAVE = "AutoSave";
 static const std::string TIMEOUT = "Timeout";
 
+ZLApplication *ZLApplication::ourInstance = 0;
+
+ZLApplication &ZLApplication::Instance() {
+	return *ourInstance;
+}
+
 ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	RotationAngleOption(ZLCategoryKey::CONFIG, ROTATION, ANGLE, ZLView::DEGREES90),
 	AngleStateOption(ZLCategoryKey::CONFIG, STATE, ANGLE, ZLView::DEGREES0),
@@ -51,13 +57,14 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	KeyDelayOption(ZLCategoryKey::CONFIG, "Options", "KeyDelay", 0, 5000, 250),
 	myViewWidget(0),
 	myWindow(0) {
+	ourInstance = this;
 	myContext = ZLibrary::createContext();
 	if (ConfigAutoSavingOption.value()) {
 		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
 	}
 
-	myPresentWindowHandler = new PresentWindowHandler(*this);
-	ZLCommunicationManager::instance().registerHandler("present", myPresentWindowHandler);
+	myPresentWindowHandler = new PresentWindowHandler();
+	ZLCommunicationManager::Instance().registerHandler("present", myPresentWindowHandler);
 
 	createToolbar(ZLApplicationWindow::WINDOW_TOOLBAR);
 	createToolbar(ZLApplicationWindow::FULLSCREEN_TOOLBAR);
@@ -74,6 +81,7 @@ ZLApplication::~ZLApplication() {
 	if (myViewWidget != 0) {
 		delete myViewWidget;
 	}
+	ourInstance = 0;
 }
 
 void ZLApplication::initWindow() {
@@ -325,11 +333,8 @@ void ZLApplication::quit() {
 	}
 }
 
-ZLApplication::PresentWindowHandler::PresentWindowHandler(ZLApplication &application) : myApplication(application) {
-}
-
 void ZLApplication::PresentWindowHandler::onMessageReceived(const std::vector<std::string> &arguments) {
-	myApplication.presentWindow();
+	ZLApplication::Instance().presentWindow();
 	if (arguments.size() == 1) {
 		myLastCaller = arguments[0];
 	}

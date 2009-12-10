@@ -31,19 +31,16 @@
 class KeyboardControlEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
-	KeyboardControlEntry(FBReader &fbreader);
+	KeyboardControlEntry();
 	void onStateChanged(bool state);
-
-private:
-	FBReader &myFBReader;
 };
 
-KeyboardControlEntry::KeyboardControlEntry(FBReader &fbreader) : ZLSimpleBooleanOptionEntry(fbreader.KeyboardControlOption), myFBReader(fbreader) {
+KeyboardControlEntry::KeyboardControlEntry() : ZLSimpleBooleanOptionEntry(FBReader::Instance().KeyboardControlOption) {
 }
 
 void KeyboardControlEntry::onStateChanged(bool state) {
 	ZLSimpleBooleanOptionEntry::onStateChanged(state);
-	myFBReader.grabAllKeys(state);
+	FBReader::Instance().grabAllKeys(state);
 }
 
 class SingleKeyOptionEntry : public ZLSimpleKeyOptionEntry {
@@ -66,7 +63,7 @@ const ZLSimpleKeyOptionEntry::CodeIndexBimap &SingleKeyOptionEntry::codeIndexBim
 class MultiKeyOptionEntry : public ZLKeyOptionEntry {
 
 public:
-	MultiKeyOptionEntry(const ZLResource &resource, FBReader &fbreader);
+	MultiKeyOptionEntry(const ZLResource &resource);
 	void onAccept();
 	int actionIndex(const std::string &key);
 	void onValueChanged(const std::string &key, int index);
@@ -95,22 +92,22 @@ void MultiKeyOptionEntry::addAction(const std::string &actionId) {
 	addActionName(myResource[ZLResourceKey(actionId)].value());
 }
 
-MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource, FBReader &fbreader) :
+MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource) :
 	ZLKeyOptionEntry(),
 	myResource(resource),
-	myEntry0(myBimap, *fbreader.keyBindings(ZLView::DEGREES0)),
-	myEntry90(myBimap, *fbreader.keyBindings(ZLView::DEGREES90)),
-	myEntry180(myBimap, *fbreader.keyBindings(ZLView::DEGREES180)),
-	myEntry270(myBimap, *fbreader.keyBindings(ZLView::DEGREES270)),
+	myEntry0(myBimap, *FBReader::Instance().keyBindings(ZLView::DEGREES0)),
+	myEntry90(myBimap, *FBReader::Instance().keyBindings(ZLView::DEGREES90)),
+	myEntry180(myBimap, *FBReader::Instance().keyBindings(ZLView::DEGREES180)),
+	myEntry270(myBimap, *FBReader::Instance().keyBindings(ZLView::DEGREES270)),
 	myCurrentEntry(&myEntry0),
 	myExitOnCancelEntry(0) {
 	addAction(ZLApplication::NoAction);
 
 	// switch view
-	addAction(ActionCode::SHOW_COLLECTION);
-	addAction(ActionCode::SHOW_NET_LIBRARY);
+	addAction(ActionCode::SHOW_LIBRARY);
+	addAction(ActionCode::SHOW_NETWORK_LIBRARY);
 	addAction(ActionCode::OPEN_PREVIOUS_BOOK);
-	addAction(ActionCode::SHOW_CONTENTS);
+	addAction(ActionCode::SHOW_TOC);
 
 	// navigation
 	addAction(ActionCode::SCROLL_TO_HOME);
@@ -118,10 +115,10 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource, FBReader &f
 	addAction(ActionCode::SCROLL_TO_END_OF_TEXT);
 	addAction(ActionCode::GOTO_NEXT_TOC_SECTION);
 	addAction(ActionCode::GOTO_PREVIOUS_TOC_SECTION);
-	addAction(ActionCode::LARGE_SCROLL_FORWARD);
-	addAction(ActionCode::LARGE_SCROLL_BACKWARD);
-	addAction(ActionCode::SMALL_SCROLL_FORWARD);
-	addAction(ActionCode::SMALL_SCROLL_BACKWARD);
+	addAction(ActionCode::PAGE_SCROLL_FORWARD);
+	addAction(ActionCode::PAGE_SCROLL_BACKWARD);
+	addAction(ActionCode::LINE_SCROLL_FORWARD);
+	addAction(ActionCode::LINE_SCROLL_BACKWARD);
 	addAction(ActionCode::UNDO);
 	addAction(ActionCode::REDO);
 
@@ -143,8 +140,8 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource, FBReader &f
 	addAction(ActionCode::ROTATE_SCREEN);
 
 	// dialogs
-	addAction(ActionCode::SHOW_OPTIONS);
-	addAction(ActionCode::SHOW_BOOK_INFO);
+	addAction(ActionCode::SHOW_OPTIONS_DIALOG);
+	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG);
 	addAction(ActionCode::ADD_BOOK);
 
 	// quit
@@ -245,7 +242,7 @@ void OrientationEntry::onAccept(const std::string&) {
 class UseSeparateOptionsEntry : public ZLSimpleBooleanOptionEntry {
 
 public:
-	UseSeparateOptionsEntry(FBReader &fbreader, ZLOptionEntry &keyEntry, OrientationEntry &orientationEntry);
+	UseSeparateOptionsEntry(ZLOptionEntry &keyEntry, OrientationEntry &orientationEntry);
 	void onStateChanged(bool state);
 
 private:
@@ -253,7 +250,7 @@ private:
 	OrientationEntry &myOrientationEntry;
 };
 
-UseSeparateOptionsEntry::UseSeparateOptionsEntry(FBReader &fbreader, ZLOptionEntry &keyEntry, OrientationEntry &orientationEntry) : ZLSimpleBooleanOptionEntry(fbreader.UseSeparateBindingsOption), myKeyEntry(keyEntry), myOrientationEntry(orientationEntry) {
+UseSeparateOptionsEntry::UseSeparateOptionsEntry(ZLOptionEntry &keyEntry, OrientationEntry &orientationEntry) : ZLSimpleBooleanOptionEntry(FBReader::Instance().UseSeparateBindingsOption), myKeyEntry(keyEntry), myOrientationEntry(orientationEntry) {
 }
 
 void UseSeparateOptionsEntry::onStateChanged(bool state) {
@@ -262,14 +259,15 @@ void UseSeparateOptionsEntry::onStateChanged(bool state) {
 	myKeyEntry.resetView();
 }
 
-KeyBindingsPage::KeyBindingsPage(FBReader &fbreader, ZLDialogContent &dialogTab) {
+KeyBindingsPage::KeyBindingsPage(ZLDialogContent &dialogTab) {
+	FBReader &fbreader = FBReader::Instance();
 	if (ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FULL_KEYBOARD_CONTROL, false).value()) {
-		dialogTab.addOption(ZLResourceKey("grabSystemKeys"), new KeyboardControlEntry(fbreader));
+		dialogTab.addOption(ZLResourceKey("grabSystemKeys"), new KeyboardControlEntry());
 	}
 	ZLResourceKey actionKey("action");
-	MultiKeyOptionEntry *keyEntry = new MultiKeyOptionEntry(dialogTab.resource(actionKey), fbreader);
+	MultiKeyOptionEntry *keyEntry = new MultiKeyOptionEntry(dialogTab.resource(actionKey));
 	OrientationEntry *orientationEntry = new OrientationEntry(*keyEntry);
-	ZLBooleanOptionEntry *useSeparateBindingsEntry = new UseSeparateOptionsEntry(fbreader, *keyEntry, *orientationEntry);
+	ZLBooleanOptionEntry *useSeparateBindingsEntry = new UseSeparateOptionsEntry(*keyEntry, *orientationEntry);
 	dialogTab.addOption(ZLResourceKey("separate"), useSeparateBindingsEntry);
 	dialogTab.addOption(ZLResourceKey("orientation"), orientationEntry);
 	dialogTab.addOption("", "", keyEntry);

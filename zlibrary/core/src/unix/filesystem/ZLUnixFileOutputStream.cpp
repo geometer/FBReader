@@ -19,6 +19,8 @@
 
 #include <unistd.h>
 #include <stdlib.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include "ZLUnixFileOutputStream.h"
 #include "ZLUnixFSManager.h"
@@ -34,11 +36,14 @@ bool ZLUnixFileOutputStream::open() {
 	close();
 
 	myTemporaryName = myName + ".XXXXXX" + '\0';
-	if (::mktemp((char*)myTemporaryName.data()) == 0) {
+	mode_t currentMask = umask(S_IRWXO | S_IRWXG);
+	int temporaryFileDescriptor = ::mkstemp(const_cast<char*>(myTemporaryName.data()));
+	umask(currentMask);
+	if (temporaryFileDescriptor == -1) {
 		return false;
 	}
 
-	myFile = fopen(myTemporaryName.c_str(), "wb");
+	myFile = fdopen(temporaryFileDescriptor, "w+");
 	return myFile != 0;
 }
 

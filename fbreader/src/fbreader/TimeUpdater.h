@@ -21,18 +21,16 @@
 #define __TIMEUPDATER_H__
 
 #include <ZLRunnable.h>
-#include <ZLApplication.h>
 
 class TimeUpdater : public ZLRunnable {
 
 public:
-	TimeUpdater(ZLApplication &application);
+	TimeUpdater();
 
 private:
 	void run();
 
 private:
-	ZLApplication &myApplication;
 	short myTime;
 };
 

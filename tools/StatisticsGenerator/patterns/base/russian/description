@@ -1,0 +1,31 @@
+File:		zapiskiw.txt
+Title:		Михаил Булгаков. Записки юного врача   	
+URL:		http://www.lib.ru/BULGAKOW/zapiskiw.txt
+Encoding: 	WINDOWS-1251
+Actions:	File was filtered by substitution command in vim :%s/<[^>]*>//g to avoid tags inclusions
+
+File:		sel_1.txt
+Title:		Джером Д.Сэлинджер. Над пропастью во ржи   	
+URL:		http://www.lib.ru/SELINGER/sel_1.txt
+Encoding: 	WINDOWS-1251
+Actions:	File was filtered by substitution command in vim :%s/<[^>]*>//g to avoid tags inclusions
+
+File:		3laws.txt
+Title:		Айзек Азимов. 3 закона роботехники   	
+URL:		http://www.lib.ru/FOUNDATION/3laws.txt
+Encoding: 	WINDOWS-1251
+Actions:	File was filtered by substitution command in vim :%s/<[^>]*>//g to avoid tags inclusions
+			Then illegal symbol (615 string 52 position) was deleted.
+			Then illegal symbol Ј was replaced by ё everywhere.
+
+File:		ponedelx.txt
+Title:		Аркадий и Борис Стругацкие. Понедельник начинается в субботу 
+URL:		http://www.lib.ru/STRUGACKIE/ponedelx.txt
+Encoding: 	WINDOWS-1251
+Actions:	File was filtered by substitution command in vim :%s/<[^>]*>//g to avoid tags inclusions
+
+File:		tigrsnegov.txt
+Title:		Тенцинг Норгей. Тигр снегов
+URL:		http://www.lib.ru/ALPINISM/TENCING/tigrsnegov.txt
+Encoding: 	WINDOWS-1251
+Actions:	File was filtered by substitution command in vim :%s/<[^>]*>//g to avoid tags inclusions

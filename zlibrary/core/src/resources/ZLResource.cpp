@@ -80,7 +80,7 @@ private:
 	ZLMissingResource();
 
 public:
-	static const ZLMissingResource &instance();
+	static const ZLMissingResource &Instance();
 
 private:
 	bool hasValue() const;
@@ -99,7 +99,7 @@ const ZLResource &ZLResource::operator [] (const ZLResourceKey &key) const {
 const ZLResource &ZLResource::resource(const std::string &key) {
 	ZLTreeResource::buildTree();
 	if (ZLTreeResource::ourRoot.isNull()) {
-		return ZLMissingResource::instance();
+		return ZLMissingResource::Instance();
 	}
 	return (*ZLTreeResource::ourRoot)[key];
 }
@@ -163,11 +163,11 @@ const ZLResource &ZLTreeResource::operator [] (const std::string &key) const {
 	if (it != myChildren.end()) {
 		return *it->second;
 	} else {
-		return ZLMissingResource::instance();
+		return ZLMissingResource::Instance();
 	}
 }
 
-const ZLMissingResource &ZLMissingResource::instance() {
+const ZLMissingResource &ZLMissingResource::Instance() {
 	if (ourInstance.isNull()) {
 		ourInstance = new ZLMissingResource();
 	}

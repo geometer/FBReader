@@ -101,7 +101,7 @@ void FB2TagInfoReader::endElementHandler(const char *tag) {
 
 FB2TagManager *FB2TagManager::ourInstance = 0;
 
-const FB2TagManager &FB2TagManager::instance() {
+const FB2TagManager &FB2TagManager::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new FB2TagManager();
 	}

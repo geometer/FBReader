@@ -70,7 +70,7 @@ void ZLGtkLibraryImplementation::init(int &argc, char **&argv) {
 	if (!ZLFile("/usr/lib/more-gconv").directory(false).isNull()) {
 		setenv("GCONV_PATH", "/usr/lib/more-gconv", 1);
 	}
-	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
+	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 }
 
 ZLPaintContext *ZLGtkLibraryImplementation::createContext() {
@@ -78,7 +78,7 @@ ZLPaintContext *ZLGtkLibraryImplementation::createContext() {
 }
 
 void ZLGtkLibraryImplementation::run(ZLApplication *application) {
-	ZLDialogManager::instance().createApplicationWindow(application);
+	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
 	gtk_widget_set_default_direction(ZLLanguageUtil::isRTLLanguage(ZLibrary::Language()) ? GTK_TEXT_DIR_RTL : GTK_TEXT_DIR_LTR);
 	gtk_main();

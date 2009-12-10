@@ -26,59 +26,42 @@
 #include <shared_ptr.h>
 #include <ZLOptions.h>
 
-#include "NetworkBookInfo.h"
+#include "NetworkLibraryItems.h"
 
-class ZLNetworkData;
+class ZLExecutionData;
+
+struct NetworkOperationData;
+class NetworkAuthenticationManager;
 
 class NetworkLink {
 
+public:
+	static std::string NetworkDataDirectory();
+	static std::string CertificatesPathPrefix();
+
 protected:
-	NetworkLink(const std::string &siteName, const std::string &optionName);
+	NetworkLink(const std::string &siteName, const std::string &title);
 
 public:
 	virtual ~NetworkLink();
 
 public:
 	const std::string SiteName;
+	const std::string Title;
 	ZLBooleanOption OnOption;
 
 public:
-	virtual shared_ptr<ZLNetworkData> simpleSearchData(NetworkBookList &books, const std::string &pattern) = 0;
-	virtual shared_ptr<ZLNetworkData> advancedSearchData(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation) = 0;
-};
-
-class NetworkLinkCollection {
+	virtual shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &data, const std::string &pattern) = 0;
+	virtual shared_ptr<ZLExecutionData> advancedSearchData(NetworkOperationData &data, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) = 0;
+	virtual shared_ptr<ZLExecutionData> resume(NetworkOperationData &data);
 
 public:
-	static NetworkLinkCollection &instance();
+	virtual shared_ptr<NetworkAuthenticationManager> authenticationManager();
+	virtual shared_ptr<NetworkLibraryItem> libraryItem() = 0;
 
-private:
-	static NetworkLinkCollection *ourInstance;
-
-public:
-	ZLStringOption DirectoryOption;
-
-private:
-	NetworkLinkCollection();
-	~NetworkLinkCollection();
-
-public:
-	std::string bookFileName(const std::string &url) const;
-	// returns error message
-	std::string downloadBook(const std::string &url, std::string &fileName) const;
-
-	// returns error message
-	std::string simpleSearch(NetworkBookList &books, const std::string &pattern);
-	// returns error message
-	std::string advancedSearch(NetworkBookList &books, const std::string &title, const std::string &author, const std::string &series, const std::string &tag, const std::string &annotation);
-
-	size_t size() const;
-	NetworkLink &link(size_t index) const;
-	bool containsEnabledLinks() const;
-
-private:
-	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
-	LinkVector myLinks;
+private: // disable copying
+	NetworkLink(const NetworkLink &);
+	const NetworkLink &operator = (const NetworkLink &);
 };
 
 #endif /* __NETWORKLINK_H__ */

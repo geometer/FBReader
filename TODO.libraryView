@@ -1,0 +1,44 @@
+DONE key scrolling (Arrow Up/Down, Page Up/Down)
+DONE book info editing
+DONE author info editing
+DONE book deleting
+DONE book covers
+DONE placeholders: book cover, author image, series image, tag image
+DONE disable author info editing for 'Unknown Author'
+DELAYED text search (?)
+DONE obsolete CollectionView
+DELAYED bidi
+DONE scroll to current book during opening
+DONE select currently opened book
+DONE scrool on expanding of a tree item
+DONE tag view
+DONE tag editing
+DONE tag cloning
+DONE tag deleting
+DONE books with no tag processing
+DONE Font family/size settings
+DONE +/- font size action
+DONE scale cover images and block tree node sizes at +/-: check on windows
+DONE colors settings in library view
+DONE wait message during library loading
+DROPPED text for empty collection
+DELAYED 'rescan books' button?
+DONE an update for books by author view
+DONE an update for books by tag view
+DONE authors with ',' in name
+DONE collectSeries => BookCollection
+DONE encoding detection for ~/8cewa.txt (language is detected successfully)
+DONE recently added (with 'add file dialog') book is not visible in library
+DONE spaces on the first page in Apocalypse Troll
+DONE what to do after the add file dialog? (remove second dialog)
+DONE image scaling: gtk
+DONE image scaling: qt3
+DONE image scaling: qt4
+DONE image scaling: win32
+DONE dont load book cover every time
+DELAYED dont store full data in fb2 image (this requires a byte counter in the XML parser)
+DONE covers for mobi books
+DELAYED move base font options from styles.xml to config.xml for all platforms
+DONE ereader bug
+DONE options dialog scrollbars in win32
+DONE broken links in chm

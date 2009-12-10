@@ -2,8 +2,8 @@
 <keymap>
 	<binding key="&lt;Left&gt;" action="undo"/>
 	<binding key="&lt;Right&gt;" action="redo"/>
-	<binding key="&lt;Down&gt;" action="largeScrollForward"/>
-	<binding key="&lt;Up&gt;" action="largeScrollBackward"/>
+	<binding key="&lt;Down&gt;" action="pageForward"/>
+	<binding key="&lt;Up&gt;" action="pageBackward"/>
 	<binding key="&lt;Cancel&gt;" action="cancel"/>
 	<binding key="&lt;Play/Stop&gt;" action="toggleFullscreen"/>
 </keymap>

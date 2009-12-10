@@ -23,18 +23,18 @@
 #include "FB2MigrationReader.h"
 #include "OEBMigrationReader.h"
 #include "HtmlDCTagsReader.h"
+#include "BookInfo.h"
 
-#include "../options/FBOptions.h"
-#include "../description/BookDescription.h"
+#include "../options/FBCategoryKey.h"
 #include "../formats/oeb/OEBPlugin.h"
 #include "../formats/pdb/PdbPlugin.h"
-#include "../formats/pdb/MobipocketStream.h"
+#include "../formats/pdb/PalmDocStream.h"
 
 Migration_0_8_16::Migration_0_8_16() : Migration("0.8.16") {
 }
 
 void Migration_0_8_16::doMigrationInternal() {
-	PluginCollection &collection = PluginCollection::instance();
+	PluginCollection &collection = PluginCollection::Instance();
 
 	std::vector<std::string> optionGroups;
 	ZLOption::listOptionGroups(optionGroups);
@@ -47,7 +47,7 @@ void Migration_0_8_16::doMigrationInternal() {
 				ZLStringOption &languageOption = info.LanguageOption;
 				const std::string &language = languageOption.value();
 				if (language == "") {
-					languageOption.setValue(PluginCollection::instance().DefaultLanguageOption.value());
+					languageOption.setValue(collection.DefaultLanguageOption.value());
 				} else if (language == "cz") {
 					languageOption.setValue("cs");
 				} else if (language == "none") {
@@ -70,7 +70,7 @@ void Migration_0_8_16::doMigrationInternal() {
 				} else if ((extension == "prc") || (extension == "pdb") || (extension == "mobi")) {
 					const std::string fileType = PdbPlugin::fileType(file);
 					if (info.TagsOption.value().empty() && ((fileType == "BOOKMOBI") || (fileType == "TEXtREAd"))) {
-						shared_ptr<ZLInputStream> stream = new MobipocketStream(file);
+						shared_ptr<ZLInputStream> stream = new PalmDocStream(file);
 						if (!stream.isNull()) {
 							HtmlDCTagsReader(info).readDocument(*stream);
 						}

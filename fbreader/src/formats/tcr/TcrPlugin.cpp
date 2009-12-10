@@ -24,43 +24,49 @@
 #include "TcrStream.h"
 #include "PPLBookReader.h"
 #include "../util/TextFormatDetector.h"
-#include "../../description/BookDescription.h"
 #include "../txt/TxtBookReader.h"
 #include "../html/HtmlBookReader.h"
 #include "../txt/PlainTextFormat.h"
+
+#include "../../bookmodel/BookModel.h"
+#include "../../library/Book.h"
 
 bool TcrPlugin::acceptsFile(const ZLFile &file) const {
 	return file.extension() == "tcr";
 }
 
-bool TcrPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	ZLFile file(path);
+bool TcrPlugin::readMetaInfo(Book &book) const {
+	ZLFile file(book.filePath());
 
 	shared_ptr<ZLInputStream> stream = new TcrStream(file);
-	detectEncodingAndLanguage(description, *stream);
-	if (description.encoding().empty()) {
+	detectEncodingAndLanguage(book, *stream);
+	if (book.encoding().empty()) {
 		return false;
 	}
 
 	return true;
 }
 
-bool TcrPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	ZLFile file(description.fileName());
+bool TcrPlugin::readModel(BookModel &model) const {
+	const Book &book = *model.book();
+	const std::string &filePath = book.filePath();
+
+	ZLFile file(filePath);
 	shared_ptr<ZLInputStream> stream = new TcrStream(file);
 
-	PlainTextFormat format(description.fileName());
+	PlainTextFormat format(filePath);
 	if (!format.initialized()) {
 		PlainTextFormatDetector detector;
 		detector.detect(*stream, format);
 	}
 
+	const std::string &encoding = book.encoding();
 	if (TextFormatDetector().isPPL(*stream)) {
-		PPLBookReader(model, description.encoding()).readDocument(*stream);
+		PPLBookReader(model, encoding).readDocument(*stream);
 	} else if (TextFormatDetector().isHtml(*stream)) {
-		HtmlBookReader("", model, format, description.encoding()).readDocument(*stream);
+		HtmlBookReader("", model, format, encoding).readDocument(*stream);
 	} else {
-		TxtBookReader(model, format, description.encoding()).readDocument(*stream);
+		TxtBookReader(model, format, encoding).readDocument(*stream);
 	}
 	return true;
 }
@@ -70,11 +76,11 @@ const std::string &TcrPlugin::iconName() const {
 	return ICON_NAME;
 }
 
-FormatInfoPage *TcrPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
-	ZLFile file(fileName);
+FormatInfoPage *TcrPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &filePath) {
+	ZLFile file(filePath);
 	shared_ptr<ZLInputStream> stream = new TcrStream(file);
 	if (TextFormatDetector().isPPL(*stream)) {
 		return 0;
 	}
-	return new PlainTextInfoPage(dialog, fileName, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
+	return new PlainTextInfoPage(dialog, filePath, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
 }

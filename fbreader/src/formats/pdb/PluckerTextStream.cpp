@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <string.h>
+#include <cstring>
 
 #include <ZLFile.h>
 #include <ZLZDecompressor.h>
@@ -51,18 +51,16 @@ bool PluckerTextStream::open() {
 
 bool PluckerTextStream::fillBuffer() {
 	while (myBufferOffset == myBufferLength) {
-		if (myRecordIndex + 1 > myHeader.Offsets.size() - 1) {
+		if (myRecordIndex + 1 > header().Offsets.size() - 1) {
 			return false;
 		}
 		++myRecordIndex;
-		size_t currentOffset = myHeader.Offsets[myRecordIndex];
+		const size_t currentOffset = recordOffset(myRecordIndex);
 		if (currentOffset < myBase->offset()) {
 			return false;
 		}
 		myBase->seek(currentOffset, true);
-		size_t nextOffset =
-			(myRecordIndex + 1 < myHeader.Offsets.size()) ?
-				myHeader.Offsets[myRecordIndex + 1] : myBase->sizeOfOpened();
+		const size_t nextOffset = recordOffset(myRecordIndex + 1);
 		if (nextOffset < currentOffset) {
 			return false;
 		}

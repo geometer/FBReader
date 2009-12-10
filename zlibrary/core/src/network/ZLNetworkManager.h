@@ -21,17 +21,22 @@
 #define __ZLNETWORKMANAGER_H__
 
 #include <string>
-#include <vector>
 
 #include <shared_ptr.h>
 #include <ZLOptions.h>
-#include <ZLNetworkData.h>
+
+#include <ZLExecutionData.h>
+
+class ZLNetworkData;
+class ZLSlowProcessListener;
 
 class ZLNetworkManager {
 
 public:
 	static void deleteInstance();
-	static ZLNetworkManager &instance();
+	static ZLNetworkManager &Instance();
+
+	static std::string CacheDirectory();
 
 protected:
 	static ZLNetworkManager *ourInstance;
@@ -60,12 +65,20 @@ protected:
 
 public:
 	// returns error message
-	std::string downloadFile(const std::string &url, const std::string &fileName) const;
+	std::string downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLSlowProcessListener> listener = 0) const;
+	std::string downloadFile(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLSlowProcessListener> listener = 0) const;
 	// returns error message
-	std::string perform(const std::vector<shared_ptr<ZLNetworkData> > &dataList) const;
+	std::string perform(const ZLExecutionData::Vector &dataList) const;
 
 private:
-	void setStandardOptions(CURL *handle, const std::string &proxy) const;
+	// void* instead of CURL* to avoid curl.h including
+	void setStandardOptions(void *curlHandle, const std::string &proxy) const;
+
+	mutable shared_ptr<ZLIntegerRangeOption> myConnectTimeoutOption;
+	mutable shared_ptr<ZLIntegerRangeOption> myTimeoutOption;
+	mutable shared_ptr<ZLBooleanOption> myUseProxyOption;
+	mutable shared_ptr<ZLStringOption> myProxyHostOption;
+	mutable shared_ptr<ZLStringOption> myProxyPortOption;
 
 	mutable shared_ptr<ZLIntegerRangeOption> myConnectTimeoutOption;
 	mutable shared_ptr<ZLIntegerRangeOption> myTimeoutOption;

@@ -28,6 +28,9 @@ W32Listener::~W32Listener() {
 W32EventSender::W32EventSender() {
 }
 
+W32EventSender::~W32EventSender() {
+}
+
 void W32EventSender::addListener(W32Listener *listener) {
 	if (listener != 0) {
 		std::list<W32Listener*>::const_iterator it = std::find(myListeners.begin(), myListeners.end(), listener);

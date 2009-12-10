@@ -17,16 +17,38 @@
  * 02110-1301, USA.
  */
 
-#include <ZLUnicodeUtil.h>
-#include <ZLNetworkData.h>
-#include <ZLNetworkUtil.h>
+#include <ZLExecutionData.h>
+
+#include <ZLibrary.h>
+#include <ZLFile.h>
 
 #include "NetworkLink.h"
+#include "NetworkOperationData.h"
+#include "NetworkAuthenticationManager.h"
 
-#include "../options/FBOptions.h"
 
-NetworkLink::NetworkLink(const std::string &siteName, const std::string &optionName) : SiteName(siteName), OnOption(ZLCategoryKey::NETWORK, optionName, "on", true) {
+std::string NetworkLink::NetworkDataDirectory() {
+	return ZLFile(ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "network").path();
+}
+
+std::string NetworkLink::CertificatesPathPrefix() {
+	return NetworkDataDirectory() + ZLibrary::FileNameDelimiter + "certificates" + ZLibrary::FileNameDelimiter;
+}
+
+NetworkLink::NetworkLink(const std::string &siteName, const std::string &title) : 
+	SiteName(siteName), 
+	Title(title),
+	OnOption(ZLCategoryKey::NETWORK, siteName, "on", true) {
 }
 
 NetworkLink::~NetworkLink() {
+}
+
+shared_ptr<ZLExecutionData> NetworkLink::resume(NetworkOperationData &result) {
+	result.clear();
+	return 0;
+}
+
+shared_ptr<NetworkAuthenticationManager> NetworkLink::authenticationManager() {
+	return 0;
 }

@@ -34,7 +34,7 @@ class ZLMessageHandler;
 class ZLCommunicationManager {
 
 public:
-	static ZLCommunicationManager &instance();
+	static ZLCommunicationManager &Instance();
 	static void deleteInstance();
 
 protected:

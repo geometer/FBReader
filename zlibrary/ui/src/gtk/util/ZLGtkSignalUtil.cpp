@@ -26,6 +26,11 @@ void ZLGtkSignalUtil::connectSignal(GtkObject *object, const char *name, GtkSign
 	ourConnectedSignals.push_back(std::pair<GtkObject*,int>(object, handlerId));
 }
 
+void ZLGtkSignalUtil::connectSignalAfter(GtkObject *object, const char *name, GtkSignalFunc function, void *data) {
+	int handlerId = g_signal_connect_after(object, name, function, data);
+	ourConnectedSignals.push_back(std::pair<GtkObject*,int>(object, handlerId));
+}
+
 void ZLGtkSignalUtil::removeAllSignals() {
 	for (std::vector<std::pair<GtkObject*,int> >::const_iterator it = ourConnectedSignals.begin(); it != ourConnectedSignals.end(); ++it) {
 		gtk_signal_disconnect(it->first, it->second);

@@ -175,7 +175,7 @@ void ComboOptionView::_createItem() {
 	if (label != 0) {
 		int width = myToColumn - myFromColumn + 1;
 		myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 2 - 1);
-		myTab->addItem(myComboBox, myRow, myToColumn - width / 2 + 1, myToColumn);
+		myTab->addItem(myComboBox, myRow, myFromColumn + width / 2, myToColumn);
 	} else {
 		myTab->addItem(myComboBox, myRow, myFromColumn, myToColumn);
 	}
@@ -244,8 +244,8 @@ void SpinOptionView::_createItem() {
 	mySpinBox->setSingleStep(entry.step());
 	mySpinBox->setValue(entry.initialValue());
 	int width = myToColumn - myFromColumn + 1;
-	myTab->addItem(label, myRow, myFromColumn, myFromColumn + width * 2 / 3 - 1);
-	myTab->addItem(mySpinBox, myRow, myFromColumn + width * 2 / 3, myToColumn);
+	myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 2 - 1);
+	myTab->addItem(mySpinBox, myRow, myFromColumn + width / 2, myToColumn);
 }
 
 void SpinOptionView::_onAccept() const {
@@ -254,14 +254,15 @@ void SpinOptionView::_onAccept() const {
 
 void StringOptionView::_createItem() {
 	myLineEdit = new QLineEdit(myTab->widget());
+	myLineEdit->setEchoMode(myPasswordMode ? QLineEdit::Password : QLineEdit::Normal);
 	myWidgets.push_back(myLineEdit);
 	connect(myLineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(onValueEdited(const QString&)));
 	if (!ZLOptionView::name().empty()) {
 		QLabel *label = new QLabel(::qtString(ZLOptionView::name()), myTab->widget());
 		myWidgets.push_back(label);
 		int width = myToColumn - myFromColumn + 1;
-		myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 4 - 1);
-		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 4, myToColumn);
+		myTab->addItem(label, myRow, myFromColumn, myFromColumn + width / 2 - 1);
+		myTab->addItem(myLineEdit, myRow, myFromColumn + width / 2, myToColumn);
 	} else {
 		myTab->addItem(myLineEdit, myRow, myFromColumn, myToColumn);
 	}
@@ -448,3 +449,14 @@ void ColorOptionView::onSliderMove(int) {
 void ColorOptionView::_onAccept() const {
 	((ZLColorOptionEntry&)*myOption).onAccept(ZLColor(myRSlider->value(), myGSlider->value(), myBSlider->value()));
 }
+
+void StaticTextOptionView::_createItem() {
+	const std::string &text = ((ZLStaticTextOptionEntry&)*myOption).initialValue();
+	QLabel *label = new QLabel(::qtString(text), myTab->widget());
+	myWidgets.push_back(label);
+	myTab->addItem(label, myRow, myFromColumn, myToColumn);
+}
+
+void StaticTextOptionView::_onAccept() const {
+}
+

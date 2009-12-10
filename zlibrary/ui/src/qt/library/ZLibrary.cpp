@@ -58,7 +58,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	ZLQtDialogManager::createInstance();
 	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
-	ZLEncodingCollection::instance().registerProvider(new IConvEncodingConverterProvider());
+	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 
 	ZLKeyUtil::setKeyNamesFileName("keynames-qt.xml");
 }
@@ -69,7 +69,7 @@ ZLPaintContext *ZLQtLibraryImplementation::createContext() {
 
 void ZLQtLibraryImplementation::run(ZLApplication *application) {
 	qApp->setReverseLayout(ZLLanguageUtil::isRTLLanguage(ZLibrary::Language()));
-	ZLDialogManager::instance().createApplicationWindow(application);
+	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
 	qApp->exec();
 	delete application;

@@ -17,10 +17,12 @@
  * 02110-1301, USA.
  */
 
-#include <string.h>
+#include <cstring>
 
 #include <ZLXMLReader.h>
 #include <ZLUnicodeUtil.h>
+
+#include <ZLPlainAsynchronousInputStream.h>
 
 #include "XMLTextStream.h"
 
@@ -66,7 +68,7 @@ bool XMLTextStream::open() {
 	if (myBase.isNull() || !myBase->open()) {
 		return false;
 	}
-	myReader->initialize();
+	myStream = new ZLPlainAsynchronousInputStream();
 	myOffset = 0;
 	return true;
 }
@@ -74,7 +76,14 @@ bool XMLTextStream::open() {
 size_t XMLTextStream::read(char *buffer, size_t maxSize) {
 	while (myDataBuffer.size() < maxSize) {
 		size_t len = myBase->read((char*)myStreamBuffer.data(), 2048);
-		if ((len == 0) || !myReader->readFromBuffer(myStreamBuffer.data(), len)) {
+		/*if ((len == 0) || !myReader->readFromBuffer(myStreamBuffer.data(), len)) {
+			break;
+		}*/
+		if (len == 0) {
+			break;
+		}
+		myStream->setBuffer(myStreamBuffer.data(), len);
+		if (!myReader->readDocument(myStream)) {
 			break;
 		}
 	}
@@ -88,7 +97,11 @@ size_t XMLTextStream::read(char *buffer, size_t maxSize) {
 }
 
 void XMLTextStream::close() {
-	myReader->shutdown();
+	if (!myStream.isNull()) {
+		myStream->setEof();
+		myReader->readDocument(myStream);
+		myStream.reset();
+	}
 	myBase->close();
 	myDataBuffer.erase();
 }

@@ -20,7 +20,7 @@
 #include "EncodedTextReader.h"
 
 EncodedTextReader::EncodedTextReader(const std::string &encoding) {
-	ZLEncodingCollection &collection = ZLEncodingCollection::instance();
+	ZLEncodingCollection &collection = ZLEncodingCollection::Instance();
 	ZLEncodingConverterInfoPtr info = collection.info(encoding);
 	myConverter = (!info.isNull()) ? info->createConverter() : collection.defaultConverter();
 }

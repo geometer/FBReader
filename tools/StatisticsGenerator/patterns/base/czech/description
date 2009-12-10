@@ -1,0 +1,33 @@
+File:			13083-0.txt
+Title:			R.U.R. by Karel Čapek
+URL:			http://www.gutenberg.org/etext/13083
+Encodings:		UTF-8
+Actions:		32 strings with comments at the begining were deleted
+				and 364 strings with license at the end.
+
+File:			16843-0.txt
+Title:			Cvičení maličkých ve svatém náboženství křesťansko-katolickém
+URL:			http://www.gutenberg.org/etext/16843
+Encodings:		UTF-8
+Actions:		40 strings with comments at the begining were deleted
+				and 372 strings with license at the end.
+
+File:			27960-0.txt
+Title:			Hore dědinú by František Omelka
+URL:			http://www.gutenberg.org/etext/27960
+Encodings:		UTF-8
+Actions:		34 strings with comments at the begining were deleted
+				and 371 strings with license at the end.
+
+File:			27974-0.txt
+Title:			Vlci proti Mustangům by František Omelka
+URL:			http://www.gutenberg.org/etext/27974
+Encodings:		UTF-8
+Actions:		30 strings with comments at the begining were deleted
+				and 368 strings with license at the end.
+
+File:			pr1-3.txt
+Title:			O zajetí a žaláři poselství našeho
+URL:			http://citanka.cz/toUTF8.en/mitrovic/pr1-3.html	
+Encodings:		UTF-8
+Actions:		:%s/<[^>]*>//g

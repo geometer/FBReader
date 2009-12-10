@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menubar>
+	<item id="bookInfo"/>
+	<item id="toc"/>
+	<item id="showLibrary"/>
+	<item id="gotoHome"/>
+	<item id="gotoPageNumber"/>
+	<item id="gotoSectionStart"/>
+	<item id="gotoSectionEnd"/>
+	<item id="nextTOCSection"/>
+	<item id="previousTOCSection"/>
+	<item id="preferences"/>
+</menubar>

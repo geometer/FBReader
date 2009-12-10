@@ -1,0 +1,50 @@
+File:			18291-0.txt > 18291_1255.txt
+Title:			Hunger by Knut Hamsun
+URL:			http://www.gutenberg.org/etext/18291
+Encodings:		UTF-8 > WINDOWS-1255
+Actions:		71 strings with comments at the begining were deleted
+				and 368 strings with license at the end.
+				iconv -c -f UTF-8 -t WINDOWS-1255 18291-0.txt > 18291_1255.txt
+
+File:			8cewa10.txt > 8cewa10_1255.txt
+Title:			Tales by Carl Ewald
+URL:			http://www.gutenberg.org/etext/5139
+Encodings:		UTF-16LE > WINDOWS-1255
+Actions:		309 strings with license at the begining were deleted
+				and 7 strings with comments at the end.
+				iconv -c -f UTF-16LE -t WINDOWS-1255 8cewa10.txt > 8cewa10_1255.txt
+			
+File:			003.txt
+URL:			http://benyehuda.org/meidnik/003.html
+Encodings:		WINDOWS-1255
+Actions:		:%s/<[^>]*>//g	
+
+File:			brandstater_004.txt
+URL:			http://benyehuda.org/brandstadter/brandstater_004.html
+Encodings:		WINDOWS-1255
+Actions:		:%s/<[^>]*>//g	
+
+File:			yoash.txt
+URL:			http://benyehuda.org/luidor/yoash.html
+Encodings:		WINDOWS-1255
+Actions:		:%s/<[^>]*>//g	
+
+File:			lean.txt
+URL:			http://benyehuda.org/feierberg/lean.html
+Encodings:		WINDOWS-1255
+Actions:		:%s/<[^>]*>//g	
+
+File:			masa.txt
+URL:			http://benyehuda.org/perets/masa.html#g
+Encodings:		WINDOWS-1255
+Actions:		:%s/<[^>]*>//g	
+
+File:			idelson_hakbalot.txt
+URL:			http://benyehuda.org/levinson/idelson_hakbalot.html
+Encodings:		WINDOWS-1255
+Actions:		:%s/<[^>]*>//g	
+
+File:			ben-zion_prose02.txt
+URL:			http://benyehuda.org/gutman/ben-zion_prose02.html
+Encodings:		WINDOWS-1255
+Actions:		:%s/<[^>]*>//g	

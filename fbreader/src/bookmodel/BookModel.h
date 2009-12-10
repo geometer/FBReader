@@ -26,9 +26,9 @@
 #include <ZLTextModel.h>
 #include <ZLTextParagraph.h>
 #include <ZLUserData.h>
-#include "../description/BookDescription.h"
 
 class ZLImage;
+class Book;
 
 class ContentsModel : public ZLTextTreeModel {
 
@@ -51,10 +51,17 @@ public:
 	};
 
 public:
-	BookModel(const BookDescriptionPtr description);
+	class HyperlinkMatcher {
+
+	public:
+		virtual Label match(const std::map<std::string,Label> &lMap, const std::string &id) const = 0;
+	};
+
+public:
+	BookModel(const shared_ptr<Book> book);
 	~BookModel();
 
-	const std::string &fileName() const;
+	void setHyperlinkMatcher(shared_ptr<HyperlinkMatcher> matcher);
 
 	shared_ptr<ZLTextModel> bookTextModel() const;
 	shared_ptr<ZLTextModel> contentsModel() const;
@@ -62,15 +69,16 @@ public:
 	const ZLImageMap &imageMap() const;
 	Label label(const std::string &id) const;
 
-	const BookDescriptionPtr description() const;
+	const shared_ptr<Book> book() const;
 
 private:
-	const BookDescriptionPtr myDescription;
+	const shared_ptr<Book> myBook;
 	shared_ptr<ZLTextModel> myBookTextModel;
 	shared_ptr<ZLTextModel> myContentsModel;
 	ZLImageMap myImages;
 	std::map<std::string,shared_ptr<ZLTextModel> > myFootnotes;
 	std::map<std::string,Label> myInternalHyperlinks;
+	shared_ptr<HyperlinkMatcher> myHyperlinkMatcher;
 
 friend class BookReader;
 };
@@ -78,6 +86,5 @@ friend class BookReader;
 inline shared_ptr<ZLTextModel> BookModel::bookTextModel() const { return myBookTextModel; }
 inline shared_ptr<ZLTextModel> BookModel::contentsModel() const { return myContentsModel; }
 inline const ZLImageMap &BookModel::imageMap() const { return myImages; }
-inline const BookDescriptionPtr BookModel::description() const { return myDescription; }
 
 #endif /* __BOOKMODEL_H__ */

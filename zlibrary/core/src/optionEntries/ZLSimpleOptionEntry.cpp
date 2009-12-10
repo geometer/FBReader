@@ -87,3 +87,10 @@ void ZLSimpleColorOptionEntry::onAccept(ZLColor color) {
 	myOption.setValue(color);
 }
 */
+
+ZLSimpleStaticTextOptionEntry::ZLSimpleStaticTextOptionEntry(const std::string &text) : myText(text) {
+}
+
+const std::string &ZLSimpleStaticTextOptionEntry::initialValue() const {
+	return myText;
+}

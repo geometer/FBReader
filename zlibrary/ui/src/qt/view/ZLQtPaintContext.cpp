@@ -174,6 +174,14 @@ void ZLQtPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	myPainter->drawImage(x, y - qImage.height(), qImage);
 }
 
+void ZLQtPaintContext::drawImage(int x, int y, const ZLImageData &image, int width, int height, ScalingType type) {
+	const QImage &qImage = (ZLQtImageData&)image;
+	const QImage &scaled = qImage.smoothScale(imageWidth(image, width, height, type), imageHeight(image, width, height, type), QImage::ScaleMin);
+	if (qImage != 0) {
+		myPainter->drawImage(x, y - scaled.height(), scaled);
+	}
+}
+
 void ZLQtPaintContext::drawLine(int x0, int y0, int x1, int y1) {
 	myPainter->drawPoint(x0, y0);
 	myPainter->drawLine(x0, y0, x1, y1);

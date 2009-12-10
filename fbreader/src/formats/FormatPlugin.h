@@ -23,14 +23,16 @@
 #include <string>
 #include <vector>
 
+#include <shared_ptr.h>
 #include <ZLOptions.h>
 
-class BookDescription;
+class Book;
 class BookModel;
 class ZLOptionsDialog;
 class ZLOptionsDialogTab;
 class ZLFile;
 class ZLInputStream;
+class ZLImage;
 
 class FormatInfoPage {
 
@@ -55,12 +57,13 @@ public:
 	virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path);
 
 	virtual const std::string &tryOpen(const std::string &path) const;
-	virtual bool readDescription(const std::string &path, BookDescription &description) const = 0;
-	virtual bool readModel(const BookDescription &description, BookModel &model) const = 0;
+	virtual bool readMetaInfo(Book &book) const = 0;
+	virtual bool readModel(BookModel &model) const = 0;
+	virtual shared_ptr<ZLImage> coverImage(const Book &book) const;
 
 protected:
-	static void detectEncodingAndLanguage(BookDescription &description, ZLInputStream &stream);
-	static void detectLanguage(BookDescription &description, ZLInputStream &stream);
+	static void detectEncodingAndLanguage(Book &book, ZLInputStream &stream);
+	static void detectLanguage(Book &book, ZLInputStream &stream);
 };
 
 class PluginCollection {
@@ -71,20 +74,20 @@ public:
 	ZLStringOption DefaultEncodingOption;
 	
 public:
-	static PluginCollection &instance();
+	static PluginCollection &Instance();
 	static void deleteInstance();
 
 private:
 	PluginCollection();
-	~PluginCollection();
 	
 public:
-	FormatPlugin *plugin(const ZLFile &file, bool strong);
+	shared_ptr<FormatPlugin> plugin(const ZLFile &file, bool strong);
+	shared_ptr<FormatPlugin> plugin(const Book &book);
 
 private:
 	static PluginCollection *ourInstance;
 
-	std::vector<FormatPlugin*> myPlugins;
+	std::vector<shared_ptr<FormatPlugin> > myPlugins;
 };
 
 inline FormatInfoPage::FormatInfoPage() {}

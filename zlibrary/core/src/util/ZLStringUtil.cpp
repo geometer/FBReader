@@ -94,3 +94,4 @@ std::string ZLStringUtil::printf(const std::string &format, const std::string &a
 	}
 	return format.substr(0, index) + arg0 + format.substr(index + 2);
 }
+

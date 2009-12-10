@@ -24,6 +24,8 @@
 
 #include <shared_ptr.h>
 
+class ZLExecutionData;
+
 class ZLImage {
 
 protected:
@@ -32,6 +34,7 @@ protected:
 public:
 	virtual ~ZLImage();
 	virtual bool isSingle() const = 0;
+	virtual shared_ptr<ZLExecutionData> synchronizationData() const;
 };
 
 class ZLSingleImage : public ZLImage {

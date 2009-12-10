@@ -22,6 +22,8 @@
 #include "BookReader.h"
 #include "BookModel.h"
 
+#include "../library/Book.h"
+
 BookReader::BookReader(BookModel &model) : myModel(model) {
 	myCurrentTextModel = 0;
 	myLastTOCParagraphIsEmpty = false;

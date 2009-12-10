@@ -29,8 +29,8 @@ public:
 	~DocBookPlugin();
 	bool providesMetaInfo() const;
 	bool acceptsFile(const std::string &extension) const;
-	bool readDescription(const std::string &path, BookDescription &description) const;
-	bool readModel(const BookDescription &description, BookModel &model) const;
+	bool readMetaInfo(Book &book) const;
+	bool readModel(BookModel &model) const;
 	const std::string &iconName() const;
 };
 

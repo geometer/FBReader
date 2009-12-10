@@ -20,9 +20,9 @@
 #include "FBReader.h"
 #include "FBReaderActions.h"
 
-BooksOrderAction::BooksOrderAction(FBReader &fbreader) : ModeDependentAction(fbreader, FBReader::BOOK_COLLECTION_MODE) {
+BooksOrderAction::BooksOrderAction() : ModeDependentAction(FBReader::LIBRARY_MODE) {
 }
 
 void BooksOrderAction::run() {
-	fbreader().refreshWindow();
+	FBReader::Instance().showLibraryView();
 }

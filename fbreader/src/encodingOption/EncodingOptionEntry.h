@@ -24,31 +24,43 @@
 
 #include <ZLOptionEntry.h>
 
-class EncodingEntry : public ZLComboOptionEntry {
+class AbstractEncodingEntry : public ZLComboOptionEntry {
 
 public:
-	EncodingEntry(ZLStringOption &encodingOption);
+	AbstractEncodingEntry(const std::string &currentValue);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onAccept(const std::string &value);
 	void onValueSelected(int index);
 
+	virtual void onAcceptValue(const std::string &value) = 0;
+
 private:
 	std::vector<std::string> mySetNames;
 	std::map<std::string,std::vector<std::string> > myValues;
 	mutable std::map<std::string,std::string> myInitialValues;
 	std::map<std::string,std::string> myValueByName;
-	ZLStringOption &myEncodingOption;
 	std::string myInitialSetName;
 
 friend class EncodingSetEntry;
 };
 
+class EncodingEntry : public AbstractEncodingEntry {
+
+public:
+	EncodingEntry(ZLStringOption &encodingOption);
+
+	void onAcceptValue(const std::string &value);
+
+private:
+	ZLStringOption &myEncodingOption;
+};
+
 class EncodingSetEntry : public ZLComboOptionEntry {
 
 public:
-	EncodingSetEntry(EncodingEntry &encodingEntry);
+	EncodingSetEntry(AbstractEncodingEntry &encodingEntry);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -56,7 +68,7 @@ public:
 	void onValueSelected(int index);
 
 private:
-	EncodingEntry &myEncodingEntry;
+	AbstractEncodingEntry &myEncodingEntry;
 };
 
 #endif /* __ENCODINGOPTIONENTRY_H__ */

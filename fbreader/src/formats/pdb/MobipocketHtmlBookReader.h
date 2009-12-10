@@ -82,6 +82,7 @@ friend class MobipocketHtmlImageTagAction;
 friend class MobipocketHtmlHrefTagAction;
 friend class MobipocketHtmlGuideTagAction;
 friend class MobipocketHtmlReferenceTagAction;
+friend class MobipocketHtmlPagebreakTagAction;
 friend class TOCReader;
 };
 

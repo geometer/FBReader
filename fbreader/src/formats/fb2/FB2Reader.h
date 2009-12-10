@@ -30,15 +30,19 @@ public:
 		int tagCode;
 	};
 
-public:
+protected:
 	virtual int tag(const char *name);
 
 	virtual void startElementHandler(int tag, const char **attributes) = 0;
 	virtual void endElementHandler(int tag) = 0;
 
+	const std::string &xlinkNamespace() const;
+
 private:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
+	bool processNamespaces() const;
+	void namespaceListChangedHandler();
 
 	const std::vector<std::string> &externalDTDs() const;
 
@@ -65,6 +69,7 @@ public:
 		_A,
 		_IMAGE,
 		_BINARY,
+		_DESCRIPTION,
 		_BODY,
 		_EMPTY_LINE,
 		_TITLE_INFO,
@@ -82,12 +87,14 @@ public:
 
 protected:
 	FB2Reader();
-	
-public:
 	~FB2Reader();
+
+private:
+	std::string myXLinkNamespace;
 };
 
 inline FB2Reader::FB2Reader() {}
 inline FB2Reader::~FB2Reader() {}
+inline const std::string &FB2Reader::xlinkNamespace() const { return myXLinkNamespace; }
 
 #endif /* __FB2READER_H__ */

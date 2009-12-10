@@ -35,3 +35,15 @@ short ZLUnixTimeManager::hoursBySeconds(long seconds) const {
 short ZLUnixTimeManager::minutesBySeconds(long seconds) const {
 	return localtime(&seconds)->tm_min;
 }
+
+short ZLUnixTimeManager::yearBySeconds(long seconds) const {
+	return localtime(&seconds)->tm_year + 1900;
+}
+
+short ZLUnixTimeManager::monthBySeconds(long seconds) const {
+	return localtime(&seconds)->tm_mon + 1;
+}
+
+short ZLUnixTimeManager::dayOfMonthBySeconds(long seconds) const {
+	return localtime(&seconds)->tm_mday;
+}

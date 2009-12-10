@@ -17,8 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <stdlib.h>
-
+#include <cstdlib>
 #include <iostream>
 
 #include <ZLStringUtil.h>

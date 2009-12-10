@@ -35,9 +35,9 @@ bool ZTXTStream::open() {
 	}
 
 	myBase->seek(2, false);
-	unsigned short records;
-	PdbUtil::readUnsignedShort(*myBase, records);
-	myMaxRecordIndex = std::min(records, (unsigned short)(myHeader.Offsets.size() - 1));
+	unsigned short recordNumber;
+	PdbUtil::readUnsignedShort(*myBase, recordNumber);
+	myMaxRecordIndex = std::min(recordNumber, (unsigned short)(header().Offsets.size() - 1));
 	myBase->seek(4, false);
 	PdbUtil::readUnsignedShort(*myBase, myMaxRecordSize);
 	if (myMaxRecordSize == 0) {
@@ -56,7 +56,7 @@ bool ZTXTStream::fillBuffer() {
 			return false;
 		}
 		++myRecordIndex;
-		size_t currentOffset = myHeader.Offsets[myRecordIndex];
+		size_t currentOffset = recordOffset(myRecordIndex);
 		// Hmm, this works on examples from manybooks.net,
 		// but I don't understand what this code means :((
 		if (myRecordIndex == 1) {
@@ -66,9 +66,7 @@ bool ZTXTStream::fillBuffer() {
 			return false;
 		}
 		myBase->seek(currentOffset, true);
-		size_t nextOffset =
-			(myRecordIndex + 1 < myHeader.Offsets.size()) ?
-				myHeader.Offsets[myRecordIndex + 1] : myBase->sizeOfOpened();
+		const size_t nextOffset = recordOffset(myRecordIndex + 1);
 		if (nextOffset < currentOffset) {
 			return false;
 		}

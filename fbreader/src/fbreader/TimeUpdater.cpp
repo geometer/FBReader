@@ -18,13 +18,14 @@
  */
 
 #include <ZLTime.h>
+#include <ZLApplication.h>
 
 #include <ZLTextStyle.h>
 
 #include "FBView.h"
 #include "TimeUpdater.h"
 
-TimeUpdater::TimeUpdater(ZLApplication &application) : myApplication(application), myTime(-1) {
+TimeUpdater::TimeUpdater() : myTime(-1) {
 }
 
 void TimeUpdater::run() {
@@ -33,7 +34,7 @@ void TimeUpdater::run() {
 		short minutes = time.hours() * 60 + time.minutes();
 		if (myTime != minutes) {
 			myTime = minutes;
-			myApplication.refreshWindow();
+			ZLApplication::Instance().refreshWindow();
 		}
 	}
 }

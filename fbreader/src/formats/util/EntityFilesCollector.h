@@ -27,7 +27,7 @@
 class EntityFilesCollector {
 
 public:
-	static EntityFilesCollector &instance();
+	static EntityFilesCollector &Instance();
 
 	const std::vector<std::string> &externalDTDs(const std::string &format);
 

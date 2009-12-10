@@ -72,7 +72,6 @@ public:
 
 protected:
 	void addParagraphInternal(ZLTextParagraph *paragraph);
-	void removeParagraphInternal(int index);
 	
 private:
 	std::vector<ZLTextParagraph*> myParagraphs;
@@ -103,8 +102,6 @@ public:
 
 	ZLTextTreeParagraph *createParagraph(ZLTextTreeParagraph *parent = 0);
 
-	void removeParagraph(int index);
-	
 	void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const;
 	void selectParagraph(size_t index) const;
 

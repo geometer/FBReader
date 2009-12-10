@@ -66,8 +66,7 @@ private:
 
 	virtual DWORD style() const;
 
-	void hScroll(WORD command);
-	void vScroll(WORD command);
+	void scroll(WORD command, int direction);
 
 protected:
 	W32Widget::Size minimumSize() { return myMinimumSize; }

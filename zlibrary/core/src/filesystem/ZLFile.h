@@ -37,6 +37,7 @@ private:
 
 public:
 	static std::string fileNameToUtf8(const std::string &fileName);
+	static std::string replaceIllegalCharacters(const std::string &fileName, char replaceWith);
 
 public:
 	enum ArchiveType {
@@ -63,6 +64,7 @@ public:
 	bool isArchive() const;
 
 	bool remove() const;
+	bool canRemove() const;
 
 	const std::string &path() const;
 	const std::string &name(bool hideExtension) const;
@@ -72,7 +74,7 @@ public:
 	std::string resolvedPath() const;
 
 	shared_ptr<ZLInputStream> inputStream() const;
-	shared_ptr<ZLOutputStream> outputStream() const;
+	shared_ptr<ZLOutputStream> outputStream(bool writeThrough = false) const;
 	shared_ptr<ZLDir> directory(bool createUnexisting = false) const;
 
 private:

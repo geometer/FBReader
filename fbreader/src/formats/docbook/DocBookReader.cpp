@@ -23,7 +23,7 @@
 
 #include "DocBookReader.h"
 
-static const ZLXMLReader::Tag TAGS[] = {
+static const DocBookReader::Tag TAGS[] = {
 	{"article", DocBookReader::_ARTICLE},
 	{"title", DocBookReader::_TITLE},
 	{"articleinfo", DocBookReader::_ARTICLEINFO},
@@ -62,10 +62,10 @@ static const ZLXMLReader::Tag TAGS[] = {
 	{0, DocBookReader::_UNKNOWN}
 };
 
-const ZLXMLReader::Tag *DocBookReader::tags() const {
+const DocBookReader::Tag *DocBookReader::tags() const {
 	return TAGS;
 }
 
 const std::vector<std::string> &DocBookReader::externalDTDs() const {
-	return EntityFilesCollector::instance().externalDTDs("docbook");
+	return EntityFilesCollector::Instance().externalDTDs("docbook");
 }

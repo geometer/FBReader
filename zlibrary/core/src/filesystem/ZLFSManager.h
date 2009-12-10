@@ -35,7 +35,7 @@ class ZLFSManager {
 
 public:
 	static void deleteInstance();
-	static ZLFSManager &instance();
+	static ZLFSManager &Instance();
 
 protected:
 	static ZLFSManager *ourInstance;
@@ -63,6 +63,8 @@ protected:
 	virtual const std::string &rootDirectoryPath() const = 0;
 	virtual std::string parentPath(const std::string &path) const = 0;
 
+	virtual bool canRemoveFile(const std::string &path) const = 0;
+
 private:
 	std::map<std::string,ZLFile::ArchiveType> myForcedFiles;
 
@@ -70,7 +72,7 @@ friend class ZLFile;
 friend class ZLDir;
 };
 
-inline ZLFSManager &ZLFSManager::instance() { return *ourInstance; }
+inline ZLFSManager &ZLFSManager::Instance() { return *ourInstance; }
 inline ZLFSManager::ZLFSManager() {}
 inline ZLFSManager::~ZLFSManager() {}
 

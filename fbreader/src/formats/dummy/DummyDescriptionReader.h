@@ -22,14 +22,14 @@
 
 #include <string>
 
-#include "../../description/BookDescription.h"
+class Book;
 
 class DummyDescriptionReader {
 
 public:
-	DummyDescriptionReader(BookDescription &description);
+	DummyDescriptionReader(Book &book);
 	~DummyDescriptionReader();
-	bool readDescription(shared_ptr<ZLInputStream> stream);
+	bool readMetaInfo(shared_ptr<ZLInputStream> stream);
 
 	/*
 	void startElementHandler(int tag, const char **attributes);
@@ -38,7 +38,7 @@ public:
 	*/
 
 private:
-	WritableBookDescription myDescription;
+	Book &myBook;
 };
 
 inline DummyDescriptionReader::~DummyDescriptionReader() {}

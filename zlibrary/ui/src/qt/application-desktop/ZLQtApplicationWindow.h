@@ -55,7 +55,7 @@ private:
 	void setFullscreen(bool fullscreen);
 
 	void closeEvent(QCloseEvent *event);
-	void keyReleaseEvent(QKeyEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 	void wheelEvent(QWheelEvent *event);
 
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);

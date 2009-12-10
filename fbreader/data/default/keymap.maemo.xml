@@ -2,10 +2,10 @@
 <keymap>
 	<binding key="&lt;ScrollKey Left&gt;" action="undo"/>
 	<binding key="&lt;ScrollKey Right&gt;" action="redo"/>
-	<binding key="&lt;ZoomKey +&gt;" action="largeScrollForward"/>
-	<binding key="&lt;ZoomKey -&gt;" action="largeScrollBackward"/>
-	<binding key="&lt;ScrollKey Down&gt;" action="smallScrollForward"/>
-	<binding key="&lt;ScrollKey Up&gt;" action="smallScrollBackward"/>
+	<binding key="&lt;ZoomKey +&gt;" action="pageForward"/>
+	<binding key="&lt;ZoomKey -&gt;" action="pageBackward"/>
+	<binding key="&lt;ScrollKey Down&gt;" action="lineForward"/>
+	<binding key="&lt;ScrollKey Up&gt;" action="lineBackward"/>
 	<binding key="&lt;Escape&gt;" action="cancel"/>
 	<binding key="&lt;FullScreen&gt;" action="toggleFullscreen"/>
   <binding key="&lt;ScrollKey Center&gt;" action="rotate"/>

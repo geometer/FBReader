@@ -197,7 +197,7 @@ void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, 
 										{
 											unsigned char len = std::min(4, (int)header.Width - j);
 											for (unsigned char k = 0; k < len; ++k) {
-												imageData.setGrayPixel(85 * (3 - (*from_ptr >> (6 - 2 * k)) & 0x3));
+												imageData.setGrayPixel(85 * (3 - ((*from_ptr >> (6 - 2 * k)) & 0x3)));
 												imageData.moveX(1);
 											}
 										}

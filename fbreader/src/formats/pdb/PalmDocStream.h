@@ -20,26 +20,31 @@
 #ifndef __PALMDOCSTREAM_H__
 #define __PALMDOCSTREAM_H__
 
-#include "PdbStream.h"
+#include "PalmDocLikeStream.h"
 
 class ZLFile;
+class HuffDecompressor;
 
-class PalmDocStream : public PdbStream {
+class PalmDocStream : public PalmDocLikeStream {
 
 public:
 	PalmDocStream(ZLFile &file);
 	~PalmDocStream();
-	bool open();
+	
+	std::pair<int,int> imageLocation(const PdbHeader &header, int index) const;
+	bool hasExtraSections() const;
+	int firstImageLocationIndex(const std::string &fileName);
 
-protected:
-	bool fillBuffer();
+private:
+	bool processRecord();
+	bool processZeroRecord();
 
-protected:
-	bool myIsCompressed;
+private:
+	unsigned short myCompressionVersion;
+	unsigned long  myTextLength; //TODO: Warning: isn't used
+	unsigned short myTextRecordNumber;
 
-	size_t myMaxRecordIndex;
-	unsigned short myMaxRecordSize;
-	size_t myRecordIndex;
+	shared_ptr<HuffDecompressor> myHuffDecompressorPtr;
 };
 
 #endif /* __PALMDOCSTREAM_H__ */

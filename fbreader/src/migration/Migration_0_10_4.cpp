@@ -23,7 +23,7 @@
 #include <ZLUnicodeUtil.h>
 
 #include "Migration.h"
-#include "../options/FBOptions.h"
+#include "../options/FBCategoryKey.h"
 
 Migration_0_10_4::Migration_0_10_4() : Migration("0.10.4") {
 }

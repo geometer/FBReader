@@ -17,11 +17,17 @@
 			<node name="unknownErrorMessage" value="Masalah tidak diketahui" />
 			<node name="couldntCreateDirectoryMessage" value="Tidak dapat membuat direktori&#10;%s" />
 			<node name="couldntCreateFileMessage" value="Tidak dapat membuat berkas&#10;%s" />
+			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn&apos;t connect to the network" />
 			<node name="couldntConnectMessage" value="Tidak dapat menghubungi alamat %s" />
 			<node name="couldntResolveHostMessage" value="Tidak dapat menerjemahkan alamat %s" />
 			<node name="couldntResolveProxyMessage" value="Tidak dapat menerjemahkan proxy %s" />
 			<node name="operationTimedOutMessage" value="Waktu tunggu operasi terlampaui" />
 			<node name="somethingWrongMessage" value="Terjadi sesuatu yang salah pada&#10;%s" />
+			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s" />
+			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK" />
+			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates" />
+			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn&apos;t read the SSL CA certificate file:&#10;%s" />
+			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s" />
 		</node>
 	</node>
 	<node name="color">

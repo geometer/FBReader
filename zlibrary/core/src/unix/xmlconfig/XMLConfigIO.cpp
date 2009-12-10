@@ -33,15 +33,6 @@ const std::string XMLConfig::UNKNOWN_CATEGORY = ".unknown.";
 
 static const std::string CHANGES_FILE = "config.changes";
 
-std::string XMLConfig::configDirName() const {
-#ifdef XMLCONFIGHOMEDIR
-	const std::string home = XMLCONFIGHOMEDIR;
-#else
-	const std::string home = "~";
-#endif
-	return home + ZLibrary::FileNameDelimiter + "." + ZLibrary::ApplicationName();
-}
-
 void XMLConfig::load() {
 	XMLConfigReader(*this, "").readDocument(ZLibrary::DefaultFilesPathPrefix() + "config.xml");
 	XMLConfigReader(*this, "").readDocument(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "default" + ZLibrary::FileNameDelimiter + "config.xml");
@@ -49,7 +40,7 @@ void XMLConfig::load() {
 	for (std::map<std::string,XMLConfigGroup*>::iterator it = myDefaultGroups.begin(); it != myDefaultGroups.end(); ++it) {
 		it->second = new XMLConfigGroup(*it->second);
 	}
-	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(false);
+	shared_ptr<ZLDir> configDir = ZLFile(ZLibrary::ApplicationWritableDirectory()).directory(false);
 	if (!configDir.isNull()) {
 		std::vector<std::string> fileNames;
 		configDir->collectFiles(fileNames, true);
@@ -71,7 +62,7 @@ void XMLConfig::load() {
 void XMLConfig::saveAll() {
 	saveDelta();
 
-	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(true);
+	shared_ptr<ZLDir> configDir = ZLFile(ZLibrary::ApplicationWritableDirectory()).directory(true);
 
 	if (myDelta != 0) {
 		if (!configDir.isNull()) {
@@ -88,7 +79,7 @@ void XMLConfig::saveAll() {
 		}
 		myDelta->clear();
 	} // TODO: show error message if config was not saved
-	ZLFile changesFile(configDirName() + ZLibrary::FileNameDelimiter + CHANGES_FILE);
+	ZLFile changesFile(ZLibrary::ApplicationWritableDirectory() + ZLibrary::FileNameDelimiter + CHANGES_FILE);
 	changesFile.remove();
 }
 
@@ -96,7 +87,7 @@ void XMLConfig::saveDelta() {
 	if ((myDelta == 0) || (myDelta->myIsUpToDate)) {
 		return;
 	}
-	shared_ptr<ZLDir> configDir = ZLFile(configDirName()).directory(true);
+	shared_ptr<ZLDir> configDir = ZLFile(ZLibrary::ApplicationWritableDirectory()).directory(true);
 	shared_ptr<ZLOutputStream> stream = ZLFile(configDir->itemPath(CHANGES_FILE)).outputStream();
 	if (!stream.isNull() && stream->open()) {
 		XMLConfigDeltaWriter(*myDelta, *stream).write();

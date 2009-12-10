@@ -21,47 +21,49 @@
 #include <ZLInputStream.h>
 
 #include "PdbPlugin.h"
-#include "../../description/BookDescription.h"
 #include "../txt/TxtBookReader.h"
 #include "../html/HtmlBookReader.h"
 #include "HtmlMetainfoReader.h"
 #include "../util/TextFormatDetector.h"
 
-bool SimplePdbPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	ZLFile file(path);
+#include "../../bookmodel/BookModel.h"
+#include "../../library/Book.h"
 
+bool SimplePdbPlugin::readMetaInfo(Book &book) const {
+	ZLFile file(book.filePath());
 	shared_ptr<ZLInputStream> stream = createStream(file);
-	detectEncodingAndLanguage(description, *stream);
-	if (description.encoding().empty()) {
+	detectEncodingAndLanguage(book, *stream);
+	if (book.encoding().empty()) {
 		return false;
 	}
 	int readType = HtmlMetainfoReader::NONE;
-	if (description.title().empty()) {
+	if (book.title().empty()) {
 		readType |= HtmlMetainfoReader::TITLE;
 	}
-	if (description.author().isNull()) {
+	if (book.authors().empty()) {
 		readType |= HtmlMetainfoReader::AUTHOR;
 	}
 	if ((readType != HtmlMetainfoReader::NONE) && TextFormatDetector().isHtml(*stream)) {
 		readType |= HtmlMetainfoReader::TAGS;
-		HtmlMetainfoReader metainfoReader(description, (HtmlMetainfoReader::ReadType)readType);
+		HtmlMetainfoReader metainfoReader(book, (HtmlMetainfoReader::ReadType)readType);
 		metainfoReader.readDocument(*stream);
 	}
 
 	return true;
 }
 
-bool SimplePdbPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	ZLFile file(description.fileName());
+bool SimplePdbPlugin::readModel(BookModel &model) const {
+	const Book &book = *model.book();
+	const std::string &filePath = book.filePath();
+	ZLFile file(filePath);
 	shared_ptr<ZLInputStream> stream = createStream(file);
 
-	PlainTextFormat format(description.fileName());
+	PlainTextFormat format(filePath);
 	if (!format.initialized()) {
 		PlainTextFormatDetector detector;
 		detector.detect(*stream, format);
 	}
-
-	readDocumentInternal(description.fileName(), model, format, description.encoding(), *stream);
+	readDocumentInternal(filePath, model, format, book.encoding(), *stream);
 	return true;
 }
 

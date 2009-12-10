@@ -32,6 +32,7 @@
 
 #include <ZLTextWord.h>
 #include <ZLTextStyle.h>
+#include <ZLTextPositionIndicatorInfo.h>
 #include <ZLTextParagraphCursor.h>
 #include <ZLTextSelectionModel.h>
 #include <ZLTextArea.h>
@@ -99,12 +100,11 @@ private:
 	class ViewStyle {
 
 	public:
-		ViewStyle(shared_ptr<ZLPaintContext> context);
+		ViewStyle(const ZLTextView &view, ZLPaintContext &context);
 		~ViewStyle();
-		void setPaintContext(shared_ptr<ZLPaintContext> context);
 
-		void reset();
-		void setTextStyle(const ZLTextStylePtr style, unsigned char bidiLevel);
+		void reset() const;
+		void setTextStyle(const shared_ptr<ZLTextStyle> style, unsigned char bidiLevel);
 
 	private:
 		void applyControl(const ZLTextControlElement &control);
@@ -117,7 +117,7 @@ private:
 		void applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end);
 
 		const ZLPaintContext &context() const;
-		const ZLTextStylePtr textStyle() const;
+		shared_ptr<ZLTextStyle> textStyle() const;
 		int elementWidth(const ZLTextElement &element, unsigned int charNumber, const ZLTextStyleEntry::Metrics &metrics) const;
 		int elementHeight(const ZLTextElement &element, const ZLTextStyleEntry::Metrics &metrics) const;
 		int elementDescent(const ZLTextElement &element) const;
@@ -131,18 +131,24 @@ private:
 		unsigned char bidiLevel() const;
 
 	private:
-		ZLTextStylePtr myTextStyle;
-		shared_ptr<ZLPaintContext> myContext;
-		mutable int myWordHeight;
+		const ZLTextView &myView;
+		mutable shared_ptr<ZLTextStyle> myTextStyle;
+		mutable ZLPaintContext &myContext;
 		unsigned char myBaseBidiLevel;
-		unsigned char myBidiLevel;
+		mutable unsigned char myBidiLevel;
+		mutable int myWordHeight;
 	};
 
+public:
+	static const std::string TYPE_ID;
+
 protected:
-	ZLTextView(ZLApplication &application, shared_ptr<ZLPaintContext> context = 0);
+	ZLTextView(ZLPaintContext &context);
 	virtual ~ZLTextView();
-	void setPaintContext(shared_ptr<ZLPaintContext> context);
 	virtual shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo() const = 0;
+
+private:
+	const std::string &typeId() const;
 
 public:
 	void clearCaches();
@@ -210,6 +216,8 @@ protected:
 	virtual int rightMargin() const = 0;
 	virtual int topMargin() const = 0;
 	virtual int bottomMargin() const = 0;
+	virtual ZLColor color(const std::string &colorStyle = std::string()) const = 0;
+	virtual shared_ptr<ZLTextStyle> baseStyle() const = 0;
 
 private:
 	int lineStartMargin() const;
@@ -310,14 +318,20 @@ friend class ZLTextSelectionModel;
 };
 
 inline ZLTextView::ViewStyle::~ViewStyle() {}
-inline const ZLPaintContext &ZLTextView::ViewStyle::context() const { return *myContext; }
-inline const ZLTextStylePtr ZLTextView::ViewStyle::textStyle() const { return myTextStyle; }
+inline const ZLPaintContext &ZLTextView::ViewStyle::context() const { return myContext; }
 inline void ZLTextView::ViewStyle::setBaseBidiLevel(unsigned char base) { myBaseBidiLevel = base; myBidiLevel = base; }
 inline unsigned char ZLTextView::ViewStyle::baseBidiLevel() const { return myBaseBidiLevel; }
 inline bool ZLTextView::ViewStyle::baseIsRtl() const { return myBaseBidiLevel % 2 == 1; }
 inline void ZLTextView::ViewStyle::increaseBidiLevel() { ++myBidiLevel; }
 inline void ZLTextView::ViewStyle::decreaseBidiLevel() { if (myBidiLevel > myBaseBidiLevel) --myBidiLevel; }
 inline unsigned char ZLTextView::ViewStyle::bidiLevel() const { return myBidiLevel; }
+
+inline shared_ptr<ZLTextStyle> ZLTextView::ViewStyle::textStyle() const {
+	if (myTextStyle.isNull()) {
+		reset();
+	}
+	return myTextStyle;
+}
 
 inline bool ZLTextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const ZLTextWordCursor &ZLTextView::startCursor() const { return myStartCursor; }

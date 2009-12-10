@@ -23,21 +23,22 @@
 #include <string>
 
 #include "DocBookReader.h"
-#include "../../description/BookDescription.h"
+
+class Book;
 
 class DocBookDescriptionReader : public DocBookReader {
 
 public:
-	DocBookDescriptionReader(BookDescription &description);
+	DocBookDescriptionReader(Book &book);
 	~DocBookDescriptionReader();
-	bool readDescription(shared_ptr<ZLInputStream> stream);
+	bool readMetaInfo(shared_ptr<ZLInputStream> stream);
 
 	void startElementHandler(int tag, const char **attributes);
 	void endElementHandler(int tag);
 	void characterDataHandler(const char *text, size_t len);
 
 private:
-	WritableBookDescription myDescription;
+	Book &myBook;
 
 	bool myReturnCode;
 

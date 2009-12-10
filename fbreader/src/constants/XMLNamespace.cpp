@@ -20,6 +20,10 @@
 #include "XMLNamespace.h"
 
 const std::string XMLNamespace::DublinCorePrefix = "http://purl.org/dc/elements";
+const std::string XMLNamespace::DublinCoreTermsPrefix = "http://purl.org/dc/terms";
 const std::string XMLNamespace::DublinCoreLegacyPrefix = "http://purl.org/metadata/dublin_core";
 const std::string XMLNamespace::XLink = "http://www.w3.org/1999/xlink";
 const std::string XMLNamespace::OpenPackagingFormat = "http://www.idpf.org/2007/opf";
+const std::string XMLNamespace::Atom = "http://www.w3.org/2005/Atom";
+const std::string XMLNamespace::OpenSearchPrefix = "http://a9.com/-/spec/opensearch";
+

@@ -21,39 +21,39 @@
 
 #include <ZLUnicodeUtil.h>
 #include <ZLPaintContext.h>
+#include <ZLTextStyle.h>
+#include <ZLTextStyleCollection.h>
 
 #include "ZLTextView.h"
 #include "ZLTextParagraphCursor.h"
-#include "ZLTextStyle.h"
 #include "ZLTextElement.h"
+#include "../style/ZLTextDecoratedStyle.h"
 
-ZLTextView::ViewStyle::ViewStyle(shared_ptr<ZLPaintContext> context) : myContext(context), myBaseBidiLevel(0) {
-	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr(), myBaseBidiLevel);
+ZLTextView::ViewStyle::ViewStyle(const ZLTextView &view, ZLPaintContext &context) : myView(view), myContext(context), myBaseBidiLevel(0) {
+}
+
+void ZLTextView::ViewStyle::reset() const {
+	myTextStyle = myView.baseStyle();
 	myWordHeight = -1;
+	myContext.setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
+	myBidiLevel = myBaseBidiLevel;
 }
 
-void ZLTextView::ViewStyle::setPaintContext(shared_ptr<ZLPaintContext> context) {
-	myContext = context;
-}
-
-void ZLTextView::ViewStyle::reset() {
-	setTextStyle(ZLTextStyleCollection::instance().baseStylePtr(), myBaseBidiLevel);
-}
-
-void ZLTextView::ViewStyle::setTextStyle(const ZLTextStylePtr style, unsigned char bidiLevel) {
+void ZLTextView::ViewStyle::setTextStyle(const shared_ptr<ZLTextStyle> style, unsigned char bidiLevel) {
 	if (myTextStyle != style) {
 		myTextStyle = style;
 		myWordHeight = -1;
 	}
-	if (!myContext.isNull()) {
-		myContext->setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
-	}
+	myContext.setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
 	myBidiLevel = bidiLevel;
 }
 
 void ZLTextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
+	if (myTextStyle.isNull()) {
+		reset();
+	}
 	if (control.isStart()) {
-		const ZLTextStyleDecoration *decoration = ZLTextStyleCollection::instance().decoration(control.textKind());
+		const ZLTextStyleDecoration *decoration = ZLTextStyleCollection::Instance().decoration(control.textKind());
 		if (decoration != 0) {
 			setTextStyle(decoration->createDecoratedStyle(myTextStyle), myBidiLevel);
 		}
@@ -65,6 +65,9 @@ void ZLTextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
 }
 
 void ZLTextView::ViewStyle::applyControl(const ZLTextStyleElement &control) {
+	if (myTextStyle.isNull()) {
+		reset();
+	}
 	setTextStyle(new ZLTextForcedStyle(myTextStyle, control.entry()), myBidiLevel);
 }
 
@@ -98,7 +101,7 @@ int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned i
 		case ZLTextElement::WORD_ELEMENT:
 			return wordWidth((const ZLTextWord&)element, charIndex, -1, false);
 		case ZLTextElement::IMAGE_ELEMENT:
-			return context().imageWidth(*((const ZLTextImageElement&)element).image());
+			return context().imageWidth(*((const ZLTextImageElement&)element).image(), myView.viewWidth(), myView.textAreaHeight(), ZLPaintContext::SCALE_REDUCE_SIZE);
 		case ZLTextElement::INDENT_ELEMENT:
 			return textStyle()->firstLineIndentDelta(metrics);
 		case ZLTextElement::HSPACE_ELEMENT:
@@ -129,7 +132,7 @@ int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element, const ZLT
 			return myWordHeight;
 		case ZLTextElement::IMAGE_ELEMENT:
 			return
-				context().imageHeight(*((const ZLTextImageElement&)element).image()) +
+				context().imageHeight(*((const ZLTextImageElement&)element).image(), myView.viewWidth(), myView.textAreaHeight(), ZLPaintContext::SCALE_REDUCE_SIZE) +
 				std::max(context().stringHeight() * (textStyle()->lineSpacePercent() - 100) / 100, 3);
 		case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
 			return - textStyle()->spaceAfter(metrics);

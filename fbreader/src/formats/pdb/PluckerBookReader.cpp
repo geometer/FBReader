@@ -33,8 +33,9 @@
 #include "DocDecompressor.h"
 #include "PluckerImages.h"
 #include "../../bookmodel/BookModel.h"
+#include "../../library/Book.h"
 
-PluckerBookReader::PluckerBookReader(const std::string &filePath, BookModel &model, const std::string &encoding) : BookReader(model), EncodedTextReader(encoding), myFilePath(filePath), myFont(FT_REGULAR) {
+PluckerBookReader::PluckerBookReader(BookModel &model) : BookReader(model), EncodedTextReader(model.book()->encoding()), myFilePath(model.book()->filePath()), myFont(FT_REGULAR) {
 	myCharBuffer = new char[65535];
 	myForcedEntry = 0;
 }

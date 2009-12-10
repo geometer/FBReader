@@ -18,9 +18,11 @@
  */
 
 #include <ZLibrary.h>
-#include <ZLStringUtil.h>
+#include <ZLFile.h>
 
 #include "FormatPlugin.h"
+
+#include "../library/Book.h"
 
 #include "fb2/FB2Plugin.h"
 //#include "docbook/DocBookPlugin.h"
@@ -36,7 +38,7 @@
 
 PluginCollection *PluginCollection::ourInstance = 0;
 
-PluginCollection &PluginCollection::instance() {
+PluginCollection &PluginCollection::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new PluginCollection();
 		ourInstance->myPlugins.push_back(new FB2Plugin());
@@ -46,6 +48,7 @@ PluginCollection &PluginCollection::instance() {
 		ourInstance->myPlugins.push_back(new PluckerPlugin());
 		ourInstance->myPlugins.push_back(new PalmDocPlugin());
 		ourInstance->myPlugins.push_back(new MobipocketPlugin());
+		ourInstance->myPlugins.push_back(new EReaderPlugin());
 		ourInstance->myPlugins.push_back(new ZTXTPlugin());
 		ourInstance->myPlugins.push_back(new TcrPlugin());
 		ourInstance->myPlugins.push_back(new CHMPlugin());
@@ -70,14 +73,12 @@ PluginCollection::PluginCollection() :
 	DefaultEncodingOption(ZLCategoryKey::CONFIG, "Format", "DefaultEncoding", "UTF-8") {
 }
 
-PluginCollection::~PluginCollection() {
-	for (std::vector<FormatPlugin*>::const_iterator it = myPlugins.begin(); it != myPlugins.end(); ++it) {
-		delete *it;
-	}
+shared_ptr<FormatPlugin> PluginCollection::plugin(const Book &book) {
+	return plugin(ZLFile(book.filePath()), false);
 }
 
-FormatPlugin *PluginCollection::plugin(const ZLFile &file, bool strong) {
-	for (std::vector<FormatPlugin*>::iterator it = myPlugins.begin(); it != myPlugins.end(); ++it) {
+shared_ptr<FormatPlugin> PluginCollection::plugin(const ZLFile &file, bool strong) {
+	for (std::vector<shared_ptr<FormatPlugin> >::const_iterator it = myPlugins.begin(); it != myPlugins.end(); ++it) {
 		if ((!strong || (*it)->providesMetaInfo()) && (*it)->acceptsFile(file)) {
 			return *it;
 		}

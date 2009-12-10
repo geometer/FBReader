@@ -60,6 +60,7 @@ enum ParseState {
 	PS_TEXT,
 	PS_TAGSTART,
 	PS_TAGNAME,
+	PS_WAIT_END_OF_TAG,
 	PS_ATTRIBUTENAME,
 	PS_ATTRIBUTEVALUE,
 	PS_SKIPTAG,
@@ -223,8 +224,14 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 						endOfComment[1] = *ptr;
 					}
 					break;
+				case PS_WAIT_END_OF_TAG:
+					if (*ptr == '>') {
+						start = ptr + 1;
+						state = PS_TEXT;
+					}
+					break;
 				case PS_TAGNAME:
-					if ((*ptr == '>') || isspace((unsigned char)*ptr)) {
+					if ((*ptr == '>') || (*ptr == '/') || isspace((unsigned char)*ptr)) {
 						currentString.append(start, ptr - start);
 						start = ptr + 1;
 						setTag(currentTag, currentString);
@@ -237,6 +244,15 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 									goto endOfProcessing;
 								}
 								state = PS_TEXT;
+							} else if (*ptr == '/') {
+								if (!tagHandler(currentTag)) {
+									goto endOfProcessing;
+								}
+								currentTag.Start = false;
+								if (!tagHandler(currentTag)) {
+									goto endOfProcessing;
+								}
+								state = PS_WAIT_END_OF_TAG;
 							} else {
 								state = PS_ATTRIBUTENAME;
 							}
@@ -244,7 +260,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 					}
 					break;
 				case PS_ATTRIBUTENAME:
-					if ((*ptr == '>') || (*ptr == '=') || isspace((unsigned char)*ptr)) {
+					if ((*ptr == '>') || (*ptr == '/') || (*ptr == '=') || isspace((unsigned char)*ptr)) {
 						if ((ptr != start) || !currentString.empty()) {
 							currentString.append(start, ptr - start);
 							for (unsigned int i = 0; i < currentString.length(); ++i) {
@@ -259,6 +275,15 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 								goto endOfProcessing;
 							}
 							state = PS_TEXT;
+						} else if (*ptr == '/') {
+							if (!tagHandler(currentTag)) {
+								goto endOfProcessing;
+							}
+							currentTag.Start = false;
+							if (!tagHandler(currentTag)) {
+								goto endOfProcessing;
+							}
+							state = PS_WAIT_END_OF_TAG;
 						} else {
 							state = (*ptr == '=') ? PS_ATTRIBUTEVALUE : PS_ATTRIBUTENAME;
 						}
@@ -275,7 +300,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 						appendString(attributeValueString, currentString);
 						state = PS_SPECIAL_IN_ATTRIBUTEVALUE;
 						state_special = ST_UNKNOWN;
-					} else if ((quotationCounter != 1) && ((*ptr == '>') || isspace((unsigned char)*ptr))) {
+					} else if ((quotationCounter != 1) && ((*ptr == '>') || (*ptr == '/') || isspace((unsigned char)*ptr))) {
 						if ((ptr != start) || !currentString.empty()) {
 							currentString.append(start, ptr - start);
 							appendString(attributeValueString, currentString);
@@ -292,6 +317,15 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 								goto endOfProcessing;
 							}
 							state = PS_TEXT;
+						} else if (*ptr == '/') {
+							if (!tagHandler(currentTag)) {
+								goto endOfProcessing;
+							}
+							currentTag.Start = false;
+							if (!tagHandler(currentTag)) {
+								goto endOfProcessing;
+							}
+							state = PS_WAIT_END_OF_TAG;
 						} else {
 							state = PS_ATTRIBUTENAME;
 						}
@@ -324,6 +358,7 @@ void HtmlReader::readDocument(ZLInputStream &stream) {
 				case PS_TAGSTART:
 				case PS_SKIPTAG:
 				case PS_COMMENT:
+				case PS_WAIT_END_OF_TAG:
 					break;
 			}
 		}

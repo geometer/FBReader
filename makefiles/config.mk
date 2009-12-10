@@ -30,6 +30,7 @@ ifeq "$(TARGET_STATUS)" "debug"
 endif
 ifeq "$(TARGET_STATUS)" "profile"
 	CFLAGS += -O3 -g -pg
+	LDFLAGS += -pg
 endif
 
 ZINCLUDE = -I $(ROOTDIR)/zlibrary/core/include -I $(ROOTDIR)/zlibrary/text/include

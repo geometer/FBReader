@@ -64,7 +64,7 @@ private:
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 	void closeEvent(QCloseEvent *event);
-	void keyReleaseEvent(QKeyEvent *event);
+	void keyPressEvent(QKeyEvent *event);
 	void wheelEvent(QWheelEvent *event);
 
 private:

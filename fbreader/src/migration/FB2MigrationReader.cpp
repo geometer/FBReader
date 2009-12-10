@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #include <ZLInputStream.h>
 #include <ZLStringUtil.h>
@@ -55,7 +55,7 @@ void FB2MigrationReader::startElementHandler(int tag, const char **attributes) {
 					ZLStringUtil::stripWhiteSpaces(seriesName);
 					myInfo.SeriesNameOption.setValue(seriesName);
 					const char *number = attributeValue(attributes, "number");
-					myInfo.NumberInSeriesOption.setValue((number != 0) ? atoi(number) : 0);
+					myInfo.IndexInSeriesOption.setValue((number != 0) ? atoi(number) : 0);
 				}
 			}
 			break;
@@ -74,7 +74,7 @@ void FB2MigrationReader::endElementHandler(int tag) {
 				ZLStringUtil::stripWhiteSpaces(myGenreBuffer);
 				if (!myGenreBuffer.empty()) {
 					const std::vector<std::string> &tags =
-						FB2TagManager::instance().humanReadableTags(myGenreBuffer);
+						FB2TagManager::Instance().humanReadableTags(myGenreBuffer);
 					if (!tags.empty()) {
 						myTags.insert(tags.begin(), tags.end());
 					} else {

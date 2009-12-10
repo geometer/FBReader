@@ -23,10 +23,10 @@
 #include <sys/stat.h>
 
 #include <algorithm>
-#include <iostream>
 
 #include <ZLibrary.h>
 #include <ZLStringUtil.h>
+#include <ZLLogger.h>
 
 #include "ZLibraryImplementation.h"
 
@@ -64,6 +64,15 @@ ZLibraryImplementation::ZLibraryImplementation() {
 ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
+static void *loadPlugin(const std::string &path) {
+	ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "loading " + path);
+	void *handle = dlopen(path.c_str(), RTLD_NOW);
+	if (handle == 0) {
+		ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, dlerror());
+	}
+	return handle;
+}
+
 bool ZLibrary::init(int &argc, char **&argv) {
 #ifdef ZLSHARED
 	const std::string pluginPath = std::string(LIBDIR) + "/zlibrary/ui";
@@ -71,7 +80,11 @@ bool ZLibrary::init(int &argc, char **&argv) {
 	void *handle = 0;
 
 	if ((argc > 2) && std::string("-zlui") == argv[1]) {
-		handle = dlopen((pluginPath + "/zlui-" + argv[2] + ".so").c_str(), RTLD_NOW);
+		std::string pluginName = argv[2];
+		if (!ZLStringUtil::stringEndsWith(pluginName, ".so")) {
+			pluginName = pluginPath + "/zlui-" + pluginName + ".so";
+		}
+		handle = loadPlugin(pluginName);
 		argc -= 2;
 		argv += 2;
 	}
@@ -101,11 +114,8 @@ bool ZLibrary::init(int &argc, char **&argv) {
 
 		std::sort(names.begin(), names.end());
 		for (std::vector<std::string>::const_iterator it = names.begin(); it != names.end(); ++it) {
-			std::cerr << "loading " << *it << "...\n";
-			handle = dlopen(it->c_str(), RTLD_NOW);
-			if (handle == 0) {
-				std::cerr << dlerror() << "\n";
-			} else {
+			handle = loadPlugin(*it);
+			if (handle != 0) {
 				break;
 			}
 		}
@@ -119,7 +129,7 @@ bool ZLibrary::init(int &argc, char **&argv) {
 	*(void**)&initLibrary = dlsym(handle, "initLibrary");
 	const char *error = dlerror();
 	if (error != 0) {
-		std::cerr << error << "\n";
+		ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, error);
 		return false;
 	}
 #endif /* ZLSHARED */

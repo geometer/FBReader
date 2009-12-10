@@ -33,7 +33,7 @@ class ORBookReader : public ZLXMLReader {
 
 public:
 	ORBookReader(BookModel &model);
-	bool readBook(const std::string &fileName);
+	bool readBook();
 
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);

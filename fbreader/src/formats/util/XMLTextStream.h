@@ -22,6 +22,7 @@
 
 #include <shared_ptr.h>
 #include <ZLInputStream.h>
+#include <ZLAsynchronousInputStream.h>
 
 class XMLTextReader;
 
@@ -42,6 +43,7 @@ private:
 private:
 	shared_ptr<ZLInputStream> myBase;
 	shared_ptr<XMLTextReader> myReader;
+	shared_ptr<ZLAsynchronousInputStream> myStream;
 	std::string myStreamBuffer;
 	std::string myDataBuffer;
 	size_t myOffset;

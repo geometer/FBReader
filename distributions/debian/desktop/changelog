@@ -1,3 +1,52 @@
+fbreader (0.12.1-1) stable; urgency=low
+
+  * new upstream version
+  * updated man page
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Tue, 8 Dec 2009 09:07:00 +0300
+
+fbreader (0.12.0-3) stable; urgency=low
+
+  * fixed rules file
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sun, 6 Dec 2009 19:48:00 +0300
+
+fbreader (0.12.0-2) stable; urgency=low
+
+  * fixed dependencies list
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sun, 6 Dec 2009 19:05:00 +0300
+
+fbreader (0.12.0-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 5 Dec 2009 03:40:00 +0300
+
+fbreader (0.11.2-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Tue, 20 Oct 2009 13:22:00 +0400
+
+fbreader (0.11.1-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Tue, 13 Oct 2009 23:38:00 +0400
+
+fbreader (0.11.0-2) stable; urgency=low
+
+  * fixed package dependencies in debian files
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 26 Sep 2009 11:23:00 +0400
+
+fbreader (0.11.0-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Vasiliy Bout <bout.vasiliy@gmail.com>  Wed, 16 Sep 2009 16:48:00 +0400
+
 fbreader (0.10.7-1) stable; urgency=low
 
   * new upstream version

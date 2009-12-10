@@ -22,10 +22,12 @@
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
 #include <ZLTextStyle.h>
+#include <ZLTextStyleCollection.h>
 #include <ZLTextStyleOptions.h>
 
 #include "FormatOptionsPage.h"
 
+#include "../options/FBTextStyle.h"
 #include "../bookmodel/FBTextKind.h"
 
 static const ZLResourceKey KEY_STYLE("style");
@@ -46,7 +48,7 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 	myComboEntry = new ComboOptionEntry(*this, styleResource[KEY_BASE].value());
 	myComboEntry->addValue(myComboEntry->initialValue());
 
-	ZLTextStyleCollection &collection = ZLTextStyleCollection::instance();
+	ZLTextStyleCollection &collection = ZLTextStyleCollection::Instance();
 	ZLTextKind styles[] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATEKIND, POEM_TITLE, STANZA, VERSE };
 	const int STYLES_NUMBER = sizeof(styles) / sizeof(ZLTextKind);
 	for (int i = 0; i < STYLES_NUMBER; ++i) {
@@ -59,7 +61,7 @@ FormatOptionsPage::FormatOptionsPage(ZLDialogContent &dialogTab) {
 
 	{
 		const std::string &name = myComboEntry->initialValue();
-		ZLTextBaseStyle &baseStyle = collection.baseStyle();
+		FBTextStyle &baseStyle = FBTextStyle::Instance();
 
 		registerEntries(dialogTab,
 			KEY_LINESPACING, new ZLTextLineSpaceOptionEntry(baseStyle.LineSpacePercentOption, dialogTab.resource(KEY_LINESPACING), false),

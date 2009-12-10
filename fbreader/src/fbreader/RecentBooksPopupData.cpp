@@ -20,7 +20,10 @@
 #include "RecentBooksPopupData.h"
 #include "FBReader.h"
 
-RecentBooksPopupData::RecentBooksPopupData(FBReader &fbreader) : myFBReader(fbreader), myId(0) {
+#include "../library/Book.h"
+#include "../library/Author.h"
+
+RecentBooksPopupData::RecentBooksPopupData() : myId(0) {
 }
 
 void RecentBooksPopupData::updateId() {
@@ -32,24 +35,30 @@ size_t RecentBooksPopupData::id() const {
 }
 
 size_t RecentBooksPopupData::count() const {
-	return myFBReader.recentBooks().books().size();
+	return FBReader::Instance().recentBooks().books().size();
 }
 
 const std::string RecentBooksPopupData::text(size_t index) {
-	Books books = myFBReader.recentBooks().books();
+	BookList books = FBReader::Instance().recentBooks().books();
 	if (index >= books.size()) {
 		return "";
 	}
-	const BookDescription &book = *books[index];
-	return book.author()->displayName() + ". " + book.title();
+	const Book &book = *books[index];
+	const AuthorList authors = book.authors();
+	if (authors.empty()) {
+		return book.title();
+	} else {
+		return authors[0]->name() + ". " + book.title();
+	}
 }
 
 void RecentBooksPopupData::run(size_t index) {
-	Books books = myFBReader.recentBooks().books();
+	FBReader &fbreader = FBReader::Instance();
+	BookList books = fbreader.recentBooks().books();
 	if (index >= books.size()) {
 		return;
 	}
-	myFBReader.openBook(books[index]);
-	myFBReader.showBookTextView();
-	myFBReader.refreshWindow();
+	fbreader.openBook(books[index]);
+	fbreader.showBookTextView();
+	fbreader.refreshWindow();
 }

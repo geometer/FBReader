@@ -27,7 +27,7 @@
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
 #include "ZLQtSelectionDialog.h"
-#include "ZLQtWaitMessage.h"
+#include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
 
 #include "../image/ZLQtImageManager.h"
@@ -73,9 +73,8 @@ bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler 
 	return ZLQtSelectionDialog(dialogTitle(key), handler).runWithSize();
 }
 
-void ZLQtDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {
-	ZLQtWaitMessage waitMessage(waitMessageText(key));
-	runnable.run();
+shared_ptr<ZLProgressDialog> ZLQtDialogManager::createProgressDialog(const ZLResourceKey &key) const {
+	return new ZLQtProgressDialog(key);
 }
 
 bool ZLQtDialogManager::isClipboardSupported(ClipboardType type) const {

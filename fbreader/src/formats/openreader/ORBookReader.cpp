@@ -17,9 +17,8 @@
  * 02110-1301, USA.
  */
 
-#include <string.h>
-#include <stdlib.h>
-
+#include <cstring>
+#include <cstdlib>
 #include <algorithm>
 
 #include <ZLUnicodeUtil.h>
@@ -29,6 +28,7 @@
 #include "../xhtml/XHTMLReader.h"
 #include "../util/MiscUtil.h"
 #include "../../bookmodel/BookModel.h"
+#include "../../library/Book.h"
 
 ORBookReader::ORBookReader(BookModel &model) : myModelReader(model) {
 }
@@ -127,8 +127,9 @@ void ORBookReader::endElementHandler(const char *tag) {
 	}
 }
 
-bool ORBookReader::readBook(const std::string &fileName) {
-	myFilePrefix = MiscUtil::htmlDirectoryPrefix(fileName);
+bool ORBookReader::readBook() {
+	const std::string &filePath = myModelReader.model().book()->filePath();
+	myFilePrefix = MiscUtil::htmlDirectoryPrefix(filePath);
 
 	myResources.clear();
 	myCoverReference.erase();
@@ -138,7 +139,7 @@ bool ORBookReader::readBook(const std::string &fileName) {
 	myTOC.clear();
 	myState = READ_NONE;
 
-	if (!readDocument(fileName)) {
+	if (!readDocument(filePath)) {
 		return false;
 	}
 

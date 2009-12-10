@@ -86,7 +86,7 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 			return code;
 		}
 		case WM_TIMER:
-			((ZLWin32TimeManager&)ZLTimeManager::instance()).execute(wParam);
+			((ZLWin32TimeManager&)ZLTimeManager::Instance()).execute(wParam);
 			return 0;
 		case WM_CREATE:
 			myMainWindow = hWnd;

@@ -109,7 +109,7 @@ private:
 class StringOptionView : public ZLGtkOptionView {
 
 public:
-	StringOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder), myLabel(0), myLineEdit(0) {}
+	StringOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder, bool passwordMode) : ZLGtkOptionView(name, tooltip, option, holder), myLabel(0), myLineEdit(0), myPasswordMode(passwordMode) {}
 
 private:
 	void _createItem();
@@ -123,6 +123,7 @@ private:
 private:
 	GtkLabel *myLabel;
 	GtkEntry *myLineEdit;
+	const bool myPasswordMode;
 };
 
 class SpinOptionView : public ZLGtkOptionView {
@@ -199,6 +200,21 @@ private:
 	GtkLabel *myLabel;
 	GtkComboBox *myComboBox;
 	std::string myCurrentKey;
+};
+
+class StaticTextOptionView : public ZLGtkOptionView {
+
+public:
+	StaticTextOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, ZLGtkOptionViewHolder &holder) : ZLGtkOptionView(name, tooltip, option, holder), myLabel(0) {}
+
+protected:
+	void _createItem();
+	void _onAccept() const;
+	void _show();
+	void _hide();
+
+private:
+	GtkLabel *myLabel;
 };
 
 #endif /* __ZLGTKOPTIONVIEW_H__ */

@@ -41,7 +41,7 @@ std::string gtkString(const std::string &str) {
 }
 
 static bool dialogDefaultKeys(GtkWidget *dialog, GdkEventKey *key, gpointer) {
-	if (!((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).isKeyboardGrabbed() && (key->state == 0)) {
+	if (!((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).isKeyboardGrabbed() && (key->state == 0)) {
 		switch (key->keyval) {
 			case GDK_Return:
 				if (!GTK_IS_BUTTON(gtk_window_get_focus(GTK_WINDOW(dialog)))) {
@@ -62,7 +62,7 @@ GtkDialog *createGtkDialog(const std::string &title) {
 	GtkWindow *dialog = GTK_WINDOW(gtk_dialog_new());
 	gtk_window_set_title(dialog, title.c_str());
 	
-	ZLGtkDialogManager &manager = (ZLGtkDialogManager&)ZLGtkDialogManager::instance();
+	ZLGtkDialogManager &manager = (ZLGtkDialogManager&)ZLGtkDialogManager::Instance();
 
 	GtkWindow *window = !manager.myDialogs.empty() ? manager.myDialogs.top() : manager.myWindow;
 	if (window != 0) {
@@ -71,12 +71,12 @@ GtkDialog *createGtkDialog(const std::string &title) {
 	gtk_window_set_modal(dialog, TRUE);
 	gtk_signal_connect(GTK_OBJECT(dialog), "key-press-event", G_CALLBACK(dialogDefaultKeys), 0);
 
-	((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).myDialogs.push(dialog);
+	((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).myDialogs.push(dialog);
 	return GTK_DIALOG(dialog);
 }
 
 void destroyGtkDialog(GtkDialog *dialog) {
-	std::stack<GtkWindow*> &dialogs = ((ZLGtkDialogManager&)ZLGtkDialogManager::instance()).myDialogs;
+	std::stack<GtkWindow*> &dialogs = ((ZLGtkDialogManager&)ZLGtkDialogManager::Instance()).myDialogs;
 	if (!dialogs.empty()) {
 		dialogs.pop();
 	}

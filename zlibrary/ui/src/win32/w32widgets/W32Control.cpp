@@ -405,7 +405,7 @@ static std::string getTextFromBuffer(const ZLUnicodeUtil::Ucs2String &buffer) {
 
 const std::string W32LineEditor::VALUE_EDITED_EVENT = "LineEditor: value edited";
 
-W32LineEditor::W32LineEditor(const std::string &text) : W32AbstractEditor(ES_AUTOHSCROLL), myBlocked(true) {
+W32LineEditor::W32LineEditor(const std::string &text, bool passwordMode) : W32AbstractEditor(passwordMode ? (ES_AUTOHSCROLL | ES_PASSWORD) : ES_AUTOHSCROLL), myBlocked(true) {
 	::createNTWCHARString(myBuffer, text);
 }
 
@@ -444,9 +444,15 @@ void W32LineEditor::init(HWND parent, W32ControlCollection *collection) {
 }
 
 void W32LineEditor::setEditable(bool editable) {
+	if (editable) {
+		myStyle &= ~ES_READONLY;
+	} else {
+		myStyle |= ES_READONLY;
+	}
 	if (myWindow != 0) {
 		// TODO: check
-		PostMessage(myWindow, EM_SETREADONLY, !editable, 0);
+		//PostMessage(myWindow, EM_SETREADONLY, !editable, 0);
+		SendMessage(myWindow, EM_SETREADONLY, (editable ? FALSE : TRUE), 0);
 	}
 }
 
@@ -533,9 +539,15 @@ void W32KeyNameEditor::init(HWND parent, W32ControlCollection *collection) {
 }
 
 void W32KeyNameEditor::setEditable(bool editable) {
+	if (editable) {
+		myStyle &= ~ES_READONLY;
+	} else {
+		myStyle |= ES_READONLY;
+	}
 	if (myWindow != 0) {
 		// TODO: check
-		PostMessage(myWindow, EM_SETREADONLY, !editable, 0);
+		//PostMessage(myWindow, EM_SETREADONLY, !editable, 0);
+		SendMessage(myWindow, EM_SETREADONLY, (editable ? FALSE : TRUE), 0);
 	}
 }
 

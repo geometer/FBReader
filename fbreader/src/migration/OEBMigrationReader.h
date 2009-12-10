@@ -24,7 +24,7 @@
 
 #include <ZLXMLReader.h>
 
-#include "../description/BookDescription.h"
+#include "BookInfo.h"
 
 class OEBMigrationReader : public ZLXMLReader {
 

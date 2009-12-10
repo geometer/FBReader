@@ -57,7 +57,7 @@ const std::string &ZLOption::getDefaultConfigValue() const {
 }
 
 void ZLOption::createInstance() {
-	ourConfig = ZLConfigManager::instance().createConfig();
+	ourConfig = ZLConfigManager::Instance().createConfig();
 }
 
 void ZLOption::deleteInstance() {

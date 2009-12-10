@@ -49,6 +49,12 @@ protected:
 class ZLApplication : public ZLApplicationBase {
 
 public:
+	static ZLApplication &Instance();
+
+private:
+	static ZLApplication *ourInstance;
+
+public:
 	static const std::string MouseScrollUpKey;
 	static const std::string MouseScrollDownKey;
 	static const std::string NoAction;
@@ -83,12 +89,8 @@ protected:
 	class RotationAction : public Action {
 
 	public:
-		RotationAction(ZLApplication &application);
 		bool isVisible() const;
 		void run();
-
-	private:
-		ZLApplication &myApplication;
 	};
 	friend class RotationAction;
 	
@@ -96,24 +98,18 @@ public:
 	class FullscreenAction : public Action {
 
 	public:
-		FullscreenAction(ZLApplication &application);
 		void run();
-
-	private:
-		ZLApplication &myApplication;
 	};
 	friend class FullscreenAction;
 	
 	class PresentWindowHandler : public ZLMessageHandler {
 
 	public:
-		PresentWindowHandler(ZLApplication &application);
 		void onMessageReceived(const std::vector<std::string> &arguments);
 		const std::string &lastCaller() const;
 		void resetLastCaller();
 
 	private:
-		ZLApplication &myApplication;
 		std::string myLastCaller;
 	};
 

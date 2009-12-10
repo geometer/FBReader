@@ -17,11 +17,17 @@
 			<node name="unknownErrorMessage" value="Tuntematon virhe" />
 			<node name="couldntCreateDirectoryMessage" value="Ei voitu luoda hakemistoa&#10;%s" />
 			<node name="couldntCreateFileMessage" value="Ei voitu luoda tiedostoa&#10;%s" />
+			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn&apos;t connect to the network" />
 			<node name="couldntConnectMessage" value="Ei voitu yhdistää palvelimeen %s" />
 			<node name="couldntResolveHostMessage" value="Ei tunnistettu palvelinta %s" />
 			<node name="couldntResolveProxyMessage" value="Ei tunnistettu välityspalvelinta %s" />
 			<node name="operationTimedOutMessage" value="Toiminto aikakatkaistiin" />
 			<node name="somethingWrongMessage" value="Jokin meni pieleen&#10;%s" />
+			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s" />
+			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK" />
+			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates" />
+			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn&apos;t read the SSL CA certificate file:&#10;%s" />
+			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s" />
 		</node>
 	</node>
 	<node name="color">

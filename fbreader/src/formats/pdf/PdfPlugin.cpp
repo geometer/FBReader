@@ -23,18 +23,18 @@
 #include "PdfPlugin.h"
 #include "PdfDescriptionReader.h"
 #include "PdfBookReader.h"
-#include "../../description/BookDescription.h"
+#include "../../library/Book.h"
 
 bool PdfPlugin::acceptsFile(const ZLFile &file) const {
 	return file.extension() == "pdf";
 }
 
-bool PdfPlugin::readDescription(const std::string &path, BookDescription &description) const {
-	return PdfDescriptionReader(description).readDescription(ZLFile(path).inputStream());
+bool PdfPlugin::readMetaInfo(Book &book) const {
+	return PdfDescriptionReader(book).readMetaInfo(ZLFile(path).inputStream());
 }
 
-bool PdfPlugin::readModel(const BookDescription &description, BookModel &model) const {
-	return PdfBookReader(model).readBook(ZLFile(description.fileName()).inputStream());
+bool PdfPlugin::readModel(BookModel &model) const {
+	return PdfBookReader(model).readBook(ZLFile(book.fileName()).inputStream());
 }
 
 const std::string &PdfPlugin::iconName() const {

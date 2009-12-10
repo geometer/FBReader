@@ -20,19 +20,22 @@
 #include <ZLFile.h>
 
 #include "PdbPlugin.h"
-#include "MobipocketStream.h"
+#include "PalmDocStream.h"
+#include "PalmDocLikeStream.h"
+
+#include "../../library/Book.h"
 
 bool PalmDocLikePlugin::providesMetaInfo() const {
 	return true;
 }
 
 shared_ptr<ZLInputStream> PalmDocLikePlugin::createStream(ZLFile &file) const {
-	return new MobipocketStream(file);
+	return new PalmDocStream(file);
 }
 
 const std::string &PalmDocLikePlugin::tryOpen(const std::string &path) const {
 	ZLFile file(path);
-	MobipocketStream stream(file);
+	PalmDocStream stream(file);
 	stream.open();
 	return stream.error();
 }

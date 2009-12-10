@@ -24,7 +24,7 @@
 #include <ZLStringUtil.h>
 
 #include "OptionsDialog.h"
-#include "../options/FBOptions.h"
+#include "../options/FBCategoryKey.h"
 
 #include "../external/ProgramCollection.h"
 
