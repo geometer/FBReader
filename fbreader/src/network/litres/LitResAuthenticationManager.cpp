@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLNetworkUtil.h>
 #include <ZLNetworkManager.h>
 #include <ZLNetworkXMLParserData.h>
