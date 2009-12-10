@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLResource.h>
 #include <ZLImage.h>
 #include <ZLFile.h>
