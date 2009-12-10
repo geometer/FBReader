@@ -111,8 +111,4 @@ inline int FBView::pressedX() const { return myPressedX; }
 inline int FBView::pressedY() const { return myPressedY; }
 inline bool FBView::isReleasedWithoutMotion() const { return myIsReleasedWithoutMotion; }
 
-inline int FBView::pressedX() const { return myPressedX; }
-inline int FBView::pressedY() const { return myPressedY; }
-inline bool FBView::isReleasedWithoutMotion() const { return myIsReleasedWithoutMotion; }
-
 #endif /* __FBVIEW_H__ */

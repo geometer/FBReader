@@ -79,12 +79,6 @@ private:
 	mutable shared_ptr<ZLBooleanOption> myUseProxyOption;
 	mutable shared_ptr<ZLStringOption> myProxyHostOption;
 	mutable shared_ptr<ZLStringOption> myProxyPortOption;
-
-	mutable shared_ptr<ZLIntegerRangeOption> myConnectTimeoutOption;
-	mutable shared_ptr<ZLIntegerRangeOption> myTimeoutOption;
-	mutable shared_ptr<ZLBooleanOption> myUseProxyOption;
-	mutable shared_ptr<ZLStringOption> myProxyHostOption;
-	mutable shared_ptr<ZLStringOption> myProxyPortOption;
 };
 
 #endif /* __ZLNETWORKMANAGER_H__ */
