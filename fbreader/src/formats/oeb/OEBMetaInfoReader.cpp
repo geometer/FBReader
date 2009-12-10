@@ -38,6 +38,7 @@ static const std::string TITLE_SUFFIX = ":title";
 static const std::string AUTHOR_SUFFIX = ":creator";
 static const std::string SUBJECT_SUFFIX = ":subject";
 static const std::string LANGUAGE_SUFFIX = ":language";
+static const std::string META = "meta";
 static const std::string AUTHOR_ROLE = "aut";
 
 void OEBMetaInfoReader::characterDataHandler(const char *text, size_t len) {
@@ -99,6 +100,18 @@ void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attrib
 		} else if (ZLStringUtil::stringEndsWith(tagString, LANGUAGE_SUFFIX)) {
 			if (isDublinCoreNamespace(tagString.substr(0, tagString.length() - LANGUAGE_SUFFIX.length()))) {
 				myReadState = READ_LANGUAGE;
+			}
+		} else if (tagString == META) {
+			const char *name = attributeValue(attributes, "name");
+			const char *content = attributeValue(attributes, "content");
+			if (name != 0 && content != 0) {
+				static const std::string SERIES = "calibre:series";
+				static const std::string SERIES_INDEX = "calibre:series_index";
+				if (SERIES == name) {
+					myBook.setSeriesName(content);
+				} else if (SERIES_INDEX == name) {
+					myBook.setIndexInSeries(atoi(content));
+				}
 			}
 		}
 	}
