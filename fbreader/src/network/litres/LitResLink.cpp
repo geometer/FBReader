@@ -75,82 +75,100 @@ shared_ptr<NetworkAuthenticationManager> LitResLink::authenticationManager() {
 	return myAuthenticationManager;
 }
 
-class LitResRootSubCatalogLoader : public NetworkSubCatalogLoader {
+class LitResRootCatalogItem : public NetworkLibraryCatalogItem {
 
 public:
-	std::string load(NetworkLibraryCatalogItem &item, NetworkLibraryItemList &children);
+	LitResRootCatalogItem(
+		LitResLink &link,
+		const std::string &title,
+		const std::string &summary
+	);
+
+private:
+	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
-class LitResSubCatalogLoader : public NetworkSubCatalogLoader {
+class LitResCatalogItem : public NetworkLibraryCatalogItem {
 
 public:
-	std::string load(NetworkLibraryCatalogItem &item, NetworkLibraryItemList &children);
+	LitResCatalogItem(
+		LitResLink &link,
+		const std::string &url,
+		const std::string &title,
+		const std::string &summary
+	);
+
+private:
+	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
-class LitResMySubCatalogLoader : public NetworkSubCatalogLoader {
+class LitResMyCatalogItem : public NetworkLibraryCatalogItem {
 
 public:
-	std::string load(NetworkLibraryCatalogItem &item, NetworkLibraryItemList &children);
+	LitResMyCatalogItem(LitResLink &link);
+
+private:
+	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
-std::string LitResRootSubCatalogLoader::load(NetworkLibraryCatalogItem &item, NetworkLibraryItemList &children) {
-	children.push_back(new NetworkLibraryCatalogItem(
-		item.link(),
+LitResRootCatalogItem::LitResRootCatalogItem(
+	LitResLink &link,
+	const std::string &title,
+	const std::string &summary
+) : NetworkLibraryCatalogItem(link, "", "", title, summary, "feed-litres.png") {
+}
+
+std::string LitResRootCatalogItem::loadChildren(NetworkLibraryItemList &children) {
+	children.push_back(new LitResCatalogItem(
+		(LitResLink&)link(),
 		LitResUtil::litresLink("pages/catalit_browser/?rating=hot"),
-		"",
 		"Горячие новинки",
-		"Новые поступления за неделю",
-		"",
-		new LitResSubCatalogLoader()
+		"Новые поступления за неделю"
 	));
-	children.push_back(new NetworkLibraryCatalogItem(
-		item.link(),
+	children.push_back(new LitResCatalogItem(
+		(LitResLink&)link(),
 		LitResUtil::litresLink("pages/catalit_browser/?rating=books"),
-		"",
 		"Популярные книги",
-		"50 самых популярных книг",
-		"",
-		new LitResSubCatalogLoader()
+		"50 самых популярных книг"
 	));
-	children.push_back(new NetworkLibraryCatalogItem(
-		item.link(),
-		"none",
-		"",
-		"Мои книги",
-		"Мои приобретенные книги",
-		"",
-		new LitResMySubCatalogLoader(),
-		/* dependsOnAccount = */true
-	));
+	children.push_back(new LitResMyCatalogItem((LitResLink&)link()));
 
 	return "";
 }
 
-std::string LitResSubCatalogLoader::load(NetworkLibraryCatalogItem &item, NetworkLibraryItemList &children) {
-	children.clear();
-
-	std::string errorMessage;
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(new ZLNetworkXMLParserData(
-		item.url(), 
-		new LitResDataParser(children, LitResUtil::Instance().genres(), item.link().authenticationManager())
-	));
-
-	std::string error = ZLNetworkManager::Instance().perform(dataList);
-	if (errorMessage.empty()) {
-		errorMessage = error;
-	}
-
-	/*for (NetworkLibraryItemList::iterator it = children.begin(); it != children.end(); ++it) {
-		NetworkLibraryBookItem &book = (NetworkLibraryBookItem &) **it;
-		book.setIndex(0);
-	}*/
-
-	return errorMessage;
+LitResCatalogItem::LitResCatalogItem(
+	LitResLink &link,
+	const std::string &url,
+	const std::string &title,
+	const std::string &summary
+) : NetworkLibraryCatalogItem(link, url, "", title, summary, "") {
 }
 
-std::string LitResMySubCatalogLoader::load(NetworkLibraryCatalogItem &item, NetworkLibraryItemList &children) {
-	LitResAuthenticationManager &mgr = (LitResAuthenticationManager&)*item.link().authenticationManager();
+std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
+	children.clear();
+
+	ZLExecutionData::Vector dataList;
+	dataList.push_back(new ZLNetworkXMLParserData(
+		url(), 
+		new LitResDataParser(children, LitResUtil::Instance().genres(), link().authenticationManager())
+	));
+
+	return ZLNetworkManager::Instance().perform(dataList);
+}
+
+LitResMyCatalogItem::LitResMyCatalogItem(LitResLink &link) : NetworkLibraryCatalogItem(
+	link,
+	"none",
+	"",
+	"Мои книги",
+	"Мои приобретенные книги",
+	"",
+	true
+) {
+}
+
+std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) {
+	LitResAuthenticationManager &mgr = (LitResAuthenticationManager&)*link().authenticationManager();
 	if (mgr.isAuthorised() == B3_FALSE) {
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
@@ -159,13 +177,5 @@ std::string LitResMySubCatalogLoader::load(NetworkLibraryCatalogItem &item, Netw
 }
 
 shared_ptr<NetworkLibraryItem> LitResLink::libraryItem() {
-	return new NetworkLibraryCatalogItem(
-		*this,
-		"",
-		"",
-		Title,
-		"Продажа электронных книг.",
-		"feed-litres.png",
-		new LitResRootSubCatalogLoader()
-	);
+	return new LitResRootCatalogItem(*this, Title, "Продажа электронных книг.");
 }

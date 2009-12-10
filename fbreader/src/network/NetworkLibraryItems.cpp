@@ -46,14 +46,12 @@ NetworkLibraryCatalogItem::NetworkLibraryCatalogItem(
 	const std::string &title,
 	const std::string &summary,
 	const std::string &coverURL,
-	shared_ptr<NetworkSubCatalogLoader> subCatalogLoader,
 	bool dependsOnAccount
 ) :
 	myLink(link),
 	myURL(url),
 	myHtmlURL(htmlURL),
 	mySummary(summary),
-	mySubCatalogLoader(subCatalogLoader),
 	myDependsOnAccount(dependsOnAccount) {
 	this->title() = title;
 	this->cover() = coverURL;
@@ -160,14 +158,4 @@ shared_ptr<NetworkAuthenticationManager> NetworkLibraryBookItem::authenticationM
 
 void NetworkLibraryBookItem::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> manager) {
 	myAuthenticationManager = manager;
-}
-
-std::string NetworkLibraryCatalogItem::loadSubCatalog(NetworkLibraryItemList &children) {
-	if (mySubCatalogLoader.isNull()) {
-		return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
-	}
-	return mySubCatalogLoader->load(*this, children);
-}
-
-NetworkSubCatalogLoader::~NetworkSubCatalogLoader() {
 }

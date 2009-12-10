@@ -27,7 +27,6 @@
 #include <shared_ptr.h>
 
 class NetworkAuthenticationManager;
-class NetworkSubCatalogLoader;
 class NetworkLink;
 
 class NetworkLibraryItem {
@@ -77,7 +76,6 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const std::string &coverURL,
-		shared_ptr<NetworkSubCatalogLoader> subCatalogLoader,
 		bool dependsOnAccount = false
 	);
 
@@ -88,7 +86,8 @@ public:
 	const std::string &htmlURL() const;
 	const std::string &summary() const;
 
-	std::string loadSubCatalog(NetworkLibraryItemList &children); // returns error message
+	// returns error message
+	virtual std::string loadChildren(NetworkLibraryItemList &children) = 0;
 
 	bool dependsOnAccount() const;
 
@@ -97,7 +96,6 @@ private:
 	const std::string myURL;
 	const std::string myHtmlURL;
 	const std::string mySummary;
-	shared_ptr<NetworkSubCatalogLoader> mySubCatalogLoader;
 	const bool myDependsOnAccount;
 
 private: // disable copying
@@ -210,14 +208,5 @@ inline const std::vector<std::string> &NetworkLibraryBookItem::tags() const { re
 inline std::map<NetworkLibraryBookItem::URLType, std::string> &NetworkLibraryBookItem::urlByType() { return myURLByType; }
 inline std::vector<NetworkLibraryBookItem::AuthorData> &NetworkLibraryBookItem::authors() { return myAuthors; }
 inline std::vector<std::string> &NetworkLibraryBookItem::tags() { return myTags; }
-
-class NetworkSubCatalogLoader {
-
-public:
-	virtual ~NetworkSubCatalogLoader();
-
-public:
-	virtual std::string load(NetworkLibraryCatalogItem &item, NetworkLibraryItemList &children) = 0; // returns error message
-};
 
 #endif /* __NETWORKLIBRARYITEMS_H__ */

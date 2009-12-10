@@ -28,9 +28,9 @@
 
 #include "../NetworkOperationData.h"
 #include "../NetworkLibraryItems.h"
-#include "../NetworkLink.h"
 #include "../NetworkAuthenticationManager.h"
-#include "../opdsLink/OPDSSubCatalogLoader.h"
+#include "../opdsLink/OPDSLink.h"
+#include "../opdsLink/OPDSCatalogItem.h"
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(const std::string &baseURL, NetworkOperationData &result) : myBaseURL(baseURL), myData(result), myIndex(0) {
 	myIgnoredItems.insert("http://feedbooks.com/news/catalog.atom");
@@ -245,13 +245,12 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry 
 	std::string annotation = entry.summary();
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x09), annotation.end());
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x0A), annotation.end());
-	return new NetworkLibraryCatalogItem(
-		myData.Link,
+	return new OPDSCatalogItem(
+		(OPDSLink&)myData.Link,
 		ZLNetworkUtil::url(myBaseURL, url),
 		ZLNetworkUtil::url(myBaseURL, htmlURL),
 		entry.title(),
 		annotation,
-		coverURL,
-		OPDSSubCatalogLoader::Instance()
+		coverURL
 	);
 }

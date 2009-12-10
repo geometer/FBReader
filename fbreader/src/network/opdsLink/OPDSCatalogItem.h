@@ -17,22 +17,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OPDSSUBCATALOGLOADER_H__
-#define __OPDSSUBCATALOGLOADER_H__
+#ifndef __OPDSCATALOGITEM_H__
+#define __OPDSCATALOGITEM_H__
 
 #include "../NetworkLibraryItems.h"
 
-class OPDSSubCatalogLoader : public NetworkSubCatalogLoader {
+class OPDSLink;
+
+class OPDSCatalogItem : public NetworkLibraryCatalogItem {
 
 public:
-	static shared_ptr<NetworkSubCatalogLoader> Instance();
+	OPDSCatalogItem(
+		OPDSLink &link,
+		const std::string &url,
+		const std::string &htmlURL,
+		const std::string &title,
+		const std::string &summary,
+		const std::string &coverURL
+	);
 
 private:
-	static shared_ptr<NetworkSubCatalogLoader> ourInstance;
-
-private:
-	OPDSSubCatalogLoader();
-	std::string load(NetworkLibraryCatalogItem &item, NetworkLibraryItemList &children);
+	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
-#endif /* __OPDSSUBCATALOGLOADER_H__ */
+#endif /* __OPDSCATALOGITEM_H__ */

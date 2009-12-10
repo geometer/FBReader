@@ -24,7 +24,7 @@
 #include <ZLNetworkXMLParserData.h>
 
 #include "OPDSLink.h"
-#include "OPDSSubCatalogLoader.h"
+#include "OPDSCatalogItem.h"
 
 #include "../NetworkOperationData.h"
 #include "../opds/OPDSXMLParser.h"
@@ -157,14 +157,13 @@ void OPDSLink::setupAdvancedSearch(
 }
 
 shared_ptr<NetworkLibraryItem> OPDSLink::libraryItem() {
-	return new NetworkLibraryCatalogItem(
+	return new OPDSCatalogItem(
 		*this,
 		myCatalogURL,
 		"",
 		Title,
 		mySummary,
-		myIconName,
-		OPDSSubCatalogLoader::Instance()
+		myIconName
 	);
 }
 

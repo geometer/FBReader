@@ -21,30 +21,28 @@
 #include <ZLNetworkManager.h>
 #include <ZLNetworkXMLParserData.h>
 
-#include "OPDSSubCatalogLoader.h"
+#include "OPDSCatalogItem.h"
 #include "OPDSLink.h"
 
 #include "../NetworkOperationData.h"
 #include "../opds/OPDSXMLParser.h"
 #include "../opds/NetworkOPDSFeedReader.h"
 
-shared_ptr<NetworkSubCatalogLoader> OPDSSubCatalogLoader::ourInstance;
-
-shared_ptr<NetworkSubCatalogLoader> OPDSSubCatalogLoader::Instance() {
-	if (ourInstance.isNull()) {
-		ourInstance = new OPDSSubCatalogLoader();
-	}
-	return ourInstance;
+OPDSCatalogItem::OPDSCatalogItem(
+	OPDSLink &link,
+	const std::string &url,
+	const std::string &htmlURL,
+	const std::string &title,
+	const std::string &summary,
+	const std::string &coverURL
+) : NetworkLibraryCatalogItem(link, url, htmlURL, title, summary, coverURL, 0) {
 }
 
-OPDSSubCatalogLoader::OPDSSubCatalogLoader() {
-}
-
-std::string OPDSSubCatalogLoader::load(NetworkLibraryCatalogItem &item, NetworkLibraryItemList &children) {
-	NetworkOperationData data(item.link());
+std::string OPDSCatalogItem::loadChildren(NetworkLibraryItemList &children) {
+	NetworkOperationData data(link());
 
 	shared_ptr<ZLExecutionData> networkData =
-		OPDSLink::createNetworkData(item.url(), data);
+		OPDSLink::createNetworkData(url(), data);
 
 	while (!networkData.isNull()) {
 		ZLExecutionData::Vector dataList;
@@ -55,7 +53,7 @@ std::string OPDSSubCatalogLoader::load(NetworkLibraryCatalogItem &item, NetworkL
 		}
 
 		children.insert(children.end(), data.Items.begin(), data.Items.end());
-		networkData = item.link().resume(data);
+		networkData = link().resume(data);
 	}
 
 	return "";

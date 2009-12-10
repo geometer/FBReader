@@ -63,7 +63,7 @@ private:
 		const std::string &annotation);
 	shared_ptr<ZLExecutionData> resume(NetworkOperationData &result);
 
-friend class OPDSSubCatalogLoader;
+friend class OPDSCatalogItem;
 
 private:
 	const std::string myCatalogURL;
