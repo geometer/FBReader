@@ -17,13 +17,12 @@
  * 02110-1301, USA.
  */
 
-#include <ZLFile.h>
-#include <ZLResource.h>
-#include <ZLZDecompressor.h>
-#include <iostream>
 #include <algorithm>
 #include <cctype>
 
+#include <ZLFile.h>
+#include <ZLResource.h>
+#include <ZLZDecompressor.h>
 
 #include "EReaderStream.h"
 #include "DocDecompressor.h"

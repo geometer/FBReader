@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
 
 #include "SQLiteConnection.h"
 
@@ -76,3 +77,10 @@ bool SQLiteConnection::close() {
 	return false;
 }
 
+void SQLiteConnection::dumpError() const {
+	if (myDatabase != 0) {
+		const std::string msg = sqlite3_errmsg(myDatabase); // TODO: error & message handling
+		const int code = sqlite3_errcode(myDatabase); // TODO: error & message handling
+		std::cerr << "SQLITE IMPLEMENTATION ERROR: (" << code << ") " << msg << std::endl;
+	}
+}

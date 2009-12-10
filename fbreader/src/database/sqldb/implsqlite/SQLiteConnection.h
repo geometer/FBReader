@@ -17,17 +17,14 @@
  * 02110-1301, USA.
  */
 
-
 #ifndef __SQLITECONNECTION_H__
 #define __SQLITECONNECTION_H__
 
-
-#include <iostream>
+#include <sqlite3.h>
 
 #include <algorithm>
 #include <vector>
 #include <string>
-#include <sqlite3.h>
 
 #include "../DBConnection.h"
 
@@ -75,14 +72,6 @@ inline void SQLiteConnection::removeStatement(sqlite3_stmt *statement) {
 	std::vector<sqlite3_stmt *>::iterator it = std::find(myStatements.begin(), myStatements.end(), statement);
 	if (it != myStatements.end()) {
 		myStatements.erase(it);
-	}
-}
-
-inline void SQLiteConnection::dumpError() const {
-	if (myDatabase != 0) {
-		const std::string msg = sqlite3_errmsg(myDatabase); // TODO: error & message handling
-		const int code = sqlite3_errcode(myDatabase); // TODO: error & message handling
-		std::cerr << "SQLITE IMPLEMENTATION ERROR: (" << code << ") " << msg << std::endl;
 	}
 }
 
