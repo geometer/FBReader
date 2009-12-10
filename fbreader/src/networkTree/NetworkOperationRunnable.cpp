@@ -182,5 +182,5 @@ LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkLibraryCatalogItem &item, 
 }
 
 void LoadSubCatalogRunnable::run() {
-	myErrorMessage = myItem.loadSubCatalog(myChildren);
+	myErrorMessage = myItem.loadChildren(myChildren);
 }
