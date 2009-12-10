@@ -55,6 +55,11 @@ const NetworkLink &NetworkCatalogRootNode::link() const {
 	return myLink;
 }
 
+bool NetworkCatalogRootNode::hasAuxHyperlink() const {
+	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
+	return !mgr.isNull() && mgr->isAuthorised(false) == B3_FALSE;
+}
+
 void NetworkCatalogRootNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
 	const ZLResource &resource =
 		ZLResource::resource("networkView")["libraryItemRootNode"];

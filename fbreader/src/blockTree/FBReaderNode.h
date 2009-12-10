@@ -48,6 +48,7 @@ public:
 	void drawSummary(ZLPaintContext &context, int vOffset, const std::string &text, bool highlighted = false);
 	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, const std::string &text, shared_ptr<ZLRunnable> action);
 	void drawAuxHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, const std::string &text, shared_ptr<ZLRunnable> action);
+	virtual bool hasAuxHyperlink() const;
 
 private:
 	void internalDrawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, const std::string &text, shared_ptr<ZLRunnable> action, bool aux);

@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLStringUtil.h>
 #include <ZLDialog.h>
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
@@ -85,7 +86,8 @@ bool PasswordRecoveryDialog::run(NetworkAuthenticationManager &mgr) {
 		}
 
 		ZLResourceKey boxKey("recoverySuccessfulBox");
-		const std::string message = ZLDialogManager::dialogMessage(boxKey);
+		const std::string message =
+			ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), email);
 		ZLDialogManager::Instance().informationBox(boxKey, message);
 
 		return true;

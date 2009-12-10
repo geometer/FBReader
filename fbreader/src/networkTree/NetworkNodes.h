@@ -145,6 +145,7 @@ public:
 private:
 	void paintHyperlinks(ZLPaintContext &context, int vOffset);
 	shared_ptr<ZLImage> lastResortCoverImage() const;
+	bool hasAuxHyperlink() const;
 
 private:
 	NetworkLink &myLink;

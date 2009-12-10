@@ -486,7 +486,7 @@
 		</node>
 		<node name="recoverySuccessfulBox">
 			<node name="title" value="Password Recovery" />
-			<node name="message" value="Recovery successful.&#10;There is a letter that must have been sent&#10;to the specified e-mail address&#10;with the request to generate the new password." />
+			<node name="message" value="A message with further instructions&#10;has been sent to&#10;%s" />
 		</node>
 	</node>
 	<node name="style">

@@ -191,6 +191,12 @@ shared_ptr<ZLImage> FBReaderNode::defaultCoverImage(const std::string &id) {
 	return cover;
 }
 
+bool FBReaderNode::hasAuxHyperlink() const {
+	return false;
+}
+
 int FBReaderNode::height(ZLPaintContext &context) const {
-	return context.fontSizeToPixels(FBTextStyle::Instance().fontSize()) * 11 / 2;
+	return
+		context.fontSizeToPixels(FBTextStyle::Instance().fontSize()) *
+		(hasAuxHyperlink() ? 13 : 11) / 2;
 }
