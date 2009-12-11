@@ -229,6 +229,14 @@ LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(LitResLink &link) : Netwo
 	
 std::string LitResByAuthorsCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	children.clear();
+
+	children.push_back(new LitResAuthorsItem(
+		(LitResLink&)link(),
+		LitResUtil::litresLink("pages/catalit_persons/?rating=1"),
+		"Популярные авторы",
+		"50 самых популярных за последнюю неделю авторов"
+	));
+
 	for (size_t i = 0; i < RUSSIAN_CHARS.size(); i += 2) {
 		const std::string letter(RUSSIAN_CHARS, i, 2);
 		children.push_back(new LitResAuthorsItem(
