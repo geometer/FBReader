@@ -79,8 +79,8 @@ void NetworkCatalogRootNode::paintHyperlinks(ZLPaintContext &context, int vOffse
 	if (!mgr.isNull()) {
 		if (mgr->isAuthorised(false) == B3_FALSE) {
 			drawHyperlink(context, left, vOffset, resource["login"].value(), myLoginAction);
-			drawAuxHyperlink(context, auxleft, vOffset, resource["passwordRecovery"].value(), myPasswordRecoveryAction);
 			drawAuxHyperlink(context, auxleft, vOffset, resource["register"].value(), myRegisterUserAction);
+			drawAuxHyperlink(context, auxleft, vOffset, resource["passwordRecovery"].value(), myPasswordRecoveryAction);
 		} else {
 			const std::string logoutString = ZLStringUtil::printf(resource["logout"].value(), mgr->currentUserName());
 			drawHyperlink(context, left, vOffset, logoutString, myLogoutAction);
