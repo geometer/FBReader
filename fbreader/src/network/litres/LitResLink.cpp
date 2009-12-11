@@ -137,10 +137,15 @@ private:
 	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
-class LitResByAuthorsLetterItem : public NetworkLibraryCatalogItem {
+class LitResAuthorsItem : public NetworkLibraryCatalogItem {
 
 public:
-	LitResByAuthorsLetterItem(LitResLink &link, const std::string &letter);
+	LitResAuthorsItem(
+		LitResLink &link,
+		const std::string &url,
+		const std::string &title,
+		const std::string &summary
+	);
 
 private:
 	std::string loadChildren(NetworkLibraryItemList &children);
@@ -221,29 +226,30 @@ LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(LitResLink &link) : Netwo
 	""
 ) {
 }
-
+	
 std::string LitResByAuthorsCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	children.clear();
 	for (size_t i = 0; i < RUSSIAN_CHARS.size(); i += 2) {
-		children.push_back(new LitResByAuthorsLetterItem(
+		const std::string letter(RUSSIAN_CHARS, i, 2);
+		children.push_back(new LitResAuthorsItem(
 			(LitResLink&)link(),
-			std::string(&RUSSIAN_CHARS[i], 2)
+			LitResUtil::litresLink("pages/catalit_persons/?search_last_name=" + ZLNetworkUtil::htmlEncode(letter + "%")),
+			letter,
+			"Авторы на букву " + letter
 		));
 	}
 	return "";
 }
 
-LitResByAuthorsLetterItem::LitResByAuthorsLetterItem(LitResLink &link, const std::string &letter) : NetworkLibraryCatalogItem(
-	link,
-	LitResUtil::litresLink("pages/catalit_persons/?search_last_name=" + ZLNetworkUtil::htmlEncode(letter + "%")),
-	"",
-	letter,
-	"Авторы на букву " + letter,
-	""
-) {
+LitResAuthorsItem::LitResAuthorsItem(
+	LitResLink &link,
+	const std::string &url,
+	const std::string &title,
+	const std::string &summary
+) : NetworkLibraryCatalogItem(link, url, "", title, summary, "") {
 }
 
-std::string LitResByAuthorsLetterItem::loadChildren(NetworkLibraryItemList &children) {
+std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 	children.clear();
 
 	std::vector<LitResAuthor> authors;
