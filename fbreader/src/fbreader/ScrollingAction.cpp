@@ -82,7 +82,7 @@ size_t PageScrollingAction::textOptionValue() const {
 	return FBReader::Instance().LinesToKeepOption.value();
 }
 
-MouseWheelScrollingAction::MouseWheelScrollingAction(bool forward) : ScrollingAction(ZLTextView::SCROLL_LINES, ZLBlockTreeView::NONE, forward) {
+MouseWheelScrollingAction::MouseWheelScrollingAction(bool forward) : ScrollingAction(ZLTextView::SCROLL_LINES, ZLBlockTreeView::ITEM, forward) {
 }
 
 size_t MouseWheelScrollingAction::textOptionValue() const {
