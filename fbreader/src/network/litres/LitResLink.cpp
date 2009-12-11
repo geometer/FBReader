@@ -19,6 +19,7 @@
 
 #include <cctype>
 
+#include <ZLUnicodeUtil.h>
 #include <ZLNetworkUtil.h>
 #include <ZLNetworkXMLParserData.h>
 #include <ZLNetworkManager.h>
@@ -36,7 +37,7 @@
 
 static const std::string LITRES_SITENAME = "litres.ru";
 
-static const std::string RUSSIAN_CHARS = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+static const std::string RUSSIAN_LETTERS = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
 
 
 static void appendToAnnotation(std::string &anno, const std::string str) {
@@ -273,8 +274,13 @@ std::string LitResByAuthorsCatalogItem::loadChildren(NetworkLibraryItemList &chi
 		"50 самых популярных за последнюю неделю авторов"
 	));
 
-	for (size_t i = 0; i < RUSSIAN_CHARS.size(); i += 2) {
-		const std::string letter(RUSSIAN_CHARS, i, 2);
+	const char *ptr = RUSSIAN_LETTERS.data();
+	const char *end = ptr + RUSSIAN_LETTERS.size();
+	while (ptr < end) {
+		ZLUnicodeUtil::Ucs4Char ch;
+		const int len = ZLUnicodeUtil::firstChar(ch, ptr);
+		const std::string letter(ptr, len);
+		ptr += len;
 		children.push_back(new LitResAuthorsItem(
 			(LitResLink&)link(),
 			LitResUtil::litresLink("pages/catalit_persons/?search_last_name=" + ZLNetworkUtil::htmlEncode(letter + "%")),
