@@ -27,15 +27,14 @@
 
 #include "../NetworkLibraryItems.h"
 
-#include "LitResGenre.h"
-
+class LitResGenre;
 class NetworkAuthenticationManager;
 
 
 class LitResDataParser : public ZLXMLReader {
 
 public:
-	LitResDataParser(NetworkLibraryItemList &books, const std::map<std::string, LitResGenre> &genres, shared_ptr<NetworkAuthenticationManager> mgr);
+	LitResDataParser(NetworkLibraryItemList &books, shared_ptr<NetworkAuthenticationManager> mgr);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
@@ -67,7 +66,6 @@ private:
 	std::string myAuthorMiddleName;
 	std::string myAuthorLastName;
 
-	const std::map<std::string, LitResGenre> &myGenres;
 	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
 };
 

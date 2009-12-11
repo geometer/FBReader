@@ -21,12 +21,31 @@
 
 #include "LitResGenresParser.h"
 
+#include "LitResGenre.h"
 
 static const std::string TAG_GENRE = "genre";
 
 
-LitResGenresParser::LitResGenresParser(std::map<std::string, LitResGenre> &genres) : myGenres(genres) {
-	mySkipGenreClosing = false;
+LitResGenresParser::LitResGenresParser(std::vector<shared_ptr<LitResGenre> > &genresTree, std::map<std::string, shared_ptr<LitResGenre> > &genresMap) :
+	myGenresTree(genresTree), 
+	myGenresMap(genresMap), 
+	myDontPopStack(false) {
+}
+
+void LitResGenresParser::saveGenre(shared_ptr<LitResGenre> genre, const std::string &token) {
+	if (myStack.empty()) {
+		myGenresTree.push_back(genre);
+	} else {
+		myStack.back()->Children.push_back(genre);
+	}
+	if (genre->Id.empty()) {
+		myStack.push_back(genre);
+	} else {
+		myDontPopStack = true;
+		if (!token.empty()) {
+			myGenresMap[token] = genre;
+		}
+	}
 }
 
 void LitResGenresParser::startElementHandler(const char *tag, const char **attributes) {
@@ -34,38 +53,29 @@ void LitResGenresParser::startElementHandler(const char *tag, const char **attri
 		const char *id = attributeValue(attributes, "id");
 		const char *title = attributeValue(attributes, "title");
 		const char *token = attributeValue(attributes, "token");
-		if (title != 0) {
-			if (id != 0 && token != 0) {
-				myGenres[std::string(token)] = LitResGenre(std::string(id), titlePrefix() + std::string(title));
-				mySkipGenreClosing = true;
-			} else {
-				myTitleStack.push_back(std::string(title));
-				myTitlePrefix = "";
-			}
+		std::string strId, strTitle, strToken;
+		if (id != 0) {
+			strId = id;
 		}
+		if (title != 0) {
+			strTitle = title;
+		}
+		if (token != 0) {
+			strToken = token;
+		}
+		saveGenre(new LitResGenre(strId, strTitle), strToken);
 	}
 }
 
 void LitResGenresParser::endElementHandler(const char *tag) {
 	if (TAG_GENRE == tag) {
-		if (!mySkipGenreClosing) {
-			myTitleStack.pop_back();
-			myTitlePrefix = "";
+		if (!myDontPopStack) {
+			myStack.pop_back();
 		}
-		mySkipGenreClosing = false;
+		myDontPopStack = false;
 	}
 }
 
 void LitResGenresParser::characterDataHandler(const char *, size_t) {
-}
-
-const std::string &LitResGenresParser::titlePrefix() {
-	if (myTitlePrefix.empty()) {
-		for (std::vector<std::string>::const_iterator it = myTitleStack.begin(); it != myTitleStack.end(); ++it) {
-			myTitlePrefix.append(*it);
-			myTitlePrefix.append("/");
-		}
-	}
-	return myTitlePrefix;
 }
 

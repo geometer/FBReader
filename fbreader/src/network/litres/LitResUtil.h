@@ -25,7 +25,7 @@
 
 #include <shared_ptr.h>
 
-#include "LitResGenre.h"
+class LitResGenre;
 
 class LitResUtil {
 
@@ -46,14 +46,21 @@ public:
 	static std::string litresLink(const std::string &path);
 	static void makeDemoUrl(std::string &url, const std::string &bookId);
 
-	const std::map<std::string, LitResGenre> &genres();
+	const std::map<std::string, shared_ptr<LitResGenre> > &genresMap();
+	const std::vector<shared_ptr<LitResGenre> > &genresTree();
+	const std::map<shared_ptr<LitResGenre>, std::string> &genresTitles();
+
 	void fillGenreIds(const std::string &tag, std::vector<std::string> &ids);
 
 private:
+	void validateGenres();
 	void loadGenres();
+	void buildGenresTitles(const std::vector<shared_ptr<LitResGenre> > &genres, const std::string &titlePrefix = "");
 
 private:
-	std::map<std::string, LitResGenre> myGenres;
+	std::vector<shared_ptr<LitResGenre> > myGenresTree;
+	std::map<std::string, shared_ptr<LitResGenre> > myGenresMap;
+	std::map<shared_ptr<LitResGenre>, std::string> myGenresTitles;
 	bool myGenresValid;
 };
 

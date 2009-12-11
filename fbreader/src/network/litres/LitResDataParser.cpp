@@ -20,7 +20,7 @@
 #include <ZLStringUtil.h>
 
 #include "LitResDataParser.h"
-
+#include "LitResGenre.h"
 #include "LitResUtil.h"
 
 #include "../NetworkAuthenticationManager.h"
@@ -43,10 +43,9 @@ static const std::string TAG_SEQUENCE = "sequence";
 static const std::string TAG_LANGUAGE = "lang";
 
 
-LitResDataParser::LitResDataParser(NetworkLibraryItemList &books, const std::map<std::string, LitResGenre> &genres, shared_ptr<NetworkAuthenticationManager> mgr) : 
+LitResDataParser::LitResDataParser(NetworkLibraryItemList &books, shared_ptr<NetworkAuthenticationManager> mgr) : 
 	myBooks(books), 
 	myIndex(0), 
-	myGenres(genres), 
 	myAuthenticationManager(mgr) {
 	myState = START;
 }
@@ -173,9 +172,16 @@ void LitResDataParser::processState(const std::string &tag, bool closed) {
 	case GENRE: 
 		if (closed && TAG_GENRE == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
-			std::map<std::string, LitResGenre>::const_iterator it = myGenres.find(myBuffer);
-			if (it != myGenres.end()) {
-				currentBook().tags().push_back(it->second.Title);
+
+			const std::map<std::string, shared_ptr<LitResGenre> > &genresMap = LitResUtil::Instance().genresMap();
+			const std::map<shared_ptr<LitResGenre>, std::string> &genresTitles = LitResUtil::Instance().genresTitles();
+
+			std::map<std::string, shared_ptr<LitResGenre> >::const_iterator it = genresMap.find(myBuffer);
+			if (it != genresMap.end()) {
+				std::map<shared_ptr<LitResGenre>, std::string>::const_iterator jt = genresTitles.find(it->second);
+				if (jt != genresTitles.end()) {
+					currentBook().tags().push_back(jt->second);
+				}
 			}
 		}
 		break;

@@ -21,10 +21,14 @@
 #define __LITRESGENRE_H__
 
 #include <string>
+#include <vector>
+
+#include <shared_ptr.h>
 
 struct LitResGenre {
 	std::string Id;
 	std::string Title;
+	std::vector<shared_ptr<LitResGenre> > Children;
 
 	LitResGenre();
 	LitResGenre(const std::string &id, const std::string &title);

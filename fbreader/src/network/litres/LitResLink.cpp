@@ -28,6 +28,7 @@
 #include "LitResAuthenticationManager.h"
 #include "LitResUtil.h"
 #include "LitResAuthorsParser.h"
+#include "LitResGenre.h"
 
 #include "../NetworkOperationData.h"
 #include "../NetworkLibraryItems.h"
@@ -57,7 +58,7 @@ LitResLink::LitResLink() :
 shared_ptr<ZLExecutionData> LitResLink::simpleSearchData(NetworkOperationData &result, const std::string &pattern) {
 	return new ZLNetworkXMLParserData(
 		LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&search=" + ZLNetworkUtil::htmlEncode(pattern)),
-		new LitResDataParser(result.Items, LitResUtil::Instance().genres(), myAuthenticationManager)
+		new LitResDataParser(result.Items, myAuthenticationManager)
 	);
 }
 
@@ -82,7 +83,7 @@ shared_ptr<ZLExecutionData> LitResLink::advancedSearchData(NetworkOperationData 
 
 	return new ZLNetworkXMLParserData(
 		LitResUtil::litresLink("pages/catalit_browser/" + request),
-		new LitResDataParser(result.Items, LitResUtil::Instance().genres(), myAuthenticationManager)
+		new LitResDataParser(result.Items, myAuthenticationManager)
 	);
 }
 
@@ -151,6 +152,33 @@ private:
 	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
+class LitResByGenresCatalogItem : public NetworkLibraryCatalogItem {
+
+public:
+	LitResByGenresCatalogItem(LitResLink &link);
+
+private:
+	std::string loadChildren(NetworkLibraryItemList &children);
+};
+
+class LitResGenresItem : public NetworkLibraryCatalogItem {
+
+public:
+	LitResGenresItem(
+		LitResLink &link,
+		const std::string &url,
+		const std::string &title,
+		const std::string &summary,
+		const std::vector<shared_ptr<LitResGenre> > &genres
+	);
+
+private:
+	std::string loadChildren(NetworkLibraryItemList &children);
+
+private:
+	const std::vector<shared_ptr<LitResGenre> > &myGenres;
+};
+
 LitResRootCatalogItem::LitResRootCatalogItem(
 	LitResLink &link,
 	const std::string &title,
@@ -172,6 +200,14 @@ std::string LitResRootCatalogItem::loadChildren(NetworkLibraryItemList &children
 		"50 самых популярных книг"
 	));
 	children.push_back(new LitResByAuthorsCatalogItem((LitResLink&)link()));
+	children.push_back(new LitResGenresItem(
+		(LitResLink&)link(),
+		"none",
+		"Книги по категориям",
+		"Просмтор книг по категориям",
+		LitResUtil::Instance().genresTree()
+	));
+
 	children.push_back(new LitResMyCatalogItem((LitResLink&)link()));
 
 	return "";
@@ -191,7 +227,7 @@ std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	ZLExecutionData::Vector dataList;
 	dataList.push_back(new ZLNetworkXMLParserData(
 		url(), 
-		new LitResDataParser(children, LitResUtil::Instance().genres(), link().authenticationManager())
+		new LitResDataParser(children, link().authenticationManager())
 	));
 
 	return ZLNetworkManager::Instance().perform(dataList);
@@ -291,6 +327,37 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 	return "";
 }
 
+LitResGenresItem::LitResGenresItem(
+	LitResLink &link,
+	const std::string &url,
+	const std::string &title,
+	const std::string &summary,
+	const std::vector<shared_ptr<LitResGenre> > &genres
+) : NetworkLibraryCatalogItem(link, url, "", title, summary, ""), myGenres(genres) {
+}
+
+std::string LitResGenresItem::loadChildren(NetworkLibraryItemList &children) {
+	for (std::vector<shared_ptr<LitResGenre> >::const_iterator it = myGenres.begin(); it != myGenres.end(); ++it) {
+		const LitResGenre &genre = **it;
+		if (genre.Id.empty()) {
+			children.push_back(new LitResGenresItem(
+				(LitResLink&)link(),
+				"none",
+				genre.Title,
+				"",
+				genre.Children
+			));
+		} else {
+			children.push_back(new LitResCatalogItem(
+				(LitResLink&)link(),
+				LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&genre=" + ZLNetworkUtil::htmlEncode(genre.Id)),
+				genre.Title,
+				""
+			));
+		}
+	}
+	return "";
+}
 
 
 shared_ptr<NetworkLibraryItem> LitResLink::libraryItem() {
