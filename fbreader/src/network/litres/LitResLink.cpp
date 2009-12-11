@@ -27,12 +27,27 @@
 #include "LitResDataParser.h"
 #include "LitResAuthenticationManager.h"
 #include "LitResUtil.h"
+#include "LitResAuthorsParser.h"
 
 #include "../NetworkOperationData.h"
 #include "../NetworkLibraryItems.h"
 #include "../NetworkErrors.h"
 
 static const std::string LITRES_SITENAME = "litres.ru";
+
+static const std::string RUSSIAN_CHARS = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+
+
+static void appendToAnnotation(std::string &anno, const std::string str) {
+	if (str.empty()) {
+		return;
+	}
+	if (!anno.empty()) {
+		anno.append(" ");
+	}
+	anno.append(str);
+}
+
 
 LitResLink::LitResLink() : 
 	NetworkLink(LITRES_SITENAME, "Каталог LitRes") {
@@ -75,6 +90,8 @@ shared_ptr<NetworkAuthenticationManager> LitResLink::authenticationManager() {
 	return myAuthenticationManager;
 }
 
+
+
 class LitResRootCatalogItem : public NetworkLibraryCatalogItem {
 
 public:
@@ -111,6 +128,24 @@ private:
 	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
+class LitResByAuthorsCatalogItem : public NetworkLibraryCatalogItem {
+
+public:
+	LitResByAuthorsCatalogItem(LitResLink &link);
+
+private:
+	std::string loadChildren(NetworkLibraryItemList &children);
+};
+
+class LitResByAuthorsLetterItem : public NetworkLibraryCatalogItem {
+
+public:
+	LitResByAuthorsLetterItem(LitResLink &link, const std::string &letter);
+
+private:
+	std::string loadChildren(NetworkLibraryItemList &children);
+};
+
 LitResRootCatalogItem::LitResRootCatalogItem(
 	LitResLink &link,
 	const std::string &title,
@@ -131,6 +166,7 @@ std::string LitResRootCatalogItem::loadChildren(NetworkLibraryItemList &children
 		"Популярные книги",
 		"50 самых популярных книг"
 	));
+	children.push_back(new LitResByAuthorsCatalogItem((LitResLink&)link()));
 	children.push_back(new LitResMyCatalogItem((LitResLink&)link()));
 
 	return "";
@@ -175,6 +211,73 @@ std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) 
 	mgr.collectPurchasedBooks(children);
 	return "";
 }
+
+LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(LitResLink &link) : NetworkLibraryCatalogItem(
+	link,
+	"none",
+	"",
+	"Книги по авторам",
+	"Просмтор книг по авторам",
+	""
+) {
+}
+
+std::string LitResByAuthorsCatalogItem::loadChildren(NetworkLibraryItemList &children) {
+	children.clear();
+	for (size_t i = 0; i < RUSSIAN_CHARS.size(); i += 2) {
+		children.push_back(new LitResByAuthorsLetterItem(
+			(LitResLink&)link(),
+			std::string(&RUSSIAN_CHARS[i], 2)
+		));
+	}
+	return "";
+}
+
+LitResByAuthorsLetterItem::LitResByAuthorsLetterItem(LitResLink &link, const std::string &letter) : NetworkLibraryCatalogItem(
+	link,
+	LitResUtil::litresLink("pages/catalit_persons/?search_last_name=" + ZLNetworkUtil::htmlEncode(letter + "%")),
+	"",
+	letter,
+	"Авторы на букву " + letter,
+	""
+) {
+}
+
+std::string LitResByAuthorsLetterItem::loadChildren(NetworkLibraryItemList &children) {
+	children.clear();
+
+	std::vector<LitResAuthor> authors;
+
+	ZLExecutionData::Vector dataList;
+	dataList.push_back(new ZLNetworkXMLParserData(
+		url(), 
+		new LitResAuthorsParser(authors)
+	));
+
+	std::string error = ZLNetworkManager::Instance().perform(dataList);
+	if (!error.empty()) {
+		return error;
+	}
+
+	for (size_t i = 0; i < authors.size(); ++i) {
+		LitResAuthor &author = authors[i];
+
+		std::string anno;
+		appendToAnnotation(anno, author.FirstName);
+		appendToAnnotation(anno, author.MiddleName);
+		appendToAnnotation(anno, author.LastName);
+
+		children.push_back(new LitResCatalogItem(
+			(LitResLink&)link(),
+			LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&person=" + ZLNetworkUtil::htmlEncode(author.Id)),
+			author.Title,
+			anno
+		));
+	}
+	return "";
+}
+
+
 
 shared_ptr<NetworkLibraryItem> LitResLink::libraryItem() {
 	return new LitResRootCatalogItem(*this, Title, "Продажа электронных книг.");
