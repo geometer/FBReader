@@ -55,3 +55,11 @@ const std::string &ZLNetworkData::sslCertificate() const {
 CURL *ZLNetworkData::handle() {
 	return myHandle;
 }
+
+const std::string &ZLNetworkData::errorMessage() const {
+	return myErrorMessage;
+}
+
+void ZLNetworkData::setErrorMessage(const std::string &message) {
+	myErrorMessage = message;
+}

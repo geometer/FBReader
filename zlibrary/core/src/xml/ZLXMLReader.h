@@ -47,6 +47,8 @@ public:
 
 	bool readDocument(shared_ptr<ZLAsynchronousInputStream> stream);
 
+	const std::string &errorMessage() const;
+
 private:
 	void initialize(const char *encoding = 0);
 	void shutdown();
@@ -64,12 +66,15 @@ protected:
 
 protected:
 	void interrupt();
+	void setErrorMessage(const std::string &message);
 
 private:
 	bool myInterrupted;
 	ZLXMLReaderInternal *myInternalReader;
 	char *myParserBuffer;
 	std::vector<shared_ptr<std::map<std::string,std::string> > > myNamespaces;
+
+	std::string myErrorMessage;
 
 friend class ZLXMLReaderInternal;
 friend class ZLXMLReaderHandler;

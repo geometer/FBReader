@@ -36,10 +36,6 @@ static const std::string TAG_PASSWORD_RECOVERY_FAILED = "catalit-pass-recover-fa
 LitResAuthenticationDataParser::LitResAuthenticationDataParser() {
 }
 
-void LitResAuthenticationDataParser::reset() {
-	myErrorMsg.clear();
-}
-
 void LitResAuthenticationDataParser::startElementHandler(const char *tag, const char **attributes) {
 	myAttributes.clear();
 	while (*attributes != 0) {
@@ -63,7 +59,7 @@ LitResLoginDataParser::LitResLoginDataParser(std::string &firstName, std::string
 
 void LitResLoginDataParser::processTag(const std::string &tag) {
 	if (TAG_AUTHORIZATION_FAILED == tag) {
-		setErrorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+		setErrorCode(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	} else if (TAG_AUTHORIZATION_OK == tag) {
 		myFirstName = attributes()["first-name"];
 		myLastName = attributes()["first-name"];
@@ -78,7 +74,7 @@ LitResPurchaseDataParser::LitResPurchaseDataParser(std::string &account, std::st
 
 void LitResPurchaseDataParser::processTag(const std::string &tag) {
 	if (TAG_AUTHORIZATION_FAILED == tag) {
-		setErrorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+		setErrorCode(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	} else {
 		myAccount = attributes()["account"];
 		myBookId = attributes()["art"];
@@ -87,38 +83,38 @@ void LitResPurchaseDataParser::processTag(const std::string &tag) {
 		} else if (TAG_PURCHASE_FAILED == tag) {
 			const std::string &error = attributes()["error"];
 			if ("1" == error) {
-				setErrorMessage(NetworkErrors::ERROR_PURCHASE_NOT_ENOUGH_MONEY);
+				setErrorCode(NetworkErrors::ERROR_PURCHASE_NOT_ENOUGH_MONEY);
 			} else if ("2" == error) {
-				setErrorMessage(NetworkErrors::ERROR_PURCHASE_MISSING_BOOK);
+				setErrorCode(NetworkErrors::ERROR_PURCHASE_MISSING_BOOK);
 			} else if ("3" == error) {
-				setErrorMessage(NetworkErrors::ERROR_PURCHASE_ALREADY_PURCHASED);
+				setErrorCode(NetworkErrors::ERROR_PURCHASE_ALREADY_PURCHASED);
 			} else {
-				setErrorMessage(NetworkErrors::ERROR_INTERNAL);
+				setErrorCode(NetworkErrors::ERROR_INTERNAL);
 			}
 		}
 	}
 }
 
 
-LitResDownloadErrorDataParser::LitResDownloadErrorDataParser() {
+/*LitResDownloadErrorDataParser::LitResDownloadErrorDataParser() {
 }
 
 void LitResDownloadErrorDataParser::processTag(const std::string &tag) {
 	if (TAG_AUTHORIZATION_FAILED == tag) {
-		setErrorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+		setErrorCode(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	} else {
 		if (TAG_DOWNLOAD_FAILED == tag) {
 			const std::string &error = attributes()["error"];
 			if ("1" == error) {
-				setErrorMessage(NetworkErrors::ERROR_BOOK_NOT_PURCHASED);
+				setErrorCode(NetworkErrors::ERROR_BOOK_NOT_PURCHASED);
 			} else if ("2" == error) {
-				setErrorMessage(NetworkErrors::ERROR_DOWNLOAD_LIMIT_EXCEEDED);
+				setErrorCode(NetworkErrors::ERROR_DOWNLOAD_LIMIT_EXCEEDED);
 			} else {
-				setErrorMessage(NetworkErrors::ERROR_INTERNAL);
+				setErrorCode(NetworkErrors::ERROR_INTERNAL);
 			}
 		}
 	}
-}
+}*/
 
 
 LitResRegisterUserDataParser::LitResRegisterUserDataParser(std::string &sid) : mySid(sid) {
@@ -128,17 +124,17 @@ void LitResRegisterUserDataParser::processTag(const std::string &tag) {
 	if (TAG_REGISTRATION_FAILED == tag) {
 		const std::string &error = attributes()["error"];
 		if ("1" == error) {
-			setErrorMessage(NetworkErrors::ERROR_LOGIN_ALREADY_TAKEN);
+			setErrorCode(NetworkErrors::ERROR_LOGIN_ALREADY_TAKEN);
 		} else if ("2" == error) {
-			setErrorMessage(NetworkErrors::ERROR_LOGIN_WAS_NOT_SPECIFIED);
+			setErrorCode(NetworkErrors::ERROR_LOGIN_WAS_NOT_SPECIFIED);
 		} else if ("3" == error) {
-			setErrorMessage(NetworkErrors::ERROR_PASSWORD_WAS_NOT_SPECIFIED);
+			setErrorCode(NetworkErrors::ERROR_PASSWORD_WAS_NOT_SPECIFIED);
 		} else if ("4" == error) {
-			setErrorMessage(NetworkErrors::ERROR_INVALID_EMAIL);
+			setErrorCode(NetworkErrors::ERROR_INVALID_EMAIL);
 		} else if ("5" == error) {
-			setErrorMessage(NetworkErrors::ERROR_TOO_MANY_REGISTRATIONS);
+			setErrorCode(NetworkErrors::ERROR_TOO_MANY_REGISTRATIONS);
 		} else {
-			setErrorMessage(NetworkErrors::ERROR_INTERNAL);
+			setErrorCode(NetworkErrors::ERROR_INTERNAL);
 		}		
 	} else if (TAG_AUTHORIZATION_OK == tag) {
 		mySid = attributes()["sid"];
@@ -150,11 +146,11 @@ void LitResPasswordRecoveryDataParser::processTag(const std::string &tag) {
 	if (TAG_PASSWORD_RECOVERY_FAILED == tag) {
 		const std::string &error = attributes()["error"];
 		if ("1" == error) {
-			setErrorMessage(NetworkErrors::ERROR_NO_USER_EMAIL);
+			setErrorCode(NetworkErrors::ERROR_NO_USER_EMAIL);
 		} else if ("2" == error) {
-			setErrorMessage(NetworkErrors::ERROR_EMAIL_WAS_NOT_SPECIFIED);
+			setErrorCode(NetworkErrors::ERROR_EMAIL_WAS_NOT_SPECIFIED);
 		} else {
-			setErrorMessage(NetworkErrors::ERROR_INTERNAL);
+			setErrorCode(NetworkErrors::ERROR_INTERNAL);
 		}		
 	} else if (TAG_PASSWORD_RECOVERY_OK == tag) {
 		// NOP

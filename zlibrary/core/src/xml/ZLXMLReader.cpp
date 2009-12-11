@@ -174,3 +174,11 @@ bool ZLXMLReader::readDocument(shared_ptr<ZLAsynchronousInputStream> stream) {
 	return stream->processInput(handler);
 }
 
+const std::string &ZLXMLReader::errorMessage() const {
+	return myErrorMessage;
+}
+
+void ZLXMLReader::setErrorMessage(const std::string &message) {
+	myErrorMessage = message;
+	interrupt();
+}

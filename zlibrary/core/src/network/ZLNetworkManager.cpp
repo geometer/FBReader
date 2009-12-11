@@ -212,11 +212,11 @@ std::string ZLNetworkManager::perform(const ZLExecutionData::Vector &dataList) c
 				case CURLE_OK:
 					break;
 				case CURLE_WRITE_ERROR:
-					/* check nData's error message here:
-					 *     - if it isn't empty => return that message;
-					 *     - otherwise => return somethingWrongMessage message.
-					 */
-					errors.insert(ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					if (!nData.errorMessage().empty()) {
+						errors.insert(nData.errorMessage());
+					} else {
+						errors.insert(ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					}
 					break;
 				default:
 					errors.insert(ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));

@@ -45,10 +45,16 @@ public:
 	virtual bool doBefore() = 0;
 	virtual void doAfter(bool success) = 0;
 
+	const std::string &errorMessage() const;
+
+protected:
+	void setErrorMessage(const std::string &message);
+
 private:
 	const std::string myURL;
 	const std::string mySSLCertificate;
 	CURL *myHandle;
+	std::string myErrorMessage;
 };
 
 #endif /* __ZLNETWORKDATA_H__ */

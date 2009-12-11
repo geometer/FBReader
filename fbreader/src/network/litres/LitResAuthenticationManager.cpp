@@ -64,7 +64,6 @@ ZLBoolean3 LitResAuthenticationManager::isAuthorised(bool useNetwork) {
 
 	std::string firstName, lastName, newSid;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(firstName, lastName, newSid);
-	LitResAuthenticationDataParser &parser = (LitResAuthenticationDataParser &) *xmlReader;
 
 	std::string query;
 	ZLNetworkUtil::addParameter(query, "sid", mySidOption.value());
@@ -77,8 +76,8 @@ ZLBoolean3 LitResAuthenticationManager::isAuthorised(bool useNetwork) {
 	));
 	std::string error = ZLNetworkManager::Instance().perform(dataList);
 
-	if (!error.empty() || !parser.error().empty()) {
-		if (parser.error() != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
+	if (!error.empty()) {
+		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
 			return B3_UNDEFINED;
 		}
 		mySidChecked = true;
@@ -94,7 +93,6 @@ ZLBoolean3 LitResAuthenticationManager::isAuthorised(bool useNetwork) {
 std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 	std::string firstName, lastName, newSid;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(firstName, lastName, newSid);
-	LitResAuthenticationDataParser &parser = (LitResAuthenticationDataParser &) *xmlReader;
 
 	std::string query;
 	ZLNetworkUtil::addParameter(query, "login", UserNameOption.value());
@@ -110,9 +108,7 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 		xmlReader
 	));
 	std::string error = ZLNetworkManager::Instance().perform(dataList);
-	if (error.empty()) {
-		error = parser.error();
-	}
+
 	mySidChecked = true;
 	if (!error.empty()) {
 		mySidUserNameOption.setValue("");
@@ -154,7 +150,6 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkLibraryBookItem &bo
 
 	std::string account, bookId;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResPurchaseDataParser(account, bookId);
-	LitResAuthenticationDataParser &parser = (LitResAuthenticationDataParser &) *xmlReader;
 
 	std::string query;
 	ZLNetworkUtil::addParameter(query, "sid", sid);
@@ -167,9 +162,7 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkLibraryBookItem &bo
 		xmlReader
 	));
 	std::string error = ZLNetworkManager::Instance().perform(dataList);
-	if (error.empty()) {
-		error = parser.error();
-	}
+
 	if (!account.empty()) {
 		myAccount = account;
 		myAccount.append(LitResUtil::CURRENCY_SUFFIX);
@@ -336,7 +329,6 @@ bool LitResAuthenticationManager::registrationSupported() {
 std::string LitResAuthenticationManager::registerUser(const std::string &login, const std::string &password, const std::string &email) {
 	std::string newSid;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResRegisterUserDataParser(newSid);
-	LitResAuthenticationDataParser &parser = (LitResAuthenticationDataParser &) *xmlReader;
 
 	std::string query;
 	ZLNetworkUtil::addParameter(query, "new_login", login);
@@ -350,9 +342,7 @@ std::string LitResAuthenticationManager::registerUser(const std::string &login, 
 		xmlReader
 	));
 	std::string error = ZLNetworkManager::Instance().perform(dataList);
-	if (error.empty()) {
-		error = parser.error();
-	}
+
 	mySidChecked = true;
 	if (!error.empty()) {
 		mySidUserNameOption.setValue("");
@@ -371,7 +361,6 @@ bool LitResAuthenticationManager::passwordRecoverySupported() {
 std::string LitResAuthenticationManager::recoverPassword(const std::string &email) {
 	std::string newSid;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResPasswordRecoveryDataParser();
-	LitResAuthenticationDataParser &parser = (LitResAuthenticationDataParser &) *xmlReader;
 
 	std::string query;
 	ZLNetworkUtil::addParameter(query, "mail", email);
@@ -382,9 +371,5 @@ std::string LitResAuthenticationManager::recoverPassword(const std::string &emai
 		certificate(),
 		xmlReader
 	));
-	std::string error = ZLNetworkManager::Instance().perform(dataList);
-	if (error.empty()) {
-		error = parser.error();
-	}
-	return error;
+	return ZLNetworkManager::Instance().perform(dataList);
 }
