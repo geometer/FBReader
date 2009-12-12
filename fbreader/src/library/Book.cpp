@@ -171,8 +171,10 @@ shared_ptr<Book> Book::loadFromBookInfo(const std::string &filePath) {
 	book->setTitle(info.TitleOption.value());
 	book->setLanguage(info.LanguageOption.value());
 	book->setEncoding(info.EncodingOption.value());
-	book->setSeriesName(info.SeriesNameOption.value());
-	book->setIndexInSeries(info.IndexInSeriesOption.value());
+	book->setSeries(
+		info.SeriesNameOption.value(),
+		info.IndexInSeriesOption.value()
+	);
 
 	if (book->language().empty()) {
 		book->setLanguage( PluginCollection::Instance().DefaultLanguageOption.value() );
@@ -236,12 +238,9 @@ void Book::setEncoding(const std::string &encoding) {
 	myEncoding = encoding;
 }
 
-void Book::setSeriesName(const std::string &name) {
+void Book::setSeries(const std::string &name, int index) {
 	mySeriesName = name;
-}
-
-void Book::setIndexInSeries(int num) {
-	myIndexInSeries = num;
+	myIndexInSeries = index;
 }
 
 void Book::removeAllTags() {

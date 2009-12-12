@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <cstdlib>
+
 #include <ZLStringUtil.h>
 
 #include "LitResDataParser.h"
@@ -124,8 +126,10 @@ void LitResDataParser::processState(const std::string &tag, bool closed) {
 				myAuthorMiddleName.clear();
 				myAuthorLastName.clear();
 			} else if (TAG_SEQUENCE == tag) {
-				const std::string &sequence = myAttributes["name"];
-				currentBook().series() = sequence;
+				currentBook().setSeries(
+					myAttributes["name"],
+					atoi(myAttributes["number"].c_str())
+				);
 			}
 		} 
 		break;

@@ -109,9 +109,8 @@ void FB2DescriptionReader::startElementHandler(int tag, const char **attributes)
 				if (name != 0) {
 					std::string seriesName = name;
 					ZLStringUtil::stripWhiteSpaces(seriesName);
-					myBook.setSeriesName(seriesName);
 					const char *number = attributeValue(attributes, "number");
-					myBook.setIndexInSeries(number != 0 ? atoi(number) : 0);
+					myBook.setSeries(seriesName, number != 0 ? atoi(number) : 0);
 				}
 			}
 			break;

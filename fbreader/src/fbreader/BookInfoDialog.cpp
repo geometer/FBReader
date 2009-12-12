@@ -254,7 +254,8 @@ const std::vector<std::string> &SeriesTitleEntry::values() const {
 }
 
 void SeriesTitleEntry::onAccept(const std::string &value) {
-	myInfoDialog.myBook->setSeriesName(value);
+	Book &book = *myInfoDialog.myBook;
+	book.setSeries(value, book.indexInSeries());
 }
 
 void SeriesTitleEntry::onValueSelected(int index) {
@@ -293,7 +294,8 @@ int BookIndexEntry::step() const {
 }
 
 void BookIndexEntry::onAccept(int value) {
-	myInfoDialog.myBook->setIndexInSeries(value);
+	Book &book = *myInfoDialog.myBook;
+	book.setSeries(book.seriesName(), value);
 }
 
 class BookTitleEntry : public ZLStringOptionEntry {

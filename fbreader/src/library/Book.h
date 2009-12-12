@@ -60,8 +60,7 @@ public: // modifiable book methods
 	void setTitle(const std::string &title);
 	void setLanguage(const std::string &language);
 	void setEncoding(const std::string &encoding);
-	void setSeriesName(const std::string &name);
-	void setIndexInSeries(int num);
+	void setSeries(const std::string &name, int index);
 
 	AuthorList &_authors();
 

@@ -78,7 +78,8 @@ NetworkLibraryBookItem::NetworkLibraryBookItem(const NetworkLibraryBookItem &boo
 	myId(book.myId), 
 	myLanguage(book.myLanguage), 
 	myDate(book.myDate), 
-	mySeries(book.mySeries), 
+	mySeriesName(book.mySeriesName), 
+	myIndexInSeries(book.myIndexInSeries),
 	myPrice(book.myPrice), 
 	myURLByType(book.myURLByType), 
 	myAuthors(book.myAuthors), 
@@ -158,4 +159,9 @@ shared_ptr<NetworkAuthenticationManager> NetworkLibraryBookItem::authenticationM
 
 void NetworkLibraryBookItem::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> manager) {
 	myAuthenticationManager = manager;
+}
+
+void NetworkLibraryBookItem::setSeries(const std::string &name, int index) {
+	mySeriesName = name;
+	myIndexInSeries = index;
 }

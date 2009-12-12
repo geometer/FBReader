@@ -147,14 +147,16 @@ public:
 
 	const std::string &language() const;
 	const std::string &date() const;
-	const std::string &series() const;
+	const std::string &seriesName() const;
+	int indexInSeries() const;
 	const std::string &price() const;
 	const std::string &annotation() const;
+
 	std::string &language();
 	std::string &date();
-	std::string &series();
 	std::string &price();
 	std::string &annotation();
+	void setSeries(const std::string &name, int index);
 
 	const std::map<URLType, std::string> &urlByType() const;
 	const std::vector<AuthorData> &authors() const;
@@ -175,7 +177,8 @@ private:
 	const std::string myId;
 	std::string myLanguage;
 	std::string myDate;
-	std::string mySeries;
+	std::string mySeriesName;
+	int myIndexInSeries;
 	std::string myPrice; // number with curency code (see http://en.wikipedia.org/wiki/List_of_circulating_currencies for example)
 	std::string myAnnotation;
 
@@ -194,12 +197,12 @@ inline void NetworkLibraryBookItem::setIndex(unsigned int index) { myIndex = ind
 
 inline const std::string &NetworkLibraryBookItem::language() const { return myLanguage; }
 inline const std::string &NetworkLibraryBookItem::date() const { return myDate; }
-inline const std::string &NetworkLibraryBookItem::series() const { return mySeries; }
+inline const std::string &NetworkLibraryBookItem::seriesName() const { return mySeriesName; }
+inline int NetworkLibraryBookItem::indexInSeries() const { return myIndexInSeries; }
 inline const std::string &NetworkLibraryBookItem::price() const { return myPrice; }
 inline const std::string &NetworkLibraryBookItem::annotation() const { return myAnnotation; }
 inline std::string &NetworkLibraryBookItem::language() { return myLanguage; }
 inline std::string &NetworkLibraryBookItem::date() { return myDate; }
-inline std::string &NetworkLibraryBookItem::series() { return mySeries; }
 inline std::string &NetworkLibraryBookItem::price() { return myPrice; }
 inline std::string &NetworkLibraryBookItem::annotation() { return myAnnotation; }
 inline const std::map<NetworkLibraryBookItem::URLType, std::string> &NetworkLibraryBookItem::urlByType() const { return myURLByType; }

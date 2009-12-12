@@ -110,9 +110,9 @@ void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attrib
 				static const std::string SERIES = "calibre:series";
 				static const std::string SERIES_INDEX = "calibre:series_index";
 				if (SERIES == name) {
-					myBook.setSeriesName(content);
+					myBook.setSeries(content, myBook.indexInSeries());
 				} else if (SERIES_INDEX == name) {
-					myBook.setIndexInSeries(atoi(content));
+					myBook.setSeries(myBook.seriesName(), atoi(content));
 				}
 			}
 		}
