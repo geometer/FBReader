@@ -18,6 +18,7 @@
  */
 
 #include <cctype>
+#include <algorithm>
 
 #include <ZLUnicodeUtil.h>
 #include <ZLNetworkUtil.h>
@@ -315,18 +316,18 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 		return error;
 	}
 
-	for (size_t i = 0; i < authors.size(); ++i) {
-		LitResAuthor &author = authors[i];
+	std::sort(authors.begin(), authors.end());
 
+	for (std::vector<LitResAuthor>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
 		std::string anno;
-		appendToAnnotation(anno, author.FirstName);
-		appendToAnnotation(anno, author.MiddleName);
-		appendToAnnotation(anno, author.LastName);
+		appendToAnnotation(anno, it->FirstName);
+		appendToAnnotation(anno, it->MiddleName);
+		appendToAnnotation(anno, it->LastName);
 
 		children.push_back(new LitResCatalogItem(
 			(LitResLink&)link(),
-			LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&person=" + ZLNetworkUtil::htmlEncode(author.Id)),
-			author.Title,
+			LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&person=" + ZLNetworkUtil::htmlEncode(it->Id)),
+			it->Title,
 			anno
 		));
 	}

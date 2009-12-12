@@ -31,9 +31,16 @@ struct LitResAuthor {
 
 	LitResAuthor();
 	LitResAuthor(const std::string &id, const std::string &title, const std::string &firstName, const std::string &middleName, const std::string &lastName);
+
+	bool operator < (const LitResAuthor &other) const;
 };
 
-inline LitResAuthor::LitResAuthor() {}
-inline LitResAuthor::LitResAuthor(const std::string &id, const std::string &title, const std::string &firstName, const std::string &middleName, const std::string &lastName) : Id(id), Title(title), FirstName(firstName), MiddleName(middleName), LastName(lastName) {}
+inline LitResAuthor::LitResAuthor() {
+}
+inline LitResAuthor::LitResAuthor(const std::string &id, const std::string &title, const std::string &firstName, const std::string &middleName, const std::string &lastName) : Id(id), Title(title), FirstName(firstName), MiddleName(middleName), LastName(lastName) {
+}
+inline bool LitResAuthor::operator < (const LitResAuthor &other) const {
+	return LastName < other.LastName;
+}
 
 #endif /* __LITRESAUTHOR_H__ */
