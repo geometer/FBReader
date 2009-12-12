@@ -61,6 +61,7 @@ DONE update man page
 0.12.5 проверить работу timeout'а
 0.12.5 кешировать содержимое каталога не по Item'у, а по URL (в некоторых деревьях они (URL) иногда повторяются)
 0.12.5 список каталогов должен лежать на сайте fbreader.org и апдейтиться автоматически
+0.12.5 common code in FB2MetaInfoReader && LitResDataParser
 
 SHUCANG advanced search на shucang.com
 LITRES litres: более понятная надпись у купленной книжки (а оставшееся число скачиваний нельзя увидеть?)
