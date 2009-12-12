@@ -103,7 +103,7 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &en
 	
 	book.setAuthenticationManager(myData.Link.authenticationManager());
 
-	book.title() = entry.title();
+	book.setTitle(entry.title());
 	book.setLanguage(entry.dcLanguage());
 	if (!entry.dcIssued().isNull()) {
 		book.setDate(entry.dcIssued()->getDateTime(true));
@@ -122,16 +122,16 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &en
 		const std::string &type = link.type();
 		if (rel == OPDSConstants::REL_COVER ||
 				rel == OPDSConstants::REL_STANZA_COVER) {
-			if (book.cover().empty() && 
+			if (book.coverURL().empty() && 
 					(type == OPDSConstants::MIME_IMG_PNG ||
 					 type == OPDSConstants::MIME_IMG_JPEG)) {
-				book.cover() = href;
+				book.setCoverURL(href);
 			}
 		} else if (rel == OPDSConstants::REL_THUMBNAIL ||
 							 rel == OPDSConstants::REL_STANZA_THUMBNAIL) {
 			if (type == OPDSConstants::MIME_IMG_PNG ||
 					type == OPDSConstants::MIME_IMG_JPEG) {
-				book.cover() = href;
+				book.setCoverURL(href);
 			}
 		} else if (rel == OPDSConstants::REL_ACQUISITION || rel.empty()) {
 			if (type == OPDSConstants::MIME_APP_EPUB) {

@@ -31,10 +31,18 @@ NetworkLibraryItem::NetworkLibraryItem() {
 
 NetworkLibraryItem::NetworkLibraryItem(const NetworkLibraryItem &item) :
 	myTitle(item.myTitle), 
-	myCover(item.myCover) {
+	myCoverURL(item.myCoverURL) {
 }
 
 NetworkLibraryItem::~NetworkLibraryItem() {
+}
+
+void NetworkLibraryItem::setTitle(const std::string &title) {
+	myTitle = title;
+}
+
+void NetworkLibraryItem::setCoverURL(const std::string &coverURL) {
+	myCoverURL = coverURL;
 }
 
 const std::string NetworkLibraryCatalogItem::TYPE_ID = "catalogItem";
@@ -53,8 +61,8 @@ NetworkLibraryCatalogItem::NetworkLibraryCatalogItem(
 	myHtmlURL(htmlURL),
 	mySummary(summary),
 	myDependsOnAccount(dependsOnAccount) {
-	this->title() = title;
-	this->cover() = coverURL;
+	setTitle(title);
+	setCoverURL(coverURL);
 }
 
 const std::string &NetworkLibraryCatalogItem::typeId() const {

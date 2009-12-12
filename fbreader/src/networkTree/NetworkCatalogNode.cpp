@@ -150,7 +150,7 @@ void NetworkCatalogNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
 }
 
 shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
-	const std::string &url = myItem->cover();
+	const std::string &url = myItem->coverURL();
 
 	if (url.empty()) {
 		return lastResortCoverImage();

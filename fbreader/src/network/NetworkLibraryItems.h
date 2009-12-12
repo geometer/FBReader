@@ -41,23 +41,21 @@ public:
 	virtual const std::string &typeId() const = 0;
 
 	const std::string &title() const;
-	const std::string &cover() const;
+	const std::string &coverURL() const;
 
-	std::string &title();
-	std::string &cover();
+	void setTitle(const std::string &title);
+	void setCoverURL(const std::string &coverURL);
 
 private:
 	std::string myTitle;
-	std::string myCover;
+	std::string myCoverURL;
 
 private: // disable copying
 	const NetworkLibraryItem &operator = (const NetworkLibraryItem &);
 };
 
 inline const std::string &NetworkLibraryItem::title() const { return myTitle; }
-inline const std::string &NetworkLibraryItem::cover() const { return myCover; }
-inline std::string &NetworkLibraryItem::title() { return myTitle; }
-inline std::string &NetworkLibraryItem::cover() { return myCover; }
+inline const std::string &NetworkLibraryItem::coverURL() const { return myCoverURL; }
 
 typedef std::vector<shared_ptr<NetworkLibraryItem> > NetworkLibraryItemList;
 
