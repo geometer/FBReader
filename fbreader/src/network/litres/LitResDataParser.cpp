@@ -44,6 +44,13 @@ static const std::string TAG_DATE = "date";
 static const std::string TAG_SEQUENCE = "sequence";
 static const std::string TAG_LANGUAGE = "lang";
 
+std::string LitResDataParser::stringAttributeValue(const char **attributes, const char *name) {
+	if (attributes == 0) {
+		return std::string();
+	}
+	const char *value = attributeValue(attributes, name);
+	return value != 0 ? value : std::string();
+}
 
 LitResDataParser::LitResDataParser(NetworkLibraryItemList &books, shared_ptr<NetworkAuthenticationManager> mgr) : 
 	myBooks(books), 
@@ -54,23 +61,13 @@ LitResDataParser::LitResDataParser(NetworkLibraryItemList &books, shared_ptr<Net
 
 
 void LitResDataParser::startElementHandler(const char *tag, const char **attributes) {
-	myAttributes.clear();
-	while (*attributes != 0) {
-		std::string name(*attributes++);
-		if (*attributes == 0) {
-			break;
-		}
-		std::string value(*attributes++);
-		myAttributes.insert(std::make_pair(name, value));
-	}
-	processState(tag, false);
+	processState(tag, false, attributes);
 	myState = getNextState(tag, false);
 	myBuffer.clear();
 }
 
 void LitResDataParser::endElementHandler(const char *tag) {
-	myAttributes.clear();
-	processState(tag, true);
+	processState(tag, true, 0);
 	myState = getNextState(tag, true);
 	myBuffer.clear();
 }
@@ -79,22 +76,25 @@ void LitResDataParser::characterDataHandler(const char *data, size_t len) {
 	myBuffer.append(data, len);
 }
 
-void LitResDataParser::processState(const std::string &tag, bool closed) {
+void LitResDataParser::processState(const std::string &tag, bool closed, const char **attributes) {
 	switch(myState) {
 	case START: 
 		break;
 	case CATALOG: 
 		if (!closed && TAG_BOOK == tag) {
-			const std::string &bookId = myAttributes["hub_id"];
+			const std::string bookId = stringAttributeValue(attributes, "hub_id");
 			myCurrentBook = new NetworkLibraryBookItem(bookId, myIndex++);
 			currentBook().setAuthenticationManager(myAuthenticationManager);
 
-			currentBook().cover() = myAttributes["cover_preview"];
+			currentBook().cover() = stringAttributeValue(attributes, "cover_preview");
 
-			currentBook().urlByType()[NetworkLibraryBookItem::LINK_HTTP] =
-				LitResUtil::appendLFrom(myAttributes["url"]);
+			const std::string url = stringAttributeValue(attributes, "url");
+			if (!url.empty()) {
+				currentBook().urlByType()[NetworkLibraryBookItem::LINK_HTTP] =
+					LitResUtil::appendLFrom(url);
+			}
 
-			const std::string &hasTrial = myAttributes["has_trial"];
+			const std::string hasTrial = stringAttributeValue(attributes, "has_trial");
 			if (hasTrial == "1") {
 				std::string demoUrl;
 				LitResUtil::makeDemoUrl(demoUrl, bookId);
@@ -103,9 +103,9 @@ void LitResDataParser::processState(const std::string &tag, bool closed) {
 				}
 			}
 
-			currentBook().price() = myAttributes["price"];
-			if (!currentBook().price().empty()) {
-				currentBook().price().append(LitResUtil::CURRENCY_SUFFIX);
+			const char *price = attributeValue(attributes, "price");
+			if (price != 0 && *price != '\0') {
+				currentBook().setPrice(price + LitResUtil::CURRENCY_SUFFIX);
 			}
 		}
 		break;
@@ -126,10 +126,13 @@ void LitResDataParser::processState(const std::string &tag, bool closed) {
 				myAuthorMiddleName.clear();
 				myAuthorLastName.clear();
 			} else if (TAG_SEQUENCE == tag) {
-				currentBook().setSeries(
-					myAttributes["name"],
-					atoi(myAttributes["number"].c_str())
-				);
+				const char *seriesName = attributeValue(attributes, "name");
+				if (seriesName != 0) {
+					const char *indexInSeries = attributeValue(attributes, "number");
+					currentBook().setSeries(
+						seriesName, indexInSeries != 0 ? atoi(indexInSeries) : 0
+					);
+				}
 			}
 		} 
 		break;
@@ -226,13 +229,13 @@ void LitResDataParser::processState(const std::string &tag, bool closed) {
 	case DATE:
 		if (closed && TAG_DATE == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
-			currentBook().date() = myBuffer;
+			currentBook().setDate(myBuffer);
 		}
 		break;
 	case LANGUAGE:
 		if (closed && TAG_LANGUAGE == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
-			currentBook().language() = myBuffer;
+			currentBook().setLanguage(myBuffer);
 		}
 		break;
 	}

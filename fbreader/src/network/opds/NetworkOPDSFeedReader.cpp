@@ -104,11 +104,11 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &en
 	book.setAuthenticationManager(myData.Link.authenticationManager());
 
 	book.title() = entry.title();
-	book.language() = entry.dcLanguage();
+	book.setLanguage(entry.dcLanguage());
 	if (!entry.dcIssued().isNull()) {
-		book.date() = entry.dcIssued()->getDateTime(true);
+		book.setDate(entry.dcIssued()->getDateTime(true));
 	}
-	book.annotation() = entry.summary();
+	book.setAnnotation(entry.summary());
 
 	for (size_t i = 0; i < entry.categories().size(); ++i) {
 		ATOMCategory &category = *(entry.categories()[i]);

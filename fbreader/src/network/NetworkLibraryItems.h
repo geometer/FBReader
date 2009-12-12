@@ -152,10 +152,11 @@ public:
 	const std::string &price() const;
 	const std::string &annotation() const;
 
-	std::string &language();
-	std::string &date();
-	std::string &price();
+	void setLanguage(const std::string &language);
+	void setDate(const std::string &date);
+	void setPrice(const std::string &price);
 	std::string &annotation();
+	void setAnnotation(const std::string &annotation);
 	void setSeries(const std::string &name, int index);
 
 	const std::map<URLType, std::string> &urlByType() const;
@@ -201,9 +202,6 @@ inline const std::string &NetworkLibraryBookItem::seriesName() const { return my
 inline int NetworkLibraryBookItem::indexInSeries() const { return myIndexInSeries; }
 inline const std::string &NetworkLibraryBookItem::price() const { return myPrice; }
 inline const std::string &NetworkLibraryBookItem::annotation() const { return myAnnotation; }
-inline std::string &NetworkLibraryBookItem::language() { return myLanguage; }
-inline std::string &NetworkLibraryBookItem::date() { return myDate; }
-inline std::string &NetworkLibraryBookItem::price() { return myPrice; }
 inline std::string &NetworkLibraryBookItem::annotation() { return myAnnotation; }
 inline const std::map<NetworkLibraryBookItem::URLType, std::string> &NetworkLibraryBookItem::urlByType() const { return myURLByType; }
 inline const std::vector<NetworkLibraryBookItem::AuthorData> &NetworkLibraryBookItem::authors() const { return myAuthors; }

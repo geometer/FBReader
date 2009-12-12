@@ -161,6 +161,22 @@ void NetworkLibraryBookItem::setAuthenticationManager(shared_ptr<NetworkAuthenti
 	myAuthenticationManager = manager;
 }
 
+void NetworkLibraryBookItem::setLanguage(const std::string &language) {
+	myLanguage = language;
+}
+
+void NetworkLibraryBookItem::setDate(const std::string &date) {
+	myDate = date;
+}
+
+void NetworkLibraryBookItem::setPrice(const std::string &price) {
+	myPrice = price;
+}
+
+void NetworkLibraryBookItem::setAnnotation(const std::string &annotation) {
+	myAnnotation = annotation;
+}
+
 void NetworkLibraryBookItem::setSeries(const std::string &name, int index) {
 	mySeriesName = name;
 	myIndexInSeries = index;

@@ -20,9 +20,6 @@
 #ifndef __LITRESDATAPARSER_H__
 #define __LITRESDATAPARSER_H__
 
-#include <map>
-#include <set>
-
 #include <ZLXMLReader.h>
 
 #include "../NetworkLibraryItems.h"
@@ -32,6 +29,9 @@ class NetworkAuthenticationManager;
 
 
 class LitResDataParser : public ZLXMLReader {
+
+private:
+	static std::string stringAttributeValue(const char **attributes, const char *name);
 
 public:
 	LitResDataParser(NetworkLibraryItemList &books, shared_ptr<NetworkAuthenticationManager> mgr);
@@ -48,7 +48,7 @@ private:
 		ANNOTATION, DATE, LANGUAGE,
 	};
 
-	void processState(const std::string &tag, bool closed);
+	void processState(const std::string &tag, bool closed, const char **attributes);
 	State getNextState(const std::string &tag, bool closed);
 
 	NetworkLibraryBookItem &currentBook();
@@ -60,7 +60,6 @@ private:
 	unsigned int myIndex;
 
 	State myState;
-	std::map<std::string, std::string> myAttributes;
 
 	std::string myAuthorFirstName;
 	std::string myAuthorMiddleName;
