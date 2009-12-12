@@ -22,19 +22,19 @@
 #include <ZLInputStream.h>
 #include <ZLStringUtil.h>
 
-#include "FB2DescriptionReader.h"
+#include "FB2MetaInfoReader.h"
 #include "FB2TagManager.h"
 
 #include "../../library/Book.h"
 
-FB2DescriptionReader::FB2DescriptionReader(Book &book) : myBook(book) {
+FB2MetaInfoReader::FB2MetaInfoReader(Book &book) : myBook(book) {
 	myBook.removeAllAuthors();
 	myBook.setTitle(std::string());
 	myBook.setLanguage(std::string());
 	myBook.removeAllTags();
 }
 
-void FB2DescriptionReader::characterDataHandler(const char *text, size_t len) {
+void FB2MetaInfoReader::characterDataHandler(const char *text, size_t len) {
 	switch (myReadState) {
 		case READ_TITLE:
 			myBuffer.append(text, len);
@@ -59,7 +59,7 @@ void FB2DescriptionReader::characterDataHandler(const char *text, size_t len) {
 	}
 }
 
-void FB2DescriptionReader::startElementHandler(int tag, const char **attributes) {
+void FB2MetaInfoReader::startElementHandler(int tag, const char **attributes) {
 	switch (tag) {
 		case _BODY:
 			myReturnCode = true;
@@ -119,7 +119,7 @@ void FB2DescriptionReader::startElementHandler(int tag, const char **attributes)
 	}
 }
 
-void FB2DescriptionReader::endElementHandler(int tag) {
+void FB2MetaInfoReader::endElementHandler(int tag) {
 	switch (tag) {
 		case _TITLE_INFO:
 			myReadState = READ_NOTHING;
@@ -197,7 +197,7 @@ void FB2DescriptionReader::endElementHandler(int tag) {
 	}
 }
 
-bool FB2DescriptionReader::readMetaInfo() {
+bool FB2MetaInfoReader::readMetaInfo() {
 	myReadState = READ_NOTHING;
 	for (int i = 0; i < 3; ++i) {
 		myAuthorNames[i].erase();

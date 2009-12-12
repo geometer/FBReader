@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FB2DESCRIPTIONREADER_H__
-#define __FB2DESCRIPTIONREADER_H__
+#ifndef __FB2METAINFOREADER_H__
+#define __FB2METAINFOREADER_H__
 
 #include <string>
 
@@ -26,11 +26,10 @@
 
 class Book;
 
-class FB2DescriptionReader : public FB2Reader {
+class FB2MetaInfoReader : public FB2Reader {
 
 public:
-	FB2DescriptionReader(Book &book);
-	~FB2DescriptionReader();
+	FB2MetaInfoReader(Book &book);
 	bool readMetaInfo();
 
 	void startElementHandler(int tag, const char **attributes);
@@ -58,6 +57,4 @@ private:
 	std::string myBuffer;
 };
 
-inline FB2DescriptionReader::~FB2DescriptionReader() {}
-
-#endif /* __FB2DESCRIPTIONREADER_H__ */
+#endif /* __FB2METAINFOREADER_H__ */

@@ -21,7 +21,7 @@
 #include <ZLImage.h>
 
 #include "FB2Plugin.h"
-#include "FB2DescriptionReader.h"
+#include "FB2MetaInfoReader.h"
 #include "FB2BookReader.h"
 #include "FB2CoverReader.h"
 
@@ -32,7 +32,7 @@ bool FB2Plugin::acceptsFile(const ZLFile &file) const {
 }
 
 bool FB2Plugin::readMetaInfo(Book &book) const {
-	return FB2DescriptionReader(book).readMetaInfo();
+	return FB2MetaInfoReader(book).readMetaInfo();
 }
 
 bool FB2Plugin::readModel(BookModel &model) const {
