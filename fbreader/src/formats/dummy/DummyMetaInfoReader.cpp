@@ -17,30 +17,24 @@
  * 02110-1301, USA.
  */
 
-#ifndef __DUMMYDESCRIPTIONREADER_H__
-#define __DUMMYDESCRIPTIONREADER_H__
+#include <ZLInputStream.h>
 
-#include <string>
+#include "DummyMetaInfoReader.h"
 
-class Book;
+DummyMetaInfoReader::DummyMetaInfoReader(Book &book) : myBook(book) {
+}
 
-class DummyDescriptionReader {
+/*
+void DummyMetaInfoReader::characterDataHandler(const char *text, size_t len) {
+}
 
-public:
-	DummyDescriptionReader(Book &book);
-	~DummyDescriptionReader();
-	bool readMetaInfo(shared_ptr<ZLInputStream> stream);
+void DummyMetaInfoReader::startElementHandler(int tag, const char **) {
+}
 
-	/*
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int tag);
-	void characterDataHandler(const char *text, size_t len);
-	*/
+void DummyMetaInfoReader::endElementHandler(int tag) {
+}
+*/
 
-private:
-	Book &myBook;
-};
-
-inline DummyDescriptionReader::~DummyDescriptionReader() {}
-
-#endif /* __DUMMYDESCRIPTIONREADER_H__ */
+bool DummyMetaInfoReader::readMetaInfo(shared_ptr<ZLInputStream> stream) {
+	return false;
+}

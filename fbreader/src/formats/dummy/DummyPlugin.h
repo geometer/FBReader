@@ -32,10 +32,7 @@ public:
 	bool readMetaInfo(Book &book) const;
 	bool readModel(BookModel &model) const;
 	const std::string &iconName() const;
+	shared_ptr<ZLImage> coverImage(const Book &book) const;
 };
-
-inline DummyPlugin::DummyPlugin() {}
-inline DummyPlugin::~DummyPlugin() {}
-inline bool DummyPlugin::providesMetaInfo() const { return true; }
 
 #endif /* __DUMMYPLUGIN_H__ */

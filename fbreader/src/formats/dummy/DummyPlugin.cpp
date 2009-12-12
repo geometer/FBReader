@@ -21,20 +21,34 @@
 #include <ZLInputStream.h>
 
 #include "DummyPlugin.h"
-#include "DummyDescriptionReader.h"
+#include "DummyMetaInfoReader.h"
 #include "DummyBookReader.h"
 #include "../../library/Book.h"
+
+DummyPlugin::DummyPlugin() {
+}
+
+DummyPlugin::~DummyPlugin() {
+}
+
+bool DummyPlugin::providesMetaInfo() const {
+	return true;
+}
 
 bool DummyPlugin::acceptsFile(const ZLFile &file) const {
 	return file.extension() == "dummy";
 }
 
 bool DummyPlugin::readMetaInfo(Book &book) const {
-	return DummyDescriptionReader(book).readMetaInfo(ZLFile(path).inputStream());
+	return DummyMetaInfoReader(book).readMetaInfo(ZLFile(path).inputStream());
 }
 
 bool DummyPlugin::readModel(BookModel &model) const {
 	return DummyBookReader(model).readBook(ZLFile(book.fileName()).inputStream());
+}
+
+shared_ptr<ZLImage> DummyPlugin::coverImage(const Book &book) const {
+	return DummyCoverReader(book).readCover();
 }
 
 const std::string &DummyPlugin::iconName() const {
