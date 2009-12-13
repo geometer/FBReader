@@ -25,6 +25,7 @@
 #include <ZLBlockTreeView.h>
 
 class ZLImage;
+class FBTextStyle;
 
 class FBReaderNode : public ZLBlockTreeNode {
 
@@ -52,6 +53,7 @@ public:
 
 private:
 	void internalDrawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, const std::string &text, shared_ptr<ZLRunnable> action, bool aux);
+	int unitSize(ZLPaintContext &context, const FBTextStyle &style) const;
 
 protected:
 	shared_ptr<ZLRunnable> expandTreeAction();

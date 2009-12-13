@@ -41,7 +41,6 @@ public:
 	const std::string realFontFamilyName(std::string &fontFamily) const;
 
 	void setFont(const std::string &family, int size, bool bold, bool italic);
-	int fontSizeToPixels(int fontSize);
 	void setColor(ZLColor color, LineStyle style = SOLID_LINE);
 	void setFillColor(ZLColor color, FillStyle style = SOLID_FILL);
 

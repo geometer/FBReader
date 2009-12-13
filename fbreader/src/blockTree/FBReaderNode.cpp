@@ -65,7 +65,7 @@ void FBReaderNode::drawCover(ZLPaintContext &context, int vOffset) {
 	}
 
 	const FBTextStyle &style = FBTextStyle::Instance();
-	const int unit = context.fontSizeToPixels(style.fontSize());
+	const int unit = unitSize(context, style);
 	const int h = unit * 9 / 2, w = h * 3 / 4;
 	vOffset += unit / 2;
 	const int hOffset = level() * unit * 3 - unit * 2;
@@ -91,7 +91,7 @@ void FBReaderNode::drawCover(ZLPaintContext &context, int vOffset) {
 
 void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset, const std::string &text, bool highlighted) {
 	const FBTextStyle &style = FBTextStyle::Instance();
-	const int unit = context.fontSizeToPixels(style.fontSize());
+	const int unit = unitSize(context, style);
 	const int hOffset = level() * unit * 3 + unit * 2;
 
 	context.setColor(highlighted ?
@@ -104,7 +104,7 @@ void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset, const std::st
 
 void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset, const std::string &text, bool highlighted) {
 	const FBTextStyle &style = FBTextStyle::Instance();
-	const int unit = context.fontSizeToPixels(style.fontSize());
+	const int unit = unitSize(context, style);
 	const int hOffset = level() * unit * 3 + unit * 2;
 
 	context.setColor(highlighted ?
@@ -123,7 +123,7 @@ void FBReaderNode::internalDrawHyperlink(ZLPaintContext &context, int &hOffset, 
 	// aux makes font size and hOffset to be 70% of their normal sizes
 
 	const FBTextStyle &style = FBTextStyle::Instance();
-	const int unit = context.fontSizeToPixels(style.fontSize());
+	const int unit = unitSize(context, style);
 	const int h = aux ? (unit * 11 / 2) : (unit * 9 / 2);
 	const int left = hOffset + level() * unit * 3 + unit * 2;
 
@@ -197,6 +197,11 @@ bool FBReaderNode::hasAuxHyperlink() const {
 
 int FBReaderNode::height(ZLPaintContext &context) const {
 	return
-		context.fontSizeToPixels(FBTextStyle::Instance().fontSize()) *
-		(hasAuxHyperlink() ? 13 : 11) / 2;
+		unitSize(context, FBTextStyle::Instance()) *
+			(hasAuxHyperlink() ? 13 : 11) / 2;
+}
+
+int FBReaderNode::unitSize(ZLPaintContext &context, const FBTextStyle &style) const {
+	context.setFont(style.fontFamily(), style.fontSize(), style.bold(), style.italic());
+	return (context.stringHeight() * 2 + 2) / 3;
 }

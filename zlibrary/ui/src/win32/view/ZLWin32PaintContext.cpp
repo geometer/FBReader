@@ -121,10 +121,6 @@ void ZLWin32PaintContext::setFont(const std::string &family, int size, bool bold
 	mySpaceWidth = -1;
 }
 
-int ZLWin32PaintContext::fontSizeToPixels(int fontSize) {
-	return fontSize * 9 / 10;
-}
-
 void ZLWin32PaintContext::setColor(ZLColor color, LineStyle style) {
 	if (myDisplayContext == 0) {
 		return;

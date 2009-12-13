@@ -73,7 +73,3 @@ int ZLPaintContext::imageHeight(const ZLImageData &image, int width, int height,
 	}
 	return height;
 }
-
-int ZLPaintContext::fontSizeToPixels(int fontSize) {
-	return fontSize;
-}

@@ -38,7 +38,7 @@ static const std::string GROUP = "Style";
 
 FBTextStyle::FBTextStyle() :
 	FontFamilyOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontFamily", ""),
-	FontSizeOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontSize", 5, 72, 20),
+	FontSizeOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:fontSize", 5, 72, 26),
 	BoldOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:bold", false),
 	ItalicOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:italic", false),
 	AlignmentOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP, "Base:alignment", ALIGN_JUSTIFY),

@@ -48,7 +48,6 @@ public:
 	virtual void clear(ZLColor color) = 0;
 
 	virtual void setFont(const std::string &family, int size, bool bold, bool italic) = 0;
-	virtual int fontSizeToPixels(int fontSize);
 	virtual void setColor(ZLColor color, LineStyle style = SOLID_LINE) = 0;
 	virtual void setFillColor(ZLColor color, FillStyle style = SOLID_FILL) = 0;
 
