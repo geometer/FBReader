@@ -33,7 +33,7 @@ void ZLGtkTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
 	}
 }
 
-void ZLGtkTimeManager::removeTask(shared_ptr<ZLRunnable> task) {
+void ZLGtkTimeManager::removeTaskInternal(shared_ptr<ZLRunnable> task) {
 	std::map<shared_ptr<ZLRunnable>,int>::iterator it = myHandlers.find(task);
 	if (it != myHandlers.end()) {
 		g_source_remove(it->second);

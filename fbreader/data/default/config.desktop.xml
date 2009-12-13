@@ -7,9 +7,6 @@
   <group name="Scrollings">
     <option name="Delay" value="0"/>
   </group>
-  <group name="TapScrolling">
-    <option name="Enabled" value="false"/>
-  </group>
   <group name="Options">
     <option name="LeftMargin" value="50"/>
     <option name="RightMargin" value="50"/>

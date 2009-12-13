@@ -475,6 +475,7 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 	} else {
 		mySelectionModel.clear();
 		ZLApplication::Instance().refreshWindow();
+		return false;
 	}
 
 	return true;

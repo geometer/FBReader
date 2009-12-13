@@ -34,7 +34,7 @@ public:
 	static void createInstance() { ourInstance = new ZLWin32TimeManager(); }
 
 	void addTask(shared_ptr<ZLRunnable> task, int interval);
-	void removeTask(shared_ptr<ZLRunnable> task);
+	void removeTaskInternal(shared_ptr<ZLRunnable> task);
 
 private:
 	void execute(UINT taskId);

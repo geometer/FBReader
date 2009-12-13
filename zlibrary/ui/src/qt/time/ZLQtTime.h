@@ -32,7 +32,7 @@ public:
 	static void createInstance() { ourInstance = new ZLQtTimeManager(); }
 
 	void addTask(shared_ptr<ZLRunnable> task, int interval);
-	void removeTask(shared_ptr<ZLRunnable> task);
+	void removeTaskInternal(shared_ptr<ZLRunnable> task);
 
 private:
 	void timerEvent(QTimerEvent *event);

@@ -28,7 +28,7 @@ void ZLQtTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
 	}
 }
 
-void ZLQtTimeManager::removeTask(shared_ptr<ZLRunnable> task) {
+void ZLQtTimeManager::removeTaskInternal(shared_ptr<ZLRunnable> task) {
 	std::map<shared_ptr<ZLRunnable>,int>::iterator it = myTimers.find(task);
 	if (it != myTimers.end()) {
 		killTimer(it->second);

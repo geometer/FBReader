@@ -92,24 +92,35 @@ ZLTimeManager::AutoRemovableTask::AutoRemovableTask(shared_ptr<ZLRunnable> task)
 }
 
 void ZLTimeManager::AutoRemovableTask::run() {
-	//ZLTimeManager::Instance().removeAutoRemovableTask(this);
 	ZLTimeManager &timeManager = ZLTimeManager::Instance();
-	std::set<shared_ptr<ZLRunnable> > &taskList = timeManager.myAutoRemovableTasks;
-	std::set<shared_ptr<ZLRunnable> >::iterator it = taskList.begin();
+	std::map<shared_ptr<ZLRunnable>,shared_ptr<ZLRunnable> > &taskList = timeManager.myAutoRemovableTasks;
+	std::map<shared_ptr<ZLRunnable>,shared_ptr<ZLRunnable> >::iterator it = taskList.begin();
 	for (; it != taskList.end(); ++it) {
-		if (this == &**it) {
+		if (this == &*it->second) {
 			break;
 		}
 	}
 	if (it != taskList.end()) {
-		timeManager.removeTask(*it);
-		myTask->run();
+		shared_ptr<ZLRunnable> task = myTask;
+		timeManager.removeTaskInternal(it->second);
 		taskList.erase(it);
+		task->run();
 	}
 }
 
 void ZLTimeManager::addAutoRemovableTask(shared_ptr<ZLRunnable> task, int delay) {
 	shared_ptr<ZLRunnable> wrapper = new AutoRemovableTask(task);
-	myAutoRemovableTasks.insert(wrapper);
+	myAutoRemovableTasks[task] = wrapper;
 	addTask(wrapper, delay > 0 ? delay : 1);
+}
+
+void ZLTimeManager::removeTask(shared_ptr<ZLRunnable> task) {
+	std::map<shared_ptr<ZLRunnable>,shared_ptr<ZLRunnable> >::iterator it =
+		myAutoRemovableTasks.find(task);
+	if (it == myAutoRemovableTasks.end()) {
+		removeTaskInternal(task);
+	} else {
+		removeTaskInternal(it->second);
+		myAutoRemovableTasks.erase(it);
+	}
 }

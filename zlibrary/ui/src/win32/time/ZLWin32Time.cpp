@@ -41,7 +41,7 @@ void ZLWin32TimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
 	}
 }
 
-void ZLWin32TimeManager::removeTask(shared_ptr<ZLRunnable> task) {
+void ZLWin32TimeManager::removeTaskInternal(shared_ptr<ZLRunnable> task) {
 	if (ZLWin32ApplicationWindow::ourApplicationWindow != 0) {
 		HWND window = ZLWin32ApplicationWindow::ourApplicationWindow->myMainWindow;
 		if (window != 0) {
