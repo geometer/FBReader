@@ -18,6 +18,7 @@
  */
 
 #include <cmath>
+#include <algorithm>
 
 #include <ZLUnicodeUtil.h>
 #include <ZLTime.h>
@@ -112,6 +113,9 @@ const std::string &FBView::caption() const {
 
 void FBView::setCaption(const std::string &caption) {
 	myCaption = caption;
+	std::replace(myCaption.begin(), myCaption.end(), '\n', ' ');
+	std::replace(myCaption.begin(), myCaption.end(), '\r', ' ');
+	ZLUnicodeUtil::cleanUtf8String(myCaption);
 }
 
 bool FBView::onStylusPress(int x, int y) {

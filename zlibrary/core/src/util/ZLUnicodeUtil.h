@@ -43,6 +43,7 @@ public:
 	
 	static bool isUtf8String(const char *str, int len);
 	static bool isUtf8String(const std::string &str);
+	static void cleanUtf8String(std::string &str);
 	static int utf8Length(const char *str, int len);
 	static int utf8Length(const std::string &str);
 	static int length(const char *str, int utf8Length);

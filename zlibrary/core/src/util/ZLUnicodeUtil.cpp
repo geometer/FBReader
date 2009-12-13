@@ -113,6 +113,41 @@ bool ZLUnicodeUtil::isUtf8String(const std::string &str) {
 	return isUtf8String(str.data(), str.length());
 }
 
+void ZLUnicodeUtil::cleanUtf8String(std::string &str) {
+	int charLength = 0;
+	int processed = 0;
+	for (std::string::iterator it = str.begin(); it != str.end();) {
+		if (charLength == processed) {
+			if ((*it & 0x80) == 0) {
+				++it;
+			} else if ((*it & 0xE0) == 0xC0) {
+				charLength = 2;
+				processed = 1;
+				++it;
+			} else if ((*it & 0xF0) == 0xE0) {
+				charLength = 3;
+				processed = 1;
+				++it;
+			} else if ((*it & 0xF8) == 0xF0) {
+				charLength = 4;
+				processed = 1;
+				++it;
+			} else {
+				it = str.erase(it);
+			}
+		} else if ((*it & 0xC0) == 0x80) {
+			++processed;
+			++it;
+		} else {
+			it -= processed;
+			do {
+				it = str.erase(it);
+			} while (--processed);
+			charLength = 0;
+		}
+	}
+}
+
 int ZLUnicodeUtil::utf8Length(const char *str, int len) {
 	const char *last = str + len;
 	int counter = 0;

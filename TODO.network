@@ -1,5 +1,5 @@
 0.12.1 win32: font size in network view
-0.12.1 win32: multiline window title
+DONE win32: multiline window title
 
 DONE GTK: в OpenFileDialog не работает второе нажатие Enter
 DONE Нет заголовка у OpenFileDialog
