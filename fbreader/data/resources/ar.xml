@@ -35,11 +35,13 @@
 		<node name="libraryItemRootNode">
 			<node name="expandTree" toBeTranslated="true" value="Open catalog" />
 			<node name="collapseTree" toBeTranslated="true" value="Close catalog" />
-			<node name="login" toBeTranslated="true" value="Login" />
-			<node name="logout" toBeTranslated="true" value="Logout (%s)" />
+			<node name="login" toBeTranslated="true" value="Sign in" />
+			<node name="logout" toBeTranslated="true" value="Sign out (%s)" />
 			<node name="reload" toBeTranslated="true" value="Reload" />
 			<node name="dontShow" toBeTranslated="true" value="Don&apos;t show this catalog" />
 			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)" />
+			<node name="register" toBeTranslated="true" value="Sign up" />
+			<node name="passwordRecovery" toBeTranslated="true" value="Recover password" />
 		</node>
 		<node name="searchResultNode">
 			<node name="title" toBeTranslated="true" value="Search results" />
@@ -55,8 +57,8 @@
 			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Read local copy"/>
-			<node name="delete" toBeTranslated="true" value="Delete local copy"/>
+			<node name="read" toBeTranslated="true" value="Read local copy" />
+			<node name="delete" toBeTranslated="true" value="Delete local copy" />
 			<node name="download" toBeTranslated="true" value="Download" />
 			<node name="readDemo" toBeTranslated="true" value="Read demo" />
 			<node name="downloadDemo" toBeTranslated="true" value="Download demo" />
@@ -181,23 +183,10 @@
 					<node name="navigation" value="فعّل التصفّح" />
 				</node>
 				<node name="Scrolling" value="التقليب">
-					<node name="optionsFor" value="خيارات">
-						<node name="page" toBeTranslated="true" value="Page Scrollings" />
-						<node name="line" toBeTranslated="true" value="Line Scrollings" />
-						<node name="mouse" value="التقليب بالفأرة" />
-						<node name="tap" value="التقليب بالأصبع" />
-					</node>
-					<node name="delay" value="التأخير بين كل قلبة، بالملي ثانية" />
-					<node name="mode" value="نمط التقليب">
-						<node name="noOverlapping" value="لا تداخل" />
-						<node name="keepLines" value="حافظ على السطور" />
-						<node name="scrollLines" value="لف السطور" />
-						<node name="scrollPercentage" value="نسبة التقليب" />
-						<node name="disable" value="عطّل" />
-					</node>
-					<node name="linesToKeep" value="السطور التي ستترك" />
-					<node name="linesToScroll" value="السطور التي ستلف" />
-					<node name="percentToScroll" value="نسبة التقليب" />
+					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs" />
+					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling" />
+					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling" />
+					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling" />
 					<node name="fingerOnly" value="اقلب عند الطرق بالأصبع فقط" />
 				</node>
 				<node name="Selection" value="التحديد">
@@ -271,7 +260,7 @@
 					<node name="action">
 						<node name="none" value="لا شيء" />
 						<node name="showLibrary" value="أظهر المكتبة" />
-						<node name="showNetLibrary" toBeTranslated="true" value="Show Network Library" />
+						<node name="showNetLibrary" toBeTranslated="true" value="Show network library" />
 						<node name="showRecent" value="أظهر الكتب الأخيرة" />
 						<node name="previousBook" value="افتح الكتاب السابق" />
 						<node name="toc" value="أظهر جدول المحتويات" />
@@ -280,10 +269,10 @@
 						<node name="gotoSectionEnd" value="اذهب إلى نهاية القسم" />
 						<node name="nextTOCSection" value="اذهب إلى القسم التالي في جدول المحتويات" />
 						<node name="previousTOCSection" value="Go to Previous TOC Section" />
-						<node name="largeScrollForward" value="Large Scroll Forward" />
-						<node name="largeScrollBackward" value="Large Scroll Backward" />
-						<node name="smallScrollForward" value="Small Scroll Forward" />
-						<node name="smallScrollBackward" value="Small Scroll Backward" />
+						<node name="pageForward" toBeTranslated="true" value="Scroll page forward" />
+						<node name="pageBackward" toBeTranslated="true" value="Scroll page backward" />
+						<node name="lineForward" toBeTranslated="true" value="Scroll line forward" />
+						<node name="lineBackward" toBeTranslated="true" value="Scroll line backward" />
 						<node name="undo" value="تراجع" />
 						<node name="redo" value="أعد" />
 						<node name="copyToClipboard" value="Copy Selected Text to Clipboard" />
@@ -403,7 +392,7 @@
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="احذف الكتاب" />
-			<node name="message" value="أأحذف الكتاب &#10;“%s”&#10;من المكتبة؟" />
+			<node name="message" value="أأحذف الكتاب&#10;%s”&#10;من المكتبة؟" />
 			<node name="deleteFile" toBeTranslated="true" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?" />
 		</node>
 		<node name="removeTagBox">
@@ -432,6 +421,13 @@
 			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased" />
 			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded" />
 			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation" />
+			<node name="loginAlreadyTaken" toBeTranslated="true" value="Username is already in use" />
+			<node name="loginNotSpecified" toBeTranslated="true" value="Please, enter a username" />
+			<node name="passwordNotSpecified" toBeTranslated="true" value="Please, enter a non-empty password" />
+			<node name="emailNotSpecified" toBeTranslated="true" value="Please, enter an e-mail address" />
+			<node name="invalidEMail" toBeTranslated="true" value="Invalid e-mail address" />
+			<node name="tooManyRegistrations" toBeTranslated="true" value="Too many registrations from your IP;&#10;try again in a few minutes" />
+			<node name="noUserEmail" toBeTranslated="true" value="No user was registered&#10;with specified e-mail address" />
 		</node>
 		<node name="downloadError">
 			<node name="title" toBeTranslated="true" value="Error while downloading" />
@@ -448,6 +444,8 @@
 			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..." />
 			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..." />
 			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..." />
+			<node name="registerUser" toBeTranslated="true" value="Registering new account. Please, wait..." />
+			<node name="passwordRecovery" toBeTranslated="true" value="Recovering password. Please, wait..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" toBeTranslated="true" value="Purchase book" />
@@ -455,10 +453,10 @@
 		</node>
 		<node name="AuthenticationDialog">
 			<node name="title" toBeTranslated="true" value="Authentication" />
-			<node name="login" toBeTranslated="true" value="Login" />
+			<node name="login" toBeTranslated="true" value="Username" />
 			<node name="password" toBeTranslated="true" value="Password" />
 			<node name="skipIP" toBeTranslated="true" value="Don&apos;t bound to ip-address" />
-			<node name="loginIsEmpty" toBeTranslated="true" value="Login must not be empty" />
+			<node name="loginIsEmpty" toBeTranslated="true" value="Username should be non-empty" />
 		</node>
 		<node name="emptyCatalogBox">
 			<node name="title" toBeTranslated="true" value="Information" />
@@ -466,11 +464,27 @@
 		</node>
 		<node name="dontShowConfirmBox">
 			<node name="title" toBeTranslated="true" value="Disable catalog" />
-			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;You can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
+			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;ou can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" toBeTranslated="true" value="Delete Book" />
-			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;&#8220;%s&#8221; book&#10;from the disk?" />
+			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;“%s” book&#10;from the disk?" />
+		</node>
+		<node name="RegisterUserDialog">
+			<node name="title" toBeTranslated="true" value="Register User" />
+			<node name="login" toBeTranslated="true" value="Username" />
+			<node name="password" toBeTranslated="true" value="Password" />
+			<node name="confirmPassword" toBeTranslated="true" value="Password confirmation" />
+			<node name="email" toBeTranslated="true" value="E-mail" />
+			<node name="differentPasswords" toBeTranslated="true" value="Password and password confirmation must be the same." />
+		</node>
+		<node name="PasswordRecoveryDialog">
+			<node name="title" toBeTranslated="true" value="Password Recovery" />
+			<node name="email" toBeTranslated="true" value="E-mail" />
+		</node>
+		<node name="recoverySuccessfulBox">
+			<node name="title" toBeTranslated="true" value="Password Recovery" />
+			<node name="message" toBeTranslated="true" value="A message with further instructions&#10;has been sent to&#10;%s" />
 		</node>
 	</node>
 	<node name="style">
