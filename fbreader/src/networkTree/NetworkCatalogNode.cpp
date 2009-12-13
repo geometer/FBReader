@@ -18,6 +18,7 @@
  */
 
 #include <iostream>
+#include <algorithm>
 
 #include <ZLResource.h>
 #include <ZLImage.h>
@@ -188,10 +189,20 @@ void NetworkCatalogNode::updateChildren() {
 		ZLDialogManager::Instance().informationBox(ZLResourceKey("emptyCatalogBox"));
 	}
 
-	if (!myChildrenItems.empty()) {
+	bool hasSubcatalogs = false;
+	for (NetworkLibraryItemList::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
+		if ((*it)->typeId() == NetworkLibraryCatalogItem::TYPE_ID) {
+			hasSubcatalogs = true;
+			break;
+		}
+	}
+
+	if (hasSubcatalogs) {
 		for (NetworkLibraryItemList::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
 			NetworkNodesFactory::createNetworkNode(this, *it);
 		}
+	} else {
+		NetworkNodesFactory::fillAuthorNode(this, myChildrenItems);
 	}
 	FBReader::Instance().invalidateAccountDependents();
 }

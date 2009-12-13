@@ -34,6 +34,7 @@
 
 #include "../NetworkOperationData.h"
 #include "../NetworkLibraryItems.h"
+#include "../NetworkComparators.h"
 #include "../NetworkErrors.h"
 
 static const std::string LITRES_SITENAME = "litres.ru";
@@ -115,11 +116,15 @@ public:
 		LitResLink &link,
 		const std::string &url,
 		const std::string &title,
-		const std::string &summary
+		const std::string &summary,
+		bool sortItems = false
 	);
 
 private:
 	std::string loadChildren(NetworkLibraryItemList &children);
+
+private:
+	const bool mySortItems;
 };
 
 class LitResMyCatalogItem : public NetworkLibraryCatalogItem {
@@ -219,8 +224,9 @@ LitResCatalogItem::LitResCatalogItem(
 	LitResLink &link,
 	const std::string &url,
 	const std::string &title,
-	const std::string &summary
-) : NetworkLibraryCatalogItem(link, url, "", title, summary, "") {
+	const std::string &summary,
+	bool sortItems
+) : NetworkLibraryCatalogItem(link, url, "", title, summary, ""), mySortItems(sortItems) {
 }
 
 std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
@@ -232,7 +238,13 @@ std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 		new LitResDataParser(children, link().authenticationManager())
 	));
 
-	return ZLNetworkManager::Instance().perform(dataList);
+	const std::string error = ZLNetworkManager::Instance().perform(dataList);
+	
+	if (mySortItems) {
+		std::sort(children.begin(), children.end(), NetworkBookItemComparator());
+	}
+
+	return error;
 }
 
 LitResMyCatalogItem::LitResMyCatalogItem(LitResLink &link) : NetworkLibraryCatalogItem(
@@ -328,7 +340,8 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 			(LitResLink&)link(),
 			LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&person=" + ZLNetworkUtil::htmlEncode(it->Id)),
 			it->Title,
-			anno
+			anno,
+			true
 		));
 	}
 	return "";
