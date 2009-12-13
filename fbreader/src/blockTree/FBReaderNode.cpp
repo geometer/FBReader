@@ -120,7 +120,7 @@ void FBReaderNode::internalDrawHyperlink(ZLPaintContext &context, int &hOffset, 
 		return;
 	}
 
-	// aux makes font size and hOffset to be 70% of their normal sizes
+	// aux makes font size and hOffset to be 80% of their normal sizes
 
 	const FBTextStyle &style = FBTextStyle::Instance();
 	const int unit = context.fontSizeToPixels(style.fontSize());
@@ -130,7 +130,7 @@ void FBReaderNode::internalDrawHyperlink(ZLPaintContext &context, int &hOffset, 
 	context.setColor(FBOptions::Instance().colorOption("internal").value());
 	context.setFont(
 		style.fontFamily(), 
-		aux ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3), 
+		aux ? (16 * style.fontSize() / 30) : (style.fontSize() * 2 / 3), 
 		style.bold(), 
 		style.italic()
 	);
@@ -139,7 +139,7 @@ void FBReaderNode::internalDrawHyperlink(ZLPaintContext &context, int &hOffset, 
 	const int stringH = context.stringHeight();
 	context.drawString(left, vOffset + h, text.data(), text.size(), false);
 	addHyperlink(left, h - stringH, left + stringW, h, action);
-	hOffset += stringW + (aux ? (14 * context.spaceWidth() / 5) : (4 * context.spaceWidth()));
+	hOffset += stringW + (aux ? (16 * context.spaceWidth() / 5) : (4 * context.spaceWidth()));
 }
 
 void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, const std::string &text, shared_ptr<ZLRunnable> action) {

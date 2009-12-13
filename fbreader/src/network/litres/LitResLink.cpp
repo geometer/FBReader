@@ -39,7 +39,7 @@
 
 static const std::string LITRES_SITENAME = "litres.ru";
 
-static const std::string RUSSIAN_LETTERS = "АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ";
+static const std::string RUSSIAN_LETTERS = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ";
 
 
 static void appendToAnnotation(std::string &anno, const std::string str) {
