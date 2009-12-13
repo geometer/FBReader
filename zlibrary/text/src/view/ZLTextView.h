@@ -57,45 +57,8 @@ public:
 	};
 
 public:
-	class PositionIndicator {
+	class PositionIndicator;
 
-	public:
-		PositionIndicator(ZLTextView &textView, const ZLTextPositionIndicatorInfo &info);
-		virtual ~PositionIndicator();
-
-		virtual void draw();
-		bool onStylusPress(int x, int y);
-
-	protected:
-		const ZLTextView &textView() const;
-		ZLPaintContext &context() const;
-		int top() const;
-		int bottom() const;
-		int left() const;
-		int right() const;
-
-		const std::vector<size_t> &textSize() const;
-		size_t startTextIndex() const;
-		size_t endTextIndex() const;
-
-	private:
-		void drawExtraText(const std::string &text);
-		std::string textPositionString() const;
-		std::string timeString() const;
-		size_t sizeOfParagraph(size_t paragraphNumber) const;
-		size_t sizeOfTextBeforeParagraph(size_t paragraphNumber) const;
-		size_t sizeOfTextBeforeCursor(const ZLTextWordCursor &cursor) const;
-
-	private:
-		ZLTextView &myTextView;
-		const ZLTextPositionIndicatorInfo &myInfo;
-		int myExtraWidth;
-
-	friend class ZLTextView;
-	};
-
-friend class ZLTextView::PositionIndicator;
-	
 private:
 	class ViewStyle {
 

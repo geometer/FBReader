@@ -23,6 +23,7 @@
 
 #include "ZLTextView.h"
 #include "ZLTextLineInfo.h"
+#include "ZLTextPositionIndicator.h"
 
 void ZLTextView::paint() {
 	preparePaintInfo();

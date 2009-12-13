@@ -23,7 +23,7 @@
 #include <ZLStringUtil.h>
 #include <ZLTextStyle.h>
 
-#include "ZLTextView.h"
+#include "ZLTextPositionIndicator.h"
 
 /*
  * Calculates m0 * m1 / d

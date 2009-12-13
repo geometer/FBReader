@@ -71,16 +71,7 @@ private:
 	void paint();
 
 private:
-	class PositionIndicatorWithLabels : public PositionIndicator {
-
-	public:
-		PositionIndicatorWithLabels(BookTextView &bookTextView, const ZLTextPositionIndicatorInfo &info);
-
-	private:
-		void draw();
-	};
-
-	friend class BookTextView::PositionIndicatorWithLabels;
+	class PositionIndicatorWithLabels;
 
 private:
 	void readBookState(const Book &book);

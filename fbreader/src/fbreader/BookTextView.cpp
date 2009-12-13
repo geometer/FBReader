@@ -25,6 +25,7 @@
 #include <ZLTextParagraph.h>
 #include <ZLTextParagraphCursor.h>
 #include <ZLTextWord.h>
+#include <ZLTextPositionIndicator.h>
 
 #include "BookTextView.h"
 #include "FBReader.h"
@@ -35,6 +36,15 @@
 
 #include "../database/booksdb/BooksDB.h"
 #include "../library/Book.h"
+
+class BookTextView::PositionIndicatorWithLabels : public PositionIndicator {
+
+public:
+	PositionIndicatorWithLabels(BookTextView &bookTextView, const ZLTextPositionIndicatorInfo &info);
+
+private:
+	void draw();
+};
 
 static const std::string LAST_STATE_GROUP = "LastState";
 

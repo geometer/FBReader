@@ -32,6 +32,7 @@
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
 #include "ZLTextSelectionModel.h"
+#include "ZLTextPositionIndicator.h"
 
 const std::string ZLTextView::TYPE_ID = "ZLTextView";
 
