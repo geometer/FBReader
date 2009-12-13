@@ -36,11 +36,13 @@
 		<node name="libraryItemRootNode">
 			<node name="expandTree" toBeTranslated="true" value="Open catalog" />
 			<node name="collapseTree" toBeTranslated="true" value="Close catalog" />
-			<node name="login" toBeTranslated="true" value="Login" />
-			<node name="logout" toBeTranslated="true" value="Logout (%s)" />
+			<node name="login" toBeTranslated="true" value="Sign in" />
+			<node name="logout" toBeTranslated="true" value="Sign out (%s)" />
 			<node name="reload" toBeTranslated="true" value="Reload" />
 			<node name="dontShow" toBeTranslated="true" value="Don&apos;t show this catalog" />
 			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)" />
+			<node name="register" toBeTranslated="true" value="Sign up" />
+			<node name="passwordRecovery" toBeTranslated="true" value="Recover password" />
 		</node>
 		<node name="searchResultNode">
 			<node name="title" toBeTranslated="true" value="Search results" />
@@ -56,8 +58,8 @@
 			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Read local copy"/>
-			<node name="delete" toBeTranslated="true" value="Delete local copy"/>
+			<node name="read" toBeTranslated="true" value="Read local copy" />
+			<node name="delete" toBeTranslated="true" value="Delete local copy" />
 			<node name="download" toBeTranslated="true" value="Download" />
 			<node name="readDemo" toBeTranslated="true" value="Read demo" />
 			<node name="downloadDemo" toBeTranslated="true" value="Download demo" />
@@ -182,23 +184,10 @@
 					<node name="navigation" value="Povolit navigaci" />
 				</node>
 				<node name="Scrolling" value="Posuv textu">
-					<node name="optionsFor" value="Nastavení">
-						<node name="page" toBeTranslated="true" value="Page Scrollings" />
-						<node name="line" toBeTranslated="true" value="Line Scrollings" />
-						<node name="mouse" value="Posuv pomocí myši" />
-						<node name="tap" value="Posuv dotykovým displejem" />
-					</node>
-					<node name="delay" value="Prodleva posuvu, msec" />
-					<node name="mode" value="Mód posuvu">
-						<node name="noOverlapping" value="Bez překrývaní" />
-						<node name="keepLines" value="Překrýt řádky" />
-						<node name="scrollLines" value="Posuv po řádcích" />
-						<node name="scrollPercentage" value="Posuv po procentech" />
-						<node name="disable" value="Vypnout" />
-					</node>
-					<node name="linesToKeep" value="Počet linek k překrytí" />
-					<node name="linesToScroll" value="Počet linek posuvu" />
-					<node name="percentToScroll" value="Posuv v procentech" />
+					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs" />
+					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling" />
+					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling" />
+					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling" />
 					<node name="fingerOnly" value="Posuv pouze dotykem prstu" />
 				</node>
 				<node name="Selection" value="Výběr">
@@ -272,7 +261,7 @@
 					<node name="action">
 						<node name="none" value="Žádné" />
 						<node name="showLibrary" value="Zobrazit knihovnu" />
-						<node name="showNetLibrary" toBeTranslated="true" value="Show Network Library" />
+						<node name="showNetLibrary" toBeTranslated="true" value="Show network library" />
 						<node name="showRecent" value="Zobrazit nedávné" />
 						<node name="previousBook" value="Otevřít předchozí knihu" />
 						<node name="toc" value="Zobrazit obsah" />
@@ -281,10 +270,10 @@
 						<node name="gotoSectionEnd" value="Přejít na konec oddílu" />
 						<node name="nextTOCSection" value="Přejít na následující záhlaví" />
 						<node name="previousTOCSection" value="Přejít na předchozí záhlaví" />
-						<node name="largeScrollForward" value="Posun vpřed - velký krok" />
-						<node name="largeScrollBackward" value="Posun vzad - velký krok" />
-						<node name="smallScrollForward" value="Posun vpřed - malý krok" />
-						<node name="smallScrollBackward" value="Posun vzad - malý krok" />
+						<node name="pageForward" toBeTranslated="true" value="Scroll page forward" />
+						<node name="pageBackward" toBeTranslated="true" value="Scroll page backward" />
+						<node name="lineForward" toBeTranslated="true" value="Scroll line forward" />
+						<node name="lineBackward" toBeTranslated="true" value="Scroll line backward" />
 						<node name="undo" value="Zpět" />
 						<node name="redo" value="Znovu" />
 						<node name="copyToClipboard" value="Kopírovat text do schránky" />
@@ -433,6 +422,13 @@
 			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased" />
 			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded" />
 			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation" />
+			<node name="loginAlreadyTaken" toBeTranslated="true" value="Username is already in use" />
+			<node name="loginNotSpecified" toBeTranslated="true" value="Please, enter a username" />
+			<node name="passwordNotSpecified" toBeTranslated="true" value="Please, enter a non-empty password" />
+			<node name="emailNotSpecified" toBeTranslated="true" value="Please, enter an e-mail address" />
+			<node name="invalidEMail" toBeTranslated="true" value="Invalid e-mail address" />
+			<node name="tooManyRegistrations" toBeTranslated="true" value="Too many registrations from your IP;&#10;try again in a few minutes" />
+			<node name="noUserEmail" toBeTranslated="true" value="No user was registered&#10;with specified e-mail address" />
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Chyba při stahování" />
@@ -449,6 +445,8 @@
 			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..." />
 			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..." />
 			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..." />
+			<node name="registerUser" toBeTranslated="true" value="Registering new account. Please, wait..." />
+			<node name="passwordRecovery" toBeTranslated="true" value="Recovering password. Please, wait..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" toBeTranslated="true" value="Purchase book" />
@@ -456,10 +454,10 @@
 		</node>
 		<node name="AuthenticationDialog">
 			<node name="title" toBeTranslated="true" value="Authentication" />
-			<node name="login" toBeTranslated="true" value="Login" />
+			<node name="login" toBeTranslated="true" value="Username" />
 			<node name="password" toBeTranslated="true" value="Password" />
 			<node name="skipIP" toBeTranslated="true" value="Don&apos;t bound to ip-address" />
-			<node name="loginIsEmpty" toBeTranslated="true" value="Login must not be empty" />
+			<node name="loginIsEmpty" toBeTranslated="true" value="Username should be non-empty" />
 		</node>
 		<node name="emptyCatalogBox">
 			<node name="title" toBeTranslated="true" value="Information" />
@@ -467,11 +465,27 @@
 		</node>
 		<node name="dontShowConfirmBox">
 			<node name="title" toBeTranslated="true" value="Disable catalog" />
-			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;You can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
+			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;ou can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" toBeTranslated="true" value="Delete Book" />
-			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;&#8220;%s&#8221; book&#10;from the disk?" />
+			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;“%s” book&#10;from the disk?" />
+		</node>
+		<node name="RegisterUserDialog">
+			<node name="title" toBeTranslated="true" value="Register User" />
+			<node name="login" toBeTranslated="true" value="Username" />
+			<node name="password" toBeTranslated="true" value="Password" />
+			<node name="confirmPassword" toBeTranslated="true" value="Password confirmation" />
+			<node name="email" toBeTranslated="true" value="E-mail" />
+			<node name="differentPasswords" toBeTranslated="true" value="Password and password confirmation must be the same." />
+		</node>
+		<node name="PasswordRecoveryDialog">
+			<node name="title" toBeTranslated="true" value="Password Recovery" />
+			<node name="email" toBeTranslated="true" value="E-mail" />
+		</node>
+		<node name="recoverySuccessfulBox">
+			<node name="title" toBeTranslated="true" value="Password Recovery" />
+			<node name="message" toBeTranslated="true" value="A message with further instructions&#10;has been sent to&#10;%s" />
 		</node>
 	</node>
 	<node name="style">
