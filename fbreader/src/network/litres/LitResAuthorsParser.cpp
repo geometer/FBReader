@@ -138,16 +138,16 @@ void LitResAuthorsParser::characterDataHandler(const char *text, size_t len) {
 	case TITLE:
 		break;
 	case TITLE_MAIN:
-		myTitle.assign(text, len);
+		myTitle.append(text, len);
 		break;
 	case FIRST:
-		myFirstName.assign(text, len);
+		myFirstName.append(text, len);
 		break;
 	case MIDDLE:
-		myMiddleName.assign(text, len);
+		myMiddleName.append(text, len);
 		break;
 	case LAST:
-		myLastName.assign(text, len);
+		myLastName.append(text, len);
 		break;
 	}
 }
