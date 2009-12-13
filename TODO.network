@@ -28,7 +28,6 @@ DONE litres: Сделать каталоги по:
 	DONE авторам
 	DONE жанрам
 DONE Более симпатичный логотип litres'а
-0.12.1 litres: Каталог автора Алекс Экслер почему-то пустой.
 DONE litres: Внутри каталога "по авторам" объединять книги автора по сериям.
 DONE litres: Авторы внутри букв идут не по алфавиту.
 
@@ -65,6 +64,7 @@ DONE Письмо smashwords'ам с вопросами:
 0.12.5 common code in FB2MetaInfoReader && LitResDataParser
 
 SHUCANG advanced search на shucang.com
+LITRES litres: Каталог автора Алекс Экслер почему-то пустой.
 LITRES litres: более понятная надпись у купленной книжки (а оставшееся число скачиваний нельзя увидеть?)
 LIBRUSEC сделать поддержку для lib.rus.ec
 
