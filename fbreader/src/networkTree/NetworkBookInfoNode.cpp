@@ -50,6 +50,49 @@ private:
 	const bool myDemo;
 };
 
+class NetworkBookInfoNode::ReadAction : public ZLRunnable {
+
+public:
+	ReadAction(shared_ptr<NetworkLibraryItem> book);
+	void run();
+
+private:
+	shared_ptr<NetworkLibraryItem> myBook;
+};
+
+class NetworkBookInfoNode::ReadDemoAction : public ZLRunnable {
+
+public:
+	ReadDemoAction(shared_ptr<NetworkLibraryItem> book);
+	void run();
+
+private:
+	shared_ptr<NetworkLibraryItem> myBook;
+};
+
+class NetworkBookInfoNode::BuyAction : public ZLRunnable {
+
+public:
+	BuyAction(shared_ptr<NetworkLibraryItem> book);
+	void run();
+
+private:
+	shared_ptr<NetworkLibraryItem> myBook;
+};
+
+class NetworkBookInfoNode::DeleteAction : public ZLRunnable {
+
+public:
+	DeleteAction(shared_ptr<NetworkLibraryItem> book);
+	void run();
+
+private:
+	void removeFormat(NetworkLibraryBookItem &book, NetworkLibraryBookItem::URLType format);
+
+private:
+	shared_ptr<NetworkLibraryItem> myBook;
+};
+
 static const std::string DEMO_SUFFIX = " (фрагмент)";
 static const std::string DEMO_TAG = "Фрагмент";
 
@@ -60,15 +103,7 @@ const std::string &NetworkBookInfoNode::typeId() const {
 	return TYPE_ID;
 }
 
-NetworkBookInfoNode::NetworkBookInfoNode(NetworkAuthorNode *parent, shared_ptr<NetworkLibraryItem> book) : FBReaderNode(parent), myBook(book) {
-	init();
-}
-
-NetworkBookInfoNode::NetworkBookInfoNode(NetworkSeriesNode *parent, shared_ptr<NetworkLibraryItem> book) : FBReaderNode(parent), myBook(book) {
-	init();
-}
-
-NetworkBookInfoNode::NetworkBookInfoNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> book) : FBReaderNode(parent), myBook(book) {
+NetworkBookInfoNode::NetworkBookInfoNode(NetworkContainerNode *parent, shared_ptr<NetworkLibraryItem> book) : FBReaderNode(parent), myBook(book) {
 	init();
 }
 

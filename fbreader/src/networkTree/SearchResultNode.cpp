@@ -32,7 +32,7 @@ const std::string SearchResultNode::TYPE_ID = "SearchResultNode";
 
 
 SearchResultNode::SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition) : 
-	FBReaderNode(parent, atPosition), 
+	NetworkContainerNode(parent, atPosition), 
 	mySearchResult(searchResult), 
 	mySummary(summary) {
 }

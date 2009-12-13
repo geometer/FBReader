@@ -17,33 +17,10 @@
  * 02110-1301, USA.
  */
 
-#ifndef __NETWORKNODESFACTORY_H__
-#define __NETWORKNODESFACTORY_H__
+#include "NetworkNodes.h"
 
-#include <ZLBlockTreeView.h>
+NetworkContainerNode::NetworkContainerNode(ZLBlockTreeView::RootNode *parent, size_t atPosition) : FBReaderNode(parent, atPosition) {
+}
 
-#include "../network/NetworkLibraryItems.h"
-
-
-class NetworkBookCollection;
-class FBReaderNode;
-class NetworkCatalogNode;
-class SearchResultNode;
-class NetworkContainerNode;
-
-
-class NetworkNodesFactory {
-
-private:
-	NetworkNodesFactory();
-
-public:
-	static FBReaderNode *createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition = -1);
-
-	static void createSubnodes(SearchResultNode *parent, NetworkBookCollection &books);
-
-private:
-	static void fillAuthorNode(NetworkContainerNode *parent, const NetworkLibraryItemList &books);
-};
-
-#endif /* __NETWORKNODESFACTORY_H__ */
+NetworkContainerNode::NetworkContainerNode(NetworkContainerNode *parent, size_t atPosition) : FBReaderNode(parent, atPosition) {
+}

@@ -40,7 +40,13 @@ inline LitResAuthor::LitResAuthor() {
 inline LitResAuthor::LitResAuthor(const std::string &id, const std::string &title, const std::string &firstName, const std::string &middleName, const std::string &lastName) : Id(id), Title(title), FirstName(firstName), MiddleName(middleName), LastName(lastName) {
 }
 inline bool LitResAuthor::operator < (const LitResAuthor &other) const {
-	return LastName < other.LastName;
+	if (LastName != other.LastName) {
+		return LastName < other.LastName;
+	}
+	if (FirstName != other.FirstName) {
+		return FirstName < other.FirstName;
+	}
+	return MiddleName < other.MiddleName;
 }
 
 #endif /* __LITRESAUTHOR_H__ */

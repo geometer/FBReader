@@ -29,10 +29,7 @@ const std::string &NetworkSeriesNode::typeId() const {
 	return TYPE_ID;
 }
 
-NetworkSeriesNode::NetworkSeriesNode(NetworkAuthorNode *parent, const std::string &seriesTitle) : FBReaderNode(parent), mySeriesTitle(seriesTitle) {
-}
-
-NetworkSeriesNode::NetworkSeriesNode(NetworkCatalogNode *parent, const std::string &seriesTitle) : FBReaderNode(parent), mySeriesTitle(seriesTitle) {
+NetworkSeriesNode::NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle) : NetworkContainerNode(parent), mySeriesTitle(seriesTitle) {
 }
 
 void NetworkSeriesNode::paint(ZLPaintContext &context, int vOffset) {

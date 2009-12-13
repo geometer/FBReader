@@ -71,12 +71,12 @@ const std::string NetworkCatalogNode::TYPE_ID = "LibraryItemNode";
 
 
 NetworkCatalogNode::NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition) : 
-	FBReaderNode(parent, atPosition), 
+	NetworkContainerNode(parent, atPosition), 
 	myItem(item) {
 }
 
 NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition) : 
-	FBReaderNode(parent, atPosition), 
+	NetworkContainerNode(parent, atPosition), 
 	myItem(item) {
 }
 

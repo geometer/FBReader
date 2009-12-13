@@ -24,13 +24,18 @@
 
 #include "../network/NetworkLibraryItems.h"
 
-
 class NetworkBookCollection;
 class NetworkLink;
 class NetworkAuthenticationManager;
 
+class NetworkContainerNode : public FBReaderNode {
 
-class NetworkCatalogNode : public FBReaderNode {
+protected:
+	NetworkContainerNode(ZLBlockTreeView::RootNode *parent, size_t atPosition = (size_t)-1);
+	NetworkContainerNode(NetworkContainerNode *parent, size_t atPosition = (size_t)-1);
+};
+
+class NetworkCatalogNode : public NetworkContainerNode {
 
 public:
 	static const std::string TYPE_ID;
@@ -41,8 +46,8 @@ private:
 	class ReloadAction;
 
 protected:
-	NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition = -1);
-	NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition = -1);
+	NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition = (size_t)-1);
+	NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition = (size_t)-1);
 
 friend class NetworkNodesFactory;
 
@@ -72,30 +77,11 @@ private:
 	shared_ptr<ZLRunnable> myReloadAction;
 };
 
-
-
 class NetworkCatalogRootNode : public NetworkCatalogNode {
 
 private:
-	class LoginAction : public ZLRunnable {
-
-	public:
-		LoginAction(NetworkAuthenticationManager &mgr);
-		void run();
-
-	private:
-		NetworkAuthenticationManager &myManager;
-	};
-
-	class LogoutAction : public ZLRunnable {
-
-	public:
-		LogoutAction(NetworkAuthenticationManager &mgr);
-		void run();
-
-	private:
-		NetworkAuthenticationManager &myManager;
-	};
+	class LoginAction;
+	class LogoutAction;
 
 	class RefillAccountAction : public ZLRunnable {
 
@@ -138,7 +124,7 @@ private:
 	};
 
 public:
-	NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition = -1);
+	NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition = (size_t)-1);
 
 	const NetworkLink &link() const;
 
@@ -157,13 +143,13 @@ private:
 	shared_ptr<ZLRunnable> myRegisterUserAction;
 };
 
-class SearchResultNode : public FBReaderNode {
+class SearchResultNode : public NetworkContainerNode {
 
 public:
 	static const std::string TYPE_ID;
 
 public:
-	SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition = -1);
+	SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition = (size_t)-1);
 
 	shared_ptr<NetworkBookCollection> searchResult();
 
@@ -177,15 +163,13 @@ private:
 	std::string mySummary;
 };
 
-
-class NetworkAuthorNode : public FBReaderNode {
+class NetworkAuthorNode : public NetworkContainerNode {
 
 public:
 	static const std::string TYPE_ID;
 
 protected:
-	NetworkAuthorNode(NetworkCatalogNode *parent, const NetworkLibraryBookItem::AuthorData &author);
-	NetworkAuthorNode(SearchResultNode *parent, const NetworkLibraryBookItem::AuthorData &author);
+	NetworkAuthorNode(NetworkContainerNode *parent, const NetworkLibraryBookItem::AuthorData &author);
 
 friend class NetworkNodesFactory;
 
@@ -201,15 +185,13 @@ private:
 	NetworkLibraryBookItem::AuthorData myAuthor;
 };
 
-
-class NetworkSeriesNode : public FBReaderNode {
+class NetworkSeriesNode : public NetworkContainerNode {
 
 public:
 	static const std::string TYPE_ID;
 
 protected:
-	NetworkSeriesNode(NetworkCatalogNode *parent, const std::string &seriesTitle);
-	NetworkSeriesNode(NetworkAuthorNode *parent, const std::string &seriesTitle);
+	NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle);
 
 friend class NetworkNodesFactory;
 
@@ -225,62 +207,20 @@ private:
 	std::string mySeriesTitle;
 };
 
-
 class NetworkBookInfoNode : public FBReaderNode {
 
 public:
 	static const std::string TYPE_ID;
 
 private:
-	class ReadAction : public ZLRunnable {
-
-	public:
-		ReadAction(shared_ptr<NetworkLibraryItem> book);
-		void run();
-
-	private:
-		shared_ptr<NetworkLibraryItem> myBook;
-	};
-
+	class ReadAction;
 	class DownloadAction;
-
-	class ReadDemoAction : public ZLRunnable {
-
-	public:
-		ReadDemoAction(shared_ptr<NetworkLibraryItem> book);
-		void run();
-
-	private:
-		shared_ptr<NetworkLibraryItem> myBook;
-	};
-
-	class BuyAction : public ZLRunnable {
-
-	public:
-		BuyAction(shared_ptr<NetworkLibraryItem> book);
-		void run();
-
-	private:
-		shared_ptr<NetworkLibraryItem> myBook;
-	};
-
-	class DeleteAction : public ZLRunnable {
-
-	public:
-		DeleteAction(shared_ptr<NetworkLibraryItem> book);
-		void run();
-
-	private:
-		void removeFormat(NetworkLibraryBookItem &book, NetworkLibraryBookItem::URLType format);
-
-	private:
-		shared_ptr<NetworkLibraryItem> myBook;
-	};
+	class ReadDemoAction;
+	class BuyAction;
+	class DeleteAction;
 
 private:
-	NetworkBookInfoNode(NetworkAuthorNode *parent, shared_ptr<NetworkLibraryItem> book);
-	NetworkBookInfoNode(NetworkSeriesNode *parent, shared_ptr<NetworkLibraryItem> book);
-	NetworkBookInfoNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> book);
+	NetworkBookInfoNode(NetworkContainerNode *parent, shared_ptr<NetworkLibraryItem> book);
 
 private:
 	void init();

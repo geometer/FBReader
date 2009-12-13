@@ -35,6 +35,26 @@
 #include "../network/NetworkLink.h"
 #include "../network/NetworkAuthenticationManager.h"
 
+class NetworkCatalogRootNode::LoginAction : public ZLRunnable {
+
+public:
+	LoginAction(NetworkAuthenticationManager &mgr);
+	void run();
+
+private:
+	NetworkAuthenticationManager &myManager;
+};
+
+class NetworkCatalogRootNode::LogoutAction : public ZLRunnable {
+
+public:
+	LogoutAction(NetworkAuthenticationManager &mgr);
+	void run();
+
+private:
+	NetworkAuthenticationManager &myManager;
+};
+
 NetworkCatalogRootNode::NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition) : NetworkCatalogNode(parent, link.libraryItem(), atPosition), myLink(link) {
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
 	if (!mgr.isNull()) {

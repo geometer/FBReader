@@ -29,10 +29,7 @@ const std::string &NetworkAuthorNode::typeId() const {
 	return TYPE_ID;
 }
 
-NetworkAuthorNode::NetworkAuthorNode(NetworkCatalogNode *parent, const NetworkLibraryBookItem::AuthorData &author) : FBReaderNode(parent), myAuthor(author) {
-}
-
-NetworkAuthorNode::NetworkAuthorNode(SearchResultNode *parent, const NetworkLibraryBookItem::AuthorData &author) : FBReaderNode(parent), myAuthor(author) {
+NetworkAuthorNode::NetworkAuthorNode(NetworkContainerNode *parent, const NetworkLibraryBookItem::AuthorData &author) : NetworkContainerNode(parent), myAuthor(author) {
 }
 
 void NetworkAuthorNode::paint(ZLPaintContext &context, int vOffset) {
