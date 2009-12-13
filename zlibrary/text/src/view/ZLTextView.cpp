@@ -34,6 +34,8 @@
 #include "ZLTextSelectionModel.h"
 #include "ZLTextPositionIndicator.h"
 
+const int ZLTextView::DOUBLE_CLICK_DELAY = 200;
+
 const std::string ZLTextView::TYPE_ID = "ZLTextView";
 
 const std::string &ZLTextView::typeId() const {
@@ -736,7 +738,7 @@ void ZLTextView::DoubleClickInfo::update(int x, int y, bool press) {
 	ZLTime current;
 	int dcDeltaX = X - x;
 	int dcDeltaY = Y - y;
-	if ((current.millisecondsFrom(Time) < 200) &&
+	if ((current.millisecondsFrom(Time) < DOUBLE_CLICK_DELAY) &&
 			(dcDeltaX > -5) && (dcDeltaX < 5) &&
 			(dcDeltaY > -5) && (dcDeltaY < 5)) {
 		++Count;

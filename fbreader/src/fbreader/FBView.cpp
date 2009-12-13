@@ -181,7 +181,7 @@ bool FBView::onStylusRelease(int x, int y) {
 			(!ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value() ||
 			 !fbreader.TapScrollingOnFingerOnlyOption.value())) {
 		myTapScroller = new TapScroller(*this, y);
-		ZLTimeManager::Instance().addAutoRemovableTask(myTapScroller, 200);
+		ZLTimeManager::Instance().addAutoRemovableTask(myTapScroller, DOUBLE_CLICK_DELAY);
 		return true;
 	}
 

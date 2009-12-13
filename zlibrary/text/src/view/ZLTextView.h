@@ -49,6 +49,9 @@ struct ZLTextElementArea;
 class ZLTextView : public ZLView {
 
 public:
+	static const int DOUBLE_CLICK_DELAY;
+
+public:
 	enum ScrollingMode {
 		NO_OVERLAPPING,
 		KEEP_LINES,
@@ -64,7 +67,6 @@ private:
 
 	public:
 		ViewStyle(const ZLTextView &view, ZLPaintContext &context);
-		~ViewStyle();
 
 		void reset() const;
 		void setTextStyle(const shared_ptr<ZLTextStyle> style, unsigned char bidiLevel);
@@ -280,7 +282,6 @@ private:
 friend class ZLTextSelectionModel;
 };
 
-inline ZLTextView::ViewStyle::~ViewStyle() {}
 inline const ZLPaintContext &ZLTextView::ViewStyle::context() const { return myContext; }
 inline void ZLTextView::ViewStyle::setBaseBidiLevel(unsigned char base) { myBaseBidiLevel = base; myBidiLevel = base; }
 inline unsigned char ZLTextView::ViewStyle::baseBidiLevel() const { return myBaseBidiLevel; }
