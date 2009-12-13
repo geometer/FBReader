@@ -63,7 +63,7 @@ public:
 		
 	RemoveType canRemove(shared_ptr<Book> book) const;
 
-	void collectSeriesNames(shared_ptr<Author> author, std::set<std::string> &names) const;
+	void collectSeriesTitles(shared_ptr<Author> author, std::set<std::string> &titles) const;
 
 	size_t revision() const;
 

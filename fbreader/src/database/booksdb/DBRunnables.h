@@ -326,12 +326,12 @@ public:
 	LoadSeriesRunnable(DBConnection &connection);
 	bool run();
 	void setBookId(int bookId);
-	const std::string &seriesName() const;
+	const std::string &seriesTitle() const;
 	int indexInSeries() const;
 
 private:
 	int myBookId;
-	std::string mySeriesName;
+	std::string mySeriesTitle;
 	int myIndexInSeries;
 
 	shared_ptr<DBCommand> myLoadSeries;

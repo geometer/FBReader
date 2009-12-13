@@ -208,12 +208,13 @@ public:
 	static const std::string TYPE_ID;
 
 protected:
-	NetworkSeriesNode(NetworkAuthorNode *parent, const std::string &series);
+	NetworkSeriesNode(NetworkCatalogNode *parent, const std::string &seriesTitle);
+	NetworkSeriesNode(NetworkAuthorNode *parent, const std::string &seriesTitle);
 
 friend class NetworkNodesFactory;
 
 public:
-	const std::string &series();
+	const std::string &seriesTitle();
 
 private:
 	const std::string &typeId() const;
@@ -221,7 +222,7 @@ private:
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:
-	std::string mySeries;
+	std::string mySeriesTitle;
 };
 
 

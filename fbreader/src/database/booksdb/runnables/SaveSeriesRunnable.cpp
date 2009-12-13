@@ -33,15 +33,15 @@ bool SaveSeriesRunnable::run() {
 		return false;
 	}
 
-	if (myBook->seriesName().empty()) {
+	if (myBook->seriesTitle().empty()) {
 		((DBIntValue &) *myDeleteBookSeries->parameter("@book_id").value()) = myBook->bookId();
 		return myDeleteBookSeries->execute();
 	}
 
-	((DBTextValue &) *myFindSeriesId->parameter("@name").value()) = myBook->seriesName();
+	((DBTextValue &) *myFindSeriesId->parameter("@name").value()) = myBook->seriesTitle();
 	shared_ptr<DBValue> tableSeriesId = myFindSeriesId->executeScalar();
 	if (tableSeriesId.isNull() || tableSeriesId->type() != DBValue::DBINT || ((DBIntValue &) *tableSeriesId).value() == 0) {
-		((DBTextValue &) *myAddSeries->parameter("@name").value()) = myBook->seriesName();
+		((DBTextValue &) *myAddSeries->parameter("@name").value()) = myBook->seriesTitle();
 		tableSeriesId = myAddSeries->executeScalar();
 		if (tableSeriesId.isNull() || tableSeriesId->type() != DBValue::DBINT || ((DBIntValue &) *tableSeriesId).value() == 0) {
 			return false;

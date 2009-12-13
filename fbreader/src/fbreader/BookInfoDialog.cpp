@@ -225,12 +225,12 @@ SeriesTitleEntry::SeriesTitleEntry(BookInfoDialog &dialog) : ZLComboOptionEntry(
 	myOriginalValuesSet.insert("");
 	const Library &library = Library::Instance();
 	for (AuthorList::const_iterator it = authors.begin(); it != authors.end(); ++it) {
-		library.collectSeriesNames(*it, myOriginalValuesSet);
+		library.collectSeriesTitles(*it, myOriginalValuesSet);
 	}
 }
 
 const std::string &SeriesTitleEntry::initialValue() const {
-	return myInfoDialog.myBook->seriesName();
+	return myInfoDialog.myBook->seriesTitle();
 }
 
 const std::vector<std::string> &SeriesTitleEntry::values() const {
@@ -241,7 +241,7 @@ const std::vector<std::string> &SeriesTitleEntry::values() const {
 	for (std::vector<AuthorDisplayNameEntry*>::const_iterator it = myInfoDialog.myAuthorEntries.begin(); it != myInfoDialog.myAuthorEntries.end(); ++it) {
 		shared_ptr<Author> currentAuthor = (*it)->myCurrentAuthor;
 		if (!currentAuthor.isNull() && std::find(authors.begin(), authors.end(), currentAuthor) == authors.end()) {
-			library.collectSeriesNames(currentAuthor, valuesSet);
+			library.collectSeriesTitles(currentAuthor, valuesSet);
 		}
 	}
 
@@ -295,7 +295,7 @@ int BookIndexEntry::step() const {
 
 void BookIndexEntry::onAccept(int value) {
 	Book &book = *myInfoDialog.myBook;
-	book.setSeries(book.seriesName(), value);
+	book.setSeries(book.seriesTitle(), value);
 }
 
 class BookTitleEntry : public ZLStringOptionEntry {

@@ -95,7 +95,7 @@ public:
 private:
 	shared_ptr<Book> loadTableBook(const std::string fileName);
 	bool loadAuthors(int bookId, AuthorList &authors);
-	bool loadSeries(int bookId, std::string &seriesName, int &indexInSeries);
+	bool loadSeries(int bookId, std::string &seriesTitle, int &indexInSeries);
 
 	std::string getFileName(int fileId);
 
@@ -134,7 +134,7 @@ private:
 	shared_ptr<DBCommand> myFindFileName;
 
 	shared_ptr<DBCommand> myFindAuthorId;
-	//shared_ptr<DBCommand> myLoadSeriesNames;
+	//shared_ptr<DBCommand> myLoadSeriesTitles;
 
 	//shared_ptr<DBCommand> myLoadAuthorNames;
 

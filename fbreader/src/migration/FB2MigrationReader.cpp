@@ -51,9 +51,9 @@ void FB2MigrationReader::startElementHandler(int tag, const char **attributes) {
 			if ((myReadState == READ_SOMETHING) && myUpdateSeries) {
 				const char *name = attributeValue(attributes, "name");
 				if (name != 0) {
-					std::string seriesName = name;
-					ZLStringUtil::stripWhiteSpaces(seriesName);
-					myInfo.SeriesNameOption.setValue(seriesName);
+					std::string seriesTitle = name;
+					ZLStringUtil::stripWhiteSpaces(seriesTitle);
+					myInfo.SeriesTitleOption.setValue(seriesTitle);
 					const char *number = attributeValue(attributes, "number");
 					myInfo.IndexInSeriesOption.setValue((number != 0) ? atoi(number) : 0);
 				}

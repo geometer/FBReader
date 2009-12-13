@@ -25,7 +25,7 @@ LoadSeriesRunnable::LoadSeriesRunnable(DBConnection &connection) {
 }
 
 bool LoadSeriesRunnable::run() {
-	mySeriesName = "";
+	mySeriesTitle = "";
 	myIndexInSeries = 0;
 
 	((DBIntValue &) *myLoadSeries->parameter("@book_id").value()) = myBookId;
@@ -44,7 +44,7 @@ bool LoadSeriesRunnable::run() {
 		reader->close();
 		return false;
 	}
-	mySeriesName = reader->textValue(0);
+	mySeriesTitle = reader->textValue(0);
 	if (numType == DBValue::DBINT) {
 		myIndexInSeries = reader->intValue(1);
 	} else {
@@ -58,8 +58,8 @@ void LoadSeriesRunnable::setBookId(int bookId) {
 	myBookId = bookId;
 }
 
-const std::string &LoadSeriesRunnable::seriesName() const {
-	return mySeriesName;
+const std::string &LoadSeriesRunnable::seriesTitle() const {
+	return mySeriesTitle;
 }
 
 int LoadSeriesRunnable::indexInSeries() const {

@@ -86,7 +86,7 @@ NetworkLibraryBookItem::NetworkLibraryBookItem(const NetworkLibraryBookItem &boo
 	myId(book.myId), 
 	myLanguage(book.myLanguage), 
 	myDate(book.myDate), 
-	mySeriesName(book.mySeriesName), 
+	mySeriesTitle(book.mySeriesTitle), 
 	myIndexInSeries(book.myIndexInSeries),
 	myPrice(book.myPrice), 
 	myURLByType(book.myURLByType), 
@@ -185,7 +185,7 @@ void NetworkLibraryBookItem::setAnnotation(const std::string &annotation) {
 	myAnnotation = annotation;
 }
 
-void NetworkLibraryBookItem::setSeries(const std::string &name, int index) {
-	mySeriesName = name;
+void NetworkLibraryBookItem::setSeries(const std::string &title, int index) {
+	mySeriesTitle = title;
 	myIndexInSeries = index;
 }

@@ -172,7 +172,7 @@ shared_ptr<Book> Book::loadFromBookInfo(const std::string &filePath) {
 	book->setLanguage(info.LanguageOption.value());
 	book->setEncoding(info.EncodingOption.value());
 	book->setSeries(
-		info.SeriesNameOption.value(),
+		info.SeriesTitleOption.value(),
 		info.IndexInSeriesOption.value()
 	);
 
@@ -238,8 +238,8 @@ void Book::setEncoding(const std::string &encoding) {
 	myEncoding = encoding;
 }
 
-void Book::setSeries(const std::string &name, int index) {
-	mySeriesName = name;
+void Book::setSeries(const std::string &title, int index) {
+	mySeriesTitle = title;
 	myIndexInSeries = index;
 }
 

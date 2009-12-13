@@ -303,12 +303,12 @@ const BookList &Library::books(shared_ptr<Tag> tag) const {
 	return myBooksByTag[tag];
 }
 
-void Library::collectSeriesNames(shared_ptr<Author> author, std::set<std::string> &names) const {
+void Library::collectSeriesTitles(shared_ptr<Author> author, std::set<std::string> &titles) const {
 	const BookList &bookList = books(author);
 	for (BookList::const_iterator it = bookList.begin(); it != bookList.end(); ++it) {
-		const std::string &current = (*it)->seriesName();
+		const std::string &current = (*it)->seriesTitle();
 		if (!current.empty()) {
-			names.insert(current);
+			titles.insert(current);
 		}
 	}
 }

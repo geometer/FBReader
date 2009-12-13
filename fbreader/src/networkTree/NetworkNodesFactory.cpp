@@ -51,13 +51,13 @@ void NetworkNodesFactory::fillAuthorNode(NetworkAuthorNode *authorNode, const Ne
 			continue;
 		}
 		const NetworkLibraryBookItem &book = (const NetworkLibraryBookItem &) **it;
-		const std::string &seriesName = book.seriesName();
-		if (seriesName.empty()) {
+		const std::string &seriesTitle = book.seriesTitle();
+		if (seriesTitle.empty()) {
 			seriesNode = 0;
 			new NetworkBookInfoNode(authorNode, *it);
 		} else {
-			if (seriesNode == 0 || seriesNode->series() != seriesName) {
-				seriesNode = new NetworkSeriesNode(authorNode, seriesName);
+			if (seriesNode == 0 || seriesNode->seriesTitle() != seriesTitle) {
+				seriesNode = new NetworkSeriesNode(authorNode, seriesTitle);
 			}
 			new NetworkBookInfoNode(seriesNode, *it);
 		}

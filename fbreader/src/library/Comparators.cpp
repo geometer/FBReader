@@ -26,11 +26,11 @@ bool BookComparator::operator() (
 	const shared_ptr<Book> book0,
 	const shared_ptr<Book> book1
 ) {
-	const std::string &seriesName0 = book0->seriesName();
-	const std::string &seriesName1 = book1->seriesName();
-	int comp = seriesName0.compare(seriesName1);
+	const std::string &seriesTitle0 = book0->seriesTitle();
+	const std::string &seriesTitle1 = book1->seriesTitle();
+	int comp = seriesTitle0.compare(seriesTitle1);
 	if (comp == 0) {
-		if (!seriesName0.empty()) {
+		if (!seriesTitle0.empty()) {
 			comp = book0->indexInSeries() - book1->indexInSeries();
 			if (comp != 0) {
 				return comp < 0;
@@ -38,11 +38,11 @@ bool BookComparator::operator() (
 		}
 		return book0->title() < book1->title();
 	}
-	if (seriesName0.empty()) {
-		return book0->title() < seriesName1;
+	if (seriesTitle0.empty()) {
+		return book0->title() < seriesTitle1;
 	}
-	if (seriesName1.empty()) {
-		return seriesName0 <= book1->title();
+	if (seriesTitle1.empty()) {
+		return seriesTitle0 <= book1->title();
 	}
 	return comp < 0;
 }

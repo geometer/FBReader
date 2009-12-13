@@ -112,7 +112,7 @@ void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attrib
 				if (SERIES == name) {
 					myBook.setSeries(content, myBook.indexInSeries());
 				} else if (SERIES_INDEX == name) {
-					myBook.setSeries(myBook.seriesName(), atoi(content));
+					myBook.setSeries(myBook.seriesTitle(), atoi(content));
 				}
 			}
 		}

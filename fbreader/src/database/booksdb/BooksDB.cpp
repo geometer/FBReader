@@ -211,7 +211,7 @@ shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
 	if (!myLoadSeries->run()) {
 		return 0;
 	}
-	book->setSeries(myLoadSeries->seriesName(), myLoadSeries->indexInSeries());
+	book->setSeries(myLoadSeries->seriesTitle(), myLoadSeries->indexInSeries());
 
 	myLoadAuthors->setBookId(book->bookId());
 	if (!myLoadAuthors->run()) {
@@ -426,7 +426,7 @@ bool BooksDB::loadBooks(BookList &books) {
 		if (!myLoadSeries->run()) {
 			return false;
 		}
-		book.setSeries(myLoadSeries->seriesName(), myLoadSeries->indexInSeries());
+		book.setSeries(myLoadSeries->seriesTitle(), myLoadSeries->indexInSeries());
 
 		myLoadAuthors->setBookId(book.bookId());
 		if (!myLoadAuthors->run()) {

@@ -27,7 +27,7 @@ BookInfo::BookInfo(const std::string &fileName) :
 	AuthorDisplayNameOption(FBCategoryKey::BOOKS, fileName, "AuthorDisplayName", EMPTY),
 	AuthorSortKeyOption(FBCategoryKey::BOOKS, fileName, "AuthorSortKey", EMPTY),
 	TitleOption(FBCategoryKey::BOOKS, fileName, "Title", EMPTY),
-	SeriesNameOption(FBCategoryKey::BOOKS, fileName, "Sequence", EMPTY),
+	SeriesTitleOption(FBCategoryKey::BOOKS, fileName, "Sequence", EMPTY),
 	IndexInSeriesOption(FBCategoryKey::BOOKS, fileName, "Number in seq", 0, 100, 0),
 	LanguageOption(FBCategoryKey::BOOKS, fileName, "Language", EMPTY),
 	EncodingOption(FBCategoryKey::BOOKS, fileName, "Encoding", EMPTY),
@@ -38,7 +38,7 @@ void BookInfo::reset() {
 	AuthorDisplayNameOption.setValue(EMPTY);
 	AuthorSortKeyOption.setValue(EMPTY);
 	TitleOption.setValue(EMPTY);
-	SeriesNameOption.setValue(EMPTY);
+	SeriesTitleOption.setValue(EMPTY);
 	IndexInSeriesOption.setValue(0);
 	LanguageOption.setValue(EMPTY);
 	EncodingOption.setValue(EMPTY);
@@ -57,7 +57,7 @@ const BookInfo &BookInfo::operator = (const BookInfo &bi) {
 	AuthorDisplayNameOption.setValue(bi.AuthorDisplayNameOption.value());
 	AuthorSortKeyOption.setValue(bi.AuthorSortKeyOption.value());
 	TitleOption.setValue(bi.TitleOption.value());
-	SeriesNameOption.setValue(bi.SeriesNameOption.value());
+	SeriesTitleOption.setValue(bi.SeriesTitleOption.value());
 	IndexInSeriesOption.setValue(bi.IndexInSeriesOption.value());
 	LanguageOption.setValue(bi.LanguageOption.value());
 	EncodingOption.setValue(bi.EncodingOption.value());

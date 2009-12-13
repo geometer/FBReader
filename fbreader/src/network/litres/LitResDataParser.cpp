@@ -126,11 +126,11 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				myAuthorMiddleName.clear();
 				myAuthorLastName.clear();
 			} else if (TAG_SEQUENCE == tag) {
-				const char *seriesName = attributeValue(attributes, "name");
-				if (seriesName != 0) {
+				const char *seriesTitle = attributeValue(attributes, "name");
+				if (seriesTitle != 0) {
 					const char *indexInSeries = attributeValue(attributes, "number");
 					currentBook().setSeries(
-						seriesName, indexInSeries != 0 ? atoi(indexInSeries) : 0
+						seriesTitle, indexInSeries != 0 ? atoi(indexInSeries) : 0
 					);
 				}
 			}

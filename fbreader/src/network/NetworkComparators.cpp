@@ -38,10 +38,10 @@ bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkLibraryItem
 		return book0.Index < book1.Index;
 	}*/
 
-	const bool book0HasSeriesName = !book0.seriesName().empty();
-	const bool book1HasSeriesName = !book1.seriesName().empty();
-	if (book0HasSeriesName && book1HasSeriesName) {
-		const int comp = book0.seriesName().compare(book1.seriesName());
+	const bool book0HasSeriesTitle = !book0.seriesTitle().empty();
+	const bool book1HasSeriesTitle = !book1.seriesTitle().empty();
+	if (book0HasSeriesTitle && book1HasSeriesTitle) {
+		const int comp = book0.seriesTitle().compare(book1.seriesTitle());
 		if (comp != 0) {
 			return comp < 0;
 		} else {
@@ -53,13 +53,13 @@ bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkLibraryItem
 		return book0.title() < book1.title();
 	}
 
-	const std::string &book0Key = book0HasSeriesName ? book0.seriesName() : book0.title();
-	const std::string &book1Key = book1HasSeriesName ? book1.seriesName() : book1.title();
+	const std::string &book0Key = book0HasSeriesTitle ? book0.seriesTitle() : book0.title();
+	const std::string &book1Key = book1HasSeriesTitle ? book1.seriesTitle() : book1.title();
 	const int comp = book0Key.compare(book1Key);
 	if (comp != 0) {
 		return comp < 0;
 	}
-	return book1HasSeriesName;
+	return book1HasSeriesTitle;
 }
 
 

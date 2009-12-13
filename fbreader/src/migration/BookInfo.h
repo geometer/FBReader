@@ -35,7 +35,7 @@ struct BookInfo {
 	ZLStringOption AuthorDisplayNameOption;
 	ZLStringOption AuthorSortKeyOption;
 	ZLStringOption TitleOption;
-	ZLStringOption SeriesNameOption;
+	ZLStringOption SeriesTitleOption;
 	ZLIntegerRangeOption IndexInSeriesOption;
 	ZLStringOption LanguageOption;
 	ZLStringOption EncodingOption;

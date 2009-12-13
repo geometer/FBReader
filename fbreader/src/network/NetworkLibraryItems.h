@@ -145,7 +145,7 @@ public:
 
 	const std::string &language() const;
 	const std::string &date() const;
-	const std::string &seriesName() const;
+	const std::string &seriesTitle() const;
 	int indexInSeries() const;
 	const std::string &price() const;
 	const std::string &annotation() const;
@@ -176,7 +176,7 @@ private:
 	const std::string myId;
 	std::string myLanguage;
 	std::string myDate;
-	std::string mySeriesName;
+	std::string mySeriesTitle;
 	int myIndexInSeries;
 	std::string myPrice; // number with curency code (see http://en.wikipedia.org/wiki/List_of_circulating_currencies for example)
 	std::string myAnnotation;
@@ -196,7 +196,7 @@ inline void NetworkLibraryBookItem::setIndex(unsigned int index) { myIndex = ind
 
 inline const std::string &NetworkLibraryBookItem::language() const { return myLanguage; }
 inline const std::string &NetworkLibraryBookItem::date() const { return myDate; }
-inline const std::string &NetworkLibraryBookItem::seriesName() const { return mySeriesName; }
+inline const std::string &NetworkLibraryBookItem::seriesTitle() const { return mySeriesTitle; }
 inline int NetworkLibraryBookItem::indexInSeries() const { return myIndexInSeries; }
 inline const std::string &NetworkLibraryBookItem::price() const { return myPrice; }
 inline const std::string &NetworkLibraryBookItem::annotation() const { return myAnnotation; }

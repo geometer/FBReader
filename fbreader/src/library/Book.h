@@ -50,7 +50,7 @@ public: // unmodifiable book methods
 	const std::string &filePath() const;
 	const std::string &language() const;
 	const std::string &encoding() const;
-	const std::string &seriesName() const;
+	const std::string &seriesTitle() const;
 	int indexInSeries() const;
 
 	const TagList &tags() const;
@@ -60,7 +60,7 @@ public: // modifiable book methods
 	void setTitle(const std::string &title);
 	void setLanguage(const std::string &language);
 	void setEncoding(const std::string &encoding);
-	void setSeries(const std::string &name, int index);
+	void setSeries(const std::string &title, int index);
 
 	AuthorList &_authors();
 
@@ -88,7 +88,7 @@ private:
 	std::string myTitle;
 	std::string myLanguage;
 	std::string myEncoding;
-	std::string mySeriesName;
+	std::string mySeriesTitle;
 	int myIndexInSeries;
 	TagList myTags;
 	AuthorList myAuthors;
@@ -102,7 +102,7 @@ inline const std::string &Book::title() const { return myTitle; }
 inline const std::string &Book::filePath() const { return myFilePath; }
 inline const std::string &Book::language() const { return myLanguage; }
 inline const std::string &Book::encoding() const { return myEncoding; }
-inline const std::string &Book::seriesName() const { return mySeriesName; }
+inline const std::string &Book::seriesTitle() const { return mySeriesTitle; }
 inline int Book::indexInSeries() const { return myIndexInSeries; }
 
 inline const TagList &Book::tags() const { return myTags; }

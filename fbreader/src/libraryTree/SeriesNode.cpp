@@ -44,7 +44,7 @@ void SeriesNode::paint(ZLPaintContext &context, int vOffset) {
 	removeAllHyperlinks();
 
 	drawCover(context, vOffset);
-	drawTitle(context, vOffset, myBook->seriesName());
+	drawTitle(context, vOffset, myBook->seriesTitle());
 
 	int left = 0;
 	drawHyperlink(
