@@ -134,11 +134,7 @@ if [ $1 == all ]; then
 elif [ $1 == supported ]; then
 	create_tmpdir
 	build_package desktop debian
-	build_package maemo2 debian
-	build_package maemo3 debian
-	build_package maemo4 debian
 	build_package win32 nsi
-	build_package desktop tarball
 	build_package source tarball
 	remove_tmpdir
 else
