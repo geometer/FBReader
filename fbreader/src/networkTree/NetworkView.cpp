@@ -231,8 +231,8 @@ void NetworkView::makeUpToDate() {
 	}
 
 	if (srNode != 0) {
-		srNode->open(true);
-		ensureVisible(srNode);
+		srNode->open(false);
+		srNode->expandOrCollapseSubtree();
 	}
 }
 
