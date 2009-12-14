@@ -1,17 +1,20 @@
 0.12.2 fix set/restore window position (in ZLGtkApplicationWindow)
+
 0.12.2 Захожу в litres -> открываю каталог -> Refill -> в браузере logout -> открываю Мои Книги и 1 пытаюсь скачать => фигня
 	** почему plugin->tryOpen(fileName) не возвращает ошибку, если внутри файла fb2 вместо нормального содержимого записан html-код страницы?
 	** После скачивания файла проверять его содержимое.
-0.12.2 update man page (Lithuanian localization)
-0.12.2 Авторизация на smashwords
-0.12.2 Сделать линки для покупки на smashwords (?ref=geometer)
-0.12.2 Литовские переносы
-0.12.2 Определитель литовского языка и кодировок
+0.12.2 reload для "моих книжек" в litres
+
 0.12.2 Не показывать те item'ы, для которых something goes wrong
 	** перенести hardcoded links в xml (для каждого сайта)
+0.12.2 Авторизация на smashwords
+0.12.2 Сделать линки для покупки на smashwords (?ref=geometer)
 0.12.2 Авторизация на feedbooks
 0.12.2 Авторизация на shucang
-0.12.2 reload для "моих книжек" в litres
+
+0.12.2 update man page (Lithuanian localization)
+0.12.2 Литовские переносы
+0.12.2 Определитель литовского языка и кодировок
 
 0.12.5 докачка файлов (оч. актуально для litres)
 0.12.5 обрабатывать type="text/html"
