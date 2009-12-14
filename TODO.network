@@ -1,4 +1,4 @@
-0.12.2 fix set/restore window position (in ZLGtkApplicationWindow)
+X-System problem - fix set/restore window position (in ZLGtkApplicationWindow)
 
 0.12.2 Захожу в litres -> открываю каталог -> Refill -> в браузере logout -> открываю Мои Книги и 1 пытаюсь скачать => фигня
 	** почему plugin->tryOpen(fileName) не возвращает ошибку, если внутри файла fb2 вместо нормального содержимого записан html-код страницы?
