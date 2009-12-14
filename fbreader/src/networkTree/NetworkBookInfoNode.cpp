@@ -311,8 +311,10 @@ void NetworkBookInfoNode::DownloadAction::run() {
 	const std::string fileName = downloader.fileName();
 	fbreader.createBook(fileName, downloaderBook);
 	if (downloaderBook.isNull()) {
-		//ZLFile(fileName).remove(); // TODO: Remove file???
-		// TODO: add errorBox???
+		ZLFile(fileName).remove();
+		ZLResourceKey boxKey("cantOpenDownloadedFile");
+		const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book.title());
+		ZLDialogManager::Instance().errorBox(boxKey, message);
 		fbreader.refreshWindow();
 		return;
 	}
