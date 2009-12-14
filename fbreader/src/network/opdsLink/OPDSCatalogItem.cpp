@@ -42,7 +42,7 @@ std::string OPDSCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	NetworkOperationData data(link());
 
 	shared_ptr<ZLExecutionData> networkData =
-		OPDSLink::createNetworkData(url(), data);
+		((OPDSLink &)link()).createNetworkData(url(), data);
 
 	while (!networkData.isNull()) {
 		ZLExecutionData::Vector dataList;

@@ -12,4 +12,8 @@
 		<part name="tag">type</part>
 		<part name="annotation">description</part>
 	</advancedSearch>
+	<ignored-feeds>
+		<link>http://feedbooks.com/news/catalog.atom</link>
+		<link>https://feedbooks.com/user/profile.atom</link>
+	</ignored-feeds>
 </catalog>

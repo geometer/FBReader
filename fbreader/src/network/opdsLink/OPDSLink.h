@@ -20,6 +20,9 @@
 #ifndef __OPDSLINK_H__
 #define __OPDSLINK_H__
 
+#include <set>
+#include <string>
+
 #include "../NetworkLink.h"
 
 class OPDSLink : public NetworkLink {
@@ -28,7 +31,7 @@ private:
 	class AdvancedSearch;
 
 protected:
-	static shared_ptr<ZLExecutionData> createNetworkData(const std::string &url, NetworkOperationData &result);
+	shared_ptr<ZLExecutionData> createNetworkData(const std::string &url, NetworkOperationData &result);
 
 public:
 	OPDSLink(
@@ -47,6 +50,7 @@ public:
 		const std::string &tagParameter,
 		const std::string &annotationParameter
 	);
+	void setIgnoredFeeds(const std::set<std::string> &ignoredFeeds);
 
 private:
 	const std::string searchURL(const std::string &pattern) const;
@@ -72,6 +76,7 @@ private:
 	const std::string mySummary;
 	const std::string myIconName;
 	shared_ptr<AdvancedSearch> myAdvancedSearch;
+	std::set<std::string> myIgnoredFeeds;
 };
 
 #endif /* __OPDSLINK_H__ */

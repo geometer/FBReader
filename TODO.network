@@ -5,8 +5,8 @@ X-System problem - fix set/restore window position (in ZLGtkApplicationWindow)
 	DONE После скачивания файла проверять его содержимое (содержимое удаляется с сообщением об ошибке "Не могу открыть скачанный файл")
 0.12.2 reload для "моих книжек" в litres
 
-0.12.2 Не показывать те item'ы, для которых something goes wrong
-	** перенести hardcoded links в xml (для каждого сайта)
+DONE Не показывать те item'ы, для которых something goes wrong
+	DONE перенести hardcoded links в xml (для каждого сайта)
 0.12.2 Авторизация на smashwords
 0.12.2 Сделать линки для покупки на smashwords (?ref=geometer)
 0.12.2 Авторизация на feedbooks

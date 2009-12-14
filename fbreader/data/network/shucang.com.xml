@@ -6,4 +6,7 @@
 	<title>Shucang Catalog</title>
 	<summary>Shucang: a Chinese bookshelf.</summary>
 	<icon>feed-shucang.png</icon>
+	<ignored-feeds>
+		<link>urn:uuid:01182b8b-4719-2369-35e0-107bce646b54</link>
+	</ignored-feeds>
 </catalog>

@@ -125,7 +125,7 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 	}
 	return new ZLNetworkXMLParserData(
 		url,
-		new OPDSXMLParser(new NetworkOPDSFeedReader(url, result))
+		new OPDSXMLParser(new NetworkOPDSFeedReader(url, result, myIgnoredFeeds))
 	);
 }
 
@@ -154,6 +154,10 @@ void OPDSLink::setupAdvancedSearch(
 	const std::string &annotationParameter
 ) {
 	myAdvancedSearch = new AdvancedSearch(type, titleParameter, authorParameter, tagParameter, annotationParameter);
+}
+
+void OPDSLink::setIgnoredFeeds(const std::set<std::string> &ignoredFeeds) {
+	myIgnoredFeeds = ignoredFeeds;
 }
 
 shared_ptr<NetworkLibraryItem> OPDSLink::libraryItem() {

@@ -44,6 +44,7 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 			mySearchParts["annotation"]
 		);
 	}
+	opdsLink->setIgnoredFeeds(myIgnoredFeeds);
 	return opdsLink;
 }
 
@@ -54,16 +55,20 @@ static const std::string TAG_SUMMARY = "summary";
 static const std::string TAG_ICON = "icon";
 static const std::string TAG_SEARCH_DESCRIPTION = "advancedSearch";
 static const std::string TAG_PART = "part";
+static const std::string TAG_IGNORED_FEEDS = "ignored-feeds";
 
 void OPDSLinkReader::startElementHandler(const char *tag, const char **attributes) {
 	if (TAG_SITE == tag) {
 		myState = READ_SITENAME;
-	} else if (TAG_LINK == tag) {
+	} else if (myState == READ_NOTHING && TAG_LINK == tag) {
 		const char *linkType = attributeValue(attributes, "type");
 		if (linkType != 0) {
 			myLinkType = linkType;
 			myState = READ_LINK;
 		}
+	} else if (myState == READ_IGNORED && TAG_LINK == tag) {
+		myIgnoredLink.clear();
+		myState = READ_IGNORED_LINK;
 	} else if (TAG_TITLE == tag) {
 		myState = READ_TITLE;
 	} else if (TAG_SUMMARY == tag) {
@@ -82,12 +87,17 @@ void OPDSLinkReader::startElementHandler(const char *tag, const char **attribute
 			mySearchPartName = name;
 			myState = READ_SEARCH_PART;
 		}
+	} else if (TAG_IGNORED_FEEDS == tag) {
+		myState = READ_IGNORED;
 	}
 }
 
 void OPDSLinkReader::endElementHandler(const char *tag) {
 	if (myState == READ_SEARCH_PART) {
 		myState = READ_SEARCH_DESCRIPTION;
+	} else if (myState == READ_IGNORED_LINK) {
+		myIgnoredFeeds.insert(myIgnoredLink);
+		myState = READ_IGNORED;
 	} else {
 		myState = READ_NOTHING;
 	}
@@ -116,6 +126,11 @@ void OPDSLinkReader::characterDataHandler(const char *text, size_t len) {
 			break;
 		case READ_SEARCH_PART:
 			mySearchParts[mySearchPartName].append(text, len);
+			break;
+		case READ_IGNORED:
+			break;
+		case READ_IGNORED_LINK:
+			myIgnoredLink.append(text, len);
 			break;
 	}
 }

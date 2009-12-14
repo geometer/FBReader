@@ -20,6 +20,8 @@
 #ifndef __OPDSLINKREADER_H__
 #define __OPDSLINKREADER_H__
 
+#include <set>
+
 #include <ZLXMLReader.h>
 
 class NetworkLink;
@@ -46,6 +48,8 @@ private:
 		READ_ICON_NAME,
 		READ_SEARCH_DESCRIPTION,
 		READ_SEARCH_PART,
+		READ_IGNORED,
+		READ_IGNORED_LINK,
 	} myState;
 	std::string myLinkType;
 	std::string mySearchPartName;
@@ -58,6 +62,9 @@ private:
 
 	std::string mySearchType;
 	std::map<std::string,std::string> mySearchParts;
+
+	std::string myIgnoredLink;
+	std::set<std::string> myIgnoredFeeds;
 };
 
 #endif /* __OPDSLINKREADER_H__ */
