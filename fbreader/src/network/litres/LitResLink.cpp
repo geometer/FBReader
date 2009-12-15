@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <cctype>
 #include <algorithm>
 
@@ -267,7 +265,6 @@ LitResMyCatalogItem::LitResMyCatalogItem(LitResLink &link) : NetworkLibraryCatal
 
 void LitResMyCatalogItem::onDisplayItem() {
 	myForceReload = false;
-	std::cerr << "NEW MYCATALOGITEM -> next load is cached" << std::endl;
 }
 
 std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) {
@@ -277,10 +274,7 @@ std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) 
 	}
 	std::string error;
 	if (myForceReload) {
-		std::cerr << "RELOAD BOOKS" << std::endl;
 		error = mgr.reloadPurchasedBooks();
-	} else {
-		std::cerr << "CACHED LOAD" << std::endl;
 	}
 	myForceReload = true;
 	mgr.collectPurchasedBooks(children);

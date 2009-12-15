@@ -17,9 +17,6 @@
  * 02110-1301, USA.
  */
 
-
-#include <iostream>
-
 #include "../DBRunnables.h"
 #include "../../sqldb/implsqlite/SQLiteFactory.h"
 
