@@ -196,7 +196,8 @@ void NetworkView::makeUpToDate() {
 			}
 		}
 		if (!processed) {
-			new NetworkCatalogRootNode(&rootNode(), link, nodeCount++);
+			NetworkCatalogNode *ptr = new NetworkCatalogRootNode(&rootNode(), link, nodeCount++);
+			ptr->item().onDisplayItem();
 		}
 	}
 

@@ -27,7 +27,9 @@ FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent,
 	const std::string &itemType = item->typeId();
 
 	if (itemType == NetworkLibraryCatalogItem::TYPE_ID) {
-		return new NetworkCatalogNode(parent, item, atPosition);
+		NetworkCatalogNode *ptr = new NetworkCatalogNode(parent, item, atPosition);
+		ptr->item().onDisplayItem();
+		return ptr;
 	} else if (itemType == NetworkLibraryBookItem::TYPE_ID) {
 		return new NetworkBookInfoNode(parent, item);
 	}

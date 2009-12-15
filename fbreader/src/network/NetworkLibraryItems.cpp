@@ -69,6 +69,9 @@ const std::string &NetworkLibraryCatalogItem::typeId() const {
 	return TYPE_ID;
 }
 
+void NetworkLibraryCatalogItem::onDisplayItem() {
+}
+
 const std::string NetworkLibraryBookItem::TYPE_ID = "bookItem";
 
 bool NetworkLibraryBookItem::AuthorData::operator < (const AuthorData &data) const {

@@ -49,14 +49,16 @@ public:
 	std::string refillAccountLink();
 	std::string currentAccount();
 
+	std::string reloadPurchasedBooks();
 	void collectPurchasedBooks(NetworkLibraryItemList &list);
 
 private:
-	shared_ptr<ZLExecutionData> loadPurchasedBooks();
+	shared_ptr<ZLExecutionData> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkLibraryItemList &purchasedBooksList);
+	void loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkLibraryItemList &purchasedBooksList);
+	void loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkLibraryItemList &purchasedBooksList);
+
 	shared_ptr<ZLExecutionData> loadAccount(std::string &dummy1);
-	void loadPurchasedBooksOnError();
 	void loadAccountOnError();
-	void loadPurchasedBooksOnSuccess();
 	void loadAccountOnSuccess();
 
 	const std::string &certificate();

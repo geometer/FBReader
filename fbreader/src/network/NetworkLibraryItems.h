@@ -84,8 +84,8 @@ public:
 	const std::string &htmlURL() const;
 	const std::string &summary() const;
 
-	// returns error message
-	virtual std::string loadChildren(NetworkLibraryItemList &children) = 0;
+	virtual void onDisplayItem(); // method is called each time the View Node is created for the Item.
+	virtual std::string loadChildren(NetworkLibraryItemList &children) = 0; // returns error message
 
 	bool dependsOnAccount() const;
 

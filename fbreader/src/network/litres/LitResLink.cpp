@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <cctype>
 #include <algorithm>
 
@@ -133,7 +135,11 @@ public:
 	LitResMyCatalogItem(LitResLink &link);
 
 private:
+	void onDisplayItem();
 	std::string loadChildren(NetworkLibraryItemList &children);
+
+private:
+	bool myForceReload;
 };
 
 class LitResByAuthorsCatalogItem : public NetworkLibraryCatalogItem {
@@ -256,6 +262,12 @@ LitResMyCatalogItem::LitResMyCatalogItem(LitResLink &link) : NetworkLibraryCatal
 	"",
 	true
 ) {
+	myForceReload = false;
+}
+
+void LitResMyCatalogItem::onDisplayItem() {
+	myForceReload = false;
+	std::cerr << "NEW MYCATALOGITEM -> next load is cached" << std::endl;
 }
 
 std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) {
@@ -263,8 +275,16 @@ std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) 
 	if (mgr.isAuthorised() == B3_FALSE) {
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
+	std::string error;
+	if (myForceReload) {
+		std::cerr << "RELOAD BOOKS" << std::endl;
+		error = mgr.reloadPurchasedBooks();
+	} else {
+		std::cerr << "CACHED LOAD" << std::endl;
+	}
+	myForceReload = true;
 	mgr.collectPurchasedBooks(children);
-	return "";
+	return error;
 }
 
 LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(LitResLink &link) : NetworkLibraryCatalogItem(
