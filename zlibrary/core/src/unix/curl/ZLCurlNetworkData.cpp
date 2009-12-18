@@ -17,7 +17,27 @@
  * 02110-1301, USA.
  */
 
+#include <ZLLogger.h>
+
 #include "ZLCurlNetworkData.h"
 
 ZLCurlNetworkData::ZLCurlNetworkData(const std::string &url, const std::string &sslCertificate) : ZLNetworkData(url, sslCertificate) {
+	myHandle = curl_easy_init();
+	if (myHandle != 0) {
+		curl_easy_setopt(myHandle, CURLOPT_URL, url.c_str());
+		if (!sslCertificate.empty()) {
+			curl_easy_setopt(myHandle, CURLOPT_CAINFO, sslCertificate.c_str());
+		}
+		ZLLogger::Instance().println("URL", url);
+	}
+}
+
+ZLCurlNetworkData::~ZLCurlNetworkData() {
+	if (myHandle != 0) {
+		curl_easy_cleanup(myHandle);
+	}
+}
+
+CURL *ZLCurlNetworkData::handle() {
+	return myHandle;
 }

@@ -79,7 +79,7 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 		if (it->isNull() || (*it)->type() != ZLNetworkData::TYPE_ID) {
 			continue;
 		}
-		ZLNetworkData &nData = (ZLNetworkData&)**it;
+		ZLCurlNetworkData &nData = (ZLCurlNetworkData&)**it;
 		if (!nData.doBefore()) {
 			continue;
 		}

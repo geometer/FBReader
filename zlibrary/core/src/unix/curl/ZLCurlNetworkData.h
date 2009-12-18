@@ -20,12 +20,21 @@
 #ifndef __ZLCURLNETWORKDATA_H__
 #define __ZLCURLNETWORKDATA_H__
 
+#include <curl/curl.h>
+
 #include <ZLNetworkData.h>
 
 class ZLCurlNetworkData : public ZLNetworkData {
 
 protected:
 	ZLCurlNetworkData(const std::string &url, const std::string &sslCertificate = std::string());
+	~ZLCurlNetworkData();
+
+public:
+	CURL *handle();
+
+private:
+	CURL *myHandle;
 };
 
 #endif /* __ZLCURLNETWORKDATA_H__ */
