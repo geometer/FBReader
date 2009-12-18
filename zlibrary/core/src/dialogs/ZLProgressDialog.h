@@ -21,7 +21,7 @@
 #define __ZLPROGRESSDIALOG_H__
 
 #include <ZLResource.h>
-#include <ZLSlowProcess.h>
+#include <ZLExecutionData.h>
 #include <ZLRunnable.h>
 
 class ZLProgressDialog {

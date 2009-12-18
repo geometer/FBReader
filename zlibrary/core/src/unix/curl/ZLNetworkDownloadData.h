@@ -22,11 +22,10 @@
 
 #include <shared_ptr.h>
 #include <ZLNetworkData.h>
-#include <ZLSlowProcess.h>
 
 class ZLOutputStream;
 
-class ZLNetworkDownloadData : public ZLNetworkData, public ZLSlowProcess {
+class ZLNetworkDownloadData : public ZLNetworkData {
 
 private:
 	static size_t handleHeader(void *ptr, size_t size, size_t nmemb, ZLNetworkDownloadData *self);

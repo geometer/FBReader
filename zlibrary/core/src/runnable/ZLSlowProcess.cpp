@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include "ZLSlowProcess.h"
+#include "ZLExecutionData.h"
 
 ZLSlowProcess::ZLSlowProcess() {
 }
@@ -39,6 +39,9 @@ void ZLSlowProcess::setPercent(int ready, int full) {
 	if (!myListener.isNull()) {
 		myListener->showPercent(ready, full);
 	}
+}
+
+void ZLSlowProcess::onCancel() {
 }
 
 ZLSlowProcessListener::ZLSlowProcessListener() {

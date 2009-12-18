@@ -24,7 +24,6 @@
 #include <ZLNetworkUtil.h>
 #include <ZLNetworkXMLParserData.h>
 #include <ZLNetworkManager.h>
-#include <ZLSlowProcess.h>
 
 #include <ZLibrary.h>
 #include <ZLDir.h>

@@ -20,7 +20,6 @@
 #include <ZLDialogManager.h>
 #include <ZLProgressDialog.h>
 #include <ZLNetworkManager.h>
-#include <ZLSlowProcess.h>
 
 #include "NetworkOperationRunnable.h"
 

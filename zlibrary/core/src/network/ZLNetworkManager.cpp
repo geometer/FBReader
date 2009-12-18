@@ -29,7 +29,6 @@
 #include "ZLNetworkManager.h"
 #include "ZLNetworkData.h"
 #include "ZLNetworkUtil.h"
-#include "ZLNetworkDownloadData.h"
 
 ZLNetworkManager *ZLNetworkManager::ourInstance = 0;
 
@@ -158,7 +157,7 @@ std::string ZLNetworkManager::downloadFile(const std::string &url, const std::st
 			);
 	}
 	ZLExecutionData::Vector dataVector;
-	ZLNetworkDownloadData *data = new ZLNetworkDownloadData(url, fileName, sslCertificate, stream);
+	shared_ptr<ZLExecutionData> data = createDownloadData(url, fileName, sslCertificate, stream);
 	data->setListener(listener);
 	dataVector.push_back(data);
 	return perform(dataVector);
@@ -259,8 +258,4 @@ std::string ZLNetworkManager::perform(const ZLExecutionData::Vector &dataList) c
 		result += *et;
 	}
 	return result;
-}
-
-shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadData(const std::string &url, const std::string &fileName) {
-	return new ZLNetworkDownloadData(url, fileName);
 }

@@ -17,8 +17,19 @@
  * 02110-1301, USA.
  */
 
+#include <ZLOutputStream.h>
+
 #include "ZLCurlNetworkManager.h"
+#include "ZLNetworkDownloadData.h"
 
 void ZLCurlNetworkManager::createInstance() {
 	ourInstance = new ZLCurlNetworkManager();
+}
+
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream) const {
+	return new ZLNetworkDownloadData(url, fileName, sslCertificate, stream);
+}
+
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream) const {
+	return new ZLNetworkDownloadData(url, fileName, stream);
 }

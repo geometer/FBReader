@@ -29,6 +29,7 @@
 
 class ZLNetworkData;
 class ZLSlowProcessListener;
+class ZLOutputStream;
 
 class ZLNetworkManager {
 
@@ -71,7 +72,8 @@ public:
 	std::string perform(const ZLExecutionData::Vector &dataList) const;
 
 public:
-	virtual shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName);
+	virtual shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream = 0) const = 0;
+	virtual shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0) const = 0;
 
 private:
 	// void* instead of CURL* to avoid curl.h including
