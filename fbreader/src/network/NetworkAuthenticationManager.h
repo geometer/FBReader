@@ -64,7 +64,7 @@ public: // Account specific methods (can be called only if authorised!!!)
 	virtual std::string refillAccountLink();
 	virtual std::string currentAccount();
 
-	virtual const std::string &certificate() = 0;
+	virtual const std::string &certificate();
 
 public: // new User Registration
 	virtual bool registrationSupported();

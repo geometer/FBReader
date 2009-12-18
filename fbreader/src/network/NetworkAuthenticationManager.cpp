@@ -37,7 +37,7 @@ std::string NetworkAuthenticationManager::networkBookId(const NetworkLibraryBook
 }
 
 NetworkLibraryBookItem::URLType NetworkAuthenticationManager::downloadLinkType(const NetworkLibraryBookItem &) {
-	return NetworkLibraryBookItem::LINK_HTTP;
+	return NetworkLibraryBookItem::NONE;
 }
 
 bool NetworkAuthenticationManager::needsInitialization() {
@@ -86,4 +86,8 @@ bool NetworkAuthenticationManager::passwordRecoverySupported() {
 
 std::string NetworkAuthenticationManager::recoverPassword(const std::string &) {
 	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
+}
+
+const std::string &NetworkAuthenticationManager::certificate() {
+	return "";
 }
