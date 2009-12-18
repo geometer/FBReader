@@ -25,24 +25,7 @@
 
 #include <shared_ptr.h>
 
-class ZLSlowProcessListener;
-
-class ZLSlowProcess {
-
-protected:
-	ZLSlowProcess();
-
-public:
-	virtual ~ZLSlowProcess();
-	void setListener(shared_ptr<ZLSlowProcessListener> listener);
-	virtual void onCancel();
-	void setPercent(int ready, int full);
-
-private:
-	shared_ptr<ZLSlowProcessListener> myListener;
-
-friend class ZLSlowProcessListener;
-};
+class ZLExecutionData;
 
 class ZLSlowProcessListener {
 
@@ -56,12 +39,12 @@ public:
 	virtual void showPercent(int ready, int full) = 0;
 
 private:
-	ZLSlowProcess *myProcess;
+	ZLExecutionData *myProcess;
 
-friend class ZLSlowProcess;
+friend class ZLExecutionData;
 };
 
-class ZLExecutionData : public ZLSlowProcess {
+class ZLExecutionData {
 
 public:
 	typedef std::vector<shared_ptr<ZLExecutionData> > Vector;
@@ -73,6 +56,13 @@ protected:
 public:
 	virtual ~ZLExecutionData();
 	virtual const std::string &type() const = 0;
+
+	void setListener(shared_ptr<ZLSlowProcessListener> listener);
+	virtual void onCancel();
+	void setPercent(int ready, int full);
+
+private:
+	shared_ptr<ZLSlowProcessListener> myListener;
 };
 
 #endif /* __ZLEXECUTIONDATA_H__ */
