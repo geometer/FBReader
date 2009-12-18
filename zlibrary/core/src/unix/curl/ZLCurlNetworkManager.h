@@ -30,11 +30,16 @@ public:
 	static void createInstance();
 
 private:
+	std::string perform(const ZLExecutionData::Vector &dataList) const;
+
 	shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream = 0) const;
 	shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0) const;
 
 	shared_ptr<ZLExecutionData> createXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader) const;
 	shared_ptr<ZLExecutionData> createXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) const;
+
+private:
+	void setStandardOptions(CURL *handle, const std::string &proxy) const;
 };
 
 #endif /* __ZLCURLNETWORKMANAGER_H__ */

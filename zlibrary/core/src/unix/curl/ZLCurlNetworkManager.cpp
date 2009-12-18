@@ -17,7 +17,14 @@
  * 02110-1301, USA.
  */
 
+#include <map>
+#include <set>
+
+#include <ZLStringUtil.h>
+#include <ZLNetworkUtil.h>
+#include <ZLResource.h>
 #include <ZLOutputStream.h>
+#include <ZLXMLReader.h>
 
 #include "ZLCurlNetworkManager.h"
 #include "ZLCurlNetworkDownloadData.h"
@@ -41,4 +48,116 @@ shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createXMLParserData(const std:
 
 shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) const {
 	return new ZLCurlNetworkXMLParserData(url, reader);
+}
+
+void ZLCurlNetworkManager::setStandardOptions(CURL *handle, const std::string &proxy) const {
+	static const char *AGENT_NAME = "FBReader";
+
+	curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, true);
+	curl_easy_setopt(handle, CURLOPT_USERAGENT, AGENT_NAME);
+	if (useProxy()) {
+		curl_easy_setopt(handle, CURLOPT_PROXY, proxy.c_str());
+	}
+	curl_easy_setopt(handle, CURLOPT_LOW_SPEED_LIMIT, 1L);
+	curl_easy_setopt(handle, CURLOPT_LOW_SPEED_TIME, TimeoutOption().value());
+	curl_easy_setopt(handle, CURLOPT_CONNECTTIMEOUT, ConnectTimeoutOption().value());
+	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 1L);
+	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYHOST, 2L);
+}
+
+std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {
+	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
+
+	if (dataList.empty()) {
+		return errorResource["emptyLibrariesList"].value();
+	}
+
+	const std::string proxy = proxyHost() + ':' + proxyPort();
+	CURLM *handle = curl_multi_init();
+	std::map<CURL*,shared_ptr<ZLExecutionData> > handleToData; 
+	for (ZLExecutionData::Vector::const_iterator it = dataList.begin(); it != dataList.end(); ++it) {
+		if (it->isNull() || (*it)->type() != ZLNetworkData::TYPE_ID) {
+			continue;
+		}
+		ZLNetworkData &nData = (ZLNetworkData&)**it;
+		if (!nData.doBefore()) {
+			continue;
+		}
+		CURL *easyHandle = nData.handle();
+		if (easyHandle != 0) {
+			handleToData[easyHandle] = *it;
+			setStandardOptions(easyHandle, proxy);
+			curl_multi_add_handle(handle, easyHandle);
+		}
+	}
+
+	int counter;
+	CURLMcode res;
+	do {
+		res = curl_multi_perform(handle, &counter);
+	} while ((res == CURLM_CALL_MULTI_PERFORM) || (counter > 0));
+
+	CURLMsg *message;
+	std::set<std::string> errors;
+	do {
+		int queueSize;
+		message = curl_multi_info_read(handle, &queueSize);
+		if ((message != 0) && (message->msg == CURLMSG_DONE)) {
+			ZLNetworkData &nData = (ZLNetworkData&)*handleToData[message->easy_handle];
+			nData.doAfter(message->data.result == CURLE_OK);
+			const std::string &url = nData.url();
+			switch (message->data.result) {
+				case CURLE_OK:
+					break;
+				case CURLE_WRITE_ERROR:
+					if (!nData.errorMessage().empty()) {
+						errors.insert(nData.errorMessage());
+					} else {
+						errors.insert(ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					}
+					break;
+				default:
+					errors.insert(ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					break;
+				case CURLE_COULDNT_RESOLVE_PROXY:
+					errors.insert(ZLStringUtil::printf(errorResource["couldntResolveProxyMessage"].value(), proxyHost()));
+					break;
+				case CURLE_COULDNT_RESOLVE_HOST:
+					errors.insert(ZLStringUtil::printf(errorResource["couldntResolveHostMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					break;
+				case CURLE_COULDNT_CONNECT:
+					errors.insert(ZLStringUtil::printf(errorResource["couldntConnectMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					break;
+				case CURLE_OPERATION_TIMEDOUT:
+					errors.insert(errorResource["operationTimedOutMessage"].value());
+					break;
+				case CURLE_SSL_CONNECT_ERROR:
+					errors.insert(ZLStringUtil::printf(errorResource["sslConnectErrorMessage"].value(), curl_easy_strerror(CURLE_SSL_CONNECT_ERROR)));
+					break;
+				case CURLE_PEER_FAILED_VERIFICATION:
+					errors.insert(ZLStringUtil::printf(errorResource["peerFailedVerificationMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					break;
+				case CURLE_SSL_CACERT:
+					errors.insert(ZLStringUtil::printf(errorResource["sslCertificateAuthorityMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					break;
+				case CURLE_SSL_CACERT_BADFILE:
+					errors.insert(ZLStringUtil::printf(errorResource["sslBadCertificateFileMessage"].value(), nData.sslCertificate()));
+					break;
+				case CURLE_SSL_SHUTDOWN_FAILED:
+					errors.insert(ZLStringUtil::printf(errorResource["sslShutdownFailedMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
+					break;
+			}
+		}
+	} while ((message != 0) && (errors.size() < 3));
+
+	curl_multi_cleanup(handle);
+
+	std::string result;
+	for (std::set<std::string>::const_iterator et = errors.begin(); et != errors.end(); ++et) {
+		if (!result.empty()) {
+			result += '\n';
+		}
+		result += *et;
+	}
+	return result;
 }
