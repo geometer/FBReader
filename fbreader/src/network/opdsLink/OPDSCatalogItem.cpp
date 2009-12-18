@@ -19,7 +19,6 @@
 
 #include <ZLExecutionData.h>
 #include <ZLNetworkManager.h>
-#include <ZLNetworkXMLParserData.h>
 
 #include "OPDSCatalogItem.h"
 #include "OPDSLink.h"

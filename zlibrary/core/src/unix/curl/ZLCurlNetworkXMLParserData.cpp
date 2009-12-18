@@ -22,36 +22,34 @@
 
 #include <ZLXMLReader.h>
 
-#include "ZLNetworkXMLParserData.h"
+#include "ZLCurlNetworkXMLParserData.h"
 
-#include "ZLPlainAsynchronousInputStream.h"
-#include "ZLGzipAsynchronousInputStream.h"
+#include "../../network/ZLPlainAsynchronousInputStream.h"
+#include "../../network/ZLGzipAsynchronousInputStream.h"
 
 
 static const std::string CONTENT_ENCODING = "content-encoding:";
 
 
 static size_t handleHeader(void *ptr, size_t size, size_t nmemb, void *stream) {
-	ZLNetworkXMLParserData *parserData = (ZLNetworkXMLParserData *) stream;
+	ZLCurlNetworkXMLParserData *parserData = (ZLCurlNetworkXMLParserData*)stream;
 	return parserData->parseHeader(ptr, size, nmemb);
 }
 
 static size_t handleData(void *ptr, size_t size, size_t nmemb, void *data) {
-	ZLNetworkXMLParserData *parserData = (ZLNetworkXMLParserData *) data;
+	ZLCurlNetworkXMLParserData *parserData = (ZLCurlNetworkXMLParserData*)data;
 	return parserData->parseData(ptr, size, nmemb);
 }
 
-ZLNetworkXMLParserData::ZLNetworkXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) : 
-		ZLNetworkData(url), myReader(reader) {
+ZLCurlNetworkXMLParserData::ZLCurlNetworkXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) : ZLNetworkData(url), myReader(reader) {
 	init();
 }
 
-ZLNetworkXMLParserData::ZLNetworkXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader) : 
-		ZLNetworkData(url, sslCertificate), myReader(reader) {
+ZLCurlNetworkXMLParserData::ZLCurlNetworkXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader) : ZLNetworkData(url, sslCertificate), myReader(reader) {
 	init();
 }
 
-void ZLNetworkXMLParserData::init() {
+void ZLCurlNetworkXMLParserData::init() {
 	CURL *h = handle();
 	if (h != 0) {
 		curl_easy_setopt(h, CURLOPT_HEADERFUNCTION, handleHeader);
@@ -61,7 +59,7 @@ void ZLNetworkXMLParserData::init() {
 	}
 }
 
-ZLNetworkXMLParserData::~ZLNetworkXMLParserData() {
+ZLCurlNetworkXMLParserData::~ZLCurlNetworkXMLParserData() {
 	if (handle() != 0) {
 		if (!myInputStream.isNull() && myInputStream->initialized() && !myInputStream->eof()) {
 			myInputStream->setEof();
@@ -70,14 +68,14 @@ ZLNetworkXMLParserData::~ZLNetworkXMLParserData() {
 	}
 }
 
-bool ZLNetworkXMLParserData::doBefore() {
+bool ZLCurlNetworkXMLParserData::doBefore() {
 	return true;
 }
 
-void ZLNetworkXMLParserData::doAfter(bool success) {
+void ZLCurlNetworkXMLParserData::doAfter(bool success) {
 }
 
-size_t ZLNetworkXMLParserData::parseHeader(void *ptr, size_t size, size_t nmemb) {
+size_t ZLCurlNetworkXMLParserData::parseHeader(void *ptr, size_t size, size_t nmemb) {
 	std::string header = ZLUnicodeUtil::toLower(std::string((const char *) ptr, size * nmemb));
 
 	if (ZLStringUtil::stringStartsWith(header, CONTENT_ENCODING)) {
@@ -89,7 +87,7 @@ size_t ZLNetworkXMLParserData::parseHeader(void *ptr, size_t size, size_t nmemb)
 	return size * nmemb;
 }
 
-size_t ZLNetworkXMLParserData::parseData(void *ptr, size_t size, size_t nmemb) {
+size_t ZLCurlNetworkXMLParserData::parseData(void *ptr, size_t size, size_t nmemb) {
 	if (myInputStream.isNull()) {
 		if (myHttpEncoding == "gzip") {
 			myInputStream = new ZLGzipAsynchronousInputStream();
@@ -107,4 +105,3 @@ size_t ZLNetworkXMLParserData::parseData(void *ptr, size_t size, size_t nmemb) {
 	}
 	return size * nmemb;
 }
-

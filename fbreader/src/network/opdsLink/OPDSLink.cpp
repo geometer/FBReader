@@ -21,7 +21,7 @@
 
 #include <ZLStringUtil.h>
 #include <ZLNetworkUtil.h>
-#include <ZLNetworkXMLParserData.h>
+#include <ZLNetworkManager.h>
 
 #include "OPDSLink.h"
 #include "OPDSCatalogItem.h"
@@ -123,7 +123,7 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 	if (url.empty()) {
 		return 0;
 	}
-	return new ZLNetworkXMLParserData(
+	return ZLNetworkManager::Instance().createXMLParserData(
 		url,
 		new OPDSXMLParser(new NetworkOPDSFeedReader(url, result, myIgnoredFeeds))
 	);

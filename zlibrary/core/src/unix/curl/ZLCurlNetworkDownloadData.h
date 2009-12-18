@@ -17,36 +17,35 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLNETWORKXMLPARSERDATA_H__
-#define __ZLNETWORKXMLPARSERDATA_H__
+#ifndef __ZLCURLNETWORKDOWNLOADDATA_H__
+#define __ZLCURLNETWORKDOWNLOADDATA_H__
 
 #include <shared_ptr.h>
+#include <ZLNetworkData.h>
 
-#include "ZLNetworkData.h"
+class ZLOutputStream;
 
-class ZLXMLReader;
-class ZLAsynchronousInputStream;
-
-class ZLNetworkXMLParserData : public ZLNetworkData {
-
-public:
-	ZLNetworkXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader);
-	ZLNetworkXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader);
-	~ZLNetworkXMLParserData();
-
-	size_t parseHeader(void *ptr, size_t size, size_t nmemb);
-	size_t parseData(void *ptr, size_t size, size_t nmemb);
+class ZLCurlNetworkDownloadData : public ZLNetworkData {
 
 private:
-	void init();
+	static size_t handleHeader(void *ptr, size_t size, size_t nmemb, ZLCurlNetworkDownloadData *self);
+	static size_t writeToStream(void *ptr, size_t size, size_t nmemb, ZLCurlNetworkDownloadData *self);
+
+public:
+	ZLCurlNetworkDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0);
+	ZLCurlNetworkDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream = 0);
+
+private:
+	void onCancel();
 
 	bool doBefore();
 	void doAfter(bool success);
 
 private:
-	shared_ptr<ZLXMLReader> myReader;
-	shared_ptr<ZLAsynchronousInputStream> myInputStream;
-	std::string myHttpEncoding;
+	const std::string myFileName;
+	int myFileSize;
+	int myDownloadedSize;
+	shared_ptr<ZLOutputStream> myOutputStream;
 };
 
-#endif /* __ZLNETWORKXMLPARSERDATA_H__ */
+#endif /* __ZLCURLNETWORKDOWNLOADDATA_H__ */

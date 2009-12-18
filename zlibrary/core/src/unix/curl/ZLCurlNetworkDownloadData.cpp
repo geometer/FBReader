@@ -24,9 +24,9 @@
 #include <ZLOutputStream.h>
 #include <ZLStringUtil.h>
 
-#include "ZLNetworkDownloadData.h"
+#include "ZLCurlNetworkDownloadData.h"
 
-size_t ZLNetworkDownloadData::handleHeader(void *ptr, size_t size, size_t nmemb, ZLNetworkDownloadData *self) {
+size_t ZLCurlNetworkDownloadData::handleHeader(void *ptr, size_t size, size_t nmemb, ZLCurlNetworkDownloadData *self) {
 	static const std::string prefix = "Content-Length: ";
 	std::string headerData((char*)ptr, size * nmemb);
 	if (ZLStringUtil::stringStartsWith(headerData, prefix)) {
@@ -39,20 +39,20 @@ size_t ZLNetworkDownloadData::handleHeader(void *ptr, size_t size, size_t nmemb,
 	return size * nmemb;
 }
 
-size_t ZLNetworkDownloadData::writeToStream(void *ptr, size_t size, size_t nmemb, ZLNetworkDownloadData *self) {
+size_t ZLCurlNetworkDownloadData::writeToStream(void *ptr, size_t size, size_t nmemb, ZLCurlNetworkDownloadData *self) {
 	self->myOutputStream->write((const char*)ptr, size * nmemb);
 	self->myDownloadedSize += size * nmemb;
 	self->setPercent(self->myDownloadedSize, self->myFileSize);
 	return size * nmemb;
 }
 
-ZLNetworkDownloadData::ZLNetworkDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream) : ZLNetworkData(url), myFileName(fileName), myFileSize(-1), myDownloadedSize(0), myOutputStream(stream) {
+ZLCurlNetworkDownloadData::ZLCurlNetworkDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream) : ZLNetworkData(url), myFileName(fileName), myFileSize(-1), myDownloadedSize(0), myOutputStream(stream) {
 }
 
-ZLNetworkDownloadData::ZLNetworkDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream) : ZLNetworkData(url, sslCertificate), myFileName(fileName), myFileSize(-1), myDownloadedSize(0), myOutputStream(stream) {
+ZLCurlNetworkDownloadData::ZLCurlNetworkDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream) : ZLNetworkData(url, sslCertificate), myFileName(fileName), myFileSize(-1), myDownloadedSize(0), myOutputStream(stream) {
 }
 
-bool ZLNetworkDownloadData::doBefore() {
+bool ZLCurlNetworkDownloadData::doBefore() {
 	if (myOutputStream.isNull()) {
 		myOutputStream = ZLFile(myFileName).outputStream();
 	}
@@ -70,12 +70,12 @@ bool ZLNetworkDownloadData::doBefore() {
 	return true;
 }
 
-void ZLNetworkDownloadData::doAfter(bool success) {
+void ZLCurlNetworkDownloadData::doAfter(bool success) {
 	myOutputStream->close();
 	if (!success) {
 		ZLFile(myFileName).remove();
 	}
 }
 
-void ZLNetworkDownloadData::onCancel() {
+void ZLCurlNetworkDownloadData::onCancel() {
 }

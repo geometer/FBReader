@@ -22,7 +22,6 @@
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLNetworkUtil.h>
-#include <ZLNetworkXMLParserData.h>
 #include <ZLNetworkManager.h>
 
 #include <ZLibrary.h>
@@ -165,8 +164,8 @@ void LitResUtil::loadGenres() {
 
 	if (dir.isNull()) {
 		ZLExecutionData::Vector dataList;
-		dataList.push_back(
-			new ZLNetworkXMLParserData(url, new LitResGenresParser(myGenresTree, myGenresMap))
+		dataList.push_back(ZLNetworkManager::Instance().createXMLParserData(
+			url, new LitResGenresParser(myGenresTree, myGenresMap))
 		);
 		const std::string error = ZLNetworkManager::Instance().perform(dataList);
 		if (!error.empty()) {

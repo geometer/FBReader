@@ -22,7 +22,6 @@
 
 #include <ZLUnicodeUtil.h>
 #include <ZLNetworkUtil.h>
-#include <ZLNetworkXMLParserData.h>
 #include <ZLNetworkManager.h>
 
 #include "LitResLink.h"
@@ -59,7 +58,7 @@ LitResLink::LitResLink() :
 }
 
 shared_ptr<ZLExecutionData> LitResLink::simpleSearchData(NetworkOperationData &result, const std::string &pattern) {
-	return new ZLNetworkXMLParserData(
+	return ZLNetworkManager::Instance().createXMLParserData(
 		LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&search=" + ZLNetworkUtil::htmlEncode(pattern)),
 		new LitResDataParser(result.Items, myAuthenticationManager)
 	);
@@ -84,7 +83,7 @@ shared_ptr<ZLExecutionData> LitResLink::advancedSearchData(NetworkOperationData 
 		return 0;
 	}
 
-	return new ZLNetworkXMLParserData(
+	return ZLNetworkManager::Instance().createXMLParserData(
 		LitResUtil::litresLink("pages/catalit_browser/" + request),
 		new LitResDataParser(result.Items, myAuthenticationManager)
 	);
@@ -237,7 +236,7 @@ std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	children.clear();
 
 	ZLExecutionData::Vector dataList;
-	dataList.push_back(new ZLNetworkXMLParserData(
+	dataList.push_back(ZLNetworkManager::Instance().createXMLParserData(
 		url(), 
 		new LitResDataParser(children, link().authenticationManager())
 	));
@@ -332,7 +331,7 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 	std::vector<LitResAuthor> authors;
 
 	ZLExecutionData::Vector dataList;
-	dataList.push_back(new ZLNetworkXMLParserData(
+	dataList.push_back(ZLNetworkManager::Instance().createXMLParserData(
 		url(), 
 		new LitResAuthorsParser(authors)
 	));
