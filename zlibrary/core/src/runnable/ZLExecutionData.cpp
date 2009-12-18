@@ -30,7 +30,7 @@ ZLExecutionData::ZLExecutionData() {
 ZLExecutionData::~ZLExecutionData() {
 }
 
-void ZLExecutionData::setListener(shared_ptr<ZLSlowProcessListener> listener) {
+void ZLExecutionData::setListener(shared_ptr<Listener> listener) {
 	if (!myListener.isNull()) {
 		myListener->myProcess = 0;
 	}
@@ -49,13 +49,13 @@ void ZLExecutionData::setPercent(int ready, int full) {
 void ZLExecutionData::onCancel() {
 }
 
-ZLSlowProcessListener::ZLSlowProcessListener() {
+ZLExecutionData::Listener::Listener() {
 }
 
-ZLSlowProcessListener::~ZLSlowProcessListener() {
+ZLExecutionData::Listener::~Listener() {
 }
 
-void ZLSlowProcessListener::cancelProcess() {
+void ZLExecutionData::Listener::cancelProcess() {
 	if (myProcess != 0) {
 		myProcess->onCancel();
 	}

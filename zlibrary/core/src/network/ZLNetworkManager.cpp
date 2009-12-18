@@ -141,11 +141,11 @@ void ZLNetworkManager::setStandardOptions(void *curlHandle, const std::string &p
 	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYHOST, 2L);
 }
 
-std::string ZLNetworkManager::downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLSlowProcessListener> listener) const {
+std::string ZLNetworkManager::downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLExecutionData::Listener> listener) const {
 	return downloadFile(url, fileName, "", listener);
 }
 
-std::string ZLNetworkManager::downloadFile(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLSlowProcessListener> listener) const {
+std::string ZLNetworkManager::downloadFile(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) const {
 	ZLFile fileToWrite(fileName);
 	shared_ptr<ZLOutputStream> stream = fileToWrite.outputStream(true);
 	if (stream.isNull() || !stream->open()) {

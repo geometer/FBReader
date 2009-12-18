@@ -28,10 +28,10 @@ ZLProgressDialog::ZLProgressDialog(const ZLResourceKey &key) : myMessage(ZLDialo
 ZLProgressDialog::~ZLProgressDialog() {
 }
 
-class ZLProgressDialog::SlowProcessListener : public ZLSlowProcessListener {
+class ZLProgressDialog::ProgressListener : public ZLExecutionData::Listener {
 
 public:
-	SlowProcessListener(ZLProgressDialog &dialog);
+	ProgressListener(ZLProgressDialog &dialog);
 
 private:
 	void showPercent(int ready, int full);
@@ -50,7 +50,7 @@ std::string ZLProgressDialog::messageText(int percent) const {
 	return message + '%';
 }
 
-void ZLProgressDialog::SlowProcessListener::showPercent(int ready, int full) {
+void ZLProgressDialog::ProgressListener::showPercent(int ready, int full) {
 	if (full <= 0) {
 		return;
 	}
@@ -58,9 +58,9 @@ void ZLProgressDialog::SlowProcessListener::showPercent(int ready, int full) {
 	myDialog.setMessage(myDialog.messageText(std::min(100, (int)(ready * 100. / full))));  
 }
 
-ZLProgressDialog::SlowProcessListener::SlowProcessListener(ZLProgressDialog &dialog) : myDialog(dialog) {
+ZLProgressDialog::ProgressListener::ProgressListener(ZLProgressDialog &dialog) : myDialog(dialog) {
 }
 
-shared_ptr<ZLSlowProcessListener> ZLProgressDialog::listener() {
-	return new SlowProcessListener(*this);
+shared_ptr<ZLExecutionData::Listener> ZLProgressDialog::listener() {
+	return new ProgressListener(*this);
 }

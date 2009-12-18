@@ -27,7 +27,7 @@
 class ZLProgressDialog {
 
 private:
-	class SlowProcessListener;
+	class ProgressListener;
 
 protected:
 	ZLProgressDialog(const ZLResourceKey &key);
@@ -35,7 +35,7 @@ protected:
 public:
 	virtual ~ZLProgressDialog();
 
-	shared_ptr<ZLSlowProcessListener> listener();
+	shared_ptr<ZLExecutionData::Listener> listener();
 	virtual void run(ZLRunnable &runnable) = 0;
 	virtual void setMessage(const std::string &message) = 0;
 

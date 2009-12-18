@@ -227,7 +227,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &networkBookId
 	return BooksDB::Instance().getNetFile(::normalize(networkBookId));
 }
 
-bool NetworkLinkCollection::downloadBook(const std::string &url, const std::string &networkBookId, NetworkLibraryBookItem::URLType format, std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLSlowProcessListener> listener) {
+bool NetworkLinkCollection::downloadBook(const std::string &url, const std::string &networkBookId, NetworkLibraryBookItem::URLType format, std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
 	const std::string nURL = ::normalize(url);
 	const std::string nNetworkBookId = ::normalize(networkBookId);
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];

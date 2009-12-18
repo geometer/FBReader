@@ -28,7 +28,6 @@
 #include <ZLExecutionData.h>
 
 class ZLNetworkData;
-class ZLSlowProcessListener;
 class ZLOutputStream;
 
 class ZLNetworkManager {
@@ -66,8 +65,8 @@ protected:
 
 public:
 	// returns error message
-	std::string downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLSlowProcessListener> listener = 0) const;
-	std::string downloadFile(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLSlowProcessListener> listener = 0) const;
+	std::string downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLExecutionData::Listener> listener = 0) const;
+	std::string downloadFile(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener = 0) const;
 	// returns error message
 	std::string perform(const ZLExecutionData::Vector &dataList) const;
 
