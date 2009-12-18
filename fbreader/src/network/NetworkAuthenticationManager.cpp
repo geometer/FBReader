@@ -89,5 +89,6 @@ std::string NetworkAuthenticationManager::recoverPassword(const std::string &) {
 }
 
 const std::string &NetworkAuthenticationManager::certificate() {
-	return "";
+	static const std::string _empty = "";
+	return _empty;
 }
