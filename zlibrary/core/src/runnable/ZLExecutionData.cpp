@@ -17,11 +17,22 @@
  * 02110-1301, USA.
  */
 
-#include <ZLNetworkManager.h>
 #include <ZLExecutionData.h>
 
-void ZLExecutionData::executeAll(const Vector &dataVector) {
-	ZLNetworkManager::Instance().perform(dataVector);
+std::set<ZLExecutionData::Runner*> ZLExecutionData::ourRunners;
+
+std::string ZLExecutionData::perform(const Vector &dataVector) {
+	std::string result;
+	for (std::set<Runner*>::const_iterator it = ourRunners.begin(); it != ourRunners.end(); ++it) {
+		std::string part = (*it)->perform(dataVector);
+		if (!part.empty()) {
+			if (!result.empty()) {
+				result += '\n';
+			}
+			result += part;
+		}
+	}
+	return result;
 }
 
 ZLExecutionData::ZLExecutionData() {
@@ -47,6 +58,14 @@ void ZLExecutionData::setPercent(int ready, int full) {
 }
 
 void ZLExecutionData::onCancel() {
+}
+
+ZLExecutionData::Runner::Runner() {
+	ourRunners.insert(this);
+}
+
+ZLExecutionData::Runner::~Runner() {
+	ourRunners.erase(this);
 }
 
 ZLExecutionData::Listener::Listener() {

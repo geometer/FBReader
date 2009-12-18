@@ -106,7 +106,7 @@ bool NetworkView::CoverUpdater::hasTasks() const {
 }
 
 void NetworkView::CoverUpdater::run() {
-	ZLExecutionData::executeAll(myDataVector);
+	ZLExecutionData::perform(myDataVector);
 }
 
 NetworkView::CoverUpdaterRunner::CoverUpdaterRunner(shared_ptr<CoverUpdater> updater) : myUpdater(updater) {

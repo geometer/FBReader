@@ -31,7 +31,7 @@ class ZLNetworkData;
 class ZLOutputStream;
 class ZLXMLReader;
 
-class ZLNetworkManager {
+class ZLNetworkManager : public ZLExecutionData::Runner {
 
 public:
 	static void deleteInstance();
@@ -69,8 +69,6 @@ public:
 	// returns error message
 	std::string downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLExecutionData::Listener> listener = 0) const;
 	std::string downloadFile(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener = 0) const;
-	// returns error message
-	virtual std::string perform(const ZLExecutionData::Vector &dataList) const = 0;
 
 public:
 	virtual shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream = 0) const = 0;

@@ -22,10 +22,25 @@
 
 #include <string>
 #include <vector>
+#include <set>
 
 #include <shared_ptr.h>
 
 class ZLExecutionData {
+
+public:
+	typedef std::vector<shared_ptr<ZLExecutionData> > Vector;
+
+public:
+	class Runner {
+
+	protected:
+		Runner();
+		virtual ~Runner();
+
+	public:
+		virtual std::string perform(const Vector &dataVector) const = 0;
+	};
 
 public:
 	class Listener {
@@ -46,8 +61,10 @@ public:
 	};
 
 public:
-	typedef std::vector<shared_ptr<ZLExecutionData> > Vector;
-	static void executeAll(const Vector &dataVector);
+	static std::string perform(const Vector &dataVector);
+
+private:
+	static std::set<Runner*> ourRunners;
 
 protected:
 	ZLExecutionData();
