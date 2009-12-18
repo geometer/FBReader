@@ -29,6 +29,7 @@
 #include "ZLCurlNetworkManager.h"
 #include "ZLCurlNetworkDownloadData.h"
 #include "ZLCurlNetworkXMLParserData.h"
+#include "ZLCurlNetworkPostFormData.h"
 
 void ZLCurlNetworkManager::createInstance() {
 	ourInstance = new ZLCurlNetworkManager();
@@ -50,6 +51,14 @@ shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createXMLParserData(const std:
 	return new ZLCurlNetworkXMLParserData(url, reader);
 }
 
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData) const {
+	return new ZLCurlNetworkPostFormData(url, sslCertificate, formData);
+}
+
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData) const {
+	return new ZLCurlNetworkPostFormData(url, formData);
+}
+
 void ZLCurlNetworkManager::setStandardOptions(CURL *handle, const std::string &proxy) const {
 	static const char *AGENT_NAME = "FBReader";
 
@@ -63,6 +72,7 @@ void ZLCurlNetworkManager::setStandardOptions(CURL *handle, const std::string &p
 	curl_easy_setopt(handle, CURLOPT_CONNECTTIMEOUT, ConnectTimeoutOption().value());
 	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 1L);
 	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYHOST, 2L);
+	curl_easy_setopt(handle, CURLOPT_COOKIEJAR, CookiesPath().c_str());
 }
 
 std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {
@@ -71,6 +81,8 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 	if (dataList.empty()) {
 		return errorResource["emptyLibrariesList"].value();
 	}
+
+	std::set<std::string> errors;
 
 	const std::string proxy = proxyHost() + ':' + proxyPort();
 	CURLM *handle = curl_multi_init();
@@ -81,6 +93,10 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 		}
 		ZLCurlNetworkData &nData = (ZLCurlNetworkData&)**it;
 		if (!nData.doBefore()) {
+			const std::string &err = nData.errorMessage();
+			if (!err.empty()) {
+				errors.insert(err);
+			}
 			continue;
 		}
 		CURL *easyHandle = nData.handle();
@@ -98,7 +114,6 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 	} while ((res == CURLM_CALL_MULTI_PERFORM) || (counter > 0));
 
 	CURLMsg *message;
-	std::set<std::string> errors;
 	do {
 		int queueSize;
 		message = curl_multi_info_read(handle, &queueSize);

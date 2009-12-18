@@ -49,6 +49,10 @@ std::string ZLNetworkManager::CacheDirectory() {
 		"cache";
 }
 
+std::string ZLNetworkManager::CookiesPath() {
+	return ZLFile(CacheDirectory() + ZLibrary::FileNameDelimiter + "cookies").path();
+}
+
 ZLNetworkManager::ZLNetworkManager() {
 }
 

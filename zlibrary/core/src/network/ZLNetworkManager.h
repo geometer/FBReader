@@ -38,6 +38,7 @@ public:
 	static ZLNetworkManager &Instance();
 
 	static std::string CacheDirectory();
+	static std::string CookiesPath();
 
 protected:
 	static ZLNetworkManager *ourInstance;
@@ -77,6 +78,9 @@ public:
 
 	virtual shared_ptr<ZLExecutionData> createXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader) const = 0;
 	virtual shared_ptr<ZLExecutionData> createXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) const = 0;
+
+	virtual shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData) const = 0;
+	virtual shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData) const = 0;
 
 private:
 	mutable shared_ptr<ZLIntegerRangeOption> myConnectTimeoutOption;
