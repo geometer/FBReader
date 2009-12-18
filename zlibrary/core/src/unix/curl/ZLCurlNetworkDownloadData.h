@@ -21,11 +21,12 @@
 #define __ZLCURLNETWORKDOWNLOADDATA_H__
 
 #include <shared_ptr.h>
-#include <ZLNetworkData.h>
+
+#include "ZLCurlNetworkData.h"
 
 class ZLOutputStream;
 
-class ZLCurlNetworkDownloadData : public ZLNetworkData {
+class ZLCurlNetworkDownloadData : public ZLCurlNetworkData {
 
 private:
 	static size_t handleHeader(void *ptr, size_t size, size_t nmemb, ZLCurlNetworkDownloadData *self);

@@ -22,12 +22,12 @@
 
 #include <shared_ptr.h>
 
-#include <ZLNetworkData.h>
+#include "ZLCurlNetworkData.h"
 
 class ZLXMLReader;
 class ZLAsynchronousInputStream;
 
-class ZLCurlNetworkXMLParserData : public ZLNetworkData {
+class ZLCurlNetworkXMLParserData : public ZLCurlNetworkData {
 
 public:
 	ZLCurlNetworkXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader);

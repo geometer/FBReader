@@ -41,11 +41,11 @@ static size_t handleData(void *ptr, size_t size, size_t nmemb, void *data) {
 	return parserData->parseData(ptr, size, nmemb);
 }
 
-ZLCurlNetworkXMLParserData::ZLCurlNetworkXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) : ZLNetworkData(url), myReader(reader) {
+ZLCurlNetworkXMLParserData::ZLCurlNetworkXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) : ZLCurlNetworkData(url), myReader(reader) {
 	init();
 }
 
-ZLCurlNetworkXMLParserData::ZLCurlNetworkXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader) : ZLNetworkData(url, sslCertificate), myReader(reader) {
+ZLCurlNetworkXMLParserData::ZLCurlNetworkXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader) : ZLCurlNetworkData(url, sslCertificate), myReader(reader) {
 	init();
 }
 

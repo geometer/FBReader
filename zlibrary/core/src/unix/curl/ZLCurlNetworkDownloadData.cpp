@@ -46,10 +46,10 @@ size_t ZLCurlNetworkDownloadData::writeToStream(void *ptr, size_t size, size_t n
 	return size * nmemb;
 }
 
-ZLCurlNetworkDownloadData::ZLCurlNetworkDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream) : ZLNetworkData(url), myFileName(fileName), myFileSize(-1), myDownloadedSize(0), myOutputStream(stream) {
+ZLCurlNetworkDownloadData::ZLCurlNetworkDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream) : ZLCurlNetworkData(url), myFileName(fileName), myFileSize(-1), myDownloadedSize(0), myOutputStream(stream) {
 }
 
-ZLCurlNetworkDownloadData::ZLCurlNetworkDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream) : ZLNetworkData(url, sslCertificate), myFileName(fileName), myFileSize(-1), myDownloadedSize(0), myOutputStream(stream) {
+ZLCurlNetworkDownloadData::ZLCurlNetworkDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream) : ZLCurlNetworkData(url, sslCertificate), myFileName(fileName), myFileSize(-1), myDownloadedSize(0), myOutputStream(stream) {
 }
 
 bool ZLCurlNetworkDownloadData::doBefore() {
