@@ -34,6 +34,7 @@
 #include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
+#include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
 
 class ZLQtLibraryImplementation : public ZLibraryImplementation {
 
@@ -59,6 +60,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
 	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
+	ZLCurlNetworkManager::createInstance();
 
 	ZLKeyUtil::setKeyNamesFileName("keynames-qt4.xml");
 }

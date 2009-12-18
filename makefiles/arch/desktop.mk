@@ -6,7 +6,7 @@ endif
 IMAGEDIR = $(INSTALLDIR)/share/pixmaps
 APPIMAGEDIR = $(INSTALLDIR)/share/pixmaps/%APPLICATION_NAME%
 
-CC = gcc
+CC = ccache gcc
 AR = ar rsu
 LD = g++
 

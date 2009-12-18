@@ -70,6 +70,9 @@ public:
 	// returns error message
 	std::string perform(const ZLExecutionData::Vector &dataList) const;
 
+public:
+	virtual shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName);
+
 private:
 	// void* instead of CURL* to avoid curl.h including
 	void setStandardOptions(void *curlHandle, const std::string &proxy) const;

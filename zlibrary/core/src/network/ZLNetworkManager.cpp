@@ -40,9 +40,6 @@ void ZLNetworkManager::deleteInstance() {
 }
 
 ZLNetworkManager &ZLNetworkManager::Instance() {
-	if (ourInstance == 0) {
-		ourInstance = new ZLNetworkManager();
-	}
 	return *ourInstance;
 }
 
@@ -262,4 +259,8 @@ std::string ZLNetworkManager::perform(const ZLExecutionData::Vector &dataList) c
 		result += *et;
 	}
 	return result;
+}
+
+shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadData(const std::string &url, const std::string &fileName) {
+	return new ZLNetworkDownloadData(url, fileName);
 }
