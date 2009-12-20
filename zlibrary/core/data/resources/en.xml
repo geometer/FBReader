@@ -62,6 +62,7 @@
 		<node name="he" value="Hebrew" />
 		<node name="id" value="Indonesian" />
 		<node name="it" value="Italian" />
+		<node name="lt" value="Lithuanian" />
 		<node name="no" value="Norwegian" />
 		<node name="pt" value="Portuguese" />
 		<node name="ru" value="Russian" />

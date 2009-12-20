@@ -62,6 +62,7 @@
 		<node name="he" value="иврит" />
 		<node name="id" value="индонезийский" />
 		<node name="it" value="итальянский" />
+		<node name="lt" value="литовский" />
 		<node name="no" value="норвежский" />
 		<node name="pt" value="португальский" />
 		<node name="ru" value="русский" />
