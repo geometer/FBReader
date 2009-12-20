@@ -486,6 +486,10 @@
 			<node name="title" value="Восстановление пароля" />
 			<node name="message" value="Инструкция по восстановлению&#10;выслана на адрес&#10;%s" />
 		</node>
+		<node name="cantOpenDownloadedFile">
+			<node name="title" value="Ошибка" />
+			<node name="message" value="Не удается открыть загруженный файл&#10;%s." />
+		</node>
 	</node>
 	<node name="style">
 		<node name="Base" value="текста по умолчанию" />

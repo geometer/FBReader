@@ -63,6 +63,7 @@
 		<node name="he" value="希伯来语" />
 		<node name="id" value="印度语" />
 		<node name="it" value="意大利语" />
+		<node name="lt" toBeTranslated="true" value="Lithuanian" />
 		<node name="no" value="挪威语" />
 		<node name="pt" value="葡萄牙语" />
 		<node name="ru" value="俄罗斯语" />

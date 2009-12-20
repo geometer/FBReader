@@ -63,6 +63,7 @@
 		<node name="he" value="Hebr&#228;isch"/>
 		<node name="id" value="Indonesisch" />
 		<node name="it" value="Italienisch" />
+		<node name="lt" toBeTranslated="true" value="Lithuanian" />
 		<node name="no" value="Norwegisch" />
 		<node name="pt" value="Portugisisch" />
 		<node name="ru" value="Russisch" />

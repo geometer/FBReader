@@ -63,6 +63,7 @@
 		<node name="he" value="Heprea" />
 		<node name="id" value="Indonesia" />
 		<node name="it" value="Italia" />
+		<node name="lt" toBeTranslated="true" value="Lithuanian" />
 		<node name="no" value="Norja" />
 		<node name="pt" value="Portugali" />
 		<node name="ru" value="Venäjä" />
