@@ -487,6 +487,10 @@
 			<node name="title" toBeTranslated="true" value="Password Recovery" />
 			<node name="message" toBeTranslated="true" value="A message with further instructions&#10;has been sent to&#10;%s" />
 		</node>
+		<node name="cantOpenDownloadedFile">
+			<node name="title" toBeTranslated="true" value="Download Error" />
+			<node name="message" toBeTranslated="true" value="Can&apos;t open downloaded file&#10;%s." />
+		</node>
 	</node>
 	<node name="style">
 		<node name="Base" value="Pagrindiniai" />
