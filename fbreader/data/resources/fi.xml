@@ -3,67 +3,67 @@
 <resources>
 	<node name="libraryView">
 		<node name="authorNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
-			<node name="edit" toBeTranslated="true" value="Edit information" />
-			<node name="unknownAuthor" toBeTranslated="true" value="Unknown Author" />
+			<node name="expandTree" value="Näytä kirjat" />
+			<node name="collapseTree" value="Piilota kirjat" />
+			<node name="edit" value="Muokkaa tietoja" />
+			<node name="unknownAuthor" value="Tuntematon tekijä" />
 		</node>
 		<node name="tagNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
-			<node name="edit" toBeTranslated="true" value="Edit tag" />
-			<node name="clone" toBeTranslated="true" value="Clone tag" />
-			<node name="delete" toBeTranslated="true" value="Remove tag" />
-			<node name="noTags" toBeTranslated="true" value="Books with no tags" />
+			<node name="expandTree" value="Näytä kirjat" />
+			<node name="collapseTree" value="Piilota kirjat" />
+			<node name="edit" value="Muokkaa luokkaa" />
+			<node name="clone" value="Kloonaa luokka" />
+			<node name="delete" value="Poista luokka" />
+			<node name="noTags" value="Kirjat ilman luokkaa" />
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" value="Näytä kirjat" />
+			<node name="collapseTree" value="Piilota kirjat" />
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Read book" />
-			<node name="edit" toBeTranslated="true" value="Edit information" />
-			<node name="delete" toBeTranslated="true" value="Remove book" />
+			<node name="read" value="Lue kirja" />
+			<node name="edit" value="Muokkaa tietoja" />
+			<node name="delete" value="Poista kirja" />
 		</node>
 	</node>
 	<node name="networkView">
 		<node name="libraryItemNode">
-			<node name="expandTree" toBeTranslated="true" value="Expand" />
-			<node name="collapseTree" toBeTranslated="true" value="Collapse" />
-			<node name="reload" toBeTranslated="true" value="Reload" />
-			<node name="openInBrowser" toBeTranslated="true" value="Open in browser" />
+			<node name="expandTree" value="Laajenna" />
+			<node name="collapseTree" value="Piilota" />
+			<node name="reload" value="Lataa uudelleen" />
+			<node name="openInBrowser" value="Avaa selaimessa" />
 		</node>
 		<node name="libraryItemRootNode">
-			<node name="expandTree" toBeTranslated="true" value="Open catalog" />
-			<node name="collapseTree" toBeTranslated="true" value="Close catalog" />
-			<node name="login" toBeTranslated="true" value="Sign in" />
-			<node name="logout" toBeTranslated="true" value="Sign out (%s)" />
-			<node name="reload" toBeTranslated="true" value="Reload" />
-			<node name="dontShow" toBeTranslated="true" value="Don&apos;t show this catalog" />
-			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)" />
-			<node name="register" toBeTranslated="true" value="Sign up" />
-			<node name="passwordRecovery" toBeTranslated="true" value="Recover password" />
+			<node name="expandTree" value="Avaa luettelo" />
+			<node name="collapseTree" value="Sulje luettelo" />
+			<node name="login" value="Kirjaudu sisään" />
+			<node name="logout" value="Kirjaudu ulos (%s)" />
+			<node name="reload" value="Lataa uudelleen" />
+			<node name="dontShow" value="Älä näytä tätä luetteloa" />
+			<node name="refillAccount" value="Muuta tili (Nyt: %s)" />
+			<node name="register" value="Rekisteröidy" />
+			<node name="passwordRecovery" value="Palauta salasana" />
 		</node>
 		<node name="searchResultNode">
-			<node name="title" toBeTranslated="true" value="Search results" />
-			<node name="expandTree" toBeTranslated="true" value="Show results" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide results" />
+			<node name="title" value="Hakutulokset" />
+			<node name="expandTree" value="Näytä tulokset" />
+			<node name="collapseTree" value="Piilota tulokset" />
 		</node>
 		<node name="authorNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" value="Näytä kirjat" />
+			<node name="collapseTree" value="Piilota kirjat" />
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" value="Näytä kirjat" />
+			<node name="collapseTree" value="Piilota kirjat" />
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Read local copy" />
-			<node name="delete" toBeTranslated="true" value="Delete local copy" />
-			<node name="download" toBeTranslated="true" value="Download" />
-			<node name="readDemo" toBeTranslated="true" value="Read demo" />
-			<node name="downloadDemo" toBeTranslated="true" value="Download demo" />
-			<node name="buy" toBeTranslated="true" value="Buy (%s)" />
+			<node name="read" value="Lue paikallista kopiota" />
+			<node name="delete" value="Poista paikallinen kopio" />
+			<node name="download" value="Lataa" />
+			<node name="readDemo" value="Lue demo" />
+			<node name="downloadDemo" value="Lataa demo" />
+			<node name="buy" value="Osta (%s)" />
 		</node>
 	</node>
 	<node name="menu">
@@ -141,11 +141,11 @@
 			<node name="go" value="&amp;Siirry" />
 			<node name="thisOnly" value="Vain tämä" />
 			<node name="withSubtags" value="Alaluokalliset" />
-			<node name="removeLink" toBeTranslated="true" value="Remove from library" />
-			<node name="removeFile" toBeTranslated="true" value="Remove from disk" />
-			<node name="yesToAll" toBeTranslated="true" value="Yes to &amp;all" />
-			<node name="buy" toBeTranslated="true" value="&amp;Buy" />
-			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download" />
+			<node name="removeLink" value="Poista kirjastosta" />
+			<node name="removeFile" value="Poista levyltä" />
+			<node name="yesToAll" value="Kyllä &amp;kaikkiin" />
+			<node name="buy" value="&amp;Osta" />
+			<node name="buyAndDownload" value="Osta ja &amp;lataa" />
 		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Asetukset" />
@@ -184,10 +184,10 @@
 					<node name="navigation" value="Salli navigointi" />
 				</node>
 				<node name="Scrolling" value="Vieritys">
-					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs" />
-					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling" />
-					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling" />
-					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling" />
+					<node name="keyScrollDelay" value="Näppäinvierityksen painnallusten viive, msecs" />
+					<node name="keyLinesToScroll" value="Vieritettävien rivien määtä rivi rivivierityksessä" />
+					<node name="keyLinesToKeep" value="Säilytettävät rivit sivuvierityksessä" />
+					<node name="enableTapScrolling" value="Ota käyttöön kosketusvieritys" />
 					<node name="fingerOnly" value="Vieritä ainoastaan kosketuksesta" />
 				</node>
 				<node name="Selection" value="Valinta">
@@ -261,7 +261,7 @@
 					<node name="action">
 						<node name="none" value="Ei mitään" />
 						<node name="showLibrary" value="Näytä kirjasto" />
-						<node name="showNetLibrary" toBeTranslated="true" value="Show network library" />
+						<node name="showNetLibrary" value="Näytä verkkokirjasto" />
 						<node name="showRecent" value="Näytä viimeisimmät kirjat" />
 						<node name="previousBook" value="Avaa edellinen kirja" />
 						<node name="toc" value="Näytä sisällysluettelo" />
@@ -270,10 +270,10 @@
 						<node name="gotoSectionEnd" value="Siirry tekstiosion loppuun" />
 						<node name="nextTOCSection" value="Sisällysluettelon seuraavaan kohtaan" />
 						<node name="previousTOCSection" value="Sisällysluettelon edelliseen kohtaan" />
-						<node name="pageForward" toBeTranslated="true" value="Scroll page forward" />
-						<node name="pageBackward" toBeTranslated="true" value="Scroll page backward" />
-						<node name="lineForward" toBeTranslated="true" value="Scroll line forward" />
-						<node name="lineBackward" toBeTranslated="true" value="Scroll line backward" />
+						<node name="pageForward" value="Vieritä sivu eteenpäin" />
+						<node name="pageBackward" value="Vieritä sivu taaksepäin" />
+						<node name="lineForward" value="Vieritä rivi eteenpäin" />
+						<node name="lineBackward" value="Vieritä rivi taaksepäin" />
 						<node name="undo" value="Peru" />
 						<node name="redo" value="Palauta" />
 						<node name="copyToClipboard" value="Kopioi valittu teksti leikepöydälle" />
@@ -329,15 +329,15 @@
 					<node name="encodingSet" value="Merkistöalue" />
 					<node name="encoding" value="Merkistö" />
 				</node>
-				<node name="Authors" toBeTranslated="true" value="Authors">
-					<node name="authorDisplayName" toBeTranslated="true" value="Author Name" />
+				<node name="Authors" value="Tekijät">
+					<node name="authorDisplayName" value="Tekijän nimi" />
 				</node>
 				<node name="Series" value="Kirjasarja">
 					<node name="seriesTitle" value="Sarjan nimi" />
 					<node name="bookIndex" value="Kirjan numero" />
 				</node>
 				<node name="Tags" value="Luokka">
-					<node name="tags" toBeTranslated="true" value="Tag Name" />
+					<node name="tags" value="Luokan nimi" />
 				</node>
 				<node name="Text" value="Teksti">
 					<node name="breakType" value="Katkaise kappale" />
@@ -354,9 +354,9 @@
 			</node>
 		</node>
 		<node name="AuthorInfoDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Author Info" />
-			<node name="name" toBeTranslated="true" value="Author Name" />
-			<node name="sortKey" toBeTranslated="true" value="Author Sort Key" />
+			<node name="title" value="FBReader - Tekijän tiedot" />
+			<node name="name" value="Tekijän nimi" />
+			<node name="sortKey" value="Tekijän lajitteluavain" />
 		</node>
 		<node name="addFileDialog">
 			<node name="title" value="FBReader - Lisää kirja kirjastoon" />
@@ -375,7 +375,7 @@
 			<node name="author" value="Tekijä" />
 			<node name="category" value="Kategoria" />
 			<node name="description" value="Kuvaus" />
-			<node name="annotation" toBeTranslated="true" value="Search results for: %s" />
+			<node name="annotation" value="Hakutulokset haulle: %s" />
 		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Siirry sivulle" />
@@ -394,7 +394,7 @@
 		<node name="removeBookBox">
 			<node name="title" value="Poista kirja" />
 			<node name="message" value="Poista&#10;&quot;%s&quot;&#10;kirjastosta?" />
-			<node name="deleteFile" toBeTranslated="true" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?" />
+			<node name="deleteFile" value="Oletko varma, että haluat &#10;poistaa tiedoston&#10;“%s”&#10;levyltä?" />
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Poista luokka" />
@@ -405,8 +405,8 @@
 			<node name="message" value="Ei voitu avata:&#10;%s" />
 		</node>
 		<node name="removeFileErrorBox">
-			<node name="title" toBeTranslated="true" value="Error" />
-			<node name="message" toBeTranslated="true" value="Couldn&apos;t remove file&#10;%s" />
+			<node name="title" value="Virhe" />
+			<node name="message" value="Ei voitu poistaa tiedostoa&#10;%s" />
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Virhe" />
@@ -414,21 +414,21 @@
 		</node>
 		<node name="networkError">
 			<node name="emptyLibrariesList" value="Tyhjä kirjastolista" />
-			<node name="authenticationFailed" toBeTranslated="true" value="Authentication failed" />
-			<node name="internalError" toBeTranslated="true" value="Internal server error" />
-			<node name="purchaseNotEnoughMoney" toBeTranslated="true" value="Not enough money" />
-			<node name="purchaseMissingBook" toBeTranslated="true" value="Missing book" />
-			<node name="purchaseAlreadyPurchased" toBeTranslated="true" value="Already purchased" />
-			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased" />
-			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded" />
-			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation" />
-			<node name="loginAlreadyTaken" toBeTranslated="true" value="Username is already in use" />
-			<node name="loginNotSpecified" toBeTranslated="true" value="Please, enter a username" />
-			<node name="passwordNotSpecified" toBeTranslated="true" value="Please, enter a non-empty password" />
-			<node name="emailNotSpecified" toBeTranslated="true" value="Please, enter an e-mail address" />
-			<node name="invalidEMail" toBeTranslated="true" value="Invalid e-mail address" />
-			<node name="tooManyRegistrations" toBeTranslated="true" value="Too many registrations from your IP;&#10;try again in a few minutes" />
-			<node name="noUserEmail" toBeTranslated="true" value="No user was registered&#10;with specified e-mail address" />
+			<node name="authenticationFailed" value="Autentikointi epäonnistui" />
+			<node name="internalError" value="Sisäinen palvelinvirhe" />
+			<node name="purchaseNotEnoughMoney" value="Ei tarpeeksi rahaa" />
+			<node name="purchaseMissingBook" value="Puuttuva kirja" />
+			<node name="purchaseAlreadyPurchased" value="Jo ostettu" />
+			<node name="bookNotPurchased" value="Kirjaa ei ostettu" />
+			<node name="downloadLimitExceeded" value="Latausrajoitus ylitetty" />
+			<node name="unsupportedOperation" value="Toimintoa ei tuettu" />
+			<node name="loginAlreadyTaken" value="Käyttäjänimi on jo käytössä" />
+			<node name="loginNotSpecified" value="Syötä käyttäjänimi" />
+			<node name="passwordNotSpecified" value="Syötä salasana" />
+			<node name="emailNotSpecified" value="Syötä sähköpostiosoite" />
+			<node name="invalidEMail" value="Virheellinen sähköpostiosoite" />
+			<node name="tooManyRegistrations" value="Liian monta rekisteröintiä IP-osoitteestasi;&#10;yritä udelleen muutaman minuutin kuluttua" />
+			<node name="noUserEmail" value="Käyttäjää ei ole rekisteröity&#10;kyseiselle sähköpostiosoitteelle" />
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Virhe latauksessa" />
@@ -438,58 +438,58 @@
 			<node name="loadingBook" value="Avataan kirjaa..." />
 			<node name="loadingBookList" value="Avataan kirjalistaa..." />
 			<node name="migrate" value="Päivitetään uuteen versioon. Ole hyvä ja odota..." />
-			<node name="downloadBookList" value="Ladataan kirjalistaa. Odota..." />
-			<node name="downloadBook" value="Ladataan kirjaa. Odota..." />
-			<node name="downloadImages" toBeTranslated="true" value="Downloading images. Please, wait..." />
-			<node name="authentication" toBeTranslated="true" value="Authentication. Please, wait..." />
-			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..." />
-			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..." />
-			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..." />
-			<node name="registerUser" toBeTranslated="true" value="Registering new account. Please, wait..." />
-			<node name="passwordRecovery" toBeTranslated="true" value="Recovering password. Please, wait..." />
+			<node name="downloadBookList" value="Ladataan kirjalistaa. Ole hyvä ja odota..." />
+			<node name="downloadBook" value="Ladataan kirjaa. Ole hyvä ja odota..." />
+			<node name="downloadImages" value="Ladataan kuvia. Ole hyvä ja odota..." />
+			<node name="authentication" value="Tunnistaudutaan. Ole hyvä ja odota..." />
+			<node name="purchaseBook" value="Ostetaan kirjaa. Ole hyvä ja odota..." />
+			<node name="initializeAuthenticationManager" value="Ladataan tilin tietoja. Ole hyvä ja odota..." />
+			<node name="loadSubCatalog" value="Ladataan luetteloa. Ole hyvä ja odota..." />
+			<node name="registerUser" value="Rekisteröidään uutta tiliä. Ole hyvä ja odota..." />
+			<node name="passwordRecovery" value="Palautetaan salasanaa. Ole hyvä ja odota..." />
 		</node>
 		<node name="purchaseConfirmBox">
-			<node name="title" toBeTranslated="true" value="Purchase book" />
-			<node name="message" toBeTranslated="true" value="Are you sure you want to buy&#10;“%s”&#10;book?" />
+			<node name="title" value="Osta kirja" />
+			<node name="message" value="Oletko varma, että haluat ostaa kirjan&#10;“%s”&#10;?" />
 		</node>
 		<node name="AuthenticationDialog">
-			<node name="title" toBeTranslated="true" value="Authentication" />
-			<node name="login" toBeTranslated="true" value="Username" />
-			<node name="password" toBeTranslated="true" value="Password" />
-			<node name="skipIP" toBeTranslated="true" value="Don&apos;t bound to ip-address" />
-			<node name="loginIsEmpty" toBeTranslated="true" value="Username should be non-empty" />
+			<node name="title" value="Tunnistautuminen" />
+			<node name="login" value="Käyttäjänimi" />
+			<node name="password" value="Salasana" />
+			<node name="skipIP" value="Älä sido IP-osoitteeseen" />
+			<node name="loginIsEmpty" value="Käyttäjänimi ei saa olla tyhjä" />
 		</node>
 		<node name="emptyCatalogBox">
-			<node name="title" toBeTranslated="true" value="Information" />
-			<node name="message" toBeTranslated="true" value="Catalog is empty." />
+			<node name="title" value="Tietoja" />
+			<node name="message" value="Luettelo on tyhjä." />
 		</node>
 		<node name="dontShowConfirmBox">
-			<node name="title" toBeTranslated="true" value="Disable catalog" />
-			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;ou can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
+			<node name="title" value="Poista luettelo käytöstä" />
+			<node name="message" value="Oletko varma, että haluat poistaa luettelon&#10;“%s” käytöstä?&#10;&#10;Voit ottaa sen uudelleen käyttöön asetusten &#10;“Verkkohaku” välilehdellä." />
 		</node>
 		<node name="deleteLocalCopyBox">
-			<node name="title" toBeTranslated="true" value="Delete Book" />
-			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;“%s” book&#10;from the disk?" />
+			<node name="title" value="Poista kirja" />
+			<node name="message" value="Oletko varma, että&#10;haluat poistaa kirjan&#10;“%s” &#10;levyltä?" />
 		</node>
 		<node name="RegisterUserDialog">
-			<node name="title" toBeTranslated="true" value="Register User" />
-			<node name="login" toBeTranslated="true" value="Username" />
-			<node name="password" toBeTranslated="true" value="Password" />
-			<node name="confirmPassword" toBeTranslated="true" value="Password confirmation" />
-			<node name="email" toBeTranslated="true" value="E-mail" />
-			<node name="differentPasswords" toBeTranslated="true" value="Password and password confirmation must be the same." />
+			<node name="title" value="Rekisteröi käyttäjä" />
+			<node name="login" value="Käyttäjänimi" />
+			<node name="password" value="Salasana" />
+			<node name="confirmPassword" value="Vahvista salasana" />
+			<node name="email" value="Sähköpostiosoite" />
+			<node name="differentPasswords" value="Salasanat ei täsmää." />
 		</node>
 		<node name="PasswordRecoveryDialog">
-			<node name="title" toBeTranslated="true" value="Password Recovery" />
-			<node name="email" toBeTranslated="true" value="E-mail" />
+			<node name="title" value="Salasanan palautus" />
+			<node name="email" value="Sähköpostiosoite" />
 		</node>
 		<node name="recoverySuccessfulBox">
-			<node name="title" toBeTranslated="true" value="Password Recovery" />
-			<node name="message" toBeTranslated="true" value="A message with further instructions&#10;has been sent to&#10;%s" />
+			<node name="title" value="Salasanan palautus" />
+			<node name="message" value="Viesti tarvittavilla jatkotoiminpiteillä&#10;on lähetetty osoiteeseen&#10;%s" />
 		</node>
 		<node name="cantOpenDownloadedFile">
-			<node name="title" toBeTranslated="true" value="Download Error" />
-			<node name="message" toBeTranslated="true" value="Can&apos;t open downloaded file&#10;%s." />
+			<node name="title" value="Latausvirhe" />
+			<node name="message" value="Ei voida avata ladattua tiedostoa&#10;%s." />
 		</node>
 	</node>
 	<node name="style">

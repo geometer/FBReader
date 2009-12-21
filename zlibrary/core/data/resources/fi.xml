@@ -17,17 +17,17 @@
 			<node name="unknownErrorMessage" value="Tuntematon virhe" />
 			<node name="couldntCreateDirectoryMessage" value="Ei voitu luoda hakemistoa&#10;%s" />
 			<node name="couldntCreateFileMessage" value="Ei voitu luoda tiedostoa&#10;%s" />
-			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn&apos;t connect to the network" />
+			<node name="couldntConnectToNetworkMessage" value="Ei voitu kytkeytyä verkkoon" />
 			<node name="couldntConnectMessage" value="Ei voitu yhdistää palvelimeen %s" />
 			<node name="couldntResolveHostMessage" value="Ei tunnistettu palvelinta %s" />
 			<node name="couldntResolveProxyMessage" value="Ei tunnistettu välityspalvelinta %s" />
 			<node name="operationTimedOutMessage" value="Toiminto aikakatkaistiin" />
 			<node name="somethingWrongMessage" value="Jokin meni pieleen&#10;%s" />
-			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s" />
-			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK" />
-			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates" />
-			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn&apos;t read the SSL CA certificate file:&#10;%s" />
-			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s" />
+			<node name="sslConnectErrorMessage" value="SSL/TLS kättelyongelma:&#10;%s" />
+			<node name="peerFailedVerificationMessage" value="SSL sertifikaatti palvelimelta %s&#10; todettiin virheelliseksi" />
+			<node name="sslCertificateAuthorityMessage" value="SSL sertifikaattia palvelimelta %s&#10;ei voida varmistaa SSL CA sertifikaateista" />
+			<node name="sslBadCertificateFileMessage" value="Ei voitu lukea SSL CA sertifikaattitiedostoa:&#10;%s" />
+			<node name="sslShutdownFailedMessage" value="SSL yhteyden katkaisu epäonnistui palvelimelle&#10;%s" />
 		</node>
 	</node>
 	<node name="color">
@@ -63,7 +63,7 @@
 		<node name="he" value="Heprea" />
 		<node name="id" value="Indonesia" />
 		<node name="it" value="Italia" />
-		<node name="lt" toBeTranslated="true" value="Lithuanian" />
+		<node name="lt" value="Liettua" />
 		<node name="no" value="Norja" />
 		<node name="pt" value="Portugali" />
 		<node name="ru" value="Venäjä" />
