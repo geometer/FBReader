@@ -19,7 +19,6 @@
 
 #include "NetworkComparators.h"
 
-
 bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkLibraryItem> &bookPtr0, const shared_ptr<NetworkLibraryItem> &bookPtr1) {
 	std::string book0Type = bookPtr0->typeId();
 	std::string book1Type = bookPtr1->typeId();
@@ -31,8 +30,24 @@ bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkLibraryItem
 		return book0Type != NetworkLibraryBookItem::TYPE_ID;
 	}
 
-	NetworkLibraryBookItem &book0 = (NetworkLibraryBookItem &) *bookPtr0;
-	NetworkLibraryBookItem &book1 = (NetworkLibraryBookItem &) *bookPtr1;
+	const NetworkLibraryBookItem &book0 = (NetworkLibraryBookItem &) *bookPtr0;
+	const NetworkLibraryBookItem &book1 = (NetworkLibraryBookItem &) *bookPtr1;
+
+	const std::vector<NetworkLibraryBookItem::AuthorData> &authors0 =
+		book0.authors();
+	const std::vector<NetworkLibraryBookItem::AuthorData> &authors1 =
+		book1.authors();
+	if (authors0.empty() && !authors1.empty()) {
+		return true;
+	}
+	if (authors1.empty() && !authors0.empty()) {
+		return false;
+	}
+	if (!authors0.empty() && !authors1.empty()) {
+		if (authors0.front().SortKey != authors1.front().SortKey) {
+			return authors0.front().SortKey < authors1.front().SortKey;
+		}
+	}
 
 	/*if (book0.Index != book1.Index) {
 		return book0.Index < book1.Index;

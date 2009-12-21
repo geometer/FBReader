@@ -23,11 +23,11 @@
 			<node name="couldntResolveProxyMessage" value=" 无法解析代理服务器%s" />
 			<node name="operationTimedOutMessage" value="操作超时" />
 			<node name="somethingWrongMessage" value="出错 %s" />
-			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s" />
-			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK" />
-			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates" />
-			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn&apos;t read the SSL CA certificate file:&#10;%s" />
-			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s" />
+			<node name="sslConnectErrorMessage" value="SSL/TLS 连接出现问题:&#10;%s" />
+			<node name="peerFailedVerificationMessage" value="来自 %s&#10;的SSL验证被认定无效" />
+			<node name="sslCertificateAuthorityMessage" value="来自 %s&#10; 的SSL验证不能被已知的SSL CA certificates授权" />
+			<node name="sslBadCertificateFileMessage" value="无法读取 SSL CA certificate 文件:&#10;%s" />
+			<node name="sslShutdownFailedMessage" value="关闭SSL连接&#10;%s 失败" />
 		</node>
 	</node>
 	<node name="color">
@@ -63,7 +63,7 @@
 		<node name="he" value="希伯来语" />
 		<node name="id" value="印度语" />
 		<node name="it" value="意大利语" />
-		<node name="lt" toBeTranslated="true" value="Lithuanian" />
+		<node name="lt" value="立陶宛语" />
 		<node name="no" value="挪威语" />
 		<node name="pt" value="葡萄牙语" />
 		<node name="ru" value="俄罗斯语" />

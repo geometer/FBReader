@@ -277,6 +277,7 @@ std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) 
 	}
 	myForceReload = true;
 	mgr.collectPurchasedBooks(children);
+	std::sort(children.begin(), children.end(), NetworkBookItemComparator());
 	return error;
 }
 
