@@ -62,7 +62,7 @@
 		<node name="he" value="العبرية" />
 		<node name="id" value="الإندونيسية" />
 		<node name="it" value="الإيطالية" />
-		<node name="lt" toBeTranslated="true" value="Lithuanian" />
+		<node name="lt" value="لتوانية" />
 		<node name="no" value="النرويجية" />
 		<node name="pt" value="البرتغالية" />
 		<node name="ru" value="الروسية" />
