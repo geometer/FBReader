@@ -89,8 +89,6 @@ private:
 
 		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
 
-		unsigned char baseBidiLevel() const;
-		
 		unsigned char bidiLevel() const;
 
 	private:
@@ -281,9 +279,13 @@ friend class ZLTextSelectionModel;
 inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }
 
 inline ZLPaintContext &ZLTextView::ViewStyle::context() const { return myView.context(); }
-inline unsigned char ZLTextView::ViewStyle::baseBidiLevel() const { return myView.textArea().isRtl() ? 1 : 0; }
 inline void ZLTextView::ViewStyle::increaseBidiLevel() { ++myBidiLevel; }
-inline void ZLTextView::ViewStyle::decreaseBidiLevel() { if (myBidiLevel > baseBidiLevel()) --myBidiLevel; }
+inline void ZLTextView::ViewStyle::decreaseBidiLevel() {
+	unsigned char base = myView.textArea().isRtl() ? 1 : 0;
+	if (myBidiLevel > base) {
+		--myBidiLevel;
+	}
+}
 inline unsigned char ZLTextView::ViewStyle::bidiLevel() const { return myBidiLevel; }
 
 inline shared_ptr<ZLTextStyle> ZLTextView::ViewStyle::textStyle() const {

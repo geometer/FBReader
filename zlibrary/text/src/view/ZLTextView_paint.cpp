@@ -169,7 +169,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, si
 			}
 			int left = viewWidth() + lineStartMargin() - 1;
 			int right = lineStartMargin();
-			const int baseRTL = myStyle.baseBidiLevel() % 2;
+			const int baseRTL = myTextArea.isRtl() ? 1 : 0;
 
 			for (ZLTextElementIterator it = fromIt; it < toIt; ++it) {
 				const ZLTextElementRectangle &rectangle = *it;
@@ -273,7 +273,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, si
 }
 
 void ZLTextView::addRectangleToTextMap(const ZLTextElementRectangle &rectangle) {
-	const unsigned char index = myStyle.bidiLevel() - myStyle.baseBidiLevel();
+	const unsigned char index = myStyle.bidiLevel() - (myTextArea.isRtl() ? 1 : 0);
 	if (index > 0) {
 		while (myTextElementsToRevert.size() < index) {
 			myTextElementsToRevert.push_back(ZLTextElementMap());
@@ -285,7 +285,7 @@ void ZLTextView::addRectangleToTextMap(const ZLTextElementRectangle &rectangle) 
 }
 
 void ZLTextView::flushRevertedElements(unsigned char bidiLevel) {
-	const int index = (int)bidiLevel - (int)myStyle.baseBidiLevel();
+	const int index = (int)bidiLevel - (myTextArea.isRtl() ? 1 : 0);
 	if ((index < 0) || (myTextElementsToRevert.size() <= (size_t)index)) {
 		return;
 	}
@@ -427,7 +427,8 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info, int y) {
 		}
 	}
 
-	for (unsigned char i = myStyle.bidiLevel(); i > myStyle.baseBidiLevel(); --i) {
+	unsigned char minBidiLevel = myTextArea.isRtl() ? 1 : 0;
+	for (unsigned char i = myStyle.bidiLevel(); i > minBidiLevel; --i) {
 		flushRevertedElements(i - 1);
 	}
 }
