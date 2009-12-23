@@ -126,7 +126,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 		info.StartIndent += myStyle.textStyle()->firstLineIndentDelta(metrics);
 	}
 	if (!info.NodeInfo.isNull()) {
-		info.StartIndent += (myStyle.context().stringHeight() + 2) / 3 * 4 * (info.NodeInfo->VerticalLinesStack.size() + 1);
+		info.StartIndent += (context().stringHeight() + 2) / 3 * 4 * (info.NodeInfo->VerticalLinesStack.size() + 1);
 	}
 	info.Width = info.StartIndent;
 
@@ -162,7 +162,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 				if (wordOccured) {
 					wordOccured = false;
 					++newInfo.SpaceCounter;
-					lastSpaceWidth = myStyle.context().spaceWidth();
+					lastSpaceWidth = context().spaceWidth();
 					newInfo.Width += lastSpaceWidth;
 				}
 				break;
@@ -227,7 +227,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 			const ZLTextWord &word = (ZLTextWord&)element;
 			int spaceLeft = maxWidth - newInfo.Width;
 			if (breakedAtFirstWord ||
-					((word.Length > 3) && (spaceLeft > 2 * myStyle.context().spaceWidth()))) {
+					((word.Length > 3) && (spaceLeft > 2 * context().spaceWidth()))) {
 				ZLUnicodeUtil::Ucs4String ucs4string;
 				ZLUnicodeUtil::utf8ToUcs4(ucs4string, word.Data, word.Size);
 				ZLTextHyphenationInfo hyphenationInfo = ZLTextHyphenator::Instance().info(word);

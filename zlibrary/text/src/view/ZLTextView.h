@@ -304,11 +304,11 @@ inline ZLTextSelectionModel &ZLTextView::selectionModel() { return mySelectionMo
 inline const ZLTextSelectionModel &ZLTextView::selectionModel() const { return mySelectionModel; }
 
 inline int ZLTextView::viewWidth() const {
-	return std::max(myStyle.context().width() - leftMargin() - rightMargin(), 1);
+	return std::max(context().width() - leftMargin() - rightMargin(), 1);
 }
 
 inline int ZLTextView::viewHeight() const {
-	return std::max(myStyle.context().height() - topMargin() - bottomMargin(), 1);
+	return std::max(context().height() - topMargin() - bottomMargin(), 1);
 }
 
 inline int ZLTextView::visualX(int logicalX) const {
