@@ -65,7 +65,7 @@ private:
 	class ViewStyle {
 
 	public:
-		ViewStyle(const ZLTextView &view, ZLPaintContext &context);
+		ViewStyle(const ZLTextView &view);
 
 		void reset() const;
 		void setTextStyle(const shared_ptr<ZLTextStyle> style, unsigned char bidiLevel);
@@ -80,7 +80,7 @@ private:
 		void applySingleControl(const ZLTextElement &element);
 		void applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end);
 
-		const ZLPaintContext &context() const;
+		ZLPaintContext &context() const;
 		shared_ptr<ZLTextStyle> textStyle() const;
 		int elementWidth(const ZLTextElement &element, unsigned int charNumber, const ZLTextStyleEntry::Metrics &metrics) const;
 		int elementHeight(const ZLTextElement &element, const ZLTextStyleEntry::Metrics &metrics) const;
@@ -97,7 +97,6 @@ private:
 	private:
 		const ZLTextView &myView;
 		mutable shared_ptr<ZLTextStyle> myTextStyle;
-		mutable ZLPaintContext &myContext;
 		unsigned char myBaseBidiLevel;
 		mutable unsigned char myBidiLevel;
 		mutable int myWordHeight;
@@ -281,7 +280,7 @@ private:
 friend class ZLTextSelectionModel;
 };
 
-inline const ZLPaintContext &ZLTextView::ViewStyle::context() const { return myContext; }
+inline ZLPaintContext &ZLTextView::ViewStyle::context() const { return myView.context(); }
 inline void ZLTextView::ViewStyle::setBaseBidiLevel(unsigned char base) { myBaseBidiLevel = base; myBidiLevel = base; }
 inline unsigned char ZLTextView::ViewStyle::baseBidiLevel() const { return myBaseBidiLevel; }
 inline bool ZLTextView::ViewStyle::baseIsRtl() const { return myBaseBidiLevel % 2 == 1; }

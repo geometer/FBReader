@@ -29,13 +29,13 @@
 #include "ZLTextElement.h"
 #include "../style/ZLTextDecoratedStyle.h"
 
-ZLTextView::ViewStyle::ViewStyle(const ZLTextView &view, ZLPaintContext &context) : myView(view), myContext(context), myBaseBidiLevel(0) {
+ZLTextView::ViewStyle::ViewStyle(const ZLTextView &view) : myView(view), myBaseBidiLevel(0) {
 }
 
 void ZLTextView::ViewStyle::reset() const {
 	myTextStyle = myView.baseStyle();
 	myWordHeight = -1;
-	myContext.setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
+	context().setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
 	myBidiLevel = myBaseBidiLevel;
 }
 
@@ -44,7 +44,7 @@ void ZLTextView::ViewStyle::setTextStyle(const shared_ptr<ZLTextStyle> style, un
 		myTextStyle = style;
 		myWordHeight = -1;
 	}
-	myContext.setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
+	context().setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
 	myBidiLevel = bidiLevel;
 }
 
