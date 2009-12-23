@@ -99,7 +99,7 @@ protected:
 	int pressedY() const;
 	bool isReleasedWithoutMotion() const;
 
-	std::string word(const ZLTextElementArea &area) const;
+	std::string word(const ZLTextElementRectangle &rectangle) const;
 
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo() const;
 

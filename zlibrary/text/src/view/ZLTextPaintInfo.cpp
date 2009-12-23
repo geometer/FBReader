@@ -141,7 +141,7 @@ ZLTextWordCursor ZLTextView::findPercentFromStart(unsigned int percent) const {
 		return ZLTextWordCursor();
 	}
 
-	int height = textAreaHeight() * percent / 100;
+	int height = textHeight() * percent / 100;
 	bool visibleLineOccured = false;
 	std::vector<ZLTextLineInfoPtr>::const_iterator it;
 	for (it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
@@ -159,7 +159,7 @@ ZLTextWordCursor ZLTextView::findPercentFromStart(unsigned int percent) const {
 
 void ZLTextView::preparePaintInfo() {
 	int newWidth = viewWidth();
-	int newHeight = textAreaHeight();
+	int newHeight = textHeight();
 	if ((newWidth != myOldWidth) || (newHeight != myOldHeight)) {
 		myOldWidth = newWidth;
 		myOldHeight = newHeight;
@@ -216,7 +216,7 @@ void ZLTextView::preparePaintInfo() {
 			if (!myStartCursor.paragraphCursor().isFirst() || !myStartCursor.isStartOfParagraph()) {
 				switch (myScrollingMode) {
 					case NO_OVERLAPPING:
-						myStartCursor = findStart(myStartCursor, PIXEL_UNIT, textAreaHeight());
+						myStartCursor = findStart(myStartCursor, PIXEL_UNIT, textHeight());
 						break;
 					case KEEP_LINES:
 					{
@@ -225,12 +225,12 @@ void ZLTextView::preparePaintInfo() {
 							endCursor = findLineFromEnd(1);
 						}
 						if (!endCursor.isNull()) {
-							ZLTextWordCursor startCursor = findStart(endCursor, PIXEL_UNIT, textAreaHeight());
+							ZLTextWordCursor startCursor = findStart(endCursor, PIXEL_UNIT, textHeight());
 							myStartCursor =
 								(startCursor != myStartCursor) ?
-									startCursor : findStart(myStartCursor, PIXEL_UNIT, textAreaHeight());
+									startCursor : findStart(myStartCursor, PIXEL_UNIT, textHeight());
 						} else {
-							myStartCursor = findStart(myStartCursor, PIXEL_UNIT, textAreaHeight());
+							myStartCursor = findStart(myStartCursor, PIXEL_UNIT, textHeight());
 						}
 						break;
 					}
@@ -239,7 +239,7 @@ void ZLTextView::preparePaintInfo() {
 						break;
 					case SCROLL_PERCENTAGE:
 						myStartCursor =
-							findStart(myStartCursor, PIXEL_UNIT, textAreaHeight() * myOverlappingValue / 100);
+							findStart(myStartCursor, PIXEL_UNIT, textHeight() * myOverlappingValue / 100);
 						break;
 				}
 				myEndCursor = buildInfos(myStartCursor);
@@ -263,7 +263,7 @@ void ZLTextView::preparePaintInfo() {
 			}
 			break;
 		case END_IS_KNOWN:
-			myStartCursor = findStart(myEndCursor, PIXEL_UNIT, textAreaHeight());
+			myStartCursor = findStart(myEndCursor, PIXEL_UNIT, textHeight());
 			myEndCursor = buildInfos(myStartCursor);
 			break;
 	}
@@ -309,7 +309,7 @@ ZLTextWordCursor ZLTextView::buildInfos(const ZLTextWordCursor &start) {
 	myLineInfos.clear();
 
 	ZLTextWordCursor cursor = start;
-	int textAreaHeight = this->textAreaHeight();
+	int textHeight = this->textHeight();
 	int counter = 0;
 	do {
 		ZLTextWordCursor paragraphEnd = cursor;
@@ -323,19 +323,19 @@ ZLTextWordCursor ZLTextView::buildInfos(const ZLTextWordCursor &start) {
 
 		while (!infoPtr->End.isEndOfParagraph()) {
 			infoPtr = processTextLine(infoPtr->End, paragraphEnd);
-			textAreaHeight -= infoPtr->Height + infoPtr->Descent;
-			if ((textAreaHeight < 0) && (counter > 0)) {
+			textHeight -= infoPtr->Height + infoPtr->Descent;
+			if ((textHeight < 0) && (counter > 0)) {
 				break;
 			}
-			textAreaHeight -= infoPtr->VSpaceAfter;
+			textHeight -= infoPtr->VSpaceAfter;
 			cursor = infoPtr->End;
 			myLineInfos.push_back(infoPtr);
-			if (textAreaHeight < 0) {
+			if (textHeight < 0) {
 				break;
 			}
 			++counter;
 		}
-	} while (cursor.isEndOfParagraph() && cursor.nextParagraph() && !cursor.paragraphCursor().isEndOfSection() && (textAreaHeight >= 0));
+	} while (cursor.isEndOfParagraph() && cursor.nextParagraph() && !cursor.paragraphCursor().isEndOfSection() && (textHeight >= 0));
 
 	return cursor;
 }

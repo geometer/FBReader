@@ -35,7 +35,7 @@
 #include <ZLTextPositionIndicatorInfo.h>
 #include <ZLTextParagraphCursor.h>
 #include <ZLTextSelectionModel.h>
-#include <ZLTextArea.h>
+#include <ZLTextRectangle.h>
 #include <ZLTextParagraph.h>
 
 class ZLTextModel;
@@ -44,7 +44,6 @@ class ZLTextMark;
 class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 struct ZLTextTreeNodeInfo;
-struct ZLTextElementArea;
 
 class ZLTextView : public ZLView {
 
@@ -165,7 +164,7 @@ protected:
 
 	virtual void paint();
 
-	const ZLTextElementArea *elementByCoordinates(int x, int y) const;
+	const ZLTextElementRectangle *elementByCoordinates(int x, int y) const;
 	int paragraphIndexByCoordinates(int x, int y) const;
 
 	void rebuildPaintInfo(bool strong);
@@ -194,7 +193,7 @@ private:
 
 	void clear();
 
-	int areaBound(const ZLTextParagraphCursor &paragraph, const ZLTextElementArea &area, int toCharNumber, bool mainDir);
+	int rectangleBound(const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
 	ZLTextLineInfoPtr processTextLine(const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 	void prepareTextLine(const ZLTextLineInfo &info, int y);
 	void drawTextLine(const ZLTextLineInfo &info, int y, size_t from, size_t to);
@@ -225,9 +224,9 @@ private:
 
 	int viewWidth() const;
 	int viewHeight() const;
-	int textAreaHeight() const;
+	int textHeight() const;
 
-	void addAreaToTextMap(const ZLTextElementArea &area);
+	void addRectangleToTextMap(const ZLTextElementRectangle &rectangle);
 	void flushRevertedElements(unsigned char bidiLevel);
 
 	void gotoCharIndex(size_t charIndex);

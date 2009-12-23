@@ -33,16 +33,16 @@ void ZLTextSelectionModel::clearData() const {
 	myImage.reset();
 }
 
-int ZLTextSelectionModel::charIndex(const ZLTextElementArea &area, int x) {
-	myView.myStyle.setTextStyle(area.Style, area.BidiLevel);
+int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int x) {
+	myView.myStyle.setTextStyle(rectangle.Style, rectangle.BidiLevel);
 	ZLTextWordCursor cursor = myView.startCursor();
-	cursor.moveToParagraph(area.ParagraphIndex);
-	const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[area.ElementIndex];
+	cursor.moveToParagraph(rectangle.ParagraphIndex);
+	const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[rectangle.ElementIndex];
 	const bool mainDir =
-		area.BidiLevel % 2 == myView.myStyle.baseBidiLevel() % 2;
-	const int deltaX = mainDir ? x - area.XStart : area.XEnd - x;
-	const int len = area.Length;
-	const int start = area.StartCharIndex;
+		rectangle.BidiLevel % 2 == myView.myStyle.baseBidiLevel() % 2;
+	const int deltaX = mainDir ? x - rectangle.XStart : rectangle.XEnd - x;
+	const int len = rectangle.Length;
+	const int start = rectangle.StartCharIndex;
 	int diff = deltaX;
 	int previousDiff = diff;
 	int index;
@@ -77,7 +77,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 		bound.After.CharIndex = mainDir ?
 			it->StartCharIndex :
 			it->StartCharIndex + it->Length;
-		if (ZLTextElementArea::RangeChecker(x, y)(*it)) {
+		if (ZLTextElementRectangle::RangeChecker(x, y)(*it)) {
 			bound.Before.ParagraphIndex = bound.After.ParagraphIndex;
 			bound.Before.ElementIndex = bound.After.ElementIndex;
 			bound.Before.Exists = true;
@@ -88,7 +88,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 		} else if (it == myView.myTextElementMap.begin()) {
 			bound.Before.Exists = false;
 		} else {
-			const ZLTextElementArea &previous = *(it - 1);
+			const ZLTextElementRectangle &previous = *(it - 1);
 			bound.Before.ParagraphIndex = previous.ParagraphIndex;
 			bound.Before.ElementIndex = previous.ElementIndex;
 			bound.Before.CharIndex = (previous.BidiLevel % 2 == myView.myStyle.baseBidiLevel() % 2) ?
@@ -97,7 +97,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 			bound.Before.Exists = true;
 		}
 	} else {
-		const ZLTextElementArea &back = myView.myTextElementMap.back();
+		const ZLTextElementRectangle &back = myView.myTextElementMap.back();
 		bound.Before.ParagraphIndex = back.ParagraphIndex;
 		bound.Before.ElementIndex = back.ElementIndex;
 		bound.Before.CharIndex = back.StartCharIndex + back.Length;
@@ -496,7 +496,7 @@ bool ZLTextSelectionModel::selectWord(int x, int y) {
 	if (it == myView.myTextElementMap.end()) {
 		return false;
 	}
-	if (ZLTextElementArea::RangeChecker(x, y)(*it)) {
+	if (ZLTextElementRectangle::RangeChecker(x, y)(*it)) {
 		int startIndex = 0;
 		int endIndex = 1;
 		switch (it->Kind) {

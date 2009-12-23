@@ -31,7 +31,7 @@
 
 class ZLTextView;
 class ZLImageData;
-class ZLTextElementArea;
+class ZLTextElementRectangle;
 
 class ZLTextSelectionModel {
 
@@ -74,7 +74,7 @@ private:
 	};
 
 private:
-	int charIndex(const ZLTextElementArea &area, int x);
+	int charIndex(const ZLTextElementRectangle &rectangle, int x);
 
 	Range internalRange() const;
 	void setBound(Bound &bound, int x, int y);

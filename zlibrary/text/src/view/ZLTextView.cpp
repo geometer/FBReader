@@ -200,9 +200,9 @@ int ZLTextView::paragraphIndexByCoordinates(int x, int y) const {
 	return -1;
 }
 
-const ZLTextElementArea *ZLTextView::elementByCoordinates(int x, int y) const {
+const ZLTextElementRectangle *ZLTextView::elementByCoordinates(int x, int y) const {
 	ZLTextElementIterator it =
-		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextElementArea::RangeChecker(visualX(x), y));
+		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextElementRectangle::RangeChecker(visualX(x), y));
 	return (it != myTextElementMap.end()) ? &*it : 0;
 }
 
@@ -377,7 +377,7 @@ bool ZLTextView::onStylusPress(int x, int y) {
 
 	if (myModel->kind() == ZLTextModel::TREE_MODEL) {
 		ZLTextTreeNodeMap::const_iterator it =
-			std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextTreeNodeArea::RangeChecker(x, y));
+			std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextTreeNodeRectangle::RangeChecker(x, y));
 		if (it != myTreeNodeMap.end()) {
 			int paragraphIndex = it->ParagraphIndex;
 			ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)(*myModel)[paragraphIndex];
@@ -424,7 +424,7 @@ bool ZLTextView::onStylusMove(int x, int y) {
 	if (!myModel.isNull()) {
 		if (myModel->kind() == ZLTextModel::TREE_MODEL) {
 			ZLTextTreeNodeMap::const_iterator it =
-				std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextTreeNodeArea::RangeChecker(x, y));
+				std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextTreeNodeRectangle::RangeChecker(x, y));
 			if (it != myTreeNodeMap.end()) {
 				ZLApplication::Instance().setHyperlinkCursor(true);
 				return true;
@@ -583,7 +583,7 @@ int ZLTextView::infoSize(const ZLTextLineInfo &info, SizeUnit unit) {
 	return (unit == PIXEL_UNIT) ? (info.Height + info.Descent + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
 }
 
-int ZLTextView::textAreaHeight() const {
+int ZLTextView::textHeight() const {
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR)) {
 		return viewHeight() - indicatorInfo->height() - indicatorInfo->offset();

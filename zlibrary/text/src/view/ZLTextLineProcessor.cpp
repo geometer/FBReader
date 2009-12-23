@@ -120,7 +120,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 	const int fontSize = myStyle.textStyle()->fontSize();
 	// TODO: change metrics at font change
-	const ZLTextStyleEntry::Metrics metrics(fontSize, fontSize / 2, viewWidth(), textAreaHeight());
+	const ZLTextStyleEntry::Metrics metrics(fontSize, fontSize / 2, viewWidth(), textHeight());
 	info.StartIndent = myStyle.textStyle()->lineStartIndent(metrics, myStyle.baseIsRtl());
 	if (isFirstLine) {
 		info.StartIndent += myStyle.textStyle()->firstLineIndentDelta(metrics);

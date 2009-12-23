@@ -84,30 +84,30 @@ void ZLTextView::paint() {
 	ZLTextParagraphCursorCache::cleanup();
 }
 
-int ZLTextView::areaBound(const ZLTextParagraphCursor &paragraph, const ZLTextElementArea &area, int toCharIndex, bool mainDir) {
-	myStyle.setTextStyle(area.Style, area.BidiLevel);
-	const ZLTextWord &word = (const ZLTextWord&)paragraph[area.ElementIndex];
-	int length = toCharIndex - area.StartCharIndex;
+int ZLTextView::rectangleBound(const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharIndex, bool mainDir) {
+	myStyle.setTextStyle(rectangle.Style, rectangle.BidiLevel);
+	const ZLTextWord &word = (const ZLTextWord&)paragraph[rectangle.ElementIndex];
+	int length = toCharIndex - rectangle.StartCharIndex;
 	bool selectHyphenationSign = false;
-	if (length >= area.Length) {
-		selectHyphenationSign = area.AddHyphenationSign;
-		length = area.Length;
+	if (length >= rectangle.Length) {
+		selectHyphenationSign = rectangle.AddHyphenationSign;
+		length = rectangle.Length;
 	}
-	int areaLen = (length > 0) ?
-		myStyle.wordWidth(word, area.StartCharIndex, length, selectHyphenationSign) : 0;
-	return mainDir ? area.XStart + areaLen : area.XEnd - areaLen;
+	int rectangleLen = (length > 0) ?
+		myStyle.wordWidth(word, rectangle.StartCharIndex, length, selectHyphenationSign) : 0;
+	return mainDir ? rectangle.XStart + rectangleLen : rectangle.XEnd - rectangleLen;
 }
 
 typedef std::vector<ZLTextSelectionModel::Range> RangeVector;
 
-bool contains(const ZLTextSelectionModel::Range &range, const ZLTextElementArea &area) {
+bool contains(const ZLTextSelectionModel::Range &range, const ZLTextElementRectangle &rectangle) {
 	return
-		((range.first.ParagraphIndex < area.ParagraphIndex) ||
-		 ((range.first.ParagraphIndex == area.ParagraphIndex) &&
-			(range.first.ElementIndex <= area.ElementIndex))) &&
-		((range.second.ParagraphIndex > area.ParagraphIndex) ||
-		 ((range.second.ParagraphIndex == area.ParagraphIndex) &&
-			(range.second.ElementIndex >= area.ElementIndex)));
+		((range.first.ParagraphIndex < rectangle.ParagraphIndex) ||
+		 ((range.first.ParagraphIndex == rectangle.ParagraphIndex) &&
+			(range.first.ElementIndex <= rectangle.ElementIndex))) &&
+		((range.second.ParagraphIndex > rectangle.ParagraphIndex) ||
+		 ((range.second.ParagraphIndex == rectangle.ParagraphIndex) &&
+			(range.second.ElementIndex >= rectangle.ElementIndex)));
 }
 
 bool strongContains(const ZLTextSelectionModel::Range &range, const ZLTextWordCursor &cursor) {
@@ -122,10 +122,10 @@ bool strongContains(const ZLTextSelectionModel::Range &range, const ZLTextWordCu
 			(range.second.ElementIndex > wn)));
 }
 
-static RangeVector::const_iterator findRange(const RangeVector &ranges, const ZLTextElementArea &area) {
+static RangeVector::const_iterator findRange(const RangeVector &ranges, const ZLTextElementRectangle &rectangle) {
 	// TODO: binary search
 	for (RangeVector::const_iterator it = ranges.begin(); it != ranges.end(); ++it) {
-		if (contains(*it, area)) {
+		if (contains(*it, rectangle)) {
 			return it;
 		}
 	}
@@ -172,18 +172,18 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, si
 			const int baseRTL = myStyle.baseBidiLevel() % 2;
 
 			for (ZLTextElementIterator it = fromIt; it < toIt; ++it) {
-				const ZLTextElementArea &area = *it;
-				RangeVector::const_iterator rt2 = findRange(ranges, area);
+				const ZLTextElementRectangle &rectangle = *it;
+				RangeVector::const_iterator rt2 = findRange(ranges, rectangle);
 				if (rt2 == rt) {
 					if (rt != ranges.end()) {
-						const bool mainDir = area.BidiLevel % 2 == baseRTL;
-						int r = area.XEnd;
+						const bool mainDir = rectangle.BidiLevel % 2 == baseRTL;
+						int r = rectangle.XEnd;
 						const ZLTextSelectionModel::BoundElement &bound =
 							mainDir ? rt->second : rt->first;
-						if (bound.ElementIndex == area.ElementIndex) {
-							const ZLTextElement &element = paragraph[area.ElementIndex];
+						if (bound.ElementIndex == rectangle.ElementIndex) {
+							const ZLTextElement &element = paragraph[rectangle.ElementIndex];
 							if (element.kind() == ZLTextElement::WORD_ELEMENT) {
-								r = areaBound(paragraph, area, bound.CharIndex, mainDir);
+								r = rectangleBound(paragraph, rectangle, bound.CharIndex, mainDir);
 							}
 						}
 						right = std::max(right, r);
@@ -202,21 +202,21 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, si
 							left = lineStartMargin();
 						}
 
-						const bool mainDir = area.BidiLevel % 2 == baseRTL;
+						const bool mainDir = rectangle.BidiLevel % 2 == baseRTL;
 
-						int l = area.XStart - 1;
-						int r = area.XEnd;
+						int l = rectangle.XStart - 1;
+						int r = rectangle.XEnd;
 
 						const ZLTextSelectionModel::BoundElement &rightBound =
 							mainDir ? rt->second : rt->first;
 						const ZLTextSelectionModel::BoundElement &leftBound =
 							mainDir ? rt->first : rt->second;
-						if (paragraph[area.ElementIndex].kind() == ZLTextElement::WORD_ELEMENT) {
-							if (rightBound.ElementIndex == area.ElementIndex) {
-								r = areaBound(paragraph, area, rightBound.CharIndex, mainDir);
+						if (paragraph[rectangle.ElementIndex].kind() == ZLTextElement::WORD_ELEMENT) {
+							if (rightBound.ElementIndex == rectangle.ElementIndex) {
+								r = rectangleBound(paragraph, rectangle, rightBound.CharIndex, mainDir);
 							}
-							if (leftBound.ElementIndex == area.ElementIndex) {
-								l = areaBound(paragraph, area, leftBound.CharIndex, mainDir);
+							if (leftBound.ElementIndex == rectangle.ElementIndex) {
+								l = rectangleBound(paragraph, rectangle, leftBound.CharIndex, mainDir);
 							}
 						}
 
@@ -235,7 +235,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, si
 		}
 	}
 
-	y = std::min(y + info.Height, topMargin() + textAreaHeight());
+	y = std::min(y + info.Height, topMargin() + textHeight());
 	int x = lineStartMargin();
 	if (!info.NodeInfo.isNull()) {
 		drawTreeLines(*info.NodeInfo, x, y, info.Height, info.Descent + info.VSpaceAfter);
@@ -253,7 +253,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, si
 			if (kind == ZLTextElement::WORD_ELEMENT) {
 				drawWord(wx, wy, (const ZLTextWord&)element, it->StartCharIndex, -1, false);
 			} else {
-				context().drawImage(wx, wy, *((const ZLTextImageElement&)element).image(), viewWidth(), textAreaHeight(), ZLPaintContext::SCALE_REDUCE_SIZE);
+				context().drawImage(wx, wy, *((const ZLTextImageElement&)element).image(), viewWidth(), textHeight(), ZLPaintContext::SCALE_REDUCE_SIZE);
 			}
 		}
 	}
@@ -272,15 +272,15 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, si
 	}
 }
 
-void ZLTextView::addAreaToTextMap(const ZLTextElementArea &area) {
+void ZLTextView::addRectangleToTextMap(const ZLTextElementRectangle &rectangle) {
 	const unsigned char index = myStyle.bidiLevel() - myStyle.baseBidiLevel();
 	if (index > 0) {
 		while (myTextElementsToRevert.size() < index) {
 			myTextElementsToRevert.push_back(ZLTextElementMap());
 		}
-		myTextElementsToRevert[index - 1].push_back(area);
+		myTextElementsToRevert[index - 1].push_back(rectangle);
 	} else {
-		myTextElementMap.push_back(area);
+		myTextElementMap.push_back(rectangle);
 	}
 }
 
@@ -307,7 +307,7 @@ void ZLTextView::flushRevertedElements(unsigned char bidiLevel) {
 }
 
 void ZLTextView::prepareTextLine(const ZLTextLineInfo &info, int y) {
-	y = std::min(y + info.Height, topMargin() + textAreaHeight());
+	y = std::min(y + info.Height, topMargin() + textHeight());
 
 	myStyle.setTextStyle(info.StartStyle, info.StartBidiLevel);
 	int spaceCounter = info.SpaceCounter;
@@ -319,7 +319,7 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info, int y) {
 
 	const int fontSize = myStyle.textStyle()->fontSize();
 	// TODO: change metrics at font change
-	const ZLTextStyleEntry::Metrics metrics(fontSize, fontSize / 2, viewWidth(), textAreaHeight());
+	const ZLTextStyleEntry::Metrics metrics(fontSize, fontSize / 2, viewWidth(), textHeight());
 
 	switch (myStyle.textStyle()->alignment()) {
 		case ALIGN_RIGHT:
@@ -361,8 +361,8 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info, int y) {
 				const int height = myStyle.elementHeight(element, metrics);
 				const int descent = myStyle.elementDescent(element);
 				const int length = (kind == ZLTextElement::WORD_ELEMENT) ? ((const ZLTextWord&)element).Length - pos.charIndex() : 0;
-				addAreaToTextMap(
-					ZLTextElementArea(
+				addRectangleToTextMap(
+					ZLTextElementRectangle(
 						paragraphIndex, pos.elementIndex(), pos.charIndex(), length, false,
 						myStyle.textStyle(), kind,
 						x, x + width - 1, y - height + 1, y + descent, myStyle.bidiLevel()
@@ -417,8 +417,8 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info, int y) {
 			const int width = myStyle.wordWidth(word, start, len, addHyphenationSign);
 			const int height = myStyle.elementHeight(word, metrics);
 			const int descent = myStyle.elementDescent(word);
-			addAreaToTextMap(
-				ZLTextElementArea(
+			addRectangleToTextMap(
+				ZLTextElementRectangle(
 					paragraphIndex, info.End.elementIndex(), start, len, addHyphenationSign,
 					myStyle.textStyle(), ZLTextElement::WORD_ELEMENT,
 					x, x + width - 1, y - height + 1, y + descent, word.BidiLevel
