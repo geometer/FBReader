@@ -26,12 +26,10 @@
 #include <algorithm>
 
 #include <ZLTime.h>
-#include <ZLOptions.h>
 #include <ZLView.h>
 #include <ZLDialogManager.h>
 
 #include <ZLTextWord.h>
-#include <ZLTextStyle.h>
 #include <ZLTextPositionIndicatorInfo.h>
 #include <ZLTextParagraphCursor.h>
 #include <ZLTextSelectionModel.h>
