@@ -45,6 +45,16 @@ class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 struct ZLTextTreeNodeInfo;
 
+class ZLTextArea {
+
+public:
+	void setModel(shared_ptr<ZLTextModel> model);
+	shared_ptr<ZLTextModel> model() const;
+
+private:
+	shared_ptr<ZLTextModel> myModel;
+};
+
 class ZLTextView : public ZLView {
 
 public:
@@ -114,6 +124,8 @@ private:
 	const std::string &typeId() const;
 
 public:
+	const ZLTextArea &textArea() const;
+
 	void clearCaches();
 	void forceScrollbarUpdate();
 
@@ -133,7 +145,6 @@ public:
 	const ZLTextWordCursor &endCursor() const;
 
 	virtual void setModel(shared_ptr<ZLTextModel> model, const std::string &language);
-	const shared_ptr<ZLTextModel> model() const;
 
 	bool hasMultiSectionModel() const;
 	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly);
@@ -231,7 +242,8 @@ private:
 	void gotoCharIndex(size_t charIndex);
 
 private:
-	shared_ptr<ZLTextModel> myModel;
+	ZLTextArea myTextArea;
+
 	std::string myLanguage;
 
 	enum {
@@ -280,6 +292,12 @@ private:
 friend class ZLTextSelectionModel;
 };
 
+inline shared_ptr<ZLTextModel> ZLTextArea::model() const { return myModel; }
+
+inline const ZLTextArea &ZLTextView::textArea() const {
+	return myTextArea;
+}
+
 inline ZLPaintContext &ZLTextView::ViewStyle::context() const { return myView.context(); }
 inline void ZLTextView::ViewStyle::setBaseBidiLevel(unsigned char base) { myBaseBidiLevel = base; myBidiLevel = base; }
 inline unsigned char ZLTextView::ViewStyle::baseBidiLevel() const { return myBaseBidiLevel; }
@@ -298,7 +316,6 @@ inline shared_ptr<ZLTextStyle> ZLTextView::ViewStyle::textStyle() const {
 inline bool ZLTextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const ZLTextWordCursor &ZLTextView::startCursor() const { return myStartCursor; }
 inline const ZLTextWordCursor &ZLTextView::endCursor() const { return myEndCursor; }
-inline const shared_ptr<ZLTextModel> ZLTextView::model() const { return myModel; }
 inline ZLTextSelectionModel &ZLTextView::selectionModel() { return mySelectionModel; }
 inline const ZLTextSelectionModel &ZLTextView::selectionModel() const { return mySelectionModel; }
 

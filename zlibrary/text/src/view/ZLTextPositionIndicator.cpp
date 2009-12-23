@@ -110,7 +110,7 @@ size_t ZLTextView::PositionIndicator::startTextIndex() const {
 
 size_t ZLTextView::PositionIndicator::endTextIndex() const {
 	std::vector<size_t>::const_iterator i = myTextView.nextBreakIterator();
-	return (i != myTextView.myTextBreaks.end()) ? *i : myTextView.myModel->paragraphsNumber();
+	return (i != myTextView.myTextBreaks.end()) ? *i : myTextView.textArea().model()->paragraphsNumber();
 }
 
 void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
@@ -127,13 +127,13 @@ void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
 }
 
 size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraphIndex) const {
-	if (myTextView.myModel->kind() == ZLTextModel::TREE_MODEL) {
+	if (myTextView.textArea().model()->kind() == ZLTextModel::TREE_MODEL) {
 		ZLTextWordCursor cursor = myTextView.startCursor();
 		if (cursor.isNull()) {
 			cursor = myTextView.endCursor();
 		}
 		if (!cursor.isNull()) {
-			const ZLTextTreeModel &treeModel = (const ZLTextTreeModel&)*myTextView.myModel;
+			const ZLTextTreeModel &treeModel = (const ZLTextTreeModel&)*myTextView.textArea().model();
 			size_t sum = 0;
 			for (size_t i = 0; i < paragraphIndex; ++i) {
 				const ZLTextTreeParagraph *para = (const ZLTextTreeParagraph*)treeModel[i];

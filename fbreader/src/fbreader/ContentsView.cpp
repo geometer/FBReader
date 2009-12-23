@@ -35,12 +35,12 @@ bool ContentsView::_onStylusMove(int x, int y) {
 	FBReader &fbreader = FBReader::Instance();
 
 	int index = paragraphIndexByCoordinates(x, y);
-	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
+	if ((index < 0) || ((int)textArea().model()->paragraphsNumber() <= index)) {
 		fbreader.setHyperlinkCursor(false);
 		return true;
 	}
 
-	const ContentsModel &contentsModel = (const ContentsModel&)*model();
+	const ContentsModel &contentsModel = (const ContentsModel&)*textArea().model();
 	const ZLTextTreeParagraph *paragraph = (const ZLTextTreeParagraph*)contentsModel[index];
 	
 	fbreader.setHyperlinkCursor(contentsModel.reference(paragraph) >= 0);
@@ -50,12 +50,12 @@ bool ContentsView::_onStylusMove(int x, int y) {
 bool ContentsView::_onStylusPress(int x, int y) {
 	FBReader &fbreader = FBReader::Instance();
 
+	const ContentsModel &contentsModel = (const ContentsModel&)*textArea().model();
 	int index = paragraphIndexByCoordinates(x, y);
-	if ((index < 0) || ((int)model()->paragraphsNumber() <= index)) {
+	if ((index < 0) || ((int)contentsModel.paragraphsNumber() <= index)) {
 		return false;
 	}
 
-	const ContentsModel &contentsModel = (const ContentsModel&)*model();
 	const ZLTextTreeParagraph *paragraph = (const ZLTextTreeParagraph*)contentsModel[index];
 	
 	int reference = contentsModel.reference(paragraph);
@@ -69,7 +69,8 @@ bool ContentsView::_onStylusPress(int x, int y) {
 }
 
 bool ContentsView::isEmpty() const {
-	return (model() == 0) || (model()->paragraphsNumber() == 0);
+	shared_ptr<ZLTextModel> model = textArea().model();
+	return model.isNull() || model->paragraphsNumber() == 0;
 }
 
 size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
@@ -81,8 +82,9 @@ size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
 			++reference;
 			startOfParagraph = true;
 		}
-		size_t length = model()->paragraphsNumber();
-		const ContentsModel &contentsModel = (const ContentsModel&)*model();
+		shared_ptr<ZLTextModel> model = textArea().model();
+		size_t length = model->paragraphsNumber();
+		const ContentsModel &contentsModel = (const ContentsModel&)*model;
 		for (size_t i = 1; i < length; ++i) {
 			long contentsReference =
 				contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[i]));
@@ -97,7 +99,7 @@ size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
 }
 
 void ContentsView::gotoReference() {
-	model()->removeAllMarks();
+	textArea().model()->removeAllMarks();
 	const size_t selected = currentTextViewParagraph();
 	highlightParagraph(selected);
 	preparePaintInfo();
