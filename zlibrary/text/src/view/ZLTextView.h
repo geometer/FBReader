@@ -68,10 +68,11 @@ private:
 	public:
 		ViewStyle(const ZLTextView &view);
 
-		void reset() const;
 		void setTextStyle(const shared_ptr<ZLTextStyle> style, unsigned char bidiLevel);
 
 	private:
+		void reset() const;
+
 		void applyControl(const ZLTextControlElement &control);
 		void applyControl(const ZLTextStyleElement &control);
 		void increaseBidiLevel();
@@ -189,14 +190,14 @@ private:
 
 	void clear();
 
-	int rectangleBound(const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
-	ZLTextLineInfoPtr processTextLine(const ZLTextWordCursor &start, const ZLTextWordCursor &end);
-	void prepareTextLine(const ZLTextLineInfo &info, int y);
-	void drawTextLine(const ZLTextLineInfo &info, int y, size_t from, size_t to);
-	void drawSelectionRectangle(int left, int top, int right, int bottom);
-	void drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
-	void drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
-	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
+	int rectangleBound(ViewStyle &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
+	ZLTextLineInfoPtr processTextLine(ViewStyle &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
+	void prepareTextLine(ViewStyle &style, const ZLTextLineInfo &info, int y);
+	void drawTextLine(ViewStyle &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
+	void drawSelectionRectangle(ViewStyle &style, int left, int top, int right, int bottom);
+	void drawWord(ViewStyle &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
+	void drawString(ViewStyle &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
+	void drawTreeLines(ViewStyle &style, const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
 
 	bool pageIsEmpty() const;
 	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;
@@ -222,7 +223,7 @@ private:
 	int viewHeight() const;
 	int textHeight() const;
 
-	void addRectangleToTextMap(const ZLTextElementRectangle &rectangle);
+	void addRectangleToTextMap(ViewStyle &style, const ZLTextElementRectangle &rectangle);
 	void flushRevertedElements(unsigned char bidiLevel);
 
 	void gotoCharIndex(size_t charIndex);
@@ -255,7 +256,6 @@ private:
 	std::vector<size_t> myTextSize;
 	std::vector<size_t> myTextBreaks;
 
-	ViewStyle myStyle;
 	ZLTextSelectionModel mySelectionModel;
 
 	shared_ptr<PositionIndicator> myPositionIndicator;

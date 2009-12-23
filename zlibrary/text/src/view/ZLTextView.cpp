@@ -40,7 +40,7 @@ const std::string &ZLTextView::typeId() const {
 	return TYPE_ID;
 }
 
-ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), myStyle(*this), mySelectionModel(*this), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
+ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myPaintState(NOTHING_TO_PAINT), myOldWidth(-1), myOldHeight(-1), mySelectionModel(*this), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
 }
 
 ZLTextView::~ZLTextView() {
@@ -67,7 +67,6 @@ void ZLTextView::setModel(shared_ptr<ZLTextModel> model) {
 	clear();
 
 	myTextArea.setModel(model);
-	myStyle.reset();
 
 	if (!model.isNull() && (model->paragraphsNumber() != 0)) {
 		setStartCursor(ZLTextParagraphCursor::cursor(*model));
@@ -497,8 +496,8 @@ bool ZLTextView::onStylusRelease(int x, int y) {
 	return false;
 }
 
-void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
-	context().setColor(color(myStyle.textStyle()->colorStyle()));
+void ZLTextView::drawString(ViewStyle &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
+	context().setColor(color(style.textStyle()->colorStyle()));
 	if (mark == 0) {
 		context().drawString(x, y, str, len, rtl);
 	} else {
@@ -541,7 +540,7 @@ void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLText
 						x += context().stringWidth(str + markStart, endPos - markStart, rtl);
 					}
 				}
-				context().setColor(color(myStyle.textStyle()->colorStyle()));
+				context().setColor(color(style.textStyle()->colorStyle()));
 			}
 			pos = markStart + markLen;
 		}
@@ -555,19 +554,19 @@ void ZLTextView::drawString(int x, int y, const char *str, int len, const ZLText
 	}
 }
 
-void ZLTextView::drawWord(int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
+void ZLTextView::drawWord(ViewStyle &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
 	if ((start == 0) && (length == -1)) {
-		drawString(x, y, word.Data, word.Size, word.mark(), 0, word.BidiLevel % 2 == 1);
+		drawString(style, x, y, word.Data, word.Size, word.mark(), 0, word.BidiLevel % 2 == 1);
 	} else {
 		int startPos = ZLUnicodeUtil::length(word.Data, start);
 		int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
 		if (!addHyphenationSign) {
-			drawString(x, y, word.Data + startPos, endPos - startPos, word.mark(), startPos, word.BidiLevel % 2 == 1);
+			drawString(style, x, y, word.Data + startPos, endPos - startPos, word.mark(), startPos, word.BidiLevel % 2 == 1);
 		} else {
 			std::string substr;
 			substr.append(word.Data + startPos, endPos - startPos);
 			substr += '-';
-			drawString(x, y, substr.data(), substr.length(), word.mark(), startPos, word.BidiLevel % 2 == 1);
+			drawString(style, x, y, substr.data(), substr.length(), word.mark(), startPos, word.BidiLevel % 2 == 1);
 		}
 	}
 }

@@ -34,7 +34,8 @@ void ZLTextSelectionModel::clearData() const {
 }
 
 int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int x) {
-	myView.myStyle.setTextStyle(rectangle.Style, rectangle.BidiLevel);
+	ZLTextView::ViewStyle style(myView);
+	style.setTextStyle(rectangle.Style, rectangle.BidiLevel);
 	ZLTextWordCursor cursor = myView.startCursor();
 	cursor.moveToParagraph(rectangle.ParagraphIndex);
 	const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[rectangle.ElementIndex];
@@ -48,7 +49,7 @@ int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int
 	int index;
 	for (index = 0; (index < len) && (diff > 0); ++index) {
 		previousDiff = diff;
-		diff = deltaX - myView.myStyle.wordWidth(word, start, index + 1);
+		diff = deltaX - style.wordWidth(word, start, index + 1);
 	}
 	if (previousDiff + diff < 0) {
 		--index;

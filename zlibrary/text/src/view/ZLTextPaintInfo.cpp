@@ -317,12 +317,12 @@ ZLTextWordCursor ZLTextView::buildInfos(const ZLTextWordCursor &start) {
 		ZLTextWordCursor paragraphStart = cursor;
 		paragraphStart.moveToParagraphStart();
 
-		myStyle.reset();
-		myStyle.applyControls(paragraphStart, cursor);
-		ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(cursor, myStyle.textStyle(), myStyle.bidiLevel());
+		ViewStyle style(*this);
+		style.applyControls(paragraphStart, cursor);
+		ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(cursor, style.textStyle(), style.bidiLevel());
 
 		while (!infoPtr->End.isEndOfParagraph()) {
-			infoPtr = processTextLine(infoPtr->End, paragraphEnd);
+			infoPtr = processTextLine(style, infoPtr->End, paragraphEnd);
 			textHeight -= infoPtr->Height + infoPtr->Descent;
 			if ((textHeight < 0) && (counter > 0)) {
 				break;
@@ -348,12 +348,12 @@ int ZLTextView::paragraphSize(const ZLTextWordCursor &cursor, bool beforeCurrent
 		end.moveToParagraphEnd();
 	}
 	
-	myStyle.reset();
+	ViewStyle style(*this);
 
 	int size = 0;
 
 	while (!word.equalElementIndex(end)) {
-		const ZLTextLineInfoPtr info = processTextLine(word, end);
+		const ZLTextLineInfoPtr info = processTextLine(style, word, end);
 		word = info->End;
 		size += infoSize(*info, unit);
 	}
@@ -367,11 +367,11 @@ void ZLTextView::skip(ZLTextWordCursor &cursor, SizeUnit unit, int size) {
 	ZLTextWordCursor paragraphEnd = cursor;
 	paragraphEnd.moveToParagraphEnd();
 
-	myStyle.reset();
-	myStyle.applyControls(paragraphStart, cursor);
+	ViewStyle style(*this);
+	style.applyControls(paragraphStart, cursor);
 
 	while (!cursor.isEndOfParagraph() && (size > 0)) {
-		const ZLTextLineInfoPtr info = processTextLine(cursor, paragraphEnd);
+		const ZLTextLineInfoPtr info = processTextLine(style, cursor, paragraphEnd);
 		cursor = info->End;
 		size -= infoSize(*info, unit);
 	}

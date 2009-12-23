@@ -30,6 +30,7 @@
 #include "../style/ZLTextDecoratedStyle.h"
 
 ZLTextView::ViewStyle::ViewStyle(const ZLTextView &view) : myView(view) {
+	reset();
 }
 
 void ZLTextView::ViewStyle::reset() const {
