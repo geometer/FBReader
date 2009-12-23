@@ -30,7 +30,8 @@
 #include "ZLTextWord.h"
 #include "ZLTextParagraphBuilder.h"
 
-ZLTextParagraphBuilder::ZLTextParagraphBuilder(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int paragraphIndex, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(language), myBaseBidiLevel(ZLLanguageUtil::isRTLLanguage(language) ? 1 : 0) {
+ZLTextParagraphBuilder::ZLTextParagraphBuilder(const ZLTextModel &model, const ZLTextParagraph &paragraph, int paragraphIndex, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(model.language()), myBaseBidiLevel(ZLLanguageUtil::isRTLLanguage(myLanguage) ? 1 : 0) {
+	const std::vector<ZLTextMark> &marks = model.marks();
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphIndex, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphIndex == paragraphIndex); ++myLastMark) {

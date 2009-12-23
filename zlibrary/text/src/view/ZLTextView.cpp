@@ -20,7 +20,6 @@
 #include <algorithm>
 
 #include <ZLUnicodeUtil.h>
-#include <ZLLanguageUtil.h>
 #include <ZLApplication.h>
 
 #include <ZLTextModel.h>
@@ -68,9 +67,9 @@ void ZLTextView::setModel(shared_ptr<ZLTextModel> model) {
 	clear();
 
 	myTextArea.setModel(model);
+	myStyle.reset();
 
 	if (!model.isNull() && (model->paragraphsNumber() != 0)) {
-		myStyle.setBaseBidiLevel(ZLLanguageUtil::isRTLLanguage(model->language()) ? 1 : 0);
 		setStartCursor(ZLTextParagraphCursor::cursor(*model));
 
 		size_t size = model->paragraphsNumber();

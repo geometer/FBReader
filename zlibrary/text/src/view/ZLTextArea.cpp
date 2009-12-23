@@ -22,6 +22,9 @@
 
 #include "ZLTextArea.h"
 
+ZLTextArea::ZLTextArea() : myIsRtl(false) {
+}
+
 ZLTextArea::~ZLTextArea() {
 }
 

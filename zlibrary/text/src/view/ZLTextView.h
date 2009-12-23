@@ -89,7 +89,6 @@ private:
 
 		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
 
-		void setBaseBidiLevel(unsigned char base);
 		unsigned char baseBidiLevel() const;
 		
 		unsigned char bidiLevel() const;
@@ -97,7 +96,6 @@ private:
 	private:
 		const ZLTextView &myView;
 		mutable shared_ptr<ZLTextStyle> myTextStyle;
-		unsigned char myBaseBidiLevel;
 		mutable unsigned char myBidiLevel;
 		mutable int myWordHeight;
 	};
@@ -283,10 +281,9 @@ friend class ZLTextSelectionModel;
 inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }
 
 inline ZLPaintContext &ZLTextView::ViewStyle::context() const { return myView.context(); }
-inline void ZLTextView::ViewStyle::setBaseBidiLevel(unsigned char base) { myBaseBidiLevel = base; myBidiLevel = base; }
-inline unsigned char ZLTextView::ViewStyle::baseBidiLevel() const { return myBaseBidiLevel; }
+inline unsigned char ZLTextView::ViewStyle::baseBidiLevel() const { return myView.textArea().isRtl() ? 1 : 0; }
 inline void ZLTextView::ViewStyle::increaseBidiLevel() { ++myBidiLevel; }
-inline void ZLTextView::ViewStyle::decreaseBidiLevel() { if (myBidiLevel > myBaseBidiLevel) --myBidiLevel; }
+inline void ZLTextView::ViewStyle::decreaseBidiLevel() { if (myBidiLevel > baseBidiLevel()) --myBidiLevel; }
 inline unsigned char ZLTextView::ViewStyle::bidiLevel() const { return myBidiLevel; }
 
 inline shared_ptr<ZLTextStyle> ZLTextView::ViewStyle::textStyle() const {

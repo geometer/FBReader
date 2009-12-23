@@ -29,14 +29,14 @@
 #include "ZLTextElement.h"
 #include "../style/ZLTextDecoratedStyle.h"
 
-ZLTextView::ViewStyle::ViewStyle(const ZLTextView &view) : myView(view), myBaseBidiLevel(0) {
+ZLTextView::ViewStyle::ViewStyle(const ZLTextView &view) : myView(view) {
 }
 
 void ZLTextView::ViewStyle::reset() const {
 	myTextStyle = myView.baseStyle();
 	myWordHeight = -1;
 	context().setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
-	myBidiLevel = myBaseBidiLevel;
+	myBidiLevel = myView.textArea().isRtl() ? 1 : 0;
 }
 
 void ZLTextView::ViewStyle::setTextStyle(const shared_ptr<ZLTextStyle> style, unsigned char bidiLevel) {

@@ -34,7 +34,7 @@ class ZLTextParagraph;
 class ZLTextParagraphBuilder {
 
 public:
-	ZLTextParagraphBuilder(const std::string &language, const ZLTextParagraph &paragraph, const std::vector<ZLTextMark> &marks, int index, ZLTextElementVector &elements);
+	ZLTextParagraphBuilder(const ZLTextModel &model, const ZLTextParagraph &paragraph, int index, ZLTextElementVector &elements);
 	void fill();
 
 private:

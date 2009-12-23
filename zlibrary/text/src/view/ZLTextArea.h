@@ -27,6 +27,7 @@ class ZLTextModel;
 class ZLTextArea {
 
 public:
+	ZLTextArea();
 	~ZLTextArea();
 
 public:

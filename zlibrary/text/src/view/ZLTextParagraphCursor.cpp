@@ -217,7 +217,7 @@ void ZLTextParagraphCursor::fill() {
 		case ZLTextParagraph::TEXT_PARAGRAPH:
 		case ZLTextParagraph::TREE_PARAGRAPH:
 		{
-			ZLTextParagraphBuilder builder(myModel.language(), paragraph, myModel.marks(), index(), myElements);
+			ZLTextParagraphBuilder builder(myModel, paragraph, myIndex, myElements);
 			builder.fill();
 			break;
 		}
