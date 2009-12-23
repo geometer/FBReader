@@ -248,7 +248,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, si
 	
 		if ((kind == ZLTextElement::WORD_ELEMENT) || (kind == ZLTextElement::IMAGE_ELEMENT)) {
 			myStyle.setTextStyle(it->Style, it->BidiLevel);
-			const int wx = myStyle.baseIsRtl() ? context().width() - it->XEnd : it->XStart;
+			const int wx = myTextArea.isRtl() ? context().width() - it->XEnd : it->XStart;
 			const int wy = it->YEnd - myStyle.elementDescent(element) - myStyle.textStyle()->verticalShift();
 			if (kind == ZLTextElement::WORD_ELEMENT) {
 				drawWord(wx, wy, (const ZLTextWord&)element, it->StartCharIndex, -1, false);
@@ -266,7 +266,7 @@ void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, si
 		int len = info.End.charIndex() - start;
 		const ZLTextWord &word = (const ZLTextWord&)info.End.element();
 		context().setColor(color(myStyle.textStyle()->colorStyle()));
-		const int x = myStyle.baseIsRtl() ? context().width() - it->XEnd : it->XStart;
+		const int x = myTextArea.isRtl() ? context().width() - it->XEnd : it->XStart;
 		const int y = it->YEnd - myStyle.elementDescent(word) - myStyle.textStyle()->verticalShift();
 		drawWord(x, y, word, start, len, it->AddHyphenationSign);
 	}
@@ -323,23 +323,23 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info, int y) {
 
 	switch (myStyle.textStyle()->alignment()) {
 		case ALIGN_RIGHT:
-			if (!myStyle.baseIsRtl()) {
-				x += metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myStyle.baseIsRtl()) - info.Width;
+			if (!myTextArea.isRtl()) {
+				x += metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myTextArea.isRtl()) - info.Width;
 			}
 			break;
 		case ALIGN_LEFT:
-			if (myStyle.baseIsRtl()) {
-				x += metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myStyle.baseIsRtl()) - info.Width;
+			if (myTextArea.isRtl()) {
+				x += metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myTextArea.isRtl()) - info.Width;
 			}
 			break;
 		case ALIGN_LINESTART:
 			break;
 		case ALIGN_CENTER:
-			x += (metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myStyle.baseIsRtl()) - info.Width) / 2;
+			x += (metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myTextArea.isRtl()) - info.Width) / 2;
 			break;
 		case ALIGN_JUSTIFY:
 			if (!endOfParagraph && (info.End.element().kind() != ZLTextElement::AFTER_PARAGRAPH_ELEMENT)) {
-				fullCorrection = metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myStyle.baseIsRtl()) - info.Width;
+				fullCorrection = metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myTextArea.isRtl()) - info.Width;
 			}
 			break;
 		case ALIGN_UNDEFINED:

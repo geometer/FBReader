@@ -91,7 +91,6 @@ private:
 
 		void setBaseBidiLevel(unsigned char base);
 		unsigned char baseBidiLevel() const;
-		bool baseIsRtl() const;
 		
 		unsigned char bidiLevel() const;
 
@@ -286,7 +285,6 @@ inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }
 inline ZLPaintContext &ZLTextView::ViewStyle::context() const { return myView.context(); }
 inline void ZLTextView::ViewStyle::setBaseBidiLevel(unsigned char base) { myBaseBidiLevel = base; myBidiLevel = base; }
 inline unsigned char ZLTextView::ViewStyle::baseBidiLevel() const { return myBaseBidiLevel; }
-inline bool ZLTextView::ViewStyle::baseIsRtl() const { return myBaseBidiLevel % 2 == 1; }
 inline void ZLTextView::ViewStyle::increaseBidiLevel() { ++myBidiLevel; }
 inline void ZLTextView::ViewStyle::decreaseBidiLevel() { if (myBidiLevel > myBaseBidiLevel) --myBidiLevel; }
 inline unsigned char ZLTextView::ViewStyle::bidiLevel() const { return myBidiLevel; }
@@ -313,15 +311,15 @@ inline int ZLTextView::viewHeight() const {
 }
 
 inline int ZLTextView::visualX(int logicalX) const {
-	return myStyle.baseIsRtl() ? context().width() - logicalX - 1 : logicalX;
+	return myTextArea.isRtl() ? context().width() - logicalX - 1 : logicalX;
 }
 
 inline int ZLTextView::lineStartMargin() const {
-	return myStyle.baseIsRtl() ? rightMargin() : leftMargin();
+	return myTextArea.isRtl() ? rightMargin() : leftMargin();
 }
 
 inline int ZLTextView::lineEndMargin() const {
-	return myStyle.baseIsRtl() ? leftMargin() : rightMargin();
+	return myTextArea.isRtl() ? leftMargin() : rightMargin();
 }
 
 #endif /* __ZLTEXTVIEW_H__ */

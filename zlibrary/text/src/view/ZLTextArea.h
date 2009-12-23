@@ -32,11 +32,14 @@ public:
 public:
 	void setModel(shared_ptr<ZLTextModel> model);
 	shared_ptr<ZLTextModel> model() const;
+	bool isRtl() const;
 
 private:
 	shared_ptr<ZLTextModel> myModel;
+	bool myIsRtl;
 };
 
 inline shared_ptr<ZLTextModel> ZLTextArea::model() const { return myModel; }
+inline bool ZLTextArea::isRtl() const { return myIsRtl; }
 
 #endif /* __ZLTEXTAREA_H__ */

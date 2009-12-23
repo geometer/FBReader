@@ -121,7 +121,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 	const int fontSize = myStyle.textStyle()->fontSize();
 	// TODO: change metrics at font change
 	const ZLTextStyleEntry::Metrics metrics(fontSize, fontSize / 2, viewWidth(), textHeight());
-	info.StartIndent = myStyle.textStyle()->lineStartIndent(metrics, myStyle.baseIsRtl());
+	info.StartIndent = myStyle.textStyle()->lineStartIndent(metrics, myTextArea.isRtl());
 	if (isFirstLine) {
 		info.StartIndent += myStyle.textStyle()->firstLineIndentDelta(metrics);
 	}
@@ -137,7 +137,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(const ZLTextWordCursor &start, con
 
 	ZLTextPartialInfo newInfo(info, current);
 	bool allowBreakAtNBSpace = true;
-	const int maxWidth = metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myStyle.baseIsRtl());
+	const int maxWidth = metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myTextArea.isRtl());
 	bool wordOccured = false;
 	int lastSpaceWidth = 0;
 	int removeLastSpace = false;

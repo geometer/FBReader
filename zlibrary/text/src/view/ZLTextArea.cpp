@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLLanguageUtil.h>
 #include <ZLTextModel.h>
 
 #include "ZLTextArea.h"
@@ -26,4 +27,7 @@ ZLTextArea::~ZLTextArea() {
 
 void ZLTextArea::setModel(shared_ptr<ZLTextModel> model) {
 	myModel = model;
+	if (!model.isNull()) {
+		myIsRtl =	ZLLanguageUtil::isRTLLanguage(model->language());
+	}
 }
