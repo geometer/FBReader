@@ -17,13 +17,26 @@
  * 02110-1301, USA.
  */
 
-#include <ZLTextModel.h>
+#ifndef __ZLTEXTAREA_H__
+#define __ZLTEXTAREA_H__
 
-#include "ZLTextArea.h"
+#include <shared_ptr.h>
 
-ZLTextArea::~ZLTextArea() {
-}
+class ZLTextModel;
 
-void ZLTextArea::setModel(shared_ptr<ZLTextModel> model) {
-	myModel = model;
-}
+class ZLTextArea {
+
+public:
+	~ZLTextArea();
+
+public:
+	void setModel(shared_ptr<ZLTextModel> model);
+	shared_ptr<ZLTextModel> model() const;
+
+private:
+	shared_ptr<ZLTextModel> myModel;
+};
+
+inline shared_ptr<ZLTextModel> ZLTextArea::model() const { return myModel; }
+
+#endif /* __ZLTEXTAREA_H__ */

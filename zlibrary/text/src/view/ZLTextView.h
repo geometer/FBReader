@@ -37,6 +37,7 @@
 #include <ZLTextSelectionModel.h>
 #include <ZLTextRectangle.h>
 #include <ZLTextParagraph.h>
+#include <ZLTextArea.h>
 
 class ZLTextModel;
 class ZLTextMark;
@@ -44,16 +45,6 @@ class ZLTextMark;
 class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 struct ZLTextTreeNodeInfo;
-
-class ZLTextArea {
-
-public:
-	void setModel(shared_ptr<ZLTextModel> model);
-	shared_ptr<ZLTextModel> model() const;
-
-private:
-	shared_ptr<ZLTextModel> myModel;
-};
 
 class ZLTextView : public ZLView {
 
@@ -290,11 +281,7 @@ private:
 friend class ZLTextSelectionModel;
 };
 
-inline shared_ptr<ZLTextModel> ZLTextArea::model() const { return myModel; }
-
-inline const ZLTextArea &ZLTextView::textArea() const {
-	return myTextArea;
-}
+inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }
 
 inline ZLPaintContext &ZLTextView::ViewStyle::context() const { return myView.context(); }
 inline void ZLTextView::ViewStyle::setBaseBidiLevel(unsigned char base) { myBaseBidiLevel = base; myBidiLevel = base; }
