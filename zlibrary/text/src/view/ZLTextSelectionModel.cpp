@@ -35,7 +35,7 @@ void ZLTextSelectionModel::clearData() const {
 }
 
 int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int x) {
-	ZLTextViewStyle style(myView, myView.baseStyle());
+	ZLTextViewStyle style(myView.textArea(), myView.baseStyle());
 	style.setTextStyle(rectangle.Style, rectangle.BidiLevel);
 	ZLTextWordCursor cursor = myView.startCursor();
 	cursor.moveToParagraph(rectangle.ParagraphIndex);

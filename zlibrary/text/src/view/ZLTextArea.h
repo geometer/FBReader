@@ -28,6 +28,9 @@ class ZLTextModel;
 
 class ZLTextArea {
 
+private:
+	class Style;
+
 public:
 	ZLTextArea(ZLPaintContext &context);
 	~ZLTextArea();

@@ -317,7 +317,7 @@ ZLTextWordCursor ZLTextView::buildInfos(const ZLTextWordCursor &start) {
 		ZLTextWordCursor paragraphStart = cursor;
 		paragraphStart.moveToParagraphStart();
 
-		ZLTextViewStyle style(*this, baseStyle());
+		ZLTextViewStyle style(textArea(), baseStyle());
 		style.applyControls(paragraphStart, cursor);
 		ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(cursor, style.textStyle(), style.bidiLevel());
 
@@ -350,7 +350,7 @@ int ZLTextView::paragraphSize(const ZLTextWordCursor &cursor, bool beforeCurrent
 	
 	int size = 0;
 
-	ZLTextViewStyle style(*this, baseStyle());
+	ZLTextViewStyle style(textArea(), baseStyle());
 	while (!word.equalElementIndex(end)) {
 		const ZLTextLineInfoPtr info = processTextLine(style, word, end);
 		word = info->End;
@@ -366,7 +366,7 @@ void ZLTextView::skip(ZLTextWordCursor &cursor, SizeUnit unit, int size) {
 	ZLTextWordCursor paragraphEnd = cursor;
 	paragraphEnd.moveToParagraphEnd();
 
-	ZLTextViewStyle style(*this, baseStyle());
+	ZLTextViewStyle style(textArea(), baseStyle());
 	style.applyControls(paragraphStart, cursor);
 
 	while (!cursor.isEndOfParagraph() && (size > 0)) {

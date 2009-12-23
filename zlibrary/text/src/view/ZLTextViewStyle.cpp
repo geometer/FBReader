@@ -30,7 +30,7 @@
 #include "ZLTextElement.h"
 #include "../style/ZLTextDecoratedStyle.h"
 
-ZLTextViewStyle::ZLTextViewStyle(const ZLTextView &view, shared_ptr<ZLTextStyle> style) : myView(view), myArea(view.textArea()) {
+ZLTextViewStyle::ZLTextViewStyle(const ZLTextArea &area, shared_ptr<ZLTextStyle> style) : myArea(area) {
 	myTextStyle = style;
 	myWordHeight = -1;
 	myArea.context().setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());

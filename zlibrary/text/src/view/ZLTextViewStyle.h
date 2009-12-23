@@ -22,14 +22,13 @@
 
 #include <ZLTextParagraphCursor.h>
 
-class ZLTextView;
 class ZLTextArea;
 class ZLTextStyle;
 
 class ZLTextViewStyle {
 
 public:
-	ZLTextViewStyle(const ZLTextView &view, shared_ptr<ZLTextStyle> style);
+	ZLTextViewStyle(const ZLTextArea &area, shared_ptr<ZLTextStyle> style);
 
 	void setTextStyle(shared_ptr<ZLTextStyle> style, unsigned char bidiLevel);
 
@@ -53,7 +52,6 @@ public:
 	unsigned char bidiLevel() const;
 
 private:
-	const ZLTextView &myView;
 	const ZLTextArea &myArea;
 	mutable shared_ptr<ZLTextStyle> myTextStyle;
 	mutable unsigned char myBidiLevel;
