@@ -209,8 +209,6 @@ private:
 	ScrollingMode myScrollingMode;
 	unsigned int myOverlappingValue;
 
-	int myOldWidth, myOldHeight;
-
 	ZLTextElementMap myTextElementMap;
 	std::vector<ZLTextElementMap> myTextElementsToRevert;
 	ZLTextTreeNodeMap myTreeNodeMap;

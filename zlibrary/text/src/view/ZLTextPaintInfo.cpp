@@ -159,11 +159,10 @@ ZLTextWordCursor ZLTextView::findPercentFromStart(unsigned int percent) const {
 }
 
 void ZLTextView::preparePaintInfo() {
-	int newWidth = viewWidth();
-	int newHeight = textHeight();
-	if ((newWidth != myOldWidth) || (newHeight != myOldHeight)) {
-		myOldWidth = newWidth;
-		myOldHeight = newHeight;
+	size_t newWidth = viewWidth();
+	size_t newHeight = textHeight();
+	if (newWidth != myTextArea.width() || newHeight != myTextArea.height()) {
+		myTextArea.setSize(newWidth, newHeight);
 		rebuildPaintInfo(false);
 	}
 

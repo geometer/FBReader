@@ -33,19 +33,30 @@ public:
 	~ZLTextArea();
 
 public:
+	ZLPaintContext &context() const;
+	void setSize(size_t width, size_t height);
+	size_t width() const;
+	size_t height() const;
+
 	void setModel(shared_ptr<ZLTextModel> model);
 	shared_ptr<ZLTextModel> model() const;
 	bool isRtl() const;
-	ZLPaintContext &context() const;
 
 private:
 	ZLPaintContext &myContext;
+	size_t myWidth;
+	size_t myHeight;
+
 	shared_ptr<ZLTextModel> myModel;
 	bool myIsRtl;
 };
 
+inline ZLPaintContext &ZLTextArea::context() const { return myContext; }
+inline void ZLTextArea::setSize(size_t width, size_t height) { myWidth = width; myHeight = height; }
+inline size_t ZLTextArea::width() const { return myWidth; }
+inline size_t ZLTextArea::height() const { return myHeight; }
+
 inline shared_ptr<ZLTextModel> ZLTextArea::model() const { return myModel; }
 inline bool ZLTextArea::isRtl() const { return myIsRtl; }
-inline ZLPaintContext &ZLTextArea::context() const { return myContext; }
 
 #endif /* __ZLTEXTAREA_H__ */

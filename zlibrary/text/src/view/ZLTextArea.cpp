@@ -21,7 +21,7 @@
 
 #include "ZLTextArea.h"
 
-ZLTextArea::ZLTextArea(ZLPaintContext &context) : myContext(context), myIsRtl(false) {
+ZLTextArea::ZLTextArea(ZLPaintContext &context) : myContext(context), myWidth(0), myHeight(0), myIsRtl(false) {
 }
 
 ZLTextArea::~ZLTextArea() {
