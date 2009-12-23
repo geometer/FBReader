@@ -20,6 +20,7 @@
 #include <algorithm>
 
 #include "ZLTextView.h"
+#include "ZLTextViewStyle.h"
 #include "ZLTextLineInfo.h"
 
 void ZLTextView::rebuildPaintInfo(bool strong) {
@@ -317,7 +318,7 @@ ZLTextWordCursor ZLTextView::buildInfos(const ZLTextWordCursor &start) {
 		ZLTextWordCursor paragraphStart = cursor;
 		paragraphStart.moveToParagraphStart();
 
-		ViewStyle style(*this);
+		ZLTextViewStyle style(*this);
 		style.applyControls(paragraphStart, cursor);
 		ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(cursor, style.textStyle(), style.bidiLevel());
 
@@ -348,7 +349,7 @@ int ZLTextView::paragraphSize(const ZLTextWordCursor &cursor, bool beforeCurrent
 		end.moveToParagraphEnd();
 	}
 	
-	ViewStyle style(*this);
+	ZLTextViewStyle style(*this);
 
 	int size = 0;
 
@@ -367,7 +368,7 @@ void ZLTextView::skip(ZLTextWordCursor &cursor, SizeUnit unit, int size) {
 	ZLTextWordCursor paragraphEnd = cursor;
 	paragraphEnd.moveToParagraphEnd();
 
-	ViewStyle style(*this);
+	ZLTextViewStyle style(*this);
 	style.applyControls(paragraphStart, cursor);
 
 	while (!cursor.isEndOfParagraph() && (size > 0)) {

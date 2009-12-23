@@ -24,32 +24,33 @@
 #include <ZLTextStyle.h>
 #include <ZLTextStyleCollection.h>
 
+#include "ZLTextViewStyle.h"
 #include "ZLTextView.h"
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextElement.h"
 #include "../style/ZLTextDecoratedStyle.h"
 
-ZLTextView::ViewStyle::ViewStyle(const ZLTextView &view) : myView(view) {
+ZLTextViewStyle::ZLTextViewStyle(const ZLTextView &view) : myView(view) {
 	reset();
 }
 
-void ZLTextView::ViewStyle::reset() const {
+void ZLTextViewStyle::reset() const {
 	myTextStyle = myView.baseStyle();
 	myWordHeight = -1;
-	context().setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
+	myView.context().setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
 	myBidiLevel = myView.textArea().isRtl() ? 1 : 0;
 }
 
-void ZLTextView::ViewStyle::setTextStyle(const shared_ptr<ZLTextStyle> style, unsigned char bidiLevel) {
+void ZLTextViewStyle::setTextStyle(const shared_ptr<ZLTextStyle> style, unsigned char bidiLevel) {
 	if (myTextStyle != style) {
 		myTextStyle = style;
 		myWordHeight = -1;
 	}
-	context().setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
+	myView.context().setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
 	myBidiLevel = bidiLevel;
 }
 
-void ZLTextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
+void ZLTextViewStyle::applyControl(const ZLTextControlElement &control) {
 	if (myTextStyle.isNull()) {
 		reset();
 	}
@@ -65,14 +66,14 @@ void ZLTextView::ViewStyle::applyControl(const ZLTextControlElement &control) {
 	}
 }
 
-void ZLTextView::ViewStyle::applyControl(const ZLTextStyleElement &control) {
+void ZLTextViewStyle::applyControl(const ZLTextStyleElement &control) {
 	if (myTextStyle.isNull()) {
 		reset();
 	}
 	setTextStyle(new ZLTextForcedStyle(myTextStyle, control.entry()), myBidiLevel);
 }
 
-void ZLTextView::ViewStyle::applySingleControl(const ZLTextElement &element) {
+void ZLTextViewStyle::applySingleControl(const ZLTextElement &element) {
 	switch (element.kind()) {
 		case ZLTextElement::CONTROL_ELEMENT:
 			applyControl((ZLTextControlElement&)element);
@@ -91,18 +92,18 @@ void ZLTextView::ViewStyle::applySingleControl(const ZLTextElement &element) {
 	}
 }
 
-void ZLTextView::ViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {
+void ZLTextViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {
 	for (ZLTextWordCursor cursor = begin; !cursor.equalElementIndex(end); cursor.nextWord()) {
 		applySingleControl(cursor.element());
 	}
 }
 
-int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned int charIndex, const ZLTextStyleEntry::Metrics &metrics) const {
+int ZLTextViewStyle::elementWidth(const ZLTextElement &element, unsigned int charIndex, const ZLTextStyleEntry::Metrics &metrics) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
 			return wordWidth((const ZLTextWord&)element, charIndex, -1, false);
 		case ZLTextElement::IMAGE_ELEMENT:
-			return context().imageWidth(*((const ZLTextImageElement&)element).image(), myView.viewWidth(), myView.textHeight(), ZLPaintContext::SCALE_REDUCE_SIZE);
+			return myView.context().imageWidth(*((const ZLTextImageElement&)element).image(), myView.viewWidth(), myView.textHeight(), ZLPaintContext::SCALE_REDUCE_SIZE);
 		case ZLTextElement::INDENT_ELEMENT:
 			return textStyle()->firstLineIndentDelta(metrics);
 		case ZLTextElement::HSPACE_ELEMENT:
@@ -118,29 +119,29 @@ int ZLTextView::ViewStyle::elementWidth(const ZLTextElement &element, unsigned i
 		case ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT:
 			return 0;
 		case ZLTextElement::FIXED_HSPACE_ELEMENT:
-			return context().spaceWidth() * ((const ZLTextFixedHSpaceElement&)element).length();
+			return myView.context().spaceWidth() * ((const ZLTextFixedHSpaceElement&)element).length();
 	}
 	return 0;
 }
 
-int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element, const ZLTextStyleEntry::Metrics &metrics) const {
+int ZLTextViewStyle::elementHeight(const ZLTextElement &element, const ZLTextStyleEntry::Metrics &metrics) const {
 	switch (element.kind()) {
 		case ZLTextElement::NB_HSPACE_ELEMENT:
 		case ZLTextElement::WORD_ELEMENT:
 			if (myWordHeight == -1) {
-				myWordHeight = context().stringHeight() * textStyle()->lineSpacePercent() / 100 + textStyle()->verticalShift();
+				myWordHeight = myView.context().stringHeight() * textStyle()->lineSpacePercent() / 100 + textStyle()->verticalShift();
 			}
 			return myWordHeight;
 		case ZLTextElement::IMAGE_ELEMENT:
 			return
-				context().imageHeight(*((const ZLTextImageElement&)element).image(), myView.viewWidth(), myView.textHeight(), ZLPaintContext::SCALE_REDUCE_SIZE) +
-				std::max(context().stringHeight() * (textStyle()->lineSpacePercent() - 100) / 100, 3);
+				myView.context().imageHeight(*((const ZLTextImageElement&)element).image(), myView.viewWidth(), myView.textHeight(), ZLPaintContext::SCALE_REDUCE_SIZE) +
+				std::max(myView.context().stringHeight() * (textStyle()->lineSpacePercent() - 100) / 100, 3);
 		case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
 			return - textStyle()->spaceAfter(metrics);
 		case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
 			return - textStyle()->spaceBefore(metrics);
 		case ZLTextElement::EMPTY_LINE_ELEMENT:
-			return context().stringHeight();
+			return myView.context().stringHeight();
 		case ZLTextElement::INDENT_ELEMENT:
 		case ZLTextElement::HSPACE_ELEMENT:
 		case ZLTextElement::FORCED_CONTROL_ELEMENT:
@@ -153,26 +154,37 @@ int ZLTextView::ViewStyle::elementHeight(const ZLTextElement &element, const ZLT
 	return 0;
 }
 
-int ZLTextView::ViewStyle::elementDescent(const ZLTextElement &element) const {
+int ZLTextViewStyle::elementDescent(const ZLTextElement &element) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
-			return context().descent();
+			return myView.context().descent();
 		default:
 			return 0;
 	}
 }
 
-int ZLTextView::ViewStyle::wordWidth(const ZLTextWord &word, int start, int length, bool addHyphenationSign) const {
+int ZLTextViewStyle::wordWidth(const ZLTextWord &word, int start, int length, bool addHyphenationSign) const {
 	if ((start == 0) && (length == -1)) {
-		return word.width(context());
+		return word.width(myView.context());
 	}
 	int startPos = ZLUnicodeUtil::length(word.Data, start);
 	int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
 	if (!addHyphenationSign) {
-		return context().stringWidth(word.Data + startPos, endPos - startPos, word.BidiLevel % 2 == 1);
+		return myView.context().stringWidth(word.Data + startPos, endPos - startPos, word.BidiLevel % 2 == 1);
 	}
 	std::string substr;
 	substr.append(word.Data + startPos, endPos - startPos);
 	substr += '-';
-	return context().stringWidth(substr.data(), substr.length(), word.BidiLevel % 2 == 1);
+	return myView.context().stringWidth(substr.data(), substr.length(), word.BidiLevel % 2 == 1);
+}
+
+void ZLTextViewStyle::increaseBidiLevel() {
+	++myBidiLevel;
+}
+
+void ZLTextViewStyle::decreaseBidiLevel() {
+	unsigned char base = myView.textArea().isRtl() ? 1 : 0;
+	if (myBidiLevel > base) {
+		--myBidiLevel;
+	}
 }

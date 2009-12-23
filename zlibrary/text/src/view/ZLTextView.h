@@ -45,6 +45,7 @@ class ZLTextMark;
 class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 struct ZLTextTreeNodeInfo;
+class ZLTextViewStyle;
 
 class ZLTextView : public ZLView {
 
@@ -61,43 +62,6 @@ public:
 
 public:
 	class PositionIndicator;
-
-private:
-	class ViewStyle {
-
-	public:
-		ViewStyle(const ZLTextView &view);
-
-		void setTextStyle(const shared_ptr<ZLTextStyle> style, unsigned char bidiLevel);
-
-	private:
-		void reset() const;
-
-		void applyControl(const ZLTextControlElement &control);
-		void applyControl(const ZLTextStyleElement &control);
-		void increaseBidiLevel();
-		void decreaseBidiLevel();
-
-	public:
-		void applySingleControl(const ZLTextElement &element);
-		void applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end);
-
-		ZLPaintContext &context() const;
-		shared_ptr<ZLTextStyle> textStyle() const;
-		int elementWidth(const ZLTextElement &element, unsigned int charNumber, const ZLTextStyleEntry::Metrics &metrics) const;
-		int elementHeight(const ZLTextElement &element, const ZLTextStyleEntry::Metrics &metrics) const;
-		int elementDescent(const ZLTextElement &element) const;
-
-		int wordWidth(const ZLTextWord &word, int start = 0, int length = -1, bool addHyphenationSign = false) const;
-
-		unsigned char bidiLevel() const;
-
-	private:
-		const ZLTextView &myView;
-		mutable shared_ptr<ZLTextStyle> myTextStyle;
-		mutable unsigned char myBidiLevel;
-		mutable int myWordHeight;
-	};
 
 public:
 	static const std::string TYPE_ID;
@@ -190,14 +154,14 @@ private:
 
 	void clear();
 
-	int rectangleBound(ViewStyle &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
-	ZLTextLineInfoPtr processTextLine(ViewStyle &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
-	void prepareTextLine(ViewStyle &style, const ZLTextLineInfo &info, int y);
-	void drawTextLine(ViewStyle &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
-	void drawSelectionRectangle(ViewStyle &style, int left, int top, int right, int bottom);
-	void drawWord(ViewStyle &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
-	void drawString(ViewStyle &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
-	void drawTreeLines(ViewStyle &style, const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
+	int rectangleBound(ZLTextViewStyle &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
+	ZLTextLineInfoPtr processTextLine(ZLTextViewStyle &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
+	void prepareTextLine(ZLTextViewStyle &style, const ZLTextLineInfo &info, int y);
+	void drawTextLine(ZLTextViewStyle &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
+	void drawSelectionRectangle(ZLTextViewStyle &style, int left, int top, int right, int bottom);
+	void drawWord(ZLTextViewStyle &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
+	void drawString(ZLTextViewStyle &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
+	void drawTreeLines(ZLTextViewStyle &style, const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
 
 	bool pageIsEmpty() const;
 	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;
@@ -223,7 +187,7 @@ private:
 	int viewHeight() const;
 	int textHeight() const;
 
-	void addRectangleToTextMap(ViewStyle &style, const ZLTextElementRectangle &rectangle);
+	void addRectangleToTextMap(ZLTextViewStyle &style, const ZLTextElementRectangle &rectangle);
 	void flushRevertedElements(unsigned char bidiLevel);
 
 	void gotoCharIndex(size_t charIndex);
@@ -274,26 +238,10 @@ private:
 	} myDoubleClickInfo;
 
 friend class ZLTextSelectionModel;
+friend class ZLTextViewStyle;
 };
 
 inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }
-
-inline ZLPaintContext &ZLTextView::ViewStyle::context() const { return myView.context(); }
-inline void ZLTextView::ViewStyle::increaseBidiLevel() { ++myBidiLevel; }
-inline void ZLTextView::ViewStyle::decreaseBidiLevel() {
-	unsigned char base = myView.textArea().isRtl() ? 1 : 0;
-	if (myBidiLevel > base) {
-		--myBidiLevel;
-	}
-}
-inline unsigned char ZLTextView::ViewStyle::bidiLevel() const { return myBidiLevel; }
-
-inline shared_ptr<ZLTextStyle> ZLTextView::ViewStyle::textStyle() const {
-	if (myTextStyle.isNull()) {
-		reset();
-	}
-	return myTextStyle;
-}
 
 inline bool ZLTextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
 inline const ZLTextWordCursor &ZLTextView::startCursor() const { return myStartCursor; }

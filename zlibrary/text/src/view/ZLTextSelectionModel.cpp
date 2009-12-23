@@ -24,6 +24,7 @@
 
 #include "ZLTextSelectionModel.h"
 #include "ZLTextView.h"
+#include "ZLTextViewStyle.h"
 
 ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view) : myView(view), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
 }
@@ -34,7 +35,7 @@ void ZLTextSelectionModel::clearData() const {
 }
 
 int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int x) {
-	ZLTextView::ViewStyle style(myView);
+	ZLTextViewStyle style(myView);
 	style.setTextStyle(rectangle.Style, rectangle.BidiLevel);
 	ZLTextWordCursor cursor = myView.startCursor();
 	cursor.moveToParagraph(rectangle.ParagraphIndex);
