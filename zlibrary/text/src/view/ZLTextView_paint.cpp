@@ -22,7 +22,7 @@
 #include <ZLUnicodeUtil.h>
 
 #include "ZLTextView.h"
-#include "ZLTextViewStyle.h"
+#include "ZLTextAreaStyle.h"
 #include "ZLTextLineInfo.h"
 #include "ZLTextPositionIndicator.h"
 
@@ -41,7 +41,7 @@ void ZLTextView::paint() {
 	labels.reserve(myLineInfos.size() + 1);
 	labels.push_back(0);
 
-	ZLTextViewStyle style(textArea(), baseStyle());
+	ZLTextArea::Style style(textArea(), baseStyle());
 
 	int y = topMargin();
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
@@ -57,7 +57,7 @@ void ZLTextView::paint() {
 	int index = 0;
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		const ZLTextLineInfo &info = **it;
-		drawTextLine(style, info, y, labels[index], labels[index + 1]);
+		drawTextLine(info, y, labels[index], labels[index + 1]);
 		y += info.Height + info.Descent + info.VSpaceAfter;
 		++index;
 	}
@@ -87,7 +87,7 @@ void ZLTextView::paint() {
 	ZLTextParagraphCursorCache::cleanup();
 }
 
-int ZLTextView::rectangleBound(ZLTextViewStyle &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharIndex, bool mainDir) {
+int ZLTextView::rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharIndex, bool mainDir) {
 	style.setTextStyle(rectangle.Style, rectangle.BidiLevel);
 	const ZLTextWord &word = (const ZLTextWord&)paragraph[rectangle.ElementIndex];
 	int length = toCharIndex - rectangle.StartCharIndex;
@@ -145,7 +145,7 @@ static RangeVector::const_iterator strongFindRange(const RangeVector &ranges, co
 	return ranges.end();
 }
 
-void ZLTextView::drawSelectionRectangle(ZLTextViewStyle &style, int left, int top, int right, int bottom) {
+void ZLTextView::drawSelectionRectangle(int left, int top, int right, int bottom) {
 	left = std::max(left, lineStartMargin());
 	right = std::min(right, viewWidth() + lineStartMargin() - 1);
 	if (left < right) {
@@ -154,7 +154,7 @@ void ZLTextView::drawSelectionRectangle(ZLTextViewStyle &style, int left, int to
 	}
 }
 
-void ZLTextView::drawTextLine(ZLTextViewStyle &style, const ZLTextLineInfo &info, int y, size_t from, size_t to) {
+void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, size_t to) {
 	const ZLTextParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 
 	const ZLTextElementIterator fromIt = myTextElementMap.begin() + from;
@@ -193,7 +193,7 @@ void ZLTextView::drawTextLine(ZLTextViewStyle &style, const ZLTextLineInfo &info
 					}
 				} else {
 					if (rt != ranges.end()) {
-						drawSelectionRectangle(style, left, top, right, bottom);
+						drawSelectionRectangle(left, top, right, bottom);
 						left = viewWidth() + lineStartMargin() - 1;
 						right = lineStartMargin();
 					}
@@ -233,7 +233,7 @@ void ZLTextView::drawTextLine(ZLTextViewStyle &style, const ZLTextLineInfo &info
 						strongContains(*rt, info.End)) {
 					right = viewWidth() + lineStartMargin() - 1;
 				}
-				drawSelectionRectangle(style, left, top, right, bottom);
+				drawSelectionRectangle(left, top, right, bottom);
 			}
 		}
 	}
@@ -241,7 +241,7 @@ void ZLTextView::drawTextLine(ZLTextViewStyle &style, const ZLTextLineInfo &info
 	y = std::min(y + info.Height, topMargin() + textHeight());
 	int x = lineStartMargin();
 	if (!info.NodeInfo.isNull()) {
-		drawTreeLines(style, *info.NodeInfo, x, y, info.Height, info.Descent + info.VSpaceAfter);
+		drawTreeLines(*info.NodeInfo, x, y, info.Height, info.Descent + info.VSpaceAfter);
 	}
 	ZLTextElementIterator it = fromIt;
 	const int endElementIndex = info.End.elementIndex();
@@ -275,7 +275,7 @@ void ZLTextView::drawTextLine(ZLTextViewStyle &style, const ZLTextLineInfo &info
 	}
 }
 
-void ZLTextView::addRectangleToTextMap(ZLTextViewStyle &style, const ZLTextElementRectangle &rectangle) {
+void ZLTextView::addRectangleToTextMap(ZLTextArea::Style &style, const ZLTextElementRectangle &rectangle) {
 	const unsigned char index = style.bidiLevel() - (myTextArea.isRtl() ? 1 : 0);
 	if (index > 0) {
 		while (myTextElementsToRevert.size() < index) {
@@ -309,7 +309,7 @@ void ZLTextView::flushRevertedElements(unsigned char bidiLevel) {
 	}
 }
 
-void ZLTextView::prepareTextLine(ZLTextViewStyle &style, const ZLTextLineInfo &info, int y) {
+void ZLTextView::prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y) {
 	y = std::min(y + info.Height, topMargin() + textHeight());
 
 	style.setTextStyle(info.StartStyle, info.StartBidiLevel);

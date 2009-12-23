@@ -26,7 +26,7 @@
 #include <ZLTextStyleCollection.h>
 
 #include "ZLTextView.h"
-#include "ZLTextViewStyle.h"
+#include "ZLTextAreaStyle.h"
 #include "ZLTextLineInfo.h"
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
@@ -61,7 +61,7 @@ void ZLTextPartialInfo::setTo(ZLTextLineInfo &lineInfo) const {
 	lineInfo.SpaceCounter = SpaceCounter;
 }
 
-ZLTextLineInfoPtr ZLTextView::processTextLine(ZLTextViewStyle &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end) {
+ZLTextLineInfoPtr ZLTextView::processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end) {
 	const bool useHyphenator =
 		ZLTextStyleCollection::Instance().AutoHyphenationOption.value();
 

@@ -24,20 +24,19 @@
 #include <ZLTextStyle.h>
 #include <ZLTextStyleCollection.h>
 
-#include "ZLTextViewStyle.h"
-#include "ZLTextView.h"
+#include "ZLTextAreaStyle.h"
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextElement.h"
 #include "../style/ZLTextDecoratedStyle.h"
 
-ZLTextViewStyle::ZLTextViewStyle(const ZLTextArea &area, shared_ptr<ZLTextStyle> style) : myArea(area) {
+ZLTextArea::Style::Style(const ZLTextArea &area, shared_ptr<ZLTextStyle> style) : myArea(area) {
 	myTextStyle = style;
 	myWordHeight = -1;
 	myArea.context().setFont(myTextStyle->fontFamily(), myTextStyle->fontSize(), myTextStyle->bold(), myTextStyle->italic());
 	myBidiLevel = myArea.isRtl() ? 1 : 0;
 }
 
-void ZLTextViewStyle::setTextStyle(shared_ptr<ZLTextStyle> style, unsigned char bidiLevel) {
+void ZLTextArea::Style::setTextStyle(shared_ptr<ZLTextStyle> style, unsigned char bidiLevel) {
 	if (myTextStyle != style) {
 		myTextStyle = style;
 		myWordHeight = -1;
@@ -46,7 +45,7 @@ void ZLTextViewStyle::setTextStyle(shared_ptr<ZLTextStyle> style, unsigned char 
 	myBidiLevel = bidiLevel;
 }
 
-void ZLTextViewStyle::applyControl(const ZLTextControlElement &control) {
+void ZLTextArea::Style::applyControl(const ZLTextControlElement &control) {
 	if (control.isStart()) {
 		const ZLTextStyleDecoration *decoration = ZLTextStyleCollection::Instance().decoration(control.textKind());
 		if (decoration != 0) {
@@ -59,11 +58,11 @@ void ZLTextViewStyle::applyControl(const ZLTextControlElement &control) {
 	}
 }
 
-void ZLTextViewStyle::applyControl(const ZLTextStyleElement &control) {
+void ZLTextArea::Style::applyControl(const ZLTextStyleElement &control) {
 	setTextStyle(new ZLTextForcedStyle(myTextStyle, control.entry()), myBidiLevel);
 }
 
-void ZLTextViewStyle::applySingleControl(const ZLTextElement &element) {
+void ZLTextArea::Style::applySingleControl(const ZLTextElement &element) {
 	switch (element.kind()) {
 		case ZLTextElement::CONTROL_ELEMENT:
 			applyControl((ZLTextControlElement&)element);
@@ -82,13 +81,13 @@ void ZLTextViewStyle::applySingleControl(const ZLTextElement &element) {
 	}
 }
 
-void ZLTextViewStyle::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {
+void ZLTextArea::Style::applyControls(const ZLTextWordCursor &begin, const ZLTextWordCursor &end) {
 	for (ZLTextWordCursor cursor = begin; !cursor.equalElementIndex(end); cursor.nextWord()) {
 		applySingleControl(cursor.element());
 	}
 }
 
-int ZLTextViewStyle::elementWidth(const ZLTextElement &element, unsigned int charIndex, const ZLTextStyleEntry::Metrics &metrics) const {
+int ZLTextArea::Style::elementWidth(const ZLTextElement &element, unsigned int charIndex, const ZLTextStyleEntry::Metrics &metrics) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
 			return wordWidth((const ZLTextWord&)element, charIndex, -1, false);
@@ -114,7 +113,7 @@ int ZLTextViewStyle::elementWidth(const ZLTextElement &element, unsigned int cha
 	return 0;
 }
 
-int ZLTextViewStyle::elementHeight(const ZLTextElement &element, const ZLTextStyleEntry::Metrics &metrics) const {
+int ZLTextArea::Style::elementHeight(const ZLTextElement &element, const ZLTextStyleEntry::Metrics &metrics) const {
 	switch (element.kind()) {
 		case ZLTextElement::NB_HSPACE_ELEMENT:
 		case ZLTextElement::WORD_ELEMENT:
@@ -144,7 +143,7 @@ int ZLTextViewStyle::elementHeight(const ZLTextElement &element, const ZLTextSty
 	return 0;
 }
 
-int ZLTextViewStyle::elementDescent(const ZLTextElement &element) const {
+int ZLTextArea::Style::elementDescent(const ZLTextElement &element) const {
 	switch (element.kind()) {
 		case ZLTextElement::WORD_ELEMENT:
 			return myArea.context().descent();
@@ -153,7 +152,7 @@ int ZLTextViewStyle::elementDescent(const ZLTextElement &element) const {
 	}
 }
 
-int ZLTextViewStyle::wordWidth(const ZLTextWord &word, int start, int length, bool addHyphenationSign) const {
+int ZLTextArea::Style::wordWidth(const ZLTextWord &word, int start, int length, bool addHyphenationSign) const {
 	if ((start == 0) && (length == -1)) {
 		return word.width(myArea.context());
 	}
@@ -168,11 +167,11 @@ int ZLTextViewStyle::wordWidth(const ZLTextWord &word, int start, int length, bo
 	return myArea.context().stringWidth(substr.data(), substr.length(), word.BidiLevel % 2 == 1);
 }
 
-void ZLTextViewStyle::increaseBidiLevel() {
+void ZLTextArea::Style::increaseBidiLevel() {
 	++myBidiLevel;
 }
 
-void ZLTextViewStyle::decreaseBidiLevel() {
+void ZLTextArea::Style::decreaseBidiLevel() {
 	unsigned char base = myArea.isRtl() ? 1 : 0;
 	if (myBidiLevel > base) {
 		--myBidiLevel;

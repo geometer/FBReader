@@ -43,7 +43,6 @@ class ZLTextMark;
 class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 struct ZLTextTreeNodeInfo;
-class ZLTextViewStyle;
 
 class ZLTextView : public ZLView {
 
@@ -152,14 +151,14 @@ private:
 
 	void clear();
 
-	int rectangleBound(ZLTextViewStyle &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
-	ZLTextLineInfoPtr processTextLine(ZLTextViewStyle &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
-	void prepareTextLine(ZLTextViewStyle &style, const ZLTextLineInfo &info, int y);
-	void drawTextLine(ZLTextViewStyle &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
-	void drawSelectionRectangle(ZLTextViewStyle &style, int left, int top, int right, int bottom);
-	void drawWord(ZLTextViewStyle &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
-	void drawString(ZLTextViewStyle &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
-	void drawTreeLines(ZLTextViewStyle &style, const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
+	int rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
+	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
+	void prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y);
+	void drawTextLine(const ZLTextLineInfo &info, int y, size_t from, size_t to);
+	void drawSelectionRectangle(int left, int top, int right, int bottom);
+	void drawWord(ZLTextArea::Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
+	void drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
+	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
 
 	bool pageIsEmpty() const;
 	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;
@@ -185,7 +184,7 @@ private:
 	int viewHeight() const;
 	int textHeight() const;
 
-	void addRectangleToTextMap(ZLTextViewStyle &style, const ZLTextElementRectangle &rectangle);
+	void addRectangleToTextMap(ZLTextArea::Style &style, const ZLTextElementRectangle &rectangle);
 	void flushRevertedElements(unsigned char bidiLevel);
 
 	void gotoCharIndex(size_t charIndex);
@@ -234,7 +233,6 @@ private:
 	} myDoubleClickInfo;
 
 friend class ZLTextSelectionModel;
-friend class ZLTextViewStyle;
 };
 
 inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }

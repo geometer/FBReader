@@ -17,18 +17,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLTEXTVIEWSTYLE_H__
-#define __ZLTEXTVIEWSTYLE_H__
+#ifndef __ZLTEXTAREASTYLE_H__
+#define __ZLTEXTAREASTYLE_H__
 
 #include <ZLTextParagraphCursor.h>
+#include <ZLTextArea.h>
 
-class ZLTextArea;
 class ZLTextStyle;
 
-class ZLTextViewStyle {
+class ZLTextArea::Style {
 
 public:
-	ZLTextViewStyle(const ZLTextArea &area, shared_ptr<ZLTextStyle> style);
+	Style(const ZLTextArea &area, shared_ptr<ZLTextStyle> style);
 
 	void setTextStyle(shared_ptr<ZLTextStyle> style, unsigned char bidiLevel);
 
@@ -58,7 +58,7 @@ private:
 	mutable int myWordHeight;
 };
 
-inline unsigned char ZLTextViewStyle::bidiLevel() const { return myBidiLevel; }
-inline shared_ptr<ZLTextStyle> ZLTextViewStyle::textStyle() const { return myTextStyle; }
+inline unsigned char ZLTextArea::Style::bidiLevel() const { return myBidiLevel; }
+inline shared_ptr<ZLTextStyle> ZLTextArea::Style::textStyle() const { return myTextStyle; }
 
-#endif /* __ZLTEXTVIEWSTYLE_H__ */
+#endif /* __ZLTEXTAREASTYLE_H__ */

@@ -26,7 +26,7 @@
 #include <ZLTextParagraph.h>
 
 #include "ZLTextView.h"
-#include "ZLTextViewStyle.h"
+#include "ZLTextAreaStyle.h"
 #include "ZLTextLineInfo.h"
 #include "ZLTextParagraphCursor.h"
 #include "ZLTextWord.h"
@@ -497,7 +497,7 @@ bool ZLTextView::onStylusRelease(int x, int y) {
 	return false;
 }
 
-void ZLTextView::drawString(ZLTextViewStyle &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
+void ZLTextView::drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
 	context().setColor(color(style.textStyle()->colorStyle()));
 	if (mark == 0) {
 		context().drawString(x, y, str, len, rtl);
@@ -555,7 +555,7 @@ void ZLTextView::drawString(ZLTextViewStyle &style, int x, int y, const char *st
 	}
 }
 
-void ZLTextView::drawWord(ZLTextViewStyle &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
+void ZLTextView::drawWord(ZLTextArea::Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
 	if ((start == 0) && (length == -1)) {
 		drawString(style, x, y, word.Data, word.Size, word.mark(), 0, word.BidiLevel % 2 == 1);
 	} else {

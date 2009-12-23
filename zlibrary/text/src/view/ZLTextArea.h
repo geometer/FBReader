@@ -28,7 +28,7 @@ class ZLTextModel;
 
 class ZLTextArea {
 
-private:
+public:
 	class Style;
 
 public:
