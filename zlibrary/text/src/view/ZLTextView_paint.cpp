@@ -41,7 +41,7 @@ void ZLTextView::paint() {
 	labels.reserve(myLineInfos.size() + 1);
 	labels.push_back(0);
 
-	ZLTextViewStyle style(*this);
+	ZLTextViewStyle style(*this, baseStyle());
 
 	int y = topMargin();
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {

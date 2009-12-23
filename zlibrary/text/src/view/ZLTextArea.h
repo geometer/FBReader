@@ -22,25 +22,30 @@
 
 #include <shared_ptr.h>
 
+class ZLPaintContext;
+
 class ZLTextModel;
 
 class ZLTextArea {
 
 public:
-	ZLTextArea();
+	ZLTextArea(ZLPaintContext &context);
 	~ZLTextArea();
 
 public:
 	void setModel(shared_ptr<ZLTextModel> model);
 	shared_ptr<ZLTextModel> model() const;
 	bool isRtl() const;
+	ZLPaintContext &context() const;
 
 private:
+	ZLPaintContext &myContext;
 	shared_ptr<ZLTextModel> myModel;
 	bool myIsRtl;
 };
 
 inline shared_ptr<ZLTextModel> ZLTextArea::model() const { return myModel; }
 inline bool ZLTextArea::isRtl() const { return myIsRtl; }
+inline ZLPaintContext &ZLTextArea::context() const { return myContext; }
 
 #endif /* __ZLTEXTAREA_H__ */
