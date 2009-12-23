@@ -22,6 +22,7 @@
 
 #include <ZLibrary.h>
 #include <ZLSearchUtil.h>
+#include <ZLLanguageUtil.h>
 
 #include "ZLTextModel.h"
 #include "ZLTextParagraph.h"
@@ -37,6 +38,10 @@ ZLTextModel::~ZLTextModel() {
 
 const std::string &ZLTextModel::language() const {
 	return myLanguage;
+}
+
+bool ZLTextModel::isRtl() const {
+	return ZLLanguageUtil::isRTLLanguage(myLanguage);
 }
 
 void ZLTextModel::search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const {

@@ -324,12 +324,12 @@ void ZLTextView::prepareTextLine(const ZLTextLineInfo &info, int y) {
 	switch (myStyle.textStyle()->alignment()) {
 		case ALIGN_RIGHT:
 			if (!myTextArea.isRtl()) {
-				x += metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myTextArea.isRtl()) - info.Width;
+				x += metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, false) - info.Width;
 			}
 			break;
 		case ALIGN_LEFT:
 			if (myTextArea.isRtl()) {
-				x += metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, myTextArea.isRtl()) - info.Width;
+				x += metrics.FullWidth - myStyle.textStyle()->lineEndIndent(metrics, true) - info.Width;
 			}
 			break;
 		case ALIGN_LINESTART:

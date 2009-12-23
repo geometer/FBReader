@@ -28,13 +28,14 @@
 #include <ZLUnicodeUtil.h>
 
 #include "ZLTextElement.h"
+#include "ZLTextParagraphCursor.h"
 
 class ZLTextParagraph;
 
-class ZLTextParagraphBuilder {
+class ZLTextParagraphCursor::Builder {
 
 public:
-	ZLTextParagraphBuilder(const ZLTextModel &model, const ZLTextParagraph &paragraph, int index, ZLTextElementVector &elements);
+	Builder(ZLTextParagraphCursor &cursor);
 	void fill();
 
 private:

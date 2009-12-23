@@ -48,6 +48,7 @@ public:
 	virtual Kind kind() const = 0;
 
 	const std::string &language() const;
+	bool isRtl() const;
 
 	size_t paragraphsNumber() const;
 	ZLTextParagraph *operator[] (size_t index);

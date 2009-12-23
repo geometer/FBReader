@@ -74,6 +74,9 @@ typedef shared_ptr<ZLTextParagraphCursor> ZLTextParagraphCursorPtr;
 
 class ZLTextParagraphCursor {
 
+private:
+	class Builder;
+
 protected:
 	ZLTextParagraphCursor(const ZLTextModel &model, size_t index);
 

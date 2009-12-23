@@ -21,7 +21,6 @@
 
 #include <linebreak.h>
 
-#include <ZLLanguageUtil.h>
 #include <ZLImage.h>
 
 #include <ZLTextParagraph.h>
@@ -30,8 +29,13 @@
 #include "ZLTextWord.h"
 #include "ZLTextParagraphBuilder.h"
 
-ZLTextParagraphBuilder::ZLTextParagraphBuilder(const ZLTextModel &model, const ZLTextParagraph &paragraph, int paragraphIndex, ZLTextElementVector &elements) : myParagraph(paragraph), myElements(elements), myLanguage(model.language()), myBaseBidiLevel(ZLLanguageUtil::isRTLLanguage(myLanguage) ? 1 : 0) {
-	const std::vector<ZLTextMark> &marks = model.marks();
+ZLTextParagraphCursor::Builder::Builder(ZLTextParagraphCursor &cursor) :
+	myParagraph(*cursor.myModel[cursor.myIndex]),
+	myElements(cursor.myElements),
+	myLanguage(cursor.myModel.language()),
+	myBaseBidiLevel(cursor.myModel.isRtl() ? 1 : 0) {
+	const int paragraphIndex = cursor.myIndex;
+	const std::vector<ZLTextMark> &marks = cursor.myModel.marks();
 	myFirstMark = std::lower_bound(marks.begin(), marks.end(), ZLTextMark(paragraphIndex, 0, 0));
 	myLastMark = myFirstMark;
 	for (; (myLastMark != marks.end()) && (myLastMark->ParagraphIndex == paragraphIndex); ++myLastMark) {
@@ -45,7 +49,7 @@ ZLTextParagraphBuilder::ZLTextParagraphBuilder(const ZLTextModel &model, const Z
 	}
 }
 
-void ZLTextParagraphBuilder::updateBidiLevel(FriBidiLevel bidiLevel) {
+void ZLTextParagraphCursor::Builder::updateBidiLevel(FriBidiLevel bidiLevel) {
 	while (myCurrentBidiLevel > bidiLevel) {
 		--myCurrentBidiLevel;
 		myElements.push_back(ZLTextElementPool::Pool.EndReversedSequenceElement);
@@ -56,7 +60,7 @@ void ZLTextParagraphBuilder::updateBidiLevel(FriBidiLevel bidiLevel) {
 	}
 }
 
-void ZLTextParagraphBuilder::addWord(const char *ptr, int offset, int len) {
+void ZLTextParagraphCursor::Builder::addWord(const char *ptr, int offset, int len) {
 	ZLTextWord *word = ZLTextElementPool::Pool.getWord(ptr, len, offset, myCurrentBidiLevel);
 	for (std::vector<ZLTextMark>::const_iterator mit = myFirstMark; mit != myLastMark; ++mit) {
 		ZLTextMark mark = *mit;
@@ -67,7 +71,7 @@ void ZLTextParagraphBuilder::addWord(const char *ptr, int offset, int len) {
 	myElements.push_back(word);
 }
 
-void ZLTextParagraphBuilder::fill() {
+void ZLTextParagraphCursor::Builder::fill() {
 	myBidiCharType = (myBaseBidiLevel == 1) ? FRIBIDI_TYPE_RTL : FRIBIDI_TYPE_LTR;
 	myCurrentBidiLevel = myBaseBidiLevel;
 	myLatestBidiLevel = myBaseBidiLevel;
@@ -109,7 +113,7 @@ void ZLTextParagraphBuilder::fill() {
 	updateBidiLevel(myBaseBidiLevel);
 }
 
-void ZLTextParagraphBuilder::processTextEntry(const ZLTextEntry &textEntry) {
+void ZLTextParagraphCursor::Builder::processTextEntry(const ZLTextEntry &textEntry) {
 	const size_t dataLength = textEntry.dataLength();
 	if (dataLength == 0) {
 		return;
