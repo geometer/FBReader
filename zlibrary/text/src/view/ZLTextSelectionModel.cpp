@@ -24,7 +24,7 @@
 
 #include "ZLTextSelectionModel.h"
 #include "ZLTextView.h"
-#include "ZLTextAreaStyle.h"
+#include "../area/ZLTextAreaStyle.h"
 
 ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view) : myView(view), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
 }
@@ -41,7 +41,7 @@ int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int
 	cursor.moveToParagraph(rectangle.ParagraphIndex);
 	const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[rectangle.ElementIndex];
 	const bool mainDir =
-		rectangle.BidiLevel % 2 == (myView.myTextArea.isRtl() ? 1 : 0);
+		rectangle.BidiLevel % 2 == (myView.textArea().isRtl() ? 1 : 0);
 	const int deltaX = mainDir ? x - rectangle.XStart : rectangle.XEnd - x;
 	const int len = rectangle.Length;
 	const int start = rectangle.StartCharIndex;
@@ -75,7 +75,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 		bound.After.ElementIndex = it->ElementIndex;
 		bound.After.Exists = true;
 		const bool mainDir =
-			it->BidiLevel % 2 == (myView.myTextArea.isRtl() ? 1 : 0);
+			it->BidiLevel % 2 == (myView.textArea().isRtl() ? 1 : 0);
 		bound.After.CharIndex = mainDir ?
 			it->StartCharIndex :
 			it->StartCharIndex + it->Length;
@@ -94,7 +94,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 			bound.Before.ParagraphIndex = previous.ParagraphIndex;
 			bound.Before.ElementIndex = previous.ElementIndex;
 			bound.Before.CharIndex =
-				(previous.BidiLevel % 2 == (myView.myTextArea.isRtl() ? 1 : 0)) ?
+				(previous.BidiLevel % 2 == (myView.textArea().isRtl() ? 1 : 0)) ?
 					previous.StartCharIndex + previous.Length :
 					previous.StartCharIndex;
 			bound.Before.Exists = true;

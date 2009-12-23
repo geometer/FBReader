@@ -22,9 +22,9 @@
 #include <ZLUnicodeUtil.h>
 
 #include "ZLTextView.h"
-#include "ZLTextAreaStyle.h"
 #include "ZLTextLineInfo.h"
 #include "ZLTextPositionIndicator.h"
+#include "../area/ZLTextAreaStyle.h"
 
 void ZLTextView::paint() {
 	preparePaintInfo();
@@ -57,7 +57,7 @@ void ZLTextView::paint() {
 	int index = 0;
 	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
 		const ZLTextLineInfo &info = **it;
-		drawTextLine(info, y, labels[index], labels[index + 1]);
+		drawTextLine(style, info, y, labels[index], labels[index + 1]);
 		y += info.Height + info.Descent + info.VSpaceAfter;
 		++index;
 	}
@@ -154,7 +154,7 @@ void ZLTextView::drawSelectionRectangle(int left, int top, int right, int bottom
 	}
 }
 
-void ZLTextView::drawTextLine(const ZLTextLineInfo &info, int y, size_t from, size_t to) {
+void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to) {
 	const ZLTextParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 
 	const ZLTextElementIterator fromIt = myTextElementMap.begin() + from;

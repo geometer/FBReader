@@ -1,1 +1,1 @@
-../src/view/ZLTextWord.h
+../src/area/ZLTextWord.h

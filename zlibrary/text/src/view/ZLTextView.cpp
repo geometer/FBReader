@@ -26,12 +26,12 @@
 #include <ZLTextParagraph.h>
 
 #include "ZLTextView.h"
-#include "ZLTextAreaStyle.h"
-#include "ZLTextLineInfo.h"
-#include "ZLTextParagraphCursor.h"
-#include "ZLTextWord.h"
 #include "ZLTextSelectionModel.h"
 #include "ZLTextPositionIndicator.h"
+#include "ZLTextLineInfo.h"
+#include "../area/ZLTextParagraphCursor.h"
+#include "../area/ZLTextWord.h"
+#include "../area/ZLTextAreaStyle.h"
 
 const int ZLTextView::DOUBLE_CLICK_DELAY = 200;
 

@@ -26,10 +26,10 @@
 #include <ZLTextStyleCollection.h>
 
 #include "ZLTextView.h"
-#include "ZLTextAreaStyle.h"
 #include "ZLTextLineInfo.h"
-#include "ZLTextParagraphCursor.h"
-#include "ZLTextWord.h"
+#include "../area/ZLTextAreaStyle.h"
+#include "../area/ZLTextParagraphCursor.h"
+#include "../area/ZLTextWord.h"
 
 struct ZLTextPartialInfo {
 	//ZLTextWordCursor Start;

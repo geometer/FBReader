@@ -20,8 +20,8 @@
 #include <algorithm>
 
 #include "ZLTextView.h"
-#include "ZLTextAreaStyle.h"
 #include "ZLTextLineInfo.h"
+#include "../area/ZLTextAreaStyle.h"
 
 void ZLTextView::rebuildPaintInfo(bool strong) {
 	if (myPaintState == NOTHING_TO_PAINT) {

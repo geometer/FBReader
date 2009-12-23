@@ -1,1 +1,1 @@
-../src/view/ZLTextElement.h
+../src/area/ZLTextElement.h

@@ -154,7 +154,7 @@ private:
 	int rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
 	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 	void prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y);
-	void drawTextLine(const ZLTextLineInfo &info, int y, size_t from, size_t to);
+	void drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
 	void drawSelectionRectangle(int left, int top, int right, int bottom);
 	void drawWord(ZLTextArea::Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
 	void drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);

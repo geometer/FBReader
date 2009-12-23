@@ -21,6 +21,7 @@
 
 #include <ZLUnicodeUtil.h>
 #include <ZLPaintContext.h>
+
 #include <ZLTextStyle.h>
 #include <ZLTextStyleCollection.h>
 
