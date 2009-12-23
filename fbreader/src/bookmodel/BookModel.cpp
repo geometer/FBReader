@@ -27,8 +27,8 @@
 #include "../library/Book.h"
 
 BookModel::BookModel(const shared_ptr<Book> book) : myBook(book) {
-	myBookTextModel = new ZLTextPlainModel(102400);
-	myContentsModel = new ContentsModel();
+	myBookTextModel = new ZLTextPlainModel(book->language(), 102400);
+	myContentsModel = new ContentsModel(book->language());
 	ZLFile file(book->filePath());
 	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(file, false);
 	if (!plugin.isNull()) {
@@ -50,6 +50,9 @@ BookModel::Label BookModel::label(const std::string &id) const {
 
 	std::map<std::string,Label>::const_iterator it = myInternalHyperlinks.find(id);
 	return (it != myInternalHyperlinks.end()) ? it->second : Label(0, -1);
+}
+
+ContentsModel::ContentsModel(const std::string &language) : ZLTextTreeModel(language) {
 }
 
 void ContentsModel::setReference(const ZLTextTreeParagraph *paragraph, int reference) {

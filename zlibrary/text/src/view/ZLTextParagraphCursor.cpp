@@ -77,20 +77,20 @@ ZLTextElementPool::~ZLTextElementPool() {
 	delete EndReversedSequenceElement;
 }
 
-ZLTextParagraphCursorPtr ZLTextParagraphCursor::cursor(const ZLTextModel &model, const std::string &language, size_t index) {
+ZLTextParagraphCursorPtr ZLTextParagraphCursor::cursor(const ZLTextModel &model, size_t index) {
 	ZLTextParagraphCursorPtr result = ZLTextParagraphCursorCache::get(model[index]);
 	if (result.isNull()) {
 		if (model.kind() == ZLTextModel::TREE_MODEL) {
-			result = new ZLTextTreeParagraphCursor((const ZLTextTreeModel&)model, language, index);
+			result = new ZLTextTreeParagraphCursor((const ZLTextTreeModel&)model, index);
 		} else {
-			result = new ZLTextPlainParagraphCursor((const ZLTextPlainModel&)model, language, index);
+			result = new ZLTextPlainParagraphCursor((const ZLTextPlainModel&)model, index);
 		}
 		ZLTextParagraphCursorCache::put(model[index], result);
 	}
 	return result;
 }
 
-ZLTextParagraphCursor::ZLTextParagraphCursor(const ZLTextModel &model, const std::string &language, size_t index) : myModel(model), myLanguage(language) {
+ZLTextParagraphCursor::ZLTextParagraphCursor(const ZLTextModel &model, size_t index) : myModel(model) {
 	myIndex = std::min(index, myModel.paragraphsNumber() - 1);
 	fill();
 }
@@ -99,7 +99,7 @@ ZLTextParagraphCursor::~ZLTextParagraphCursor() {
 }
 
 ZLTextParagraphCursorPtr ZLTextPlainParagraphCursor::previous() const {
-	return isFirst() ? 0 : cursor(myModel, myLanguage, myIndex - 1);
+	return isFirst() ? 0 : cursor(myModel, myIndex - 1);
 }
 
 ZLTextParagraphCursorPtr ZLTextTreeParagraphCursor::previous() const {
@@ -121,11 +121,11 @@ ZLTextParagraphCursorPtr ZLTextTreeParagraphCursor::previous() const {
 			--index;
 		}
 	}
-	return cursor(myModel, myLanguage, index);
+	return cursor(myModel, index);
 }
 
 ZLTextParagraphCursorPtr ZLTextPlainParagraphCursor::next() const {
-	return isLast() ? 0 : cursor(myModel, myLanguage, myIndex + 1);
+	return isLast() ? 0 : cursor(myModel, myIndex + 1);
 }
 
 ZLTextParagraphCursorPtr ZLTextTreeParagraphCursor::next() const {
@@ -134,7 +134,7 @@ ZLTextParagraphCursorPtr ZLTextTreeParagraphCursor::next() const {
 	}
 	const ZLTextTreeParagraph *current = (const ZLTextTreeParagraph*)myModel[myIndex];
 	if (!current->children().empty() && current->isOpen()) {
-		return cursor(myModel, myLanguage, myIndex + 1);
+		return cursor(myModel, myIndex + 1);
 	}
 
 	const ZLTextTreeParagraph *parent = current->parent();
@@ -147,7 +147,7 @@ ZLTextParagraphCursorPtr ZLTextTreeParagraphCursor::next() const {
 		while (((const ZLTextTreeParagraph*)myModel[index])->parent() != parent) {
 			++index;
 		}
-		return cursor(myModel, myLanguage, index);
+		return cursor(myModel, index);
 	}
 	return 0;
 }
@@ -217,7 +217,7 @@ void ZLTextParagraphCursor::fill() {
 		case ZLTextParagraph::TEXT_PARAGRAPH:
 		case ZLTextParagraph::TREE_PARAGRAPH:
 		{
-			ZLTextParagraphBuilder builder(myLanguage, paragraph, myModel.marks(), index(), myElements);
+			ZLTextParagraphBuilder builder(myModel.language(), paragraph, myModel.marks(), index(), myElements);
 			builder.fill();
 			break;
 		}
@@ -316,7 +316,7 @@ const ZLTextWordCursor &ZLTextWordCursor::operator = (ZLTextParagraphCursorPtr p
 
 void ZLTextWordCursor::moveToParagraph(int paragraphIndex) {
 	if (!isNull() && (paragraphIndex != (int)myParagraphCursor->index())) {
-		myParagraphCursor = ZLTextParagraphCursor::cursor(myParagraphCursor->myModel, myParagraphCursor->myLanguage, paragraphIndex);
+		myParagraphCursor = ZLTextParagraphCursor::cursor(myParagraphCursor->myModel, paragraphIndex);
 		moveToParagraphStart();
 	}
 }

@@ -19,7 +19,6 @@
 
 #include <algorithm>
 
-#include <ZLibrary.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLLanguageUtil.h>
 #include <ZLApplication.h>
@@ -65,16 +64,14 @@ void ZLTextView::clear() {
 	ZLTextParagraphCursorCache::clear();
 }
 
-void ZLTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &language) {
+void ZLTextView::setModel(shared_ptr<ZLTextModel> model) {
 	clear();
 
 	myTextArea.setModel(model);
 
-	myLanguage = language.empty() ? ZLibrary::Language() : language;
-	myStyle.setBaseBidiLevel(ZLLanguageUtil::isRTLLanguage(myLanguage) ? 1 : 0);
-
 	if (!model.isNull() && (model->paragraphsNumber() != 0)) {
-		setStartCursor(ZLTextParagraphCursor::cursor(*model, myLanguage));
+		myStyle.setBaseBidiLevel(ZLLanguageUtil::isRTLLanguage(model->language()) ? 1 : 0);
+		setStartCursor(ZLTextParagraphCursor::cursor(*model));
 
 		size_t size = model->paragraphsNumber();
 		myTextSize.reserve(size + 1);

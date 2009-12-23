@@ -144,7 +144,7 @@ public:
 	const ZLTextWordCursor &startCursor() const;
 	const ZLTextWordCursor &endCursor() const;
 
-	virtual void setModel(shared_ptr<ZLTextModel> model, const std::string &language);
+	virtual void setModel(shared_ptr<ZLTextModel> model);
 
 	bool hasMultiSectionModel() const;
 	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly);
@@ -243,8 +243,6 @@ private:
 
 private:
 	ZLTextArea myTextArea;
-
-	std::string myLanguage;
 
 	enum {
 		NOTHING_TO_PAINT,

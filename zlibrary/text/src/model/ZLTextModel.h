@@ -41,11 +41,13 @@ public:
 	};
 
 protected:
-	ZLTextModel(const size_t rowSize);
+	ZLTextModel(const std::string &language, const size_t rowSize);
 
 public:
 	virtual ~ZLTextModel();
 	virtual Kind kind() const = 0;
+
+	const std::string &language() const;
 
 	size_t paragraphsNumber() const;
 	ZLTextParagraph *operator[] (size_t index);
@@ -74,6 +76,7 @@ protected:
 	void addParagraphInternal(ZLTextParagraph *paragraph);
 	
 private:
+	const std::string myLanguage;
 	std::vector<ZLTextParagraph*> myParagraphs;
 	mutable std::vector<ZLTextMark> myMarks;
 	mutable ZLTextRowMemoryAllocator myAllocator;
@@ -88,7 +91,7 @@ private:
 class ZLTextPlainModel : public ZLTextModel {
 
 public:
-	ZLTextPlainModel(const size_t rowSize);
+	ZLTextPlainModel(const std::string &language, const size_t rowSize);
 	Kind kind() const;
 	void createParagraph(ZLTextParagraph::Kind kind);
 };
@@ -96,7 +99,7 @@ public:
 class ZLTextTreeModel : public ZLTextModel {
 
 public:
-	ZLTextTreeModel();
+	ZLTextTreeModel(const std::string &language);
 	~ZLTextTreeModel();
 	Kind kind() const;
 

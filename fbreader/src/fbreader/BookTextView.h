@@ -39,7 +39,7 @@ public:
 	BookTextView(ZLPaintContext &context);
 	~BookTextView();
 
-	void setModel(shared_ptr<ZLTextModel> model, const std::string &language, shared_ptr<Book> book);
+	void setModel(shared_ptr<ZLTextModel> model, shared_ptr<Book> book);
 	void setContentsModel(shared_ptr<ZLTextModel> contentsModel);
 	void saveState();
 

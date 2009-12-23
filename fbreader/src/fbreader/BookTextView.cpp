@@ -105,8 +105,8 @@ void BookTextView::saveBookState(const Book &book) {
 	ZLBooleanOption(ZLCategoryKey::STATE, LAST_STATE_GROUP, STATE_VALID, false).setValue(false);
 }
 
-void BookTextView::setModel(shared_ptr<ZLTextModel> model, const std::string &language, shared_ptr<Book> book) {
-	FBView::setModel(model, language);
+void BookTextView::setModel(shared_ptr<ZLTextModel> model, shared_ptr<Book> book) {
+	FBView::setModel(model);
 	if (!myBook.isNull()) {
 		saveBookState(*myBook);
 	}

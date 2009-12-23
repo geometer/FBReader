@@ -278,21 +278,20 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		FootnoteView &footnoteView = (FootnoteView&)*myFootnoteView;
 
 		bookTextView.saveState();
-		bookTextView.setModel(0, "", 0);
+		bookTextView.setModel(0, 0);
 		bookTextView.setContentsModel(0);
-		contentsView.setModel(0, "");
+		contentsView.setModel(0);
 		if (myModel != 0) {
 			delete myModel;
 		}
 		myModel = new BookModel(book);
-		const std::string &lang = book->language();
-		ZLTextHyphenator::Instance().load(lang);
-		bookTextView.setModel(myModel->bookTextModel(), lang, book);
+		ZLTextHyphenator::Instance().load(book->language());
+		bookTextView.setModel(myModel->bookTextModel(), book);
 		bookTextView.setCaption(book->title());
 		bookTextView.setContentsModel(myModel->contentsModel());
-		footnoteView.setModel(0, lang);
+		footnoteView.setModel(0);
 		footnoteView.setCaption(book->title());
-		contentsView.setModel(myModel->contentsModel(), lang);
+		contentsView.setModel(myModel->contentsModel());
 		contentsView.setCaption(book->title());
 
 		myRecentBooks.addBook(book);
@@ -328,7 +327,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 					bookTextView().gotoParagraph(label.ParagraphNumber);
 				} else {
 					FootnoteView &view = ((FootnoteView&)*myFootnoteView);
-					view.setModel(label.Model, myModel->book()->language());
+					view.setModel(label.Model);
 					setMode(FOOTNOTE_MODE);
 					view.gotoParagraph(label.ParagraphNumber);
 				}

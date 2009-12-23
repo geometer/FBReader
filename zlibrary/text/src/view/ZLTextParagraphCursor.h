@@ -75,10 +75,10 @@ typedef shared_ptr<ZLTextParagraphCursor> ZLTextParagraphCursorPtr;
 class ZLTextParagraphCursor {
 
 protected:
-	ZLTextParagraphCursor(const ZLTextModel &model, const std::string &language, size_t index);
+	ZLTextParagraphCursor(const ZLTextModel &model, size_t index);
 
 public:
-	static ZLTextParagraphCursorPtr cursor(const ZLTextModel &model, const std::string &language, size_t index = 0);
+	static ZLTextParagraphCursorPtr cursor(const ZLTextModel &model, size_t index = 0);
 	virtual ~ZLTextParagraphCursor();
 
 	bool isFirst() const;
@@ -108,7 +108,6 @@ private:
 	
 protected:
 	const ZLTextModel &myModel;
-	const std::string &myLanguage;
 	size_t myIndex;
 	ZLTextElementVector myElements;
 
@@ -177,7 +176,7 @@ private:
 class ZLTextPlainParagraphCursor : public ZLTextParagraphCursor {
 
 private:
-	ZLTextPlainParagraphCursor(const ZLTextModel &model, const std::string &language, size_t index);
+	ZLTextPlainParagraphCursor(const ZLTextModel &model, size_t index);
 
 public:
 	~ZLTextPlainParagraphCursor();
@@ -192,7 +191,7 @@ friend class ZLTextParagraphCursor;
 class ZLTextTreeParagraphCursor : public ZLTextParagraphCursor {
 
 private:
-	ZLTextTreeParagraphCursor(const ZLTextTreeModel &model, const std::string &language, size_t index);
+	ZLTextTreeParagraphCursor(const ZLTextTreeModel &model, size_t index);
 
 public:
 	~ZLTextTreeParagraphCursor();
@@ -266,10 +265,10 @@ inline const ZLTextParagraphCursor &ZLTextWordCursor::paragraphCursor() const { 
 inline void ZLTextWordCursor::nextWord() { ++myElementIndex; myCharIndex = 0; }
 inline void ZLTextWordCursor::previousWord() { --myElementIndex; myCharIndex = 0; }
 
-inline ZLTextPlainParagraphCursor::ZLTextPlainParagraphCursor(const ZLTextModel &model, const std::string &language, size_t index) : ZLTextParagraphCursor(model, language, index) {}
+inline ZLTextPlainParagraphCursor::ZLTextPlainParagraphCursor(const ZLTextModel &model, size_t index) : ZLTextParagraphCursor(model, index) {}
 inline ZLTextPlainParagraphCursor::~ZLTextPlainParagraphCursor() {}
 
-inline ZLTextTreeParagraphCursor::ZLTextTreeParagraphCursor(const ZLTextTreeModel &model, const std::string &language, size_t index) : ZLTextParagraphCursor(model, language, index) {}
+inline ZLTextTreeParagraphCursor::ZLTextTreeParagraphCursor(const ZLTextTreeModel &model, size_t index) : ZLTextParagraphCursor(model, index) {}
 inline ZLTextTreeParagraphCursor::~ZLTextTreeParagraphCursor() {}
 
 #endif /* __ZLTEXTPARAGRAPHCURSOR_H__ */

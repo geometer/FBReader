@@ -33,6 +33,7 @@ class Book;
 class ContentsModel : public ZLTextTreeModel {
 
 public:
+	ContentsModel(const std::string &language);
 	void setReference(const ZLTextTreeParagraph *paragraph, int reference);
 	int reference(const ZLTextTreeParagraph *paragraph) const;
 
