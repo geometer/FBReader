@@ -63,6 +63,7 @@ public:
 
 private:
 	ZLPaintContext &myContext;
+	shared_ptr<ZLPaintContext> myMirroredContext;
 	size_t myWidth;
 	size_t myHeight;
 
@@ -81,7 +82,7 @@ public:
 	ZLTextTreeNodeMap myTreeNodeMap;
 };
 
-inline ZLPaintContext &ZLTextArea::context() const { return myContext; }
+inline ZLPaintContext &ZLTextArea::context() const { return myIsRtl ? *myMirroredContext : myContext; }
 inline void ZLTextArea::setSize(size_t width, size_t height) { myWidth = width; myHeight = height; }
 inline size_t ZLTextArea::width() const { return myWidth; }
 inline size_t ZLTextArea::height() const { return myHeight; }

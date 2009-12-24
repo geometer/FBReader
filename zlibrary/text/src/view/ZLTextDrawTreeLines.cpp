@@ -33,42 +33,42 @@ void ZLTextView::drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int
 	const int depth = Stack.size();
 	for (int i = depth - 1; i >= 0; --i) {
 		if (Stack[i]) {
-			context().drawLine(visualX(x + 2 * qstep), y + vSpaceAfter, visualX(x + 2 * qstep), y - height + 1);
+			myTextArea.context().drawLine(x + 2 * qstep, y + vSpaceAfter, x + 2 * qstep, y - height + 1);
 		}
 		x += 4 * qstep;
 	}
 
 	if (info.IsFirstLine) {
 		if ((depth > 0) && !Stack[0]) {
-			context().drawLine(visualX(x - 2 * qstep), y - qstep, visualX(x - 2 * qstep), y - height + 1);
+			myTextArea.context().drawLine(x - 2 * qstep, y - qstep, x - 2 * qstep, y - height + 1);
 		}
 
 		if (info.IsLeaf) {
 			if (depth > 0) {
-				context().drawLine(visualX(x - 2 * qstep), y - qstep, visualX(x + 3 * qstep), y - qstep);
+				myTextArea.context().drawLine(x - 2 * qstep, y - qstep, x + 3 * qstep, y - qstep);
 			}
 		} else {
 			int space = std::max(qstep * 2 / 5, 2);
 			if (depth > 0) {
-				context().drawLine(visualX(x - 2 * qstep), y - qstep, visualX(x + qstep), y - qstep);
+				myTextArea.context().drawLine(x - 2 * qstep, y - qstep, x + qstep, y - qstep);
 			}
 			const int x0 = x + qstep, x1 = x + 3 * qstep;
 			const int y0 = y, y1 = y - 2 * qstep;
-			context().drawLine(visualX(x0), y0, visualX(x0), y1);
-			context().drawLine(visualX(x1), y0, visualX(x1), y1);
-			context().drawLine(visualX(x0), y0, visualX(x1), y0);
-			context().drawLine(visualX(x0), y1, visualX(x1), y1);
-			context().drawLine(visualX(x0 + space), y - qstep, visualX(x1 - space), y - qstep);
+			myTextArea.context().drawLine(x0, y0, x0, y1);
+			myTextArea.context().drawLine(x1, y0, x1, y1);
+			myTextArea.context().drawLine(x0, y0, x1, y0);
+			myTextArea.context().drawLine(x0, y1, x1, y1);
+			myTextArea.context().drawLine(x0 + space, y - qstep, x1 - space, y - qstep);
 			if (info.IsOpen) {
-				context().drawLine(visualX(x + 2 * qstep), y + vSpaceAfter, visualX(x + 2 * qstep), y);
+				myTextArea.context().drawLine(x + 2 * qstep, y + vSpaceAfter, x + 2 * qstep, y);
 			} else {
-				context().drawLine(visualX(x + 2 * qstep), y0 - space, visualX(x + 2 * qstep), y1 + space);
+				myTextArea.context().drawLine(x + 2 * qstep, y0 - space, x + 2 * qstep, y1 + space);
 			}
 			const int left = std::min(visualX(x), visualX(x + 4 * qstep));
 			const int right = std::max(visualX(x), visualX(x + 4 * qstep));
 			myTextArea.myTreeNodeMap.push_back(ZLTextTreeNodeRectangle(info.ParagraphIndex, left, right, y - height + 1, y));
 		}
 	} else if (!info.IsLeaf && info.IsOpen) {
-		context().drawLine(visualX(x + 2 * qstep), y + vSpaceAfter, visualX(x + 2 * qstep), y - height + 1);
+		myTextArea.context().drawLine(x + 2 * qstep, y + vSpaceAfter, x + 2 * qstep, y - height + 1);
 	}
 }

@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLMirroredPaintContext.h>
+
 #include <ZLTextModel.h>
 
 #include "ZLTextArea.h"
@@ -34,6 +36,11 @@ void ZLTextArea::setModel(shared_ptr<ZLTextModel> model) {
 	myModel = model;
 	if (!model.isNull()) {
 		myIsRtl = model->isRtl();
+		if (myIsRtl) {
+			myMirroredContext = new ZLMirroredPaintContext(myContext);
+		} else {
+			myMirroredContext.reset();
+		}
 		myStartCursor = ZLTextParagraphCursor::cursor(*model);
 		myEndCursor = 0;
 	}
