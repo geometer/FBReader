@@ -239,7 +239,7 @@ std::string FBView::word(const ZLTextElementRectangle &rectangle) const {
 	std::string txt;
 
 	if (rectangle.Kind == ZLTextElement::WORD_ELEMENT) {
-		ZLTextWordCursor cursor = startCursor();
+		ZLTextWordCursor cursor = textArea().startCursor();
 		cursor.moveToParagraph(rectangle.ParagraphIndex);
 		cursor.moveTo(rectangle.ElementIndex, 0);
 		const ZLTextWord &word = (ZLTextWord&)cursor.element();

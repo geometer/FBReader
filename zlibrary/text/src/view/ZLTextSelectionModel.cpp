@@ -37,7 +37,7 @@ void ZLTextSelectionModel::clearData() const {
 int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int x) {
 	ZLTextArea::Style style(myView.textArea(), rectangle.Style);
 	style.setTextStyle(rectangle.Style, rectangle.BidiLevel);
-	ZLTextWordCursor cursor = myView.startCursor();
+	ZLTextWordCursor cursor = myView.textArea().startCursor();
 	cursor.moveToParagraph(rectangle.ParagraphIndex);
 	const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[rectangle.ElementIndex];
 	const bool mainDir =
@@ -188,7 +188,7 @@ const std::vector<ZLTextSelectionModel::Range> &ZLTextSelectionModel::ranges() c
 	if (!myRangeVectorIsUpToDate && !isEmpty()) {
 		Range r = internalRange();
 
-		ZLTextWordCursor cursor = myView.startCursor();
+		ZLTextWordCursor cursor = myView.textArea().startCursor();
 		cursor.moveToParagraph(r.first.ParagraphIndex);
 		cursor.moveToParagraphStart();
 		int startLevel = 0;
@@ -411,11 +411,11 @@ void ZLTextSelectionModel::createData() const {
 	if (!myTextIsUpToDate && !isEmpty()) {
 		Range r = internalRange();
 
-		ZLTextWordCursor start = myView.startCursor();
+		ZLTextWordCursor start = myView.textArea().startCursor();
 		start.moveToParagraph(r.first.ParagraphIndex);
 		start.moveTo(r.first.ElementIndex, r.first.CharIndex);
 
-		ZLTextWordCursor end = myView.startCursor();
+		ZLTextWordCursor end = myView.textArea().startCursor();
 		end.moveToParagraph(r.second.ParagraphIndex);
 		end.moveTo(r.second.ElementIndex, r.second.CharIndex);
 
@@ -509,7 +509,7 @@ bool ZLTextSelectionModel::selectWord(int x, int y) {
 				break;
 			case ZLTextElement::WORD_ELEMENT:
 			{
-				ZLTextWordCursor cursor = myView.startCursor();
+				ZLTextWordCursor cursor = myView.textArea().startCursor();
 				cursor.moveToParagraph(it->ParagraphIndex);
 				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->ElementIndex];
 				ZLUnicodeUtil::Ucs4String ucs4string;
@@ -566,7 +566,7 @@ void ZLTextSelectionModel::extendWordSelectionToParagraph() {
 	myFirstBound.Before.CharIndex = 0;
 	myFirstBound.After = myFirstBound.Before;
 
-	ZLTextWordCursor cursor = myView.startCursor();
+	ZLTextWordCursor cursor = myView.textArea().startCursor();
 	cursor.moveToParagraph(myFirstBound.Before.ParagraphIndex);
 	cursor.moveToParagraphEnd();
 

@@ -140,7 +140,7 @@ void BookTextView::setContentsModel(shared_ptr<ZLTextModel> contentsModel) {
 }
 
 void BookTextView::saveState() {
-	const ZLTextWordCursor &cursor = startCursor();
+	const ZLTextWordCursor &cursor = textArea().startCursor();
 
 	if (myBook.isNull()) {
 		return;
@@ -165,7 +165,7 @@ BookTextView::Position BookTextView::cursorPosition(const ZLTextWordCursor &curs
 }
 
 bool BookTextView::pushCurrentPositionIntoStack(bool doPushSamePosition) {
-	const ZLTextWordCursor &cursor = startCursor();
+	const ZLTextWordCursor &cursor = textArea().startCursor();
 	if (cursor.isNull()) {
 		return false;
 	}
@@ -187,7 +187,7 @@ bool BookTextView::pushCurrentPositionIntoStack(bool doPushSamePosition) {
 }
 
 void BookTextView::replaceCurrentPositionInStack() {
-	const ZLTextWordCursor &cursor = startCursor();
+	const ZLTextWordCursor &cursor = textArea().startCursor();
 	if (!cursor.isNull()) {
 		myPositionStack[myCurrentPointInStack] = cursorPosition(cursor);
 		myStackChanged = true;
@@ -195,29 +195,32 @@ void BookTextView::replaceCurrentPositionInStack() {
 }
 
 void BookTextView::gotoParagraph(int num, bool end) {
-	if (!empty()) {
-		if (!myLockUndoStackChanges) {
-			if (myPositionStack.size() > myCurrentPointInStack) {
-				myPositionStack.erase(myPositionStack.begin() + myCurrentPointInStack, myPositionStack.end());
-				myStackChanged = true;
-			}
-			pushCurrentPositionIntoStack(false);
-			myCurrentPointInStack = myPositionStack.size();
-		}
-
-		FBView::gotoParagraph(num, end);
+	if (textArea().isEmpty()) {
+		return;
 	}
+
+	if (!myLockUndoStackChanges) {
+		if (myPositionStack.size() > myCurrentPointInStack) {
+			myPositionStack.erase(myPositionStack.begin() + myCurrentPointInStack, myPositionStack.end());
+			myStackChanged = true;
+		}
+		pushCurrentPositionIntoStack(false);
+		myCurrentPointInStack = myPositionStack.size();
+	}
+
+	FBView::gotoParagraph(num, end);
 }
 
 bool BookTextView::canUndoPageMove() {
-	if (empty()) {
+	if (textArea().isEmpty()) {
 		return false;
 	}
+
 	if (myCurrentPointInStack == 0) {
 		return false;
 	}
 	if ((myCurrentPointInStack == 1) && (myPositionStack.size() == 1)) {
-		const ZLTextWordCursor &cursor = startCursor();
+		const ZLTextWordCursor &cursor = textArea().startCursor();
 		if (!cursor.isNull()) {
 			return myPositionStack.back() != cursorPosition(cursor);
 		}
@@ -246,7 +249,8 @@ void BookTextView::undoPageMove() {
 }
 
 bool BookTextView::canRedoPageMove() {
-	return !empty() && (myCurrentPointInStack + 1 < myPositionStack.size());
+	return !textArea().isEmpty() &&
+					myCurrentPointInStack + 1 < myPositionStack.size();
 }
 
 void BookTextView::redoPageMove() {
@@ -272,7 +276,7 @@ bool BookTextView::getHyperlinkInfo(const ZLTextElementRectangle &rectangle, std
 			(rectangle.Kind != ZLTextElement::IMAGE_ELEMENT)) {
 		return false;
 	}
-	ZLTextWordCursor cursor = startCursor();
+	ZLTextWordCursor cursor = textArea().startCursor();
 	cursor.moveToParagraph(rectangle.ParagraphIndex);
 	cursor.moveToParagraphStart();
 	ZLTextKind hyperlinkKind = REGULAR;
@@ -396,9 +400,9 @@ void BookTextView::PositionIndicatorWithLabels::draw() {
 }
 
 void BookTextView::scrollToHome() {
-	if (!startCursor().isNull() &&
-			startCursor().isStartOfParagraph() &&
-			startCursor().paragraphCursor().index() == 0) {
+	if (!textArea().startCursor().isNull() &&
+			textArea().startCursor().isStartOfParagraph() &&
+			textArea().startCursor().paragraphCursor().index() == 0) {
 		return;
 	}
 

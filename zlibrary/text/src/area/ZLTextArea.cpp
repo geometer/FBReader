@@ -28,8 +28,17 @@ ZLTextArea::~ZLTextArea() {
 }
 
 void ZLTextArea::setModel(shared_ptr<ZLTextModel> model) {
+	clear();
+
 	myModel = model;
 	if (!model.isNull()) {
 		myIsRtl = model->isRtl();
+		myStartCursor = ZLTextParagraphCursor::cursor(*model);
+		myEndCursor = 0;
 	}
+}
+
+void ZLTextArea::clear() {
+	myStartCursor = 0;
+	myEndCursor = 0;
 }

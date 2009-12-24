@@ -51,8 +51,7 @@ ZLTextView::~ZLTextView() {
 void ZLTextView::clear() {
 	mySelectionModel.clear();
 
-	myStartCursor = 0;
-	myEndCursor = 0;
+	myTextArea.clear();
 	myLineInfos.clear();
 	myPaintState = NOTHING_TO_PAINT;
 
@@ -70,7 +69,7 @@ void ZLTextView::setModel(shared_ptr<ZLTextModel> model) {
 	myTextArea.setModel(model);
 
 	if (!model.isNull() && (model->paragraphsNumber() != 0)) {
-		setStartCursor(ZLTextParagraphCursor::cursor(*model));
+		myPaintState = START_IS_KNOWN;
 
 		size_t size = model->paragraphsNumber();
 		myTextSize.reserve(size + 1);
@@ -105,9 +104,9 @@ void ZLTextView::scrollPage(bool forward, ScrollingMode mode, unsigned int value
 }
 
 std::vector<size_t>::const_iterator ZLTextView::nextBreakIterator() const {
-	ZLTextWordCursor cursor = endCursor();
+	ZLTextWordCursor cursor = textArea().endCursor();
 	if (cursor.isNull()) {
-		cursor = startCursor();
+		cursor = textArea().startCursor();
 	}
 	if (cursor.isNull()) {
 		return myTextBreaks.begin();
@@ -116,13 +115,13 @@ std::vector<size_t>::const_iterator ZLTextView::nextBreakIterator() const {
 }
 
 void ZLTextView::scrollToStartOfText() {
-	if (endCursor().isNull()) {
+	if (textArea().endCursor().isNull()) {
 		return;
 	}
 
-	if (!startCursor().isNull() &&
-			startCursor().isStartOfParagraph() &&
-			startCursor().paragraphCursor().isFirst()) {
+	if (!textArea().startCursor().isNull() &&
+			textArea().startCursor().isStartOfParagraph() &&
+			textArea().startCursor().paragraphCursor().isFirst()) {
 		return;
 	}
 
@@ -133,23 +132,23 @@ void ZLTextView::scrollToStartOfText() {
 
 void ZLTextView::scrollToEndOfText() {
 	shared_ptr<ZLTextModel> model = myTextArea.model();
-	if (endCursor().isNull() || model.isNull()) {
+	if (textArea().endCursor().isNull() || model.isNull()) {
 		return;
 	}
 
-	if (endCursor().isEndOfParagraph() &&
-			endCursor().paragraphCursor().isLast()) {
+	if (textArea().endCursor().isEndOfParagraph() &&
+			textArea().endCursor().paragraphCursor().isLast()) {
 		return;
 	}
 
 	std::vector<size_t>::const_iterator i = nextBreakIterator();
 	if (i == myTextBreaks.end()) {
 		gotoParagraph(model->paragraphsNumber(), true);
-		myEndCursor.nextParagraph();
+		myTextArea.myEndCursor.nextParagraph();
 	} else {
 		gotoParagraph(*i - 1, true);
 	}
-	myEndCursor.moveToParagraphEnd();
+	myTextArea.myEndCursor.moveToParagraphEnd();
 	ZLApplication::Instance().refreshWindow();
 }
 
@@ -209,23 +208,23 @@ void ZLTextView::gotoMark(ZLTextMark mark) {
 		return;
 	}
 	bool doRepaint = false;
-	if (startCursor().isNull()) {
+	if (textArea().startCursor().isNull()) {
 		doRepaint = true;
 		preparePaintInfo();
 	}
-	if (startCursor().isNull()) {
+	if (textArea().startCursor().isNull()) {
 		return;
 	}
-	if (((int)startCursor().paragraphCursor().index() != mark.ParagraphIndex) ||
-			(startCursor().position() > mark)) {
+	if (((int)textArea().startCursor().paragraphCursor().index() != mark.ParagraphIndex) ||
+			(textArea().startCursor().position() > mark)) {
 		doRepaint = true;
 		gotoParagraph(mark.ParagraphIndex);
 		preparePaintInfo();
 	}
-	if (endCursor().isNull()) {
+	if (textArea().endCursor().isNull()) {
 		preparePaintInfo();
 	}
-	while (mark > endCursor().position()) {
+	while (mark > textArea().endCursor().position()) {
 		doRepaint = true;
 		scrollPage(true, NO_OVERLAPPING, 0);
 		preparePaintInfo();
@@ -241,14 +240,14 @@ void ZLTextView::gotoParagraph(int num, bool end) {
 		return;
 	}
 
-	if (!startCursor().isNull() &&
-			startCursor().isStartOfParagraph() &&
-			startCursor().paragraphCursor().isFirst() &&
-			(num >= (int)startCursor().paragraphCursor().index()) &&
-			!endCursor().isNull() &&
-			endCursor().isEndOfParagraph() &&
-			endCursor().paragraphCursor().isLast() &&
-			(num <= (int)endCursor().paragraphCursor().index())) {
+	if (!textArea().startCursor().isNull() &&
+			textArea().startCursor().isStartOfParagraph() &&
+			textArea().startCursor().paragraphCursor().isFirst() &&
+			(num >= (int)textArea().startCursor().paragraphCursor().index()) &&
+			!textArea().endCursor().isNull() &&
+			textArea().endCursor().isEndOfParagraph() &&
+			textArea().endCursor().paragraphCursor().isLast() &&
+			(num <= (int)textArea().endCursor().paragraphCursor().index())) {
 		return;
 	}
 
@@ -291,8 +290,8 @@ void ZLTextView::gotoParagraph(int num, bool end) {
 
 void ZLTextView::gotoPosition(int paragraphIndex, int elementIndex, int charIndex) {
 	gotoParagraph(paragraphIndex, false);
-	if (!myStartCursor.isNull() && 
-			((int)myStartCursor.paragraphCursor().index() == paragraphIndex)) {
+	if (!textArea().startCursor().isNull() && 
+			((int)textArea().startCursor().paragraphCursor().index() == paragraphIndex)) {
 		moveStartCursor(paragraphIndex, elementIndex, charIndex);
 	}
 }
@@ -320,9 +319,9 @@ void ZLTextView::search(const std::string &text, bool ignoreCase, bool wholeText
 	}
 
 	model->search(text, startIndex, endIndex, ignoreCase);
-	if (!startCursor().isNull()) {
+	if (!textArea().startCursor().isNull()) {
 		rebuildPaintInfo(true);
-		ZLTextMark position = startCursor().position();
+		ZLTextMark position = textArea().startCursor().position();
 		gotoMark(wholeText ?
 							(backward ? model->lastMark() : model->firstMark()) :
 							(backward ? model->previousMark(position) : model->nextMark(position)));
@@ -331,22 +330,22 @@ void ZLTextView::search(const std::string &text, bool ignoreCase, bool wholeText
 }
 
 bool ZLTextView::canFindNext() const {
-	return !endCursor().isNull() && (myTextArea.model()->nextMark(endCursor().position()).ParagraphIndex > -1);
+	return !textArea().endCursor().isNull() && (myTextArea.model()->nextMark(textArea().endCursor().position()).ParagraphIndex > -1);
 }
 
 void ZLTextView::findNext() {
-	if (!endCursor().isNull()) {
-		gotoMark(myTextArea.model()->nextMark(endCursor().position()));
+	if (!textArea().endCursor().isNull()) {
+		gotoMark(myTextArea.model()->nextMark(textArea().endCursor().position()));
 	}
 }
 
 bool ZLTextView::canFindPrevious() const {
-	return !startCursor().isNull() && (myTextArea.model()->previousMark(startCursor().position()).ParagraphIndex > -1);
+	return !textArea().startCursor().isNull() && (myTextArea.model()->previousMark(textArea().startCursor().position()).ParagraphIndex > -1);
 }
 
 void ZLTextView::findPrevious() {
-	if (!startCursor().isNull()) {
-		gotoMark(myTextArea.model()->previousMark(startCursor().position()));
+	if (!textArea().startCursor().isNull()) {
+		gotoMark(myTextArea.model()->previousMark(textArea().startCursor().position()));
 	}
 }
 
@@ -388,8 +387,8 @@ bool ZLTextView::onStylusPress(int x, int y) {
 			preparePaintInfo();
 			if (paragraph->isOpen()) {
 				int nextParagraphIndex = paragraphIndex + paragraph->fullSize();
-				int lastParagraphIndex = endCursor().paragraphCursor().index();
-				if (endCursor().isEndOfParagraph()) {
+				int lastParagraphIndex = textArea().endCursor().paragraphCursor().index();
+				if (textArea().endCursor().isEndOfParagraph()) {
 					++lastParagraphIndex;
 				}
 				if (lastParagraphIndex < nextParagraphIndex) {
@@ -397,8 +396,8 @@ bool ZLTextView::onStylusPress(int x, int y) {
 					preparePaintInfo();
 				}
 			}
-			int firstParagraphIndex = startCursor().paragraphCursor().index();
-			if (startCursor().isStartOfParagraph()) {
+			int firstParagraphIndex = textArea().startCursor().paragraphCursor().index();
+			if (textArea().startCursor().isStartOfParagraph()) {
 				--firstParagraphIndex;
 			}
 			if (firstParagraphIndex >= paragraphIndex) {
@@ -619,30 +618,30 @@ void ZLTextView::gotoCharIndex(size_t charIndex) {
 	gotoParagraph(paragraphIndex, false);
 	preparePaintInfo();
 	if (!positionIndicator().isNull()) {
-		size_t endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
+		size_t endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor());
 		if (endCharIndex > charIndex) {
 			while (endCharIndex > charIndex) {
 				scrollPage(false, SCROLL_LINES, 1);
 				preparePaintInfo();
-				if (positionIndicator()->sizeOfTextBeforeCursor(startCursor()) <= myTextSize[startParagraphIndex]) {
+				if (positionIndicator()->sizeOfTextBeforeCursor(textArea().startCursor()) <= myTextSize[startParagraphIndex]) {
 					break;
 				}
-				endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
+				endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor());
 			}
 			if (endCharIndex < charIndex) {
 				scrollPage(true, SCROLL_LINES, 1);
 			}
 		} else {
-			int startCharIndex = positionIndicator()->sizeOfTextBeforeCursor(startCursor());
+			int startCharIndex = positionIndicator()->sizeOfTextBeforeCursor(textArea().startCursor());
 			while (endCharIndex < charIndex) {
 				scrollPage(true, SCROLL_LINES, 1);
 				preparePaintInfo();
-				const int newStartCharIndex = positionIndicator()->sizeOfTextBeforeCursor(startCursor());
+				const int newStartCharIndex = positionIndicator()->sizeOfTextBeforeCursor(textArea().startCursor());
 				if (newStartCharIndex <= startCharIndex) {
 					break;
 				}
 				startCharIndex = newStartCharIndex;
-				endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
+				endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor());
 			}
 			if (endCharIndex > charIndex) {
 				scrollPage(false, SCROLL_LINES, 1);
@@ -668,14 +667,14 @@ void ZLTextView::gotoPage(size_t index) {
 }
 
 size_t ZLTextView::pageIndex() {
-	if (empty() || positionIndicator().isNull() || endCursor().isNull()) {
+	if (textArea().isEmpty() || positionIndicator().isNull() || textArea().endCursor().isNull()) {
 		return 0;
 	}
-	return positionIndicator()->sizeOfTextBeforeCursor(endCursor()) / 2048 + 1;
+	return positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor()) / 2048 + 1;
 }
 
 size_t ZLTextView::pageNumber() const {
-	if (empty()) {
+	if (textArea().isEmpty()) {
 		return 0;
 	}
 	std::vector<size_t>::const_iterator i = nextBreakIterator();
@@ -695,7 +694,7 @@ void ZLTextView::onScrollbarMoved(Direction direction, size_t full, size_t from,
 	  return;
 	}
 
-	if (startCursor().isNull() || endCursor().isNull()) {
+	if (textArea().startCursor().isNull() || textArea().endCursor().isNull()) {
 		return;
 	}
 

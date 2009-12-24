@@ -22,6 +22,8 @@
 
 #include <shared_ptr.h>
 
+#include "ZLTextParagraphCursor.h"
+
 class ZLPaintContext;
 
 class ZLTextModel;
@@ -45,6 +47,11 @@ public:
 	shared_ptr<ZLTextModel> model() const;
 	bool isRtl() const;
 
+	void clear();
+	const ZLTextWordCursor &startCursor() const;
+	const ZLTextWordCursor &endCursor() const;
+	bool isEmpty() const;
+
 private:
 	ZLPaintContext &myContext;
 	size_t myWidth;
@@ -52,6 +59,10 @@ private:
 
 	shared_ptr<ZLTextModel> myModel;
 	bool myIsRtl;
+
+public:
+	ZLTextWordCursor myStartCursor;
+	ZLTextWordCursor myEndCursor;
 };
 
 inline ZLPaintContext &ZLTextArea::context() const { return myContext; }
@@ -61,5 +72,9 @@ inline size_t ZLTextArea::height() const { return myHeight; }
 
 inline shared_ptr<ZLTextModel> ZLTextArea::model() const { return myModel; }
 inline bool ZLTextArea::isRtl() const { return myIsRtl; }
+
+inline const ZLTextWordCursor &ZLTextArea::startCursor() const { return myStartCursor; }
+inline const ZLTextWordCursor &ZLTextArea::endCursor() const { return myEndCursor; }
+inline bool ZLTextArea::isEmpty() const { return myStartCursor.isNull() && myEndCursor.isNull(); }
 
 #endif /* __ZLTEXTAREA_H__ */

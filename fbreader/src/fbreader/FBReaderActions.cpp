@@ -91,7 +91,6 @@ void AddBookAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 
 	const ZLResourceKey dialogKey("addFileDialog");
-	const ZLResource &msgResource = ZLResource::resource("dialog")[dialogKey];
 	FBFileHandler handler;
 	if (ZLDialogManager::Instance().selectionDialog(dialogKey, handler)) {
 		shared_ptr<Book> book = handler.description();
@@ -115,7 +114,7 @@ bool ScrollToHomeAction::isEnabled() const {
 	if (!isVisible()) {
 		return false;
 	}
-	ZLTextWordCursor cursor = FBReader::Instance().bookTextView().startCursor();
+	ZLTextWordCursor cursor = FBReader::Instance().bookTextView().textArea().startCursor();
 	return cursor.isNull() || !cursor.isStartOfParagraph() || !cursor.paragraphCursor().isFirst();
 }
 
@@ -130,7 +129,7 @@ bool ScrollToStartOfTextAction::isEnabled() const {
 	if (!isVisible()) {
 		return false;
 	}
-	ZLTextWordCursor cursor = FBReader::Instance().bookTextView().startCursor();
+	ZLTextWordCursor cursor = FBReader::Instance().bookTextView().textArea().startCursor();
 	return cursor.isNull() || !cursor.isStartOfParagraph() || !cursor.paragraphCursor().isFirst();
 }
 
@@ -145,7 +144,7 @@ bool ScrollToEndOfTextAction::isEnabled() const {
 	if (!isVisible()) {
 		return false;
 	}
-	ZLTextWordCursor cursor = FBReader::Instance().bookTextView().endCursor();
+	ZLTextWordCursor cursor = FBReader::Instance().bookTextView().textArea().endCursor();
 	return cursor.isNull() || !cursor.isEndOfParagraph() || !cursor.paragraphCursor().isLast();
 }
 
@@ -340,7 +339,7 @@ bool GotoPreviousTOCSectionAction::isEnabled() const {
 		return true;
 	}
 	if (tocIndex == 0) {
-		const ZLTextWordCursor &cursor = fbreader.bookTextView().startCursor();
+		const ZLTextWordCursor &cursor = fbreader.bookTextView().textArea().startCursor();
 		if (cursor.isNull()) {
 			return false;
 		}
@@ -361,7 +360,7 @@ void GotoPreviousTOCSectionAction::run() {
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.textArea().model();
 
 	int reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current]));
-	const ZLTextWordCursor &cursor = fbreader.bookTextView().startCursor();
+	const ZLTextWordCursor &cursor = fbreader.bookTextView().textArea().startCursor();
 	if (!cursor.isNull() &&
 			(cursor.elementIndex() == 0)) {
 		int paragraphIndex = cursor.paragraphCursor().index();

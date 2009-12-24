@@ -33,7 +33,7 @@ void ZLTextView::paint() {
 	myTreeNodeMap.clear();
 	context().clear(backgroundColor());
 
-	if (empty()) {
+	if (textArea().isEmpty()) {
 		return;
 	}
 
@@ -70,8 +70,8 @@ void ZLTextView::paint() {
 	if (myDoUpdateScrollbar && !indicatorInfo.isNull()) {
 		myDoUpdateScrollbar = false;
 		const size_t full = positionIndicator()->sizeOfTextBeforeParagraph(positionIndicator()->endTextIndex());
-		const size_t from = positionIndicator()->sizeOfTextBeforeCursor(startCursor());
-		const size_t to = positionIndicator()->sizeOfTextBeforeCursor(endCursor());
+		const size_t from = positionIndicator()->sizeOfTextBeforeCursor(textArea().startCursor());
+		const size_t to = positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor());
 
 		bool showScrollbar =
 			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::OS_SCROLLBAR) &&

@@ -89,9 +89,6 @@ public:
 	virtual void gotoParagraph(int num, bool end = false);
 	void gotoPosition(int paragraphNumber, int wordNumber, int charNumber);
 
-	const ZLTextWordCursor &startCursor() const;
-	const ZLTextWordCursor &endCursor() const;
-
 	virtual void setModel(shared_ptr<ZLTextModel> model);
 
 	bool hasMultiSectionModel() const;
@@ -127,10 +124,6 @@ protected:
 
 	void rebuildPaintInfo(bool strong);
 	virtual void preparePaintInfo();
-
-	void setStartCursor(ZLTextParagraphCursorPtr cursor);
-
-	bool empty() const;
 
 	virtual shared_ptr<PositionIndicator> createPositionIndicator(const ZLTextPositionIndicatorInfo&);
 
@@ -200,8 +193,6 @@ private:
 		TO_SCROLL_FORWARD,
 		TO_SCROLL_BACKWARD
 	} myPaintState;
-	ZLTextWordCursor myStartCursor;
-	ZLTextWordCursor myEndCursor;
 	std::vector<ZLTextLineInfoPtr> myLineInfos;
 	std::set<ZLTextLineInfoPtr> myLineInfoCache;
 
@@ -237,9 +228,6 @@ friend class ZLTextSelectionModel;
 
 inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }
 
-inline bool ZLTextView::empty() const { return myPaintState == NOTHING_TO_PAINT; }
-inline const ZLTextWordCursor &ZLTextView::startCursor() const { return myStartCursor; }
-inline const ZLTextWordCursor &ZLTextView::endCursor() const { return myEndCursor; }
 inline ZLTextSelectionModel &ZLTextView::selectionModel() { return mySelectionModel; }
 inline const ZLTextSelectionModel &ZLTextView::selectionModel() const { return mySelectionModel; }
 
