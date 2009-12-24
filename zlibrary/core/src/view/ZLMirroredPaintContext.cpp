@@ -75,7 +75,8 @@ void ZLMirroredPaintContext::drawImage(int x, int y, const ZLImageData &image, i
 }
 
 void ZLMirroredPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	// TODO: implement
+	const int w = myBase.width() - 1;
+	myBase.drawLine(w - x0, y0, w - x1, y1);
 }
 
 void ZLMirroredPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
