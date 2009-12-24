@@ -30,6 +30,7 @@
 #include "ZLTextParagraphCursor.h"
 
 class ZLTextView;
+class ZLTextArea;
 class ZLImageData;
 class ZLTextElementRectangle;
 
@@ -88,6 +89,7 @@ private:
 
 private:
 	ZLTextView &myView;
+	ZLTextArea &myArea;
 	bool myIsActive;
 	bool myIsEmpty;
 

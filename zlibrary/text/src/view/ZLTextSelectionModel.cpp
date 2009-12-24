@@ -26,7 +26,7 @@
 #include "ZLTextView.h"
 #include "../area/ZLTextAreaStyle.h"
 
-ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view) : myView(view), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
+ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view) : myView(view), myArea(view.myTextArea), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
 }
 
 void ZLTextSelectionModel::clearData() const {
@@ -35,13 +35,13 @@ void ZLTextSelectionModel::clearData() const {
 }
 
 int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int x) {
-	ZLTextArea::Style style(myView.textArea(), rectangle.Style);
+	ZLTextArea::Style style(myArea, rectangle.Style);
 	style.setTextStyle(rectangle.Style, rectangle.BidiLevel);
-	ZLTextWordCursor cursor = myView.textArea().startCursor();
+	ZLTextWordCursor cursor = myArea.startCursor();
 	cursor.moveToParagraph(rectangle.ParagraphIndex);
 	const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[rectangle.ElementIndex];
 	const bool mainDir =
-		rectangle.BidiLevel % 2 == (myView.textArea().isRtl() ? 1 : 0);
+		rectangle.BidiLevel % 2 == (myArea.isRtl() ? 1 : 0);
 	const int deltaX = mainDir ? x - rectangle.XStart : rectangle.XEnd - x;
 	const int len = rectangle.Length;
 	const int start = rectangle.StartCharIndex;
@@ -75,7 +75,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 		bound.After.ElementIndex = it->ElementIndex;
 		bound.After.Exists = true;
 		const bool mainDir =
-			it->BidiLevel % 2 == (myView.textArea().isRtl() ? 1 : 0);
+			it->BidiLevel % 2 == (myArea.isRtl() ? 1 : 0);
 		bound.After.CharIndex = mainDir ?
 			it->StartCharIndex :
 			it->StartCharIndex + it->Length;
@@ -94,7 +94,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 			bound.Before.ParagraphIndex = previous.ParagraphIndex;
 			bound.Before.ElementIndex = previous.ElementIndex;
 			bound.Before.CharIndex =
-				(previous.BidiLevel % 2 == (myView.textArea().isRtl() ? 1 : 0)) ?
+				(previous.BidiLevel % 2 == (myArea.isRtl() ? 1 : 0)) ?
 					previous.StartCharIndex + previous.Length :
 					previous.StartCharIndex;
 			bound.Before.Exists = true;
@@ -188,7 +188,7 @@ const std::vector<ZLTextSelectionModel::Range> &ZLTextSelectionModel::ranges() c
 	if (!myRangeVectorIsUpToDate && !isEmpty()) {
 		Range r = internalRange();
 
-		ZLTextWordCursor cursor = myView.textArea().startCursor();
+		ZLTextWordCursor cursor = myArea.startCursor();
 		cursor.moveToParagraph(r.first.ParagraphIndex);
 		cursor.moveToParagraphStart();
 		int startLevel = 0;
@@ -411,11 +411,11 @@ void ZLTextSelectionModel::createData() const {
 	if (!myTextIsUpToDate && !isEmpty()) {
 		Range r = internalRange();
 
-		ZLTextWordCursor start = myView.textArea().startCursor();
+		ZLTextWordCursor start = myArea.startCursor();
 		start.moveToParagraph(r.first.ParagraphIndex);
 		start.moveTo(r.first.ElementIndex, r.first.CharIndex);
 
-		ZLTextWordCursor end = myView.textArea().startCursor();
+		ZLTextWordCursor end = myArea.startCursor();
 		end.moveToParagraph(r.second.ParagraphIndex);
 		end.moveTo(r.second.ElementIndex, r.second.CharIndex);
 
@@ -509,7 +509,7 @@ bool ZLTextSelectionModel::selectWord(int x, int y) {
 				break;
 			case ZLTextElement::WORD_ELEMENT:
 			{
-				ZLTextWordCursor cursor = myView.textArea().startCursor();
+				ZLTextWordCursor cursor = myArea.startCursor();
 				cursor.moveToParagraph(it->ParagraphIndex);
 				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->ElementIndex];
 				ZLUnicodeUtil::Ucs4String ucs4string;
@@ -566,7 +566,7 @@ void ZLTextSelectionModel::extendWordSelectionToParagraph() {
 	myFirstBound.Before.CharIndex = 0;
 	myFirstBound.After = myFirstBound.Before;
 
-	ZLTextWordCursor cursor = myView.textArea().startCursor();
+	ZLTextWordCursor cursor = myArea.startCursor();
 	cursor.moveToParagraph(myFirstBound.Before.ParagraphIndex);
 	cursor.moveToParagraphEnd();
 
