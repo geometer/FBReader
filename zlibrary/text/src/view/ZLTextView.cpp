@@ -28,7 +28,7 @@
 #include "ZLTextView.h"
 #include "ZLTextSelectionModel.h"
 #include "ZLTextPositionIndicator.h"
-#include "ZLTextLineInfo.h"
+#include "../area/ZLTextLineInfo.h"
 #include "../area/ZLTextParagraphCursor.h"
 #include "../area/ZLTextWord.h"
 #include "../area/ZLTextAreaStyle.h"

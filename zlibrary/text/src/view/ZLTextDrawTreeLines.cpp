@@ -22,7 +22,7 @@
 #include <ZLPaintContext.h>
 
 #include "ZLTextView.h"
-#include "ZLTextLineInfo.h"
+#include "../area/ZLTextLineInfo.h"
 
 void ZLTextView::drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter) {
 	context().setColor(color(ZLTextStyle::TREE_LINES));

@@ -22,8 +22,8 @@
 #include <ZLUnicodeUtil.h>
 
 #include "ZLTextView.h"
-#include "ZLTextLineInfo.h"
 #include "ZLTextPositionIndicator.h"
+#include "../area/ZLTextLineInfo.h"
 #include "../area/ZLTextAreaStyle.h"
 
 void ZLTextView::paint() {

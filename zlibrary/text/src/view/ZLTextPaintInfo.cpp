@@ -20,7 +20,7 @@
 #include <algorithm>
 
 #include "ZLTextView.h"
-#include "ZLTextLineInfo.h"
+#include "../area/ZLTextLineInfo.h"
 #include "../area/ZLTextAreaStyle.h"
 
 void ZLTextView::rebuildPaintInfo(bool strong) {
