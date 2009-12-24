@@ -22,8 +22,8 @@
 
 #include <vector>
 
-#include "ZLTextElement.h"
 #include <ZLTextStyle.h>
+#include <ZLTextElement.h>
 
 struct ZLTextRectangle {
 	int XStart, XEnd, YStart, YEnd;

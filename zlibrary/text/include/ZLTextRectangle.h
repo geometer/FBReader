@@ -1,1 +1,1 @@
-../src/view/ZLTextRectangle.h
+../src/area/ZLTextRectangle.h
