@@ -52,7 +52,6 @@ void ZLTextView::clear() {
 	mySelectionModel.clear();
 
 	myTextArea.clear();
-	myLineInfos.clear();
 	myPaintState = NOTHING_TO_PAINT;
 
 	myTextElementMap.clear();

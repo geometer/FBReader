@@ -145,7 +145,6 @@ private:
 	void clear();
 
 	int rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
-	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 	void prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y);
 	void drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
 	void drawSelectionRectangle(int left, int top, int right, int bottom);
@@ -193,8 +192,6 @@ private:
 		TO_SCROLL_FORWARD,
 		TO_SCROLL_BACKWARD
 	} myPaintState;
-	std::vector<ZLTextLineInfoPtr> myLineInfos;
-	std::set<ZLTextLineInfoPtr> myLineInfoCache;
 
 	ScrollingMode myScrollingMode;
 	unsigned int myOverlappingValue;

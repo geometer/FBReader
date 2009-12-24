@@ -20,6 +20,7 @@
 #include <ZLTextModel.h>
 
 #include "ZLTextArea.h"
+#include "ZLTextLineInfo.h"
 
 ZLTextArea::ZLTextArea(ZLPaintContext &context) : myContext(context), myWidth(0), myHeight(0), myIsRtl(false) {
 }
@@ -41,4 +42,6 @@ void ZLTextArea::setModel(shared_ptr<ZLTextModel> model) {
 void ZLTextArea::clear() {
 	myStartCursor = 0;
 	myEndCursor = 0;
+
+	myLineInfos.clear();
 }

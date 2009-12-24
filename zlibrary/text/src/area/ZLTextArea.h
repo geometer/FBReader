@@ -20,6 +20,9 @@
 #ifndef __ZLTEXTAREA_H__
 #define __ZLTEXTAREA_H__
 
+#include <vector>
+#include <set>
+
 #include <shared_ptr.h>
 
 #include "ZLTextParagraphCursor.h"
@@ -27,6 +30,8 @@
 class ZLPaintContext;
 
 class ZLTextModel;
+
+class ZLTextLineInfoPtr;
 
 class ZLTextArea {
 
@@ -52,6 +57,9 @@ public:
 	const ZLTextWordCursor &endCursor() const;
 	bool isEmpty() const;
 
+public:
+	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
+
 private:
 	ZLPaintContext &myContext;
 	size_t myWidth;
@@ -63,6 +71,9 @@ private:
 public:
 	ZLTextWordCursor myStartCursor;
 	ZLTextWordCursor myEndCursor;
+
+	std::vector<ZLTextLineInfoPtr> myLineInfos;
+	std::set<ZLTextLineInfoPtr> myLineInfoCache;
 };
 
 inline ZLPaintContext &ZLTextArea::context() const { return myContext; }

@@ -25,11 +25,11 @@
 #include <ZLTextStyle.h>
 #include <ZLTextStyleCollection.h>
 
-#include "ZLTextView.h"
-#include "../area/ZLTextLineInfo.h"
-#include "../area/ZLTextAreaStyle.h"
-#include "../area/ZLTextParagraphCursor.h"
-#include "../area/ZLTextWord.h"
+#include "ZLTextArea.h"
+#include "ZLTextLineInfo.h"
+#include "ZLTextAreaStyle.h"
+#include "ZLTextParagraphCursor.h"
+#include "ZLTextWord.h"
 
 struct ZLTextPartialInfo {
 	//ZLTextWordCursor Start;
@@ -61,7 +61,7 @@ void ZLTextPartialInfo::setTo(ZLTextLineInfo &lineInfo) const {
 	lineInfo.SpaceCounter = SpaceCounter;
 }
 
-ZLTextLineInfoPtr ZLTextView::processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end) {
+ZLTextLineInfoPtr ZLTextArea::processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end) {
 	const bool useHyphenator =
 		ZLTextStyleCollection::Instance().AutoHyphenationOption.value();
 
@@ -121,8 +121,8 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(ZLTextArea::Style &style, const ZL
 
 	const int fontSize = style.textStyle()->fontSize();
 	// TODO: change metrics at font change
-	const ZLTextStyleEntry::Metrics metrics(fontSize, fontSize / 2, viewWidth(), textHeight());
-	info.StartIndent = style.textStyle()->lineStartIndent(metrics, myTextArea.isRtl());
+	const ZLTextStyleEntry::Metrics metrics(fontSize, fontSize / 2, width(), height());
+	info.StartIndent = style.textStyle()->lineStartIndent(metrics, isRtl());
 	if (isFirstLine) {
 		info.StartIndent += style.textStyle()->firstLineIndentDelta(metrics);
 	}
@@ -138,7 +138,7 @@ ZLTextLineInfoPtr ZLTextView::processTextLine(ZLTextArea::Style &style, const ZL
 
 	ZLTextPartialInfo newInfo(info, current);
 	bool allowBreakAtNBSpace = true;
-	const int maxWidth = metrics.FullWidth - style.textStyle()->lineEndIndent(metrics, myTextArea.isRtl());
+	const int maxWidth = metrics.FullWidth - style.textStyle()->lineEndIndent(metrics, isRtl());
 	bool wordOccured = false;
 	int lastSpaceWidth = 0;
 	int removeLastSpace = false;

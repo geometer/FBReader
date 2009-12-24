@@ -38,13 +38,13 @@ void ZLTextView::paint() {
 	}
 
 	std::vector<size_t> labels;
-	labels.reserve(myLineInfos.size() + 1);
+	labels.reserve(myTextArea.myLineInfos.size() + 1);
 	labels.push_back(0);
 
 	ZLTextArea::Style style(textArea(), baseStyle());
 
 	int y = topMargin();
-	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myTextArea.myLineInfos.begin(); it != myTextArea.myLineInfos.end(); ++it) {
 		const ZLTextLineInfo &info = **it;
 		prepareTextLine(style, info, y);
 		y += info.Height + info.Descent + info.VSpaceAfter;
@@ -55,7 +55,7 @@ void ZLTextView::paint() {
 
 	y = topMargin();
 	int index = 0;
-	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myTextArea.myLineInfos.begin(); it != myTextArea.myLineInfos.end(); ++it) {
 		const ZLTextLineInfo &info = **it;
 		drawTextLine(style, info, y, labels[index], labels[index + 1]);
 		y += info.Height + info.Descent + info.VSpaceAfter;

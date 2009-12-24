@@ -32,10 +32,10 @@ void ZLTextView::rebuildPaintInfo(bool strong) {
 		preparePaintInfo();
 	}
 
-	myLineInfos.clear();
+	myTextArea.myLineInfos.clear();
 	if (strong) {
 		ZLTextParagraphCursorCache::clear();
-		myLineInfoCache.clear();
+		myTextArea.myLineInfoCache.clear();
 	}
 
 	if (!myTextArea.myStartCursor.isNull()) {
@@ -63,7 +63,7 @@ void ZLTextView::moveStartCursor(int paragraphIndex, int elementIndex, int charI
 	myTextArea.myStartCursor.moveToParagraph(paragraphIndex);
 	myTextArea.myStartCursor.moveTo(elementIndex, charIndex);
 	myTextArea.myEndCursor = 0;
-	myLineInfos.clear();
+	myTextArea.myLineInfos.clear();
 	myPaintState = START_IS_KNOWN;
 }
 
@@ -83,12 +83,12 @@ void ZLTextView::moveEndCursor(int paragraphIndex, int elementIndex, int charInd
 		myTextArea.myEndCursor.moveTo(elementIndex, charIndex);
 	}
 	myTextArea.myStartCursor = 0;
-	myLineInfos.clear();
+	myTextArea.myLineInfos.clear();
 	myPaintState = END_IS_KNOWN;
 }
 
 bool ZLTextView::pageIsEmpty() const {
-	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myTextArea.myLineInfos.begin(); it != myTextArea.myLineInfos.end(); ++it) {
 		if ((*it)->IsVisible) {
 			return false;
 		}
@@ -97,12 +97,12 @@ bool ZLTextView::pageIsEmpty() const {
 }
 
 ZLTextWordCursor ZLTextView::findLineFromStart(unsigned int overlappingValue) const {
-	if (myLineInfos.empty() || (overlappingValue == 0)) {
+	if (myTextArea.myLineInfos.empty() || (overlappingValue == 0)) {
 		return ZLTextWordCursor();
 	}
 
 	std::vector<ZLTextLineInfoPtr>::const_iterator it;
-	for (it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+	for (it = myTextArea.myLineInfos.begin(); it != myTextArea.myLineInfos.end(); ++it) {
 		if ((*it)->IsVisible) {
 			--overlappingValue;
 			if (overlappingValue == 0) {
@@ -110,16 +110,16 @@ ZLTextWordCursor ZLTextView::findLineFromStart(unsigned int overlappingValue) co
 			}
 		}
 	}
-	return (it != myLineInfos.end()) ? (*it)->End : (*myLineInfos.back()).End;
+	return (it != myTextArea.myLineInfos.end()) ? (*it)->End : (*myTextArea.myLineInfos.back()).End;
 }
 
 ZLTextWordCursor ZLTextView::findLineFromEnd(unsigned int overlappingValue) const {
-	if (myLineInfos.empty() || (overlappingValue == 0)) {
+	if (myTextArea.myLineInfos.empty() || (overlappingValue == 0)) {
 		return ZLTextWordCursor();
 	}
 
 	std::vector<ZLTextLineInfoPtr>::const_iterator it;
-	for (it = myLineInfos.end() - 1; it != myLineInfos.begin(); --it) {
+	for (it = myTextArea.myLineInfos.end() - 1; it != myTextArea.myLineInfos.begin(); --it) {
 		if ((*it)->IsVisible) {
 			--overlappingValue;
 			if (overlappingValue == 0) {
@@ -131,14 +131,14 @@ ZLTextWordCursor ZLTextView::findLineFromEnd(unsigned int overlappingValue) cons
 }
 
 ZLTextWordCursor ZLTextView::findPercentFromStart(unsigned int percent) const {
-	if (myLineInfos.empty()) {
+	if (myTextArea.myLineInfos.empty()) {
 		return ZLTextWordCursor();
 	}
 
 	int height = textHeight() * percent / 100;
 	bool visibleLineOccured = false;
 	std::vector<ZLTextLineInfoPtr>::const_iterator it;
-	for (it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+	for (it = myTextArea.myLineInfos.begin(); it != myTextArea.myLineInfos.end(); ++it) {
 		const ZLTextLineInfo &info = **it;
 		if (info.IsVisible) {
 			visibleLineOccured = true;
@@ -148,7 +148,7 @@ ZLTextWordCursor ZLTextView::findPercentFromStart(unsigned int percent) const {
 			break;
 		}
 	}
-	return (it != myLineInfos.end()) ? (*it)->End : (*myLineInfos.back()).End;
+	return (it != myTextArea.myLineInfos.end()) ? (*it)->End : (*myTextArea.myLineInfos.back()).End;
 }
 
 void ZLTextView::preparePaintInfo() {
@@ -164,7 +164,7 @@ void ZLTextView::preparePaintInfo() {
 	}
 	myDoUpdateScrollbar = true;
 
-	myLineInfoCache.insert(myLineInfos.begin(), myLineInfos.end());
+	myTextArea.myLineInfoCache.insert(myTextArea.myLineInfos.begin(), myTextArea.myLineInfos.end());
 
 	switch (myPaintState) {
 		default:
@@ -261,7 +261,7 @@ void ZLTextView::preparePaintInfo() {
 			break;
 	}
 	myPaintState = READY;
-	myLineInfoCache.clear();
+	myTextArea.myLineInfoCache.clear();
 }
 
 ZLTextWordCursor ZLTextView::findStart(const ZLTextWordCursor &end, SizeUnit unit, int size) {
@@ -299,7 +299,7 @@ ZLTextWordCursor ZLTextView::findStart(const ZLTextWordCursor &end, SizeUnit uni
 }
 
 ZLTextWordCursor ZLTextView::buildInfos(const ZLTextWordCursor &start) {
-	myLineInfos.clear();
+	myTextArea.myLineInfos.clear();
 
 	ZLTextWordCursor cursor = start;
 	int textHeight = this->textHeight();
@@ -315,14 +315,14 @@ ZLTextWordCursor ZLTextView::buildInfos(const ZLTextWordCursor &start) {
 		ZLTextLineInfoPtr infoPtr = new ZLTextLineInfo(cursor, style.textStyle(), style.bidiLevel());
 
 		while (!infoPtr->End.isEndOfParagraph()) {
-			infoPtr = processTextLine(style, infoPtr->End, paragraphEnd);
+			infoPtr = myTextArea.processTextLine(style, infoPtr->End, paragraphEnd);
 			textHeight -= infoPtr->Height + infoPtr->Descent;
 			if ((textHeight < 0) && (counter > 0)) {
 				break;
 			}
 			textHeight -= infoPtr->VSpaceAfter;
 			cursor = infoPtr->End;
-			myLineInfos.push_back(infoPtr);
+			myTextArea.myLineInfos.push_back(infoPtr);
 			if (textHeight < 0) {
 				break;
 			}
@@ -345,7 +345,7 @@ int ZLTextView::paragraphSize(const ZLTextWordCursor &cursor, bool beforeCurrent
 
 	ZLTextArea::Style style(textArea(), baseStyle());
 	while (!word.equalElementIndex(end)) {
-		const ZLTextLineInfoPtr info = processTextLine(style, word, end);
+		const ZLTextLineInfoPtr info = myTextArea.processTextLine(style, word, end);
 		word = info->End;
 		size += infoSize(*info, unit);
 	}
@@ -363,7 +363,7 @@ void ZLTextView::skip(ZLTextWordCursor &cursor, SizeUnit unit, int size) {
 	style.applyControls(paragraphStart, cursor);
 
 	while (!cursor.isEndOfParagraph() && (size > 0)) {
-		const ZLTextLineInfoPtr info = processTextLine(style, cursor, paragraphEnd);
+		const ZLTextLineInfoPtr info = myTextArea.processTextLine(style, cursor, paragraphEnd);
 		cursor = info->End;
 		size -= infoSize(*info, unit);
 	}
