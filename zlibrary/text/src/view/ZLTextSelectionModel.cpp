@@ -59,18 +59,18 @@ int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int
 }
 
 void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
-	if (myView.myTextElementMap.empty()) {
+	if (myArea.myTextElementMap.empty()) {
 		return;
 	}
 
-	ZLTextElementMap::const_iterator it = myView.myTextElementMap.begin();
-	for (; it != myView.myTextElementMap.end(); ++it) {
+	ZLTextElementMap::const_iterator it = myArea.myTextElementMap.begin();
+	for (; it != myArea.myTextElementMap.end(); ++it) {
 		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
 			break;
 		}
 	}
 
-	if (it != myView.myTextElementMap.end()) {
+	if (it != myArea.myTextElementMap.end()) {
 		bound.After.ParagraphIndex = it->ParagraphIndex;
 		bound.After.ElementIndex = it->ElementIndex;
 		bound.After.Exists = true;
@@ -87,7 +87,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 				bound.After.CharIndex = charIndex(*it, x);
 				bound.Before.CharIndex = bound.After.CharIndex;
 			}
-		} else if (it == myView.myTextElementMap.begin()) {
+		} else if (it == myArea.myTextElementMap.begin()) {
 			bound.Before.Exists = false;
 		} else {
 			const ZLTextElementRectangle &previous = *(it - 1);
@@ -100,7 +100,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 			bound.Before.Exists = true;
 		}
 	} else {
-		const ZLTextElementRectangle &back = myView.myTextElementMap.back();
+		const ZLTextElementRectangle &back = myArea.myTextElementMap.back();
 		bound.Before.ParagraphIndex = back.ParagraphIndex;
 		bound.Before.ElementIndex = back.ElementIndex;
 		bound.Before.CharIndex = back.StartCharIndex + back.Length;
@@ -110,7 +110,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 }
 
 void ZLTextSelectionModel::activate(int x, int y) {
-	if (myView.myTextElementMap.empty()) {
+	if (myArea.myTextElementMap.empty()) {
 		return;
 	}
 
@@ -138,7 +138,7 @@ bool ZLTextSelectionModel::BoundElement::operator != (const ZLTextSelectionModel
 }
 
 bool ZLTextSelectionModel::extendTo(int x, int y) {
-	if (!myIsActive || myView.myTextElementMap.empty()) {
+	if (!myIsActive || myArea.myTextElementMap.empty()) {
 		return false;
 	}
 
@@ -490,13 +490,13 @@ shared_ptr<ZLImageData> ZLTextSelectionModel::image() const {
 bool ZLTextSelectionModel::selectWord(int x, int y) {
 	clear();
 
-	ZLTextElementMap::const_iterator it = myView.myTextElementMap.begin();
-	for (; it != myView.myTextElementMap.end(); ++it) {
+	ZLTextElementMap::const_iterator it = myArea.myTextElementMap.begin();
+	for (; it != myArea.myTextElementMap.end(); ++it) {
 		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
 			break;
 		}
 	}
-	if (it == myView.myTextElementMap.end()) {
+	if (it == myArea.myTextElementMap.end()) {
 		return false;
 	}
 	if (ZLTextElementRectangle::RangeChecker(x, y)(*it)) {

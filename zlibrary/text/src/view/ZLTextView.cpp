@@ -54,8 +54,8 @@ void ZLTextView::clear() {
 	myTextArea.clear();
 	myPaintState = NOTHING_TO_PAINT;
 
-	myTextElementMap.clear();
-	myTreeNodeMap.clear();
+	myTextArea.myTextElementMap.clear();
+	myTextArea.myTreeNodeMap.clear();
 	myTextSize.clear();
 	myTextBreaks.clear();
 
@@ -158,7 +158,7 @@ int ZLTextView::paragraphIndexByCoordinates(int x, int y) const {
 	int xLeft = context().width() + 1;
 	int xRight = -1;
 
-	for (ZLTextElementIterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
+	for (ZLTextElementIterator it = myTextArea.myTextElementMap.begin(); it != myTextArea.myTextElementMap.end(); ++it) {
 		if (it->YEnd < y) {
 			paragraphIndex = it->ParagraphIndex;
 			if (it->YStart > yBottom) {
@@ -198,8 +198,8 @@ int ZLTextView::paragraphIndexByCoordinates(int x, int y) const {
 
 const ZLTextElementRectangle *ZLTextView::elementByCoordinates(int x, int y) const {
 	ZLTextElementIterator it =
-		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextElementRectangle::RangeChecker(visualX(x), y));
-	return (it != myTextElementMap.end()) ? &*it : 0;
+		std::find_if(myTextArea.myTextElementMap.begin(), myTextArea.myTextElementMap.end(), ZLTextElementRectangle::RangeChecker(visualX(x), y));
+	return (it != myTextArea.myTextElementMap.end()) ? &*it : 0;
 }
 
 void ZLTextView::gotoMark(ZLTextMark mark) {
@@ -376,8 +376,8 @@ bool ZLTextView::onStylusPress(int x, int y) {
 
 	if (model->kind() == ZLTextModel::TREE_MODEL) {
 		ZLTextTreeNodeMap::const_iterator it =
-			std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextTreeNodeRectangle::RangeChecker(x, y));
-		if (it != myTreeNodeMap.end()) {
+			std::find_if(myTextArea.myTreeNodeMap.begin(), myTextArea.myTreeNodeMap.end(), ZLTextTreeNodeRectangle::RangeChecker(x, y));
+		if (it != myTextArea.myTreeNodeMap.end()) {
 			int paragraphIndex = it->ParagraphIndex;
 			ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)(*model)[paragraphIndex];
 
@@ -424,8 +424,8 @@ bool ZLTextView::onStylusMove(int x, int y) {
 	if (!model.isNull()) {
 		if (model->kind() == ZLTextModel::TREE_MODEL) {
 			ZLTextTreeNodeMap::const_iterator it =
-				std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextTreeNodeRectangle::RangeChecker(x, y));
-			if (it != myTreeNodeMap.end()) {
+				std::find_if(myTextArea.myTreeNodeMap.begin(), myTextArea.myTreeNodeMap.end(), ZLTextTreeNodeRectangle::RangeChecker(x, y));
+			if (it != myTextArea.myTreeNodeMap.end()) {
 				ZLApplication::Instance().setHyperlinkCursor(true);
 				return true;
 			}

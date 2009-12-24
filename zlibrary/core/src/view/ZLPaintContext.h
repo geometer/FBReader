@@ -89,7 +89,7 @@ private:
 	ZLPaintContext(const ZLPaintContext&);
 	const ZLPaintContext& operator = (const ZLPaintContext&);
 
-friend class ZLPartialPaintContext;
+friend class ZLMirroredPaintContext;
 };
 
 inline int ZLPaintContext::imageWidth(const ZLImageData &image) const { return image.width(); }

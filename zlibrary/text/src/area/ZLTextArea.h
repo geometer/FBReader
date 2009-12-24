@@ -25,7 +25,8 @@
 
 #include <shared_ptr.h>
 
-#include "ZLTextParagraphCursor.h"
+#include <ZLTextParagraphCursor.h>
+#include <ZLTextRectangle.h>
 
 class ZLPaintContext;
 
@@ -74,6 +75,10 @@ public:
 
 	std::vector<ZLTextLineInfoPtr> myLineInfos;
 	std::set<ZLTextLineInfoPtr> myLineInfoCache;
+
+	ZLTextElementMap myTextElementMap;
+	std::vector<ZLTextElementMap> myTextElementsToRevert;
+	ZLTextTreeNodeMap myTreeNodeMap;
 };
 
 inline ZLPaintContext &ZLTextArea::context() const { return myContext; }

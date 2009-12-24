@@ -29,8 +29,8 @@
 void ZLTextView::paint() {
 	preparePaintInfo();
 
-	myTextElementMap.clear();
-	myTreeNodeMap.clear();
+	myTextArea.myTextElementMap.clear();
+	myTextArea.myTreeNodeMap.clear();
 	context().clear(backgroundColor());
 
 	if (textArea().isEmpty()) {
@@ -48,7 +48,7 @@ void ZLTextView::paint() {
 		const ZLTextLineInfo &info = **it;
 		prepareTextLine(style, info, y);
 		y += info.Height + info.Descent + info.VSpaceAfter;
-		labels.push_back(myTextElementMap.size());
+		labels.push_back(myTextArea.myTextElementMap.size());
 	}
 
 	mySelectionModel.update();
@@ -157,8 +157,8 @@ void ZLTextView::drawSelectionRectangle(int left, int top, int right, int bottom
 void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to) {
 	const ZLTextParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 
-	const ZLTextElementIterator fromIt = myTextElementMap.begin() + from;
-	const ZLTextElementIterator toIt = myTextElementMap.begin() + to;
+	const ZLTextElementIterator fromIt = myTextArea.myTextElementMap.begin() + from;
+	const ZLTextElementIterator toIt = myTextArea.myTextElementMap.begin() + to;
 
 	if (!mySelectionModel.isEmpty() && (from != to)) {
 		const std::vector<ZLTextSelectionModel::Range> &ranges = mySelectionModel.ranges();
@@ -278,25 +278,25 @@ void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 void ZLTextView::addRectangleToTextMap(ZLTextArea::Style &style, const ZLTextElementRectangle &rectangle) {
 	const unsigned char index = style.bidiLevel() - (myTextArea.isRtl() ? 1 : 0);
 	if (index > 0) {
-		while (myTextElementsToRevert.size() < index) {
-			myTextElementsToRevert.push_back(ZLTextElementMap());
+		while (myTextArea.myTextElementsToRevert.size() < index) {
+			myTextArea.myTextElementsToRevert.push_back(ZLTextElementMap());
 		}
-		myTextElementsToRevert[index - 1].push_back(rectangle);
+		myTextArea.myTextElementsToRevert[index - 1].push_back(rectangle);
 	} else {
-		myTextElementMap.push_back(rectangle);
+		myTextArea.myTextElementMap.push_back(rectangle);
 	}
 }
 
 void ZLTextView::flushRevertedElements(unsigned char bidiLevel) {
 	const int index = (int)bidiLevel - (myTextArea.isRtl() ? 1 : 0);
-	if ((index < 0) || (myTextElementsToRevert.size() <= (size_t)index)) {
+	if ((index < 0) || (myTextArea.myTextElementsToRevert.size() <= (size_t)index)) {
 		return;
 	}
 	ZLTextElementMap &from =
-		myTextElementsToRevert[index];
+		myTextArea.myTextElementsToRevert[index];
 	ZLTextElementMap &to = (index > 0) ?
-		myTextElementsToRevert[index - 1] :
-		myTextElementMap;
+		myTextArea.myTextElementsToRevert[index - 1] :
+		myTextArea.myTextElementMap;
 	if (!from.empty()) {
 		const int sum = from[from.size() - 1].XEnd + from[0].XStart;
 		for (ZLTextElementMap::reverse_iterator it = from.rbegin(); it != from.rend(); ++it) {
