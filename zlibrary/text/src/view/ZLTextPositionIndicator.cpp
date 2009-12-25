@@ -238,7 +238,7 @@ void ZLTextView::PositionIndicator::draw() {
 }
 
 bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
-	x = myTextView.visualX(x);
+	x = myTextView.textArea().realX(x);
 
 	const long bottom = this->bottom();
 	const long top = this->top();

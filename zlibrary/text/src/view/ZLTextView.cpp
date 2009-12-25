@@ -152,7 +152,7 @@ void ZLTextView::scrollToEndOfText() {
 }
 
 int ZLTextView::paragraphIndexByCoordinates(int x, int y) const {
-	x = visualX(x);
+	x = myTextArea.realX(x);
 	int paragraphIndex = -1;
 	int yBottom = -1;
 	int xLeft = context().width() + 1;
@@ -198,7 +198,7 @@ int ZLTextView::paragraphIndexByCoordinates(int x, int y) const {
 
 const ZLTextElementRectangle *ZLTextView::elementByCoordinates(int x, int y) const {
 	ZLTextElementIterator it =
-		std::find_if(myTextArea.myTextElementMap.begin(), myTextArea.myTextElementMap.end(), ZLTextElementRectangle::RangeChecker(visualX(x), y));
+		std::find_if(myTextArea.myTextElementMap.begin(), myTextArea.myTextElementMap.end(), ZLTextElementRectangle::RangeChecker(myTextArea.realX(x), y));
 	return (it != myTextArea.myTextElementMap.end()) ? &*it : 0;
 }
 
@@ -414,7 +414,7 @@ bool ZLTextView::onStylusPress(int x, int y) {
 
 void ZLTextView::activateSelection(int x, int y) {
 	if (isSelectionEnabled()) {
-		mySelectionModel.activate(visualX(x), y);
+		mySelectionModel.activate(myTextArea.realX(x), y);
 		ZLApplication::Instance().refreshWindow();
 	}
 }
@@ -436,7 +436,7 @@ bool ZLTextView::onStylusMove(int x, int y) {
 }
 
 bool ZLTextView::onStylusMovePressed(int x, int y) {
-	if (mySelectionModel.extendTo(visualX(x), y)) {
+	if (mySelectionModel.extendTo(myTextArea.realX(x), y)) {
 		ZLApplication::Instance().refreshWindow();
 		copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 	}
@@ -467,7 +467,7 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 		myDoubleClickInfo.Count = 20;
 		return true;
 	} else if (count > 2) {
-		if (mySelectionModel.selectWord(visualX(x), y)) {
+		if (mySelectionModel.selectWord(myTextArea.realX(x), y)) {
 			ZLApplication::Instance().refreshWindow();
 			copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 			myDoubleClickInfo.Count = 10;

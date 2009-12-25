@@ -137,7 +137,6 @@ protected:
 private:
 	int lineStartMargin() const;
 	int lineEndMargin() const;
-	int visualX(int logicalX) const;
 
 	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
 	void moveEndCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
@@ -230,10 +229,6 @@ inline int ZLTextView::viewWidth() const {
 
 inline int ZLTextView::viewHeight() const {
 	return std::max(context().height() - topMargin() - bottomMargin(), 1);
-}
-
-inline int ZLTextView::visualX(int logicalX) const {
-	return myTextArea.isRtl() ? context().width() - logicalX - 1 : logicalX;
 }
 
 inline int ZLTextView::lineStartMargin() const {
