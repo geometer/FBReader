@@ -41,8 +41,14 @@ class ZLTextArea {
 public:
 	class Style;
 
+	class ColorMap {
+
+	public:
+		virtual ZLColor color(const std::string &style = std::string()) const = 0;
+	};
+
 public:
-	ZLTextArea(ZLPaintContext &context);
+	ZLTextArea(ZLPaintContext &context, const ColorMap &colorMap);
 	~ZLTextArea();
 
 public:
@@ -67,10 +73,14 @@ public:
 
 public:
 	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
+
+	void drawWord(ZLTextArea::Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
+	void drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
 	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
 
 private:
 	ZLPaintContext &myContext;
+	const ColorMap &myColorMap;
 	shared_ptr<ZLMirroredPaintContext> myMirroredContext;
 	size_t myWidth;
 	size_t myHeight;

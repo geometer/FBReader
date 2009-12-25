@@ -241,7 +241,6 @@ void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 	y = std::min(y + info.Height, topMargin() + textHeight());
 	int x = lineStartMargin();
 	if (!info.NodeInfo.isNull()) {
-		myTextArea.context().setColor(color(ZLTextStyle::TREE_LINES));
 		myTextArea.drawTreeLines(*info.NodeInfo, x, y, info.Height, info.Descent + info.VSpaceAfter);
 	}
 	ZLTextElementIterator it = fromIt;
@@ -255,7 +254,7 @@ void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 			const int wx = it->XStart;
 			const int wy = it->YEnd - style.elementDescent(element) - style.textStyle()->verticalShift();
 			if (kind == ZLTextElement::WORD_ELEMENT) {
-				drawWord(style, wx, wy, (const ZLTextWord&)element, it->StartCharIndex, -1, false);
+				myTextArea.drawWord(style, wx, wy, (const ZLTextWord&)element, it->StartCharIndex, -1, false);
 			} else {
 				myTextArea.context().drawImage(wx, wy, *((const ZLTextImageElement&)element).image(), viewWidth(), textHeight(), ZLPaintContext::SCALE_REDUCE_SIZE);
 			}
@@ -272,7 +271,7 @@ void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 		context().setColor(color(style.textStyle()->colorStyle()));
 		const int x = it->XStart;
 		const int y = it->YEnd - style.elementDescent(word) - style.textStyle()->verticalShift();
-		drawWord(style, x, y, word, start, len, it->AddHyphenationSign);
+		myTextArea.drawWord(style, x, y, word, start, len, it->AddHyphenationSign);
 	}
 }
 

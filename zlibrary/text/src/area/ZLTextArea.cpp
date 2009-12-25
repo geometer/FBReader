@@ -24,7 +24,7 @@
 #include "ZLTextArea.h"
 #include "ZLTextLineInfo.h"
 
-ZLTextArea::ZLTextArea(ZLPaintContext &context) : myContext(context), myWidth(0), myHeight(0) {
+ZLTextArea::ZLTextArea(ZLPaintContext &context, const ColorMap &colorMap) : myContext(context), myColorMap(colorMap), myWidth(0), myHeight(0) {
 }
 
 ZLTextArea::~ZLTextArea() {

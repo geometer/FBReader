@@ -19,7 +19,6 @@
 
 #include <algorithm>
 
-#include <ZLUnicodeUtil.h>
 #include <ZLApplication.h>
 
 #include <ZLTextModel.h>
@@ -41,7 +40,7 @@ const std::string &ZLTextView::typeId() const {
 	return TYPE_ID;
 }
 
-ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myTextArea(context), myPaintState(NOTHING_TO_PAINT), mySelectionModel(*this), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
+ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myTextArea(context, *this), myPaintState(NOTHING_TO_PAINT), mySelectionModel(*this), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
 }
 
 ZLTextView::~ZLTextView() {
@@ -440,82 +439,6 @@ bool ZLTextView::onStylusRelease(int x, int y) {
 
 	mySelectionModel.deactivate();
 	return false;
-}
-
-void ZLTextView::drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
-	myTextArea.context().setColor(color(style.textStyle()->colorStyle()));
-	if (mark == 0) {
-		myTextArea.context().drawString(x, y, str, len, rtl);
-	} else {
-		bool revert = rtl != myTextArea.isRtl();
-		if (revert) {
-			x += myTextArea.context().stringWidth(str, len, rtl);
-		}
-		int pos = 0;
-		for (; (mark != 0) && (pos < len); mark = mark->next()) {
-			int markStart = mark->start() - shift;
-			int markLen = mark->length();
-
-			if (markStart < pos) {
-				markLen += markStart - pos;
-				markStart = pos;
-			}
-
-			if (markLen <= 0) {
-				continue;
-			}
-
-			if (markStart > pos) {
-				int endPos = std::min(markStart, len);
-				if (revert) {
-					x -= myTextArea.context().stringWidth(str + pos, endPos - pos, rtl);
-				}
-				myTextArea.context().drawString(x, y, str + pos, endPos - pos, rtl);
-				if (!revert) {
-					x += myTextArea.context().stringWidth(str + pos, endPos - pos, rtl);
-				}
-			}
-			if (markStart < len) {
-				myTextArea.context().setColor(color(ZLTextStyle::HIGHLIGHTED_TEXT));
-				{
-					int endPos = std::min(markStart + markLen, len);
-					if (revert) {
-						x -= myTextArea.context().stringWidth(str + markStart, endPos - markStart, rtl);
-					}
-					myTextArea.context().drawString(x, y, str + markStart, endPos - markStart, rtl);
-					if (!revert) {
-						x += myTextArea.context().stringWidth(str + markStart, endPos - markStart, rtl);
-					}
-				}
-				myTextArea.context().setColor(color(style.textStyle()->colorStyle()));
-			}
-			pos = markStart + markLen;
-		}
-
-		if (pos < len) {
-			if (revert) {
-				x -= myTextArea.context().stringWidth(str + pos, len - pos, rtl);
-			}
-			myTextArea.context().drawString(x, y, str + pos, len - pos, rtl);
-		}
-	}
-}
-
-void ZLTextView::drawWord(ZLTextArea::Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
-	if ((start == 0) && (length == -1)) {
-		drawString(style, x, y, word.Data, word.Size, word.mark(), 0, word.BidiLevel % 2 == 1);
-	} else {
-		int startPos = ZLUnicodeUtil::length(word.Data, start);
-		int endPos = (length == -1) ? word.Size : ZLUnicodeUtil::length(word.Data, start + length);
-		if (!addHyphenationSign) {
-			drawString(style, x, y, word.Data + startPos, endPos - startPos, word.mark(), startPos, word.BidiLevel % 2 == 1);
-		} else {
-			std::string substr;
-			substr.append(word.Data + startPos, endPos - startPos);
-			substr += '-';
-			drawString(style, x, y, substr.data(), substr.length(), word.mark(), startPos, word.BidiLevel % 2 == 1);
-		}
-	}
 }
 
 void ZLTextView::clearCaches() {

@@ -43,7 +43,7 @@ class ZLTextMark;
 class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 
-class ZLTextView : public ZLView {
+class ZLTextView : public ZLView, public ZLTextArea::ColorMap {
 
 public:
 	static const int DOUBLE_CLICK_DELAY;
@@ -127,7 +127,6 @@ protected:
 	virtual int rightMargin() const = 0;
 	virtual int topMargin() const = 0;
 	virtual int bottomMargin() const = 0;
-	virtual ZLColor color(const std::string &colorStyle = std::string()) const = 0;
 	virtual shared_ptr<ZLTextStyle> baseStyle() const = 0;
 
 private:
@@ -143,8 +142,6 @@ private:
 	void prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y);
 	void drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
 	void drawSelectionRectangle(int left, int top, int right, int bottom);
-	void drawWord(ZLTextArea::Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
-	void drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
 
 	bool pageIsEmpty() const;
 	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;
