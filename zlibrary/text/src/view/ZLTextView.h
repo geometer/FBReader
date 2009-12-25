@@ -118,9 +118,6 @@ protected:
 
 	virtual void paint();
 
-	const ZLTextElementRectangle *elementByCoordinates(int x, int y) const;
-	int paragraphIndexByCoordinates(int x, int y) const;
-
 	void rebuildPaintInfo(bool strong);
 	virtual void preparePaintInfo();
 

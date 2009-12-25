@@ -61,9 +61,13 @@ public:
 	const ZLTextWordCursor &endCursor() const;
 	bool isEmpty() const;
 
+	const ZLTextElementRectangle *elementByCoordinates(int x, int y) const;
+	const ZLTextTreeNodeRectangle *treeNodeByCoordinates(int x, int y) const;
+	int paragraphIndexByCoordinates(int x, int y) const;
+
 public:
 	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
-	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter, ZLColor color);
+	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
 
 private:
 	ZLPaintContext &myContext;

@@ -150,57 +150,6 @@ void ZLTextView::scrollToEndOfText() {
 	ZLApplication::Instance().refreshWindow();
 }
 
-int ZLTextView::paragraphIndexByCoordinates(int x, int y) const {
-	x = myTextArea.realX(x);
-	int paragraphIndex = -1;
-	int yBottom = -1;
-	int xLeft = context().width() + 1;
-	int xRight = -1;
-
-	for (ZLTextElementIterator it = myTextArea.myTextElementMap.begin(); it != myTextArea.myTextElementMap.end(); ++it) {
-		if (it->YEnd < y) {
-			paragraphIndex = it->ParagraphIndex;
-			if (it->YStart > yBottom) {
-				yBottom = it->YEnd;
-				xLeft = it->XStart;
-				xRight = -1;
-			}
-			xRight = it->XEnd;
-			continue;
-		}
-		if (it->YStart > y) {
-			return
-				((paragraphIndex == it->ParagraphIndex) &&
-				 (xLeft <= x) && (x <= xRight)) ?
-				paragraphIndex : -1;
-		}
-		if (it->XEnd < x) {
-			paragraphIndex = it->ParagraphIndex;
-			if (it->YStart > yBottom) {
-				yBottom = it->YEnd;
-				xLeft = it->XStart;
-				xRight = -1;
-			}
-			xRight = it->XEnd;
-			continue;
-		}
-		if (it->XStart > x) {
-			return
-				((paragraphIndex == it->ParagraphIndex) &&
-				 (it->YStart <= yBottom) && (xLeft < x)) ?
-				paragraphIndex : -1;
-		}
-		return it->ParagraphIndex;
-	}
-	return -1;
-}
-
-const ZLTextElementRectangle *ZLTextView::elementByCoordinates(int x, int y) const {
-	ZLTextElementIterator it =
-		std::find_if(myTextArea.myTextElementMap.begin(), myTextArea.myTextElementMap.end(), ZLTextElementRectangle::RangeChecker(myTextArea.realX(x), y));
-	return (it != myTextArea.myTextElementMap.end()) ? &*it : 0;
-}
-
 void ZLTextView::gotoMark(ZLTextMark mark) {
 	if (mark.ParagraphIndex < 0) {
 		return;
@@ -374,10 +323,9 @@ bool ZLTextView::onStylusPress(int x, int y) {
 	}
 
 	if (model->kind() == ZLTextModel::TREE_MODEL) {
-		ZLTextTreeNodeMap::const_iterator it =
-			std::find_if(myTextArea.myTreeNodeMap.begin(), myTextArea.myTreeNodeMap.end(), ZLTextTreeNodeRectangle::RangeChecker(x, y));
-		if (it != myTextArea.myTreeNodeMap.end()) {
-			int paragraphIndex = it->ParagraphIndex;
+		const ZLTextTreeNodeRectangle *node = myTextArea.treeNodeByCoordinates(x, y);
+		if (node != 0) {
+			int paragraphIndex = node->ParagraphIndex;
 			ZLTextTreeParagraph *paragraph = (ZLTextTreeParagraph*)(*model)[paragraphIndex];
 
 			paragraph->open(!paragraph->isOpen());
@@ -422,9 +370,9 @@ bool ZLTextView::onStylusMove(int x, int y) {
 	shared_ptr<ZLTextModel> model = myTextArea.model();
 	if (!model.isNull()) {
 		if (model->kind() == ZLTextModel::TREE_MODEL) {
-			ZLTextTreeNodeMap::const_iterator it =
-				std::find_if(myTextArea.myTreeNodeMap.begin(), myTextArea.myTreeNodeMap.end(), ZLTextTreeNodeRectangle::RangeChecker(x, y));
-			if (it != myTextArea.myTreeNodeMap.end()) {
+			const ZLTextTreeNodeRectangle *node =
+				myTextArea.treeNodeByCoordinates(x, y);
+			if (node != 0) {
 				ZLApplication::Instance().setHyperlinkCursor(true);
 				return true;
 			}

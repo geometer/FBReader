@@ -24,9 +24,7 @@
 #include "ZLTextView.h"
 #include "../area/ZLTextLineInfo.h"
 
-void ZLTextArea::drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter, ZLColor color) {
-	context().setColor(color);
-
+void ZLTextArea::drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter) {
 	const int qstep = (context().stringHeight() + 2) / 3;
 
 	const std::vector<bool> &Stack = info.VerticalLinesStack;

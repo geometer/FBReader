@@ -34,7 +34,7 @@ ContentsView::~ContentsView() {
 bool ContentsView::_onStylusMove(int x, int y) {
 	FBReader &fbreader = FBReader::Instance();
 
-	int index = paragraphIndexByCoordinates(x, y);
+	int index = textArea().paragraphIndexByCoordinates(x, y);
 	if ((index < 0) || ((int)textArea().model()->paragraphsNumber() <= index)) {
 		fbreader.setHyperlinkCursor(false);
 		return true;
@@ -51,7 +51,7 @@ bool ContentsView::_onStylusPress(int x, int y) {
 	FBReader &fbreader = FBReader::Instance();
 
 	const ContentsModel &contentsModel = (const ContentsModel&)*textArea().model();
-	int index = paragraphIndexByCoordinates(x, y);
+	int index = textArea().paragraphIndexByCoordinates(x, y);
 	if ((index < 0) || ((int)contentsModel.paragraphsNumber() <= index)) {
 		return false;
 	}

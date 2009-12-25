@@ -241,7 +241,8 @@ void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 	y = std::min(y + info.Height, topMargin() + textHeight());
 	int x = lineStartMargin();
 	if (!info.NodeInfo.isNull()) {
-		myTextArea.drawTreeLines(*info.NodeInfo, x, y, info.Height, info.Descent + info.VSpaceAfter, color(ZLTextStyle::TREE_LINES));
+		myTextArea.context().setColor(color(ZLTextStyle::TREE_LINES));
+		myTextArea.drawTreeLines(*info.NodeInfo, x, y, info.Height, info.Descent + info.VSpaceAfter);
 	}
 	ZLTextElementIterator it = fromIt;
 	const int endElementIndex = info.End.elementIndex();

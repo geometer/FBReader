@@ -304,7 +304,7 @@ bool BookTextView::_onStylusPress(int x, int y) {
 
 bool BookTextView::onStylusClick(int x, int y, int count) {
 	FBReader &fbreader = FBReader::Instance();
-	const ZLTextElementRectangle *rectangle = elementByCoordinates(x, y);
+	const ZLTextElementRectangle *rectangle = textArea().elementByCoordinates(x, y);
 	if (rectangle != 0) {
 		std::string id;
 		std::string type;
@@ -332,7 +332,7 @@ bool BookTextView::_onStylusRelease(int x, int y) {
 		return false;
 	}
 
-	const ZLTextElementRectangle *rectangle = elementByCoordinates(x, y);
+	const ZLTextElementRectangle *rectangle = textArea().elementByCoordinates(x, y);
 	if (rectangle != 0) {
 		std::string id;
 		std::string type;
@@ -355,7 +355,7 @@ bool BookTextView::_onStylusRelease(int x, int y) {
 }
 
 bool BookTextView::_onStylusMove(int x, int y) {
-	const ZLTextElementRectangle *rectangle = elementByCoordinates(x, y);
+	const ZLTextElementRectangle *rectangle = textArea().elementByCoordinates(x, y);
 	std::string id;
 	std::string type;
 	FBReader::Instance().setHyperlinkCursor((rectangle != 0) && getHyperlinkInfo(*rectangle, id, type));

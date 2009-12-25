@@ -57,3 +57,60 @@ void ZLTextArea::clear() {
 	myTextElementMap.clear();
 	myTreeNodeMap.clear();
 }
+
+int ZLTextArea::paragraphIndexByCoordinates(int x, int y) const {
+	x = realX(x);
+	int paragraphIndex = -1;
+	int yBottom = -1;
+	int xLeft = context().width() + 1;
+	int xRight = -1;
+
+	for (ZLTextElementIterator it = myTextElementMap.begin(); it != myTextElementMap.end(); ++it) {
+		if (it->YEnd < y) {
+			paragraphIndex = it->ParagraphIndex;
+			if (it->YStart > yBottom) {
+				yBottom = it->YEnd;
+				xLeft = it->XStart;
+				xRight = -1;
+			}
+			xRight = it->XEnd;
+			continue;
+		}
+		if (it->YStart > y) {
+			return
+				((paragraphIndex == it->ParagraphIndex) &&
+				 (xLeft <= x) && (x <= xRight)) ?
+				paragraphIndex : -1;
+		}
+		if (it->XEnd < x) {
+			paragraphIndex = it->ParagraphIndex;
+			if (it->YStart > yBottom) {
+				yBottom = it->YEnd;
+				xLeft = it->XStart;
+				xRight = -1;
+			}
+			xRight = it->XEnd;
+			continue;
+		}
+		if (it->XStart > x) {
+			return
+				((paragraphIndex == it->ParagraphIndex) &&
+				 (it->YStart <= yBottom) && (xLeft < x)) ?
+				paragraphIndex : -1;
+		}
+		return it->ParagraphIndex;
+	}
+	return -1;
+}
+
+const ZLTextElementRectangle *ZLTextArea::elementByCoordinates(int x, int y) const {
+	ZLTextElementIterator it =
+		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextRectangle::RangeChecker(realX(x), y));
+	return (it != myTextElementMap.end()) ? &*it : 0;
+}
+
+const ZLTextTreeNodeRectangle *ZLTextArea::treeNodeByCoordinates(int x, int y) const {
+	ZLTextTreeNodeMap::const_iterator it =
+		std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextRectangle::RangeChecker(x, y));
+	return (it != myTreeNodeMap.end()) ? &*it : 0;
+}
