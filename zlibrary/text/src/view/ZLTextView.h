@@ -42,7 +42,6 @@ class ZLTextMark;
 
 class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
-struct ZLTextTreeNodeInfo;
 
 class ZLTextView : public ZLView {
 
@@ -149,7 +148,6 @@ private:
 	void drawSelectionRectangle(int left, int top, int right, int bottom);
 	void drawWord(ZLTextArea::Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
 	void drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
-	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
 
 	bool pageIsEmpty() const;
 	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;

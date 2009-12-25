@@ -34,6 +34,7 @@ class ZLMirroredPaintContext;
 class ZLTextModel;
 
 class ZLTextLineInfoPtr;
+struct ZLTextTreeNodeInfo;
 
 class ZLTextArea {
 
@@ -62,6 +63,7 @@ public:
 
 public:
 	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
+	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter, ZLColor color);
 
 private:
 	ZLPaintContext &myContext;

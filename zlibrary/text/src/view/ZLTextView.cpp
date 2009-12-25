@@ -49,13 +49,12 @@ ZLTextView::~ZLTextView() {
 }
 
 void ZLTextView::clear() {
+	myTextArea.clear();
+
 	mySelectionModel.clear();
 
-	myTextArea.clear();
 	myPaintState = NOTHING_TO_PAINT;
 
-	myTextArea.myTextElementMap.clear();
-	myTextArea.myTreeNodeMap.clear();
 	myTextSize.clear();
 	myTextBreaks.clear();
 

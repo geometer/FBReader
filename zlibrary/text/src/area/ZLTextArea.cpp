@@ -54,4 +54,6 @@ void ZLTextArea::clear() {
 	myEndCursor = 0;
 
 	myLineInfos.clear();
+	myTextElementMap.clear();
+	myTreeNodeMap.clear();
 }
