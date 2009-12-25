@@ -447,7 +447,8 @@ void ZLTextView::drawString(ZLTextArea::Style &style, int x, int y, const char *
 	if (mark == 0) {
 		myTextArea.context().drawString(x, y, str, len, rtl);
 	} else {
-		if (rtl) {
+		bool revert = rtl != myTextArea.isRtl();
+		if (revert) {
 			x += myTextArea.context().stringWidth(str, len, rtl);
 		}
 		int pos = 0;
@@ -466,11 +467,11 @@ void ZLTextView::drawString(ZLTextArea::Style &style, int x, int y, const char *
 
 			if (markStart > pos) {
 				int endPos = std::min(markStart, len);
-				if (rtl) {
+				if (revert) {
 					x -= myTextArea.context().stringWidth(str + pos, endPos - pos, rtl);
 				}
 				myTextArea.context().drawString(x, y, str + pos, endPos - pos, rtl);
-				if (!rtl) {
+				if (!revert) {
 					x += myTextArea.context().stringWidth(str + pos, endPos - pos, rtl);
 				}
 			}
@@ -478,11 +479,11 @@ void ZLTextView::drawString(ZLTextArea::Style &style, int x, int y, const char *
 				myTextArea.context().setColor(color(ZLTextStyle::HIGHLIGHTED_TEXT));
 				{
 					int endPos = std::min(markStart + markLen, len);
-					if (rtl) {
+					if (revert) {
 						x -= myTextArea.context().stringWidth(str + markStart, endPos - markStart, rtl);
 					}
 					myTextArea.context().drawString(x, y, str + markStart, endPos - markStart, rtl);
-					if (!rtl) {
+					if (!revert) {
 						x += myTextArea.context().stringWidth(str + markStart, endPos - markStart, rtl);
 					}
 				}
@@ -492,7 +493,7 @@ void ZLTextView::drawString(ZLTextArea::Style &style, int x, int y, const char *
 		}
 
 		if (pos < len) {
-			if (rtl) {
+			if (revert) {
 				x -= myTextArea.context().stringWidth(str + pos, len - pos, rtl);
 			}
 			myTextArea.context().drawString(x, y, str + pos, len - pos, rtl);
