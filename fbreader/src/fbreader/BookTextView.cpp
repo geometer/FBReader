@@ -65,6 +65,7 @@ BookTextView::BookTextView(ZLPaintContext &context) :
 
 BookTextView::~BookTextView() {
 	saveState();
+	setModel(0, 0);
 }
 
 void BookTextView::readBookState(const Book &book) {
