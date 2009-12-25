@@ -31,7 +31,7 @@ void ZLTextView::paint() {
 
 	myTextArea.myTextElementMap.clear();
 	myTextArea.myTreeNodeMap.clear();
-	context().clear(backgroundColor());
+	myTextArea.context().clear(backgroundColor());
 
 	if (textArea().isEmpty()) {
 		return;
@@ -149,8 +149,8 @@ void ZLTextView::drawSelectionRectangle(int left, int top, int right, int bottom
 	left = std::max(left, lineStartMargin());
 	right = std::min(right, viewWidth() + lineStartMargin() - 1);
 	if (left < right) {
-		context().setFillColor(color(ZLTextStyle::SELECTION_BACKGROUND));
-		context().fillRectangle(visualX(left), top, visualX(right), bottom);
+		myTextArea.context().setFillColor(color(ZLTextStyle::SELECTION_BACKGROUND));
+		myTextArea.context().fillRectangle(left, top, right, bottom);
 	}
 }
 
@@ -382,7 +382,7 @@ void ZLTextView::prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo 
 			case ZLTextElement::NB_HSPACE_ELEMENT:
 				if (wordOccured && (spaceCounter > 0)) {
 					int correction = fullCorrection / spaceCounter;
-					x += context().spaceWidth() + correction;
+					x += myTextArea.context().spaceWidth() + correction;
 					fullCorrection -= correction;
 					wordOccured = false;
 					--spaceCounter;
@@ -395,13 +395,13 @@ void ZLTextView::prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo 
 			case ZLTextElement::FIXED_HSPACE_ELEMENT:
 				break;
 			case ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT:
-				//context().setColor(ZLColor(0, 255, 0));
-				//context().drawLine(visualX(x), y, visualX(x), y - 20);
+				//myTextArea.context().setColor(ZLColor(0, 255, 0));
+				//myTextArea.context().drawLine(x, y, x, y - 20);
 				break;
 			case ZLTextElement::END_REVERSED_SEQUENCE_ELEMENT:
 				flushRevertedElements(style.bidiLevel());
-				//context().setColor(ZLColor(255, 0, 0));
-				//context().drawLine(visualX(x), y, visualX(x), y - 20);
+				//myTextArea.context().setColor(ZLColor(255, 0, 0));
+				//myTextArea.context().drawLine(x, y, x, y - 20);
 				break;
 		}
 

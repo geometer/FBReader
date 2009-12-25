@@ -80,7 +80,7 @@ const ZLTextView &ZLTextView::PositionIndicator::textView() const {
 }
 
 ZLPaintContext &ZLTextView::PositionIndicator::context() const {
-	return myTextView.context();
+	return myTextView.myTextArea.context();
 }
 
 int ZLTextView::PositionIndicator::bottom() const {
@@ -118,11 +118,7 @@ void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
 	context().setColor(myTextView.color());
 
 	int width = context().stringWidth(text.data(), text.length(), false);
-	if (myTextView.visualX(0) == 0) {
-		context().drawString(right() - width, bottom() - 2, text.data(), text.length(), false);
-	} else {
-		context().drawString(myTextView.visualX(right()), bottom() - 2, text.data(), text.length(), false);
-	}
+	context().drawString(right() - width, bottom() - 2, text.data(), text.length(), false);
 	myExtraWidth += text.length() * context().stringWidth("0", 1, false) + context().spaceWidth();
 }
 
@@ -234,11 +230,11 @@ void ZLTextView::PositionIndicator::draw() {
 
 	context.setColor(myTextView.color());
 	context.setFillColor(myInfo.color());
-	context.fillRectangle(myTextView.visualX(left + 1), top + 1, myTextView.visualX(left + fillWidth + 1), bottom - 1);
-	context.drawLine(myTextView.visualX(left), top, myTextView.visualX(right), top);
-	context.drawLine(myTextView.visualX(left), bottom, myTextView.visualX(right), bottom);
-	context.drawLine(myTextView.visualX(left), bottom, myTextView.visualX(left), top);
-	context.drawLine(myTextView.visualX(right), bottom, myTextView.visualX(right), top);
+	context.fillRectangle(left + 1, top + 1, left + fillWidth + 1, bottom - 1);
+	context.drawLine(left, top, right, top);
+	context.drawLine(left, bottom, right, bottom);
+	context.drawLine(left, bottom, left, top);
+	context.drawLine(right, bottom, right, top);
 }
 
 bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {

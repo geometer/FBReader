@@ -63,7 +63,8 @@ int ZLMirroredPaintContext::descent() const {
 }
 
 void ZLMirroredPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
-	// TODO: implement
+	int w = myBase.stringWidth(str, len, rtl);
+	myBase.drawString(mirroredX(x) - w, y, str, len, rtl);
 }
 
 void ZLMirroredPaintContext::drawImage(int x, int y, const ZLImageData &image) {
@@ -80,11 +81,12 @@ void ZLMirroredPaintContext::drawLine(int x0, int y0, int x1, int y1) {
 }
 
 void ZLMirroredPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
-	// TODO: implement
+	const int w = myBase.width() - 1;
+	myBase.fillRectangle(w - x0, y0, w - x1, y1);
 }
 
 void ZLMirroredPaintContext::drawFilledCircle(int x, int y, int r) {
-	// TODO: implement
+	myBase.drawFilledCircle(mirroredX(x), y, r);
 }
 
 const std::string ZLMirroredPaintContext::realFontFamilyName(std::string &fontFamily) const {

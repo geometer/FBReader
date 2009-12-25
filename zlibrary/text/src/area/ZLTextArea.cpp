@@ -24,10 +24,14 @@
 #include "ZLTextArea.h"
 #include "ZLTextLineInfo.h"
 
-ZLTextArea::ZLTextArea(ZLPaintContext &context) : myContext(context), myWidth(0), myHeight(0), myIsRtl(false) {
+ZLTextArea::ZLTextArea(ZLPaintContext &context) : myContext(context), myWidth(0), myHeight(0) {
 }
 
 ZLTextArea::~ZLTextArea() {
+}
+
+int ZLTextArea::realX(int x) const {
+	return myMirroredContext.isNull() ? x : myMirroredContext->mirroredX(x);
 }
 
 void ZLTextArea::setModel(shared_ptr<ZLTextModel> model) {
@@ -35,8 +39,7 @@ void ZLTextArea::setModel(shared_ptr<ZLTextModel> model) {
 
 	myModel = model;
 	if (!model.isNull()) {
-		myIsRtl = model->isRtl();
-		if (myIsRtl) {
+		if (model->isRtl()) {
 			myMirroredContext = new ZLMirroredPaintContext(myContext);
 		} else {
 			myMirroredContext.reset();

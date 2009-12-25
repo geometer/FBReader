@@ -29,6 +29,7 @@
 #include <ZLTextRectangle.h>
 
 class ZLPaintContext;
+class ZLMirroredPaintContext;
 
 class ZLTextModel;
 
@@ -52,6 +53,7 @@ public:
 	void setModel(shared_ptr<ZLTextModel> model);
 	shared_ptr<ZLTextModel> model() const;
 	bool isRtl() const;
+	int realX(int X) const;
 
 	void clear();
 	const ZLTextWordCursor &startCursor() const;
@@ -63,12 +65,11 @@ public:
 
 private:
 	ZLPaintContext &myContext;
-	shared_ptr<ZLPaintContext> myMirroredContext;
+	shared_ptr<ZLMirroredPaintContext> myMirroredContext;
 	size_t myWidth;
 	size_t myHeight;
 
 	shared_ptr<ZLTextModel> myModel;
-	bool myIsRtl;
 
 public:
 	ZLTextWordCursor myStartCursor;
@@ -82,13 +83,13 @@ public:
 	ZLTextTreeNodeMap myTreeNodeMap;
 };
 
-inline ZLPaintContext &ZLTextArea::context() const { return myIsRtl ? *myMirroredContext : myContext; }
+inline ZLPaintContext &ZLTextArea::context() const { return myMirroredContext.isNull() ? myContext : (ZLPaintContext&)*myMirroredContext; }
 inline void ZLTextArea::setSize(size_t width, size_t height) { myWidth = width; myHeight = height; }
 inline size_t ZLTextArea::width() const { return myWidth; }
 inline size_t ZLTextArea::height() const { return myHeight; }
 
 inline shared_ptr<ZLTextModel> ZLTextArea::model() const { return myModel; }
-inline bool ZLTextArea::isRtl() const { return myIsRtl; }
+inline bool ZLTextArea::isRtl() const { return !myMirroredContext.isNull(); }
 
 inline const ZLTextWordCursor &ZLTextArea::startCursor() const { return myStartCursor; }
 inline const ZLTextWordCursor &ZLTextArea::endCursor() const { return myEndCursor; }

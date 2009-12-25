@@ -31,6 +31,9 @@ class ZLMirroredPaintContext : public ZLPaintContext {
 public:
 	ZLMirroredPaintContext(ZLPaintContext &base);
 
+public:
+	int mirroredX(int x) const;
+
 private:
 	void clear(ZLColor color);
 
@@ -61,5 +64,9 @@ private:
 private:
 	ZLPaintContext &myBase;
 };
+
+inline int ZLMirroredPaintContext::mirroredX(int x) const {
+	return myBase.width() - x - 1;
+}
 
 #endif /* __ZLMIRROREDPAINTCONTEXT_H__ */
