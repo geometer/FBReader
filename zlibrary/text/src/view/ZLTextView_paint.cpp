@@ -252,12 +252,12 @@ void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 	
 		if ((kind == ZLTextElement::WORD_ELEMENT) || (kind == ZLTextElement::IMAGE_ELEMENT)) {
 			style.setTextStyle(it->Style, it->BidiLevel);
-			const int wx = myTextArea.isRtl() ? context().width() - it->XEnd : it->XStart;
+			const int wx = it->XStart;
 			const int wy = it->YEnd - style.elementDescent(element) - style.textStyle()->verticalShift();
 			if (kind == ZLTextElement::WORD_ELEMENT) {
 				drawWord(style, wx, wy, (const ZLTextWord&)element, it->StartCharIndex, -1, false);
 			} else {
-				context().drawImage(wx, wy, *((const ZLTextImageElement&)element).image(), viewWidth(), textHeight(), ZLPaintContext::SCALE_REDUCE_SIZE);
+				myTextArea.context().drawImage(wx, wy, *((const ZLTextImageElement&)element).image(), viewWidth(), textHeight(), ZLPaintContext::SCALE_REDUCE_SIZE);
 			}
 		}
 	}
@@ -270,7 +270,7 @@ void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 		int len = info.End.charIndex() - start;
 		const ZLTextWord &word = (const ZLTextWord&)info.End.element();
 		context().setColor(color(style.textStyle()->colorStyle()));
-		const int x = myTextArea.isRtl() ? context().width() - it->XEnd : it->XStart;
+		const int x = it->XStart;
 		const int y = it->YEnd - style.elementDescent(word) - style.textStyle()->verticalShift();
 		drawWord(style, x, y, word, start, len, it->AddHyphenationSign);
 	}

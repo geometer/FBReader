@@ -443,12 +443,12 @@ bool ZLTextView::onStylusRelease(int x, int y) {
 }
 
 void ZLTextView::drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
-	context().setColor(color(style.textStyle()->colorStyle()));
+	myTextArea.context().setColor(color(style.textStyle()->colorStyle()));
 	if (mark == 0) {
-		context().drawString(x, y, str, len, rtl);
+		myTextArea.context().drawString(x, y, str, len, rtl);
 	} else {
 		if (rtl) {
-			x += context().stringWidth(str, len, rtl);
+			x += myTextArea.context().stringWidth(str, len, rtl);
 		}
 		int pos = 0;
 		for (; (mark != 0) && (pos < len); mark = mark->next()) {
@@ -467,35 +467,35 @@ void ZLTextView::drawString(ZLTextArea::Style &style, int x, int y, const char *
 			if (markStart > pos) {
 				int endPos = std::min(markStart, len);
 				if (rtl) {
-					x -= context().stringWidth(str + pos, endPos - pos, rtl);
+					x -= myTextArea.context().stringWidth(str + pos, endPos - pos, rtl);
 				}
-				context().drawString(x, y, str + pos, endPos - pos, rtl);
+				myTextArea.context().drawString(x, y, str + pos, endPos - pos, rtl);
 				if (!rtl) {
-					x += context().stringWidth(str + pos, endPos - pos, rtl);
+					x += myTextArea.context().stringWidth(str + pos, endPos - pos, rtl);
 				}
 			}
 			if (markStart < len) {
-				context().setColor(color(ZLTextStyle::HIGHLIGHTED_TEXT));
+				myTextArea.context().setColor(color(ZLTextStyle::HIGHLIGHTED_TEXT));
 				{
 					int endPos = std::min(markStart + markLen, len);
 					if (rtl) {
-						x -= context().stringWidth(str + markStart, endPos - markStart, rtl);
+						x -= myTextArea.context().stringWidth(str + markStart, endPos - markStart, rtl);
 					}
-					context().drawString(x, y, str + markStart, endPos - markStart, rtl);
+					myTextArea.context().drawString(x, y, str + markStart, endPos - markStart, rtl);
 					if (!rtl) {
-						x += context().stringWidth(str + markStart, endPos - markStart, rtl);
+						x += myTextArea.context().stringWidth(str + markStart, endPos - markStart, rtl);
 					}
 				}
-				context().setColor(color(style.textStyle()->colorStyle()));
+				myTextArea.context().setColor(color(style.textStyle()->colorStyle()));
 			}
 			pos = markStart + markLen;
 		}
 
 		if (pos < len) {
 			if (rtl) {
-				x -= context().stringWidth(str + pos, len - pos, rtl);
+				x -= myTextArea.context().stringWidth(str + pos, len - pos, rtl);
 			}
-			context().drawString(x, y, str + pos, len - pos, rtl);
+			myTextArea.context().drawString(x, y, str + pos, len - pos, rtl);
 		}
 	}
 }

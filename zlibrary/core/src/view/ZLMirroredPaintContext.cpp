@@ -68,11 +68,11 @@ void ZLMirroredPaintContext::drawString(int x, int y, const char *str, int len, 
 }
 
 void ZLMirroredPaintContext::drawImage(int x, int y, const ZLImageData &image) {
-	// TODO: implement
+	myBase.drawImage(mirroredX(x) - image.width(), y, image);
 }
 
 void ZLMirroredPaintContext::drawImage(int x, int y, const ZLImageData &image, int width, int height, ScalingType type) {
-	// TODO: implement
+	myBase.drawImage(mirroredX(x) - imageWidth(image, width, height, type), y, image, width, height, type);
 }
 
 void ZLMirroredPaintContext::drawLine(int x0, int y0, int x1, int y1) {
