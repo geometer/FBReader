@@ -37,16 +37,19 @@ int ZLTextArea::realX(int x) const {
 void ZLTextArea::setModel(shared_ptr<ZLTextModel> model) {
 	clear();
 
-	myModel = model;
-	if (!model.isNull()) {
-		if (model->isRtl()) {
-			myMirroredContext = new ZLMirroredPaintContext(myContext);
-		} else {
-			myMirroredContext.reset();
-		}
-		myStartCursor = ZLTextParagraphCursor::cursor(*model);
-		myEndCursor = 0;
+	if (model.isNull() || model->paragraphsNumber() == 0) {
+		myModel = 0;
+		return;
 	}
+
+	myModel = model;
+	if (model->isRtl()) {
+		myMirroredContext = new ZLMirroredPaintContext(myContext);
+	} else {
+		myMirroredContext.reset();
+	}
+	myStartCursor = ZLTextParagraphCursor::cursor(*model);
+	myEndCursor = 0;
 }
 
 void ZLTextArea::clear() {
