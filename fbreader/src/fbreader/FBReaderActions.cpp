@@ -449,7 +449,7 @@ bool CopySelectedTextAction::isVisible() const {
 }
 
 void CopySelectedTextAction::run() {
-	textView().copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_MAIN);
+	textView().selectionModel().copySelectionToClipboard(ZLDialogManager::CLIPBOARD_MAIN);
 }
 
 bool OpenSelectedTextInDictionaryAction::isVisible() const {

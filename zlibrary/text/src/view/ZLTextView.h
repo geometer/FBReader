@@ -27,7 +27,6 @@
 
 #include <ZLTime.h>
 #include <ZLView.h>
-#include <ZLDialogManager.h>
 
 #include <ZLTextWord.h>
 #include <ZLTextPositionIndicatorInfo.h>
@@ -101,7 +100,6 @@ public:
 
 	ZLTextSelectionModel &selectionModel();
 	const ZLTextSelectionModel &selectionModel() const;
-	void copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const;
 
 	virtual bool isSelectionEnabled() const = 0;
 

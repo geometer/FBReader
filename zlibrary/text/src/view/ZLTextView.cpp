@@ -384,23 +384,9 @@ bool ZLTextView::onStylusMove(int x, int y) {
 bool ZLTextView::onStylusMovePressed(int x, int y) {
 	if (mySelectionModel.extendTo(myTextArea.realX(x), y)) {
 		ZLApplication::Instance().refreshWindow();
-		copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
+		mySelectionModel.copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 	}
 	return true;
-}
-
-void ZLTextView::copySelectedTextToClipboard(ZLDialogManager::ClipboardType type) const {
-	if (ZLDialogManager::Instance().isClipboardSupported(type)) {
-		std::string text = mySelectionModel.text();
-		if (!text.empty()) {
-			ZLDialogManager::Instance().setClipboardText(text, type);
-		} else {
-			shared_ptr<ZLImageData> image = mySelectionModel.image();
-			if (!image.isNull()) {
-				ZLDialogManager::Instance().setClipboardImage(*image, type);
-			}
-		}
-	}
 }
 
 bool ZLTextView::onStylusClick(int x, int y, int count) {
@@ -409,13 +395,13 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 	} else if (count > 10) {
 		mySelectionModel.extendWordSelectionToParagraph();
 		ZLApplication::Instance().refreshWindow();
-		copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
+		mySelectionModel.copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 		myDoubleClickInfo.Count = 20;
 		return true;
 	} else if (count > 2) {
 		if (mySelectionModel.selectWord(myTextArea.realX(x), y)) {
 			ZLApplication::Instance().refreshWindow();
-			copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
+			mySelectionModel.copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 			myDoubleClickInfo.Count = 10;
 			return true;
 		} else {

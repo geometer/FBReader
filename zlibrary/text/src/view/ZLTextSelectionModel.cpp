@@ -393,7 +393,7 @@ void ZLTextSelectionModel::update() {
 	} else if (myDoUpdate) {
 		myDoUpdate = false;
 		setBound(mySecondBound, myStoredX, myStoredY);
-		myView.copySelectedTextToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
+		copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 		myTextIsUpToDate = false;
 		clearData();
 		myRangeVectorIsUpToDate = false;
@@ -586,4 +586,15 @@ void ZLTextSelectionScroller::setDirection(Direction direction) {
 
 void ZLTextSelectionScroller::run() {
 	mySelectionModel.scrollAndExtend();
+}
+
+void ZLTextSelectionModel::copySelectionToClipboard(ZLDialogManager::ClipboardType type) const {
+	if (ZLDialogManager::Instance().isClipboardSupported(type)) {
+		createData();
+		if (!myText.empty()) {
+			ZLDialogManager::Instance().setClipboardText(myText, type);
+		} else if (!myImage.isNull()) {
+			ZLDialogManager::Instance().setClipboardImage(*myImage, type);
+		}
+	}
 }

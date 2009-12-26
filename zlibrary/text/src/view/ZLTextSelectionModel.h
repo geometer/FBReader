@@ -27,6 +27,8 @@
 #include <shared_ptr.h>
 #include <ZLRunnable.h>
 
+#include <ZLDialogManager.h>
+
 #include "ZLTextParagraphCursor.h"
 
 class ZLTextView;
@@ -63,6 +65,8 @@ public:
 	const std::string &text() const;
 	shared_ptr<ZLImageData> image() const;
 	const std::vector<Range> &ranges() const;
+
+	void copySelectionToClipboard(ZLDialogManager::ClipboardType type) const;
 
 	bool isEmpty() const;
 
