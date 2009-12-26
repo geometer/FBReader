@@ -28,7 +28,7 @@ void ZLTextArea::drawString(ZLTextArea::Style &style, int x, int y, const char *
 	x += myHOffset;
 	y += myVOffset;
 
-	context().setColor(myColorMap.color(style.textStyle()->colorStyle()));
+	context().setColor(myProperties.color(style.textStyle()->colorStyle()));
 	if (mark == 0) {
 		context().drawString(x, y, str, len, rtl);
 	} else {
@@ -61,7 +61,7 @@ void ZLTextArea::drawString(ZLTextArea::Style &style, int x, int y, const char *
 				}
 			}
 			if (markStart < len) {
-				context().setColor(myColorMap.color(ZLTextStyle::HIGHLIGHTED_TEXT));
+				context().setColor(myProperties.color(ZLTextStyle::HIGHLIGHTED_TEXT));
 				{
 					int endPos = std::min(markStart + markLen, len);
 					if (revert) {
@@ -72,7 +72,7 @@ void ZLTextArea::drawString(ZLTextArea::Style &style, int x, int y, const char *
 						x += context().stringWidth(str + markStart, endPos - markStart, rtl);
 					}
 				}
-				context().setColor(myColorMap.color(style.textStyle()->colorStyle()));
+				context().setColor(myProperties.color(style.textStyle()->colorStyle()));
 			}
 			pos = markStart + markLen;
 		}

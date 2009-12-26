@@ -41,7 +41,7 @@ const std::string &ZLTextView::typeId() const {
 	return TYPE_ID;
 }
 
-ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myTextArea(context, *this), myPaintState(NOTHING_TO_PAINT), mySelectionModelIsUpToDate(true), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
+ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myTextArea(context, *this), myPaintState(NOTHING_TO_PAINT), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
 }
 
 ZLTextView::~ZLTextView() {
@@ -115,9 +115,10 @@ void ZLTextView::scrollToStartOfText() {
 		return;
 	}
 
-	if (!textArea().startCursor().isNull() &&
-			textArea().startCursor().isStartOfParagraph() &&
-			textArea().startCursor().paragraphCursor().isFirst()) {
+	const ZLTextWordCursor &startCursor = textArea().startCursor();
+	if (!startCursor.isNull() &&
+			startCursor.isStartOfParagraph() &&
+			startCursor.paragraphCursor().isFirst()) {
 		return;
 	}
 
@@ -185,14 +186,16 @@ void ZLTextView::gotoParagraph(int num, bool end) {
 		return;
 	}
 
-	if (!textArea().startCursor().isNull() &&
-			textArea().startCursor().isStartOfParagraph() &&
-			textArea().startCursor().paragraphCursor().isFirst() &&
-			(num >= (int)textArea().startCursor().paragraphCursor().index()) &&
-			!textArea().endCursor().isNull() &&
-			textArea().endCursor().isEndOfParagraph() &&
-			textArea().endCursor().paragraphCursor().isLast() &&
-			(num <= (int)textArea().endCursor().paragraphCursor().index())) {
+	const ZLTextWordCursor &startCursor = textArea().startCursor();
+	const ZLTextWordCursor &endCursor = textArea().endCursor();
+	if (!startCursor.isNull() &&
+			startCursor.isStartOfParagraph() &&
+			startCursor.paragraphCursor().isFirst() &&
+			(num >= (int)startCursor.paragraphCursor().index()) &&
+			!endCursor.isNull() &&
+			endCursor.isEndOfParagraph() &&
+			endCursor.paragraphCursor().isLast() &&
+			(num <= (int)endCursor.paragraphCursor().index())) {
 		return;
 	}
 
@@ -235,8 +238,9 @@ void ZLTextView::gotoParagraph(int num, bool end) {
 
 void ZLTextView::gotoPosition(int paragraphIndex, int elementIndex, int charIndex) {
 	gotoParagraph(paragraphIndex, false);
-	if (!textArea().startCursor().isNull() && 
-			((int)textArea().startCursor().paragraphCursor().index() == paragraphIndex)) {
+	const ZLTextWordCursor &startCursor = textArea().startCursor();
+	if (!startCursor.isNull() && 
+			((int)startCursor.paragraphCursor().index() == paragraphIndex)) {
 		moveStartCursor(paragraphIndex, elementIndex, charIndex);
 	}
 }
@@ -264,9 +268,10 @@ void ZLTextView::search(const std::string &text, bool ignoreCase, bool wholeText
 	}
 
 	model->search(text, startIndex, endIndex, ignoreCase);
-	if (!textArea().startCursor().isNull()) {
+	const ZLTextWordCursor &startCursor = textArea().startCursor();
+	if (!startCursor.isNull()) {
 		rebuildPaintInfo(true);
-		ZLTextMark position = textArea().startCursor().position();
+		ZLTextMark position = startCursor.position();
 		gotoMark(wholeText ?
 							(backward ? model->lastMark() : model->firstMark()) :
 							(backward ? model->previousMark(position) : model->nextMark(position)));
@@ -285,12 +290,16 @@ void ZLTextView::findNext() {
 }
 
 bool ZLTextView::canFindPrevious() const {
-	return !textArea().startCursor().isNull() && (myTextArea.model()->previousMark(textArea().startCursor().position()).ParagraphIndex > -1);
+	const ZLTextWordCursor &startCursor = textArea().startCursor();
+	return
+		!startCursor.isNull() &&
+		(textArea().model()->previousMark(startCursor.position()).ParagraphIndex > -1);
 }
 
 void ZLTextView::findPrevious() {
-	if (!textArea().startCursor().isNull()) {
-		gotoMark(myTextArea.model()->previousMark(textArea().startCursor().position()));
+	const ZLTextWordCursor &startCursor = textArea().startCursor();
+	if (!startCursor.isNull()) {
+		gotoMark(myTextArea.model()->previousMark(startCursor.position()));
 	}
 }
 
@@ -342,8 +351,9 @@ bool ZLTextView::onStylusPress(int x, int y) {
 					preparePaintInfo();
 				}
 			}
-			int firstParagraphIndex = textArea().startCursor().paragraphCursor().index();
-			if (textArea().startCursor().isStartOfParagraph()) {
+			const ZLTextWordCursor &startCursor = textArea().startCursor();
+			int firstParagraphIndex = startCursor.paragraphCursor().index();
+			if (startCursor.isStartOfParagraph()) {
 				--firstParagraphIndex;
 			}
 			if (firstParagraphIndex >= paragraphIndex) {

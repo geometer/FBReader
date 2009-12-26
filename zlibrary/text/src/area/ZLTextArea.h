@@ -43,14 +43,16 @@ class ZLTextArea {
 public:
 	class Style;
 
-	class ColorMap {
+	class Properties {
 
 	public:
+		virtual shared_ptr<ZLTextStyle> baseStyle() const = 0;
 		virtual ZLColor color(const std::string &style = std::string()) const = 0;
+		virtual bool isSelectionEnabled() const = 0;
 	};
 
 public:
-	ZLTextArea(ZLPaintContext &context, const ColorMap &colorMap);
+	ZLTextArea(ZLPaintContext &context, const Properties &properties);
 	~ZLTextArea();
 
 public:
@@ -78,9 +80,12 @@ public:
 
 	ZLTextSelectionModel &selectionModel();
 
-public:
+	void paint();
+
+public: // TODO: change to private
 	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 
+private:
 	void prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y);
 
 	void drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
@@ -95,7 +100,7 @@ public:
 
 private:
 	ZLPaintContext &myContext;
-	const ColorMap &myColorMap;
+	const Properties &myProperties;
 	shared_ptr<ZLMirroredPaintContext> myMirroredContext;
 	size_t myHOffset;
 	size_t myVOffset;
@@ -104,19 +109,21 @@ private:
 
 	shared_ptr<ZLTextModel> myModel;
 
-public:
+public: // TODO: change to private
 	ZLTextWordCursor myStartCursor;
 	ZLTextWordCursor myEndCursor;
 
 	std::vector<ZLTextLineInfoPtr> myLineInfos;
 	std::set<ZLTextLineInfoPtr> myLineInfoCache;
 
+private:
 	ZLTextElementMap myTextElementMap;
 	std::vector<ZLTextElementMap> myTextElementsToRevert;
 	ZLTextTreeNodeMap myTreeNodeMap;
 
-private:
 	shared_ptr<ZLTextSelectionModel> mySelectionModel;
+
+friend class ZLTextSelectionModel;
 };
 
 inline ZLPaintContext &ZLTextArea::context() const { return myMirroredContext.isNull() ? myContext : (ZLPaintContext&)*myMirroredContext; }

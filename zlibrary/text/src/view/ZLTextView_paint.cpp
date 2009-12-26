@@ -19,58 +19,23 @@
 
 #include <algorithm>
 
-#include <ZLUnicodeUtil.h>
-
 #include "ZLTextView.h"
 #include "ZLTextPositionIndicator.h"
-#include "../area/ZLTextLineInfo.h"
-#include "../area/ZLTextAreaStyle.h"
-#include "../area/ZLTextSelectionModel.h"
 
 void ZLTextView::paint() {
+	context().clear(backgroundColor());
+
 	myTextArea.setOffsets(
 		myTextArea.isRtl() ? rightMargin() : leftMargin(), topMargin()
 	);
 
 	preparePaintInfo();
 
-	myTextArea.myTextElementMap.clear();
-	myTextArea.myTreeNodeMap.clear();
-	myTextArea.context().clear(backgroundColor());
-
-	if (textArea().isEmpty()) {
+	if (myTextArea.isEmpty()) {
 		return;
 	}
 
-	std::vector<size_t> labels;
-	labels.reserve(myTextArea.myLineInfos.size() + 1);
-	labels.push_back(0);
-
-	ZLTextArea::Style style(textArea(), baseStyle());
-
-	int y = 0;
-	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myTextArea.myLineInfos.begin(); it != myTextArea.myLineInfos.end(); ++it) {
-		const ZLTextLineInfo &info = **it;
-		myTextArea.prepareTextLine(style, info, y);
-		y += info.Height + info.Descent + info.VSpaceAfter;
-		labels.push_back(myTextArea.myTextElementMap.size());
-	}
-
-	if (!isSelectionEnabled()) {
-		myTextArea.selectionModel().clear();
-	} else if (!mySelectionModelIsUpToDate) {
-		myTextArea.selectionModel().update();
-	}
-	mySelectionModelIsUpToDate = true;
-
-	y = 0;
-	int index = 0;
-	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myTextArea.myLineInfos.begin(); it != myTextArea.myLineInfos.end(); ++it) {
-		const ZLTextLineInfo &info = **it;
-		myTextArea.drawTextLine(style, info, y, labels[index], labels[index + 1]);
-		y += info.Height + info.Descent + info.VSpaceAfter;
-		++index;
-	}
+	myTextArea.paint();
 
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR)) {

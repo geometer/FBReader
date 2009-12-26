@@ -26,7 +26,7 @@
 #include "ZLTextArea.h"
 #include "ZLTextAreaStyle.h"
 
-ZLTextSelectionModel::ZLTextSelectionModel(ZLTextArea &area) : myArea(area), myIsActive(false), myIsEmpty(true), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
+ZLTextSelectionModel::ZLTextSelectionModel(ZLTextArea &area) : myArea(area), myIsActive(false), myIsEmpty(true), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true), myIsValid(true) {
 }
 
 ZLTextSelectionModel::~ZLTextSelectionModel() {
@@ -186,6 +186,7 @@ void ZLTextSelectionModel::clear() {
 	myTextIsUpToDate = true;
 	myRanges.clear();
 	myRangeVectorIsUpToDate = true;
+	myIsValid = true;
 }
 
 const std::vector<ZLTextSelectionModel::Range> &ZLTextSelectionModel::ranges() const {
@@ -362,7 +363,15 @@ bool ZLTextSelectionModel::isEmpty() const {
 	return !r.first.Exists || !r.second.Exists || (r.first == r.second);
 }
 
+void ZLTextSelectionModel::invalidate() {
+	myIsValid = false;
+}
+
 void ZLTextSelectionModel::update() {
+	if (myIsValid) {
+		return;
+	}
+	myIsValid = true;
 	setBound(mySecondBound, myStoredX, myStoredY);
 	copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 	myTextIsUpToDate = false;

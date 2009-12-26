@@ -44,7 +44,7 @@ class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 class ZLTextSelectionModel;
 
-class ZLTextView : public ZLView, public ZLTextArea::ColorMap {
+class ZLTextView : public ZLView, public ZLTextArea::Properties {
 
 public:
 	static const int DOUBLE_CLICK_DELAY;
@@ -101,8 +101,6 @@ public:
 
 	void highlightParagraph(int paragraphNumber);
 
-	virtual bool isSelectionEnabled() const = 0;
-
 protected:
 	bool onStylusPress(int x, int y);
 	bool onStylusMove(int x, int y);
@@ -125,7 +123,6 @@ protected:
 	virtual int rightMargin() const = 0;
 	virtual int topMargin() const = 0;
 	virtual int bottomMargin() const = 0;
-	virtual shared_ptr<ZLTextStyle> baseStyle() const = 0;
 
 private:
 	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
@@ -179,7 +176,6 @@ private:
 	std::vector<size_t> myTextSize;
 	std::vector<size_t> myTextBreaks;
 
-	bool mySelectionModelIsUpToDate;
 	shared_ptr<ZLRunnable> mySelectionScroller;
 
 	shared_ptr<PositionIndicator> myPositionIndicator;
@@ -196,8 +192,6 @@ private:
 		int X;
 		int Y;
 	} myDoubleClickInfo;
-
-friend class ZLTextSelectionScroller;
 };
 
 inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }

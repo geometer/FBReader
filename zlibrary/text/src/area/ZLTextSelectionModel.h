@@ -110,6 +110,8 @@ private:
 
 	mutable std::vector<Range> myRanges;
 	mutable bool myRangeVectorIsUpToDate;
+
+	bool myIsValid;
 };
 
 #endif /* __ZLTEXTSELECTIONMODEL_H__ */

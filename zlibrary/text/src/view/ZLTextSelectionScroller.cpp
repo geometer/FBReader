@@ -21,6 +21,7 @@
 
 #include "ZLTextSelectionScroller.h"
 #include "ZLTextView.h"
+#include "../area/ZLTextSelectionModel.h"
 
 ZLTextSelectionScroller::ZLTextSelectionScroller(ZLTextView &view) : myView(view), myDirection(DONT_SCROLL) {
 }
@@ -32,7 +33,7 @@ void ZLTextSelectionScroller::setDirection(Direction direction) {
 void ZLTextSelectionScroller::run() {
 	if (myDirection != DONT_SCROLL) {
 		myView.scrollPage(myDirection == SCROLL_FORWARD, ZLTextView::SCROLL_LINES, 1);
-		myView.mySelectionModelIsUpToDate = false;
+		myView.selectionModel().invalidate();
 		ZLApplication::Instance().refreshWindow();
 	}
 }

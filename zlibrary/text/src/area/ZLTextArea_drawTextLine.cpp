@@ -201,7 +201,7 @@ void ZLTextArea::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 		}
 		int len = info.End.charIndex() - start;
 		const ZLTextWord &word = (const ZLTextWord&)info.End.element();
-		context().setColor(myColorMap.color(style.textStyle()->colorStyle()));
+		context().setColor(myProperties.color(style.textStyle()->colorStyle()));
 		const int x = it->XStart;
 		const int y = it->YEnd - style.elementDescent(word) - style.textStyle()->verticalShift();
 		drawWord(style, x, y, word, start, len, it->AddHyphenationSign);

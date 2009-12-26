@@ -17,15 +17,18 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <ZLMirroredPaintContext.h>
 
 #include <ZLTextModel.h>
 
 #include "ZLTextArea.h"
+#include "ZLTextAreaStyle.h"
 #include "ZLTextLineInfo.h"
 #include "ZLTextSelectionModel.h"
 
-ZLTextArea::ZLTextArea(ZLPaintContext &context, const ColorMap &colorMap) : myContext(context), myColorMap(colorMap), myWidth(0), myHeight(0) {
+ZLTextArea::ZLTextArea(ZLPaintContext &context, const Properties &properties) : myContext(context), myProperties(properties), myWidth(0), myHeight(0) {
 }
 
 ZLTextArea::~ZLTextArea() {
@@ -141,7 +144,7 @@ void ZLTextArea::drawSelectionRectangle(int left, int top, int right, int bottom
 	left = std::max(left, 0);
 	right = std::min(right, (int)width() - 1);
 	if (left < right) {
-		context().setFillColor(myColorMap.color(ZLTextStyle::SELECTION_BACKGROUND));
+		context().setFillColor(myProperties.color(ZLTextStyle::SELECTION_BACKGROUND));
 		context().fillRectangle(
 			myHOffset + left,
 			myVOffset + top,
@@ -156,4 +159,40 @@ ZLTextSelectionModel &ZLTextArea::selectionModel() {
 		mySelectionModel = new ZLTextSelectionModel(*this);
 	}
 	return *mySelectionModel;
+}
+
+void ZLTextArea::paint() {
+	myTextElementMap.clear();
+	myTreeNodeMap.clear();
+
+	std::vector<size_t> labels;
+	labels.reserve(myLineInfos.size() + 1);
+	labels.push_back(0);
+
+	ZLTextArea::Style style(*this, myProperties.baseStyle());
+
+	int y = 0;
+	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+		const ZLTextLineInfo &info = **it;
+		prepareTextLine(style, info, y);
+		y += info.Height + info.Descent + info.VSpaceAfter;
+		labels.push_back(myTextElementMap.size());
+	}
+
+	if (!mySelectionModel.isNull()) {
+		if (!myProperties.isSelectionEnabled()) {
+			mySelectionModel->clear();
+		} else {
+			mySelectionModel->update();
+		}
+	}
+
+	y = 0;
+	int index = 0;
+	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myLineInfos.begin(); it != myLineInfos.end(); ++it) {
+		const ZLTextLineInfo &info = **it;
+		drawTextLine(style, info, y, labels[index], labels[index + 1]);
+		y += info.Height + info.Descent + info.VSpaceAfter;
+		++index;
+	}
 }

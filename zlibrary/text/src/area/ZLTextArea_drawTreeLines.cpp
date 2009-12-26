@@ -28,7 +28,7 @@ void ZLTextArea::drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int
 	x += myHOffset;
 	y += myVOffset;
 
-	context().setColor(myColorMap.color(ZLTextStyle::TREE_LINES));
+	context().setColor(myProperties.color(ZLTextStyle::TREE_LINES));
 
 	const int qstep = (context().stringHeight() + 2) / 3;
 
