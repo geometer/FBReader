@@ -130,7 +130,6 @@ private:
 
 	void clear();
 
-	bool pageIsEmpty() const;
 	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;
 	ZLTextWordCursor findLineFromEnd(unsigned int overlappingValue) const;
 	ZLTextWordCursor findPercentFromStart(unsigned int percent) const;

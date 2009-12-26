@@ -85,6 +85,8 @@ public:
 public: // TODO: change to private
 	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 
+	bool visiblePageIsEmpty() const;
+
 private:
 	void prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y);
 

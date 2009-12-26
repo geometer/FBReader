@@ -87,15 +87,6 @@ void ZLTextView::moveEndCursor(int paragraphIndex, int elementIndex, int charInd
 	myPaintState = END_IS_KNOWN;
 }
 
-bool ZLTextView::pageIsEmpty() const {
-	for (std::vector<ZLTextLineInfoPtr>::const_iterator it = myTextArea.myLineInfos.begin(); it != myTextArea.myLineInfos.end(); ++it) {
-		if ((*it)->IsVisible) {
-			return false;
-		}
-	}
-	return true;
-}
-
 ZLTextWordCursor ZLTextView::findLineFromStart(unsigned int overlappingValue) const {
 	if (myTextArea.myLineInfos.empty() || (overlappingValue == 0)) {
 		return ZLTextWordCursor();
@@ -196,7 +187,7 @@ void ZLTextView::preparePaintInfo() {
 
 				if (!startCursor.isNull()) {
 					ZLTextWordCursor endCursor = buildInfos(startCursor);
-					if (!pageIsEmpty() && ((myScrollingMode != KEEP_LINES) || (endCursor != myTextArea.myEndCursor))) {
+					if (!myTextArea.visiblePageIsEmpty() && ((myScrollingMode != KEEP_LINES) || (endCursor != myTextArea.myEndCursor))) {
 						myTextArea.myStartCursor = startCursor;
 						myTextArea.myEndCursor = endCursor;
 						break;
@@ -237,7 +228,7 @@ void ZLTextView::preparePaintInfo() {
 						break;
 				}
 				myTextArea.myEndCursor = buildInfos(myTextArea.myStartCursor);
-				if (pageIsEmpty()) {
+				if (myTextArea.visiblePageIsEmpty()) {
 					myTextArea.myStartCursor = findStart(myTextArea.myStartCursor, LINE_UNIT, 1);
 					myTextArea.myEndCursor = buildInfos(myTextArea.myStartCursor);
 				}
@@ -245,7 +236,7 @@ void ZLTextView::preparePaintInfo() {
 			break;
 		case START_IS_KNOWN:
 			myTextArea.myEndCursor = buildInfos(myTextArea.myStartCursor);
-			if (pageIsEmpty()) {
+			if (myTextArea.visiblePageIsEmpty()) {
 				ZLTextWordCursor startCursor = findLineFromStart(1);
 				if (!startCursor.isNull()) {
 					myTextArea.myStartCursor = startCursor;
