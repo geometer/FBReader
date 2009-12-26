@@ -138,7 +138,6 @@ private:
 
 	shared_ptr<ZLTextView::PositionIndicator> positionIndicator();
 
-	int viewHeight() const;
 	int textHeight() const;
 
 	void gotoCharIndex(size_t charIndex);
@@ -183,9 +182,5 @@ private:
 };
 
 inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }
-
-inline int ZLTextView::viewHeight() const {
-	return std::max(context().height() - topMargin() - bottomMargin(), 1);
-}
 
 #endif /* __ZLTEXTVIEW_H__ */

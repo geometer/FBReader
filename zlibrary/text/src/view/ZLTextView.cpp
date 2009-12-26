@@ -461,12 +461,13 @@ void ZLTextView::highlightParagraph(int paragraphIndex) {
 }
 
 int ZLTextView::textHeight() const {
+	int viewHeight = context().height() - topMargin() - bottomMargin();
+
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR)) {
-		return viewHeight() - indicatorInfo->height() - indicatorInfo->offset();
-	} else {
-		return viewHeight();
+		viewHeight -= indicatorInfo->height() + indicatorInfo->offset();
 	}
+	return std::max(viewHeight, 1);
 }
 
 void ZLTextView::gotoCharIndex(size_t charIndex) {
