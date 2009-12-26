@@ -92,11 +92,11 @@ int ZLTextView::PositionIndicator::top() const {
 }
 
 int ZLTextView::PositionIndicator::left() const {
-	return myTextView.lineStartMargin();
+	return myTextView.textArea().hOffset();
 }
 
 int ZLTextView::PositionIndicator::right() const {
-	return myTextView.lineStartMargin() + myTextView.viewWidth() - myExtraWidth - 1;
+	return myTextView.textArea().hOffset() + myTextView.textArea().width() - myExtraWidth - 1;
 }
 
 const std::vector<size_t> &ZLTextView::PositionIndicator::textSize() const {

@@ -33,6 +33,7 @@ class ZLMirroredPaintContext;
 
 class ZLTextModel;
 
+class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 struct ZLTextTreeNodeInfo;
 
@@ -53,7 +54,10 @@ public:
 
 public:
 	ZLPaintContext &context() const;
+	void setOffsets(size_t hOffset, size_t vOffset);
 	void setSize(size_t width, size_t height);
+	size_t hOffset() const;
+	size_t vOffset() const;
 	size_t width() const;
 	size_t height() const;
 
@@ -67,21 +71,29 @@ public:
 	const ZLTextWordCursor &endCursor() const;
 	bool isEmpty() const;
 
-	const ZLTextElementRectangle *elementByCoordinates(int x, int y) const;
-	const ZLTextTreeNodeRectangle *treeNodeByCoordinates(int x, int y) const;
-	int paragraphIndexByCoordinates(int x, int y) const;
+	const ZLTextElementRectangle *elementByCoordinates(int x, int y, bool absolute = true) const;
+	const ZLTextTreeNodeRectangle *treeNodeByCoordinates(int x, int y, bool absolute = true) const;
+	int paragraphIndexByCoordinates(int x, int y, bool absolute = true) const;
 
 public:
 	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 
+	void prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y);
+
 	void drawWord(ZLTextArea::Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
 	void drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
+	void drawSelectionRectangle(int left, int top, int right, int bottom);
 	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
+
+	void addRectangleToTextMap(ZLTextArea::Style &style, const ZLTextElementRectangle &rectangle);
+	void flushRevertedElements(unsigned char bidiLevel);
 
 private:
 	ZLPaintContext &myContext;
 	const ColorMap &myColorMap;
 	shared_ptr<ZLMirroredPaintContext> myMirroredContext;
+	size_t myHOffset;
+	size_t myVOffset;
 	size_t myWidth;
 	size_t myHeight;
 
@@ -103,6 +115,9 @@ inline ZLPaintContext &ZLTextArea::context() const { return myMirroredContext.is
 inline void ZLTextArea::setSize(size_t width, size_t height) { myWidth = width; myHeight = height; }
 inline size_t ZLTextArea::width() const { return myWidth; }
 inline size_t ZLTextArea::height() const { return myHeight; }
+inline void ZLTextArea::setOffsets(size_t hOffset, size_t vOffset) { myHOffset = hOffset; myVOffset = vOffset; }
+inline size_t ZLTextArea::hOffset() const { return myHOffset; }
+inline size_t ZLTextArea::vOffset() const { return myVOffset; }
 
 inline shared_ptr<ZLTextModel> ZLTextArea::model() const { return myModel; }
 inline bool ZLTextArea::isRtl() const { return !myMirroredContext.isNull(); }

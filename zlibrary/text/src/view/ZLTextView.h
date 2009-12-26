@@ -130,18 +130,13 @@ protected:
 	virtual shared_ptr<ZLTextStyle> baseStyle() const = 0;
 
 private:
-	int lineStartMargin() const;
-	int lineEndMargin() const;
-
 	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
 	void moveEndCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
 
 	void clear();
 
 	int rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
-	void prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y);
 	void drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
-	void drawSelectionRectangle(int left, int top, int right, int bottom);
 
 	bool pageIsEmpty() const;
 	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;
@@ -163,12 +158,8 @@ private:
 
 	shared_ptr<ZLTextView::PositionIndicator> positionIndicator();
 
-	int viewWidth() const;
 	int viewHeight() const;
 	int textHeight() const;
-
-	void addRectangleToTextMap(ZLTextArea::Style &style, const ZLTextElementRectangle &rectangle);
-	void flushRevertedElements(unsigned char bidiLevel);
 
 	void gotoCharIndex(size_t charIndex);
 
@@ -215,20 +206,8 @@ inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }
 inline ZLTextSelectionModel &ZLTextView::selectionModel() { return mySelectionModel; }
 inline const ZLTextSelectionModel &ZLTextView::selectionModel() const { return mySelectionModel; }
 
-inline int ZLTextView::viewWidth() const {
-	return std::max(context().width() - leftMargin() - rightMargin(), 1);
-}
-
 inline int ZLTextView::viewHeight() const {
 	return std::max(context().height() - topMargin() - bottomMargin(), 1);
-}
-
-inline int ZLTextView::lineStartMargin() const {
-	return myTextArea.isRtl() ? rightMargin() : leftMargin();
-}
-
-inline int ZLTextView::lineEndMargin() const {
-	return myTextArea.isRtl() ? leftMargin() : rightMargin();
 }
 
 #endif /* __ZLTEXTVIEW_H__ */

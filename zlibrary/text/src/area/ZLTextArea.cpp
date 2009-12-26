@@ -61,7 +61,12 @@ void ZLTextArea::clear() {
 	myTreeNodeMap.clear();
 }
 
-int ZLTextArea::paragraphIndexByCoordinates(int x, int y) const {
+int ZLTextArea::paragraphIndexByCoordinates(int x, int y, bool absolute) const {
+	if (absolute) {
+		x -= myHOffset;
+		y -= myVOffset;
+	}
+
 	x = realX(x);
 	int paragraphIndex = -1;
 	int yBottom = -1;
@@ -106,14 +111,38 @@ int ZLTextArea::paragraphIndexByCoordinates(int x, int y) const {
 	return -1;
 }
 
-const ZLTextElementRectangle *ZLTextArea::elementByCoordinates(int x, int y) const {
+const ZLTextElementRectangle *ZLTextArea::elementByCoordinates(int x, int y, bool absolute) const {
+	if (absolute) {
+		x -= myHOffset;
+		y -= myVOffset;
+	}
+
 	ZLTextElementIterator it =
 		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextRectangle::RangeChecker(realX(x), y));
 	return (it != myTextElementMap.end()) ? &*it : 0;
 }
 
-const ZLTextTreeNodeRectangle *ZLTextArea::treeNodeByCoordinates(int x, int y) const {
+const ZLTextTreeNodeRectangle *ZLTextArea::treeNodeByCoordinates(int x, int y, bool absolute) const {
+	if (absolute) {
+		x -= myHOffset;
+		y -= myVOffset;
+	}
+
 	ZLTextTreeNodeMap::const_iterator it =
 		std::find_if(myTreeNodeMap.begin(), myTreeNodeMap.end(), ZLTextRectangle::RangeChecker(x, y));
 	return (it != myTreeNodeMap.end()) ? &*it : 0;
+}
+
+void ZLTextArea::drawSelectionRectangle(int left, int top, int right, int bottom) {
+	left = std::max(left, 0);
+	right = std::min(right, (int)width() - 1);
+	if (left < right) {
+		context().setFillColor(myColorMap.color(ZLTextStyle::SELECTION_BACKGROUND));
+		context().fillRectangle(
+			myHOffset + left,
+			myVOffset + top,
+			myHOffset + right,
+			myVOffset + bottom
+		);
+	}
 }

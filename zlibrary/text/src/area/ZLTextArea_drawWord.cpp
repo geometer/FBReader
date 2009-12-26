@@ -25,6 +25,9 @@
 #include "ZLTextAreaStyle.h"
 
 void ZLTextArea::drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
+	x += myHOffset;
+	y += myVOffset;
+
 	context().setColor(myColorMap.color(style.textStyle()->colorStyle()));
 	if (mark == 0) {
 		context().drawString(x, y, str, len, rtl);
