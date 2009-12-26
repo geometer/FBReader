@@ -25,6 +25,7 @@
 #include "ZLTextPositionIndicator.h"
 #include "../area/ZLTextLineInfo.h"
 #include "../area/ZLTextAreaStyle.h"
+#include "../area/ZLTextSelectionModel.h"
 
 void ZLTextView::paint() {
 	myTextArea.setOffsets(
@@ -56,9 +57,9 @@ void ZLTextView::paint() {
 	}
 
 	if (!isSelectionEnabled()) {
-		mySelectionModel.clear();
+		myTextArea.selectionModel().clear();
 	} else if (!mySelectionModelIsUpToDate) {
-		mySelectionModel.update();
+		myTextArea.selectionModel().update();
 	}
 	mySelectionModelIsUpToDate = true;
 
@@ -160,8 +161,8 @@ void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 	const ZLTextElementIterator fromIt = myTextArea.myTextElementMap.begin() + from;
 	const ZLTextElementIterator toIt = myTextArea.myTextElementMap.begin() + to;
 
-	if (!mySelectionModel.isEmpty() && (from != to)) {
-		const std::vector<ZLTextSelectionModel::Range> &ranges = mySelectionModel.ranges();
+	if (!myTextArea.selectionModel().isEmpty() && (from != to)) {
+		const std::vector<ZLTextSelectionModel::Range> &ranges = myTextArea.selectionModel().ranges();
 
 		if (!ranges.empty()) {
 			RangeVector::const_iterator rt = ranges.end();

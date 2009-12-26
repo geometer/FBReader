@@ -288,8 +288,7 @@ public:
 	bool isEnabled() const;
 
 protected:
-	ZLTextView &textView();
-	const ZLTextView &textView() const;
+	ZLTextView &textView() const;
 };
 
 class CopySelectedTextAction : public SelectionAction {

@@ -26,8 +26,9 @@
 #include <optionEntries/ZLSimpleOptionEntry.h>
 #include <ZLibrary.h>
 
-#include <ZLTextView.h>
 #include <ZLBlockTreeView.h>
+#include <ZLTextView.h>
+#include <ZLTextSelectionModel.h>
 
 #include "FBReader.h"
 #include "FBReaderActions.h"
@@ -436,12 +437,8 @@ bool SelectionAction::isEnabled() const {
 	return !selectionModel.text().empty() || !selectionModel.image().isNull();
 }
 
-ZLTextView &SelectionAction::textView() {
+ZLTextView &SelectionAction::textView() const {
 	return (ZLTextView&)*FBReader::Instance().currentView();
-}
-
-const ZLTextView &SelectionAction::textView() const {
-	return (const ZLTextView&)*FBReader::Instance().currentView();
 }
 
 bool CopySelectedTextAction::isVisible() const {

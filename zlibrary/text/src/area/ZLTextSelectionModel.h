@@ -29,11 +29,9 @@
 
 #include "ZLTextParagraphCursor.h"
 
-class ZLTextView;
 class ZLTextArea;
 class ZLImageData;
 class ZLTextElementRectangle;
-class ZLRunnable;
 
 class ZLTextSelectionModel {
 
@@ -50,7 +48,7 @@ public:
 	typedef std::pair<BoundElement,BoundElement> Range;
 
 public:
-	ZLTextSelectionModel(ZLTextView &view, ZLTextArea &area);
+	ZLTextSelectionModel(ZLTextArea &area);
 	~ZLTextSelectionModel();
 
 	void activate(int x, int y);
@@ -77,9 +75,6 @@ public:
 
 	bool isEmpty() const;
 
-	void startSelectionScrolling(bool forward);
-	void stopSelectionScrolling();
-
 private:
 	struct Bound {
 		BoundElement Before;
@@ -98,7 +93,6 @@ private:
 	void createData() const;
 
 private:
-	ZLTextView &myView;
 	ZLTextArea &myArea;
 	bool myIsActive;
 	bool myIsEmpty;
@@ -106,7 +100,6 @@ private:
 	Bound myFirstBound;
 	Bound mySecondBound;
 
-	shared_ptr<ZLRunnable> mySelectionScroller;
 	int myStoredX;
 	int myStoredY;
 

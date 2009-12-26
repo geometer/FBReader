@@ -23,11 +23,10 @@
 #include <ZLibrary.h>
 
 #include "ZLTextSelectionModel.h"
-#include "ZLTextSelectionScroller.h"
-#include "ZLTextView.h"
-#include "../area/ZLTextAreaStyle.h"
+#include "ZLTextArea.h"
+#include "ZLTextAreaStyle.h"
 
-ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view, ZLTextArea &area) : myView(view), myArea(area), myIsActive(false), myIsEmpty(true), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
+ZLTextSelectionModel::ZLTextSelectionModel(ZLTextArea &area) : myArea(area), myIsActive(false), myIsEmpty(true), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
 }
 
 ZLTextSelectionModel::~ZLTextSelectionModel() {
@@ -361,31 +360,6 @@ bool ZLTextSelectionModel::isEmpty() const {
 	}
 	Range r = internalRange();
 	return !r.first.Exists || !r.second.Exists || (r.first == r.second);
-}
-
-void ZLTextSelectionModel::startSelectionScrolling(bool forward) {
-	if (mySelectionScroller.isNull()) {
-		mySelectionScroller = new ZLTextSelectionScroller(myView);
-	}
-	ZLTextSelectionScroller::Direction direction =
-		forward ?
-			ZLTextSelectionScroller::SCROLL_FORWARD :
-			ZLTextSelectionScroller::SCROLL_BACKWARD;
-	ZLTextSelectionScroller &scroller = ((ZLTextSelectionScroller&)*mySelectionScroller);
-	if (scroller.direction() != direction) {
-		if (scroller.direction() != ZLTextSelectionScroller::DONT_SCROLL) {
-			ZLTimeManager::Instance().removeTask(mySelectionScroller);
-		}
-		((ZLTextSelectionScroller&)*mySelectionScroller).setDirection(direction);
-		ZLTimeManager::Instance().addTask(mySelectionScroller, 400);
-	}
-}
-
-void ZLTextSelectionModel::stopSelectionScrolling() {
-	if (!mySelectionScroller.isNull()) {
-		((ZLTextSelectionScroller&)*mySelectionScroller).setDirection(ZLTextSelectionScroller::DONT_SCROLL);
-		ZLTimeManager::Instance().removeTask(mySelectionScroller);
-	}
 }
 
 void ZLTextSelectionModel::update() {

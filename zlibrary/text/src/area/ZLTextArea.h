@@ -36,6 +36,7 @@ class ZLTextModel;
 class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 struct ZLTextTreeNodeInfo;
+class ZLTextSelectionModel;
 
 class ZLTextArea {
 
@@ -75,6 +76,8 @@ public:
 	const ZLTextTreeNodeRectangle *treeNodeByCoordinates(int x, int y, bool absolute = true) const;
 	int paragraphIndexByCoordinates(int x, int y, bool absolute = true) const;
 
+	ZLTextSelectionModel &selectionModel();
+
 public:
 	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 
@@ -110,6 +113,9 @@ public:
 	ZLTextElementMap myTextElementMap;
 	std::vector<ZLTextElementMap> myTextElementsToRevert;
 	ZLTextTreeNodeMap myTreeNodeMap;
+
+private:
+	shared_ptr<ZLTextSelectionModel> mySelectionModel;
 };
 
 inline ZLPaintContext &ZLTextArea::context() const { return myMirroredContext.isNull() ? myContext : (ZLPaintContext&)*myMirroredContext; }

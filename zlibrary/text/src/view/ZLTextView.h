@@ -31,16 +31,18 @@
 #include <ZLTextWord.h>
 #include <ZLTextPositionIndicatorInfo.h>
 #include <ZLTextParagraphCursor.h>
-#include <ZLTextSelectionModel.h>
 #include <ZLTextRectangle.h>
 #include <ZLTextParagraph.h>
 #include <ZLTextArea.h>
+
+class ZLRunnable;
 
 class ZLTextModel;
 class ZLTextMark;
 
 class ZLTextLineInfo;
 class ZLTextLineInfoPtr;
+class ZLTextSelectionModel;
 
 class ZLTextView : public ZLView, public ZLTextArea::ColorMap {
 
@@ -71,6 +73,7 @@ private:
 
 public:
 	const ZLTextArea &textArea() const;
+	ZLTextSelectionModel &selectionModel();
 
 	void clearCaches();
 	void forceScrollbarUpdate();
@@ -97,9 +100,6 @@ public:
 	void findPrevious();
 
 	void highlightParagraph(int paragraphNumber);
-
-	ZLTextSelectionModel &selectionModel();
-	const ZLTextSelectionModel &selectionModel() const;
 
 	virtual bool isSelectionEnabled() const = 0;
 
@@ -160,6 +160,9 @@ private:
 
 	void gotoCharIndex(size_t charIndex);
 
+	void startSelectionScrolling(bool forward);
+	void stopSelectionScrolling();
+
 private:
 	ZLTextArea myTextArea;
 
@@ -178,8 +181,8 @@ private:
 	std::vector<size_t> myTextSize;
 	std::vector<size_t> myTextBreaks;
 
-	ZLTextSelectionModel mySelectionModel;
 	bool mySelectionModelIsUpToDate;
+	shared_ptr<ZLRunnable> mySelectionScroller;
 
 	shared_ptr<PositionIndicator> myPositionIndicator;
 
@@ -200,9 +203,6 @@ friend class ZLTextSelectionScroller;
 };
 
 inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }
-
-inline ZLTextSelectionModel &ZLTextView::selectionModel() { return mySelectionModel; }
-inline const ZLTextSelectionModel &ZLTextView::selectionModel() const { return mySelectionModel; }
 
 inline int ZLTextView::viewHeight() const {
 	return std::max(context().height() - topMargin() - bottomMargin(), 1);

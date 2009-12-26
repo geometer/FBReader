@@ -25,8 +25,9 @@
 #include <ZLTextParagraph.h>
 
 #include "ZLTextView.h"
-#include "ZLTextSelectionModel.h"
+#include "ZLTextSelectionScroller.h"
 #include "ZLTextPositionIndicator.h"
+#include "../area/ZLTextSelectionModel.h"
 #include "../area/ZLTextLineInfo.h"
 #include "../area/ZLTextParagraphCursor.h"
 #include "../area/ZLTextWord.h"
@@ -40,7 +41,7 @@ const std::string &ZLTextView::typeId() const {
 	return TYPE_ID;
 }
 
-ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myTextArea(context, *this), myPaintState(NOTHING_TO_PAINT), mySelectionModel(*this, myTextArea), mySelectionModelIsUpToDate(true), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
+ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myTextArea(context, *this), myPaintState(NOTHING_TO_PAINT), mySelectionModelIsUpToDate(true), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
 }
 
 ZLTextView::~ZLTextView() {
@@ -49,8 +50,6 @@ ZLTextView::~ZLTextView() {
 
 void ZLTextView::clear() {
 	myTextArea.clear();
-
-	mySelectionModel.clear();
 
 	myPaintState = NOTHING_TO_PAINT;
 
@@ -296,14 +295,14 @@ void ZLTextView::findPrevious() {
 }
 
 bool ZLTextView::onStylusPress(int x, int y) {
-	mySelectionModel.stopSelectionScrolling();
+	stopSelectionScrolling();
 
 	myDoubleClickInfo.update(x, y, true);
 	if (myDoubleClickInfo.Count > 10) {
 		return true;
 	}
 
-	mySelectionModel.deactivate();
+	myTextArea.selectionModel().deactivate();
 
 	shared_ptr<ZLTextModel> model = myTextArea.model();
   if (model.isNull()) {
@@ -362,7 +361,7 @@ bool ZLTextView::onStylusPress(int x, int y) {
 
 void ZLTextView::activateSelection(int x, int y) {
 	if (isSelectionEnabled()) {
-		mySelectionModel.activate(myTextArea.realX(x), y);
+		myTextArea.selectionModel().activate(myTextArea.realX(x), y);
 		ZLApplication::Instance().refreshWindow();
 	}
 }
@@ -384,20 +383,20 @@ bool ZLTextView::onStylusMove(int x, int y) {
 }
 
 bool ZLTextView::onStylusMovePressed(int x, int y) {
-	switch (mySelectionModel.extendTo(myTextArea.realX(x), y)) {
+	switch (myTextArea.selectionModel().extendTo(myTextArea.realX(x), y)) {
 		case ZLTextSelectionModel::BOUND_NOT_CHANGED:
-			mySelectionModel.stopSelectionScrolling();
+			stopSelectionScrolling();
 			break;
 		case ZLTextSelectionModel::BOUND_CHANGED:
-			mySelectionModel.stopSelectionScrolling();
+			stopSelectionScrolling();
 			ZLApplication::Instance().refreshWindow();
 			break;
 		case ZLTextSelectionModel::BOUND_OVER_BEFORE:
-			mySelectionModel.startSelectionScrolling(false);
+			startSelectionScrolling(false);
 			ZLApplication::Instance().refreshWindow();
 			break;
 		case ZLTextSelectionModel::BOUND_OVER_AFTER:
-			mySelectionModel.startSelectionScrolling(true);
+			startSelectionScrolling(true);
 			ZLApplication::Instance().refreshWindow();
 			break;
 	}
@@ -408,12 +407,12 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 	if (count > 20) {
 		return true;
 	} else if (count > 10) {
-		mySelectionModel.extendWordSelectionToParagraph();
+		myTextArea.selectionModel().extendWordSelectionToParagraph();
 		ZLApplication::Instance().refreshWindow();
 		myDoubleClickInfo.Count = 20;
 		return true;
 	} else if (count > 2) {
-		if (mySelectionModel.selectWord(myTextArea.realX(x), y)) {
+		if (myTextArea.selectionModel().selectWord(myTextArea.realX(x), y)) {
 			ZLApplication::Instance().refreshWindow();
 			myDoubleClickInfo.Count = 10;
 			return true;
@@ -421,7 +420,7 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 			myDoubleClickInfo.Count = 0;
 		}
 	} else {
-		mySelectionModel.clear();
+		myTextArea.selectionModel().clear();
 		ZLApplication::Instance().refreshWindow();
 		return false;
 	}
@@ -430,7 +429,7 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 }
 
 bool ZLTextView::onStylusRelease(int x, int y) {
-	mySelectionModel.stopSelectionScrolling();
+	stopSelectionScrolling();
 
 	myDoubleClickInfo.update(x, y, false);
 
@@ -438,7 +437,7 @@ bool ZLTextView::onStylusRelease(int x, int y) {
 		return onStylusClick(x, y, myDoubleClickInfo.Count);
 	}
 
-	mySelectionModel.deactivate();
+	myTextArea.selectionModel().deactivate();
 	return false;
 }
 
@@ -559,7 +558,7 @@ void ZLTextView::onScrollbarMoved(Direction direction, size_t full, size_t from,
 		return;
 	}
 
-	mySelectionModel.deactivate();
+	myTextArea.selectionModel().deactivate();
 
   if (myTextArea.model().isNull()) {
 	  return;
@@ -621,4 +620,33 @@ void ZLTextView::DoubleClickInfo::update(int x, int y, bool press) {
 	X = x;
 	Y = y;
 	Time = current;
+}
+
+ZLTextSelectionModel &ZLTextView::selectionModel() {
+	return myTextArea.selectionModel();
+}
+
+void ZLTextView::startSelectionScrolling(bool forward) {
+	if (mySelectionScroller.isNull()) {
+		mySelectionScroller = new ZLTextSelectionScroller(*this);
+	}
+	ZLTextSelectionScroller::Direction direction =
+		forward ?
+			ZLTextSelectionScroller::SCROLL_FORWARD :
+			ZLTextSelectionScroller::SCROLL_BACKWARD;
+	ZLTextSelectionScroller &scroller = ((ZLTextSelectionScroller&)*mySelectionScroller);
+	if (scroller.direction() != direction) {
+		if (scroller.direction() != ZLTextSelectionScroller::DONT_SCROLL) {
+			ZLTimeManager::Instance().removeTask(mySelectionScroller);
+		}
+		((ZLTextSelectionScroller&)*mySelectionScroller).setDirection(direction);
+		ZLTimeManager::Instance().addTask(mySelectionScroller, 400);
+	}
+}
+
+void ZLTextView::stopSelectionScrolling() {
+	if (!mySelectionScroller.isNull()) {
+		((ZLTextSelectionScroller&)*mySelectionScroller).setDirection(ZLTextSelectionScroller::DONT_SCROLL);
+		ZLTimeManager::Instance().removeTask(mySelectionScroller);
+	}
 }

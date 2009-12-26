@@ -23,6 +23,7 @@
 
 #include "ZLTextArea.h"
 #include "ZLTextLineInfo.h"
+#include "ZLTextSelectionModel.h"
 
 ZLTextArea::ZLTextArea(ZLPaintContext &context, const ColorMap &colorMap) : myContext(context), myColorMap(colorMap), myWidth(0), myHeight(0) {
 }
@@ -59,6 +60,10 @@ void ZLTextArea::clear() {
 	myLineInfos.clear();
 	myTextElementMap.clear();
 	myTreeNodeMap.clear();
+
+	if (!mySelectionModel.isNull()) {
+		mySelectionModel->clear();
+	}
 }
 
 int ZLTextArea::paragraphIndexByCoordinates(int x, int y, bool absolute) const {
@@ -144,4 +149,11 @@ void ZLTextArea::drawSelectionRectangle(int left, int top, int right, int bottom
 			myVOffset + bottom
 		);
 	}
+}
+
+ZLTextSelectionModel &ZLTextArea::selectionModel() {
+	if (mySelectionModel.isNull()) {
+		mySelectionModel = new ZLTextSelectionModel(*this);
+	}
+	return *mySelectionModel;
 }
