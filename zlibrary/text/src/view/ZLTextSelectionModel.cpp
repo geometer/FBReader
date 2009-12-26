@@ -23,10 +23,14 @@
 #include <ZLibrary.h>
 
 #include "ZLTextSelectionModel.h"
+#include "ZLTextSelectionScroller.h"
 #include "ZLTextView.h"
 #include "../area/ZLTextAreaStyle.h"
 
 ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view, ZLTextArea &area) : myView(view), myArea(area), myIsActive(false), myIsEmpty(true), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
+}
+
+ZLTextSelectionModel::~ZLTextSelectionModel() {
 }
 
 void ZLTextSelectionModel::clearData() const {
@@ -561,21 +565,6 @@ void ZLTextSelectionModel::extendWordSelectionToParagraph() {
 	myRangeVectorIsUpToDate = false;
 
 	copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
-}
-
-ZLTextSelectionScroller::ZLTextSelectionScroller(ZLTextView &view) : myView(view), myDirection(DONT_SCROLL) {
-}
-
-void ZLTextSelectionScroller::setDirection(Direction direction) {
-	myDirection = direction;
-}
-
-void ZLTextSelectionScroller::run() {
-	if (myDirection != DONT_SCROLL) {
-		myView.scrollPage(myDirection == SCROLL_FORWARD, ZLTextView::SCROLL_LINES, 1);
-		myView.mySelectionModelIsUpToDate = false;
-		ZLApplication::Instance().refreshWindow();
-	}
 }
 
 void ZLTextSelectionModel::copySelectionToClipboard(ZLDialogManager::ClipboardType type) const {

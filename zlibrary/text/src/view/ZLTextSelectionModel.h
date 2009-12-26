@@ -20,12 +20,10 @@
 #ifndef __ZLTEXTSELECTIONMODEL_H__
 #define __ZLTEXTSELECTIONMODEL_H__
 
-#include <map>
 #include <set>
 #include <string>
 
 #include <shared_ptr.h>
-#include <ZLRunnable.h>
 
 #include <ZLDialogManager.h>
 
@@ -35,6 +33,7 @@ class ZLTextView;
 class ZLTextArea;
 class ZLImageData;
 class ZLTextElementRectangle;
+class ZLRunnable;
 
 class ZLTextSelectionModel {
 
@@ -52,6 +51,7 @@ public:
 
 public:
 	ZLTextSelectionModel(ZLTextView &view, ZLTextArea &area);
+	~ZLTextSelectionModel();
 
 	void activate(int x, int y);
 	bool extendTo(int x, int y);
@@ -111,31 +111,5 @@ private:
 	mutable std::vector<Range> myRanges;
 	mutable bool myRangeVectorIsUpToDate;
 };
-
-class ZLTextSelectionScroller : public ZLRunnable {
-
-public:
-	enum Direction {
-		SCROLL_FORWARD,
-		SCROLL_BACKWARD,
-		DONT_SCROLL
-	};
-
-public:
-	ZLTextSelectionScroller(ZLTextView &view);
-	void setDirection(Direction direction);
-	Direction direction() const;
-
-private:
-	void run();
-
-private:
-	ZLTextView &myView;
-	Direction myDirection;
-};
-
-inline ZLTextSelectionScroller::Direction ZLTextSelectionScroller::direction() const {
-	return myDirection;
-}
 
 #endif /* __ZLTEXTSELECTIONMODEL_H__ */
