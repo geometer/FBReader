@@ -134,11 +134,6 @@ private:
 	ZLTextWordCursor findLineFromEnd(unsigned int overlappingValue) const;
 	ZLTextWordCursor findPercentFromStart(unsigned int percent) const;
 
-	void skip(ZLTextWordCursor &paragraph, ZLTextArea::SizeUnit unit, int size);
-	ZLTextWordCursor findStart(const ZLTextWordCursor &end, ZLTextArea::SizeUnit unit, int textHeight);
-
-	ZLTextWordCursor buildInfos(const ZLTextWordCursor &start);
-
 	std::vector<size_t>::const_iterator nextBreakIterator() const;
 
 	shared_ptr<ZLTextView::PositionIndicator> positionIndicator();

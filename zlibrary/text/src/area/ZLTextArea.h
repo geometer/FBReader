@@ -83,18 +83,22 @@ public:
 	void paint();
 
 public: // TODO: change to private
-	ZLTextLineInfoPtr processTextLine(Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
-
-	bool visiblePageIsEmpty() const;
-
 	enum SizeUnit {
 		PIXEL_UNIT,
 		LINE_UNIT
 	};
-	int infoHeight(const ZLTextLineInfo &info, SizeUnit unit);
-	int paragraphHeight(const ZLTextWordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit);
+
+	ZLTextWordCursor buildInfos(const ZLTextWordCursor &start);
+	ZLTextWordCursor findStart(const ZLTextWordCursor &end, SizeUnit unit, int textHeight);
+	bool visiblePageIsEmpty() const;
 
 private:
+	int infoHeight(const ZLTextLineInfo &info, SizeUnit unit);
+	int paragraphHeight(const ZLTextWordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit);
+	void skip(ZLTextWordCursor &paragraph, SizeUnit unit, int size);
+
+	ZLTextLineInfoPtr processTextLine(Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
+
 	void prepareTextLine(Style &style, const ZLTextLineInfo &info, int y);
 
 	void drawTextLine(Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
