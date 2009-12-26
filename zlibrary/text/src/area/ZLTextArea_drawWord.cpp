@@ -24,7 +24,7 @@
 #include "ZLTextArea.h"
 #include "ZLTextAreaStyle.h"
 
-void ZLTextArea::drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
+void ZLTextArea::drawString(Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl) {
 	x += myHOffset;
 	y += myVOffset;
 
@@ -86,7 +86,7 @@ void ZLTextArea::drawString(ZLTextArea::Style &style, int x, int y, const char *
 	}
 }
 
-void ZLTextArea::drawWord(ZLTextArea::Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
+void ZLTextArea::drawWord(Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign) {
 	if ((start == 0) && (length == -1)) {
 		drawString(style, x, y, word.Data, word.Size, word.mark(), 0, word.BidiLevel % 2 == 1);
 	} else {

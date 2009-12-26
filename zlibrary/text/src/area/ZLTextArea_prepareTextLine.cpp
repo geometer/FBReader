@@ -24,7 +24,7 @@
 #include "ZLTextLineInfo.h"
 #include "ZLTextAreaStyle.h"
 
-void ZLTextArea::addRectangleToTextMap(ZLTextArea::Style &style, const ZLTextElementRectangle &rectangle) {
+void ZLTextArea::addRectangleToTextMap(Style &style, const ZLTextElementRectangle &rectangle) {
 	const unsigned char index = style.bidiLevel() - (isRtl() ? 1 : 0);
 	if (index > 0) {
 		while (myTextElementsToRevert.size() < index) {
@@ -57,7 +57,7 @@ void ZLTextArea::flushRevertedElements(unsigned char bidiLevel) {
 	}
 }
 
-void ZLTextArea::prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y) {
+void ZLTextArea::prepareTextLine(Style &style, const ZLTextLineInfo &info, int y) {
 	y = std::min(y + info.Height, (int)height());
 
 	style.setTextStyle(info.StartStyle, info.StartBidiLevel);

@@ -24,7 +24,7 @@
 #include "ZLTextAreaStyle.h"
 #include "ZLTextSelectionModel.h"
 
-int ZLTextArea::rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharIndex, bool mainDir) {
+int ZLTextArea::rectangleBound(Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharIndex, bool mainDir) {
 	style.setTextStyle(rectangle.Style, rectangle.BidiLevel);
 	const ZLTextWord &word = (const ZLTextWord&)paragraph[rectangle.ElementIndex];
 	int length = toCharIndex - rectangle.StartCharIndex;
@@ -82,7 +82,7 @@ static RangeVector::const_iterator strongFindRange(const RangeVector &ranges, co
 	return ranges.end();
 }
 
-void ZLTextArea::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to) {
+void ZLTextArea::drawTextLine(Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to) {
 	const ZLTextParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 
 	const ZLTextElementIterator fromIt = myTextElementMap.begin() + from;

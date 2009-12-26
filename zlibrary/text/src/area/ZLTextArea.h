@@ -83,21 +83,28 @@ public:
 	void paint();
 
 public: // TODO: change to private
-	ZLTextLineInfoPtr processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
+	ZLTextLineInfoPtr processTextLine(Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 
 	bool visiblePageIsEmpty() const;
 
-private:
-	void prepareTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y);
+	enum SizeUnit {
+		PIXEL_UNIT,
+		LINE_UNIT
+	};
+	int infoHeight(const ZLTextLineInfo &info, SizeUnit unit);
+	int paragraphHeight(const ZLTextWordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit);
 
-	void drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
-	void drawWord(ZLTextArea::Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
-	void drawString(ZLTextArea::Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
+private:
+	void prepareTextLine(Style &style, const ZLTextLineInfo &info, int y);
+
+	void drawTextLine(Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
+	void drawWord(Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
+	void drawString(Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
 	void drawSelectionRectangle(int left, int top, int right, int bottom);
 	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
 
-	int rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
-	void addRectangleToTextMap(ZLTextArea::Style &style, const ZLTextElementRectangle &rectangle);
+	int rectangleBound(Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
+	void addRectangleToTextMap(Style &style, const ZLTextElementRectangle &rectangle);
 	void flushRevertedElements(unsigned char bidiLevel);
 
 private:

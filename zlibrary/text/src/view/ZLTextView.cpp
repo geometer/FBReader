@@ -460,10 +460,6 @@ void ZLTextView::highlightParagraph(int paragraphIndex) {
 	rebuildPaintInfo(true);
 }
 
-int ZLTextView::infoSize(const ZLTextLineInfo &info, SizeUnit unit) {
-	return (unit == PIXEL_UNIT) ? (info.Height + info.Descent + info.VSpaceAfter) : (info.IsVisible ? 1 : 0);
-}
-
 int ZLTextView::textHeight() const {
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR)) {

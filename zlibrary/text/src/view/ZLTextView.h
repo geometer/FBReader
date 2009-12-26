@@ -134,14 +134,8 @@ private:
 	ZLTextWordCursor findLineFromEnd(unsigned int overlappingValue) const;
 	ZLTextWordCursor findPercentFromStart(unsigned int percent) const;
 
-	enum SizeUnit {
-		PIXEL_UNIT,
-		LINE_UNIT
-	};
-	int infoSize(const ZLTextLineInfo &info, SizeUnit unit);
-	int paragraphSize(const ZLTextWordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit);
-	void skip(ZLTextWordCursor &paragraph, SizeUnit unit, int size);
-	ZLTextWordCursor findStart(const ZLTextWordCursor &end, SizeUnit unit, int textHeight);
+	void skip(ZLTextWordCursor &paragraph, ZLTextArea::SizeUnit unit, int size);
+	ZLTextWordCursor findStart(const ZLTextWordCursor &end, ZLTextArea::SizeUnit unit, int textHeight);
 
 	ZLTextWordCursor buildInfos(const ZLTextWordCursor &start);
 

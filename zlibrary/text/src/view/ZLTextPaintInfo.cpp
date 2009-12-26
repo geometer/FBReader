@@ -201,7 +201,7 @@ void ZLTextView::preparePaintInfo() {
 			if (!myTextArea.myStartCursor.paragraphCursor().isFirst() || !myTextArea.myStartCursor.isStartOfParagraph()) {
 				switch (myScrollingMode) {
 					case NO_OVERLAPPING:
-						myTextArea.myStartCursor = findStart(myTextArea.myStartCursor, PIXEL_UNIT, textHeight());
+						myTextArea.myStartCursor = findStart(myTextArea.myStartCursor, ZLTextArea::PIXEL_UNIT, textHeight());
 						break;
 					case KEEP_LINES:
 					{
@@ -210,26 +210,26 @@ void ZLTextView::preparePaintInfo() {
 							endCursor = findLineFromEnd(1);
 						}
 						if (!endCursor.isNull()) {
-							ZLTextWordCursor startCursor = findStart(endCursor, PIXEL_UNIT, textHeight());
+							ZLTextWordCursor startCursor = findStart(endCursor, ZLTextArea::PIXEL_UNIT, textHeight());
 							myTextArea.myStartCursor =
 								(startCursor != myTextArea.myStartCursor) ?
-									startCursor : findStart(myTextArea.myStartCursor, PIXEL_UNIT, textHeight());
+									startCursor : findStart(myTextArea.myStartCursor, ZLTextArea::PIXEL_UNIT, textHeight());
 						} else {
-							myTextArea.myStartCursor = findStart(myTextArea.myStartCursor, PIXEL_UNIT, textHeight());
+							myTextArea.myStartCursor = findStart(myTextArea.myStartCursor, ZLTextArea::PIXEL_UNIT, textHeight());
 						}
 						break;
 					}
 					case SCROLL_LINES:
-						myTextArea.myStartCursor = findStart(myTextArea.myStartCursor, LINE_UNIT, myOverlappingValue);
+						myTextArea.myStartCursor = findStart(myTextArea.myStartCursor, ZLTextArea::LINE_UNIT, myOverlappingValue);
 						break;
 					case SCROLL_PERCENTAGE:
 						myTextArea.myStartCursor =
-							findStart(myTextArea.myStartCursor, PIXEL_UNIT, textHeight() * myOverlappingValue / 100);
+							findStart(myTextArea.myStartCursor, ZLTextArea::PIXEL_UNIT, textHeight() * myOverlappingValue / 100);
 						break;
 				}
 				myTextArea.myEndCursor = buildInfos(myTextArea.myStartCursor);
 				if (myTextArea.visiblePageIsEmpty()) {
-					myTextArea.myStartCursor = findStart(myTextArea.myStartCursor, LINE_UNIT, 1);
+					myTextArea.myStartCursor = findStart(myTextArea.myStartCursor, ZLTextArea::LINE_UNIT, 1);
 					myTextArea.myEndCursor = buildInfos(myTextArea.myStartCursor);
 				}
 			}
@@ -248,7 +248,7 @@ void ZLTextView::preparePaintInfo() {
 			}
 			break;
 		case END_IS_KNOWN:
-			myTextArea.myStartCursor = findStart(myTextArea.myEndCursor, PIXEL_UNIT, textHeight());
+			myTextArea.myStartCursor = findStart(myTextArea.myEndCursor, ZLTextArea::PIXEL_UNIT, textHeight());
 			myTextArea.myEndCursor = buildInfos(myTextArea.myStartCursor);
 			break;
 	}
@@ -256,9 +256,9 @@ void ZLTextView::preparePaintInfo() {
 	myTextArea.myLineInfoCache.clear();
 }
 
-ZLTextWordCursor ZLTextView::findStart(const ZLTextWordCursor &end, SizeUnit unit, int size) {
+ZLTextWordCursor ZLTextView::findStart(const ZLTextWordCursor &end, ZLTextArea::SizeUnit unit, int size) {
 	ZLTextWordCursor start = end;
-	size -= paragraphSize(start, true, unit);
+	size -= myTextArea.paragraphHeight(start, true, unit);
 	bool positionChanged = !start.isStartOfParagraph();
 	start.moveToParagraphStart();
 	while (size > 0) {
@@ -271,11 +271,11 @@ ZLTextWordCursor ZLTextView::findStart(const ZLTextWordCursor &end, SizeUnit uni
 		if (!start.paragraphCursor().isEndOfSection()) {
 			positionChanged = true;
 		}
-		size -= paragraphSize(start, false, unit);
+		size -= myTextArea.paragraphHeight(start, false, unit);
 	}
 	skip(start, unit, -size);
 
-	if (unit != LINE_UNIT) {
+	if (unit != ZLTextArea::LINE_UNIT) {
 		bool sameStart = start == end;
 		if (!sameStart && start.isEndOfParagraph() && end.isStartOfParagraph()) {
 			ZLTextWordCursor startCopy = start;
@@ -283,7 +283,7 @@ ZLTextWordCursor ZLTextView::findStart(const ZLTextWordCursor &end, SizeUnit uni
 			sameStart = startCopy == end;
 		}
 		if (sameStart) {
-			start = findStart(end, LINE_UNIT, 1);
+			start = findStart(end, ZLTextArea::LINE_UNIT, 1);
 		}
 	}
 
@@ -325,27 +325,7 @@ ZLTextWordCursor ZLTextView::buildInfos(const ZLTextWordCursor &start) {
 	return cursor;
 }
 
-int ZLTextView::paragraphSize(const ZLTextWordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit) {
-	ZLTextWordCursor word = cursor;
-	word.moveToParagraphStart();
-	ZLTextWordCursor end = cursor;
-	if (!beforeCurrentPosition) {
-		end.moveToParagraphEnd();
-	}
-	
-	int size = 0;
-
-	ZLTextArea::Style style(textArea(), baseStyle());
-	while (!word.equalElementIndex(end)) {
-		const ZLTextLineInfoPtr info = myTextArea.processTextLine(style, word, end);
-		word = info->End;
-		size += infoSize(*info, unit);
-	}
-
-	return size;
-}
-
-void ZLTextView::skip(ZLTextWordCursor &cursor, SizeUnit unit, int size) {
+void ZLTextView::skip(ZLTextWordCursor &cursor, ZLTextArea::SizeUnit unit, int size) {
 	ZLTextWordCursor paragraphStart = cursor;
 	paragraphStart.moveToParagraphStart();
 	ZLTextWordCursor paragraphEnd = cursor;
@@ -357,6 +337,6 @@ void ZLTextView::skip(ZLTextWordCursor &cursor, SizeUnit unit, int size) {
 	while (!cursor.isEndOfParagraph() && (size > 0)) {
 		const ZLTextLineInfoPtr info = myTextArea.processTextLine(style, cursor, paragraphEnd);
 		cursor = info->End;
-		size -= infoSize(*info, unit);
+		size -= myTextArea.infoHeight(*info, unit);
 	}
 }

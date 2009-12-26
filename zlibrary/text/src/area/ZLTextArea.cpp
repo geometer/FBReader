@@ -205,3 +205,30 @@ bool ZLTextArea::visiblePageIsEmpty() const {
 	}
 	return true;
 }
+
+int ZLTextArea::infoHeight(const ZLTextLineInfo &info, SizeUnit unit) {
+	return
+		unit == PIXEL_UNIT ?
+			info.Height + info.Descent + info.VSpaceAfter :
+			info.IsVisible ? 1 : 0;
+}
+
+int ZLTextArea::paragraphHeight(const ZLTextWordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit) {
+	ZLTextWordCursor word = cursor;
+	word.moveToParagraphStart();
+	ZLTextWordCursor end = cursor;
+	if (!beforeCurrentPosition) {
+		end.moveToParagraphEnd();
+	}
+	
+	int size = 0;
+
+	Style style(*this, myProperties.baseStyle());
+	while (!word.equalElementIndex(end)) {
+		const ZLTextLineInfoPtr info = processTextLine(style, word, end);
+		word = info->End;
+		size += infoHeight(*info, unit);
+	}
+
+	return size;
+}

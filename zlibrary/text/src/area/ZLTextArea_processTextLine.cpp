@@ -61,7 +61,7 @@ void ZLTextPartialInfo::setTo(ZLTextLineInfo &lineInfo) const {
 	lineInfo.SpaceCounter = SpaceCounter;
 }
 
-ZLTextLineInfoPtr ZLTextArea::processTextLine(ZLTextArea::Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end) {
+ZLTextLineInfoPtr ZLTextArea::processTextLine(Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end) {
 	const bool useHyphenator =
 		ZLTextStyleCollection::Instance().AutoHyphenationOption.value();
 
