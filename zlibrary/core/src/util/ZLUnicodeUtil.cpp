@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <stdlib.h>
+#include <cstdlib>
 #include <map>
 
 #include <ZLibrary.h>
@@ -29,6 +29,7 @@ struct ZLUnicodeData {
 	enum SymbolType {
 		LETTER_LOWERCASE,
 		LETTER_UPPERCASE,
+		LETTER_OTHER,
 		UNKNOWN
 	};
 
@@ -64,6 +65,8 @@ void ZLUnicodeTableReader::startElementHandler(const char *tag, const char **att
 			type = ZLUnicodeData::LETTER_LOWERCASE;
 		} else if (LETTER_UPPERCASE_TYPE == typeS) {
 			type = ZLUnicodeData::LETTER_UPPERCASE;
+		} else if (typeS != 0 && *typeS == 'L') {
+			type = ZLUnicodeData::LETTER_OTHER;
 		}
 		const char *lowerS = attributeValue(attributes, "lower");
 		const ZLUnicodeUtil::Ucs4Char lower = (lowerS != 0) ? strtol(lowerS, 0, 16) : code;
@@ -352,6 +355,7 @@ bool ZLUnicodeUtil::isLetter(Ucs4Char ch) {
 	switch (it->second.Type) {
 		case ZLUnicodeData::LETTER_LOWERCASE:
 		case ZLUnicodeData::LETTER_UPPERCASE:
+		case ZLUnicodeData::LETTER_OTHER:
 			return true;
 		default:
 			return false;

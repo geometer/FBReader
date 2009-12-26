@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLApplication.h>
 #include <ZLTime.h>
 #include <ZLUnicodeUtil.h>
@@ -496,85 +494,66 @@ shared_ptr<ZLImageData> ZLTextSelectionModel::image() const {
 bool ZLTextSelectionModel::selectWord(int x, int y) {
 	clear();
 
-	const ZLTextElementRectangle *rectangle =
-		myArea.elementByCoordinates(x, y);
+	const ZLTextElementRectangle *rectangle = myArea.elementByCoordinates(x, y);
 	if (rectangle == 0) {
 		return false;
 	}
 
-	/*
-	ZLTextElementMap::const_iterator it = myArea.myTextElementMap.begin();
-	for (; it != myArea.myTextElementMap.end(); ++it) {
-		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
+	int startIndex = 0;
+	int endIndex = 1;
+	switch (rectangle->Kind) {
+		default:
+			return false;
+		case ZLTextElement::IMAGE_ELEMENT:
 			break;
-		}
-	}
-	if (it == myArea.myTextElementMap.end()) {
-		return false;
-	}
-	if (ZLTextElementRectangle::RangeChecker(x, y)(*it)) {
-	*/
-	if (true) {
-		//const ZLTextElementRectangle *rectangle = &*it;
-		std::cerr << rectangle->XStart << ":" << rectangle->XEnd << "\n";
-
-		int startIndex = 0;
-		int endIndex = 1;
-		switch (rectangle->Kind) {
-			default:
-				return false;
-			case ZLTextElement::IMAGE_ELEMENT:
-				break;
-			case ZLTextElement::WORD_ELEMENT:
-			{
-				ZLTextWordCursor cursor = myArea.startCursor();
-				cursor.moveToParagraph(rectangle->ParagraphIndex);
-				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[rectangle->ElementIndex];
-				ZLUnicodeUtil::Ucs4String ucs4string;
-				ZLUnicodeUtil::utf8ToUcs4(ucs4string, word.Data, word.Size);
-				startIndex = charIndex(*rectangle, x);
-				if (startIndex == word.Length) {
-					--startIndex;
-				}
-				endIndex = startIndex + 1;
-				ZLUnicodeUtil::Ucs4Char ch = ucs4string[startIndex];
-				if (ZLUnicodeUtil::isLetter(ch) || (('0' <= ch) && (ch <= '9'))) {
-					while (--startIndex >= 0) {
-						ch = ucs4string[startIndex];
-						if (!ZLUnicodeUtil::isLetter(ch) && ((ch < '0') || (ch > '9'))) {
-							break;
-						}
+		case ZLTextElement::WORD_ELEMENT:
+		{
+			ZLTextWordCursor cursor = myArea.startCursor();
+			cursor.moveToParagraph(rectangle->ParagraphIndex);
+			const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[rectangle->ElementIndex];
+			ZLUnicodeUtil::Ucs4String ucs4string;
+			ZLUnicodeUtil::utf8ToUcs4(ucs4string, word.Data, word.Size);
+			startIndex = charIndex(*rectangle, x);
+			if (startIndex == word.Length) {
+				--startIndex;
+			}
+			endIndex = startIndex + 1;
+			ZLUnicodeUtil::Ucs4Char ch = ucs4string[startIndex];
+			if (ZLUnicodeUtil::isLetter(ch) || (('0' <= ch) && (ch <= '9'))) {
+				while (--startIndex >= 0) {
+					ch = ucs4string[startIndex];
+					if (!ZLUnicodeUtil::isLetter(ch) && ((ch < '0') || (ch > '9'))) {
+						break;
 					}
-					++startIndex;
-					while (++endIndex <= word.Length) {
-						ch = ucs4string[endIndex - 1];
-						if (!ZLUnicodeUtil::isLetter(ch) && ((ch < '0') || (ch > '9'))) {
-							break;
-						}
-					}
-					--endIndex;
 				}
+				++startIndex;
+				while (++endIndex <= word.Length) {
+					ch = ucs4string[endIndex - 1];
+					if (!ZLUnicodeUtil::isLetter(ch) && ((ch < '0') || (ch > '9'))) {
+						break;
+					}
+				}
+				--endIndex;
 			}
 		}
-
-		myFirstBound.Before.Exists = true;
-		myFirstBound.Before.ParagraphIndex = rectangle->ParagraphIndex;
-		myFirstBound.Before.ElementIndex = rectangle->ElementIndex;
-		myFirstBound.Before.CharIndex = startIndex;
-		myFirstBound.After = myFirstBound.Before;
-
-		mySecondBound.Before = myFirstBound.Before;
-		mySecondBound.Before.CharIndex = endIndex;
-		mySecondBound.After = mySecondBound.Before;
-
-		myIsEmpty = false;
-		myTextIsUpToDate = false;
-		myRangeVectorIsUpToDate = false;
-		myDoUpdate = false;
-
-		return true;
 	}
-	return false;
+
+	myFirstBound.Before.Exists = true;
+	myFirstBound.Before.ParagraphIndex = rectangle->ParagraphIndex;
+	myFirstBound.Before.ElementIndex = rectangle->ElementIndex;
+	myFirstBound.Before.CharIndex = startIndex;
+	myFirstBound.After = myFirstBound.Before;
+
+	mySecondBound.Before = myFirstBound.Before;
+	mySecondBound.Before.CharIndex = endIndex;
+	mySecondBound.After = mySecondBound.Before;
+
+	myIsEmpty = false;
+	myTextIsUpToDate = false;
+	myRangeVectorIsUpToDate = false;
+	myDoUpdate = false;
+
+	return true;
 }
 
 void ZLTextSelectionModel::extendWordSelectionToParagraph() {
