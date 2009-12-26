@@ -3,82 +3,82 @@
 <resources>
 	<node name="dialog">
 		<node name="button">
-			<node name="ok" value="&amp;Ok" />
-			<node name="cancel" value="&amp;Annulla" />
-			<node name="yes" value="&amp;Sì" />
-			<node name="no" value="&amp;No" />
-			<node name="apply" value="&amp;Applica" />
+			<node name="ok" value="&amp;OK"/>
+			<node name="cancel" value="&amp;Annulla"/>
+			<node name="yes" value="&amp;Sì"/>
+			<node name="no" value="&amp;No"/>
+			<node name="apply" value="&amp;Applica"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Salvataggio configurazione..." />
+			<node name="savingConfig" value="Salvataggio configurazione..."/>
 		</node>
 		<node name="networkError">
-			<node name="title" value="Errore di rete" />
-			<node name="unknownErrorMessage" value="Errore sconosciuto" />
-			<node name="couldntCreateDirectoryMessage" value="Impossibile creare una cartella&#10;%s" />
-			<node name="couldntCreateFileMessage" value="Impossibile creare un file&#10;%s" />
-			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn&apos;t connect to the network" />
-			<node name="couldntConnectMessage" value="Impossibile connettersi all&apos;host %s" />
-			<node name="couldntResolveHostMessage" value="Impossibile trovare l&apos;host %s" />
-			<node name="couldntResolveProxyMessage" value="Impossibile trovare il proxy %s" />
-			<node name="operationTimedOutMessage" value="Tempo scaduto per l&apos;operazione" />
-			<node name="somethingWrongMessage" value="Qualcosa va storto per&#10;%s" />
-			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s" />
-			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK" />
-			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates" />
-			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn&apos;t read the SSL CA certificate file:&#10;%s" />
-			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s" />
+			<node name="title" value="Errore di rete"/>
+			<node name="unknownErrorMessage" value="Errore sconosciuto"/>
+			<node name="couldntCreateDirectoryMessage" value="Impossibile creare una cartella&#10;%s"/>
+			<node name="couldntCreateFileMessage" value="Impossibile creare un file&#10;%s"/>
+			<node name="couldntConnectToNetworkMessage" value="Impossibile connettersi alla rete"/>
+			<node name="couldntConnectMessage" value="Impossibile connettersi all'host %s"/>
+			<node name="couldntResolveHostMessage" value="Impossibile trovare l'host %s"/>
+			<node name="couldntResolveProxyMessage" value="Impossibile trovare il proxy %s"/>
+			<node name="operationTimedOutMessage" value="Tempo scaduto per l'operazione"/>
+			<node name="somethingWrongMessage" value="Qualcosa va storto per&#10;%s"/>
+			<node name="sslConnectErrorMessage" value="Problema nell'handshake SSL/TLS:&#10;%s"/>
+			<node name="peerFailedVerificationMessage" value="Il certificato SSL da %s&#10;non è stato considerato valido"/>
+			<node name="sslCertificateAuthorityMessage" value="Il certificato SSL da %s&#10;non può essere autenticato con un certificato SSL di una CA nota"/>
+			<node name="sslBadCertificateFileMessage" value="Impossibile leggere il file di certificato SSL della CA:&#10;%s"/>
+			<node name="sslShutdownFailedMessage" value="Fallimento nella chiusura della connessione SSL per&#10;%s"/>
 		</node>
 	</node>
 	<node name="color">
-		<node name="red" value="Rosso" />
-		<node name="green" value="Verde" />
-		<node name="blue" value="Blu" />
-		<node name="black" value="Nero" />
-		<node name="white" value="Bianco" />
-		<node name="maroon" value="Marrone" />
-		<node name="olive" value="Oliva" />
-		<node name="navy" value="Blu scuro" />
-		<node name="purple" value="Viola" />
-		<node name="teal" value="Verde-azzurro" />
-		<node name="silver" value="Argento" />
-		<node name="gray" value="Grigio" />
-		<node name="lime" value="Verde-giallo" />
-		<node name="yellow" value="Giallo" />
-		<node name="magenta" value="Magenta" />
-		<node name="cyan" value="Ciano" />
-		<node name="custom..." value="Personalizzato..." />
+		<node name="red" value="Rosso"/>
+		<node name="green" value="Verde"/>
+		<node name="blue" value="Blu"/>
+		<node name="black" value="Nero"/>
+		<node name="white" value="Bianco"/>
+		<node name="maroon" value="Marrone"/>
+		<node name="olive" value="Oliva"/>
+		<node name="navy" value="Blu scuro"/>
+		<node name="purple" value="Viola"/>
+		<node name="teal" value="Verde-azzurro"/>
+		<node name="silver" value="Argento"/>
+		<node name="gray" value="Grigio"/>
+		<node name="lime" value="Verde-giallo"/>
+		<node name="yellow" value="Giallo"/>
+		<node name="magenta" value="Magenta"/>
+		<node name="cyan" value="Ciano"/>
+		<node name="custom..." value="Personalizzato..."/>
 	</node>
 	<node name="language">
-		<node name="ar" value="Arabo" />
-		<node name="cs" value="Ceco" />
-		<node name="de" value="Tedesco" />
-		<node name="de-traditional" value="Tedesco (ortografia tradizionale)" />
-		<node name="el" value="Greco" />
-		<node name="en" value="Inglese" />
-		<node name="eo" value="Esperanto" />
-		<node name="es" value="Spagnolo" />
-		<node name="fi" value="Finlandese" />
-		<node name="fr" value="Francese" />
-		<node name="he" value="Ebraico" />
-		<node name="id" value="Indonesiano" />
-		<node name="it" value="Italiano" />
-		<node name="lt" toBeTranslated="true" value="Lithuanian" />
-		<node name="no" value="Norvegese" />
-		<node name="pt" value="Portoghese" />
-		<node name="ru" value="Russo" />
-		<node name="tr" value="Turco" />
-		<node name="sv" value="Svedese" />
-		<node name="uk" value="Ucraino" />
-		<node name="zh" value="Cinese" />
-		<node name="other" value="Altra" />
+		<node name="ar" value="Arabo"/>
+		<node name="cs" value="Ceco"/>
+		<node name="de" value="Tedesco"/>
+		<node name="de-traditional" value="Tedesco (ortografia tradizionale)"/>
+		<node name="el" value="Greco"/>
+		<node name="en" value="Inglese"/>
+		<node name="eo" value="Esperanto"/>
+		<node name="es" value="Spagnolo"/>
+		<node name="fi" value="Finlandese"/>
+		<node name="fr" value="Francese"/>
+		<node name="he" value="Ebraico"/>
+		<node name="id" value="Indonesiano"/>
+		<node name="it" value="Italiano"/>
+		<node name="lt" value="Lituano"/>
+		<node name="no" value="Norvegese"/>
+		<node name="pt" value="Portoghese"/>
+		<node name="ru" value="Russo"/>
+		<node name="tr" value="Turco"/>
+		<node name="sv" value="Svedese"/>
+		<node name="uk" value="Ucraino"/>
+		<node name="zh" value="Cinese"/>
+		<node name="other" value="Altra"/>
 	</node>
 	<node name="boolean3">
-		<node name="on" value="on" />
-		<node name="off" value="off" />
-		<node name="unchanged" value="invariato" />
+		<node name="on" value="on"/>
+		<node name="off" value="off"/>
+		<node name="unchanged" value="invariato"/>
 	</node>
 	<node name="keyOptionView">
-		<node name="actionFor" value="Azione del Tasto" />
+		<node name="actionFor" value="Azione del Tasto"/>
 	</node>
 </resources>
