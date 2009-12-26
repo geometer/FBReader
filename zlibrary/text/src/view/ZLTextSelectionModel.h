@@ -54,7 +54,13 @@ public:
 	~ZLTextSelectionModel();
 
 	void activate(int x, int y);
-	bool extendTo(int x, int y);
+	enum ExtensionResult {
+		BOUND_NOT_CHANGED,
+		BOUND_CHANGED,
+		BOUND_OVER_BEFORE,
+		BOUND_OVER_AFTER
+	};
+	ExtensionResult extendTo(int x, int y);
 	void invalidate();
 	void update();
 	void deactivate();
@@ -71,6 +77,9 @@ public:
 
 	bool isEmpty() const;
 
+	void startSelectionScrolling(bool forward);
+	void stopSelectionScrolling();
+
 private:
 	struct Bound {
 		BoundElement Before;
@@ -84,8 +93,6 @@ private:
 
 	Range internalRange() const;
 	void setBound(Bound &bound, int x, int y);
-	void startSelectionScrolling(bool forward);
-	void stopSelectionScrolling();
 
 	void clearData() const;
 	void createData() const;

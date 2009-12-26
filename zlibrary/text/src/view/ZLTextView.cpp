@@ -296,6 +296,8 @@ void ZLTextView::findPrevious() {
 }
 
 bool ZLTextView::onStylusPress(int x, int y) {
+	mySelectionModel.stopSelectionScrolling();
+
 	myDoubleClickInfo.update(x, y, true);
 	if (myDoubleClickInfo.Count > 10) {
 		return true;
@@ -382,8 +384,22 @@ bool ZLTextView::onStylusMove(int x, int y) {
 }
 
 bool ZLTextView::onStylusMovePressed(int x, int y) {
-	if (mySelectionModel.extendTo(myTextArea.realX(x), y)) {
-		ZLApplication::Instance().refreshWindow();
+	switch (mySelectionModel.extendTo(myTextArea.realX(x), y)) {
+		case ZLTextSelectionModel::BOUND_NOT_CHANGED:
+			mySelectionModel.stopSelectionScrolling();
+			break;
+		case ZLTextSelectionModel::BOUND_CHANGED:
+			mySelectionModel.stopSelectionScrolling();
+			ZLApplication::Instance().refreshWindow();
+			break;
+		case ZLTextSelectionModel::BOUND_OVER_BEFORE:
+			mySelectionModel.startSelectionScrolling(false);
+			ZLApplication::Instance().refreshWindow();
+			break;
+		case ZLTextSelectionModel::BOUND_OVER_AFTER:
+			mySelectionModel.startSelectionScrolling(true);
+			ZLApplication::Instance().refreshWindow();
+			break;
 	}
 	return true;
 }
@@ -414,6 +430,8 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 }
 
 bool ZLTextView::onStylusRelease(int x, int y) {
+	mySelectionModel.stopSelectionScrolling();
+
 	myDoubleClickInfo.update(x, y, false);
 
 	if (myDoubleClickInfo.Count > 0) {

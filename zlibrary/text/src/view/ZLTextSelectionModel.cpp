@@ -145,9 +145,9 @@ bool ZLTextSelectionModel::BoundElement::operator != (const ZLTextSelectionModel
 	return !operator == (element);
 }
 
-bool ZLTextSelectionModel::extendTo(int x, int y) {
+ZLTextSelectionModel::ExtensionResult ZLTextSelectionModel::extendTo(int x, int y) {
 	if (!myIsActive || myArea.myTextElementMap.empty()) {
-		return false;
+		return BOUND_NOT_CHANGED;
 	}
 
 	Range oldRange = internalRange();
@@ -156,32 +156,30 @@ bool ZLTextSelectionModel::extendTo(int x, int y) {
 	myStoredX = x;
 	myStoredY = y;
 
-	if (!mySecondBound.Before.Exists) {
-		startSelectionScrolling(false);
-	} else if (!mySecondBound.After.Exists) {
-		startSelectionScrolling(true);
-	} else {
-		stopSelectionScrolling();
-	}
-
+	ExtensionResult result = BOUND_NOT_CHANGED;
 	if ((oldRange.first != newRange.first) || (oldRange.second != newRange.second)) {
 		myTextIsUpToDate = false;
 		clearData();
 		myRangeVectorIsUpToDate = false;
 		myRanges.clear();
 		copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
-		return true;
+		result = BOUND_CHANGED;
 	}
-	return false;
+
+	if (!mySecondBound.Before.Exists) {
+		return BOUND_OVER_BEFORE;
+	} else if (!mySecondBound.After.Exists) {
+		return BOUND_OVER_AFTER;
+	}
+
+	return result;
 }
 
 void ZLTextSelectionModel::deactivate() {
-	stopSelectionScrolling();
 	myIsActive = false;
 }
 
 void ZLTextSelectionModel::clear() {
-	stopSelectionScrolling();
 	myIsEmpty = true;
 	myIsActive = false;
 	myCursors.clear();
