@@ -133,8 +133,6 @@ private:
 
 	void clear();
 
-	void drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
-
 	bool pageIsEmpty() const;
 	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;
 	ZLTextWordCursor findLineFromEnd(unsigned int overlappingValue) const;
