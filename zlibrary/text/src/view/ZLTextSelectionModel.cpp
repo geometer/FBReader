@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLApplication.h>
 #include <ZLTime.h>
 #include <ZLUnicodeUtil.h>
@@ -35,6 +37,7 @@ void ZLTextSelectionModel::clearData() const {
 }
 
 int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int x) {
+	int x1 = x - myArea.hOffset();
 	ZLTextArea::Style style(myArea, rectangle.Style);
 	style.setTextStyle(rectangle.Style, rectangle.BidiLevel);
 	ZLTextWordCursor cursor = myArea.startCursor();
@@ -42,7 +45,7 @@ int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int
 	const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[rectangle.ElementIndex];
 	const bool mainDir =
 		rectangle.BidiLevel % 2 == (myArea.isRtl() ? 1 : 0);
-	const int deltaX = mainDir ? x - rectangle.XStart : rectangle.XEnd - x;
+	const int deltaX = mainDir ? x1 - rectangle.XStart : rectangle.XEnd - x1;
 	const int len = rectangle.Length;
 	const int start = rectangle.StartCharIndex;
 	int diff = deltaX;
@@ -59,8 +62,8 @@ int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int
 }
 
 void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
-	x -= myArea.hOffset();
-	y -= myArea.vOffset();
+	int x1 = x - myArea.hOffset();
+	int y1 = y - myArea.vOffset();
 
 	if (myArea.myTextElementMap.empty()) {
 		return;
@@ -68,7 +71,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 
 	ZLTextElementMap::const_iterator it = myArea.myTextElementMap.begin();
 	for (; it != myArea.myTextElementMap.end(); ++it) {
-		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
+		if ((it->YStart > y1) || ((it->YEnd > y1) && (it->XEnd > x1))) {
 			break;
 		}
 	}
@@ -82,7 +85,7 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 		bound.After.CharIndex = mainDir ?
 			it->StartCharIndex :
 			it->StartCharIndex + it->Length;
-		if (ZLTextElementRectangle::RangeChecker(x, y)(*it)) {
+		if (ZLTextElementRectangle::RangeChecker(x1, y1)(*it)) {
 			bound.Before.ParagraphIndex = bound.After.ParagraphIndex;
 			bound.Before.ElementIndex = bound.After.ElementIndex;
 			bound.Before.Exists = true;
@@ -113,9 +116,6 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 }
 
 void ZLTextSelectionModel::activate(int x, int y) {
-	x -= myArea.hOffset();
-	y -= myArea.vOffset();
-
 	if (myArea.myTextElementMap.empty()) {
 		return;
 	}
@@ -144,9 +144,6 @@ bool ZLTextSelectionModel::BoundElement::operator != (const ZLTextSelectionModel
 }
 
 bool ZLTextSelectionModel::extendTo(int x, int y) {
-	x -= myArea.hOffset();
-	y -= myArea.vOffset();
-
 	if (!myIsActive || myArea.myTextElementMap.empty()) {
 		return false;
 	}
@@ -497,11 +494,15 @@ shared_ptr<ZLImageData> ZLTextSelectionModel::image() const {
 }
 
 bool ZLTextSelectionModel::selectWord(int x, int y) {
-	x -= myArea.hOffset();
-	y -= myArea.vOffset();
-
 	clear();
 
+	const ZLTextElementRectangle *rectangle =
+		myArea.elementByCoordinates(x, y);
+	if (rectangle == 0) {
+		return false;
+	}
+
+	/*
 	ZLTextElementMap::const_iterator it = myArea.myTextElementMap.begin();
 	for (; it != myArea.myTextElementMap.end(); ++it) {
 		if ((it->YStart > y) || ((it->YEnd > y) && (it->XEnd > x))) {
@@ -512,9 +513,14 @@ bool ZLTextSelectionModel::selectWord(int x, int y) {
 		return false;
 	}
 	if (ZLTextElementRectangle::RangeChecker(x, y)(*it)) {
+	*/
+	if (true) {
+		//const ZLTextElementRectangle *rectangle = &*it;
+		std::cerr << rectangle->XStart << ":" << rectangle->XEnd << "\n";
+
 		int startIndex = 0;
 		int endIndex = 1;
-		switch (it->Kind) {
+		switch (rectangle->Kind) {
 			default:
 				return false;
 			case ZLTextElement::IMAGE_ELEMENT:
@@ -522,11 +528,11 @@ bool ZLTextSelectionModel::selectWord(int x, int y) {
 			case ZLTextElement::WORD_ELEMENT:
 			{
 				ZLTextWordCursor cursor = myArea.startCursor();
-				cursor.moveToParagraph(it->ParagraphIndex);
-				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[it->ElementIndex];
+				cursor.moveToParagraph(rectangle->ParagraphIndex);
+				const ZLTextWord &word = (const ZLTextWord&)cursor.paragraphCursor()[rectangle->ElementIndex];
 				ZLUnicodeUtil::Ucs4String ucs4string;
 				ZLUnicodeUtil::utf8ToUcs4(ucs4string, word.Data, word.Size);
-				startIndex = charIndex(*it, x);
+				startIndex = charIndex(*rectangle, x);
 				if (startIndex == word.Length) {
 					--startIndex;
 				}
@@ -552,8 +558,8 @@ bool ZLTextSelectionModel::selectWord(int x, int y) {
 		}
 
 		myFirstBound.Before.Exists = true;
-		myFirstBound.Before.ParagraphIndex = it->ParagraphIndex;
-		myFirstBound.Before.ElementIndex = it->ElementIndex;
+		myFirstBound.Before.ParagraphIndex = rectangle->ParagraphIndex;
+		myFirstBound.Before.ElementIndex = rectangle->ElementIndex;
 		myFirstBound.Before.CharIndex = startIndex;
 		myFirstBound.After = myFirstBound.Before;
 

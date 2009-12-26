@@ -67,7 +67,6 @@ int ZLTextArea::paragraphIndexByCoordinates(int x, int y, bool absolute) const {
 		y -= myVOffset;
 	}
 
-	x = realX(x);
 	int paragraphIndex = -1;
 	int yBottom = -1;
 	int xLeft = context().width() + 1;
@@ -118,7 +117,7 @@ const ZLTextElementRectangle *ZLTextArea::elementByCoordinates(int x, int y, boo
 	}
 
 	ZLTextElementIterator it =
-		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextRectangle::RangeChecker(realX(x), y));
+		std::find_if(myTextElementMap.begin(), myTextElementMap.end(), ZLTextRectangle::RangeChecker(x, y));
 	return (it != myTextElementMap.end()) ? &*it : 0;
 }
 
