@@ -59,6 +59,9 @@ int ZLTextSelectionModel::charIndex(const ZLTextElementRectangle &rectangle, int
 }
 
 void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
+	x -= myArea.hOffset();
+	y -= myArea.vOffset();
+
 	if (myArea.myTextElementMap.empty()) {
 		return;
 	}
@@ -110,6 +113,9 @@ void ZLTextSelectionModel::setBound(Bound &bound, int x, int y) {
 }
 
 void ZLTextSelectionModel::activate(int x, int y) {
+	x -= myArea.hOffset();
+	y -= myArea.vOffset();
+
 	if (myArea.myTextElementMap.empty()) {
 		return;
 	}
@@ -138,6 +144,9 @@ bool ZLTextSelectionModel::BoundElement::operator != (const ZLTextSelectionModel
 }
 
 bool ZLTextSelectionModel::extendTo(int x, int y) {
+	x -= myArea.hOffset();
+	y -= myArea.vOffset();
+
 	if (!myIsActive || myArea.myTextElementMap.empty()) {
 		return false;
 	}
@@ -488,6 +497,9 @@ shared_ptr<ZLImageData> ZLTextSelectionModel::image() const {
 }
 
 bool ZLTextSelectionModel::selectWord(int x, int y) {
+	x -= myArea.hOffset();
+	y -= myArea.vOffset();
+
 	clear();
 
 	ZLTextElementMap::const_iterator it = myArea.myTextElementMap.begin();

@@ -91,7 +91,7 @@ void ZLTextView::paint() {
 	ZLTextParagraphCursorCache::cleanup();
 }
 
-int ZLTextView::rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharIndex, bool mainDir) {
+int ZLTextArea::rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharIndex, bool mainDir) {
 	style.setTextStyle(rectangle.Style, rectangle.BidiLevel);
 	const ZLTextWord &word = (const ZLTextWord&)paragraph[rectangle.ElementIndex];
 	int length = toCharIndex - rectangle.StartCharIndex;
@@ -107,7 +107,7 @@ int ZLTextView::rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCu
 
 typedef std::vector<ZLTextSelectionModel::Range> RangeVector;
 
-bool contains(const ZLTextSelectionModel::Range &range, const ZLTextElementRectangle &rectangle) {
+static bool contains(const ZLTextSelectionModel::Range &range, const ZLTextElementRectangle &rectangle) {
 	return
 		((range.first.ParagraphIndex < rectangle.ParagraphIndex) ||
 		 ((range.first.ParagraphIndex == rectangle.ParagraphIndex) &&
@@ -117,7 +117,7 @@ bool contains(const ZLTextSelectionModel::Range &range, const ZLTextElementRecta
 			(range.second.ElementIndex >= rectangle.ElementIndex)));
 }
 
-bool strongContains(const ZLTextSelectionModel::Range &range, const ZLTextWordCursor &cursor) {
+static bool strongContains(const ZLTextSelectionModel::Range &range, const ZLTextWordCursor &cursor) {
 	const int pn = cursor.paragraphCursor().index();
 	const int wn = cursor.elementIndex();
 	return
@@ -181,7 +181,7 @@ void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 						if (bound.ElementIndex == rectangle.ElementIndex) {
 							const ZLTextElement &element = paragraph[rectangle.ElementIndex];
 							if (element.kind() == ZLTextElement::WORD_ELEMENT) {
-								r = rectangleBound(style, paragraph, rectangle, bound.CharIndex, mainDir);
+								r = myTextArea.rectangleBound(style, paragraph, rectangle, bound.CharIndex, mainDir);
 							}
 						}
 						right = std::max(right, r);
@@ -211,10 +211,10 @@ void ZLTextView::drawTextLine(ZLTextArea::Style &style, const ZLTextLineInfo &in
 							mainDir ? rt->first : rt->second;
 						if (paragraph[rectangle.ElementIndex].kind() == ZLTextElement::WORD_ELEMENT) {
 							if (rightBound.ElementIndex == rectangle.ElementIndex) {
-								r = rectangleBound(style, paragraph, rectangle, rightBound.CharIndex, mainDir);
+								r = myTextArea.rectangleBound(style, paragraph, rectangle, rightBound.CharIndex, mainDir);
 							}
 							if (leftBound.ElementIndex == rectangle.ElementIndex) {
-								l = rectangleBound(style, paragraph, rectangle, leftBound.CharIndex, mainDir);
+								l = myTextArea.rectangleBound(style, paragraph, rectangle, leftBound.CharIndex, mainDir);
 							}
 						}
 

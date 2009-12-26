@@ -85,6 +85,7 @@ public:
 	void drawSelectionRectangle(int left, int top, int right, int bottom);
 	void drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int height, int vSpaceAfter);
 
+	int rectangleBound(ZLTextArea::Style &style, const ZLTextParagraphCursor &paragraph, const ZLTextElementRectangle &rectangle, int toCharNumber, bool mainDir);
 	void addRectangleToTextMap(ZLTextArea::Style &style, const ZLTextElementRectangle &rectangle);
 	void flushRevertedElements(unsigned char bidiLevel);
 
