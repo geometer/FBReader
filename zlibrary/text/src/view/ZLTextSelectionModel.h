@@ -87,8 +87,6 @@ private:
 	void startSelectionScrolling(bool forward);
 	void stopSelectionScrolling();
 
-	void scrollAndExtend();
-
 	void clearData() const;
 	void createData() const;
 
@@ -112,8 +110,6 @@ private:
 
 	mutable std::vector<Range> myRanges;
 	mutable bool myRangeVectorIsUpToDate;
-
-friend class ZLTextSelectionScroller;
 };
 
 class ZLTextSelectionScroller : public ZLRunnable {
