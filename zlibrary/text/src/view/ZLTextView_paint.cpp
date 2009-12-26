@@ -55,7 +55,12 @@ void ZLTextView::paint() {
 		labels.push_back(myTextArea.myTextElementMap.size());
 	}
 
-	mySelectionModel.update();
+	if (!isSelectionEnabled()) {
+		mySelectionModel.clear();
+	} else if (!mySelectionModelIsUpToDate) {
+		mySelectionModel.update();
+	}
+	mySelectionModelIsUpToDate = true;
 
 	y = 0;
 	int index = 0;

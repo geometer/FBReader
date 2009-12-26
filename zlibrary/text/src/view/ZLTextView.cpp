@@ -40,7 +40,7 @@ const std::string &ZLTextView::typeId() const {
 	return TYPE_ID;
 }
 
-ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myTextArea(context, *this), myPaintState(NOTHING_TO_PAINT), mySelectionModel(*this), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
+ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myTextArea(context, *this), myPaintState(NOTHING_TO_PAINT), mySelectionModel(*this, myTextArea), mySelectionModelIsUpToDate(true), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
 }
 
 ZLTextView::~ZLTextView() {

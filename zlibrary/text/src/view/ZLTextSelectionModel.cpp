@@ -26,7 +26,7 @@
 #include "ZLTextView.h"
 #include "../area/ZLTextAreaStyle.h"
 
-ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view) : myView(view), myArea(view.myTextArea), myIsActive(false), myIsEmpty(true), myDoUpdate(false), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
+ZLTextSelectionModel::ZLTextSelectionModel(ZLTextView &view, ZLTextArea &area) : myView(view), myArea(area), myIsActive(false), myIsEmpty(true), myTextIsUpToDate(true), myRangeVectorIsUpToDate(true) {
 }
 
 void ZLTextSelectionModel::clearData() const {
@@ -173,14 +173,12 @@ bool ZLTextSelectionModel::extendTo(int x, int y) {
 void ZLTextSelectionModel::deactivate() {
 	stopSelectionScrolling();
 	myIsActive = false;
-	myDoUpdate = false;
 }
 
 void ZLTextSelectionModel::clear() {
 	stopSelectionScrolling();
 	myIsEmpty = true;
 	myIsActive = false;
-	myDoUpdate = false;
 	myCursors.clear();
 	clearData();
 	myTextIsUpToDate = true;
@@ -364,7 +362,7 @@ bool ZLTextSelectionModel::isEmpty() const {
 
 void ZLTextSelectionModel::startSelectionScrolling(bool forward) {
 	if (mySelectionScroller.isNull()) {
-		mySelectionScroller = new ZLTextSelectionScroller(*this);
+		mySelectionScroller = new ZLTextSelectionScroller(myView);
 	}
 	ZLTextSelectionScroller::Direction direction =
 		forward ?
@@ -388,27 +386,12 @@ void ZLTextSelectionModel::stopSelectionScrolling() {
 }
 
 void ZLTextSelectionModel::update() {
-	if (!myView.isSelectionEnabled()) {
-		clear();
-	} else if (myDoUpdate) {
-		myDoUpdate = false;
-		setBound(mySecondBound, myStoredX, myStoredY);
-		copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
-		myTextIsUpToDate = false;
-		clearData();
-		myRangeVectorIsUpToDate = false;
-		myRanges.clear();
-	}
-}
-
-void ZLTextSelectionModel::scrollAndExtend() {
-	ZLTextSelectionScroller::Direction direction =
-		((ZLTextSelectionScroller&)*mySelectionScroller).direction();
-	if (direction != ZLTextSelectionScroller::DONT_SCROLL) {
-		myView.scrollPage(direction == ZLTextSelectionScroller::SCROLL_FORWARD, ZLTextView::SCROLL_LINES, 1);
-		myDoUpdate = true;
-		ZLApplication::Instance().refreshWindow();
-	}
+	setBound(mySecondBound, myStoredX, myStoredY);
+	copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
+	myTextIsUpToDate = false;
+	clearData();
+	myRangeVectorIsUpToDate = false;
+	myRanges.clear();
 }
 
 void ZLTextSelectionModel::createData() const {
@@ -551,7 +534,6 @@ bool ZLTextSelectionModel::selectWord(int x, int y) {
 	myIsEmpty = false;
 	myTextIsUpToDate = false;
 	myRangeVectorIsUpToDate = false;
-	myDoUpdate = false;
 
 	return true;
 }
@@ -574,10 +556,9 @@ void ZLTextSelectionModel::extendWordSelectionToParagraph() {
 	myIsEmpty = false;
 	myTextIsUpToDate = false;
 	myRangeVectorIsUpToDate = false;
-	myDoUpdate = false;
 }
 
-ZLTextSelectionScroller::ZLTextSelectionScroller(ZLTextSelectionModel &selectionModel) : mySelectionModel(selectionModel), myDirection(DONT_SCROLL) {
+ZLTextSelectionScroller::ZLTextSelectionScroller(ZLTextView &view) : myView(view), myDirection(DONT_SCROLL) {
 }
 
 void ZLTextSelectionScroller::setDirection(Direction direction) {
@@ -585,7 +566,11 @@ void ZLTextSelectionScroller::setDirection(Direction direction) {
 }
 
 void ZLTextSelectionScroller::run() {
-	mySelectionModel.scrollAndExtend();
+	if (myDirection != DONT_SCROLL) {
+		myView.scrollPage(myDirection == SCROLL_FORWARD, ZLTextView::SCROLL_LINES, 1);
+		myView.mySelectionModelIsUpToDate = false;
+		ZLApplication::Instance().refreshWindow();
+	}
 }
 
 void ZLTextSelectionModel::copySelectionToClipboard(ZLDialogManager::ClipboardType type) const {

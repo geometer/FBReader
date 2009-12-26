@@ -179,6 +179,7 @@ private:
 	std::vector<size_t> myTextBreaks;
 
 	ZLTextSelectionModel mySelectionModel;
+	bool mySelectionModelIsUpToDate;
 
 	shared_ptr<PositionIndicator> myPositionIndicator;
 
@@ -195,7 +196,7 @@ private:
 		int Y;
 	} myDoubleClickInfo;
 
-friend class ZLTextSelectionModel;
+friend class ZLTextSelectionScroller;
 };
 
 inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }

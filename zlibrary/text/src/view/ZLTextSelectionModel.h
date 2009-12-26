@@ -51,10 +51,11 @@ public:
 	typedef std::pair<BoundElement,BoundElement> Range;
 
 public:
-	ZLTextSelectionModel(ZLTextView &view);
+	ZLTextSelectionModel(ZLTextView &view, ZLTextArea &area);
 
 	void activate(int x, int y);
 	bool extendTo(int x, int y);
+	void invalidate();
 	void update();
 	void deactivate();
 	void clear();
@@ -101,7 +102,6 @@ private:
 	Bound mySecondBound;
 
 	shared_ptr<ZLRunnable> mySelectionScroller;
-	bool myDoUpdate;
 	int myStoredX;
 	int myStoredY;
 
@@ -126,7 +126,7 @@ public:
 	};
 
 public:
-	ZLTextSelectionScroller(ZLTextSelectionModel &selectionModel);
+	ZLTextSelectionScroller(ZLTextView &view);
 	void setDirection(Direction direction);
 	Direction direction() const;
 
@@ -134,7 +134,7 @@ private:
 	void run();
 
 private:
-	ZLTextSelectionModel &mySelectionModel;
+	ZLTextView &myView;
 	Direction myDirection;
 };
 
