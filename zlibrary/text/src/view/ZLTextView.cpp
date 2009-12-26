@@ -384,7 +384,6 @@ bool ZLTextView::onStylusMove(int x, int y) {
 bool ZLTextView::onStylusMovePressed(int x, int y) {
 	if (mySelectionModel.extendTo(myTextArea.realX(x), y)) {
 		ZLApplication::Instance().refreshWindow();
-		mySelectionModel.copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 	}
 	return true;
 }
@@ -395,13 +394,11 @@ bool ZLTextView::onStylusClick(int x, int y, int count) {
 	} else if (count > 10) {
 		mySelectionModel.extendWordSelectionToParagraph();
 		ZLApplication::Instance().refreshWindow();
-		mySelectionModel.copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 		myDoubleClickInfo.Count = 20;
 		return true;
 	} else if (count > 2) {
 		if (mySelectionModel.selectWord(myTextArea.realX(x), y)) {
 			ZLApplication::Instance().refreshWindow();
-			mySelectionModel.copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 			myDoubleClickInfo.Count = 10;
 			return true;
 		} else {

@@ -165,6 +165,7 @@ bool ZLTextSelectionModel::extendTo(int x, int y) {
 		clearData();
 		myRangeVectorIsUpToDate = false;
 		myRanges.clear();
+		copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 		return true;
 	}
 	return false;
@@ -535,6 +536,8 @@ bool ZLTextSelectionModel::selectWord(int x, int y) {
 	myTextIsUpToDate = false;
 	myRangeVectorIsUpToDate = false;
 
+	copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
+
 	return true;
 }
 
@@ -556,6 +559,8 @@ void ZLTextSelectionModel::extendWordSelectionToParagraph() {
 	myIsEmpty = false;
 	myTextIsUpToDate = false;
 	myRangeVectorIsUpToDate = false;
+
+	copySelectionToClipboard(ZLDialogManager::CLIPBOARD_SELECTION);
 }
 
 ZLTextSelectionScroller::ZLTextSelectionScroller(ZLTextView &view) : myView(view), myDirection(DONT_SCROLL) {
