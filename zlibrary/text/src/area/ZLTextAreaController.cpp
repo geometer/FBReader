@@ -28,6 +28,12 @@ ZLTextAreaController::ZLTextAreaController(ZLPaintContext &context, const ZLText
 ZLTextAreaController::~ZLTextAreaController() {
 }
 
+void ZLTextAreaController::setModel(shared_ptr<ZLTextModel> model) {
+	myArea.setModel(model);
+
+	myPaintState = myArea.isEmpty() ? NOTHING_TO_PAINT : START_IS_KNOWN;
+}
+
 void ZLTextAreaController::clear() {
 	myArea.clear();
 
@@ -381,4 +387,13 @@ void ZLTextAreaController::moveEndCursor(int paragraphIndex, int elementIndex, i
 	myArea.myStartCursor = 0;
 	myArea.myLineInfos.clear();
 	myPaintState = END_IS_KNOWN;
+}
+
+void ZLTextAreaController::scrollPage(bool forward, ScrollingMode mode, unsigned int value) {
+	if (myPaintState != READY) {
+		return;
+	}
+	myPaintState = forward ? TO_SCROLL_FORWARD : TO_SCROLL_BACKWARD;
+	myScrollingMode = mode;
+	myOverlappingValue = value;
 }

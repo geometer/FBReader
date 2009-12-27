@@ -58,11 +58,9 @@ void ZLTextView::clear() {
 void ZLTextView::setModel(shared_ptr<ZLTextModel> model) {
 	clear();
 
-	myTextAreaController.area().setModel(model);
+	myTextAreaController.setModel(model);
 
 	if (!model.isNull() && (model->paragraphsNumber() != 0)) {
-		myTextAreaController.myPaintState = ZLTextAreaController::START_IS_KNOWN;
-
 		size_t size = model->paragraphsNumber();
 		myTextSize.reserve(size + 1);
 		myTextSize.push_back(0);
@@ -632,5 +630,30 @@ void ZLTextView::stopSelectionScrolling() {
 	if (!mySelectionScroller.isNull()) {
 		((ZLTextSelectionScroller&)*mySelectionScroller).setDirection(ZLTextSelectionScroller::DONT_SCROLL);
 		ZLTimeManager::Instance().removeTask(mySelectionScroller);
+	}
+}
+
+void ZLTextView::scrollPage(bool forward, ZLTextAreaController::ScrollingMode mode, unsigned int value) {
+	preparePaintInfo();
+	myTextAreaController.scrollPage(forward, mode, value);
+}
+
+void ZLTextView::preparePaintInfo() {
+	size_t newWidth = 
+		std::max(context().width() - leftMargin() - rightMargin(), 1);
+	int viewHeight = context().height() - topMargin() - bottomMargin();
+	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
+	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR)) {
+		viewHeight -= indicatorInfo->height() + indicatorInfo->offset();
+	}
+	size_t newHeight = std::max(viewHeight, 1);
+
+	if (newWidth != myTextAreaController.area().width() || newHeight != myTextAreaController.area().height()) {
+		myTextAreaController.area().setSize(newWidth, newHeight);
+		myTextAreaController.rebuildPaintInfo(false);
+	}
+
+	if (myTextAreaController.preparePaintInfo()) {
+		myDoUpdateScrollbar = true;
 	}
 }

@@ -47,15 +47,16 @@ public:
 	const ZLTextArea &area() const;
 	ZLTextArea &area();
 
+	void setModel(shared_ptr<ZLTextModel> model);
 	void clear();
 	bool preparePaintInfo();
+	void rebuildPaintInfo(bool strong);
 
-public: // TODO: change to private
+	void scrollPage(bool forward, ScrollingMode mode, unsigned int value);
 	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
 	void moveEndCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
 
-	void rebuildPaintInfo(bool strong);
-
+private:
 	enum SizeUnit {
 		PIXEL_UNIT,
 		LINE_UNIT
@@ -70,7 +71,6 @@ public: // TODO: change to private
 	ZLTextWordCursor findLineFromEnd(unsigned int overlappingValue) const;
 	ZLTextWordCursor findPercentFromStart(unsigned int percent) const;
 
-private:
 	int infoHeight(const ZLTextLineInfo &info, SizeUnit unit);
 	int paragraphHeight(const ZLTextWordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit);
 	void skip(ZLTextWordCursor &paragraph, SizeUnit unit, int size);
@@ -78,7 +78,6 @@ private:
 private:
 	ZLTextArea myArea;
 
-public: // TODO: change to private
 	enum {
 		NOTHING_TO_PAINT,
 		READY,

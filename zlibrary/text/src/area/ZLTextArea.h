@@ -113,10 +113,10 @@ public: // TODO: change to private
 	ZLTextWordCursor myStartCursor;
 	ZLTextWordCursor myEndCursor;
 
+private:
 	std::vector<ZLTextLineInfoPtr> myLineInfos;
 	std::set<ZLTextLineInfoPtr> myLineInfoCache;
 
-private:
 	ZLTextElementMap myTextElementMap;
 	std::vector<ZLTextElementMap> myTextElementsToRevert;
 	ZLTextTreeNodeMap myTreeNodeMap;
