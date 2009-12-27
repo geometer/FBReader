@@ -28,6 +28,13 @@ ZLTextAreaController::ZLTextAreaController(ZLPaintContext &context, const ZLText
 ZLTextAreaController::~ZLTextAreaController() {
 }
 
+void ZLTextAreaController::clear() {
+	myArea.clear();
+
+	myPaintState = NOTHING_TO_PAINT;
+	ZLTextParagraphCursorCache::clear();
+}
+
 ZLTextWordCursor ZLTextAreaController::findStart(const ZLTextWordCursor &end, SizeUnit unit, int size) {
 	ZLTextWordCursor start = end;
 	size -= paragraphHeight(start, true, unit);

@@ -69,7 +69,6 @@ public:
 	bool isRtl() const;
 	int realX(int X) const;
 
-	void clear();
 	const ZLTextWordCursor &startCursor() const;
 	const ZLTextWordCursor &endCursor() const;
 	bool isEmpty() const;
@@ -83,6 +82,8 @@ public:
 	void paint();
 
 private:
+	void clear();
+
 	ZLTextLineInfoPtr processTextLine(Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 
 	void prepareTextLine(Style &style, const ZLTextLineInfo &info, int y);

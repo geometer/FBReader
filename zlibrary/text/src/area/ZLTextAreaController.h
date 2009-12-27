@@ -47,6 +47,7 @@ public:
 	const ZLTextArea &area() const;
 	ZLTextArea &area();
 
+	void clear();
 	bool preparePaintInfo();
 
 public: // TODO: change to private

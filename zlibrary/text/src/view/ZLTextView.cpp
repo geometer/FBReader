@@ -49,14 +49,10 @@ ZLTextView::~ZLTextView() {
 }
 
 void ZLTextView::clear() {
-	myTextAreaController.area().clear();
-
-	myTextAreaController.myPaintState = ZLTextAreaController::NOTHING_TO_PAINT;
+	myTextAreaController.clear();
 
 	myTextSize.clear();
 	myTextBreaks.clear();
-
-	ZLTextParagraphCursorCache::clear();
 }
 
 void ZLTextView::setModel(shared_ptr<ZLTextModel> model) {
