@@ -104,5 +104,5 @@ void ContentsView::gotoReference() {
 	highlightParagraph(selected);
 	preparePaintInfo();
 	gotoParagraph(selected);
-	scrollPage(false, ZLTextView::SCROLL_PERCENTAGE, 40);
+	scrollPage(false, ZLTextAreaController::SCROLL_PERCENTAGE, 40);
 }

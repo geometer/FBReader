@@ -80,7 +80,7 @@ const ZLTextView &ZLTextView::PositionIndicator::textView() const {
 }
 
 ZLPaintContext &ZLTextView::PositionIndicator::context() const {
-	return myTextView.myTextArea.context();
+	return myTextView.textArea().context();
 }
 
 int ZLTextView::PositionIndicator::bottom() const {

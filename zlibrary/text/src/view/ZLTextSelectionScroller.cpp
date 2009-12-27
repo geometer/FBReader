@@ -32,7 +32,7 @@ void ZLTextSelectionScroller::setDirection(Direction direction) {
 
 void ZLTextSelectionScroller::run() {
 	if (myDirection != DONT_SCROLL) {
-		myView.scrollPage(myDirection == SCROLL_FORWARD, ZLTextView::SCROLL_LINES, 1);
+		myView.scrollPage(myDirection == SCROLL_FORWARD, ZLTextAreaController::SCROLL_LINES, 1);
 		myView.selectionModel().invalidate();
 		ZLApplication::Instance().refreshWindow();
 	}

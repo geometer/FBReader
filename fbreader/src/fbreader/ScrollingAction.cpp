@@ -24,7 +24,7 @@
 #include "ScrollingAction.h"
 
 ScrollingAction::ScrollingAction(
-	ZLTextView::ScrollingMode textScrollingMode,
+	ZLTextAreaController::ScrollingMode textScrollingMode,
 	ZLBlockTreeView::ScrollingMode blockScrollingMode,
 	bool forward
 ) : myTextScrollingMode(textScrollingMode), myBlockScrollingMode(blockScrollingMode), myForward(forward) {
@@ -60,7 +60,7 @@ void ScrollingAction::run() {
 	fbreader.myLastScrollingTime = ZLTime();
 }
 
-LineScrollingAction::LineScrollingAction(bool forward) : ScrollingAction(ZLTextView::SCROLL_LINES, ZLBlockTreeView::ITEM, forward) {
+LineScrollingAction::LineScrollingAction(bool forward) : ScrollingAction(ZLTextAreaController::SCROLL_LINES, ZLBlockTreeView::ITEM, forward) {
 }
 
 int LineScrollingAction::scrollingDelay() const {
@@ -71,7 +71,7 @@ size_t LineScrollingAction::textOptionValue() const {
 	return FBReader::Instance().LinesToScrollOption.value();
 }
 
-PageScrollingAction::PageScrollingAction(bool forward) : ScrollingAction(ZLTextView::KEEP_LINES, ZLBlockTreeView::PAGE, forward) {
+PageScrollingAction::PageScrollingAction(bool forward) : ScrollingAction(ZLTextAreaController::KEEP_LINES, ZLBlockTreeView::PAGE, forward) {
 }
 
 int PageScrollingAction::scrollingDelay() const {
@@ -82,14 +82,14 @@ size_t PageScrollingAction::textOptionValue() const {
 	return FBReader::Instance().LinesToKeepOption.value();
 }
 
-MouseWheelScrollingAction::MouseWheelScrollingAction(bool forward) : ScrollingAction(ZLTextView::SCROLL_LINES, ZLBlockTreeView::ITEM, forward) {
+MouseWheelScrollingAction::MouseWheelScrollingAction(bool forward) : ScrollingAction(ZLTextAreaController::SCROLL_LINES, ZLBlockTreeView::ITEM, forward) {
 }
 
 size_t MouseWheelScrollingAction::textOptionValue() const {
 	return 1;
 }
 
-TapScrollingAction::TapScrollingAction(bool forward) : ScrollingAction(ZLTextView::KEEP_LINES, ZLBlockTreeView::NONE, forward) {
+TapScrollingAction::TapScrollingAction(bool forward) : ScrollingAction(ZLTextAreaController::KEEP_LINES, ZLBlockTreeView::NONE, forward) {
 }
 
 size_t TapScrollingAction::textOptionValue() const {

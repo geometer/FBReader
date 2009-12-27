@@ -25,17 +25,17 @@
 void ZLTextView::paint() {
 	context().clear(backgroundColor());
 
-	myTextArea.setOffsets(
-		myTextArea.isRtl() ? rightMargin() : leftMargin(), topMargin()
+	myTextAreaController.area().setOffsets(
+		textArea().isRtl() ? rightMargin() : leftMargin(), topMargin()
 	);
 
 	preparePaintInfo();
 
-	if (myTextArea.isEmpty()) {
+	if (textArea().isEmpty()) {
 		return;
 	}
 
-	myTextArea.paint();
+	myTextAreaController.area().paint();
 
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR)) {

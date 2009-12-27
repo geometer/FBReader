@@ -82,21 +82,7 @@ public:
 
 	void paint();
 
-public: // TODO: change to private
-	enum SizeUnit {
-		PIXEL_UNIT,
-		LINE_UNIT
-	};
-
-	ZLTextWordCursor buildInfos(const ZLTextWordCursor &start);
-	ZLTextWordCursor findStart(const ZLTextWordCursor &end, SizeUnit unit, int textHeight);
-	bool visiblePageIsEmpty() const;
-
 private:
-	int infoHeight(const ZLTextLineInfo &info, SizeUnit unit);
-	int paragraphHeight(const ZLTextWordCursor &cursor, bool beforeCurrentPosition, SizeUnit unit);
-	void skip(ZLTextWordCursor &paragraph, SizeUnit unit, int size);
-
 	ZLTextLineInfoPtr processTextLine(Style &style, const ZLTextWordCursor &start, const ZLTextWordCursor &end);
 
 	void prepareTextLine(Style &style, const ZLTextLineInfo &info, int y);
@@ -136,6 +122,7 @@ private:
 
 	shared_ptr<ZLTextSelectionModel> mySelectionModel;
 
+friend class ZLTextAreaController;
 friend class ZLTextSelectionModel;
 };
 

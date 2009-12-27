@@ -21,14 +21,14 @@
 #define __SCROLLINGACTION_H__
 
 #include <ZLApplication.h>
-#include <ZLTextView.h>
+#include <ZLTextAreaController.h>
 #include <ZLBlockTreeView.h>
 
 class ScrollingAction : public ZLApplication::Action {
 
 protected:
 	ScrollingAction(
-		ZLTextView::ScrollingMode textScrollingMode,
+		ZLTextAreaController::ScrollingMode textScrollingMode,
 		ZLBlockTreeView::ScrollingMode blockScrollingMode,
 		bool forward
 	);
@@ -41,7 +41,7 @@ public:
 	void run();
 
 private:
-	const ZLTextView::ScrollingMode myTextScrollingMode;
+	const ZLTextAreaController::ScrollingMode myTextScrollingMode;
 	const ZLBlockTreeView::ScrollingMode myBlockScrollingMode;
 	const bool myForward;
 };

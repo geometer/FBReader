@@ -33,7 +33,7 @@
 #include <ZLTextParagraphCursor.h>
 #include <ZLTextRectangle.h>
 #include <ZLTextParagraph.h>
-#include <ZLTextArea.h>
+#include <ZLTextAreaController.h>
 
 class ZLRunnable;
 
@@ -48,14 +48,6 @@ class ZLTextView : public ZLView, public ZLTextArea::Properties {
 
 public:
 	static const int DOUBLE_CLICK_DELAY;
-
-public:
-	enum ScrollingMode {
-		NO_OVERLAPPING,
-		KEEP_LINES,
-		SCROLL_LINES,
-		SCROLL_PERCENTAGE
-	};
 
 public:
 	class PositionIndicator;
@@ -82,7 +74,7 @@ public:
 	size_t pageIndex();
 	size_t pageNumber() const;
 
-	void scrollPage(bool forward, ScrollingMode mode, unsigned int value);
+	void scrollPage(bool forward, ZLTextAreaController::ScrollingMode mode, unsigned int value);
 	void scrollToStartOfText();
 	void scrollToEndOfText();
 
@@ -114,7 +106,6 @@ protected:
 
 	virtual void paint();
 
-	void rebuildPaintInfo(bool strong);
 	virtual void preparePaintInfo();
 
 	virtual shared_ptr<PositionIndicator> createPositionIndicator(const ZLTextPositionIndicatorInfo&);
@@ -130,15 +121,9 @@ private:
 
 	void clear();
 
-	ZLTextWordCursor findLineFromStart(unsigned int overlappingValue) const;
-	ZLTextWordCursor findLineFromEnd(unsigned int overlappingValue) const;
-	ZLTextWordCursor findPercentFromStart(unsigned int percent) const;
-
 	std::vector<size_t>::const_iterator nextBreakIterator() const;
 
 	shared_ptr<ZLTextView::PositionIndicator> positionIndicator();
-
-	int textHeight() const;
 
 	void gotoCharIndex(size_t charIndex);
 
@@ -146,19 +131,7 @@ private:
 	void stopSelectionScrolling();
 
 private:
-	ZLTextArea myTextArea;
-
-	enum {
-		NOTHING_TO_PAINT,
-		READY,
-		START_IS_KNOWN,
-		END_IS_KNOWN,
-		TO_SCROLL_FORWARD,
-		TO_SCROLL_BACKWARD
-	} myPaintState;
-
-	ScrollingMode myScrollingMode;
-	unsigned int myOverlappingValue;
+	ZLTextAreaController myTextAreaController;
 
 	std::vector<size_t> myTextSize;
 	std::vector<size_t> myTextBreaks;
@@ -181,6 +154,6 @@ private:
 	} myDoubleClickInfo;
 };
 
-inline const ZLTextArea &ZLTextView::textArea() const { return myTextArea; }
+inline const ZLTextArea &ZLTextView::textArea() const { return myTextAreaController.area(); }
 
 #endif /* __ZLTEXTVIEW_H__ */
