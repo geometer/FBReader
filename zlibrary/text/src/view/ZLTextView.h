@@ -116,9 +116,6 @@ protected:
 	virtual int bottomMargin() const = 0;
 
 private:
-	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
-	void moveEndCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
-
 	void clear();
 
 	std::vector<size_t>::const_iterator nextBreakIterator() const;

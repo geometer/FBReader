@@ -340,3 +340,38 @@ bool ZLTextAreaController::preparePaintInfo() {
 	myArea.myLineInfoCache.clear();
 	return true;
 }
+
+void ZLTextAreaController::moveStartCursor(int paragraphIndex, int elementIndex, int charIndex) {
+	if (myPaintState == NOTHING_TO_PAINT) {
+		return;
+	}
+
+	if (myArea.myStartCursor.isNull()) {
+		myArea.myStartCursor = myArea.myEndCursor;
+	}
+	myArea.myStartCursor.moveToParagraph(paragraphIndex);
+	myArea.myStartCursor.moveTo(elementIndex, charIndex);
+	myArea.myEndCursor = 0;
+	myArea.myLineInfos.clear();
+	myPaintState = START_IS_KNOWN;
+}
+
+void ZLTextAreaController::moveEndCursor(int paragraphIndex, int elementIndex, int charIndex) {
+	if (myPaintState == NOTHING_TO_PAINT) {
+		return;
+	}
+
+	if (myArea.myEndCursor.isNull()) {
+		myArea.myEndCursor = myArea.myStartCursor;
+	}
+	myArea.myEndCursor.moveToParagraph(paragraphIndex);
+	if ((paragraphIndex > 0) && (elementIndex == 0) && (charIndex == 0)) {
+		myArea.myEndCursor.previousParagraph();
+		myArea.myEndCursor.moveToParagraphEnd();
+	} else {
+		myArea.myEndCursor.moveTo(elementIndex, charIndex);
+	}
+	myArea.myStartCursor = 0;
+	myArea.myLineInfos.clear();
+	myPaintState = END_IS_KNOWN;
+}

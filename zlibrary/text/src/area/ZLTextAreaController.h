@@ -50,6 +50,9 @@ public:
 	bool preparePaintInfo();
 
 public: // TODO: change to private
+	void moveStartCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
+	void moveEndCursor(int paragraphNumber, int wordNumber = 0, int charNumber = 0);
+
 	void rebuildPaintInfo(bool strong);
 
 	enum SizeUnit {

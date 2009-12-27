@@ -23,41 +23,6 @@
 #include "../area/ZLTextLineInfo.h"
 #include "../area/ZLTextAreaStyle.h"
 
-void ZLTextView::moveStartCursor(int paragraphIndex, int elementIndex, int charIndex) {
-	if (myTextAreaController.myPaintState == ZLTextAreaController::NOTHING_TO_PAINT) {
-		return;
-	}
-
-	if (myTextAreaController.area().myStartCursor.isNull()) {
-		myTextAreaController.area().myStartCursor = myTextAreaController.area().myEndCursor;
-	}
-	myTextAreaController.area().myStartCursor.moveToParagraph(paragraphIndex);
-	myTextAreaController.area().myStartCursor.moveTo(elementIndex, charIndex);
-	myTextAreaController.area().myEndCursor = 0;
-	myTextAreaController.area().myLineInfos.clear();
-	myTextAreaController.myPaintState = ZLTextAreaController::START_IS_KNOWN;
-}
-
-void ZLTextView::moveEndCursor(int paragraphIndex, int elementIndex, int charIndex) {
-	if (myTextAreaController.myPaintState == ZLTextAreaController::NOTHING_TO_PAINT) {
-		return;
-	}
-
-	if (myTextAreaController.area().myEndCursor.isNull()) {
-		myTextAreaController.area().myEndCursor = myTextAreaController.area().myStartCursor;
-	}
-	myTextAreaController.area().myEndCursor.moveToParagraph(paragraphIndex);
-	if ((paragraphIndex > 0) && (elementIndex == 0) && (charIndex == 0)) {
-		myTextAreaController.area().myEndCursor.previousParagraph();
-		myTextAreaController.area().myEndCursor.moveToParagraphEnd();
-	} else {
-		myTextAreaController.area().myEndCursor.moveTo(elementIndex, charIndex);
-	}
-	myTextAreaController.area().myStartCursor = 0;
-	myTextAreaController.area().myLineInfos.clear();
-	myTextAreaController.myPaintState = ZLTextAreaController::END_IS_KNOWN;
-}
-
 void ZLTextView::scrollPage(bool forward, ZLTextAreaController::ScrollingMode mode, unsigned int value) {
 	preparePaintInfo();
 	if (myTextAreaController.myPaintState == ZLTextAreaController::READY) {

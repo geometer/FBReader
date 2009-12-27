@@ -218,11 +218,11 @@ void ZLTextView::gotoParagraph(int num, bool end) {
 
 	if (end) {
 		if ((num > 0) && (num <= (int)model->paragraphsNumber())) {
-			moveEndCursor(num);
+			myTextAreaController.moveEndCursor(num);
 		}
 	} else {
 		if ((num >= 0) && (num < (int)model->paragraphsNumber())) {
-			moveStartCursor(num);
+			myTextAreaController.moveStartCursor(num);
 		}
 	}
 }
@@ -232,7 +232,7 @@ void ZLTextView::gotoPosition(int paragraphIndex, int elementIndex, int charInde
 	const ZLTextWordCursor &startCursor = textArea().startCursor();
 	if (!startCursor.isNull() && 
 			((int)startCursor.paragraphCursor().index() == paragraphIndex)) {
-		moveStartCursor(paragraphIndex, elementIndex, charIndex);
+		myTextAreaController.moveStartCursor(paragraphIndex, elementIndex, charIndex);
 	}
 }
 
