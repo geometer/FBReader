@@ -36,10 +36,14 @@ Section "FBReader"
   CreateShortCut "$SMPROGRAMS\FBReader for Windows\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut "$SMPROGRAMS\FBReader for Windows\FBReader.lnk" "$INSTDIR\FBReader.exe" "" "$INSTDIR\FBReader.exe" 0
 
-	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "BookPath"
+	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "Base:fontFamily"
 	StrCmp $0 "" 0 +2
 	WriteRegStr HKCU "Software\FBReader\options\Style" "Base:fontFamily" "Georgia" 
+	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "Base:fontSize"
+	StrCmp $0 "" 0 +2
 	WriteRegStr HKCU "Software\FBReader\options\Style" "Base:fontSize" "20" 
+	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "BookPath"
+	StrCmp $0 "" 0 +2
 	WriteRegStr HKCU "Software\FBReader\options\Options" "BookPath" "C:\Books;$PROFILE\Books" 
 	ReadRegStr $0 HKCU "Software\FBReader\options\Options" "DownloadDirectory"
 	StrCmp $0 "" 0 +2
