@@ -23,6 +23,7 @@
 #include "DocBookDescriptionReader.h"
 
 #include "../../library/Book.h"
+#include "../../library/Author.h"
 
 DocBookDescriptionReader::DocBookDescriptionReader(Book &book) : myBook(book) {
 	myReadTitle = false;
