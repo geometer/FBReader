@@ -61,6 +61,7 @@ public:
 	};
 
 public:
+	static std::string perform(shared_ptr<ZLExecutionData> data);
 	static std::string perform(const Vector &dataVector);
 
 private:

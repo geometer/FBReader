@@ -21,6 +21,12 @@
 
 std::set<ZLExecutionData::Runner*> ZLExecutionData::ourRunners;
 
+std::string ZLExecutionData::perform(shared_ptr<ZLExecutionData> data) {
+	Vector dataVector;
+	dataVector.push_back(data);
+	return perform(dataVector);
+}
+
 std::string ZLExecutionData::perform(const Vector &dataVector) {
 	std::string result;
 	for (std::set<Runner*>::const_iterator it = ourRunners.begin(); it != ourRunners.end(); ++it) {
