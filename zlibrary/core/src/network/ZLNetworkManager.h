@@ -71,6 +71,12 @@ public:
 	std::string downloadFile(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener = 0) const;
 
 public:
+	virtual shared_ptr<ZLExecutionData> createNoActionData(const std::string &url, const std::string &sslCertificate) const = 0;
+	virtual shared_ptr<ZLExecutionData> createNoActionData(const std::string &url) const = 0;
+
+	virtual shared_ptr<ZLExecutionData> createReadToStringData(const std::string &url, std::string &dataString, const std::string &sslCertificate) const = 0;
+	virtual shared_ptr<ZLExecutionData> createReadToStringData(const std::string &url, std::string &dataString) const = 0;
+
 	virtual shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream = 0) const = 0;
 	virtual shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0) const = 0;
 

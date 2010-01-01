@@ -27,12 +27,30 @@
 #include <ZLXMLReader.h>
 
 #include "ZLCurlNetworkManager.h"
+#include "ZLCurlNetworkNoActionData.h"
+#include "ZLCurlNetworkReadToStringData.h"
 #include "ZLCurlNetworkDownloadData.h"
 #include "ZLCurlNetworkXMLParserData.h"
 #include "ZLCurlNetworkPostFormData.h"
 
 void ZLCurlNetworkManager::createInstance() {
 	ourInstance = new ZLCurlNetworkManager();
+}
+
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createNoActionData(const std::string &url, const std::string &sslCertificate) const {
+	return new ZLCurlNetworkNoActionData(url, sslCertificate);
+}
+
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createNoActionData(const std::string &url) const {
+	return new ZLCurlNetworkNoActionData(url);
+}
+
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createReadToStringData(const std::string &url, std::string &dataString, const std::string &sslCertificate) const {
+	return new ZLCurlNetworkReadToStringData(url, dataString, sslCertificate);
+}
+
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createReadToStringData(const std::string &url, std::string &dataString) const {
+	return new ZLCurlNetworkReadToStringData(url, dataString);
 }
 
 shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream) const {

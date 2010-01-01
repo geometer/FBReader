@@ -32,6 +32,12 @@ public:
 private:
 	std::string perform(const ZLExecutionData::Vector &dataList) const;
 
+	shared_ptr<ZLExecutionData> createNoActionData(const std::string &url, const std::string &sslCertificate) const;
+	shared_ptr<ZLExecutionData> createNoActionData(const std::string &url) const;
+
+	shared_ptr<ZLExecutionData> createReadToStringData(const std::string &url, std::string &dataString, const std::string &sslCertificate) const;
+	shared_ptr<ZLExecutionData> createReadToStringData(const std::string &url, std::string &dataString) const;
+
 	shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream = 0) const;
 	shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0) const;
 
