@@ -69,7 +69,13 @@ void ZLTextArea::drawTreeLines(const ZLTextTreeNodeInfo &info, int x, int y, int
 			}
 			const int left = std::min(realX(x), realX(x + 4 * qstep));
 			const int right = std::max(realX(x), realX(x + 4 * qstep));
-			myTreeNodeMap.push_back(ZLTextTreeNodeRectangle(info.ParagraphIndex, left, right, y - height + 1, y));
+			myTreeNodeMap.push_back(
+				ZLTextTreeNodeRectangle(
+					info.ParagraphIndex,
+					left - myHOffset, right - myHOffset,
+					y - height + 1 - myVOffset, y - myVOffset
+				)
+			);
 		}
 	} else if (!info.IsLeaf && info.IsOpen) {
 		context().drawLine(x + 2 * qstep, y + vSpaceAfter, x + 2 * qstep, y - height + 1);
