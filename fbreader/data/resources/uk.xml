@@ -1,69 +1,69 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- Ukrainian FBReader resources, by Valentina Kanevska -->
 <resources>
 	<node name="libraryView">
 		<node name="authorNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
-			<node name="edit" toBeTranslated="true" value="Edit information" />
-			<node name="unknownAuthor" toBeTranslated="true" value="Unknown Author" />
+			<node name="expandTree" value="Показати книги" />
+			<node name="collapseTree" value="Скрити книги" />
+			<node name="edit" value="Редагувати інформацію" />
+			<node name="unknownAuthor" value="Невідомий автор" />
 		</node>
 		<node name="tagNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
-			<node name="edit" toBeTranslated="true" value="Edit tag" />
-			<node name="clone" toBeTranslated="true" value="Clone tag" />
-			<node name="delete" toBeTranslated="true" value="Remove tag" />
-			<node name="noTags" toBeTranslated="true" value="Books with no tags" />
+			<node name="expandTree" value="Показати книги" />
+			<node name="collapseTree" value="Скрити книги" />
+			<node name="edit" value="Редагувати тег" />
+			<node name="clone" value="Клонувати тег" />
+			<node name="delete" value="Видалити тег" />
+			<node name="noTags" value="Книги без тегів" />
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" value="Показати книги" />
+			<node name="collapseTree" value="Скрити книги" />
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Read book" />
-			<node name="edit" toBeTranslated="true" value="Edit information" />
-			<node name="delete" toBeTranslated="true" value="Remove book" />
+			<node name="read" value="Читати книгу" />
+			<node name="edit" value="Редагувати інформацію" />
+			<node name="delete" value="Вилучити книгу" />
 		</node>
 	</node>
 	<node name="networkView">
 		<node name="libraryItemNode">
-			<node name="expandTree" toBeTranslated="true" value="Expand" />
-			<node name="collapseTree" toBeTranslated="true" value="Collapse" />
-			<node name="reload" toBeTranslated="true" value="Reload" />
-			<node name="openInBrowser" toBeTranslated="true" value="Open in browser" />
+			<node name="expandTree" value="Розгорнути" />
+			<node name="collapseTree" value="Сгорнути" />
+			<node name="reload" value="Відновити" />
+			<node name="openInBrowser" value="Відкрити в браузері" />
 		</node>
 		<node name="libraryItemRootNode">
-			<node name="expandTree" toBeTranslated="true" value="Open catalog" />
-			<node name="collapseTree" toBeTranslated="true" value="Close catalog" />
-			<node name="login" toBeTranslated="true" value="Sign in" />
-			<node name="logout" toBeTranslated="true" value="Sign out (%s)" />
-			<node name="reload" toBeTranslated="true" value="Reload" />
-			<node name="dontShow" toBeTranslated="true" value="Don&apos;t show this catalog" />
-			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)" />
-			<node name="register" toBeTranslated="true" value="Sign up" />
-			<node name="passwordRecovery" toBeTranslated="true" value="Recover password" />
+			<node name="expandTree" value="Відкрити каталог" />
+			<node name="collapseTree" value="Закрити каталог" />
+			<node name="login" value="Увійти" />
+			<node name="logout" value="Вийти (%s)" />
+			<node name="reload" value="Відновити" />
+			<node name="dontShow" value="Не показувати каталог" />
+			<node name="refillAccount" value="Поповнити рахунок (currently: %s)" />
+			<node name="register" value="Увійти" />
+			<node name="passwordRecovery" value="Recover password" />
 		</node>
 		<node name="searchResultNode">
-			<node name="title" toBeTranslated="true" value="Search results" />
-			<node name="expandTree" toBeTranslated="true" value="Show results" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide results" />
+			<node name="title" value="Результати пошуку" />
+			<node name="expandTree" value="Показати результати пошуку" />
+			<node name="collapseTree" value="Скрити результати пошуку" />
 		</node>
 		<node name="authorNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" value="Show books" />
+			<node name="collapseTree" value="Скрити книги" />
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" value="Показати книги" />
+			<node name="collapseTree" value="Скрити книги" />
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Read local copy" />
-			<node name="delete" toBeTranslated="true" value="Delete local copy" />
-			<node name="download" toBeTranslated="true" value="Download" />
-			<node name="readDemo" toBeTranslated="true" value="Read demo" />
-			<node name="downloadDemo" toBeTranslated="true" value="Download demo" />
-			<node name="buy" toBeTranslated="true" value="Buy (%s)" />
+			<node name="read" value="Читати локальну копію" />
+			<node name="delete" value="Видалити локальну копію" />
+			<node name="download" value="Завантажити" />
+			<node name="readDemo" value="Читати фрагмент" />
+			<node name="downloadDemo" value="Завантажити фрагмент" />
+			<node name="buy" value="Buy (%s)" />
 		</node>
 	</node>
 	<node name="menu">
@@ -78,14 +78,14 @@
 			<node name="showHelp" value="Про програму FBReader" />
 		</node>
 		<node name="gotoHome" value="На початок книги" />
-		<node name="gotoPageNumber" toBeTranslated="true" value="Go to Page..." />
+		<node name="gotoPageNumber" value="До сторінки..." />
 		<node name="gotoSectionStart" value="На початок розділу" />
 		<node name="gotoSectionEnd" value="В кінець розділу" />
 		<node name="nextTOCSection" value="До наступної глави" />
 		<node name="previousTOCSection" value="До попередньої глави" />
 		<node name="navigate" value="Навігація">
 			<node name="gotoHome" value="На початок книги" />
-			<node name="gotoPageNumber" toBeTranslated="true" value="Go to Page..." />
+			<node name="gotoPageNumber" value="До сторінки ..." />
 			<node name="gotoSectionStart" value="На початок розділу" />
 			<node name="gotoSectionEnd" value="В кінець розділу" />
 			<node name="nextTOCSection" value="До наступної глави" />
@@ -112,21 +112,21 @@
 		<node name="quit" value="Закрити" />
 	</node>
 	<node name="toolbar">
-		<node name="showReading" toBeTranslated="true" value="Show Reading Mode" />
+		<node name="showReading" value="Повернутися до читання" />
 		<node name="showLibrary" value="Бібліотека">
-			<node name="popup" toBeTranslated="true" value="Show Recent Books List" />
+			<node name="popup" value="Прочитані книги" />
 		</node>
 		<node name="showRecent" value="Прочитані книги" />
-		<node name="byAuthor" toBeTranslated="true" value="Organize Books by Author" />
-		<node name="byTag" toBeTranslated="true" value="Organize Books by Tag" />
+		<node name="byAuthor" value="За авторами" />
+		<node name="byTag" value="За тегами" />
 		<node name="addBook" value="Додати файл до бібліотеки" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Search in Network Libraries" />
-		<node name="searchOnNetwork" toBeTranslated="true" value="Network Search" />
-		<node name="advancedSearchOnNetwork" toBeTranslated="true" value="Advanced Network Search" />
+		<node name="showNetLibrary" value="Шукати у електронних бібліотеках" />
+		<node name="searchOnNetwork" value="Шукати у мережі" />
+		<node name="advancedSearchOnNetwork" value="Розширений пошук у мережі" />
 		<node name="gotoHome" value="На початок книги" />
 		<node name="undo" value="Назад" />
 		<node name="redo" value="Вперед" />
-		<node name="gotoPageNumberWithParameter" toBeTranslated="true" value="Go to Page" />
+		<node name="gotoPageNumberWithParameter" value="До сторінки" />
 		<node name="toc" value="Зміст" />
 		<node name="search" value="Пошук" />
 		<node name="findNext" value="Знайти наступний" />
@@ -139,13 +139,13 @@
 	<node name="dialog">
 		<node name="button">
 			<node name="go" value="&amp;Шукати" />
-			<node name="thisOnly" toBeTranslated="true" value="This only" />
-			<node name="withSubtags" toBeTranslated="true" value="With subtags" />
-			<node name="removeLink" toBeTranslated="true" value="Remove from library" />
-			<node name="removeFile" toBeTranslated="true" value="Remove from disk" />
-			<node name="yesToAll" toBeTranslated="true" value="Yes to &amp;all" />
-			<node name="buy" toBeTranslated="true" value="&amp;Buy" />
-			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download" />
+			<node name="thisOnly" value="Тільки цю" />
+			<node name="withSubtags" value="З підтегами" />
+			<node name="removeLink" value="Видалити з бібліотеки" />
+			<node name="removeFile" value="Видалити з диска" />
+			<node name="yesToAll" value="Так для &amp;all" />
+			<node name="buy" value="&amp;Купити" />
+			<node name="buyAndDownload" value="Купити та &amp;завантажити" />
 		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Налаштування" />
@@ -153,14 +153,14 @@
 				<node name="Library" value="Бібліотека">
 					<node name="bookPath" value="Каталоги з книгами" />
 					<node name="lookInSubdirectories" value="Шукати книги в підтеках" />
-					<node name="collectBooksWithoutMetaInfo" toBeTranslated="true" value="Collect Books without MetaInfo" />
-					<node name="downloadDirectory" toBeTranslated="true" value="Directory for Downloaded Books" />
+					<node name="collectBooksWithoutMetaInfo" value="Показати книжки без метаінформації" />
+					<node name="downloadDirectory" value="Каталог для загружаемых книг" />
 				</node>
-				<node name="NetworkLibrary" toBeTranslated="true" value="Network Search">
-					<node name="useProxy" toBeTranslated="true" value="Use Proxy" />
-					<node name="proxyHost" toBeTranslated="true" value="Proxy Host" />
-					<node name="proxyPort" toBeTranslated="true" value="Proxy Port" />
-					<node name="timeout" toBeTranslated="true" value="Network Operations Timeout, seconds" />
+				<node name="NetworkLibrary" value="Пошук у мережі">
+					<node name="useProxy" value="Використовувати проксі-сервер" />
+					<node name="proxyHost" value="Адреса проксі-сервера" />
+					<node name="proxyPort" value="Порт проксі-сервера" />
+					<node name="timeout" value="Максимальний час затримки, секунди" />
 				</node>
 				<node name="Language" value="Мова">
 					<node name="autoDetect" value="Визначити мову та кодувати автоматично" />
@@ -170,10 +170,10 @@
 					<node name="useWindows1252Hack" value="Використати windows-1252 замiсть iso-8859-1" />
 				</node>
 				<node name="Indicator" value="Індикатор">
-					<node name="type" toBeTranslated="true" value="Show as">
-						<node name="osScrollbar" toBeTranslated="true" value="OS Scrollbar" />
-						<node name="fbIndicator" toBeTranslated="true" value="Old Style Indicator" />
-						<node name="none" toBeTranslated="true" value="Don&apos;t Show" />
+					<node name="type" value="Показувати як">
+						<node name="osScrollbar" value="Лінійка прокручування" />
+						<node name="fbIndicator" value="Iндикатор внизу" />
+						<node name="none" value="Не показувати" />
 					</node>
 					<node name="height" value="Висота індикатора" />
 					<node name="offset" value="Відступ від тексту" />
@@ -184,17 +184,17 @@
 					<node name="navigation" value="Реагувати на натискання" />
 				</node>
 				<node name="Scrolling" value="Перегортання">
-					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs" />
-					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling" />
-					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling" />
-					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling" />
-					<node name="fingerOnly" toBeTranslated="true" value="Scroll on Finger Tap Only" />
+					<node name="keyScrollDelay" value="Затримка між перегортання клавішами, мілісекунди" />
+					<node name="keyLinesToScroll" value="Скільки рядків перегортати за 1 раз" />
+					<node name="keyLinesToKeep" value="Скільки рядків залишати з попередньої сторінки" />
+					<node name="enableTapScrolling" value="Включити прокручування натисненням на екран" />
+					<node name="fingerOnly" value="Прокручувати тільки при натисканні пальцем" />
 				</node>
 				<node name="Selection" value="Помітка">
 					<node name="enableSelection" value="Дозволити помiчати текст" />
 				</node>
-				<node name="CSS" toBeTranslated="true" value="CSS">
-					<node name="overrideSpecifiedFonts" toBeTranslated="true" value="Always Use My Own Fonts" />
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Завжди використовувати власні шрифти" />
 				</node>
 				<node name="Margins" value="Відступи">
 					<node name="left" value="Відступ зліва" />
@@ -217,8 +217,8 @@
 					</node>
 					<node name="spaceBefore" value="Пропуск перед" />
 					<node name="spaceAfter" value="Пропуск після" />
-					<node name="startIndent" toBeTranslated="true" value="Line Start Indent" />
-					<node name="endIndent" toBeTranslated="true" value="Line End Indent" />
+					<node name="startIndent" value="Відступ на початку рядка" />
+					<node name="endIndent" value="Відступ на кінці рядка" />
 				</node>
 				<node name="Styles" value="Стилі">
 					<node name="optionsFor" value="Налаштування для" />
@@ -248,7 +248,7 @@
 						<node name="text" value="звичайного тексту" />
 						<node name="internalLink" value="посилання" />
 						<node name="externalLink" value="зовнішнього посилання" />
-						<node name="bookLink" toBeTranslated="true" value="Link to Another Book" />
+						<node name="bookLink" value="Посилання на іншу книгу" />
 						<node name="highlighted" value="підсвіченого тексту" />
 						<node name="treeLines" value="ліній" />
 						<node name="indicator" value="індикатора" />
@@ -261,7 +261,7 @@
 					<node name="action">
 						<node name="none" value="Ніяких дій" />
 						<node name="showLibrary" value="Показати бібліотеку" />
-						<node name="showNetLibrary" toBeTranslated="true" value="Show network library" />
+						<node name="showNetLibrary" value="Показати електронну бібліотеку" />
 						<node name="showRecent" value="Показати прочитані книги" />
 						<node name="previousBook" value="Відкрити попередню книгу" />
 						<node name="toc" value="Показати зміст" />
@@ -270,10 +270,10 @@
 						<node name="gotoSectionEnd" value="Перейти до кінця розділу" />
 						<node name="nextTOCSection" value="Перейти до наступної глави" />
 						<node name="previousTOCSection" value="Перейти до попередньої глави" />
-						<node name="pageForward" toBeTranslated="true" value="Scroll page forward" />
-						<node name="pageBackward" toBeTranslated="true" value="Scroll page backward" />
-						<node name="lineForward" toBeTranslated="true" value="Scroll line forward" />
-						<node name="lineBackward" toBeTranslated="true" value="Scroll line backward" />
+						<node name="pageForward" value="Перегорнути на сторінку вперед" />
+						<node name="pageBackward" value="Перегорнути на сторінку назад" />
+						<node name="lineForward" value="Перегорнути на рядок вперед" />
+						<node name="lineBackward" value="Перегорнути рядок назад" />
 						<node name="undo" value="Скасувати перехід" />
 						<node name="redo" value="Повторити перехід" />
 						<node name="copyToClipboard" value="Скопіювати позначений текст до буфера" />
@@ -329,15 +329,15 @@
 					<node name="encodingSet" value="Набір кодувань" />
 					<node name="encoding" value="Кодування" />
 				</node>
-				<node name="Authors" toBeTranslated="true" value="Authors">
-					<node name="authorDisplayName" toBeTranslated="true" value="Author Name" />
+				<node name="Authors" value="Автори">
+					<node name="authorDisplayName" value="Ім'я автора" />
 				</node>
 				<node name="Series" value="Серія">
 					<node name="seriesTitle" value="Назва серії" />
 					<node name="bookIndex" value="Номер книги у серії" />
 				</node>
-				<node name="Tags" toBeTranslated="true" value="Tags">
-					<node name="tags" toBeTranslated="true" value="Tag Name" />
+				<node name="Tags" value="Теги">
+					<node name="tags" value="Назва тегу" />
 				</node>
 				<node name="Text" value="Текст">
 					<node name="breakType" value="Новий параграф по" />
@@ -354,9 +354,9 @@
 			</node>
 		</node>
 		<node name="AuthorInfoDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Author Info" />
-			<node name="name" toBeTranslated="true" value="Author Name" />
-			<node name="sortKey" toBeTranslated="true" value="Author Sort Key" />
+			<node name="title" value="FBReader - Інформація про автора" />
+			<node name="name" value="Ім'я автора" />
+			<node name="sortKey" value="Сортувати за авторами" />
 		</node>
 		<node name="addFileDialog">
 			<node name="title" value="FBReader - Додавання книги до бібліотеки" />
@@ -370,126 +370,126 @@
 			<node name="currentSection" value="Тільки у цьому розділі" />
 		</node>
 		<node name="networkSearchDialog">
-			<node name="title" toBeTranslated="true" value="Network Search" />
-			<node name="titleAndSeries" toBeTranslated="true" value="Title/Series" />
-			<node name="author" toBeTranslated="true" value="Author" />
-			<node name="category" toBeTranslated="true" value="Category" />
-			<node name="description" toBeTranslated="true" value="Description" />
-			<node name="annotation" toBeTranslated="true" value="Search results for: %s" />
+			<node name="title" value="Пошук у мережі" />
+			<node name="titleAndSeries" value="Назва книги/Серія" />
+			<node name="author" value="Автор" />
+			<node name="category" value="Категорія" />
+			<node name="description" value="Опис" />
+			<node name="annotation" value="Результати пошуку для: %s" />
 		</node>
 		<node name="gotoPageDialog">
-			<node name="title" toBeTranslated="true" value="Go To Page" />
-			<node name="pageNumber" toBeTranslated="true" value="Go to Page Number" />
+			<node name="title" value="До сторінки" />
+			<node name="pageNumber" value="Номер сторінки" />
 		</node>
 		<node name="editTagDialog">
-			<node name="title" toBeTranslated="true" value="Edit Tag" />
-			<node name="name" toBeTranslated="true" value="Tag Name" />
-			<node name="includeSubtags" toBeTranslated="true" value="Include Subtags" />
+			<node name="title" value="Редагувати тег" />
+			<node name="name" value="Назва тега" />
+			<node name="includeSubtags" value="Включаючи підтеги" />
 		</node>
 		<node name="cloneTagDialog">
-			<node name="title" toBeTranslated="true" value="Clone Tag" />
-			<node name="name" toBeTranslated="true" value="Tag Name" />
-			<node name="includeSubtags" toBeTranslated="true" value="Include Subtags" />
+			<node name="title" value="Клонувати тег" />
+			<node name="name" value="Назва тегу" />
+			<node name="includeSubtags" value="Включаючи підтеги" />
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Видалення книги" />
-			<node name="message" value="Видалити книгу&#10;&quot;%s&quot;&#10;з бібліотеки?" />
-			<node name="deleteFile" toBeTranslated="true" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?" />
+			<node name="message" value="Видалити книгу&#xA;&quot;%s&quot;&#xA;з бібліотеки?" />
+			<node name="deleteFile" value="Ви дійсно хочете вилучити з диска файл “%s”?" />
 		</node>
 		<node name="removeTagBox">
-			<node name="title" toBeTranslated="true" value="Remove Tag" />
-			<node name="message" toBeTranslated="true" value="Remove Tag “%s”?" />
+			<node name="title" value="Видалити тег" />
+			<node name="message" value="Видалити тег “%s”?" />
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Помилка" />
-			<node name="message" value="Не можу відкрити:&#10;%s" />
+			<node name="message" value="Не можу відкрити:&#xA;%s" />
 		</node>
 		<node name="removeFileErrorBox">
-			<node name="title" toBeTranslated="true" value="Error" />
-			<node name="message" toBeTranslated="true" value="Couldn&apos;t remove file&#10;%s" />
+			<node name="title" value="Помилка" />
+			<node name="message" value="Не можу видалити файл %s" />
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Помилка" />
 			<node name="message" value="Вибачте, немає файлу з інформацією" />
 		</node>
 		<node name="networkError">
-			<node name="emptyLibrariesList" toBeTranslated="true" value="Empty libraries list" />
-			<node name="authenticationFailed" toBeTranslated="true" value="Authentication failed" />
-			<node name="internalError" toBeTranslated="true" value="Internal server error" />
-			<node name="purchaseNotEnoughMoney" toBeTranslated="true" value="Not enough money" />
-			<node name="purchaseMissingBook" toBeTranslated="true" value="Missing book" />
-			<node name="purchaseAlreadyPurchased" toBeTranslated="true" value="Already purchased" />
-			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased" />
-			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded" />
-			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation" />
-			<node name="loginAlreadyTaken" toBeTranslated="true" value="Username is already in use" />
-			<node name="loginNotSpecified" toBeTranslated="true" value="Please, enter a username" />
-			<node name="passwordNotSpecified" toBeTranslated="true" value="Please, enter a non-empty password" />
-			<node name="emailNotSpecified" toBeTranslated="true" value="Please, enter an e-mail address" />
-			<node name="invalidEMail" toBeTranslated="true" value="Invalid e-mail address" />
-			<node name="tooManyRegistrations" toBeTranslated="true" value="Too many registrations from your IP;&#10;try again in a few minutes" />
-			<node name="noUserEmail" toBeTranslated="true" value="No user was registered&#10;with specified e-mail address" />
+			<node name="emptyLibrariesList" value="Бібліотеки для пошуку не вказані" />
+			<node name="authenticationFailed" value="Помилка авторизації" />
+			<node name="internalError" value="Внутрішня помилка сервера" />
+			<node name="purchaseNotEnoughMoney" value="Не достатньо коштів на рахунку" />
+			<node name="purchaseMissingBook" value="Книга відсутня в продажу" />
+			<node name="purchaseAlreadyPurchased" value="Книга вже була куплена" />
+			<node name="bookNotPurchased" value="Книга не була куплена" />
+			<node name="downloadLimitExceeded" value="Ліміт завантажень вичерпано" />
+			<node name="unsupportedOperation" value="Операція не підтримується" />
+			<node name="loginAlreadyTaken" value="Це ім'я користувача зайнято" />
+			<node name="loginNotSpecified" value="Введіть ім'я користувача" />
+			<node name="passwordNotSpecified" value="Введіть непорожній пароль" />
+			<node name="emailNotSpecified" value="Введіть адресу електронної пошти" />
+			<node name="invalidEMail" value="Невірна адреса електронної пошти" />
+			<node name="tooManyRegistrations" value="Занадто багато реєстрацій з вашого IP; спробуйте ще раз через пару хвилин" />
+			<node name="noUserEmail" value="Немає користувача з такою адресою електронної пошти" />
 		</node>
 		<node name="downloadError">
-			<node name="title" toBeTranslated="true" value="Error while downloading" />
-			<node name="message" toBeTranslated="true" value="Can&apos;t download this book at the moment" />
+			<node name="title" value="Помилка при завантаженні" />
+			<node name="message" value="Неможливо завантажити цю книгу в даний момент" />
 		</node>
 		<node name="waitMessage">
 			<node name="loadingBook" value="Завантаження книги. Зачекайте..." />
 			<node name="loadingBookList" value="Завантаження списку книг. Зачекайте..." />
-			<node name="migrate" toBeTranslated="true" value="Upgrading to the new version. Please, wait..." />
-			<node name="downloadBookList" toBeTranslated="true" value="Downloading book list. Please, wait..." />
-			<node name="downloadBook" toBeTranslated="true" value="Downloading book. Please, wait..." />
-			<node name="downloadImages" toBeTranslated="true" value="Downloading images. Please, wait..." />
-			<node name="authentication" toBeTranslated="true" value="Authentication. Please, wait..." />
-			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..." />
-			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..." />
-			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..." />
-			<node name="registerUser" toBeTranslated="true" value="Registering new account. Please, wait..." />
-			<node name="passwordRecovery" toBeTranslated="true" value="Recovering password. Please, wait..." />
+			<node name="migrate" value="Перехід на нову версію. Зачекайте, будь ласка..." />
+			<node name="downloadBookList" value="Завантаження списку книг. Будь ласка, зачекайте ..." />
+			<node name="downloadBook" value="Завантаження книги. Будь ласка, зачекайте ..." />
+			<node name="downloadImages" value="Завантаження зображень. Будь ласка, зачекайте ..." />
+			<node name="authentication" value="Авторізація. Будь ласка, зачекайте ..." />
+			<node name="purchaseBook" value="Покупка книги. Будь ласка, зачекайте ..." />
+			<node name="initializeAuthenticationManager" value="Завантаження інформації користувача. Будь ласка, зачекайте ..." />
+			<node name="loadSubCatalog" value="Завантаження каталогу. Будь ласка, зачекайте..." />
+			<node name="registerUser" value="Реєстрація нового користувача. Будь ласка, зачекайте..." />
+			<node name="passwordRecovery" value="Відновлення пароля. Будь ласка, зачекайте ..." />
 		</node>
 		<node name="purchaseConfirmBox">
-			<node name="title" toBeTranslated="true" value="Purchase book" />
-			<node name="message" toBeTranslated="true" value="Are you sure you want to buy&#10;“%s”&#10;book?" />
+			<node name="title" value="Купити книгу" />
+			<node name="message" value="Ви впевнені, що хочете придбати книгу “%s”?" />
 		</node>
 		<node name="AuthenticationDialog">
-			<node name="title" toBeTranslated="true" value="Authentication" />
-			<node name="login" toBeTranslated="true" value="Username" />
-			<node name="password" toBeTranslated="true" value="Password" />
-			<node name="skipIP" toBeTranslated="true" value="Don&apos;t bound to ip-address" />
-			<node name="loginIsEmpty" toBeTranslated="true" value="Username should be non-empty" />
+			<node name="title" value="Авторізація" />
+			<node name="login" value="Ім'я користувача" />
+			<node name="password" value="Пароль" />
+			<node name="skipIP" value="Не прив'язуватися до IP-адреси" />
+			<node name="loginIsEmpty" value="Ім'я користувача не повинно бути порожнім" />
 		</node>
 		<node name="emptyCatalogBox">
-			<node name="title" toBeTranslated="true" value="Information" />
-			<node name="message" toBeTranslated="true" value="Catalog is empty." />
+			<node name="title" value="Інформація" />
+			<node name="message" value="Каталог порожній" />
 		</node>
 		<node name="dontShowConfirmBox">
-			<node name="title" toBeTranslated="true" value="Disable catalog" />
-			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;ou can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
+			<node name="title" value="Відключення каталога" />
+			<node name="message" value="Ви дійсно бажаєте відключити каталог&#xD;&#xA;“%s”?&#xD;&#xA;&#xD;&#xA;Ви можете включити його во вкладинці “Пошук в мережі” у діалозі Налаштування." />
 		</node>
 		<node name="deleteLocalCopyBox">
-			<node name="title" toBeTranslated="true" value="Delete Book" />
-			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;“%s” book&#10;from the disk?" />
+			<node name="title" value="Видалити книгу" />
+			<node name="message" value="Ви дійсно бажаете &#xD;&#xA;видалити книгу&#xD;&#xA;“%s” &#xD;&#xA;з диску?" />
 		</node>
 		<node name="RegisterUserDialog">
-			<node name="title" toBeTranslated="true" value="Register User" />
-			<node name="login" toBeTranslated="true" value="Username" />
-			<node name="password" toBeTranslated="true" value="Password" />
-			<node name="confirmPassword" toBeTranslated="true" value="Password confirmation" />
-			<node name="email" toBeTranslated="true" value="E-mail" />
-			<node name="differentPasswords" toBeTranslated="true" value="Password and password confirmation must be the same." />
+			<node name="title" value="Регістрація користувача" />
+			<node name="login" value="Ім'я користувача" />
+			<node name="password" value="Пароль" />
+			<node name="confirmPassword" value="Підтвердження пароля" />
+			<node name="email" value="E-mail" />
+			<node name="differentPasswords" value="Пароль та підтвердження повинні бути однаковими." />
 		</node>
 		<node name="PasswordRecoveryDialog">
-			<node name="title" toBeTranslated="true" value="Password Recovery" />
-			<node name="email" toBeTranslated="true" value="E-mail" />
+			<node name="title" value="Відновлення пароля" />
+			<node name="email" value="E-mail" />
 		</node>
 		<node name="recoverySuccessfulBox">
-			<node name="title" toBeTranslated="true" value="Password Recovery" />
-			<node name="message" toBeTranslated="true" value="A message with further instructions&#10;has been sent to&#10;%s" />
+			<node name="title" value="Відновлення пароля" />
+			<node name="message" value="Інструкція з відновлення вислана на адресу&#xD;&#xA;%s" />
 		</node>
 		<node name="cantOpenDownloadedFile">
-			<node name="title" toBeTranslated="true" value="Download Error" />
-			<node name="message" toBeTranslated="true" value="Can&apos;t open downloaded file&#10;%s." />
+			<node name="title" value="Помилка завантаження" />
+			<node name="message" value="Не можливо відктири завантаженний файл&#xD;&#xA;%s." />
 		</node>
 	</node>
 	<node name="style">
@@ -517,7 +517,7 @@
 		<node name="Code" value="тексту програми" />
 		<node name="StrikeThrough" value="закресленого тексту" />
 		<node name="Contents Table" value="змісту" />
-		<node name="Library Entry" toBeTranslated="true" value="Library Entry" />
+		<node name="Library Entry" value="бібліотеки" />
 		<node name="Recent Book List" value="списку книг" />
 		<node name="Italic" value="курсиву" />
 		<node name="Bold" value="жирного тексту" />
@@ -530,7 +530,7 @@
 		<node name="Header 5" value="тексту всередині &lt;h5&gt;" />
 		<node name="Header 6" value="тексту всередині &lt;h6&gt;" />
 		<node name="External Hyperlink" value="зовнішнього посилання" />
-		<node name="Link to Another Book" toBeTranslated="true" value="Link to Another Book" />
+		<node name="Link to Another Book" value="посилання на іншу книгу" />
 	</node>
 	<node name="external">
 		<node name="browser" value="переглядачі" />
@@ -542,7 +542,7 @@
 		<node name="encryptedFile" value="файл захищений DRM" />
 	</node>
 	<node name="networkLibrary">
-		<node name="caption" toBeTranslated="true" value="Network Library" />
+		<node name="caption" value="електронна бібліотека" />
 	</node>
 	<node name="library">
 		<node name="caption" value="Бібліотека" />

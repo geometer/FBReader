@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!-- Ukrainian zlibrary resources, by Valentina Kanevska -->
 <resources>
 	<node name="dialog">
@@ -13,21 +13,21 @@
 			<node name="savingConfig" value="Збереження налаштувань..." />
 		</node>
 		<node name="networkError">
-			<node name="title" toBeTranslated="true" value="Network error" />
-			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error" />
-			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn&apos;t create a directory&#10;%s" />
-			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn&apos;t create a file&#10;%s" />
-			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn&apos;t connect to the network" />
-			<node name="couldntConnectMessage" toBeTranslated="true" value="Couldn&apos;t connect to host %s" />
-			<node name="couldntResolveHostMessage" toBeTranslated="true" value="Couldn&apos;t resolve host %s" />
-			<node name="couldntResolveProxyMessage" toBeTranslated="true" value="Couldn&apos;t resolve proxy %s" />
-			<node name="operationTimedOutMessage" toBeTranslated="true" value="Operation is timed out" />
-			<node name="somethingWrongMessage" toBeTranslated="true" value="Something goes wrong for&#10;%s" />
-			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s" />
-			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK" />
-			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates" />
-			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn&apos;t read the SSL CA certificate file:&#10;%s" />
-			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s" />
+			<node name="title" value="Помилка при роботі в мережі" />
+			<node name="unknownErrorMessage" value="Невідома помилка" />
+			<node name="couldntCreateDirectoryMessage" value="Неможливо створити каталог&#xD;&#xA;%s" />
+			<node name="couldntCreateFileMessage" value="Неможливо створити файл&#xD;&#xA;%s" />
+			<node name="couldntConnectToNetworkMessage" value="Не вдалося підключитися до мережі" />
+			<node name="couldntConnectMessage" value="Не вдалося з'єднатися з сайтом %s" />
+			<node name="couldntResolveHostMessage" value="Не вдається знайти сайт %s" />
+			<node name="couldntResolveProxyMessage" value="Не вдається знайти сайт проксі-сервер %s" />
+			<node name="operationTimedOutMessage" value="Відведений час з'єднання минув" />
+			<node name="somethingWrongMessage" value="Помилка при роботі з&#xD;&#xA;%s" />
+			<node name="sslConnectErrorMessage" value="Проблема встановлення SSL / TLS з'єднання:&#xD;&#xA;%s" />
+			<node name="peerFailedVerificationMessage" value="SSL сертифікат %s&#xD;&#xA;не в порядку" />
+			<node name="sslCertificateAuthorityMessage" value="SSL сертифікат %s не може бути підтверджений відомими сертифікатами SSL CA" />
+			<node name="sslBadCertificateFileMessage" value="Неможливо прочитати файл сертифіката:&#xD;&#xA;%s" />
+			<node name="sslShutdownFailedMessage" value="Не вдалося закрити SSL з'єднання з&#xD;&#xA;%s" />
 		</node>
 	</node>
 	<node name="color">
