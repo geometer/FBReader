@@ -3,82 +3,82 @@
 <resources>
 	<node name="dialog">
 		<node name="button">
-			<node name="ok" value="&amp;Гаразд" />
-			<node name="cancel" value="С&amp;касувати" />
-			<node name="yes" value="&amp;Так" />
-			<node name="no" value="&amp;Ні" />
-			<node name="apply" value="Заст&amp;осувати" />
+			<node name="ok" value="&amp;Гаразд"/>
+			<node name="cancel" value="С&amp;касувати"/>
+			<node name="yes" value="&amp;Так"/>
+			<node name="no" value="&amp;Ні"/>
+			<node name="apply" value="Заст&amp;осувати"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Збереження налаштувань..." />
+			<node name="savingConfig" value="Збереження налаштувань..."/>
 		</node>
 		<node name="networkError">
-			<node name="title" value="Помилка при роботі в мережі" />
-			<node name="unknownErrorMessage" value="Невідома помилка" />
-			<node name="couldntCreateDirectoryMessage" value="Неможливо створити каталог&#xD;&#xA;%s" />
-			<node name="couldntCreateFileMessage" value="Неможливо створити файл&#xD;&#xA;%s" />
-			<node name="couldntConnectToNetworkMessage" value="Не вдалося підключитися до мережі" />
-			<node name="couldntConnectMessage" value="Не вдалося з'єднатися з сайтом %s" />
-			<node name="couldntResolveHostMessage" value="Не вдається знайти сайт %s" />
-			<node name="couldntResolveProxyMessage" value="Не вдається знайти сайт проксі-сервер %s" />
-			<node name="operationTimedOutMessage" value="Відведений час з'єднання минув" />
-			<node name="somethingWrongMessage" value="Помилка при роботі з&#xD;&#xA;%s" />
-			<node name="sslConnectErrorMessage" value="Проблема встановлення SSL / TLS з'єднання:&#xD;&#xA;%s" />
-			<node name="peerFailedVerificationMessage" value="SSL сертифікат %s&#xD;&#xA;не в порядку" />
-			<node name="sslCertificateAuthorityMessage" value="SSL сертифікат %s не може бути підтверджений відомими сертифікатами SSL CA" />
-			<node name="sslBadCertificateFileMessage" value="Неможливо прочитати файл сертифіката:&#xD;&#xA;%s" />
-			<node name="sslShutdownFailedMessage" value="Не вдалося закрити SSL з'єднання з&#xD;&#xA;%s" />
+			<node name="title" value="Помилка при роботі в мережі"/>
+			<node name="unknownErrorMessage" value="Невідома помилка"/>
+			<node name="couldntCreateDirectoryMessage" value="Неможливо створити каталог&#10;%s"/>
+			<node name="couldntCreateFileMessage" value="Неможливо створити файл&#10;%s"/>
+			<node name="couldntConnectToNetworkMessage" value="Не вдалося підключитися до мережі"/>
+			<node name="couldntConnectMessage" value="Не вдалося з'єднатися з сайтом %s"/>
+			<node name="couldntResolveHostMessage" value="Не вдається знайти сайт %s"/>
+			<node name="couldntResolveProxyMessage" value="Не вдається знайти сайт проксі-сервер %s"/>
+			<node name="operationTimedOutMessage" value="Відведений час з'єднання минув"/>
+			<node name="somethingWrongMessage" value="Помилка при роботі з&#10;%s"/>
+			<node name="sslConnectErrorMessage" value="Проблема встановлення SSL / TLS з'єднання:&#10;%s"/>
+			<node name="peerFailedVerificationMessage" value="SSL сертифікат %s&#10;не в порядку"/>
+			<node name="sslCertificateAuthorityMessage" value="SSL сертифікат %s не може бути підтверджений відомими сертифікатами SSL CA"/>
+			<node name="sslBadCertificateFileMessage" value="Неможливо прочитати файл сертифіката:&#10;%s"/>
+			<node name="sslShutdownFailedMessage" value="Не вдалося закрити SSL з'єднання з&#10;%s"/>
 		</node>
 	</node>
 	<node name="color">
-		<node name="red" value="Червоний" />
-		<node name="green" value="Зелений" />
-		<node name="blue" value="Синій" />
-		<node name="black" value="Чорний" />
-		<node name="white" value="Білий" />
-		<node name="maroon" value="Брунатний" />
-		<node name="olive" value="Оливковий" />
-		<node name="navy" value="Темно-синій" />
-		<node name="purple" value="Фіолетовий" />
-		<node name="teal" value="Темно-блакитний" />
-		<node name="silver" value="Сріблястий" />
-		<node name="gray" value="Сірий" />
-		<node name="lime" value="Світло-зелений" />
-		<node name="yellow" value="Жовтий" />
-		<node name="magenta" value="Пурпурний" />
-		<node name="cyan" value="Блакитний" />
-		<node name="custom..." value="Налаштувати..." />
+		<node name="red" value="Червоний"/>
+		<node name="green" value="Зелений"/>
+		<node name="blue" value="Синій"/>
+		<node name="black" value="Чорний"/>
+		<node name="white" value="Білий"/>
+		<node name="maroon" value="Брунатний"/>
+		<node name="olive" value="Оливковий"/>
+		<node name="navy" value="Темно-синій"/>
+		<node name="purple" value="Фіолетовий"/>
+		<node name="teal" value="Темно-блакитний"/>
+		<node name="silver" value="Сріблястий"/>
+		<node name="gray" value="Сірий"/>
+		<node name="lime" value="Світло-зелений"/>
+		<node name="yellow" value="Жовтий"/>
+		<node name="magenta" value="Пурпурний"/>
+		<node name="cyan" value="Блакитний"/>
+		<node name="custom..." value="Налаштувати..."/>
 	</node>
 	<node name="language">
-		<node name="ar" value="Арабська" />
-		<node name="cs" value="Чеська" />
-		<node name="de" value="Німецька" />
-		<node name="de-traditional" value="Німецька (традiцiйна орфографiя)" />
-		<node name="el" value="Грецька" />
-		<node name="en" value="Англійська" />
-		<node name="eo" value="Есперанто" />
-		<node name="es" value="Іспанська" />
-		<node name="fi" value="Фінська" />
-		<node name="fr" value="Французька" />
-		<node name="he" value="Гебрейська" />
-		<node name="id" value="Індонезійська" />
-		<node name="it" value="Італійська" />
-		<node name="lt" value="Литовська" />
-		<node name="no" value="Норвезька" />
-		<node name="pt" value="Португальська" />
-		<node name="ru" value="Російська" />
-		<node name="tr" value="Турецька" />
-		<node name="sv" value="Шведська" />
-		<node name="uk" value="Українська" />
-		<node name="zh" value="Китайська" />
-		<node name="other" value="Інша" />
+		<node name="ar" value="Арабська"/>
+		<node name="cs" value="Чеська"/>
+		<node name="de" value="Німецька"/>
+		<node name="de-traditional" value="Німецька (традiцiйна орфографiя)"/>
+		<node name="el" value="Грецька"/>
+		<node name="en" value="Англійська"/>
+		<node name="eo" value="Есперанто"/>
+		<node name="es" value="Іспанська"/>
+		<node name="fi" value="Фінська"/>
+		<node name="fr" value="Французька"/>
+		<node name="he" value="Гебрейська"/>
+		<node name="id" value="Індонезійська"/>
+		<node name="it" value="Італійська"/>
+		<node name="lt" value="Литовська"/>
+		<node name="no" value="Норвезька"/>
+		<node name="pt" value="Португальська"/>
+		<node name="ru" value="Російська"/>
+		<node name="tr" value="Турецька"/>
+		<node name="sv" value="Шведська"/>
+		<node name="uk" value="Українська"/>
+		<node name="zh" value="Китайська"/>
+		<node name="other" value="Інша"/>
 	</node>
 	<node name="boolean3">
-		<node name="on" value="ввімкнути" />
-		<node name="off" value="вимкнути" />
-		<node name="unchanged" value="не змінювати" />
+		<node name="on" value="ввімкнути"/>
+		<node name="off" value="вимкнути"/>
+		<node name="unchanged" value="не змінювати"/>
 	</node>
 	<node name="keyOptionView">
-		<node name="actionFor" value="Дія для" />
+		<node name="actionFor" value="Дія для"/>
 	</node>
 </resources>
