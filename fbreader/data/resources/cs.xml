@@ -3,73 +3,73 @@
 <resources>
 	<node name="libraryView">
 		<node name="authorNode">
-			<node name="expandTree" toBeTranslated="true" value="Zobrazit seznam knih"/>
-			<node name="collapseTree" toBeTranslated="true" value="Skrýt seznam knih"/>
-			<node name="edit" toBeTranslated="true" value="Upravit informace o knize"/>
-			<node name="unknownAuthor" toBeTranslated="true" value="Neznámý autor"/>
+			<node name="expandTree" value="Zobrazit seznam knih"/>
+			<node name="collapseTree" value="Skrýt seznam knih"/>
+			<node name="edit" value="Upravit informace o knize"/>
+			<node name="unknownAuthor" value="Neznámý autor"/>
 		</node>
 		<node name="tagNode">
-			<node name="expandTree" toBeTranslated="true" value="Zobrazit seznam knih"/>
-			<node name="collapseTree" toBeTranslated="true" value="Skrýt seznam knih"/>
-			<node name="edit" toBeTranslated="true" value="Upravit informace o knize"/>
-			<node name="clone" toBeTranslated="true" value="Zkopírovat informace o knize"/>
-			<node name="delete" toBeTranslated="true" value="Odstranit informace o knize"/>
-			<node name="noTags" toBeTranslated="true" value="Žádné informace o knize nejsou k dispozici"/>
+			<node name="expandTree" value="Zobrazit seznam knih"/>
+			<node name="collapseTree" value="Skrýt seznam knih"/>
+			<node name="edit" value="Upravit informace o knize"/>
+			<node name="clone" value="Zkopírovat informace o knize"/>
+			<node name="delete" value="Odstranit informace o knize"/>
+			<node name="noTags" value="Žádné informace o knize nejsou k dispozici"/>
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" toBeTranslated="true" value="Zobrazit seznam knih"/>
-			<node name="collapseTree" toBeTranslated="true" value="Skrýt seznam knih"/>
+			<node name="expandTree" value="Zobrazit seznam knih"/>
+			<node name="collapseTree" value="Skrýt seznam knih"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Číst knihu"/>
-			<node name="edit" toBeTranslated="true" value="Upravit informace o knize"/>
-			<node name="delete" toBeTranslated="true" value="Odstranit knihu"/>
+			<node name="read" value="Číst knihu"/>
+			<node name="edit" value="Upravit informace o knize"/>
+			<node name="delete" value="Odstranit knihu"/>
 		</node>
 	</node>
 	<node name="networkView">
 		<node name="libraryItemNode">
-			<node name="expandTree" toBeTranslated="true" value="Rozbalit"/>
-			<node name="collapseTree" toBeTranslated="true" value="Skrýt"/>
-			<node name="reload" toBeTranslated="true" value="Obnovi"/>
-			<node name="openInBrowser" toBeTranslated="true" value="Otevřít v internetovém prohlížeči"/>
+			<node name="expandTree" value="Rozbalit"/>
+			<node name="collapseTree" value="Skrýt"/>
+			<node name="reload" value="Obnovi"/>
+			<node name="openInBrowser" value="Otevřít v internetovém prohlížeči"/>
 		</node>
 		<node name="libraryItemRootNode">
-			<node name="expandTree" toBeTranslated="true" value="Otevřít katalog"/>
-			<node name="collapseTree" toBeTranslated="true" value="Zavřít katalog"/>
-			<node name="login" toBeTranslated="true" value="Přihlášení"/>
-			<node name="logout" toBeTranslated="true" value="Odhlášení (%s)"/>
-			<node name="reload" toBeTranslated="true" value="Obnovit"/>
-			<node name="dontShow" toBeTranslated="true" value="'Nezobrazovat tento katalog"/>
-			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)"/>
-			<node name="register" toBeTranslated="true" value="Přihlášení"/>
-			<node name="passwordRecovery" toBeTranslated="true" value="Obnovit heslo"/>
+			<node name="expandTree" value="Otevřít katalog"/>
+			<node name="collapseTree" value="Zavřít katalog"/>
+			<node name="login" value="Přihlášení"/>
+			<node name="logout" value="Odhlášení (%s)"/>
+			<node name="reload" value="Obnovit"/>
+			<node name="dontShow" value="'Nezobrazovat tento katalog"/>
+			<node name="refillAccount" value="Refill account (currently: %s)"/>
+			<node name="register" value="Přihlášení"/>
+			<node name="passwordRecovery" value="Obnovit heslo"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="title" toBeTranslated="true" value="Hledat"/>
-			<node name="expandTree" toBeTranslated="true" value="Zobrazit výsledky"/>
-			<node name="collapseTree" toBeTranslated="true" value="Skrýt výsledky"/>
+			<node name="title" value="Hledat"/>
+			<node name="expandTree" value="Zobrazit výsledky"/>
+			<node name="collapseTree" value="Skrýt výsledky"/>
 		</node>
 		<node name="authorNode">
-			<node name="expandTree" toBeTranslated="true" value="Zobrazit knihy"/>
-			<node name="collapseTree" toBeTranslated="true" value="Skrýt knihy"/>
+			<node name="expandTree" value="Zobrazit knihy"/>
+			<node name="collapseTree" value="Skrýt knihy"/>
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" toBeTranslated="true" value="Zobrazit knihy"/>
-			<node name="collapseTree" toBeTranslated="true" value="Skrýt knihy"/>
+			<node name="expandTree" value="Zobrazit knihy"/>
+			<node name="collapseTree" value="Skrýt knihy"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Číst lokální verzi knihy"/>
-			<node name="delete" toBeTranslated="true" value="Smazat lokální verzi knihy"/>
-			<node name="download" toBeTranslated="true" value="Stáhnout"/>
-			<node name="readDemo" toBeTranslated="true" value="Číst ukázku"/>
-			<node name="downloadDemo" toBeTranslated="true" value="Stáhnout ukázku"/>
-			<node name="buy" toBeTranslated="true" value="Zaplatit (%s)"/>
+			<node name="read" value="Číst lokální verzi knihy"/>
+			<node name="delete" value="Smazat lokální verzi knihy"/>
+			<node name="download" value="Stáhnout"/>
+			<node name="readDemo" value="Číst ukázku"/>
+			<node name="downloadDemo" value="Stáhnout ukázku"/>
+			<node name="buy" value="Zaplatit (%s)"/>
 		</node>
 	</node>
 	<node name="menu">
 		<node name="bookInfo" value="Informace o knize..."/>
 		<node name="toc" value="Obsah"/>
-		<node name="showLibrary" toBeTranslated="true" value="Otevřít knihovnu"/>
+		<node name="showLibrary" value="Otevřít knihovnu"/>
 		<node name="library" value="Knihovna">
 			<node name="showLibrary" value="Otevřít"/>
 			<node name="previousBook" value="Předchozí kniha"/>
@@ -141,11 +141,11 @@
 			<node name="go" value="&amp;Provést"/>
 			<node name="thisOnly" value="Pouze tento"/>
 			<node name="withSubtags" value="S rozšířenými volbami"/>
-			<node name="removeLink" toBeTranslated="true" value="Odstranit z knihovny"/>
-			<node name="removeFile" toBeTranslated="true" value="Odstranit z disku"/>
-			<node name="yesToAll" toBeTranslated="true" value="&amp;Ano pro všechny"/>
-			<node name="buy" toBeTranslated="true" value="&amp;Zaplatit"/>
-			<node name="buyAndDownload" toBeTranslated="true" value="Zaplatit a &amp;stáhnout"/>
+			<node name="removeLink" value="Odstranit z knihovny"/>
+			<node name="removeFile" value="Odstranit z disku"/>
+			<node name="yesToAll" value="&amp;Ano pro všechny"/>
+			<node name="buy" value="&amp;Zaplatit"/>
+			<node name="buyAndDownload" value="Zaplatit a &amp;stáhnout"/>
 		</node>
 		<node name="OptionsDialog">
 			<node name="title" value="FBReader - Nastavení"/>
@@ -184,10 +184,10 @@
 					<node name="navigation" value="Povolit navigaci"/>
 				</node>
 				<node name="Scrolling" value="Posuv textu">
-					<node name="keyScrollDelay" toBeTranslated="true" value="Zpoždění mezi stiskem kláves posuvu v msec"/>
-					<node name="keyLinesToScroll" toBeTranslated="true" value="Počet řádků posuvu při posuvu po řádcích"/>
-					<node name="keyLinesToKeep" toBeTranslated="true" value="Počet řádků, které nebudou překresleny"/>
-					<node name="enableTapScrolling" toBeTranslated="true" value="Posun dotykem na displeji"/>
+					<node name="keyScrollDelay" value="Zpoždění mezi stiskem kláves posuvu v msec"/>
+					<node name="keyLinesToScroll" value="Počet řádků posuvu při posuvu po řádcích"/>
+					<node name="keyLinesToKeep" value="Počet řádků, které nebudou překresleny"/>
+					<node name="enableTapScrolling" value="Posun dotykem na displeji"/>
 					<node name="fingerOnly" value="Posuv pouze dotykem na displeji"/>
 				</node>
 				<node name="Selection" value="Výběr">
@@ -261,7 +261,7 @@
 					<node name="action">
 						<node name="none" value="Žádné"/>
 						<node name="showLibrary" value="Zobrazit knihovnu"/>
-						<node name="showNetLibrary" toBeTranslated="true" value="Zobrazit knihovnu na síti"/>
+						<node name="showNetLibrary" value="Zobrazit knihovnu na síti"/>
 						<node name="showRecent" value="Zobrazit nedávné"/>
 						<node name="previousBook" value="Otevřít předchozí knihu"/>
 						<node name="toc" value="Zobrazit obsah"/>
@@ -270,10 +270,10 @@
 						<node name="gotoSectionEnd" value="Přejít na konec oddílu"/>
 						<node name="nextTOCSection" value="Přejít na následující záhlaví"/>
 						<node name="previousTOCSection" value="Přejít na předchozí záhlaví"/>
-						<node name="pageForward" toBeTranslated="true" value="Posuv o stránu vpřed"/>
-						<node name="pageBackward" toBeTranslated="true" value="Posuv o stránu vzad"/>
-						<node name="lineForward" toBeTranslated="true" value="Posuv o řádek vpřed"/>
-						<node name="lineBackward" toBeTranslated="true" value="Posuv o řádek vzad"/>
+						<node name="pageForward" value="Posuv o stránu vpřed"/>
+						<node name="pageBackward" value="Posuv o stránu vzad"/>
+						<node name="lineForward" value="Posuv o řádek vpřed"/>
+						<node name="lineBackward" value="Posuv o řádek vzad"/>
 						<node name="undo" value="Zpět"/>
 						<node name="redo" value="Znovu"/>
 						<node name="copyToClipboard" value="Kopírovat text do schránky"/>
@@ -329,15 +329,15 @@
 					<node name="encodingSet" value="Typ znakové sady"/>
 					<node name="encoding" value="Kódování"/>
 				</node>
-				<node name="Authors" toBeTranslated="true" value="Autoři">
-					<node name="authorDisplayName" toBeTranslated="true" value="Jméno autora"/>
+				<node name="Authors" value="Autoři">
+					<node name="authorDisplayName" value="Jméno autora"/>
 				</node>
 				<node name="Series" value="Série">
 					<node name="seriesTitle" value="Název série"/>
 					<node name="bookIndex" value="Číslo knihy"/>
 				</node>
 				<node name="Tags" value="Kategorie">
-					<node name="tags" toBeTranslated="true" value="Jméno značky"/>
+					<node name="tags" value="Jméno značky"/>
 				</node>
 				<node name="Text" value="Text">
 					<node name="breakType" value="Nový odstavec po"/>
@@ -354,9 +354,9 @@
 			</node>
 		</node>
 		<node name="AuthorInfoDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Informace o autorovi"/>
-			<node name="name" toBeTranslated="true" value="Jméno autora"/>
-			<node name="sortKey" toBeTranslated="true" value="Třídicí klíč autora"/>
+			<node name="title" value="FBReader - Informace o autorovi"/>
+			<node name="name" value="Jméno autora"/>
+			<node name="sortKey" value="Třídicí klíč autora"/>
 		</node>
 		<node name="addFileDialog">
 			<node name="title" value="FBReader - Přidat knihu do knihovny"/>
@@ -375,7 +375,7 @@
 			<node name="author" value="Autor"/>
 			<node name="category" value="Kategorie"/>
 			<node name="description" value="Popis"/>
-			<node name="annotation" toBeTranslated="true" value="Výsledky hledání pro: %s"/>
+			<node name="annotation" value="Výsledky hledání pro: %s"/>
 		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Jít na stránku"/>
@@ -394,7 +394,7 @@
 		<node name="removeBookBox">
 			<node name="title" value="Odstranit knihu"/>
 			<node name="message" value="Odstranit knihu&#10;“%s”&#10;u knihovny?"/>
-			<node name="deleteFile" toBeTranslated="true" value="Jste jsi opravdu jisti trvalým odst&#10;raděním souboru&#10;“%s”&#10;z disku?"/>
+			<node name="deleteFile" value="Jste jsi opravdu jisti trvalým odst&#10;raděním souboru&#10;“%s”&#10;z disku?"/>
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Odstranit kategorii"/>
@@ -405,8 +405,8 @@
 			<node name="message" value="Nemohu't otevřít:&#10;%s"/>
 		</node>
 		<node name="removeFileErrorBox">
-			<node name="title" toBeTranslated="true" value="Error"/>
-			<node name="message" toBeTranslated="true" value="Nemohu ostrani't soubor&#10;%s"/>
+			<node name="title" value="Error"/>
+			<node name="message" value="Nemohu ostrani't soubor&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Chyba"/>
@@ -414,21 +414,21 @@
 		</node>
 		<node name="networkError">
 			<node name="emptyLibrariesList" value="Vyprázdnit seznam knihovny"/>
-			<node name="authenticationFailed" toBeTranslated="true" value="Přihlášení selhalo"/>
-			<node name="internalError" toBeTranslated="true" value="Chyba serveru"/>
-			<node name="purchaseNotEnoughMoney" toBeTranslated="true" value="Nedostatek peněz"/>
-			<node name="purchaseMissingBook" toBeTranslated="true" value="Chybějící kniha"/>
-			<node name="purchaseAlreadyPurchased" toBeTranslated="true" value="Zaplaceno"/>
-			<node name="bookNotPurchased" toBeTranslated="true" value="Nedošlo k zaplacení knihy"/>
-			<node name="downloadLimitExceeded" toBeTranslated="true" value="Překročen limit pro stahování"/>
-			<node name="unsupportedOperation" toBeTranslated="true" value="Nepodporovaná operace"/>
-			<node name="loginAlreadyTaken" toBeTranslated="true" value="Jméno uživatele je obsazeno"/>
-			<node name="loginNotSpecified" toBeTranslated="true" value="Prosím zadejte jméno uživatele"/>
-			<node name="passwordNotSpecified" toBeTranslated="true" value="Zadejte prosím neprázdné heslo"/>
-			<node name="emailNotSpecified" toBeTranslated="true" value="Zadejte prosím e-mailovou adresu"/>
-			<node name="invalidEMail" toBeTranslated="true" value="Nesprávná adresa e-mailu"/>
-			<node name="tooManyRegistrations" toBeTranslated="true" value="Příliš mnoho registrací pro IP;&#10;zkuste to za několik minut znovu"/>
-			<node name="noUserEmail" toBeTranslated="true" value="Uživatel nebyl registrován&#10; s udanou e-mailovou adresou"/>
+			<node name="authenticationFailed" value="Přihlášení selhalo"/>
+			<node name="internalError" value="Chyba serveru"/>
+			<node name="purchaseNotEnoughMoney" value="Nedostatek peněz"/>
+			<node name="purchaseMissingBook" value="Chybějící kniha"/>
+			<node name="purchaseAlreadyPurchased" value="Zaplaceno"/>
+			<node name="bookNotPurchased" value="Nedošlo k zaplacení knihy"/>
+			<node name="downloadLimitExceeded" value="Překročen limit pro stahování"/>
+			<node name="unsupportedOperation" value="Nepodporovaná operace"/>
+			<node name="loginAlreadyTaken" value="Jméno uživatele je obsazeno"/>
+			<node name="loginNotSpecified" value="Prosím zadejte jméno uživatele"/>
+			<node name="passwordNotSpecified" value="Zadejte prosím neprázdné heslo"/>
+			<node name="emailNotSpecified" value="Zadejte prosím e-mailovou adresu"/>
+			<node name="invalidEMail" value="Nesprávná adresa e-mailu"/>
+			<node name="tooManyRegistrations" value="Příliš mnoho registrací pro IP;&#10;zkuste to za několik minut znovu"/>
+			<node name="noUserEmail" value="Uživatel nebyl registrován&#10; s udanou e-mailovou adresou"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Chyba při stahování"/>
@@ -440,56 +440,56 @@
 			<node name="migrate" value="Probihá upgrade na novou verzi. Čekejte prosím..."/>
 			<node name="downloadBookList" value="Probíhá stahování seznamu knih. Čekejte prosím..."/>
 			<node name="downloadBook" value="Stahování knihy. Čekejte prosím..."/>
-			<node name="downloadImages" toBeTranslated="true" value="Stahuji obrázky. Čekelte prosím..."/>
-			<node name="authentication" toBeTranslated="true" value="Přihlašování probíhá. Čekejte prosím..."/>
-			<node name="purchaseBook" toBeTranslated="true" value="Platba knihy probíhá. Čekejte prosím..."/>
-			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Stahování informace o účtu. Čekejte prosím..."/>
-			<node name="loadSubCatalog" toBeTranslated="true" value="Importuji katalog. Čekejte prosím..."/>
-			<node name="registerUser" toBeTranslated="true" value="Registrace nového účtu. Čekejte prosím..."/>
-			<node name="passwordRecovery" toBeTranslated="true" value="Obnovení hesla. Čekejte prosím..."/>
+			<node name="downloadImages" value="Stahuji obrázky. Čekelte prosím..."/>
+			<node name="authentication" value="Přihlašování probíhá. Čekejte prosím..."/>
+			<node name="purchaseBook" value="Platba knihy probíhá. Čekejte prosím..."/>
+			<node name="initializeAuthenticationManager" value="Stahování informace o účtu. Čekejte prosím..."/>
+			<node name="loadSubCatalog" value="Importuji katalog. Čekejte prosím..."/>
+			<node name="registerUser" value="Registrace nového účtu. Čekejte prosím..."/>
+			<node name="passwordRecovery" value="Obnovení hesla. Čekejte prosím..."/>
 		</node>
 		<node name="purchaseConfirmBox">
-			<node name="title" toBeTranslated="true" value="Zaplatit knihu"/>
-			<node name="message" toBeTranslated="true" value="Chcete zaplatit&#10;“%s”&#10;tuto knihu?"/>
+			<node name="title" value="Zaplatit knihu"/>
+			<node name="message" value="Chcete zaplatit&#10;“%s”&#10;tuto knihu?"/>
 		</node>
 		<node name="AuthenticationDialog">
-			<node name="title" toBeTranslated="true" value="Přihlášení"/>
-			<node name="login" toBeTranslated="true" value="Jméno"/>
-			<node name="password" toBeTranslated="true" value="Heslo"/>
-			<node name="skipIP" toBeTranslated="true" value="Není možné se připoji't k ip-addrese"/>
-			<node name="loginIsEmpty" toBeTranslated="true" value="Prázdné přihlašovací informace"/>
+			<node name="title" value="Přihlášení"/>
+			<node name="login" value="Jméno"/>
+			<node name="password" value="Heslo"/>
+			<node name="skipIP" value="Není možné se připoji't k ip-addrese"/>
+			<node name="loginIsEmpty" value="Prázdné přihlašovací informace"/>
 		</node>
 		<node name="emptyCatalogBox">
-			<node name="title" toBeTranslated="true" value="Informace"/>
-			<node name="message" toBeTranslated="true" value="Prázdný katalog."/>
+			<node name="title" value="Informace"/>
+			<node name="message" value="Prázdný katalog."/>
 		</node>
 		<node name="dontShowConfirmBox">
-			<node name="title" toBeTranslated="true" value="Zakázat katalog"/>
-			<node name="message" toBeTranslated="true" value="Souhlasíte se zákazem&#10;“%s” katalogu?&#10;&#10;Můžete ho povolit v nastaveních programu, na záložce&#10;“Hledání v síti”."/>
+			<node name="title" value="Zakázat katalog"/>
+			<node name="message" value="Souhlasíte se zákazem&#10;“%s” katalogu?&#10;&#10;Můžete ho povolit v nastaveních programu, na záložce&#10;“Hledání v síti”."/>
 		</node>
 		<node name="deleteLocalCopyBox">
-			<node name="title" toBeTranslated="true" value="Odstranit knihu"/>
-			<node name="message" toBeTranslated="true" value="Souhlasíte&#10;s trvalým odstraněním&#10;“%s” k&#10;knihy z disku?"/>
+			<node name="title" value="Odstranit knihu"/>
+			<node name="message" value="Souhlasíte&#10;s trvalým odstraněním&#10;“%s” k&#10;knihy z disku?"/>
 		</node>
 		<node name="RegisterUserDialog">
-			<node name="title" toBeTranslated="true" value="Registrace uživatele"/>
-			<node name="login" toBeTranslated="true" value="Jméno"/>
-			<node name="password" toBeTranslated="true" value="Heslo"/>
-			<node name="confirmPassword" toBeTranslated="true" value="Potvrzení hesla"/>
-			<node name="email" toBeTranslated="true" value="E-mail"/>
-			<node name="differentPasswords" toBeTranslated="true" value="Heslo a jeho potvrzení musí být shodné."/>
+			<node name="title" value="Registrace uživatele"/>
+			<node name="login" value="Jméno"/>
+			<node name="password" value="Heslo"/>
+			<node name="confirmPassword" value="Potvrzení hesla"/>
+			<node name="email" value="E-mail"/>
+			<node name="differentPasswords" value="Heslo a jeho potvrzení musí být shodné."/>
 		</node>
 		<node name="PasswordRecoveryDialog">
-			<node name="title" toBeTranslated="true" value="Obnovit heslo"/>
-			<node name="email" toBeTranslated="true" value="E-mail"/>
+			<node name="title" value="Obnovit heslo"/>
+			<node name="email" value="E-mail"/>
 		</node>
 		<node name="recoverySuccessfulBox">
-			<node name="title" toBeTranslated="true" value="Heslo obnoveno"/>
-			<node name="message" toBeTranslated="true" value="Zprávy k následujícím instrukcím&#10;jsou odeslány na&#10;%s"/>
+			<node name="title" value="Heslo obnoveno"/>
+			<node name="message" value="Zprávy k následujícím instrukcím&#10;jsou odeslány na&#10;%s"/>
 		</node>
 		<node name="cantOpenDownloadedFile">
-			<node name="title" toBeTranslated="true" value="Chyba stahování"/>
-			<node name="message" toBeTranslated="true" value="N'emohu otevřít stažený soubor&#10;%s."/>
+			<node name="title" value="Chyba stahování"/>
+			<node name="message" value="N'emohu otevřít stažený soubor&#10;%s."/>
 		</node>
 	</node>
 	<node name="style">

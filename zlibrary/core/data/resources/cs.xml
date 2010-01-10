@@ -17,17 +17,17 @@
 			<node name="unknownErrorMessage" value="Neznámá chyba"/>
 			<node name="couldntCreateDirectoryMessage" value="Nepodařilo se vytvořit složku&#10;%s"/>
 			<node name="couldntCreateFileMessage" value="Nepodařilo se vytvořit soubor&#10;%s"/>
-			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Není možné se připojit't k síti"/>
+			<node name="couldntConnectToNetworkMessage" value="Není možné se připojit't k síti"/>
 			<node name="couldntConnectMessage" value="Nepodařilo se připojit k serveru %s"/>
 			<node name="couldntResolveHostMessage" value="Nepodařilo se najít server %s"/>
 			<node name="couldntResolveProxyMessage" value="Nepodařilo se najít proxy %s"/>
 			<node name="operationTimedOutMessage" value="Vypršel čas operace"/>
 			<node name="somethingWrongMessage" value="Něco se nepodařilo&#10;%s"/>
-			<node name="sslConnectErrorMessage" toBeTranslated="true" value="Problém s SSL/TLS handshake &#10;%s"/>
-			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="Nesprávný SSL certifikát z %s&#10;"/>
-			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certifikát z%s&#10;není možné autorizovat vůči známým SSL CA certifikátům"/>
-			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Není možné přečís't soubor SSL CA certifikátů:&#10;%s"/>
-			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Selhalo odpojení SSL spojení pro&#10;%s"/>
+			<node name="sslConnectErrorMessage" value="Problém s SSL/TLS handshake &#10;%s"/>
+			<node name="peerFailedVerificationMessage" value="Nesprávný SSL certifikát z %s&#10;"/>
+			<node name="sslCertificateAuthorityMessage" value="SSL certifikát z%s&#10;není možné autorizovat vůči známým SSL CA certifikátům"/>
+			<node name="sslBadCertificateFileMessage" value="Není možné přečís't soubor SSL CA certifikátů:&#10;%s"/>
+			<node name="sslShutdownFailedMessage" value="Selhalo odpojení SSL spojení pro&#10;%s"/>
 		</node>
 	</node>
 	<node name="color">
@@ -63,7 +63,7 @@
 		<node name="he" value="Hebrejsky"/>
 		<node name="id" value="Indonézsky"/>
 		<node name="it" value="Italsky"/>
-		<node name="lt" toBeTranslated="true" value="Lithuanian"/>
+		<node name="lt" value="Lithuanian"/>
 		<node name="no" value="Norsky"/>
 		<node name="pt" value="Portugalsky"/>
 		<node name="ru" value="Rusky"/>
