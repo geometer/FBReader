@@ -29,13 +29,11 @@
 
 #include "../filesystem/ZLCocoaFSManager.h"
 #include "../time/ZLCocoaTime.h"
-/*
-#include "../dialogs/ZLGtkDialogManager.h"
-#include "../image/ZLGtkImageManager.h"
-#include "../view/ZLGtkPaintContext.h"
-#include "../../unix/message/ZLUnixMessage.h"
-#include "../../../../core/src/util/ZLKeyUtil.h"
-*/
+//#include "../dialogs/ZLGtkDialogManager.h"
+//#include "../image/ZLGtkImageManager.h"
+#include "../view/ZLCocoaPaintContext.h"
+//#include "../../unix/message/ZLUnixMessage.h"
+//#include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 /*
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
@@ -80,8 +78,7 @@ void ZLCocoaLibraryImplementation::init(int &argc, char **&argv) {
 }
 
 ZLPaintContext *ZLCocoaLibraryImplementation::createContext() {
-	//return new ZLGtkPaintContext();
-	return 0;
+	return new ZLCocoaPaintContext();
 }
 
 void ZLCocoaLibraryImplementation::run(ZLApplication *application) {

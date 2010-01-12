@@ -29,11 +29,13 @@ static bool taskFunction(gpointer *data) {
 void ZLCocoaTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
 	removeTask(task);
 	if ((interval > 0) && !task.isNull()) {
+		// TODO: implement
 		//myHandlers[task] = g_timeout_add(interval, (GSourceFunc)taskFunction, &*task);
 	}
 }
 
 void ZLCocoaTimeManager::removeTaskInternal(shared_ptr<ZLRunnable> task) {
+	// TODO: implement
 	/*
 	std::map<shared_ptr<ZLRunnable>,int>::iterator it = myHandlers.find(task);
 	if (it != myHandlers.end()) {
