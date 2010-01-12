@@ -120,7 +120,6 @@ protected:
 	void registerPopupData(const std::string &actionId, shared_ptr<ZLPopupData> popupData);
 
 	void setView(shared_ptr<ZLView> view);
-	shared_ptr<ZLView> currentView() const;
 	ZLView::Angle rotation() const;
 
 	void setFullscreen(bool fullscreen);
@@ -131,6 +130,7 @@ public:
 	virtual ~ZLApplication();
 	virtual void initWindow();
 
+	shared_ptr<ZLView> currentView() const;
 	shared_ptr<ZLPaintContext> context();
 
 	void grabAllKeys(bool grab);

@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
 //#include <algorithm>
 
 //#include <ZLUnicodeUtil.h>
@@ -97,6 +98,7 @@ void ZLCocoaPaintContext::drawFilledCircle(int x, int y, int r) {
 }
 
 void ZLCocoaPaintContext::clear(ZLColor color) {
+	std::cerr << "CLEAR\n";
 	// TODO: implement
 }
 

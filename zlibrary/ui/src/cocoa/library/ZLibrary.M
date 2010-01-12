@@ -27,9 +27,10 @@
 
 #import <Cocoa/Cocoa.h>
 
+#include "../application/ZLCocoaApplicationWindow.h"
 #include "../filesystem/ZLCocoaFSManager.h"
 #include "../time/ZLCocoaTime.h"
-//#include "../dialogs/ZLGtkDialogManager.h"
+#include "../dialogs/ZLCocoaDialogManager.h"
 //#include "../image/ZLGtkImageManager.h"
 #include "../view/ZLCocoaPaintContext.h"
 //#include "../../unix/message/ZLUnixMessage.h"
@@ -65,9 +66,9 @@ void ZLCocoaLibraryImplementation::init(int &argc, char **&argv) {
 	XMLConfigManager::createInstance();
 	ZLCocoaFSManager::createInstance();
 	ZLCocoaTimeManager::createInstance();
+	ZLCocoaDialogManager::createInstance();
 
 	/*
-	ZLGtkDialogManager::createInstance();
 	ZLUnixCommunicationManager::createInstance();
 	ZLGtkImageManager::createInstance();
 	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
@@ -82,7 +83,16 @@ ZLPaintContext *ZLCocoaLibraryImplementation::createContext() {
 }
 
 void ZLCocoaLibraryImplementation::run(ZLApplication *application) {
+	//ZLDialogManager::Instance().createApplicationWindow(application);
+	new ZLCocoaApplicationWindow(application);
 	NSApplicationMain(myArgc, myArgv);
+
+	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	//NSApplication *app = [NSApplication sharedApplication];
+	//[NSBundle loadNibNamed: @"MainMenu" owner: app];
+    //[app run];
+    //[pool release];
+
 	/*
 	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
