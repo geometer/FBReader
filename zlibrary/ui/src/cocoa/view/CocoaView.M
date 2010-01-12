@@ -24,26 +24,26 @@
 @implementation CocoaView
 
 - (id)initWithFrame:(NSRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
+	self = [super initWithFrame:frame];
+	if (self) {
 		ZLApplication::Instance().initWindow();
-    }
-    return self;
+	}
+	return self;
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
 	ZLApplication &application = ZLApplication::Instance();
 	application.currentView()->paint();
-	
+
 	NSString* hello = @"Hello, World!";
-    NSPoint point = NSMakePoint(15, 75);
-    NSMutableDictionary* font_attributes = [NSMutableDictionary new];
-    NSFont* font = [NSFont fontWithName:@"Futura-MediumItalic" size:42];
-    [font_attributes setObject:font forKey:NSFontAttributeName];
-	
-    [hello drawAtPoint:point withAttributes:font_attributes];
-	
-    [font_attributes release];
+	NSPoint point = NSMakePoint(15, 75);
+	NSMutableDictionary* font_attributes = [NSMutableDictionary new];
+	NSFont* font = [NSFont fontWithName:@"Futura-MediumItalic" size:42];
+	[font_attributes setObject:font forKey:NSFontAttributeName];
+
+	[hello drawAtPoint:point withAttributes:font_attributes];
+
+	[font_attributes release];
 }
 
 @end
