@@ -21,6 +21,8 @@
 
 #import "CocoaView.h"
 
+#include "ZLCocoaPaintContext.h"
+
 @implementation CocoaView
 
 - (id)initWithFrame:(NSRect)frame {
@@ -32,18 +34,13 @@
 }
 
 - (void)drawRect:(NSRect)dirtyRect {
-	ZLApplication &application = ZLApplication::Instance();
-	application.currentView()->paint();
-
-	NSString* hello = @"Hello, World!";
-	NSPoint point = NSMakePoint(15, 75);
-	NSMutableDictionary* font_attributes = [NSMutableDictionary new];
-	NSFont* font = [NSFont fontWithName:@"Futura-MediumItalic" size:42];
-	[font_attributes setObject:font forKey:NSFontAttributeName];
-
-	[hello drawAtPoint:point withAttributes:font_attributes];
-
-	[font_attributes release];
+	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
+	if (!view.isNull()) {
+		ZLCocoaPaintContext &context = (ZLCocoaPaintContext&)view->context();
+		NSSize size = [self bounds].size;
+		context.setSize(size.width, size.height);
+		view->paint();
+	}
 }
 
 @end

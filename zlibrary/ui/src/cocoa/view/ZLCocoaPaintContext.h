@@ -20,6 +20,8 @@
 #ifndef __ZLCOCOAPAINTCONTEXT_H__
 #define __ZLCOCOAPAINTCONTEXT_H__
 
+//#import <Foundation/Foundation.h>
+
 #include <ZLPaintContext.h>
 
 class ZLCocoaPaintContext : public ZLPaintContext {
@@ -27,6 +29,8 @@ class ZLCocoaPaintContext : public ZLPaintContext {
 public:
 	ZLCocoaPaintContext();
 	~ZLCocoaPaintContext();
+	
+	void setSize(int width, int height);
 
 private:
 	int width() const;
@@ -53,6 +57,10 @@ private:
 	void drawLine(int x0, int y0, int x1, int y1);
 	void fillRectangle(int x0, int y0, int x1, int y1);
 	void drawFilledCircle(int x, int y, int r);
+	
+private:
+	int myWidth;
+	int myHeight;
 };
 
 #endif /* __ZLCOCOAPAINTCONTEXT_H__ */

@@ -26,10 +26,14 @@
 #include "ZLCocoaPaintContext.h"
 //#include "../image/ZLCocoaImageManager.h"
 
+NSMutableDictionary* myFontAttributes = nil;
+
 ZLCocoaPaintContext::ZLCocoaPaintContext() {
+	myFontAttributes = [NSMutableDictionary new];
 }
 
 ZLCocoaPaintContext::~ZLCocoaPaintContext() {
+	[myFontAttributes release];
 }
 
 void ZLCocoaPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
@@ -38,15 +42,22 @@ void ZLCocoaPaintContext::fillFamiliesList(std::vector<std::string> &families) c
 
 const std::string ZLCocoaPaintContext::realFontFamilyName(std::string &fontFamily) const {
 	// TODO: implement
-	return fontFamily;
+	return fontFamily.empty() ? "Arial" : fontFamily;
 }
 
 void ZLCocoaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
-	// TODO: implement
+	const std::string family1 = "Georgia";
+	NSFont* font = [NSFont fontWithName:[NSString stringWithUTF8String:family1.c_str()] size:size];
+	[myFontAttributes setObject:font forKey:NSFontAttributeName];
+	[myFontAttributes setObject:[NSNumber numberWithFloat:italic ? 0.4 : 0.0] forKey:NSObliquenessAttributeName];
 }
 
 void ZLCocoaPaintContext::setColor(ZLColor color, LineStyle style) {
-	// TODO: implement
+	NSColor *fgColor = [NSColor colorWithCalibratedRed:color.Red / 255.0
+												 green:color.Green / 255.0
+												  blue:color.Blue /255.0
+												 alpha:1.0];
+	[myFontAttributes setObject:fgColor forKey:NSForegroundColorAttributeName];
 }
 
 void ZLCocoaPaintContext::setFillColor(ZLColor color, FillStyle style) {
@@ -54,18 +65,24 @@ void ZLCocoaPaintContext::setFillColor(ZLColor color, FillStyle style) {
 }
 
 int ZLCocoaPaintContext::stringWidth(const char *str, int len, bool rtl) const {
-	// TODO: implement
-	return 10 * len;
+	static std::string buffer;
+	buffer.assign(str, len);
+	
+	NSString* nsstring = [NSString stringWithUTF8String:buffer.c_str()];
+	NSSize size = [nsstring sizeWithAttributes:myFontAttributes];
+	return size.width;
 }
 
 int ZLCocoaPaintContext::spaceWidth() const {
-	// TODO: implement
-	return 10;
+	NSString* nsstring = [NSString stringWithUTF8String:" "];
+	NSSize size = [nsstring sizeWithAttributes:myFontAttributes];
+	return size.width;
 }
 
 int ZLCocoaPaintContext::stringHeight() const {
-	// TODO: implement
-	return 10;
+	NSString* nsstring = [NSString stringWithUTF8String:"X"];
+	NSSize size = [nsstring sizeWithAttributes:myFontAttributes];
+	return size.height;
 }
 
 int ZLCocoaPaintContext::descent() const {
@@ -74,7 +91,12 @@ int ZLCocoaPaintContext::descent() const {
 }
 
 void ZLCocoaPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
-	// TODO: implement
+	static std::string buffer;
+	buffer.assign(str, len);
+	
+	NSString* nsstring = [NSString stringWithUTF8String:buffer.c_str()];
+	NSPoint point = NSMakePoint(x, height() - y);
+	[nsstring drawAtPoint:point withAttributes:myFontAttributes];
 }
 
 void ZLCocoaPaintContext::drawImage(int x, int y, const ZLImageData &image) {
@@ -98,18 +120,25 @@ void ZLCocoaPaintContext::drawFilledCircle(int x, int y, int r) {
 }
 
 void ZLCocoaPaintContext::clear(ZLColor color) {
-	std::cerr << "CLEAR\n";
-	// TODO: implement
+	NSColor *bgColor = [NSColor colorWithCalibratedRed:color.Red / 255.0
+												 green:color.Green / 255.0
+												  blue:color.Blue / 255.0
+												 alpha:1.0];
+	[bgColor setFill];
+	[NSBezierPath fillRect: NSMakeRect(0, 0, width(), height())];
+}
+
+void ZLCocoaPaintContext::setSize(int width, int height) {
+	myWidth = width;
+	myHeight = height;
 }
 
 int ZLCocoaPaintContext::width() const {
-	// TODO: implement
-	return 500;
+	return myWidth;
 }
 
 int ZLCocoaPaintContext::height() const {
-	// TODO: implement
-	return 500;
+	return myHeight;
 }
 
 // vim:ts=2:sw=2:noet
