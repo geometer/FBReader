@@ -61,6 +61,9 @@ private:
 private:
 	int myWidth;
 	int myHeight;
+
+	// NSMutableDictionary*
+	void *myFontAttributes;
 };
 
 #endif /* __ZLCOCOAPAINTCONTEXT_H__ */

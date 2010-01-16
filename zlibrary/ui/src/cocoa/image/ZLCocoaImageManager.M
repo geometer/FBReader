@@ -19,12 +19,26 @@
 
 #include "ZLCocoaImageManager.h"
 
+ZLCocoaImageData::ZLCocoaImageData() : myNSImage(0) {
+}
+
+ZLCocoaImageData::~ZLCocoaImageData() {
+}
+
 unsigned int ZLCocoaImageData::width() const {
-	return 50;
+	if (myNSImage == 0) {
+		return 0;
+	}
+	NSImage *nsImage = (NSImage*)myNSImage;
+	return [nsImage size].width;
 }
 
 unsigned int ZLCocoaImageData::height() const {
-	return 50;
+	if (myNSImage == 0) {
+		return 0;
+	}
+	NSImage *nsImage = (NSImage*)myNSImage;
+	return [nsImage size].height;
 }
 
 void ZLCocoaImageData::init(unsigned int width, unsigned int height) {
@@ -51,28 +65,16 @@ void ZLCocoaImageData::copyFrom(const ZLImageData &source, unsigned int targetX,
 	// TODO: implement
 }
 
+void *ZLCocoaImageData::nsImage() const {
+	return myNSImage;
+}
+
 shared_ptr<ZLImageData> ZLCocoaImageManager::createData() const {
 	return new ZLCocoaImageData();
 }
 
 void ZLCocoaImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
-	// TODO: implement
-	/*
-	GdkPixbufLoader *loader = gdk_pixbuf_loader_new();
-	GError *error = 0;
-  
-	gdk_pixbuf_loader_write(loader, (const unsigned char*)stringData.data(), stringData.length(), &error);
-	if (error == 0) {
-		gdk_pixbuf_loader_close(loader, &error);
-		if (error == 0) {
-			((ZLCocoaImageData&)data).myPixbuf = gdk_pixbuf_loader_get_pixbuf(loader);
-			g_object_ref(((ZLCocoaImageData&)data).myPixbuf);
-		}
-	}
-  
-	if (error != 0) {
-		g_error_free(error);
-	}
-	g_object_unref(loader);
-	*/
+	NSData *nsData = [NSData dataWithBytes:stringData.data()
+									length:stringData.length()];
+	((ZLCocoaImageData&)data).myNSImage = [[NSImage new] initWithData:nsData];
 }

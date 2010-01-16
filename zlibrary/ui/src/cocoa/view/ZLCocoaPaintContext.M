@@ -17,23 +17,21 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 //#include <algorithm>
 
 //#include <ZLUnicodeUtil.h>
 //#include <ZLImage.h>
 
 #include "ZLCocoaPaintContext.h"
-//#include "../image/ZLCocoaImageManager.h"
-
-NSMutableDictionary* myFontAttributes = nil;
+#include "../image/ZLCocoaImageManager.h"
 
 ZLCocoaPaintContext::ZLCocoaPaintContext() {
 	myFontAttributes = [NSMutableDictionary new];
 }
 
 ZLCocoaPaintContext::~ZLCocoaPaintContext() {
-	[myFontAttributes release];
+	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
+	[fontAttributes release];
 }
 
 void ZLCocoaPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
@@ -48,8 +46,9 @@ const std::string ZLCocoaPaintContext::realFontFamilyName(std::string &fontFamil
 void ZLCocoaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
 	const std::string family1 = "Georgia";
 	NSFont* font = [NSFont fontWithName:[NSString stringWithUTF8String:family1.c_str()] size:size];
-	[myFontAttributes setObject:font forKey:NSFontAttributeName];
-	[myFontAttributes setObject:[NSNumber numberWithFloat:italic ? 0.4 : 0.0] forKey:NSObliquenessAttributeName];
+	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
+	[fontAttributes setObject:font forKey:NSFontAttributeName];
+	[fontAttributes setObject:[NSNumber numberWithFloat:italic ? 0.4 : 0.0] forKey:NSObliquenessAttributeName];
 }
 
 void ZLCocoaPaintContext::setColor(ZLColor color, LineStyle style) {
@@ -57,7 +56,8 @@ void ZLCocoaPaintContext::setColor(ZLColor color, LineStyle style) {
 												 green:color.Green / 255.0
 												  blue:color.Blue /255.0
 												 alpha:1.0];
-	[myFontAttributes setObject:fgColor forKey:NSForegroundColorAttributeName];
+	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
+	[fontAttributes setObject:fgColor forKey:NSForegroundColorAttributeName];
 }
 
 void ZLCocoaPaintContext::setFillColor(ZLColor color, FillStyle style) {
@@ -69,19 +69,22 @@ int ZLCocoaPaintContext::stringWidth(const char *str, int len, bool rtl) const {
 	buffer.assign(str, len);
 	
 	NSString* nsstring = [NSString stringWithUTF8String:buffer.c_str()];
-	NSSize size = [nsstring sizeWithAttributes:myFontAttributes];
+	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
+	NSSize size = [nsstring sizeWithAttributes:fontAttributes];
 	return size.width;
 }
 
 int ZLCocoaPaintContext::spaceWidth() const {
 	NSString* nsstring = [NSString stringWithUTF8String:" "];
-	NSSize size = [nsstring sizeWithAttributes:myFontAttributes];
+	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
+	NSSize size = [nsstring sizeWithAttributes:fontAttributes];
 	return size.width;
 }
 
 int ZLCocoaPaintContext::stringHeight() const {
 	NSString* nsstring = [NSString stringWithUTF8String:"X"];
-	NSSize size = [nsstring sizeWithAttributes:myFontAttributes];
+	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
+	NSSize size = [nsstring sizeWithAttributes:fontAttributes];
 	return size.height;
 }
 
@@ -96,15 +99,24 @@ void ZLCocoaPaintContext::drawString(int x, int y, const char *str, int len, boo
 	
 	NSString* nsstring = [NSString stringWithUTF8String:buffer.c_str()];
 	NSPoint point = NSMakePoint(x, height() - y);
-	[nsstring drawAtPoint:point withAttributes:myFontAttributes];
+	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
+	[nsstring drawAtPoint:point withAttributes:fontAttributes];
 }
 
 void ZLCocoaPaintContext::drawImage(int x, int y, const ZLImageData &image) {
-	// TODO: implement
+	NSImage *nsImage = (NSImage*)((ZLCocoaImageData&)image).nsImage();
+	if (nsImage == 0) {
+		return;
+	}
+	[nsImage drawAtPoint:NSMakePoint(x, height() - y)
+				fromRect:NSZeroRect
+			   operation:NSCompositeSourceOver
+				fraction:1.0];
 }
 
 void ZLCocoaPaintContext::drawImage(int x, int y, const ZLImageData &image, int width, int height, ScalingType type) {
 	// TODO: implement
+	drawImage(x, y, image);
 }
 
 void ZLCocoaPaintContext::drawLine(int x0, int y0, int x1, int y1) {

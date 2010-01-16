@@ -26,8 +26,8 @@
 class ZLCocoaImageData : public ZLImageData {
 
 public:
-	ZLCocoaImageData() {}
-	~ZLCocoaImageData() {}
+	ZLCocoaImageData();
+	~ZLCocoaImageData();
 
 	unsigned int width() const;
 	unsigned int height() const;
@@ -39,6 +39,12 @@ public:
 	void setPixel(unsigned char r, unsigned char g, unsigned char b);
 
 	void copyFrom(const ZLImageData &source, unsigned int targetX, unsigned int targetY);
+
+	void *nsImage() const;
+
+private:
+	// NSImage*
+	void *myNSImage;
 
 friend class ZLCocoaImageManager;
 };
