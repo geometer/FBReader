@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-//#include <gtk/gtk.h>
-
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
@@ -37,7 +35,7 @@
 //#include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
-//#include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
+#include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
 
 class ZLCocoaLibraryImplementation : public ZLibraryImplementation {
 
@@ -69,7 +67,7 @@ void ZLCocoaLibraryImplementation::init(int &argc, char **&argv) {
 	//ZLUnixCommunicationManager::createInstance();
 	ZLCocoaImageManager::createInstance();
 	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
-	//ZLCurlNetworkManager::createInstance();
+	ZLCurlNetworkManager::createInstance();
 
 	//ZLKeyUtil::setKeyNamesFileName("keynames-gtk.xml");
 }

@@ -50,6 +50,7 @@ class ZLApplication : public ZLApplicationBase {
 
 public:
 	static ZLApplication &Instance();
+	static void deleteInstance();
 
 private:
 	static ZLApplication *ourInstance;

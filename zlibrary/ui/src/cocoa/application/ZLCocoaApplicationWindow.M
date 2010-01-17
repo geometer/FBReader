@@ -75,3 +75,16 @@ void ZLCocoaApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 
 void ZLCocoaApplicationWindow::setCaption(const std::string &caption) {
 }
+
+void ZLCocoaApplicationWindow::restoreSizeAndPosition(void *nsWindow) {
+	[(NSWindow*)nsWindow setFrame:NSMakeRect(myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value())
+						  display:true];
+}
+
+void ZLCocoaApplicationWindow::saveSizeAndPosition(void *nsWindow) {
+	NSRect rect = [(NSWindow*)nsWindow frame];
+	myXOption.setValue(rect.origin.x);
+	myYOption.setValue(rect.origin.y);
+	myWidthOption.setValue(rect.size.width);
+	myHeightOption.setValue(rect.size.height);	
+}

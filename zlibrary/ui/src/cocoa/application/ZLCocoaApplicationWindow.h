@@ -31,6 +31,10 @@ public:
 	ZLCocoaApplicationWindow(ZLApplication *application);
 	~ZLCocoaApplicationWindow();
 
+public:
+	void restoreSizeAndPosition(void *nsWindow);
+	void saveSizeAndPosition(void *nsWindow);
+	
 private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLToolbar::ItemPtr item);
