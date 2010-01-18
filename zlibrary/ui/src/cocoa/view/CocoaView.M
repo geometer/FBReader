@@ -38,8 +38,9 @@
 	if (!view.isNull()) {
 		ZLCocoaPaintContext &context = (ZLCocoaPaintContext&)view->context();
 		NSSize size = [self bounds].size;
-		context.setSize(size.width, size.height);
+		context.begin(size.width, size.height);
 		view->paint();
+		context.end();
 	}
 }
 

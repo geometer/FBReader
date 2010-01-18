@@ -19,7 +19,7 @@
 
 //#include <algorithm>
 
-//#include <ZLUnicodeUtil.h>
+#include <ZLUnicodeUtil.h>
 //#include <ZLImage.h>
 
 #include "ZLCocoaPaintContext.h"
@@ -44,29 +44,44 @@ const std::string ZLCocoaPaintContext::realFontFamilyName(std::string &fontFamil
 }
 
 void ZLCocoaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
+	//CGContextSetTextMatrix(myCGContext, CGAffineTransformIdentity);
+
 	const std::string family1 = "Georgia";
+	//CFStringRef myFontName = CFStringCreateWithCString(kCFAllocatorDefault, family1.c_str(), kCFStringEncodingUTF8);
+	//CGFontRef myFont = CGFontCreateWithFontName(myFontName);
+	//CGContextSetFont(myCGContext, myFont);
+	//CGContextSetFontSize(myCGContext, size);
+	
+	//CGContextSelectFont(myCGContext, family1.c_str(), size, kCGEncodingMacRoman);
+
 	NSFont* font = [NSFont fontWithName:[NSString stringWithUTF8String:family1.c_str()] size:size];
 	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
 	[fontAttributes setObject:font forKey:NSFontAttributeName];
-	[fontAttributes setObject:[NSNumber numberWithFloat:italic ? 0.4 : 0.0] forKey:NSObliquenessAttributeName];
+	[fontAttributes setObject:[NSNumber numberWithFloat:italic ? 0.2 : 0.0] forKey:NSObliquenessAttributeName];
+
 }
 
 void ZLCocoaPaintContext::setColor(ZLColor color, LineStyle style) {
-	NSColor *fgColor = [NSColor colorWithCalibratedRed:color.Red / 255.0
-												 green:color.Green / 255.0
-												  blue:color.Blue /255.0
-												 alpha:1.0];
+	CGContextSetRGBStrokeColor(myCGContext,
+							   color.Red / 255.0,
+							   color.Green / 255.0,
+							   color.Blue / 255.0,
+							   1.0);
+
 	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
+	NSColor *fgColor = [NSColor colorWithCalibratedRed:color.Red / 255.0
+												 green:color.Green / 255.0 
+												  blue:color.Blue / 255.0
+												 alpha:1.0];
 	[fontAttributes setObject:fgColor forKey:NSForegroundColorAttributeName];
-	[fgColor setStroke];
 }
 
 void ZLCocoaPaintContext::setFillColor(ZLColor color, FillStyle style) {
-	NSColor *bgColor = [NSColor colorWithCalibratedRed:color.Red / 255.0
-												 green:color.Green / 255.0
-												  blue:color.Blue / 255.0
-												 alpha:1.0];
-	[bgColor setFill];
+	CGContextSetRGBFillColor(myCGContext,
+							 color.Red / 255.0,
+							 color.Green / 255.0,
+							 color.Blue / 255.0,
+							 1.0);
 }
 
 int ZLCocoaPaintContext::stringWidth(const char *str, int len, bool rtl) const {
@@ -105,7 +120,7 @@ void ZLCocoaPaintContext::drawString(int x, int y, const char *str, int len, boo
 	NSString* nsstring = [NSString stringWithUTF8String:buffer.c_str()];
 	NSPoint point = NSMakePoint(x, height() - y);
 	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
-	[nsstring drawAtPoint:point withAttributes:fontAttributes];
+	[nsstring drawAtPoint:point withAttributes:fontAttributes];	
 }
 
 void ZLCocoaPaintContext::drawImage(int x, int y, const ZLImageData &image) {
@@ -125,14 +140,21 @@ void ZLCocoaPaintContext::drawImage(int x, int y, const ZLImageData &image, int 
 }
 
 void ZLCocoaPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	[NSBezierPath setDefaultLineCapStyle:NSSquareLineCapStyle];
-	[NSBezierPath setDefaultLineWidth:2.0];
-	[NSBezierPath strokeLineFromPoint:NSMakePoint(x0, height() - y0)
-							  toPoint:NSMakePoint(x1, height() - y1)];
+	CGContextSetShouldAntialias(myCGContext, false);
+	CGContextBeginPath(myCGContext);
+	CGContextMoveToPoint(myCGContext, x0, myHeight - y0);
+	CGContextAddLineToPoint(myCGContext, x1, myHeight - y1);
+	CGContextStrokePath(myCGContext);
+	CGContextSetShouldAntialias(myCGContext, true);
 }
 
 void ZLCocoaPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
-	[NSBezierPath fillRect: NSMakeRect(x0, height() - y1, x1 - x0, y1 - y0)];
+	CGRect rect;
+	rect.origin.x = x0;
+	rect.origin.y = myHeight - y0 + 1;
+	rect.size.width = x1 - x0;
+	rect.size.height = y0 - y1 - 1;
+	CGContextFillRect(myCGContext, rect);
 }
 
 void ZLCocoaPaintContext::drawFilledCircle(int x, int y, int r) {
@@ -140,17 +162,21 @@ void ZLCocoaPaintContext::drawFilledCircle(int x, int y, int r) {
 }
 
 void ZLCocoaPaintContext::clear(ZLColor color) {
-	NSColor *bgColor = [NSColor colorWithCalibratedRed:color.Red / 255.0
-												 green:color.Green / 255.0
-												  blue:color.Blue / 255.0
-												 alpha:1.0];
-	[bgColor setFill];
-	[NSBezierPath fillRect: NSMakeRect(0, 0, width(), height())];
+	setFillColor(color, ZLPaintContext::SOLID_FILL);
+	fillRectangle(0, 0, myWidth, myHeight);
 }
 
-void ZLCocoaPaintContext::setSize(int width, int height) {
+void ZLCocoaPaintContext::begin(int width, int height) {
 	myWidth = width;
 	myHeight = height;
+	
+	myCGContext = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+	CGContextSetLineWidth(myCGContext, 1);
+	CGContextSetLineCap(myCGContext, kCGLineCapSquare);
+	CGContextSetShouldAntialias(myCGContext, true);
+}
+
+void ZLCocoaPaintContext::end() {
 }
 
 int ZLCocoaPaintContext::width() const {

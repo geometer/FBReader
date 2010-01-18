@@ -20,7 +20,7 @@
 #ifndef __ZLCOCOAPAINTCONTEXT_H__
 #define __ZLCOCOAPAINTCONTEXT_H__
 
-//#import <Foundation/Foundation.h>
+#import <ApplicationServices/ApplicationServices.h>
 
 #include <ZLPaintContext.h>
 
@@ -30,7 +30,8 @@ public:
 	ZLCocoaPaintContext();
 	~ZLCocoaPaintContext();
 	
-	void setSize(int width, int height);
+	void begin(int width, int height);
+	void end();
 
 private:
 	int width() const;
@@ -64,6 +65,7 @@ private:
 
 	// NSMutableDictionary*
 	void *myFontAttributes;
+	CGContextRef myCGContext;
 };
 
 #endif /* __ZLCOCOAPAINTCONTEXT_H__ */
