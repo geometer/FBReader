@@ -44,4 +44,13 @@
 	}
 }
 
+- (BOOL)performKeyEquivalent:(NSEvent*)theEvent {
+	NSString *chars = [theEvent characters];
+	if ([chars isEqualToString:@"l"]) {
+		ZLApplication::Instance().doActionByKey("<L>");
+		return TRUE;
+	}
+	return [super performKeyEquivalent:theEvent]; 
+}
+
 @end
