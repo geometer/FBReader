@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalPrograms>
+	<section name="Web Browser">
+		<program name="%browser" protocol="execute">
+			<action name="openLink" command="%command"/>
+			<option name="command" defaultValue="mozilla %1 &amp;"/>
+		</program>
+	</section>
+</ExternalPrograms>

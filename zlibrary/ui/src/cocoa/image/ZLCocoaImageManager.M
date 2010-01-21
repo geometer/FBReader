@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#import <Cocoa/Cocoa.h>
+
 #include "ZLCocoaImageManager.h"
 
 ZLCocoaImageData::ZLCocoaImageData() : myNSImage(0) {

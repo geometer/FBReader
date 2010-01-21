@@ -19,6 +19,8 @@
 
 //#include <algorithm>
 
+#import <Cocoa/Cocoa.h>
+
 #include <ZLUnicodeUtil.h>
 //#include <ZLImage.h>
 

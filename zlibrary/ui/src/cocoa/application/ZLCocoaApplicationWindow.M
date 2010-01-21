@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#import <Cocoa/Cocoa.h>
+
 #include <ZLibrary.h>
 
 #include "ZLCocoaApplicationWindow.h"
