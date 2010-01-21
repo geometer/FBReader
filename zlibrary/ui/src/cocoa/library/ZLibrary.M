@@ -54,6 +54,8 @@ void initLibrary() {
 }
 
 void ZLCocoaLibraryImplementation::init(int &argc, char **&argv) {
+	[[NSAutoreleasePool alloc] init];
+
 	ZLibrary::parseArguments(argc, argv);
 
 	myArgc = argc;

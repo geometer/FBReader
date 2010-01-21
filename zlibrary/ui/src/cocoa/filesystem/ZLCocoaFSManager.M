@@ -17,7 +17,20 @@
  * 02110-1301, USA.
  */
 
+#import <Foundation/Foundation.h>
+
+#include <iostream>
+
+#include <ZLStringUtil.h>
+
 #include "ZLCocoaFSManager.h"
+
+void ZLCocoaFSManager::normalize(std::string &path) const {
+	if (ZLStringUtil::stringStartsWith(path, "~~")) {
+		path = [[[NSBundle mainBundle] bundlePath] UTF8String] + path.substr(2);
+	}
+	return ZLUnixFSManager::normalize(path);
+}
 
 std::string ZLCocoaFSManager::convertFilenameToUtf8(const std::string &name) const {
 	return name;
