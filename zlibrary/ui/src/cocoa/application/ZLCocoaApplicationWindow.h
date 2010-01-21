@@ -20,21 +20,17 @@
 #ifndef __ZLCOCOAAPPLICATIONWINDOW_H__
 #define __ZLCOCOAAPPLICATIONWINDOW_H__
 
-#include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
+#include "../../../../core/src/application/ZLApplicationWindow.h"
 #include "../../../../core/src/application/ZLToolbar.h"
 
 class ZLCocoaViewWidget;
 
-class ZLCocoaApplicationWindow : public ZLDesktopApplicationWindow { 
+class ZLCocoaApplicationWindow : public ZLApplicationWindow { 
 
 public:
 	ZLCocoaApplicationWindow(ZLApplication *application);
 	~ZLCocoaApplicationWindow();
 
-public:
-	void restoreSizeAndPosition(void *nsWindow);
-	void saveSizeAndPosition(void *nsWindow);
-	
 private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLToolbar::ItemPtr item);

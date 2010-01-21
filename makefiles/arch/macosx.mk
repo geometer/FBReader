@@ -32,7 +32,7 @@ LDFLAGS = -arch $(ARCH) \
 EXTERNAL_INCLUDE = -I$(ROOTDIR)/3rdparty/include
 EXTERNAL_LIBS = -liconv
 
-UILIBS = -framework Cocoa $(ROOTDIR)/zlibrary/ui/src/cocoa/view/CocoaView.o $(ROOTDIR)/zlibrary/ui/src/cocoa/library/ZLCocoaAppDelegate.o
+UILIBS = -framework Cocoa $(ROOTDIR)/zlibrary/ui/src/cocoa/application/CocoaWindow.o $(ROOTDIR)/zlibrary/ui/src/cocoa/library/ZLCocoaAppDelegate.o
 
 RM = rm -rvf
 RM_QUIET = rm -rf

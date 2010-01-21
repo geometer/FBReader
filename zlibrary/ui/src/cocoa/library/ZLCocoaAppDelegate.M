@@ -22,17 +22,20 @@
 #include "../application/ZLCocoaApplicationWindow.h"
 
 #import "ZLCocoaAppDelegate.h"
+#import "../view/CocoaView.h"
 
 @implementation ZLCocoaAppDelegate
 
 @synthesize window;
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
-	((ZLCocoaApplicationWindow&)ZLCocoaApplicationWindow::Instance()).restoreSizeAndPosition(window);
+	[window setContentView:[CocoaView new]];
+	[[window windowController] setShouldCascadeWindows:NO];
+	//((ZLCocoaApplicationWindow&)ZLCocoaApplicationWindow::Instance()).restoreSizeAndPosition(window);
 }
 
 - (void)applicationWillTerminate:(NSNotification*)notification {
-	((ZLCocoaApplicationWindow&)ZLCocoaApplicationWindow::Instance()).saveSizeAndPosition(window);
+	//((ZLCocoaApplicationWindow&)ZLCocoaApplicationWindow::Instance()).saveSizeAndPosition(window);
 	ZLApplication::deleteInstance();
 	ZLibrary::shutdown();
 }

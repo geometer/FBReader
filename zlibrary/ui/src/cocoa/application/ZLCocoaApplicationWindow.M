@@ -28,19 +28,18 @@
 //#include "../dialogs/ZLCocoaDialogManager.h"
 #include "../view/ZLCocoaViewWidget.h"
 
-ZLCocoaApplicationWindow::ZLCocoaApplicationWindow(ZLApplication *application) :
-	ZLDesktopApplicationWindow(application) {
+ZLCocoaApplicationWindow::ZLCocoaApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application) {
 }
 
 void ZLCocoaApplicationWindow::init() {
-	ZLDesktopApplicationWindow::init();
+	ZLApplicationWindow::init();
 }
 
 ZLCocoaApplicationWindow::~ZLCocoaApplicationWindow() {
 }
 
 void ZLCocoaApplicationWindow::refresh() {
-	ZLDesktopApplicationWindow::refresh();
+	ZLApplicationWindow::refresh();
 }
 
 void ZLCocoaApplicationWindow::processAllEvents() {
@@ -76,17 +75,4 @@ void ZLCocoaApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 }
 
 void ZLCocoaApplicationWindow::setCaption(const std::string &caption) {
-}
-
-void ZLCocoaApplicationWindow::restoreSizeAndPosition(void *nsWindow) {
-	[(NSWindow*)nsWindow setFrame:NSMakeRect(myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value())
-						  display:true];
-}
-
-void ZLCocoaApplicationWindow::saveSizeAndPosition(void *nsWindow) {
-	NSRect rect = [(NSWindow*)nsWindow frame];
-	myXOption.setValue(rect.origin.x);
-	myYOption.setValue(rect.origin.y);
-	myWidthOption.setValue(rect.size.width);
-	myHeightOption.setValue(rect.size.height);	
 }
