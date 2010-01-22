@@ -1,8 +1,12 @@
 ОБЩИЕ ВЕЩИ
 	интеграция с pragprogs
 	summary в library view
-	аннотации к книгам
+	аннотации к книгам в library/network view
 	закладки
+	authentication на feedbooks/shucang/smashwords
+	покупки на smashwords
+	плавная прокрутка пальцем
+	вернуть "продвинутые настройки" прокрутки
 
 ДИАЛОГИ
 	диалог открытия файла
