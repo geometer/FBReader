@@ -44,19 +44,33 @@
 	}
 }
 
+#include <iostream>
+
 - (BOOL)performKeyEquivalent:(NSEvent*)theEvent {
 	NSString *chars = [theEvent characters];
 	if ([chars isEqualToString:@"l"]) {
 		ZLApplication::Instance().doActionByKey("<L>");
 		return TRUE;
 	}
+	if ([chars isEqualToString:@"c"]) {
+		ZLApplication::Instance().doActionByKey("<C>");
+		return TRUE;
+	}
 	switch ([theEvent keyCode]) {
+		case 116:
+			ZLApplication::Instance().doActionByKey("<PageUp>");
+			return TRUE;
+		case 121:
+			ZLApplication::Instance().doActionByKey("<PageDown>");
+			return TRUE;
 		case 125:
 			ZLApplication::Instance().doActionByKey("<DownArrow>");
 			return TRUE;
 		case 126:
 			ZLApplication::Instance().doActionByKey("<UpArrow>");
 			return TRUE;
+		default:
+			std::cerr << [theEvent keyCode] << "\n";
 	}
 	return [super performKeyEquivalent:theEvent]; 
 }
