@@ -43,6 +43,7 @@ MISSING FEATURES
 	поворот экрана
 	таймер
 	clipboard
+	toolbar (?)
 
 ОПТИМИЗАЦИЯ/COCOA-ИЗАЦИЯ
 	производительность ZLPaintContext

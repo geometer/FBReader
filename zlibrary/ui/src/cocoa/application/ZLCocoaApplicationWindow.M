@@ -31,8 +31,21 @@
 ZLCocoaApplicationWindow::ZLCocoaApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application) {
 }
 
+#include <iostream>
+
 void ZLCocoaApplicationWindow::init() {
 	ZLApplicationWindow::init();
+	NSMenu *menu = [[NSApplication sharedApplication] mainMenu];
+	NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"Hello"
+																								action:0
+																				 keyEquivalent:@""];
+	std::cerr << [[menu itemArray] count] << "\n";
+	[item setHidden:NO];
+	[menu addItem:item];
+	[item setHidden:NO];
+	std::cerr << [[menu itemArray] count] << "\n";
+	[menu update];
+	std::cerr << [[menu itemArray] count] << "\n";
 }
 
 ZLCocoaApplicationWindow::~ZLCocoaApplicationWindow() {
