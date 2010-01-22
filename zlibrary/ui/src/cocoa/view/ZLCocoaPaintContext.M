@@ -149,7 +149,7 @@ void ZLCocoaPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 	CGRect rect;
 	rect.origin.x = x0;
 	rect.origin.y = myHeight - y0 + 1;
-	rect.size.width = x1 - x0;
+	rect.size.width = x1 - x0 + 1;
 	rect.size.height = y0 - y1 - 1;
 	CGContextFillRect(myCGContext, rect);
 }

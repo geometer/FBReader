@@ -17,6 +17,7 @@
 		NSString *windowFilename = @"MainWindow";
 		[self setFrameUsingName:windowFilename];
 		[self setFrameAutosaveName:windowFilename];
+		[self setAcceptsMouseMovedEvents:YES];
 	}
 	return self;
 }

@@ -35,44 +35,89 @@
 
 - (void)drawRect:(NSRect)dirtyRect {
 	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
-	if (!view.isNull()) {
-		ZLCocoaPaintContext &context = (ZLCocoaPaintContext&)view->context();
-		NSSize size = [self bounds].size;
-		context.begin(size.width, size.height);
-		view->paint();
-		context.end();
+	if (view.isNull()) {
+		return;
 	}
+
+	ZLCocoaPaintContext &context = (ZLCocoaPaintContext&)view->context();
+	NSSize size = [self bounds].size;
+	context.begin(size.width, size.height);
+	view->paint();
+	context.end();
 }
 
 #include <iostream>
 
-- (BOOL)performKeyEquivalent:(NSEvent*)theEvent {
+- (void)mouseDown:(NSEvent*)theEvent {
+	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
+	if (view.isNull()) {
+		return;
+	}
+	NSPoint location = [theEvent locationInWindow];
+	NSSize size = [self bounds].size;
+	view->onStylusPress(location.x, size.height - location.y);
+}
+
+- (void)mouseUp:(NSEvent*)theEvent {
+	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
+	if (view.isNull()) {
+		return;
+	}
+	NSPoint location = [theEvent locationInWindow];
+	NSSize size = [self bounds].size;
+	view->onStylusRelease(location.x, size.height - location.y);
+}
+
+- (void)mouseMoved:(NSEvent*)theEvent {
+	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
+	if (view.isNull()) {
+		return;
+	}
+	NSPoint location = [theEvent locationInWindow];
+	NSSize size = [self bounds].size;
+	view->onStylusMove(location.x, size.height - location.y);
+}
+
+- (void)mouseDragged:(NSEvent*)theEvent {
+	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
+	if (view.isNull()) {
+		return;
+	}
+	NSPoint location = [theEvent locationInWindow];
+	NSSize size = [self bounds].size;
+	view->onStylusMovePressed(location.x, size.height - location.y);
+}
+
+- (BOOL)acceptsFirstResponder {
+	return YES;
+}
+
+- (void)keyDown:(NSEvent*)theEvent {
 	NSString *chars = [theEvent characters];
 	if ([chars isEqualToString:@"l"]) {
 		ZLApplication::Instance().doActionByKey("<L>");
-		return TRUE;
+		return;
 	}
 	if ([chars isEqualToString:@"c"]) {
 		ZLApplication::Instance().doActionByKey("<C>");
-		return TRUE;
+		return;
 	}
 	switch ([theEvent keyCode]) {
 		case 116:
 			ZLApplication::Instance().doActionByKey("<PageUp>");
-			return TRUE;
+			return;
 		case 121:
 			ZLApplication::Instance().doActionByKey("<PageDown>");
-			return TRUE;
+			return;
 		case 125:
 			ZLApplication::Instance().doActionByKey("<DownArrow>");
-			return TRUE;
+			return;
 		case 126:
 			ZLApplication::Instance().doActionByKey("<UpArrow>");
-			return TRUE;
+			return;
 		default:
 			std::cerr << [theEvent keyCode] << "\n";
 	}
-	return [super performKeyEquivalent:theEvent]; 
 }
 
 @end
