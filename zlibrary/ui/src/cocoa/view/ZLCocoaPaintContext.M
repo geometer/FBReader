@@ -46,21 +46,18 @@ const std::string ZLCocoaPaintContext::realFontFamilyName(std::string &fontFamil
 }
 
 void ZLCocoaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
-	//CGContextSetTextMatrix(myCGContext, CGAffineTransformIdentity);
-
 	const std::string family1 = "Georgia";
-	//CFStringRef myFontName = CFStringCreateWithCString(kCFAllocatorDefault, family1.c_str(), kCFStringEncodingUTF8);
-	//CGFontRef myFont = CGFontCreateWithFontName(myFontName);
-	//CGContextSetFont(myCGContext, myFont);
-	//CGContextSetFontSize(myCGContext, size);
-	
-	//CGContextSelectFont(myCGContext, family1.c_str(), size, kCGEncodingMacRoman);
 
-	NSFont* font = [NSFont fontWithName:[NSString stringWithUTF8String:family1.c_str()] size:size];
+	NSFont *font = [NSFont fontWithName:[NSString stringWithUTF8String:family1.c_str()] size:size];
 	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
+	if (bold || italic) {
+		int trait =
+			(bold ? NSBoldFontMask : NSUnboldFontMask) |
+			(italic ? NSItalicFontMask : NSUnitalicFontMask);
+		font = [[NSFontManager sharedFontManager] convertFont:font
+												  toHaveTrait:trait];
+	}
 	[fontAttributes setObject:font forKey:NSFontAttributeName];
-	[fontAttributes setObject:[NSNumber numberWithFloat:italic ? 0.2 : 0.0] forKey:NSObliquenessAttributeName];
-
 }
 
 void ZLCocoaPaintContext::setColor(ZLColor color, LineStyle style) {
