@@ -42,13 +42,11 @@ void ZLCocoaPaintContext::fillFamiliesList(std::vector<std::string> &families) c
 
 const std::string ZLCocoaPaintContext::realFontFamilyName(std::string &fontFamily) const {
 	// TODO: implement
-	return fontFamily.empty() ? "Arial" : fontFamily;
+	return fontFamily.empty() ? "Times" : fontFamily;
 }
 
 void ZLCocoaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
-	const std::string family1 = "Georgia";
-
-	NSFont *font = [NSFont fontWithName:[NSString stringWithUTF8String:family1.c_str()] size:size];
+	NSFont *font = [NSFont fontWithName:[NSString stringWithUTF8String:family.c_str()] size:size];
 	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
 	if (bold || italic) {
 		int trait =

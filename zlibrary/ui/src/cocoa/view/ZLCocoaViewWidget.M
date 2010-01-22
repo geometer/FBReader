@@ -19,20 +19,13 @@
 
 #include <algorithm>
 
+#import <Cocoa/Cocoa.h>
+
 //#include <ZLibrary.h>
 //#include <ZLLanguageUtil.h>
 
 #include "ZLCocoaViewWidget.h"
 #include "ZLCocoaPaintContext.h"
-//#include "../util/ZLCocoaSignalUtil.h"
-
-int ZLCocoaViewWidget::width() const {
-	return 500;
-}
-
-int ZLCocoaViewWidget::height() const {
-	return 500;
-}
 
 ZLCocoaViewWidget::ZLCocoaViewWidget(ZLApplication *application, ZLView::Angle initialAngle) : ZLViewWidget(initialAngle) {
 }
@@ -53,6 +46,7 @@ void ZLCocoaViewWidget::trackStylus(bool track) {
 }
 
 void ZLCocoaViewWidget::repaint()	{
+	[[[[NSApplication sharedApplication] mainWindow] contentView] setNeedsDisplay:TRUE];
 }
 
 void ZLCocoaViewWidget::doPaint()	{

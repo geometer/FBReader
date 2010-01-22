@@ -50,6 +50,14 @@
 		ZLApplication::Instance().doActionByKey("<L>");
 		return TRUE;
 	}
+	switch ([theEvent keyCode]) {
+		case 125:
+			ZLApplication::Instance().doActionByKey("<DownArrow>");
+			return TRUE;
+		case 126:
+			ZLApplication::Instance().doActionByKey("<UpArrow>");
+			return TRUE;
+	}
 	return [super performKeyEquivalent:theEvent]; 
 }
 

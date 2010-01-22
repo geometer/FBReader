@@ -29,8 +29,6 @@ public:
 	ZLCocoaViewWidget(ZLApplication *application, ZLView::Angle initialAngle);
 	~ZLCocoaViewWidget();
 
-	int width() const;
-	int height() const;
 	void doPaint();
 
 private:
