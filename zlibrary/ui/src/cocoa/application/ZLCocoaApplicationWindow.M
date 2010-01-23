@@ -81,11 +81,9 @@ void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 }
 
 void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item, int index) {
-	//std::cerr << "addToolbarItem 0\n";
 	NSToolbar *toolbar = [(NSWindow*)myWindow toolbar];
 	NSString *identifier = 0;
 
-	//std::cerr << "addToolbarItem 1\n";
 	switch (item->type()) {
 		case ZLToolbar::Item::TEXT_FIELD:
 		case ZLToolbar::Item::COMBO_BOX:
@@ -113,10 +111,8 @@ void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item, int index
 
 	if (identifier != 0) {
 		if (index >= 0) {
-			//std::cerr << "insertAtIndex " << index << "\n";
 			[toolbar insertItemWithItemIdentifier:identifier
 																		atIndex:index];
-			//std::cerr << "OK\n";
 		} else {
 			[toolbar insertItemWithItemIdentifier:identifier
 																		atIndex:[[toolbar items] count]];
@@ -126,7 +122,6 @@ void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item, int index
 }
 
 void ZLCocoaApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	//std::cerr << "setToolbarItemState\n";
 	int index = 0;
 	std::pair<ZLToolbar::ItemPtr,bool> *pair = 0;
 	for (std::vector<std::pair<ZLToolbar::ItemPtr,bool> >::iterator it = myToolbarItems.begin(); it != myToolbarItems.end(); ++it) {
@@ -138,18 +133,15 @@ void ZLCocoaApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool
 			++index;
 		}
 	}
-	//std::cerr << "setToolbarItemState 1\n";
 	if (pair != 0 && pair->second != visible) {
 		pair->second = visible;
 		if (visible) {
-			//std::cerr << "index = " << index << "\n";
-			//addToolbarItem(item, index);
+			addToolbarItem(item, index);
 		} else {
 			NSToolbar *toolbar = [(NSWindow*)myWindow toolbar];
 			[toolbar removeItemAtIndex:index];
 		}
 	}
-	//std::cerr << "setToolbarItemState 2\n";
 }
 
 ZLViewWidget *ZLCocoaApplicationWindow::createViewWidget() {

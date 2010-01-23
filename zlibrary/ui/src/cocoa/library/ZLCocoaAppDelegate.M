@@ -33,7 +33,7 @@
 	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"mainToolbar"];
 	[window setToolbar:toolbar];
 
-	ZLCocoaToolbarDelegate *delegate = [[[ZLCocoaToolbarDelegate alloc] init] autorelease];
+	ZLCocoaToolbarDelegate *delegate = [[ZLCocoaToolbarDelegate alloc] init];
 	[toolbar setDelegate:delegate];	
 	[toolbar setAllowsUserCustomization:YES];
 	//[toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
