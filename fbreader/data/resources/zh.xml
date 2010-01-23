@@ -112,29 +112,91 @@
 		<node name="quit" value="关闭" />
 	</node>
 	<node name="toolbar">
-		<node name="showReading" value="显示阅读模式" />
-		<node name="showLibrary" value="显示书库目录">
+		<node name="showReading">
+			<node name="label" value="显示阅读模式" />
+			<node name="tooltip" value="显示阅读模式" />
+		</node>
+		<node name="showLibrary">
+			<node name="label" value="显示书库目录" />
+			<node name="tooltip" value="显示书库目录" />
 			<node name="popup" value="显示最新书籍列表" />
 		</node>
-		<node name="showRecent" value="显示最新的书籍列表" />
-		<node name="byAuthor" value="按作者显示书籍" />
-		<node name="byTag" value="按标签显示书籍" />
-		<node name="addBook" value="添加书籍到书库" />
-		<node name="showNetLibrary" value="在网络书库中搜索" />
-		<node name="searchOnNetwork" value="网络搜索" />
-		<node name="advancedSearchOnNetwork" value="高级网络搜索" />
-		<node name="gotoHome" value="到正文起始处" />
-		<node name="undo" value="后退" />
-		<node name="redo" value="前进" />
-		<node name="gotoPageNumberWithParameter" value="跳转到指定页" />
-		<node name="toc" value="目录" />
-		<node name="search" value="全文搜索" />
-		<node name="findNext" value="查找下一个" />
-		<node name="findPrevious" value="查找上一个" />
-		<node name="bookInfo" value="书籍信息" />
-		<node name="preferences" value="设置选项" />
-		<node name="rotate" value="旋转" />
-		<node name="showHelp" value="关于 FBReader" />
+		<node name="showRecent">
+			<node name="label" value="显示最新的书籍列表" />
+			<node name="tooltip" value="显示最新的书籍列表" />
+		</node>
+		<node name="byAuthor">
+			<node name="label" value="按作者显示书籍" />
+			<node name="tooltip" value="按作者显示书籍" />
+		</node>
+		<node name="byTag">
+			<node name="label" value="按标签显示书籍" />
+			<node name="tooltip" value="按标签显示书籍" />
+		</node>
+		<node name="addBook">
+			<node name="label" value="添加书籍到书库" />
+			<node name="tooltip" value="添加书籍到书库" />
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" value="在网络书库中搜索" />
+			<node name="tooltip" value="在网络书库中搜索" />
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" value="网络搜索" />
+			<node name="tooltip" value="网络搜索" />
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" value="高级网络搜索" />
+			<node name="tooltip" value="高级网络搜索" />
+		</node>
+		<node name="gotoHome">
+			<node name="label" value="到正文起始处" />
+			<node name="tooltip" value="到正文起始处" />
+		</node>
+		<node name="undo">
+			<node name="label" value="后退" />
+			<node name="tooltip" value="后退" />
+		</node>
+		<node name="redo">
+			<node name="label" value="前进" />
+			<node name="tooltip" value="前进" />
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" value="跳转到指定页" />
+			<node name="tooltip" value="跳转到指定页" />
+		</node>
+		<node name="toc">
+			<node name="label" value="目录" />
+			<node name="tooltip" value="目录" />
+		</node>
+		<node name="search">
+			<node name="label" value="全文搜索" />
+			<node name="tooltip" value="全文搜索" />
+		</node>
+		<node name="findNext">
+			<node name="label" value="查找下一个" />
+			<node name="tooltip" value="查找下一个" />
+		</node>
+		<node name="findPrevious">
+			<node name="label" value="查找上一个" />
+			<node name="tooltip" value="查找上一个" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="书籍信息" />
+			<node name="tooltip" value="书籍信息" />
+		</node>
+		<node name="preferences">
+			<node name="label" value="设置选项" />
+			<node name="tooltip" value="设置选项" />
+		</node>
+		<node name="rotate">
+			<node name="label" value="旋转" />
+			<node name="tooltip" value="旋转" />
+		</node>
+		<node name="showHelp">
+			<node name="label" value="关于 FBReader" />
+			<node name="tooltip" value="关于 FBReader" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
