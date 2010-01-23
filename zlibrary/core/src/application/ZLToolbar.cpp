@@ -141,32 +141,42 @@ const ZLToolbar &ZLToolbar::Item::toolbar() const {
 	return myToolbar;
 }
 
-ZLToolbar::ActionItem::ActionItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip) : Item(toolbar), myActionId(actionId), myTooltip(tooltip) {
+ZLToolbar::ActionItem::ActionItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : Item(toolbar), myActionId(actionId), myResource(resource) {
 }
 
 const std::string &ZLToolbar::ActionItem::actionId() const {
 	return myActionId;
 }
 
-const std::string &ZLToolbar::ActionItem::tooltip() const {
-	if (!myTooltip.hasValue()) {
+const std::string &ZLToolbar::ActionItem::label() const {
+	const ZLResource &labelResource = myResource["label"];
+	if (!labelResource.hasValue()) {
 		static const std::string EMPTY;
 		return EMPTY;
 	}
-	return myTooltip.value();
+	return labelResource.value();
 }
 
-ZLToolbar::AbstractButtonItem::AbstractButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip) : ActionItem(toolbar, actionId, tooltip) {
+const std::string &ZLToolbar::ActionItem::tooltip() const {
+	const ZLResource &tooltipResource = myResource["tooltip"];
+	if (!tooltipResource.hasValue()) {
+		static const std::string EMPTY;
+		return EMPTY;
+	}
+	return tooltipResource.value();
 }
 
-ZLToolbar::PlainButtonItem::PlainButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip) : AbstractButtonItem(toolbar, actionId, tooltip) {
+ZLToolbar::AbstractButtonItem::AbstractButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : ActionItem(toolbar, actionId, resource) {
 }
 
-ZLToolbar::MenuButtonItem::MenuButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip) : AbstractButtonItem(toolbar, actionId, tooltip) {
+ZLToolbar::PlainButtonItem::PlainButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : AbstractButtonItem(toolbar, actionId, resource) {
+}
+
+ZLToolbar::MenuButtonItem::MenuButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : AbstractButtonItem(toolbar, actionId, resource) {
 }
 
 const std::string &ZLToolbar::MenuButtonItem::popupTooltip() const {
-	const ZLResource &popupResource = myTooltip["popup"];
+	const ZLResource &popupResource = myResource["popup"];
 	if (!popupResource.hasValue()) {
 		static const std::string EMPTY;
 		return EMPTY;
@@ -179,7 +189,7 @@ shared_ptr<ZLPopupData> ZLToolbar::MenuButtonItem::popupData() const {
 	return (it == toolbar().myPopupDataMap.end()) ? 0 : it->second;
 }
 
-ZLToolbar::ToggleButtonItem::ToggleButtonItem(const ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group, const ZLResource &tooltip) : AbstractButtonItem(toolbar, actionId, tooltip), myGroup(group) {
+ZLToolbar::ToggleButtonItem::ToggleButtonItem(const ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group, const ZLResource &resource) : AbstractButtonItem(toolbar, actionId, resource), myGroup(group) {
 	myGroup.myItems.insert(this);
 }
 
@@ -283,7 +293,7 @@ ZLToolbar::Item::Type ZLToolbar::SeparatorItem::type() const {
 	return SEPARATOR;
 }
 
-ZLToolbar::ParameterItem::ParameterItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip) : ActionItem(toolbar, actionId, tooltip), myParameterId(parameterId), myMaxWidth(maxWidth), mySymbolSet(symbolSet) {
+ZLToolbar::ParameterItem::ParameterItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource) : ActionItem(toolbar, actionId, resource), myParameterId(parameterId), myMaxWidth(maxWidth), mySymbolSet(symbolSet) {
 }
 
 const std::string &ZLToolbar::ParameterItem::parameterId() const {
@@ -298,14 +308,14 @@ ZLToolbar::ParameterItem::SymbolSet ZLToolbar::ParameterItem::symbolSet() const 
 	return mySymbolSet;
 }
 
-ZLToolbar::TextFieldItem::TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip) : ParameterItem(toolbar, actionId, parameterId, maxWidth, symbolSet, tooltip) {
+ZLToolbar::TextFieldItem::TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource) : ParameterItem(toolbar, actionId, parameterId, maxWidth, symbolSet, resource) {
 }
 
 ZLToolbar::Item::Type ZLToolbar::TextFieldItem::type() const {
 	return TEXT_FIELD;
 }
 
-ZLToolbar::ComboBoxItem::ComboBoxItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip) : ParameterItem(toolbar, actionId, parameterId, maxWidth, symbolSet, tooltip) {
+ZLToolbar::ComboBoxItem::ComboBoxItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource) : ParameterItem(toolbar, actionId, parameterId, maxWidth, symbolSet, resource) {
 }
 
 ZLToolbar::Item::Type ZLToolbar::ComboBoxItem::type() const {

@@ -26,7 +26,7 @@
 	NSMutableDictionary *myItems;
 }
 
-- (void)addItemWithIdentifier:(NSString*)identifier tooltip:(NSString*)tooltip;
+- (void)addItemWithIdentifier:(NSString*)identifier label:(NSString*)label tooltip:(NSString*)tooltip;
 
 @end
 

@@ -111,29 +111,91 @@
 		<node name="quit" value="Закрыть" />
 	</node>
 	<node name="toolbar">
-		<node name="showReading" value="Вернуться к чтению" />
-		<node name="showLibrary" value="Библиотека">
-			<node name="popup" value="Прочитанные книги" />
+		<node name="showReading">
+			<node name="label" value="Читать книгу" />
+			<node name="tooltip" value="Вернуться к чтению" />
 		</node>
-		<node name="showRecent" value="Прочитанные книги" />
-		<node name="byAuthor" value="По авторам" />
-		<node name="byTag" value="По категориям" />
-		<node name="addBook" value="Добавить файл в библиотеку" />
-		<node name="showNetLibrary" value="Поиск по сетевым библиотекам" />
-		<node name="searchOnNetwork" value="Быстрый поиск в сети" />
-		<node name="advancedSearchOnNetwork" value="Поиск в сети" />
-		<node name="gotoHome" value="В начало книги" />
-		<node name="undo" value="Назад" />
-		<node name="redo" value="Вперед" />
-		<node name="gotoPageNumberWithParameter" value="Перейти на страницу" />
-		<node name="toc" value="Оглавление" />
-		<node name="search" value="Поиск" />
-		<node name="findNext" value="Найти следующий" />
-		<node name="findPrevious" value="Найти предыдущий" />
-		<node name="bookInfo" value="Информация о книге" />
-		<node name="preferences" value="Настройки" />
-		<node name="rotate" value="Поворот текста" />
-		<node name="showHelp" value="О программе" />
+		<node name="showLibrary">
+			<node name="label" value="Библиотека" />
+			<node name="tooltip" value="Библиотека" />
+			<node name="popup" value="Недавно прочитанные книги" />
+		</node>
+		<node name="showRecent">
+			<node name="label" value="История" />
+			<node name="tooltip" value="Недавно прочитанные книги" />
+		</node>
+		<node name="byAuthor">
+			<node name="label" value="По авторам" />
+			<node name="tooltip" value="По авторам" />
+		</node>
+		<node name="byTag">
+			<node name="label" value="По категориям" />
+			<node name="tooltip" value="По категориям" />
+		</node>
+		<node name="addBook">
+			<node name="label" value="Добавить" />
+			<node name="tooltip" value="Добавить файл в библиотеку" />
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" value="Сеть" />
+			<node name="tooltip" value="Доступ к сетевым библиотекам" />
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" value="Быстрый поиск" />
+			<node name="tooltip" value="Быстрый поиск в сети" />
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" value="Поиск" />
+			<node name="tooltip" value="Поиск в сети" />
+		</node>
+		<node name="gotoHome">
+			<node name="label" value="В начало" />
+			<node name="tooltip" value="В начало книги" />
+		</node>
+		<node name="undo">
+			<node name="label" value="Назад" />
+			<node name="tooltip" value="Назад" />
+		</node>
+		<node name="redo">
+			<node name="label" value="Вперед" />
+			<node name="tooltip" value="Вперед" />
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" value="Перейти на" />
+			<node name="tooltip" value="Перейти на страницу" />
+		</node>
+		<node name="toc">
+			<node name="label" value="Оглавление" />
+			<node name="tooltip" value="Оглавление" />
+		</node>
+		<node name="search">
+			<node name="label" value="Поиск" />
+			<node name="tooltip" value="Поиск" />
+		</node>
+		<node name="findNext">
+			<node name="label" value="Следующий" />
+			<node name="tooltip" value="Найти следующий" />
+		</node>
+		<node name="findPrevious">
+			<node name="label" value="Предыдущий" />
+			<node name="tooltip" value="Найти предыдущий" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="О книге" />
+			<node name="tooltip" value="Информация о книге" />
+		</node>
+		<node name="preferences">
+			<node name="label" value="Настройки" />
+			<node name="tooltip" value="Настройки" />
+		</node>
+		<node name="rotate">
+			<node name="label" value="Поворот" />
+			<node name="tooltip" value="Поворот текста" />
+		</node>
+		<node name="showHelp">
+			<node name="label" value="О программе" />
+			<node name="tooltip" value="О программе" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">

@@ -61,28 +61,29 @@ public:
 	class ActionItem : public Item {
 
 	public:
-		ActionItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip);
+		ActionItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
 		const std::string &actionId() const;
+		const std::string &label() const;
 		const std::string &tooltip() const;
 
 	private:
 		const std::string myActionId;
 
 	protected:
-		const ZLResource &myTooltip;
+		const ZLResource &myResource;
 	};
 
 	class AbstractButtonItem : public ActionItem {
 
 	public:
-		AbstractButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip);
+		AbstractButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
 		const std::string &iconName() const;
 	};
 
 	class PlainButtonItem : public AbstractButtonItem {
 
 	public:
-		PlainButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip);
+		PlainButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
 
 		Type type() const;
 	};
@@ -90,7 +91,7 @@ public:
 	class MenuButtonItem : public AbstractButtonItem {
 
 	public:
-		MenuButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &tooltip);
+		MenuButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
 
 		const std::string &popupTooltip() const;
 		shared_ptr<ZLPopupData> popupData() const;
@@ -104,7 +105,7 @@ public:
 	class ToggleButtonItem : public AbstractButtonItem {
 
 	public:
-		ToggleButtonItem(const ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group, const ZLResource &tooltip);
+		ToggleButtonItem(const ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group, const ZLResource &resource);
 
 		Type type() const;
 
@@ -154,7 +155,7 @@ public:
 		};
 
 	public:
-		ParameterItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip);
+		ParameterItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource);
 		const std::string &parameterId() const;
 		int maxWidth() const;
 		SymbolSet symbolSet() const;
@@ -168,14 +169,14 @@ public:
 	class TextFieldItem : public ParameterItem {
 
 	public:
-		TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip);
+		TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource);
 		Type type() const;
 	};
 
 	class ComboBoxItem : public ParameterItem {
 
 	public:
-		ComboBoxItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &tooltip);
+		ComboBoxItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource);
 		Type type() const;
 	};
 

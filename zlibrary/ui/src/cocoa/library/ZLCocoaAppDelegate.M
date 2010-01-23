@@ -36,7 +36,7 @@
 	ZLCocoaToolbarDelegate *delegate = [[[ZLCocoaToolbarDelegate alloc] init] autorelease];
 	[toolbar setDelegate:delegate];	
 	[toolbar setAllowsUserCustomization:YES];
-	[toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
+	//[toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
 
 	ZLApplication::Instance().initWindow();
 
