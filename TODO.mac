@@ -45,6 +45,7 @@ MISSING FEATURES
 	таймер
 	clipboard
 	toolbar (?)
+	определение системного языка
 
 ОПТИМИЗАЦИЯ/COCOA-ИЗАЦИЯ
 	производительность ZLPaintContext
