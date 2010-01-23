@@ -45,7 +45,9 @@ MISSING FEATURES
 	поворот экрана
 	таймер
 	clipboard
-	toolbar (?)
+	toolbar
+		toggle buttons
+		text fields
 	определение системного языка
 
 ОПТИМИЗАЦИЯ/COCOA-ИЗАЦИЯ
