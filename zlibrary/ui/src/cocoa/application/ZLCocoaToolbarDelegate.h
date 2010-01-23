@@ -24,6 +24,7 @@
 
 @interface ZLCocoaToolbarDelegate : NSObject<NSToolbarDelegate> {
 	NSMutableDictionary *myItems;
+	NSMutableArray *mySelectableItems;
 }
 
 - (void)addItemWithIdentifier:(NSString*)identifier label:(NSString*)label tooltip:(NSString*)tooltip;

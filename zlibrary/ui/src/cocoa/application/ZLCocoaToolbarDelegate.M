@@ -18,6 +18,7 @@
  */
 
 #include <ZLibrary.h>
+#include <ZLApplication.h>
 #include <ZLFile.h>
 
 #import "ZLCocoaToolbarDelegate.h"
@@ -28,16 +29,19 @@
 	self = [super init];
 	if (self) {
 		myItems = [[NSMutableDictionary alloc] init];
+		mySelectableItems = [[NSMutableArray alloc] init];
 	}
 	return self;
 }
 
 - (void)addItemWithIdentifier:(NSString*)identifier label:(NSString*)label tooltip:(NSString*)tooltip {
-	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+	NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
 	ZLFile file(ZLibrary::ApplicationImageDirectory() + "/" + [identifier UTF8String] + ".png");
 	[item setImage:[[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:file.path().c_str()]]];
 	[item setLabel:label];
 	[item setToolTip:tooltip];
+	[item setTarget:self];
+	[item setAction:@selector(doAction:)];
 	[myItems setObject:item forKey:identifier];
 }
 
@@ -54,13 +58,17 @@
 }
 
 - (NSArray*)toolbarSelectableItemIdentifiers:(NSToolbar*)toolbar {
-	return [myItems allKeys];
+	return mySelectableItems;
 }
 
 - (void)toolbarWillAddItem:(NSNotification*)notification {
 }
 
 - (void)toolbarDidRemoveItem:(NSNotification*)notification {
+}
+
+- (void)doAction:(id)sender {
+	ZLApplication::Instance().doAction([[sender itemIdentifier] UTF8String]);
 }
 
 @end

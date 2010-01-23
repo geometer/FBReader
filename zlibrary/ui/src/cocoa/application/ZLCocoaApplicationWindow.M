@@ -122,6 +122,8 @@ void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item, int index
 }
 
 void ZLCocoaApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
+	NSToolbar *toolbar = [(NSWindow*)myWindow toolbar];
+
 	int index = 0;
 	std::pair<ZLToolbar::ItemPtr,bool> *pair = 0;
 	for (std::vector<std::pair<ZLToolbar::ItemPtr,bool> >::iterator it = myToolbarItems.begin(); it != myToolbarItems.end(); ++it) {
@@ -133,13 +135,17 @@ void ZLCocoaApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool
 			++index;
 		}
 	}
-	if (pair != 0 && pair->second != visible) {
-		pair->second = visible;
+	if (pair != 0) {
+		if (pair->second != visible) {
+			pair->second = visible;
+			if (visible) {
+				addToolbarItem(item, index);
+			} else {
+				[toolbar removeItemAtIndex:index];
+			}
+		}
 		if (visible) {
-			addToolbarItem(item, index);
-		} else {
-			NSToolbar *toolbar = [(NSWindow*)myWindow toolbar];
-			[toolbar removeItemAtIndex:index];
+			[[[toolbar items] objectAtIndex:index] setTarget:enabled ? [toolbar delegate] : nil];
 		}
 	}
 }
