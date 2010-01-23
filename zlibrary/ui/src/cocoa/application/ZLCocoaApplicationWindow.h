@@ -20,6 +20,7 @@
 #ifndef __ZLCOCOAAPPLICATIONWINDOW_H__
 #define __ZLCOCOAAPPLICATIONWINDOW_H__
 
+#include <vector>
 #include <map>
 
 #include "../../../../core/src/application/ZLApplicationWindow.h"
@@ -35,6 +36,7 @@ public:
 
 private:
 	ZLViewWidget *createViewWidget();
+	void addToolbarItem(ZLToolbar::ItemPtr item, int index);
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void init();
 	void refresh();
@@ -54,7 +56,9 @@ private:
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 private:
-	std::map<ZLToolbar::ItemPtr,int> myItemToIndexMap;
+	// NSWindow*
+	void *myWindow;
+	std::vector<std::pair<ZLToolbar::ItemPtr,bool> > myToolbarItems;
 };
 
 #endif /* __ZLCOCOAAPPLICATIONWINDOW_H__ */

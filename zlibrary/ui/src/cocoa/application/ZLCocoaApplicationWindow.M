@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #import <Cocoa/Cocoa.h>
 
 #include <ZLibrary.h>
@@ -35,6 +37,8 @@ ZLCocoaApplicationWindow::ZLCocoaApplicationWindow(ZLApplication *application) :
 }
 
 void ZLCocoaApplicationWindow::init() {
+	myWindow = [[[NSApplication sharedApplication] windows] objectAtIndex:0];
+
 	ZLApplicationWindow::init();
 
 	/*
@@ -56,6 +60,7 @@ ZLCocoaApplicationWindow::~ZLCocoaApplicationWindow() {
 }
 
 void ZLCocoaApplicationWindow::refresh() {
+	std::cerr << "refresh\n";
 	ZLApplicationWindow::refresh();
 }
 
@@ -73,9 +78,15 @@ bool ZLCocoaApplicationWindow::isFullscreen() const {
 }
 
 void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
-	NSWindow *window = [[[NSApplication sharedApplication] delegate] window];
-	NSToolbar *toolbar = [window toolbar];
+	addToolbarItem(item, -1);
+}
 
+void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item, int index) {
+	std::cerr << "addToolbarItem 0\n";
+	NSToolbar *toolbar = [(NSWindow*)myWindow toolbar];
+	NSString *identifier = 0;
+
+	std::cerr << "addToolbarItem 1\n";
 	switch (item->type()) {
 		case ZLToolbar::Item::TEXT_FIELD:
 		case ZLToolbar::Item::COMBO_BOX:
@@ -84,27 +95,61 @@ void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		case ZLToolbar::Item::TOGGLE_BUTTON:
 		case ZLToolbar::Item::MENU_BUTTON:
 		{
-			ZLCocoaToolbarDelegate *delegate =
-				(ZLCocoaToolbarDelegate*)[toolbar delegate];
 			const ZLToolbar::AbstractButtonItem &button =
 				(const ZLToolbar::AbstractButtonItem&)*item;
-			NSString *identifier = [NSString stringWithUTF8String:button.actionId().c_str()];
-			NSString *tooltip = [NSString stringWithUTF8String:button.tooltip().c_str()];
-			[delegate addItemWithIdentifier:identifier tooltip:tooltip];
-			[toolbar insertItemWithItemIdentifier:identifier
-																		atIndex:[[toolbar items] count]];
+			identifier = [NSString stringWithUTF8String:button.actionId().c_str()];
+			if (index == -1) {
+				ZLCocoaToolbarDelegate *delegate =
+					(ZLCocoaToolbarDelegate*)[toolbar delegate];
+				NSString *tooltip = [NSString stringWithUTF8String:button.tooltip().c_str()];
+				[delegate addItemWithIdentifier:identifier tooltip:tooltip];
+			}
 			break;
 		}
 		case ZLToolbar::Item::SEPARATOR:
-			[toolbar insertItemWithItemIdentifier:NSToolbarSeparatorItemIdentifier
-																		atIndex:[[toolbar items] count]];
+			identifier = NSToolbarSeparatorItemIdentifier;
 			break;
+	}
+
+	if (identifier != 0) {
+		if (index >= 0) {
+			std::cerr << "insertAtIndex " << index << "\n";
+			[toolbar insertItemWithItemIdentifier:identifier
+																		atIndex:index];
+			std::cerr << "OK\n";
+		} else {
+			[toolbar insertItemWithItemIdentifier:identifier
+																		atIndex:[[toolbar items] count]];
+			myToolbarItems.push_back(std::make_pair(item, true));
+		}
 	}
 }
 
 void ZLCocoaApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	NSWindow *window = [[[NSApplication sharedApplication] delegate] window];
-	NSToolbar *toolbar = [window toolbar];
+	std::cerr << "setToolbarItemState\n";
+	int index = 0;
+	std::pair<ZLToolbar::ItemPtr,bool> *pair = 0;
+	for (std::vector<std::pair<ZLToolbar::ItemPtr,bool> >::iterator it = myToolbarItems.begin(); it != myToolbarItems.end(); ++it) {
+		if (it->first == item) {
+			pair = &*it;
+			break;
+		}
+		if (it->second) {
+			++index;
+		}
+	}
+	std::cerr << "setToolbarItemState 1\n";
+	if (pair != 0 && pair->second != visible) {
+		pair->second = visible;
+		if (visible) {
+			std::cerr << "index = " << index << "\n";
+			//addToolbarItem(item, index);
+		} else {
+			NSToolbar *toolbar = [(NSWindow*)myWindow toolbar];
+			//[toolbar removeItemAtIndex:index];
+		}
+	}
+	std::cerr << "setToolbarItemState 2\n";
 }
 
 ZLViewWidget *ZLCocoaApplicationWindow::createViewWidget() {
