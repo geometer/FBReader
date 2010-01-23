@@ -91,7 +91,6 @@ void ZLCocoaLibraryImplementation::run(ZLApplication *application) {
 
 	/*
 	ZLDialogManager::Instance().createApplicationWindow(application);
-	application->initWindow();
 	gtk_widget_set_default_direction(ZLLanguageUtil::isRTLLanguage(ZLibrary::Language()) ? GTK_TEXT_DIR_RTL : GTK_TEXT_DIR_LTR);
 	gtk_main();
 	delete application;

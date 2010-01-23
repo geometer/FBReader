@@ -22,9 +22,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface ZLCocoaToolbarDelegate : NSObject {
+@interface ZLCocoaToolbarDelegate : NSObject<NSToolbarDelegate> {
 	NSMutableDictionary *myItems;
 }
+
+- (void)addItemWithIdentifier:(NSString*)identifier tooltip:(NSString*)tooltip;
 
 @end
 

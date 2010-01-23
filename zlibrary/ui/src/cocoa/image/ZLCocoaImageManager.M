@@ -25,6 +25,9 @@ ZLCocoaImageData::ZLCocoaImageData() : myNSImage(0) {
 }
 
 ZLCocoaImageData::~ZLCocoaImageData() {
+	if (myNSImage != 0) {
+		[((NSImage*)myNSImage) release];
+	}
 }
 
 unsigned int ZLCocoaImageData::width() const {
@@ -78,5 +81,5 @@ shared_ptr<ZLImageData> ZLCocoaImageManager::createData() const {
 void ZLCocoaImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
 	NSData *nsData = [NSData dataWithBytes:stringData.data()
 									length:stringData.length()];
-	((ZLCocoaImageData&)data).myNSImage = [[NSImage new] initWithData:nsData];
+	((ZLCocoaImageData&)data).myNSImage = [[NSImage alloc] initWithData:nsData];
 }

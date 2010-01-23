@@ -25,14 +25,6 @@
 
 @implementation CocoaView
 
-- (id)initWithFrame:(NSRect)frame {
-	self = [super initWithFrame:frame];
-	if (self) {
-		ZLApplication::Instance().initWindow();
-	}
-	return self;
-}
-
 - (void)drawRect:(NSRect)dirtyRect {
 	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
 	if (view.isNull()) {

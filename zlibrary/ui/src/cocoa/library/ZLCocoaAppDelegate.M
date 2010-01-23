@@ -20,10 +20,10 @@
 #include <ZLibrary.h>
 
 #include "../application/ZLCocoaApplicationWindow.h"
+#include "../application/ZLCocoaToolbarDelegate.h"
+#include "../view/CocoaView.h"
 
 #import "ZLCocoaAppDelegate.h"
-#import "../view/CocoaView.h"
-#import "../application/ZLCocoaToolbarDelegate.h"
 
 @implementation ZLCocoaAppDelegate
 
@@ -32,10 +32,15 @@
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
 	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"mainToolbar"];
 	[window setToolbar:toolbar];
-	[toolbar setDelegate:[ZLCocoaToolbarDelegate new]];	
-	[toolbar insertItemWithItemIdentifier:@"item0" atIndex:0];
 
-	NSView *view = [CocoaView new];
+	ZLCocoaToolbarDelegate *delegate = [[[ZLCocoaToolbarDelegate alloc] init] autorelease];
+	[toolbar setDelegate:delegate];	
+	[toolbar setAllowsUserCustomization:YES];
+	[toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
+
+	ZLApplication::Instance().initWindow();
+
+	NSView *view = [[CocoaView alloc] init];
 	[window setContentView:view];
 	[window setInitialFirstResponder:view];
 }

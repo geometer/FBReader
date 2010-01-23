@@ -23,6 +23,9 @@
 
 #include "ZLCocoaApplicationWindow.h"
 
+#import "ZLCocoaToolbarDelegate.h"
+#import "../view/CocoaView.h"
+
 //#include "../util/ZLCocoaKeyUtil.h"
 //#include "../util/ZLCocoaSignalUtil.h"
 //#include "../dialogs/ZLCocoaDialogManager.h"
@@ -35,6 +38,10 @@ ZLCocoaApplicationWindow::ZLCocoaApplicationWindow(ZLApplication *application) :
 
 void ZLCocoaApplicationWindow::init() {
 	ZLApplicationWindow::init();
+
+	std::cerr << "initWindow\n";
+
+	/*
 	NSMenu *menu = [[NSApplication sharedApplication] mainMenu];
 	NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:@"Hello"
 																								action:0
@@ -46,6 +53,7 @@ void ZLCocoaApplicationWindow::init() {
 	std::cerr << [[menu itemArray] count] << "\n";
 	[menu update];
 	std::cerr << [[menu itemArray] count] << "\n";
+	*/
 }
 
 ZLCocoaApplicationWindow::~ZLCocoaApplicationWindow() {
@@ -69,6 +77,33 @@ bool ZLCocoaApplicationWindow::isFullscreen() const {
 }
 
 void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
+	NSWindow *window = [[[NSApplication sharedApplication] delegate] window];
+	NSToolbar *toolbar = [window toolbar];
+
+	switch (item->type()) {
+		case ZLToolbar::Item::TEXT_FIELD:
+		case ZLToolbar::Item::COMBO_BOX:
+			break;
+		case ZLToolbar::Item::PLAIN_BUTTON:
+		case ZLToolbar::Item::TOGGLE_BUTTON:
+		case ZLToolbar::Item::MENU_BUTTON:
+		{
+			ZLCocoaToolbarDelegate *delegate =
+				(ZLCocoaToolbarDelegate*)[toolbar delegate];
+			const ZLToolbar::AbstractButtonItem &button =
+				(const ZLToolbar::AbstractButtonItem&)*item;
+			NSString *identifier = [NSString stringWithUTF8String:button.actionId().c_str()];
+			NSString *tooltip = [NSString stringWithUTF8String:button.tooltip().c_str()];
+			[delegate addItemWithIdentifier:identifier tooltip:tooltip];
+			[toolbar insertItemWithItemIdentifier:identifier
+																		atIndex:[[toolbar items] count]];
+			break;
+		}
+		case ZLToolbar::Item::SEPARATOR:
+			[toolbar insertItemWithItemIdentifier:NSToolbarSeparatorItemIdentifier
+																		atIndex:[[toolbar items] count]];
+			break;
+	}
 }
 
 void ZLCocoaApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {

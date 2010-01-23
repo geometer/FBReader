@@ -28,7 +28,7 @@
 #include "../image/ZLCocoaImageManager.h"
 
 ZLCocoaPaintContext::ZLCocoaPaintContext() {
-	myFontAttributes = [NSMutableDictionary new];
+	myFontAttributes = [[NSMutableDictionary alloc] init];
 }
 
 ZLCocoaPaintContext::~ZLCocoaPaintContext() {

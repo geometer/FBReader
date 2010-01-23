@@ -17,6 +17,9 @@
  * 02110-1301, USA.
  */
 
+#include <ZLibrary.h>
+#include <ZLFile.h>
+
 #import "ZLCocoaToolbarDelegate.h"
 
 @implementation ZLCocoaToolbarDelegate
@@ -24,12 +27,18 @@
 - (id)init {
 	self = [super init];
 	if (self) {
-		myItems = [NSMutableDictionary new];
-		NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:@"item0"];
-		[item setLabel:@"Item"];
-		[myItems setObject:item forKey:@"item0"];
+		myItems = [[NSMutableDictionary alloc] init];
 	}
 	return self;
+}
+
+- (void)addItemWithIdentifier:(NSString*)identifier tooltip:(NSString*)tooltip {
+	NSToolbarItem *item = [[NSToolbarItem alloc] initWithItemIdentifier:identifier];
+	ZLFile file(ZLibrary::ApplicationImageDirectory() + "/" + [identifier UTF8String] + ".png");
+	[item setImage:[[NSImage alloc] initWithContentsOfFile:[NSString stringWithUTF8String:file.path().c_str()]]];
+	[item setLabel:tooltip];
+	[item setToolTip:tooltip];
+	[myItems setObject:item forKey:identifier];
 }
 
 - (NSToolbarItem*)toolbar:(NSToolbar*)toolbar itemForItemIdentifier:(NSString*)identifier willBeInsertedIntoToolbar:(BOOL)flag {

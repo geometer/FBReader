@@ -19,8 +19,6 @@
 
 #import <Foundation/Foundation.h>
 
-#include <iostream>
-
 #include <ZLStringUtil.h>
 
 #include "ZLCocoaFSManager.h"
