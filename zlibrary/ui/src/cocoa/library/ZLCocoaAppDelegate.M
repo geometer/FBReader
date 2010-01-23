@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,14 +23,21 @@
 
 #import "ZLCocoaAppDelegate.h"
 #import "../view/CocoaView.h"
+#import "../application/ZLCocoaToolbarDelegate.h"
 
 @implementation ZLCocoaAppDelegate
 
 @synthesize window;
 
 - (void)applicationDidFinishLaunching:(NSNotification*)notification {
-	[window setContentView:[CocoaView new]];
-	[[window windowController] setShouldCascadeWindows:NO];
+	NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"mainToolbar"];
+	[window setToolbar:toolbar];
+	[toolbar setDelegate:[ZLCocoaToolbarDelegate new]];	
+	[toolbar insertItemWithItemIdentifier:@"item0" atIndex:0];
+
+	NSView *view = [CocoaView new];
+	[window setContentView:view];
+	[window setInitialFirstResponder:view];
 }
 
 - (void)applicationWillTerminate:(NSNotification*)notification {

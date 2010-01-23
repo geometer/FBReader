@@ -17,22 +17,15 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLCOCOAFSMANAGER_H__
-#define __ZLCOCOAFSMANAGER_H__
+#ifndef __ZLCOCOATOOLBARDELEGATE_H__
+#define __ZLCOCOATOOLBARDELEGATE_H__
 
-#include "../../../../core/src/unix/filesystem/ZLUnixFSManager.h"
+#import <Cocoa/Cocoa.h>
 
-class ZLCocoaFSManager : public ZLUnixFSManager {
+@interface ZLCocoaToolbarDelegate : NSObject {
+	NSMutableDictionary *myItems;
+}
 
-public:
-	static void createInstance() { ourInstance = new ZLCocoaFSManager(); }
-	
-private:
-	ZLCocoaFSManager() {}
-	
-protected:
-	void normalize(std::string &path) const;
-	std::string convertFilenameToUtf8(const std::string &name) const;
-};
+@end
 
-#endif /* __ZLCOCOAFSMANAGER_H__ */
+#endif /* __ZLCOCOATOOLBARDELEGATE_H__ */
