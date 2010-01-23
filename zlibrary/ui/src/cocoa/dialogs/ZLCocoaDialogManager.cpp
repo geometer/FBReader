@@ -26,7 +26,7 @@
 //#include "ZLCocoaDialog.h"
 //#include "ZLCocoaOptionsDialog.h"
 //#include "ZLCocoaSelectionDialog.h"
-//#include "ZLCocoaProgressDialog.h"
+#include "ZLCocoaProgressDialog.h"
 //#include "ZLCocoaUtil.h"
 
 shared_ptr<ZLDialog> ZLCocoaDialogManager::createDialog(const ZLResourceKey &key) const {
@@ -63,12 +63,7 @@ bool ZLCocoaDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandl
 }
 
 shared_ptr<ZLProgressDialog> ZLCocoaDialogManager::createProgressDialog(const ZLResourceKey &key) const {
-	/*
-	return new ZLCocoaProgressDialog(
-		!myDialogs.empty() ? myDialogs.top() : myWindow, key
-	);
-	*/
-	return 0;
+	return new ZLCocoaProgressDialog(key);
 }
 
 bool ZLCocoaDialogManager::isClipboardSupported(ClipboardType) const {

@@ -21,7 +21,7 @@ MACOS_VERSION = 10.6
 
 CFLAGS = \
 	-arch $(ARCH) -fmessage-length=0 -pipe -fpascal-strings -fasm-blocks \
-	-Os -mdynamic-no-pic -W -Wall \
+	-mdynamic-no-pic -W -Wall \
 	-isysroot /Developer/SDKs/MacOSX$(MACOS_VERSION).sdk \
 	-fvisibility=hidden -fvisibility-inlines-hidden \
 	-mmacosx-version-min=$(MACOS_VERSION) \
