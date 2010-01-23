@@ -83,8 +83,8 @@
 	<key code="0xDD" name="&lt;]&gt;"/>
 	<key code="0xDE" name="&lt;'&gt;"/>
 -->
-	<modifier code="0x200" name="&lt;Shift&gt;"/>
-	<modifier code="0x400" name="&lt;Ctrl&gt;"/>
-	<modifier code="0x800" name="&lt;Alt&gt;"/>
-	<modifier code="0x1000" name="&lt;Command&gt;"/>
+	<modifier code="0x20000" name="&lt;Shift&gt;"/>
+	<modifier code="0x40000" name="&lt;Ctrl&gt;"/>
+	<modifier code="0x80000" name="&lt;Alt&gt;"/>
+	<modifier code="0x100000" name="&lt;Command&gt;"/>
 </keynames>

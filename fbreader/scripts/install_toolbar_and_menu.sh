@@ -11,7 +11,7 @@ case "$1" in
 		fullscreen_toolbar_file=data/default/fullscreen_toolbar.desktop.xml
 		;;
 	macosx)
-		toolbar_file=data/default/toolbar.macos.xml
+		toolbar_file=data/default/toolbar.macosx.xml
 		;;
 	maemo)
 		case "$2" in
