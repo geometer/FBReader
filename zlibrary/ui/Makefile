@@ -18,7 +18,7 @@ SUBDIRS_ALL = \
   src/nanoX/time src/nanoX/dialogs src/nanoX/optionView src/nanoX/view \
   src/nanoX/image src/nanoX/filesystem src/nanoX/library src/nanoX/application \
   src/cocoa/application src/cocoa/filesystem src/cocoa/library src/cocoa/view \
-  src/cocoa/dialogs src/cocoa/image src/cocoa/time \
+  src/cocoa/dialogs src/cocoa/image src/cocoa/time src/cocoa/util \
   src/iphone/application src/iphone/filesystem src/iphone/library src/iphone/view \
   src/iphone/dialogs src/iphone/image src/iphone/time
 QTSUBDIRS_ALL = src/qt/time src/qtopia/message src/qtopia/application src/qtopia/dialogs src/qtopia/optionView src/qtopia/view src/qt/dialogs src/qt/view src/qt/image src/qt/util src/opie/view src/opie/dialogs src/opie/application src/qt/application-desktop src/qt/application-pdaxrom src/opie/library src/qt/library src/qtopia/library src/qt/filesystem src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/application src/qt4/library src/qt4/filesystem src/ezx/library src/ezx/application src/ezx/dialogs src/ezx/view src/ezx/optionView
@@ -29,7 +29,7 @@ SUBDIRS =
 ifeq "$(UI_TYPE)" "cocoa"
   SUBDIRS = \
     src/cocoa/application src/cocoa/filesystem src/cocoa/library src/cocoa/view \
-    src/cocoa/dialogs src/cocoa/image src/cocoa/time
+    src/cocoa/dialogs src/cocoa/image src/cocoa/time src/cocoa/util
 endif
 
 ifeq "$(UI_TYPE)" "nanoX"

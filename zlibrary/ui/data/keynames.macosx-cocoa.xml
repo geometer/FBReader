@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keynames disableAutoNames="true">
-	<key code="0x33" name="&lt;Esc&gt;"/>
+<keynames>
 	<key code="0x5c" name="&lt;F1&gt;"/>
 	<key code="0x5d" name="&lt;F2&gt;"/>
 	<key code="0x5e" name="&lt;F3&gt;"/>
@@ -24,21 +23,24 @@
 	<key code="0x19" name="&lt;9&gt;"/>
 	<key code="0x1d" name="&lt;0&gt;"/>
 
+	<key code="0x35" name="&lt;Esc&gt;"/>
+	<key code="0x7b" name="&lt;LeftArrow&gt;"/>
+	<key code="0x7e" name="&lt;UpArrow&gt;"/>
+	<key code="0x7c" name="&lt;RightArrow&gt;"/>
+	<key code="0x7d" name="&lt;DownArrow&gt;"/>
+	<key code="0x74" name="&lt;PageUp&gt;"/>
+	<key code="0x79" name="&lt;PageDown&gt;"/>
+	<key code="0x24" name="&lt;Return&gt;"/>
+
+<!--
 	<key code="0x08" name="&lt;BackSpace&gt;"/>
 	<key code="0x09" name="&lt;Tab&gt;"/>
-	<key code="0xD" name="&lt;Return&gt;"/>
 	<key code="0x2D" name="&lt;Insert&gt;"/>
 	<key code="0x2E" name="&lt;Delete&gt;"/>
 	<key code="0x13" name="&lt;Pause&gt;"/>
 	<key code="0x2C" name="&lt;PrintScreen&gt;"/>
 	<key code="0x24" name="&lt;Home&gt;"/>
 	<key code="0x23" name="&lt;End&gt;"/>
-	<key code="0x25" name="&lt;LeftArrow&gt;"/>
-	<key code="0x26" name="&lt;UpArrow&gt;"/>
-	<key code="0x27" name="&lt;RightArrow&gt;"/>
-	<key code="0x28" name="&lt;DownArrow&gt;"/>
-	<key code="0x21" name="&lt;PageUp&gt;"/>
-	<key code="0x22" name="&lt;PageDown&gt;"/>
 	<key code="0x41" name="&lt;A&gt;"/>
 	<key code="0x42" name="&lt;B&gt;"/>
 	<key code="0x43" name="&lt;C&gt;"/>
@@ -65,18 +67,6 @@
 	<key code="0x58" name="&lt;X&gt;"/>
 	<key code="0x59" name="&lt;Y&gt;"/>
 	<key code="0x5A" name="&lt;Z&gt;"/>
-	<key code="0x70" name="&lt;F1&gt;"/>
-	<key code="0x71" name="&lt;F2&gt;"/>
-	<key code="0x72" name="&lt;F3&gt;"/>
-	<key code="0x73" name="&lt;F4&gt;"/>
-	<key code="0x74" name="&lt;F5&gt;"/>
-	<key code="0x75" name="&lt;F6&gt;"/>
-	<key code="0x76" name="&lt;F7&gt;"/>
-	<key code="0x77" name="&lt;F8&gt;"/>
-	<key code="0x78" name="&lt;F9&gt;"/>
-	<key code="0x79" name="&lt;F10&gt;"/>
-	<key code="0x7A" name="&lt;F11&gt;"/>
-	<key code="0x7B" name="&lt;F12&gt;"/>
 	<key code="0x14" name="&lt;CapsLock&gt;"/>
 	<key code="0x90" name="&lt;NumLock&gt;"/>
 	<key code="0x91" name="&lt;ScrollLock&gt;"/>
@@ -92,7 +82,9 @@
 	<key code="0xDC" name="&lt;\&gt;"/>
 	<key code="0xDD" name="&lt;]&gt;"/>
 	<key code="0xDE" name="&lt;'&gt;"/>
-	<modifier code="0x1" name="&lt;Shift&gt;"/>
-	<modifier code="0x2" name="&lt;Ctrl&gt;"/>
-	<modifier code="0x4" name="&lt;Alt&gt;"/>
+-->
+	<modifier code="0x200" name="&lt;Shift&gt;"/>
+	<modifier code="0x400" name="&lt;Ctrl&gt;"/>
+	<modifier code="0x800" name="&lt;Alt&gt;"/>
+	<modifier code="0x1000" name="&lt;Command&gt;"/>
 </keynames>

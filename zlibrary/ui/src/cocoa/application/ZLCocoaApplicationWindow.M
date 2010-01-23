@@ -34,12 +34,8 @@
 ZLCocoaApplicationWindow::ZLCocoaApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application) {
 }
 
-#include <iostream>
-
 void ZLCocoaApplicationWindow::init() {
 	ZLApplicationWindow::init();
-
-	std::cerr << "initWindow\n";
 
 	/*
 	NSMenu *menu = [[NSApplication sharedApplication] mainMenu];

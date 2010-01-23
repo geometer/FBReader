@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,25 @@
  * 02110-1301, USA.
  */
 
+#include <cctype>
+#include <iostream>
+
 #import <Cocoa/Cocoa.h>
 
-@interface ZLCocoaAppDelegate : NSObject<NSApplicationDelegate> {
-    NSWindow *window;
+#include <ZLUnicodeUtil.h>
+#include <ZLStringUtil.h>
+
+#include "ZLCocoaKeyUtil.h"
+
+std::string ZLCocoaKeyUtil::keyName(void *nsEvent) {
+	NSEvent *event = (NSEvent*)nsEvent;
+	const std::string chars = [[event characters] UTF8String];
+	ZLUnicodeUtil::Ucs4Char unicode = -1;
+	if (ZLUnicodeUtil::utf8Length(chars) == 1) {
+		ZLUnicodeUtil::firstChar(unicode, chars);
+	}
+
+	std::cerr << (char)unicode << ":" << [event keyCode] << ":" << [NSEvent modifierFlags] << "\n";
+	std::cerr << ZLKeyUtil::keyName(unicode, [event keyCode], [NSEvent modifierFlags]) << "\n";
+	return ZLKeyUtil::keyName(unicode, [event keyCode], [NSEvent modifierFlags]);
 }
-
-@property (assign) IBOutlet NSWindow *window;
-
-@end

@@ -273,6 +273,10 @@ void ZLUnicodeUtil::utf8ToUcs2(Ucs2String &to, const std::string &from, int toLe
 	utf8ToUcs2(to, from.data(), from.length(), toLength);
 }
 
+int ZLUnicodeUtil::firstChar(Ucs4Char &ch, const std::string &utf8String) {
+	return firstChar(ch, utf8String.c_str());
+}
+
 int ZLUnicodeUtil::firstChar(Ucs4Char &ch, const char *utf8String) {
 	if ((*utf8String & 0x80) == 0) {
 		ch = *utf8String;

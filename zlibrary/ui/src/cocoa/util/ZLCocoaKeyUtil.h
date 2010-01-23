@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,15 @@
  * 02110-1301, USA.
  */
 
-#import <Cocoa/Cocoa.h>
+#ifndef __ZLCOCOAKEYUTIL_H__
+#define __ZLCOCOAKEYUTIL_H__
 
-@interface ZLCocoaAppDelegate : NSObject<NSApplicationDelegate> {
-    NSWindow *window;
-}
+#include "../../../../core/src/util/ZLKeyUtil.h"
 
-@property (assign) IBOutlet NSWindow *window;
+class ZLCocoaKeyUtil : ZLKeyUtil {
 
-@end
+public:
+	static std::string keyName(void *nsEvent);
+};
+
+#endif /* __ZLCOCOAKEYUTIL_H__ */

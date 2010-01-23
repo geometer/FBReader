@@ -22,6 +22,7 @@
 #import "CocoaView.h"
 
 #include "ZLCocoaPaintContext.h"
+#include "../util/ZLCocoaKeyUtil.h"
 
 @implementation CocoaView
 
@@ -37,8 +38,6 @@
 	view->paint();
 	context.end();
 }
-
-#include <iostream>
 
 - (void)mouseDown:(NSEvent*)theEvent {
 	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
@@ -85,31 +84,7 @@
 }
 
 - (void)keyDown:(NSEvent*)theEvent {
-	NSString *chars = [theEvent characters];
-	if ([chars isEqualToString:@"l"]) {
-		ZLApplication::Instance().doActionByKey("<L>");
-		return;
-	}
-	if ([chars isEqualToString:@"c"]) {
-		ZLApplication::Instance().doActionByKey("<C>");
-		return;
-	}
-	switch ([theEvent keyCode]) {
-		case 116:
-			ZLApplication::Instance().doActionByKey("<PageUp>");
-			return;
-		case 121:
-			ZLApplication::Instance().doActionByKey("<PageDown>");
-			return;
-		case 125:
-			ZLApplication::Instance().doActionByKey("<DownArrow>");
-			return;
-		case 126:
-			ZLApplication::Instance().doActionByKey("<UpArrow>");
-			return;
-		default:
-			std::cerr << [theEvent keyCode] << "\n";
-	}
+	ZLApplication::Instance().doActionByKey(ZLCocoaKeyUtil::keyName(theEvent));
 }
 
 @end
