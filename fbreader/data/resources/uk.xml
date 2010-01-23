@@ -112,29 +112,91 @@
 		<node name="quit" value="Закрити"/>
 	</node>
 	<node name="toolbar">
-		<node name="showReading" value="Повернутися до читання"/>
-		<node name="showLibrary" value="Бібліотека">
-			<node name="popup" value="Прочитані книги"/>
+		<node name="showReading">
+			<node name="label" value="Читати книгу"/>
+			<node name="tooltip" value="Повернутися до читання" />
 		</node>
-		<node name="showRecent" value="Прочитані книги"/>
-		<node name="byAuthor" value="За авторами"/>
-		<node name="byTag" value="За тегами"/>
-		<node name="addBook" value="Додати файл до бібліотеки"/>
-		<node name="showNetLibrary" value="Шукати у електронних бібліотеках"/>
-		<node name="searchOnNetwork" value="Шукати у мережі"/>
-		<node name="advancedSearchOnNetwork" value="Розширений пошук у мережі"/>
-		<node name="gotoHome" value="На початок книги"/>
-		<node name="undo" value="Назад"/>
-		<node name="redo" value="Вперед"/>
-		<node name="gotoPageNumberWithParameter" value="До сторінки"/>
-		<node name="toc" value="Зміст"/>
-		<node name="search" value="Пошук"/>
-		<node name="findNext" value="Знайти наступний"/>
-		<node name="findPrevious" value="Знайти попередній"/>
-		<node name="bookInfo" value="Інформацiя про книгу"/>
-		<node name="preferences" value="Налаштування"/>
-		<node name="rotate" value="Повернути текст"/>
-		<node name="showHelp" value="Про програму"/>
+		<node name="showLibrary">
+			<node name="label" value="Бібліотека" />
+			<node name="tooltip" value="Бібліотека" />
+			<node name="popup" value="Прочитані книги" />
+		</node>
+		<node name="showRecent">
+			<node name="label" value="Прочитані книги" />
+			<node name="tooltip" value="Прочитані книги" />
+		</node>
+		<node name="byAuthor">
+			<node name="label" value="За авторами" />
+			<node name="tooltip" value="За авторами" />
+		</node>
+		<node name="byTag">
+			<node name="label" value="За тегами" />
+			<node name="tooltip" value="За тегами" />
+		</node>
+		<node name="addBook">
+			<node name="label" value="Додати файл" />
+			<node name="tooltip" value="Додати файл до бібліотеки" />
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" value="Мережа" />
+			<node name="tooltip" value="Шукати у електронних бібліотеках" />
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" value="Пошук" />
+			<node name="tooltip" value="Шукати у мережі" />
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" value="Розширений пошук" />
+			<node name="tooltip" value="Розширений пошук у мережі" />
+		</node>
+		<node name="gotoHome">
+			<node name="label" value="На початок" />
+			<node name="tooltip" value="На початок книги" />
+		</node>
+		<node name="undo">
+			<node name="label" value="Назад" />
+			<node name="tooltip" value="Назад" />
+		</node>
+		<node name="redo">
+			<node name="label" value="Вперед" />
+			<node name="tooltip" value="Вперед" />
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" value="До сторінки" />
+			<node name="tooltip" value="До сторінки" />
+		</node>
+		<node name="toc">
+			<node name="label" value="Зміст" />
+			<node name="tooltip" value="Зміст" />
+		</node>
+		<node name="search">
+			<node name="label" value="Пошук" />
+			<node name="tooltip" value="Пошук" />
+		</node>
+		<node name="findNext">
+			<node name="label" value="Наступний" />
+			<node name="tooltip" value="Знайти наступний" />
+		</node>
+		<node name="findPrevious">
+			<node name="label" value="Попередній" />
+			<node name="tooltip" value="Знайти попередній" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="Про книгу" />
+			<node name="tooltip" value="Інформацiя про книгу" />
+		</node>
+		<node name="preferences">
+			<node name="label" value="Налаштування" />
+			<node name="tooltip" value="Налаштування" />
+		</node>
+		<node name="rotate">
+			<node name="label" value="Повернути" />
+			<node name="tooltip" value="Повернути текст" />
+		</node>
+		<node name="showHelp">
+			<node name="label" value="Про програму" />
+			<node name="tooltip" value="Про програму" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
@@ -465,7 +527,7 @@
 		</node>
 		<node name="dontShowConfirmBox">
 			<node name="title" value="Відключення каталога"/>
-			<node name="message" value="Ви дійсно бажаєте відключити каталог&#10;“%s”?&#10;&#10;Ви можете включити його во вкладинці “Пошук в мережі” у діалозі Налаштування."/>
+			<node name="message" value="Ви дійсно бажаєте відключити каталог&#10;“%s”?&#10;&#10;Ви можете включити його&#10;во вкладинці “Пошук в мережі”&#10;у діалозі Налаштування."/>
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" value="Видалити книгу"/>
