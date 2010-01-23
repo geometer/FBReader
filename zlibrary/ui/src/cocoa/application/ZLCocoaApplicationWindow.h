@@ -20,6 +20,8 @@
 #ifndef __ZLCOCOAAPPLICATIONWINDOW_H__
 #define __ZLCOCOAAPPLICATIONWINDOW_H__
 
+#include <map>
+
 #include "../../../../core/src/application/ZLApplicationWindow.h"
 #include "../../../../core/src/application/ZLToolbar.h"
 
@@ -50,6 +52,9 @@ private:
 
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
+
+private:
+	std::map<ZLToolbar::ItemPtr,int> myItemToIndexMap;
 };
 
 #endif /* __ZLCOCOAAPPLICATIONWINDOW_H__ */

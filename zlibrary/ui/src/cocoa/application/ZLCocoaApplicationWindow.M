@@ -107,6 +107,8 @@ void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 }
 
 void ZLCocoaApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
+	NSWindow *window = [[[NSApplication sharedApplication] delegate] window];
+	NSToolbar *toolbar = [window toolbar];
 }
 
 ZLViewWidget *ZLCocoaApplicationWindow::createViewWidget() {

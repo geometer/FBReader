@@ -125,15 +125,23 @@ void ZLCocoaPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	if (nsImage == 0) {
 		return;
 	}
-	[nsImage drawAtPoint:NSMakePoint(x, height() - y)
-				fromRect:NSZeroRect
-			   operation:NSCompositeSourceOver
-				fraction:1.0];
+	[nsImage drawAtPoint:NSMakePoint(x, myHeight - y)
+							fromRect:NSZeroRect
+					   operation:NSCompositeSourceOver
+							fraction:1.0];
 }
 
 void ZLCocoaPaintContext::drawImage(int x, int y, const ZLImageData &image, int width, int height, ScalingType type) {
-	// TODO: implement
-	drawImage(x, y, image);
+	NSImage *nsImage = (NSImage*)((ZLCocoaImageData&)image).nsImage();
+	if (nsImage == 0) {
+		return;
+	}
+	const int realWidth = imageWidth(image, width, height, type);
+	const int realHeight = imageHeight(image, width, height, type);
+	[nsImage drawInRect:NSMakeRect(x, myHeight - y, realWidth, realHeight)
+						 fromRect:NSZeroRect
+					  operation:NSCompositeSourceOver
+						 fraction:1.0];
 }
 
 void ZLCocoaPaintContext::drawLine(int x0, int y0, int x1, int y1) {
