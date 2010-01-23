@@ -42,7 +42,7 @@
 
 	NSView *view = [[CocoaView alloc] init];
 	[window setContentView:view];
-	[window setInitialFirstResponder:view];
+	[window makeFirstResponder:view];
 }
 
 - (void)applicationWillTerminate:(NSNotification*)notification {
