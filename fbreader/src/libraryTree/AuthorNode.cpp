@@ -66,6 +66,7 @@ void AuthorNode::paint(ZLPaintContext &context, int vOffset) {
 
 	drawCover(context, vOffset);
 	drawTitle(context, vOffset);
+	drawSummary(context, vOffset);
 
 	int left = 0;
 	drawHyperlink(

@@ -28,6 +28,7 @@
 
 #include "../library/Book.h"
 #include "../library/Author.h"
+#include "../library/Tag.h"
 #include "../fbreader/FBReader.h"
 #include "../fbreader/BookInfoDialog.h"
 #include "../formats/FormatPlugin.h"
@@ -175,6 +176,43 @@ std::string BookNode::title() const {
 	return myBook->title();
 }
 
+std::string BookNode::summary() const {
+	FBReaderNode *parent = (FBReaderNode*)this->parent();
+	while (parent->typeId() != AuthorNode::TYPE_ID &&
+				 parent->typeId() != TagNode::TYPE_ID) {
+		parent = (FBReaderNode*)parent->parent();
+	}
+	if (parent->typeId() == AuthorNode::TYPE_ID) {
+		const TagList &tags = myBook->tags();
+		if (tags.empty()) {
+			return std::string();
+		} else {
+			std::string tagsText;
+			for (TagList::const_iterator it = tags.begin(); it != tags.end(); ++it) {
+				if (!tagsText.empty()) {
+					tagsText += ", ";
+				}
+				tagsText += (*it)->name();
+			}
+			return tagsText;
+		}
+	} else {
+		const AuthorList &authors = myBook->authors();
+		if (authors.empty()) {
+			return ZLResource::resource("libraryView")["authorNode"]["unknownAuthor"].value();
+		} else {
+			std::string authorsText;
+			for (AuthorList::const_iterator it = authors.begin(); it != authors.end(); ++it) {
+				if (!authorsText.empty()) {
+					authorsText += ", ";
+				}
+				authorsText += (*it)->name();
+			}
+			return authorsText;
+		}
+	}
+}
+
 void BookNode::paint(ZLPaintContext &context, int vOffset) {
 	const ZLResource &resource =
 		ZLResource::resource("libraryView")["bookNode"];
@@ -183,22 +221,7 @@ void BookNode::paint(ZLPaintContext &context, int vOffset) {
 		myBook->filePath() == FBReader::Instance().currentBook()->filePath();
 	drawCover(context, vOffset);
 	drawTitle(context, vOffset, highlighted);
-	if (((FBReaderNode*)parent())->typeId() == TagNode::TYPE_ID) {
-		std::string authorsText;
-		const AuthorList &authors = myBook->authors();
-		if (authors.empty()) {
-			authorsText =
-				ZLResource::resource("libraryView")["authorNode"]["unknownAuthor"].value();
-		} else {
-			for (AuthorList::const_iterator it = authors.begin(); it != authors.end(); ++it) {
-				if (!authorsText.empty()) {
-					authorsText += ", ";
-				}
-				authorsText += (*it)->name();
-			}
-		}
-		drawSummary(context, vOffset, authorsText, highlighted);
-	}
+	drawSummary(context, vOffset, highlighted);
 
 	if (myReadAction.isNull()) {
 		myReadAction = new ReadAction(myBook);

@@ -65,6 +65,7 @@ protected:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
+	std::string summary() const;
 	virtual shared_ptr<ZLImage> lastResortCoverImage() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
@@ -158,6 +159,7 @@ private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
+	std::string summary() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:
@@ -238,6 +240,7 @@ private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
+	std::string summary() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
 	const NetworkLibraryBookItem &bookItem() const;

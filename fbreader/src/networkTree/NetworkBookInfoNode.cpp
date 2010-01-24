@@ -120,6 +120,18 @@ std::string NetworkBookInfoNode::title() const {
 	return bookItem().title();
 }
 
+std::string NetworkBookInfoNode::summary() const {
+	std::string authorsString;
+	const std::vector<NetworkLibraryBookItem::AuthorData> authors = bookItem().authors();
+	for (std::vector<NetworkLibraryBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
+		if (!authorsString.empty()) {
+			authorsString += ", ";
+		}
+		authorsString += it->DisplayName;
+	}
+	return authorsString;
+}
+
 void NetworkBookInfoNode::paint(ZLPaintContext &context, int vOffset) {
 	NetworkLibraryBookItem &book = bookItem();
 
@@ -135,16 +147,7 @@ void NetworkBookInfoNode::paint(ZLPaintContext &context, int vOffset) {
 	const bool local = hasLocalCopy();
 
 	drawTitle(context, vOffset);
-
-	std::string authorsString;
-	const std::vector<NetworkLibraryBookItem::AuthorData> authors = book.authors();
-	for (std::vector<NetworkLibraryBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
-		if (!authorsString.empty()) {
-			authorsString += ", ";
-		}
-		authorsString += it->DisplayName;
-	}
-	drawSummary(context, vOffset, authorsString);
+	drawSummary(context, vOffset);
 
 	int left = 0;
 	if (local) {

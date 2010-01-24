@@ -146,6 +146,7 @@ void TagNode::paint(ZLPaintContext &context, int vOffset) {
 
 	drawCover(context, vOffset);
 	drawTitle(context, vOffset);
+	drawSummary(context, vOffset);
 
 	if (myEditAction.isNull()) {
 		myEditAction = new EditAction(*this);

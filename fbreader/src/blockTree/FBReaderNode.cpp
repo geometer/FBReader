@@ -103,7 +103,12 @@ void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset, bool highligh
 	context.drawString(hOffset, vOffset + 2 * unit, text.data(), text.size(), false);
 }
 
-void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset, const std::string &text, bool highlighted) {
+void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset, bool highlighted) {
+	const std::string text = summary();
+	if (text.empty()) {
+		return;
+	}
+
 	const FBTextStyle &style = FBTextStyle::Instance();
 	const int unit = unitSize(context, style);
 	const int hOffset = level() * unit * 3 + unit * 2;
@@ -205,4 +210,17 @@ int FBReaderNode::height(ZLPaintContext &context) const {
 int FBReaderNode::unitSize(ZLPaintContext &context, const FBTextStyle &style) const {
 	context.setFont(style.fontFamily(), style.fontSize(), style.bold(), style.italic());
 	return (context.stringHeight() * 2 + 2) / 3;
+}
+
+std::string FBReaderNode::summary() const {
+	std::string result;
+	int count = 0;
+	const ZLBlockTreeNode::List &subNodes = children();
+	for (ZLBlockTreeNode::List::const_iterator it = subNodes.begin(); it != subNodes.end() && count < 3; ++it, ++count) {
+		if (count > 0) {
+			result += ", ";
+		}
+		result += ((const FBReaderNode*)*it)->title();
+	}
+	return result;
 }
