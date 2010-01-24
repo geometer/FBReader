@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLCOCOATIME_H__
-#define __ZLCOCOATIME_H__
+#ifndef __ZLCOCOATIMEMANAGER_H__
+#define __ZLCOCOATIMEMANAGER_H__
 
 //#include <map>
 
@@ -29,11 +29,24 @@ class ZLCocoaTimeManager : public ZLUnixTimeManager {
 public:
 	static void createInstance() { ourInstance = new ZLCocoaTimeManager(); }
 
+private:
+	ZLCocoaTimeManager();
+	~ZLCocoaTimeManager();
+
+public:
 	void addTask(shared_ptr<ZLRunnable> task, int interval);
 	void removeTaskInternal(shared_ptr<ZLRunnable> task);
 
+public:
+	shared_ptr<ZLRunnable> taskByTimer(void *timer) const;
+
 private:
-	//std::map<shared_ptr<ZLRunnable>,int> myHandlers;
+	// id
+	void *myRunner;
+	// shared_ptr<ZLRunnable> -> NSTimer*
+	std::map<shared_ptr<ZLRunnable>,void*> myTimers;
+	// NSTimer* -> shared_ptr<ZLRunnable>
+	std::map<void*,shared_ptr<ZLRunnable> > myTasks;
 };
 
-#endif /* __ZLCOCOATIME_H__ */
+#endif /* __ZLCOCOATIMEMANAGER_H__ */

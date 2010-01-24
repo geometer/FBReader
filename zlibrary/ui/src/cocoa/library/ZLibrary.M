@@ -27,7 +27,7 @@
 
 #include "../application/ZLCocoaApplicationWindow.h"
 #include "../filesystem/ZLCocoaFSManager.h"
-#include "../time/ZLCocoaTime.h"
+#include "../time/ZLCocoaTimeManager.h"
 #include "../dialogs/ZLCocoaDialogManager.h"
 #include "../image/ZLCocoaImageManager.h"
 #include "../view/ZLCocoaPaintContext.h"
