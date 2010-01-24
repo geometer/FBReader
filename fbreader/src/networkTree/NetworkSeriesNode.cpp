@@ -32,6 +32,10 @@ const std::string &NetworkSeriesNode::typeId() const {
 NetworkSeriesNode::NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle) : NetworkContainerNode(parent), mySeriesTitle(seriesTitle) {
 }
 
+std::string NetworkSeriesNode::title() const {
+	return mySeriesTitle;
+}
+
 void NetworkSeriesNode::paint(ZLPaintContext &context, int vOffset) {
 	const ZLResource &resource =
 		ZLResource::resource("networkView")["seriesNode"];
@@ -39,7 +43,7 @@ void NetworkSeriesNode::paint(ZLPaintContext &context, int vOffset) {
 	removeAllHyperlinks();
 
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
-	drawTitle(context, vOffset, mySeriesTitle);
+	drawTitle(context, vOffset);
 
 	int left = 0;
 	drawHyperlink(

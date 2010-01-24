@@ -44,6 +44,7 @@ public:
 private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:
@@ -64,6 +65,7 @@ public:
 private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:
@@ -95,6 +97,7 @@ public:
 private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:
@@ -124,6 +127,7 @@ public:
 private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:

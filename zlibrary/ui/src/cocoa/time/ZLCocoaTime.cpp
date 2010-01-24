@@ -19,13 +19,6 @@
 
 #include "ZLCocoaTime.h"
 
-/*
-static bool taskFunction(gpointer *data) {
-	((ZLRunnable*)data)->run();
-	return true;
-}
-*/
-
 void ZLCocoaTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
 	removeTask(task);
 	if ((interval > 0) && !task.isNull()) {

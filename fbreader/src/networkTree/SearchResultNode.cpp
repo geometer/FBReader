@@ -41,6 +41,10 @@ const std::string &SearchResultNode::typeId() const {
 	return TYPE_ID;
 }
 
+std::string SearchResultNode::title() const {
+	return ZLResource::resource("networkView")["searchResultNode"]["title"].value();
+}
+
 void SearchResultNode::paint(ZLPaintContext &context, int vOffset) {
 	const ZLResource &resource =
 		ZLResource::resource("networkView")["searchResultNode"];
@@ -48,7 +52,7 @@ void SearchResultNode::paint(ZLPaintContext &context, int vOffset) {
 	removeAllHyperlinks();
 
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
-	drawTitle(context, vOffset, resource["title"].value());
+	drawTitle(context, vOffset);
 	drawSummary(context, vOffset, mySummary);
 
 	int left = 0;

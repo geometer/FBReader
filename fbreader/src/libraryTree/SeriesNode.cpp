@@ -37,6 +37,10 @@ shared_ptr<Book> SeriesNode::book() const {
 	return myBook;
 }
 
+std::string SeriesNode::title() const {
+	return myBook->seriesTitle();
+}
+
 void SeriesNode::paint(ZLPaintContext &context, int vOffset) {
 	const ZLResource &resource =
 		ZLResource::resource("libraryView")["seriesNode"];
@@ -44,7 +48,7 @@ void SeriesNode::paint(ZLPaintContext &context, int vOffset) {
 	removeAllHyperlinks();
 
 	drawCover(context, vOffset);
-	drawTitle(context, vOffset, myBook->seriesTitle());
+	drawTitle(context, vOffset);
 
 	int left = 0;
 	drawHyperlink(

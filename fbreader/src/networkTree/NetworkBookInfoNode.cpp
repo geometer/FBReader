@@ -116,6 +116,10 @@ void NetworkBookInfoNode::init() {
 	myDeleteAction = new DeleteAction(myBook);
 }
 
+std::string NetworkBookInfoNode::title() const {
+	return bookItem().title();
+}
+
 void NetworkBookInfoNode::paint(ZLPaintContext &context, int vOffset) {
 	NetworkLibraryBookItem &book = bookItem();
 
@@ -130,7 +134,7 @@ void NetworkBookInfoNode::paint(ZLPaintContext &context, int vOffset) {
 	const bool purchase = canBePurchased();
 	const bool local = hasLocalCopy();
 
-	drawTitle(context, vOffset, book.title());
+	drawTitle(context, vOffset);
 
 	std::string authorsString;
 	const std::vector<NetworkLibraryBookItem::AuthorData> authors = book.authors();

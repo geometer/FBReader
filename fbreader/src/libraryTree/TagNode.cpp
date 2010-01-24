@@ -131,6 +131,13 @@ shared_ptr<Tag> TagNode::tag() const {
 	return myTag;
 }
 
+std::string TagNode::title() const {
+	if (myTag.isNull()) {
+		return ZLResource::resource("libraryView")["tagNode"]["noTags"].value();
+	}
+	return myTag->name();
+}
+
 void TagNode::paint(ZLPaintContext &context, int vOffset) {
 	const ZLResource &resource =
 		ZLResource::resource("libraryView")["tagNode"];
@@ -138,9 +145,7 @@ void TagNode::paint(ZLPaintContext &context, int vOffset) {
 	removeAllHyperlinks();
 
 	drawCover(context, vOffset);
-	drawTitle(context, vOffset,
-		myTag.isNull() ? resource["noTags"].value() : myTag->name()
-	);
+	drawTitle(context, vOffset);
 
 	if (myEditAction.isNull()) {
 		myEditAction = new EditAction(*this);

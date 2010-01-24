@@ -114,12 +114,15 @@ const std::string &NetworkCatalogNode::typeId() const {
 	return TYPE_ID;
 }
 
+std::string NetworkCatalogNode::title() const {
+	return myItem->title();
+}
 
 void NetworkCatalogNode::paint(ZLPaintContext &context, int vOffset) {
 	removeAllHyperlinks();
 
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
-	drawTitle(context, vOffset, myItem->title());
+	drawTitle(context, vOffset);
 	const std::string &summary = item().summary();
 	if (!summary.empty()) {
 		drawSummary(context, vOffset, summary);

@@ -89,7 +89,7 @@ void FBReaderNode::drawCover(ZLPaintContext &context, int vOffset) {
 	context.drawImage(hOffset + (w - width) / 2, vOffset + (h + height) / 2, *coverData, width, height, ZLPaintContext::SCALE_FIT_TO_SIZE);
 }
 
-void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset, const std::string &text, bool highlighted) {
+void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset, bool highlighted) {
 	const FBTextStyle &style = FBTextStyle::Instance();
 	const int unit = unitSize(context, style);
 	const int hOffset = level() * unit * 3 + unit * 2;
@@ -99,6 +99,7 @@ void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset, const std::st
 		FBOptions::Instance().RegularTextColorOption.value());
 	context.setFont(style.fontFamily(), style.fontSize(), style.bold(), style.italic());
 
+	const std::string text = title();
 	context.drawString(hOffset, vOffset + 2 * unit, text.data(), text.size(), false);
 }
 

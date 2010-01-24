@@ -64,6 +64,7 @@ public:
 protected:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	std::string title() const;
 	virtual shared_ptr<ZLImage> lastResortCoverImage() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
@@ -156,6 +157,7 @@ public:
 private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:
@@ -179,6 +181,7 @@ public:
 private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:
@@ -201,6 +204,7 @@ public:
 private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:
@@ -233,8 +237,10 @@ public:
 private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
+	const NetworkLibraryBookItem &bookItem() const;
 	NetworkLibraryBookItem &bookItem();
 
 	bool hasLocalCopy();
@@ -253,6 +259,7 @@ private:
 };
 
 inline shared_ptr<NetworkLibraryItem> NetworkBookInfoNode::book() { return myBook; }
-inline NetworkLibraryBookItem &NetworkBookInfoNode::bookItem() { return (NetworkLibraryBookItem &) *myBook; }
+inline const NetworkLibraryBookItem &NetworkBookInfoNode::bookItem() const { return (const NetworkLibraryBookItem&)*myBook; }
+inline NetworkLibraryBookItem &NetworkBookInfoNode::bookItem() { return (NetworkLibraryBookItem&)*myBook; }
 
 #endif /* __NETWORKNODES_H__ */

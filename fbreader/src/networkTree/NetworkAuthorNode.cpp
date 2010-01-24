@@ -32,6 +32,10 @@ const std::string &NetworkAuthorNode::typeId() const {
 NetworkAuthorNode::NetworkAuthorNode(NetworkContainerNode *parent, const NetworkLibraryBookItem::AuthorData &author) : NetworkContainerNode(parent), myAuthor(author) {
 }
 
+std::string NetworkAuthorNode::title() const {
+	return myAuthor.DisplayName;
+}
+
 void NetworkAuthorNode::paint(ZLPaintContext &context, int vOffset) {
 	const ZLResource &resource =
 		ZLResource::resource("networkView")["authorNode"];
@@ -39,7 +43,7 @@ void NetworkAuthorNode::paint(ZLPaintContext &context, int vOffset) {
 	removeAllHyperlinks();
 
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
-	drawTitle(context, vOffset, myAuthor.DisplayName);
+	drawTitle(context, vOffset);
 
 	int left = 0;
 	drawHyperlink(

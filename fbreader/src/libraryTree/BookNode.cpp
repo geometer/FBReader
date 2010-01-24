@@ -171,6 +171,10 @@ void BookNode::EditInfoAction::run() {
 	}
 }
 
+std::string BookNode::title() const {
+	return myBook->title();
+}
+
 void BookNode::paint(ZLPaintContext &context, int vOffset) {
 	const ZLResource &resource =
 		ZLResource::resource("libraryView")["bookNode"];
@@ -178,7 +182,7 @@ void BookNode::paint(ZLPaintContext &context, int vOffset) {
 	const bool highlighted =
 		myBook->filePath() == FBReader::Instance().currentBook()->filePath();
 	drawCover(context, vOffset);
-	drawTitle(context, vOffset, myBook->title(), highlighted);
+	drawTitle(context, vOffset, highlighted);
 	if (((FBReaderNode*)parent())->typeId() == TagNode::TYPE_ID) {
 		std::string authorsText;
 		const AuthorList &authors = myBook->authors();
