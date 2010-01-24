@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <ZLTime.h>
+#include <ZLTimeManager.h>
 
 #include "XMLConfig.h"
 #include "XMLConfigDelta.h"

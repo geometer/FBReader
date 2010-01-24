@@ -20,6 +20,8 @@
 #include <sys/timeb.h>
 #include <time.h>
 
+#include <ZLTime.h>
+
 #include "ZLUnixTime.h"
 
 ZLTime ZLUnixTimeManager::currentTime() const {

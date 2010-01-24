@@ -27,6 +27,7 @@
 #include <ZLStringUtil.h>
 #include <ZLResource.h>
 #include <ZLMessage.h>
+#include <ZLTimeManager.h>
 
 #include <ZLTextStyleCollection.h>
 #include <ZLTextHyphenator.h>

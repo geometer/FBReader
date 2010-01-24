@@ -20,7 +20,7 @@
 #ifndef __ZLUNIXTIME_H__
 #define __ZLUNIXTIME_H__
 
-#include <ZLTime.h>
+#include <ZLTimeManager.h>
 
 class ZLUnixTimeManager : public ZLTimeManager {
 

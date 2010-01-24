@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <ZLTime.h>
+#include <ZLTimeManager.h>
 #include <ZLDialogManager.h>
 #include <ZLImageManager.h>
 #include <ZLMessage.h>

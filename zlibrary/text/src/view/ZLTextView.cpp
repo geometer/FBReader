@@ -20,6 +20,7 @@
 #include <algorithm>
 
 #include <ZLApplication.h>
+#include <ZLTimeManager.h>
 
 #include <ZLTextModel.h>
 #include <ZLTextParagraph.h>

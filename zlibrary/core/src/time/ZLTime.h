@@ -20,11 +20,6 @@
 #ifndef __ZLTIME_H__
 #define __ZLTIME_H__
 
-#include <map>
-
-#include <shared_ptr.h>
-#include <ZLRunnable.h>
-
 class ZLTime {
 
 public:
@@ -43,46 +38,6 @@ public:
 private:
 	long mySeconds;
 	long myMilliseconds;
-
-friend class ZLTimeManager;
-};
-
-class ZLTimeManager {
-
-private:
-	class AutoRemovableTask;
-
-protected:
-	static ZLTimeManager *ourInstance;
-
-public:
-	static ZLTimeManager &Instance();
-	static void deleteInstance();
-
-protected:
-	ZLTimeManager();
-	virtual ~ZLTimeManager();
-
-public:
-	virtual void addTask(shared_ptr<ZLRunnable> task, int interval) = 0;
-	void addAutoRemovableTask(shared_ptr<ZLRunnable> task, int delay = 0);
-	void removeTask(shared_ptr<ZLRunnable> task);
-	
-protected:
-	virtual void removeTaskInternal(shared_ptr<ZLRunnable> task) = 0;
-
-	virtual ZLTime currentTime() const = 0;
-	virtual short hoursBySeconds(long seconds) const = 0;
-	virtual short minutesBySeconds(long seconds) const = 0;
-
-	virtual short yearBySeconds(long seconds) const = 0;
-	virtual short monthBySeconds(long seconds) const = 0;
-	virtual short dayOfMonthBySeconds(long seconds) const = 0;
-
-private:
-	std::map<shared_ptr<ZLRunnable>,shared_ptr<ZLRunnable> > myAutoRemovableTasks;
-
-friend class ZLTime;
 };
 
 #endif /* __ZLTIME_H__ */

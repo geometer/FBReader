@@ -18,8 +18,7 @@
  */
 
 #include "ZLTime.h"
-
-ZLTimeManager *ZLTimeManager::ourInstance = 0;
+#include "ZLTimeManager.h"
 
 ZLTime::ZLTime() {
 	*this = ZLTimeManager::Instance().currentTime();
@@ -57,70 +56,4 @@ short ZLTime::month() const {
 
 short ZLTime::year() const {
 	return ZLTimeManager::Instance().yearBySeconds(mySeconds);
-}
-
-ZLTimeManager &ZLTimeManager::Instance() {
-	return *ourInstance;
-}
-
-void ZLTimeManager::deleteInstance() {
-	if (ourInstance != 0) {
-		delete ourInstance;
-		ourInstance = 0;
-	}
-}
-
-ZLTimeManager::ZLTimeManager() {
-}
-
-ZLTimeManager::~ZLTimeManager() {
-}
-
-class ZLTimeManager::AutoRemovableTask : public ZLRunnable {
-
-public:
-	AutoRemovableTask(shared_ptr<ZLRunnable> task);
-
-private:
-	void run();
-
-private:
-	shared_ptr<ZLRunnable> myTask;
-};
-
-ZLTimeManager::AutoRemovableTask::AutoRemovableTask(shared_ptr<ZLRunnable> task) : myTask(task) {
-}
-
-void ZLTimeManager::AutoRemovableTask::run() {
-	ZLTimeManager &timeManager = ZLTimeManager::Instance();
-	std::map<shared_ptr<ZLRunnable>,shared_ptr<ZLRunnable> > &taskList = timeManager.myAutoRemovableTasks;
-	std::map<shared_ptr<ZLRunnable>,shared_ptr<ZLRunnable> >::iterator it = taskList.begin();
-	for (; it != taskList.end(); ++it) {
-		if (this == &*it->second) {
-			break;
-		}
-	}
-	if (it != taskList.end()) {
-		shared_ptr<ZLRunnable> task = myTask;
-		timeManager.removeTaskInternal(it->second);
-		taskList.erase(it);
-		task->run();
-	}
-}
-
-void ZLTimeManager::addAutoRemovableTask(shared_ptr<ZLRunnable> task, int delay) {
-	shared_ptr<ZLRunnable> wrapper = new AutoRemovableTask(task);
-	myAutoRemovableTasks[task] = wrapper;
-	addTask(wrapper, delay > 0 ? delay : 1);
-}
-
-void ZLTimeManager::removeTask(shared_ptr<ZLRunnable> task) {
-	std::map<shared_ptr<ZLRunnable>,shared_ptr<ZLRunnable> >::iterator it =
-		myAutoRemovableTasks.find(task);
-	if (it == myAutoRemovableTasks.end()) {
-		removeTaskInternal(task);
-	} else {
-		removeTaskInternal(it->second);
-		myAutoRemovableTasks.erase(it);
-	}
 }

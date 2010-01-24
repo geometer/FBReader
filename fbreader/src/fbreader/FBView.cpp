@@ -21,7 +21,7 @@
 #include <algorithm>
 
 #include <ZLUnicodeUtil.h>
-#include <ZLTime.h>
+#include <ZLTimeManager.h>
 
 #include "FBView.h"
 #include "FBReader.h"
