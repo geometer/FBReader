@@ -28,6 +28,7 @@
 #include "../image/ZLCocoaImageManager.h"
 
 ZLCocoaPaintContext::ZLCocoaPaintContext() {
+	myFont = 0;
 	myFontAttributes = [[NSMutableDictionary alloc] init];
 }
 
@@ -55,6 +56,7 @@ void ZLCocoaPaintContext::setFont(const std::string &family, int size, bool bold
 		font = [[NSFontManager sharedFontManager] convertFont:font
 												  toHaveTrait:trait];
 	}
+	myFont = font;
 	[fontAttributes setObject:font forKey:NSFontAttributeName];
 }
 
@@ -99,15 +101,11 @@ int ZLCocoaPaintContext::spaceWidth() const {
 }
 
 int ZLCocoaPaintContext::stringHeight() const {
-	NSString* nsstring = [NSString stringWithUTF8String:"X"];
-	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
-	NSSize size = [nsstring sizeWithAttributes:fontAttributes];
-	return size.height;
+	return [(NSFont*)myFont pointSize];
 }
 
 int ZLCocoaPaintContext::descent() const {
-	// TODO: implement
-	return 0;
+	return - [(NSFont*)myFont descender];
 }
 
 void ZLCocoaPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
@@ -115,7 +113,7 @@ void ZLCocoaPaintContext::drawString(int x, int y, const char *str, int len, boo
 	buffer.assign(str, len);
 	
 	NSString* nsstring = [NSString stringWithUTF8String:buffer.c_str()];
-	NSPoint point = NSMakePoint(x, height() - y);
+	NSPoint point = NSMakePoint(x, height() - y - descent());
 	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
 	[nsstring drawAtPoint:point withAttributes:fontAttributes];	
 }

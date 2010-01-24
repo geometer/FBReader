@@ -63,6 +63,8 @@ private:
 	int myWidth;
 	int myHeight;
 
+	// NSFont*
+	void *myFont;
 	// NSMutableDictionary*
 	void *myFontAttributes;
 	CGContextRef myCGContext;
