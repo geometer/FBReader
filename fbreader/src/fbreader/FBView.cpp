@@ -22,6 +22,7 @@
 
 #include <ZLUnicodeUtil.h>
 #include <ZLTimeManager.h>
+#include <ZLTextSelectionModel.h>
 
 #include "FBView.h"
 #include "FBReader.h"
@@ -164,6 +165,8 @@ void FBView::TapScroller::run() {
 }
 
 bool FBView::onStylusRelease(int x, int y) {
+	const bool hadSelection = !selectionModel().isEmpty();
+
 	if (!myTapScroller.isNull()) {
 		ZLTimeManager::Instance().removeTask(myTapScroller);
 		myTapScroller.reset();
@@ -180,7 +183,7 @@ bool FBView::onStylusRelease(int x, int y) {
 	FBReader &fbreader = FBReader::Instance();
 	myIsReleasedWithoutMotion =
 		myIsReleasedWithoutMotion && (abs(x - pressedX()) <= 5) && (abs(y - pressedY()) <= 5);
-	if (isReleasedWithoutMotion() &&
+	if (!hadSelection && isReleasedWithoutMotion() &&
 			fbreader.EnableTapScrollingOption.value() &&
 			(!ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value() ||
 			 !fbreader.TapScrollingOnFingerOnlyOption.value())) {
