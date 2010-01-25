@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ private:
 	ZLCocoaFSManager() {}
 	
 protected:
+	void normalize(std::string &path) const;
 	std::string convertFilenameToUtf8(const std::string &name) const;
 };
 

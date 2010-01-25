@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,18 @@
  * 02110-1301, USA.
  */
 
+#import <Foundation/Foundation.h>
+
+#include <ZLStringUtil.h>
+
 #include "ZLCocoaFSManager.h"
+
+void ZLCocoaFSManager::normalize(std::string &path) const {
+	if (ZLStringUtil::stringStartsWith(path, "~~")) {
+		path = [[[NSBundle mainBundle] bundlePath] UTF8String] + path.substr(2);
+	}
+	return ZLUnixFSManager::normalize(path);
+}
 
 std::string ZLCocoaFSManager::convertFilenameToUtf8(const std::string &name) const {
 	return name;

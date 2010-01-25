@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,13 +27,79 @@
 
 - (void)drawRect:(CGRect)dirtyRect {
 	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
-	if (!view.isNull()) {
-		ZLCocoaPaintContext &context = (ZLCocoaPaintContext&)view->context();
-		CGSize size = [self bounds].size;
-		context.begin(size.width, size.height);
-		view->paint();
-		context.end();
+	if (view.isNull()) {
+		return;
 	}
+
+	ZLCocoaPaintContext &context = (ZLCocoaPaintContext&)view->context();
+	CGSize size = [self bounds].size;
+	context.begin(size.width, size.height);
+	view->paint();
+	context.end();
+}
+
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)theEvent {
+	NSSet *allTouches = [theEvent allTouches];
+	if ([allTouches count] != 1) {
+		return;
+	}
+	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
+	if (view.isNull()) {
+		return;
+	}
+	UITouch *touch = [[allTouches allObjects] objectAtIndex:0];
+	CGPoint location = [touch locationInView:self];
+	CGSize size = [self bounds].size;
+	view->onStylusPress(location.x, size.height - location.y);
+}
+
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)theEvent {
+	NSSet *allTouches = [theEvent allTouches];
+	if ([allTouches count] != 1) {
+		return;
+	}
+	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
+	if (view.isNull()) {
+		return;
+	}
+	UITouch *touch = [[allTouches allObjects] objectAtIndex:0];
+	CGPoint location = [touch locationInView:self];
+	CGSize size = [self bounds].size;
+	view->onStylusRelease(location.x, size.height - location.y);
+}
+
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)theEvent {
+	NSSet *allTouches = [theEvent allTouches];
+	if ([allTouches count] != 1) {
+		return;
+	}
+	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
+	if (view.isNull()) {
+		return;
+	}
+	UITouch *touch = [[allTouches allObjects] objectAtIndex:0];
+	CGPoint location = [touch locationInView:self];
+	CGSize size = [self bounds].size;
+	view->onStylusRelease(location.x, size.height - location.y);
+}
+
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)theEvent {
+	NSSet *allTouches = [theEvent allTouches];
+	if ([allTouches count] != 1) {
+		return;
+	}
+	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
+	if (view.isNull()) {
+		return;
+	}
+	UITouch *touch = [[allTouches allObjects] objectAtIndex:0];
+	CGPoint location = [touch locationInView:self];
+	CGSize size = [self bounds].size;
+	view->onStylusMovePressed(location.x, size.height - location.y);
+}
+
+- (BOOL)canBecomeFirstResponder {
+	return YES;
 }
 
 @end

@@ -19,7 +19,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-
 @interface CocoaView : NSView {
 
 }
