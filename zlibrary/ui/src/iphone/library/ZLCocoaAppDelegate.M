@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,25 +18,34 @@
  */
 
 #include <ZLibrary.h>
+#include <ZLApplication.h>
 
 #include "../application/ZLCocoaApplicationWindow.h"
 
 #import "ZLCocoaAppDelegate.h"
+#import "../../../../../iphone/Classes/iphoneViewController.h"
 
 @implementation ZLCocoaAppDelegate
 
 @synthesize window;
+@synthesize viewController;
 
-- (void)applicationDidFinishLaunching:(NSNotification*)notification {
+- (void)applicationDidFinishLaunching:(UIApplication*)application {    
+	ZLApplication::Instance().initWindow();
+
+	[window addSubview:viewController.view];
+	[window makeKeyAndVisible];
 }
 
-- (void)applicationWillTerminate:(NSNotification*)notification {
+- (void)applicationWillTerminate:(UIApplication*)application {
 	ZLApplication::deleteInstance();
 	ZLibrary::shutdown();
 }
 
-- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(UIApplication*)sender {
-	return YES;
+- (void)dealloc {
+	[viewController release];
+	[window release];
+	[super dealloc];
 }
 
 @end

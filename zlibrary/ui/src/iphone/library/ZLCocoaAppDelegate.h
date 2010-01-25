@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,10 +17,16 @@
  * 02110-1301, USA.
  */
 
-@interface ZLCocoaAppDelegate : NSObject /* <NSApplicationDelegate> */ {
+#import <UIKit/UIKit.h>
+
+@class iphoneViewController;
+
+@interface ZLCocoaAppDelegate : NSObject <UIApplicationDelegate> {
     UIWindow *window;
+    iphoneViewController *viewController;
 }
 
-@property (assign) IBOutlet UIWindow *window;
+@property (nonatomic, retain) IBOutlet UIWindow *window;
+@property (nonatomic, retain) IBOutlet iphoneViewController *viewController;
 
 @end

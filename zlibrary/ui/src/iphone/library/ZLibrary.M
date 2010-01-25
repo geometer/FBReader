@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 
 #include "../application/ZLCocoaApplicationWindow.h"
 #include "../filesystem/ZLCocoaFSManager.h"
-#include "../time/ZLCocoaTime.h"
+#include "../time/ZLCocoaTimeManager.h"
 #include "../dialogs/ZLCocoaDialogManager.h"
 #include "../image/ZLCocoaImageManager.h"
 #include "../view/ZLCocoaPaintContext.h"
@@ -45,6 +45,8 @@ private:
 private:
 	int myArgc;
 	const char **myArgv;
+	// NSAutoreleasePool*
+	void *myPool;
 };
 
 void initLibrary() {
@@ -52,6 +54,8 @@ void initLibrary() {
 }
 
 void ZLCocoaLibraryImplementation::init(int &argc, char **&argv) {
+	myPool = [[NSAutoreleasePool alloc] init];
+
 	ZLibrary::parseArguments(argc, argv);
 
 	myArgc = argc;
@@ -75,25 +79,8 @@ ZLPaintContext *ZLCocoaLibraryImplementation::createContext() {
 }
 
 void ZLCocoaLibraryImplementation::run(ZLApplication *application) {
-	//ZLDialogManager::Instance().createApplicationWindow(application);
 	new ZLCocoaApplicationWindow(application);
-    
-    NSAutoreleasePool * pool = [[NSAutoreleasePool alloc] init];
-    int retVal = UIApplicationMain(myArgc, (char**)myArgv, nil, nil);
-    [pool release];
-    //return retVal;
-	
-	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	//NSApplication *app = [NSApplication sharedApplication];
-	//[NSBundle loadNibNamed: @"MainMenu" owner: app];
-    //[app run];
-    //[pool release];
-
-	/*
-	ZLDialogManager::Instance().createApplicationWindow(application);
-	application->initWindow();
-	gtk_widget_set_default_direction(ZLLanguageUtil::isRTLLanguage(ZLibrary::Language()) ? GTK_TEXT_DIR_RTL : GTK_TEXT_DIR_LTR);
-	gtk_main();
+	UIApplicationMain(myArgc, (char**)myArgv, nil, nil);
 	delete application;
-	*/
+	[(NSAutoreleasePool*)myPool release];
 }

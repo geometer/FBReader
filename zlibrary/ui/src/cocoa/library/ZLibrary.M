@@ -17,13 +17,13 @@
  * 02110-1301, USA.
  */
 
+#import <Cocoa/Cocoa.h>
+
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
 
 #include "../../../../core/src/unix/library/ZLibraryImplementation.h"
-
-#import <Cocoa/Cocoa.h>
 
 #include "../application/ZLCocoaApplicationWindow.h"
 #include "../filesystem/ZLCocoaFSManager.h"
@@ -47,6 +47,8 @@ private:
 private:
 	int myArgc;
 	const char **myArgv;
+	// NSAutoreleasePool*
+	void *myPool;
 };
 
 void initLibrary() {
@@ -54,7 +56,7 @@ void initLibrary() {
 }
 
 void ZLCocoaLibraryImplementation::init(int &argc, char **&argv) {
-	[[NSAutoreleasePool alloc] init];
+	myPool = [[NSAutoreleasePool alloc] init];
 
 	ZLibrary::parseArguments(argc, argv);
 
@@ -79,20 +81,8 @@ ZLPaintContext *ZLCocoaLibraryImplementation::createContext() {
 }
 
 void ZLCocoaLibraryImplementation::run(ZLApplication *application) {
-	//ZLDialogManager::Instance().createApplicationWindow(application);
 	new ZLCocoaApplicationWindow(application);
 	NSApplicationMain(myArgc, myArgv);
-
-	//NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	//NSApplication *app = [NSApplication sharedApplication];
-	//[NSBundle loadNibNamed: @"MainMenu" owner: app];
-    //[app run];
-    //[pool release];
-
-	/*
-	ZLDialogManager::Instance().createApplicationWindow(application);
-	gtk_widget_set_default_direction(ZLLanguageUtil::isRTLLanguage(ZLibrary::Language()) ? GTK_TEXT_DIR_RTL : GTK_TEXT_DIR_LTR);
-	gtk_main();
 	delete application;
-	*/
+	[(NSAutoreleasePool*)myPool release];
 }
