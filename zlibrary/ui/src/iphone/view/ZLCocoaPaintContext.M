@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -121,17 +121,18 @@ void ZLCocoaPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	if (uiImage == 0) {
 		return;
 	}
-/*
-	[uiImage drawAtPoint:NSMakePoint(x, height() - y)
-				fromRect:NSZeroRect
-			   operation:NSCompositeSourceOver
-				fraction:1.0];
-*/
+	int height = image.height();
+	[uiImage drawInRect:CGRectMake(x, y - height, image.width(), height)];
 }
 
 void ZLCocoaPaintContext::drawImage(int x, int y, const ZLImageData &image, int width, int height, ScalingType type) {
-	// TODO: implement
-	drawImage(x, y, image);
+	UIImage *uiImage = (UIImage*)((ZLCocoaImageData&)image).uiImage();
+	if (uiImage == 0) {
+		return;
+	}
+	const int realWidth = imageWidth(image, width, height, type);
+	const int realHeight = imageHeight(image, width, height, type);
+	[uiImage drawInRect:CGRectMake(x, y - realHeight, realWidth, realHeight)];
 }
 
 void ZLCocoaPaintContext::drawLine(int x0, int y0, int x1, int y1) {

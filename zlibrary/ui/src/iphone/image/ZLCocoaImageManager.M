@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,12 +17,17 @@
  * 02110-1301, USA.
  */
 
+#import <UIKit/UIKit.h>
+
 #include "ZLCocoaImageManager.h"
 
 ZLCocoaImageData::ZLCocoaImageData() : myUIImage(0) {
 }
 
 ZLCocoaImageData::~ZLCocoaImageData() {
+	if (myUIImage != 0) {
+		[((UIImage*)myUIImage) release];
+	}
 }
 
 unsigned int ZLCocoaImageData::width() const {
@@ -76,5 +81,5 @@ shared_ptr<ZLImageData> ZLCocoaImageManager::createData() const {
 void ZLCocoaImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
 	NSData *nsData = [NSData dataWithBytes:stringData.data()
 									length:stringData.length()];
-	((ZLCocoaImageData&)data).myUIImage = [[UIImage new] initWithData:nsData];
+	((ZLCocoaImageData&)data).myUIImage = [[UIImage alloc] initWithData:nsData];
 }
