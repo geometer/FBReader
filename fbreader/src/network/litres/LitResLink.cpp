@@ -213,8 +213,8 @@ std::string LitResRootCatalogItem::loadChildren(NetworkLibraryItemList &children
 	children.push_back(new LitResGenresItem(
 		(LitResLink&)link(),
 		"none",
-		"Книги по категориям",
-		"Просмтор книг по категориям",
+		"Книги по жанрам",
+		"Просмтор книг по жанрам",
 		LitResUtil::Instance().genresTree()
 	));
 
@@ -255,7 +255,7 @@ LitResMyCatalogItem::LitResMyCatalogItem(LitResLink &link) : NetworkLibraryCatal
 	"none",
 	"",
 	"Мои книги",
-	"Мои приобретенные книги",
+	"Купленные книги",
 	"",
 	true
 ) {
@@ -386,7 +386,8 @@ std::string LitResGenresItem::loadChildren(NetworkLibraryItemList &children) {
 				(LitResLink&)link(),
 				LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&genre=" + ZLNetworkUtil::htmlEncode(genre.Id)),
 				genre.Title,
-				""
+				"",
+				true
 			));
 		}
 	}

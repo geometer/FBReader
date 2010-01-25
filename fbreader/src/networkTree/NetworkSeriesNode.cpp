@@ -36,6 +36,37 @@ std::string NetworkSeriesNode::title() const {
 	return mySeriesTitle;
 }
 
+std::string NetworkSeriesNode::summary() const {
+	if (mySummary.empty()) {
+		FBReaderNode *parent = (FBReaderNode*)this->parent();
+		if (parent->typeId() == NetworkAuthorNode::TYPE_ID) {
+			mySummary = FBReaderNode::summary();
+		} else {
+			std::set<NetworkLibraryBookItem::AuthorData> authorSet;
+			const std::vector<ZLBlockTreeNode*> &books = children();
+			for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
+				const NetworkLibraryBookItem &book = 
+					(const NetworkLibraryBookItem&)*((NetworkBookInfoNode*)*it)->book();
+				const std::vector<NetworkLibraryBookItem::AuthorData> &authors = book.authors();
+				for (std::vector<NetworkLibraryBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
+					if (authorSet.find(*it) == authorSet.end()) {
+						authorSet.insert(*it);
+						if (!mySummary.empty()) {
+							mySummary += ", ";
+						}
+						mySummary += it->DisplayName;
+					}
+				}
+			}
+			if (mySummary == parent->title()) {
+				mySummary = FBReaderNode::summary();
+			}
+		}
+	}
+	
+	return mySummary;
+}
+
 void NetworkSeriesNode::paint(ZLPaintContext &context, int vOffset) {
 	const ZLResource &resource =
 		ZLResource::resource("networkView")["seriesNode"];
@@ -44,6 +75,7 @@ void NetworkSeriesNode::paint(ZLPaintContext &context, int vOffset) {
 
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
 	drawTitle(context, vOffset);
+	drawSummary(context, vOffset);
 
 	int left = 0;
 	drawHyperlink(

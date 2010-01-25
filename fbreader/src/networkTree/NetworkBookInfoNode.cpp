@@ -129,6 +129,10 @@ std::string NetworkBookInfoNode::summary() const {
 		}
 		authorsString += it->DisplayName;
 	}
+	FBReaderNode *parent = (FBReaderNode*)this->parent();
+	if (parent->title() == authorsString) {
+		return std::string();
+	}
 	return authorsString;
 }
 

@@ -216,11 +216,15 @@ std::string FBReaderNode::summary() const {
 	std::string result;
 	int count = 0;
 	const ZLBlockTreeNode::List &subNodes = children();
-	for (ZLBlockTreeNode::List::const_iterator it = subNodes.begin(); it != subNodes.end() && count < 3; ++it, ++count) {
+	ZLBlockTreeNode::List::const_iterator it = subNodes.begin();
+	for (; it != subNodes.end() && count < 3; ++it, ++count) {
 		if (count > 0) {
 			result += ", ";
 		}
 		result += ((const FBReaderNode*)*it)->title();
+	}
+	if (it != subNodes.end()) {
+		result += ", ...";
 	}
 	return result;
 }

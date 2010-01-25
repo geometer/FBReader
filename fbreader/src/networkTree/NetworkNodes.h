@@ -207,10 +207,12 @@ private:
 	const std::string &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
+	std::string summary() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:
 	std::string mySeriesTitle;
+	mutable std::string mySummary;
 };
 
 class NetworkBookInfoNode : public FBReaderNode {
