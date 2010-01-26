@@ -228,7 +228,7 @@ bool NetworkBookInfoNode::NetworkBookInfoNode::hasDirectLink() {
 		return false;
 	}
 	NetworkAuthenticationManager &mgr = *book.authenticationManager();
-	if (mgr.isAuthorised() == B3_TRUE && !mgr.needPurchase(book)) {
+	if (mgr.isAuthorised().Status == B3_TRUE && !mgr.needPurchase(book)) {
 		return true;
 	}
 	return false;
@@ -240,7 +240,7 @@ bool NetworkBookInfoNode::canBePurchased() {
 		return false;
 	}
 	NetworkAuthenticationManager &mgr = *book.authenticationManager();
-	if (mgr.isAuthorised() != B3_TRUE) {
+	if (mgr.isAuthorised().Status != B3_TRUE) {
 		return true;
 	}
 	return mgr.needPurchase(book);
@@ -388,7 +388,7 @@ void NetworkBookInfoNode::BuyAction::run() {
 		return;
 	}
 	NetworkAuthenticationManager &mgr = *book.authenticationManager();
-	if (mgr.isAuthorised() != B3_TRUE) {
+	if (mgr.isAuthorised().Status != B3_TRUE) {
 		if (!AuthenticationDialog::run(mgr)) {
 			return;
 		}
@@ -416,7 +416,7 @@ void NetworkBookInfoNode::BuyAction::run() {
 	if (downloadBook) {
 		DownloadAction(myBook, false).run();
 	}
-	if (mgr.isAuthorised() == B3_FALSE) {
+	if (mgr.isAuthorised().Status == B3_FALSE) {
 		fbreader.invalidateAccountDependents();
 	}
 	fbreader.refreshWindow();

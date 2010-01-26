@@ -53,7 +53,7 @@ void SearchOnNetworkAction::run() {
 		if (link.OnOption.value()) {
 			shared_ptr<NetworkAuthenticationManager> mgr = link.authenticationManager();
 			if (!mgr.isNull()) {
-				if (mgr->isAuthorised() == B3_TRUE && mgr->needsInitialization()) {
+				if (mgr->isAuthorised().Status == B3_TRUE && mgr->needsInitialization()) {
 					InitializeAuthenticationManagerRunnable initializer(*mgr);
 					initializer.executeWithUI();
 					if (initializer.hasErrors()) {

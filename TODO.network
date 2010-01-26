@@ -1,7 +1,10 @@
 0.12.2: выключение на windows
 0.12.2: размер окошка в windows
 
-0.14.0: не можем открыть каталог litres в отсутствие сети
+DONE	не можем открыть каталог litres в отсутствие сети - выдается сообщение сетевой ошибки
+	* есть место ожидания сети без окна "wait..." :
+	  проверка NetworkAuthenticationManager::isAuthorised(useNetwork = true)
+	  (проявляется только при медленной сети / при timeout'е)
 0.14.0: BUG: не скачивается файл жанров, если в начальный момент не было сети
 0.14.0: убрать string compare для автора в NetworkSeriesNode::summary()
 0.14.0: authentication на feedbooks/shucang/smashwords

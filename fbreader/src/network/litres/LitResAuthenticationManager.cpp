@@ -48,17 +48,17 @@ const std::string &LitResAuthenticationManager::certificate() {
 	return myCertificate;
 }
 
-ZLBoolean3 LitResAuthenticationManager::isAuthorised(bool useNetwork) {
+NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::isAuthorised(bool useNetwork) {
 	bool authState = !mySidUserNameOption.value().empty() && !mySidOption.value().empty();
 	if (mySidChecked || !useNetwork) {
-		return authState ? B3_TRUE : B3_FALSE;
+		return AuthenticationStatus(authState);
 	}
 
 	if (!authState) {
 		mySidChecked = true;
 		mySidUserNameOption.setValue("");
 		mySidOption.setValue("");
-		return B3_FALSE;
+		return AuthenticationStatus(false);
 	}
 
 	std::string firstName, lastName, newSid;
@@ -77,16 +77,16 @@ ZLBoolean3 LitResAuthenticationManager::isAuthorised(bool useNetwork) {
 
 	if (!error.empty()) {
 		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
-			return B3_UNDEFINED;
+			return AuthenticationStatus(error);
 		}
 		mySidChecked = true;
 		mySidUserNameOption.setValue("");
 		mySidOption.setValue("");
-		return B3_FALSE;
+		return AuthenticationStatus(false);
 	}
 	mySidChecked = true;
 	mySidOption.setValue(newSid);
-	return B3_TRUE;
+	return AuthenticationStatus(true);
 }
 
 std::string LitResAuthenticationManager::authorise(const std::string &pwd) {

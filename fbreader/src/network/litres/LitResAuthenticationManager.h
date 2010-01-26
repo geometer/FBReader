@@ -31,7 +31,7 @@ public:
 	LitResAuthenticationManager(const std::string &siteName);
 
 public:
-	ZLBoolean3 isAuthorised(bool useNetwork = true);
+	AuthenticationStatus isAuthorised(bool useNetwork = true);
 	std::string authorise(const std::string &pwd);
 	void logOut();
 	bool skipIPSupported();

@@ -77,7 +77,7 @@ const NetworkLink &NetworkCatalogRootNode::link() const {
 
 bool NetworkCatalogRootNode::hasAuxHyperlink() const {
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
-	return !mgr.isNull() && mgr->isAuthorised(false) == B3_FALSE;
+	return !mgr.isNull() && mgr->isAuthorised(false).Status == B3_FALSE;
 }
 
 void NetworkCatalogRootNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
@@ -97,7 +97,7 @@ void NetworkCatalogRootNode::paintHyperlinks(ZLPaintContext &context, int vOffse
 
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
 	if (!mgr.isNull()) {
-		if (mgr->isAuthorised(false) == B3_FALSE) {
+		if (mgr->isAuthorised(false).Status == B3_FALSE) {
 			drawHyperlink(context, left, vOffset, resource["login"].value(), myLoginAction);
 			drawAuxHyperlink(context, auxleft, vOffset, resource["register"].value(), myRegisterUserAction);
 			drawAuxHyperlink(context, auxleft, vOffset, resource["passwordRecovery"].value(), myPasswordRecoveryAction);

@@ -268,7 +268,7 @@ void LitResMyCatalogItem::onDisplayItem() {
 
 std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	LitResAuthenticationManager &mgr = (LitResAuthenticationManager&)*link().authenticationManager();
-	if (mgr.isAuthorised() == B3_FALSE) {
+	if (mgr.isAuthorised().Status == B3_FALSE) {
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
 	std::string error;
