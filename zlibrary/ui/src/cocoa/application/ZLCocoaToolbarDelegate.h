@@ -22,7 +22,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface ZLCocoaToolbarDelegate : NSObject<NSToolbarDelegate> {
+@interface ZLCocoaToolbarDelegate : NSObject /*<NSToolbarDelegate>*/ {
 	NSMutableDictionary *myItems;
 	NSMutableArray *mySelectableItems;
 }

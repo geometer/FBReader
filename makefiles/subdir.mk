@@ -22,12 +22,22 @@ endif
 
 .M.o:
 	@echo -n 'Compiling $@ ...'
+ifdef CFLAGS_NOARCH
+	@$(CC) -MM $(CFLAGS_PRE) $(INCLUDE) $< -o `basename $< .M`.d
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $<
+else
 	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
+endif
 	@echo ' OK'
 
 .m.o:
 	@echo -n 'Compiling $@ ...'
+ifdef CFLAGS_NOARCH
+	@$(CC) -MM $(CFLAGS_PRE) $(INCLUDE) $< -o `basename $< .m`.d
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $<
+else
 	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
+endif
 	@echo ' OK'
 
 all: $(OBJECTS)

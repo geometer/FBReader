@@ -4,6 +4,7 @@ include $(ROOTDIR)/makefiles/config.mk
 SHARE_FBREADER = $(SHAREDIR)/FBReader
 
 install:
+	@strip $(INSTALLDIR)/Contents/MacOS/*
 	@install -d $(INSTALLDIR)/Contents/Resources/English.lproj
 	@install -m 0644 Info.plist $(INSTALLDIR)/Contents
 	@install -m 0644 ../data/icons/application/FBReader.icns $(INSTALLDIR)/Contents/Resources

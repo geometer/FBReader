@@ -35,7 +35,7 @@ std::string ZLCocoaKeyUtil::keyName(void *nsEvent) {
 		ZLUnicodeUtil::firstChar(unicode, chars);
 	}
 
-	std::cerr << (char)unicode << ":" << [event keyCode] << ":" << [NSEvent modifierFlags] << "\n";
-	std::cerr << ZLKeyUtil::keyName(unicode, [event keyCode], [NSEvent modifierFlags]) << "\n";
-	return ZLKeyUtil::keyName(unicode, [event keyCode], [NSEvent modifierFlags]);
+	std::cerr << (char)unicode << ":" << [event keyCode] << ":" << [event modifierFlags] << "\n";
+	std::cerr << ZLKeyUtil::keyName(unicode, [event keyCode], [event modifierFlags]) << "\n";
+	return ZLKeyUtil::keyName(unicode, [event keyCode], [event modifierFlags]);
 }

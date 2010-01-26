@@ -19,7 +19,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface ZLCocoaAppDelegate : NSObject<NSApplicationDelegate> {
+@interface ZLCocoaAppDelegate : NSObject /*<NSApplicationDelegate>*/ {
     NSWindow *window;
 }
 

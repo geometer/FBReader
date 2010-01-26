@@ -18,6 +18,7 @@ LD = $(TOOLS_DIR)/g++-4.2
 
 MACOS_VERSION = 10.5
 
+ARCH_FLAGS = -arch x86_64 -arch i386 -arch ppc7400 -arch ppc64
 CFLAGS_NOARCH = \
 	-fmessage-length=0 -pipe -fpascal-strings -fasm-blocks \
 	-mdynamic-no-pic -W -Wall \
@@ -25,8 +26,8 @@ CFLAGS_NOARCH = \
 	-fvisibility=hidden -fvisibility-inlines-hidden \
 	-mmacosx-version-min=$(MACOS_VERSION) \
 	-gdwarf-2
-CFLAGS = -arch x86_64 -arch i386 -arch ppc7400 -arch ppc64 $(CFLAGS_NOARCH)
-LDFLAGS = -arch $(ARCH) \
+CFLAGS = $(ARCH_FLAGS) $(CFLAGS_NOARCH)
+LDFLAGS = $(ARCH_FLAGS) \
 	-isysroot /Developer/SDKs/MacOSX$(MACOS_VERSION).sdk \
 	-mmacosx-version-min=$(MACOS_VERSION)
 EXTERNAL_INCLUDE = -I$(ROOTDIR)/3rdparty/include
