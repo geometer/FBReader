@@ -48,6 +48,14 @@ void NetworkNodesFactory::createSubnodes(SearchResultNode *parent, NetworkBookCo
 
 void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const NetworkLibraryItemList &books) {
 	NetworkSeriesNode *seriesNode = 0;
+
+	NetworkSeriesNode::SummaryType summaryType = NetworkSeriesNode::AUTHORS;
+	if ((parent->typeId() == NetworkCatalogNode::TYPE_ID 
+		&& ((NetworkCatalogNode*)parent)->item().catalogType() == NetworkLibraryCatalogItem::BY_AUTHORS)
+		|| parent->typeId() == NetworkAuthorNode::TYPE_ID) {
+		summaryType = NetworkSeriesNode::BOOKS;
+	}
+
 	for (NetworkLibraryItemList::const_iterator it = books.begin(); it != books.end(); ++it) {
 		if ((*it)->typeId() != NetworkLibraryBookItem::TYPE_ID) {
 			continue;
@@ -59,7 +67,7 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 			new NetworkBookInfoNode(parent, *it);
 		} else {
 			if (seriesNode == 0 || seriesNode->seriesTitle() != seriesTitle) {
-				seriesNode = new NetworkSeriesNode(parent, seriesTitle);
+				seriesNode = new NetworkSeriesNode(parent, seriesTitle, summaryType);
 			}
 			new NetworkBookInfoNode(seriesNode, *it);
 		}

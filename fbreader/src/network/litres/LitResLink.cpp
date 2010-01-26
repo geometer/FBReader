@@ -116,14 +116,17 @@ public:
 		const std::string &url,
 		const std::string &title,
 		const std::string &summary,
-		bool sortItems = false
+		bool sortItems = false,
+		CatalogType catalogType = NetworkLibraryCatalogItem::OTHER
 	);
 
 private:
 	std::string loadChildren(NetworkLibraryItemList &children);
+	CatalogType catalogType() const;
 
 private:
 	const bool mySortItems;
+	const CatalogType myCatalogType;
 };
 
 class LitResMyCatalogItem : public NetworkLibraryCatalogItem {
@@ -224,8 +227,9 @@ LitResCatalogItem::LitResCatalogItem(
 	const std::string &url,
 	const std::string &title,
 	const std::string &summary,
-	bool sortItems
-) : NetworkLibraryCatalogItem(link, url, "", title, summary, ""), mySortItems(sortItems) {
+	bool sortItems,
+	CatalogType catalogType
+) : NetworkLibraryCatalogItem(link, url, "", title, summary, ""), mySortItems(sortItems), myCatalogType(catalogType) {
 }
 
 std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
@@ -245,6 +249,11 @@ std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 
 	return error;
 }
+
+NetworkLibraryCatalogItem::CatalogType LitResCatalogItem::catalogType() const {
+	return myCatalogType;
+}
+
 
 LitResMyCatalogItem::LitResMyCatalogItem(LitResLink &link) : NetworkLibraryCatalogItem(
 	link,
@@ -351,7 +360,8 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 			LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&person=" + ZLNetworkUtil::htmlEncode(it->Id)),
 			it->Title,
 			anno,
-			true
+			true,
+			NetworkLibraryCatalogItem::BY_AUTHORS
 		));
 	}
 	return "";

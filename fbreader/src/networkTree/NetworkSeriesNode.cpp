@@ -29,7 +29,8 @@ const std::string &NetworkSeriesNode::typeId() const {
 	return TYPE_ID;
 }
 
-NetworkSeriesNode::NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle) : NetworkContainerNode(parent), mySeriesTitle(seriesTitle) {
+NetworkSeriesNode::NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle, SummaryType summaryType) : 
+	NetworkContainerNode(parent), mySeriesTitle(seriesTitle), mySummaryType(summaryType) {
 }
 
 std::string NetworkSeriesNode::title() const {
@@ -38,8 +39,7 @@ std::string NetworkSeriesNode::title() const {
 
 std::string NetworkSeriesNode::summary() const {
 	if (mySummary.empty()) {
-		FBReaderNode *parent = (FBReaderNode*)this->parent();
-		if (parent->typeId() == NetworkAuthorNode::TYPE_ID) {
+		if (mySummaryType == BOOKS) {
 			mySummary = FBReaderNode::summary();
 		} else {
 			std::set<NetworkLibraryBookItem::AuthorData> authorSet;
@@ -57,9 +57,6 @@ std::string NetworkSeriesNode::summary() const {
 						mySummary += it->DisplayName;
 					}
 				}
-			}
-			if (mySummary == parent->title()) {
-				mySummary = FBReaderNode::summary();
 			}
 		}
 	}

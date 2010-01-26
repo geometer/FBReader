@@ -72,6 +72,10 @@ const std::string &NetworkLibraryCatalogItem::typeId() const {
 void NetworkLibraryCatalogItem::onDisplayItem() {
 }
 
+NetworkLibraryCatalogItem::CatalogType NetworkLibraryCatalogItem::catalogType() const {
+	return OTHER;
+}
+
 const std::string NetworkLibraryBookItem::TYPE_ID = "bookItem";
 
 bool NetworkLibraryBookItem::AuthorData::operator < (const AuthorData &data) const {

@@ -195,8 +195,10 @@ class NetworkSeriesNode : public NetworkContainerNode {
 public:
 	static const std::string TYPE_ID;
 
+	enum SummaryType { AUTHORS, BOOKS };
+
 protected:
-	NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle);
+	NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle, SummaryType summaryType);
 
 friend class NetworkNodesFactory;
 
@@ -212,6 +214,7 @@ private:
 
 private:
 	std::string mySeriesTitle;
+	SummaryType mySummaryType;
 	mutable std::string mySummary;
 };
 
