@@ -12,7 +12,12 @@ OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES_CPP)) $(patsubst %.M, %.o, $(SOURCES_
 
 .cpp.o:
 	@echo -n 'Compiling $@ ...'
+ifdef CFLAGS_NOARCH
+	@$(CC) -MM $(CFLAGS_PRE) $(INCLUDE) $< -o `basename $< .cpp`.d
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $<
+else
 	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
+endif
 	@echo ' OK'
 
 .M.o:

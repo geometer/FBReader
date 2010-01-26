@@ -16,16 +16,16 @@ CC = $(TOOLS_DIR)/gcc-4.2
 AR = $(TOOLS_DIR)/ar rsu
 LD = $(TOOLS_DIR)/g++-4.2
 
-ARCH = x86_64
-MACOS_VERSION = 10.6
+MACOS_VERSION = 10.5
 
-CFLAGS = \
-	-arch $(ARCH) -fmessage-length=0 -pipe -fpascal-strings -fasm-blocks \
+CFLAGS_NOARCH = \
+	-fmessage-length=0 -pipe -fpascal-strings -fasm-blocks \
 	-mdynamic-no-pic -W -Wall \
 	-isysroot /Developer/SDKs/MacOSX$(MACOS_VERSION).sdk \
 	-fvisibility=hidden -fvisibility-inlines-hidden \
 	-mmacosx-version-min=$(MACOS_VERSION) \
 	-gdwarf-2
+CFLAGS = -arch x86_64 -arch i386 -arch ppc7400 -arch ppc64 $(CFLAGS_NOARCH)
 LDFLAGS = -arch $(ARCH) \
 	-isysroot /Developer/SDKs/MacOSX$(MACOS_VERSION).sdk \
 	-mmacosx-version-min=$(MACOS_VERSION)
