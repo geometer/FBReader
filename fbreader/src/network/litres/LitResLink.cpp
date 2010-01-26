@@ -182,6 +182,9 @@ public:
 		const std::vector<shared_ptr<LitResGenre> > &genres
 	);
 
+public:
+	static std::string loadChildren(NetworkLibraryItemList &children, LitResLink &link, const std::vector<shared_ptr<LitResGenre> > &genres);
+
 private:
 	std::string loadChildren(NetworkLibraryItemList &children);
 
@@ -210,14 +213,7 @@ std::string LitResRootCatalogItem::loadChildren(NetworkLibraryItemList &children
 		"50 самых популярных книг"
 	));
 	children.push_back(new LitResByAuthorsCatalogItem((LitResLink&)link()));
-	children.push_back(new LitResGenresItem(
-		(LitResLink&)link(),
-		"none",
-		"Книги по жанрам",
-		"Просмтор книг по жанрам",
-		LitResUtil::Instance().genresTree()
-	));
-
+	children.push_back(new LitResByGenresCatalogItem((LitResLink&)link()));
 	children.push_back(new LitResMyCatalogItem((LitResLink&)link()));
 
 	return "";
@@ -361,6 +357,21 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 	return "";
 }
 
+
+LitResByGenresCatalogItem::LitResByGenresCatalogItem(LitResLink &link) : NetworkLibraryCatalogItem(
+	link,
+	"none",
+	"",
+	"Книги по жанрам",
+	"Просмтор книг по жанрам",
+	""
+) {
+}
+
+std::string LitResByGenresCatalogItem::loadChildren(NetworkLibraryItemList &children) {
+	return LitResGenresItem::loadChildren(children, (LitResLink&)link(), LitResUtil::Instance().genresTree());
+}
+
 LitResGenresItem::LitResGenresItem(
 	LitResLink &link,
 	const std::string &url,
@@ -371,11 +382,15 @@ LitResGenresItem::LitResGenresItem(
 }
 
 std::string LitResGenresItem::loadChildren(NetworkLibraryItemList &children) {
-	for (std::vector<shared_ptr<LitResGenre> >::const_iterator it = myGenres.begin(); it != myGenres.end(); ++it) {
+	return LitResGenresItem::loadChildren(children, (LitResLink&)link(), myGenres);
+}
+
+std::string LitResGenresItem::loadChildren(NetworkLibraryItemList &children, LitResLink &link, const std::vector<shared_ptr<LitResGenre> > &genres) {
+	for (std::vector<shared_ptr<LitResGenre> >::const_iterator it = genres.begin(); it != genres.end(); ++it) {
 		const LitResGenre &genre = **it;
 		if (genre.Id.empty()) {
 			children.push_back(new LitResGenresItem(
-				(LitResLink&)link(),
+				link,
 				"none",
 				genre.Title,
 				"",
@@ -383,7 +398,7 @@ std::string LitResGenresItem::loadChildren(NetworkLibraryItemList &children) {
 			));
 		} else {
 			children.push_back(new LitResCatalogItem(
-				(LitResLink&)link(),
+				link,
 				LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&genre=" + ZLNetworkUtil::htmlEncode(genre.Id)),
 				genre.Title,
 				"",

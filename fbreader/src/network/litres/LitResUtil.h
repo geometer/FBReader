@@ -54,7 +54,7 @@ public:
 
 private:
 	void validateGenres();
-	void loadGenres();
+	bool loadGenres();
 	void buildGenresTitles(const std::vector<shared_ptr<LitResGenre> > &genres, const std::string &titlePrefix = "");
 
 private:

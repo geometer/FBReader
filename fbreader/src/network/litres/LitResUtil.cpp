@@ -98,9 +98,10 @@ void LitResUtil::makeDemoUrl(std::string &url, const std::string &bookId) {
 
 void LitResUtil::validateGenres() {
 	if (!myGenresValid) {
-		loadGenres();
-		buildGenresTitles(myGenresTree);
-		myGenresValid = true;
+		if (loadGenres()) {
+			buildGenresTitles(myGenresTree);
+			myGenresValid = true;
+		}
 	}
 }
 
@@ -152,7 +153,7 @@ void LitResUtil::fillGenreIds(const std::string &tag, std::vector<std::string> &
 	}
 }
 
-void LitResUtil::loadGenres() {
+bool LitResUtil::loadGenres() {
 	static const std::string directoryPath = ZLNetworkManager::CacheDirectory();
 	static shared_ptr<ZLDir> dir = ZLFile(directoryPath).directory(true);
 
@@ -172,8 +173,9 @@ void LitResUtil::loadGenres() {
 			myGenresTree.clear();
 			myGenresMap.clear();
 			myGenresTitles.clear();
+			return false;
 		}
-		return;
+		return true;
 	}
 
 	std::string cacheName;
@@ -228,11 +230,11 @@ void LitResUtil::loadGenres() {
 	}
 
 	if (cacheName.empty()) {
-		return;
+		return false;
 	}
 
 	shared_ptr<ZLXMLReader> parser = new LitResGenresParser(myGenresTree, myGenresMap);
-	parser->readDocument(cacheName);
+	return parser->readDocument(cacheName);
 }
 
 void LitResUtil::buildGenresTitles(const std::vector<shared_ptr<LitResGenre> > &genres, const std::string &titlePrefix) {
