@@ -167,7 +167,11 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 				case CURLE_SSL_CONNECT_ERROR:
 					errors.insert(ZLStringUtil::printf(errorResource["sslConnectErrorMessage"].value(), curl_easy_strerror(CURLE_SSL_CONNECT_ERROR)));
 					break;
+#if LIBCURL_VERSION_NUM > 0x071100
 				case CURLE_PEER_FAILED_VERIFICATION:
+#else
+				case CURLE_SSL_PEER_CERTIFICATE:
+#endif
 					errors.insert(ZLStringUtil::printf(errorResource["peerFailedVerificationMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
 					break;
 				case CURLE_SSL_CACERT:
