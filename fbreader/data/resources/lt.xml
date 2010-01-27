@@ -112,29 +112,91 @@
 		<node name="quit" value="Uždaryti" />
 	</node>
 	<node name="toolbar">
-		<node name="showReading" value="Pereiti į skaitymo veikseną" />
-		<node name="showLibrary" value="Rodyti bibliotekos struktūrą">
+		<node name="showReading">
+			<node name="label" toBeTranslated="true" value="Read Book" />
+			<node name="tooltip" value="Pereiti į skaitymo veikseną" />
+		</node>
+		<node name="showLibrary">
+			<node name="label" toBeTranslated="true" value="Library" />
+			<node name="tooltip" value="Rodyti bibliotekos struktūrą" />
 			<node name="popup" value="Rodyti neseniai skaitytas knygas" />
 		</node>
-		<node name="showRecent" value="Rodyti neseniai skaitytų knygų sąrašą" />
-		<node name="byAuthor" value="Rušiuoti knygas pagal autorius" />
-		<node name="byTag" value="Rušiuoti knygas pagal gaires" />
-		<node name="addBook" value="Pridėti failą prie bibliotekos" />
-		<node name="showNetLibrary" value="Ieškoti Interneto bibliotekose" />
-		<node name="searchOnNetwork" value="Ieškoti tinkle" />
-		<node name="advancedSearchOnNetwork" value="Patikslintoji paieška tinkle" />
-		<node name="gotoHome" value="Eiti į teksto pradžią" />
-		<node name="undo" value="Atgal" />
-		<node name="redo" value="Pirmyn" />
-		<node name="gotoPageNumberWithParameter" value="Atversti puslapį" />
-		<node name="toc" value="Turinys" />
-		<node name="search" value="Ieškoti teksto" />
-		<node name="findNext" value="Rasti sekantį" />
-		<node name="findPrevious" value="Rasti buvusį" />
-		<node name="bookInfo" value="Informacija apie knygą" />
-		<node name="preferences" value="Nustatymai" />
-		<node name="rotate" value="Pasukti tekstą" />
-		<node name="showHelp" value="Apie FBReader" />
+		<node name="showRecent">
+			<node name="label" toBeTranslated="true" value="Recent Books" />
+			<node name="showRecent" value="Rodyti neseniai skaitytų knygų sąrašą" />
+		</node>
+		<node name="byAuthor">
+			<node name="label" toBeTranslated="true" value="By Author" />
+			<node name="byAuthor" value="Rušiuoti knygas pagal autorius" />
+		</node>
+		<node name="byTag">
+			<node name="label" toBeTranslated="true" value="By Tag" />
+			<node name="byTag" value="Rušiuoti knygas pagal gaires" />
+		</node>
+		<node name="addBook">
+			<node name="label" toBeTranslated="true" value="Add File" />
+			<node name="addBook" value="Pridėti failą prie bibliotekos" />
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" toBeTranslated="true" value="Network" />
+			<node name="showNetLibrary" value="Ieškoti Interneto bibliotekose" />
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Simple Search" />
+			<node name="searchOnNetwork" value="Ieškoti tinkle" />
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="advancedSearchOnNetwork" value="Patikslintoji paieška tinkle" />
+		</node>
+		<node name="gotoHome">
+			<node name="label" toBeTranslated="true" value="Go to Start" />
+			<node name="gotoHome" value="Eiti į teksto pradžią" />
+		</node>
+		<node name="undo">
+			<node name="label" toBeTranslated="true" value="Go Back" />
+			<node name="undo" value="Atgal" />
+		</node>
+		<node name="redo">
+			<node name="label" toBeTranslated="true" value="Go Forward" />
+			<node name="redo" value="Pirmyn" />
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" toBeTranslated="true" value="Go to Page" />
+			<node name="gotoPageNumberWithParameter" value="Atversti puslapį" />
+		</node>
+		<node name="toc">
+			<node name="label" toBeTranslated="true" value="TOC" />
+			<node name="toc" value="Turinys" />
+		</node>
+		<node name="search">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="search" value="Ieškoti teksto" />
+		</node>
+		<node name="findNext">
+			<node name="label" toBeTranslated="true" value="Next" />
+			<node name="findNext" value="Rasti sekantį" />
+		</node>
+		<node name="findPrevious">
+			<node name="label" toBeTranslated="true" value="Previous" />
+			<node name="findPrevious" value="Rasti buvusį" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="bookInfo" value="Informacija apie knygą" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Preferences" />
+			<node name="preferences" value="Nustatymai" />
+		</node>
+		<node name="rotate">
+			<node name="label" toBeTranslated="true" value="Rotate" />
+			<node name="rotate" value="Pasukti tekstą" />
+		</node>
+		<node name="showHelp">
+			<node name="label" toBeTranslated="true" value="About" />
+			<node name="showHelp" value="Apie FBReader" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
