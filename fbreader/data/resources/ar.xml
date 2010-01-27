@@ -447,6 +447,7 @@
 			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..." />
 			<node name="registerUser" toBeTranslated="true" value="Registering new account. Please, wait..." />
 			<node name="passwordRecovery" toBeTranslated="true" value="Recovering password. Please, wait..." />
+			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" toBeTranslated="true" value="Purchase book" />

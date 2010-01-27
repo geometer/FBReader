@@ -447,6 +447,7 @@
 			<node name="loadSubCatalog" value="Ladataan luetteloa. Ole hyvä ja odota..." />
 			<node name="registerUser" value="Rekisteröidään uutta tiliä. Ole hyvä ja odota..." />
 			<node name="passwordRecovery" value="Palautetaan salasanaa. Ole hyvä ja odota..." />
+			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Osta kirja" />

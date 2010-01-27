@@ -98,6 +98,23 @@ const std::string &DownloadBookRunnable::fileName() const {
 }
 
 
+IsAuthorisedRunnable::IsAuthorisedRunnable(NetworkAuthenticationManager &mgr) :
+	NetworkOperationRunnable("authenticationCheck"),
+	myManager(mgr),
+	myResult(B3_UNDEFINED) {
+}
+
+void IsAuthorisedRunnable::run() {
+	NetworkAuthenticationManager::AuthenticationStatus auth = myManager.isAuthorised(true);
+	myErrorMessage = auth.Message;
+	myResult = auth.Status;
+}
+
+ZLBoolean3 IsAuthorisedRunnable::result() {
+	return myResult;
+}
+
+
 AuthoriseRunnable::AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password) : 
 	NetworkOperationRunnable("authentication"), 
 	myManager(mgr), 

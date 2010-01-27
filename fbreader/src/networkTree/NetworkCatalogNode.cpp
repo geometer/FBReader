@@ -222,13 +222,14 @@ void NetworkCatalogNode::ExpandCatalogAction::run() {
 	NetworkLink &link = myNode.item().link();
 	if (!link.authenticationManager().isNull()) {
 		NetworkAuthenticationManager &mgr = *link.authenticationManager();
-		NetworkAuthenticationManager::AuthenticationStatus auth = mgr.isAuthorised();
-		std::cerr << "authState == " << auth.Status << std::endl;
-		if (auth.Status == B3_UNDEFINED) {
-			ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), auth.Message);
+		IsAuthorisedRunnable checker(mgr);
+		checker.executeWithUI();
+		std::cerr << "authState == " << checker.result() << std::endl;
+		if (checker.hasErrors()) {
+			checker.showErrorMessage();
 			return;
 		}
-		if (auth.Status == B3_TRUE && mgr.needsInitialization()) {
+		if (checker.result() == B3_TRUE && mgr.needsInitialization()) {
 			InitializeAuthenticationManagerRunnable initializer(mgr);
 			initializer.executeWithUI();
 			if (initializer.hasErrors()) {

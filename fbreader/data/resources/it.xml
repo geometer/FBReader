@@ -447,6 +447,7 @@
 			<node name="loadSubCatalog" value="Caricamento catalogo. Attendere, prego..."/>
 			<node name="registerUser" value="Registrazione nuovo account in corso. Attendere, prego..."/>
 			<node name="passwordRecovery" value="Recupero password in corso. Attendere, prego..."/>
+			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Acquista libro"/>

@@ -447,6 +447,7 @@
 			<node name="loadSubCatalog" value="Importuji katalog. Čekejte prosím..."/>
 			<node name="registerUser" value="Registrace nového účtu. Čekejte prosím..."/>
 			<node name="passwordRecovery" value="Obnovení hesla. Čekejte prosím..."/>
+			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Zaplatit knihu"/>

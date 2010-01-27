@@ -509,6 +509,7 @@
 			<node name="loadSubCatalog" value="Завантаження каталогу. Будь ласка, зачекайте..."/>
 			<node name="registerUser" value="Реєстрація нового користувача. Будь ласка, зачекайте..."/>
 			<node name="passwordRecovery" value="Відновлення пароля. Будь ласка, зачекайте ..."/>
+			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Купити книгу"/>

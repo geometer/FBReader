@@ -7,10 +7,7 @@ DONE	убрать string compare для автора в NetworkSeriesNode::summa
 	(Добавлен метод NetworkLibraryCatalogItem::catalogType(). По нему выставляется тип summary внутри NodesFactory)
 0.14.0: authentication на feedbooks/shucang/smashwords
 0.14.0: Сделать линки для покупки на smashwords (?ref=geometer)
-0.14.0: litres: При отключенной сети открытие каталога верхнего уровня долго думает без каких-либо сообщений, после этого ничего не происходит.
-	* есть место ожидания сети без окна "wait..." :
-	  проверка NetworkAuthenticationManager::isAuthorised(useNetwork = true)
-	  (проявляется только при медленной сети / при timeout'е)
+DONE	litres: При отключенной сети открытие каталога верхнего уровня долго думает без каких-либо сообщений, после этого ничего не происходит.
 0.14.0: X-System problem - fix set/restore window position (in ZLGtkApplicationWindow)
 0.14.0: Удалять скачанный файл картинки, если картинку из него получить не удалось
 0.14.0: регулярная загрузка данных о каталогах с fbreader.org
