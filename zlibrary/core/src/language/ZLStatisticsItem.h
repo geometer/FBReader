@@ -35,8 +35,8 @@ public:
   virtual size_t frequency() const = 0;
   virtual void next() = 0;
 
-	bool operator== (const ZLStatisticsItem &otherItem) const;
-	bool operator!= (const ZLStatisticsItem &otherItem) const;
+	bool operator == (const ZLStatisticsItem &otherItem) const;
+	bool operator != (const ZLStatisticsItem &otherItem) const;
 
 	size_t index() const;
 
@@ -77,11 +77,11 @@ inline size_t ZLStatisticsItem::index() const {
 	return myIndex;
 }
 
-inline bool ZLStatisticsItem::operator== (const ZLStatisticsItem& otherItem) const {
+inline bool ZLStatisticsItem::operator == (const ZLStatisticsItem& otherItem) const {
 	return (this->index() == otherItem.index());
 }
 
-inline bool ZLStatisticsItem::operator!= (const ZLStatisticsItem& otherItem) const {
+inline bool ZLStatisticsItem::operator != (const ZLStatisticsItem& otherItem) const {
 	return (this->index() != otherItem.index());
 }
 

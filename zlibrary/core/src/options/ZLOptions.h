@@ -96,7 +96,7 @@ protected:
 
 private:
 	ZLOption(const ZLOption&);
-	const ZLOption& operator = (const ZLOption&);
+	const ZLOption &operator = (const ZLOption&);
 };
 
 class ZLSimpleOption : public ZLOption {

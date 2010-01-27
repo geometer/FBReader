@@ -42,7 +42,7 @@ public:
 
 private:
 	ZLEncodingConverter(const ZLEncodingConverter&);
-	ZLEncodingConverter &operator=(const ZLEncodingConverter&);
+	ZLEncodingConverter &operator = (const ZLEncodingConverter&);
 };
 
 class ZLEncodingConverterInfo {
@@ -63,7 +63,7 @@ private:
 
 private:
 	ZLEncodingConverterInfo(const ZLEncodingConverterInfo&);
-	ZLEncodingConverterInfo &operator=(const ZLEncodingConverterInfo&);
+	ZLEncodingConverterInfo &operator = (const ZLEncodingConverterInfo&);
 };
 
 typedef shared_ptr<ZLEncodingConverterInfo> ZLEncodingConverterInfoPtr;
@@ -83,7 +83,7 @@ private:
 
 private:
 	ZLEncodingSet(const ZLEncodingSet&);
-	ZLEncodingSet &operator=(const ZLEncodingSet&);
+	ZLEncodingSet &operator = (const ZLEncodingSet&);
 };
 
 class ZLEncodingConverterProvider;

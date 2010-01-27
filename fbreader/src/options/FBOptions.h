@@ -49,7 +49,7 @@ public:
 private:
 	FBOptions();
 	FBOptions(const FBOptions&);
-	const FBOptions& operator = (const FBOptions&);
+	const FBOptions &operator = (const FBOptions&);
 
 private:
 	std::map<std::string,shared_ptr<ZLColorOption> > myColorOptions;

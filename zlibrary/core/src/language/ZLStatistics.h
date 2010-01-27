@@ -100,7 +100,7 @@ public:
 	ZLArrayBasedStatistics(size_t charSequenceSize, size_t size, size_t volume, unsigned long long squaresVolume);	
 	~ZLArrayBasedStatistics();
 
-	ZLArrayBasedStatistics& operator = (const ZLArrayBasedStatistics &other);
+	ZLArrayBasedStatistics &operator = (const ZLArrayBasedStatistics &other);
 	void insert(const ZLCharSequence &charSequence, size_t frequency);
 	
 	bool empty() const;

@@ -82,7 +82,7 @@ private:
 
 private:
 	CHMFileInfo(const CHMFileInfo&);
-	const CHMFileInfo &operator= (const CHMFileInfo&);
+	const CHMFileInfo &operator = (const CHMFileInfo&);
 
 friend class CHMInputStream;
 };

@@ -87,7 +87,7 @@ private:
 
 private:
 	ZLPaintContext(const ZLPaintContext&);
-	const ZLPaintContext& operator = (const ZLPaintContext&);
+	const ZLPaintContext &operator = (const ZLPaintContext&);
 
 friend class ZLMirroredPaintContext;
 };

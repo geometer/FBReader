@@ -32,8 +32,8 @@ public:
 	~ZLCharSequence();		
  
 	size_t getSize() const;
-	const char& operator[] (size_t index) const;
-	ZLCharSequence& operator= (const ZLCharSequence& other);
+	const char &operator [] (size_t index) const;
+	ZLCharSequence &operator = (const ZLCharSequence& other);
 		
 	std::string toString() const; 
 	std::string toHexSequence() const; 
@@ -51,7 +51,7 @@ private:
 
 inline ZLCharSequence::ZLCharSequence() : mySize(0), myHead(0) {}
 
-inline const char& ZLCharSequence::operator[] (size_t index) const {
+inline const char& ZLCharSequence::operator [] (size_t index) const {
 	return myHead[index];
 }
 

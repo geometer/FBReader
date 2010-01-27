@@ -46,7 +46,7 @@ friend class ZLTextTeXPatternComparator;
 class ZLTextTeXPatternComparator {
 
 public:
-	bool operator() (const ZLTextTeXHyphenationPattern *p1, const ZLTextTeXHyphenationPattern *p2) const;
+	bool operator () (const ZLTextTeXHyphenationPattern *p1, const ZLTextTeXHyphenationPattern *p2) const;
 };
 
 class ZLTextTeXHyphenator : public ZLTextHyphenator {

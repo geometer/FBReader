@@ -54,7 +54,7 @@ public:
 
 	private:
 		HtmlTag(const HtmlTag&);
-		const HtmlTag &operator= (const HtmlTag&);
+		const HtmlTag &operator = (const HtmlTag&);
 	};
 
 private:

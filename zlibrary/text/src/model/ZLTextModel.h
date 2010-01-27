@@ -51,8 +51,8 @@ public:
 	bool isRtl() const;
 
 	size_t paragraphsNumber() const;
-	ZLTextParagraph *operator[] (size_t index);
-	const ZLTextParagraph *operator[] (size_t index) const;
+	ZLTextParagraph *operator [] (size_t index);
+	const ZLTextParagraph *operator [] (size_t index) const;
 	const std::vector<ZLTextMark> &marks() const;
 
 	virtual void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const;
@@ -117,11 +117,11 @@ inline size_t ZLTextModel::paragraphsNumber() const { return myParagraphs.size()
 inline const std::vector<ZLTextMark> &ZLTextModel::marks() const { return myMarks; }
 inline void ZLTextModel::removeAllMarks() { myMarks.clear(); }
 
-inline ZLTextParagraph *ZLTextModel::operator[] (size_t index) {
+inline ZLTextParagraph *ZLTextModel::operator [] (size_t index) {
 	return myParagraphs[std::min(myParagraphs.size() - 1, index)];
 }
 
-inline const ZLTextParagraph *ZLTextModel::operator[] (size_t index) const {
+inline const ZLTextParagraph *ZLTextModel::operator [] (size_t index) const {
 	return myParagraphs[std::min(myParagraphs.size() - 1, index)];
 }
 

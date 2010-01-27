@@ -31,7 +31,7 @@ struct ZLTextRectangle {
 
 	struct RangeChecker {
 		RangeChecker(int x, int y) : myX(x), myY(y) {}
-		bool operator()(const ZLTextRectangle &position) const {
+		bool operator () (const ZLTextRectangle &position) const {
 			return
 				(myX >= position.XStart) && (myX <= position.XEnd) &&
 				(myY >= position.YStart) && (myY <= position.YEnd);
