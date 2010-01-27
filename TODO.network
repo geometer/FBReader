@@ -8,7 +8,7 @@ DONE	убрать string compare для автора в NetworkSeriesNode::summa
 0.14.0: authentication на feedbooks/shucang/smashwords
 0.14.0: Сделать линки для покупки на smashwords (?ref=geometer)
 DONE	litres: При отключенной сети открытие каталога верхнего уровня долго думает без каких-либо сообщений, после этого ничего не происходит.
-0.14.0: X-System problem - fix set/restore window position (in ZLGtkApplicationWindow)
+DELAYED (can't reproduce) X-System problem - fix set/restore window position (in ZLGtkApplicationWindow)
 0.14.0: Удалять скачанный файл картинки, если картинку из него получить не удалось
 0.14.0: регулярная загрузка данных о каталогах с fbreader.org
 0.14.0: докачка файлов (оч. актуально для litres)

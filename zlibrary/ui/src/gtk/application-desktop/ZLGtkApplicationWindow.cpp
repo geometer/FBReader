@@ -74,8 +74,7 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 
 	gtk_box_pack_start(GTK_BOX(myVBox), myWindowToolbar.toolbarWidget(), false, false, 0);
 
-	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
-	gtk_window_move(myMainWindow, myXOption.value(), myYOption.value());
+	setPosition();
 	gtk_widget_show_all(GTK_WIDGET(myMainWindow));
 
 	gtk_widget_add_events(GTK_WIDGET(myMainWindow), GDK_KEY_PRESS_MASK);
@@ -106,13 +105,7 @@ ZLGtkApplicationWindow::~ZLGtkApplicationWindow() {
 		myWindowStateOption.setValue(MAXIMIZED);
 	} else {
 		myWindowStateOption.setValue(NORMAL);
-		int x, y, width, height;
-		gtk_window_get_position(myMainWindow, &x, &y);
-		gtk_window_get_size(myMainWindow, &width, &height);
-		myXOption.setValue(x);
-		myYOption.setValue(y);
-		myWidthOption.setValue(width);
-		myHeightOption.setValue(height);
+		readPosition();
 	}
 }
 
@@ -172,13 +165,7 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 	GdkWindowState state = gdk_window_get_state(GTK_WIDGET(myMainWindow)->window);
 	if (fullscreen) {
 		if ((state & GDK_WINDOW_STATE_MAXIMIZED) == 0) {
-			int x, y, width, height;
-			gtk_window_get_position(myMainWindow, &x, &y);
-			gtk_window_get_size(myMainWindow, &width, &height);
-			myXOption.setValue(x);
-			myYOption.setValue(y);
-			myWidthOption.setValue(width);
-			myHeightOption.setValue(height);
+			readPosition();
 		}
 		gtk_window_fullscreen(myMainWindow);
 		gtk_widget_hide(myWindowToolbar.toolbarWidget());
@@ -192,8 +179,7 @@ void ZLGtkApplicationWindow::setFullscreen(bool fullscreen) {
 		}
 		gtk_widget_show(myWindowToolbar.toolbarWidget());
 		if ((state & GDK_WINDOW_STATE_MAXIMIZED) == 0) {
-			gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
-			gtk_window_move(myMainWindow, myXOption.value(), myYOption.value());
+			setPosition();
 		}
 	}
 
@@ -252,3 +238,19 @@ void ZLGtkApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 void ZLGtkApplicationWindow::setFocusToMainWidget() {
 	gtk_window_set_focus(myMainWindow, myViewWidget->area());
 }
+
+void ZLGtkApplicationWindow::readPosition() {
+	int x, y, width, height;
+	gtk_window_get_position(myMainWindow, &x, &y);
+	gtk_window_get_size(myMainWindow, &width, &height);
+	myXOption.setValue(x);
+	myYOption.setValue(y);
+	myWidthOption.setValue(width);
+	myHeightOption.setValue(height);
+}
+
+void ZLGtkApplicationWindow::setPosition() {
+	gtk_window_resize(myMainWindow, myWidthOption.value(), myHeightOption.value());
+	gtk_window_move(myMainWindow, myXOption.value(), myYOption.value());
+}
+

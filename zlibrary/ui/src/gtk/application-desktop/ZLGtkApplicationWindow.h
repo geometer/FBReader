@@ -62,6 +62,9 @@ private:
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
+	void readPosition();
+	void setPosition();
+
 public:
 	bool handleKeyEventSlot(GdkEventKey *event);
 	void handleScrollEventSlot(GdkEventScroll *event);
