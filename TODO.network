@@ -5,7 +5,9 @@ DONE	не можем открыть каталог litres в отсутстви�
 DONE	BUG: не скачивается файл жанров, если в начальный момент не было сети
 DONE	убрать string compare для автора в NetworkSeriesNode::summary()
 	(Добавлен метод NetworkLibraryCatalogItem::catalogType(). По нему выставляется тип summary внутри NodesFactory)
-0.14.0: authentication на feedbooks/shucang/smashwords
+0.14.0: authentication на feedbooks
+0.14.0: authentication на shucang
+0.14.0: authentication на smashwords
 0.14.0: Сделать линки для покупки на smashwords (?ref=geometer)
 DONE	litres: При отключенной сети открытие каталога верхнего уровня долго думает без каких-либо сообщений, после этого ничего не происходит.
 DELAYED (can't reproduce) X-System problem - fix set/restore window position (in ZLGtkApplicationWindow)
