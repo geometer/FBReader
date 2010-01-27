@@ -49,7 +49,7 @@ public:
 
 private:
 	ZLTextPositionIndicatorInfo(const ZLTextPositionIndicatorInfo&);
-	const ZLTextPositionIndicatorInfo operator = (const ZLTextPositionIndicatorInfo&);
+	const ZLTextPositionIndicatorInfo &operator = (const ZLTextPositionIndicatorInfo&);
 };
 
 #endif /* __ZLTEXTPOSITIONINDICATORINFO_H__ */
