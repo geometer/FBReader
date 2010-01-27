@@ -3,18 +3,21 @@ include $(ROOTDIR)/makefiles/arch/unix.mk
 ifeq "$(INSTALLDIR)" ""
   INSTALLDIR=$(ROOTDIR)/FBReader.app
 endif
-BINDIR=$(INSTALLDIR)/Contents/MacOS
-SHAREDIR=$(INSTALLDIR)/Contents/Share
+BINDIR = $(INSTALLDIR)/Contents/MacOS
+SHAREDIR = $(INSTALLDIR)/Contents/Share
 IMAGEDIR = $(SHAREDIR)/icons
 APPIMAGEDIR = $(SHAREDIR)/icons/%APPLICATION_NAME%
+
 BASEDIR = ~~/Contents/Share
+IMAGEDIR_MACRO = $(BASEDIR)/icons
+APPIMAGEDIR_MACRO = $(BASEDIR)/icons/%APPLICATION_NAME%
 
 ZLSHARED = no
 
-TOOLS_DIR = /Developer/usr/bin
-CC = $(TOOLS_DIR)/gcc-4.2
-AR = $(TOOLS_DIR)/ar rsu
-LD = $(TOOLS_DIR)/g++-4.2
+TOOLSPATH = /Developer/usr/bin
+CC = $(TOOLSPATH)/gcc-4.2
+AR = $(TOOLSPATH)/ar rsu
+LD = $(TOOLSPATH)/g++-4.2
 
 MACOS_VERSION = 10.5
 
@@ -30,6 +33,7 @@ CFLAGS = $(ARCH_FLAGS) $(CFLAGS_NOARCH)
 LDFLAGS = $(ARCH_FLAGS) \
 	-isysroot /Developer/SDKs/MacOSX$(MACOS_VERSION).sdk \
 	-mmacosx-version-min=$(MACOS_VERSION)
+EXTERNAL_INCLUDE = -I/usr/local/include
 EXTERNAL_LIBS = -liconv
 
 UILIBS = -framework Cocoa $(ROOTDIR)/zlibrary/ui/src/cocoa/application/CocoaWindow.o $(ROOTDIR)/zlibrary/ui/src/cocoa/library/ZLCocoaAppDelegate.o
