@@ -112,29 +112,91 @@
 		<node name="quit" value="Stäng" />
 	</node>
 	<node name="toolbar">
-		<node name="showReading" toBeTranslated="true" value="Show Reading Mode" />
-		<node name="showLibrary" value="Visa biblioteksträd">
+		<node name="showReading">
+			<node name="label" toBeTranslated="true" value="Read Book" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Mode" />
+		</node>
+		<node name="showLibrary">
+			<node name="label" toBeTranslated="true" value="Library" />
+			<node name="tooltip" value="Visa biblioteksträd" />
 			<node name="popup" toBeTranslated="true" value="Show Recent Books List" />
 		</node>
-		<node name="showRecent" value="Visa tidigare bokhistorik" />
-		<node name="byAuthor" toBeTranslated="true" value="Organize Books by Author" />
-		<node name="byTag" toBeTranslated="true" value="Organize Books by Tag" />
-		<node name="addBook" value="Lägg till fil till bibliotek" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Search in Network Libraries" />
-		<node name="searchOnNetwork" toBeTranslated="true" value="Network Search" />
-		<node name="advancedSearchOnNetwork" toBeTranslated="true" value="Advanced Network Search" />
-		<node name="gotoHome" value="Gå till början av text" />
-		<node name="undo" value="Gå bakåt" />
-		<node name="redo" value="Gå framåt" />
-		<node name="gotoPageNumberWithParameter" toBeTranslated="true" value="Go to Page" />
-		<node name="toc" value="Innehållsförteckning" />
-		<node name="search" value="Textsökning" />
-		<node name="findNext" value="Sök nästa" />
-		<node name="findPrevious" value="Sök föregående" />
-		<node name="bookInfo" value="Visa bokinformation" />
-		<node name="preferences" value="Visa inställningar" />
-		<node name="rotate" value="Rotera text" />
-		<node name="showHelp" value="Om FBReader" />
+		<node name="showRecent">
+			<node name="label" toBeTranslated="true" value="Recent Books" />
+			<node name="tooltip" value="Visa tidigare bokhistorik" />
+		</node>
+		<node name="byAuthor">
+			<node name="label" toBeTranslated="true" value="By Author" />
+			<node name="tooltip" toBeTranslated="true" value="Organize Books by Author" />
+		</node>
+		<node name="byTag">
+			<node name="label" toBeTranslated="true" value="By Tag" />
+			<node name="tooltip" toBeTranslated="true" value="Organize Books by Tag" />
+		</node>
+		<node name="addBook">
+			<node name="label" toBeTranslated="true" value="Add File" />
+			<node name="tooltip" value="Lägg till fil till bibliotek" />
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" toBeTranslated="true" value="Network" />
+			<node name="tooltip" toBeTranslated="true" value="Search in Network Libraries" />
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Simple Search" />
+			<node name="tooltip" toBeTranslated="true" value="Network Search" />
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="tooltip" toBeTranslated="true" value="Advanced Network Search" />
+		</node>
+		<node name="gotoHome">
+			<node name="label" toBeTranslated="true" value="Go to Start" />
+			<node name="tooltip" value="Gå till början av text" />
+		</node>
+		<node name="undo">
+			<node name="label" toBeTranslated="true" value="Go Back" />
+			<node name="tooltip" value="Gå bakåt" />
+		</node>
+		<node name="redo">
+			<node name="label" toBeTranslated="true" value="Go Forward" />
+			<node name="tooltip" value="Gå framåt" />
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" toBeTranslated="true" value="Go to Page" />
+			<node name="tooltip" toBeTranslated="true" value="Go to Page" />
+		</node>
+		<node name="toc">
+			<node name="label" toBeTranslated="true" value="TOC" />
+			<node name="tooltip" value="Innehållsförteckning" />
+		</node>
+		<node name="search">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="tooltip" value="Textsökning" />
+		</node>
+		<node name="findNext">
+			<node name="label" toBeTranslated="true" value="Next" />
+			<node name="tooltip" value="Sök nästa" />
+		</node>
+		<node name="findPrevious">
+			<node name="label" toBeTranslated="true" value="Previous" />
+			<node name="tooltip" value="Sök föregående" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="tooltip" value="Visa bokinformation" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Preferences" />
+			<node name="tooltip" value="Visa inställningar" />
+		</node>
+		<node name="rotate">
+			<node name="label" toBeTranslated="true" value="Rotate" />
+			<node name="tooltip" value="Rotera text" />
+		</node>
+		<node name="showHelp">
+			<node name="label" toBeTranslated="true" value="About" />
+			<node name="tooltip" value="Om FBReader" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
