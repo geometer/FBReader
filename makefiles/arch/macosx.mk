@@ -30,7 +30,6 @@ CFLAGS = $(ARCH_FLAGS) $(CFLAGS_NOARCH)
 LDFLAGS = $(ARCH_FLAGS) \
 	-isysroot /Developer/SDKs/MacOSX$(MACOS_VERSION).sdk \
 	-mmacosx-version-min=$(MACOS_VERSION)
-EXTERNAL_INCLUDE = -I$(ROOTDIR)/3rdparty/include
 EXTERNAL_LIBS = -liconv
 
 UILIBS = -framework Cocoa $(ROOTDIR)/zlibrary/ui/src/cocoa/application/CocoaWindow.o $(ROOTDIR)/zlibrary/ui/src/cocoa/library/ZLCocoaAppDelegate.o
