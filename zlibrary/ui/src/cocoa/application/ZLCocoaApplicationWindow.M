@@ -155,6 +155,7 @@ ZLViewWidget *ZLCocoaApplicationWindow::createViewWidget() {
 }
 
 void ZLCocoaApplicationWindow::close() {
+	[(NSWindow*)myWindow close];
 }
 
 void ZLCocoaApplicationWindow::grabAllKeys(bool) {

@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLApplication.h>
+
 #import "CocoaWindow.h"
 
 @implementation CocoaWindow
@@ -29,8 +31,14 @@
 		[self setFrameUsingName:windowFilename];
 		[self setFrameAutosaveName:windowFilename];
 		[self setAcceptsMouseMovedEvents:YES];
+		[self setDelegate:self];
 	}
 	return self;
+}
+
+- (BOOL)windowShouldClose:(id)sender {
+	ZLApplication::Instance().closeView();
+	return NO;
 }
 
 @end

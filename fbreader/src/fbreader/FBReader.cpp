@@ -143,6 +143,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::CANCEL, new CancelAction());
 	addAction(ActionCode::SHOW_HIDE_POSITION_INDICATOR, new ToggleIndicatorAction());
 	addAction(ActionCode::QUIT, new QuitAction());
+	addAction(ActionCode::FORCE_QUIT, new ForceQuitAction());
 	addAction(ActionCode::OPEN_PREVIOUS_BOOK, new OpenPreviousBookAction());
 	addAction(ActionCode::SHOW_HELP, new ShowHelpAction());
 	addAction(ActionCode::GOTO_NEXT_TOC_SECTION, new GotoNextTOCSectionAction());

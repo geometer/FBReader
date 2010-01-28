@@ -61,6 +61,7 @@ public:
 	static const std::string ADD_BOOK;
 	static const std::string ROTATE_SCREEN;
 	static const std::string QUIT;
+	static const std::string FORCE_QUIT;
 	static const std::string OPEN_PREVIOUS_BOOK;
 	static const std::string GOTO_NEXT_TOC_SECTION;
 	static const std::string GOTO_PREVIOUS_TOC_SECTION;
@@ -241,6 +242,12 @@ public:
 };
 
 class QuitAction : public ZLApplication::Action {
+
+public:
+	void run();
+};
+
+class ForceQuitAction : public ZLApplication::Action {
 
 public:
 	void run();

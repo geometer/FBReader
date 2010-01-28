@@ -288,6 +288,10 @@ void QuitAction::run() {
 	FBReader::Instance().closeView();
 }
 
+void ForceQuitAction::run() {
+	FBReader::Instance().quit();
+}
+
 bool GotoNextTOCSectionAction::isVisible() const {
 	FBReader &fbreader = FBReader::Instance();
 	if (fbreader.mode() != FBReader::BOOK_TEXT_MODE) {

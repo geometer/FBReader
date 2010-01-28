@@ -125,7 +125,6 @@ protected:
 
 	void setFullscreen(bool fullscreen);
 	bool isFullscreen() const;
-	void quit();
 
 public:
 	virtual ~ZLApplication();
@@ -148,6 +147,7 @@ public:
 	virtual shared_ptr<ZLKeyBindings> keyBindings();	
 	void doActionByKey(const std::string &key);
 
+	void quit();
 	virtual bool closeView();
 	virtual void openFile(const std::string &fileName);
 
