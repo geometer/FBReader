@@ -112,29 +112,91 @@
 		<node name="quit" value="أغلق" />
 	</node>
 	<node name="toolbar">
-		<node name="showReading" toBeTranslated="true" value="Show Reading Mode" />
-		<node name="showLibrary" value="اعرض شجرة المكتبة">
+		<node name="showReading">
+			<node name="label" toBeTranslated="true" value="Read Book" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Mode" />
+		</node>
+		<node name="showLibrary">
+			<node name="label" toBeTranslated="true" value="Library" />
+			<node name="tooltip" value="اعرض شجرة المكتبة" />
 			<node name="popup" toBeTranslated="true" value="Show Recent Books List" />
 		</node>
-		<node name="showRecent" value="اعرض قائمة آخر الكتب" />
-		<node name="byAuthor" toBeTranslated="true" value="Organize Books by Author" />
-		<node name="byTag" toBeTranslated="true" value="Organize Books by Tag" />
-		<node name="addBook" value="أضف الملف للمكتبة" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Search in Network Libraries" />
-		<node name="searchOnNetwork" toBeTranslated="true" value="Network Search" />
-		<node name="advancedSearchOnNetwork" toBeTranslated="true" value="Advanced Network Search" />
-		<node name="gotoHome" value="اذهب إلى بداية النص" />
-		<node name="undo" value="عد للخلف" />
-		<node name="redo" value="تقدّم للأمام" />
-		<node name="gotoPageNumberWithParameter" toBeTranslated="true" value="Go to Page" />
-		<node name="toc" value="جدول المحتويات" />
-		<node name="search" value="البحث في النص" />
-		<node name="findNext" value="ابحث عن التالي" />
-		<node name="findPrevious" value="ابحث عن السابق" />
-		<node name="bookInfo" value="اعرض حوار معلومات الكتاب" />
-		<node name="preferences" value="اعرض حوار التفضيلات" />
-		<node name="rotate" value="لف النص" />
-		<node name="showHelp" value="عن إف.بي.ريدر" />
+		<node name="showRecent">
+			<node name="label" toBeTranslated="true" value="Recent Books" />
+			<node name="tooltip" value="اعرض قائمة آخر الكتب" />
+		</node>
+		<node name="byAuthor">
+			<node name="label" toBeTranslated="true" value="By Author" />
+			<node name="tooltip" toBeTranslated="true" value="Organize Books by Author" />
+		</node>
+		<node name="byTag">
+			<node name="label" toBeTranslated="true" value="By Tag" />
+			<node name="tooltip" toBeTranslated="true" value="Organize Books by Tag" />
+		</node>
+		<node name="addBook">
+			<node name="label" toBeTranslated="true" value="Add File" />
+			<node name="tooltip" value="أضف الملف للمكتبة" />
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" toBeTranslated="true" value="Network" />
+			<node name="tooltip" toBeTranslated="true" value="Search in Network Libraries" />
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Simple Search" />
+			<node name="tooltip" toBeTranslated="true" value="Network Search" />
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="tooltip" toBeTranslated="true" value="Advanced Network Search" />
+		</node>
+		<node name="gotoHome">
+			<node name="label" toBeTranslated="true" value="Go to Start" />
+			<node name="tooltip" value="اذهب إلى بداية النص" />
+		</node>
+		<node name="undo">
+			<node name="label" toBeTranslated="true" value="Go Back" />
+			<node name="tooltip" value="عد للخلف" />
+		</node>
+		<node name="redo">
+			<node name="label" toBeTranslated="true" value="Go Forward" />
+			<node name="tooltip" value="تقدّم للأمام" />
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" toBeTranslated="true" value="Go to Page" />
+			<node name="tooltip" toBeTranslated="true" value="Go to Page" />
+		</node>
+		<node name="toc">
+			<node name="label" toBeTranslated="true" value="TOC" />
+			<node name="tooltip" value="جدول المحتويات" />
+		</node>
+		<node name="search">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="tooltip" value="البحث في النص" />
+		</node>
+		<node name="findNext">
+			<node name="label" toBeTranslated="true" value="Next" />
+			<node name="tooltip" value="ابحث عن التالي" />
+		</node>
+		<node name="findPrevious">
+			<node name="label" toBeTranslated="true" value="Previous" />
+			<node name="tooltip" value="ابحث عن السابق" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="tooltip" value="اعرض حوار معلومات الكتاب" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Preferences" />
+			<node name="tooltip" value="اعرض حوار التفضيلات" />
+		</node>
+		<node name="rotate">
+			<node name="label" toBeTranslated="true" value="Rotate" />
+			<node name="tooltip" value="لف النص" />
+		</node>
+		<node name="showHelp">
+			<node name="label" toBeTranslated="true" value="About" />
+			<node name="tooltip" value="عن إف.بي.ريدر" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">

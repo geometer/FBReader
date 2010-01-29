@@ -112,29 +112,91 @@
 		<node name="quit" value="Keluar" />
 	</node>
 	<node name="toolbar">
-		<node name="showReading" value="Tampilkan Mode Baca" />
-		<node name="showLibrary" value="Tampilkan Daftar Pustaka">
+		<node name="showReading">
+			<node name="label" toBeTranslated="true" value="Read Book" />
+			<node name="tooltip" value="Tampilkan Mode Baca" />
+		</node>
+		<node name="showLibrary">
+			<node name="label" toBeTranslated="true" value="Library" />
+			<node name="tooltip" value="Tampilkan Daftar Pustaka" />
 			<node name="popup" value="Tampilkan Daftar Buku-buku Sebelumnya" />
 		</node>
-		<node name="showRecent" value="Tampilkan Daftar Buku-buku Sebelumnya" />
-		<node name="byAuthor" value="Atur Buku-buku berdasarkan Pengarang" />
-		<node name="byTag" value="Atur Buku-buku berdasarkan Tag" />
-		<node name="addBook" value="Tambahkan Berkas ke Pustaka" />
-		<node name="showNetLibrary" value="Cari dalam Pustaka Jaringan" />
-		<node name="searchOnNetwork" value="Pencarian dalam Jaringan" />
-		<node name="advancedSearchOnNetwork" value="Pencarian dalam Jaringan Tingkat Lanjut" />
-		<node name="gotoHome" value="Ke Bagian Awal Teks" />
-		<node name="undo" value="Mundur" />
-		<node name="redo" value="Maju" />
-		<node name="gotoPageNumberWithParameter" value="Ke Halaman" />
-		<node name="toc" value="Daftart Isi" />
-		<node name="search" value="Pencarian Teks" />
-		<node name="findNext" value="Pencarian Maju" />
-		<node name="findPrevious" value="Pencarian Mundur" />
-		<node name="bookInfo" value="Tampilkan Dialog Informasi Buku" />
-		<node name="preferences" value="Tampilkan Dialog Pengaturan" />
-		<node name="rotate" value="Putar Layar" />
-		<node name="showHelp" value="Mengenai FBReader" />
+		<node name="showRecent">
+			<node name="label" toBeTranslated="true" value="Recent Books" />
+			<node name="tooltip" value="Tampilkan Daftar Buku-buku Sebelumnya" />
+		</node>
+		<node name="byAuthor">
+			<node name="label" toBeTranslated="true" value="By Author" />
+			<node name="tooltip" value="Atur Buku-buku berdasarkan Pengarang" />
+		</node>
+		<node name="byTag">
+			<node name="label" toBeTranslated="true" value="By Tag" />
+			<node name="tooltip" value="Atur Buku-buku berdasarkan Tag" />
+		</node>
+		<node name="addBook">
+			<node name="label" toBeTranslated="true" value="Add File" />
+			<node name="tooltip" value="Tambahkan Berkas ke Pustaka" />
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" toBeTranslated="true" value="Network" />
+			<node name="tooltip" value="Cari dalam Pustaka Jaringan" />
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Simple Search" />
+			<node name="tooltip" value="Pencarian dalam Jaringan" />
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="tooltip" value="Pencarian dalam Jaringan Tingkat Lanjut" />
+		</node>
+		<node name="gotoHome">
+			<node name="label" toBeTranslated="true" value="Go to Start" />
+			<node name="tooltip" value="Ke Bagian Awal Teks" />
+		</node>
+		<node name="undo">
+			<node name="label" toBeTranslated="true" value="Go Back" />
+			<node name="tooltip" value="Mundur" />
+		</node>
+		<node name="redo">
+			<node name="label" toBeTranslated="true" value="Go Forward" />
+			<node name="tooltip" value="Maju" />
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" toBeTranslated="true" value="Go to Page" />
+			<node name="tooltip" value="Ke Halaman" />
+		</node>
+		<node name="toc">
+			<node name="label" toBeTranslated="true" value="TOC" />
+			<node name="tooltip" value="Daftart Isi" />
+		</node>
+		<node name="search">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="tooltip" value="Pencarian Teks" />
+		</node>
+		<node name="findNext">
+			<node name="label" toBeTranslated="true" value="Next" />
+			<node name="tooltip" value="Pencarian Maju" />
+		</node>
+		<node name="findPrevious">
+			<node name="label" toBeTranslated="true" value="Previous" />
+			<node name="tooltip" value="Pencarian Mundur" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="tooltip" value="Tampilkan Dialog Informasi Buku" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Preferences" />
+			<node name="tooltip" value="Tampilkan Dialog Pengaturan" />
+		</node>
+		<node name="rotate">
+			<node name="label" toBeTranslated="true" value="Rotate" />
+			<node name="tooltip" value="Putar Layar" />
+		</node>
+		<node name="showHelp">
+			<node name="label" toBeTranslated="true" value="About" />
+			<node name="tooltip" value="Mengenai FBReader" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">

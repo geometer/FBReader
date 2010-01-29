@@ -112,29 +112,91 @@
 		<node name="quit" value="Fermer"/>
 	</node>
 	<node name="toolbar">
-		<node name="showReading" value="Afficher le mode de lecture"/>
-		<node name="showLibrary" value="Afficher l'arbre de la bibliothèque">
+		<node name="showReading">
+			<node name="label" toBeTranslated="true" value="Read Book" />
+			<node name="tooltip" value="Afficher le mode de lecture"/>
+		</node>
+		<node name="showLibrary">
+			<node name="label" toBeTranslated="true" value="Library" />
+			<node name="tooltip" value="Afficher l'arbre de la bibliothèque" />
 			<node name="popup" value="Afficher la liste des livres récents"/>
 		</node>
-		<node name="showRecent" value="Afficher la liste des livres récents"/>
-		<node name="byAuthor" value="Classer les livres par auteur"/>
-		<node name="byTag" value="Classer les livres par tag"/>
-		<node name="addBook" value="Ajouter un livre à la bibliothèque"/>
-		<node name="showNetLibrary" value="Recherche dans bibliothèques réseau"/>
-		<node name="searchOnNetwork" value="Recherche réseau"/>
-		<node name="advancedSearchOnNetwork" value="Recherche réseau avancée"/>
-		<node name="gotoHome" value="Aller au début du texte"/>
-		<node name="undo" value="Précédent"/>
-		<node name="redo" value="Suivant"/>
-		<node name="gotoPageNumberWithParameter" value="Aller page"/>
-		<node name="toc" value="Table des matières"/>
-		<node name="search" value="Rechercher"/>
-		<node name="findNext" value="Rechercher suivant"/>
-		<node name="findPrevious" value="Rechercher précédent"/>
-		<node name="bookInfo" value="Afficher les informations sur le livre"/>
-		<node name="preferences" value="Afficher les préférences"/>
-		<node name="rotate" value="Tourner l'écran"/>
-		<node name="showHelp" value="À propos de FBReader"/>
+		<node name="showRecent">
+			<node name="label" toBeTranslated="true" value="Recent Books" />
+			<node name="tooltip" value="Afficher la liste des livres récents"/>
+		</node>
+		<node name="byAuthor">
+			<node name="label" toBeTranslated="true" value="By Author" />
+			<node name="tooltip" value="Classer les livres par auteur"/>
+		</node>
+		<node name="byTag">
+			<node name="label" toBeTranslated="true" value="By Tag" />
+			<node name="tooltip" value="Classer les livres par tag"/>
+		</node>
+		<node name="addBook">
+			<node name="label" toBeTranslated="true" value="Add File" />
+			<node name="tooltip" value="Ajouter un livre à la bibliothèque"/>
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" toBeTranslated="true" value="Network" />
+			<node name="tooltip" value="Recherche dans bibliothèques réseau"/>
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Simple Search" />
+			<node name="tooltip" value="Recherche réseau"/>
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="tooltip" value="Recherche réseau avancée"/>
+		</node>
+		<node name="gotoHome">
+			<node name="label" toBeTranslated="true" value="Go to Start" />
+			<node name="tooltip" value="Aller au début du texte"/>
+		</node>
+		<node name="undo">
+			<node name="label" toBeTranslated="true" value="Go Back" />
+			<node name="tooltip" value="Précédent"/>
+		</node>
+		<node name="redo">
+			<node name="label" toBeTranslated="true" value="Go Forward" />
+			<node name="tooltip" value="Suivant"/>
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" toBeTranslated="true" value="Go to Page" />
+			<node name="tooltip" value="Aller page"/>
+		</node>
+		<node name="toc">
+			<node name="label" toBeTranslated="true" value="TOC" />
+			<node name="tooltip" value="Table des matières"/>
+		</node>
+		<node name="search">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="tooltip" value="Rechercher"/>
+		</node>
+		<node name="findNext">
+			<node name="label" toBeTranslated="true" value="Next" />
+			<node name="tooltip" value="Rechercher suivant"/>
+		</node>
+		<node name="findPrevious">
+			<node name="label" toBeTranslated="true" value="Previous" />
+			<node name="tooltip" value="Rechercher précédent"/>
+		</node>
+		<node name="bookInfo">
+			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="tooltip" value="Afficher les informations sur le livre"/>
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Preferences" />
+			<node name="tooltip" value="Afficher les préférences"/>
+		</node>
+		<node name="rotate">
+			<node name="label" toBeTranslated="true" value="Rotate" />
+			<node name="tooltip" value="Tourner l'écran"/>
+		</node>
+		<node name="showHelp">
+			<node name="label" toBeTranslated="true" value="About" />
+			<node name="tooltip" value="À propos de FBReader"/>
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">

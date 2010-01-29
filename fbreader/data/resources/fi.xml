@@ -112,29 +112,91 @@
 		<node name="quit" value="Sulje" />
 	</node>
 	<node name="toolbar">
-		<node name="showReading" value="Näytä lukutila" />
-		<node name="showLibrary" value="Näytä kirjastopuu">
+		<node name="showReading">
+			<node name="label" toBeTranslated="true" value="Read Book" />
+			<node name="tooltip" value="Näytä lukutila" />
+		</node>
+		<node name="showLibrary">
+			<node name="label" toBeTranslated="true" value="Library" />
+			<node name="tooltip" value="Näytä kirjastopuu" />
 			<node name="popup" value="Näytä viimeisimmät kirjat lista" />
 		</node>
-		<node name="showRecent" value="Näytä viimeisimmät kirjat" />
-		<node name="byAuthor" value="Lajittele kirjat tekijän mukaan" />
-		<node name="byTag" value="Lajittele kirjat luokan mukaan" />
-		<node name="addBook" value="Lisää tiedosto kirjastoon" />
-		<node name="showNetLibrary" value="Etsi verkkokirjastoista" />
-		<node name="searchOnNetwork" value="Verkkohaku" />
-		<node name="advancedSearchOnNetwork" value="Tarkennettu verkkohaku" />
-		<node name="gotoHome" value="Siirry tekstin alkuun" />
-		<node name="undo" value="Siirry edelliseen kohtaan" />
-		<node name="redo" value="Siirry eteenpäin" />
-		<node name="gotoPageNumberWithParameter" value="Siirry sivulle" />
-		<node name="toc" value="Sisällysluettelo" />
-		<node name="search" value="Etsi teksti" />
-		<node name="findNext" value="Etsi seuraava" />
-		<node name="findPrevious" value="Etsi edellinen" />
-		<node name="bookInfo" value="Näytä kirjan tiedot valintaikkuna" />
-		<node name="preferences" value="Näytä asetukset valintaikkuna" />
-		<node name="rotate" value="Kierrä teksti" />
-		<node name="showHelp" value="Tietoja FBReaderista" />
+		<node name="showRecent">
+			<node name="label" toBeTranslated="true" value="Recent Books" />
+			<node name="tooltip" value="Näytä viimeisimmät kirjat" />
+		</node>
+		<node name="byAuthor">
+			<node name="label" toBeTranslated="true" value="By Author" />
+			<node name="tooltip" value="Lajittele kirjat tekijän mukaan" />
+		</node>
+		<node name="byTag">
+			<node name="label" toBeTranslated="true" value="By Tag" />
+			<node name="tooltip" value="Lajittele kirjat luokan mukaan" />
+		</node>
+		<node name="addBook">
+			<node name="label" toBeTranslated="true" value="Add File" />
+			<node name="tooltip" value="Lisää tiedosto kirjastoon" />
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" toBeTranslated="true" value="Network" />
+			<node name="tooltip" value="Etsi verkkokirjastoista" />
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Simple Search" />
+			<node name="tooltip" value="Verkkohaku" />
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="tooltip" value="Tarkennettu verkkohaku" />
+		</node>
+		<node name="gotoHome">
+			<node name="label" toBeTranslated="true" value="Go to Start" />
+			<node name="tooltip" value="Siirry tekstin alkuun" />
+		</node>
+		<node name="undo">
+			<node name="label" toBeTranslated="true" value="Go Back" />
+			<node name="tooltip" value="Siirry edelliseen kohtaan" />
+		</node>
+		<node name="redo">
+			<node name="label" toBeTranslated="true" value="Go Forward" />
+			<node name="tooltip" value="Siirry eteenpäin" />
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" toBeTranslated="true" value="Go to Page" />
+			<node name="tooltip" value="Siirry sivulle" />
+		</node>
+		<node name="toc">
+			<node name="label" toBeTranslated="true" value="TOC" />
+			<node name="tooltip" value="Sisällysluettelo" />
+		</node>
+		<node name="search">
+			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="tooltip" value="Etsi teksti" />
+		</node>
+		<node name="findNext">
+			<node name="label" toBeTranslated="true" value="Next" />
+			<node name="tooltip" value="Etsi seuraava" />
+		</node>
+		<node name="findPrevious">
+			<node name="label" toBeTranslated="true" value="Previous" />
+			<node name="tooltip" value="Etsi edellinen" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="tooltip" value="Näytä kirjan tiedot valintaikkuna" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Preferences" />
+			<node name="tooltip" value="Näytä asetukset valintaikkuna" />
+		</node>
+		<node name="rotate">
+			<node name="label" toBeTranslated="true" value="Rotate" />
+			<node name="tooltip" value="Kierrä teksti" />
+		</node>
+		<node name="showHelp">
+			<node name="label" toBeTranslated="true" value="About" />
+			<node name="tooltip" value="Tietoja FBReaderista" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
