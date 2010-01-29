@@ -1,5 +1,6 @@
-0.12.2: выключение на windows
+DONE: выключение на windows
 0.12.2: размер окошка в windows
+0.12.2: проапдейтить все локализации
 
 DONE	не можем открыть каталог litres в отсутствие сети - выдается сообщение сетевой ошибки
 DONE	BUG: не скачивается файл жанров, если в начальный момент не было сети
@@ -20,7 +21,7 @@ DELAYED (can't reproduce) X-System problem - fix set/restore window position (in
 0.14.0: обрабатывать type="text/html"
 0.14.0: аннотации к книгам в library/network view
 0.14.0: вернуть "продвинутые настройки" прокрутки
-0.14.0: update man page (Lithuanian localization)
+DONE: update man page (Lithuanian localization)
 0.14.0: доделать поддержку manybooks.net
 
 0.14.1: интеграция с books.google.com?
