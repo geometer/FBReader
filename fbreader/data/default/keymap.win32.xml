@@ -21,6 +21,7 @@
 	<binding key="&lt;Home&gt;" action="gotoSectionStart"/>
 	<binding key="&lt;End&gt;" action="gotoSectionEnd"/>
 	<binding key="&lt;Esc&gt;" action="cancel"/>
+	<binding key="&lt;Alt&gt;+&lt;F4&gt;" action="quit"/>
 	<binding key="&lt;=&gt;" action="increaseFont"/>
 	<binding key="&lt;-&gt;" action="decreaseFont"/>
 	<binding key="&lt;D&gt;" action="toggleIndicator"/>

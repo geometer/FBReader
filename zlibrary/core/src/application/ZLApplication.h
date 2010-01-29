@@ -32,6 +32,7 @@
 #include <ZLMessage.h>
 #include <ZLView.h>
 
+class ZLApplicationWindow;
 class ZLViewWidget;
 class ZLPaintContext;
 class ZLKeyBindings;
@@ -175,14 +176,14 @@ private:
 	const ZLMenubar &menubar() const;
 
 private:
-	ZLViewWidget *myViewWidget;
+	shared_ptr<ZLViewWidget> myViewWidget;
 	shared_ptr<ZLView> myInitialView;
 	std::map<std::string,shared_ptr<Action> > myActionMap;
 	mutable shared_ptr<ZLToolbar> myToolbar;
 	mutable shared_ptr<ZLToolbar> myFullscreenToolbar;
 	mutable shared_ptr<ZLMenubar> myMenubar;
 	shared_ptr<ZLPaintContext> myContext;
-	class ZLApplicationWindow *myWindow;
+	shared_ptr <ZLApplicationWindow> myWindow;
 	ZLTime myLastKeyActionTime;
 	shared_ptr<ZLMessageHandler> myPresentWindowHandler;
 

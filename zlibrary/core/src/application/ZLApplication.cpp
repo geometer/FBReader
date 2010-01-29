@@ -61,9 +61,7 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	KeyboardControlOption(ZLCategoryKey::CONFIG, KEYBOARD, FULL_CONTROL, false),
 	ConfigAutoSavingOption(ZLCategoryKey::CONFIG, CONFIG, AUTO_SAVE, true),
 	ConfigAutoSaveTimeoutOption(ZLCategoryKey::CONFIG, CONFIG, TIMEOUT, 1, 6000, 30),
-	KeyDelayOption(ZLCategoryKey::CONFIG, "Options", "KeyDelay", 0, 5000, 250),
-	myViewWidget(0),
-	myWindow(0) {
+	KeyDelayOption(ZLCategoryKey::CONFIG, "Options", "KeyDelay", 0, 5000, 250) {
 	ourInstance = this;
 	myContext = ZLibrary::createContext();
 	if (ConfigAutoSavingOption.value()) {
@@ -79,14 +77,10 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 }
 
 ZLApplication::~ZLApplication() {
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		if (KeyboardControlOption.value()) {
 			grabAllKeys(false);
 		}
-		delete myWindow;
-	}
-	if (myViewWidget != 0) {
-		delete myViewWidget;
 	}
 	ourInstance = 0;
 }
@@ -116,7 +110,7 @@ void ZLApplication::setView(shared_ptr<ZLView> view) {
 		return;
 	}
 
-	if (myViewWidget != 0) {
+	if (!myViewWidget.isNull()) {
 		myViewWidget->setView(view);
 		resetWindowCaption();
 		refreshWindow();
@@ -126,20 +120,20 @@ void ZLApplication::setView(shared_ptr<ZLView> view) {
 }
 
 shared_ptr<ZLView> ZLApplication::currentView() const {
-	return (myViewWidget != 0) ? myViewWidget->view() : 0;
+	return myViewWidget.isNull() ? 0 : myViewWidget->view();
 }
 
 void ZLApplication::refreshWindow() {
-	if (myViewWidget != 0) {
+	if (!myViewWidget.isNull()) {
 		myViewWidget->repaint();
 	}
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		myWindow->refresh();
 	}
 }
 
 void ZLApplication::presentWindow() {
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		myWindow->present();
 	}
 }
@@ -173,7 +167,7 @@ void ZLApplication::doAction(const std::string &actionId) {
 }
 
 void ZLApplication::resetWindowCaption() {
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		if ((currentView() == 0) || (currentView()->caption().empty())) {
 			myWindow->setCaption(ZLibrary::ApplicationName());
 		} else {
@@ -198,7 +192,7 @@ bool ZLApplication::Action::useKeyDelay() const {
 }
 
 void ZLApplication::trackStylus(bool track) {
-	if (myViewWidget != 0) {
+	if (!myViewWidget.isNull()) {
 		myViewWidget->trackStylus(track);
 	}
 }
@@ -218,29 +212,29 @@ void ZLApplication::doActionByKey(const std::string &key) {
 }
 
 void ZLApplication::grabAllKeys(bool grab) {
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		myWindow->grabAllKeys(grab);
 	}
 }
 
 void ZLApplication::setHyperlinkCursor(bool hyperlink) {
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		myWindow->setHyperlinkCursor(hyperlink);
 	}
 }
 
 bool ZLApplication::isFullscreen() const {
-	return (myWindow != 0) && myWindow->isFullscreen();
+	return !myWindow.isNull() && myWindow->isFullscreen();
 }
 
 void ZLApplication::setFullscreen(bool fullscreen) {
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		myWindow->setFullscreen(fullscreen);
 	}
 }
 
 void ZLApplication::quit() {
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		myWindow->close();
 	}
 }
@@ -277,19 +271,19 @@ bool ZLApplication::isViewFinal() const {
 }
 
 void ZLApplication::setVisualParameter(const std::string &id, const std::string &value) {
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		myWindow->setVisualParameter(id, value);
 	}
 }
 
 void ZLApplication::setParameterValueList(const std::string &id, const std::vector<std::string> &values) {
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		myWindow->setParameterValueList(id, values);
 	}
 }
 
 const std::string &ZLApplication::visualParameter(const std::string &id) {
-	if (myWindow != 0) {
+	if (!myWindow.isNull()) {
 		return myWindow->visualParameter(id);
 	}
 	static const std::string EMPTY;
@@ -297,7 +291,7 @@ const std::string &ZLApplication::visualParameter(const std::string &id) {
 }
 
 ZLView::Angle ZLApplication::rotation() const {
-	return (myViewWidget != 0) ? myViewWidget->rotation() : ZLView::DEGREES0;
+	return myViewWidget.isNull() ? ZLView::DEGREES0 : myViewWidget->rotation();
 }
 
 shared_ptr<ZLKeyBindings> ZLApplication::keyBindings() {

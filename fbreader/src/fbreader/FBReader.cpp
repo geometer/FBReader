@@ -97,7 +97,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBookAlreadyOpen(false),
 	myActionOnCancel(UNFULLSCREEN) {
 
-	myModel = 0;
 	myBookTextView = new BookTextView(*context());
 	myFootnoteView = new FootnoteView(*context());
 	myContentsView = new ContentsView(*context());
@@ -162,9 +161,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 }
 
 FBReader::~FBReader() {
-	if (myModel != 0) {
-		delete myModel;
-	}
 	ZLTextStyleCollection::deleteInstance();
 	PluginCollection::deleteInstance();
 	ZLTextHyphenator::deleteInstance();
@@ -283,9 +279,7 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		bookTextView.setModel(0, 0);
 		bookTextView.setContentsModel(0);
 		contentsView.setModel(0);
-		if (myModel != 0) {
-			delete myModel;
-		}
+		myModel.reset();
 		myModel = new BookModel(book);
 		ZLTextHyphenator::Instance().load(book->language());
 		bookTextView.setModel(myModel->bookTextModel(), book);
@@ -322,7 +316,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 	if (type == "external") {
 		openLinkInBrowser(id);
 	} else if (type == "internal") {
-		if ((myMode == BOOK_TEXT_MODE) && (myModel != 0)) {
+		if (myMode == BOOK_TEXT_MODE && !myModel.isNull()) {
 			BookModel::Label label = myModel->label(id);
 			if (!label.Model.isNull()) {
 				if (label.Model == myModel->bookTextModel()) {

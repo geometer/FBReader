@@ -300,6 +300,8 @@ void ZLWin32ApplicationWindow::processAllEvents() {
 
 ZLWin32ApplicationWindow::~ZLWin32ApplicationWindow() {
 	ourApplicationWindow = 0;
+	ZLWin32DialogManager &dManager = (ZLWin32DialogManager&)ZLWin32DialogManager::Instance();
+	dManager.removeApplicationWindow();
 }
 
 void ZLWin32ApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {

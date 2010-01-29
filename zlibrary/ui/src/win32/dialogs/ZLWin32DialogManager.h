@@ -36,6 +36,7 @@ private:
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
+	void removeApplicationWindow() const;
 
 	shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const;
 	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &id, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;

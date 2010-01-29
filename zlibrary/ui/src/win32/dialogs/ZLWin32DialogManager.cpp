@@ -31,6 +31,10 @@ void ZLWin32DialogManager::createApplicationWindow(ZLApplication *application) c
 	myApplicationWindow = new ZLWin32ApplicationWindow(application);
 }
 
+void ZLWin32DialogManager::removeApplicationWindow() const {
+	myApplicationWindow = 0;
+}
+
 shared_ptr<ZLDialog> ZLWin32DialogManager::createDialog(const ZLResourceKey &key) const {
 	return new ZLWin32Dialog(*myApplicationWindow, resource()[key]);
 }

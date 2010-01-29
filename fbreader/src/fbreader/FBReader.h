@@ -144,7 +144,7 @@ private:
 
 	ZLTime myLastScrollingTime;
 
-	BookModel *myModel;
+	shared_ptr<BookModel> myModel;
 
 	shared_ptr<ZLKeyBindings> myBindings0;
 	shared_ptr<ZLKeyBindings> myBindings90;
