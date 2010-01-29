@@ -50,9 +50,12 @@ private:
 		READ_SEARCH_PART,
 		READ_IGNORED,
 		READ_IGNORED_LINK,
+		READ_AUTHENTICATION_DESCRIPTION,
+		READ_AUTHENTICATION_PART,
 	} myState;
 	std::string myLinkType;
 	std::string mySearchPartName;
+	std::string myAuthenticationPartName;
 
 	std::string mySiteName;
 	std::string myTitle;
@@ -65,6 +68,9 @@ private:
 
 	std::string myIgnoredLink;
 	std::set<std::string> myIgnoredFeeds;
+
+	std::string myAuthenticationType;
+	std::map<std::string,std::string> myAuthenticationParts;
 };
 
 #endif /* __OPDSLINKREADER_H__ */

@@ -16,4 +16,11 @@
 		<link>http://feedbooks.com/news/catalog.atom</link>
 		<link>https://feedbooks.com/user/profile.atom</link>
 	</ignored-feeds>
+	<authentication type="post">
+		<part name="login">user[username]</part>
+		<part name="password">user[password]</part>
+		<part name="signInUrl">https://www.feedbooks.com/user/signin</part>
+		<part name="signOutUrl">https://www.feedbooks.com/user/signout</part>
+		<part name="accountUrl">https://www.feedbooks.com/user/profile.atom</part>
+	</authentication>
 </catalog>

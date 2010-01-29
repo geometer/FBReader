@@ -25,6 +25,9 @@
 
 #include "../NetworkLink.h"
 
+
+class NetworkAuthenticationManager;
+
 class OPDSLink : public NetworkLink {
 
 private:
@@ -51,6 +54,7 @@ public:
 		const std::string &annotationParameter
 	);
 	void setIgnoredFeeds(const std::set<std::string> &ignoredFeeds);
+	void setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> mgr);
 
 private:
 	const std::string searchURL(const std::string &pattern) const;
@@ -67,6 +71,8 @@ private:
 		const std::string &annotation);
 	shared_ptr<ZLExecutionData> resume(NetworkOperationData &result);
 
+	shared_ptr<NetworkAuthenticationManager> authenticationManager();
+
 friend class OPDSCatalogItem;
 
 private:
@@ -77,6 +83,7 @@ private:
 	const std::string myIconName;
 	shared_ptr<AdvancedSearch> myAdvancedSearch;
 	std::set<std::string> myIgnoredFeeds;
+	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
 };
 
 #endif /* __OPDSLINK_H__ */

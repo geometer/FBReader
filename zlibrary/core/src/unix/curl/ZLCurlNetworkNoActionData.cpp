@@ -19,10 +19,20 @@
 
 #include "ZLCurlNetworkNoActionData.h"
 
+static size_t handleData(void *ptr, size_t size, size_t nmemb, void *data) {
+	return size * nmemb;
+}
+
+
 ZLCurlNetworkNoActionData::ZLCurlNetworkNoActionData(const std::string &url, const std::string &sslCertificate) : ZLCurlNetworkData(url, sslCertificate) {
 }
 
 bool ZLCurlNetworkNoActionData::doBefore() {
+	CURL *h = handle();
+	if (h != 0) {
+		curl_easy_setopt(h, CURLOPT_WRITEFUNCTION, handleData);
+		curl_easy_setopt(h, CURLOPT_WRITEDATA, this);
+	}
 	return true;
 }
 

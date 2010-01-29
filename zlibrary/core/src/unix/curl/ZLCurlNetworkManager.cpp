@@ -90,7 +90,10 @@ void ZLCurlNetworkManager::setStandardOptions(CURL *handle, const std::string &p
 	curl_easy_setopt(handle, CURLOPT_CONNECTTIMEOUT, ConnectTimeoutOption().value());
 	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 1L);
 	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYHOST, 2L);
-	curl_easy_setopt(handle, CURLOPT_COOKIEJAR, CookiesPath().c_str());
+
+	const std::string cookies = CookiesPath();
+	curl_easy_setopt(handle, CURLOPT_COOKIEFILE, cookies.c_str());
+	curl_easy_setopt(handle, CURLOPT_COOKIEJAR, cookies.c_str());
 }
 
 std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {

@@ -19,6 +19,7 @@
 
 #include "OPDSLinkReader.h"
 #include "OPDSLink.h"
+#include "OPDSAuthenticationManager.h"
 
 OPDSLinkReader::OPDSLinkReader() : myState(READ_NOTHING) {
 }
@@ -45,6 +46,20 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 		);
 	}
 	opdsLink->setIgnoredFeeds(myIgnoredFeeds);
+	if (!myAuthenticationType.empty()) {
+		shared_ptr<NetworkAuthenticationManager> mgr;
+		if (myAuthenticationType == "post") {
+			mgr = new OPDSAuthenticationManager(
+				mySiteName,
+				myAuthenticationParts["login"],
+				myAuthenticationParts["password"],
+				myAuthenticationParts["signInUrl"],
+				myAuthenticationParts["signOutUrl"],
+				myAuthenticationParts["accountUrl"]
+			);
+		}
+		opdsLink->setAuthenticationManager(mgr);
+	}
 	return opdsLink;
 }
 
@@ -56,6 +71,7 @@ static const std::string TAG_ICON = "icon";
 static const std::string TAG_SEARCH_DESCRIPTION = "advancedSearch";
 static const std::string TAG_PART = "part";
 static const std::string TAG_IGNORED_FEEDS = "ignored-feeds";
+static const std::string TAG_AUTHENTICATION = "authentication";
 
 void OPDSLinkReader::startElementHandler(const char *tag, const char **attributes) {
 	if (TAG_SITE == tag) {
@@ -89,12 +105,26 @@ void OPDSLinkReader::startElementHandler(const char *tag, const char **attribute
 		}
 	} else if (TAG_IGNORED_FEEDS == tag) {
 		myState = READ_IGNORED;
+	} else if (TAG_AUTHENTICATION == tag) {
+		const char *authenticationType = attributeValue(attributes, "type");
+		if (authenticationType != 0) {
+			myAuthenticationType = authenticationType;
+			myState = READ_AUTHENTICATION_DESCRIPTION;
+		}
+	} else if (myState == READ_AUTHENTICATION_DESCRIPTION && TAG_PART == tag) {
+		const char *name = attributeValue(attributes, "name");
+		if (name != 0) {
+			myAuthenticationPartName = name;
+			myState = READ_AUTHENTICATION_PART;
+		}
 	}
 }
 
 void OPDSLinkReader::endElementHandler(const char *tag) {
 	if (myState == READ_SEARCH_PART) {
 		myState = READ_SEARCH_DESCRIPTION;
+	} else if (myState == READ_AUTHENTICATION_PART) {
+		myState = READ_AUTHENTICATION_DESCRIPTION;
 	} else if (myState == READ_IGNORED_LINK) {
 		myIgnoredFeeds.insert(myIgnoredLink);
 		myState = READ_IGNORED;
@@ -131,6 +161,11 @@ void OPDSLinkReader::characterDataHandler(const char *text, size_t len) {
 			break;
 		case READ_IGNORED_LINK:
 			myIgnoredLink.append(text, len);
+			break;
+		case READ_AUTHENTICATION_DESCRIPTION:
+			break;
+		case READ_AUTHENTICATION_PART:
+			myAuthenticationParts[myAuthenticationPartName].append(text, len);
 			break;
 	}
 }

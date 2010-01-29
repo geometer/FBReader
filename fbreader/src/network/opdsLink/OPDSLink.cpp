@@ -27,6 +27,7 @@
 #include "OPDSCatalogItem.h"
 
 #include "../NetworkOperationData.h"
+#include "../NetworkAuthenticationManager.h"
 #include "../opds/OPDSXMLParser.h"
 #include "../opds/NetworkOPDSFeedReader.h"
 
@@ -160,6 +161,11 @@ void OPDSLink::setIgnoredFeeds(const std::set<std::string> &ignoredFeeds) {
 	myIgnoredFeeds = ignoredFeeds;
 }
 
+void OPDSLink::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> mgr) {
+	myAuthenticationManager = mgr;
+}
+
+
 shared_ptr<NetworkLibraryItem> OPDSLink::libraryItem() {
 	return new OPDSCatalogItem(
 		*this,
@@ -205,4 +211,8 @@ shared_ptr<ZLExecutionData> OPDSLink::resume(NetworkOperationData &data) {
 	const std::string url = data.ResumeURI;
 	data.clear();
 	return createNetworkData(url, data);
+}
+
+shared_ptr<NetworkAuthenticationManager> OPDSLink::authenticationManager() {
+	return myAuthenticationManager;
 }

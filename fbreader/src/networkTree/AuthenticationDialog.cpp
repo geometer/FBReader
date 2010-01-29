@@ -135,17 +135,19 @@ bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr) {
 		if (authoriser.hasErrors()) {
 			errorMessage = authoriser.errorMessage();
 			mgr.logOut();
-		} else {
+			continue;
+		}
+		if (mgr.needsInitialization()) {
 			InitializeAuthenticationManagerRunnable initializer(mgr);
 			initializer.executeWithUI();
 			if (initializer.hasErrors()) {
 				errorMessage = initializer.errorMessage();
 				mgr.logOut();
-			} else {
-				userList.saveUser(mgr.currentUserName());
-				return true;
+				continue;
 			}
 		}
+		userList.saveUser(mgr.currentUserName());
+		return true;
 	}
 }
 

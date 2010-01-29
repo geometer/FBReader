@@ -23,6 +23,15 @@
 #include "ZLCurlNetworkPostFormData.h"
 
 
+static size_t handleHeader(void *ptr, size_t size, size_t nmemb, void *stream) {
+	return size * nmemb;
+}
+
+static size_t handleData(void *ptr, size_t size, size_t nmemb, void *data) {
+	return size * nmemb;
+}
+
+
 ZLCurlNetworkPostFormData::ZLCurlNetworkPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData) : 
 	ZLCurlNetworkData(url) {
 	init(formData);
@@ -34,6 +43,14 @@ ZLCurlNetworkPostFormData::ZLCurlNetworkPostFormData(const std::string &url, con
 }
 
 void ZLCurlNetworkPostFormData::init(const std::vector<std::pair<std::string, std::string> > &formData) {
+	CURL *h = handle();
+	if (h != 0) {
+		curl_easy_setopt(h, CURLOPT_HEADERFUNCTION, handleHeader);
+		curl_easy_setopt(h, CURLOPT_WRITEHEADER, this);
+		curl_easy_setopt(h, CURLOPT_WRITEFUNCTION, handleData);
+		curl_easy_setopt(h, CURLOPT_WRITEDATA, this);
+	}
+
 	myPostItem = 0;
 	myLastItem = 0;
 	for (size_t i = 0; i < formData.size(); ++i) {
@@ -43,8 +60,8 @@ void ZLCurlNetworkPostFormData::init(const std::vector<std::pair<std::string, st
 			return;
 		}
 	}
-	if (myPostItem != 0 && handle() != 0) {
-		curl_easy_setopt(handle(), CURLOPT_HTTPPOST, myPostItem);
+	if (myPostItem != 0 && h != 0) {
+		curl_easy_setopt(h, CURLOPT_HTTPPOST, myPostItem);
 	}
 }
 
