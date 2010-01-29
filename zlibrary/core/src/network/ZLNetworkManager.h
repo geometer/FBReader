@@ -30,6 +30,7 @@
 class ZLNetworkData;
 class ZLOutputStream;
 class ZLXMLReader;
+class ZLNetworkReader;
 
 class ZLNetworkManager : public ZLExecutionData::Runner {
 
@@ -83,8 +84,11 @@ public:
 	virtual shared_ptr<ZLExecutionData> createXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader) const = 0;
 	virtual shared_ptr<ZLExecutionData> createXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) const = 0;
 
-	virtual shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData) const = 0;
-	virtual shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData) const = 0;
+	virtual shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const = 0;
+	virtual shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const = 0;
+
+	virtual shared_ptr<ZLExecutionData> createReadResponseData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLNetworkReader> reader) const = 0;
+	virtual shared_ptr<ZLExecutionData> createReadResponseData(const std::string &url, shared_ptr<ZLNetworkReader> reader) const = 0;
 
 private:
 	mutable shared_ptr<ZLIntegerRangeOption> myConnectTimeoutOption;

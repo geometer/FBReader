@@ -44,8 +44,11 @@ private:
 	shared_ptr<ZLExecutionData> createXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader) const;
 	shared_ptr<ZLExecutionData> createXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) const;
 
-	shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData) const;
-	shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData) const;
+	shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const;
+	shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const;
+
+	shared_ptr<ZLExecutionData> createReadResponseData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLNetworkReader> reader) const;
+	shared_ptr<ZLExecutionData> createReadResponseData(const std::string &url, shared_ptr<ZLNetworkReader> reader) const;
 
 private:
 	void setStandardOptions(CURL *handle, const std::string &proxy) const;

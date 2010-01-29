@@ -17,40 +17,23 @@
  * 02110-1301, USA.
  */
 
-#include <ZLLogger.h>
+#include <ZLNetworkReader.h>
 #include <ZLNetworkUtil.h>
 
 #include "ZLCurlNetworkPostFormData.h"
 
 
-static size_t handleHeader(void *ptr, size_t size, size_t nmemb, void *stream) {
-	return size * nmemb;
-}
-
-static size_t handleData(void *ptr, size_t size, size_t nmemb, void *data) {
-	return size * nmemb;
-}
-
-
-ZLCurlNetworkPostFormData::ZLCurlNetworkPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData) : 
-	ZLCurlNetworkData(url) {
+ZLCurlNetworkPostFormData::ZLCurlNetworkPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) : 
+	ZLCurlNetworkReadResponseData(url, reader) {
 	init(formData);
 }
 
-ZLCurlNetworkPostFormData::ZLCurlNetworkPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData) : 
-	ZLCurlNetworkData(url, sslCertificate) {
+ZLCurlNetworkPostFormData::ZLCurlNetworkPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) : 
+	ZLCurlNetworkReadResponseData(url, sslCertificate, reader) {
 	init(formData);
 }
 
 void ZLCurlNetworkPostFormData::init(const std::vector<std::pair<std::string, std::string> > &formData) {
-	CURL *h = handle();
-	if (h != 0) {
-		curl_easy_setopt(h, CURLOPT_HEADERFUNCTION, handleHeader);
-		curl_easy_setopt(h, CURLOPT_WRITEHEADER, this);
-		curl_easy_setopt(h, CURLOPT_WRITEFUNCTION, handleData);
-		curl_easy_setopt(h, CURLOPT_WRITEDATA, this);
-	}
-
 	myPostItem = 0;
 	myLastItem = 0;
 	for (size_t i = 0; i < formData.size(); ++i) {
@@ -60,21 +43,26 @@ void ZLCurlNetworkPostFormData::init(const std::vector<std::pair<std::string, st
 			return;
 		}
 	}
-	if (myPostItem != 0 && h != 0) {
-		curl_easy_setopt(h, CURLOPT_HTTPPOST, myPostItem);
-	}
 }
 
 ZLCurlNetworkPostFormData::~ZLCurlNetworkPostFormData() {
 	if (myPostItem != 0) {
 		curl_formfree(myPostItem);
 		myPostItem = 0;
+		myLastItem = 0;
 	}
 }
 
 bool ZLCurlNetworkPostFormData::doBefore() {
-	return errorMessage().empty();
-}
+	if (!errorMessage().empty()) {
+		return false;
+	}
 
-void ZLCurlNetworkPostFormData::doAfter(bool) {
+	CURL *h = handle();
+
+	if (myPostItem != 0 && h != 0) {
+		curl_easy_setopt(h, CURLOPT_HTTPPOST, myPostItem);
+	}
+
+	return ZLCurlNetworkReadResponseData::doBefore();
 }

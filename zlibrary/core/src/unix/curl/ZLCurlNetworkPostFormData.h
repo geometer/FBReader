@@ -22,17 +22,18 @@
 
 #include <string>
 
-#include "ZLCurlNetworkData.h"
+#include "ZLCurlNetworkReadResponseData.h"
 
-class ZLCurlNetworkPostFormData : public ZLCurlNetworkData {
+class ZLNetworkReader;
+
+class ZLCurlNetworkPostFormData : public ZLCurlNetworkReadResponseData {
 
 public:
-	ZLCurlNetworkPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData);
-	ZLCurlNetworkPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData);
+	ZLCurlNetworkPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader);
+	ZLCurlNetworkPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader);
 	~ZLCurlNetworkPostFormData();
 
 	bool doBefore();
-	void doAfter(bool success);
 
 private:
 	void init(const std::vector<std::pair<std::string, std::string> > &formData);

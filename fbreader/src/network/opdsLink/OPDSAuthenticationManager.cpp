@@ -20,6 +20,7 @@
 #include <ZLNetworkManager.h>
 
 #include "OPDSAuthenticationManager.h"
+#include "OPDSNetworkAuthenticationReader.h"
 
 #include "../NetworkLibraryItems.h"
 #include "../NetworkErrors.h"
@@ -55,24 +56,21 @@ NetworkAuthenticationManager::AuthenticationStatus OPDSAuthenticationManager::is
 		return AuthenticationStatus(false);
 	}
 
-	//std::string firstName, lastName, newSid;
-	//shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(firstName, lastName, newSid);
-
 	ZLExecutionData::Vector dataList;
-	//dataList.push_back(ZLNetworkManager::Instance().createXMLParserData(
-	dataList.push_back(ZLNetworkManager::Instance().createNoActionData(
+	dataList.push_back(ZLNetworkManager::Instance().createReadResponseData(
 		myAccountUrl,
-		certificate()
+		certificate(),
+		new OPDSNetworkAuthenticationReader()
 	));
 	std::string error = ZLNetworkManager::Instance().perform(dataList);
 
 	if (!error.empty()) {
-		//if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
+		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
 			return AuthenticationStatus(error);
-		//}
-		/*myAccountChecked = true;
+		}
+		myAccountChecked = true;
 		myAccountUserNameOption.setValue("");
-		return AuthenticationStatus(false);*/
+		return AuthenticationStatus(false);
 	}
 	myAccountChecked = true;
 	return AuthenticationStatus(true);
@@ -88,7 +86,8 @@ std::string OPDSAuthenticationManager::authorise(const std::string &pwd) {
 	dataList.push_back(ZLNetworkManager::Instance().createPostFormData(
 		myPostSignInUrl,
 		certificate(),
-		formData
+		formData,
+		new OPDSNetworkAuthenticationReader()
 	));
 	std::string error = ZLNetworkManager::Instance().perform(dataList);
 

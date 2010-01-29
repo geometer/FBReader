@@ -25,6 +25,7 @@
 #include <ZLResource.h>
 #include <ZLOutputStream.h>
 #include <ZLXMLReader.h>
+#include <ZLNetworkReader.h>
 
 #include "ZLCurlNetworkManager.h"
 #include "ZLCurlNetworkNoActionData.h"
@@ -32,6 +33,7 @@
 #include "ZLCurlNetworkDownloadData.h"
 #include "ZLCurlNetworkXMLParserData.h"
 #include "ZLCurlNetworkPostFormData.h"
+#include "ZLCurlNetworkReadResponseData.h"
 
 void ZLCurlNetworkManager::createInstance() {
 	ourInstance = new ZLCurlNetworkManager();
@@ -69,13 +71,22 @@ shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createXMLParserData(const std:
 	return new ZLCurlNetworkXMLParserData(url, reader);
 }
 
-shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData) const {
-	return new ZLCurlNetworkPostFormData(url, sslCertificate, formData);
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const {
+	return new ZLCurlNetworkPostFormData(url, sslCertificate, formData, reader);
 }
 
-shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData) const {
-	return new ZLCurlNetworkPostFormData(url, formData);
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const {
+	return new ZLCurlNetworkPostFormData(url, formData, reader);
 }
+
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createReadResponseData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLNetworkReader> reader) const {
+	return new ZLCurlNetworkReadResponseData(url, sslCertificate, reader);
+}
+
+shared_ptr<ZLExecutionData> ZLCurlNetworkManager::createReadResponseData(const std::string &url, shared_ptr<ZLNetworkReader> reader) const {
+	return new ZLCurlNetworkReadResponseData(url, reader);
+}
+
 
 void ZLCurlNetworkManager::setStandardOptions(CURL *handle, const std::string &proxy) const {
 	static const char *AGENT_NAME = "FBReader";
