@@ -1,3 +1,9 @@
+fbreader (0.12.2-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Fri, 29 Jan 2010 19:53:00 +0300
+
 fbreader (0.12.1-2) stable; urgency=low
 
   * cosmetical fixes
