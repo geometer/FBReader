@@ -138,8 +138,8 @@ LRESULT ZLWin32ApplicationWindow::mainLoopCallback(HWND hWnd, UINT uMsg, WPARAM 
 				GetWindowRect(myMainWindow, &rectangle);
 				myXOption.setValue(rectangle.left);
 				myYOption.setValue(rectangle.top);
-				myWidthOption.setValue(rectangle.right - rectangle.left + 1);
-				myHeightOption.setValue(rectangle.bottom - rectangle.top + 1);
+				myWidthOption.setValue(rectangle.right - rectangle.left);
+				myHeightOption.setValue(rectangle.bottom - rectangle.top);
 			}
 			application().closeView();
 			return 0;
