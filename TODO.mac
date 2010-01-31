@@ -1,22 +1,9 @@
-ОБЩИЕ ВЕЩИ
-	интеграция с pragprogs
-	summary в library view
-	аннотации к книгам в library/network view
-	закладки
-	authentication на feedbooks/shucang/smashwords
-	покупки на smashwords
-	плавная прокрутка пальцем
-	вернуть "продвинутые настройки" прокрутки
-	определение типа файла по mimetype
-	UI profiles
-	регулярная загрузка данных о каталогах с fbreader.org
-
 ДИАЛОГИ
 	диалог открытия файла
 	диалог(и) настроек
 	WaitMessage (= ProgressDialog)
 	диалог поиска
-	information box
+	DONE information box
 
 УПРАВЛЕНИЕ
 	реакция на клавиши
