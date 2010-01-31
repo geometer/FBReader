@@ -33,7 +33,7 @@ public:
 	virtual ~StyleSheetParser();
 	void reset();
 	void parse(ZLInputStream &stream);
-	void parse(const char *text, int len);
+	void parse(const char *text, int len, bool final = false);
 
 protected:
 	virtual void storeData(const std::string &tagName, const std::string &className, const StyleSheetTable::AttributeMap &map);
