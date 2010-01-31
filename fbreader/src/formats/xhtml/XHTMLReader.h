@@ -75,6 +75,7 @@ private:
 	BookReader &myModelReader;
 	std::string myPathPrefix;
 	std::string myReferenceName;
+	std::string myReferenceDirName;
 	bool myPreformatted;
 	bool myNewParagraphInProgress;
 	StyleSheetTable myStyleSheetTable;

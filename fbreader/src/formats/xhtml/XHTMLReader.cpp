@@ -292,7 +292,9 @@ void XHTMLTagControlAction::doAtEnd(XHTMLReader &reader) {
 void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
 	const char *href = reader.attributeValue(xmlattributes, "href");
 	if (href != 0) {
-		const std::string link = (*href == '#') ? (reader.myReferenceName + href) : href;
+		const std::string link = (*href == '#') ?
+			reader.myReferenceName + href :
+			reader.myReferenceDirName + href;
 		const FBTextKind hyperlinkType = MiscUtil::referenceType(link);
 		myHyperlinkStack.push(hyperlinkType);
 		bookReader(reader).addHyperlinkControl(hyperlinkType, link);
@@ -432,6 +434,8 @@ bool XHTMLReader::readFile(const std::string &filePath, const std::string &refer
 
 	myPathPrefix = MiscUtil::htmlDirectoryPrefix(filePath);
 	myReferenceName = referenceName;
+	const int index = referenceName.rfind('/', referenceName.length() - 1);
+	myReferenceDirName = referenceName.substr(0, index + 1);
 
 	myPreformatted = false;
 	myNewParagraphInProgress = false;
