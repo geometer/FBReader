@@ -40,7 +40,13 @@
 
 	if ([[pboard types] containsObject:NSFilenamesPboardType] &&
 			(sourceDragMask & NSDragOperationGeneric)) {
-		return NSDragOperationGeneric;
+		std::vector<std::string> filePaths;
+		for (NSString *path in [pboard propertyListForType:NSFilenamesPboardType]) {
+			filePaths.push_back([path UTF8String]);
+		}
+		if (ZLApplication::Instance().canDragFiles(filePaths)) {
+			return NSDragOperationGeneric;
+		}
 	}
 	return NSDragOperationNone;
 }
@@ -51,11 +57,12 @@
 
 	if ([[pboard types] containsObject:NSFilenamesPboardType] &&
 			(sourceDragMask & NSDragOperationGeneric)) {
-		NSArray *files = [pboard propertyListForType:NSFilenamesPboardType];
-		if ([files count] == 1) {
-			ZLApplication::Instance().openFile([[files objectAtIndex:0] UTF8String]);
-			[self display];
+		std::vector<std::string> filePaths;
+		for (NSString *path in [pboard propertyListForType:NSFilenamesPboardType]) {
+			filePaths.push_back([path UTF8String]);
 		}
+		ZLApplication::Instance().dragFiles(filePaths);
+		[self display];
 	}
 	return YES;
 }

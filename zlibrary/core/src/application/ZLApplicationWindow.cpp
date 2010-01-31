@@ -19,6 +19,8 @@
 
 #include "ZLApplicationWindow.h"
 
+#include "../view/ZLViewWidget.h"
+
 ZLApplicationWindow *ZLApplicationWindow::ourInstance = 0;
 
 ZLApplicationWindow &ZLApplicationWindow::Instance() {

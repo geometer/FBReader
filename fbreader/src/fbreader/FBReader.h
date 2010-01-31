@@ -92,7 +92,10 @@ private:
 
 	bool closeView();
 	std::string helpFileName(const std::string &language) const;
-	void openFile(const std::string &fileName);
+
+	void openFile(const std::string &filePath);
+	bool canDragFiles(const std::vector<std::string> &filePaths) const;
+	void dragFiles(const std::vector<std::string> &filePaths);
 
 	bool isViewFinal() const;
 

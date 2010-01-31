@@ -101,6 +101,13 @@ bool ZLApplication::closeView() {
 void ZLApplication::openFile(const std::string&) {
 }
 
+bool ZLApplication::canDragFiles(const std::vector<std::string>&) const {
+	return false;
+}
+
+void ZLApplication::dragFiles(const std::vector<std::string>&) {
+}
+
 void ZLApplication::addAction(const std::string &actionId, shared_ptr<Action> action) {
 	myActionMap[actionId] = action;
 }

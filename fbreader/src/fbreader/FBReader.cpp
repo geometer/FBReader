@@ -438,12 +438,22 @@ std::string FBReader::helpFileName(const std::string &language) const {
 	return ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "help" + ZLibrary::FileNameDelimiter + "MiniHelp." + language + ".fb2";
 }
 
-void FBReader::openFile(const std::string &fileName) {
+void FBReader::openFile(const std::string &filePath) {
 	shared_ptr<Book> book;
-	createBook(fileName, book);
+	createBook(filePath, book);
 	if (!book.isNull()) {
 		openBook(book);
 		refreshWindow();
+	}
+}
+
+bool FBReader::canDragFiles(const std::vector<std::string> &filePaths) const {
+	return filePaths.size() > 0;
+}
+
+void FBReader::dragFiles(const std::vector<std::string> &filePaths) {
+	if (filePaths.size() > 0) {
+		openFile(filePaths[0]);
 	}
 }
 

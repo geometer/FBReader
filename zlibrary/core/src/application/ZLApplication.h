@@ -150,7 +150,9 @@ public:
 
 	void quit();
 	virtual bool closeView();
-	virtual void openFile(const std::string &fileName);
+	virtual void openFile(const std::string &filePath);
+	virtual bool canDragFiles(const std::vector<std::string> &filePaths) const;
+	virtual void dragFiles(const std::vector<std::string> &filePaths);
 
 	virtual bool isViewFinal() const;
 
