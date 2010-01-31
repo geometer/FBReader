@@ -48,6 +48,12 @@ const std::string ZLCocoaPaintContext::realFontFamilyName(std::string &fontFamil
 
 void ZLCocoaPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
 	NSFont *font = [NSFont fontWithName:[NSString stringWithUTF8String:family.c_str()] size:size];
+	if (font == nil) {
+		font = [NSFont fontWithName:@"Times" size:size];
+	}
+	if (font == nil) {
+		font = [NSFont fontWithName:@"Times" size:20];
+	}
 	NSMutableDictionary *fontAttributes = (NSMutableDictionary*)myFontAttributes;
 	if (bold || italic) {
 		int trait =

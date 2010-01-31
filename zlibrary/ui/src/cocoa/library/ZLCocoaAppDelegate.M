@@ -54,4 +54,9 @@
 	return YES;
 }
 
+- (BOOL)application:(NSApplication*)application openFile:(NSString*)fileName {
+	ZLApplication::Instance().openFile([fileName UTF8String]);
+	return YES;
+}
+
 @end

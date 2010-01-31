@@ -2,6 +2,29 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>oebzip</string>
+				<string>epub</string>
+				<string>fb2</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>FBReader.icns</string>
+			<key>CFBundleTypeMIMETypes</key>
+			<array>
+				<string>application/epub+zip</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>e-book</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSIsAppleDefaultForType</key>
+			<true/>
+		</dict>
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>

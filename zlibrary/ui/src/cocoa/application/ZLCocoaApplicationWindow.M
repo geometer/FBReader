@@ -33,7 +33,7 @@
 //#include "../dialogs/ZLCocoaDialogManager.h"
 #include "../view/ZLCocoaViewWidget.h"
 
-ZLCocoaApplicationWindow::ZLCocoaApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application) {
+ZLCocoaApplicationWindow::ZLCocoaApplicationWindow(ZLApplication *application) : ZLApplicationWindow(application), myWindow(0) {
 }
 
 void ZLCocoaApplicationWindow::init() {
