@@ -4,6 +4,7 @@
 	WaitMessage (= ProgressDialog)
 	диалог поиска
 	DONE information box
+	sign in dialog
 
 УПРАВЛЕНИЕ
 	реакция на клавиши
