@@ -167,11 +167,13 @@ ZLTextAlignmentType ZLTextForcedStyle::alignment() const {
 }
 
 bool ZLTextForcedStyle::bold() const {
-	return myEntry.boldSupported() ? myEntry.bold() : base()->bold();
+	return (myEntry.supportedFontModifier() & FONT_MODIFIER_BOLD) ?
+					 (myEntry.fontModifier() & FONT_MODIFIER_BOLD) : base()->bold();
 }
 
 bool ZLTextForcedStyle::italic() const {
-	return myEntry.italicSupported() ? myEntry.italic() : base()->italic();
+	return (myEntry.supportedFontModifier() & FONT_MODIFIER_ITALIC) ?
+					 (myEntry.fontModifier() & FONT_MODIFIER_ITALIC) : base()->italic();
 }
 
 int ZLTextForcedStyle::fontSize() const {

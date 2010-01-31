@@ -65,9 +65,8 @@ ZLTextStyleEntry::ZLTextStyleEntry(char *address) {
 		memcpy(&myLengths[i].Size, address, sizeof(short));
 		address += sizeof(short);
 	}
-	const char mask = *address++;
-	myBold = mask & 1;
-	myItalic = mask & 2;
+	mySupportedFontModifier = *address++;
+	myFontModifier = *address++;
 	myAlignmentType = (ZLTextAlignmentType)*address++;
 	myFontSizeMag = (signed char)*address++;
 	if (fontFamilySupported()) {
@@ -151,7 +150,7 @@ void ZLTextParagraph::Iterator::next() {
 				int mask;
 				memcpy(&mask, myPointer + 1, sizeof(int));
 				bool withFontFamily = mask & ZLTextStyleEntry::SUPPORT_FONT_FAMILY;
-				myPointer += sizeof(int) + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 4;
+				myPointer += sizeof(int) + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 5;
 				if (withFontFamily) {
 					while (*myPointer != '\0') {
 						++myPointer;

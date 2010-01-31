@@ -28,6 +28,7 @@
 
 #include <ZLTextKind.h>
 #include <ZLTextAlignmentType.h>
+#include <ZLTextFontModifier.h>
 
 class ZLImage;
 typedef std::map<std::string,shared_ptr<const ZLImage> > ZLImageMap;
@@ -105,13 +106,9 @@ public:
 	ZLTextAlignmentType alignmentType() const;
 	void setAlignmentType(ZLTextAlignmentType alignmentType);
 
-	bool boldSupported() const;
-	bool bold() const;
-	void setBold(bool bold);
-
-	bool italicSupported() const;
-	bool italic() const;
-	void setItalic(bool italic);
+	unsigned char supportedFontModifier() const;
+	unsigned char fontModifier() const;
+	void setFontModifier(ZLTextFontModifier style, bool set);
 
 	bool fontSizeSupported() const;
 	signed char fontSizeMag() const;
@@ -121,11 +118,9 @@ public:
 	const std::string &fontFamily() const;
 	void setFontFamily(const std::string &fontFamily);
 
-	static const int SUPPORT_BOLD = 1 << NUMBER_OF_LENGTHS;
-	static const int SUPPORT_ITALIC = 1 << (NUMBER_OF_LENGTHS + 1);
-	static const int SUPPORT_ALIGNMENT_TYPE = 1 << (NUMBER_OF_LENGTHS + 2);
-	static const int SUPPORT_FONT_SIZE = 1 << (NUMBER_OF_LENGTHS + 3);
-	static const int SUPPORT_FONT_FAMILY = 1 << (NUMBER_OF_LENGTHS + 4);
+	static const int SUPPORT_ALIGNMENT_TYPE = 1 << NUMBER_OF_LENGTHS;
+	static const int SUPPORT_FONT_SIZE = 1 << (NUMBER_OF_LENGTHS + 1);
+	static const int SUPPORT_FONT_FAMILY = 1 << (NUMBER_OF_LENGTHS + 2);
 
 private:
 	int myMask;
@@ -133,8 +128,8 @@ private:
 	LengthType myLengths[NUMBER_OF_LENGTHS];
 
 	ZLTextAlignmentType myAlignmentType;
-	bool myBold;
-	bool myItalic;
+	unsigned char mySupportedFontModifier;
+	unsigned char myFontModifier;
 	signed char myFontSizeMag;
 	std::string myFontFamily;
 
@@ -336,7 +331,7 @@ private:
 inline ZLTextParagraphEntry::ZLTextParagraphEntry() {}
 inline ZLTextParagraphEntry::~ZLTextParagraphEntry() {}
 
-inline ZLTextStyleEntry::ZLTextStyleEntry() : myMask(0) {}
+inline ZLTextStyleEntry::ZLTextStyleEntry() : myMask(0), mySupportedFontModifier(0), myFontModifier(0) {}
 inline ZLTextStyleEntry::~ZLTextStyleEntry() {}
 
 inline ZLTextStyleEntry::Metrics::Metrics(int fontSize, int fontXHeight, int fullWidth, int fullHeight) : FontSize(fontSize), FontXHeight(fontXHeight), FullWidth(fullWidth), FullHeight(fullHeight) {}
@@ -354,13 +349,16 @@ inline bool ZLTextStyleEntry::alignmentTypeSupported() const { return myMask & S
 inline ZLTextAlignmentType ZLTextStyleEntry::alignmentType() const { return myAlignmentType; }
 inline void ZLTextStyleEntry::setAlignmentType(ZLTextAlignmentType alignmentType) { myAlignmentType = alignmentType; myMask |= SUPPORT_ALIGNMENT_TYPE; }
 
-inline bool ZLTextStyleEntry::boldSupported() const { return myMask & SUPPORT_BOLD; }
-inline bool ZLTextStyleEntry::bold() const { return myBold; }
-inline void ZLTextStyleEntry::setBold(bool bold) { myBold = bold; myMask |= SUPPORT_BOLD; }
-
-inline bool ZLTextStyleEntry::italicSupported() const { return myMask & SUPPORT_ITALIC; }
-inline bool ZLTextStyleEntry::italic() const { return myItalic; }
-inline void ZLTextStyleEntry::setItalic(bool italic) { myItalic = italic; myMask |= SUPPORT_ITALIC; }
+inline unsigned char ZLTextStyleEntry::supportedFontModifier() const { return mySupportedFontModifier; }
+inline unsigned char ZLTextStyleEntry::fontModifier() const { return myFontModifier; }
+inline void ZLTextStyleEntry::setFontModifier(ZLTextFontModifier style, bool set) {
+	if (set) {
+		myFontModifier |= style;
+	} else {
+		myFontModifier &= ~style;
+	}
+	mySupportedFontModifier |= style;
+}
 
 inline bool ZLTextStyleEntry::fontSizeSupported() const { return myMask & SUPPORT_FONT_SIZE; }
 inline signed char ZLTextStyleEntry::fontSizeMag() const { return myFontSizeMag; }

@@ -170,13 +170,18 @@ shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &
 		} else if (bold[0] == "lighter") {
 		}
 		if (num != -1) {
-			entry->setBold(num >= 600);
+			entry->setFontModifier(FONT_MODIFIER_BOLD, num >= 600);
 		}
 	}
 
 	const std::vector<std::string> &italic = values(styles, "font-style");
 	if (!italic.empty()) {
-		entry->setItalic(italic[0] == "italic");
+		entry->setFontModifier(FONT_MODIFIER_ITALIC, italic[0] == "italic");
+	}
+
+	const std::vector<std::string> &variant = values(styles, "font-variant");
+	if (!variant.empty()) {
+		entry->setFontModifier(FONT_MODIFIER_SMALLCAPS, variant[0] == "small-caps");
 	}
 
 	const std::vector<std::string> &fontFamily = values(styles, "font-family");

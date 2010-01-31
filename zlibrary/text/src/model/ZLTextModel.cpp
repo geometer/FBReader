@@ -214,7 +214,7 @@ void ZLTextModel::addControl(ZLTextKind textKind, bool isStart) {
 }
 
 void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
-	int len = sizeof(int) + 4 + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
+	int len = sizeof(int) + 5 + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
 	if (entry.fontFamilySupported()) {
 		len += entry.fontFamily().length() + 1;
 	}
@@ -228,14 +228,8 @@ void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
 		memcpy(address, &entry.myLengths[i].Size, sizeof(short));
 		address += sizeof(short);
 	}
-	char &mask = *address++;
-	mask = 0;
-	if (entry.myBold) {
-		mask |= 1;
-	}
-	if (entry.myItalic) {
-		mask |= 2;
-	}
+	*address++ = entry.mySupportedFontModifier;
+	*address++ = entry.myFontModifier;
 	*address++ = entry.myAlignmentType;
 	*address++ = entry.myFontSizeMag;
 	if (entry.fontFamilySupported()) {
