@@ -55,6 +55,13 @@ void XHTMLTagAction::endParagraph(XHTMLReader &reader) {
 	reader.endParagraph();
 }
 
+class XHTMLTagStyleAction : public XHTMLTagAction {
+
+public:
+	void doAtStart(XHTMLReader &reader, const char **xmlattributes);
+	void doAtEnd(XHTMLReader &reader);
+};
+
 class XHTMLTagLinkAction : public XHTMLTagAction {
 
 public:
@@ -143,6 +150,27 @@ public:
 	void doAtEnd(XHTMLReader &reader);
 };
 
+void XHTMLTagStyleAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
+	static const std::string TYPE = "text/css";
+
+	const char *type = reader.attributeValue(xmlattributes, "type");
+	if ((type == 0) || (TYPE != type)) {
+		return;
+	}
+
+	if (reader.myReadState == XHTMLReader::READ_NOTHING) {
+		reader.myReadState = XHTMLReader::READ_STYLE;
+		reader.myTableParser = new StyleSheetTableParser(reader.myStyleSheetTable);
+	}
+}
+
+void XHTMLTagStyleAction::doAtEnd(XHTMLReader &reader) {
+	if (reader.myReadState == XHTMLReader::READ_STYLE) {
+		reader.myReadState = XHTMLReader::READ_NOTHING;
+		reader.myTableParser.reset();
+	}
+}
+
 void XHTMLTagLinkAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
 	static const std::string REL = "stylesheet";
 	const char *rel = reader.attributeValue(xmlattributes, "rel");
@@ -185,12 +213,12 @@ void XHTMLTagParagraphAction::doAtEnd(XHTMLReader &reader) {
 }
 
 void XHTMLTagBodyAction::doAtStart(XHTMLReader &reader, const char**) {
-	reader.myInsideBody = true;
+	reader.myReadState = XHTMLReader::READ_BODY;
 }
 
 void XHTMLTagBodyAction::doAtEnd(XHTMLReader &reader) {
 	endParagraph(reader);
-	reader.myInsideBody = false;
+	reader.myReadState = XHTMLReader::READ_NOTHING;
 }
 
 void XHTMLTagRestartParagraphAction::doAtStart(XHTMLReader &reader, const char**) {
@@ -328,7 +356,7 @@ void XHTMLReader::fillTagTable() {
 		//addAction("script",	new XHTMLTagAction());
 
 		//addAction("font",	new XHTMLTagAction());
-		//addAction("style",	new XHTMLTagAction());
+		addAction("style",	new XHTMLTagStyleAction());
 
 		addAction("p",	new XHTMLTagParagraphAction());
 		addAction("h1",	new XHTMLTagParagraphWithControlAction(H1));
@@ -407,7 +435,7 @@ bool XHTMLReader::readFile(const std::string &filePath, const std::string &refer
 
 	myPreformatted = false;
 	myNewParagraphInProgress = false;
-	myInsideBody = false;
+	myReadState = READ_NOTHING;
 
 	myCSSStack.clear();
 	myStyleEntryStack.clear();
@@ -528,35 +556,46 @@ void XHTMLReader::endParagraph() {
 }
 
 void XHTMLReader::characterDataHandler(const char *text, size_t len) {
-	if (myPreformatted) {
-		if ((*text == '\r') || (*text == '\n')) {
-			myModelReader.addControl(CODE, false);
-			endParagraph();
-			beginParagraph();
-			myModelReader.addControl(CODE, true);
-		}
-		size_t spaceCounter = 0;
-		while ((spaceCounter < len) && isspace((unsigned char)*(text + spaceCounter))) {
-			++spaceCounter;
-		}
-		myModelReader.addFixedHSpace(spaceCounter);
-		text += spaceCounter;
-		len -= spaceCounter;
-	} else if ((myNewParagraphInProgress) || !myModelReader.paragraphIsOpen()) {
-		while (isspace((unsigned char)*text)) {
-			++text;
-			if (--len == 0) {
-				break;
+	switch (myReadState) {
+		case READ_NOTHING:
+			break;
+		case READ_STYLE:
+			if (!myTableParser.isNull()) {
+				myTableParser->parse(text, len);
 			}
-		}
-	}
-	if (len > 0) {
-		myCurrentParagraphIsEmpty = false;
-		if (myInsideBody && !myModelReader.paragraphIsOpen()) {
-			myModelReader.beginParagraph();
-		}
-		myModelReader.addData(std::string(text, len));
-		myNewParagraphInProgress = false;
+			break;
+		case READ_BODY:
+			if (myPreformatted) {
+				if ((*text == '\r') || (*text == '\n')) {
+					myModelReader.addControl(CODE, false);
+					endParagraph();
+					beginParagraph();
+					myModelReader.addControl(CODE, true);
+				}
+				size_t spaceCounter = 0;
+				while ((spaceCounter < len) && isspace((unsigned char)*(text + spaceCounter))) {
+					++spaceCounter;
+				}
+				myModelReader.addFixedHSpace(spaceCounter);
+				text += spaceCounter;
+				len -= spaceCounter;
+			} else if ((myNewParagraphInProgress) || !myModelReader.paragraphIsOpen()) {
+				while (isspace((unsigned char)*text)) {
+					++text;
+					if (--len == 0) {
+						break;
+					}
+				}
+			}
+			if (len > 0) {
+				myCurrentParagraphIsEmpty = false;
+				if (!myModelReader.paragraphIsOpen()) {
+					myModelReader.beginParagraph();
+				}
+				myModelReader.addData(std::string(text, len));
+				myNewParagraphInProgress = false;
+			}
+			break;
 	}
 }
 
