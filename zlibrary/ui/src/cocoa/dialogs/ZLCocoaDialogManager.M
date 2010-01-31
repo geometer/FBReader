@@ -90,11 +90,6 @@ int ZLCocoaDialogManager::questionBox(const ZLResourceKey &key, const std::strin
 	return -1;
 }
 
-/*
-int ZLCocoaDialogManager::internalBox(const gchar *icon, const std::string &title, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
-}
-*/
-
 bool ZLCocoaDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
 	//return ZLCocoaSelectionDialog(dialogTitle(key), handler).runWithSize();
 	return 0;
