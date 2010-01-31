@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#import <Cocoa/Cocoa.h>
+
 #include <ZLDialog.h>
 #include <ZLOptionsDialog.h>
 #include <ZLProgressDialog.h>
@@ -29,6 +31,16 @@
 #include "ZLCocoaProgressDialog.h"
 //#include "ZLCocoaUtil.h"
 
+static std::string cleanString(const std::string &str) {
+	int index = str.find('&');
+	if (index == -1) {
+		return str;
+	}
+	std::string result = str;
+	result.erase(index, 1);
+	return result;
+}
+
 shared_ptr<ZLDialog> ZLCocoaDialogManager::createDialog(const ZLResourceKey &key) const {
 	//return new ZLCocoaDialog(resource()[key]);
 	return 0;
@@ -40,16 +52,42 @@ shared_ptr<ZLOptionsDialog> ZLCocoaDialogManager::createOptionsDialog(const ZLRe
 }
 
 void ZLCocoaDialogManager::informationBox(const std::string &title, const std::string &message) const {
-	//internalBox(GTK_STOCK_DIALOG_INFO, title, message);
+	NSRunInformationalAlertPanel(
+		[NSString stringWithUTF8String:title.c_str()],
+		[NSString stringWithUTF8String:message.c_str()],
+		[NSString stringWithUTF8String:cleanString(buttonName(OK_BUTTON)).c_str()],
+		nil,
+		nil
+	);
 }
 
 void ZLCocoaDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
-	//internalBox(GTK_STOCK_DIALOG_ERROR, dialogTitle(key), message);
+	NSRunCriticalAlertPanel(
+		[NSString stringWithUTF8String:dialogTitle(key).c_str()],
+		[NSString stringWithUTF8String:message.c_str()],
+		[NSString stringWithUTF8String:cleanString(buttonName(OK_BUTTON)).c_str()],
+		nil,
+		nil
+	);
 }
 
 int ZLCocoaDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
-	//return internalBox(GTK_STOCK_DIALOG_QUESTION, dialogTitle(key), message, button0, button1, button2);
-	return 0;
+	const int code = NSRunInformationalAlertPanel(
+		[NSString stringWithUTF8String:dialogTitle(key).c_str()],
+		[NSString stringWithUTF8String:message.c_str()],
+		button0.Name.empty() ? nil : [NSString stringWithUTF8String:cleanString(buttonName(button0)).c_str()],
+		button1.Name.empty() ? nil : [NSString stringWithUTF8String:cleanString(buttonName(button1)).c_str()],
+		button2.Name.empty() ? nil : [NSString stringWithUTF8String:cleanString(buttonName(button2)).c_str()]
+	);
+	switch (code) {
+		case NSAlertDefaultReturn:
+			return 0;
+		case NSAlertAlternateReturn:
+			return 1;
+		case NSAlertOtherReturn:
+			return 2;
+	}
+	return -1;
 }
 
 /*

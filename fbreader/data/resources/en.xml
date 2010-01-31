@@ -527,7 +527,7 @@
 		</node>
 		<node name="dontShowConfirmBox">
 			<node name="title" value="Disable catalog" />
-			<node name="message" value="Are you sure you want to disable&#10;&#8220;%s&#8221; catalog?&#10;&#10;You can enable it in the future at&#10;&#8220;Network Search&#8221; tab in the Options dialog." />
+			<node name="message" value="Are you sure you want to disable&#10;&#8220;%s&#8221; catalog?&#10;&#10;You can enable this catalog again at&#10;&#8220;Network Search&#8221; tab in the Preferences dialog." />
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" value="Delete Book" />
