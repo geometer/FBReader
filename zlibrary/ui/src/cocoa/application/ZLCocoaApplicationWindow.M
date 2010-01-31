@@ -26,7 +26,6 @@
 #include "ZLCocoaApplicationWindow.h"
 
 #import "ZLCocoaToolbarDelegate.h"
-#import "../view/CocoaView.h"
 
 //#include "../util/ZLCocoaKeyUtil.h"
 //#include "../util/ZLCocoaSignalUtil.h"

@@ -47,6 +47,8 @@ void ZLCocoaViewWidget::trackStylus(bool track) {
 
 void ZLCocoaViewWidget::repaint()	{
 	[[[[NSApplication sharedApplication] mainWindow] contentView] setNeedsDisplay:YES];
+	//NSView *view = [[[NSApplication sharedApplication] mainWindow] contentView];
+	//[view setNeedsDisplayInRect:[view bounds]];
 }
 
 void ZLCocoaViewWidget::doPaint()	{

@@ -12,7 +12,7 @@
 				<string>fb2</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>FBReader.icns</string>
+			<string>FBReaderDocument.icns</string>
 			<key>CFBundleTypeMIMETypes</key>
 			<array>
 				<string>application/epub+zip</string>

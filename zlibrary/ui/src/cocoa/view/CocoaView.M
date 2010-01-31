@@ -26,6 +26,40 @@
 
 @implementation CocoaView
 
+- (id)init {
+	self = [super init];
+	if (self) {
+		[self registerForDraggedTypes:[NSArray arrayWithObjects:NSFilenamesPboardType, nil]];
+	}
+	return self;
+}
+
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender {
+	NSPasteboard *pboard = [sender draggingPasteboard];
+	NSDragOperation sourceDragMask = [sender draggingSourceOperationMask];
+
+	if ([[pboard types] containsObject:NSFilenamesPboardType] &&
+			(sourceDragMask & NSDragOperationGeneric)) {
+		return NSDragOperationGeneric;
+	}
+	return NSDragOperationNone;
+}
+
+- (BOOL)performDragOperation:(id <NSDraggingInfo>)sender {
+	NSDragOperation sourceDragMask = [sender draggingSourceOperationMask];
+	NSPasteboard *pboard = [sender draggingPasteboard];
+
+	if ([[pboard types] containsObject:NSFilenamesPboardType] &&
+			(sourceDragMask & NSDragOperationGeneric)) {
+		NSArray *files = [pboard propertyListForType:NSFilenamesPboardType];
+		if ([files count] == 1) {
+			ZLApplication::Instance().openFile([[files objectAtIndex:0] UTF8String]);
+			[self display];
+		}
+	}
+	return YES;
+}
+
 - (void)drawRect:(NSRect)dirtyRect {
 	shared_ptr<ZLView> view = ZLApplication::Instance().currentView();
 	if (view.isNull()) {
