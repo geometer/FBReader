@@ -35,6 +35,15 @@ public:
 	);
 };
 
+class BookByFileNameComparator {
+
+public:
+	bool operator () (
+		const shared_ptr<Book> book0,
+		const shared_ptr<Book> book1
+	);
+};
+
 class AuthorComparator {
 
 public:

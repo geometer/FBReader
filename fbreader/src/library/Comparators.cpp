@@ -47,6 +47,13 @@ bool BookComparator::operator() (
 	return comp < 0;
 }
 
+bool BookByFileNameComparator::operator() (
+	const shared_ptr<Book> book0,
+	const shared_ptr<Book> book1
+) {
+	return book0->filePath() < book1->filePath();
+}
+
 bool AuthorComparator::operator() (
 	const shared_ptr<Author> author0,
 	const shared_ptr<Author> author1

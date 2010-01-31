@@ -290,6 +290,7 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		contentsView.setModel(myModel->contentsModel());
 		contentsView.setCaption(book->title());
 
+		Library::Instance().addBook(book);
 		myRecentBooks.addBook(book);
 		((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
 	}
