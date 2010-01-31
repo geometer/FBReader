@@ -165,4 +165,5 @@ void ZLCocoaApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 }
 
 void ZLCocoaApplicationWindow::setCaption(const std::string &caption) {
+	[(NSWindow*)myWindow setTitle:[NSString stringWithUTF8String:caption.c_str()]];
 }
