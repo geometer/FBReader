@@ -448,12 +448,33 @@ void FBReader::openFile(const std::string &filePath) {
 }
 
 bool FBReader::canDragFiles(const std::vector<std::string> &filePaths) const {
-	return filePaths.size() > 0;
+	switch (myMode) {
+		case BOOK_TEXT_MODE:
+		case FOOTNOTE_MODE:
+		case CONTENTS_MODE:
+		case LIBRARY_MODE:
+			return filePaths.size() > 0;
+		default:
+			return false;
+	}
 }
 
 void FBReader::dragFiles(const std::vector<std::string> &filePaths) {
-	if (filePaths.size() > 0) {
-		openFile(filePaths[0]);
+	switch (myMode) {
+		case BOOK_TEXT_MODE:
+		case FOOTNOTE_MODE:
+		case CONTENTS_MODE:
+			if (filePaths.size() > 0) {
+				openFile(filePaths[0]);
+			}
+			break;
+		case LIBRARY_MODE:
+			if (filePaths.size() > 0) {
+				openFile(filePaths[0]);
+			}
+			break;
+		default:
+			break;
 	}
 }
 

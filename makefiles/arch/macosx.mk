@@ -1,7 +1,7 @@
 include $(ROOTDIR)/makefiles/arch/unix.mk
 
 ifeq "$(INSTALLDIR)" ""
-  INSTALLDIR=/%APPLICATION_NAME%.app
+  INSTALLDIR=/FBReader.app
 endif
 BINDIR = $(INSTALLDIR)/Contents/MacOS
 SHAREDIR = $(INSTALLDIR)/Contents/Share

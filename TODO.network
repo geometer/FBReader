@@ -24,6 +24,7 @@ DELAYED (can't reproduce) X-System problem - fix set/restore window position (in
 0.14.0: вернуть "продвинутые настройки" прокрутки
 DONE: update man page (Lithuanian localization)
 0.14.0: доделать поддержку manybooks.net
+0.14.0: FBReader::openFile должен добавлять в библиотеку все книги из архива
 
 0.14.1: интеграция с books.google.com?
 0.14.1: Показывать проценты при загрузке сетевого каталога (?)
