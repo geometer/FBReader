@@ -123,6 +123,7 @@ void ZLGtkApplicationWindow::Toolbar::addToolbarItem(ZLToolbar::ItemPtr item) {
 	switch (item->type()) {
 		case ZLToolbar::Item::TEXT_FIELD:
 		case ZLToolbar::Item::COMBO_BOX:
+		case ZLToolbar::Item::SEARCH_FIELD:
 			{
 				const ZLToolbar::ParameterItem &parameterItem = (const ZLToolbar::ParameterItem&)*item;
 				GtkEntryParameter *parameter =

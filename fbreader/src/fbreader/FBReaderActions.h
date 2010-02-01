@@ -74,6 +74,7 @@ public:
 	static const std::string ADVANCED_SEARCH_ON_NETWORK;
 	static const std::string ORGANIZE_BOOKS_BY_AUTHOR;
 	static const std::string ORGANIZE_BOOKS_BY_TAG;
+	static const std::string FILTER_LIBRARY;
 
 private:
 	ActionCode();
@@ -276,10 +277,10 @@ public:
 	void run();
 };
 
-class GotoPageNumber : public ModeDependentAction {
+class GotoPageNumberAction : public ModeDependentAction {
 
 public:
-	GotoPageNumber(const std::string &parameter);
+	GotoPageNumberAction(const std::string &parameter);
 	bool isVisible() const;
 	bool isEnabled() const;
 	void run();
@@ -353,6 +354,13 @@ class BooksOrderAction : public ModeDependentAction {
 
 public:
 	BooksOrderAction();
+	void run();
+};
+
+class FilterLibraryAction : public ModeDependentAction {
+
+public:
+	FilterLibraryAction();
 	void run();
 };
 

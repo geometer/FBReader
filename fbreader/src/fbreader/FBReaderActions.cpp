@@ -385,20 +385,20 @@ void GotoPreviousTOCSectionAction::run() {
 	}
 }
 
-GotoPageNumber::GotoPageNumber(const std::string &parameter) : ModeDependentAction(FBReader::BOOK_TEXT_MODE), myParameter(parameter) {
+GotoPageNumberAction::GotoPageNumberAction(const std::string &parameter) : ModeDependentAction(FBReader::BOOK_TEXT_MODE), myParameter(parameter) {
 }
 
-bool GotoPageNumber::isVisible() const {
+bool GotoPageNumberAction::isVisible() const {
 	return
 		ModeDependentAction::isVisible() &&
 		!FBReader::Instance().bookTextView().hasMultiSectionModel();
 }
 
-bool GotoPageNumber::isEnabled() const {
+bool GotoPageNumberAction::isEnabled() const {
 	return ModeDependentAction::isEnabled() && (FBReader::Instance().bookTextView().pageNumber() > 1);
 }
 
-void GotoPageNumber::run() {
+void GotoPageNumberAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	int pageIndex = 0;
 	const int pageNumber = fbreader.bookTextView().pageNumber();
@@ -472,4 +472,10 @@ void FBFullscreenAction::run() {
 		fbreader.myActionOnCancel = FBReader::UNFULLSCREEN;
 	}
 	FullscreenAction::run();
+}
+
+FilterLibraryAction::FilterLibraryAction() : ModeDependentAction(FBReader::LIBRARY_MODE) {
+}
+
+void FilterLibraryAction::run() {
 }

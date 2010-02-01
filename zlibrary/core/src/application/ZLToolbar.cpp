@@ -79,19 +79,22 @@ void ZLToolbarCreator::startElementHandler(const char *tag, const char **attribu
 	static const std::string TOGGLE_BUTTON = "toggleButton";
 	static const std::string TEXT_FIELD = "textField";
 	static const std::string COMBO_BOX = "comboBox";
+	static const std::string SEARCH_FIELD = "searchField";
 	static const std::string SEPARATOR = "separator";
+
+	const char *id = attributeValue(attributes, "id");
+	const char *location = attributeValue(attributes, "location");
+	ZLToolbar::Item *item = 0;
+
 	if (BUTTON == tag) {
-		const char *id = attributeValue(attributes, "id");
 		if (id != 0) {
 			myToolbar.addPlainButton(id);
 		}
 	} else if (MENU_BUTTON == tag) {
-		const char *id = attributeValue(attributes, "id");
 		if (id != 0) {
 			myToolbar.addMenuButton(id);
 		}
 	} else if (TOGGLE_BUTTON == tag) {
-		const char *id = attributeValue(attributes, "id");
 		const char *groupId = attributeValue(attributes, "group");
 		const char *isDefault = attributeValue(attributes, "default");
 		if ((id != 0) && (groupId != 0)) {
@@ -102,8 +105,7 @@ void ZLToolbarCreator::startElementHandler(const char *tag, const char **attribu
 			}
 			*/
 		}
-	} else if ((TEXT_FIELD == tag) || (COMBO_BOX == tag)) {
-		const char *id = attributeValue(attributes, "id");
+	} else if (TEXT_FIELD == tag || COMBO_BOX == tag || SEARCH_FIELD == tag) {
 		const char *parameterId = attributeValue(attributes, "parameterId");
 		const char *maxWidth = attributeValue(attributes, "maxWidth");
 		const char *symbolSet = attributeValue(attributes, "symbols");
@@ -114,12 +116,13 @@ void ZLToolbarCreator::startElementHandler(const char *tag, const char **attribu
 					ZLToolbar::ParameterItem::SET_DIGITS :
 					ZLToolbar::ParameterItem::SET_ANY;
 			if (nMaxWidth > 0) {
-				myToolbar.addParameterItem(
-					(TEXT_FIELD == tag) ?
-						ZLToolbar::Item::TEXT_FIELD :
-						ZLToolbar::Item::COMBO_BOX,
-					id, parameterId, nMaxWidth, sSet
-				);
+				ZLToolbar::Item::Type type = ZLToolbar::Item::TEXT_FIELD;
+				if (COMBO_BOX == tag) {
+					type = ZLToolbar::Item::COMBO_BOX;
+				} else if (SEARCH_FIELD == tag) {
+					type = ZLToolbar::Item::SEARCH_FIELD;
+				}
+				myToolbar.addParameterItem(type, id, parameterId, nMaxWidth, sSet);
 			}
 		}
 	} else if (SEPARATOR == tag) {
@@ -131,7 +134,8 @@ const ZLToolbar::ItemVector &ZLToolbar::items() const {
 	return myItems;
 }
 
-ZLToolbar::Item::Item(const ZLToolbar &toolbar) : myToolbar(toolbar) {
+ZLToolbar::Item::Item(ZLToolbar &toolbar) : myToolbar(toolbar) {
+	toolbar.myItems.push_back(this);
 }
 
 ZLToolbar::Item::~Item() {
@@ -141,7 +145,15 @@ const ZLToolbar &ZLToolbar::Item::toolbar() const {
 	return myToolbar;
 }
 
-ZLToolbar::ActionItem::ActionItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : Item(toolbar), myActionId(actionId), myResource(resource) {
+ZLToolbar::Item::Location ZLToolbar::Item::location() const {
+	return myLocation;
+}
+
+void ZLToolbar::Item::setLocation(Location location) {
+	myLocation = location;
+}
+
+ZLToolbar::ActionItem::ActionItem(ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : Item(toolbar), myActionId(actionId), myResource(resource) {
 }
 
 const std::string &ZLToolbar::ActionItem::actionId() const {
@@ -166,13 +178,13 @@ const std::string &ZLToolbar::ActionItem::tooltip() const {
 	return tooltipResource.value();
 }
 
-ZLToolbar::AbstractButtonItem::AbstractButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : ActionItem(toolbar, actionId, resource) {
+ZLToolbar::AbstractButtonItem::AbstractButtonItem(ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : ActionItem(toolbar, actionId, resource) {
 }
 
-ZLToolbar::PlainButtonItem::PlainButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : AbstractButtonItem(toolbar, actionId, resource) {
+ZLToolbar::PlainButtonItem::PlainButtonItem(ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : AbstractButtonItem(toolbar, actionId, resource) {
 }
 
-ZLToolbar::MenuButtonItem::MenuButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : AbstractButtonItem(toolbar, actionId, resource) {
+ZLToolbar::MenuButtonItem::MenuButtonItem(ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource) : AbstractButtonItem(toolbar, actionId, resource) {
 }
 
 const std::string &ZLToolbar::MenuButtonItem::popupTooltip() const {
@@ -189,7 +201,7 @@ shared_ptr<ZLPopupData> ZLToolbar::MenuButtonItem::popupData() const {
 	return (it == toolbar().myPopupDataMap.end()) ? 0 : it->second;
 }
 
-ZLToolbar::ToggleButtonItem::ToggleButtonItem(const ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group, const ZLResource &resource) : AbstractButtonItem(toolbar, actionId, resource), myGroup(group) {
+ZLToolbar::ToggleButtonItem::ToggleButtonItem(ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group, const ZLResource &resource) : AbstractButtonItem(toolbar, actionId, resource), myGroup(group) {
 	myGroup.myItems.insert(this);
 }
 
@@ -222,21 +234,16 @@ ZLToolbar::ZLToolbar() : myResource(ZLResource::resource("toolbar")) {
 }
 
 void ZLToolbar::addPlainButton(const std::string &actionId) {
-	myItems.push_back(
-		new PlainButtonItem(*this, actionId, myResource[ZLResourceKey(actionId)])
-	);
+	new PlainButtonItem(*this, actionId, myResource[ZLResourceKey(actionId)]);
 }
 
 void ZLToolbar::addMenuButton(const std::string &actionId) {
-	myItems.push_back(
-		new MenuButtonItem(*this, actionId, myResource[ZLResourceKey(actionId)])
-	);
+	new MenuButtonItem(*this, actionId, myResource[ZLResourceKey(actionId)]);
 }
 
 void ZLToolbar::addToggleButton(const std::string &actionId, const std::string &groupId, bool isDefault) {
 	ButtonGroup &group = getButtonGroup(groupId);
 	ToggleButtonItem *button = new ToggleButtonItem(*this, actionId, group, myResource[ZLResourceKey(actionId)]);
-	myItems.push_back(button);
 	if (isDefault) {
 		group.setDefaultAction(actionId);
 	}
@@ -246,14 +253,13 @@ void ZLToolbar::addToggleButton(const std::string &actionId, const std::string &
 }
 
 void ZLToolbar::addParameterItem(Item::Type type, const std::string &actionId, const std::string &parameterId, int maxWidth, ParameterItem::SymbolSet symbolSet) {
-	ParameterItem *item = (type == Item::TEXT_FIELD) ?
-		(ParameterItem*)new TextFieldItem(*this, actionId, parameterId, maxWidth, symbolSet, myResource[ZLResourceKey(actionId)]) :
-		(ParameterItem*)new ComboBoxItem(*this, actionId, parameterId, maxWidth, symbolSet, myResource[ZLResourceKey(actionId)]);
-	myItems.push_back(item);
+	new ParameterItem(
+		*this, type, actionId, parameterId, maxWidth, symbolSet, myResource[ZLResourceKey(actionId)]
+	);
 }
 
 void ZLToolbar::addSeparator() {
-	myItems.push_back(new SeparatorItem(*this));
+	new SeparatorItem(*this);
 }
 
 ZLToolbar::ButtonGroup::ButtonGroup(const std::string &groupId) : myPressedItem(0), myDefaultButtonOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", groupId, "") {
@@ -286,14 +292,18 @@ ZLToolbar::Item::Type ZLToolbar::ToggleButtonItem::type() const {
 	return TOGGLE_BUTTON;
 }
 
-ZLToolbar::SeparatorItem::SeparatorItem(const ZLToolbar &toolbar) : Item(toolbar) {
+ZLToolbar::SeparatorItem::SeparatorItem(ZLToolbar &toolbar) : Item(toolbar) {
 }
 
 ZLToolbar::Item::Type ZLToolbar::SeparatorItem::type() const {
 	return SEPARATOR;
 }
 
-ZLToolbar::ParameterItem::ParameterItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource) : ActionItem(toolbar, actionId, resource), myParameterId(parameterId), myMaxWidth(maxWidth), mySymbolSet(symbolSet) {
+ZLToolbar::ParameterItem::ParameterItem(ZLToolbar &toolbar, Type type, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource) : ActionItem(toolbar, actionId, resource), myType(type), myParameterId(parameterId), myMaxWidth(maxWidth), mySymbolSet(symbolSet) {
+}
+
+ZLToolbar::Item::Type ZLToolbar::ParameterItem::type() const {
+	return myType;
 }
 
 const std::string &ZLToolbar::ParameterItem::parameterId() const {
@@ -306,18 +316,4 @@ int ZLToolbar::ParameterItem::maxWidth() const {
 
 ZLToolbar::ParameterItem::SymbolSet ZLToolbar::ParameterItem::symbolSet() const {
 	return mySymbolSet;
-}
-
-ZLToolbar::TextFieldItem::TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource) : ParameterItem(toolbar, actionId, parameterId, maxWidth, symbolSet, resource) {
-}
-
-ZLToolbar::Item::Type ZLToolbar::TextFieldItem::type() const {
-	return TEXT_FIELD;
-}
-
-ZLToolbar::ComboBoxItem::ComboBoxItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource) : ParameterItem(toolbar, actionId, parameterId, maxWidth, symbolSet, resource) {
-}
-
-ZLToolbar::Item::Type ZLToolbar::ComboBoxItem::type() const {
-	return COMBO_BOX;
 }

@@ -64,3 +64,4 @@ const std::string ActionCode::SEARCH_ON_NETWORK = "searchOnNetwork";
 const std::string ActionCode::ADVANCED_SEARCH_ON_NETWORK = "advancedSearchOnNetwork";
 const std::string ActionCode::ORGANIZE_BOOKS_BY_AUTHOR = "byAuthor";
 const std::string ActionCode::ORGANIZE_BOOKS_BY_TAG = "byTag";
+const std::string ActionCode::FILTER_LIBRARY = "filterLibrary";

@@ -196,6 +196,10 @@
 			<node name="label" value="About" />
 			<node name="tooltip" value="About FBReader" />
 		</node>
+		<node name="filterLibrary">
+			<node name="label" value="Filter" />
+			<node name="tooltip" value="Filter" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">

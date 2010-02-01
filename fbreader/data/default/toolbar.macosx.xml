@@ -10,7 +10,7 @@
 	<button id="showNetLibrary"/>
 	<separator/>
 	<button id="advancedSearchOnNetwork"/>
-	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>
+	<searchField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>
 	<separator/>
 	<button id="gotoHome"/>
 	<button id="undo"/>
@@ -22,4 +22,5 @@
 	<button id="search"/>
 	<button id="findPrevious"/>
 	<button id="findNext"/>
+	<searchField id="filterLibrary" parameterId="libraryFilter" maxWidth="15" location="right"/>
 </toolbar>

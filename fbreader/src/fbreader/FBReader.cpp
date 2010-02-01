@@ -150,11 +150,12 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::COPY_SELECTED_TEXT_TO_CLIPBOARD, new CopySelectedTextAction());
 	addAction(ActionCode::OPEN_SELECTED_TEXT_IN_DICTIONARY, new OpenSelectedTextInDictionaryAction());
 	addAction(ActionCode::CLEAR_SELECTION, new ClearSelectionAction());
-	addAction(ActionCode::GOTO_PAGE_NUMBER, new GotoPageNumber(std::string()));
-	addAction(ActionCode::GOTO_PAGE_NUMBER_WITH_PARAMETER, new GotoPageNumber(PageIndexParameter));
+	addAction(ActionCode::GOTO_PAGE_NUMBER, new GotoPageNumberAction(std::string()));
+	addAction(ActionCode::GOTO_PAGE_NUMBER_WITH_PARAMETER, new GotoPageNumberAction(PageIndexParameter));
 	shared_ptr<Action> booksOrderAction = new BooksOrderAction();
 	addAction(ActionCode::ORGANIZE_BOOKS_BY_AUTHOR, booksOrderAction);
 	addAction(ActionCode::ORGANIZE_BOOKS_BY_TAG, booksOrderAction);
+	addAction(ActionCode::FILTER_LIBRARY, new FilterLibraryAction());
 
 	myOpenFileHandler = new OpenFileHandler();
 	ZLCommunicationManager::Instance().registerHandler("openFile", myOpenFileHandler);

@@ -61,6 +61,7 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 		switch ((*it)->type()) {
 			case ZLToolbar::Item::TEXT_FIELD:
 			case ZLToolbar::Item::COMBO_BOX:
+			case ZLToolbar::Item::SEARCH_FIELD:
 			case ZLToolbar::Item::PLAIN_BUTTON:
 			case ZLToolbar::Item::MENU_BUTTON:
 				{

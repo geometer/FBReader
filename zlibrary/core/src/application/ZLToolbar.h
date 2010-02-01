@@ -43,25 +43,35 @@ public:
 			TOGGLE_BUTTON,
 			TEXT_FIELD,
 			COMBO_BOX,
+			SEARCH_FIELD,
 			SEPARATOR
 		};
 
+		enum Location {
+			LEFT,
+			RIGHT
+		};
+
 	public:
-		Item(const ZLToolbar &toolbar);
+		Item(ZLToolbar &toolbar);
 		virtual ~Item();
 
 		virtual Type type() const = 0;
 
 		const ZLToolbar &toolbar() const;
 
+		void setLocation(Location location);
+		Location location() const;
+
 	private:
 		const ZLToolbar &myToolbar;
+		Location myLocation;
 	};
 
 	class ActionItem : public Item {
 
 	public:
-		ActionItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
+		ActionItem(ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
 		const std::string &actionId() const;
 		const std::string &label() const;
 		const std::string &tooltip() const;
@@ -76,14 +86,14 @@ public:
 	class AbstractButtonItem : public ActionItem {
 
 	public:
-		AbstractButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
+		AbstractButtonItem(ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
 		const std::string &iconName() const;
 	};
 
 	class PlainButtonItem : public AbstractButtonItem {
 
 	public:
-		PlainButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
+		PlainButtonItem(ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
 
 		Type type() const;
 	};
@@ -91,7 +101,7 @@ public:
 	class MenuButtonItem : public AbstractButtonItem {
 
 	public:
-		MenuButtonItem(const ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
+		MenuButtonItem(ZLToolbar &toolbar, const std::string &actionId, const ZLResource &resource);
 
 		const std::string &popupTooltip() const;
 		shared_ptr<ZLPopupData> popupData() const;
@@ -105,7 +115,7 @@ public:
 	class ToggleButtonItem : public AbstractButtonItem {
 
 	public:
-		ToggleButtonItem(const ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group, const ZLResource &resource);
+		ToggleButtonItem(ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group, const ZLResource &resource);
 
 		Type type() const;
 
@@ -142,7 +152,7 @@ public:
 	class SeparatorItem : public Item {
 
 	public:
-		SeparatorItem(const ZLToolbar &toolbar);
+		SeparatorItem(ZLToolbar &toolbar);
 		Type type() const;
 	};
 
@@ -155,29 +165,17 @@ public:
 		};
 
 	public:
-		ParameterItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource);
+		ParameterItem(ZLToolbar &toolbar, Type type, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource);
+		Type type() const;
 		const std::string &parameterId() const;
 		int maxWidth() const;
 		SymbolSet symbolSet() const;
 
 	private:
+		const Type myType;
 		const std::string myParameterId;
 		const int myMaxWidth;
 		const SymbolSet mySymbolSet;
-	};
-
-	class TextFieldItem : public ParameterItem {
-
-	public:
-		TextFieldItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource);
-		Type type() const;
-	};
-
-	class ComboBoxItem : public ParameterItem {
-
-	public:
-		ComboBoxItem(const ZLToolbar &toolbar, const std::string &actionId, const std::string &parameterId, int maxWidth, SymbolSet symbolSet, const ZLResource &resource);
-		Type type() const;
 	};
 
 public:
