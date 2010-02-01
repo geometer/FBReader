@@ -120,6 +120,9 @@ void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item, int index
 		case ZLToolbar::Item::SEPARATOR:
 			identifier = NSToolbarSeparatorItemIdentifier;
 			break;
+		case ZLToolbar::Item::FILL_SEPARATOR:
+			identifier = NSToolbarFlexibleSpaceItemIdentifier;
+			break;
 	}
 
 	if (identifier != 0) {

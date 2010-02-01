@@ -22,5 +22,6 @@
 	<button id="search"/>
 	<button id="findPrevious"/>
 	<button id="findNext"/>
-	<searchField id="filterLibrary" parameterId="libraryFilter" maxWidth="15" location="right"/>
+	<fillSeparator/>
+	<searchField id="filterLibrary" parameterId="libraryFilter" maxWidth="15"/>
 </toolbar>

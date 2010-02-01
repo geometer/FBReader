@@ -55,7 +55,7 @@ void ZLApplicationWindow::refresh() {
 
 void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 	const ZLToolbar::ItemVector &items = application().toolbar(type).items();
-	bool enableToolbarSpace = false;
+	bool canAddSeparator = false;
 	ZLToolbar::ItemPtr lastSeparator = 0;
 	for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		switch ((*it)->type()) {
@@ -76,7 +76,7 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 							setToolbarItemState(lastSeparator, true, true);
 							lastSeparator = 0;
 						}
-						enableToolbarSpace = true;
+						canAddSeparator = true;
 					}
 					setToolbarItemState(*it, visible, enabled);
 				}
@@ -94,7 +94,7 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 							setToolbarItemState(lastSeparator, true, true);
 							lastSeparator = 0;
 						}
-						enableToolbarSpace = true;
+						canAddSeparator = true;
 					}
 					/*
 					if (!enabled && button.isPressed()) {
@@ -110,9 +110,20 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 				}
 				break;
 			case ZLToolbar::Item::SEPARATOR:
-				if (enableToolbarSpace) {
+				if (canAddSeparator) {
 					lastSeparator = *it;
-					enableToolbarSpace = false;
+					canAddSeparator = false;
+				} else {
+					setToolbarItemState(*it, false, true);
+				}
+				break;
+			case ZLToolbar::Item::FILL_SEPARATOR:
+				if (canAddSeparator) {
+					lastSeparator = *it;
+					canAddSeparator = false;
+				} else if (lastSeparator != 0) {
+					setToolbarItemState(lastSeparator, false, true);
+					lastSeparator = *it;
 				} else {
 					setToolbarItemState(*it, false, true);
 				}
