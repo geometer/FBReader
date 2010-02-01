@@ -141,6 +141,11 @@ void ZLGtkApplicationWindow::Toolbar::addToolbarItem(ZLToolbar::ItemPtr item) {
 		case ZLToolbar::Item::SEPARATOR:
 			gtkItem = gtk_separator_tool_item_new();
 			break;
+		case ZLToolbar::Item::FILL_SEPARATOR:
+			gtkItem = gtk_separator_tool_item_new();
+			gtk_separator_tool_item_set_draw(GTK_SEPARATOR_TOOL_ITEM(gtkItem), false);
+			gtk_tool_item_set_expand(gtkItem, true);
+			break;
 	}
 	if (gtkItem != 0) {
 		gtk_toolbar_insert(myGtkToolbar, gtkItem, -1);

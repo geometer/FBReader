@@ -29,4 +29,6 @@
 	<button id="rotate"/>
 	<separator/>
 	<button id="showHelp"/>
+	<fillSeparator/>
+	<searchField id="filterLibrary" parameterId="libraryFilter" maxWidth="15"/>
 </toolbar>
