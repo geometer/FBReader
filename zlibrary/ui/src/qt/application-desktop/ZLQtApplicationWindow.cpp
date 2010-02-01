@@ -228,7 +228,7 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 	}
 }
 
-ZLQtApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::TextFieldItem &textFieldItem) : QLineEdit(toolbar), myWindow(window), myActionId(textFieldItem.actionId()) {
+ZLQtApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::ParameterItem &textFieldItem) : QLineEdit(toolbar), myWindow(window), myActionId(textFieldItem.actionId()) {
 	setAlignment(Qt::AlignHCenter);
 	setFocusPolicy(ClickFocus);
 	setMaxLength(textFieldItem.maxWidth());

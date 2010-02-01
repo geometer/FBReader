@@ -220,9 +220,10 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			break;
 		}
 		case ZLToolbar::Item::TEXT_FIELD:
+		case ZLToolbar::Item::SEARCH_FIELD:
 		{
-			ZLToolbar::TextFieldItem &textFieldItem =
-				(ZLToolbar::TextFieldItem&)*item;
+			ZLToolbar::ParameterItem &textFieldItem =
+				(ZLToolbar::ParameterItem&)*item;
 			LineEditParameter *para = new LineEditParameter(tb, *this, textFieldItem);
 			addVisualParameter(textFieldItem.parameterId(), para);
 			action = para->action();

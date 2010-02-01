@@ -54,7 +54,7 @@ void ZLQtLineEdit::keyReleaseEvent(QKeyEvent *event) {
 	}
 }
 
-ZLQtApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::TextFieldItem &textFieldItem) {
+ZLQtApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::ParameterItem &textFieldItem) {
 	myEdit = new ZLQtLineEdit(toolbar, window, *this, textFieldItem.actionId());
 	myEdit->setAlignment(Qt::AlignHCenter);
 	myEdit->setMaxLength(textFieldItem.maxWidth());

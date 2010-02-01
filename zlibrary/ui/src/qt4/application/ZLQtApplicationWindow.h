@@ -88,7 +88,7 @@ private:
 	class LineEditParameter : public VisualParameter {
 
 	public:
-		LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::TextFieldItem &textFieldItem);
+		LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::ParameterItem &textFieldItem);
 		QAction *action() const;
 		void restoreOldValue();
 

@@ -80,7 +80,7 @@ private:
 	class LineEditParameter : public QLineEdit, public VisualParameter {
 
 	public:
-		LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::TextFieldItem &textFieldItem);
+		LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::ParameterItem &textFieldItem);
 
 	private:
 		void keyReleaseEvent(QKeyEvent *event);
