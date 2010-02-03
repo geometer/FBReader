@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Dutch zlibrary resources, by Bosel -->
+<resources>
+	<node name="dialog">
+		<node name="button">
+			<node name="ok" value="&amp;OK"/>
+			<node name="cancel" value="&amp;Afbreken"/>
+			<node name="yes" value="&amp;Ja"/>
+			<node name="no" value="&amp;Nee"/>
+			<node name="apply" value="&amp;Toepassen"/>
+		</node>
+		<node name="waitMessage">
+			<node name="savingConfig" value="Instellingen opslaan..."/>
+		</node>
+		<node name="networkError">
+			<node name="title" value="Netwerk fout"/>
+			<node name="unknownErrorMessage" value="Onbekende fout"/>
+			<node name="couldntCreateDirectoryMessage" value="Map&#10;%s kan niet worden gemaakt"/>
+			<node name="couldntCreateFileMessage" value="Bestand&#10;%s kan niet worden gemaakt"/>
+			<node name="couldntConnectToNetworkMessage" value="Geen verbinding met het netwerk"/>
+			<node name="couldntConnectMessage" value="Geen verbinding met host %s"/>
+			<node name="couldntResolveHostMessage" value="Host %s kan niet worden gevonden"/>
+			<node name="couldntResolveProxyMessage" value="Proxy %s kan niet worden gevonden"/>
+			<node name="operationTimedOutMessage" value="Time out operatie"/>
+			<node name="somethingWrongMessage" value="Er gaat iets fout met&#10;%s"/>
+			<node name="sslConnectErrorMessage" value="SSL/TLS Handshake probleem opgetreden:&#10;%s"/>
+			<node name="peerFailedVerificationMessage" value="SSL certificaat van %s&#10; is ongeldig"/>
+			<node name="sslCertificateAuthorityMessage" value="SSL certificaat van  %s&#10; kan niet worden geautoriseerd met  bekende SSL CA certificaten"/>
+			<node name="sslBadCertificateFileMessage" value="Het SSL CA certificaat:&#10;%s kan niet worden gelezen"/>
+			<node name="sslShutdownFailedMessage" value="De SSL verbinding met&#10;%s kan niet worden gesloten"/>
+		</node>
+	</node>
+	<node name="color">
+		<node name="red" value="Rood"/>
+		<node name="green" value="Groen"/>
+		<node name="blue" value="Blauw"/>
+		<node name="black" value="Zwart"/>
+		<node name="white" value="Wit"/>
+		<node name="maroon" value="Bruin"/>
+		<node name="olive" value="Olijf"/>
+		<node name="navy" value="Marine"/>
+		<node name="purple" value="Violet"/>
+		<node name="teal" value="Taling"/>
+		<node name="silver" value="Zilver"/>
+		<node name="gray" value="Grijs"/>
+		<node name="lime" value="Limoen"/>
+		<node name="yellow" value="Geel"/>
+		<node name="magenta" value="Magenta"/>
+		<node name="cyan" value="Cyan"/>
+		<node name="custom..." value="Anders…"/>
+	</node>
+	<node name="language">
+		<node name="ar" value="Arabisch"/>
+		<node name="cs" value="Tsjechisch"/>
+		<node name="de" value="Duits"/>
+		<node name="de-traditional" value="Duits (oude stijl)"/>
+		<node name="el" value="Grieks"/>
+		<node name="en" value="Engels"/>
+		<node name="eo" value="Esperanto"/>
+		<node name="es" value="Spaans"/>
+		<node name="fi" value="Fins"/>
+		<node name="fr" value="Frans"/>
+		<node name="he" value="Hebreews"/>
+		<node name="id" value="Indonesisch"/>
+		<node name="it" value="Italiaans"/>
+		<node name="lt" value="Litouws"/>
+		<node name="no" value="Noors"/>
+		<node name="pt" value="Portugees"/>
+		<node name="ru" value="Russisch"/>
+		<node name="sv" value="Zweeds"/>
+		<node name="tr" value="Turks"/>
+		<node name="uk" value="Ukraiens"/>
+		<node name="zh" value="Chinees"/>
+		<node name="nl" value="Nederlands"/>
+		<node name="other" value="Anders"/>
+	</node>
+	<node name="boolean3">
+		<node name="on" value="aan"/>
+		<node name="off" value="uit"/>
+		<node name="unchanged" value="onveranderd"/>
+	</node>
+	<node name="keyOptionView">
+		<node name="actionFor" value="Actie voor toets"/>
+	</node>
+</resources>
