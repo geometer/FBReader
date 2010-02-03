@@ -63,6 +63,7 @@
 		<node name="id" value="индонезийский" />
 		<node name="it" value="итальянский" />
 		<node name="lt" value="литовский" />
+		<node name="nl" value="голландский" />
 		<node name="no" value="норвежский" />
 		<node name="pt" value="португальский" />
 		<node name="ru" value="русский" />

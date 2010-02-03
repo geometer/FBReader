@@ -63,7 +63,8 @@
 		<node name="he" value="Hebrejsky"/>
 		<node name="id" value="Indonézsky"/>
 		<node name="it" value="Italsky"/>
-		<node name="lt" value="Lithuanian"/>
+		<node name="lt" value="Litevsky"/>
+		<node name="nl" value="Nizozemština"/>
 		<node name="no" value="Norsky"/>
 		<node name="pt" value="Portugalsky"/>
 		<node name="ru" value="Rusky"/>

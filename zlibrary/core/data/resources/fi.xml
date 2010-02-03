@@ -64,6 +64,7 @@
 		<node name="id" value="Indonesia" />
 		<node name="it" value="Italia" />
 		<node name="lt" value="Liettua" />
+		<node name="nl" value="Hollanni" />
 		<node name="no" value="Norja" />
 		<node name="pt" value="Portugali" />
 		<node name="ru" value="Venäjä" />

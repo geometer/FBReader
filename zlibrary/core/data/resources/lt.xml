@@ -1,84 +1,85 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!-- Lithuanian zlibrary resources, by Stanislovas Zacharovas -->
 <resources>
-  <node name="dialog">
-    <node name="button">
-      <node name="ok" value="&amp;Patvirtinti" />
-      <node name="cancel" value="&amp;Atmesti" />
-      <node name="yes" value="&amp;Taip" />
-      <node name="no" value="&amp;Ne" />
-      <node name="apply" value="&amp;Pritaikyti" />
-    </node>
-    <node name="waitMessage">
-      <node name="savingConfig" value="Įrašoma konfiguracija..." />
-    </node>
-    <node name="networkError">
-      <node name="title" value="Tinklo klaida" />
-      <node name="unknownErrorMessage" value="Nežinoma klaida" />
-      <node name="couldntCreateDirectoryMessage" value="Nepavyksta sukurti katalogo&#xD;&#xA;%s" />
-      <node name="couldntCreateFileMessage" value="Napavyksta sukurti failo&#xD;&#xA;%s" />
-      <node name="couldntConnectToNetworkMessage" value="Nepavyksta prisijungti prie tinklo" />
-      <node name="couldntConnectMessage" value="Nepavyksta komunikuoti su kompiuteriu %s" />
-      <node name="couldntResolveHostMessage" value="Nepavyksta komunikuoti su kompiuteriu %s" />
-      <node name="couldntResolveProxyMessage" value="Nepavyksta komunikuoti su įgaliotoju serveriu %s" />
-      <node name="operationTimedOutMessage" value="Per ilgai vykusi operacija sustabdyta" />
-      <node name="somethingWrongMessage" value="Kažkas blogai su&#xD;&#xA;%s" />
-      <node name="sslConnectErrorMessage" value="SSL/TLS susijungimo problema:&#xD;&#xA;%s" />
-      <node name="peerFailedVerificationMessage" value="SSL sertifikate iš %s&#xD;&#xA;yra negeras" />
-      <node name="sslCertificateAuthorityMessage" value="SSL sertifikate iš %s&#xD;&#xA;nesulyginamas su SSL CA sertifikatais" />
-      <node name="sslBadCertificateFileMessage" value="Nepavyksta nuskaityti SSL CA sertifikato failo:&#xD;&#xA;%s" />
-      <node name="sslShutdownFailedMessage" value="Nepavyksta nutraukti SSL prisijungimo prie &#xD;&#xA;%s" />
-    </node>
-  </node>
-  <node name="color">
-    <node name="red" value="Raudona" />
-    <node name="green" value="Žalia" />
-    <node name="blue" value="Mėlyna" />
-    <node name="black" value="Juoda" />
-    <node name="white" value="Balta" />
-    <node name="maroon" value="Kaštoninė " />
-    <node name="olive" value="Alyvų" />
-    <node name="navy" value="Tamsiai mėlyna" />
-    <node name="purple" value="Purpurinė" />
-    <node name="teal" value="Šviesiai smaragdinė" />
-    <node name="silver" value="Sidabrinė" />
-    <node name="gray" value="Pilka" />
-    <node name="lime" value="Šviesiai žalia" />
-    <node name="yellow" value="Geltona" />
-    <node name="magenta" value="Rausvai raudona (Magenta)" />
-    <node name="cyan" value="Žalsvai mėlyna (Cyan)" />
-    <node name="custom..." value="Mano spalva" />
-  </node>
-  <node name="language">
-    <node name="ar" value="Arabų" />
-    <node name="cs" value="Čekų" />
-    <node name="de" value="Vokiečių" />
-    <node name="de-traditional" value="Vokiečių (tradicinė orfografija)" />
-    <node name="el" value="Graikų" />
-    <node name="en" value="Anglų" />
-    <node name="eo" value="Esperanto" />
-    <node name="es" value="Ispanų" />
-    <node name="fi" value="Suomių" />
-    <node name="fr" value="Prancūzų" />
-    <node name="he" value="Hebrajų" />
-    <node name="id" value="Indoneziečių" />
-    <node name="it" value="Italų" />
-    <node name="lt" value="Lietuvių" />
-    <node name="no" value="Norvegų" />
-    <node name="pt" value="Portugalų" />
-    <node name="ru" value="Rusų" />
-    <node name="sv" value="Švedų" />
-    <node name="tr" value="Turkų" />
-    <node name="uk" value="Ukrainiečių" />
-    <node name="zh" value="Kiniečių" />
-    <node name="other" value="Kitą" />
-  </node>
-  <node name="boolean3">
-    <node name="on" value="įjungti" />
-    <node name="off" value="išjungti" />
-    <node name="unchanged" value="nekeisti" />
-  </node>
-  <node name="keyOptionView">
-    <node name="actionFor" value="Veiksmas mygtukui" />
-  </node>
+	<node name="dialog">
+		<node name="button">
+			<node name="ok" value="&amp;Patvirtinti" />
+			<node name="cancel" value="&amp;Atmesti" />
+			<node name="yes" value="&amp;Taip" />
+			<node name="no" value="&amp;Ne" />
+			<node name="apply" value="&amp;Pritaikyti" />
+		</node>
+		<node name="waitMessage">
+			<node name="savingConfig" value="Įrašoma konfiguracija..." />
+		</node>
+		<node name="networkError">
+			<node name="title" value="Tinklo klaida" />
+			<node name="unknownErrorMessage" value="Nežinoma klaida" />
+			<node name="couldntCreateDirectoryMessage" value="Nepavyksta sukurti katalogo&#xD;&#xA;%s" />
+			<node name="couldntCreateFileMessage" value="Napavyksta sukurti failo&#xD;&#xA;%s" />
+			<node name="couldntConnectToNetworkMessage" value="Nepavyksta prisijungti prie tinklo" />
+			<node name="couldntConnectMessage" value="Nepavyksta komunikuoti su kompiuteriu %s" />
+			<node name="couldntResolveHostMessage" value="Nepavyksta komunikuoti su kompiuteriu %s" />
+			<node name="couldntResolveProxyMessage" value="Nepavyksta komunikuoti su įgaliotoju serveriu %s" />
+			<node name="operationTimedOutMessage" value="Per ilgai vykusi operacija sustabdyta" />
+			<node name="somethingWrongMessage" value="Kažkas blogai su&#xD;&#xA;%s" />
+			<node name="sslConnectErrorMessage" value="SSL/TLS susijungimo problema:&#xD;&#xA;%s" />
+			<node name="peerFailedVerificationMessage" value="SSL sertifikate iš %s&#xD;&#xA;yra negeras" />
+			<node name="sslCertificateAuthorityMessage" value="SSL sertifikate iš %s&#xD;&#xA;nesulyginamas su SSL CA sertifikatais" />
+			<node name="sslBadCertificateFileMessage" value="Nepavyksta nuskaityti SSL CA sertifikato failo:&#xD;&#xA;%s" />
+			<node name="sslShutdownFailedMessage" value="Nepavyksta nutraukti SSL prisijungimo prie &#xD;&#xA;%s" />
+		</node>
+	</node>
+	<node name="color">
+		<node name="red" value="Raudona" />
+		<node name="green" value="Žalia" />
+		<node name="blue" value="Mėlyna" />
+		<node name="black" value="Juoda" />
+		<node name="white" value="Balta" />
+		<node name="maroon" value="Kaštoninė " />
+		<node name="olive" value="Alyvų" />
+		<node name="navy" value="Tamsiai mėlyna" />
+		<node name="purple" value="Purpurinė" />
+		<node name="teal" value="Šviesiai smaragdinė" />
+		<node name="silver" value="Sidabrinė" />
+		<node name="gray" value="Pilka" />
+		<node name="lime" value="Šviesiai žalia" />
+		<node name="yellow" value="Geltona" />
+		<node name="magenta" value="Rausvai raudona (Magenta)" />
+		<node name="cyan" value="Žalsvai mėlyna (Cyan)" />
+		<node name="custom..." value="Mano spalva" />
+	</node>
+	<node name="language">
+		<node name="ar" value="Arabų" />
+		<node name="cs" value="Čekų" />
+		<node name="de" value="Vokiečių" />
+		<node name="de-traditional" value="Vokiečių (tradicinė orfografija)" />
+		<node name="el" value="Graikų" />
+		<node name="en" value="Anglų" />
+		<node name="eo" value="Esperanto" />
+		<node name="es" value="Ispanų" />
+		<node name="fi" value="Suomių" />
+		<node name="fr" value="Prancūzų" />
+		<node name="he" value="Hebrajų" />
+		<node name="id" value="Indoneziečių" />
+		<node name="it" value="Italų" />
+		<node name="lt" value="Lietuvių" />
+		<node name="nl" toBeTranslated="true" value="Dutch" />
+		<node name="no" value="Norvegų" />
+		<node name="pt" value="Portugalų" />
+		<node name="ru" value="Rusų" />
+		<node name="sv" value="Švedų" />
+		<node name="tr" value="Turkų" />
+		<node name="uk" value="Ukrainiečių" />
+		<node name="zh" value="Kiniečių" />
+		<node name="other" value="Kitą" />
+	</node>
+	<node name="boolean3">
+		<node name="on" value="įjungti" />
+		<node name="off" value="išjungti" />
+		<node name="unchanged" value="nekeisti" />
+	</node>
+	<node name="keyOptionView">
+		<node name="actionFor" value="Veiksmas mygtukui" />
+	</node>
 </resources>

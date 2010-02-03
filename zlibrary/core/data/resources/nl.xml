@@ -64,6 +64,7 @@
 		<node name="id" value="Indonesisch"/>
 		<node name="it" value="Italiaans"/>
 		<node name="lt" value="Litouws"/>
+		<node name="nl" value="Nederlands"/>
 		<node name="no" value="Noors"/>
 		<node name="pt" value="Portugees"/>
 		<node name="ru" value="Russisch"/>
@@ -71,7 +72,6 @@
 		<node name="tr" value="Turks"/>
 		<node name="uk" value="Ukraiens"/>
 		<node name="zh" value="Chinees"/>
-		<node name="nl" value="Nederlands"/>
 		<node name="other" value="Anders"/>
 	</node>
 	<node name="boolean3">

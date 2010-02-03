@@ -64,6 +64,7 @@
 		<node name="id" value="Indonesiska" />
 		<node name="it" value="Italienska" />
 		<node name="lt" value="Litauiska" />
+		<node name="nl" value="Nederländska" />
 		<node name="no" value="Norska" />
 		<node name="pt" value="Portugisiska" />
 		<node name="ru" value="Ryska" />

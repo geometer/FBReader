@@ -64,6 +64,7 @@
 		<node name="id" value="印度语" />
 		<node name="it" value="意大利语" />
 		<node name="lt" value="立陶宛语" />
+		<node name="nl" toBeTranslated="true" value="Dutch" />
 		<node name="no" value="挪威语" />
 		<node name="pt" value="葡萄牙语" />
 		<node name="ru" value="俄罗斯语" />
