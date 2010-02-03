@@ -7,6 +7,7 @@ DONE	BUG: не скачивается файл жанров, если в нач�
 DONE	убрать string compare для автора в NetworkSeriesNode::summary()
 	(Добавлен метод NetworkLibraryCatalogItem::catalogType(). По нему выставляется тип summary внутри NodesFactory)
 DONE	прорисовывается ненужное пространство для дополнительных ссылок у feedbooks.com
+0.14.0: почему не удается добраться до книг вот в этом каталоге? http://davidsoft.free.fr/calibre2opds/demo/_catalog/catalog.xml
 0.14.0: переделать ZLNetwok...
 0.14.0: перенести удаление www. для feedbooks в fbreader\... ::downloadBook(...)
 0.14.0: authentication на feedbooks
