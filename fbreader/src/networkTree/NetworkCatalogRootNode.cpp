@@ -77,7 +77,10 @@ const NetworkLink &NetworkCatalogRootNode::link() const {
 
 bool NetworkCatalogRootNode::hasAuxHyperlink() const {
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
-	return !mgr.isNull() && mgr->isAuthorised(false).Status == B3_FALSE;
+	if (mgr.isNull() || mgr->isAuthorised(false).Status != B3_FALSE) {
+		return false;
+	}
+	return !myRegisterUserAction.isNull() || !myPasswordRecoveryAction.isNull();
 }
 
 void NetworkCatalogRootNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
