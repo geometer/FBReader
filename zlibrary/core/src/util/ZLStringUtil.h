@@ -36,6 +36,8 @@ public:
 	static void stripWhiteSpaces(std::string &str);
 
 	static std::string printf(const std::string &format, const std::string &arg0);
+
+	static void extractColonedPair(const std::string &pair, std::string &key, std::string &data);
 };
 
 #endif /* __ZLSTRINGUTIL_H__ */

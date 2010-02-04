@@ -95,3 +95,15 @@ std::string ZLStringUtil::printf(const std::string &format, const std::string &a
 	return format.substr(0, index) + arg0 + format.substr(index + 2);
 }
 
+void ZLStringUtil::extractColonedPair(const std::string &pair, std::string &key, std::string &data) {
+	if (pair.empty()) {
+		return;
+	}
+	const size_t index = pair.find(':');
+	key.assign(pair, 0, index);
+	if (index < pair.size() - 1) {
+		data.assign(pair, index + 1, std::string::npos);
+	}
+	ZLStringUtil::stripWhiteSpaces(key);
+	ZLStringUtil::stripWhiteSpaces(data);
+}

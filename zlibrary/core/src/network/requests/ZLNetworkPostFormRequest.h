@@ -17,30 +17,29 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLCURLNETWORKPOSTFORMDATA_H__
-#define __ZLCURLNETWORKPOSTFORMDATA_H__
+#ifndef __ZLNETWORKPOSTFORMREQUEST_H__
+#define __ZLNETWORKPOSTFORMREQUEST_H__
 
-#include <string>
+#include "../ZLNetworkRequest.h"
 
-#include "ZLCurlNetworkReadResponseData.h"
 
 class ZLNetworkReader;
 
-class ZLCurlNetworkPostFormData : public ZLCurlNetworkReadResponseData {
+class ZLNetworkPostFormRequest : public ZLNetworkPostRequest {
 
 public:
-	ZLCurlNetworkPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader);
-	ZLCurlNetworkPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader);
-	~ZLCurlNetworkPostFormData();
+	ZLNetworkPostFormRequest(const std::string &url, const std::string &sslCertificate, 
+		const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader);
+
+private:
+	bool handleHeader(void *ptr, size_t size);
+	bool handleContent(void *ptr, size_t size);
 
 	bool doBefore();
+	void doAfter(bool success);
 
 private:
-	void init(const std::vector<std::pair<std::string, std::string> > &formData);
-
-private:
-	curl_httppost *myPostItem;
-	curl_httppost *myLastItem;
+	shared_ptr<ZLNetworkReader> myReader;
 };
 
-#endif /* __ZLCURLNETWORKPOSTFORMDATA_H__ */
+#endif /* __ZLNETWORKPOSTFORMREQUEST_H__ */

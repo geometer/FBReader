@@ -17,40 +17,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLNETWORKDATA_H__
-#define __ZLNETWORKDATA_H__
+#include "ZLNetworkNoActionRequest.h"
 
-#include <string>
 
-#include <ZLExecutionData.h>
+ZLNetworkNoActionRequest::ZLNetworkNoActionRequest(const std::string &url, const std::string &sslCertificate) :
+	ZLNetworkGetRequest(url, sslCertificate) {
+}
 
-class ZLNetworkData : public ZLExecutionData {
+bool ZLNetworkNoActionRequest::doBefore() {
+	return true;
+}
 
-public:
-	static const std::string TYPE_ID;
+void ZLNetworkNoActionRequest::doAfter(bool) {
+}
 
-protected:
-	ZLNetworkData(const std::string &url, const std::string &sslCertificate = std::string());
-
-public:
-	virtual ~ZLNetworkData();
-	const std::string &type() const;
-
-	const std::string &url() const;
-	const std::string &sslCertificate() const;
-
-	virtual bool doBefore() = 0;
-	virtual void doAfter(bool success) = 0;
-
-	const std::string &errorMessage() const;
-
-protected:
-	void setErrorMessage(const std::string &message);
-
-private:
-	const std::string myURL;
-	const std::string mySSLCertificate;
-	std::string myErrorMessage;
-};
-
-#endif /* __ZLNETWORKDATA_H__ */
+bool ZLNetworkNoActionRequest::handleContent(void *, size_t) {
+	return true;
+}

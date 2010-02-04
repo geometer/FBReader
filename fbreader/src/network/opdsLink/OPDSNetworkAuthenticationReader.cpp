@@ -23,17 +23,10 @@ OPDSNetworkAuthenticationReader::OPDSNetworkAuthenticationReader() {
 }
 
 
-std::string OPDSNetworkAuthenticationReader::handleHeader(const std::string &key, const std::string &value) {
-	if (value.empty()) {
-		// TODO: handle HTTP/1.x responses
-	} else {
-		// TODO: handle header items
-	}
+std::string OPDSNetworkAuthenticationReader::handleHeader(void *ptr, size_t size) {
 	return "";
 }
 
-std::string OPDSNetworkAuthenticationReader::handleData(const std::string &data) {
-	// TODO: handle data
+std::string OPDSNetworkAuthenticationReader::handleContent(void *ptr, size_t size) {
 	return "";
 }
-

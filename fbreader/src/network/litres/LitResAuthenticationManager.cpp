@@ -68,7 +68,7 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 	ZLNetworkUtil::addParameter(query, "sid", mySidOption.value());
 
 	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserData(
+	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_authorise/" + query),
 		certificate(),
 		xmlReader
@@ -101,7 +101,7 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 	}
 
 	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserData(
+	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_authorise/" + query),
 		certificate(),
 		xmlReader
@@ -155,7 +155,7 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkLibraryBookItem &bo
 	ZLNetworkUtil::addParameter(query, "art", book.id());
 
 	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserData(
+	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/purchase_book/" + query),
 		certificate(),
 		xmlReader
@@ -271,7 +271,7 @@ shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std:
 		}
 	}
 
-	return ZLNetworkManager::Instance().createXMLParserData(
+	return ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_browser/" + query), 
 		certificate(),
 		new LitResDataParser(purchasedBooksList, mgr)
@@ -300,7 +300,7 @@ shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadAccount(std::string
 	ZLNetworkUtil::addParameter(query, "sid", sid);
 	ZLNetworkUtil::addParameter(query, "art", "0");
 
-	return ZLNetworkManager::Instance().createXMLParserData(
+	return ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/purchase_book/" + query),
 		certificate(),
 		new LitResPurchaseDataParser(myAccount, dummy1)
@@ -335,7 +335,7 @@ std::string LitResAuthenticationManager::registerUser(const std::string &login, 
 	ZLNetworkUtil::addParameter(query, "mail", email);
 
 	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserData(
+	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_register_user/" + query),
 		certificate(),
 		xmlReader
@@ -365,7 +365,7 @@ std::string LitResAuthenticationManager::recoverPassword(const std::string &emai
 	ZLNetworkUtil::addParameter(query, "mail", email);
 
 	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserData(
+	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_recover_pass/" + query),
 		certificate(),
 		xmlReader

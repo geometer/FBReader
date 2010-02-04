@@ -17,36 +17,22 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLCURLNETWORKXMLPARSERDATA_H__
-#define __ZLCURLNETWORKXMLPARSERDATA_H__
+#ifndef __ZLNETWORKNOACTIONREQUEST_H__
+#define __ZLNETWORKNOACTIONREQUEST_H__
 
-#include <shared_ptr.h>
+#include "../ZLNetworkRequest.h"
 
-#include "ZLCurlNetworkData.h"
 
-class ZLXMLReader;
-class ZLAsynchronousInputStream;
-
-class ZLCurlNetworkXMLParserData : public ZLCurlNetworkData {
+class ZLNetworkNoActionRequest : public ZLNetworkGetRequest {
 
 public:
-	ZLCurlNetworkXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader);
-	ZLCurlNetworkXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader);
-	~ZLCurlNetworkXMLParserData();
-
-	size_t parseHeader(void *ptr, size_t size, size_t nmemb);
-	size_t parseData(void *ptr, size_t size, size_t nmemb);
+	ZLNetworkNoActionRequest(const std::string &url, const std::string &sslCertificate);
 
 private:
-	void init();
-
 	bool doBefore();
 	void doAfter(bool success);
 
-private:
-	shared_ptr<ZLXMLReader> myReader;
-	shared_ptr<ZLAsynchronousInputStream> myInputStream;
-	std::string myHttpEncoding;
+	bool handleContent(void *ptr, size_t size);
 };
 
-#endif /* __ZLCURLNETWORKXMLPARSERDATA_H__ */
+#endif /* __ZLNETWORKNOACTIONREQUEST_H__ */

@@ -29,10 +29,8 @@ public:
 	OPDSNetworkAuthenticationReader();
 
 public:
-	std::string handleHeader(const std::string &key, const std::string &value);
-	std::string handleData(const std::string &data);
-
-private:
+	std::string handleHeader(void *ptr, size_t size);
+	std::string handleContent(void *ptr, size_t size);
 };
 
 #endif /* __OPDSNETWORKAUTHENTICATIONREADER_H__ */

@@ -57,7 +57,7 @@ NetworkAuthenticationManager::AuthenticationStatus OPDSAuthenticationManager::is
 	}
 
 	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createReadResponseData(
+	dataList.push_back(ZLNetworkManager::Instance().createReadResponseRequest(
 		myAccountUrl,
 		certificate(),
 		new OPDSNetworkAuthenticationReader()
@@ -83,7 +83,7 @@ std::string OPDSAuthenticationManager::authorise(const std::string &pwd) {
 	formData.push_back(std::make_pair(myPostPassword, pwd));
 
 	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createPostFormData(
+	dataList.push_back(ZLNetworkManager::Instance().createPostFormRequest(
 		myPostSignInUrl,
 		certificate(),
 		formData,
@@ -107,7 +107,7 @@ void OPDSAuthenticationManager::logOut() {
 	if (!mySignOutUrl.empty()) {
 		// TODO: is it so necessary to clean up cookies???
 		ZLExecutionData::Vector dataList;
-		dataList.push_back(ZLNetworkManager::Instance().createNoActionData(
+		dataList.push_back(ZLNetworkManager::Instance().createNoActionRequest(
 			mySignOutUrl,
 			certificate()
 		));

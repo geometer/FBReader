@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,33 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLCURLNETWORKREADRESPONSEDATA_H__
-#define __ZLCURLNETWORKREADRESPONSEDATA_H__
+#ifndef __ZLNETWORKDOWNLOADREQUEST_H__
+#define __ZLNETWORKDOWNLOADREQUEST_H__
 
-#include "ZLCurlNetworkData.h"
+#include "../ZLNetworkRequest.h"
 
-class ZLNetworkReader;
 
-class ZLCurlNetworkReadResponseData : public ZLCurlNetworkData {
+class ZLOutputStream;
+
+class ZLNetworkDownloadRequest : public ZLNetworkGetRequest {
 
 public:
-	ZLCurlNetworkReadResponseData(const std::string &url, shared_ptr<ZLNetworkReader> reader);
-	ZLCurlNetworkReadResponseData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLNetworkReader> reader);
+	ZLNetworkDownloadRequest(const std::string &url, const std::string &sslCertificate, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0);
 
-	size_t parseHeader(void *ptr, size_t size, size_t nmemb);
-	size_t parseData(void *ptr, size_t size, size_t nmemb);
+private:
+	void onCancel();
 
-protected:
+	bool handleHeader(void *ptr, size_t size);
+	bool handleContent(void *ptr, size_t size);
+
 	bool doBefore();
 	void doAfter(bool success);
 
 private:
-	shared_ptr<ZLNetworkReader> myReader;
+	const std::string myFileName;
+	int myFileSize;
+	int myDownloadedSize;
+	shared_ptr<ZLOutputStream> myOutputStream;
 };
 
-#endif /* __ZLCURLNETWORKREADRESPONSEDATA_H__ */
+#endif /* __ZLNETWORKDOWNLOADREQUEST_H__ */

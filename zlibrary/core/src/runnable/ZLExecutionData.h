@@ -26,7 +26,9 @@
 
 #include <shared_ptr.h>
 
-class ZLExecutionData {
+#include <ZLUserData.h>
+
+class ZLExecutionData : public ZLUserDataHolder {
 
 public:
 	typedef std::vector<shared_ptr<ZLExecutionData> > Vector;

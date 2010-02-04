@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,28 @@
  * 02110-1301, USA.
  */
 
-#include <ZLLogger.h>
+#ifndef __ZLNETWORKREADRESPONSEREQUEST_H__
+#define __ZLNETWORKREADRESPONSEREQUEST_H__
 
-#include "ZLCurlNetworkData.h"
+#include "../ZLNetworkRequest.h"
 
-ZLCurlNetworkData::ZLCurlNetworkData(const std::string &url, const std::string &sslCertificate) : ZLNetworkData(url, sslCertificate) {
-	myHandle = curl_easy_init();
-	if (myHandle != 0) {
-		curl_easy_setopt(myHandle, CURLOPT_URL, url.c_str());
-		if (!sslCertificate.empty()) {
-			curl_easy_setopt(myHandle, CURLOPT_CAINFO, sslCertificate.c_str());
-		}
-		ZLLogger::Instance().println("URL", url);
-	}
-}
 
-ZLCurlNetworkData::~ZLCurlNetworkData() {
-	if (myHandle != 0) {
-		curl_easy_cleanup(myHandle);
-	}
-}
+class ZLNetworkReader;
 
-CURL *ZLCurlNetworkData::handle() {
-	return myHandle;
-}
+class ZLNetworkReadResponseRequest : public ZLNetworkGetRequest {
+
+public:
+	ZLNetworkReadResponseRequest(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLNetworkReader> reader);
+
+private:
+	bool handleHeader(void *ptr, size_t size);
+	bool handleContent(void *ptr, size_t size);
+
+	bool doBefore();
+	void doAfter(bool success);
+
+private:
+	shared_ptr<ZLNetworkReader> myReader;
+};
+
+#endif /* __ZLNETWORKREADRESPONSEREQUEST_H__ */

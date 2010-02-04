@@ -25,7 +25,6 @@
 #include <ZLStringUtil.h>
 #include <ZLResource.h>
 #include <ZLNetworkManager.h>
-#include <ZLNetworkData.h>
 
 #include "NetworkLinkCollection.h"
 

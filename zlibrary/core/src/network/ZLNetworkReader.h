@@ -29,8 +29,8 @@ public:
 	virtual ~ZLNetworkReader();
 
 public: // handle??? methods return error messages, or empty string on success.
-	virtual std::string handleHeader(const std::string &key, const std::string &value) = 0;
-	virtual std::string handleData(const std::string &data) = 0;
+	virtual std::string handleHeader(void *ptr, size_t size) = 0;
+	virtual std::string handleContent(void *ptr, size_t size) = 0;
 
 private: // disable copying
 	ZLNetworkReader(const ZLNetworkReader &);

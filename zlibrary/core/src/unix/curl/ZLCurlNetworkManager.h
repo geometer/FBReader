@@ -24,6 +24,12 @@
 
 #include "../../network/ZLNetworkManager.h"
 
+
+class ZLNetworkRequest;
+class ZLNetworkGetRequest;
+class ZLNetworkPostRequest;
+
+
 class ZLCurlNetworkManager : public ZLNetworkManager {
 
 public:
@@ -32,26 +38,14 @@ public:
 private:
 	std::string perform(const ZLExecutionData::Vector &dataList) const;
 
-	shared_ptr<ZLExecutionData> createNoActionData(const std::string &url, const std::string &sslCertificate) const;
-	shared_ptr<ZLExecutionData> createNoActionData(const std::string &url) const;
+	std::string doBeforeRequest(ZLNetworkRequest &request) const;
+	std::string doBeforePostRequest(ZLNetworkPostRequest &request) const;
 
-	shared_ptr<ZLExecutionData> createReadToStringData(const std::string &url, std::string &dataString, const std::string &sslCertificate) const;
-	shared_ptr<ZLExecutionData> createReadToStringData(const std::string &url, std::string &dataString) const;
-
-	shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLOutputStream> stream = 0) const;
-	shared_ptr<ZLExecutionData> createDownloadData(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0) const;
-
-	shared_ptr<ZLExecutionData> createXMLParserData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLXMLReader> reader) const;
-	shared_ptr<ZLExecutionData> createXMLParserData(const std::string &url, shared_ptr<ZLXMLReader> reader) const;
-
-	shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const;
-	shared_ptr<ZLExecutionData> createPostFormData(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const;
-
-	shared_ptr<ZLExecutionData> createReadResponseData(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLNetworkReader> reader) const;
-	shared_ptr<ZLExecutionData> createReadResponseData(const std::string &url, shared_ptr<ZLNetworkReader> reader) const;
-
-private:
 	void setStandardOptions(CURL *handle, const std::string &proxy) const;
+
+	void setRequestOptions(CURL *handle, const ZLNetworkRequest &request) const;
+
+	void clearRequestOptions(ZLNetworkRequest &request) const;
 };
 
 #endif /* __ZLCURLNETWORKMANAGER_H__ */

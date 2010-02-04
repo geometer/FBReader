@@ -17,21 +17,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLCURLNETWORKNOACTIONDATA_H__
-#define __ZLCURLNETWORKNOACTIONDATA_H__
+#ifndef __ZLNETWORKREADTOSTRINGREQUEST_H__
+#define __ZLNETWORKREADTOSTRINGREQUEST_H__
 
-#include "ZLCurlNetworkData.h"
+#include "../ZLNetworkRequest.h"
 
-class ZLCurlNetworkNoActionData : public ZLCurlNetworkData {
+
+class ZLNetworkReadToStringRequest : public ZLNetworkGetRequest {
 
 public:
-	ZLCurlNetworkNoActionData(const std::string &url, const std::string &sslCertificate = std::string());
+	ZLNetworkReadToStringRequest(const std::string &url, const std::string &sslCertificate, std::string &buffer);
 
 private:
-	void onCancel();
+	bool handleHeader(void *ptr, size_t size);
+	bool handleContent(void *ptr, size_t size);
 
 	bool doBefore();
 	void doAfter(bool success);
+
+private:
+	std::string &myBuffer;
+	size_t myDataSize;
 };
 
-#endif /* __ZLCURLNETWORKNOACTIONDATA_H__ */
+#endif /* __ZLNETWORKREADTOSTRINGREQUEST_H__ */
