@@ -27,7 +27,7 @@
 #include "../options/FBOptions.h"
 #include "../options/FBTextStyle.h"
 
-const ZLTypeId FBReaderNode::TYPE_ID(ZLIdentifiableObject::TYPE_ID);
+const ZLTypeId FBReaderNode::TYPE_ID(ZLBlockTreeNode::TYPE_ID);
 
 class FBReaderNode::ExpandTreeAction : public ZLRunnable {
 

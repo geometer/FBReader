@@ -22,13 +22,12 @@
 
 #include <map>
 
-#include <ZLTypeId.h>
 #include <ZLBlockTreeView.h>
 
 class ZLImage;
 class FBTextStyle;
 
-class FBReaderNode : public ZLBlockTreeNode, public ZLIdentifiableObject {
+class FBReaderNode : public ZLBlockTreeNode {
 
 protected:
 	static shared_ptr<ZLImage> defaultCoverImage(const std::string &id);

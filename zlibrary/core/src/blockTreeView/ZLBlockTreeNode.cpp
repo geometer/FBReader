@@ -21,6 +21,8 @@
 
 #include "ZLBlockTreeNode.h"
 
+const ZLTypeId ZLBlockTreeNode::TYPE_ID(ZLIdentifiableObject::TYPE_ID);
+
 ZLBlockTreeNode::ZLBlockTreeNode(ZLBlockTreeView &view) : myView(view), myParent(0), myChildIndex(0), myIsOpen(true) {
 }
 

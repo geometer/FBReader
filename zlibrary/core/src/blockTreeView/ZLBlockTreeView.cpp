@@ -277,10 +277,16 @@ void ZLBlockTreeView::ensureVisible(ZLBlockTreeNode *node) {
 	}
 }
 
+const ZLTypeId ZLBlockTreeView::RootNode::TYPE_ID(ZLBlockTreeNode::TYPE_ID);
+
 ZLBlockTreeView::RootNode::RootNode(ZLBlockTreeView &view) : ZLBlockTreeNode(view) {
 }
 
 void ZLBlockTreeView::RootNode::paint(ZLPaintContext&, int) {
+}
+
+const ZLTypeId &ZLBlockTreeView::RootNode::typeId() const {
+	return TYPE_ID;
 }
 
 int ZLBlockTreeView::RootNode::height(ZLPaintContext&) const {

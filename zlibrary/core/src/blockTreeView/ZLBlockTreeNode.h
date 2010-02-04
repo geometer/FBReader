@@ -25,12 +25,13 @@
 
 #include <shared_ptr.h>
 
+#include <ZLTypeId.h>
 #include <ZLRunnable.h>
 #include <ZLPaintContext.h>
 
 class ZLBlockTreeView;
 
-class ZLBlockTreeNode {
+class ZLBlockTreeNode : public ZLIdentifiableObject {
 
 public:
 	typedef std::vector<ZLBlockTreeNode*> List;
@@ -47,6 +48,9 @@ protected:
 		bool contains(size_t x, size_t y) const;
 		bool operator < (const Rectangle &r) const;
 	};
+
+public:
+	static const ZLTypeId TYPE_ID;
 
 protected:
 	ZLBlockTreeNode(ZLBlockTreeView &view);

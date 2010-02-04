@@ -30,9 +30,13 @@ public:
 	class RootNode : public ZLBlockTreeNode {
 
 	public:
+		static const ZLTypeId TYPE_ID;
+ 
+	public:
 		RootNode(ZLBlockTreeView &view);
 
 	private:
+		const ZLTypeId &typeId() const;
 		void paint(ZLPaintContext &context, int vOffset);
 		int height(ZLPaintContext &context) const;
 	};
