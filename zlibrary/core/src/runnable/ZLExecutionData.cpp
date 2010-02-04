@@ -19,6 +19,8 @@
 
 #include <ZLExecutionData.h>
 
+const ZLTypeId ZLExecutionData::TYPE_ID(ZLIdentifiableObject::TYPE_ID);
+
 std::set<ZLExecutionData::Runner*> ZLExecutionData::ourRunners;
 
 std::string ZLExecutionData::perform(shared_ptr<ZLExecutionData> data) {

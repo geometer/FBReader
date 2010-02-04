@@ -26,12 +26,16 @@
 
 #include <shared_ptr.h>
 
+#include <ZLTypeId.h>
 #include <ZLUserData.h>
 
-class ZLExecutionData : public ZLUserDataHolder {
+class ZLExecutionData : public ZLUserDataHolder, public ZLIdentifiableObject {
 
 public:
 	typedef std::vector<shared_ptr<ZLExecutionData> > Vector;
+
+public:
+	static const ZLTypeId TYPE_ID;
 
 public:
 	class Runner {
@@ -74,7 +78,6 @@ protected:
 
 public:
 	virtual ~ZLExecutionData();
-	virtual const std::string &type() const = 0;
 
 	void setListener(shared_ptr<Listener> listener);
 	virtual void onCancel();

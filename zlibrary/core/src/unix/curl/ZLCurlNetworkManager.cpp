@@ -191,7 +191,7 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 	std::map<CURL*,shared_ptr<ZLExecutionData> > handleToRequest;
 
 	for (ZLExecutionData::Vector::const_iterator it = dataList.begin(); it != dataList.end(); ++it) {
-		if (it->isNull() || (*it)->type() != ZLNetworkRequest::TYPE_ID) {
+		if (it->isNull() || !(*it)->isObjectOfType(ZLNetworkRequest::TYPE_ID)) {
 			continue;
 		}
 		ZLNetworkRequest &request = (ZLNetworkRequest&)**it;

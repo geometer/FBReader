@@ -27,13 +27,13 @@
 class ZLNetworkRequest : public ZLExecutionData {
 
 public:
-	static const std::string TYPE_ID;
+	static const ZLTypeId TYPE_ID;
 
 protected:
 	ZLNetworkRequest(const std::string &url, const std::string &sslCertificate);
 
 private:
-	const std::string &type() const;
+	const ZLTypeId &typeId() const;
 
 public:
 	virtual ~ZLNetworkRequest();
@@ -69,12 +69,14 @@ private: // disable copying
 class ZLNetworkGetRequest : public ZLNetworkRequest {
 
 public:
+	static const ZLTypeId TYPE_ID;
 	static const std::string REQUEST_TYPE;
 
 public:
 	ZLNetworkGetRequest(const std::string &url, const std::string &sslCertificate);
 
 private:
+	const ZLTypeId &typeId() const;
 	const std::string &requestType() const;
 };
 
@@ -82,6 +84,7 @@ private:
 class ZLNetworkPostRequest : public ZLNetworkRequest {
 
 public:
+	static const ZLTypeId TYPE_ID;
 	static const std::string REQUEST_TYPE;
 
 public:
@@ -90,6 +93,7 @@ public:
 	const std::vector<std::pair<std::string, std::string> > &postData() const;
 
 private:
+	const ZLTypeId &typeId() const;
 	const std::string &requestType() const;
 
 private:
