@@ -29,7 +29,7 @@
 #include <ZLTypeId.h>
 #include <ZLUserData.h>
 
-class ZLExecutionData : public ZLUserDataHolder, public ZLIdentifiableObject {
+class ZLExecutionData : public ZLUserDataHolder, public ZLObjectWithRTTI {
 
 public:
 	typedef std::vector<shared_ptr<ZLExecutionData> > Vector;

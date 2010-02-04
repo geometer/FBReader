@@ -173,7 +173,7 @@ void NetworkView::makeUpToDate() {
 		}
 		bool processed = false;
 		while (nodeIt != rootChildren.end() &&
-					 (*nodeIt)->isObjectOfType(NetworkCatalogNode::TYPE_ID)) {
+					 (*nodeIt)->isInstanceOf(NetworkCatalogNode::TYPE_ID)) {
 			const NetworkLink &nodeLink = ((NetworkCatalogRootNode*)*nodeIt)->link();
 			if (&nodeLink == &link) {
 				++nodeIt;
@@ -207,7 +207,7 @@ void NetworkView::makeUpToDate() {
 	while (nodeIt != rootChildren.end()) {
 		ZLBlockTreeNode *node = *nodeIt++;
 		++nodeCount;
-		if (node->isObjectOfType(SearchResultNode::TYPE_ID)) {
+		if (node->isInstanceOf(SearchResultNode::TYPE_ID)) {
 			srNode = (SearchResultNode*)node;
 		} else {
 			nodesToDelete.insert(node);
@@ -242,7 +242,7 @@ void NetworkView::updateAccountDependents() {
 	ZLBlockTreeNode::List rootChildren = rootNode().children();
 
 	ZLBlockTreeNode::List::iterator nodeIt = rootChildren.begin();
-	while (nodeIt != rootChildren.end() && (*nodeIt)->isObjectOfType(NetworkCatalogNode::TYPE_ID)) {
+	while (nodeIt != rootChildren.end() && (*nodeIt)->isInstanceOf(NetworkCatalogNode::TYPE_ID)) {
 		NetworkCatalogNode &node = (NetworkCatalogNode &) **nodeIt;
 		updateAccountDependents(node);
 		++nodeIt;
@@ -268,7 +268,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 
 		bool processed = false;
 		while (nodeIt != nodeChildren.end()) {
-			if (!(*nodeIt)->isObjectOfType(NetworkCatalogNode::TYPE_ID)) {
+			if (!(*nodeIt)->isInstanceOf(NetworkCatalogNode::TYPE_ID)) {
 				++nodeIt;
 				++nodeCount;
 				continue;
@@ -308,7 +308,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 
 	while (nodeIt != nodeChildren.end()) {
 		ZLBlockTreeNode *node = *nodeIt++;
-		if (node->isObjectOfType(NetworkCatalogNode::TYPE_ID)) {
+		if (node->isInstanceOf(NetworkCatalogNode::TYPE_ID)) {
 			nodesToDelete.insert(node);
 		}
 	}

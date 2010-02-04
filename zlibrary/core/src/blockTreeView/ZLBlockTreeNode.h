@@ -31,7 +31,7 @@
 
 class ZLBlockTreeView;
 
-class ZLBlockTreeNode : public ZLIdentifiableObject {
+class ZLBlockTreeNode : public ZLObjectWithRTTI {
 
 public:
 	typedef std::vector<ZLBlockTreeNode*> List;

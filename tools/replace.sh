@@ -7,8 +7,8 @@ fi
 
 echo will replace $1 by $2
 
-for file in `find . -name "*.h" -o -name "*.cpp"`; do
+for file in `find . -type f -a -name "*.h" -o -name "*.cpp" -o -name "*.M"`; do
 	if grep -q "$1" $file; then
-		sed -i "s/$1/$2/" $file;
+		sed -e s/$1/$2/ -i \"\" $file;
 	fi;
 done

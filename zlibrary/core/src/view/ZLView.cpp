@@ -21,7 +21,7 @@
 #include "ZLViewWidget.h"
 #include "ZLPaintContext.h"
 
-const ZLTypeId ZLView::TYPE_ID(ZLIdentifiableObject::TYPE_ID);
+const ZLTypeId ZLView::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
 const ZLTypeId &ZLView::typeId() const {
 	return TYPE_ID;

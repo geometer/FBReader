@@ -31,7 +31,7 @@
 class NetworkAuthenticationManager;
 class NetworkLink;
 
-class NetworkLibraryItem : public ZLIdentifiableObject {
+class NetworkLibraryItem : public ZLObjectWithRTTI {
 
 protected:
 	static const ZLTypeId TYPE_ID;

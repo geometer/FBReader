@@ -58,7 +58,7 @@ void LibraryView::showBook(shared_ptr<Book> book) {
 		const ZLBlockTreeNode::List &children = nodesQueue.front()->children();
 		nodesQueue.pop();
 		for (ZLBlockTreeNode::List::const_iterator it = children.begin(); it != children.end(); ++it) {
-			if ((*it)->isObjectOfType(BookNode::TYPE_ID)) {
+			if ((*it)->isInstanceOf(BookNode::TYPE_ID)) {
 				// TODO: replace with == for shared_ptr<Book>
 				//if (((BookNode*)*it)->book() == book) {
 				if (((BookNode*)*it)->book()->filePath() == book->filePath()) {

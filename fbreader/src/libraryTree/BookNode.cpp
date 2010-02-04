@@ -178,11 +178,11 @@ std::string BookNode::title() const {
 
 std::string BookNode::summary() const {
 	FBReaderNode *parent = (FBReaderNode*)this->parent();
-	while (!parent->isObjectOfType(AuthorNode::TYPE_ID) &&
-				 !parent->isObjectOfType(TagNode::TYPE_ID)) {
+	while (!parent->isInstanceOf(AuthorNode::TYPE_ID) &&
+				 !parent->isInstanceOf(TagNode::TYPE_ID)) {
 		parent = (FBReaderNode*)parent->parent();
 	}
-	if (parent->isObjectOfType(AuthorNode::TYPE_ID)) {
+	if (parent->isInstanceOf(AuthorNode::TYPE_ID)) {
 		const TagList &tags = myBook->tags();
 		if (tags.empty()) {
 			return std::string();

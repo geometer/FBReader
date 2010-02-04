@@ -30,7 +30,7 @@
 class ZLViewWidget;
 class ZLPaintContext;
 
-class ZLView : public ZLIdentifiableObject {
+class ZLView : public ZLObjectWithRTTI {
 
 public:
 	enum Angle {

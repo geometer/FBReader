@@ -112,7 +112,7 @@ size_t TagNode::positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag) {
 	const ZLBlockTreeNode::List &children = parent->children();
 	ZLBlockTreeNode::List::const_reverse_iterator it = children.rbegin();
 	for (; it != children.rend(); ++it) {
-		if (!(*it)->isObjectOfType(TagNode::TYPE_ID) ||
+		if (!(*it)->isInstanceOf(TagNode::TYPE_ID) ||
 				TagComparator()(((TagNode*)*it)->tag(), tag)) {
 			break;
 		}
@@ -198,8 +198,8 @@ void TagNode::EditOrCloneAction::run() {
 	const ZLBlockTreeNode::List &children = myTagNode.children();
 	IncludeSubtagsEntry *includeSubtagsEntry = new IncludeSubtagsEntry();
 	if (!children.empty() &&
-			children.back()->isObjectOfType(TagNode::TYPE_ID)) {
-		if (!children.front()->isObjectOfType(BookNode::TYPE_ID)) {
+			children.back()->isInstanceOf(TagNode::TYPE_ID)) {
+		if (!children.front()->isInstanceOf(BookNode::TYPE_ID)) {
 			includeSubtagsEntry->setActive(false);
 		}
 		dialog->addOption(ZLResourceKey("includeSubtags"), includeSubtagsEntry);

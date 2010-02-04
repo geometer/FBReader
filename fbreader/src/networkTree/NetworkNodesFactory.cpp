@@ -24,11 +24,11 @@
 #include "../network/NetworkBookCollection.h"
 
 FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition) {
-	if (item->isObjectOfType(NetworkLibraryCatalogItem::TYPE_ID)) {
+	if (item->isInstanceOf(NetworkLibraryCatalogItem::TYPE_ID)) {
 		NetworkCatalogNode *ptr = new NetworkCatalogNode(parent, item, atPosition);
 		ptr->item().onDisplayItem();
 		return ptr;
-	} else if (item->isObjectOfType(NetworkLibraryBookItem::TYPE_ID)) {
+	} else if (item->isInstanceOf(NetworkLibraryBookItem::TYPE_ID)) {
 		return new NetworkBookInfoNode(parent, item);
 	}
 	return 0;
@@ -48,14 +48,14 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 	NetworkSeriesNode *seriesNode = 0;
 
 	NetworkSeriesNode::SummaryType summaryType = NetworkSeriesNode::AUTHORS;
-	if ((parent->isObjectOfType(NetworkCatalogNode::TYPE_ID) &&
+	if ((parent->isInstanceOf(NetworkCatalogNode::TYPE_ID) &&
 			((NetworkCatalogNode*)parent)->item().catalogType() == NetworkLibraryCatalogItem::BY_AUTHORS) ||
-			 parent->isObjectOfType(NetworkAuthorNode::TYPE_ID)) {
+			 parent->isInstanceOf(NetworkAuthorNode::TYPE_ID)) {
 		summaryType = NetworkSeriesNode::BOOKS;
 	}
 
 	for (NetworkLibraryItemList::const_iterator it = books.begin(); it != books.end(); ++it) {
-		if (!(*it)->isObjectOfType(NetworkLibraryBookItem::TYPE_ID)) {
+		if (!(*it)->isInstanceOf(NetworkLibraryBookItem::TYPE_ID)) {
 			continue;
 		}
 		const NetworkLibraryBookItem &book = (const NetworkLibraryBookItem &) **it;

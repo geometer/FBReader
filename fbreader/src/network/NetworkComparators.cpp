@@ -21,9 +21,9 @@
 
 bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkLibraryItem> &bookPtr0, const shared_ptr<NetworkLibraryItem> &bookPtr1) {
 	const bool book0isABook =
-		bookPtr0->isObjectOfType(NetworkLibraryBookItem::TYPE_ID);
+		bookPtr0->isInstanceOf(NetworkLibraryBookItem::TYPE_ID);
 	const bool book1isABook =
-		bookPtr1->isObjectOfType(NetworkLibraryBookItem::TYPE_ID);
+		bookPtr1->isInstanceOf(NetworkLibraryBookItem::TYPE_ID);
 
 	if (!book0isABook && !book1isABook) {
 		return bookPtr0->title() < bookPtr1->title();

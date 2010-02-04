@@ -26,7 +26,7 @@
 #include "NetworkLink.h"
 #include "NetworkLinkCollection.h"
 
-const ZLTypeId NetworkLibraryItem::TYPE_ID(ZLIdentifiableObject::TYPE_ID);
+const ZLTypeId NetworkLibraryItem::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 const ZLTypeId NetworkLibraryCatalogItem::TYPE_ID(NetworkLibraryItem::TYPE_ID);
 const ZLTypeId NetworkLibraryBookItem::TYPE_ID(NetworkLibraryItem::TYPE_ID);
 

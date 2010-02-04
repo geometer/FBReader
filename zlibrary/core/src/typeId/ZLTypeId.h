@@ -35,17 +35,17 @@ public:
 private:
 	const ZLTypeId *myBase;	
 
-friend class ZLIdentifiableObject;
+friend class ZLObjectWithRTTI;
 };
 
-class ZLIdentifiableObject {
+class ZLObjectWithRTTI {
 
 public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	virtual ~ZLIdentifiableObject();
-	bool isObjectOfType(const ZLTypeId &type, bool exact = false) const;
+	virtual ~ZLObjectWithRTTI();
+	bool isInstanceOf(const ZLTypeId &type, bool exact = false) const;
 
 protected:
 	virtual const ZLTypeId &typeId() const = 0;
@@ -59,7 +59,7 @@ inline bool ZLTypeId::operator != (const ZLTypeId &type) const {
 	return this != &type;
 }
 
-inline ZLIdentifiableObject::~ZLIdentifiableObject() {
+inline ZLObjectWithRTTI::~ZLObjectWithRTTI() {
 }
 
 #endif /* __ZLTYPEID_H__ */

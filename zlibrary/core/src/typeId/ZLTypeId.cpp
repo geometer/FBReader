@@ -19,7 +19,7 @@
 
 #include "ZLTypeId.h"
 
-const ZLTypeId ZLIdentifiableObject::TYPE_ID;
+const ZLTypeId ZLObjectWithRTTI::TYPE_ID;
 
 ZLTypeId::ZLTypeId() {
 }
@@ -37,6 +37,6 @@ bool ZLTypeId::isSubtypeOf(const ZLTypeId &type) const {
 	return false;
 }
 
-bool ZLIdentifiableObject::isObjectOfType(const ZLTypeId &type, bool exact) const {
+bool ZLObjectWithRTTI::isInstanceOf(const ZLTypeId &type, bool exact) const {
 	return exact ? typeId() == type : typeId().isSubtypeOf(type);
 }

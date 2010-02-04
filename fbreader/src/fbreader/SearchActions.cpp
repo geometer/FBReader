@@ -90,7 +90,7 @@ bool SearchAction::isVisible() const {
 	shared_ptr<ZLView> view = FBReader::Instance().currentView();
 	return
 		!view.isNull() && 
-		view->isObjectOfType(ZLTextView::TYPE_ID) &&
+		view->isInstanceOf(ZLTextView::TYPE_ID) &&
 		((FBView&)*view).hasContents();
 }
 
@@ -133,7 +133,7 @@ bool FindNextAction::isEnabled() const {
 	shared_ptr<ZLView> view = FBReader::Instance().currentView();
 	return
 		!view.isNull() && 
-		view->isObjectOfType(ZLTextView::TYPE_ID) &&
+		view->isInstanceOf(ZLTextView::TYPE_ID) &&
 		((ZLTextView&)*view).canFindNext();
 	return false;
 }
@@ -146,7 +146,7 @@ bool FindPreviousAction::isEnabled() const {
 	shared_ptr<ZLView> view = FBReader::Instance().currentView();
 	return
 		!view.isNull() && 
-		view->isObjectOfType(ZLTextView::TYPE_ID) &&
+		view->isInstanceOf(ZLTextView::TYPE_ID) &&
 		((ZLTextView&)*view).canFindPrevious();
 }
 

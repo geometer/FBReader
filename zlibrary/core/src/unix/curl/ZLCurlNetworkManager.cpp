@@ -124,7 +124,7 @@ std::string ZLCurlNetworkManager::doBeforeRequest(ZLNetworkRequest &request) con
 		return ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), ZLNetworkUtil::hostFromUrl(request.url()));
 	}
 
-	if (request.isObjectOfType(ZLNetworkPostRequest::TYPE_ID)) {
+	if (request.isInstanceOf(ZLNetworkPostRequest::TYPE_ID)) {
 		return doBeforePostRequest((ZLNetworkPostRequest &) request);
 	}
 	return "";
@@ -157,7 +157,7 @@ void ZLCurlNetworkManager::setRequestOptions(CURL *handle, const ZLNetworkReques
 	curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, handleContent);
 	curl_easy_setopt(handle, CURLOPT_WRITEDATA, &request);
 
-	if (request.isObjectOfType(ZLNetworkPostRequest::TYPE_ID)) {
+	if (request.isInstanceOf(ZLNetworkPostRequest::TYPE_ID)) {
 		shared_ptr<ZLUserData> postDataPtr = request.getUserData("postData");
 		PostData &postData = (PostData&)*postDataPtr;
 
@@ -169,7 +169,7 @@ void ZLCurlNetworkManager::setRequestOptions(CURL *handle, const ZLNetworkReques
 
 
 void ZLCurlNetworkManager::clearRequestOptions(ZLNetworkRequest &request) const {
-	if (request.isObjectOfType(ZLNetworkPostRequest::TYPE_ID)) {
+	if (request.isInstanceOf(ZLNetworkPostRequest::TYPE_ID)) {
 		request.removeUserData("postData");
 	}
 }
@@ -191,7 +191,7 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 	std::map<CURL*,shared_ptr<ZLExecutionData> > handleToRequest;
 
 	for (ZLExecutionData::Vector::const_iterator it = dataList.begin(); it != dataList.end(); ++it) {
-		if (it->isNull() || !(*it)->isObjectOfType(ZLNetworkRequest::TYPE_ID)) {
+		if (it->isNull() || !(*it)->isInstanceOf(ZLNetworkRequest::TYPE_ID)) {
 			continue;
 		}
 		ZLNetworkRequest &request = (ZLNetworkRequest&)**it;
