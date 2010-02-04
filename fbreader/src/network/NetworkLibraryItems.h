@@ -26,10 +26,15 @@
 
 #include <shared_ptr.h>
 
+#include <ZLTypeId.h>
+
 class NetworkAuthenticationManager;
 class NetworkLink;
 
-class NetworkLibraryItem {
+class NetworkLibraryItem : public ZLIdentifiableObject {
+
+protected:
+	static const ZLTypeId TYPE_ID;
 
 protected:
 	NetworkLibraryItem();
@@ -38,7 +43,7 @@ protected:
 public:
 	virtual ~NetworkLibraryItem();
 
-	virtual const std::string &typeId() const = 0;
+	virtual const ZLTypeId &typeId() const = 0;
 
 	const std::string &title() const;
 	const std::string &coverURL() const;
@@ -64,7 +69,7 @@ typedef std::vector<shared_ptr<NetworkLibraryItem> > NetworkLibraryItemList;
 class NetworkLibraryCatalogItem : public NetworkLibraryItem {
 
 public:
-	static const std::string TYPE_ID;
+	static const ZLTypeId TYPE_ID;
 
 	enum CatalogType {
 		OTHER,
@@ -82,7 +87,7 @@ public:
 		bool dependsOnAccount = false
 	);
 
-	const std::string &typeId() const;
+	const ZLTypeId &typeId() const;
 
 	NetworkLink &link() const;
 	const std::string &url() const;
@@ -135,13 +140,13 @@ public:
 	};
 
 public:
-	static const std::string TYPE_ID;
+	static const ZLTypeId TYPE_ID;
 
 public:
 	NetworkLibraryBookItem(const std::string &id, unsigned int index);
 	explicit NetworkLibraryBookItem(const NetworkLibraryBookItem &book);
 
-	const std::string &typeId() const;
+	const ZLTypeId &typeId() const;
 
 	//std::string fileName(URLType format) const;
 	const std::string &id() const;

@@ -24,13 +24,11 @@
 #include "../network/NetworkBookCollection.h"
 
 FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition) {
-	const std::string &itemType = item->typeId();
-
-	if (itemType == NetworkLibraryCatalogItem::TYPE_ID) {
+	if (item->isObjectOfType(NetworkLibraryCatalogItem::TYPE_ID)) {
 		NetworkCatalogNode *ptr = new NetworkCatalogNode(parent, item, atPosition);
 		ptr->item().onDisplayItem();
 		return ptr;
-	} else if (itemType == NetworkLibraryBookItem::TYPE_ID) {
+	} else if (item->isObjectOfType(NetworkLibraryBookItem::TYPE_ID)) {
 		return new NetworkBookInfoNode(parent, item);
 	}
 	return 0;
@@ -57,7 +55,7 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 	}
 
 	for (NetworkLibraryItemList::const_iterator it = books.begin(); it != books.end(); ++it) {
-		if ((*it)->typeId() != NetworkLibraryBookItem::TYPE_ID) {
+		if (!(*it)->isObjectOfType(NetworkLibraryBookItem::TYPE_ID)) {
 			continue;
 		}
 		const NetworkLibraryBookItem &book = (const NetworkLibraryBookItem &) **it;

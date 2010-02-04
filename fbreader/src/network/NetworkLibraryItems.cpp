@@ -26,6 +26,10 @@
 #include "NetworkLink.h"
 #include "NetworkLinkCollection.h"
 
+const ZLTypeId NetworkLibraryItem::TYPE_ID(ZLIdentifiableObject::TYPE_ID);
+const ZLTypeId NetworkLibraryCatalogItem::TYPE_ID(NetworkLibraryItem::TYPE_ID);
+const ZLTypeId NetworkLibraryBookItem::TYPE_ID(NetworkLibraryItem::TYPE_ID);
+
 NetworkLibraryItem::NetworkLibraryItem() {
 }
 
@@ -45,8 +49,6 @@ void NetworkLibraryItem::setCoverURL(const std::string &coverURL) {
 	myCoverURL = coverURL;
 }
 
-const std::string NetworkLibraryCatalogItem::TYPE_ID = "catalogItem";
-
 NetworkLibraryCatalogItem::NetworkLibraryCatalogItem(
 	NetworkLink &link,
 	const std::string &url,
@@ -65,7 +67,7 @@ NetworkLibraryCatalogItem::NetworkLibraryCatalogItem(
 	setCoverURL(coverURL);
 }
 
-const std::string &NetworkLibraryCatalogItem::typeId() const {
+const ZLTypeId &NetworkLibraryCatalogItem::typeId() const {
 	return TYPE_ID;
 }
 
@@ -75,8 +77,6 @@ void NetworkLibraryCatalogItem::onDisplayItem() {
 NetworkLibraryCatalogItem::CatalogType NetworkLibraryCatalogItem::catalogType() const {
 	return OTHER;
 }
-
-const std::string NetworkLibraryBookItem::TYPE_ID = "bookItem";
 
 bool NetworkLibraryBookItem::AuthorData::operator < (const AuthorData &data) const {
 	const int sComp = SortKey.compare(data.SortKey);
@@ -102,7 +102,7 @@ NetworkLibraryBookItem::NetworkLibraryBookItem(const NetworkLibraryBookItem &boo
 	myAuthenticationManager(book.myAuthenticationManager) {
 }
 
-const std::string &NetworkLibraryBookItem::typeId() const {
+const ZLTypeId &NetworkLibraryBookItem::typeId() const {
 	return TYPE_ID;
 }
 

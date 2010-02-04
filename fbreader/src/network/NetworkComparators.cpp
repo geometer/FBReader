@@ -20,14 +20,16 @@
 #include "NetworkComparators.h"
 
 bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkLibraryItem> &bookPtr0, const shared_ptr<NetworkLibraryItem> &bookPtr1) {
-	std::string book0Type = bookPtr0->typeId();
-	std::string book1Type = bookPtr1->typeId();
+	const bool book0isABook =
+		bookPtr0->isObjectOfType(NetworkLibraryBookItem::TYPE_ID);
+	const bool book1isABook =
+		bookPtr1->isObjectOfType(NetworkLibraryBookItem::TYPE_ID);
 
-	if (book0Type != NetworkLibraryBookItem::TYPE_ID && book1Type != NetworkLibraryBookItem::TYPE_ID) {
+	if (!book0isABook && !book1isABook) {
 		return bookPtr0->title() < bookPtr1->title();
 	}
-	if (book0Type != NetworkLibraryBookItem::TYPE_ID || book1Type != NetworkLibraryBookItem::TYPE_ID) {
-		return book0Type != NetworkLibraryBookItem::TYPE_ID;
+	if (!book0isABook || !book1isABook) {
+		return !book0isABook;
 	}
 
 	const NetworkLibraryBookItem &book0 = (NetworkLibraryBookItem &) *bookPtr0;
