@@ -85,6 +85,19 @@ void ZLCocoaApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item, int index
 
 	switch (item->type()) {
 		case ZLToolbar::Item::TEXT_FIELD:
+		{
+			const ZLToolbar::ParameterItem &parameterItem =
+				(const ZLToolbar::ParameterItem&)*item;
+			identifier = [NSString stringWithUTF8String:parameterItem.actionId().c_str()];
+			if (index == -1) {
+				ZLCocoaToolbarDelegate *delegate =
+					(ZLCocoaToolbarDelegate*)[toolbar delegate];
+				NSString *label = [NSString stringWithUTF8String:parameterItem.label().c_str()];
+				NSString *tooltip = [NSString stringWithUTF8String:parameterItem.tooltip().c_str()];
+				[delegate addTextItemWithIdentifier:identifier label:label tooltip:tooltip];
+			}
+			break;
+		}
 		case ZLToolbar::Item::COMBO_BOX:
 			break;
 		case ZLToolbar::Item::SEARCH_FIELD:

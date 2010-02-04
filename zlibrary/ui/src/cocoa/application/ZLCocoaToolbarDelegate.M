@@ -37,7 +37,27 @@
 - (void)addSearchItemWithIdentifier:(NSString*)identifier label:(NSString*)label tooltip:(NSString*)tooltip {
 	NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
 
-	[item setView:[[[NSSearchField alloc] init] autorelease]];
+	NSSearchField *searchField = [[[NSSearchField alloc] init] autorelease];
+	[item setView:searchField];
+	//[item setView:[[[NSSearchField alloc] init] autorelease]];
+	//[item setMinSize:[[item view] bounds].size];
+	//[item setMaxSize:[[item view] bounds].size];
+	[item setMinSize:NSMakeSize(200, 30)];
+	[item setMaxSize:NSMakeSize(200, 30)];
+
+	[item setLabel:label];
+	[item setToolTip:tooltip];
+	[item setTarget:self];
+	[item setAction:@selector(doAction:)];
+	[myItems setObject:item forKey:identifier];
+}
+
+- (void)addTextItemWithIdentifier:(NSString*)identifier label:(NSString*)label tooltip:(NSString*)tooltip {
+	NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
+
+	NSTextField *textField = [[[NSTextField alloc] init] autorelease];
+	[item setView:textField];
+	//[item setView:[[[NSSearchField alloc] init] autorelease]];
 	//[item setMinSize:[[item view] bounds].size];
 	//[item setMaxSize:[[item view] bounds].size];
 	[item setMinSize:NSMakeSize(200, 30)];
