@@ -28,8 +28,7 @@
 #include "../network/NetworkBookCollection.h"
 
 
-const std::string SearchResultNode::TYPE_ID = "SearchResultNode";
-
+const ZLTypeId SearchResultNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
 SearchResultNode::SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition) : 
 	NetworkContainerNode(parent, atPosition), 
@@ -37,7 +36,7 @@ SearchResultNode::SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr
 	mySummary(summary) {
 }
 
-const std::string &SearchResultNode::typeId() const {
+const ZLTypeId &SearchResultNode::typeId() const {
 	return TYPE_ID;
 }
 

@@ -50,9 +50,9 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 	NetworkSeriesNode *seriesNode = 0;
 
 	NetworkSeriesNode::SummaryType summaryType = NetworkSeriesNode::AUTHORS;
-	if ((parent->typeId() == NetworkCatalogNode::TYPE_ID 
-		&& ((NetworkCatalogNode*)parent)->item().catalogType() == NetworkLibraryCatalogItem::BY_AUTHORS)
-		|| parent->typeId() == NetworkAuthorNode::TYPE_ID) {
+	if ((parent->isObjectOfType(NetworkCatalogNode::TYPE_ID) &&
+			((NetworkCatalogNode*)parent)->item().catalogType() == NetworkLibraryCatalogItem::BY_AUTHORS) ||
+			 parent->isObjectOfType(NetworkAuthorNode::TYPE_ID)) {
 		summaryType = NetworkSeriesNode::BOOKS;
 	}
 

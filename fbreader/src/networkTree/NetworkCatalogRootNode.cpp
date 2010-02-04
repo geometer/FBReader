@@ -55,6 +55,8 @@ private:
 	NetworkAuthenticationManager &myManager;
 };
 
+const ZLTypeId NetworkCatalogRootNode::TYPE_ID(NetworkCatalogNode::TYPE_ID);
+
 NetworkCatalogRootNode::NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition) : NetworkCatalogNode(parent, link.libraryItem(), atPosition), myLink(link) {
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
 	if (!mgr.isNull()) {
@@ -69,6 +71,10 @@ NetworkCatalogRootNode::NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent
 		}
 	}
 	myDontShowAction = new DontShowAction(myLink);
+}
+
+const ZLTypeId &NetworkCatalogRootNode::typeId() const {
+	return TYPE_ID;
 }
 
 const NetworkLink &NetworkCatalogRootNode::link() const {

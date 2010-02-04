@@ -66,9 +66,9 @@ private:
 	shared_ptr<Book> myBook;
 };
 
-const std::string BookNode::TYPE_ID = "BookNode";
+const ZLTypeId BookNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
-const std::string &BookNode::typeId() const {
+const ZLTypeId &BookNode::typeId() const {
 	return TYPE_ID;
 }
 
@@ -178,11 +178,11 @@ std::string BookNode::title() const {
 
 std::string BookNode::summary() const {
 	FBReaderNode *parent = (FBReaderNode*)this->parent();
-	while (parent->typeId() != AuthorNode::TYPE_ID &&
-				 parent->typeId() != TagNode::TYPE_ID) {
+	while (!parent->isObjectOfType(AuthorNode::TYPE_ID) &&
+				 !parent->isObjectOfType(TagNode::TYPE_ID)) {
 		parent = (FBReaderNode*)parent->parent();
 	}
-	if (parent->typeId() == AuthorNode::TYPE_ID) {
+	if (parent->isObjectOfType(AuthorNode::TYPE_ID)) {
 		const TagList &tags = myBook->tags();
 		if (tags.empty()) {
 			return std::string();

@@ -172,7 +172,8 @@ void NetworkView::makeUpToDate() {
 			continue;
 		}
 		bool processed = false;
-		while (nodeIt != rootChildren.end() && ((FBReaderNode*)*nodeIt)->typeId() == NetworkCatalogNode::TYPE_ID) {
+		while (nodeIt != rootChildren.end() &&
+					 ((FBReaderNode*)*nodeIt)->isObjectOfType(NetworkCatalogNode::TYPE_ID)) {
 			const NetworkLink &nodeLink = ((NetworkCatalogRootNode*)*nodeIt)->link();
 			if (&nodeLink == &link) {
 				++nodeIt;
@@ -206,7 +207,7 @@ void NetworkView::makeUpToDate() {
 	while (nodeIt != rootChildren.end()) {
 		FBReaderNode *node = (FBReaderNode *) *nodeIt++;
 		++nodeCount;
-		if (node->typeId() == SearchResultNode::TYPE_ID) {
+		if (node->isObjectOfType(SearchResultNode::TYPE_ID)) {
 			srNode = (SearchResultNode *) node;
 		} else {
 			nodesToDelete.insert(node);
@@ -241,7 +242,7 @@ void NetworkView::updateAccountDependents() {
 	ZLBlockTreeNode::List rootChildren = rootNode().children();
 
 	ZLBlockTreeNode::List::iterator nodeIt = rootChildren.begin();
-	while (nodeIt != rootChildren.end() && ((FBReaderNode*)*nodeIt)->typeId() == NetworkCatalogNode::TYPE_ID) {
+	while (nodeIt != rootChildren.end() && ((FBReaderNode*)*nodeIt)->isObjectOfType(NetworkCatalogNode::TYPE_ID)) {
 		NetworkCatalogNode &node = (NetworkCatalogNode &) **nodeIt;
 		updateAccountDependents(node);
 		++nodeIt;
@@ -267,7 +268,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 
 		bool processed = false;
 		while (nodeIt != nodeChildren.end()) {
-			if (((FBReaderNode*)*nodeIt)->typeId() != NetworkCatalogNode::TYPE_ID) {
+			if (!((FBReaderNode*)*nodeIt)->isObjectOfType(NetworkCatalogNode::TYPE_ID)) {
 				++nodeIt;
 				++nodeCount;
 				continue;
@@ -307,7 +308,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 
 	while (nodeIt != nodeChildren.end()) {
 		FBReaderNode *node = (FBReaderNode *) *nodeIt++;
-		if (node->typeId() == NetworkCatalogNode::TYPE_ID) {
+		if (node->isObjectOfType(NetworkCatalogNode::TYPE_ID)) {
 			nodesToDelete.insert(node);
 		}
 	}

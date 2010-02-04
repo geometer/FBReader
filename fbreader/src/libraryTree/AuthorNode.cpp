@@ -38,9 +38,9 @@ private:
 	shared_ptr<Author> myAuthor;
 };
 
-const std::string AuthorNode::TYPE_ID = "AuthorNode";
+const ZLTypeId AuthorNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
-const std::string &AuthorNode::typeId() const {
+const ZLTypeId &AuthorNode::typeId() const {
 	return TYPE_ID;
 }
 

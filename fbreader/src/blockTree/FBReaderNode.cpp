@@ -27,6 +27,8 @@
 #include "../options/FBOptions.h"
 #include "../options/FBTextStyle.h"
 
+const ZLTypeId FBReaderNode::TYPE_ID(ZLIdentifiableObject::TYPE_ID);
+
 class FBReaderNode::ExpandTreeAction : public ZLRunnable {
 
 public:
@@ -43,6 +45,10 @@ FBReaderNode::FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition) : ZLBlock
 }
 
 FBReaderNode::~FBReaderNode() {
+}
+
+const ZLTypeId &FBReaderNode::typeId() const {
+	return TYPE_ID;
 }
 
 shared_ptr<ZLImage> FBReaderNode::coverImage() const {

@@ -68,8 +68,7 @@ private:
 	NetworkCatalogNode &myNode;
 };
 
-const std::string NetworkCatalogNode::TYPE_ID = "LibraryItemNode";
-
+const ZLTypeId NetworkCatalogNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
 NetworkCatalogNode::NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition) : 
 	NetworkContainerNode(parent, atPosition), 
@@ -110,7 +109,7 @@ const NetworkLibraryItemList &NetworkCatalogNode::childrenItems() {
 	return myChildrenItems;
 }
 
-const std::string &NetworkCatalogNode::typeId() const {
+const ZLTypeId &NetworkCatalogNode::typeId() const {
 	return TYPE_ID;
 }
 

@@ -24,9 +24,9 @@
 
 #include "../library/Book.h"
 
-const std::string SeriesNode::TYPE_ID = "SeriesNode";
+const ZLTypeId SeriesNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
-const std::string &SeriesNode::typeId() const {
+const ZLTypeId &SeriesNode::typeId() const {
 	return TYPE_ID;
 }
 

@@ -97,9 +97,9 @@ static const std::string DEMO_SUFFIX = " (фрагмент)";
 static const std::string DEMO_TAG = "Фрагмент";
 
 
-const std::string NetworkBookInfoNode::TYPE_ID = "NetworkBookInfoNode";
+const ZLTypeId NetworkBookInfoNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
-const std::string &NetworkBookInfoNode::typeId() const {
+const ZLTypeId &NetworkBookInfoNode::typeId() const {
 	return TYPE_ID;
 }
 

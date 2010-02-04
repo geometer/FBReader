@@ -23,9 +23,9 @@
 #include "NetworkNodes.h"
 #include "NetworkView.h"
 
-const std::string NetworkAuthorNode::TYPE_ID = "NetworkAuthorNode";
+const ZLTypeId NetworkAuthorNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
-const std::string &NetworkAuthorNode::typeId() const {
+const ZLTypeId &NetworkAuthorNode::typeId() const {
 	return TYPE_ID;
 }
 

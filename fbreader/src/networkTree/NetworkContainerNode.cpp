@@ -19,6 +19,12 @@
 
 #include "NetworkNodes.h"
 
+const ZLTypeId NetworkContainerNode::TYPE_ID(FBReaderNode::TYPE_ID);
+
+const ZLTypeId &NetworkContainerNode::typeId() const {
+	return TYPE_ID;
+}
+
 NetworkContainerNode::NetworkContainerNode(ZLBlockTreeView::RootNode *parent, size_t atPosition) : FBReaderNode(parent, atPosition) {
 }
 

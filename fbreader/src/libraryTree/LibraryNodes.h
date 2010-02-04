@@ -31,7 +31,7 @@ class Tag;
 class AuthorNode : public FBReaderNode {
 
 public:
-	static const std::string TYPE_ID;
+	static const ZLTypeId TYPE_ID;
 
 private:
 	class EditInfoAction;
@@ -42,7 +42,7 @@ public:
 	shared_ptr<Author> author() const;
 
 private:
-	const std::string &typeId() const;
+	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
@@ -55,7 +55,7 @@ private:
 class SeriesNode : public FBReaderNode {
 
 public:
-	static const std::string TYPE_ID;
+	static const ZLTypeId TYPE_ID;
 
 public:
 	SeriesNode(AuthorNode *parent, shared_ptr<Book> book);
@@ -63,7 +63,7 @@ public:
 	shared_ptr<Book> book() const;
 
 private:
-	const std::string &typeId() const;
+	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
@@ -84,7 +84,7 @@ private:
 	class IncludeSubtagsEntry;
 
 public:
-	static const std::string TYPE_ID;
+	static const ZLTypeId TYPE_ID;
 
 private:
 	static size_t positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag);
@@ -95,7 +95,7 @@ public:
 	shared_ptr<Tag> tag() const;
 
 private:
-	const std::string &typeId() const;
+	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
 	void paint(ZLPaintContext &context, int vOffset);
@@ -110,7 +110,7 @@ private:
 class BookNode : public FBReaderNode {
 
 public:
-	static const std::string TYPE_ID;
+	static const ZLTypeId TYPE_ID;
 
 private:
 	class ReadAction;
@@ -125,7 +125,7 @@ public:
 	shared_ptr<Book> book() const;
 
 private:
-	const std::string &typeId() const;
+	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
 	std::string summary() const;
