@@ -1,8 +1,8 @@
 include $(ROOTDIR)/makefiles/arch/unix.mk
 
-ifeq "$(INSTALLDIR)" ""
-  INSTALLDIR=/FBReader.app
-endif
+DESTDIR ?= /Applications
+
+INSTALLDIR = /FBReader.app
 BINDIR = $(INSTALLDIR)/Contents/MacOS
 SHAREDIR = $(INSTALLDIR)/Contents/Share
 IMAGEDIR = $(SHAREDIR)/icons
