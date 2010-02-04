@@ -25,8 +25,6 @@ const ZLTypeId ZLNetworkRequest::TYPE_ID(ZLExecutionData::TYPE_ID);
 const ZLTypeId ZLNetworkGetRequest::TYPE_ID(ZLNetworkRequest::TYPE_ID);
 const ZLTypeId ZLNetworkPostRequest::TYPE_ID(ZLNetworkRequest::TYPE_ID);
 
-const std::string ZLNetworkGetRequest::REQUEST_TYPE = "ZLNetworkGetRequest";
-const std::string ZLNetworkPostRequest::REQUEST_TYPE = "ZLNetworkPostRequest";
 
 ZLNetworkRequest::ZLNetworkRequest(const std::string &url, const std::string &sslCertificate) : myURL(url), mySSLCertificate(sslCertificate) {
 	ZLLogger::Instance().println("URL", url);
@@ -69,9 +67,6 @@ const ZLTypeId &ZLNetworkGetRequest::typeId() const {
 	return TYPE_ID;
 }
 
-const std::string &ZLNetworkGetRequest::requestType() const {
-	return REQUEST_TYPE;
-}
 
 
 ZLNetworkPostRequest::ZLNetworkPostRequest(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &postData) :
@@ -81,10 +76,6 @@ ZLNetworkPostRequest::ZLNetworkPostRequest(const std::string &url, const std::st
 
 const ZLTypeId &ZLNetworkPostRequest::typeId() const {
 	return TYPE_ID;
-}
-
-const std::string &ZLNetworkPostRequest::requestType() const {
-	return REQUEST_TYPE;
 }
 
 const std::vector<std::pair<std::string, std::string> > &ZLNetworkPostRequest::postData() const {

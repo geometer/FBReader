@@ -38,8 +38,6 @@ private:
 public:
 	virtual ~ZLNetworkRequest();
 
-	virtual const std::string &requestType() const = 0;
-
 	const std::string &errorMessage() const;
 
 	const std::string &url() const;
@@ -70,14 +68,12 @@ class ZLNetworkGetRequest : public ZLNetworkRequest {
 
 public:
 	static const ZLTypeId TYPE_ID;
-	static const std::string REQUEST_TYPE;
 
 public:
 	ZLNetworkGetRequest(const std::string &url, const std::string &sslCertificate);
 
 private:
 	const ZLTypeId &typeId() const;
-	const std::string &requestType() const;
 };
 
 
@@ -85,7 +81,6 @@ class ZLNetworkPostRequest : public ZLNetworkRequest {
 
 public:
 	static const ZLTypeId TYPE_ID;
-	static const std::string REQUEST_TYPE;
 
 public:
 	ZLNetworkPostRequest(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &postData);
@@ -94,7 +89,6 @@ public:
 
 private:
 	const ZLTypeId &typeId() const;
-	const std::string &requestType() const;
 
 private:
 	std::vector<std::pair<std::string, std::string> > myData;

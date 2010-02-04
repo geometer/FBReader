@@ -124,7 +124,7 @@ std::string ZLCurlNetworkManager::doBeforeRequest(ZLNetworkRequest &request) con
 		return ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), ZLNetworkUtil::hostFromUrl(request.url()));
 	}
 
-	if (request.requestType() == ZLNetworkPostRequest::REQUEST_TYPE) {
+	if (request.isObjectOfType(ZLNetworkPostRequest::TYPE_ID)) {
 		return doBeforePostRequest((ZLNetworkPostRequest &) request);
 	}
 	return "";
@@ -157,7 +157,7 @@ void ZLCurlNetworkManager::setRequestOptions(CURL *handle, const ZLNetworkReques
 	curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, handleContent);
 	curl_easy_setopt(handle, CURLOPT_WRITEDATA, &request);
 
-	if (request.requestType() == ZLNetworkPostRequest::REQUEST_TYPE) {
+	if (request.isObjectOfType(ZLNetworkPostRequest::TYPE_ID)) {
 		shared_ptr<ZLUserData> postDataPtr = request.getUserData("postData");
 		PostData &postData = (PostData&)*postDataPtr;
 
@@ -169,7 +169,7 @@ void ZLCurlNetworkManager::setRequestOptions(CURL *handle, const ZLNetworkReques
 
 
 void ZLCurlNetworkManager::clearRequestOptions(ZLNetworkRequest &request) const {
-	if (request.requestType() == ZLNetworkPostRequest::REQUEST_TYPE) {
+	if (request.isObjectOfType(ZLNetworkPostRequest::TYPE_ID)) {
 		request.removeUserData("postData");
 	}
 }
