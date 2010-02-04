@@ -9,7 +9,11 @@ DONE	убрать string compare для автора в NetworkSeriesNode::summa
 DONE	прорисовывается ненужное пространство для дополнительных ссылок у feedbooks.com
 0.14.0: почему не удается добраться до книг вот в этом каталоге? http://davidsoft.free.fr/calibre2opds/demo/_catalog/catalog.xml
 DONE	переделать ZLNetwok...
+0.14.0: Не обойтись ли TYPE_ID вместо REQUEST_TYPE?
+0.14.0: А что, есть такое слово coloned? (a pair separated by colon -- точно можно, colon-separated pair -- может быть) В любом случае, предлагаю завести для него специальный ZLParseUtil
 0.14.0: перенести удаление www. для feedbooks в fbreader\... ::downloadBook(...)
+	** Аккуратнее: там потом есть еще проверка на "скачанность файла" по имени
+	** А может таки у всех удалять. Трудно себе представить, что у кого-то добавление префикса "www." дает ВАЛИДНУЮ ссылку на ДРУГУЮ книгу
 0.14.0: authentication на feedbooks
 0.14.0: authentication на shucang
 0.14.0: authentication на smashwords
@@ -21,6 +25,7 @@ DELAYED (can't reproduce) X-System problem - fix set/restore window position (in
 0.14.0: докачка файлов (оч. актуально для litres)
 0.14.0: Через какое-то время (2 недели?) картинки в кеше должны протухать (сервер может решить показывать новые картинки в фидах)
 
+0.14.0: паттерны для голландского языка/кодировок
 0.14.0: обрабатывать type="text/html"
 0.14.0: аннотации к книгам в library/network view
 0.14.0: разделить диалог настроек на части: program, library, text
@@ -53,9 +58,6 @@ DONE: fillSeparator: логика включения/выключения раз
 0.12.5 Упростить NetworkLibraryItem'ы: неизменяемые и некопируемые
 0.12.5 Посмотреть каталоги из http://catalog.lexcycle.com/
 0.12.5 проверить работу timeout'а
-0.12.5 кешировать содержимое каталога не по Item'у, а по URL (в некоторых деревьях они (URL) иногда повторяются)
-0.12.5 список каталогов должен лежать на сайте fbreader.org и апдейтиться автоматически
-0.12.5 common code in FB2MetaInfoReader && LitResDataParser
 
 SHUCANG advanced search на shucang.com
 LIBRUSEC сделать поддержку для lib.rus.ec
@@ -70,6 +72,7 @@ DELAYED в QT4 - плохо работают wait-messag'и:
 	** не видно надписей
 	** первый message - появляется не в центре окна, а в центре экрана???
 
+0.15.0 common code in FB2MetaInfoReader && LitResDataParser
 0.15.0 Делать всю работу с сетью в отдельном треде
 	** загрузка иконок не должна мешать работе
 	** более интеллигентная защита от бесконечных циклов в просмотре подкаталогов (сейчас смотрим <= 10 страниц в OPDSLink)
