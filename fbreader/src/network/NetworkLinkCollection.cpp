@@ -226,7 +226,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &networkBookId
 	return BooksDB::Instance().getNetFile(::normalize(networkBookId));
 }
 
-bool NetworkLinkCollection::downloadBook(const std::string &url, const std::string &networkBookId, NetworkLibraryBookItem::URLType format, std::string &fileName, const std::string &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
+bool NetworkLinkCollection::downloadBook(const std::string &url, const std::string &networkBookId, NetworkLibraryBookItem::URLType format, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
 	const std::string nURL = ::normalize(url);
 	const std::string nNetworkBookId = ::normalize(networkBookId);
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
@@ -252,7 +252,7 @@ bool NetworkLinkCollection::downloadBook(const std::string &url, const std::stri
 		ZLFile(fileName).remove();
 	}
 	BooksDB::Instance().setNetFile(nNetworkBookId, fileName);
-	myErrorMessage = ZLNetworkManager::Instance().downloadFile(nURL, fileName, sslCertificate, listener);
+	myErrorMessage = ZLNetworkManager::Instance().downloadFile(nURL, sslCertificate, fileName, listener);
 	return myErrorMessage.empty();
 }
 

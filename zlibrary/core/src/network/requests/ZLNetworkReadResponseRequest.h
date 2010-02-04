@@ -28,7 +28,7 @@ class ZLNetworkReader;
 class ZLNetworkReadResponseRequest : public ZLNetworkGetRequest {
 
 public:
-	ZLNetworkReadResponseRequest(const std::string &url, const std::string &sslCertificate, shared_ptr<ZLNetworkReader> reader);
+	ZLNetworkReadResponseRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLNetworkReader> reader);
 
 private:
 	bool handleHeader(void *ptr, size_t size);

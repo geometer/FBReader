@@ -60,7 +60,6 @@ LitResLink::LitResLink() :
 shared_ptr<ZLExecutionData> LitResLink::simpleSearchData(NetworkOperationData &result, const std::string &pattern) {
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_browser/?checkpoint=2000-01-01&search=" + ZLNetworkUtil::htmlEncode(pattern)),
-		"",
 		new LitResDataParser(result.Items, myAuthenticationManager)
 	);
 }
@@ -86,7 +85,6 @@ shared_ptr<ZLExecutionData> LitResLink::advancedSearchData(NetworkOperationData 
 
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_browser/" + request),
-		"",
 		new LitResDataParser(result.Items, myAuthenticationManager)
 	);
 }
@@ -240,7 +238,6 @@ std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	ZLExecutionData::Vector dataList;
 	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
 		url(),
-		"",
 		new LitResDataParser(children, link().authenticationManager())
 	));
 
@@ -342,7 +339,6 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 	ZLExecutionData::Vector dataList;
 	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
 		url(),
-		"",
 		new LitResAuthorsParser(authors)
 	));
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLNETWORKNOACTIONREQUEST_H__
-#define __ZLNETWORKNOACTIONREQUEST_H__
+#ifndef __ZLNETWORKSSLCERTIFICATE_H__
+#define __ZLNETWORKSSLCERTIFICATE_H__
 
-#include "../ZLNetworkRequest.h"
+#include <string>
 
+struct ZLNetworkSSLCertificate {
 
-class ZLNetworkNoActionRequest : public ZLNetworkGetRequest {
+	std::string Path;
 
-public:
-	ZLNetworkNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
-
-private:
-	bool doBefore();
-	void doAfter(bool success);
-
-	bool handleContent(void *ptr, size_t size);
+	ZLNetworkSSLCertificate();
+	ZLNetworkSSLCertificate(const std::string &path);
 };
 
-#endif /* __ZLNETWORKNOACTIONREQUEST_H__ */
+inline ZLNetworkSSLCertificate::ZLNetworkSSLCertificate() {}
+inline ZLNetworkSSLCertificate::ZLNetworkSSLCertificate(const std::string &path) : Path(path) {}
+
+#endif /* __ZLNETWORKSSLCERTIFICATE_H__ */

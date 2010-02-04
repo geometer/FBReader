@@ -22,7 +22,7 @@
 #include "ZLNetworkReadResponseRequest.h"
 
 
-ZLNetworkReadResponseRequest::ZLNetworkReadResponseRequest(const std::string &url, const std::string &sslCertificate, 
+ZLNetworkReadResponseRequest::ZLNetworkReadResponseRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
 		shared_ptr<ZLNetworkReader> reader) :
 	ZLNetworkGetRequest(url, sslCertificate),
 	myReader(reader) {

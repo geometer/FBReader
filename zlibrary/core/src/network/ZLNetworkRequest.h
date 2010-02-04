@@ -23,6 +23,8 @@
 #include <string>
 
 #include <ZLExecutionData.h>
+#include <ZLNetworkSSLCertificate.h>
+
 
 class ZLNetworkRequest : public ZLExecutionData {
 
@@ -30,7 +32,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	ZLNetworkRequest(const std::string &url, const std::string &sslCertificate);
+	ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
 
 private:
 	const ZLTypeId &typeId() const;
@@ -41,7 +43,7 @@ public:
 	const std::string &errorMessage() const;
 
 	const std::string &url() const;
-	const std::string &sslCertificate() const;
+	const ZLNetworkSSLCertificate &sslCertificate() const;
 
 protected:
 	void setErrorMessage(const std::string &message);
@@ -55,7 +57,7 @@ public:
 
 private:
 	const std::string myURL;
-	const std::string mySSLCertificate;
+	const ZLNetworkSSLCertificate mySSLCertificate;
 	std::string myErrorMessage;
 
 private: // disable copying
@@ -70,7 +72,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	ZLNetworkGetRequest(const std::string &url, const std::string &sslCertificate);
+	ZLNetworkGetRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
 
 private:
 	const ZLTypeId &typeId() const;
@@ -83,7 +85,8 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	ZLNetworkPostRequest(const std::string &url, const std::string &sslCertificate, const std::vector<std::pair<std::string, std::string> > &postData);
+	ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
+		const std::vector<std::pair<std::string, std::string> > &postData);
 
 	const std::vector<std::pair<std::string, std::string> > &postData() const;
 

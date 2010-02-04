@@ -22,7 +22,7 @@
 #include "ZLNetworkPostFormRequest.h"
 
 
-ZLNetworkPostFormRequest::ZLNetworkPostFormRequest(const std::string &url, const std::string &sslCertificate,
+ZLNetworkPostFormRequest::ZLNetworkPostFormRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate,
 		const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) :
 	ZLNetworkPostRequest(url, sslCertificate, formData),
 	myReader(reader) {

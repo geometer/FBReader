@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLNetworkSSLCertificate.h>
+
 #include "NetworkAuthenticationManager.h"
 
 #include "NetworkLibraryItems.h"
@@ -88,7 +90,7 @@ std::string NetworkAuthenticationManager::recoverPassword(const std::string &) {
 	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
 }
 
-const std::string &NetworkAuthenticationManager::certificate() {
-	static const std::string _empty = "";
+const ZLNetworkSSLCertificate &NetworkAuthenticationManager::certificate() {
+	static const ZLNetworkSSLCertificate _empty;
 	return _empty;
 }

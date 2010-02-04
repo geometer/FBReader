@@ -27,7 +27,7 @@
 #include "ZLNetworkDownloadRequest.h"
 
 
-ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, const std::string &sslCertificate,
+ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate,
 		const std::string &fileName, shared_ptr<ZLOutputStream> stream) :
 	ZLNetworkGetRequest(url, sslCertificate),
 	myFileName(fileName),

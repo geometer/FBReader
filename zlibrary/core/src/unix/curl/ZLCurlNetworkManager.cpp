@@ -148,8 +148,8 @@ std::string ZLCurlNetworkManager::doBeforePostRequest(ZLNetworkPostRequest &requ
 
 void ZLCurlNetworkManager::setRequestOptions(CURL *handle, const ZLNetworkRequest &request) const {
 	curl_easy_setopt(handle, CURLOPT_URL, request.url().c_str());
-	if (!request.sslCertificate().empty()) {
-		curl_easy_setopt(handle, CURLOPT_CAINFO, request.sslCertificate().c_str());
+	if (!request.sslCertificate().Path.empty()) {
+		curl_easy_setopt(handle, CURLOPT_CAINFO, request.sslCertificate().Path.c_str());
 	}
 
 	curl_easy_setopt(handle, CURLOPT_HEADERFUNCTION, handleHeader);
@@ -262,7 +262,7 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 					errors.insert(ZLStringUtil::printf(errorResource["sslCertificateAuthorityMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));
 					break;
 				case CURLE_SSL_CACERT_BADFILE:
-					errors.insert(ZLStringUtil::printf(errorResource["sslBadCertificateFileMessage"].value(), request.sslCertificate()));
+					errors.insert(ZLStringUtil::printf(errorResource["sslBadCertificateFileMessage"].value(), request.sslCertificate().Path));
 					break;
 				case CURLE_SSL_SHUTDOWN_FAILED:
 					errors.insert(ZLStringUtil::printf(errorResource["sslShutdownFailedMessage"].value(), ZLNetworkUtil::hostFromUrl(url)));

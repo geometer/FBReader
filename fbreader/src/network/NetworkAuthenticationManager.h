@@ -26,6 +26,7 @@
 
 #include "NetworkLibraryItems.h"
 
+struct ZLNetworkSSLCertificate;
 
 class NetworkAuthenticationManager {
 
@@ -72,7 +73,7 @@ public: // Account specific methods (can be called only if authorised!!!)
 	virtual std::string refillAccountLink();
 	virtual std::string currentAccount();
 
-	virtual const std::string &certificate();
+	virtual const ZLNetworkSSLCertificate &certificate();
 
 public: // new User Registration
 	virtual bool registrationSupported();

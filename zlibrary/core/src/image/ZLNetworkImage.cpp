@@ -67,7 +67,7 @@ shared_ptr<ZLExecutionData> ZLNetworkImage::synchronizationData() const {
 	}
 	myIsSynchronized = true;
 
-	return ZLNetworkManager::Instance().createDownloadRequest(myURL, "", myFileName);
+	return ZLNetworkManager::Instance().createDownloadRequest(myURL, myFileName);
 }
 
 const shared_ptr<std::string> ZLNetworkImage::stringData() const {

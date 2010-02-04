@@ -24,6 +24,7 @@
 
 #include <ZLRunnable.h>
 #include <ZLBoolean3.h>
+#include <ZLNetworkSSLCertificate.h>
 
 #include "../network/NetworkLibraryItems.h"
 #include "../network/NetworkBookCollection.h"
@@ -66,7 +67,7 @@ public:
 
 private:
 	std::string myURL;
-	std::string mySSLCertificate;
+	ZLNetworkSSLCertificate mySSLCertificate;
 	std::string myNetworkBookId;
 	NetworkLibraryBookItem::URLType myFormat;
 

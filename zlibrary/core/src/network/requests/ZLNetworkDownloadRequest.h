@@ -28,7 +28,7 @@ class ZLOutputStream;
 class ZLNetworkDownloadRequest : public ZLNetworkGetRequest {
 
 public:
-	ZLNetworkDownloadRequest(const std::string &url, const std::string &sslCertificate, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0);
+	ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0);
 
 private:
 	void onCancel();

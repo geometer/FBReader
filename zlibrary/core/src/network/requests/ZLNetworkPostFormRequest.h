@@ -28,7 +28,7 @@ class ZLNetworkReader;
 class ZLNetworkPostFormRequest : public ZLNetworkPostRequest {
 
 public:
-	ZLNetworkPostFormRequest(const std::string &url, const std::string &sslCertificate, 
+	ZLNetworkPostFormRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
 		const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader);
 
 private:

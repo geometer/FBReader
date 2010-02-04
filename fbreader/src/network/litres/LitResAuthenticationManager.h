@@ -22,6 +22,8 @@
 
 #include <set>
 
+#include <ZLNetworkSSLCertificate.h>
+
 #include "../NetworkAuthenticationManager.h"
 #include "../NetworkLibraryItems.h"
 
@@ -61,7 +63,7 @@ private:
 	void loadAccountOnError();
 	void loadAccountOnSuccess();
 
-	const std::string &certificate();
+	const ZLNetworkSSLCertificate &certificate();
 
 public: // new User Registration
 	bool registrationSupported();
@@ -82,7 +84,7 @@ private:
 	NetworkLibraryItemList myPurchasedBooksList;
 	std::string myAccount;
 
-	std::string myCertificate;
+	ZLNetworkSSLCertificate myCertificate;
 };
 
 #endif /* __LITRESAUTHENTICATIONMANAGER_H__ */
