@@ -25,11 +25,12 @@
 #include <shared_ptr.h>
 
 #include <ZLColor.h>
+#include <ZLTypeId.h>
 
 class ZLViewWidget;
 class ZLPaintContext;
 
-class ZLView {
+class ZLView : public ZLIdentifiableObject {
 
 public:
 	enum Angle {
@@ -44,11 +45,12 @@ public:
 		HORIZONTAL
 	};
 
+protected:
+	static const ZLTypeId TYPE_ID;
+
 public:
 	ZLView(ZLPaintContext &context);
 	virtual ~ZLView();
-
-	virtual const std::string &typeId() const = 0;
 
 	virtual const std::string &caption() const = 0;
 	virtual void paint() = 0;
@@ -64,6 +66,8 @@ public:
 	virtual bool onFingerTap(int x, int y);
 
 protected:
+	const ZLTypeId &typeId() const;
+
 	virtual ZLColor backgroundColor() const = 0;
 
 	void setScrollbarEnabled(Direction direction, bool enabled);

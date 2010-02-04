@@ -23,9 +23,9 @@
 
 #include "ZLBlockTreeView.h"
 
-const std::string ZLBlockTreeView::TYPE_ID = "ZLBlockTreeView";
+const ZLTypeId ZLBlockTreeView::TYPE_ID(ZLView::TYPE_ID);
 
-const std::string &ZLBlockTreeView::typeId() const {
+const ZLTypeId &ZLBlockTreeView::typeId() const {
 	return TYPE_ID;
 }
 

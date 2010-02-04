@@ -430,7 +430,7 @@ void GotoPageNumberAction::run() {
 
 bool SelectionAction::isVisible() const {
 	shared_ptr<ZLView> view = FBReader::Instance().currentView();
-	return !view.isNull() && view->typeId() == ZLTextView::TYPE_ID;
+	return !view.isNull() && view->isObjectOfType(ZLTextView::TYPE_ID);
 }
 
 bool SelectionAction::isEnabled() const {

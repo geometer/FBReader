@@ -19,6 +19,15 @@
 
 #include "ZLTypeId.h"
 
+const ZLTypeId ZLIdentifiableObject::TYPE_ID;
+
+ZLTypeId::ZLTypeId() {
+}
+
+ZLTypeId::ZLTypeId(const ZLTypeId &base) {
+	myBase = &base;
+}
+
 bool ZLTypeId::isSubtypeOf(const ZLTypeId &type) const {
 	for (const ZLTypeId *t = this; t != 0; t = t->myBase) {
 		if (t == &type) {
@@ -26,4 +35,8 @@ bool ZLTypeId::isSubtypeOf(const ZLTypeId &type) const {
 		}
 	}
 	return false;
+}
+
+bool ZLIdentifiableObject::isObjectOfType(const ZLTypeId &type, bool exact) const {
+	return exact ? typeId() == type : typeId().isSubtypeOf(type);
 }

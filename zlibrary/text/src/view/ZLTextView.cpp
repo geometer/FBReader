@@ -36,9 +36,9 @@
 
 const int ZLTextView::DOUBLE_CLICK_DELAY = 200;
 
-const std::string ZLTextView::TYPE_ID = "ZLTextView";
+const ZLTypeId ZLTextView::TYPE_ID(ZLView::TYPE_ID);
 
-const std::string &ZLTextView::typeId() const {
+const ZLTypeId &ZLTextView::typeId() const {
 	return TYPE_ID;
 }
 

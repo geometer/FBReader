@@ -21,6 +21,12 @@
 #include "ZLViewWidget.h"
 #include "ZLPaintContext.h"
 
+const ZLTypeId ZLView::TYPE_ID(ZLIdentifiableObject::TYPE_ID);
+
+const ZLTypeId &ZLView::typeId() const {
+	return TYPE_ID;
+}
+
 ZLView::ZLView(ZLPaintContext &context) : myViewWidget(0), myContext(context) {
 }
 
@@ -192,7 +198,7 @@ void ZLViewWidget::correctDirection(ZLView::Direction &direction, bool &invert) 
 
 void ZLViewWidget::onScrollbarMoved(ZLView::Direction direction, size_t full, size_t from, size_t to) {
 	if (!myView.isNull()) {
-		bool invert;
+		bool invert = false;
 		correctDirection(direction, invert);
 		if (invert) {
 			size_t tmp = full - from;
@@ -205,7 +211,7 @@ void ZLViewWidget::onScrollbarMoved(ZLView::Direction direction, size_t full, si
 
 void ZLViewWidget::onScrollbarStep(ZLView::Direction direction, int steps) {
 	if (!myView.isNull()) {
-		bool invert;
+		bool invert = false;
 		correctDirection(direction, invert);
 		myView->onScrollbarStep(direction, invert ? -steps : steps);
 	}
@@ -213,7 +219,7 @@ void ZLViewWidget::onScrollbarStep(ZLView::Direction direction, int steps) {
 
 void ZLViewWidget::onScrollbarPageStep(ZLView::Direction direction, int steps) {
 	if (!myView.isNull()) {
-		bool invert;
+		bool invert = false;
 		correctDirection(direction, invert);
 		myView->onScrollbarPageStep(direction, invert ? -steps : steps);
 	}

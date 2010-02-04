@@ -22,8 +22,10 @@
 
 class ZLTypeId {
 
-public:
+private:
 	ZLTypeId();
+
+public:
 	explicit ZLTypeId(const ZLTypeId &base);
 
 	bool operator == (const ZLTypeId &type) const;
@@ -32,6 +34,21 @@ public:
 
 private:
 	const ZLTypeId *myBase;	
+
+friend class ZLIdentifiableObject;
+};
+
+class ZLIdentifiableObject {
+
+public:
+	static const ZLTypeId TYPE_ID;
+
+public:
+	virtual ~ZLIdentifiableObject();
+	bool isObjectOfType(const ZLTypeId &type, bool exact = false) const;
+
+protected:
+	virtual const ZLTypeId &typeId() const = 0;
 };
 
 inline bool ZLTypeId::operator == (const ZLTypeId &type) const {
@@ -40,6 +57,9 @@ inline bool ZLTypeId::operator == (const ZLTypeId &type) const {
 
 inline bool ZLTypeId::operator != (const ZLTypeId &type) const {
 	return this != &type;
+}
+
+inline ZLIdentifiableObject::~ZLIdentifiableObject() {
 }
 
 #endif /* __ZLTYPEID_H__ */

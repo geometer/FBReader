@@ -38,11 +38,11 @@ public:
 	};
 
 public:
-	static const std::string TYPE_ID;
-	const std::string &typeId() const;
+	static const ZLTypeId TYPE_ID;
 
 protected:
 	ZLBlockTreeView(ZLPaintContext &context);
+	const ZLTypeId &typeId() const;
 
 	RootNode &rootNode();
 	void clear();

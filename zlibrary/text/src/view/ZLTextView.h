@@ -53,7 +53,7 @@ public:
 	class PositionIndicator;
 
 public:
-	static const std::string TYPE_ID;
+	static const ZLTypeId TYPE_ID;
 
 protected:
 	ZLTextView(ZLPaintContext &context);
@@ -61,7 +61,7 @@ protected:
 	virtual shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo() const = 0;
 
 private:
-	const std::string &typeId() const;
+	const ZLTypeId &typeId() const;
 
 public:
 	const ZLTextArea &textArea() const;
