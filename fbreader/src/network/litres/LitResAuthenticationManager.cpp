@@ -38,13 +38,11 @@ LitResAuthenticationManager::LitResAuthenticationManager(const std::string &site
 	NetworkAuthenticationManager(siteName), 
 	mySidChecked(false), 
 	mySidUserNameOption(ZLCategoryKey::NETWORK, siteName, "sidUserName", ""), 
-	mySidOption(ZLCategoryKey::NETWORK, siteName, "sid", "") {
+	mySidOption(ZLCategoryKey::NETWORK, siteName, "sid", ""),
+	myCertificate(NetworkLink::CertificatesPathPrefix() + "litres.ru.crt") {
 }
 
 const ZLNetworkSSLCertificate &LitResAuthenticationManager::certificate() {
-	if (myCertificate.Path.empty()) {
-		myCertificate = ZLNetworkSSLCertificate(NetworkLink::CertificatesPathPrefix() + "litres.ru.crt");
-	}
 	return myCertificate;
 }
 

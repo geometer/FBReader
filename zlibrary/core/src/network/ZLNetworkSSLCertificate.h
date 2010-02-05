@@ -23,7 +23,6 @@
 #include <string>
 
 struct ZLNetworkSSLCertificate {
-
 	std::string Path;
 
 	ZLNetworkSSLCertificate();

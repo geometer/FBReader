@@ -161,8 +161,15 @@ void ZLCurlNetworkManager::setRequestOptions(CURL *handle, const ZLNetworkReques
 		break;
 
 	case ZLNetworkRequest::BASIC:
+#if LIBCURL_VERSION_NUM >= 0x071301
 		curl_easy_setopt(handle, CURLOPT_USERNAME, request.userName().c_str());
 		curl_easy_setopt(handle, CURLOPT_PASSWORD, request.password().c_str());
+#else
+		curl_easy_setopt(
+			handle, CURLOPT_USERPWD,
+			(request.userName() + ':' + request.password()).c_str()
+		);
+#endif
 		curl_easy_setopt(handle, CURLOPT_HTTPAUTH, (long) CURLAUTH_BASIC);
 		break;
 	}
