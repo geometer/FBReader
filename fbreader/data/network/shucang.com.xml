@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <catalog type="opds">
 	<site>shucang.com</site>
-	<link type="main">http://shucang.com/s/index.php</link>
-	<link type="search">http://shucang.com/s/doclist.php?skey=%s</link>
+	<link type="main">http://www.shucang.com/s/index.php</link>
+	<link type="search">http://www.shucang.com/s/doclist.php?skey=%s</link>
 	<title>Shucang Catalog</title>
 	<summary>Shucang: a Chinese bookshelf.</summary>
 	<icon>feed-shucang.png</icon>
-	<ignored-feeds>
+	<account-dependent-feeds>
 		<link>urn:uuid:01182b8b-4719-2369-35e0-107bce646b54</link>
-	</ignored-feeds>
+	</account-dependent-feeds>
+	<authentication type="basic">
+		<part name="signInUrl">http://www.shucang.com/s/myshucang.php</part>
+		<part name="signOutUrl">http://www.shucang.com/logout.php</part>
+	</authentication>
 </catalog>
