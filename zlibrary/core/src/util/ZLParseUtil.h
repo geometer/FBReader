@@ -17,25 +17,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLNETWORKREADER_H__
-#define __ZLNETWORKREADER_H__
+#ifndef __ZLPARSEUTIL_H__
+#define __ZLPARSEUTIL_H__
 
 #include <string>
 
-class ZLNetworkReader {
+class ZLParseUtil {
+
+private:
+	ZLParseUtil();
 
 public:
-	ZLNetworkReader();
-	virtual ~ZLNetworkReader();
-
-public:
-	// return error messages
-	virtual std::string handleHeader(void *ptr, size_t size) = 0;
-	virtual std::string handleContent(void *ptr, size_t size) = 0;
-
-private: // disable copying
-	ZLNetworkReader(const ZLNetworkReader &);
-	const ZLNetworkReader &operator = (const ZLNetworkReader &);
+	static bool parseHTTPStatusLine(const std::string &line, std::string &httpVersion, std::string &statusCode, std::string &reasonPhrase);
 };
 
-#endif /* __ZLNETWORKREADER_H__ */
+#endif /* __ZLPARSEUTIL_H__ */

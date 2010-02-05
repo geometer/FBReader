@@ -18,33 +18,28 @@
  */
 
 #include <ZLNetworkManager.h>
+#include <ZLNetworkRequest.h>
 
-#include "OPDSAuthenticationManager.h"
+#include "OPDSBasicAuthenticationManager.h"
 #include "OPDSNetworkAuthenticationReader.h"
 
 #include "../NetworkLibraryItems.h"
 #include "../NetworkErrors.h"
 
 
-OPDSAuthenticationManager::OPDSAuthenticationManager(
-	const std::string &siteName,
-	const std::string &postLogin,
-	const std::string &postPassword,
-	const std::string &postSignInUrl,
-	const std::string &signOutUrl,
-	const std::string &accountUrl) : 
+OPDSBasicAuthenticationManager::OPDSBasicAuthenticationManager(
+		const std::string &siteName,
+		const std::string &signInUrl,
+		const std::string &signOutUrl) :
 	NetworkAuthenticationManager(siteName),
-	myPostLogin(postLogin),
-	myPostPassword(postPassword),
-	myPostSignInUrl(postSignInUrl),
+	mySignInUrl(signInUrl),
 	mySignOutUrl(signOutUrl),
-	myAccountUrl(accountUrl),
 	myAccountChecked(false),
 	myAccountUserNameOption(ZLCategoryKey::NETWORK, siteName, "accountUserName", "") {
 }
 
 
-NetworkAuthenticationManager::AuthenticationStatus OPDSAuthenticationManager::isAuthorised(bool useNetwork) {
+NetworkAuthenticationManager::AuthenticationStatus OPDSBasicAuthenticationManager::isAuthorised(bool useNetwork) {
 	bool authState = !myAccountUserNameOption.value().empty();
 	if (myAccountChecked || !useNetwork) {
 		return AuthenticationStatus(authState);
@@ -56,12 +51,17 @@ NetworkAuthenticationManager::AuthenticationStatus OPDSAuthenticationManager::is
 		return AuthenticationStatus(false);
 	}
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createReadResponseRequest(
-		myAccountUrl,
+	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createReadResponseRequest(
+		mySignInUrl,
 		certificate(),
-		new OPDSNetworkAuthenticationReader()
-	));
+		new OPDSNetworkAuthenticationReader(SiteName)
+	);
+	ZLNetworkRequest &request = (ZLNetworkRequest &)*data;
+
+	request.setRedirectionSupported(false);
+
+	ZLExecutionData::Vector dataList;
+	dataList.push_back(data);
 	std::string error = ZLNetworkManager::Instance().perform(dataList);
 
 	if (!error.empty()) {
@@ -76,19 +76,20 @@ NetworkAuthenticationManager::AuthenticationStatus OPDSAuthenticationManager::is
 	return AuthenticationStatus(true);
 }
 
-std::string OPDSAuthenticationManager::authorise(const std::string &pwd) {
+std::string OPDSBasicAuthenticationManager::authorise(const std::string &pwd) {
 
-	std::vector<std::pair<std::string, std::string> > formData;
-	formData.push_back(std::make_pair(myPostLogin, UserNameOption.value()));
-	formData.push_back(std::make_pair(myPostPassword, pwd));
+	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createReadResponseRequest(
+		mySignInUrl,
+		certificate(),
+		new OPDSNetworkAuthenticationReader(SiteName)
+	);
+	ZLNetworkRequest &request = (ZLNetworkRequest &)*data;
+
+	request.setRedirectionSupported(false);
+	request.setupAuthentication(ZLNetworkRequest::BASIC, UserNameOption.value(), pwd);
 
 	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createPostFormRequest(
-		myPostSignInUrl,
-		certificate(),
-		formData,
-		new OPDSNetworkAuthenticationReader()
-	));
+	dataList.push_back(data);
 	std::string error = ZLNetworkManager::Instance().perform(dataList);
 
 	myAccountChecked = true;
@@ -100,7 +101,7 @@ std::string OPDSAuthenticationManager::authorise(const std::string &pwd) {
 	return "";
 }
 
-void OPDSAuthenticationManager::logOut() {
+void OPDSBasicAuthenticationManager::logOut() {
 	myAccountChecked = true;
 	myAccountUserNameOption.setValue("");
 
@@ -120,20 +121,20 @@ void OPDSAuthenticationManager::logOut() {
 
 
 
-std::string OPDSAuthenticationManager::networkBookId(const NetworkLibraryBookItem &) {
+std::string OPDSBasicAuthenticationManager::networkBookId(const NetworkLibraryBookItem &) {
 	return "";
 }
 
-NetworkLibraryBookItem::URLType OPDSAuthenticationManager::downloadLinkType(const NetworkLibraryBookItem &) {
+NetworkLibraryBookItem::URLType OPDSBasicAuthenticationManager::downloadLinkType(const NetworkLibraryBookItem &) {
 	return NetworkLibraryBookItem::NONE;
 }
 
-const std::string &OPDSAuthenticationManager::currentUserName() {
+const std::string &OPDSBasicAuthenticationManager::currentUserName() {
 	return myAccountUserNameOption.value();
 }
 
 
-/*const std::string &OPDSAuthenticationManager::certificate() {
+/*const std::string &OPDSBasicAuthenticationManager::certificate() {
 	static const std::string _empty = "";
 	return _empty;
 }*/

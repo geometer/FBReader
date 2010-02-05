@@ -19,7 +19,7 @@
 
 #include "OPDSLinkReader.h"
 #include "OPDSLink.h"
-#include "OPDSAuthenticationManager.h"
+#include "OPDSBasicAuthenticationManager.h"
 
 OPDSLinkReader::OPDSLinkReader() : myState(READ_NOTHING) {
 }
@@ -48,7 +48,13 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 	opdsLink->setIgnoredFeeds(myIgnoredFeeds);
 	if (!myAuthenticationType.empty()) {
 		shared_ptr<NetworkAuthenticationManager> mgr;
-		if (myAuthenticationType == "post") {
+		if (myAuthenticationType == "basic") {
+			mgr = new OPDSBasicAuthenticationManager(
+				mySiteName,
+				myAuthenticationParts["signInUrl"],
+				myAuthenticationParts["signOutUrl"]
+			);
+		} /*else if (myAuthenticationType == "post") {
 			mgr = new OPDSAuthenticationManager(
 				mySiteName,
 				myAuthenticationParts["login"],
@@ -57,8 +63,10 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 				myAuthenticationParts["signOutUrl"],
 				myAuthenticationParts["accountUrl"]
 			);
+		}*/
+		if (!mgr.isNull()) {
+			opdsLink->setAuthenticationManager(mgr);
 		}
-		opdsLink->setAuthenticationManager(mgr);
 	}
 	return opdsLink;
 }

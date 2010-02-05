@@ -17,13 +17,34 @@
  * 02110-1301, USA.
  */
 
+#include <ZLUnicodeUtil.h>
+#include <ZLStringUtil.h>
+#include <ZLParseUtil.h>
+
 #include "OPDSNetworkAuthenticationReader.h"
 
-OPDSNetworkAuthenticationReader::OPDSNetworkAuthenticationReader() {
+#include "../NetworkErrors.h"
+
+OPDSNetworkAuthenticationReader::OPDSNetworkAuthenticationReader(const std::string &siteName) : mySiteName(siteName) {
+	myDone = false;
 }
 
 
 std::string OPDSNetworkAuthenticationReader::handleHeader(void *ptr, size_t size) {
+	std::string line((const char *) ptr, size);
+	std::string version, code, phrase;
+	if (!myDone && ZLParseUtil::parseHTTPStatusLine(line, version, code, phrase)) {
+		myDone = true;
+		if (code.size() != 3) {
+			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, mySiteName);
+		}
+		if (code == "401") {
+			return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+		}
+		if (code[0] == '4' || code[0] == '5') {
+			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, mySiteName);
+		}
+	}
 	return "";
 }
 

@@ -14,13 +14,17 @@
 	</advancedSearch>
 	<ignored-feeds>
 		<link>http://feedbooks.com/news/catalog.atom</link>
-		<link>https://feedbooks.com/user/profile.atom</link>
+		<!--link>https://feedbooks.com/user/profile.atom</link-->
 	</ignored-feeds>
-	<authentication type="post">
+	<authentication type="basic">
+		<part name="signInUrl">https://feedbooks.com/user/profile.atom</part>
+		<part name="signOutUrl">https://feedbooks.com/user/signout</part>
+	</authentication>
+	<!--authentication type="post">
 		<part name="login">user[username]</part>
 		<part name="password">user[password]</part>
 		<part name="signInUrl">https://feedbooks.com/user/signin</part>
 		<part name="signOutUrl">https://feedbooks.com/user/signout</part>
 		<part name="accountUrl">https://feedbooks.com/user/profile.atom</part>
-	</authentication>
+	</authentication-->
 </catalog>

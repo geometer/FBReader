@@ -17,11 +17,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OPDSAUTHENTICATIONMANAGER_H__
-#define __OPDSAUTHENTICATIONMANAGER_H__
+#ifndef __OPDSBASICAUTHENTICATIONMANAGER_H__
+#define __OPDSBASICAUTHENTICATIONMANAGER_H__
 
 #include "../NetworkAuthenticationManager.h"
 
+
+/*
+ * Authentication types:
+ *	basic, post
+ *
+ * `basic` parameters:
+ *     - signInURL (signInURL == checkURL)
+ *     - signOutURL
+ *
+ * `post` parameters:
+ *     - login string name
+ *     - password string name
+ *     - signInURL
+ *     - checkURL
+ *     - signOutURL
+ */
 
 /*
  * When signing in and/or trying to access account page there can be following answers:
@@ -35,16 +51,13 @@
  *     for example: HTTP/1.1 401 Unauthorized
  */
 
-class OPDSAuthenticationManager : public NetworkAuthenticationManager {
+class OPDSBasicAuthenticationManager : public NetworkAuthenticationManager {
 
 public:
-	OPDSAuthenticationManager(
+	OPDSBasicAuthenticationManager(
 		const std::string &siteName,
-		const std::string &postLogin,
-		const std::string &postPassword,
-		const std::string &postSignInUrl,
-		const std::string &signOutUrl,
-		const std::string &accountUrl
+		const std::string &signInUrl,
+		const std::string &signOutUrl
 	);
 
 public:
@@ -69,11 +82,8 @@ public: // Account specific methods (can be called only if authorised!!!)
 	//const std::string &certificate();
 
 private: // config data
-	std::string myPostLogin;
-	std::string myPostPassword;
-	std::string myPostSignInUrl;
+	std::string mySignInUrl;
 	std::string mySignOutUrl;
-	std::string myAccountUrl;
 
 private:
 	bool myAccountChecked;
@@ -81,4 +91,4 @@ private:
 	ZLStringOption myAccountUserNameOption;
 };
 
-#endif /* __OPDSAUTHENTICATIONMANAGER_H__ */
+#endif /* __OPDSBASICAUTHENTICATIONMANAGER_H__ */

@@ -26,11 +26,15 @@
 class OPDSNetworkAuthenticationReader : public ZLNetworkReader {
 
 public:
-	OPDSNetworkAuthenticationReader();
+	OPDSNetworkAuthenticationReader(const std::string &siteName);
 
 public:
 	std::string handleHeader(void *ptr, size_t size);
 	std::string handleContent(void *ptr, size_t size);
+
+private:
+	const std::string &mySiteName;
+	bool myDone;
 };
 
 #endif /* __OPDSNETWORKAUTHENTICATIONREADER_H__ */

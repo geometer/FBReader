@@ -28,7 +28,9 @@ const ZLTypeId ZLNetworkPostRequest::TYPE_ID(ZLNetworkRequest::TYPE_ID);
 
 ZLNetworkRequest::ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) :
 	myURL(url),
-	mySSLCertificate(sslCertificate) {
+	mySSLCertificate(sslCertificate),
+	myAuthenticationMethod(NO_AUTH),
+	myRedirectionSupported(true) {
 	ZLLogger::Instance().println("URL", url);
 }
 

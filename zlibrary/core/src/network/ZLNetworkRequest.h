@@ -34,19 +34,11 @@ public:
 protected:
 	ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
 
-private:
-	const ZLTypeId &typeId() const;
-
 public:
 	virtual ~ZLNetworkRequest();
 
-	const std::string &errorMessage() const;
-
-	const std::string &url() const;
-	const ZLNetworkSSLCertificate &sslCertificate() const;
-
-protected:
-	void setErrorMessage(const std::string &message);
+private:
+	const ZLTypeId &typeId() const;
 
 public:
 	virtual bool handleHeader(void *ptr, size_t size);
@@ -55,15 +47,53 @@ public:
 	virtual bool doBefore() = 0;
 	virtual void doAfter(bool success) = 0;
 
+protected:
+	void setErrorMessage(const std::string &message);
+
+public:
+	const std::string &errorMessage() const;
+
+	const std::string &url() const;
+	const ZLNetworkSSLCertificate &sslCertificate() const;
+
+public: // HTTP parameters
+	enum AuthenticationMethod {
+		NO_AUTH, BASIC
+	};
+	void setupAuthentication(AuthenticationMethod method, const std::string &userName, const std::string &password);
+	const std::string &userName() const;
+	const std::string &password() const;
+	AuthenticationMethod authenticationMethod() const;
+
+	void setRedirectionSupported(bool supported);
+	bool isRedirectionSupported() const;
+
 private:
 	const std::string myURL;
 	const ZLNetworkSSLCertificate mySSLCertificate;
 	std::string myErrorMessage;
 
+	std::string myUserName;
+	std::string myPassword;
+	AuthenticationMethod myAuthenticationMethod;
+
+	bool myRedirectionSupported;
+
 private: // disable copying
 	ZLNetworkRequest(const ZLNetworkRequest &);
 	const ZLNetworkRequest &operator = (const ZLNetworkRequest &);
 };
+
+inline void ZLNetworkRequest::setupAuthentication(AuthenticationMethod method, const std::string &userName, const std::string &password) {
+	myAuthenticationMethod = method;
+	myUserName = userName;
+	myPassword = password;
+}
+inline const std::string &ZLNetworkRequest::userName() const { return myUserName; }
+inline const std::string &ZLNetworkRequest::password() const { return myPassword; }
+inline ZLNetworkRequest::AuthenticationMethod ZLNetworkRequest::authenticationMethod() const { return myAuthenticationMethod; }
+inline void ZLNetworkRequest::setRedirectionSupported(bool supported) { myRedirectionSupported = supported; }
+inline bool ZLNetworkRequest::isRedirectionSupported() const { return myRedirectionSupported; }
 
 
 class ZLNetworkGetRequest : public ZLNetworkRequest {

@@ -96,7 +96,6 @@ void ZLCurlNetworkManager::createInstance() {
 void ZLCurlNetworkManager::setStandardOptions(CURL *handle, const std::string &proxy) const {
 	static const char *AGENT_NAME = "FBReader";
 
-	curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, true);
 	curl_easy_setopt(handle, CURLOPT_USERAGENT, AGENT_NAME);
 	if (useProxy()) {
 		curl_easy_setopt(handle, CURLOPT_PROXY, proxy.c_str());
@@ -156,6 +155,19 @@ void ZLCurlNetworkManager::setRequestOptions(CURL *handle, const ZLNetworkReques
 	curl_easy_setopt(handle, CURLOPT_WRITEHEADER, &request);
 	curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, handleContent);
 	curl_easy_setopt(handle, CURLOPT_WRITEDATA, &request);
+
+	switch (request.authenticationMethod()) {
+	case ZLNetworkRequest::NO_AUTH:
+		break;
+
+	case ZLNetworkRequest::BASIC:
+		curl_easy_setopt(handle, CURLOPT_USERNAME, request.userName().c_str());
+		curl_easy_setopt(handle, CURLOPT_PASSWORD, request.password().c_str());
+		curl_easy_setopt(handle, CURLOPT_HTTPAUTH, (long) CURLAUTH_BASIC);
+		break;
+	}
+
+	curl_easy_setopt(handle, CURLOPT_FOLLOWLOCATION, request.isRedirectionSupported());
 
 	if (request.isInstanceOf(ZLNetworkPostRequest::TYPE_ID)) {
 		shared_ptr<ZLUserData> postDataPtr = request.getUserData("postData");
