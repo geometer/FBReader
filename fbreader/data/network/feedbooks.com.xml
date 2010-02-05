@@ -14,8 +14,10 @@
 	</advancedSearch>
 	<ignored-feeds>
 		<link>http://feedbooks.com/news/catalog.atom</link>
-		<!--link>https://feedbooks.com/user/profile.atom</link-->
 	</ignored-feeds>
+	<account-dependent-feeds>
+		<link>https://feedbooks.com/user/profile.atom</link>
+	</account-dependent-feeds>
 	<authentication type="basic">
 		<part name="signInUrl">https://feedbooks.com/user/profile.atom</part>
 		<part name="signOutUrl">https://feedbooks.com/user/signout</part>

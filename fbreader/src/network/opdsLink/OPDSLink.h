@@ -54,6 +54,7 @@ public:
 		const std::string &annotationParameter
 	);
 	void setIgnoredFeeds(const std::set<std::string> &ignoredFeeds);
+	void setAccountDependentFeeds(const std::set<std::string> &accountDependentFeeds);
 	void setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> mgr);
 
 private:
@@ -83,6 +84,7 @@ private:
 	const std::string myIconName;
 	shared_ptr<AdvancedSearch> myAdvancedSearch;
 	std::set<std::string> myIgnoredFeeds;
+	std::set<std::string> myAccountDependentFeeds;
 	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
 };
 

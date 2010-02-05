@@ -32,11 +32,13 @@
 #include "../opdsLink/OPDSLink.h"
 #include "../opdsLink/OPDSCatalogItem.h"
 
-NetworkOPDSFeedReader::NetworkOPDSFeedReader(const std::string &baseURL, NetworkOperationData &result, const std::set<std::string> &ignoredFeeds) : 
+NetworkOPDSFeedReader::NetworkOPDSFeedReader(const std::string &baseURL, NetworkOperationData &result, 
+		const std::set<std::string> &ignoredFeeds, const std::set<std::string> &accountDependentFeeds) : 
 	myBaseURL(baseURL), 
 	myData(result), 
 	myIndex(0), 
-	myIgnoredFeeds(ignoredFeeds) {
+	myIgnoredFeeds(ignoredFeeds),
+	myAccountDependentFeeds(accountDependentFeeds) {
 }
 
 void NetworkOPDSFeedReader::processFeedStart() {
@@ -243,6 +245,8 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry 
 		htmlURL.erase();
 	}
 
+	bool dependsOnAccount = myAccountDependentFeeds.count(entry.id()->uri()) > 0;
+
 	std::string annotation = entry.summary();
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x09), annotation.end());
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x0A), annotation.end());
@@ -252,6 +256,7 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry 
 		ZLNetworkUtil::url(myBaseURL, htmlURL),
 		entry.title(),
 		annotation,
-		coverURL
+		coverURL,
+		dependsOnAccount
 	);
 }

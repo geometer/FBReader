@@ -46,6 +46,7 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 		);
 	}
 	opdsLink->setIgnoredFeeds(myIgnoredFeeds);
+	opdsLink->setAccountDependentFeeds(myAccountDependentFeeds);
 	if (!myAuthenticationType.empty()) {
 		shared_ptr<NetworkAuthenticationManager> mgr;
 		if (myAuthenticationType == "basic") {
@@ -79,6 +80,7 @@ static const std::string TAG_ICON = "icon";
 static const std::string TAG_SEARCH_DESCRIPTION = "advancedSearch";
 static const std::string TAG_PART = "part";
 static const std::string TAG_IGNORED_FEEDS = "ignored-feeds";
+static const std::string TAG_ACCOUNT_DEPENDENT_FEEDS = "account-dependent-feeds";
 static const std::string TAG_AUTHENTICATION = "authentication";
 
 void OPDSLinkReader::startElementHandler(const char *tag, const char **attributes) {
@@ -91,8 +93,11 @@ void OPDSLinkReader::startElementHandler(const char *tag, const char **attribute
 			myState = READ_LINK;
 		}
 	} else if (myState == READ_IGNORED && TAG_LINK == tag) {
-		myIgnoredLink.clear();
+		myLinkBuffer.clear();
 		myState = READ_IGNORED_LINK;
+	} else if (myState == READ_ACCOUNT_DEPENDENT && TAG_LINK == tag) {
+		myLinkBuffer.clear();
+		myState = READ_ACCOUNT_DEPENDENT_LINK;
 	} else if (TAG_TITLE == tag) {
 		myState = READ_TITLE;
 	} else if (TAG_SUMMARY == tag) {
@@ -113,6 +118,8 @@ void OPDSLinkReader::startElementHandler(const char *tag, const char **attribute
 		}
 	} else if (TAG_IGNORED_FEEDS == tag) {
 		myState = READ_IGNORED;
+	} else if (TAG_ACCOUNT_DEPENDENT_FEEDS == tag) {
+		myState = READ_ACCOUNT_DEPENDENT;
 	} else if (TAG_AUTHENTICATION == tag) {
 		const char *authenticationType = attributeValue(attributes, "type");
 		if (authenticationType != 0) {
@@ -134,8 +141,11 @@ void OPDSLinkReader::endElementHandler(const char *tag) {
 	} else if (myState == READ_AUTHENTICATION_PART) {
 		myState = READ_AUTHENTICATION_DESCRIPTION;
 	} else if (myState == READ_IGNORED_LINK) {
-		myIgnoredFeeds.insert(myIgnoredLink);
+		myIgnoredFeeds.insert(myLinkBuffer);
 		myState = READ_IGNORED;
+	} else if (myState == READ_ACCOUNT_DEPENDENT_LINK) {
+		myAccountDependentFeeds.insert(myLinkBuffer);
+		myState = READ_ACCOUNT_DEPENDENT;
 	} else {
 		myState = READ_NOTHING;
 	}
@@ -144,6 +154,10 @@ void OPDSLinkReader::endElementHandler(const char *tag) {
 void OPDSLinkReader::characterDataHandler(const char *text, size_t len) {
 	switch (myState) {
 		case READ_NOTHING:
+		case READ_SEARCH_DESCRIPTION:
+		case READ_IGNORED:
+		case READ_ACCOUNT_DEPENDENT:
+		case READ_AUTHENTICATION_DESCRIPTION:
 			break;
 		case READ_SITENAME:
 			mySiteName.append(text, len);
@@ -160,17 +174,12 @@ void OPDSLinkReader::characterDataHandler(const char *text, size_t len) {
 		case READ_ICON_NAME:
 			myIconName.append(text, len);
 			break;
-		case READ_SEARCH_DESCRIPTION:
-			break;
 		case READ_SEARCH_PART:
 			mySearchParts[mySearchPartName].append(text, len);
 			break;
-		case READ_IGNORED:
-			break;
 		case READ_IGNORED_LINK:
-			myIgnoredLink.append(text, len);
-			break;
-		case READ_AUTHENTICATION_DESCRIPTION:
+		case READ_ACCOUNT_DEPENDENT_LINK:
+			myLinkBuffer.append(text, len);
 			break;
 		case READ_AUTHENTICATION_PART:
 			myAuthenticationParts[myAuthenticationPartName].append(text, len);

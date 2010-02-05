@@ -126,7 +126,7 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 	}
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		url,
-		new OPDSXMLParser(new NetworkOPDSFeedReader(url, result, myIgnoredFeeds))
+		new OPDSXMLParser(new NetworkOPDSFeedReader(url, result, myIgnoredFeeds, myAccountDependentFeeds))
 	);
 }
 
@@ -159,6 +159,10 @@ void OPDSLink::setupAdvancedSearch(
 
 void OPDSLink::setIgnoredFeeds(const std::set<std::string> &ignoredFeeds) {
 	myIgnoredFeeds = ignoredFeeds;
+}
+
+void OPDSLink::setAccountDependentFeeds(const std::set<std::string> &accountDependentFeeds) {
+	myAccountDependentFeeds = accountDependentFeeds;
 }
 
 void OPDSLink::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> mgr) {

@@ -324,7 +324,7 @@ bool NetworkView::processAccountDependent(NetworkLibraryCatalogItem &item) {
 	}
 	NetworkLink &link = item.link();
 	if (link.authenticationManager().isNull()) {
-		return true;
+		return false;
 	}
 	return link.authenticationManager()->isAuthorised().Status != B3_FALSE;
 }

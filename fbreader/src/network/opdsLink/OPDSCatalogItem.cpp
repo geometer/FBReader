@@ -33,8 +33,9 @@ OPDSCatalogItem::OPDSCatalogItem(
 	const std::string &htmlURL,
 	const std::string &title,
 	const std::string &summary,
-	const std::string &coverURL
-) : NetworkLibraryCatalogItem(link, url, htmlURL, title, summary, coverURL, 0) {
+	const std::string &coverURL,
+	bool dependsOnAccount
+) : NetworkLibraryCatalogItem(link, url, htmlURL, title, summary, coverURL, dependsOnAccount) {
 }
 
 std::string OPDSCatalogItem::loadChildren(NetworkLibraryItemList &children) {

@@ -33,7 +33,8 @@ class NetworkLibraryItem;
 class NetworkOPDSFeedReader : public OPDSFeedReader {
 
 public:
-	NetworkOPDSFeedReader(const std::string &baseURL, NetworkOperationData &result, const std::set<std::string> &ignoredFeeds);
+	NetworkOPDSFeedReader(const std::string &baseURL, NetworkOperationData &result, 
+		const std::set<std::string> &ignoredFeeds, const std::set<std::string> &accountDependentFeeds);
 
 public:
 	void processFeedEntry(shared_ptr<OPDSEntry> entry);
@@ -50,6 +51,7 @@ private:
 	NetworkOperationData &myData;
 	unsigned int myIndex;
 	const std::set<std::string> myIgnoredFeeds;
+	const std::set<std::string> myAccountDependentFeeds;
 };
 
 

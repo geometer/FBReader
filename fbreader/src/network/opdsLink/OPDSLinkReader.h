@@ -50,6 +50,8 @@ private:
 		READ_SEARCH_PART,
 		READ_IGNORED,
 		READ_IGNORED_LINK,
+		READ_ACCOUNT_DEPENDENT,
+		READ_ACCOUNT_DEPENDENT_LINK,
 		READ_AUTHENTICATION_DESCRIPTION,
 		READ_AUTHENTICATION_PART,
 	} myState;
@@ -66,8 +68,9 @@ private:
 	std::string mySearchType;
 	std::map<std::string,std::string> mySearchParts;
 
-	std::string myIgnoredLink;
+	std::string myLinkBuffer;
 	std::set<std::string> myIgnoredFeeds;
+	std::set<std::string> myAccountDependentFeeds;
 
 	std::string myAuthenticationType;
 	std::map<std::string,std::string> myAuthenticationParts;
