@@ -136,7 +136,6 @@ public:
 
 private:
 	void onDisplayItem();
-	bool dependsOnAccount() const;
 	std::string loadChildren(NetworkLibraryItemList &children);
 
 private:
@@ -261,17 +260,14 @@ LitResMyCatalogItem::LitResMyCatalogItem(LitResLink &link) : NetworkLibraryCatal
 	"",
 	"Мои книги",
 	"Купленные книги",
-	""
+	"",
+	true
 ) {
 	myForceReload = false;
 }
 
 void LitResMyCatalogItem::onDisplayItem() {
 	myForceReload = false;
-}
-
-bool LitResMyCatalogItem::dependsOnAccount() const {
-	return true;
 }
 
 std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) {
