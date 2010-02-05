@@ -19,7 +19,7 @@ DELAYED перенести удаление www. для feedbooks в fbreader\..
 	** А может таки у всех удалять. Трудно себе представить, что у кого-то добавление префикса "www." дает ВАЛИДНУЮ ссылку на ДРУГУЮ книгу
 DONE	сделать perform для одого ZLExecutionData
 DONE	OPDS.xml: пометка страниц, которые нужно прятать только если не залогинены (а не всегда)
-0.14.0: authentication на feedbooks
+DONE	authentication на feedbooks
 0.14.0: authentication на shucang
 0.14.0: authentication на smashwords
 0.14.0: в нынешнем виде ZLParseUtil не тянет на "универсальный" класс, у него ровно 1 usage. Может, туда его и перенести?
