@@ -70,7 +70,7 @@ public: // HTTP parameters
 
 private:
 	const std::string myURL;
-	const ZLNetworkSSLCertificate mySSLCertificate;
+	const ZLNetworkSSLCertificate &mySSLCertificate;
 	std::string myErrorMessage;
 
 	std::string myUserName;

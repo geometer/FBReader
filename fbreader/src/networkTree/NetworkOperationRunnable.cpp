@@ -78,7 +78,6 @@ DownloadBookRunnable::DownloadBookRunnable(const NetworkLibraryBookItem &book, N
 		myAuthManager = book.authenticationManager();
 		if (!myAuthManager.isNull() && !myAuthManager->needPurchase(book)) {
 			myURL = myAuthManager->downloadLink(book);
-			mySSLCertificate = myAuthManager->certificate();
 			myNetworkBookId = myAuthManager->networkBookId(book);
 			myFormat = myAuthManager->downloadLinkType(book);
 		}
@@ -94,7 +93,7 @@ DownloadBookRunnable::~DownloadBookRunnable() {
 void DownloadBookRunnable::run() {
 	NetworkLinkCollection::Instance().downloadBook(
 		myURL, myNetworkBookId, myFormat, myFileName,
-		mySSLCertificate,
+		myAuthManager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : myAuthManager->certificate(),
 		myDialog->listener()
 	);
 	myErrorMessage = NetworkLinkCollection::Instance().errorMessage();

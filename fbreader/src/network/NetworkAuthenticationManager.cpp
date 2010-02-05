@@ -91,6 +91,5 @@ std::string NetworkAuthenticationManager::recoverPassword(const std::string &) {
 }
 
 const ZLNetworkSSLCertificate &NetworkAuthenticationManager::certificate() {
-	static const ZLNetworkSSLCertificate _empty;
-	return _empty;
+	return ZLNetworkSSLCertificate::NULL_CERTIFICATE;
 }

@@ -68,7 +68,6 @@ public:
 
 private:
 	std::string myURL;
-	ZLNetworkSSLCertificate mySSLCertificate;
 	std::string myNetworkBookId;
 	NetworkLibraryBookItem::URLType myFormat;
 

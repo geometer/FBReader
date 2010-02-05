@@ -22,14 +22,23 @@
 
 #include <string>
 
-struct ZLNetworkSSLCertificate {
-	std::string Path;
+class ZLNetworkSSLCertificate {
 
-	ZLNetworkSSLCertificate();
+public:
+	static const ZLNetworkSSLCertificate NULL_CERTIFICATE;
+
+public:
+	const std::string Path;
+
+public:
 	ZLNetworkSSLCertificate(const std::string &path);
-};
 
-inline ZLNetworkSSLCertificate::ZLNetworkSSLCertificate() {}
-inline ZLNetworkSSLCertificate::ZLNetworkSSLCertificate(const std::string &path) : Path(path) {}
+private:
+	ZLNetworkSSLCertificate();
+
+private:
+	ZLNetworkSSLCertificate(const ZLNetworkSSLCertificate&);
+	const ZLNetworkSSLCertificate &operator = (const ZLNetworkSSLCertificate&);
+};
 
 #endif /* __ZLNETWORKSSLCERTIFICATE_H__ */
