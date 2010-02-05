@@ -83,8 +83,7 @@ public:
 		const std::string &htmlURL,
 		const std::string &title,
 		const std::string &summary,
-		const std::string &coverURL,
-		bool dependsOnAccount = false
+		const std::string &coverURL
 	);
 
 	const ZLTypeId &typeId() const;
@@ -97,7 +96,7 @@ public:
 	virtual void onDisplayItem(); // method is called each time the View Node is created for the Item.
 	virtual std::string loadChildren(NetworkLibraryItemList &children) = 0; // returns error message
 
-	bool dependsOnAccount() const;
+	virtual bool dependsOnAccount() const;
 
 	virtual CatalogType catalogType() const;
 
@@ -106,7 +105,6 @@ private:
 	const std::string myURL;
 	const std::string myHtmlURL;
 	const std::string mySummary;
-	const bool myDependsOnAccount;
 
 private: // disable copying
 	NetworkLibraryCatalogItem(const NetworkLibraryCatalogItem &);
@@ -117,7 +115,6 @@ inline NetworkLink &NetworkLibraryCatalogItem::link() const { return myLink; }
 inline const std::string &NetworkLibraryCatalogItem::url() const { return myURL; }
 inline const std::string &NetworkLibraryCatalogItem::htmlURL() const { return myHtmlURL; }
 inline const std::string &NetworkLibraryCatalogItem::summary() const { return mySummary; }
-inline bool NetworkLibraryCatalogItem::dependsOnAccount() const { return myDependsOnAccount; }
 
 class NetworkLibraryBookItem : public NetworkLibraryItem {
 

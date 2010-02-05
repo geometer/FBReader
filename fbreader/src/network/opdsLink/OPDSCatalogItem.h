@@ -38,6 +38,7 @@ public:
 
 private:
 	std::string loadChildren(NetworkLibraryItemList &children);
+	bool dependsOnAccount() const;
 };
 
 #endif /* __OPDSCATALOGITEM_H__ */

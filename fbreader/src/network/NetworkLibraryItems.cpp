@@ -55,14 +55,12 @@ NetworkLibraryCatalogItem::NetworkLibraryCatalogItem(
 	const std::string &htmlURL,
 	const std::string &title,
 	const std::string &summary,
-	const std::string &coverURL,
-	bool dependsOnAccount
+	const std::string &coverURL
 ) :
 	myLink(link),
 	myURL(url),
 	myHtmlURL(htmlURL),
-	mySummary(summary),
-	myDependsOnAccount(dependsOnAccount) {
+	mySummary(summary) {
 	setTitle(title);
 	setCoverURL(coverURL);
 }
@@ -72,6 +70,10 @@ const ZLTypeId &NetworkLibraryCatalogItem::typeId() const {
 }
 
 void NetworkLibraryCatalogItem::onDisplayItem() {
+}
+
+bool NetworkLibraryCatalogItem::dependsOnAccount() const {
+	return false;
 }
 
 NetworkLibraryCatalogItem::CatalogType NetworkLibraryCatalogItem::catalogType() const {
