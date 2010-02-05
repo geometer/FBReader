@@ -29,13 +29,10 @@
 
 #include "ZLNetworkManager.h"
 #include "ZLNetworkRequest.h"
-#include "ZLNetworkReader.h"
 #include "ZLNetworkUtil.h"
 
 #include "requests/ZLNetworkDownloadRequest.h"
 #include "requests/ZLNetworkNoActionRequest.h"
-#include "requests/ZLNetworkPostFormRequest.h"
-#include "requests/ZLNetworkReadResponseRequest.h"
 #include "requests/ZLNetworkReadToStringRequest.h"
 #include "requests/ZLNetworkXMLParserRequest.h"
 
@@ -177,22 +174,6 @@ shared_ptr<ZLExecutionData> ZLNetworkManager::createNoActionRequest(const std::s
 
 shared_ptr<ZLExecutionData> ZLNetworkManager::createNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) const {
 	return new ZLNetworkNoActionRequest(url, sslCertificate);
-}
-
-shared_ptr<ZLExecutionData> ZLNetworkManager::createPostFormRequest(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const {
-	return new ZLNetworkPostFormRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, formData, reader);
-}
-
-shared_ptr<ZLExecutionData> ZLNetworkManager::createPostFormRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const {
-	return new ZLNetworkPostFormRequest(url, sslCertificate, formData, reader);
-}
-
-shared_ptr<ZLExecutionData> ZLNetworkManager::createReadResponseRequest(const std::string &url, shared_ptr<ZLNetworkReader> reader) const {
-	return new ZLNetworkReadResponseRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, reader);
-}
-
-shared_ptr<ZLExecutionData> ZLNetworkManager::createReadResponseRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLNetworkReader> reader) const {
-	return new ZLNetworkReadResponseRequest(url, sslCertificate, reader);
 }
 
 shared_ptr<ZLExecutionData> ZLNetworkManager::createReadToStringRequest(const std::string &url, std::string &buffer) const {

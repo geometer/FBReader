@@ -37,7 +37,7 @@ private:
 	bool handleContent(void *ptr, size_t size);
 
 	bool doBefore();
-	void doAfter(bool success);
+	bool doAfter(bool success);
 
 private:
 	shared_ptr<ZLXMLReader> myReader;

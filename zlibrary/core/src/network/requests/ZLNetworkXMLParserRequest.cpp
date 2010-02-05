@@ -47,7 +47,8 @@ bool ZLNetworkXMLParserRequest::doBefore() {
 	return true;
 }
 
-void ZLNetworkXMLParserRequest::doAfter(bool) {
+bool ZLNetworkXMLParserRequest::doAfter(bool) {
+	return true;
 }
 
 bool ZLNetworkXMLParserRequest::handleHeader(void *ptr, size_t size) {

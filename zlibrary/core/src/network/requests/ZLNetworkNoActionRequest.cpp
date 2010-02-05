@@ -28,7 +28,8 @@ bool ZLNetworkNoActionRequest::doBefore() {
 	return true;
 }
 
-void ZLNetworkNoActionRequest::doAfter(bool) {
+bool ZLNetworkNoActionRequest::doAfter(bool) {
+	return true;
 }
 
 bool ZLNetworkNoActionRequest::handleContent(void *, size_t) {

@@ -27,7 +27,6 @@
 #include <ZLResource.h>
 #include <ZLOutputStream.h>
 #include <ZLXMLReader.h>
-#include <ZLNetworkReader.h>
 #include <ZLNetworkRequest.h>
 
 #include "ZLCurlNetworkManager.h"
@@ -240,9 +239,15 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 		message = curl_multi_info_read(handle, &queueSize);
 		if ((message != 0) && (message->msg == CURLMSG_DONE)) {
 			ZLNetworkRequest &request = (ZLNetworkRequest&)*handleToRequest[message->easy_handle];
-			request.doAfter(message->data.result == CURLE_OK);
 			const std::string &url = request.url();
-			switch (message->data.result) {
+
+			CURLcode result = message->data.result;
+			bool doAfterResult = request.doAfter(result == CURLE_OK);
+			if (result == CURLE_OK && !doAfterResult) {
+				result = CURLE_WRITE_ERROR;
+			}
+
+			switch (result) {
 				case CURLE_OK:
 					break;
 				case CURLE_WRITE_ERROR:

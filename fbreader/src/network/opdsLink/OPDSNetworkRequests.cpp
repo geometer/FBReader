@@ -21,33 +21,44 @@
 #include <ZLStringUtil.h>
 #include <ZLParseUtil.h>
 
-#include "OPDSNetworkAuthenticationReader.h"
+#include "OPDSNetworkRequests.h"
 
 #include "../NetworkErrors.h"
 
-OPDSNetworkAuthenticationReader::OPDSNetworkAuthenticationReader(const std::string &siteName) : mySiteName(siteName) {
-	myDone = false;
+OPDSNetworkBasicRequest::OPDSNetworkBasicRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) : ZLNetworkGetRequest(url, sslCertificate) {
 }
 
 
-std::string OPDSNetworkAuthenticationReader::handleHeader(void *ptr, size_t size) {
+bool OPDSNetworkBasicRequest::handleHeader(void *ptr, size_t size) {
 	std::string line((const char *) ptr, size);
 	std::string version, code, phrase;
-	if (!myDone && ZLParseUtil::parseHTTPStatusLine(line, version, code, phrase)) {
-		myDone = true;
-		if (code.size() != 3) {
-			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, mySiteName);
-		}
-		if (code == "401") {
-			return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
-		}
-		if (code[0] == '4' || code[0] == '5') {
-			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, mySiteName);
-		}
+	if (myStatusCode.empty() && ZLParseUtil::parseHTTPStatusLine(line, version, code, phrase)) {
+		myStatusCode = code;
 	}
-	return "";
+	return true;
 }
 
-std::string OPDSNetworkAuthenticationReader::handleContent(void *ptr, size_t size) {
-	return "";
+bool OPDSNetworkBasicRequest::handleContent(void *ptr, size_t size) {
+	return true;
+}
+
+bool OPDSNetworkBasicRequest::doBefore() {
+	return true;
+}
+
+bool OPDSNetworkBasicRequest::doAfter(bool success) {
+	if (!success) {
+		return true;
+	}
+	if (myStatusCode.size() != 3) {
+		return false;
+	}
+	if (myStatusCode == "401") {
+		setErrorMessage(NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED));
+		return false;
+	}
+	if (myStatusCode[0] == '4' || myStatusCode[0] == '5') {
+		return false;
+	}
+	return true;
 }

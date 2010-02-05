@@ -35,7 +35,8 @@ bool ZLNetworkReadToStringRequest::doBefore() {
 	return true;
 }
 
-void ZLNetworkReadToStringRequest::doAfter(bool) {
+bool ZLNetworkReadToStringRequest::doAfter(bool) {
+	return true;
 }
 
 bool ZLNetworkReadToStringRequest::handleHeader(void *ptr, size_t size) {

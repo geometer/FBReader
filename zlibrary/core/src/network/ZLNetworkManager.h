@@ -30,7 +30,6 @@
 class ZLNetworkData;
 class ZLOutputStream;
 class ZLXMLReader;
-class ZLNetworkReader;
 
 struct ZLNetworkSSLCertificate;
 
@@ -79,12 +78,6 @@ public:
 
 	shared_ptr<ZLExecutionData> createNoActionRequest(const std::string &url) const;
 	shared_ptr<ZLExecutionData> createNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) const;
-
-	shared_ptr<ZLExecutionData> createPostFormRequest(const std::string &url, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const;
-	shared_ptr<ZLExecutionData> createPostFormRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::vector<std::pair<std::string, std::string> > &formData, shared_ptr<ZLNetworkReader> reader) const;
-
-	shared_ptr<ZLExecutionData> createReadResponseRequest(const std::string &url, shared_ptr<ZLNetworkReader> reader) const;
-	shared_ptr<ZLExecutionData> createReadResponseRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLNetworkReader> reader) const;
 
 	shared_ptr<ZLExecutionData> createReadToStringRequest(const std::string &url, std::string &buffer) const;
 	shared_ptr<ZLExecutionData> createReadToStringRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, std::string &buffer) const;

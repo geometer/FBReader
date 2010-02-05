@@ -30,7 +30,7 @@ public:
 
 private:
 	bool doBefore();
-	void doAfter(bool success);
+	bool doAfter(bool success);
 
 	bool handleContent(void *ptr, size_t size);
 };

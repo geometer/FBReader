@@ -43,14 +43,12 @@ bool ZLNetworkDownloadRequest::doBefore() {
 	return !myOutputStream.isNull() && myOutputStream->open();
 }
 
-void ZLNetworkDownloadRequest::doAfter(bool success) {
+bool ZLNetworkDownloadRequest::doAfter(bool success) {
 	myOutputStream->close();
 	if (!success) {
 		ZLFile(myFileName).remove();
 	}
-}
-
-void ZLNetworkDownloadRequest::onCancel() {
+	return true;
 }
 
 bool ZLNetworkDownloadRequest::handleHeader(void *ptr, size_t size) {

@@ -17,28 +17,26 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLNETWORKREADRESPONSEREQUEST_H__
-#define __ZLNETWORKREADRESPONSEREQUEST_H__
+#ifndef __OPDSNETWORKREQUESTS_H__
+#define __OPDSNETWORKREQUESTS_H__
 
-#include "../ZLNetworkRequest.h"
+#include <ZLNetworkRequest.h>
 
 
-class ZLNetworkReader;
-
-class ZLNetworkReadResponseRequest : public ZLNetworkGetRequest {
+class OPDSNetworkBasicRequest : public ZLNetworkGetRequest {
 
 public:
-	ZLNetworkReadResponseRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLNetworkReader> reader);
+	OPDSNetworkBasicRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
 
-private:
+public:
 	bool handleHeader(void *ptr, size_t size);
 	bool handleContent(void *ptr, size_t size);
 
 	bool doBefore();
-	void doAfter(bool success);
+	bool doAfter(bool success);
 
 private:
-	shared_ptr<ZLNetworkReader> myReader;
+	std::string myStatusCode;
 };
 
-#endif /* __ZLNETWORKREADRESPONSEREQUEST_H__ */
+#endif /* __OPDSNETWORKREQUESTS_H__ */

@@ -21,7 +21,7 @@
 #include <ZLNetworkRequest.h>
 
 #include "OPDSBasicAuthenticationManager.h"
-#include "OPDSNetworkAuthenticationReader.h"
+#include "OPDSNetworkRequests.h"
 
 #include "../NetworkLibraryItems.h"
 #include "../NetworkErrors.h"
@@ -51,10 +51,9 @@ NetworkAuthenticationManager::AuthenticationStatus OPDSBasicAuthenticationManage
 		return AuthenticationStatus(false);
 	}
 
-	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createReadResponseRequest(
+	shared_ptr<ZLExecutionData> data = new OPDSNetworkBasicRequest(
 		mySignInUrl,
-		certificate(),
-		new OPDSNetworkAuthenticationReader(SiteName)
+		certificate()
 	);
 	ZLNetworkRequest &request = (ZLNetworkRequest &)*data;
 
@@ -78,10 +77,9 @@ NetworkAuthenticationManager::AuthenticationStatus OPDSBasicAuthenticationManage
 
 std::string OPDSBasicAuthenticationManager::authorise(const std::string &pwd) {
 
-	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createReadResponseRequest(
+	shared_ptr<ZLExecutionData> data = new OPDSNetworkBasicRequest(
 		mySignInUrl,
-		certificate(),
-		new OPDSNetworkAuthenticationReader(SiteName)
+		certificate()
 	);
 	ZLNetworkRequest &request = (ZLNetworkRequest &)*data;
 
