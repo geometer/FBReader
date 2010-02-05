@@ -44,9 +44,7 @@ std::string OPDSCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 		((OPDSLink &)link()).createNetworkData(url(), data);
 
 	while (!networkData.isNull()) {
-		ZLExecutionData::Vector dataList;
-		dataList.push_back(networkData);
-		std::string error = ZLNetworkManager::Instance().perform(dataList);
+		std::string error = ZLNetworkManager::Instance().perform(networkData);
 		if (!error.empty()) {
 			return error;
 		}

@@ -59,9 +59,7 @@ NetworkAuthenticationManager::AuthenticationStatus OPDSBasicAuthenticationManage
 
 	request.setRedirectionSupported(false);
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(data);
-	std::string error = ZLNetworkManager::Instance().perform(dataList);
+	std::string error = ZLNetworkManager::Instance().perform(data);
 
 	if (!error.empty()) {
 		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
@@ -86,9 +84,7 @@ std::string OPDSBasicAuthenticationManager::authorise(const std::string &pwd) {
 	request.setRedirectionSupported(false);
 	request.setupAuthentication(ZLNetworkRequest::BASIC, UserNameOption.value(), pwd);
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(data);
-	std::string error = ZLNetworkManager::Instance().perform(dataList);
+	std::string error = ZLNetworkManager::Instance().perform(data);
 
 	myAccountChecked = true;
 	if (!error.empty()) {
@@ -105,12 +101,11 @@ void OPDSBasicAuthenticationManager::logOut() {
 
 	if (!mySignOutUrl.empty()) {
 		// TODO: is it so necessary to clean up cookies???
-		ZLExecutionData::Vector dataList;
-		dataList.push_back(ZLNetworkManager::Instance().createNoActionRequest(
+		shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createNoActionRequest(
 			mySignOutUrl,
 			certificate()
-		));
-		ZLNetworkManager::Instance().perform(dataList);
+		);
+		ZLNetworkManager::Instance().perform(data);
 	}
 }
 

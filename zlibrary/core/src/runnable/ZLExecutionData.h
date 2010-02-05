@@ -46,6 +46,7 @@ public:
 
 	public:
 		virtual std::string perform(const Vector &dataVector) const = 0;
+		std::string perform(shared_ptr<ZLExecutionData> data) const;
 	};
 
 public:

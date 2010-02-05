@@ -235,13 +235,12 @@ LitResCatalogItem::LitResCatalogItem(
 std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	children.clear();
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 		url(),
 		new LitResDataParser(children, link().authenticationManager())
-	));
+	);
 
-	const std::string error = ZLNetworkManager::Instance().perform(dataList);
+	const std::string error = ZLNetworkManager::Instance().perform(networkData);
 	
 	if (mySortItems) {
 		std::sort(children.begin(), children.end(), NetworkBookItemComparator());
@@ -336,13 +335,12 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 
 	std::vector<LitResAuthor> authors;
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 		url(),
 		new LitResAuthorsParser(authors)
-	));
+	);
 
-	std::string error = ZLNetworkManager::Instance().perform(dataList);
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
 	if (!error.empty()) {
 		return error;
 	}

@@ -164,11 +164,11 @@ bool LitResUtil::loadGenres() {
 	myGenresTitles.clear();
 
 	if (dir.isNull()) {
-		ZLExecutionData::Vector dataList;
-		dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
-			url, new LitResGenresParser(myGenresTree, myGenresMap))
+		shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
+			url,
+			new LitResGenresParser(myGenresTree, myGenresMap)
 		);
-		const std::string error = ZLNetworkManager::Instance().perform(dataList);
+		const std::string error = ZLNetworkManager::Instance().perform(networkData);
 		if (!error.empty()) {
 			myGenresTree.clear();
 			myGenresMap.clear();

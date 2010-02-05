@@ -65,13 +65,12 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 	std::string query;
 	ZLNetworkUtil::addParameter(query, "sid", mySidOption.value());
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_authorise/" + query),
 		certificate(),
 		xmlReader
-	));
-	std::string error = ZLNetworkManager::Instance().perform(dataList);
+	);
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
 	if (!error.empty()) {
 		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
@@ -98,13 +97,12 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 		ZLNetworkUtil::addParameter(query, "skip_ip", "1");
 	}
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_authorise/" + query),
 		certificate(),
 		xmlReader
-	));
-	std::string error = ZLNetworkManager::Instance().perform(dataList);
+	);
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
 	mySidChecked = true;
 	if (!error.empty()) {
@@ -152,13 +150,12 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkLibraryBookItem &bo
 	ZLNetworkUtil::addParameter(query, "sid", sid);
 	ZLNetworkUtil::addParameter(query, "art", book.id());
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/purchase_book/" + query),
 		certificate(),
 		xmlReader
-	));
-	std::string error = ZLNetworkManager::Instance().perform(dataList);
+	);
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
 	if (!account.empty()) {
 		myAccount = account;
@@ -332,13 +329,12 @@ std::string LitResAuthenticationManager::registerUser(const std::string &login, 
 	ZLNetworkUtil::addParameter(query, "new_pwd1", password);
 	ZLNetworkUtil::addParameter(query, "mail", email);
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_register_user/" + query),
 		certificate(),
 		xmlReader
-	));
-	std::string error = ZLNetworkManager::Instance().perform(dataList);
+	);
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
 	mySidChecked = true;
 	if (!error.empty()) {
@@ -362,13 +358,12 @@ std::string LitResAuthenticationManager::recoverPassword(const std::string &emai
 	std::string query;
 	ZLNetworkUtil::addParameter(query, "mail", email);
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::litresLink("pages/catalit_recover_pass/" + query),
 		certificate(),
 		xmlReader
-	));
-	return ZLNetworkManager::Instance().perform(dataList);
+	);
+	return ZLNetworkManager::Instance().perform(networkData);
 }
 
 std::string LitResAuthenticationManager::reloadPurchasedBooks() {
@@ -386,10 +381,9 @@ std::string LitResAuthenticationManager::reloadPurchasedBooks() {
 	std::set<std::string> purchasedBooksIds;
 	NetworkLibraryItemList purchasedBooksList;
 
-	ZLExecutionData::Vector dataList;
-	dataList.push_back(loadPurchasedBooks(purchasedBooksIds, purchasedBooksList));
+	shared_ptr<ZLExecutionData> networkData = loadPurchasedBooks(purchasedBooksIds, purchasedBooksList);
 
-	std::string error = ZLNetworkManager::Instance().perform(dataList);
+	std::string error = ZLNetworkManager::Instance().perform(networkData);
 	if (!error.empty()) {
 		//loadPurchasedBooksOnError(purchasedBooksIds, purchasedBooksList);
 		if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {

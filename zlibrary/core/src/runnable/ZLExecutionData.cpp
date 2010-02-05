@@ -76,6 +76,12 @@ ZLExecutionData::Runner::~Runner() {
 	ourRunners.erase(this);
 }
 
+std::string ZLExecutionData::Runner::perform(shared_ptr<ZLExecutionData> data) const {
+	Vector dataVector;
+	dataVector.push_back(data);
+	return perform(dataVector);
+}
+
 ZLExecutionData::Listener::Listener() {
 }
 
