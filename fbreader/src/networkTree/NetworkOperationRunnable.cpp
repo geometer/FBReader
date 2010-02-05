@@ -74,13 +74,13 @@ DownloadBookRunnable::DownloadBookRunnable(const NetworkLibraryBookItem &book, N
 		myURL = it->second;
 		myNetworkBookId = myURL;
 		myFormat = format;
-	} else if (!book.authenticationManager().isNull()) {
-		NetworkAuthenticationManager &mgr = *book.authenticationManager();
-		if (!mgr.needPurchase(book)) {
-			myURL = mgr.downloadLink(book);
-			mySSLCertificate = mgr.certificate();
-			myNetworkBookId = mgr.networkBookId(book);
-			myFormat = mgr.downloadLinkType(book);
+	} else {
+		myAuthManager = book.authenticationManager();
+		if (!myAuthManager.isNull() && !myAuthManager->needPurchase(book)) {
+			myURL = myAuthManager->downloadLink(book);
+			mySSLCertificate = myAuthManager->certificate();
+			myNetworkBookId = myAuthManager->networkBookId(book);
+			myFormat = myAuthManager->downloadLinkType(book);
 		}
 	}
 }
@@ -88,8 +88,15 @@ DownloadBookRunnable::DownloadBookRunnable(const NetworkLibraryBookItem &book, N
 DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook"), myURL(url), myNetworkBookId(url), myFormat(NetworkLibraryBookItem::NONE) {
 }
 
+DownloadBookRunnable::~DownloadBookRunnable() {
+}
+
 void DownloadBookRunnable::run() {
-	NetworkLinkCollection::Instance().downloadBook(myURL, myNetworkBookId, myFormat, myFileName, mySSLCertificate, myDialog->listener());
+	NetworkLinkCollection::Instance().downloadBook(
+		myURL, myNetworkBookId, myFormat, myFileName,
+		mySSLCertificate,
+		myDialog->listener()
+	);
 	myErrorMessage = NetworkLinkCollection::Instance().errorMessage();
 }
 

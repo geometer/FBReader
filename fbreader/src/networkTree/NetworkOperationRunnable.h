@@ -61,6 +61,7 @@ class DownloadBookRunnable : public NetworkOperationRunnable {
 public:
 	DownloadBookRunnable(const NetworkLibraryBookItem &book, NetworkLibraryBookItem::URLType format);
 	DownloadBookRunnable(const std::string &url);
+	~DownloadBookRunnable();
 	void run();
 
 	const std::string &fileName() const;
@@ -72,6 +73,8 @@ private:
 	NetworkLibraryBookItem::URLType myFormat;
 
 	std::string myFileName;
+
+	shared_ptr<NetworkAuthenticationManager> myAuthManager;
 };
 
 class IsAuthorisedRunnable : public NetworkOperationRunnable {
