@@ -34,13 +34,6 @@ ZLNetworkRequest::ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCer
 	ZLLogger::Instance().println("URL", url);
 }
 
-ZLNetworkRequest::~ZLNetworkRequest() {
-}
-
-const ZLTypeId &ZLNetworkRequest::typeId() const {
-	return TYPE_ID;
-}
-
 const std::string &ZLNetworkRequest::errorMessage() const {
 	return myErrorMessage;
 }

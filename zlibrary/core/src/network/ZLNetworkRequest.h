@@ -35,12 +35,6 @@ protected:
 	ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
 
 public:
-	virtual ~ZLNetworkRequest();
-
-private:
-	const ZLTypeId &typeId() const;
-
-public:
 	virtual bool handleHeader(void *ptr, size_t size);
 	virtual bool handleContent(void *ptr, size_t size) = 0;
 
