@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
 <catalog type="opds">
 	<site>manybooks.net</site>
-	<link type="main">http://manybooks.net/stanza/catalog/index.php</link>
-	<link type="search">http://manybooks.net/stanza/search.php?q=%s</link>
+	<link type="main">http://manybooks.net/opds/</link>
+	<link type="search">http://manybooks.net/opds/search.php?q=%s</link>
 	<title>ManyBooks Catalog</title>
 	<summary>ManyBooks.net: The best ebooks at the best price: free!</summary>
 	<icon></icon>
 </catalog>
--->
