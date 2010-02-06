@@ -21,6 +21,7 @@
 #define __OPDSLINK_H__
 
 #include <set>
+#include <map>
 #include <string>
 
 #include "../NetworkLink.h"
@@ -56,6 +57,7 @@ public:
 	void setIgnoredFeeds(const std::set<std::string> &ignoredFeeds);
 	void setAccountDependentFeeds(const std::set<std::string> &accountDependentFeeds);
 	void setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> mgr);
+	void addUrlRewritingRule(const std::string &name, const std::string &value);
 
 private:
 	const std::string searchURL(const std::string &pattern) const;
@@ -74,7 +76,7 @@ private:
 
 	shared_ptr<NetworkAuthenticationManager> authenticationManager();
 
-friend class OPDSCatalogItem;
+	void rewriteUrl(std::string &url) const;
 
 private:
 	const std::string myCatalogURL;
@@ -86,6 +88,10 @@ private:
 	std::set<std::string> myIgnoredFeeds;
 	std::set<std::string> myAccountDependentFeeds;
 	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
+
+	std::map<std::string,std::string> myUrlRewritingRules;
+
+friend class OPDSCatalogItem;
 };
 
 #endif /* __OPDSLINK_H__ */

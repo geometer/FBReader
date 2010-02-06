@@ -25,8 +25,6 @@
 #include <ZLOptionsDialog.h>
 #include <ZLDir.h>
 #include <ZLStringUtil.h>
-#include <ZLUnicodeUtil.h>
-#include <ZLNetworkUtil.h>
 #include <ZLResource.h>
 #include <ZLMessage.h>
 #include <ZLTimeManager.h>
@@ -45,6 +43,7 @@
 #include "TimeUpdater.h"
 
 #include "../libraryTree/LibraryView.h"
+#include "../network/NetworkLinkCollection.h"
 #include "../networkTree/NetworkView.h"
 #include "../networkTree/NetworkOperationRunnable.h"
 
@@ -311,7 +310,7 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 		return;
 	}
 	std::string copy = url;
-	transformUrl(copy);
+	NetworkLinkCollection::Instance().rewriteUrl(copy);
 	program->run("openLink", copy);
 }
 
@@ -533,14 +532,6 @@ const RecentBooks &FBReader::recentBooks() const {
 
 shared_ptr<Book> FBReader::currentBook() const {
 	return myModel->book();
-}
-
-void FBReader::transformUrl(std::string &url) const {
-	const std::string host =
-		ZLUnicodeUtil::toLower(ZLNetworkUtil::hostFromUrl(url));
-	if (host.find("litres.ru") != std::string::npos) {
-		ZLNetworkUtil::appendParameter(url, "lfrom", "51");
-	}
 }
 
 void FBReader::invalidateNetworkView() {

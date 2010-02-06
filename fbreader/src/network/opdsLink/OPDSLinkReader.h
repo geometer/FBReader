@@ -54,6 +54,7 @@ private:
 		READ_ACCOUNT_DEPENDENT_LINK,
 		READ_AUTHENTICATION_DESCRIPTION,
 		READ_AUTHENTICATION_PART,
+		READ_URL_REWRITING_RULES,
 	} myState;
 	std::string myLinkType;
 	std::string mySearchPartName;
@@ -74,6 +75,8 @@ private:
 
 	std::string myAuthenticationType;
 	std::map<std::string,std::string> myAuthenticationParts;
+
+	std::map<std::string,std::string> myUrlRewritingRules;
 };
 
 #endif /* __OPDSLINKREADER_H__ */

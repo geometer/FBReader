@@ -291,11 +291,14 @@ void XHTMLTagControlAction::doAtEnd(XHTMLReader &reader) {
 
 void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
 	const char *href = reader.attributeValue(xmlattributes, "href");
-	if (href != 0) {
-		const std::string link = (*href == '#') ?
-			reader.myReferenceName + href :
-			reader.myReferenceDirName + href;
-		const FBTextKind hyperlinkType = MiscUtil::referenceType(link);
+	if (href != 0 && href[0] != '\0') {
+		const FBTextKind hyperlinkType = MiscUtil::referenceType(href);
+		std::string link = href;
+		if (hyperlinkType == INTERNAL_HYPERLINK) {
+			link = (link[0] == '#') ?
+				reader.myReferenceName + link :
+				reader.myReferenceDirName + link;
+		}
 		myHyperlinkStack.push(hyperlinkType);
 		bookReader(reader).addHyperlinkControl(hyperlinkType, link);
 	} else {

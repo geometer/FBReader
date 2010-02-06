@@ -417,7 +417,10 @@ std::string LitResGenresItem::loadChildren(NetworkLibraryItemList &children, Lit
 	return "";
 }
 
-
 shared_ptr<NetworkLibraryItem> LitResLink::libraryItem() {
 	return new LitResRootCatalogItem(*this, Title, "Продажа электронных книг.");
+}
+
+void LitResLink::rewriteUrl(std::string &url) const {
+	ZLNetworkUtil::appendParameter(url, "lfrom", "51");
 }

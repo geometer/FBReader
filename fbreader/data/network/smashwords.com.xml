@@ -12,4 +12,7 @@
 		<part name="tag">categories</part>
 		<part name="annotation">description</part>
 	</advancedSearch>
+	<urlRewritingRules>
+		<addUrlParameter name="ref" value="geometer"/>
+	</urlRewritingRules>
 </catalog>

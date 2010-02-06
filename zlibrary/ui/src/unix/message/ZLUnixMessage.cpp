@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#include <unistd.h>
-#include <stdlib.h>
+#include <cunistd>
+#include <cstdlib>
 
 #include <ZLFile.h>
 
@@ -84,8 +84,9 @@ void ZLUnixExecMessageSender::sendStringMessage(const std::string &message) {
 		if (index >= 0) {
 			command = command.substr(0, index) + escapedMessage + command.substr(index + 2);
 		}
-		if (system(command.c_str()) == -1)
+		if (system(command.c_str()) == -1) {
 			exit(-1);
+		}
 		exit(0);
 	}
 }

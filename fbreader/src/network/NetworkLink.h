@@ -55,9 +55,10 @@ public:
 	virtual shared_ptr<ZLExecutionData> advancedSearchData(NetworkOperationData &data, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) = 0;
 	virtual shared_ptr<ZLExecutionData> resume(NetworkOperationData &data);
 
-public:
-	virtual shared_ptr<NetworkAuthenticationManager> authenticationManager();
+	virtual shared_ptr<NetworkAuthenticationManager> authenticationManager() = 0;
 	virtual shared_ptr<NetworkLibraryItem> libraryItem() = 0;
+
+	virtual void rewriteUrl(std::string &url) const = 0;
 
 private: // disable copying
 	NetworkLink(const NetworkLink &);

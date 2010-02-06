@@ -41,6 +41,8 @@ public:
 
 	shared_ptr<NetworkLibraryItem> libraryItem();
 
+	void rewriteUrl(std::string &url) const;
+
 private:
 	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
 };

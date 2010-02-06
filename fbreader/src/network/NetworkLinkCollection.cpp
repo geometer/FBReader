@@ -23,8 +23,10 @@
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLResource.h>
 #include <ZLNetworkManager.h>
+#include <ZLNetworkUtil.h>
 
 #include "NetworkLinkCollection.h"
 
@@ -370,4 +372,14 @@ size_t NetworkLinkCollection::numberOfEnabledLinks() const {
 		}
 	}
 	return count;
+}
+
+void NetworkLinkCollection::rewriteUrl(std::string &url) const {
+	const std::string host =
+		ZLUnicodeUtil::toLower(ZLNetworkUtil::hostFromUrl(url));
+	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+		if (host.find((*it)->SiteName) != std::string::npos) {
+			(*it)->rewriteUrl(url);
+		}
+	}
 }

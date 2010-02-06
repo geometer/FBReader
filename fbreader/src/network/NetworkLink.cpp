@@ -48,7 +48,3 @@ shared_ptr<ZLExecutionData> NetworkLink::resume(NetworkOperationData &result) {
 	result.clear();
 	return 0;
 }
-
-shared_ptr<NetworkAuthenticationManager> NetworkLink::authenticationManager() {
-	return 0;
-}

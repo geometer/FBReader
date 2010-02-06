@@ -220,3 +220,13 @@ shared_ptr<ZLExecutionData> OPDSLink::resume(NetworkOperationData &data) {
 shared_ptr<NetworkAuthenticationManager> OPDSLink::authenticationManager() {
 	return myAuthenticationManager;
 }
+
+void OPDSLink::addUrlRewritingRule(const std::string &name, const std::string &value) {
+	myUrlRewritingRules[name] = value;
+}
+
+void OPDSLink::rewriteUrl(std::string &url) const {
+	for (std::map<std::string,std::string>::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
+		ZLNetworkUtil::appendParameter(url, it->first, it->second);
+	}
+}

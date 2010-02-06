@@ -69,6 +69,9 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 			opdsLink->setAuthenticationManager(mgr);
 		}
 	}
+	for (std::map<std::string,std::string>::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
+		opdsLink->addUrlRewritingRule(it->first, it->second);
+	}
 	return opdsLink;
 }
 
@@ -82,6 +85,8 @@ static const std::string TAG_PART = "part";
 static const std::string TAG_IGNORED_FEEDS = "ignored-feeds";
 static const std::string TAG_ACCOUNT_DEPENDENT_FEEDS = "account-dependent-feeds";
 static const std::string TAG_AUTHENTICATION = "authentication";
+static const std::string TAG_URL_REWRITING_RULES = "urlRewritingRules";
+static const std::string TAG_ADD_URL_PARAMETER = "addUrlParameter";
 
 void OPDSLinkReader::startElementHandler(const char *tag, const char **attributes) {
 	if (TAG_SITE == tag) {
@@ -132,10 +137,18 @@ void OPDSLinkReader::startElementHandler(const char *tag, const char **attribute
 			myAuthenticationPartName = name;
 			myState = READ_AUTHENTICATION_PART;
 		}
+	} else if (TAG_URL_REWRITING_RULES == tag) {
+		myState = READ_URL_REWRITING_RULES;
+	} else if (myState == READ_URL_REWRITING_RULES && TAG_ADD_URL_PARAMETER == tag) {
+		const char *name = attributeValue(attributes, "name");
+		const char *value = attributeValue(attributes, "value");
+		if (name != 0 && value != 0) {
+			myUrlRewritingRules[name] = value;
+		}
 	}
 }
 
-void OPDSLinkReader::endElementHandler(const char *tag) {
+void OPDSLinkReader::endElementHandler(const char*) {
 	if (myState == READ_SEARCH_PART) {
 		myState = READ_SEARCH_DESCRIPTION;
 	} else if (myState == READ_AUTHENTICATION_PART) {
@@ -158,6 +171,7 @@ void OPDSLinkReader::characterDataHandler(const char *text, size_t len) {
 		case READ_IGNORED:
 		case READ_ACCOUNT_DEPENDENT:
 		case READ_AUTHENTICATION_DESCRIPTION:
+		case READ_URL_REWRITING_RULES:
 			break;
 		case READ_SITENAME:
 			mySiteName.append(text, len);

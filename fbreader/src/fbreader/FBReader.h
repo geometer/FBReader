@@ -131,8 +131,6 @@ private:
 	friend class RebuildCollectionRunnable;
 	friend class OptionsApplyRunnable;
 
-	void transformUrl(std::string &url) const;
-
 private:
 	ViewMode myMode;
 	ViewMode myPreviousMode;
