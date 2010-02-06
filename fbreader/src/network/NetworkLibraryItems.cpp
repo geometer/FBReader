@@ -50,7 +50,7 @@ void NetworkLibraryItem::setCoverURL(const std::string &coverURL) {
 }
 
 NetworkLibraryCatalogItem::NetworkLibraryCatalogItem(
-	NetworkLink &link,
+	const NetworkLink &link,
 	const std::string &url,
 	const std::string &htmlURL,
 	const std::string &title,

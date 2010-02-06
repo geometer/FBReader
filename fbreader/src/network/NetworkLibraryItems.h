@@ -78,7 +78,7 @@ public:
 
 public:
 	NetworkLibraryCatalogItem(
-		NetworkLink &link,
+		const NetworkLink &link,
 		const std::string &url,
 		const std::string &htmlURL,
 		const std::string &title,
@@ -89,7 +89,7 @@ public:
 
 	const ZLTypeId &typeId() const;
 
-	NetworkLink &link() const;
+	const NetworkLink &link() const;
 	const std::string &url() const;
 	const std::string &htmlURL() const;
 	const std::string &summary() const;
@@ -102,7 +102,7 @@ public:
 	virtual CatalogType catalogType() const;
 
 private:
-	NetworkLink &myLink;
+	const NetworkLink &myLink;
 	const std::string myURL;
 	const std::string myHtmlURL;
 	const std::string mySummary;
@@ -113,7 +113,7 @@ private: // disable copying
 	const NetworkLibraryCatalogItem &operator = (const NetworkLibraryCatalogItem &);
 };
 
-inline NetworkLink &NetworkLibraryCatalogItem::link() const { return myLink; }
+inline const NetworkLink &NetworkLibraryCatalogItem::link() const { return myLink; }
 inline const std::string &NetworkLibraryCatalogItem::url() const { return myURL; }
 inline const std::string &NetworkLibraryCatalogItem::htmlURL() const { return myHtmlURL; }
 inline const std::string &NetworkLibraryCatalogItem::summary() const { return mySummary; }

@@ -120,7 +120,7 @@ std::string OPDSLink::AdvancedSearch::query(
 	return query;
 }
 
-shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, NetworkOperationData &result) {
+shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, NetworkOperationData &result) const {
 	if (url.empty()) {
 		return 0;
 	}
@@ -170,7 +170,7 @@ void OPDSLink::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager>
 }
 
 
-shared_ptr<NetworkLibraryItem> OPDSLink::libraryItem() {
+shared_ptr<NetworkLibraryItem> OPDSLink::libraryItem() const {
 	return new OPDSCatalogItem(
 		*this,
 		myCatalogURL,
@@ -185,7 +185,7 @@ const std::string OPDSLink::searchURL(const std::string &query) const {
 	return ZLStringUtil::printf(mySearchURL, query);
 }
 
-shared_ptr<ZLExecutionData> OPDSLink::simpleSearchData(NetworkOperationData &result, const std::string &pattern) {
+shared_ptr<ZLExecutionData> OPDSLink::simpleSearchData(NetworkOperationData &result, const std::string &pattern) const {
 	return createNetworkData(
 		searchURL(ZLNetworkUtil::htmlEncode(pattern)),
 		result
@@ -198,7 +198,7 @@ shared_ptr<ZLExecutionData> OPDSLink::advancedSearchData(
 	const std::string &author,
 	const std::string &tag,
 	const std::string &annotation
-) {
+) const {
 	if (myAdvancedSearch.isNull()) {
 		return 0;
 	}
@@ -208,7 +208,7 @@ shared_ptr<ZLExecutionData> OPDSLink::advancedSearchData(
 	return query.empty() ? 0 : createNetworkData(searchURL(query), result);
 }
 
-shared_ptr<ZLExecutionData> OPDSLink::resume(NetworkOperationData &data) {
+shared_ptr<ZLExecutionData> OPDSLink::resume(NetworkOperationData &data) const {
 	if (++data.ResumeCount >= 10) {
 		return 0;
 	}
@@ -217,7 +217,7 @@ shared_ptr<ZLExecutionData> OPDSLink::resume(NetworkOperationData &data) {
 	return createNetworkData(url, data);
 }
 
-shared_ptr<NetworkAuthenticationManager> OPDSLink::authenticationManager() {
+shared_ptr<NetworkAuthenticationManager> OPDSLink::authenticationManager() const {
 	return myAuthenticationManager;
 }
 

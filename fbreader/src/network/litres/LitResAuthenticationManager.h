@@ -27,10 +27,12 @@
 #include "../NetworkAuthenticationManager.h"
 #include "../NetworkLibraryItems.h"
 
+class LitResLink;
+
 class LitResAuthenticationManager : public NetworkAuthenticationManager {
 
 public:
-	LitResAuthenticationManager(const std::string &siteName);
+	LitResAuthenticationManager(const LitResLink &link);
 
 public:
 	AuthenticationStatus isAuthorised(bool useNetwork = true);
@@ -74,6 +76,8 @@ public: // Password Recovery
 	std::string recoverPassword(const std::string &email);
 
 private:
+	const LitResLink &myLink;
+
 	bool mySidChecked;
 
 	ZLStringOption mySidUserNameOption;

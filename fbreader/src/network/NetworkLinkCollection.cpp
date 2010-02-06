@@ -294,7 +294,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std:
 
 		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = searchDatas.begin(); jt != searchDatas.end(); ++jt) {
 			NetworkOperationData &searchData = **jt;
-			NetworkLink &link = searchData.Link;
+			const NetworkLink &link = searchData.Link;
 			if (link.OnOption.value()) {
 				shared_ptr<ZLExecutionData> data = link.resume(searchData);
 				if (!data.isNull()) {
@@ -343,7 +343,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 
 		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = searchDatas.begin(); jt != searchDatas.end(); ++jt) {
 			NetworkOperationData &searchData = **jt;
-			NetworkLink &link = searchData.Link;
+			const NetworkLink &link = searchData.Link;
 			if (link.OnOption.value()) {
 				shared_ptr<ZLExecutionData> data = link.resume(searchData);
 				if (!data.isNull()) {

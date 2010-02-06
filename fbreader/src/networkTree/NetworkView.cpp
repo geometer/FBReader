@@ -322,7 +322,7 @@ bool NetworkView::processAccountDependent(NetworkLibraryCatalogItem &item) {
 	if (!item.dependsOnAccount()) {
 		return true;
 	}
-	NetworkLink &link = item.link();
+	const NetworkLink &link = item.link();
 	if (link.authenticationManager().isNull()) {
 		return false;
 	}

@@ -218,7 +218,7 @@ void NetworkCatalogNode::ExpandCatalogAction::run() {
 		return;
 	}
 
-	NetworkLink &link = myNode.item().link();
+	const NetworkLink &link = myNode.item().link();
 	if (!link.authenticationManager().isNull()) {
 		NetworkAuthenticationManager &mgr = *link.authenticationManager();
 		IsAuthorisedRunnable checker(mgr);

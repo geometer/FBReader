@@ -21,7 +21,6 @@
 
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
-#include <ZLNetworkUtil.h>
 #include <ZLNetworkManager.h>
 
 #include <ZLibrary.h>
@@ -29,62 +28,14 @@
 #include <ZLFile.h>
 #include <ZLTime.h>
 
-#include "LitResUtil.h"
-
+#include "LitResLink.h"
 #include "LitResGenresParser.h"
-
 #include "LitResGenre.h"
-
-const std::string LitResUtil::CURRENCY_SUFFIX = " р.";
 
 static const std::string GENRES_CACHE_PREFIX = "litres_genres_";
 static const std::string GENRES_CACHE_SUFFIX = ".xml.gz";
 
-
-shared_ptr<LitResUtil> LitResUtil::ourInstance;
-
-
-LitResUtil::LitResUtil() : myGenresValid(false) {
-}
-
-LitResUtil &LitResUtil::Instance() {
-	if (ourInstance.isNull()) {
-		ourInstance = new LitResUtil();
-	}
-	return *ourInstance;
-}
-
-std::string LitResUtil::appendLFrom(const std::string &original) {
-	std::string url = original;
-	return ZLNetworkUtil::appendParameter(url, "lfrom", "51");
-}
-
-std::string LitResUtil::litresLink(const std::string &path) {
-	std::string url = "://robot.litres.ru/" + path;
-	if (ZLNetworkUtil::hasParameter(url, "sid") ||
-			ZLNetworkUtil::hasParameter(url, "pwd")) {
-		url = "https" + url;
-	} else {
-		url = "http" + url;
-	}
-	return appendLFrom(url);
-}
-
-void LitResUtil::makeDemoUrl(std::string &url, const std::string &bookId) {
-	std::string id;
-	if (bookId.length() < 8) {
-		id.assign(8 - bookId.length(), '0');
-	}
-	id.append(bookId);
-	url = "http://robot.litres.ru/static/trials/";
-	url.append(id, 0, 2).append("/");
-	url.append(id, 2, 2).append("/");
-	url.append(id, 4, 2).append("/");
-	url.append(id).append(".fb2.zip");
-}
-
-
-void LitResUtil::validateGenres() {
+void LitResLink::validateGenres() const {
 	if (!myGenresValid) {
 		if (loadGenres()) {
 			buildGenresTitles(myGenresTree);
@@ -93,23 +44,22 @@ void LitResUtil::validateGenres() {
 	}
 }
 
-const std::map<std::string, shared_ptr<LitResGenre> > &LitResUtil::genresMap() {
+const std::map<std::string, shared_ptr<LitResGenre> > &LitResLink::genresMap() const {
 	validateGenres();
 	return myGenresMap;
 }
 
-const std::vector<shared_ptr<LitResGenre> > &LitResUtil::genresTree() {
+const std::vector<shared_ptr<LitResGenre> > &LitResLink::genresTree() const {
 	validateGenres();
 	return myGenresTree;
 }
 
-const std::map<shared_ptr<LitResGenre>, std::string> &LitResUtil::genresTitles() {
+const std::map<shared_ptr<LitResGenre>, std::string> &LitResLink::genresTitles() const {
 	validateGenres();
 	return myGenresTitles;
 }
 
-
-void LitResUtil::fillGenreIds(const std::string &tag, std::vector<std::string> &ids) {
+void LitResLink::fillGenreIds(const std::string &tag, std::vector<std::string> &ids) const {
 	std::vector<std::string> words;
 	int index = 0;
 
@@ -141,11 +91,11 @@ void LitResUtil::fillGenreIds(const std::string &tag, std::vector<std::string> &
 	}
 }
 
-bool LitResUtil::loadGenres() {
+bool LitResLink::loadGenres() const {
 	static const std::string directoryPath = ZLNetworkManager::CacheDirectory();
 	static shared_ptr<ZLDir> dir = ZLFile(directoryPath).directory(true);
 
-	const std::string url = litresLink("pages/catalit_genres/");
+	const std::string url = litresUrl("pages/catalit_genres/");
 
 	myGenresTree.clear();
 	myGenresMap.clear();
@@ -225,7 +175,7 @@ bool LitResUtil::loadGenres() {
 	return parser->readDocument(cacheName);
 }
 
-void LitResUtil::buildGenresTitles(const std::vector<shared_ptr<LitResGenre> > &genres, const std::string &titlePrefix) {
+void LitResLink::buildGenresTitles(const std::vector<shared_ptr<LitResGenre> > &genres, const std::string &titlePrefix) const {
 	for (std::vector<shared_ptr<LitResGenre> >::const_iterator it = genres.begin(); it != genres.end(); ++it) {
 		shared_ptr<LitResGenre> genre = *it;
 		std::string title = titlePrefix.empty() ? (genre->Title) : (titlePrefix + "/" + genre->Title);

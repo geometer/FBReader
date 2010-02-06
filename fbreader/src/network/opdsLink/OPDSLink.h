@@ -34,9 +34,6 @@ class OPDSLink : public NetworkLink {
 private:
 	class AdvancedSearch;
 
-protected:
-	shared_ptr<ZLExecutionData> createNetworkData(const std::string &url, NetworkOperationData &result);
-
 public:
 	OPDSLink(
 		const std::string &siteName,
@@ -62,19 +59,21 @@ public:
 private:
 	const std::string searchURL(const std::string &pattern) const;
 
-	shared_ptr<NetworkLibraryItem> libraryItem();
+	shared_ptr<ZLExecutionData> createNetworkData(const std::string &url, NetworkOperationData &result) const;
+
 	shared_ptr<ZLExecutionData> simpleSearchData(
 		NetworkOperationData &result,
-		const std::string &pattern);
+		const std::string &pattern) const;
 	shared_ptr<ZLExecutionData> advancedSearchData(
 		NetworkOperationData &result,
 		const std::string &titleAndSeries,
 		const std::string &author,
 		const std::string &tag,
-		const std::string &annotation);
-	shared_ptr<ZLExecutionData> resume(NetworkOperationData &result);
+		const std::string &annotation) const;
+	shared_ptr<ZLExecutionData> resume(NetworkOperationData &result) const;
 
-	shared_ptr<NetworkAuthenticationManager> authenticationManager();
+	shared_ptr<NetworkLibraryItem> libraryItem() const;
+	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;
 
 	void rewriteUrl(std::string &url) const;
 

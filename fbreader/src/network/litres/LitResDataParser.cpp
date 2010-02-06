@@ -23,7 +23,7 @@
 
 #include "LitResDataParser.h"
 #include "LitResGenre.h"
-#include "LitResUtil.h"
+#include "LitResLink.h"
 
 #include "../NetworkAuthenticationManager.h"
 
@@ -52,10 +52,24 @@ std::string LitResDataParser::stringAttributeValue(const char **attributes, cons
 	return value != 0 ? value : std::string();
 }
 
-LitResDataParser::LitResDataParser(NetworkLibraryItemList &books, shared_ptr<NetworkAuthenticationManager> mgr) : 
+std::string LitResDataParser::makeDemoUrl(const std::string &bookId) const {
+	std::string id;
+	if (bookId.length() < 8) {
+		id.assign(8 - bookId.length(), '0');
+	}
+	id.append(bookId);
+	std::string path = "/static/trials/";
+	path.append(id, 0, 2).append("/");
+	path.append(id, 2, 2).append("/");
+	path.append(id, 4, 2).append("/");
+	path.append(id).append(".fb2.zip");
+	return myLink.litresUrl(path);
+}
+
+LitResDataParser::LitResDataParser(const LitResLink &link, NetworkLibraryItemList &books) : 
+	myLink(link),
 	myBooks(books), 
-	myIndex(0), 
-	myAuthenticationManager(mgr) {
+	myIndex(0) {
 	myState = START;
 }
 
@@ -84,28 +98,29 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 		if (!closed && TAG_BOOK == tag) {
 			const std::string bookId = stringAttributeValue(attributes, "hub_id");
 			myCurrentBook = new NetworkLibraryBookItem(bookId, myIndex++);
-			currentBook().setAuthenticationManager(myAuthenticationManager);
+			currentBook().setAuthenticationManager(myLink.authenticationManager());
 
 			currentBook().setCoverURL(stringAttributeValue(attributes, "cover_preview"));
 
-			const std::string url = stringAttributeValue(attributes, "url");
+			std::string url = stringAttributeValue(attributes, "url");
 			if (!url.empty()) {
-				currentBook().urlByType()[NetworkLibraryBookItem::LINK_HTTP] =
-					LitResUtil::appendLFrom(url);
+				myLink.rewriteUrl(url);
+				currentBook().urlByType()[NetworkLibraryBookItem::LINK_HTTP] = url;
 			}
 
 			const std::string hasTrial = stringAttributeValue(attributes, "has_trial");
 			if (hasTrial == "1") {
-				std::string demoUrl;
-				LitResUtil::makeDemoUrl(demoUrl, bookId);
-				if (!demoUrl.empty()) {
-					currentBook().urlByType().insert(std::make_pair(NetworkLibraryBookItem::BOOK_DEMO_FB2_ZIP, demoUrl));
-				}
+				currentBook().urlByType().insert(
+					std::make_pair(
+						NetworkLibraryBookItem::BOOK_DEMO_FB2_ZIP,
+						makeDemoUrl(bookId)
+					)
+				);
 			}
 
 			const char *price = attributeValue(attributes, "price");
 			if (price != 0 && *price != '\0') {
-				currentBook().setPrice(price + LitResUtil::CURRENCY_SUFFIX);
+				currentBook().setPrice(price + LitResLink::CURRENCY_SUFFIX);
 			}
 		}
 		break;
@@ -180,8 +195,8 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 		if (closed && TAG_GENRE == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
 
-			const std::map<std::string, shared_ptr<LitResGenre> > &genresMap = LitResUtil::Instance().genresMap();
-			const std::map<shared_ptr<LitResGenre>, std::string> &genresTitles = LitResUtil::Instance().genresTitles();
+			const std::map<std::string, shared_ptr<LitResGenre> > &genresMap = myLink.genresMap();
+			const std::map<shared_ptr<LitResGenre>, std::string> &genresTitles = myLink.genresTitles();
 
 			std::map<std::string, shared_ptr<LitResGenre> >::const_iterator it = genresMap.find(myBuffer);
 			if (it != genresMap.end()) {

@@ -25,16 +25,16 @@
 class NetworkLink;
 
 struct NetworkOperationData {
-	NetworkOperationData(NetworkLink &link);
+	NetworkOperationData(const NetworkLink &link);
 	void clear();
 
-	NetworkLink &Link;
+	const NetworkLink &Link;
 	NetworkLibraryItemList Items;
 	std::string ResumeURI;
 	size_t ResumeCount;
 };
 
-inline NetworkOperationData::NetworkOperationData(NetworkLink &link) : Link(link), ResumeCount(0) {
+inline NetworkOperationData::NetworkOperationData(const NetworkLink &link) : Link(link), ResumeCount(0) {
 }
 
 inline void NetworkOperationData::clear() {

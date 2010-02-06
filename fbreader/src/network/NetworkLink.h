@@ -51,12 +51,12 @@ public:
 	ZLBooleanOption OnOption;
 
 public:
-	virtual shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &data, const std::string &pattern) = 0;
-	virtual shared_ptr<ZLExecutionData> advancedSearchData(NetworkOperationData &data, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) = 0;
-	virtual shared_ptr<ZLExecutionData> resume(NetworkOperationData &data);
+	virtual shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &data, const std::string &pattern) const = 0;
+	virtual shared_ptr<ZLExecutionData> advancedSearchData(NetworkOperationData &data, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) const = 0;
+	virtual shared_ptr<ZLExecutionData> resume(NetworkOperationData &data) const;
 
-	virtual shared_ptr<NetworkAuthenticationManager> authenticationManager() = 0;
-	virtual shared_ptr<NetworkLibraryItem> libraryItem() = 0;
+	virtual shared_ptr<NetworkAuthenticationManager> authenticationManager() const = 0;
+	virtual shared_ptr<NetworkLibraryItem> libraryItem() const = 0;
 
 	virtual void rewriteUrl(std::string &url) const = 0;
 

@@ -20,31 +20,52 @@
 #ifndef __LITRESLINK_H__
 #define __LITRESLINK_H__
 
-
 #include <map>
 #include <string>
 
 #include "../NetworkLink.h"
 
-
 class NetworkAuthenticationManager;
+class LitResGenre;
 
 class LitResLink : public NetworkLink {
 
 public:
+	static const std::string CURRENCY_SUFFIX;
+
+public:
 	LitResLink();
 
-	shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &result, const std::string &pattern);
-	shared_ptr<ZLExecutionData> advancedSearchData(NetworkOperationData &result, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation);
+private:
+	shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &result, const std::string &pattern) const;
+	shared_ptr<ZLExecutionData> advancedSearchData(NetworkOperationData &result, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) const;
 
-	shared_ptr<NetworkAuthenticationManager> authenticationManager();
+	shared_ptr<NetworkLibraryItem> libraryItem() const;
 
-	shared_ptr<NetworkLibraryItem> libraryItem();
+public:
+	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;
 
 	void rewriteUrl(std::string &url) const;
+	std::string litresUrl(const std::string &path) const;
+
+	const std::map<std::string, shared_ptr<LitResGenre> > &genresMap() const;
+	const std::vector<shared_ptr<LitResGenre> > &genresTree() const;
+	const std::map<shared_ptr<LitResGenre>, std::string> &genresTitles() const;
+
+	void fillGenreIds(const std::string &tag, std::vector<std::string> &ids) const;
+
+private:
+	void validateGenres() const;
+	bool loadGenres() const;
+	void buildGenresTitles(const std::vector<shared_ptr<LitResGenre> > &genres, const std::string &titlePrefix = "") const;
 
 private:
 	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
+
+	mutable std::vector<shared_ptr<LitResGenre> > myGenresTree;
+	mutable std::map<std::string, shared_ptr<LitResGenre> > myGenresMap;
+	mutable std::map<shared_ptr<LitResGenre>, std::string> myGenresTitles;
+	mutable bool myGenresValid;
 };
 
 #endif /* __LITRESLINK_H__ */

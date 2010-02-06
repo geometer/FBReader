@@ -24,9 +24,9 @@
 
 #include "../NetworkLibraryItems.h"
 
+class LitResLink;
 class LitResGenre;
 class NetworkAuthenticationManager;
-
 
 class LitResDataParser : public ZLXMLReader {
 
@@ -34,7 +34,7 @@ private:
 	static std::string stringAttributeValue(const char **attributes, const char *name);
 
 public:
-	LitResDataParser(NetworkLibraryItemList &books, shared_ptr<NetworkAuthenticationManager> mgr);
+	LitResDataParser(const LitResLink &link, NetworkLibraryItemList &books);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
@@ -52,8 +52,11 @@ private:
 	State getNextState(const std::string &tag, bool closed);
 
 	NetworkLibraryBookItem &currentBook();
+	std::string makeDemoUrl(const std::string &bookId) const;
 
 private:
+	const LitResLink &myLink;
+
 	NetworkLibraryItemList &myBooks;
 	std::string myBuffer;
 	shared_ptr<NetworkLibraryItem> myCurrentBook;
@@ -64,8 +67,6 @@ private:
 	std::string myAuthorFirstName;
 	std::string myAuthorMiddleName;
 	std::string myAuthorLastName;
-
-	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
 };
 
 inline NetworkLibraryBookItem &LitResDataParser::currentBook() { return (NetworkLibraryBookItem &) *myCurrentBook; }

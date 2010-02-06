@@ -28,7 +28,7 @@
 #include "../opds/NetworkOPDSFeedReader.h"
 
 OPDSCatalogItem::OPDSCatalogItem(
-	OPDSLink &link,
+	const OPDSLink &link,
 	const std::string &url,
 	const std::string &htmlURL,
 	const std::string &title,

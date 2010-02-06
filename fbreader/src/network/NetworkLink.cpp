@@ -44,7 +44,7 @@ NetworkLink::NetworkLink(const std::string &siteName, const std::string &title) 
 NetworkLink::~NetworkLink() {
 }
 
-shared_ptr<ZLExecutionData> NetworkLink::resume(NetworkOperationData &result) {
+shared_ptr<ZLExecutionData> NetworkLink::resume(NetworkOperationData &result) const {
 	result.clear();
 	return 0;
 }
