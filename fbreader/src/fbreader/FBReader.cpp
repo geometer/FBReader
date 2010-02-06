@@ -25,6 +25,8 @@
 #include <ZLOptionsDialog.h>
 #include <ZLDir.h>
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
+#include <ZLNetworkUtil.h>
 #include <ZLResource.h>
 #include <ZLMessage.h>
 #include <ZLTimeManager.h>
@@ -55,8 +57,6 @@
 #include "../database/booksdb/BooksDB.h"
 #include "../database/booksdb/BooksDBUtil.h"
 #include "../library/Book.h"
-
-#include "../network/litres/LitResUtil.h"
 
 static const std::string OPTIONS = "Options";
 
@@ -536,18 +536,10 @@ shared_ptr<Book> FBReader::currentBook() const {
 }
 
 void FBReader::transformUrl(std::string &url) const {
-	static const std::string LFROM_PREFIX = "lfrom=";
-	if (url.find("litres.ru") != std::string::npos) {
-		size_t index = url.find(LFROM_PREFIX);
-		if (index == std::string::npos) {
-			url = LitResUtil::appendLFrom(url);
-		} else {
-			size_t index2 = index + LFROM_PREFIX.size();
-			while (index2 < url.size() && url[index2] != '&') {
-				++index2;
-			}
-			url.replace(index, index2 - index, LitResUtil::LFROM);
-		}
+	const std::string host =
+		ZLUnicodeUtil::toLower(ZLNetworkUtil::hostFromUrl(url));
+	if (host.find("litres.ru") != std::string::npos) {
+		ZLNetworkUtil::appendParameter(url, "lfrom", "51");
 	}
 }
 

@@ -35,7 +35,6 @@
 
 #include "LitResGenre.h"
 
-const std::string LitResUtil::LFROM = "lfrom=51";
 const std::string LitResUtil::CURRENCY_SUFFIX = " р.";
 
 static const std::string GENRES_CACHE_PREFIX = "litres_genres_";
@@ -56,30 +55,19 @@ LitResUtil &LitResUtil::Instance() {
 }
 
 std::string LitResUtil::appendLFrom(const std::string &original) {
-	if (original.find("lfrom=") != std::string::npos) {
-		return original;
-	}
 	std::string url = original;
-	size_t index = url.rfind('/');
-	size_t qindex = url.find('?', index + 1);
-	if (qindex == std::string::npos) {
-		url.append("?");
-	} else {
-		url.append("&");
-	}
-	url.append(LFROM);
-	return url;
+	return ZLNetworkUtil::appendParameter(url, "lfrom", "51");
 }
 
 std::string LitResUtil::litresLink(const std::string &path) {
-	std::string protocol = "http";
-	if (path.find("?sid=") != std::string::npos ||
-			path.find("&sid=") != std::string::npos ||
-			path.find("?pwd=") != std::string::npos ||
-			path.find("&pwd=") != std::string::npos) {
-		protocol = "https";
+	std::string url = "://robot.litres.ru/" + path;
+	if (ZLNetworkUtil::hasParameter(url, "sid") ||
+			ZLNetworkUtil::hasParameter(url, "pwd")) {
+		url = "https" + url;
+	} else {
+		url = "http" + url;
 	}
-	return appendLFrom(protocol + "://robot.litres.ru/" + path);
+	return appendLFrom(url);
 }
 
 void LitResUtil::makeDemoUrl(std::string &url, const std::string &bookId) {

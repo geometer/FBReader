@@ -66,18 +66,18 @@ shared_ptr<ZLExecutionData> LitResLink::simpleSearchData(NetworkOperationData &r
 
 shared_ptr<ZLExecutionData> LitResLink::advancedSearchData(NetworkOperationData &result, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) {
 	std::string request = "?checkpoint=2000-01-01";
-	ZLNetworkUtil::addParameter(request, "search_title", titleAndSeries);
-	ZLNetworkUtil::addParameter(request, "search_person", author);
+	ZLNetworkUtil::appendParameter(request, "search_title", titleAndSeries);
+	ZLNetworkUtil::appendParameter(request, "search_person", author);
 	if (!tag.empty()) {
 		std::vector<std::string> genreIds;
 		LitResUtil::Instance().fillGenreIds(tag, genreIds);
 		if (!genreIds.empty()) {
 			for (std::vector<std::string>::const_iterator it = genreIds.begin(); it != genreIds.end(); ++it) {
-				ZLNetworkUtil::addParameter(request, "genre", *it);
+				ZLNetworkUtil::appendParameter(request, "genre", *it);
 			}
 		}
 	}
-	ZLNetworkUtil::addParameter(request, "search", annotation); // if it is included, than annotation words also are searched in title, author, etc.
+	ZLNetworkUtil::appendParameter(request, "search", annotation); // if it is included, than annotation words also are searched in title, author, etc.
 
 	if (request.empty()) {
 		return 0;

@@ -30,7 +30,6 @@ class LitResGenre;
 class LitResUtil {
 
 public:
-	static const std::string LFROM;
 	static const std::string CURRENCY_SUFFIX;
 
 private:
@@ -42,6 +41,7 @@ public:
 	static LitResUtil &Instance();
 
 public:
+	static std::string appendParameter(const std::string &url, const std::string &name, const std::string &value);
 	static std::string appendLFrom(const std::string &url);
 	static std::string litresLink(const std::string &path);
 	static void makeDemoUrl(std::string &url, const std::string &bookId);

@@ -84,17 +84,40 @@ std::string ZLNetworkUtil::htmlEncode(const std::string &stringToEncode) {
 	return encodedString;
 }
 
-void ZLNetworkUtil::addParameter(std::string &url, const std::string &name, const std::string &value) {
-	std::string val(value);
-	ZLStringUtil::stripWhiteSpaces(val);
-	if (!val.empty()) {
-		if (url.find('?') == std::string::npos) {
-			url.append("?");
-		} else {
-			url.append("&");
-		}
-		url.append(name);
-		url.append("=");
-		url.append(ZLNetworkUtil::htmlEncode(val));
+std::string &ZLNetworkUtil::appendParameter(std::string &url, const std::string &name, const std::string &value) {
+	std::string realValue = value;
+	ZLStringUtil::stripWhiteSpaces(realValue);
+	if (realValue.empty()) {
+		return url;
 	}
+	htmlEncode(realValue);
+	size_t index = url.find('?', url.rfind('/') + 1);
+	const std::string delimiter = (index == std::string::npos) ? "?" : "&";
+	while (index != std::string::npos) {
+		size_t start = index + 1;
+		size_t eqIndex = url.find('=', start);
+		index = url.find('&', start);
+		if (url.substr(start, eqIndex - start) == name) {
+			if (url.substr(eqIndex + 1, index - eqIndex - 1) == realValue) {
+				return url;
+			} else {
+				return url.replace(eqIndex + 1, index - eqIndex - 1, realValue);
+			}
+		}
+	}
+	return url.append(delimiter).append(name).append("=").append(realValue);
+}
+
+bool ZLNetworkUtil::hasParameter(const std::string &url, const std::string &name) {
+	size_t index = url.find('?', url.rfind('/') + 1);
+	const std::string delimiter = (index == std::string::npos) ? "?" : "&";
+	while (index != std::string::npos) {
+		size_t start = index + 1;
+		size_t eqIndex = url.find('=', start);
+		index = url.find('&', start);
+		if (url.substr(start, eqIndex - start) == name) {
+			return true;
+		}
+	}
+	return false;
 }
