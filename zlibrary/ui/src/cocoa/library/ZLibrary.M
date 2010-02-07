@@ -31,8 +31,7 @@
 #include "../dialogs/ZLCocoaDialogManager.h"
 #include "../image/ZLCocoaImageManager.h"
 #include "../view/ZLCocoaPaintContext.h"
-//#include "../../unix/message/ZLUnixMessage.h"
-//#include "../../../../core/src/util/ZLKeyUtil.h"
+#include "../message/ZLCocoaMessage.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 #include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
@@ -68,12 +67,10 @@ void ZLCocoaLibraryImplementation::init(int &argc, char **&argv) {
 	ZLCocoaTimeManager::createInstance();
 	ZLCocoaDialogManager::createInstance();
 
-	//ZLUnixCommunicationManager::createInstance();
+	ZLCocoaCommunicationManager::createInstance();
 	ZLCocoaImageManager::createInstance();
 	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 	ZLCurlNetworkManager::createInstance();
-
-	//ZLKeyUtil::setKeyNamesFileName("keynames-gtk.xml");
 }
 
 ZLPaintContext *ZLCocoaLibraryImplementation::createContext() {
