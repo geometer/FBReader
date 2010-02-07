@@ -39,6 +39,7 @@ public:
 	void errorBox(const ZLResourceKey &key, const std::string &message) const;
 	int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const;
 	bool selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const;
+	shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const std::string &directoryPath, const ZLOpenFileDialog::Filter &filter) const;
 	shared_ptr<ZLProgressDialog> createProgressDialog(const ZLResourceKey &key) const;
 
 	bool isClipboardSupported(ClipboardType type) const;
