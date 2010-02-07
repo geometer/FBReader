@@ -58,12 +58,12 @@ std::string LitResDataParser::makeDemoUrl(const std::string &bookId) const {
 		id.assign(8 - bookId.length(), '0');
 	}
 	id.append(bookId);
-	std::string path = "/static/trials/";
-	path.append(id, 0, 2).append("/");
-	path.append(id, 2, 2).append("/");
-	path.append(id, 4, 2).append("/");
-	path.append(id).append(".fb2.zip");
-	return myLink.litresUrl(path);
+	std::string url = "http://robot.litres.ru/static/trials/";
+	url.append(id, 0, 2).append("/");
+	url.append(id, 2, 2).append("/");
+	url.append(id, 4, 2).append("/");
+	url.append(id).append(".fb2.zip");
+	return url;
 }
 
 LitResDataParser::LitResDataParser(const LitResLink &link, NetworkLibraryItemList &books) : 

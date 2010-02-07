@@ -165,15 +165,6 @@ private:
 	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
-class LitResByGenresCatalogItem : public NetworkLibraryCatalogItem {
-
-public:
-	LitResByGenresCatalogItem(const LitResLink &link);
-
-private:
-	std::string loadChildren(NetworkLibraryItemList &children);
-};
-
 class LitResGenresItem : public NetworkLibraryCatalogItem {
 
 public:
@@ -184,9 +175,6 @@ public:
 		const std::string &summary,
 		const std::vector<shared_ptr<LitResGenre> > &genres
 	);
-
-public:
-	static std::string loadChildren(NetworkLibraryItemList &children, const LitResLink &link, const std::vector<shared_ptr<LitResGenre> > &genres);
 
 private:
 	std::string loadChildren(NetworkLibraryItemList &children);
@@ -217,7 +205,13 @@ std::string LitResRootCatalogItem::loadChildren(NetworkLibraryItemList &children
 		"50 самых популярных книг"
 	));
 	children.push_back(new LitResByAuthorsCatalogItem(link));
-	children.push_back(new LitResByGenresCatalogItem(link));
+	children.push_back(new LitResGenresItem(
+		link,
+		"none",
+		"Книги по жанрам",
+		"Просмотр книг по жанрам",
+		link.genresTree()
+	));
 	children.push_back(new LitResMyCatalogItem(link));
 
 	return "";
@@ -291,7 +285,7 @@ LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(const LitResLink &link) :
 	"none",
 	"",
 	"Книги по авторам",
-	"Просмтор книг по авторам",
+	"Просмотр книг по авторам",
 	""
 ) {
 }
@@ -371,36 +365,26 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 }
 
 
-LitResByGenresCatalogItem::LitResByGenresCatalogItem(const LitResLink &link) : NetworkLibraryCatalogItem(
-	link,
-	"none",
-	"",
-	"Книги по жанрам",
-	"Просмтор книг по жанрам",
-	""
-) {
-}
-
-std::string LitResByGenresCatalogItem::loadChildren(NetworkLibraryItemList &children) {
-	const LitResLink &link = (const LitResLink&)this->link();
-	return LitResGenresItem::loadChildren(children, link, link.genresTree());
-}
-
 LitResGenresItem::LitResGenresItem(
 	const LitResLink &link,
 	const std::string &url,
 	const std::string &title,
 	const std::string &summary,
 	const std::vector<shared_ptr<LitResGenre> > &genres
-) : NetworkLibraryCatalogItem(link, url, "", title, summary, ""), myGenres(genres) {
+) : NetworkLibraryCatalogItem(
+	link,
+	url,
+	"",
+	title,
+	summary,
+	""
+),
+myGenres(genres) {
 }
 
 std::string LitResGenresItem::loadChildren(NetworkLibraryItemList &children) {
-	return LitResGenresItem::loadChildren(children, (const LitResLink&)link(), myGenres);
-}
-
-std::string LitResGenresItem::loadChildren(NetworkLibraryItemList &children, const LitResLink &link, const std::vector<shared_ptr<LitResGenre> > &genres) {
-	for (std::vector<shared_ptr<LitResGenre> >::const_iterator it = genres.begin(); it != genres.end(); ++it) {
+	const LitResLink &link = (const LitResLink&)this->link();
+	for (std::vector<shared_ptr<LitResGenre> >::const_iterator it = myGenres.begin(); it != myGenres.end(); ++it) {
 		const LitResGenre &genre = **it;
 		if (genre.Id.empty()) {
 			children.push_back(new LitResGenresItem(
