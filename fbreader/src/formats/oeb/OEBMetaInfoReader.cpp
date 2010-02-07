@@ -23,6 +23,7 @@
 #include <ZLUnicodeUtil.h>
 
 #include "OEBMetaInfoReader.h"
+#include "../util/EntityFilesCollector.h"
 
 #include "../../constants/XMLNamespace.h"
 #include "../../library/Book.h"
@@ -174,4 +175,8 @@ bool OEBMetaInfoReader::readMetaInfo(const std::string &fileName) {
 		}
 	}
 	return code;
+}
+
+const std::vector<std::string> &OEBMetaInfoReader::externalDTDs() const {
+	return EntityFilesCollector::Instance().externalDTDs("xhtml");
 }

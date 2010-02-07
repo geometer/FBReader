@@ -36,6 +36,7 @@ public:
 	void endElementHandler(const char *tag);
 	void characterDataHandler(const char *text, size_t len);
 	bool processNamespaces() const;
+	const std::vector<std::string> &externalDTDs() const;
 
 private:
 	bool isDublinCoreNamespace(const std::string &nsId) const;

@@ -20,6 +20,7 @@
 #include <cstdlib>
 
 #include "NCXReader.h"
+#include "../util/EntityFilesCollector.h"
 
 NCXReader::NCXReader(BookReader &modelReader) : myModelReader(modelReader), myReadState(READ_NONE), myPlayIndex(-65535) {
 }
@@ -102,6 +103,10 @@ void NCXReader::characterDataHandler(const char *text, size_t len) {
 	if (myReadState == READ_TEXT) {
 		myPointStack.back().Text.append(text, len);
 	}
+}
+
+const std::vector<std::string> &NCXReader::externalDTDs() const {
+	return EntityFilesCollector::Instance().externalDTDs("xhtml");
 }
 
 const std::map<int,NCXReader::NavPoint> &NCXReader::navigationMap() const {

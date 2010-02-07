@@ -27,6 +27,7 @@
 #include "NCXReader.h"
 #include "../xhtml/XHTMLReader.h"
 #include "../util/MiscUtil.h"
+#include "../util/EntityFilesCollector.h"
 #include "../../bookmodel/BookModel.h"
 #include "../../constants/XMLNamespace.h"
 
@@ -198,4 +199,8 @@ void OEBBookReader::namespaceListChangedHandler() {
 	} else {
 		myOPFSchemePrefix.erase();
 	}
+}
+
+const std::vector<std::string> &OEBBookReader::externalDTDs() const {
+	return EntityFilesCollector::Instance().externalDTDs("xhtml");
 }
