@@ -34,7 +34,6 @@
 #include "FBReaderActions.h"
 #include "BookTextView.h"
 #include "ContentsView.h"
-#include "FBFileHandler.h"
 #include "BookInfoDialog.h"
 
 #include "../bookmodel/BookModel.h"
@@ -83,29 +82,6 @@ ShowContentsAction::ShowContentsAction() : SetModeAction(FBReader::CONTENTS_MODE
 
 bool ShowContentsAction::isVisible() const {
 	return ModeDependentAction::isVisible() && !((ContentsView&)*FBReader::Instance().myContentsView).isEmpty();
-}
-
-AddBookAction::AddBookAction(int visibleInModes) : ModeDependentAction(visibleInModes) {
-}
-
-void AddBookAction::run() {
-	FBReader &fbreader = FBReader::Instance();
-
-	const ZLResourceKey dialogKey("addFileDialog");
-	FBFileHandler handler;
-	if (ZLDialogManager::Instance().selectionDialog(dialogKey, handler)) {
-		shared_ptr<Book> book = handler.description();
-		if (!book.isNull()) {
-			if (BookInfoDialog(book).dialog().run()) {
-				Library::Instance().addBook(book);
-				fbreader.openBook(book);
-				fbreader.setMode(FBReader::BOOK_TEXT_MODE);
-			} else {
-				Library::Instance().removeBook(book);
-			}
-			fbreader.refreshWindow();
-		}
-	}
 }
 
 ScrollToHomeAction::ScrollToHomeAction() : ModeDependentAction(FBReader::BOOK_TEXT_MODE) {
