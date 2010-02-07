@@ -17,24 +17,17 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLOPENFILEDIALOG_H__
-#define __ZLOPENFILEDIALOG_H__
+#ifndef __ZLCOCOAOPENFILEDIALOG_H__
+#define __ZLCOCOAOPENFILEDIALOG_H__
 
-#include <string>
+#include <ZLOpenFileDialog.h>
 
-class ZLOpenFileDialog {
+class ZLCocoaOpenFileDialog : public ZLOpenFileDialog {
 
-public:
-	class Filter {
-
-	public:
-		virtual bool accepts(const std::string &filePath) const = 0;
-	};
-
-public:
-	virtual bool run() = 0;
-	virtual std::string filePath() const = 0;
-	virtual std::string directoryPath() const = 0;
+private:
+	bool run();
+	std::string filePath() const;
+	std::string directoryPath() const;
 };
 
-#endif /* __ZLOPENFILEDIALOG_H__ */
+#endif /* __ZLCOCOAOPENFILEDIALOG_H__ */

@@ -26,10 +26,27 @@
 #include "BookInfoDialog.h"
 #include "../library/Book.h"
 
+class BookFileFilter : public ZLOpenFileDialog::Filter {
+
+private:
+	bool accepts(const std::string &filePath) const;
+};
+
+bool BookFileFilter::accepts(const std::string &filePath) const {
+	return true;
+}
+
 AddBookAction::AddBookAction(int visibleInModes) : ModeDependentAction(visibleInModes) {
 }
 
 void AddBookAction::run() {
+	BookFileFilter filter;
+	shared_ptr<ZLOpenFileDialog> dialog = ZLDialogManager::Instance().createOpenFileDialog("", filter);
+	if (!dialog.isNull()) {
+		dialog->run();
+		return;
+	}
+
 	FBReader &fbreader = FBReader::Instance();
 
 	const ZLResourceKey dialogKey("addFileDialog");

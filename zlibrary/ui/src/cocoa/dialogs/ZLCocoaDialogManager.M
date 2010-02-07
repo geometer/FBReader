@@ -29,6 +29,7 @@
 //#include "ZLCocoaOptionsDialog.h"
 //#include "ZLCocoaSelectionDialog.h"
 #include "ZLCocoaProgressDialog.h"
+#include "ZLCocoaOpenFileDialog.h"
 //#include "ZLCocoaUtil.h"
 
 static std::string cleanString(const std::string &str) {
@@ -96,7 +97,7 @@ bool ZLCocoaDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandl
 }
 
 shared_ptr<ZLOpenFileDialog> ZLCocoaDialogManager::createOpenFileDialog(const std::string &directoryPath, const ZLOpenFileDialog::Filter &filter) const {
-	return 0;
+	return new ZLCocoaOpenFileDialog();
 }
 
 shared_ptr<ZLProgressDialog> ZLCocoaDialogManager::createProgressDialog(const ZLResourceKey &key) const {

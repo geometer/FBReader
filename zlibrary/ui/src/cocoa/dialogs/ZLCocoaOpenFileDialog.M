@@ -17,24 +17,19 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLOPENFILEDIALOG_H__
-#define __ZLOPENFILEDIALOG_H__
+#import <Cocoa/Cocoa.h>
 
-#include <string>
+#include "ZLCocoaOpenFileDialog.h"
 
-class ZLOpenFileDialog {
+bool ZLCocoaOpenFileDialog::run() {
+	NSOpenPanel *panel = [NSOpenPanel openPanel];
+	return [panel runModal] == NSFileHandlingPanelOKButton;
+}
 
-public:
-	class Filter {
+std::string ZLCocoaOpenFileDialog::filePath() const {
+	return std::string();
+}
 
-	public:
-		virtual bool accepts(const std::string &filePath) const = 0;
-	};
-
-public:
-	virtual bool run() = 0;
-	virtual std::string filePath() const = 0;
-	virtual std::string directoryPath() const = 0;
-};
-
-#endif /* __ZLOPENFILEDIALOG_H__ */
+std::string ZLCocoaOpenFileDialog::directoryPath() const {
+	return std::string();
+}
