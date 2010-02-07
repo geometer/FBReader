@@ -45,5 +45,5 @@ ZLCocoaOpenURLMessageSender::ZLCocoaOpenURLMessageSender() {
 }
 
 void ZLCocoaOpenURLMessageSender::sendStringMessage(const std::string &message) {
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String]]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:message.c_str()]]];
 }
