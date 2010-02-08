@@ -21,6 +21,9 @@
 
 #include "ZLCocoaOpenFileDialog.h"
 
+ZLCocoaOpenFileDialog::ZLCocoaOpenFileDialog(const std::string &directoryPath, const Filter &filter) : myDirectoryPath(directoryPath), myFilter(filter) {
+}
+
 bool ZLCocoaOpenFileDialog::run() {
 	NSOpenPanel *panel = [NSOpenPanel openPanel];
 	return [panel runModal] == NSFileHandlingPanelOKButton;

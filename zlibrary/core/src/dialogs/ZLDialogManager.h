@@ -71,7 +71,8 @@ public:
 
 	virtual shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const = 0;
 	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction = 0, bool showApplyButton = false) const = 0;
-	virtual shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const std::string &directoryPath, const ZLOpenFileDialog::Filter &filter) const { return 0; }
+	// TODO: change to pure virtual
+	virtual shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const std::string &directoryPath, const ZLOpenFileDialog::Filter &filter) const;
 	virtual bool selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const = 0;
 
 	void informationBox(const ZLResourceKey &key) const;

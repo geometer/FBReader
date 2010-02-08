@@ -100,3 +100,7 @@ void ZLDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const
 		runnable.run();
 	}
 }
+
+shared_ptr<ZLOpenFileDialog> ZLDialogManager::createOpenFileDialog(const std::string &directoryPath, const ZLOpenFileDialog::Filter &filter) const {
+	return 0;
+}

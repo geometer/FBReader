@@ -97,7 +97,7 @@ bool ZLCocoaDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandl
 }
 
 shared_ptr<ZLOpenFileDialog> ZLCocoaDialogManager::createOpenFileDialog(const std::string &directoryPath, const ZLOpenFileDialog::Filter &filter) const {
-	return new ZLCocoaOpenFileDialog();
+	return new ZLCocoaOpenFileDialog(directoryPath, filter);
 }
 
 shared_ptr<ZLProgressDialog> ZLCocoaDialogManager::createProgressDialog(const ZLResourceKey &key) const {

@@ -24,10 +24,17 @@
 
 class ZLCocoaOpenFileDialog : public ZLOpenFileDialog {
 
+public:
+	ZLCocoaOpenFileDialog(const std::string &directoryPath, const Filter &filter);
+
 private:
 	bool run();
 	std::string filePath() const;
 	std::string directoryPath() const;
+
+private:
+	std::string myDirectoryPath;
+	const Filter &myFilter;
 };
 
 #endif /* __ZLCOCOAOPENFILEDIALOG_H__ */
