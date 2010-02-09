@@ -66,7 +66,7 @@ bool NetworkLibraryPage::onApply() {
 		const bool oldUse = myOldUseFlag[i];
 		if (link.OnOption.value() != oldUse) {
 			shared_ptr<NetworkAuthenticationManager> mgr = link.authenticationManager();
-			if (!mgr.isNull()) {
+			if (!mgr.isNull() && mgr->isAuthorised(false).Status != B3_FALSE) {
 				mgr->logOut();
 			}
 			netChanged = true;

@@ -120,7 +120,8 @@ bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr) {
 	while (true) {
 		std::string password;
 		if (!runDialog(mgr, userList, errorMessage, password)) {
-			mgr.logOut();
+			LogOutRunnable logout(mgr);
+			logout.executeWithUI();
 			return false;
 		}
 
@@ -134,7 +135,8 @@ bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr) {
 		authoriser.executeWithUI();
 		if (authoriser.hasErrors()) {
 			errorMessage = authoriser.errorMessage();
-			mgr.logOut();
+			LogOutRunnable logout(mgr);
+			logout.executeWithUI();
 			continue;
 		}
 		if (mgr.needsInitialization()) {
@@ -142,7 +144,8 @@ bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr) {
 			initializer.executeWithUI();
 			if (initializer.hasErrors()) {
 				errorMessage = initializer.errorMessage();
-				mgr.logOut();
+				LogOutRunnable logout(mgr);
+				logout.executeWithUI();
 				continue;
 			}
 		}
@@ -150,4 +153,3 @@ bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr) {
 		return true;
 	}
 }
-

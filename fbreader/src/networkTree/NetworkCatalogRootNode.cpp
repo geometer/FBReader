@@ -147,7 +147,8 @@ NetworkCatalogRootNode::LogoutAction::LogoutAction(NetworkAuthenticationManager 
 }
 
 void NetworkCatalogRootNode::LogoutAction::run() {
-	myManager.logOut();
+	LogOutRunnable logout(myManager);
+	logout.executeWithUI();
 	FBReader::Instance().invalidateAccountDependents();
 	FBReader::Instance().refreshWindow();
 }

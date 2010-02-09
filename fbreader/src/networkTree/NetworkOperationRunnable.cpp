@@ -142,6 +142,18 @@ void InitializeAuthenticationManagerRunnable::run() {
 }
 
 
+LogOutRunnable::LogOutRunnable(NetworkAuthenticationManager &mgr) :
+	NetworkOperationRunnable("signOut"), 
+	myManager(mgr) {
+}
+
+void LogOutRunnable::run() {
+	if (myManager.isAuthorised(false).Status != B3_FALSE) {
+		myManager.logOut();
+	}
+}
+
+
 PurchaseBookRunnable::PurchaseBookRunnable(NetworkAuthenticationManager &mgr, NetworkLibraryBookItem &book) : 
 	NetworkOperationRunnable("purchaseBook"), 
 	myManager(mgr), 

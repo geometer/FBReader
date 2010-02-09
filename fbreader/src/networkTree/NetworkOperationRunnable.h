@@ -110,6 +110,16 @@ private:
 	NetworkAuthenticationManager &myManager;
 };
 
+class LogOutRunnable : public NetworkOperationRunnable {
+
+public:
+	LogOutRunnable(NetworkAuthenticationManager &mgr);
+	void run();
+
+private:
+	NetworkAuthenticationManager &myManager;
+};
+
 class PurchaseBookRunnable : public NetworkOperationRunnable {
 
 public:

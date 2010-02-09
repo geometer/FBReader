@@ -513,6 +513,7 @@
 			<node name="registerUser" value="Registering new account. Please, wait..." />
 			<node name="passwordRecovery" value="Recovering password. Please, wait..." />
 			<node name="authenticationCheck" value="Account validation. Please, wait..." />
+			<node name="signOut" value="Signing out. Please, wait..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Purchase book" />

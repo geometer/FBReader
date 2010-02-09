@@ -59,7 +59,8 @@ void SearchOnNetworkAction::run() {
 					InitializeAuthenticationManagerRunnable initializer(*mgr);
 					initializer.executeWithUI();
 					if (initializer.hasErrors()) {
-						mgr->logOut();
+						LogOutRunnable logout(*mgr);
+						logout.executeWithUI();
 					}
 				}
 			}
