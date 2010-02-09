@@ -141,31 +141,27 @@ std::string ZLNetworkManager::downloadFile(const std::string &url, const std::st
 }
 
 std::string ZLNetworkManager::downloadFile(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLExecutionData::Listener> listener) const {
-	ZLFile fileToWrite(fileName);
-	shared_ptr<ZLOutputStream> stream = fileToWrite.outputStream(true);
-	if (stream.isNull() || !stream->open()) {
-		const ZLResource &errorResource =
-			ZLResource::resource("dialog")["networkError"];
-		return
-			ZLStringUtil::printf(
-				errorResource["couldntCreateFileMessage"].value(), fileName
-			);
-	}
-	ZLExecutionData::Vector dataVector;
-	shared_ptr<ZLExecutionData> data = createDownloadRequest(url, sslCertificate, fileName, stream);
+	shared_ptr<ZLExecutionData> data = createDownloadRequest(url, sslCertificate, fileName);
 	data->setListener(listener);
-	dataVector.push_back(data);
-	return perform(dataVector);
+	return perform(data);
 }
 
 
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream) const {
-	return new ZLNetworkDownloadRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, fileName, stream);
+shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, const std::string &fileName) const {
+	return new ZLNetworkDownloadRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, fileName);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLOutputStream> stream) const {
-	return new ZLNetworkDownloadRequest(url, sslCertificate, fileName, stream);
+shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, shared_ptr<ZLOutputStream> stream) const {
+	return new ZLNetworkDownloadRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, stream);
+}
+
+shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName) const {
+	return new ZLNetworkDownloadRequest(url, sslCertificate, fileName);
+}
+
+shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLOutputStream> stream) const {
+	return new ZLNetworkDownloadRequest(url, sslCertificate, stream);
 }
 
 shared_ptr<ZLExecutionData> ZLNetworkManager::createNoActionRequest(const std::string &url) const {

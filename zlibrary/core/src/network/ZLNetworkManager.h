@@ -73,8 +73,10 @@ public:
 	std::string downloadFile(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLExecutionData::Listener> listener = 0) const;
 
 public: 
-	shared_ptr<ZLExecutionData> createDownloadRequest(const std::string &url, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0) const;
-	shared_ptr<ZLExecutionData> createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0) const;
+	shared_ptr<ZLExecutionData> createDownloadRequest(const std::string &url, const std::string &fileName) const;
+	shared_ptr<ZLExecutionData> createDownloadRequest(const std::string &url, shared_ptr<ZLOutputStream> stream) const;
+	shared_ptr<ZLExecutionData> createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName) const;
+	shared_ptr<ZLExecutionData> createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLOutputStream> stream) const;
 
 	shared_ptr<ZLExecutionData> createNoActionRequest(const std::string &url) const;
 	shared_ptr<ZLExecutionData> createNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) const;

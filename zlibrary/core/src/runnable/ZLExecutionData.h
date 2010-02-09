@@ -59,7 +59,8 @@ public:
 		virtual ~Listener();
 
 		void cancelProcess();
-		virtual void showPercent(int ready, int full) = 0;
+		virtual void showPercent(int ready, int full);
+		virtual bool finish();
 
 	private:
 		ZLExecutionData *myProcess;
@@ -83,6 +84,7 @@ public:
 	void setListener(shared_ptr<Listener> listener);
 	virtual void onCancel();
 	void setPercent(int ready, int full);
+	bool finish();
 
 private:
 	shared_ptr<Listener> myListener;

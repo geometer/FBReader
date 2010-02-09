@@ -30,6 +30,31 @@
 
 #include "ZLNetworkImage.h"
 
+#include "ZLImageManager.h"
+
+
+class ImageDownloadListener : public ZLExecutionData::Listener {
+
+public:
+	ImageDownloadListener(const ZLImage &image);
+
+private:
+	bool finish();
+
+private:
+	const ZLImage &myImage;
+};
+
+ImageDownloadListener::ImageDownloadListener(const ZLImage &image) : myImage(image) {
+}
+
+bool ImageDownloadListener::finish() {
+	// FIXME: now imageData() always returns not null -- we need better image validation
+	return !ZLImageManager::Instance().imageData(myImage).isNull();
+}
+
+
+
 ZLNetworkImage::ZLNetworkImage(const std::string &mimeType, const std::string &url) : ZLSingleImage(mimeType), myURL(url), myIsSynchronized(false) {
 	static const std::string directoryPath = ZLNetworkManager::CacheDirectory();
 
@@ -67,7 +92,9 @@ shared_ptr<ZLExecutionData> ZLNetworkImage::synchronizationData() const {
 	}
 	myIsSynchronized = true;
 
-	return ZLNetworkManager::Instance().createDownloadRequest(myURL, myFileName);
+	shared_ptr<ZLExecutionData> request = ZLNetworkManager::Instance().createDownloadRequest(myURL, myFileName);
+	request->setListener(new ImageDownloadListener(*this));
+	return request;
 }
 
 const shared_ptr<std::string> ZLNetworkImage::stringData() const {

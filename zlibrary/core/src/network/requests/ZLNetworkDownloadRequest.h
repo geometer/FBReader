@@ -28,7 +28,8 @@ class ZLOutputStream;
 class ZLNetworkDownloadRequest : public ZLNetworkGetRequest {
 
 public:
-	ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLOutputStream> stream = 0);
+	ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName);
+	ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLOutputStream> stream);
 
 private:
 	bool handleHeader(void *ptr, size_t size);

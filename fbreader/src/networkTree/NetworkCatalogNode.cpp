@@ -154,6 +154,9 @@ void NetworkCatalogNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
 }
 
 shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
+	// two test images:
+	//const std::string &url = "http://www.speedyshare.com/files/20842382/download/abc.png";
+	//const std::string &url = "http://www.speedyshare.com/files/20842428/download/logo%20small.png";
 	const std::string &url = myItem->coverURL();
 
 	if (url.empty()) {

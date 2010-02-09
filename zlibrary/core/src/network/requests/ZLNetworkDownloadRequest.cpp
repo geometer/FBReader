@@ -24,28 +24,44 @@
 #include <ZLOutputStream.h>
 #include <ZLStringUtil.h>
 
+#include <ZLResource.h>
+
 #include "ZLNetworkDownloadRequest.h"
 
 
 ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate,
-		const std::string &fileName, shared_ptr<ZLOutputStream> stream) :
+		const std::string &fileName) :
 	ZLNetworkGetRequest(url, sslCertificate),
 	myFileName(fileName),
+	myFileSize(-1),
+	myDownloadedSize(0) {
+}
+
+ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate,
+		shared_ptr<ZLOutputStream> stream) :
+	ZLNetworkGetRequest(url, sslCertificate),
 	myFileSize(-1),
 	myDownloadedSize(0),
 	myOutputStream(stream) {
 }
 
 bool ZLNetworkDownloadRequest::doBefore() {
-	if (myOutputStream.isNull()) {
-		myOutputStream = ZLFile(myFileName).outputStream();
+	if (myFileName.empty()) {
+		return !myOutputStream.isNull() && myOutputStream->open();
 	}
-	return !myOutputStream.isNull() && myOutputStream->open();
+	myOutputStream = ZLFile(myFileName).outputStream(true);
+	if (myOutputStream.isNull() || !myOutputStream->open()) {
+		const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
+		setErrorMessage(ZLStringUtil::printf(errorResource["couldntCreateFileMessage"].value(), myFileName));
+		return false;
+	}
+	return true;
 }
 
 bool ZLNetworkDownloadRequest::doAfter(bool success) {
 	myOutputStream->close();
-	if (!success) {
+	bool status = success && finish(); // arguments order is significant
+	if (!status && !myFileName.empty()) {
 		ZLFile(myFileName).remove();
 	}
 	return true;

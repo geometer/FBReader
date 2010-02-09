@@ -65,6 +65,13 @@ void ZLExecutionData::setPercent(int ready, int full) {
 	}
 }
 
+bool ZLExecutionData::finish() {
+	if (!myListener.isNull()) {
+		return myListener->finish();
+	}
+	return true;
+}
+
 void ZLExecutionData::onCancel() {
 }
 
@@ -92,4 +99,11 @@ void ZLExecutionData::Listener::cancelProcess() {
 	if (myProcess != 0) {
 		myProcess->onCancel();
 	}
+}
+
+void ZLExecutionData::Listener::showPercent(int, int) {
+}
+
+bool ZLExecutionData::Listener::finish() {
+	return true;
 }
