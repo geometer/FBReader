@@ -59,7 +59,23 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 			continue;
 		}
 		const NetworkLibraryBookItem &book = (const NetworkLibraryBookItem &) **it;
-		const std::string &seriesTitle = book.seriesTitle();
+		std::string seriesTitle = book.seriesTitle();
+
+		if (!seriesTitle.empty() && (seriesNode == 0 || seriesNode->seriesTitle() != seriesTitle)) {
+			NetworkLibraryItemList::const_iterator jt = it + 1;
+			while (jt != books.end() && !(*jt)->isInstanceOf(NetworkLibraryBookItem::TYPE_ID)) {
+				++jt;
+			}
+			if (jt == books.end()) {
+				seriesTitle.clear();
+			} else {
+				const NetworkLibraryBookItem &next = (const NetworkLibraryBookItem &) **jt;
+				if (next.seriesTitle() != seriesTitle) {
+					seriesTitle.clear();
+				}
+			}
+		}
+
 		if (seriesTitle.empty()) {
 			seriesNode = 0;
 			new NetworkBookInfoNode(parent, *it);
