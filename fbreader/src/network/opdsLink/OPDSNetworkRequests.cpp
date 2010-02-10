@@ -19,11 +19,51 @@
 
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
-#include <ZLParseUtil.h>
 
 #include "OPDSNetworkRequests.h"
 
 #include "../NetworkErrors.h"
+
+
+bool parseHTTPStatusLine(const std::string &line, std::string &httpVersion, std::string &statusCode, std::string &reasonPhrase) {
+	static const std::string PREFIX = "HTTP/";
+
+	if (line.size() < PREFIX.size() || ZLUnicodeUtil::toUpper(line.substr(0, PREFIX.size())) != PREFIX) {
+		return false;
+	}
+	size_t index = PREFIX.size();
+
+	httpVersion.clear();
+	statusCode.clear();
+	reasonPhrase.clear();
+
+	while (index < line.size() && isdigit(line[index])) {
+		httpVersion.append(1, line[index++]);
+	}
+	if (index >= line.size() || line[index++] != '.') {
+		return false;
+	}
+	httpVersion.append(1, '.');
+	while (index < line.size() && isdigit(line[index])) {
+		httpVersion.append(1, line[index++]);
+	}
+	if (index >= line.size() || line[index++] != ' ') {
+		return false;
+	}
+	while (index < line.size() && isdigit(line[index])) {
+		statusCode.append(1, line[index++]);
+	}
+	if (index >= line.size() || line[index++] != ' ') {
+		return false;
+	}
+	while (index < line.size() && line[index] != '\r' && line[index] != '\n') {
+		reasonPhrase.append(1, line[index++]);
+	}
+	return true;
+}
+
+
+
 
 OPDSNetworkBasicRequest::OPDSNetworkBasicRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) : ZLNetworkGetRequest(url, sslCertificate) {
 }
@@ -32,7 +72,7 @@ OPDSNetworkBasicRequest::OPDSNetworkBasicRequest(const std::string &url, const Z
 bool OPDSNetworkBasicRequest::handleHeader(void *ptr, size_t size) {
 	std::string line((const char *) ptr, size);
 	std::string version, code, phrase;
-	if (myStatusCode.empty() && ZLParseUtil::parseHTTPStatusLine(line, version, code, phrase)) {
+	if (myStatusCode.empty() && ::parseHTTPStatusLine(line, version, code, phrase)) {
 		myStatusCode = code;
 	}
 	return true;
