@@ -144,9 +144,6 @@ void OptionsApplyRunnable::run() {
 	FBReader &fbreader = FBReader::Instance();
 	fbreader.grabAllKeys(fbreader.KeyboardControlOption.value());
 	fbreader.clearTextCaches();
-	if (myDialog.myNetworkLibraryPage->onApply()) {
-		FBReader::Instance().invalidateNetworkView();
-	}
 	fbreader.refreshWindow();
 }
 
