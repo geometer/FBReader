@@ -26,8 +26,6 @@
 #include <ZLFile.h>
 #include <ZLFileImage.h>
 
-#include <ZLOutputStream.h>
-
 #include "ZLNetworkImage.h"
 
 
