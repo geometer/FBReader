@@ -25,43 +25,10 @@
 #include <ZLDir.h>
 #include <ZLFile.h>
 #include <ZLFileImage.h>
-#include <ZLResource.h>
 
 #include <ZLOutputStream.h>
 
 #include "ZLNetworkImage.h"
-
-#include "../network/requests/ZLNetworkDownloadRequest.h"
-
-
-class ImageDownloadRequest : public ZLNetworkDownloadRequest {
-
-public:
-	ImageDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName);
-
-private:
-	bool doAfter(bool success);
-};
-
-ImageDownloadRequest::ImageDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName) :
-	ZLNetworkDownloadRequest(url, sslCertificate, fileName) {
-}
-
-bool ImageDownloadRequest::doAfter(bool success) {
-	bool status = ZLNetworkDownloadRequest::doAfter(success);
-
-	if (success && status) {
-		shared_ptr<ZLImage> image = new ZLFileImage("image/auto", fileName(), 0);
-		if (!image->good()) {
-			image.reset();
-			status = false;
-			const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
-			setErrorMessage(ZLStringUtil::printf(errorResource["badImageFile"].value(), url()));
-			ZLFile(fileName()).remove();
-		}
-	}
-	return status;
-}
 
 
 ZLNetworkImage::ZLNetworkImage(const std::string &mimeType, const std::string &url) : ZLSingleImage(mimeType), myURL(url), myIsSynchronized(false) {
@@ -105,8 +72,7 @@ shared_ptr<ZLExecutionData> ZLNetworkImage::synchronizationData() const {
 		return 0;
 	}
 	myIsSynchronized = true;
-	return new ImageDownloadRequest(myURL, ZLNetworkSSLCertificate::NULL_CERTIFICATE, myFileName);
-	//return ZLNetworkManager::Instance().createDownloadRequest(myURL, myFileName);
+	return ZLNetworkManager::Instance().createDownloadRequest(myURL, myFileName);
 }
 
 const shared_ptr<std::string> ZLNetworkImage::stringData() const {
@@ -114,6 +80,10 @@ const shared_ptr<std::string> ZLNetworkImage::stringData() const {
 		ZLFile imageFile(myFileName);
 		if (imageFile.exists()) {
 			myCachedImage = new ZLFileImage("image/auto", myFileName, 0);
+			if (!myCachedImage->good()) {
+				myCachedImage.reset();
+				imageFile.remove();
+			}
 		}
 	}
 	return myCachedImage.isNull() ? 0 : myCachedImage->stringData();
