@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE catalog SYSTEM "catalog.dtd">
 <catalog type="opds">
 	<site>shucang.com</site>
-	<link type="main">http://www.shucang.com/s/index.php</link>
-	<link type="search">http://www.shucang.com/s/doclist.php?skey=%s</link>
+	<link rel="main">http://www.shucang.com/s/index.php</link>
+	<link rel="search">http://www.shucang.com/s/doclist.php?skey=%s</link>
+	<link rel="signIn">http://www.shucang.com/s/myshucang.php</link>
+	<link rel="signOut">http://www.shucang.com/logout.php</link>
 	<title>Shucang Catalog</title>
 	<summary>Shucang: a Chinese bookshelf.</summary>
+	<feeds>
+		<condition show="signedIn">urn:uuid:01182b8b-4719-2369-35e0-107bce646b54</condition>
+	</feeds>
+	<authentication type="basic"/>
 	<icon>data:image/png;base64,
 iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAgAElEQVR4nO29d5Rc13Xm+zv33sqp
 qwNCN2IDaAAMIECCJEAxgAEkQYpBlEjlRMnL1nj8ZtZ4bHn01rz1/OZ5xqMZ+Y2fbY6f7JFlSZQl
@@ -263,11 +270,4 @@ npKBaAX1toUY7Jbtpw7znOOwk+mM3lUb1z8fuZazgRcq5VYkVQKLI3HlXsd21NQUe6XMO3sTXOVx
 /fORjzIBYOaKpADuWoQgLjl0XNBTXOBWLFerfNQJkJPcngUa7vyCXIAsF0zKaf2HCnz4LQEKpWAn
 QbLryfO+QuE0tA+V/JYAM6Vcm3zogP+t/FYA+P8BWRrHkBhRBlIAAAAASUVORK5CYII=
 	</icon>
-	<account-dependent-feeds>
-		<link>urn:uuid:01182b8b-4719-2369-35e0-107bce646b54</link>
-	</account-dependent-feeds>
-	<authentication type="basic">
-		<part name="signInUrl">http://www.shucang.com/s/myshucang.php</part>
-		<part name="signOutUrl">http://www.shucang.com/logout.php</part>
-	</authentication>
 </catalog>

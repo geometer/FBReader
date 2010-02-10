@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE catalog SYSTEM "catalog.dtd">
 <catalog type="opds">
 	<site>feedbooks.com</site>
 	<link rel="main">http://feedbooks.com/catalog.atom</link>

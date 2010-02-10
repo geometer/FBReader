@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE catalog SYSTEM "catalog.dtd">
 <catalog type="opds">
 	<site>manybooks.net</site>
-	<link type="main">http://manybooks.net/opds/</link>
-	<link type="search">http://manybooks.net/opds/search.php?q=%s</link>
+	<link rel="main">http://manybooks.net/opds/</link>
+	<link rel="search">http://manybooks.net/opds/search.php?q=%s</link>
 	<title>ManyBooks Catalog</title>
 	<summary>ManyBooks.net: The best ebooks at the best price: free!</summary>
 	<icon>data:image/png;base64,

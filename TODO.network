@@ -11,7 +11,7 @@ DONE	в нынешнем виде ZLParseUtil не тянет на "универ
 	**   - any author or publisher page
 	**   - any book page
 	**   - any category or sub-category of books
-0.14.0: написать схему для opds.xml
+DONE написать схему для opds.xml (написано DTD для opds.xml)
 0.14.0: привести все opds.xml к общему синтаксису
 0.14.0: поправить парсер opds.xml
 DONE	не показывать ветки серий, в которых только 1 книга (сразу показывать книгу) - для сетевых и локальной библиотек
