@@ -83,6 +83,7 @@ ZLNetworkImage::ZLNetworkImage(const std::string &mimeType, const std::string &u
 	if (imageFile.exists()) {
 		myIsSynchronized = true;
 		myCachedImage = new ZLFileImage("image/auto", myFileName, 0);
+		// TODO: проверить картинку на валидность (если не валидна, стереть файл и myIsSynchronized = false)
 	}
 }
 
@@ -93,6 +94,7 @@ shared_ptr<ZLExecutionData> ZLNetworkImage::synchronizationData() const {
 	myIsSynchronized = true;
 
 	shared_ptr<ZLExecutionData> request = ZLNetworkManager::Instance().createDownloadRequest(myURL, myFileName);
+	// убрать listener, передавать в request ссылку на this, пусть он ставит в ZLNetworkImage нужные флаги
 	request->setListener(new ImageDownloadListener(*this));
 	return request;
 }
