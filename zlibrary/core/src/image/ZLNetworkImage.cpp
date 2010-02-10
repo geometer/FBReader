@@ -25,34 +25,43 @@
 #include <ZLDir.h>
 #include <ZLFile.h>
 #include <ZLFileImage.h>
+#include <ZLResource.h>
 
 #include <ZLOutputStream.h>
 
 #include "ZLNetworkImage.h"
 
-#include "ZLImageManager.h"
+#include "../network/requests/ZLNetworkDownloadRequest.h"
 
 
-class ImageDownloadListener : public ZLExecutionData::Listener {
+class ImageDownloadRequest : public ZLNetworkDownloadRequest {
 
 public:
-	ImageDownloadListener(const ZLImage &image);
+	ImageDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName);
 
 private:
-	bool finish();
-
-private:
-	const ZLImage &myImage;
+	bool doAfter(bool success);
 };
 
-ImageDownloadListener::ImageDownloadListener(const ZLImage &image) : myImage(image) {
+ImageDownloadRequest::ImageDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName) :
+	ZLNetworkDownloadRequest(url, sslCertificate, fileName) {
 }
 
-bool ImageDownloadListener::finish() {
-	// FIXME: now imageData() always returns not null -- we need better image validation
-	return !ZLImageManager::Instance().imageData(myImage).isNull();
-}
+bool ImageDownloadRequest::doAfter(bool success) {
+	bool status = ZLNetworkDownloadRequest::doAfter(success);
 
+	if (success && status) {
+		shared_ptr<ZLImage> image = new ZLFileImage("image/auto", fileName(), 0);
+		if (!image->good()) {
+			image.reset();
+			status = false;
+			const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
+			setErrorMessage(ZLStringUtil::printf(errorResource["badImageFile"].value(), url()));
+			ZLFile(fileName()).remove();
+		}
+	}
+	return status;
+}
 
 
 ZLNetworkImage::ZLNetworkImage(const std::string &mimeType, const std::string &url) : ZLSingleImage(mimeType), myURL(url), myIsSynchronized(false) {
@@ -81,9 +90,13 @@ ZLNetworkImage::ZLNetworkImage(const std::string &mimeType, const std::string &u
 
 	ZLFile imageFile(myFileName);
 	if (imageFile.exists()) {
-		myIsSynchronized = true;
 		myCachedImage = new ZLFileImage("image/auto", myFileName, 0);
-		// TODO: проверить картинку на валидность (если не валидна, стереть файл и myIsSynchronized = false)
+		if (myCachedImage->good()) {
+			myIsSynchronized = true;
+		} else {
+			myCachedImage.reset();
+			imageFile.remove();
+		}
 	}
 }
 
@@ -92,11 +105,8 @@ shared_ptr<ZLExecutionData> ZLNetworkImage::synchronizationData() const {
 		return 0;
 	}
 	myIsSynchronized = true;
-
-	shared_ptr<ZLExecutionData> request = ZLNetworkManager::Instance().createDownloadRequest(myURL, myFileName);
-	// убрать listener, передавать в request ссылку на this, пусть он ставит в ZLNetworkImage нужные флаги
-	request->setListener(new ImageDownloadListener(*this));
-	return request;
+	return new ImageDownloadRequest(myURL, ZLNetworkSSLCertificate::NULL_CERTIFICATE, myFileName);
+	//return ZLNetworkManager::Instance().createDownloadRequest(myURL, myFileName);
 }
 
 const shared_ptr<std::string> ZLNetworkImage::stringData() const {

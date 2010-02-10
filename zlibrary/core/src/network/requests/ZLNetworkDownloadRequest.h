@@ -31,12 +31,14 @@ public:
 	ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName);
 	ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLOutputStream> stream);
 
-private:
+protected:
 	bool handleHeader(void *ptr, size_t size);
 	bool handleContent(void *ptr, size_t size);
 
 	bool doBefore();
 	bool doAfter(bool success);
+
+	const std::string &fileName() const;
 
 private:
 	const std::string myFileName;
@@ -44,5 +46,7 @@ private:
 	int myDownloadedSize;
 	shared_ptr<ZLOutputStream> myOutputStream;
 };
+
+inline const std::string &ZLNetworkDownloadRequest::fileName() const { return myFileName; }
 
 #endif /* __ZLNETWORKDOWNLOADREQUEST_H__ */

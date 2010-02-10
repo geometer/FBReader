@@ -35,6 +35,7 @@ public:
 	virtual ~ZLImage();
 	virtual bool isSingle() const = 0;
 	virtual shared_ptr<ZLExecutionData> synchronizationData() const;
+	virtual bool good() const = 0;
 };
 
 class ZLSingleImage : public ZLImage {
@@ -46,8 +47,9 @@ protected:
 public:
 	bool isSingle() const { return true; }
 	const std::string &mimeType() const;
+	bool good() const;
 	virtual const shared_ptr<std::string> stringData() const = 0;
-	
+
 private:
 	std::string myMimeType;
 };
@@ -60,6 +62,7 @@ protected:
 
 public:
 	bool isSingle() const { return false; }
+	bool good() const;
 	virtual unsigned int rows() const = 0;
 	virtual unsigned int columns() const = 0;
 	virtual shared_ptr<const ZLImage> subImage(unsigned int row, unsigned int column) const = 0;

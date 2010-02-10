@@ -21,6 +21,27 @@
 
 #include "ZLImage.h"
 
+#include "ZLImageManager.h"
+
 shared_ptr<ZLExecutionData> ZLImage::synchronizationData() const {
 	return 0;
+}
+
+bool ZLSingleImage::good() const {
+	// FIXME: now imageData() always returns not null -- we need better image validation
+	return !ZLImageManager::Instance().imageData(*this).isNull();
+}
+
+bool ZLMultiImage::good() const {
+	const unsigned int w = rows();
+	const unsigned int h = columns();
+	for (unsigned int row = 0; row < w; ++row) {
+		for (unsigned int col = 0; col < h; ++col) {
+			shared_ptr<const ZLImage> img = subImage(row, col);
+			if (img.isNull() || !img->good()) {
+				return false;
+			}
+		}
+	}
+	return true;
 }

@@ -60,8 +60,7 @@ bool ZLNetworkDownloadRequest::doBefore() {
 
 bool ZLNetworkDownloadRequest::doAfter(bool success) {
 	myOutputStream->close();
-	bool status = success && finish(); // arguments order is significant
-	if (!status && !myFileName.empty()) {
+	if (!success && !myFileName.empty()) {
 		ZLFile(myFileName).remove();
 	}
 	return true;

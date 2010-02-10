@@ -27,6 +27,7 @@
 			<node name="sslCertificateAuthorityMessage" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates" />
 			<node name="sslBadCertificateFileMessage" value="Couldn&apos;t read the SSL CA certificate file:&#10;%s" />
 			<node name="sslShutdownFailedMessage" value="Failed to shut down the SSL connection for&#10;%s" />
+			<node name="badImageFile" value="Bad image file&#10;%s" />
 		</node>
 	</node>
 	<node name="color">
