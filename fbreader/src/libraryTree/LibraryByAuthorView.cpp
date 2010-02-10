@@ -36,7 +36,15 @@ void LibraryByAuthorView::fillAuthorSubtree(AuthorNode *authorNode, const std::s
 	const BookList &books = Library::Instance().books(authorNode->author());
 	SeriesNode *seriesNode = 0;
 	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
-		const std::string &series = (*it)->seriesTitle();
+		std::string series = (*it)->seriesTitle();
+
+		if (!series.empty() && (seriesNode == 0 || seriesNode->book()->seriesTitle() != series)) {
+			BookList::const_iterator jt = it + 1;
+			if (jt == books.end() || (*jt)->seriesTitle() != series) {
+				series.clear();
+			}
+		}
+
 		if (series.empty()) {
 			seriesNode = 0;
 			new BookNode(authorNode, *it);
