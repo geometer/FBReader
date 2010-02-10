@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <catalog type="opds">
 	<site>smashwords.com</site>
-	<link type="main">http://smashwords.com/atom</link>
-	<link type="search">http://smashwords.com/atom/search/books?query=%s</link>
+	<link rel="main">http://smashwords.com/atom</link>
+	<link rel="search">http://smashwords.com/atom/search/books?query=%s</link>
 	<title>Smashwords</title>
 	<summary>Ebooks from independent authors and publishers</summary>
+	<advancedSearch style="quoted">
+		<field name="author">authorFullName</field>
+		<field name="titleOrSeries">title</field>
+		<field name="tag">categories</field>
+		<field name="annotation">description</field>
+	</advancedSearch>
+	<urlRewritingRules>
+		<rule type="addUrlParameter" name="ref" value="geometer"/>
+	</urlRewritingRules>
 	<icon>data:image/png;base64,
 iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAL
 EwAACxMBAJqcGAAAAAd0SU1FB9gLFAUcBH3DnpQAAAizSURBVFjDzVldbBPZFT73zp3x+Dcex3+Q
@@ -48,13 +57,4 @@ OwkhbuuutPCVK1cA4NixY4uQDM/Z5mGMbd68ef/+/bN6woSQ3t7eRTSZ8PPcZkrdDM/MUmtsbMy2
 bUmSFtGEWDwglzRNGxoaSiaT5Q9lWQYAVVVf4H8d89Ht27dFUQwGg+UPVVX1+XzFYnExin/Of4Ns
 2x4eHvb5fCtXriw9nJycvH//fmtrqyAI/1NAFdu/1fSEF6D/AmCU/2ALMCZ7AAAAAElFTkSuQmCC
 	</icon>
-	<advancedSearch style="quoted">
-		<part name="author">authorFullName</part>
-		<part name="titleOrSeries">title</part>
-		<part name="tag">categories</part>
-		<part name="annotation">description</part>
-	</advancedSearch>
-	<urlRewritingRules>
-		<addUrlParameter name="ref" value="geometer"/>
-	</urlRewritingRules>
 </catalog>

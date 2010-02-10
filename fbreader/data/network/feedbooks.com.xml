@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <catalog type="opds">
 	<site>feedbooks.com</site>
-	<link type="main">http://feedbooks.com/catalog.atom</link>
-	<link type="search">http://feedbooks.com/books/search.atom?query=%s</link>
+	<link rel="main">http://feedbooks.com/catalog.atom</link>
+	<link rel="search">http://feedbooks.com/books/search.atom?query=%s</link>
+	<link rel="signIn">https://feedbooks.com/user/profile.atom</link>
+	<link rel="signOut">https://feedbooks.com/user/signout</link>
 	<title>Feedbooks OPDS Catalog</title>
 	<summary>Feedbooks: Food for the mind. A place to discover and publish e-books.</summary>
+	<advancedSearch style="separateWords">
+		<field name="author">author</field>
+		<field name="titleOrSeries">title</field>
+		<field name="tag">type</field>
+		<field name="annotation">description</field>
+	</advancedSearch>
+	<feeds>
+		<condition show="never">http://feedbooks.com/news/catalog.atom</condition>
+		<condition show="signedIn">https://feedbooks.com/user/profile.atom</condition>
+	</feeds>
+	<authentication type="basic"/>
 	<icon>data:image/png;base64,
 iVBORw0KGgoAAAANSUhEUgAAADwAAABQCAIAAADKqIEEAAAAAXNSR0IArs4c6QAAAAZiS0dEAP8A
 /wD/oL2nkwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB9kLCwoVC/TE6x0AAA1oSURBVGje
@@ -70,27 +83,4 @@ d4zz2cSBrbp9Qacs4+q5CU1084mxUu/udCXD0yplYj7OZ+zFSff757Jvl1ImZ2OPE/trVBGFSvuR
 rnrh41p32CPcfWds3DTwIEUMD+J0cTKZtQ1TMOOg3/Dgy2wsqakbKnw5SwkPSfAw9iVN8ZKWFf7h
 V3KvaPw/AMARafW5GgkAAAAASUVORK5CYII=
 	</icon>
-	<advancedSearch style="separateWords">
-		<part name="author">author</part>
-		<part name="titleOrSeries">title</part>
-		<part name="tag">type</part>
-		<part name="annotation">description</part>
-	</advancedSearch>
-	<ignored-feeds>
-		<link>http://feedbooks.com/news/catalog.atom</link>
-	</ignored-feeds>
-	<account-dependent-feeds>
-		<link>https://feedbooks.com/user/profile.atom</link>
-	</account-dependent-feeds>
-	<authentication type="basic">
-		<part name="signInUrl">https://feedbooks.com/user/profile.atom</part>
-		<part name="signOutUrl">https://feedbooks.com/user/signout</part>
-	</authentication>
-	<!--authentication type="post">
-		<part name="login">user[username]</part>
-		<part name="password">user[password]</part>
-		<part name="signInUrl">https://feedbooks.com/user/signin</part>
-		<part name="signOutUrl">https://feedbooks.com/user/signout</part>
-		<part name="accountUrl">https://feedbooks.com/user/profile.atom</part>
-	</authentication-->
 </catalog>
