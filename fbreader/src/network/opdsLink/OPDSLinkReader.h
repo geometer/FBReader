@@ -44,37 +44,32 @@ private:
 		READ_SITENAME,
 		READ_TITLE,
 		READ_SUMMARY,
-		READ_LINK,
 		READ_ICON_NAME,
+		READ_LINK,
 		READ_SEARCH_DESCRIPTION,
-		READ_SEARCH_PART,
-		READ_IGNORED,
-		READ_IGNORED_LINK,
-		READ_ACCOUNT_DEPENDENT,
-		READ_ACCOUNT_DEPENDENT_LINK,
-		READ_AUTHENTICATION_DESCRIPTION,
-		READ_AUTHENTICATION_PART,
+		READ_SEARCH_FIELD,
+		READ_FEEDS,
+		READ_FEEDS_CONDITION,
 		READ_URL_REWRITING_RULES,
 	} myState;
-	std::string myLinkType;
-	std::string mySearchPartName;
-	std::string myAuthenticationPartName;
 
 	std::string mySiteName;
 	std::string myTitle;
 	std::string mySummary;
-	std::map<std::string,std::string> myLinks;
 	std::string myIconName;
 
-	std::string mySearchType;
-	std::map<std::string,std::string> mySearchParts;
+	std::string myAttrBuffer;
+	std::string myBuffer;
 
-	std::string myLinkBuffer;
+	std::map<std::string,std::string> myLinks;
+
+	std::string mySearchType;
+	std::map<std::string,std::string> mySearchFields;
+
 	std::set<std::string> myIgnoredFeeds;
 	std::set<std::string> myAccountDependentFeeds;
 
 	std::string myAuthenticationType;
-	std::map<std::string,std::string> myAuthenticationParts;
 
 	std::map<std::string,std::string> myUrlRewritingRules;
 };
