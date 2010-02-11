@@ -260,7 +260,7 @@ void ZLQtApplicationWindow::LineEditParameter::internalSetValue(const std::strin
 void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	switch (item->type()) {
 		case ZLToolbar::Item::TEXT_FIELD:
-			myItemToWidgetMap[&*item] = new LineEditParameter(myToolBar, *this, (ZLToolbar::TextFieldItem&)*item);
+			myItemToWidgetMap[&*item] = new LineEditParameter(myToolBar, *this, (ZLToolbar::ParameterItem&)*item);
 			break;
 		case ZLToolbar::Item::PLAIN_BUTTON:
 		case ZLToolbar::Item::MENU_BUTTON:
