@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <vector>
+
 #include <ZLExecutionData.h>
 
 #include "ZLImage.h"
@@ -28,17 +30,39 @@ shared_ptr<ZLExecutionData> ZLImage::synchronizationData() const {
 }
 
 bool ZLSingleImage::good() const {
-	// FIXME: now imageData() always returns not null -- we need better image validation
 	return !ZLImageManager::Instance().imageData(*this).isNull();
 }
 
 bool ZLMultiImage::good() const {
-	const unsigned int w = rows();
-	const unsigned int h = columns();
-	for (unsigned int row = 0; row < w; ++row) {
-		for (unsigned int col = 0; col < h; ++col) {
-			shared_ptr<const ZLImage> img = subImage(row, col);
-			if (img.isNull() || !img->good()) {
+	unsigned int rows = this->rows();
+	unsigned int columns = this->columns();
+	if (rows == 0 || columns == 0) {
+		return false;
+	}
+	std::vector<int> widths;
+	widths.reserve(columns);
+	std::vector<int> heights;
+	heights.reserve(rows);
+	for (unsigned int i = 0; i < rows; ++i) {
+		for (unsigned int j = 0; j < columns; ++j) {
+			shared_ptr<const ZLImage> subImage = this->subImage(i, j);
+			if (subImage.isNull()) {
+				return false;
+			}
+			shared_ptr<ZLImageData> data = ZLImageManager::Instance().imageData(*subImage);
+			if (data.isNull()) {
+				return false;
+			}
+			int w = data->width();
+			if (i == 0) {
+				widths.push_back(w);
+			} else if (w != widths[j]) {
+				return false;
+			}
+			int h = data->height();
+			if (j == 0) {
+				heights.push_back(h);
+			} else if (h != heights[i]) {
 				return false;
 			}
 		}

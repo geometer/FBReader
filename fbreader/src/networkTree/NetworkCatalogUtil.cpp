@@ -43,7 +43,7 @@ shared_ptr<ZLImage> NetworkCatalogUtil::getImageByDataUrl(const std::string &url
 	if (index == std::string::npos) {
 		return 0;
 	}
-		
+
 	ZLBase64EncodedImage *image = new ZLBase64EncodedImage("image/auto");
 	image->addData(url, index + 1, std::string::npos);
 	return image;

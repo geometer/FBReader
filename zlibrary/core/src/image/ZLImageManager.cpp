@@ -129,7 +129,7 @@ PalmImageHeader::PalmImageHeader(const std::string &str) {
 	CompressionType = (Flags & 0x8000) ? str[13] : 0xFF;
 }
 
-void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, ZLImageData &imageData) const {
+bool ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, ZLImageData &imageData) const {
 	if (imageString.length() >= 16) {
 		PalmImageHeader header(imageString);
 		switch (header.CompressionType) {
@@ -223,6 +223,7 @@ void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, 
 							}
 						}
 					}
+					return true;
 				}
 				break;
 			default: // unknown
@@ -230,74 +231,90 @@ void ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, 
 				break;
 		}
 	}
+	return false;
 }
 
-void ZLImageManager::convertMultiImage(const ZLMultiImage &multiImage, ZLImageData &data) const {
+bool ZLImageManager::convertMultiImage(const ZLMultiImage &multiImage, ZLImageData &data) const {
 	unsigned int rows = multiImage.rows();
 	unsigned int columns = multiImage.columns();
-	if ((rows > 0) && (columns > 0)) {
-		std::vector<shared_ptr<ZLImageData> > parts;
-		parts.reserve(rows * columns);
-		std::vector<int> widths;
-		widths.reserve(columns);
-		std::vector<int> heights;
-		heights.reserve(rows);
-		int fullWidth = 0;
-		int fullHeight = 0;
+	if (rows == 0 || columns == 0) {
+		return false;
+	}
 
-		for (unsigned int i = 0; i < rows; ++i) {
-			for (unsigned int j = 0; j < columns; ++j) {
-				shared_ptr<const ZLImage> subImage = multiImage.subImage(i, j);
-				if (subImage.isNull()) {
-					return;
-				}
-				shared_ptr<ZLImageData> data = imageData(*subImage);
-				int w = data->width();
-				if (i == 0) {
-					widths.push_back(w);
-					fullWidth += w;
-				} else if (w != widths[j]) {
-					return;
-				}
-				int h = data->height();
-				if (j == 0) {
-					heights.push_back(h);
-					fullHeight += h;
-				} else if (h != heights[i]) {
-					return;
-				}
-				parts.push_back(data);
-			}
-		}
+	std::vector<shared_ptr<ZLImageData> > parts;
+	parts.reserve(rows * columns);
+	std::vector<int> widths;
+	widths.reserve(columns);
+	std::vector<int> heights;
+	heights.reserve(rows);
+	int fullWidth = 0;
+	int fullHeight = 0;
 
-		data.init(fullWidth, fullHeight);
-		int vOffset = 0;
-		for (unsigned int i = 0; i < rows; ++i) {
-			int hOffset = 0;
-			for (unsigned int j = 0; j < columns; ++j) {
-				data.copyFrom(*parts[j * rows + i], hOffset, vOffset);
-				hOffset += widths[j];
+	for (unsigned int i = 0; i < rows; ++i) {
+		for (unsigned int j = 0; j < columns; ++j) {
+			shared_ptr<const ZLImage> subImage = multiImage.subImage(i, j);
+			if (subImage.isNull()) {
+				return false;
 			}
-			vOffset += heights[i];
+			shared_ptr<ZLImageData> data = imageData(*subImage);
+			if (data.isNull()) {
+				return false;
+			}
+			int w = data->width();
+			if (i == 0) {
+				widths.push_back(w);
+				fullWidth += w;
+			} else if (w != widths[j]) {
+				return false;
+			}
+			int h = data->height();
+			if (j == 0) {
+				heights.push_back(h);
+				fullHeight += h;
+			} else if (h != heights[i]) {
+				return false;
+			}
+			parts.push_back(data);
 		}
 	}
+
+	data.init(fullWidth, fullHeight);
+	int vOffset = 0;
+	for (unsigned int i = 0; i < rows; ++i) {
+		int hOffset = 0;
+		for (unsigned int j = 0; j < columns; ++j) {
+			data.copyFrom(*parts[j * rows + i], hOffset, vOffset);
+			hOffset += widths[j];
+		}
+		vOffset += heights[i];
+	}
+	return true;
 }
 
 shared_ptr<ZLImageData> ZLImageManager::imageData(const ZLImage &image) const {
-	shared_ptr<ZLImageData> data = createData();
+	shared_ptr<ZLImageData> data;
 
 	if (image.isSingle()) {
 		const ZLSingleImage &singleImage = (const ZLSingleImage&)image;
 		shared_ptr<std::string> stringData = singleImage.stringData();
-		if (!stringData.isNull() && !stringData->empty()) {
-			if (singleImage.mimeType() == "image/palm") {
-				convertFromPalmImageFormat(*stringData, *data);
-			} else {
-				convertImageDirect(*stringData, *data);
+		if (stringData.isNull() || stringData->empty()) {
+			return 0;
+		}
+		data = createData();
+		if (singleImage.mimeType() == "image/palm") {
+			if (!convertFromPalmImageFormat(*stringData, *data)) {
+				return 0;
+			}
+		} else {
+			if (!convertImageDirect(*stringData, *data)) {
+				return 0;
 			}
 		}
 	} else {
-		convertMultiImage((const ZLMultiImage&)image, *data);
+		data = createData();
+		if (!convertMultiImage((const ZLMultiImage&)image, *data)) {
+			return 0;
+		}
 	}
 
 	return data;

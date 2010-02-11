@@ -65,11 +65,11 @@ protected:
 	virtual ~ZLImageManager() {}
 
 	virtual shared_ptr<ZLImageData> createData() const = 0;
-	virtual void convertImageDirect(const std::string &stringData, ZLImageData &imageData) const = 0;
+	virtual bool convertImageDirect(const std::string &stringData, ZLImageData &imageData) const = 0;
 
 private:
-	void convertMultiImage(const ZLMultiImage &multiImage, ZLImageData &imageData) const;
-	void convertFromPalmImageFormat(const std::string &imageString, ZLImageData &imageData) const;
+	bool convertMultiImage(const ZLMultiImage &multiImage, ZLImageData &imageData) const;
+	bool convertFromPalmImageFormat(const std::string &imageString, ZLImageData &imageData) const;
 };
 
 inline void ZLImageData::setGrayPixel(unsigned char c) { setPixel(c, c, c); }
