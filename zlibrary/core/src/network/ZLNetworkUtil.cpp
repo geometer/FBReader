@@ -110,7 +110,6 @@ std::string &ZLNetworkUtil::appendParameter(std::string &url, const std::string 
 
 bool ZLNetworkUtil::hasParameter(const std::string &url, const std::string &name) {
 	size_t index = url.find('?', url.rfind('/') + 1);
-	const std::string delimiter = (index == std::string::npos) ? "?" : "&";
 	while (index != std::string::npos) {
 		size_t start = index + 1;
 		size_t eqIndex = url.find('=', start);
