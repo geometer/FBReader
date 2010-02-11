@@ -96,7 +96,8 @@ toff_t TIFFReader::size(thandle_t readerPtr) {
 	return ((TIFFReader*)readerPtr)->myData.length();
 }
 
-bool ZLWin32ImageManager::tiffConvert(const std::string &stringData, ZLWin32ImageData &data) const {
+bool ZLWin32ImageManager::tiffConvert(const std::string &stringData, ZLWin32ImageData &data, bool &result) const {
+	result = false;
 	TIFFReader reader(stringData);
 	TIFF *tiff = TIFFClientOpen("ZLWin32ImageManager", "rM", &reader, TIFFReader::read, TIFFReader::write, TIFFReader::seek, TIFFReader::close, TIFFReader::size, TIFFReader::map, TIFFReader::unmap);
 	if (tiff == 0) {
@@ -112,7 +113,7 @@ bool ZLWin32ImageManager::tiffConvert(const std::string &stringData, ZLWin32Imag
 
 	data.init(width, height, true, 0);
 
-	TIFFReadRGBAImage(tiff, width, height, (uint32*)data.myArray, 1);
+	result = TIFFReadRGBAImage(tiff, width, height, (uint32*)data.myArray, 1);
 	data.bgr2rgb();
 
 	TIFFClose(tiff);

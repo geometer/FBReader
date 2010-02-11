@@ -50,6 +50,6 @@ shared_ptr<ZLImageData> ZLQtImageManager::createData() const {
 	return new ZLQtImageData();
 }
 
-void ZLQtImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
-	((ZLQtImageData&)data).loadFromData((const unsigned char*)stringData.data(), stringData.length());
+bool ZLQtImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
+	return ((ZLQtImageData&)data).loadFromData((const unsigned char*)stringData.data(), stringData.length());
 }

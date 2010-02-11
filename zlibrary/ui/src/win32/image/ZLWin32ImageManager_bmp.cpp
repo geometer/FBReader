@@ -19,7 +19,8 @@
 
 #include "ZLWin32ImageManager.h"
 
-bool ZLWin32ImageManager::bmpConvert(const std::string &stringData, ZLWin32ImageData &data) const {
+bool ZLWin32ImageManager::bmpConvert(const std::string &stringData, ZLWin32ImageData &data, bool &result) const {
+	result = false;
 	if (stringData.size() <= sizeof(BITMAPFILEHEADER)) {
 		return false;
 	}
@@ -41,5 +42,6 @@ bool ZLWin32ImageManager::bmpConvert(const std::string &stringData, ZLWin32Image
 	data.myBytesPerPixel = 3;
 	data.myBytesPerLine = (data.myWidth * 24 + 31) / 32 * 4;
 
+	result = true;
 	return true;
 }

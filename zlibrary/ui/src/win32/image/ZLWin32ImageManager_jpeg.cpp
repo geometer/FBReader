@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <windows.h>
+
 #include <stdio.h>
 #include <setjmp.h>
 #include <jpeglib.h>
@@ -97,7 +99,8 @@ static void errorExit(j_common_ptr info) {
 	longjmp(((JpegErrorManager*)info->err)->mySetjmpBuffer, 1);
 }
 
-bool ZLWin32ImageManager::jpegConvert(const std::string &stringData, ZLWin32ImageData &data) const {
+bool ZLWin32ImageManager::jpegConvert(const std::string &stringData, ZLWin32ImageData &data, bool &result) const {
+	result = false;
 	struct jpeg_decompress_struct info;
 	JpegSourceManager reader(stringData);
 	JpegErrorManager errorManager;
@@ -152,5 +155,6 @@ bool ZLWin32ImageManager::jpegConvert(const std::string &stringData, ZLWin32Imag
 	jpeg_finish_decompress(&info);
 	jpeg_destroy_decompress(&info);
 
+	result = true;
 	return true;
 }

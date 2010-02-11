@@ -47,7 +47,8 @@ static void pngReadFunction(png_structp png_ptr, png_bytep data, png_size_t leng
 	}
 }
 
-bool ZLWin32ImageManager::pngConvert(const std::string &stringData, ZLWin32ImageData &data) const {
+bool ZLWin32ImageManager::pngConvert(const std::string &stringData, ZLWin32ImageData &data, bool &result) const {
+	result = false;
 	if (!png_check_sig((png_byte*)stringData.data(), 8)) {
 		return false;
 	}
@@ -118,5 +119,6 @@ bool ZLWin32ImageManager::pngConvert(const std::string &stringData, ZLWin32Image
 	data.bgr2rgb();
 
 	png_destroy_read_struct(&pngStructure, &pngInfo, 0);
+	result = true;
 	return true;
 }

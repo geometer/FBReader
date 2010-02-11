@@ -64,7 +64,7 @@ private:
 protected:
 	~ZLQtImageManager() {}
 	shared_ptr<ZLImageData> createData() const;
-	void convertImageDirect(const std::string &stringData, ZLImageData &imageData) const;
+	bool convertImageDirect(const std::string &stringData, ZLImageData &imageData) const;
 };
 
 #endif /* __ZLQTIMAGEMANAGER_H__ */
