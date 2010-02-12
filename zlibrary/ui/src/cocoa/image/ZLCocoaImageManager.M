@@ -78,8 +78,13 @@ shared_ptr<ZLImageData> ZLCocoaImageManager::createData() const {
 	return new ZLCocoaImageData();
 }
 
-void ZLCocoaImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
+bool ZLCocoaImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
+	if (stringData.empty()) {
+		return false;
+	}
 	NSData *nsData = [NSData dataWithBytes:stringData.data()
-									length:stringData.length()];
-	((ZLCocoaImageData&)data).myNSImage = [[NSImage alloc] initWithData:nsData];
+																	length:stringData.length()];
+	NSImage *image = [[NSImage alloc] initWithData:nsData];
+	((ZLCocoaImageData&)data).myNSImage = image;
+	return image != nil;
 }
