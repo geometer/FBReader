@@ -40,6 +40,7 @@
 <!ELEMENT rule EMPTY>
 <!ATTLIST rule
 	type (addUrlParameter) #REQUIRED
+	apply (always|external|internal) "always"
 	name CDATA #REQUIRED
 	value CDATA #REQUIRED
 >

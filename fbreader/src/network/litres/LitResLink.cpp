@@ -411,7 +411,7 @@ shared_ptr<NetworkLibraryItem> LitResLink::libraryItem() const {
 	return new LitResRootCatalogItem(*this, Title, "Продажа электронных книг.");
 }
 
-void LitResLink::rewriteUrl(std::string &url) const {
+void LitResLink::rewriteUrl(std::string &url, bool externalUrl) const {
 	ZLNetworkUtil::appendParameter(url, "lfrom", "51");
 }
 

@@ -21,13 +21,13 @@
 #define __OPDSLINK_H__
 
 #include <set>
-#include <map>
 #include <string>
 
 #include "../NetworkLink.h"
 
 
 class NetworkAuthenticationManager;
+class URLRewritingRule;
 
 class OPDSLink : public NetworkLink {
 
@@ -54,7 +54,7 @@ public:
 	void setIgnoredFeeds(const std::set<std::string> &ignoredFeeds);
 	void setAccountDependentFeeds(const std::set<std::string> &accountDependentFeeds);
 	void setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> mgr);
-	void addUrlRewritingRule(const std::string &name, const std::string &value);
+	void addUrlRewritingRule(shared_ptr<URLRewritingRule> rule);
 
 private:
 	const std::string searchURL(const std::string &pattern) const;
@@ -75,7 +75,7 @@ private:
 	shared_ptr<NetworkLibraryItem> libraryItem() const;
 	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;
 
-	void rewriteUrl(std::string &url) const;
+	void rewriteUrl(std::string &url, bool externalUrl) const;
 
 private:
 	const std::string myCatalogURL;
@@ -88,7 +88,7 @@ private:
 	std::set<std::string> myAccountDependentFeeds;
 	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
 
-	std::map<std::string,std::string> myUrlRewritingRules;
+	std::set<shared_ptr<URLRewritingRule> > myUrlRewritingRules;
 
 friend class OPDSCatalogItem;
 };

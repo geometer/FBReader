@@ -310,7 +310,7 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 		return;
 	}
 	std::string copy = url;
-	NetworkLinkCollection::Instance().rewriteUrl(copy);
+	NetworkLinkCollection::Instance().rewriteUrl(copy, true);
 	program->run("openLink", copy);
 }
 

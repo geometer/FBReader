@@ -31,6 +31,9 @@
 #include "../opds/OPDSXMLParser.h"
 #include "../opds/NetworkOPDSFeedReader.h"
 
+#include "URLRewritingRule.h"
+
+
 class OPDSLink::AdvancedSearch {
 
 public:
@@ -221,12 +224,27 @@ shared_ptr<NetworkAuthenticationManager> OPDSLink::authenticationManager() const
 	return myAuthenticationManager;
 }
 
-void OPDSLink::addUrlRewritingRule(const std::string &name, const std::string &value) {
-	myUrlRewritingRules[name] = value;
+void OPDSLink::addUrlRewritingRule(shared_ptr<URLRewritingRule> rule) {
+	if (!rule.isNull()) {
+		myUrlRewritingRules.insert(rule);
+	}
 }
 
-void OPDSLink::rewriteUrl(std::string &url) const {
-	for (std::map<std::string,std::string>::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
-		ZLNetworkUtil::appendParameter(url, it->first, it->second);
+void OPDSLink::rewriteUrl(std::string &url, bool externalUrl) const {
+	for (std::set<shared_ptr<URLRewritingRule> >::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
+		const URLRewritingRule &rule = **it;
+
+		if (rule.Apply != URLRewritingRule::ALWAYS) {
+			if ((rule.Apply == URLRewritingRule::EXTERNAL && !externalUrl)
+				|| (rule.Apply == URLRewritingRule::INTERNAL && externalUrl)) {
+				continue;
+			}
+		}
+
+		switch (rule.Type) {
+		case URLRewritingRule::ADD_URL_PARAMETER:
+			ZLNetworkUtil::appendParameter(url, rule.Name, rule.Value);
+			break;
+		}
 	}
 }

@@ -25,6 +25,7 @@
 #include <ZLXMLReader.h>
 
 class NetworkLink;
+class URLRewritingRule;
 
 class OPDSLinkReader : public ZLXMLReader {
 
@@ -71,7 +72,7 @@ private:
 
 	std::string myAuthenticationType;
 
-	std::map<std::string,std::string> myUrlRewritingRules;
+	std::set<shared_ptr<URLRewritingRule> > myUrlRewritingRules;
 };
 
 #endif /* __OPDSLINKREADER_H__ */

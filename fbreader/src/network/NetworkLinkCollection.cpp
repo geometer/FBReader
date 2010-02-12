@@ -40,6 +40,7 @@
 
 #include "litres/LitResLink.h"
 #include "opdsLink/OPDSLinkReader.h"
+#include "opdsLink/URLRewritingRule.h"
 
 NetworkLinkCollection *NetworkLinkCollection::ourInstance = 0;
 
@@ -374,12 +375,12 @@ size_t NetworkLinkCollection::numberOfEnabledLinks() const {
 	return count;
 }
 
-void NetworkLinkCollection::rewriteUrl(std::string &url) const {
+void NetworkLinkCollection::rewriteUrl(std::string &url, bool externalUrl) const {
 	const std::string host =
 		ZLUnicodeUtil::toLower(ZLNetworkUtil::hostFromUrl(url));
 	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		if (host.find((*it)->SiteName) != std::string::npos) {
-			(*it)->rewriteUrl(url);
+			(*it)->rewriteUrl(url, externalUrl);
 		}
 	}
 }

@@ -13,7 +13,7 @@
 		<field name="annotation">description</field>
 	</advancedSearch>
 	<urlRewritingRules>
-		<rule type="addUrlParameter" name="ref" value="geometer"/>
+		<rule type="addUrlParameter" apply="external" name="ref" value="geometer"/>
 	</urlRewritingRules>
 	<icon>data:image/png;base64,
 iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAL

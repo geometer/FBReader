@@ -21,6 +21,9 @@
 #include "OPDSLink.h"
 #include "OPDSBasicAuthenticationManager.h"
 
+#include "URLRewritingRule.h"
+
+
 OPDSLinkReader::OPDSLinkReader() : myState(READ_NOTHING) {
 }
 
@@ -52,8 +55,8 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 			new OPDSBasicAuthenticationManager(mySiteName, myLinks["signIn"], myLinks["signOut"])
 		);
 	}
-	for (std::map<std::string,std::string>::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
-		opdsLink->addUrlRewritingRule(it->first, it->second);
+	for (std::set<shared_ptr<URLRewritingRule> >::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
+		opdsLink->addUrlRewritingRule(*it);
 	}
 	return opdsLink;
 }
@@ -117,13 +120,27 @@ void OPDSLinkReader::startElementHandler(const char *tag, const char **attribute
 	} else if (TAG_URL_REWRITING_RULES == tag) {
 		myState = READ_URL_REWRITING_RULES;
 	} else if (myState == READ_URL_REWRITING_RULES && TAG_RULE == tag) {
-		const char *type = attributeValue(attributes, "type");
-		const char *name = attributeValue(attributes, "name");
+		const char *type  = attributeValue(attributes, "type");
+		const char *apply = attributeValue(attributes, "apply");
+		const char *name  = attributeValue(attributes, "name");
 		const char *value = attributeValue(attributes, "value");
+
+		URLRewritingRule::RuleApply ruleApply = URLRewritingRule::ALWAYS;
+		if (apply != 0) {
+			const std::string applyStr = apply;
+			if (applyStr == "external") {
+				ruleApply = URLRewritingRule::EXTERNAL;
+			} else if (applyStr == "internal") {
+				ruleApply = URLRewritingRule::INTERNAL;
+			} else if (applyStr != "always") {
+				type = 0;
+			}
+		}
+
 		if (type != 0 && name != 0 && value != 0) {
 			std::string typeStr = type;
 			if (typeStr == "addUrlParameter") {
-				myUrlRewritingRules[name] = value;
+				myUrlRewritingRules.insert(new URLRewritingRule(URLRewritingRule::ADD_URL_PARAMETER, ruleApply, name, value));
 			}
 		}
 	}

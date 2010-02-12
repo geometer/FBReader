@@ -58,7 +58,7 @@ public:
 	virtual shared_ptr<NetworkAuthenticationManager> authenticationManager() const = 0;
 	virtual shared_ptr<NetworkLibraryItem> libraryItem() const = 0;
 
-	virtual void rewriteUrl(std::string &url) const = 0;
+	virtual void rewriteUrl(std::string &url, bool externalUrl = false) const = 0;
 
 private: // disable copying
 	NetworkLink(const NetworkLink &);
