@@ -75,7 +75,7 @@ private:
 	shared_ptr<NetworkLibraryItem> libraryItem() const;
 	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;
 
-	void rewriteUrl(std::string &url, bool externalUrl) const;
+	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
 private:
 	const std::string myCatalogURL;

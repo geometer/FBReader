@@ -91,6 +91,7 @@ DownloadBookRunnable::~DownloadBookRunnable() {
 }
 
 void DownloadBookRunnable::run() {
+	NetworkLinkCollection::Instance().rewriteUrl(myURL);
 	NetworkLinkCollection::Instance().downloadBook(
 		myURL, myNetworkBookId, myFormat, myFileName,
 		myAuthManager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : myAuthManager->certificate(),

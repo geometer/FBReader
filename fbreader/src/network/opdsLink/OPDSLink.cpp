@@ -127,8 +127,10 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 	if (url.empty()) {
 		return 0;
 	}
+	std::string modifiedUrl(url);
+	rewriteUrl(modifiedUrl);
 	return ZLNetworkManager::Instance().createXMLParserRequest(
-		url,
+		modifiedUrl,
 		new OPDSXMLParser(new NetworkOPDSFeedReader(url, result, myIgnoredFeeds, myAccountDependentFeeds))
 	);
 }

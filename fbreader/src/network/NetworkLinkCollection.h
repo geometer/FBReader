@@ -68,7 +68,7 @@ public:
 
 	const std::string &errorMessage() const;
 
-	void rewriteUrl(std::string &url, bool externalUrl) const;
+	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
 private:
 	std::string makeBookFileName(const std::string &url, NetworkLibraryBookItem::URLType format, bool createDirectories);
