@@ -69,15 +69,6 @@ inline void BitStream::reset() {
 	myBitCounter = 0;
 }
 
-inline bool BitStream::ensure(unsigned char length) {
-	while ((myBitCounter < length) && (bytesLeft() >= 2)) {
-		myBuffer |= ((myByteStream[1] << 8) | myByteStream[0]) << (BitStream::BufferSize - 16 - myBitCounter);
-		myBitCounter += 16;
-		myByteStream += 2;
-	}
-	return myBitCounter >= length;
-}
-
 inline unsigned int BitStream::peek(unsigned char length) {
 	ensure(length);
 	return (length > 0) ? (myBuffer >> (BufferSize - length)) : 0;

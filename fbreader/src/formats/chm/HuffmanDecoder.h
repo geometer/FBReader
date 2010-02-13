@@ -45,8 +45,8 @@ friend class LZXDecompressor;
 };
 
 inline unsigned int HuffmanDecoder::getSymbol(BitStream &stream) const {
-  unsigned int symbol = mySymbols[stream.peek(myMaxBitsNumber)];
-  stream.remove(CodeLengths[symbol]);
+	unsigned int symbol = mySymbols[stream.peek(myMaxBitsNumber)];
+	stream.remove(CodeLengths[symbol]);
 	return symbol;
 }
 

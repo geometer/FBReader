@@ -35,10 +35,19 @@ unsigned int BitStream::get4BytesDirect() {
 }
 
 bool BitStream::getBytesDirect(unsigned char *buffer, unsigned int length) {
-	if (myByteStream + 4 > myByteStreamEnd) {
+	if (myByteStream + length > myByteStreamEnd) {
 		return false;
 	}
 	memcpy(buffer, myByteStream, length);
 	myByteStream += length;
 	return true;
+}
+
+bool BitStream::ensure(unsigned char length) {
+	while ((myBitCounter < length) && (bytesLeft() >= 2)) {
+		myBuffer |= ((myByteStream[1] << 8) | myByteStream[0]) << (BitStream::BufferSize - 16 - myBitCounter);
+		myBitCounter += 16;
+		myByteStream += 2;
+	}
+	return myBitCounter >= length;
 }

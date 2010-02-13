@@ -282,7 +282,7 @@ bool CHMFileInfo::init(ZLInputStream &stream) {
 						name = ZLUnicodeUtil::toLower(name);
 					}
 					myRecords.insert(
-						std::pair<std::string,CHMFileInfo::RecordInfo>(
+						std::make_pair(
 							name,
 							CHMFileInfo::RecordInfo(contentSection, offset, length)
 						)
