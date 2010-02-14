@@ -46,6 +46,7 @@ public:
 	class Properties {
 
 	public:
+		~Properties();
 		virtual shared_ptr<ZLTextStyle> baseStyle() const = 0;
 		virtual ZLColor color(const std::string &style = std::string()) const = 0;
 		virtual bool isSelectionEnabled() const = 0;
@@ -126,6 +127,8 @@ private:
 friend class ZLTextAreaController;
 friend class ZLTextSelectionModel;
 };
+
+inline ZLTextArea::Properties::~Properties() {}
 
 inline ZLPaintContext &ZLTextArea::context() const { return myMirroredContext.isNull() ? myContext : (ZLPaintContext&)*myMirroredContext; }
 inline void ZLTextArea::setSize(size_t width, size_t height) { myWidth = width; myHeight = height; }
