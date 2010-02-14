@@ -102,7 +102,6 @@ private:
 	friend class XHTMLTagParagraphAction;
 	friend class XHTMLTagBodyAction;
 	friend class XHTMLTagRestartParagraphAction;
-	friend class XHTMLTagSvgAction;
 };
 
 #endif /* __XHTMLREADER_H__ */

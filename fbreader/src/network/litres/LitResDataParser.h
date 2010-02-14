@@ -30,9 +30,6 @@ class NetworkAuthenticationManager;
 
 class LitResDataParser : public ZLXMLReader {
 
-private:
-	static std::string stringAttributeValue(const char **attributes, const char *name);
-
 public:
 	LitResDataParser(const LitResLink &link, NetworkLibraryItemList &books);
 
@@ -48,6 +45,7 @@ private:
 		ANNOTATION, DATE, LANGUAGE,
 	};
 
+	std::string stringAttributeValue(const char **attributes, const char *name);
 	void processState(const std::string &tag, bool closed, const char **attributes);
 	State getNextState(const std::string &tag, bool closed);
 

@@ -51,9 +51,9 @@ public:
 	void startElementHandler(const char *tag, const char **attributes);
 
 private:
-	static int intValue(const char **attributes, const char *name, int defaultValue = 0);
-	static bool booleanValue(const char **attributes, const char *name);
-	static ZLBoolean3 b3Value(const char **attributes, const char *name);
+	int intValue(const char **attributes, const char *name, int defaultValue = 0);
+	bool booleanValue(const char **attributes, const char *name);
+	ZLBoolean3 b3Value(const char **attributes, const char *name);
 
 private:
 	ZLTextStyleCollection &myCollection;

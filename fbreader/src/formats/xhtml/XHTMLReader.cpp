@@ -108,8 +108,8 @@ private:
 class XHTMLSvgImageAttributeNamePredicate : public ZLXMLReader::NamespaceAttributeNamePredicate {
 
 public:
-	XHTMLSvgImageAttributeNamePredicate(const XHTMLReader &xhtmlReader);
-	bool accepts(const char *name) const;
+	XHTMLSvgImageAttributeNamePredicate();
+	bool accepts(const ZLXMLReader &reader, const char *name) const;
 
 private:
 	bool myIsEnabled;
@@ -315,11 +315,11 @@ void XHTMLTagSvgAction::doAtEnd(XHTMLReader&) {
 	myPredicate.myIsEnabled = false;
 }
 
-XHTMLSvgImageAttributeNamePredicate::XHTMLSvgImageAttributeNamePredicate(const XHTMLReader &xhtmlReader) : ZLXMLReader::NamespaceAttributeNamePredicate(xhtmlReader, XMLNamespace::XLink, "href"), myIsEnabled(false) {
+XHTMLSvgImageAttributeNamePredicate::XHTMLSvgImageAttributeNamePredicate() : ZLXMLReader::NamespaceAttributeNamePredicate(XMLNamespace::XLink, "href"), myIsEnabled(false) {
 }
 
-bool XHTMLSvgImageAttributeNamePredicate::accepts(const char *name) const {
-	return myIsEnabled && NamespaceAttributeNamePredicate::accepts(name);
+bool XHTMLSvgImageAttributeNamePredicate::accepts(const ZLXMLReader &reader, const char *name) const {
+	return myIsEnabled && NamespaceAttributeNamePredicate::accepts(reader, name);
 }
 
 void XHTMLTagImageAction::doAtEnd(XHTMLReader&) {
@@ -445,6 +445,9 @@ void XHTMLReader::fillTagTable() {
 
 		addAction("img",	new XHTMLTagImageAction("src"));
 		addAction("object",	new XHTMLTagImageAction("data"));
+		XHTMLSvgImageAttributeNamePredicate *predicate = new XHTMLSvgImageAttributeNamePredicate();
+		addAction("image",	new XHTMLTagImageAction(predicate));
+		addAction("svg",	new XHTMLTagSvgAction(*predicate));
 
 		//addAction("area",	new XHTMLTagAction());
 		//addAction("map",	new XHTMLTagAction());
@@ -483,9 +486,6 @@ bool XHTMLReader::readFile(const std::string &filePath, const std::string &refer
 	myModelReader.addHyperlinkLabel(referenceName);
 
 	fillTagTable();
-	XHTMLSvgImageAttributeNamePredicate *predicate = new XHTMLSvgImageAttributeNamePredicate(*this);
-	addAction("image",	new XHTMLTagImageAction(predicate));
-	addAction("svg",	new XHTMLTagSvgAction(*predicate));
 
 	myPathPrefix = MiscUtil::htmlDirectoryPrefix(filePath);
 	myReferenceName = referenceName;

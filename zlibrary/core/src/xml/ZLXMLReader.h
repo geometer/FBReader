@@ -37,14 +37,14 @@ public:
 
 	public:
 		virtual ~AttributeNamePredicate();
-		virtual bool accepts(const char *name) const = 0;
+		virtual bool accepts(const ZLXMLReader &reader, const char *name) const = 0;
 	};
 
 	class FixedAttributeNamePredicate : public AttributeNamePredicate {
 
 	public:
 		FixedAttributeNamePredicate(const std::string &attributeName);
-		bool accepts(const char *name) const;
+		bool accepts(const ZLXMLReader &reader, const char *name) const;
 
 	private:
 		const std::string myAttributeName;
@@ -53,18 +53,13 @@ public:
 	class NamespaceAttributeNamePredicate : public AttributeNamePredicate {
 
 	public:
-		NamespaceAttributeNamePredicate(const ZLXMLReader &xmlReader, const std::string &ns, const std::string &name);
-		bool accepts(const char *name) const;
+		NamespaceAttributeNamePredicate(const std::string &ns, const std::string &name);
+		bool accepts(const ZLXMLReader &reader, const char *name) const;
 
 	private:
-		const ZLXMLReader &myXMLReader;
 		const std::string myNamespaceName;
 		const std::string myAttributeName;
 	};
-
-public:
-	static const char *attributeValue(const char **xmlattributes, const char *name);
-	static const char *attributeValue(const char **xmlattributes, const AttributeNamePredicate &predicate);
 
 protected:
 	ZLXMLReader(const char *encoding = 0);
@@ -80,6 +75,9 @@ public:
 	const std::string &errorMessage() const;
 
 	const std::map<std::string,std::string> &namespaces() const;
+
+	const char *attributeValue(const char **xmlattributes, const char *name);
+	const char *attributeValue(const char **xmlattributes, const AttributeNamePredicate &predicate);
 
 private:
 	void initialize(const char *encoding = 0);
