@@ -42,12 +42,3 @@ bool BitStream::getBytesDirect(unsigned char *buffer, unsigned int length) {
 	myByteStream += length;
 	return true;
 }
-
-bool BitStream::ensure(unsigned char length) {
-	while ((myBitCounter < length) && (bytesLeft() >= 2)) {
-		myBuffer |= ((myByteStream[1] << 8) | myByteStream[0]) << (BitStream::BufferSize - 16 - myBitCounter);
-		myBitCounter += 16;
-		myByteStream += 2;
-	}
-	return myBitCounter >= length;
-}
