@@ -237,6 +237,11 @@ void ZLTextView::PositionIndicator::draw() {
 	context.drawLine(right, bottom, right, top);
 }
 
+bool ZLTextView::PositionIndicator::isResponsibleFor(int x, int y) {
+	x = myTextView.textArea().realX(x);
+	return x >= left() && x <= right() && y >= top() && y <= bottom();
+}
+
 bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 	x = myTextView.textArea().realX(x);
 

@@ -29,6 +29,7 @@ public:
 	virtual ~PositionIndicator();
 
 	virtual void draw();
+	bool isResponsibleFor(int x, int y);
 	bool onStylusPress(int x, int y);
 
 protected:

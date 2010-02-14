@@ -32,6 +32,8 @@
 #include "../../bookmodel/BookReader.h"
 #include "../../bookmodel/BookModel.h"
 
+#include "../../constants/XMLNamespace.h"
+
 static const bool USE_CSS = false;
 
 std::map<std::string,XHTMLTagAction*> XHTMLReader::ourTagActions;
@@ -93,13 +95,37 @@ public:
 class XHTMLTagImageAction : public XHTMLTagAction {
 
 public:
-	XHTMLTagImageAction(const std::string &nameAttribute);
+	XHTMLTagImageAction(shared_ptr<ZLXMLReader::AttributeNamePredicate> predicate);
+	XHTMLTagImageAction(const std::string &attributeName);
 
 	void doAtStart(XHTMLReader &reader, const char **xmlattributes);
 	void doAtEnd(XHTMLReader &reader);
 
 private:
-	const std::string myNameAttribute;
+	shared_ptr<ZLXMLReader::AttributeNamePredicate> myPredicate;
+};
+
+class XHTMLSvgImageAttributeNamePredicate : public ZLXMLReader::NamespaceAttributeNamePredicate {
+
+public:
+	XHTMLSvgImageAttributeNamePredicate(const XHTMLReader &xhtmlReader);
+	bool accepts(const char *name) const;
+
+private:
+	bool myIsEnabled;
+
+friend class XHTMLTagSvgAction;
+};
+
+class XHTMLTagSvgAction : public XHTMLTagAction {
+
+public:
+	XHTMLTagSvgAction(XHTMLSvgImageAttributeNamePredicate &predicate);
+	void doAtStart(XHTMLReader &reader, const char **xmlattributes);
+	void doAtEnd(XHTMLReader &reader);
+
+private:
+	XHTMLSvgImageAttributeNamePredicate &myPredicate;
 };
 
 class XHTMLTagItemAction : public XHTMLTagAction {
@@ -245,11 +271,16 @@ void XHTMLTagItemAction::doAtEnd(XHTMLReader &reader) {
 	endParagraph(reader);
 }
 
-XHTMLTagImageAction::XHTMLTagImageAction(const std::string &nameAttribute) : myNameAttribute(nameAttribute) {
+XHTMLTagImageAction::XHTMLTagImageAction(shared_ptr<ZLXMLReader::AttributeNamePredicate> predicate) {
+	myPredicate = predicate;
+}
+
+XHTMLTagImageAction::XHTMLTagImageAction(const std::string &attributeName) {
+	myPredicate = new ZLXMLReader::FixedAttributeNamePredicate(attributeName);
 }
 
 void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattributes) {
-	const char *fileName = reader.attributeValue(xmlattributes, myNameAttribute.c_str());
+	const char *fileName = reader.attributeValue(xmlattributes, *myPredicate);
 	if (fileName == 0) {
 		return;
 	}
@@ -271,6 +302,24 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 	if (flag) {
 		beginParagraph(reader);
 	}
+}
+
+XHTMLTagSvgAction::XHTMLTagSvgAction(XHTMLSvgImageAttributeNamePredicate &predicate) : myPredicate(predicate) {
+}
+
+void XHTMLTagSvgAction::doAtStart(XHTMLReader&, const char**) {
+	myPredicate.myIsEnabled = true;
+}
+
+void XHTMLTagSvgAction::doAtEnd(XHTMLReader&) {
+	myPredicate.myIsEnabled = false;
+}
+
+XHTMLSvgImageAttributeNamePredicate::XHTMLSvgImageAttributeNamePredicate(const XHTMLReader &xhtmlReader) : ZLXMLReader::NamespaceAttributeNamePredicate(xhtmlReader, XMLNamespace::XLink, "href"), myIsEnabled(false) {
+}
+
+bool XHTMLSvgImageAttributeNamePredicate::accepts(const char *name) const {
+	return myIsEnabled && NamespaceAttributeNamePredicate::accepts(name);
 }
 
 void XHTMLTagImageAction::doAtEnd(XHTMLReader&) {
@@ -434,6 +483,9 @@ bool XHTMLReader::readFile(const std::string &filePath, const std::string &refer
 	myModelReader.addHyperlinkLabel(referenceName);
 
 	fillTagTable();
+	XHTMLSvgImageAttributeNamePredicate *predicate = new XHTMLSvgImageAttributeNamePredicate(*this);
+	addAction("image",	new XHTMLTagImageAction(predicate));
+	addAction("svg",	new XHTMLTagSvgAction(*predicate));
 
 	myPathPrefix = MiscUtil::htmlDirectoryPrefix(filePath);
 	myReferenceName = referenceName;
@@ -608,4 +660,8 @@ void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 
 const std::vector<std::string> &XHTMLReader::externalDTDs() const {
 	return EntityFilesCollector::Instance().externalDTDs("xhtml");
+}
+
+bool XHTMLReader::processNamespaces() const {
+	return true;
 }

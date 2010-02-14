@@ -33,11 +33,41 @@ class ZLXMLReaderInternal;
 class ZLXMLReader {
 
 public:
+	class AttributeNamePredicate {
+
+	public:
+		virtual ~AttributeNamePredicate();
+		virtual bool accepts(const char *name) const = 0;
+	};
+
+	class FixedAttributeNamePredicate : public AttributeNamePredicate {
+
+	public:
+		FixedAttributeNamePredicate(const std::string &attributeName);
+		bool accepts(const char *name) const;
+
+	private:
+		const std::string myAttributeName;
+	};
+
+	class NamespaceAttributeNamePredicate : public AttributeNamePredicate {
+
+	public:
+		NamespaceAttributeNamePredicate(const ZLXMLReader &xmlReader, const std::string &ns, const std::string &name);
+		bool accepts(const char *name) const;
+
+	private:
+		const ZLXMLReader &myXMLReader;
+		const std::string myNamespaceName;
+		const std::string myAttributeName;
+	};
+
+public:
 	static const char *attributeValue(const char **xmlattributes, const char *name);
+	static const char *attributeValue(const char **xmlattributes, const AttributeNamePredicate &predicate);
 
 protected:
 	ZLXMLReader(const char *encoding = 0);
-	const std::map<std::string,std::string> &namespaces() const;
 
 public:
 	virtual ~ZLXMLReader();
@@ -48,6 +78,8 @@ public:
 	bool readDocument(shared_ptr<ZLAsynchronousInputStream> stream);
 
 	const std::string &errorMessage() const;
+
+	const std::map<std::string,std::string> &namespaces() const;
 
 private:
 	void initialize(const char *encoding = 0);

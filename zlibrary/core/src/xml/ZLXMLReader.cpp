@@ -169,6 +169,44 @@ const char *ZLXMLReader::attributeValue(const char **xmlattributes, const char *
 	return 0;
 }
 
+ZLXMLReader::AttributeNamePredicate::~AttributeNamePredicate() {
+}
+
+ZLXMLReader::FixedAttributeNamePredicate::FixedAttributeNamePredicate(const std::string &attributeName) : myAttributeName(attributeName) {
+}
+
+bool ZLXMLReader::FixedAttributeNamePredicate::accepts(const char *name) const {
+	return myAttributeName == name;
+}
+
+ZLXMLReader::NamespaceAttributeNamePredicate::NamespaceAttributeNamePredicate(const ZLXMLReader &xmlReader, const std::string &ns, const std::string &name) : myXMLReader(xmlReader), myNamespaceName(ns), myAttributeName(name) {
+}
+
+bool ZLXMLReader::NamespaceAttributeNamePredicate::accepts(const char *name) const {
+	const std::map<std::string,std::string> &namespaces = myXMLReader.namespaces();
+	for (std::map<std::string,std::string>::const_iterator it = namespaces.begin(); it != namespaces.end(); ++it) {
+		if (it->second == myNamespaceName) {
+			return it->first + ':' + myAttributeName == name;
+		}
+	}
+	return false;
+}
+
+const char *ZLXMLReader::attributeValue(const char **xmlattributes, const AttributeNamePredicate &predicate) {
+	while (*xmlattributes != 0) {
+		bool useNext = predicate.accepts(*xmlattributes);
+		++xmlattributes;
+		if (*xmlattributes == 0) {
+			return 0;
+		}
+		if (useNext) {
+			return *xmlattributes;
+		}
+		++xmlattributes;
+	}
+	return 0;
+}
+
 bool ZLXMLReader::readDocument(shared_ptr<ZLAsynchronousInputStream> stream) {
 	ZLXMLReaderHandler handler(*this);
 	return stream->processInput(handler);

@@ -127,11 +127,13 @@ bool FBView::onStylusPress(int x, int y) {
 
 	myPressedX = x;
 	myPressedY = y;
-	myIsReleasedWithoutMotion = true;
+	myIsReleasedWithoutMotion = false;
 
 	if (ZLTextView::onStylusPress(x, y)) {
 		return true;
 	}
+
+	myIsReleasedWithoutMotion = true;
 	
 	if (_onStylusPress(x, y)) {
 		return true;

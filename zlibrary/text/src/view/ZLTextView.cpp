@@ -429,6 +429,14 @@ bool ZLTextView::onStylusRelease(int x, int y) {
 
 	myDoubleClickInfo.update(x, y, false);
 
+	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
+	if (!indicatorInfo.isNull() &&
+			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR) &&
+			indicatorInfo->isSensitive() &&
+			positionIndicator()->isResponsibleFor(x, y)) {
+		return true;
+	}
+
 	if (myDoubleClickInfo.Count > 0) {
 		return onStylusClick(x, y, myDoubleClickInfo.Count);
 	}

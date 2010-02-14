@@ -67,6 +67,8 @@ private:
 
 	const std::vector<std::string> &externalDTDs() const;
 
+	bool processNamespaces() const;
+
 	void beginParagraph();
 	void endParagraph();
 	void addStyleEntry(const std::string tag, const std::string aClass);
@@ -100,6 +102,7 @@ private:
 	friend class XHTMLTagParagraphAction;
 	friend class XHTMLTagBodyAction;
 	friend class XHTMLTagRestartParagraphAction;
+	friend class XHTMLTagSvgAction;
 };
 
 #endif /* __XHTMLREADER_H__ */
