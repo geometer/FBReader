@@ -23,6 +23,7 @@
 
 #include "NetworkOperationRunnable.h"
 
+#include "../network/NetworkLink.h"
 #include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkAuthenticationManager.h"
 #include "../network/NetworkItems.h"
@@ -75,7 +76,7 @@ DownloadBookRunnable::DownloadBookRunnable(const NetworkBookItem &book, NetworkI
 		myNetworkBookId = myURL;
 		myFormat = format;
 	} else {
-		myAuthManager = book.authenticationManager();
+		myAuthManager = book.Link.authenticationManager();
 		if (!myAuthManager.isNull() && !myAuthManager->needPurchase(book)) {
 			myURL = myAuthManager->downloadLink(book);
 			myNetworkBookId = myAuthManager->networkBookId(book);

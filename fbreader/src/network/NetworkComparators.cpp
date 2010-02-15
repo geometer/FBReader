@@ -53,14 +53,14 @@ bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkItem> &book
 		return book0.Index < book1.Index;
 	}*/
 
-	const bool book0HasSeriesTitle = !book0.seriesTitle().empty();
-	const bool book1HasSeriesTitle = !book1.seriesTitle().empty();
+	const bool book0HasSeriesTitle = !book0.SeriesTitle.empty();
+	const bool book1HasSeriesTitle = !book1.SeriesTitle.empty();
 	if (book0HasSeriesTitle && book1HasSeriesTitle) {
-		const int comp = book0.seriesTitle().compare(book1.seriesTitle());
+		const int comp = book0.SeriesTitle.compare(book1.SeriesTitle);
 		if (comp != 0) {
 			return comp < 0;
 		} else {
-			int diff = book0.indexInSeries() - book1.indexInSeries();
+			int diff = book0.IndexInSeries - book1.IndexInSeries;
 			if (diff != 0) {
 				return diff < 0;
 			}
@@ -68,8 +68,8 @@ bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkItem> &book
 		return book0.Title < book1.Title;
 	}
 
-	const std::string &book0Key = book0HasSeriesTitle ? book0.seriesTitle() : book0.Title;
-	const std::string &book1Key = book1HasSeriesTitle ? book1.seriesTitle() : book1.Title;
+	const std::string &book0Key = book0HasSeriesTitle ? book0.SeriesTitle : book0.Title;
+	const std::string &book1Key = book1HasSeriesTitle ? book1.SeriesTitle : book1.Title;
 	const int comp = book0Key.compare(book1Key);
 	if (comp != 0) {
 		return comp < 0;

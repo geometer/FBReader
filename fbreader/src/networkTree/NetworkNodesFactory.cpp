@@ -59,7 +59,7 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 			continue;
 		}
 		const NetworkBookItem &book = (const NetworkBookItem &) **it;
-		std::string seriesTitle = book.seriesTitle();
+		std::string seriesTitle = book.SeriesTitle;
 
 		if (!seriesTitle.empty() && (seriesNode == 0 || seriesNode->seriesTitle() != seriesTitle)) {
 			NetworkItem::List::const_iterator jt = it + 1;
@@ -70,7 +70,7 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 				seriesTitle.clear();
 			} else {
 				const NetworkBookItem &next = (const NetworkBookItem&)**jt;
-				if (next.seriesTitle() != seriesTitle) {
+				if (next.SeriesTitle != seriesTitle) {
 					seriesTitle.clear();
 				}
 			}

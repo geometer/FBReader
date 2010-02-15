@@ -31,6 +31,7 @@
 #include "NetworkOperationRunnable.h"
 #include "AuthenticationDialog.h"
 
+#include "../network/NetworkLink.h"
 #include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkAuthenticationManager.h"
 #include "../network/NetworkErrors.h"
@@ -169,7 +170,7 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 			}
 		}
 		if (purchase) {
-			const std::string buyText = ZLStringUtil::printf(resource["buy"].value(), book.price());
+			const std::string buyText = ZLStringUtil::printf(resource["buy"].value(), book.Price);
 			drawHyperlink(context, left, vOffset, buyText, myBuyAction);
 		}
 	}
@@ -187,10 +188,10 @@ bool NetworkBookNode::hasLocalCopy() {
 		|| hasLocalCopy(book, NetworkItem::URL_BOOK_FB2_ZIP)) {
 		return true;
 	}
-	if (book.authenticationManager().isNull()) {
+	if (book.Link.authenticationManager().isNull()) {
 		return false;
 	}
-	NetworkAuthenticationManager &mgr = *book.authenticationManager();
+	NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
 	const std::string networkBookId = mgr.networkBookId(book);
 	if (!networkBookId.empty()) {
 		std::string fileName = NetworkLinkCollection::Instance().bookFileName(networkBookId);
@@ -224,10 +225,10 @@ bool NetworkBookNode::NetworkBookNode::hasDirectLink() {
 	if (book.bestBookFormat() != NetworkItem::URL_NONE) {
 		return true;
 	}
-	if (book.authenticationManager().isNull()) {
+	if (book.Link.authenticationManager().isNull()) {
 		return false;
 	}
-	NetworkAuthenticationManager &mgr = *book.authenticationManager();
+	NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
 	if (mgr.isAuthorised().Status == B3_TRUE && !mgr.needPurchase(book)) {
 		return true;
 	}
@@ -236,10 +237,10 @@ bool NetworkBookNode::NetworkBookNode::hasDirectLink() {
 
 bool NetworkBookNode::canBePurchased() {
 	NetworkBookItem &book = bookItem();
-	if (book.authenticationManager().isNull()) {
+	if (book.Link.authenticationManager().isNull()) {
 		return false;
 	}
-	NetworkAuthenticationManager &mgr = *book.authenticationManager();
+	NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
 	if (mgr.isAuthorised().Status != B3_TRUE) {
 		return true;
 	}
@@ -265,8 +266,8 @@ void NetworkBookNode::ReadAction::run() {
 	std::string networkBookId;
 	if (format != NetworkItem::URL_NONE) {
 		networkBookId = book.URLByType[format];
-	} else if (!book.authenticationManager().isNull()) {
-		NetworkAuthenticationManager &mgr = *book.authenticationManager();
+	} else if (!book.Link.authenticationManager().isNull()) {
+		NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
 		networkBookId = mgr.networkBookId(book);
 		format = mgr.downloadLinkType(book);
 	}
@@ -300,10 +301,10 @@ void NetworkBookNode::DownloadAction::run() {
 		myDemo ? book.bestDemoFormat() : book.bestBookFormat();
 
 	if (format == NetworkItem::URL_NONE) {
-		if (myDemo || book.authenticationManager().isNull()) {
+		if (myDemo || book.Link.authenticationManager().isNull()) {
 			return;
 		}
-		NetworkAuthenticationManager &mgr = *book.authenticationManager();
+		NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
 		if (mgr.needPurchase(book)) {
 			return;
 		}
@@ -335,7 +336,7 @@ void NetworkBookNode::DownloadAction::run() {
 		downloaderBook->addAuthor(it->DisplayName, it->SortKey);
 	}
 	downloaderBook->setTitle(myDemo ? book.Title + DEMO_SUFFIX : book.Title);
-	downloaderBook->setLanguage(book.language());
+	downloaderBook->setLanguage(book.Language);
 	for (std::vector<std::string>::const_iterator it = book.Tags.begin(); it != book.Tags.end(); ++it) {
 		downloaderBook->addTag(*it);
 	}
@@ -381,13 +382,13 @@ NetworkBookNode::BuyAction::BuyAction(shared_ptr<NetworkItem> book) : myBook(boo
 void NetworkBookNode::BuyAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	NetworkBookItem &book = (NetworkBookItem &) *myBook;
-	if (book.authenticationManager().isNull()) {
+	if (book.Link.authenticationManager().isNull()) {
 		return;
 	}
 	if (!NetworkOperationRunnable::tryConnect()) {
 		return;
 	}
-	NetworkAuthenticationManager &mgr = *book.authenticationManager();
+	NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
 	if (mgr.isAuthorised().Status != B3_TRUE) {
 		if (!AuthenticationDialog::run(mgr)) {
 			return;
@@ -454,11 +455,11 @@ void NetworkBookNode::DeleteAction::run() {
 	removeFormat(book, NetworkItem::URL_BOOK_MOBIPOCKET);
 	removeFormat(book, NetworkItem::URL_BOOK_FB2_ZIP);
 
-	if (book.authenticationManager().isNull()) {
+	if (book.Link.authenticationManager().isNull()) {
 		return;
 	}
 
-	NetworkAuthenticationManager &mgr = *book.authenticationManager();
+	NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
 	const std::string url = mgr.networkBookId(book);
 	const NetworkItem::URLType format = mgr.downloadLinkType(book);
 	const std::string fileName = NetworkLinkCollection::Instance().makeBookFileName(url, format);

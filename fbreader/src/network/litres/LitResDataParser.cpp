@@ -25,9 +25,6 @@
 #include "LitResGenre.h"
 #include "LitResLink.h"
 
-#include "../NetworkAuthenticationManager.h"
-
-
 static const std::string TAG_CATALOG = "catalit-fb2-books";
 static const std::string TAG_BOOK = "fb2-book";
 static const std::string TAG_TEXT_DESCRIPTION = "text_description";
@@ -124,23 +121,21 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 		break;
 	case BOOK: 
 		if (closed && TAG_BOOK == tag) {
-			NetworkBookItem *book = new NetworkBookItem(
+			myBooks.push_back(new NetworkBookItem(
+				myLink,
 				myBookId,
 				myIndex++,
 				myTitle,
 				mySummary,
 				myLanguage,
+				myDate,
+				myPrice,
 				myAuthors,
 				myTags,
+				mySeriesTitle,
+				myIndexInSeries,
 				myURLByType
-			);
-
-			book->setAuthenticationManager(myLink.authenticationManager());
-			book->setPrice(myPrice);
-			book->setDate(myDate);
-			book->setSeries(mySeriesTitle, myIndexInSeries);
-
-			myBooks.push_back(book);
+			));
 
 			myTitle.erase();
 			mySummary.erase();

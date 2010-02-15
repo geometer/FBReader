@@ -53,6 +53,7 @@ protected:
 
 protected:
 	NetworkItem(
+		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
 		const std::map<URLType,std::string> &urlByType
@@ -64,6 +65,7 @@ public:
 	virtual const ZLTypeId &typeId() const = 0;
 
 public:
+	const NetworkLink &Link;
 	const std::string Title;
 	const std::string Summary;
 	/*const*/ std::map<URLType,std::string> URLByType;
@@ -108,7 +110,6 @@ public:
 	virtual CatalogType catalogType() const;
 
 public:
-	const NetworkLink &Link;
 	const VisibilityType Visibility;
 };
 
@@ -127,67 +128,39 @@ public:
 
 public:
 	NetworkBookItem(
+		const NetworkLink &link,
 		const std::string &id,
 		unsigned int index,
 		const std::string &title,
 		const std::string &summary,
 		const std::string &language,
+		const std::string &date,
+		const std::string &price,
 		const std::vector<AuthorData> &authors,
 		const std::vector<std::string> &tags,
+		const std::string &seriesTitle,
+		unsigned int indexInSeries,
 		const std::map<URLType,std::string> &urlByType
 	);
-	explicit NetworkBookItem(const NetworkBookItem &book);
+	NetworkBookItem(const NetworkBookItem &book, unsigned int index);
 
 	const ZLTypeId &typeId() const;
 
 public:
-	unsigned int index() const;
-	void setIndex(unsigned int index);
-
-	const std::string &language() const;
-	const std::string &date() const;
-	const std::string &seriesTitle() const;
-	int indexInSeries() const;
-	const std::string &price() const;
-
-	void setLanguage(const std::string &language);
-	void setDate(const std::string &date);
-	void setPrice(const std::string &price);
-	void setSeries(const std::string &name, int index);
-
-	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;
-	void setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> manager);
-
 	URLType bestBookFormat() const;
 	URLType bestDemoFormat() const;
 
-private:
-	unsigned int myIndex;
-
 public:
+	/*const*/ unsigned int Index;
 	const std::string Id;
-
-private:
-	std::string myLanguage;
-	std::string myDate;
-	std::string mySeriesTitle;
-	int myIndexInSeries;
-	std::string myPrice; // number with curency code (see http://en.wikipedia.org/wiki/List_of_circulating_currencies for example)
-
-public:
+	const std::string Language;
+	const std::string Date;
+	// number with curency code (see http://en.wikipedia.org/wiki/List_of_circulating_currencies for example)
+	const std::string Price;
 	const std::vector<AuthorData> Authors;
 	const std::vector<std::string> Tags;
-
-	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
+	const std::string SeriesTitle;
+	const int IndexInSeries;
 };
-
-inline unsigned int NetworkBookItem::index() const { return myIndex; }
-inline void NetworkBookItem::setIndex(unsigned int index) { myIndex = index; }
-
-inline const std::string &NetworkBookItem::language() const { return myLanguage; }
-inline const std::string &NetworkBookItem::date() const { return myDate; }
-inline const std::string &NetworkBookItem::seriesTitle() const { return mySeriesTitle; }
-inline int NetworkBookItem::indexInSeries() const { return myIndexInSeries; }
-inline const std::string &NetworkBookItem::price() const { return myPrice; }
 
 #endif /* __NETWORKITEMS_H__ */

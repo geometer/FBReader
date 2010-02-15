@@ -22,10 +22,12 @@
 const ZLTypeId NetworkItem::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
 NetworkItem::NetworkItem(
+	const NetworkLink &link,
 	const std::string &title,
 	const std::string &summary,
 	const std::map<URLType,std::string> &urlByType
 ) :
+	Link(link),
 	Title(title),
 	Summary(summary),
 	URLByType(urlByType) {

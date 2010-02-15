@@ -21,7 +21,6 @@
 //#include <ZLFile.h>
 
 #include "NetworkItems.h"
-#include "NetworkAuthenticationManager.h"
 
 const ZLTypeId NetworkBookItem::TYPE_ID(NetworkItem::TYPE_ID);
 
@@ -31,35 +30,43 @@ bool NetworkBookItem::AuthorData::operator < (const AuthorData &data) const {
 }
 
 NetworkBookItem::NetworkBookItem(
+	const NetworkLink &link,
 	const std::string &id,
 	unsigned int index,
 	const std::string &title,
 	const std::string &summary,
 	const std::string &language,
+	const std::string &date,
+	const std::string &price,
 	const std::vector<AuthorData> &authors,
 	const std::vector<std::string> &tags,
+	const std::string &seriesTitle,
+	unsigned int indexInSeries,
 	const std::map<URLType,std::string> &urlByType
 ) : 
-	NetworkItem(title, summary, urlByType),
-	myIndex(index),
+	NetworkItem(link, title, summary, urlByType),
+	Index(index),
 	Id(id),
-	myLanguage(language),
+	Language(language),
+	Date(date),
+	Price(price),
 	Authors(authors),
-	Tags(tags) {
+	Tags(tags),
+	SeriesTitle(seriesTitle),
+	IndexInSeries(indexInSeries) {
 }
 
-NetworkBookItem::NetworkBookItem(const NetworkBookItem &book) :
-	NetworkItem(book.Title, book.Summary, book.URLByType), 
-	myIndex(book.myIndex), 
+NetworkBookItem::NetworkBookItem(const NetworkBookItem &book, unsigned int index) :
+	NetworkItem(book.Link, book.Title, book.Summary, book.URLByType), 
+	Index(index), 
 	Id(book.Id), 
-	myLanguage(book.myLanguage), 
-	myDate(book.myDate), 
-	mySeriesTitle(book.mySeriesTitle), 
-	myIndexInSeries(book.myIndexInSeries),
-	myPrice(book.myPrice), 
+	Language(book.Language), 
+	Date(book.Date), 
+	Price(book.Price), 
 	Authors(book.Authors), 
-	Tags(book.Tags), 
-	myAuthenticationManager(book.myAuthenticationManager) {
+	Tags(book.Tags),
+	SeriesTitle(book.SeriesTitle),
+	IndexInSeries(book.IndexInSeries) {
 }
 
 const ZLTypeId &NetworkBookItem::typeId() const {
@@ -122,29 +129,4 @@ NetworkItem::URLType NetworkBookItem::bestDemoFormat() const {
 		return URL_BOOK_DEMO_FB2_ZIP;
 	}
 	return URL_NONE;
-}
-
-shared_ptr<NetworkAuthenticationManager> NetworkBookItem::authenticationManager() const {
-	return myAuthenticationManager;
-}
-
-void NetworkBookItem::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> manager) {
-	myAuthenticationManager = manager;
-}
-
-void NetworkBookItem::setLanguage(const std::string &language) {
-	myLanguage = language;
-}
-
-void NetworkBookItem::setDate(const std::string &date) {
-	myDate = date;
-}
-
-void NetworkBookItem::setPrice(const std::string &price) {
-	myPrice = price;
-}
-
-void NetworkBookItem::setSeries(const std::string &title, int index) {
-	mySeriesTitle = title;
-	myIndexInSeries = index;
 }

@@ -28,8 +28,7 @@ NetworkCatalogItem::NetworkCatalogItem(
 	const std::map<URLType,std::string> &urlByType,
 	VisibilityType visibility
 ) :
-	NetworkItem(title, summary, urlByType),
-	Link(link),
+	NetworkItem(link, title, summary, urlByType),
 	Visibility(visibility) {
 }
 

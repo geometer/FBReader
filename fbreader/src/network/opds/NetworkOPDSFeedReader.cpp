@@ -27,7 +27,6 @@
 
 #include "../NetworkOperationData.h"
 #include "../NetworkItems.h"
-#include "../NetworkAuthenticationManager.h"
 #include "../opdsLink/OPDSLink.h"
 #include "../opdsLink/OPDSCatalogItem.h"
 
@@ -189,18 +188,20 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 	//entry.rights();
 
 	NetworkBookItem *book = new NetworkBookItem(
+		myData.Link,
 		entry.id()->uri(),
 		myIndex++,
 		entry.title(),
 		entry.summary(),
 		entry.dcLanguage(),
+		date,
+		std::string(), // price
 		authors,
 		tags,
+		std::string(), // series
+		0, // index in series
 		urlMap
 	);
-
-	book->setDate(date);
-	book->setAuthenticationManager(myData.Link.authenticationManager());
 
 	return book;
 }

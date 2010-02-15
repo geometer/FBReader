@@ -43,9 +43,9 @@ void NetworkBookCollection::addBook(shared_ptr<NetworkItem> bookPtr) {
 		const NetworkBookItem::AuthorData &author = *jt;
 		std::map<NetworkBookItem::AuthorData, unsigned int>::iterator kt = myAuthorRates.find(author);
 		if (kt == myAuthorRates.end()) {
-			myAuthorRates[author] = book.index();
-		} else if (kt->second > book.index()) {
-			kt->second = book.index();
+			myAuthorRates[author] = book.Index;
+		} else if (kt->second > book.Index) {
+			kt->second = book.Index;
 		}
 	}
 }

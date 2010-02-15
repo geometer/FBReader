@@ -177,9 +177,7 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
 		}
 	}
 	myPurchasedBooksIds.insert(book.Id);
-	NetworkBookItem *bookCopy = new NetworkBookItem(book);
-	bookCopy->setIndex(0);
-	myPurchasedBooksList.push_back(bookCopy);
+	myPurchasedBooksList.push_back(new NetworkBookItem(book, 0));
 	return error;
 }
 
@@ -285,7 +283,7 @@ void LitResAuthenticationManager::loadPurchasedBooksOnError(std::set<std::string
 void LitResAuthenticationManager::loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList) {
 	for (NetworkItem::List::iterator it = purchasedBooksList.begin(); it != purchasedBooksList.end(); ++it) {
 		NetworkBookItem &book = (NetworkBookItem&)**it;
-		book.setIndex(0);
+		book.Index = 0;
 		purchasedBooksIds.insert(book.Id);
 	}
 }
