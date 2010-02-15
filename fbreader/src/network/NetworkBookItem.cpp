@@ -36,7 +36,7 @@ NetworkBookItem::NetworkBookItem(
 	const std::string &title,
 	const std::string &summary,
 	const std::string &language,
-	const std::map<URLType,std::string> urlByType
+	const std::map<URLType,std::string> &urlByType
 ) : 
 	NetworkItem(title, summary, urlByType),
 	myIndex(index),

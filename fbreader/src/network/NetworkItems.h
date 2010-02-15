@@ -94,7 +94,7 @@ public:
 		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
-		const std::map<URLType,std::string> urlByType,
+		const std::map<URLType,std::string> &urlByType,
 		VisibilityType visibility = Always
 	);
 
@@ -132,7 +132,7 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const std::string &language,
-		const std::map<URLType,std::string> urlByType
+		const std::map<URLType,std::string> &urlByType
 	);
 	explicit NetworkBookItem(const NetworkBookItem &book);
 
