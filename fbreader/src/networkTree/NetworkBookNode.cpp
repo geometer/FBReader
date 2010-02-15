@@ -39,7 +39,7 @@
 
 #include "../fbreader/FBReader.h"
 
-class NetworkBookInfoNode::DownloadAction : public ZLRunnable {
+class NetworkBookNode::DownloadAction : public ZLRunnable {
 
 public:
 	DownloadAction(shared_ptr<NetworkLibraryItem> book, bool demo);
@@ -50,7 +50,7 @@ private:
 	const bool myDemo;
 };
 
-class NetworkBookInfoNode::ReadAction : public ZLRunnable {
+class NetworkBookNode::ReadAction : public ZLRunnable {
 
 public:
 	ReadAction(shared_ptr<NetworkLibraryItem> book);
@@ -60,7 +60,7 @@ private:
 	shared_ptr<NetworkLibraryItem> myBook;
 };
 
-class NetworkBookInfoNode::ReadDemoAction : public ZLRunnable {
+class NetworkBookNode::ReadDemoAction : public ZLRunnable {
 
 public:
 	ReadDemoAction(shared_ptr<NetworkLibraryItem> book);
@@ -70,7 +70,7 @@ private:
 	shared_ptr<NetworkLibraryItem> myBook;
 };
 
-class NetworkBookInfoNode::BuyAction : public ZLRunnable {
+class NetworkBookNode::BuyAction : public ZLRunnable {
 
 public:
 	BuyAction(shared_ptr<NetworkLibraryItem> book);
@@ -80,7 +80,7 @@ private:
 	shared_ptr<NetworkLibraryItem> myBook;
 };
 
-class NetworkBookInfoNode::DeleteAction : public ZLRunnable {
+class NetworkBookNode::DeleteAction : public ZLRunnable {
 
 public:
 	DeleteAction(shared_ptr<NetworkLibraryItem> book);
@@ -97,17 +97,17 @@ static const std::string DEMO_SUFFIX = " (фрагмент)";
 static const std::string DEMO_TAG = "Фрагмент";
 
 
-const ZLTypeId NetworkBookInfoNode::TYPE_ID(FBReaderNode::TYPE_ID);
+const ZLTypeId NetworkBookNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
-const ZLTypeId &NetworkBookInfoNode::typeId() const {
+const ZLTypeId &NetworkBookNode::typeId() const {
 	return TYPE_ID;
 }
 
-NetworkBookInfoNode::NetworkBookInfoNode(NetworkContainerNode *parent, shared_ptr<NetworkLibraryItem> book) : FBReaderNode(parent), myBook(book) {
+NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkLibraryItem> book) : FBReaderNode(parent), myBook(book) {
 	init();
 }
 
-void NetworkBookInfoNode::init() {
+void NetworkBookNode::init() {
 	myReadAction = new ReadAction(myBook);
 	myDownloadAction = new DownloadAction(myBook, false);
 	myReadDemoAction = new ReadDemoAction(myBook);
@@ -116,11 +116,11 @@ void NetworkBookInfoNode::init() {
 	myDeleteAction = new DeleteAction(myBook);
 }
 
-std::string NetworkBookInfoNode::title() const {
+std::string NetworkBookNode::title() const {
 	return myBook->Title;
 }
 
-std::string NetworkBookInfoNode::summary() const {
+std::string NetworkBookNode::summary() const {
 	std::string authorsString;
 	const std::vector<NetworkBookItem::AuthorData> authors = bookItem().authors();
 	for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
@@ -136,7 +136,7 @@ std::string NetworkBookInfoNode::summary() const {
 	return authorsString;
 }
 
-void NetworkBookInfoNode::paint(ZLPaintContext &context, int vOffset) {
+void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 	NetworkBookItem &book = bookItem();
 
 	const ZLResource &resource =
@@ -175,12 +175,12 @@ void NetworkBookInfoNode::paint(ZLPaintContext &context, int vOffset) {
 	}
 }
 
-shared_ptr<ZLImage> NetworkBookInfoNode::extractCoverImage() const {
+shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {
 	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->CoverURL);
 	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
 }
 
-bool NetworkBookInfoNode::hasLocalCopy() {
+bool NetworkBookNode::hasLocalCopy() {
 	NetworkBookItem &book = bookItem();
 	if (hasLocalCopy(book, NetworkBookItem::BOOK_EPUB)
 		|| hasLocalCopy(book, NetworkBookItem::BOOK_MOBIPOCKET)
@@ -206,7 +206,7 @@ bool NetworkBookInfoNode::hasLocalCopy() {
 	return false;	
 }
 
-bool NetworkBookInfoNode::hasLocalCopy(NetworkBookItem &book, NetworkBookItem::URLType format) {
+bool NetworkBookNode::hasLocalCopy(NetworkBookItem &book, NetworkBookItem::URLType format) {
 	std::map<NetworkBookItem::URLType, std::string>::const_iterator it = book.urlByType().find(format);
 	if (it == book.urlByType().end()) {
 		return false;
@@ -219,7 +219,7 @@ bool NetworkBookInfoNode::hasLocalCopy(NetworkBookItem &book, NetworkBookItem::U
 	return !fileName.empty() && ZLFile(fileName).exists();
 }
 
-bool NetworkBookInfoNode::NetworkBookInfoNode::hasDirectLink() {
+bool NetworkBookNode::NetworkBookNode::hasDirectLink() {
 	NetworkBookItem &book = bookItem();
 	if (book.bestBookFormat() != NetworkBookItem::NONE) {
 		return true;
@@ -234,7 +234,7 @@ bool NetworkBookInfoNode::NetworkBookInfoNode::hasDirectLink() {
 	return false;
 }
 
-bool NetworkBookInfoNode::canBePurchased() {
+bool NetworkBookNode::canBePurchased() {
 	NetworkBookItem &book = bookItem();
 	if (book.authenticationManager().isNull()) {
 		return false;
@@ -246,19 +246,19 @@ bool NetworkBookInfoNode::canBePurchased() {
 	return mgr.needPurchase(book);
 }
 
-NetworkBookInfoNode::ReadAction::ReadAction(shared_ptr<NetworkLibraryItem> book) : myBook(book) {
+NetworkBookNode::ReadAction::ReadAction(shared_ptr<NetworkLibraryItem> book) : myBook(book) {
 }
 
-void NetworkBookInfoNode::ReadAction::run() {
+void NetworkBookNode::ReadAction::run() {
 	NetworkBookItem &book = (NetworkBookItem &) *myBook;
 
 	NetworkBookItem::URLType format = NetworkBookItem::NONE;
 
-	if (NetworkBookInfoNode::hasLocalCopy(book, NetworkBookItem::BOOK_EPUB)) {
+	if (NetworkBookNode::hasLocalCopy(book, NetworkBookItem::BOOK_EPUB)) {
 		format = NetworkBookItem::BOOK_EPUB;
-	} else if (NetworkBookInfoNode::hasLocalCopy(book, NetworkBookItem::BOOK_MOBIPOCKET)) {
+	} else if (NetworkBookNode::hasLocalCopy(book, NetworkBookItem::BOOK_MOBIPOCKET)) {
 		format = NetworkBookItem::BOOK_MOBIPOCKET;
-	} else if (NetworkBookInfoNode::hasLocalCopy(book, NetworkBookItem::BOOK_FB2_ZIP)) {
+	} else if (NetworkBookNode::hasLocalCopy(book, NetworkBookItem::BOOK_FB2_ZIP)) {
 		format = NetworkBookItem::BOOK_FB2_ZIP;
 	}
 
@@ -286,10 +286,10 @@ void NetworkBookInfoNode::ReadAction::run() {
 	}
 }
 
-NetworkBookInfoNode::DownloadAction::DownloadAction(shared_ptr<NetworkLibraryItem> book, bool demo) : myBook(book), myDemo(demo) {
+NetworkBookNode::DownloadAction::DownloadAction(shared_ptr<NetworkLibraryItem> book, bool demo) : myBook(book), myDemo(demo) {
 }
 
-void NetworkBookInfoNode::DownloadAction::run() {
+void NetworkBookNode::DownloadAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
 		return;
 	}
@@ -349,10 +349,10 @@ void NetworkBookInfoNode::DownloadAction::run() {
 	fbreader.refreshWindow();
 }
 
-NetworkBookInfoNode::ReadDemoAction::ReadDemoAction(shared_ptr<NetworkLibraryItem> book) : myBook(book) {
+NetworkBookNode::ReadDemoAction::ReadDemoAction(shared_ptr<NetworkLibraryItem> book) : myBook(book) {
 };
 
-void NetworkBookInfoNode::ReadDemoAction::run() {
+void NetworkBookNode::ReadDemoAction::run() {
 	NetworkBookItem &book = (NetworkBookItem &) *myBook;
 	NetworkBookItem::URLType format = book.bestDemoFormat();
 	if (format == NetworkBookItem::NONE) {
@@ -375,10 +375,10 @@ void NetworkBookInfoNode::ReadDemoAction::run() {
 	}
 }
 
-NetworkBookInfoNode::BuyAction::BuyAction(shared_ptr<NetworkLibraryItem> book) : myBook(book) {
+NetworkBookNode::BuyAction::BuyAction(shared_ptr<NetworkLibraryItem> book) : myBook(book) {
 }
 
-void NetworkBookInfoNode::BuyAction::run() {
+void NetworkBookNode::BuyAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	NetworkBookItem &book = (NetworkBookItem &) *myBook;
 	if (book.authenticationManager().isNull()) {
@@ -422,10 +422,10 @@ void NetworkBookInfoNode::BuyAction::run() {
 	fbreader.refreshWindow();
 }
 
-NetworkBookInfoNode::DeleteAction::DeleteAction(shared_ptr<NetworkLibraryItem> book) : myBook(book) {
+NetworkBookNode::DeleteAction::DeleteAction(shared_ptr<NetworkLibraryItem> book) : myBook(book) {
 }
 
-void NetworkBookInfoNode::DeleteAction::removeFormat(NetworkBookItem &book, NetworkBookItem::URLType format) {
+void NetworkBookNode::DeleteAction::removeFormat(NetworkBookItem &book, NetworkBookItem::URLType format) {
 	std::map<NetworkBookItem::URLType, std::string>::const_iterator it = book.urlByType().find(format);
 	if (it == book.urlByType().end()) {
 		return;
@@ -441,7 +441,7 @@ void NetworkBookInfoNode::DeleteAction::removeFormat(NetworkBookItem &book, Netw
 	}
 }
 
-void NetworkBookInfoNode::DeleteAction::run() {
+void NetworkBookNode::DeleteAction::run() {
 	NetworkBookItem &book = (NetworkBookItem &) *myBook;
 
 	ZLResourceKey boxKey("deleteLocalCopyBox");

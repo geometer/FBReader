@@ -29,7 +29,7 @@ FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent,
 		ptr->item().onDisplayItem();
 		return ptr;
 	} else if (item->isInstanceOf(NetworkBookItem::TYPE_ID)) {
-		return new NetworkBookInfoNode(parent, item);
+		return new NetworkBookNode(parent, item);
 	}
 	return 0;
 }
@@ -78,12 +78,12 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 
 		if (seriesTitle.empty()) {
 			seriesNode = 0;
-			new NetworkBookInfoNode(parent, *it);
+			new NetworkBookNode(parent, *it);
 		} else {
 			if (seriesNode == 0 || seriesNode->seriesTitle() != seriesTitle) {
 				seriesNode = new NetworkSeriesNode(parent, seriesTitle, summaryType);
 			}
-			new NetworkBookInfoNode(seriesNode, *it);
+			new NetworkBookNode(seriesNode, *it);
 		}
 	}	
 }

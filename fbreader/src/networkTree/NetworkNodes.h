@@ -231,7 +231,7 @@ private:
 	mutable std::string mySummary;
 };
 
-class NetworkBookInfoNode : public FBReaderNode {
+class NetworkBookNode : public FBReaderNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -244,7 +244,7 @@ private:
 	class DeleteAction;
 
 private:
-	NetworkBookInfoNode(NetworkContainerNode *parent, shared_ptr<NetworkLibraryItem> book);
+	NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkLibraryItem> book);
 
 private:
 	void init();
@@ -279,8 +279,8 @@ private:
 	shared_ptr<ZLRunnable> myDeleteAction;
 };
 
-inline shared_ptr<NetworkLibraryItem> NetworkBookInfoNode::book() { return myBook; }
-inline const NetworkBookItem &NetworkBookInfoNode::bookItem() const { return (const NetworkBookItem&)*myBook; }
-inline NetworkBookItem &NetworkBookInfoNode::bookItem() { return (NetworkBookItem&)*myBook; }
+inline shared_ptr<NetworkLibraryItem> NetworkBookNode::book() { return myBook; }
+inline const NetworkBookItem &NetworkBookNode::bookItem() const { return (const NetworkBookItem&)*myBook; }
+inline NetworkBookItem &NetworkBookNode::bookItem() { return (NetworkBookItem&)*myBook; }
 
 #endif /* __NETWORKNODES_H__ */

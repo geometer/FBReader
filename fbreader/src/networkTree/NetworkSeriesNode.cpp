@@ -46,7 +46,7 @@ std::string NetworkSeriesNode::summary() const {
 			const std::vector<ZLBlockTreeNode*> &books = children();
 			for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
 				const NetworkBookItem &book = 
-					(const NetworkBookItem&)*((NetworkBookInfoNode*)*it)->book();
+					(const NetworkBookItem&)*((NetworkBookNode*)*it)->book();
 				const std::vector<NetworkBookItem::AuthorData> &authors = book.authors();
 				for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
 					if (authorSet.find(*it) == authorSet.end()) {
