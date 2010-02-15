@@ -54,12 +54,12 @@ public:
 	std::string currentAccount();
 
 	std::string reloadPurchasedBooks();
-	void collectPurchasedBooks(NetworkLibraryItemList &list);
+	void collectPurchasedBooks(NetworkLibraryItem::List &list);
 
 private:
-	shared_ptr<ZLExecutionData> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkLibraryItemList &purchasedBooksList);
-	void loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkLibraryItemList &purchasedBooksList);
-	void loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkLibraryItemList &purchasedBooksList);
+	shared_ptr<ZLExecutionData> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList);
+	void loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList);
+	void loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList);
 
 	shared_ptr<ZLExecutionData> loadAccount(std::string &dummy1);
 	void loadAccountOnError();
@@ -85,7 +85,7 @@ private:
 
 	std::string myInitializedDataSid;
 	std::set<std::string> myPurchasedBooksIds;
-	NetworkLibraryItemList myPurchasedBooksList;
+	NetworkLibraryItem::List myPurchasedBooksList;
 	std::string myAccount;
 
 	ZLNetworkSSLCertificate myCertificate;

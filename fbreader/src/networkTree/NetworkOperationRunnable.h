@@ -199,12 +199,12 @@ private:
 class LoadSubCatalogRunnable : public NetworkOperationRunnable {
 
 public:
-	LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkLibraryItemList &children);
+	LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkLibraryItem::List &children);
 	void run();
 
 private:
 	NetworkCatalogItem &myItem;
-	NetworkLibraryItemList &myChildren;
+	NetworkLibraryItem::List &myChildren;
 };
 
 #endif /* __NETWORKOPERATIONRUNNABLE_H__ */

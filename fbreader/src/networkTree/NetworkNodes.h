@@ -62,7 +62,7 @@ friend class NetworkNodesFactory;
 
 public:
 	NetworkCatalogItem &item();
-	const NetworkLibraryItemList &childrenItems();
+	const NetworkLibraryItem::List &childrenItems();
 
 	void updateChildren();
 
@@ -81,7 +81,7 @@ protected:
 
 private:
 	shared_ptr<NetworkLibraryItem> myItem;
-	NetworkLibraryItemList myChildrenItems;
+	NetworkLibraryItem::List myChildrenItems;
 	shared_ptr<ZLRunnable> myExpandCatalogAction;
 	shared_ptr<ZLRunnable> myOpenInBrowserAction;
 	shared_ptr<ZLRunnable> myReloadAction;

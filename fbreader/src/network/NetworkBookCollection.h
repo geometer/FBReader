@@ -25,7 +25,7 @@
 #include "NetworkComparators.h"
 
 
-typedef std::map<NetworkBookItem::AuthorData, NetworkLibraryItemList, NetworkAuthorComparator> NetworkAuthorBooksMap;
+typedef std::map<NetworkBookItem::AuthorData, NetworkLibraryItem::List, NetworkAuthorComparator> NetworkAuthorBooksMap;
 
 
 class NetworkBookCollection {
@@ -36,13 +36,13 @@ public:
 public:
 	void addBook(shared_ptr<NetworkLibraryItem> bookPtr);
 
-	const NetworkLibraryItemList &books() const;
+	const NetworkLibraryItem::List &books() const;
 	bool empty() const;
 
 	const NetworkAuthorBooksMap &authorBooksMap();
 
 private:
-	NetworkLibraryItemList myBookList;
+	NetworkLibraryItem::List myBookList;
 	std::map<NetworkBookItem::AuthorData, unsigned int> myAuthorRates;
 	shared_ptr<NetworkAuthorComparator> myAuthorComparator;
 	shared_ptr<NetworkAuthorBooksMap> myAuthorBooksMap;
@@ -52,7 +52,7 @@ private: // disable copying
 	const NetworkBookCollection &operator = (const NetworkBookCollection &);
 };
 
-inline const NetworkLibraryItemList &NetworkBookCollection::books() const { return myBookList; }
+inline const NetworkLibraryItem::List &NetworkBookCollection::books() const { return myBookList; }
 inline bool NetworkBookCollection::empty() const { return myBookList.empty(); }
 
 #endif /* __NETWORKBOOKCOLLECTION_H__ */

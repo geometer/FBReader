@@ -210,7 +210,7 @@ void AdvancedSearchRunnable::run() {
 }
 
 
-LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkLibraryItemList &children) : 
+LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkLibraryItem::List &children) : 
 	NetworkOperationRunnable("loadSubCatalog"), 
 	myItem(item), 
 	myChildren(children) {

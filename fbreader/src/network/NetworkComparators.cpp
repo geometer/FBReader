@@ -26,7 +26,7 @@ bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkLibraryItem
 		bookPtr1->isInstanceOf(NetworkBookItem::TYPE_ID);
 
 	if (!book0isABook && !book1isABook) {
-		return bookPtr0->title() < bookPtr1->title();
+		return bookPtr0->Title < bookPtr1->Title;
 	}
 	if (!book0isABook || !book1isABook) {
 		return !book0isABook;
@@ -67,11 +67,11 @@ bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkLibraryItem
 				return diff < 0;
 			}
 		}
-		return book0.title() < book1.title();
+		return book0.Title < book1.Title;
 	}
 
-	const std::string &book0Key = book0HasSeriesTitle ? book0.seriesTitle() : book0.title();
-	const std::string &book1Key = book1HasSeriesTitle ? book1.seriesTitle() : book1.title();
+	const std::string &book0Key = book0HasSeriesTitle ? book0.seriesTitle() : book0.Title;
+	const std::string &book1Key = book1HasSeriesTitle ? book1.seriesTitle() : book1.Title;
 	const int comp = book0Key.compare(book1Key);
 	if (comp != 0) {
 		return comp < 0;

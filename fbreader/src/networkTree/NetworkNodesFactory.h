@@ -40,7 +40,7 @@ private:
 public:
 	static FBReaderNode *createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition = -1);
 	static void createSubnodes(SearchResultNode *parent, NetworkBookCollection &books);
-	static void fillAuthorNode(NetworkContainerNode *parent, const NetworkLibraryItemList &books);
+	static void fillAuthorNode(NetworkContainerNode *parent, const NetworkLibraryItem::List &books);
 };
 
 #endif /* __NETWORKNODESFACTORY_H__ */

@@ -38,7 +38,7 @@ public:
 	);
 
 private:
-	std::string loadChildren(NetworkLibraryItemList &children);
+	std::string loadChildren(NetworkLibraryItem::List &children);
 };
 
 #endif /* __OPDSCATALOGITEM_H__ */

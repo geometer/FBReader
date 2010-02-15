@@ -31,7 +31,7 @@ class NetworkAuthenticationManager;
 class LitResDataParser : public ZLXMLReader {
 
 public:
-	LitResDataParser(const LitResLink &link, NetworkLibraryItemList &books);
+	LitResDataParser(const LitResLink &link, NetworkLibraryItem::List &books);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
@@ -55,7 +55,7 @@ private:
 private:
 	const LitResLink &myLink;
 
-	NetworkLibraryItemList &myBooks;
+	NetworkLibraryItem::List &myBooks;
 	std::string myBuffer;
 	shared_ptr<NetworkLibraryItem> myCurrentBook;
 	unsigned int myIndex;

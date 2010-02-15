@@ -100,12 +100,9 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 }
 
 shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
-	shared_ptr<NetworkLibraryItem> bookPtr = new NetworkBookItem(entry.id()->uri(), myIndex++);
-	NetworkBookItem &book = (NetworkBookItem &) *bookPtr;
-	
-	book.setAuthenticationManager(myData.Link.authenticationManager());
+	shared_ptr<NetworkLibraryItem> bookPtr = new NetworkBookItem(entry.id()->uri(), myIndex++, entry.title(), "");
+	NetworkBookItem &book = (NetworkBookItem&)*bookPtr;
 
-	book.setTitle(entry.title());
 	book.setLanguage(entry.dcLanguage());
 	if (!entry.dcIssued().isNull()) {
 		book.setDate(entry.dcIssued()->getDateTime(true));
@@ -117,6 +114,7 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &en
 		book.tags().push_back(category.term());
 	}
 
+	std::string coverURL;
 	for (size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
 		const std::string &href = link.href();
@@ -124,16 +122,16 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &en
 		const std::string &type = link.type();
 		if (rel == OPDSConstants::REL_COVER ||
 				rel == OPDSConstants::REL_STANZA_COVER) {
-			if (book.coverURL().empty() && 
+			if (coverURL.empty() && 
 					(type == OPDSConstants::MIME_IMG_PNG ||
 					 type == OPDSConstants::MIME_IMG_JPEG)) {
-				book.setCoverURL(href);
+				coverURL = href;
 			}
 		} else if (rel == OPDSConstants::REL_THUMBNAIL ||
 							 rel == OPDSConstants::REL_STANZA_THUMBNAIL) {
 			if (type == OPDSConstants::MIME_IMG_PNG ||
 					type == OPDSConstants::MIME_IMG_JPEG) {
-				book.setCoverURL(href);
+				coverURL = href;
 			}
 		} else if (rel == OPDSConstants::REL_ACQUISITION || rel.empty()) {
 			if (type == OPDSConstants::MIME_APP_EPUB) {
@@ -145,6 +143,10 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &en
 			}
 		}
 	}
+
+	book.CoverURL = coverURL;
+
+	book.setAuthenticationManager(myData.Link.authenticationManager());
 
 	for (size_t i = 0; i < entry.authors().size(); ++i) {
 		ATOMAuthor &author = *(entry.authors()[i]);

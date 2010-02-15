@@ -117,7 +117,7 @@ void NetworkBookInfoNode::init() {
 }
 
 std::string NetworkBookInfoNode::title() const {
-	return bookItem().title();
+	return myBook->Title;
 }
 
 std::string NetworkBookInfoNode::summary() const {
@@ -176,7 +176,7 @@ void NetworkBookInfoNode::paint(ZLPaintContext &context, int vOffset) {
 }
 
 shared_ptr<ZLImage> NetworkBookInfoNode::extractCoverImage() const {
-	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->coverURL());
+	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->CoverURL);
 	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
 }
 
@@ -324,7 +324,7 @@ void NetworkBookInfoNode::DownloadAction::run() {
 	if (downloaderBook.isNull()) {
 		ZLFile(fileName).remove();
 		ZLResourceKey boxKey("cantOpenDownloadedFile");
-		const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book.title());
+		const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book.Title);
 		ZLDialogManager::Instance().errorBox(boxKey, message);
 		fbreader.refreshWindow();
 		return;
@@ -334,7 +334,7 @@ void NetworkBookInfoNode::DownloadAction::run() {
 	for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = book.authors().begin(); it != book.authors().end(); ++it) {
 		downloaderBook->addAuthor(it->DisplayName, it->SortKey);
 	}
-	downloaderBook->setTitle(myDemo ? book.title() + DEMO_SUFFIX : book.title());
+	downloaderBook->setTitle(myDemo ? book.Title + DEMO_SUFFIX : book.Title);
 	downloaderBook->setLanguage(book.language());
 	for (std::vector<std::string>::const_iterator it = book.tags().begin(); it != book.tags().end(); ++it) {
 		downloaderBook->addTag(*it);
@@ -399,7 +399,7 @@ void NetworkBookInfoNode::BuyAction::run() {
 		}
 	}
 	ZLResourceKey boxKey("purchaseConfirmBox");
-	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book.title());
+	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book.Title);
 	const int code = ZLDialogManager::Instance().questionBox(boxKey, message, ZLResourceKey("buy"), ZLResourceKey("buyAndDownload"), ZLDialogManager::CANCEL_BUTTON);
 	if (code == 2) {
 		return;
@@ -445,7 +445,7 @@ void NetworkBookInfoNode::DeleteAction::run() {
 	NetworkBookItem &book = (NetworkBookItem &) *myBook;
 
 	ZLResourceKey boxKey("deleteLocalCopyBox");
-	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book.title());
+	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book.Title);
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
 		return;
 	}

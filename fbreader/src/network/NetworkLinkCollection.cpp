@@ -286,7 +286,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std:
 			if (!searchData.Items.empty() && result.isNull()) {
 				result = new NetworkBookCollection();
 			}
-			for (NetworkLibraryItemList::const_iterator kt = searchData.Items.begin(); kt != searchData.Items.end(); ++kt) {
+			for (NetworkLibraryItem::List::const_iterator kt = searchData.Items.begin(); kt != searchData.Items.end(); ++kt) {
 				result->addBook(*kt);
 			}
 		}
@@ -335,7 +335,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 			if (!searchData.Items.empty() && result.isNull()) {
 				result = new NetworkBookCollection();
 			}
-			for (NetworkLibraryItemList::const_iterator kt = searchData.Items.begin(); kt != searchData.Items.end(); ++kt) {
+			for (NetworkLibraryItem::List::const_iterator kt = searchData.Items.begin(); kt != searchData.Items.end(); ++kt) {
 				result->addBook(*kt);
 			}
 		}

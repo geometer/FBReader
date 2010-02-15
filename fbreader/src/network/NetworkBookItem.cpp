@@ -30,8 +30,15 @@ bool NetworkBookItem::AuthorData::operator < (const AuthorData &data) const {
 	return (sComp < 0) || (sComp == 0 && DisplayName < data.DisplayName);
 }
 
-NetworkBookItem::NetworkBookItem(const std::string &id, unsigned int index) : 
-	myIndex(index), myId(id) {
+NetworkBookItem::NetworkBookItem(
+	const std::string &id,
+	unsigned int index,
+	const std::string &title,
+	const std::string &coverURL
+) : 
+	NetworkLibraryItem(title, coverURL),
+	myIndex(index),
+	myId(id) {
 }
 
 NetworkBookItem::NetworkBookItem(const NetworkBookItem &book) :

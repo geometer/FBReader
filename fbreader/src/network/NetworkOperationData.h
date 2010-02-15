@@ -29,7 +29,7 @@ struct NetworkOperationData {
 	void clear();
 
 	const NetworkLink &Link;
-	NetworkLibraryItemList Items;
+	NetworkLibraryItem::List Items;
 	std::string ResumeURI;
 	size_t ResumeCount;
 };

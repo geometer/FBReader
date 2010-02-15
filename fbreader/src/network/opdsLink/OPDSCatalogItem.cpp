@@ -38,7 +38,7 @@ OPDSCatalogItem::OPDSCatalogItem(
 ) : NetworkCatalogItem(link, url, htmlURL, title, summary, coverURL, visibility) {
 }
 
-std::string OPDSCatalogItem::loadChildren(NetworkLibraryItemList &children) {
+std::string OPDSCatalogItem::loadChildren(NetworkLibraryItem::List &children) {
 	NetworkOperationData data(Link);
 
 	shared_ptr<ZLExecutionData> networkData =

@@ -66,7 +66,7 @@ std::string LitResDataParser::makeDemoUrl(const std::string &bookId) const {
 	return url;
 }
 
-LitResDataParser::LitResDataParser(const LitResLink &link, NetworkLibraryItemList &books) : 
+LitResDataParser::LitResDataParser(const LitResLink &link, NetworkLibraryItem::List &books) : 
 	myLink(link),
 	myBooks(books), 
 	myIndex(0) {
@@ -97,10 +97,10 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 	case CATALOG: 
 		if (!closed && TAG_BOOK == tag) {
 			const std::string bookId = stringAttributeValue(attributes, "hub_id");
-			myCurrentBook = new NetworkBookItem(bookId, myIndex++);
+			myCurrentBook = new NetworkBookItem(bookId, myIndex++, "", "");
 			currentBook().setAuthenticationManager(myLink.authenticationManager());
 
-			currentBook().setCoverURL(stringAttributeValue(attributes, "cover_preview"));
+			currentBook().CoverURL = stringAttributeValue(attributes, "cover_preview");
 
 			std::string url = stringAttributeValue(attributes, "url");
 			if (!url.empty()) {
@@ -210,7 +210,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 	case BOOK_TITLE: 
 		if (closed && TAG_BOOK_TITLE == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
-			currentBook().setTitle(myBuffer);
+			currentBook().Title = myBuffer;
 		}
 		break;
 	case ANNOTATION: 

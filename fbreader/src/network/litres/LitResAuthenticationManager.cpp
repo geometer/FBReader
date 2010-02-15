@@ -194,7 +194,7 @@ std::string LitResAuthenticationManager::downloadLink(const NetworkBookItem &boo
 	return myLink.litresUrl("pages/catalit_download_book/" + query);
 }
 
-void LitResAuthenticationManager::collectPurchasedBooks(NetworkLibraryItemList &list) {
+void LitResAuthenticationManager::collectPurchasedBooks(NetworkLibraryItem::List &list) {
 	list.assign(myPurchasedBooksList.begin(), myPurchasedBooksList.end());
 }
 
@@ -251,7 +251,7 @@ std::string LitResAuthenticationManager::initialize() {
 	return "";
 }
 
-shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkLibraryItemList &purchasedBooksList) {
+shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList) {
 	const std::string &sid = mySidOption.value();
 	purchasedBooksIds.clear();
 	purchasedBooksList.clear();
@@ -277,13 +277,13 @@ shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std:
 	);
 }
 
-void LitResAuthenticationManager::loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkLibraryItemList &purchasedBooksList) {
+void LitResAuthenticationManager::loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList) {
 	purchasedBooksIds.clear();
 	purchasedBooksList.clear();
 }
 
-void LitResAuthenticationManager::loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkLibraryItemList &purchasedBooksList) {
-	for (NetworkLibraryItemList::iterator it = purchasedBooksList.begin(); it != purchasedBooksList.end(); ++it) {
+void LitResAuthenticationManager::loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList) {
+	for (NetworkLibraryItem::List::iterator it = purchasedBooksList.begin(); it != purchasedBooksList.end(); ++it) {
 		NetworkBookItem &book = (NetworkBookItem&)**it;
 		book.setIndex(0);
 		purchasedBooksIds.insert(book.id());
@@ -383,7 +383,7 @@ std::string LitResAuthenticationManager::reloadPurchasedBooks() {
 	}
 
 	std::set<std::string> purchasedBooksIds;
-	NetworkLibraryItemList purchasedBooksList;
+	NetworkLibraryItem::List purchasedBooksList;
 
 	shared_ptr<ZLExecutionData> networkData = loadPurchasedBooks(purchasedBooksIds, purchasedBooksList);
 

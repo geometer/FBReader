@@ -33,11 +33,14 @@ class NetworkLink;
 
 class NetworkLibraryItem : public ZLObjectWithRTTI {
 
+public:
+	typedef std::vector<shared_ptr<NetworkLibraryItem> > List;
+
 protected:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	NetworkLibraryItem();
+	NetworkLibraryItem(const std::string &title, const std::string &coverURL);
 	explicit NetworkLibraryItem(const NetworkLibraryItem &item);
 
 public:
@@ -45,24 +48,13 @@ public:
 
 	virtual const ZLTypeId &typeId() const = 0;
 
-	const std::string &title() const;
-	const std::string &coverURL() const;
-
-	void setTitle(const std::string &title);
-	void setCoverURL(const std::string &coverURL);
-
-private:
-	std::string myTitle;
-	std::string myCoverURL;
+public:
+	/*const*/ std::string Title;
+	/*const*/ std::string CoverURL;
 
 private: // disable copying
 	const NetworkLibraryItem &operator = (const NetworkLibraryItem &);
 };
-
-inline const std::string &NetworkLibraryItem::title() const { return myTitle; }
-inline const std::string &NetworkLibraryItem::coverURL() const { return myCoverURL; }
-
-typedef std::vector<shared_ptr<NetworkLibraryItem> > NetworkLibraryItemList;
 
 class NetworkCatalogItem : public NetworkLibraryItem {
 
@@ -96,7 +88,7 @@ public:
 	// method is called each time the View Node is created for the Item.
 	virtual void onDisplayItem();
 	// returns error message
-	virtual std::string loadChildren(NetworkLibraryItemList &children) = 0;
+	virtual std::string loadChildren(List &children) = 0;
 
 	virtual CatalogType catalogType() const;
 
@@ -136,7 +128,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	NetworkBookItem(const std::string &id, unsigned int index);
+	NetworkBookItem(const std::string &id, unsigned int index, const std::string &title, const std::string &coverURL);
 	explicit NetworkBookItem(const NetworkBookItem &book);
 
 	const ZLTypeId &typeId() const;

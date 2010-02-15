@@ -252,7 +252,7 @@ void NetworkView::updateAccountDependents() {
 void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 	std::set<ZLBlockTreeNode*> nodesToDelete;
 
-	const NetworkLibraryItemList &nodeItems = node.childrenItems();
+	const NetworkLibraryItem::List &nodeItems = node.childrenItems();
 
 	ZLBlockTreeNode::List nodeChildren = node.children();
 	ZLBlockTreeNode::List::iterator nodeIt = nodeChildren.begin();

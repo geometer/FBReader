@@ -30,13 +30,12 @@ NetworkCatalogItem::NetworkCatalogItem(
 	const std::string &coverURL,
 	VisibilityType visibility
 ) :
+	NetworkLibraryItem(title, coverURL),
 	Link(link),
 	URL(url),
 	HtmlURL(htmlURL),
 	Summary(summary),
 	Visibility(visibility) {
-	setTitle(title);
-	setCoverURL(coverURL);
 }
 
 const ZLTypeId &NetworkCatalogItem::typeId() const {

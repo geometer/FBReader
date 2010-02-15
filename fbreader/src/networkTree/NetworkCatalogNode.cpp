@@ -105,7 +105,7 @@ NetworkCatalogItem &NetworkCatalogNode::item() {
 	return (NetworkCatalogItem&)*myItem;
 }
 
-const NetworkLibraryItemList &NetworkCatalogNode::childrenItems() {
+const NetworkLibraryItem::List &NetworkCatalogNode::childrenItems() {
 	return myChildrenItems;
 }
 
@@ -114,7 +114,7 @@ const ZLTypeId &NetworkCatalogNode::typeId() const {
 }
 
 std::string NetworkCatalogNode::title() const {
-	return myItem->title();
+	return myItem->Title;
 }
 
 std::string NetworkCatalogNode::summary() const {
@@ -154,7 +154,7 @@ void NetworkCatalogNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
 }
 
 shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
-	const std::string &url = myItem->coverURL();
+	const std::string &url = myItem->CoverURL;
 
 	if (url.empty()) {
 		return lastResortCoverImage();
@@ -193,7 +193,7 @@ void NetworkCatalogNode::updateChildren() {
 	}
 
 	bool hasSubcatalogs = false;
-	for (NetworkLibraryItemList::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
+	for (NetworkLibraryItem::List::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
 		if ((*it)->typeId() == NetworkCatalogItem::TYPE_ID) {
 			hasSubcatalogs = true;
 			break;
@@ -201,7 +201,7 @@ void NetworkCatalogNode::updateChildren() {
 	}
 
 	if (hasSubcatalogs) {
-		for (NetworkLibraryItemList::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
+		for (NetworkLibraryItem::List::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
 			NetworkNodesFactory::createNetworkNode(this, *it);
 		}
 	} else {
