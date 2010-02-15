@@ -138,9 +138,6 @@ public:
 
 	const ZLTypeId &typeId() const;
 
-	//std::string fileName(URLType format) const;
-	const std::string &id() const;
-
 public:
 	unsigned int index() const;
 	void setIndex(unsigned int index);
@@ -170,7 +167,9 @@ public:
 
 private:
 	unsigned int myIndex;
-	const std::string myId;
+
+public:
+	const std::string Id;
 
 private:
 	std::string myLanguage;

@@ -40,14 +40,14 @@ NetworkBookItem::NetworkBookItem(
 ) : 
 	NetworkItem(title, summary, urlByType),
 	myIndex(index),
-	myId(id),
+	Id(id),
 	myLanguage(language) {
 }
 
 NetworkBookItem::NetworkBookItem(const NetworkBookItem &book) :
 	NetworkItem(book.Title, book.Summary, book.URLByType), 
 	myIndex(book.myIndex), 
-	myId(book.myId), 
+	Id(book.Id), 
 	myLanguage(book.myLanguage), 
 	myDate(book.myDate), 
 	mySeriesTitle(book.mySeriesTitle), 
@@ -60,10 +60,6 @@ NetworkBookItem::NetworkBookItem(const NetworkBookItem &book) :
 
 const ZLTypeId &NetworkBookItem::typeId() const {
 	return TYPE_ID;
-}
-
-const std::string &NetworkBookItem::id() const {
-	return myId;
 }
 
 /*std::string NetworkBookItem::fileName(URLType format) const {

@@ -123,7 +123,7 @@ void LitResAuthenticationManager::logOut() {
 }
 
 std::string LitResAuthenticationManager::networkBookId(const NetworkBookItem &book) {
-	return "http://robot.litres.ru/pages/catalit_download_book/?art=" + book.id();
+	return "http://robot.litres.ru/pages/catalit_download_book/?art=" + book.Id;
 }
 
 NetworkItem::URLType LitResAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
@@ -135,7 +135,7 @@ const std::string &LitResAuthenticationManager::currentUserName() {
 }
 
 bool LitResAuthenticationManager::needPurchase(const NetworkBookItem &book) {
-	return myPurchasedBooksIds.count(book.id()) == 0;
+	return myPurchasedBooksIds.count(book.Id) == 0;
 }
 
 std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
@@ -149,7 +149,7 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
 
 	std::string query;
 	ZLNetworkUtil::appendParameter(query, "sid", sid);
-	ZLNetworkUtil::appendParameter(query, "art", book.id());
+	ZLNetworkUtil::appendParameter(query, "art", book.Id);
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 		myLink.litresUrl("pages/purchase_book/" + query),
@@ -172,11 +172,11 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
 		if (!error.empty()) {
 			return error;
 		}
-		if (bookId != book.id()) {
+		if (bookId != book.Id) {
 			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, SiteName);
 		}
 	}
-	myPurchasedBooksIds.insert(book.id());
+	myPurchasedBooksIds.insert(book.Id);
 	NetworkBookItem *bookCopy = new NetworkBookItem(book);
 	bookCopy->setIndex(0);
 	myPurchasedBooksList.push_back(bookCopy);
@@ -190,7 +190,7 @@ std::string LitResAuthenticationManager::downloadLink(const NetworkBookItem &boo
 	}
 	std::string query;
 	ZLNetworkUtil::appendParameter(query, "sid", sid);
-	ZLNetworkUtil::appendParameter(query, "art", book.id());
+	ZLNetworkUtil::appendParameter(query, "art", book.Id);
 	return myLink.litresUrl("pages/catalit_download_book/" + query);
 }
 
@@ -286,7 +286,7 @@ void LitResAuthenticationManager::loadPurchasedBooksOnSuccess(std::set<std::stri
 	for (NetworkItem::List::iterator it = purchasedBooksList.begin(); it != purchasedBooksList.end(); ++it) {
 		NetworkBookItem &book = (NetworkBookItem&)**it;
 		book.setIndex(0);
-		purchasedBooksIds.insert(book.id());
+		purchasedBooksIds.insert(book.Id);
 	}
 }
 
