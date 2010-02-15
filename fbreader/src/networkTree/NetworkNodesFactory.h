@@ -22,7 +22,7 @@
 
 #include <ZLBlockTreeView.h>
 
-#include "../network/NetworkLibraryItems.h"
+#include "../network/NetworkItems.h"
 
 
 class NetworkBookCollection;
@@ -38,9 +38,9 @@ private:
 	NetworkNodesFactory();
 
 public:
-	static FBReaderNode *createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition = -1);
+	static FBReaderNode *createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = -1);
 	static void createSubnodes(SearchResultNode *parent, NetworkBookCollection &books);
-	static void fillAuthorNode(NetworkContainerNode *parent, const NetworkLibraryItem::List &books);
+	static void fillAuthorNode(NetworkContainerNode *parent, const NetworkItem::List &books);
 };
 
 #endif /* __NETWORKNODESFACTORY_H__ */

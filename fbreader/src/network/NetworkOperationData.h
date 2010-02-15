@@ -20,7 +20,7 @@
 #ifndef __NETWORKOPERATIONDATA_H__
 #define __NETWORKOPERATIONDATA_H__
 
-#include "NetworkLibraryItems.h"
+#include "NetworkItems.h"
 
 class NetworkLink;
 
@@ -29,7 +29,7 @@ struct NetworkOperationData {
 	void clear();
 
 	const NetworkLink &Link;
-	NetworkLibraryItem::List Items;
+	NetworkItem::List Items;
 	std::string ResumeURI;
 	size_t ResumeCount;
 };

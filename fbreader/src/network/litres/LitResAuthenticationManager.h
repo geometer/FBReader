@@ -25,7 +25,7 @@
 #include <ZLNetworkSSLCertificate.h>
 
 #include "../NetworkAuthenticationManager.h"
-#include "../NetworkLibraryItems.h"
+#include "../NetworkItems.h"
 
 class LitResLink;
 
@@ -41,7 +41,7 @@ public:
 	bool skipIPSupported();
 
 	std::string networkBookId(const NetworkBookItem &book); 
-	NetworkBookItem::URLType downloadLinkType(const NetworkBookItem &book);
+	NetworkItem::URLType downloadLinkType(const NetworkBookItem &book);
 
 	const std::string &currentUserName();
 	bool needsInitialization();
@@ -54,12 +54,12 @@ public:
 	std::string currentAccount();
 
 	std::string reloadPurchasedBooks();
-	void collectPurchasedBooks(NetworkLibraryItem::List &list);
+	void collectPurchasedBooks(NetworkItem::List &list);
 
 private:
-	shared_ptr<ZLExecutionData> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList);
-	void loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList);
-	void loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList);
+	shared_ptr<ZLExecutionData> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
+	void loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
+	void loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
 
 	shared_ptr<ZLExecutionData> loadAccount(std::string &dummy1);
 	void loadAccountOnError();
@@ -85,7 +85,7 @@ private:
 
 	std::string myInitializedDataSid;
 	std::set<std::string> myPurchasedBooksIds;
-	NetworkLibraryItem::List myPurchasedBooksList;
+	NetworkItem::List myPurchasedBooksList;
 	std::string myAccount;
 
 	ZLNetworkSSLCertificate myCertificate;

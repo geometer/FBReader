@@ -20,7 +20,7 @@
 #ifndef __OPDSCATALOGITEM_H__
 #define __OPDSCATALOGITEM_H__
 
-#include "../NetworkLibraryItems.h"
+#include "../NetworkItems.h"
 
 class OPDSLink;
 
@@ -38,7 +38,7 @@ public:
 	);
 
 private:
-	std::string loadChildren(NetworkLibraryItem::List &children);
+	std::string loadChildren(NetworkItem::List &children);
 };
 
 #endif /* __OPDSCATALOGITEM_H__ */

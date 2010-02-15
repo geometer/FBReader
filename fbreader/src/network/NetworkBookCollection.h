@@ -20,12 +20,12 @@
 #ifndef __NETWORKBOOKCOLLECTION_H__
 #define __NETWORKBOOKCOLLECTION_H__
 
-#include "NetworkLibraryItems.h"
+#include "NetworkItems.h"
 
 #include "NetworkComparators.h"
 
 
-typedef std::map<NetworkBookItem::AuthorData, NetworkLibraryItem::List, NetworkAuthorComparator> NetworkAuthorBooksMap;
+typedef std::map<NetworkBookItem::AuthorData, NetworkItem::List, NetworkAuthorComparator> NetworkAuthorBooksMap;
 
 
 class NetworkBookCollection {
@@ -34,15 +34,15 @@ public:
 	NetworkBookCollection();
 
 public:
-	void addBook(shared_ptr<NetworkLibraryItem> bookPtr);
+	void addBook(shared_ptr<NetworkItem> bookPtr);
 
-	const NetworkLibraryItem::List &books() const;
+	const NetworkItem::List &books() const;
 	bool empty() const;
 
 	const NetworkAuthorBooksMap &authorBooksMap();
 
 private:
-	NetworkLibraryItem::List myBookList;
+	NetworkItem::List myBookList;
 	std::map<NetworkBookItem::AuthorData, unsigned int> myAuthorRates;
 	shared_ptr<NetworkAuthorComparator> myAuthorComparator;
 	shared_ptr<NetworkAuthorBooksMap> myAuthorBooksMap;
@@ -52,7 +52,7 @@ private: // disable copying
 	const NetworkBookCollection &operator = (const NetworkBookCollection &);
 };
 
-inline const NetworkLibraryItem::List &NetworkBookCollection::books() const { return myBookList; }
+inline const NetworkItem::List &NetworkBookCollection::books() const { return myBookList; }
 inline bool NetworkBookCollection::empty() const { return myBookList.empty(); }
 
 #endif /* __NETWORKBOOKCOLLECTION_H__ */

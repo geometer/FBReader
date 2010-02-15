@@ -40,7 +40,7 @@ private:
 	shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &result, const std::string &pattern) const;
 	shared_ptr<ZLExecutionData> advancedSearchData(NetworkOperationData &result, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) const;
 
-	shared_ptr<NetworkLibraryItem> libraryItem() const;
+	shared_ptr<NetworkItem> libraryItem() const;
 
 public:
 	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;

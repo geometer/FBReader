@@ -19,7 +19,7 @@
 
 #include "NetworkComparators.h"
 
-bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkLibraryItem> &bookPtr0, const shared_ptr<NetworkLibraryItem> &bookPtr1) {
+bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1) {
 	const bool book0isABook =
 		bookPtr0->isInstanceOf(NetworkBookItem::TYPE_ID);
 	const bool book1isABook =

@@ -23,7 +23,7 @@
 
 #include "../network/NetworkBookCollection.h"
 
-FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition) {
+FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) {
 	if (item->isInstanceOf(NetworkCatalogItem::TYPE_ID)) {
 		NetworkCatalogNode *ptr = new NetworkCatalogNode(parent, item, atPosition);
 		ptr->item().onDisplayItem();
@@ -44,7 +44,7 @@ void NetworkNodesFactory::createSubnodes(SearchResultNode *parent, NetworkBookCo
 	}
 }
 
-void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const NetworkLibraryItem::List &books) {
+void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const NetworkItem::List &books) {
 	NetworkSeriesNode *seriesNode = 0;
 
 	NetworkSeriesNode::SummaryType summaryType = NetworkSeriesNode::AUTHORS;
@@ -54,7 +54,7 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 		summaryType = NetworkSeriesNode::BOOKS;
 	}
 
-	for (NetworkLibraryItem::List::const_iterator it = books.begin(); it != books.end(); ++it) {
+	for (NetworkItem::List::const_iterator it = books.begin(); it != books.end(); ++it) {
 		if (!(*it)->isInstanceOf(NetworkBookItem::TYPE_ID)) {
 			continue;
 		}
@@ -62,7 +62,7 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 		std::string seriesTitle = book.seriesTitle();
 
 		if (!seriesTitle.empty() && (seriesNode == 0 || seriesNode->seriesTitle() != seriesTitle)) {
-			NetworkLibraryItem::List::const_iterator jt = it + 1;
+			NetworkItem::List::const_iterator jt = it + 1;
 			while (jt != books.end() && !(*jt)->isInstanceOf(NetworkBookItem::TYPE_ID)) {
 				++jt;
 			}

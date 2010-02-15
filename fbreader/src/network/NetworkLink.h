@@ -26,7 +26,7 @@
 #include <shared_ptr.h>
 #include <ZLOptions.h>
 
-#include "NetworkLibraryItems.h"
+#include "NetworkItems.h"
 
 class ZLExecutionData;
 
@@ -56,7 +56,7 @@ public:
 	virtual shared_ptr<ZLExecutionData> resume(NetworkOperationData &data) const;
 
 	virtual shared_ptr<NetworkAuthenticationManager> authenticationManager() const = 0;
-	virtual shared_ptr<NetworkLibraryItem> libraryItem() const = 0;
+	virtual shared_ptr<NetworkItem> libraryItem() const = 0;
 
 	virtual void rewriteUrl(std::string &url, bool isUrlExternal = false) const = 0;
 

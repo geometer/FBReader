@@ -28,13 +28,13 @@ NetworkBookCollection::NetworkBookCollection() {
 	myAuthorComparator = new NetworkAuthorComparator(myAuthorRates);
 }
 
-void NetworkBookCollection::addBook(shared_ptr<NetworkLibraryItem> bookPtr) {
+void NetworkBookCollection::addBook(shared_ptr<NetworkItem> bookPtr) {
 	if (bookPtr.isNull() || bookPtr->typeId() != NetworkBookItem::TYPE_ID) {
 		return;
 	}
 	myAuthorBooksMap.reset();
 
-	NetworkLibraryItem::List::iterator it = std::upper_bound(myBookList.begin(), myBookList.end(), bookPtr, NetworkBookItemComparator());
+	NetworkItem::List::iterator it = std::upper_bound(myBookList.begin(), myBookList.end(), bookPtr, NetworkBookItemComparator());
 	myBookList.insert(it, bookPtr);
 
 	NetworkBookItem &book = (NetworkBookItem &) *bookPtr;
@@ -54,7 +54,7 @@ const NetworkAuthorBooksMap &NetworkBookCollection::authorBooksMap() {
 	if (myAuthorBooksMap.isNull()) {
 		myAuthorBooksMap = new NetworkAuthorBooksMap(*myAuthorComparator);
 		NetworkAuthorBooksMap &bookMap = *myAuthorBooksMap;
-		for (NetworkLibraryItem::List::const_iterator it = myBookList.begin(); it != myBookList.end(); ++it) {
+		for (NetworkItem::List::const_iterator it = myBookList.begin(); it != myBookList.end(); ++it) {
 			NetworkBookItem &book = (NetworkBookItem &) **it;
 			for (std::vector<NetworkBookItem::AuthorData>::const_iterator jt = book.authors().begin(); jt != book.authors().end(); ++jt) {
 				bookMap[*jt].push_back(*it);

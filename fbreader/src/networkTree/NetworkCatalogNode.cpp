@@ -33,7 +33,7 @@
 
 #include "../fbreader/FBReader.h"
 
-#include "../network/NetworkLibraryItems.h"
+#include "../network/NetworkItems.h"
 #include "../network/NetworkBookCollection.h"
 #include "../network/NetworkLink.h"
 #include "../network/NetworkAuthenticationManager.h"
@@ -70,12 +70,12 @@ private:
 
 const ZLTypeId NetworkCatalogNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
-NetworkCatalogNode::NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition) : 
+NetworkCatalogNode::NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) : 
 	NetworkContainerNode(parent, atPosition), 
 	myItem(item) {
 }
 
-NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition) : 
+NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) : 
 	NetworkContainerNode(parent, atPosition), 
 	myItem(item) {
 }
@@ -105,7 +105,7 @@ NetworkCatalogItem &NetworkCatalogNode::item() {
 	return (NetworkCatalogItem&)*myItem;
 }
 
-const NetworkLibraryItem::List &NetworkCatalogNode::childrenItems() {
+const NetworkItem::List &NetworkCatalogNode::childrenItems() {
 	return myChildrenItems;
 }
 
@@ -193,7 +193,7 @@ void NetworkCatalogNode::updateChildren() {
 	}
 
 	bool hasSubcatalogs = false;
-	for (NetworkLibraryItem::List::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
+	for (NetworkItem::List::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
 		if ((*it)->typeId() == NetworkCatalogItem::TYPE_ID) {
 			hasSubcatalogs = true;
 			break;
@@ -201,7 +201,7 @@ void NetworkCatalogNode::updateChildren() {
 	}
 
 	if (hasSubcatalogs) {
-		for (NetworkLibraryItem::List::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
+		for (NetworkItem::List::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
 			NetworkNodesFactory::createNetworkNode(this, *it);
 		}
 	} else {

@@ -30,7 +30,7 @@
 
 #include "../fbreader/FBReader.h"
 
-#include "../network/NetworkLibraryItems.h"
+#include "../network/NetworkItems.h"
 #include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkLink.h"
 #include "../network/NetworkAuthenticationManager.h"

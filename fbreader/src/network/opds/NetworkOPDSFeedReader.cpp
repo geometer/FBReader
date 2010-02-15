@@ -26,7 +26,7 @@
 #include "NetworkOPDSFeedReader.h"
 
 #include "../NetworkOperationData.h"
-#include "../NetworkLibraryItems.h"
+#include "../NetworkItems.h"
 #include "../NetworkAuthenticationManager.h"
 #include "../opdsLink/OPDSLink.h"
 #include "../opdsLink/OPDSCatalogItem.h"
@@ -88,7 +88,7 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 		}
 	}
 
-	shared_ptr<NetworkLibraryItem> item;
+	shared_ptr<NetworkItem> item;
 	if (hasBookLink) {
 		item = readBookItem(e);
 	} else {
@@ -99,8 +99,8 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 	}
 }
 
-shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
-	shared_ptr<NetworkLibraryItem> bookPtr = new NetworkBookItem(
+shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
+	shared_ptr<NetworkItem> bookPtr = new NetworkBookItem(
 		entry.id()->uri(),
 		myIndex++,
 		entry.title(),
@@ -202,7 +202,7 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &en
 	return bookPtr;
 }
 
-shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry) {
+shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry) {
 	std::string coverURL;
 	std::string url;
 	bool urlIsAlternate = false;

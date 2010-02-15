@@ -25,7 +25,7 @@
 
 #include <ZLXMLReader.h>
 
-#include "../NetworkLibraryItems.h"
+#include "../NetworkItems.h"
 
 class LitResLink;
 class LitResGenre;
@@ -34,7 +34,7 @@ class NetworkAuthenticationManager;
 class LitResDataParser : public ZLXMLReader {
 
 public:
-	LitResDataParser(const LitResLink &link, NetworkLibraryItem::List &books);
+	LitResDataParser(const LitResLink &link, NetworkItem::List &books);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
@@ -57,7 +57,7 @@ private:
 private:
 	const LitResLink &myLink;
 
-	NetworkLibraryItem::List &myBooks;
+	NetworkItem::List &myBooks;
 	std::string myBuffer;
 
 	unsigned int myIndex;
@@ -80,7 +80,7 @@ private:
 	std::vector<NetworkBookItem::AuthorData> myAuthors;
 
 	std::vector<std::string> myTags;
-	std::map<NetworkBookItem::URLType,std::string> myURLByType;
+	std::map<NetworkItem::URLType,std::string> myURLByType;
 };
 
 #endif /* __LITRESDATAPARSER_H__ */

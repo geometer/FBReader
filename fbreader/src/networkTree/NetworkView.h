@@ -27,11 +27,11 @@
 
 #include "NetworkOperationRunnable.h"
 
-#include "../network/NetworkLibraryItems.h"
+#include "../network/NetworkItems.h"
 
 class NetworkAuthorNode;
 class NetworkCatalogNode;
-class NetworkLibraryItem;
+class NetworkItem;
 class FBReaderNode;
 
 class NetworkView : public ZLBlockTreeView {

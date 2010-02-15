@@ -72,7 +72,7 @@ private:
 		const std::string &annotation) const;
 	shared_ptr<ZLExecutionData> resume(NetworkOperationData &result) const;
 
-	shared_ptr<NetworkLibraryItem> libraryItem() const;
+	shared_ptr<NetworkItem> libraryItem() const;
 	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;
 
 	void rewriteUrl(std::string &url, bool isUrlExternal = false) const;

@@ -24,7 +24,7 @@
 #include <ZLOptions.h>
 #include <ZLBoolean3.h>
 
-#include "NetworkLibraryItems.h"
+#include "NetworkItems.h"
 
 struct ZLNetworkSSLCertificate;
 
@@ -60,7 +60,7 @@ public:
 	 */
 	virtual std::string networkBookId(const NetworkBookItem &book); 
 
-	virtual NetworkBookItem::URLType downloadLinkType(const NetworkBookItem &book); // returns type of download link
+	virtual NetworkItem::URLType downloadLinkType(const NetworkBookItem &book); // returns type of download link
 
 public: // Account specific methods (can be called only if authorised!!!)
 	virtual const std::string &currentUserName() = 0;

@@ -125,12 +125,12 @@ static std::string normalize(const std::string &url) {
 	return nURL;
 }
 
-std::string NetworkLinkCollection::makeBookFileName(const std::string &url, NetworkBookItem::URLType format) {
+std::string NetworkLinkCollection::makeBookFileName(const std::string &url, NetworkItem::URLType format) {
 	myErrorMessage.clear();
 	return makeBookFileName(url, format, false);
 }
 
-std::string NetworkLinkCollection::makeBookFileName(const std::string &url, NetworkBookItem::URLType format, bool createDirectories) {
+std::string NetworkLinkCollection::makeBookFileName(const std::string &url, NetworkItem::URLType format, bool createDirectories) {
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 	size_t index = url.find("://");
 	std::string suburl = url.substr(index + 3);
@@ -229,7 +229,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &networkBookId
 	return BooksDB::Instance().getNetFile(::normalize(networkBookId));
 }
 
-bool NetworkLinkCollection::downloadBook(const std::string &url, const std::string &networkBookId, NetworkBookItem::URLType format, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
+bool NetworkLinkCollection::downloadBook(const std::string &url, const std::string &networkBookId, NetworkItem::URLType format, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
 	const std::string nURL = ::normalize(url);
 	const std::string nNetworkBookId = ::normalize(networkBookId);
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
@@ -286,7 +286,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std:
 			if (!searchData.Items.empty() && result.isNull()) {
 				result = new NetworkBookCollection();
 			}
-			for (NetworkLibraryItem::List::const_iterator kt = searchData.Items.begin(); kt != searchData.Items.end(); ++kt) {
+			for (NetworkItem::List::const_iterator kt = searchData.Items.begin(); kt != searchData.Items.end(); ++kt) {
 				result->addBook(*kt);
 			}
 		}
@@ -335,7 +335,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 			if (!searchData.Items.empty() && result.isNull()) {
 				result = new NetworkBookCollection();
 			}
-			for (NetworkLibraryItem::List::const_iterator kt = searchData.Items.begin(); kt != searchData.Items.end(); ++kt) {
+			for (NetworkItem::List::const_iterator kt = searchData.Items.begin(); kt != searchData.Items.end(); ++kt) {
 				result->addBook(*kt);
 			}
 		}

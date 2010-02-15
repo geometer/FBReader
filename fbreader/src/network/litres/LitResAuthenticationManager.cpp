@@ -28,7 +28,7 @@
 #include "LitResLink.h"
 
 #include "../NetworkErrors.h"
-#include "../NetworkLibraryItems.h"
+#include "../NetworkItems.h"
 
 #include "../NetworkLink.h"
 #include "../NetworkLinkCollection.h"
@@ -126,7 +126,7 @@ std::string LitResAuthenticationManager::networkBookId(const NetworkBookItem &bo
 	return "http://robot.litres.ru/pages/catalit_download_book/?art=" + book.id();
 }
 
-NetworkBookItem::URLType LitResAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
+NetworkItem::URLType LitResAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
 	return NetworkBookItem::BOOK_FB2_ZIP;
 }
 
@@ -194,7 +194,7 @@ std::string LitResAuthenticationManager::downloadLink(const NetworkBookItem &boo
 	return myLink.litresUrl("pages/catalit_download_book/" + query);
 }
 
-void LitResAuthenticationManager::collectPurchasedBooks(NetworkLibraryItem::List &list) {
+void LitResAuthenticationManager::collectPurchasedBooks(NetworkItem::List &list) {
 	list.assign(myPurchasedBooksList.begin(), myPurchasedBooksList.end());
 }
 
@@ -251,7 +251,7 @@ std::string LitResAuthenticationManager::initialize() {
 	return "";
 }
 
-shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList) {
+shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList) {
 	const std::string &sid = mySidOption.value();
 	purchasedBooksIds.clear();
 	purchasedBooksList.clear();
@@ -277,13 +277,13 @@ shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std:
 	);
 }
 
-void LitResAuthenticationManager::loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList) {
+void LitResAuthenticationManager::loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList) {
 	purchasedBooksIds.clear();
 	purchasedBooksList.clear();
 }
 
-void LitResAuthenticationManager::loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkLibraryItem::List &purchasedBooksList) {
-	for (NetworkLibraryItem::List::iterator it = purchasedBooksList.begin(); it != purchasedBooksList.end(); ++it) {
+void LitResAuthenticationManager::loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList) {
+	for (NetworkItem::List::iterator it = purchasedBooksList.begin(); it != purchasedBooksList.end(); ++it) {
 		NetworkBookItem &book = (NetworkBookItem&)**it;
 		book.setIndex(0);
 		purchasedBooksIds.insert(book.id());
@@ -383,7 +383,7 @@ std::string LitResAuthenticationManager::reloadPurchasedBooks() {
 	}
 
 	std::set<std::string> purchasedBooksIds;
-	NetworkLibraryItem::List purchasedBooksList;
+	NetworkItem::List purchasedBooksList;
 
 	shared_ptr<ZLExecutionData> networkData = loadPurchasedBooks(purchasedBooksIds, purchasedBooksList);
 

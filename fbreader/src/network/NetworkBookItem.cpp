@@ -20,10 +20,10 @@
 //#include <ZLStringUtil.h>
 //#include <ZLFile.h>
 
-#include "NetworkLibraryItems.h"
+#include "NetworkItems.h"
 #include "NetworkAuthenticationManager.h"
 
-const ZLTypeId NetworkBookItem::TYPE_ID(NetworkLibraryItem::TYPE_ID);
+const ZLTypeId NetworkBookItem::TYPE_ID(NetworkItem::TYPE_ID);
 
 bool NetworkBookItem::AuthorData::operator < (const AuthorData &data) const {
 	const int sComp = SortKey.compare(data.SortKey);
@@ -38,14 +38,14 @@ NetworkBookItem::NetworkBookItem(
 	const std::string &coverURL,
 	const std::string &language
 ) : 
-	NetworkLibraryItem(title, summary, coverURL),
+	NetworkItem(title, summary, coverURL),
 	myIndex(index),
 	myId(id),
 	myLanguage(language) {
 }
 
 NetworkBookItem::NetworkBookItem(const NetworkBookItem &book) :
-	NetworkLibraryItem(book.Title, book.Summary, book.CoverURL), 
+	NetworkItem(book.Title, book.Summary, book.CoverURL), 
 	myIndex(book.myIndex), 
 	myId(book.myId), 
 	myLanguage(book.myLanguage), 
@@ -107,7 +107,7 @@ const std::string &NetworkBookItem::id() const {
 	return ZLFile::replaceIllegalCharacters(fName, '_');
 }*/
 
-NetworkBookItem::URLType NetworkBookItem::bestBookFormat() const {
+NetworkItem::URLType NetworkBookItem::bestBookFormat() const {
 	if (myURLByType.count(BOOK_EPUB) != 0) {
 		return BOOK_EPUB;
 	} else if (myURLByType.count(BOOK_FB2_ZIP) != 0) {
@@ -118,7 +118,7 @@ NetworkBookItem::URLType NetworkBookItem::bestBookFormat() const {
 	return NONE;
 }
 
-NetworkBookItem::URLType NetworkBookItem::bestDemoFormat() const {
+NetworkItem::URLType NetworkBookItem::bestDemoFormat() const {
 	if (myURLByType.count(BOOK_DEMO_FB2_ZIP) != 0) {
 		return BOOK_DEMO_FB2_ZIP;
 	}

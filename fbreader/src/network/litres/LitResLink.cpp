@@ -31,7 +31,7 @@
 #include "LitResGenre.h"
 
 #include "../NetworkOperationData.h"
-#include "../NetworkLibraryItems.h"
+#include "../NetworkItems.h"
 #include "../NetworkComparators.h"
 #include "../NetworkErrors.h"
 
@@ -105,7 +105,7 @@ public:
 	);
 
 private:
-	std::string loadChildren(NetworkLibraryItem::List &children);
+	std::string loadChildren(NetworkItem::List &children);
 };
 
 class LitResCatalogItem : public NetworkCatalogItem {
@@ -121,7 +121,7 @@ public:
 	);
 
 private:
-	std::string loadChildren(NetworkLibraryItem::List &children);
+	std::string loadChildren(NetworkItem::List &children);
 	CatalogType catalogType() const;
 
 private:
@@ -136,7 +136,7 @@ public:
 
 private:
 	void onDisplayItem();
-	std::string loadChildren(NetworkLibraryItem::List &children);
+	std::string loadChildren(NetworkItem::List &children);
 
 private:
 	bool myForceReload;
@@ -148,7 +148,7 @@ public:
 	LitResByAuthorsCatalogItem(const LitResLink &link);
 
 private:
-	std::string loadChildren(NetworkLibraryItem::List &children);
+	std::string loadChildren(NetworkItem::List &children);
 };
 
 class LitResAuthorsItem : public NetworkCatalogItem {
@@ -162,7 +162,7 @@ public:
 	);
 
 private:
-	std::string loadChildren(NetworkLibraryItem::List &children);
+	std::string loadChildren(NetworkItem::List &children);
 };
 
 class LitResGenresItem : public NetworkCatalogItem {
@@ -177,7 +177,7 @@ public:
 	);
 
 private:
-	std::string loadChildren(NetworkLibraryItem::List &children);
+	std::string loadChildren(NetworkItem::List &children);
 
 private:
 	const std::vector<shared_ptr<LitResGenre> > &myGenres;
@@ -190,7 +190,7 @@ LitResRootCatalogItem::LitResRootCatalogItem(
 ) : NetworkCatalogItem(link, "", "", title, summary, "feed-litres.png") {
 }
 
-std::string LitResRootCatalogItem::loadChildren(NetworkLibraryItem::List &children) {
+std::string LitResRootCatalogItem::loadChildren(NetworkItem::List &children) {
 	const LitResLink &link = (const LitResLink&)Link;
 	children.push_back(new LitResCatalogItem(
 		link,
@@ -227,7 +227,7 @@ LitResCatalogItem::LitResCatalogItem(
 ) : NetworkCatalogItem(link, url, "", title, summary, ""), mySortItems(sortItems), myCatalogType(catalogType) {
 }
 
-std::string LitResCatalogItem::loadChildren(NetworkLibraryItem::List &children) {
+std::string LitResCatalogItem::loadChildren(NetworkItem::List &children) {
 	children.clear();
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
@@ -265,7 +265,7 @@ void LitResMyCatalogItem::onDisplayItem() {
 	myForceReload = false;
 }
 
-std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItem::List &children) {
+std::string LitResMyCatalogItem::loadChildren(NetworkItem::List &children) {
 	LitResAuthenticationManager &mgr =
 		(LitResAuthenticationManager&)*Link.authenticationManager();
 	if (mgr.isAuthorised().Status == B3_FALSE) {
@@ -291,7 +291,7 @@ LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(const LitResLink &link) :
 ) {
 }
 	
-std::string LitResByAuthorsCatalogItem::loadChildren(NetworkLibraryItem::List &children) {
+std::string LitResByAuthorsCatalogItem::loadChildren(NetworkItem::List &children) {
 	children.clear();
 
 	const LitResLink &link = (const LitResLink&)Link;
@@ -328,7 +328,7 @@ LitResAuthorsItem::LitResAuthorsItem(
 ) : NetworkCatalogItem(link, url, "", title, summary, "") {
 }
 
-std::string LitResAuthorsItem::loadChildren(NetworkLibraryItem::List &children) {
+std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children) {
 	children.clear();
 
 	std::vector<LitResAuthor> authors;
@@ -383,7 +383,7 @@ LitResGenresItem::LitResGenresItem(
 myGenres(genres) {
 }
 
-std::string LitResGenresItem::loadChildren(NetworkLibraryItem::List &children) {
+std::string LitResGenresItem::loadChildren(NetworkItem::List &children) {
 	const LitResLink &link = (const LitResLink&)Link;
 	for (std::vector<shared_ptr<LitResGenre> >::const_iterator it = myGenres.begin(); it != myGenres.end(); ++it) {
 		const LitResGenre &genre = **it;
@@ -408,7 +408,7 @@ std::string LitResGenresItem::loadChildren(NetworkLibraryItem::List &children) {
 	return "";
 }
 
-shared_ptr<NetworkLibraryItem> LitResLink::libraryItem() const {
+shared_ptr<NetworkItem> LitResLink::libraryItem() const {
 	return new LitResRootCatalogItem(*this, Title, "Продажа электронных книг.");
 }
 

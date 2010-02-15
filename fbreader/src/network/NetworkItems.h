@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __NETWORKLIBRARYITEMS_H__
-#define __NETWORKLIBRARYITEMS_H__
+#ifndef __NETWORKITEMS_H__
+#define __NETWORKITEMS_H__
 
 #include <string>
 #include <vector>
@@ -31,23 +31,33 @@
 class NetworkAuthenticationManager;
 class NetworkLink;
 
-class NetworkLibraryItem : public ZLObjectWithRTTI {
+class NetworkItem : public ZLObjectWithRTTI {
 
 public:
-	typedef std::vector<shared_ptr<NetworkLibraryItem> > List;
+	typedef std::vector<shared_ptr<NetworkItem> > List;
+
+	enum URLType {
+		NONE,
+		BOOK_EPUB,
+		BOOK_MOBIPOCKET,
+		BOOK_FB2_ZIP,
+		//BOOK_PDF,
+		BOOK_DEMO_FB2_ZIP,
+		LINK_HTTP,
+	};
 
 protected:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	NetworkLibraryItem(
+	NetworkItem(
 		const std::string &title,
 		const std::string &summary,
 		const std::string &coverURL
 	);
 
 public:
-	virtual ~NetworkLibraryItem();
+	virtual ~NetworkItem();
 
 	virtual const ZLTypeId &typeId() const = 0;
 
@@ -57,11 +67,11 @@ public:
 	/*const*/ std::string CoverURL;
 
 private: // disable copying
-	NetworkLibraryItem(const NetworkLibraryItem &item);
-	const NetworkLibraryItem &operator = (const NetworkLibraryItem &);
+	NetworkItem(const NetworkItem &item);
+	const NetworkItem &operator = (const NetworkItem &);
 };
 
-class NetworkCatalogItem : public NetworkLibraryItem {
+class NetworkCatalogItem : public NetworkItem {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -104,19 +114,9 @@ public:
 	const VisibilityType Visibility;
 };
 
-class NetworkBookItem : public NetworkLibraryItem {
+class NetworkBookItem : public NetworkItem {
 
 public:
-	enum URLType {
-		NONE,
-		BOOK_EPUB,
-		BOOK_MOBIPOCKET,
-		BOOK_FB2_ZIP,
-		//BOOK_PDF,
-		BOOK_DEMO_FB2_ZIP,
-		LINK_HTTP,
-	};
-
 	struct AuthorData {
 		std::string DisplayName;
 		std::string SortKey;
@@ -198,11 +198,11 @@ inline const std::string &NetworkBookItem::date() const { return myDate; }
 inline const std::string &NetworkBookItem::seriesTitle() const { return mySeriesTitle; }
 inline int NetworkBookItem::indexInSeries() const { return myIndexInSeries; }
 inline const std::string &NetworkBookItem::price() const { return myPrice; }
-inline const std::map<NetworkBookItem::URLType, std::string> &NetworkBookItem::urlByType() const { return myURLByType; }
+inline const std::map<NetworkItem::URLType, std::string> &NetworkBookItem::urlByType() const { return myURLByType; }
 inline const std::vector<NetworkBookItem::AuthorData> &NetworkBookItem::authors() const { return myAuthors; }
 inline const std::vector<std::string> &NetworkBookItem::tags() const { return myTags; }
-inline std::map<NetworkBookItem::URLType, std::string> &NetworkBookItem::urlByType() { return myURLByType; }
+inline std::map<NetworkItem::URLType, std::string> &NetworkBookItem::urlByType() { return myURLByType; }
 inline std::vector<NetworkBookItem::AuthorData> &NetworkBookItem::authors() { return myAuthors; }
 inline std::vector<std::string> &NetworkBookItem::tags() { return myTags; }
 
-#endif /* __NETWORKLIBRARYITEMS_H__ */
+#endif /* __NETWORKITEMS_H__ */

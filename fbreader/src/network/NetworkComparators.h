@@ -23,13 +23,13 @@
 
 #include <map>
 
-#include "NetworkLibraryItems.h"
+#include "NetworkItems.h"
 
 
 class NetworkBookItemComparator {
 
 public:
-	bool operator () (const shared_ptr<NetworkLibraryItem> &bookPtr0, const shared_ptr<NetworkLibraryItem> &bookPtr1);
+	bool operator () (const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1);
 };
 
 

@@ -17,9 +17,9 @@
  * 02110-1301, USA.
  */
 
-#include "NetworkLibraryItems.h"
+#include "NetworkItems.h"
 
-const ZLTypeId NetworkCatalogItem::TYPE_ID(NetworkLibraryItem::TYPE_ID);
+const ZLTypeId NetworkCatalogItem::TYPE_ID(NetworkItem::TYPE_ID);
 
 NetworkCatalogItem::NetworkCatalogItem(
 	const NetworkLink &link,
@@ -30,7 +30,7 @@ NetworkCatalogItem::NetworkCatalogItem(
 	const std::string &coverURL,
 	VisibilityType visibility
 ) :
-	NetworkLibraryItem(title, summary, coverURL),
+	NetworkItem(title, summary, coverURL),
 	Link(link),
 	URL(url),
 	HtmlURL(htmlURL),

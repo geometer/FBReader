@@ -66,7 +66,7 @@ public:
 	void logOut();
 
 	std::string networkBookId(const NetworkBookItem &book);
-	NetworkBookItem::URLType downloadLinkType(const NetworkBookItem &book);
+	NetworkItem::URLType downloadLinkType(const NetworkBookItem &book);
 
 public: // Account specific methods (can be called only if authorised!!!)
 	const std::string &currentUserName();

@@ -17,11 +17,11 @@
  * 02110-1301, USA.
  */
 
-#include "NetworkLibraryItems.h"
+#include "NetworkItems.h"
 
-const ZLTypeId NetworkLibraryItem::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
+const ZLTypeId NetworkItem::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
-NetworkLibraryItem::NetworkLibraryItem(
+NetworkItem::NetworkItem(
 	const std::string &title,
 	const std::string &summary,
 	const std::string &coverURL
@@ -31,5 +31,5 @@ NetworkLibraryItem::NetworkLibraryItem(
 	CoverURL(coverURL) {
 }
 
-NetworkLibraryItem::~NetworkLibraryItem() {
+NetworkItem::~NetworkItem() {
 }

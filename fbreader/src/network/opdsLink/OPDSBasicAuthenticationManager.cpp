@@ -23,7 +23,7 @@
 #include "OPDSBasicAuthenticationManager.h"
 #include "OPDSNetworkRequests.h"
 
-#include "../NetworkLibraryItems.h"
+#include "../NetworkItems.h"
 #include "../NetworkErrors.h"
 
 
@@ -118,7 +118,7 @@ std::string OPDSBasicAuthenticationManager::networkBookId(const NetworkBookItem 
 	return "";
 }
 
-NetworkBookItem::URLType OPDSBasicAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
+NetworkItem::URLType OPDSBasicAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
 	return NetworkBookItem::NONE;
 }
 

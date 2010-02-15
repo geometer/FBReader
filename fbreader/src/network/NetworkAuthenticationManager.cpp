@@ -21,7 +21,7 @@
 
 #include "NetworkAuthenticationManager.h"
 
-#include "NetworkLibraryItems.h"
+#include "NetworkItems.h"
 #include "NetworkErrors.h"
 
 
@@ -38,7 +38,7 @@ std::string NetworkAuthenticationManager::networkBookId(const NetworkBookItem &)
 	return "";
 }
 
-NetworkBookItem::URLType NetworkAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
+NetworkItem::URLType NetworkAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
 	return NetworkBookItem::NONE;
 }
 

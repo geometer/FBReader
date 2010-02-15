@@ -25,7 +25,7 @@
 
 #include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkAuthenticationManager.h"
-#include "../network/NetworkLibraryItems.h"
+#include "../network/NetworkItems.h"
 
 NetworkOperationRunnable::NetworkOperationRunnable(const std::string &uiMessageKey) {
 	myDialog =
@@ -68,8 +68,8 @@ void NetworkOperationRunnable::showErrorMessage() const {
 	}
 }
 
-DownloadBookRunnable::DownloadBookRunnable(const NetworkBookItem &book, NetworkBookItem::URLType format) : NetworkOperationRunnable("downloadBook") {
-	const std::map<NetworkBookItem::URLType, std::string>::const_iterator it = book.urlByType().find(format);
+DownloadBookRunnable::DownloadBookRunnable(const NetworkBookItem &book, NetworkItem::URLType format) : NetworkOperationRunnable("downloadBook") {
+	const std::map<NetworkItem::URLType, std::string>::const_iterator it = book.urlByType().find(format);
 	if (it != book.urlByType().end()) {
 		myURL = it->second;
 		myNetworkBookId = myURL;
@@ -210,7 +210,7 @@ void AdvancedSearchRunnable::run() {
 }
 
 
-LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkLibraryItem::List &children) : 
+LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkItem::List &children) : 
 	NetworkOperationRunnable("loadSubCatalog"), 
 	myItem(item), 
 	myChildren(children) {

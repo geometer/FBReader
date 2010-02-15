@@ -175,7 +175,7 @@ void OPDSLink::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager>
 }
 
 
-shared_ptr<NetworkLibraryItem> OPDSLink::libraryItem() const {
+shared_ptr<NetworkItem> OPDSLink::libraryItem() const {
 	return new OPDSCatalogItem(
 		*this,
 		myCatalogURL,

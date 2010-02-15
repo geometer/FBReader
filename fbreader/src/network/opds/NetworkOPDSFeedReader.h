@@ -27,7 +27,7 @@
 
 class NetworkOperationData;
 
-class NetworkLibraryItem;
+class NetworkItem;
 
 
 class NetworkOPDSFeedReader : public OPDSFeedReader {
@@ -43,8 +43,8 @@ public:
 	void processFeedEnd();
 
 private:
-	shared_ptr<NetworkLibraryItem> readBookItem(OPDSEntry &entry);
-	shared_ptr<NetworkLibraryItem> readCatalogItem(OPDSEntry &entry);
+	shared_ptr<NetworkItem> readBookItem(OPDSEntry &entry);
+	shared_ptr<NetworkItem> readCatalogItem(OPDSEntry &entry);
 
 private:
 	const std::string myBaseURL;

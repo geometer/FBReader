@@ -22,7 +22,7 @@
 
 #include "../blockTree/FBReaderNode.h"
 
-#include "../network/NetworkLibraryItems.h"
+#include "../network/NetworkItems.h"
 
 class NetworkBookCollection;
 class NetworkLink;
@@ -52,8 +52,8 @@ private:
 	class ReloadAction;
 
 protected:
-	NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition = (size_t)-1);
-	NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition = (size_t)-1);
+	NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
+	NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
 
 private:
 	const ZLTypeId &typeId() const;
@@ -62,7 +62,7 @@ friend class NetworkNodesFactory;
 
 public:
 	NetworkCatalogItem &item();
-	const NetworkLibraryItem::List &childrenItems();
+	const NetworkItem::List &childrenItems();
 
 	void updateChildren();
 
@@ -80,8 +80,8 @@ protected:
 	virtual void paintHyperlinks(ZLPaintContext &context, int vOffset);
 
 private:
-	shared_ptr<NetworkLibraryItem> myItem;
-	NetworkLibraryItem::List myChildrenItems;
+	shared_ptr<NetworkItem> myItem;
+	NetworkItem::List myChildrenItems;
 	shared_ptr<ZLRunnable> myExpandCatalogAction;
 	shared_ptr<ZLRunnable> myOpenInBrowserAction;
 	shared_ptr<ZLRunnable> myReloadAction;
@@ -244,7 +244,7 @@ private:
 	class DeleteAction;
 
 private:
-	NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkLibraryItem> book);
+	NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book);
 
 private:
 	void init();
@@ -252,7 +252,7 @@ private:
 friend class NetworkNodesFactory;
 
 public:
-	shared_ptr<NetworkLibraryItem> book();
+	shared_ptr<NetworkItem> book();
 
 private:
 	const ZLTypeId &typeId() const;
@@ -267,10 +267,10 @@ private:
 	bool hasLocalCopy();
 	bool hasDirectLink();
 	bool canBePurchased();
-	static bool hasLocalCopy(NetworkBookItem &book, NetworkBookItem::URLType format);
+	static bool hasLocalCopy(NetworkBookItem &book, NetworkItem::URLType format);
 
 private:
-	shared_ptr<NetworkLibraryItem> myBook;
+	shared_ptr<NetworkItem> myBook;
 	shared_ptr<ZLRunnable> myReadAction;
 	shared_ptr<ZLRunnable> myDownloadAction;
 	shared_ptr<ZLRunnable> myReadDemoAction;
@@ -279,7 +279,7 @@ private:
 	shared_ptr<ZLRunnable> myDeleteAction;
 };
 
-inline shared_ptr<NetworkLibraryItem> NetworkBookNode::book() { return myBook; }
+inline shared_ptr<NetworkItem> NetworkBookNode::book() { return myBook; }
 inline const NetworkBookItem &NetworkBookNode::bookItem() const { return (const NetworkBookItem&)*myBook; }
 inline NetworkBookItem &NetworkBookNode::bookItem() { return (NetworkBookItem&)*myBook; }
 

@@ -26,7 +26,7 @@
 #include <ZLBoolean3.h>
 #include <ZLNetworkSSLCertificate.h>
 
-#include "../network/NetworkLibraryItems.h"
+#include "../network/NetworkItems.h"
 #include "../network/NetworkBookCollection.h"
 
 class ZLProgressDialog;
@@ -59,7 +59,7 @@ inline const std::string &NetworkOperationRunnable::errorMessage() const { retur
 class DownloadBookRunnable : public NetworkOperationRunnable {
 
 public:
-	DownloadBookRunnable(const NetworkBookItem &book, NetworkBookItem::URLType format);
+	DownloadBookRunnable(const NetworkBookItem &book, NetworkItem::URLType format);
 	DownloadBookRunnable(const std::string &url);
 	~DownloadBookRunnable();
 	void run();
@@ -69,7 +69,7 @@ public:
 private:
 	std::string myURL;
 	std::string myNetworkBookId;
-	NetworkBookItem::URLType myFormat;
+	NetworkItem::URLType myFormat;
 
 	std::string myFileName;
 
@@ -199,12 +199,12 @@ private:
 class LoadSubCatalogRunnable : public NetworkOperationRunnable {
 
 public:
-	LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkLibraryItem::List &children);
+	LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkItem::List &children);
 	void run();
 
 private:
 	NetworkCatalogItem &myItem;
-	NetworkLibraryItem::List &myChildren;
+	NetworkItem::List &myChildren;
 };
 
 #endif /* __NETWORKOPERATIONRUNNABLE_H__ */

@@ -66,7 +66,7 @@ std::string LitResDataParser::makeDemoUrl(const std::string &bookId) const {
 	return url;
 }
 
-LitResDataParser::LitResDataParser(const LitResLink &link, NetworkLibraryItem::List &books) : 
+LitResDataParser::LitResDataParser(const LitResLink &link, NetworkItem::List &books) : 
 	myLink(link),
 	myBooks(books), 
 	myIndex(0) {
@@ -142,7 +142,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			for (std::vector<std::string>::const_iterator it = myTags.begin(); it != myTags.end(); ++it) {
 				book->tags().push_back(*it);
 			}
-			for (std::map<NetworkBookItem::URLType,std::string>::const_iterator it = myURLByType.begin(); it != myURLByType.end(); ++it) {
+			for (std::map<NetworkItem::URLType,std::string>::const_iterator it = myURLByType.begin(); it != myURLByType.end(); ++it) {
 				book->urlByType().insert(*it);
 			}
 

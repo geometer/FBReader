@@ -26,7 +26,7 @@
 #include "NetworkNodes.h"
 #include "NetworkNodesFactory.h"
 
-#include "../network/NetworkLibraryItems.h"
+#include "../network/NetworkItems.h"
 
 #include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkLink.h"
@@ -252,15 +252,15 @@ void NetworkView::updateAccountDependents() {
 void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 	std::set<ZLBlockTreeNode*> nodesToDelete;
 
-	const NetworkLibraryItem::List &nodeItems = node.childrenItems();
+	const NetworkItem::List &nodeItems = node.childrenItems();
 
 	ZLBlockTreeNode::List nodeChildren = node.children();
 	ZLBlockTreeNode::List::iterator nodeIt = nodeChildren.begin();
 
 	size_t nodeCount = 0;
 	for (size_t i = 0; i < nodeItems.size(); ++i) {
-		shared_ptr<NetworkLibraryItem> currentItemPtr = nodeItems[i];
-		NetworkLibraryItem &currentItem = *currentItemPtr;
+		shared_ptr<NetworkItem> currentItemPtr = nodeItems[i];
+		NetworkItem &currentItem = *currentItemPtr;
 
 		if (currentItem.typeId() != NetworkCatalogItem::TYPE_ID) {
 			continue;
