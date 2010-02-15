@@ -36,12 +36,12 @@ public:
 class NetworkAuthorComparator {
 
 public:
-	NetworkAuthorComparator(const std::map<NetworkLibraryBookItem::AuthorData, unsigned int> &rates);
+	NetworkAuthorComparator(const std::map<NetworkBookItem::AuthorData, unsigned int> &rates);
 
-	bool operator () (const NetworkLibraryBookItem::AuthorData &author0, const NetworkLibraryBookItem::AuthorData &author1);
+	bool operator () (const NetworkBookItem::AuthorData &author0, const NetworkBookItem::AuthorData &author1);
 
 private:
-	const std::map<NetworkLibraryBookItem::AuthorData, unsigned int> &myRates;
+	const std::map<NetworkBookItem::AuthorData, unsigned int> &myRates;
 };
 
 

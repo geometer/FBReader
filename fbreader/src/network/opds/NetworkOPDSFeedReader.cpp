@@ -100,8 +100,8 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 }
 
 shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
-	shared_ptr<NetworkLibraryItem> bookPtr = new NetworkLibraryBookItem(entry.id()->uri(), myIndex++);
-	NetworkLibraryBookItem &book = (NetworkLibraryBookItem &) *bookPtr;
+	shared_ptr<NetworkLibraryItem> bookPtr = new NetworkBookItem(entry.id()->uri(), myIndex++);
+	NetworkBookItem &book = (NetworkBookItem &) *bookPtr;
 	
 	book.setAuthenticationManager(myData.Link.authenticationManager());
 
@@ -137,18 +137,18 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &en
 			}
 		} else if (rel == OPDSConstants::REL_ACQUISITION || rel.empty()) {
 			if (type == OPDSConstants::MIME_APP_EPUB) {
-				book.urlByType()[NetworkLibraryBookItem::BOOK_EPUB] = href;
+				book.urlByType()[NetworkBookItem::BOOK_EPUB] = href;
 			} else if (type == OPDSConstants::MIME_APP_MOBI) {
-				book.urlByType()[NetworkLibraryBookItem::BOOK_MOBIPOCKET] = href;
+				book.urlByType()[NetworkBookItem::BOOK_MOBIPOCKET] = href;
 			//} else if (type == OPDSConstants::MIME_APP_PDF) {
-				//book.urlByType()[NetworkLibraryBookItem::BOOK_PDF] = href;
+				//book.urlByType()[NetworkBookItem::BOOK_PDF] = href;
 			}
 		}
 	}
 
 	for (size_t i = 0; i < entry.authors().size(); ++i) {
 		ATOMAuthor &author = *(entry.authors()[i]);
-		NetworkLibraryBookItem::AuthorData authorData;
+		NetworkBookItem::AuthorData authorData;
 		std::string name = author.name();
 		std::string lowerCased = ZLUnicodeUtil::toLower(name);
 		static const std::string authorPrefix = "author:";

@@ -49,7 +49,7 @@ private:
 	void processState(const std::string &tag, bool closed, const char **attributes);
 	State getNextState(const std::string &tag, bool closed);
 
-	NetworkLibraryBookItem &currentBook();
+	NetworkBookItem &currentBook();
 	std::string makeDemoUrl(const std::string &bookId) const;
 
 private:
@@ -67,6 +67,6 @@ private:
 	std::string myAuthorLastName;
 };
 
-inline NetworkLibraryBookItem &LitResDataParser::currentBook() { return (NetworkLibraryBookItem &) *myCurrentBook; }
+inline NetworkBookItem &LitResDataParser::currentBook() { return (NetworkBookItem &) *myCurrentBook; }
 
 #endif /* __LITRESDATAPARSER_H__ */

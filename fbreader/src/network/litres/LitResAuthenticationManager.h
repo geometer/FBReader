@@ -40,15 +40,15 @@ public:
 	void logOut();
 	bool skipIPSupported();
 
-	std::string networkBookId(const NetworkLibraryBookItem &book); 
-	NetworkLibraryBookItem::URLType downloadLinkType(const NetworkLibraryBookItem &book);
+	std::string networkBookId(const NetworkBookItem &book); 
+	NetworkBookItem::URLType downloadLinkType(const NetworkBookItem &book);
 
 	const std::string &currentUserName();
 	bool needsInitialization();
 	std::string initialize();
-	bool needPurchase(const NetworkLibraryBookItem &book);
-	std::string purchaseBook(NetworkLibraryBookItem &book);
-	std::string downloadLink(const NetworkLibraryBookItem &book);
+	bool needPurchase(const NetworkBookItem &book);
+	std::string purchaseBook(NetworkBookItem &book);
+	std::string downloadLink(const NetworkBookItem &book);
 
 	std::string refillAccountLink();
 	std::string currentAccount();

@@ -186,12 +186,12 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	NetworkAuthorNode(NetworkContainerNode *parent, const NetworkLibraryBookItem::AuthorData &author);
+	NetworkAuthorNode(NetworkContainerNode *parent, const NetworkBookItem::AuthorData &author);
 
 friend class NetworkNodesFactory;
 
 public:
-	const NetworkLibraryBookItem::AuthorData &author();
+	const NetworkBookItem::AuthorData &author();
 
 private:
 	const ZLTypeId &typeId() const;
@@ -200,7 +200,7 @@ private:
 	void paint(ZLPaintContext &context, int vOffset);
 
 private:
-	NetworkLibraryBookItem::AuthorData myAuthor;
+	NetworkBookItem::AuthorData myAuthor;
 };
 
 class NetworkSeriesNode : public NetworkContainerNode {
@@ -261,13 +261,13 @@ private:
 	std::string summary() const;
 	void paint(ZLPaintContext &context, int vOffset);
 
-	const NetworkLibraryBookItem &bookItem() const;
-	NetworkLibraryBookItem &bookItem();
+	const NetworkBookItem &bookItem() const;
+	NetworkBookItem &bookItem();
 
 	bool hasLocalCopy();
 	bool hasDirectLink();
 	bool canBePurchased();
-	static bool hasLocalCopy(NetworkLibraryBookItem &book, NetworkLibraryBookItem::URLType format);
+	static bool hasLocalCopy(NetworkBookItem &book, NetworkBookItem::URLType format);
 
 private:
 	shared_ptr<NetworkLibraryItem> myBook;
@@ -280,7 +280,7 @@ private:
 };
 
 inline shared_ptr<NetworkLibraryItem> NetworkBookInfoNode::book() { return myBook; }
-inline const NetworkLibraryBookItem &NetworkBookInfoNode::bookItem() const { return (const NetworkLibraryBookItem&)*myBook; }
-inline NetworkLibraryBookItem &NetworkBookInfoNode::bookItem() { return (NetworkLibraryBookItem&)*myBook; }
+inline const NetworkBookItem &NetworkBookInfoNode::bookItem() const { return (const NetworkBookItem&)*myBook; }
+inline NetworkBookItem &NetworkBookInfoNode::bookItem() { return (NetworkBookItem&)*myBook; }
 
 #endif /* __NETWORKNODES_H__ */

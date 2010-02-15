@@ -97,7 +97,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 	case CATALOG: 
 		if (!closed && TAG_BOOK == tag) {
 			const std::string bookId = stringAttributeValue(attributes, "hub_id");
-			myCurrentBook = new NetworkLibraryBookItem(bookId, myIndex++);
+			myCurrentBook = new NetworkBookItem(bookId, myIndex++);
 			currentBook().setAuthenticationManager(myLink.authenticationManager());
 
 			currentBook().setCoverURL(stringAttributeValue(attributes, "cover_preview"));
@@ -105,14 +105,14 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			std::string url = stringAttributeValue(attributes, "url");
 			if (!url.empty()) {
 				myLink.rewriteUrl(url);
-				currentBook().urlByType()[NetworkLibraryBookItem::LINK_HTTP] = url;
+				currentBook().urlByType()[NetworkBookItem::LINK_HTTP] = url;
 			}
 
 			const std::string hasTrial = stringAttributeValue(attributes, "has_trial");
 			if (hasTrial == "1") {
 				currentBook().urlByType().insert(
 					std::make_pair(
-						NetworkLibraryBookItem::BOOK_DEMO_FB2_ZIP,
+						NetworkBookItem::BOOK_DEMO_FB2_ZIP,
 						makeDemoUrl(bookId)
 					)
 				);
@@ -153,7 +153,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 		break;
 	case AUTHOR: 
 		if (closed && TAG_AUTHOR == tag) {
-			NetworkLibraryBookItem::AuthorData data;
+			NetworkBookItem::AuthorData data;
 			if (!myAuthorFirstName.empty()) {
 				data.DisplayName.append(myAuthorFirstName);
 			}

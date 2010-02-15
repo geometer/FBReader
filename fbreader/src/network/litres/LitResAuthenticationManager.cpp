@@ -122,23 +122,23 @@ void LitResAuthenticationManager::logOut() {
 	mySidOption.setValue("");
 }
 
-std::string LitResAuthenticationManager::networkBookId(const NetworkLibraryBookItem &book) {
+std::string LitResAuthenticationManager::networkBookId(const NetworkBookItem &book) {
 	return "http://robot.litres.ru/pages/catalit_download_book/?art=" + book.id();
 }
 
-NetworkLibraryBookItem::URLType LitResAuthenticationManager::downloadLinkType(const NetworkLibraryBookItem &) {
-	return NetworkLibraryBookItem::BOOK_FB2_ZIP;
+NetworkBookItem::URLType LitResAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
+	return NetworkBookItem::BOOK_FB2_ZIP;
 }
 
 const std::string &LitResAuthenticationManager::currentUserName() {
 	return mySidUserNameOption.value();
 }
 
-bool LitResAuthenticationManager::needPurchase(const NetworkLibraryBookItem &book) {
+bool LitResAuthenticationManager::needPurchase(const NetworkBookItem &book) {
 	return myPurchasedBooksIds.count(book.id()) == 0;
 }
 
-std::string LitResAuthenticationManager::purchaseBook(NetworkLibraryBookItem &book) {
+std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
@@ -177,13 +177,13 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkLibraryBookItem &bo
 		}
 	}
 	myPurchasedBooksIds.insert(book.id());
-	NetworkLibraryBookItem *bookCopy = new NetworkLibraryBookItem(book);
+	NetworkBookItem *bookCopy = new NetworkBookItem(book);
 	bookCopy->setIndex(0);
 	myPurchasedBooksList.push_back(bookCopy);
 	return error;
 }
 
-std::string LitResAuthenticationManager::downloadLink(const NetworkLibraryBookItem &book) {
+std::string LitResAuthenticationManager::downloadLink(const NetworkBookItem &book) {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
 		return "";
@@ -284,7 +284,7 @@ void LitResAuthenticationManager::loadPurchasedBooksOnError(std::set<std::string
 
 void LitResAuthenticationManager::loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkLibraryItemList &purchasedBooksList) {
 	for (NetworkLibraryItemList::iterator it = purchasedBooksList.begin(); it != purchasedBooksList.end(); ++it) {
-		NetworkLibraryBookItem &book = (NetworkLibraryBookItem &) **it;
+		NetworkBookItem &book = (NetworkBookItem&)**it;
 		book.setIndex(0);
 		purchasedBooksIds.insert(book.id());
 	}

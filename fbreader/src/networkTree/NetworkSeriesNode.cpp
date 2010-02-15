@@ -42,13 +42,13 @@ std::string NetworkSeriesNode::summary() const {
 		if (mySummaryType == BOOKS) {
 			mySummary = FBReaderNode::summary();
 		} else {
-			std::set<NetworkLibraryBookItem::AuthorData> authorSet;
+			std::set<NetworkBookItem::AuthorData> authorSet;
 			const std::vector<ZLBlockTreeNode*> &books = children();
 			for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
-				const NetworkLibraryBookItem &book = 
-					(const NetworkLibraryBookItem&)*((NetworkBookInfoNode*)*it)->book();
-				const std::vector<NetworkLibraryBookItem::AuthorData> &authors = book.authors();
-				for (std::vector<NetworkLibraryBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
+				const NetworkBookItem &book = 
+					(const NetworkBookItem&)*((NetworkBookInfoNode*)*it)->book();
+				const std::vector<NetworkBookItem::AuthorData> &authors = book.authors();
+				for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
 					if (authorSet.find(*it) == authorSet.end()) {
 						authorSet.insert(*it);
 						if (!mySummary.empty()) {

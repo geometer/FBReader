@@ -68,8 +68,8 @@ void NetworkOperationRunnable::showErrorMessage() const {
 	}
 }
 
-DownloadBookRunnable::DownloadBookRunnable(const NetworkLibraryBookItem &book, NetworkLibraryBookItem::URLType format) : NetworkOperationRunnable("downloadBook") {
-	const std::map<NetworkLibraryBookItem::URLType, std::string>::const_iterator it = book.urlByType().find(format);
+DownloadBookRunnable::DownloadBookRunnable(const NetworkBookItem &book, NetworkBookItem::URLType format) : NetworkOperationRunnable("downloadBook") {
+	const std::map<NetworkBookItem::URLType, std::string>::const_iterator it = book.urlByType().find(format);
 	if (it != book.urlByType().end()) {
 		myURL = it->second;
 		myNetworkBookId = myURL;
@@ -84,7 +84,7 @@ DownloadBookRunnable::DownloadBookRunnable(const NetworkLibraryBookItem &book, N
 	}
 }
 
-DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook"), myURL(url), myNetworkBookId(url), myFormat(NetworkLibraryBookItem::NONE) {
+DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook"), myURL(url), myNetworkBookId(url), myFormat(NetworkBookItem::NONE) {
 }
 
 DownloadBookRunnable::~DownloadBookRunnable() {
@@ -155,7 +155,7 @@ void LogOutRunnable::run() {
 }
 
 
-PurchaseBookRunnable::PurchaseBookRunnable(NetworkAuthenticationManager &mgr, NetworkLibraryBookItem &book) : 
+PurchaseBookRunnable::PurchaseBookRunnable(NetworkAuthenticationManager &mgr, NetworkBookItem &book) : 
 	NetworkOperationRunnable("purchaseBook"), 
 	myManager(mgr), 
 	myBook(book) {

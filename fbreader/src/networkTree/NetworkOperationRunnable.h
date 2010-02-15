@@ -59,7 +59,7 @@ inline const std::string &NetworkOperationRunnable::errorMessage() const { retur
 class DownloadBookRunnable : public NetworkOperationRunnable {
 
 public:
-	DownloadBookRunnable(const NetworkLibraryBookItem &book, NetworkLibraryBookItem::URLType format);
+	DownloadBookRunnable(const NetworkBookItem &book, NetworkBookItem::URLType format);
 	DownloadBookRunnable(const std::string &url);
 	~DownloadBookRunnable();
 	void run();
@@ -69,7 +69,7 @@ public:
 private:
 	std::string myURL;
 	std::string myNetworkBookId;
-	NetworkLibraryBookItem::URLType myFormat;
+	NetworkBookItem::URLType myFormat;
 
 	std::string myFileName;
 
@@ -123,12 +123,12 @@ private:
 class PurchaseBookRunnable : public NetworkOperationRunnable {
 
 public:
-	PurchaseBookRunnable(NetworkAuthenticationManager &mgr, NetworkLibraryBookItem &book);
+	PurchaseBookRunnable(NetworkAuthenticationManager &mgr, NetworkBookItem &book);
 	void run();
 
 private:
 	NetworkAuthenticationManager &myManager;
-	NetworkLibraryBookItem &myBook;
+	NetworkBookItem &myBook;
 };
 
 class PasswordRecoveryRunnable : public NetworkOperationRunnable {

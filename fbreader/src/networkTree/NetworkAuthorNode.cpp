@@ -29,7 +29,7 @@ const ZLTypeId &NetworkAuthorNode::typeId() const {
 	return TYPE_ID;
 }
 
-NetworkAuthorNode::NetworkAuthorNode(NetworkContainerNode *parent, const NetworkLibraryBookItem::AuthorData &author) : NetworkContainerNode(parent), myAuthor(author) {
+NetworkAuthorNode::NetworkAuthorNode(NetworkContainerNode *parent, const NetworkBookItem::AuthorData &author) : NetworkContainerNode(parent), myAuthor(author) {
 }
 
 std::string NetworkAuthorNode::title() const {
@@ -57,6 +57,6 @@ shared_ptr<ZLImage> NetworkAuthorNode::extractCoverImage() const {
 	return defaultCoverImage("booktree-author.png");
 }
 
-const NetworkLibraryBookItem::AuthorData &NetworkAuthorNode::author() {
+const NetworkBookItem::AuthorData &NetworkAuthorNode::author() {
 	return myAuthor;
 }

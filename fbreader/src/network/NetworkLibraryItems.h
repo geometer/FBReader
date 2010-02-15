@@ -112,7 +112,7 @@ private: // disable copying
 	const NetworkCatalogItem &operator = (const NetworkCatalogItem &);
 };
 
-class NetworkLibraryBookItem : public NetworkLibraryItem {
+class NetworkBookItem : public NetworkLibraryItem {
 
 public:
 	enum URLType {
@@ -136,8 +136,8 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	NetworkLibraryBookItem(const std::string &id, unsigned int index);
-	explicit NetworkLibraryBookItem(const NetworkLibraryBookItem &book);
+	NetworkBookItem(const std::string &id, unsigned int index);
+	explicit NetworkBookItem(const NetworkBookItem &book);
 
 	const ZLTypeId &typeId() const;
 
@@ -193,24 +193,24 @@ private:
 	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
 
 private: // disable copying
-	const NetworkLibraryBookItem &operator = (const NetworkLibraryBookItem &);
+	const NetworkBookItem &operator = (const NetworkBookItem &);
 };
 
-inline unsigned int NetworkLibraryBookItem::index() const { return myIndex; }
-inline void NetworkLibraryBookItem::setIndex(unsigned int index) { myIndex = index; }
+inline unsigned int NetworkBookItem::index() const { return myIndex; }
+inline void NetworkBookItem::setIndex(unsigned int index) { myIndex = index; }
 
-inline const std::string &NetworkLibraryBookItem::language() const { return myLanguage; }
-inline const std::string &NetworkLibraryBookItem::date() const { return myDate; }
-inline const std::string &NetworkLibraryBookItem::seriesTitle() const { return mySeriesTitle; }
-inline int NetworkLibraryBookItem::indexInSeries() const { return myIndexInSeries; }
-inline const std::string &NetworkLibraryBookItem::price() const { return myPrice; }
-inline const std::string &NetworkLibraryBookItem::annotation() const { return myAnnotation; }
-inline std::string &NetworkLibraryBookItem::annotation() { return myAnnotation; }
-inline const std::map<NetworkLibraryBookItem::URLType, std::string> &NetworkLibraryBookItem::urlByType() const { return myURLByType; }
-inline const std::vector<NetworkLibraryBookItem::AuthorData> &NetworkLibraryBookItem::authors() const { return myAuthors; }
-inline const std::vector<std::string> &NetworkLibraryBookItem::tags() const { return myTags; }
-inline std::map<NetworkLibraryBookItem::URLType, std::string> &NetworkLibraryBookItem::urlByType() { return myURLByType; }
-inline std::vector<NetworkLibraryBookItem::AuthorData> &NetworkLibraryBookItem::authors() { return myAuthors; }
-inline std::vector<std::string> &NetworkLibraryBookItem::tags() { return myTags; }
+inline const std::string &NetworkBookItem::language() const { return myLanguage; }
+inline const std::string &NetworkBookItem::date() const { return myDate; }
+inline const std::string &NetworkBookItem::seriesTitle() const { return mySeriesTitle; }
+inline int NetworkBookItem::indexInSeries() const { return myIndexInSeries; }
+inline const std::string &NetworkBookItem::price() const { return myPrice; }
+inline const std::string &NetworkBookItem::annotation() const { return myAnnotation; }
+inline std::string &NetworkBookItem::annotation() { return myAnnotation; }
+inline const std::map<NetworkBookItem::URLType, std::string> &NetworkBookItem::urlByType() const { return myURLByType; }
+inline const std::vector<NetworkBookItem::AuthorData> &NetworkBookItem::authors() const { return myAuthors; }
+inline const std::vector<std::string> &NetworkBookItem::tags() const { return myTags; }
+inline std::map<NetworkBookItem::URLType, std::string> &NetworkBookItem::urlByType() { return myURLByType; }
+inline std::vector<NetworkBookItem::AuthorData> &NetworkBookItem::authors() { return myAuthors; }
+inline std::vector<std::string> &NetworkBookItem::tags() { return myTags; }
 
 #endif /* __NETWORKLIBRARYITEMS_H__ */

@@ -29,7 +29,7 @@ NetworkBookCollection::NetworkBookCollection() {
 }
 
 void NetworkBookCollection::addBook(shared_ptr<NetworkLibraryItem> bookPtr) {
-	if (bookPtr.isNull() || bookPtr->typeId() != NetworkLibraryBookItem::TYPE_ID) {
+	if (bookPtr.isNull() || bookPtr->typeId() != NetworkBookItem::TYPE_ID) {
 		return;
 	}
 	myAuthorBooksMap.reset();
@@ -37,11 +37,11 @@ void NetworkBookCollection::addBook(shared_ptr<NetworkLibraryItem> bookPtr) {
 	NetworkLibraryItemList::iterator it = std::upper_bound(myBookList.begin(), myBookList.end(), bookPtr, NetworkBookItemComparator());
 	myBookList.insert(it, bookPtr);
 
-	NetworkLibraryBookItem &book = (NetworkLibraryBookItem &) *bookPtr;
+	NetworkBookItem &book = (NetworkBookItem &) *bookPtr;
 
-	for (std::vector<NetworkLibraryBookItem::AuthorData>::iterator jt = book.authors().begin(); jt != book.authors().end(); ++jt) {
-		NetworkLibraryBookItem::AuthorData &author = *jt;
-		std::map<NetworkLibraryBookItem::AuthorData, unsigned int>::iterator kt = myAuthorRates.find(author);
+	for (std::vector<NetworkBookItem::AuthorData>::iterator jt = book.authors().begin(); jt != book.authors().end(); ++jt) {
+		NetworkBookItem::AuthorData &author = *jt;
+		std::map<NetworkBookItem::AuthorData, unsigned int>::iterator kt = myAuthorRates.find(author);
 		if (kt == myAuthorRates.end()) {
 			myAuthorRates[author] = book.index();
 		} else if (kt->second > book.index()) {
@@ -55,8 +55,8 @@ const NetworkAuthorBooksMap &NetworkBookCollection::authorBooksMap() {
 		myAuthorBooksMap = new NetworkAuthorBooksMap(*myAuthorComparator);
 		NetworkAuthorBooksMap &bookMap = *myAuthorBooksMap;
 		for (NetworkLibraryItemList::const_iterator it = myBookList.begin(); it != myBookList.end(); ++it) {
-			NetworkLibraryBookItem &book = (NetworkLibraryBookItem &) **it;
-			for (std::vector<NetworkLibraryBookItem::AuthorData>::const_iterator jt = book.authors().begin(); jt != book.authors().end(); ++jt) {
+			NetworkBookItem &book = (NetworkBookItem &) **it;
+			for (std::vector<NetworkBookItem::AuthorData>::const_iterator jt = book.authors().begin(); jt != book.authors().end(); ++jt) {
 				bookMap[*jt].push_back(*it);
 			}
 		}

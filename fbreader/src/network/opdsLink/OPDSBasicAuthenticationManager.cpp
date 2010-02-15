@@ -114,12 +114,12 @@ void OPDSBasicAuthenticationManager::logOut() {
 
 
 
-std::string OPDSBasicAuthenticationManager::networkBookId(const NetworkLibraryBookItem &) {
+std::string OPDSBasicAuthenticationManager::networkBookId(const NetworkBookItem &) {
 	return "";
 }
 
-NetworkLibraryBookItem::URLType OPDSBasicAuthenticationManager::downloadLinkType(const NetworkLibraryBookItem &) {
-	return NetworkLibraryBookItem::NONE;
+NetworkBookItem::URLType OPDSBasicAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
+	return NetworkBookItem::NONE;
 }
 
 const std::string &OPDSBasicAuthenticationManager::currentUserName() {

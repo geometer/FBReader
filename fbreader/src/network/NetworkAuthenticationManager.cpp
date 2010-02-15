@@ -34,12 +34,12 @@ NetworkAuthenticationManager::NetworkAuthenticationManager(const std::string &si
 NetworkAuthenticationManager::~NetworkAuthenticationManager() {
 }
 
-std::string NetworkAuthenticationManager::networkBookId(const NetworkLibraryBookItem &) {
+std::string NetworkAuthenticationManager::networkBookId(const NetworkBookItem &) {
 	return "";
 }
 
-NetworkLibraryBookItem::URLType NetworkAuthenticationManager::downloadLinkType(const NetworkLibraryBookItem &) {
-	return NetworkLibraryBookItem::NONE;
+NetworkBookItem::URLType NetworkAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
+	return NetworkBookItem::NONE;
 }
 
 bool NetworkAuthenticationManager::needsInitialization() {
@@ -50,15 +50,15 @@ std::string NetworkAuthenticationManager::initialize() {
 	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
 }
 
-bool NetworkAuthenticationManager::needPurchase(const NetworkLibraryBookItem &) {
+bool NetworkAuthenticationManager::needPurchase(const NetworkBookItem &) {
 	return false;
 }
 
-std::string NetworkAuthenticationManager::purchaseBook(NetworkLibraryBookItem &) {
+std::string NetworkAuthenticationManager::purchaseBook(NetworkBookItem &) {
 	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
 }
 
-std::string NetworkAuthenticationManager::downloadLink(const NetworkLibraryBookItem &) {
+std::string NetworkAuthenticationManager::downloadLink(const NetworkBookItem &) {
 	return "";
 }
 

@@ -28,7 +28,7 @@ FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent,
 		NetworkCatalogNode *ptr = new NetworkCatalogNode(parent, item, atPosition);
 		ptr->item().onDisplayItem();
 		return ptr;
-	} else if (item->isInstanceOf(NetworkLibraryBookItem::TYPE_ID)) {
+	} else if (item->isInstanceOf(NetworkBookItem::TYPE_ID)) {
 		return new NetworkBookInfoNode(parent, item);
 	}
 	return 0;
@@ -55,21 +55,21 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 	}
 
 	for (NetworkLibraryItemList::const_iterator it = books.begin(); it != books.end(); ++it) {
-		if (!(*it)->isInstanceOf(NetworkLibraryBookItem::TYPE_ID)) {
+		if (!(*it)->isInstanceOf(NetworkBookItem::TYPE_ID)) {
 			continue;
 		}
-		const NetworkLibraryBookItem &book = (const NetworkLibraryBookItem &) **it;
+		const NetworkBookItem &book = (const NetworkBookItem &) **it;
 		std::string seriesTitle = book.seriesTitle();
 
 		if (!seriesTitle.empty() && (seriesNode == 0 || seriesNode->seriesTitle() != seriesTitle)) {
 			NetworkLibraryItemList::const_iterator jt = it + 1;
-			while (jt != books.end() && !(*jt)->isInstanceOf(NetworkLibraryBookItem::TYPE_ID)) {
+			while (jt != books.end() && !(*jt)->isInstanceOf(NetworkBookItem::TYPE_ID)) {
 				++jt;
 			}
 			if (jt == books.end()) {
 				seriesTitle.clear();
 			} else {
-				const NetworkLibraryBookItem &next = (const NetworkLibraryBookItem &) **jt;
+				const NetworkBookItem &next = (const NetworkBookItem&)**jt;
 				if (next.seriesTitle() != seriesTitle) {
 					seriesTitle.clear();
 				}

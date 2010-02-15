@@ -58,17 +58,17 @@ public:
 	 * Returns analog for downloadLink(book), but this link doesn't depend on account;
 	 * This value is used in calls for BooksDB's Network database.
 	 */
-	virtual std::string networkBookId(const NetworkLibraryBookItem &book); 
+	virtual std::string networkBookId(const NetworkBookItem &book); 
 
-	virtual NetworkLibraryBookItem::URLType downloadLinkType(const NetworkLibraryBookItem &book); // returns type of download link
+	virtual NetworkBookItem::URLType downloadLinkType(const NetworkBookItem &book); // returns type of download link
 
 public: // Account specific methods (can be called only if authorised!!!)
 	virtual const std::string &currentUserName() = 0;
 	virtual bool needsInitialization();
 	virtual std::string initialize(); // returns error message
-	virtual bool needPurchase(const NetworkLibraryBookItem &book); // returns true if link must be purchased before downloading
-	virtual std::string purchaseBook(NetworkLibraryBookItem &book); // returns error message
-	virtual std::string downloadLink(const NetworkLibraryBookItem &book); // returns link to download book
+	virtual bool needPurchase(const NetworkBookItem &book); // returns true if link must be purchased before downloading
+	virtual std::string purchaseBook(NetworkBookItem &book); // returns error message
+	virtual std::string downloadLink(const NetworkBookItem &book); // returns link to download book
 
 	virtual std::string refillAccountLink();
 	virtual std::string currentAccount();

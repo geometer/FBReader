@@ -65,16 +65,16 @@ public:
 	std::string authorise(const std::string &pwd); // returns error message
 	void logOut();
 
-	std::string networkBookId(const NetworkLibraryBookItem &book);
-	NetworkLibraryBookItem::URLType downloadLinkType(const NetworkLibraryBookItem &book);
+	std::string networkBookId(const NetworkBookItem &book);
+	NetworkBookItem::URLType downloadLinkType(const NetworkBookItem &book);
 
 public: // Account specific methods (can be called only if authorised!!!)
 	const std::string &currentUserName();
 	/*bool needsInitialization();
 	std::string initialize(); // returns error message
-	bool needPurchase(const NetworkLibraryBookItem &book); // returns true if link must be purchased before downloading
-	std::string purchaseBook(NetworkLibraryBookItem &book); // returns error message
-	std::string downloadLink(const NetworkLibraryBookItem &book); // returns link to download book*/
+	bool needPurchase(const NetworkBookItem &book); // returns true if link must be purchased before downloading
+	std::string purchaseBook(NetworkBookItem &book); // returns error message
+	std::string downloadLink(const NetworkBookItem &book); // returns link to download book*/
 
 	//std::string refillAccountLink();
 	//std::string currentAccount();

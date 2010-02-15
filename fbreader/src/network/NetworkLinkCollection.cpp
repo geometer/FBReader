@@ -125,12 +125,12 @@ static std::string normalize(const std::string &url) {
 	return nURL;
 }
 
-std::string NetworkLinkCollection::makeBookFileName(const std::string &url, NetworkLibraryBookItem::URLType format) {
+std::string NetworkLinkCollection::makeBookFileName(const std::string &url, NetworkBookItem::URLType format) {
 	myErrorMessage.clear();
 	return makeBookFileName(url, format, false);
 }
 
-std::string NetworkLinkCollection::makeBookFileName(const std::string &url, NetworkLibraryBookItem::URLType format, bool createDirectories) {
+std::string NetworkLinkCollection::makeBookFileName(const std::string &url, NetworkBookItem::URLType format, bool createDirectories) {
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 	size_t index = url.find("://");
 	std::string suburl = url.substr(index + 3);
@@ -173,21 +173,21 @@ std::string NetworkLinkCollection::makeBookFileName(const std::string &url, Netw
 	std::string ext;
 	std::string suffix;
 	switch (format) {
-		case NetworkLibraryBookItem::BOOK_EPUB:
+		case NetworkBookItem::BOOK_EPUB:
 			ext = ".epub";
 			break;
-		case NetworkLibraryBookItem::BOOK_MOBIPOCKET:
+		case NetworkBookItem::BOOK_MOBIPOCKET:
 			ext = ".mobi";
 			break;
-		case NetworkLibraryBookItem::BOOK_FB2_ZIP:
+		case NetworkBookItem::BOOK_FB2_ZIP:
 			ext = ".fb2.zip";
 			break;
-		case NetworkLibraryBookItem::BOOK_DEMO_FB2_ZIP:
+		case NetworkBookItem::BOOK_DEMO_FB2_ZIP:
 			suffix = ".trial";
 			ext = ".fb2.zip";
 			break;
-		case NetworkLibraryBookItem::NONE:
-		case NetworkLibraryBookItem::LINK_HTTP:
+		case NetworkBookItem::NONE:
+		case NetworkBookItem::LINK_HTTP:
 			break;
 	}
 
@@ -229,7 +229,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &networkBookId
 	return BooksDB::Instance().getNetFile(::normalize(networkBookId));
 }
 
-bool NetworkLinkCollection::downloadBook(const std::string &url, const std::string &networkBookId, NetworkLibraryBookItem::URLType format, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
+bool NetworkLinkCollection::downloadBook(const std::string &url, const std::string &networkBookId, NetworkBookItem::URLType format, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
 	const std::string nURL = ::normalize(url);
 	const std::string nNetworkBookId = ::normalize(networkBookId);
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];

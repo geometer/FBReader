@@ -25,7 +25,7 @@
 #include "NetworkComparators.h"
 
 
-typedef std::map<NetworkLibraryBookItem::AuthorData, NetworkLibraryItemList, NetworkAuthorComparator> NetworkAuthorBooksMap;
+typedef std::map<NetworkBookItem::AuthorData, NetworkLibraryItemList, NetworkAuthorComparator> NetworkAuthorBooksMap;
 
 
 class NetworkBookCollection {
@@ -43,7 +43,7 @@ public:
 
 private:
 	NetworkLibraryItemList myBookList;
-	std::map<NetworkLibraryBookItem::AuthorData, unsigned int> myAuthorRates;
+	std::map<NetworkBookItem::AuthorData, unsigned int> myAuthorRates;
 	shared_ptr<NetworkAuthorComparator> myAuthorComparator;
 	shared_ptr<NetworkAuthorBooksMap> myAuthorBooksMap;
 
