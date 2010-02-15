@@ -97,19 +97,20 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 	case CATALOG: 
 		if (!closed && TAG_BOOK == tag) {
 			myBookId = stringAttributeValue(attributes, "hub_id");
-			myCoverURL = stringAttributeValue(attributes, "cover_preview");
+			myURLByType[NetworkItem::URL_COVER] =
+				stringAttributeValue(attributes, "cover_preview");
 
 			std::string url = stringAttributeValue(attributes, "url");
 			if (!url.empty()) {
 				myLink.rewriteUrl(url);
-				myURLByType[NetworkBookItem::LINK_HTTP] = url;
+				myURLByType[NetworkItem::URL_LINK_HTTP] = url;
 			}
 
 			const std::string hasTrial = stringAttributeValue(attributes, "has_trial");
 			if (hasTrial == "1") {
 				myURLByType.insert(
 					std::make_pair(
-						NetworkBookItem::BOOK_DEMO_FB2_ZIP,
+						NetworkItem::URL_BOOK_DEMO_FB2_ZIP,
 						makeDemoUrl(myBookId)
 					)
 				);
@@ -128,9 +129,8 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				myIndex++,
 				myTitle,
 				mySummary,
-				myCoverURL,
 				myLanguage,
-				std::map<NetworkItem::URLType,std::string>()
+				myURLByType
 			);
 
 			book->setAuthenticationManager(myLink.authenticationManager());
@@ -142,9 +142,6 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			}
 			for (std::vector<std::string>::const_iterator it = myTags.begin(); it != myTags.end(); ++it) {
 				book->tags().push_back(*it);
-			}
-			for (std::map<NetworkItem::URLType,std::string>::const_iterator it = myURLByType.begin(); it != myURLByType.end(); ++it) {
-				book->URLByType.insert(*it);
 			}
 
 			myBooks.push_back(book);

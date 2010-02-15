@@ -127,7 +127,7 @@ std::string LitResAuthenticationManager::networkBookId(const NetworkBookItem &bo
 }
 
 NetworkItem::URLType LitResAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
-	return NetworkBookItem::BOOK_FB2_ZIP;
+	return NetworkItem::URL_BOOK_FB2_ZIP;
 }
 
 const std::string &LitResAuthenticationManager::currentUserName() {

@@ -187,7 +187,8 @@ LitResRootCatalogItem::LitResRootCatalogItem(
 	const LitResLink &link,
 	const std::string &title,
 	const std::string &summary
-) : NetworkCatalogItem(link, "", "", title, summary, "feed-litres.png", std::map<URLType,std::string>()) {
+) : NetworkCatalogItem(link, "", "", title, summary, std::map<URLType,std::string>()) {
+	URLByType[URL_COVER] = "feed-litres.png";
 }
 
 std::string LitResRootCatalogItem::loadChildren(NetworkItem::List &children) {
@@ -224,7 +225,7 @@ LitResCatalogItem::LitResCatalogItem(
 	const std::string &summary,
 	bool sortItems,
 	CatalogType catalogType
-) : NetworkCatalogItem(link, url, "", title, summary, "", std::map<URLType,std::string>()), mySortItems(sortItems), myCatalogType(catalogType) {
+) : NetworkCatalogItem(link, url, "", title, summary, std::map<URLType,std::string>()), mySortItems(sortItems), myCatalogType(catalogType) {
 }
 
 std::string LitResCatalogItem::loadChildren(NetworkItem::List &children) {
@@ -255,7 +256,6 @@ LitResMyCatalogItem::LitResMyCatalogItem(const LitResLink &link) : NetworkCatalo
 	"",
 	"Мои книги",
 	"Купленные книги",
-	"",
 	std::map<URLType,std::string>(),
 	LoggedUsers
 ) {
@@ -288,7 +288,6 @@ LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(const LitResLink &link) :
 	"",
 	"Книги по авторам",
 	"Просмотр книг по авторам",
-	"",
 	std::map<URLType,std::string>()
 ) {
 }
@@ -327,7 +326,7 @@ LitResAuthorsItem::LitResAuthorsItem(
 	const std::string &url,
 	const std::string &title,
 	const std::string &summary
-) : NetworkCatalogItem(link, url, "", title, summary, "", std::map<URLType,std::string>()) {
+) : NetworkCatalogItem(link, url, "", title, summary, std::map<URLType,std::string>()) {
 }
 
 std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children) {
@@ -380,7 +379,6 @@ LitResGenresItem::LitResGenresItem(
 	"",
 	title,
 	summary,
-	"",
 	std::map<URLType,std::string>()
 ),
 myGenres(genres) {

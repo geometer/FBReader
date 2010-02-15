@@ -17,7 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <algorithm>
 
 #include <ZLResource.h>
@@ -154,7 +153,7 @@ void NetworkCatalogNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
 }
 
 shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
-	const std::string &url = myItem->CoverURL;
+	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
 
 	if (url.empty()) {
 		return lastResortCoverImage();
@@ -223,7 +222,6 @@ void NetworkCatalogNode::ExpandCatalogAction::run() {
 		NetworkAuthenticationManager &mgr = *link.authenticationManager();
 		IsAuthorisedRunnable checker(mgr);
 		checker.executeWithUI();
-		std::cerr << "authState == " << checker.result() << std::endl;
 		if (checker.hasErrors()) {
 			checker.showErrorMessage();
 			return;

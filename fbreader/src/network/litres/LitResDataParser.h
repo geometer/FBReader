@@ -67,7 +67,6 @@ private:
 	std::string myBookId;
 	std::string myTitle;
 	std::string mySummary;
-	std::string myCoverURL;
 	std::string myLanguage;
 	std::string myDate;
 	std::string myPrice;

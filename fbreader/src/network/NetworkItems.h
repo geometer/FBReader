@@ -37,14 +37,14 @@ public:
 	typedef std::vector<shared_ptr<NetworkItem> > List;
 
 	enum URLType {
-		NONE,
-		BOOK_EPUB,
-		BOOK_MOBIPOCKET,
-		BOOK_FB2_ZIP,
-		//BOOK_PDF,
-		BOOK_DEMO_FB2_ZIP,
-		LINK_HTTP,
-		COVER
+		URL_NONE,
+		URL_BOOK_EPUB,
+		URL_BOOK_MOBIPOCKET,
+		URL_BOOK_FB2_ZIP,
+		URL_BOOK_PDF,
+		URL_BOOK_DEMO_FB2_ZIP,
+		URL_LINK_HTTP,
+		URL_COVER
 	};
 
 protected:
@@ -54,7 +54,6 @@ protected:
 	NetworkItem(
 		const std::string &title,
 		const std::string &summary,
-		const std::string &coverURL,
 		const std::map<URLType,std::string> &urlByType
 	);
 
@@ -66,7 +65,6 @@ public:
 public:
 	const std::string Title;
 	const std::string Summary;
-	/*const*/ std::string CoverURL;
 	/*const*/ std::map<URLType,std::string> URLByType;
 
 private: // disable copying
@@ -97,7 +95,6 @@ public:
 		const std::string &htmlURL,
 		const std::string &title,
 		const std::string &summary,
-		const std::string &coverURL,
 		const std::map<URLType,std::string> urlByType,
 		VisibilityType visibility = Always
 	);
@@ -137,7 +134,6 @@ public:
 		unsigned int index,
 		const std::string &title,
 		const std::string &summary,
-		const std::string &coverURL,
 		const std::string &language,
 		const std::map<URLType,std::string> urlByType
 	);

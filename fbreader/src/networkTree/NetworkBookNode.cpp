@@ -161,7 +161,7 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 		drawHyperlink(context, left, vOffset, resource["download"].value(), myDownloadAction);
 	} else {
 		NetworkItem::URLType format = book.bestDemoFormat();
-		if (format != NetworkBookItem::NONE) {
+		if (format != NetworkItem::URL_NONE) {
 			if (hasLocalCopy(book, format)) {
 				drawHyperlink(context, left, vOffset, resource["readDemo"].value(), myReadDemoAction);
 			} else {
@@ -176,15 +176,15 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 }
 
 shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {
-	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->CoverURL);
+	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
 	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
 }
 
 bool NetworkBookNode::hasLocalCopy() {
 	NetworkBookItem &book = bookItem();
-	if (hasLocalCopy(book, NetworkBookItem::BOOK_EPUB)
-		|| hasLocalCopy(book, NetworkBookItem::BOOK_MOBIPOCKET)
-		|| hasLocalCopy(book, NetworkBookItem::BOOK_FB2_ZIP)) {
+	if (hasLocalCopy(book, NetworkItem::URL_BOOK_EPUB)
+		|| hasLocalCopy(book, NetworkItem::URL_BOOK_MOBIPOCKET)
+		|| hasLocalCopy(book, NetworkItem::URL_BOOK_FB2_ZIP)) {
 		return true;
 	}
 	if (book.authenticationManager().isNull()) {
@@ -221,7 +221,7 @@ bool NetworkBookNode::hasLocalCopy(NetworkBookItem &book, NetworkItem::URLType f
 
 bool NetworkBookNode::NetworkBookNode::hasDirectLink() {
 	NetworkBookItem &book = bookItem();
-	if (book.bestBookFormat() != NetworkBookItem::NONE) {
+	if (book.bestBookFormat() != NetworkItem::URL_NONE) {
 		return true;
 	}
 	if (book.authenticationManager().isNull()) {
@@ -252,18 +252,18 @@ NetworkBookNode::ReadAction::ReadAction(shared_ptr<NetworkItem> book) : myBook(b
 void NetworkBookNode::ReadAction::run() {
 	NetworkBookItem &book = (NetworkBookItem &) *myBook;
 
-	NetworkItem::URLType format = NetworkBookItem::NONE;
+	NetworkItem::URLType format = NetworkItem::URL_NONE;
 
-	if (NetworkBookNode::hasLocalCopy(book, NetworkBookItem::BOOK_EPUB)) {
-		format = NetworkBookItem::BOOK_EPUB;
-	} else if (NetworkBookNode::hasLocalCopy(book, NetworkBookItem::BOOK_MOBIPOCKET)) {
-		format = NetworkBookItem::BOOK_MOBIPOCKET;
-	} else if (NetworkBookNode::hasLocalCopy(book, NetworkBookItem::BOOK_FB2_ZIP)) {
-		format = NetworkBookItem::BOOK_FB2_ZIP;
+	if (NetworkBookNode::hasLocalCopy(book, NetworkItem::URL_BOOK_EPUB)) {
+		format = NetworkItem::URL_BOOK_EPUB;
+	} else if (NetworkBookNode::hasLocalCopy(book, NetworkItem::URL_BOOK_MOBIPOCKET)) {
+		format = NetworkItem::URL_BOOK_MOBIPOCKET;
+	} else if (NetworkBookNode::hasLocalCopy(book, NetworkItem::URL_BOOK_FB2_ZIP)) {
+		format = NetworkItem::URL_BOOK_FB2_ZIP;
 	}
 
 	std::string networkBookId;
-	if (format != NetworkBookItem::NONE) {
+	if (format != NetworkItem::URL_NONE) {
 		networkBookId = book.URLByType[format];
 	} else if (!book.authenticationManager().isNull()) {
 		NetworkAuthenticationManager &mgr = *book.authenticationManager();
@@ -299,7 +299,7 @@ void NetworkBookNode::DownloadAction::run() {
 	NetworkItem::URLType format =
 		myDemo ? book.bestDemoFormat() : book.bestBookFormat();
 
-	if (format == NetworkBookItem::NONE) {
+	if (format == NetworkItem::URL_NONE) {
 		if (myDemo || book.authenticationManager().isNull()) {
 			return;
 		}
@@ -355,7 +355,7 @@ NetworkBookNode::ReadDemoAction::ReadDemoAction(shared_ptr<NetworkItem> book) : 
 void NetworkBookNode::ReadDemoAction::run() {
 	NetworkBookItem &book = (NetworkBookItem &) *myBook;
 	NetworkItem::URLType format = book.bestDemoFormat();
-	if (format == NetworkBookItem::NONE) {
+	if (format == NetworkItem::URL_NONE) {
 		return;
 	}
 	std::string networkBookId = book.URLByType[format];
@@ -450,9 +450,9 @@ void NetworkBookNode::DeleteAction::run() {
 		return;
 	}
 
-	removeFormat(book, NetworkBookItem::BOOK_EPUB);
-	removeFormat(book, NetworkBookItem::BOOK_MOBIPOCKET);
-	removeFormat(book, NetworkBookItem::BOOK_FB2_ZIP);
+	removeFormat(book, NetworkItem::URL_BOOK_EPUB);
+	removeFormat(book, NetworkItem::URL_BOOK_MOBIPOCKET);
+	removeFormat(book, NetworkItem::URL_BOOK_FB2_ZIP);
 
 	if (book.authenticationManager().isNull()) {
 		return;

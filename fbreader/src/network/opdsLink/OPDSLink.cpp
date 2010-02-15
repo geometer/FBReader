@@ -176,14 +176,15 @@ void OPDSLink::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager>
 
 
 shared_ptr<NetworkItem> OPDSLink::libraryItem() const {
+	std::map<NetworkItem::URLType,std::string> urlMap;
+	urlMap[NetworkItem::URL_COVER] = myIconName;
 	return new OPDSCatalogItem(
 		*this,
 		myCatalogURL,
 		"",
 		Title,
 		mySummary,
-		myIconName,
-		std::map<NetworkItem::URLType,std::string>()
+		urlMap
 	);
 }
 

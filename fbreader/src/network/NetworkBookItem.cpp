@@ -35,18 +35,17 @@ NetworkBookItem::NetworkBookItem(
 	unsigned int index,
 	const std::string &title,
 	const std::string &summary,
-	const std::string &coverURL,
 	const std::string &language,
 	const std::map<URLType,std::string> urlByType
 ) : 
-	NetworkItem(title, summary, coverURL, urlByType),
+	NetworkItem(title, summary, urlByType),
 	myIndex(index),
 	myId(id),
 	myLanguage(language) {
 }
 
 NetworkBookItem::NetworkBookItem(const NetworkBookItem &book) :
-	NetworkItem(book.Title, book.Summary, book.CoverURL, book.URLByType), 
+	NetworkItem(book.Title, book.Summary, book.URLByType), 
 	myIndex(book.myIndex), 
 	myId(book.myId), 
 	myLanguage(book.myLanguage), 
@@ -108,21 +107,21 @@ const std::string &NetworkBookItem::id() const {
 }*/
 
 NetworkItem::URLType NetworkBookItem::bestBookFormat() const {
-	if (URLByType.count(BOOK_EPUB) != 0) {
-		return BOOK_EPUB;
-	} else if (URLByType.count(BOOK_FB2_ZIP) != 0) {
-		return BOOK_FB2_ZIP;
-	} else if (URLByType.count(BOOK_MOBIPOCKET) != 0) {
-		return BOOK_MOBIPOCKET;
+	if (URLByType.count(URL_BOOK_EPUB) != 0) {
+		return URL_BOOK_EPUB;
+	} else if (URLByType.count(URL_BOOK_FB2_ZIP) != 0) {
+		return URL_BOOK_FB2_ZIP;
+	} else if (URLByType.count(URL_BOOK_MOBIPOCKET) != 0) {
+		return URL_BOOK_MOBIPOCKET;
 	}
-	return NONE;
+	return URL_NONE;
 }
 
 NetworkItem::URLType NetworkBookItem::bestDemoFormat() const {
-	if (URLByType.count(BOOK_DEMO_FB2_ZIP) != 0) {
-		return BOOK_DEMO_FB2_ZIP;
+	if (URLByType.count(URL_BOOK_DEMO_FB2_ZIP) != 0) {
+		return URL_BOOK_DEMO_FB2_ZIP;
 	}
-	return NONE;
+	return URL_NONE;
 }
 
 shared_ptr<NetworkAuthenticationManager> NetworkBookItem::authenticationManager() const {

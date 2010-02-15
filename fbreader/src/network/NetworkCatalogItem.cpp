@@ -27,11 +27,10 @@ NetworkCatalogItem::NetworkCatalogItem(
 	const std::string &htmlURL,
 	const std::string &title,
 	const std::string &summary,
-	const std::string &coverURL,
 	const std::map<URLType,std::string> urlByType,
 	VisibilityType visibility
 ) :
-	NetworkItem(title, summary, coverURL, urlByType),
+	NetworkItem(title, summary, urlByType),
 	Link(link),
 	URL(url),
 	HtmlURL(htmlURL),

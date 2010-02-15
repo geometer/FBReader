@@ -39,7 +39,7 @@ std::string NetworkAuthenticationManager::networkBookId(const NetworkBookItem &)
 }
 
 NetworkItem::URLType NetworkAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
-	return NetworkBookItem::NONE;
+	return NetworkItem::URL_NONE;
 }
 
 bool NetworkAuthenticationManager::needsInitialization() {

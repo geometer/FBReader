@@ -84,7 +84,7 @@ DownloadBookRunnable::DownloadBookRunnable(const NetworkBookItem &book, NetworkI
 	}
 }
 
-DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook"), myURL(url), myNetworkBookId(url), myFormat(NetworkBookItem::NONE) {
+DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook"), myURL(url), myNetworkBookId(url), myFormat(NetworkItem::URL_NONE) {
 }
 
 DownloadBookRunnable::~DownloadBookRunnable() {

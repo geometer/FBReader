@@ -173,21 +173,21 @@ std::string NetworkLinkCollection::makeBookFileName(const std::string &url, Netw
 	std::string ext;
 	std::string suffix;
 	switch (format) {
-		case NetworkBookItem::BOOK_EPUB:
+		case NetworkItem::URL_BOOK_EPUB:
 			ext = ".epub";
 			break;
-		case NetworkBookItem::BOOK_MOBIPOCKET:
+		case NetworkItem::URL_BOOK_MOBIPOCKET:
 			ext = ".mobi";
 			break;
-		case NetworkBookItem::BOOK_FB2_ZIP:
+		case NetworkItem::URL_BOOK_FB2_ZIP:
 			ext = ".fb2.zip";
 			break;
-		case NetworkBookItem::BOOK_DEMO_FB2_ZIP:
+		case NetworkItem::URL_BOOK_DEMO_FB2_ZIP:
 			suffix = ".trial";
 			ext = ".fb2.zip";
 			break;
-		case NetworkBookItem::NONE:
-		case NetworkBookItem::LINK_HTTP:
+		case NetworkItem::URL_NONE:
+		case NetworkItem::URL_LINK_HTTP:
 			break;
 	}
 

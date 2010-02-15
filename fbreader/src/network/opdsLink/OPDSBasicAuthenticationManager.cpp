@@ -119,7 +119,7 @@ std::string OPDSBasicAuthenticationManager::networkBookId(const NetworkBookItem 
 }
 
 NetworkItem::URLType OPDSBasicAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
-	return NetworkBookItem::NONE;
+	return NetworkItem::URL_NONE;
 }
 
 const std::string &OPDSBasicAuthenticationManager::currentUserName() {
