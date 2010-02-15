@@ -128,7 +128,14 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	NetworkBookItem(const std::string &id, unsigned int index, const std::string &title, const std::string &coverURL);
+	NetworkBookItem(
+		const std::string &id,
+		unsigned int index,
+		const std::string &title,
+		const std::string &summary,
+		const std::string &coverURL,
+		const std::string &language
+	);
 	explicit NetworkBookItem(const NetworkBookItem &book);
 
 	const ZLTypeId &typeId() const;
@@ -171,12 +178,12 @@ public:
 private:
 	unsigned int myIndex;
 	const std::string myId;
+	std::string myAnnotation;
 	std::string myLanguage;
 	std::string myDate;
 	std::string mySeriesTitle;
 	int myIndexInSeries;
 	std::string myPrice; // number with curency code (see http://en.wikipedia.org/wiki/List_of_circulating_currencies for example)
-	std::string myAnnotation;
 
 	std::map<URLType, std::string> myURLByType;
 	std::vector<AuthorData> myAuthors;

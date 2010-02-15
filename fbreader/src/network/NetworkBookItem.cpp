@@ -34,11 +34,15 @@ NetworkBookItem::NetworkBookItem(
 	const std::string &id,
 	unsigned int index,
 	const std::string &title,
-	const std::string &coverURL
+	const std::string &summary,
+	const std::string &coverURL,
+	const std::string &language
 ) : 
 	NetworkLibraryItem(title, coverURL),
 	myIndex(index),
-	myId(id) {
+	myId(id),
+	myAnnotation(summary),
+	myLanguage(language) {
 }
 
 NetworkBookItem::NetworkBookItem(const NetworkBookItem &book) :

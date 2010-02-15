@@ -97,10 +97,15 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 	case CATALOG: 
 		if (!closed && TAG_BOOK == tag) {
 			const std::string bookId = stringAttributeValue(attributes, "hub_id");
-			myCurrentBook = new NetworkBookItem(bookId, myIndex++, "", "");
+			myCurrentBook = new NetworkBookItem(
+				bookId,
+				myIndex++,
+				"", // title
+				"", // summary
+				stringAttributeValue(attributes, "cover_preview"),
+				"" // language
+			);
 			currentBook().setAuthenticationManager(myLink.authenticationManager());
-
-			currentBook().CoverURL = stringAttributeValue(attributes, "cover_preview");
 
 			std::string url = stringAttributeValue(attributes, "url");
 			if (!url.empty()) {

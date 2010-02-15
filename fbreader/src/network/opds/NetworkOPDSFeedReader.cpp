@@ -100,14 +100,19 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 }
 
 shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
-	shared_ptr<NetworkLibraryItem> bookPtr = new NetworkBookItem(entry.id()->uri(), myIndex++, entry.title(), "");
+	shared_ptr<NetworkLibraryItem> bookPtr = new NetworkBookItem(
+		entry.id()->uri(),
+		myIndex++,
+		entry.title(),
+		entry.summary(),
+		"",
+		entry.dcLanguage()
+	);
 	NetworkBookItem &book = (NetworkBookItem&)*bookPtr;
 
-	book.setLanguage(entry.dcLanguage());
 	if (!entry.dcIssued().isNull()) {
 		book.setDate(entry.dcIssued()->getDateTime(true));
 	}
-	book.setAnnotation(entry.summary());
 
 	for (size_t i = 0; i < entry.categories().size(); ++i) {
 		ATOMCategory &category = *(entry.categories()[i]);
@@ -145,8 +150,6 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &en
 	}
 
 	book.CoverURL = coverURL;
-
-	book.setAuthenticationManager(myData.Link.authenticationManager());
 
 	for (size_t i = 0; i < entry.authors().size(); ++i) {
 		ATOMAuthor &author = *(entry.authors()[i]);
@@ -193,6 +196,8 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &en
 		std::cerr << "\t\t</contributor>" << std::endl;
 	}*/
 	//entry.rights();
+
+	book.setAuthenticationManager(myData.Link.authenticationManager());
 
 	return bookPtr;
 }
