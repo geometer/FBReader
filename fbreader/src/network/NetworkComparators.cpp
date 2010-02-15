@@ -35,10 +35,8 @@ bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkItem> &book
 	const NetworkBookItem &book0 = (NetworkBookItem &) *bookPtr0;
 	const NetworkBookItem &book1 = (NetworkBookItem &) *bookPtr1;
 
-	const std::vector<NetworkBookItem::AuthorData> &authors0 =
-		book0.authors();
-	const std::vector<NetworkBookItem::AuthorData> &authors1 =
-		book1.authors();
+	const std::vector<NetworkBookItem::AuthorData> &authors0 = book0.Authors;
+	const std::vector<NetworkBookItem::AuthorData> &authors1 = book1.Authors;
 	if (authors0.empty() && !authors1.empty()) {
 		return true;
 	}

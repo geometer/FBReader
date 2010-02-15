@@ -130,6 +130,8 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				myTitle,
 				mySummary,
 				myLanguage,
+				myAuthors,
+				myTags,
 				myURLByType
 			);
 
@@ -137,12 +139,6 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			book->setPrice(myPrice);
 			book->setDate(myDate);
 			book->setSeries(mySeriesTitle, myIndexInSeries);
-			for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = myAuthors.begin(); it != myAuthors.end(); ++it) {
-				book->authors().push_back(*it);
-			}
-			for (std::vector<std::string>::const_iterator it = myTags.begin(); it != myTags.end(); ++it) {
-				book->tags().push_back(*it);
-			}
 
 			myBooks.push_back(book);
 

@@ -122,7 +122,7 @@ std::string NetworkBookNode::title() const {
 
 std::string NetworkBookNode::summary() const {
 	std::string authorsString;
-	const std::vector<NetworkBookItem::AuthorData> authors = bookItem().authors();
+	const std::vector<NetworkBookItem::AuthorData> authors = bookItem().Authors;
 	for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
 		if (!authorsString.empty()) {
 			authorsString += ", ";
@@ -331,12 +331,12 @@ void NetworkBookNode::DownloadAction::run() {
 	}
 
 	downloaderBook->removeAllAuthors();
-	for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = book.authors().begin(); it != book.authors().end(); ++it) {
+	for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = book.Authors.begin(); it != book.Authors.end(); ++it) {
 		downloaderBook->addAuthor(it->DisplayName, it->SortKey);
 	}
 	downloaderBook->setTitle(myDemo ? book.Title + DEMO_SUFFIX : book.Title);
 	downloaderBook->setLanguage(book.language());
-	for (std::vector<std::string>::const_iterator it = book.tags().begin(); it != book.tags().end(); ++it) {
+	for (std::vector<std::string>::const_iterator it = book.Tags.begin(); it != book.Tags.end(); ++it) {
 		downloaderBook->addTag(*it);
 	}
 	if (myDemo) {
@@ -467,4 +467,3 @@ void NetworkBookNode::DeleteAction::run() {
 	}
 	FBReader::Instance().refreshWindow();
 }
-

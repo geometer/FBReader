@@ -142,7 +142,6 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 	}
 
 	std::vector<NetworkBookItem::AuthorData> authors;
-
 	for (size_t i = 0; i < entry.authors().size(); ++i) {
 		ATOMAuthor &author = *(entry.authors()[i]);
 		NetworkBookItem::AuthorData authorData;
@@ -195,17 +194,12 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		entry.title(),
 		entry.summary(),
 		entry.dcLanguage(),
+		authors,
+		tags,
 		urlMap
 	);
 
 	book->setDate(date);
-	for (std::vector<std::string>::const_iterator it = tags.begin(); it != tags.end(); ++it) {
-		book->tags().push_back(*it);
-	}
-	for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
-		book->authors().push_back(*it);
-	}
-
 	book->setAuthenticationManager(myData.Link.authenticationManager());
 
 	return book;

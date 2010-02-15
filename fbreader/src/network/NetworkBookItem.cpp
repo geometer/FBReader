@@ -36,12 +36,16 @@ NetworkBookItem::NetworkBookItem(
 	const std::string &title,
 	const std::string &summary,
 	const std::string &language,
+	const std::vector<AuthorData> &authors,
+	const std::vector<std::string> &tags,
 	const std::map<URLType,std::string> &urlByType
 ) : 
 	NetworkItem(title, summary, urlByType),
 	myIndex(index),
 	Id(id),
-	myLanguage(language) {
+	myLanguage(language),
+	Authors(authors),
+	Tags(tags) {
 }
 
 NetworkBookItem::NetworkBookItem(const NetworkBookItem &book) :
@@ -53,8 +57,8 @@ NetworkBookItem::NetworkBookItem(const NetworkBookItem &book) :
 	mySeriesTitle(book.mySeriesTitle), 
 	myIndexInSeries(book.myIndexInSeries),
 	myPrice(book.myPrice), 
-	myAuthors(book.myAuthors), 
-	myTags(book.myTags), 
+	Authors(book.Authors), 
+	Tags(book.Tags), 
 	myAuthenticationManager(book.myAuthenticationManager) {
 }
 
