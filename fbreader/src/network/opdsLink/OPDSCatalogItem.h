@@ -34,7 +34,7 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const std::string &coverURL,
-		bool dependsOnAccount = false
+		VisibilityType visibility = Always
 	);
 
 private:

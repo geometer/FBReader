@@ -191,7 +191,7 @@ LitResRootCatalogItem::LitResRootCatalogItem(
 }
 
 std::string LitResRootCatalogItem::loadChildren(NetworkLibraryItemList &children) {
-	const LitResLink &link = (const LitResLink&)this->link();
+	const LitResLink &link = (const LitResLink&)Link;
 	children.push_back(new LitResCatalogItem(
 		link,
 		link.litresUrl("pages/catalit_browser/?rating=hot"),
@@ -231,8 +231,8 @@ std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	children.clear();
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		url(),
-		new LitResDataParser((const LitResLink&)link(), children)
+		URL,
+		new LitResDataParser((const LitResLink&)Link, children)
 	);
 
 	const std::string error = ZLNetworkManager::Instance().perform(networkData);
@@ -256,7 +256,7 @@ LitResMyCatalogItem::LitResMyCatalogItem(const LitResLink &link) : NetworkCatalo
 	"Мои книги",
 	"Купленные книги",
 	"",
-	true
+	LoggedUsers
 ) {
 	myForceReload = false;
 }
@@ -266,7 +266,8 @@ void LitResMyCatalogItem::onDisplayItem() {
 }
 
 std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) {
-	LitResAuthenticationManager &mgr = (LitResAuthenticationManager&)*link().authenticationManager();
+	LitResAuthenticationManager &mgr =
+		(LitResAuthenticationManager&)*Link.authenticationManager();
 	if (mgr.isAuthorised().Status == B3_FALSE) {
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
@@ -293,7 +294,7 @@ LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(const LitResLink &link) :
 std::string LitResByAuthorsCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	children.clear();
 
-	const LitResLink &link = (const LitResLink&)this->link();
+	const LitResLink &link = (const LitResLink&)Link;
 
 	children.push_back(new LitResAuthorsItem(
 		link,
@@ -333,7 +334,7 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 	std::vector<LitResAuthor> authors;
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		url(),
+		URL,
 		new LitResAuthorsParser(authors)
 	);
 
@@ -344,7 +345,7 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 
 	std::sort(authors.begin(), authors.end());
 
-	const LitResLink &link = (const LitResLink&)this->link();
+	const LitResLink &link = (const LitResLink&)Link;
 
 	for (std::vector<LitResAuthor>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
 		std::string anno;
@@ -383,7 +384,7 @@ myGenres(genres) {
 }
 
 std::string LitResGenresItem::loadChildren(NetworkLibraryItemList &children) {
-	const LitResLink &link = (const LitResLink&)this->link();
+	const LitResLink &link = (const LitResLink&)Link;
 	for (std::vector<shared_ptr<LitResGenre> >::const_iterator it = myGenres.begin(); it != myGenres.end(); ++it) {
 		const LitResGenre &genre = **it;
 		if (genre.Id.empty()) {
@@ -411,7 +412,7 @@ shared_ptr<NetworkLibraryItem> LitResLink::libraryItem() const {
 	return new LitResRootCatalogItem(*this, Title, "Продажа электронных книг.");
 }
 
-void LitResLink::rewriteUrl(std::string &url, bool externalUrl) const {
+void LitResLink::rewriteUrl(std::string &url, bool) const {
 	ZLNetworkUtil::appendParameter(url, "lfrom", "51");
 }
 

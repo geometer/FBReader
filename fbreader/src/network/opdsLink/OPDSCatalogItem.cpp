@@ -34,15 +34,15 @@ OPDSCatalogItem::OPDSCatalogItem(
 	const std::string &title,
 	const std::string &summary,
 	const std::string &coverURL,
-	bool dependsOnAccount
-) : NetworkCatalogItem(link, url, htmlURL, title, summary, coverURL, dependsOnAccount) {
+	VisibilityType visibility
+) : NetworkCatalogItem(link, url, htmlURL, title, summary, coverURL, visibility) {
 }
 
 std::string OPDSCatalogItem::loadChildren(NetworkLibraryItemList &children) {
-	NetworkOperationData data(link());
+	NetworkOperationData data(Link);
 
 	shared_ptr<ZLExecutionData> networkData =
-		((OPDSLink &)link()).createNetworkData(url(), data);
+		((OPDSLink&)Link).createNetworkData(URL, data);
 
 	while (!networkData.isNull()) {
 		std::string error = ZLNetworkManager::Instance().perform(networkData);
@@ -51,7 +51,7 @@ std::string OPDSCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 		}
 
 		children.insert(children.end(), data.Items.begin(), data.Items.end());
-		networkData = link().resume(data);
+		networkData = Link.resume(data);
 	}
 
 	return "";

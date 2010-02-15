@@ -319,10 +319,10 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 }
 
 bool NetworkView::processAccountDependent(NetworkCatalogItem &item) {
-	if (!item.dependsOnAccount()) {
+	if (item.Visibility == NetworkCatalogItem::Always) {
 		return true;
 	}
-	const NetworkLink &link = item.link();
+	const NetworkLink &link = item.Link;
 	if (link.authenticationManager().isNull()) {
 		return false;
 	}

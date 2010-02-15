@@ -28,13 +28,13 @@ NetworkCatalogItem::NetworkCatalogItem(
 	const std::string &title,
 	const std::string &summary,
 	const std::string &coverURL,
-	bool dependsOnAccount
+	VisibilityType visibility
 ) :
-	myLink(link),
-	myURL(url),
-	myHtmlURL(htmlURL),
-	mySummary(summary),
-	myDependsOnAccount(dependsOnAccount) {
+	Link(link),
+	URL(url),
+	HtmlURL(htmlURL),
+	Summary(summary),
+	Visibility(visibility) {
 	setTitle(title);
 	setCoverURL(coverURL);
 }
@@ -48,24 +48,4 @@ void NetworkCatalogItem::onDisplayItem() {
 
 NetworkCatalogItem::CatalogType NetworkCatalogItem::catalogType() const {
 	return OTHER;
-}
-
-const NetworkLink &NetworkCatalogItem::link() const {
-	return myLink;
-}
-
-const std::string &NetworkCatalogItem::url() const {
-	return myURL;
-}
-
-const std::string &NetworkCatalogItem::htmlURL() const {
-	return myHtmlURL;
-}
-
-const std::string &NetworkCatalogItem::summary() const {
-	return mySummary;
-}
-
-bool NetworkCatalogItem::dependsOnAccount() const {
-	return myDependsOnAccount;
 }

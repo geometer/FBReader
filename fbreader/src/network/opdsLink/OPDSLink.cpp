@@ -232,13 +232,13 @@ void OPDSLink::addUrlRewritingRule(shared_ptr<URLRewritingRule> rule) {
 	}
 }
 
-void OPDSLink::rewriteUrl(std::string &url, bool externalUrl) const {
+void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
 	for (std::set<shared_ptr<URLRewritingRule> >::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
 		const URLRewritingRule &rule = **it;
 
 		if (rule.Apply != URLRewritingRule::ALWAYS) {
-			if ((rule.Apply == URLRewritingRule::EXTERNAL && !externalUrl)
-				|| (rule.Apply == URLRewritingRule::INTERNAL && externalUrl)) {
+			if ((rule.Apply == URLRewritingRule::EXTERNAL && !isUrlExternal)
+				|| (rule.Apply == URLRewritingRule::INTERNAL && isUrlExternal)) {
 				continue;
 			}
 		}

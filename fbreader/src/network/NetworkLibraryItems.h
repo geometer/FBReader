@@ -74,6 +74,12 @@ public:
 		BY_AUTHORS,
 	};
 
+	enum VisibilityType {
+		Always,
+		Never,
+		LoggedUsers
+	};
+
 public:
 	NetworkCatalogItem(
 		const NetworkLink &link,
@@ -82,29 +88,24 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const std::string &coverURL,
-		bool dependsOnAccount = false
+		VisibilityType visibility = Always
 	);
 
 	const ZLTypeId &typeId() const;
 
-	const NetworkLink &link() const;
-	const std::string &url() const;
-	const std::string &htmlURL() const;
-	const std::string &summary() const;
-
-	virtual void onDisplayItem(); // method is called each time the View Node is created for the Item.
-	virtual std::string loadChildren(NetworkLibraryItemList &children) = 0; // returns error message
-
-	bool dependsOnAccount() const;
+	// method is called each time the View Node is created for the Item.
+	virtual void onDisplayItem();
+	// returns error message
+	virtual std::string loadChildren(NetworkLibraryItemList &children) = 0;
 
 	virtual CatalogType catalogType() const;
 
-private:
-	const NetworkLink &myLink;
-	const std::string myURL;
-	const std::string myHtmlURL;
-	const std::string mySummary;
-	const bool myDependsOnAccount;
+public:
+	const NetworkLink &Link;
+	const std::string URL;
+	const std::string HtmlURL;
+	const std::string Summary;
+	const VisibilityType Visibility;
 
 private: // disable copying
 	NetworkCatalogItem(const NetworkCatalogItem &);

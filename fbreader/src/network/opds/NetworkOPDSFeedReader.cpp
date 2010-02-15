@@ -17,7 +17,6 @@
  * 02110-1301, USA.
  */
 
-//#include <iostream>
 #include <algorithm>
 
 #include <ZLStringUtil.h>
@@ -257,6 +256,6 @@ shared_ptr<NetworkLibraryItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry 
 		entry.title(),
 		annotation,
 		coverURL,
-		dependsOnAccount
+		dependsOnAccount ? OPDSCatalogItem::LoggedUsers : OPDSCatalogItem::Always
 	);
 }

@@ -89,7 +89,7 @@ shared_ptr<ZLRunnable> NetworkCatalogNode::expandCatalogAction() {
 
 shared_ptr<ZLRunnable> NetworkCatalogNode::openInBrowserAction() {
 	if (myOpenInBrowserAction.isNull()) {
-		myOpenInBrowserAction = new OpenInBrowserAction(item().htmlURL());
+		myOpenInBrowserAction = new OpenInBrowserAction(item().HtmlURL);
 	}
 	return myOpenInBrowserAction;
 }
@@ -118,7 +118,7 @@ std::string NetworkCatalogNode::title() const {
 }
 
 std::string NetworkCatalogNode::summary() const {
-	return ((const NetworkCatalogItem&)*myItem).summary();
+	return ((const NetworkCatalogItem&)*myItem).Summary;
 }
 
 void NetworkCatalogNode::paint(ZLPaintContext &context, int vOffset) {
@@ -136,13 +136,13 @@ void NetworkCatalogNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
 		ZLResource::resource("networkView")["libraryItemNode"];
 
 	int left = 0;
-	if (!item().url().empty()) {
+	if (!item().URL.empty()) {
 		drawHyperlink(context, left, vOffset,
 			resource[isOpen() ? "collapseTree" : "expandTree"].value(),
 			expandCatalogAction()
 		);
 	}
-	if (!item().htmlURL().empty()) {
+	if (!item().HtmlURL.empty()) {
 		drawHyperlink(context, left, vOffset,
 			resource["openInBrowser"].value(),
 			openInBrowserAction()
@@ -218,7 +218,7 @@ void NetworkCatalogNode::ExpandCatalogAction::run() {
 		return;
 	}
 
-	const NetworkLink &link = myNode.item().link();
+	const NetworkLink &link = myNode.item().Link;
 	if (!link.authenticationManager().isNull()) {
 		NetworkAuthenticationManager &mgr = *link.authenticationManager();
 		IsAuthorisedRunnable checker(mgr);
