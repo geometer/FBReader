@@ -27,7 +27,6 @@
 #include "NetworkLinkCollection.h"
 
 const ZLTypeId NetworkLibraryItem::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
-const ZLTypeId NetworkLibraryCatalogItem::TYPE_ID(NetworkLibraryItem::TYPE_ID);
 const ZLTypeId NetworkLibraryBookItem::TYPE_ID(NetworkLibraryItem::TYPE_ID);
 
 NetworkLibraryItem::NetworkLibraryItem() {
@@ -47,35 +46,6 @@ void NetworkLibraryItem::setTitle(const std::string &title) {
 
 void NetworkLibraryItem::setCoverURL(const std::string &coverURL) {
 	myCoverURL = coverURL;
-}
-
-NetworkLibraryCatalogItem::NetworkLibraryCatalogItem(
-	const NetworkLink &link,
-	const std::string &url,
-	const std::string &htmlURL,
-	const std::string &title,
-	const std::string &summary,
-	const std::string &coverURL,
-	bool dependsOnAccount
-) :
-	myLink(link),
-	myURL(url),
-	myHtmlURL(htmlURL),
-	mySummary(summary),
-	myDependsOnAccount(dependsOnAccount) {
-	setTitle(title);
-	setCoverURL(coverURL);
-}
-
-const ZLTypeId &NetworkLibraryCatalogItem::typeId() const {
-	return TYPE_ID;
-}
-
-void NetworkLibraryCatalogItem::onDisplayItem() {
-}
-
-NetworkLibraryCatalogItem::CatalogType NetworkLibraryCatalogItem::catalogType() const {
-	return OTHER;
 }
 
 bool NetworkLibraryBookItem::AuthorData::operator < (const AuthorData &data) const {

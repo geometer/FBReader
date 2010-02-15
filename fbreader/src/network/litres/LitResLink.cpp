@@ -95,7 +95,7 @@ shared_ptr<NetworkAuthenticationManager> LitResLink::authenticationManager() con
 
 
 
-class LitResRootCatalogItem : public NetworkLibraryCatalogItem {
+class LitResRootCatalogItem : public NetworkCatalogItem {
 
 public:
 	LitResRootCatalogItem(
@@ -108,7 +108,7 @@ private:
 	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
-class LitResCatalogItem : public NetworkLibraryCatalogItem {
+class LitResCatalogItem : public NetworkCatalogItem {
 
 public:
 	LitResCatalogItem(
@@ -117,7 +117,7 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		bool sortItems = false,
-		CatalogType catalogType = NetworkLibraryCatalogItem::OTHER
+		CatalogType catalogType = NetworkCatalogItem::OTHER
 	);
 
 private:
@@ -129,7 +129,7 @@ private:
 	const CatalogType myCatalogType;
 };
 
-class LitResMyCatalogItem : public NetworkLibraryCatalogItem {
+class LitResMyCatalogItem : public NetworkCatalogItem {
 
 public:
 	LitResMyCatalogItem(const LitResLink &link);
@@ -142,7 +142,7 @@ private:
 	bool myForceReload;
 };
 
-class LitResByAuthorsCatalogItem : public NetworkLibraryCatalogItem {
+class LitResByAuthorsCatalogItem : public NetworkCatalogItem {
 
 public:
 	LitResByAuthorsCatalogItem(const LitResLink &link);
@@ -151,7 +151,7 @@ private:
 	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
-class LitResAuthorsItem : public NetworkLibraryCatalogItem {
+class LitResAuthorsItem : public NetworkCatalogItem {
 
 public:
 	LitResAuthorsItem(
@@ -165,7 +165,7 @@ private:
 	std::string loadChildren(NetworkLibraryItemList &children);
 };
 
-class LitResGenresItem : public NetworkLibraryCatalogItem {
+class LitResGenresItem : public NetworkCatalogItem {
 
 public:
 	LitResGenresItem(
@@ -187,7 +187,7 @@ LitResRootCatalogItem::LitResRootCatalogItem(
 	const LitResLink &link,
 	const std::string &title,
 	const std::string &summary
-) : NetworkLibraryCatalogItem(link, "", "", title, summary, "feed-litres.png") {
+) : NetworkCatalogItem(link, "", "", title, summary, "feed-litres.png") {
 }
 
 std::string LitResRootCatalogItem::loadChildren(NetworkLibraryItemList &children) {
@@ -224,7 +224,7 @@ LitResCatalogItem::LitResCatalogItem(
 	const std::string &summary,
 	bool sortItems,
 	CatalogType catalogType
-) : NetworkLibraryCatalogItem(link, url, "", title, summary, ""), mySortItems(sortItems), myCatalogType(catalogType) {
+) : NetworkCatalogItem(link, url, "", title, summary, ""), mySortItems(sortItems), myCatalogType(catalogType) {
 }
 
 std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
@@ -244,12 +244,12 @@ std::string LitResCatalogItem::loadChildren(NetworkLibraryItemList &children) {
 	return error;
 }
 
-NetworkLibraryCatalogItem::CatalogType LitResCatalogItem::catalogType() const {
+NetworkCatalogItem::CatalogType LitResCatalogItem::catalogType() const {
 	return myCatalogType;
 }
 
 
-LitResMyCatalogItem::LitResMyCatalogItem(const LitResLink &link) : NetworkLibraryCatalogItem(
+LitResMyCatalogItem::LitResMyCatalogItem(const LitResLink &link) : NetworkCatalogItem(
 	link,
 	"none",
 	"",
@@ -280,7 +280,7 @@ std::string LitResMyCatalogItem::loadChildren(NetworkLibraryItemList &children) 
 	return error;
 }
 
-LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(const LitResLink &link) : NetworkLibraryCatalogItem(
+LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(const LitResLink &link) : NetworkCatalogItem(
 	link,
 	"none",
 	"",
@@ -324,7 +324,7 @@ LitResAuthorsItem::LitResAuthorsItem(
 	const std::string &url,
 	const std::string &title,
 	const std::string &summary
-) : NetworkLibraryCatalogItem(link, url, "", title, summary, "") {
+) : NetworkCatalogItem(link, url, "", title, summary, "") {
 }
 
 std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
@@ -358,7 +358,7 @@ std::string LitResAuthorsItem::loadChildren(NetworkLibraryItemList &children) {
 			it->Title,
 			anno,
 			true,
-			NetworkLibraryCatalogItem::BY_AUTHORS
+			NetworkCatalogItem::BY_AUTHORS
 		));
 	}
 	return "";
@@ -371,7 +371,7 @@ LitResGenresItem::LitResGenresItem(
 	const std::string &title,
 	const std::string &summary,
 	const std::vector<shared_ptr<LitResGenre> > &genres
-) : NetworkLibraryCatalogItem(
+) : NetworkCatalogItem(
 	link,
 	url,
 	"",

@@ -24,7 +24,7 @@
 
 class OPDSLink;
 
-class OPDSCatalogItem : public NetworkLibraryCatalogItem {
+class OPDSCatalogItem : public NetworkCatalogItem {
 
 public:
 	OPDSCatalogItem(

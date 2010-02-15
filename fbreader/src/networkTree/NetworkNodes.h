@@ -61,7 +61,7 @@ private:
 friend class NetworkNodesFactory;
 
 public:
-	NetworkLibraryCatalogItem &item();
+	NetworkCatalogItem &item();
 	const NetworkLibraryItemList &childrenItems();
 
 	void updateChildren();

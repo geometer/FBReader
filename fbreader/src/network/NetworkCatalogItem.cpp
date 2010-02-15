@@ -17,42 +17,55 @@
  * 02110-1301, USA.
  */
 
-#include <ZLExecutionData.h>
-#include <ZLNetworkManager.h>
+#include "NetworkLibraryItems.h"
 
-#include "OPDSCatalogItem.h"
-#include "OPDSLink.h"
+const ZLTypeId NetworkCatalogItem::TYPE_ID(NetworkLibraryItem::TYPE_ID);
 
-#include "../NetworkOperationData.h"
-#include "../opds/OPDSXMLParser.h"
-#include "../opds/NetworkOPDSFeedReader.h"
-
-OPDSCatalogItem::OPDSCatalogItem(
-	const OPDSLink &link,
+NetworkCatalogItem::NetworkCatalogItem(
+	const NetworkLink &link,
 	const std::string &url,
 	const std::string &htmlURL,
 	const std::string &title,
 	const std::string &summary,
 	const std::string &coverURL,
 	bool dependsOnAccount
-) : NetworkCatalogItem(link, url, htmlURL, title, summary, coverURL, dependsOnAccount) {
+) :
+	myLink(link),
+	myURL(url),
+	myHtmlURL(htmlURL),
+	mySummary(summary),
+	myDependsOnAccount(dependsOnAccount) {
+	setTitle(title);
+	setCoverURL(coverURL);
 }
 
-std::string OPDSCatalogItem::loadChildren(NetworkLibraryItemList &children) {
-	NetworkOperationData data(link());
+const ZLTypeId &NetworkCatalogItem::typeId() const {
+	return TYPE_ID;
+}
 
-	shared_ptr<ZLExecutionData> networkData =
-		((OPDSLink &)link()).createNetworkData(url(), data);
+void NetworkCatalogItem::onDisplayItem() {
+}
 
-	while (!networkData.isNull()) {
-		std::string error = ZLNetworkManager::Instance().perform(networkData);
-		if (!error.empty()) {
-			return error;
-		}
+NetworkCatalogItem::CatalogType NetworkCatalogItem::catalogType() const {
+	return OTHER;
+}
 
-		children.insert(children.end(), data.Items.begin(), data.Items.end());
-		networkData = link().resume(data);
-	}
+const NetworkLink &NetworkCatalogItem::link() const {
+	return myLink;
+}
 
-	return "";
+const std::string &NetworkCatalogItem::url() const {
+	return myURL;
+}
+
+const std::string &NetworkCatalogItem::htmlURL() const {
+	return myHtmlURL;
+}
+
+const std::string &NetworkCatalogItem::summary() const {
+	return mySummary;
+}
+
+bool NetworkCatalogItem::dependsOnAccount() const {
+	return myDependsOnAccount;
 }

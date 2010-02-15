@@ -57,7 +57,7 @@ private:
 	void makeUpToDate();
 	void updateAccountDependents();
 	void updateAccountDependents(NetworkCatalogNode &node);
-	bool processAccountDependent(NetworkLibraryCatalogItem &item);
+	bool processAccountDependent(NetworkCatalogItem &item);
 
 private:
 	bool myUpdateChildren;

@@ -262,7 +262,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 		shared_ptr<NetworkLibraryItem> currentItemPtr = nodeItems[i];
 		NetworkLibraryItem &currentItem = *currentItemPtr;
 
-		if (currentItem.typeId() != NetworkLibraryCatalogItem::TYPE_ID) {
+		if (currentItem.typeId() != NetworkCatalogItem::TYPE_ID) {
 			continue;
 		}
 
@@ -274,7 +274,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 				continue;
 			}
 			NetworkCatalogNode &child = (NetworkCatalogNode &) **nodeIt;
-			NetworkLibraryCatalogItem &childItem = child.item();
+			NetworkCatalogItem &childItem = child.item();
 			if (&childItem == &currentItem) {
 				if (processAccountDependent(child.item())) {
 					updateAccountDependents(child);
@@ -301,7 +301,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 				}
 			}
 		}
-		if (!processed && processAccountDependent((NetworkLibraryCatalogItem &) currentItem)) {
+		if (!processed && processAccountDependent((NetworkCatalogItem &) currentItem)) {
 			NetworkNodesFactory::createNetworkNode(&node, currentItemPtr, nodeCount++);
 		}
 	}
@@ -318,7 +318,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 	}
 }
 
-bool NetworkView::processAccountDependent(NetworkLibraryCatalogItem &item) {
+bool NetworkView::processAccountDependent(NetworkCatalogItem &item) {
 	if (!item.dependsOnAccount()) {
 		return true;
 	}

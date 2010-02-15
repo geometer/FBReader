@@ -64,9 +64,7 @@ inline const std::string &NetworkLibraryItem::coverURL() const { return myCoverU
 
 typedef std::vector<shared_ptr<NetworkLibraryItem> > NetworkLibraryItemList;
 
-
-
-class NetworkLibraryCatalogItem : public NetworkLibraryItem {
+class NetworkCatalogItem : public NetworkLibraryItem {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -77,7 +75,7 @@ public:
 	};
 
 public:
-	NetworkLibraryCatalogItem(
+	NetworkCatalogItem(
 		const NetworkLink &link,
 		const std::string &url,
 		const std::string &htmlURL,
@@ -109,15 +107,9 @@ private:
 	const bool myDependsOnAccount;
 
 private: // disable copying
-	NetworkLibraryCatalogItem(const NetworkLibraryCatalogItem &);
-	const NetworkLibraryCatalogItem &operator = (const NetworkLibraryCatalogItem &);
+	NetworkCatalogItem(const NetworkCatalogItem &);
+	const NetworkCatalogItem &operator = (const NetworkCatalogItem &);
 };
-
-inline const NetworkLink &NetworkLibraryCatalogItem::link() const { return myLink; }
-inline const std::string &NetworkLibraryCatalogItem::url() const { return myURL; }
-inline const std::string &NetworkLibraryCatalogItem::htmlURL() const { return myHtmlURL; }
-inline const std::string &NetworkLibraryCatalogItem::summary() const { return mySummary; }
-inline bool NetworkLibraryCatalogItem::dependsOnAccount() const { return myDependsOnAccount; }
 
 class NetworkLibraryBookItem : public NetworkLibraryItem {
 

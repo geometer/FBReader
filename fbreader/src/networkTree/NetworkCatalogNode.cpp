@@ -101,8 +101,8 @@ shared_ptr<ZLRunnable> NetworkCatalogNode::reloadAction() {
 	return myReloadAction;
 }
 
-NetworkLibraryCatalogItem &NetworkCatalogNode::item() {
-	return (NetworkLibraryCatalogItem&)*myItem;
+NetworkCatalogItem &NetworkCatalogNode::item() {
+	return (NetworkCatalogItem&)*myItem;
 }
 
 const NetworkLibraryItemList &NetworkCatalogNode::childrenItems() {
@@ -118,7 +118,7 @@ std::string NetworkCatalogNode::title() const {
 }
 
 std::string NetworkCatalogNode::summary() const {
-	return ((const NetworkLibraryCatalogItem&)*myItem).summary();
+	return ((const NetworkCatalogItem&)*myItem).summary();
 }
 
 void NetworkCatalogNode::paint(ZLPaintContext &context, int vOffset) {
@@ -194,7 +194,7 @@ void NetworkCatalogNode::updateChildren() {
 
 	bool hasSubcatalogs = false;
 	for (NetworkLibraryItemList::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
-		if ((*it)->typeId() == NetworkLibraryCatalogItem::TYPE_ID) {
+		if ((*it)->typeId() == NetworkCatalogItem::TYPE_ID) {
 			hasSubcatalogs = true;
 			break;
 		}

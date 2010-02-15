@@ -24,7 +24,7 @@
 #include "../network/NetworkBookCollection.h"
 
 FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkLibraryItem> item, size_t atPosition) {
-	if (item->isInstanceOf(NetworkLibraryCatalogItem::TYPE_ID)) {
+	if (item->isInstanceOf(NetworkCatalogItem::TYPE_ID)) {
 		NetworkCatalogNode *ptr = new NetworkCatalogNode(parent, item, atPosition);
 		ptr->item().onDisplayItem();
 		return ptr;
@@ -49,7 +49,7 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 
 	NetworkSeriesNode::SummaryType summaryType = NetworkSeriesNode::AUTHORS;
 	if ((parent->isInstanceOf(NetworkCatalogNode::TYPE_ID) &&
-			((NetworkCatalogNode*)parent)->item().catalogType() == NetworkLibraryCatalogItem::BY_AUTHORS) ||
+			((NetworkCatalogNode*)parent)->item().catalogType() == NetworkCatalogItem::BY_AUTHORS) ||
 			 parent->isInstanceOf(NetworkAuthorNode::TYPE_ID)) {
 		summaryType = NetworkSeriesNode::BOOKS;
 	}
