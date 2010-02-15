@@ -23,15 +23,12 @@ const ZLTypeId NetworkLibraryItem::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
 NetworkLibraryItem::NetworkLibraryItem(
 	const std::string &title,
+	const std::string &summary,
 	const std::string &coverURL
 ) :
 	Title(title),
+	Summary(summary),
 	CoverURL(coverURL) {
-}
-
-NetworkLibraryItem::NetworkLibraryItem(const NetworkLibraryItem &item) :
-	Title(item.Title), 
-	CoverURL(item.CoverURL) {
 }
 
 NetworkLibraryItem::~NetworkLibraryItem() {

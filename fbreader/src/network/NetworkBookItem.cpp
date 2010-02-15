@@ -38,15 +38,14 @@ NetworkBookItem::NetworkBookItem(
 	const std::string &coverURL,
 	const std::string &language
 ) : 
-	NetworkLibraryItem(title, coverURL),
+	NetworkLibraryItem(title, summary, coverURL),
 	myIndex(index),
 	myId(id),
-	myAnnotation(summary),
 	myLanguage(language) {
 }
 
 NetworkBookItem::NetworkBookItem(const NetworkBookItem &book) :
-	NetworkLibraryItem(book), 
+	NetworkLibraryItem(book.Title, book.Summary, book.CoverURL), 
 	myIndex(book.myIndex), 
 	myId(book.myId), 
 	myLanguage(book.myLanguage), 
@@ -144,10 +143,6 @@ void NetworkBookItem::setDate(const std::string &date) {
 
 void NetworkBookItem::setPrice(const std::string &price) {
 	myPrice = price;
-}
-
-void NetworkBookItem::setAnnotation(const std::string &annotation) {
-	myAnnotation = annotation;
 }
 
 void NetworkBookItem::setSeries(const std::string &title, int index) {

@@ -30,11 +30,10 @@ NetworkCatalogItem::NetworkCatalogItem(
 	const std::string &coverURL,
 	VisibilityType visibility
 ) :
-	NetworkLibraryItem(title, coverURL),
+	NetworkLibraryItem(title, summary, coverURL),
 	Link(link),
 	URL(url),
 	HtmlURL(htmlURL),
-	Summary(summary),
 	Visibility(visibility) {
 }
 

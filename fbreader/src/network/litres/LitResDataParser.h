@@ -20,6 +20,9 @@
 #ifndef __LITRESDATAPARSER_H__
 #define __LITRESDATAPARSER_H__
 
+#include <vector>
+#include <map>
+
 #include <ZLXMLReader.h>
 
 #include "../NetworkLibraryItems.h"
@@ -49,7 +52,6 @@ private:
 	void processState(const std::string &tag, bool closed, const char **attributes);
 	State getNextState(const std::string &tag, bool closed);
 
-	NetworkBookItem &currentBook();
 	std::string makeDemoUrl(const std::string &bookId) const;
 
 private:
@@ -57,16 +59,28 @@ private:
 
 	NetworkLibraryItem::List &myBooks;
 	std::string myBuffer;
-	shared_ptr<NetworkLibraryItem> myCurrentBook;
+
 	unsigned int myIndex;
 
 	State myState;
 
+	std::string myBookId;
+	std::string myTitle;
+	std::string mySummary;
+	std::string myCoverURL;
+	std::string myLanguage;
+	std::string myDate;
+	std::string myPrice;
+	std::string mySeriesTitle;
+	int myIndexInSeries;
+
 	std::string myAuthorFirstName;
 	std::string myAuthorMiddleName;
 	std::string myAuthorLastName;
-};
+	std::vector<NetworkBookItem::AuthorData> myAuthors;
 
-inline NetworkBookItem &LitResDataParser::currentBook() { return (NetworkBookItem &) *myCurrentBook; }
+	std::vector<std::string> myTags;
+	std::map<NetworkBookItem::URLType,std::string> myURLByType;
+};
 
 #endif /* __LITRESDATAPARSER_H__ */

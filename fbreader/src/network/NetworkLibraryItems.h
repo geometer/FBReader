@@ -40,8 +40,11 @@ protected:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	NetworkLibraryItem(const std::string &title, const std::string &coverURL);
-	explicit NetworkLibraryItem(const NetworkLibraryItem &item);
+	NetworkLibraryItem(
+		const std::string &title,
+		const std::string &summary,
+		const std::string &coverURL
+	);
 
 public:
 	virtual ~NetworkLibraryItem();
@@ -49,10 +52,12 @@ public:
 	virtual const ZLTypeId &typeId() const = 0;
 
 public:
-	/*const*/ std::string Title;
+	const std::string Title;
+	const std::string Summary;
 	/*const*/ std::string CoverURL;
 
 private: // disable copying
+	NetworkLibraryItem(const NetworkLibraryItem &item);
 	const NetworkLibraryItem &operator = (const NetworkLibraryItem &);
 };
 
@@ -96,12 +101,7 @@ public:
 	const NetworkLink &Link;
 	const std::string URL;
 	const std::string HtmlURL;
-	const std::string Summary;
 	const VisibilityType Visibility;
-
-private: // disable copying
-	NetworkCatalogItem(const NetworkCatalogItem &);
-	const NetworkCatalogItem &operator = (const NetworkCatalogItem &);
 };
 
 class NetworkBookItem : public NetworkLibraryItem {
@@ -152,13 +152,10 @@ public:
 	const std::string &seriesTitle() const;
 	int indexInSeries() const;
 	const std::string &price() const;
-	const std::string &annotation() const;
 
 	void setLanguage(const std::string &language);
 	void setDate(const std::string &date);
 	void setPrice(const std::string &price);
-	std::string &annotation();
-	void setAnnotation(const std::string &annotation);
 	void setSeries(const std::string &name, int index);
 
 	const std::map<URLType, std::string> &urlByType() const;
@@ -178,7 +175,8 @@ public:
 private:
 	unsigned int myIndex;
 	const std::string myId;
-	std::string myAnnotation;
+
+private:
 	std::string myLanguage;
 	std::string myDate;
 	std::string mySeriesTitle;
@@ -190,9 +188,6 @@ private:
 	std::vector<std::string> myTags;
 
 	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
-
-private: // disable copying
-	const NetworkBookItem &operator = (const NetworkBookItem &);
 };
 
 inline unsigned int NetworkBookItem::index() const { return myIndex; }
@@ -203,8 +198,6 @@ inline const std::string &NetworkBookItem::date() const { return myDate; }
 inline const std::string &NetworkBookItem::seriesTitle() const { return mySeriesTitle; }
 inline int NetworkBookItem::indexInSeries() const { return myIndexInSeries; }
 inline const std::string &NetworkBookItem::price() const { return myPrice; }
-inline const std::string &NetworkBookItem::annotation() const { return myAnnotation; }
-inline std::string &NetworkBookItem::annotation() { return myAnnotation; }
 inline const std::map<NetworkBookItem::URLType, std::string> &NetworkBookItem::urlByType() const { return myURLByType; }
 inline const std::vector<NetworkBookItem::AuthorData> &NetworkBookItem::authors() const { return myAuthors; }
 inline const std::vector<std::string> &NetworkBookItem::tags() const { return myTags; }
