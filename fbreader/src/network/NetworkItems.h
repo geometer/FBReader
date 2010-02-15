@@ -44,6 +44,7 @@ public:
 		//BOOK_PDF,
 		BOOK_DEMO_FB2_ZIP,
 		LINK_HTTP,
+		COVER
 	};
 
 protected:
@@ -53,7 +54,8 @@ protected:
 	NetworkItem(
 		const std::string &title,
 		const std::string &summary,
-		const std::string &coverURL
+		const std::string &coverURL,
+		const std::map<URLType,std::string> &urlByType
 	);
 
 public:
@@ -65,6 +67,7 @@ public:
 	const std::string Title;
 	const std::string Summary;
 	/*const*/ std::string CoverURL;
+	/*const*/ std::map<URLType,std::string> URLByType;
 
 private: // disable copying
 	NetworkItem(const NetworkItem &item);
@@ -95,6 +98,7 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const std::string &coverURL,
+		const std::map<URLType,std::string> urlByType,
 		VisibilityType visibility = Always
 	);
 
@@ -134,7 +138,8 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const std::string &coverURL,
-		const std::string &language
+		const std::string &language,
+		const std::map<URLType,std::string> urlByType
 	);
 	explicit NetworkBookItem(const NetworkBookItem &book);
 
@@ -158,11 +163,9 @@ public:
 	void setPrice(const std::string &price);
 	void setSeries(const std::string &name, int index);
 
-	const std::map<URLType, std::string> &urlByType() const;
 	const std::vector<AuthorData> &authors() const;
 	const std::vector<std::string> &tags() const;
 
-	std::map<URLType, std::string> &urlByType();
 	std::vector<AuthorData> &authors();
 	std::vector<std::string> &tags();
 
@@ -183,7 +186,6 @@ private:
 	int myIndexInSeries;
 	std::string myPrice; // number with curency code (see http://en.wikipedia.org/wiki/List_of_circulating_currencies for example)
 
-	std::map<URLType, std::string> myURLByType;
 	std::vector<AuthorData> myAuthors;
 	std::vector<std::string> myTags;
 
@@ -198,10 +200,8 @@ inline const std::string &NetworkBookItem::date() const { return myDate; }
 inline const std::string &NetworkBookItem::seriesTitle() const { return mySeriesTitle; }
 inline int NetworkBookItem::indexInSeries() const { return myIndexInSeries; }
 inline const std::string &NetworkBookItem::price() const { return myPrice; }
-inline const std::map<NetworkItem::URLType, std::string> &NetworkBookItem::urlByType() const { return myURLByType; }
 inline const std::vector<NetworkBookItem::AuthorData> &NetworkBookItem::authors() const { return myAuthors; }
 inline const std::vector<std::string> &NetworkBookItem::tags() const { return myTags; }
-inline std::map<NetworkItem::URLType, std::string> &NetworkBookItem::urlByType() { return myURLByType; }
 inline std::vector<NetworkBookItem::AuthorData> &NetworkBookItem::authors() { return myAuthors; }
 inline std::vector<std::string> &NetworkBookItem::tags() { return myTags; }
 

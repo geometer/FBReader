@@ -69,8 +69,8 @@ void NetworkOperationRunnable::showErrorMessage() const {
 }
 
 DownloadBookRunnable::DownloadBookRunnable(const NetworkBookItem &book, NetworkItem::URLType format) : NetworkOperationRunnable("downloadBook") {
-	const std::map<NetworkItem::URLType, std::string>::const_iterator it = book.urlByType().find(format);
-	if (it != book.urlByType().end()) {
+	const std::map<NetworkItem::URLType, std::string>::const_iterator it = book.URLByType.find(format);
+	if (it != book.URLByType.end()) {
 		myURL = it->second;
 		myNetworkBookId = myURL;
 		myFormat = format;

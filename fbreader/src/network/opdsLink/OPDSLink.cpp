@@ -182,7 +182,8 @@ shared_ptr<NetworkItem> OPDSLink::libraryItem() const {
 		"",
 		Title,
 		mySummary,
-		myIconName
+		myIconName,
+		std::map<NetworkItem::URLType,std::string>()
 	);
 }
 

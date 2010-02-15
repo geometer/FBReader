@@ -34,8 +34,9 @@ OPDSCatalogItem::OPDSCatalogItem(
 	const std::string &title,
 	const std::string &summary,
 	const std::string &coverURL,
+	const std::map<URLType,std::string> &urlByType,
 	VisibilityType visibility
-) : NetworkCatalogItem(link, url, htmlURL, title, summary, coverURL, visibility) {
+) : NetworkCatalogItem(link, url, htmlURL, title, summary, coverURL, urlByType, visibility) {
 }
 
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {

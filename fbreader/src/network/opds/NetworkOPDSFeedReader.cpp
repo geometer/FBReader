@@ -106,7 +106,8 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		entry.title(),
 		entry.summary(),
 		"",
-		entry.dcLanguage()
+		entry.dcLanguage(),
+		std::map<NetworkItem::URLType,std::string>()
 	);
 	NetworkBookItem &book = (NetworkBookItem&)*bookPtr;
 
@@ -140,9 +141,9 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 			}
 		} else if (rel == OPDSConstants::REL_ACQUISITION || rel.empty()) {
 			if (type == OPDSConstants::MIME_APP_EPUB) {
-				book.urlByType()[NetworkBookItem::BOOK_EPUB] = href;
+				book.URLByType[NetworkBookItem::BOOK_EPUB] = href;
 			} else if (type == OPDSConstants::MIME_APP_MOBI) {
-				book.urlByType()[NetworkBookItem::BOOK_MOBIPOCKET] = href;
+				book.URLByType[NetworkBookItem::BOOK_MOBIPOCKET] = href;
 			//} else if (type == OPDSConstants::MIME_APP_PDF) {
 				//book.urlByType()[NetworkBookItem::BOOK_PDF] = href;
 			}
@@ -256,6 +257,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	std::string annotation = entry.summary();
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x09), annotation.end());
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x0A), annotation.end());
+	std::map<NetworkItem::URLType,std::string> urlMap;
 	return new OPDSCatalogItem(
 		(OPDSLink&)myData.Link,
 		ZLNetworkUtil::url(myBaseURL, url),
@@ -263,6 +265,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 		entry.title(),
 		annotation,
 		coverURL,
+		urlMap,
 		dependsOnAccount ? OPDSCatalogItem::LoggedUsers : OPDSCatalogItem::Always
 	);
 }

@@ -207,8 +207,8 @@ bool NetworkBookNode::hasLocalCopy() {
 }
 
 bool NetworkBookNode::hasLocalCopy(NetworkBookItem &book, NetworkItem::URLType format) {
-	std::map<NetworkItem::URLType, std::string>::const_iterator it = book.urlByType().find(format);
-	if (it == book.urlByType().end()) {
+	std::map<NetworkItem::URLType, std::string>::const_iterator it = book.URLByType.find(format);
+	if (it == book.URLByType.end()) {
 		return false;
 	}
 	std::string fileName = NetworkLinkCollection::Instance().bookFileName(it->second);
@@ -264,7 +264,7 @@ void NetworkBookNode::ReadAction::run() {
 
 	std::string networkBookId;
 	if (format != NetworkBookItem::NONE) {
-		networkBookId = book.urlByType()[format];
+		networkBookId = book.URLByType[format];
 	} else if (!book.authenticationManager().isNull()) {
 		NetworkAuthenticationManager &mgr = *book.authenticationManager();
 		networkBookId = mgr.networkBookId(book);
@@ -358,7 +358,7 @@ void NetworkBookNode::ReadDemoAction::run() {
 	if (format == NetworkBookItem::NONE) {
 		return;
 	}
-	std::string networkBookId = book.urlByType()[format];
+	std::string networkBookId = book.URLByType[format];
 	if (!networkBookId.empty()) {
 		std::string fileName = NetworkLinkCollection::Instance().bookFileName(networkBookId);
 		if (fileName.empty() || !ZLFile(fileName).exists()) {
@@ -426,8 +426,8 @@ NetworkBookNode::DeleteAction::DeleteAction(shared_ptr<NetworkItem> book) : myBo
 }
 
 void NetworkBookNode::DeleteAction::removeFormat(NetworkBookItem &book, NetworkItem::URLType format) {
-	std::map<NetworkItem::URLType, std::string>::const_iterator it = book.urlByType().find(format);
-	if (it == book.urlByType().end()) {
+	std::map<NetworkItem::URLType, std::string>::const_iterator it = book.URLByType.find(format);
+	if (it == book.URLByType.end()) {
 		return;
 	}
 	std::string fileName = NetworkLinkCollection::Instance().bookFileName(it->second);

@@ -129,7 +129,8 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				myTitle,
 				mySummary,
 				myCoverURL,
-				myLanguage
+				myLanguage,
+				std::map<NetworkItem::URLType,std::string>()
 			);
 
 			book->setAuthenticationManager(myLink.authenticationManager());
@@ -143,7 +144,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				book->tags().push_back(*it);
 			}
 			for (std::map<NetworkItem::URLType,std::string>::const_iterator it = myURLByType.begin(); it != myURLByType.end(); ++it) {
-				book->urlByType().insert(*it);
+				book->URLByType.insert(*it);
 			}
 
 			myBooks.push_back(book);
