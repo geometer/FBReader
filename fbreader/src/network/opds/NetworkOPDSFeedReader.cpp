@@ -258,10 +258,10 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x0A), annotation.end());
 	std::map<NetworkItem::URLType,std::string> urlMap;
 	urlMap[NetworkItem::URL_COVER] = coverURL;
+	urlMap[NetworkItem::URL_CATALOG] = ZLNetworkUtil::url(myBaseURL, url);
+	urlMap[NetworkItem::URL_HTML_PAGE] = ZLNetworkUtil::url(myBaseURL, htmlURL);
 	return new OPDSCatalogItem(
 		(OPDSLink&)myData.Link,
-		ZLNetworkUtil::url(myBaseURL, url),
-		ZLNetworkUtil::url(myBaseURL, htmlURL),
 		entry.title(),
 		annotation,
 		urlMap,

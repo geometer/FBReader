@@ -29,20 +29,18 @@
 
 OPDSCatalogItem::OPDSCatalogItem(
 	const OPDSLink &link,
-	const std::string &url,
-	const std::string &htmlURL,
 	const std::string &title,
 	const std::string &summary,
 	const std::map<URLType,std::string> &urlByType,
 	VisibilityType visibility
-) : NetworkCatalogItem(link, url, htmlURL, title, summary, urlByType, visibility) {
+) : NetworkCatalogItem(link, title, summary, urlByType, visibility) {
 }
 
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {
 	NetworkOperationData data(Link);
 
 	shared_ptr<ZLExecutionData> networkData =
-		((OPDSLink&)Link).createNetworkData(URL, data);
+		((OPDSLink&)Link).createNetworkData(URLByType[URL_CATALOG], data);
 
 	while (!networkData.isNull()) {
 		std::string error = ZLNetworkManager::Instance().perform(networkData);

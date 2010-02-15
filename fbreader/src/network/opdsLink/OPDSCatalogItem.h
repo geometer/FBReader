@@ -29,8 +29,6 @@ class OPDSCatalogItem : public NetworkCatalogItem {
 public:
 	OPDSCatalogItem(
 		const OPDSLink &link,
-		const std::string &url,
-		const std::string &htmlURL,
 		const std::string &title,
 		const std::string &summary,
 		const std::map<URLType,std::string> &urlByType,

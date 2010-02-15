@@ -103,7 +103,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			std::string url = stringAttributeValue(attributes, "url");
 			if (!url.empty()) {
 				myLink.rewriteUrl(url);
-				myURLByType[NetworkItem::URL_LINK_HTTP] = url;
+				myURLByType[NetworkItem::URL_HTML_PAGE] = url;
 			}
 
 			const std::string hasTrial = stringAttributeValue(attributes, "has_trial");

@@ -88,7 +88,7 @@ shared_ptr<ZLRunnable> NetworkCatalogNode::expandCatalogAction() {
 
 shared_ptr<ZLRunnable> NetworkCatalogNode::openInBrowserAction() {
 	if (myOpenInBrowserAction.isNull()) {
-		myOpenInBrowserAction = new OpenInBrowserAction(item().HtmlURL);
+		myOpenInBrowserAction = new OpenInBrowserAction(item().URLByType[NetworkItem::URL_HTML_PAGE]);
 	}
 	return myOpenInBrowserAction;
 }
@@ -135,13 +135,13 @@ void NetworkCatalogNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
 		ZLResource::resource("networkView")["libraryItemNode"];
 
 	int left = 0;
-	if (!item().URL.empty()) {
+	if (!item().URLByType[NetworkItem::URL_CATALOG].empty()) {
 		drawHyperlink(context, left, vOffset,
 			resource[isOpen() ? "collapseTree" : "expandTree"].value(),
 			expandCatalogAction()
 		);
 	}
-	if (!item().HtmlURL.empty()) {
+	if (!item().URLByType[NetworkItem::URL_HTML_PAGE].empty()) {
 		drawHyperlink(context, left, vOffset,
 			resource["openInBrowser"].value(),
 			openInBrowserAction()

@@ -182,12 +182,17 @@ std::string NetworkLinkCollection::makeBookFileName(const std::string &url, Netw
 		case NetworkItem::URL_BOOK_FB2_ZIP:
 			ext = ".fb2.zip";
 			break;
+		case NetworkItem::URL_BOOK_PDF:
+			ext = ".pdf";
+			break;
 		case NetworkItem::URL_BOOK_DEMO_FB2_ZIP:
 			suffix = ".trial";
 			ext = ".fb2.zip";
 			break;
 		case NetworkItem::URL_NONE:
-		case NetworkItem::URL_LINK_HTTP:
+		case NetworkItem::URL_HTML_PAGE:
+		case NetworkItem::URL_CATALOG:
+		case NetworkItem::URL_COVER:
 			break;
 	}
 

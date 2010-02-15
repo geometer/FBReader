@@ -187,7 +187,7 @@ LitResRootCatalogItem::LitResRootCatalogItem(
 	const LitResLink &link,
 	const std::string &title,
 	const std::string &summary
-) : NetworkCatalogItem(link, "", "", title, summary, std::map<URLType,std::string>()) {
+) : NetworkCatalogItem(link, title, summary, std::map<URLType,std::string>()) {
 	URLByType[URL_COVER] = "feed-litres.png";
 }
 
@@ -225,14 +225,15 @@ LitResCatalogItem::LitResCatalogItem(
 	const std::string &summary,
 	bool sortItems,
 	CatalogType catalogType
-) : NetworkCatalogItem(link, url, "", title, summary, std::map<URLType,std::string>()), mySortItems(sortItems), myCatalogType(catalogType) {
+) : NetworkCatalogItem(link, title, summary, std::map<URLType,std::string>()), mySortItems(sortItems), myCatalogType(catalogType) {
+	URLByType[URL_CATALOG] = url;
 }
 
 std::string LitResCatalogItem::loadChildren(NetworkItem::List &children) {
 	children.clear();
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		URL,
+		URLByType[URL_CATALOG],
 		new LitResDataParser((const LitResLink&)Link, children)
 	);
 
@@ -252,14 +253,13 @@ NetworkCatalogItem::CatalogType LitResCatalogItem::catalogType() const {
 
 LitResMyCatalogItem::LitResMyCatalogItem(const LitResLink &link) : NetworkCatalogItem(
 	link,
-	"none",
-	"",
 	"Мои книги",
 	"Купленные книги",
 	std::map<URLType,std::string>(),
 	LoggedUsers
 ) {
 	myForceReload = false;
+	URLByType[URL_CATALOG] = "none";
 }
 
 void LitResMyCatalogItem::onDisplayItem() {
@@ -284,12 +284,11 @@ std::string LitResMyCatalogItem::loadChildren(NetworkItem::List &children) {
 
 LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(const LitResLink &link) : NetworkCatalogItem(
 	link,
-	"none",
-	"",
 	"Книги по авторам",
 	"Просмотр книг по авторам",
 	std::map<URLType,std::string>()
 ) {
+	URLByType[URL_CATALOG] = "none";
 }
 	
 std::string LitResByAuthorsCatalogItem::loadChildren(NetworkItem::List &children) {
@@ -326,7 +325,8 @@ LitResAuthorsItem::LitResAuthorsItem(
 	const std::string &url,
 	const std::string &title,
 	const std::string &summary
-) : NetworkCatalogItem(link, url, "", title, summary, std::map<URLType,std::string>()) {
+) : NetworkCatalogItem(link, title, summary, std::map<URLType,std::string>()) {
+	URLByType[URL_CATALOG] = url;
 }
 
 std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children) {
@@ -335,7 +335,7 @@ std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children) {
 	std::vector<LitResAuthor> authors;
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		URL,
+		URLByType[URL_CATALOG],
 		new LitResAuthorsParser(authors)
 	);
 
@@ -375,13 +375,12 @@ LitResGenresItem::LitResGenresItem(
 	const std::vector<shared_ptr<LitResGenre> > &genres
 ) : NetworkCatalogItem(
 	link,
-	url,
-	"",
 	title,
 	summary,
 	std::map<URLType,std::string>()
 ),
 myGenres(genres) {
+	URLByType[URL_CATALOG] = url;
 }
 
 std::string LitResGenresItem::loadChildren(NetworkItem::List &children) {

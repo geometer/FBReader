@@ -38,12 +38,13 @@ public:
 
 	enum URLType {
 		URL_NONE,
+		URL_CATALOG,
 		URL_BOOK_EPUB,
 		URL_BOOK_MOBIPOCKET,
 		URL_BOOK_FB2_ZIP,
 		URL_BOOK_PDF,
 		URL_BOOK_DEMO_FB2_ZIP,
-		URL_LINK_HTTP,
+		URL_HTML_PAGE,
 		URL_COVER
 	};
 
@@ -91,8 +92,6 @@ public:
 public:
 	NetworkCatalogItem(
 		const NetworkLink &link,
-		const std::string &url,
-		const std::string &htmlURL,
 		const std::string &title,
 		const std::string &summary,
 		const std::map<URLType,std::string> urlByType,
@@ -110,8 +109,6 @@ public:
 
 public:
 	const NetworkLink &Link;
-	const std::string URL;
-	const std::string HtmlURL;
 	const VisibilityType Visibility;
 };
 

@@ -23,8 +23,6 @@ const ZLTypeId NetworkCatalogItem::TYPE_ID(NetworkItem::TYPE_ID);
 
 NetworkCatalogItem::NetworkCatalogItem(
 	const NetworkLink &link,
-	const std::string &url,
-	const std::string &htmlURL,
 	const std::string &title,
 	const std::string &summary,
 	const std::map<URLType,std::string> urlByType,
@@ -32,8 +30,6 @@ NetworkCatalogItem::NetworkCatalogItem(
 ) :
 	NetworkItem(title, summary, urlByType),
 	Link(link),
-	URL(url),
-	HtmlURL(htmlURL),
 	Visibility(visibility) {
 }
 
