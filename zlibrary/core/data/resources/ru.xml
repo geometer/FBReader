@@ -60,6 +60,7 @@
 		<node name="fi" value="финский" />
 		<node name="fr" value="французский" />
 		<node name="he" value="иврит" />
+		<node name="hu" value="венгерский" />
 		<node name="id" value="индонезийский" />
 		<node name="it" value="итальянский" />
 		<node name="lt" value="литовский" />
