@@ -70,10 +70,12 @@ protected:
 public:
 	FBView(ZLPaintContext &context);
 
+	void setCaption(const std::string &caption);
+
+private:
 	bool onFingerTap(int x, int y);
 
 	const std::string &caption() const;
-	void setCaption(const std::string &caption);
 
 	int leftMargin() const;
 	int rightMargin() const;
@@ -84,6 +86,7 @@ public:
 	shared_ptr<ZLTextStyle> baseStyle() const;
 
 	bool isSelectionEnabled() const;
+	int doubleClickDelay() const;
 
 protected:
 	bool onStylusPress(int x, int y);

@@ -190,7 +190,7 @@ bool FBView::onStylusRelease(int x, int y) {
 			(!ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value() ||
 			 !fbreader.TapScrollingOnFingerOnlyOption.value())) {
 		myTapScroller = new TapScroller(*this, y);
-		ZLTimeManager::Instance().addAutoRemovableTask(myTapScroller, DOUBLE_CLICK_DELAY);
+		ZLTimeManager::Instance().addAutoRemovableTask(myTapScroller, doubleClickDelay());
 		return true;
 	}
 
@@ -305,6 +305,10 @@ ZLBooleanOption &FBView::selectionOption() {
 
 bool FBView::isSelectionEnabled() const {
 	return selectionOption().value();
+}
+
+int FBView::doubleClickDelay() const {
+	return isSelectionEnabled() ? 200 : 0;
 }
 
 bool FBView::hasContents() const {

@@ -34,15 +34,18 @@
 #include "../area/ZLTextWord.h"
 #include "../area/ZLTextAreaStyle.h"
 
-const int ZLTextView::DOUBLE_CLICK_DELAY = 200;
-
 const ZLTypeId ZLTextView::TYPE_ID(ZLView::TYPE_ID);
 
 const ZLTypeId &ZLTextView::typeId() const {
 	return TYPE_ID;
 }
 
-ZLTextView::ZLTextView(ZLPaintContext &context) : ZLView(context), myTextAreaController(context, *this), myTreeStateIsFrozen(false), myDoUpdateScrollbar(false) {
+ZLTextView::ZLTextView(ZLPaintContext &context) :
+	ZLView(context),
+	myTextAreaController(context, *this),
+	myTreeStateIsFrozen(false),
+	myDoUpdateScrollbar(false),
+	myDoubleClickInfo(*this) {
 }
 
 ZLTextView::~ZLTextView() {
@@ -593,7 +596,7 @@ void ZLTextView::forceScrollbarUpdate() {
 	myDoUpdateScrollbar = true;
 }
 
-ZLTextView::DoubleClickInfo::DoubleClickInfo() {
+ZLTextView::DoubleClickInfo::DoubleClickInfo(const ZLTextView &view) : myView(view) {
 	Count = 0;
 }
 
@@ -601,7 +604,7 @@ void ZLTextView::DoubleClickInfo::update(int x, int y, bool press) {
 	ZLTime current;
 	int dcDeltaX = X - x;
 	int dcDeltaY = Y - y;
-	if ((current.millisecondsFrom(Time) < DOUBLE_CLICK_DELAY) &&
+	if ((current.millisecondsFrom(Time) < myView.doubleClickDelay()) &&
 			(dcDeltaX > -5) && (dcDeltaX < 5) &&
 			(dcDeltaY > -5) && (dcDeltaY < 5)) {
 		++Count;
