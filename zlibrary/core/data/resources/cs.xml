@@ -61,10 +61,11 @@
 		<node name="fi" value="Finsky"/>
 		<node name="fr" value="Francouzsky"/>
 		<node name="he" value="Hebrejsky"/>
+		<node name="hu" toBeTranslated="true" value="Hungarian"/>
 		<node name="id" value="Indonézsky"/>
 		<node name="it" value="Italsky"/>
 		<node name="lt" value="Litevsky"/>
-		<node name="nl" value="Nizozemština"/>
+		<node name="nl" toBeTranslated="true" value="Dutch"/>
 		<node name="no" value="Norsky"/>
 		<node name="pt" value="Portugalsky"/>
 		<node name="ru" value="Rusky"/>
