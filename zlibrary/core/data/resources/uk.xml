@@ -61,6 +61,7 @@
 		<node name="fi" value="Фінська"/>
 		<node name="fr" value="Французька"/>
 		<node name="he" value="Гебрейська"/>
+		<node name="hu" value="Угорська"/>
 		<node name="id" value="Індонезійська"/>
 		<node name="it" value="Італійська"/>
 		<node name="lt" value="Литовська"/>

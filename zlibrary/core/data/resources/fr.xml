@@ -61,6 +61,7 @@
 		<node name="fi" value="Finnois"/>
 		<node name="fr" value="Français"/>
 		<node name="he" value="Hébreu"/>
+		<node name="hu" value="Hongrois" />
 		<node name="id" value="Indonésien"/>
 		<node name="it" value="Italien"/>
 		<node name="lt" value="Lithuanien"/>

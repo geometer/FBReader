@@ -61,6 +61,7 @@
 		<node name="fi" value="芬兰语" />
 		<node name="fr" value="法语" />
 		<node name="he" value="希伯来语" />
+		<node name="hu" toBeTranslated="true" value="Hungarian" />
 		<node name="id" value="印度语" />
 		<node name="it" value="意大利语" />
 		<node name="lt" value="立陶宛语" />
