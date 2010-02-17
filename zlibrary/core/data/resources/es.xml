@@ -13,19 +13,19 @@
 			<node name="savingConfig" value="Guardando configuración..." />
 		</node>
 		<node name="networkError">
-			<node name="title" value="Error de red" />
+			<node name="title" value="Error de Red" />
 			<node name="unknownErrorMessage" value="Error desconocido" />
-			<node name="couldntCreateDirectoryMessage" value="No es posible crear un directorio&#10;%s" />
+			<node name="couldntCreateDirectoryMessage" value="CNo es posible crear un directorio&#10;%s" />
 			<node name="couldntCreateFileMessage" value="No se puede crear un archivo&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" value="No se pudo conectar a la red" />
 			<node name="couldntConnectMessage" value="No se puede conectar al servidor %s" />
 			<node name="couldntResolveHostMessage" value="No se puede conectar a la dirección %s" />
 			<node name="couldntResolveProxyMessage" value="No se puede conectar al proxy %s" />
-			<node name="operationTimedOutMessage" value="Se terminó el tiempo de la conección" />
+			<node name="operationTimedOutMessage" value="Se terminó el tiempo de conexión" />
 			<node name="somethingWrongMessage" value="Algo va mal para&#10;%s" />
 			<node name="sslConnectErrorMessage" value="SSL/TLS Se produjo un problema:&#10;%s" />
-			<node name="peerFailedVerificationMessage" value="Certificado de SSL %s&#10;no fue aceptado" />
-			<node name="sslCertificateAuthorityMessage" value="Certificado de SSL %s&#10;no se puede autenticar con conocidos certificados de CA" />
+			<node name="peerFailedVerificationMessage" value="Certificado de SSL para %s&#10;no fue aceptado" />
+			<node name="sslCertificateAuthorityMessage" value="SCertificado de SSL para %s&#10;no se puede autenticar con certificados conocidos de CA" />
 			<node name="sslBadCertificateFileMessage" value="No se pudo leer el achivo certificado SSL:&#10;%s" />
 			<node name="sslShutdownFailedMessage" value="No se ha podido cerrar la conexión SSL para&#10;%s" />
 		</node>
@@ -36,24 +36,24 @@
 		<node name="blue" value="Azul" />
 		<node name="black" value="Negro" />
 		<node name="white" value="Blanco" />
-		<node name="maroon" value="Granate" />
-		<node name="olive" value="Oliva" />
-		<node name="navy" value="Marino" />
-		<node name="purple" value="Púrpura" />
-		<node name="teal" value="Verde oscuro" />
-		<node name="silver" value="Plata" />
+		<node name="maroon" value="Marrón" />
+		<node name="olive" value="Verde oliva" />
+		<node name="navy" value="Azul oscuro" />
+		<node name="purple" value="Violeta" />
+		<node name="teal" value="Turquesa" />
+		<node name="silver" value="Gris claro" />
 		<node name="gray" value="Gris" />
-		<node name="lime" value="Cal" />
+		<node name="lime" value="Verde claro" />
 		<node name="yellow" value="Amarillo" />
 		<node name="magenta" value="Magenta" />
 		<node name="cyan" value="Cian" />
 		<node name="custom..." value="Personalizado..." />
 	</node>
 	<node name="language">
-		<node name="ar" value="Arábico" />
+		<node name="ar" value="Árabe" />
 		<node name="cs" value="Checo" />
 		<node name="de" value="Alemán" />
-		<node name="de-traditional" value="Alemán (ortografia tradicional)" />
+		<node name="de-traditional" value="Alemán (ortografía tradicional)" />
 		<node name="el" value="Griego" />
 		<node name="en" value="Inglés" />
 		<node name="eo" value="Esperanto" />
@@ -69,7 +69,7 @@
 		<node name="no" value="Noruego" />
 		<node name="pt" value="Portugués" />
 		<node name="ru" value="Ruso" />
-		<node name="sv" value="Suizo" />
+		<node name="sv" value="Sueco" />
 		<node name="tr" value="Turco" />
 		<node name="uk" value="Ucraniano" />
 		<node name="zh" value="Chino" />
