@@ -65,7 +65,7 @@
 		<node name="id" value="Indoneziečių" />
 		<node name="it" value="Italų" />
 		<node name="lt" value="Lietuvių" />
-		<node name="nl" toBeTranslated="true" value="Dutch" />
+		<node name="nl" value="Olandų" />
 		<node name="no" value="Norvegų" />
 		<node name="pt" value="Portugalų" />
 		<node name="ru" value="Rusų" />

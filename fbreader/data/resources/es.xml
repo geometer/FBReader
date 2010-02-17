@@ -197,6 +197,10 @@
 			<node name="label" value="Ayuda" />
 			<node name="tooltip" value="Información sobre FBReader" />
 		</node>
+		<node name="filterLibrary">
+			<node name="label" toBeTranslated="yes" value="Filter" />
+			<node name="tooltip" toBeTranslated="yes" value="Filter" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">

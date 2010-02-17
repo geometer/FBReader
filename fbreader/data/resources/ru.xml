@@ -196,6 +196,10 @@
 			<node name="label" value="О программе" />
 			<node name="tooltip" value="О программе" />
 		</node>
+		<node name="filterLibrary">
+			<node name="label" value="Фильтровать" />
+			<node name="tooltip" value="Фильтровать" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
