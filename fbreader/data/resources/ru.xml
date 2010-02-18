@@ -513,6 +513,7 @@
 			<node name="registerUser" value="Регистрируем пользователя. Подождите, пожалуйста..." />
 			<node name="passwordRecovery" value="Просим восстановить пароль. Подождите, пожалуйста..." />
 			<node name="authenticationCheck" value="Проверка учетной записи. Подождите, пожалуйста..." />
+			<node name="signOut" value="Выход из системы. Подождите, пожалуйста..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Покупка книги" />

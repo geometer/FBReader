@@ -198,8 +198,8 @@
 			<node name="tooltip" value="Over FBReader" />
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="yes" value="Filter" />
-			<node name="tooltip" toBeTranslated="yes" value="Filter" />
+			<node name="label" toBeTranslated="true" value="Filter" />
+			<node name="tooltip" toBeTranslated="true" value="Filter" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -514,6 +514,7 @@
 			<node name="registerUser" value="Nieuwe account wordt aangemaakt..." />
 			<node name="passwordRecovery" value="Het wachtwoord wordt hersteld..." />
 			<node name="authenticationCheck" value="Account wordt gecontroleerd..." />
+			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Koop Boek" />
