@@ -7,7 +7,7 @@
 			<node name="cancel" value="&amp;Cancelar" />
 			<node name="yes" value="&amp;Si" />
 			<node name="no" value="&amp;No" />
-			<node name="apply" value="&amp;Aplicar" />
+			<node name="apply" value="Ap&amp;licar" />
 		</node>
 		<node name="waitMessage">
 			<node name="savingConfig" value="Guardando configuración..." />
@@ -15,7 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Error de Red" />
 			<node name="unknownErrorMessage" value="Error desconocido" />
-			<node name="couldntCreateDirectoryMessage" value="CNo es posible crear un directorio&#10;%s" />
+			<node name="couldntCreateDirectoryMessage" value="No es posible crear un directorio&#10;%s" />
 			<node name="couldntCreateFileMessage" value="No se puede crear un archivo&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" value="No se pudo conectar a la red" />
 			<node name="couldntConnectMessage" value="No se puede conectar al servidor %s" />
@@ -25,7 +25,7 @@
 			<node name="somethingWrongMessage" value="Algo va mal para&#10;%s" />
 			<node name="sslConnectErrorMessage" value="SSL/TLS Se produjo un problema:&#10;%s" />
 			<node name="peerFailedVerificationMessage" value="Certificado de SSL para %s&#10;no fue aceptado" />
-			<node name="sslCertificateAuthorityMessage" value="SCertificado de SSL para %s&#10;no se puede autenticar con certificados conocidos de CA" />
+			<node name="sslCertificateAuthorityMessage" value="Certificado de SSL para %s&#10;no se puede autenticar con certificados conocidos de CA" />
 			<node name="sslBadCertificateFileMessage" value="No se pudo leer el achivo certificado SSL:&#10;%s" />
 			<node name="sslShutdownFailedMessage" value="No se ha podido cerrar la conexión SSL para&#10;%s" />
 		</node>

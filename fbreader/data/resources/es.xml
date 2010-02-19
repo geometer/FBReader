@@ -13,7 +13,7 @@
 			<node name="collapseTree" value="Ocultar libros"/>
 			<node name="edit" value="Modificar etiqueta"/>
 			<node name="clone" value="Duplicar etiqueta"/>
-			<node name="delete" value="Eliminar etiqueta"/>
+			<node name="delete" value="Borrar etiqueta"/>
 			<node name="noTags" value="Libros sin etiquetas"/>
 		</node>
 		<node name="seriesNode">
@@ -23,7 +23,7 @@
 		<node name="bookNode">
 			<node name="read" value="Leer libro"/>
 			<node name="edit" value="Modificar información"/>
-			<node name="delete" value="Eliminar libro"/>
+			<node name="delete" value="Borrar libro"/>
 		</node>
 	</node>
 	<node name="networkView">
@@ -134,16 +134,16 @@
 			<node name="tooltip" value="Ordenar Libros por Etiqueta" />
 		</node>
 		<node name="addBook">
-			<node name="label" value="Agregar Libro" />
-			<node name="tooltip" value="Agregar Libro a la Biblioteca" />
+			<node name="label" value="Añadir Libro" />
+			<node name="tooltip" value="Añadir Libro a la Biblioteca" />
 		</node>
 		<node name="showNetLibrary">
 			<node name="label" value="Red" />
-			<node name="tooltip" value="Búsqueda en la Red de Bibliotecas" />
+			<node name="tooltip" value="Buscar Libros en la Web" />
 		</node>
 		<node name="searchOnNetwork">
 			<node name="label" value="Búsqueda simple" />
-			<node name="tooltip" value="Red de búsqueda" />
+			<node name="tooltip" value="Buscar en la Web" />
 		</node>
 		<node name="advancedSearchOnNetwork">
 			<node name="label" value="Búsqueda" />
@@ -217,16 +217,16 @@
 			<node name="title" value="FBReader - Opciones" />
 			<node name="tab">
 				<node name="Library" value="Biblioteca">
-					<node name="bookPath" value="Directorio de Libros" />
+					<node name="bookPath" value="Directorios de Libros" />
 					<node name="lookInSubdirectories" value="Buscar libros en los subdirectorios" />
 					<node name="collectBooksWithoutMetaInfo" value="Colección de libros sin información" />
 					<node name="downloadDirectory" value="Directorio de libros descargados" />
 				</node>
-				<node name="NetworkLibrary" value="Red de Búsqueda">
+				<node name="NetworkLibrary" value="Búsqueda en la Web">
 					<node name="useProxy" value="Usar servidor Proxy" />
 					<node name="proxyHost" value="IP del servidor Proxy" />
 					<node name="proxyPort" value="Puerto del servidor Proxy" />
-					<node name="timeout" value="Tiempo de espera de operaciones de red, en segundos" />
+					<node name="timeout" value="Tiempo de espera en operaciones de red (segundos)" />
 				</node>
 				<node name="Language" value="Idioma">
 					<node name="autoDetect" value="Detectar automáticamente el idioma y la codificación" />
@@ -242,27 +242,27 @@
 						<node name="none" value="No mostrar" />
 					</node>
 					<node name="height" value="Altura de la barra señaladora" />
-					<node name="offset" value="Margen inferior del texto" />
-					<node name="pageNumber" value="Mostrar números de página" />
-					<node name="time" value="Mostrar la Hora actual" />
+					<node name="offset" value="Margen inferior" />
+					<node name="pageNumber" value="Mostrar el número de página" />
+					<node name="time" value="Mostrar la Hora" />
 					<node name="fontSize" value="Tamaño de la Fuente" />
-					<node name="tocMarks" value="Ver Marcadores del Índice" />
+					<node name="tocMarks" value="Mostrar marcadores del Índice" />
 					<node name="navigation" value="Activar Navegación" />
 				</node>
 				<node name="Scrolling" value="Desplazamiento Vertical">
 					<node name="keyScrollDelay" value="Retardo en desplazamiento vertical, milisegundos" />
 					<node name="keyLinesToScroll" value="Líneas desplazadas con flechas del teclado" />
 					<node name="keyLinesToKeep" value="Líneas desplazadas con avance de página (AvPág/RePág)" />
-					<node name="enableTapScrolling" value="Activar desplazamiento vertical con un Click" />
-					<node name="fingerOnly" value="Sólo desplazamiento vertical con un Click" />
+					<node name="enableTapScrolling" value="Activar desplazamiento vertical con un click del ratón" />
+					<node name="fingerOnly" value="Sólo desplazamiento vertical con un click del ratón" />
 				</node>
 				<node name="Selection" value="Selección">
-					<node name="enableSelection" value="Permitir selección del texto" />
+					<node name="enableSelection" value="Permitir seleccionar el texto" />
 				</node>
 				<node name="CSS" value="CSS">
 					<node name="overrideSpecifiedFonts" value="Utilizar siempre Fuentes personalizadas" />
 				</node>
-				<node name="Margins" value="Margenes">
+				<node name="Margins" value="Márgenes">
 					<node name="left" value="Margen izquierdo" />
 					<node name="right" value="Margen derecho" />
 					<node name="top" value="Margen superior" />
@@ -296,13 +296,13 @@
 					<node name="bold" value="Negrita" />
 					<node name="italic" value="Itálica" />
 					<node name="allowHyphenations" value="Permitir separación en sílabas" />
-					<node name="autoHyphenations" value="Separación en sílabas automática" />
+					<node name="autoHyphenations" value="Separación automática en sílabas" />
 				</node>
-				<node name="Rotation" value="Rotación">
+				<node name="Rotation" value="Girar texto">
 					<node name="direction" value="Tipo de giro">
 						<node name="disabled" value="Desactivar" />
 						<node name="clockwise" value="90 grados a la derecha" />
-						<node name="counterclockwise" value="90 grados hacia la izquierda" />
+						<node name="counterclockwise" value="90 grados a la izquierda" />
 						<node name="180" value="180 grados" />
 						<node name="cycle" value="Girar en las cuatro direcciones" />
 					</node>
@@ -322,12 +322,12 @@
 				</node>
 				<node name="Keys" value="Atajos">
 					<node name="grabSystemKeys" value="Guardar atajos del teclado" />
-					<node name="separate" value="Los atajos del teclado dependen de la orientación del texto" />
+					<node name="separate" value="Las combinaciones de teclas dependen de la orientación del texto" />
 					<node name="orientation" value="Orientación" />
 					<node name="action">
 						<node name="none" value="Ninguno" />
 						<node name="showLibrary" value="Mostrar la Biblioteca" />
-						<node name="showNetLibrary" value="Mostrar Red de Bibliotecas" />
+						<node name="showNetLibrary" value="Mostrar Bibliotecas en la Web" />
 						<node name="showRecent" value="Mostrar libros recientes" />
 						<node name="previousBook" value="Abrir el libro anterior" />
 						<node name="toc" value="Ver índice de contenidos" />
@@ -370,10 +370,10 @@
 					<node name="enableIntegration" value="Activar la integración con Navegador Web" />
 					<node name="defaultText" value="Activar la integración con el Diccionario" />
 					<node name="choice" value="Integrar con" />
-					<node name="singleClickOpen" value="Abrir con un Click" />
+					<node name="singleClickOpen" value="Abrir con un click" />
 				</node>
-				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Abrir enlaces externos en Navegador Web" />
+				<node name="Web" value="Navegador">
+					<node name="enableIntegration" value="Abrir enlaces externos en el Navegador Web" />
 					<node name="defaultText" value="Abrir enlaces externos en Navegador Web" />
 					<node name="choice" value="Usar Navegador Web" />
 					<node name="command" value="Comando a ejecutar" />
@@ -436,7 +436,7 @@
 			<node name="currentSection" value="&amp;En este capítulo solamente" />
 		</node>
 		<node name="networkSearchDialog">
-			<node name="title" value="Red de búsqueda" />
+			<node name="title" value="Búsqueda en la Web" />
 			<node name="titleAndSeries" value="Título/Colección" />
 			<node name="author" value="Autor" />
 			<node name="category" value="Categoría" />
@@ -458,13 +458,13 @@
 			<node name="includeSubtags" value="Incluir Subetiquetas" />
 		</node>
 		<node name="removeBookBox">
-			<node name="title" value="Eliminar Libro" />
-			<node name="message" value="¿Eliminar Libro&#10;&#8220;%s&#8221;&#10;de la Biblioteca?" />
-			<node name="deleteFile" value="¿Está seguro de&#10;eliminar archivo&#10;&#8220;%s&#8221;&#10;del disco duro?" />
+			<node name="title" value="Borrar Libro" />
+			<node name="message" value="¿Borrar Libro&#10;&#8220;%s&#8221;&#10;de la Biblioteca?" />
+			<node name="deleteFile" value="¿Está seguro de&#10;borrar el archivo&#10;&#8220;%s&#8221;&#10;del disco duro?" />
 		</node>
 		<node name="removeTagBox">
-			<node name="title" value="Eliminar Etiqueta" />
-			<node name="message" value="¿Eliminar Etiqueta &#8220;%s&#8221;?" />
+			<node name="title" value="Borrar Etiqueta" />
+			<node name="message" value="¿Borrar Etiqueta &#8220;%s&#8221;?" />
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Error" />
@@ -472,7 +472,7 @@
 		</node>
 		<node name="removeFileErrorBox">
 			<node name="title" value="Error" />
-			<node name="message" value="No se puede eliminar archivo &#10;%s" />
+			<node name="message" value="No se puede borrar el archivo &#10;%s" />
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Error" />
@@ -533,7 +533,7 @@
 		</node>
 		<node name="dontShowConfirmBox">
 			<node name="title" value="Deshabilitar catálogo" />
-			<node name="message" value="¿Estás seguro de que desea deshabilitar&#10;&#8220;%s&#8221; el catálogo?&#10;&#10;Se puede habilitar en el futuro en&#10;&#8220; Red de búsqueda&#8221; en el diálogo de Preferencias." />
+			<node name="message" value="¿Estás seguro de que desea deshabilitar&#10;&#8220;%s&#8221; el catálogo?&#10;&#10;Se puede habilitar en el futuro en&#10;&#8220; Búsqueda en la Web&#8221; en el diálogo de Preferencias." />
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" value="Borrar Libro" />
