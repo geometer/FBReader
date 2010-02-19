@@ -31,6 +31,7 @@
 #include "LitResLink.h"
 #include "LitResGenresParser.h"
 #include "LitResGenre.h"
+#include "LitResUtil.h"
 
 static const std::string GENRES_CACHE_PREFIX = "litres_genres_";
 static const std::string GENRES_CACHE_SUFFIX = ".xml.gz";
@@ -95,7 +96,7 @@ bool LitResLink::loadGenres() const {
 	static const std::string directoryPath = ZLNetworkManager::CacheDirectory();
 	static shared_ptr<ZLDir> dir = ZLFile(directoryPath).directory(true);
 
-	const std::string url = litresUrl("pages/catalit_genres/");
+	const std::string url = LitResUtil::url(*this, "pages/catalit_genres/");
 
 	myGenresTree.clear();
 	myGenresMap.clear();

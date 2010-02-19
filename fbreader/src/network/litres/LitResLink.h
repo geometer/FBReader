@@ -46,7 +46,6 @@ public:
 	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;
 
 	void rewriteUrl(std::string &url, bool isUrlExternal = false) const;
-	std::string litresUrl(const std::string &path) const;
 
 	const std::map<std::string, shared_ptr<LitResGenre> > &genresMap() const;
 	const std::vector<shared_ptr<LitResGenre> > &genresTree() const;

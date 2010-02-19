@@ -27,12 +27,12 @@
 #include "../NetworkAuthenticationManager.h"
 #include "../NetworkItems.h"
 
-class LitResLink;
+class NetworkLink;
 
 class LitResAuthenticationManager : public NetworkAuthenticationManager {
 
 public:
-	LitResAuthenticationManager(const LitResLink &link);
+	LitResAuthenticationManager(const NetworkLink &link);
 
 public:
 	AuthenticationStatus isAuthorised(bool useNetwork = true);
@@ -76,7 +76,7 @@ public: // Password Recovery
 	std::string recoverPassword(const std::string &email);
 
 private:
-	const LitResLink &myLink;
+	const NetworkLink &myLink;
 
 	bool mySidChecked;
 

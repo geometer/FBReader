@@ -32,7 +32,7 @@
 
 <!ELEMENT authentication EMPTY>
 <!ATTLIST authentication
-	type (basic) #REQUIRED
+	type (basic|litres) #REQUIRED
 >
 
 <!ELEMENT urlRewritingRules (rule+)>

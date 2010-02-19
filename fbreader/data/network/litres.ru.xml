@@ -17,7 +17,10 @@
 	<feeds>
 		<condition show="signedIn">http://data.fbreader.org/catalogs/litres/my.php</condition>
 	</feeds>
-	<authentication type="basic"/>
+	<authentication type="litres"/>
+	<urlRewritingRules>
+		<rule type="addUrlParameter" apply="external" name="ref" value="geometer"/>
+	</urlRewritingRules>
 	<icon>data:image/png;base64,
 iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAIAAABMXPacAAAABGdBTUEAAK/I
 NwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAyk

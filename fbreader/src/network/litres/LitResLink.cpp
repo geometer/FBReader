@@ -29,6 +29,7 @@
 #include "LitResAuthenticationManager.h"
 #include "LitResAuthorsParser.h"
 #include "LitResGenre.h"
+#include "LitResUtil.h"
 
 #include "../NetworkOperationData.h"
 #include "../NetworkItems.h"
@@ -59,7 +60,7 @@ LitResLink::LitResLink() :
 
 shared_ptr<ZLExecutionData> LitResLink::simpleSearchData(NetworkOperationData &result, const std::string &pattern) const {
 	return ZLNetworkManager::Instance().createXMLParserRequest(
-		litresUrl("pages/catalit_browser/?checkpoint=2000-01-01&search=" + ZLNetworkUtil::htmlEncode(pattern)),
+		LitResUtil::url(*this, "pages/catalit_browser/?checkpoint=2000-01-01&search=" + ZLNetworkUtil::htmlEncode(pattern)),
 		new LitResDataParser(*this, result.Items)
 	);
 }
@@ -84,7 +85,7 @@ shared_ptr<ZLExecutionData> LitResLink::advancedSearchData(NetworkOperationData 
 	}
 
 	return ZLNetworkManager::Instance().createXMLParserRequest(
-		litresUrl("pages/catalit_browser/" + request),
+		LitResUtil::url(*this, "pages/catalit_browser/" + request),
 		new LitResDataParser(*this, result.Items)
 	);
 }
@@ -195,13 +196,13 @@ std::string LitResRootCatalogItem::loadChildren(NetworkItem::List &children) {
 	const LitResLink &link = (const LitResLink&)Link;
 	children.push_back(new LitResCatalogItem(
 		link,
-		link.litresUrl("pages/catalit_browser/?rating=hot"),
+		LitResUtil::url(link, "pages/catalit_browser/?rating=hot"),
 		"Горячие новинки",
 		"Новые поступления за неделю"
 	));
 	children.push_back(new LitResCatalogItem(
 		link,
-		link.litresUrl("pages/catalit_browser/?rating=books"),
+		LitResUtil::url(link, "pages/catalit_browser/?rating=books"),
 		"Популярные книги",
 		"50 самых популярных книг"
 	));
@@ -298,7 +299,7 @@ std::string LitResByAuthorsCatalogItem::loadChildren(NetworkItem::List &children
 
 	children.push_back(new LitResAuthorsItem(
 		link,
-		link.litresUrl("pages/catalit_persons/?rating=1"),
+		LitResUtil::url(link, "pages/catalit_persons/?rating=1"),
 		"Популярные авторы",
 		"50 самых популярных за последнюю неделю авторов"
 	));
@@ -312,7 +313,7 @@ std::string LitResByAuthorsCatalogItem::loadChildren(NetworkItem::List &children
 		ptr += len;
 		children.push_back(new LitResAuthorsItem(
 			link,
-			link.litresUrl("pages/catalit_persons/?search_last_name=" + ZLNetworkUtil::htmlEncode(letter + "%")),
+			LitResUtil::url(link, "pages/catalit_persons/?search_last_name=" + ZLNetworkUtil::htmlEncode(letter + "%")),
 			letter,
 			"Авторы на букву " + letter
 		));
@@ -356,7 +357,7 @@ std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children) {
 
 		children.push_back(new LitResCatalogItem(
 			link,
-			link.litresUrl("pages/catalit_browser/?checkpoint=2000-01-01&person=" + ZLNetworkUtil::htmlEncode(it->Id)),
+			LitResUtil::url(link, "pages/catalit_browser/?checkpoint=2000-01-01&person=" + ZLNetworkUtil::htmlEncode(it->Id)),
 			it->Title,
 			anno,
 			true,
@@ -398,7 +399,7 @@ std::string LitResGenresItem::loadChildren(NetworkItem::List &children) {
 		} else {
 			children.push_back(new LitResCatalogItem(
 				link,
-				link.litresUrl("pages/catalit_browser/?checkpoint=2000-01-01&genre=" + ZLNetworkUtil::htmlEncode(genre.Id)),
+				LitResUtil::url(link, "pages/catalit_browser/?checkpoint=2000-01-01&genre=" + ZLNetworkUtil::htmlEncode(genre.Id)),
 				genre.Title,
 				"",
 				true
@@ -414,16 +415,4 @@ shared_ptr<NetworkItem> LitResLink::libraryItem() const {
 
 void LitResLink::rewriteUrl(std::string &url, bool) const {
 	ZLNetworkUtil::appendParameter(url, "lfrom", "51");
-}
-
-std::string LitResLink::litresUrl(const std::string &path) const {
-	std::string url = "://robot.litres.ru/" + path;
-	if (ZLNetworkUtil::hasParameter(url, "sid") ||
-			ZLNetworkUtil::hasParameter(url, "pwd")) {
-		url = "https" + url;
-	} else {
-		url = "http" + url;
-	}
-	rewriteUrl(url);
-	return url;
 }
