@@ -39,6 +39,7 @@ public:
 
 private:
 	static shared_ptr<Library> ourInstance;
+	static const size_t MaxRecentListSize;
 
 public:
 	ZLStringOption PathOption;
@@ -53,6 +54,7 @@ public:
 	const TagList &tags() const;
 	const BookList &books(shared_ptr<Author> author) const;
 	const BookList &books(shared_ptr<Tag> tag) const;
+	const BookList &recentBooks() const;
 
 	enum RemoveType {
 		REMOVE_DONT_REMOVE = 0,
@@ -70,6 +72,7 @@ public:
 	void addBook(shared_ptr<Book> book);
 	void removeBook(shared_ptr<Book> book);
 	void updateBook(shared_ptr<Book> book);
+	void addBookToRecentList(shared_ptr<Book> book);
 
 	void replaceAuthor(shared_ptr<Author> from, shared_ptr<Author> to);
 
@@ -80,7 +83,6 @@ public:
 	void cloneTag(shared_ptr<Tag> from, shared_ptr<Tag> to, bool includeSubTags);
 
 private:
-
 	void collectDirNames(std::set<std::string> &names) const;
 	void collectBookFileNames(std::set<std::string> &bookFileNames) const;
 
@@ -101,6 +103,7 @@ private:
 	mutable BooksByAuthor myBooksByAuthor;
 	typedef std::map<shared_ptr<Tag>,BookList,TagComparator> BooksByTag;
 	mutable BooksByTag myBooksByTag;
+	mutable BookList myRecentBooks;
 
 	mutable std::string myPath;
 	mutable bool myScanSubdirs;
@@ -117,6 +120,7 @@ private:
 friend class LibrarySynchronizer;
 };
 
+/*
 class RecentBooks {
 
 public:
@@ -133,5 +137,6 @@ public:
 private:
 	BookList myBooks;
 };
+*/
 
 #endif /* __LIBRARY_H__ */

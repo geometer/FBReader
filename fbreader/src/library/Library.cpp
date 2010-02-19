@@ -37,6 +37,7 @@
 #include "../database/booksdb/BooksDB.h"
 
 shared_ptr<Library> Library::ourInstance;
+const size_t Library::MaxRecentListSize = 10;
 
 Library::Library &Library::Instance() {
 	if (ourInstance.isNull()) {
@@ -53,6 +54,7 @@ Library::Library() :
 	CollectAllBooksOption(ZLCategoryKey::CONFIG, OPTIONS, "CollectAllBooks", false),
 	myBuildMode(BUILD_ALL),
 	myRevision(0) {
+	BooksDBUtil::getRecentBooks(myRecentBooks);
 }
 
 void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
@@ -280,6 +282,18 @@ void Library::removeBook(shared_ptr<Book> book) {
 			myBuildMode = (BuildMode)(myBuildMode | BUILD_UPDATE_BOOKS_INFO);
 		}
 		BooksDB::Instance().deleteFromBookList(*book);
+		bool recentListChanged = false;
+		for (BookList::iterator it = myRecentBooks.begin(); it != myRecentBooks.end();) {
+			if ((*it)->filePath() == book->filePath()) {
+				it = myRecentBooks.erase(it);
+				recentListChanged = true;
+			} else {
+				++it;
+			}
+		}
+		if (recentListChanged) {
+			BooksDB::Instance().saveRecentBooks(myRecentBooks);
+		}
 	}
 }
 
@@ -381,4 +395,28 @@ void Library::insertIntoBookSet(shared_ptr<Book> book) const {
 	if (!book.isNull()) {
 		myBooks.insert(book);
 	}
+}
+
+const BookList &Library::recentBooks() const {
+	return myRecentBooks;
+}
+
+void Library::addBookToRecentList(shared_ptr<Book> book) {
+	if (book.isNull()) {
+		return;
+	}
+	for (BookList::iterator it = myRecentBooks.begin(); it != myRecentBooks.end(); ++it) {
+		if ((*it)->filePath() == book->filePath()) {
+			if (it == myRecentBooks.begin()) {
+				return;
+			}
+			myRecentBooks.erase(it);
+			break;
+		}
+	}
+	myRecentBooks.insert(myRecentBooks.begin(), book);
+	if (myRecentBooks.size() > MaxRecentListSize) {
+		myRecentBooks.erase(myRecentBooks.begin() + MaxRecentListSize, myRecentBooks.end());
+	}
+	BooksDB::Instance().saveRecentBooks(myRecentBooks);
 }

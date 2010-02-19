@@ -42,6 +42,7 @@
 
 #include "../database/booksdb/BooksDBUtil.h"
 #include "../database/booksdb/BooksDB.h"
+#include "../library/Library.h"
 #include "../library/Book.h"
 
 ModeDependentAction::ModeDependentAction(int visibleInModes) : myVisibleInModes(visibleInModes) {
@@ -196,12 +197,12 @@ bool OpenPreviousBookAction::isVisible() const {
 			(fbreader.mode() != FBReader::CONTENTS_MODE)) {
 		return false;
 	}
-	return fbreader.recentBooks().books().size() > 1;
+	return Library::Instance().recentBooks().size() > 1;
 }
 
 void OpenPreviousBookAction::run() {
 	FBReader &fbreader = FBReader::Instance();
-	BookList books = fbreader.recentBooks().books();
+	const BookList &books = Library::Instance().recentBooks();
 	fbreader.openBook(books[1]);
 	fbreader.refreshWindow();
 	fbreader.resetWindowCaption();

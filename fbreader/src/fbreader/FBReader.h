@@ -83,6 +83,8 @@ public:
 
 	shared_ptr<Book> currentBook() const;
 
+	void refreshWindow();
+
 private:
 	void initWindow();
 
@@ -115,9 +117,6 @@ public:
 	BookTextView &bookTextView() const;
 	void showBookTextView();
 	void openBook(shared_ptr<Book> book);
-
-	RecentBooks &recentBooks();
-	const RecentBooks &recentBooks() const;
 
 	void invalidateNetworkView();
 	void invalidateAccountDependents();
@@ -158,8 +157,6 @@ private:
 	ProgramCollectionMap myProgramCollectionMap;
 
 	shared_ptr<ZLMessageHandler> myOpenFileHandler;
-
-	RecentBooks myRecentBooks;
 
 	enum {
 		RETURN_TO_TEXT_MODE,

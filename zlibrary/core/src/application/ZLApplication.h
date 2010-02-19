@@ -156,7 +156,7 @@ public:
 
 	virtual bool isViewFinal() const;
 
-	void refreshWindow();
+	virtual void refreshWindow();
 	void presentWindow();
 
 	const std::string &lastCaller() const;

@@ -173,7 +173,6 @@ void FBReader::initWindow() {
 	MigrationRunnable migration;
 	if (migration.shouldMigrate()) {
 		ZLDialogManager::Instance().wait(ZLResourceKey("migrate"), migration);
-		myRecentBooks.reload();
 	}
 
 	if (!myBookAlreadyOpen) {
@@ -182,7 +181,7 @@ void FBReader::initWindow() {
 			createBook(myBookToOpen, book);
 		}
 		if (book.isNull()) {
-			const BookList &books = myRecentBooks.books();
+			const BookList &books = Library::Instance().recentBooks();
 			if (!books.empty()) {
 				book = books[0];
 			}
@@ -198,6 +197,11 @@ void FBReader::initWindow() {
 	refreshWindow();
 
 	ZLTimeManager::Instance().addTask(new TimeUpdater(), 1000);
+}
+
+void FBReader::refreshWindow() {
+	ZLApplication::refreshWindow();
+	((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
 }
 
 bool FBReader::createBook(const std::string& fileName, shared_ptr<Book> &book) {
@@ -291,7 +295,7 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		contentsView.setCaption(book->title());
 
 		Library::Instance().addBook(book);
-		myRecentBooks.addBook(book);
+		Library::Instance().addBookToRecentList(book);
 		((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
 		showBookTextView();
 	}
@@ -520,14 +524,6 @@ void FBReader::openInDictionary(const std::string &word) {
 
 shared_ptr<ProgramCollection> FBReader::webBrowserCollection() const {
 	return myProgramCollectionMap.collection("Web Browser");
-}
-
-RecentBooks &FBReader::recentBooks() {
-	return myRecentBooks;
-}
-
-const RecentBooks &FBReader::recentBooks() const {
-	return myRecentBooks;
 }
 
 shared_ptr<Book> FBReader::currentBook() const {
