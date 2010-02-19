@@ -109,11 +109,6 @@ void OPDSBasicAuthenticationManager::logOut() {
 	}
 }
 
-
-
-
-
-
 std::string OPDSBasicAuthenticationManager::networkBookId(const NetworkBookItem &) {
 	return "";
 }

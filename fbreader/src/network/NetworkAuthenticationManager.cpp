@@ -51,7 +51,7 @@ std::string NetworkAuthenticationManager::initialize() {
 }
 
 bool NetworkAuthenticationManager::needPurchase(const NetworkBookItem &) {
-	return false;
+	return true;
 }
 
 std::string NetworkAuthenticationManager::purchaseBook(NetworkBookItem &) {
