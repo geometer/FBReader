@@ -39,8 +39,8 @@
 #include "NetworkAuthenticationManager.h"
 
 #include "litres/LitResLink.h"
-#include "opdsLink/OPDSLinkReader.h"
-#include "opdsLink/URLRewritingRule.h"
+#include "opds/OPDSLinkReader.h"
+#include "opds/URLRewritingRule.h"
 
 NetworkLinkCollection *NetworkLinkCollection::ourInstance = 0;
 

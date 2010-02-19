@@ -25,11 +25,11 @@
 
 #include "OPDSLink.h"
 #include "OPDSCatalogItem.h"
+#include "OPDSXMLParser.h"
+#include "NetworkOPDSFeedReader.h"
 
 #include "../NetworkOperationData.h"
 #include "../NetworkAuthenticationManager.h"
-#include "../opds/OPDSXMLParser.h"
-#include "../opds/NetworkOPDSFeedReader.h"
 
 #include "URLRewritingRule.h"
 

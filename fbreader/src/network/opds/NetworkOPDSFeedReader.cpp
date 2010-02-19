@@ -24,11 +24,11 @@
 #include <ZLNetworkUtil.h>
 
 #include "NetworkOPDSFeedReader.h"
+#include "OPDSLink.h"
+#include "OPDSCatalogItem.h"
 
 #include "../NetworkOperationData.h"
 #include "../NetworkItems.h"
-#include "../opdsLink/OPDSLink.h"
-#include "../opdsLink/OPDSCatalogItem.h"
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(const std::string &baseURL, NetworkOperationData &result, 
 		const std::set<std::string> &ignoredFeeds, const std::set<std::string> &accountDependentFeeds) : 

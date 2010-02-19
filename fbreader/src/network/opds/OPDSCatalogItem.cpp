@@ -22,10 +22,10 @@
 
 #include "OPDSCatalogItem.h"
 #include "OPDSLink.h"
+#include "OPDSXMLParser.h"
+#include "NetworkOPDSFeedReader.h"
 
 #include "../NetworkOperationData.h"
-#include "../opds/OPDSXMLParser.h"
-#include "../opds/NetworkOPDSFeedReader.h"
 
 OPDSCatalogItem::OPDSCatalogItem(
 	const OPDSLink &link,
