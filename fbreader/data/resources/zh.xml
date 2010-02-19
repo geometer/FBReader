@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- Chinese FBReader resources, by http://shucang.com/ -->
 <resources>
 	<node name="libraryView">
@@ -198,8 +198,8 @@
 			<node name="tooltip" value="关于 FBReader" />
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter" />
-			<node name="tooltip" toBeTranslated="true" value="Filter" />
+			<node name="label" value="筛选" />
+			<node name="tooltip" value="筛选" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -513,8 +513,8 @@
 			<node name="loadSubCatalog" value="目录传载中，请等待..." />
 			<node name="registerUser" value="正在注册新账号，请稍等..." />
 			<node name="passwordRecovery" value="请求找回密码中，请稍等..." />
-			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
-			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
+			<node name="authenticationCheck" value="帐号验证中,请稍等..." />
+			<node name="signOut" value="退出. 正在处理,请稍等..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="购买书籍" />
