@@ -78,12 +78,14 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 		ATOMLink &link = *(e.links()[i]);
 		const std::string &rel = link.rel();
 		const std::string &type = link.type();
-		if (rel == OPDSConstants::REL_ACQUISITION || rel.empty()) {
-			if (type == OPDSConstants::MIME_APP_EPUB
-				|| type == OPDSConstants::MIME_APP_MOBI) {
-				hasBookLink = true;
-				break;
-			}
+		if ((rel == OPDSConstants::REL_ACQUISITION ||
+				 rel == OPDSConstants::REL_ACQUISITION_SAMPLE ||
+				 rel.empty()) &&
+				(type == OPDSConstants::MIME_APP_EPUB ||
+				 type == OPDSConstants::MIME_APP_MOBI ||
+				 type == OPDSConstants::MIME_APP_FB2ZIP)) {
+			hasBookLink = true;
+			break;
 		}
 	}
 
@@ -130,12 +132,18 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 				urlMap[NetworkItem::URL_COVER] = href;
 			}
 		} else if (rel == OPDSConstants::REL_ACQUISITION || rel.empty()) {
-			if (type == OPDSConstants::MIME_APP_EPUB) {
+			if (type == OPDSConstants::MIME_APP_FB2ZIP) {
+				urlMap[NetworkItem::URL_BOOK_FB2_ZIP] = href;
+			} else if (type == OPDSConstants::MIME_APP_EPUB) {
 				urlMap[NetworkItem::URL_BOOK_EPUB] = href;
 			} else if (type == OPDSConstants::MIME_APP_MOBI) {
 				urlMap[NetworkItem::URL_BOOK_MOBIPOCKET] = href;
 			} else if (type == OPDSConstants::MIME_APP_PDF) {
 				urlMap[NetworkItem::URL_BOOK_PDF] = href;
+			}
+		} else if (rel == OPDSConstants::REL_ACQUISITION_SAMPLE) {
+			if (type == OPDSConstants::MIME_APP_FB2ZIP) {
+				urlMap[NetworkItem::URL_BOOK_DEMO_FB2_ZIP] = href;
 			}
 		}
 	}

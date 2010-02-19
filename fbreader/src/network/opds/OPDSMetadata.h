@@ -35,10 +35,10 @@ public:
 
 	// Entry level / acquisition links
 	static const std::string REL_ACQUISITION;
-	static const std::string REL_BUYING;
-	static const std::string REL_LENDING;
-	static const std::string REL_SUBSCRIPTION;
-	static const std::string REL_SAMPLE;
+	static const std::string REL_ACQUISITION_BUY;
+	static const std::string REL_ACQUISITION_BORROW;
+	static const std::string REL_ACQUISITION_SUBSCRIBE;
+	static const std::string REL_ACQUISITION_SAMPLE;
 
 	// Entry level / other
 	static const std::string REL_COVER;
@@ -53,6 +53,7 @@ public:
 	static const std::string MIME_OPDS_FULLENTRY;
 
 	// MIME types / application
+	static const std::string MIME_APP_FB2ZIP;
 	static const std::string MIME_APP_EPUB;
 	static const std::string MIME_APP_MOBI;
 	static const std::string MIME_APP_PDF;

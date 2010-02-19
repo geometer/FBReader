@@ -23,10 +23,10 @@
 const std::string OPDSConstants::REL_BOOKSHELF     = "http://opds-spec.org/bookshelf";
 const std::string OPDSConstants::REL_SUBSCRIPTIONS = "http://opds-spec.org/subscriptions";
 const std::string OPDSConstants::REL_ACQUISITION   = "http://opds-spec.org/acquisition";
-const std::string OPDSConstants::REL_BUYING        = "http://opds-spec.org/buying";
-const std::string OPDSConstants::REL_LENDING       = "http://opds-spec.org/lending";
-const std::string OPDSConstants::REL_SUBSCRIPTION  = "http://opds-spec.org/subscription";
-const std::string OPDSConstants::REL_SAMPLE        = "http://opds-spec.org/sample";
+const std::string OPDSConstants::REL_ACQUISITION_BUY        = "http://opds-spec.org/acquisition/buy";
+const std::string OPDSConstants::REL_ACQUISITION_BORROW     = "http://opds-spec.org/acquisition/borrow";
+const std::string OPDSConstants::REL_ACQUISITION_SUBSCRIBE  = "http://opds-spec.org/acquisition/subscribe";
+const std::string OPDSConstants::REL_ACQUISITION_SAMPLE     = "http://opds-spec.org/acquisition/sample";
 const std::string OPDSConstants::REL_COVER         = "http://opds-spec.org/cover";
 const std::string OPDSConstants::REL_STANZA_COVER  = "x-stanza-cover-image";
 const std::string OPDSConstants::REL_THUMBNAIL     = "http://opds-spec.org/thumbnail";
@@ -36,6 +36,7 @@ const std::string OPDSConstants::REL_ALTERNATE     = "alternate";
 
 const std::string OPDSConstants::MIME_OPDS_FULLENTRY = "application/atom+xml;type=entry";
 
+const std::string OPDSConstants::MIME_APP_FB2ZIP  = "application/fb2+zip";
 const std::string OPDSConstants::MIME_APP_EPUB  = "application/epub+zip";
 const std::string OPDSConstants::MIME_APP_MOBI  = "application/x-mobipocket-ebook";
 const std::string OPDSConstants::MIME_APP_PDF   = "application/pdf";
