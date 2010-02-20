@@ -36,7 +36,6 @@
 class FindFileIdRunnable;
 class LoadAuthorsRunnable;
 class LoadTagsRunnable;
-class LoadSeriesRunnable;
 class LoadFileEntriesRunnable;
 class DeleteFileEntriesRunnable;
 
@@ -320,21 +319,14 @@ private:
 	shared_ptr<DBCommand> myLoadSingleTag;
 };
 
-class LoadSeriesRunnable : public DBRunnable {
+class LoadSeriesRunnable {
 
 public:
 	LoadSeriesRunnable(DBConnection &connection);
-	bool run();
-	void setBookId(int bookId);
-	const std::string &seriesTitle() const;
-	int indexInSeries() const;
+	void run(Book &book);
 
 private:
-	int myBookId;
-	std::string mySeriesTitle;
-	int myIndexInSeries;
-
-	shared_ptr<DBCommand> myLoadSeries;
+	shared_ptr<DBCommand> myCommand;
 };
 
 class LoadFileEntriesRunnable : public DBRunnable {

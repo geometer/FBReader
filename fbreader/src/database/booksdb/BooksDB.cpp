@@ -171,11 +171,7 @@ shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
 		reader->textValue(3, std::string())
 	);
 
-	myLoadSeries->setBookId(bookId);
-	if (!myLoadSeries->run()) {
-		return 0;
-	}
-	book->setSeries(myLoadSeries->seriesTitle(), myLoadSeries->indexInSeries());
+	myLoadSeries->run(*book);
 
 	myLoadAuthors->setBookId(bookId);
 	if (!myLoadAuthors->run()) {
@@ -347,8 +343,8 @@ bool BooksDB::loadBooks(BookList &books) {
 	}
 	books.clear();
 	while (reader->next()) {
-		if (reader->type(0) != DBValue::DBINT     /* book_id  */
-			|| reader->type(4) != DBValue::DBINT  /* file_id  */) {
+		if (reader->type(0) != DBValue::DBINT || /* book_id */
+				reader->type(4) != DBValue::DBINT) { /* file_id */
 			return false;
 		}
 		const int fileId = reader->intValue(4);
@@ -365,11 +361,7 @@ bool BooksDB::loadBooks(BookList &books) {
 	
 	for (BookList::iterator it = books.begin(); it != books.end(); ++it) {
 		shared_ptr<Book> book = *it;
-		myLoadSeries->setBookId(book->bookId());
-		if (!myLoadSeries->run()) {
-			return false;
-		}
-		book->setSeries(myLoadSeries->seriesTitle(), myLoadSeries->indexInSeries());
+		myLoadSeries->run(*book);
 
 		myLoadAuthors->setBookId(book->bookId());
 		if (!myLoadAuthors->run()) {

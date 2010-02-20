@@ -228,14 +228,6 @@ const std::string BooksDBQuery::LOAD_BOOK = \
 	"FROM Books AS b " \
 	"WHERE b.file_id = @file_id; ";
 
-const std::string BooksDBQuery::LOAD_SERIES = \
-	"SELECT " \
-	"	s.name AS name, " \
-	"	bs.book_index AS book_index " \
-	"FROM BookSeries AS bs " \
-	"	INNER JOIN Series AS s ON s.series_id = bs.series_id " \
-	"WHERE bs.book_id = @book_id; ";
-
 const std::string BooksDBQuery::LOAD_AUTHORS = \
 	"SELECT " \
 	"	a.name AS name, " \

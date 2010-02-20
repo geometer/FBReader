@@ -37,7 +37,6 @@ public:
 	static const std::string CLEAR_DATABASE;
 
 	static const std::string LOAD_BOOK;
-	static const std::string LOAD_SERIES;
 	static const std::string LOAD_AUTHORS;
 	
 	static const std::string ADD_BOOKTAG;

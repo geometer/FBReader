@@ -18,47 +18,39 @@
  */
 
 #include "../DBRunnables.h"
+#include "../../../library/Book.h"
 #include "../../sqldb/implsqlite/SQLiteFactory.h"
 
+static std::string LOAD_SERIES_QUERY =
+	"SELECT Series.name, BookSeries.book_index" \
+	" FROM BookSeries" \
+	" INNER JOIN Series ON Series.series_id = BookSeries.series_id" \
+	" WHERE BookSeries.book_id = @book_id;";
+
+static std::string LOAD_ALL_SERIES_QUERY =
+	"SELECT Series.name, BookSeries.book_index, BookSeries.book_id" \
+	" FROM BookSeries" \
+	" INNER JOIN Series ON Series.series_id = BookSeries.series_id";
+
 LoadSeriesRunnable::LoadSeriesRunnable(DBConnection &connection) {
-	myLoadSeries      = SQLiteFactory::createCommand(BooksDBQuery::LOAD_SERIES, connection, "@book_id", DBValue::DBINT);
+	myCommand = SQLiteFactory::createCommand(
+		LOAD_SERIES_QUERY, connection, "@book_id", DBValue::DBINT
+	);
 }
 
-bool LoadSeriesRunnable::run() {
-	mySeriesTitle = "";
-	myIndexInSeries = 0;
-
-	((DBIntValue &) *myLoadSeries->parameter("@book_id").value()) = myBookId;
-	shared_ptr<DBDataReader> reader = myLoadSeries->executeReader();
-	if (reader.isNull()) {
-		return false;
-	}
+void LoadSeriesRunnable::run(Book &book) {
+	((DBIntValue&)*myCommand->parameter("@book_id").value()) = book.bookId();
+	shared_ptr<DBDataReader> reader = myCommand->executeReader();
 
 	if (!reader->next()) {
-		return true;
+		return;
 	}
 
-	int numType = reader->type(1);
-	if (reader->type(0) != DBValue::DBTEXT || (numType != DBValue::DBINT && numType != DBValue::DBNULL)) {
-		return false;
+	std::string seriesTitle = reader->textValue(0, std::string());
+	if (!seriesTitle.empty()) {
+		book.setSeries(
+			seriesTitle,
+			(reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0
+		);
 	}
-	mySeriesTitle = reader->textValue(0, std::string());
-	if (numType == DBValue::DBINT) {
-		myIndexInSeries = reader->intValue(1);
-	} else {
-		myIndexInSeries = 0;
-	}
-	return true;
-}
-
-void LoadSeriesRunnable::setBookId(int bookId) {
-	myBookId = bookId;
-}
-
-const std::string &LoadSeriesRunnable::seriesTitle() const {
-	return mySeriesTitle;
-}
-
-int LoadSeriesRunnable::indexInSeries() const {
-	return myIndexInSeries;
 }
