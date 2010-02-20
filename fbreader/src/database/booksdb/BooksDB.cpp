@@ -172,9 +172,7 @@ shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
 	loadSeries(*book);
 	loadAuthors(*book);
 
-	if (!myLoadTags->run(*book)) {
-		return 0;
-	}
+	myLoadTags->run(*book);
 
 	return book;
 }
@@ -330,9 +328,7 @@ std::string BooksDB::getFileName(int fileId) {
 
 bool BooksDB::loadBooks(BookList &books) {
 	shared_ptr<DBDataReader> reader = myLoadBooks->executeReader();
-	if (reader.isNull()) {
-		return false;
-	}
+
 	books.clear();
 	std::map<int,shared_ptr<Book> > bookMap;
 
@@ -362,9 +358,7 @@ bool BooksDB::loadBooks(BookList &books) {
 	for (BookList::iterator it = books.begin(); it != books.end(); ++it) {
 		shared_ptr<Book> book = *it;
 
-		if (!myLoadTags->run(*book)) {
-			return false;
-		}
+		myLoadTags->run(*book);
 	}
 
 	return true;

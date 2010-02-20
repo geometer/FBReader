@@ -63,9 +63,7 @@ bool SaveTagsRunnable::run() {
 	DBIntValue &addTagId = (DBIntValue&)*myAddBookTag->parameter("@tag_id").value();
 
 	TagList dbTags;
-	if (!myLoadTags->run(myBook->bookId(), dbTags)) {
-		return 0;
-	}
+	myLoadTags->run(myBook->bookId(), dbTags);
 
 	TagList tags = myBook->tags(); // make copy of vector
 

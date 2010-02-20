@@ -292,8 +292,8 @@ class LoadTagsRunnable {
 
 public:
 	LoadTagsRunnable(DBConnection &connection);
-	bool run(int bookId, TagList &tags);
-	bool run(Book &book);
+	void run(int bookId, TagList &tags);
+	void run(Book &book);
 
 private:
 	shared_ptr<Tag> getTag(int id);

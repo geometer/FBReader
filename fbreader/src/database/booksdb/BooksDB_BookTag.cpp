@@ -59,28 +59,20 @@ shared_ptr<Tag> LoadTagsRunnable::getTag(int id) {
 	return Tag::getTag(name, getTag(parentId), id);
 }
 
-bool LoadTagsRunnable::run(Book &book) {
+void LoadTagsRunnable::run(Book &book) {
 	TagList tags;
-	if (!run(book.bookId(), tags)) {
-		return false;
-	}
-
+	run(book.bookId(), tags);
 	book.removeAllTags();
 	for (TagList::const_iterator it = tags.begin(); it != tags.end(); ++it) {
 		book.addTag(*it);
 	}
-	return true;
 }
 
-bool LoadTagsRunnable::run(int bookId, TagList &tags) {
+void LoadTagsRunnable::run(int bookId, TagList &tags) {
 	((DBIntValue&)*myLoadBookTags->parameter("@book_id").value()) = bookId;
+	shared_ptr<DBDataReader> reader = myLoadBookTags->executeReader();
 
 	tags.clear();
-
-	shared_ptr<DBDataReader> reader = myLoadBookTags->executeReader();
-	if (reader.isNull()) {
-		return false;
-	}
 
 	while (reader->next()) {
 		shared_ptr<Tag> tag = getTag(reader->intValue(0));
@@ -88,6 +80,4 @@ bool LoadTagsRunnable::run(int bookId, TagList &tags) {
 			tags.push_back(tag);
 		}
 	}
-
-	return true;
 }
