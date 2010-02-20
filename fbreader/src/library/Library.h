@@ -120,23 +120,4 @@ private:
 friend class LibrarySynchronizer;
 };
 
-/*
-class RecentBooks {
-
-public:
-	static const size_t MaxListSize;
-
-public:
-	RecentBooks();
-	~RecentBooks();
-	void addBook(shared_ptr<Book> book);
-	const BookList &books() const;
-
-	void reload();
-
-private:
-	BookList myBooks;
-};
-*/
-
 #endif /* __LIBRARY_H__ */

@@ -52,7 +52,7 @@ shared_ptr<Tag> LoadTagsRunnable::getTag(int id) {
 	if (reader.isNull() || !reader->next()) {
 		return 0;
 	}
-	const std::string name = reader->textValue(0);
+	const std::string name = reader->textValue(0, std::string());
 	const int parentId = reader->intValue(1);
 	reader.reset();
 

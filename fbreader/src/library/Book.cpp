@@ -37,6 +37,21 @@ Book::Book(const std::string filePath) : myBookId(0), myFilePath(filePath), myIn
 Book::~Book() {
 }
 
+shared_ptr<Book> Book::createBook(
+	const std::string &filePath,
+	int id,
+	const std::string &encoding,
+	const std::string &language,
+	const std::string &title
+) {
+	Book *book = new Book(filePath);
+	book->setBookId(id);
+	book->setEncoding(encoding);
+	book->setLanguage(language);
+	book->setTitle(title);
+	return book;
+}
+
 shared_ptr<Book> Book::loadFromFile(const std::string &filePath) {
 	ZLFile bookFile(filePath);
 	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(bookFile, false);

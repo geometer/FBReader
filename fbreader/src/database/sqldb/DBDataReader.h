@@ -40,7 +40,7 @@ public: // to implement:
 
 	virtual int intValue(size_t column) const = 0;
 	virtual double realValue(size_t column) const = 0;
-	virtual std::string textValue(size_t column) const = 0;
+	virtual std::string textValue(size_t column, const std::string &defaultValue) const = 0;
 
 public:
 	bool isDBNull(size_t column) const;

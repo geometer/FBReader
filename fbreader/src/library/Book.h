@@ -31,9 +31,15 @@ class Tag;
 
 class Book {
 
-friend class BooksDB;
-
 public:
+	static shared_ptr<Book> createBook(
+		const std::string &filePath,
+		int id,
+		const std::string &encoding,
+		const std::string &language,
+		const std::string &title
+	);
+
 	static shared_ptr<Book> loadFromFile(const std::string &filePath);
 
 	// this method is used in Migration only

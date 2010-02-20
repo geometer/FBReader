@@ -40,27 +40,19 @@ bool LoadAuthorsRunnable::run() {
 		if (reader->type(0) != DBValue::DBTEXT /* name */
 		 || reader->type(1) != DBValue::DBTEXT /* sort_key */ 
 		 || reader->type(2) != DBValue::DBINT  /* author_index */) {
-			reader->close();
 			return false;
 		}
-		const std::string name = reader->textValue(0);
-		const std::string sortKey = reader->textValue(1);
+		const std::string name = reader->textValue(0, std::string());
+		const std::string sortKey = reader->textValue(1, std::string());
 		const size_t authorIndex = reader->intValue(2);
 		if (authorIndex != (1 + myAuthors.size())) {
-			reader->close();
 			return false;
 		}
 		shared_ptr<Author> author = Author::getAuthor(name, sortKey);
 		if (author.isNull()) {
-			reader->close();
 			return false;
 		}
-		myAuthors.push_back( author );
-	}
-	reader->close();
-
-	if (myAuthors.empty()) {
-		//myAuthors.push_back( new Author() );
+		myAuthors.push_back(author);
 	}
 	return true;
 }

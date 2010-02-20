@@ -47,7 +47,7 @@ public:
 
 	int intValue(size_t column) const;
 	double realValue(size_t column) const;
-	std::string textValue(size_t column) const;
+	std::string textValue(size_t column, const std::string &defaultValue) const;
 
 private:
 	sqlite3_stmt *currentStatement() const;

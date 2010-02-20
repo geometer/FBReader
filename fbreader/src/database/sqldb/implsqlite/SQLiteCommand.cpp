@@ -20,6 +20,7 @@
 #include <iostream>
 #include <algorithm>
 
+#include <ZLLogger.h>
 #include <ZLStringUtil.h>
 
 #include "SQLiteCommand.h"
@@ -58,6 +59,8 @@ SQLiteCommand::~SQLiteCommand() {
 
 
 bool SQLiteCommand::execute() {
+	ZLLogger::Instance().println("sqlite", "execute: " + commandString());
+
 	SQLiteConnection &con = (SQLiteConnection &) connection();
 	if (!con.isOpened()) {
 		myStatements.clear();
@@ -89,6 +92,8 @@ bool SQLiteCommand::execute() {
 }
 
 shared_ptr<DBValue> SQLiteCommand::executeScalar() {
+	ZLLogger::Instance().println("sqlite", "executeScalar: " + commandString());
+
 	SQLiteConnection &con = (SQLiteConnection &) connection();
 	if (!con.isOpened()) {
 		myStatements.clear();
@@ -124,6 +129,8 @@ shared_ptr<DBValue> SQLiteCommand::executeScalar() {
 }
 
 shared_ptr<DBDataReader> SQLiteCommand::executeReader() {
+	ZLLogger::Instance().println("sqlite", "executeReader: " + commandString());
+
 	SQLiteConnection &con = (SQLiteConnection &) connection();
 	if (!con.isOpened()) {
 		myStatements.clear();

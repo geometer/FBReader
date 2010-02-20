@@ -35,22 +35,19 @@ bool LoadSeriesRunnable::run() {
 	}
 
 	if (!reader->next()) {
-		reader->close();
 		return true;
 	}
 
 	int numType = reader->type(1);
 	if (reader->type(0) != DBValue::DBTEXT || (numType != DBValue::DBINT && numType != DBValue::DBNULL)) {
-		reader->close();
 		return false;
 	}
-	mySeriesTitle = reader->textValue(0);
+	mySeriesTitle = reader->textValue(0, std::string());
 	if (numType == DBValue::DBINT) {
 		myIndexInSeries = reader->intValue(1);
 	} else {
 		myIndexInSeries = 0;
 	}
-	reader->close();
 	return true;
 }
 

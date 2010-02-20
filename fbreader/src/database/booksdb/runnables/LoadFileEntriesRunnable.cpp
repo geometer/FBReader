@@ -49,8 +49,10 @@ bool LoadFileEntriesRunnable::run() {
 			res = false;
 			continue;
 		}
-		const std::string entry = reader->textValue(0);
-		myEntries.push_back(myFileName + BooksDBQuery::ArchiveEntryDelimiter + entry);
+		myEntries.push_back(
+			myFileName + BooksDBQuery::ArchiveEntryDelimiter +
+			reader->textValue(0, std::string())
+		);
 	}
 	reader->close();
 	return res;
