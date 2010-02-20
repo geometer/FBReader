@@ -68,8 +68,6 @@ public: // modifiable book methods
 	void setEncoding(const std::string &encoding);
 	void setSeries(const std::string &title, int index);
 
-	AuthorList &_authors();
-
 public:
 	bool addTag(shared_ptr<Tag> tag);
 	bool addTag(const std::string &fullName);
@@ -113,8 +111,6 @@ inline int Book::indexInSeries() const { return myIndexInSeries; }
 
 inline const TagList &Book::tags() const { return myTags; }
 inline const AuthorList &Book::authors() const { return myAuthors; }
-
-inline AuthorList &Book::_authors() { return myAuthors; }
 
 inline int Book::bookId() const { return myBookId; }
 inline void Book::setBookId(int bookId) { myBookId = bookId; }

@@ -17,10 +17,10 @@
  * 02110-1301, USA.
  */
 
-#include "../DBRunnables.h"
-#include "../../../library/Book.h"
-#include "../../../library/Tag.h"
-#include "../../sqldb/implsqlite/SQLiteFactory.h"
+#include "DBRunnables.h"
+#include "../../library/Book.h"
+#include "../../library/Tag.h"
+#include "../sqldb/implsqlite/SQLiteFactory.h"
 
 static const std::string LOAD_BOOK_TAGS_QUERY =
 	"SELECT tag_id FROM BookTag WHERE book_id = @book_id";
