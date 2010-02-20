@@ -274,15 +274,6 @@ private:
 };
 
 
-inline void FindFileIdRunnable::setFileName(const std::string &fileName, bool add) {
-	myFileName = fileName;
-	myAdd = add;
-	myFileId = 0;
-}
-
-inline int FindFileIdRunnable::fileId() const { return myFileId; }
-
-
 /*
  * Load Runnables
  */

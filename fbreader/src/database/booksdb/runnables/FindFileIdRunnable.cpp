@@ -76,6 +76,16 @@ bool FindFileIdRunnable::run() {
 	}
 }
 
+void FindFileIdRunnable::setFileName(const std::string &fileName, bool add) {
+	myFileName = fileName;
+	myAdd = add;
+	myFileId = 0;
+}
+
+int FindFileIdRunnable::fileId() const {
+	return myFileId;
+}
+
 SaveFileEntriesRunnable::SaveFileEntriesRunnable(DBConnection &connection) {
 	myAddFile = SQLiteFactory::createCommand(ADD_FILE, connection, "@name", DBValue::DBTEXT, "@parent_id", DBValue::DBINT, "@size", DBValue::DBINT);
 
