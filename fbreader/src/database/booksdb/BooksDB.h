@@ -93,7 +93,6 @@ public:
 	bool checkBookList(const Book &book);
 
 private:
-	shared_ptr<Book> loadTableBook(const std::string &fileName);
 	bool loadAuthors(int bookId, AuthorList &authors);
 	bool loadSeries(int bookId, std::string &seriesTitle, int &indexInSeries);
 

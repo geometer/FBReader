@@ -146,48 +146,38 @@ bool BooksDB::clearDatabase() {
 	return executeAsTransaction(*runnable);
 }
 
-
-shared_ptr<Book> BooksDB::loadTableBook(const std::string &fileName) {
-	DBCommand &cmd = *myLoadBook;
-	
-	myFindFileId->setFileName(fileName);
-	if (!myFindFileId->run()) {
-		return false;
-	}
-	((DBIntValue&)*cmd.parameter("@file_id").value()) = myFindFileId->fileId();
-	shared_ptr<DBDataReader> reader = cmd.executeReader();
-
-	if (reader.isNull() || !reader->next() ||
-			reader->type(0) != DBValue::DBINT /* book_id */) {
-		return 0;
-	}
-
-	return Book::createBook(
-		fileName,
-		reader->intValue(0),
-		reader->textValue(1, BooksDBQuery::AutoEncoding),
-		reader->textValue(2, BooksDBQuery::OtherLanguage),
-		reader->textValue(3, std::string())
-	);
-}
-
 shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
 	if (!isInitialized()) {
 		return 0;
 	}
 
-	shared_ptr<Book> book = loadTableBook(fileName);
-	if (book.isNull()) {
-		return book;
+	myFindFileId->setFileName(fileName);
+	if (!myFindFileId->run()) {
+		return false;
 	}
+	((DBIntValue&)*myLoadBook->parameter("@file_id").value()) = myFindFileId->fileId();
+	shared_ptr<DBDataReader> reader = myLoadBook->executeReader();
 
-	myLoadSeries->setBookId(book->bookId());
+	if (reader.isNull() || !reader->next() ||
+			reader->type(0) != DBValue::DBINT /* book_id */) {
+		return 0;
+	}
+	const int bookId = reader->intValue(0);
+
+	shared_ptr<Book> book = Book::createBook(
+		fileName, bookId,
+		reader->textValue(1, BooksDBQuery::AutoEncoding),
+		reader->textValue(2, BooksDBQuery::OtherLanguage),
+		reader->textValue(3, std::string())
+	);
+
+	myLoadSeries->setBookId(bookId);
 	if (!myLoadSeries->run()) {
 		return 0;
 	}
 	book->setSeries(myLoadSeries->seriesTitle(), myLoadSeries->indexInSeries());
 
-	myLoadAuthors->setBookId(book->bookId());
+	myLoadAuthors->setBookId(bookId);
 	if (!myLoadAuthors->run()) {
 		return 0;
 	}
@@ -277,12 +267,11 @@ bool BooksDB::setEncoding(const Book &book, const std::string &encoding) {
 	}
 
 	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(BooksDBQuery::SET_ENCODING, connection());
-	DBCommand &cmd = *command;
 
-	cmd.parameters().push_back(DBCommandParameter("@book_id", new DBIntValue(book.bookId())));
-	cmd.parameters().push_back(DBCommandParameter("@encoding", new DBTextValue(encoding)));
+	command->parameters().push_back(DBCommandParameter("@book_id", new DBIntValue(book.bookId())));
+	command->parameters().push_back(DBCommandParameter("@encoding", new DBTextValue(encoding)));
 
-	return cmd.execute();
+	return command->execute();
 }
 
 bool BooksDB::loadFileEntries(const std::string &fileName, std::vector<std::string> &entries) {
