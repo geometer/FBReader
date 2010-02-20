@@ -127,7 +127,6 @@ void BooksDB::initCommands() {
 
 	myLoadAuthors = new LoadAuthorsRunnable(connection());
 	myLoadTags = new LoadTagsRunnable(connection());
-	myLoadSeries = new LoadSeriesRunnable(connection());
 	myLoadFileEntries = new LoadFileEntriesRunnable(connection());
 
 	myLoadRecentBooks = new LoadRecentBooksRunnable(connection());
@@ -171,7 +170,7 @@ shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
 		reader->textValue(3, std::string())
 	);
 
-	myLoadSeries->run(*book);
+	loadSeries(*book);
 
 	myLoadAuthors->setBookId(bookId);
 	if (!myLoadAuthors->run()) {
@@ -361,7 +360,7 @@ bool BooksDB::loadBooks(BookList &books) {
 	
 	for (BookList::iterator it = books.begin(); it != books.end(); ++it) {
 		shared_ptr<Book> book = *it;
-		myLoadSeries->run(*book);
+		loadSeries(*book);
 
 		myLoadAuthors->setBookId(book->bookId());
 		if (!myLoadAuthors->run()) {

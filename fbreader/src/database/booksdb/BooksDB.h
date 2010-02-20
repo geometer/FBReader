@@ -93,8 +93,7 @@ public:
 	bool checkBookList(const Book &book);
 
 private:
-	bool loadAuthors(int bookId, AuthorList &authors);
-	bool loadSeries(int bookId, std::string &seriesTitle, int &indexInSeries);
+	void loadSeries(Book &book);
 
 	std::string getFileName(int fileId);
 
@@ -115,7 +114,6 @@ private:
 
 	shared_ptr<LoadAuthorsRunnable> myLoadAuthors;
 	shared_ptr<LoadTagsRunnable> myLoadTags;
-	shared_ptr<LoadSeriesRunnable> myLoadSeries;
 	shared_ptr<LoadFileEntriesRunnable> myLoadFileEntries;
 
 	shared_ptr<LoadRecentBooksRunnable> myLoadRecentBooks;
@@ -133,9 +131,6 @@ private:
 	shared_ptr<DBCommand> myFindFileName;
 
 	shared_ptr<DBCommand> myFindAuthorId;
-	//shared_ptr<DBCommand> myLoadSeriesTitles;
-
-	//shared_ptr<DBCommand> myLoadAuthorNames;
 
 	shared_ptr<DBCommand> myLoadBooks;
 

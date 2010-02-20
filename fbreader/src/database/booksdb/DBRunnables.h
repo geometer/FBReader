@@ -319,16 +319,6 @@ private:
 	shared_ptr<DBCommand> myLoadSingleTag;
 };
 
-class LoadSeriesRunnable {
-
-public:
-	LoadSeriesRunnable(DBConnection &connection);
-	void run(Book &book);
-
-private:
-	shared_ptr<DBCommand> myCommand;
-};
-
 class LoadFileEntriesRunnable : public DBRunnable {
 
 public:

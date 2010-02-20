@@ -17,9 +17,11 @@
  * 02110-1301, USA.
  */
 
-#include "../DBRunnables.h"
-#include "../../../library/Book.h"
-#include "../../sqldb/implsqlite/SQLiteFactory.h"
+#include <string>
+
+#include "BooksDB.h"
+#include "../../library/Book.h"
+#include "../sqldb/implsqlite/SQLiteFactory.h"
 
 static std::string LOAD_SERIES_QUERY =
 	"SELECT Series.name, BookSeries.book_index" \
@@ -32,15 +34,13 @@ static std::string LOAD_ALL_SERIES_QUERY =
 	" FROM BookSeries" \
 	" INNER JOIN Series ON Series.series_id = BookSeries.series_id";
 
-LoadSeriesRunnable::LoadSeriesRunnable(DBConnection &connection) {
-	myCommand = SQLiteFactory::createCommand(
-		LOAD_SERIES_QUERY, connection, "@book_id", DBValue::DBINT
+void BooksDB::loadSeries(Book &book) {
+	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+		LOAD_SERIES_QUERY, connection(), "@book_id", DBValue::DBINT
 	);
-}
 
-void LoadSeriesRunnable::run(Book &book) {
-	((DBIntValue&)*myCommand->parameter("@book_id").value()) = book.bookId();
-	shared_ptr<DBDataReader> reader = myCommand->executeReader();
+	((DBIntValue&)*command->parameter("@book_id").value()) = book.bookId();
+	shared_ptr<DBDataReader> reader = command->executeReader();
 
 	if (!reader->next()) {
 		return;
