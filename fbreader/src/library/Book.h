@@ -32,6 +32,9 @@ class Tag;
 class Book {
 
 public:
+	static const std::string AutoEncoding;
+
+public:
 	static shared_ptr<Book> createBook(
 		const std::string &filePath,
 		int id,
@@ -46,7 +49,7 @@ public:
 	static shared_ptr<Book> loadFromBookInfo(const std::string &filePath);
 
 private:
-	Book(const std::string filePath);
+	Book(const std::string filePath, int id);
 
 public:
 	~Book();

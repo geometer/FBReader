@@ -31,7 +31,9 @@
 #include "../formats/FormatPlugin.h"
 #include "../migration/BookInfo.h"
 
-Book::Book(const std::string filePath) : myBookId(0), myFilePath(filePath), myIndexInSeries(0) {
+const std::string Book::AutoEncoding = "auto";
+
+Book::Book(const std::string filePath, int id) : myBookId(id), myFilePath(filePath), myIndexInSeries(0) {
 }
 
 Book::~Book() {
@@ -44,8 +46,7 @@ shared_ptr<Book> Book::createBook(
 	const std::string &language,
 	const std::string &title
 ) {
-	Book *book = new Book(filePath);
-	book->setBookId(id);
+	Book *book = new Book(filePath, id);
 	book->setEncoding(encoding);
 	book->setLanguage(language);
 	book->setTitle(title);
@@ -59,7 +60,7 @@ shared_ptr<Book> Book::loadFromFile(const std::string &filePath) {
 		return 0;
 	}
 
-	shared_ptr<Book> book = new Book(filePath);
+	shared_ptr<Book> book = new Book(filePath, 0);
 	if (!plugin->readMetaInfo(*book)) {
 		return 0;	
 	}
@@ -69,7 +70,7 @@ shared_ptr<Book> Book::loadFromFile(const std::string &filePath) {
 	}
 
 	if (book->encoding().empty()) {
-		book->setEncoding("auto");
+		book->setEncoding(AutoEncoding);
 	}
 
 	if (book->language().empty()) {
@@ -181,18 +182,20 @@ bool Book::cloneTag(shared_ptr<Tag> from, shared_ptr<Tag> to, bool includeSubTag
 shared_ptr<Book> Book::loadFromBookInfo(const std::string &filePath) {
 	BookInfo info(filePath);
 
-	shared_ptr<Book> book = new Book(filePath);
+	shared_ptr<Book> book = createBook(
+		filePath, 0,
+		info.EncodingOption.value(),
+		info.LanguageOption.value(),
+		info.TitleOption.value()
+	);
 
-	book->setTitle(info.TitleOption.value());
-	book->setLanguage(info.LanguageOption.value());
-	book->setEncoding(info.EncodingOption.value());
 	book->setSeries(
 		info.SeriesTitleOption.value(),
 		info.IndexInSeriesOption.value()
 	);
 
 	if (book->language().empty()) {
-		book->setLanguage( PluginCollection::Instance().DefaultLanguageOption.value() );
+		book->setLanguage(PluginCollection::Instance().DefaultLanguageOption.value());
 	}
 
 	const std::string &tagList = info.TagsOption.value();

@@ -18,6 +18,7 @@
  */
 
 #include <ZLFile.h>
+#include <ZLLanguageUtil.h>
 
 #include "Migration.h"
 #include "FB2MigrationReader.h"
@@ -51,7 +52,7 @@ void Migration_0_8_16::doMigrationInternal() {
 				} else if (language == "cz") {
 					languageOption.setValue("cs");
 				} else if (language == "none") {
-					languageOption.setValue("other");
+					languageOption.setValue(ZLLanguageUtil::OtherLanguageCode);
 				} else if ((language == "chinese") || (language == "anycharacter")) {
 					languageOption.setValue("zh");
 				}

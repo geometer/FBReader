@@ -22,11 +22,11 @@
 
 #include "EncodingOptionEntry.h"
 
-static const std::string AUTO = "auto";
+#include "../library/Book.h"
 
 AbstractEncodingEntry::AbstractEncodingEntry(const std::string &currentValue) {
 	const std::string &value = currentValue;
-	if (value == AUTO) {
+	if (value == Book::AutoEncoding) {
 		myInitialSetName = value;
 		myInitialValues[value] = value;
 		setActive(false);
@@ -54,10 +54,10 @@ AbstractEncodingEntry::AbstractEncodingEntry(const std::string &currentValue) {
 }
 
 const std::vector<std::string> &AbstractEncodingEntry::values() const {
-	if (initialValue() == AUTO) {
+	if (initialValue() == Book::AutoEncoding) {
 		static std::vector<std::string> AUTO_ENCODING;
 		if (AUTO_ENCODING.empty()) {
-			AUTO_ENCODING.push_back(AUTO);
+			AUTO_ENCODING.push_back(Book::AutoEncoding);
 		}
 		return AUTO_ENCODING;
 	}
@@ -74,7 +74,7 @@ const std::string &AbstractEncodingEntry::initialValue() const {
 }
 
 void AbstractEncodingEntry::onAccept(const std::string &value) {
-	if (initialValue() != AUTO) {
+	if (initialValue() != Book::AutoEncoding) {
 		onAcceptValue(myValueByName[value]);
 	}
 }

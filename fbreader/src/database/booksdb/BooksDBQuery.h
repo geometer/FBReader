@@ -27,9 +27,6 @@ class BooksDBQuery {
 public:
 	static const std::string ArchiveEntryDelimiter;
 
-	static const std::string OtherLanguage;
-	static const std::string AutoEncoding;
-
 public:
 	static const std::string PREINIT_DATABASE;
 	static const std::string INIT_DATABASE;

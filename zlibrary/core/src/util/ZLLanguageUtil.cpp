@@ -19,9 +19,11 @@
 
 #include "ZLLanguageUtil.h"
 
+const std::string ZLLanguageUtil::OtherLanguageCode = "other";
+
 std::string ZLLanguageUtil::languageByCode(unsigned char languageCode, unsigned char subLanguageCode) {
 	switch (languageCode) {
-		default:   return "other";
+		default:   return OtherLanguageCode;
 		case 0x01: return "ar";  // Arabic
 		case 0x02: return "bg";  // Bulgarian
 		case 0x03: return "ca";  // Catalan

@@ -24,12 +24,15 @@
 
 class ZLLanguageUtil {
 
-private:
-	ZLLanguageUtil();
+public:
+	static const std::string OtherLanguageCode;
 
 public:
 	static std::string languageByCode(unsigned char languageCode, unsigned char subLanguageCode);
 	static bool isRTLLanguage(const std::string &languageCode);
+
+private:
+	ZLLanguageUtil();
 };
 
 #endif /* __ZLLANGUAGEUTIL_H__ */

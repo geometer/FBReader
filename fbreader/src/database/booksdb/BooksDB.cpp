@@ -20,6 +20,7 @@
 #include <ZLibrary.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
+#include <ZLLanguageUtil.h>
 
 #include "BooksDB.h"
 #include "BooksDBQuery.h"
@@ -160,8 +161,8 @@ shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
 
 	shared_ptr<Book> book = Book::createBook(
 		fileName, bookId,
-		reader->textValue(1, BooksDBQuery::AutoEncoding),
-		reader->textValue(2, BooksDBQuery::OtherLanguage),
+		reader->textValue(1, Book::AutoEncoding),
+		reader->textValue(2, ZLLanguageUtil::OtherLanguageCode),
 		reader->textValue(3, std::string())
 	);
 
@@ -339,8 +340,8 @@ bool BooksDB::loadBooks(BookList &books) {
 		shared_ptr<Book> book = Book::createBook(
 			fileName,
 			bookId,
-			reader->textValue(1, BooksDBQuery::AutoEncoding),
-			reader->textValue(2, BooksDBQuery::OtherLanguage),
+			reader->textValue(1, Book::AutoEncoding),
+			reader->textValue(2, ZLLanguageUtil::OtherLanguageCode),
 			reader->textValue(3, std::string())
 		);
 		books.push_back(book);

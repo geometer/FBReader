@@ -17,17 +17,14 @@
  * 02110-1301, USA.
  */
 
-
 #include <ZLibrary.h>
+#include <ZLLanguageUtil.h>
 
 #include "BooksDBQuery.h"
 
+#include "../../library/Book.h"
 
 const std::string BooksDBQuery::ArchiveEntryDelimiter = ":";
-
-const std::string BooksDBQuery::OtherLanguage = "other";
-const std::string BooksDBQuery::AutoEncoding = "auto";
-
 
 const std::string BooksDBQuery::PREINIT_DATABASE = \
 	"ATTACH @stateFile AS State; " \
@@ -231,8 +228,8 @@ const std::string BooksDBQuery::LOAD_BOOK = \
 const std::string BooksDBQuery::ADD_BOOK = \
 	"INSERT INTO Books (encoding, language, title, file_id) " \
 	"	VALUES ( " \
-	"		nullif(@encoding,\"" + AutoEncoding + "\"), " \
-	"		nullif(@language,\"" + OtherLanguage + "\"), " \
+	"		nullif(@encoding,\"" + Book::AutoEncoding + "\"), " \
+	"		nullif(@language,\"" + ZLLanguageUtil::OtherLanguageCode + "\"), " \
 	"		@title, " \
 	"		@file_id " \
 	"	); " \
@@ -241,8 +238,8 @@ const std::string BooksDBQuery::ADD_BOOK = \
 
 const std::string BooksDBQuery::UPDATE_BOOK = \
 	"UPDATE Books SET " \
-	"	encoding = nullif(@encoding,\"" + AutoEncoding + "\"), " \
-	"	language = nullif(@language,\"" + OtherLanguage + "\"), " \
+	"	encoding = nullif(@encoding,\"" + Book::AutoEncoding + "\"), " \
+	"	language = nullif(@language,\"" + ZLLanguageUtil::OtherLanguageCode + "\"), " \
 	"	title = @title " \
 	"WHERE " \
 	"	book_id = @book_id; ";
