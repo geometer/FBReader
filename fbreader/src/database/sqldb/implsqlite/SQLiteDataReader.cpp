@@ -131,28 +131,3 @@ std::string SQLiteDataReader::textValue(size_t column, const std::string &defaul
 	}
 	return defaultValue;
 }
-
-/*
-std::string SQLiteDataReader::textValue(size_t column) const {
-	static const std::string NULL_STR("NULL");
-
-	sqlite3_stmt *statement = currentStatement();
-	if (column >= (size_t)sqlite3_column_count(statement)) {
-		return std::string();
-	}
-	switch (sqlite3_column_type(statement, column)) {
-		case SQLITE_NULL:
-			return NULL_STR;
-		case SQLITE_TEXT:
-			break;
-		default:
-			return std::string();
-	}
-
-	const char *res = (const char*)sqlite3_column_text(statement, column);
-	if (res == 0) {
-		return NULL_STR;
-	}
-	return res;
-}
-*/
