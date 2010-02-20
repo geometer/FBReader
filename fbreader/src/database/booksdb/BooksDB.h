@@ -21,6 +21,7 @@
 #define __BOOKSDB_H__
 
 #include <set>
+#include <map>
 #include <deque>
 
 #include "../sqldb/implsqlite/SQLiteDataBase.h"
@@ -94,6 +95,7 @@ public:
 
 private:
 	void loadSeries(Book &book);
+	void loadSeries(const std::map<int,shared_ptr<Book> > &books);
 
 	std::string getFileName(int fileId);
 

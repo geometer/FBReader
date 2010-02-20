@@ -38,19 +38,35 @@ void BooksDB::loadSeries(Book &book) {
 	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		LOAD_SERIES_QUERY, connection(), "@book_id", DBValue::DBINT
 	);
-
 	((DBIntValue&)*command->parameter("@book_id").value()) = book.bookId();
 	shared_ptr<DBDataReader> reader = command->executeReader();
 
-	if (!reader->next()) {
-		return;
+	if (reader->next()) {
+		std::string seriesTitle = reader->textValue(0, std::string());
+		if (!seriesTitle.empty()) {
+			book.setSeries(
+				seriesTitle,
+				(reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0
+			);
+		}
 	}
+}
 
-	std::string seriesTitle = reader->textValue(0, std::string());
-	if (!seriesTitle.empty()) {
-		book.setSeries(
-			seriesTitle,
-			(reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0
-		);
+void BooksDB::loadSeries(const std::map<int,shared_ptr<Book> > &books) {
+	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+		LOAD_ALL_SERIES_QUERY, connection()
+	);
+	shared_ptr<DBDataReader> reader = command->executeReader();
+
+	while (reader->next()) {
+		std::string seriesTitle = reader->textValue(0, std::string());
+		std::map<int,shared_ptr<Book> >::const_iterator it =
+			books.find((reader->type(2) == DBValue::DBINT) ? reader->intValue(2) : 0);
+		if (!seriesTitle.empty() && it != books.end()) {
+			it->second->setSeries(
+				seriesTitle,
+				(reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0
+			);
+		}
 	}
 }

@@ -341,26 +341,32 @@ bool BooksDB::loadBooks(BookList &books) {
 		return false;
 	}
 	books.clear();
+	std::map<int,shared_ptr<Book> > bookMap;
+
 	while (reader->next()) {
 		if (reader->type(0) != DBValue::DBINT || /* book_id */
 				reader->type(4) != DBValue::DBINT) { /* file_id */
 			return false;
 		}
+		const int bookId = reader->intValue(0);
 		const int fileId = reader->intValue(4);
 		const std::string fileName = getFileName(fileId);
 
-		books.push_back(Book::createBook(
+		shared_ptr<Book> book = Book::createBook(
 			fileName,
-			reader->intValue(0),
+			bookId,
 			reader->textValue(1, BooksDBQuery::AutoEncoding),
 			reader->textValue(2, BooksDBQuery::OtherLanguage),
 			reader->textValue(3, std::string())
-		));
+		);
+		books.push_back(book);
+		bookMap[bookId] = book;
 	}
+
+	loadSeries(bookMap);
 	
 	for (BookList::iterator it = books.begin(); it != books.end(); ++it) {
 		shared_ptr<Book> book = *it;
-		loadSeries(*book);
 
 		myLoadAuthors->setBookId(book->bookId());
 		if (!myLoadAuthors->run()) {
