@@ -17,6 +17,9 @@
  * 02110-1301, USA.
  */
 
+#include <string>
+
+#include "BooksDB.h"
 #include "DBRunnables.h"
 #include "../../library/Book.h"
 #include "../../library/Tag.h"
@@ -25,47 +28,53 @@
 static const std::string LOAD_BOOK_TAGS_QUERY =
 	"SELECT tag_id FROM BookTag WHERE book_id = @book_id";
 
+static const std::string LOAD_ALL_BOOK_TAGS_QUERY =
+	"SELECT tag_id, book_id FROM BookTag";
+
 static const std::string LOAD_SINGLE_TAG_QUERY =
 	"SELECT name, parent_id FROM Tags WHERE tag_id = @tag_id";
+
+static const std::string LOAD_ALL_TAGS_QUERY =
+	"SELECT name, parent_id, tag_id FROM Tags ORDER BY tag_id";
+
+void BooksDB::loadTags(Book &book) {
+	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+		LOAD_BOOK_TAGS_QUERY, connection(), "@book_id", DBValue::DBINT
+	);
+	((DBIntValue&)*command->parameter("@book_id").value()) = book.bookId();
+	shared_ptr<DBDataReader> reader = command->executeReader();
+
+	book.removeAllTags();
+	while (reader->next()) {
+		book.addTag(getTagById(reader->intValue(0)));
+	}
+}
+
+void BooksDB::loadTags(const std::map<int,shared_ptr<Book> > &books) {
+	loadAllTagsById();
+
+	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+		LOAD_ALL_BOOK_TAGS_QUERY, connection()
+	);
+	shared_ptr<DBDataReader> reader = command->executeReader();
+
+	for (std::map<int,shared_ptr<Book> >::const_iterator it = books.begin(); it != books.end(); ++it) {
+		it->second->removeAllTags();
+	}
+
+	while (reader->next()) {
+		std::map<int,shared_ptr<Book> >::const_iterator it =
+			books.find((reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0);
+		if (it != books.end()) {
+			it->second->addTag(getTagById(reader->intValue(0)));
+		}
+	}
+}
 
 LoadTagsRunnable::LoadTagsRunnable(DBConnection &connection) {
 	myLoadBookTags = SQLiteFactory::createCommand(
 		LOAD_BOOK_TAGS_QUERY, connection, "@book_id", DBValue::DBINT
 	);
-	myLoadSingleTag = SQLiteFactory::createCommand(
-		LOAD_SINGLE_TAG_QUERY, connection, "@tag_id", DBValue::DBINT
-	);
-}
-
-shared_ptr<Tag> LoadTagsRunnable::getTag(int id) {
-	if (id == 0) {
-		return 0;
-	}
-
-	shared_ptr<Tag> tag = Tag::getTagById(id);
-	if (!tag.isNull()) {
-		return tag;
-	}
-
-	((DBIntValue&)*myLoadSingleTag->parameter("@tag_id").value()) = id;
-	shared_ptr<DBDataReader> reader = myLoadSingleTag->executeReader();
-	if (reader.isNull() || !reader->next()) {
-		return 0;
-	}
-	const std::string name = reader->textValue(0, std::string());
-	const int parentId = reader->intValue(1);
-	reader.reset();
-
-	return Tag::getTag(name, getTag(parentId), id);
-}
-
-void LoadTagsRunnable::run(Book &book) {
-	TagList tags;
-	run(book.bookId(), tags);
-	book.removeAllTags();
-	for (TagList::const_iterator it = tags.begin(); it != tags.end(); ++it) {
-		book.addTag(*it);
-	}
 }
 
 void LoadTagsRunnable::run(int bookId, TagList &tags) {
@@ -75,9 +84,58 @@ void LoadTagsRunnable::run(int bookId, TagList &tags) {
 	tags.clear();
 
 	while (reader->next()) {
-		shared_ptr<Tag> tag = getTag(reader->intValue(0));
+		shared_ptr<Tag> tag = BooksDB::Instance().getTagById(reader->intValue(0));
 		if (!tag.isNull()) {
 			tags.push_back(tag);
 		}
+	}
+}
+
+shared_ptr<Tag> BooksDB::getTagById(int id) const {
+	if (id == 0) {
+		return 0;
+	}
+
+	shared_ptr<Tag> tag = Tag::getTagById(id);
+	if (!tag.isNull()) {
+		return tag;
+	}
+
+	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+		LOAD_SINGLE_TAG_QUERY, connection(), "@tag_id", DBValue::DBINT
+	);
+	((DBIntValue&)*command->parameter("@tag_id").value()) = id;
+	shared_ptr<DBDataReader> reader = command->executeReader();
+	if (!reader->next()) {
+		return 0;
+	}
+	const std::string name = reader->textValue(0, std::string());
+	const int parentId = (reader->type(1) == DBValue::DBINT) ?
+		reader->intValue(1) : 0;
+	reader.reset();
+
+	return Tag::getTag(name, getTagById(parentId), id);
+}
+
+void BooksDB::loadAllTagsById() const {
+	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+		LOAD_ALL_TAGS_QUERY, connection()
+	);
+	shared_ptr<DBDataReader> reader = command->executeReader();
+	while (reader->next()) {
+		if (reader->type(2) != DBValue::DBINT) {
+			continue;
+		}
+		const int id = reader->intValue(2);
+		if (!Tag::getTagById(id).isNull()) {
+			continue;
+		}
+		Tag::getTag(
+			reader->textValue(0, std::string()),
+			Tag::getTagById(
+				(reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0
+			),
+			id
+		);
 	}
 }

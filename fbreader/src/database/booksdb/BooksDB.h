@@ -94,10 +94,17 @@ public:
 	bool checkBookList(const Book &book);
 
 private:
+public:
+	shared_ptr<Tag> getTagById(int id) const;
+	void loadAllTagsById() const;
+
+private:
 	void loadSeries(Book &book);
 	void loadSeries(const std::map<int,shared_ptr<Book> > &books);
 	void loadAuthors(Book &book);
 	void loadAuthors(const std::map<int,shared_ptr<Book> > &books);
+	void loadTags(Book &book);
+	void loadTags(const std::map<int,shared_ptr<Book> > &books);
 
 	std::string getFileName(int fileId);
 
@@ -116,7 +123,6 @@ private:
 
 	shared_ptr<FindFileIdRunnable> myFindFileId;
 
-	shared_ptr<LoadTagsRunnable> myLoadTags;
 	shared_ptr<LoadFileEntriesRunnable> myLoadFileEntries;
 
 	shared_ptr<LoadRecentBooksRunnable> myLoadRecentBooks;
