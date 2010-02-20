@@ -17,17 +17,24 @@
  * 02110-1301, USA.
  */
 
-
 #include <ZLibrary.h>
 #include <ZLFile.h>
 
 #include "../DBRunnables.h"
 #include "../../sqldb/implsqlite/SQLiteFactory.h"
 
+static const std::string FIND_FILE_ID =
+	"SELECT file_id FROM Files" \
+	" WHERE name = @name AND coalesce(parent_id, 0) = @parent_id;";
+
+static const std::string ADD_FILE =
+	"INSERT INTO Files (name, parent_id, size)" \
+	" VALUES(@name, nullif(@parent_id, 0), nullif(@size, 0);" \
+	" SELECT last_insert_rowid() AS file_id;";
 
 FindFileIdRunnable::FindFileIdRunnable(DBConnection &connection) {
-	myFindFileId      = SQLiteFactory::createCommand(BooksDBQuery::FIND_FILE_ID, connection, "@name", DBValue::DBTEXT, "@parent_id", DBValue::DBINT);
-	myAddFile         = SQLiteFactory::createCommand(BooksDBQuery::ADD_FILE, connection, "@name", DBValue::DBTEXT, "@parent_id", DBValue::DBINT, "@size", DBValue::DBINT);
+	myFindFileId      = SQLiteFactory::createCommand(FIND_FILE_ID, connection, "@name", DBValue::DBTEXT, "@parent_id", DBValue::DBINT);
+	myAddFile         = SQLiteFactory::createCommand(ADD_FILE, connection, "@name", DBValue::DBTEXT, "@parent_id", DBValue::DBINT, "@size", DBValue::DBINT);
 }
 
 bool FindFileIdRunnable::run() {
@@ -69,4 +76,38 @@ bool FindFileIdRunnable::run() {
 	}
 }
 
+SaveFileEntriesRunnable::SaveFileEntriesRunnable(DBConnection &connection) {
+	myAddFile = SQLiteFactory::createCommand(ADD_FILE, connection, "@name", DBValue::DBTEXT, "@parent_id", DBValue::DBINT, "@size", DBValue::DBINT);
+
+	myFindFileId = new FindFileIdRunnable(connection);
+	myDeleteFileEntries = new DeleteFileEntriesRunnable(connection);
+}
+
+bool SaveFileEntriesRunnable::run() {
+	myFindFileId->setFileName(myFileName, true);
+	if (!myFindFileId->run()) {
+		return false;
+	}
+
+	myDeleteFileEntries->setFileId(myFindFileId->fileId());
+	if (!myDeleteFileEntries->run()) {
+		return false;
+	}
+
+	DBTextValue &addName = (DBTextValue &) *myAddFile->parameter("@name").value();
+	((DBIntValue &) *myAddFile->parameter("@parent_id").value()) = myFindFileId->fileId();
+	((DBIntValue &) *myAddFile->parameter("@size").value()) = 0;
+
+	for (std::vector<std::string>::const_iterator it = myEntries.begin(); it != myEntries.end(); ++it) {
+		const std::string &entry = (*it);
+		if (entry.empty()) {
+			continue;
+		}
+		addName = entry;
+		if (!myAddFile->execute()) {
+			return false;
+		}
+	}
+	return true;
+}
 

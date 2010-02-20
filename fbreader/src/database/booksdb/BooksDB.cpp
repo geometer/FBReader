@@ -47,15 +47,12 @@ BooksDB &BooksDB::Instance() {
 	return *ourInstance;
 }
 
-
-
 BooksDB::BooksDB(const std::string &path) : SQLiteDataBase(path), myInitialized(false) {
 	initCommands();
 }
 
 BooksDB::~BooksDB() {
 }
-
 
 bool BooksDB::initDatabase() {
 	if (isInitialized()) {
@@ -450,7 +447,6 @@ bool BooksDB::setNetFile(const std::string &url, const std::string &fileName) {
 	((DBTextValue&)*mySetNetFile->parameter("@url").value()) = url;
 	return mySetNetFile->execute();
 }
-
 
 bool BooksDB::loadBookState(const Book &book, ReadingState &state) {
 	state.Paragraph = state.Word = state.Character = 0;

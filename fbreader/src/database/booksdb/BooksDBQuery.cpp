@@ -228,21 +228,6 @@ const std::string BooksDBQuery::LOAD_BOOK = \
 	"FROM Books AS b " \
 	"WHERE b.file_id = @file_id; ";
 
-const std::string BooksDBQuery::FIND_FILE_ID = \
-	"SELECT file_id FROM Files " \
-	"WHERE name = @name " \
-	"	AND coalesce(parent_id, 0) = @parent_id; ";
-
-const std::string BooksDBQuery::ADD_FILE = \
-	"INSERT INTO Files (name, parent_id, size) " \
-	"VALUES ( " \
-	"	@name, " \
-	"	nullif(@parent_id, 0), " \
-	"	nullif(@size, 0) " \
-	"); " \
-	" " \
-	"SELECT last_insert_rowid() AS file_id; ";
-
 const std::string BooksDBQuery::ADD_BOOK = \
 	"INSERT INTO Books (encoding, language, title, file_id) " \
 	"	VALUES ( " \

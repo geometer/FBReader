@@ -37,14 +37,6 @@ public:
 	static const std::string CLEAR_DATABASE;
 
 	static const std::string LOAD_BOOK;
-	
-	static const std::string ADD_BOOKTAG;
-	static const std::string DELETE_BOOKTAG;
-	static const std::string FIND_TAG_ID;
-	static const std::string ADD_TAG;
-
-	static const std::string FIND_FILE_ID;
-	static const std::string ADD_FILE;
 
 	static const std::string ADD_BOOK;
 	static const std::string UPDATE_BOOK;
