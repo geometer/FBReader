@@ -1,15 +1,18 @@
 [Desktop Entry]
 Name=E-book reader
 Name[ar]=قارئ الكتب الإلكترونية
+Name[es]=Lector de Libros
 Name[ru]=Чтение электронных книг
 Name[zh_CN]=电子书阅读
 GenericName=E-book reader
 GenericName[ar]=قارئ الكتب الإلكترونية
+GenericName[es]=Lector de Libros
 GenericName[ru]=Чтение электронных книг
 GenericName[zh_CN]=电子书阅读
-Comment=E-book reader
+Comment=FBReader E-book reader
 Comment[ar]=قارئ الكتب الإلكترونية
-Comment[ru]=Чтение электронных книг
+Comment[es]=FBReader Lector de Libros Elecrónicos
+Comment[ru]=FBReader, программа для чтения электронных книг
 Comment[zh_CN]=FBReader 电子书阅读器
 TryExec=FBReader
 Exec=FBReader %F

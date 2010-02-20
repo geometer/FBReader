@@ -2,8 +2,8 @@
 <FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:l="http://www.w3.org/1999/xlink"><description><title-info><author><last-name>FBReader</last-name></author> <book-title>About FBReader</book-title> <lang>hu</lang></title-info></description>
 <body>
 <title><p>Az FBReader &FBReaderVersion;</p></title>
-<p>Az FBReader egy elektronikus könyv (e-book) olvasó program, Linux/Windows XP PDA/UMPC/ számítógépekre. Az FBReader többféle e-book formátumot képes kezelni: <code>ePub</code>, <code>fb2</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, stb. Közvetlenül olvas a <code>zip</code>, <code>tar</code>, <code>gzip</code> and <code>bzip2</code> formátumú tömötített fájlokból.</p>
-<p>Az FBReader a <a l:href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a> hatálya alatt terjesztett program. Az „FBReader for Windows XP” verzió az Independent JPEG Group munkáján alapul.</p>
+<p>Az FBReader egy elektronikus könyv (e-book) olvasó program, Linux/Windows XP operációsrendszerekre, PDA/UMPC/PC számítógépekre. Az FBReader többféle e-book formátumot képes kezelni: <code>ePub</code>, <code>fb2</code>, <code>chm</code>, <code>rtf</code>, <code>plucker</code>, stb. Közvetlenül olvas a <code>zip</code>, <code>tar</code>, <code>gzip</code> and <code>bzip2</code> formátumú tömörített fájlokból.</p>
+<p>Az FBReader a <a l:href="http://www.gnu.org/licenses/gpl.html">GNU GPL</a> hatálya alatt terjesztett program.</p>
 <p>Ha tetszik a program és támogatnád a fejlesztést, látogass el az <a l:href="http://www.fbreader.org/donation/make.php">adományozó</a> oldalra.</p>
 <empty-line/>
 <subtitle><p>Kezdő lépések</p></subtitle>
