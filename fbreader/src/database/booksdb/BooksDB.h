@@ -96,6 +96,8 @@ public:
 private:
 	void loadSeries(Book &book);
 	void loadSeries(const std::map<int,shared_ptr<Book> > &books);
+	void loadAuthors(Book &book);
+	void loadAuthors(const std::map<int,shared_ptr<Book> > &books);
 
 	std::string getFileName(int fileId);
 
@@ -114,7 +116,6 @@ private:
 
 	shared_ptr<FindFileIdRunnable> myFindFileId;
 
-	shared_ptr<LoadAuthorsRunnable> myLoadAuthors;
 	shared_ptr<LoadTagsRunnable> myLoadTags;
 	shared_ptr<LoadFileEntriesRunnable> myLoadFileEntries;
 

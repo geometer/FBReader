@@ -21,50 +21,55 @@
 
 #include "BooksDB.h"
 #include "../../library/Book.h"
+#include "../../library/Author.h"
 #include "../sqldb/implsqlite/SQLiteFactory.h"
 
-static const std::string LOAD_SERIES_QUERY =
-	"SELECT Series.name, BookSeries.book_index" \
-	" FROM BookSeries" \
-	" INNER JOIN Series ON Series.series_id = BookSeries.series_id" \
-	" WHERE BookSeries.book_id = @book_id;";
-static const std::string LOAD_ALL_SERIES_QUERY =
-	"SELECT Series.name, BookSeries.book_index, BookSeries.book_id" \
-	" FROM BookSeries" \
-	" INNER JOIN Series ON Series.series_id = BookSeries.series_id";
+static const std::string LOAD_AUTHORS_QUERY =
+	"SELECT Authors.name, Authors.sort_key" \
+	" FROM BookAuthor" \
+	"	INNER JOIN Authors ON Authors.author_id = BookAuthor.author_id" \
+	" WHERE BookAuthor.book_id = @book_id" \
+	" ORDER BY BookAuthor.author_index;";
+static const std::string LOAD_ALL_AUTHORS_QUERY =
+	"SELECT Authors.name, Authors.sort_key, BookAuthor.book_id" \
+	" FROM BookAuthor" \
+	"	INNER JOIN Authors ON Authors.author_id = BookAuthor.author_id" \
+	" ORDER BY BookAuthor.author_index;";
 
-void BooksDB::loadSeries(Book &book) {
+void BooksDB::loadAuthors(Book &book) {
 	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
-		LOAD_SERIES_QUERY, connection(), "@book_id", DBValue::DBINT
+		LOAD_AUTHORS_QUERY, connection(), "@book_id", DBValue::DBINT
 	);
 	((DBIntValue&)*command->parameter("@book_id").value()) = book.bookId();
 	shared_ptr<DBDataReader> reader = command->executeReader();
+	
+	book.removeAllAuthors();
 
-	if (reader->next()) {
-		std::string seriesTitle = reader->textValue(0, std::string());
-		if (!seriesTitle.empty()) {
-			book.setSeries(
-				seriesTitle,
-				(reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0
-			);
-		}
+	while (reader->next()) {
+		book.addAuthor(
+			reader->textValue(0, std::string()),
+			reader->textValue(1, std::string())
+		);
 	}
 }
 
-void BooksDB::loadSeries(const std::map<int,shared_ptr<Book> > &books) {
-	shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
-		LOAD_ALL_SERIES_QUERY, connection()
+void BooksDB::loadAuthors(const std::map<int,shared_ptr<Book> > &books) {
+	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
+		LOAD_ALL_AUTHORS_QUERY, connection()
 	);
 	shared_ptr<DBDataReader> reader = command->executeReader();
+	
+	for (std::map<int,shared_ptr<Book> >::const_iterator it = books.begin(); it != books.end(); ++it) {
+		it->second->removeAllAuthors();
+	}
 
 	while (reader->next()) {
-		std::string seriesTitle = reader->textValue(0, std::string());
 		std::map<int,shared_ptr<Book> >::const_iterator it =
 			books.find((reader->type(2) == DBValue::DBINT) ? reader->intValue(2) : 0);
-		if (!seriesTitle.empty() && it != books.end()) {
-			it->second->setSeries(
-				seriesTitle,
-				(reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0
+		if (it != books.end()) {
+			it->second->addAuthor(
+				reader->textValue(0, std::string()),
+				reader->textValue(1, std::string())
 			);
 		}
 	}

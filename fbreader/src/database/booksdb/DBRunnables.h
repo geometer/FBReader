@@ -34,7 +34,6 @@
 #include "../../library/Lists.h"
 
 class FindFileIdRunnable;
-class LoadAuthorsRunnable;
 class LoadTagsRunnable;
 class LoadFileEntriesRunnable;
 class DeleteFileEntriesRunnable;
@@ -288,21 +287,6 @@ inline int FindFileIdRunnable::fileId() const { return myFileId; }
 /*
  * Load Runnables
  */
-
-class LoadAuthorsRunnable : public DBRunnable {
-
-public:
-	LoadAuthorsRunnable(DBConnection &connection);
-	bool run();
-	void setBookId(int bookId);
-	void collectAuthors(AuthorList &authors);
-
-private:
-	int myBookId;
-	AuthorList myAuthors;
-
-	shared_ptr<DBCommand> myLoadAuthors;
-};
 
 class LoadTagsRunnable {
 

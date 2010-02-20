@@ -125,7 +125,6 @@ void BooksDB::initCommands() {
 
 	myFindFileId = new FindFileIdRunnable(connection());
 
-	myLoadAuthors = new LoadAuthorsRunnable(connection());
 	myLoadTags = new LoadTagsRunnable(connection());
 	myLoadFileEntries = new LoadFileEntriesRunnable(connection());
 
@@ -171,13 +170,7 @@ shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
 	);
 
 	loadSeries(*book);
-
-	myLoadAuthors->setBookId(bookId);
-	if (!myLoadAuthors->run()) {
-		return 0;
-	}
-	book->removeAllAuthors();
-	myLoadAuthors->collectAuthors(book->_authors());
+	loadAuthors(*book);
 
 	if (!myLoadTags->run(*book)) {
 		return 0;
@@ -364,16 +357,10 @@ bool BooksDB::loadBooks(BookList &books) {
 	}
 
 	loadSeries(bookMap);
+	loadAuthors(bookMap);
 	
 	for (BookList::iterator it = books.begin(); it != books.end(); ++it) {
 		shared_ptr<Book> book = *it;
-
-		myLoadAuthors->setBookId(book->bookId());
-		if (!myLoadAuthors->run()) {
-			return false;
-		}
-		book->removeAllAuthors();
-		myLoadAuthors->collectAuthors(book->_authors());
 
 		if (!myLoadTags->run(*book)) {
 			return false;
