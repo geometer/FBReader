@@ -29,7 +29,7 @@ static const std::string FIND_FILE_ID =
 
 static const std::string ADD_FILE =
 	"INSERT INTO Files (name, parent_id, size)" \
-	" VALUES(@name, nullif(@parent_id, 0), nullif(@size, 0);" \
+	" VALUES(@name, nullif(@parent_id, 0), nullif(@size, 0));" \
 	" SELECT last_insert_rowid() AS file_id;";
 
 FindFileIdRunnable::FindFileIdRunnable(DBConnection &connection) {
