@@ -21,6 +21,7 @@
 
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
+#include <ZLLogger.h>
 
 #include "OEBMetaInfoReader.h"
 #include "../util/EntityFilesCollector.h"
@@ -162,19 +163,21 @@ bool OEBMetaInfoReader::processNamespaces() const {
 bool OEBMetaInfoReader::readMetaInfo(const std::string &fileName) {
 	myReadMetaData = false;
 	myReadState = READ_NONE;
-	bool code = readDocument(fileName);
-	if (code) {
-		if (!myAuthorList.empty()) {
-			for (std::vector<std::string>::const_iterator it = myAuthorList.begin(); it != myAuthorList.end(); ++it) {
-				myBook.addAuthor(*it);
-			}
-		} else {
-			for (std::vector<std::string>::const_iterator it = myAuthorList2.begin(); it != myAuthorList2.end(); ++it) {
-				myBook.addAuthor(*it);
-			}
+	if (!readDocument(fileName)) {
+		ZLLogger::Instance().println("epub", "Failure while reading info from " + fileName);
+		return false;
+	}
+
+	if (!myAuthorList.empty()) {
+		for (std::vector<std::string>::const_iterator it = myAuthorList.begin(); it != myAuthorList.end(); ++it) {
+			myBook.addAuthor(*it);
+		}
+	} else {
+		for (std::vector<std::string>::const_iterator it = myAuthorList2.begin(); it != myAuthorList2.end(); ++it) {
+			myBook.addAuthor(*it);
 		}
 	}
-	return code;
+	return true;
 }
 
 const std::vector<std::string> &OEBMetaInfoReader::externalDTDs() const {

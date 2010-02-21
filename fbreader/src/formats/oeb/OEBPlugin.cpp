@@ -22,6 +22,7 @@
 #include <ZLStringUtil.h>
 #include <ZLDir.h>
 #include <ZLInputStream.h>
+#include <ZLLogger.h>
 
 #include "OEBPlugin.h"
 #include "OEBMetaInfoReader.h"
@@ -53,19 +54,23 @@ std::string OEBPlugin::opfFileName(const std::string &oebFileName) {
 		return oebFileName;
 	}
 
+	ZLLogger::Instance().println("epub", "Looking for opf file in " + oebFileName);
 	oebFile.forceArchiveType(ZLFile::ZIP);
 	shared_ptr<ZLDir> zipDir = oebFile.directory(false);
 	if (zipDir.isNull()) {
-		return "";
+		ZLLogger::Instance().println("epub", "Couldn't open zip archive");
+		return std::string();
 	}
 	std::vector<std::string> fileNames;
 	zipDir->collectFiles(fileNames, false);
 	for (std::vector<std::string>::const_iterator it = fileNames.begin(); it != fileNames.end(); ++it) {
+		ZLLogger::Instance().println("epub", "Item: " + *it);
 		if (ZLStringUtil::stringEndsWith(*it, ".opf")) {
 			return zipDir->itemPath(*it);
 		}
 	}
-	return "";
+	ZLLogger::Instance().println("epub", "Opf file not found");
+	return std::string();
 }
 
 bool OEBPlugin::readMetaInfo(Book &book) const {
