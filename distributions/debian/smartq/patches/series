@@ -1,0 +1,6 @@
+110-use-sensible-browser.patch
+120-key-names-and-actions.patch
+130-default-indicator.patch
+140-fullscreen-scrolling.patch
+150-default-rotation-direction.patch
+160-use-gcc-4-3.patch

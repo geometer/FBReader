@@ -1,0 +1,13 @@
+--- fbreader-0.12.2.orig/fbreader/data/default/config.desktop.xml
++++ fbreader-0.12.2/fbreader/data/default/config.desktop.xml
+@@ -4,6 +4,10 @@
+ 		<option name="Base:fontFamily" value="Georgia"/>
+ 		<option name="Base:fontSize" value="16"/>
+ 	</group>
++	<group name="Indicator">
++		<option name="Type" value="1"/>
++		<option name="Time" value="true"/>
++	</group>
+   <group name="Scrollings">
+     <option name="Delay" value="0"/>
+   </group>

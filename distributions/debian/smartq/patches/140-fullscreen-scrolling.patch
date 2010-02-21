@@ -1,0 +1,41 @@
+--- fbreader-0.12.2.orig/zlibrary/ui/src/gtk/view/ZLGtkViewWidget.cpp
++++ fbreader-0.12.2/zlibrary/ui/src/gtk/view/ZLGtkViewWidget.cpp
+@@ -203,7 +204,6 @@
+ 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "button_release_event", GTK_SIGNAL_FUNC(mouseReleased), this);
+ 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "motion_notify_event", GTK_SIGNAL_FUNC(mouseMoved), this);
+ 	ZLGtkSignalUtil::connectSignal(GTK_OBJECT(myArea), "expose_event", GTK_SIGNAL_FUNC(::doPaint), this);
+-	myRepaintBlocked = false;
+ }
+ 
+ void ZLGtkViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
+@@ -292,9 +292,7 @@
+ }
+ 
+ void ZLGtkViewWidget::repaint()	{
+-	if (!myRepaintBlocked) {
+-		gtk_widget_queue_draw(myArea);
+-	}
++	gtk_widget_queue_draw(myArea);
+ }
+ 
+ void ZLGtkViewWidget::doPaint()	{
+@@ -352,9 +350,6 @@
+ 			gdk_draw_pixbuf(myArea->window, myArea->style->white_gc, myRotatedPixbuf, 0, 0, 0, 0, h, w, GDK_RGB_DITHER_NONE, 0, 0);
+ 			break;
+ 	}
+-	myRepaintBlocked = true;
+-	myApplication->refreshWindow();
+-	myRepaintBlocked = false;
+ }
+ 
+ GtkWidget *ZLGtkViewWidget::area() {
+--- fbreader-0.12.2.orig/zlibrary/ui/src/gtk/view/ZLGtkViewWidget.h
++++ fbreader-0.12.2/zlibrary/ui/src/gtk/view/ZLGtkViewWidget.h
+@@ -61,7 +61,6 @@
+ 	GdkPixbuf *myOriginalPixbuf;
+ 	GdkPixbuf *myRotatedPixbuf;
+ 	GdkImage *myImage;
+-	bool myRepaintBlocked;
+ 
+ 	GtkAdjustment *myVerticalAdjustment;
+ 	GtkWidget *myRightScrollBar;

@@ -1,8 +1,34 @@
-fbreader (0.12.5-1) stable; urgency=low
+fbreader (0.12.5.smartq-1) stable; urgency=low
 
   * new upstream version
 
  -- Nikolay Pultsin <geometer@fbreader.org>  Sun, 21 Feb 2010 16:20:00 +0300
+
+fbreader (0.12.2-5) stable; urgency=low
+
+  * Double-click detection is switched off if a text selection is disabled
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Tue, 16 Feb 2010 16:35:00 +0300
+
+fbreader (0.12.2-4) stable; urgency=low
+
+  * Better solution for chm crash problem: gcc 4.3 is used instead of 4.4
+  * Fixed position indicator behaviour
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sun, 14 Feb 2010 15:46:00 +0300
+
+fbreader (0.12.2-3) stable; urgency=low
+
+  * Arabic and Chinese entries have been added to the desktop file
+  * A SmartQ-specific crach on chm files has been fixed
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Sat, 13 Feb 2010 14:46:00 +0300
+
+fbreader (0.12.2-2) stable; urgency=low
+
+  * several SmartQ-specific patches have been added
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Tue, 9 Feb 2010 18:51:00 +0300
 
 fbreader (0.12.2-1) stable; urgency=low
 

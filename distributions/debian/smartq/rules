@@ -1,0 +1,58 @@
+#!/usr/bin/make -f
+
+clean: unpatch
+		dh_testdir
+		dh_testroot
+		[ ! -f Makefile ] || $(MAKE) distclean
+		dh_clean build-stamp install-stamp
+
+build: patch build-stamp
+build-stamp:
+		dh_testdir
+		$(MAKE) -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy
+		$(MAKE) -C zlibrary/text TARGET_ARCH=desktop UI_TYPE=dummy
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=gtk
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt4
+		$(MAKE) -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy
+		touch build-stamp 
+
+install: DEB_DIR = $(CURDIR)/debian
+install: build
+		dh_testdir
+		dh_testroot
+		dh_clean -k
+		dh_installdirs
+		$(MAKE) -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DEB_DIR)/libzlcore do_install
+		$(MAKE) -C zlibrary/text TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DEB_DIR)/libzltext do_install
+		$(MAKE) -C zlibrary/core TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DEB_DIR)/libzlcore-dev do_install_dev
+		$(MAKE) -C zlibrary/text TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DEB_DIR)/libzltext-dev do_install_dev
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=gtk DESTDIR=$(DEB_DIR)/libzlui-gtk do_install
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt DESTDIR=$(DEB_DIR)/libzlui-qt do_install
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=desktop UI_TYPE=qt4 DESTDIR=$(DEB_DIR)/libzlui-qt4 do_install
+		$(MAKE) -C fbreader TARGET_ARCH=desktop UI_TYPE=dummy DESTDIR=$(DEB_DIR)/fbreader do_install
+		touch install-stamp
+
+binary-arch: VERSION=$(shell expr "`dpkg-parsechangelog |grep Version:`" : '.*Version: \(.*\)')
+binary-arch: build install
+		dh_testdir
+		dh_testroot
+		dh_desktop
+		dh_installmenu
+		dh_installdocs
+		dh_installman fbreader/desktop/FBReader.1
+		dh_installchangelogs
+		dh_strip
+		dh_compress
+		dh_fixperms
+		dh_makeshlibs -plibzlcore -V"libzlcore (>= $(VERSION)),libzlcore(<< 0.13.0)"
+		dh_makeshlibs -plibzltext -V"libzltext (>= $(VERSION)),libzltext(<< 0.13.0)"
+		dh_installdeb
+		dh_shlibdeps -l debian/libzlcore/usr/lib:debian/libzltext/usr/lib
+		dh_gencontrol
+		dh_md5sums
+		dh_builddeb
+
+binary:	binary-arch
+
+include /usr/share/quilt/quilt.make

@@ -1,0 +1,11 @@
+--- fbreader-0.10.0.orig/fbreader/data/default/external.desktop.xml
++++ fbreader-0.10.0/fbreader/data/default/external.desktop.xml
+@@ -3,7 +3,7 @@
+ 	<section name="Web Browser">
+ 		<program name="%browser" protocol="execute">
+ 			<action name="openLink" command="%command"/>
+-			<option name="command" defaultValue="mozilla %1 &amp;"/>
++			<option name="command" defaultValue="sensible-browser %1 &amp;"/>
+ 		</program>
+ 	</section>
+ </ExternalPrograms>

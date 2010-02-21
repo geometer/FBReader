@@ -1,0 +1,12 @@
+--- fbreader-0.12.2.orig/fbreader/data/default/config.desktop.xml
++++ fbreader-0.12.2/fbreader/data/default/config.desktop.xml
+@@ -9,6 +9,9 @@
+ 		<option name="PositionText" value="true"/>
+ 		<option name="Time" value="true"/>
+ 	</group>
++	<group name="Rotation">
++		<option name="Angle" value="270"/>
++	</group>
+   <group name="Scrollings">
+     <option name="Delay" value="0"/>
+   </group>

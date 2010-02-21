@@ -1,0 +1,115 @@
+Source: fbreader
+Section: text
+Priority: optional
+Maintainer: Nikolay Pultsin <geometer@fbreader.org>
+Standards-Version: 3.8.0
+Build-Depends: debhelper (>= 5), libgtk2.0-dev, libqt3-mt-dev, libqt4-dev, libexpat1-dev, libbz2-dev, libz-dev, liblinebreak-dev (>= 1.0-1), libjpeg-dev, libfribidi-dev, libcurl-dev, quilt (>= 0.40), libsqlite3-dev
+
+Package: fbreader
+Priority: optional
+Architecture: any
+Replaces: fbreader-gtk, fbreader-qt, fbreader-qt4
+Depends: ${shlibs:Depends}, libzlui
+Description: e-book reader
+ FBReader is an e-book reader.
+ .
+ Main features:
+  * supports several open e-book formats: fb2, html, chm, plucker,
+    palmdoc, ztxt, tcr (psion text), rtf, oeb, openreader, non-DRM'ed
+    mobipocket, plain text
+  * reads directly from tar, zip, gzip, bzip2 archives (you can have
+    several books in one archive)
+  * supports a structured view of your e-book collection
+  * automatically determines encodings
+  * automatically generates a table of contents
+  * keeps the last open book and the last read positions for all open books
+    between runs
+  * automatic hyphenation (patterns for several languages are included)
+  * search and download books from network libraries
+ .
+  Homepage: http://www.fbreader.org/
+
+Package: libzlcore
+Section: libs
+Priority: optional
+Architecture: any
+Conflicts: fbreader-gtk, fbreader-qt, fbreader-qt4
+Replaces: libzlcore-data
+Depends: ${shlibs:Depends}
+Description: ZLibrary core
+ This is the core of ZLibrary, the library that the fbreader e-book reader
+ is based on.
+ .
+ ZLibrary is a cross-platform library to build applications running on desktop
+ Linux, Windows, different Linux-based PDAs using this library.
+
+Package: libzltext
+Section: libs
+Priority: optional
+Architecture: any
+Replaces: libzltext-data
+Depends: ${shlibs:Depends}, libzlcore (= ${binary:Version})
+Description: ZLibrary text model/viewer
+ This package provides text model/viewer part of ZLibrary.
+ .
+ ZLibrary is a cross-platform library to build applications running on desktop
+ Linux, Windows, different Linux-based PDAs using this library.
+
+Package: libzlui-gtk
+Section: libs
+Priority: optional
+Architecture: any
+Depends: ${shlibs:Depends}, libzlcore (= ${binary:Version})
+Provides: libzlui
+Description: GTK+ interface module for ZLibrary
+ This package provides a GTK+-based UI for ZLibrary.
+ .
+ ZLibrary is a cross-platform library to build applications running on desktop
+ Linux, Windows, different Linux-based PDAs using this library.
+
+Package: libzlui-qt
+Section: libs
+Priority: optional
+Architecture: any
+Depends: ${shlibs:Depends}, libzlcore (= ${binary:Version})
+Provides: libzlui
+Description: Qt3 interface module for ZLibrary
+ This package provides a Qt3-based UI for ZLibrary.
+ .
+ ZLibrary is a cross-platform library to build applications running on desktop
+ Linux, Windows, different Linux-based PDAs using this library.
+
+Package: libzlui-qt4
+Section: libs
+Priority: optional
+Architecture: any
+Depends: ${shlibs:Depends}
+Provides: libzlui
+Description: Qt4 interface module for ZLibrary
+ This package provides a Qt4-based UI for ZLibrary.
+ .
+ ZLibrary is a cross-platform library to build applications running on desktop
+ Linux, Windows, different Linux-based PDAs using this library.
+
+Package: libzlcore-dev
+Section: libdevel
+Priority: optional
+Architecture: any
+Depends: libzlcore, ${shlibs:Depends}, libzlcore (= ${binary:Version})
+Description: ZLibrary core - development files
+ This package contains development files for the ZLibrary core.
+ .
+ ZLibrary is a cross-platform library to build applications running on desktop
+ Linux, Windows, different Linux-based PDAs using this library.
+
+Package: libzltext-dev
+Section: libdevel
+Priority: optional
+Architecture: any
+Depends: libzltext, ${shlibs:Depends}, libzltext (= ${binary:Version})
+Description: ZLibrary text model/viewer - development files
+ This package contains development files for the ZLibrary text model/viewer
+ library.
+ .
+ ZLibrary is a cross-platform library to build applications running on desktop
+ Linux, Windows, different Linux-based PDAs using this library.

@@ -1,0 +1,14 @@
+--- fbreader-0.12.2.orig/makefiles/arch/desktop.mk	2010-02-13 08:04:07.000000000 +0000
++++ fbreader-0.12.2/makefiles/arch/desktop.mk	2010-02-13 10:26:41.000000000 +0000
+@@ -6,9 +6,9 @@
+ IMAGEDIR = $(INSTALLDIR)/share/pixmaps
+ APPIMAGEDIR = $(INSTALLDIR)/share/pixmaps/%APPLICATION_NAME%
+ 
+-CC = gcc
++CC = gcc-4.3
+ AR = ar rsu
+-LD = g++
++LD = g++-4.3
+ 
+ CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
+ LDFLAGS =

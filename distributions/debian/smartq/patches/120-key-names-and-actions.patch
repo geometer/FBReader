@@ -1,0 +1,58 @@
+--- fbreader-0.12.2.orig/fbreader/data/default/keymap.desktop.xml
++++ fbreader-0.12.2/fbreader/data/default/keymap.desktop.xml
+@@ -1,36 +1,8 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <keymap>
+-	<binding key="&lt;L&gt;" action="showLibrary"/>
+-	<binding key="&lt;W&gt;" action="showNetLibrary"/>
+-	<binding key="&lt;O&gt;" action="preferences"/>
+-	<binding key="&lt;LeftArrow&gt;" action="undo"/>
+-	<binding key="&lt;RightArrow&gt;" action="redo"/>
+-	<binding key="&lt;C&gt;" action="toc"/>
+-	<binding key="&lt;Ctrl&gt;+&lt;F&gt;" action="search"/>
+-	<binding key="&lt;F&gt;" action="search"/>
+-	<binding key="&lt;P&gt;" action="findPrevious"/>
+-	<binding key="&lt;F3&gt;" action="findNext"/>
+-	<binding key="&lt;N&gt;" action="findNext"/>
+ 	<binding key="&lt;PageDown&gt;" action="pageForward"/>
+ 	<binding key="&lt;PageUp&gt;" action="pageBackward"/>
+-	<binding key="&lt;DownArrow&gt;" action="lineForward"/>
+-	<binding key="&lt;UpArrow&gt;" action="lineBackward"/>
+-	<binding key="&lt;MouseScrollDown&gt;" action="mouseScrollForward"/>
+-	<binding key="&lt;MouseScrollUp&gt;" action="mouseScrollBackward"/>
+-	<binding key="&lt;Ctrl&gt;+&lt;Home&gt;" action="gotoHome"/>
+-	<binding key="&lt;Home&gt;" action="gotoSectionStart"/>
+-	<binding key="&lt;End&gt;" action="gotoSectionEnd"/>
++	<binding key="&lt;Return&gt;" action="rotate"/>
++	<binding key="&lt;FullScreen&gt;" action="toggleFullscreen"/>
+ 	<binding key="&lt;Esc&gt;" action="cancel"/>
+-	<binding key="&lt;=&gt;" action="increaseFont"/>
+-	<binding key="&lt;-&gt;" action="decreaseFont"/>
+-	<binding key="&lt;D&gt;" action="toggleIndicator"/>
+-	<binding key="&lt;Return&gt;" action="toggleFullscreen"/>
+-	<binding key="&lt;A&gt;" action="addBook"/>
+-	<binding key="&lt;I&gt;" action="bookInfo"/>
+-	<binding key="&lt;R&gt;" action="rotate"/>
+-	<binding key="&lt;Ctrl&gt;+&lt;DownArrow&gt;" action="nextTOCSection"/>
+-	<binding key="&lt;Ctrl&gt;+&lt;UpArrow&gt;" action="previousTOCSection"/>
+-	<binding key="&lt;Ctrl&gt;+&lt;C&gt;" action="copyToClipboard"/>
+-	<binding key="&lt;G&gt;" action="gotoPageNumber"/>
+-	<binding key="&lt;Z&gt;" action="debugNL"/>
+ </keymap>
+--- fbreader-0.12.2.orig/zlibrary/ui/data/keynames.desktop-gtk.xml
++++ fbreader-0.12.2/zlibrary/ui/data/keynames.desktop-gtk.xml
+@@ -1,5 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <keynames>
++	<key code="0xFFE9" name="&lt;FullScreen&gt;"/>
+ 	<key code="0xFF1B" name="&lt;Esc&gt;"/>
+ 	<key code="0x1B" name="&lt;Esc&gt;"/>
+ 	<key code="0xFF09" name="&lt;Tab&gt;"/>
+@@ -41,7 +42,6 @@
+ 	<key code="0xFFE2" name="&lt;RShift&gt;"/>
+ 	<key code="0xFFE3" name="&lt;Ctrl&gt;"/>
+ 	<key code="0xFE08" name="&lt;RCtrl&gt;"/>
+-	<key code="0xFFE9" name="&lt;Alt&gt;"/>
+ 	<key code="0xFFEA" name="&lt;RAlt&gt;"/>
+ 	<key code="0xFFEB" name="&lt;Win&gt;"/>
+ 	<key code="0xFF6B" name="&lt;Break&gt;"/>

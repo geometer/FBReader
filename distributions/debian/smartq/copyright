@@ -1,0 +1,51 @@
+This is the Debian prepackaged version of FBReader.
+
+It was originally Debianised by Nikolay Pultsin <geometer@fbreader.org>.
+Sources are downloaded from its website at:
+
+	http://www.fbreader.org/
+
+It is copyright as follows:
+
+/*
+ * Copyright (C) 2004-2009 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
+On Debian systems, the full text of the GPL can be found in 
+/usr/share/common-licenses/GPL
+
+It also includes html entity files with these licenses:
+
+<!-- Portions (C) International Organization for Standardization 1986
+     Permission to copy in any form is granted for use with
+     conforming SGML systems and applications as defined in
+     ISO 8879, provided this notice is included in all copies.
+-->
+
+<!-- Copyright (C) 2001, 2002 Organization for the Advancement of Structured
+     Information Standards (OASIS).
+
+     Permission to use, copy, modify and distribute this entity set
+     and its accompanying documentation for any purpose and without
+     fee is hereby granted in perpetuity, provided that the above
+     copyright notice and this paragraph appear in all copies. The
+     copyright holders make no representation about the suitability of
+     the entities for any purpose. It is provided "as is" without
+     expressed or implied warranty.
+
+-->
