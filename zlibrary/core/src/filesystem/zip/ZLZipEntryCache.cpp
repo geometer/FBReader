@@ -40,13 +40,15 @@ ZLZipEntryCache::ZLZipEntryCache(ZLInputStream &baseStream) {
 
 	ZLZipHeader header;
 	while (header.readFrom(baseStream)) {
-		std::string entryName(header.NameLength, '\0');
-		if ((unsigned int)baseStream.read((char*)entryName.data(), header.NameLength) == header.NameLength) {
-			Info &info = myInfoMap[entryName];
-			info.Offset = baseStream.offset() + header.ExtraLength;
-			info.CompressionMethod = header.CompressionMethod;
-			info.CompressedSize = header.CompressedSize;
-			info.UncompressedSize = header.UncompressedSize;
+		if (header.Signature == ZLZipHeader::SignatureLocalFile) {
+			std::string entryName(header.NameLength, '\0');
+			if ((unsigned int)baseStream.read((char*)entryName.data(), header.NameLength) == header.NameLength) {
+				Info &info = myInfoMap[entryName];
+				info.Offset = baseStream.offset() + header.ExtraLength;
+				info.CompressionMethod = header.CompressionMethod;
+				info.CompressedSize = header.CompressedSize;
+				info.UncompressedSize = header.UncompressedSize;
+			}
 		}
 		ZLZipHeader::skipEntry(baseStream, header);
 	}

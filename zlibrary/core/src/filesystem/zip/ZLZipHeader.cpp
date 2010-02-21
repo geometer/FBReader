@@ -21,31 +21,53 @@
 #include "ZLZDecompressor.h"
 #include "../ZLInputStream.h"
 
+const int ZLZipHeader::SignatureLocalFile = 0x04034B50;
+const int ZLZipHeader::SignatureData = 0x08074B50;
+
 bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 	size_t startOffset = stream.offset();
 	Signature = readLong(stream);
-	Version = readShort(stream);
-	Flags = readShort(stream);
-	CompressionMethod = readShort(stream);
-	ModificationTime = readShort(stream);
-	ModificationDate = readShort(stream);
-	CRC32 = readLong(stream);
-	CompressedSize = readLong(stream);
-	UncompressedSize = readLong(stream);
-	NameLength = readShort(stream);
-	ExtraLength = readShort(stream);
-	return (Signature == 0x04034B50) && (stream.offset() == startOffset + 30) && (NameLength != 0);
+	switch (Signature) {
+		default:
+			return false;
+		case SignatureLocalFile:
+			Version = readShort(stream);
+			Flags = readShort(stream);
+			CompressionMethod = readShort(stream);
+			ModificationTime = readShort(stream);
+			ModificationDate = readShort(stream);
+			CRC32 = readLong(stream);
+			CompressedSize = readLong(stream);
+			UncompressedSize = readLong(stream);
+			NameLength = readShort(stream);
+			ExtraLength = readShort(stream);
+			return stream.offset() == startOffset + 30 && NameLength != 0;
+		case SignatureData:
+			CRC32 = readLong(stream);
+			CompressedSize = readLong(stream);
+			CompressedSize = 0;
+			UncompressedSize = readLong(stream);
+			NameLength = 0;
+			ExtraLength = 0;
+			return stream.offset() == startOffset + 16;
+	}
 }
 
 void ZLZipHeader::skipEntry(ZLInputStream &stream, const ZLZipHeader &header) {
-	if (header.Flags & 0x08) {
-		stream.seek(header.ExtraLength, false);
-		ZLZDecompressor decompressor((size_t)-1);
-		while (decompressor.decompress(stream, 0, 2048) == 2048) {
-		}
-		//stream.seek(16, false);
-	} else {
-		stream.seek(header.ExtraLength + header.CompressedSize, false);
+	switch (header.Signature) {
+		default:
+			break;
+		case SignatureLocalFile:
+			if (header.Flags & 0x08) {
+				stream.seek(header.ExtraLength, false);
+				ZLZDecompressor decompressor((size_t)-1);
+				while (decompressor.decompress(stream, 0, 2048) == 2048) {
+				}
+				//stream.seek(16, false);
+			} else {
+				stream.seek(header.ExtraLength + header.CompressedSize, false);
+			}
+			break;
 	}
 }
 
