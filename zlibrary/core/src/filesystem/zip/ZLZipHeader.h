@@ -39,7 +39,7 @@ struct ZLZipHeader {
 	unsigned short ExtraLength;
 
 	bool readFrom(ZLInputStream &stream);
-	static void skipEntry(ZLInputStream &stream, const ZLZipHeader &header);
+	static void skipEntry(ZLInputStream &stream, ZLZipHeader &header);
 
 private:
 	unsigned short readShort(ZLInputStream &stream);

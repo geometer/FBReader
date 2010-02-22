@@ -109,6 +109,5 @@ size_t ZLZipInputStream::offset() const {
 }
 
 size_t ZLZipInputStream::sizeOfOpened() {
-	// TODO: implement for files with Flags & 0x08
 	return myUncompressedSize;
 }

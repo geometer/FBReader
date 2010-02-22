@@ -45,7 +45,6 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 		case SignatureData:
 			CRC32 = readLong(stream);
 			CompressedSize = readLong(stream);
-			CompressedSize = 0;
 			UncompressedSize = readLong(stream);
 			NameLength = 0;
 			ExtraLength = 0;
@@ -53,7 +52,7 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 	}
 }
 
-void ZLZipHeader::skipEntry(ZLInputStream &stream, const ZLZipHeader &header) {
+void ZLZipHeader::skipEntry(ZLInputStream &stream, ZLZipHeader &header) {
 	switch (header.Signature) {
 		default:
 			break;
@@ -61,8 +60,11 @@ void ZLZipHeader::skipEntry(ZLInputStream &stream, const ZLZipHeader &header) {
 			if (header.Flags & 0x08) {
 				stream.seek(header.ExtraLength, false);
 				ZLZDecompressor decompressor((size_t)-1);
-				while (decompressor.decompress(stream, 0, 2048) == 2048) {
-				}
+				size_t size;
+				do {
+					size = decompressor.decompress(stream, 0, 2048);
+					header.UncompressedSize += size;
+				} while (size == 2048);
 				//stream.seek(16, false);
 			} else {
 				stream.seek(header.ExtraLength + header.CompressedSize, false);
