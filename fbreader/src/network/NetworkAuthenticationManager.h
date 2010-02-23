@@ -73,7 +73,7 @@ public: // Account specific methods (can be called only if authorised!!!)
 	virtual std::string refillAccountLink();
 	virtual std::string currentAccount();
 
-	virtual const ZLNetworkSSLCertificate &certificate();
+	virtual const ZLNetworkSSLCertificate &certificate() = 0;
 
 public: // new User Registration
 	virtual bool registrationSupported();

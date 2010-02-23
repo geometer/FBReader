@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLNetworkManager.h>
 #include <ZLNetworkRequest.h>
 
@@ -34,6 +36,7 @@ OPDSBasicAuthenticationManager::OPDSBasicAuthenticationManager(
 	NetworkAuthenticationManager(siteName),
 	mySignInUrl(signInUrl),
 	mySignOutUrl(signOutUrl),
+	myCertificate(siteName != "feedbooks.com" ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : ZLNetworkSSLCertificate::DONT_VERIFY_CERTIFICATE),
 	myAccountChecked(false),
 	myAccountUserNameOption(ZLCategoryKey::NETWORK, siteName, "accountUserName", "") {
 }
@@ -74,7 +77,6 @@ NetworkAuthenticationManager::AuthenticationStatus OPDSBasicAuthenticationManage
 }
 
 std::string OPDSBasicAuthenticationManager::authorise(const std::string &pwd) {
-
 	shared_ptr<ZLExecutionData> data = new OPDSNetworkBasicRequest(
 		mySignInUrl,
 		certificate()
@@ -121,8 +123,6 @@ const std::string &OPDSBasicAuthenticationManager::currentUserName() {
 	return myAccountUserNameOption.value();
 }
 
-
-/*const std::string &OPDSBasicAuthenticationManager::certificate() {
-	static const std::string _empty = "";
-	return _empty;
-}*/
+const ZLNetworkSSLCertificate &OPDSBasicAuthenticationManager::certificate() {
+	return myCertificate;
+}

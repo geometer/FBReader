@@ -19,10 +19,11 @@
 
 #include "ZLNetworkSSLCertificate.h"
 
-const ZLNetworkSSLCertificate ZLNetworkSSLCertificate::NULL_CERTIFICATE;
+const ZLNetworkSSLCertificate ZLNetworkSSLCertificate::NULL_CERTIFICATE(true);
+const ZLNetworkSSLCertificate ZLNetworkSSLCertificate::DONT_VERIFY_CERTIFICATE(false);
 
-ZLNetworkSSLCertificate::ZLNetworkSSLCertificate() {
+ZLNetworkSSLCertificate::ZLNetworkSSLCertificate(bool doVerify) : DoVerify(doVerify) {
 }
 
-ZLNetworkSSLCertificate::ZLNetworkSSLCertificate(const std::string &path) : Path(path) {
+ZLNetworkSSLCertificate::ZLNetworkSSLCertificate(const std::string &path) : Path(path), DoVerify(true) {
 }

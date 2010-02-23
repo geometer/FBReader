@@ -79,11 +79,13 @@ public: // Account specific methods (can be called only if authorised!!!)
 	//std::string refillAccountLink();
 	//std::string currentAccount();
 
-	//const std::string &certificate();
+private:
+	const ZLNetworkSSLCertificate &certificate();
 
 private: // config data
 	std::string mySignInUrl;
 	std::string mySignOutUrl;
+	const ZLNetworkSSLCertificate &myCertificate;
 
 private:
 	bool myAccountChecked;

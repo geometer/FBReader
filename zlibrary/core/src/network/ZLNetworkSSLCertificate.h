@@ -26,15 +26,17 @@ class ZLNetworkSSLCertificate {
 
 public:
 	static const ZLNetworkSSLCertificate NULL_CERTIFICATE;
+	static const ZLNetworkSSLCertificate DONT_VERIFY_CERTIFICATE;
 
 public:
 	const std::string Path;
+	const bool DoVerify;
 
 public:
 	ZLNetworkSSLCertificate(const std::string &path);
 
 private:
-	ZLNetworkSSLCertificate();
+	ZLNetworkSSLCertificate(bool doVerify);
 
 private:
 	ZLNetworkSSLCertificate(const ZLNetworkSSLCertificate&);

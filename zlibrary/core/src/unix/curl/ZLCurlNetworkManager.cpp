@@ -148,6 +148,8 @@ void ZLCurlNetworkManager::setRequestOptions(CURL *handle, const ZLNetworkReques
 	curl_easy_setopt(handle, CURLOPT_URL, request.url().c_str());
 	if (!request.sslCertificate().Path.empty()) {
 		curl_easy_setopt(handle, CURLOPT_CAINFO, request.sslCertificate().Path.c_str());
+	} else if (!request.sslCertificate().DoVerify) {
+		curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 0L);
 	}
 
 	curl_easy_setopt(handle, CURLOPT_HEADERFUNCTION, handleHeader);

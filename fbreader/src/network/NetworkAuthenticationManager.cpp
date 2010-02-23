@@ -89,7 +89,3 @@ bool NetworkAuthenticationManager::passwordRecoverySupported() {
 std::string NetworkAuthenticationManager::recoverPassword(const std::string &) {
 	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
 }
-
-const ZLNetworkSSLCertificate &NetworkAuthenticationManager::certificate() {
-	return ZLNetworkSSLCertificate::NULL_CERTIFICATE;
-}
