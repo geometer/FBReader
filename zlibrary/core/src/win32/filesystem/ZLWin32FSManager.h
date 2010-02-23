@@ -35,7 +35,7 @@ private:
 	ZLWin32FSManager() {}
 	
 private:
-	void normalize(std::string &path) const;
+	void normalizeRealPath(std::string &path) const;
 	std::string resolveSymlink(const std::string &path) const;
 	ZLFSDir *createPlainDirectory(const std::string &path) const;
 	ZLInputStream *createPlainInputStream(const std::string &path) const;

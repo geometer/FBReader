@@ -82,7 +82,7 @@ std::string ZLWin32FSManager::resolveSymlink(const std::string &path) const {
 	return path;
 }
 
-void ZLWin32FSManager::normalize(std::string &path) const {
+void ZLWin32FSManager::normalizeRealPath(std::string &path) const {
 	if (path.empty()) {
 		return;
 	}

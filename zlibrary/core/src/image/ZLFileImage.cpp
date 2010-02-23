@@ -18,9 +18,11 @@
  */
 
 #include <ZLFile.h>
+#include <ZLLogger.h>
 
 #include "ZLFileImage.h"
 
 shared_ptr<ZLInputStream> ZLFileImage::inputStream() const {
+	ZLLogger::Instance().println("image", "Reading image from file " + myPath);
 	return ZLFile(myPath).inputStream();
 }

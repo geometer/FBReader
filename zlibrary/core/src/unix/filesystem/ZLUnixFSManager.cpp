@@ -67,7 +67,7 @@ std::string ZLUnixFSManager::resolveSymlink(const std::string &path) const {
 		if (buffer[0] != '/') {
 			buffer = parentPath(current) + '/' + buffer;
 		}
-		normalize(buffer);
+		normalizeRealPath(buffer);
 		if (names.find(buffer) != names.end()) {
 			return buffer;
 		}
@@ -76,7 +76,7 @@ std::string ZLUnixFSManager::resolveSymlink(const std::string &path) const {
 	return "";
 }
 
-void ZLUnixFSManager::normalize(std::string &path) const {
+void ZLUnixFSManager::normalizeRealPath(std::string &path) const {
 	static std::string HomeDir = getHomeDir();
 	static std::string PwdDir = getPwdDir();
 
@@ -110,9 +110,9 @@ void ZLUnixFSManager::normalize(std::string &path) const {
 	while ((index = path.find("/./")) != -1) {
 		path.erase(index, 2);
 	}
-	len = path.length();
-	if ((len >= 2) && (path.substr(len - 2) == "/.")) {
-		path.erase(len - 2);
+	while (path.length() >= 2 &&
+				 path.substr(path.length() - 2) == "/.") {
+		path.erase(path.length() - 2);
 	}
 	while ((index = path.find("//")) != -1) {
 		path.erase(index, 1);

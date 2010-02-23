@@ -25,7 +25,7 @@
 class ZLUnixFSManager : public ZLFSManager {
 
 protected:
-	void normalize(std::string &path) const;
+	void normalizeRealPath(std::string &path) const;
 
 private:
 	std::string resolveSymlink(const std::string &path) const;

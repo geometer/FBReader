@@ -45,10 +45,11 @@ protected:
 	virtual ~ZLFSManager();
 	
 public:
-	virtual void normalize(std::string &path) const = 0;
+	void normalize(std::string &path) const;
 	virtual std::string resolveSymlink(const std::string &path) const = 0;
 
 protected:
+	virtual void normalizeRealPath(std::string &path) const = 0;
 	virtual ZLInputStream *createPlainInputStream(const std::string &path) const = 0;
 	virtual ZLOutputStream *createOutputStream(const std::string &path) const = 0;
 	virtual ZLFSDir *createPlainDirectory(const std::string &path) const = 0;
