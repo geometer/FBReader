@@ -38,7 +38,7 @@
 
 #include "../fbreader/FBReader.h"
 
-NetworkView::NetworkView(ZLPaintContext &context) : ZLBlockTreeView(context), myUpdateChildren(true) {
+NetworkView::NetworkView(ZLPaintContext &context) : ZLBlockTreeView(context), myUpdateChildren(true), myUpdateAccountDependents(false) {
 }
 
 void NetworkView::drawCoverLater(FBReaderNode *node, int vOffset) {
