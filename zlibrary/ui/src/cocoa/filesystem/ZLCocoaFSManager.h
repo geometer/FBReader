@@ -31,7 +31,7 @@ private:
 	ZLCocoaFSManager() {}
 	
 protected:
-	void normalize(std::string &path) const;
+	void normalizeRealPath(std::string &path) const;
 	std::string convertFilenameToUtf8(const std::string &name) const;
 };
 

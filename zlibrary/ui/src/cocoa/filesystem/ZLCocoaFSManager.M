@@ -23,11 +23,11 @@
 
 #include "ZLCocoaFSManager.h"
 
-void ZLCocoaFSManager::normalize(std::string &path) const {
+void ZLCocoaFSManager::normalizeRealPath(std::string &path) const {
 	if (ZLStringUtil::stringStartsWith(path, "~~")) {
 		path = [[[NSBundle mainBundle] bundlePath] UTF8String] + path.substr(2);
 	}
-	return ZLUnixFSManager::normalize(path);
+	return ZLUnixFSManager::normalizeRealPath(path);
 }
 
 std::string ZLCocoaFSManager::convertFilenameToUtf8(const std::string &name) const {
