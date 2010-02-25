@@ -25,7 +25,7 @@
 #if MAEMO_VERSION <= 3
 	#include <hildon-controlbar.h>
 	#include <hildon-number-editor.h>
-#elif MAEMO_VERSION == 4
+#elif MAEMO_VERSION <= 5
 	#include <hildon/hildon-controlbar.h>
 	#include <hildon/hildon-number-editor.h>
 #else

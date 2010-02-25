@@ -46,6 +46,8 @@ public:
 	void wait(const ZLResourceKey &key, ZLRunnable &runnable) const;
 	bool isWaiting() const { return myIsWaiting; }
 
+	shared_ptr<ZLProgressDialog> createProgressDialog(const ZLResourceKey &key) const;
+
 	bool isClipboardSupported(ClipboardType type) const;
 	void setClipboardText(const std::string &text, ClipboardType type) const;
 	void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const;

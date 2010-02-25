@@ -103,7 +103,7 @@ ZLGtkApplicationWindow::ZLGtkApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application),
 	KeyActionOnReleaseNotOnPressOption(ZLCategoryKey::CONFIG, "KeyAction", "OnRelease", false),
 	myFullScreen(false) {
-	myProgram = HILDON_PROGRAM(hildon_program_get_Instance());
+	myProgram = HILDON_PROGRAM(hildon_program_get_instance());
 	g_set_application_name("");
 
 	myWindow = HILDON_WINDOW(hildon_stackable_window_new());

@@ -29,7 +29,7 @@
 
 #if MAEMO_VERSION <= 3
 	#include <hildon-widgets/hildon-program.h>
-#elif MAEMO_VERSION == 4
+#elif MAEMO_VERSION <= 5
 	#include <hildon/hildon-program.h>
 #else
 	#error Unknown MAEMO_VERSION

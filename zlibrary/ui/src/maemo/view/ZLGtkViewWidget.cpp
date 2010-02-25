@@ -69,7 +69,7 @@ bool ZLGtkViewWidget::isStylusEvent(GtkWidget *widget, GdkEventButton *event) {
 	return
 		(MinPressureOption.value() <= intPressure) &&
 		(intPressure <= MaxPressureOption.value());
-#elif MAEMO_VERSION == 4
+#elif MAEMO_VERSION <= 5
 	gdouble pressure;
 	if (gdk_event_get_axis((GdkEvent*)event, GDK_AXIS_PRESSURE, &pressure)) {
 		int intPressure = (int)(100 * pressure);

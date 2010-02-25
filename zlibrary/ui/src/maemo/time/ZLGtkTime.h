@@ -30,7 +30,7 @@ public:
 	static void createInstance() { ourInstance = new ZLGtkTimeManager(); }
 
 	void addTask(shared_ptr<ZLRunnable> task, int interval);
-	void removeTask(shared_ptr<ZLRunnable> task);
+	void removeTaskInternal(shared_ptr<ZLRunnable> task);
 
 private:
 	std::map<shared_ptr<ZLRunnable>,int> myHandlers;

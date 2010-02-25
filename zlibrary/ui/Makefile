@@ -71,7 +71,8 @@ ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <maemo2> <maemo3> <maemo4>)"
 endif
 
 ifeq "$(UI_TYPE)" "maemo5"
-  GTKSUBDIRS = src/gtk/time src/maemo5/dialogs src/maemo5/optionView src/maemo/view src/gtk/image src/gtk/util src/maemo5/application src/maemo/library src/gtk/filesystem src/maemo/message src/gtk/pixbuf
+  #GTKSUBDIRS = src/gtk/time src/maemo5/dialogs src/maemo5/optionView src/maemo/view src/gtk/image src/gtk/util src/maemo5/application src/maemo/library src/gtk/filesystem src/maemo/message src/gtk/pixbuf
+  GTKSUBDIRS = src/gtk/time src/maemo/dialogs src/maemo/optionView src/maemo/view src/gtk/image src/gtk/util src/maemo/application src/maemo/library src/gtk/filesystem src/maemo/message src/gtk/pixbuf
 endif
 
 ifeq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <maemo3> <maemo4> <maemo5>)"

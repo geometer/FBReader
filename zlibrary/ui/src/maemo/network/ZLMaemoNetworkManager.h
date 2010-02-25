@@ -22,9 +22,9 @@
 
 #include <conic.h>
 
-#include <ZLNetworkManager.h>
+#include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
 
-class ZLMaemoNetworkManager : public ZLNetworkManager {
+class ZLMaemoNetworkManager : public ZLCurlNetworkManager {
 
 public:
 	static void createInstance();
