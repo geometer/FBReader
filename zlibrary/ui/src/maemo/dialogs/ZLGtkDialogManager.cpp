@@ -33,6 +33,7 @@
 #include "ZLGtkDialog.h"
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkSelectionDialog.h"
+#include "ZLGtkProgressDialog.h"
 #include "ZLGtkUtil.h"
 #include "../../gtk/image/ZLGtkImageManager.h"
 
@@ -91,6 +92,10 @@ static void *runRunnable(void *data) {
 	rwf.flag = false;
 	pthread_exit(0);
 	return 0;
+}
+
+shared_ptr<ZLProgressDialog> ZLGtkDialogManager::createProgressDialog(const ZLResourceKey &key) const {
+	return new ZLGtkProgressDialog(myWindow, key);
 }
 
 void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {

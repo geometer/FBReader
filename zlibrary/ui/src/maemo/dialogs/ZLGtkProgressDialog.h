@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __XMLNAMESPACE_H__
-#define __XMLNAMESPACE_H__
+#ifndef __ZLGTKPROGRESSDIALOG_H__
+#define __ZLGTKPROGRESSDIALOG_H__
 
 #include <string>
 
-class XMLNamespace {
+#include <gtk/gtkwidget.h>
+#include <gtk/gtkwindow.h>
 
-private:
-	XMLNamespace();
+#include <ZLProgressDialog.h>
+
+class ZLGtkProgressDialog : public ZLProgressDialog {
 
 public:
-	static const std::string DublinCorePrefix;
-	static const std::string DublinCoreLegacyPrefix;
-	static const std::string DublinCoreTermsPrefix;
-	static const std::string XLink;
-	static const std::string OpenPackagingFormat;
-	static const std::string Atom;
-	static const std::string OpenSearch;
-	static const std::string CalibreMetadata;
+	ZLGtkProgressDialog(GtkWindow *window, const ZLResourceKey &key);
+
+private:
+	void run(ZLRunnable &runnable);
+	void setMessage(const std::string &message);
+
+private:
+	GtkWindow *myParent;
+	GtkWidget *myLabel;
 };
 
-#endif /* __XMLNAMESPACE_H__ */
+#endif /* __ZLGTKPROGRESSDIALOG_H__ */

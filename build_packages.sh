@@ -87,7 +87,7 @@ build_package() {
 					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
 					;;
 				maemo5)
-					/scratchbox/login sb-conf se FREMANTLE_X86
+					/scratchbox/login sb-conf se FREMANTLE_ARMEL
 					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
 					;;
 				*)

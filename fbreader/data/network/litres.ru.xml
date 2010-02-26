@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-<!DOCTYPE catalog SYSTEM "catalog.dtd">
 <catalog type="opds">
 	<site>feedbooks.com</site>
 	<link rel="main">http://data.fbreader.org/catalogs/litres/index.php</link>
 	<link rel="search">http://feedbooks.com/books/search.atom?query=%s</link>
 	<link rel="signIn">https://feedbooks.com/user/profile.atom</link>
 	<link rel="signOut">https://feedbooks.com/user/signout</link>
-	<title>Каталог Litres (OPDS version)</title>
+	<title>Каталог LitRes (OPDS version)</title>
 	<summary>Продажа электронных книг.</summary>
 	<advancedSearch style="separateWords">
 		<field name="author">author</field>
@@ -100,4 +98,3 @@ AB6zBI8pAg+cw5VCfe/UBsBVeD4m1gNgLE1NFQg8z2azv3VOaf8XYACbumOQ
 Xqkv2QAAAABJRU5ErkJggg==
 	</icon>
 </catalog>
--->

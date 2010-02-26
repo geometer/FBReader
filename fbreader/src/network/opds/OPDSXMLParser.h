@@ -62,9 +62,11 @@ private:
 	shared_ptr<OPDSFeedReader> myFeedReader;
 
 	std::string myBuffer;
+
 	std::string myDCPrefix;
 	std::string myAtomPrefix;
 	std::string myOpenSearchPrefix;
+	std::string myCalibrePrefix;
 
 	State myState;
 
