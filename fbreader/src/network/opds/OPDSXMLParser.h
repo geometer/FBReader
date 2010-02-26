@@ -53,7 +53,6 @@ private:
 
 private:
 	bool checkAtomTag(const std::string &tag, const std::string &pattern) const;
-	bool checkDCTag(const std::string &tag, const std::string &pattern) const;
 
 	static bool checkNSTag(const std::string &tag, const std::string &nsprefix, const std::string &pattern);
 	
@@ -62,7 +61,7 @@ private:
 
 	std::string myBuffer;
 
-	std::string myDCPrefix;
+	std::string myDublinCoreNamespaceId;
 	std::string myAtomNamespaceId;
 	std::string myAtomPrefix;
 	std::string myOpenSearchNamespaceId;
