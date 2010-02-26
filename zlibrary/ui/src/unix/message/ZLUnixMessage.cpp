@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <cunistd>
+#include <unistd.h>
 #include <cstdlib>
 
 #include <ZLFile.h>
