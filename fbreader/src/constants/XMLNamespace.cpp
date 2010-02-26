@@ -26,4 +26,4 @@ const std::string XMLNamespace::XLink = "http://www.w3.org/1999/xlink";
 const std::string XMLNamespace::OpenPackagingFormat = "http://www.idpf.org/2007/opf";
 const std::string XMLNamespace::Atom = "http://www.w3.org/2005/Atom";
 const std::string XMLNamespace::OpenSearchPrefix = "http://a9.com/-/spec/opensearch";
-
+const std::string XMLNamespace::CalibreMetadata = "http://calibre.kovidgoyal.net/2009/metadata";

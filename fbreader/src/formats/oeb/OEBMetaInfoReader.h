@@ -40,7 +40,7 @@ public:
 
 private:
 	bool isDublinCoreNamespace(const std::string &nsId) const;
-	bool isOPFNamespace(const std::string &nsId) const;
+	bool isNSName(const std::string &fullName, const std::string &shortName, const std::string &fullNSId) const;
 
 private:
 	Book &myBook;

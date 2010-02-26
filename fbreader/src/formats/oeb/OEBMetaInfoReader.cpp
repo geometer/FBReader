@@ -37,11 +37,12 @@ OEBMetaInfoReader::OEBMetaInfoReader(Book &book) : myBook(book) {
 
 static const std::string METADATA = "metadata";
 static const std::string DC_METADATA = "dc-metadata";
-static const std::string METADATA_SUFFIX = ":metadata";
 static const std::string TITLE_SUFFIX = ":title";
 static const std::string AUTHOR_SUFFIX = ":creator";
 static const std::string SUBJECT_SUFFIX = ":subject";
 static const std::string LANGUAGE_SUFFIX = ":language";
+static const std::string SERIES = "series";
+static const std::string SERIES_INDEX = "series_index";
 static const std::string META = "meta";
 static const std::string AUTHOR_ROLE = "aut";
 
@@ -68,19 +69,23 @@ bool OEBMetaInfoReader::isDublinCoreNamespace(const std::string &nsId) const {
 		  ZLStringUtil::stringStartsWith(iter->second, XMLNamespace::DublinCoreLegacyPrefix)));
 }
 
-bool OEBMetaInfoReader::isOPFNamespace(const std::string &nsId) const {
+bool OEBMetaInfoReader::isNSName(const std::string &fullName, const std::string &shortName, const std::string &fullNSId) const {
+	const int prefixLength = fullName.length() - shortName.length() - 1;
+	if (prefixLength <= 0 ||
+			fullName[prefixLength] != ':' ||
+			!ZLStringUtil::stringEndsWith(fullName, shortName)) {
+		return false;
+	}
 	const std::map<std::string,std::string> &namespaceMap = namespaces();
-	std::map<std::string,std::string>::const_iterator iter = namespaceMap.find(nsId);
-	return
-		(iter != namespaceMap.end()) &&
-		(iter->second == XMLNamespace::OpenPackagingFormat);
+	std::map<std::string,std::string>::const_iterator iter =
+		namespaceMap.find(fullName.substr(0, prefixLength));
+	return iter != namespaceMap.end() && iter->second == fullNSId;
 }
 
 void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attributes) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
-	if ((METADATA == tagString) || (DC_METADATA == tagString) ||
-			(ZLStringUtil::stringEndsWith(tagString, METADATA_SUFFIX) &&
-			 isOPFNamespace(tagString.substr(0, tagString.length() - METADATA_SUFFIX.length())))) {
+	if (METADATA == tagString || DC_METADATA == tagString ||
+			isNSName(tagString, METADATA, XMLNamespace::OpenPackagingFormat)) {
 		myDCMetadataTag = tagString;
 		myReadMetaData = true;
 	} else if (myReadMetaData) {
@@ -109,11 +114,10 @@ void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attrib
 			const char *name = attributeValue(attributes, "name");
 			const char *content = attributeValue(attributes, "content");
 			if (name != 0 && content != 0) {
-				static const std::string SERIES = "calibre:series";
-				static const std::string SERIES_INDEX = "calibre:series_index";
-				if (SERIES == name) {
+				std::string sName = name;
+				if (isNSName(sName, SERIES, XMLNamespace::CalibreMetadata)) {
 					myBook.setSeries(content, myBook.indexInSeries());
-				} else if (SERIES_INDEX == name) {
+				} else if (isNSName(sName, SERIES_INDEX, XMLNamespace::CalibreMetadata)) {
 					myBook.setSeries(myBook.seriesTitle(), atoi(content));
 				}
 			}
