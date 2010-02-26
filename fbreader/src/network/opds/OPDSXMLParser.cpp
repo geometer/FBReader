@@ -62,8 +62,9 @@ bool OPDSXMLParser::processNamespaces() const {
 
 void OPDSXMLParser::namespaceListChangedHandler() {
 	myDCPrefix.erase();
+	myAtomNamespaceId.erase();
 	myAtomPrefix.erase();
-	myOpenSearchPrefix.erase();
+	myOpenSearchNamespaceId.erase();
 	myCalibrePrefix.erase();
 
 	const std::map<std::string,std::string> &nsMap = namespaces();
@@ -74,15 +75,15 @@ void OPDSXMLParser::namespaceListChangedHandler() {
 		if (ZLStringUtil::stringStartsWith(it->second, XMLNamespace::DublinCoreTermsPrefix)) {
 			myDCPrefix = it->first + ':';
 		} else if (it->second == XMLNamespace::Atom) {
+			myAtomNamespaceId = it->first + ':';
 			myAtomPrefix = it->first + ':';
 		} else if (it->second == XMLNamespace::OpenSearch) {
-			myOpenSearchPrefix = it->first + ':';
+			myOpenSearchNamespaceId = it->first;
 		} else if (it->second == XMLNamespace::CalibreMetadata) {
 			myCalibrePrefix = it->first + ':';
 		}
 	}
 }
-
 
 bool OPDSXMLParser::checkAtomTag(const std::string &tag, const std::string &pattern) const {
 	return checkNSTag(tag, myAtomPrefix, pattern);
@@ -91,11 +92,6 @@ bool OPDSXMLParser::checkAtomTag(const std::string &tag, const std::string &patt
 bool OPDSXMLParser::checkDCTag(const std::string &tag, const std::string &pattern) const {
 	return checkNSTag(tag, myDCPrefix, pattern);
 }
-
-bool OPDSXMLParser::checkOpenSearchTag(const std::string &tag, const std::string &pattern) const {
-	return checkNSTag(tag, myOpenSearchPrefix, pattern);
-}
-
 
 bool OPDSXMLParser::checkNSTag(const std::string &tag, const std::string &nsprefix, const std::string &pattern) {
 	return
@@ -125,7 +121,7 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 		
 	switch (myState) {
 		case START:
-			if (checkAtomTag(tag, TAG_FEED)) {
+			if (tagPrefix == myAtomNamespaceId && tagName == TAG_FEED) {
 				myFeedReader->processFeedStart();
 				myFeed = new OPDSFeedMetadata();
 				myFeed->readAttributes(myAttributes);
@@ -133,6 +129,47 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 			}
 			break;
 		case FEED:
+			if (tagPrefix == myAtomNamespaceId) {
+				if (tagName == TAG_AUTHOR) {
+					myAuthor = new ATOMAuthor();
+					myAuthor->readAttributes(myAttributes);
+					myState = F_AUTHOR;
+				} else if (tagName == TAG_ID) {
+					myId = new ATOMId();
+					myId->readAttributes(myAttributes);
+					myState = F_ID;
+				} else if (tagName == TAG_LINK) {
+					myLink = new ATOMLink();
+					myLink->readAttributes(myAttributes);
+					myState = F_LINK;
+				} else if (tagName == TAG_CATEGORY) {
+					myCategory = new ATOMCategory();
+					myCategory->readAttributes(myAttributes);
+					myState = F_CATEGORY;
+				} else if (tagName == TAG_TITLE) {
+					//myTitle = new ATOMTitle(); // TODO: implement ATOMTextConstruct & ATOMTitle
+					//myTitle->readAttributes(myAttributes);
+					myState = F_TITLE;
+				} else if (tagName == TAG_UPDATED) {
+					myUpdated = new ATOMUpdated();
+					myUpdated->readAttributes(myAttributes);
+					myState = F_UPDATED;
+				} else if (tagName == TAG_ENTRY) {
+					myEntry = new OPDSEntry();
+					myEntry->readAttributes(myAttributes);
+					mySummaryTagFound = false;
+					myState = F_ENTRY;
+				} 
+			} else if (tagPrefix == myOpenSearchNamespaceId) {
+				if (tagName == OPENSEARCH_TAG_TOTALRESULTS) {
+					myState = OPENSEARCH_TOTALRESULTS;
+				} else if (tagName == OPENSEARCH_TAG_ITEMSPERPAGE) {
+					myState = OPENSEARCH_ITEMSPERPAGE;
+				} else if (tagName == OPENSEARCH_TAG_STARTINDEX) {
+					myState = OPENSEARCH_STARTINDEX;
+				} 
+			} 
+			break;
 		default:
 			processState(tag, false);
 			myState = getNextState(tag, false);
@@ -157,12 +194,52 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 		case START:
 			break;
 		case FEED: 
-			if (checkAtomTag(tag, TAG_FEED)) {
+			if (tagPrefix == myAtomNamespaceId && tagName == TAG_FEED) {
 				myFeedReader->processFeedMetadata(myFeed);
 				myFeed.reset();
 				myFeedReader->processFeedEnd();
 				myState = START;
 			} 
+			break;
+		case F_ENTRY:
+			if (tagPrefix == myAtomNamespaceId && tagName == TAG_ENTRY) {
+				myFeedReader->processFeedEntry(myEntry);
+				myEntry.reset();
+				myState = FEED;
+			} 
+			break;
+		case OPENSEARCH_TOTALRESULTS:
+			if (tagPrefix == myOpenSearchNamespaceId &&
+					tagName == OPENSEARCH_TAG_TOTALRESULTS) {
+				ZLStringUtil::stripWhiteSpaces(myBuffer);
+				int number = atoi(myBuffer.c_str());
+				if (!myFeed.isNull()) {
+					myFeed->setOpensearchTotalResults(number);
+				}
+				myState = FEED;
+			}
+			break;
+		case OPENSEARCH_ITEMSPERPAGE:
+			if (tagPrefix == myOpenSearchNamespaceId &&
+					tagName == OPENSEARCH_TAG_ITEMSPERPAGE) {
+				ZLStringUtil::stripWhiteSpaces(myBuffer);
+				int number = atoi(myBuffer.c_str());
+				if (!myFeed.isNull()) {
+					myFeed->setOpensearchItemsPerPage(number);
+				}
+				myState = FEED;
+			}
+			break;
+		case OPENSEARCH_STARTINDEX:
+			if (tagPrefix == myOpenSearchNamespaceId &&
+					tagName == OPENSEARCH_TAG_STARTINDEX) {
+				ZLStringUtil::stripWhiteSpaces(myBuffer);
+				int number = atoi(myBuffer.c_str());
+				if (!myFeed.isNull()) {
+					myFeed->setOpensearchStartIndex(number);
+				}
+				myState = FEED;
+			}
 			break;
 		default:
 			processState(tag, true);
@@ -180,35 +257,6 @@ void OPDSXMLParser::characterDataHandler(const char *data, size_t len) {
 
 void OPDSXMLParser::processState(const std::string &tag, bool closed) {
 	switch(myState) {
-		case START: 
-			break;
-		case FEED: 
-			if (!closed) {
-				if (checkAtomTag(tag, TAG_AUTHOR)) {
-					myAuthor = new ATOMAuthor();
-					myAuthor->readAttributes(myAttributes);
-				} else if (checkAtomTag(tag, TAG_ID)) {
-					myId = new ATOMId();
-					myId->readAttributes(myAttributes);
-				} else if (checkAtomTag(tag, TAG_LINK)) {
-					myLink = new ATOMLink();
-					myLink->readAttributes(myAttributes);
-				} else if (checkAtomTag(tag, TAG_CATEGORY)) {
-					myCategory = new ATOMCategory();
-					myCategory->readAttributes(myAttributes);
-				} else if (checkAtomTag(tag, TAG_TITLE)) {
-					//myTitle = new ATOMTitle(); // TODO: implement ATOMTextConstruct & ATOMTitle
-					//myTitle->readAttributes(myAttributes);
-				} else if (checkAtomTag(tag, TAG_UPDATED)) {
-					myUpdated = new ATOMUpdated();
-					myUpdated->readAttributes(myAttributes);
-				} else if (checkAtomTag(tag, TAG_ENTRY)) {
-					myEntry = new OPDSEntry();
-					myEntry->readAttributes(myAttributes);
-					mySummaryTagFound = false;
-				} 
-			}
-			break;
 		case F_ENTRY: 
 			if (!closed) {
 				if (checkAtomTag(tag, TAG_AUTHOR)) {
@@ -243,11 +291,6 @@ void OPDSXMLParser::processState(const std::string &tag, bool closed) {
 					// nothing to do
 				} else if (checkDCTag(tag, DC_TAG_ISSUED)) {
 					// nothing to do
-				} 
-			} else {
-				if (checkAtomTag(tag, TAG_ENTRY)) {
-					myFeedReader->processFeedEntry(myEntry);
-					myEntry.reset();
 				} 
 			}
 			break;
@@ -451,66 +494,12 @@ void OPDSXMLParser::processState(const std::string &tag, bool closed) {
 				myEntry->setDCPublisher(myBuffer);
 			}
 			break;
-		case OPENSEARCH_TOTALRESULTS:
-			if (closed && checkOpenSearchTag(tag, OPENSEARCH_TAG_TOTALRESULTS)) {
-				ZLStringUtil::stripWhiteSpaces(myBuffer);
-				int number = atoi(myBuffer.c_str());
-				if (!myFeed.isNull()) {
-					myFeed->setOpensearchTotalResults(number);
-				}
-			}
-			break;
-		case OPENSEARCH_ITEMSPERPAGE:
-			if (closed && checkOpenSearchTag(tag, OPENSEARCH_TAG_ITEMSPERPAGE)) {
-				ZLStringUtil::stripWhiteSpaces(myBuffer);
-				int number = atoi(myBuffer.c_str());
-				if (!myFeed.isNull()) {
-					myFeed->setOpensearchItemsPerPage(number);
-				}
-			}
-			break;
-		case OPENSEARCH_STARTINDEX:
-			if (closed && checkOpenSearchTag(tag, OPENSEARCH_TAG_STARTINDEX)) {
-				ZLStringUtil::stripWhiteSpaces(myBuffer);
-				int number = atoi(myBuffer.c_str());
-				if (!myFeed.isNull()) {
-					myFeed->setOpensearchStartIndex(number);
-				}
-			}
-			break;
 	}
 }
 
 
 OPDSXMLParser::State OPDSXMLParser::getNextState(const std::string &tag, bool closed) {
 	switch(myState) {
-		case START: 
-			break;
-		case FEED: 
-			if (!closed) {
-				if (checkAtomTag(tag, TAG_AUTHOR)) {
-					return F_AUTHOR;
-				} else if (checkAtomTag(tag, TAG_ID)) {
-					return F_ID;
-				} else if (checkAtomTag(tag, TAG_LINK)) {
-					return F_LINK;
-				} else if (checkAtomTag(tag, TAG_CATEGORY)) {
-					return F_CATEGORY;
-				} else if (checkAtomTag(tag, TAG_TITLE)) {
-					return F_TITLE;
-				} else if (checkAtomTag(tag, TAG_UPDATED)) {
-					return F_UPDATED;
-				} else if (checkAtomTag(tag, TAG_ENTRY)) {
-					return F_ENTRY;
-				} else if (checkOpenSearchTag(tag, OPENSEARCH_TAG_TOTALRESULTS)) {
-					return OPENSEARCH_TOTALRESULTS;
-				} else if (checkOpenSearchTag(tag, OPENSEARCH_TAG_ITEMSPERPAGE)) {
-					return OPENSEARCH_ITEMSPERPAGE;
-				} else if (checkOpenSearchTag(tag, OPENSEARCH_TAG_STARTINDEX)) {
-					return OPENSEARCH_STARTINDEX;
-				} 
-			}
-			break;
 		case F_ENTRY: 
 			if (!closed) {
 				if (checkAtomTag(tag, TAG_AUTHOR)) {
@@ -540,10 +529,6 @@ OPDSXMLParser::State OPDSXMLParser::getNextState(const std::string &tag, bool cl
 				} else if (checkDCTag(tag, DC_TAG_PUBLISHER)) {
 					return FE_DC_PUBLISHER;
 				}
-			} else {
-				if (checkAtomTag(tag, TAG_ENTRY)) {
-					return FEED;
-				} 
 			}
 			break;
 		case F_ID: 
@@ -689,21 +674,6 @@ OPDSXMLParser::State OPDSXMLParser::getNextState(const std::string &tag, bool cl
 		case FEA_EMAIL:
 			if (closed && checkAtomTag(tag, TAG_EMAIL)) {
 				return FE_AUTHOR;
-			}
-			break;
-		case OPENSEARCH_TOTALRESULTS:
-			if (closed && checkOpenSearchTag(tag, OPENSEARCH_TAG_TOTALRESULTS)) {
-				return FEED;
-			}
-			break;
-		case OPENSEARCH_ITEMSPERPAGE:
-			if (closed && checkOpenSearchTag(tag, OPENSEARCH_TAG_ITEMSPERPAGE)) {
-				return FEED;
-			}
-			break;
-		case OPENSEARCH_STARTINDEX:
-			if (closed && checkOpenSearchTag(tag, OPENSEARCH_TAG_STARTINDEX)) {
-				return FEED;
 			}
 			break;
 	}
