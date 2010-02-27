@@ -95,46 +95,10 @@ public:
 private:
 	class LoginAction;
 	class LogoutAction;
-
-	class RefillAccountAction : public ZLRunnable {
-
-	public:
-		RefillAccountAction(NetworkAuthenticationManager &mgr);
-		void run();
-
-	private:
-		NetworkAuthenticationManager &myManager;
-	};
-
-	class DontShowAction : public ZLRunnable {
-
-	public:
-		DontShowAction(NetworkLink &link);
-		void run();
-
-	private:
-		NetworkLink &myLink;
-	};
-
-	class PasswordRecoveryAction : public ZLRunnable {
-
-	public:
-		PasswordRecoveryAction(NetworkAuthenticationManager &mgr);
-		void run();
-
-	private:
-		NetworkAuthenticationManager &myManager;
-	};
-
-	class RegisterUserAction : public ZLRunnable {
-
-	public:
-		RegisterUserAction(NetworkAuthenticationManager &mgr);
-		void run();
-
-	private:
-		NetworkAuthenticationManager &myManager;
-	};
+	class RefillAccountAction;
+	class DontShowAction;
+	class PasswordRecoveryAction;
+	class RegisterUserAction;
 
 public:
 	NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition = (size_t)-1);
