@@ -206,8 +206,8 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		std::string(), // price
 		authors,
 		tags,
-		std::string(), // series
-		0, // index in series
+		entry.seriesTitle(),
+		entry.seriesIndex(),
 		urlMap
 	);
 

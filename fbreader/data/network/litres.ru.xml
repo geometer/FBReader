@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <catalog type="opds">
-	<site>feedbooks.com</site>
+	<site>litres.ru</site>
 	<link rel="main">http://data.fbreader.org/catalogs/litres/index.php</link>
 	<link rel="search">http://feedbooks.com/books/search.atom?query=%s</link>
 	<link rel="signIn">https://feedbooks.com/user/profile.atom</link>

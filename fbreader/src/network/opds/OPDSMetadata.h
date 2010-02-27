@@ -20,6 +20,8 @@
 #ifndef __OPDSMETADATA_H__
 #define __OPDSMETADATA_H__
 
+#include <map>
+
 #include "../atom/ATOMContainers.h"
 
 
@@ -80,8 +82,6 @@ public:
 	DCDate(int year, int month, int day, int hour, int minutes, int seconds, float sfract, int tzhour, int tzminutes);
 };
 
-
-
 class OPDSEntry : public ATOMEntry {
 
 public:
@@ -91,15 +91,22 @@ public:
 	const std::string &dcLanguage() const { return myDCLanguage; }
 	const std::string &dcPublisher() const { return myDCPublisher; }
 	shared_ptr<DCDate> dcIssued() { return myDCIssued; }
+	const std::string &seriesTitle() const { return mySeriesTitle; }
+	int seriesIndex() const { return mySeriesIndex; }
 
 	void setDCLanguage(const std::string &language) { myDCLanguage = language; }
 	void setDCPublisher(const std::string &publisher) { myDCPublisher = publisher; }
 	void setDCIssued(shared_ptr<DCDate> issued) { myDCIssued = issued; }
+	void setSeriesTitle(const std::string &seriesTitle) { mySeriesTitle = seriesTitle; }
+	void setSeriesIndex(int seriesIndex) { mySeriesIndex = seriesIndex; }
 
 private:
 	std::string myDCLanguage;
 	std::string myDCPublisher;
 	shared_ptr<DCDate> myDCIssued;
+
+	std::string mySeriesTitle;
+	int mySeriesIndex;
 };
 
 

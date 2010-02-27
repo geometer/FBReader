@@ -72,16 +72,12 @@ DCDate::DCDate(int year, int month, int day, int hour, int minutes, int seconds,
 	ATOMDateConstruct(year, month, day, hour, minutes, seconds, sfract, tzhour, tzminutes) {
 }
 
-
-
 OPDSEntry::OPDSEntry() {
 }
 
 OPDSEntry::OPDSEntry(shared_ptr<ATOMId> id, const std::string &title, shared_ptr<ATOMUpdated> updated) :
 	ATOMEntry(id, title, updated) {
 }
-
-
 
 OPDSFeedMetadata::OPDSFeedMetadata() : myOpensearchTotalResults(0), myOpensearchItemsPerPage(0), myOpensearchStartIndex(1) {
 }
