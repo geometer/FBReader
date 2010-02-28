@@ -10,7 +10,7 @@
 
 <!ELEMENT link (#PCDATA)>
 <!ATTLIST link 
-	rel (main|search|signIn|signOut) #REQUIRED
+	rel (main|search|signIn|signOut|refillAccount) #REQUIRED
 	type CDATA #REQUIRED
 >
 

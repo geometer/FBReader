@@ -195,11 +195,10 @@ void LitResAuthenticationManager::collectPurchasedBooks(NetworkItem::List &list)
 std::string LitResAuthenticationManager::refillAccountLink() {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
-		return "";
+		return std::string();
 	}
-	std::string url =
-		"https://www.litres.ru/pages/put_money_on_account/?sid=" + sid;
-	Link.rewriteUrl(url);
+	std::string url = Link.url(NetworkLink::URL_REFILL_ACCOUNT);
+	ZLNetworkUtil::appendParameter(url, "sid", sid);
 	return url;
 }
 

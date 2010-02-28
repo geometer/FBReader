@@ -45,6 +45,7 @@ public:
 	static const std::string URL_SEARCH;
 	static const std::string URL_SIGN_IN;
 	static const std::string URL_SIGN_OUT;
+	static const std::string URL_REFILL_ACCOUNT;
 
 protected:
 	NetworkLink(
