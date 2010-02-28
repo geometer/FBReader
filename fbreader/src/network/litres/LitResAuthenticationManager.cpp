@@ -311,16 +311,15 @@ std::string LitResAuthenticationManager::registerUser(const std::string &login, 
 	std::string newSid;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResRegisterUserDataParser(newSid);
 
-	std::string query;
-	ZLNetworkUtil::appendParameter(query, "new_login", login);
-	ZLNetworkUtil::appendParameter(query, "new_pwd1", password);
-	ZLNetworkUtil::appendParameter(query, "mail", email);
+	std::string url = Link.url(NetworkLink::URL_SIGN_UP);
+	ZLNetworkUtil::appendParameter(url, "new_login", login);
+	ZLNetworkUtil::appendParameter(url, "new_pwd1", password);
+	ZLNetworkUtil::appendParameter(url, "mail", email);
 
-	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(Link, "pages/catalit_register_user/" + query),
-		certificate(),
-		xmlReader
-	);
+	shared_ptr<ZLExecutionData> networkData =
+		ZLNetworkManager::Instance().createXMLParserRequest(
+			url, certificate(), xmlReader
+		);
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
 	mySidChecked = true;
