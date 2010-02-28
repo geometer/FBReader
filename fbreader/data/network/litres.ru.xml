@@ -19,7 +19,7 @@
 	</feeds>
 	<authentication type="litres"/>
 	<urlRewritingRules>
-		<rule type="addUrlParameter" apply="always" name="lfrom" value="51"/>
+		<rule type="addUrlParameter" apply="external" name="lfrom" value="51"/>
 	</urlRewritingRules>
 	<icon>data:image/png;base64,
 iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAIAAABMXPacAAAABGdBTUEAAK/I
