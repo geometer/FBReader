@@ -20,9 +20,9 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
 
-#include "OPDSNetworkRequests.h"
+#include "BasicAuthenticationRequest.h"
 
-#include "../NetworkErrors.h"
+#include "../../NetworkErrors.h"
 
 bool parseHTTPStatusLine(const std::string &line, std::string &httpVersion, std::string &statusCode, std::string &reasonPhrase) {
 	static const std::string PREFIX = "HTTP/";
@@ -61,10 +61,10 @@ bool parseHTTPStatusLine(const std::string &line, std::string &httpVersion, std:
 	return true;
 }
 
-OPDSNetworkBasicRequest::OPDSNetworkBasicRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) : ZLNetworkGetRequest(url, sslCertificate) {
+BasicAuthenticationRequest::BasicAuthenticationRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) : ZLNetworkGetRequest(url, sslCertificate) {
 }
 
-bool OPDSNetworkBasicRequest::handleHeader(void *ptr, size_t size) {
+bool BasicAuthenticationRequest::handleHeader(void *ptr, size_t size) {
 	std::string line((const char*) ptr, size);
 	std::string version, code, phrase;
 	if (myStatusCode.empty() && ::parseHTTPStatusLine(line, version, code, phrase)) {
@@ -73,15 +73,15 @@ bool OPDSNetworkBasicRequest::handleHeader(void *ptr, size_t size) {
 	return true;
 }
 
-bool OPDSNetworkBasicRequest::handleContent(void *ptr, size_t size) {
+bool BasicAuthenticationRequest::handleContent(void *ptr, size_t size) {
 	return true;
 }
 
-bool OPDSNetworkBasicRequest::doBefore() {
+bool BasicAuthenticationRequest::doBefore() {
 	return true;
 }
 
-bool OPDSNetworkBasicRequest::doAfter(bool success) {
+bool BasicAuthenticationRequest::doAfter(bool success) {
 	if (!success) {
 		return true;
 	}

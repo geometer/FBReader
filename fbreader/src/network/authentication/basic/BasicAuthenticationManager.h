@@ -17,11 +17,10 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OPDSBASICAUTHENTICATIONMANAGER_H__
-#define __OPDSBASICAUTHENTICATIONMANAGER_H__
+#ifndef __BASICAUTHENTICATIONMANAGER_H__
+#define __BASICAUTHENTICATIONMANAGER_H__
 
-#include "../NetworkAuthenticationManager.h"
-
+#include "../../NetworkAuthenticationManager.h"
 
 /*
  * Authentication types:
@@ -51,10 +50,10 @@
  *     for example: HTTP/1.1 401 Unauthorized
  */
 
-class OPDSBasicAuthenticationManager : public NetworkAuthenticationManager {
+class BasicAuthenticationManager : public NetworkAuthenticationManager {
 
 public:
-	OPDSBasicAuthenticationManager(
+	BasicAuthenticationManager(
 		const std::string &siteName,
 		const std::string &signInUrl,
 		const std::string &signOutUrl
@@ -93,4 +92,4 @@ private:
 	ZLStringOption myAccountUserNameOption;
 };
 
-#endif /* __OPDSBASICAUTHENTICATIONMANAGER_H__ */
+#endif /* __BASICAUTHENTICATIONMANAGER_H__ */

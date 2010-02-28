@@ -19,7 +19,7 @@
 
 #include "OPDSLinkReader.h"
 #include "OPDSLink.h"
-#include "OPDSBasicAuthenticationManager.h"
+#include "../authentication/basic/BasicAuthenticationManager.h"
 #include "../litres/LitResAuthenticationManager.h"
 
 #include "URLRewritingRule.h"
@@ -54,7 +54,7 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 
 	shared_ptr<NetworkAuthenticationManager> authManager;
 	if (myAuthenticationType == "basic") {
-		authManager = new OPDSBasicAuthenticationManager(
+		authManager = new BasicAuthenticationManager(
 			mySiteName, myLinks["signIn"], myLinks["signOut"]
 		);
 	} else if (myAuthenticationType == "litres") {

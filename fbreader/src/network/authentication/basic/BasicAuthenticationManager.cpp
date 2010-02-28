@@ -17,19 +17,16 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLNetworkManager.h>
 #include <ZLNetworkRequest.h>
 
-#include "OPDSBasicAuthenticationManager.h"
-#include "OPDSNetworkRequests.h"
+#include "BasicAuthenticationManager.h"
+#include "BasicAuthenticationRequest.h"
 
-#include "../NetworkItems.h"
-#include "../NetworkErrors.h"
+#include "../../NetworkItems.h"
+#include "../../NetworkErrors.h"
 
-
-OPDSBasicAuthenticationManager::OPDSBasicAuthenticationManager(
+BasicAuthenticationManager::BasicAuthenticationManager(
 		const std::string &siteName,
 		const std::string &signInUrl,
 		const std::string &signOutUrl) :
@@ -42,7 +39,7 @@ OPDSBasicAuthenticationManager::OPDSBasicAuthenticationManager(
 }
 
 
-NetworkAuthenticationManager::AuthenticationStatus OPDSBasicAuthenticationManager::isAuthorised(bool useNetwork) {
+NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::isAuthorised(bool useNetwork) {
 	bool authState = !myAccountUserNameOption.value().empty();
 	if (myAccountChecked || !useNetwork) {
 		return AuthenticationStatus(authState);
@@ -54,7 +51,7 @@ NetworkAuthenticationManager::AuthenticationStatus OPDSBasicAuthenticationManage
 		return AuthenticationStatus(false);
 	}
 
-	shared_ptr<ZLExecutionData> data = new OPDSNetworkBasicRequest(
+	shared_ptr<ZLExecutionData> data = new BasicAuthenticationRequest(
 		mySignInUrl,
 		certificate()
 	);
@@ -76,8 +73,8 @@ NetworkAuthenticationManager::AuthenticationStatus OPDSBasicAuthenticationManage
 	return AuthenticationStatus(true);
 }
 
-std::string OPDSBasicAuthenticationManager::authorise(const std::string &pwd) {
-	shared_ptr<ZLExecutionData> data = new OPDSNetworkBasicRequest(
+std::string BasicAuthenticationManager::authorise(const std::string &pwd) {
+	shared_ptr<ZLExecutionData> data = new BasicAuthenticationRequest(
 		mySignInUrl,
 		certificate()
 	);
@@ -97,7 +94,7 @@ std::string OPDSBasicAuthenticationManager::authorise(const std::string &pwd) {
 	return "";
 }
 
-void OPDSBasicAuthenticationManager::logOut() {
+void BasicAuthenticationManager::logOut() {
 	myAccountChecked = true;
 	myAccountUserNameOption.setValue("");
 
@@ -111,18 +108,18 @@ void OPDSBasicAuthenticationManager::logOut() {
 	}
 }
 
-std::string OPDSBasicAuthenticationManager::networkBookId(const NetworkBookItem &) {
+std::string BasicAuthenticationManager::networkBookId(const NetworkBookItem &) {
 	return "";
 }
 
-NetworkItem::URLType OPDSBasicAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
+NetworkItem::URLType BasicAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
 	return NetworkItem::URL_NONE;
 }
 
-const std::string &OPDSBasicAuthenticationManager::currentUserName() {
+const std::string &BasicAuthenticationManager::currentUserName() {
 	return myAccountUserNameOption.value();
 }
 
-const ZLNetworkSSLCertificate &OPDSBasicAuthenticationManager::certificate() {
+const ZLNetworkSSLCertificate &BasicAuthenticationManager::certificate() {
 	return myCertificate;
 }

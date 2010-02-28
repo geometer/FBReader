@@ -17,16 +17,15 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OPDSNETWORKREQUESTS_H__
-#define __OPDSNETWORKREQUESTS_H__
+#ifndef __BASICAUTHENTICATIONREQUEST_H__
+#define __BASICAUTHENTICATIONREQUEST_H__
 
 #include <ZLNetworkRequest.h>
 
-
-class OPDSNetworkBasicRequest : public ZLNetworkGetRequest {
+class BasicAuthenticationRequest : public ZLNetworkGetRequest {
 
 public:
-	OPDSNetworkBasicRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
+	BasicAuthenticationRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
 
 public:
 	bool handleHeader(void *ptr, size_t size);
@@ -39,4 +38,4 @@ private:
 	std::string myStatusCode;
 };
 
-#endif /* __OPDSNETWORKREQUESTS_H__ */
+#endif /* __BASICAUTHENTICATIONREQUEST_H__ */
