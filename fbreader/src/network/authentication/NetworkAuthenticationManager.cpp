@@ -24,7 +24,6 @@
 #include "../NetworkErrors.h"
 
 NetworkAuthenticationManager::NetworkAuthenticationManager(const std::string &siteName) :
-	SiteName(siteName), 
 	UserNameOption(ZLCategoryKey::NETWORK, siteName, "userName", ""),
 	SkipIPOption(ZLCategoryKey::NETWORK, siteName, "skipIP", false) {
 }

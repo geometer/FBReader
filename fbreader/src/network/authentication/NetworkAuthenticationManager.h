@@ -35,7 +35,6 @@ public:
 	virtual ~NetworkAuthenticationManager();
 
 public:
-	const std::string SiteName;
 	ZLStringOption UserNameOption;
 	ZLBooleanOption SkipIPOption;
 

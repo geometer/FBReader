@@ -170,7 +170,7 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
 			return error;
 		}
 		if (bookId != book.Id) {
-			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, SiteName);
+			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, myLink.SiteName);
 		}
 	}
 	myPurchasedBooksIds.insert(book.Id);
@@ -254,16 +254,6 @@ shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std:
 	std::string query;
 	ZLNetworkUtil::appendParameter(query, "my", "1");
 	ZLNetworkUtil::appendParameter(query, "sid", sid);
-
-	shared_ptr<NetworkAuthenticationManager> mgr;
-	NetworkLinkCollection &collection = NetworkLinkCollection::Instance();
-	for (size_t i = 0; i < collection.size(); ++i) {
-		NetworkLink &link = collection.link(i);
-		if (link.SiteName == this->SiteName) {
-			mgr = link.authenticationManager();
-			break;
-		}
-	}
 
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::url(myLink, "pages/catalit_browser/" + query), 
