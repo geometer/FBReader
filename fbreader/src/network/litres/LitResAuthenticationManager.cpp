@@ -339,17 +339,13 @@ bool LitResAuthenticationManager::passwordRecoverySupported() {
 }
 
 std::string LitResAuthenticationManager::recoverPassword(const std::string &email) {
-	std::string newSid;
-	shared_ptr<ZLXMLReader> xmlReader = new LitResPasswordRecoveryDataParser();
+	std::string url = Link.url(NetworkLink::URL_RECOVER_PASSWORD);
+	ZLNetworkUtil::appendParameter(url, "mail", email);
 
-	std::string query;
-	ZLNetworkUtil::appendParameter(query, "mail", email);
-
-	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(Link, "pages/catalit_recover_pass/" + query),
-		certificate(),
-		xmlReader
-	);
+	shared_ptr<ZLExecutionData> networkData =
+		ZLNetworkManager::Instance().createXMLParserRequest(
+			url, certificate(), new LitResPasswordRecoveryDataParser()
+		);
 	return ZLNetworkManager::Instance().perform(networkData);
 }
 
