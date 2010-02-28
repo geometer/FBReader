@@ -28,7 +28,6 @@
 #include <ZLFile.h>
 #include <ZLTime.h>
 
-#include "LitResLink.h"
 #include "LitResGenresParser.h"
 #include "LitResGenre.h"
 #include "LitResUtil.h"
@@ -36,31 +35,49 @@
 static const std::string GENRES_CACHE_PREFIX = "litres_genres_";
 static const std::string GENRES_CACHE_SUFFIX = ".xml.gz";
 
-void LitResLink::validateGenres() const {
-	if (!myGenresValid) {
+LitResGenre::LitResGenre() {
+}
+
+LitResGenre::LitResGenre(const std::string &id, const std::string &title) : Id(id), Title(title) {
+}
+
+LitResGenreMap *LitResGenreMap::ourInstance = 0;
+
+const LitResGenreMap &LitResGenreMap::Instance() {
+	if (ourInstance == 0) {
+		ourInstance = new LitResGenreMap();
+	}
+	return *ourInstance;
+}
+
+LitResGenreMap::LitResGenreMap() : myInitialized(false) {
+}
+
+void LitResGenreMap::validateGenres() const {
+	if (!myInitialized) {
 		if (loadGenres()) {
 			buildGenresTitles(myGenresTree);
-			myGenresValid = true;
+			myInitialized = true;
 		}
 	}
 }
 
-const std::map<std::string, shared_ptr<LitResGenre> > &LitResLink::genresMap() const {
+const std::map<std::string, shared_ptr<LitResGenre> > &LitResGenreMap::genresMap() const {
 	validateGenres();
 	return myGenresMap;
 }
 
-const std::vector<shared_ptr<LitResGenre> > &LitResLink::genresTree() const {
+const std::vector<shared_ptr<LitResGenre> > &LitResGenreMap::genresTree() const {
 	validateGenres();
 	return myGenresTree;
 }
 
-const std::map<shared_ptr<LitResGenre>, std::string> &LitResLink::genresTitles() const {
+const std::map<shared_ptr<LitResGenre>, std::string> &LitResGenreMap::genresTitles() const {
 	validateGenres();
 	return myGenresTitles;
 }
 
-void LitResLink::fillGenreIds(const std::string &tag, std::vector<std::string> &ids) const {
+void LitResGenreMap::fillGenreIds(const std::string &tag, std::vector<std::string> &ids) const {
 	std::vector<std::string> words;
 	int index = 0;
 
@@ -92,11 +109,11 @@ void LitResLink::fillGenreIds(const std::string &tag, std::vector<std::string> &
 	}
 }
 
-bool LitResLink::loadGenres() const {
+bool LitResGenreMap::loadGenres() const {
 	static const std::string directoryPath = ZLNetworkManager::CacheDirectory();
 	static shared_ptr<ZLDir> dir = ZLFile(directoryPath).directory(true);
 
-	const std::string url = LitResUtil::url(*this, "pages/catalit_genres/");
+	const std::string url = LitResUtil::url("pages/catalit_genres/");
 
 	myGenresTree.clear();
 	myGenresMap.clear();
@@ -176,7 +193,7 @@ bool LitResLink::loadGenres() const {
 	return parser->readDocument(cacheName);
 }
 
-void LitResLink::buildGenresTitles(const std::vector<shared_ptr<LitResGenre> > &genres, const std::string &titlePrefix) const {
+void LitResGenreMap::buildGenresTitles(const std::vector<shared_ptr<LitResGenre> > &genres, const std::string &titlePrefix) const {
 	for (std::vector<shared_ptr<LitResGenre> >::const_iterator it = genres.begin(); it != genres.end(); ++it) {
 		shared_ptr<LitResGenre> genre = *it;
 		std::string title = titlePrefix.empty() ? (genre->Title) : (titlePrefix + "/" + genre->Title);

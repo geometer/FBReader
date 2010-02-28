@@ -23,7 +23,7 @@
 
 #include "../NetworkLink.h"
 
-std::string LitResUtil::url(const NetworkLink &link, const std::string &path) {
+std::string LitResUtil::url(const std::string &path) {
 	std::string url = "://robot.litres.ru/" + path;
 	if (ZLNetworkUtil::hasParameter(url, "sid") ||
 			ZLNetworkUtil::hasParameter(url, "pwd")) {
@@ -31,6 +31,11 @@ std::string LitResUtil::url(const NetworkLink &link, const std::string &path) {
 	} else {
 		url = "http" + url;
 	}
-	link.rewriteUrl(url);
 	return url;
+}
+
+std::string LitResUtil::url(const NetworkLink &link, const std::string &path) {
+	std::string urlString = url(path);
+	link.rewriteUrl(urlString);
+	return urlString;
 }

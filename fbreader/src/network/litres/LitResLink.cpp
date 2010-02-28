@@ -55,7 +55,6 @@ static void appendToAnnotation(std::string &anno, const std::string str) {
 LitResLink::LitResLink() : 
 	NetworkLink(LITRES_SITENAME, "Каталог LitRes") {
 	myAuthenticationManager = new LitResAuthenticationManager(*this);
-	myGenresValid = false;
 }
 
 shared_ptr<ZLExecutionData> LitResLink::simpleSearchData(NetworkOperationData &result, const std::string &pattern) const {
@@ -71,7 +70,7 @@ shared_ptr<ZLExecutionData> LitResLink::advancedSearchData(NetworkOperationData 
 	ZLNetworkUtil::appendParameter(request, "search_person", author);
 	if (!tag.empty()) {
 		std::vector<std::string> genreIds;
-		fillGenreIds(tag, genreIds);
+		LitResGenreMap::Instance().fillGenreIds(tag, genreIds);
 		if (!genreIds.empty()) {
 			for (std::vector<std::string>::const_iterator it = genreIds.begin(); it != genreIds.end(); ++it) {
 				ZLNetworkUtil::appendParameter(request, "genre", *it);
@@ -212,7 +211,7 @@ std::string LitResRootCatalogItem::loadChildren(NetworkItem::List &children) {
 		"none",
 		"Книги по жанрам",
 		"Просмотр книг по жанрам",
-		link.genresTree()
+		LitResGenreMap::Instance().genresTree()
 	));
 	children.push_back(new LitResMyCatalogItem(link));
 

@@ -27,6 +27,7 @@ class NetworkLink;
 class LitResUtil {
 
 public:
+	static std::string url(const std::string &path);
 	static std::string url(const NetworkLink &link, const std::string &path);
 
 private:

@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include <shared_ptr.h>
 
@@ -34,7 +35,32 @@ struct LitResGenre {
 	LitResGenre(const std::string &id, const std::string &title);
 };
 
-inline LitResGenre::LitResGenre() {}
-inline LitResGenre::LitResGenre(const std::string &id, const std::string &title) : Id(id), Title(title) {}
+class LitResGenreMap {
+
+public:
+	static const LitResGenreMap &Instance();
+
+private:
+	static LitResGenreMap *ourInstance;
+
+private:
+	LitResGenreMap();
+
+public:
+	const std::map<std::string, shared_ptr<LitResGenre> > &genresMap() const;
+	const std::vector<shared_ptr<LitResGenre> > &genresTree() const;
+	const std::map<shared_ptr<LitResGenre>, std::string> &genresTitles() const;
+	void fillGenreIds(const std::string &tag, std::vector<std::string> &ids) const;
+
+private:
+	void validateGenres() const;
+	bool loadGenres() const;
+	void buildGenresTitles(const std::vector<shared_ptr<LitResGenre> > &genres, const std::string &titlePrefix = "") const;
+
+	mutable std::vector<shared_ptr<LitResGenre> > myGenresTree;
+	mutable std::map<std::string, shared_ptr<LitResGenre> > myGenresMap;
+	mutable std::map<shared_ptr<LitResGenre>, std::string> myGenresTitles;
+	mutable bool myInitialized;
+};
 
 #endif /* __LITRESGENRE_H__ */
