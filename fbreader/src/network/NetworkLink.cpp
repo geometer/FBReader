@@ -37,10 +37,14 @@ std::string NetworkLink::CertificatesPathPrefix() {
 NetworkLink::NetworkLink(
 	const std::string &siteName,
 	const std::string &title,
+	const std::string &summary,
+	const std::string &icon,
 	const std::map<std::string,std::string> &links
 ) : 
 	SiteName(siteName), 
 	Title(title),
+	Summary(summary),
+	Icon(icon),
 	OnOption(ZLCategoryKey::NETWORK, siteName, "on", true),
 	myLinks(links) {
 }

@@ -53,7 +53,13 @@ static void appendToAnnotation(std::string &anno, const std::string str) {
 
 
 LitResLink::LitResLink() : 
-	NetworkLink(LITRES_SITENAME, "Каталог LitRes", std::map<std::string,std::string>()) {
+	NetworkLink(
+		LITRES_SITENAME,
+		"Каталог LitRes",
+		"Продажа электронных книг.",
+		"feed-litres.png",
+		std::map<std::string,std::string>()
+	) {
 	myAuthenticationManager = new LitResAuthenticationManager(*this);
 }
 
@@ -101,6 +107,7 @@ public:
 	LitResRootCatalogItem(
 		const LitResLink &link,
 		const std::string &title,
+		const std::string &icon,
 		const std::string &summary
 	);
 
@@ -186,9 +193,10 @@ private:
 LitResRootCatalogItem::LitResRootCatalogItem(
 	const LitResLink &link,
 	const std::string &title,
+	const std::string &icon,
 	const std::string &summary
 ) : NetworkCatalogItem(link, title, summary, std::map<URLType,std::string>()) {
-	URLByType[URL_COVER] = "feed-litres.png";
+	URLByType[URL_COVER] = icon;
 }
 
 std::string LitResRootCatalogItem::loadChildren(NetworkItem::List &children) {
@@ -409,7 +417,7 @@ std::string LitResGenresItem::loadChildren(NetworkItem::List &children) {
 }
 
 shared_ptr<NetworkItem> LitResLink::libraryItem() const {
-	return new LitResRootCatalogItem(*this, Title, "Продажа электронных книг.");
+	return new LitResRootCatalogItem(*this, Title, Icon, Summary);
 }
 
 void LitResLink::rewriteUrl(std::string &url, bool) const {

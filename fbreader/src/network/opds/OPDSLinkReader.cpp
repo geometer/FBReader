@@ -35,9 +35,9 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 	OPDSLink *opdsLink = new OPDSLink(
 		mySiteName,
 		myTitle,
-		myLinks,
 		mySummary,
-		myIconName
+		myIcon,
+		myLinks
 	);
 	if (!mySearchType.empty()) {
 		opdsLink->setupAdvancedSearch(
@@ -186,7 +186,7 @@ void OPDSLinkReader::characterDataHandler(const char *text, size_t len) {
 			mySummary.append(text, len);
 			break;
 		case READ_ICON_NAME:
-			myIconName.append(text, len);
+			myIcon.append(text, len);
 			break;
 		case READ_LINK:
 			myLinks[myAttrBuffer].append(text, len);

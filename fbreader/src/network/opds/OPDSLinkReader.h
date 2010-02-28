@@ -57,7 +57,7 @@ private:
 	std::string mySiteName;
 	std::string myTitle;
 	std::string mySummary;
-	std::string myIconName;
+	std::string myIcon;
 
 	std::string myAttrBuffer;
 	std::string myBuffer;

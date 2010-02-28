@@ -41,9 +41,9 @@ public:
 	OPDSLink(
 		const std::string &siteName,
 		const std::string &title,
-		const std::map<std::string,std::string> &links,
 		const std::string &summary,
-		const std::string &iconName
+		const std::string &icon,
+		const std::map<std::string,std::string> &links
 	);
 	~OPDSLink();
 	void setupAdvancedSearch(
@@ -82,7 +82,6 @@ private:
 private:
 	const std::string myTitle;
 	const std::string mySummary;
-	const std::string myIconName;
 	shared_ptr<AdvancedSearch> myAdvancedSearch;
 	std::set<std::string> myIgnoredFeeds;
 	std::set<std::string> myAccountDependentFeeds;
