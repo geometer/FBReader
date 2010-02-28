@@ -29,14 +29,13 @@ OPDSLinkReader::OPDSLinkReader() : myState(READ_NOTHING) {
 }
 
 shared_ptr<NetworkLink> OPDSLinkReader::link() {
-	if (mySiteName.empty() || myTitle.empty() || myLinks["main"].empty()) {
+	if (mySiteName.empty() || myTitle.empty() || myLinks[OPDSLink::URL_MAIN].empty()) {
 		return 0;
 	}
 	OPDSLink *opdsLink = new OPDSLink(
 		mySiteName,
-		myLinks["main"],
-		myLinks["search"],
 		myTitle,
+		myLinks,
 		mySummary,
 		myIconName
 	);

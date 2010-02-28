@@ -53,7 +53,7 @@ static void appendToAnnotation(std::string &anno, const std::string str) {
 
 
 LitResLink::LitResLink() : 
-	NetworkLink(LITRES_SITENAME, "Каталог LitRes") {
+	NetworkLink(LITRES_SITENAME, "Каталог LitRes", std::map<std::string,std::string>()) {
 	myAuthenticationManager = new LitResAuthenticationManager(*this);
 }
 

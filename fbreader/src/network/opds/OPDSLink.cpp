@@ -33,6 +33,8 @@
 
 #include "URLRewritingRule.h"
 
+const std::string OPDSLink::URL_MAIN = "main";
+const std::string OPDSLink::URL_SEARCH = "search";
 
 class OPDSLink::AdvancedSearch {
 
@@ -137,14 +139,11 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 
 OPDSLink::OPDSLink(
 	const std::string &siteName,
-	const std::string &catalogURL,
-	const std::string &searchURL,
 	const std::string &title,
+	const std::map<std::string,std::string> &links,
 	const std::string &summary,
 	const std::string &iconName
-) : NetworkLink(siteName, title),
-	myCatalogURL(catalogURL),
-	mySearchURL(searchURL),
+) : NetworkLink(siteName, title, links),
 	mySummary(summary),
 	myIconName(iconName) {
 }
@@ -178,7 +177,7 @@ void OPDSLink::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager>
 shared_ptr<NetworkItem> OPDSLink::libraryItem() const {
 	std::map<NetworkItem::URLType,std::string> urlMap;
 	urlMap[NetworkItem::URL_COVER] = myIconName;
-	urlMap[NetworkItem::URL_CATALOG] = myCatalogURL;
+	urlMap[NetworkItem::URL_CATALOG] = url(URL_MAIN);
 	return new OPDSCatalogItem(
 		*this,
 		Title,
@@ -188,7 +187,7 @@ shared_ptr<NetworkItem> OPDSLink::libraryItem() const {
 }
 
 const std::string OPDSLink::searchURL(const std::string &query) const {
-	return ZLStringUtil::printf(mySearchURL, query);
+	return ZLStringUtil::printf(url(URL_SEARCH), query);
 }
 
 shared_ptr<ZLExecutionData> OPDSLink::simpleSearchData(NetworkOperationData &result, const std::string &pattern) const {

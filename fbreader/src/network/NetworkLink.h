@@ -22,6 +22,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include <shared_ptr.h>
 #include <ZLOptions.h>
@@ -40,15 +41,15 @@ public:
 	static std::string CertificatesPathPrefix();
 
 protected:
-	NetworkLink(const std::string &siteName, const std::string &title);
+	NetworkLink(
+		const std::string &siteName,
+		const std::string &title,
+		const std::map<std::string,std::string> &links
+	);
 
 public:
 	virtual ~NetworkLink();
-
-public:
-	const std::string SiteName;
-	const std::string Title;
-	ZLBooleanOption OnOption;
+	std::string url(const std::string &urlId) const;
 
 public:
 	virtual shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &data, const std::string &pattern) const = 0;
@@ -59,6 +60,14 @@ public:
 	virtual shared_ptr<NetworkItem> libraryItem() const = 0;
 
 	virtual void rewriteUrl(std::string &url, bool isUrlExternal = false) const = 0;
+
+public:
+	const std::string SiteName;
+	const std::string Title;
+	ZLBooleanOption OnOption;
+
+private:
+	const std::map<std::string,std::string> myLinks;
 
 private: // disable copying
 	NetworkLink(const NetworkLink &);

@@ -25,11 +25,14 @@
 
 #include "../NetworkLink.h"
 
-
 class NetworkAuthenticationManager;
 class URLRewritingRule;
 
 class OPDSLink : public NetworkLink {
+
+public:
+	static const std::string URL_MAIN;
+	static const std::string URL_SEARCH;
 
 private:
 	class AdvancedSearch;
@@ -37,9 +40,8 @@ private:
 public:
 	OPDSLink(
 		const std::string &siteName,
-		const std::string &catalogURL,
-		const std::string &searchURL,
 		const std::string &title,
+		const std::map<std::string,std::string> &links,
 		const std::string &summary,
 		const std::string &iconName
 	);
@@ -78,8 +80,6 @@ private:
 	void rewriteUrl(std::string &url, bool isUrlExternal = false) const;
 
 private:
-	const std::string myCatalogURL;
-	const std::string mySearchURL;
 	const std::string myTitle;
 	const std::string mySummary;
 	const std::string myIconName;

@@ -34,13 +34,23 @@ std::string NetworkLink::CertificatesPathPrefix() {
 	return NetworkDataDirectory() + ZLibrary::FileNameDelimiter + "certificates" + ZLibrary::FileNameDelimiter;
 }
 
-NetworkLink::NetworkLink(const std::string &siteName, const std::string &title) : 
+NetworkLink::NetworkLink(
+	const std::string &siteName,
+	const std::string &title,
+	const std::map<std::string,std::string> &links
+) : 
 	SiteName(siteName), 
 	Title(title),
-	OnOption(ZLCategoryKey::NETWORK, siteName, "on", true) {
+	OnOption(ZLCategoryKey::NETWORK, siteName, "on", true),
+	myLinks(links) {
 }
 
 NetworkLink::~NetworkLink() {
+}
+
+std::string NetworkLink::url(const std::string &urlId) const {
+	std::map<std::string,std::string>::const_iterator it = myLinks.find(urlId);
+	return (it != myLinks.end()) ? it->second : std::string();
 }
 
 shared_ptr<ZLExecutionData> NetworkLink::resume(NetworkOperationData &result) const {
