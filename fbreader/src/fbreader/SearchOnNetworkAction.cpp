@@ -28,8 +28,8 @@
 
 #include "../network/NetworkLink.h"
 #include "../network/NetworkLinkCollection.h"
-#include "../network/NetworkAuthenticationManager.h"
 #include "../network/SearchResult.h"
+#include "../network/authentication/NetworkAuthenticationManager.h"
 
 #include "../networkTree/NetworkOperationRunnable.h"
 

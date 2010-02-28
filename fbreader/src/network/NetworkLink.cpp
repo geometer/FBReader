@@ -24,7 +24,6 @@
 
 #include "NetworkLink.h"
 #include "NetworkOperationData.h"
-#include "NetworkAuthenticationManager.h"
 
 
 std::string NetworkLink::NetworkDataDirectory() {

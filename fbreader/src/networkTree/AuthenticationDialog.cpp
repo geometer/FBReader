@@ -29,7 +29,7 @@
 #include "NetworkOperationRunnable.h"
 
 #include "../network/UserList.h"
-#include "../network/NetworkAuthenticationManager.h"
+#include "../network/authentication/NetworkAuthenticationManager.h"
 
 class UserNamesEntry : public ZLComboOptionEntry {
 

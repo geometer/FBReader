@@ -21,9 +21,7 @@
 
 #include "NetworkAuthenticationManager.h"
 
-#include "NetworkItems.h"
-#include "NetworkErrors.h"
-
+#include "../NetworkErrors.h"
 
 NetworkAuthenticationManager::NetworkAuthenticationManager(const std::string &siteName) :
 	SiteName(siteName), 

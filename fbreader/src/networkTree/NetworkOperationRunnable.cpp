@@ -25,7 +25,7 @@
 
 #include "../network/NetworkLink.h"
 #include "../network/NetworkLinkCollection.h"
-#include "../network/NetworkAuthenticationManager.h"
+#include "../network/authentication/NetworkAuthenticationManager.h"
 #include "../network/NetworkItems.h"
 
 NetworkOperationRunnable::NetworkOperationRunnable(const std::string &uiMessageKey) {

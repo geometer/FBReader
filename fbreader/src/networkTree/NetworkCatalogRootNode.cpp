@@ -33,7 +33,7 @@
 #include "../network/NetworkItems.h"
 #include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkLink.h"
-#include "../network/NetworkAuthenticationManager.h"
+#include "../network/authentication/NetworkAuthenticationManager.h"
 
 class NetworkCatalogRootNode::LoginAction : public ZLRunnable {
 

@@ -24,7 +24,7 @@
 #include <ZLOptions.h>
 #include <ZLBoolean3.h>
 
-#include "NetworkItems.h"
+#include "../NetworkItems.h"
 
 struct ZLNetworkSSLCertificate;
 

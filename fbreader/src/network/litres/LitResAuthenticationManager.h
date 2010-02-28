@@ -24,7 +24,7 @@
 
 #include <ZLNetworkSSLCertificate.h>
 
-#include "../NetworkAuthenticationManager.h"
+#include "../authentication/NetworkAuthenticationManager.h"
 #include "../NetworkItems.h"
 
 class NetworkLink;

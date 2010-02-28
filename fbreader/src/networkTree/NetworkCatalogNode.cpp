@@ -35,7 +35,7 @@
 #include "../network/NetworkItems.h"
 #include "../network/NetworkBookCollection.h"
 #include "../network/NetworkLink.h"
-#include "../network/NetworkAuthenticationManager.h"
+#include "../network/authentication/NetworkAuthenticationManager.h"
 
 class NetworkCatalogNode::ExpandCatalogAction : public ZLRunnable {
 

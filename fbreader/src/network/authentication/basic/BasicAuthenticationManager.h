@@ -20,7 +20,7 @@
 #ifndef __BASICAUTHENTICATIONMANAGER_H__
 #define __BASICAUTHENTICATIONMANAGER_H__
 
-#include "../../NetworkAuthenticationManager.h"
+#include "../NetworkAuthenticationManager.h"
 
 /*
  * Authentication types:

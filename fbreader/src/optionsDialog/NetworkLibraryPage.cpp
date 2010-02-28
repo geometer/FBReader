@@ -30,7 +30,6 @@
 
 #include "../network/NetworkLink.h"
 #include "../network/NetworkLinkCollection.h"
-#include "../network/NetworkAuthenticationManager.h"
 #include "../network/UserList.h"
 
 #include "NetworkLibraryPage.h"

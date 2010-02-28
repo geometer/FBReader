@@ -36,7 +36,6 @@
 
 #include "NetworkOperationData.h"
 #include "NetworkBookCollection.h"
-#include "NetworkAuthenticationManager.h"
 
 #include "litres/LitResLink.h"
 #include "opds/OPDSLinkReader.h"

@@ -29,7 +29,7 @@
 #include "NetworkOPDSFeedReader.h"
 
 #include "../NetworkOperationData.h"
-#include "../NetworkAuthenticationManager.h"
+#include "../authentication/NetworkAuthenticationManager.h"
 
 #include "URLRewritingRule.h"
 

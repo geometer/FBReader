@@ -7,12 +7,12 @@ include $(MAKEFILESDIR)/config.mk
 TARGET = FBReader
 target = fbreader
 
-ALL_SUBDIRS = src src/database src/database/sqldb src/database/sqldb/implsqlite src/database/booksdb src/database/booksdb/runnables src/migration src/constants src/options src/library src/bookmodel src/formats src/formats/fb2 src/formats/docbook src/formats/css src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/xhtml src/formats/oeb src/formats/rtf src/formats/openreader src/formats/pdf src/formats/dummy src/formats/util src/external src/optionsDialog src/fbreader src/encodingOption src/network src/network/authentication/basic src/network/atom src/network/opds src/network/litres src/blockTree src/libraryTree src/networkTree
+ALL_SUBDIRS = src src/database src/database/sqldb src/database/sqldb/implsqlite src/database/booksdb src/database/booksdb/runnables src/migration src/constants src/options src/library src/bookmodel src/formats src/formats/fb2 src/formats/docbook src/formats/css src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/xhtml src/formats/oeb src/formats/rtf src/formats/openreader src/formats/pdf src/formats/dummy src/formats/util src/external src/optionsDialog src/fbreader src/encodingOption src/network src/network/authentication src/network/authentication/basic src/network/atom src/network/opds src/network/litres src/blockTree src/libraryTree src/networkTree
 ALL_ARCHSUBDIRS = desktop pdaxrom opie zaurus maemo openzaurus pma400 win32
 
 SUBDIRS = src/database src/database/sqldb src/database/sqldb/implsqlite src/database/booksdb src/database/booksdb/runnables src/migration src/constants src/options src/library src/bookmodel \
 	src/formats src/formats/fb2 src/formats/css src/formats/html src/formats/pdb src/formats/txt src/formats/tcr src/formats/chm src/formats/xhtml src/formats/oeb src/formats/rtf src/formats/openreader src/formats/util \
-	src/external src/optionsDialog src/fbreader src/encodingOption src/network src/network/authentication/basic src/network/atom src/network/opds src/network/litres src/blockTree src/libraryTree src/networkTree
+	src/external src/optionsDialog src/fbreader src/encodingOption src/network src/network/authentication src/network/authentication/basic src/network/atom src/network/opds src/network/litres src/blockTree src/libraryTree src/networkTree
 
 all: .resources
 	@for subdir in $(SUBDIRS); do \

@@ -29,7 +29,7 @@
 #include "RegisterUserDialog.h"
 #include "NetworkOperationRunnable.h"
 
-#include "../network/NetworkAuthenticationManager.h"
+#include "../network/authentication/NetworkAuthenticationManager.h"
 #include "../network/NetworkErrors.h"
 
 #include "../fbreader/FBReader.h"

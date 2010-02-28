@@ -26,7 +26,6 @@
 
 class NetworkBookCollection;
 class NetworkLink;
-class NetworkAuthenticationManager;
 
 class NetworkContainerNode : public FBReaderNode {
 
