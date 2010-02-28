@@ -4,16 +4,15 @@
 	<site>litres.ru</site>
 	<link rel="main" type="application/atom+xml">http://data.fbreader.org/catalogs/litres/index.php</link>
 	<link rel="search" type="application/atom+xml">http://data.fbreader.org/catalogs/litres/search.php?query=%s</link>
-	<link rel="signIn" type="application/atom+xml">https://feedbooks.com/user/profile.atom</link>
-	<link rel="signOut" type="application/atom+xml">https://feedbooks.com/user/signout</link>
+	<link rel="signIn" type="text/html">https://robot.litres.ru/pages/catalit_authorise/?lfrom=51</link>
 	<link rel="refillAccount" type="text/html">https://www.litres.ru/pages/put_money_on_account/?lfrom=51</link>
 	<title>Каталог LitRes (OPDS version)</title>
 	<summary>Продажа электронных книг.</summary>
 	<advancedSearch style="separateWords">
 		<field name="author">author</field>
-		<field name="titleOrSeries">title</field>
-		<field name="tag">type</field>
-		<field name="annotation">description</field>
+		<field name="titleOrSeries">titleOrSeries</field>
+		<field name="tag">tag</field>
+		<field name="annotation">annotation</field>
 	</advancedSearch>
 	<feeds>
 		<condition show="signedIn">http://data.fbreader.org/catalogs/litres/my.php</condition>

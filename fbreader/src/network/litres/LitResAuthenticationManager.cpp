@@ -59,14 +59,13 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 	std::string firstName, lastName, newSid;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(firstName, lastName, newSid);
 
-	std::string query;
-	ZLNetworkUtil::appendParameter(query, "sid", mySidOption.value());
+	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
+	ZLNetworkUtil::appendParameter(url, "sid", mySidOption.value());
 
-	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(Link, "pages/catalit_authorise/" + query),
-		certificate(),
-		xmlReader
-	);
+	shared_ptr<ZLExecutionData> networkData =
+		ZLNetworkManager::Instance().createXMLParserRequest(
+			url, certificate(), xmlReader
+		);
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
 	if (!error.empty()) {
@@ -87,18 +86,19 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 	std::string firstName, lastName, newSid;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(firstName, lastName, newSid);
 
-	std::string query;
-	ZLNetworkUtil::appendParameter(query, "login", UserNameOption.value());
-	ZLNetworkUtil::appendParameter(query, "pwd", pwd);
+	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
+	ZLNetworkUtil::appendParameter(url, "login", UserNameOption.value());
+	ZLNetworkUtil::appendParameter(url, "pwd", pwd);
 	if (SkipIPOption.value()) {
-		ZLNetworkUtil::appendParameter(query, "skip_ip", "1");
+		ZLNetworkUtil::appendParameter(url, "skip_ip", "1");
 	}
 
-	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(Link, "pages/catalit_authorise/" + query),
-		certificate(),
-		xmlReader
-	);
+	shared_ptr<ZLExecutionData> networkData =
+		ZLNetworkManager::Instance().createXMLParserRequest(
+			url,
+			certificate(),
+			xmlReader
+		);
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
 	mySidChecked = true;
