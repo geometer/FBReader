@@ -2,8 +2,8 @@
 <!DOCTYPE catalog SYSTEM "catalog.dtd">
 <catalog type="opds">
 	<site>smashwords.com</site>
-	<link rel="main">http://smashwords.com/atom</link>
-	<link rel="search">http://smashwords.com/atom/search/books?query=%s</link>
+	<link rel="main" type="application/atom+xml">http://smashwords.com/atom</link>
+	<link rel="search" type="application/atom+xml">http://smashwords.com/atom/search/books?query=%s</link>
 	<title>Smashwords</title>
 	<summary>Ebooks from independent authors and publishers</summary>
 	<advancedSearch style="quoted">

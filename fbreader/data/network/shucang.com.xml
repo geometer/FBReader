@@ -2,10 +2,10 @@
 <!DOCTYPE catalog SYSTEM "catalog.dtd">
 <catalog type="opds">
 	<site>shucang.com</site>
-	<link rel="main">http://www.shucang.com/s/index.php</link>
-	<link rel="search">http://www.shucang.com/s/doclist.php?skey=%s</link>
-	<link rel="signIn">http://www.shucang.com/s/myshucang.php</link>
-	<link rel="signOut">http://www.shucang.com/logout.php</link>
+	<link rel="main" type="application/atom+xml">http://www.shucang.com/s/index.php</link>
+	<link rel="search" type="application/atom+xml">http://www.shucang.com/s/doclist.php?skey=%s</link>
+	<link rel="signIn" type="application/atom+xml">http://www.shucang.com/s/myshucang.php</link>
+	<link rel="signOut" type="application/atom+xml">http://www.shucang.com/logout.php</link>
 	<title>Shucang Catalog</title>
 	<summary>Shucang: a Chinese bookshelf.</summary>
 	<feeds>

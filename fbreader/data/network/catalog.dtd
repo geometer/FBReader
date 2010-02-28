@@ -11,6 +11,7 @@
 <!ELEMENT link (#PCDATA)>
 <!ATTLIST link 
 	rel (main|search|signIn|signOut) #REQUIRED
+	type CDATA #REQUIRED
 >
 
 <!ELEMENT advancedSearch (field+)>
