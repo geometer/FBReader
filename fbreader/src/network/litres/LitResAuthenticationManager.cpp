@@ -268,7 +268,7 @@ shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std:
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::url(myLink, "pages/catalit_browser/" + query), 
 		certificate(),
-		new LitResDataParser((LitResLink&)myLink, purchasedBooksList)
+		new LitResDataParser(myLink, purchasedBooksList)
 	);
 }
 

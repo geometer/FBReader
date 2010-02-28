@@ -27,14 +27,14 @@
 
 #include "../NetworkItems.h"
 
-class LitResLink;
+class NetworkLink;
 class LitResGenre;
 class NetworkAuthenticationManager;
 
 class LitResDataParser : public ZLXMLReader {
 
 public:
-	LitResDataParser(const LitResLink &link, NetworkItem::List &books);
+	LitResDataParser(const NetworkLink &link, NetworkItem::List &books);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
@@ -55,7 +55,7 @@ private:
 	std::string makeDemoUrl(const std::string &bookId) const;
 
 private:
-	const LitResLink &myLink;
+	const NetworkLink &myLink;
 
 	NetworkItem::List &myBooks;
 	std::string myBuffer;

@@ -20,6 +20,7 @@
 #include "OPDSLinkReader.h"
 #include "OPDSLink.h"
 #include "OPDSBasicAuthenticationManager.h"
+#include "../litres/LitResAuthenticationManager.h"
 
 #include "URLRewritingRule.h"
 
@@ -50,11 +51,17 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 	}
 	opdsLink->setIgnoredFeeds(myIgnoredFeeds);
 	opdsLink->setAccountDependentFeeds(myAccountDependentFeeds);
+
+	shared_ptr<NetworkAuthenticationManager> authManager;
 	if (myAuthenticationType == "basic") {
-		opdsLink->setAuthenticationManager(
-			new OPDSBasicAuthenticationManager(mySiteName, myLinks["signIn"], myLinks["signOut"])
+		authManager = new OPDSBasicAuthenticationManager(
+			mySiteName, myLinks["signIn"], myLinks["signOut"]
 		);
+	} else if (myAuthenticationType == "litres") {
+		authManager = new LitResAuthenticationManager(*opdsLink);
 	}
+	opdsLink->setAuthenticationManager(authManager);
+
 	for (std::set<shared_ptr<URLRewritingRule> >::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
 		opdsLink->addUrlRewritingRule(*it);
 	}

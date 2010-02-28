@@ -24,6 +24,7 @@
 #include "LitResDataParser.h"
 #include "LitResGenre.h"
 #include "LitResLink.h"
+#include "../NetworkLink.h"
 
 static const std::string TAG_CATALOG = "catalit-fb2-books";
 static const std::string TAG_BOOK = "fb2-book";
@@ -63,7 +64,7 @@ std::string LitResDataParser::makeDemoUrl(const std::string &bookId) const {
 	return url;
 }
 
-LitResDataParser::LitResDataParser(const LitResLink &link, NetworkItem::List &books) : 
+LitResDataParser::LitResDataParser(const NetworkLink &link, NetworkItem::List &books) : 
 	myLink(link),
 	myBooks(books), 
 	myIndex(0) {
