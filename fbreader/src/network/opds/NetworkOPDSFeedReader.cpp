@@ -24,19 +24,20 @@
 #include <ZLNetworkUtil.h>
 
 #include "NetworkOPDSFeedReader.h"
-#include "OPDSLink.h"
 #include "OPDSCatalogItem.h"
 
 #include "../NetworkOperationData.h"
 #include "../NetworkItems.h"
 
-NetworkOPDSFeedReader::NetworkOPDSFeedReader(const std::string &baseURL, NetworkOperationData &result, 
-		const std::set<std::string> &ignoredFeeds, const std::set<std::string> &accountDependentFeeds) : 
+NetworkOPDSFeedReader::NetworkOPDSFeedReader(
+	const std::string &baseURL,
+	NetworkOperationData &result, 
+	const std::map<std::string,OPDSLink::URLCondition> &conditions
+) :
 	myBaseURL(baseURL), 
 	myData(result), 
 	myIndex(0), 
-	myIgnoredFeeds(ignoredFeeds),
-	myAccountDependentFeeds(accountDependentFeeds) {
+	myUrlConditions(conditions) {
 }
 
 void NetworkOPDSFeedReader::processFeedStart() {
@@ -69,7 +70,10 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 	if (entry.isNull()) {
 		return;
 	}
-	if (myIgnoredFeeds.count(entry->id()->uri()) != 0) {
+	std::map<std::string,OPDSLink::URLCondition>::const_iterator it =
+		myUrlConditions.find(entry->id()->uri());
+	if (it != myUrlConditions.end() &&
+			it->second == OPDSLink::URL_CONDITION_NEVER) {
 		return;
 	}
 	OPDSEntry &e = *entry;
@@ -263,7 +267,11 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 		htmlURL.erase();
 	}
 
-	bool dependsOnAccount = myAccountDependentFeeds.count(entry.id()->uri()) > 0;
+	std::map<std::string,OPDSLink::URLCondition>::const_iterator it =
+		myUrlConditions.find(entry.id()->uri());
+	bool dependsOnAccount =
+		it != myUrlConditions.end() &&
+		it->second == OPDSLink::URL_CONDITION_SIGNED_IN;
 
 	std::string annotation = entry.summary();
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x09), annotation.end());

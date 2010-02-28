@@ -20,11 +20,13 @@
 #ifndef __OPDSLINKREADER_H__
 #define __OPDSLINKREADER_H__
 
-#include <set>
+#include <vector>
+#include <map>
 
 #include <ZLXMLReader.h>
 
-class NetworkLink;
+#include "OPDSLink.h"
+
 class URLRewritingRule;
 
 class OPDSLinkReader : public ZLXMLReader {
@@ -67,12 +69,9 @@ private:
 	std::string mySearchType;
 	std::map<std::string,std::string> mySearchFields;
 
-	std::set<std::string> myIgnoredFeeds;
-	std::set<std::string> myAccountDependentFeeds;
-
+	std::map<std::string,OPDSLink::URLCondition> myUrlConditions;
 	std::string myAuthenticationType;
-
-	std::set<shared_ptr<URLRewritingRule> > myUrlRewritingRules;
+	std::vector<shared_ptr<URLRewritingRule> > myUrlRewritingRules;
 };
 
 #endif /* __OPDSLINKREADER_H__ */

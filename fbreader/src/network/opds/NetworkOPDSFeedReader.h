@@ -20,21 +20,23 @@
 #ifndef __NETWORKOPDSFEEDREADER_H__
 #define __NETWORKOPDSFEEDREADER_H__
 
-#include <set>
+#include <map>
 #include <string>
 
 #include "OPDSFeedReader.h"
+#include "OPDSLink.h"
 
 class NetworkOperationData;
 
 class NetworkItem;
 
-
 class NetworkOPDSFeedReader : public OPDSFeedReader {
 
 public:
-	NetworkOPDSFeedReader(const std::string &baseURL, NetworkOperationData &result, 
-		const std::set<std::string> &ignoredFeeds, const std::set<std::string> &accountDependentFeeds);
+	NetworkOPDSFeedReader(
+		const std::string &baseURL,
+		NetworkOperationData &result,
+		const std::map<std::string,OPDSLink::URLCondition> &conditions);
 
 public:
 	void processFeedEntry(shared_ptr<OPDSEntry> entry);
@@ -50,8 +52,7 @@ private:
 	const std::string myBaseURL;
 	NetworkOperationData &myData;
 	unsigned int myIndex;
-	const std::set<std::string> myIgnoredFeeds;
-	const std::set<std::string> myAccountDependentFeeds;
+	const std::map<std::string,OPDSLink::URLCondition> &myUrlConditions;
 };
 
 

@@ -133,7 +133,7 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 	rewriteUrl(modifiedUrl);
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		modifiedUrl,
-		new OPDSXMLParser(new NetworkOPDSFeedReader(url, result, myIgnoredFeeds, myAccountDependentFeeds))
+		new OPDSXMLParser(new NetworkOPDSFeedReader(url, result, myUrlConditions))
 	);
 }
 
@@ -159,12 +159,12 @@ void OPDSLink::setupAdvancedSearch(
 	myAdvancedSearch = new AdvancedSearch(type, titleParameter, authorParameter, tagParameter, annotationParameter);
 }
 
-void OPDSLink::setIgnoredFeeds(const std::set<std::string> &ignoredFeeds) {
-	myIgnoredFeeds = ignoredFeeds;
+void OPDSLink::setUrlConditions(const std::map<std::string,URLCondition> &conditions) {
+	myUrlConditions = conditions;
 }
 
-void OPDSLink::setAccountDependentFeeds(const std::set<std::string> &accountDependentFeeds) {
-	myAccountDependentFeeds = accountDependentFeeds;
+void OPDSLink::setUrlRewritingRules(const std::vector<shared_ptr<URLRewritingRule> > &rules) {
+	myUrlRewritingRules = rules;
 }
 
 void OPDSLink::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> mgr) {
@@ -219,14 +219,8 @@ shared_ptr<NetworkAuthenticationManager> OPDSLink::authenticationManager() const
 	return myAuthenticationManager;
 }
 
-void OPDSLink::addUrlRewritingRule(shared_ptr<URLRewritingRule> rule) {
-	if (!rule.isNull()) {
-		myUrlRewritingRules.insert(rule);
-	}
-}
-
 void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
-	for (std::set<shared_ptr<URLRewritingRule> >::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
+	for (std::vector<shared_ptr<URLRewritingRule> >::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
 		const URLRewritingRule &rule = **it;
 
 		if (rule.Apply != URLRewritingRule::ALWAYS) {
