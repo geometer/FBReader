@@ -72,6 +72,7 @@
     <node name="sv" value="Swéd" />
     <node name="tr" value="Török" />
     <node name="uk" value="Ukrán" />
+		<node name="vi" toBeTranslated="true" value="Vietnamese" />
     <node name="zh" value="Kínai" />
     <node name="other" value="Egyéb" />
   </node>

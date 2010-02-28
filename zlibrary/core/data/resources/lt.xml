@@ -72,6 +72,7 @@
 		<node name="sv" value="Švedų" />
 		<node name="tr" value="Turkų" />
 		<node name="uk" value="Ukrainiečių" />
+		<node name="vi" value="Vietnamiečių" />
 		<node name="zh" value="Kiniečių" />
 		<node name="other" value="Kitą" />
 	</node>

@@ -72,6 +72,7 @@
 		<node name="sv" value="瑞典语" />
 		<node name="tr" value="土耳其语" />
 		<node name="uk" value="乌克兰语" />
+		<node name="vi" toBeTranslated="true" value="Vietnamese" />
 		<node name="zh" value="中文" />
 		<node name="other" value="其他" />
 	</node>

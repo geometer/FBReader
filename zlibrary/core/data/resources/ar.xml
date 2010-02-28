@@ -72,6 +72,7 @@
 		<node name="tr" value="التركية" />
 		<node name="sv" value="السويدية" />
 		<node name="uk" value="الأكرانية" />
+		<node name="vi" toBeTranslated="true" value="Vietnamese" />
 		<node name="zh" value="الصينية" />
 		<node name="other" value="أخري" />
 	</node>

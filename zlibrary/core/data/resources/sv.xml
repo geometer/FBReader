@@ -72,6 +72,7 @@
 		<node name="tr" value="Turkiska" />
 		<node name="sv" value="Svenska" />
 		<node name="uk" value="Ukrainska" />
+		<node name="vi" value="Vietnamesiska" />
 		<node name="zh" value="Kinesiska" />
 		<node name="other" value="Annat" />
 	</node>

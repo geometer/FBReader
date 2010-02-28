@@ -72,6 +72,7 @@
 		<node name="tr" value="Turecky"/>
 		<node name="sv" value="Švédsky"/>
 		<node name="uk" value="Ukrajinsky"/>
+		<node name="vi" toBeTranslated="true" value="Vietnamese" />
 		<node name="zh" value="Čínsky"/>
 		<node name="other" value="Jiný"/>
 	</node>

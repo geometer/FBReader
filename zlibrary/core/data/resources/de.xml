@@ -72,6 +72,7 @@
 		<node name="sv" value="Schwedisch"/>
 		<node name="tr" value="Türkisch"/>
 		<node name="uk" value="Ukrainisch"/>
+		<node name="vi" value="Vietnamesisch" />
 		<node name="zh" value="Chinesisch"/>
 		<node name="other" value="Andere"/>
 	</node>

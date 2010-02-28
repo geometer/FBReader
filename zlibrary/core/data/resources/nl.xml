@@ -72,6 +72,7 @@
 		<node name="sv" value="Zweeds"/>
 		<node name="tr" value="Turks"/>
 		<node name="uk" value="Ukraiens"/>
+		<node name="vi" value="Vietnamees" />
 		<node name="zh" value="Chinees"/>
 		<node name="other" value="Anders"/>
 	</node>

@@ -72,6 +72,7 @@
 		<node name="sv" value="Sueco" />
 		<node name="tr" value="Turco" />
 		<node name="uk" value="Ucraniano" />
+		<node name="vi" value="Vietnamita" />
 		<node name="zh" value="Chino" />
 		<node name="other" value="Otro" />
 	</node>

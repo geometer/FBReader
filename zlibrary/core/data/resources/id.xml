@@ -72,6 +72,7 @@
 		<node name="sv" value="Swedia" />
 		<node name="tr" value="Turki" />
 		<node name="uk" value="Ukraina" />
+		<node name="vi" value="Vietnam" />
 		<node name="zh" value="Cina" />
 		<node name="other" value="Lainnya" />
 	</node>
