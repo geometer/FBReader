@@ -21,11 +21,13 @@
 
 #include "NetworkAuthenticationManager.h"
 
+#include "../NetworkLink.h"
 #include "../NetworkErrors.h"
 
-NetworkAuthenticationManager::NetworkAuthenticationManager(const std::string &siteName) :
-	UserNameOption(ZLCategoryKey::NETWORK, siteName, "userName", ""),
-	SkipIPOption(ZLCategoryKey::NETWORK, siteName, "skipIP", false) {
+NetworkAuthenticationManager::NetworkAuthenticationManager(const NetworkLink &link) :
+	Link(link),
+	UserNameOption(ZLCategoryKey::NETWORK, link.SiteName, "userName", ""),
+	SkipIPOption(ZLCategoryKey::NETWORK, link.SiteName, "skipIP", false) {
 }
 
 NetworkAuthenticationManager::~NetworkAuthenticationManager() {

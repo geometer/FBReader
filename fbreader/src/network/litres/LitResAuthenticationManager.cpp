@@ -32,8 +32,7 @@
 #include "../NetworkLinkCollection.h"
 
 LitResAuthenticationManager::LitResAuthenticationManager(const NetworkLink &link) :
-	NetworkAuthenticationManager(link.SiteName), 
-	myLink(link),
+	NetworkAuthenticationManager(link), 
 	mySidChecked(false), 
 	mySidUserNameOption(ZLCategoryKey::NETWORK, link.SiteName, "sidUserName", ""), 
 	mySidOption(ZLCategoryKey::NETWORK, link.SiteName, "sid", ""),
@@ -64,7 +63,7 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 	ZLNetworkUtil::appendParameter(query, "sid", mySidOption.value());
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(myLink, "pages/catalit_authorise/" + query),
+		LitResUtil::url(Link, "pages/catalit_authorise/" + query),
 		certificate(),
 		xmlReader
 	);
@@ -96,7 +95,7 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 	}
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(myLink, "pages/catalit_authorise/" + query),
+		LitResUtil::url(Link, "pages/catalit_authorise/" + query),
 		certificate(),
 		xmlReader
 	);
@@ -149,7 +148,7 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
 	ZLNetworkUtil::appendParameter(query, "art", book.Id);
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(myLink, "pages/purchase_book/" + query),
+		LitResUtil::url(Link, "pages/purchase_book/" + query),
 		certificate(),
 		xmlReader
 	);
@@ -170,7 +169,7 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
 			return error;
 		}
 		if (bookId != book.Id) {
-			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, myLink.SiteName);
+			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, Link.SiteName);
 		}
 	}
 	myPurchasedBooksIds.insert(book.Id);
@@ -186,7 +185,7 @@ std::string LitResAuthenticationManager::downloadLink(const NetworkBookItem &boo
 	std::string query;
 	ZLNetworkUtil::appendParameter(query, "sid", sid);
 	ZLNetworkUtil::appendParameter(query, "art", book.Id);
-	return LitResUtil::url(myLink, "pages/catalit_download_book/" + query);
+	return LitResUtil::url(Link, "pages/catalit_download_book/" + query);
 }
 
 void LitResAuthenticationManager::collectPurchasedBooks(NetworkItem::List &list) {
@@ -200,7 +199,7 @@ std::string LitResAuthenticationManager::refillAccountLink() {
 	}
 	std::string url =
 		"https://www.litres.ru/pages/put_money_on_account/?sid=" + sid;
-	myLink.rewriteUrl(url);
+	Link.rewriteUrl(url);
 	return url;
 }
 
@@ -256,9 +255,9 @@ shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std:
 	ZLNetworkUtil::appendParameter(query, "sid", sid);
 
 	return ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(myLink, "pages/catalit_browser/" + query), 
+		LitResUtil::url(Link, "pages/catalit_browser/" + query), 
 		certificate(),
-		new LitResDataParser(myLink, purchasedBooksList)
+		new LitResDataParser(Link, purchasedBooksList)
 	);
 }
 
@@ -285,7 +284,7 @@ shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadAccount(std::string
 	ZLNetworkUtil::appendParameter(query, "art", "0");
 
 	return ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(myLink, "pages/purchase_book/" + query),
+		LitResUtil::url(Link, "pages/purchase_book/" + query),
 		certificate(),
 		new LitResPurchaseDataParser(myAccount, dummy1)
 	);
@@ -319,7 +318,7 @@ std::string LitResAuthenticationManager::registerUser(const std::string &login, 
 	ZLNetworkUtil::appendParameter(query, "mail", email);
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(myLink, "pages/catalit_register_user/" + query),
+		LitResUtil::url(Link, "pages/catalit_register_user/" + query),
 		certificate(),
 		xmlReader
 	);
@@ -348,7 +347,7 @@ std::string LitResAuthenticationManager::recoverPassword(const std::string &emai
 	ZLNetworkUtil::appendParameter(query, "mail", email);
 
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(myLink, "pages/catalit_recover_pass/" + query),
+		LitResUtil::url(Link, "pages/catalit_recover_pass/" + query),
 		certificate(),
 		xmlReader
 	);

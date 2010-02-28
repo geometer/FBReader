@@ -27,8 +27,8 @@
  *	basic, post
  *
  * `basic` parameters:
- *     - signInURL (signInURL == checkURL)
- *     - signOutURL
+ *     - Link.url(URL_SIGN_IN) (= checkURL)
+ *     - Link.url(URL_SIGN_OUT)
  *
  * `post` parameters:
  *     - login string name
@@ -53,11 +53,7 @@
 class BasicAuthenticationManager : public NetworkAuthenticationManager {
 
 public:
-	BasicAuthenticationManager(
-		const std::string &siteName,
-		const std::string &signInUrl,
-		const std::string &signOutUrl
-	);
+	BasicAuthenticationManager(const NetworkLink &link);
 
 public:
 	AuthenticationStatus isAuthorised(bool useNetwork = true);
@@ -82,8 +78,6 @@ private:
 	const ZLNetworkSSLCertificate &certificate();
 
 private: // config data
-	std::string mySignInUrl;
-	std::string mySignOutUrl;
 	const ZLNetworkSSLCertificate &myCertificate;
 
 private:

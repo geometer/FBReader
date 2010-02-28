@@ -28,13 +28,16 @@
 
 struct ZLNetworkSSLCertificate;
 
+class NetworkLink;
+
 class NetworkAuthenticationManager {
 
 public:
-	NetworkAuthenticationManager(const std::string &siteName);
+	NetworkAuthenticationManager(const NetworkLink &link);
 	virtual ~NetworkAuthenticationManager();
 
 public:
+	const NetworkLink &Link;
 	ZLStringOption UserNameOption;
 	ZLBooleanOption SkipIPOption;
 

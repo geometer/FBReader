@@ -33,9 +33,6 @@
 
 #include "URLRewritingRule.h"
 
-const std::string OPDSLink::URL_MAIN = "main";
-const std::string OPDSLink::URL_SEARCH = "search";
-
 class OPDSLink::AdvancedSearch {
 
 public:

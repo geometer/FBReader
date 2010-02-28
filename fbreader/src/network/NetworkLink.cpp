@@ -25,6 +25,10 @@
 #include "NetworkLink.h"
 #include "NetworkOperationData.h"
 
+const std::string NetworkLink::URL_MAIN = "main";
+const std::string NetworkLink::URL_SEARCH = "search";
+const std::string NetworkLink::URL_SIGN_IN = "signIn";
+const std::string NetworkLink::URL_SIGN_OUT = "signOut";
 
 std::string NetworkLink::NetworkDataDirectory() {
 	return ZLFile(ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "network").path();

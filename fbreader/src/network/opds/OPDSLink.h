@@ -32,10 +32,6 @@ class URLRewritingRule;
 class OPDSLink : public NetworkLink {
 
 public:
-	static const std::string URL_MAIN;
-	static const std::string URL_SEARCH;
-
-public:
 	enum URLCondition {
 		URL_CONDITION_NEVER,
 		URL_CONDITION_SIGNED_IN,

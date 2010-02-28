@@ -40,6 +40,12 @@ public:
 	static std::string NetworkDataDirectory();
 	static std::string CertificatesPathPrefix();
 
+public:
+	static const std::string URL_MAIN;
+	static const std::string URL_SEARCH;
+	static const std::string URL_SIGN_IN;
+	static const std::string URL_SIGN_OUT;
+
 protected:
 	NetworkLink(
 		const std::string &siteName,

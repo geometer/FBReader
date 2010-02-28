@@ -27,8 +27,6 @@
 #include "../authentication/NetworkAuthenticationManager.h"
 #include "../NetworkItems.h"
 
-class NetworkLink;
-
 class LitResAuthenticationManager : public NetworkAuthenticationManager {
 
 public:
@@ -76,8 +74,6 @@ public: // Password Recovery
 	std::string recoverPassword(const std::string &email);
 
 private:
-	const NetworkLink &myLink;
-
 	bool mySidChecked;
 
 	ZLStringOption mySidUserNameOption;

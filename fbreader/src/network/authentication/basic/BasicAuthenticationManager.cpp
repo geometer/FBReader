@@ -23,19 +23,15 @@
 #include "BasicAuthenticationManager.h"
 #include "BasicAuthenticationRequest.h"
 
+#include "../../NetworkLink.h"
 #include "../../NetworkItems.h"
 #include "../../NetworkErrors.h"
 
-BasicAuthenticationManager::BasicAuthenticationManager(
-		const std::string &siteName,
-		const std::string &signInUrl,
-		const std::string &signOutUrl) :
-	NetworkAuthenticationManager(siteName),
-	mySignInUrl(signInUrl),
-	mySignOutUrl(signOutUrl),
-	myCertificate(siteName != "feedbooks.com" ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : ZLNetworkSSLCertificate::DONT_VERIFY_CERTIFICATE),
+BasicAuthenticationManager::BasicAuthenticationManager(const NetworkLink &link) :
+	NetworkAuthenticationManager(link),
+	myCertificate(link.SiteName != "feedbooks.com" ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : ZLNetworkSSLCertificate::DONT_VERIFY_CERTIFICATE),
 	myAccountChecked(false),
-	myAccountUserNameOption(ZLCategoryKey::NETWORK, siteName, "accountUserName", "") {
+	myAccountUserNameOption(ZLCategoryKey::NETWORK, link.SiteName, "accountUserName", "") {
 }
 
 
@@ -52,7 +48,7 @@ NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::i
 	}
 
 	shared_ptr<ZLExecutionData> data = new BasicAuthenticationRequest(
-		mySignInUrl,
+		Link.url(NetworkLink::URL_SIGN_IN),
 		certificate()
 	);
 	ZLNetworkRequest &request = (ZLNetworkRequest &)*data;
@@ -75,7 +71,7 @@ NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::i
 
 std::string BasicAuthenticationManager::authorise(const std::string &pwd) {
 	shared_ptr<ZLExecutionData> data = new BasicAuthenticationRequest(
-		mySignInUrl,
+		Link.url(NetworkLink::URL_SIGN_IN),
 		certificate()
 	);
 	ZLNetworkRequest &request = (ZLNetworkRequest &)*data;
@@ -98,10 +94,11 @@ void BasicAuthenticationManager::logOut() {
 	myAccountChecked = true;
 	myAccountUserNameOption.setValue("");
 
-	if (!mySignOutUrl.empty()) {
+	const std::string signOutUrl = Link.url(NetworkLink::URL_SIGN_IN);
+	if (!signOutUrl.empty()) {
 		// TODO: is it so necessary to clean up cookies???
 		shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createNoActionRequest(
-			mySignOutUrl,
+			signOutUrl,
 			certificate()
 		);
 		ZLNetworkManager::Instance().perform(data);

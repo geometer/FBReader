@@ -29,7 +29,7 @@ OPDSLinkReader::OPDSLinkReader() : myState(READ_NOTHING) {
 }
 
 shared_ptr<NetworkLink> OPDSLinkReader::link() {
-	if (mySiteName.empty() || myTitle.empty() || myLinks[OPDSLink::URL_MAIN].empty()) {
+	if (mySiteName.empty() || myTitle.empty() || myLinks[NetworkLink::URL_MAIN].empty()) {
 		return 0;
 	}
 	OPDSLink *opdsLink = new OPDSLink(
@@ -53,9 +53,7 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 
 	shared_ptr<NetworkAuthenticationManager> authManager;
 	if (myAuthenticationType == "basic") {
-		authManager = new BasicAuthenticationManager(
-			mySiteName, myLinks["signIn"], myLinks["signOut"]
-		);
+		authManager = new BasicAuthenticationManager(*opdsLink);
 	} else if (myAuthenticationType == "litres") {
 		authManager = new LitResAuthenticationManager(*opdsLink);
 	}
