@@ -138,19 +138,4 @@ inline void OPDSFeedMetadata::setOpensearchTotalResults(unsigned long number) { 
 inline void OPDSFeedMetadata::setOpensearchItemsPerPage(unsigned long number) { myOpensearchItemsPerPage = number; }
 inline void OPDSFeedMetadata::setOpensearchStartIndex(unsigned long number) { myOpensearchStartIndex = number; }
 
-
-
-class OPDSFeed : public OPDSFeedMetadata {
-
-public:
-	OPDSFeed();
-	OPDSFeed(shared_ptr<ATOMId> id, const std::string &title, shared_ptr<ATOMUpdated> updated);
-
-	std::vector<shared_ptr<OPDSEntry> > &entries() { return myEntries; }
-	const std::vector<shared_ptr<OPDSEntry> > &entries() const { return myEntries; }
-
-private:
-	std::vector<shared_ptr<OPDSEntry> > myEntries;
-};
-
 #endif /* __OPDSMETADATA_H__ */
