@@ -83,5 +83,5 @@ OPDSFeedMetadata::OPDSFeedMetadata() : myOpensearchTotalResults(0), myOpensearch
 }
 
 OPDSFeedMetadata::OPDSFeedMetadata(shared_ptr<ATOMId> id, const std::string &title, shared_ptr<ATOMUpdated> updated) :
-	ATOMFeedMetadata(id, title, updated) {
+	ATOMFeedMetadata(id, title, updated), myOpensearchTotalResults(0), myOpensearchItemsPerPage(0), myOpensearchStartIndex(1) {
 }
