@@ -83,8 +83,6 @@ private:
 	void rewriteUrl(std::string &url, bool isUrlExternal = false) const;
 
 private:
-	const std::string myTitle;
-	const std::string mySummary;
 	shared_ptr<AdvancedSearch> myAdvancedSearch;
 
 	std::map<std::string,URLCondition> myUrlConditions;
