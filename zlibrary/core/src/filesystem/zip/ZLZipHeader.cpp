@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLLogger.h>
+
 #include "ZLZipHeader.h"
 #include "ZLZDecompressor.h"
 #include "../ZLInputStream.h"
@@ -39,6 +41,10 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 			CRC32 = readLong(stream);
 			CompressedSize = readLong(stream);
 			UncompressedSize = readLong(stream);
+			if (CompressionMethod == 0 && CompressedSize != UncompressedSize) {
+				ZLLogger::Instance().println("zip", "Different compressed & uncompressed size for stored entry; the uncompressed one will be used.");
+				CompressedSize = UncompressedSize;
+			}
 			NameLength = readShort(stream);
 			ExtraLength = readShort(stream);
 			return stream.offset() == startOffset + 30 && NameLength != 0;

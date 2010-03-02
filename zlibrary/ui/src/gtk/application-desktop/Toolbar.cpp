@@ -210,7 +210,8 @@ void ZLGtkApplicationWindow::Toolbar::setToolbarItemState(ZLToolbar::ItemPtr ite
 	 * Not sure, but looks like gtk_widget_set_sensitive(WIDGET, false)
 	 * does something strange if WIDGET is already insensitive.
 	 */
-	bool alreadyEnabled = GTK_WIDGET_STATE(GTK_WIDGET(gtkItem)) != GTK_STATE_INSENSITIVE;
+	bool alreadyEnabled =
+		(GTK_WIDGET_STATE(GTK_WIDGET(gtkItem)) & GTK_STATE_INSENSITIVE) == 0;
 	if (enabled != alreadyEnabled) {
 		gtk_widget_set_sensitive(GTK_WIDGET(gtkItem), enabled);
 	}
