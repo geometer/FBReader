@@ -1,0 +1,10 @@
+--- fbreader-0.12.2.orig/fbreader/data/default/config.desktop.xml
++++ fbreader-0.12.2/fbreader/data/default/config.desktop.xml
+@@ -15,6 +15,7 @@
+     <option name="Delay" value="0"/>
+   </group>
+   <group name="Options">
++    <option name="IsSelectionEnabled" value="false"/>
+     <option name="LeftMargin" value="50"/>
+     <option name="RightMargin" value="50"/>
+     <option name="KeyDelay" value="0"/>

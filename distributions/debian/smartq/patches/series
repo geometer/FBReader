@@ -4,3 +4,4 @@
 140-fullscreen-scrolling.patch
 150-default-rotation-direction.patch
 160-use-gcc-4-3.patch
+170-disable-selection-by-default.patch
