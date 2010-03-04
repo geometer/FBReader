@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Vietnamese zlibrary resources, by Phạm Văn Hùng -->
+<!-- Vietnamese zlibrary resources, by Phạm Văn Hùng_Firestork -->
 <resources>
 	<node name="dialog">
 		<node name="button">
@@ -13,21 +13,21 @@
 			<node name="savingConfig" value="Đang lưu cấu hình..." />
 		</node>
 		<node name="networkError">
-			<node name="title" value="Mạng bị lỗi" />
-			<node name="unknownErrorMessage" value="Lỗi không biết" />
-			<node name="couldntCreateDirectoryMessage" value="Không thể tạo thư mục&#10;%s" />
-			<node name="couldntCreateFileMessage" value="Không thể tạo tập tin&#10;%s" />
+			<node name="title" value="Lỗi về mạng" />
+			<node name="unknownErrorMessage" value="Lỗi chưa biết" />
+			<node name="couldntCreateDirectoryMessage" value="Không tạo được thư mục&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Không tạo được tập tin&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" value="Không thể kết nối vào mạng" />
 			<node name="couldntConnectMessage" value="Không thể kết nối vào máy chủ %s" />
-			<node name="couldntResolveHostMessage" value="Không thể phân giải máy chủ%s " />
-			<node name="couldntResolveProxyMessage" value="Không thể kết nối qua proxy%s" />
+			<node name="couldntResolveHostMessage" value="Không thể phân giải máy chủ %s " />
+			<node name="couldntResolveProxyMessage" value="Không thể kết nối qua proxy %s" />
 			<node name="operationTimedOutMessage" value="Quá trình đã hết thời gian chờ" />
 			<node name="somethingWrongMessage" value="Một vài thứ không đúng(gặp lỗi) vì&#10;%s" />
 			<node name="sslConnectErrorMessage" value="Xuất hiện lỗi SSL/TLS handshake:&#10;%s" />
-			<node name="peerFailedVerificationMessage" value="Chứng chỉ SSL từ %s&#10;có vẻ không đúng" />
-			<node name="sslCertificateAuthorityMessage" value="Chứng chỉ SSL từ %s&#10;không thể được chứng nhận với chứng chỉ SSL CA dã biết" />
-			<node name="sslBadCertificateFileMessage" value="Không thể đọc được tập tin chứng chỉ SSL CA:&#10;%s" />
-			<node name="sslShutdownFailedMessage" value="Thất bại khi tắt kết nối SSL vì&#10;%s" />
+			<node name="peerFailedVerificationMessage" value="Chứng chỉ SSL từ %s&#10;có vẻ không Tốt" />
+			<node name="sslCertificateAuthorityMessage" value="Chứng chỉ SSL từ %s&#10;không thể được chứng nhận với chứng chỉ SSL CA đã biết" />
+			<node name="sslBadCertificateFileMessage" value="Không thể đọc tập tin chứng chỉ SSL CA:&#10;%s" />
+			<node name="sslShutdownFailedMessage" value="Thất bại khi ngắt kết nối SSL vì&#10;%s" />
 		</node>
 	</node>
 	<node name="color">
@@ -36,52 +36,52 @@
 		<node name="blue" value="Xanh da trời" />
 		<node name="black" value="Đen" />
 		<node name="white" value="Trắng" />
-		<node name="maroon" value="Nâu xẫm" />
+		<node name="maroon" value="Nâu sẫm" />
 		<node name="olive" value="Màu oliu" />
 		<node name="navy" value="Xanh dương" />
 		<node name="purple" value="Tím" />
-		<node name="teal" value="Màu mòng két :)" />
+		<node name="teal" value="Xanh vừa :)" />
 		<node name="silver" value="Bạc" />
 		<node name="gray" value="Xám" />
 		<node name="lime" value="Xanh lá mạ" />
 		<node name="yellow" value="Vàng" />
-		<node name="magenta" value="Tím tươi" />
+		<node name="magenta" value="Hồng đậm" />
 		<node name="cyan" value="Xanh ngọc" />
 		<node name="custom..." value="Tùy chỉnh..." />
 	</node>
 	<node name="language">
-		<node name="ar" value="Tiếng Ả rập" />
+		<node name="ar" value="Tiếng Ả Rập" />
 		<node name="cs" value="Tiếng CH Séc" />
 		<node name="de" value="Tiếng Đức" />
 		<node name="de-traditional" value="Tiếng Đức (truyền thống)" />
 		<node name="el" value="Tiếng Hy Lạp" />
 		<node name="en" value="Tiếng Anh" />
-		<node name="eo" value="Quốc Tế ngữ" />
+		<node name="eo" value="Quốc tế ngữ" />
 		<node name="es" value="Tiếng Tây Ban Nha" />
 		<node name="fi" value="Tiếng Phần Lan" />
 		<node name="fr" value="Tiếng Pháp" />
 		<node name="he" value="Tiếng Do Thái" />
-		<node name="hu" toBeTranslated="true" value="Hungarian" />
+		<node name="hu" value="Tiếng Hungari" />
 		<node name="id" value="Tiếng Inđônêxia" />
 		<node name="it" value="Tiếng Ý" />
-		<node name="lt" toBeTranslated="true" value="Lithuanian" />
-		<node name="nl" toBeTranslated="true" value="Dutch" />
+		<node name="lt" value="Tiếng Lát-vi" />
+		<node name="nl" value="Tiếng Hà Lan" />
 		<node name="no" value="Tiếng Na Uy" />
 		<node name="pt" value="Tiếng Bồ Đào Nha" />
 		<node name="ru" value="Tiếng Nga" />
-		<node name="tr" value="Tiếng Thổ Nhĩ Kỳ" />
 		<node name="sv" value="Tiếng Thụy Điển" />
+		<node name="tr" value="Tiếng Thổ Nhĩ Kỳ" />
 		<node name="uk" value="Tiếng Ukraina" />
-		<node name="zh" value="Tiếng Tàu" />
 		<node name="vi" value="Tiếng Việt" />
+		<node name="zh" value="Tiếng Tàu" />
 		<node name="other" value="Khác" />
 	</node>
 	<node name="boolean3">
-		<node name="on" value="Bật" />
-		<node name="off" value="Tắt" />
-		<node name="unchanged" value="Giữ nguyên" />
+		<node name="on" value="bật" />
+		<node name="off" value="tắt" />
+		<node name="unchanged" value="giữ nguyên" />
 	</node>
 	<node name="keyOptionView">
-		<node name="actionFor" value="Thao tác cho phím" />
+		<node name="actionFor" value="Thao tác cho Phím" />
 	</node>
 </resources>

@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Vietnamese FBReader resources, by Phạm Văn Hùng_Firestork -->
+<resources>
+	<node name="libraryView">
+		<node name="authorNode">
+			<node name="expandTree" value="Hiện sách" />
+			<node name="collapseTree" value="Ẩn sách" />
+			<node name="edit" value="Chỉnh sửa thông tin" />
+			<node name="unknownAuthor" value="Chưa biết tác giả" />
+		</node>
+		<node name="tagNode">
+			<node name="expandTree" value="Hiện sách" />
+			<node name="collapseTree" value="Ẩn sách" />
+			<node name="edit" value="Chỉnh sửa từ khóa" />
+			<node name="clone" value="Thêm 1 từ khóa" />
+			<node name="delete" value="Xóa từ khóa" />
+			<node name="noTags" value="Sách không có từ khóa" />
+		</node>
+		<node name="seriesNode">
+			<node name="expandTree" value="Hiện sách" />
+			<node name="collapseTree" value="Ẩn sách" />
+		</node>
+		<node name="bookNode">
+			<node name="read" value="Đọc sách" />
+			<node name="edit" value="Chỉnh sửa thông tin" />
+			<node name="delete" value="Xóa sách" />
+		</node>
+	</node>
+	<node name="networkView">
+		<node name="libraryItemNode">
+			<node name="expandTree" value="Mở rộng" />
+			<node name="collapseTree" value="Thu lại" />
+			<node name="reload" value="Tải lại" />
+			<node name="openInBrowser" value="Mở trong trình duyệt" />
+		</node>
+		<node name="libraryItemRootNode">
+			<node name="expandTree" value="Mở catalô" />
+			<node name="collapseTree" value="Đóng catalô" />
+			<node name="login" value="Đăng nhập" />
+			<node name="logout" value="Đăng xuấtt (%s)" />
+			<node name="reload" value="Tải lại" />
+			<node name="dontShow" value="Không hiện catalô này" />
+			<node name="refillAccount" value="Làm đầy tài khoản (hiện tại: %s)" />
+			<node name="register" value="Đăng kí" />
+			<node name="passwordRecovery" value="Phục hồi mật khẩu" />
+		</node>
+		<node name="searchResultNode">
+			<node name="title" value="Kết quả tìm kiếm" />
+			<node name="expandTree" value="Hiện kết quả" />
+			<node name="collapseTree" value="Ẩn kết quả" />
+		</node>
+		<node name="authorNode">
+			<node name="expandTree" value="Hiện sách" />
+			<node name="collapseTree" value="Ẩn sách" />
+		</node>
+		<node name="seriesNode">
+			<node name="expandTree" value="Hiện sách" />
+			<node name="collapseTree" value="Ẩn sách" />
+		</node>
+		<node name="bookNode">
+			<node name="read" value="Đọc bản ở máy " />
+			<node name="delete" value="Xóa bản ở máy" />
+			<node name="download" value="Tải về" />
+			<node name="readDemo" value="Đọc thử bản mẫu" />
+			<node name="downloadDemo" value="Tải về bản mẫu " />
+			<node name="buy" value="Mua (%s)" />
+		</node>
+	</node>
+	<node name="menu">
+		<node name="bookInfo" value="Thông tin sách..." />
+		<node name="toc" value="Mục lục" />
+		<node name="showLibrary" value="Mở Thư	viện" />
+		<node name="library" value="Thư viện">
+			<node name="showLibrary" value="Mở" />
+			<node name="previousBook" value="Quyển trước" />
+			<node name="showRecent" value="Vừa xem" />
+			<node name="addBook" value="Thêm sách..." />
+			<node name="showHelp" value="Nói về FBreader" />
+		</node>
+		<node name="gotoHome" value="Đến vị trí đầu của Tài liệu" />
+		<node name="gotoPageNumber" value="Đến trang..." />
+		<node name="gotoSectionStart" value="Đến đầu của một Tiết đoạn" />
+		<node name="gotoSectionEnd" value="Đến cuối của một Tiết đoạn " />
+		<node name="nextTOCSection" value="Đến khoản ML Tiếp theo" />
+		<node name="previousTOCSection" value="Đến khoản ML Trước" />
+		<node name="navigate" value="Navigate">
+			<node name="gotoHome" value="Đến vị trí đầu của Tài liệu" />
+			<node name="gotoPageNumber" value="Đến trang..." />
+			<node name="gotoSectionStart" value="Đến đầu của một Tiết đoạn" />
+			<node name="gotoSectionEnd" value="Đến cuối của một Tiết đoạn" />
+			<node name="nextTOCSection" value="Đến mục ML Tiếp theo" />
+			<node name="previousTOCSection" value="Đến mục ML Trước" />
+			<node name="undo" value="Quay lại" />
+			<node name="redo" value="Đi về trước" />
+		</node>
+		<node name="selection" value="Tiết đoạn">
+			<node name="copyToClipboard" value="Chép vào Clipboard" />
+			<node name="openInDictionary" value="Mở trong Từ	điển" />
+			<node name="clearSelection" value="Xóa" />
+		</node>
+		<node name="search" value="Tìm kiếm">
+			<node name="search" value="Tìm chữ..." />
+			<node name="findNext" value="Tìm tiếp phía sau" />
+			<node name="findPrevious" value="Tìm về phía trước" />
+		</node>
+		<node name="view" value="Cách xem">
+			<node name="rotate" value="Quay màn hình" />
+			<node name="toggleFullscreen" value="Toàn Màn hình" />
+			<node name="toggleIndicator" value="Đảo chiều Thanh định hướng" />
+		</node>
+		<node name="preferences" value="Tùy chỉnh..." />
+		<node name="quit" value="Đóng" />
+	</node>
+	<node name="toolbar">
+		<node name="showReading">
+			<node name="label" value="Đọc Sách" />
+			<node name="tooltip" value="Xem Chế độ Đọc sách" />
+		</node>
+		<node name="showLibrary">
+			<node name="label" value="Thư viện" />
+			<node name="tooltip" value="Xem Cây tổ chức Thư viện" />
+			<node name="popup" value="Xem danh sách vừa đọc" />
+		</node>
+		<node name="showRecent">
+			<node name="label" value="Sách vừa đọc" />
+			<node name="tooltip" value="Xem danh sách vừa đọc" />
+		</node>
+		<node name="byAuthor">
+			<node name="label" value="Theo Tác giả" />
+			<node name="tooltip" value="Tổ chức Sách theo tác giả" />
+		</node>
+		<node name="byTag">
+			<node name="label" value="Theo Từ khóa" />
+			<node name="tooltip" value="Tổ chức Sách theo Từ khóa" />
+		</node>
+		<node name="addBook">
+			<node name="label" value="Thêm Tập tin" />
+			<node name="tooltip" value="Thêm Tập tin vào Thư viện" />
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" value="Mạng" />
+			<node name="tooltip" value="Tìm kiếm trong các Thư viện trên	Mạng" />
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" value="Tìm kiếm Đơn giản" />
+			<node name="tooltip" value="Tìm kiếm trên Mạng" />
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" value="Tìm kiếm" />
+			<node name="tooltip" value="Tìm kiếm Nâng cao trên Mạng" />
+		</node>
+		<node name="gotoHome">
+			<node name="label" value="Đến Vị trí đầu" />
+			<node name="tooltip" value="Đến Vị trí đầu của sách" />
+		</node>
+		<node name="undo">
+			<node name="label" value="Quay lại" />
+			<node name="tooltip" value="Quay lại" />
+		</node>
+		<node name="redo">
+			<node name="label" value="Đi tiếp" />
+			<node name="tooltip" value="Đi tiếp" />
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" value="Đến Trang" />
+			<node name="tooltip" value="Đến Trang" />
+		</node>
+		<node name="toc">
+			<node name="label" value="ML" />
+			<node name="tooltip" value="Mục Lục" />
+		</node>
+		<node name="search">
+			<node name="label" value="Tìm kiếm" />
+			<node name="tooltip" value="Tìm kiếm chữ" />
+		</node>
+		<node name="findNext">
+			<node name="label" value="Tiếp" />
+			<node name="tooltip" value="Tìm tiếp" />
+		</node>
+		<node name="findPrevious">
+			<node name="label" value="Trước" />
+			<node name="tooltip" value="Tìm Phía trước" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="Thông tin Sách" />
+			<node name="tooltip" value="Hiện hộp Thông tin Sách" />
+		</node>
+		<node name="preferences">
+			<node name="label" value="Tùy chỉnh" />
+			<node name="tooltip" value="Hiện hộp Tùy chỉnh " />
+		</node>
+		<node name="rotate">
+			<node name="label" value="Quay" />
+			<node name="tooltip" value="Quay Sách" />
+		</node>
+		<node name="showHelp">
+			<node name="label" value="Nói về" />
+			<node name="tooltip" value="Về FBreader" />
+		</node>
+		<node name="filterLibrary">
+			<node name="label" value="Bộ lọc" />
+			<node name="tooltip" value="Bộ lọc" />
+		</node>
+	</node>
+	<node name="dialog">
+		<node name="button">
+			<node name="go" value="&amp;Đi!" />
+			<node name="thisOnly" value="Chỉ cái này" />
+			<node name="withSubtags" value="Với từ khóa phụ" />
+			<node name="removeLink" value="Xóa khỏi thư	viện" />
+			<node name="removeFile" value="Xóa khỏi ổ cứng" />
+			<node name="yesToAll" value="Đồng ý	&amp;tất cả" />
+			<node name="buy" value="&amp;Mua" />
+			<node name="buyAndDownload" value="Mua và &amp;tải về" />
+		</node>
+		<node name="OptionsDialog">
+			<node name="title" value="Tùy chọn FBreader" />
+			<node name="tab">
+				<node name="Library" value="Thư viện">
+					<node name="bookPath" value="Đường dẫn tới Sách" />
+					<node name="lookInSubdirectories" value="Tìm Sách trong Thư mục con" />
+					<node name="collectBooksWithoutMetaInfo" value="Sưu tập Sách mà không có Siêu Thông tin" />
+					<node name="downloadDirectory" value="Thư mục Sách tải về" />
+				</node>
+				<node name="NetworkLibrary" value="Tìm kiếm tên Mạng">
+					<node name="useProxy" value="Sử dụng	Proxy" />
+					<node name="proxyHost" value="Máy chủ Proxy" />
+					<node name="proxyPort" value="Cổng Proxy" />
+					<node name="timeout" value="Hoạt động Mạng hết Thời gian chờ,	giây" />
+				</node>
+				<node name="Language" value="Ngôn ngữ">
+					<node name="autoDetect" value="Tự động Lựa chọn Ngôn ngữ và cách Giải mã" />
+					<node name="defaultLanguage" value="Ngôn ngữ	Mặc định" />
+					<node name="defaultEncodingSet" value="Đặt cách Giải mã Mặc định" />
+					<node name="defaultEncoding" value="Cách Giải mã Mặc định" />
+					<node name="useWindows1252Hack" value="Sử dụng windows-1252 thay thế cho	iso-8859-1" />
+				</node>
+				<node name="Indicator" value="Thanh Định hướng">
+					<node name="type" value="Hiện như">
+						<node name="osScrollbar" value="Thanh cuộn của HĐH" />
+						<node name="fbIndicator" value="Thanh Định hướng kiểu cũ" />
+						<node name="none" value="Không Hiện" />
+					</node>
+					<node name="height" value="Độ rộng Thanh cuộn" />
+					<node name="offset" value="Khoảng cách tính từ cuối Văn bản" />
+					<node name="pageNumber" value="Hiện Vị trí trang hiện tại" />
+					<node name="time" value="Hiện Thời gian" />
+					<node name="fontSize" value="Cỡ Phông" />
+					<node name="tocMarks" value="Hiện các Đánh dấu ML" />
+					<node name="navigation" value="Cho phép Điều hướng" />
+				</node>
+				<node name="Scrolling" value="Cuộn">
+					<node name="keyScrollDelay" value="Thời gian giữa 2 lần ấn Phím Cuộn, mili giây" />
+					<node name="keyLinesToScroll" value="Số dòng để Cuộn mỗi Dòng	Cuộn" />
+					<node name="keyLinesToKeep" value="Số dòng để Giữ	mỗi Trang	Cuộn" />
+					<node name="enableTapScrolling" value="Bật Cuộn Phân nhánh" />
+					<node name="fingerOnly" value="Chỉ cuộn trong Chốt Phân nhánh" />
+				</node>
+				<node name="Selection" value="Sự	Chọn">
+					<node name="enableSelection" value="Bật Chọn Văn bản" />
+				</node>
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Luôn luôn Sử dụng Phông của Tôi" />
+				</node>
+				<node name="Margins" value="Canh Lề">
+					<node name="left" value="Lề Trái" />
+					<node name="right" value="Lề Phải" />
+					<node name="top" value="Lề Trên" />
+					<node name="bottom" value="Lề Dưới" />
+				</node>
+				<node name="Format" value="Định dạng">
+					<node name="optionsFor" value="Tùy chọn cho" />
+					<node name="lineSpacing" value="Giãn cách Dòng">
+						<node name="unchanged" value="&lt;giữ nguyên&gt;" />
+					</node>
+					<node name="firstLineIndent" value="Thụt Lề Dòng dầu" />
+					<node name="alignment" value="Căn chỉnh">
+						<node name="left" value="Trái" />
+						<node name="right" value="Phải" />
+						<node name="center" value="Giữa" />
+						<node name="justify" value="Tự căn chỉnh" />
+						<node name="unchanged" value="&lt;giữ nguyên&gt;" />
+					</node>
+					<node name="spaceBefore" value="Khoảng cách phía Trước" />
+					<node name="spaceAfter" value="Khoảng cách phía Sau" />
+					<node name="startIndent" value="Dòng Bắt đầu Thụt lề" />
+					<node name="endIndent" value="Dòng kết thúc Thụt lề" />
+				</node>
+				<node name="Styles" value="Kiểu">
+					<node name="optionsFor" value="Tùy chọn cho" />
+					<node name="fontFamily" value="Hệ thống">
+						<node name="unchanged" value="&lt;giữ nguyên&gt;" />
+					</node>
+					<node name="fontSize" value="Cỡ" />
+					<node name="fontSizeDifference" value="Các Cỡ Khác nhau" />
+					<node name="bold" value="Đậm" />
+					<node name="italic" value="Nghiêng" />
+					<node name="allowHyphenations" value="Cho phép Tách từ" />
+					<node name="autoHyphenations" value="Tự động Tách từ" />
+				</node>
+				<node name="Rotation" value="Quay">
+					<node name="direction" value="Kiểu Quay">
+						<node name="disabled" value="Tắt" />
+						<node name="clockwise" value="Thuận chiều kim đồng hồ 90 Độ" />
+						<node name="counterclockwise" value="Ngược chiều kim đồng hồ 90 Độ" />
+						<node name="180" value="180 Độ" />
+						<node name="cycle" value="Xoay vòng Cả 4 Hướng" />
+					</node>
+				</node>
+				<node name="Colors" value="Màu sắc">
+					<node name="colorFor" value="Màu cho">
+						<node name="background" value="Nền" />
+						<node name="selectionBackground" value="Chọn Nền" />
+						<node name="text" value="Văn bản thường" />
+						<node name="internalLink" value="Văn bản Siêu liên kết Bên ngoài" />
+						<node name="externalLink" value="Văn bản Siêu liên kết Bên trong" />
+						<node name="bookLink" value="Liên kết tới Quyển sách khác" />
+						<node name="highlighted" value="Làm nổi bật văn bản" />
+						<node name="treeLines" value="Dòng Cây" />
+						<node name="indicator" value="Vị trí thanh Định hướng" />
+					</node>
+				</node>
+				<node name="Keys" value="Keys">
+					<node name="grabSystemKeys" value="Bắt Phím Hệ thống" />
+					<node name="separate" value="Phím Gán Phụ thuộc vào Định hướng" />
+					<node name="orientation" value="Định hướng" />
+					<node name="action">
+						<node name="none" value="Không" />
+						<node name="showLibrary" value="Hiện thư viện" />
+						<node name="showNetLibrary" value="Hiện thư viện mạng" />
+						<node name="showRecent" value="Hiện những cuốn vừa đọc" />
+						<node name="previousBook" value="Mở Cuốn trước " />
+						<node name="toc" value="Hiện mục lục" />
+						<node name="gotoHome" value="Đến trang chủ" />
+						<node name="gotoSectionStart" value="Đến đầu tiết đoạn" />
+						<node name="gotoSectionEnd" value="Đến cuối tiết đoạn" />
+						<node name="nextTOCSection" value="Đến đoạn ML tiếp theo" />
+						<node name="previousTOCSection" value="Đến đoạn ML trước" />
+						<node name="pageForward" value="Cuộn trang về trước" />
+						<node name="pageBackward" value="Cuộn trang về sau" />
+						<node name="lineForward" value="Cuộn dòng về trước" />
+						<node name="lineBackward" value="Cuộn dòng về sau" />
+						<node name="undo" value="Hoàn tác" />
+						<node name="redo" value="Quay lại" />
+						<node name="copyToClipboard" value="Chép đoạn văn bản đã chọn vào clipboard" />
+						<node name="openInDictionary" value="Mở đoạn văn bản đã chọn trong clipboard" />
+						<node name="clearSelection" value="Xóa mục chọn" />
+						<node name="search" value="Tìm kiếm" />
+						<node name="findPrevious" value="Tìm trước" />
+						<node name="findNext" value="Tìm tiếp" />
+						<node name="increaseFont" value="Tăng cỡ phông" />
+						<node name="decreaseFont" value="Giảm cỡ phông" />
+						<node name="toggleIndicator" value="Đảo chiều vị trí thanh định hướng" />
+						<node name="toggleFullscreen" value="Đảo chế độ toàn màn hình" />
+						<node name="rotate" value="Xoay màn hình" />
+						<node name="preferences" value="Hiện hộp tùy chọn" />
+						<node name="bookInfo" value="Hiện hộp thông tin" />
+						<node name="addBook" value="Thêm sách" />
+						<node name="cancel" value="Hủy bỏl" />
+						<node name="quit" value="Thoát" />
+					</node>
+					<node name="quitOnCancel" value="Thoát Ứng dụng khi Hủy bỏ" />
+					<node name="keyDelay" value="Độ trễ Giữa các Phím Cấp bách được Cấp nhận" />
+				</node>
+				<node name="Config" value="Cấu hình">
+					<node name="autoSave" value="Lưu Trạng thái một cách Tự động" />
+					<node name="timeout" value="Thời gian chờ Giữa những Lần lưu, giây" />
+				</node>
+				<node name="Dictionary" value="Từ điển">
+					<node name="enableIntegration" value="Bật Tích hợp với	%s" />
+					<node name="defaultText" value="Bật Tích hợp với Từ điển" />
+					<node name="choice" value="Tích hợp với" />
+					<node name="singleClickOpen" value="Mở bằng Một lần Click" />
+				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="Mở Liên kết Bên ngoài trong	%s" />
+					<node name="defaultText" value="Mở Liên kết Bên ngoài trong Trình duyệt" />
+					<node name="choice" value="Dùng Trình duyệt" />
+					<node name="command" value="Lệnh để Thực thi" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Tác dụng ở Phím Nhả (Release) , không ở Phím Bấm (Press)" />
+					<node name="minStylusPressure" value="Áp lực bút Stylus Tối thiểu" />
+					<node name="maxStylusPressure" value="Áp lực bút Stylus Tối đa" />
+				</node>
+			</node>
+		</node>
+		<node name="InfoDialog">
+			<node name="title" value="FBReader - Thông tin sách" />
+			<node name="tab">
+				<node name="Common" value="Thông thường">
+					<node name="file" value="Tập tin" />
+					<node name="title" value="Tên sách" />
+					<node name="language" value="Ngôn ngữ" />
+					<node name="encodingSet" value="Đặt cách Giải mã" />
+					<node name="encoding" value="Cách Giải mã" />
+				</node>
+				<node name="Authors" value="Tác giả">
+					<node name="authorDisplayName" value="Tên Tác giả" />
+				</node>
+				<node name="Series" value="Bộ sách">
+					<node name="seriesTitle" value="Tên Bộ" />
+					<node name="bookIndex" value="Chỉ mục sách" />
+				</node>
+				<node name="Tags" value="Từ khóa">
+					<node name="tags" value="Tên Từ khóa" />
+				</node>
+				<node name="Text" value="Văn bản">
+					<node name="breakType" value="Ngắt Đoạn tại" />
+					<node name="ignoreIndent" value="Bỏ qua Thụt lề ngắn hơn" />
+					<node name="buildTOC" value="Tạo Mục Lục" />
+					<node name="emptyLines" value="Làm sạch Dòng Trước Tiết đoạn Mới" />
+				</node>
+				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
+					<node name="breakType" value="Ngắt Đoạn tại" />
+					<node name="ignoreIndent" value="Bỏ qua Thụt lề ngắn hơn" />
+					<node name="buildTOC" value="Tạo Mục Lục" />
+					<node name="emptyLines" value="Làm sạch Dòng Trước Tiết đoạn Mới" />
+				</node>
+			</node>
+		</node>
+		<node name="AuthorInfoDialog">
+			<node name="title" value="FBReader - Thông tin Tác giả" />
+			<node name="name" value="Tên Tác giả" />
+			<node name="sortKey" value="Khóa Xếp Tác giả" />
+		</node>
+		<node name="addFileDialog">
+			<node name="title" value="FBReader - Thêm Sách vào Thư viện" />
+		</node>
+		<node name="textSearchDialog">
+			<node name="title" value="Tìm Chữ" />
+			<node name="text" value="" />
+			<node name="ignoreCase" value="&amp;Bỏ qua loại chữ" />
+			<node name="wholeText" value="Giữ n&amp;guyên chữ" />
+			<node name="backward" value="&amp;Quay lại" />
+			<node name="currentSection" value="&amp;Chỉ đoạn này" />
+		</node>
+		<node name="networkSearchDialog">
+			<node name="title" value="Tìm kiếm trên Mạng" />
+			<node name="titleAndSeries" value="Tên/Bộ" />
+			<node name="author" value="Tác giả" />
+			<node name="category" value="Hạng mục" />
+			<node name="description" value="Mô tả" />
+			<node name="annotation" value="Tìm kiếm kết quả cho: %s" />
+		</node>
+		<node name="gotoPageDialog">
+			<node name="title" value="Đến Trang" />
+			<node name="pageNumber" value="Đến Trang Số" />
+		</node>
+		<node name="editTagDialog">
+			<node name="title" value="Chỉnh sửa Từ khóa" />
+			<node name="name" value="Tên Từ khóa" />
+			<node name="includeSubtags" value="Bao gồm Từ khóa phụ" />
+		</node>
+		<node name="cloneTagDialog">
+			<node name="title" value="Bản sao Từ khóa" />
+			<node name="name" value="Tên Từ khóa" />
+			<node name="includeSubtags" value="Bao gồm Từ khóa phụ" />
+		</node>
+		<node name="removeBookBox">
+			<node name="title" value="Xóa Sách" />
+			<node name="message" value="Xóa Sách&#10;&#8220;%s&#8221;&#10;khỏi Thư viện?" />
+			<node name="deleteFile" value="Bạn thực sự muốn&#10;xóa tập tin&#10;&#8220;%s&#8221;&#10;khỏi đĩa cứng?" />
+		</node>
+		<node name="removeTagBox">
+			<node name="title" value="Xóa Từ khóa" />
+			<node name="message" value="Xóa Từ khóa &#8220;%s&#8221;?" />
+		</node>
+		<node name="openBookErrorBox">
+			<node name="title" value="Lỗi" />
+			<node name="message" value="Không thể mở:&#10;%s" />
+		</node>
+		<node name="removeFileErrorBox">
+			<node name="title" value="Lỗi" />
+			<node name="message" value="Không thể xóa tập tin&#10;%s" />
+		</node>
+		<node name="noHelpBox">
+			<node name="title" value="Lỗi" />
+			<node name="message" value="Rất tiếc, không tìm thấy tập tin giúp đỡ" />
+		</node>
+		<node name="networkError">
+			<node name="emptyLibrariesList" value="Danh sách thư viện rỗng" />
+			<node name="authenticationFailed" value="Xác thực thất bại" />
+			<node name="internalError" value="Lỗi máy chủ nội bộ" />
+			<node name="purchaseNotEnoughMoney" value="Không đủ tiền" />
+			<node name="purchaseMissingBook" value="Sách bị mất" />
+			<node name="purchaseAlreadyPurchased" value="Đã sẵn sàng mua" />
+			<node name="bookNotPurchased" value="Sách không được mua" />
+			<node name="downloadLimitExceeded" value="Vượt quá giới hạn tải về" />
+			<node name="unsupportedOperation" value="Thao tác không được hỗ trợ" />
+			<node name="loginAlreadyTaken" value="Tên người dùng đã sẵn sàng sử dụng" />
+			<node name="loginNotSpecified" value="Vui lòng nhập tên người dùng" />
+			<node name="passwordNotSpecified" value="Làm ơn gõ một mật khẩu không trống rỗng" />
+			<node name="emailNotSpecified" value="Làm ơn gõ một địa chỉ thư điện tử (email)" />
+			<node name="invalidEMail" value="Địa chỉ thư điện tử không đúng" />
+			<node name="tooManyRegistrations" value="Có quá nhiều đăng ký từ địa chỉ IP của bạn;&#10;hãy thử lại trong ít phút nữa" />
+			<node name="noUserEmail" value="Chưa có người nào đăng&#10;với địa chỉ thư điện tử được chỉ định" />
+		</node>
+		<node name="downloadError">
+			<node name="title" value="Có lỗi khi đang tải về" />
+			<node name="message" value="Không thể tải về cuốn sách này ngay bây giờ" />
+		</node>
+		<node name="waitMessage">
+			<node name="loadingBook" value="Đang tải sách. Vui lòng đợi..." />
+			<node name="loadingBookList" value="Đang tải thư viện. Vui lòng đợi..." />
+			<node name="migrate" value="Đang nâng cấp lên phiên bản mới. Vui lòng đợi..." />
+			<node name="downloadBookList" value="Đang tải về danh sách các cuốn sách. Vui lòng đợi..." />
+			<node name="downloadBook" value="Đang tải sách về. Vui lòng đợi..." />
+			<node name="downloadImages" value="Đang tải về hình ảnh. Vui lòng đợi..." />
+			<node name="authentication" value="Xác thực. Vui lòng đợi..." />
+			<node name="purchaseBook" value="Mua sách. Vui lòng đợi..." />
+			<node name="initializeAuthenticationManager" value="Đang tải về thông tin tài khoản. Vui lòng đợi..." />
+			<node name="loadSubCatalog" value="Đang tải catalô. Vui lòng đợi..." />
+			<node name="registerUser" value="Đang đăng ký tài khoản mới. Vui lòng đợi..." />
+			<node name="passwordRecovery" value="Đang khôi phục mật khẩu. Vui lòng đợi..." />
+			<node name="authenticationCheck" value="Tài khoản hợp lệ. Vui lòng đợi..." />
+			<node name="signOut" value="Đang đăng xuất. Vui lòng đợi..." />
+		</node>
+		<node name="purchaseConfirmBox">
+			<node name="title" value="Mua sách" />
+			<node name="message" value="Bạn có chắc muốn mua&#10;&#8220;%s&#8221;&#10;sách?" />
+		</node>
+		<node name="AuthenticationDialog">
+			<node name="title" value="Xác thực" />
+			<node name="login" value="Tên người dùng" />
+			<node name="password" value="Mật khẩu" />
+			<node name="skipIP" value="Đừng giới hạn địa chỉ IP" />
+			<node name="loginIsEmpty" value="Tên người dùng không được để trống" />
+		</node>
+		<node name="emptyCatalogBox">
+			<node name="title" value="Thông tin" />
+			<node name="message" value="Catalô trống rỗng." />
+		</node>
+		<node name="dontShowConfirmBox">
+			<node name="title" value="Vô hiệu hóa catalô" />
+			<node name="message" value="Bạn thực sự muốn vô hiệu hóa&#10;&#8220;%s&#8221; catalô?&#10;&#10;Bạn có thể kích hoạt lại catalô này tại thẻ&#10;&#8220;Tìm kiếm trên Mạng&#8221; trong hộp Tùy chỉnh." />
+		</node>
+		<node name="deleteLocalCopyBox">
+			<node name="title" value="Xóa Sách" />
+			<node name="message" value="Bạn có chắc&#10;mình muốn xóa&#10;&#8220;%s&#8221; sách&#10;khỏi đĩa cứng?" />
+		</node>
+		<node name="RegisterUserDialog">
+			<node name="title" value="Người dùng đăng kí" />
+			<node name="login" value="Tên người dùng" />
+			<node name="password" value="Mật khẩu" />
+			<node name="confirmPassword" value="Xác nhận mật khẩu" />
+			<node name="email" value="Thư điện tử" tooltip="Thư điện tử này được dùng để khôi phục mật khẩu của bạn&#10;trong trường hợp bị mất.&#10;Nếu bạn không chỉ rõ một thư điện tử&#10;bạn không thể khôi phục mật khẩu của mình." />
+			<node name="differentPasswords" value="Mật khẩu và mật khẩu xác nhận phải giống nhau." />
+		</node>
+		<node name="PasswordRecoveryDialog">
+			<node name="title" value="Khôi phục mật khẩu" />
+			<node name="email" value="Thư điện tử" />
+		</node>
+		<node name="recoverySuccessfulBox">
+			<node name="title" value="Khôi phục mật khẩu" />
+			<node name="message" value="Một bức thư với những hướng dẫn rõ ràng&#10;đã được gửi tới&#10;%s" />
+		</node>
+		<node name="cantOpenDownloadedFile">
+			<node name="title" value="Lỗi Tải về" />
+			<node name="message" value="Không thể mở tập tin đã tải về&#10;%s." />
+		</node>
+	</node>
+	<node name="style">
+		<node name="Base" value="Cơ sở" />
+		<node name="Regular Paragraph" value="Đoạn văn bản Bình thường" />
+		<node name="Title" value="Nhan đề sách" />
+		<node name="Section Title" value="Nhan đề Tiết đoạn" />
+		<node name="Poem Title" value="Nhan đề Bài thơ" />
+		<node name="Subtitle" value="Chú thích" />
+		<node name="Annotation" value="Ghi chú" />
+		<node name="Epigraph" value="Đề từ" />
+		<node name="Stanza" value="Khổ thơ" />
+		<node name="Verse" value="Câu thơ" />
+		<node name="Preformatted text" value="Đoạn văn bản đã định dạng" />
+		<node name="Image" value="Hình ảnh" />
+		<node name="Cite" value="Trích dẫn" />
+		<node name="Author" value="Tác giả" />
+		<node name="Date" value="Ngày tháng" />
+		<node name="Internal Hyperlink" value="Siêu liên kết Nội bộ" />
+		<node name="Footnote" value="Chú dẫn cuối trang" />
+		<node name="Emphasis" value="Nổi bật" />
+		<node name="Strong" value="Mạnh" />
+		<node name="Subscript" value="Chỉ số dưới" />
+		<node name="Superscript" value="Chỉ số trên" />
+		<node name="Code" value="Mã" />
+		<node name="StrikeThrough" value="StrikeThrough" />
+		<node name="Contents Table" value="Mục Lục" />
+		<node name="Library Entry" value="Mục nhập Thư viện" />
+		<node name="Recent Book List" value="Danh sách những Cuốn vùa đọc" />
+		<node name="Italic" value="Nghiêng" />
+		<node name="Bold" value="Đậm" />
+		<node name="Definition" value="Định nghĩa" />
+		<node name="Definition Description" value="Mô tả Định nghĩa" />
+		<node name="Header 1" value="Đầu dòng 1" />
+		<node name="Header 2" value="Đầu dòng 2" />
+		<node name="Header 3" value="Đầu dòng 3" />
+		<node name="Header 4" value="Đầu dòng 4" />
+		<node name="Header 5" value="Đầu dòng 5" />
+		<node name="Header 6" value="Đầu dòng 6" />
+		<node name="External Hyperlink" value="Siêu liên kết Bên ngoài" />
+		<node name="Link to Another Book" value="Liên kế tới Cuốn sách Khác" />
+	</node>
+	<node name="external">
+		<node name="browser" value="Trình duyệt" />
+		<node name="defaultBrowser" value="Trình duyệt Mặc định" />
+	</node>
+	<node name="mobipocketPlugin">
+		<node name="unknown" value="Lỗi Chưa biết" />
+		<node name="unsupportedCompressionMethod" value="Phương thức Nén Chưa được hỗ trợ" />
+		<node name="encryptedFile" value="Tập tin được bảo vệ bằng DRM" />
+	</node>
+	<node name="networkLibrary">
+		<node name="caption" value="Thư viện trên Mạng" />
+	</node>
+	<node name="library">
+		<node name="caption" value="Thư viện" />
+	</node>
+</resources>
