@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!-- Vietnamese FBReader resources, by Phạm Văn Hùng_Firestork -->
 <resources>
 	<node name="libraryView">
@@ -222,7 +222,7 @@
 					<node name="collectBooksWithoutMetaInfo" value="Sưu tập Sách mà không có Siêu Thông tin" />
 					<node name="downloadDirectory" value="Thư mục Sách tải về" />
 				</node>
-				<node name="NetworkLibrary" value="Tìm kiếm tên Mạng">
+				<node name="NetworkLibrary" value="Tìm kiếm trên Mạng">
 					<node name="useProxy" value="Sử dụng	Proxy" />
 					<node name="proxyHost" value="Máy chủ Proxy" />
 					<node name="proxyPort" value="Cổng Proxy" />
@@ -288,7 +288,7 @@
 				</node>
 				<node name="Styles" value="Kiểu">
 					<node name="optionsFor" value="Tùy chọn cho" />
-					<node name="fontFamily" value="Hệ thống">
+					<node name="fontFamily" value="Phông Hệ thống">
 						<node name="unchanged" value="&lt;giữ nguyên&gt;" />
 					</node>
 					<node name="fontSize" value="Cỡ" />
@@ -320,7 +320,7 @@
 						<node name="indicator" value="Vị trí thanh Định hướng" />
 					</node>
 				</node>
-				<node name="Keys" value="Keys">
+				<node name="Keys" value="Các phím">
 					<node name="grabSystemKeys" value="Bắt Phím Hệ thống" />
 					<node name="separate" value="Phím Gán Phụ thuộc vào Định hướng" />
 					<node name="orientation" value="Định hướng" />
@@ -360,7 +360,7 @@
 						<node name="quit" value="Thoát" />
 					</node>
 					<node name="quitOnCancel" value="Thoát Ứng dụng khi Hủy bỏ" />
-					<node name="keyDelay" value="Độ trễ Giữa các Phím Cấp bách được Cấp nhận" />
+					<node name="keyDelay" value="Độ trễ Giữa các lần Bấm Phím được Chấp nhận" />
 				</node>
 				<node name="Config" value="Cấu hình">
 					<node name="autoSave" value="Lưu Trạng thái một cách Tự động" />
@@ -388,7 +388,7 @@
 		<node name="InfoDialog">
 			<node name="title" value="FBReader - Thông tin sách" />
 			<node name="tab">
-				<node name="Common" value="Thông thường">
+				<node name="Common" value="Tổng quát">
 					<node name="file" value="Tập tin" />
 					<node name="title" value="Tên sách" />
 					<node name="language" value="Ngôn ngữ" />
@@ -501,8 +501,8 @@
 			<node name="message" value="Không thể tải về cuốn sách này ngay bây giờ" />
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Đang tải sách. Vui lòng đợi..." />
-			<node name="loadingBookList" value="Đang tải thư viện. Vui lòng đợi..." />
+			<node name="loadingBook" value="Đang tải sách. Vui lòng đợi..." />
+			<node name="loadingBookList" value="Đang tải thu viện. Vui lòng đợi..." />
 			<node name="migrate" value="Đang nâng cấp lên phiên bản mới. Vui lòng đợi..." />
 			<node name="downloadBookList" value="Đang tải về danh sách các cuốn sách. Vui lòng đợi..." />
 			<node name="downloadBook" value="Đang tải sách về. Vui lòng đợi..." />
