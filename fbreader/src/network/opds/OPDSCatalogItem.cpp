@@ -49,7 +49,7 @@ std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {
 		}
 
 		children.insert(children.end(), data.Items.begin(), data.Items.end());
-		networkData = Link.resume(data);
+		networkData = data.resume();
 	}
 
 	return "";

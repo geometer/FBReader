@@ -17,32 +17,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __NETWORKOPERATIONDATA_H__
-#define __NETWORKOPERATIONDATA_H__
+#include "NetworkLink.h"
+#include "NetworkOperationData.h"
 
-#include <shared_ptr.h>
+NetworkOperationData::NetworkOperationData(const NetworkLink &link) : Link(link), myResumeCount(0) {
+}
 
-#include "NetworkItems.h"
+void NetworkOperationData::clear() {
+	Items.clear();
+	ResumeURI.clear();
+}
 
-class ZLExecutionData;
-
-class NetworkLink;
-
-class NetworkOperationData {
-
-public:
-	NetworkOperationData(const NetworkLink &link);
-
-	void clear();
-	shared_ptr<ZLExecutionData> resume();
-
-public:
-	const NetworkLink &Link;
-	NetworkItem::List Items;
-	std::string ResumeURI;
-
-private:
-	size_t myResumeCount;
-};
-
-#endif /* __NETWORKOPERATIONDATA_H__ */
+shared_ptr<ZLExecutionData> NetworkOperationData::resume() {
+	if (++myResumeCount >= 10) {
+		return 0;
+	}
+	return Link.resume(*this);
+}

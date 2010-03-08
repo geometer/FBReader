@@ -259,17 +259,17 @@ bool NetworkLinkCollection::downloadBook(const BookReference &reference, const s
 
 shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std::string &pattern) {
 	ZLExecutionData::Vector dataList;
-	std::vector<shared_ptr<NetworkOperationData> > searchDatas;
+	std::vector<shared_ptr<NetworkOperationData> > opDataVector;
 	shared_ptr<NetworkBookCollection> result;
 
 	myErrorMessage.clear();
 
 	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		NetworkLink &link = **it;
-		shared_ptr<NetworkOperationData> searchData = new NetworkOperationData(link);
-		searchDatas.push_back(searchData);
 		if (link.OnOption.value()) {
-			shared_ptr<ZLExecutionData> data = link.simpleSearchData(*searchData, pattern);
+			shared_ptr<NetworkOperationData> opData = new NetworkOperationData(link);
+			opDataVector.push_back(opData);
+			shared_ptr<ZLExecutionData> data = link.simpleSearchData(*opData, pattern);
 			if (!data.isNull()) {
 				dataList.push_back(data);
 			}
@@ -279,26 +279,22 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std:
 	while (myErrorMessage.empty() && !dataList.empty()) {
 		myErrorMessage = ZLNetworkManager::Instance().perform(dataList);
 
-		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = searchDatas.begin(); jt != searchDatas.end(); ++jt) {
-			NetworkOperationData &searchData = **jt;
-			if (!searchData.Items.empty() && result.isNull()) {
+		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = opDataVector.begin(); jt != opDataVector.end(); ++jt) {
+			NetworkOperationData &opData = **jt;
+			if (!opData.Items.empty() && result.isNull()) {
 				result = new NetworkBookCollection();
 			}
-			for (NetworkItem::List::const_iterator kt = searchData.Items.begin(); kt != searchData.Items.end(); ++kt) {
+			for (NetworkItem::List::const_iterator kt = opData.Items.begin(); kt != opData.Items.end(); ++kt) {
 				result->addBook(*kt);
 			}
 		}
 
 		dataList.clear();
 
-		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = searchDatas.begin(); jt != searchDatas.end(); ++jt) {
-			NetworkOperationData &searchData = **jt;
-			const NetworkLink &link = searchData.Link;
-			if (link.OnOption.value()) {
-				shared_ptr<ZLExecutionData> data = link.resume(searchData);
-				if (!data.isNull()) {
-					dataList.push_back(data);
-				}
+		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = opDataVector.begin(); jt != opDataVector.end(); ++jt) {
+			shared_ptr<ZLExecutionData> data = (*jt)->resume();
+			if (!data.isNull()) {
+				dataList.push_back(data);
 			}
 		}
 	}
@@ -308,17 +304,17 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std:
 
 shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) {
 	ZLExecutionData::Vector dataList;
-	std::vector<shared_ptr<NetworkOperationData> > searchDatas;
+	std::vector<shared_ptr<NetworkOperationData> > opDataVector;
 	shared_ptr<NetworkBookCollection> result;
 
 	myErrorMessage.clear();
 
 	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		NetworkLink &link = **it;
-		shared_ptr<NetworkOperationData> searchData = new NetworkOperationData(link);
-		searchDatas.push_back(searchData);
 		if (link.OnOption.value()) {
-			shared_ptr<ZLExecutionData> data = link.advancedSearchData(*searchData, titleAndSeries, author, tag, annotation);
+			shared_ptr<NetworkOperationData> opData = new NetworkOperationData(link);
+			opDataVector.push_back(opData);
+			shared_ptr<ZLExecutionData> data = link.advancedSearchData(*opData, titleAndSeries, author, tag, annotation);
 			if (!data.isNull()) {
 				dataList.push_back(data);
 			}
@@ -328,26 +324,22 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 	while (myErrorMessage.empty() && !dataList.empty()) {
 		myErrorMessage = ZLNetworkManager::Instance().perform(dataList);
 
-		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = searchDatas.begin(); jt != searchDatas.end(); ++jt) {
-			NetworkOperationData &searchData = **jt;
-			if (!searchData.Items.empty() && result.isNull()) {
+		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = opDataVector.begin(); jt != opDataVector.end(); ++jt) {
+			NetworkOperationData &opData = **jt;
+			if (!opData.Items.empty() && result.isNull()) {
 				result = new NetworkBookCollection();
 			}
-			for (NetworkItem::List::const_iterator kt = searchData.Items.begin(); kt != searchData.Items.end(); ++kt) {
+			for (NetworkItem::List::const_iterator kt = opData.Items.begin(); kt != opData.Items.end(); ++kt) {
 				result->addBook(*kt);
 			}
 		}
 
 		dataList.clear();
 
-		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = searchDatas.begin(); jt != searchDatas.end(); ++jt) {
-			NetworkOperationData &searchData = **jt;
-			const NetworkLink &link = searchData.Link;
-			if (link.OnOption.value()) {
-				shared_ptr<ZLExecutionData> data = link.resume(searchData);
-				if (!data.isNull()) {
-					dataList.push_back(data);
-				}
+		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = opDataVector.begin(); jt != opDataVector.end(); ++jt) {
+			shared_ptr<ZLExecutionData> data = (*jt)->resume();
+			if (!data.isNull()) {
+				dataList.push_back(data);
 			}
 		}
 	}

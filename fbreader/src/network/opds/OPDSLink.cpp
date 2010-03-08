@@ -204,9 +204,6 @@ shared_ptr<ZLExecutionData> OPDSLink::advancedSearchData(
 }
 
 shared_ptr<ZLExecutionData> OPDSLink::resume(NetworkOperationData &data) const {
-	if (++data.ResumeCount >= 10) {
-		return 0;
-	}
 	const std::string url = data.ResumeURI;
 	data.clear();
 	return createNetworkData(url, data);
