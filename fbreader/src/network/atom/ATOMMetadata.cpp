@@ -147,7 +147,14 @@ void ATOMLink::readAttributes(const std::map<std::string, std::string> &attribut
 	readAttribute(LENGTH, attributes);
 }
 
+void ATOMLink::setUserData(const std::string &key, const std::string &value) {
+	myUserData[key] = value;
+}
 
+const std::string ATOMLink::userData(const std::string &key) const {
+	std::map<std::string,std::string>::const_iterator it = myUserData.find(key);
+	return (it != myUserData.end()) ? it->second : std::string();
+}
 
 ATOMLogo::ATOMLogo() {
 }

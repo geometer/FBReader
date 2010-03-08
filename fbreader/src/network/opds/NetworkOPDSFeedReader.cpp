@@ -25,6 +25,7 @@
 
 #include "NetworkOPDSFeedReader.h"
 #include "OPDSCatalogItem.h"
+#include "OPDSXMLParser.h"
 
 #include "../NetworkOperationData.h"
 #include "../NetworkItems.h"
@@ -173,10 +174,16 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 				));
 			}
 		} else if (rel == OPDSConstants::REL_ACQUISITION_BUY) {
-			if (type == OPDSConstants::MIME_APP_LITRES) {
-				references.push_back(new BookReference(
-					href, BookReference::FB2_ZIP, BookReference::BUY
-				));
+			BookReference::Format format = formatByMimeType(link.userData(OPDSXMLParser::KEY_FORMAT));
+			if (format != BookReference::NONE) {
+				std::string price = link.userData(OPDSXMLParser::KEY_PRICE);
+				std::string currency = link.userData(OPDSXMLParser::KEY_CURRENCY);
+				if (currency == "RUB") {
+					price += " р.";
+				} else {
+					price += " " + currency;
+				}
+				references.push_back(new BuyBookReference(href, format, price));
 			}
 		}
 	}

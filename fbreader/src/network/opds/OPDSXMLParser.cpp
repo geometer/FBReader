@@ -40,14 +40,20 @@ static const std::string TAG_SUBTITLE = "subtitle";
 static const std::string TAG_TITLE = "title";
 static const std::string TAG_UPDATED = "updated";
 static const std::string TAG_META = "meta";
+static const std::string TAG_PRICE = "price";
 
 static const std::string DC_TAG_LANGUAGE = "language";
 static const std::string DC_TAG_ISSUED = "issued";
 static const std::string DC_TAG_PUBLISHER = "publisher";
+static const std::string DC_TAG_FORMAT = "format";
 
 static const std::string OPENSEARCH_TAG_TOTALRESULTS = "totalResults";
 static const std::string OPENSEARCH_TAG_ITEMSPERPAGE = "itemsPerPage";
 static const std::string OPENSEARCH_TAG_STARTINDEX = "startIndex";
+
+const std::string OPDSXMLParser::KEY_PRICE = "price";
+const std::string OPDSXMLParser::KEY_CURRENCY = "currency";
+const std::string OPDSXMLParser::KEY_FORMAT = "format";
 
 OPDSXMLParser::OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader) :myFeedReader(feedReader) {
 	myState = START;
@@ -62,13 +68,14 @@ void OPDSXMLParser::namespaceListChangedHandler() {
 	myAtomNamespaceId.erase();
 	myOpenSearchNamespaceId.erase();
 	myCalibreNamespaceId.erase();
+	myOpdsNamespaceId.erase();
 
 	const std::map<std::string,std::string> &nsMap = namespaces();
 	for (std::map<std::string,std::string>::const_iterator it = nsMap.begin(); it != nsMap.end(); ++it) {
 		if (it->first.empty()) {
 			continue;
 		}
-		if (ZLStringUtil::stringStartsWith(it->second, XMLNamespace::DublinCoreTermsPrefix)) {
+		if (it->second == XMLNamespace::DublinCoreTerms) {
 			myDublinCoreNamespaceId = it->first;
 		} else if (it->second == XMLNamespace::Atom) {
 			myAtomNamespaceId = it->first;
@@ -76,6 +83,8 @@ void OPDSXMLParser::namespaceListChangedHandler() {
 			myOpenSearchNamespaceId = it->first;
 		} else if (it->second == XMLNamespace::CalibreMetadata) {
 			myCalibreNamespaceId = it->first;
+		} else if (it->second == XMLNamespace::Opds) {
+			myOpdsNamespaceId = it->first;
 		}
 	}
 }
@@ -218,6 +227,14 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 				} 
 			} 
 			break;
+		case FE_LINK:
+			if (tagPrefix == myOpdsNamespaceId && tagName == TAG_PRICE) {
+				myLink->setUserData(KEY_CURRENCY, attributeMap["currencycode"]);
+				myState = FEL_PRICE;
+			} if (tagPrefix == myDublinCoreNamespaceId && tagName == DC_TAG_FORMAT) {
+				myState = FEL_FORMAT;
+			}
+			break;
 		case FE_AUTHOR:
 			if (tagPrefix == myAtomNamespaceId) {
 				if (tagName == TAG_NAME) {
@@ -333,6 +350,18 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			if (tagPrefix == myAtomNamespaceId && tagName == TAG_NAME) {
 				myAuthor->setName(myBuffer);
 				myState = FE_AUTHOR;
+			}
+			break;
+		case FEL_PRICE:
+			if (tagPrefix == myOpdsNamespaceId && tagName == TAG_PRICE) {
+				myLink->setUserData(KEY_PRICE, myBuffer);
+				myState = FE_LINK;
+			}
+			break;
+		case FEL_FORMAT:
+			if (tagPrefix == myDublinCoreNamespaceId && tagName == DC_TAG_FORMAT) {
+				myLink->setUserData(KEY_FORMAT, myBuffer);
+				myState = FE_LINK;
 			}
 			break;
 		case FA_URI:

@@ -128,6 +128,8 @@ void NetworkBookItem::removeLocalFiles() const {
 				 type == BookReference::DOWNLOAD_CONDITIONAL)) {
 			std::string fileName = (*it)->localCopyFileName();
 			if (!fileName.empty()) {
+				// TODO: remove a book from the library
+				// TODO: remove a record from the database
 				ZLFile(fileName).remove();
 			}
 		}

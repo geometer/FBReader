@@ -29,6 +29,11 @@
 class OPDSXMLParser : public ZLXMLReader {
 
 public:
+	static const std::string KEY_PRICE;
+	static const std::string KEY_CURRENCY;
+	static const std::string KEY_FORMAT;
+
+public:
 	OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader);
 
 private:
@@ -44,6 +49,7 @@ private:
 		FEED, F_ENTRY, F_ID, F_LINK, F_CATEGORY, F_TITLE, F_UPDATED, F_AUTHOR,
 		FA_NAME, FA_URI, FA_EMAIL,
 		FE_AUTHOR, FE_ID, FE_CATEGORY, FE_LINK, FE_PUBLISHED, FE_SUMMARY, FE_CONTENT, FE_SUBTITLE, FE_TITLE, FE_UPDATED, FE_DC_LANGUAGE, FE_DC_ISSUED, FE_DC_PUBLISHER,
+		FEL_PRICE, FEL_FORMAT,
 		FEA_NAME, FEA_URI, FEA_EMAIL,
 		OPENSEARCH_TOTALRESULTS, OPENSEARCH_ITEMSPERPAGE, OPENSEARCH_STARTINDEX,
 	};
@@ -57,6 +63,7 @@ private:
 	std::string myAtomNamespaceId;
 	std::string myOpenSearchNamespaceId;
 	std::string myCalibreNamespaceId;
+	std::string myOpdsNamespaceId;
 
 	State myState;
 
