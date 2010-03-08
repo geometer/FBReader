@@ -71,46 +71,6 @@ const ZLTypeId &NetworkBookItem::typeId() const {
 	return TYPE_ID;
 }
 
-/*std::string NetworkBookItem::fileName(URLType format) const {
-	std::string authorName;
-	size_t maxSize = 256 - title().size() - myLanguage.size() - 4;
-	if (!myAuthors.empty()) {
-		authorName = myAuthors[0].DisplayName;
-		for (size_t i = 1;  i < myAuthors.size() && authorName.size() < maxSize; ++i) {
-			authorName.append(",_");
-			authorName.append(myAuthors[i].DisplayName);
-		}
-	}
-	if (authorName.size() > maxSize) {
-		authorName.erase(maxSize);
-		ZLStringUtil::stripWhiteSpaces(authorName);
-	}
-	std::string fName = authorName + "_" + title() + "_(" + myLanguage + ")";
-	switch (format) {
-		case LINK_HTTP:
-			break;
-		case BOOK_EPUB:
-			fName += ".epub";
-			break;
-		case BOOK_MOBIPOCKET:
-			fName += ".mobi";
-			break;
-		case BOOK_FB2_ZIP:
-			fName += ".fb2.zip";
-			break;
-//		case BOOK_PDF:
-//			fName += ".pdf";
-//			break;
-		case BOOK_DEMO_FB2_ZIP:
-			fName += "_(trial).fb2.zip";
-			break;
-		case NONE:
-			return "";
-			break;
-	}
-	return ZLFile::replaceIllegalCharacters(fName, '_');
-}*/
-
 shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Type type) const {
 	shared_ptr<BookReference> reference;
 	for (std::vector<shared_ptr<BookReference> >::const_iterator it = myReferences.begin(); it != myReferences.end(); ++it) {
@@ -159,6 +119,19 @@ std::string NetworkBookItem::localCopyFileName() const {
 		}
 	}
 	return fileName;
+}
+
+void NetworkBookItem::removeLocalFiles() const {
+	for (std::vector<shared_ptr<BookReference> >::const_iterator it = myReferences.begin(); it != myReferences.end(); ++it) {
+		const BookReference::Type type = (*it)->ReferenceType;
+		if ((type == BookReference::DOWNLOAD ||
+				 type == BookReference::DOWNLOAD_CONDITIONAL)) {
+			std::string fileName = (*it)->localCopyFileName();
+			if (!fileName.empty()) {
+				ZLFile(fileName).remove();
+			}
+		}
+	}
 }
 
 shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Format format, BookReference::Type type) const {

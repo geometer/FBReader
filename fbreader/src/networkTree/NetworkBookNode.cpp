@@ -21,8 +21,6 @@
 #include <ZLImage.h>
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
-#include <ZLNetworkManager.h>
-#include <ZLNetworkUtil.h>
 #include <ZLDialogManager.h>
 
 #include "NetworkNodes.h"
@@ -32,9 +30,7 @@
 #include "AuthenticationDialog.h"
 
 #include "../network/NetworkLink.h"
-#include "../network/NetworkLinkCollection.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
-#include "../network/NetworkErrors.h"
 
 #include "../library/Book.h"
 
@@ -84,14 +80,11 @@ private:
 class NetworkBookNode::DeleteAction : public ZLRunnable {
 
 public:
-	DeleteAction(shared_ptr<NetworkItem> book);
+	DeleteAction(const NetworkBookItem &item);
 	void run();
 
 private:
-	void removeFormat(const NetworkBookItem &book, BookReference::Format format);
-
-private:
-	shared_ptr<NetworkItem> myBook;
+	const NetworkBookItem &myItem;
 };
 
 static const std::string DEMO_SUFFIX = " (фрагмент)";
@@ -115,7 +108,7 @@ void NetworkBookNode::init() {
 	myReadDemoAction = new ReadDemoAction(book);
 	myDownloadDemoAction = new DownloadAction(myBook, true);
 	myBuyAction = new BuyAction(myBook);
-	myDeleteAction = new DeleteAction(myBook);
+	myDeleteAction = new DeleteAction(book);
 }
 
 std::string NetworkBookNode::title() const {
@@ -328,39 +321,16 @@ void NetworkBookNode::BuyAction::run() {
 	fbreader.refreshWindow();
 }
 
-NetworkBookNode::DeleteAction::DeleteAction(shared_ptr<NetworkItem> book) : myBook(book) {
-}
-
-void NetworkBookNode::DeleteAction::removeFormat(const NetworkBookItem &book, BookReference::Format format) {
-	shared_ptr<BookReference> reference = book.reference(format, BookReference::DOWNLOAD);
-	if (reference.isNull()) {
-		return;
-	}
-	std::string fileName =
-		NetworkLinkCollection::Instance().bookFileName(*reference);
-	if (!fileName.empty()) {
-		// TODO: remove name from database
-		ZLFile(fileName).remove();
-	}
-	fileName =
-		NetworkLinkCollection::Instance().makeBookFileName(*reference);
-	if (!fileName.empty()) {
-		ZLFile(fileName).remove();
-	}
+NetworkBookNode::DeleteAction::DeleteAction(const NetworkBookItem &item) : myItem(item) {
 }
 
 void NetworkBookNode::DeleteAction::run() {
-	NetworkBookItem &book = (NetworkBookItem&)*myBook;
-
 	ZLResourceKey boxKey("deleteLocalCopyBox");
-	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book.Title);
+	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myItem.Title);
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
 		return;
 	}
 
-	removeFormat(book, BookReference::EPUB);
-	removeFormat(book, BookReference::FB2_ZIP);
-	removeFormat(book, BookReference::MOBIPOCKET);
-
+	myItem.removeLocalFiles();
 	FBReader::Instance().refreshWindow();
 }

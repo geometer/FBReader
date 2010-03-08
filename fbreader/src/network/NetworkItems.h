@@ -26,6 +26,7 @@
 
 #include <shared_ptr.h>
 
+#include <ZLFile.h>
 #include <ZLTypeId.h>
 
 #include "BookReference.h"
@@ -148,6 +149,7 @@ public:
 	shared_ptr<BookReference> reference(BookReference::Format format, BookReference::Type type) const;
 
 	std::string localCopyFileName() const;
+	void removeLocalFiles() const;
 
 public:
 	/*const*/ unsigned int Index;

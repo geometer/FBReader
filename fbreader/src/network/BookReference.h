@@ -25,18 +25,18 @@
 class BookReference {
 
 public:
-	enum Format {
-		NONE = 0,
-		MOBIPOCKET = 1,
-		FB2_ZIP = 2,
-		EPUB = 3,
-	};
-
 	enum Type {
 		DOWNLOAD,
 		DOWNLOAD_DEMO,
 		DOWNLOAD_CONDITIONAL,
 		BUY
+	};
+
+	enum Format {
+		NONE = 0,
+		MOBIPOCKET = 1,
+		FB2_ZIP = 2,
+		EPUB = 3,
 	};
 
 public:
