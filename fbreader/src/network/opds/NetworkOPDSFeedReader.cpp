@@ -84,10 +84,12 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 		const std::string &type = link.type();
 		if ((rel == OPDSConstants::REL_ACQUISITION ||
 				 rel == OPDSConstants::REL_ACQUISITION_SAMPLE ||
+				 rel == OPDSConstants::REL_ACQUISITION_BUY ||
 				 rel.empty()) &&
 				(type == OPDSConstants::MIME_APP_EPUB ||
 				 type == OPDSConstants::MIME_APP_MOBI ||
-				 type == OPDSConstants::MIME_APP_FB2ZIP)) {
+				 type == OPDSConstants::MIME_APP_FB2ZIP ||
+				 type == OPDSConstants::MIME_APP_LITRES)) {
 			hasBookLink = true;
 			break;
 		}
@@ -148,6 +150,10 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		} else if (rel == OPDSConstants::REL_ACQUISITION_SAMPLE) {
 			if (type == OPDSConstants::MIME_APP_FB2ZIP) {
 				urlMap[NetworkItem::URL_BOOK_DEMO_FB2_ZIP] = href;
+			}
+		} else if (rel == OPDSConstants::REL_ACQUISITION_BUY) {
+			if (type == OPDSConstants::MIME_APP_LITRES) {
+				urlMap[NetworkItem::URL_BOOK_BUY_FB2_ZIP] = href;
 			}
 		}
 	}

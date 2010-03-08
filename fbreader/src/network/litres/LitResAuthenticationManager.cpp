@@ -140,17 +140,20 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
 
+	std::map<NetworkItem::URLType,std::string>::const_iterator it =
+		book.URLByType.find(NetworkItem::URL_BOOK_BUY_FB2_ZIP);
+	if (it == book.URLByType.end()) {
+		// TODO: add correct error message
+		return "Oh, that's impossible";
+	}
+	std::string query = it->second;
+	ZLNetworkUtil::appendParameter(query, "sid", sid);
+
 	std::string account, bookId;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResPurchaseDataParser(account, bookId);
 
-	std::string query;
-	ZLNetworkUtil::appendParameter(query, "sid", sid);
-	ZLNetworkUtil::appendParameter(query, "art", book.Id);
-
 	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(Link, "pages/purchase_book/" + query),
-		certificate(),
-		xmlReader
+		query, certificate(), xmlReader
 	);
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 

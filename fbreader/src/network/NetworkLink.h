@@ -80,7 +80,8 @@ public:
 	ZLBooleanOption OnOption;
 
 private:
-	const std::map<std::string,std::string> myLinks;
+protected:
+	/*const*/ std::map<std::string,std::string> myLinks;
 
 private: // disable copying
 	NetworkLink(const NetworkLink &);

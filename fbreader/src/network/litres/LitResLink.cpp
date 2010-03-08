@@ -60,6 +60,10 @@ LitResLink::LitResLink() :
 		"feed-litres.png",
 		std::map<std::string,std::string>()
 	) {
+	myLinks[URL_SIGN_IN] = "https://robot.litres.ru/pages/catalit_authorise/?lfrom=51";
+	myLinks[URL_SIGN_UP] = "https://robot.litres.ru/pages/catalit_register_user/?lfrom=51";
+	myLinks[URL_REFILL_ACCOUNT] = "https://www.litres.ru/pages/put_money_on_account/?lfrom=51";
+	myLinks[URL_RECOVER_PASSWORD] = "http://robot.litres.ru/pages/catalit_recover_pass/?lfrom=51";
 	myAuthenticationManager = new LitResAuthenticationManager(*this);
 }
 

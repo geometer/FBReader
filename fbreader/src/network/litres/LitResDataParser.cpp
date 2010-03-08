@@ -113,6 +113,12 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 					)
 				);
 			}
+			myURLByType.insert(
+				std::make_pair(
+					NetworkItem::URL_BOOK_BUY_FB2_ZIP,
+					"https://robot.litres.ru/pages/purchase_book/?lfrom=51&art=" + myBookId
+				)
+			);
 
 			const char *price = attributeValue(attributes, "price");
 			if (price != 0 && *price != '\0') {

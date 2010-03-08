@@ -41,6 +41,8 @@ const std::string OPDSConstants::MIME_APP_EPUB  = "application/epub+zip";
 const std::string OPDSConstants::MIME_APP_MOBI  = "application/x-mobipocket-ebook";
 const std::string OPDSConstants::MIME_APP_PDF   = "application/pdf";
 const std::string OPDSConstants::MIME_APP_ATOM  = "application/atom+xml";
+const std::string OPDSConstants::MIME_APP_LITRES  = "application/litres+xml";
+
 const std::string OPDSConstants::MIME_IMG_PNG   = "image/png";
 const std::string OPDSConstants::MIME_IMG_JPEG  = "image/jpeg";
 const std::string OPDSConstants::MIME_TEXT_HTML = "text/html";

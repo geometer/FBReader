@@ -20,7 +20,6 @@
 #ifndef __LITRESLINK_H__
 #define __LITRESLINK_H__
 
-#include <map>
 #include <string>
 
 #include "../NetworkLink.h"
