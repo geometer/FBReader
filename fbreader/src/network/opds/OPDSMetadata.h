@@ -41,6 +41,7 @@ public:
 	static const std::string REL_ACQUISITION_BORROW;
 	static const std::string REL_ACQUISITION_SUBSCRIBE;
 	static const std::string REL_ACQUISITION_SAMPLE;
+	static const std::string REL_ACQUISITION_CONDITIONAL;
 
 	// Entry level / other
 	static const std::string REL_COVER;

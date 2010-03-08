@@ -86,6 +86,7 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 		if ((rel == OPDSConstants::REL_ACQUISITION ||
 				 rel == OPDSConstants::REL_ACQUISITION_SAMPLE ||
 				 rel == OPDSConstants::REL_ACQUISITION_BUY ||
+				 rel == OPDSConstants::REL_ACQUISITION_CONDITIONAL ||
 				 rel.empty()) &&
 				(type == OPDSConstants::MIME_APP_EPUB ||
 				 type == OPDSConstants::MIME_APP_MOBI ||
@@ -162,6 +163,13 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 			if (format != BookReference::NONE) {
 				references.push_back(new BookReference(
 					href, format, BookReference::DOWNLOAD_DEMO
+				));
+			}
+		} else if (rel == OPDSConstants::REL_ACQUISITION_CONDITIONAL) {
+			BookReference::Format format = formatByMimeType(type);
+			if (format != BookReference::NONE) {
+				references.push_back(new BookReference(
+					href, format, BookReference::DOWNLOAD_CONDITIONAL
 				));
 			}
 		} else if (rel == OPDSConstants::REL_ACQUISITION_BUY) {

@@ -27,6 +27,7 @@ const std::string OPDSConstants::REL_ACQUISITION_BUY        = "http://opds-spec.
 const std::string OPDSConstants::REL_ACQUISITION_BORROW     = "http://opds-spec.org/acquisition/borrow";
 const std::string OPDSConstants::REL_ACQUISITION_SUBSCRIBE  = "http://opds-spec.org/acquisition/subscribe";
 const std::string OPDSConstants::REL_ACQUISITION_SAMPLE     = "http://opds-spec.org/acquisition/sample";
+const std::string OPDSConstants::REL_ACQUISITION_CONDITIONAL     = "http://data.fbreader.org/acquisition/conditional";
 const std::string OPDSConstants::REL_COVER         = "http://opds-spec.org/cover";
 const std::string OPDSConstants::REL_STANZA_COVER  = "x-stanza-cover-image";
 const std::string OPDSConstants::REL_THUMBNAIL     = "http://opds-spec.org/thumbnail";
