@@ -47,6 +47,9 @@ public:
 	const Format BookFormat;
 	const Type ReferenceType;
 
+public:
+	virtual const std::string &cleanURL() const;
+
 private:
 	BookReference(const BookReference&);
 	const BookReference &operator = (const BookReference&);
@@ -55,10 +58,22 @@ private:
 class BuyBookReference : public BookReference {
 
 public:
-	BuyBookReference(const std::string &url, Format format, Type type, const std::string &price);
+	BuyBookReference(const std::string &url, Format format, const std::string &price);
 
 public:
 	const std::string Price;
+};
+
+class DecoratedBookReference : public BookReference {
+
+public:
+	DecoratedBookReference(const BookReference &base, const std::string &url);
+
+private:
+	const std::string &cleanURL() const;
+
+private:
+	const std::string myCleanURL;
 };
 
 #endif /* __BOOKREFERENCE_H__ */

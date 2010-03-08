@@ -58,7 +58,7 @@ public:
 	std::string bookFileName(const BookReference &reference) const;
 	std::string makeBookFileName(const BookReference &reference);
 
-	bool downloadBook(const BookReference &reference, const std::string &networkBookId, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
+	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
 
 	shared_ptr<NetworkBookCollection> simpleSearch(const std::string &pattern);
 	shared_ptr<NetworkBookCollection> advancedSearch(const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation);

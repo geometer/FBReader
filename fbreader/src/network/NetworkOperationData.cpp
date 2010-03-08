@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLExecutionData.h>
+
 #include "NetworkLink.h"
 #include "NetworkOperationData.h"
 

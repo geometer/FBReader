@@ -112,21 +112,19 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 					BookReference::DOWNLOAD_DEMO
 				));
 			}
-			myReferences.push_back(new BookReference(
-				"https://robot.litres.ru/pages/purchase_book/?lfrom=51&art=" + myBookId,
-				BookReference::FB2_ZIP,
-				BookReference::BUY
-			));
+			const char *price = attributeValue(attributes, "price");
+			if (price != 0) {
+				myReferences.push_back(new BuyBookReference(
+					"https://robot.litres.ru/pages/purchase_book/?lfrom=51&art=" + myBookId,
+					BookReference::FB2_ZIP,
+					price + LitResLink::CURRENCY_SUFFIX
+				));
+			}
 			myReferences.push_back(new BookReference(
 				"https://robot.litres.ru/pages/catalit_download_book/?art=" + myBookId,
 				BookReference::FB2_ZIP,
 				BookReference::DOWNLOAD_CONDITIONAL
 			));
-
-			const char *price = attributeValue(attributes, "price");
-			if (price != 0 && *price != '\0') {
-				myPrice = price + LitResLink::CURRENCY_SUFFIX;
-			}
 		}
 		break;
 	case BOOK: 
@@ -139,7 +137,6 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				mySummary,
 				myLanguage,
 				myDate,
-				myPrice,
 				myAuthors,
 				myTags,
 				mySeriesTitle,
@@ -150,7 +147,6 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 
 			myTitle.erase();
 			mySummary.erase();
-			myPrice.erase();
 			myLanguage.erase();
 			myDate.erase();
 			mySeriesTitle.erase();

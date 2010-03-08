@@ -69,13 +69,12 @@ void NetworkOperationRunnable::showErrorMessage() const {
 	}
 }
 
-DownloadBookRunnable::DownloadBookRunnable(shared_ptr<BookReference> reference, const std::string &networkBookId, shared_ptr<NetworkAuthenticationManager> authManager) : NetworkOperationRunnable("downloadBook") {
+DownloadBookRunnable::DownloadBookRunnable(shared_ptr<BookReference> reference, shared_ptr<NetworkAuthenticationManager> authManager) : NetworkOperationRunnable("downloadBook") {
 	myReference = reference;
-	myNetworkBookId = networkBookId.empty() ? reference->URL : networkBookId;
 	myAuthManager = authManager;
 }
 
-DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook"), myNetworkBookId(url) {
+DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook") {
 	myReference = new BookReference(url, BookReference::NONE, BookReference::DOWNLOAD);
 }
 
@@ -84,7 +83,7 @@ DownloadBookRunnable::~DownloadBookRunnable() {
 
 void DownloadBookRunnable::run() {
 	NetworkLinkCollection::Instance().downloadBook(
-		*myReference, myNetworkBookId, myFileName,
+		*myReference, myFileName,
 		myAuthManager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : myAuthManager->certificate(),
 		myDialog->listener()
 	);

@@ -18,6 +18,8 @@
  */
 
 #include "NetworkItems.h"
+#include "NetworkLink.h"
+#include "authentication/NetworkAuthenticationManager.h"
 
 const ZLTypeId NetworkBookItem::TYPE_ID(NetworkItem::TYPE_ID);
 
@@ -34,7 +36,6 @@ NetworkBookItem::NetworkBookItem(
 	const std::string &summary,
 	const std::string &language,
 	const std::string &date,
-	const std::string &price,
 	const std::vector<AuthorData> &authors,
 	const std::vector<std::string> &tags,
 	const std::string &seriesTitle,
@@ -47,7 +48,6 @@ NetworkBookItem::NetworkBookItem(
 	Id(id),
 	Language(language),
 	Date(date),
-	Price(price),
 	Authors(authors),
 	Tags(tags),
 	SeriesTitle(seriesTitle),
@@ -61,7 +61,6 @@ NetworkBookItem::NetworkBookItem(const NetworkBookItem &book, unsigned int index
 	Id(book.Id), 
 	Language(book.Language), 
 	Date(book.Date), 
-	Price(book.Price), 
 	Authors(book.Authors), 
 	Tags(book.Tags),
 	SeriesTitle(book.SeriesTitle),
@@ -120,14 +119,59 @@ shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Type type) c
 			reference = *it;
 		}
 	}
+
+	if (!reference.isNull() && type == BookReference::BUY) {
+		shared_ptr<NetworkAuthenticationManager> authManager =
+			Link.authenticationManager();
+		if (authManager.isNull() ||
+				authManager->isAuthorised().Status != B3_TRUE ||
+				!authManager->needPurchase(*this)) {
+			return 0;
+		}
+	} else if (reference.isNull() && type == BookReference::DOWNLOAD) {
+		reference = this->reference(BookReference::DOWNLOAD_CONDITIONAL);
+		if (!reference.isNull()) {
+			shared_ptr<NetworkAuthenticationManager> authManager =
+				Link.authenticationManager();
+			if (authManager.isNull() || authManager->needPurchase(*this)) {
+				return 0;
+			}
+			reference = authManager->downloadReference(*this);
+		}
+	}
+
 	return reference;
 }
 
 shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Format format, BookReference::Type type) const {
+	shared_ptr<BookReference> reference;
+
 	for (std::vector<shared_ptr<BookReference> >::const_iterator it = myReferences.begin(); it != myReferences.end(); ++it) {
 		if ((*it)->BookFormat == format && (*it)->ReferenceType == type) {
-			return *it;
+			reference = *it;
+			break;
 		}
 	}
-	return 0;
+
+	if (!reference.isNull() && type == BookReference::BUY) {
+		shared_ptr<NetworkAuthenticationManager> authManager =
+			Link.authenticationManager();
+		if (authManager.isNull() ||
+				authManager->isAuthorised().Status != B3_TRUE ||
+				!authManager->needPurchase(*this)) {
+			return 0;
+		}
+	} else if (reference.isNull() && type == BookReference::DOWNLOAD) {
+		reference = this->reference(format, BookReference::DOWNLOAD_CONDITIONAL);
+		if (!reference.isNull()) {
+			shared_ptr<NetworkAuthenticationManager> authManager =
+				Link.authenticationManager();
+			if (authManager.isNull() || authManager->needPurchase(*this)) {
+				return 0;
+			}
+			reference = authManager->downloadReference(*this);
+		}
+	}
+
+	return reference;
 }

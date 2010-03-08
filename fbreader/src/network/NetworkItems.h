@@ -132,7 +132,6 @@ public:
 		const std::string &summary,
 		const std::string &language,
 		const std::string &date,
-		const std::string &price,
 		const std::vector<AuthorData> &authors,
 		const std::vector<std::string> &tags,
 		const std::string &seriesTitle,
@@ -153,8 +152,6 @@ public:
 	const std::string Id;
 	const std::string Language;
 	const std::string Date;
-	// number with curency code (see http://en.wikipedia.org/wiki/List_of_circulating_currencies for example)
-	const std::string Price;
 	const std::vector<AuthorData> Authors;
 	const std::vector<std::string> Tags;
 	const std::string SeriesTitle;

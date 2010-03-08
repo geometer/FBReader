@@ -22,5 +22,16 @@
 BookReference::BookReference(const std::string &url, Format format, Type type) : URL(url), BookFormat(format), ReferenceType(type) {
 }
 
-BuyBookReference::BuyBookReference(const std::string &url, Format format, Type type, const std::string &price) : BookReference(url, format, type), Price(price) {
+const std::string &BookReference::cleanURL() const {
+	return URL;
+}
+
+BuyBookReference::BuyBookReference(const std::string &url, Format format, const std::string &price) : BookReference(url, format, BookReference::BUY), Price(price) {
+}
+
+DecoratedBookReference::DecoratedBookReference(const BookReference &base, const std::string &url) : BookReference(url, base.BookFormat, base.ReferenceType), myCleanURL(base.cleanURL()) {
+}
+
+const std::string &DecoratedBookReference::cleanURL() const {
+	return myCleanURL;
 }

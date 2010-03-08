@@ -232,7 +232,6 @@ private:
 	std::string localCopyFileName(const NetworkBookItem &book, BookReference::Format format) const;
 
 	bool hasDirectLink();
-	bool canBePurchased();
 
 private:
 	shared_ptr<NetworkItem> myBook;

@@ -183,7 +183,7 @@ shared_ptr<BookReference> LitResAuthenticationManager::downloadReference(const N
 	}
 	std::string url = reference->URL;
 	ZLNetworkUtil::appendParameter(url, "sid", sid);
-	return new BookReference(url, reference->BookFormat, BookReference::DOWNLOAD);
+	return new DecoratedBookReference(*reference, url);
 }
 
 void LitResAuthenticationManager::collectPurchasedBooks(NetworkItem::List &list) {

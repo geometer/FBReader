@@ -88,7 +88,7 @@ public:
 	void run();
 
 private:
-	void removeFormat(shared_ptr<BookReference> reference);
+	void removeFormat(const NetworkBookItem &book, BookReference::Format format);
 
 private:
 	shared_ptr<NetworkItem> myBook;
@@ -148,7 +148,6 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
 
 	const bool direct = hasDirectLink();
-	const bool purchase = canBePurchased();
 	const bool local = !localCopyFileName().empty();
 
 	drawTitle(context, vOffset);
@@ -170,8 +169,11 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 				drawHyperlink(context, left, vOffset, resource["downloadDemo"].value(), myDownloadDemoAction);
 			}
 		}
-		if (purchase) {
-			const std::string buyText = ZLStringUtil::printf(resource["buy"].value(), book.Price);
+		reference = book.reference(BookReference::BUY);
+		if (!reference.isNull()) {
+			const std::string buyText = ZLStringUtil::printf(
+				resource["buy"].value(), ((BuyBookReference&)*reference).Price
+			);
 			drawHyperlink(context, left, vOffset, buyText, myBuyAction);
 		}
 	}
@@ -215,42 +217,13 @@ std::string NetworkBookNode::localCopyFileName(shared_ptr<BookReference> referen
 }
 
 std::string NetworkBookNode::localCopyFileName(const NetworkBookItem &book, BookReference::Format format) const {
-	std::string fileName = localCopyFileName(
-		book.reference(format, BookReference::DOWNLOAD)
-	);
-	if (!fileName.empty()) {
-		return fileName;
-	}
 	return localCopyFileName(
-		book.reference(format, BookReference::DOWNLOAD_CONDITIONAL)
+		book.reference(format, BookReference::DOWNLOAD)
 	);
 }
 
 bool NetworkBookNode::NetworkBookNode::hasDirectLink() {
-	NetworkBookItem &book = bookItem();
-	if (!book.reference(BookReference::DOWNLOAD).isNull()) {
-		return true;
-	}
-	if (book.Link.authenticationManager().isNull()) {
-		return false;
-	}
-	NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
-	if (mgr.isAuthorised().Status == B3_TRUE && !mgr.needPurchase(book)) {
-		return true;
-	}
-	return false;
-}
-
-bool NetworkBookNode::canBePurchased() {
-	NetworkBookItem &book = bookItem();
-	if (book.Link.authenticationManager().isNull()) {
-		return false;
-	}
-	NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
-	if (mgr.isAuthorised().Status != B3_TRUE) {
-		return true;
-	}
-	return mgr.needPurchase(book);
+	return !bookItem().reference(BookReference::DOWNLOAD).isNull();
 }
 
 NetworkBookNode::ReadAction::ReadAction(const NetworkBookNode &node) : myNode(node) {
@@ -283,25 +256,11 @@ void NetworkBookNode::DownloadAction::run() {
 	shared_ptr<BookReference> reference = book.reference(
 		myDemo ? BookReference::DOWNLOAD_DEMO : BookReference::DOWNLOAD
 	);
-	shared_ptr<NetworkAuthenticationManager> authManager;
-	std::string networkBookId;
-	if (reference.isNull() && !myDemo) {
-		reference = book.reference(BookReference::DOWNLOAD_CONDITIONAL);
-		if (reference.isNull()) {
-			return;
-		}
-		networkBookId = reference->URL;
-		authManager = book.Link.authenticationManager();
-		if (authManager.isNull() || authManager->needPurchase(book)) {
-			return;
-		}
-		reference = authManager->downloadReference(book);
-	}
 	if (reference.isNull()) {
 		return;
 	}
 
-	DownloadBookRunnable downloader(reference, networkBookId, authManager);
+	DownloadBookRunnable downloader(reference, book.Link.authenticationManager());
 	downloader.executeWithUI();
 	if (downloader.hasErrors()) {
 		downloader.showErrorMessage();
@@ -409,7 +368,8 @@ void NetworkBookNode::BuyAction::run() {
 NetworkBookNode::DeleteAction::DeleteAction(shared_ptr<NetworkItem> book) : myBook(book) {
 }
 
-void NetworkBookNode::DeleteAction::removeFormat(shared_ptr<BookReference> reference) {
+void NetworkBookNode::DeleteAction::removeFormat(const NetworkBookItem &book, BookReference::Format format) {
+	shared_ptr<BookReference> reference = book.reference(format, BookReference::DOWNLOAD);
 	if (reference.isNull()) {
 		return;
 	}
@@ -435,24 +395,9 @@ void NetworkBookNode::DeleteAction::run() {
 		return;
 	}
 
-	removeFormat(book.reference(
-		BookReference::EPUB, BookReference::DOWNLOAD
-	));
-	removeFormat(book.reference(
-		BookReference::EPUB, BookReference::DOWNLOAD_CONDITIONAL
-	));
-	removeFormat(book.reference(
-		BookReference::FB2_ZIP, BookReference::DOWNLOAD
-	));
-	removeFormat(book.reference(
-		BookReference::FB2_ZIP, BookReference::DOWNLOAD_CONDITIONAL
-	));
-	removeFormat(book.reference(
-		BookReference::MOBIPOCKET, BookReference::DOWNLOAD
-	));
-	removeFormat(book.reference(
-		BookReference::MOBIPOCKET, BookReference::DOWNLOAD_CONDITIONAL
-	));
+	removeFormat(book, BookReference::EPUB);
+	removeFormat(book, BookReference::FB2_ZIP);
+	removeFormat(book, BookReference::MOBIPOCKET);
 
 	FBReader::Instance().refreshWindow();
 }

@@ -69,7 +69,6 @@ private:
 	std::string mySummary;
 	std::string myLanguage;
 	std::string myDate;
-	std::string myPrice;
 	std::string mySeriesTitle;
 	int myIndexInSeries;
 

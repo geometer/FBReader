@@ -127,7 +127,7 @@ static std::string normalize(const std::string &url) {
 
 std::string NetworkLinkCollection::makeBookFileName(const BookReference &reference) {
 	myErrorMessage.clear();
-	return makeBookFileName(reference.URL, reference.BookFormat, reference.ReferenceType, false);
+	return makeBookFileName(reference.cleanURL(), reference.BookFormat, reference.ReferenceType, false);
 }
 
 std::string NetworkLinkCollection::makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories) {
@@ -223,13 +223,13 @@ std::string NetworkLinkCollection::makeBookFileName(const std::string &url, Book
 }
 
 std::string NetworkLinkCollection::bookFileName(const BookReference &reference) const {
-	return BooksDB::Instance().getNetFile(::normalize(reference.URL));
+	return BooksDB::Instance().getNetFile(::normalize(reference.cleanURL()));
 }
 
-bool NetworkLinkCollection::downloadBook(const BookReference &reference, const std::string &networkBookId, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
+bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
 	std::string nURL = ::normalize(reference.URL);
 	rewriteUrl(nURL);
-	const std::string nNetworkBookId = ::normalize(networkBookId);
+	const std::string nNetworkBookId = ::normalize(reference.cleanURL());
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 	myErrorMessage.clear();
 

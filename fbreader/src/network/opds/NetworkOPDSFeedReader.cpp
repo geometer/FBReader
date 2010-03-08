@@ -236,7 +236,6 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		entry.summary(),
 		entry.dcLanguage(),
 		date,
-		std::string(), // price
 		authors,
 		tags,
 		entry.seriesTitle(),
