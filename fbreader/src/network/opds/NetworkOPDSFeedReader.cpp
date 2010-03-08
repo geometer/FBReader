@@ -176,14 +176,12 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		} else if (rel == OPDSConstants::REL_ACQUISITION_BUY) {
 			BookReference::Format format = formatByMimeType(link.userData(OPDSXMLParser::KEY_FORMAT));
 			if (format != BookReference::NONE) {
-				std::string price = link.userData(OPDSXMLParser::KEY_PRICE);
-				std::string currency = link.userData(OPDSXMLParser::KEY_CURRENCY);
-				if (currency == "RUB") {
-					price += " р.";
-				} else {
-					price += " " + currency;
-				}
-				references.push_back(new BuyBookReference(href, format, price));
+				references.push_back(new BuyBookReference(
+					href, format, BookReference::price(
+						link.userData(OPDSXMLParser::KEY_PRICE),
+						link.userData(OPDSXMLParser::KEY_CURRENCY)
+					)
+				));
 			}
 		}
 	}

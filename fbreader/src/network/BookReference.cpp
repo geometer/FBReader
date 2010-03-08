@@ -22,6 +22,13 @@
 #include "BookReference.h"
 #include "NetworkLinkCollection.h"
 
+std::string BookReference::price(const std::string &price, const std::string &currency) {
+	if (currency == "RUB") {
+		return price + " р.";
+	}
+	return currency + " " + price;
+}
+
 BookReference::BookReference(const std::string &url, Format format, Type type) : URL(url), BookFormat(format), ReferenceType(type) {
 }
 

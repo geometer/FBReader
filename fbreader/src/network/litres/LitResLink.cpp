@@ -36,8 +36,6 @@
 #include "../NetworkComparators.h"
 #include "../NetworkErrors.h"
 
-const std::string LitResLink::CURRENCY_SUFFIX = " р.";
-
 static const std::string LITRES_SITENAME = "litres.ru";
 static const std::string RUSSIAN_LETTERS = "АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЭЮЯ";
 

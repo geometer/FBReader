@@ -23,7 +23,6 @@
 
 #include "LitResDataParser.h"
 #include "LitResGenre.h"
-#include "LitResLink.h"
 #include "../NetworkLink.h"
 
 static const std::string TAG_CATALOG = "catalit-fb2-books";
@@ -117,7 +116,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				myReferences.push_back(new BuyBookReference(
 					"https://robot.litres.ru/pages/purchase_book/?lfrom=51&art=" + myBookId,
 					BookReference::FB2_ZIP,
-					price + LitResLink::CURRENCY_SUFFIX
+					BookReference::price(price, "RUB")
 				));
 			}
 			myReferences.push_back(new BookReference(

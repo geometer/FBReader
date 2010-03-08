@@ -24,7 +24,6 @@
 #include "LitResDataParser.h"
 #include "LitResAuthenticationDataParser.h"
 #include "LitResUtil.h"
-#include "LitResLink.h"
 
 #include "../NetworkErrors.h"
 #include "../NetworkItems.h"
@@ -149,8 +148,7 @@ std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &boo
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
 	if (!account.empty()) {
-		myAccount = account;
-		myAccount.append(LitResLink::CURRENCY_SUFFIX);
+		myAccount = BookReference::price(account, "RUB");
 	}
 	if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
 		mySidChecked = true;
@@ -292,9 +290,7 @@ void LitResAuthenticationManager::loadAccountOnError() {
 }
 
 void LitResAuthenticationManager::loadAccountOnSuccess() {
-	if (!myAccount.empty()) {
-		myAccount.append(LitResLink::CURRENCY_SUFFIX);
-	}
+	myAccount = BookReference::price(myAccount, "RUB");
 }
 
 bool LitResAuthenticationManager::skipIPSupported() {

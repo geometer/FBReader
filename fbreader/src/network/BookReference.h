@@ -40,6 +40,9 @@ public:
 	};
 
 public:
+	static std::string price(const std::string &price, const std::string &currency);
+
+public:
 	BookReference(const std::string &url, Format format, Type type);
 
 public:

@@ -29,9 +29,6 @@ class NetworkAuthenticationManager;
 class LitResLink : public NetworkLink {
 
 public:
-	static const std::string CURRENCY_SUFFIX;
-
-public:
 	LitResLink();
 
 private:
