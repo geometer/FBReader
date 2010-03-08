@@ -215,7 +215,7 @@ private:
 friend class NetworkNodesFactory;
 
 public:
-	shared_ptr<NetworkItem> book();
+	const NetworkBookItem &book() const;
 
 private:
 	const ZLTypeId &typeId() const;
@@ -223,11 +223,6 @@ private:
 	std::string title() const;
 	std::string summary() const;
 	void paint(ZLPaintContext &context, int vOffset);
-
-	const NetworkBookItem &bookItem() const;
-	NetworkBookItem &bookItem();
-
-	bool hasDirectLink();
 
 private:
 	shared_ptr<NetworkItem> myBook;
@@ -238,9 +233,5 @@ private:
 	shared_ptr<ZLRunnable> myBuyAction;
 	shared_ptr<ZLRunnable> myDeleteAction;
 };
-
-inline shared_ptr<NetworkItem> NetworkBookNode::book() { return myBook; }
-inline const NetworkBookItem &NetworkBookNode::bookItem() const { return (const NetworkBookItem&)*myBook; }
-inline NetworkBookItem &NetworkBookNode::bookItem() { return (NetworkBookItem&)*myBook; }
 
 #endif /* __NETWORKNODES_H__ */

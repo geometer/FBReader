@@ -102,7 +102,7 @@ NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<Networ
 }
 
 void NetworkBookNode::init() {
-	const NetworkBookItem &book = (const NetworkBookItem&)*myBook;
+	const NetworkBookItem &book = this->book();
 	myReadAction = new ReadAction(book);
 	myDownloadAction = new DownloadAction(myBook, false);
 	myReadDemoAction = new ReadDemoAction(book);
@@ -117,7 +117,7 @@ std::string NetworkBookNode::title() const {
 
 std::string NetworkBookNode::summary() const {
 	std::string authorsString;
-	const std::vector<NetworkBookItem::AuthorData> authors = bookItem().Authors;
+	const std::vector<NetworkBookItem::AuthorData> authors = book().Authors;
 	for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
 		if (!authorsString.empty()) {
 			authorsString += ", ";
@@ -132,7 +132,7 @@ std::string NetworkBookNode::summary() const {
 }
 
 void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
-	const NetworkBookItem &book = (const NetworkBookItem&)*myBook;
+	const NetworkBookItem &book = this->book();
 
 	const ZLResource &resource =
 		ZLResource::resource("networkView")["bookNode"];
@@ -141,17 +141,14 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
 
-	const bool direct = hasDirectLink();
-	const bool local = !book.localCopyFileName().empty();
-
 	drawTitle(context, vOffset);
 	drawSummary(context, vOffset);
 
 	int left = 0;
-	if (local) {
+	if (!book.localCopyFileName().empty()) {
 		drawHyperlink(context, left, vOffset, resource["read"].value(), myReadAction);
 		drawHyperlink(context, left, vOffset, resource["delete"].value(), myDeleteAction);
-	} else if (direct) {
+	} else if (!book.reference(BookReference::DOWNLOAD).isNull()) {
 		drawHyperlink(context, left, vOffset, resource["download"].value(), myDownloadAction);
 	} else {
 		shared_ptr<BookReference> reference =
@@ -176,10 +173,6 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {
 	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
 	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
-}
-
-bool NetworkBookNode::NetworkBookNode::hasDirectLink() {
-	return !bookItem().reference(BookReference::DOWNLOAD).isNull();
 }
 
 NetworkBookNode::ReadAction::ReadAction(const NetworkBookItem &item) : myItem(item) {
@@ -333,4 +326,8 @@ void NetworkBookNode::DeleteAction::run() {
 
 	myItem.removeLocalFiles();
 	FBReader::Instance().refreshWindow();
+}
+
+const NetworkBookItem &NetworkBookNode::book() const {
+	return (const NetworkBookItem&)*myBook;
 }
