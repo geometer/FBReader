@@ -121,12 +121,12 @@ private:
 class PurchaseBookRunnable : public NetworkOperationRunnable {
 
 public:
-	PurchaseBookRunnable(NetworkAuthenticationManager &mgr, NetworkBookItem &book);
+	PurchaseBookRunnable(NetworkAuthenticationManager &mgr, const NetworkBookItem &book);
 	void run();
 
 private:
 	NetworkAuthenticationManager &myManager;
-	NetworkBookItem &myBook;
+	const NetworkBookItem &myBook;
 };
 
 class PasswordRecoveryRunnable : public NetworkOperationRunnable {

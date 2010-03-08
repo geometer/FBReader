@@ -126,7 +126,7 @@ bool LitResAuthenticationManager::needPurchase(const NetworkBookItem &book) {
 	return myPurchasedBooksIds.count(book.Id) == 0;
 }
 
-std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
+std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &book) {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);

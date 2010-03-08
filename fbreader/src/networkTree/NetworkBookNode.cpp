@@ -70,11 +70,11 @@ private:
 class NetworkBookNode::BuyAction : public ZLRunnable {
 
 public:
-	BuyAction(shared_ptr<NetworkItem> book);
+	BuyAction(const NetworkBookItem &item);
 	void run();
 
 private:
-	shared_ptr<NetworkItem> myBook;
+	const NetworkBookItem &myItem;
 };
 
 class NetworkBookNode::DeleteAction : public ZLRunnable {
@@ -107,7 +107,7 @@ void NetworkBookNode::init() {
 	myDownloadAction = new DownloadAction(book, false);
 	myReadDemoAction = new ReadDemoAction(book);
 	myDownloadDemoAction = new DownloadAction(book, true);
-	myBuyAction = new BuyAction(myBook);
+	myBuyAction = new BuyAction(book);
 	myDeleteAction = new DeleteAction(book);
 }
 
@@ -265,38 +265,37 @@ void NetworkBookNode::ReadDemoAction::run() {
 	}
 }
 
-NetworkBookNode::BuyAction::BuyAction(shared_ptr<NetworkItem> book) : myBook(book) {
+NetworkBookNode::BuyAction::BuyAction(const NetworkBookItem &item) : myItem(item) {
 }
 
 void NetworkBookNode::BuyAction::run() {
 	FBReader &fbreader = FBReader::Instance();
-	NetworkBookItem &book = (NetworkBookItem &) *myBook;
-	if (book.Link.authenticationManager().isNull()) {
+	if (myItem.Link.authenticationManager().isNull()) {
 		return;
 	}
 	if (!NetworkOperationRunnable::tryConnect()) {
 		return;
 	}
-	NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
+	NetworkAuthenticationManager &mgr = *myItem.Link.authenticationManager();
 	if (mgr.isAuthorised().Status != B3_TRUE) {
 		if (!AuthenticationDialog::run(mgr)) {
 			return;
 		}
 		fbreader.invalidateAccountDependents();
 		fbreader.refreshWindow();
-		if (!mgr.needPurchase(book)) {
+		if (!mgr.needPurchase(myItem)) {
 			return;
 		}
 	}
 	ZLResourceKey boxKey("purchaseConfirmBox");
-	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book.Title);
+	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myItem.Title);
 	const int code = ZLDialogManager::Instance().questionBox(boxKey, message, ZLResourceKey("buy"), ZLResourceKey("buyAndDownload"), ZLDialogManager::CANCEL_BUTTON);
 	if (code == 2) {
 		return;
 	}
 	bool downloadBook = code == 1;
-	if (mgr.needPurchase(book)) {
-		PurchaseBookRunnable purchaser(mgr, book);
+	if (mgr.needPurchase(myItem)) {
+		PurchaseBookRunnable purchaser(mgr, myItem);
 		purchaser.executeWithUI();
 		if (purchaser.hasErrors()) {
 			purchaser.showErrorMessage();
@@ -304,7 +303,7 @@ void NetworkBookNode::BuyAction::run() {
 		}
 	}
 	if (downloadBook) {
-		DownloadAction(book, false).run();
+		DownloadAction(myItem, false).run();
 	}
 	if (mgr.isAuthorised().Status == B3_FALSE) {
 		fbreader.invalidateAccountDependents();

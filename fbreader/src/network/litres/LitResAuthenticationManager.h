@@ -42,7 +42,7 @@ public:
 	bool needsInitialization();
 	std::string initialize();
 	bool needPurchase(const NetworkBookItem &book);
-	std::string purchaseBook(NetworkBookItem &book);
+	std::string purchaseBook(const NetworkBookItem &book);
 	shared_ptr<BookReference> downloadReference(const NetworkBookItem &book);
 
 	std::string refillAccountLink();

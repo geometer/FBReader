@@ -45,7 +45,7 @@ bool NetworkAuthenticationManager::needPurchase(const NetworkBookItem &) {
 	return true;
 }
 
-std::string NetworkAuthenticationManager::purchaseBook(NetworkBookItem &) {
+std::string NetworkAuthenticationManager::purchaseBook(const NetworkBookItem &) {
 	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
 }
 

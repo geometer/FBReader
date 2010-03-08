@@ -145,7 +145,7 @@ void LogOutRunnable::run() {
 }
 
 
-PurchaseBookRunnable::PurchaseBookRunnable(NetworkAuthenticationManager &mgr, NetworkBookItem &book) : 
+PurchaseBookRunnable::PurchaseBookRunnable(NetworkAuthenticationManager &mgr, const NetworkBookItem &book) : 
 	NetworkOperationRunnable("purchaseBook"), 
 	myManager(mgr), 
 	myBook(book) {
