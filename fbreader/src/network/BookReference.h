@@ -50,6 +50,8 @@ public:
 public:
 	virtual const std::string &cleanURL() const;
 
+	std::string localCopyFileName() const;
+
 private:
 	BookReference(const BookReference&);
 	const BookReference &operator = (const BookReference&);

@@ -163,7 +163,7 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 		shared_ptr<BookReference> reference =
 			book.reference(BookReference::DOWNLOAD_DEMO);
 		if (!reference.isNull()) {
-			if (!localCopyFileName(reference).empty()) {
+			if (!reference->localCopyFileName().empty()) {
 				drawHyperlink(context, left, vOffset, resource["readDemo"].value(), myReadDemoAction);
 			} else {
 				drawHyperlink(context, left, vOffset, resource["downloadDemo"].value(), myDownloadDemoAction);
@@ -197,29 +197,10 @@ std::string NetworkBookNode::localCopyFileName() const {
 	return localCopyFileName(book, BookReference::MOBIPOCKET);
 }
 
-std::string NetworkBookNode::localCopyFileName(shared_ptr<BookReference> reference) const {
-	if (reference.isNull()) {
-		return std::string();
-	}
-	std::string fileName =
-		NetworkLinkCollection::Instance().bookFileName(*reference);
-	if (!fileName.empty() && ZLFile(fileName).exists()) {
-		return fileName;
-	}
-
-	fileName =
-		NetworkLinkCollection::Instance().makeBookFileName(*reference);
-	if (!fileName.empty() && ZLFile(fileName).exists()) {
-		return fileName;
-	}
-
-	return std::string();
-}
-
 std::string NetworkBookNode::localCopyFileName(const NetworkBookItem &book, BookReference::Format format) const {
-	return localCopyFileName(
-		book.reference(format, BookReference::DOWNLOAD)
-	);
+	shared_ptr<BookReference> reference =
+		book.reference(format, BookReference::DOWNLOAD);
+	return reference.isNull() ? std::string() : reference->localCopyFileName();
 }
 
 bool NetworkBookNode::NetworkBookNode::hasDirectLink() {
@@ -305,7 +286,7 @@ NetworkBookNode::ReadDemoAction::ReadDemoAction(const NetworkBookNode &node) : m
 void NetworkBookNode::ReadDemoAction::run() {
 	shared_ptr<BookReference> reference =
 		myNode.bookItem().reference(BookReference::DOWNLOAD_DEMO);
-	const std::string fileName = myNode.localCopyFileName(reference);
+	const std::string fileName = reference->localCopyFileName();
 	if (!fileName.empty()) {
 		FBReader &fbreader = FBReader::Instance();
 		shared_ptr<Book> bookPtr;

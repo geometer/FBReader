@@ -17,7 +17,10 @@
  * 02110-1301, USA.
  */
 
+#include <ZLFile.h>
+
 #include "BookReference.h"
+#include "NetworkLinkCollection.h"
 
 BookReference::BookReference(const std::string &url, Format format, Type type) : URL(url), BookFormat(format), ReferenceType(type) {
 }
@@ -34,4 +37,20 @@ DecoratedBookReference::DecoratedBookReference(const BookReference &base, const 
 
 const std::string &DecoratedBookReference::cleanURL() const {
 	return myCleanURL;
+}
+
+std::string BookReference::localCopyFileName() const {
+	std::string fileName =
+		NetworkLinkCollection::Instance().bookFileName(*this);
+	if (!fileName.empty() && ZLFile(fileName).exists()) {
+		return fileName;
+	}
+
+	fileName =
+		NetworkLinkCollection::Instance().makeBookFileName(*this);
+	if (!fileName.empty() && ZLFile(fileName).exists()) {
+		return fileName;
+	}
+
+	return std::string();
 }
