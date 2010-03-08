@@ -147,6 +147,8 @@ public:
 	shared_ptr<BookReference> reference(BookReference::Type type) const;
 	shared_ptr<BookReference> reference(BookReference::Format format, BookReference::Type type) const;
 
+	std::string localCopyFileName() const;
+
 public:
 	/*const*/ unsigned int Index;
 	const std::string Id;

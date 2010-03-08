@@ -143,6 +143,24 @@ shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Type type) c
 	return reference;
 }
 
+std::string NetworkBookItem::localCopyFileName() const {
+	shared_ptr<BookReference> reference;
+	std::string fileName;
+	for (std::vector<shared_ptr<BookReference> >::const_iterator it = myReferences.begin(); it != myReferences.end(); ++it) {
+		const BookReference::Type type = (*it)->ReferenceType;
+		if ((type == BookReference::DOWNLOAD ||
+				 type == BookReference::DOWNLOAD_CONDITIONAL) &&
+				(reference.isNull() || (*it)->BookFormat > reference->BookFormat)) {
+			std::string name = (*it)->localCopyFileName();
+			if (!name.empty()) {
+				reference = *it;
+				fileName = name;
+			}
+		}
+	}
+	return fileName;
+}
+
 shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Format format, BookReference::Type type) const {
 	shared_ptr<BookReference> reference;
 

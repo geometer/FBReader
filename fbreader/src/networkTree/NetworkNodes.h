@@ -227,9 +227,6 @@ private:
 	const NetworkBookItem &bookItem() const;
 	NetworkBookItem &bookItem();
 
-	std::string localCopyFileName() const;
-	std::string localCopyFileName(const NetworkBookItem &book, BookReference::Format format) const;
-
 	bool hasDirectLink();
 
 private:

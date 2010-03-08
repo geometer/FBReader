@@ -54,21 +54,21 @@ private:
 class NetworkBookNode::ReadAction : public ZLRunnable {
 
 public:
-	ReadAction(const NetworkBookNode &node);
+	ReadAction(const NetworkBookItem &item);
 	void run();
 
 private:
-	const NetworkBookNode &myNode;
+	const NetworkBookItem &myItem;
 };
 
 class NetworkBookNode::ReadDemoAction : public ZLRunnable {
 
 public:
-	ReadDemoAction(const NetworkBookNode &node);
+	ReadDemoAction(const NetworkBookItem &item);
 	void run();
 
 private:
-	const NetworkBookNode &myNode;
+	const NetworkBookItem &myItem;
 };
 
 class NetworkBookNode::BuyAction : public ZLRunnable {
@@ -109,9 +109,10 @@ NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<Networ
 }
 
 void NetworkBookNode::init() {
-	myReadAction = new ReadAction(*this);
+	const NetworkBookItem &book = (const NetworkBookItem&)*myBook;
+	myReadAction = new ReadAction(book);
 	myDownloadAction = new DownloadAction(myBook, false);
-	myReadDemoAction = new ReadDemoAction(*this);
+	myReadDemoAction = new ReadDemoAction(book);
 	myDownloadDemoAction = new DownloadAction(myBook, true);
 	myBuyAction = new BuyAction(myBook);
 	myDeleteAction = new DeleteAction(myBook);
@@ -138,7 +139,7 @@ std::string NetworkBookNode::summary() const {
 }
 
 void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
-	NetworkBookItem &book = bookItem();
+	const NetworkBookItem &book = (const NetworkBookItem&)*myBook;
 
 	const ZLResource &resource =
 		ZLResource::resource("networkView")["bookNode"];
@@ -148,7 +149,7 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
 
 	const bool direct = hasDirectLink();
-	const bool local = !localCopyFileName().empty();
+	const bool local = !book.localCopyFileName().empty();
 
 	drawTitle(context, vOffset);
 	drawSummary(context, vOffset);
@@ -184,34 +185,15 @@ shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {
 	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
 }
 
-std::string NetworkBookNode::localCopyFileName() const {
-	const NetworkBookItem &book = bookItem();
-	std::string fileName = localCopyFileName(book, BookReference::EPUB);
-	if (!fileName.empty()) {
-		return fileName;
-	}
-	fileName = localCopyFileName(book, BookReference::FB2_ZIP);
-	if (!fileName.empty()) {
-		return fileName;
-	}
-	return localCopyFileName(book, BookReference::MOBIPOCKET);
-}
-
-std::string NetworkBookNode::localCopyFileName(const NetworkBookItem &book, BookReference::Format format) const {
-	shared_ptr<BookReference> reference =
-		book.reference(format, BookReference::DOWNLOAD);
-	return reference.isNull() ? std::string() : reference->localCopyFileName();
-}
-
 bool NetworkBookNode::NetworkBookNode::hasDirectLink() {
 	return !bookItem().reference(BookReference::DOWNLOAD).isNull();
 }
 
-NetworkBookNode::ReadAction::ReadAction(const NetworkBookNode &node) : myNode(node) {
+NetworkBookNode::ReadAction::ReadAction(const NetworkBookItem &item) : myItem(item) {
 }
 
 void NetworkBookNode::ReadAction::run() {
-	const std::string fileName = myNode.localCopyFileName();
+	const std::string fileName = myItem.localCopyFileName();
 	if (!fileName.empty()) {
 		FBReader &fbreader = FBReader::Instance();
 		shared_ptr<Book> bookPtr;
@@ -280,12 +262,12 @@ void NetworkBookNode::DownloadAction::run() {
 	fbreader.refreshWindow();
 }
 
-NetworkBookNode::ReadDemoAction::ReadDemoAction(const NetworkBookNode &node) : myNode(node) {
+NetworkBookNode::ReadDemoAction::ReadDemoAction(const NetworkBookItem &item) : myItem(item) {
 };
 
 void NetworkBookNode::ReadDemoAction::run() {
 	shared_ptr<BookReference> reference =
-		myNode.bookItem().reference(BookReference::DOWNLOAD_DEMO);
+		myItem.reference(BookReference::DOWNLOAD_DEMO);
 	const std::string fileName = reference->localCopyFileName();
 	if (!fileName.empty()) {
 		FBReader &fbreader = FBReader::Instance();
@@ -368,7 +350,7 @@ void NetworkBookNode::DeleteAction::removeFormat(const NetworkBookItem &book, Bo
 }
 
 void NetworkBookNode::DeleteAction::run() {
-	NetworkBookItem &book = (NetworkBookItem &) *myBook;
+	NetworkBookItem &book = (NetworkBookItem&)*myBook;
 
 	ZLResourceKey boxKey("deleteLocalCopyBox");
 	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), book.Title);
