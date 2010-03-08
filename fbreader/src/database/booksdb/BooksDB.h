@@ -82,6 +82,7 @@ public:
 
 	std::string getNetFile(const std::string &url);
 	bool setNetFile(const std::string &url, const std::string &fileName);
+	bool unsetNetFile(const std::string &url);
 
 	bool loadBookState(const Book &book, ReadingState &state);
 	bool setBookState(const Book &book, const ReadingState &state);

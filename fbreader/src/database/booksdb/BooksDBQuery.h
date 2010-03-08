@@ -83,9 +83,6 @@ public:
 	static const std::string GET_PALM_TYPE;
 	static const std::string SET_PALM_TYPE;
 
-	static const std::string GET_NET_FILE;
-	static const std::string SET_NET_FILE;
-
 	static const std::string LOAD_BOOK_STATE;
 	static const std::string SET_BOOK_STATE;
 	static const std::string LOAD_STACK_POS;

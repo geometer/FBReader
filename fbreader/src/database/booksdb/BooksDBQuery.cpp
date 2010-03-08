@@ -324,9 +324,6 @@ const std::string BooksDBQuery::SET_BOOK_STATE_STACK = "INSERT OR REPLACE INTO B
 const std::string BooksDBQuery::SET_PALM_TYPE = "INSERT OR REPLACE INTO PalmType (file_id, type) VALUES (@file_id, @type); ";
 const std::string BooksDBQuery::GET_PALM_TYPE = "SELECT type FROM PalmType WHERE file_id = @file_id; ";
 
-const std::string BooksDBQuery::SET_NET_FILE = "INSERT OR REPLACE INTO NetFiles (url, file_id) VALUES (@url, @file_id); ";
-const std::string BooksDBQuery::GET_NET_FILE = "SELECT file_id FROM NetFiles WHERE url = @url; ";
-
 const std::string BooksDBQuery::LOAD_STACK_POS = "SELECT stack_pos FROM StackPosition WHERE book_id = @book_id; ";
 const std::string BooksDBQuery::SET_STACK_POS = "INSERT OR REPLACE INTO StackPosition(book_id, stack_pos) VALUES (@book_id, @stack_pos); ";
 
