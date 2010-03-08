@@ -54,21 +54,21 @@ private:
 class NetworkBookNode::ReadAction : public ZLRunnable {
 
 public:
-	ReadAction(shared_ptr<NetworkItem> book);
+	ReadAction(const NetworkBookNode &node);
 	void run();
 
 private:
-	shared_ptr<NetworkItem> myBook;
+	const NetworkBookNode &myNode;
 };
 
 class NetworkBookNode::ReadDemoAction : public ZLRunnable {
 
 public:
-	ReadDemoAction(shared_ptr<NetworkItem> book);
+	ReadDemoAction(const NetworkBookNode &node);
 	void run();
 
 private:
-	shared_ptr<NetworkItem> myBook;
+	const NetworkBookNode &myNode;
 };
 
 class NetworkBookNode::BuyAction : public ZLRunnable {
@@ -88,7 +88,7 @@ public:
 	void run();
 
 private:
-	void removeFormat(NetworkBookItem &book, NetworkItem::URLType format);
+	void removeFormat(shared_ptr<BookReference> reference);
 
 private:
 	shared_ptr<NetworkItem> myBook;
@@ -109,9 +109,9 @@ NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<Networ
 }
 
 void NetworkBookNode::init() {
-	myReadAction = new ReadAction(myBook);
+	myReadAction = new ReadAction(*this);
 	myDownloadAction = new DownloadAction(myBook, false);
-	myReadDemoAction = new ReadDemoAction(myBook);
+	myReadDemoAction = new ReadDemoAction(*this);
 	myDownloadDemoAction = new DownloadAction(myBook, true);
 	myBuyAction = new BuyAction(myBook);
 	myDeleteAction = new DeleteAction(myBook);
@@ -149,7 +149,7 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 
 	const bool direct = hasDirectLink();
 	const bool purchase = canBePurchased();
-	const bool local = hasLocalCopy();
+	const bool local = !localCopyFileName().empty();
 
 	drawTitle(context, vOffset);
 	drawSummary(context, vOffset);
@@ -161,9 +161,10 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 	} else if (direct) {
 		drawHyperlink(context, left, vOffset, resource["download"].value(), myDownloadAction);
 	} else {
-		NetworkItem::URLType format = book.bestDemoFormat();
-		if (format != NetworkItem::URL_NONE) {
-			if (hasLocalCopy(book, format)) {
+		shared_ptr<BookReference> reference =
+			book.reference(BookReference::DOWNLOAD_DEMO);
+		if (!reference.isNull()) {
+			if (!localCopyFileName(reference).empty()) {
 				drawHyperlink(context, left, vOffset, resource["readDemo"].value(), myReadDemoAction);
 			} else {
 				drawHyperlink(context, left, vOffset, resource["downloadDemo"].value(), myDownloadDemoAction);
@@ -181,48 +182,53 @@ shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {
 	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
 }
 
-bool NetworkBookNode::hasLocalCopy() {
-	NetworkBookItem &book = bookItem();
-	if (hasLocalCopy(book, NetworkItem::URL_BOOK_EPUB)
-		|| hasLocalCopy(book, NetworkItem::URL_BOOK_MOBIPOCKET)
-		|| hasLocalCopy(book, NetworkItem::URL_BOOK_FB2_ZIP)) {
-		return true;
+std::string NetworkBookNode::localCopyFileName() const {
+	const NetworkBookItem &book = bookItem();
+	std::string fileName = localCopyFileName(book, BookReference::EPUB);
+	if (!fileName.empty()) {
+		return fileName;
 	}
-	if (book.Link.authenticationManager().isNull()) {
-		return false;
+	fileName = localCopyFileName(book, BookReference::FB2_ZIP);
+	if (!fileName.empty()) {
+		return fileName;
 	}
-	NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
-	const std::string networkBookId = mgr.networkBookId(book);
-	if (!networkBookId.empty()) {
-		std::string fileName = NetworkLinkCollection::Instance().bookFileName(networkBookId);
-		if (!fileName.empty() && ZLFile(fileName).exists()) {
-			return true;
-		}
-		NetworkItem::URLType format = mgr.downloadLinkType(book);
-		fileName = NetworkLinkCollection::Instance().makeBookFileName(networkBookId, format);
-		if (!fileName.empty() && ZLFile(fileName).exists()) {
-			return true;
-		}
-	}
-	return false;	
+	return localCopyFileName(book, BookReference::MOBIPOCKET);
 }
 
-bool NetworkBookNode::hasLocalCopy(NetworkBookItem &book, NetworkItem::URLType format) {
-	std::map<NetworkItem::URLType, std::string>::const_iterator it = book.URLByType.find(format);
-	if (it == book.URLByType.end()) {
-		return false;
+std::string NetworkBookNode::localCopyFileName(shared_ptr<BookReference> reference) const {
+	if (reference.isNull()) {
+		return std::string();
 	}
-	std::string fileName = NetworkLinkCollection::Instance().bookFileName(it->second);
+	std::string fileName =
+		NetworkLinkCollection::Instance().bookFileName(*reference);
 	if (!fileName.empty() && ZLFile(fileName).exists()) {
-		return true;
+		return fileName;
 	}
-	fileName = NetworkLinkCollection::Instance().makeBookFileName(it->second, format);
-	return !fileName.empty() && ZLFile(fileName).exists();
+
+	fileName =
+		NetworkLinkCollection::Instance().makeBookFileName(*reference);
+	if (!fileName.empty() && ZLFile(fileName).exists()) {
+		return fileName;
+	}
+
+	return std::string();
+}
+
+std::string NetworkBookNode::localCopyFileName(const NetworkBookItem &book, BookReference::Format format) const {
+	std::string fileName = localCopyFileName(
+		book.reference(format, BookReference::DOWNLOAD)
+	);
+	if (!fileName.empty()) {
+		return fileName;
+	}
+	return localCopyFileName(
+		book.reference(format, BookReference::DOWNLOAD_CONDITIONAL)
+	);
 }
 
 bool NetworkBookNode::NetworkBookNode::hasDirectLink() {
 	NetworkBookItem &book = bookItem();
-	if (book.bestBookFormat() != NetworkItem::URL_NONE) {
+	if (!book.reference(BookReference::DOWNLOAD).isNull()) {
 		return true;
 	}
 	if (book.Link.authenticationManager().isNull()) {
@@ -247,35 +253,12 @@ bool NetworkBookNode::canBePurchased() {
 	return mgr.needPurchase(book);
 }
 
-NetworkBookNode::ReadAction::ReadAction(shared_ptr<NetworkItem> book) : myBook(book) {
+NetworkBookNode::ReadAction::ReadAction(const NetworkBookNode &node) : myNode(node) {
 }
 
 void NetworkBookNode::ReadAction::run() {
-	NetworkBookItem &book = (NetworkBookItem &) *myBook;
-
-	NetworkItem::URLType format = NetworkItem::URL_NONE;
-
-	if (NetworkBookNode::hasLocalCopy(book, NetworkItem::URL_BOOK_EPUB)) {
-		format = NetworkItem::URL_BOOK_EPUB;
-	} else if (NetworkBookNode::hasLocalCopy(book, NetworkItem::URL_BOOK_MOBIPOCKET)) {
-		format = NetworkItem::URL_BOOK_MOBIPOCKET;
-	} else if (NetworkBookNode::hasLocalCopy(book, NetworkItem::URL_BOOK_FB2_ZIP)) {
-		format = NetworkItem::URL_BOOK_FB2_ZIP;
-	}
-
-	std::string networkBookId;
-	if (format != NetworkItem::URL_NONE) {
-		networkBookId = book.URLByType[format];
-	} else if (!book.Link.authenticationManager().isNull()) {
-		NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
-		networkBookId = mgr.networkBookId(book);
-		format = mgr.downloadLinkType(book);
-	}
-	if (!networkBookId.empty()) {
-		std::string fileName = NetworkLinkCollection::Instance().bookFileName(networkBookId);
-		if (fileName.empty() || !ZLFile(fileName).exists()) {
-			fileName = NetworkLinkCollection::Instance().makeBookFileName(networkBookId, format);
-		}
+	const std::string fileName = myNode.localCopyFileName();
+	if (!fileName.empty()) {
 		FBReader &fbreader = FBReader::Instance();
 		shared_ptr<Book> bookPtr;
 		fbreader.createBook(fileName, bookPtr);
@@ -295,23 +278,30 @@ void NetworkBookNode::DownloadAction::run() {
 		return;
 	}
 
-	NetworkBookItem &book = (NetworkBookItem &) *myBook;
+	NetworkBookItem &book = (NetworkBookItem&)*myBook;
 
-	NetworkItem::URLType format =
-		myDemo ? book.bestDemoFormat() : book.bestBookFormat();
-
-	if (format == NetworkItem::URL_NONE) {
-		if (myDemo || book.Link.authenticationManager().isNull()) {
+	shared_ptr<BookReference> reference = book.reference(
+		myDemo ? BookReference::DOWNLOAD_DEMO : BookReference::DOWNLOAD
+	);
+	shared_ptr<NetworkAuthenticationManager> authManager;
+	std::string networkBookId;
+	if (reference.isNull() && !myDemo) {
+		reference = book.reference(BookReference::DOWNLOAD_CONDITIONAL);
+		if (reference.isNull()) {
 			return;
 		}
-		NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
-		if (mgr.needPurchase(book)) {
+		networkBookId = reference->URL;
+		authManager = book.Link.authenticationManager();
+		if (authManager.isNull() || authManager->needPurchase(book)) {
 			return;
 		}
-		format = mgr.downloadLinkType(book);
+		reference = authManager->downloadReference(book);
+	}
+	if (reference.isNull()) {
+		return;
 	}
 
-	DownloadBookRunnable downloader(book, format);
+	DownloadBookRunnable downloader(reference, networkBookId, authManager);
 	downloader.executeWithUI();
 	if (downloader.hasErrors()) {
 		downloader.showErrorMessage();
@@ -350,21 +340,14 @@ void NetworkBookNode::DownloadAction::run() {
 	fbreader.refreshWindow();
 }
 
-NetworkBookNode::ReadDemoAction::ReadDemoAction(shared_ptr<NetworkItem> book) : myBook(book) {
+NetworkBookNode::ReadDemoAction::ReadDemoAction(const NetworkBookNode &node) : myNode(node) {
 };
 
 void NetworkBookNode::ReadDemoAction::run() {
-	NetworkBookItem &book = (NetworkBookItem &) *myBook;
-	NetworkItem::URLType format = book.bestDemoFormat();
-	if (format == NetworkItem::URL_NONE) {
-		return;
-	}
-	std::string networkBookId = book.URLByType[format];
-	if (!networkBookId.empty()) {
-		std::string fileName = NetworkLinkCollection::Instance().bookFileName(networkBookId);
-		if (fileName.empty() || !ZLFile(fileName).exists()) {
-			fileName = NetworkLinkCollection::Instance().makeBookFileName(networkBookId, format);
-		}
+	shared_ptr<BookReference> reference =
+		myNode.bookItem().reference(BookReference::DOWNLOAD_DEMO);
+	const std::string fileName = myNode.localCopyFileName(reference);
+	if (!fileName.empty()) {
 		FBReader &fbreader = FBReader::Instance();
 		shared_ptr<Book> bookPtr;
 		fbreader.createBook(fileName, bookPtr);
@@ -426,17 +409,18 @@ void NetworkBookNode::BuyAction::run() {
 NetworkBookNode::DeleteAction::DeleteAction(shared_ptr<NetworkItem> book) : myBook(book) {
 }
 
-void NetworkBookNode::DeleteAction::removeFormat(NetworkBookItem &book, NetworkItem::URLType format) {
-	std::map<NetworkItem::URLType, std::string>::const_iterator it = book.URLByType.find(format);
-	if (it == book.URLByType.end()) {
+void NetworkBookNode::DeleteAction::removeFormat(shared_ptr<BookReference> reference) {
+	if (reference.isNull()) {
 		return;
 	}
-	std::string fileName = NetworkLinkCollection::Instance().bookFileName(it->second);
+	std::string fileName =
+		NetworkLinkCollection::Instance().bookFileName(*reference);
 	if (!fileName.empty()) {
+		// TODO: remove name from database
 		ZLFile(fileName).remove();
-		// TODO: cleanup network database ???
 	}
-	fileName = NetworkLinkCollection::Instance().makeBookFileName(it->second, format);
+	fileName =
+		NetworkLinkCollection::Instance().makeBookFileName(*reference);
 	if (!fileName.empty()) {
 		ZLFile(fileName).remove();
 	}
@@ -451,20 +435,24 @@ void NetworkBookNode::DeleteAction::run() {
 		return;
 	}
 
-	removeFormat(book, NetworkItem::URL_BOOK_EPUB);
-	removeFormat(book, NetworkItem::URL_BOOK_MOBIPOCKET);
-	removeFormat(book, NetworkItem::URL_BOOK_FB2_ZIP);
+	removeFormat(book.reference(
+		BookReference::EPUB, BookReference::DOWNLOAD
+	));
+	removeFormat(book.reference(
+		BookReference::EPUB, BookReference::DOWNLOAD_CONDITIONAL
+	));
+	removeFormat(book.reference(
+		BookReference::FB2_ZIP, BookReference::DOWNLOAD
+	));
+	removeFormat(book.reference(
+		BookReference::FB2_ZIP, BookReference::DOWNLOAD_CONDITIONAL
+	));
+	removeFormat(book.reference(
+		BookReference::MOBIPOCKET, BookReference::DOWNLOAD
+	));
+	removeFormat(book.reference(
+		BookReference::MOBIPOCKET, BookReference::DOWNLOAD_CONDITIONAL
+	));
 
-	if (book.Link.authenticationManager().isNull()) {
-		return;
-	}
-
-	NetworkAuthenticationManager &mgr = *book.Link.authenticationManager();
-	const std::string url = mgr.networkBookId(book);
-	const NetworkItem::URLType format = mgr.downloadLinkType(book);
-	const std::string fileName = NetworkLinkCollection::Instance().makeBookFileName(url, format);
-	if (!fileName.empty()) {
-		ZLFile(fileName).remove();
-	}
 	FBReader::Instance().refreshWindow();
 }

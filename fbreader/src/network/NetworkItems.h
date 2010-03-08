@@ -28,6 +28,8 @@
 
 #include <ZLTypeId.h>
 
+#include "BookReference.h"
+
 class NetworkAuthenticationManager;
 class NetworkLink;
 
@@ -39,12 +41,6 @@ public:
 	enum URLType {
 		URL_NONE,
 		URL_CATALOG,
-		URL_BOOK_EPUB,
-		URL_BOOK_MOBIPOCKET,
-		URL_BOOK_FB2_ZIP,
-		URL_BOOK_PDF,
-		URL_BOOK_DEMO_FB2_ZIP,
-		URL_BOOK_BUY_FB2_ZIP,
 		URL_HTML_PAGE,
 		URL_COVER
 	};
@@ -141,15 +137,16 @@ public:
 		const std::vector<std::string> &tags,
 		const std::string &seriesTitle,
 		unsigned int indexInSeries,
-		const std::map<URLType,std::string> &urlByType
+		const std::map<URLType,std::string> &urlByType,
+		const std::vector<shared_ptr<BookReference> > references
 	);
 	NetworkBookItem(const NetworkBookItem &book, unsigned int index);
 
 	const ZLTypeId &typeId() const;
 
 public:
-	URLType bestBookFormat() const;
-	URLType bestDemoFormat() const;
+	shared_ptr<BookReference> reference(BookReference::Type type) const;
+	shared_ptr<BookReference> reference(BookReference::Format format, BookReference::Type type) const;
 
 public:
 	/*const*/ unsigned int Index;
@@ -162,6 +159,9 @@ public:
 	const std::vector<std::string> Tags;
 	const std::string SeriesTitle;
 	const int IndexInSeries;
+
+private:
+	std::vector<shared_ptr<BookReference> > myReferences;
 };
 
 #endif /* __NETWORKITEMS_H__ */

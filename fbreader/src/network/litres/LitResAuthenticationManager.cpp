@@ -118,14 +118,6 @@ void LitResAuthenticationManager::logOut() {
 	mySidOption.setValue("");
 }
 
-std::string LitResAuthenticationManager::networkBookId(const NetworkBookItem &book) {
-	return "http://robot.litres.ru/pages/catalit_download_book/?art=" + book.Id;
-}
-
-NetworkItem::URLType LitResAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
-	return NetworkItem::URL_BOOK_FB2_ZIP;
-}
-
 const std::string &LitResAuthenticationManager::currentUserName() {
 	return mySidUserNameOption.value();
 }
@@ -140,13 +132,12 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
 
-	std::map<NetworkItem::URLType,std::string>::const_iterator it =
-		book.URLByType.find(NetworkItem::URL_BOOK_BUY_FB2_ZIP);
-	if (it == book.URLByType.end()) {
+	shared_ptr<BookReference> reference = book.reference(BookReference::BUY);
+	if (reference.isNull()) {
 		// TODO: add correct error message
 		return "Oh, that's impossible";
 	}
-	std::string query = it->second;
+	std::string query = reference->URL;
 	ZLNetworkUtil::appendParameter(query, "sid", sid);
 
 	std::string account, bookId;
@@ -180,15 +171,19 @@ std::string LitResAuthenticationManager::purchaseBook(NetworkBookItem &book) {
 	return error;
 }
 
-std::string LitResAuthenticationManager::downloadLink(const NetworkBookItem &book) {
+shared_ptr<BookReference> LitResAuthenticationManager::downloadReference(const NetworkBookItem &book) {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
-		return "";
+		return 0;
 	}
-	std::string query;
-	ZLNetworkUtil::appendParameter(query, "sid", sid);
-	ZLNetworkUtil::appendParameter(query, "art", book.Id);
-	return LitResUtil::url(Link, "pages/catalit_download_book/" + query);
+	shared_ptr<BookReference> reference =
+		book.reference(BookReference::DOWNLOAD_CONDITIONAL);
+	if (reference.isNull()) {
+		return 0;
+	}
+	std::string url = reference->URL;
+	ZLNetworkUtil::appendParameter(url, "sid", sid);
+	return new BookReference(url, reference->BookFormat, BookReference::DOWNLOAD);
 }
 
 void LitResAuthenticationManager::collectPurchasedBooks(NetworkItem::List &list) {

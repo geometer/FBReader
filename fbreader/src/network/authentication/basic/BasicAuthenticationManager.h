@@ -60,8 +60,7 @@ public:
 	std::string authorise(const std::string &pwd); // returns error message
 	void logOut();
 
-	std::string networkBookId(const NetworkBookItem &book);
-	NetworkItem::URLType downloadLinkType(const NetworkBookItem &book);
+	shared_ptr<BookReference> downloadReference(const NetworkBookItem &book);
 
 public: // Account specific methods (can be called only if authorised!!!)
 	const std::string &currentUserName();

@@ -17,9 +17,6 @@
  * 02110-1301, USA.
  */
 
-//#include <ZLStringUtil.h>
-//#include <ZLFile.h>
-
 #include "NetworkItems.h"
 
 const ZLTypeId NetworkBookItem::TYPE_ID(NetworkItem::TYPE_ID);
@@ -42,7 +39,8 @@ NetworkBookItem::NetworkBookItem(
 	const std::vector<std::string> &tags,
 	const std::string &seriesTitle,
 	unsigned int indexInSeries,
-	const std::map<URLType,std::string> &urlByType
+	const std::map<URLType,std::string> &urlByType,
+	const std::vector<shared_ptr<BookReference> > references
 ) : 
 	NetworkItem(link, title, summary, urlByType),
 	Index(index),
@@ -53,7 +51,8 @@ NetworkBookItem::NetworkBookItem(
 	Authors(authors),
 	Tags(tags),
 	SeriesTitle(seriesTitle),
-	IndexInSeries(indexInSeries) {
+	IndexInSeries(indexInSeries),
+	myReferences(references) {
 }
 
 NetworkBookItem::NetworkBookItem(const NetworkBookItem &book, unsigned int index) :
@@ -113,20 +112,22 @@ const ZLTypeId &NetworkBookItem::typeId() const {
 	return ZLFile::replaceIllegalCharacters(fName, '_');
 }*/
 
-NetworkItem::URLType NetworkBookItem::bestBookFormat() const {
-	if (URLByType.count(URL_BOOK_EPUB) != 0) {
-		return URL_BOOK_EPUB;
-	} else if (URLByType.count(URL_BOOK_FB2_ZIP) != 0) {
-		return URL_BOOK_FB2_ZIP;
-	} else if (URLByType.count(URL_BOOK_MOBIPOCKET) != 0) {
-		return URL_BOOK_MOBIPOCKET;
+shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Type type) const {
+	shared_ptr<BookReference> reference;
+	for (std::vector<shared_ptr<BookReference> >::const_iterator it = myReferences.begin(); it != myReferences.end(); ++it) {
+		if ((*it)->ReferenceType == type &&
+				(reference.isNull() || (*it)->BookFormat > reference->BookFormat)) {
+			reference = *it;
+		}
 	}
-	return URL_NONE;
+	return reference;
 }
 
-NetworkItem::URLType NetworkBookItem::bestDemoFormat() const {
-	if (URLByType.count(URL_BOOK_DEMO_FB2_ZIP) != 0) {
-		return URL_BOOK_DEMO_FB2_ZIP;
+shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Format format, BookReference::Type type) const {
+	for (std::vector<shared_ptr<BookReference> >::const_iterator it = myReferences.begin(); it != myReferences.end(); ++it) {
+		if ((*it)->BookFormat == format && (*it)->ReferenceType == type) {
+			return *it;
+		}
 	}
-	return URL_NONE;
+	return 0;
 }

@@ -25,6 +25,7 @@
 #include <ZLBoolean3.h>
 
 #include "../NetworkItems.h"
+#include "../BookReference.h"
 
 struct ZLNetworkSSLCertificate;
 
@@ -56,13 +57,7 @@ public:
 
 	virtual bool skipIPSupported();
 
-	/* 
-	 * Returns analog for downloadLink(book), but this link doesn't depend on account;
-	 * This value is used in calls for BooksDB's Network database.
-	 */
-	virtual std::string networkBookId(const NetworkBookItem &book); 
-
-	virtual NetworkItem::URLType downloadLinkType(const NetworkBookItem &book); // returns type of download link
+	virtual shared_ptr<BookReference> downloadReference(const NetworkBookItem &book) = 0;
 
 public: // Account specific methods (can be called only if authorised!!!)
 	virtual const std::string &currentUserName() = 0;
@@ -70,7 +65,6 @@ public: // Account specific methods (can be called only if authorised!!!)
 	virtual std::string initialize(); // returns error message
 	virtual bool needPurchase(const NetworkBookItem &book); // returns true if link must be purchased before downloading
 	virtual std::string purchaseBook(NetworkBookItem &book); // returns error message
-	virtual std::string downloadLink(const NetworkBookItem &book); // returns link to download book
 
 	virtual std::string refillAccountLink();
 	virtual std::string currentAccount();

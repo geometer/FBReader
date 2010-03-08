@@ -69,32 +69,22 @@ void NetworkOperationRunnable::showErrorMessage() const {
 	}
 }
 
-DownloadBookRunnable::DownloadBookRunnable(const NetworkBookItem &book, NetworkItem::URLType format) : NetworkOperationRunnable("downloadBook") {
-	const std::map<NetworkItem::URLType, std::string>::const_iterator it = book.URLByType.find(format);
-	if (it != book.URLByType.end()) {
-		myURL = it->second;
-		myNetworkBookId = myURL;
-		myFormat = format;
-	} else {
-		myAuthManager = book.Link.authenticationManager();
-		if (!myAuthManager.isNull() && !myAuthManager->needPurchase(book)) {
-			myURL = myAuthManager->downloadLink(book);
-			myNetworkBookId = myAuthManager->networkBookId(book);
-			myFormat = myAuthManager->downloadLinkType(book);
-		}
-	}
+DownloadBookRunnable::DownloadBookRunnable(shared_ptr<BookReference> reference, const std::string &networkBookId, shared_ptr<NetworkAuthenticationManager> authManager) : NetworkOperationRunnable("downloadBook") {
+	myReference = reference;
+	myNetworkBookId = networkBookId.empty() ? reference->URL : networkBookId;
+	myAuthManager = authManager;
 }
 
-DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook"), myURL(url), myNetworkBookId(url), myFormat(NetworkItem::URL_NONE) {
+DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook"), myNetworkBookId(url) {
+	myReference = new BookReference(url, BookReference::NONE, BookReference::DOWNLOAD);
 }
 
 DownloadBookRunnable::~DownloadBookRunnable() {
 }
 
 void DownloadBookRunnable::run() {
-	NetworkLinkCollection::Instance().rewriteUrl(myURL);
 	NetworkLinkCollection::Instance().downloadBook(
-		myURL, myNetworkBookId, myFormat, myFileName,
+		*myReference, myNetworkBookId, myFileName,
 		myAuthManager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : myAuthManager->certificate(),
 		myDialog->listener()
 	);

@@ -32,6 +32,7 @@
 
 class NetworkLink;
 class NetworkBookCollection;
+class BookReference;
 
 struct ZLNetworkSSLCertificate;
 
@@ -54,10 +55,10 @@ private:
 	~NetworkLinkCollection();
 
 public:
-	std::string bookFileName(const std::string &networkBookId) const;
-	std::string makeBookFileName(const std::string &url, NetworkItem::URLType format);
+	std::string bookFileName(const BookReference &reference) const;
+	std::string makeBookFileName(const BookReference &reference);
 
-	bool downloadBook(const std::string &url, const std::string &networkBookId, NetworkItem::URLType format, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
+	bool downloadBook(const BookReference &reference, const std::string &networkBookId, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
 
 	shared_ptr<NetworkBookCollection> simpleSearch(const std::string &pattern);
 	shared_ptr<NetworkBookCollection> advancedSearch(const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation);
@@ -71,7 +72,7 @@ public:
 	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
 private:
-	std::string makeBookFileName(const std::string &url, NetworkItem::URLType format, bool createDirectories);
+	std::string makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);
 
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;

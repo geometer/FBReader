@@ -1,0 +1,64 @@
+/*
+ * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
+#ifndef __BOOKREFERENCE_H__
+#define __BOOKREFERENCE_H__
+
+#include <string>
+
+class BookReference {
+
+public:
+	enum Format {
+		NONE = 0,
+		MOBIPOCKET = 1,
+		FB2_ZIP = 2,
+		EPUB = 3,
+	};
+
+	enum Type {
+		DOWNLOAD,
+		DOWNLOAD_DEMO,
+		DOWNLOAD_CONDITIONAL,
+		BUY
+	};
+
+public:
+	BookReference(const std::string &url, Format format, Type type);
+
+public:
+	const std::string URL;
+	const Format BookFormat;
+	const Type ReferenceType;
+
+private:
+	BookReference(const BookReference&);
+	const BookReference &operator = (const BookReference&);
+};
+
+class BuyBookReference : public BookReference {
+
+public:
+	BuyBookReference(const std::string &url, Format format, Type type, const std::string &price);
+
+public:
+	const std::string Price;
+};
+
+#endif /* __BOOKREFERENCE_H__ */

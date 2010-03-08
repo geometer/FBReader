@@ -80,6 +80,7 @@ private:
 
 	std::vector<std::string> myTags;
 	std::map<NetworkItem::URLType,std::string> myURLByType;
+	std::vector<shared_ptr<BookReference> > myReferences;
 };
 
 #endif /* __LITRESDATAPARSER_H__ */

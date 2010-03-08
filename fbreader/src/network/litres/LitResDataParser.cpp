@@ -106,19 +106,22 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 
 			const std::string hasTrial = stringAttributeValue(attributes, "has_trial");
 			if (hasTrial == "1") {
-				myURLByType.insert(
-					std::make_pair(
-						NetworkItem::URL_BOOK_DEMO_FB2_ZIP,
-						makeDemoUrl(myBookId)
-					)
-				);
+				myReferences.push_back(new BookReference(
+					makeDemoUrl(myBookId),
+					BookReference::FB2_ZIP,
+					BookReference::DOWNLOAD_DEMO
+				));
 			}
-			myURLByType.insert(
-				std::make_pair(
-					NetworkItem::URL_BOOK_BUY_FB2_ZIP,
-					"https://robot.litres.ru/pages/purchase_book/?lfrom=51&art=" + myBookId
-				)
-			);
+			myReferences.push_back(new BookReference(
+				"https://robot.litres.ru/pages/purchase_book/?lfrom=51&art=" + myBookId,
+				BookReference::FB2_ZIP,
+				BookReference::BUY
+			));
+			myReferences.push_back(new BookReference(
+				"https://robot.litres.ru/pages/catalit_download_book/?art=" + myBookId,
+				BookReference::FB2_ZIP,
+				BookReference::DOWNLOAD_CONDITIONAL
+			));
 
 			const char *price = attributeValue(attributes, "price");
 			if (price != 0 && *price != '\0') {
@@ -141,7 +144,8 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				myTags,
 				mySeriesTitle,
 				myIndexInSeries,
-				myURLByType
+				myURLByType,
+				myReferences
 			));
 
 			myTitle.erase();
@@ -154,6 +158,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			myAuthors.clear();
 			myTags.clear();
 			myURLByType.clear();
+			myReferences.clear();
 		}
 		break;
 	case BOOK_DESCRIPTION: 

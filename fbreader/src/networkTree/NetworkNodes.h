@@ -227,10 +227,12 @@ private:
 	const NetworkBookItem &bookItem() const;
 	NetworkBookItem &bookItem();
 
-	bool hasLocalCopy();
+	std::string localCopyFileName() const;
+	std::string localCopyFileName(shared_ptr<BookReference> reference) const;
+	std::string localCopyFileName(const NetworkBookItem &book, BookReference::Format format) const;
+
 	bool hasDirectLink();
 	bool canBePurchased();
-	static bool hasLocalCopy(NetworkBookItem &book, NetworkItem::URLType format);
 
 private:
 	shared_ptr<NetworkItem> myBook;

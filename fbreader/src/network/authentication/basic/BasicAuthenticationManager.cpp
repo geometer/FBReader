@@ -105,18 +105,14 @@ void BasicAuthenticationManager::logOut() {
 	}
 }
 
-std::string BasicAuthenticationManager::networkBookId(const NetworkBookItem &) {
-	return "";
-}
-
-NetworkItem::URLType BasicAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
-	return NetworkItem::URL_NONE;
-}
-
 const std::string &BasicAuthenticationManager::currentUserName() {
 	return myAccountUserNameOption.value();
 }
 
 const ZLNetworkSSLCertificate &BasicAuthenticationManager::certificate() {
 	return myCertificate;
+}
+
+shared_ptr<BookReference> BasicAuthenticationManager::downloadReference(const NetworkBookItem &book) {
+	return 0;
 }

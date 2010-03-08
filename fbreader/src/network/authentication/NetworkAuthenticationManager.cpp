@@ -33,14 +33,6 @@ NetworkAuthenticationManager::NetworkAuthenticationManager(const NetworkLink &li
 NetworkAuthenticationManager::~NetworkAuthenticationManager() {
 }
 
-std::string NetworkAuthenticationManager::networkBookId(const NetworkBookItem &) {
-	return "";
-}
-
-NetworkItem::URLType NetworkAuthenticationManager::downloadLinkType(const NetworkBookItem &) {
-	return NetworkItem::URL_NONE;
-}
-
 bool NetworkAuthenticationManager::needsInitialization() {
 	return false;
 }
@@ -55,10 +47,6 @@ bool NetworkAuthenticationManager::needPurchase(const NetworkBookItem &) {
 
 std::string NetworkAuthenticationManager::purchaseBook(NetworkBookItem &) {
 	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
-}
-
-std::string NetworkAuthenticationManager::downloadLink(const NetworkBookItem &) {
-	return "";
 }
 
 std::string NetworkAuthenticationManager::refillAccountLink() {
