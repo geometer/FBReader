@@ -30,8 +30,7 @@
 #include "../network/NetworkLinkCollection.h"
 #include "../network/SearchResult.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
-
-#include "../networkTree/NetworkOperationRunnable.h"
+#include "../networkActions/NetworkOperationRunnable.h"
 
 static const std::string SEARCH_PARAMETER_ID = "networkSearchPattern";
 

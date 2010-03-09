@@ -28,7 +28,6 @@
 #include "NetworkView.h"
 #include "NetworkNodesFactory.h"
 #include "NetworkCatalogUtil.h"
-#include "NetworkOperationRunnable.h"
 
 #include "../fbreader/FBReader.h"
 
@@ -36,6 +35,7 @@
 #include "../network/NetworkBookCollection.h"
 #include "../network/NetworkLink.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
+#include "../networkActions/NetworkOperationRunnable.h"
 
 class NetworkCatalogNode::ExpandCatalogAction : public ZLRunnableWithKey {
 

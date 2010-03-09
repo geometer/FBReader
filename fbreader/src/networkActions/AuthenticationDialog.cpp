@@ -24,10 +24,8 @@
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
-
 #include "AuthenticationDialog.h"
 #include "NetworkOperationRunnable.h"
-
 #include "../network/UserList.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
 

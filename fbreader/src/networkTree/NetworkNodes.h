@@ -205,12 +205,6 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 private:
-	class ReadAction;
-	class DownloadAction;
-	class BuyAction;
-	class DeleteAction;
-
-private:
 	NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book);
 
 friend class NetworkNodesFactory;

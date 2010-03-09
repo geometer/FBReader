@@ -27,11 +27,11 @@
 #include "NetworkNodesFactory.h"
 
 #include "../network/NetworkItems.h"
-
 #include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkLink.h"
 #include "../network/SearchResult.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
+#include "../networkActions/NetworkOperationRunnable.h"
 
 #include "../options/FBOptions.h"
 

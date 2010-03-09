@@ -25,8 +25,6 @@
 
 #include <ZLBlockTreeView.h>
 
-#include "NetworkOperationRunnable.h"
-
 #include "../network/NetworkItems.h"
 
 class NetworkAuthorNode;

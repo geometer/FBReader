@@ -23,10 +23,6 @@
 #include <ZLDialogManager.h>
 
 #include "NetworkNodes.h"
-#include "NetworkOperationRunnable.h"
-#include "AuthenticationDialog.h"
-#include "PasswordRecoveryDialog.h"
-#include "RegisterUserDialog.h"
 
 #include "../fbreader/FBReader.h"
 
@@ -34,6 +30,11 @@
 #include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkLink.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
+
+#include "../networkActions/NetworkOperationRunnable.h"
+#include "../networkActions/AuthenticationDialog.h"
+#include "../networkActions/PasswordRecoveryDialog.h"
+#include "../networkActions/RegisterUserDialog.h"
 
 class NetworkCatalogRootNode::LoginAction : public ZLRunnableWithKey {
 

@@ -44,8 +44,8 @@
 
 #include "../libraryTree/LibraryView.h"
 #include "../network/NetworkLinkCollection.h"
+#include "../networkActions/NetworkOperationRunnable.h"
 #include "../networkTree/NetworkView.h"
-#include "../networkTree/NetworkOperationRunnable.h"
 
 #include "../migration/migrate.h"
 
