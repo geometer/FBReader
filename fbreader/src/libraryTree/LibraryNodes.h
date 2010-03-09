@@ -33,9 +33,6 @@ class AuthorNode : public FBReaderNode {
 public:
 	static const ZLTypeId TYPE_ID;
 
-private:
-	class EditInfoAction;
-
 public:
 	AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author);
 

@@ -24,20 +24,7 @@
 #include "BooksUtil.h"
 
 #include "../library/Author.h"
-#include "../fbreader/FBReader.h"
-
-#include "AuthorInfoDialog.h"
-
-class AuthorNode::EditInfoAction : public ZLRunnableWithKey {
-
-public:
-	EditInfoAction(shared_ptr<Author> author);
-	void run();
-	ZLResourceKey key() const;
-
-private:
-	shared_ptr<Author> myAuthor;
-};
+#include "../libraryActions/LibraryAuthorActions.h"
 
 const ZLTypeId AuthorNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
@@ -72,24 +59,10 @@ void AuthorNode::paint(ZLPaintContext &context, int vOffset) {
 	drawHyperlink(context, left, vOffset, expandTreeAction());
 	if (!myAuthor.isNull()) {
 		if (myEditInfoAction.isNull()) {
-			myEditInfoAction = new EditInfoAction(myAuthor);
+			myEditInfoAction = new AuthorEditInfoAction(myAuthor);
 		}
 		drawHyperlink(context, left, vOffset, myEditInfoAction);
 	}
-}
-
-AuthorNode::EditInfoAction::EditInfoAction(shared_ptr<Author> author) : myAuthor(author) {
-}
-
-void AuthorNode::EditInfoAction::run() {
-	if (AuthorInfoDialog::run(myAuthor)) {
-		// TODO: select current node (?) again
-		FBReader::Instance().refreshWindow();
-	}
-}
-
-ZLResourceKey AuthorNode::EditInfoAction::key() const {
-	return ZLResourceKey("edit");
 }
 
 shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {

@@ -275,4 +275,3 @@ void NetworkCatalogNode::ReloadAction::run() {
 	}
 	FBReader::Instance().refreshWindow();
 }
-
