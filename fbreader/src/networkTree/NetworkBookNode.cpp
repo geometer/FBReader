@@ -51,23 +51,13 @@ private:
 class NetworkBookNode::ReadAction : public ZLNamedRunnable {
 
 public:
-	ReadAction(const NetworkBookItem &item);
+	ReadAction(const NetworkBookItem &item, bool demo);
 	ZLResourceKey key() const;
 	void run();
 
 private:
 	const NetworkBookItem &myItem;
-};
-
-class NetworkBookNode::ReadDemoAction : public ZLNamedRunnable {
-
-public:
-	ReadDemoAction(const NetworkBookItem &item);
-	ZLResourceKey key() const;
-	void run();
-
-private:
-	const NetworkBookItem &myItem;
+	const bool myDemo;
 };
 
 class NetworkBookNode::BuyAction : public ZLNamedRunnable {
@@ -112,9 +102,9 @@ NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<Networ
 
 void NetworkBookNode::init() {
 	const NetworkBookItem &book = this->book();
-	myReadAction = new ReadAction(book);
+	myReadAction = new ReadAction(book, false);
 	myDownloadAction = new DownloadAction(book, false);
-	myReadDemoAction = new ReadDemoAction(book);
+	myReadDemoAction = new ReadAction(book, true);
 	myDownloadDemoAction = new DownloadAction(book, true);
 	myBuyAction = new BuyAction(book);
 	myDeleteAction = new DeleteAction(book);
@@ -181,15 +171,24 @@ shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {
 	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
 }
 
-NetworkBookNode::ReadAction::ReadAction(const NetworkBookItem &item) : myItem(item) {
+NetworkBookNode::ReadAction::ReadAction(const NetworkBookItem &item, bool demo) : myItem(item), myDemo(demo) {
 }
 
 ZLResourceKey NetworkBookNode::ReadAction::key() const {
-	return ZLResourceKey("read");
+	return ZLResourceKey(myDemo ? "readDemo" : "read");
 }
 
 void NetworkBookNode::ReadAction::run() {
-	const std::string fileName = myItem.localCopyFileName();
+	std::string fileName;
+	if (myDemo) {
+		shared_ptr<BookReference> reference =
+			myItem.reference(BookReference::DOWNLOAD_DEMO);
+		if (!reference.isNull()) {
+			fileName = reference->localCopyFileName();
+		}
+	} else {
+		fileName = myItem.localCopyFileName();
+	}
 	if (!fileName.empty()) {
 		FBReader &fbreader = FBReader::Instance();
 		shared_ptr<Book> bookPtr;
@@ -258,29 +257,6 @@ void NetworkBookNode::DownloadAction::run() {
 	fbreader.openBook(downloaderBook);
 	fbreader.setMode(FBReader::BOOK_TEXT_MODE);
 	fbreader.refreshWindow();
-}
-
-NetworkBookNode::ReadDemoAction::ReadDemoAction(const NetworkBookItem &item) : myItem(item) {
-};
-
-ZLResourceKey NetworkBookNode::ReadDemoAction::key() const {
-	return ZLResourceKey("readDemo");
-}
-
-void NetworkBookNode::ReadDemoAction::run() {
-	shared_ptr<BookReference> reference =
-		myItem.reference(BookReference::DOWNLOAD_DEMO);
-	const std::string fileName = reference->localCopyFileName();
-	if (!fileName.empty()) {
-		FBReader &fbreader = FBReader::Instance();
-		shared_ptr<Book> bookPtr;
-		fbreader.createBook(fileName, bookPtr);
-		if (!bookPtr.isNull()) {
-			fbreader.openBook(bookPtr);
-			fbreader.setMode(FBReader::BOOK_TEXT_MODE);
-			fbreader.refreshWindow();
-		}
-	}
 }
 
 NetworkBookNode::BuyAction::BuyAction(const NetworkBookItem &item) : myItem(item) {

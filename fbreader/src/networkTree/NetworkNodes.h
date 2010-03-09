@@ -207,7 +207,6 @@ public:
 private:
 	class ReadAction;
 	class DownloadAction;
-	class ReadDemoAction;
 	class BuyAction;
 	class DeleteAction;
 
