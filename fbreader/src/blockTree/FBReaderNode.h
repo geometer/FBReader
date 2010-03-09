@@ -21,6 +21,7 @@
 #define __FBREADERNODE_H__
 
 #include <map>
+#include <vector>
 
 #include <ZLBlockTreeView.h>
 
@@ -44,6 +45,7 @@ public:
 
 protected:
 	FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition = -1);
+	virtual void init();
 	virtual const ZLResource &resource() const = 0;
 
 public:
@@ -59,8 +61,10 @@ private:
 	int unitSize(ZLPaintContext &context, const FBTextStyle &style) const;
 
 protected:
+	void paint(ZLPaintContext &context, int vOffset);
 	shared_ptr<ZLRunnableWithKey> expandTreeAction();
-
+	void registerAction(shared_ptr<ZLRunnableWithKey> action);
+	void registerExpandTreeAction();
 	virtual shared_ptr<ZLImage> extractCoverImage() const = 0;
 
 private:
@@ -77,9 +81,11 @@ protected:
 	int height(ZLPaintContext &context) const;
 
 private:
+	bool myIsInitialized;
 	shared_ptr<ZLRunnableWithKey> myExpandTreeAction;
 	mutable bool myCoverImageIsStored;
 	mutable shared_ptr<ZLImage> myStoredCoverImage;
+	std::vector<shared_ptr<ZLRunnableWithKey> > myActions;
 };
 
 #endif /* __FBREADERNODE_H__ */

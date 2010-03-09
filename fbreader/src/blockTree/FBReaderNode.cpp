@@ -42,7 +42,10 @@ private:
 
 std::map<std::string,shared_ptr<ZLImage> > FBReaderNode::ourDefaultCovers;
 
-FBReaderNode::FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition) : ZLBlockTreeNode(parent, atPosition), myCoverImageIsStored(false) {
+FBReaderNode::FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition) : ZLBlockTreeNode(parent, atPosition), myCoverImageIsStored(false), myIsInitialized(false) {
+}
+
+void FBReaderNode::init() {
 }
 
 FBReaderNode::~FBReaderNode() {
@@ -129,11 +132,10 @@ void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset, bool highli
 }
 
 void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLRunnableWithKey> action, bool auxiliary) {
+	// auxiliary makes font size and hSkip to be 70% of their normal sizes
 	if (action.isNull()) {
 		return;
 	}
-
-	// auxiliary makes font size and hOffset to be 70% of their normal sizes
 
 	const FBTextStyle &style = FBTextStyle::Instance();
 	const int unit = unitSize(context, style);
@@ -190,6 +192,16 @@ shared_ptr<ZLRunnableWithKey> FBReaderNode::expandTreeAction() {
 	return myExpandTreeAction;
 }
 
+void FBReaderNode::registerAction(shared_ptr<ZLRunnableWithKey> action) {
+	if (!action.isNull()) {
+		myActions.push_back(action);
+	}
+}
+
+void FBReaderNode::registerExpandTreeAction() {
+	registerAction(new ExpandTreeAction(*this));
+}
+
 shared_ptr<ZLImage> FBReaderNode::defaultCoverImage(const std::string &id) {
 	shared_ptr<ZLImage> cover = ourDefaultCovers[id];
 	if (cover.isNull()) {
@@ -231,4 +243,24 @@ std::string FBReaderNode::summary() const {
 		result += ", ...";
 	}
 	return result;
+}
+
+void FBReaderNode::paint(ZLPaintContext &context, int vOffset) {
+	if (!myIsInitialized) {
+		init();
+		myIsInitialized = true;
+	}
+
+	removeAllHyperlinks();
+
+	drawCover(context, vOffset);
+	drawTitle(context, vOffset);
+	drawSummary(context, vOffset);
+
+	int left = 0;
+	for (std::vector<shared_ptr<ZLRunnableWithKey> >::const_iterator it = myActions.begin(); it != myActions.end(); ++it) {
+		if ((*it)->makesSense()) {
+			drawHyperlink(context, left, vOffset, *it);
+		}
+	}
 }

@@ -35,7 +35,7 @@ public:
 	ZLResourceKey key() const;
 
 private:
-	shared_ptr<Author> myAuthor;
+	const shared_ptr<Author> myAuthor;
 };
 
 #endif /* __LIBRARYAUTHORACTIONS_H__ */

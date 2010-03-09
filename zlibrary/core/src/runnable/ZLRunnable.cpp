@@ -23,3 +23,7 @@
 std::string ZLRunnableWithKey::text(const ZLResource &resource) const {
 	return resource[key()].value();
 }
+
+bool ZLRunnableWithKey::makesSense() const {
+	return true;
+}

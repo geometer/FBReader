@@ -43,6 +43,10 @@ ZLResourceKey NetworkBookReadAction::key() const {
 	return ZLResourceKey(myDemo ? "readDemo" : "read");
 }
 
+bool NetworkBookReadAction::makesSense() const {
+	return myDemo || !myBook.localCopyFileName().empty();
+}
+
 void NetworkBookReadAction::run() {
 	std::string fileName;
 	if (myDemo) {
@@ -71,6 +75,10 @@ NetworkBookDownloadAction::NetworkBookDownloadAction(const NetworkBookItem &book
 
 ZLResourceKey NetworkBookDownloadAction::key() const {
 	return ZLResourceKey(myDemo ? "downloadDemo" : "download");
+}
+
+bool NetworkBookDownloadAction::makesSense() const {
+	return myDemo || !myBook.localCopyFileName().empty();
 }
 
 void NetworkBookDownloadAction::run() {

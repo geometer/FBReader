@@ -35,6 +35,7 @@ public:
 
 public:
 	AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author);
+	void init();
 
 	shared_ptr<Author> author() const;
 
@@ -43,11 +44,9 @@ private:
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
-	void paint(ZLPaintContext &context, int vOffset);
 
 private:
 	shared_ptr<Author> myAuthor;
-	shared_ptr<ZLRunnableWithKey> myEditInfoAction;
 };
 
 class SeriesNode : public FBReaderNode {
@@ -56,7 +55,8 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	SeriesNode(AuthorNode *parent, shared_ptr<Book> book);
+	SeriesNode(AuthorNode *parent);
+	void init();
 
 	shared_ptr<Book> book() const;
 
@@ -65,10 +65,6 @@ private:
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
-	void paint(ZLPaintContext &context, int vOffset);
-
-private:
-	shared_ptr<Book> myBook;
 };
 
 class TagNode : public FBReaderNode {
@@ -91,6 +87,8 @@ private:
 public:
 	TagNode(ZLBlockTreeView::RootNode *parent, shared_ptr<Tag> tag);
 	TagNode(TagNode *parent, shared_ptr<Tag> tag);
+	void init();
+
 	shared_ptr<Tag> tag() const;
 
 private:
@@ -98,13 +96,9 @@ private:
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
-	void paint(ZLPaintContext &context, int vOffset);
 
 private:
 	shared_ptr<Tag> myTag;
-	shared_ptr<ZLRunnableWithKey> myEditAction;
-	shared_ptr<ZLRunnableWithKey> myCloneAction;
-	shared_ptr<ZLRunnableWithKey> myRemoveAction;
 };
 
 class BookNode : public FBReaderNode {

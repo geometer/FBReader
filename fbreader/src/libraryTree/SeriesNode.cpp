@@ -34,26 +34,19 @@ const ZLTypeId &SeriesNode::typeId() const {
 	return TYPE_ID;
 }
 
-SeriesNode::SeriesNode(AuthorNode *parent, shared_ptr<Book> book) : FBReaderNode(parent), myBook(book) {
+SeriesNode::SeriesNode(AuthorNode *parent) : FBReaderNode(parent) {
+}
+
+void SeriesNode::init() {
+	registerExpandTreeAction();
 }
 
 shared_ptr<Book> SeriesNode::book() const {
-	return myBook;
+	return ((BookNode&)*children().front()).book();
 }
 
 std::string SeriesNode::title() const {
-	return myBook->seriesTitle();
-}
-
-void SeriesNode::paint(ZLPaintContext &context, int vOffset) {
-	removeAllHyperlinks();
-
-	drawCover(context, vOffset);
-	drawTitle(context, vOffset);
-	drawSummary(context, vOffset);
-
-	int left = 0;
-	drawHyperlink(context, left, vOffset, expandTreeAction());
+	return book()->seriesTitle();
 }
 
 shared_ptr<ZLImage> SeriesNode::extractCoverImage() const {

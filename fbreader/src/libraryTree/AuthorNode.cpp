@@ -39,6 +39,13 @@ const ZLTypeId &AuthorNode::typeId() const {
 AuthorNode::AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author) : FBReaderNode(parent, atPosition), myAuthor(author) {
 }
 
+void AuthorNode::init() {
+	registerExpandTreeAction();
+	if (!myAuthor.isNull()) {
+		registerAction(new AuthorEditInfoAction(myAuthor));
+	}
+}
+
 shared_ptr<Author> AuthorNode::author() const {
 	return myAuthor;
 }
@@ -46,23 +53,6 @@ shared_ptr<Author> AuthorNode::author() const {
 std::string AuthorNode::title() const {
 	return myAuthor.isNull() ?
 		resource()["unknownAuthor"].value() : myAuthor->name();
-}
-
-void AuthorNode::paint(ZLPaintContext &context, int vOffset) {
-	removeAllHyperlinks();
-
-	drawCover(context, vOffset);
-	drawTitle(context, vOffset);
-	drawSummary(context, vOffset);
-
-	int left = 0;
-	drawHyperlink(context, left, vOffset, expandTreeAction());
-	if (!myAuthor.isNull()) {
-		if (myEditInfoAction.isNull()) {
-			myEditInfoAction = new AuthorEditInfoAction(myAuthor);
-		}
-		drawHyperlink(context, left, vOffset, myEditInfoAction);
-	}
 }
 
 shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {

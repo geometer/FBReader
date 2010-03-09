@@ -77,24 +77,27 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 	drawSummary(context, vOffset);
 
 	int left = 0;
-	if (!book.localCopyFileName().empty()) {
-		drawHyperlink(context, left, vOffset, myReadAction);
-		drawHyperlink(context, left, vOffset, myDeleteAction);
-	} else if (!book.reference(BookReference::DOWNLOAD).isNull()) {
-		drawHyperlink(context, left, vOffset, myDownloadAction);
-	} else {
-		shared_ptr<BookReference> reference =
-			book.reference(BookReference::DOWNLOAD_DEMO);
-		if (!reference.isNull()) {
-			if (!reference->localCopyFileName().empty()) {
-				drawHyperlink(context, left, vOffset, myReadDemoAction);
-			} else {
-				drawHyperlink(context, left, vOffset, myDownloadDemoAction);
+
+	drawHyperlink(context, left, vOffset, myReadAction);
+	drawHyperlink(context, left, vOffset, myDeleteAction);
+
+	if (book.localCopyFileName().empty()) {
+		if (!book.reference(BookReference::DOWNLOAD).isNull()) {
+			drawHyperlink(context, left, vOffset, myDownloadAction);
+		} else {
+			shared_ptr<BookReference> reference =
+				book.reference(BookReference::DOWNLOAD_DEMO);
+			if (!reference.isNull()) {
+				if (!reference->localCopyFileName().empty()) {
+					drawHyperlink(context, left, vOffset, myReadDemoAction);
+				} else {
+					drawHyperlink(context, left, vOffset, myDownloadDemoAction);
+				}
 			}
-		}
-		reference = book.reference(BookReference::BUY);
-		if (!reference.isNull()) {
-			drawHyperlink(context, left, vOffset, myBuyAction);
+			reference = book.reference(BookReference::BUY);
+			if (!reference.isNull()) {
+				drawHyperlink(context, left, vOffset, myBuyAction);
+			}
 		}
 	}
 }

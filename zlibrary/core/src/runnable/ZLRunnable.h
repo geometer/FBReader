@@ -37,6 +37,7 @@ class ZLRunnableWithKey : public ZLRunnable {
 public:
 	virtual ZLResourceKey key() const = 0;
 	virtual std::string text(const ZLResource &resource) const;
+	virtual bool makesSense() const;
 };
 
 inline ZLRunnable::~ZLRunnable() {}

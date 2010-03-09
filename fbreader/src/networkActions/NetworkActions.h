@@ -29,6 +29,7 @@ class NetworkBookDownloadAction : public ZLRunnableWithKey {
 public:
 	NetworkBookDownloadAction(const NetworkBookItem &book, bool demo);
 	ZLResourceKey key() const;
+	bool makesSense() const;
 	void run();
 
 private:
@@ -41,6 +42,7 @@ class NetworkBookReadAction : public ZLRunnableWithKey {
 public:
 	NetworkBookReadAction(const NetworkBookItem &book, bool demo);
 	ZLResourceKey key() const;
+	bool makesSense() const;
 	void run();
 
 private:

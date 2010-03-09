@@ -50,7 +50,7 @@ void LibraryByAuthorView::fillAuthorSubtree(AuthorNode *authorNode, const std::s
 			new BookNode(authorNode, *it);
 		} else {
 			if (seriesNode == 0 || seriesNode->book()->seriesTitle() != series) {
-				seriesNode = new SeriesNode(authorNode, *it);
+				seriesNode = new SeriesNode(authorNode);
 			}
 			new BookNode(seriesNode, *it);
 			if (visibleBooks.find(*it) != visibleBooks.end()) {

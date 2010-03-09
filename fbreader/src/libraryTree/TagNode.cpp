@@ -78,7 +78,7 @@ private:
 	ZLResourceKey key() const;
 
 private:
-	shared_ptr<Tag> myTag;
+	const shared_ptr<Tag> myTag;
 };
 
 class TagNode::NameEntry : public ZLComboOptionEntry {
@@ -132,6 +132,15 @@ size_t TagNode::positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag) {
 TagNode::TagNode(ZLBlockTreeView::RootNode *parent, shared_ptr<Tag> tag) : FBReaderNode(parent, positionToInsert(parent, tag)), myTag(tag) {
 }
 
+void TagNode::init() {
+	registerExpandTreeAction();
+	if (!myTag.isNull()) {
+		registerAction(new EditAction(*this));
+		registerAction(new CloneAction(*this));
+		registerAction(new RemoveAction(myTag));
+	}
+}
+
 TagNode::TagNode(TagNode *parent, shared_ptr<Tag> tag) : FBReaderNode(parent, positionToInsert(parent, tag)), myTag(tag) {
 }
 
@@ -144,28 +153,6 @@ std::string TagNode::title() const {
 		return resource()["noTags"].value();
 	}
 	return myTag->name();
-}
-
-void TagNode::paint(ZLPaintContext &context, int vOffset) {
-	removeAllHyperlinks();
-
-	drawCover(context, vOffset);
-	drawTitle(context, vOffset);
-	drawSummary(context, vOffset);
-
-	if (myEditAction.isNull()) {
-		myEditAction = new EditAction(*this);
-		myCloneAction = new CloneAction(*this);
-		myRemoveAction = new RemoveAction(myTag);
-	}
-
-	int left = 0;
-	drawHyperlink(context, left, vOffset, expandTreeAction());
-	if (!myTag.isNull()) {
-		drawHyperlink(context, left, vOffset, myEditAction);
-		drawHyperlink(context, left, vOffset, myCloneAction);
-		drawHyperlink(context, left, vOffset, myRemoveAction);
-	}
 }
 
 TagNode::EditOrCloneAction::EditOrCloneAction(TagNode &node) : myTagNode(node) {
