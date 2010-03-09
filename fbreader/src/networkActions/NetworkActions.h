@@ -55,6 +55,7 @@ class NetworkBookBuyAction : public ZLRunnableWithKey {
 public:
 	NetworkBookBuyAction(const NetworkBookItem &book);
 	ZLResourceKey key() const;
+	bool makesSense() const;
 	std::string text(const ZLResource &resource) const;
 	void run();
 
@@ -67,6 +68,7 @@ class NetworkBookDeleteAction : public ZLRunnableWithKey {
 public:
 	NetworkBookDeleteAction(const NetworkBookItem &book);
 	ZLResourceKey key() const;
+	bool makesSense() const;
 	void run();
 
 private:

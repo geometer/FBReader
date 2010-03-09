@@ -232,12 +232,16 @@ std::string BookNode::summary() const {
 	}
 }
 
+bool BookNode::highlighted() const {
+	return myBook->filePath() == FBReader::Instance().currentBook()->filePath();
+}
+
 void BookNode::paint(ZLPaintContext &context, int vOffset) {
-	const bool highlighted =
-		myBook->filePath() == FBReader::Instance().currentBook()->filePath();
+	removeAllHyperlinks();
+
 	drawCover(context, vOffset);
-	drawTitle(context, vOffset, highlighted);
-	drawSummary(context, vOffset, highlighted);
+	drawTitle(context, vOffset);
+	drawSummary(context, vOffset);
 
 	if (myReadAction.isNull()) {
 		myReadAction = new ReadAction(myBook);

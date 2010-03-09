@@ -47,13 +47,16 @@ protected:
 	FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition = -1);
 	virtual void init();
 	virtual const ZLResource &resource() const = 0;
+	virtual bool highlighted() const;
 
 public:
 	~FBReaderNode();
 
 	void drawCover(ZLPaintContext &context, int vOffset);
-	void drawTitle(ZLPaintContext &context, int vOffset, bool highlighted = false);
-	void drawSummary(ZLPaintContext &context, int vOffset, bool highlighted = false);
+
+protected:
+	void drawTitle(ZLPaintContext &context, int vOffset);
+	void drawSummary(ZLPaintContext &context, int vOffset);
 	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
 	virtual bool hasAuxHyperlink() const;
 
@@ -81,11 +84,11 @@ protected:
 	int height(ZLPaintContext &context) const;
 
 private:
-	bool myIsInitialized;
 	shared_ptr<ZLRunnableWithKey> myExpandTreeAction;
 	mutable bool myCoverImageIsStored;
 	mutable shared_ptr<ZLImage> myStoredCoverImage;
 	std::vector<shared_ptr<ZLRunnableWithKey> > myActions;
+	bool myIsInitialized;
 };
 
 #endif /* __FBREADERNODE_H__ */

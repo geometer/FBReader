@@ -119,6 +119,7 @@ public:
 	shared_ptr<Book> book() const;
 
 private:
+	bool highlighted() const;
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;

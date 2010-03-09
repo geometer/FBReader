@@ -48,6 +48,10 @@ FBReaderNode::FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition) : ZLBlock
 void FBReaderNode::init() {
 }
 
+bool FBReaderNode::highlighted() const {
+	return false;
+}
+
 FBReaderNode::~FBReaderNode() {
 }
 
@@ -99,12 +103,12 @@ void FBReaderNode::drawCover(ZLPaintContext &context, int vOffset) {
 	context.drawImage(hOffset + (w - width) / 2, vOffset + (h + height) / 2, *coverData, width, height, ZLPaintContext::SCALE_FIT_TO_SIZE);
 }
 
-void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset, bool highlighted) {
+void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset) {
 	const FBTextStyle &style = FBTextStyle::Instance();
 	const int unit = unitSize(context, style);
 	const int hOffset = level() * unit * 3 + unit * 2;
 
-	context.setColor(highlighted ?
+	context.setColor(highlighted() ?
 		FBOptions::Instance().colorOption(ZLTextStyle::HIGHLIGHTED_TEXT).value() :
 		FBOptions::Instance().RegularTextColorOption.value());
 	context.setFont(style.fontFamily(), style.fontSize(), style.bold(), style.italic());
@@ -113,7 +117,7 @@ void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset, bool highligh
 	context.drawString(hOffset, vOffset + 2 * unit, text.data(), text.size(), false);
 }
 
-void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset, bool highlighted) {
+void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset) {
 	const std::string text = summary();
 	if (text.empty()) {
 		return;
@@ -123,7 +127,7 @@ void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset, bool highli
 	const int unit = unitSize(context, style);
 	const int hOffset = level() * unit * 3 + unit * 2;
 
-	context.setColor(highlighted ?
+	context.setColor(highlighted() ?
 		FBOptions::Instance().colorOption(ZLTextStyle::HIGHLIGHTED_TEXT).value() :
 		FBOptions::Instance().RegularTextColorOption.value());
 	context.setFont(style.fontFamily(), style.fontSize() * 2 / 3, style.bold(), style.italic());
@@ -133,7 +137,7 @@ void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset, bool highli
 
 void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLRunnableWithKey> action, bool auxiliary) {
 	// auxiliary makes font size and hSkip to be 70% of their normal sizes
-	if (action.isNull()) {
+	if (action.isNull() || !action->makesSense()) {
 		return;
 	}
 

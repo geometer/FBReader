@@ -44,7 +44,17 @@ ZLResourceKey NetworkBookReadAction::key() const {
 }
 
 bool NetworkBookReadAction::makesSense() const {
-	return myDemo || !myBook.localCopyFileName().empty();
+	if (myDemo) {
+		if (!myBook.localCopyFileName().empty() ||
+				!myBook.reference(BookReference::DOWNLOAD).isNull()) {
+			return false;
+		}
+		shared_ptr<BookReference> reference =
+			myBook.reference(BookReference::DOWNLOAD_DEMO);
+		return !reference.isNull() && !reference->localCopyFileName().empty();
+	} else {
+		return !myBook.localCopyFileName().empty();
+	}
 }
 
 void NetworkBookReadAction::run() {
@@ -78,7 +88,19 @@ ZLResourceKey NetworkBookDownloadAction::key() const {
 }
 
 bool NetworkBookDownloadAction::makesSense() const {
-	return myDemo || !myBook.localCopyFileName().empty();
+	if (myDemo) {
+		if (!myBook.localCopyFileName().empty() ||
+				!myBook.reference(BookReference::DOWNLOAD).isNull()) {
+			return false;
+		}
+		shared_ptr<BookReference> reference =
+			myBook.reference(BookReference::DOWNLOAD_DEMO);
+		return !reference.isNull() && reference->localCopyFileName().empty();
+	} else {
+		return
+			myBook.localCopyFileName().empty() &&
+			!myBook.reference(BookReference::DOWNLOAD).isNull();
+	}
 }
 
 void NetworkBookDownloadAction::run() {
@@ -139,6 +161,13 @@ ZLResourceKey NetworkBookBuyAction::key() const {
 	return ZLResourceKey("buy");
 }
 
+bool NetworkBookBuyAction::makesSense() const {
+	return
+		myBook.localCopyFileName().empty() &&
+		myBook.reference(BookReference::DOWNLOAD).isNull() &&
+		!myBook.reference(BookReference::BUY).isNull();
+}
+
 std::string NetworkBookBuyAction::text(const ZLResource &resource) const {
 	const std::string text = ZLRunnableWithKey::text(resource);
 	shared_ptr<BookReference> reference = myBook.reference(BookReference::BUY);
@@ -196,6 +225,10 @@ NetworkBookDeleteAction::NetworkBookDeleteAction(const NetworkBookItem &book) : 
 
 ZLResourceKey NetworkBookDeleteAction::key() const {
 	return ZLResourceKey("delete");
+}
+
+bool NetworkBookDeleteAction::makesSense() const {
+	return !myBook.localCopyFileName().empty();
 }
 
 void NetworkBookDeleteAction::run() {
