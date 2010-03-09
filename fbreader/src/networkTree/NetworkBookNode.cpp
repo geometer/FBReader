@@ -37,18 +37,21 @@ const ZLResource &NetworkBookNode::resource() const {
 }
 
 NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book) : FBReaderNode(parent), myBook(book) {
-	const NetworkBookItem &item = this->book();
-	if (!item.reference(BookReference::DOWNLOAD).isNull()) {
-		myReadAction = new NetworkBookReadAction(item, false);
-		myDownloadAction = new NetworkBookDownloadAction(item, false);
-		myDeleteAction = new NetworkBookDeleteAction(item);
+}
+
+void NetworkBookNode::init() {
+	const NetworkBookItem &book = this->book();
+	if (!book.reference(BookReference::DOWNLOAD).isNull()) {
+		registerAction(new NetworkBookReadAction(book, false));
+		registerAction(new NetworkBookDownloadAction(book, false));
+		registerAction(new NetworkBookDeleteAction(book));
 	}
-	if (!item.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
-		myReadDemoAction = new NetworkBookReadAction(item, true);
-		myDownloadDemoAction = new NetworkBookDownloadAction(item, true);
+	if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
+		registerAction(new NetworkBookReadAction(book, true));
+		registerAction(new NetworkBookDownloadAction(book, true));
 	}
-	if (!item.reference(BookReference::BUY).isNull()) {
-		myBuyAction = new NetworkBookBuyAction(item);
+	if (!book.reference(BookReference::BUY).isNull()) {
+		registerAction(new NetworkBookBuyAction(book));
 	}
 }
 
@@ -72,21 +75,8 @@ std::string NetworkBookNode::summary() const {
 	return authorsString;
 }
 
-void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
-	removeAllHyperlinks();
-
+void NetworkBookNode::drawCover(ZLPaintContext &context, int vOffset) {
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
-
-	drawTitle(context, vOffset);
-	drawSummary(context, vOffset);
-
-	int left = 0;
-	drawHyperlink(context, left, vOffset, myReadAction);
-	drawHyperlink(context, left, vOffset, myDeleteAction);
-	drawHyperlink(context, left, vOffset, myDownloadAction);
-	drawHyperlink(context, left, vOffset, myReadDemoAction);
-	drawHyperlink(context, left, vOffset, myDownloadDemoAction);
-	drawHyperlink(context, left, vOffset, myBuyAction);
 }
 
 shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {

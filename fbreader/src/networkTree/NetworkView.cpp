@@ -144,7 +144,7 @@ void NetworkView::paint() {
 		}
 	}
 	for (std::map<FBReaderNode*,int>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
-		it->first->drawCover(context(), it->second);
+		it->first->drawCoverReal(context(), it->second);
 	}
 	myNodesToPaintCovers.clear();
 }

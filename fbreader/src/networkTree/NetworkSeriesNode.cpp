@@ -37,6 +37,10 @@ NetworkSeriesNode::NetworkSeriesNode(NetworkContainerNode *parent, const std::st
 	NetworkContainerNode(parent), mySeriesTitle(seriesTitle), mySummaryType(summaryType) {
 }
 
+void NetworkSeriesNode::init() {
+	registerExpandTreeAction();
+}
+
 std::string NetworkSeriesNode::title() const {
 	return mySeriesTitle;
 }
@@ -65,17 +69,6 @@ std::string NetworkSeriesNode::summary() const {
 	}
 	
 	return mySummary;
-}
-
-void NetworkSeriesNode::paint(ZLPaintContext &context, int vOffset) {
-	removeAllHyperlinks();
-
-	((NetworkView&)view()).drawCoverLater(this, vOffset);
-	drawTitle(context, vOffset);
-	drawSummary(context, vOffset);
-
-	int left = 0;
-	drawHyperlink(context, left, vOffset, expandTreeAction());
 }
 
 shared_ptr<ZLImage> NetworkSeriesNode::extractCoverImage() const {

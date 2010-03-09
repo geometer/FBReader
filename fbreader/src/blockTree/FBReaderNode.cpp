@@ -68,6 +68,10 @@ shared_ptr<ZLImage> FBReaderNode::coverImage() const {
 }
 
 void FBReaderNode::drawCover(ZLPaintContext &context, int vOffset) {
+	drawCoverReal(context, vOffset);
+}
+
+void FBReaderNode::drawCoverReal(ZLPaintContext &context, int vOffset) {
 	shared_ptr<ZLImage> cover = coverImage();
 	if (cover.isNull()) {
 		return;

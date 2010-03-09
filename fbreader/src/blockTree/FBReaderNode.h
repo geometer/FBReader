@@ -44,7 +44,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition = -1);
+	FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition = (size_t)-1);
 	virtual void init();
 	virtual const ZLResource &resource() const = 0;
 	virtual bool highlighted() const;
@@ -52,9 +52,10 @@ protected:
 public:
 	~FBReaderNode();
 
-	void drawCover(ZLPaintContext &context, int vOffset);
+	void drawCoverReal(ZLPaintContext &context, int vOffset);
 
 protected:
+	virtual void drawCover(ZLPaintContext &context, int vOffset);
 	void drawTitle(ZLPaintContext &context, int vOffset);
 	void drawSummary(ZLPaintContext &context, int vOffset);
 	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
