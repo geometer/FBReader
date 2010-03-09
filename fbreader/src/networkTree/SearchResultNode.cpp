@@ -40,8 +40,12 @@ const ZLTypeId &SearchResultNode::typeId() const {
 	return TYPE_ID;
 }
 
+const ZLResource &SearchResultNode::resource() const {
+	return ZLResource::resource("networkView")["searchResultNode"];
+}
+
 std::string SearchResultNode::title() const {
-	return ZLResource::resource("networkView")["searchResultNode"]["title"].value();
+	return resource()["title"].value();
 }
 
 std::string SearchResultNode::summary() const {
@@ -49,9 +53,6 @@ std::string SearchResultNode::summary() const {
 }
 
 void SearchResultNode::paint(ZLPaintContext &context, int vOffset) {
-	const ZLResource &resource =
-		ZLResource::resource("networkView")["searchResultNode"];
-
 	removeAllHyperlinks();
 
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
@@ -59,11 +60,7 @@ void SearchResultNode::paint(ZLPaintContext &context, int vOffset) {
 	drawSummary(context, vOffset);
 
 	int left = 0;
-	drawHyperlink(
-		context, left, vOffset,
-		resource[isOpen() ? "collapseTree" : "expandTree"].value(),
-		expandTreeAction()
-	);
+	drawHyperlink(context, left, vOffset, expandTreeAction());
 }
 
 shared_ptr<ZLImage> SearchResultNode::extractCoverImage() const {

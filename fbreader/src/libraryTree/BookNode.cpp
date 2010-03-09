@@ -33,31 +33,34 @@
 #include "../fbreader/BookInfoDialog.h"
 #include "../formats/FormatPlugin.h"
 
-class BookNode::ReadAction : public ZLRunnable {
+class BookNode::ReadAction : public ZLNamedRunnable {
 
 public:
 	ReadAction(shared_ptr<Book> book);
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	shared_ptr<Book> myBook;
 };
 
-class BookNode::EditInfoAction : public ZLRunnable {
+class BookNode::EditInfoAction : public ZLNamedRunnable {
 
 public:
 	EditInfoAction(shared_ptr<Book> book);
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	shared_ptr<Book> myBook;
 };
 
-class BookNode::RemoveAction : public ZLRunnable {
+class BookNode::RemoveAction : public ZLNamedRunnable {
 
 public:
 	RemoveAction(shared_ptr<Book> book);
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	int removeBookDialog() const;
@@ -70,6 +73,10 @@ const ZLTypeId BookNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
 const ZLTypeId &BookNode::typeId() const {
 	return TYPE_ID;
+}
+
+const ZLResource &BookNode::resource() const {
+	return ZLResource::resource("libraryView")["bookNode"];
 }
 
 BookNode::BookNode(AuthorNode *parent, shared_ptr<Book> book) : FBReaderNode(parent), myBook(book) {
@@ -92,6 +99,10 @@ void BookNode::ReadAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	fbreader.openBook(myBook);
 	fbreader.showBookTextView();
+}
+
+ZLResourceKey BookNode::ReadAction::key() const {
+	return ZLResourceKey("read");
 }
 
 BookNode::RemoveAction::RemoveAction(shared_ptr<Book> book) : myBook(book) {
@@ -117,6 +128,10 @@ void BookNode::RemoveAction::run() {
 		case Library::REMOVE_DONT_REMOVE:
 			break;
 	}
+}
+
+ZLResourceKey BookNode::RemoveAction::key() const {
+	return ZLResourceKey("delete");
 }
 
 int BookNode::RemoveAction::removeBookDialog() const {
@@ -172,6 +187,10 @@ void BookNode::EditInfoAction::run() {
 	}
 }
 
+ZLResourceKey BookNode::EditInfoAction::key() const {
+	return ZLResourceKey("edit");
+}
+
 std::string BookNode::title() const {
 	return myBook->title();
 }
@@ -214,9 +233,6 @@ std::string BookNode::summary() const {
 }
 
 void BookNode::paint(ZLPaintContext &context, int vOffset) {
-	const ZLResource &resource =
-		ZLResource::resource("libraryView")["bookNode"];
-
 	const bool highlighted =
 		myBook->filePath() == FBReader::Instance().currentBook()->filePath();
 	drawCover(context, vOffset);
@@ -232,21 +248,9 @@ void BookNode::paint(ZLPaintContext &context, int vOffset) {
 		}
 	}
 	int left = 0;
-	drawHyperlink(
-		context, left, vOffset,
-		resource["read"].value(),
-		myReadAction
-	);
-	drawHyperlink(
-		context, left, vOffset,
-		resource["edit"].value(),
-		myEditInfoAction
-	);
-	drawHyperlink(
-		context, left, vOffset,
-		resource["delete"].value(),
-		myRemoveAction
-	);
+	drawHyperlink(context, left, vOffset, myReadAction);
+	drawHyperlink(context, left, vOffset, myEditInfoAction);
+	drawHyperlink(context, left, vOffset, myRemoveAction);
 }
 
 shared_ptr<ZLImage> BookNode::extractCoverImage() const {

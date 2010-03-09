@@ -42,6 +42,7 @@ public:
 	shared_ptr<Author> author() const;
 
 private:
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
@@ -49,7 +50,7 @@ private:
 
 private:
 	shared_ptr<Author> myAuthor;
-	shared_ptr<ZLRunnable> myEditInfoAction;
+	shared_ptr<ZLNamedRunnable> myEditInfoAction;
 };
 
 class SeriesNode : public FBReaderNode {
@@ -63,6 +64,7 @@ public:
 	shared_ptr<Book> book() const;
 
 private:
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
@@ -95,6 +97,7 @@ public:
 	shared_ptr<Tag> tag() const;
 
 private:
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
@@ -102,9 +105,9 @@ private:
 
 private:
 	shared_ptr<Tag> myTag;
-	shared_ptr<ZLRunnable> myEditAction;
-	shared_ptr<ZLRunnable> myCloneAction;
-	shared_ptr<ZLRunnable> myRemoveAction;
+	shared_ptr<ZLNamedRunnable> myEditAction;
+	shared_ptr<ZLNamedRunnable> myCloneAction;
+	shared_ptr<ZLNamedRunnable> myRemoveAction;
 };
 
 class BookNode : public FBReaderNode {
@@ -125,6 +128,7 @@ public:
 	shared_ptr<Book> book() const;
 
 private:
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
@@ -133,9 +137,9 @@ private:
 
 private:
 	shared_ptr<Book> myBook;
-	shared_ptr<ZLRunnable> myReadAction;
-	shared_ptr<ZLRunnable> myEditInfoAction;
-	shared_ptr<ZLRunnable> myRemoveAction;
+	shared_ptr<ZLNamedRunnable> myReadAction;
+	shared_ptr<ZLNamedRunnable> myEditInfoAction;
+	shared_ptr<ZLNamedRunnable> myRemoveAction;
 };
 
 #endif /* __LIBRARYNODES_H__ */

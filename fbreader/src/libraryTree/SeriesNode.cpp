@@ -26,6 +26,10 @@
 
 const ZLTypeId SeriesNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
+const ZLResource &SeriesNode::resource() const {
+	return ZLResource::resource("libraryView")["seriesNode"];
+}
+
 const ZLTypeId &SeriesNode::typeId() const {
 	return TYPE_ID;
 }
@@ -42,9 +46,6 @@ std::string SeriesNode::title() const {
 }
 
 void SeriesNode::paint(ZLPaintContext &context, int vOffset) {
-	const ZLResource &resource =
-		ZLResource::resource("libraryView")["seriesNode"];
-
 	removeAllHyperlinks();
 
 	drawCover(context, vOffset);
@@ -52,11 +53,7 @@ void SeriesNode::paint(ZLPaintContext &context, int vOffset) {
 	drawSummary(context, vOffset);
 
 	int left = 0;
-	drawHyperlink(
-		context, left, vOffset,
-		resource[isOpen() ? "collapseTree" : "expandTree"].value(),
-		expandTreeAction()
-	);
+	drawHyperlink(context, left, vOffset, expandTreeAction());
 }
 
 shared_ptr<ZLImage> SeriesNode::extractCoverImage() const {

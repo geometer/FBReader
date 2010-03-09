@@ -36,10 +36,11 @@
 
 #include "../fbreader/FBReader.h"
 
-class NetworkBookNode::DownloadAction : public ZLRunnable {
+class NetworkBookNode::DownloadAction : public ZLNamedRunnable {
 
 public:
 	DownloadAction(const NetworkBookItem &item, bool demo);
+	ZLResourceKey key() const;
 	void run();
 
 private:
@@ -47,40 +48,44 @@ private:
 	const bool myDemo;
 };
 
-class NetworkBookNode::ReadAction : public ZLRunnable {
+class NetworkBookNode::ReadAction : public ZLNamedRunnable {
 
 public:
 	ReadAction(const NetworkBookItem &item);
+	ZLResourceKey key() const;
 	void run();
 
 private:
 	const NetworkBookItem &myItem;
 };
 
-class NetworkBookNode::ReadDemoAction : public ZLRunnable {
+class NetworkBookNode::ReadDemoAction : public ZLNamedRunnable {
 
 public:
 	ReadDemoAction(const NetworkBookItem &item);
+	ZLResourceKey key() const;
 	void run();
 
 private:
 	const NetworkBookItem &myItem;
 };
 
-class NetworkBookNode::BuyAction : public ZLRunnable {
+class NetworkBookNode::BuyAction : public ZLNamedRunnable {
 
 public:
 	BuyAction(const NetworkBookItem &item);
+	ZLResourceKey key() const;
 	void run();
 
 private:
 	const NetworkBookItem &myItem;
 };
 
-class NetworkBookNode::DeleteAction : public ZLRunnable {
+class NetworkBookNode::DeleteAction : public ZLNamedRunnable {
 
 public:
 	DeleteAction(const NetworkBookItem &item);
+	ZLResourceKey key() const;
 	void run();
 
 private:
@@ -95,6 +100,10 @@ const ZLTypeId NetworkBookNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
 const ZLTypeId &NetworkBookNode::typeId() const {
 	return TYPE_ID;
+}
+
+const ZLResource &NetworkBookNode::resource() const {
+	return ZLResource::resource("networkView")["bookNode"];
 }
 
 NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book) : FBReaderNode(parent), myBook(book) {
@@ -134,9 +143,6 @@ std::string NetworkBookNode::summary() const {
 void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 	const NetworkBookItem &book = this->book();
 
-	const ZLResource &resource =
-		ZLResource::resource("networkView")["bookNode"];
-
 	removeAllHyperlinks();
 
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
@@ -146,26 +152,26 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 
 	int left = 0;
 	if (!book.localCopyFileName().empty()) {
-		drawHyperlink(context, left, vOffset, resource["read"].value(), myReadAction);
-		drawHyperlink(context, left, vOffset, resource["delete"].value(), myDeleteAction);
+		drawHyperlink(context, left, vOffset, myReadAction);
+		drawHyperlink(context, left, vOffset, myDeleteAction);
 	} else if (!book.reference(BookReference::DOWNLOAD).isNull()) {
-		drawHyperlink(context, left, vOffset, resource["download"].value(), myDownloadAction);
+		drawHyperlink(context, left, vOffset, myDownloadAction);
 	} else {
 		shared_ptr<BookReference> reference =
 			book.reference(BookReference::DOWNLOAD_DEMO);
 		if (!reference.isNull()) {
 			if (!reference->localCopyFileName().empty()) {
-				drawHyperlink(context, left, vOffset, resource["readDemo"].value(), myReadDemoAction);
+				drawHyperlink(context, left, vOffset, myReadDemoAction);
 			} else {
-				drawHyperlink(context, left, vOffset, resource["downloadDemo"].value(), myDownloadDemoAction);
+				drawHyperlink(context, left, vOffset, myDownloadDemoAction);
 			}
 		}
 		reference = book.reference(BookReference::BUY);
 		if (!reference.isNull()) {
 			const std::string buyText = ZLStringUtil::printf(
-				resource["buy"].value(), ((BuyBookReference&)*reference).Price
+				resource()["buy"].value(), ((BuyBookReference&)*reference).Price
 			);
-			drawHyperlink(context, left, vOffset, buyText, myBuyAction);
+			drawHyperlink(context, left, vOffset, myBuyAction, buyText);
 		}
 	}
 }
@@ -176,6 +182,10 @@ shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {
 }
 
 NetworkBookNode::ReadAction::ReadAction(const NetworkBookItem &item) : myItem(item) {
+}
+
+ZLResourceKey NetworkBookNode::ReadAction::key() const {
+	return ZLResourceKey("read");
 }
 
 void NetworkBookNode::ReadAction::run() {
@@ -193,6 +203,10 @@ void NetworkBookNode::ReadAction::run() {
 }
 
 NetworkBookNode::DownloadAction::DownloadAction(const NetworkBookItem &item, bool demo) : myItem(item), myDemo(demo) {
+}
+
+ZLResourceKey NetworkBookNode::DownloadAction::key() const {
+	return ZLResourceKey(myDemo ? "downloadDemo" : "download");
 }
 
 void NetworkBookNode::DownloadAction::run() {
@@ -249,6 +263,10 @@ void NetworkBookNode::DownloadAction::run() {
 NetworkBookNode::ReadDemoAction::ReadDemoAction(const NetworkBookItem &item) : myItem(item) {
 };
 
+ZLResourceKey NetworkBookNode::ReadDemoAction::key() const {
+	return ZLResourceKey("readDemo");
+}
+
 void NetworkBookNode::ReadDemoAction::run() {
 	shared_ptr<BookReference> reference =
 		myItem.reference(BookReference::DOWNLOAD_DEMO);
@@ -266,6 +284,10 @@ void NetworkBookNode::ReadDemoAction::run() {
 }
 
 NetworkBookNode::BuyAction::BuyAction(const NetworkBookItem &item) : myItem(item) {
+}
+
+ZLResourceKey NetworkBookNode::BuyAction::key() const {
+	return ZLResourceKey("buy");
 }
 
 void NetworkBookNode::BuyAction::run() {
@@ -312,6 +334,10 @@ void NetworkBookNode::BuyAction::run() {
 }
 
 NetworkBookNode::DeleteAction::DeleteAction(const NetworkBookItem &item) : myItem(item) {
+}
+
+ZLResourceKey NetworkBookNode::DeleteAction::key() const {
+	return ZLResourceKey("delete");
 }
 
 void NetworkBookNode::DeleteAction::run() {

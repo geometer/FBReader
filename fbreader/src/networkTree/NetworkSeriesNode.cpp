@@ -29,6 +29,10 @@ const ZLTypeId &NetworkSeriesNode::typeId() const {
 	return TYPE_ID;
 }
 
+const ZLResource &NetworkSeriesNode::resource() const {
+	return ZLResource::resource("networkView")["seriesNode"];
+}
+
 NetworkSeriesNode::NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle, SummaryType summaryType) : 
 	NetworkContainerNode(parent), mySeriesTitle(seriesTitle), mySummaryType(summaryType) {
 }
@@ -64,9 +68,6 @@ std::string NetworkSeriesNode::summary() const {
 }
 
 void NetworkSeriesNode::paint(ZLPaintContext &context, int vOffset) {
-	const ZLResource &resource =
-		ZLResource::resource("networkView")["seriesNode"];
-
 	removeAllHyperlinks();
 
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
@@ -74,11 +75,7 @@ void NetworkSeriesNode::paint(ZLPaintContext &context, int vOffset) {
 	drawSummary(context, vOffset);
 
 	int left = 0;
-	drawHyperlink(
-		context, left, vOffset,
-		resource[isOpen() ? "collapseTree" : "expandTree"].value(),
-		expandTreeAction()
-	);
+	drawHyperlink(context, left, vOffset, expandTreeAction());
 }
 
 shared_ptr<ZLImage> NetworkSeriesNode::extractCoverImage() const {

@@ -37,30 +37,33 @@
 #include "../network/NetworkLink.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
 
-class NetworkCatalogNode::ExpandCatalogAction : public ZLRunnable {
+class NetworkCatalogNode::ExpandCatalogAction : public ZLNamedRunnable {
 
 public:
 	ExpandCatalogAction(NetworkCatalogNode &node);
+	ZLResourceKey key() const;
 	void run();
 
 private:
 	NetworkCatalogNode &myNode;
 };
 
-class NetworkCatalogNode::OpenInBrowserAction : public ZLRunnable {
+class NetworkCatalogNode::OpenInBrowserAction : public ZLNamedRunnable {
 
 public:
 	OpenInBrowserAction(const std::string &url);
+	ZLResourceKey key() const;
 	void run();
 
 private:
 	const std::string myURL;
 };
 
-class NetworkCatalogNode::ReloadAction : public ZLRunnable {
+class NetworkCatalogNode::ReloadAction : public ZLNamedRunnable {
 
 public:
 	ReloadAction(NetworkCatalogNode &node);
+	ZLResourceKey key() const;
 	void run();
 
 private:
@@ -79,21 +82,21 @@ NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<Ne
 	myItem(item) {
 }
 
-shared_ptr<ZLRunnable> NetworkCatalogNode::expandCatalogAction() {
+shared_ptr<ZLNamedRunnable> NetworkCatalogNode::expandCatalogAction() {
 	if (myExpandCatalogAction.isNull()) {
 		myExpandCatalogAction = new ExpandCatalogAction(*this);
 	}
 	return myExpandCatalogAction;
 }
 
-shared_ptr<ZLRunnable> NetworkCatalogNode::openInBrowserAction() {
+shared_ptr<ZLNamedRunnable> NetworkCatalogNode::openInBrowserAction() {
 	if (myOpenInBrowserAction.isNull()) {
 		myOpenInBrowserAction = new OpenInBrowserAction(item().URLByType[NetworkItem::URL_HTML_PAGE]);
 	}
 	return myOpenInBrowserAction;
 }
 
-shared_ptr<ZLRunnable> NetworkCatalogNode::reloadAction() {
+shared_ptr<ZLNamedRunnable> NetworkCatalogNode::reloadAction() {
 	if (myReloadAction.isNull()) {
 		myReloadAction = new ReloadAction(*this);
 	}
@@ -110,6 +113,10 @@ const NetworkItem::List &NetworkCatalogNode::childrenItems() {
 
 const ZLTypeId &NetworkCatalogNode::typeId() const {
 	return TYPE_ID;
+}
+
+const ZLResource &NetworkCatalogNode::resource() const {
+	return ZLResource::resource("networkView")["libraryItemNode"];
 }
 
 std::string NetworkCatalogNode::title() const {
@@ -131,24 +138,15 @@ void NetworkCatalogNode::paint(ZLPaintContext &context, int vOffset) {
 }
 
 void NetworkCatalogNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
-	const ZLResource &resource =
-		ZLResource::resource("networkView")["libraryItemNode"];
-
 	int left = 0;
 	if (!item().URLByType[NetworkItem::URL_CATALOG].empty()) {
-		drawHyperlink(context, left, vOffset,
-			resource[isOpen() ? "collapseTree" : "expandTree"].value(),
-			expandCatalogAction()
-		);
+		drawHyperlink(context, left, vOffset, expandCatalogAction());
 	}
 	if (!item().URLByType[NetworkItem::URL_HTML_PAGE].empty()) {
-		drawHyperlink(context, left, vOffset,
-			resource["openInBrowser"].value(),
-			openInBrowserAction()
-		);
+		drawHyperlink(context, left, vOffset, openInBrowserAction());
 	}
 	if (isOpen()) {
-		drawHyperlink(context, left, vOffset, resource["reload"].value(), reloadAction());
+		drawHyperlink(context, left, vOffset, reloadAction());
 	}
 }
 
@@ -212,6 +210,10 @@ void NetworkCatalogNode::updateChildren() {
 NetworkCatalogNode::ExpandCatalogAction::ExpandCatalogAction(NetworkCatalogNode &node) : myNode(node) {
 }
 
+ZLResourceKey NetworkCatalogNode::ExpandCatalogAction::key() const {
+	return ZLResourceKey(myNode.isOpen() ? "collapseTree" : "expandTree");
+}
+
 void NetworkCatalogNode::ExpandCatalogAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
 		return;
@@ -246,11 +248,19 @@ void NetworkCatalogNode::ExpandCatalogAction::run() {
 NetworkCatalogNode::OpenInBrowserAction::OpenInBrowserAction(const std::string &url) : myURL(url) {
 }
 
+ZLResourceKey NetworkCatalogNode::OpenInBrowserAction::key() const {
+	return ZLResourceKey("openInBrowser");
+}
+
 void NetworkCatalogNode::OpenInBrowserAction::run() {
 	FBReader::Instance().openLinkInBrowser(myURL);
 }
 
 NetworkCatalogNode::ReloadAction::ReloadAction(NetworkCatalogNode &node) : myNode(node) {
+}
+
+ZLResourceKey NetworkCatalogNode::ReloadAction::key() const {
+	return ZLResourceKey("reload");
 }
 
 void NetworkCatalogNode::ReloadAction::run() {

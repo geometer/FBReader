@@ -35,61 +35,67 @@
 #include "../network/NetworkLink.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
 
-class NetworkCatalogRootNode::LoginAction : public ZLRunnable {
+class NetworkCatalogRootNode::LoginAction : public ZLNamedRunnable {
 
 public:
 	LoginAction(NetworkAuthenticationManager &mgr);
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::LogoutAction : public ZLRunnable {
+class NetworkCatalogRootNode::LogoutAction : public ZLNamedRunnable {
 
 public:
 	LogoutAction(NetworkAuthenticationManager &mgr);
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::RefillAccountAction : public ZLRunnable {
+class NetworkCatalogRootNode::RefillAccountAction : public ZLNamedRunnable {
 
 public:
 	RefillAccountAction(NetworkAuthenticationManager &mgr);
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::DontShowAction : public ZLRunnable {
+class NetworkCatalogRootNode::DontShowAction : public ZLNamedRunnable {
 
 public:
 	DontShowAction(NetworkLink &link);
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	NetworkLink &myLink;
 };
 
-class NetworkCatalogRootNode::PasswordRecoveryAction : public ZLRunnable {
+class NetworkCatalogRootNode::PasswordRecoveryAction : public ZLNamedRunnable {
 
 public:
 	PasswordRecoveryAction(NetworkAuthenticationManager &mgr);
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::RegisterUserAction : public ZLRunnable {
+class NetworkCatalogRootNode::RegisterUserAction : public ZLNamedRunnable {
 
 public:
 	RegisterUserAction(NetworkAuthenticationManager &mgr);
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	NetworkAuthenticationManager &myManager;
@@ -117,6 +123,10 @@ const ZLTypeId &NetworkCatalogRootNode::typeId() const {
 	return TYPE_ID;
 }
 
+const ZLResource &NetworkCatalogRootNode::resource() const {
+	return ZLResource::resource("networkView")["libraryItemRootNode"];
+}
+
 const NetworkLink &NetworkCatalogRootNode::link() const {
 	return myLink;
 }
@@ -130,38 +140,34 @@ bool NetworkCatalogRootNode::hasAuxHyperlink() const {
 }
 
 void NetworkCatalogRootNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
-	const ZLResource &resource =
-		ZLResource::resource("networkView")["libraryItemRootNode"];
-
 	int left = 0;
 	int auxleft = 0;
-	drawHyperlink(
-		context, left, vOffset,
-		resource[isOpen() ? "collapseTree" : "expandTree"].value(),
-		expandCatalogAction()
-	);
+	drawHyperlink(context, left, vOffset, expandCatalogAction());
 	if (isOpen()) {
-		drawHyperlink(context, left, vOffset, resource["reload"].value(), reloadAction());
+		drawHyperlink(context, left, vOffset, reloadAction());
 	}
 
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
 	if (!mgr.isNull()) {
 		if (mgr->isAuthorised(false).Status == B3_FALSE) {
-			drawHyperlink(context, left, vOffset, resource["login"].value(), myLoginAction);
-			drawAuxHyperlink(context, auxleft, vOffset, resource["register"].value(), myRegisterUserAction);
-			drawAuxHyperlink(context, auxleft, vOffset, resource["passwordRecovery"].value(), myPasswordRecoveryAction);
+			drawHyperlink(context, left, vOffset, myLoginAction);
+			drawAuxHyperlink(context, auxleft, vOffset, myRegisterUserAction);
+			drawAuxHyperlink(context, auxleft, vOffset, myPasswordRecoveryAction);
 		} else {
-			const std::string logoutString = ZLStringUtil::printf(resource["logout"].value(), mgr->currentUserName());
-			drawHyperlink(context, left, vOffset, logoutString, myLogoutAction);
+			const std::string logoutString = ZLStringUtil::printf(
+				resource()["logout"].value(), mgr->currentUserName()
+			);
+			drawHyperlink(context, left, vOffset, myLogoutAction, logoutString);
 			std::string account = mgr->currentAccount();
 			if (!account.empty() && !mgr->refillAccountLink().empty()) {
-				const std::string refillString = ZLStringUtil::printf(resource["refillAccount"].value(), account);
-				drawHyperlink(context, left, vOffset, refillString, myRefillAccountAction);
+				const std::string refillString =
+					ZLStringUtil::printf(resource()["refillAccount"].value(), account);
+				drawHyperlink(context, left, vOffset, myRefillAccountAction, refillString);
 			}
 		}
 	}
 	if (NetworkLinkCollection::Instance().numberOfEnabledLinks() > 1) {
-		drawHyperlink(context, left, vOffset, resource["dontShow"].value(), myDontShowAction);
+		drawHyperlink(context, left, vOffset, myDontShowAction);
 	}
 }
 
@@ -171,6 +177,10 @@ shared_ptr<ZLImage> NetworkCatalogRootNode::lastResortCoverImage() const {
 
 
 NetworkCatalogRootNode::LoginAction::LoginAction(NetworkAuthenticationManager &mgr) : myManager(mgr) {
+}
+
+ZLResourceKey NetworkCatalogRootNode::LoginAction::key() const {
+	return ZLResourceKey("login");
 }
 
 void NetworkCatalogRootNode::LoginAction::run() {
@@ -186,6 +196,10 @@ void NetworkCatalogRootNode::LoginAction::run() {
 NetworkCatalogRootNode::LogoutAction::LogoutAction(NetworkAuthenticationManager &mgr) : myManager(mgr) {
 }
 
+ZLResourceKey NetworkCatalogRootNode::LogoutAction::key() const {
+	return ZLResourceKey("logout");
+}
+
 void NetworkCatalogRootNode::LogoutAction::run() {
 	LogOutRunnable logout(myManager);
 	logout.executeWithUI();
@@ -194,6 +208,10 @@ void NetworkCatalogRootNode::LogoutAction::run() {
 }
 
 NetworkCatalogRootNode::DontShowAction::DontShowAction(NetworkLink &link) : myLink(link) {
+}
+
+ZLResourceKey NetworkCatalogRootNode::DontShowAction::key() const {
+	return ZLResourceKey("dontShow");
 }
 
 void NetworkCatalogRootNode::DontShowAction::run() {
@@ -210,11 +228,19 @@ void NetworkCatalogRootNode::DontShowAction::run() {
 NetworkCatalogRootNode::RefillAccountAction::RefillAccountAction(NetworkAuthenticationManager &mgr) : myManager(mgr) {
 }
 
+ZLResourceKey NetworkCatalogRootNode::RefillAccountAction::key() const {
+	return ZLResourceKey("refillAccount");
+}
+
 void NetworkCatalogRootNode::RefillAccountAction::run() {
 	FBReader::Instance().openLinkInBrowser(myManager.refillAccountLink());
 }
 
 NetworkCatalogRootNode::PasswordRecoveryAction::PasswordRecoveryAction(NetworkAuthenticationManager &mgr) : myManager(mgr) {
+}
+
+ZLResourceKey NetworkCatalogRootNode::PasswordRecoveryAction::key() const {
+	return ZLResourceKey("passwordRecovery");
 }
 
 void NetworkCatalogRootNode::PasswordRecoveryAction::run() {
@@ -228,6 +254,10 @@ void NetworkCatalogRootNode::PasswordRecoveryAction::run() {
 }
 
 NetworkCatalogRootNode::RegisterUserAction::RegisterUserAction(NetworkAuthenticationManager &mgr) : myManager(mgr) {
+}
+
+ZLResourceKey NetworkCatalogRootNode::RegisterUserAction::key() const {
+	return ZLResourceKey("register");
 }
 
 void NetworkCatalogRootNode::RegisterUserAction::run() {

@@ -55,6 +55,7 @@ protected:
 	NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
 
 private:
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 
 friend class NetworkNodesFactory;
@@ -65,9 +66,9 @@ public:
 
 	void updateChildren();
 
-	shared_ptr<ZLRunnable> expandCatalogAction();
-	shared_ptr<ZLRunnable> openInBrowserAction();
-	shared_ptr<ZLRunnable> reloadAction();
+	shared_ptr<ZLNamedRunnable> expandCatalogAction();
+	shared_ptr<ZLNamedRunnable> openInBrowserAction();
+	shared_ptr<ZLNamedRunnable> reloadAction();
 
 protected:
 	shared_ptr<ZLImage> extractCoverImage() const;
@@ -81,9 +82,9 @@ protected:
 private:
 	shared_ptr<NetworkItem> myItem;
 	NetworkItem::List myChildrenItems;
-	shared_ptr<ZLRunnable> myExpandCatalogAction;
-	shared_ptr<ZLRunnable> myOpenInBrowserAction;
-	shared_ptr<ZLRunnable> myReloadAction;
+	shared_ptr<ZLNamedRunnable> myExpandCatalogAction;
+	shared_ptr<ZLNamedRunnable> myOpenInBrowserAction;
+	shared_ptr<ZLNamedRunnable> myReloadAction;
 };
 
 class NetworkCatalogRootNode : public NetworkCatalogNode {
@@ -105,6 +106,7 @@ public:
 	const NetworkLink &link() const;
 
 private:
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 
 	void paintHyperlinks(ZLPaintContext &context, int vOffset);
@@ -113,12 +115,12 @@ private:
 
 private:
 	NetworkLink &myLink;
-	shared_ptr<ZLRunnable> myLoginAction;
-	shared_ptr<ZLRunnable> myLogoutAction;
-	shared_ptr<ZLRunnable> myDontShowAction;
-	shared_ptr<ZLRunnable> myRefillAccountAction;
-	shared_ptr<ZLRunnable> myPasswordRecoveryAction;
-	shared_ptr<ZLRunnable> myRegisterUserAction;
+	shared_ptr<ZLNamedRunnable> myLoginAction;
+	shared_ptr<ZLNamedRunnable> myLogoutAction;
+	shared_ptr<ZLNamedRunnable> myDontShowAction;
+	shared_ptr<ZLNamedRunnable> myRefillAccountAction;
+	shared_ptr<ZLNamedRunnable> myPasswordRecoveryAction;
+	shared_ptr<ZLNamedRunnable> myRegisterUserAction;
 };
 
 class SearchResultNode : public NetworkContainerNode {
@@ -132,6 +134,7 @@ public:
 	shared_ptr<NetworkBookCollection> searchResult();
 
 private:
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
@@ -157,6 +160,7 @@ public:
 	const NetworkBookItem::AuthorData &author();
 
 private:
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
@@ -182,6 +186,7 @@ public:
 	const std::string &seriesTitle();
 
 private:
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
@@ -218,6 +223,7 @@ public:
 	const NetworkBookItem &book() const;
 
 private:
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
@@ -226,12 +232,12 @@ private:
 
 private:
 	shared_ptr<NetworkItem> myBook;
-	shared_ptr<ZLRunnable> myReadAction;
-	shared_ptr<ZLRunnable> myDownloadAction;
-	shared_ptr<ZLRunnable> myReadDemoAction;
-	shared_ptr<ZLRunnable> myDownloadDemoAction;
-	shared_ptr<ZLRunnable> myBuyAction;
-	shared_ptr<ZLRunnable> myDeleteAction;
+	shared_ptr<ZLNamedRunnable> myReadAction;
+	shared_ptr<ZLNamedRunnable> myDownloadAction;
+	shared_ptr<ZLNamedRunnable> myReadDemoAction;
+	shared_ptr<ZLNamedRunnable> myDownloadDemoAction;
+	shared_ptr<ZLNamedRunnable> myBuyAction;
+	shared_ptr<ZLNamedRunnable> myDeleteAction;
 };
 
 #endif /* __NETWORKNODES_H__ */

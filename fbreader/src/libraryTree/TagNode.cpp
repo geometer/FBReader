@@ -30,7 +30,7 @@
 #include "../library/Lists.h"
 #include "../library/Comparators.h"
 
-class TagNode::EditOrCloneAction : public ZLRunnable {
+class TagNode::EditOrCloneAction : public ZLNamedRunnable {
 
 public:
 	EditOrCloneAction(TagNode &node);
@@ -52,6 +52,7 @@ public:
 	EditAction(TagNode &node);
 
 private:
+	ZLResourceKey key() const;
 	void onAccept(const std::string &name, bool includeSubTags);
 	std::string resourceKeyName() const;
 };
@@ -62,15 +63,19 @@ public:
 	CloneAction(TagNode &node);
 
 private:
+	ZLResourceKey key() const;
 	void onAccept(const std::string &name, bool includeSubTags);
 	std::string resourceKeyName() const;
 };
 
-class TagNode::RemoveAction : public ZLRunnable {
+class TagNode::RemoveAction : public ZLNamedRunnable {
 
 public:
 	RemoveAction(shared_ptr<Tag> tag);
+
+private:
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	shared_ptr<Tag> myTag;
@@ -108,6 +113,10 @@ const ZLTypeId &TagNode::typeId() const {
 	return TYPE_ID;
 }
 
+const ZLResource &TagNode::resource() const {
+	return ZLResource::resource("libraryView")["tagNode"];
+}
+
 size_t TagNode::positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag) {
 	const ZLBlockTreeNode::List &children = parent->children();
 	ZLBlockTreeNode::List::const_reverse_iterator it = children.rbegin();
@@ -132,15 +141,12 @@ shared_ptr<Tag> TagNode::tag() const {
 
 std::string TagNode::title() const {
 	if (myTag.isNull()) {
-		return ZLResource::resource("libraryView")["tagNode"]["noTags"].value();
+		return resource()["noTags"].value();
 	}
 	return myTag->name();
 }
 
 void TagNode::paint(ZLPaintContext &context, int vOffset) {
-	const ZLResource &resource =
-		ZLResource::resource("libraryView")["tagNode"];
-
 	removeAllHyperlinks();
 
 	drawCover(context, vOffset);
@@ -154,27 +160,11 @@ void TagNode::paint(ZLPaintContext &context, int vOffset) {
 	}
 
 	int left = 0;
-	drawHyperlink(
-		context, left, vOffset,
-		resource[isOpen() ? "collapseTree" : "expandTree"].value(),
-		expandTreeAction()
-	);
+	drawHyperlink(context, left, vOffset, expandTreeAction());
 	if (!myTag.isNull()) {
-		drawHyperlink(
-			context, left, vOffset,
-			resource["edit"].value(),
-			myEditAction
-		);
-		drawHyperlink(
-			context, left, vOffset,
-			resource["clone"].value(),
-			myCloneAction
-		);
-		drawHyperlink(
-			context, left, vOffset,
-			resource["delete"].value(),
-			myRemoveAction
-		);
+		drawHyperlink(context, left, vOffset, myEditAction);
+		drawHyperlink(context, left, vOffset, myCloneAction);
+		drawHyperlink(context, left, vOffset, myRemoveAction);
 	}
 }
 
@@ -221,6 +211,10 @@ void TagNode::EditAction::onAccept(const std::string &name, bool includeSubTags)
 	Library::Instance().renameTag(myTagNode.myTag, Tag::getTagByFullName(name), includeSubTags);
 }
 
+ZLResourceKey TagNode::EditAction::key() const {
+	return ZLResourceKey("edit");
+}
+
 std::string TagNode::EditAction::resourceKeyName() const {
 	return "editTagDialog";
 }
@@ -232,6 +226,10 @@ void TagNode::CloneAction::onAccept(const std::string &name, bool includeSubTags
 	Library::Instance().cloneTag(myTagNode.myTag, Tag::getTagByFullName(name), includeSubTags);
 }
 
+ZLResourceKey TagNode::CloneAction::key() const {
+	return ZLResourceKey("clone");
+}
+
 std::string TagNode::CloneAction::resourceKeyName() const {
 	return "cloneTagDialog";
 }
@@ -241,6 +239,10 @@ TagNode::RemoveAction::RemoveAction(shared_ptr<Tag> tag) : myTag(tag) {
 
 void TagNode::RemoveAction::run() {
 	BooksUtil::removeTag(myTag);
+}
+
+ZLResourceKey TagNode::RemoveAction::key() const {
+	return ZLResourceKey("delete");
 }
 
 shared_ptr<ZLImage> TagNode::extractCoverImage() const {

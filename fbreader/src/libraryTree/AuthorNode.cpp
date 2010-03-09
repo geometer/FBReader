@@ -28,17 +28,22 @@
 
 #include "AuthorInfoDialog.h"
 
-class AuthorNode::EditInfoAction : public ZLRunnable {
+class AuthorNode::EditInfoAction : public ZLNamedRunnable {
 
 public:
 	EditInfoAction(shared_ptr<Author> author);
 	void run();
+	ZLResourceKey key() const;
 
 private:
 	shared_ptr<Author> myAuthor;
 };
 
 const ZLTypeId AuthorNode::TYPE_ID(FBReaderNode::TYPE_ID);
+
+const ZLResource &AuthorNode::resource() const {
+	return ZLResource::resource("libraryView")["authorNode"];
+}
 
 const ZLTypeId &AuthorNode::typeId() const {
 	return TYPE_ID;
@@ -52,16 +57,11 @@ shared_ptr<Author> AuthorNode::author() const {
 }
 
 std::string AuthorNode::title() const {
-	if (myAuthor.isNull()) {
-		return ZLResource::resource("libraryView")["authorNode"]["unknownAuthor"].value();
-	}
-	return myAuthor->name();
+	return myAuthor.isNull() ?
+		resource()["unknownAuthor"].value() : myAuthor->name();
 }
 
 void AuthorNode::paint(ZLPaintContext &context, int vOffset) {
-	const ZLResource &resource =
-		ZLResource::resource("libraryView")["authorNode"];
-
 	removeAllHyperlinks();
 
 	drawCover(context, vOffset);
@@ -69,20 +69,12 @@ void AuthorNode::paint(ZLPaintContext &context, int vOffset) {
 	drawSummary(context, vOffset);
 
 	int left = 0;
-	drawHyperlink(
-		context, left, vOffset,
-		resource[isOpen() ? "collapseTree" : "expandTree"].value(),
-		expandTreeAction()
-	);
+	drawHyperlink(context, left, vOffset, expandTreeAction());
 	if (!myAuthor.isNull()) {
 		if (myEditInfoAction.isNull()) {
 			myEditInfoAction = new EditInfoAction(myAuthor);
 		}
-		drawHyperlink(
-			context, left, vOffset,
-			resource["edit"].value(),
-			myEditInfoAction
-		);
+		drawHyperlink(context, left, vOffset, myEditInfoAction);
 	}
 }
 
@@ -94,6 +86,10 @@ void AuthorNode::EditInfoAction::run() {
 		// TODO: select current node (?) again
 		FBReader::Instance().refreshWindow();
 	}
+}
+
+ZLResourceKey AuthorNode::EditInfoAction::key() const {
+	return ZLResourceKey("edit");
 }
 
 shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {

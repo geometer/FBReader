@@ -25,6 +25,7 @@
 #include <ZLBlockTreeView.h>
 
 class ZLImage;
+class ZLResource;
 class FBTextStyle;
 
 class FBReaderNode : public ZLBlockTreeNode {
@@ -43,6 +44,7 @@ public:
 
 protected:
 	FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition = -1);
+	virtual const ZLResource &resource() const = 0;
 
 public:
 	~FBReaderNode();
@@ -50,16 +52,16 @@ public:
 	void drawCover(ZLPaintContext &context, int vOffset);
 	void drawTitle(ZLPaintContext &context, int vOffset, bool highlighted = false);
 	void drawSummary(ZLPaintContext &context, int vOffset, bool highlighted = false);
-	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, const std::string &text, shared_ptr<ZLRunnable> action);
-	void drawAuxHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, const std::string &text, shared_ptr<ZLRunnable> action);
+	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLNamedRunnable> action, const std::string &text = std::string());
+	void drawAuxHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLNamedRunnable> action);
 	virtual bool hasAuxHyperlink() const;
 
 private:
-	void internalDrawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, const std::string &text, shared_ptr<ZLRunnable> action, bool aux);
+	void internalDrawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLNamedRunnable> action, const std::string &text, bool aux);
 	int unitSize(ZLPaintContext &context, const FBTextStyle &style) const;
 
 protected:
-	shared_ptr<ZLRunnable> expandTreeAction();
+	shared_ptr<ZLNamedRunnable> expandTreeAction();
 
 	virtual shared_ptr<ZLImage> extractCoverImage() const = 0;
 
@@ -77,7 +79,7 @@ protected:
 	int height(ZLPaintContext &context) const;
 
 private:
-	shared_ptr<ZLRunnable> myExpandTreeAction;
+	shared_ptr<ZLNamedRunnable> myExpandTreeAction;
 	mutable bool myCoverImageIsStored;
 	mutable shared_ptr<ZLImage> myStoredCoverImage;
 };
