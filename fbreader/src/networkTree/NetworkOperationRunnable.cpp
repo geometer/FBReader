@@ -51,6 +51,10 @@ void NetworkOperationRunnable::showErrorMessage(const std::string &message) {
 	);
 }
 
+const std::string &NetworkOperationRunnable::errorMessage() const {
+	return myErrorMessage;
+}
+
 bool NetworkOperationRunnable::tryConnect() {
 	if (!ZLNetworkManager::Instance().connect()) {
 		showErrorMessage(

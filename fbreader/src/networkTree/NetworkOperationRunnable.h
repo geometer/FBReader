@@ -54,8 +54,6 @@ protected:
 	shared_ptr<ZLProgressDialog> myDialog;
 };
 
-inline const std::string &NetworkOperationRunnable::errorMessage() const { return myErrorMessage; }
-
 class DownloadBookRunnable : public NetworkOperationRunnable {
 
 public:
@@ -68,10 +66,8 @@ public:
 
 private:
 	shared_ptr<BookReference> myReference;
-
-	std::string myFileName;
-
 	shared_ptr<NetworkAuthenticationManager> myAuthManager;
+	std::string myFileName;
 };
 
 class IsAuthorisedRunnable : public NetworkOperationRunnable {
