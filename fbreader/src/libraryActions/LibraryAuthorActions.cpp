@@ -17,14 +17,6 @@
  * 02110-1301, USA.
  */
 
-/*
-#include <ZLResource.h>
-#include <ZLOptionsDialog.h>
-
-#include "LibraryNodes.h"
-#include "BooksUtil.h"
-*/
-
 #include "LibraryAuthorActions.h"
 #include "AuthorInfoDialog.h"
 

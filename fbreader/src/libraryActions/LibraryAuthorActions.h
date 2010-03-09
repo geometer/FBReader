@@ -23,18 +23,6 @@
 #include <shared_ptr.h>
 
 #include <ZLRunnable.h>
-/*
-#include <ZLResource.h>
-#include <ZLOptionsDialog.h>
-
-#include "LibraryNodes.h"
-#include "BooksUtil.h"
-
-#include "../library/Author.h"
-#include "../fbreader/FBReader.h"
-
-#include "AuthorInfoDialog.h"
-*/
 
 class Author;
 
