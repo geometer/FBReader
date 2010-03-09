@@ -182,9 +182,6 @@ protected:
 
 friend class NetworkNodesFactory;
 
-public:
-	const std::string &seriesTitle();
-
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;

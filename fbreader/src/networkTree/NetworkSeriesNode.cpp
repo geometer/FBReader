@@ -88,7 +88,3 @@ shared_ptr<ZLImage> NetworkSeriesNode::extractCoverImage() const {
 	}
 	return defaultCoverImage("booktree-book.png");
 }
-
-const std::string &NetworkSeriesNode::seriesTitle() {
-	return mySeriesTitle;
-}
