@@ -52,6 +52,7 @@ public:
 	LogoutAction(NetworkAuthenticationManager &mgr);
 	void run();
 	ZLResourceKey key() const;
+	std::string text(const ZLResource &resource) const;
 
 private:
 	NetworkAuthenticationManager &myManager;
@@ -63,6 +64,7 @@ public:
 	RefillAccountAction(NetworkAuthenticationManager &mgr);
 	void run();
 	ZLResourceKey key() const;
+	std::string text(const ZLResource &resource) const;
 
 private:
 	NetworkAuthenticationManager &myManager;
@@ -151,18 +153,13 @@ void NetworkCatalogRootNode::paintHyperlinks(ZLPaintContext &context, int vOffse
 	if (!mgr.isNull()) {
 		if (mgr->isAuthorised(false).Status == B3_FALSE) {
 			drawHyperlink(context, left, vOffset, myLoginAction);
-			drawAuxHyperlink(context, auxleft, vOffset, myRegisterUserAction);
-			drawAuxHyperlink(context, auxleft, vOffset, myPasswordRecoveryAction);
+			drawHyperlink(context, auxleft, vOffset, myRegisterUserAction, true);
+			drawHyperlink(context, auxleft, vOffset, myPasswordRecoveryAction, true);
 		} else {
-			const std::string logoutString = ZLStringUtil::printf(
-				resource()["logout"].value(), mgr->currentUserName()
-			);
-			drawHyperlink(context, left, vOffset, myLogoutAction, logoutString);
-			std::string account = mgr->currentAccount();
-			if (!account.empty() && !mgr->refillAccountLink().empty()) {
-				const std::string refillString =
-					ZLStringUtil::printf(resource()["refillAccount"].value(), account);
-				drawHyperlink(context, left, vOffset, myRefillAccountAction, refillString);
+			drawHyperlink(context, left, vOffset, myLogoutAction);
+			if (!mgr->currentAccount().empty() &&
+					!mgr->refillAccountLink().empty()) {
+				drawHyperlink(context, left, vOffset, myRefillAccountAction);
 			}
 		}
 	}
@@ -200,6 +197,11 @@ ZLResourceKey NetworkCatalogRootNode::LogoutAction::key() const {
 	return ZLResourceKey("logout");
 }
 
+std::string NetworkCatalogRootNode::LogoutAction::text(const ZLResource &resource) const {
+	const std::string text = ZLNamedRunnable::text(resource);
+	return ZLStringUtil::printf(text, myManager.currentUserName());
+}
+
 void NetworkCatalogRootNode::LogoutAction::run() {
 	LogOutRunnable logout(myManager);
 	logout.executeWithUI();
@@ -230,6 +232,15 @@ NetworkCatalogRootNode::RefillAccountAction::RefillAccountAction(NetworkAuthenti
 
 ZLResourceKey NetworkCatalogRootNode::RefillAccountAction::key() const {
 	return ZLResourceKey("refillAccount");
+}
+
+std::string NetworkCatalogRootNode::RefillAccountAction::text(const ZLResource &resource) const {
+	const std::string text = ZLNamedRunnable::text(resource);
+	std::string account = myManager.currentAccount();
+	if (!account.empty() && !myManager.refillAccountLink().empty()) {
+		return ZLStringUtil::printf(text, account);
+	}
+	return text;
 }
 
 void NetworkCatalogRootNode::RefillAccountAction::run() {

@@ -19,6 +19,8 @@
 
 #include <algorithm>
 
+#include <ZLResource.h>
+
 #include "ZLBlockTreeNode.h"
 
 const ZLTypeId ZLBlockTreeNode::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
@@ -164,4 +166,8 @@ ZLBlockTreeNode *ZLBlockTreeNode::next() const {
 
 const ZLBlockTreeNode::List &ZLBlockTreeNode::children() const {
 	return myChildren;
+}
+
+std::string ZLNamedRunnable::text(const ZLResource &resource) const {
+	return resource[key()].value();
 }

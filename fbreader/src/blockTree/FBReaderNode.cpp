@@ -128,40 +128,32 @@ void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset, bool highli
 	context.drawString(hOffset, vOffset + 13 * unit / 4, text.data(), text.size(), false);
 }
 
-void FBReaderNode::internalDrawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLNamedRunnable> action, const std::string &text, bool aux) {
+void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLNamedRunnable> action, bool auxiliary) {
 	if (action.isNull()) {
 		return;
 	}
 
-	// aux makes font size and hOffset to be 70% of their normal sizes
+	// auxiliary makes font size and hOffset to be 70% of their normal sizes
 
 	const FBTextStyle &style = FBTextStyle::Instance();
 	const int unit = unitSize(context, style);
-	const int h = aux ? (unit * 11 / 2) : (unit * 9 / 2);
+	const int h = auxiliary ? (unit * 11 / 2) : (unit * 9 / 2);
 	const int left = hOffset + level() * unit * 3 + unit * 2;
 
 	context.setColor(FBOptions::Instance().colorOption("internal").value());
 	context.setFont(
 		style.fontFamily(), 
-		aux ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3), 
+		auxiliary ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3), 
 		style.bold(), 
 		style.italic()
 	);
 
-	const std::string name = text.empty() ? resource()[action->key()].value() : text;
-	const int stringW = context.stringWidth(name.data(), name.size(), false);
+	const std::string text = action->text(resource());
+	const int stringW = context.stringWidth(text.data(), text.size(), false);
 	const int stringH = context.stringHeight();
-	context.drawString(left, vOffset + h, name.data(), name.size(), false);
+	context.drawString(left, vOffset + h, text.data(), text.size(), false);
 	addHyperlink(left, h - stringH, left + stringW, h, action);
 	hOffset += stringW + 4 * context.spaceWidth();
-}
-
-void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLNamedRunnable> action, const std::string &text) {
-	internalDrawHyperlink(context, hOffset, vOffset, action, text, false);
-}
-
-void FBReaderNode::drawAuxHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLNamedRunnable> action) {
-	internalDrawHyperlink(context, hOffset, vOffset, action, std::string(), true);
 }
 
 FBReaderNode::ExpandTreeAction::ExpandTreeAction(FBReaderNode &node) : myNode(node) {

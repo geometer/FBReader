@@ -65,6 +65,7 @@ class NetworkBookNode::BuyAction : public ZLNamedRunnable {
 public:
 	BuyAction(const NetworkBookItem &item);
 	ZLResourceKey key() const;
+	std::string text(const ZLResource &resource) const;
 	void run();
 
 private:
@@ -158,10 +159,7 @@ void NetworkBookNode::paint(ZLPaintContext &context, int vOffset) {
 		}
 		reference = book.reference(BookReference::BUY);
 		if (!reference.isNull()) {
-			const std::string buyText = ZLStringUtil::printf(
-				resource()["buy"].value(), ((BuyBookReference&)*reference).Price
-			);
-			drawHyperlink(context, left, vOffset, myBuyAction, buyText);
+			drawHyperlink(context, left, vOffset, myBuyAction);
 		}
 	}
 }
@@ -264,6 +262,15 @@ NetworkBookNode::BuyAction::BuyAction(const NetworkBookItem &item) : myItem(item
 
 ZLResourceKey NetworkBookNode::BuyAction::key() const {
 	return ZLResourceKey("buy");
+}
+
+std::string NetworkBookNode::BuyAction::text(const ZLResource &resource) const {
+	const std::string text = ZLNamedRunnable::text(resource);
+	shared_ptr<BookReference> reference = myItem.reference(BookReference::BUY);
+	if (!reference.isNull()) {
+		return ZLStringUtil::printf(text, ((BuyBookReference&)*reference).Price);
+	}
+	return text;
 }
 
 void NetworkBookNode::BuyAction::run() {
