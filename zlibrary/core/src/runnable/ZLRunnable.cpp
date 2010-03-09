@@ -17,28 +17,9 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLRUNNABLE_H__
-#define __ZLRUNNABLE_H__
+#include <ZLRunnable.h>
+#include <ZLResource.h>
 
-#include <string>
-
-class ZLResource;
-class ZLResourceKey;
-
-class ZLRunnable {
-
-public:
-	virtual ~ZLRunnable();
-	virtual void run() = 0;
-};
-
-class ZLRunnableWithKey : public ZLRunnable {
-
-public:
-	virtual ZLResourceKey key() const = 0;
-	virtual std::string text(const ZLResource &resource) const;
-};
-
-inline ZLRunnable::~ZLRunnable() {}
-
-#endif /* __ZLRUNNABLE_H__ */
+std::string ZLRunnableWithKey::text(const ZLResource &resource) const {
+	return resource[key()].value();
+}

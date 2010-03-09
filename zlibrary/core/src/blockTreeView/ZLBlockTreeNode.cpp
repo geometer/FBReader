@@ -167,7 +167,3 @@ ZLBlockTreeNode *ZLBlockTreeNode::next() const {
 const ZLBlockTreeNode::List &ZLBlockTreeNode::children() const {
 	return myChildren;
 }
-
-std::string ZLRunnableWithKey::text(const ZLResource &resource) const {
-	return resource[key()].value();
-}

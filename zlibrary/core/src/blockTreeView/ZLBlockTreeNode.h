@@ -29,16 +29,7 @@
 #include <ZLRunnable.h>
 #include <ZLPaintContext.h>
 
-class ZLResource;
-class ZLResourceKey;
 class ZLBlockTreeView;
-
-class ZLRunnableWithKey : public ZLRunnable {
-
-public:
-	virtual ZLResourceKey key() const = 0;
-	virtual std::string text(const ZLResource &resource) const;
-};
 
 class ZLBlockTreeNode : public ZLObjectWithRTTI {
 
