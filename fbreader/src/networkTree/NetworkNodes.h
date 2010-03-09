@@ -213,9 +213,6 @@ private:
 private:
 	NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book);
 
-private:
-	void init();
-
 friend class NetworkNodesFactory;
 
 public:
