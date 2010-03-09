@@ -52,6 +52,7 @@ private:
 	const std::string myBaseURL;
 	NetworkOperationData &myData;
 	unsigned int myIndex;
+	unsigned int myOpenSearchStartIndex;
 	const std::map<std::string,OPDSLink::URLCondition> &myUrlConditions;
 };
 

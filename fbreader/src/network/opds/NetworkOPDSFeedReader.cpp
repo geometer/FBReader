@@ -39,6 +39,7 @@ NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	myBaseURL(baseURL), 
 	myData(result), 
 	myIndex(0), 
+	myOpenSearchStartIndex(0),
 	myUrlConditions(conditions) {
 }
 
@@ -60,11 +61,19 @@ void NetworkOPDSFeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> fee
 			}
 		}
 	}
-	myIndex = feed->getOpensearchStartIndex() - 1;
+	myOpenSearchStartIndex = feed->getOpensearchStartIndex() - 1;
 }
 
 
 void NetworkOPDSFeedReader::processFeedEnd() {
+	for (size_t i = 0; i < myData.Items.size(); ++i) {
+		NetworkItem &item = *myData.Items[i];
+		if (!item.isInstanceOf(NetworkBookItem::TYPE_ID)) {
+			continue;
+		}
+		NetworkBookItem &book = (NetworkBookItem&) item;
+		book.Index += myOpenSearchStartIndex;
+	}
 }
 
 
