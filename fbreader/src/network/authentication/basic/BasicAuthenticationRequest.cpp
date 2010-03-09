@@ -65,7 +65,7 @@ BasicAuthenticationRequest::BasicAuthenticationRequest(const std::string &url, c
 }
 
 bool BasicAuthenticationRequest::handleHeader(void *ptr, size_t size) {
-	std::string line((const char*) ptr, size);
+	std::string line((const char*)ptr, size);
 	std::string version, code, phrase;
 	if (myStatusCode.empty() && ::parseHTTPStatusLine(line, version, code, phrase)) {
 		myStatusCode = code;
@@ -73,7 +73,7 @@ bool BasicAuthenticationRequest::handleHeader(void *ptr, size_t size) {
 	return true;
 }
 
-bool BasicAuthenticationRequest::handleContent(void *ptr, size_t size) {
+bool BasicAuthenticationRequest::handleContent(void*, size_t) {
 	return true;
 }
 

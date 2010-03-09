@@ -66,9 +66,9 @@ public:
 
 	void updateChildren();
 
-	shared_ptr<ZLNamedRunnable> expandCatalogAction();
-	shared_ptr<ZLNamedRunnable> openInBrowserAction();
-	shared_ptr<ZLNamedRunnable> reloadAction();
+	shared_ptr<ZLRunnableWithKey> expandCatalogAction();
+	shared_ptr<ZLRunnableWithKey> openInBrowserAction();
+	shared_ptr<ZLRunnableWithKey> reloadAction();
 
 protected:
 	shared_ptr<ZLImage> extractCoverImage() const;
@@ -82,9 +82,9 @@ protected:
 private:
 	shared_ptr<NetworkItem> myItem;
 	NetworkItem::List myChildrenItems;
-	shared_ptr<ZLNamedRunnable> myExpandCatalogAction;
-	shared_ptr<ZLNamedRunnable> myOpenInBrowserAction;
-	shared_ptr<ZLNamedRunnable> myReloadAction;
+	shared_ptr<ZLRunnableWithKey> myExpandCatalogAction;
+	shared_ptr<ZLRunnableWithKey> myOpenInBrowserAction;
+	shared_ptr<ZLRunnableWithKey> myReloadAction;
 };
 
 class NetworkCatalogRootNode : public NetworkCatalogNode {
@@ -115,12 +115,12 @@ private:
 
 private:
 	NetworkLink &myLink;
-	shared_ptr<ZLNamedRunnable> myLoginAction;
-	shared_ptr<ZLNamedRunnable> myLogoutAction;
-	shared_ptr<ZLNamedRunnable> myDontShowAction;
-	shared_ptr<ZLNamedRunnable> myRefillAccountAction;
-	shared_ptr<ZLNamedRunnable> myPasswordRecoveryAction;
-	shared_ptr<ZLNamedRunnable> myRegisterUserAction;
+	shared_ptr<ZLRunnableWithKey> myLoginAction;
+	shared_ptr<ZLRunnableWithKey> myLogoutAction;
+	shared_ptr<ZLRunnableWithKey> myDontShowAction;
+	shared_ptr<ZLRunnableWithKey> myRefillAccountAction;
+	shared_ptr<ZLRunnableWithKey> myPasswordRecoveryAction;
+	shared_ptr<ZLRunnableWithKey> myRegisterUserAction;
 };
 
 class SearchResultNode : public NetworkContainerNode {
@@ -228,12 +228,12 @@ private:
 
 private:
 	shared_ptr<NetworkItem> myBook;
-	shared_ptr<ZLNamedRunnable> myReadAction;
-	shared_ptr<ZLNamedRunnable> myDownloadAction;
-	shared_ptr<ZLNamedRunnable> myReadDemoAction;
-	shared_ptr<ZLNamedRunnable> myDownloadDemoAction;
-	shared_ptr<ZLNamedRunnable> myBuyAction;
-	shared_ptr<ZLNamedRunnable> myDeleteAction;
+	shared_ptr<ZLRunnableWithKey> myReadAction;
+	shared_ptr<ZLRunnableWithKey> myDownloadAction;
+	shared_ptr<ZLRunnableWithKey> myReadDemoAction;
+	shared_ptr<ZLRunnableWithKey> myDownloadDemoAction;
+	shared_ptr<ZLRunnableWithKey> myBuyAction;
+	shared_ptr<ZLRunnableWithKey> myDeleteAction;
 };
 
 #endif /* __NETWORKNODES_H__ */

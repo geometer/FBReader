@@ -50,7 +50,7 @@ private:
 
 private:
 	shared_ptr<Author> myAuthor;
-	shared_ptr<ZLNamedRunnable> myEditInfoAction;
+	shared_ptr<ZLRunnableWithKey> myEditInfoAction;
 };
 
 class SeriesNode : public FBReaderNode {
@@ -105,9 +105,9 @@ private:
 
 private:
 	shared_ptr<Tag> myTag;
-	shared_ptr<ZLNamedRunnable> myEditAction;
-	shared_ptr<ZLNamedRunnable> myCloneAction;
-	shared_ptr<ZLNamedRunnable> myRemoveAction;
+	shared_ptr<ZLRunnableWithKey> myEditAction;
+	shared_ptr<ZLRunnableWithKey> myCloneAction;
+	shared_ptr<ZLRunnableWithKey> myRemoveAction;
 };
 
 class BookNode : public FBReaderNode {
@@ -137,9 +137,9 @@ private:
 
 private:
 	shared_ptr<Book> myBook;
-	shared_ptr<ZLNamedRunnable> myReadAction;
-	shared_ptr<ZLNamedRunnable> myEditInfoAction;
-	shared_ptr<ZLNamedRunnable> myRemoveAction;
+	shared_ptr<ZLRunnableWithKey> myReadAction;
+	shared_ptr<ZLRunnableWithKey> myEditInfoAction;
+	shared_ptr<ZLRunnableWithKey> myRemoveAction;
 };
 
 #endif /* __LIBRARYNODES_H__ */

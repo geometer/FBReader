@@ -33,7 +33,7 @@ class ZLResource;
 class ZLResourceKey;
 class ZLBlockTreeView;
 
-class ZLNamedRunnable : public ZLRunnable {
+class ZLRunnableWithKey : public ZLRunnable {
 
 public:
 	virtual ZLResourceKey key() const = 0;
@@ -91,7 +91,7 @@ public:
 	bool isOverHyperlink(size_t x, size_t y);
 
 protected:
-	void addHyperlink(size_t left, size_t top, size_t right, size_t bottom, shared_ptr<ZLNamedRunnable> action);
+	void addHyperlink(size_t left, size_t top, size_t right, size_t bottom, shared_ptr<ZLRunnableWithKey> action);
 	void removeAllHyperlinks();
 
 private:
@@ -102,7 +102,7 @@ private:
 	List myChildren;
 	bool myIsOpen;
 
-	typedef std::map<Rectangle,shared_ptr<ZLNamedRunnable> > LinkMap;
+	typedef std::map<Rectangle,shared_ptr<ZLRunnableWithKey> > LinkMap;
 	LinkMap myHyperlinks;
 
 private:

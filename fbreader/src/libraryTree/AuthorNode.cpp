@@ -28,7 +28,7 @@
 
 #include "AuthorInfoDialog.h"
 
-class AuthorNode::EditInfoAction : public ZLNamedRunnable {
+class AuthorNode::EditInfoAction : public ZLRunnableWithKey {
 
 public:
 	EditInfoAction(shared_ptr<Author> author);

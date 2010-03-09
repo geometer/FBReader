@@ -52,14 +52,14 @@ public:
 	void drawCover(ZLPaintContext &context, int vOffset);
 	void drawTitle(ZLPaintContext &context, int vOffset, bool highlighted = false);
 	void drawSummary(ZLPaintContext &context, int vOffset, bool highlighted = false);
-	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLNamedRunnable> action, bool auxiliary = false);
+	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
 	virtual bool hasAuxHyperlink() const;
 
 private:
 	int unitSize(ZLPaintContext &context, const FBTextStyle &style) const;
 
 protected:
-	shared_ptr<ZLNamedRunnable> expandTreeAction();
+	shared_ptr<ZLRunnableWithKey> expandTreeAction();
 
 	virtual shared_ptr<ZLImage> extractCoverImage() const = 0;
 
@@ -77,7 +77,7 @@ protected:
 	int height(ZLPaintContext &context) const;
 
 private:
-	shared_ptr<ZLNamedRunnable> myExpandTreeAction;
+	shared_ptr<ZLRunnableWithKey> myExpandTreeAction;
 	mutable bool myCoverImageIsStored;
 	mutable shared_ptr<ZLImage> myStoredCoverImage;
 };

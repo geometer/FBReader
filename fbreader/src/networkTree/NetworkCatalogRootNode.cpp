@@ -35,7 +35,7 @@
 #include "../network/NetworkLink.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
 
-class NetworkCatalogRootNode::LoginAction : public ZLNamedRunnable {
+class NetworkCatalogRootNode::LoginAction : public ZLRunnableWithKey {
 
 public:
 	LoginAction(NetworkAuthenticationManager &mgr);
@@ -46,7 +46,7 @@ private:
 	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::LogoutAction : public ZLNamedRunnable {
+class NetworkCatalogRootNode::LogoutAction : public ZLRunnableWithKey {
 
 public:
 	LogoutAction(NetworkAuthenticationManager &mgr);
@@ -58,7 +58,7 @@ private:
 	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::RefillAccountAction : public ZLNamedRunnable {
+class NetworkCatalogRootNode::RefillAccountAction : public ZLRunnableWithKey {
 
 public:
 	RefillAccountAction(NetworkAuthenticationManager &mgr);
@@ -70,7 +70,7 @@ private:
 	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::DontShowAction : public ZLNamedRunnable {
+class NetworkCatalogRootNode::DontShowAction : public ZLRunnableWithKey {
 
 public:
 	DontShowAction(NetworkLink &link);
@@ -81,7 +81,7 @@ private:
 	NetworkLink &myLink;
 };
 
-class NetworkCatalogRootNode::PasswordRecoveryAction : public ZLNamedRunnable {
+class NetworkCatalogRootNode::PasswordRecoveryAction : public ZLRunnableWithKey {
 
 public:
 	PasswordRecoveryAction(NetworkAuthenticationManager &mgr);
@@ -92,7 +92,7 @@ private:
 	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::RegisterUserAction : public ZLNamedRunnable {
+class NetworkCatalogRootNode::RegisterUserAction : public ZLRunnableWithKey {
 
 public:
 	RegisterUserAction(NetworkAuthenticationManager &mgr);
@@ -198,7 +198,7 @@ ZLResourceKey NetworkCatalogRootNode::LogoutAction::key() const {
 }
 
 std::string NetworkCatalogRootNode::LogoutAction::text(const ZLResource &resource) const {
-	const std::string text = ZLNamedRunnable::text(resource);
+	const std::string text = ZLRunnableWithKey::text(resource);
 	return ZLStringUtil::printf(text, myManager.currentUserName());
 }
 
@@ -235,7 +235,7 @@ ZLResourceKey NetworkCatalogRootNode::RefillAccountAction::key() const {
 }
 
 std::string NetworkCatalogRootNode::RefillAccountAction::text(const ZLResource &resource) const {
-	const std::string text = ZLNamedRunnable::text(resource);
+	const std::string text = ZLRunnableWithKey::text(resource);
 	std::string account = myManager.currentAccount();
 	if (!account.empty() && !myManager.refillAccountLink().empty()) {
 		return ZLStringUtil::printf(text, account);

@@ -44,7 +44,7 @@ private:
 XMLTextReader::XMLTextReader(std::string &buffer, const std::string &startTag) : myStartTag(ZLUnicodeUtil::toLower(startTag)), myBuffer(buffer), myStarted(myStartTag.empty()) {
 }
 
-void XMLTextReader::startElementHandler(const char *tag, const char **attributes) {
+void XMLTextReader::startElementHandler(const char *tag, const char**) {
 	if (!myStarted && (myStartTag == ZLUnicodeUtil::toLower(tag))) {
 		myStarted = true;
 	}

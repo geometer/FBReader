@@ -36,7 +36,7 @@
 
 #include "../fbreader/FBReader.h"
 
-class NetworkBookNode::DownloadAction : public ZLNamedRunnable {
+class NetworkBookNode::DownloadAction : public ZLRunnableWithKey {
 
 public:
 	DownloadAction(const NetworkBookItem &item, bool demo);
@@ -48,7 +48,7 @@ private:
 	const bool myDemo;
 };
 
-class NetworkBookNode::ReadAction : public ZLNamedRunnable {
+class NetworkBookNode::ReadAction : public ZLRunnableWithKey {
 
 public:
 	ReadAction(const NetworkBookItem &item, bool demo);
@@ -60,7 +60,7 @@ private:
 	const bool myDemo;
 };
 
-class NetworkBookNode::BuyAction : public ZLNamedRunnable {
+class NetworkBookNode::BuyAction : public ZLRunnableWithKey {
 
 public:
 	BuyAction(const NetworkBookItem &item);
@@ -72,7 +72,7 @@ private:
 	const NetworkBookItem &myItem;
 };
 
-class NetworkBookNode::DeleteAction : public ZLNamedRunnable {
+class NetworkBookNode::DeleteAction : public ZLRunnableWithKey {
 
 public:
 	DeleteAction(const NetworkBookItem &item);
@@ -261,7 +261,7 @@ ZLResourceKey NetworkBookNode::BuyAction::key() const {
 }
 
 std::string NetworkBookNode::BuyAction::text(const ZLResource &resource) const {
-	const std::string text = ZLNamedRunnable::text(resource);
+	const std::string text = ZLRunnableWithKey::text(resource);
 	shared_ptr<BookReference> reference = myItem.reference(BookReference::BUY);
 	if (!reference.isNull()) {
 		return ZLStringUtil::printf(text, ((BuyBookReference&)*reference).Price);

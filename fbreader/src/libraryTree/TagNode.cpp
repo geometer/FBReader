@@ -30,7 +30,7 @@
 #include "../library/Lists.h"
 #include "../library/Comparators.h"
 
-class TagNode::EditOrCloneAction : public ZLNamedRunnable {
+class TagNode::EditOrCloneAction : public ZLRunnableWithKey {
 
 public:
 	EditOrCloneAction(TagNode &node);
@@ -68,7 +68,7 @@ private:
 	std::string resourceKeyName() const;
 };
 
-class TagNode::RemoveAction : public ZLNamedRunnable {
+class TagNode::RemoveAction : public ZLRunnableWithKey {
 
 public:
 	RemoveAction(shared_ptr<Tag> tag);

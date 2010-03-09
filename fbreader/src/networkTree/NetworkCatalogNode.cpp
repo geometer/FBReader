@@ -37,7 +37,7 @@
 #include "../network/NetworkLink.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
 
-class NetworkCatalogNode::ExpandCatalogAction : public ZLNamedRunnable {
+class NetworkCatalogNode::ExpandCatalogAction : public ZLRunnableWithKey {
 
 public:
 	ExpandCatalogAction(NetworkCatalogNode &node);
@@ -48,7 +48,7 @@ private:
 	NetworkCatalogNode &myNode;
 };
 
-class NetworkCatalogNode::OpenInBrowserAction : public ZLNamedRunnable {
+class NetworkCatalogNode::OpenInBrowserAction : public ZLRunnableWithKey {
 
 public:
 	OpenInBrowserAction(const std::string &url);
@@ -59,7 +59,7 @@ private:
 	const std::string myURL;
 };
 
-class NetworkCatalogNode::ReloadAction : public ZLNamedRunnable {
+class NetworkCatalogNode::ReloadAction : public ZLRunnableWithKey {
 
 public:
 	ReloadAction(NetworkCatalogNode &node);
@@ -82,21 +82,21 @@ NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<Ne
 	myItem(item) {
 }
 
-shared_ptr<ZLNamedRunnable> NetworkCatalogNode::expandCatalogAction() {
+shared_ptr<ZLRunnableWithKey> NetworkCatalogNode::expandCatalogAction() {
 	if (myExpandCatalogAction.isNull()) {
 		myExpandCatalogAction = new ExpandCatalogAction(*this);
 	}
 	return myExpandCatalogAction;
 }
 
-shared_ptr<ZLNamedRunnable> NetworkCatalogNode::openInBrowserAction() {
+shared_ptr<ZLRunnableWithKey> NetworkCatalogNode::openInBrowserAction() {
 	if (myOpenInBrowserAction.isNull()) {
 		myOpenInBrowserAction = new OpenInBrowserAction(item().URLByType[NetworkItem::URL_HTML_PAGE]);
 	}
 	return myOpenInBrowserAction;
 }
 
-shared_ptr<ZLNamedRunnable> NetworkCatalogNode::reloadAction() {
+shared_ptr<ZLRunnableWithKey> NetworkCatalogNode::reloadAction() {
 	if (myReloadAction.isNull()) {
 		myReloadAction = new ReloadAction(*this);
 	}

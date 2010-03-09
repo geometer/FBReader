@@ -33,7 +33,7 @@
 #include "../fbreader/BookInfoDialog.h"
 #include "../formats/FormatPlugin.h"
 
-class BookNode::ReadAction : public ZLNamedRunnable {
+class BookNode::ReadAction : public ZLRunnableWithKey {
 
 public:
 	ReadAction(shared_ptr<Book> book);
@@ -44,7 +44,7 @@ private:
 	shared_ptr<Book> myBook;
 };
 
-class BookNode::EditInfoAction : public ZLNamedRunnable {
+class BookNode::EditInfoAction : public ZLRunnableWithKey {
 
 public:
 	EditInfoAction(shared_ptr<Book> book);
@@ -55,7 +55,7 @@ private:
 	shared_ptr<Book> myBook;
 };
 
-class BookNode::RemoveAction : public ZLNamedRunnable {
+class BookNode::RemoveAction : public ZLRunnableWithKey {
 
 public:
 	RemoveAction(shared_ptr<Book> book);

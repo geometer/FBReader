@@ -80,7 +80,7 @@ size_t ZLBlockTreeNode::level() const {
 	return l;
 }
 
-void ZLBlockTreeNode::addHyperlink(size_t left, size_t top, size_t right, size_t bottom, shared_ptr<ZLNamedRunnable> action) {
+void ZLBlockTreeNode::addHyperlink(size_t left, size_t top, size_t right, size_t bottom, shared_ptr<ZLRunnableWithKey> action) {
 	myHyperlinks[Rectangle(left, top, right, bottom)] = action;
 }
 
@@ -168,6 +168,6 @@ const ZLBlockTreeNode::List &ZLBlockTreeNode::children() const {
 	return myChildren;
 }
 
-std::string ZLNamedRunnable::text(const ZLResource &resource) const {
+std::string ZLRunnableWithKey::text(const ZLResource &resource) const {
 	return resource[key()].value();
 }

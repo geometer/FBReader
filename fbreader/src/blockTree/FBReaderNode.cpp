@@ -29,7 +29,7 @@
 
 const ZLTypeId FBReaderNode::TYPE_ID(ZLBlockTreeNode::TYPE_ID);
 
-class FBReaderNode::ExpandTreeAction : public ZLNamedRunnable {
+class FBReaderNode::ExpandTreeAction : public ZLRunnableWithKey {
 
 public:
 	ExpandTreeAction(FBReaderNode &node);
@@ -128,7 +128,7 @@ void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset, bool highli
 	context.drawString(hOffset, vOffset + 13 * unit / 4, text.data(), text.size(), false);
 }
 
-void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLNamedRunnable> action, bool auxiliary) {
+void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLRunnableWithKey> action, bool auxiliary) {
 	if (action.isNull()) {
 		return;
 	}
@@ -183,7 +183,7 @@ void FBReaderNode::expandOrCollapseSubtree() {
 	}
 }
 
-shared_ptr<ZLNamedRunnable> FBReaderNode::expandTreeAction() {
+shared_ptr<ZLRunnableWithKey> FBReaderNode::expandTreeAction() {
 	if (myExpandTreeAction.isNull()) {
 		myExpandTreeAction = new ExpandTreeAction(*this);
 	}
