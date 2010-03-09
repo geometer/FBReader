@@ -38,12 +38,18 @@ const ZLResource &NetworkBookNode::resource() const {
 
 NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book) : FBReaderNode(parent), myBook(book) {
 	const NetworkBookItem &item = this->book();
-	myReadAction = new NetworkBookReadAction(item, false);
-	myDownloadAction = new NetworkBookDownloadAction(item, false);
-	myReadDemoAction = new NetworkBookReadAction(item, true);
-	myDownloadDemoAction = new NetworkBookDownloadAction(item, true);
-	myBuyAction = new NetworkBookBuyAction(item);
-	myDeleteAction = new NetworkBookDeleteAction(item);
+	if (!item.reference(BookReference::DOWNLOAD).isNull()) {
+		myReadAction = new NetworkBookReadAction(item, false);
+		myDownloadAction = new NetworkBookDownloadAction(item, false);
+		myDeleteAction = new NetworkBookDeleteAction(item);
+	}
+	if (!item.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
+		myReadDemoAction = new NetworkBookReadAction(item, true);
+		myDownloadDemoAction = new NetworkBookDownloadAction(item, true);
+	}
+	if (!item.reference(BookReference::BUY).isNull()) {
+		myBuyAction = new NetworkBookBuyAction(item);
+	}
 }
 
 std::string NetworkBookNode::title() const {
