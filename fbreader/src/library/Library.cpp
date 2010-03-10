@@ -150,18 +150,27 @@ size_t Library::revision() const {
 
 class LibrarySynchronizer : public ZLRunnable {
 
+public:
+	LibrarySynchronizer(Library::BuildMode mode);
+
 private:
 	void run();
+
+private:
+	const Library::BuildMode myBuildMode;
 };
+
+LibrarySynchronizer::LibrarySynchronizer(Library::BuildMode mode) : myBuildMode(mode) {
+}
 
 void LibrarySynchronizer::run() {
 	Library &library = Library::Instance();
 
-	if (library.myBuildMode & Library::BUILD_COLLECT_FILES_INFO) {
+	if (myBuildMode & Library::BUILD_COLLECT_FILES_INFO) {
 		library.rebuildBookSet();
 	}
 
-	if (library.myBuildMode & Library::BUILD_UPDATE_BOOKS_INFO) {
+	if (myBuildMode & Library::BUILD_UPDATE_BOOKS_INFO) {
 		library.rebuildMaps();
 	}
 }
@@ -178,11 +187,11 @@ void Library::synchronize() const {
 		return;
 	}
 
-	LibrarySynchronizer synchronizer;
+	LibrarySynchronizer synchronizer(myBuildMode);
+	myBuildMode = BUILD_NOTHING;
 	ZLDialogManager::Instance().wait(ZLResourceKey("loadingBookList"), synchronizer);
 
 	++myRevision;
-	myBuildMode = BUILD_NOTHING;
 }
 
 void Library::rebuildMaps() const {
