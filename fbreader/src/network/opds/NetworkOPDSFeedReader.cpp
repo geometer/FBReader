@@ -295,6 +295,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 					}
 				} else {
 					url = href;
+					urlIsAlternate = false;
 				}
 			} else if (type == OPDSConstants::MIME_TEXT_HTML) {
 				htmlURL = href;
