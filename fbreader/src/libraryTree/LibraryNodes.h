@@ -89,7 +89,7 @@ private:
 	std::string title() const;
 
 private:
-	shared_ptr<Tag> myTag;
+	const shared_ptr<Tag> myTag;
 };
 
 class BookNode : public FBReaderNode {
@@ -114,7 +114,7 @@ private:
 	std::string summary() const;
 
 private:
-	shared_ptr<Book> myBook;
+	const shared_ptr<Book> myBook;
 };
 
 #endif /* __LIBRARYNODES_H__ */
