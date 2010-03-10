@@ -106,11 +106,6 @@ class BookNode : public FBReaderNode {
 public:
 	static const ZLTypeId TYPE_ID;
 
-private:
-	class ReadAction;
-	class EditInfoAction;
-	class RemoveAction;
-
 public:
 	BookNode(AuthorNode *parent, shared_ptr<Book> book);
 	BookNode(SeriesNode *parent, shared_ptr<Book> book);

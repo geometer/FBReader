@@ -18,58 +18,16 @@
  */
 
 #include <ZLResource.h>
-#include <ZLDialogManager.h>
-#include <ZLOptionsDialog.h>
-#include <ZLFile.h>
-#include <ZLStringUtil.h>
-#include <ZLImageManager.h>
 
 #include "LibraryNodes.h"
 
 #include "../library/Book.h"
 #include "../library/Author.h"
 #include "../library/Tag.h"
+#include "../libraryActions/LibraryBookActions.h"
+
 #include "../fbreader/FBReader.h"
-#include "../fbreader/BookInfoDialog.h"
 #include "../formats/FormatPlugin.h"
-
-class BookNode::ReadAction : public ZLRunnableWithKey {
-
-public:
-	ReadAction(shared_ptr<Book> book);
-	void run();
-	ZLResourceKey key() const;
-
-private:
-	const shared_ptr<Book> myBook;
-};
-
-class BookNode::EditInfoAction : public ZLRunnableWithKey {
-
-public:
-	EditInfoAction(shared_ptr<Book> book);
-	void run();
-	ZLResourceKey key() const;
-
-private:
-	const shared_ptr<Book> myBook;
-};
-
-class BookNode::RemoveAction : public ZLRunnableWithKey {
-
-public:
-	RemoveAction(shared_ptr<Book> book);
-
-private:
-	void run();
-	ZLResourceKey key() const;
-	bool makesSense() const;
-
-	int removeBookDialog() const;
-
-private:
-	const shared_ptr<Book> myBook;
-};
 
 const ZLTypeId BookNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
@@ -91,116 +49,13 @@ BookNode::BookNode(TagNode *parent, size_t atPosition, shared_ptr<Book> book) : 
 }
 
 void BookNode::init() {
-	registerAction(new ReadAction(myBook));
-	registerAction(new EditInfoAction(myBook));
-	registerAction(new RemoveAction(myBook));
+	registerAction(new BookReadAction(myBook));
+	registerAction(new BookEditInfoAction(myBook));
+	registerAction(new BookRemoveAction(myBook));
 }
 
 shared_ptr<Book> BookNode::book() const {
 	return myBook;
-}
-
-BookNode::ReadAction::ReadAction(shared_ptr<Book> book) : myBook(book) {
-}
-
-void BookNode::ReadAction::run() {
-	FBReader &fbreader = FBReader::Instance();
-	fbreader.openBook(myBook);
-	fbreader.showBookTextView();
-}
-
-ZLResourceKey BookNode::ReadAction::key() const {
-	return ZLResourceKey("read");
-}
-
-BookNode::RemoveAction::RemoveAction(shared_ptr<Book> book) : myBook(book) {
-}
-
-void BookNode::RemoveAction::run() {
-	switch (removeBookDialog()) {
-		case Library::REMOVE_FROM_DISK:
-		{
-			const std::string path = ZLFile(myBook->filePath()).physicalFilePath();
-			ZLFile physicalFile(path);
-			if (!physicalFile.remove()) {
-				ZLResourceKey boxKey("removeFileErrorBox");
-				const std::string message =
-					ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), path);
-				ZLDialogManager::Instance().errorBox(boxKey, message);
-			}
-		}
-		// yes, we go through this label
-		case Library::REMOVE_FROM_LIBRARY:
-			Library::Instance().removeBook(myBook);
-			FBReader::Instance().refreshWindow();
-		case Library::REMOVE_DONT_REMOVE:
-			break;
-	}
-}
-
-ZLResourceKey BookNode::RemoveAction::key() const {
-	return ZLResourceKey("delete");
-}
-
-bool BookNode::RemoveAction::makesSense() const {
-	return Library::Instance().canRemove(myBook) != Library::REMOVE_DONT_REMOVE;
-}
-
-int BookNode::RemoveAction::removeBookDialog() const {
-	ZLResourceKey boxKey("removeBookBox");
-	const ZLResource &msgResource = ZLResource::resource("dialog")[boxKey];
-
-	switch (Library::Instance().canRemove(myBook)) {
-		case Library::REMOVE_DONT_REMOVE:
-			return Library::REMOVE_DONT_REMOVE;
-		case Library::REMOVE_FROM_DISK:
-		{
-			ZLFile physFile(ZLFile(myBook->filePath()).physicalFilePath());
-			const std::string message = ZLStringUtil::printf(msgResource["deleteFile"].value(), physFile.name(false));
-			if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
-				return Library::REMOVE_FROM_DISK;
-			}
-			return Library::REMOVE_DONT_REMOVE;
-		}
-		case Library::REMOVE_FROM_LIBRARY:
-		{
-			const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myBook->title());
-			if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
-				return Library::REMOVE_FROM_LIBRARY;
-			}
-			return Library::REMOVE_DONT_REMOVE;
-		}
-		case Library::REMOVE_FROM_LIBRARY_AND_DISK:
-		{
-			ZLResourceKey removeFileKey("removeFile");
-			ZLResourceKey removeLinkKey("removeLink");
-    
-			const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myBook->title());
-			switch(ZLDialogManager::Instance().questionBox(boxKey, message, removeLinkKey, removeFileKey, ZLDialogManager::CANCEL_BUTTON)) {
-				case 0:
-					return Library::REMOVE_FROM_LIBRARY;
-				case 1:
-					return Library::REMOVE_FROM_DISK;
-				case 2:
-					return Library::REMOVE_DONT_REMOVE;
-			}
-		}
-	}
-	return Library::REMOVE_DONT_REMOVE;
-}
-
-BookNode::EditInfoAction::EditInfoAction(shared_ptr<Book> book) : myBook(book) {
-}
-
-void BookNode::EditInfoAction::run() {
-	if (BookInfoDialog(myBook).dialog().run()) {
-		// TODO: select current node (?) again
-		FBReader::Instance().refreshWindow();
-	}
-}
-
-ZLResourceKey BookNode::EditInfoAction::key() const {
-	return ZLResourceKey("edit");
 }
 
 std::string BookNode::title() const {
