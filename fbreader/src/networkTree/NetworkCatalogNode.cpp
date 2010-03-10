@@ -64,6 +64,7 @@ class NetworkCatalogNode::ReloadAction : public ZLRunnableWithKey {
 public:
 	ReloadAction(NetworkCatalogNode &node);
 	ZLResourceKey key() const;
+	bool makesSense() const;
 	void run();
 
 private:
@@ -145,9 +146,7 @@ void NetworkCatalogNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
 	if (!item().URLByType[NetworkItem::URL_HTML_PAGE].empty()) {
 		drawHyperlink(context, left, vOffset, openInBrowserAction());
 	}
-	if (isOpen()) {
-		drawHyperlink(context, left, vOffset, reloadAction());
-	}
+	drawHyperlink(context, left, vOffset, reloadAction());
 }
 
 shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
@@ -263,15 +262,16 @@ ZLResourceKey NetworkCatalogNode::ReloadAction::key() const {
 	return ZLResourceKey("reload");
 }
 
+bool NetworkCatalogNode::ReloadAction::makesSense() const {
+	return myNode.isOpen();
+}
+
 void NetworkCatalogNode::ReloadAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
 		return;
 	}
 
-	bool openState = myNode.isOpen();
 	myNode.updateChildren();
-	if (openState) {
-		myNode.expandOrCollapseSubtree();
-	}
+	myNode.expandOrCollapseSubtree();
 	FBReader::Instance().refreshWindow();
 }

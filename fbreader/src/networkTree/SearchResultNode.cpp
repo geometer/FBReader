@@ -36,6 +36,10 @@ SearchResultNode::SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr
 	mySummary(summary) {
 }
 
+void SearchResultNode::init() {
+	registerExpandTreeAction();
+}
+
 const ZLTypeId &SearchResultNode::typeId() const {
 	return TYPE_ID;
 }
@@ -50,17 +54,6 @@ std::string SearchResultNode::title() const {
 
 std::string SearchResultNode::summary() const {
 	return mySummary;
-}
-
-void SearchResultNode::paint(ZLPaintContext &context, int vOffset) {
-	removeAllHyperlinks();
-
-	((NetworkView&)view()).drawCoverLater(this, vOffset);
-	drawTitle(context, vOffset);
-	drawSummary(context, vOffset);
-
-	int left = 0;
-	drawHyperlink(context, left, vOffset, expandTreeAction());
 }
 
 shared_ptr<ZLImage> SearchResultNode::extractCoverImage() const {

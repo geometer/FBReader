@@ -56,6 +56,7 @@ protected:
 	NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
 
 private:
+	//void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 
@@ -107,6 +108,7 @@ public:
 	const NetworkLink &link() const;
 
 private:
+	//void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 
@@ -135,12 +137,12 @@ public:
 	shared_ptr<NetworkBookCollection> searchResult();
 
 private:
+	void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
 	std::string summary() const;
-	void paint(ZLPaintContext &context, int vOffset);
 
 private:
 	shared_ptr<NetworkBookCollection> mySearchResult;
@@ -221,12 +223,6 @@ private:
 
 private:
 	shared_ptr<NetworkItem> myBook;
-	shared_ptr<ZLRunnableWithKey> myReadAction;
-	shared_ptr<ZLRunnableWithKey> myDownloadAction;
-	shared_ptr<ZLRunnableWithKey> myReadDemoAction;
-	shared_ptr<ZLRunnableWithKey> myDownloadDemoAction;
-	shared_ptr<ZLRunnableWithKey> myBuyAction;
-	shared_ptr<ZLRunnableWithKey> myDeleteAction;
 };
 
 #endif /* __NETWORKNODES_H__ */

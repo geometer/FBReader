@@ -36,72 +36,78 @@
 #include "../networkActions/PasswordRecoveryDialog.h"
 #include "../networkActions/RegisterUserDialog.h"
 
-class NetworkCatalogRootNode::LoginAction : public ZLRunnableWithKey {
+class NetworkCatalogAuthAction : public ZLRunnableWithKey {
+
+protected:
+	NetworkCatalogAuthAction(NetworkAuthenticationManager &mgr, bool forLoggedUsers);
+
+protected:
+	bool makesSense() const;
+
+protected:
+	NetworkAuthenticationManager &myManager;
+
+private:
+	const bool myForLoggedUsers;
+};
+
+class NetworkCatalogRootNode::LoginAction : public NetworkCatalogAuthAction {
 
 public:
 	LoginAction(NetworkAuthenticationManager &mgr);
 	void run();
 	ZLResourceKey key() const;
-
-private:
-	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::LogoutAction : public ZLRunnableWithKey {
+class NetworkCatalogRootNode::LogoutAction : public NetworkCatalogAuthAction {
 
 public:
 	LogoutAction(NetworkAuthenticationManager &mgr);
 	void run();
 	ZLResourceKey key() const;
 	std::string text(const ZLResource &resource) const;
-
-private:
-	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::RefillAccountAction : public ZLRunnableWithKey {
+class NetworkCatalogRootNode::RefillAccountAction : public NetworkCatalogAuthAction {
 
 public:
 	RefillAccountAction(NetworkAuthenticationManager &mgr);
+
+private:
 	void run();
 	ZLResourceKey key() const;
 	std::string text(const ZLResource &resource) const;
-
-private:
-	NetworkAuthenticationManager &myManager;
+	bool makesSense() const;
 };
 
 class NetworkCatalogRootNode::DontShowAction : public ZLRunnableWithKey {
 
 public:
 	DontShowAction(NetworkLink &link);
+
+private:
 	void run();
 	ZLResourceKey key() const;
+	bool makesSense() const;
 
 private:
 	NetworkLink &myLink;
 };
 
-class NetworkCatalogRootNode::PasswordRecoveryAction : public ZLRunnableWithKey {
+class NetworkCatalogRootNode::PasswordRecoveryAction : public NetworkCatalogAuthAction {
 
 public:
 	PasswordRecoveryAction(NetworkAuthenticationManager &mgr);
 	void run();
 	ZLResourceKey key() const;
-
-private:
-	NetworkAuthenticationManager &myManager;
 };
 
-class NetworkCatalogRootNode::RegisterUserAction : public ZLRunnableWithKey {
+class NetworkCatalogRootNode::RegisterUserAction : public NetworkCatalogAuthAction {
 
 public:
 	RegisterUserAction(NetworkAuthenticationManager &mgr);
 	void run();
 	ZLResourceKey key() const;
-
-private:
-	NetworkAuthenticationManager &myManager;
 };
 
 const ZLTypeId NetworkCatalogRootNode::TYPE_ID(NetworkCatalogNode::TYPE_ID);
@@ -111,7 +117,9 @@ NetworkCatalogRootNode::NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent
 	if (!mgr.isNull()) {
 		myLoginAction = new LoginAction(*mgr);
 		myLogoutAction = new LogoutAction(*mgr);
-		myRefillAccountAction = new RefillAccountAction(*mgr);
+		if (!mgr->refillAccountLink().empty()) {
+			myRefillAccountAction = new RefillAccountAction(*mgr);
+		}
 		if (mgr->registrationSupported()) {
 			myRegisterUserAction = new RegisterUserAction(*mgr);
 		}
@@ -146,35 +154,27 @@ void NetworkCatalogRootNode::paintHyperlinks(ZLPaintContext &context, int vOffse
 	int left = 0;
 	int auxleft = 0;
 	drawHyperlink(context, left, vOffset, expandCatalogAction());
-	if (isOpen()) {
-		drawHyperlink(context, left, vOffset, reloadAction());
-	}
-
-	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
-	if (!mgr.isNull()) {
-		if (mgr->isAuthorised(false).Status == B3_FALSE) {
-			drawHyperlink(context, left, vOffset, myLoginAction);
-			drawHyperlink(context, auxleft, vOffset, myRegisterUserAction, true);
-			drawHyperlink(context, auxleft, vOffset, myPasswordRecoveryAction, true);
-		} else {
-			drawHyperlink(context, left, vOffset, myLogoutAction);
-			if (!mgr->currentAccount().empty() &&
-					!mgr->refillAccountLink().empty()) {
-				drawHyperlink(context, left, vOffset, myRefillAccountAction);
-			}
-		}
-	}
-	if (NetworkLinkCollection::Instance().numberOfEnabledLinks() > 1) {
-		drawHyperlink(context, left, vOffset, myDontShowAction);
-	}
+	drawHyperlink(context, left, vOffset, reloadAction());
+	drawHyperlink(context, left, vOffset, myLoginAction);
+	drawHyperlink(context, auxleft, vOffset, myRegisterUserAction, true);
+	drawHyperlink(context, auxleft, vOffset, myPasswordRecoveryAction, true);
+	drawHyperlink(context, left, vOffset, myLogoutAction);
+	drawHyperlink(context, left, vOffset, myRefillAccountAction);
+	drawHyperlink(context, left, vOffset, myDontShowAction);
 }
 
 shared_ptr<ZLImage> NetworkCatalogRootNode::lastResortCoverImage() const {
 	return 0;
 }
 
+NetworkCatalogAuthAction::NetworkCatalogAuthAction(NetworkAuthenticationManager &mgr, bool forLoggedUsers) : myManager(mgr), myForLoggedUsers(forLoggedUsers) {
+}
 
-NetworkCatalogRootNode::LoginAction::LoginAction(NetworkAuthenticationManager &mgr) : myManager(mgr) {
+bool NetworkCatalogAuthAction::makesSense() const {
+	return (myManager.isAuthorised(false).Status == B3_FALSE) != myForLoggedUsers;
+}
+
+NetworkCatalogRootNode::LoginAction::LoginAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, false) {
 }
 
 ZLResourceKey NetworkCatalogRootNode::LoginAction::key() const {
@@ -191,7 +191,7 @@ void NetworkCatalogRootNode::LoginAction::run() {
 	FBReader::Instance().refreshWindow();
 }
 
-NetworkCatalogRootNode::LogoutAction::LogoutAction(NetworkAuthenticationManager &mgr) : myManager(mgr) {
+NetworkCatalogRootNode::LogoutAction::LogoutAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, true) {
 }
 
 ZLResourceKey NetworkCatalogRootNode::LogoutAction::key() const {
@@ -228,7 +228,11 @@ void NetworkCatalogRootNode::DontShowAction::run() {
 	FBReader::Instance().refreshWindow();
 }
 
-NetworkCatalogRootNode::RefillAccountAction::RefillAccountAction(NetworkAuthenticationManager &mgr) : myManager(mgr) {
+bool NetworkCatalogRootNode::DontShowAction::makesSense() const {
+	return NetworkLinkCollection::Instance().numberOfEnabledLinks() > 1;
+}
+
+NetworkCatalogRootNode::RefillAccountAction::RefillAccountAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, true) {
 }
 
 ZLResourceKey NetworkCatalogRootNode::RefillAccountAction::key() const {
@@ -248,7 +252,13 @@ void NetworkCatalogRootNode::RefillAccountAction::run() {
 	FBReader::Instance().openLinkInBrowser(myManager.refillAccountLink());
 }
 
-NetworkCatalogRootNode::PasswordRecoveryAction::PasswordRecoveryAction(NetworkAuthenticationManager &mgr) : myManager(mgr) {
+bool NetworkCatalogRootNode::RefillAccountAction::makesSense() const {
+	return
+		NetworkCatalogAuthAction::makesSense() && 
+		!myManager.currentAccount().empty();
+}
+
+NetworkCatalogRootNode::PasswordRecoveryAction::PasswordRecoveryAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, false) {
 }
 
 ZLResourceKey NetworkCatalogRootNode::PasswordRecoveryAction::key() const {
@@ -265,7 +275,7 @@ void NetworkCatalogRootNode::PasswordRecoveryAction::run() {
 	FBReader::Instance().refreshWindow();
 }
 
-NetworkCatalogRootNode::RegisterUserAction::RegisterUserAction(NetworkAuthenticationManager &mgr) : myManager(mgr) {
+NetworkCatalogRootNode::RegisterUserAction::RegisterUserAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, false) {
 }
 
 ZLResourceKey NetworkCatalogRootNode::RegisterUserAction::key() const {
