@@ -20,6 +20,7 @@
 #include <cstdlib>
 
 #include "NCXReader.h"
+#include "../util/MiscUtil.h"
 #include "../util/EntityFilesCollector.h"
 
 NCXReader::NCXReader(BookReader &modelReader) : myModelReader(modelReader), myReadState(READ_NONE), myPlayIndex(-65535) {
@@ -54,7 +55,7 @@ void NCXReader::startElementHandler(const char *tag, const char **attributes) {
 			} else if (TAG_CONTENT == tag) {
 				const char *src = attributeValue(attributes, "src");
 				if (src != 0) {
-					myPointStack.back().ContentHRef = src;
+					myPointStack.back().ContentHRef = MiscUtil::decodeHtmlURL(src);
 				}
 			}
 			break;

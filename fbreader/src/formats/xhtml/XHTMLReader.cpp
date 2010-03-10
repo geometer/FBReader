@@ -215,7 +215,7 @@ void XHTMLTagLinkAction::doAtStart(XHTMLReader &reader, const char **xmlattribut
 		return;
 	}
 
-	shared_ptr<ZLInputStream> cssStream = ZLFile(reader.myPathPrefix + href).inputStream();
+	shared_ptr<ZLInputStream> cssStream = ZLFile(reader.myPathPrefix + MiscUtil::decodeHtmlURL(href)).inputStream();
 	if (cssStream.isNull()) {
 		return;
 	}
@@ -285,7 +285,7 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 		return;
 	}
 
-	const std::string fullfileName = pathPrefix(reader) + fileName;
+	const std::string fullfileName = pathPrefix(reader) + MiscUtil::decodeHtmlURL(fileName);
 	if (!ZLFile(fullfileName).exists()) {
 		return;
 	}
@@ -342,7 +342,7 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 	const char *href = reader.attributeValue(xmlattributes, "href");
 	if (href != 0 && href[0] != '\0') {
 		const FBTextKind hyperlinkType = MiscUtil::referenceType(href);
-		std::string link = href;
+		std::string link = MiscUtil::decodeHtmlURL(href);
 		if (hyperlinkType == INTERNAL_HYPERLINK) {
 			link = (link[0] == '#') ?
 				reader.myReferenceName + link :
@@ -355,7 +355,9 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 	}
 	const char *name = reader.attributeValue(xmlattributes, "name");
 	if (name != 0) {
-		bookReader(reader).addHyperlinkLabel(reader.myReferenceName + "#" + name);
+		bookReader(reader).addHyperlinkLabel(
+			reader.myReferenceName + "#" + MiscUtil::decodeHtmlURL(name)
+		);
 	}
 }
 

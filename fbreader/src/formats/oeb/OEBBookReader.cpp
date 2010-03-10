@@ -66,7 +66,7 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 		const char *id = attributeValue(xmlattributes, "id");
 		const char *href = attributeValue(xmlattributes, "href");
 		if ((id != 0) && (href != 0)) {
-			myIdToHref[id] = href;
+			myIdToHref[id] = MiscUtil::decodeHtmlURL(href);
 		}
 	} else if ((myState == READ_SPINE) && (ITEMREF == tagString)) {
 		const char *id = attributeValue(xmlattributes, "idref");
@@ -81,21 +81,22 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 		const char *title = attributeValue(xmlattributes, "title");
 		const char *href = attributeValue(xmlattributes, "href");
 		if (href != 0) {
+			const std::string reference = MiscUtil::decodeHtmlURL(href);
 			if (title != 0) {
-				myGuideTOC.push_back(std::pair<std::string,std::string>(title, href));
+				myGuideTOC.push_back(std::pair<std::string,std::string>(title, reference));
 			}
 			static const std::string COVER_IMAGE = "other.ms-coverimage-standard";
 			if ((type != 0) && (COVER_IMAGE == type)) {
 				myModelReader.setMainTextModel();
-				myModelReader.addImageReference(href);
-				myModelReader.addImage(href, new ZLFileImage("image/auto", myFilePrefix + href, 0));
+				myModelReader.addImageReference(reference);
+				myModelReader.addImage(reference, new ZLFileImage("image/auto", myFilePrefix + reference, 0));
 			}
 		}
 	} else if ((myState == READ_TOUR) && (SITE == tagString)) {
 		const char *title = attributeValue(xmlattributes, "title");
 		const char *href = attributeValue(xmlattributes, "href");
 		if ((title != 0) && (href != 0)) {
-			myTourTOC.push_back(std::pair<std::string,std::string>(title, href));
+			myTourTOC.push_back(std::make_pair(title, MiscUtil::decodeHtmlURL(href)));
 		}
 	}
 }
