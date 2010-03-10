@@ -33,7 +33,7 @@
 class TagNode::EditOrCloneAction : public ZLRunnableWithKey {
 
 public:
-	EditOrCloneAction(TagNode &node);
+	EditOrCloneAction(shared_ptr<Tag> tag);
 
 private:
 	void run();
@@ -43,13 +43,13 @@ protected:
 	virtual std::string resourceKeyName() const = 0;
 
 protected:
-	TagNode &myTagNode;
+	const shared_ptr<Tag> myTag;
 };
 
 class TagNode::EditAction : public EditOrCloneAction {
 
 public:
-	EditAction(TagNode &node);
+	EditAction(shared_ptr<Tag> tag);
 
 private:
 	ZLResourceKey key() const;
@@ -60,7 +60,7 @@ private:
 class TagNode::CloneAction : public EditOrCloneAction {
 
 public:
-	CloneAction(TagNode &node);
+	CloneAction(shared_ptr<Tag> tag);
 
 private:
 	ZLResourceKey key() const;
@@ -135,8 +135,8 @@ TagNode::TagNode(ZLBlockTreeView::RootNode *parent, shared_ptr<Tag> tag) : FBRea
 void TagNode::init() {
 	registerExpandTreeAction();
 	if (!myTag.isNull()) {
-		registerAction(new EditAction(*this));
-		registerAction(new CloneAction(*this));
+		registerAction(new EditAction(myTag));
+		registerAction(new CloneAction(myTag));
 		registerAction(new RemoveAction(myTag));
 	}
 }
@@ -155,7 +155,7 @@ std::string TagNode::title() const {
 	return myTag->name();
 }
 
-TagNode::EditOrCloneAction::EditOrCloneAction(TagNode &node) : myTagNode(node) {
+TagNode::EditOrCloneAction::EditOrCloneAction(shared_ptr<Tag> tag) : myTag(tag) {
 }
 
 void TagNode::EditOrCloneAction::run() {
@@ -169,14 +169,13 @@ void TagNode::EditOrCloneAction::run() {
 			names.push_back((*it)->fullName());
 		}
 	}
-	NameEntry *tagNameEntry = new NameEntry(names, myTagNode.myTag->fullName());
+	NameEntry *tagNameEntry = new NameEntry(names, myTag->fullName());
 	dialog->addOption(ZLResourceKey("name"), tagNameEntry);
 
-	const ZLBlockTreeNode::List &children = myTagNode.children();
 	IncludeSubtagsEntry *includeSubtagsEntry = new IncludeSubtagsEntry();
-	if (!children.empty() &&
-			children.back()->isInstanceOf(TagNode::TYPE_ID)) {
-		if (!children.front()->isInstanceOf(BookNode::TYPE_ID)) {
+	const Library &library = Library::Instance();
+	if (library.hasSubtags(myTag)) {
+		if (!library.hasBooks(myTag)) {
 			includeSubtagsEntry->setActive(false);
 		}
 		dialog->addOption(ZLResourceKey("includeSubtags"), includeSubtagsEntry);
@@ -191,11 +190,11 @@ void TagNode::EditOrCloneAction::run() {
 	}
 }
 
-TagNode::EditAction::EditAction(TagNode &node) : EditOrCloneAction(node) {
+TagNode::EditAction::EditAction(shared_ptr<Tag> tag) : EditOrCloneAction(tag) {
 }
 
 void TagNode::EditAction::onAccept(const std::string &name, bool includeSubTags) {
-	Library::Instance().renameTag(myTagNode.myTag, Tag::getTagByFullName(name), includeSubTags);
+	Library::Instance().renameTag(myTag, Tag::getTagByFullName(name), includeSubTags);
 }
 
 ZLResourceKey TagNode::EditAction::key() const {
@@ -206,11 +205,11 @@ std::string TagNode::EditAction::resourceKeyName() const {
 	return "editTagDialog";
 }
 
-TagNode::CloneAction::CloneAction(TagNode &node) : EditOrCloneAction(node) {
+TagNode::CloneAction::CloneAction(shared_ptr<Tag> tag) : EditOrCloneAction(tag) {
 }
 
 void TagNode::CloneAction::onAccept(const std::string &name, bool includeSubTags) {
-	Library::Instance().cloneTag(myTagNode.myTag, Tag::getTagByFullName(name), includeSubTags);
+	Library::Instance().cloneTag(myTag, Tag::getTagByFullName(name), includeSubTags);
 }
 
 ZLResourceKey TagNode::CloneAction::key() const {
