@@ -18,6 +18,7 @@
  */
 
 #include <ZLResource.h>
+#include <ZLImage.h>
 
 #include "LibraryNodes.h"
 
@@ -50,6 +51,9 @@ size_t TagNode::positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag) {
 TagNode::TagNode(ZLBlockTreeView::RootNode *parent, shared_ptr<Tag> tag) : FBReaderNode(parent, positionToInsert(parent, tag)), myTag(tag) {
 }
 
+TagNode::TagNode(TagNode *parent, shared_ptr<Tag> tag) : FBReaderNode(parent, positionToInsert(parent, tag)), myTag(tag) {
+}
+
 void TagNode::init() {
 	registerExpandTreeAction();
 	if (!myTag.isNull()) {
@@ -57,9 +61,6 @@ void TagNode::init() {
 		registerAction(new TagCloneAction(myTag));
 		registerAction(new TagRemoveAction(myTag));
 	}
-}
-
-TagNode::TagNode(TagNode *parent, shared_ptr<Tag> tag) : FBReaderNode(parent, positionToInsert(parent, tag)), myTag(tag) {
 }
 
 shared_ptr<Tag> TagNode::tag() const {

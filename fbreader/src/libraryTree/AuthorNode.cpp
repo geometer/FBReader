@@ -18,6 +18,7 @@
  */
 
 #include <ZLResource.h>
+#include <ZLImage.h>
 #include <ZLOptionsDialog.h>
 
 #include "LibraryNodes.h"

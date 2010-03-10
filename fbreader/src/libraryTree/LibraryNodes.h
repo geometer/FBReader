@@ -20,9 +20,9 @@
 #ifndef __LIBRARYNODES_H__
 #define __LIBRARYNODES_H__
 
-#include <ZLImage.h>
-
 #include "../blockTree/FBReaderNode.h"
+
+class ZLImage;
 
 class Author;
 class Book;
