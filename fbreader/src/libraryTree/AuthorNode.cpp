@@ -21,7 +21,6 @@
 #include <ZLOptionsDialog.h>
 
 #include "LibraryNodes.h"
-#include "BooksUtil.h"
 
 #include "../library/Author.h"
 #include "../libraryActions/LibraryAuthorActions.h"

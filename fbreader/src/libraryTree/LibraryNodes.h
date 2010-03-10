@@ -69,15 +69,6 @@ private:
 
 class TagNode : public FBReaderNode {
 
-private:
-	class EditOrCloneAction;
-	class EditAction;
-	class CloneAction;
-	class RemoveAction;
-
-	class NameEntry;
-	class IncludeSubtagsEntry;
-
 public:
 	static const ZLTypeId TYPE_ID;
 
