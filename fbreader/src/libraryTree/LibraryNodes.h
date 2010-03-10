@@ -119,19 +119,16 @@ public:
 	shared_ptr<Book> book() const;
 
 private:
+	void init();
 	bool highlighted() const;
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
 	std::string summary() const;
-	void paint(ZLPaintContext &context, int vOffset);
 
 private:
 	shared_ptr<Book> myBook;
-	shared_ptr<ZLRunnableWithKey> myReadAction;
-	shared_ptr<ZLRunnableWithKey> myEditInfoAction;
-	shared_ptr<ZLRunnableWithKey> myRemoveAction;
 };
 
 #endif /* __LIBRARYNODES_H__ */

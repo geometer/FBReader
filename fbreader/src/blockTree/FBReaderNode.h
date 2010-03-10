@@ -65,7 +65,6 @@ private:
 
 protected:
 	void paint(ZLPaintContext &context, int vOffset);
-	shared_ptr<ZLRunnableWithKey> expandTreeAction();
 	void registerAction(shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
 	void registerExpandTreeAction();
 	virtual shared_ptr<ZLImage> extractCoverImage() const = 0;
@@ -84,7 +83,6 @@ protected:
 	int height(ZLPaintContext &context) const;
 
 private:
-	shared_ptr<ZLRunnableWithKey> myExpandTreeAction;
 	mutable bool myCoverImageIsStored;
 	mutable shared_ptr<ZLImage> myStoredCoverImage;
 	std::vector<std::pair<shared_ptr<ZLRunnableWithKey>,bool> > myActions;

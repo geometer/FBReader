@@ -41,7 +41,7 @@ public:
 	ZLResourceKey key() const;
 
 private:
-	shared_ptr<Book> myBook;
+	const shared_ptr<Book> myBook;
 };
 
 class BookNode::EditInfoAction : public ZLRunnableWithKey {
@@ -52,21 +52,23 @@ public:
 	ZLResourceKey key() const;
 
 private:
-	shared_ptr<Book> myBook;
+	const shared_ptr<Book> myBook;
 };
 
 class BookNode::RemoveAction : public ZLRunnableWithKey {
 
 public:
 	RemoveAction(shared_ptr<Book> book);
-	void run();
-	ZLResourceKey key() const;
 
 private:
+	void run();
+	ZLResourceKey key() const;
+	bool makesSense() const;
+
 	int removeBookDialog() const;
 
 private:
-	shared_ptr<Book> myBook;
+	const shared_ptr<Book> myBook;
 };
 
 const ZLTypeId BookNode::TYPE_ID(FBReaderNode::TYPE_ID);
@@ -86,6 +88,12 @@ BookNode::BookNode(SeriesNode *parent, shared_ptr<Book> book) : FBReaderNode(par
 }
 
 BookNode::BookNode(TagNode *parent, size_t atPosition, shared_ptr<Book> book) : FBReaderNode(parent, atPosition), myBook(book) {
+}
+
+void BookNode::init() {
+	registerAction(new ReadAction(myBook));
+	registerAction(new EditInfoAction(myBook));
+	registerAction(new RemoveAction(myBook));
 }
 
 shared_ptr<Book> BookNode::book() const {
@@ -132,6 +140,10 @@ void BookNode::RemoveAction::run() {
 
 ZLResourceKey BookNode::RemoveAction::key() const {
 	return ZLResourceKey("delete");
+}
+
+bool BookNode::RemoveAction::makesSense() const {
+	return Library::Instance().canRemove(myBook) != Library::REMOVE_DONT_REMOVE;
 }
 
 int BookNode::RemoveAction::removeBookDialog() const {
@@ -234,27 +246,6 @@ std::string BookNode::summary() const {
 
 bool BookNode::highlighted() const {
 	return myBook->filePath() == FBReader::Instance().currentBook()->filePath();
-}
-
-void BookNode::paint(ZLPaintContext &context, int vOffset) {
-	removeAllHyperlinks();
-
-	drawCover(context, vOffset);
-	drawTitle(context, vOffset);
-	drawSummary(context, vOffset);
-
-	if (myReadAction.isNull()) {
-		myReadAction = new ReadAction(myBook);
-		myEditInfoAction = new EditInfoAction(myBook);
-		Library::RemoveType type = Library::Instance().canRemove(myBook);
-		if (type != Library::REMOVE_DONT_REMOVE) {
-			myRemoveAction = new RemoveAction(myBook);
-		}
-	}
-	int left = 0;
-	drawHyperlink(context, left, vOffset, myReadAction);
-	drawHyperlink(context, left, vOffset, myEditInfoAction);
-	drawHyperlink(context, left, vOffset, myRemoveAction);
 }
 
 shared_ptr<ZLImage> BookNode::extractCoverImage() const {

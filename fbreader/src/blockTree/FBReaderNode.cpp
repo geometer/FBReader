@@ -193,13 +193,6 @@ void FBReaderNode::expandOrCollapseSubtree() {
 	}
 }
 
-shared_ptr<ZLRunnableWithKey> FBReaderNode::expandTreeAction() {
-	if (myExpandTreeAction.isNull()) {
-		myExpandTreeAction = new ExpandTreeAction(*this);
-	}
-	return myExpandTreeAction;
-}
-
 void FBReaderNode::registerAction(shared_ptr<ZLRunnableWithKey> action, bool auxiliary) {
 	if (!action.isNull()) {
 		myActions.push_back(std::make_pair(action, auxiliary));
