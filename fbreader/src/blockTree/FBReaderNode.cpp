@@ -200,9 +200,9 @@ shared_ptr<ZLRunnableWithKey> FBReaderNode::expandTreeAction() {
 	return myExpandTreeAction;
 }
 
-void FBReaderNode::registerAction(shared_ptr<ZLRunnableWithKey> action) {
+void FBReaderNode::registerAction(shared_ptr<ZLRunnableWithKey> action, bool auxiliary) {
 	if (!action.isNull()) {
-		myActions.push_back(action);
+		myActions.push_back(std::make_pair(action, auxiliary));
 	}
 }
 
@@ -221,14 +221,17 @@ shared_ptr<ZLImage> FBReaderNode::defaultCoverImage(const std::string &id) {
 	return cover;
 }
 
-bool FBReaderNode::hasAuxHyperlink() const {
-	return false;
-}
-
 int FBReaderNode::height(ZLPaintContext &context) const {
+	bool hasAuxHyperlink = false;
+	for (std::vector<std::pair<shared_ptr<ZLRunnableWithKey>,bool> >::const_iterator it = myActions.begin(); it != myActions.end(); ++it) {
+		if (it->second && it->first->makesSense()) {
+			hasAuxHyperlink = true;
+			break;
+		}
+	}
 	return
 		unitSize(context, FBTextStyle::Instance()) *
-			(hasAuxHyperlink() ? 13 : 11) / 2;
+			(hasAuxHyperlink ? 13 : 11) / 2;
 }
 
 int FBReaderNode::unitSize(ZLPaintContext &context, const FBTextStyle &style) const {
@@ -266,9 +269,14 @@ void FBReaderNode::paint(ZLPaintContext &context, int vOffset) {
 	drawSummary(context, vOffset);
 
 	int left = 0;
-	for (std::vector<shared_ptr<ZLRunnableWithKey> >::const_iterator it = myActions.begin(); it != myActions.end(); ++it) {
-		if ((*it)->makesSense()) {
-			drawHyperlink(context, left, vOffset, *it);
+	int auxLeft = 0;
+	for (std::vector<std::pair<shared_ptr<ZLRunnableWithKey>,bool> >::const_iterator it = myActions.begin(); it != myActions.end(); ++it) {
+		if (it->first->makesSense()) {
+			if (it->second) {
+				drawHyperlink(context, auxLeft, vOffset, it->first, true);
+			} else {
+				drawHyperlink(context, left, vOffset, it->first);
+			}
 		}
 	}
 }

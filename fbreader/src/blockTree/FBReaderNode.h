@@ -59,7 +59,6 @@ protected:
 	void drawTitle(ZLPaintContext &context, int vOffset);
 	void drawSummary(ZLPaintContext &context, int vOffset);
 	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
-	virtual bool hasAuxHyperlink() const;
 
 private:
 	int unitSize(ZLPaintContext &context, const FBTextStyle &style) const;
@@ -67,7 +66,7 @@ private:
 protected:
 	void paint(ZLPaintContext &context, int vOffset);
 	shared_ptr<ZLRunnableWithKey> expandTreeAction();
-	void registerAction(shared_ptr<ZLRunnableWithKey> action);
+	void registerAction(shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
 	void registerExpandTreeAction();
 	virtual shared_ptr<ZLImage> extractCoverImage() const = 0;
 
@@ -88,7 +87,7 @@ private:
 	shared_ptr<ZLRunnableWithKey> myExpandTreeAction;
 	mutable bool myCoverImageIsStored;
 	mutable shared_ptr<ZLImage> myStoredCoverImage;
-	std::vector<shared_ptr<ZLRunnableWithKey> > myActions;
+	std::vector<std::pair<shared_ptr<ZLRunnableWithKey>,bool> > myActions;
 	bool myIsInitialized;
 };
 

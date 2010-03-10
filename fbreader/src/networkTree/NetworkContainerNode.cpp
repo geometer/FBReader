@@ -32,6 +32,6 @@ NetworkContainerNode::NetworkContainerNode(ZLBlockTreeView::RootNode *parent, si
 NetworkContainerNode::NetworkContainerNode(NetworkContainerNode *parent, size_t atPosition) : FBReaderNode(parent, atPosition) {
 }
 
-void NetworkContainerNode::drawCover(ZLPaintContext &context, int vOffset) {
+void NetworkContainerNode::drawCover(ZLPaintContext&, int vOffset) {
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
 }

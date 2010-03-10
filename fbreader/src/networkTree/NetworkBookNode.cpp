@@ -41,7 +41,8 @@ NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<Networ
 
 void NetworkBookNode::init() {
 	const NetworkBookItem &book = this->book();
-	if (!book.reference(BookReference::DOWNLOAD).isNull()) {
+	if (!book.reference(BookReference::DOWNLOAD).isNull() ||
+			!book.reference(BookReference::DOWNLOAD_CONDITIONAL).isNull()) {
 		registerAction(new NetworkBookReadAction(book, false));
 		registerAction(new NetworkBookDownloadAction(book, false));
 		registerAction(new NetworkBookDeleteAction(book));
@@ -75,7 +76,7 @@ std::string NetworkBookNode::summary() const {
 	return authorsString;
 }
 
-void NetworkBookNode::drawCover(ZLPaintContext &context, int vOffset) {
+void NetworkBookNode::drawCover(ZLPaintContext&, int vOffset) {
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
 }
 

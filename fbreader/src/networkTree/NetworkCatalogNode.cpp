@@ -37,17 +37,6 @@
 #include "../network/authentication/NetworkAuthenticationManager.h"
 #include "../networkActions/NetworkOperationRunnable.h"
 
-class NetworkCatalogNode::ExpandCatalogAction : public ZLRunnableWithKey {
-
-public:
-	ExpandCatalogAction(NetworkCatalogNode &node);
-	ZLResourceKey key() const;
-	void run();
-
-private:
-	NetworkCatalogNode &myNode;
-};
-
 class NetworkCatalogNode::OpenInBrowserAction : public ZLRunnableWithKey {
 
 public:
@@ -57,18 +46,6 @@ public:
 
 private:
 	const std::string myURL;
-};
-
-class NetworkCatalogNode::ReloadAction : public ZLRunnableWithKey {
-
-public:
-	ReloadAction(NetworkCatalogNode &node);
-	ZLResourceKey key() const;
-	bool makesSense() const;
-	void run();
-
-private:
-	NetworkCatalogNode &myNode;
 };
 
 const ZLTypeId NetworkCatalogNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
@@ -83,25 +60,16 @@ NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<Ne
 	myItem(item) {
 }
 
-shared_ptr<ZLRunnableWithKey> NetworkCatalogNode::expandCatalogAction() {
-	if (myExpandCatalogAction.isNull()) {
-		myExpandCatalogAction = new ExpandCatalogAction(*this);
+void NetworkCatalogNode::init() {
+	if (!item().URLByType[NetworkItem::URL_CATALOG].empty()) {
+		registerAction(new ExpandCatalogAction(*this));
 	}
-	return myExpandCatalogAction;
-}
-
-shared_ptr<ZLRunnableWithKey> NetworkCatalogNode::openInBrowserAction() {
-	if (myOpenInBrowserAction.isNull()) {
-		myOpenInBrowserAction = new OpenInBrowserAction(item().URLByType[NetworkItem::URL_HTML_PAGE]);
+	const std::string htmlUrl =
+		item().URLByType[NetworkItem::URL_HTML_PAGE];
+	if (!htmlUrl.empty()) {
+		registerAction(new OpenInBrowserAction(htmlUrl));
 	}
-	return myOpenInBrowserAction;
-}
-
-shared_ptr<ZLRunnableWithKey> NetworkCatalogNode::reloadAction() {
-	if (myReloadAction.isNull()) {
-		myReloadAction = new ReloadAction(*this);
-	}
-	return myReloadAction;
+	registerAction(new ReloadAction(*this));
 }
 
 NetworkCatalogItem &NetworkCatalogNode::item() {
@@ -126,27 +94,6 @@ std::string NetworkCatalogNode::title() const {
 
 std::string NetworkCatalogNode::summary() const {
 	return ((const NetworkCatalogItem&)*myItem).Summary;
-}
-
-void NetworkCatalogNode::paint(ZLPaintContext &context, int vOffset) {
-	removeAllHyperlinks();
-
-	((NetworkView&)view()).drawCoverLater(this, vOffset);
-	drawTitle(context, vOffset);
-	drawSummary(context, vOffset);
-
-	paintHyperlinks(context, vOffset);
-}
-
-void NetworkCatalogNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
-	int left = 0;
-	if (!item().URLByType[NetworkItem::URL_CATALOG].empty()) {
-		drawHyperlink(context, left, vOffset, expandCatalogAction());
-	}
-	if (!item().URLByType[NetworkItem::URL_HTML_PAGE].empty()) {
-		drawHyperlink(context, left, vOffset, openInBrowserAction());
-	}
-	drawHyperlink(context, left, vOffset, reloadAction());
 }
 
 shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {

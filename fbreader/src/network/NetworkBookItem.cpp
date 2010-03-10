@@ -80,15 +80,7 @@ shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Type type) c
 		}
 	}
 
-	if (!reference.isNull() && type == BookReference::BUY) {
-		shared_ptr<NetworkAuthenticationManager> authManager =
-			Link.authenticationManager();
-		if (authManager.isNull() ||
-				authManager->isAuthorised().Status != B3_TRUE ||
-				!authManager->needPurchase(*this)) {
-			return 0;
-		}
-	} else if (reference.isNull() && type == BookReference::DOWNLOAD) {
+	if (reference.isNull() && type == BookReference::DOWNLOAD) {
 		reference = this->reference(BookReference::DOWNLOAD_CONDITIONAL);
 		if (!reference.isNull()) {
 			shared_ptr<NetworkAuthenticationManager> authManager =
@@ -134,37 +126,4 @@ void NetworkBookItem::removeLocalFiles() const {
 			}
 		}
 	}
-}
-
-shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Format format, BookReference::Type type) const {
-	shared_ptr<BookReference> reference;
-
-	for (std::vector<shared_ptr<BookReference> >::const_iterator it = myReferences.begin(); it != myReferences.end(); ++it) {
-		if ((*it)->BookFormat == format && (*it)->ReferenceType == type) {
-			reference = *it;
-			break;
-		}
-	}
-
-	if (!reference.isNull() && type == BookReference::BUY) {
-		shared_ptr<NetworkAuthenticationManager> authManager =
-			Link.authenticationManager();
-		if (authManager.isNull() ||
-				authManager->isAuthorised().Status != B3_TRUE ||
-				!authManager->needPurchase(*this)) {
-			return 0;
-		}
-	} else if (reference.isNull() && type == BookReference::DOWNLOAD) {
-		reference = this->reference(format, BookReference::DOWNLOAD_CONDITIONAL);
-		if (!reference.isNull()) {
-			shared_ptr<NetworkAuthenticationManager> authManager =
-				Link.authenticationManager();
-			if (authManager.isNull() || authManager->needPurchase(*this)) {
-				return 0;
-			}
-			reference = authManager->downloadReference(*this);
-		}
-	}
-
-	return reference;
 }

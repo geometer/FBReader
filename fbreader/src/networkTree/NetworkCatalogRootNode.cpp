@@ -113,21 +113,26 @@ public:
 const ZLTypeId NetworkCatalogRootNode::TYPE_ID(NetworkCatalogNode::TYPE_ID);
 
 NetworkCatalogRootNode::NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition) : NetworkCatalogNode(parent, link.libraryItem(), atPosition), myLink(link) {
+}
+
+void NetworkCatalogRootNode::init() {
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
+	registerAction(new ExpandCatalogAction(*this));
+	registerAction(new ReloadAction(*this));
 	if (!mgr.isNull()) {
-		myLoginAction = new LoginAction(*mgr);
-		myLogoutAction = new LogoutAction(*mgr);
+		registerAction(new LoginAction(*mgr));
+		registerAction(new LogoutAction(*mgr));
 		if (!mgr->refillAccountLink().empty()) {
-			myRefillAccountAction = new RefillAccountAction(*mgr);
+			registerAction(new RefillAccountAction(*mgr));
 		}
 		if (mgr->registrationSupported()) {
-			myRegisterUserAction = new RegisterUserAction(*mgr);
+			registerAction(new RegisterUserAction(*mgr), true);
 		}
 		if (mgr->passwordRecoverySupported()) {
-			myPasswordRecoveryAction = new PasswordRecoveryAction(*mgr);
+			registerAction(new PasswordRecoveryAction(*mgr), true);
 		}
 	}
-	myDontShowAction = new DontShowAction(myLink);
+	registerAction(new DontShowAction(myLink));
 }
 
 const ZLTypeId &NetworkCatalogRootNode::typeId() const {
@@ -140,27 +145,6 @@ const ZLResource &NetworkCatalogRootNode::resource() const {
 
 const NetworkLink &NetworkCatalogRootNode::link() const {
 	return myLink;
-}
-
-bool NetworkCatalogRootNode::hasAuxHyperlink() const {
-	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
-	if (mgr.isNull() || mgr->isAuthorised(false).Status != B3_FALSE) {
-		return false;
-	}
-	return !myRegisterUserAction.isNull() || !myPasswordRecoveryAction.isNull();
-}
-
-void NetworkCatalogRootNode::paintHyperlinks(ZLPaintContext &context, int vOffset) {
-	int left = 0;
-	int auxleft = 0;
-	drawHyperlink(context, left, vOffset, expandCatalogAction());
-	drawHyperlink(context, left, vOffset, reloadAction());
-	drawHyperlink(context, left, vOffset, myLoginAction);
-	drawHyperlink(context, auxleft, vOffset, myRegisterUserAction, true);
-	drawHyperlink(context, auxleft, vOffset, myPasswordRecoveryAction, true);
-	drawHyperlink(context, left, vOffset, myLogoutAction);
-	drawHyperlink(context, left, vOffset, myRefillAccountAction);
-	drawHyperlink(context, left, vOffset, myDontShowAction);
 }
 
 shared_ptr<ZLImage> NetworkCatalogRootNode::lastResortCoverImage() const {
