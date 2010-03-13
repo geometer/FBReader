@@ -274,41 +274,36 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 		const std::string &href = link.href();
 		const std::string &rel = link.rel();
 		const std::string &type = link.type();
-		if (rel == OPDSConstants::REL_COVER ||
-				rel == OPDSConstants::REL_STANZA_COVER) {
-			if (coverURL.empty() &&
-					(type == OPDSConstants::MIME_IMG_PNG ||
-					 type == OPDSConstants::MIME_IMG_JPEG)) {
+		if (type == OPDSConstants::MIME_IMG_PNG ||
+				type == OPDSConstants::MIME_IMG_JPEG) {
+			if (rel == OPDSConstants::REL_THUMBNAIL ||
+					rel == OPDSConstants::REL_STANZA_THUMBNAIL ||
+					(coverURL.empty() &&
+					 (rel == OPDSConstants::REL_COVER ||
+						rel == OPDSConstants::REL_STANZA_COVER))) {
 				coverURL = href;
 			}
-		} else if (rel == OPDSConstants::REL_THUMBNAIL ||
-							 rel == OPDSConstants::REL_STANZA_THUMBNAIL) {
-			if (type == OPDSConstants::MIME_IMG_PNG ||
-					type == OPDSConstants::MIME_IMG_JPEG) {
-				coverURL = href;
-			}
-		} else if (rel == OPDSConstants::REL_ACQUISITION ||
-							 rel == OPDSConstants::REL_ALTERNATE ||
-							 rel == OPDSConstants::REL_CATALOG_AUTHOR ||
-							 rel.empty()) {
-			if (type == OPDSConstants::MIME_APP_ATOM) {
-				if (rel == OPDSConstants::REL_ALTERNATE) {
-					if (url.empty()) {
-						url = href;
-						urlIsAlternate = true;
-					}
-				} else {
+		} else if (type == OPDSConstants::MIME_APP_ATOM) {
+			if (rel == OPDSConstants::REL_ALTERNATE) {
+				if (url.empty()) {
 					url = href;
-					urlIsAlternate = false;
-					if (rel == OPDSConstants::REL_CATALOG_AUTHOR) {
-						catalogType = NetworkCatalogItem::BY_AUTHORS;
-					}
+					urlIsAlternate = true;
 				}
-			} else if (type == OPDSConstants::MIME_TEXT_HTML) {
+			} else {
+				url = href;
+				urlIsAlternate = false;
+				if (rel == OPDSConstants::REL_CATALOG_AUTHOR) {
+					catalogType = NetworkCatalogItem::BY_AUTHORS;
+				}
+			}
+		} else if (type == OPDSConstants::MIME_TEXT_HTML) {
+			if (rel == OPDSConstants::REL_ACQUISITION ||
+					rel == OPDSConstants::REL_ALTERNATE ||
+					rel.empty()) {
 				htmlURL = href;
 			}
-		} else if (rel == OPDSConstants::REL_BOOKSHELF) {
-			if (type == OPDSConstants::MIME_APP_LITRES) {
+		} else if (type == OPDSConstants::MIME_APP_LITRES) {
+			if (rel == OPDSConstants::REL_BOOKSHELF) {
 				litresCatalogue = true;
 				url = href;
 			}
