@@ -30,6 +30,7 @@
 #include "LitResAuthorsParser.h"
 #include "LitResGenre.h"
 #include "LitResUtil.h"
+#include "LitResBookshelfItem.h"
 
 #include "../NetworkOperationData.h"
 #include "../NetworkItems.h"
@@ -138,19 +139,6 @@ private:
 	const CatalogType myCatalogType;
 };
 
-class LitResMyCatalogItem : public NetworkCatalogItem {
-
-public:
-	LitResMyCatalogItem(const LitResLink &link);
-
-private:
-	void onDisplayItem();
-	std::string loadChildren(NetworkItem::List &children);
-
-private:
-	bool myForceReload;
-};
-
 class LitResByAuthorsCatalogItem : public NetworkCatalogItem {
 
 public:
@@ -223,7 +211,15 @@ std::string LitResRootCatalogItem::loadChildren(NetworkItem::List &children) {
 		"Просмотр книг по жанрам",
 		LitResGenreMap::Instance().genresTree()
 	));
-	children.push_back(new LitResMyCatalogItem(link));
+	std::map<URLType,std::string> urlMap;
+	urlMap[URL_CATALOG] = "none";
+	children.push_back(new LitResBookshelfItem(
+		link,
+		"Мои книги",
+		"Купленные книги",
+		urlMap,
+		NetworkCatalogItem::LoggedUsers
+	));
 
 	return "";
 }
@@ -258,38 +254,6 @@ std::string LitResCatalogItem::loadChildren(NetworkItem::List &children) {
 
 NetworkCatalogItem::CatalogType LitResCatalogItem::catalogType() const {
 	return myCatalogType;
-}
-
-
-LitResMyCatalogItem::LitResMyCatalogItem(const LitResLink &link) : NetworkCatalogItem(
-	link,
-	"Мои книги",
-	"Купленные книги",
-	std::map<URLType,std::string>(),
-	LoggedUsers
-) {
-	myForceReload = false;
-	URLByType[URL_CATALOG] = "none";
-}
-
-void LitResMyCatalogItem::onDisplayItem() {
-	myForceReload = false;
-}
-
-std::string LitResMyCatalogItem::loadChildren(NetworkItem::List &children) {
-	LitResAuthenticationManager &mgr =
-		(LitResAuthenticationManager&)*Link.authenticationManager();
-	if (mgr.isAuthorised().Status == B3_FALSE) {
-		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
-	}
-	std::string error;
-	if (myForceReload) {
-		error = mgr.reloadPurchasedBooks();
-	}
-	myForceReload = true;
-	mgr.collectPurchasedBooks(children);
-	std::sort(children.begin(), children.end(), NetworkBookItemComparator());
-	return error;
 }
 
 LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(const LitResLink &link) : NetworkCatalogItem(

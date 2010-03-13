@@ -30,6 +30,7 @@
 #include "../NetworkOperationData.h"
 #include "../NetworkItems.h"
 #include "../BookReference.h"
+#include "../litres/LitResBookshelfItem.h"
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	const std::string &baseURL,
@@ -266,6 +267,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	std::string url;
 	bool urlIsAlternate = false;
 	std::string htmlURL;
+	bool litresCatalogue = false;
 	for (size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
 		const std::string &href = link.href();
@@ -300,6 +302,11 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 			} else if (type == OPDSConstants::MIME_TEXT_HTML) {
 				htmlURL = href;
 			}
+		} else if (rel == OPDSConstants::REL_BOOKSHELF) {
+			if (type == OPDSConstants::MIME_APP_LITRES) {
+				litresCatalogue = true;
+				url = href;
+			}
 		}
 	}
 
@@ -324,11 +331,21 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	urlMap[NetworkItem::URL_COVER] = coverURL;
 	urlMap[NetworkItem::URL_CATALOG] = ZLNetworkUtil::url(myBaseURL, url);
 	urlMap[NetworkItem::URL_HTML_PAGE] = ZLNetworkUtil::url(myBaseURL, htmlURL);
-	return new OPDSCatalogItem(
-		(OPDSLink&)myData.Link,
-		entry.title(),
-		annotation,
-		urlMap,
-		dependsOnAccount ? OPDSCatalogItem::LoggedUsers : OPDSCatalogItem::Always
-	);
+	if (litresCatalogue) {
+		return new LitResBookshelfItem(
+			(OPDSLink&)myData.Link,
+			entry.title(),
+			annotation,
+			urlMap,
+			dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
+		);
+	} else {
+		return new OPDSCatalogItem(
+			(OPDSLink&)myData.Link,
+			entry.title(),
+			annotation,
+			urlMap,
+			dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
+		);
+	}
 }
