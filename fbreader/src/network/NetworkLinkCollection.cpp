@@ -38,7 +38,6 @@
 #include "NetworkBookCollection.h"
 #include "BookReference.h"
 
-#include "litres/LitResLink.h"
 #include "opds/OPDSLinkReader.h"
 #include "opds/URLRewritingRule.h"
 
@@ -88,7 +87,6 @@ bool NetworkLinkCollection::Comparator::operator() (
 
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
-	myLinks.push_back(new LitResLink());
 
 	shared_ptr<ZLDir> dir = ZLFile(NetworkLink::NetworkDataDirectory()).directory();
 	if (!dir.isNull()) {

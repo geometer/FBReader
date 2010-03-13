@@ -23,8 +23,8 @@
 
 #include "LitResBookshelfItem.h"
 #include "LitResAuthenticationManager.h"
-#include "LitResLink.h"
 
+#include "../NetworkLink.h"
 #include "../NetworkComparators.h"
 #include "../NetworkErrors.h"
 
