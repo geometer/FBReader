@@ -22,6 +22,7 @@
 
 const std::string OPDSConstants::REL_BOOKSHELF     = "http://opds-spec.org/bookshelf";
 const std::string OPDSConstants::REL_SUBSCRIPTIONS = "http://opds-spec.org/subscriptions";
+const std::string OPDSConstants::REL_CATALOG_AUTHOR = "http://opds-spec.org/catalog/author";
 const std::string OPDSConstants::REL_ACQUISITION   = "http://opds-spec.org/acquisition";
 const std::string OPDSConstants::REL_ACQUISITION_BUY        = "http://opds-spec.org/acquisition/buy";
 const std::string OPDSConstants::REL_ACQUISITION_BORROW     = "http://opds-spec.org/acquisition/borrow";

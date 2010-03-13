@@ -37,7 +37,6 @@ public:
 	static const std::string OpenSearch;
 	static const std::string CalibreMetadata;
 	static const std::string Opds;
-	static const std::string FBReaderCatalog;
 };
 
 #endif /* __XMLNAMESPACE_H__ */

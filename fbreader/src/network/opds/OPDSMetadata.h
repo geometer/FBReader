@@ -35,6 +35,9 @@ public:
 	static const std::string REL_BOOKSHELF;
 	static const std::string REL_SUBSCRIPTIONS;
 
+	// Entry level / catalog types
+	static const std::string REL_CATALOG_AUTHOR;
+
 	// Entry level / acquisition links
 	static const std::string REL_ACQUISITION;
 	static const std::string REL_ACQUISITION_BUY;
@@ -96,14 +99,12 @@ public:
 	shared_ptr<DCDate> dcIssued() { return myDCIssued; }
 	const std::string &seriesTitle() const { return mySeriesTitle; }
 	int seriesIndex() const { return mySeriesIndex; }
-	const std::string &catalogType() const { return myCatalogType; }
 
 	void setDCLanguage(const std::string &language) { myDCLanguage = language; }
 	void setDCPublisher(const std::string &publisher) { myDCPublisher = publisher; }
 	void setDCIssued(shared_ptr<DCDate> issued) { myDCIssued = issued; }
 	void setSeriesTitle(const std::string &seriesTitle) { mySeriesTitle = seriesTitle; }
 	void setSeriesIndex(int seriesIndex) { mySeriesIndex = seriesIndex; }
-	void setCatalogType(const std::string &catalogType) { myCatalogType = catalogType; }
 
 private:
 	std::string myDCLanguage;
@@ -112,7 +113,6 @@ private:
 
 	std::string mySeriesTitle;
 	int mySeriesIndex;
-	std::string myCatalogType;
 };
 
 
