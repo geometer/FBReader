@@ -40,10 +40,6 @@ LitResBookshelfItem::LitResBookshelfItem(
 	summary,
 	urlByType,
 	visibility
-	//"Мои книги",
-	//"Купленные книги",
-	//std::map<URLType,std::string>(),
-	//LoggedUsers
 ) {
 	myForceReload = false;
 }
