@@ -64,6 +64,7 @@ private:
 	std::string myOpenSearchNamespaceId;
 	std::string myCalibreNamespaceId;
 	std::string myOpdsNamespaceId;
+	std::string myFBReaderCatalogNamespaceId;
 
 	State myState;
 

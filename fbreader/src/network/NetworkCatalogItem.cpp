@@ -26,10 +26,13 @@ NetworkCatalogItem::NetworkCatalogItem(
 	const std::string &title,
 	const std::string &summary,
 	const std::map<URLType,std::string> &urlByType,
-	VisibilityType visibility
+	VisibilityType visibility,
+	CatalogType catalogType
 ) :
 	NetworkItem(link, title, summary, urlByType),
-	Visibility(visibility) {
+	Visibility(visibility),
+	Type(catalogType)
+	{
 }
 
 const ZLTypeId &NetworkCatalogItem::typeId() const {
@@ -37,8 +40,4 @@ const ZLTypeId &NetworkCatalogItem::typeId() const {
 }
 
 void NetworkCatalogItem::onDisplayItem() {
-}
-
-NetworkCatalogItem::CatalogType NetworkCatalogItem::catalogType() const {
-	return OTHER;
 }

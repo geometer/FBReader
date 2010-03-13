@@ -28,3 +28,4 @@ const std::string XMLNamespace::Atom = "http://www.w3.org/2005/Atom";
 const std::string XMLNamespace::OpenSearch = "http://a9.com/-/spec/opensearch/1.1/";
 const std::string XMLNamespace::CalibreMetadata = "http://calibre.kovidgoyal.net/2009/metadata";
 const std::string XMLNamespace::Opds = "http://opds-spec.org/2010/catalog";
+const std::string XMLNamespace::FBReaderCatalog = "http://data.fbreader.org/catalogs";

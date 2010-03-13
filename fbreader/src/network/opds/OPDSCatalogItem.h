@@ -32,7 +32,8 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility = Always
+		VisibilityType visibility = Always,
+		CatalogType catalogType = OTHER
 	);
 
 private:

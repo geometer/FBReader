@@ -69,6 +69,7 @@ void OPDSXMLParser::namespaceListChangedHandler() {
 	myOpenSearchNamespaceId.erase();
 	myCalibreNamespaceId.erase();
 	myOpdsNamespaceId.erase();
+	myFBReaderCatalogNamespaceId.erase();
 
 	const std::map<std::string,std::string> &nsMap = namespaces();
 	for (std::map<std::string,std::string>::const_iterator it = nsMap.begin(); it != nsMap.end(); ++it) {
@@ -85,6 +86,8 @@ void OPDSXMLParser::namespaceListChangedHandler() {
 			myCalibreNamespaceId = it->first;
 		} else if (it->second == XMLNamespace::Opds) {
 			myOpdsNamespaceId = it->first;
+		} else if (it->second == XMLNamespace::FBReaderCatalog) {
+			myFBReaderCatalogNamespaceId = it->first;
 		}
 	}
 }
@@ -200,10 +203,14 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 					myUpdated->readAttributes(attributeMap);
 					myState = FE_UPDATED;
 				} else if (tagName == TAG_META) {
-					if (attributeMap["name"] == myCalibreNamespaceId + ":series") {
-						myEntry->setSeriesTitle(attributeMap["value"]);
-					} else if (attributeMap["name"] == myCalibreNamespaceId + ":series_index") {
-						myEntry->setSeriesIndex(atoi(attributeMap["value"].c_str()));
+					const std::string &name = attributeMap["name"];
+					const std::string &value = attributeMap["value"];
+					if (name == myCalibreNamespaceId + ":series") {
+						myEntry->setSeriesTitle(value);
+					} else if (name == myCalibreNamespaceId + ":series_index") {
+						myEntry->setSeriesIndex(atoi(value.c_str()));
+					} else if (name == myFBReaderCatalogNamespaceId + ":catalog-type") {
+						myEntry->setCatalogType(value);
 					}
 				}
 			} else if (tagPrefix == myDublinCoreNamespaceId) {

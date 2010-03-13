@@ -29,7 +29,7 @@ FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent,
 		ptr->item().onDisplayItem();
 		return ptr;
 	} else if (item->isInstanceOf(NetworkBookItem::TYPE_ID)) {
-		return new NetworkBookNode(parent, item);
+		return new NetworkBookNode(parent, item, NetworkBookNode::AUTHORS);
 	}
 	return 0;
 }
@@ -47,11 +47,13 @@ void NetworkNodesFactory::createSubnodes(SearchResultNode *parent, NetworkBookCo
 void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const NetworkItem::List &books) {
 	NetworkSeriesNode *seriesNode = 0;
 
-	NetworkSeriesNode::SummaryType summaryType = NetworkSeriesNode::AUTHORS;
+	NetworkSeriesNode::SummaryType seriesSummaryType = NetworkSeriesNode::AUTHORS;
+	NetworkBookNode::SummaryType booksSummaryType = NetworkBookNode::AUTHORS;
 	if ((parent->isInstanceOf(NetworkCatalogNode::TYPE_ID) &&
-			((NetworkCatalogNode*)parent)->item().catalogType() == NetworkCatalogItem::BY_AUTHORS) ||
+			((NetworkCatalogNode*)parent)->item().Type == NetworkCatalogItem::BY_AUTHORS) ||
 			 parent->isInstanceOf(NetworkAuthorNode::TYPE_ID)) {
-		summaryType = NetworkSeriesNode::BOOKS;
+		seriesSummaryType = NetworkSeriesNode::BOOKS;
+		booksSummaryType = NetworkBookNode::NONE;
 	}
 
 	for (NetworkItem::List::const_iterator it = books.begin(); it != books.end(); ++it) {
@@ -78,12 +80,12 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 
 		if (seriesTitle.empty()) {
 			seriesNode = 0;
-			new NetworkBookNode(parent, *it);
+			new NetworkBookNode(parent, *it, booksSummaryType);
 		} else {
 			if (seriesNode == 0 || seriesNode->title() != seriesTitle) {
-				seriesNode = new NetworkSeriesNode(parent, seriesTitle, summaryType);
+				seriesNode = new NetworkSeriesNode(parent, seriesTitle, seriesSummaryType);
 			}
-			new NetworkBookNode(seriesNode, *it);
+			new NetworkBookNode(seriesNode, *it, booksSummaryType);
 		}
 	}	
 }

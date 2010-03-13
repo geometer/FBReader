@@ -78,15 +78,15 @@ class NetworkCatalogItem : public NetworkItem {
 public:
 	static const ZLTypeId TYPE_ID;
 
-	enum CatalogType {
-		OTHER,
-		BY_AUTHORS,
-	};
-
 	enum VisibilityType {
 		Always,
 		Never,
 		LoggedUsers
+	};
+
+	enum CatalogType {
+		OTHER,
+		BY_AUTHORS,
 	};
 
 public:
@@ -95,7 +95,8 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility = Always
+		VisibilityType visibility = Always,
+		CatalogType type = OTHER
 	);
 
 	const ZLTypeId &typeId() const;
@@ -105,10 +106,9 @@ public:
 	// returns error message
 	virtual std::string loadChildren(List &children) = 0;
 
-	virtual CatalogType catalogType() const;
-
 public:
 	const VisibilityType Visibility;
+	const CatalogType Type;
 };
 
 class NetworkBookItem : public NetworkItem {

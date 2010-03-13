@@ -132,11 +132,9 @@ public:
 
 private:
 	std::string loadChildren(NetworkItem::List &children);
-	CatalogType catalogType() const;
 
 private:
 	const bool mySortItems;
-	const CatalogType myCatalogType;
 };
 
 class LitResByAuthorsCatalogItem : public NetworkCatalogItem {
@@ -231,7 +229,7 @@ LitResCatalogItem::LitResCatalogItem(
 	const std::string &summary,
 	bool sortItems,
 	CatalogType catalogType
-) : NetworkCatalogItem(link, title, summary, std::map<URLType,std::string>()), mySortItems(sortItems), myCatalogType(catalogType) {
+) : NetworkCatalogItem(link, title, summary, std::map<URLType,std::string>(), Always, catalogType), mySortItems(sortItems) {
 	URLByType[URL_CATALOG] = url;
 }
 
@@ -250,10 +248,6 @@ std::string LitResCatalogItem::loadChildren(NetworkItem::List &children) {
 	}
 
 	return error;
-}
-
-NetworkCatalogItem::CatalogType LitResCatalogItem::catalogType() const {
-	return myCatalogType;
 }
 
 LitResByAuthorsCatalogItem::LitResByAuthorsCatalogItem(const LitResLink &link) : NetworkCatalogItem(

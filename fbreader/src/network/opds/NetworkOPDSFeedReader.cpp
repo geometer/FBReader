@@ -345,7 +345,8 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 			entry.title(),
 			annotation,
 			urlMap,
-			dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
+			dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always,
+			entry.catalogType() == "author" ? NetworkCatalogItem::BY_AUTHORS : NetworkCatalogItem::OTHER
 		);
 	}
 }

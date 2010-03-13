@@ -207,8 +207,10 @@ class NetworkBookNode : public FBReaderNode {
 public:
 	static const ZLTypeId TYPE_ID;
 
+	enum SummaryType { AUTHORS, NONE };
+
 private:
-	NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book);
+	NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book, SummaryType summaryType);
 	void init();
 
 friend class NetworkNodesFactory;
@@ -226,6 +228,7 @@ private:
 
 private:
 	shared_ptr<NetworkItem> myBook;
+	SummaryType mySummaryType;
 };
 
 #endif /* __NETWORKNODES_H__ */

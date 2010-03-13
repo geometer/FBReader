@@ -36,7 +36,7 @@ const ZLResource &NetworkBookNode::resource() const {
 	return ZLResource::resource("networkView")["bookNode"];
 }
 
-NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book) : FBReaderNode(parent), myBook(book) {
+NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book, SummaryType summaryType) : FBReaderNode(parent), myBook(book), mySummaryType(summaryType) {
 }
 
 void NetworkBookNode::init() {
@@ -61,6 +61,7 @@ std::string NetworkBookNode::title() const {
 }
 
 std::string NetworkBookNode::summary() const {
+	int count = 0;
 	std::string authorsString;
 	const std::vector<NetworkBookItem::AuthorData> authors = book().Authors;
 	for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
@@ -68,9 +69,9 @@ std::string NetworkBookNode::summary() const {
 			authorsString += ", ";
 		}
 		authorsString += it->DisplayName;
+		++count;
 	}
-	FBReaderNode *parent = (FBReaderNode*)this->parent();
-	if (parent->title() == authorsString) {
+	if (mySummaryType == NONE && count == 1) {
 		return std::string();
 	}
 	return authorsString;
