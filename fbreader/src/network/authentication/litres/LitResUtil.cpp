@@ -17,30 +17,25 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LITRESBOOKSHELFITEM_H__
-#define __LITRESBOOKSHELFITEM_H__
+#include <ZLNetworkUtil.h>
 
-#include "../NetworkItems.h"
+#include "LitResUtil.h"
 
-class NetworkLink;
+#include "../../NetworkLink.h"
 
-class LitResBookshelfItem : public NetworkCatalogItem {
+std::string LitResUtil::url(const std::string &path) {
+	std::string url = "://robot.litres.ru/" + path;
+	if (ZLNetworkUtil::hasParameter(url, "sid") ||
+			ZLNetworkUtil::hasParameter(url, "pwd")) {
+		url = "https" + url;
+	} else {
+		url = "http" + url;
+	}
+	return url;
+}
 
-public:
-	LitResBookshelfItem(
-		const NetworkLink &link,
-		const std::string &title,
-		const std::string &summary,
-		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility = Always
-	);
-
-private:
-	void onDisplayItem();
-	std::string loadChildren(NetworkItem::List &children);
-
-private:
-	bool myForceReload;
-};
-
-#endif /* __LITRESBOOKSHELFITEM_H__ */
+std::string LitResUtil::url(const NetworkLink &link, const std::string &path) {
+	std::string urlString = url(path);
+	link.rewriteUrl(urlString);
+	return urlString;
+}

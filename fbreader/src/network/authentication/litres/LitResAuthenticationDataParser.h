@@ -22,7 +22,7 @@
 
 #include <ZLXMLReader.h>
 
-#include "../NetworkErrors.h"
+#include "../../NetworkErrors.h"
 
 
 class LitResAuthenticationDataParser : public ZLXMLReader {

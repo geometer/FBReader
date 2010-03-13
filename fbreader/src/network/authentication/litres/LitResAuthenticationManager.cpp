@@ -25,10 +25,9 @@
 #include "LitResAuthenticationDataParser.h"
 #include "LitResUtil.h"
 
-#include "../NetworkErrors.h"
-#include "../NetworkItems.h"
-#include "../NetworkLink.h"
-#include "../NetworkLinkCollection.h"
+#include "../../NetworkErrors.h"
+#include "../../NetworkLink.h"
+#include "../../NetworkLinkCollection.h"
 
 LitResAuthenticationManager::LitResAuthenticationManager(const NetworkLink &link) :
 	NetworkAuthenticationManager(link), 

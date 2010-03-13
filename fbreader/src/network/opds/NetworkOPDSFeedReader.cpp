@@ -30,7 +30,7 @@
 #include "../NetworkOperationData.h"
 #include "../NetworkItems.h"
 #include "../BookReference.h"
-#include "../litres/LitResBookshelfItem.h"
+#include "../authentication/litres/LitResBookshelfItem.h"
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	const std::string &baseURL,

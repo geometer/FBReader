@@ -25,7 +25,7 @@
 
 #include <ZLXMLReader.h>
 
-#include "../NetworkItems.h"
+#include "../../NetworkItems.h"
 
 class NetworkLink;
 class LitResGenre;

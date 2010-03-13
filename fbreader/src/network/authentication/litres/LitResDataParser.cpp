@@ -23,7 +23,7 @@
 
 #include "LitResDataParser.h"
 #include "LitResGenre.h"
-#include "../NetworkLink.h"
+#include "../../NetworkLink.h"
 
 static const std::string TAG_CATALOG = "catalit-fb2-books";
 static const std::string TAG_BOOK = "fb2-book";
@@ -47,20 +47,6 @@ std::string LitResDataParser::stringAttributeValue(const char **attributes, cons
 	}
 	const char *value = attributeValue(attributes, name);
 	return value != 0 ? value : std::string();
-}
-
-std::string LitResDataParser::makeDemoUrl(const std::string &bookId) const {
-	std::string id;
-	if (bookId.length() < 8) {
-		id.assign(8 - bookId.length(), '0');
-	}
-	id.append(bookId);
-	std::string url = "http://robot.litres.ru/static/trials/";
-	url.append(id, 0, 2).append("/");
-	url.append(id, 2, 2).append("/");
-	url.append(id, 4, 2).append("/");
-	url.append(id).append(".fb2.zip");
-	return url;
 }
 
 LitResDataParser::LitResDataParser(const NetworkLink &link, NetworkItem::List &books) : 
@@ -103,22 +89,6 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				myURLByType[NetworkItem::URL_HTML_PAGE] = url;
 			}
 
-			const std::string hasTrial = stringAttributeValue(attributes, "has_trial");
-			if (hasTrial == "1") {
-				myReferences.push_back(new BookReference(
-					makeDemoUrl(myBookId),
-					BookReference::FB2_ZIP,
-					BookReference::DOWNLOAD_DEMO
-				));
-			}
-			const char *price = attributeValue(attributes, "price");
-			if (price != 0) {
-				myReferences.push_back(new BuyBookReference(
-					"https://robot.litres.ru/pages/purchase_book/?lfrom=51&art=" + myBookId,
-					BookReference::FB2_ZIP,
-					BookReference::price(price, "RUB")
-				));
-			}
 			myReferences.push_back(new BookReference(
 				"https://robot.litres.ru/pages/catalit_download_book/?art=" + myBookId,
 				BookReference::FB2_ZIP,

@@ -24,8 +24,8 @@
 
 #include <ZLNetworkSSLCertificate.h>
 
-#include "../authentication/NetworkAuthenticationManager.h"
-#include "../NetworkItems.h"
+#include "../NetworkAuthenticationManager.h"
+#include "../../NetworkItems.h"
 
 class LitResAuthenticationManager : public NetworkAuthenticationManager {
 

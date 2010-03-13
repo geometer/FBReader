@@ -24,9 +24,9 @@
 #include "LitResBookshelfItem.h"
 #include "LitResAuthenticationManager.h"
 
-#include "../NetworkLink.h"
-#include "../NetworkComparators.h"
-#include "../NetworkErrors.h"
+#include "../../NetworkLink.h"
+#include "../../NetworkComparators.h"
+#include "../../NetworkErrors.h"
 
 LitResBookshelfItem::LitResBookshelfItem(
 	const NetworkLink &link,

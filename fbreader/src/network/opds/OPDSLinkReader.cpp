@@ -20,7 +20,7 @@
 #include "OPDSLinkReader.h"
 #include "OPDSLink.h"
 #include "../authentication/basic/BasicAuthenticationManager.h"
-#include "../litres/LitResAuthenticationManager.h"
+#include "../authentication/litres/LitResAuthenticationManager.h"
 
 #include "URLRewritingRule.h"
 
