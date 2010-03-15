@@ -24,6 +24,8 @@
 #include <ZLNetworkManager.h>
 
 #include "OPDSLink.h"
+#include "OPDSLink_Reader.h"
+#include "OPDSLink_AdvancedSearch.h"
 #include "OPDSCatalogItem.h"
 #include "OPDSXMLParser.h"
 #include "NetworkOPDSFeedReader.h"
@@ -32,35 +34,6 @@
 #include "../authentication/NetworkAuthenticationManager.h"
 
 #include "URLRewritingRule.h"
-
-class OPDSLink::AdvancedSearch {
-
-public:
-	AdvancedSearch(
-		const std::string &type,
-		const std::string &titleParameter,
-		const std::string &authorParameter,
-		const std::string &tagParameter,
-		const std::string &annotationParameter
-	);
-
-	std::string query(
-		const std::string &titleOrSeries,
-		const std::string &author,
-		const std::string &tag,
-		const std::string &annotation
-	) const;
-
-private:
-	void addSubQuery(std::string &query, const std::string &name, const std::string &value) const;
-
-private:
-	const std::string myType;
-	const std::string myTitleParameter;
-	const std::string myAuthorParameter;
-	const std::string myTagParameter;
-	const std::string myAnnotationParameter;
-};
 
 OPDSLink::AdvancedSearch::AdvancedSearch(
 	const std::string &type,
@@ -122,6 +95,12 @@ std::string OPDSLink::AdvancedSearch::query(
 	return query;
 }
 
+shared_ptr<NetworkLink> OPDSLink::read(const std::string &path) {
+	Reader reader;
+	reader.readDocument(path);
+	return reader.link();
+}
+
 shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, NetworkOperationData &result) const {
 	if (url.empty()) {
 		return 0;
@@ -130,7 +109,7 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 	rewriteUrl(modifiedUrl);
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		modifiedUrl,
-		new OPDSXMLParser(new NetworkOPDSFeedReader(url, result, myUrlConditions))
+		new OPDSXMLParser(new NetworkOPDSFeedReader(*this, url, result))
 	);
 }
 
@@ -145,29 +124,6 @@ OPDSLink::OPDSLink(
 
 OPDSLink::~OPDSLink() {
 }
-
-void OPDSLink::setupAdvancedSearch(
-	const std::string &type,
-	const std::string &titleParameter,
-	const std::string &authorParameter,
-	const std::string &tagParameter,
-	const std::string &annotationParameter
-) {
-	myAdvancedSearch = new AdvancedSearch(type, titleParameter, authorParameter, tagParameter, annotationParameter);
-}
-
-void OPDSLink::setUrlConditions(const std::map<std::string,URLCondition> &conditions) {
-	myUrlConditions = conditions;
-}
-
-void OPDSLink::setUrlRewritingRules(const std::vector<shared_ptr<URLRewritingRule> > &rules) {
-	myUrlRewritingRules = rules;
-}
-
-void OPDSLink::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> mgr) {
-	myAuthenticationManager = mgr;
-}
-
 
 shared_ptr<NetworkItem> OPDSLink::libraryItem() const {
 	std::map<NetworkItem::URLType,std::string> urlMap;
@@ -230,4 +186,31 @@ void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
 			break;
 		}
 	}
+}
+
+OPDSLink::RelationAlias::RelationAlias(const std::string &alias, const std::string &type) : Alias(alias), Type(type) {
+}
+
+bool OPDSLink::RelationAlias::operator < (const RelationAlias &alias) const {
+	int cmp = Alias.compare(alias.Alias);
+	if (cmp != 0) {
+		return cmp < 0;
+	}
+	return Type < alias.Type;
+}
+
+const std::string &OPDSLink::relation(const std::string &rel, const std::string &type) const {
+	RelationAlias alias(rel, type);
+	std::map<RelationAlias,std::string>::const_iterator it = myRelationAliases.find(alias);
+	if (it != myRelationAliases.end()) {
+		return it->second;
+	}
+	if (!type.empty()) {
+		alias.Type.erase();
+		it = myRelationAliases.find(alias);
+		if (it != myRelationAliases.end()) {
+			return it->second;
+		}
+	}
+	return rel;
 }

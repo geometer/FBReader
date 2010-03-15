@@ -154,21 +154,21 @@ void NetworkBookDownloadAction::run() {
 	fbreader.refreshWindow();
 }
 
-NetworkBookBuyAction::NetworkBookBuyAction(const NetworkBookItem &book) : myBook(book) {
+NetworkBookBuyDirectlyAction::NetworkBookBuyDirectlyAction(const NetworkBookItem &book) : myBook(book) {
 }
 
-ZLResourceKey NetworkBookBuyAction::key() const {
+ZLResourceKey NetworkBookBuyDirectlyAction::key() const {
 	return ZLResourceKey("buy");
 }
 
-bool NetworkBookBuyAction::makesSense() const {
+bool NetworkBookBuyDirectlyAction::makesSense() const {
 	return
 		myBook.localCopyFileName().empty() &&
 		myBook.reference(BookReference::DOWNLOAD).isNull() &&
 		!myBook.reference(BookReference::BUY).isNull();
 }
 
-std::string NetworkBookBuyAction::text(const ZLResource &resource) const {
+std::string NetworkBookBuyDirectlyAction::text(const ZLResource &resource) const {
 	const std::string text = ZLRunnableWithKey::text(resource);
 	shared_ptr<BookReference> reference = myBook.reference(BookReference::BUY);
 	if (!reference.isNull()) {
@@ -177,7 +177,7 @@ std::string NetworkBookBuyAction::text(const ZLResource &resource) const {
 	return text;
 }
 
-void NetworkBookBuyAction::run() {
+void NetworkBookBuyDirectlyAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	if (myBook.Link.authenticationManager().isNull()) {
 		return;
@@ -218,6 +218,37 @@ void NetworkBookBuyAction::run() {
 		fbreader.invalidateAccountDependents();
 	}
 	fbreader.refreshWindow();
+}
+
+NetworkBookBuyInBrowserAction::NetworkBookBuyInBrowserAction(const NetworkBookItem &book) : myBook(book) {
+}
+
+ZLResourceKey NetworkBookBuyInBrowserAction::key() const {
+	return ZLResourceKey("buy");
+}
+
+bool NetworkBookBuyInBrowserAction::makesSense() const {
+	return
+		myBook.localCopyFileName().empty() &&
+		//myBook.reference(BookReference::DOWNLOAD).isNull() &&
+		myBook.reference(BookReference::BUY).isNull() &&
+		!myBook.reference(BookReference::BUY_IN_BROWSER).isNull();
+}
+
+std::string NetworkBookBuyInBrowserAction::text(const ZLResource &resource) const {
+	const std::string text = ZLRunnableWithKey::text(resource);
+	shared_ptr<BookReference> reference = myBook.reference(BookReference::BUY_IN_BROWSER);
+	if (!reference.isNull()) {
+		return ZLStringUtil::printf(text, ((BuyBookReference&)*reference).Price);
+	}
+	return text;
+}
+
+void NetworkBookBuyInBrowserAction::run() {
+	shared_ptr<BookReference> reference = myBook.reference(BookReference::BUY_IN_BROWSER);
+	if (!reference.isNull()) {
+		FBReader::Instance().openLinkInBrowser(reference->URL);
+	}
 }
 
 NetworkBookDeleteAction::NetworkBookDeleteAction(const NetworkBookItem &book) : myBook(book) {

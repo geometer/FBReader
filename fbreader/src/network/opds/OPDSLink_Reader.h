@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OPDSLINKREADER_H__
-#define __OPDSLINKREADER_H__
+#ifndef __OPDSLINK_READER_H__
+#define __OPDSLINK_READER_H__
 
 #include <vector>
 #include <map>
@@ -29,10 +29,10 @@
 
 class URLRewritingRule;
 
-class OPDSLinkReader : public ZLXMLReader {
+class OPDSLink::Reader : public ZLXMLReader {
 
 public:
-	OPDSLinkReader();
+	Reader();
 
 	shared_ptr<NetworkLink> link();
 
@@ -54,6 +54,7 @@ private:
 		READ_FEEDS,
 		READ_FEEDS_CONDITION,
 		READ_URL_REWRITING_RULES,
+		READ_RELATION_ALIASES,
 	} myState;
 
 	std::string mySiteName;
@@ -66,12 +67,14 @@ private:
 
 	std::map<std::string,std::string> myLinks;
 
+	std::map<RelationAlias,std::string> myRelationAliases;
+
 	std::string mySearchType;
 	std::map<std::string,std::string> mySearchFields;
 
-	std::map<std::string,OPDSLink::URLCondition> myUrlConditions;
+	std::map<std::string,OPDSLink::FeedCondition> myFeedConditions;
 	std::string myAuthenticationType;
 	std::vector<shared_ptr<URLRewritingRule> > myUrlRewritingRules;
 };
 
-#endif /* __OPDSLINKREADER_H__ */
+#endif /* __OPDSLINK_READER_H__ */

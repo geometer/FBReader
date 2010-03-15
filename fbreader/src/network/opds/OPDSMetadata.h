@@ -46,11 +46,12 @@ public:
 	static const std::string REL_ACQUISITION_SAMPLE;
 	static const std::string REL_ACQUISITION_CONDITIONAL;
 
+	// Smashwords "acquisition" links
+	static const std::string REL_SMASHWORDS_BUY;
+
 	// Entry level / other
 	static const std::string REL_COVER;
-	static const std::string REL_STANZA_COVER;
 	static const std::string REL_THUMBNAIL;
-	static const std::string REL_STANZA_THUMBNAIL;
 
 	// Any (?) level
 	static const std::string REL_ALTERNATE;

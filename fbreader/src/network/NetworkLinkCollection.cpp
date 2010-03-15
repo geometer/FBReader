@@ -38,7 +38,7 @@
 #include "NetworkBookCollection.h"
 #include "BookReference.h"
 
-#include "opds/OPDSLinkReader.h"
+#include "opds/OPDSLink.h"
 #include "opds/URLRewritingRule.h"
 
 NetworkLinkCollection *NetworkLinkCollection::ourInstance = 0;
@@ -93,9 +93,7 @@ NetworkLinkCollection::NetworkLinkCollection() :
 		std::vector<std::string> names;
 		dir->collectFiles(names, false);
 		for (std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
-			OPDSLinkReader reader;
-			reader.readDocument(dir->itemPath(*it));
-			shared_ptr<NetworkLink> link = reader.link();
+			shared_ptr<NetworkLink> link = OPDSLink::read(dir->itemPath(*it));
 			if (!link.isNull()) {
 				myLinks.push_back(link);
 			}

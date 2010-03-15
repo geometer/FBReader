@@ -50,10 +50,23 @@ private:
 	const bool myDemo;
 };
 
-class NetworkBookBuyAction : public ZLRunnableWithKey {
+class NetworkBookBuyDirectlyAction : public ZLRunnableWithKey {
 
 public:
-	NetworkBookBuyAction(const NetworkBookItem &book);
+	NetworkBookBuyDirectlyAction(const NetworkBookItem &book);
+	ZLResourceKey key() const;
+	bool makesSense() const;
+	std::string text(const ZLResource &resource) const;
+	void run();
+
+private:
+	const NetworkBookItem &myBook;
+};
+
+class NetworkBookBuyInBrowserAction : public ZLRunnableWithKey {
+
+public:
+	NetworkBookBuyInBrowserAction(const NetworkBookItem &book);
 	ZLResourceKey key() const;
 	bool makesSense() const;
 	std::string text(const ZLResource &resource) const;

@@ -32,15 +32,19 @@ class URLRewritingRule;
 class OPDSLink : public NetworkLink {
 
 public:
-	enum URLCondition {
-		URL_CONDITION_NEVER,
-		URL_CONDITION_SIGNED_IN,
+	static shared_ptr<NetworkLink> read(const std::string &path);
+
+public:
+	enum FeedCondition {
+		CONDITION_NEVER,
+		CONDITION_SIGNED_IN,
 	};
 
 private:
+	class Reader;
 	class AdvancedSearch;
 
-public:
+private:
 	OPDSLink(
 		const std::string &siteName,
 		const std::string &title,
@@ -48,18 +52,9 @@ public:
 		const std::string &icon,
 		const std::map<std::string,std::string> &links
 	);
-	~OPDSLink();
-	void setupAdvancedSearch(
-		const std::string &type,
-		const std::string &titleParameter,
-		const std::string &authorParameter,
-		const std::string &tagParameter,
-		const std::string &annotationParameter
-	);
-	void setUrlConditions(const std::map<std::string,URLCondition> &conditions);
-	void setUrlRewritingRules(const std::vector<shared_ptr<URLRewritingRule> > &rules);
 
-	void setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> mgr);
+public:
+	~OPDSLink();
 
 private:
 	const std::string searchURL(const std::string &pattern) const;
@@ -82,14 +77,26 @@ private:
 
 	void rewriteUrl(std::string &url, bool isUrlExternal = false) const;
 
+	const std::string &relation(const std::string &rel, const std::string &type) const;
+
 private:
 	shared_ptr<AdvancedSearch> myAdvancedSearch;
 
-	std::map<std::string,URLCondition> myUrlConditions;
+	struct RelationAlias {
+		std::string Alias;
+		std::string Type;
+
+		RelationAlias(const std::string &alias, const std::string &type);
+		bool operator < (const RelationAlias &other) const;
+	};
+	std::map<RelationAlias,std::string> myRelationAliases;
+
+	std::map<std::string,FeedCondition> myFeedConditions;
 	std::vector<shared_ptr<URLRewritingRule> > myUrlRewritingRules;
 
 	shared_ptr<NetworkAuthenticationManager> myAuthenticationManager;
 
+friend class NetworkOPDSFeedReader;
 friend class OPDSCatalogItem;
 };
 

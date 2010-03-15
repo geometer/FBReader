@@ -147,7 +147,7 @@ std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &boo
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
 	if (!account.empty()) {
-		myAccount = BookReference::price(account, "RUB");
+		myAccount = BuyBookReference::price(account, "RUB");
 	}
 	if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
 		mySidChecked = true;
@@ -289,7 +289,7 @@ void LitResAuthenticationManager::loadAccountOnError() {
 }
 
 void LitResAuthenticationManager::loadAccountOnSuccess() {
-	myAccount = BookReference::price(myAccount, "RUB");
+	myAccount = BuyBookReference::price(myAccount, "RUB");
 }
 
 bool LitResAuthenticationManager::skipIPSupported() {

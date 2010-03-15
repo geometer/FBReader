@@ -29,7 +29,8 @@ public:
 		DOWNLOAD,
 		DOWNLOAD_DEMO,
 		DOWNLOAD_CONDITIONAL,
-		BUY
+		BUY,
+		BUY_IN_BROWSER
 	};
 
 	enum Format {
@@ -38,9 +39,6 @@ public:
 		FB2_ZIP = 2,
 		EPUB = 3,
 	};
-
-public:
-	static std::string price(const std::string &price, const std::string &currency);
 
 public:
 	BookReference(const std::string &url, Format format, Type type);
@@ -63,7 +61,10 @@ private:
 class BuyBookReference : public BookReference {
 
 public:
-	BuyBookReference(const std::string &url, Format format, const std::string &price);
+	BuyBookReference(const std::string &url, Format format, Type type, const std::string &price);
+
+public:
+	static std::string price(const std::string &price, const std::string &currency);
 
 public:
 	const std::string Price;

@@ -34,9 +34,10 @@ class NetworkOPDSFeedReader : public OPDSFeedReader {
 
 public:
 	NetworkOPDSFeedReader(
+		const OPDSLink &link,
 		const std::string &baseURL,
-		NetworkOperationData &result,
-		const std::map<std::string,OPDSLink::URLCondition> &conditions);
+		NetworkOperationData &result
+	);
 
 public:
 	void processFeedEntry(shared_ptr<OPDSEntry> entry);
@@ -49,11 +50,11 @@ private:
 	shared_ptr<NetworkItem> readCatalogItem(OPDSEntry &entry);
 
 private:
+	const OPDSLink &myLink;
 	const std::string myBaseURL;
 	NetworkOperationData &myData;
 	unsigned int myIndex;
 	unsigned int myOpenSearchStartIndex;
-	const std::map<std::string,OPDSLink::URLCondition> &myUrlConditions;
 };
 
 

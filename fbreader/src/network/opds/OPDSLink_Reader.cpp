@@ -17,18 +17,19 @@
  * 02110-1301, USA.
  */
 
-#include "OPDSLinkReader.h"
 #include "OPDSLink.h"
+#include "OPDSLink_Reader.h"
+#include "OPDSLink_AdvancedSearch.h"
 #include "../authentication/basic/BasicAuthenticationManager.h"
 #include "../authentication/litres/LitResAuthenticationManager.h"
 
 #include "URLRewritingRule.h"
 
 
-OPDSLinkReader::OPDSLinkReader() : myState(READ_NOTHING) {
+OPDSLink::Reader::Reader() : myState(READ_NOTHING) {
 }
 
-shared_ptr<NetworkLink> OPDSLinkReader::link() {
+shared_ptr<NetworkLink> OPDSLink::Reader::link() {
 	if (mySiteName.empty() || myTitle.empty() || myLinks[NetworkLink::URL_MAIN].empty()) {
 		return 0;
 	}
@@ -40,7 +41,7 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 		myLinks
 	);
 	if (!mySearchType.empty()) {
-		opdsLink->setupAdvancedSearch(
+		opdsLink->myAdvancedSearch = new AdvancedSearch(
 			mySearchType,
 			mySearchFields["titleOrSeries"],
 			mySearchFields["author"],
@@ -48,16 +49,17 @@ shared_ptr<NetworkLink> OPDSLinkReader::link() {
 			mySearchFields["annotation"]
 		);
 	}
-	opdsLink->setUrlConditions(myUrlConditions);
-	opdsLink->setUrlRewritingRules(myUrlRewritingRules);
+	myRelationAliases.swap(opdsLink->myRelationAliases);
+	myFeedConditions.swap(opdsLink->myFeedConditions);
+	myUrlRewritingRules.swap(opdsLink->myUrlRewritingRules);
 
-	shared_ptr<NetworkAuthenticationManager> authManager;
 	if (myAuthenticationType == "basic") {
-		authManager = new BasicAuthenticationManager(*opdsLink);
+		opdsLink->myAuthenticationManager =
+			new BasicAuthenticationManager(*opdsLink);
 	} else if (myAuthenticationType == "litres") {
-		authManager = new LitResAuthenticationManager(*opdsLink);
+		opdsLink->myAuthenticationManager =
+			new LitResAuthenticationManager(*opdsLink);
 	}
-	opdsLink->setAuthenticationManager(authManager);
 
 	return opdsLink;
 }
@@ -67,6 +69,8 @@ static const std::string TAG_LINK = "link";
 static const std::string TAG_TITLE = "title";
 static const std::string TAG_SUMMARY = "summary";
 static const std::string TAG_ICON = "icon";
+static const std::string TAG_RELATION_ALIASES = "relationAliases";
+static const std::string TAG_ALIAS = "alias";
 static const std::string TAG_SEARCH_DESCRIPTION = "advancedSearch";
 static const std::string TAG_FEEDS = "feeds";
 static const std::string TAG_AUTHENTICATION = "authentication";
@@ -75,7 +79,7 @@ static const std::string TAG_FIELD = "field";
 static const std::string TAG_CONDITION = "condition";
 static const std::string TAG_RULE = "rule";
 
-void OPDSLinkReader::startElementHandler(const char *tag, const char **attributes) {
+void OPDSLink::Reader::startElementHandler(const char *tag, const char **attributes) {
 	if (TAG_SITE == tag) {
 		myState = READ_SITENAME;
 	} else if (TAG_TITLE == tag) {
@@ -144,29 +148,43 @@ void OPDSLinkReader::startElementHandler(const char *tag, const char **attribute
 				myUrlRewritingRules.push_back(new URLRewritingRule(URLRewritingRule::ADD_URL_PARAMETER, ruleApply, name, value));
 			}
 		}
+	} else if (TAG_RELATION_ALIASES == tag) {
+		myState = READ_RELATION_ALIASES;
+	} else if (myState == READ_RELATION_ALIASES && TAG_ALIAS == tag) {
+		const char *alias = attributeValue(attributes, "alias");
+		const char *name  = attributeValue(attributes, "name");
+		const char *type  = attributeValue(attributes, "type");
+		if (alias != 0 && name != 0) {
+			myRelationAliases[
+				RelationAlias(alias, (type != 0) ? type : std::string())
+			] = name;
+		}
 	}
 }
 
-void OPDSLinkReader::endElementHandler(const char *tag) {
+void OPDSLink::Reader::endElementHandler(const char *tag) {
 	if (myState == READ_SEARCH_FIELD) {
 		myState = READ_SEARCH_DESCRIPTION;
 	} else if (myState == READ_FEEDS_CONDITION) {
-		myUrlConditions[myBuffer] = (myAttrBuffer == "signedIn") ?
-			OPDSLink::URL_CONDITION_SIGNED_IN : OPDSLink::URL_CONDITION_NEVER;
+		myFeedConditions[myBuffer] = (myAttrBuffer == "signedIn") ?
+			OPDSLink::CONDITION_SIGNED_IN : OPDSLink::CONDITION_NEVER;
 		myState = READ_FEEDS;
 	} else if (myState == READ_URL_REWRITING_RULES && TAG_RULE == tag) {
-		//myState = myState;
+		// myState = myState
+	} else if (myState == READ_RELATION_ALIASES && TAG_ALIAS == tag) {
+		// myState = myState
 	} else {
 		myState = READ_NOTHING;
 	}
 }
 
-void OPDSLinkReader::characterDataHandler(const char *text, size_t len) {
+void OPDSLink::Reader::characterDataHandler(const char *text, size_t len) {
 	switch (myState) {
 		case READ_NOTHING:
 		case READ_SEARCH_DESCRIPTION:
 		case READ_FEEDS:
 		case READ_URL_REWRITING_RULES:
+		case READ_RELATION_ALIASES:
 			break;
 		case READ_SITENAME:
 			mySiteName.append(text, len);

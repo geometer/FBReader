@@ -22,13 +22,6 @@
 #include "BookReference.h"
 #include "NetworkLinkCollection.h"
 
-std::string BookReference::price(const std::string &price, const std::string &currency) {
-	if (currency == "RUB") {
-		return price + " р.";
-	}
-	return currency + " " + price;
-}
-
 BookReference::BookReference(const std::string &url, Format format, Type type) : URL(url), BookFormat(format), ReferenceType(type) {
 }
 
@@ -36,7 +29,18 @@ const std::string &BookReference::cleanURL() const {
 	return URL;
 }
 
-BuyBookReference::BuyBookReference(const std::string &url, Format format, const std::string &price) : BookReference(url, format, BookReference::BUY), Price(price) {
+std::string BuyBookReference::price(const std::string &price, const std::string &currency) {
+	if (currency.empty()) {
+		return price;
+	} else if (currency == "RUB") {
+		return price + " р.";
+	} else if (currency == "USD") {
+		return "$" + price;
+	}
+	return currency + " " + price;
+}
+
+BuyBookReference::BuyBookReference(const std::string &url, Format format, Type type, const std::string &price) : BookReference(url, format, type), Price(price) {
 }
 
 DecoratedBookReference::DecoratedBookReference(const BookReference &base, const std::string &url) : BookReference(url, base.BookFormat, base.ReferenceType), myCleanURL(base.cleanURL()) {

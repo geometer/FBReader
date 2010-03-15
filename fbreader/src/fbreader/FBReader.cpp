@@ -28,6 +28,7 @@
 #include <ZLResource.h>
 #include <ZLMessage.h>
 #include <ZLTimeManager.h>
+#include <ZLLogger.h>
 
 #include <ZLTextStyleCollection.h>
 #include <ZLTextHyphenator.h>
@@ -315,6 +316,7 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 	}
 	std::string copy = url;
 	NetworkLinkCollection::Instance().rewriteUrl(copy, true);
+	ZLLogger::Instance().println("URL", copy);
 	program->run("openLink", copy);
 }
 
