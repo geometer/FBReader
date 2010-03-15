@@ -176,12 +176,6 @@ public:
 	std::string &length() { return attributes()[LENGTH]; }
 
 	void readAttributes(const std::map<std::string, std::string> &attributes);
-
-	void setUserData(const std::string &key, const std::string &value);
-	const std::string userData(const std::string &key) const;
-
-private:
-	std::map<std::string,std::string> myUserData;
 };
 
 

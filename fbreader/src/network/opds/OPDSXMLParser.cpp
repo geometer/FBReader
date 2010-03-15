@@ -42,6 +42,8 @@ static const std::string TAG_UPDATED = "updated";
 static const std::string TAG_META = "meta";
 static const std::string TAG_PRICE = "price";
 
+static const std::string TAG_HACK_SPAN = "span";
+
 static const std::string DC_TAG_LANGUAGE = "language";
 static const std::string DC_TAG_ISSUED = "issued";
 static const std::string DC_TAG_PUBLISHER = "publisher";
@@ -252,6 +254,11 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 				} 
 			}
 			break;
+		case FE_CONTENT:
+			if (tagName == TAG_HACK_SPAN || attributeMap["class"] == "price") {
+				myState = FEC_HACK_SPAN;
+			}
+			break;
 		default:
 			break;
 	}
@@ -450,6 +457,10 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 				}
 				myState = F_ENTRY;
 			}
+			break;
+		case FEC_HACK_SPAN:
+			myEntry->setUserData(KEY_PRICE, myBuffer);
+			myState = FE_CONTENT;
 			break;
 		case FE_SUBTITLE:
 			if (tagPrefix == myAtomNamespaceId && tagName == TAG_SUBTITLE) {

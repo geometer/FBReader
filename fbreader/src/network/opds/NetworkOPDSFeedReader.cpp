@@ -176,18 +176,25 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 				));
 			}
 		} else if (rel == OPDSConstants::REL_ACQUISITION_BUY) {
+			std::string price = BuyBookReference::price(
+				link.userData(OPDSXMLParser::KEY_PRICE),
+				link.userData(OPDSXMLParser::KEY_CURRENCY)
+			);
+			if (price.empty()) {
+				price = BuyBookReference::price(
+					entry.userData(OPDSXMLParser::KEY_PRICE),
+					entry.userData(OPDSXMLParser::KEY_CURRENCY)
+				);
+			}
 			if (type == OPDSConstants::MIME_TEXT_HTML) {
 				references.push_back(new BuyBookReference(
-					href, BookReference::NONE, BookReference::BUY_IN_BROWSER, ""
+					href, BookReference::NONE, BookReference::BUY_IN_BROWSER, price
 				));
 			} else {
 				BookReference::Format format = formatByMimeType(link.userData(OPDSXMLParser::KEY_FORMAT));
 				if (format != BookReference::NONE) {
 					references.push_back(new BuyBookReference(
-						href, format, BookReference::BUY, BuyBookReference::price(
-							link.userData(OPDSXMLParser::KEY_PRICE),
-							link.userData(OPDSXMLParser::KEY_CURRENCY)
-						)
+						href, format, BookReference::BUY, price
 					));
 				}
 			}

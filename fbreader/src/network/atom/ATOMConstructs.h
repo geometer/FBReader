@@ -43,11 +43,15 @@ public:
 
 	virtual void readAttributes(const std::map<std::string, std::string> &attributes);
 
+	void setUserData(const std::string &key, const std::string &value);
+	const std::string userData(const std::string &key) const;
+
 protected:
 	void readAttribute(const std::string &name, const std::map<std::string, std::string> &attributes);
 
 private:
-	 std::map<std::string, std::string> myAttributes;
+	std::map<std::string, std::string> myAttributes;
+	std::map<std::string,std::string> myUserData;
 };
 
 
