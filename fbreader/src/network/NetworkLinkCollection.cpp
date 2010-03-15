@@ -133,9 +133,16 @@ std::string NetworkLinkCollection::makeBookFileName(const std::string &url, Book
 		path.erase(0, 4);
 	}
 
+	size_t index = path.find(':');
+	while (index != std::string::npos) {
+		path[index] = '_';
+		index = path.find(':', index);
+	}
+
 	shared_ptr<ZLDir> dir;
 	std::string fileName = DirectoryOption.value();
-	size_t index = 0;
+
+	index = 0;
 	while (true) {
 		dir = ZLFile(fileName).directory(createDirectories);
 		if (dir.isNull()) {
@@ -248,9 +255,12 @@ bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::st
 	if (ZLFile(fileName).exists()) {
 		ZLFile(fileName).remove();
 	}
-	BooksDB::Instance().setNetFile(nNetworkBookId, fileName);
 	myErrorMessage = ZLNetworkManager::Instance().downloadFile(nURL, sslCertificate, fileName, listener);
-	return myErrorMessage.empty();
+	if (!myErrorMessage.empty()) {
+		return false;
+	}
+	BooksDB::Instance().setNetFile(nNetworkBookId, fileName);
+	return true;
 }
 
 shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std::string &pattern) {

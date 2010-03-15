@@ -229,6 +229,10 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 				} 
 			} 
 			break;
+		case FE_TITLE:
+			// TODO: remove this temporary code
+			// DON'T clear myBuffer
+			return;
 		case FE_LINK:
 			if (tagPrefix == myOpdsNamespaceId && tagName == TAG_PRICE) {
 				myLink->setUserData(KEY_CURRENCY, attributeMap["currencycode"]);
@@ -462,6 +466,10 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 				// TODO:implement ATOMTextConstruct & ATOMTitle
 				myEntry->setTitle(myBuffer);
 				myState = F_ENTRY;
+			} else {
+				// TODO: remove this temporary code
+				// DON'T clear myBuffer
+				return;
 			}
 			break;
 		case FE_UPDATED:

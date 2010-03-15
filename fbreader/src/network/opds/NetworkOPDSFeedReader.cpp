@@ -76,6 +76,17 @@ void NetworkOPDSFeedReader::processFeedEnd() {
 }
 
 
+static BookReference::Format formatByMimeType(const std::string &mimeType) {
+	if (mimeType == OPDSConstants::MIME_APP_FB2ZIP) {
+		return BookReference::FB2_ZIP;
+	} else if (mimeType == OPDSConstants::MIME_APP_EPUB) {
+		return BookReference::EPUB;
+	} else if (mimeType == OPDSConstants::MIME_APP_MOBI) {
+		return BookReference::MOBIPOCKET;
+	}
+	return BookReference::NONE;
+}
+
 void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 	if (entry.isNull()) {
 		return;
@@ -92,20 +103,13 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 		ATOMLink &link = *(e.links()[i]);
 		const std::string &type = link.type();
 		const std::string &rel = myLink.relation(link.rel(), type);
-		if ((rel == OPDSConstants::REL_ACQUISITION ||
-				 rel == OPDSConstants::REL_ACQUISITION_SAMPLE ||
-				 rel == OPDSConstants::REL_ACQUISITION_BUY ||
-				 rel == OPDSConstants::REL_ACQUISITION_CONDITIONAL ||
-				 rel.empty()) &&
-				(type == OPDSConstants::MIME_APP_EPUB ||
-				 type == OPDSConstants::MIME_APP_MOBI ||
-				 type == OPDSConstants::MIME_APP_FB2ZIP ||
-				 type == OPDSConstants::MIME_APP_LITRES)) {
+		if (rel == OPDSConstants::REL_ACQUISITION ||
+				rel == OPDSConstants::REL_ACQUISITION_SAMPLE ||
+				rel == OPDSConstants::REL_ACQUISITION_BUY ||
+				rel == OPDSConstants::REL_ACQUISITION_CONDITIONAL ||
+				(rel.empty() && formatByMimeType(type) != BookReference::NONE)) {
 			hasBookLink = true;
 			break;
-		}
-		if (rel == OPDSConstants::REL_SMASHWORDS_BUY) {
-			hasBookLink = true;
 		}
 	}
 
@@ -118,17 +122,6 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 	if (!item.isNull()) {
 		myData.Items.push_back(item);
 	}
-}
-
-static BookReference::Format formatByMimeType(const std::string &mimeType) {
-	if (mimeType == OPDSConstants::MIME_APP_FB2ZIP) {
-		return BookReference::FB2_ZIP;
-	} else if (mimeType == OPDSConstants::MIME_APP_EPUB) {
-		return BookReference::EPUB;
-	} else if (mimeType == OPDSConstants::MIME_APP_MOBI) {
-		return BookReference::MOBIPOCKET;
-	}
-	return BookReference::NONE;
 }
 
 shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
@@ -183,20 +176,20 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 				));
 			}
 		} else if (rel == OPDSConstants::REL_ACQUISITION_BUY) {
-			BookReference::Format format = formatByMimeType(link.userData(OPDSXMLParser::KEY_FORMAT));
-			if (format != BookReference::NONE) {
-				references.push_back(new BuyBookReference(
-					href, format, BookReference::BUY, BuyBookReference::price(
-						link.userData(OPDSXMLParser::KEY_PRICE),
-						link.userData(OPDSXMLParser::KEY_CURRENCY)
-					)
-				));
-			}
-		} else if (rel == OPDSConstants::REL_SMASHWORDS_BUY) {
 			if (type == OPDSConstants::MIME_TEXT_HTML) {
 				references.push_back(new BuyBookReference(
 					href, BookReference::NONE, BookReference::BUY_IN_BROWSER, ""
 				));
+			} else {
+				BookReference::Format format = formatByMimeType(link.userData(OPDSXMLParser::KEY_FORMAT));
+				if (format != BookReference::NONE) {
+					references.push_back(new BuyBookReference(
+						href, format, BookReference::BUY, BuyBookReference::price(
+							link.userData(OPDSXMLParser::KEY_PRICE),
+							link.userData(OPDSXMLParser::KEY_CURRENCY)
+						)
+					));
+				}
 			}
 		}
 	}
