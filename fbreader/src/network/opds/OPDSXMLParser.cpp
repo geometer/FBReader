@@ -39,7 +39,6 @@ static const std::string TAG_CONTENT = "content";
 static const std::string TAG_SUBTITLE = "subtitle";
 static const std::string TAG_TITLE = "title";
 static const std::string TAG_UPDATED = "updated";
-static const std::string TAG_META = "meta";
 static const std::string TAG_PRICE = "price";
 
 static const std::string TAG_HACK_SPAN = "span";
@@ -48,6 +47,9 @@ static const std::string DC_TAG_LANGUAGE = "language";
 static const std::string DC_TAG_ISSUED = "issued";
 static const std::string DC_TAG_PUBLISHER = "publisher";
 static const std::string DC_TAG_FORMAT = "format";
+
+static const std::string CALIBRE_TAG_SERIES = "series";
+static const std::string CALIBRE_TAG_SERIES_INDEX = "series_index";
 
 static const std::string OPENSEARCH_TAG_TOTALRESULTS = "totalResults";
 static const std::string OPENSEARCH_TAG_ITEMSPERPAGE = "itemsPerPage";
@@ -201,14 +203,6 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 					myUpdated = new ATOMUpdated();
 					myUpdated->readAttributes(attributeMap);
 					myState = FE_UPDATED;
-				} else if (tagName == TAG_META) {
-					const std::string &name = attributeMap["name"];
-					const std::string &value = attributeMap["value"];
-					if (name == myCalibreNamespaceId + ":series") {
-						myEntry->setSeriesTitle(value);
-					} else if (name == myCalibreNamespaceId + ":series_index") {
-						myEntry->setSeriesIndex(atoi(value.c_str()));
-					}
 				}
 			} else if (tagPrefix == myDublinCoreNamespaceId) {
 				if (tagName == DC_TAG_LANGUAGE) {
@@ -218,6 +212,12 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 				} else if (tagName == DC_TAG_PUBLISHER) {
 					myState = FE_DC_PUBLISHER;
 				} 
+			} else if (tagPrefix == myCalibreNamespaceId) {
+				if (tagName == CALIBRE_TAG_SERIES) {
+					myState = FE_CALIBRE_SERIES;
+				} else if (tagName == CALIBRE_TAG_SERIES_INDEX) {
+					myState = FE_CALIBRE_SERIES_INDEX;
+				}
 			}
 			break;
 		case F_AUTHOR:
@@ -512,6 +512,18 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			if (tagPrefix == myDublinCoreNamespaceId && tagName == DC_TAG_PUBLISHER) {
 				// FIXME:publisher can be lost:buffer will be truncated, if there are extension tags inside the <dc:publisher> tag
 				myEntry->setDCPublisher(myBuffer);
+				myState = F_ENTRY;
+			}
+			break;
+		case FE_CALIBRE_SERIES:
+			if (tagPrefix == myCalibreNamespaceId && tagName == CALIBRE_TAG_SERIES) {
+				myEntry->setSeriesTitle(myBuffer);
+				myState = F_ENTRY;
+			}
+			break;
+		case FE_CALIBRE_SERIES_INDEX:
+			if (tagPrefix == myCalibreNamespaceId && tagName == CALIBRE_TAG_SERIES_INDEX) {
+				myEntry->setSeriesIndex(atoi(myBuffer.c_str()));
 				myState = F_ENTRY;
 			}
 			break;
