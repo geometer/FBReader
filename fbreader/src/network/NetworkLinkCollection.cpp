@@ -123,7 +123,7 @@ static std::string normalize(const std::string &url) {
 
 std::string NetworkLinkCollection::makeBookFileName(const BookReference &reference) {
 	myErrorMessage.clear();
-	return makeBookFileName(reference.cleanURL(), reference.BookFormat, reference.ReferenceType, false);
+	return makeBookFileName(::normalize(reference.cleanURL()), reference.BookFormat, reference.ReferenceType, false);
 }
 
 std::string NetworkLinkCollection::makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories) {
