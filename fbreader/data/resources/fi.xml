@@ -63,6 +63,7 @@
 			<node name="download" value="Lataa" />
 			<node name="readDemo" value="Lue demo" />
 			<node name="downloadDemo" value="Lataa demo" />
+			<node name="demo" value="demo"/>
 			<node name="buy" value="Osta (%s)" />
 		</node>
 	</node>

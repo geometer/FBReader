@@ -63,6 +63,7 @@
 			<node name="download" value="Stáhnout" />
 			<node name="readDemo" value="Číst ukázku" />
 			<node name="downloadDemo" value="Stáhnout ukázku" />
+			<node name="demo" toBeTranslated="true" value="sample"/>
 			<node name="buy" value="Zaplatit (%s)" />
 		</node>
 	</node>

@@ -61,8 +61,9 @@
 			<node name="read" toBeTranslated="true" value="Read local copy" />
 			<node name="delete" toBeTranslated="true" value="Delete local copy" />
 			<node name="download" toBeTranslated="true" value="Download" />
-			<node name="readDemo" toBeTranslated="true" value="Read demo" />
-			<node name="downloadDemo" toBeTranslated="true" value="Download demo" />
+			<node name="readDemo" toBeTranslated="true" value="Read sample" />
+			<node name="downloadDemo" toBeTranslated="true" value="Download sample" />
+			<node name="demo" toBeTranslated="true" value="demo" />
 			<node name="buy" toBeTranslated="true" value="Buy (%s)" />
 		</node>
 	</node>

@@ -27,7 +27,7 @@ class NetworkBookItem;
 class NetworkBookDownloadAction : public ZLRunnableWithKey {
 
 public:
-	NetworkBookDownloadAction(const NetworkBookItem &book, bool demo);
+	NetworkBookDownloadAction(const NetworkBookItem &book, bool demo, const std::string &tag = std::string());
 	ZLResourceKey key() const;
 	bool makesSense() const;
 	void run();
@@ -35,6 +35,7 @@ public:
 private:
 	const NetworkBookItem &myBook;
 	const bool myDemo;
+	const std::string myTag;
 };
 
 class NetworkBookReadAction : public ZLRunnableWithKey {

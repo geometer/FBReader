@@ -63,6 +63,7 @@
 			<node name="download" value="Завантажити"/>
 			<node name="readDemo" value="Читати фрагмент"/>
 			<node name="downloadDemo" value="Завантажити фрагмент"/>
+			<node name="demo" value="фрагмент"/>
 			<node name="buy" value="Buy (%s)"/>
 		</node>
 	</node>

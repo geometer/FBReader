@@ -63,6 +63,7 @@
 			<node name="download" value="Tải về" />
 			<node name="readDemo" value="Đọc thử bản mẫu" />
 			<node name="downloadDemo" value="Tải về bản mẫu " />
+			<node name="demo" toBeTranslated="true" value="sample"/>
 			<node name="buy" value="Mua (%s)" />
 		</node>
 	</node>

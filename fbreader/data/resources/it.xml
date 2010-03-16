@@ -63,6 +63,7 @@
 			<node name="download" value="Scarica" />
 			<node name="readDemo" value="Leggi demo" />
 			<node name="downloadDemo" value="Scarica demo" />
+			<node name="demo" value="demo"/>
 			<node name="buy" value="Compra (%s)" />
 		</node>
 	</node>

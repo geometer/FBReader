@@ -63,6 +63,7 @@
 			<node name="download" value="Letöltés"/>
 			<node name="readDemo" value="Minta olvasása"/>
 			<node name="downloadDemo" value="Minta letöltése"/>
+			<node name="demo" toBeTranslated="true" value="sample"/>
 			<node name="buy" value="(%s)- megvásárlása"/>
 		</node>
 	</node>

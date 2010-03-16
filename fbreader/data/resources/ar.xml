@@ -63,6 +63,7 @@
 			<node name="download" value="نزّل" />
 			<node name="readDemo" value="اقرأ نسخة العرض" />
 			<node name="downloadDemo" value="نزّل نسخة العرض" />
+			<node name="demo" toBeTranslated="true" value="sample"/>
 			<node name="buy" value="اشترِ (%s)" />
 		</node>
 	</node>

@@ -33,9 +33,6 @@
 #include "../library/Book.h"
 #include "../fbreader/FBReader.h"
 
-static const std::string DEMO_SUFFIX = " (фрагмент)";
-static const std::string DEMO_TAG = "Фрагмент";
-
 NetworkBookReadAction::NetworkBookReadAction(const NetworkBookItem &book, bool demo) : myBook(book), myDemo(demo) {
 }
 
@@ -80,7 +77,7 @@ void NetworkBookReadAction::run() {
 	}
 }
 
-NetworkBookDownloadAction::NetworkBookDownloadAction(const NetworkBookItem &book, bool demo) : myBook(book), myDemo(demo) {
+NetworkBookDownloadAction::NetworkBookDownloadAction(const NetworkBookItem &book, bool demo, const std::string &tag) : myBook(book), myDemo(demo), myTag(tag) {
 }
 
 ZLResourceKey NetworkBookDownloadAction::key() const {
@@ -139,13 +136,17 @@ void NetworkBookDownloadAction::run() {
 	for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = myBook.Authors.begin(); it != myBook.Authors.end(); ++it) {
 		downloaderBook->addAuthor(it->DisplayName, it->SortKey);
 	}
-	downloaderBook->setTitle(myDemo ? myBook.Title + DEMO_SUFFIX : myBook.Title);
+	std::string bookTitle = myBook.Title;
+	if (!myTag.empty()) {
+		bookTitle += " (" + myTag + ")";
+	}
+	downloaderBook->setTitle(bookTitle);
 	downloaderBook->setLanguage(myBook.Language);
 	for (std::vector<std::string>::const_iterator it = myBook.Tags.begin(); it != myBook.Tags.end(); ++it) {
 		downloaderBook->addTag(*it);
 	}
-	if (myDemo) {
-		downloaderBook->addTag(DEMO_TAG);
+	if (!myTag.empty()) {
+		downloaderBook->addTag(myTag);
 	}
 	Library::Instance().addBook(downloaderBook);
 

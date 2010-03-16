@@ -63,6 +63,7 @@
 			<node name="download" value="Download"/>
 			<node name="readDemo" value="Lees demo"/>
 			<node name="downloadDemo" value="Download demo"/>
+			<node name="demo" value="demo"/>
 			<node name="buy" value="Koop (%s)"/>
 		</node>
 	</node>

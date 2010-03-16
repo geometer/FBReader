@@ -63,6 +63,7 @@
 			<node name="download" value="下载" />
 			<node name="readDemo" value="试读章节" />
 			<node name="downloadDemo" value="试读下载" />
+			<node name="demo" toBeTranslated="true" value="demo" />
 			<node name="buy" value="购买 (%s)" />
 		</node>
 	</node>

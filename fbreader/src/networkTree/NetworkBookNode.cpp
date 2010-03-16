@@ -49,7 +49,7 @@ void NetworkBookNode::init() {
 	}
 	if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
 		registerAction(new NetworkBookReadAction(book, true));
-		registerAction(new NetworkBookDownloadAction(book, true));
+		registerAction(new NetworkBookDownloadAction(book, true, resource()["demo"].value()));
 	}
 	if (!book.reference(BookReference::BUY).isNull()) {
 		registerAction(new NetworkBookBuyDirectlyAction(book));
