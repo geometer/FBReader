@@ -80,8 +80,8 @@ shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Type type) c
 		}
 	}
 
-	if (reference.isNull() && type == BookReference::DOWNLOAD) {
-		reference = this->reference(BookReference::DOWNLOAD_CONDITIONAL);
+	if (reference.isNull() && type == BookReference::DOWNLOAD_FULL) {
+		reference = this->reference(BookReference::DOWNLOAD_FULL_CONDITIONAL);
 		if (!reference.isNull()) {
 			shared_ptr<NetworkAuthenticationManager> authManager =
 				Link.authenticationManager();
@@ -92,16 +92,34 @@ shared_ptr<BookReference> NetworkBookItem::reference(BookReference::Type type) c
 		}
 	}
 
+	if (reference.isNull() &&
+			type == BookReference::DOWNLOAD_FULL &&
+			this->reference(BookReference::BUY).isNull() &&
+			this->reference(BookReference::BUY_IN_BROWSER).isNull()) {
+		reference = this->reference(BookReference::DOWNLOAD_FULL_OR_DEMO);
+	}
+
+	if (reference.isNull() &&
+			type == BookReference::DOWNLOAD_DEMO &&
+			(!this->reference(BookReference::BUY).isNull() ||
+			 !this->reference(BookReference::BUY_IN_BROWSER).isNull())) {
+		reference = this->reference(BookReference::DOWNLOAD_FULL_OR_DEMO);
+	}
+
 	return reference;
 }
 
 std::string NetworkBookItem::localCopyFileName() const {
+	const bool hasBuyReference =
+		!this->reference(BookReference::BUY).isNull() ||
+		!this->reference(BookReference::BUY_IN_BROWSER).isNull();
 	shared_ptr<BookReference> reference;
 	std::string fileName;
 	for (std::vector<shared_ptr<BookReference> >::const_iterator it = myReferences.begin(); it != myReferences.end(); ++it) {
 		const BookReference::Type type = (*it)->ReferenceType;
-		if ((type == BookReference::DOWNLOAD ||
-				 type == BookReference::DOWNLOAD_CONDITIONAL) &&
+		if ((type == BookReference::DOWNLOAD_FULL ||
+				 type == BookReference::DOWNLOAD_FULL_CONDITIONAL ||
+				 (!hasBuyReference && type == BookReference::DOWNLOAD_FULL_OR_DEMO)) &&
 				(reference.isNull() || (*it)->BookFormat > reference->BookFormat)) {
 			std::string name = (*it)->localCopyFileName();
 			if (!name.empty()) {
@@ -114,10 +132,14 @@ std::string NetworkBookItem::localCopyFileName() const {
 }
 
 void NetworkBookItem::removeLocalFiles() const {
+	const bool hasBuyReference =
+		!this->reference(BookReference::BUY).isNull() ||
+		!this->reference(BookReference::BUY_IN_BROWSER).isNull();
 	for (std::vector<shared_ptr<BookReference> >::const_iterator it = myReferences.begin(); it != myReferences.end(); ++it) {
 		const BookReference::Type type = (*it)->ReferenceType;
-		if ((type == BookReference::DOWNLOAD ||
-				 type == BookReference::DOWNLOAD_CONDITIONAL)) {
+		if (type == BookReference::DOWNLOAD_FULL ||
+				type == BookReference::DOWNLOAD_FULL_CONDITIONAL ||
+				(!hasBuyReference && type == BookReference::DOWNLOAD_FULL_OR_DEMO)) {
 			std::string fileName = (*it)->localCopyFileName();
 			if (!fileName.empty()) {
 				// TODO: remove a book from the library

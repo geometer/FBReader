@@ -79,7 +79,7 @@ DownloadBookRunnable::DownloadBookRunnable(shared_ptr<BookReference> reference, 
 }
 
 DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook") {
-	myReference = new BookReference(url, BookReference::NONE, BookReference::DOWNLOAD);
+	myReference = new BookReference(url, BookReference::NONE, BookReference::DOWNLOAD_FULL);
 }
 
 DownloadBookRunnable::~DownloadBookRunnable() {

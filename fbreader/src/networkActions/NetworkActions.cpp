@@ -46,7 +46,7 @@ ZLResourceKey NetworkBookReadAction::key() const {
 bool NetworkBookReadAction::makesSense() const {
 	if (myDemo) {
 		if (!myBook.localCopyFileName().empty() ||
-				!myBook.reference(BookReference::DOWNLOAD).isNull()) {
+				!myBook.reference(BookReference::DOWNLOAD_FULL).isNull()) {
 			return false;
 		}
 		shared_ptr<BookReference> reference =
@@ -90,7 +90,7 @@ ZLResourceKey NetworkBookDownloadAction::key() const {
 bool NetworkBookDownloadAction::makesSense() const {
 	if (myDemo) {
 		if (!myBook.localCopyFileName().empty() ||
-				!myBook.reference(BookReference::DOWNLOAD).isNull()) {
+				!myBook.reference(BookReference::DOWNLOAD_FULL).isNull()) {
 			return false;
 		}
 		shared_ptr<BookReference> reference =
@@ -99,7 +99,7 @@ bool NetworkBookDownloadAction::makesSense() const {
 	} else {
 		return
 			myBook.localCopyFileName().empty() &&
-			!myBook.reference(BookReference::DOWNLOAD).isNull();
+			!myBook.reference(BookReference::DOWNLOAD_FULL).isNull();
 	}
 }
 
@@ -109,7 +109,7 @@ void NetworkBookDownloadAction::run() {
 	}
 
 	shared_ptr<BookReference> reference = myBook.reference(
-		myDemo ? BookReference::DOWNLOAD_DEMO : BookReference::DOWNLOAD
+		myDemo ? BookReference::DOWNLOAD_DEMO : BookReference::DOWNLOAD_FULL
 	);
 	if (reference.isNull()) {
 		return;
@@ -164,7 +164,7 @@ ZLResourceKey NetworkBookBuyDirectlyAction::key() const {
 bool NetworkBookBuyDirectlyAction::makesSense() const {
 	return
 		myBook.localCopyFileName().empty() &&
-		myBook.reference(BookReference::DOWNLOAD).isNull() &&
+		myBook.reference(BookReference::DOWNLOAD_FULL).isNull() &&
 		!myBook.reference(BookReference::BUY).isNull();
 }
 
@@ -230,7 +230,7 @@ ZLResourceKey NetworkBookBuyInBrowserAction::key() const {
 bool NetworkBookBuyInBrowserAction::makesSense() const {
 	return
 		myBook.localCopyFileName().empty() &&
-		//myBook.reference(BookReference::DOWNLOAD).isNull() &&
+		myBook.reference(BookReference::DOWNLOAD_FULL).isNull() &&
 		myBook.reference(BookReference::BUY).isNull() &&
 		!myBook.reference(BookReference::BUY_IN_BROWSER).isNull();
 }

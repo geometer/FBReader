@@ -174,7 +174,7 @@ shared_ptr<BookReference> LitResAuthenticationManager::downloadReference(const N
 		return 0;
 	}
 	shared_ptr<BookReference> reference =
-		book.reference(BookReference::DOWNLOAD_CONDITIONAL);
+		book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL);
 	if (reference.isNull()) {
 		return 0;
 	}

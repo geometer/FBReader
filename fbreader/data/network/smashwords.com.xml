@@ -16,7 +16,7 @@
 		<alias alias="x-stanza-cover-image-thumbnail" name="http://opds-spec.org/thumbnail" />
 		<alias alias="x-stanza-cover-image" name="http://opds-spec.org/cover" />
 		<alias alias="bookinfo" name="http://opds-spec.org/acquisition/buy" type="text/html" />
-		<alias alias="" name="http://opds-spec.org/acquisition/sample" type="application/epub+zip" />
+		<alias alias="" name="http://data.fbreader.org/acquisition/sampleOrFull" type="application/epub+zip" />
 	</relationAliases>
 	<urlRewritingRules>
 		<rule type="addUrlParameter" apply="external" name="ref" value="geometer"/>

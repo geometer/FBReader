@@ -305,8 +305,11 @@ MobipocketHtmlBookReader::MobipocketHtmlBookReader(const std::string &fileName, 
 	setProcessPreTag(false);
 }
 
+#include <iostream>
+
 bool MobipocketHtmlBookReader::characterDataHandler(const char *text, size_t len, bool convert) {
 	myTocReader.appendText(text, len);
+	std::cerr << std::string(text, len);
 	return HtmlBookReader::characterDataHandler(text, len, convert);
 }
 

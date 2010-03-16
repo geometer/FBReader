@@ -92,7 +92,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			myReferences.push_back(new BookReference(
 				"https://robot.litres.ru/pages/catalit_download_book/?art=" + myBookId,
 				BookReference::FB2_ZIP,
-				BookReference::DOWNLOAD_CONDITIONAL
+				BookReference::DOWNLOAD_FULL_CONDITIONAL
 			));
 		}
 		break;

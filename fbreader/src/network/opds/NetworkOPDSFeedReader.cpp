@@ -87,6 +87,22 @@ static BookReference::Format formatByMimeType(const std::string &mimeType) {
 	return BookReference::NONE;
 }
 
+static BookReference::Type typeByRelation(const std::string &rel) {
+	if (rel == OPDSConstants::REL_ACQUISITION || rel.empty()) {
+		return BookReference::DOWNLOAD_FULL;
+	} else if (rel == OPDSConstants::REL_ACQUISITION_SAMPLE) {
+		return BookReference::DOWNLOAD_DEMO;
+	} else if (rel == OPDSConstants::REL_ACQUISITION_CONDITIONAL) {
+		return BookReference::DOWNLOAD_FULL_CONDITIONAL;
+	} else if (rel == OPDSConstants::REL_ACQUISITION_SAMPLE_OR_FULL) {
+		return BookReference::DOWNLOAD_FULL_OR_DEMO;
+	} else if (rel == OPDSConstants::REL_ACQUISITION_BUY) {
+		return BookReference::BUY;
+	} else {
+		return BookReference::UNKNOWN;
+	}
+}
+
 void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 	if (entry.isNull()) {
 		return;
@@ -107,6 +123,7 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 				rel == OPDSConstants::REL_ACQUISITION_SAMPLE ||
 				rel == OPDSConstants::REL_ACQUISITION_BUY ||
 				rel == OPDSConstants::REL_ACQUISITION_CONDITIONAL ||
+				rel == OPDSConstants::REL_ACQUISITION_SAMPLE_OR_FULL ||
 				(rel.empty() && formatByMimeType(type) != BookReference::NONE)) {
 			hasBookLink = true;
 			break;
@@ -143,6 +160,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		const std::string &href = link.href();
 		const std::string &type = link.type();
 		const std::string &rel = myLink.relation(link.rel(), type);
+		BookReference::Type referenceType = typeByRelation(rel);
 		if (rel == OPDSConstants::REL_COVER) {
 			if (urlMap[NetworkItem::URL_COVER].empty() && 
 					(type == OPDSConstants::MIME_IMG_PNG ||
@@ -154,28 +172,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 					type == OPDSConstants::MIME_IMG_JPEG) {
 				urlMap[NetworkItem::URL_COVER] = href;
 			}
-		} else if (rel == OPDSConstants::REL_ACQUISITION || rel.empty()) {
-			BookReference::Format format = formatByMimeType(type);
-			if (format != BookReference::NONE) {
-				references.push_back(new BookReference(
-					href, format, BookReference::DOWNLOAD
-				));
-			}
-		} else if (rel == OPDSConstants::REL_ACQUISITION_SAMPLE) {
-			BookReference::Format format = formatByMimeType(type);
-			if (format != BookReference::NONE) {
-				references.push_back(new BookReference(
-					href, format, BookReference::DOWNLOAD_DEMO
-				));
-			}
-		} else if (rel == OPDSConstants::REL_ACQUISITION_CONDITIONAL) {
-			BookReference::Format format = formatByMimeType(type);
-			if (format != BookReference::NONE) {
-				references.push_back(new BookReference(
-					href, format, BookReference::DOWNLOAD_CONDITIONAL
-				));
-			}
-		} else if (rel == OPDSConstants::REL_ACQUISITION_BUY) {
+		} else if (referenceType == BookReference::BUY) {
 			std::string price = BuyBookReference::price(
 				link.userData(OPDSXMLParser::KEY_PRICE),
 				link.userData(OPDSXMLParser::KEY_CURRENCY)
@@ -197,6 +194,11 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 						href, format, BookReference::BUY, price
 					));
 				}
+			}
+		} else if (referenceType != BookReference::UNKNOWN) {
+			BookReference::Format format = formatByMimeType(type);
+			if (format != BookReference::NONE) {
+				references.push_back(new BookReference(href, format, referenceType));
 			}
 		}
 	}

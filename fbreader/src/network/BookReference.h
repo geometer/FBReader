@@ -26,11 +26,13 @@ class BookReference {
 
 public:
 	enum Type {
-		DOWNLOAD,
+		DOWNLOAD_FULL,
+		DOWNLOAD_FULL_CONDITIONAL,
 		DOWNLOAD_DEMO,
-		DOWNLOAD_CONDITIONAL,
+		DOWNLOAD_FULL_OR_DEMO,
 		BUY,
-		BUY_IN_BROWSER
+		BUY_IN_BROWSER,
+		UNKNOWN
 	};
 
 	enum Format {

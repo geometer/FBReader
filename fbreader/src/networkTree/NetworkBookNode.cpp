@@ -41,8 +41,8 @@ NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<Networ
 
 void NetworkBookNode::init() {
 	const NetworkBookItem &book = this->book();
-	if (!book.reference(BookReference::DOWNLOAD).isNull() ||
-			!book.reference(BookReference::DOWNLOAD_CONDITIONAL).isNull()) {
+	if (!book.reference(BookReference::DOWNLOAD_FULL).isNull() ||
+			!book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL).isNull()) {
 		registerAction(new NetworkBookReadAction(book, false));
 		registerAction(new NetworkBookDownloadAction(book, false));
 		registerAction(new NetworkBookDeleteAction(book));
