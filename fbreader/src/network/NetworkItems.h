@@ -80,7 +80,7 @@ public:
 
 	enum VisibilityType {
 		Always,
-		Never,
+		//Never,
 		LoggedUsers
 	};
 
