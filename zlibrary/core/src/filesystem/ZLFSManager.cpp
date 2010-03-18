@@ -52,7 +52,7 @@ void ZLFSManager::normalize(std::string &path) const {
 		normalizeRealPath(realPath);
 
 		std::string archivePath = path.substr(index + 1);
-		while (archivePath.substr(2) == "./") {
+		while (archivePath.length() >= 2 && archivePath.substr(2) == "./") {
 			archivePath.erase(0, 2);
 		}
 		int index;
