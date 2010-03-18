@@ -20,6 +20,7 @@
 #ifndef __OPDSLINK_ADVANCEDSEARCH_H__
 #define __OPDSLINK_ADVANCEDSEARCH_H__
 
+#include <string>
 /*
 #include <algorithm>
 

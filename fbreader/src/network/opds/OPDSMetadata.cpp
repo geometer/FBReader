@@ -34,8 +34,6 @@ const std::string OPDSConstants::REL_ACQUISITION_SAMPLE_OR_FULL     = "http://da
 const std::string OPDSConstants::REL_COVER         = "http://opds-spec.org/cover";
 const std::string OPDSConstants::REL_THUMBNAIL     = "http://opds-spec.org/thumbnail";
 
-const std::string OPDSConstants::REL_ALTERNATE     = "alternate";
-
 const std::string OPDSConstants::MIME_OPDS_FULLENTRY = "application/atom+xml;type=entry";
 
 const std::string OPDSConstants::MIME_APP_FB2ZIP  = "application/fb2+zip";

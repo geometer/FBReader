@@ -51,9 +51,6 @@ public:
 	static const std::string REL_COVER;
 	static const std::string REL_THUMBNAIL;
 
-	// Any (?) level
-	static const std::string REL_ALTERNATE;
-
 	// MIME types / MIME type for "Full Entry" atom:link element
 	static const std::string MIME_OPDS_FULLENTRY;
 

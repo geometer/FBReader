@@ -160,7 +160,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		const std::string &href = link.href();
 		const std::string &type = link.type();
 		const std::string &rel = myLink.relation(link.rel(), type);
-		BookReference::Type referenceType = typeByRelation(rel);
+		const BookReference::Type referenceType = typeByRelation(rel);
 		if (rel == OPDSConstants::REL_COVER) {
 			if (urlMap[NetworkItem::URL_COVER].empty() && 
 					(type == OPDSConstants::MIME_IMG_PNG ||
@@ -288,7 +288,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				coverURL = href;
 			}
 		} else if (type == OPDSConstants::MIME_APP_ATOM) {
-			if (rel == OPDSConstants::REL_ALTERNATE) {
+			if (rel == ATOMConstants::REL_ALTERNATE) {
 				if (url.empty()) {
 					url = href;
 					urlIsAlternate = true;
@@ -302,7 +302,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 			}
 		} else if (type == OPDSConstants::MIME_TEXT_HTML) {
 			if (rel == OPDSConstants::REL_ACQUISITION ||
-					rel == OPDSConstants::REL_ALTERNATE ||
+					rel == ATOMConstants::REL_ALTERNATE ||
 					rel.empty()) {
 				htmlURL = href;
 			}
