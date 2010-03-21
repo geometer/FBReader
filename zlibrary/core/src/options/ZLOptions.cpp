@@ -17,11 +17,12 @@
  * 02110-1301, USA.
  */
 
-#include <stdlib.h>
-#include <stdio.h>
-#include <locale.h>
+#include <cstdlib>
+#include <cstdio>
 
 #include <algorithm>
+
+#include <ZLStringUtil.h>
 
 #include "ZLOptions.h"
 #include "ZLConfig.h"
@@ -82,21 +83,6 @@ static long stringToInteger(const std::string &value, long defaultValue) {
 }
 static long stringToInteger(const std::string &value, long defaultValue, long minValue, long maxValue) {
 	return std::max(minValue, std::min(maxValue, stringToInteger(value, defaultValue)));
-}
-
-static std::string doubleToString(double value) {
-	char buf[100];
-	setlocale(LC_NUMERIC, "C");
-	sprintf(buf, "%f", value);
-	return buf;
-}
-static double stringToDouble(const std::string &value, double defaultValue) {
-	if (!value.empty()) {
-		setlocale(LC_NUMERIC, "C");
-		return atof(value.c_str());
-	} else {
-		return defaultValue;
-	}
 }
 
 const std::string ZLOption::PLATFORM_GROUP = "PlatformOptions";
@@ -272,12 +258,12 @@ long ZLIntegerRangeOption::maxValue() const {
 	return myMaxValue;
 }
 
-ZLDoubleOption::ZLDoubleOption(const ZLCategoryKey &category, const std::string &groupName, const std::string &optionName, double defaultValue) : ZLOption(category, groupName, optionName), myDefaultValue(stringToDouble(getDefaultConfigValue(), defaultValue)) {
+ZLDoubleOption::ZLDoubleOption(const ZLCategoryKey &category, const std::string &groupName, const std::string &optionName, double defaultValue) : ZLOption(category, groupName, optionName), myDefaultValue(ZLStringUtil::stringToDouble(getDefaultConfigValue(), defaultValue)) {
 }
 
 double ZLDoubleOption::value() const {
 	if (!myIsSynchronized) {
-		myValue = stringToDouble(getConfigValue(), myDefaultValue);
+		myValue = ZLStringUtil::stringToDouble(getConfigValue(), myDefaultValue);
 		myIsSynchronized = true;
 	}
 	return myValue;
@@ -292,7 +278,7 @@ void ZLDoubleOption::setValue(double value) {
 	if (myValue == myDefaultValue) {
 		unsetConfigValue();
 	} else {
-		setConfigValue(doubleToString(myValue));
+		setConfigValue(ZLStringUtil::doubleToString(myValue));
 	}
 }
 

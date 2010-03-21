@@ -57,16 +57,16 @@ void StyleSheetTable::addMap(const std::string &tag, const std::string &aClass, 
 static void parseLength(const std::string &toParse, short &size, ZLTextStyleEntry::SizeUnit &unit) {
 	if (ZLStringUtil::stringEndsWith(toParse, "%")) {
 		unit = ZLTextStyleEntry::SIZE_UNIT_PERCENT;
-		size = atoi(toParse.data());
+		size = atoi(toParse.c_str());
 	} else if (ZLStringUtil::stringEndsWith(toParse, "em")) {
 		unit = ZLTextStyleEntry::SIZE_UNIT_EM_100;
-		size = (short)(100 * atof(toParse.data()));
+		size = (short)(100 * ZLStringUtil::stringToDouble(toParse, 0));
 	} else if (ZLStringUtil::stringEndsWith(toParse, "ex")) {
 		unit = ZLTextStyleEntry::SIZE_UNIT_EX_100;
-		size = (short)(100 * atof(toParse.data()));
+		size = (short)(100 * ZLStringUtil::stringToDouble(toParse, 0));
 	} else {
 		unit = ZLTextStyleEntry::SIZE_UNIT_PIXEL;
-		size = atoi(toParse.data());
+		size = atoi(toParse.c_str());
 	}
 }
 

@@ -18,6 +18,8 @@
  */
 
 #include <cctype>
+#include <cstdlib>
+#include <locale.h>
 
 #include "ZLStringUtil.h"
 
@@ -95,3 +97,18 @@ std::string ZLStringUtil::printf(const std::string &format, const std::string &a
 	return format.substr(0, index) + arg0 + format.substr(index + 2);
 }
 
+std::string ZLStringUtil::doubleToString(double value) {
+	char buf[100];
+	setlocale(LC_NUMERIC, "C");
+	sprintf(buf, "%f", value);
+	return buf;
+}
+
+double ZLStringUtil::stringToDouble(const std::string &value, double defaultValue) {
+	if (!value.empty()) {
+		setlocale(LC_NUMERIC, "C");
+		return atof(value.c_str());
+	} else {
+		return defaultValue;
+	}
+}
