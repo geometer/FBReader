@@ -1,10 +1,14 @@
 ===== 0.12.8 (March 22, 2010) =====
 
 * Smashwords library support has been improved: purchase links have been added
+* LitRes library support has been updated: since this version FBReader uses an
+  OPDS proxy located at http://data.fbreader.org/ for most operations with the
+  LitRes catalog
 * Processing of the xhtml hyperlinks in html encoded form (like
   '/files/This%20is%20a%20link') has been fixed
 * A seg.fault during scanning several archives has been fixed
 * Lithuanian localization has been updated
+* Vietnamese language/encoding detection patterns have been added
 
 ===== 0.12.7 (March 5, 2010) =====
 

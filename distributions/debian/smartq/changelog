@@ -1,14 +1,18 @@
+fbreader (0.12.8-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Mon, 22 Mar 2010 21:42:00 +0300
+
 fbreader (0.12.7-1) stable; urgency=low
 
-  * Vietnamese localization has been added
-  * LitRes catalog browsing broken in 0.12.6 has been fixed
+  * new upstream version
 
  -- Nikolay Pultsin <geometer@fbreader.org>  Fri, 5 Mar 2010 00:39:00 +0300
 
 fbreader (0.12.6-1) stable; urgency=low
 
-  * A processing of ePub files with incorrect CRC/entry size information
-    has been fixed. Such files are available e.g. from the FictionWise site.
+  * new upstream version
   * Text selection is disabled by default. That means the tap scrolling
     works faster in 200 ms.
 

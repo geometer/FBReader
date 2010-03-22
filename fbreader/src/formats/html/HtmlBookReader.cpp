@@ -17,7 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <cctype>
 
 #include <ZLFile.h>
@@ -171,9 +170,6 @@ HtmlImageTagAction::HtmlImageTagAction(HtmlBookReader &reader) : HtmlTagAction(r
 
 void HtmlImageTagAction::run(const HtmlReader::HtmlTag &tag) {
 	if (tag.Start) {
-		if (bookReader().paragraphIsOpen()) {
-			std::cerr << "\n";
-		}
 		bookReader().endParagraph();
 		for (unsigned int i = 0; i < tag.Attributes.size(); ++i) {
 			if (tag.Attributes[i].Name == "SRC") {
@@ -203,9 +199,6 @@ void HtmlBreakTagAction::run(const HtmlReader::HtmlTag &tag) {
 
 	if ((tag.Start && (myBreakType & BREAK_AT_START)) ||
 			(!tag.Start && (myBreakType & BREAK_AT_END))) {
-		if (bookReader().paragraphIsOpen()) {
-			std::cerr << "\n";
-		}
 		bookReader().endParagraph();
 		if (bookReader().isKindStackEmpty()) {
 			bookReader().pushKind(REGULAR);
@@ -218,9 +211,6 @@ HtmlPreTagAction::HtmlPreTagAction(HtmlBookReader &reader) : HtmlTagAction(reade
 }
 
 void HtmlPreTagAction::run(const HtmlReader::HtmlTag &tag) {
-		if (bookReader().paragraphIsOpen()) {
-			std::cerr << "\n";
-		}
 	bookReader().endParagraph();
 	myReader.myIsPreformatted = tag.Start;
 	myReader.mySpaceCounter = -1;
@@ -251,9 +241,6 @@ HtmlListItemTagAction::HtmlListItemTagAction(HtmlBookReader &reader) : HtmlTagAc
 
 void HtmlListItemTagAction::run(const HtmlReader::HtmlTag &tag) {
 	if (tag.Start) {
-		if (bookReader().paragraphIsOpen()) {
-			std::cerr << "\n";
-		}
 		bookReader().endParagraph();
 		bookReader().beginParagraph();
 		if (!myReader.myListNumStack.empty()) {
@@ -475,9 +462,6 @@ void HtmlBookReader::preformattedCharacterDataHandler(const char *text, size_t l
 					static const std::string SPACE = " ";
 					myBookReader.addData(SPACE);
 				}
-		if (myBookReader.paragraphIsOpen()) {
-			std::cerr << "\n";
-		}
 				myBookReader.endParagraph();
 				myBookReader.beginParagraph();
 				start = ptr + 1;
@@ -503,9 +487,6 @@ void HtmlBookReader::preformattedCharacterDataHandler(const char *text, size_t l
 				if (mySpaceCounter > myFormat.ignoredIndent()) {
 					if (ptr - start > mySpaceCounter) {
 						addConvertedDataToBuffer(start, ptr - start - mySpaceCounter, convert);
-		if (myBookReader.paragraphIsOpen()) {
-			std::cerr << "\n";
-		}
 						myBookReader.endParagraph();
 						myBookReader.beginParagraph();
 					}
@@ -527,9 +508,6 @@ void HtmlBookReader::preformattedCharacterDataHandler(const char *text, size_t l
 			} else {
 				if (myBreakCounter > 1) {
 					addConvertedDataToBuffer(start, ptr - start, convert);
-		if (myBookReader.paragraphIsOpen()) {
-			std::cerr << "\n";
-		}
 					myBookReader.endParagraph();
 					myBookReader.beginParagraph();
 					start = ptr;
@@ -599,9 +577,6 @@ void HtmlBookReader::startDocumentHandler() {
 }
 
 void HtmlBookReader::endDocumentHandler() {
-		if (myBookReader.paragraphIsOpen()) {
-			std::cerr << "\n";
-		}
 	myBookReader.endParagraph();
 }
 
