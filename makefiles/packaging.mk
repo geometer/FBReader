@@ -28,7 +28,7 @@ tarball:
 debian:
 	@echo -n 'Building $(ARCHITECTURE) debian package...'
 	@mkdir $(TMPDIR)
-	@cp -a Makefile zlibrary fbreader makefiles $(TMPDIR)
+	@cp -a Makefile zlibrary fbreader makefiles ChangeLog $(TMPDIR)
 	@rm -rf `find $(TMPDIR) -name ".svn"`
 	@mkdir $(TMPDIR)/debian
 	@for file in $(DIST_DIR)/debian/$(ARCHITECTURE)/*; do \

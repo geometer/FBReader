@@ -94,7 +94,7 @@ void BasicAuthenticationManager::logOut() {
 	myAccountChecked = true;
 	myAccountUserNameOption.setValue("");
 
-	const std::string signOutUrl = Link.url(NetworkLink::URL_SIGN_IN);
+	const std::string signOutUrl = Link.url(NetworkLink::URL_SIGN_OUT);
 	if (!signOutUrl.empty()) {
 		// TODO: is it so necessary to clean up cookies???
 		shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createNoActionRequest(

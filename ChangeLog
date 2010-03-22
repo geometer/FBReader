@@ -1,0 +1,17 @@
+===== 0.12.8 (March 22, 2010) =====
+
+* Smashwords library support has been improved: purchase links have been added
+* Processing of the xhtml hyperlinks in html encoded form (like
+  '/files/This%20is%20a%20link') has been fixed
+* A seg.fault during scanning several archives has been fixed
+* Lithuanian localization has been updated
+
+===== 0.12.7 (March 5, 2010) =====
+
+* Vietnamese localization has been added
+* LitRes catalog browsing broken in 0.12.6 has been fixed
+
+===== 0.12.6 (March 3, 2010) =====
+
+* A processing of ePub files with incorrect CRC/entry size information
+  has been fixed. Such files are available e.g. from the FictionWise site.
