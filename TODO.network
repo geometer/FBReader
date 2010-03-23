@@ -92,3 +92,5 @@ DELAYED (can't reproduce) X-System problem - fix set/restore window position (in
 0.15.0 предусмотреть ограничения по времени на загрузку "продолжений" каталогов
 0.15.0 обработка ссылок вида "открыть фид в браузере/rss ридере"
 0.15.0 автоматизированное получение https сертификатов
+
+BONJOUR сделать поддержку zeroconf/bonjour
