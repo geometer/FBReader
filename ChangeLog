@@ -1,3 +1,10 @@
+===== 0.12.9 (March 25, 2010) =====
+
+* Processing of epub local hyperlinks of form "../dir/file.html" has been
+  fixed
+* Code is now compilable with gcc 4.4.* (missing include directives have been
+  added)
+
 ===== 0.12.8 (March 22, 2010) =====
 
 * Smashwords library support has been improved: purchase links have been added
