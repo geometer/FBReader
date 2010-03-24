@@ -16,7 +16,7 @@ case "$1" in
 	maemo)
 		case "$2" in
 			maemo5)
-		    toolbar_file=""
+		    toolbar_file=data/default/toolbar.maemo5.xml
 				;;
 			*)
 		    toolbar_file=data/default/toolbar.maemo.xml
