@@ -20,6 +20,7 @@
 #include <cstring>
 
 #include <ZLFile.h>
+#include <ZLFileUtil.h>
 #include <ZLFileImage.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
@@ -349,7 +350,7 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 				reader.myReferenceDirName + link;
 		}
 		myHyperlinkStack.push(hyperlinkType);
-		bookReader(reader).addHyperlinkControl(hyperlinkType, link);
+		bookReader(reader).addHyperlinkControl(hyperlinkType, ZLFileUtil::normalizeUnixPath(link));
 	} else {
 		myHyperlinkStack.push(REGULAR);
 	}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbar>
+	<menuButton id="showLibrary"/>
+	<button id="showNetLibrary"/>
+	<button id="advancedSearchOnNetwork"/>
+	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>
+	<button id="toc"/>
+	<button id="undo"/>
+	<button id="redo"/>
+	<separator/>
+	<button id="search"/>
+	<button id="findPrevious"/>
+	<button id="findNext"/>
+	<separator/>
+	<button id="rotate"/>
+	<button id="toggleFullscreen"/>
+</toolbar>

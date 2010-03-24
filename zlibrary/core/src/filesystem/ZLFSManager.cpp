@@ -18,6 +18,7 @@
  */
 
 #include <ZLibrary.h>
+#include <ZLFileUtil.h>
 
 #include "ZLFSManager.h"
 #include "ZLFSDir.h"
@@ -50,32 +51,6 @@ void ZLFSManager::normalize(std::string &path) const {
 	} else {
 		std::string realPath = path.substr(0, index);
 		normalizeRealPath(realPath);
-
-		std::string archivePath = path.substr(index + 1);
-		while (archivePath.length() >= 2 && archivePath.substr(2) == "./") {
-			archivePath.erase(0, 2);
-		}
-		int index;
-		while ((index = archivePath.find("/../")) != -1) {
-			int prevIndex = std::max((int)archivePath.rfind('/', index - 1), 0);
-			archivePath.erase(prevIndex, index + 3 - prevIndex);
-		}
-		int len = archivePath.length();
-		if ((len >= 3) && (archivePath.substr(len - 3) == "/..")) {
-			int prevIndex = std::max((int)archivePath.rfind('/', len - 4), 0);
-			archivePath.erase(prevIndex);
-		}
-		while ((index = archivePath.find("/./")) != -1) {
-			archivePath.erase(index, 2);
-		}
-		while (archivePath.length() >= 2 &&
-					 archivePath.substr(archivePath.length() - 2) == "/.") {
-			archivePath.erase(archivePath.length() - 2);
-		}
-		while ((index = archivePath.find("//")) != -1) {
-			archivePath.erase(index, 1);
-		}
-
-		path = realPath + ':' + archivePath;
+		path = realPath + ':' + ZLFileUtil::normalizeUnixPath(path.substr(index + 1));
 	}
 }

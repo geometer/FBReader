@@ -18,6 +18,7 @@
  */
 
 #include <ZLImage.h>
+#include <ZLLogger.h>
 
 #include "BookReader.h"
 #include "BookModel.h"
@@ -132,6 +133,10 @@ void BookReader::addHyperlinkControl(FBTextKind kind, const std::string &label) 
 			myHyperlinkType.erase();
 			break;
 	}
+	ZLLogger::Instance().println(
+		"hyperlink",
+		" + control (" + myHyperlinkType + "): " + label
+	);
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
 		myCurrentTextModel->addHyperlinkControl(kind, label, myHyperlinkType);
@@ -150,6 +155,10 @@ void BookReader::addHyperlinkLabel(const std::string &label) {
 }
 
 void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber) {
+	ZLLogger::Instance().println(
+		"hyperlink",
+		" + label: " + label
+	);
 	myModel.myInternalHyperlinks.insert(
 		std::pair<std::string,BookModel::Label>(
 			label, BookModel::Label(myCurrentTextModel, paragraphNumber)
