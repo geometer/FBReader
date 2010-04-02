@@ -348,9 +348,10 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 			link = (link[0] == '#') ?
 				reader.myReferenceName + link :
 				reader.myReferenceDirName + link;
+			link = ZLFileUtil::normalizeUnixPath(link);
 		}
 		myHyperlinkStack.push(hyperlinkType);
-		bookReader(reader).addHyperlinkControl(hyperlinkType, ZLFileUtil::normalizeUnixPath(link));
+		bookReader(reader).addHyperlinkControl(hyperlinkType, link);
 	} else {
 		myHyperlinkStack.push(REGULAR);
 	}

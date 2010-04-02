@@ -1,3 +1,8 @@
+===== 0.12.10 (April 1, 2010) =====
+
+* Processing of external hyperlinks in epubs has been fixed
+* Feedbooks.com description file has been updated
+
 ===== 0.12.9 (March 25, 2010) =====
 
 * Processing of epub local hyperlinks of form "../dir/file.html" has been
