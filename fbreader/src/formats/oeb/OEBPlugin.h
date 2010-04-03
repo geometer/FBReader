@@ -25,7 +25,7 @@
 class OEBPlugin : public FormatPlugin {
 
 public:
-	static std::string opfFileName(const std::string &oebFileName);
+	static ZLFile opfFile(const ZLFile &oebFile);
 
 public:
 	~OEBPlugin();

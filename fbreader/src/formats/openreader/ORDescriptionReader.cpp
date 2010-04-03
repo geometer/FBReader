@@ -80,7 +80,7 @@ void ORDescriptionReader::endElementHandler(const char *tag) {
 bool ORDescriptionReader::readMetaInfo() {
 	myReadMetaData = false;
 	myReadState = READ_NONE;
-	return readDocument(myBook.filePath());
+	return readDocument(myBook.file());
 }
 
 const std::vector<std::string> &ORDescriptionReader::externalDTDs() const {

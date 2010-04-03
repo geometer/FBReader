@@ -511,7 +511,7 @@ BookInfoDialog::BookInfoDialog(shared_ptr<Book> book) : myBook(book) {
 
 	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Common"));
 	commonTab.addOption(ZLResourceKey("file"), 
-		new ZLStringInfoEntry(ZLFile::fileNameToUtf8(ZLFile(book->filePath()).path()))
+		new ZLStringInfoEntry(ZLFile::fileNameToUtf8(book->file().path()))
 	);
 	commonTab.addOption(ZLResourceKey("title"), new BookTitleEntry(*this));
 
@@ -552,7 +552,7 @@ BookInfoDialog::BookInfoDialog(shared_ptr<Book> book) : myBook(book) {
 
 	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*book);
 	if (!plugin.isNull()) {
-		myFormatInfoPage = plugin->createInfoPage(*myDialog, ZLFile(book->filePath()));
+		myFormatInfoPage = plugin->createInfoPage(*myDialog, book->file());
 	}
 }
 

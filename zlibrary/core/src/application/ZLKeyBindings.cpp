@@ -19,6 +19,7 @@
 
 #include <stdlib.h>
 
+#include <ZLFile.h>
 #include <ZLXMLReader.h>
 #include <ZLStringUtil.h>
 #include <ZLibrary.h>
@@ -58,7 +59,7 @@ void ZLKeyBindingsReader::startElementHandler(const char *tag, const char **attr
 static const std::string KeymapFile = "keymap.xml";
 
 void ZLKeyBindingsReader::readBindings() {
-	readDocument(ZLibrary::DefaultFilesPathPrefix() + KeymapFile);
+	readDocument(ZLFile(ZLibrary::DefaultFilesPathPrefix() + KeymapFile));
 }
 
 ZLKeyBindings::ZLKeyBindings(const std::string &name) : myName(name) {

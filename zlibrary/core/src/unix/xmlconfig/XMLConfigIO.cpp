@@ -34,8 +34,12 @@ const std::string XMLConfig::UNKNOWN_CATEGORY = ".unknown.";
 static const std::string CHANGES_FILE = "config.changes";
 
 void XMLConfig::load() {
-	XMLConfigReader(*this, "").readDocument(ZLibrary::DefaultFilesPathPrefix() + "config.xml");
-	XMLConfigReader(*this, "").readDocument(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "default" + ZLibrary::FileNameDelimiter + "config.xml");
+	XMLConfigReader(*this, "").readDocument(ZLFile(
+		ZLibrary::DefaultFilesPathPrefix() + "config.xml"
+	));
+	XMLConfigReader(*this, "").readDocument(ZLFile(
+		ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "default" + ZLibrary::FileNameDelimiter + "config.xml"
+	));
 	myDefaultGroups = myGroups;
 	for (std::map<std::string,XMLConfigGroup*>::iterator it = myDefaultGroups.begin(); it != myDefaultGroups.end(); ++it) {
 		it->second = new XMLConfigGroup(*it->second);
@@ -55,7 +59,9 @@ void XMLConfig::load() {
 		myDelta = new XMLConfigDelta();
 	}
 	if (!configDir.isNull()) {
-		XMLConfigReader(*this, UNKNOWN_CATEGORY).readDocument(configDir->itemPath(CHANGES_FILE));
+		XMLConfigReader(*this, UNKNOWN_CATEGORY).readDocument(
+			ZLFile(configDir->itemPath(CHANGES_FILE))
+		);
 	}
 }
 

@@ -20,6 +20,7 @@
 #include <stdlib.h>
 
 #include <ZLApplication.h>
+#include <ZLFile.h>
 #include <ZLXMLReader.h>
 #include <ZLResource.h>
 #include <ZLibrary.h>
@@ -44,7 +45,7 @@ void ZLApplication::createToolbar(int index) {
 	std::string fileName = ZLibrary::DefaultFilesPathPrefix();
 	const bool isWindowToolbar = index == ZLApplicationWindow::WINDOW_TOOLBAR;
 	fileName += isWindowToolbar ? "toolbar.xml" : "fullscreen_toolbar.xml";
-	ZLToolbarCreator(isWindowToolbar ? *myToolbar : *myFullscreenToolbar).readDocument(fileName);
+	ZLToolbarCreator(isWindowToolbar ? *myToolbar : *myFullscreenToolbar).readDocument(ZLFile(fileName));
 }
 
 const ZLToolbar &ZLApplication::toolbar(int index) const {

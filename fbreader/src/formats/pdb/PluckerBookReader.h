@@ -67,7 +67,7 @@ private:
 	void processHeader(FontType font, bool start);
 
 private:
-	std::string myFilePath;
+	const ZLFile myFile;
 	shared_ptr<ZLInputStream> myStream;
 	FontType myFont;
 	char *myCharBuffer;

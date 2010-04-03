@@ -39,9 +39,9 @@ void RtfDescriptionReader::setEncoding(int code) {
 	}
 }
 
-bool RtfDescriptionReader::readDocument(const std::string &fileName) {
+bool RtfDescriptionReader::readDocument(const ZLFile &file) {
 	myDoRead = false;
-	bool code = RtfReader::readDocument(fileName);
+	bool code = RtfReader::readDocument(file);
 	if (myBook.encoding().empty()) {
 		myBook.setEncoding(PluginCollection::Instance().DefaultEncodingOption.value());
 	}

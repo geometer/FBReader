@@ -53,8 +53,9 @@ void ZLEncodingCollection::registerProvider(shared_ptr<ZLEncodingConverterProvid
 
 void ZLEncodingCollection::init() {
 	if (mySets.empty()) {
-		const std::string prefix = encodingDescriptionPath() + ZLibrary::FileNameDelimiter;
-		ZLEncodingCollectionReader(*this).readDocument(prefix + "Encodings.xml");
+		ZLEncodingCollectionReader(*this).readDocument(ZLFile(
+			encodingDescriptionPath() + ZLibrary::FileNameDelimiter + "Encodings.xml"
+		));
 	}
 }
 

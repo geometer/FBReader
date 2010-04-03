@@ -38,10 +38,7 @@ bool RtfPlugin::acceptsFile(const ZLFile &file) const {
 }
 
 bool RtfPlugin::readMetaInfo(Book &book) const {
-	const std::string &path = book.filePath();
-	ZLFile file(path);
-	//shared_ptr<ZLInputStream> stream = file.inputStream();
-	shared_ptr<ZLInputStream> stream = new RtfReaderStream(path, 50000);
+	shared_ptr<ZLInputStream> stream = new RtfReaderStream(book.file(), 50000);
 
 	if (stream.isNull()) {
 		return false;
@@ -49,7 +46,7 @@ bool RtfPlugin::readMetaInfo(Book &book) const {
 
 	detectEncodingAndLanguage(book, *stream);
 
-	if (!RtfDescriptionReader(book).readDocument(path)) {
+	if (!RtfDescriptionReader(book).readDocument(book.file())) {
 		return false;
 	}
 	
@@ -58,5 +55,5 @@ bool RtfPlugin::readMetaInfo(Book &book) const {
 
 bool RtfPlugin::readModel(BookModel &model) const {
 	const Book &book = *model.book();
-	return RtfBookReader(model, book.encoding()).readDocument(book.filePath());
+	return RtfBookReader(model, book.encoding()).readDocument(book.file());
 }

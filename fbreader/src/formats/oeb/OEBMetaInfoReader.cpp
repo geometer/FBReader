@@ -164,11 +164,11 @@ bool OEBMetaInfoReader::processNamespaces() const {
 	return true;
 }
 
-bool OEBMetaInfoReader::readMetaInfo(const std::string &fileName) {
+bool OEBMetaInfoReader::readMetaInfo(const ZLFile &file) {
 	myReadMetaData = false;
 	myReadState = READ_NONE;
-	if (!readDocument(fileName)) {
-		ZLLogger::Instance().println("epub", "Failure while reading info from " + fileName);
+	if (!readDocument(file)) {
+		ZLLogger::Instance().println("epub", "Failure while reading info from " + file.path());
 		return false;
 	}
 

@@ -25,9 +25,10 @@
 #include "RtfReader.h"
 #include "../../bookmodel/BookReader.h"
 
+class ZLFile;
+
 class BookModel;
 class RtfImage;
-
 
 class RtfBookReader : public RtfReader {
 
@@ -35,7 +36,7 @@ public:
 	RtfBookReader(BookModel &model, const std::string &encoding);
 	~RtfBookReader();
 
-	bool readDocument(const std::string &fileName);
+	bool readDocument(const ZLFile &file);
 
 	bool characterDataHandler(std::string &str);
 	void flushBuffer();

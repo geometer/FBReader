@@ -26,6 +26,7 @@
 
 #include <shared_ptr.h>
 
+class ZLFile;
 class ZLInputStream;
 class ZLAsynchronousInputStream;
 class ZLXMLReaderInternal;
@@ -67,9 +68,8 @@ protected:
 public:
 	virtual ~ZLXMLReader();
 
+	bool readDocument(const ZLFile &file);
 	bool readDocument(shared_ptr<ZLInputStream> stream);
-	bool readDocument(const std::string &fileName);
-
 	bool readDocument(shared_ptr<ZLAsynchronousInputStream> stream);
 
 	const std::string &errorMessage() const;

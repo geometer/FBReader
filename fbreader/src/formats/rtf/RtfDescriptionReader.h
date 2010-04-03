@@ -32,7 +32,7 @@ public:
 	RtfDescriptionReader(Book &book);
 	~RtfDescriptionReader();
 
-	bool readDocument(const std::string &fileName);
+	bool readDocument(const ZLFile &file);
 
 	void setEncoding(int code);
 	void setAlignment();

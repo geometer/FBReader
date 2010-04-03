@@ -32,6 +32,9 @@ class ZLOutputStream;
 
 class ZLFile {
 
+public:
+	static const ZLFile NO_FILE;
+
 private:
 	static std::map<std::string,weak_ptr<ZLInputStream> > ourPlainStreamCache;
 
@@ -50,6 +53,9 @@ public:
 		ARCHIVE = 0xff00,
 	};
 	
+private:
+	ZLFile();
+
 public:
 	explicit ZLFile(const std::string &path, const std::string &mimeType = std::string());
 	~ZLFile();
@@ -57,7 +63,7 @@ public:
 	bool exists() const;
 	size_t size() const;	
 
-	void forceArchiveType(ArchiveType type);
+	void forceArchiveType(ArchiveType type) const;
 
 	bool isCompressed() const;
 	bool isDirectory() const;
@@ -79,6 +85,10 @@ public:
 	shared_ptr<ZLOutputStream> outputStream(bool writeThrough = false) const;
 	shared_ptr<ZLDir> directory(bool createUnexisting = false) const;
 
+	bool operator == (const ZLFile &other) const;
+	bool operator != (const ZLFile &other) const;
+	bool operator < (const ZLFile &other) const;
+
 private:
 	void fillInfo() const;
 	shared_ptr<ZLInputStream> envelopeCompressedStream(shared_ptr<ZLInputStream> &base) const;
@@ -90,7 +100,7 @@ private:
 	std::string myExtension;
 	mutable std::string myMimeType;
 	mutable bool myMimeTypeIsUpToDate;
-	ArchiveType myArchiveType;
+	mutable ArchiveType myArchiveType;
 	mutable ZLFileInfo myInfo;
 	mutable bool myInfoIsFilled;
 };
@@ -103,5 +113,9 @@ inline bool ZLFile::isArchive() const { return myArchiveType & ARCHIVE; }
 inline const std::string &ZLFile::path() const { return myPath; }
 inline const std::string &ZLFile::name(bool hideExtension) const { return hideExtension ? myNameWithoutExtension : myNameWithExtension; }
 inline const std::string &ZLFile::extension() const { return myExtension; }
+
+inline bool ZLFile::operator == (const ZLFile &other) const { return myPath == other.myPath; }
+inline bool ZLFile::operator != (const ZLFile &other) const { return myPath != other.myPath; }
+inline bool ZLFile::operator < (const ZLFile &other) const { return myPath < other.myPath; }
 
 #endif /* __ZLFILE_H__ */

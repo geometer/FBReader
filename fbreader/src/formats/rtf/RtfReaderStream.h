@@ -21,12 +21,14 @@
 #define __RTFREADERSTREAM_H__
 
 #include <string>
+
+#include <ZLFile.h>
 #include <ZLInputStream.h>
 
 class RtfReaderStream : public ZLInputStream {
 
 public:
-	RtfReaderStream(const std::string& fileName, size_t maxSize);
+	RtfReaderStream(const ZLFile& file, size_t maxSize);
 	~RtfReaderStream();
 
 private:
@@ -39,7 +41,7 @@ private:
 	size_t sizeOfOpened();
 
 private:
-	const std::string myFileName;
+	const ZLFile myFile;
 	char *myBuffer;
 	size_t mySize;
 	size_t myOffset;

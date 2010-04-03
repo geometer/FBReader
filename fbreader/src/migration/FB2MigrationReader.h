@@ -32,7 +32,7 @@ class FB2MigrationReader : public FB2Reader {
 public:
 	FB2MigrationReader(BookInfo &info, bool updateSeries);
 
-	void doRead(const std::string &fileName);
+	void doRead(const ZLFile &file);
 
 	void startElementHandler(int tag, const char **attributes);
 	void endElementHandler(int tag);

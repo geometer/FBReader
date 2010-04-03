@@ -30,6 +30,7 @@
 
 #include "../EncodedTextReader.h"
 
+class ZLFile;
 class ZLInputStream;
 class RtfCommand;
 
@@ -47,7 +48,7 @@ protected:
 	virtual ~RtfReader();
 
 public:
-	virtual bool readDocument(const std::string &fileName);
+	virtual bool readDocument(const ZLFile &file);
 
 protected:
 	enum DestinationType {

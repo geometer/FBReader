@@ -35,7 +35,7 @@
 #include "../../bookmodel/BookModel.h"
 #include "../../library/Book.h"
 
-PluckerBookReader::PluckerBookReader(BookModel &model) : BookReader(model), EncodedTextReader(model.book()->encoding()), myFilePath(model.book()->filePath()), myFont(FT_REGULAR) {
+PluckerBookReader::PluckerBookReader(BookModel &model) : BookReader(model), EncodedTextReader(model.book()->encoding()), myFile(model.book()->file()), myFont(FT_REGULAR) {
 	myCharBuffer = new char[65535];
 	myForcedEntry = 0;
 }
@@ -433,11 +433,11 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 				static const std::string mime = "image/palm";
 				ZLImage *image = 0;
 				if (type == 2) {
-					image = new ZLFileImage(mime, myFilePath, myStream->offset(), recordSize - 8);
+					image = new ZLFileImage(mime, myFile.path(), myStream->offset(), recordSize - 8);
 				} else if (myCompressionVersion == 1) {
-					image = new DocCompressedFileImage(mime, myFilePath, myStream->offset(), recordSize - 8);
+					image = new DocCompressedFileImage(mime, myFile.path(), myStream->offset(), recordSize - 8);
 				} else if (myCompressionVersion == 2) {
-					image = new ZCompressedFileImage(mime, myFilePath, myStream->offset() + 2, recordSize - 10);
+					image = new ZCompressedFileImage(mime, myFile.path(), myStream->offset() + 2, recordSize - 10);
 				}
 				if (image != 0) {
 					addImage(fromNumber(uid), image);
@@ -482,7 +482,7 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 }
 
 bool PluckerBookReader::readDocument() {
-	myStream = ZLFile(myFilePath).inputStream();
+	myStream = myFile.inputStream();
 	if (myStream.isNull() || !myStream->open()) {
 		return false;
 	}

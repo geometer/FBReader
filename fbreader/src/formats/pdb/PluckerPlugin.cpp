@@ -34,9 +34,7 @@ bool PluckerPlugin::acceptsFile(const ZLFile &file) const {
 }
 
 bool PluckerPlugin::readMetaInfo(Book &book) const {
-	ZLFile file(book.filePath());
-
-	shared_ptr<ZLInputStream> stream = new PluckerTextStream(file);
+	shared_ptr<ZLInputStream> stream = new PluckerTextStream(book.file());
 	detectEncodingAndLanguage(book, *stream);
 	if (book.encoding().empty()) {
 		return false;

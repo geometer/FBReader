@@ -83,9 +83,9 @@ void XHTMLFilesCollector::endElementHandler(const char *tag) {
 	}
 }
 
-OEBTextStream::OEBTextStream(const std::string &opfFileName) {
-	myFilePrefix = MiscUtil::htmlDirectoryPrefix(opfFileName);
-	XHTMLFilesCollector(myXHTMLFileNames).readDocument(opfFileName);
+OEBTextStream::OEBTextStream(const ZLFile &opfFile) {
+	myFilePrefix = MiscUtil::htmlDirectoryPrefix(opfFile.path());
+	XHTMLFilesCollector(myXHTMLFileNames).readDocument(opfFile);
 }
 
 void OEBTextStream::resetToStart() {

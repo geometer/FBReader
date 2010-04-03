@@ -49,7 +49,7 @@ void LibraryByTagView::updateBookList(TagNode *tagNode) {
 		if (!(*kt)->isInstanceOf(BookNode::TYPE_ID)) {
 			break;
 		}
-		if (((BookNode*)(*kt))->book()->filePath() != (*jt)->filePath()) {
+		if (((BookNode*)(*kt))->book()->file() != (*jt)->file()) {
 			break;
 		}
 	}

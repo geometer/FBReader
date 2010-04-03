@@ -19,8 +19,9 @@
 
 #include <algorithm>
 
-#include <ZLXMLReader.h>
 #include <ZLibrary.h>
+#include <ZLFile.h>
+#include <ZLXMLReader.h>
 #include <ZLResource.h>
 
 #include "ProgramCollection.h"
@@ -123,7 +124,7 @@ void ProgramCollectionBuilder::endElementHandler(const char *tag) {
 
 ProgramCollectionMap::ProgramCollectionMap() {
 	ProgramCollectionBuilder builder(*this);
-	builder.readDocument(ZLibrary::DefaultFilesPathPrefix() + "external.xml");
+	builder.readDocument(ZLFile(ZLibrary::DefaultFilesPathPrefix() + "external.xml"));
 }
 
 shared_ptr<ProgramCollection> ProgramCollectionMap::collection(const std::string &name) const {

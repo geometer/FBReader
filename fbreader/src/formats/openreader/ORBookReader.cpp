@@ -128,8 +128,8 @@ void ORBookReader::endElementHandler(const char *tag) {
 }
 
 bool ORBookReader::readBook() {
-	const std::string &filePath = myModelReader.model().book()->filePath();
-	myFilePrefix = MiscUtil::htmlDirectoryPrefix(filePath);
+	const ZLFile &file = myModelReader.model().book()->file();
+	myFilePrefix = MiscUtil::htmlDirectoryPrefix(file.path());
 
 	myResources.clear();
 	myCoverReference.erase();
@@ -139,7 +139,7 @@ bool ORBookReader::readBook() {
 	myTOC.clear();
 	myState = READ_NONE;
 
-	if (!readDocument(filePath)) {
+	if (!readDocument(file)) {
 		return false;
 	}
 
@@ -152,7 +152,7 @@ bool ORBookReader::readBook() {
 
 	for (std::vector<std::string>::const_iterator it = myHtmlFilesOrder.begin(); it != myHtmlFilesOrder.end(); ++it) {
 		myHtmlFileIDs.erase(*it);
-		XHTMLReader(myModelReader).readFile(myFilePrefix + myResources[*it], *it);
+		XHTMLReader(myModelReader).readFile(ZLFile(myFilePrefix + myResources[*it]), *it);
 	}
 
 	int level = 1;
@@ -174,7 +174,7 @@ bool ORBookReader::readBook() {
 	for (std::set<std::string>::const_iterator it = myHtmlFileIDs.begin(); it != myHtmlFileIDs.end(); ++it) {
 		myModelReader.setFootnoteTextModel(*it);
 		myModelReader.pushKind(REGULAR);
-		XHTMLReader(myModelReader).readFile(myFilePrefix + myResources[*it], *it);
+		XHTMLReader(myModelReader).readFile(ZLFile(myFilePrefix + myResources[*it]), *it);
 	}
 
 	for (std::map<std::string,std::string>::const_iterator it = myImageIDs.begin(); it != myImageIDs.end(); ++it) {

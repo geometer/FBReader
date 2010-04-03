@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLFile.h>
 #include <ZLXMLReader.h>
 #include <ZLResource.h>
 #include <ZLibrary.h>
@@ -38,7 +39,7 @@ private:
 
 void ZLApplication::createMenubar() {
 	menubar();
-	ZLMenubarCreator(*myMenubar).readDocument(ZLibrary::DefaultFilesPathPrefix() + "menubar.xml");
+	ZLMenubarCreator(*myMenubar).readDocument(ZLFile(ZLibrary::DefaultFilesPathPrefix() + "menubar.xml"));
 }
 
 ZLMenubarCreator::ZLMenubarCreator(ZLMenubar &menubar) : myMenubar(menubar) {

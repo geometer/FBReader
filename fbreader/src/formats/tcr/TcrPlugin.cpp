@@ -36,9 +36,7 @@ bool TcrPlugin::acceptsFile(const ZLFile &file) const {
 }
 
 bool TcrPlugin::readMetaInfo(Book &book) const {
-	ZLFile file(book.filePath());
-
-	shared_ptr<ZLInputStream> stream = new TcrStream(file);
+	shared_ptr<ZLInputStream> stream = new TcrStream(book.file());
 	detectEncodingAndLanguage(book, *stream);
 	if (book.encoding().empty()) {
 		return false;
@@ -49,8 +47,8 @@ bool TcrPlugin::readMetaInfo(Book &book) const {
 
 bool TcrPlugin::readModel(BookModel &model) const {
 	const Book &book = *model.book();
+	const ZLFile &file = book.file();
 
-	ZLFile file(book.filePath());
 	shared_ptr<ZLInputStream> stream = new TcrStream(file);
 
 	PlainTextFormat format(file);

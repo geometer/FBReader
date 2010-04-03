@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLFile.h>
 #include <ZLFileImage.h>
 
 #include "OEBCoverReader.h"
@@ -54,15 +55,15 @@ void XHTMLImageFinder::startElementHandler(const char *tag, const char **attribu
 OEBCoverReader::OEBCoverReader() {
 }
 
-shared_ptr<ZLImage> OEBCoverReader::readCover(const std::string &filePath) {
-	myPathPrefix = MiscUtil::htmlDirectoryPrefix(filePath);
+shared_ptr<ZLImage> OEBCoverReader::readCover(const ZLFile &file) {
+	myPathPrefix = MiscUtil::htmlDirectoryPrefix(file.path());
 	myReadGuide = false;
 	myImage = 0;
 	myCoverXHTML.erase();
-	readDocument(filePath);
+	readDocument(file);
 	myPathPrefix = MiscUtil::htmlDirectoryPrefix(myCoverXHTML);
 	if (!myCoverXHTML.empty()) {
-		XHTMLImageFinder(*this).readDocument(myCoverXHTML);
+		XHTMLImageFinder(*this).readDocument(ZLFile(myCoverXHTML));
 	}
 	return myImage;
 }

@@ -134,7 +134,7 @@ bool RtfBookReader::characterDataHandler(std::string &str) {
 	return true;
 }
 
-bool RtfBookReader::readDocument(const std::string &fileName) {
+bool RtfBookReader::readDocument(const ZLFile &file) {
 	myImageIndex = 0;
 	myFootnoteIndex = 1;
 
@@ -144,7 +144,7 @@ bool RtfBookReader::readDocument(const std::string &fileName) {
 	myBookReader.pushKind(REGULAR);
 	myBookReader.beginParagraph();
 
-	bool code = RtfReader::readDocument(fileName);
+	bool code = RtfReader::readDocument(file);
 
 	flushBuffer();
 	myBookReader.endParagraph();

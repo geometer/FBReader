@@ -30,7 +30,7 @@ class OEBMigrationReader : public ZLXMLReader {
 
 public:
 	OEBMigrationReader(BookInfo &info);
-	void doRead(const std::string &fileName);
+	void doRead(const ZLFile &file);
 
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);

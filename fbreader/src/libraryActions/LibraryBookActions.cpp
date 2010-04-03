@@ -48,7 +48,7 @@ void BookRemoveAction::run() {
 	switch (removeBookDialog()) {
 		case Library::REMOVE_FROM_DISK:
 		{
-			const std::string path = ZLFile(myBook->filePath()).physicalFilePath();
+			const std::string path = myBook->file().physicalFilePath();
 			ZLFile physicalFile(path);
 			if (!physicalFile.remove()) {
 				ZLResourceKey boxKey("removeFileErrorBox");
@@ -83,7 +83,7 @@ int BookRemoveAction::removeBookDialog() const {
 			return Library::REMOVE_DONT_REMOVE;
 		case Library::REMOVE_FROM_DISK:
 		{
-			ZLFile physFile(ZLFile(myBook->filePath()).physicalFilePath());
+			ZLFile physFile(myBook->file().physicalFilePath());
 			const std::string message = ZLStringUtil::printf(msgResource["deleteFile"].value(), physFile.name(false));
 			if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) == 0) {
 				return Library::REMOVE_FROM_DISK;

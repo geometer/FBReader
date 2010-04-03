@@ -30,7 +30,7 @@
 #include "../../library/Book.h"
 
 bool SimplePdbPlugin::readMetaInfo(Book &book) const {
-	ZLFile file(book.filePath());
+	const ZLFile &file = book.file();
 	shared_ptr<ZLInputStream> stream = createStream(file);
 	detectEncodingAndLanguage(book, *stream);
 	if (book.encoding().empty()) {
@@ -54,7 +54,7 @@ bool SimplePdbPlugin::readMetaInfo(Book &book) const {
 
 bool SimplePdbPlugin::readModel(BookModel &model) const {
 	const Book &book = *model.book();
-	ZLFile file(book.filePath());
+	const ZLFile &file = book.file();
 	shared_ptr<ZLInputStream> stream = createStream(file);
 
 	PlainTextFormat format(file);

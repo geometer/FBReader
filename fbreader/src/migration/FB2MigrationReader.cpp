@@ -90,9 +90,9 @@ void FB2MigrationReader::endElementHandler(int tag) {
 	}
 }
 
-void FB2MigrationReader::doRead(const std::string &fileName) {
+void FB2MigrationReader::doRead(const ZLFile &file) {
 	myReadState = READ_NOTHING;
-	readDocument(fileName);
+	readDocument(file);
 	if (myUpdateTags) {
 		std::string tagList;
 		for (std::set<std::string>::const_iterator it = myTags.begin(); it != myTags.end(); ++it) {

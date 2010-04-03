@@ -21,6 +21,7 @@
 #include <map>
 
 #include <ZLibrary.h>
+#include <ZLFile.h>
 #include <ZLXMLReader.h>
 
 #include "ZLUnicodeUtil.h"
@@ -81,7 +82,7 @@ static void initUnicodeTable() {
 	if (!inProgress && UNICODE_TABLE.empty()) {
 		inProgress = true;
 		ZLUnicodeTableReader reader;
-		reader.readDocument(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "unicode.xml.gz");
+		reader.readDocument(ZLFile(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "unicode.xml.gz"));
 		inProgress = false;
 	}
 }

@@ -29,6 +29,8 @@
 #include "../css/StyleSheetTable.h"
 #include "../css/StyleSheetParser.h"
 
+class ZLFile;
+
 class BookReader;
 class XHTMLReader;
 
@@ -58,7 +60,7 @@ private:
 
 public:
 	XHTMLReader(BookReader &modelReader);
-	bool readFile(const std::string &filePath, const std::string &referenceName);
+	bool readFile(const ZLFile &file, const std::string &referenceName);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);

@@ -91,8 +91,8 @@ ZLXMLReader::~ZLXMLReader() {
 	delete myInternalReader;
 }
 
-bool ZLXMLReader::readDocument(const std::string &fileName) {
-	return readDocument(ZLFile(fileName).inputStream());
+bool ZLXMLReader::readDocument(const ZLFile &file) {
+	return readDocument(file.inputStream());
 }
 
 bool ZLXMLReader::readDocument(shared_ptr<ZLInputStream> stream) {

@@ -76,7 +76,7 @@ const std::string &EReaderPlugin::tryOpen(const ZLFile &file) const {
 }
 
 bool EReaderPlugin::readMetaInfo(Book &book) const {
-	shared_ptr<ZLInputStream> stream = ZLFile(book.filePath()).inputStream();
+	shared_ptr<ZLInputStream> stream = book.file().inputStream();
 	if (stream.isNull() || ! stream->open()) {
 		return false;
 	}

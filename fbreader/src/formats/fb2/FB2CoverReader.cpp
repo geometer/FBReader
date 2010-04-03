@@ -17,19 +17,20 @@
  * 02110-1301, USA.
  */
 
+#include <ZLFile.h>
 #include <ZLBase64EncodedImage.h>
 
 #include "FB2CoverReader.h"
 
 #include "../../library/Book.h"
 
-FB2CoverReader::FB2CoverReader(const Book &book) : myFilePath(book.filePath()) {
+FB2CoverReader::FB2CoverReader(const Book &book) : myFile(book.file()) {
 }
 
 shared_ptr<ZLImage> FB2CoverReader::readCover() {
 	myReadCoverPage = false;
 	myImageReference.erase();
-	readDocument(myFilePath);
+	readDocument(myFile);
 	return myImage;
 }
 

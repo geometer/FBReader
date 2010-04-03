@@ -27,7 +27,7 @@ class ZLFile;
 class PluckerTextStream : public PdbStream {
 
 public:
-	PluckerTextStream(ZLFile &file);
+	PluckerTextStream(const ZLFile &file);
 	~PluckerTextStream();
 	bool open();
 	void close();

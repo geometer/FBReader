@@ -74,7 +74,7 @@ PluginCollection::PluginCollection() :
 }
 
 shared_ptr<FormatPlugin> PluginCollection::plugin(const Book &book) {
-	return plugin(ZLFile(book.filePath()), false);
+	return plugin(book.file(), false);
 }
 
 shared_ptr<FormatPlugin> PluginCollection::plugin(const ZLFile &file, bool strong) {

@@ -61,7 +61,7 @@ void LibraryView::showBook(shared_ptr<Book> book) {
 			if ((*it)->isInstanceOf(BookNode::TYPE_ID)) {
 				// TODO: replace with == for shared_ptr<Book>
 				//if (((BookNode*)*it)->book() == book) {
-				if (((BookNode*)*it)->book()->filePath() == book->filePath()) {
+				if (((BookNode*)*it)->book()->file() == book->file()) {
 					bookNodes.push_back(*it);
 				}
 			} else {

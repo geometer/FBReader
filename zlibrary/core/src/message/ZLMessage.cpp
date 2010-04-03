@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLFile.h>
 #include <ZLXMLReader.h>
 #include <ZLibrary.h>
 
@@ -92,8 +93,12 @@ void ZLMessageDescriptionReader::startElementHandler(const char *tag, const char
 }
 
 void ZLCommunicationManager::init() {
-	ZLMessageDescriptionReader(*this).readDocument(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "messages.xml");
-	ZLMessageDescriptionReader(*this).readDocument(ZLibrary::DefaultFilesPathPrefix() + "messages.xml");
+	ZLMessageDescriptionReader(*this).readDocument(ZLFile(
+		ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + "messages.xml"
+	));
+	ZLMessageDescriptionReader(*this).readDocument(ZLFile(
+		ZLibrary::DefaultFilesPathPrefix() + "messages.xml"
+	));
 	myInitialized = true;
 }
 

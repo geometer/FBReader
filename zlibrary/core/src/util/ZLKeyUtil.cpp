@@ -22,6 +22,7 @@
 
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
+#include <ZLFile.h>
 #include <ZLXMLReader.h>
 #include <ZLibrary.h>
 
@@ -64,7 +65,7 @@ void KeyNamesReader::startElementHandler(const char *tag, const char **attribute
 
 std::string ZLKeyUtil::keyName(int unicode, int key, int modifiersMask) {
 	if (!ourInitialized) {
-		KeyNamesReader().readDocument(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + ourKeyNamesFileName);
+		KeyNamesReader().readDocument(ZLFile(ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + ourKeyNamesFileName));
 		ourInitialized = true;
 	}
 

@@ -320,5 +320,5 @@ void FB2BookReader::endElementHandler(int tag) {
 }
 
 bool FB2BookReader::readBook() {
-	return readDocument(myModelReader.model().book()->filePath());
+	return readDocument(myModelReader.model().book()->file());
 }

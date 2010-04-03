@@ -23,7 +23,12 @@
 struct ZLFileInfo {
 	bool Exists;
 	bool IsDirectory;
-	unsigned long Size;
+	size_t Size;
+
+	ZLFileInfo();
 };
+
+inline ZLFileInfo::ZLFileInfo() : Exists(false), IsDirectory(false), Size(0) {
+}
 
 #endif /* __ZLFILEINFO_H__ */

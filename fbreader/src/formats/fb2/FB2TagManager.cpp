@@ -19,6 +19,7 @@
 
 #include <vector>
 
+#include <ZLFile.h>
 #include <ZLXMLReader.h>
 #include <ZLibrary.h>
 #include <ZLStringUtil.h>
@@ -109,11 +110,11 @@ const FB2TagManager &FB2TagManager::Instance() {
 }
 
 FB2TagManager::FB2TagManager() {
-	FB2TagInfoReader(myTagMap).readDocument(
+	FB2TagInfoReader(myTagMap).readDocument(ZLFile(
 		ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter +
 		"formats" + ZLibrary::FileNameDelimiter + "fb2" +
 		ZLibrary::FileNameDelimiter + "fb2genres.xml"
-	);
+	));
 }
 
 const std::vector<std::string> &FB2TagManager::humanReadableTags(const std::string &id) const {

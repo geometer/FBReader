@@ -40,7 +40,7 @@ void MobipocketPlugin::readDocumentInternal(const ZLFile &file, BookModel &model
 }
 
 bool MobipocketPlugin::readMetaInfo(Book &book) const {
-	shared_ptr<ZLInputStream> stream = ZLFile(book.filePath()).inputStream();
+	shared_ptr<ZLInputStream> stream = book.file().inputStream();
 	if (stream.isNull() || ! stream->open()) {
 		return false;
 	}
@@ -138,7 +138,7 @@ bool MobipocketPlugin::readMetaInfo(Book &book) const {
 }
 
 shared_ptr<ZLImage> MobipocketPlugin::coverImage(const Book &book) const {
-	shared_ptr<ZLInputStream> stream = ZLFile(book.filePath()).inputStream();
+	shared_ptr<ZLInputStream> stream = book.file().inputStream();
 	if (stream.isNull() || ! stream->open()) {
 		return 0;
 	}
@@ -210,18 +210,18 @@ shared_ptr<ZLImage> MobipocketPlugin::coverImage(const Book &book) const {
 		coverIndex = thumbIndex;
 	}
 
-	ZLFile file(book.filePath());
+	const ZLFile &file = book.file();
 	PalmDocStream pbStream(file);
 	if (!pbStream.open()) {
 		return 0;
 	}
-	int index = pbStream.firstImageLocationIndex(book.filePath());
+	int index = pbStream.firstImageLocationIndex(file.path());
 	if (index >= 0) {
 		std::pair<int,int> imageLocation = pbStream.imageLocation(pbStream.header(), index + coverIndex);
 		if ((imageLocation.first > 0) && (imageLocation.second > 0)) {
 			return new ZLFileImage(
 				"image/auto",
-				book.filePath(),
+				file.path(),
 				imageLocation.first,
 				imageLocation.second
 			);

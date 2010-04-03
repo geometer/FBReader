@@ -101,7 +101,7 @@ std::string BookNode::summary() const {
 }
 
 bool BookNode::highlighted() const {
-	return myBook->filePath() == FBReader::Instance().currentBook()->filePath();
+	return myBook->file() == FBReader::Instance().currentBook()->file();
 }
 
 shared_ptr<ZLImage> BookNode::extractCoverImage() const {

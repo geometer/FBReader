@@ -202,5 +202,5 @@ bool FB2MetaInfoReader::readMetaInfo() {
 	for (int i = 0; i < 3; ++i) {
 		myAuthorNames[i].erase();
 	}
-	return readDocument(myBook.filePath());
+	return readDocument(myBook.file());
 }

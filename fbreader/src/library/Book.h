@@ -24,6 +24,8 @@
 
 #include <shared_ptr.h>
 
+#include <ZLFile.h>
+
 #include "Lists.h"
 
 class Author;
@@ -56,7 +58,7 @@ public:
 
 public: // unmodifiable book methods
 	const std::string &title() const;
-	const std::string &filePath() const;
+	const ZLFile &file() const;
 	const std::string &language() const;
 	const std::string &encoding() const;
 	const std::string &seriesTitle() const;
@@ -91,7 +93,7 @@ public:
 private:
 	int myBookId;
 
-	const std::string myFilePath;
+	const ZLFile myFile;
 	std::string myTitle;
 	std::string myLanguage;
 	std::string myEncoding;
@@ -106,7 +108,7 @@ private: // disable copying
 };
 
 inline const std::string &Book::title() const { return myTitle; }
-inline const std::string &Book::filePath() const { return myFilePath; }
+inline const ZLFile &Book::file() const { return myFile; }
 inline const std::string &Book::language() const { return myLanguage; }
 inline const std::string &Book::encoding() const { return myEncoding; }
 inline const std::string &Book::seriesTitle() const { return mySeriesTitle; }

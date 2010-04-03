@@ -23,6 +23,7 @@
 #include "FB2Reader.h"
 
 class Book;
+class ZLfile;
 class ZLImage;
 
 class FB2CoverReader : public FB2Reader {
@@ -37,7 +38,7 @@ private:
 	void characterDataHandler(const char *text, size_t len);
 
 private:
-	const std::string myFilePath;
+	const ZLFile myFile;
 	bool myReadCoverPage;
 	std::string myImageReference;
 	shared_ptr<ZLImage> myImage;

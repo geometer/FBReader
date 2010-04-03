@@ -77,25 +77,24 @@ bool BooksDBUtil::getBooks(std::map<std::string, shared_ptr<Book> > &booksmap, b
 	}
 	for (BookList::iterator it = books.begin(); it != books.end(); ++it) {
 		Book &book = **it;
-		const std::string &filePath = book.filePath();
-		const std::string physicalFilePath = ZLFile(filePath).physicalFilePath();
+		const std::string physicalFilePath = book.file().physicalFilePath();
 		ZLFile file(physicalFilePath);
 		if (!checkFile || file.exists()) {
 			if (!checkFile || checkInfo(file)) {
 				if (isBookFull(book)) {
-					booksmap.insert(std::make_pair(filePath, *it));
+					booksmap.insert(std::make_pair(book.file().path(), *it));
 					continue;
 				}
 			} else {
-				if (physicalFilePath != filePath) {
+				if (physicalFilePath != book.file().path()) {
 					resetZipInfo(file);
 				}
 				saveInfo(file);
 			}
-			shared_ptr<Book> bookptr = Book::loadFromFile(filePath);
+			shared_ptr<Book> bookptr = Book::loadFromFile(book.file().path());
 			if (!bookptr.isNull()) {
 				BooksDB::Instance().saveBook(bookptr);
-				booksmap.insert(std::make_pair(filePath, bookptr));
+				booksmap.insert(std::make_pair(book.file().path(), bookptr));
 			}
 		}
 	}

@@ -293,7 +293,7 @@ void Library::removeBook(shared_ptr<Book> book) {
 		BooksDB::Instance().deleteFromBookList(*book);
 		bool recentListChanged = false;
 		for (BookList::iterator it = myRecentBooks.begin(); it != myRecentBooks.end();) {
-			if ((*it)->filePath() == book->filePath()) {
+			if ((*it)->file() == book->file()) {
 				it = myRecentBooks.erase(it);
 				recentListChanged = true;
 			} else {
@@ -395,7 +395,7 @@ Library::RemoveType Library::canRemove(shared_ptr<Book> book) const {
 	return (RemoveType)(
 		(myExternalBooks.find(book) != myExternalBooks.end() ?
 			REMOVE_FROM_LIBRARY : REMOVE_DONT_REMOVE) |
-		(BooksDBUtil::canRemoveFile(book->filePath()) ?
+		(BooksDBUtil::canRemoveFile(book->file().path()) ?
 			REMOVE_FROM_DISK : REMOVE_DONT_REMOVE)
 	);
 }
@@ -415,7 +415,7 @@ void Library::addBookToRecentList(shared_ptr<Book> book) {
 		return;
 	}
 	for (BookList::iterator it = myRecentBooks.begin(); it != myRecentBooks.end(); ++it) {
-		if ((*it)->filePath() == book->filePath()) {
+		if ((*it)->file() == book->file()) {
 			if (it == myRecentBooks.begin()) {
 				return;
 			}

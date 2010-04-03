@@ -28,7 +28,7 @@
 class OEBTextStream : public MergedStream {
 
 public:
-	OEBTextStream(const std::string &opfFileName);
+	OEBTextStream(const ZLFile &opfFile);
 
 private:
 	void resetToStart();

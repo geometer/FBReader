@@ -29,8 +29,7 @@
 BookModel::BookModel(const shared_ptr<Book> book) : myBook(book) {
 	myBookTextModel = new ZLTextPlainModel(book->language(), 102400);
 	myContentsModel = new ContentsModel(book->language());
-	ZLFile file(book->filePath());
-	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(file, false);
+	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(book->file(), false);
 	if (!plugin.isNull()) {
 		plugin->readModel(*this);
 	}

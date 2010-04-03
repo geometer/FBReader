@@ -26,13 +26,15 @@
 
 #include "../NetworkLink.h"
 
+class ZLFile;
+
 class NetworkAuthenticationManager;
 class URLRewritingRule;
 
 class OPDSLink : public NetworkLink {
 
 public:
-	static shared_ptr<NetworkLink> read(const std::string &path);
+	static shared_ptr<NetworkLink> read(const ZLFile &file);
 
 public:
 	enum FeedCondition {

@@ -95,9 +95,9 @@ std::string OPDSLink::AdvancedSearch::query(
 	return query;
 }
 
-shared_ptr<NetworkLink> OPDSLink::read(const std::string &path) {
+shared_ptr<NetworkLink> OPDSLink::read(const ZLFile &file) {
 	Reader reader;
-	reader.readDocument(path);
+	reader.readDocument(file);
 	return reader.link();
 }
 

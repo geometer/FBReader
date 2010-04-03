@@ -156,7 +156,9 @@ void ZLTextTeXHyphenator::load(const std::string &language) {
 	
 	unload();
 
-	ZLTextHyphenationReader(this).readDocument(PatternZip() + ":" + language + POSTFIX);
+	ZLTextHyphenationReader(this).readDocument(ZLFile(
+		PatternZip() + ":" + language + POSTFIX
+	));
 	
 	std::sort(myPatternTable.begin(), myPatternTable.end(), ZLTextTeXPatternComparator());
 }

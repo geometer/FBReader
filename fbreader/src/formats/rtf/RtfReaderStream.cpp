@@ -122,7 +122,7 @@ void RtfTextOnlyReader::newParagraph() {
 void RtfTextOnlyReader::interrupt() {
 }
 
-RtfReaderStream::RtfReaderStream(const std::string& fileName, size_t maxSize) : myFileName(fileName), myBuffer(0), mySize(maxSize) {
+RtfReaderStream::RtfReaderStream(const ZLFile& file, size_t maxSize) : myFile(file), myBuffer(0), mySize(maxSize) {
 }
 
 RtfReaderStream::~RtfReaderStream() {
@@ -134,7 +134,7 @@ bool RtfReaderStream::open() {
 		myBuffer = new char[mySize];
 	}
 	RtfTextOnlyReader reader(myBuffer, mySize);
-	reader.readDocument(myFileName);
+	reader.readDocument(myFile);
 	mySize = reader.readSize();
 	myOffset = 0;
 	return true;

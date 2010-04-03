@@ -485,12 +485,12 @@ void XHTMLReader::fillTagTable() {
 XHTMLReader::XHTMLReader(BookReader &modelReader) : myModelReader(modelReader) {
 }
 
-bool XHTMLReader::readFile(const std::string &filePath, const std::string &referenceName) {
+bool XHTMLReader::readFile(const ZLFile &file, const std::string &referenceName) {
 	myModelReader.addHyperlinkLabel(referenceName);
 
 	fillTagTable();
 
-	myPathPrefix = MiscUtil::htmlDirectoryPrefix(filePath);
+	myPathPrefix = MiscUtil::htmlDirectoryPrefix(file.path());
 	myReferenceName = referenceName;
 	const int index = referenceName.rfind('/', referenceName.length() - 1);
 	myReferenceDirName = referenceName.substr(0, index + 1);
@@ -503,7 +503,7 @@ bool XHTMLReader::readFile(const std::string &filePath, const std::string &refer
 	myStyleEntryStack.clear();
 	myStylesToRemove = 0;
 
-	return readDocument(filePath);
+	return readDocument(file);
 }
 
 void XHTMLReader::addStyleEntry(const std::string tag, const std::string aClass) {

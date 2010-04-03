@@ -80,9 +80,9 @@ bool OEBMigrationReader::processNamespaces() const {
 	return true;
 }
 
-void OEBMigrationReader::doRead(const std::string &fileName) {
+void OEBMigrationReader::doRead(const ZLFile &file) {
 	myReadMetaData = false;
 	myReadSubject = false;
-	readDocument(fileName);
+	readDocument(file);
 	myInfo.TagsOption.setValue(myTagList);
 }

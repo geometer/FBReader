@@ -30,7 +30,12 @@
 #include "bzip2/ZLBzip2InputStream.h"
 #include "ZLFSManager.h"
 
+const ZLFile ZLFile::NO_FILE;
+
 std::map<std::string,weak_ptr<ZLInputStream> > ZLFile::ourPlainStreamCache;
+
+ZLFile::ZLFile() : myMimeTypeIsUpToDate(true), myInfoIsFilled(true) {
+}
 
 ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(path), myMimeType(mimeType), myMimeTypeIsUpToDate(!mimeType.empty()), myInfoIsFilled(false) {
 	ZLFSManager::Instance().normalize(myPath);
@@ -190,7 +195,7 @@ bool ZLFile::remove() const {
 	}
 }
 
-void ZLFile::forceArchiveType(ArchiveType type) {
+void ZLFile::forceArchiveType(ArchiveType type) const {
 	if (myArchiveType != type) {
 		myArchiveType = type;
 		ZLFSManager::Instance().myForcedFiles[myPath] = myArchiveType;

@@ -79,7 +79,7 @@ public:
 	int bytesNumber() const { return myBytesNumber; }
 
 protected:
-	const std::string myFilePath;
+	const ZLFile myFile;
 	int myBytesNumber;
 };
 
@@ -229,7 +229,7 @@ bool MyTwoBytesEncodingConverter::fillTable(int*) {
 	return false;
 }
 
-EncodingReader::EncodingReader(const std::string &encoding) : myFilePath(ZLEncodingCollection::encodingDescriptionPath() + ZLibrary::FileNameDelimiter + encoding) {
+EncodingReader::EncodingReader(const std::string &encoding) : myFile(ZLEncodingCollection::encodingDescriptionPath() + ZLibrary::FileNameDelimiter + encoding) {
 }
 
 EncodingReader::~EncodingReader() {
@@ -260,7 +260,7 @@ bool EncodingIntReader::fillTable(int *map) {
 	for (int i = 0; i < 256; ++i) {
 		myMap[i] = i;
 	}
-	return readDocument(myFilePath);
+	return readDocument(myFile);
 }
 
 void EncodingIntReader::startElementHandler(const char *tag, const char **attributes) {
@@ -279,7 +279,7 @@ EncodingCharReader::~EncodingCharReader() {
 
 char **EncodingCharReader::createTable() {
 	myMap = 0;
-	if (!readDocument(myFilePath) && (myMap != 0)) {
+	if (!readDocument(myFile) && (myMap != 0)) {
 		int length = (myBytesNumber == 1) ? 256 : 32768;
 		for (int i = 0; i < length; ++i) {
 			if (myMap[i] != 0) {

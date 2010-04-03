@@ -98,7 +98,7 @@ shared_ptr<ZLInputStream> CHMTextStream::nextStream() {
 }
 
 bool CHMPlugin::readMetaInfo(Book &book) const {
-	ZLFile file(book.filePath());
+	const ZLFile &file = book.file();
 	shared_ptr<ZLInputStream> stream = file.inputStream();
 	if (stream.isNull() || !stream->open()) {
 		return false;
@@ -163,7 +163,7 @@ bool CHMPlugin::readModel(BookModel &model) const {
 	model.setHyperlinkMatcher(new CHMHyperlinkMatcher());
 
 	const Book &book = *model.book();
-	const ZLFile file(book.filePath());
+	const ZLFile &file = book.file();
 
 	shared_ptr<ZLInputStream> stream = file.inputStream();
 	if (stream.isNull() || !stream->open()) {

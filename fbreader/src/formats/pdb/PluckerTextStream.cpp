@@ -26,7 +26,7 @@
 #include "PdbReader.h"
 #include "DocDecompressor.h"
 
-PluckerTextStream::PluckerTextStream(ZLFile &file) : PdbStream(file) {
+PluckerTextStream::PluckerTextStream(const ZLFile &file) : PdbStream(file) {
 	myFullBuffer = 0;
 }
 

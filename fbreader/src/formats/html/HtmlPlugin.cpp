@@ -36,8 +36,7 @@ bool HtmlPlugin::acceptsFile(const ZLFile &file) const {
 }
 
 bool HtmlPlugin::readMetaInfo(Book &book) const {
-	ZLFile file(book.filePath());
-	shared_ptr<ZLInputStream> stream = file.inputStream();
+	shared_ptr<ZLInputStream> stream = book.file().inputStream();
 	if (stream.isNull()) {
 		return false;
 	}
@@ -54,7 +53,7 @@ bool HtmlPlugin::readMetaInfo(Book &book) const {
 
 bool HtmlPlugin::readModel(BookModel &model) const {
 	const Book& book = *model.book();
-	const ZLFile file(book.filePath());
+	const ZLFile &file = book.file();
 	shared_ptr<ZLInputStream> stream = file.inputStream();
 	if (stream.isNull()) {
 		return false;

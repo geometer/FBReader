@@ -35,7 +35,7 @@ bool SaveTableBookRunnable::run() {
 		return updateTableBook(myBook);
 	}
 
-	myFindFileId->setFileName(myBook->filePath(), true);
+	myFindFileId->setFileName(myBook->file().path(), true);
 	if (!myFindFileId->run()) {
 		return false;
 	}

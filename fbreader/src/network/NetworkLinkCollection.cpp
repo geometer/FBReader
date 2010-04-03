@@ -93,7 +93,7 @@ NetworkLinkCollection::NetworkLinkCollection() :
 		std::vector<std::string> names;
 		dir->collectFiles(names, false);
 		for (std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
-			shared_ptr<NetworkLink> link = OPDSLink::read(dir->itemPath(*it));
+			shared_ptr<NetworkLink> link = OPDSLink::read(ZLFile(dir->itemPath(*it)));
 			if (!link.isNull()) {
 				myLinks.push_back(link);
 			}

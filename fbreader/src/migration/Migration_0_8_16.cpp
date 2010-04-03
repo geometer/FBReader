@@ -61,12 +61,12 @@ void Migration_0_8_16::doMigrationInternal() {
 				if (extension == "fb2") {
 					ZLBooleanOption seriesOption(FBCategoryKey::BOOKS, *it, "SequenceDefined", false);
 					if (!seriesOption.value() || info.TagsOption.value().empty()) {
-						FB2MigrationReader(info, !seriesOption.value()).doRead(*it);
+						FB2MigrationReader(info, !seriesOption.value()).doRead(ZLFile(*it));
 					}
 					seriesOption.setValue(true);
 				} else if ((extension == "opf") || (extension == "oebzip") || (extension == "epub")) {
 					if (info.TagsOption.value().empty()) {
-						OEBMigrationReader(info).doRead(OEBPlugin::opfFileName(*it));
+						OEBMigrationReader(info).doRead(OEBPlugin::opfFile(ZLFile(*it)));
 					}
 				} else if ((extension == "prc") || (extension == "pdb") || (extension == "mobi")) {
 					const std::string fileType = PdbPlugin::fileType(file);

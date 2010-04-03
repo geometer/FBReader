@@ -30,7 +30,7 @@ class OEBMetaInfoReader : public ZLXMLReader {
 
 public:
 	OEBMetaInfoReader(Book &book);
-	bool readMetaInfo(const std::string &fileName);
+	bool readMetaInfo(const ZLFile &file);
 
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);

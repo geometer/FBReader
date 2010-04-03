@@ -32,7 +32,7 @@ class OEBBookReader : public ZLXMLReader {
 
 public:
 	OEBBookReader(BookModel &model);
-	bool readBook(const std::string &fileName);
+	bool readBook(const ZLFile &file);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);

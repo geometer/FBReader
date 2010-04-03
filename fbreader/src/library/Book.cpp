@@ -33,7 +33,7 @@
 
 const std::string Book::AutoEncoding = "auto";
 
-Book::Book(const std::string filePath, int id) : myBookId(id), myFilePath(filePath), myIndexInSeries(0) {
+Book::Book(const std::string filePath, int id) : myBookId(id), myFile(filePath), myIndexInSeries(0) {
 }
 
 Book::~Book() {

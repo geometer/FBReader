@@ -420,9 +420,9 @@ void RtfReader::interrupt() {
 	myIsInterrupted = true;
 }
 
-bool RtfReader::readDocument(const std::string &fileName) {
-	myFileName = fileName;
-	myStream = ZLFile(fileName).inputStream();
+bool RtfReader::readDocument(const ZLFile &file) {
+	myFileName = file.path();
+	myStream = file.inputStream();
 	if (myStream.isNull() || !myStream->open()) {
 			return false;
 	}

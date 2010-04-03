@@ -388,7 +388,7 @@ bool BooksDB::removeBook(const Book &book) {
 	if (!isInitialized() || book.bookId() == 0) {
 		return false;
 	}
-	myDeleteBook->setFileName(book.filePath());
+	myDeleteBook->setFileName(book.file().path());
 	return executeAsTransaction(*myDeleteBook);
 }
 

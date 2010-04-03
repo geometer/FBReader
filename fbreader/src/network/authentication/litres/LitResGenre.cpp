@@ -190,7 +190,7 @@ bool LitResGenreMap::loadGenres() const {
 	}
 
 	shared_ptr<ZLXMLReader> parser = new LitResGenresParser(myGenresTree, myGenresMap);
-	return parser->readDocument(cacheName);
+	return parser->readDocument(ZLFile(cacheName));
 }
 
 void LitResGenreMap::buildGenresTitles(const std::vector<shared_ptr<LitResGenre> > &genres, const std::string &titlePrefix) const {

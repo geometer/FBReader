@@ -21,6 +21,7 @@
 
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
+#include <ZLFile.h>
 #include <ZLFileImage.h>
 #include <ZLXMLNamespace.h>
 
@@ -112,8 +113,8 @@ void OEBBookReader::endElementHandler(const char *tag) {
 	}
 }
 
-bool OEBBookReader::readBook(const std::string &fileName) {
-	myFilePrefix = MiscUtil::htmlDirectoryPrefix(fileName);
+bool OEBBookReader::readBook(const ZLFile &file) {
+	myFilePrefix = MiscUtil::htmlDirectoryPrefix(file.path());
 
 	myIdToHref.clear();
 	myHtmlFileNames.clear();
@@ -122,7 +123,7 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 	myGuideTOC.clear();
 	myState = READ_NONE;
 
-	if (!readDocument(fileName)) {
+	if (!readDocument(file)) {
 		return false;
 	}
 
@@ -134,7 +135,7 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 			myModelReader.insertEndOfSectionParagraph();
 		}
 		XHTMLReader xhtmlReader(myModelReader);
-		xhtmlReader.readFile(myFilePrefix + *it, *it);
+		xhtmlReader.readFile(ZLFile(myFilePrefix + *it), *it);
 	}
 
 	generateTOC();
@@ -145,7 +146,7 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 void OEBBookReader::generateTOC() {
 	if (!myNCXTOCFileName.empty()) {
 		NCXReader ncxReader(myModelReader);
-		if (ncxReader.readDocument(myFilePrefix + myNCXTOCFileName)) {
+		if (ncxReader.readDocument(ZLFile(myFilePrefix + myNCXTOCFileName))) {
 			const std::map<int,NCXReader::NavPoint> navigationMap = ncxReader.navigationMap();
 			if (!navigationMap.empty()) {
 				size_t level = 0;
