@@ -27,7 +27,7 @@ class ZLFile;
 class PalmDocLikeStream : public PdbStream {
 
 public:
-	PalmDocLikeStream(ZLFile &file);
+	PalmDocLikeStream(const ZLFile &file);
 	~PalmDocLikeStream();
 	bool open();
 	

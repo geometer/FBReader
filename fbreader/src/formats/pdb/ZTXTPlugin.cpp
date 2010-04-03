@@ -33,12 +33,11 @@ bool ZTXTPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::fileType(file) == "zTXTGPlm";
 }
 
-shared_ptr<ZLInputStream> ZTXTPlugin::createStream(ZLFile &file) const {
+shared_ptr<ZLInputStream> ZTXTPlugin::createStream(const ZLFile &file) const {
 	return new ZTXTStream(file);
 }
 
-FormatInfoPage *ZTXTPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
-	ZLFile file(fileName);
+FormatInfoPage *ZTXTPlugin::createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file) {
 	shared_ptr<ZLInputStream> stream = createStream(file);
-	return new PlainTextInfoPage(dialog, fileName, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
+	return new PlainTextInfoPage(dialog, file, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
 }

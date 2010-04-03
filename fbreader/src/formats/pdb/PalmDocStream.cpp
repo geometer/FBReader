@@ -28,7 +28,7 @@
 #include "DocDecompressor.h"
 #include "HuffDecompressor.h"
 
-PalmDocStream::PalmDocStream(ZLFile &file) : PalmDocLikeStream(file) {
+PalmDocStream::PalmDocStream(const ZLFile &file) : PalmDocLikeStream(file) {
 }
 
 PalmDocStream::~PalmDocStream() {

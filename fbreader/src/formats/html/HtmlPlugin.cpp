@@ -54,26 +54,26 @@ bool HtmlPlugin::readMetaInfo(Book &book) const {
 
 bool HtmlPlugin::readModel(BookModel &model) const {
 	const Book& book = *model.book();
-	const std::string filePath = book.filePath();
-	shared_ptr<ZLInputStream> stream = ZLFile(filePath).inputStream();
+	const ZLFile file(book.filePath());
+	shared_ptr<ZLInputStream> stream = file.inputStream();
 	if (stream.isNull()) {
 		return false;
 	}
 
-	PlainTextFormat format(filePath);
+	PlainTextFormat format(file);
 	if (!format.initialized()) {
 		PlainTextFormatDetector detector;
 		detector.detect(*stream, format);
 	}
 
-	std::string directoryPrefix = MiscUtil::htmlDirectoryPrefix(filePath);
+	std::string directoryPrefix = MiscUtil::htmlDirectoryPrefix(file.path());
 	HtmlBookReader reader(directoryPrefix, model, format, book.encoding());
-	reader.setFileName(MiscUtil::htmlFileName(filePath));
+	reader.setFileName(MiscUtil::htmlFileName(file.path()));
 	reader.readDocument(*stream);
 
 	return true;
 }
 
-FormatInfoPage *HtmlPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &filePath) {
-	return new PlainTextInfoPage(dialog, filePath, ZLResourceKey("<PRE>"), false);
+FormatInfoPage *HtmlPlugin::createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file) {
+	return new PlainTextInfoPage(dialog, file, ZLResourceKey("<PRE>"), false);
 }

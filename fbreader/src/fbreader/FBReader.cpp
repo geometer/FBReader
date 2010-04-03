@@ -209,7 +209,7 @@ bool FBReader::createBook(const ZLFile &bookFile, shared_ptr<Book> &book) {
 	shared_ptr<FormatPlugin> plugin =
 		PluginCollection::Instance().plugin(bookFile, false);
 	if (!plugin.isNull()) {
-		std::string error = plugin->tryOpen(bookFile.path());
+		std::string error = plugin->tryOpen(bookFile);
 		if (!error.empty()) {
 			ZLResourceKey boxKey("openBookErrorBox");
 			ZLDialogManager::Instance().errorBox(

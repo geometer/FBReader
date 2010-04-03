@@ -28,7 +28,7 @@
 #include "DocDecompressor.h"
 
 
-EReaderStream::EReaderStream(ZLFile &file) : PalmDocLikeStream(file) {
+EReaderStream::EReaderStream(const ZLFile &file) : PalmDocLikeStream(file) {
 	myDestination = TEXT;
 }
 

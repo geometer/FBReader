@@ -30,25 +30,24 @@ bool PalmDocPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::fileType(file) == "TEXtREAd";
 }
 
-void PalmDocPlugin::readDocumentInternal(const std::string &fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const {
+void PalmDocPlugin::readDocumentInternal(const ZLFile &file, BookModel &model, const PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const {
 	stream.open();
 	bool readAsPalmDoc = ((PalmDocStream&)stream).hasExtraSections();
 	stream.close();
 	if (readAsPalmDoc) {
-		MobipocketHtmlBookReader(fileName, model, format, encoding).readDocument(stream);
+		MobipocketHtmlBookReader(file, model, format, encoding).readDocument(stream);
 	} else {
-		SimplePdbPlugin::readDocumentInternal(fileName, model, format, encoding, stream);
+		SimplePdbPlugin::readDocumentInternal(file, model, format, encoding, stream);
 	}
 }
 
-FormatInfoPage *PalmDocPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
-	ZLFile file(fileName);
+FormatInfoPage *PalmDocPlugin::createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file) {
 	shared_ptr<ZLInputStream> stream = createStream(file);
 	stream->open();
 	bool readAsPalmDoc = ((PalmDocStream&)*stream).hasExtraSections();
 	stream->close();
 	if (!readAsPalmDoc) {
-		return new PlainTextInfoPage(dialog, fileName, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
+		return new PlainTextInfoPage(dialog, file, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
 	} else {
 		return 0;
 	}

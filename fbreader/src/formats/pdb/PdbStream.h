@@ -29,7 +29,7 @@ class ZLFile;
 class PdbStream : public ZLInputStream {
 
 public:
-	PdbStream(ZLFile &file);
+	PdbStream(const ZLFile &file);
 	virtual ~PdbStream();
 
 protected:

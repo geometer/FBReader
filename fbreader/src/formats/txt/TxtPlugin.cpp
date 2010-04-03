@@ -55,13 +55,13 @@ bool TxtPlugin::readMetaInfo(Book &book) const {
 
 bool TxtPlugin::readModel(BookModel &model) const {
 	const Book &book = *model.book();
-	const std::string &filePath = book.filePath();
-	shared_ptr<ZLInputStream> stream = ZLFile(filePath).inputStream();
+	const ZLFile file(book.filePath());
+	shared_ptr<ZLInputStream> stream = file.inputStream();
 	if (stream.isNull()) {
 		return false;
 	}
 
-	PlainTextFormat format(filePath);
+	PlainTextFormat format(file);
 	if (!format.initialized()) {
 		PlainTextFormatDetector detector;
 		detector.detect(*stream, format);
@@ -71,6 +71,6 @@ bool TxtPlugin::readModel(BookModel &model) const {
 	return true;
 }
 
-FormatInfoPage *TxtPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
-	return new PlainTextInfoPage(dialog, fileName, ZLResourceKey("Text"), true);
+FormatInfoPage *TxtPlugin::createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file) {
+	return new PlainTextInfoPage(dialog, file, ZLResourceKey("Text"), true);
 }

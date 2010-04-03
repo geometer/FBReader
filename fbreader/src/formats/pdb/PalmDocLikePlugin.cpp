@@ -29,12 +29,11 @@ bool PalmDocLikePlugin::providesMetaInfo() const {
 	return true;
 }
 
-shared_ptr<ZLInputStream> PalmDocLikePlugin::createStream(ZLFile &file) const {
+shared_ptr<ZLInputStream> PalmDocLikePlugin::createStream(const ZLFile &file) const {
 	return new PalmDocStream(file);
 }
 
-const std::string &PalmDocLikePlugin::tryOpen(const std::string &path) const {
-	ZLFile file(path);
+const std::string &PalmDocLikePlugin::tryOpen(const ZLFile &file) const {
 	PalmDocStream stream(file);
 	stream.open();
 	return stream.error();

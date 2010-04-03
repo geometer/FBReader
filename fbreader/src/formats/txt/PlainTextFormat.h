@@ -36,7 +36,7 @@ public:
 		BREAK_PARAGRAPH_AT_LINE_WITH_INDENT = 4,
 	};
 
-	PlainTextFormat(const std::string &fileName);
+	PlainTextFormat(const ZLFile &file);
 	~PlainTextFormat() {}
 
 	bool initialized() const { return InitializedOption.value(); }
@@ -59,7 +59,7 @@ friend class PlainTextFormatDetector;
 class PlainTextInfoPage : public FormatInfoPage {
 
 public:
-	PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const ZLResourceKey &key, bool showContentsEntry);
+	PlainTextInfoPage(ZLOptionsDialog &dialog, const ZLFile &file, const ZLResourceKey &key, bool showContentsEntry);
 	~PlainTextInfoPage();
 
 private:

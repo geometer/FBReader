@@ -552,7 +552,7 @@ BookInfoDialog::BookInfoDialog(shared_ptr<Book> book) : myBook(book) {
 
 	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*book);
 	if (!plugin.isNull()) {
-		myFormatInfoPage = plugin->createInfoPage(*myDialog, book->filePath());
+		myFormatInfoPage = plugin->createInfoPage(*myDialog, ZLFile(book->filePath()));
 	}
 }
 

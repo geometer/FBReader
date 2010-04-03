@@ -23,7 +23,7 @@
 
 #include "PdbStream.h"
 
-PdbStream::PdbStream(ZLFile &file) : myBase(file.inputStream()) {
+PdbStream::PdbStream(const ZLFile &file) : myBase(file.inputStream()) {
 	myBuffer = 0;
 }
 

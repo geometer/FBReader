@@ -35,18 +35,18 @@ const std::string OPTION_IgnoredIndent = "IgnoredIndent";
 const std::string OPTION_EmptyLinesBeforeNewSection = "EmptyLinesBeforeNewSection";
 const std::string OPTION_CreateContentsTable = "CreateContentsTable";
 
-PlainTextFormat::PlainTextFormat(const std::string &fileName) :
-	InitializedOption(FBCategoryKey::BOOKS, fileName, OPTION_Initialized, false),
-	BreakTypeOption(FBCategoryKey::BOOKS, fileName, OPTION_BreakType, 1),
-	IgnoredIndentOption(FBCategoryKey::BOOKS, fileName, OPTION_IgnoredIndent, 1, 100, 1),
-	EmptyLinesBeforeNewSectionOption(FBCategoryKey::BOOKS, fileName, OPTION_EmptyLinesBeforeNewSection, 1, 100, 1),
-	CreateContentsTableOption(FBCategoryKey::BOOKS, fileName, OPTION_CreateContentsTable, false) {
+PlainTextFormat::PlainTextFormat(const ZLFile &file) :
+	InitializedOption(FBCategoryKey::BOOKS, file.path(), OPTION_Initialized, false),
+	BreakTypeOption(FBCategoryKey::BOOKS, file.path(), OPTION_BreakType, 1),
+	IgnoredIndentOption(FBCategoryKey::BOOKS, file.path(), OPTION_IgnoredIndent, 1, 100, 1),
+	EmptyLinesBeforeNewSectionOption(FBCategoryKey::BOOKS, file.path(), OPTION_EmptyLinesBeforeNewSection, 1, 100, 1),
+	CreateContentsTableOption(FBCategoryKey::BOOKS, file.path(), OPTION_CreateContentsTable, false) {
 }
 
-PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const std::string &fileName, const ZLResourceKey &key, bool showContentsEntry) : myFormat(fileName) {
+PlainTextInfoPage::PlainTextInfoPage(ZLOptionsDialog &dialog, const ZLFile &file, const ZLResourceKey &key, bool showContentsEntry) : myFormat(file) {
 	if (!myFormat.initialized()) {
 		PlainTextFormatDetector detector;
-		shared_ptr<ZLInputStream> stream = ZLFile(fileName).inputStream();
+		shared_ptr<ZLInputStream> stream = file.inputStream();
 		if (!stream.isNull()) {
 			detector.detect(*stream, myFormat);
 		}

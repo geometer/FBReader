@@ -22,7 +22,7 @@
 
 #include "ZTXTStream.h"
 
-ZTXTStream::ZTXTStream(ZLFile &file) : PdbStream(file) {
+ZTXTStream::ZTXTStream(const ZLFile &file) : PdbStream(file) {
 }
 
 ZTXTStream::~ZTXTStream() {

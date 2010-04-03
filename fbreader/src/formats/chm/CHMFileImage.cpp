@@ -25,7 +25,7 @@ CHMFileImage::CHMFileImage(shared_ptr<CHMFileInfo> info, const std::string &entr
 }
 
 shared_ptr<ZLInputStream> CHMFileImage::inputStream() const {
-	shared_ptr<ZLInputStream> baseStream = ZLFile(myInfo->fileName()).inputStream();
+	shared_ptr<ZLInputStream> baseStream = ZLFile(myInfo->filePath()).inputStream();
 	if (baseStream.isNull() || !baseStream->open()) {
 		return 0;
 	}

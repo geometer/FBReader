@@ -29,7 +29,7 @@ class ZLFile;
 class EReaderStream : public PalmDocLikeStream {
 
 public:
-	EReaderStream(ZLFile &file);
+	EReaderStream(const ZLFile &file);
 	~EReaderStream();
 
 	enum StreamDestination {

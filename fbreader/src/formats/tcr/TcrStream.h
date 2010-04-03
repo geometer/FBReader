@@ -27,7 +27,7 @@ class ZLFile;
 class TcrStream : public ZLInputStream {
 
 public:
-	TcrStream(ZLFile &file);
+	TcrStream(const ZLFile &file);
 	virtual ~TcrStream();
 	bool open();
 	virtual void close();

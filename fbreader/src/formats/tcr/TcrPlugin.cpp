@@ -49,12 +49,11 @@ bool TcrPlugin::readMetaInfo(Book &book) const {
 
 bool TcrPlugin::readModel(BookModel &model) const {
 	const Book &book = *model.book();
-	const std::string &filePath = book.filePath();
 
-	ZLFile file(filePath);
+	ZLFile file(book.filePath());
 	shared_ptr<ZLInputStream> stream = new TcrStream(file);
 
-	PlainTextFormat format(filePath);
+	PlainTextFormat format(file);
 	if (!format.initialized()) {
 		PlainTextFormatDetector detector;
 		detector.detect(*stream, format);
@@ -71,11 +70,10 @@ bool TcrPlugin::readModel(BookModel &model) const {
 	return true;
 }
 
-FormatInfoPage *TcrPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &filePath) {
-	ZLFile file(filePath);
+FormatInfoPage *TcrPlugin::createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file) {
 	shared_ptr<ZLInputStream> stream = new TcrStream(file);
 	if (TextFormatDetector().isPPL(*stream)) {
 		return 0;
 	}
-	return new PlainTextInfoPage(dialog, filePath, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
+	return new PlainTextInfoPage(dialog, file, ZLResourceKey("Text"), !TextFormatDetector().isHtml(*stream));
 }

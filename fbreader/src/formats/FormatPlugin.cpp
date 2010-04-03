@@ -88,7 +88,7 @@ void FormatPlugin::detectLanguage(Book &book, ZLInputStream &stream) {
 	book.setLanguage(language);
 }
 
-const std::string &FormatPlugin::tryOpen(const std::string&) const {
+const std::string &FormatPlugin::tryOpen(const ZLFile&) const {
 	static const std::string EMPTY = "";
 	return EMPTY;
 }

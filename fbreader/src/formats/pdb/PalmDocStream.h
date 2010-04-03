@@ -28,7 +28,7 @@ class HuffDecompressor;
 class PalmDocStream : public PalmDocLikeStream {
 
 public:
-	PalmDocStream(ZLFile &file);
+	PalmDocStream(const ZLFile &file);
 	~PalmDocStream();
 	
 	std::pair<int,int> imageLocation(const PdbHeader &header, int index) const;

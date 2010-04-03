@@ -53,9 +53,9 @@ public:
 
 	virtual bool providesMetaInfo() const = 0;
 	virtual bool acceptsFile(const ZLFile &file) const = 0;
-	virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path);
+	virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file);
 
-	virtual const std::string &tryOpen(const std::string &path) const;
+	virtual const std::string &tryOpen(const ZLFile &file) const;
 	virtual bool readMetaInfo(Book &book) const = 0;
 	virtual bool readModel(BookModel &model) const = 0;
 	virtual shared_ptr<ZLImage> coverImage(const Book &book) const;
@@ -93,6 +93,6 @@ inline FormatInfoPage::FormatInfoPage() {}
 inline FormatInfoPage::~FormatInfoPage() {}
 inline FormatPlugin::FormatPlugin() {}
 inline FormatPlugin::~FormatPlugin() {}
-inline FormatInfoPage *FormatPlugin::createInfoPage(ZLOptionsDialog&, const std::string&) { return 0; }
+inline FormatInfoPage *FormatPlugin::createInfoPage(ZLOptionsDialog&, const ZLFile&) { return 0; }
 
 #endif /* __FORMATPLUGIN_H__ */

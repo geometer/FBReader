@@ -25,7 +25,7 @@
 
 #include "TcrStream.h"
 
-TcrStream::TcrStream(ZLFile &file) : myBase(file.inputStream()) {
+TcrStream::TcrStream(const ZLFile &file) : myBase(file.inputStream()) {
 }
 
 TcrStream::~TcrStream() {

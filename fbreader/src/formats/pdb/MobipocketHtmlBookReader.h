@@ -27,7 +27,7 @@
 class MobipocketHtmlBookReader : public HtmlBookReader {
 
 public:
-	MobipocketHtmlBookReader(const std::string &fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding);
+	MobipocketHtmlBookReader(const ZLFile &file, BookModel &model, const PlainTextFormat &format, const std::string &encoding);
 	void readDocument(ZLInputStream &stream);
 
 private:

@@ -189,7 +189,7 @@ shared_ptr<ZLInputStream> CHMFileInfo::entryStream(shared_ptr<ZLInputStream> bas
 	return new CHMInputStream(base, sectionInfo, recordInfo.Offset, recordInfo.Length);
 }
 
-CHMFileInfo::CHMFileInfo(const std::string &fileName) : myFileName(fileName) {
+CHMFileInfo::CHMFileInfo(const ZLFile &file) : myFilePath(file.path()) {
 }
 
 bool CHMFileInfo::moveToEntry(ZLInputStream &stream, const std::string &entryName) {
@@ -485,6 +485,6 @@ CHMFileInfo::FileNames CHMFileInfo::sectionNames(shared_ptr<ZLInputStream> base)
 	return names;
 }
 
-const std::string CHMFileInfo::fileName() const {
-	return myFileName;
+const std::string CHMFileInfo::filePath() const {
+	return myFilePath;
 }

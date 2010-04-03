@@ -29,7 +29,7 @@ class ZLFile;
 class ZTXTStream : public PdbStream {
 
 public:
-	ZTXTStream(ZLFile &file);
+	ZTXTStream(const ZLFile &file);
 	~ZTXTStream();
 	bool open();
 

@@ -52,18 +52,18 @@ public:
 	bool readModel(BookModel &model) const;
 
 protected:
-	virtual shared_ptr<ZLInputStream> createStream(ZLFile &file) const = 0;
-	virtual void readDocumentInternal(const std::string &fileName, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
+	virtual shared_ptr<ZLInputStream> createStream(const ZLFile &file) const = 0;
+	virtual void readDocumentInternal(const ZLFile &file, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
 };
 
 class PalmDocLikePlugin : public SimplePdbPlugin {
 
 public:
 	bool providesMetaInfo() const;
-	const std::string &tryOpen(const std::string &path) const;
+	const std::string &tryOpen(const ZLFile &file) const;
 
 protected:
-	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;
+	shared_ptr<ZLInputStream> createStream(const ZLFile &file) const;
 };
 
 class PalmDocPlugin : public PalmDocLikePlugin {
@@ -71,10 +71,10 @@ class PalmDocPlugin : public PalmDocLikePlugin {
 public:
 	bool acceptsFile(const ZLFile &file) const;
 
-	void readDocumentInternal(const std::string &fileName, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
+	void readDocumentInternal(const ZLFile &file, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
 
 private:
-	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
+	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file);
 };
 
 class MobipocketPlugin : public PalmDocLikePlugin {
@@ -83,7 +83,7 @@ private:
 	bool acceptsFile(const ZLFile &file) const;
 	bool readMetaInfo(Book &book) const;
 
-	void readDocumentInternal(const std::string &fileName, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
+	void readDocumentInternal(const ZLFile &file, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
 	shared_ptr<ZLImage> coverImage(const Book &book) const;
 };
 
@@ -93,11 +93,11 @@ public:
 	bool providesMetaInfo() const;
 	bool acceptsFile(const ZLFile &file) const;
 	bool readMetaInfo(Book &book) const;
-	const std::string &tryOpen(const std::string &path) const;
+	const std::string &tryOpen(const ZLFile &file) const;
 
-	void readDocumentInternal(const std::string &fileName, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
+	void readDocumentInternal(const ZLFile &file, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
 protected:
-	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;
+	shared_ptr<ZLInputStream> createStream(const ZLFile &file) const;
 };
 
 class ZTXTPlugin : public SimplePdbPlugin {
@@ -107,10 +107,10 @@ public:
 	bool acceptsFile(const ZLFile &file) const;
 
 protected:
-	shared_ptr<ZLInputStream> createStream(ZLFile &file) const;
+	shared_ptr<ZLInputStream> createStream(const ZLFile &file) const;
 
 private:
-	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
+	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file);
 };
 
 inline PdbPlugin::PdbPlugin() {}

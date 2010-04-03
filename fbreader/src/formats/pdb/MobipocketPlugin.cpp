@@ -35,8 +35,8 @@ bool MobipocketPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::fileType(file) == "BOOKMOBI";
 }
 
-void MobipocketPlugin::readDocumentInternal(const std::string &fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const {
-	MobipocketHtmlBookReader(fileName, model, format, encoding).readDocument(stream);
+void MobipocketPlugin::readDocumentInternal(const ZLFile &file, BookModel &model, const PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const {
+	MobipocketHtmlBookReader(file, model, format, encoding).readDocument(stream);
 }
 
 bool MobipocketPlugin::readMetaInfo(Book &book) const {

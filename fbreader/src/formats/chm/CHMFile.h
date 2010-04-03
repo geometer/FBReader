@@ -27,6 +27,8 @@
 #include <shared_ptr.h>
 #include <ZLInputStream.h>
 
+class ZLFile;
+
 class LZXDecompressor;
 
 class CHMFileInfo {
@@ -42,13 +44,13 @@ public:
 	};
 
 public:
-	CHMFileInfo(const std::string &fileName);
+	CHMFileInfo(const ZLFile &file);
 	bool init(ZLInputStream &stream);
 	// We assume that base exists and is already open
 	shared_ptr<ZLInputStream> entryStream(shared_ptr<ZLInputStream> base, const std::string &name) const;
 	// We assume that base exists and is already open
 	FileNames sectionNames(shared_ptr<ZLInputStream> base) const;
-	const std::string fileName() const;
+	const std::string filePath() const;
 
 private:
 	bool moveToEntry(ZLInputStream &stream, const std::string &entryName);
@@ -78,7 +80,7 @@ private:
 	};
 	std::vector<SectionInfo> mySectionInfos;
 
-	const std::string myFileName;
+	const std::string myFilePath;
 
 private:
 	CHMFileInfo(const CHMFileInfo&);

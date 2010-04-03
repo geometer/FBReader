@@ -38,7 +38,7 @@ bool EReaderPlugin::acceptsFile(const ZLFile &file) const {
 	return PdbPlugin::fileType(file) == "PNRdPPrs";
 }
 
-void EReaderPlugin::readDocumentInternal(const std::string& fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const {
+void EReaderPlugin::readDocumentInternal(const ZLFile &file, BookModel &model, const PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const {
 	if (!stream.open())	{
 		//TODO maybe anything else opens stream
 		return;
@@ -51,7 +51,7 @@ void EReaderPlugin::readDocumentInternal(const std::string& fileName, BookModel 
 	const std::map<std::string, EReaderStream::ImageInfo>& imageIds = estream.images();
 	for(std::map<std::string, EReaderStream::ImageInfo>::const_iterator it = imageIds.begin(); it != imageIds.end(); ++it) {
 		const std::string id = it->first;
-		bookReader.addImage(id, new ZLFileImage(it->second.Type, fileName, it->second.Offset, it->second.Size));
+		bookReader.addImage(id, new ZLFileImage(it->second.Type, file.path(), it->second.Offset, it->second.Size));
 	}
 	const std::map<std::string, unsigned short>& footnoteIds = estream.footnotes();
 	for(std::map<std::string, unsigned short>::const_iterator it = footnoteIds.begin(); it != footnoteIds.end(); ++it) {
@@ -65,12 +65,11 @@ void EReaderPlugin::readDocumentInternal(const std::string& fileName, BookModel 
 	stream.close();
 }
 
-shared_ptr<ZLInputStream> EReaderPlugin::createStream(ZLFile &file) const {
+shared_ptr<ZLInputStream> EReaderPlugin::createStream(const ZLFile &file) const {
 	return new EReaderStream(file);
 }
 
-const std::string &EReaderPlugin::tryOpen(const std::string &path) const {
-	ZLFile file(path);
+const std::string &EReaderPlugin::tryOpen(const ZLFile &file) const {
 	EReaderStream stream(file);
 	stream.open();
 	return stream.error();

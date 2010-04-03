@@ -23,7 +23,7 @@
 #include "PalmDocLikeStream.h"
 
 
-PalmDocLikeStream::PalmDocLikeStream(ZLFile &file) : PdbStream(file) {
+PalmDocLikeStream::PalmDocLikeStream(const ZLFile &file) : PdbStream(file) {
 }
 
 PalmDocLikeStream::~PalmDocLikeStream() {

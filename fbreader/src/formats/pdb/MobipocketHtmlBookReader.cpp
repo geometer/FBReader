@@ -300,7 +300,7 @@ bool MobipocketHtmlBookReader::tagHandler(const HtmlTag &tag) {
 	return HtmlBookReader::tagHandler(tag);
 }
 
-MobipocketHtmlBookReader::MobipocketHtmlBookReader(const std::string &fileName, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlBookReader("", model, format, encoding), myFileName(fileName), myTocReader(*this) {
+MobipocketHtmlBookReader::MobipocketHtmlBookReader(const ZLFile &file, BookModel &model, const PlainTextFormat &format, const std::string &encoding) : HtmlBookReader("", model, format, encoding), myFileName(file.path()), myTocReader(*this) {
 	setBuildTableOfContent(false);
 	setProcessPreTag(false);
 }

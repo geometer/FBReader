@@ -104,7 +104,7 @@ bool CHMPlugin::readMetaInfo(Book &book) const {
 		return false;
 	}
 
-	CHMFileInfo chmFile(book.filePath());
+	CHMFileInfo chmFile(file);
 	if (!chmFile.init(*stream)) {
 		return false;
 	}
@@ -163,14 +163,14 @@ bool CHMPlugin::readModel(BookModel &model) const {
 	model.setHyperlinkMatcher(new CHMHyperlinkMatcher());
 
 	const Book &book = *model.book();
-	const std::string &filePath = book.filePath();
+	const ZLFile file(book.filePath());
 
-	shared_ptr<ZLInputStream> stream = ZLFile(filePath).inputStream();
+	shared_ptr<ZLInputStream> stream = file.inputStream();
 	if (stream.isNull() || !stream->open()) {
 		return false;
 	}
 
-	shared_ptr<CHMFileInfo> info = new CHMFileInfo(filePath);
+	shared_ptr<CHMFileInfo> info = new CHMFileInfo(file);
 	if (!info->init(*stream)) {
 		return false;
 	}
@@ -204,7 +204,7 @@ bool CHMPlugin::readModel(BookModel &model) const {
 	*/
 
 	int contentCounter = 0;
-	PlainTextFormat format(filePath);
+	PlainTextFormat format(file);
 	HtmlSectionReader reader(model, format, encoding, info, referenceCollection);
 	while (referenceCollection.containsNonProcessedReferences()) {
 		const std::string fileName = referenceCollection.nextReference();

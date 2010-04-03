@@ -60,7 +60,3 @@ bool RtfPlugin::readModel(BookModel &model) const {
 	const Book &book = *model.book();
 	return RtfBookReader(model, book.encoding()).readDocument(book.filePath());
 }
-
-FormatInfoPage *RtfPlugin::createInfoPage(ZLOptionsDialog&, const std::string&) {
-	return 0;
-}

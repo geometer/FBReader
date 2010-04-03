@@ -30,7 +30,7 @@ public:
 	bool acceptsFile(const ZLFile &file) const;
 	bool readMetaInfo(Book &book) const;
 	bool readModel(BookModel &model) const;
-	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
+	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file);
 };
 
 #endif /* __TXTPLUGIN_H__ */
