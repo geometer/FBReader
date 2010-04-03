@@ -22,11 +22,11 @@
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLLogger.h>
+#include <ZLXMLNamespace.h>
 
 #include "OEBMetaInfoReader.h"
 #include "../util/EntityFilesCollector.h"
 
-#include "../../constants/XMLNamespace.h"
 #include "../../library/Book.h"
 
 OEBMetaInfoReader::OEBMetaInfoReader(Book &book) : myBook(book) {
@@ -65,8 +65,8 @@ bool OEBMetaInfoReader::isDublinCoreNamespace(const std::string &nsId) const {
 	std::map<std::string,std::string>::const_iterator iter = namespaces().find(nsId);
 	return
 		((iter != namespaceMap.end()) &&
-		 (ZLStringUtil::stringStartsWith(iter->second, XMLNamespace::DublinCorePrefix) ||
-		  ZLStringUtil::stringStartsWith(iter->second, XMLNamespace::DublinCoreLegacyPrefix)));
+		 (ZLStringUtil::stringStartsWith(iter->second, ZLXMLNamespace::DublinCorePrefix) ||
+		  ZLStringUtil::stringStartsWith(iter->second, ZLXMLNamespace::DublinCoreLegacyPrefix)));
 }
 
 bool OEBMetaInfoReader::isNSName(const std::string &fullName, const std::string &shortName, const std::string &fullNSId) const {
@@ -85,7 +85,7 @@ bool OEBMetaInfoReader::isNSName(const std::string &fullName, const std::string 
 void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attributes) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
 	if (METADATA == tagString || DC_METADATA == tagString ||
-			isNSName(tagString, METADATA, XMLNamespace::OpenPackagingFormat)) {
+			isNSName(tagString, METADATA, ZLXMLNamespace::OpenPackagingFormat)) {
 		myDCMetadataTag = tagString;
 		myReadMetaData = true;
 	} else if (myReadMetaData) {
@@ -115,9 +115,9 @@ void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attrib
 			const char *content = attributeValue(attributes, "content");
 			if (name != 0 && content != 0) {
 				std::string sName = name;
-				if (isNSName(sName, SERIES, XMLNamespace::CalibreMetadata)) {
+				if (isNSName(sName, SERIES, ZLXMLNamespace::CalibreMetadata)) {
 					myBook.setSeries(content, myBook.indexInSeries());
-				} else if (isNSName(sName, SERIES_INDEX, XMLNamespace::CalibreMetadata)) {
+				} else if (isNSName(sName, SERIES_INDEX, ZLXMLNamespace::CalibreMetadata)) {
 					myBook.setSeries(myBook.seriesTitle(), atoi(content));
 				}
 			}

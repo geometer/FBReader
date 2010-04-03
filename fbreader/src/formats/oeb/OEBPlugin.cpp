@@ -23,13 +23,13 @@
 #include <ZLDir.h>
 #include <ZLInputStream.h>
 #include <ZLLogger.h>
+#include <ZLMimeType.h>
 
 #include "OEBPlugin.h"
 #include "OEBMetaInfoReader.h"
 #include "OEBBookReader.h"
 #include "OEBCoverReader.h"
 #include "OEBTextStream.h"
-#include "../../constants/MimeType.h"
 #include "../../bookmodel/BookModel.h"
 #include "../../library/Book.h"
 
@@ -49,9 +49,9 @@ bool OEBPlugin::acceptsFile(const ZLFile &file) const {
 	const std::string &extension = file.extension();
 	if (!mimeType.empty()) {
 		return 
-			mimeType == MimeType::APPLICATION_EPUB_ZIP ||
-			(mimeType == MimeType::APPLICATION_XML && extension == OPF) ||
-			(mimeType == MimeType::APPLICATION_ZIP && extension == OEBZIP);
+			mimeType == ZLMimeType::APPLICATION_EPUB_ZIP ||
+			(mimeType == ZLMimeType::APPLICATION_XML && extension == OPF) ||
+			(mimeType == ZLMimeType::APPLICATION_ZIP && extension == OEBZIP);
 	}
 	return extension == OPF || extension == OEBZIP || extension == EPUB;
 }

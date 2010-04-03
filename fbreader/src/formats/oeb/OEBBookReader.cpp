@@ -22,6 +22,7 @@
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLFileImage.h>
+#include <ZLXMLNamespace.h>
 
 #include "OEBBookReader.h"
 #include "NCXReader.h"
@@ -29,7 +30,6 @@
 #include "../util/MiscUtil.h"
 #include "../util/EntityFilesCollector.h"
 #include "../../bookmodel/BookModel.h"
-#include "../../constants/XMLNamespace.h"
 
 OEBBookReader::OEBBookReader(BookModel &model) : myModelReader(model) {
 }
@@ -191,7 +191,7 @@ void OEBBookReader::namespaceListChangedHandler() {
 	const std::map<std::string,std::string> &namespaceMap = namespaces();
 	std::map<std::string,std::string>::const_iterator iter = namespaceMap.begin();
 	for (; iter != namespaceMap.end(); ++iter) {
-		if (iter->second == XMLNamespace::OpenPackagingFormat) {
+		if (iter->second == ZLXMLNamespace::OpenPackagingFormat) {
 			break;
 		}
 	}

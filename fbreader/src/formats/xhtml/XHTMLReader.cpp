@@ -24,6 +24,7 @@
 #include <ZLFileImage.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
+#include <ZLXMLNamespace.h>
 
 #include "XHTMLReader.h"
 #include "../util/EntityFilesCollector.h"
@@ -32,8 +33,6 @@
 
 #include "../../bookmodel/BookReader.h"
 #include "../../bookmodel/BookModel.h"
-
-#include "../../constants/XMLNamespace.h"
 
 static const bool USE_CSS = false;
 
@@ -316,7 +315,7 @@ void XHTMLTagSvgAction::doAtEnd(XHTMLReader&) {
 	myPredicate.myIsEnabled = false;
 }
 
-XHTMLSvgImageAttributeNamePredicate::XHTMLSvgImageAttributeNamePredicate() : ZLXMLReader::NamespaceAttributeNamePredicate(XMLNamespace::XLink, "href"), myIsEnabled(false) {
+XHTMLSvgImageAttributeNamePredicate::XHTMLSvgImageAttributeNamePredicate() : ZLXMLReader::NamespaceAttributeNamePredicate(ZLXMLNamespace::XLink, "href"), myIsEnabled(false) {
 }
 
 bool XHTMLSvgImageAttributeNamePredicate::accepts(const ZLXMLReader &reader, const char *name) const {

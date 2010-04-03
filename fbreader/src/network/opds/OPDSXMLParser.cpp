@@ -20,9 +20,9 @@
 #include <cstdlib>
 
 #include <ZLStringUtil.h>
+#include <ZLXMLNamespace.h>
 
 #include "OPDSXMLParser.h"
-#include "../../constants/XMLNamespace.h"
 
 static const std::string TAG_FEED = "feed";
 static const std::string TAG_ENTRY = "entry";
@@ -79,15 +79,15 @@ void OPDSXMLParser::namespaceListChangedHandler() {
 		if (it->first.empty()) {
 			continue;
 		}
-		if (it->second == XMLNamespace::DublinCoreTerms) {
+		if (it->second == ZLXMLNamespace::DublinCoreTerms) {
 			myDublinCoreNamespaceId = it->first;
-		} else if (it->second == XMLNamespace::Atom) {
+		} else if (it->second == ZLXMLNamespace::Atom) {
 			myAtomNamespaceId = it->first;
-		} else if (it->second == XMLNamespace::OpenSearch) {
+		} else if (it->second == ZLXMLNamespace::OpenSearch) {
 			myOpenSearchNamespaceId = it->first;
-		} else if (it->second == XMLNamespace::CalibreMetadata) {
+		} else if (it->second == ZLXMLNamespace::CalibreMetadata) {
 			myCalibreNamespaceId = it->first;
-		} else if (it->second == XMLNamespace::Opds) {
+		} else if (it->second == ZLXMLNamespace::Opds) {
 			myOpdsNamespaceId = it->first;
 		}
 	}

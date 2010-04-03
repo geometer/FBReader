@@ -19,9 +19,9 @@
 
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
+#include <ZLXMLNamespace.h>
 
 #include "OEBMigrationReader.h"
-#include "../constants/XMLNamespace.h"
 
 OEBMigrationReader::OEBMigrationReader(BookInfo &info) : myInfo(info) {
 }
@@ -41,8 +41,8 @@ bool OEBMigrationReader::isDublinCoreNamespace(const std::string &nsId) const {
 	std::map<std::string,std::string>::const_iterator iter = namespaceMap.find(nsId);
 	return
 		((iter != namespaceMap.end()) &&
-		 (ZLStringUtil::stringStartsWith(iter->second, XMLNamespace::DublinCorePrefix) ||
-		  ZLStringUtil::stringStartsWith(iter->second, XMLNamespace::DublinCoreLegacyPrefix)));
+		 (ZLStringUtil::stringStartsWith(iter->second, ZLXMLNamespace::DublinCorePrefix) ||
+		  ZLStringUtil::stringStartsWith(iter->second, ZLXMLNamespace::DublinCoreLegacyPrefix)));
 }
 
 void OEBMigrationReader::startElementHandler(const char *tag, const char**) {
