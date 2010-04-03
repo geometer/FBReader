@@ -18,6 +18,7 @@
  */
 
 #include <gtk/gtk.h>
+#include <gio/gio.h>
 
 #include "ZLGtkFSManager.h"
 
@@ -36,5 +37,25 @@ std::string ZLGtkFSManager::convertFilenameToUtf8(const std::string &name) const
 }
 
 std::string ZLGtkFSManager::mimeType(const std::string &path) const {
-	return std::string();
+	std::string type;
+
+	GFile *file = g_file_new_for_path(path.c_str());
+	if (file != 0) {
+		GFileInfo *info = g_file_query_info(
+			file,
+			"standard::content-type",
+			G_FILE_QUERY_INFO_NONE,
+			0, 0
+		);
+		if (info != 0) {
+			const char *pType = g_file_info_get_content_type(info);
+			if (pType != 0) {
+				type = pType;
+			}
+			g_object_unref(info);
+		}
+		g_object_unref(file);
+	}
+
+	return type;
 }
