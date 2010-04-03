@@ -1,3 +1,8 @@
+===== 0.14.0 (?????) =====
+
+* CSS processing for multi-xhtml epubs has been fixed (in 0.12.* the CSS
+  loaded for the first xhtml was also applied for all other xhtmls
+
 ===== 0.12.10 (April 1, 2010) =====
 
 * Processing of external hyperlinks in epubs has been fixed

@@ -23,6 +23,7 @@
 #include "ZLGtkDialogManager.h"
 #include "ZLGtkDialog.h"
 #include "ZLGtkOptionsDialog.h"
+#include "ZLGtkOpenFileDialog.h"
 #include "ZLGtkSelectionDialog.h"
 #include "ZLGtkProgressDialog.h"
 #include "ZLGtkUtil.h"
@@ -33,6 +34,10 @@ shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const ZLResourceKey &key) 
 
 shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const ZLResourceKey &id, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
 	return new ZLGtkOptionsDialog(resource()[id], applyAction, showApplyButton);
+}
+
+shared_ptr<ZLOpenFileDialog> ZLGtkDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const ZLOpenFileDialog::Filter &filter) const {
+	return new ZLGtkOpenFileDialog(dialogTitle(key), directoryPath);
 }
 
 void ZLGtkDialogManager::informationBox(const std::string &title, const std::string &message) const {

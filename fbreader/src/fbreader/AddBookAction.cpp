@@ -19,6 +19,7 @@
 
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
+#include <ZLFile.h>
 
 #include "FBReaderActions.h"
 #include "FBReader.h"
@@ -36,21 +37,24 @@ bool BookFileFilter::accepts(const std::string &filePath) const {
 	return true;
 }
 
-AddBookAction::AddBookAction(int visibleInModes) : ModeDependentAction(visibleInModes) {
+AddBookAction::AddBookAction(int visibleInModes) : ModeDependentAction(visibleInModes), DirectoryOption(ZLCategoryKey::LOOK_AND_FEEL, "OpenFileDialog", "Directory", ZLFile("~").path()) {
 }
 
 void AddBookAction::run() {
-	BookFileFilter filter;
-	shared_ptr<ZLOpenFileDialog> dialog = ZLDialogManager::Instance().createOpenFileDialog("", filter);
-	if (!dialog.isNull()) {
-		dialog->run();
-		return;
-	}
+	const ZLResourceKey dialogKey("addFileDialog");
 
+	BookFileFilter filter;
+	shared_ptr<ZLOpenFileDialog> dialog = ZLDialogManager::Instance().createOpenFileDialog(dialogKey, DirectoryOption.value(), filter);
+	bool code = dialog->run();
+	DirectoryOption.setValue(dialog->directoryPath());
+	if (code) {
+		FBReader::Instance().openFile(dialog->filePath());
+	}
+	return;
+
+	FBFileHandler handler;
 	FBReader &fbreader = FBReader::Instance();
 
-	const ZLResourceKey dialogKey("addFileDialog");
-	FBFileHandler handler;
 	if (ZLDialogManager::Instance().selectionDialog(dialogKey, handler)) {
 		shared_ptr<Book> book = handler.description();
 		if (!book.isNull()) {

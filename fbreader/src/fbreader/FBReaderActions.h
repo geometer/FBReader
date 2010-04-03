@@ -130,6 +130,9 @@ public:
 
 class AddBookAction : public ModeDependentAction {
 
+private:
+	ZLStringOption DirectoryOption;
+
 public:
 	AddBookAction(int visibleInModes);
 	void run();
