@@ -129,11 +129,11 @@ bool OEBBookReader::readBook(const std::string &fileName) {
 	myModelReader.setMainTextModel();
 	myModelReader.pushKind(REGULAR);
 
-	XHTMLReader xhtmlReader(myModelReader);
 	for (std::vector<std::string>::const_iterator it = myHtmlFileNames.begin(); it != myHtmlFileNames.end(); ++it) {
 		if (it != myHtmlFileNames.begin()) {
 			myModelReader.insertEndOfSectionParagraph();
 		}
+		XHTMLReader xhtmlReader(myModelReader);
 		xhtmlReader.readFile(myFilePrefix + *it, *it);
 	}
 
