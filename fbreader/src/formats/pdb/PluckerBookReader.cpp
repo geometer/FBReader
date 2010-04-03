@@ -48,7 +48,7 @@ void PluckerBookReader::safeAddControl(FBTextKind kind, bool start) {
 	if (myParagraphStarted) {
 		addControl(kind, start);
 	} else {
-		myDelayedControls.push_back(std::pair<FBTextKind,bool>(kind, start));
+		myDelayedControls.push_back(std::make_pair(kind, start));
 	}
 }
 
@@ -209,7 +209,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 			int sectionNum = twoBytes(ptr + 1);
 			int paragraphNum = twoBytes(ptr + 3);
 			safeAddHyperlinkControl(fromNumber(sectionNum) + '#' + fromNumber(paragraphNum));
-			myReferencedParagraphs.insert(std::pair<int,int>(sectionNum, paragraphNum));
+			myReferencedParagraphs.insert(std::make_pair(sectionNum, paragraphNum));
 			break;
 		}
 		case 0x11:

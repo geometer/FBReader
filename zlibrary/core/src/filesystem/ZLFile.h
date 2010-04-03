@@ -88,7 +88,8 @@ private:
 	std::string myNameWithExtension;
 	std::string myNameWithoutExtension;
 	std::string myExtension;
-	std::string myMimeType;
+	mutable std::string myMimeType;
+	mutable bool myMimeTypeIsUpToDate;
 	ArchiveType myArchiveType;
 	mutable ZLFileInfo myInfo;
 	mutable bool myInfoIsFilled;
@@ -102,6 +103,5 @@ inline bool ZLFile::isArchive() const { return myArchiveType & ARCHIVE; }
 inline const std::string &ZLFile::path() const { return myPath; }
 inline const std::string &ZLFile::name(bool hideExtension) const { return hideExtension ? myNameWithoutExtension : myNameWithExtension; }
 inline const std::string &ZLFile::extension() const { return myExtension; }
-inline const std::string &ZLFile::mimeType() const { return myMimeType; }
 
 #endif /* __ZLFILE_H__ */

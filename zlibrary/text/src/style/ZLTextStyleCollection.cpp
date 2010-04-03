@@ -131,7 +131,7 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 				decoration->FontFamilyOption.setValue(fontFamily);
 			}
 
-			myCollection.myDecorationMap.insert(std::pair<ZLTextKind,ZLTextStyleDecoration*>(id, decoration));
+			myCollection.myDecorationMap.insert(std::make_pair(id, decoration));
 		}
 	}
 }

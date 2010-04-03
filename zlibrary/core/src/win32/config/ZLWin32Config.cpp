@@ -55,7 +55,7 @@ void ZLWin32ConfigGroup::setValue(const std::string &name, const std::string &va
 	if (jt == myCategories.end()) {
 		jt = myCategories.insert(category).first;
 	}
-	myValues.insert(std::pair<std::string,ZLWin32ConfigValue>(name, ZLWin32ConfigValue(*jt, value)));
+	myValues.insert(std::make_pair(name, ZLWin32ConfigValue(*jt, value)));
 }
 
 ZLWin32Config::ZLWin32Config() : myBufferSize(4096), myPseudoGroupNameNumber(0) {
@@ -77,7 +77,7 @@ ZLWin32ConfigGroup *ZLWin32Config::getGroup(const std::string &name, bool create
 	}
 	if (createUnexisting) {
 		ZLWin32ConfigGroup *group = new ZLWin32ConfigGroup(name, myCategories);
-		myGroups.insert(std::pair<std::string,ZLWin32ConfigGroup*>(name, group));
+		myGroups.insert(std::make_pair(name, group));
 		return group;
 	}
 	return 0;
@@ -137,7 +137,7 @@ void ZLWin32Config::setValue(const std::string &groupName, const std::string &na
 		jt = myCategories.insert(category).first;
 	}
 	registrySetValue(category, group->myName, name, value);
-	groupValues.insert(std::pair<std::string,ZLWin32ConfigValue>(name, ZLWin32ConfigValue(*jt, value)));
+	groupValues.insert(std::make_pair(name, ZLWin32ConfigValue(*jt, value)));
 }
 
 void ZLWin32Config::unsetValue(const std::string &groupName, const std::string &name) {

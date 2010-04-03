@@ -32,7 +32,7 @@
 
 std::map<std::string,weak_ptr<ZLInputStream> > ZLFile::ourPlainStreamCache;
 
-ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(path), myMimeType(mimeType), myInfoIsFilled(false) {
+ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(path), myMimeType(mimeType), myMimeTypeIsUpToDate(!mimeType.empty()), myInfoIsFilled(false) {
 	ZLFSManager::Instance().normalize(myPath);
 	{
 		size_t index = ZLFSManager::Instance().findLastFileNameDelimiter(myPath);
@@ -236,6 +236,14 @@ bool ZLFile::isDirectory() const {
 		fillInfo();
 	}
 	return myInfo.IsDirectory;
+}
+
+const std::string &ZLFile::mimeType() const {
+	if (!myMimeTypeIsUpToDate) {
+		myMimeType = ZLFSManager::Instance().mimeType(myPath);
+		myMimeTypeIsUpToDate = true;
+	}
+	return myMimeType;
 }
 
 bool ZLFile::canRemove() const {

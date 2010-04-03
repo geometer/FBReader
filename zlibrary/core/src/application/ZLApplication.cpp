@@ -98,7 +98,7 @@ bool ZLApplication::closeView() {
 	return true;
 }
 
-void ZLApplication::openFile(const std::string&) {
+void ZLApplication::openFile(const ZLFile&) {
 }
 
 bool ZLApplication::canDragFiles(const std::vector<std::string>&) const {

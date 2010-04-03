@@ -296,7 +296,7 @@ bool MobipocketHtmlBookReader::tagHandler(const HtmlTag &tag) {
 	if (myBookReader.paragraphIsOpen()) {
 		--paragraphNumber;
 	}
-	myPositionToParagraphMap.push_back(std::pair<size_t,size_t>(tag.Offset, paragraphNumber));
+	myPositionToParagraphMap.push_back(std::make_pair(tag.Offset, paragraphNumber));
 	return HtmlBookReader::tagHandler(tag);
 }
 

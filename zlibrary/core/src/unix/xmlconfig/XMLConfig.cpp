@@ -58,7 +58,7 @@ bool XMLConfigGroup::setValue(const std::string &name, const std::string &value,
 	if (jt == myCategories.end()) {
 		jt = myCategories.insert(category).first;
 	}
-	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*jt, value)));
+	myValues.insert(std::make_pair(name, XMLConfigValue(*jt, value)));
 	return true;
 }
 
@@ -118,7 +118,7 @@ XMLConfigGroup *XMLConfig::getGroup(const std::string &name, bool createUnexisti
 	}
 	if (createUnexisting) {
 		XMLConfigGroup *group = new XMLConfigGroup(myCategories);
-		myGroups.insert(std::pair<std::string,XMLConfigGroup*>(name, group));
+		myGroups.insert(std::make_pair(name, group));
 		return group;
 	}
 	return 0;

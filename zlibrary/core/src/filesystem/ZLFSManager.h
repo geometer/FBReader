@@ -57,6 +57,7 @@ protected:
 	virtual ZLFileInfo fileInfo(const std::string &path) const = 0;
 	virtual bool removeFile(const std::string &path) const = 0;
 	virtual std::string convertFilenameToUtf8(const std::string &name) const = 0;
+	virtual std::string mimeType(const std::string &path) const = 0;
 
 	virtual int findArchiveFileNameDelimiter(const std::string &path) const = 0;
 	int findLastFileNameDelimiter(const std::string &path) const;

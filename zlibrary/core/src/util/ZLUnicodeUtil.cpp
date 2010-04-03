@@ -72,7 +72,7 @@ void ZLUnicodeTableReader::startElementHandler(const char *tag, const char **att
 		const ZLUnicodeUtil::Ucs4Char lower = (lowerS != 0) ? strtol(lowerS, 0, 16) : code;
 		const char *upperS = attributeValue(attributes, "upper");
 		const ZLUnicodeUtil::Ucs4Char upper = (upperS != 0) ? strtol(upperS, 0, 16) : code;
-		UNICODE_TABLE.insert(std::pair<ZLUnicodeUtil::Ucs4Char,ZLUnicodeData>(code, ZLUnicodeData(type, lower, upper)));
+		UNICODE_TABLE.insert(std::make_pair(code, ZLUnicodeData(type, lower, upper)));
 	}
 }
 

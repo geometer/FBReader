@@ -46,7 +46,7 @@ public:
 
 public:
 	// returns true if description was found or error message was shown
-	static bool createBook(ZLFile bookFile, shared_ptr<Book> &book);
+	static bool createBook(const ZLFile &bookFile, shared_ptr<Book> &book);
 
 	static const std::string PageIndexParameter;
 
@@ -96,7 +96,7 @@ private:
 	bool closeView();
 	std::string helpFileName(const std::string &language) const;
 
-	void openFile(const std::string &filePath);
+	void openFile(const ZLFile &file);
 	bool canDragFiles(const std::vector<std::string> &filePaths) const;
 	void dragFiles(const std::vector<std::string> &filePaths);
 

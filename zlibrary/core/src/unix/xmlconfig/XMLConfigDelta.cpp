@@ -46,7 +46,7 @@ bool XMLConfigDeltaGroup::setValue(const std::string &name, const std::string &v
 	if (kt == myCategories.end()) {
 		kt = myCategories.insert(category).first;
 	}
-	myValues.insert(std::pair<std::string,XMLConfigValue>(name, XMLConfigValue(*kt, value)));
+	myValues.insert(std::make_pair(name, XMLConfigValue(*kt, value)));
 	return updateNewOption;
 }
 
@@ -81,6 +81,6 @@ XMLConfigDeltaGroup *XMLConfigDelta::getGroup(const std::string &name) {
 		return it-> second;
 	}
 	XMLConfigDeltaGroup *group = new XMLConfigDeltaGroup(myCategories);
-	myGroups.insert(std::pair<std::string,XMLConfigDeltaGroup*>(name, group));
+	myGroups.insert(std::make_pair(name, group));
 	return group;
 }

@@ -34,3 +34,7 @@ std::string ZLGtkFSManager::convertFilenameToUtf8(const std::string &name) const
 	g_free(gtkString);
 	return convertedName;
 }
+
+std::string ZLGtkFSManager::mimeType(const std::string &path) const {
+	return std::string();
+}

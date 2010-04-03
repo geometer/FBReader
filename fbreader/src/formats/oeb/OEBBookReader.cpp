@@ -83,7 +83,7 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 		if (href != 0) {
 			const std::string reference = MiscUtil::decodeHtmlURL(href);
 			if (title != 0) {
-				myGuideTOC.push_back(std::pair<std::string,std::string>(title, reference));
+				myGuideTOC.push_back(std::make_pair(std::string(title), reference));
 			}
 			static const std::string COVER_IMAGE = "other.ms-coverimage-standard";
 			if ((type != 0) && (COVER_IMAGE == type)) {

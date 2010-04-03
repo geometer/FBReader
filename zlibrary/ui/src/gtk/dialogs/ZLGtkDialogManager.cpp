@@ -24,7 +24,6 @@
 #include "ZLGtkDialog.h"
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkOpenFileDialog.h"
-#include "ZLGtkSelectionDialog.h"
 #include "ZLGtkProgressDialog.h"
 #include "ZLGtkUtil.h"
 
@@ -81,10 +80,6 @@ int ZLGtkDialogManager::internalBox(const gchar *icon, const std::string &title,
 	destroyGtkDialog(dialog);
 
 	return (response < 0) ? -1 : response;
-}
-
-bool ZLGtkDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
-	return ZLGtkSelectionDialog(dialogTitle(key), handler).runWithSize();
 }
 
 shared_ptr<ZLProgressDialog> ZLGtkDialogManager::createProgressDialog(const ZLResourceKey &key) const {

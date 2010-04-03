@@ -49,7 +49,7 @@ void BookReader::setFootnoteTextModel(const std::string &id) {
 		myCurrentTextModel = (*it).second;
 	} else {
 		myCurrentTextModel = new ZLTextPlainModel(myModel.myBookTextModel->language(), 8192);
-		myModel.myFootnotes.insert(std::pair<std::string,shared_ptr<ZLTextModel> >(id, myCurrentTextModel));
+		myModel.myFootnotes.insert(std::make_pair(id, myCurrentTextModel));
 	}
 }
 
@@ -159,11 +159,9 @@ void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber
 		"hyperlink",
 		" + label: " + label
 	);
-	myModel.myInternalHyperlinks.insert(
-		std::pair<std::string,BookModel::Label>(
-			label, BookModel::Label(myCurrentTextModel, paragraphNumber)
-		)
-	);
+	myModel.myInternalHyperlinks.insert(std::make_pair(
+		label, BookModel::Label(myCurrentTextModel, paragraphNumber)
+	));
 }
 
 void BookReader::addData(const std::string &data) {

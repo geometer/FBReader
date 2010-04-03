@@ -91,7 +91,7 @@ shared_ptr<PdfObject> PdfNameObject::nameObject(const std::string &id) {
 	}
 	std::cerr << "PdfNameObject " << id << "\n";
 	shared_ptr<PdfObject> object = new PdfNameObject();
-	ourObjectMap.insert(std::pair<std::string,shared_ptr<PdfObject> >(id, object));
+	ourObjectMap.insert(std::make_pair(id, object));
 	return object;
 }
 

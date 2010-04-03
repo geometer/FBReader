@@ -145,7 +145,7 @@ void RtfFontResetCommand::run(RtfReader &reader, int*) const {
 }
 
 void RtfReader::addAction(const std::string &tag, RtfCommand *command) {
-	ourKeywordMap.insert(std::pair<std::string,RtfCommand*>(tag, command));
+	ourKeywordMap.insert(std::make_pair(tag, command));
 }
 
 void RtfReader::fillKeywordMap() {

@@ -55,6 +55,6 @@ void AddBookAction::run() {
 	DirectoryOption.setValue(dialog->directoryPath());
 	FileOption.setValue(dialog->filePath());
 	if (code) {
-		FBReader::Instance().openFile(dialog->filePath());
+		FBReader::Instance().openFile(ZLFile(dialog->filePath()));
 	}
 }

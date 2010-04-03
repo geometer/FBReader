@@ -77,14 +77,14 @@ shared_ptr<PdfObject> PdfBookReader::resolveReference(shared_ptr<PdfObject> ref,
 		return ref;
 	}
 	const PdfObjectReference &reference = (const PdfObjectReference&)*ref;
-	const std::pair<int,int>address(reference.number(), reference.generation());
+	const std::pair<int,int> address(reference.number(), reference.generation());
 	std::map<std::pair<int,int>,shared_ptr<PdfObject> >::const_iterator it = myObjectMap.find(address);
 	if (it != myObjectMap.end()) {
 		return it->second;
 	}
 	std::map<std::pair<int,int>,int>::const_iterator jt = myObjectLocationMap.find(address);
 	shared_ptr<PdfObject> object = readObjectFromLocation(stream, address);
-	myObjectMap.insert(std::pair<std::pair<int,int>,shared_ptr<PdfObject> >(address, object));
+	myObjectMap.insert(std::make_pair(address, object));
 	return object;
 }
 

@@ -70,7 +70,7 @@ public:
 			FBReader &fbreader = FBReader::Instance();
 			fbreader.myBookAlreadyOpen = true;
 			fbreader.presentWindow();
-			fbreader.openFile(arguments[0]);
+			fbreader.openFile(ZLFile(arguments[0]));
 		}
 	}
 };
@@ -205,7 +205,7 @@ void FBReader::refreshWindow() {
 	((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
 }
 
-bool FBReader::createBook(ZLFile bookFile, shared_ptr<Book> &book) {
+bool FBReader::createBook(const ZLFile &bookFile, shared_ptr<Book> &book) {
 	shared_ptr<FormatPlugin> plugin =
 		PluginCollection::Instance().plugin(bookFile, false);
 	if (!plugin.isNull()) {
@@ -442,9 +442,9 @@ std::string FBReader::helpFileName(const std::string &language) const {
 	return ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "help" + ZLibrary::FileNameDelimiter + "MiniHelp." + language + ".fb2";
 }
 
-void FBReader::openFile(const std::string &filePath) {
+void FBReader::openFile(const ZLFile &file) {
 	shared_ptr<Book> book;
-	createBook(ZLFile(filePath), book);
+	createBook(file, book);
 	if (!book.isNull()) {
 		openBook(book);
 		refreshWindow();
@@ -469,12 +469,12 @@ void FBReader::dragFiles(const std::vector<std::string> &filePaths) {
 		case FOOTNOTE_MODE:
 		case CONTENTS_MODE:
 			if (filePaths.size() > 0) {
-				openFile(filePaths[0]);
+				openFile(ZLFile(filePaths[0]));
 			}
 			break;
 		case LIBRARY_MODE:
 			if (filePaths.size() > 0) {
-				openFile(filePaths[0]);
+				openFile(ZLFile(filePaths[0]));
 			}
 			break;
 		default:

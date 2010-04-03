@@ -240,10 +240,9 @@ OptionsDialog::OptionsDialog() {
 	}
 
 	std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > additional;
-	additional.push_back(std::pair<ZLResourceKey,ZLOptionEntry*>(
-		ZLResourceKey("singleClickOpen"),
-		new ZLSimpleBooleanOptionEntry(fbreader.EnableSingleClickDictionaryOption)
-	));
+	ZLOptionEntry *entry =
+		new ZLSimpleBooleanOptionEntry(fbreader.EnableSingleClickDictionaryOption);
+	additional.push_back(std::make_pair(ZLResourceKey("singleClickOpen"), entry));
 	createIntegrationTab(fbreader.dictionaryCollection(), ZLResourceKey("Dictionary"), additional);
 	additional.clear();
 	createIntegrationTab(fbreader.webBrowserCollection(), ZLResourceKey("Web"), additional);

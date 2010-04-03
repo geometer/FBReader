@@ -39,6 +39,7 @@ class ZLKeyBindings;
 class ZLToolbar;
 class ZLPopupData;
 class ZLMenubar;
+class ZLFile;
 
 class ZLApplicationBase {
 
@@ -150,7 +151,7 @@ public:
 
 	void quit();
 	virtual bool closeView();
-	virtual void openFile(const std::string &filePath);
+	virtual void openFile(const ZLFile &file);
 	virtual bool canDragFiles(const std::vector<std::string> &filePaths) const;
 	virtual void dragFiles(const std::vector<std::string> &filePaths);
 
