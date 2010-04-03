@@ -16,7 +16,9 @@
 	</advancedSearch>
 	<feeds>
 		<condition show="never">http://feedbooks.com/news/catalog.atom</condition>
-		<condition show="signedIn">https://feedbooks.com/user/profile.atom</condition>
+		<condition show="signedIn">https://www.feedbooks.com/user/profile.atom</condition>
+		<condition show="never">http://feedbooks.com/news/catalog.atom</condition>
+		<condition show="signedIn">https://www.feedbooks.com/user/profile.atom</condition>
 	</feeds>
 	<authentication type="basic"/>
 	<icon>data:image/png;base64,
