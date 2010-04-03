@@ -39,11 +39,6 @@ bool FB2Plugin::readModel(BookModel &model) const {
 	return FB2BookReader(model).readBook();
 }
 
-const std::string &FB2Plugin::iconName() const {
-	static const std::string ICON_NAME = "fb2";
-	return ICON_NAME;
-}
-
 shared_ptr<ZLImage> FB2Plugin::coverImage(const Book &book) const {
 	return FB2CoverReader(book).readCover();
 }

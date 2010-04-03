@@ -245,8 +245,3 @@ bool CHMPlugin::readModel(BookModel &model) const {
 
 	return true;
 }
-
-const std::string &CHMPlugin::iconName() const {
-	static const std::string ICON_NAME = "html";
-	return ICON_NAME;
-}

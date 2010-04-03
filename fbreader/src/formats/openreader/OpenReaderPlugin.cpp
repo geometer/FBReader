@@ -45,8 +45,3 @@ bool OpenReaderPlugin::readMetaInfo(Book &book) const {
 bool OpenReaderPlugin::readModel(BookModel &model) const {
 	return ORBookReader(model).readBook();
 }
-
-const std::string &OpenReaderPlugin::iconName() const {
-	static const std::string ICON_NAME = "openreader";
-	return ICON_NAME;
-}

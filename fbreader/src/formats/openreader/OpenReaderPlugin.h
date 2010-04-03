@@ -30,7 +30,6 @@ public:
 	bool acceptsFile(const ZLFile &file) const;
 	bool readMetaInfo(Book &book) const;
 	bool readModel(BookModel &model) const;
-	const std::string &iconName() const;
 };
 
 #endif /* __OPENREADERPLUGIN_H__ */

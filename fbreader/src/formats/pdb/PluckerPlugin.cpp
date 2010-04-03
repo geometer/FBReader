@@ -48,8 +48,3 @@ bool PluckerPlugin::readMetaInfo(Book &book) const {
 bool PluckerPlugin::readModel(BookModel &model) const {
 	return PluckerBookReader(model).readDocument();
 }
-
-const std::string &PluckerPlugin::iconName() const {
-	static const std::string ICON_NAME = "plucker";
-	return ICON_NAME;
-}

@@ -36,8 +36,3 @@ bool PdfPlugin::readMetaInfo(Book &book) const {
 bool PdfPlugin::readModel(BookModel &model) const {
 	return PdfBookReader(model).readBook(ZLFile(book.fileName()).inputStream());
 }
-
-const std::string &PdfPlugin::iconName() const {
-	static const std::string ICON_NAME = "unknown";
-	return ICON_NAME;
-}

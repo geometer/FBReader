@@ -50,8 +50,3 @@ bool DummyPlugin::readModel(BookModel &model) const {
 shared_ptr<ZLImage> DummyPlugin::coverImage(const Book &book) const {
 	return DummyCoverReader(book).readCover();
 }
-
-const std::string &DummyPlugin::iconName() const {
-	static const std::string ICON_NAME = "unknown";
-	return ICON_NAME;
-}

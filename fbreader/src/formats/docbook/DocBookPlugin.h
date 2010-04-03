@@ -31,7 +31,6 @@ public:
 	bool acceptsFile(const std::string &extension) const;
 	bool readMetaInfo(Book &book) const;
 	bool readModel(BookModel &model) const;
-	const std::string &iconName() const;
 };
 
 inline DocBookPlugin::DocBookPlugin() {}

@@ -61,11 +61,6 @@ bool RtfPlugin::readModel(BookModel &model) const {
 	return RtfBookReader(model, book.encoding()).readDocument(book.filePath());
 }
 
-const std::string &RtfPlugin::iconName() const {
-	static const std::string ICON_NAME = "rtf";
-	return ICON_NAME;
-}
-
 FormatInfoPage *RtfPlugin::createInfoPage(ZLOptionsDialog&, const std::string&) {
 	return 0;
 }

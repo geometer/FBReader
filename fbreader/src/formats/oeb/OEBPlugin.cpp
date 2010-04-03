@@ -118,8 +118,3 @@ shared_ptr<ZLImage> OEBPlugin::coverImage(const Book &book) const {
 	const std::string opf = opfFileName(book.filePath());
 	return OEBCoverReader().readCover(opf);
 }
-
-const std::string &OEBPlugin::iconName() const {
-	static const std::string ICON_NAME = "oeb";
-	return ICON_NAME;
-}

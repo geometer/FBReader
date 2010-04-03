@@ -71,11 +71,6 @@ bool TxtPlugin::readModel(BookModel &model) const {
 	return true;
 }
 
-const std::string &TxtPlugin::iconName() const {
-	static const std::string ICON_NAME = "unknown";
-	return ICON_NAME;
-}
-
 FormatInfoPage *TxtPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
 	return new PlainTextInfoPage(dialog, fileName, ZLResourceKey("Text"), true);
 }

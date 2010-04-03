@@ -65,11 +65,6 @@ void EReaderPlugin::readDocumentInternal(const std::string& fileName, BookModel 
 	stream.close();
 }
 
-const std::string &EReaderPlugin::iconName() const {
-	static const std::string ICON_NAME = "unknown";
-	return ICON_NAME;
-}
-
 shared_ptr<ZLInputStream> EReaderPlugin::createStream(ZLFile &file) const {
 	return new EReaderStream(file);
 }

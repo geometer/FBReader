@@ -74,11 +74,6 @@ bool HtmlPlugin::readModel(BookModel &model) const {
 	return true;
 }
 
-const std::string &HtmlPlugin::iconName() const {
-	static const std::string ICON_NAME = "html";
-	return ICON_NAME;
-}
-
 FormatInfoPage *HtmlPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &filePath) {
 	return new PlainTextInfoPage(dialog, filePath, ZLResourceKey("<PRE>"), false);
 }

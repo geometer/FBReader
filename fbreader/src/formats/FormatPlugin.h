@@ -53,7 +53,6 @@ public:
 
 	virtual bool providesMetaInfo() const = 0;
 	virtual bool acceptsFile(const ZLFile &file) const = 0;
-	virtual const std::string &iconName() const = 0;
 	virtual FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &path);
 
 	virtual const std::string &tryOpen(const std::string &path) const;

@@ -39,11 +39,6 @@ void MobipocketPlugin::readDocumentInternal(const std::string &fileName, BookMod
 	MobipocketHtmlBookReader(fileName, model, format, encoding).readDocument(stream);
 }
 
-const std::string &MobipocketPlugin::iconName() const {
-	static const std::string ICON_NAME = "mobipocket";
-	return ICON_NAME;
-}
-
 bool MobipocketPlugin::readMetaInfo(Book &book) const {
 	shared_ptr<ZLInputStream> stream = ZLFile(book.filePath()).inputStream();
 	if (stream.isNull() || ! stream->open()) {

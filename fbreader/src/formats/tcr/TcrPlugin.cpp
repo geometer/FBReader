@@ -71,11 +71,6 @@ bool TcrPlugin::readModel(BookModel &model) const {
 	return true;
 }
 
-const std::string &TcrPlugin::iconName() const {
-	static const std::string ICON_NAME = "tcr";
-	return ICON_NAME;
-}
-
 FormatInfoPage *TcrPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &filePath) {
 	ZLFile file(filePath);
 	shared_ptr<ZLInputStream> stream = new TcrStream(file);

@@ -37,11 +37,6 @@ shared_ptr<ZLInputStream> ZTXTPlugin::createStream(ZLFile &file) const {
 	return new ZTXTStream(file);
 }
 
-const std::string &ZTXTPlugin::iconName() const {
-	static const std::string ICON_NAME = "weasel";
-	return ICON_NAME;
-}
-
 FormatInfoPage *ZTXTPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
 	ZLFile file(fileName);
 	shared_ptr<ZLInputStream> stream = createStream(file);

@@ -29,7 +29,6 @@ public:
 	bool acceptsFile(const ZLFile &file) const;
 	bool readMetaInfo(Book &book) const;
 	bool readModel(BookModel &model) const;
-	const std::string &iconName() const;
 	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName);
 };
 

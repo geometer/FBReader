@@ -41,11 +41,6 @@ void PalmDocPlugin::readDocumentInternal(const std::string &fileName, BookModel 
 	}
 }
 
-const std::string &PalmDocPlugin::iconName() const {
-	static const std::string ICON_NAME = "palm";
-	return ICON_NAME;
-}
-
 FormatInfoPage *PalmDocPlugin::createInfoPage(ZLOptionsDialog &dialog, const std::string &fileName) {
 	ZLFile file(fileName);
 	shared_ptr<ZLInputStream> stream = createStream(file);

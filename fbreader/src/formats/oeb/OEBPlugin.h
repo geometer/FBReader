@@ -34,8 +34,6 @@ public:
 	bool readMetaInfo(Book &book) const;
 	bool readModel(BookModel &model) const;
 	shared_ptr<ZLImage> coverImage(const Book &book) const;
-
-	const std::string &iconName() const;
 };
 
 #endif /* __OEBPLUGIN_H__ */

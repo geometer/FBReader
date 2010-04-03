@@ -36,8 +36,3 @@ bool DocBookPlugin::readMetaInfo(Book &book) const {
 bool DocBookPlugin::readModel(BookModel &model) const {
 	return DocBookBookReader(model).readDocument(ZLFile(book.fileName()).inputStream());
 }
-
-const std::string &DocBookPlugin::iconName() const {
-	static const std::string ICON_NAME = "unknown";
-	return ICON_NAME;
-}

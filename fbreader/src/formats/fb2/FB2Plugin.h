@@ -31,7 +31,6 @@ public:
 	bool acceptsFile(const ZLFile &file) const;
 	bool readMetaInfo(Book &book) const;
 	bool readModel(BookModel &model) const;
-	const std::string &iconName() const;
 	shared_ptr<ZLImage> coverImage(const Book &book) const;
 };
 
