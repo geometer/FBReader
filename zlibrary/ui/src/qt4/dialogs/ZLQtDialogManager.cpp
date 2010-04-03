@@ -27,7 +27,6 @@
 #include "ZLQtDialog.h"
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
-#include "ZLQtSelectionDialog.h"
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
 
@@ -65,11 +64,6 @@ int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &
 		parent = myStoredWindow;
 	}
 	return QMessageBox::question(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
-}
-
-bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
-	myStoredWindow = qApp->activeWindow();
-	return ZLQtSelectionDialog(dialogTitle(key), handler).runWithSize();
 }
 
 shared_ptr<ZLProgressDialog> ZLQtDialogManager::createProgressDialog(const ZLResourceKey &key) const {
