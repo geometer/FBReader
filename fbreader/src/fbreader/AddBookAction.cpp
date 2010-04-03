@@ -37,16 +37,22 @@ bool BookFileFilter::accepts(const std::string &filePath) const {
 	return true;
 }
 
-AddBookAction::AddBookAction(int visibleInModes) : ModeDependentAction(visibleInModes), DirectoryOption(ZLCategoryKey::LOOK_AND_FEEL, "OpenFileDialog", "Directory", ZLFile("~").path()) {
+static const std::string GROUP_NAME = "OpenFileDialog";
+
+AddBookAction::AddBookAction(int visibleInModes) :
+	ModeDependentAction(visibleInModes),
+	DirectoryOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP_NAME, "Directory", ZLFile("~").path()),
+	FileOption(ZLCategoryKey::LOOK_AND_FEEL, GROUP_NAME, "File", std::string()) {
 }
 
 void AddBookAction::run() {
 	const ZLResourceKey dialogKey("addFileDialog");
 
 	BookFileFilter filter;
-	shared_ptr<ZLOpenFileDialog> dialog = ZLDialogManager::Instance().createOpenFileDialog(dialogKey, DirectoryOption.value(), filter);
+	shared_ptr<ZLOpenFileDialog> dialog = ZLDialogManager::Instance().createOpenFileDialog(dialogKey, DirectoryOption.value(), FileOption.value(), filter);
 	bool code = dialog->run();
 	DirectoryOption.setValue(dialog->directoryPath());
+	FileOption.setValue(dialog->filePath());
 	if (code) {
 		FBReader::Instance().openFile(dialog->filePath());
 	}

@@ -24,32 +24,66 @@
 #include "ZLGtkOpenFileDialog.h"
 #include "ZLGtkUtil.h"
 
-ZLGtkOpenFileDialog::ZLGtkOpenFileDialog(const std::string &title, const std::string &directoryPath) : myTitle(title), myDirectoryPath(directoryPath) {
-}
-
-bool ZLGtkOpenFileDialog::run() {
-	GtkDialog *dialog = GTK_DIALOG(gtk_file_chooser_dialog_new(
-		myTitle.c_str(), 0, GTK_FILE_CHOOSER_ACTION_OPEN,
+ZLGtkOpenFileDialog::ZLGtkOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath) {
+	myDialog = GTK_DIALOG(gtk_file_chooser_dialog_new(
+		title.c_str(), 0, GTK_FILE_CHOOSER_ACTION_OPEN,
 		gtkString(ZLDialogManager::buttonName(ZLDialogManager::CANCEL_BUTTON)).c_str(),
 			GTK_RESPONSE_CANCEL,
 		gtkString(ZLDialogManager::buttonName(ZLDialogManager::OK_BUTTON)).c_str(),
 			GTK_RESPONSE_ACCEPT,
 		0
 	));
-	GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
-	gtk_file_chooser_set_current_folder(chooser, myDirectoryPath.c_str());
-	const int code = gtk_dialog_run(dialog);
-	myFilePath = gtk_file_chooser_get_filename(chooser);
-	myDirectoryPath = gtk_file_chooser_get_current_folder(chooser);
-	gtk_widget_hide(GTK_WIDGET(dialog));
-	destroyGtkDialog(dialog);
+	GtkFileChooser *chooser = GTK_FILE_CHOOSER(myDialog);
+	gtk_file_chooser_set_current_folder(chooser, directoryPath.c_str());
+	gtk_file_chooser_set_filename(chooser, filePath.c_str());
+}
+
+ZLGtkOpenFileDialog::~ZLGtkOpenFileDialog() {
+	destroyGtkDialog(myDialog);
+}
+
+bool ZLGtkOpenFileDialog::runInternal() {
+	const int code = gtk_dialog_run(myDialog);
+	gtk_widget_hide(GTK_WIDGET(myDialog));
 	return code == GTK_RESPONSE_ACCEPT;
 }
 
 std::string ZLGtkOpenFileDialog::filePath() const {
-	return myFilePath;
+	return gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(myDialog));
 }
 
 std::string ZLGtkOpenFileDialog::directoryPath() const {
-	return myDirectoryPath;
+	return gtk_file_chooser_get_current_folder(GTK_FILE_CHOOSER(myDialog));
+}
+
+void ZLGtkOpenFileDialog::setPosition(int x, int y) {
+	//gtk_window_move(GTK_WINDOW(myDialog), x, y);
+}
+
+int ZLGtkOpenFileDialog::x() const {
+	int _x;
+	gtk_window_get_position(GTK_WINDOW(myDialog), &_x, 0);
+	return _x;
+}
+
+int ZLGtkOpenFileDialog::y() const {
+	int _y;
+	gtk_window_get_position(GTK_WINDOW(myDialog), 0, &_y);
+	return _y;
+}
+
+void ZLGtkOpenFileDialog::setSize(int width, int height) {
+	gtk_window_resize(GTK_WINDOW(myDialog), width, height);
+}
+
+int ZLGtkOpenFileDialog::width() const {
+	int _width;
+	gtk_window_get_size(GTK_WINDOW(myDialog), &_width, 0);
+	return _width;
+}
+
+int ZLGtkOpenFileDialog::height() const {
+	int _height;
+	gtk_window_get_size(GTK_WINDOW(myDialog), 0, &_height);
+	return _height;
 }

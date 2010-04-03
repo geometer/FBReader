@@ -36,8 +36,8 @@ shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const ZLReso
 	return new ZLGtkOptionsDialog(resource()[id], applyAction, showApplyButton);
 }
 
-shared_ptr<ZLOpenFileDialog> ZLGtkDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const ZLOpenFileDialog::Filter &filter) const {
-	return new ZLGtkOpenFileDialog(dialogTitle(key), directoryPath);
+shared_ptr<ZLOpenFileDialog> ZLGtkDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
+	return new ZLGtkOpenFileDialog(dialogTitle(key), directoryPath, filePath);
 }
 
 void ZLGtkDialogManager::informationBox(const std::string &title, const std::string &message) const {

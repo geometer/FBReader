@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,32 +17,34 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLGTKOPENFILEDIALOG_H__
-#define __ZLGTKOPENFILEDIALOG_H__
+#ifndef __ZLDESKTOPOPENFILEDIALOG_H__
+#define __ZLDESKTOPOPENFILEDIALOG_H__
 
-#include <gtk/gtkdialog.h>
+#include <ZLOpenFileDialog.h>
+#include <ZLOptions.h>
 
-#include "../../../../core/src/desktop/dialogs/ZLDesktopOpenFileDialog.h"
+class ZLDesktopOpenFileDialog : public ZLOpenFileDialog {
 
-class ZLGtkOpenFileDialog : public ZLDesktopOpenFileDialog {
+protected:
+	ZLDesktopOpenFileDialog();
 
 public:
-	ZLGtkOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath);
-	~ZLGtkOpenFileDialog();
+	bool run();
 
-	bool runInternal();
-	std::string filePath() const;
-	std::string directoryPath() const;
-
-	void setPosition(int x, int y);
-	void setSize(int width, int height);
-	int x() const;
-	int y() const;
-	int width() const;
-	int height() const;
+protected:
+	virtual bool runInternal() = 0;
+	virtual void setPosition(int x, int y) = 0;
+	virtual void setSize(int width, int height) = 0;
+	virtual int x() const = 0;
+	virtual int y() const = 0;
+	virtual int width() const = 0;
+	virtual int height() const = 0;
 
 private:
-	GtkDialog *myDialog;
+	ZLIntegerOption myXOption;
+	ZLIntegerOption myYOption;
+	ZLIntegerOption myWidthOption;
+	ZLIntegerOption myHeightOption;
 };
 
-#endif /* __ZLGTKOPENFILEDIALOG_H__ */
+#endif /* __ZLDESKTOPOPENFILEDIALOG_H__ */
