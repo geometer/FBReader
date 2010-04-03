@@ -24,7 +24,13 @@
 #include "ZLGtkOpenFileDialog.h"
 #include "ZLGtkUtil.h"
 
-ZLGtkOpenFileDialog::ZLGtkOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath) {
+static gboolean filterHandler(const GtkFileFilterInfo *info, void *data) {
+	const ZLOpenFileDialog::Filter &filter =
+		*(const ZLOpenFileDialog::Filter*)data;
+	return filter.accepts(info->filename, info->mime_type);
+}
+
+ZLGtkOpenFileDialog::ZLGtkOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter) {
 	myDialog = GTK_DIALOG(gtk_file_chooser_dialog_new(
 		title.c_str(), 0, GTK_FILE_CHOOSER_ACTION_OPEN,
 		gtkString(ZLDialogManager::buttonName(ZLDialogManager::CANCEL_BUTTON)).c_str(),
@@ -36,6 +42,10 @@ ZLGtkOpenFileDialog::ZLGtkOpenFileDialog(const std::string &title, const std::st
 	GtkFileChooser *chooser = GTK_FILE_CHOOSER(myDialog);
 	gtk_file_chooser_set_current_folder(chooser, directoryPath.c_str());
 	gtk_file_chooser_set_filename(chooser, filePath.c_str());
+	GtkFileFilter *gtkFilter = gtk_file_filter_new();
+	gtk_file_filter_add_custom(gtkFilter, (GtkFileFilterFlags)(GTK_FILE_FILTER_FILENAME | GTK_FILE_FILTER_MIME_TYPE), filterHandler, (void*)&filter, 0);
+	//gtk_file_chooser_add_filter(chooser, gtkFilter);
+	gtk_file_chooser_set_filter(chooser, gtkFilter);
 }
 
 ZLGtkOpenFileDialog::~ZLGtkOpenFileDialog() {

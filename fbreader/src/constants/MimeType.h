@@ -17,24 +17,34 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLOPENFILEDIALOG_H__
-#define __ZLOPENFILEDIALOG_H__
+#ifndef __MIMETYPE_H__
+#define __MIMETYPE_H__
 
 #include <string>
 
-class ZLOpenFileDialog {
+class MimeType {
 
 public:
-	class Filter {
+	static const std::string APPLICATION_XML;
+	static const std::string APPLICATION_ZIP;
+	static const std::string APPLICATION_EPUB_ZIP;
+	static const std::string APPLICATION_FB2_ZIP;
+	static const std::string APPLICATION_MOBIPOCKET_EBOOK;
+	static const std::string APPLICATION_PDF;
+	static const std::string APPLICATION_ATOM_XML;
+	static const std::string APPLICATION_ATOM_XML_ENTRY;
+	static const std::string APPLICATION_LITRES_XML;
 
-	public:
-		virtual bool accepts(const std::string &filePath, const std::string &mime_type) const = 0;
-	};
+	static const std::string IMAGE_PNG;
+	static const std::string IMAGE_JPEG;
+
+	static const std::string TEXT_HTML;
 
 public:
-	virtual bool run() = 0;
-	virtual std::string filePath() const = 0;
-	virtual std::string directoryPath() const = 0;
+	static bool isImage(const std::string &mimeType);
+
+private:
+	MimeType();
 };
 
-#endif /* __ZLOPENFILEDIALOG_H__ */
+#endif /* __MIMETYPE_H__ */

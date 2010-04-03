@@ -34,22 +34,6 @@ const std::string OPDSConstants::REL_ACQUISITION_SAMPLE_OR_FULL     = "http://da
 const std::string OPDSConstants::REL_COVER         = "http://opds-spec.org/cover";
 const std::string OPDSConstants::REL_THUMBNAIL     = "http://opds-spec.org/thumbnail";
 
-const std::string OPDSConstants::MIME_OPDS_FULLENTRY = "application/atom+xml;type=entry";
-
-const std::string OPDSConstants::MIME_APP_FB2ZIP  = "application/fb2+zip";
-const std::string OPDSConstants::MIME_APP_EPUB  = "application/epub+zip";
-const std::string OPDSConstants::MIME_APP_MOBI  = "application/x-mobipocket-ebook";
-const std::string OPDSConstants::MIME_APP_PDF   = "application/pdf";
-const std::string OPDSConstants::MIME_APP_ATOM  = "application/atom+xml";
-const std::string OPDSConstants::MIME_APP_LITRES  = "application/litres+xml";
-
-const std::string OPDSConstants::MIME_IMG_PNG   = "image/png";
-const std::string OPDSConstants::MIME_IMG_JPEG  = "image/jpeg";
-const std::string OPDSConstants::MIME_TEXT_HTML = "text/html";
-
-
-
-
 DCDate::DCDate() : 
 	ATOMDateConstruct(0) {
 }

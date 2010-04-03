@@ -32,7 +32,7 @@
 
 std::map<std::string,weak_ptr<ZLInputStream> > ZLFile::ourPlainStreamCache;
 
-ZLFile::ZLFile(const std::string &path) : myPath(path), myInfoIsFilled(false) {
+ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(path), myMimeType(mimeType), myInfoIsFilled(false) {
 	ZLFSManager::Instance().normalize(myPath);
 	{
 		size_t index = ZLFSManager::Instance().findLastFileNameDelimiter(myPath);

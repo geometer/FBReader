@@ -27,7 +27,7 @@
 class ZLGtkOpenFileDialog : public ZLDesktopOpenFileDialog {
 
 public:
-	ZLGtkOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath);
+	ZLGtkOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter);
 	~ZLGtkOpenFileDialog();
 
 	bool runInternal();

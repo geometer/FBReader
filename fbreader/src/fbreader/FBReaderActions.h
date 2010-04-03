@@ -131,6 +131,9 @@ public:
 class AddBookAction : public ModeDependentAction {
 
 private:
+	class FileFilter;
+
+private:
 	ZLStringOption DirectoryOption;
 	ZLStringOption FileOption;
 

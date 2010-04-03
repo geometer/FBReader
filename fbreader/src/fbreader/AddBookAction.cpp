@@ -23,18 +23,19 @@
 
 #include "FBReaderActions.h"
 #include "FBReader.h"
-#include "FBFileHandler.h"
 #include "BookInfoDialog.h"
 #include "../library/Book.h"
+#include "../formats/FormatPlugin.h"
 
-class BookFileFilter : public ZLOpenFileDialog::Filter {
+class AddBookAction::FileFilter : public ZLOpenFileDialog::Filter {
 
 private:
-	bool accepts(const std::string &filePath) const;
+	bool accepts(const std::string &filePath, const std::string &mimeType) const;
 };
 
-bool BookFileFilter::accepts(const std::string &filePath) const {
-	return true;
+bool AddBookAction::FileFilter::accepts(const std::string &filePath, const std::string &mimeType) const {
+	ZLFile file(filePath, mimeType);
+	return file.isArchive() || !PluginCollection::Instance().plugin(file, false).isNull();
 }
 
 static const std::string GROUP_NAME = "OpenFileDialog";
@@ -48,30 +49,12 @@ AddBookAction::AddBookAction(int visibleInModes) :
 void AddBookAction::run() {
 	const ZLResourceKey dialogKey("addFileDialog");
 
-	BookFileFilter filter;
+	FileFilter filter;
 	shared_ptr<ZLOpenFileDialog> dialog = ZLDialogManager::Instance().createOpenFileDialog(dialogKey, DirectoryOption.value(), FileOption.value(), filter);
 	bool code = dialog->run();
 	DirectoryOption.setValue(dialog->directoryPath());
 	FileOption.setValue(dialog->filePath());
 	if (code) {
 		FBReader::Instance().openFile(dialog->filePath());
-	}
-	return;
-
-	FBFileHandler handler;
-	FBReader &fbreader = FBReader::Instance();
-
-	if (ZLDialogManager::Instance().selectionDialog(dialogKey, handler)) {
-		shared_ptr<Book> book = handler.description();
-		if (!book.isNull()) {
-			if (BookInfoDialog(book).dialog().run()) {
-				Library::Instance().addBook(book);
-				fbreader.openBook(book);
-				fbreader.setMode(FBReader::BOOK_TEXT_MODE);
-			} else {
-				Library::Instance().removeBook(book);
-			}
-			fbreader.refreshWindow();
-		}
 	}
 }

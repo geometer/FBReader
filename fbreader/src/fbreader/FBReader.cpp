@@ -179,7 +179,7 @@ void FBReader::initWindow() {
 	if (!myBookAlreadyOpen) {
 		shared_ptr<Book> book;
 		if (!myBookToOpen.empty()) {
-			createBook(myBookToOpen, book);
+			createBook(ZLFile(myBookToOpen), book);
 		}
 		if (book.isNull()) {
 			const BookList &books = Library::Instance().recentBooks();
@@ -205,13 +205,11 @@ void FBReader::refreshWindow() {
 	((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
 }
 
-bool FBReader::createBook(const std::string& fileName, shared_ptr<Book> &book) {
-	ZLFile bookFile = ZLFile(fileName);
-
+bool FBReader::createBook(ZLFile bookFile, shared_ptr<Book> &book) {
 	shared_ptr<FormatPlugin> plugin =
-		PluginCollection::Instance().plugin(ZLFile(fileName), false);
+		PluginCollection::Instance().plugin(bookFile, false);
 	if (!plugin.isNull()) {
-		std::string error = plugin->tryOpen(fileName);
+		std::string error = plugin->tryOpen(bookFile.path());
 		if (!error.empty()) {
 			ZLResourceKey boxKey("openBookErrorBox");
 			ZLDialogManager::Instance().errorBox(
@@ -248,7 +246,7 @@ bool FBReader::createBook(const std::string& fileName, shared_ptr<Book> &book) {
 			ZLFile subFile(itemName);
 			if (subFile.isArchive()) {
 				archiveNames.push(itemName);
-			} else if (createBook(itemName, book)) {
+			} else if (createBook(subFile, book)) {
 				return true;
 			}
 		}
@@ -346,7 +344,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 			downloader.showErrorMessage();
 		} else {
 			shared_ptr<Book> book;
-			createBook(downloader.fileName(), book);
+			createBook(ZLFile(downloader.fileName()), book);
 			if (!book.isNull()) {
 				Library::Instance().addBook(book);
 				openBook(book);
@@ -446,7 +444,7 @@ std::string FBReader::helpFileName(const std::string &language) const {
 
 void FBReader::openFile(const std::string &filePath) {
 	shared_ptr<Book> book;
-	createBook(filePath, book);
+	createBook(ZLFile(filePath), book);
 	if (!book.isNull()) {
 		openBook(book);
 		refreshWindow();

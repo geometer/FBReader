@@ -51,7 +51,7 @@ public:
 	};
 	
 public:
-	ZLFile(const std::string &path);
+	explicit ZLFile(const std::string &path, const std::string &mimeType = std::string());
 	~ZLFile();
 
 	bool exists() const;
@@ -70,6 +70,8 @@ public:
 	const std::string &name(bool hideExtension) const;
 	const std::string &extension() const;
 
+	const std::string &mimeType() const;
+
 	std::string physicalFilePath() const;
 	std::string resolvedPath() const;
 
@@ -86,6 +88,7 @@ private:
 	std::string myNameWithExtension;
 	std::string myNameWithoutExtension;
 	std::string myExtension;
+	std::string myMimeType;
 	ArchiveType myArchiveType;
 	mutable ZLFileInfo myInfo;
 	mutable bool myInfoIsFilled;
@@ -99,5 +102,6 @@ inline bool ZLFile::isArchive() const { return myArchiveType & ARCHIVE; }
 inline const std::string &ZLFile::path() const { return myPath; }
 inline const std::string &ZLFile::name(bool hideExtension) const { return hideExtension ? myNameWithoutExtension : myNameWithExtension; }
 inline const std::string &ZLFile::extension() const { return myExtension; }
+inline const std::string &ZLFile::mimeType() const { return myMimeType; }
 
 #endif /* __ZLFILE_H__ */

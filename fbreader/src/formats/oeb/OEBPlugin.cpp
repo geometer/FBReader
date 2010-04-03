@@ -29,6 +29,7 @@
 #include "OEBBookReader.h"
 #include "OEBCoverReader.h"
 #include "OEBTextStream.h"
+#include "../../constants/MimeType.h"
 #include "../../bookmodel/BookModel.h"
 #include "../../library/Book.h"
 
@@ -44,8 +45,15 @@ bool OEBPlugin::providesMetaInfo() const {
 }
 
 bool OEBPlugin::acceptsFile(const ZLFile &file) const {
+	const std::string &mimeType = file.mimeType();
 	const std::string &extension = file.extension();
-	return (extension == OPF) || (extension == OEBZIP) || (extension == EPUB);
+	if (!mimeType.empty()) {
+		return 
+			mimeType == MimeType::APPLICATION_EPUB_ZIP ||
+			(mimeType == MimeType::APPLICATION_XML && extension == OPF) ||
+			(mimeType == MimeType::APPLICATION_ZIP && extension == OEBZIP);
+	}
+	return extension == OPF || extension == OEBZIP || extension == EPUB;
 }
 
 std::string OEBPlugin::opfFileName(const std::string &oebFileName) {

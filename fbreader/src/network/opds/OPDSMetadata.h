@@ -50,26 +50,6 @@ public:
 	// Entry level / other
 	static const std::string REL_COVER;
 	static const std::string REL_THUMBNAIL;
-
-	// MIME types / MIME type for "Full Entry" atom:link element
-	static const std::string MIME_OPDS_FULLENTRY;
-
-	// MIME types / application
-	static const std::string MIME_APP_FB2ZIP;
-	static const std::string MIME_APP_EPUB;
-	static const std::string MIME_APP_MOBI;
-	static const std::string MIME_APP_PDF;
-	static const std::string MIME_APP_ATOM;
-
-	// a special MIME type for the litres OPDS catalog
-	static const std::string MIME_APP_LITRES;
-
-	// MIME types / image
-	static const std::string MIME_IMG_PNG;
-	static const std::string MIME_IMG_JPEG;
-
-	// MIME types / text
-	static const std::string MIME_TEXT_HTML;
 };
 
 

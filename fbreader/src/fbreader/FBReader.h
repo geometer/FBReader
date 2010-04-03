@@ -32,6 +32,7 @@
 #include "../library/Library.h"
 #include "../external/ProgramCollection.h"
 
+class ZLFile;
 class ZLMessageHandler;
 
 class Book;
@@ -45,7 +46,7 @@ public:
 
 public:
 	// returns true if description was found or error message was shown
-	static bool createBook(const std::string &fileName, shared_ptr<Book> &book);
+	static bool createBook(ZLFile bookFile, shared_ptr<Book> &book);
 
 	static const std::string PageIndexParameter;
 

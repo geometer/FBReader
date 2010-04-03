@@ -127,7 +127,7 @@ void BooksDBUtil::listZipEntries(const ZLFile &zipFile, std::vector<std::string>
 	entries.clear();
 	BooksDB::Instance().loadFileEntries(zipFile.path(), entries);
 	if (entries.empty()) {
-		resetZipInfo(zipFile.path());
+		resetZipInfo(zipFile);
 		BooksDB::Instance().loadFileEntries(zipFile.path(), entries);
 	}
 }

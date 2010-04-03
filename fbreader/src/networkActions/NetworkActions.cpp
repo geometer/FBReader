@@ -68,7 +68,7 @@ void NetworkBookReadAction::run() {
 	if (!fileName.empty()) {
 		FBReader &fbreader = FBReader::Instance();
 		shared_ptr<Book> bookPtr;
-		fbreader.createBook(fileName, bookPtr);
+		fbreader.createBook(ZLFile(fileName), bookPtr);
 		if (!bookPtr.isNull()) {
 			fbreader.openBook(bookPtr);
 			fbreader.setMode(FBReader::BOOK_TEXT_MODE);
@@ -122,7 +122,7 @@ void NetworkBookDownloadAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	shared_ptr<Book> downloaderBook;
 	const std::string fileName = downloader.fileName();
-	fbreader.createBook(fileName, downloaderBook);
+	fbreader.createBook(ZLFile(fileName), downloaderBook);
 	if (downloaderBook.isNull()) {
 		ZLFile(fileName).remove();
 		ZLResourceKey boxKey("cantOpenDownloadedFile");
