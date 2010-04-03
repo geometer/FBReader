@@ -124,7 +124,7 @@ bool PdfBookReader::readReferenceTable(ZLInputStream &stream, int xrefOffset) {
 				const int objectGeneration = atoi(myBuffer.c_str() + 11);
 				const bool objectInUse = myBuffer[17] == 'n';
 				if (objectInUse) {
-					myObjectLocationMap[std::pair<int,int>(start + i, objectGeneration)] = objectOffset;
+					myObjectLocationMap[std::make_pair(start + i, objectGeneration)] = objectOffset;
 				}
 			}
 		}

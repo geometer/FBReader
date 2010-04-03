@@ -82,7 +82,7 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 
 	if (view != 0) {
 		myOptionPositions.insert(
-			std::pair<ZLOptionView*,Position>(view, Position(myRowCounter, fromColumn, toColumn))
+			std::make_pair(view, Position(myRowCounter, fromColumn, toColumn))
 		);
 		addView(view);
 		view->setVisible(option->isVisible());

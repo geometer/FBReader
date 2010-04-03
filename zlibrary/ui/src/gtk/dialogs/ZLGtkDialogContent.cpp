@@ -60,7 +60,7 @@ void ZLGtkDialogContent::createViewByEntry(const std::string &name, const std::s
 	ZLOptionView *view = ZLGtkOptionViewHolder::createViewByEntry(name, tooltip, option);
 	if (view != 0) {
 		myOptionPositions.insert(
-			std::pair<ZLOptionView*,Position>(view, Position(row, fromColumn, toColumn))
+			std::make_pair(view, Position(row, fromColumn, toColumn))
 		);
 		view->setVisible(option->isVisible());
 		addView(view);

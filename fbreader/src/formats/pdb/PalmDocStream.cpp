@@ -166,12 +166,12 @@ std::pair<int,int> PalmDocStream::imageLocation(const PdbHeader &header, int ind
 	index += myMaxRecordIndex + 1;
 	int recordNumber = header.Offsets.size();
 	if (index > recordNumber - 1) {
-		return std::pair<int,int>(-1, -1);
+		return std::make_pair(-1, -1);
 	} else {
 		int start = header.Offsets[index];
 		int end = (index < recordNumber - 1) ?
 			header.Offsets[index + 1] : myBase->offset();
-		return std::pair<int,int>(start, end - start);
+		return std::make_pair(start, end - start);
 	}
 }
 
