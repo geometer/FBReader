@@ -24,10 +24,7 @@
 #include "ZLGtkOpenFileDialog.h"
 #include "ZLGtkUtil.h"
 
-#include <iostream>
-
 static gboolean filterHandler(const GtkFileFilterInfo *info, void *data) {
-	std::cerr << info->filename << " : " << info->mime_type << "\n";
 	const ZLOpenFileDialog::Filter &filter =
 		*(const ZLOpenFileDialog::Filter*)data;
 	return filter.accepts(info->filename, info->mime_type);
