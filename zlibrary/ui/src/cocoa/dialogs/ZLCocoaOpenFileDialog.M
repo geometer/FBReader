@@ -21,16 +21,25 @@
 
 #include "ZLCocoaOpenFileDialog.h"
 
-ZLCocoaOpenFileDialog::ZLCocoaOpenFileDialog(const std::string &directoryPath, const Filter &filter) : myDirectoryPath(directoryPath), myFilter(filter) {
+ZLCocoaOpenFileDialog::ZLCocoaOpenFileDialog(const std::string &title, const std::string &filePath, const Filter &filter) : myTitle(title), myFilePath(filePath), myFilter(filter) {
 }
 
 bool ZLCocoaOpenFileDialog::run() {
 	NSOpenPanel *panel = [NSOpenPanel openPanel];
-	return [panel runModal] == NSFileHandlingPanelOKButton;
+	[panel setTitle:[NSString stringWithUTF8String:myTitle.c_str()]];
+	bool code = [panel runModal] == NSFileHandlingPanelOKButton;
+
+	myFilePath.erase();
+	NSArray *urls = [panel URLs];
+	if ([urls count] > 0) {
+		myFilePath = [[[urls objectAtIndex:0] path] UTF8String];
+	}
+
+	return code;
 }
 
 std::string ZLCocoaOpenFileDialog::filePath() const {
-	return std::string();
+	return myFilePath;
 }
 
 std::string ZLCocoaOpenFileDialog::directoryPath() const {

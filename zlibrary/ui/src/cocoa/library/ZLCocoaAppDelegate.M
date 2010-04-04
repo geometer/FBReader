@@ -18,6 +18,7 @@
  */
 
 #include <ZLibrary.h>
+#include <ZLFile.h>
 
 #include "../application/ZLCocoaApplicationWindow.h"
 #include "../application/ZLCocoaToolbarDelegate.h"
@@ -55,7 +56,7 @@
 }
 
 - (BOOL)application:(NSApplication*)application openFile:(NSString*)fileName {
-	ZLApplication::Instance().openFile([fileName UTF8String]);
+	ZLApplication::Instance().openFile(ZLFile([fileName UTF8String]));
 	return YES;
 }
 

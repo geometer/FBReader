@@ -44,9 +44,9 @@ MAEMO:
 	** определение mimeType
 
 MAC:
-	** размеры и координаты окна
-	** заголовок окна
-	** directory path
+	DONE размеры и координаты окна
+	DONE заголовок окна
+	DONE directory path
 	** file path
 	** filter
 	** определение mimeType

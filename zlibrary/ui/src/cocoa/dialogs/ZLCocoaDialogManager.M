@@ -27,7 +27,6 @@
 #include "ZLCocoaDialogManager.h"
 //#include "ZLCocoaDialog.h"
 //#include "ZLCocoaOptionsDialog.h"
-//#include "ZLCocoaSelectionDialog.h"
 #include "ZLCocoaProgressDialog.h"
 #include "ZLCocoaOpenFileDialog.h"
 //#include "ZLCocoaUtil.h"
@@ -91,13 +90,8 @@ int ZLCocoaDialogManager::questionBox(const ZLResourceKey &key, const std::strin
 	return -1;
 }
 
-bool ZLCocoaDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
-	//return ZLCocoaSelectionDialog(dialogTitle(key), handler).runWithSize();
-	return 0;
-}
-
-shared_ptr<ZLOpenFileDialog> ZLCocoaDialogManager::createOpenFileDialog(const std::string &directoryPath, const ZLOpenFileDialog::Filter &filter) const {
-	return new ZLCocoaOpenFileDialog(directoryPath, filter);
+shared_ptr<ZLOpenFileDialog> ZLCocoaDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
+	return new ZLCocoaOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
 }
 
 shared_ptr<ZLProgressDialog> ZLCocoaDialogManager::createProgressDialog(const ZLResourceKey &key) const {
