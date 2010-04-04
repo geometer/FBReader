@@ -23,6 +23,9 @@
 
 ZLQtOpenFileDialog::ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter) {
 	myDialog = new QFileDialog();
+	myDialog->setWindowTitle(QString::fromUtf8(title.c_str()));
+	myDialog->setDirectory(QString::fromUtf8(directoryPath.c_str()));
+	myDialog->selectFile(QString::fromUtf8(filePath.c_str()));
 }
 
 ZLQtOpenFileDialog::~ZLQtOpenFileDialog() {
@@ -34,17 +37,20 @@ bool ZLQtOpenFileDialog::runInternal() {
 }
 
 std::string ZLQtOpenFileDialog::filePath() const {
-	return std::string();
+	QStringList paths = myDialog->selectedFiles();
+	return paths.size() > 0 ? (const char*)paths[0].toUtf8() : std::string();
 }
 
 std::string ZLQtOpenFileDialog::directoryPath() const {
-	return std::string();
+	return (const char*)myDialog->directory().absolutePath().toUtf8();
 }
 
 void ZLQtOpenFileDialog::setPosition(int x, int y) {
+	myDialog->move(x, y);
 }
 
 void ZLQtOpenFileDialog::setSize(int width, int height) {
+	myDialog->resize(width, height);
 }
 
 int ZLQtOpenFileDialog::x() const {
