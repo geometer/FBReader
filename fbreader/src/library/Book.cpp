@@ -33,40 +33,39 @@
 
 const std::string Book::AutoEncoding = "auto";
 
-Book::Book(const std::string filePath, int id) : myBookId(id), myFile(filePath), myIndexInSeries(0) {
+Book::Book(const ZLFile &file, int id) : myBookId(id), myFile(file), myIndexInSeries(0) {
 }
 
 Book::~Book() {
 }
 
 shared_ptr<Book> Book::createBook(
-	const std::string &filePath,
+	const ZLFile &file,
 	int id,
 	const std::string &encoding,
 	const std::string &language,
 	const std::string &title
 ) {
-	Book *book = new Book(filePath, id);
+	Book *book = new Book(file, id);
 	book->setEncoding(encoding);
 	book->setLanguage(language);
 	book->setTitle(title);
 	return book;
 }
 
-shared_ptr<Book> Book::loadFromFile(const std::string &filePath) {
-	ZLFile bookFile(filePath);
-	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(bookFile, false);
+shared_ptr<Book> Book::loadFromFile(const ZLFile &file) {
+	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(file, false);
 	if (plugin.isNull()) {
 		return 0;
 	}
 
-	shared_ptr<Book> book = new Book(filePath, 0);
+	shared_ptr<Book> book = new Book(file, 0);
 	if (!plugin->readMetaInfo(*book)) {
 		return 0;	
 	}
 
 	if (book->title().empty()) {
-		book->setTitle(ZLFile::fileNameToUtf8(bookFile.name(true)));
+		book->setTitle(ZLFile::fileNameToUtf8(file.name(true)));
 	}
 
 	if (book->encoding().empty()) {
@@ -179,11 +178,11 @@ bool Book::cloneTag(shared_ptr<Tag> from, shared_ptr<Tag> to, bool includeSubTag
 	return false;
 }
 
-shared_ptr<Book> Book::loadFromBookInfo(const std::string &filePath) {
-	BookInfo info(filePath);
+shared_ptr<Book> Book::loadFromBookInfo(const ZLFile &file) {
+	BookInfo info(file.path());
 
 	shared_ptr<Book> book = createBook(
-		filePath, 0,
+		file, 0,
 		info.EncodingOption.value(),
 		info.LanguageOption.value(),
 		info.TitleOption.value()

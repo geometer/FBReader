@@ -75,7 +75,7 @@ private:
 	bool migrateState();
 	bool migrateNetwork();
 
-	bool migrateBook(const std::string &fileName);
+	bool migrateBook(const ZLFile &file);
 
 	std::string tags2string(const TagList &tags);
 
@@ -243,7 +243,7 @@ bool Migration_0_11_0_Runnable::migrateBooks() {
 			if (collection.plugin(file, false) != 0) {
 				if (!BookInfo(name).TitleOption.value().empty()) {
 					//ZLTime start;
-					if (!migrateBook(name)) {
+					if (!migrateBook(ZLFile(name))) {
 						std::cerr << "ERROR(2): migrateBook failed" << std::endl;
 						res = false;
 					}
@@ -286,14 +286,14 @@ bool Migration_0_11_0_Runnable::migrateBooks() {
 }
 
 
-bool Migration_0_11_0_Runnable::migrateBook(const std::string &fileName) {
-	shared_ptr<Book> infoBook = Book::loadFromBookInfo(fileName);
+bool Migration_0_11_0_Runnable::migrateBook(const ZLFile &file) {
+	shared_ptr<Book> infoBook = Book::loadFromBookInfo(file);
 	if (infoBook.isNull()) {
-		std::cerr << "ERROR: loading book from BookInfo failed: " << fileName << std::endl;
+		std::cerr << "ERROR: loading book from BookInfo failed: " << file.path() << std::endl;
 		return false;
 	}
-	if (shouldReadDisk(fileName) && BooksDBUtil::isBookFull(*infoBook)) {
-		shared_ptr<Book> fileBook = Book::loadFromFile(fileName);
+	if (shouldReadDisk(file.path()) && BooksDBUtil::isBookFull(*infoBook)) {
+		shared_ptr<Book> fileBook = Book::loadFromFile(file);
 		//shared_ptr<Book> fileBook = infoBook;
 		//shared_ptr<Book> fileBook;
 		if (!fileBook.isNull()) {
@@ -308,10 +308,10 @@ bool Migration_0_11_0_Runnable::migrateBook(const std::string &fileName) {
 			}
 		}
 	}
-	myBooks.insert(std::make_pair(fileName, infoBook));
+	myBooks.insert(std::make_pair(file.path(), infoBook));
 	const bool code = BooksDB::Instance().saveBook(infoBook);
 	if (!code) {
-		std::cerr << "ERROR: saving book to database failed: " << fileName << std::endl;
+		std::cerr << "ERROR: saving book to database failed: " << file.path() << std::endl;
 	}
 	return code;
 }

@@ -38,20 +38,20 @@ public:
 
 public:
 	static shared_ptr<Book> createBook(
-		const std::string &filePath,
+		const ZLFile &file,
 		int id,
 		const std::string &encoding,
 		const std::string &language,
 		const std::string &title
 	);
 
-	static shared_ptr<Book> loadFromFile(const std::string &filePath);
+	static shared_ptr<Book> loadFromFile(const ZLFile &file);
 
 	// this method is used in Migration only
-	static shared_ptr<Book> loadFromBookInfo(const std::string &filePath);
+	static shared_ptr<Book> loadFromBookInfo(const ZLFile &file);
 
 private:
-	Book(const std::string filePath, int id);
+	Book(const ZLFile &file, int id);
 
 public:
 	~Book();

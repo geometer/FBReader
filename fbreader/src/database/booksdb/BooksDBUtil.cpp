@@ -48,7 +48,7 @@ shared_ptr<Book> BooksDBUtil::getBook(const std::string &filePath, bool checkFil
 		saveInfo(file);
 	}
 
-	shared_ptr<Book> book = Book::loadFromFile(filePath);
+	shared_ptr<Book> book = Book::loadFromFile(ZLFile(filePath));
 	if (book.isNull()) {
 		return 0;
 	}
@@ -91,7 +91,7 @@ bool BooksDBUtil::getBooks(std::map<std::string, shared_ptr<Book> > &booksmap, b
 				}
 				saveInfo(file);
 			}
-			shared_ptr<Book> bookptr = Book::loadFromFile(book.file().path());
+			shared_ptr<Book> bookptr = Book::loadFromFile(book.file());
 			if (!bookptr.isNull()) {
 				BooksDB::Instance().saveBook(bookptr);
 				booksmap.insert(std::make_pair(book.file().path(), bookptr));

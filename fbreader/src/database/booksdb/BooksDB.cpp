@@ -157,7 +157,7 @@ shared_ptr<Book> BooksDB::loadBook(const std::string &fileName) {
 	const int bookId = reader->intValue(0);
 
 	shared_ptr<Book> book = Book::createBook(
-		fileName, bookId,
+		ZLFile(fileName), bookId,
 		reader->textValue(1, Book::AutoEncoding),
 		reader->textValue(2, ZLLanguageUtil::OtherLanguageCode),
 		reader->textValue(3, std::string())
@@ -335,7 +335,7 @@ bool BooksDB::loadBooks(BookList &books) {
 		const std::string fileName = getFileName(fileId);
 
 		shared_ptr<Book> book = Book::createBook(
-			fileName,
+			ZLFile(fileName),
 			bookId,
 			reader->textValue(1, Book::AutoEncoding),
 			reader->textValue(2, ZLLanguageUtil::OtherLanguageCode),
