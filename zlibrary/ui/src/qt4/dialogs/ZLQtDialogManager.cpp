@@ -26,20 +26,25 @@
 #include "ZLQtDialogManager.h"
 #include "ZLQtDialog.h"
 #include "ZLQtOptionsDialog.h"
+#include "ZLQtOpenFileDialog.h"
 #include "ZLQtDialogContent.h"
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
 
 #include "../image/ZLQtImageManager.h"
 
+shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
+	myStoredWindow = qApp->activeWindow();
+	return new ZLQtDialog(resource()[key]);
+}
+
 shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
 	myStoredWindow = qApp->activeWindow();
 	return new ZLQtOptionsDialog(resource()[key], applyAction, showApplyButton);
 }
 
-shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
-	myStoredWindow = qApp->activeWindow();
-	return new ZLQtDialog(resource()[key]);
+shared_ptr<ZLOpenFileDialog> ZLQtDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
+	return new ZLQtOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
 }
 
 void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
