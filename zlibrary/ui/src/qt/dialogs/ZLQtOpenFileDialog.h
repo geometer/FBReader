@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,32 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQTFSMANAGER_H__
-#define __ZLQTFSMANAGER_H__
+#ifndef __ZLQTOPENFILEDIALOG_H__
+#define __ZLQTOPENFILEDIALOG_H__
 
-#include "../../../../core/src/unix/filesystem/ZLUnixFSManager.h"
+#include "../../../../core/src/desktop/dialogs/ZLDesktopOpenFileDialog.h"
 
-class ZLQtFSManager : public ZLUnixFSManager {
+class QFileDialog;
+
+class ZLQtOpenFileDialog : public ZLDesktopOpenFileDialog {
 
 public:
-	static void createInstance() { ourInstance = new ZLQtFSManager(); }
-	
+	ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter);
+	~ZLQtOpenFileDialog();
+
+	bool runInternal();
+	std::string filePath() const;
+	std::string directoryPath() const;
+
+	void setPosition(int x, int y);
+	void setSize(int width, int height);
+	int x() const;
+	int y() const;
+	int width() const;
+	int height() const;
+
 private:
-	ZLQtFSManager() {}
-	
-protected:
-	std::string convertFilenameToUtf8(const std::string &name) const;
-	std::string mimeType(const std::string &path) const;
+	QFileDialog *myDialog;
 };
 
-#endif /* __ZLQTFSMANAGER_H__ */
+#endif /* __ZLQTOPENFILEDIALOG_H__ */

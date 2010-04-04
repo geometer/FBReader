@@ -25,19 +25,23 @@
 #include "ZLQtDialogManager.h"
 #include "ZLQtDialog.h"
 #include "ZLQtOptionsDialog.h"
+#include "ZLQtOpenFileDialog.h"
 #include "ZLQtDialogContent.h"
-#include "ZLQtSelectionDialog.h"
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
 
 #include "../image/ZLQtImageManager.h"
 
+shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
+	return new ZLQtDialog(resource()[key]);
+}
+
 shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
 	return new ZLQtOptionsDialog(resource()[key], applyAction, showApplyButton);
 }
 
-shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
-	return new ZLQtDialog(resource()[key]);
+shared_ptr<ZLOpenFileDialog> ZLQtDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
+	return new ZLQtOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
 }
 
 void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
@@ -67,10 +71,6 @@ int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &
 		::qtButtonName(button1),
 		::qtButtonName(button2)
 	);
-}
-
-bool ZLQtDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
-	return ZLQtSelectionDialog(dialogTitle(key), handler).runWithSize();
 }
 
 shared_ptr<ZLProgressDialog> ZLQtDialogManager::createProgressDialog(const ZLResourceKey &key) const {
