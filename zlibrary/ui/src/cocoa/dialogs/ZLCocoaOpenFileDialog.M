@@ -17,22 +17,62 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #import <Cocoa/Cocoa.h>
 
 #include "ZLCocoaOpenFileDialog.h"
 
-ZLCocoaOpenFileDialog::ZLCocoaOpenFileDialog(const std::string &title, const std::string &filePath, const Filter &filter) : myTitle(title), myFilePath(filePath), myFilter(filter) {
+@interface ZLCocoaOpenFileDialogDelegate : NSObject /*<NSOpenSavePanelDelegate>*/ {
+}
+
+- (BOOL)panel:(id)sender shouldEnableURL:(NSURL*)url;
+
+@end
+
+@implementation ZLCocoaOpenFileDialogDelegate
+
+- (id)init {
+	std::cerr << "HELLO\n";
+	self = [super init];
+	if (self) {
+	}
+	return self;
+}
+
+- (BOOL)panel:(id)sender shouldEnableURL:(NSURL*)url {
+	std::cerr << [[url path] UTF8String] << "\n";
+	return NO;
+}
+
+@end
+
+ZLCocoaOpenFileDialog::ZLCocoaOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter) : myTitle(title), myDirectoryPath(directoryPath), myFilePath(filePath), myFilter(filter) {
 }
 
 bool ZLCocoaOpenFileDialog::run() {
 	NSOpenPanel *panel = [NSOpenPanel openPanel];
+	[panel setDelegate:[[ZLCocoaOpenFileDialogDelegate alloc] init]];
 	[panel setTitle:[NSString stringWithUTF8String:myTitle.c_str()]];
+
+	if ([panel respondsToSelector:@selector(setDirectoryURL)]) {
+		[panel setDirectoryURL:[NSURL fileURLWithPath:[NSString stringWithUTF8String:myDirectoryPath.c_str()]]];
+	} else {
+		[panel setDirectory:[NSString stringWithUTF8String:myDirectoryPath.c_str()]];
+	}
+
 	bool code = [panel runModal] == NSFileHandlingPanelOKButton;
 
 	myFilePath.erase();
-	NSArray *urls = [panel URLs];
-	if ([urls count] > 0) {
-		myFilePath = [[[urls objectAtIndex:0] path] UTF8String];
+	const char *filePath = [[[panel URL] path] UTF8String];
+	if (filePath != 0) {
+		myFilePath = filePath;
+	}
+
+	if ([panel respondsToSelector:@selector(directoryURL)]) {
+		myDirectoryPath = [[[panel directoryURL] path] UTF8String];
+	} else {
+		myDirectoryPath = [[panel directory] UTF8String];
 	}
 
 	return code;
@@ -43,5 +83,5 @@ std::string ZLCocoaOpenFileDialog::filePath() const {
 }
 
 std::string ZLCocoaOpenFileDialog::directoryPath() const {
-	return std::string();
+	return myDirectoryPath;
 }
