@@ -43,7 +43,10 @@
 }
 
 - (BOOL)panel:(id)sender shouldEnableURL:(NSURL*)url {
-	return ((const ZLOpenFileDialog::Filter*)myFilter)->accepts(ZLFile([[url path] UTF8String]));
+	ZLFile file([[url path] UTF8String]);
+	return
+		file.isDirectory() ||
+		((const ZLOpenFileDialog::Filter*)myFilter)->accepts(file);
 }
 
 @end
