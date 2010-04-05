@@ -18,3 +18,6 @@
  */
 
 #include "ZLOpenFileDialog.h"
+
+ZLOpenFileDialog::Filter::~Filter() {
+}

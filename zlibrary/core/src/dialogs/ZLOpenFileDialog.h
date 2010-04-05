@@ -30,6 +30,7 @@ public:
 	class Filter {
 
 	public:
+		virtual ~Filter();
 		virtual bool accepts(const ZLFile &file) const = 0;
 	};
 
