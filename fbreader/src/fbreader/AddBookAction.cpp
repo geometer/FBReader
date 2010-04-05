@@ -30,11 +30,10 @@
 class AddBookAction::FileFilter : public ZLOpenFileDialog::Filter {
 
 private:
-	bool accepts(const std::string &filePath, const std::string &mimeType) const;
+	bool accepts(const ZLFile &file) const;
 };
 
-bool AddBookAction::FileFilter::accepts(const std::string &filePath, const std::string &mimeType) const {
-	ZLFile file(filePath, mimeType);
+bool AddBookAction::FileFilter::accepts(const ZLFile &file) const {
 	return file.isArchive() || !PluginCollection::Instance().plugin(file, false).isNull();
 }
 

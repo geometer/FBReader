@@ -48,5 +48,5 @@ MAC:
 	DONE заголовок окна
 	DONE directory path
 	** file path
-	** filter
+	DONE (10.6 only) filter
 	** определение mimeType

@@ -17,32 +17,33 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #import <Cocoa/Cocoa.h>
+
+#include <ZLFile.h>
 
 #include "ZLCocoaOpenFileDialog.h"
 
 @interface ZLCocoaOpenFileDialogDelegate : NSObject /*<NSOpenSavePanelDelegate>*/ {
+	const void *myFilter;
 }
 
+- (id)initWithFilter:(const void*)filter;
 - (BOOL)panel:(id)sender shouldEnableURL:(NSURL*)url;
 
 @end
 
 @implementation ZLCocoaOpenFileDialogDelegate
 
-- (id)init {
-	std::cerr << "HELLO\n";
+- (id)initWithFilter:(const void*)filter {
 	self = [super init];
 	if (self) {
+		myFilter = filter;
 	}
 	return self;
 }
 
 - (BOOL)panel:(id)sender shouldEnableURL:(NSURL*)url {
-	std::cerr << [[url path] UTF8String] << "\n";
-	return NO;
+	return ((const ZLOpenFileDialog::Filter*)myFilter)->accepts(ZLFile([[url path] UTF8String]));
 }
 
 @end
@@ -52,7 +53,7 @@ ZLCocoaOpenFileDialog::ZLCocoaOpenFileDialog(const std::string &title, const std
 
 bool ZLCocoaOpenFileDialog::run() {
 	NSOpenPanel *panel = [NSOpenPanel openPanel];
-	[panel setDelegate:[[ZLCocoaOpenFileDialogDelegate alloc] init]];
+	[panel setDelegate:[[ZLCocoaOpenFileDialogDelegate alloc] initWithFilter:&myFilter]];
 	[panel setTitle:[NSString stringWithUTF8String:myTitle.c_str()]];
 
 	if ([panel respondsToSelector:@selector(setDirectoryURL)]) {

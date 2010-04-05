@@ -22,13 +22,15 @@
 
 #include <string>
 
+class ZLFile;
+
 class ZLOpenFileDialog {
 
 public:
 	class Filter {
 
 	public:
-		virtual bool accepts(const std::string &filePath, const std::string &mime_type) const = 0;
+		virtual bool accepts(const ZLFile &file) const = 0;
 	};
 
 public:
