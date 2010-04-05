@@ -52,6 +52,7 @@ Before building FBReader, you should check (and maybe edit) 2 files:
         TARGET_ARCH = pma400                UI_TYPE = qtopia
         TARGET_ARCH = moto                  UI_TYPE = ezx
         TARGET_ARCH = win32                 UI_TYPE = win32
+        TARGET_ARCH = macosx                UI_TYPE = cocoa
 
   ** makefiles/arch/$(TARGET_ARCH).mk
      This file defines compiler name and location, headers and libraries
