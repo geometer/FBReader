@@ -26,7 +26,7 @@
 #include "DocDecompressor.h"
 
 const shared_ptr<std::string> ZCompressedFileImage::stringData() const {
-	shared_ptr<ZLInputStream> stream = ZLFile(myPath).inputStream();
+	shared_ptr<ZLInputStream> stream = myFile.inputStream();
 
 	shared_ptr<std::string> imageData = new std::string();
 
@@ -55,7 +55,7 @@ const shared_ptr<std::string> ZCompressedFileImage::stringData() const {
 }
 
 const shared_ptr<std::string> DocCompressedFileImage::stringData() const {
-	shared_ptr<ZLInputStream> stream = ZLFile(myPath).inputStream();
+	shared_ptr<ZLInputStream> stream = myFile.inputStream();
 
 	shared_ptr<std::string> imageData = new std::string();
 

@@ -20,20 +20,22 @@
 #ifndef __ZLFILEIMAGE_H__
 #define __ZLFILEIMAGE_H__
 
+#include <ZLFile.h>
+
 #include "ZLStreamImage.h"
 
 class ZLFileImage : public ZLStreamImage {
 
 public:
-	ZLFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size = 0);
+	ZLFileImage(const ZLFile &file, size_t offset, size_t size = 0);
 
 protected:
 	shared_ptr<ZLInputStream> inputStream() const;
 
 private:
-	std::string myPath;
+	const ZLFile myFile;
 };
 
-inline ZLFileImage::ZLFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size) : ZLStreamImage(mimeType, offset, size), myPath(path) {}
+inline ZLFileImage::ZLFileImage(const ZLFile &file, size_t offset, size_t size) : ZLStreamImage(file.mimeType(), offset, size), myFile(file) {}
 
 #endif /* __ZLFILEIMAGE_H__ */

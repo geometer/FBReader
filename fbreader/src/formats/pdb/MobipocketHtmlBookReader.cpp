@@ -322,7 +322,7 @@ void MobipocketHtmlBookReader::readDocument(ZLInputStream &stream) {
 			if ((imageLocation.first > 0) && (imageLocation.second > 0)) {
 				std::string id;
 				ZLStringUtil::appendNumber(id, i + 1);
-				myBookReader.addImage(id, new ZLFileImage("image/auto", myFileName, imageLocation.first, imageLocation.second));
+				myBookReader.addImage(id, new ZLFileImage(ZLFile(myFileName), imageLocation.first, imageLocation.second));
 			}
 		}
 	}

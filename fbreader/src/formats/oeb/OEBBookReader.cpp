@@ -90,7 +90,7 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 			if ((type != 0) && (COVER_IMAGE == type)) {
 				myModelReader.setMainTextModel();
 				myModelReader.addImageReference(reference);
-				myModelReader.addImage(reference, new ZLFileImage("image/auto", myFilePrefix + reference, 0));
+				myModelReader.addImage(reference, new ZLFileImage(ZLFile(myFilePrefix + reference), 0));
 			}
 		}
 	} else if ((myState == READ_TOUR) && (SITE == tagString)) {

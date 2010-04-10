@@ -23,30 +23,31 @@
 #include <string>
 
 #include <ZLImage.h>
+#include <ZLFile.h>
 #include "../../bookmodel/BookModel.h"
 
 class ZCompressedFileImage : public ZLSingleImage {
 
 public:
-	ZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t size);
+	ZCompressedFileImage(const ZLFile &file, size_t offset, size_t size);
 	const shared_ptr<std::string> stringData() const;
 
 private:
-	std::string myPath;
-	size_t myOffset;
-	size_t myCompressedSize;
+	const ZLFile myFile;
+	const size_t myOffset;
+	const size_t myCompressedSize;
 };
 
 class DocCompressedFileImage : public ZLSingleImage {
 
 public:
-	DocCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize);
+	DocCompressedFileImage(const ZLFile &file, size_t offset, size_t compressedSize);
 	const shared_ptr<std::string> stringData() const;
 
 private:
-	std::string myPath;
-	size_t myOffset;
-	size_t myCompressedSize;
+	const ZLFile myFile;
+	const size_t myOffset;
+	const size_t myCompressedSize;
 };
 
 class PluckerMultiImage : public ZLMultiImage {
@@ -66,9 +67,9 @@ private:
 	std::vector<std::string> myIds;
 };
 
-inline ZCompressedFileImage::ZCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) : ZLSingleImage(mimeType), myPath(path), myOffset(offset), myCompressedSize(compressedSize) {}
+inline ZCompressedFileImage::ZCompressedFileImage(const ZLFile &file, size_t offset, size_t compressedSize) : ZLSingleImage(file.mimeType()), myFile(file), myOffset(offset), myCompressedSize(compressedSize) {}
 
-inline DocCompressedFileImage::DocCompressedFileImage(const std::string &mimeType, const std::string &path, size_t offset, size_t compressedSize) : ZLSingleImage(mimeType), myPath(path), myOffset(offset), myCompressedSize(compressedSize) {}
+inline DocCompressedFileImage::DocCompressedFileImage(const ZLFile &file, size_t offset, size_t compressedSize) : ZLSingleImage(file.mimeType()), myFile(file), myOffset(offset), myCompressedSize(compressedSize) {}
 
 inline PluckerMultiImage::PluckerMultiImage(unsigned int rows, unsigned int columns, const ZLImageMap &imageMap) : myRows(rows), myColumns(columns), myImageMap(imageMap) {}
 inline void PluckerMultiImage::addId(const std::string &id) { myIds.push_back(id); }

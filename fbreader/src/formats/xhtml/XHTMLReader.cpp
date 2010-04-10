@@ -298,7 +298,7 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 		fileName +=2;
 	}
 	bookReader(reader).addImageReference(fullfileName);
-	bookReader(reader).addImage(fullfileName, new ZLFileImage("image/auto", fullfileName, 0));
+	bookReader(reader).addImage(fullfileName, new ZLFileImage(ZLFile(fullfileName), 0));
 	if (flag) {
 		beginParagraph(reader);
 	}

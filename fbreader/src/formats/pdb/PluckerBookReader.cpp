@@ -430,14 +430,14 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 			case 2: // image
 			case 3: // compressed image
 			{
-				static const std::string mime = "image/palm";
 				ZLImage *image = 0;
+				const ZLFile imageFile(myFile.path(), "image/palm");
 				if (type == 2) {
-					image = new ZLFileImage(mime, myFile.path(), myStream->offset(), recordSize - 8);
+					image = new ZLFileImage(imageFile, myStream->offset(), recordSize - 8);
 				} else if (myCompressionVersion == 1) {
-					image = new DocCompressedFileImage(mime, myFile.path(), myStream->offset(), recordSize - 8);
+					image = new DocCompressedFileImage(imageFile, myStream->offset(), recordSize - 8);
 				} else if (myCompressionVersion == 2) {
-					image = new ZCompressedFileImage(mime, myFile.path(), myStream->offset() + 2, recordSize - 10);
+					image = new ZCompressedFileImage(imageFile, myStream->offset() + 2, recordSize - 10);
 				}
 				if (image != 0) {
 					addImage(fromNumber(uid), image);

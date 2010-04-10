@@ -174,12 +174,10 @@ void HtmlImageTagAction::run(const HtmlReader::HtmlTag &tag) {
 		for (unsigned int i = 0; i < tag.Attributes.size(); ++i) {
 			if (tag.Attributes[i].Name == "SRC") {
 				const std::string fileName = MiscUtil::decodeHtmlURL(tag.Attributes[i].Value);
-				const std::string filePath = myReader.myBaseDirPath + fileName;
-				if (ZLFile(filePath).exists()) {
+				const ZLFile file(myReader.myBaseDirPath + fileName);
+				if (file.exists()) {
 					bookReader().addImageReference(fileName);
-					bookReader().addImage(fileName,
-						new ZLFileImage("image/auto", filePath, 0)
-					);
+					bookReader().addImage(fileName, new ZLFileImage(file, 0));
 				}
 				break;
 			}

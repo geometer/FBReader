@@ -178,7 +178,7 @@ bool ORBookReader::readBook() {
 	}
 
 	for (std::map<std::string,std::string>::const_iterator it = myImageIDs.begin(); it != myImageIDs.end(); ++it) {
-		myModelReader.addImage(it->first, new ZLFileImage(it->second, myFilePrefix + myResources[it->first], 0));
+		myModelReader.addImage(it->first, new ZLFileImage(ZLFile(myFilePrefix + myResources[it->first], it->second), 0));
 	}
 
 	return true;

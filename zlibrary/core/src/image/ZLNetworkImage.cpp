@@ -55,7 +55,7 @@ ZLNetworkImage::ZLNetworkImage(const std::string &mimeType, const std::string &u
 
 	ZLFile imageFile(myFileName);
 	if (imageFile.exists()) {
-		myCachedImage = new ZLFileImage("image/auto", myFileName, 0);
+		myCachedImage = new ZLFileImage(imageFile, 0);
 		if (myCachedImage->good()) {
 			myIsSynchronized = true;
 		} else {
@@ -77,7 +77,7 @@ const shared_ptr<std::string> ZLNetworkImage::stringData() const {
 	if (myCachedImage.isNull()) {
 		ZLFile imageFile(myFileName);
 		if (imageFile.exists()) {
-			myCachedImage = new ZLFileImage("image/auto", myFileName, 0);
+			myCachedImage = new ZLFileImage(imageFile, 0);
 			if (!myCachedImage->good()) {
 				myCachedImage.reset();
 				imageFile.remove();

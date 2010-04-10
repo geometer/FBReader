@@ -220,8 +220,7 @@ shared_ptr<ZLImage> MobipocketPlugin::coverImage(const Book &book) const {
 		std::pair<int,int> imageLocation = pbStream.imageLocation(pbStream.header(), index + coverIndex);
 		if ((imageLocation.first > 0) && (imageLocation.second > 0)) {
 			return new ZLFileImage(
-				"image/auto",
-				file.path(),
+				file,
 				imageLocation.first,
 				imageLocation.second
 			);

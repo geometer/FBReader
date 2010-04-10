@@ -206,9 +206,9 @@ void FBReaderNode::registerExpandTreeAction() {
 shared_ptr<ZLImage> FBReaderNode::defaultCoverImage(const std::string &id) {
 	shared_ptr<ZLImage> cover = ourDefaultCovers[id];
 	if (cover.isNull()) {
-		cover = new ZLFileImage("image/auto",
-			ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + id,
-			0);
+		cover = new ZLFileImage(
+			ZLFile(ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + id), 0
+		);
 		ourDefaultCovers[id] = cover;
 	}
 	return cover;
