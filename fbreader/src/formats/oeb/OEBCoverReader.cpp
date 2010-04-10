@@ -63,7 +63,13 @@ shared_ptr<ZLImage> OEBCoverReader::readCover(const ZLFile &file) {
 	readDocument(file);
 	myPathPrefix = MiscUtil::htmlDirectoryPrefix(myCoverXHTML);
 	if (!myCoverXHTML.empty()) {
-		XHTMLImageFinder(*this).readDocument(ZLFile(myCoverXHTML));
+		ZLFile coverFile(myCoverXHTML);
+		const std::string ext = coverFile.extension();
+		if (ext == "gif" || ext == "jpeg" || ext == "jpg") {
+			myImage = new ZLFileImage("image/auto", myCoverXHTML, 0);
+		} else {
+			XHTMLImageFinder(*this).readDocument(coverFile);
+		}
 	}
 	return myImage;
 }
