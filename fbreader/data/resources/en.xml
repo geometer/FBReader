@@ -323,7 +323,12 @@
 				<node name="Keys" value="Keys">
 					<node name="grabSystemKeys" value="Grab System Keys" />
 					<node name="separate" value="Keybindings Depend on Orientation" />
-					<node name="orientation" value="Orientation" />
+					<node name="orientation" value="Orientation">
+						<node name="degrees0" value="0 Degrees" />
+						<node name="degrees90ccw" value="90 Degrees Counterclockwise" />
+						<node name="degrees180" value="180 Degrees" />
+						<node name="degrees90cw" value="90 Degrees Clockwise" />
+					</node>
 					<node name="action">
 						<node name="none" value="None" />
 						<node name="showLibrary" value="Show library" />

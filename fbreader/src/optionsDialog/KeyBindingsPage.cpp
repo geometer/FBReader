@@ -198,7 +198,7 @@ void MultiKeyOptionEntry::onKeySelected(const std::string &key) {
 class OrientationEntry : public ZLComboOptionEntry {
 
 public:
-	OrientationEntry(MultiKeyOptionEntry &keyEntry);
+	OrientationEntry(MultiKeyOptionEntry &keyEntry, const ZLResource &resource);
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
 	void onValueSelected(int index);
@@ -206,9 +206,10 @@ public:
 
 private:
 	MultiKeyOptionEntry &myKeyEntry;
+	const ZLResource &myResource;
 };
 
-OrientationEntry::OrientationEntry(MultiKeyOptionEntry &keyEntry) : myKeyEntry(keyEntry) {
+OrientationEntry::OrientationEntry(MultiKeyOptionEntry &keyEntry, const ZLResource &resource) : myKeyEntry(keyEntry), myResource(resource) {
 }
 
 const std::string &OrientationEntry::initialValue() const {
@@ -218,10 +219,10 @@ const std::string &OrientationEntry::initialValue() const {
 const std::vector<std::string> &OrientationEntry::values() const {
 	static std::vector<std::string> _values;
 	if (_values.empty()) {
-		_values.push_back("0 Degrees");
-		_values.push_back("90 Degrees Counterclockwise");
-		_values.push_back("180 Degrees");
-		_values.push_back("90 Degrees Clockwise");
+		_values.push_back(myResource["degrees0"].value());
+		_values.push_back(myResource["degrees90ccw"].value());
+		_values.push_back(myResource["degrees180"].value());
+		_values.push_back(myResource["degrees90cw"].value());
 	}
 	return _values;
 }
@@ -265,11 +266,13 @@ KeyBindingsPage::KeyBindingsPage(ZLDialogContent &dialogTab) {
 		dialogTab.addOption(ZLResourceKey("grabSystemKeys"), new KeyboardControlEntry());
 	}
 	ZLResourceKey actionKey("action");
+	ZLResourceKey separateKey("separate");
+	ZLResourceKey orientationKey("orientation");
 	MultiKeyOptionEntry *keyEntry = new MultiKeyOptionEntry(dialogTab.resource(actionKey));
-	OrientationEntry *orientationEntry = new OrientationEntry(*keyEntry);
+	OrientationEntry *orientationEntry = new OrientationEntry(*keyEntry, dialogTab.resource(orientationKey));
 	ZLBooleanOptionEntry *useSeparateBindingsEntry = new UseSeparateOptionsEntry(*keyEntry, *orientationEntry);
-	dialogTab.addOption(ZLResourceKey("separate"), useSeparateBindingsEntry);
-	dialogTab.addOption(ZLResourceKey("orientation"), orientationEntry);
+	dialogTab.addOption(separateKey, useSeparateBindingsEntry);
+	dialogTab.addOption(orientationKey, orientationEntry);
 	dialogTab.addOption("", "", keyEntry);
 	ZLOptionEntry *exitOnCancelEntry = new ZLSimpleBooleanOptionEntry(fbreader.QuitOnCancelOption);
 	keyEntry->setExitOnCancelEntry(exitOnCancelEntry);

@@ -324,7 +324,12 @@
 				<node name="Keys" value="Klávesové zkratky">
 					<node name="grabSystemKeys" value="Převzít systémové zkratky" />
 					<node name="separate" value="Vlastní zkratky zavislé na orientaci textu" />
-					<node name="orientation" value="Orientace" />
+					<node name="orientation" value="Orientace">
+						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
+						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
+						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
+						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+					</node>
 					<node name="action">
 						<node name="none" value="Žádné" />
 						<node name="showLibrary" value="Zobrazit knihovnu" />

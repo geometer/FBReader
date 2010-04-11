@@ -324,7 +324,12 @@
 				<node name="Keys" value="Touches">
 					<node name="grabSystemKeys" value="Capturer les touches systèmes"/>
 					<node name="separate" value="Les touches dépendent de l'orientation"/>
-					<node name="orientation" value="Orientation"/>
+					<node name="orientation" value="Orientation">
+						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
+						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
+						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
+						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+					</node>
 					<node name="action">
 						<node name="none" value="Aucune"/>
 						<node name="showLibrary" value="Afficher la bibliothèque"/>

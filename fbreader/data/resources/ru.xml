@@ -323,7 +323,12 @@
 				<node name="Keys" value="Клавиши">
 					<node name="grabSystemKeys" value="Перехватывать системные клавиши" />
 					<node name="separate" value="Свои настройки для каждой ориентации текста" />
-					<node name="orientation" value="Ориентация" />
+					<node name="orientation" value="При повороте на:">
+						<node name="degrees0" value="0 градусов" />
+						<node name="degrees90ccw" value="90 градусов против часовой стрелки" />
+						<node name="degrees180" value="180 градусов" />
+						<node name="degrees90cw" value="90 градусов по часовой стрелке" />
+					</node>
 					<node name="action">
 						<node name="none" value="Никакого действия" />
 						<node name="showLibrary" value="Показать библиотеку" />

@@ -324,7 +324,12 @@
 				<node name="Keys" value="Atajos">
 					<node name="grabSystemKeys" value="Guardar atajos del teclado" />
 					<node name="separate" value="Las combinaciones de teclas dependen de la orientación del texto" />
-					<node name="orientation" value="Orientación" />
+					<node name="orientation" value="Orientación">
+						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
+						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
+						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
+						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+					</node>
 					<node name="action">
 						<node name="none" value="Ninguno" />
 						<node name="showLibrary" value="Mostrar la Biblioteca" />

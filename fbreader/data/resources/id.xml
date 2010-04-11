@@ -324,7 +324,12 @@
 				<node name="Keys" value="Tombol">
 					<node name="grabSystemKeys" value="Tangkap Tombol Sistem" />
 					<node name="separate" value="Tombol Tergantung dari Orientasi" />
-					<node name="orientation" value="Orientasi" />
+					<node name="orientation" value="Orientasi">
+						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
+						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
+						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
+						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+					</node>
 					<node name="action">
 						<node name="none" value="Tidak Terpakai" />
 						<node name="showLibrary" value="Tampilkan Pustaka" />
