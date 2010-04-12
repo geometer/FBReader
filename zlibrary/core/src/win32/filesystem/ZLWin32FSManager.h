@@ -35,6 +35,7 @@ private:
 	ZLWin32FSManager() {}
 	
 private:
+	std::string mimeType(const std::string &path) const;
 	void normalizeRealPath(std::string &path) const;
 	std::string resolveSymlink(const std::string &path) const;
 	ZLFSDir *createPlainDirectory(const std::string &path) const;

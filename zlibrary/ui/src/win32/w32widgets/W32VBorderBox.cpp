@@ -19,6 +19,8 @@
 
 #include "W32Container.h"
 
+#undef max
+
 W32VBorderBox::W32VBorderBox() : mySpacing(0) {
 }
 

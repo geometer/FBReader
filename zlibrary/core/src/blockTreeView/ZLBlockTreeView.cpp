@@ -39,7 +39,7 @@ void ZLBlockTreeView::paint() {
 	context.clear(backgroundColor());
 
 	bool firstNodeFound = false;
-	int vOffset = -myNodePartToSkip;
+	int vOffset = 0 - myNodePartToSkip;
 	const int maxY = context.height();
 
 	size_t before = myNodePartToSkip;

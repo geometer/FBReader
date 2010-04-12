@@ -29,8 +29,10 @@
 
 #include <ZLOptions.h>
 
+#include "Book.h"
+#include "Author.h"
+#include "Tag.h"
 #include "Lists.h"
-#include "Comparators.h"
 
 class Library {
 

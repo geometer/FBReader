@@ -338,14 +338,14 @@ inline ZLTextStyleEntry::Metrics::Metrics(int fontSize, int fontXHeight, int ful
 
 inline bool ZLTextStyleEntry::isEmpty() const { return myMask == 0; }
 
-inline bool ZLTextStyleEntry::lengthSupported(Length name) const { return myMask & (1 << name); }
+inline bool ZLTextStyleEntry::lengthSupported(Length name) const { return (myMask & (1 << name)) != 0; }
 inline void ZLTextStyleEntry::setLength(Length name, short length, SizeUnit unit) {
 	myLengths[name].Size = length;
 	myLengths[name].Unit = unit;
 	myMask |= 1 << name;
 }
 
-inline bool ZLTextStyleEntry::alignmentTypeSupported() const { return myMask & SUPPORT_ALIGNMENT_TYPE; }
+inline bool ZLTextStyleEntry::alignmentTypeSupported() const { return (myMask & SUPPORT_ALIGNMENT_TYPE) == SUPPORT_ALIGNMENT_TYPE; }
 inline ZLTextAlignmentType ZLTextStyleEntry::alignmentType() const { return myAlignmentType; }
 inline void ZLTextStyleEntry::setAlignmentType(ZLTextAlignmentType alignmentType) { myAlignmentType = alignmentType; myMask |= SUPPORT_ALIGNMENT_TYPE; }
 
@@ -360,11 +360,11 @@ inline void ZLTextStyleEntry::setFontModifier(ZLTextFontModifier style, bool set
 	mySupportedFontModifier |= style;
 }
 
-inline bool ZLTextStyleEntry::fontSizeSupported() const { return myMask & SUPPORT_FONT_SIZE; }
+inline bool ZLTextStyleEntry::fontSizeSupported() const { return (myMask & SUPPORT_FONT_SIZE) == SUPPORT_FONT_SIZE; }
 inline signed char ZLTextStyleEntry::fontSizeMag() const { return myFontSizeMag; }
 inline void ZLTextStyleEntry::setFontSizeMag(signed char fontSizeMag) { myFontSizeMag = fontSizeMag; myMask |= SUPPORT_FONT_SIZE; }
 
-inline bool ZLTextStyleEntry::fontFamilySupported() const { return myMask & SUPPORT_FONT_FAMILY; }
+inline bool ZLTextStyleEntry::fontFamilySupported() const { return (myMask & SUPPORT_FONT_FAMILY) == SUPPORT_FONT_FAMILY; }
 inline const std::string &ZLTextStyleEntry::fontFamily() const { return myFontFamily; }
 inline void ZLTextStyleEntry::setFontFamily(const std::string &fontFamily) { myFontFamily = fontFamily; myMask |= SUPPORT_FONT_FAMILY; }
 

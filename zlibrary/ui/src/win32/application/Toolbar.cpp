@@ -107,7 +107,7 @@ void ZLWin32ApplicationWindow::processChevron(const NMREBARCHEVRON &chevron) {
 				myPopupMenu->addItem(
 					"  " + button.tooltip(),
 					ImageList_GetIcon(imageList, imageIndex, ILD_NORMAL),
-					info.fsState & TBSTATE_ENABLED,
+					(info.fsState & TBSTATE_ENABLED) == TBSTATE_ENABLED,
 					info.idCommand
 				);
 			} else if (info.idCommand >= -200) /* is a separator */ {

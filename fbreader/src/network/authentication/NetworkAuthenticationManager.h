@@ -27,7 +27,7 @@
 #include "../NetworkItems.h"
 #include "../BookReference.h"
 
-struct ZLNetworkSSLCertificate;
+class ZLNetworkSSLCertificate;
 
 class NetworkLink;
 

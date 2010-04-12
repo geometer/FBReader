@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include "W32Event.h"
 
 W32Listener::W32Listener() {

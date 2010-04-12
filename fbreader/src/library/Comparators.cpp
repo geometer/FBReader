@@ -20,7 +20,6 @@
 #include "Book.h"
 #include "Author.h"
 #include "Tag.h"
-#include "Comparators.h"
 
 bool BookComparator::operator() (
 	const shared_ptr<Book> book0,

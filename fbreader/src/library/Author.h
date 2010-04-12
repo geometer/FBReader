@@ -28,7 +28,16 @@
 
 #include "Lists.h"
 
-class AuthorComparator;
+class Author;
+
+class AuthorComparator {
+
+public:
+	bool operator () (
+		const shared_ptr<Author> author0,
+		const shared_ptr<Author> author1
+	);
+};
 
 class Author {
 

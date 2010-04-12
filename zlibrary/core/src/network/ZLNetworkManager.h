@@ -31,7 +31,7 @@ class ZLNetworkData;
 class ZLOutputStream;
 class ZLXMLReader;
 
-struct ZLNetworkSSLCertificate;
+class ZLNetworkSSLCertificate;
 
 class ZLNetworkManager : public ZLExecutionData::Runner {
 

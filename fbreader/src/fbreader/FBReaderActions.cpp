@@ -49,7 +49,7 @@ ModeDependentAction::ModeDependentAction(int visibleInModes) : myVisibleInModes(
 }
 
 bool ModeDependentAction::isVisible() const {
-	return FBReader::Instance().mode() & myVisibleInModes;
+	return (FBReader::Instance().mode() & myVisibleInModes) != 0;
 }
 
 SetModeAction::SetModeAction(FBReader::ViewMode modeToSet, int visibleInModes) : ModeDependentAction(visibleInModes), myModeToSet(modeToSet) {

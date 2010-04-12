@@ -38,9 +38,9 @@
 class ZLRunnable;
 
 class ZLTextModel;
-class ZLTextMark;
+struct ZLTextMark;
 
-class ZLTextLineInfo;
+struct ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 class ZLTextSelectionModel;
 

@@ -21,6 +21,8 @@
 
 #include "ZLWin32ImageManager.h"
 
+#undef min
+
 class GifReader {
 
 public:
@@ -94,7 +96,7 @@ bool ZLWin32ImageManager::gifConvert(const std::string &stringData, ZLWin32Image
 		if (eb->Function == 0xF9 && 
 				eb->ByteCount == 4) {
 			if ((eb->Bytes[0] & 1) == 1) {
-				transparent = (unsigned byte)eb->Bytes[3];
+				transparent = (unsigned char)eb->Bytes[3];
 			}
 		}
 	}

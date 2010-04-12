@@ -302,7 +302,7 @@ void ColorOptionView::onEvent(const std::string &event, W32EventSender&) {
 		//chooser.lpfnHook = 0;
 		//chooser.lpTemplateName = 0;
 
-		bool code = ChooseColor(&chooser);
+		bool code = ChooseColor(&chooser) == TRUE;
 
 		for (int i = 0; i < 16; ++i) {
 			std::string optionName = OPTION_PREFIX;

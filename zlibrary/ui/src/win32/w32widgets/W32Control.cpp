@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <windows.h>
 #include <commctrl.h>
 
@@ -25,6 +27,9 @@
 #include "W32Control.h"
 #include "W32ControlCollection.h"
 #include "../../../../core/src/win32/util/W32WCHARUtil.h"
+
+#undef max
+#undef min
 
 static const WORD CLASS_BUTTON = 0x0080;
 static const WORD CLASS_EDIT = 0x0081;

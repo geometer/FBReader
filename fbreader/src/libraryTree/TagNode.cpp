@@ -23,7 +23,6 @@
 #include "LibraryNodes.h"
 
 #include "../library/Tag.h"
-#include "../library/Comparators.h"
 #include "../libraryActions/LibraryTagActions.h"
 
 const ZLTypeId TagNode::TYPE_ID(FBReaderNode::TYPE_ID);

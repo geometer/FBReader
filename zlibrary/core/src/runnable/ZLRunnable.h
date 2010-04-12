@@ -23,7 +23,7 @@
 #include <string>
 
 class ZLResource;
-class ZLResourceKey;
+struct ZLResourceKey;
 
 class ZLRunnable {
 

@@ -19,6 +19,8 @@
 
 #include "ZLWin32ImageManager.h"
 
+#undef max
+
 ZLWin32ImageData::ZLWin32ImageData() : myWidth(0), myHeight(0), myArray(0), myArrayWithoutAlpha(0), myInfo(0) {
 }
 

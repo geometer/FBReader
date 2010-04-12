@@ -25,6 +25,8 @@
 
 #include "ZLWin32ImageManager.h"
 
+#undef min
+
 struct JpegSourceManager : public jpeg_source_mgr {
 	static void initSourceCallback(j_decompress_ptr info);
 	static void termSourceCallback(j_decompress_ptr info);

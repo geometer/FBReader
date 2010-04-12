@@ -34,7 +34,7 @@ class NetworkLink;
 class NetworkBookCollection;
 class BookReference;
 
-struct ZLNetworkSSLCertificate;
+class ZLNetworkSSLCertificate;
 
 class NetworkLinkCollection {
 

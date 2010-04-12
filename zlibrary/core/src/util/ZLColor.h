@@ -34,7 +34,7 @@ struct ZLColor {
 };
 
 inline ZLColor::ZLColor(unsigned char r, unsigned char g, unsigned char b) : Red(r), Green(g), Blue(b) {}
-inline ZLColor::ZLColor(long longValue) : Red(longValue >> 16), Green(longValue >> 8), Blue(longValue) {}
+inline ZLColor::ZLColor(long longValue) : Red((unsigned char)(longValue >> 16)), Green((unsigned char)(longValue >> 8)), Blue((unsigned char)longValue) {}
 inline long ZLColor::intValue() { return (((long)Red) << 16) + (((long)Green) << 8) + Blue; }
 inline bool ZLColor::operator == (const ZLColor &color) const { return (Red == color.Red) && (Green == color.Green) && (Blue == color.Blue); }
 inline bool ZLColor::operator != (const ZLColor &color) const { return !operator==(color); }

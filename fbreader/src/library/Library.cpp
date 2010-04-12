@@ -39,7 +39,7 @@
 shared_ptr<Library> Library::ourInstance;
 const size_t Library::MaxRecentListSize = 10;
 
-Library::Library &Library::Instance() {
+Library &Library::Instance() {
 	if (ourInstance.isNull()) {
 		ourInstance = new Library();
 	}
@@ -367,8 +367,7 @@ void Library::cloneTag(shared_ptr<Tag> from, shared_ptr<Tag> to, bool includeSub
 
 bool Library::hasBooks(shared_ptr<Tag> tag) const {
 	synchronize();
-	const std::map<shared_ptr<Tag>,BookList>::const_iterator it =
-		myBooksByTag.find(tag);
+	const BooksByTag::const_iterator it = myBooksByTag.find(tag);
 	return it != myBooksByTag.end() && !it->second.empty();
 }
 

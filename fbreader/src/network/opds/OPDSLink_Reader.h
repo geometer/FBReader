@@ -27,7 +27,7 @@
 
 #include "OPDSLink.h"
 
-class URLRewritingRule;
+struct URLRewritingRule;
 
 class OPDSLink::Reader : public ZLXMLReader {
 

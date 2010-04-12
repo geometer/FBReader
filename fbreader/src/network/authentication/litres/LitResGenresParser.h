@@ -27,7 +27,7 @@
 
 #include <ZLXMLReader.h>
 
-class LitResGenre;
+struct LitResGenre;
 
 class LitResGenresParser : public ZLXMLReader {
 

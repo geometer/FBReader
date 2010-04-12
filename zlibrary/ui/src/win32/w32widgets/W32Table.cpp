@@ -19,6 +19,8 @@
 
 #include "W32Container.h"
 
+#undef max
+
 W32Table::W32Table() : myVerticalSpacing(0), myHorizontalSpacing(0) {
 }
 

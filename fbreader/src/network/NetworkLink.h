@@ -31,7 +31,7 @@
 
 class ZLExecutionData;
 
-struct NetworkOperationData;
+class NetworkOperationData;
 class NetworkAuthenticationManager;
 
 class NetworkLink {

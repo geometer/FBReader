@@ -276,7 +276,7 @@ EReaderStream::ImageInfo EReaderStream::imageLocation(const std::string& id) {
 	if (myImagedataOffset != myMetadataOffset && myImages.empty()) {
 		processImageHeaders();
 	}
-	const std::map<const std::string, ImageInfo>::const_iterator it = myImages.find(id);
+	const std::map<std::string, ImageInfo>::const_iterator it = myImages.find(id);
 	if (it != myImages.end()) {
 		return it->second;
 	} else {

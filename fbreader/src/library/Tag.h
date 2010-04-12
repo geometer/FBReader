@@ -79,6 +79,15 @@ private: // disable copying
 	const Tag &operator = (const Tag &);
 };
 
+class TagComparator {
+
+public:
+	bool operator () (
+		shared_ptr<Tag> tag0,
+		shared_ptr<Tag> tag1
+	);
+};
+
 inline const std::string &Tag::name() const { return myName; }
 
 inline shared_ptr<Tag> Tag::parent() const { return myParent; }

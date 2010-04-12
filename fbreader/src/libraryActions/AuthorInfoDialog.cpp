@@ -27,7 +27,6 @@
 
 #include "../library/Library.h"
 #include "../library/Author.h"
-#include "../library/Comparators.h"
 
 class AuthorNameEntry : public ZLComboOptionEntry {
 

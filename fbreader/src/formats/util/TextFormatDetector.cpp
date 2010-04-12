@@ -22,6 +22,7 @@
 #include <algorithm>
 
 #include <ZLInputStream.h>
+#include <ZLUnicodeUtil.h>
 
 #include "TextFormatDetector.h"
 
@@ -38,8 +39,7 @@ bool TextFormatDetector::isHtml(ZLInputStream &stream) const {
 
 	const size_t bufferSize = 1024;
 	char *buffer = new char[bufferSize];
-	char sixBytes[7]; 
-	memset(sixBytes, 0, 7);
+	std::string sixBytes; 
 	int valuableBytesCounter = 0;
 	bool skipFlag = true;
 	while (valuableBytesCounter < 6) {
@@ -56,13 +56,13 @@ bool TextFormatDetector::isHtml(ZLInputStream &stream) const {
 		}
 		if (!skipFlag && (index < size)) {
 			int bytes = std::min(6 - valuableBytesCounter, (int)(size - index));
-			memcpy(sixBytes, buffer + index, bytes);
+			sixBytes = std::string(buffer + index, bytes);
 			valuableBytesCounter += bytes;
 		}
 	}
 	stream.close();
 	delete[] buffer;
-	return strcasecmp(sixBytes, "<html>") == 0;
+	return ZLUnicodeUtil::toLower(sixBytes) == "<html>";
 }
 
 bool TextFormatDetector::isPPL(ZLInputStream &stream) const {

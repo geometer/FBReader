@@ -28,7 +28,7 @@
 #include "../../NetworkItems.h"
 
 class NetworkLink;
-class LitResGenre;
+struct LitResGenre;
 class NetworkAuthenticationManager;
 
 class LitResDataParser : public ZLXMLReader {

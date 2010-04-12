@@ -149,7 +149,7 @@ void ZLTextParagraph::Iterator::next() {
 			{
 				int mask;
 				memcpy(&mask, myPointer + 1, sizeof(int));
-				bool withFontFamily = mask & ZLTextStyleEntry::SUPPORT_FONT_FAMILY;
+				bool withFontFamily = (mask & ZLTextStyleEntry::SUPPORT_FONT_FAMILY) == ZLTextStyleEntry::SUPPORT_FONT_FAMILY;
 				myPointer += sizeof(int) + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 5;
 				if (withFontFamily) {
 					while (*myPointer != '\0') {

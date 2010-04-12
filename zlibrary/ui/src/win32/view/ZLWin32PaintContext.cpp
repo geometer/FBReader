@@ -25,6 +25,8 @@
 #include "../image/ZLWin32ImageManager.h"
 #include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
+#undef min
+
 ZLWin32PaintContext::ZLWin32PaintContext() : myDisplayContext(0), myBufferBitmap(0), myWidth(0), myHeight(0), myBackgroundBrush(0), myFillBrush(0), mySpaceWidth(-1) {
 }
 

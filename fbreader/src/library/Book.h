@@ -107,6 +107,24 @@ private: // disable copying
 	const Book &operator = (const Book &);
 };
 
+class BookComparator {
+
+public:
+	bool operator () (
+		const shared_ptr<Book> book0,
+		const shared_ptr<Book> book1
+	);
+};
+
+class BookByFileNameComparator {
+
+public:
+	bool operator () (
+		const shared_ptr<Book> book0,
+		const shared_ptr<Book> book1
+	);
+};
+
 inline const std::string &Book::title() const { return myTitle; }
 inline const ZLFile &Book::file() const { return myFile; }
 inline const std::string &Book::language() const { return myLanguage; }

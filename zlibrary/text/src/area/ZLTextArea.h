@@ -33,7 +33,7 @@ class ZLMirroredPaintContext;
 
 class ZLTextModel;
 
-class ZLTextLineInfo;
+struct ZLTextLineInfo;
 class ZLTextLineInfoPtr;
 struct ZLTextTreeNodeInfo;
 class ZLTextSelectionModel;

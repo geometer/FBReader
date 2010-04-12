@@ -31,7 +31,7 @@
 
 class ZLTextArea;
 class ZLImageData;
-class ZLTextElementRectangle;
+struct ZLTextElementRectangle;
 
 class ZLTextSelectionModel {
 

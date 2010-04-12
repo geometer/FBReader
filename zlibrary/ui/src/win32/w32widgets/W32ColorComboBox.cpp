@@ -18,6 +18,7 @@
  */
 
 #include <windows.h>
+#include <commctrl.h>
 
 #include <ZLResource.h>
 #include <ZLStringUtil.h>

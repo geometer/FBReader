@@ -24,7 +24,6 @@
 #include "../application/ZLWin32ApplicationWindow.h"
 #include "../image/ZLWin32ImageManager.h"
 #include "ZLWin32OptionsDialog.h"
-#include "ZLWin32SelectionDialog.h"
 #include "ZLWin32MessageBox.h"
 
 void ZLWin32DialogManager::createApplicationWindow(ZLApplication *application) const {
@@ -67,10 +66,6 @@ int ZLWin32DialogManager::questionBox(const ZLResourceKey &key, const std::strin
 		box.addButton(buttonName(button2));
 	}
 	return box.run();
-}
-
-bool ZLWin32DialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
-	return ZLWin32SelectionDialog(*myApplicationWindow, dialogTitle(key), handler).runWithSize();
 }
 
 shared_ptr<ZLProgressDialog> ZLWin32DialogManager::createProgressDialog(const ZLResourceKey &key) const {

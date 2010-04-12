@@ -19,6 +19,8 @@
 
 #include "W32DialogPanel.h"
 
+#undef max
+
 static const int FirstControlId = 2001;
 
 const std::string W32StandaloneDialogPanel::CANCEL_EVENT = "Standalone Dialog Panel: Cancel";

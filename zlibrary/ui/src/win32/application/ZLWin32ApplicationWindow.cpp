@@ -38,6 +38,9 @@
 #include "../../../../core/src/win32/util/W32WCHARUtil.h"
 #include "../time/ZLWin32Time.h"
 
+#undef max
+#undef min
+
 const int ZLWin32ApplicationWindow::IconSize = 32;
 
 ZLWin32ApplicationWindow *ZLWin32ApplicationWindow::ourApplicationWindow = 0;

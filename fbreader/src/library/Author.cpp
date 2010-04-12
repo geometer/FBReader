@@ -21,7 +21,6 @@
 #include <ZLUnicodeUtil.h>
 
 #include "Author.h"
-#include "Comparators.h"
 
 std::set<shared_ptr<Author>,AuthorComparator> Author::ourAuthorSet;
 

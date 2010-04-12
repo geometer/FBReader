@@ -25,6 +25,8 @@
 #include "W32Control.h"
 #include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
+#undef max
+
 static const int FirstControlId = 2001;
 
 std::map<HWND,W32DialogPanel*> W32DialogPanel::ourPanels;

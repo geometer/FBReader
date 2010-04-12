@@ -30,7 +30,9 @@
 #include "ZLWin32FileOutputStream.h"
 #include "../util/W32WCHARUtil.h"
 
+#ifndef CSIDL_MYDOCUMENTS
 #define CSIDL_MYDOCUMENTS 5
+#endif
 
 static std::string getPwdDir() {
 	ZLUnicodeUtil::Ucs2String buffer;
@@ -125,7 +127,7 @@ ZLFSDir *ZLWin32FSManager::createNewDirectory(const std::string &path) const {
 	while (current.length() > 3) {
 		WIN32_FILE_ATTRIBUTE_DATA data;
 		ZLUnicodeUtil::Ucs2String wPath = longFilePath(current);
-		const bool exists = GetFileAttributesEx(::wchar(wPath), GetFileExInfoStandard, &data);
+		const bool exists = GetFileAttributesEx(::wchar(wPath), GetFileExInfoStandard, &data) == TRUE;
 		if (exists && ((data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == 0)) {
 			return 0;
 		}
@@ -182,9 +184,9 @@ ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 	} else {
 		ZLUnicodeUtil::Ucs2String wPath = longFilePath(path);
 		WIN32_FILE_ATTRIBUTE_DATA data;
-		info.Exists = GetFileAttributesEx(::wchar(wPath), GetFileExInfoStandard, &data);
+		info.Exists = GetFileAttributesEx(::wchar(wPath), GetFileExInfoStandard, &data) == TRUE;
 		if (info.Exists) {
-			info.IsDirectory = data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+			info.IsDirectory = (data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) == FILE_ATTRIBUTE_DIRECTORY;
 			info.Size = info.IsDirectory ? 0 : data.nFileSizeLow;
 		}
 	}
@@ -193,7 +195,7 @@ ZLFileInfo ZLWin32FSManager::fileInfo(const std::string &path) const {
 
 bool ZLWin32FSManager::removeFile(const std::string &path) const {
 	ZLUnicodeUtil::Ucs2String wPath = longFilePath(path);
-	return DeleteFileW(::wchar(wPath));
+	return DeleteFileW(::wchar(wPath)) == TRUE;
 }
 
 ZLUnicodeUtil::Ucs2String ZLWin32FSManager::longFilePath(const std::string &path) {

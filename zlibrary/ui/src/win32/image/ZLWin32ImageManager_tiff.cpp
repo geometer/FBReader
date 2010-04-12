@@ -17,9 +17,11 @@
  * 02110-1301, USA.
  */
 
+#include "ZLWin32ImageManager.h"
+
 #include <tiffio.h>
 
-#include "ZLWin32ImageManager.h"
+#undef min
 
 class TIFFReader {
 
@@ -113,7 +115,7 @@ bool ZLWin32ImageManager::tiffConvert(const std::string &stringData, ZLWin32Imag
 
 	data.init(width, height, true, 0);
 
-	result = TIFFReadRGBAImage(tiff, width, height, (uint32*)data.myArray, 1);
+	result = TIFFReadRGBAImage(tiff, width, height, (uint32*)data.myArray, 1) != 0;
 	data.bgr2rgb();
 
 	TIFFClose(tiff);

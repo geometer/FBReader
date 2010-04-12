@@ -21,6 +21,8 @@
 
 #include "ZLWin32Config.h"
 
+#undef max
+
 void ZLWin32Config::load() {
 	HKEY root;
 	HKEY categoryKey;

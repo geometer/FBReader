@@ -21,6 +21,8 @@
 
 #include "W32Container.h"
 
+#undef max
+
 W32Box::W32Box() : myHomogeneous(false), mySpacing(0) {
 }
 

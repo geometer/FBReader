@@ -27,25 +27,30 @@
 ZLTime ZLUnixTimeManager::currentTime() const {
 	struct timeb timeB;
 	ftime(&timeB);
-	return ZLTime(timeB.time, timeB.millitm);
+	return ZLTime((long)timeB.time, timeB.millitm);
 }
 
 short ZLUnixTimeManager::hoursBySeconds(long seconds) const {
-	return localtime(&seconds)->tm_hour;
+	time_t seconds_time = seconds;
+	return localtime(&seconds_time)->tm_hour;
 }
 
 short ZLUnixTimeManager::minutesBySeconds(long seconds) const {
-	return localtime(&seconds)->tm_min;
+	time_t seconds_time = seconds;
+	return localtime(&seconds_time)->tm_min;
 }
 
 short ZLUnixTimeManager::yearBySeconds(long seconds) const {
-	return localtime(&seconds)->tm_year + 1900;
+	time_t seconds_time = seconds;
+	return localtime(&seconds_time)->tm_year + 1900;
 }
 
 short ZLUnixTimeManager::monthBySeconds(long seconds) const {
-	return localtime(&seconds)->tm_mon + 1;
+	time_t seconds_time = seconds;
+	return localtime(&seconds_time)->tm_mon + 1;
 }
 
 short ZLUnixTimeManager::dayOfMonthBySeconds(long seconds) const {
-	return localtime(&seconds)->tm_mday;
+	time_t seconds_time = seconds;
+	return localtime(&seconds_time)->tm_mday;
 }

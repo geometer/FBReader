@@ -28,6 +28,8 @@
 
 #include "../../../../core/src/win32/util/W32WCHARUtil.h"
 
+#undef max
+
 bool W32PropertySheet::ourPropertySheetStarted = false;
 
 W32PropertySheet::W32PropertySheet(HWND mainWindow, const std::string &caption, bool showApplyButton) : myMainWindow(mainWindow), myDialogWindow(0), myShowApplyButton(showApplyButton) {

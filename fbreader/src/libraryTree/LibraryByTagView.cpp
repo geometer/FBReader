@@ -23,7 +23,6 @@
 #include "../library/Library.h"
 #include "../library/Book.h"
 #include "../library/Tag.h"
-#include "../library/Comparators.h"
 #include "../libraryActions/BooksUtil.h"
 
 LibraryByTagView::LibraryByTagView(ZLPaintContext &context) : LibraryView(context) {
