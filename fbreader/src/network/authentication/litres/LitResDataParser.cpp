@@ -85,7 +85,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 
 			std::string url = stringAttributeValue(attributes, "url");
 			if (!url.empty()) {
-				myLink.rewriteUrl(url);
+				myLink.rewriteUrl(url, true); // This code duplicates code in FBReader::openInBrowser and is not required
 				myURLByType[NetworkItem::URL_HTML_PAGE] = url;
 			}
 
