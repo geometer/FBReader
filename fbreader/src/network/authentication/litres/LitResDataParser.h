@@ -52,8 +52,6 @@ private:
 	void processState(const std::string &tag, bool closed, const char **attributes);
 	State getNextState(const std::string &tag, bool closed);
 
-	std::string makeDemoUrl(const std::string &bookId) const;
-
 private:
 	const NetworkLink &myLink;
 
