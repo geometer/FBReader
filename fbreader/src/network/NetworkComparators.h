@@ -29,7 +29,7 @@
 class NetworkBookItemComparator {
 
 public:
-	bool operator () (const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1);
+	bool operator () (const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1) const;
 };
 
 
@@ -38,7 +38,7 @@ class NetworkAuthorComparator {
 public:
 	NetworkAuthorComparator(const std::map<NetworkBookItem::AuthorData, unsigned int> &rates);
 
-	bool operator () (const NetworkBookItem::AuthorData &author0, const NetworkBookItem::AuthorData &author1);
+	bool operator () (const NetworkBookItem::AuthorData &author0, const NetworkBookItem::AuthorData &author1) const;
 
 private:
 	const std::map<NetworkBookItem::AuthorData, unsigned int> &myRates;

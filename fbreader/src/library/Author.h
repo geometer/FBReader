@@ -36,7 +36,7 @@ public:
 	bool operator () (
 		const shared_ptr<Author> author0,
 		const shared_ptr<Author> author1
-	);
+	) const;
 };
 
 class Author {

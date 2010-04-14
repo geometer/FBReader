@@ -120,6 +120,11 @@ void ZLWin32FSManager::normalizeRealPath(std::string &path) const {
 	}
 }
 
+std::string ZLWin32FSManager::mimeType(const std::string &path) const {
+	// TODO: implement
+	return std::string();
+}
+
 ZLFSDir *ZLWin32FSManager::createNewDirectory(const std::string &path) const {
 	std::vector<ZLUnicodeUtil::Ucs2String> subpaths;
 	std::string current = path;

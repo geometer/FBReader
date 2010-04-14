@@ -19,7 +19,7 @@
 
 #include "NetworkComparators.h"
 
-bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1) {
+bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1) const {
 	const bool book0isABook =
 		bookPtr0->isInstanceOf(NetworkBookItem::TYPE_ID);
 	const bool book1isABook =
@@ -81,7 +81,7 @@ bool NetworkBookItemComparator::operator () (const shared_ptr<NetworkItem> &book
 NetworkAuthorComparator::NetworkAuthorComparator(const std::map<NetworkBookItem::AuthorData, unsigned int> &rates) : myRates(rates) {
 }
 
-bool NetworkAuthorComparator::operator () (const NetworkBookItem::AuthorData &author0, const NetworkBookItem::AuthorData &author1) {
+bool NetworkAuthorComparator::operator () (const NetworkBookItem::AuthorData &author0, const NetworkBookItem::AuthorData &author1) const {
 	std::map<NetworkBookItem::AuthorData, unsigned int>::const_iterator it1 = myRates.find(author0);
 	std::map<NetworkBookItem::AuthorData, unsigned int>::const_iterator it2 = myRates.find(author1);
 	if (it1 == myRates.end() && it2 == myRates.end()) {

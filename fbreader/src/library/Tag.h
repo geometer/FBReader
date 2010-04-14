@@ -85,7 +85,7 @@ public:
 	bool operator () (
 		shared_ptr<Tag> tag0,
 		shared_ptr<Tag> tag1
-	);
+	) const;
 };
 
 inline const std::string &Tag::name() const { return myName; }

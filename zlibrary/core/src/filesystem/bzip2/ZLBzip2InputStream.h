@@ -22,6 +22,11 @@
 
 #include <bzlib.h>
 
+#ifdef WIN32
+#undef min
+#undef max
+#endif
+
 #include <shared_ptr.h>
 
 #include "../ZLInputStream.h"

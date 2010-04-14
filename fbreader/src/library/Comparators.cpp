@@ -24,7 +24,7 @@
 bool BookComparator::operator() (
 	const shared_ptr<Book> book0,
 	const shared_ptr<Book> book1
-) {
+) const {
 	const std::string &seriesTitle0 = book0->seriesTitle();
 	const std::string &seriesTitle1 = book1->seriesTitle();
 	int comp = seriesTitle0.compare(seriesTitle1);
@@ -49,14 +49,14 @@ bool BookComparator::operator() (
 bool BookByFileNameComparator::operator() (
 	const shared_ptr<Book> book0,
 	const shared_ptr<Book> book1
-) {
+) const {
 	return book0->file() < book1->file();
 }
 
 bool AuthorComparator::operator() (
 	const shared_ptr<Author> author0,
 	const shared_ptr<Author> author1
-) {
+) const {
 	if (author0.isNull()) {
 		return !author1.isNull();
 	}
@@ -71,7 +71,7 @@ bool AuthorComparator::operator() (
 bool TagComparator::operator() (
 	shared_ptr<Tag> tag0,
 	shared_ptr<Tag> tag1
-) {
+) const {
 	if (tag0.isNull()) {
 		return !tag1.isNull();
 	}
