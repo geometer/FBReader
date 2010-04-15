@@ -44,6 +44,10 @@ ZLStatisticsBasedMatcher::ZLStatisticsBasedMatcher(const std::string &fileName, 
 ZLStatisticsBasedMatcher::~ZLStatisticsBasedMatcher() {
 }
 
-int ZLStatisticsBasedMatcher::criterion(const ZLStatistics &otherStatistics) {
+int ZLStatisticsBasedMatcher::charSequenceLength() const {
+	return myStatisticsPtr->getCharSequenceSize();
+}
+
+int ZLStatisticsBasedMatcher::criterion(const ZLStatistics &otherStatistics) const {
 	return ZLStatistics::correlation(otherStatistics, *myStatisticsPtr);
 }

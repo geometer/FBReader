@@ -75,7 +75,7 @@ ZLCharSequence& ZLCharSequence::operator= (const ZLCharSequence& other) {
 
 std::string ZLCharSequence::toHexSequence() const { 
 	std::string result;
-	static char table[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+	static const char table[] = "0123456789abcdef";
 	for(size_t count = 0;; ++count) {
 		result += "0x";
 		result += table[(myHead[count] >> 4) & 0x0F];

@@ -56,8 +56,7 @@ ZLLanguageDetector::~ZLLanguageDetector() {
 
 shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const char *buffer, size_t length, int matchingCriterion) {
 	shared_ptr<LanguageInfo> info;
-	ZLMapBasedStatistics bufferStatistics;//= new ZLMapBasedStatistics();
-	ZLStatisticsGenerator("\r\n ").generate(buffer, length, 3, bufferStatistics);
+	std::map<int,shared_ptr<ZLMapBasedStatistics> > statisticsMap;
 	std::string ucs2;
 	if ((unsigned char)buffer[0] == 0xFE &&
 			(unsigned char)buffer[1] == 0xFF) {
@@ -69,8 +68,16 @@ shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const 
 	}
 	for (SBVector::const_iterator it = myMatchers.begin(); it != myMatchers.end(); ++it) {
 		if (ucs2.empty() || (*it)->info()->Encoding == ucs2) {
-			int criterion = (*it)->criterion(bufferStatistics);
-			//std::cerr << (*it)->info()->Language << " " << criterion << "\n";
+			const int charSequenceLength = (*it)->charSequenceLength();
+			shared_ptr<ZLMapBasedStatistics> stat = statisticsMap[charSequenceLength];
+			if (stat.isNull()) {
+				stat = new ZLMapBasedStatistics();
+				ZLStatisticsGenerator("\r\n ").generate(
+					buffer, length, charSequenceLength, *stat
+				);
+				statisticsMap[charSequenceLength] = stat;
+			}
+			const int criterion = (*it)->criterion(*stat);
 			if (criterion > matchingCriterion) {
 				info = (*it)->info();
 				matchingCriterion = criterion;

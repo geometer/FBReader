@@ -56,6 +56,22 @@ unsigned long long ZLStatistics::getSquaresVolume() const {
   return mySquaresVolume;
 }
 
+static int log10(long long number) {
+	int count = 0;
+	while (number != 0) {
+		number /= 10;
+		++count;
+	}
+	return count;
+}
+
+static int power10(unsigned int number) {
+	int power = 1;
+	while (number-- > 0) {
+		power *= 10;
+	}
+	return power;
+}
 
 int ZLStatistics::correlation(const ZLStatistics& candidate, const ZLStatistics& pattern) {
 	if (&candidate == &pattern) {
@@ -103,8 +119,25 @@ int ZLStatistics::correlation(const ZLStatistics& candidate, const ZLStatistics&
 		return 0;
 	}
 
-	const long long quotient1 = (1000 * numerator / patternDispersion); 
-	const long long quotient2 = (1000 * numerator / candidateDispersion);
+	int orderDiff = ::log10(patternDispersion) - ::log10(candidateDispersion);
+	int patternMult = 1000;
+	if (orderDiff >= 5) {
+		patternMult = ::power10(6);
+	} else if (orderDiff >= 3) {
+		patternMult = ::power10(5);
+	} else if (orderDiff >= 1) {
+		patternMult = ::power10(4);
+	} else if (orderDiff <= -1) {
+		patternMult = ::power10(2);
+	} else if (orderDiff <= -3) {
+		patternMult = ::power10(1);
+	} else if (orderDiff <= -5) {
+		patternMult = ::power10(0);
+	}
+	int candidateMult = 1000000 / patternMult;
+
+	const long long quotient1 = (patternMult * numerator / patternDispersion); 
+	const long long quotient2 = (candidateMult * numerator / candidateDispersion);
 	const int sign = (numerator >= 0) ? 1 : -1;
 	
 	return sign * quotient1 * quotient2;
@@ -268,11 +301,11 @@ void ZLArrayBasedStatistics::calculateVolumes() const {
 }
 
 shared_ptr<ZLStatisticsItem> ZLArrayBasedStatistics::begin() const {
-	return new ZLArrayBasedStatisticsItem(mySequences, myFrequencies, 0);
+	return new ZLArrayBasedStatisticsItem(myCharSequenceSize, mySequences, myFrequencies, 0);
 }
 
 shared_ptr<ZLStatisticsItem> ZLArrayBasedStatistics::end() const {
-	return new ZLArrayBasedStatisticsItem(mySequences + myBack * myCharSequenceSize, myFrequencies + myBack, myBack);
+	return new ZLArrayBasedStatisticsItem(myCharSequenceSize, mySequences + myBack * myCharSequenceSize, myFrequencies + myBack, myBack);
 }
 
 ZLArrayBasedStatistics& ZLArrayBasedStatistics::operator= (const ZLArrayBasedStatistics &other) {

@@ -42,7 +42,8 @@ public:
 	ZLStatisticsBasedMatcher(const std::string &fileName, shared_ptr<ZLLanguageDetector::LanguageInfo> info);
 	~ZLStatisticsBasedMatcher(); // надо ли его объявлять, если он ничего не делает??
 
-	int criterion(const ZLStatistics &otherStatistics);
+	int charSequenceLength() const;
+	int criterion(const ZLStatistics &otherStatistics) const;
 
 private:
 	shared_ptr<ZLArrayBasedStatistics> myStatisticsPtr;
