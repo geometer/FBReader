@@ -32,7 +32,12 @@ static const std::string TAG_NAVLABEL = "navLabel";
 static const std::string TAG_CONTENT = "content";
 static const std::string TAG_TEXT = "text";
 
-void NCXReader::startElementHandler(const char *tag, const char **attributes) {
+void NCXReader::startElementHandler(const char *fullTag, const char **attributes) {
+	std::string tag = fullTag;
+	const size_t index = tag.rfind(':');
+	if (index != std::string::npos) {
+		tag = tag.substr(index + 1);
+	}
 	switch (myReadState) {
 		case READ_NONE:
 			if (TAG_NAVMAP == tag) {
@@ -69,7 +74,12 @@ void NCXReader::startElementHandler(const char *tag, const char **attributes) {
 	}
 }
 
-void NCXReader::endElementHandler(const char *tag) {
+void NCXReader::endElementHandler(const char *fullTag) {
+	std::string tag = fullTag;
+	const size_t index = tag.rfind(':');
+	if (index != std::string::npos) {
+		tag = tag.substr(index + 1);
+	}
 	switch (myReadState) {
 		case READ_NONE:
 			break;

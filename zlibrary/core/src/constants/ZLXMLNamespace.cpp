@@ -28,3 +28,4 @@ const std::string ZLXMLNamespace::Atom = "http://www.w3.org/2005/Atom";
 const std::string ZLXMLNamespace::OpenSearch = "http://a9.com/-/spec/opensearch/1.1/";
 const std::string ZLXMLNamespace::CalibreMetadata = "http://calibre.kovidgoyal.net/2009/metadata";
 const std::string ZLXMLNamespace::Opds = "http://opds-spec.org/2010/catalog";
+const std::string ZLXMLNamespace::DaisyNCX = "http://www.daisy.org/z3986/2005/ncx/";

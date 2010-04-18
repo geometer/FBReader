@@ -37,6 +37,7 @@ public:
 	static const std::string OpenSearch;
 	static const std::string CalibreMetadata;
 	static const std::string Opds;
+	static const std::string DaisyNCX;
 };
 
 #endif /* __ZLXMLNAMESPACE_H__ */
