@@ -63,7 +63,7 @@
 			<node name="download" value="Letöltés"/>
 			<node name="readDemo" value="Minta olvasása"/>
 			<node name="downloadDemo" value="Minta letöltése"/>
-			<node name="demo" toBeTranslated="true" value="sample"/>
+			<node name="demo" value="Minta"/>
 			<node name="buy" value="(%s)- megvásárlása"/>
 		</node>
 	</node>
@@ -199,8 +199,8 @@
 			<node name="tooltip" value="FBReader névjegye" />
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter" />
-			<node name="tooltip" toBeTranslated="true" value="Filter" />
+			<node name="label" value="Szűrés" />
+			<node name="tooltip" value="Válogatás a könyvtár köteteiből" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -324,11 +324,11 @@
 				<node name="Keys" value="Billentyűk">
 					<node name="grabSystemKeys" value="A rendszerbillentyűk használata" />
 					<node name="separate" value="Elforgatásfüggő billentyűhozzárendelés" />
-					<node name="orientation" value="Elforgatás">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+					<node name="orientation" value="Elforgatás" >
+						<node name="degrees0" value="0 fok" />
+						<node name="degrees90ccw" value="90 fok balra" />
+						<node name="degrees180" value="180 fok" />
+						<node name="degrees90cw" value="90 90 fok jobbra" />
 					</node>
 					<node name="action">
 						<node name="none" value="Nem" />
@@ -360,7 +360,7 @@
 						<node name="toggleFullscreen" value="Teljes képernyőre" />
 						<node name="rotate" value="Képernyő elforgatása" />
 						<node name="preferences" value="Beállító panel" />
-						<node name="bookInfo" value="Kötete adatainak módosítása" />
+						<node name="bookInfo" value="Kötet adatainak módosítása" />
 						<node name="addBook" value="Kötet hozzáadása" />
 						<node name="cancel" value="Mégsem" />
 						<node name="quit" value="Kilépés" />
@@ -406,7 +406,7 @@
 				</node>
 				<node name="Series" value="Sorozat">
 					<node name="seriesTitle" value="Sorozat címe" />
-					<node name="bookIndex" value="Kötete helye a sorozatban" />
+					<node name="bookIndex" value="Kötet helye a sorozatban" />
 				</node>
 				<node name="Tags" value="Kulcsszavak">
 					<node name="tags" value="Kulcs neve" />
@@ -520,7 +520,7 @@
 			<node name="registerUser" value="Új felhasználó regisztrálás, várj egy kicsit..." />
 			<node name="passwordRecovery" value="Jelszó visszaszerzése, türelem..." />
 			<node name="authenticationCheck" value="Adatok ellenörzése, várj egy kicsit..." />
-			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
+			<node name="signOut" value="Kijelentkezés. Türelem..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Kötet megvásárlása" />

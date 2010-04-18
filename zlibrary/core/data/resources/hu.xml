@@ -12,14 +12,14 @@
     <node name="waitMessage">
       <node name="savingConfig" value="Beállítás mentése..." />
     </node>
-		<node name="networkError">
+    <node name="networkError">
       <node name="title" value="Hálózati hiba" />
       <node name="unknownErrorMessage" value="Ismeretlen hiba" />
       <node name="couldntCreateDirectoryMessage" value="Nem lehet létrehozni a %s könyvtárat" />
-      <node name="couldntCreateFileMessage" value="nem lehet létrehozni a %s fájlt" />
+      <node name="couldntCreateFileMessage" value="Nem lehet létrehozni a %s fájlt" />
       <node name="couldntConnectToNetworkMessage" value="A hálózati csatlakozás sikertelen" />
-      <node name="couldntConnectMessage" value="A %s elérhetetlen" />
-      <node name="couldntResolveHostMessage" value="A(z) %s neve nem felismerhető" />
+      <node name="couldntConnectMessage" value="A(z) %s neve nem felismerhető" />
+      <node name="couldntResolveHostMessage" value="A(z) %s gépnév nem felismerhető" />
       <node name="couldntResolveProxyMessage" value="A(z) %s proxy nem felismerhető" />
       <node name="operationTimedOutMessage" value="A meghatározott időkeret lejárt" />
       <node name="somethingWrongMessage" value="Valami hiba történt a %s körül" />
@@ -27,7 +27,7 @@
       <node name="peerFailedVerificationMessage" value="A %s SSL igazolása hibás" />
       <node name="sslCertificateAuthorityMessage" value="A %s SSL igazolása nincs érvényesíttetve egyetlen ismert szervezettel sem." />
       <node name="sslBadCertificateFileMessage" value="A %s SSL igazolása nem olvasható" />
-      <node name="sslShutdownFailedMessage" value="A %s SSL kapcsolata nem bontható." />
+      <node name="sslShutdownFailedMessage"  value="A %s SSL kapcsolata nem bontható." />
     </node>
   </node>
   <node name="color">
@@ -65,14 +65,14 @@
     <node name="id" value="Indonéz" />
     <node name="it" value="Olasz" />
     <node name="lt" value="Litván" />
-    <node name="nl" value="Holland"/>
-    <node name="no" value="Norwég" />
+    <node name="nl" value="Holland" />
+    <node name="no" value="Norvég" />
     <node name="pt" value="Portugugál" />
     <node name="ru" value="Orosz" />
-    <node name="sv" value="Swéd" />
+    <node name="sv" value="Svéd" />
     <node name="tr" value="Török" />
     <node name="uk" value="Ukrán" />
-		<node name="vi" toBeTranslated="true" value="Vietnamese" />
+    <node name="vi" value="Vietnámi" />
     <node name="zh" value="Kínai" />
     <node name="other" value="Egyéb" />
   </node>
