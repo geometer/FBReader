@@ -1,8 +1,14 @@
+fbreader (0.14.20100422-1) stable; urgency=low
+
+  * new upstream version
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thu, 22 Apr 2010 13:49:00 +0400
+
 fbreader (0.12.10-1) stable; urgency=low
 
   * new upstream version
 
- -- Nikolay Pultsin <geometer@fbreader.org>  Thu, 1 Apr 2010 13:48:00 +0300
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thu, 1 Apr 2010 13:48:00 +0400
 
 fbreader (0.12.9-1) stable; urgency=low
 

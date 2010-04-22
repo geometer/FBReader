@@ -1,7 +1,14 @@
-===== 0.14.0 (?????) =====
+===== 0.14.20100422 (April 22, 2010) =====
 
+* Standard file open dialog is now used instead of the old specially written
+  for FBReader
 * CSS processing for multi-xhtml epubs has been fixed (in 0.12.* the CSS
-  loaded for the first xhtml was also applied for all other xhtmls
+  loaded for the first xhtml was also applied for all other xhtmls)
+* Chinese encodings detection has been improved
+* Language/encoding detection for small files has been improved
+* A problem with TOC in newest O'Reilly ePubs has been fixed
+* A detection of book format by mime-type (not by file extension) has been
+  partially implemented (in Gtk+ version only)
 
 ===== 0.12.10 (April 1, 2010) =====
 
