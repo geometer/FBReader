@@ -67,6 +67,7 @@
 		<node name="lt" value="Lietuvių" />
 		<node name="nl" value="Olandų" />
 		<node name="no" value="Norvegų" />
+		<node name="pl" toBeTranslated="true" value="Polish" />
 		<node name="pt" value="Portugalų" />
 		<node name="ru" value="Rusų" />
 		<node name="sv" value="Švedų" />

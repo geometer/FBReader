@@ -67,6 +67,7 @@
 		<node name="lt" value="Liettua" />
 		<node name="nl" value="Hollanni" />
 		<node name="no" value="Norja" />
+		<node name="pl" toBeTranslated="true" value="Polish" />
 		<node name="pt" value="Portugali" />
 		<node name="ru" value="Venäjä" />
 		<node name="tr" value="Turkki" />

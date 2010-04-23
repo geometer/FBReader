@@ -66,6 +66,7 @@
 		<node name="lt" value="Lithuanian" />
 		<node name="nl" value="Dutch" />
 		<node name="no" value="Norwegian" />
+		<node name="pl" value="Polish" />
 		<node name="pt" value="Portuguese" />
 		<node name="ru" value="Russian" />
 		<node name="sv" value="Swedish" />

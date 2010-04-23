@@ -67,12 +67,13 @@
 		<node name="lt" value="立陶宛语" />
 		<node name="nl" value="荷兰语" />
 		<node name="no" value="挪威语" />
+		<node name="pl" toBeTranslated="true" value="Polish" />
 		<node name="pt" value="葡萄牙语" />
 		<node name="ru" value="俄罗斯语" />
 		<node name="sv" value="瑞典语" />
 		<node name="tr" value="土耳其语" />
 		<node name="uk" value="乌克兰语" />
-		<node name="vi" toBeTranslated="true" value="Vietnamese" />
+		<node name="vi" value="越南语" />
 		<node name="zh" value="中文" />
 		<node name="other" value="其他" />
 	</node>

@@ -67,6 +67,7 @@
 		<node name="lt" value="Litouws"/>
 		<node name="nl" value="Nederlands"/>
 		<node name="no" value="Noors"/>
+		<node name="pl" toBeTranslated="true" value="Polish" />
 		<node name="pt" value="Portugees"/>
 		<node name="ru" value="Russisch"/>
 		<node name="sv" value="Zweeds"/>
