@@ -4,7 +4,7 @@ INSTALLDIR = /usr
 IMAGEDIR = $(INSTALLDIR)/share/%APPLICATION_NAME%/icons
 APPIMAGEDIR = $(IMAGEDIR)
 
-CC = gcc
+CC = ccache gcc
 AR = ar rsu
 
 DEPGEN = $(CC) -MM

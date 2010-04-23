@@ -32,7 +32,7 @@
 #include "ZLGtkDialogManager.h"
 #include "ZLGtkDialog.h"
 #include "ZLGtkOptionsDialog.h"
-#include "ZLGtkSelectionDialog.h"
+#include "ZLGtkProgressDialog.h"
 #include "ZLGtkUtil.h"
 #include "../../gtk/image/ZLGtkImageManager.h"
 
@@ -42,6 +42,10 @@ shared_ptr<ZLDialog> ZLGtkDialogManager::createDialog(const ZLResourceKey &key) 
 
 shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool) const {
 	return new ZLGtkOptionsDialog(resource()[key], applyAction);
+}
+
+shared_ptr<ZLOpenFileDialog> ZLGtkDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
+	return 0;//new ZLGtkOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
 }
 
 void ZLGtkDialogManager::informationBox(const std::string&, const std::string &message) const {
@@ -76,10 +80,6 @@ int ZLGtkDialogManager::questionBox(const ZLResourceKey&, const std::string &mes
 	return response == GTK_RESPONSE_REJECT ? -1 : response;
 }
 
-bool ZLGtkDialogManager::selectionDialog(const ZLResourceKey &key, ZLTreeHandler &handler) const {
-	return ZLGtkSelectionDialog(dialogTitle(key).c_str(), handler).run();
-}
-
 struct RunnableWithFlag {
 	ZLRunnable *runnable;
 	volatile bool flag;
@@ -91,6 +91,10 @@ static void *runRunnable(void *data) {
 	rwf.flag = false;
 	pthread_exit(0);
 	return 0;
+}
+
+shared_ptr<ZLProgressDialog> ZLGtkDialogManager::createProgressDialog(const ZLResourceKey &key) const {
+	return new ZLGtkProgressDialog(myWindow, key);
 }
 
 void ZLGtkDialogManager::wait(const ZLResourceKey &key, ZLRunnable &runnable) const {

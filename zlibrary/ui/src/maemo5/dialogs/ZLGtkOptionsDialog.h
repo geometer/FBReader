@@ -31,9 +31,6 @@
 class ZLGtkOptionsDialog : public ZLOptionsDialog {
 
 public:
-	static void addMaemoBuilder(shared_ptr<ZLDialogContentBuilder> builder);
-
-public:
 	ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
 	~ZLGtkOptionsDialog();
 	ZLDialogContent &createTab(const ZLResourceKey &key);

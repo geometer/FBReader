@@ -17,44 +17,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLGTKSELECTIONDIALOG_H__
-#define __ZLGTKSELECTIONDIALOG_H__
+#ifndef __ZLGTKPROGRESSDIALOG_H__
+#define __ZLGTKPROGRESSDIALOG_H__
 
-#include <gtk/gtk.h>
+#include <string>
 
-#include <vector>
-#include <map>
+#include <gtk/gtkwidget.h>
+#include <gtk/gtkwindow.h>
 
-#include <ZLSelectionDialog.h>
+#include <ZLProgressDialog.h>
 
-class ZLGtkSelectionDialog : public ZLSelectionDialog {
+class ZLGtkProgressDialog : public ZLProgressDialog {
 
 public:
-	ZLGtkSelectionDialog(const char *caption, ZLTreeHandler &handler); 
-	~ZLGtkSelectionDialog(); 
-
-	bool run();
-
-	void activatedSlot();
-
-protected:
-	void exitDialog();
-	void updateStateLine();
-	void updateList();
-	void selectItem(int index);
+	ZLGtkProgressDialog(GtkWindow *window, const ZLResourceKey &key);
 
 private:
-	GdkPixbuf *getPixmap(const ZLTreeNodePtr node);
+	void run(ZLRunnable &runnable);
+	void setMessage(const std::string &message);
 
 private:
-	bool myExitFlag;
-	bool myNodeSelected;
-	GtkDialog *myDialog;
-	GtkListStore *myStore;
-	GtkTreeView *myView;
-	GtkEntry *myStateLine;
-
-	std::map<std::string,GdkPixbuf*> myPixmaps;
+	GtkWindow *myParent;
+	GtkWidget *myLabel;
 };
 
-#endif /* __ZLGTKSELECTIONDIALOG_H__ */
+#endif /* __ZLGTKPROGRESSDIALOG_H__ */

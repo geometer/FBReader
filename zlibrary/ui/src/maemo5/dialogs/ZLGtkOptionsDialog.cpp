@@ -29,10 +29,6 @@
 #include "ZLGtkDialogContent.h"
 #include "ZLGtkUtil.h"
 
-void ZLGtkOptionsDialog::addMaemoBuilder(shared_ptr<ZLDialogContentBuilder> builder) {
-	//addPlatformDependentBuilder(builder);
-}
-
 ZLGtkOptionsDialog::ZLGtkOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : ZLOptionsDialog(resource, applyAction) {
 	myDialog = createGtkDialog(caption());
 	gtk_widget_set_size_request(GTK_WIDGET(myDialog), 800, 800);
