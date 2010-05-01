@@ -51,6 +51,7 @@ do_install:
 	@install -m 0644 data/formats/fb2/fb2genres.xml $(FBSHAREDIR)/formats/fb2
 	@install -d $(FBSHAREDIR)/default
 	@./scripts/install_toolbar_and_menu.sh $(VARIANT) $(UI_TYPE) $(FBSHAREDIR)/default
+	@./scripts/install_config.sh $(VARIANT) $(UI_TYPE) $(FBSHAREDIR)/default
 	@install -m 0644 data/default/external.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/external.xml
 	@if [ -f data/default/messages.$(TARGET_ARCH).xml ]; then \
 		install -m 0644 data/default/messages.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/messages.xml; \

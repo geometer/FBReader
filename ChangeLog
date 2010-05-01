@@ -32,7 +32,7 @@
 * A seg.fault during scanning several archives has been fixed
 * Lithuanian localization has been updated
 * Vietnamese language/encoding detection patterns have been added
-* Parcing of decimal point in CSS files has been fixed (it doesn't depend on
+* Parsing of decimal point in CSS files has been fixed (it doesn't depend on
 the current locale now)
 
 ===== 0.12.7 (March 5, 2010) =====

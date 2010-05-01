@@ -9,7 +9,6 @@ SERVICE_FILE = FBReader.service
 BACKUP_CONF = FBReader.backup
 
 install:
-	@install -m 0644 ../data/default/config.maemo.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/config.xml
 	@install -m 0644 ../data/default/keymap.maemo.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
 	@install -m 0644 ../data/default/styles.maemo.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
 	@install -d $(DESTDIR)$(SHAREDIR)/icons/hicolor/16x16/apps

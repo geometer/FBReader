@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<group name="Style">
+		<option name="Base:fontFamily" value="Sans"/>
+		<option name="Base:fontSize" value="18"/>
+	</group>
+  <group name="Options">
+		<option name="IsSelectionEnabled" value="false"/>
+    <option name="Timeout" value="30"/>
+    <option name="LeftMargin" value="20"/>
+    <option name="TopMargin" value="4"/>
+    <option name="BookPath" value="~/MyDocs/Books:/media/mmc1/Books:/media/mmc2/Books"/>
+    <option name="DownloadDirectory" value="~/MyDocs/Books"/>
+  </group>
+</config>

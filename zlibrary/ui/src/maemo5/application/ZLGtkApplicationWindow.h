@@ -37,11 +37,10 @@
 
 #include "../../../../core/src/application/ZLApplicationWindow.h"
 #include "../../../../core/src/application/ZLMenu.h"
-#include "../../../../core/src/dialogs/ZLDialogContentBuilder.h"
 
 class ZLGtkViewWidget;
 
-class ZLGtkApplicationWindow : public ZLApplicationWindow, public ZLDialogContentBuilder { 
+class ZLGtkApplicationWindow : public ZLApplicationWindow { 
 
 private:
 	ZLBooleanOption KeyActionOnReleaseNotOnPressOption;
@@ -53,10 +52,8 @@ public:
 private:
 	ZLViewWidget *createViewWidget();
 	void init();
-	GtkToolItem *createGtkToolButton(const ZLToolbar::AbstractButtonItem &button);
 	void updatePopupData(GtkMenuToolButton *button, shared_ptr<ZLPopupData> data);
 	void addToolbarItem(ZLToolbar::ItemPtr item);
-	void buildTabs(ZLOptionsDialog &dialog);
 
 	class MenuBuilder : public ZLMenuVisitor {
 
@@ -90,43 +87,17 @@ private:
 
 public:
 	bool handleKeyEventSlot(GdkEventKey *event, bool isKeyRelease);
-	void onGtkButtonPress(GtkToolItem *gtkButton);
 	HildonWindow *getMainWindow() const { return myWindow; }
 	void setFocusToMainWidget();
-
-public:
-	class GtkEntryParameter : public VisualParameter {
-
-	public:
-		GtkEntryParameter(ZLGtkApplicationWindow &window, const ZLToolbar::ParameterItem &item);
-		void onKeyPressed(const std::string &keyName);
-		void onValueChanged();
-		GtkToolItem *createToolItem();
-
-	private:
-		std::string internalValue() const;
-		void internalSetValue(const std::string &value);
-		void setValueList(const std::vector<std::string> &values);
-
-	private:
-		ZLGtkApplicationWindow &myWindow;
-		const ZLToolbar::ParameterItem &myItem;
-		GtkWidget *myWidget;
-		GtkEntry *myEntry;
-	};
 
 private:
 	HildonProgram *myProgram;
 	HildonWindow *myWindow;
-	GtkToolbar *myToolbar;
 	HildonAppMenu *myMenu;
 	ZLGtkViewWidget *myViewWidget;
 
 	bool myFullScreen;
 
-	std::map<const ZLToolbar::Item*,GtkToolItem*> myAbstractToGtk;
-	std::map<GtkToolItem*,ZLToolbar::ItemPtr> myGtkToAbstract;
-	std::map<GtkToolItem*,size_t> myPopupIdMap;
 	std::map<std::string,GtkWidget*> myMenuItems;
 	std::vector<GtkMenuItem*> mySubmenuItems;
 
