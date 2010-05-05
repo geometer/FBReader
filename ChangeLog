@@ -9,6 +9,7 @@
 * A problem with TOC in newest O'Reilly ePubs has been fixed
 * A detection of book format by mime-type (not by file extension) has been
   partially implemented (in Gtk+ version only)
+* Polish interface localization has been added (by Rafał Bakuła)
 
 ===== 0.12.10 (April 1, 2010) =====
 
