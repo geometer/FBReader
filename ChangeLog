@@ -1,5 +1,6 @@
 ===== 0.14.20100422 (April 22, 2010) =====
 
+* Mobipocket image processing has been fixed
 * Standard file open dialog is now used instead of the old specially written
   for FBReader
 * CSS processing for multi-xhtml epubs has been fixed (in 0.12.* the CSS

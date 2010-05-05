@@ -183,7 +183,7 @@ int PalmDocStream::firstImageLocationIndex(const std::string &fileName) {
 
 	bool found = false;
 	int index = 0;
-	char bu[10];
+	char bu[5] = { 0 };
 	std::pair<int,int> firstImageLocation = imageLocation(header(), 0);
 	fileStream->seek(firstImageLocation.first, false);
 	while ((firstImageLocation.first > 0) && (firstImageLocation.second > 0)) {
@@ -196,7 +196,7 @@ int PalmDocStream::firstImageLocationIndex(const std::string &fileName) {
 				found = true;
 				break;
 			}
-			fileStream->seek(firstImageLocation.second - 10, false);
+			fileStream->seek(firstImageLocation.second - 4, false);
 		} else {
 			fileStream->seek(firstImageLocation.second, false);
 		}
