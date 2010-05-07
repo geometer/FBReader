@@ -1,5 +1,7 @@
 ===== 0.14.20100422 (April 22, 2010) =====
 
+* Chinese text drawing optimization (thanks to You Sheng (SmartDevices) for
+  idea)
 * Mobipocket image processing has been fixed
 * Standard file open dialog is now used instead of the old specially written
   for FBReader
