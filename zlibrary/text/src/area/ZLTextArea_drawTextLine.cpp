@@ -174,25 +174,58 @@ void ZLTextArea::drawTextLine(Style &style, const ZLTextLineInfo &info, int y, s
 	}
 	ZLTextElementIterator it = fromIt;
 	const int endElementIndex = info.End.elementIndex();
+	std::vector<ZLTextElementIterator> wordIterators;
 	for (; (it != toIt) && (it->ElementIndex != endElementIndex); ++it) {
 		const ZLTextElement &element = paragraph[it->ElementIndex];
 		ZLTextElement::Kind kind = element.kind();
 	
-		if ((kind == ZLTextElement::WORD_ELEMENT) || (kind == ZLTextElement::IMAGE_ELEMENT)) {
-			style.setTextStyle(it->Style, it->BidiLevel);
-			const int wx = it->XStart;
-			const int wy = it->YEnd - style.elementDescent(element) - style.textStyle()->verticalShift();
-			if (kind == ZLTextElement::WORD_ELEMENT) {
-				drawWord(style, wx, wy, (const ZLTextWord&)element, it->StartCharIndex, -1, false);
-			} else {
+		switch (kind) {
+			case ZLTextElement::WORD_ELEMENT:
+			{
+				if (it->StartCharIndex != 0) {
+					style.setTextStyle(it->Style, it->BidiLevel);
+					const int wx = it->XStart;
+					const int wy = it->YEnd - style.elementDescent(element) - style.textStyle()->verticalShift();
+					drawWord(style, wx, wy, (const ZLTextWord&)element, it->StartCharIndex, -1, false);
+				} else {
+					bool doFlush = false;
+					if (!wordIterators.empty()) {
+						if (wordIterators.back()->ElementIndex + 1 != it->ElementIndex) {
+							doFlush = true;
+						} else {
+							const ZLTextWord &previous = (const ZLTextWord&)paragraph[it->ElementIndex - 1];
+							const ZLTextWord &current = (const ZLTextWord&)paragraph[it->ElementIndex];
+							doFlush = previous.Data + previous.Size != current.Data;
+						}
+					}
+					if (doFlush) {
+						drawSequence(style, paragraph, wordIterators);
+					}
+					wordIterators.push_back(it);
+				}
+				break;
+			}
+			case ZLTextElement::IMAGE_ELEMENT:
+			{
+				drawSequence(style, paragraph, wordIterators);
+				style.setTextStyle(it->Style, it->BidiLevel);
+				const int wx = it->XStart;
+				const int wy = it->YEnd - style.elementDescent(element) - style.textStyle()->verticalShift();
 				context().drawImage(
 					hOffset() + wx, vOffset() + wy,
 					*((const ZLTextImageElement&)element).image(),
 					width(), height(), ZLPaintContext::SCALE_REDUCE_SIZE
 				);
+				break;
 			}
+			default:
+				drawSequence(style, paragraph, wordIterators);
+				break;
 		}
 	}
+
+	drawSequence(style, paragraph, wordIterators);
+
 	if (it != toIt) {
 		style.setTextStyle(it->Style, it->BidiLevel);
 		int start = 0;
@@ -206,4 +239,22 @@ void ZLTextArea::drawTextLine(Style &style, const ZLTextLineInfo &info, int y, s
 		const int y = it->YEnd - style.elementDescent(word) - style.textStyle()->verticalShift();
 		drawWord(style, x, y, word, start, len, it->AddHyphenationSign);
 	}
+}
+
+void ZLTextArea::drawSequence(Style &style, const ZLTextParagraphCursor &paragraph, std::vector<ZLTextElementIterator> &wordIterators) {
+	if (wordIterators.empty()) {
+		return;
+	}
+	size_t size = 0;
+	for (std::vector<ZLTextElementIterator>::const_iterator it = wordIterators.begin(); it != wordIterators.end(); ++it) {
+		const ZLTextWord &word = (const ZLTextWord&)paragraph[(*it)->ElementIndex];
+		size += word.Size;
+	}
+	ZLTextElementIterator iter = wordIterators.front();
+	const ZLTextWord &word = (const ZLTextWord&)paragraph[iter->ElementIndex];
+	style.setTextStyle(iter->Style, iter->BidiLevel);
+	const int wx = iter->XStart;
+	const int wy = iter->YEnd - style.elementDescent(word) - style.textStyle()->verticalShift();
+	drawString(style, wx, wy, word.Data, size, word.mark(), 0, word.BidiLevel % 2 == 1);
+	wordIterators.clear();
 }

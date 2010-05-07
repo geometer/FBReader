@@ -90,6 +90,7 @@ private:
 	void prepareTextLine(Style &style, const ZLTextLineInfo &info, int y);
 
 	void drawTextLine(Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
+	void drawSequence(Style &style, const ZLTextParagraphCursor &paragraph, std::vector<ZLTextElementIterator> &wordIterators);
 	void drawWord(Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
 	void drawString(Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
 	void drawSelectionRectangle(int left, int top, int right, int bottom);
