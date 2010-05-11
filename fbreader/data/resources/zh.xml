@@ -63,7 +63,7 @@
 			<node name="download" value="下载" />
 			<node name="readDemo" value="试读章节" />
 			<node name="downloadDemo" value="试读下载" />
-			<node name="demo" toBeTranslated="true" value="demo" />
+			<node name="demo" value="demo" />
 			<node name="buy" value="购买 (%s)" />
 		</node>
 	</node>
@@ -325,10 +325,10 @@
 					<node name="grabSystemKeys" value="抓系统键" />
 					<node name="separate" value="依赖不同位置设定快捷键" />
 					<node name="orientation" value="方位">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+						<node name="degrees0" value="0度" />
+						<node name="degrees90ccw" value="逆时针90度" />
+						<node name="degrees180" value="180度" />
+						<node name="degrees90cw" value="顺时针90度" />
 					</node>
 					<node name="action">
 						<node name="none" value="没有" />

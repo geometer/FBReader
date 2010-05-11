@@ -25,8 +25,8 @@
 			<node name="somethingWrongMessage" value="出错 %s" />
 			<node name="sslConnectErrorMessage" value="SSL/TLS 连接出现问题:&#10;%s" />
 			<node name="peerFailedVerificationMessage" value="来自 %s&#10;的SSL验证被认定无效" />
-			<node name="sslCertificateAuthorityMessage" value="来自 %s&#10; 的SSL验证不能被已知的SSL CA certificates授权" />
-			<node name="sslBadCertificateFileMessage" value="无法读取 SSL CA certificate 文件:&#10;%s" />
+			<node name="sslCertificateAuthorityMessage" value="来自 %s&#10; 的SSL验证不能被已知的SSL CA 证书授权" />
+			<node name="sslBadCertificateFileMessage" value="无法读取 SSL CA 证书文件:&#10;%s" />
 			<node name="sslShutdownFailedMessage" value="关闭SSL连接&#10;%s 失败" />
 		</node>
 	</node>
@@ -67,7 +67,7 @@
 		<node name="lt" value="立陶宛语" />
 		<node name="nl" value="荷兰语" />
 		<node name="no" value="挪威语" />
-		<node name="pl" toBeTranslated="true" value="Polish" />
+		<node name="pl" value="波兰语" />
 		<node name="pt" value="葡萄牙语" />
 		<node name="ru" value="俄罗斯语" />
 		<node name="sv" value="瑞典语" />
