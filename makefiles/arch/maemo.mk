@@ -14,8 +14,8 @@ RM_QUIET = rm -rf
 LD = g++
 ifeq "$(UI_TYPE)" "maemo5"
 	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -pthread -DMAEMO_VERSION=5
-	GTKINCLUDE = -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/freetype2 -I/usr/include/libpng12 -DMAEMO_CHANGES -I/usr/include/hildon-1 -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/conic
-	UILIBS = -lhildon-1 -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lpango-1.0 -lcairo -lgmodule-2.0 -ldl -lfreetype -lz -lfontconfig -lpng12 -lXrender -lX11 -losso -ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lglib-2.0 -lconic
+	GTKINCLUDE = -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/freetype2 -I/usr/include/libpng12 -DMAEMO_CHANGES -I/usr/include/hildon-1 -I/usr/include/hildon-fm-2 -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/conic
+	UILIBS = -lhildon-1 -lhildonfm -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lpango-1.0 -lcairo -lgmodule-2.0 -ldl -lfreetype -lz -lfontconfig -lpng12 -lXrender -lX11 -losso -ldbus-glib-1 -ldbus-1 -lgobject-2.0 -lglib-2.0 -lconic
 else ifeq "$(UI_TYPE)" "maemo4"
 	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -pthread -mthumb -DMAEMO_VERSION=4
 	GTKINCLUDE = -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/freetype2 -I/usr/include/libpng12 -DMAEMO_CHANGES -I/usr/include/hildon-1 -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/conic

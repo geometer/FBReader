@@ -70,6 +70,9 @@
 		<node name="bookInfo" value="Book Info..." />
 		<node name="toc" value="Table of Contents" />
 		<node name="showLibrary" value="Open library" />
+		<node name="showNetLibrary" value="Network library" />
+		<node name="addBook" value="Open file..." />
+		<node name="showRecent" value="Recent books" />
 		<node name="library" value="Library">
 			<node name="showLibrary" value="Open" />
 			<node name="previousBook" value="Previous Book" />

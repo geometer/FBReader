@@ -2,12 +2,11 @@
 <menubar>
 	<item id="showLibrary"/>
 	<item id="showNetLibrary"/>
-	<item id="toc"/>
+	<item id="showRecent"/>
+	<item id="addBook"/>
 	<item id="toc"/>
 	<item id="preferences"/>
 	<item id="bookInfo"/>
-	<item id="increaseFont"/>
-	<item id="decreaseFont"/>
 	<item id="rotate"/>
 	<item id="toggleFullscreen"/>
 </menubar>

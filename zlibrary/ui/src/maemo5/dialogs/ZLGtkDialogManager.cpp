@@ -19,20 +19,14 @@
 
 #include <gtk/gtk.h>
 
-#if MAEMO_VERSION <= 3
-	#include <hildon-widgets/gtk-infoprint.h>
-	#include <hildon-note.h>
-#elif MAEMO_VERSION <= 5
-	#include <hildon/hildon-note.h>
-	#include <hildon/hildon-banner.h>
-#else
-	#error Unknown MAEMO_VERSION
-#endif
+#include <hildon/hildon-note.h>
+#include <hildon/hildon-banner.h>
 
 #include "ZLGtkDialogManager.h"
 #include "ZLGtkDialog.h"
 #include "ZLGtkOptionsDialog.h"
 #include "ZLGtkProgressDialog.h"
+#include "ZLGtkOpenFileDialog.h"
 #include "ZLGtkUtil.h"
 #include "../../gtk/image/ZLGtkImageManager.h"
 
@@ -45,7 +39,7 @@ shared_ptr<ZLOptionsDialog> ZLGtkDialogManager::createOptionsDialog(const ZLReso
 }
 
 shared_ptr<ZLOpenFileDialog> ZLGtkDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
-	return 0;//new ZLGtkOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
+	return new ZLGtkOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
 }
 
 void ZLGtkDialogManager::informationBox(const std::string&, const std::string &message) const {
