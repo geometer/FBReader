@@ -50,79 +50,57 @@
 #include "../formats/FormatPlugin.h"
 #include "../encodingOption/EncodingOptionEntry.h"
 
-class RotationTypeEntry : public ZLChoiceOptionEntry {
+class RotationTypeEntry : public ZLComboOptionEntry {
 
 public:
 	RotationTypeEntry(const ZLResource &resource, ZLIntegerOption &angleOption);
-	const std::string &text(int index) const;
-	int choiceNumber() const;
-	int initialCheckedIndex() const;
-	void onAccept(int index);
+
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
 
 private:
-	const ZLResource &myResource;
 	ZLIntegerOption &myAngleOption;
+	std::vector<std::string> myValues;
 };
 
-RotationTypeEntry::RotationTypeEntry(const ZLResource &resource, ZLIntegerOption &angleOption) : myResource(resource), myAngleOption(angleOption) {
+RotationTypeEntry::RotationTypeEntry(const ZLResource &resource, ZLIntegerOption &angleOption) : myAngleOption(angleOption) {
+	myValues.push_back(resource["disabled"].value());
+	myValues.push_back(resource["counterclockwise"].value());
+	myValues.push_back(resource["180"].value());
+	myValues.push_back(resource["clockwise"].value());
+	myValues.push_back(resource["cycle"].value());
 }
 
-const std::string &RotationTypeEntry::text(int index) const {
-	std::string keyName;
-	switch (index) {
-		case 1:
-			keyName = "counterclockwise";
-			break;
-		case 2:
-			keyName = "180";
-			break;
-		case 3:
-			keyName = "clockwise";
-			break;
-		case 4:
-			keyName = "cycle";
-			break;
-		default:
-			keyName = "disabled";
-			break;
-	}
-	return myResource[keyName].value();
-}
-
-int RotationTypeEntry::choiceNumber() const {
-	return 5;
-}
-
-int RotationTypeEntry::initialCheckedIndex() const {
+const std::string &RotationTypeEntry::initialValue() const {
 	switch (myAngleOption.value()) {
 		default:
-			return 0;
+			return myValues[0];
 		case ZLView::DEGREES90:
-			return 1;
+			return myValues[1];
 		case ZLView::DEGREES180:
-			return 2;
+			return myValues[2];
 		case ZLView::DEGREES270:
-			return 3;
+			return myValues[3];
 		case -1:
-			return 4;
+			return myValues[4];
 	}
 }
 
-void RotationTypeEntry::onAccept(int index) {
+const std::vector<std::string> &RotationTypeEntry::values() const {
+	return myValues;
+}
+
+void RotationTypeEntry::onAccept(const std::string &value) {
 	int angle = ZLView::DEGREES0;
-	switch (index) {
-		case 1:
-			angle = ZLView::DEGREES90;
-			break;
-		case 2:
-			angle = ZLView::DEGREES180;
-			break;
-		case 3:
-			angle = ZLView::DEGREES270;
-			break;
-		case 4:
-			angle = -1;
-			break;
+	if (value == myValues[1]) {
+		angle = ZLView::DEGREES90;
+	} else if (value == myValues[2]) {
+		angle = ZLView::DEGREES180;
+	} else if (value == myValues[3]) {
+		angle = ZLView::DEGREES270;
+	} else if (value == myValues[4]) {
+		angle = -1;
 	}
 	myAngleOption.setValue(angle);
 }
