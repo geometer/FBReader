@@ -23,7 +23,6 @@
 
 #include "FBReaderActions.h"
 #include "FBReader.h"
-#include "BookInfoDialog.h"
 #include "../library/Book.h"
 #include "../formats/FormatPlugin.h"
 

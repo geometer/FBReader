@@ -17,14 +17,14 @@
  * 02110-1301, USA.
  */
 
-#ifndef __BOOKINFODIALOG_H__
-#define __BOOKINFODIALOG_H__
+#ifndef __CURRENTBOOKDIALOG_H__
+#define __CURRENTBOOKDIALOG_H__
 
 #include <string>
 
 #include <ZLOptionEntry.h>
 
-#include "../formats/FormatPlugin.h"
+#include "../../formats/FormatPlugin.h"
 
 class ZLOptionsDialog;
 class ZLDialogContent;
@@ -33,10 +33,10 @@ class SeriesTitleEntry;
 class BookIndexEntry;
 class BookTagEntry;
 
-class BookInfoDialog {
+class CurrentBookDialog {
 
 public:
-	BookInfoDialog(shared_ptr<Book> book);
+	CurrentBookDialog(shared_ptr<Book> book);
 
 	ZLOptionsDialog &dialog();
 
@@ -75,6 +75,6 @@ friend class BookTagEntry;
 friend class BookInfoApplyAction;
 };
 
-inline ZLOptionsDialog &BookInfoDialog::dialog() { return *myDialog; }
+inline ZLOptionsDialog &CurrentBookDialog::dialog() { return *myDialog; }
 
-#endif /* __BOOKINFODIALOG_H__ */
+#endif /* __CURRENTBOOKDIALOG_H__ */

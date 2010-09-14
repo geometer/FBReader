@@ -34,7 +34,7 @@
 #include "FBReaderActions.h"
 #include "BookTextView.h"
 #include "ContentsView.h"
-#include "BookInfoDialog.h"
+#include "../optionsDialog/currentBook/CurrentBookDialog.h"
 
 #include "../bookmodel/BookModel.h"
 #include "../options/FBTextStyle.h"
@@ -136,7 +136,7 @@ ShowBookInfoAction::ShowBookInfoAction() : ModeDependentAction(FBReader::BOOK_TE
 void ShowBookInfoAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	shared_ptr<Book> book = fbreader.myModel->book();
-	if (BookInfoDialog(book).dialog().run()) {
+	if (CurrentBookDialog(book).dialog().run()) {
 		fbreader.openBook(book);
 		fbreader.refreshWindow();
 	}

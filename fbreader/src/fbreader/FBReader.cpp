@@ -40,7 +40,6 @@
 #include "FootnoteView.h"
 #include "ContentsView.h"
 #include "RecentBooksPopupData.h"
-#include "BookInfoDialog.h"
 #include "TimeUpdater.h"
 
 #include "../libraryTree/LibraryView.h"
