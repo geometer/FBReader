@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,34 +17,35 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OPTIONSDIALOG_H__
-#define __OPTIONSDIALOG_H__
+#ifndef __ABSTRACTOPTIONSDIALOG_H__
+#define __ABSTRACTOPTIONSDIALOG_H__
 
-#include "AbstractOptionsDialog.h"
+#include <vector>
+#include <shared_ptr.h>
 
 class ZLOptionsDialog;
-class ZLDialogContent;
-class OptionsPage;
-class KeyBindingsPage;
-class ConfigPage;
-class NetworkLibraryPage;
-class ZLPaintContext;
+class ZLResourceKey;
 class ProgramCollection;
-
-class ZLBooleanOptionEntry;
-class ZLSpinOptionEntry;
 class ZLOption;
+class ZLOptionEntry;
 
-class OptionsDialog : public AbstractOptionsDialog {
+class AbstractOptionsDialog {
 
 public:
-	OptionsDialog();
+	AbstractOptionsDialog(const ZLResourceKey &key, bool showApplyButton);
+
+	ZLOptionsDialog &dialog();
+
+protected:
+	void createIntegrationTab(shared_ptr<ProgramCollection> collection, const ZLResourceKey &key, std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > &additionalOptions);
+	void createIndicatorTab();
+	void storeTemporaryOption(ZLOption *option);
 
 private:
-	shared_ptr<OptionsPage> myFormatPage;
-	shared_ptr<OptionsPage> myStylePage;
-	shared_ptr<KeyBindingsPage> myKeyBindingsPage;
-	shared_ptr<ConfigPage> myConfigPage;
+	shared_ptr<ZLOptionsDialog> myDialog;
+	std::vector<shared_ptr<ZLOption> > myTemporaryOptions;
 };
 
-#endif /* __OPTIONSDIALOG_H__ */
+inline ZLOptionsDialog &AbstractOptionsDialog::dialog() { return *myDialog; }
+
+#endif /* __ABSTRACTOPTIONSDIALOG_H__ */

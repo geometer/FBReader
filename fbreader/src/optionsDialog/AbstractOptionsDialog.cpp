@@ -17,23 +17,32 @@
  * 02110-1301, USA.
  */
 
-#include "LibraryOptionsDialog.h"
-
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 
-#include "../../fbreader/FBReader.h"
+#include "AbstractOptionsDialog.h"
 
-#include "../../network/NetworkLinkCollection.h"
+#include "../fbreader/FBReader.h"
 
 
-LibraryOptionsDialog::LibraryOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LibraryOptionsDialog"), true) {
+class OptionsApplyRunnable : public ZLRunnable {
 
-	ZLDialogContent &libraryTab = dialog().createTab(ZLResourceKey("Library"));
+public:
+	void run();
+};
 
-	Library &library = Library::Instance();
-	libraryTab.addOption(ZLResourceKey("bookPath"), library.PathOption);
-	libraryTab.addOption(ZLResourceKey("lookInSubdirectories"), library.ScanSubdirsOption);
-	libraryTab.addOption(ZLResourceKey("collectBooksWithoutMetaInfo"), library.CollectAllBooksOption);
-	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
+void OptionsApplyRunnable::run() {
+	FBReader &fbreader = FBReader::Instance();
+	fbreader.grabAllKeys(fbreader.KeyboardControlOption.value());
+	fbreader.clearTextCaches();
+	fbreader.refreshWindow();
+}
+
+
+AbstractOptionsDialog::AbstractOptionsDialog(const ZLResourceKey &key, bool showApplyButton) {
+	myDialog = ZLDialogManager::Instance().createOptionsDialog(key, new OptionsApplyRunnable(), showApplyButton);
+}
+
+void AbstractOptionsDialog::storeTemporaryOption(ZLOption *option) {
+	myTemporaryOptions.push_back(option);
 }

@@ -122,7 +122,7 @@ void IndicatorTypeEntry::onValueSelected(int index) {
 	}
 }
 
-void OptionsDialog::createIndicatorTab() {
+void AbstractOptionsDialog::createIndicatorTab() {
 	ZLDialogContent &indicatorTab = myDialog->createTab(ZLResourceKey("Indicator"));
 	FBIndicatorStyle &indicatorInfo = FBView::commonIndicatorInfo();
 	static ZLResourceKey typeKey("type");

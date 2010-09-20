@@ -20,23 +20,13 @@
 #ifndef __LIBRARYOPTIONSDIALOG_H__
 #define __LIBRARYOPTIONSDIALOG_H__
 
-#include <shared_ptr.h>
-
-class ZLOptionsDialog;
+#include "../AbstractOptionsDialog.h"
 
 
-class LibraryOptionsDialog {
+class LibraryOptionsDialog : public AbstractOptionsDialog {
 
 public:
 	LibraryOptionsDialog();
-
-	ZLOptionsDialog &dialog();
-
-private:
-	shared_ptr<ZLOptionsDialog> myDialog;
-
 };
-
-inline ZLOptionsDialog &LibraryOptionsDialog::dialog() { return *myDialog; }
 
 #endif /* __LIBRARYOPTIONSDIALOG_H__ */

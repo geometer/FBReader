@@ -130,7 +130,6 @@ private:
 	void rebuildCollectionInternal();
 	friend class RebuildCollectionRunnable;
 	friend class OptionsApplyRunnable;
-	friend class LibraryApplyRunnable;
 
 private:
 	ViewMode myMode;

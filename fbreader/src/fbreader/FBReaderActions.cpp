@@ -34,12 +34,16 @@
 #include "FBReaderActions.h"
 #include "BookTextView.h"
 #include "ContentsView.h"
+#include "../optionsDialog/OptionsPage.h"
+#include "../optionsDialog/KeyBindingsPage.h"
+#include "../optionsDialog/ConfigPage.h"
+#include "../optionsDialog/OptionsDialog.h"
 #include "../optionsDialog/bookInfo/BookInfoDialog.h"
 #include "../optionsDialog/library/LibraryOptionsDialog.h"
+#include "../optionsDialog/network/NetworkOptionsDialog.h"
 
 #include "../bookmodel/BookModel.h"
 #include "../options/FBTextStyle.h"
-#include "../optionsDialog/OptionsDialog.h"
 
 #include "../database/booksdb/BooksDBUtil.h"
 #include "../database/booksdb/BooksDB.h"
@@ -81,6 +85,10 @@ void ShowOptionsDialogAction::run() {
 
 void ShowLibraryOptionsDialogAction::run() {
 	LibraryOptionsDialog().dialog().run();
+}
+
+void ShowNetworkOptionsDialogAction::run() {
+	NetworkOptionsDialog().dialog().run();
 }
 
 ShowContentsAction::ShowContentsAction() : SetModeAction(FBReader::CONTENTS_MODE, FBReader::BOOK_TEXT_MODE) {

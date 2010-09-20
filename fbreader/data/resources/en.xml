@@ -208,6 +208,10 @@
 			<node name="label" value="Library Preferences" />
 			<node name="tooltip" value="Show Library Preferences Dialog" />
 		</node>
+		<node name="networkOptions">
+			<node name="label" value="Network Preferences" />
+			<node name="tooltip" value="Show Network Preferences Dialog" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
@@ -231,15 +235,26 @@
 				</node>
 			</node>
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Options" />
+		<node name="NetworkOptionsDialog">
+			<node name="title" value="FBReader - Network Options" />
 			<node name="tab">
-				<node name="NetworkLibrary" value="Network Search">
+				<node name="NetworkLibrary" value="Network Library">
 					<node name="useProxy" value="Use Proxy" />
 					<node name="proxyHost" value="Proxy Host" />
 					<node name="proxyPort" value="Proxy Port" />
 					<node name="timeout" value="Network Operations Timeout, seconds" />
 				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="Open External Links in %s" />
+					<node name="defaultText" value="Open External Links in Browser" />
+					<node name="choice" value="Use Browser" />
+					<node name="command" value="Command to Execute" />
+				</node>
+			</node>
+		</node>
+		<node name="OptionsDialog">
+			<node name="title" value="FBReader - Options" />
+			<node name="tab">
 				<node name="Language" value="Language">
 					<node name="autoDetect" value="Automatically Detect Language and Encoding" />
 					<node name="defaultLanguage" value="Default Language" />
@@ -388,12 +403,6 @@
 					<node name="defaultText" value="Enable Integration with Dictionary" />
 					<node name="choice" value="Integrate with" />
 					<node name="singleClickOpen" value="Open by Single Click" />
-				</node>
-				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Open External Links in %s" />
-					<node name="defaultText" value="Open External Links in Browser" />
-					<node name="choice" value="Use Browser" />
-					<node name="command" value="Command to Execute" />
 				</node>
 				<node name="Maemo" value="Maemo">
 					<node name="keyActionOnRelease" value="Action on Key Release, not on Key Press" />

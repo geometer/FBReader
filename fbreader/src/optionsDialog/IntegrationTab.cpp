@@ -106,7 +106,7 @@ void EnableIntegrationEntry::onStateChanged(bool state) {
 	}
 }
 
-void OptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collection, const ZLResourceKey &key, std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > &additionalOptions) {
+void AbstractOptionsDialog::createIntegrationTab(shared_ptr<ProgramCollection> collection, const ZLResourceKey &key, std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > &additionalOptions) {
 	if (!collection.isNull()) {
 		const std::vector<std::string> &programNames = collection->names();
 		if (!programNames.empty()) {

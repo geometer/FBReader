@@ -105,34 +105,13 @@ void RotationTypeEntry::onAccept(const std::string &value) {
 	myAngleOption.setValue(angle);
 }
 
-class OptionsApplyRunnable : public ZLRunnable {
 
-public:
-	OptionsApplyRunnable(OptionsDialog &dialog);
-	void run();
-
-private:
-	OptionsDialog &myDialog;
-};
-
-OptionsApplyRunnable::OptionsApplyRunnable(OptionsDialog &dialog) : myDialog(dialog) {
-}
-
-void OptionsApplyRunnable::run() {
-	FBReader &fbreader = FBReader::Instance();
-	fbreader.grabAllKeys(fbreader.KeyboardControlOption.value());
-	fbreader.clearTextCaches();
-	fbreader.refreshWindow();
-}
-
-OptionsDialog::OptionsDialog() {
+OptionsDialog::OptionsDialog() : AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
 	FBReader &fbreader = FBReader::Instance();
 
-	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("OptionsDialog"), new OptionsApplyRunnable(*this), true);
+	ZLOptionsDialog &dialog = this->dialog();
 
-	myNetworkLibraryPage = new NetworkLibraryPage(myDialog->createTab(ZLResourceKey("NetworkLibrary")));
-
-	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
+	ZLDialogContent &encodingTab = dialog.createTab(ZLResourceKey("Language"));
 	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::Instance().LanguageAutoDetectOption));
 	encodingTab.addOption(ZLResourceKey("defaultLanguage"), new ZLLanguageOptionEntry(PluginCollection::Instance().DefaultLanguageOption, ZLLanguageList::languageCodes()));
 	EncodingEntry *encodingEntry = new EncodingEntry(PluginCollection::Instance().DefaultEncodingOption);
@@ -140,7 +119,7 @@ OptionsDialog::OptionsDialog() {
 	encodingTab.addOption(ZLResourceKey("defaultEncodingSet"), encodingSetEntry);
 	encodingTab.addOption(ZLResourceKey("defaultEncoding"), encodingEntry);
 
-	ZLDialogContent &scrollingTab = myDialog->createTab(ZLResourceKey("Scrolling"));
+	ZLDialogContent &scrollingTab = dialog.createTab(ZLResourceKey("Scrolling"));
 	scrollingTab.addOption(ZLResourceKey("keyLinesToScroll"), new ZLSimpleSpinOptionEntry(fbreader.LinesToScrollOption, 1));
 	scrollingTab.addOption(ZLResourceKey("keyLinesToKeep"), new ZLSimpleSpinOptionEntry(fbreader.LinesToKeepOption, 1));
 	scrollingTab.addOption(ZLResourceKey("keyScrollDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyScrollingDelayOption, 50));
@@ -161,13 +140,13 @@ OptionsDialog::OptionsDialog() {
 		}
 	}
 
-	ZLDialogContent &selectionTab = myDialog->createTab(ZLResourceKey("Selection"));
+	ZLDialogContent &selectionTab = dialog.createTab(ZLResourceKey("Selection"));
 	selectionTab.addOption(ZLResourceKey("enableSelection"), FBView::selectionOption());
 
-	ZLDialogContent &cssTab = myDialog->createTab(ZLResourceKey("CSS"));
+	ZLDialogContent &cssTab = dialog.createTab(ZLResourceKey("CSS"));
 	cssTab.addOption(ZLResourceKey("overrideSpecifiedFonts"), ZLTextStyleCollection::Instance().OverrideSpecifiedFontsOption);
 
-	ZLDialogContent &marginTab = myDialog->createTab(ZLResourceKey("Margins"));
+	ZLDialogContent &marginTab = dialog.createTab(ZLResourceKey("Margins"));
 	FBOptions &options = FBOptions::Instance();
 	marginTab.addOptions(
 		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(options.LeftMarginOption, 1),
@@ -178,16 +157,16 @@ OptionsDialog::OptionsDialog() {
 		ZLResourceKey("bottom"), new ZLSimpleSpinOptionEntry(options.BottomMarginOption, 1)
 	);
 
-	myFormatPage = new FormatOptionsPage(myDialog->createTab(ZLResourceKey("Format")));
-	myStylePage = new StyleOptionsPage(myDialog->createTab(ZLResourceKey("Styles")), *fbreader.context());
+	myFormatPage = new FormatOptionsPage(dialog.createTab(ZLResourceKey("Format")));
+	myStylePage = new StyleOptionsPage(dialog.createTab(ZLResourceKey("Styles")), *fbreader.context());
 
 	createIndicatorTab();
 
-	ZLDialogContent &rotationTab = myDialog->createTab(ZLResourceKey("Rotation"));
+	ZLDialogContent &rotationTab = dialog.createTab(ZLResourceKey("Rotation"));
 	ZLResourceKey directionKey("direction");
 	rotationTab.addOption(directionKey, new RotationTypeEntry(rotationTab.resource(directionKey), fbreader.RotationAngleOption));
 
-	ZLDialogContent &colorsTab = myDialog->createTab(ZLResourceKey("Colors"));
+	ZLDialogContent &colorsTab = dialog.createTab(ZLResourceKey("Colors"));
 	ZLResourceKey colorKey("colorFor");
 	const ZLResource &resource = colorsTab.resource(colorKey);
 	ZLColorOptionBuilder builder;
@@ -205,9 +184,9 @@ OptionsDialog::OptionsDialog() {
 	colorsTab.addOption(colorKey, builder.comboEntry());
 	colorsTab.addOption("", "", builder.colorEntry());
 
-	myKeyBindingsPage = new KeyBindingsPage(myDialog->createTab(ZLResourceKey("Keys")));
+	myKeyBindingsPage = new KeyBindingsPage(dialog.createTab(ZLResourceKey("Keys")));
 	if (ZLOption::isAutoSavingSupported()) {
-		myConfigPage = new ConfigPage(myDialog->createTab(ZLResourceKey("Config")));
+		myConfigPage = new ConfigPage(dialog.createTab(ZLResourceKey("Config")));
 	}
 
 	std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > additional;
@@ -215,15 +194,6 @@ OptionsDialog::OptionsDialog() {
 		new ZLSimpleBooleanOptionEntry(fbreader.EnableSingleClickDictionaryOption);
 	additional.push_back(std::make_pair(ZLResourceKey("singleClickOpen"), entry));
 	createIntegrationTab(fbreader.dictionaryCollection(), ZLResourceKey("Dictionary"), additional);
-	additional.clear();
-	createIntegrationTab(fbreader.webBrowserCollection(), ZLResourceKey("Web"), additional);
 
-	myDialog->createPlatformDependentTabs();
-}
-
-void OptionsDialog::storeTemporaryOption(ZLOption *option) {
-	myTemporaryOptions.push_back(option);
-}
-
-OptionsDialog::~OptionsDialog() {
+	dialog.createPlatformDependentTabs();
 }

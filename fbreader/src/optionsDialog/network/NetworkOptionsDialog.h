@@ -17,23 +17,16 @@
  * 02110-1301, USA.
  */
 
-#include "LibraryOptionsDialog.h"
+#ifndef __NETWORKOPTIONSDIALOG_H__
+#define __NETWORKOPTIONSDIALOG_H__
 
-#include <ZLDialogManager.h>
-#include <ZLOptionsDialog.h>
-
-#include "../../fbreader/FBReader.h"
-
-#include "../../network/NetworkLinkCollection.h"
+#include "../AbstractOptionsDialog.h"
 
 
-LibraryOptionsDialog::LibraryOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LibraryOptionsDialog"), true) {
+class NetworkOptionsDialog : public AbstractOptionsDialog {
 
-	ZLDialogContent &libraryTab = dialog().createTab(ZLResourceKey("Library"));
+public:
+	NetworkOptionsDialog();
+};
 
-	Library &library = Library::Instance();
-	libraryTab.addOption(ZLResourceKey("bookPath"), library.PathOption);
-	libraryTab.addOption(ZLResourceKey("lookInSubdirectories"), library.ScanSubdirsOption);
-	libraryTab.addOption(ZLResourceKey("collectBooksWithoutMetaInfo"), library.CollectAllBooksOption);
-	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
-}
+#endif /* __NETWORKOPTIONSDIALOG_H__ */
