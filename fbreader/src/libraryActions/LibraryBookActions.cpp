@@ -26,7 +26,7 @@
 #include "LibraryBookActions.h"
 #include "../library/Book.h"
 #include "../fbreader/FBReader.h"
-#include "../optionsDialog/currentBook/CurrentBookDialog.h"
+#include "../optionsDialog/bookInfo/BookInfoDialog.h"
 
 BookReadAction::BookReadAction(shared_ptr<Book> book) : myBook(book) {
 }
@@ -121,7 +121,7 @@ BookEditInfoAction::BookEditInfoAction(shared_ptr<Book> book) : myBook(book) {
 }
 
 void BookEditInfoAction::run() {
-	if (CurrentBookDialog(myBook).dialog().run()) {
+	if (BookInfoDialog(myBook).dialog().run()) {
 		// TODO: select current node (?) again
 		FBReader::Instance().refreshWindow();
 	}

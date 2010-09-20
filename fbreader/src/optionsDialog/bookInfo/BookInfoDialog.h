@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef __CURRENTBOOKDIALOG_H__
-#define __CURRENTBOOKDIALOG_H__
+#ifndef __BOOKINFODIALOG_H__
+#define __BOOKINFODIALOG_H__
 
 #include <string>
 
@@ -33,10 +33,10 @@ class SeriesTitleEntry;
 class BookIndexEntry;
 class BookTagEntry;
 
-class CurrentBookDialog {
+class BookInfoDialog {
 
 public:
-	CurrentBookDialog(shared_ptr<Book> book);
+	BookInfoDialog(shared_ptr<Book> book);
 
 	ZLOptionsDialog &dialog();
 
@@ -75,6 +75,6 @@ friend class BookTagEntry;
 friend class BookInfoApplyAction;
 };
 
-inline ZLOptionsDialog &CurrentBookDialog::dialog() { return *myDialog; }
+inline ZLOptionsDialog &BookInfoDialog::dialog() { return *myDialog; }
 
-#endif /* __CURRENTBOOKDIALOG_H__ */
+#endif /* __BOOKINFODIALOG_H__ */

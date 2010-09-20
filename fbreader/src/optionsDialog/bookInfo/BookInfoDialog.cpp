@@ -30,7 +30,7 @@
 #include <optionEntries/ZLSimpleOptionEntry.h>
 #include <optionEntries/ZLLanguageOptionEntry.h>
 
-#include "CurrentBookDialog.h"
+#include "BookInfoDialog.h"
 
 #include "../../library/Library.h"
 #include "../../encodingOption/EncodingOptionEntry.h"
@@ -44,7 +44,7 @@ static const size_t TAG_ENTRIES_POOL_SIZE = 64;
 class AuthorDisplayNameEntry : public ZLComboOptionEntry {
 
 public:
-	AuthorDisplayNameEntry(CurrentBookDialog &dialog, shared_ptr<Author> initialAuthor, bool &visible);
+	AuthorDisplayNameEntry(BookInfoDialog &dialog, shared_ptr<Author> initialAuthor, bool &visible);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -58,7 +58,7 @@ private:
 	void onValueChanged(const std::string &value);
 
 private:
-	CurrentBookDialog &myInfoDialog;
+	BookInfoDialog &myInfoDialog;
 	mutable std::vector<std::string> myValues;
 	shared_ptr<Author> myCurrentAuthor;
 
@@ -73,7 +73,7 @@ friend class BookInfoApplyAction;
 class SeriesTitleEntry : public ZLComboOptionEntry {
 
 public:
-	SeriesTitleEntry(CurrentBookDialog &dialog);
+	SeriesTitleEntry(BookInfoDialog &dialog);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -84,7 +84,7 @@ public:
 	void onValueSelected(int index);
 
 private:
-	CurrentBookDialog &myInfoDialog;
+	BookInfoDialog &myInfoDialog;
 	std::set<std::string> myOriginalValuesSet;
 	mutable std::vector<std::string> myValues;
 };
@@ -97,7 +97,7 @@ public:
 	static const int MAX_NUMBER;
 	
 public:
-	BookIndexEntry(CurrentBookDialog &dialog);
+	BookIndexEntry(BookInfoDialog &dialog);
 
 	int initialValue() const;
 	int minValue() const;
@@ -106,13 +106,13 @@ public:
 	void onAccept(int value);
 
 private:
-	CurrentBookDialog &myInfoDialog;
+	BookInfoDialog &myInfoDialog;
 };
 
 
 
 
-AuthorDisplayNameEntry::AuthorDisplayNameEntry(CurrentBookDialog &dialog, shared_ptr<Author> initialAuthor, bool &visible) : 
+AuthorDisplayNameEntry::AuthorDisplayNameEntry(BookInfoDialog &dialog, shared_ptr<Author> initialAuthor, bool &visible) : 
 	ZLComboOptionEntry(true), myInfoDialog(dialog), myCurrentAuthor(initialAuthor) {
 
 	if (myCurrentAuthor.isNull()) {
@@ -219,7 +219,7 @@ void AuthorDisplayNameEntry::onValueChanged(const std::string &value) {
 
 
 
-SeriesTitleEntry::SeriesTitleEntry(CurrentBookDialog &dialog) : ZLComboOptionEntry(true), myInfoDialog(dialog) {
+SeriesTitleEntry::SeriesTitleEntry(BookInfoDialog &dialog) : ZLComboOptionEntry(true), myInfoDialog(dialog) {
 	const AuthorList &authors = myInfoDialog.myBook->authors();
 	myOriginalValuesSet.insert(initialValue());
 	myOriginalValuesSet.insert("");
@@ -274,7 +274,7 @@ void SeriesTitleEntry::onValueEdited(const std::string &value) {
 const int BookIndexEntry::MIN_NUMBER = 0;
 const int BookIndexEntry::MAX_NUMBER = 100;
 
-BookIndexEntry::BookIndexEntry(CurrentBookDialog &dialog) : myInfoDialog(dialog) {
+BookIndexEntry::BookIndexEntry(BookInfoDialog &dialog) : myInfoDialog(dialog) {
 }
 
 int BookIndexEntry::initialValue() const {
@@ -301,16 +301,16 @@ void BookIndexEntry::onAccept(int value) {
 class BookTitleEntry : public ZLStringOptionEntry {
 
 public:
-	BookTitleEntry(CurrentBookDialog &dialog);
+	BookTitleEntry(BookInfoDialog &dialog);
 
 	const std::string &initialValue() const;
 	void onAccept(const std::string &value);
 
 private:
-	CurrentBookDialog &myInfoDialog;
+	BookInfoDialog &myInfoDialog;
 };
 
-BookTitleEntry::BookTitleEntry(CurrentBookDialog &dialog) : myInfoDialog(dialog) {
+BookTitleEntry::BookTitleEntry(BookInfoDialog &dialog) : myInfoDialog(dialog) {
 }
 
 const std::string &BookTitleEntry::initialValue() const {
@@ -329,15 +329,15 @@ void BookTitleEntry::onAccept(const std::string &value) {
 class BookEncodingEntry : public AbstractEncodingEntry {
 
 public:
-	BookEncodingEntry(CurrentBookDialog &dialog);
+	BookEncodingEntry(BookInfoDialog &dialog);
 
 	void onAcceptValue(const std::string &value);
 
 private:
-	CurrentBookDialog &myInfoDialog;
+	BookInfoDialog &myInfoDialog;
 };
 
-BookEncodingEntry::BookEncodingEntry(CurrentBookDialog &dialog) : 
+BookEncodingEntry::BookEncodingEntry(BookInfoDialog &dialog) : 
 	AbstractEncodingEntry(dialog.myBook->encoding()), 
 	myInfoDialog(dialog) {
 }
@@ -351,15 +351,15 @@ void BookEncodingEntry::onAcceptValue(const std::string &value) {
 class BookLanguageEntry : public ZLAbstractLanguageOptionEntry {
 
 public:
-	BookLanguageEntry(CurrentBookDialog &dialog, const std::vector<std::string> &languageCodes);
+	BookLanguageEntry(BookInfoDialog &dialog, const std::vector<std::string> &languageCodes);
 
 	void onAcceptCode(const std::string &code);
 
 private:
-	CurrentBookDialog &myInfoDialog;
+	BookInfoDialog &myInfoDialog;
 };
 
-BookLanguageEntry::BookLanguageEntry(CurrentBookDialog &dialog, const std::vector<std::string> &languageCodes) : 
+BookLanguageEntry::BookLanguageEntry(BookInfoDialog &dialog, const std::vector<std::string> &languageCodes) : 
 	ZLAbstractLanguageOptionEntry(dialog.myBook->language(), languageCodes),
 	myInfoDialog(dialog) {
 }
@@ -375,7 +375,7 @@ void BookLanguageEntry::onAcceptCode(const std::string &code) {
 class BookTagEntry : public ZLComboOptionEntry {
 
 public:
-	BookTagEntry(CurrentBookDialog &dialog, std::string initialTag, bool &visible);
+	BookTagEntry(BookInfoDialog &dialog, std::string initialTag, bool &visible);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -389,14 +389,14 @@ private:
 	void onValueChanged(const std::string &value);
 
 private:
-	CurrentBookDialog &myInfoDialog;
+	BookInfoDialog &myInfoDialog;
 	std::string myInitialValue;
 	bool myEmpty;
 
 	mutable std::vector<std::string> myValues;
 };
 
-BookTagEntry::BookTagEntry(CurrentBookDialog &dialog, std::string initialTag, bool &visible) : 
+BookTagEntry::BookTagEntry(BookInfoDialog &dialog, std::string initialTag, bool &visible) : 
 		ZLComboOptionEntry(true), myInfoDialog(dialog), myInitialValue(initialTag) {
 
 	myEmpty = myInitialValue.empty();
@@ -472,14 +472,14 @@ void BookTagEntry::onValueChanged(const std::string &value) {
 class BookInfoApplyAction : public ZLRunnable {
 
 public:
-	BookInfoApplyAction(CurrentBookDialog &dialog);
+	BookInfoApplyAction(BookInfoDialog &dialog);
 	void run();
 
 private:
-	CurrentBookDialog &myInfoDialog;
+	BookInfoDialog &myInfoDialog;
 };
 
-BookInfoApplyAction::BookInfoApplyAction(CurrentBookDialog &dialog) : myInfoDialog(dialog) {}
+BookInfoApplyAction::BookInfoApplyAction(BookInfoDialog &dialog) : myInfoDialog(dialog) {}
 
 void BookInfoApplyAction::run() {
 	Book &book = *myInfoDialog.myBook;
@@ -506,7 +506,7 @@ void BookInfoApplyAction::run() {
 	Library::Instance().updateBook(myInfoDialog.myBook);
 }
 
-CurrentBookDialog::CurrentBookDialog(shared_ptr<Book> book) : myBook(book) {
+BookInfoDialog::BookInfoDialog(shared_ptr<Book> book) : myBook(book) {
 	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("InfoDialog"), new BookInfoApplyAction(*this));
 
 	ZLDialogContent &commonTab = myDialog->createTab(ZLResourceKey("Common"));
@@ -556,7 +556,7 @@ CurrentBookDialog::CurrentBookDialog(shared_ptr<Book> book) : myBook(book) {
 	}
 }
 
-void CurrentBookDialog::initTagEntries() {
+void BookInfoDialog::initTagEntries() {
 	bool visible = true;
 	const TagList &tags = myBook->tags();
 	myTagsDone = false;
@@ -570,7 +570,7 @@ void CurrentBookDialog::initTagEntries() {
 	myTagsDone = true;
 }
 
-void CurrentBookDialog::initAuthorEntries() {
+void BookInfoDialog::initAuthorEntries() {
 	bool visible = true;
 	const AuthorList &authors = myBook->authors();
 	myAuthorsDone = false;
