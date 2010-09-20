@@ -27,6 +27,7 @@ PreferencesPopupData::PreferencesPopupData() {
 	myActionIds.push_back(ActionCode::SHOW_BOOK_INFO_DIALOG);
 	myActionIds.push_back(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG);
 	myActionIds.push_back(ActionCode::SHOW_NETWORK_OPTIONS_DIALOG);
+	myActionIds.push_back(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG);
 }
 
 size_t PreferencesPopupData::id() const {

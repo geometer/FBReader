@@ -36,11 +36,11 @@
 #include "ContentsView.h"
 #include "../optionsDialog/OptionsPage.h"
 #include "../optionsDialog/KeyBindingsPage.h"
-#include "../optionsDialog/ConfigPage.h"
 #include "../optionsDialog/OptionsDialog.h"
 #include "../optionsDialog/bookInfo/BookInfoDialog.h"
 #include "../optionsDialog/library/LibraryOptionsDialog.h"
 #include "../optionsDialog/network/NetworkOptionsDialog.h"
+#include "../optionsDialog/system/SystemOptionsDialog.h"
 
 #include "../bookmodel/BookModel.h"
 #include "../options/FBTextStyle.h"
@@ -89,6 +89,10 @@ void ShowLibraryOptionsDialogAction::run() {
 
 void ShowNetworkOptionsDialogAction::run() {
 	NetworkOptionsDialog().dialog().run();
+}
+
+void ShowSystemOptionsDialogAction::run() {
+	SystemOptionsDialog().dialog().run();
 }
 
 ShowContentsAction::ShowContentsAction() : SetModeAction(FBReader::CONTENTS_MODE, FBReader::BOOK_TEXT_MODE) {

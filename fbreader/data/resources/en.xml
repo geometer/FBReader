@@ -212,6 +212,10 @@
 			<node name="label" value="Network Preferences" />
 			<node name="tooltip" value="Show Network Preferences Dialog" />
 		</node>
+		<node name="systemOptions">
+			<node name="label" value="System Preferences" />
+			<node name="tooltip" value="Show System Preferences Dialog" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
@@ -252,8 +256,8 @@
 				</node>
 			</node>
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Options" />
+		<node name="SystemOptionsDialog">
+			<node name="title" value="FBReader - System Options" />
 			<node name="tab">
 				<node name="Language" value="Language">
 					<node name="autoDetect" value="Automatically Detect Language and Encoding" />
@@ -262,6 +266,26 @@
 					<node name="defaultEncoding" value="Default Encoding" />
 					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1" />
 				</node>
+				<node name="Config" value="Config">
+					<node name="autoSave" value="Save State Automatically" />
+					<node name="timeout" value="Timeout between Savings, seconds" />
+				</node>
+				<node name="Dictionary" value="Dictionary">
+					<node name="enableIntegration" value="Enable Integration with %s" />
+					<node name="defaultText" value="Enable Integration with Dictionary" />
+					<node name="choice" value="Integrate with" />
+					<node name="singleClickOpen" value="Open by Single Click" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Action on Key Release, not on Key Press" />
+					<node name="minStylusPressure" value="Minimal Stylus Pressure" />
+					<node name="maxStylusPressure" value="Maximal Stylus Pressure" />
+				</node>
+			</node>
+		</node>
+		<node name="OptionsDialog">
+			<node name="title" value="FBReader - Options" />
+			<node name="tab">
 				<node name="Indicator" value="Indicator">
 					<node name="type" value="Show as">
 						<node name="osScrollbar" value="OS Scrollbar" />
@@ -393,21 +417,6 @@
 					</node>
 					<node name="quitOnCancel" value="Quit Application on Cancel" />
 					<node name="keyDelay" value="Delay Between Accepted Key Pressings" />
-				</node>
-				<node name="Config" value="Config">
-					<node name="autoSave" value="Save State Automatically" />
-					<node name="timeout" value="Timeout between Savings, seconds" />
-				</node>
-				<node name="Dictionary" value="Dictionary">
-					<node name="enableIntegration" value="Enable Integration with %s" />
-					<node name="defaultText" value="Enable Integration with Dictionary" />
-					<node name="choice" value="Integrate with" />
-					<node name="singleClickOpen" value="Open by Single Click" />
-				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Action on Key Release, not on Key Press" />
-					<node name="minStylusPressure" value="Minimal Stylus Pressure" />
-					<node name="maxStylusPressure" value="Maximal Stylus Pressure" />
 				</node>
 			</node>
 		</node>

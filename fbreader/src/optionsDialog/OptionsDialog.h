@@ -26,7 +26,6 @@ class ZLOptionsDialog;
 class ZLDialogContent;
 class OptionsPage;
 class KeyBindingsPage;
-class ConfigPage;
 class NetworkLibraryPage;
 class ZLPaintContext;
 class ProgramCollection;
@@ -44,7 +43,6 @@ private:
 	shared_ptr<OptionsPage> myFormatPage;
 	shared_ptr<OptionsPage> myStylePage;
 	shared_ptr<KeyBindingsPage> myKeyBindingsPage;
-	shared_ptr<ConfigPage> myConfigPage;
 };
 
 #endif /* __OPTIONSDIALOG_H__ */

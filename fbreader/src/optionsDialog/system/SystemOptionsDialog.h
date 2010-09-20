@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,15 +17,16 @@
  * 02110-1301, USA.
  */
 
-#ifndef __CONFIGPAGE_H__
-#define __CONFIGPAGE_H__
+#ifndef __SYSTEMOPTIONSDIALOG_H__
+#define __SYSTEMOPTIONSDIALOG_H__
 
-class ZLDialogContent;
+#include "../AbstractOptionsDialog.h"
 
-class ConfigPage {
+
+class SystemOptionsDialog: public AbstractOptionsDialog {
 
 public:
-	ConfigPage(ZLDialogContent &dialogTab);
+	SystemOptionsDialog();
 };
 
-#endif /* __CONFIGPAGE_H__ */
+#endif /* __SYSTEMOPTIONSDIALOG_H__ */

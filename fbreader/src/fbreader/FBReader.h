@@ -167,6 +167,7 @@ private:
 friend class OpenFileHandler;
 
 friend class OptionsDialog;
+friend class SystemOptionsDialog;
 friend class FBView;
 
 //friend class ShowCollectionAction;

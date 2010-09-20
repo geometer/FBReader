@@ -20,11 +20,9 @@
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 #include <ZLPaintContext.h>
-#include <ZLLanguageList.h>
 #include <ZLEncodingConverter.h>
 
 #include <optionEntries/ZLColorOptionBuilder.h>
-#include <optionEntries/ZLLanguageOptionEntry.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
 #include <optionEntries/ZLToggleBooleanOptionEntry.h>
 
@@ -37,7 +35,6 @@
 #include "FormatOptionsPage.h"
 #include "StyleOptionsPage.h"
 #include "KeyBindingsPage.h"
-#include "ConfigPage.h"
 #include "NetworkLibraryPage.h"
 
 #include "../fbreader/FBReader.h"
@@ -48,7 +45,6 @@
 #include "../library/Library.h"
 #include "../external/ProgramCollection.h"
 #include "../formats/FormatPlugin.h"
-#include "../encodingOption/EncodingOptionEntry.h"
 
 class RotationTypeEntry : public ZLComboOptionEntry {
 
@@ -110,14 +106,6 @@ OptionsDialog::OptionsDialog() : AbstractOptionsDialog(ZLResourceKey("OptionsDia
 	FBReader &fbreader = FBReader::Instance();
 
 	ZLOptionsDialog &dialog = this->dialog();
-
-	ZLDialogContent &encodingTab = dialog.createTab(ZLResourceKey("Language"));
-	encodingTab.addOption(ZLResourceKey("autoDetect"), new ZLSimpleBooleanOptionEntry(PluginCollection::Instance().LanguageAutoDetectOption));
-	encodingTab.addOption(ZLResourceKey("defaultLanguage"), new ZLLanguageOptionEntry(PluginCollection::Instance().DefaultLanguageOption, ZLLanguageList::languageCodes()));
-	EncodingEntry *encodingEntry = new EncodingEntry(PluginCollection::Instance().DefaultEncodingOption);
-	EncodingSetEntry *encodingSetEntry = new EncodingSetEntry(*encodingEntry);
-	encodingTab.addOption(ZLResourceKey("defaultEncodingSet"), encodingSetEntry);
-	encodingTab.addOption(ZLResourceKey("defaultEncoding"), encodingEntry);
 
 	ZLDialogContent &scrollingTab = dialog.createTab(ZLResourceKey("Scrolling"));
 	scrollingTab.addOption(ZLResourceKey("keyLinesToScroll"), new ZLSimpleSpinOptionEntry(fbreader.LinesToScrollOption, 1));
@@ -185,15 +173,4 @@ OptionsDialog::OptionsDialog() : AbstractOptionsDialog(ZLResourceKey("OptionsDia
 	colorsTab.addOption("", "", builder.colorEntry());
 
 	myKeyBindingsPage = new KeyBindingsPage(dialog.createTab(ZLResourceKey("Keys")));
-	if (ZLOption::isAutoSavingSupported()) {
-		myConfigPage = new ConfigPage(dialog.createTab(ZLResourceKey("Config")));
-	}
-
-	std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > additional;
-	ZLOptionEntry *entry =
-		new ZLSimpleBooleanOptionEntry(fbreader.EnableSingleClickDictionaryOption);
-	additional.push_back(std::make_pair(ZLResourceKey("singleClickOpen"), entry));
-	createIntegrationTab(fbreader.dictionaryCollection(), ZLResourceKey("Dictionary"), additional);
-
-	dialog.createPlatformDependentTabs();
 }
