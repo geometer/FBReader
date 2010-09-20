@@ -204,6 +204,10 @@
 			<node name="label" value="Filter" />
 			<node name="tooltip" value="Filter" />
 		</node>
+		<node name="libraryOptions">
+			<node name="label" value="Library Preferences" />
+			<node name="tooltip" value="Show Library Preferences Dialog" />
+		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
@@ -216,8 +220,8 @@
 			<node name="buy" value="&amp;Buy" />
 			<node name="buyAndDownload" value="Buy and &amp;download" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Options" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Library">
 					<node name="bookPath" value="Book Path" />
@@ -225,6 +229,11 @@
 					<node name="collectBooksWithoutMetaInfo" value="Collect Books without MetaInfo" />
 					<node name="downloadDirectory" value="Directory for Downloaded Books" />
 				</node>
+			</node>
+		</node>
+		<node name="OptionsDialog">
+			<node name="title" value="FBReader - Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="Network Search">
 					<node name="useProxy" value="Use Proxy" />
 					<node name="proxyHost" value="Proxy Host" />

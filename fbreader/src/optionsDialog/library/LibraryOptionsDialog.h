@@ -17,36 +17,26 @@
  * 02110-1301, USA.
  */
 
-#include "PreferencesPopupData.h"
+#ifndef __LIBRARYOPTIONSDIALOG_H__
+#define __LIBRARYOPTIONSDIALOG_H__
 
-#include <ZLResource.h>
+#include <shared_ptr.h>
 
-#include "FBReaderActions.h"
+class ZLOptionsDialog;
 
-PreferencesPopupData::PreferencesPopupData() {
-	myActionIds.push_back(ActionCode::SHOW_BOOK_INFO_DIALOG);
-	myActionIds.push_back(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG);
-}
 
-size_t PreferencesPopupData::id() const {
-	return 0;
-}
+class LibraryOptionsDialog {
 
-size_t PreferencesPopupData::count() const {
-	return myActionIds.size();
-}
+public:
+	LibraryOptionsDialog();
 
-const std::string PreferencesPopupData::text(size_t index) {
-	if (index >= myActionIds.size()) {
-		return "";
-	}
-	const std::string &actionId = myActionIds[index];
-	return resource(actionId)["label"].value();
-}
+	ZLOptionsDialog &dialog();
 
-void PreferencesPopupData::run(size_t index) {
-	if (index >= myActionIds.size()) {
-		return;
-	}
-	FBReader::Instance().doAction(myActionIds[index]);
-}
+private:
+	shared_ptr<ZLOptionsDialog> myDialog;
+
+};
+
+inline ZLOptionsDialog &LibraryOptionsDialog::dialog() { return *myDialog; }
+
+#endif /* __LIBRARYOPTIONSDIALOG_H__ */

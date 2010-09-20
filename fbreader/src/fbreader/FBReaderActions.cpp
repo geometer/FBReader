@@ -35,6 +35,7 @@
 #include "BookTextView.h"
 #include "ContentsView.h"
 #include "../optionsDialog/bookInfo/BookInfoDialog.h"
+#include "../optionsDialog/library/LibraryOptionsDialog.h"
 
 #include "../bookmodel/BookModel.h"
 #include "../options/FBTextStyle.h"
@@ -76,6 +77,10 @@ void ShowHelpAction::run() {
 
 void ShowOptionsDialogAction::run() {
 	OptionsDialog().dialog().run();
+}
+
+void ShowLibraryOptionsDialogAction::run() {
+	LibraryOptionsDialog().dialog().run();
 }
 
 ShowContentsAction::ShowContentsAction() : SetModeAction(FBReader::CONTENTS_MODE, FBReader::BOOK_TEXT_MODE) {

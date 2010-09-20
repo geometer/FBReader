@@ -130,13 +130,6 @@ OptionsDialog::OptionsDialog() {
 
 	myDialog = ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey("OptionsDialog"), new OptionsApplyRunnable(*this), true);
 
-	ZLDialogContent &libraryTab = myDialog->createTab(ZLResourceKey("Library"));
-	Library &library = Library::Instance();
-	libraryTab.addOption(ZLResourceKey("bookPath"), library.PathOption);
-	libraryTab.addOption(ZLResourceKey("lookInSubdirectories"), library.ScanSubdirsOption);
-	libraryTab.addOption(ZLResourceKey("collectBooksWithoutMetaInfo"), library.CollectAllBooksOption);
-	libraryTab.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
-
 	myNetworkLibraryPage = new NetworkLibraryPage(myDialog->createTab(ZLResourceKey("NetworkLibrary")));
 
 	ZLDialogContent &encodingTab = myDialog->createTab(ZLResourceKey("Language"));
