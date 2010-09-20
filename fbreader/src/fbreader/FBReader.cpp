@@ -40,6 +40,7 @@
 #include "FootnoteView.h"
 #include "ContentsView.h"
 #include "RecentBooksPopupData.h"
+#include "PreferencesPopupData.h"
 #include "TimeUpdater.h"
 
 #include "../libraryTree/LibraryView.h"
@@ -155,6 +156,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::ORGANIZE_BOOKS_BY_AUTHOR, booksOrderAction);
 	addAction(ActionCode::ORGANIZE_BOOKS_BY_TAG, booksOrderAction);
 	addAction(ActionCode::FILTER_LIBRARY, new FilterLibraryAction());
+
+	registerPopupData(ActionCode::SHOW_OPTIONS_DIALOG, new PreferencesPopupData());
 
 	myOpenFileHandler = new OpenFileHandler();
 	ZLCommunicationManager::Instance().registerHandler("openFile", myOpenFileHandler);

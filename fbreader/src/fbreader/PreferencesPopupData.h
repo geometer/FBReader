@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,26 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLPOPUPDATA_H__
-#define __ZLPOPUPDATA_H__
+#ifndef __PREFERENCESPOPUPDATA_H__
+#define __PREFERENCESPOPUPDATA_H__
 
 #include <string>
+#include <vector>
 
-#include <ZLResource.h>
+#include <ZLPopupData.h>
 
-class ZLPopupData {
-
+class PreferencesPopupData: public ZLPopupData {
 public:
-	virtual ~ZLPopupData();
+	PreferencesPopupData();
 
-	virtual size_t id() const = 0;
-	virtual size_t count() const = 0;
-	virtual const std::string text(size_t index) = 0;
-	virtual void run(size_t index) = 0;
+private:
+	size_t id() const;
+	size_t count() const;
+	const std::string text(size_t index);
+	void run(size_t index);
 
-	static const ZLResource &resource(const std::string &actionId);
+private:
+	std::vector<std::string> myActionIds;
 };
 
-inline ZLPopupData::~ZLPopupData() {
-}
-
-#endif /* __ZLPOPUPDATA_H__ */
+#endif /* __PREFERENCESPOPUPDATA_H__ */

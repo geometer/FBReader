@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,35 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLPOPUPDATA_H__
-#define __ZLPOPUPDATA_H__
-
-#include <string>
+#include "PreferencesPopupData.h"
 
 #include <ZLResource.h>
 
-class ZLPopupData {
+#include "FBReaderActions.h"
 
-public:
-	virtual ~ZLPopupData();
-
-	virtual size_t id() const = 0;
-	virtual size_t count() const = 0;
-	virtual const std::string text(size_t index) = 0;
-	virtual void run(size_t index) = 0;
-
-	static const ZLResource &resource(const std::string &actionId);
-};
-
-inline ZLPopupData::~ZLPopupData() {
+PreferencesPopupData::PreferencesPopupData() {
+	myActionIds.push_back(ActionCode::SHOW_BOOK_INFO_DIALOG);
 }
 
-#endif /* __ZLPOPUPDATA_H__ */
+size_t PreferencesPopupData::id() const {
+	return 0;
+}
+
+size_t PreferencesPopupData::count() const {
+	return myActionIds.size();
+}
+
+const std::string PreferencesPopupData::text(size_t index) {
+	if (index >= myActionIds.size()) {
+		return "";
+	}
+	const std::string &actionId = myActionIds[index];
+	return resource(actionId)["label"].value();
+}
+
+void PreferencesPopupData::run(size_t index) {
+	if (index >= myActionIds.size()) {
+		return;
+	}
+	FBReader::Instance().doAction(myActionIds[index]);
+}

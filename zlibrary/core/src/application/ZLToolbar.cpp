@@ -137,8 +137,8 @@ const ZLToolbar::ItemVector &ZLToolbar::items() const {
 	return myItems;
 }
 
-const ZLResource &ZLToolbar::resource(const std::string &id) const {
-	return myResource[ZLResourceKey(id)];
+const ZLResource &ZLToolbar::resource(const std::string &id) {
+	return ZLResource::resource("toolbar")[id];
 }
 
 ZLToolbar::Item::Item(ZLToolbar &toolbar, Type type) : myToolbar(toolbar), myType(type) {
@@ -237,7 +237,7 @@ ZLToolbar::ButtonGroup &ZLToolbar::getButtonGroup(const std::string &id) {
 	return *group;
 }
 
-ZLToolbar::ZLToolbar() : myResource(ZLResource::resource("toolbar")) {
+ZLToolbar::ZLToolbar() {
 }
 
 ZLToolbar::ButtonGroup::ButtonGroup(const std::string &groupId) : myPressedItem(0), myDefaultButtonOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", groupId, "") {
@@ -282,4 +282,8 @@ ZLToolbar::ParameterItem::SymbolSet ZLToolbar::ParameterItem::symbolSet() const 
 
 void ZLToolbar::ParameterItem::setSymbolSet(SymbolSet symbolSet) {
 	mySymbolSet = symbolSet;
+}
+
+const ZLResource &ZLPopupData::resource(const std::string &actionId) {
+	return ZLToolbar::resource(actionId);
 }

@@ -23,8 +23,7 @@
 	<button id="findPrevious"/>
 	<button id="findNext"/>
 	<separator/>
-	<button id="bookInfo"/>
-	<button id="preferences"/>
+	<menuButton id="preferences"/>
 	<separator/>
 	<button id="rotate"/>
 	<separator/>

@@ -170,7 +170,7 @@ public:
 	ZLToolbar();
 
 	const ItemVector &items() const;
-	const ZLResource &resource(const std::string &id) const;
+	static const ZLResource &resource(const std::string &id);
 
 	void registerPopupData(const std::string &actionId, shared_ptr<ZLPopupData> popupData);
 
@@ -179,7 +179,6 @@ private:
 
 private:
 	ItemVector myItems;
-	const ZLResource &myResource;
 	std::map<std::string, shared_ptr<ZLPopupData> > myPopupDataMap;
 	std::map<std::string, shared_ptr<ButtonGroup> > myButtonGroups;
 
