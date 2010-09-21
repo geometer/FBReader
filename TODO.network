@@ -6,8 +6,7 @@
 	DONE Реализовать ShowOptionsDialogAction: что запускать??? 
 	DONE Сделать правильный ресурс toolbar/preferences
 	DONE "NetworkLibrary" tab: разделить настройки подключения и настройки каталогов
-	** "Keys" tab: Добавить в список действий новые actions
-	** Слить странички с 1 настройкой
+	DELAYED "Keys" tab: Добавить в список действий новые actions
 
 ** сделать сетевую часть как в java
 

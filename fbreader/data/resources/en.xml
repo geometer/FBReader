@@ -111,7 +111,7 @@
 			<node name="toggleFullscreen" value="Full Screen" />
 			<node name="toggleIndicator" value="Toggle Indicator" />
 		</node>
-		<node name="preferences" value="Preferences..." />
+		<node name="preferences" value="Last Preferences Dialog..." />
 		<node name="quit" value="Close" />
 	</node>
 	<node name="toolbar">
@@ -367,11 +367,11 @@
 						<node name="toggleIndicator" value="Toggle position indicator" />
 						<node name="toggleFullscreen" value="Toggle fullscreen mode" />
 						<node name="rotate" value="Rotate screen" />
-						<node name="preferences" value="Show options dialog" />
-						<node name="bookInfo" value="Show book info dialog" />
 						<node name="addBook" value="Add book" />
 						<node name="cancel" value="Cancel" />
 						<node name="quit" value="Quit" />
+						<node name="bookInfo" value="Show book info dialog" />
+						<node name="preferences" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="Quit Application on Cancel" />
 					<node name="keyDelay" value="Delay Between Accepted Key Pressings" />
