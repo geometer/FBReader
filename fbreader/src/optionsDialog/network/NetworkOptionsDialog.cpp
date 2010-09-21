@@ -67,27 +67,37 @@ void NetworkLinkBooleanOptionEntry::onAccept(bool state) {
 NetworkOptionsDialog::NetworkOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("NetworkOptionsDialog"), true) {
 	FBReader &fbreader = FBReader::Instance();
 
-	ZLDialogContent &libraryTab = dialog().createTab(ZLResourceKey("NetworkLibrary"));
+	ZLDialogContent &connectionTab = dialog().createTab(ZLResourceKey("Connection"));
 
-	NetworkLinkCollection &linkCollection = NetworkLinkCollection::Instance();
-	const size_t linkCollectionSize = linkCollection.size();
-	for (size_t i = 0; i < linkCollectionSize; ++i) {
-		NetworkLink &link = linkCollection.link(i);
-		libraryTab.addOption(link.SiteName, "", new NetworkLinkBooleanOptionEntry(link.OnOption));
-	}
 	ZLNetworkManager &networkManager = ZLNetworkManager::Instance();
+	connectionTab.addOption(ZLResourceKey("timeout"), new ZLSimpleSpinOptionEntry(networkManager.TimeoutOption(), 5));
 	if (!networkManager.providesProxyInfo()) {
 		ZLToggleBooleanOptionEntry *useProxyEntry = new ZLToggleBooleanOptionEntry(networkManager.UseProxyOption());
-		libraryTab.addOption(ZLResourceKey("useProxy"), useProxyEntry);
+		connectionTab.addOption(ZLResourceKey("useProxy"), useProxyEntry);
 		ZLSimpleStringOptionEntry *proxyHostEntry = new ZLSimpleStringOptionEntry(networkManager.ProxyHostOption());
-		libraryTab.addOption(ZLResourceKey("proxyHost"), proxyHostEntry);
+		connectionTab.addOption(ZLResourceKey("proxyHost"), proxyHostEntry);
 		ZLSimpleStringOptionEntry *proxyPortEntry = new ZLSimpleStringOptionEntry(networkManager.ProxyPortOption());
-		libraryTab.addOption(ZLResourceKey("proxyPort"), proxyPortEntry);
+		connectionTab.addOption(ZLResourceKey("proxyPort"), proxyPortEntry);
 		useProxyEntry->addDependentEntry(proxyHostEntry);
 		useProxyEntry->addDependentEntry(proxyPortEntry);
 		useProxyEntry->onStateChanged(useProxyEntry->initialState());
 	}
-	libraryTab.addOption(ZLResourceKey("timeout"), new ZLSimpleSpinOptionEntry(networkManager.TimeoutOption(), 5));
+
+	ZLDialogContent &libraryTab = dialog().createTab(ZLResourceKey("NetworkLibrary"));
+
+	NetworkLinkCollection &linkCollection = NetworkLinkCollection::Instance();
+	const size_t linkCollectionSize = linkCollection.size();
+	const size_t linkCollectionSizeMinusOne = linkCollectionSize - 1;
+	for (size_t i = 0; i < linkCollectionSize; ++i) {
+		NetworkLink &link = linkCollection.link(i);
+		if (i < linkCollectionSizeMinusOne) {
+			NetworkLink &link2 = linkCollection.link(++i);
+			libraryTab.addOptions(link.SiteName, "", new NetworkLinkBooleanOptionEntry(link.OnOption),
+					link2.SiteName, "", new NetworkLinkBooleanOptionEntry(link2.OnOption));
+		} else {
+			libraryTab.addOption(link.SiteName, "", new NetworkLinkBooleanOptionEntry(link.OnOption));
+		}
+	}
 
 	std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > additional;
 	createIntegrationTab(fbreader.webBrowserCollection(), ZLResourceKey("Web"), additional);

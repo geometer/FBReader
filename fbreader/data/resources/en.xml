@@ -251,6 +251,8 @@
 			<node name="title" value="FBReader - Network Options" />
 			<node name="tab">
 				<node name="NetworkLibrary" value="Network Library">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Use Proxy" />
 					<node name="proxyHost" value="Proxy Host" />
 					<node name="proxyPort" value="Proxy Port" />
