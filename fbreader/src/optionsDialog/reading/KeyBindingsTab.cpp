@@ -19,14 +19,15 @@
 
 #include <ZLOptionsDialog.h>
 #include <ZLApplication.h>
+#include <ZLOptionEntry.h>
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 #include <optionEntries/ZLSimpleKeyOptionEntry.h>
 
-#include "KeyBindingsPage.h"
+#include "ReadingOptionsDialog.h"
 
-#include "../fbreader/FBReader.h"
-#include "../fbreader/FBReaderActions.h"
+#include "../../fbreader/FBReader.h"
+#include "../../fbreader/FBReaderActions.h"
 
 class KeyboardControlEntry : public ZLSimpleBooleanOptionEntry {
 
@@ -260,7 +261,9 @@ void UseSeparateOptionsEntry::onStateChanged(bool state) {
 	myKeyEntry.resetView();
 }
 
-KeyBindingsPage::KeyBindingsPage(ZLDialogContent &dialogTab) {
+
+void ReadingOptionsDialog::createKeyBindingsTab() {
+	ZLDialogContent &dialogTab = dialog().createTab(ZLResourceKey("Keys"));
 	FBReader &fbreader = FBReader::Instance();
 	if (ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FULL_KEYBOARD_CONTROL, false).value()) {
 		dialogTab.addOption(ZLResourceKey("grabSystemKeys"), new KeyboardControlEntry());

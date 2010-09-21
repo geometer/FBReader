@@ -38,7 +38,6 @@ public:
 
 protected:
 	void createIntegrationTab(shared_ptr<ProgramCollection> collection, const ZLResourceKey &key, std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > &additionalOptions);
-	void createIndicatorTab();
 	void storeTemporaryOption(ZLOption *option);
 
 private:

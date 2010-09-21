@@ -23,11 +23,11 @@
 
 #include <ZLTextStyleOptions.h>
 
-#include "OptionsDialog.h"
+#include "ReadingOptionsDialog.h"
 
-#include "../fbreader/FBReader.h"
-#include "../fbreader/FBView.h"
-#include "../fbreader/BookTextView.h"
+#include "../../fbreader/FBReader.h"
+#include "../../fbreader/FBView.h"
+#include "../../fbreader/BookTextView.h"
 
 class StateOptionEntry : public ZLToggleBooleanOptionEntry {
 
@@ -122,8 +122,8 @@ void IndicatorTypeEntry::onValueSelected(int index) {
 	}
 }
 
-void AbstractOptionsDialog::createIndicatorTab() {
-	ZLDialogContent &indicatorTab = myDialog->createTab(ZLResourceKey("Indicator"));
+void ReadingOptionsDialog::createIndicatorTab() {
+	ZLDialogContent &indicatorTab = dialog().createTab(ZLResourceKey("Indicator"));
 	FBIndicatorStyle &indicatorInfo = FBView::commonIndicatorInfo();
 	static ZLResourceKey typeKey("type");
 	IndicatorTypeEntry *indicatorTypeEntry =

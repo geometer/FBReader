@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,17 +17,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __KEYBINDINGSPAGE_H__
-#define __KEYBINDINGSPAGE_H__
+#ifndef __READINGOPTIONSDIALOG_H__
+#define __READINGOPTIONSDIALOG_H__
 
-#include <ZLOptionEntry.h>
+#include "../AbstractOptionsDialog.h"
 
-class ZLDialogContent;
 
-class KeyBindingsPage {
+class ReadingOptionsDialog : public AbstractOptionsDialog {
+
+private:
+	void createIndicatorTab();
+	void createKeyBindingsTab();
 
 public:
-	KeyBindingsPage(ZLDialogContent &dialogTab);
+	ReadingOptionsDialog();
 };
 
-#endif /* __KEYBINDINGSPAGE_H__ */
+#endif /* __READINGOPTIONSDIALOG_H__ */
