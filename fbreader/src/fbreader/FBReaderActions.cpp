@@ -80,26 +80,35 @@ void ShowHelpAction::run() {
 }
 
 void ShowOptionsDialogAction::run() {
-	// TODO: implement
+	std::string actionId = FBReader::Instance().LastOpenedPreferencesDialog.value();
+	if (actionId.empty()) {
+		return;
+	}
+	FBReader::Instance().doAction(actionId);
 }
 
 void ShowLibraryOptionsDialogAction::run() {
+	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG);
 	LibraryOptionsDialog().dialog().run();
 }
 
 void ShowNetworkOptionsDialogAction::run() {
+	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_NETWORK_OPTIONS_DIALOG);
 	NetworkOptionsDialog().dialog().run();
 }
 
 void ShowSystemOptionsDialogAction::run() {
+	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG);
 	SystemOptionsDialog().dialog().run();
 }
 
 void ShowReadingOptionsDialogAction::run() {
+	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_READING_OPTIONS_DIALOG);
 	ReadingOptionsDialog().dialog().run();
 }
 
 void ShowLookAndFeelOptionsDialogAction::run() {
+	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_LOOKANDFEEL_OPTIONS_DIALOG);
 	LookAndFeelOptionsDialog().dialog().run();
 }
 
@@ -160,6 +169,7 @@ ShowBookInfoAction::ShowBookInfoAction() : ModeDependentAction(FBReader::BOOK_TE
 
 void ShowBookInfoAction::run() {
 	FBReader &fbreader = FBReader::Instance();
+	fbreader.LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_BOOK_INFO_DIALOG);
 	shared_ptr<Book> book = fbreader.myModel->book();
 	if (BookInfoDialog(book).dialog().run()) {
 		fbreader.openBook(book);

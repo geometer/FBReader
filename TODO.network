@@ -3,8 +3,8 @@
 	DONE добавить в меню CurrentBookDialog
 	DONE реалзовать остальные диалоги
 	DONE добавить остальные диалоги в меню
-	** Реализовать ShowOptionsDialogAction: что запускать??? 
-	** Сделать правильный ресурс toolbar/preferences
+	DONE Реализовать ShowOptionsDialogAction: что запускать??? 
+	DONE Сделать правильный ресурс toolbar/preferences
 	** "NetworkLibrary" tab: разделить настройки подключения и настройки каталогов
 	** "Keys" tab: Добавить в список действий новые actions
 	** Слить странички с 1 настройкой

@@ -89,6 +89,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	TapScrollingOnFingerOnlyOption(ZLCategoryKey::CONFIG, "TapScrolling", "FingerOnly", true),
 	UseSeparateBindingsOption(ZLCategoryKey::CONFIG, "KeysOptions", "UseSeparateBindings", false),
 	EnableSingleClickDictionaryOption(ZLCategoryKey::CONFIG, "Dictionary", "SingleClick", false),
+	LastOpenedPreferencesDialog(ZLCategoryKey::CONFIG, "PreferencesDialog", "LastOpened", ""),
 	myBindings0(new ZLKeyBindings("Keys")),
 	myBindings90(new ZLKeyBindings("Keys90")),
 	myBindings180(new ZLKeyBindings("Keys180")),

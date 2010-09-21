@@ -75,6 +75,8 @@ public:
 
 	ZLBooleanOption EnableSingleClickDictionaryOption;
 
+	ZLStringOption LastOpenedPreferencesDialog;
+
 public:
 	FBReader(const std::string &bookToOpen);
 	~FBReader();

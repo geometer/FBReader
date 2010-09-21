@@ -197,8 +197,8 @@
 			<node name="tooltip" value="Filter" />
 		</node>
 		<node name="preferences">
-			<node name="label" value="Preferences" />
-			<node name="tooltip" value="Show Preferences Dialog" />
+			<node name="label" value="Last Preferences Dialog" />
+			<node name="tooltip" value="Show Last Opened Preferences Dialog" />
 		</node>
 		<node name="bookInfo">
 			<node name="label" value="Book Info" />
