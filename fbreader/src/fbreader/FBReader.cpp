@@ -104,6 +104,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myLibraryByAuthorView = new LibraryByAuthorView(*context());
 	myLibraryByTagView = new LibraryByTagView(*context());
 	myRecentBooksPopupData = new RecentBooksPopupData();
+	myPreferencesPopupData = new PreferencesPopupData();
 	myMode = UNDEFINED_MODE;
 	myPreviousMode = BOOK_TEXT_MODE;
 	setMode(BOOK_TEXT_MODE);
@@ -162,7 +163,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::ORGANIZE_BOOKS_BY_TAG, booksOrderAction);
 	addAction(ActionCode::FILTER_LIBRARY, new FilterLibraryAction());
 
-	registerPopupData(ActionCode::SHOW_OPTIONS_DIALOG, new PreferencesPopupData());
+	registerPopupData(ActionCode::SHOW_OPTIONS_DIALOG, myPreferencesPopupData);
 
 	myOpenFileHandler = new OpenFileHandler();
 	ZLCommunicationManager::Instance().registerHandler("openFile", myOpenFileHandler);
@@ -210,6 +211,7 @@ void FBReader::initWindow() {
 void FBReader::refreshWindow() {
 	ZLApplication::refreshWindow();
 	((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
+	((PreferencesPopupData&)*myPreferencesPopupData).updateId();
 }
 
 bool FBReader::createBook(const ZLFile &bookFile, shared_ptr<Book> &book) {

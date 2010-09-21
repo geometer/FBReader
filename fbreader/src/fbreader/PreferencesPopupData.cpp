@@ -33,24 +33,41 @@ PreferencesPopupData::PreferencesPopupData() {
 }
 
 size_t PreferencesPopupData::id() const {
-	return 0;
+	return myId;
+}
+
+void PreferencesPopupData::updateId() {
+	++myId;
+	myInvalidated = true;
 }
 
 size_t PreferencesPopupData::count() const {
-	return myActionIds.size();
+	if (myInvalidated) {
+		myInvalidated = false;
+		myVisibleActionIds.clear();
+		const FBReader& fbreader = FBReader::Instance();
+		const size_t size = myActionIds.size();
+		for (size_t i = 0; i < size; ++i) {
+			const std::string &actionId = myActionIds[i];
+			if (fbreader.action(actionId)->isVisible()) {
+				myVisibleActionIds.push_back(actionId);
+			}
+		}
+	}
+	return myVisibleActionIds.size();
 }
 
 const std::string PreferencesPopupData::text(size_t index) {
-	if (index >= myActionIds.size()) {
+	if (index >= myVisibleActionIds.size()) {
 		return "";
 	}
-	const std::string &actionId = myActionIds[index];
+	const std::string &actionId = myVisibleActionIds[index];
 	return resource(actionId)["label"].value();
 }
 
 void PreferencesPopupData::run(size_t index) {
-	if (index >= myActionIds.size()) {
+	if (index >= myVisibleActionIds.size()) {
 		return;
 	}
-	FBReader::Instance().doAction(myActionIds[index]);
+	FBReader::Instance().doAction(myVisibleActionIds[index]);
 }

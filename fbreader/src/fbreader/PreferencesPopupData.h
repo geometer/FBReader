@@ -28,6 +28,7 @@
 class PreferencesPopupData: public ZLPopupData {
 public:
 	PreferencesPopupData();
+	void updateId();
 
 private:
 	size_t id() const;
@@ -36,7 +37,10 @@ private:
 	void run(size_t index);
 
 private:
+	size_t myId;
 	std::vector<std::string> myActionIds;
+	mutable bool myInvalidated;
+	mutable std::vector<std::string> myVisibleActionIds;
 };
 
 #endif /* __PREFERENCESPOPUPDATA_H__ */
