@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Esperanto zlibrary resources, by Katarína Nosková -->
+<resources>
+	<node name="dialog">
+		<node name="button">
+			<node name="ok" value="&amp;Bone" />
+			<node name="cancel" value="&amp;Rezigni" />
+			<node name="yes" value="&amp;Jes" />
+			<node name="no" value="&amp;Ne" />
+			<node name="apply" value="&amp;Apliki" />
+		</node>
+		<node name="waitMessage">
+			<node name="savingConfig" value="Mi konservas agordojn..." />
+		</node>
+		<node name="networkError">
+			<node name="title" value="Reta eraro" />
+			<node name="unknownErrorMessage" value="Nekonata eraro" />
+			<node name="couldntCreateDirectoryMessage" value="Mi ne sukcesis krei la dosierujon&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Mi ne sukcesis krei la dosieron&#10;%s" />
+			<node name="couldntConnectToNetworkMessage" value="Ne eblas konektiĝi al la reto"/>
+			<node name="couldntConnectMessage" value="Mi ne sukcesis konektiĝi al la servilo %s"/>
+			<node name="couldntResolveHostMessage" value="Mi ne sukcesis trovi la servilon %s"/>
+			<node name="couldntResolveProxyMessage" value="Mi ne sukcesis trovi la prokuran servilon %s"/>
+			<node name="operationTimedOutMessage" value="Tempolimo por la ago pasis."/>
+			<node name="somethingWrongMessage" value="Io malsukcesis&#10;%s"/>
+			<node name="sslConnectErrorMessage" value="Problemo kun SSL/TLS handshake &#10;%s"/>
+			<node name="peerFailedVerificationMessage" value="Malĝusta SSL-atestilo el %s&#10;"/>
+			<node name="sslCertificateAuthorityMessage" value="La SSL-atestilon el%s&#10;ne eblas rajtigi kontraŭ konataj SSL CA atestiloj"/>
+			<node name="sslBadCertificateFileMessage" value="Ne eblas legi la dosieron de SSL CA atestiloj:&#10;%s"/>
+			<node name="sslShutdownFailedMessage" value="Malŝalto de SSL-konekto por&#10;%s malsukcesis"/>
+		</node>
+	</node>
+	<node name="color">
+		<node name="red" value="Ruĝa" />
+		<node name="green" value="Verda" />
+		<node name="blue" value="Blua" />
+		<node name="black" value="Nigra" />
+		<node name="white" value="Blanka" />
+		<node name="maroon" value="Kaŝtankolora" />
+		<node name="olive" value="Oliveca" />
+		<node name="navy" value="Malhelgriza" />
+		<node name="purple" value="Purpura" />
+		<node name="teal" value="Bluverda (Teal)" />
+		<node name="silver" value="Arĝenta" />
+		<node name="gray" value="Griza" />
+		<node name="lime" value="Helverda" />
+		<node name="yellow" value="Flava" />
+		<node name="magenta" value="Violkolora" />
+		<node name="cyan" value="Bluverda (Cyan)" />
+		<node name="custom..." value="Propra..." />
+	</node>
+	<node name="language">
+		<node name="ar" value="La araba" />
+		<node name="cs" value="La ĉeĥa" />
+		<node name="de" value="La germana" />
+		<node name="de-traditional" value="La germana (tradicia)" />
+		<node name="el" value="La greka" />
+		<node name="en" value="La angla" />
+		<node name="eo" value="Esperanto" />
+		<node name="es" value="La hispana" />
+		<node name="fi" value="La finna" />
+		<node name="fr" value="La franca" />
+		<node name="he" value="La hebrea" />
+		<node name="hu" toBeTranslated="true" value="Hungarian"/>
+		<node name="id" value="La indonezia"/>
+		<node name="it" value="La itala"/>
+		<node name="lt" value="La litova"/>
+		<node name="nl" toBeTranslated="true" value="Dutch"/>
+		<node name="no" value="La noverga"/>
+		<node name="pl" toBeTranslated="true" value="Polish" />
+		<node name="pt" value="La portugala"/>
+		<node name="ru" value="La rusa"/>
+		<node name="sv" value="La sveda"/>
+		<node name="tr" value="La turka"/>
+		<node name="uk" value="La ukraina"/>
+		<node name="vi" toBeTranslated="true" value="Vietnamese" />
+		<node name="zh" value="La ĉina"/>
+		<node name="other" value="Alia"/>
+	</node>
+	<node name="boolean3">
+		<node name="on" value="ŝaltita" />
+		<node name="off" value="malŝaltita" />
+		<node name="unchanged" value="sen ŝanĝoj" />
+	</node>
+	<node name="keyOptionView">
+		<node name="actionFor" value="Ago por" />
+	</node>
+</resources>
