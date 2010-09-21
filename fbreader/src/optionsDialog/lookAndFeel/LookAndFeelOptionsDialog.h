@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,30 +17,22 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OPTIONSDIALOG_H__
-#define __OPTIONSDIALOG_H__
+#ifndef __LOOKANDFEELOPTIONSDIALOG_H__
+#define __LOOKANDFEELOPTIONSDIALOG_H__
 
-#include "AbstractOptionsDialog.h"
+#include "../AbstractOptionsDialog.h"
 
-class ZLOptionsDialog;
-class ZLDialogContent;
 class OptionsPage;
-class NetworkLibraryPage;
-class ZLPaintContext;
-class ProgramCollection;
 
-class ZLBooleanOptionEntry;
-class ZLSpinOptionEntry;
-class ZLOption;
 
-class OptionsDialog : public AbstractOptionsDialog {
+class LookAndFeelOptionsDialog : public AbstractOptionsDialog {
 
 public:
-	OptionsDialog();
+	LookAndFeelOptionsDialog();
 
 private:
 	shared_ptr<OptionsPage> myFormatPage;
 	shared_ptr<OptionsPage> myStylePage;
 };
 
-#endif /* __OPTIONSDIALOG_H__ */
+#endif /* __LOOKANDFEELOPTIONSDIALOG_H__ */

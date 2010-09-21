@@ -34,13 +34,13 @@
 #include "FBReaderActions.h"
 #include "BookTextView.h"
 #include "ContentsView.h"
-#include "../optionsDialog/OptionsPage.h"
-#include "../optionsDialog/OptionsDialog.h"
 #include "../optionsDialog/bookInfo/BookInfoDialog.h"
 #include "../optionsDialog/library/LibraryOptionsDialog.h"
 #include "../optionsDialog/network/NetworkOptionsDialog.h"
 #include "../optionsDialog/system/SystemOptionsDialog.h"
 #include "../optionsDialog/reading/ReadingOptionsDialog.h"
+#include "../optionsDialog/lookAndFeel/OptionsPage.h"
+#include "../optionsDialog/lookAndFeel/LookAndFeelOptionsDialog.h"
 
 #include "../bookmodel/BookModel.h"
 #include "../options/FBTextStyle.h"
@@ -80,7 +80,7 @@ void ShowHelpAction::run() {
 }
 
 void ShowOptionsDialogAction::run() {
-	OptionsDialog().dialog().run();
+	// TODO: implement
 }
 
 void ShowLibraryOptionsDialogAction::run() {
@@ -97,6 +97,10 @@ void ShowSystemOptionsDialogAction::run() {
 
 void ShowReadingOptionsDialogAction::run() {
 	ReadingOptionsDialog().dialog().run();
+}
+
+void ShowLookAndFeelOptionsDialogAction::run() {
+	LookAndFeelOptionsDialog().dialog().run();
 }
 
 ShowContentsAction::ShowContentsAction() : SetModeAction(FBReader::CONTENTS_MODE, FBReader::BOOK_TEXT_MODE) {

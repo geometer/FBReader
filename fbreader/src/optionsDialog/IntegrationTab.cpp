@@ -19,14 +19,16 @@
 
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
-#include <optionEntries/ZLToggleBooleanOptionEntry.h>
-#include <optionEntries/ZLSimpleOptionEntry.h>
 #include <ZLStringUtil.h>
 
-#include "OptionsDialog.h"
-#include "../options/FBCategoryKey.h"
+#include <optionEntries/ZLToggleBooleanOptionEntry.h>
+#include <optionEntries/ZLSimpleOptionEntry.h>
 
+#include "AbstractOptionsDialog.h"
+
+#include "../options/FBCategoryKey.h"
 #include "../external/ProgramCollection.h"
+
 
 class ProgramChoiceEntry : public ZLComboOptionEntry {
 

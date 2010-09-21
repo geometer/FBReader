@@ -184,14 +184,6 @@
 			<node name="label" value="Previous" />
 			<node name="tooltip" value="Find Previous" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" value="Book Info" />
-			<node name="tooltip" value="Show Book Info Dialog" />
-		</node>
-		<node name="preferences">
-			<node name="label" value="Preferences" />
-			<node name="tooltip" value="Show Preferences Dialog" />
-		</node>
 		<node name="rotate">
 			<node name="label" value="Rotate" />
 			<node name="tooltip" value="Rotate Text" />
@@ -203,6 +195,14 @@
 		<node name="filterLibrary">
 			<node name="label" value="Filter" />
 			<node name="tooltip" value="Filter" />
+		</node>
+		<node name="preferences">
+			<node name="label" value="Preferences" />
+			<node name="tooltip" value="Show Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="Book Info" />
+			<node name="tooltip" value="Show Book Info Dialog" />
 		</node>
 		<node name="libraryOptions">
 			<node name="label" value="Library Preferences" />
@@ -219,6 +219,10 @@
 		<node name="readingOptions">
 			<node name="label" value="Reading Preferences" />
 			<node name="tooltip" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -372,8 +376,8 @@
 				</node>
 			</node>
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Options" />
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" value="FBReader - Look &amp; Feel Options" />
 			<node name="tab">
 				<node name="CSS" value="CSS">
 					<node name="overrideSpecifiedFonts" value="Always Use My Own Fonts" />

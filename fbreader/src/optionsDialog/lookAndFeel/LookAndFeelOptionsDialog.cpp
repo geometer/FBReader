@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,35 +20,25 @@
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 #include <ZLPaintContext.h>
-#include <ZLEncodingConverter.h>
 
-#include <optionEntries/ZLColorOptionBuilder.h>
 #include <optionEntries/ZLSimpleOptionEntry.h>
-#include <optionEntries/ZLToggleBooleanOptionEntry.h>
+#include <optionEntries/ZLColorOptionBuilder.h>
 
-#include <ZLTextView.h>
-#include <ZLTextStyle.h>
 #include <ZLTextStyleCollection.h>
-#include <ZLTextStyleOptions.h>
 
-#include "OptionsDialog.h"
+#include "LookAndFeelOptionsDialog.h"
+
 #include "FormatOptionsPage.h"
 #include "StyleOptionsPage.h"
-#include "NetworkLibraryPage.h"
 
-#include "../fbreader/FBReader.h"
-#include "../options/FBOptions.h"
-#include "../fbreader/BookTextView.h"
-
-#include "../network/NetworkLinkCollection.h"
-#include "../library/Library.h"
-#include "../external/ProgramCollection.h"
-#include "../formats/FormatPlugin.h"
+#include "../../fbreader/FBReader.h"
+#include "../../fbreader/FBView.h"
+#include "../../options/FBOptions.h"
 
 
-
-OptionsDialog::OptionsDialog() : AbstractOptionsDialog(ZLResourceKey("OptionsDialog"), true) {
+LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("LookAndFeelOptionsDialog"), true) {
 	FBReader &fbreader = FBReader::Instance();
+	FBOptions &options = FBOptions::Instance();
 
 	ZLOptionsDialog &dialog = this->dialog();
 
@@ -56,7 +46,6 @@ OptionsDialog::OptionsDialog() : AbstractOptionsDialog(ZLResourceKey("OptionsDia
 	cssTab.addOption(ZLResourceKey("overrideSpecifiedFonts"), ZLTextStyleCollection::Instance().OverrideSpecifiedFontsOption);
 
 	ZLDialogContent &marginTab = dialog.createTab(ZLResourceKey("Margins"));
-	FBOptions &options = FBOptions::Instance();
 	marginTab.addOptions(
 		ZLResourceKey("left"), new ZLSimpleSpinOptionEntry(options.LeftMarginOption, 1),
 		ZLResourceKey("right"), new ZLSimpleSpinOptionEntry(options.RightMarginOption, 1)
