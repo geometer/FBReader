@@ -1,8 +1,9 @@
-en.xml     English				-----                          any usage
+en.xml     English        -----                          any usage
 ru.xml     Russian        -----                          any usage
 ar.xml     Arabic         Khaled Hosny
 cs.xml     Czech          Lubomír Čevela
 de.xml     German         Rainer Paul
+eo.xml     Esperanto      Katarína Nosková
 es.xml     Spanish        Leproso
 fi.xml     Finnish        Marko Vertainen                freely distributed by GP (open or closed source)
 fr.xml     French         Pierre Senellart               any usage
