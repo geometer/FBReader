@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="书籍信息..." />
 		<node name="toc" value="目录" />
 		<node name="showLibrary" value="打开书库" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="书库">
 			<node name="showLibrary" value="打开" />
 			<node name="previousBook" value="上一本书" />
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="全屏" />
 			<node name="toggleIndicator" value="切换指示" />
 		</node>
-		<node name="preferences" value="参数设置..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="关闭" />
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" value="查找上一个" />
 			<node name="tooltip" value="查找上一个" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" value="书籍信息" />
-			<node name="tooltip" value="书籍信息" />
-		</node>
-		<node name="preferences">
-			<node name="label" value="设置选项" />
-			<node name="tooltip" value="设置选项" />
-		</node>
 		<node name="rotate">
 			<node name="label" value="旋转" />
 			<node name="tooltip" value="旋转" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" value="筛选" />
 			<node name="tooltip" value="筛选" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="书籍信息" />
+			<node name="tooltip" value="书籍信息" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" value="&amp;购买" />
 			<node name="buyAndDownload" value="购买 &amp;下载" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - 设置" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="书库">
 					<node name="bookPath" value="书籍路径" />
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="藏书无相关描述" />
 					<node name="downloadDirectory" value="书籍下载存放目录" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="网络搜索">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="使用代理服务器" />
 					<node name="proxyHost" value="代理主机" />
 					<node name="proxyPort" value="代理端口" />
 					<node name="timeout" value="网络操作超时，秒" />
 				</node>
+				<node name="Web" value="网页">
+					<node name="enableIntegration" value="在%s打开外部链接" />
+					<node name="defaultText" value="在浏览器打开外部链接" />
+					<node name="choice" value="使用浏览器" />
+					<node name="command" value="执行命令" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="语言">
 					<node name="autoDetect" value="自动检测语言和编码" />
 					<node name="defaultLanguage" value="默认语言" />
 					<node name="defaultEncodingSet" value="默认编码设置" />
 					<node name="defaultEncoding" value="默认编码" />
 					<node name="useWindows1252Hack" value="使用windows-1252 代替iso-8859-1" />
+				</node>
+				<node name="Config" value="配置">
+					<node name="autoSave" value="自动保存" />
+					<node name="timeout" value="保存超时，秒" />
+				</node>
+				<node name="Dictionary" value="字典">
+					<node name="enableIntegration" value="允许整合%s" />
+					<node name="defaultText" value="允许整合字典" />
+					<node name="choice" value="整合" />
+					<node name="singleClickOpen" value="单击打开" />
+				</node>
+				<node name="Maemo" value="Maemo平台">
+					<node name="keyActionOnRelease" value="在放开时执行" />
+					<node name="minStylusPressure" value="最小笔触压" />
+					<node name="maxStylusPressure" value="最大笔触压" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="滚动方式">
+					<node name="keyScrollDelay" value="按键滚动间的延迟, 兆秒" />
+					<node name="keyLinesToScroll" value="行滚动时的行数" />
+					<node name="keyLinesToKeep" value="翻页时保留行数" />
+					<node name="enableTapScrolling" value="允许Tap键滚动" />
+					<node name="fingerOnly" value="仅限手动滚动" />
+				</node>
+				<node name="Selection" value="选择项">
+					<node name="enableSelection" value="允许文本选择" />
 				</node>
 				<node name="Indicator" value="进度条">
 					<node name="type" value="显示">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="显示目录标记" />
 					<node name="navigation" value="启用导航" />
 				</node>
-				<node name="Scrolling" value="滚动方式">
-					<node name="keyScrollDelay" value="按键滚动间的延迟, 兆秒" />
-					<node name="keyLinesToScroll" value="行滚动时的行数" />
-					<node name="keyLinesToKeep" value="翻页时保留行数" />
-					<node name="enableTapScrolling" value="允许Tap键滚动" />
-					<node name="fingerOnly" value="仅限手动滚动" />
-				</node>
-				<node name="Selection" value="选择项">
-					<node name="enableSelection" value="允许文本选择" />
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="始终用自己的字体" />
-				</node>
-				<node name="Margins" value="边距">
-					<node name="left" value="左边距" />
-					<node name="right" value="右边距" />
-					<node name="top" value="顶边距" />
-					<node name="bottom" value="底边距" />
-				</node>
-				<node name="Format" value="格式">
-					<node name="optionsFor" value="设置" />
-					<node name="lineSpacing" value="行间距">
-						<node name="unchanged" value="&lt;不可变&gt;" />
-					</node>
-					<node name="firstLineIndent" value="首行缩进" />
-					<node name="alignment" value="对齐">
-						<node name="left" value="左" />
-						<node name="right" value="右" />
-						<node name="center" value="居中" />
-						<node name="justify" value="对齐" />
-						<node name="unchanged" value="&lt;不变&gt;" />
-					</node>
-					<node name="spaceBefore" value="前间距" />
-					<node name="spaceAfter" value="后间距" />
-					<node name="startIndent" value="行首缩进" />
-					<node name="endIndent" value="行末缩进" />
-				</node>
-				<node name="Styles" value="样式">
-					<node name="optionsFor" value="选项" />
-					<node name="fontFamily" value="字体">
-						<node name="unchanged" value="&lt;不变&gt;" />
-					</node>
-					<node name="fontSize" value="大小" />
-					<node name="fontSizeDifference" value="大小差异" />
-					<node name="bold" value="加粗" />
-					<node name="italic" value="倾斜" />
-					<node name="allowHyphenations" value="允许断字" />
-					<node name="autoHyphenations" value="自动断字" />
-				</node>
 				<node name="Rotation" value="旋转">
 					<node name="direction" value="旋转方向">
 						<node name="disabled" value="禁用" />
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="逆时针转90度" />
 						<node name="180" value="180度" />
 						<node name="cycle" value="依次旋转4个方向" />
-					</node>
-				</node>
-				<node name="Colors" value="颜色">
-					<node name="colorFor" value="颜色设置">
-						<node name="background" value="背景色" />
-						<node name="selectionBackground" value="选择背景色" />
-						<node name="text" value="普通文本" />
-						<node name="internalLink" value="内部超链接文字" />
-						<node name="externalLink" value="外部超链接文字" />
-						<node name="bookLink" value="书籍链接" />
-						<node name="highlighted" value="高亮显示的文字" />
-						<node name="treeLines" value="树状线" />
-						<node name="indicator" value="进度条" />
 					</node>
 				</node>
 				<node name="Keys" value="按键">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="切换进度条" />
 						<node name="toggleFullscreen" value="切换到全屏模式" />
 						<node name="rotate" value="旋转屏幕" />
-						<node name="preferences" value="显示设置对话框" />
-						<node name="bookInfo" value="显示书籍信息对话框" />
 						<node name="addBook" value="添加书籍" />
 						<node name="cancel" value="取消" />
 						<node name="quit" value="退出" />
+						<node name="bookInfo" value="显示书籍信息对话框" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="按取消退出程序" />
 					<node name="keyDelay" value="有效按键之间的延迟" />
 				</node>
-				<node name="Config" value="配置">
-					<node name="autoSave" value="自动保存" />
-					<node name="timeout" value="保存超时，秒" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="始终用自己的字体" />
 				</node>
-				<node name="Dictionary" value="字典">
-					<node name="enableIntegration" value="允许整合%s" />
-					<node name="defaultText" value="允许整合字典" />
-					<node name="choice" value="整合" />
-					<node name="singleClickOpen" value="单击打开" />
+				<node name="Margins" value="边距">
+					<node name="left" value="左边距" />
+					<node name="right" value="右边距" />
+					<node name="top" value="顶边距" />
+					<node name="bottom" value="底边距" />
 				</node>
-				<node name="Web" value="网页">
-					<node name="enableIntegration" value="在%s打开外部链接" />
-					<node name="defaultText" value="在浏览器打开外部链接" />
-					<node name="choice" value="使用浏览器" />
-					<node name="command" value="执行命令" />
+				<node name="Format" value="格式">
+					<node name="optionsFor" value="设置" />
+					<node name="lineSpacing" value="行间距">
+						<node name="unchanged" value="&lt;不可变&gt;" />
+					</node>
+					<node name="firstLineIndent" value="首行缩进" />
+					<node name="alignment" value="对齐">
+						<node name="left" value="左" />
+						<node name="right" value="右" />
+						<node name="center" value="居中" />
+						<node name="justify" value="对齐" />
+						<node name="unchanged" value="&lt;不变&gt;" />
+					</node>
+					<node name="spaceBefore" value="前间距" />
+					<node name="spaceAfter" value="后间距" />
+					<node name="startIndent" value="行首缩进" />
+					<node name="endIndent" value="行末缩进" />
 				</node>
-				<node name="Maemo" value="Maemo平台">
-					<node name="keyActionOnRelease" value="在放开时执行" />
-					<node name="minStylusPressure" value="最小笔触压" />
-					<node name="maxStylusPressure" value="最大笔触压" />
+				<node name="Styles" value="样式">
+					<node name="optionsFor" value="选项" />
+					<node name="fontFamily" value="字体">
+						<node name="unchanged" value="&lt;不变&gt;" />
+					</node>
+					<node name="fontSize" value="大小" />
+					<node name="fontSizeDifference" value="大小差异" />
+					<node name="bold" value="加粗" />
+					<node name="italic" value="倾斜" />
+					<node name="allowHyphenations" value="允许断字" />
+					<node name="autoHyphenations" value="自动断字" />
+				</node>
+				<node name="Colors" value="颜色">
+					<node name="colorFor" value="颜色设置">
+						<node name="background" value="背景色" />
+						<node name="selectionBackground" value="选择背景色" />
+						<node name="text" value="普通文本" />
+						<node name="internalLink" value="内部超链接文字" />
+						<node name="externalLink" value="外部超链接文字" />
+						<node name="bookLink" value="书籍链接" />
+						<node name="highlighted" value="高亮显示的文字" />
+						<node name="treeLines" value="树状线" />
+						<node name="indicator" value="进度条" />
+					</node>
 				</node>
 			</node>
 		</node>

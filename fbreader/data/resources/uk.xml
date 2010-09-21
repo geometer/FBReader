@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="Інформація про книгу..."/>
 		<node name="toc" value="Зміст"/>
 		<node name="showLibrary" value="Відкрити бібліотеку"/>
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Бібліотека">
 			<node name="showLibrary" value="Відкрити бібліотеку"/>
 			<node name="previousBook" value="Попередня книга"/>
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="На весь екран"/>
 			<node name="toggleIndicator" value="Індикатор позиції"/>
 		</node>
-		<node name="preferences" value="Налаштування..."/>
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="Закрити"/>
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" value="Попередній" />
 			<node name="tooltip" value="Знайти попередній" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" value="Про книгу" />
-			<node name="tooltip" value="Інформацiя про книгу" />
-		</node>
-		<node name="preferences">
-			<node name="label" value="Налаштування" />
-			<node name="tooltip" value="Налаштування" />
-		</node>
 		<node name="rotate">
 			<node name="label" value="Повернути" />
 			<node name="tooltip" value="Повернути текст" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" toBeTranslated="true" value="Filter" />
 			<node name="tooltip" toBeTranslated="true" value="Filter" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="Про книгу" />
+			<node name="tooltip" value="Інформацiя про книгу" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" value="&amp;Купити"/>
 			<node name="buyAndDownload" value="Купити та &amp;завантажити"/>
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Налаштування"/>
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Бібліотека">
 					<node name="bookPath" value="Каталоги з книгами"/>
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="Показати книжки без метаінформації"/>
 					<node name="downloadDirectory" value="Каталог для загружаемых книг"/>
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="Пошук у мережі">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Використовувати проксі-сервер"/>
 					<node name="proxyHost" value="Адреса проксі-сервера"/>
 					<node name="proxyPort" value="Порт проксі-сервера"/>
 					<node name="timeout" value="Максимальний час затримки, секунди"/>
 				</node>
+				<node name="Web" value="Веб">
+					<node name="enableIntegration" value="Відкривати зовнішні посилання за допомогою %s"/>
+					<node name="defaultText" value="Відкривати зовнішні посилання у переглядачі"/>
+					<node name="choice" value="Переглядач"/>
+					<node name="command" value="Виконати команду"/>
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="Мова">
 					<node name="autoDetect" value="Визначити мову та кодувати автоматично"/>
 					<node name="defaultLanguage" value="Типова мова"/>
 					<node name="defaultEncodingSet" value="Набiр символiв"/>
 					<node name="defaultEncoding" value="Типовий набiр символiв"/>
 					<node name="useWindows1252Hack" value="Використати windows-1252 замiсть iso-8859-1"/>
+				</node>
+				<node name="Config" value="Налаштування">
+					<node name="autoSave" value="Автоматично зберігати стан"/>
+					<node name="timeout" value="Час між збереженням, секунди"/>
+				</node>
+				<node name="Dictionary" value="Словники">
+					<node name="enableIntegration" value="Увімкнути інтеграцію з %s"/>
+					<node name="defaultText" value="Увімкнути інтеграцію зі словником"/>
+					<node name="choice" value="Використати"/>
+					<node name="singleClickOpen" value="Відкривати словник по натисканню на слово"/>
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Виконувати при вiдпусканнi клавiши, нe при натисненнi"/>
+					<node name="minStylusPressure" value="Мiнiмальне натискування стiлусом"/>
+					<node name="maxStylusPressure" value="Максимальне натискування стiлусом"/>
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="Перегортання">
+					<node name="keyScrollDelay" value="Затримка між перегортання клавішами, мілісекунди"/>
+					<node name="keyLinesToScroll" value="Скільки рядків перегортати за 1 раз"/>
+					<node name="keyLinesToKeep" value="Скільки рядків залишати з попередньої сторінки"/>
+					<node name="enableTapScrolling" value="Включити прокручування натисненням на екран"/>
+					<node name="fingerOnly" value="Прокручувати тільки при натисканні пальцем"/>
+				</node>
+				<node name="Selection" value="Помітка">
+					<node name="enableSelection" value="Дозволити помiчати текст"/>
 				</node>
 				<node name="Indicator" value="Індикатор">
 					<node name="type" value="Показувати як">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="Показувати помітки початку"/>
 					<node name="navigation" value="Реагувати на натискання"/>
 				</node>
-				<node name="Scrolling" value="Перегортання">
-					<node name="keyScrollDelay" value="Затримка між перегортання клавішами, мілісекунди"/>
-					<node name="keyLinesToScroll" value="Скільки рядків перегортати за 1 раз"/>
-					<node name="keyLinesToKeep" value="Скільки рядків залишати з попередньої сторінки"/>
-					<node name="enableTapScrolling" value="Включити прокручування натисненням на екран"/>
-					<node name="fingerOnly" value="Прокручувати тільки при натисканні пальцем"/>
-				</node>
-				<node name="Selection" value="Помітка">
-					<node name="enableSelection" value="Дозволити помiчати текст"/>
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Завжди використовувати власні шрифти"/>
-				</node>
-				<node name="Margins" value="Відступи">
-					<node name="left" value="Відступ зліва"/>
-					<node name="right" value="Відступ зправа"/>
-					<node name="top" value="Відступ зверху"/>
-					<node name="bottom" value="Відступ знизу"/>
-				</node>
-				<node name="Format" value="Форматування">
-					<node name="optionsFor" value="Налаштування для"/>
-					<node name="lineSpacing" value="Інтервал">
-						<node name="unchanged" value="&lt;не змінювати&gt;"/>
-					</node>
-					<node name="firstLineIndent" value="Червоний рядок"/>
-					<node name="alignment" value="Вирівнювання">
-						<node name="left" value="ліве"/>
-						<node name="right" value="праве"/>
-						<node name="center" value="по центру"/>
-						<node name="justify" value="по краях"/>
-						<node name="unchanged" value="&lt;не змінювати&gt;"/>
-					</node>
-					<node name="spaceBefore" value="Пропуск перед"/>
-					<node name="spaceAfter" value="Пропуск після"/>
-					<node name="startIndent" value="Відступ на початку рядка"/>
-					<node name="endIndent" value="Відступ на кінці рядка"/>
-				</node>
-				<node name="Styles" value="Стилі">
-					<node name="optionsFor" value="Налаштування для"/>
-					<node name="fontFamily" value="Шрифт">
-						<node name="unchanged" value="&lt;не змінювати&gt;"/>
-					</node>
-					<node name="fontSize" value="Розмір"/>
-					<node name="fontSizeDifference" value="Розмір"/>
-					<node name="bold" value="Жирний"/>
-					<node name="italic" value="Курсив"/>
-					<node name="allowHyphenations" value="Переноси"/>
-					<node name="autoHyphenations" value="Переноси"/>
-				</node>
 				<node name="Rotation" value="Поворот">
 					<node name="direction" value="Як повертати">
 						<node name="disabled" value="Не повертати взагалі"/>
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="На 90 градусів проти годинникової стрілки"/>
 						<node name="180" value="На 180 градусів"/>
 						<node name="cycle" value="Перемикатися поміж 4 орієнтаціями"/>
-					</node>
-				</node>
-				<node name="Colors" value="Кольори">
-					<node name="colorFor" value="Колір">
-						<node name="background" value="фону"/>
-						<node name="selectionBackground" value="фону помітки"/>
-						<node name="text" value="звичайного тексту"/>
-						<node name="internalLink" value="посилання"/>
-						<node name="externalLink" value="зовнішнього посилання"/>
-						<node name="bookLink" value="Посилання на іншу книгу"/>
-						<node name="highlighted" value="підсвіченого тексту"/>
-						<node name="treeLines" value="ліній"/>
-						<node name="indicator" value="індикатора"/>
 					</node>
 				</node>
 				<node name="Keys" value="Клавіші">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="Показати/сховати індикатор"/>
 						<node name="toggleFullscreen" value="Ввімкнути/вимкнути повноекранний режим"/>
 						<node name="rotate" value="Повернути текст"/>
-						<node name="preferences" value="Показати діалог налаштувань"/>
-						<node name="bookInfo" value="Показати інформацію про книгу"/>
 						<node name="addBook" value="Додати файл до бібліотеки"/>
 						<node name="cancel" value="Відмінити поточний режим"/>
 						<node name="quit" value="Вийти з програми"/>
+						<node name="bookInfo" value="Показати інформацію про книгу"/>
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="Вийти з програми"/>
 					<node name="keyDelay" value="Затримка між натисканням на клавіші"/>
 				</node>
-				<node name="Config" value="Налаштування">
-					<node name="autoSave" value="Автоматично зберігати стан"/>
-					<node name="timeout" value="Час між збереженням, секунди"/>
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Завжди використовувати власні шрифти"/>
 				</node>
-				<node name="Dictionary" value="Словники">
-					<node name="enableIntegration" value="Увімкнути інтеграцію з %s"/>
-					<node name="defaultText" value="Увімкнути інтеграцію зі словником"/>
-					<node name="choice" value="Використати"/>
-					<node name="singleClickOpen" value="Відкривати словник по натисканню на слово"/>
+				<node name="Margins" value="Відступи">
+					<node name="left" value="Відступ зліва"/>
+					<node name="right" value="Відступ зправа"/>
+					<node name="top" value="Відступ зверху"/>
+					<node name="bottom" value="Відступ знизу"/>
 				</node>
-				<node name="Web" value="Веб">
-					<node name="enableIntegration" value="Відкривати зовнішні посилання за допомогою %s"/>
-					<node name="defaultText" value="Відкривати зовнішні посилання у переглядачі"/>
-					<node name="choice" value="Переглядач"/>
-					<node name="command" value="Виконати команду"/>
+				<node name="Format" value="Форматування">
+					<node name="optionsFor" value="Налаштування для"/>
+					<node name="lineSpacing" value="Інтервал">
+						<node name="unchanged" value="&lt;не змінювати&gt;"/>
+					</node>
+					<node name="firstLineIndent" value="Червоний рядок"/>
+					<node name="alignment" value="Вирівнювання">
+						<node name="left" value="ліве"/>
+						<node name="right" value="праве"/>
+						<node name="center" value="по центру"/>
+						<node name="justify" value="по краях"/>
+						<node name="unchanged" value="&lt;не змінювати&gt;"/>
+					</node>
+					<node name="spaceBefore" value="Пропуск перед"/>
+					<node name="spaceAfter" value="Пропуск після"/>
+					<node name="startIndent" value="Відступ на початку рядка"/>
+					<node name="endIndent" value="Відступ на кінці рядка"/>
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Виконувати при вiдпусканнi клавiши, нe при натисненнi"/>
-					<node name="minStylusPressure" value="Мiнiмальне натискування стiлусом"/>
-					<node name="maxStylusPressure" value="Максимальне натискування стiлусом"/>
+				<node name="Styles" value="Стилі">
+					<node name="optionsFor" value="Налаштування для"/>
+					<node name="fontFamily" value="Шрифт">
+						<node name="unchanged" value="&lt;не змінювати&gt;"/>
+					</node>
+					<node name="fontSize" value="Розмір"/>
+					<node name="fontSizeDifference" value="Розмір"/>
+					<node name="bold" value="Жирний"/>
+					<node name="italic" value="Курсив"/>
+					<node name="allowHyphenations" value="Переноси"/>
+					<node name="autoHyphenations" value="Переноси"/>
+				</node>
+				<node name="Colors" value="Кольори">
+					<node name="colorFor" value="Колір">
+						<node name="background" value="фону"/>
+						<node name="selectionBackground" value="фону помітки"/>
+						<node name="text" value="звичайного тексту"/>
+						<node name="internalLink" value="посилання"/>
+						<node name="externalLink" value="зовнішнього посилання"/>
+						<node name="bookLink" value="Посилання на іншу книгу"/>
+						<node name="highlighted" value="підсвіченого тексту"/>
+						<node name="treeLines" value="ліній"/>
+						<node name="indicator" value="індикатора"/>
+					</node>
 				</node>
 			</node>
 		</node>

@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="Thông tin sách..." />
 		<node name="toc" value="Mục lục" />
 		<node name="showLibrary" value="Mở Thư	viện" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Thư viện">
 			<node name="showLibrary" value="Mở" />
 			<node name="previousBook" value="Quyển trước" />
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="Toàn Màn hình" />
 			<node name="toggleIndicator" value="Đảo chiều Thanh định hướng" />
 		</node>
-		<node name="preferences" value="Tùy chỉnh..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="Đóng" />
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" value="Trước" />
 			<node name="tooltip" value="Tìm Phía trước" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" value="Thông tin Sách" />
-			<node name="tooltip" value="Hiện hộp Thông tin Sách" />
-		</node>
-		<node name="preferences">
-			<node name="label" value="Tùy chỉnh" />
-			<node name="tooltip" value="Hiện hộp Tùy chỉnh " />
-		</node>
 		<node name="rotate">
 			<node name="label" value="Quay" />
 			<node name="tooltip" value="Quay Sách" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" value="Bộ lọc" />
 			<node name="tooltip" value="Bộ lọc" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="Thông tin Sách" />
+			<node name="tooltip" value="Hiện hộp Thông tin Sách" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" value="&amp;Mua" />
 			<node name="buyAndDownload" value="Mua và &amp;tải về" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="Tùy chọn FBreader" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Thư viện">
 					<node name="bookPath" value="Đường dẫn tới Sách" />
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="Sưu tập Sách mà không có Siêu Thông tin" />
 					<node name="downloadDirectory" value="Thư mục Sách tải về" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="Tìm kiếm trên Mạng">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Sử dụng	Proxy" />
 					<node name="proxyHost" value="Máy chủ Proxy" />
 					<node name="proxyPort" value="Cổng Proxy" />
 					<node name="timeout" value="Hoạt động Mạng hết Thời gian chờ,	giây" />
 				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="Mở Liên kết Bên ngoài trong	%s" />
+					<node name="defaultText" value="Mở Liên kết Bên ngoài trong Trình duyệt" />
+					<node name="choice" value="Dùng Trình duyệt" />
+					<node name="command" value="Lệnh để Thực thi" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="Ngôn ngữ">
 					<node name="autoDetect" value="Tự động Lựa chọn Ngôn ngữ và cách Giải mã" />
 					<node name="defaultLanguage" value="Ngôn ngữ	Mặc định" />
 					<node name="defaultEncodingSet" value="Đặt cách Giải mã Mặc định" />
 					<node name="defaultEncoding" value="Cách Giải mã Mặc định" />
 					<node name="useWindows1252Hack" value="Sử dụng windows-1252 thay thế cho	iso-8859-1" />
+				</node>
+				<node name="Config" value="Cấu hình">
+					<node name="autoSave" value="Lưu Trạng thái một cách Tự động" />
+					<node name="timeout" value="Thời gian chờ Giữa những Lần lưu, giây" />
+				</node>
+				<node name="Dictionary" value="Từ điển">
+					<node name="enableIntegration" value="Bật Tích hợp với	%s" />
+					<node name="defaultText" value="Bật Tích hợp với Từ điển" />
+					<node name="choice" value="Tích hợp với" />
+					<node name="singleClickOpen" value="Mở bằng Một lần Click" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Tác dụng ở Phím Nhả (Release) , không ở Phím Bấm (Press)" />
+					<node name="minStylusPressure" value="Áp lực bút Stylus Tối thiểu" />
+					<node name="maxStylusPressure" value="Áp lực bút Stylus Tối đa" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="Cuộn">
+					<node name="keyScrollDelay" value="Thời gian giữa 2 lần ấn Phím Cuộn, mili giây" />
+					<node name="keyLinesToScroll" value="Số dòng để Cuộn mỗi Dòng	Cuộn" />
+					<node name="keyLinesToKeep" value="Số dòng để Giữ	mỗi Trang	Cuộn" />
+					<node name="enableTapScrolling" value="Bật Cuộn Phân nhánh" />
+					<node name="fingerOnly" value="Chỉ cuộn trong Chốt Phân nhánh" />
+				</node>
+				<node name="Selection" value="Sự	Chọn">
+					<node name="enableSelection" value="Bật Chọn Văn bản" />
 				</node>
 				<node name="Indicator" value="Thanh Định hướng">
 					<node name="type" value="Hiện như">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="Hiện các Đánh dấu ML" />
 					<node name="navigation" value="Cho phép Điều hướng" />
 				</node>
-				<node name="Scrolling" value="Cuộn">
-					<node name="keyScrollDelay" value="Thời gian giữa 2 lần ấn Phím Cuộn, mili giây" />
-					<node name="keyLinesToScroll" value="Số dòng để Cuộn mỗi Dòng	Cuộn" />
-					<node name="keyLinesToKeep" value="Số dòng để Giữ	mỗi Trang	Cuộn" />
-					<node name="enableTapScrolling" value="Bật Cuộn Phân nhánh" />
-					<node name="fingerOnly" value="Chỉ cuộn trong Chốt Phân nhánh" />
-				</node>
-				<node name="Selection" value="Sự	Chọn">
-					<node name="enableSelection" value="Bật Chọn Văn bản" />
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Luôn luôn Sử dụng Phông của Tôi" />
-				</node>
-				<node name="Margins" value="Canh Lề">
-					<node name="left" value="Lề Trái" />
-					<node name="right" value="Lề Phải" />
-					<node name="top" value="Lề Trên" />
-					<node name="bottom" value="Lề Dưới" />
-				</node>
-				<node name="Format" value="Định dạng">
-					<node name="optionsFor" value="Tùy chọn cho" />
-					<node name="lineSpacing" value="Giãn cách Dòng">
-						<node name="unchanged" value="&lt;giữ nguyên&gt;" />
-					</node>
-					<node name="firstLineIndent" value="Thụt Lề Dòng dầu" />
-					<node name="alignment" value="Căn chỉnh">
-						<node name="left" value="Trái" />
-						<node name="right" value="Phải" />
-						<node name="center" value="Giữa" />
-						<node name="justify" value="Tự căn chỉnh" />
-						<node name="unchanged" value="&lt;giữ nguyên&gt;" />
-					</node>
-					<node name="spaceBefore" value="Khoảng cách phía Trước" />
-					<node name="spaceAfter" value="Khoảng cách phía Sau" />
-					<node name="startIndent" value="Dòng Bắt đầu Thụt lề" />
-					<node name="endIndent" value="Dòng kết thúc Thụt lề" />
-				</node>
-				<node name="Styles" value="Kiểu">
-					<node name="optionsFor" value="Tùy chọn cho" />
-					<node name="fontFamily" value="Phông Hệ thống">
-						<node name="unchanged" value="&lt;giữ nguyên&gt;" />
-					</node>
-					<node name="fontSize" value="Cỡ" />
-					<node name="fontSizeDifference" value="Các Cỡ Khác nhau" />
-					<node name="bold" value="Đậm" />
-					<node name="italic" value="Nghiêng" />
-					<node name="allowHyphenations" value="Cho phép Tách từ" />
-					<node name="autoHyphenations" value="Tự động Tách từ" />
-				</node>
 				<node name="Rotation" value="Quay">
 					<node name="direction" value="Kiểu Quay">
 						<node name="disabled" value="Tắt" />
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="Ngược chiều kim đồng hồ 90 Độ" />
 						<node name="180" value="180 Độ" />
 						<node name="cycle" value="Xoay vòng Cả 4 Hướng" />
-					</node>
-				</node>
-				<node name="Colors" value="Màu sắc">
-					<node name="colorFor" value="Màu cho">
-						<node name="background" value="Nền" />
-						<node name="selectionBackground" value="Chọn Nền" />
-						<node name="text" value="Văn bản thường" />
-						<node name="internalLink" value="Văn bản Siêu liên kết Bên ngoài" />
-						<node name="externalLink" value="Văn bản Siêu liên kết Bên trong" />
-						<node name="bookLink" value="Liên kết tới Quyển sách khác" />
-						<node name="highlighted" value="Làm nổi bật văn bản" />
-						<node name="treeLines" value="Dòng Cây" />
-						<node name="indicator" value="Vị trí thanh Định hướng" />
 					</node>
 				</node>
 				<node name="Keys" value="Các phím">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="Đảo chiều vị trí thanh định hướng" />
 						<node name="toggleFullscreen" value="Đảo chế độ toàn màn hình" />
 						<node name="rotate" value="Xoay màn hình" />
-						<node name="preferences" value="Hiện hộp tùy chọn" />
-						<node name="bookInfo" value="Hiện hộp thông tin" />
 						<node name="addBook" value="Thêm sách" />
 						<node name="cancel" value="Hủy bỏl" />
 						<node name="quit" value="Thoát" />
+						<node name="bookInfo" value="Hiện hộp thông tin" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="Thoát Ứng dụng khi Hủy bỏ" />
 					<node name="keyDelay" value="Độ trễ Giữa các lần Bấm Phím được Chấp nhận" />
 				</node>
-				<node name="Config" value="Cấu hình">
-					<node name="autoSave" value="Lưu Trạng thái một cách Tự động" />
-					<node name="timeout" value="Thời gian chờ Giữa những Lần lưu, giây" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Luôn luôn Sử dụng Phông của Tôi" />
 				</node>
-				<node name="Dictionary" value="Từ điển">
-					<node name="enableIntegration" value="Bật Tích hợp với	%s" />
-					<node name="defaultText" value="Bật Tích hợp với Từ điển" />
-					<node name="choice" value="Tích hợp với" />
-					<node name="singleClickOpen" value="Mở bằng Một lần Click" />
+				<node name="Margins" value="Canh Lề">
+					<node name="left" value="Lề Trái" />
+					<node name="right" value="Lề Phải" />
+					<node name="top" value="Lề Trên" />
+					<node name="bottom" value="Lề Dưới" />
 				</node>
-				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Mở Liên kết Bên ngoài trong	%s" />
-					<node name="defaultText" value="Mở Liên kết Bên ngoài trong Trình duyệt" />
-					<node name="choice" value="Dùng Trình duyệt" />
-					<node name="command" value="Lệnh để Thực thi" />
+				<node name="Format" value="Định dạng">
+					<node name="optionsFor" value="Tùy chọn cho" />
+					<node name="lineSpacing" value="Giãn cách Dòng">
+						<node name="unchanged" value="&lt;giữ nguyên&gt;" />
+					</node>
+					<node name="firstLineIndent" value="Thụt Lề Dòng dầu" />
+					<node name="alignment" value="Căn chỉnh">
+						<node name="left" value="Trái" />
+						<node name="right" value="Phải" />
+						<node name="center" value="Giữa" />
+						<node name="justify" value="Tự căn chỉnh" />
+						<node name="unchanged" value="&lt;giữ nguyên&gt;" />
+					</node>
+					<node name="spaceBefore" value="Khoảng cách phía Trước" />
+					<node name="spaceAfter" value="Khoảng cách phía Sau" />
+					<node name="startIndent" value="Dòng Bắt đầu Thụt lề" />
+					<node name="endIndent" value="Dòng kết thúc Thụt lề" />
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Tác dụng ở Phím Nhả (Release) , không ở Phím Bấm (Press)" />
-					<node name="minStylusPressure" value="Áp lực bút Stylus Tối thiểu" />
-					<node name="maxStylusPressure" value="Áp lực bút Stylus Tối đa" />
+				<node name="Styles" value="Kiểu">
+					<node name="optionsFor" value="Tùy chọn cho" />
+					<node name="fontFamily" value="Phông Hệ thống">
+						<node name="unchanged" value="&lt;giữ nguyên&gt;" />
+					</node>
+					<node name="fontSize" value="Cỡ" />
+					<node name="fontSizeDifference" value="Các Cỡ Khác nhau" />
+					<node name="bold" value="Đậm" />
+					<node name="italic" value="Nghiêng" />
+					<node name="allowHyphenations" value="Cho phép Tách từ" />
+					<node name="autoHyphenations" value="Tự động Tách từ" />
+				</node>
+				<node name="Colors" value="Màu sắc">
+					<node name="colorFor" value="Màu cho">
+						<node name="background" value="Nền" />
+						<node name="selectionBackground" value="Chọn Nền" />
+						<node name="text" value="Văn bản thường" />
+						<node name="internalLink" value="Văn bản Siêu liên kết Bên ngoài" />
+						<node name="externalLink" value="Văn bản Siêu liên kết Bên trong" />
+						<node name="bookLink" value="Liên kết tới Quyển sách khác" />
+						<node name="highlighted" value="Làm nổi bật văn bản" />
+						<node name="treeLines" value="Dòng Cây" />
+						<node name="indicator" value="Vị trí thanh Định hướng" />
+					</node>
 				</node>
 			</node>
 		</node>

@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="Apie knygą..." />
 		<node name="toc" value="Turinys" />
 		<node name="showLibrary" value="Atidaryti biblioteką" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Biblioteka">
 			<node name="showLibrary" value="Atidaryti" />
 			<node name="previousBook" value="Ankstesnė knyga" />
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="Užpildyti ekraną" />
 			<node name="toggleIndicator" value="Įjungti indikatorių" />
 		</node>
-		<node name="preferences" value="Nuostatos..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="Uždaryti" />
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" value="Ankstesnis" />
 			<node name="tooltip" value="Rasti ankstesnį" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" value="Informacija" />
-			<node name="tooltip" value="Informacija apie knygą" />
-		</node>
-		<node name="preferences">
-			<node name="label" value="Nustatymai" />
-			<node name="tooltip" value="Nustatyti programos parametrus" />
-		</node>
 		<node name="rotate">
 			<node name="label" value="Pasukti" />
 			<node name="tooltip" value="Pasukti tekstą" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" value="Filtras" />
 			<node name="tooltip" value="Filtruoti pagal __" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="Informacija" />
+			<node name="tooltip" value="Informacija apie knygą" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" value="&amp;Pirkti" />
 			<node name="buyAndDownload" value="Pirkti ir &amp;nusikrauti" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Nustatymai" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Biblioteka">
 					<node name="bookPath" value="Kelias prie knygos (knygų)" />
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="Atrinkti knygas be MetaInfo" />
 					<node name="downloadDirectory" value="Atsisiųstų knygų saugojimo vieta" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="Interneto bibliotekos">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Naudoti Proxy" />
 					<node name="proxyHost" value="Proxy Host'as" />
 					<node name="proxyPort" value="Proxy Port'as" />
 					<node name="timeout" value="Veiksmo vykdymo laukimas, sekundemis" />
 				</node>
+				<node name="Web" value="Internetas">
+					<node name="enableIntegration" value="Leisti prisijungti prie Interneto" />
+					<node name="defaultText" value="Atidaryti išorinę nuorodą naršyklėje" />
+					<node name="choice" value="Naudoti naršyklę" />
+					<node name="command" value="Įvykdyti komandą" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="Kalba">
 					<node name="autoDetect" value="Automatinis kalbos ir koduotės atpažinimas" />
 					<node name="defaultLanguage" value="Pagrindinė kalba" />
 					<node name="defaultEncodingSet" value="Pagrindinės koduotės aibė" />
 					<node name="defaultEncoding" value="Pagrindinė koduotė" />
 					<node name="useWindows1252Hack" value="Naudoti windows-1252 vietoje iso-8859-1" />
+				</node>
+				<node name="Config" value="Konfigūracija">
+					<node name="autoSave" value="Automatiškai saugoti būseną" />
+					<node name="timeout" value="Laiko tarpas tarp saugojimų, sekundės" />
+				</node>
+				<node name="Dictionary" value="Žodynas">
+					<node name="enableIntegration" value="Leisti sujungimą" />
+					<node name="defaultText" value="Leisti sujungimą su žodynu" />
+					<node name="choice" value="Sujungti su" />
+					<node name="singleClickOpen" value="Atidaryti vienu pelės paspaudimu" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Veikmas atleidžiant paspaustą mygtuką" />
+					<node name="minStylusPressure" value="Silpniausias bakstuko paspaudimas" />
+					<node name="maxStylusPressure" value="Stipriausias bakstuko paspaudimas" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="Puslapio keitimas">
+					<node name="keyScrollDelay" value="Puslapio keitimo užlaikymas, msec." />
+					<node name="keyLinesToScroll" value="Eilučių skaičius keičiamas vienu paspaudimu" />
+					<node name="keyLinesToKeep" value="Eilučių skaičius paliekamas pakeičiant puslapį" />
+					<node name="enableTapScrolling" value="Leisti keisti puslapį bakstelnant ekraną" />
+					<node name="fingerOnly" value="Keisti puslapį tik prisilietus pirštu" />
+				</node>
+				<node name="Selection" value="Teksto žymėjimas">
+					<node name="enableSelection" value="Leisti teksto žymėjimą" />
 				</node>
 				<node name="Indicator" value="Indikatorius">
 					<node name="type" value="Rodyti kaip">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="Rodyti turinio žymes" />
 					<node name="navigation" value="Leisti Navigaciją" />
 				</node>
-				<node name="Scrolling" value="Puslapio keitimas">
-					<node name="keyScrollDelay" value="Puslapio keitimo užlaikymas, msec." />
-					<node name="keyLinesToScroll" value="Eilučių skaičius keičiamas vienu paspaudimu" />
-					<node name="keyLinesToKeep" value="Eilučių skaičius paliekamas pakeičiant puslapį" />
-					<node name="enableTapScrolling" value="Leisti keisti puslapį bakstelnant ekraną" />
-					<node name="fingerOnly" value="Keisti puslapį tik prisilietus pirštu" />
-				</node>
-				<node name="Selection" value="Teksto žymėjimas">
-					<node name="enableSelection" value="Leisti teksto žymėjimą" />
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Visada naudoti mano šriftą" />
-				</node>
-				<node name="Margins" value="Paraštės">
-					<node name="left" value="Kairioji paraštė" />
-					<node name="right" value="Dešinioji paraštė" />
-					<node name="top" value="Viršutinė paraštė" />
-					<node name="bottom" value="Apatinė paraštė" />
-				</node>
-				<node name="Format" value="Formatas">
-					<node name="optionsFor" value="Nustatymai" />
-					<node name="lineSpacing" value="Atstumas tarp eilučių">
-						<node name="unchanged" value="&lt;nekeistas&gt;" />
-					</node>
-					<node name="firstLineIndent" value="Pirmos eilutės atstumas nuo krašto" />
-					<node name="alignment" value="Lygiavimas">
-						<node name="left" value="Kairėn" />
-						<node name="right" value="Dešinėn" />
-						<node name="center" value="Per vidurį" />
-						<node name="justify" value="Išlyginti" />
-						<node name="unchanged" value="&lt;nekeistas&gt;" />
-					</node>
-					<node name="spaceBefore" value="Atstumas prieš" />
-					<node name="spaceAfter" value="Atstumas po" />
-					<node name="startIndent" value="Eilutės pradžia" />
-					<node name="endIndent" value="Eilutės pabaiga" />
-				</node>
-				<node name="Styles" value="Stiliai">
-					<node name="optionsFor" value="Nustatymai" />
-					<node name="fontFamily" value="Šriftų šeima">
-						<node name="unchanged" value="&lt;nekeistas&gt;" />
-					</node>
-					<node name="fontSize" value="Dydis" />
-					<node name="fontSizeDifference" value="Dydžių skirtumai" />
-					<node name="bold" value="Pastorintas" />
-					<node name="italic" value="Kursyvas" />
-					<node name="allowHyphenations" value="Skiemenų perkėlimas" />
-					<node name="autoHyphenations" value="Automatinis skiemenų perkėlimas" />
-				</node>
 				<node name="Rotation" value="Pasukimas">
 					<node name="direction" value="Sukti puslapį">
 						<node name="disabled" value="Nesukti" />
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="90 laipsnių prieš laikrodžio rodyklę" />
 						<node name="180" value="180 laipsnių" />
 						<node name="cycle" value="Keturiomis kryptimis" />
-					</node>
-				</node>
-				<node name="Colors" value="Spalvos">
-					<node name="colorFor" value="Spalva">
-						<node name="background" value="Fonas" />
-						<node name="selectionBackground" value="Teksto žymėjimo spalva" />
-						<node name="text" value="Tekstas" />
-						<node name="internalLink" value="Vidinė nuoroda" />
-						<node name="externalLink" value="Nuoroda į įšorinį objektą" />
-						<node name="bookLink" value="Nuoroda į kitą knygą" />
-						<node name="highlighted" value="Išskirtas tekstas" />
-						<node name="treeLines" value="Hierarchinės struktūros linijos" />
-						<node name="indicator" value="Indikatorius" />
 					</node>
 				</node>
 				<node name="Keys" value="Mygtukai">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="Įjungti puslapių indikatorių" />
 						<node name="toggleFullscreen" value="Įjungti ekrano užpildymą" />
 						<node name="rotate" value="Pasukti ekraną" />
-						<node name="preferences" value="Parodyti nustatymus" />
-						<node name="bookInfo" value="Parodyti knygos informaciją" />
 						<node name="addBook" value="Pridėti knygą" />
 						<node name="cancel" value="Atšaukti" />
 						<node name="quit" value="Išeiti" />
+						<node name="bookInfo" value="Parodyti knygos informaciją" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="Išeiti iš programos pasirinkus Atšaukti" />
 					<node name="keyDelay" value="Užlaikymas tarp mygtuko paspaudimo ir vykdymo" />
 				</node>
-				<node name="Config" value="Konfigūracija">
-					<node name="autoSave" value="Automatiškai saugoti būseną" />
-					<node name="timeout" value="Laiko tarpas tarp saugojimų, sekundės" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Visada naudoti mano šriftą" />
 				</node>
-				<node name="Dictionary" value="Žodynas">
-					<node name="enableIntegration" value="Leisti sujungimą" />
-					<node name="defaultText" value="Leisti sujungimą su žodynu" />
-					<node name="choice" value="Sujungti su" />
-					<node name="singleClickOpen" value="Atidaryti vienu pelės paspaudimu" />
+				<node name="Margins" value="Paraštės">
+					<node name="left" value="Kairioji paraštė" />
+					<node name="right" value="Dešinioji paraštė" />
+					<node name="top" value="Viršutinė paraštė" />
+					<node name="bottom" value="Apatinė paraštė" />
 				</node>
-				<node name="Web" value="Internetas">
-					<node name="enableIntegration" value="Leisti prisijungti prie Interneto" />
-					<node name="defaultText" value="Atidaryti išorinę nuorodą naršyklėje" />
-					<node name="choice" value="Naudoti naršyklę" />
-					<node name="command" value="Įvykdyti komandą" />
+				<node name="Format" value="Formatas">
+					<node name="optionsFor" value="Nustatymai" />
+					<node name="lineSpacing" value="Atstumas tarp eilučių">
+						<node name="unchanged" value="&lt;nekeistas&gt;" />
+					</node>
+					<node name="firstLineIndent" value="Pirmos eilutės atstumas nuo krašto" />
+					<node name="alignment" value="Lygiavimas">
+						<node name="left" value="Kairėn" />
+						<node name="right" value="Dešinėn" />
+						<node name="center" value="Per vidurį" />
+						<node name="justify" value="Išlyginti" />
+						<node name="unchanged" value="&lt;nekeistas&gt;" />
+					</node>
+					<node name="spaceBefore" value="Atstumas prieš" />
+					<node name="spaceAfter" value="Atstumas po" />
+					<node name="startIndent" value="Eilutės pradžia" />
+					<node name="endIndent" value="Eilutės pabaiga" />
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Veikmas atleidžiant paspaustą mygtuką" />
-					<node name="minStylusPressure" value="Silpniausias bakstuko paspaudimas" />
-					<node name="maxStylusPressure" value="Stipriausias bakstuko paspaudimas" />
+				<node name="Styles" value="Stiliai">
+					<node name="optionsFor" value="Nustatymai" />
+					<node name="fontFamily" value="Šriftų šeima">
+						<node name="unchanged" value="&lt;nekeistas&gt;" />
+					</node>
+					<node name="fontSize" value="Dydis" />
+					<node name="fontSizeDifference" value="Dydžių skirtumai" />
+					<node name="bold" value="Pastorintas" />
+					<node name="italic" value="Kursyvas" />
+					<node name="allowHyphenations" value="Skiemenų perkėlimas" />
+					<node name="autoHyphenations" value="Automatinis skiemenų perkėlimas" />
+				</node>
+				<node name="Colors" value="Spalvos">
+					<node name="colorFor" value="Spalva">
+						<node name="background" value="Fonas" />
+						<node name="selectionBackground" value="Teksto žymėjimo spalva" />
+						<node name="text" value="Tekstas" />
+						<node name="internalLink" value="Vidinė nuoroda" />
+						<node name="externalLink" value="Nuoroda į įšorinį objektą" />
+						<node name="bookLink" value="Nuoroda į kitą knygą" />
+						<node name="highlighted" value="Išskirtas tekstas" />
+						<node name="treeLines" value="Hierarchinės struktūros linijos" />
+						<node name="indicator" value="Indikatorius" />
+					</node>
 				</node>
 			</node>
 		</node>

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <resources>
 	<node name="libraryView">
 		<node name="authorNode">
@@ -70,6 +71,9 @@
 		<node name="bookInfo" value="Информация о книге..." />
 		<node name="toc" value="Содержание" />
 		<node name="showLibrary" value="Открыть библиотеку" />
+		<node name="showNetLibrary" value="Сетевая библиотека" />
+		<node name="addBook" value="Открыть файл..." />
+		<node name="showRecent" value="Недавние книги" />
 		<node name="library" value="Библиотека">
 			<node name="showLibrary" value="Открыть" />
 			<node name="previousBook" value="Предыдущая книга" />
@@ -108,7 +112,7 @@
 			<node name="toggleFullscreen" value="На весь экран" />
 			<node name="toggleIndicator" value="Индикатор позиции" />
 		</node>
-		<node name="preferences" value="Настройки..." />
+		<node name="preferences" toBeTranslated="true" value="Последние настройки..." />
 		<node name="quit" value="Закрыть" />
 	</node>
 	<node name="toolbar">
@@ -181,14 +185,6 @@
 			<node name="label" value="Предыдущий" />
 			<node name="tooltip" value="Найти предыдущий" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" value="О книге" />
-			<node name="tooltip" value="Информация о книге" />
-		</node>
-		<node name="preferences">
-			<node name="label" value="Настройки" />
-			<node name="tooltip" value="Настройки" />
-		</node>
 		<node name="rotate">
 			<node name="label" value="Поворот" />
 			<node name="tooltip" value="Поворот текста" />
@@ -200,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" value="Фильтровать" />
 			<node name="tooltip" value="Фильтровать" />
+		</node>
+		<node name="preferences">
+			<node name="label" value="Последний открытый диалог настроек" />
+			<node name="tooltip" value="Последний открытый диалог настроек" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="О книге" />
+			<node name="tooltip" value="Информация о книге" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" value="Настройки библиотеки" />
+			<node name="tooltip" value="Показать диалог настроек библиотеки" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" value="Сетевые настройки" />
+			<node name="tooltip" value="Показать диалог сетевых настроек" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" value="Системные настройки" />
+			<node name="tooltip" value="Показать диалог системных настроек" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" value="Настройки чтения" />
+			<node name="tooltip" value="Показать диалог настроек чтения" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" value="Настройки внешнего вида" />
+			<node name="tooltip" value="Показать диалог настроек внешнего вида" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -213,8 +237,8 @@
 			<node name="buy" value="&amp;Купить" />
 			<node name="buyAndDownload" value="Купить и &amp;скачать" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Настройки" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" value="FBReader - Настройки библиотеки" />
 			<node name="tab">
 				<node name="Library" value="Библиотека">
 					<node name="bookPath" value="Каталоги с книгами" />
@@ -222,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="Сканировать книги без метаинформации" />
 					<node name="downloadDirectory" value="Каталог для загружаемых книг" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" value="FBReader - Сетевые настройки" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="Поиск в сети">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Использовать прокси-сервер" />
 					<node name="proxyHost" value="Адрес прокси-сервера" />
 					<node name="proxyPort" value="Порт прокси-сервера" />
 					<node name="timeout" value="Максимальное время задержки, секунды" />
 				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="Открывать внешние ссылки в %s" />
+					<node name="defaultText" value="Открывать внешние ссылки в браузере" />
+					<node name="choice" value="Браузер" />
+					<node name="command" value="Выполнять команду" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" value="FBReader - Системные настройки" />
+			<node name="tab">
 				<node name="Language" value="Язык">
 					<node name="autoDetect" value="Автоматически определять язык и кодировку" />
 					<node name="defaultLanguage" value="Язык по умолчанию" />
 					<node name="defaultEncodingSet" value="Набор кодировок по умолчанию" />
 					<node name="defaultEncoding" value="Кодировка по умолчанию" />
 					<node name="useWindows1252Hack" value="Использовать windows-1252 вместо iso-8859-1" />
+				</node>
+				<node name="Config" value="Настройки">
+					<node name="autoSave" value="Автоматически сохранять состояние" />
+					<node name="timeout" value="Время между сохранениями, секунды" />
+				</node>
+				<node name="Dictionary" value="Словари">
+					<node name="enableIntegration" value="Включить интеграцию с %s" />
+					<node name="defaultText" value="Включить интеграцию со словарем" />
+					<node name="choice" value="Использовать" />
+					<node name="singleClickOpen" value="Открывать словарь по нажатию на слово" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Реагировать на отпускание клавиши, а не на нажатие" />
+					<node name="minStylusPressure" value="Минимальное давление стилуса" />
+					<node name="maxStylusPressure" value="Максимальное давление стилуса" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" value="FBReader - Настройки чтения" />
+			<node name="tab">
+				<node name="Scrolling" value="Перелистывание">
+					<node name="keyScrollDelay" value="Задержка между листаниями клавишами" />
+					<node name="keyLinesToScroll" value="Сколько строк пролистывать за 1 раз" />
+					<node name="keyLinesToKeep" value="Сколько строк оставлять с предыдущей страницы" />
+					<node name="enableTapScrolling" value="Включить прокрутку нажатием на экран" />
+					<node name="fingerOnly" value="Только при нажатии пальцем" />
+				</node>
+				<node name="Selection" value="Выделение">
+					<node name="enableSelection" value="Разрешить выделение текста" />
 				</node>
 				<node name="Indicator" value="Индикатор">
 					<node name="type" value="Внешний вид">
@@ -249,55 +321,6 @@
 					<node name="tocMarks" value="Показывать пометки начала глав" />
 					<node name="navigation" value="Реагировать на нажатия" />
 				</node>
-				<node name="Scrolling" value="Перелистывание">
-					<node name="keyScrollDelay" value="Задержка между листаниями клавишами" />
-					<node name="keyLinesToScroll" value="Сколько строк пролистывать за 1 раз" />
-					<node name="keyLinesToKeep" value="Сколько строк оставлять с предыдущей страницы" />
-					<node name="enableTapScrolling" value="Включить прокрутку нажатием на экран" />
-					<node name="fingerOnly" value="Только при нажатии пальцем" />
-				</node>
-				<node name="Selection" value="Пометка">
-					<node name="enableSelection" value="Разрешить помечать текст" />
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Всегда использовать собственные шрифты" />
-				</node>
-				<node name="Margins" value="Отступы">
-					<node name="left" value="Отступ слева" />
-					<node name="right" value="Отступ справа" />
-					<node name="top" value="Отступ сверху" />
-					<node name="bottom" value="Отступ снизу" />
-				</node>
-				<node name="Format" value="Форматирование">
-					<node name="optionsFor" value="Настройки для" />
-					<node name="lineSpacing" value="Интервал">
-						<node name="unchanged" value="&lt;не менять&gt;" />
-					</node>
-					<node name="firstLineIndent" value="Красная строка" />
-					<node name="alignment" value="Выравнивание">
-						<node name="left" value="левое" />
-						<node name="right" value="правое" />
-						<node name="center" value="по центру" />
-						<node name="justify" value="по краям" />
-						<node name="unchanged" value="&lt;не менять&gt;" />
-					</node>
-					<node name="spaceBefore" value="Пропуск перед" />
-					<node name="spaceAfter" value="Пропуск после" />
-					<node name="startIndent" value="Отступ в начале строки" />
-					<node name="endIndent" value="Отступ в конце строки" />
-				</node>
-				<node name="Styles" value="Стили">
-					<node name="optionsFor" value="Настройки для" />
-					<node name="fontFamily" value="Шрифт">
-						<node name="unchanged" value="&lt;не менять&gt;" />
-					</node>
-					<node name="fontSize" value="Размер" />
-					<node name="fontSizeDifference" value="Размер" />
-					<node name="bold" value="Жирный" />
-					<node name="italic" value="Курсив" />
-					<node name="allowHyphenations" value="Переносы" />
-					<node name="autoHyphenations" value="Переносы" />
-				</node>
 				<node name="Rotation" value="Поворот">
 					<node name="direction" value="Как поворачивать">
 						<node name="disabled" value="Не поворачивать вообще" />
@@ -305,19 +328,6 @@
 						<node name="counterclockwise" value="На 90 градусов против часовой стрелки" />
 						<node name="180" value="На 180 градусов" />
 						<node name="cycle" value="Переключаться между 4 ориентациями" />
-					</node>
-				</node>
-				<node name="Colors" value="Цвета">
-					<node name="colorFor" value="Цвет">
-						<node name="background" value="фона" />
-						<node name="selectionBackground" value="фона пометки" />
-						<node name="text" value="обычного текста" />
-						<node name="internalLink" value="ссылки" />
-						<node name="externalLink" value="внешней ссылки" />
-						<node name="bookLink" value="ссылки на книгу" />
-						<node name="highlighted" value="подсвеченного текста" />
-						<node name="treeLines" value="линий" />
-						<node name="indicator" value="индикатора" />
 					</node>
 				</node>
 				<node name="Keys" value="Клавиши">
@@ -358,35 +368,71 @@
 						<node name="toggleIndicator" value="Показать/спрятать индикатор" />
 						<node name="toggleFullscreen" value="Включить/выключить полноэкранный режим" />
 						<node name="rotate" value="Повернуть текст" />
-						<node name="preferences" value="Показать диалог настроек" />
-						<node name="bookInfo" value="Показать информацию о книге" />
 						<node name="addBook" value="Добавить файл в библиотеку" />
 						<node name="cancel" value="Отменить текущий режим" />
 						<node name="quit" value="Выйти из программы" />
+						<node name="bookInfo" value="Показать информацию о книге" />
+						<node name="preferences" value="Показать последний открытый диалог настроек" />
 					</node>
 					<node name="quitOnCancel" value="Выходить из программы" />
 					<node name="keyDelay" value="Задержка между нажатиями на клавиши" />
 				</node>
-				<node name="Config" value="Настройки">
-					<node name="autoSave" value="Автоматически сохранять состояние" />
-					<node name="timeout" value="Время между сохранениями, секунды" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" value="FBReader - Настройки внешнего вида" />
+			<node name="tab">
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Всегда использовать собственные шрифты" />
 				</node>
-				<node name="Dictionary" value="Словари">
-					<node name="enableIntegration" value="Включить интеграцию с %s" />
-					<node name="defaultText" value="Включить интеграцию со словарем" />
-					<node name="choice" value="Использовать" />
-					<node name="singleClickOpen" value="Открывать словарь по нажатию на слово" />
+				<node name="Margins" value="Отступы">
+					<node name="left" value="Отступ слева" />
+					<node name="right" value="Отступ справа" />
+					<node name="top" value="Отступ сверху" />
+					<node name="bottom" value="Отступ снизу" />
 				</node>
-				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Открывать внешние ссылки в %s" />
-					<node name="defaultText" value="Открывать внешние ссылки в браузере" />
-					<node name="choice" value="Браузер" />
-					<node name="command" value="Выполнять команду" />
+				<node name="Format" value="Форматирование">
+					<node name="optionsFor" value="Настройки для" />
+					<node name="lineSpacing" value="Интервал">
+						<node name="unchanged" value="&lt;не менять&gt;" />
+					</node>
+					<node name="firstLineIndent" value="Красная строка" />
+					<node name="alignment" value="Выравнивание">
+						<node name="left" value="левое" />
+						<node name="right" value="правое" />
+						<node name="center" value="по центру" />
+						<node name="justify" value="по краям" />
+						<node name="unchanged" value="&lt;не менять&gt;" />
+					</node>
+					<node name="spaceBefore" value="Пропуск перед" />
+					<node name="spaceAfter" value="Пропуск после" />
+					<node name="startIndent" value="Отступ в начале строки" />
+					<node name="endIndent" value="Отступ в конце строки" />
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Реагировать на отпускание клавиши, а не на нажатие" />
-					<node name="minStylusPressure" value="Минимальное давление стилуса" />
-					<node name="maxStylusPressure" value="Максимальное давление стилуса" />
+				<node name="Styles" value="Стили">
+					<node name="optionsFor" value="Настройки для" />
+					<node name="fontFamily" value="Шрифт">
+						<node name="unchanged" value="&lt;не менять&gt;" />
+					</node>
+					<node name="fontSize" value="Размер" />
+					<node name="fontSizeDifference" value="Размер" />
+					<node name="bold" value="Жирный" />
+					<node name="italic" value="Курсив" />
+					<node name="allowHyphenations" value="Переносы" />
+					<node name="autoHyphenations" value="Переносы" />
+				</node>
+				<node name="Colors" value="Цвета">
+					<node name="colorFor" value="Цвет">
+						<node name="background" value="фона" />
+						<node name="selectionBackground" value="фона пометки" />
+						<node name="text" value="обычного текста" />
+						<node name="internalLink" value="ссылки" />
+						<node name="externalLink" value="внешней ссылки" />
+						<node name="bookLink" value="ссылки на книгу" />
+						<node name="highlighted" value="подсвеченного текста" />
+						<node name="treeLines" value="линий" />
+						<node name="indicator" value="индикатора" />
+					</node>
 				</node>
 			</node>
 		</node>

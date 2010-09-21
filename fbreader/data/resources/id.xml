@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="Informasi Buku..." />
 		<node name="toc" value="Daftar Isi" />
 		<node name="showLibrary" toBeTranslated="true" value="Open library" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Pustaka">
 			<node name="showLibrary" value="Buka" />
 			<node name="previousBook" value="Buku Sebelumnya" />
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="Layar Penuh" />
 			<node name="toggleIndicator" value="Hidup/Matikan Indikator" />
 		</node>
-		<node name="preferences" value="Pengaturan..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="Keluar" />
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" toBeTranslated="true" value="Previous" />
 			<node name="tooltip" value="Pencarian Mundur" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" toBeTranslated="true" value="Book Info" />
-			<node name="tooltip" value="Tampilkan Dialog Informasi Buku" />
-		</node>
-		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Preferences" />
-			<node name="tooltip" value="Tampilkan Dialog Pengaturan" />
-		</node>
 		<node name="rotate">
 			<node name="label" toBeTranslated="true" value="Rotate" />
 			<node name="tooltip" value="Putar Layar" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" toBeTranslated="true" value="Filter" />
 			<node name="tooltip" toBeTranslated="true" value="Filter" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="tooltip" value="Tampilkan Dialog Informasi Buku" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" toBeTranslated="true" value="&amp;Buy" />
 			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Pengaturan" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Pustaka">
 					<node name="bookPath" value="Lokasi Buku" />
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="Kumpulkan Buku-buku tanpa MetaInfo" />
 					<node name="downloadDirectory" value="Direktori Buku-buku hasil Download" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="Pencarian Jaringan">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Gunakan Proxy" />
 					<node name="proxyHost" value="Alamat Proxy" />
 					<node name="proxyPort" value="Nomor Port Proxy" />
 					<node name="timeout" value="Waktu Tunggu Operasi Jaringan, detik" />
 				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="Buka Tautan Eksternal dengan %s" />
+					<node name="defaultText" value="Buka Tautan Eksternal dengan Browser" />
+					<node name="choice" value="Gunakan Browser" />
+					<node name="command" value="Perintah yang Dieksekusi" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="Bahasa">
 					<node name="autoDetect" value="Deteksi Bahasa dan Enkode secara Otomatis" />
 					<node name="defaultLanguage" value="Bahasa Standar" />
 					<node name="defaultEncodingSet" value="Set Enkode Standar" />
 					<node name="defaultEncoding" value="Enkode Standar" />
 					<node name="useWindows1252Hack" value="Gunakan windows-1252 daripada iso-8859-1" />
+				</node>
+				<node name="Config" value="Konfigurasi">
+					<node name="autoSave" value="Simpan Status Secara Otomatis" />
+					<node name="timeout" value="Waktu Tunda Antara Penyimpanan, detik" />
+				</node>
+				<node name="Dictionary" value="Kamus">
+					<node name="enableIntegration" value="Aktifkan Integrasi dengan %s" />
+					<node name="defaultText" value="Aktifkan Integrasi dengan Kamus" />
+					<node name="choice" value="Integrasikan dengan" />
+					<node name="singleClickOpen" value="Buka dengan Klik Tunggal" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Tombol Aktif saat Dilepas, bukan saat Ditekan" />
+					<node name="minStylusPressure" value="Tekanan Minimal Stylus" />
+					<node name="maxStylusPressure" value="Tekanan Maksimal Stylus" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="Geser Layar">
+					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs" />
+					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling" />
+					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling" />
+					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling" />
+					<node name="fingerOnly" value="Geser Hanya Menggunakan Layar Sentuh" />
+				</node>
+				<node name="Selection" value="Seleksi">
+					<node name="enableSelection" value="Aktifkan Seleksi Teks" />
 				</node>
 				<node name="Indicator" value="Indikator">
 					<node name="type" value="Tampilkan sebagai">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="Tampilkan Penanda Daftar Isi" />
 					<node name="navigation" value="Aktifkan Navigasi" />
 				</node>
-				<node name="Scrolling" value="Geser Layar">
-					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs" />
-					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling" />
-					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling" />
-					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling" />
-					<node name="fingerOnly" value="Geser Hanya Menggunakan Layar Sentuh" />
-				</node>
-				<node name="Selection" value="Seleksi">
-					<node name="enableSelection" value="Aktifkan Seleksi Teks" />
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Gunakan Selalu Bentuk Huruf Milik Saya" />
-				</node>
-				<node name="Margins" value="Margin">
-					<node name="left" value="Margin Kiri" />
-					<node name="right" value="Margin Kanan" />
-					<node name="top" value="Margin Atas" />
-					<node name="bottom" value="Margin Bawah" />
-				</node>
-				<node name="Format" value="Format">
-					<node name="optionsFor" value="Pengaturan untuk" />
-					<node name="lineSpacing" value="Jarak Baris">
-						<node name="unchanged" value="&lt;tidak diubah&gt;" />
-					</node>
-					<node name="firstLineIndent" value="Indentasi Baris Pertama" />
-					<node name="alignment" value="Perataan Teks">
-						<node name="left" value="Kiri" />
-						<node name="right" value="Kanan" />
-						<node name="center" value="Tengah" />
-						<node name="justify" value="Rata Kanan Kiri" />
-						<node name="unchanged" value="&lt;tidak diubah&gt;" />
-					</node>
-					<node name="spaceBefore" value="Jarak Sebelumnya" />
-					<node name="spaceAfter" value="Jarak Setelahnya" />
-					<node name="startIndent" value="Indentasi Baris Awal" />
-					<node name="endIndent" value="Indentasi Baris Akhir" />
-				</node>
-				<node name="Styles" value="Bentuk">
-					<node name="optionsFor" value="Pengaturan untuk" />
-					<node name="fontFamily" value="Keluarga">
-						<node name="unchanged" value="&lt;tidak diubah&gt;" />
-					</node>
-					<node name="fontSize" value="Ukuran" />
-					<node name="fontSizeDifference" value="Perbedaan Ukuran" />
-					<node name="bold" value="Tebal" />
-					<node name="italic" value="Miring" />
-					<node name="allowHyphenations" value="Ijinkan Pemenggalan Kata" />
-					<node name="autoHyphenations" value="Pemenggalan Kata Otomatis" />
-				</node>
 				<node name="Rotation" value="Rotasi">
 					<node name="direction" value="Tipe Rotasi">
 						<node name="disabled" value="Non-aktifkan" />
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="90 Derajat Berlawanan Jarum Jam" />
 						<node name="180" value="180 Derajat" />
 						<node name="cycle" value="Rotasi 4 Arah Bergantian" />
-					</node>
-				</node>
-				<node name="Colors" value="Warna">
-					<node name="colorFor" value="Warna untuk">
-						<node name="background" value="Latar Belakang" />
-						<node name="selectionBackground" value="Latar Belakang Seleksi" />
-						<node name="text" value="Teks Biasa" />
-						<node name="internalLink" value="Tautan Teks Internal" />
-						<node name="externalLink" value="Tautan Teks Eksternal" />
-						<node name="bookLink" value="Tautan ke Buku Lainnya" />
-						<node name="highlighted" value="Teks Berwarna Cerah" />
-						<node name="treeLines" value="Garis Diagram Pohon" />
-						<node name="indicator" value="Indikator Posisi" />
 					</node>
 				</node>
 				<node name="Keys" value="Tombol">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="Hidup/Matikan Indikator" />
 						<node name="toggleFullscreen" value="Hidup/Matikan Layar Penuh" />
 						<node name="rotate" value="Putar Layar" />
-						<node name="preferences" value="Tampilkan Dialog Pengaturan" />
-						<node name="bookInfo" value="Tampilkan Dialog Informasi Buku" />
 						<node name="addBook" value="Tambah Buku" />
 						<node name="cancel" value="Batal" />
 						<node name="quit" value="Keluar" />
+						<node name="bookInfo" value="Tampilkan Dialog Informasi Buku" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="Keluar dari Aplikasi Ketika Pembatalan" />
 					<node name="keyDelay" value="Waktu Tunda Antara Penekanan Tombol" />
 				</node>
-				<node name="Config" value="Konfigurasi">
-					<node name="autoSave" value="Simpan Status Secara Otomatis" />
-					<node name="timeout" value="Waktu Tunda Antara Penyimpanan, detik" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Gunakan Selalu Bentuk Huruf Milik Saya" />
 				</node>
-				<node name="Dictionary" value="Kamus">
-					<node name="enableIntegration" value="Aktifkan Integrasi dengan %s" />
-					<node name="defaultText" value="Aktifkan Integrasi dengan Kamus" />
-					<node name="choice" value="Integrasikan dengan" />
-					<node name="singleClickOpen" value="Buka dengan Klik Tunggal" />
+				<node name="Margins" value="Margin">
+					<node name="left" value="Margin Kiri" />
+					<node name="right" value="Margin Kanan" />
+					<node name="top" value="Margin Atas" />
+					<node name="bottom" value="Margin Bawah" />
 				</node>
-				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Buka Tautan Eksternal dengan %s" />
-					<node name="defaultText" value="Buka Tautan Eksternal dengan Browser" />
-					<node name="choice" value="Gunakan Browser" />
-					<node name="command" value="Perintah yang Dieksekusi" />
+				<node name="Format" value="Format">
+					<node name="optionsFor" value="Pengaturan untuk" />
+					<node name="lineSpacing" value="Jarak Baris">
+						<node name="unchanged" value="&lt;tidak diubah&gt;" />
+					</node>
+					<node name="firstLineIndent" value="Indentasi Baris Pertama" />
+					<node name="alignment" value="Perataan Teks">
+						<node name="left" value="Kiri" />
+						<node name="right" value="Kanan" />
+						<node name="center" value="Tengah" />
+						<node name="justify" value="Rata Kanan Kiri" />
+						<node name="unchanged" value="&lt;tidak diubah&gt;" />
+					</node>
+					<node name="spaceBefore" value="Jarak Sebelumnya" />
+					<node name="spaceAfter" value="Jarak Setelahnya" />
+					<node name="startIndent" value="Indentasi Baris Awal" />
+					<node name="endIndent" value="Indentasi Baris Akhir" />
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Tombol Aktif saat Dilepas, bukan saat Ditekan" />
-					<node name="minStylusPressure" value="Tekanan Minimal Stylus" />
-					<node name="maxStylusPressure" value="Tekanan Maksimal Stylus" />
+				<node name="Styles" value="Bentuk">
+					<node name="optionsFor" value="Pengaturan untuk" />
+					<node name="fontFamily" value="Keluarga">
+						<node name="unchanged" value="&lt;tidak diubah&gt;" />
+					</node>
+					<node name="fontSize" value="Ukuran" />
+					<node name="fontSizeDifference" value="Perbedaan Ukuran" />
+					<node name="bold" value="Tebal" />
+					<node name="italic" value="Miring" />
+					<node name="allowHyphenations" value="Ijinkan Pemenggalan Kata" />
+					<node name="autoHyphenations" value="Pemenggalan Kata Otomatis" />
+				</node>
+				<node name="Colors" value="Warna">
+					<node name="colorFor" value="Warna untuk">
+						<node name="background" value="Latar Belakang" />
+						<node name="selectionBackground" value="Latar Belakang Seleksi" />
+						<node name="text" value="Teks Biasa" />
+						<node name="internalLink" value="Tautan Teks Internal" />
+						<node name="externalLink" value="Tautan Teks Eksternal" />
+						<node name="bookLink" value="Tautan ke Buku Lainnya" />
+						<node name="highlighted" value="Teks Berwarna Cerah" />
+						<node name="treeLines" value="Garis Diagram Pohon" />
+						<node name="indicator" value="Indikator Posisi" />
+					</node>
 				</node>
 			</node>
 		</node>

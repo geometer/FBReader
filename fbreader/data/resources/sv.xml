@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="Bokinformation..." />
 		<node name="toc" value="Innehållsförteckning" />
 		<node name="showLibrary" toBeTranslated="true" value="Open library" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Bibliotek">
 			<node name="showLibrary" value="Öppna" />
 			<node name="previousBook" value="Föregående bok" />
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="Helskärm" />
 			<node name="toggleIndicator" value="Växla indikator" />
 		</node>
-		<node name="preferences" value="Inställningar..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="Stäng" />
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" toBeTranslated="true" value="Previous" />
 			<node name="tooltip" value="Sök föregående" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" toBeTranslated="true" value="Book Info" />
-			<node name="tooltip" value="Visa bokinformation" />
-		</node>
-		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Preferences" />
-			<node name="tooltip" value="Visa inställningar" />
-		</node>
 		<node name="rotate">
 			<node name="label" toBeTranslated="true" value="Rotate" />
 			<node name="tooltip" value="Rotera text" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" toBeTranslated="true" value="Filter" />
 			<node name="tooltip" toBeTranslated="true" value="Filter" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="tooltip" value="Visa bokinformation" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" toBeTranslated="true" value="&amp;Buy" />
 			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Alternativ" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Bibliotek">
 					<node name="bookPath" value="Boksökväg" />
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" toBeTranslated="true" value="Collect Books without MetaInfo" />
 					<node name="downloadDirectory" toBeTranslated="true" value="Directory for Downloaded Books" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" toBeTranslated="true" value="Network Search">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" toBeTranslated="true" value="Use Proxy" />
 					<node name="proxyHost" toBeTranslated="true" value="Proxy Host" />
 					<node name="proxyPort" toBeTranslated="true" value="Proxy Port" />
 					<node name="timeout" toBeTranslated="true" value="Network Operations Timeout, seconds" />
 				</node>
+				<node name="Web" value="Webb">
+					<node name="enableIntegration" value="Öppna externa länkar med %s" />
+					<node name="defaultText" value="Öppna externa länkar i webbläsare" />
+					<node name="choice" value="Använd webbläsare" />
+					<node name="command" value="Kommando att köra" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="Språk">
 					<node name="autoDetect" value="Upptäck automatiskt språk och kodning" />
 					<node name="defaultLanguage" value="Standardspråk" />
 					<node name="defaultEncodingSet" value="Standardteckenuppsättning" />
 					<node name="defaultEncoding" value="Standardkodning" />
 					<node name="useWindows1252Hack" value="Använd windows-1252 istället för iso-8859-1" />
+				</node>
+				<node name="Config" value="Konfiguration">
+					<node name="autoSave" value="Spara tillstånd automatiskt" />
+					<node name="timeout" value="Tidsgräns mellan sparningar, sekunder" />
+				</node>
+				<node name="Dictionary" value="Ordbok">
+					<node name="enableIntegration" value="Aktivera integration med %s" />
+					<node name="defaultText" value="Aktivera integration med ordbok" />
+					<node name="choice" value="Integrera med" />
+					<node name="singleClickOpen" value="Öppna med ett klick" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Åtgärd vid tangentsläpp, inte tangenttryck" />
+					<node name="minStylusPressure" value="Minimalt pentryck" />
+					<node name="maxStylusPressure" value="Maximalt pentryck" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="Rullning">
+					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs" />
+					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling" />
+					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling" />
+					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling" />
+					<node name="fingerOnly" toBeTranslated="true" value="Scroll on Finger Tap Only" />
+				</node>
+				<node name="Selection" value="Markering">
+					<node name="enableSelection" value="Aktivera textmarkering" />
 				</node>
 				<node name="Indicator" value="Indikator">
 					<node name="type" toBeTranslated="true" value="Show as">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="Visa förteckningsmarkeringar" />
 					<node name="navigation" value="Aktivera navigering" />
 				</node>
-				<node name="Scrolling" value="Rullning">
-					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs" />
-					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling" />
-					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling" />
-					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling" />
-					<node name="fingerOnly" toBeTranslated="true" value="Scroll on Finger Tap Only" />
-				</node>
-				<node name="Selection" value="Markering">
-					<node name="enableSelection" value="Aktivera textmarkering" />
-				</node>
-				<node name="CSS" toBeTranslated="true" value="CSS">
-					<node name="overrideSpecifiedFonts" toBeTranslated="true" value="Always Use My Own Fonts" />
-				</node>
-				<node name="Margins" value="Marginaler">
-					<node name="left" value="Vänstermarginal" />
-					<node name="right" value="Högermarginal" />
-					<node name="top" value="Övermarginal" />
-					<node name="bottom" value="Nedermarginal" />
-				</node>
-				<node name="Format" value="Formatering">
-					<node name="optionsFor" value="Alternativ för" />
-					<node name="lineSpacing" value="Radmellanrum">
-						<node name="unchanged" value="&lt;oförändrad&gt;" />
-					</node>
-					<node name="firstLineIndent" value="Indentera första raden" />
-					<node name="alignment" value="Justering">
-						<node name="left" value="Vänster" />
-						<node name="right" value="Höger" />
-						<node name="center" value="Centrera" />
-						<node name="justify" value="Justera" />
-						<node name="unchanged" value="&lt;oförändrad&gt;" />
-					</node>
-					<node name="spaceBefore" value="Blanksteg före" />
-					<node name="spaceAfter" value="Blanksteg efter" />
-					<node name="startIndent" toBeTranslated="true" value="Line Start Indent" />
-					<node name="endIndent" toBeTranslated="true" value="Line End Indent" />
-				</node>
-				<node name="Styles" value="Stilar">
-					<node name="optionsFor" value="Alternativ för" />
-					<node name="fontFamily" value="Familj">
-						<node name="unchanged" value="&lt;oförändrad&gt;" />
-					</node>
-					<node name="fontSize" value="Storlek" />
-					<node name="fontSizeDifference" value="Storleksskillnad" />
-					<node name="bold" value="Fet" />
-					<node name="italic" value="Kursiv" />
-					<node name="allowHyphenations" value="Tillåt avstavningar" />
-					<node name="autoHyphenations" value="Automatiska avstavningar" />
-				</node>
 				<node name="Rotation" value="Rotering">
 					<node name="direction" value="Roteringstyp">
 						<node name="disabled" value="Inaktiverad" />
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="90 grader motsols" />
 						<node name="180" value="180 grader" />
 						<node name="cycle" value="Växla genom alla fyra riktningar" />
-					</node>
-				</node>
-				<node name="Colors" value="Färger">
-					<node name="colorFor" value="Färg för">
-						<node name="background" value="Bakgrund" />
-						<node name="selectionBackground" value="Markeringsbakgrund" />
-						<node name="text" value="Vanlig text" />
-						<node name="internalLink" value="Text för intern hyperlänk" />
-						<node name="externalLink" value="Text för extern hyperlänk" />
-						<node name="bookLink" toBeTranslated="true" value="Link to Another Book" />
-						<node name="highlighted" value="Färgmarkerad text" />
-						<node name="treeLines" value="Trädrader" />
-						<node name="indicator" value="Positionsindikator" />
 					</node>
 				</node>
 				<node name="Keys" value="Tangenter">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="Växla positionsindikator" />
 						<node name="toggleFullscreen" value="Växla helskärmsläge" />
 						<node name="rotate" value="Rotera skärm" />
-						<node name="preferences" value="Visa alternativdialog" />
-						<node name="bookInfo" value="Visa bokinformation" />
 						<node name="addBook" value="Lägg till bok" />
 						<node name="cancel" value="Avbryt" />
 						<node name="quit" value="Avsluta" />
+						<node name="bookInfo" value="Visa bokinformation" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="Avsluta programmet vid avbryt" />
 					<node name="keyDelay" toBeTranslated="true" value="Delay Between Accepted Key Pressings" />
 				</node>
-				<node name="Config" value="Konfiguration">
-					<node name="autoSave" value="Spara tillstånd automatiskt" />
-					<node name="timeout" value="Tidsgräns mellan sparningar, sekunder" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" toBeTranslated="true" value="CSS">
+					<node name="overrideSpecifiedFonts" toBeTranslated="true" value="Always Use My Own Fonts" />
 				</node>
-				<node name="Dictionary" value="Ordbok">
-					<node name="enableIntegration" value="Aktivera integration med %s" />
-					<node name="defaultText" value="Aktivera integration med ordbok" />
-					<node name="choice" value="Integrera med" />
-					<node name="singleClickOpen" value="Öppna med ett klick" />
+				<node name="Margins" value="Marginaler">
+					<node name="left" value="Vänstermarginal" />
+					<node name="right" value="Högermarginal" />
+					<node name="top" value="Övermarginal" />
+					<node name="bottom" value="Nedermarginal" />
 				</node>
-				<node name="Web" value="Webb">
-					<node name="enableIntegration" value="Öppna externa länkar med %s" />
-					<node name="defaultText" value="Öppna externa länkar i webbläsare" />
-					<node name="choice" value="Använd webbläsare" />
-					<node name="command" value="Kommando att köra" />
+				<node name="Format" value="Formatering">
+					<node name="optionsFor" value="Alternativ för" />
+					<node name="lineSpacing" value="Radmellanrum">
+						<node name="unchanged" value="&lt;oförändrad&gt;" />
+					</node>
+					<node name="firstLineIndent" value="Indentera första raden" />
+					<node name="alignment" value="Justering">
+						<node name="left" value="Vänster" />
+						<node name="right" value="Höger" />
+						<node name="center" value="Centrera" />
+						<node name="justify" value="Justera" />
+						<node name="unchanged" value="&lt;oförändrad&gt;" />
+					</node>
+					<node name="spaceBefore" value="Blanksteg före" />
+					<node name="spaceAfter" value="Blanksteg efter" />
+					<node name="startIndent" toBeTranslated="true" value="Line Start Indent" />
+					<node name="endIndent" toBeTranslated="true" value="Line End Indent" />
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Åtgärd vid tangentsläpp, inte tangenttryck" />
-					<node name="minStylusPressure" value="Minimalt pentryck" />
-					<node name="maxStylusPressure" value="Maximalt pentryck" />
+				<node name="Styles" value="Stilar">
+					<node name="optionsFor" value="Alternativ för" />
+					<node name="fontFamily" value="Familj">
+						<node name="unchanged" value="&lt;oförändrad&gt;" />
+					</node>
+					<node name="fontSize" value="Storlek" />
+					<node name="fontSizeDifference" value="Storleksskillnad" />
+					<node name="bold" value="Fet" />
+					<node name="italic" value="Kursiv" />
+					<node name="allowHyphenations" value="Tillåt avstavningar" />
+					<node name="autoHyphenations" value="Automatiska avstavningar" />
+				</node>
+				<node name="Colors" value="Färger">
+					<node name="colorFor" value="Färg för">
+						<node name="background" value="Bakgrund" />
+						<node name="selectionBackground" value="Markeringsbakgrund" />
+						<node name="text" value="Vanlig text" />
+						<node name="internalLink" value="Text för intern hyperlänk" />
+						<node name="externalLink" value="Text för extern hyperlänk" />
+						<node name="bookLink" toBeTranslated="true" value="Link to Another Book" />
+						<node name="highlighted" value="Färgmarkerad text" />
+						<node name="treeLines" value="Trädrader" />
+						<node name="indicator" value="Positionsindikator" />
+					</node>
 				</node>
 			</node>
 		</node>

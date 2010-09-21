@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="Informace o knize..." />
 		<node name="toc" value="Obsah" />
 		<node name="showLibrary" value="Otevřít knihovnu" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Knihovna">
 			<node name="showLibrary" value="Otevřít" />
 			<node name="previousBook" value="Předchozí kniha" />
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="Celá obrazovka" />
 			<node name="toggleIndicator" value="Natočení obrazovky" />
 		</node>
-		<node name="preferences" value="Předvolby..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="Ukončit" />
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" toBeTranslated="true" value="Previous" />
 			<node name="tooltip" value="Najít předchozí" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" toBeTranslated="true" value="Book Info" />
-			<node name="tooltip" value="Informace o knize" />
-		</node>
-		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Preferences" />
-			<node name="tooltip" value="Nastavení" />
-		</node>
 		<node name="rotate">
 			<node name="label" toBeTranslated="true" value="Rotate" />
 			<node name="tooltip" value="Změna směru textu" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" toBeTranslated="true" value="Filter" />
 			<node name="tooltip" toBeTranslated="true" value="Filter" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="tooltip" value="Informace o knize" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" value="&amp;Zaplatit" />
 			<node name="buyAndDownload" value="Zaplatit a &amp;stáhnout" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Nastavení" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Knihovna">
 					<node name="bookPath" value="Složka s knihami" />
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="Shromáždit knihy bez informací o knihách (metadat)" />
 					<node name="downloadDirectory" value="Prohledávat podadresáře" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="Hledání knih na síti">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Použít Proxy" />
 					<node name="proxyHost" value="Proxy server" />
 					<node name="proxyPort" value="Port Proxy serveru" />
 					<node name="timeout" value="Vypršení časového intervalu sítě v sekundách" />
 				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="Otevírat externí odkazy v %s" />
+					<node name="defaultText" value="Otevírat externí odkazy v prohlížeči" />
+					<node name="choice" value="Použít prohlížeč" />
+					<node name="command" value="Vložte příkaz" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="Jazyk">
 					<node name="autoDetect" value="Automatická detekce jazyka o kódování znaků" />
 					<node name="defaultLanguage" value="Předvolený jazyk" />
 					<node name="defaultEncodingSet" value="Předvolená sada kódování" />
 					<node name="defaultEncoding" value="Základní kódování" />
 					<node name="useWindows1252Hack" value="Použít windows-1252 namísto iso-8859-1" />
+				</node>
+				<node name="Config" value="Nastavení">
+					<node name="autoSave" value="Automatické uložení" />
+					<node name="timeout" value="Interval mezi uloženími v sekundách" />
+				</node>
+				<node name="Dictionary" value="Slovník">
+					<node name="enableIntegration" value="Zapnout integraci s %s" />
+					<node name="defaultText" value="Zapnout integraci se slovníkem" />
+					<node name="choice" value="Integrace s" />
+					<node name="singleClickOpen" value="Otevřít jedním kliknutím" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Reagovat na puštění klávesy místo stisku klávesy" />
+					<node name="minStylusPressure" value="Minimální tlak stylusu" />
+					<node name="maxStylusPressure" value="Maximální tlak stylusu" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="Posuv textu">
+					<node name="keyScrollDelay" value="Zpoždění mezi stiskem kláves posuvu v msec" />
+					<node name="keyLinesToScroll" value="Počet řádků posuvu při posuvu po řádcích" />
+					<node name="keyLinesToKeep" value="Počet řádků, které nebudou překresleny" />
+					<node name="enableTapScrolling" value="Posun dotykem na displeji" />
+					<node name="fingerOnly" value="Posuv pouze dotykem na displeji" />
+				</node>
+				<node name="Selection" value="Výběr">
+					<node name="enableSelection" value="Povolit výběr textu" />
 				</node>
 				<node name="Indicator" value="Indikátor">
 					<node name="type" value="Zobraz jako">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="Zobraz značky TOC" />
 					<node name="navigation" value="Povolit navigaci" />
 				</node>
-				<node name="Scrolling" value="Posuv textu">
-					<node name="keyScrollDelay" value="Zpoždění mezi stiskem kláves posuvu v msec" />
-					<node name="keyLinesToScroll" value="Počet řádků posuvu při posuvu po řádcích" />
-					<node name="keyLinesToKeep" value="Počet řádků, které nebudou překresleny" />
-					<node name="enableTapScrolling" value="Posun dotykem na displeji" />
-					<node name="fingerOnly" value="Posuv pouze dotykem na displeji" />
-				</node>
-				<node name="Selection" value="Výběr">
-					<node name="enableSelection" value="Povolit výběr textu" />
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Vždy použít uživatelské fonty" />
-				</node>
-				<node name="Margins" value="Okraje">
-					<node name="left" value="Levý okraj" />
-					<node name="right" value="Pravý okraj" />
-					<node name="top" value="Horní okraj" />
-					<node name="bottom" value="Dolní okraj" />
-				</node>
-				<node name="Format" value="Formát">
-					<node name="optionsFor" value="Nastavení formátu" />
-					<node name="lineSpacing" value="Řádkování">
-						<node name="unchanged" value="&lt;beze změn&gt;" />
-					</node>
-					<node name="firstLineIndent" value="Odsazení první linky" />
-					<node name="alignment" value="Zarovnání">
-						<node name="left" value="Vlevo" />
-						<node name="right" value="Vpravo" />
-						<node name="center" value="Na střed" />
-						<node name="justify" value="Do bloku" />
-						<node name="unchanged" value="&lt;beze změn&gt;" />
-					</node>
-					<node name="spaceBefore" value="Odsazení před" />
-					<node name="spaceAfter" value="Odsazení za" />
-					<node name="startIndent" value="Počátek odsazení" />
-					<node name="endIndent" value="Konec odsazení" />
-				</node>
-				<node name="Styles" value="Styly">
-					<node name="optionsFor" value="Nastavení stylů" />
-					<node name="fontFamily" value="Rodina fontů">
-						<node name="unchanged" value="&lt;beze změn&gt;" />
-					</node>
-					<node name="fontSize" value="Velikost" />
-					<node name="fontSizeDifference" value="Rozdíl velikosti" />
-					<node name="bold" value="Tučně" />
-					<node name="italic" value="Kurzíva" />
-					<node name="allowHyphenations" value="Povolit dělení slov" />
-					<node name="autoHyphenations" value="Automatické dělení slov" />
-				</node>
 				<node name="Rotation" value="Natočení">
 					<node name="direction" value="Směr natočení">
 						<node name="disabled" value="Vypnuto" />
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="90 stupňů proti směru hodinových ručiček" />
 						<node name="180" value="180 stupňů" />
 						<node name="cycle" value="Střídat všechny čtyři směry" />
-					</node>
-				</node>
-				<node name="Colors" value="Barvy">
-					<node name="colorFor" value="Barva">
-						<node name="background" value="Pozadí" />
-						<node name="selectionBackground" value="Výběr pozadí" />
-						<node name="text" value="Běžného textu" />
-						<node name="internalLink" value="Interního hypertextového odkazu" />
-						<node name="externalLink" value="Externího hypertextového odkazu" />
-						<node name="bookLink" value="Odkazu na jinou knihu" />
-						<node name="highlighted" value="Zvýrazněného textu" />
-						<node name="treeLines" value="Stromu" />
-						<node name="indicator" value="Indikátoru" />
 					</node>
 				</node>
 				<node name="Keys" value="Klávesové zkratky">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="Zobrazit indikátor" />
 						<node name="toggleFullscreen" value="Celoobrazovkový mód" />
 						<node name="rotate" value="Směr textu" />
-						<node name="preferences" value="Dialog nastavení" />
-						<node name="bookInfo" value="Informace o knize" />
 						<node name="addBook" value="Přidat knihu" />
 						<node name="cancel" value="Zrušit" />
 						<node name="quit" value="Ukončit" />
+						<node name="bookInfo" value="Informace o knize" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="Ukončit program" />
 					<node name="keyDelay" value="Zpoždění stisku kláves" />
 				</node>
-				<node name="Config" value="Nastavení">
-					<node name="autoSave" value="Automatické uložení" />
-					<node name="timeout" value="Interval mezi uloženími v sekundách" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Vždy použít uživatelské fonty" />
 				</node>
-				<node name="Dictionary" value="Slovník">
-					<node name="enableIntegration" value="Zapnout integraci s %s" />
-					<node name="defaultText" value="Zapnout integraci se slovníkem" />
-					<node name="choice" value="Integrace s" />
-					<node name="singleClickOpen" value="Otevřít jedním kliknutím" />
+				<node name="Margins" value="Okraje">
+					<node name="left" value="Levý okraj" />
+					<node name="right" value="Pravý okraj" />
+					<node name="top" value="Horní okraj" />
+					<node name="bottom" value="Dolní okraj" />
 				</node>
-				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Otevírat externí odkazy v %s" />
-					<node name="defaultText" value="Otevírat externí odkazy v prohlížeči" />
-					<node name="choice" value="Použít prohlížeč" />
-					<node name="command" value="Vložte příkaz" />
+				<node name="Format" value="Formát">
+					<node name="optionsFor" value="Nastavení formátu" />
+					<node name="lineSpacing" value="Řádkování">
+						<node name="unchanged" value="&lt;beze změn&gt;" />
+					</node>
+					<node name="firstLineIndent" value="Odsazení první linky" />
+					<node name="alignment" value="Zarovnání">
+						<node name="left" value="Vlevo" />
+						<node name="right" value="Vpravo" />
+						<node name="center" value="Na střed" />
+						<node name="justify" value="Do bloku" />
+						<node name="unchanged" value="&lt;beze změn&gt;" />
+					</node>
+					<node name="spaceBefore" value="Odsazení před" />
+					<node name="spaceAfter" value="Odsazení za" />
+					<node name="startIndent" value="Počátek odsazení" />
+					<node name="endIndent" value="Konec odsazení" />
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Reagovat na puštění klávesy místo stisku klávesy" />
-					<node name="minStylusPressure" value="Minimální tlak stylusu" />
-					<node name="maxStylusPressure" value="Maximální tlak stylusu" />
+				<node name="Styles" value="Styly">
+					<node name="optionsFor" value="Nastavení stylů" />
+					<node name="fontFamily" value="Rodina fontů">
+						<node name="unchanged" value="&lt;beze změn&gt;" />
+					</node>
+					<node name="fontSize" value="Velikost" />
+					<node name="fontSizeDifference" value="Rozdíl velikosti" />
+					<node name="bold" value="Tučně" />
+					<node name="italic" value="Kurzíva" />
+					<node name="allowHyphenations" value="Povolit dělení slov" />
+					<node name="autoHyphenations" value="Automatické dělení slov" />
+				</node>
+				<node name="Colors" value="Barvy">
+					<node name="colorFor" value="Barva">
+						<node name="background" value="Pozadí" />
+						<node name="selectionBackground" value="Výběr pozadí" />
+						<node name="text" value="Běžného textu" />
+						<node name="internalLink" value="Interního hypertextového odkazu" />
+						<node name="externalLink" value="Externího hypertextového odkazu" />
+						<node name="bookLink" value="Odkazu na jinou knihu" />
+						<node name="highlighted" value="Zvýrazněného textu" />
+						<node name="treeLines" value="Stromu" />
+						<node name="indicator" value="Indikátoru" />
+					</node>
 				</node>
 			</node>
 		</node>

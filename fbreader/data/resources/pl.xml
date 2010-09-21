@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="Informacje o Książce..." />
 		<node name="toc" value="Spis Zawartości" />
 		<node name="showLibrary" value="Otwórz Bibliotekę" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Biblioteka">
 			<node name="showLibrary" value="Otwórz" />
 			<node name="previousBook" value="Poprzednia Książka" />
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="Pełny ekran" />
 			<node name="toggleIndicator" value="Zmień wskaźnik" />
 		</node>
-		<node name="preferences" value="Preferencje..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="Zamknij" />
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" value="Poprzedni" />
 			<node name="tooltip" value="Znajdź Poprzedni" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" value="Informacje o Książce" />
-			<node name="tooltip" value="Pokaż Informacje o Książce" />
-		</node>
-		<node name="preferences">
-			<node name="label" value="Preferencje" />
-			<node name="tooltip" value="Pokaż Opcje" />
-		</node>
 		<node name="rotate">
 			<node name="label" value="Obrót" />
 			<node name="tooltip" value="Obróć Tekst" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" value="Filtr" />
 			<node name="tooltip" value="Filtr" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="Informacje o Książce" />
+			<node name="tooltip" value="Pokaż Informacje o Książce" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" value="&amp;Kup" />
 			<node name="buyAndDownload" value="Kup i &amp;Pobierz" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Opcje" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Biblioteka">
 					<node name="bookPath" value="Katalog z Książkami" />
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="Dodaj Książki bez Opisu" />
 					<node name="downloadDirectory" value="Pobieraj Książki do Katalogu" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="Szukanie w Sieci">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Użyj Proxy" />
 					<node name="proxyHost" value="Host Proxy" />
 					<node name="proxyPort" value="Port Proxy" />
 					<node name="timeout" value="Przekroczony Czas Operacji Sieciowej, sekundy" />
 				</node>
+				<node name="Web" value="Internet">
+					<node name="enableIntegration" value="Otwórz Zewnętrzne Linki w %s" />
+					<node name="defaultText" value="Otwórz Zewnętrzne linki w Przeglądarce" />
+					<node name="choice" value="Użyj Przeglądarkę" />
+					<node name="command" value="Polecenie do Wykonania" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="Język">
 					<node name="autoDetect" value="Automatycznie Wykryj Język i Kodowanie" />
 					<node name="defaultLanguage" value="Domyślny Język" />
 					<node name="defaultEncodingSet" value="Domyślny Zestaw Znaków" />
 					<node name="defaultEncoding" value="Domyślne Kodowanie" />
 					<node name="useWindows1252Hack" value="Użyj windows-1252 zamiast iso-8859-1" />
+				</node>
+				<node name="Config" value="Konfiguracja">
+					<node name="autoSave" value="Automatyczny Zapis Stanu" />
+					<node name="timeout" value="Odstęp Między Zapisami , sekundy" />
+				</node>
+				<node name="Dictionary" value="Słownik">
+					<node name="enableIntegration" value="Włącz Integrację z %s" />
+					<node name="defaultText" value="Włącz Integrację ze Słownikiem" />
+					<node name="choice" value="Integruj z" />
+					<node name="singleClickOpen" value="Otwórz Pojedynczym Kliknięciem" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Wykonaj Przy Zwolnieniu Klawisza, nie Przy Naciśnięciu" />
+					<node name="minStylusPressure" value="Minimalny Nacisk Rysika" />
+					<node name="maxStylusPressure" value="Maksymalny Nacisk Rysika" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="Przewijanie">
+					<node name="keyScrollDelay" value="Opóźnienie Powtarzania Klawisza, ms" />
+					<node name="keyLinesToScroll" value="Ilość Przewijanych Linii na Wciśnięcie Klawisza" />
+					<node name="keyLinesToKeep" value="Ilość Powtarzanych Lini Przy Przewijaniu Stron" />
+					<node name="enableTapScrolling" value="Włącz Przewijanie Dotykiem" />
+					<node name="fingerOnly" value="Przewijaj Tylko Dotykiem Palca" />
+				</node>
+				<node name="Selection" value="Zaznaczanie">
+					<node name="enableSelection" value="Włącz Zaznaczanie Tekstu" />
 				</node>
 				<node name="Indicator" value="Pasek Postępu">
 					<node name="type" value="Pokaż jako">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="Pokaż Znaczniki Spisu" />
 					<node name="navigation" value="Włącz Nawigację" />
 				</node>
-				<node name="Scrolling" value="Przewijanie">
-					<node name="keyScrollDelay" value="Opóźnienie Powtarzania Klawisza, ms" />
-					<node name="keyLinesToScroll" value="Ilość Przewijanych Linii na Wciśnięcie Klawisza" />
-					<node name="keyLinesToKeep" value="Ilość Powtarzanych Lini Przy Przewijaniu Stron" />
-					<node name="enableTapScrolling" value="Włącz Przewijanie Dotykiem" />
-					<node name="fingerOnly" value="Przewijaj Tylko Dotykiem Palca" />
-				</node>
-				<node name="Selection" value="Zaznaczanie">
-					<node name="enableSelection" value="Włącz Zaznaczanie Tekstu" />
-				</node>
-				<node name="CSS" value="Personalizacja Wyświetlania (CSS)">
-					<node name="overrideSpecifiedFonts" value="Zawsze używaj moje czcionki" />
-				</node>
-				<node name="Margins" value="Marginesy">
-					<node name="left" value="Lewy Margines" />
-					<node name="right" value="Prawy Margines" />
-					<node name="top" value="Górny Margines" />
-					<node name="bottom" value="Dolny Margines" />
-				</node>
-				<node name="Format" value="Formatowanie">
-					<node name="optionsFor" value="Opcja Dotyczy" />
-					<node name="lineSpacing" value="Odstęp Między Liniami">
-						<node name="unchanged" value="&lt;bez zmian&gt;" />
-					</node>
-					<node name="firstLineIndent" value="Wcięcie Pierwszej Linii" />
-					<node name="alignment" value="Wyrównanie">
-						<node name="left" value="Do Lewej" />
-						<node name="right" value="Do Prawej" />
-						<node name="center" value="Do Środka" />
-						<node name="justify" value="Do Lewej i Prawej" />
-						<node name="unchanged" value="&lt;bez zmian&gt;" />
-					</node>
-					<node name="spaceBefore" value="Odstęp Przed" />
-					<node name="spaceAfter" value="Odstęp Po" />
-					<node name="startIndent" value="Wcięcie na Początku Linii" />
-					<node name="endIndent" value="Wcięcie na Końcu Linii" />
-				</node>
-				<node name="Styles" value="Style">
-					<node name="optionsFor" value="Opcja Dotyczy" />
-					<node name="fontFamily" value="Czcionka">
-						<node name="unchanged" value="&lt;bez zmiand&gt;" />
-					</node>
-					<node name="fontSize" value="Rozmiar" />
-					<node name="fontSizeDifference" value="Różnica Wielkości" />
-					<node name="bold" value="Pogrubiona" />
-					<node name="italic" value="Kursywa" />
-					<node name="allowHyphenations" value="Zezwól na Dzielenie Wyrazów" />
-					<node name="autoHyphenations" value="Automatyczne Dzielenie Wyrazów" />
-				</node>
 				<node name="Rotation" value="Obrót">
 					<node name="direction" value="Rodzaj Obrotu">
 						<node name="disabled" value="Wyłączony" />
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="90 Stopni w Lewo" />
 						<node name="180" value="180 Stopni" />
 						<node name="cycle" value="Wszystkie 4 Kierunki Po Kolei" />
-					</node>
-				</node>
-				<node name="Colors" value="Kolory">
-					<node name="colorFor" value="Kolor Dla">
-						<node name="background" value="Tło" />
-						<node name="selectionBackground" value="Tło Zaznaczenia" />
-						<node name="text" value="Zwykły Tekst" />
-						<node name="internalLink" value="Wewnętrzny Hiperlink" />
-						<node name="externalLink" value="Zewnętrzny Hiperlink" />
-						<node name="bookLink" value="Link do Innej Książki" />
-						<node name="highlighted" value="Zaznaczony Tekst" />
-						<node name="treeLines" value="Linie Drzewa" />
-						<node name="indicator" value="Pasek Postępu" />
 					</node>
 				</node>
 				<node name="Keys" value="Klawisze">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="Przełącz wskaźnik pozycji" />
 						<node name="toggleFullscreen" value="Przełącz na pełny ekran" />
 						<node name="rotate" value="Obróć ekran" />
-						<node name="preferences" value="Pokaż opcje" />
-						<node name="bookInfo" value="Pokaż informacje o książce" />
 						<node name="addBook" value="Dodaj książkę" />
 						<node name="cancel" value="Anuluj" />
 						<node name="quit" value="Zakończ" />
+						<node name="bookInfo" value="Pokaż informacje o książce" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="Zakończ Program Gdy Anuluj" />
 					<node name="keyDelay" value="Odstęp Pomiędzy Ponownym Wciśnięciem Klawisza" />
 				</node>
-				<node name="Config" value="Konfiguracja">
-					<node name="autoSave" value="Automatyczny Zapis Stanu" />
-					<node name="timeout" value="Odstęp Między Zapisami , sekundy" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" value="Personalizacja Wyświetlania (CSS)">
+					<node name="overrideSpecifiedFonts" value="Zawsze używaj moje czcionki" />
 				</node>
-				<node name="Dictionary" value="Słownik">
-					<node name="enableIntegration" value="Włącz Integrację z %s" />
-					<node name="defaultText" value="Włącz Integrację ze Słownikiem" />
-					<node name="choice" value="Integruj z" />
-					<node name="singleClickOpen" value="Otwórz Pojedynczym Kliknięciem" />
+				<node name="Margins" value="Marginesy">
+					<node name="left" value="Lewy Margines" />
+					<node name="right" value="Prawy Margines" />
+					<node name="top" value="Górny Margines" />
+					<node name="bottom" value="Dolny Margines" />
 				</node>
-				<node name="Web" value="Internet">
-					<node name="enableIntegration" value="Otwórz Zewnętrzne Linki w %s" />
-					<node name="defaultText" value="Otwórz Zewnętrzne linki w Przeglądarce" />
-					<node name="choice" value="Użyj Przeglądarkę" />
-					<node name="command" value="Polecenie do Wykonania" />
+				<node name="Format" value="Formatowanie">
+					<node name="optionsFor" value="Opcja Dotyczy" />
+					<node name="lineSpacing" value="Odstęp Między Liniami">
+						<node name="unchanged" value="&lt;bez zmian&gt;" />
+					</node>
+					<node name="firstLineIndent" value="Wcięcie Pierwszej Linii" />
+					<node name="alignment" value="Wyrównanie">
+						<node name="left" value="Do Lewej" />
+						<node name="right" value="Do Prawej" />
+						<node name="center" value="Do Środka" />
+						<node name="justify" value="Do Lewej i Prawej" />
+						<node name="unchanged" value="&lt;bez zmian&gt;" />
+					</node>
+					<node name="spaceBefore" value="Odstęp Przed" />
+					<node name="spaceAfter" value="Odstęp Po" />
+					<node name="startIndent" value="Wcięcie na Początku Linii" />
+					<node name="endIndent" value="Wcięcie na Końcu Linii" />
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Wykonaj Przy Zwolnieniu Klawisza, nie Przy Naciśnięciu" />
-					<node name="minStylusPressure" value="Minimalny Nacisk Rysika" />
-					<node name="maxStylusPressure" value="Maksymalny Nacisk Rysika" />
+				<node name="Styles" value="Style">
+					<node name="optionsFor" value="Opcja Dotyczy" />
+					<node name="fontFamily" value="Czcionka">
+						<node name="unchanged" value="&lt;bez zmiand&gt;" />
+					</node>
+					<node name="fontSize" value="Rozmiar" />
+					<node name="fontSizeDifference" value="Różnica Wielkości" />
+					<node name="bold" value="Pogrubiona" />
+					<node name="italic" value="Kursywa" />
+					<node name="allowHyphenations" value="Zezwól na Dzielenie Wyrazów" />
+					<node name="autoHyphenations" value="Automatyczne Dzielenie Wyrazów" />
+				</node>
+				<node name="Colors" value="Kolory">
+					<node name="colorFor" value="Kolor Dla">
+						<node name="background" value="Tło" />
+						<node name="selectionBackground" value="Tło Zaznaczenia" />
+						<node name="text" value="Zwykły Tekst" />
+						<node name="internalLink" value="Wewnętrzny Hiperlink" />
+						<node name="externalLink" value="Zewnętrzny Hiperlink" />
+						<node name="bookLink" value="Link do Innej Książki" />
+						<node name="highlighted" value="Zaznaczony Tekst" />
+						<node name="treeLines" value="Linie Drzewa" />
+						<node name="indicator" value="Pasek Postępu" />
+					</node>
 				</node>
 			</node>
 		</node>

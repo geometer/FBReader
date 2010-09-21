@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="Kirjan tiedot..." />
 		<node name="toc" value="Sisällysluettelo" />
 		<node name="showLibrary" value="Avaa kirjasto" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Kirjasto">
 			<node name="showLibrary" value="Avaa kirjasto" />
 			<node name="previousBook" value="Edellinen kirja" />
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="Koko näyttö" />
 			<node name="toggleIndicator" value="Sijainninilmaisin" />
 		</node>
-		<node name="preferences" value="Asetukset..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="Sulje" />
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" toBeTranslated="true" value="Previous" />
 			<node name="tooltip" value="Etsi edellinen" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" toBeTranslated="true" value="Book Info" />
-			<node name="tooltip" value="Näytä kirjan tiedot valintaikkuna" />
-		</node>
-		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Preferences" />
-			<node name="tooltip" value="Näytä asetukset valintaikkuna" />
-		</node>
 		<node name="rotate">
 			<node name="label" toBeTranslated="true" value="Rotate" />
 			<node name="tooltip" value="Kierrä teksti" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" toBeTranslated="true" value="Filter" />
 			<node name="tooltip" toBeTranslated="true" value="Filter" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="tooltip" value="Näytä kirjan tiedot valintaikkuna" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" value="&amp;Osta" />
 			<node name="buyAndDownload" value="Osta ja &amp;lataa" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Asetukset" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Kirjasto">
 					<node name="bookPath" value="Kirjaston hakemisto" />
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="Ryhmitä ilman metatietoja olevat kirjat" />
 					<node name="downloadDirectory" value="Ladattujen kirjojen hakemisto" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="Verkkohaku">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Käytä välityspalvelinta" />
 					<node name="proxyHost" value="Välityspalvelimen osoite" />
 					<node name="proxyPort" value="Välityspalvelimen portti" />
 					<node name="timeout" value="Verkkotoimintojen aikakatkaisu sekunteina" />
 				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="Ulkoisten linkkien avaus: %s" />
+					<node name="defaultText" value="Avaa ulkoiset linkit selaimessa" />
+					<node name="choice" value="Käytä selainta" />
+					<node name="command" value="Suorituskomento" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="Kieli">
 					<node name="autoDetect" value="Tunnista kieli ja merkistö automaattisesti" />
 					<node name="defaultLanguage" value="Oletuskieli" />
 					<node name="defaultEncodingSet" value="Oletusmerkistöalue" />
 					<node name="defaultEncoding" value="Oletusmerkistö" />
 					<node name="useWindows1252Hack" value="Käytä windows-1252 merkistöä iso-8859-1 sijaan" />
+				</node>
+				<node name="Config" value="Tila">
+					<node name="autoSave" value="Tallenna tila automaattisesti" />
+					<node name="timeout" value="Tallennusvälin aika sekunneissa" />
+				</node>
+				<node name="Dictionary" value="Sanakirja">
+					<node name="enableIntegration" value="Käytä sanakirjaa: %s" />
+					<node name="defaultText" value="Käytettävä sanakirja" />
+					<node name="choice" value="Integroi seuraavan kanssa:" />
+					<node name="singleClickOpen" value="Avaa yhdellä kosketuksella" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Toiminta näppäimen vapautuksesta painalluksen sijaan" />
+					<node name="minStylusPressure" value="Styluksen minimi paine" />
+					<node name="maxStylusPressure" value="Styluksen maksimi paine" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="Vieritys">
+					<node name="keyScrollDelay" value="Näppäinvierityksen painnallusten viive, msecs" />
+					<node name="keyLinesToScroll" value="Vieritettävien rivien määtä rivi rivivierityksessä" />
+					<node name="keyLinesToKeep" value="Säilytettävät rivit sivuvierityksessä" />
+					<node name="enableTapScrolling" value="Ota käyttöön kosketusvieritys" />
+					<node name="fingerOnly" value="Vieritä ainoastaan kosketuksesta" />
+				</node>
+				<node name="Selection" value="Valinta">
+					<node name="enableSelection" value="Ota käyttöön tekstinvalinta" />
 				</node>
 				<node name="Indicator" value="Ilmaisin">
 					<node name="type" value="Näytä">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="Näytä sisällysmerkit" />
 					<node name="navigation" value="Salli navigointi" />
 				</node>
-				<node name="Scrolling" value="Vieritys">
-					<node name="keyScrollDelay" value="Näppäinvierityksen painnallusten viive, msecs" />
-					<node name="keyLinesToScroll" value="Vieritettävien rivien määtä rivi rivivierityksessä" />
-					<node name="keyLinesToKeep" value="Säilytettävät rivit sivuvierityksessä" />
-					<node name="enableTapScrolling" value="Ota käyttöön kosketusvieritys" />
-					<node name="fingerOnly" value="Vieritä ainoastaan kosketuksesta" />
-				</node>
-				<node name="Selection" value="Valinta">
-					<node name="enableSelection" value="Ota käyttöön tekstinvalinta" />
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Käytä aina omaa kirjasinta" />
-				</node>
-				<node name="Margins" value="Reunus">
-					<node name="left" value="Vasenreunus" />
-					<node name="right" value="Oikeareunus" />
-					<node name="top" value="Yläreunus" />
-					<node name="bottom" value="Alareunus" />
-				</node>
-				<node name="Format" value="Muotoilu">
-					<node name="optionsFor" value="Asetukset" />
-					<node name="lineSpacing" value="Riviväli">
-						<node name="unchanged" value="&lt;ei muutosta&gt;" />
-					</node>
-					<node name="firstLineIndent" value="1. rivin sisennys" />
-					<node name="alignment" value="Tasaus">
-						<node name="left" value="Vasen" />
-						<node name="right" value="Oikea" />
-						<node name="center" value="Keskitetty" />
-						<node name="justify" value="Tasattu" />
-						<node name="unchanged" value="&lt;ei muutosta&gt;" />
-					</node>
-					<node name="spaceBefore" value="Väli ennen" />
-					<node name="spaceAfter" value="Väli jälkeen" />
-					<node name="startIndent" value="Rivin alun sisennys" />
-					<node name="endIndent" value="Rivin lopun sisennys" />
-				</node>
-				<node name="Styles" value="Tyylit">
-					<node name="optionsFor" value="Asetukset" />
-					<node name="fontFamily" value="Kirjasinperhe">
-						<node name="unchanged" value="&lt;ei muutosta&gt;" />
-					</node>
-					<node name="fontSize" value="Koko" />
-					<node name="fontSizeDifference" value="Koon ero" />
-					<node name="bold" value="Lihavoitu" />
-					<node name="italic" value="Kursivoitu" />
-					<node name="allowHyphenations" value="Salli tavutus" />
-					<node name="autoHyphenations" value="Automaattinen tavutus" />
-				</node>
 				<node name="Rotation" value="Kierto">
 					<node name="direction" value="Kiertämistapa">
 						<node name="disabled" value="Pois käytöstä" />
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="90 astetta vastapäivään" />
 						<node name="180" value="180 astetta" />
 						<node name="cycle" value="Kierrä neljä suuntaa" />
-					</node>
-				</node>
-				<node name="Colors" value="Värit">
-					<node name="colorFor" value="Värit">
-						<node name="background" value="Taustalle" />
-						<node name="selectionBackground" value="Valitun tekstin taustalle" />
-						<node name="text" value="Normaalille tekstille" />
-						<node name="internalLink" value="Sisäisen linkin tekstille" />
-						<node name="externalLink" value="Ulkoisen linkin tekstille" />
-						<node name="bookLink" value="Linkille toiseen kirjaan" />
-						<node name="highlighted" value="Korostetulle tekstille" />
-						<node name="treeLines" value="Kirjastopuun viivoille" />
-						<node name="indicator" value="Sijainninilmaisimelle" />
 					</node>
 				</node>
 				<node name="Keys" value="Näppäimet">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="Sijainninilmaisin päällä/pois" />
 						<node name="toggleFullscreen" value="Koko näyttö päällä/pois" />
 						<node name="rotate" value="Kierrä näyttöä" />
-						<node name="preferences" value="Näytä asetukset valintaikkuna" />
-						<node name="bookInfo" value="Näytä kirjantiedot valintaikkuna" />
 						<node name="addBook" value="Lisää kirja" />
 						<node name="cancel" value="Peru" />
 						<node name="quit" value="Lopeta" />
+						<node name="bookInfo" value="Näytä kirjantiedot valintaikkuna" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="Sulje sovellus peruttaessa" />
 					<node name="keyDelay" value="Hyväksyttyjen näppäinpainallusten viive" />
 				</node>
-				<node name="Config" value="Tila">
-					<node name="autoSave" value="Tallenna tila automaattisesti" />
-					<node name="timeout" value="Tallennusvälin aika sekunneissa" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Käytä aina omaa kirjasinta" />
 				</node>
-				<node name="Dictionary" value="Sanakirja">
-					<node name="enableIntegration" value="Käytä sanakirjaa: %s" />
-					<node name="defaultText" value="Käytettävä sanakirja" />
-					<node name="choice" value="Integroi seuraavan kanssa:" />
-					<node name="singleClickOpen" value="Avaa yhdellä kosketuksella" />
+				<node name="Margins" value="Reunus">
+					<node name="left" value="Vasenreunus" />
+					<node name="right" value="Oikeareunus" />
+					<node name="top" value="Yläreunus" />
+					<node name="bottom" value="Alareunus" />
 				</node>
-				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Ulkoisten linkkien avaus: %s" />
-					<node name="defaultText" value="Avaa ulkoiset linkit selaimessa" />
-					<node name="choice" value="Käytä selainta" />
-					<node name="command" value="Suorituskomento" />
+				<node name="Format" value="Muotoilu">
+					<node name="optionsFor" value="Asetukset" />
+					<node name="lineSpacing" value="Riviväli">
+						<node name="unchanged" value="&lt;ei muutosta&gt;" />
+					</node>
+					<node name="firstLineIndent" value="1. rivin sisennys" />
+					<node name="alignment" value="Tasaus">
+						<node name="left" value="Vasen" />
+						<node name="right" value="Oikea" />
+						<node name="center" value="Keskitetty" />
+						<node name="justify" value="Tasattu" />
+						<node name="unchanged" value="&lt;ei muutosta&gt;" />
+					</node>
+					<node name="spaceBefore" value="Väli ennen" />
+					<node name="spaceAfter" value="Väli jälkeen" />
+					<node name="startIndent" value="Rivin alun sisennys" />
+					<node name="endIndent" value="Rivin lopun sisennys" />
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Toiminta näppäimen vapautuksesta painalluksen sijaan" />
-					<node name="minStylusPressure" value="Styluksen minimi paine" />
-					<node name="maxStylusPressure" value="Styluksen maksimi paine" />
+				<node name="Styles" value="Tyylit">
+					<node name="optionsFor" value="Asetukset" />
+					<node name="fontFamily" value="Kirjasinperhe">
+						<node name="unchanged" value="&lt;ei muutosta&gt;" />
+					</node>
+					<node name="fontSize" value="Koko" />
+					<node name="fontSizeDifference" value="Koon ero" />
+					<node name="bold" value="Lihavoitu" />
+					<node name="italic" value="Kursivoitu" />
+					<node name="allowHyphenations" value="Salli tavutus" />
+					<node name="autoHyphenations" value="Automaattinen tavutus" />
+				</node>
+				<node name="Colors" value="Värit">
+					<node name="colorFor" value="Värit">
+						<node name="background" value="Taustalle" />
+						<node name="selectionBackground" value="Valitun tekstin taustalle" />
+						<node name="text" value="Normaalille tekstille" />
+						<node name="internalLink" value="Sisäisen linkin tekstille" />
+						<node name="externalLink" value="Ulkoisen linkin tekstille" />
+						<node name="bookLink" value="Linkille toiseen kirjaan" />
+						<node name="highlighted" value="Korostetulle tekstille" />
+						<node name="treeLines" value="Kirjastopuun viivoille" />
+						<node name="indicator" value="Sijainninilmaisimelle" />
+					</node>
 				</node>
 			</node>
 		</node>

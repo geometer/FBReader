@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="Könyv adatai..." />
 		<node name="toc" value="Tartalomjegyzék" />
 		<node name="showLibrary" value="Könyvtár megnyitása" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Könyvtár">
 			<node name="showLibrary" value="Megnyitás" />
 			<node name="previousBook" value="Előző kötet" />
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="Teljes képernyő" />
 			<node name="toggleIndicator" value="Helyzet jelző átkapcsolása" />
 		</node>
-		<node name="preferences" value="Beállítások..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="Bezár" />
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" value="Előző" />
 			<node name="tooltip" value="Előző keresése" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" value="Könyv adatai" />
-			<node name="tooltip" value="A könyv adatainak módosítása" />
-		</node>
-		<node name="preferences">
-			<node name="label" value="Beállítások" />
-			<node name="tooltip" value="Beállítások módosítása" />
-		</node>
 		<node name="rotate">
 			<node name="label" value="Elforgatás" />
 			<node name="tooltip" value="A szöveg elforgatása" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" value="Szűrés" />
 			<node name="tooltip" value="Válogatás a könyvtár köteteiből" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="Könyv adatai" />
+			<node name="tooltip" value="A könyv adatainak módosítása" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" value="&amp;Vásárlás" />
 			<node name="buyAndDownload" value="Vásárlás &amp;és letöltés" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Beállítások" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Könyvtár">
 					<node name="bookPath" value="A könyvek helye" />
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="Gyüjtsd össze az információk nélküli köteteket is" />
 					<node name="downloadDirectory" value="A letöltendő kötetek helye" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="Keresés az Interneten">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Proxy használat" />
 					<node name="proxyHost" value="Proxy IP címe" />
 					<node name="proxyPort" value="Proxy port" />
 					<node name="timeout" value="Várakozás hálózati válaszra, másodpercben" />
 				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="Külső csatolások megnyitása: %s" />
+					<node name="defaultText" value="Külső csatolások megnyitása a böngészőben" />
+					<node name="choice" value="Böngésző használata" />
+					<node name="command" value="Végrehajtandó parancs" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="Nyelv">
 					<node name="autoDetect" value="Nyelv és kódlap automatikus kiválasztása" />
 					<node name="defaultLanguage" value="Elsődleges nyelv" />
 					<node name="defaultEncodingSet" value="Elsődleges kódlap készlet" />
 					<node name="defaultEncoding" value="Elsődleges kódlap" />
 					<node name="useWindows1252Hack" value="Használja a windows-1252-t az iso-8859-1 helyett" />
+				</node>
+				<node name="Config" value="Beállítások">
+					<node name="autoSave" value="Állapot automatikus mentése" />
+					<node name="timeout" value="Mentések közötti várakozás, másodperc" />
+				</node>
+				<node name="Dictionary" value="Szótár">
+					<node name="enableIntegration" value="A(z) %s összekapcsolása a programmal"/>
+					<node name="defaultText" value="Külső szótárral együttműködés engedélyezése" />
+					<node name="choice" value="Együttműködés:" />
+					<node name="singleClickOpen" value="Egy gombos megnyitás" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Végrehajtás a billentyű elengedésekor" />
+					<node name="minStylusPressure" value="Minimális nyomás" />
+					<node name="maxStylusPressure" value="Maximális nyomás" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="Görgetés">
+					<node name="keyScrollDelay" value="Várakozás a billentyűlenyomás után, ezredmásodperc" />
+					<node name="keyLinesToScroll" value="Egyszerre gördített sorok" />
+					<node name="keyLinesToKeep" value="Oldalankénti léptetéskor megtartott sorok" />
+					<node name="enableTapScrolling" value="Érintő görgetés engedélyezve" />
+					<node name="fingerOnly" value="Csak érintő görgetés" />
+				</node>
+				<node name="Selection" value="Kijelölés">
+					<node name="enableSelection" value="Szöveg kijelőlés engedélyezve" />
 				</node>
 				<node name="Indicator" value="Helyzet jelző">
 					<node name="type" value="Típusa">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="Mutassa a tartalom bejegyzéseket" />
 					<node name="navigation" value="Pozícionálás engedélyezve" />
 				</node>
-				<node name="Scrolling" value="Görgetés">
-					<node name="keyScrollDelay" value="Várakozás a billentyűlenyomás után, ezredmásodperc" />
-					<node name="keyLinesToScroll" value="Egyszerre gördített sorok" />
-					<node name="keyLinesToKeep" value="Oldalankénti léptetéskor megtartott sorok" />
-					<node name="enableTapScrolling" value="Érintő görgetés engedélyezve" />
-					<node name="fingerOnly" value="Csak érintő görgetés" />
-				</node>
-				<node name="Selection" value="Kijelölés">
-					<node name="enableSelection" value="Szöveg kijelőlés engedélyezve" />
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Kizárólag saját fontok használata" />
-				</node>
-				<node name="Margins" value="Margók">
-					<node name="left" value="Bal margó" />
-					<node name="right" value="Jobb margó" />
-					<node name="top" value="Oldal tetején" />
-					<node name="bottom" value="Oldal alján" />
-				</node>
-				<node name="Format" value="Formátum">
-					<node name="optionsFor" value="Beállítások" />
-					<node name="lineSpacing" value="Sorköz">
-						<node name="unchanged" value="&lt;változatlan&gt;" />
-					</node>
-					<node name="firstLineIndent" value="Első sor behúzása" />
-					<node name="alignment" value="Igazítás">
-						<node name="left" value="Bal" />
-						<node name="right" value="Jobb" />
-						<node name="center" value="Középre" />
-						<node name="justify" value="Sorkizárt" />
-						<node name="unchanged" value="&lt;változatlan&gt;" />
-					</node>
-					<node name="spaceBefore" value="Sorköz előtte" />
-					<node name="spaceAfter" value="Sorköz utánna" />
-					<node name="startIndent" value="Behúzás sor elején" />
-					<node name="endIndent" value="Behúzás sor végén" />
-				</node>
-				<node name="Styles" value="Stílusok">
-					<node name="optionsFor" value="Beállítások" />
-					<node name="fontFamily" value="Betűkészlet">
-						<node name="unchanged" value="&lt;változatlan&gt;" />
-					</node>
-					<node name="fontSize" value="Méret" />
-					<node name="fontSizeDifference" value="Méret eltérés" />
-					<node name="bold" value="Vastag" />
-					<node name="italic" value="Dőlt" />
-					<node name="allowHyphenations" value="Elválasztás engedélyezve" />
-					<node name="autoHyphenations" value="Automatikus elválasztás" />
-				</node>
 				<node name="Rotation" value="Elforgatás">
 					<node name="direction" value="Elforgatás">
 						<node name="disabled" value="Tiltva" />
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="90 fok balra" />
 						<node name="180" value="180 fok" />
 						<node name="cycle" value="Sorban mind a 4 pozícioba" />
-					</node>
-				</node>
-				<node name="Colors" value="Színek">
-					<node name="colorFor" value="Színek">
-						<node name="background" value="Háttér" />
-						<node name="selectionBackground" value="Kijelölt rész háttere" />
-						<node name="text" value="Szöveg" />
-						<node name="internalLink" value="Belső mutató" />
-						<node name="externalLink" value="Külső mutató" />
-						<node name="bookLink" value="Mutató másik kötetre" />
-						<node name="highlighted" value="Kiemelt szöveg" />
-						<node name="treeLines" value="Könyvtárfa vonalai" />
-						<node name="indicator" value="Helyzet jelző" />
 					</node>
 				</node>
 				<node name="Keys" value="Billentyűk">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="Helyzet jelző kapcsolása" />
 						<node name="toggleFullscreen" value="Teljes képernyőre" />
 						<node name="rotate" value="Képernyő elforgatása" />
-						<node name="preferences" value="Beállító panel" />
-						<node name="bookInfo" value="Kötet adatainak módosítása" />
 						<node name="addBook" value="Kötet hozzáadása" />
 						<node name="cancel" value="Mégsem" />
 						<node name="quit" value="Kilépés" />
+						<node name="bookInfo" value="Kötet adatainak módosítása" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="&#8220;Mégsem&#8221; után kilépés a programból" />
 					<node name="keyDelay" value="Várakozás a billentyűleütések között" />
 				</node>
-				<node name="Config" value="Beállítások">
-					<node name="autoSave" value="Állapot automatikus mentése" />
-					<node name="timeout" value="Mentések közötti várakozás, másodperc" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Kizárólag saját fontok használata" />
 				</node>
-				<node name="Dictionary" value="Szótár">
-					<node name="enableIntegration" value="A(z) %s összekapcsolása a programmal"/>
-					<node name="defaultText" value="Külső szótárral együttműködés engedélyezése" />
-					<node name="choice" value="Együttműködés:" />
-					<node name="singleClickOpen" value="Egy gombos megnyitás" />
+				<node name="Margins" value="Margók">
+					<node name="left" value="Bal margó" />
+					<node name="right" value="Jobb margó" />
+					<node name="top" value="Oldal tetején" />
+					<node name="bottom" value="Oldal alján" />
 				</node>
-				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Külső csatolások megnyitása: %s" />
-					<node name="defaultText" value="Külső csatolások megnyitása a böngészőben" />
-					<node name="choice" value="Böngésző használata" />
-					<node name="command" value="Végrehajtandó parancs" />
+				<node name="Format" value="Formátum">
+					<node name="optionsFor" value="Beállítások" />
+					<node name="lineSpacing" value="Sorköz">
+						<node name="unchanged" value="&lt;változatlan&gt;" />
+					</node>
+					<node name="firstLineIndent" value="Első sor behúzása" />
+					<node name="alignment" value="Igazítás">
+						<node name="left" value="Bal" />
+						<node name="right" value="Jobb" />
+						<node name="center" value="Középre" />
+						<node name="justify" value="Sorkizárt" />
+						<node name="unchanged" value="&lt;változatlan&gt;" />
+					</node>
+					<node name="spaceBefore" value="Sorköz előtte" />
+					<node name="spaceAfter" value="Sorköz utánna" />
+					<node name="startIndent" value="Behúzás sor elején" />
+					<node name="endIndent" value="Behúzás sor végén" />
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Végrehajtás a billentyű elengedésekor" />
-					<node name="minStylusPressure" value="Minimális nyomás" />
-					<node name="maxStylusPressure" value="Maximális nyomás" />
+				<node name="Styles" value="Stílusok">
+					<node name="optionsFor" value="Beállítások" />
+					<node name="fontFamily" value="Betűkészlet">
+						<node name="unchanged" value="&lt;változatlan&gt;" />
+					</node>
+					<node name="fontSize" value="Méret" />
+					<node name="fontSizeDifference" value="Méret eltérés" />
+					<node name="bold" value="Vastag" />
+					<node name="italic" value="Dőlt" />
+					<node name="allowHyphenations" value="Elválasztás engedélyezve" />
+					<node name="autoHyphenations" value="Automatikus elválasztás" />
+				</node>
+				<node name="Colors" value="Színek">
+					<node name="colorFor" value="Színek">
+						<node name="background" value="Háttér" />
+						<node name="selectionBackground" value="Kijelölt rész háttere" />
+						<node name="text" value="Szöveg" />
+						<node name="internalLink" value="Belső mutató" />
+						<node name="externalLink" value="Külső mutató" />
+						<node name="bookLink" value="Mutató másik kötetre" />
+						<node name="highlighted" value="Kiemelt szöveg" />
+						<node name="treeLines" value="Könyvtárfa vonalai" />
+						<node name="indicator" value="Helyzet jelző" />
+					</node>
 				</node>
 			</node>
 		</node>

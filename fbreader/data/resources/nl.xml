@@ -71,6 +71,9 @@
 		<node name="bookInfo" value="Boek Info..." />
 		<node name="toc" value="Inhoudsopgave" />
 		<node name="showLibrary" value="Open bibliotheek" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="addBook" toBeTranslated="true" value="Open file..." />
+		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Bibliotheek">
 			<node name="showLibrary" value="Open" />
 			<node name="previousBook" value="Vorig boek" />
@@ -109,7 +112,7 @@
 			<node name="toggleFullscreen" value="Beeldvullend" />
 			<node name="toggleIndicator" value="Indicator Aan/Uit" />
 		</node>
-		<node name="preferences" value="Voorkeuren..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
 		<node name="quit" value="Sluiten" />
 	</node>
 	<node name="toolbar">
@@ -182,14 +185,6 @@
 			<node name="label" value="Vorige" />
 			<node name="tooltip" value="Zoek vorige" />
 		</node>
-		<node name="bookInfo">
-			<node name="label" value="Boek Info" />
-			<node name="tooltip" value="Toon boek informatie" />
-		</node>
-		<node name="preferences">
-			<node name="label" value="Voorkeuren" />
-			<node name="tooltip" value="Toon voorkeuren" />
-		</node>
 		<node name="rotate">
 			<node name="label" value="Draaien" />
 			<node name="tooltip" value="Text draaien" />
@@ -201,6 +196,34 @@
 		<node name="filterLibrary">
 			<node name="label" toBeTranslated="true" value="Filter" />
 			<node name="tooltip" toBeTranslated="true" value="Filter" />
+		</node>
+		<node name="preferences">
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="Boek Info" />
+			<node name="tooltip" value="Toon boek informatie" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" toBeTranslated="true" value="Library Preferences" />
+			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" toBeTranslated="true" value="Network Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" toBeTranslated="true" value="System Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" toBeTranslated="true" value="Reading Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -214,8 +237,8 @@
 			<node name="buy" value="&amp;Koop" />
 			<node name="buyAndDownload" value="Koop en &amp;download" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - Voorkeuren" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
 			<node name="tab">
 				<node name="Library" value="Bibliotheek">
 					<node name="bookPath" value="Boek Locaties" />
@@ -223,18 +246,66 @@
 					<node name="collectBooksWithoutMetaInfo" value="Voeg boeken toe zonder MetaInfo" />
 					<node name="downloadDirectory" value="Locatie voor Downloads" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="online bibliotheken">
+				</node>
+				<node name="Connection" value="Connection">
 					<node name="useProxy" value="Gebruik Proxy" />
 					<node name="proxyHost" value="Proxy Host" />
 					<node name="proxyPort" value="Proxy Poort" />
 					<node name="timeout" value="Netwerk Timeout, in seconden" />
 				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="Externe links in %s openen" />
+					<node name="defaultText" value="Externe links in Browser openen" />
+					<node name="choice" value="Gebruik Browser" />
+					<node name="command" value="Commando uitvoeren" />
+				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="tab">
 				<node name="Language" value="Taal">
 					<node name="autoDetect" value="Taal en Codering automatisch detecteren" />
 					<node name="defaultLanguage" value="Standaard Taal" />
 					<node name="defaultEncodingSet" value="Standaard Codering Type" />
 					<node name="defaultEncoding" value="Standaard Codering" />
 					<node name="useWindows1252Hack" value="Gebruik windows-1252 in plaats van iso-8859-1" />
+				</node>
+				<node name="Config" value="Configuratie">
+					<node name="autoSave" value="Automatisch staat opslaan" />
+					<node name="timeout" value="Tijd tussen automatisch oplaan, in seconden" />
+				</node>
+				<node name="Dictionary" value="Dictionary">
+					<node name="enableIntegration" value="Integratie met %s toestaan" />
+					<node name="defaultText" value="Integratie met woordenboek toestaan" />
+					<node name="choice" value="Integreren met" />
+					<node name="singleClickOpen" value="Openen met enkele klik" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="Activeren bij loslaten toets, niet bij toetsaanslag" />
+					<node name="minStylusPressure" value="Minimale Stylus Druk" />
+					<node name="maxStylusPressure" value="Maximale Stylus Druk" />
+				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="tab">
+				<node name="Scrolling" value="Scrolling">
+					<node name="keyScrollDelay" value="Vertraging tussen Toets Scrollings, msecs" />
+					<node name="keyLinesToScroll" value="Aantal regels Scrollen bij Regel Scrolling" />
+					<node name="keyLinesToKeep" value="Te bewaren regels bij Pagina Scrolling" />
+					<node name="enableTapScrolling" value="Tap Scrolling gebruiken" />
+					<node name="fingerOnly" value="Alleen door Vinger Tap scrollen" />
+				</node>
+				<node name="Selection" value="Selectie">
+					<node name="enableSelection" value="Tekst selectie gebruiken" />
 				</node>
 				<node name="Indicator" value="Indicator">
 					<node name="type" value="Toon als">
@@ -250,55 +321,6 @@
 					<node name="tocMarks" value="Toon Hoofdstukken" />
 					<node name="navigation" value="Gebruiken voor Navigatie" />
 				</node>
-				<node name="Scrolling" value="Scrolling">
-					<node name="keyScrollDelay" value="Vertraging tussen Toets Scrollings, msecs" />
-					<node name="keyLinesToScroll" value="Aantal regels Scrollen bij Regel Scrolling" />
-					<node name="keyLinesToKeep" value="Te bewaren regels bij Pagina Scrolling" />
-					<node name="enableTapScrolling" value="Tap Scrolling gebruiken" />
-					<node name="fingerOnly" value="Alleen door Vinger Tap scrollen" />
-				</node>
-				<node name="Selection" value="Selectie">
-					<node name="enableSelection" value="Tekst selectie gebruiken" />
-				</node>
-				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Altijd mijn eigen Fonts gebruiken" />
-				</node>
-				<node name="Margins" value="Marges">
-					<node name="left" value="Linker Marge" />
-					<node name="right" value="Rechter Marge" />
-					<node name="top" value="Boven Marge" />
-					<node name="bottom" value="Onder Marge" />
-				</node>
-				<node name="Format" value="Opmaak">
-					<node name="optionsFor" value="Opties voor" />
-					<node name="lineSpacing" value="Regelafstand">
-						<node name="unchanged" value="&lt;unchanged&gt;" />
-					</node>
-					<node name="firstLineIndent" value="Inspringen eerste regel" />
-					<node name="alignment" value="Uitlijning">
-						<node name="left" value="Links" />
-						<node name="right" value="Rechts" />
-						<node name="center" value="Centreren" />
-						<node name="justify" value="Uitvullen" />
-						<node name="unchanged" value="&lt;unchanged&gt;" />
-					</node>
-					<node name="spaceBefore" value="Ruimte Voor" />
-					<node name="spaceAfter" value="Ruimte Na" />
-					<node name="startIndent" value="Inspringen aan begin regel" />
-					<node name="endIndent" value="Inspringen aan einde regel" />
-				</node>
-				<node name="Styles" value="Lettertype">
-					<node name="optionsFor" value="Opties voor" />
-					<node name="fontFamily" value="Font Familie">
-						<node name="unchanged" value="&lt;unchanged&gt;" />
-					</node>
-					<node name="fontSize" value="Afmeting" />
-					<node name="fontSizeDifference" value="Verschil Font Afmetingen" />
-					<node name="bold" value="Vet" />
-					<node name="italic" value="Cursief" />
-					<node name="allowHyphenations" value="Woordafbreking Toestaan" />
-					<node name="autoHyphenations" value="Automatische Woordafbreking" />
-				</node>
 				<node name="Rotation" value="Oriëntatie">
 					<node name="direction" value="Soort Rotatie">
 						<node name="disabled" value="Geen" />
@@ -306,19 +328,6 @@
 						<node name="counterclockwise" value="90 Graden Linksom" />
 						<node name="180" value="180 Graden" />
 						<node name="cycle" value="Rondgang door de vier standen" />
-					</node>
-				</node>
-				<node name="Colors" value="Kleuren">
-					<node name="colorFor" value="Kleur voor">
-						<node name="background" value="Achtergrond" />
-						<node name="selectionBackground" value="Actergrond Selecties" />
-						<node name="text" value="Reguliere Tekst" />
-						<node name="internalLink" value="Interne Hyperlink Tekst" />
-						<node name="externalLink" value="Externe Hyperlink Tekst" />
-						<node name="bookLink" value="Link naar een Ander Boek" />
-						<node name="highlighted" value="Gemarkeerde Tekst" />
-						<node name="treeLines" value="Tree Lines" />
-						<node name="indicator" value="Positie Indicator" />
 					</node>
 				</node>
 				<node name="Keys" value="Toetsen">
@@ -359,35 +368,71 @@
 						<node name="toggleIndicator" value="Indicator Aan/Uit" />
 						<node name="toggleFullscreen" value="Volledig scherm" />
 						<node name="rotate" value="Scherm draaien" />
-						<node name="preferences" value="Toon voorkeuren" />
-						<node name="bookInfo" value="Toon Boek Info scherm" />
 						<node name="addBook" value="Boek toevoegen" />
 						<node name="cancel" value="Annuleren" />
 						<node name="quit" value="Afsluiten" />
+						<node name="bookInfo" value="Toon Boek Info scherm" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
 					</node>
 					<node name="quitOnCancel" value="Programma afsluiten bij annuleren" />
 					<node name="keyDelay" value="Vertraging tussen geaccepteerde toetsaanslagen" />
 				</node>
-				<node name="Config" value="Configuratie">
-					<node name="autoSave" value="Automatisch staat opslaan" />
-					<node name="timeout" value="Tijd tussen automatisch oplaan, in seconden" />
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="tab">
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="Altijd mijn eigen Fonts gebruiken" />
 				</node>
-				<node name="Dictionary" value="Dictionary">
-					<node name="enableIntegration" value="Integratie met %s toestaan" />
-					<node name="defaultText" value="Integratie met woordenboek toestaan" />
-					<node name="choice" value="Integreren met" />
-					<node name="singleClickOpen" value="Openen met enkele klik" />
+				<node name="Margins" value="Marges">
+					<node name="left" value="Linker Marge" />
+					<node name="right" value="Rechter Marge" />
+					<node name="top" value="Boven Marge" />
+					<node name="bottom" value="Onder Marge" />
 				</node>
-				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Externe links in %s openen" />
-					<node name="defaultText" value="Externe links in Browser openen" />
-					<node name="choice" value="Gebruik Browser" />
-					<node name="command" value="Commando uitvoeren" />
+				<node name="Format" value="Opmaak">
+					<node name="optionsFor" value="Opties voor" />
+					<node name="lineSpacing" value="Regelafstand">
+						<node name="unchanged" value="&lt;unchanged&gt;" />
+					</node>
+					<node name="firstLineIndent" value="Inspringen eerste regel" />
+					<node name="alignment" value="Uitlijning">
+						<node name="left" value="Links" />
+						<node name="right" value="Rechts" />
+						<node name="center" value="Centreren" />
+						<node name="justify" value="Uitvullen" />
+						<node name="unchanged" value="&lt;unchanged&gt;" />
+					</node>
+					<node name="spaceBefore" value="Ruimte Voor" />
+					<node name="spaceAfter" value="Ruimte Na" />
+					<node name="startIndent" value="Inspringen aan begin regel" />
+					<node name="endIndent" value="Inspringen aan einde regel" />
 				</node>
-				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Activeren bij loslaten toets, niet bij toetsaanslag" />
-					<node name="minStylusPressure" value="Minimale Stylus Druk" />
-					<node name="maxStylusPressure" value="Maximale Stylus Druk" />
+				<node name="Styles" value="Lettertype">
+					<node name="optionsFor" value="Opties voor" />
+					<node name="fontFamily" value="Font Familie">
+						<node name="unchanged" value="&lt;unchanged&gt;" />
+					</node>
+					<node name="fontSize" value="Afmeting" />
+					<node name="fontSizeDifference" value="Verschil Font Afmetingen" />
+					<node name="bold" value="Vet" />
+					<node name="italic" value="Cursief" />
+					<node name="allowHyphenations" value="Woordafbreking Toestaan" />
+					<node name="autoHyphenations" value="Automatische Woordafbreking" />
+				</node>
+				<node name="Colors" value="Kleuren">
+					<node name="colorFor" value="Kleur voor">
+						<node name="background" value="Achtergrond" />
+						<node name="selectionBackground" value="Actergrond Selecties" />
+						<node name="text" value="Reguliere Tekst" />
+						<node name="internalLink" value="Interne Hyperlink Tekst" />
+						<node name="externalLink" value="Externe Hyperlink Tekst" />
+						<node name="bookLink" value="Link naar een Ander Boek" />
+						<node name="highlighted" value="Gemarkeerde Tekst" />
+						<node name="treeLines" value="Tree Lines" />
+						<node name="indicator" value="Positie Indicator" />
+					</node>
 				</node>
 			</node>
 		</node>
