@@ -282,7 +282,7 @@ void ZLArrayBasedStatistics::insert(const ZLCharSequence &charSequence, size_t f
 		return;
 	}
 	for(size_t i = 0; i < myCharSequenceSize; ++i) {
-		mySequences[myBack * myCharSequenceSize + i] = charSequence.toString()[i]; 
+		mySequences[myBack * myCharSequenceSize + i] = charSequence[i]; 
 	}
 	myFrequencies[myBack] = (unsigned short) frequency;
 	++myBack;
