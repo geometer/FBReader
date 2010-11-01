@@ -24,19 +24,18 @@
 #include "ZLStatistics.h"
 #include "ZLStatisticsItem.h"
 
-ZLStatistics::ZLStatistics() : myCharSequenceSize(0),
-																myVolumesAreUpToDate(true),
-																myVolume(0),
-																mySquaresVolume(0) {
+ZLStatistics::ZLStatistics() : myCharSequenceSize(0), myVolumesAreUpToDate(true),
+		myVolume(0), mySquaresVolume(0) {
 }
 
-ZLStatistics::ZLStatistics(size_t charSequenceSize) : myCharSequenceSize(charSequenceSize),
-																											myVolumesAreUpToDate(true),
-																											myVolume(0),
-																											mySquaresVolume(0) {
+ZLStatistics::ZLStatistics(size_t charSequenceSize) :
+		myCharSequenceSize(charSequenceSize), myVolumesAreUpToDate(true),
+		myVolume(0), mySquaresVolume(0) {
 }
 
-ZLStatistics::ZLStatistics(size_t charSequenceSize, size_t volume, unsigned long long squaresVolume) : myCharSequenceSize(charSequenceSize), myVolumesAreUpToDate(true), myVolume(volume), mySquaresVolume(squaresVolume) {
+ZLStatistics::ZLStatistics(size_t charSequenceSize, size_t volume, unsigned long long squaresVolume) :
+		myCharSequenceSize(charSequenceSize), myVolumesAreUpToDate(true),
+		myVolume(volume), mySquaresVolume(squaresVolume) {
 }
 
 ZLStatistics::~ZLStatistics() {
@@ -44,16 +43,16 @@ ZLStatistics::~ZLStatistics() {
 
 size_t ZLStatistics::getVolume() const {
 	if (!myVolumesAreUpToDate) {
-  	calculateVolumes();
+		calculateVolumes();
 	}
-  return myVolume;
+	return myVolume;
 }
 
 unsigned long long ZLStatistics::getSquaresVolume() const {
 	if (!myVolumesAreUpToDate) {
-  	calculateVolumes();
+		calculateVolumes();
 	}
-  return mySquaresVolume;
+	return mySquaresVolume;
 }
 
 static int log10(long long number) {
@@ -65,13 +64,13 @@ static int log10(long long number) {
 	return count;
 }
 
-static int power10(unsigned int number) {
-	int power = 1;
-	while (number-- > 0) {
-		power *= 10;
-	}
-	return power;
-}
+//static int power10(unsigned int number) {
+//	int power = 1;
+//	while (number-- > 0) {
+//		power *= 10;
+//	}
+//	return power;
+//}
 
 int ZLStatistics::correlation(const ZLStatistics& candidate, const ZLStatistics& pattern) {
 	if (&candidate == &pattern) {
@@ -122,17 +121,23 @@ int ZLStatistics::correlation(const ZLStatistics& candidate, const ZLStatistics&
 	int orderDiff = ::log10(patternDispersion) - ::log10(candidateDispersion);
 	int patternMult = 1000;
 	if (orderDiff >= 5) {
-		patternMult = ::power10(6);
+		//patternMult = ::power10(6);
+		patternMult = 1000000;
 	} else if (orderDiff >= 3) {
-		patternMult = ::power10(5);
+		//patternMult = ::power10(5);
+		patternMult = 100000;
 	} else if (orderDiff >= 1) {
-		patternMult = ::power10(4);
+		//patternMult = ::power10(4);
+		patternMult = 10000;
 	} else if (orderDiff <= -1) {
-		patternMult = ::power10(2);
+		//patternMult = ::power10(2);
+		patternMult = 100;
 	} else if (orderDiff <= -3) {
-		patternMult = ::power10(1);
+		//patternMult = ::power10(1);
+		patternMult = 10;
 	} else if (orderDiff <= -5) {
-		patternMult = ::power10(0);
+		//patternMult = ::power10(0);
+		patternMult = 1;
 	}
 	int candidateMult = 1000000 / patternMult;
 
@@ -166,7 +171,7 @@ ZLMapBasedStatistics::~ZLMapBasedStatistics() {
 void ZLMapBasedStatistics::calculateVolumes() const {
 	myVolume = 0;
 	mySquaresVolume = 0;
-	for(Dictionary::const_iterator it = myDictionary.begin(); it != myDictionary.end(); ++it) {
+	for (Dictionary::const_iterator it = myDictionary.begin(); it != myDictionary.end(); ++it) {
 		const size_t frequency = it->second;
 		myVolume += frequency;
 		mySquaresVolume += frequency * frequency;
@@ -258,20 +263,18 @@ shared_ptr<ZLStatisticsItem> ZLMapBasedStatistics::end() const {
 }
 
 ZLArrayBasedStatistics::ZLArrayBasedStatistics() :  ZLStatistics(),
-																										myCapacity(0),
-																										myBack(0),
-																										mySequences(0),
-																										myFrequencies(0) {
+		myCapacity(0), myBack(0), mySequences(0), myFrequencies(0) {
 }
 
-ZLArrayBasedStatistics::ZLArrayBasedStatistics(size_t charSequenceSize, size_t size, size_t volume, unsigned long long squaresVolume) : ZLStatistics(charSequenceSize, volume, squaresVolume), myCapacity(size) {
+ZLArrayBasedStatistics::ZLArrayBasedStatistics(size_t charSequenceSize, size_t size, size_t volume, unsigned long long squaresVolume) :
+		ZLStatistics(charSequenceSize, volume, squaresVolume), myCapacity(size) {
 	myBack = 0;
 	mySequences = new char[myCharSequenceSize * size];
 	myFrequencies = new unsigned short[size];
 }
  
 ZLArrayBasedStatistics::~ZLArrayBasedStatistics() {
-	if ((mySequences != 0) && (mySequences != 0)) {
+	if (mySequences != 0) {
 		delete[] mySequences;
 		delete[] myFrequencies;
 	}
@@ -281,7 +284,7 @@ void ZLArrayBasedStatistics::insert(const ZLCharSequence &charSequence, size_t f
 	if (myBack == myCapacity) {
 		return;
 	}
-	for(size_t i = 0; i < myCharSequenceSize; ++i) {
+	for (size_t i = 0; i < myCharSequenceSize; ++i) {
 		mySequences[myBack * myCharSequenceSize + i] = charSequence[i]; 
 	}
 	myFrequencies[myBack] = (unsigned short) frequency;
@@ -292,7 +295,7 @@ void ZLArrayBasedStatistics::insert(const ZLCharSequence &charSequence, size_t f
 void ZLArrayBasedStatistics::calculateVolumes() const {
 	myVolume = 0;
 	mySquaresVolume = 0;
-	for(size_t i = 0; i != myBack; ++i) {
+	for (size_t i = 0; i != myBack; ++i) {
 		const size_t frequency = myFrequencies[i];
 		myVolume += frequency;
 		mySquaresVolume += frequency * frequency;
@@ -309,20 +312,20 @@ shared_ptr<ZLStatisticsItem> ZLArrayBasedStatistics::end() const {
 }
 
 ZLArrayBasedStatistics& ZLArrayBasedStatistics::operator= (const ZLArrayBasedStatistics &other) {
-  if (this == &other) {
+	if (this == &other) {
 		return *this;
 	}
 	myCharSequenceSize = other.myCharSequenceSize;
 	myVolumesAreUpToDate = false;
-	if ((mySequences != 0) && (mySequences != 0)) {
+	if (mySequences != 0) {
 		delete[] mySequences;
-  	delete[] myFrequencies;
+		delete[] myFrequencies;
 	}
-  myCapacity = other.myCapacity;
+	myCapacity = other.myCapacity;
 	myBack = 0;
-	if ((other.mySequences != 0) && (other.mySequences != 0)) {
-  	mySequences = new char[myCapacity * other.myCharSequenceSize];
-  	myFrequencies = new unsigned short[myCapacity];
+	if (other.mySequences != 0) {
+		mySequences = new char[myCapacity * other.myCharSequenceSize];
+		myFrequencies = new unsigned short[myCapacity];
 		while (myBack < other.myBack) {
 			mySequences[myBack] = other.mySequences[myBack];
 			myFrequencies[myBack] = other.myFrequencies[myBack];
@@ -334,5 +337,3 @@ ZLArrayBasedStatistics& ZLArrayBasedStatistics::operator= (const ZLArrayBasedSta
 	} 
 	return *this;
 }
-	
-// vim: ts=2

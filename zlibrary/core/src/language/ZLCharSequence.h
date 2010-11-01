@@ -35,7 +35,6 @@ public:
 	const char &operator [] (size_t index) const;
 	ZLCharSequence &operator = (const ZLCharSequence& other);
 		
-	//std::string toString() const; 
 	std::string toHexSequence() const; 
 
 	// returns
@@ -59,30 +58,14 @@ inline bool operator < (const ZLCharSequence &a, const ZLCharSequence &b) {
 	return a.compareTo(b) < 0;
 }
 
-inline int ZLCharSequence::compareTo(const ZLCharSequence &other) const {
-	int difference = mySize - other.mySize;
-	if (difference != 0) {
-		return difference;
-	}
-	for (size_t i = 0; i < mySize; ++i) {
-		difference = myHead[i] - other.myHead[i];
-		if (difference != 0) {
-			return difference;
-		}
-	}
-	return 0;
-}
-
 inline ZLCharSequence::~ZLCharSequence() {
-	delete[] myHead;
+	if (myHead != 0) {
+		delete[] myHead;
+	}
 }
 
 inline size_t ZLCharSequence::getSize() const {
 	return mySize;
 }
-
-//inline std::string ZLCharSequence::toString() const {
-//	return std::string(myHead, 0, mySize);
-//}
 
 #endif /*__ZLCHARSEQUENCE_H__*/
