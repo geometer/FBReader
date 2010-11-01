@@ -29,6 +29,7 @@
 #include <ZLMessage.h>
 #include <ZLTimeManager.h>
 #include <ZLLogger.h>
+#include <ZLNetworkManager.h>
 
 #include <ZLTextStyleCollection.h>
 #include <ZLTextHyphenator.h>
@@ -168,6 +169,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 
 	myOpenFileHandler = new OpenFileHandler();
 	ZLCommunicationManager::Instance().registerHandler("openFile", myOpenFileHandler);
+
+	ZLNetworkManager::Instance().setUserAgent(std::string("FBReader/") + VERSION);
 }
 
 FBReader::~FBReader() {

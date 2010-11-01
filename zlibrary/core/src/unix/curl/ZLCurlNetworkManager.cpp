@@ -93,9 +93,10 @@ void ZLCurlNetworkManager::createInstance() {
 
 
 void ZLCurlNetworkManager::setStandardOptions(CURL *handle, const std::string &proxy) const {
-	static const std::string AGENT_NAME = std::string("FBReader/") + VERSION;
-
-	curl_easy_setopt(handle, CURLOPT_USERAGENT, AGENT_NAME.c_str());
+	const std::string &agent = userAgent();
+	if (!agent.empty()) {
+		curl_easy_setopt(handle, CURLOPT_USERAGENT, agent.c_str());
+	}
 	if (useProxy()) {
 		curl_easy_setopt(handle, CURLOPT_PROXY, proxy.c_str());
 	}
