@@ -70,7 +70,9 @@ void RtfTextOnlyReader::addCharData(const char *data, size_t len, bool) {
 		if (myFilledSize < myMaxSize) {
 			len = std::min((size_t)len, myMaxSize - myFilledSize);
 			memcpy(myBuffer + myFilledSize, data, len);
-				myFilledSize += len;
+			myFilledSize += len;
+		}
+		if (myFilledSize < myMaxSize) {
 			myBuffer[myFilledSize++]=' ';
 		} else {
 			interrupt();
@@ -143,7 +145,7 @@ bool RtfReaderStream::open() {
 size_t RtfReaderStream::read(char *buffer, size_t maxSize) {
 	maxSize = std::min(maxSize, mySize - myOffset);
 	if ((buffer != 0) && (myBuffer !=0)) {
-		memcpy(buffer, myBuffer, maxSize);
+		memcpy(buffer, myBuffer + myOffset, maxSize);
 	}
 	myOffset += maxSize;
 	return maxSize;
