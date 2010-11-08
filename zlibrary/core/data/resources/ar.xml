@@ -51,6 +51,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="العربية" />
+		<node name="bg" toBeTranslated="true" value="Bulgarian" />
 		<node name="cs" value="التشيكية" />
 		<node name="de" value="الألمانية" />
 		<node name="de-traditional" value="الألمانية (النظام التقليدي)" />
@@ -70,8 +71,8 @@
 		<node name="pl" toBeTranslated="true" value="Polish" />
 		<node name="pt" value="البرتغالية" />
 		<node name="ru" value="الروسية" />
-		<node name="tr" value="التركية" />
 		<node name="sv" value="السويدية" />
+		<node name="tr" value="التركية" />
 		<node name="uk" value="الأكرانية" />
 		<node name="vi" toBeTranslated="true" value="Vietnamese" />
 		<node name="zh" value="الصينية" />

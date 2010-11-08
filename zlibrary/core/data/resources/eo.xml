@@ -51,6 +51,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="La araba" />
+		<node name="bg" toBeTranslated="true" value="Bulgarian" />
 		<node name="cs" value="La ĉeĥa" />
 		<node name="de" value="La germana" />
 		<node name="de-traditional" value="La germana (tradicia)" />

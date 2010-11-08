@@ -51,6 +51,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="Arabo"/>
+		<node name="bg" toBeTranslated="true" value="Bulgarian" />
 		<node name="cs" value="Ceco"/>
 		<node name="de" value="Tedesco"/>
 		<node name="de-traditional" value="Tedesco (ortografia tradizionale)"/>
@@ -70,8 +71,8 @@
 		<node name="pl" toBeTranslated="true" value="Polish" />
 		<node name="pt" value="Portoghese"/>
 		<node name="ru" value="Russo"/>
-		<node name="tr" value="Turco"/>
 		<node name="sv" value="Svedese"/>
+		<node name="tr" value="Turco"/>
 		<node name="uk" value="Ucraino"/>
 		<node name="vi" value="Vietnamita" />
 		<node name="zh" value="Cinese"/>
