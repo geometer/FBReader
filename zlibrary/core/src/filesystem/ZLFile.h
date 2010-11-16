@@ -107,8 +107,8 @@ private:
 
 inline ZLFile::~ZLFile() {}
 
-inline bool ZLFile::isCompressed() const { return (myArchiveType & COMPRESSED) == COMPRESSED; }
-inline bool ZLFile::isArchive() const { return (myArchiveType & ARCHIVE) == ARCHIVE; }
+inline bool ZLFile::isCompressed() const { return (myArchiveType & COMPRESSED) != 0; }
+inline bool ZLFile::isArchive() const { return (myArchiveType & ARCHIVE) != 0; }
 
 inline const std::string &ZLFile::path() const { return myPath; }
 inline const std::string &ZLFile::name(bool hideExtension) const { return hideExtension ? myNameWithoutExtension : myNameWithExtension; }
