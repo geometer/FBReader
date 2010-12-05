@@ -4,3 +4,7 @@ makefiles/target.mk
 .settings
 *.o
 *.d
+*.pyc
+zlibrary/core/libzlcore.so*
+zlibrary/text/libzltext.so*
+zlibrary/ui/zlui-qt4.so
