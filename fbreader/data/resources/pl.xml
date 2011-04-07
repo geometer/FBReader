@@ -18,7 +18,7 @@
 		</node>
 		<node name="seriesNode">
 			<node name="expandTree" value="Pokaż książki"/>
-			<node name="collapseTree" value="Ukryj Książki"/>
+			<node name="collapseTree" value="Ukryj książki"/>
 		</node>
 		<node name="bookNode">
 			<node name="read" value="Czytaj książkę"/>
@@ -112,7 +112,7 @@
 			<node name="toggleFullscreen" value="Pełny ekran" />
 			<node name="toggleIndicator" value="Zmień wskaźnik" />
 		</node>
-		<node name="preferences" value="Otatnie okno preferencji..." />
+		<node name="preferences" value="Ostatnie okno preferencji..." />
 		<node name="quit" value="Zamknij" />
 	</node>
 	<node name="toolbar">
@@ -202,7 +202,7 @@
 			<node name="tooltip" value="Pokaż ostatnio otwierane okno preferencji" />
 		</node>
 		<node name="bookInfo">
-			<node name="label" value="Informacje o Książce" />
+			<node name="label" value="Informacje o książce" />
 			<node name="tooltip" value="Pokaż informacje o książce" />
 		</node>
 		<node name="libraryOptions">
@@ -299,8 +299,8 @@
 			<node name="tab">
 				<node name="Scrolling" value="Przewijanie">
 					<node name="keyScrollDelay" value="Opóźnienie powtarzania klawisza, ms" />
-					<node name="keyLinesToScroll" value="Ilość przewijanych linii na wciśnięcie klawisza" />
-					<node name="keyLinesToKeep" value="Ilość powtarzanych lini przy przewijaniu stron" />
+					<node name="keyLinesToScroll" value="Liczba przewijanych wierszy na wciśnięcie klawisza" />
+					<node name="keyLinesToKeep" value="Liczba powtarzanych wierszy przy przewijaniu stron" />
 					<node name="enableTapScrolling" value="Włącz przewijanie dotykiem" />
 					<node name="fingerOnly" value="Przewijaj tylko dotykiem palca" />
 				</node>
@@ -324,8 +324,8 @@
 				<node name="Rotation" value="Obrót">
 					<node name="direction" value="Rodzaj obrotu">
 						<node name="disabled" value="Wyłączony" />
-						<node name="clockwise" value="90 stopni w Prawo" />
-						<node name="counterclockwise" value="90 stopni w Lewo" />
+						<node name="clockwise" value="90 stopni w prawo" />
+						<node name="counterclockwise" value="90 stopni w lewo" />
 						<node name="180" value="180 stopni" />
 						<node name="cycle" value="Wszystkie 4 kierunki po kolei" />
 					</node>
@@ -353,8 +353,8 @@
 						<node name="previousTOCSection" value="Idź do poprzedniej sekcji spisu" />
 						<node name="pageForward" value="Przewiń stronę do przodu" />
 						<node name="pageBackward" value="Przewiń stronę do tyłu" />
-						<node name="lineForward" value="Przewiń linię do przodu" />
-						<node name="lineBackward" value="Przewiń linię do tyłu" />
+						<node name="lineForward" value="Przewiń wiersz do przodu" />
+						<node name="lineBackward" value="Przewiń wiersz do tyłu" />
 						<node name="undo" value="Cofnij" />
 						<node name="redo" value="Ponów" />
 						<node name="copyToClipboard" value="Kopiuj zaznaczony tekst do schowka" />
@@ -393,10 +393,10 @@
 				</node>
 				<node name="Format" value="Formatowanie">
 					<node name="optionsFor" value="Opcja dotyczy" />
-					<node name="lineSpacing" value="Odstęp między liniami">
+					<node name="lineSpacing" value="Odstęp między wierszami">
 						<node name="unchanged" value="&lt;bez zmian&gt;" />
 					</node>
-					<node name="firstLineIndent" value="Wcięcie pierwszej linii" />
+					<node name="firstLineIndent" value="Wcięcie pierwszego wiersza" />
 					<node name="alignment" value="Wyrównanie">
 						<node name="left" value="Do lewej" />
 						<node name="right" value="Do prawej" />
@@ -406,8 +406,8 @@
 					</node>
 					<node name="spaceBefore" value="Odstęp przed" />
 					<node name="spaceAfter" value="Odstęp po" />
-					<node name="startIndent" value="Wcięcie na początku linii" />
-					<node name="endIndent" value="Wcięcie na końcu linii" />
+					<node name="startIndent" value="Wcięcie na początku wiersza" />
+					<node name="endIndent" value="Wcięcie na końcu wiersza" />
 				</node>
 				<node name="Styles" value="Style">
 					<node name="optionsFor" value="Opcja dotyczy" />
@@ -460,13 +460,13 @@
 					<node name="breakType" value="Łam akapit w" />
 					<node name="ignoreIndent" value="Ignoruj wcięcie mniejsze niż" />
 					<node name="buildTOC" value="Stwórz spis treści" />
-					<node name="emptyLines" value="Pusta linia przed nową sekcją" />
+					<node name="emptyLines" value="Pusty wiersz przed nową sekcją" />
 				</node>
 				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
 					<node name="breakType" value="Łam akapit w" />
 					<node name="ignoreIndent" value="Ignoruj wcięcie mniejsze niż" />
 					<node name="buildTOC" value="Stwórz spis treści" />
-					<node name="emptyLines" value="Pusta linia przed nową sekcją" />
+					<node name="emptyLines" value="Pusty wiersz przed nową sekcją" />
 				</node>
 			</node>
 		</node>
@@ -569,7 +569,7 @@
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Zakup książki" />
-			<node name="message" value="Czy na peno chcesz kupić książkę&#10;&#8220;%s&#8221;&#10;?" />
+			<node name="message" value="Czy na pewno chcesz kupić książkę&#10;&#8220;%s&#8221;&#10;?" />
 		</node>
 		<node name="AuthenticationDialog">
 			<node name="title" value="Uwierzytelnianie" />
@@ -632,7 +632,7 @@
 		<node name="Emphasis" value="Podkreślenie" />
 		<node name="Strong" value="Wytłuszczenie" />
 		<node name="Subscript" value="Indeks dolny" />
-		<node name="Superscript" value="Indeks Górny" />
+		<node name="Superscript" value="Indeks górny" />
 		<node name="Code" value="Kod" />
 		<node name="StrikeThrough" value="Przekreślenie" />
 		<node name="Contents Table" value="Spis treści" />
