@@ -107,7 +107,7 @@ bool BookNode::highlighted() const {
 shared_ptr<ZLImage> BookNode::extractCoverImage() const {
 	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*myBook);
 	if (!plugin.isNull()) {
-		shared_ptr<ZLImage> cover = plugin->coverImage(*myBook);
+		shared_ptr<ZLImage> cover = plugin->coverImage(myBook->file());
 		if (!cover.isNull()) {
 			return cover;
 		}

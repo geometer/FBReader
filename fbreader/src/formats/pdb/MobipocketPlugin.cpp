@@ -137,8 +137,8 @@ bool MobipocketPlugin::readMetaInfo(Book &book) const {
 	return PalmDocLikePlugin::readMetaInfo(book);
 }
 
-shared_ptr<ZLImage> MobipocketPlugin::coverImage(const Book &book) const {
-	shared_ptr<ZLInputStream> stream = book.file().inputStream();
+shared_ptr<ZLImage> MobipocketPlugin::coverImage(const ZLFile &file) const {
+	shared_ptr<ZLInputStream> stream = file.inputStream();
 	if (stream.isNull() || ! stream->open()) {
 		return 0;
 	}
@@ -210,7 +210,6 @@ shared_ptr<ZLImage> MobipocketPlugin::coverImage(const Book &book) const {
 		coverIndex = thumbIndex;
 	}
 
-	const ZLFile &file = book.file();
 	PalmDocStream pbStream(file);
 	if (!pbStream.open()) {
 		return 0;

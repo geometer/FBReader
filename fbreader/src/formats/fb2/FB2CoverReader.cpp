@@ -24,7 +24,7 @@
 
 #include "../../library/Book.h"
 
-FB2CoverReader::FB2CoverReader(const Book &book) : myFile(book.file()) {
+FB2CoverReader::FB2CoverReader(const ZLFile &file) : myFile(file) {
 }
 
 shared_ptr<ZLImage> FB2CoverReader::readCover() {

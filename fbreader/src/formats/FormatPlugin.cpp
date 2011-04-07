@@ -93,6 +93,6 @@ const std::string &FormatPlugin::tryOpen(const ZLFile&) const {
 	return EMPTY;
 }
 
-shared_ptr<ZLImage> FormatPlugin::coverImage(const Book &book) const {
+shared_ptr<ZLImage> FormatPlugin::coverImage(const ZLFile &file) const {
 	return 0;
 }

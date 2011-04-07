@@ -58,7 +58,7 @@ public:
 	virtual const std::string &tryOpen(const ZLFile &file) const;
 	virtual bool readMetaInfo(Book &book) const = 0;
 	virtual bool readModel(BookModel &model) const = 0;
-	virtual shared_ptr<ZLImage> coverImage(const Book &book) const;
+	virtual shared_ptr<ZLImage> coverImage(const ZLFile &file) const;
 
 protected:
 	static void detectEncodingAndLanguage(Book &book, ZLInputStream &stream);
