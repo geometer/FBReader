@@ -23,7 +23,6 @@
 #include <sys/stat.h>
 
 #include "ZLUnixFileOutputStream.h"
-#include "ZLUnixFSManager.h"
 
 ZLUnixFileOutputStream::ZLUnixFileOutputStream(const std::string &name) : myName(name), myHasErrors(false), myFile(0) {
 }

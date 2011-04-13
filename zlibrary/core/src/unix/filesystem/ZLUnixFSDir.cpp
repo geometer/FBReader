@@ -22,7 +22,6 @@
 #include <stdio.h>
 
 #include "ZLUnixFSDir.h"
-#include "ZLUnixFSManager.h"
 
 void ZLUnixFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
 	DIR *dir = opendir(path().c_str());
