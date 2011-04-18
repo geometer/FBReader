@@ -24,7 +24,6 @@
 #include <ZLFile.h>
 #include <ZLInputStream.h>
 #include <ZLUnicodeUtil.h>
-#include <ZLEncodingConverter.h>
 
 #include <ZLAsynchronousInputStream.h>
 
