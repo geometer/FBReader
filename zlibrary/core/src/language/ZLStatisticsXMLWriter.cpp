@@ -27,55 +27,55 @@
 #include <shared_ptr.h>
 
 void ZLStatisticsXMLWriter::writeStatistics(const ZLMapBasedStatistics &statistics) {
-    addTag("statistics", false);
-    std::string charSequenceSizeString;
-    std::string volumeString;
-    std::string squaresVolumeString;
+	addTag("statistics", false);
+	std::string charSequenceSizeString;
+	std::string volumeString;
+	std::string squaresVolumeString;
 	std::string sizeString;
-    ZLStringUtil::appendNumber(charSequenceSizeString, statistics.getCharSequenceSize());
-    ZLStringUtil::appendNumber(sizeString, statistics.getSize());
-    ZLStringUtil::appendNumber(volumeString, statistics.getVolume());
-    ZLStatisticsXMLWriter::appendLongNumber(squaresVolumeString, statistics.getSquaresVolume());
-    addAttribute("charSequenceSize", charSequenceSizeString);
+	ZLStringUtil::appendNumber(charSequenceSizeString, statistics.getCharSequenceSize());
+	ZLStringUtil::appendNumber(sizeString, statistics.getSize());
+	ZLStringUtil::appendNumber(volumeString, statistics.getVolume());
+	ZLStatisticsXMLWriter::appendLongNumber(squaresVolumeString, statistics.getSquaresVolume());
+	addAttribute("charSequenceSize", charSequenceSizeString);
 	addAttribute("size", sizeString);
-    addAttribute("volume", volumeString);
-    addAttribute("squaresVolume", squaresVolumeString);
-    //ZLStatisticsItem *ptr = statistics.begin();
+	addAttribute("volume", volumeString);
+	addAttribute("squaresVolume", squaresVolumeString);
+	//ZLStatisticsItem *ptr = statistics.begin();
 	//const ZLStatisticsItem *end = statistics.end();
-    shared_ptr<ZLStatisticsItem> ptr = statistics.begin();
+	shared_ptr<ZLStatisticsItem> ptr = statistics.begin();
 	const shared_ptr<ZLStatisticsItem> end = statistics.end();
-    while (*ptr != *end) {
+	while (*ptr != *end) {
 		writeSequence(ptr->sequence().toHexSequence(), ptr->frequency());
 		ptr->next();
-    }
+	}
 	//delete ptr;
 	//delete end;
-    closeTag();
+	closeTag();
 }
 
 void ZLStatisticsXMLWriter::writeSequence(const std::string &key, size_t frequency) {
-    addTag("item", true);
-    addAttribute("sequence", key);
-    std::string frequencyString;
-    ZLStringUtil::appendNumber(frequencyString, frequency);
-    addAttribute("frequency", frequencyString);
+	addTag("item", true);
+	addAttribute("sequence", key);
+	std::string frequencyString;
+	ZLStringUtil::appendNumber(frequencyString, frequency);
+	addAttribute("frequency", frequencyString);
 }
 
 void ZLStatisticsXMLWriter::appendLongNumber(std::string &str, unsigned long long n) {
-    int len;
-    if (n > 0) {
-        len = 0;
-        for (unsigned long long copy = n; copy > 0; copy /= 10) {
-            len++;
-        }
-    } else {
-        len = 1;
-    }
+	int len;
+	if (n > 0) {
+		len = 0;
+		for (unsigned long long copy = n; copy > 0; copy /= 10) {
+			len++;
+		}
+	} else {
+		len = 1;
+	}
 
-    str.append(len, '\0');
-    char *ptr = (char*)str.data() + str.length() - 1;
-    for (int i = 0; i < len; ++i) {
-        *ptr-- = '0' + n % 10;
-        n /= 10;
-    }
+	str.append(len, '\0');
+	char *ptr = (char*)str.data() + str.length() - 1;
+	for (int i = 0; i < len; ++i) {
+		*ptr-- = '0' + n % 10;
+		n /= 10;
+	}
 }

@@ -31,59 +31,57 @@
 size_t ZLStatisticsGenerator::ourBufferSize = 2000000;
 
 ZLStatisticsGenerator::ZLStatisticsGenerator(const std::string &breakSymbols) {
-    myBreakSymbolsTable = new char[256];
-    memset(myBreakSymbolsTable, 0, 256);
-    for (int i = breakSymbols.size() - 1; i >= 0; --i) {
-    	myBreakSymbolsTable[(unsigned char)breakSymbols[i]] = 1;
-    }
-    myStart = new char[ourBufferSize];
-    myEnd = myStart;
+	myBreakSymbolsTable = new char[256];
+	memset(myBreakSymbolsTable, 0, 256);
+	for (int i = breakSymbols.size() - 1; i >= 0; --i) {
+		myBreakSymbolsTable[(unsigned char)breakSymbols[i]] = 1;
+	}
+	myStart = new char[ourBufferSize];
+	myEnd = myStart;
 }
 
 ZLStatisticsGenerator::~ZLStatisticsGenerator() {
-    delete[] myStart;
-    delete[] myBreakSymbolsTable;
+	delete[] myStart;
+	delete[] myBreakSymbolsTable;
 }
 
 int ZLStatisticsGenerator::read(const std::string &inputFileName) {
-    shared_ptr<ZLInputStream> stream = ZLFile(inputFileName).inputStream();
-    if (stream.isNull() || !stream->open()) {
+	shared_ptr<ZLInputStream> stream = ZLFile(inputFileName).inputStream();
+	if (stream.isNull() || !stream->open()) {
 		return 1;
-    }
-    myEnd = myStart + stream->read(myStart, ourBufferSize);
+	}
+	myEnd = myStart + stream->read(myStart, ourBufferSize);
 	std::string out = inputFileName;
-    stream->close();
-    return 0;
+	stream->close();
+	return 0;
 }
 
 void ZLStatisticsGenerator::generate(const std::string &inputFileName, size_t charSequenceSize, ZLMapBasedStatistics &statistics) {
-    if (read(inputFileName) == 1) {
+	if (read(inputFileName) == 1) {
 		return;
-    }
-    if ((size_t)(myEnd - myStart) < (charSequenceSize-1)) {
+	}
+	if ((size_t)(myEnd - myStart) < (charSequenceSize-1)) {
 		return;
-    }
-    generate(myStart, myEnd - myStart,  charSequenceSize, statistics);
+	}
+	generate(myStart, myEnd - myStart, charSequenceSize, statistics);
 }
 
 void ZLStatisticsGenerator::generate(const char* buffer, size_t length, size_t charSequenceSize, ZLMapBasedStatistics &statistics) {
-    const char *start = buffer;
-    const char *end = buffer + length;
+	const char *start = buffer;
+	const char *end = buffer + length;
 	std::map<ZLCharSequence, size_t> dictionary;
-    size_t locker = charSequenceSize;
-    for (const char *ptr = start; ptr < end;) { 
-	if (myBreakSymbolsTable[(unsigned char)*(ptr)] == 1) {
-		locker = charSequenceSize; 	
-	} else if (locker != 0) {
-		--locker; 
+	size_t locker = charSequenceSize;
+	for (const char *ptr = start; ptr < end;) {
+		if (myBreakSymbolsTable[(unsigned char)*(ptr)] == 1) {
+			locker = charSequenceSize;
+		} else if (locker != 0) {
+			--locker;
+		}
+		if (locker == 0) {
+			const char* sequenceStart = ptr - charSequenceSize + 1;
+			++dictionary[ZLCharSequence(sequenceStart, charSequenceSize)];
+		}
+		++ptr;
 	}
-	if (locker == 0) {
-		const char* sequenceStart = ptr - charSequenceSize + 1; 
-		++dictionary[ZLCharSequence(sequenceStart, charSequenceSize)];
-	}	
-	++ptr;
-    }
 	statistics = ZLMapBasedStatistics(dictionary);
 }
-
-// vim: ts=4

@@ -43,7 +43,7 @@ public:
 	shared_ptr<LanguageInfo> findInfo(const char *buffer, size_t length, int matchingCriterion = 0);
 
 private:
-    typedef std::vector<shared_ptr<ZLStatisticsBasedMatcher> > SBVector;
+	typedef std::vector<shared_ptr<ZLStatisticsBasedMatcher> > SBVector;
 	SBVector myMatchers;
 };
 
