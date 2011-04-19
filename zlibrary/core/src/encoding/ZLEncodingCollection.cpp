@@ -23,7 +23,6 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLXMLReader.h>
 
-#include "../options/ZLConfig.h"
 #include "ZLEncodingConverter.h"
 #include "DummyEncodingConverter.h"
 #include "MyEncodingConverter.h"
