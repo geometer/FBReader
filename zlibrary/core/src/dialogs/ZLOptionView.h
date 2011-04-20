@@ -33,7 +33,7 @@ public:
 	virtual ~ZLOptionView();
 
 	// TODO: change to pure virtual
-	virtual void reset() {}
+	virtual void reset();
 
 	void setVisible(bool visible);
 	void setActive(bool active);
@@ -44,7 +44,7 @@ protected:
 	virtual void _hide() = 0;
 	virtual void _show() = 0;
 	// TODO: replace by pure virtual method
-	virtual void _setActive(bool active) {}
+	virtual void _setActive(bool active);
 	virtual void _onAccept() const = 0;
 
 	const std::string &name() const;
@@ -58,5 +58,8 @@ protected:
 private:
 	bool myInitialized;
 };
+
+inline void ZLOptionView::reset() {}
+inline void ZLOptionView::_setActive(bool) {}
 
 #endif /* __ZLOPTIONVIEW_H__ */
