@@ -23,7 +23,7 @@
 #include <zlib.h>
 #include <shared_ptr.h>
 
-#include "ZLAsynchronousInputStream.h"
+#include <ZLAsynchronousInputStream.h>
 
 
 class ZLGzipAsynchronousInputStream : public ZLAsynchronousInputStream  {

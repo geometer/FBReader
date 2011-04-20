@@ -24,7 +24,7 @@
 
 #include "ZLNetworkXMLParserRequest.h"
 
-#include "../ZLPlainAsynchronousInputStream.h"
+#include <ZLPlainAsynchronousInputStream.h>
 #include "../ZLGzipAsynchronousInputStream.h"
 
 

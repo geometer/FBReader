@@ -25,7 +25,7 @@
 #include <ZLInputStream.h>
 #include <ZLUnicodeUtil.h>
 
-#include <ZLAsynchronousInputStream.h>
+#include "ZLAsynchronousInputStream.h"
 
 #include "ZLXMLReader.h"
 
