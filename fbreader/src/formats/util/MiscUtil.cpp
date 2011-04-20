@@ -19,7 +19,6 @@
 
 #include <cstdlib>
 
-#include <ZLApplication.h>
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
 
