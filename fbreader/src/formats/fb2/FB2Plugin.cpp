@@ -25,8 +25,6 @@
 #include "FB2BookReader.h"
 #include "FB2CoverReader.h"
 
-#include "../../database/booksdb/BooksDBUtil.h"
-
 bool FB2Plugin::acceptsFile(const ZLFile &file) const {
 	return file.extension() == "fb2";
 }
