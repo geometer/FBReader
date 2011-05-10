@@ -331,10 +331,10 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 	program->run("openLink", copy);
 }
 
-void FBReader::tryShowFootnoteView(const std::string &id, const std::string &type) {
-	if (type == "external") {
+void FBReader::tryShowFootnoteView(const std::string &id, FBHyperlinkType type) {
+	if (type == HYPERLINK_EXTERNAL) {
 		openLinkInBrowser(id);
-	} else if (type == "internal") {
+	} else if (type == HYPERLINK_INTERNAL) {
 		if (myMode == BOOK_TEXT_MODE && !myModel.isNull()) {
 			BookModel::Label label = myModel->label(id);
 			if (!label.Model.isNull()) {
@@ -350,7 +350,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 				refreshWindow();
 			}
 		}
-	} else if (type == "book") {
+	} else if (type == HYPERLINK_BOOK) {
 		DownloadBookRunnable downloader(id);
 		downloader.executeWithUI();
 		if (downloader.hasErrors()) {

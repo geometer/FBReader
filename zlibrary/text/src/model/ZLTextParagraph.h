@@ -26,6 +26,7 @@
 
 #include <shared_ptr.h>
 
+#include <ZLHyperlinkType.h>
 #include <ZLTextKind.h>
 #include <ZLTextAlignmentType.h>
 #include <ZLTextFontModifier.h>
@@ -185,12 +186,12 @@ public:
 	ZLTextHyperlinkControlEntry(const char *address);
 	~ZLTextHyperlinkControlEntry();
 	const std::string &label() const;
-	const std::string &hyperlinkType() const;
+	ZLHyperlinkType hyperlinkType() const;
 	bool isHyperlink() const;
 
 private:
 	const std::string myLabel;
-	const std::string myHyperlinkType;
+	const ZLHyperlinkType myHyperlinkType;
 };
 
 class ZLTextEntry : public ZLTextParagraphEntry {
@@ -380,10 +381,10 @@ inline unsigned char ZLTextFixedHSpaceEntry::length() const { return myLength; }
 inline ZLTextControlEntryPool::ZLTextControlEntryPool() {}
 inline ZLTextControlEntryPool::~ZLTextControlEntryPool() {}
 
-inline ZLTextHyperlinkControlEntry::ZLTextHyperlinkControlEntry(const char *address) : ZLTextControlEntry((ZLTextKind)*address, true), myLabel(address + 1), myHyperlinkType(address + myLabel.length() + 2) {}
+inline ZLTextHyperlinkControlEntry::ZLTextHyperlinkControlEntry(const char *address) : ZLTextControlEntry((ZLTextKind)*address, true), myLabel(address + 2), myHyperlinkType((ZLHyperlinkType)*(address + 1)) {}
 inline ZLTextHyperlinkControlEntry::~ZLTextHyperlinkControlEntry() {}
 inline const std::string &ZLTextHyperlinkControlEntry::label() const { return myLabel; }
-inline const std::string &ZLTextHyperlinkControlEntry::hyperlinkType() const { return myHyperlinkType; }
+inline ZLHyperlinkType ZLTextHyperlinkControlEntry::hyperlinkType() const { return myHyperlinkType; }
 inline bool ZLTextHyperlinkControlEntry::isHyperlink() const { return true; }
 
 inline ZLTextEntry::ZLTextEntry(const char *address) : myAddress(address) {}

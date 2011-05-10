@@ -28,6 +28,8 @@
 
 #include "FBView.h"
 
+#include "../bookmodel/FBHyperlinkType.h"
+
 class Book;
 
 class BookTextView : public FBView {
@@ -64,7 +66,7 @@ private:
 
 	void preparePaintInfo();
 
-	bool getHyperlinkInfo(const ZLTextElementRectangle &rectangle, std::string &id, std::string &type) const;
+	bool getHyperlinkInfo(const ZLTextElementRectangle &rectangle, std::string &id, FBHyperlinkType &type) const;
 
 	shared_ptr<PositionIndicator> createPositionIndicator(const ZLTextPositionIndicatorInfo &info);
 

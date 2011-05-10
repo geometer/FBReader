@@ -29,6 +29,7 @@
 #include <ZLApplication.h>
 #include <ZLKeyBindings.h>
 
+#include "../bookmodel/FBHyperlinkType.h"
 #include "../library/Library.h"
 #include "../external/ProgramCollection.h"
 
@@ -116,7 +117,7 @@ public:
 	shared_ptr<ProgramCollection> webBrowserCollection() const;
 	void openLinkInBrowser(const std::string &url) const;
 
-	void tryShowFootnoteView(const std::string &id, const std::string &type);
+	void tryShowFootnoteView(const std::string &id, FBHyperlinkType type);
 	BookTextView &bookTextView() const;
 	void showBookTextView();
 	void openBook(shared_ptr<Book> book);

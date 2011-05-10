@@ -272,7 +272,7 @@ void BookTextView::redoPageMove() {
 	}
 }
 
-bool BookTextView::getHyperlinkInfo(const ZLTextElementRectangle &rectangle, std::string &id, std::string &type) const {
+bool BookTextView::getHyperlinkInfo(const ZLTextElementRectangle &rectangle, std::string &id, FBHyperlinkType &type) const {
 	if ((rectangle.Kind != ZLTextElement::WORD_ELEMENT) &&
 			(rectangle.Kind != ZLTextElement::IMAGE_ELEMENT)) {
 		return false;
@@ -288,7 +288,7 @@ bool BookTextView::getHyperlinkInfo(const ZLTextElementRectangle &rectangle, std
 			if (control.isHyperlink()) {
 				hyperlinkKind = control.kind();
 				id = ((const ZLTextHyperlinkControlEntry&)control).label();
-				type = ((const ZLTextHyperlinkControlEntry&)control).hyperlinkType();
+				type = (FBHyperlinkType)((const ZLTextHyperlinkControlEntry&)control).hyperlinkType();
 			} else if (!control.isStart() && (control.kind() == hyperlinkKind)) {
 				hyperlinkKind = REGULAR;
 			}
@@ -308,7 +308,7 @@ bool BookTextView::onStylusClick(int x, int y, int count) {
 	const ZLTextElementRectangle *rectangle = textArea().elementByCoordinates(x, y);
 	if (rectangle != 0) {
 		std::string id;
-		std::string type;
+		FBHyperlinkType type = HYPERLINK_NONE;
 		if (getHyperlinkInfo(*rectangle, id, type)) {
 			fbreader.tryShowFootnoteView(id, type);
 			return true;
@@ -336,7 +336,7 @@ bool BookTextView::_onStylusRelease(int x, int y) {
 	const ZLTextElementRectangle *rectangle = textArea().elementByCoordinates(x, y);
 	if (rectangle != 0) {
 		std::string id;
-		std::string type;
+		FBHyperlinkType type = HYPERLINK_NONE;
 		if (getHyperlinkInfo(*rectangle, id, type)) {
 			fbreader.tryShowFootnoteView(id, type);
 			return true;
@@ -358,7 +358,7 @@ bool BookTextView::_onStylusRelease(int x, int y) {
 bool BookTextView::_onStylusMove(int x, int y) {
 	const ZLTextElementRectangle *rectangle = textArea().elementByCoordinates(x, y);
 	std::string id;
-	std::string type;
+	FBHyperlinkType type = HYPERLINK_NONE;
 	FBReader::Instance().setHyperlinkCursor((rectangle != 0) && getHyperlinkInfo(*rectangle, id, type));
 	return true;
 }

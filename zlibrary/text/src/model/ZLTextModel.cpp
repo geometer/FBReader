@@ -240,14 +240,13 @@ void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
-void ZLTextModel::addHyperlinkControl(ZLTextKind textKind, const std::string &label, const std::string &hyperlinkType) {
-	myLastEntryStart = myAllocator.allocate(label.length() + hyperlinkType.length() + 4);
+void ZLTextModel::addHyperlinkControl(ZLTextKind textKind, ZLHyperlinkType hyperlinkType, const std::string &label) {
+	myLastEntryStart = myAllocator.allocate(label.length() + 4);
 	*myLastEntryStart = ZLTextParagraphEntry::HYPERLINK_CONTROL_ENTRY;
 	*(myLastEntryStart + 1) = textKind;
-	memcpy(myLastEntryStart + 2, label.data(), label.length());
-	*(myLastEntryStart + label.length() + 2) = '\0';
-	memcpy(myLastEntryStart + label.length() + 3, hyperlinkType.data(), hyperlinkType.length());
-	*(myLastEntryStart + label.length() + hyperlinkType.length() + 3) = '\0';
+	*(myLastEntryStart + 2) = hyperlinkType;
+	memcpy(myLastEntryStart + 3, label.data(), label.length());
+	*(myLastEntryStart + label.length() + 3) = '\0';
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
