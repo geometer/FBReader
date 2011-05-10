@@ -36,7 +36,7 @@ enum FBTextKind {
 	VERSE = 8,
 	PREFORMATTED = 9,
 	IMAGE = 10,
-	END_OF_SECTION = 11,
+	//END_OF_SECTION = 11,
 	CITE = 12,
 	AUTHOR = 13,
 	DATEKIND = 14,
