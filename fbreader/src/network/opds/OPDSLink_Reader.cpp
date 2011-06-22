@@ -22,6 +22,7 @@
 #include "OPDSLink_AdvancedSearch.h"
 #include "../authentication/basic/BasicAuthenticationManager.h"
 #include "../authentication/litres/LitResAuthenticationManager.h"
+#include <stdio.h>
 
 #include "URLRewritingRule.h"
 

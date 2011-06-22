@@ -48,12 +48,12 @@ shared_ptr<NetworkLink> OPDSLink::GenericReader::link() {
 	myFeedConditions.swap(opdsLink->myFeedConditions);
 	myUrlRewritingRules.swap(opdsLink->myUrlRewritingRules);
 
-	if (myAuthenticationType == "basic") {
-		opdsLink->myAuthenticationManager =
-			new BasicAuthenticationManager(*opdsLink);
-	} else if (myAuthenticationType == "litres") {
+	if (myAuthenticationType == "litres") {
 		opdsLink->myAuthenticationManager =
 			new LitResAuthenticationManager(*opdsLink);
+	} else  {
+		opdsLink->myAuthenticationManager =
+			new BasicAuthenticationManager(*opdsLink);
 	}
 
 	return opdsLink;

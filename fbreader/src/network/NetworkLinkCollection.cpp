@@ -89,22 +89,22 @@ bool NetworkLinkCollection::Comparator::operator() (
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 
-//	shared_ptr<ZLDir> dir = ZLFile(NetworkLink::NetworkDataDirectory()).directory();
-//	if (!dir.isNull()) {
-//		std::vector<std::string> names;
-//		dir->collectFiles(names, false);
-//		for (std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
-//			shared_ptr<NetworkLink> link = OPDSLink::read(ZLFile(dir->itemPath(*it)));
-//			if (!link.isNull()) {
-//				myLinks.push_back(link);
-//			}
-//		}
-//	}
 	ZLFile file = ZLFile(NetworkLink::NetworkDataDirectory() + "/generic.xml");
 
 	OPDSLink::GenericReader reader;
 	reader.readDocument(file);
 	myLinks = reader.myNetworkLinks;
+	shared_ptr<ZLDir> dir = ZLFile(NetworkLink::NetworkDataDirectory()).directory();
+	if (!dir.isNull()) {
+		std::vector<std::string> names;
+		dir->collectFiles(names, false);
+		for (std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
+			shared_ptr<NetworkLink> link = OPDSLink::read(ZLFile(dir->itemPath(*it)));
+			if (!link.isNull()) {
+				myLinks.push_back(link);
+			}
+		}
+	}
 
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 }
