@@ -26,6 +26,8 @@ private:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
 	void characterDataHandler(const char *text, size_t len);
+	shared_ptr<NetworkLink> link();
+	void reset();
 
 private:
 	enum {
@@ -33,8 +35,7 @@ private:
 		READ_SITENAME,
 		READ_TITLE,
 		READ_SUMMARY,
-		READ_ICON_NAME,
-		READ_LINK,
+		READ_ENTRY,
 	} myState;
 
 	std::string mySiteName;
