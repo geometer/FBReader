@@ -46,6 +46,9 @@ private:
 	class Reader;
 	class AdvancedSearch;
 
+public:
+	class GenericReader;
+
 private:
 	OPDSLink(
 		const std::string &siteName,
