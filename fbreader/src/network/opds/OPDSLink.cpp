@@ -25,6 +25,7 @@
 
 #include "OPDSLink.h"
 #include "OPDSLink_Reader.h"
+#include "OPDSLink_GenericReader.h"
 #include "OPDSLink_AdvancedSearch.h"
 #include "OPDSCatalogItem.h"
 #include "OPDSXMLParser.h"
