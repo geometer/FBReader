@@ -94,9 +94,10 @@ NetworkLinkCollection::NetworkLinkCollection() :
 
 	std::string OPDSXMLURL = "http://data.fbreader.org/catalogs/generic-1.4.xml";
 	std::string OPDSXMLLocal = ZLibrary::ApplicationWritableDirectory() + ZLibrary::FileNameDelimiter + "generic-1.4.xml";
-	ZLNetworkManager::Instance().downloadFile(OPDSXMLURL, OPDSXMLLocal);
 	ZLFile file = ZLFile(OPDSXMLLocal);
-
+	if (!file.exists()) {
+		ZLNetworkManager::Instance().downloadFile(OPDSXMLURL, OPDSXMLLocal);
+	}
 	OPDSLink::GenericReader reader;
 	reader.readDocument(file);
 	myLinks = reader.myNetworkLinks;
