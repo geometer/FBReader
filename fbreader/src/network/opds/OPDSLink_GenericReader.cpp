@@ -151,9 +151,6 @@ void OPDSLink::GenericReader::reset() {
 	mySummary = "";
 	myIcon = "";
 
-	myAttrBuffer = "";
-	myBuffer = "";
-
 	myLinks.clear();
 
 	myRelationAliases.clear();

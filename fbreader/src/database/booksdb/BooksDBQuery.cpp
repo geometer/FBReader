@@ -107,6 +107,21 @@ const std::string BooksDBQuery::INIT_DATABASE = \
 	"	file_id INTEGER UNIQUE REFERENCES Files (file_id) " \
 	"); " \
 	" " \
+	"CREATE TABLE IF NOT EXISTS Net.Links ( " \
+	"	link_id INTEGER PRIMARY KEY,  " \
+	"	title TEXT NOT NULL,  " \
+	"	site_name TEXT NOT NULL,  " \
+	"	summary TEXT  " \
+	"); " \
+	" " \
+	"CREATE TABLE IF NOT EXISTS Net.LinkUrls ( " \
+	"	key TEXT NOT NULL,  " \
+	"	link_id INTEGER NOT NULL REFERENCES CustomLinks(link_id),  " \
+	"	url TEXT,  " \
+	"	update_time INTEGER,  " \
+	"	CONSTRAINT LinkUrls_PK PRIMARY KEY (key, link_id)  " \
+	"); " \
+	" " \
 	"CREATE TABLE IF NOT EXISTS State.StackPosition ( " \
 	"	book_id INTEGER UNIQUE NOT NULL REFERENCES Books (book_id), " \
 	"	stack_pos INTEGER NOT NULL " \

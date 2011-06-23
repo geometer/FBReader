@@ -43,9 +43,6 @@ private:
 	std::string mySummary;
 	std::string myIcon;
 
-	std::string myAttrBuffer;
-	std::string myBuffer;
-
 	std::map<std::string,std::string> myLinks;
 
 	std::map<RelationAlias,std::string> myRelationAliases;
