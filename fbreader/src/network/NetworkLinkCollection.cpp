@@ -27,6 +27,8 @@
 #include <ZLResource.h>
 #include <ZLNetworkManager.h>
 #include <ZLNetworkUtil.h>
+#include <stdio.h>
+#include <ZLibrary.h>
 
 #include "NetworkLinkCollection.h"
 
@@ -41,6 +43,7 @@
 #include "opds/OPDSLink.h"
 #include "opds/OPDSLink_GenericReader.h"
 #include "opds/URLRewritingRule.h"
+
 
 NetworkLinkCollection *NetworkLinkCollection::ourInstance = 0;
 
@@ -89,22 +92,25 @@ bool NetworkLinkCollection::Comparator::operator() (
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 
-	ZLFile file = ZLFile(NetworkLink::NetworkDataDirectory() + "/generic.xml");
+	std::string OPDSXMLURL = "http://data.fbreader.org/catalogs/generic-1.4.xml";
+	std::string OPDSXMLLocal = ZLibrary::ApplicationWritableDirectory() + ZLibrary::FileNameDelimiter + "generic-1.4.xml";
+	ZLNetworkManager::Instance().downloadFile(OPDSXMLURL, OPDSXMLLocal);
+	ZLFile file = ZLFile(OPDSXMLLocal);
 
 	OPDSLink::GenericReader reader;
 	reader.readDocument(file);
 	myLinks = reader.myNetworkLinks;
-	shared_ptr<ZLDir> dir = ZLFile(NetworkLink::NetworkDataDirectory()).directory();
-	if (!dir.isNull()) {
-		std::vector<std::string> names;
-		dir->collectFiles(names, false);
-		for (std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
-			shared_ptr<NetworkLink> link = OPDSLink::read(ZLFile(dir->itemPath(*it)));
-			if (!link.isNull()) {
-				myLinks.push_back(link);
-			}
-		}
-	}
+//	shared_ptr<ZLDir> dir = ZLFile(NetworkLink::NetworkDataDirectory()).directory();
+//	if (!dir.isNull()) {
+//		std::vector<std::string> names;
+//		dir->collectFiles(names, false);
+//		for (std::vector<std::string>::iterator it = names.begin(); it != names.end(); ++it) {
+//			shared_ptr<NetworkLink> link = OPDSLink::read(ZLFile(dir->itemPath(*it)));
+//			if (!link.isNull()) {
+//				myLinks.push_back(link);
+//			}
+//		}
+//	}
 
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 }

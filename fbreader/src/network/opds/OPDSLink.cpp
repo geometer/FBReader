@@ -24,7 +24,6 @@
 #include <ZLNetworkManager.h>
 
 #include "OPDSLink.h"
-#include "OPDSLink_Reader.h"
 #include "OPDSLink_AdvancedSearch.h"
 #include "OPDSCatalogItem.h"
 #include "OPDSXMLParser.h"
@@ -95,11 +94,11 @@ std::string OPDSLink::AdvancedSearch::query(
 	return query;
 }
 
-shared_ptr<NetworkLink> OPDSLink::read(const ZLFile &file) {
-	Reader reader;
-	reader.readDocument(file);
-	return reader.link();
-}
+//shared_ptr<NetworkLink> OPDSLink::read(const ZLFile &file) {
+//	Reader reader;
+//	reader.readDocument(file);
+//	return reader.link();
+//}
 
 shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, NetworkOperationData &result) const {
 	if (url.empty()) {

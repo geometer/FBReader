@@ -51,7 +51,7 @@ shared_ptr<NetworkLink> OPDSLink::GenericReader::link() {
 	if (myAuthenticationType == "litres") {
 		opdsLink->myAuthenticationManager =
 			new LitResAuthenticationManager(*opdsLink);
-	} else  {
+	} else if (myLinks.count("signIn")) {
 		opdsLink->myAuthenticationManager =
 			new BasicAuthenticationManager(*opdsLink);
 	}
@@ -72,7 +72,7 @@ void OPDSLink::GenericReader::startElementHandler(const char *tag, const char **
 			const char *linkRel = attributeValue(attributes, "rel");
 			const char *linkHref = attributeValue(attributes, "href");
 			if (std::string(linkType) == "image/png") {
-				//TODO
+				myIcon = linkHref;
 			} else  {
 				if (linkRel == 0) {
 					myLinks["main"] = linkHref;

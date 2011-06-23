@@ -43,7 +43,6 @@ public:
 	};
 
 private:
-	class Reader;
 	class AdvancedSearch;
 
 public:
