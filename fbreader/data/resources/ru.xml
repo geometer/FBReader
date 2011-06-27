@@ -141,6 +141,10 @@
 			<node name="label" value="Добавить" />
 			<node name="tooltip" value="Добавить файл в библиотеку" />
 		</node>
+		<node name="addNetworkCatalog">
+			<node name="label" value="Добавить" />
+			<node name="tooltip" value="Добавить сетевую библиотеку" />
+		</node>
 		<node name="showNetLibrary">
 			<node name="label" value="Сеть" />
 			<node name="tooltip" value="Доступ к сетевым библиотекам" />
@@ -229,6 +233,7 @@
 	<node name="dialog">
 		<node name="button">
 			<node name="go" value="&amp;Искать" />
+			<node name="add" value="Добавить" />
 			<node name="thisOnly" value="Только эту" />
 			<node name="withSubtags" value="С подкатегориями" />
 			<node name="removeLink" value="Удалить из библиотеки" />
@@ -493,6 +498,10 @@
 			<node name="category" value="Категория" />
 			<node name="description" value="Описание" />
 			<node name="annotation" value="Результаты поиска для: %s" />
+		</node>
+		<node name="addNetworkCatalogDialog">
+			<node name="title" value="Добавить сетевую библиотеку" />
+			<node name="url" value="Адрес" />
 		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Перейти на страницу" />

@@ -23,6 +23,7 @@
 #include <ZLRunnable.h>
 
 class NetworkBookItem;
+class NetworkLink;
 
 class NetworkBookDownloadAction : public ZLRunnableWithKey {
 
@@ -87,6 +88,17 @@ public:
 
 private:
 	const NetworkBookItem &myBook;
+};
+
+class ParseNetworkCatalogAction : public ZLRunnable {
+
+public:
+	ParseNetworkCatalogAction(const std::string &url);
+	void run();
+
+private:
+	NetworkLink* myLink;
+	const std::string &myURL;
 };
 
 #endif /* __NETWORKACTIONS_H__ */

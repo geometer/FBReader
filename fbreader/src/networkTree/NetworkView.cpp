@@ -167,9 +167,9 @@ void NetworkView::makeUpToDate() {
 	size_t nodeCount = 0;
 	for (size_t i = 0; i < collection.size(); ++i) {
 		NetworkLink &link = collection.link(i);
-		if (!link.OnOption.value()) {
-			continue;
-		}
+//		if (!link.OnOption.value()) {
+//			continue;
+//		}
 		bool processed = false;
 		while (nodeIt != rootChildren.end() &&
 					 (*nodeIt)->isInstanceOf(NetworkCatalogNode::TYPE_ID)) {
