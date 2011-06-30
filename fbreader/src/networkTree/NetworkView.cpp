@@ -21,6 +21,7 @@
 #include <ZLImage.h>
 #include <ZLExecutionData.h>
 #include <ZLTimeManager.h>
+#include <stdio.h>
 
 #include "NetworkView.h"
 #include "NetworkNodes.h"
@@ -175,7 +176,7 @@ void NetworkView::makeUpToDate() {
 		while (nodeIt != rootChildren.end() &&
 					 (*nodeIt)->isInstanceOf(NetworkCatalogNode::TYPE_ID)) {
 			const NetworkLink &nodeLink = ((NetworkCatalogRootNode*)*nodeIt)->link();
-			if (&nodeLink == &link) {
+			if (false) {
 				++nodeIt;
 				++nodeCount;
 				processed = true;
