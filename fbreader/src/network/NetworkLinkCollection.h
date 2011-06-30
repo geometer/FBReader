@@ -27,6 +27,7 @@
 
 #include <ZLOptions.h>
 #include <ZLExecutionData.h>
+#include <pthread.h>
 
 #include "NetworkItems.h"
 
@@ -37,6 +38,7 @@ class BookReference;
 class ZLNetworkSSLCertificate;
 
 class NetworkLinkCollection {
+
 
 private:
 	class Comparator;
@@ -74,9 +76,12 @@ public:
 private:
 	std::string makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);
 
+	void UpdateGenericLinks(std::string genericUrl);
+
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 	LinkVector myLinks;
+	pthread_t upd_thread;
 
 	std::string myErrorMessage;
 };

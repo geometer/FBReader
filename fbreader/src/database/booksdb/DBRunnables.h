@@ -32,6 +32,8 @@
 #include "BooksDBQuery.h"
 
 #include "../../library/Lists.h"
+#include "../../network/NetworkLink.h"
+#include "../../network/opds/OPDSLink.h"
 
 class FindFileIdRunnable;
 class LoadFileEntriesRunnable;
@@ -306,6 +308,28 @@ private:
 	std::vector<int> myFileIds;
 
 	shared_ptr<DBCommand> myLoadRecentBooks;
+};
+
+class SaveNetworkLinkRunnable : public DBRunnable {
+
+public:
+	SaveNetworkLinkRunnable(DBConnection &connection);
+	bool run();
+	void setNetworkLink(shared_ptr<NetworkLink> link);
+
+private:
+	bool addNetworkLink(const shared_ptr<NetworkLink> link);
+	bool updateNetworkLink(const shared_ptr<NetworkLink> link, int linkId);
+
+private:
+	shared_ptr<NetworkLink> myNetworkLink;
+
+	shared_ptr<DBCommand> myFindNetworkLinkId;
+	shared_ptr<DBCommand> myAddNetworkLink;
+	shared_ptr<DBCommand> myUpdateNetworkLink;
+
+	shared_ptr<DBCommand> myAddNetworkLinkUrl;
+	shared_ptr<DBCommand> myDeleteNetworkLinkUrls;
 };
 
 #endif /* __DBRUNNABLES_H__ */

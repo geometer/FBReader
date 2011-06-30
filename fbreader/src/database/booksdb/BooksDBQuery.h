@@ -92,6 +92,16 @@ public:
 	static const std::string DELETE_BOOK_LIST;
 	static const std::string CHECK_BOOK_LIST;
 
+	static const std::string FIND_NETWORK_LINK_ID;
+	static const std::string ADD_NETWORK_LINK;
+	static const std::string UPDATE_NETWORK_LINK;
+
+	static const std::string ADD_NETWORK_LINKURL;
+	static const std::string DELETE_NETWORK_LINKURLS;
+
+	static const std::string LOAD_NETWORK_LINKS;
+	static const std::string LOAD_NETWORK_LINKURLS;
+
 private: // disable creation Instances
 	BooksDBQuery();
 };

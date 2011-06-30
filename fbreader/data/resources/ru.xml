@@ -503,6 +503,12 @@
 			<node name="title" value="Добавить сетевую библиотеку" />
 			<node name="url" value="Адрес" />
 		</node>
+		<node name="checkNetworkCatalogDialog">
+			<node name="title" value="Проверьте данные" />
+			<node name="name" value="Название" />
+			<node name="subname" value="Описание" />
+			<node name="icon" value="Изображение" />
+		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Перейти на страницу" />
 			<node name="pageNumber" value="Номер страницы" />

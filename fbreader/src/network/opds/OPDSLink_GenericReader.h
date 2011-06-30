@@ -42,6 +42,7 @@ private:
 	std::string myTitle;
 	std::string mySummary;
 	std::string myIcon;
+	std::string myId;
 
 	std::map<std::string,std::string> myLinks;
 

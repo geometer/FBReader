@@ -73,14 +73,15 @@ public:
 	virtual void rewriteUrl(std::string &url, bool isUrlExternal = false) const = 0;
 
 public:
-	const std::string SiteName;
-	const std::string Title;
-	const std::string Summary;
-	const std::string Icon;
+	std::string SiteName;
+	std::string Title;
+	std::string Summary;
+	std::string Icon;
 	ZLBooleanOption OnOption;
+	std::string PredefinedId;
+	bool Enabled;
 
-private:
-protected:
+public:
 	/*const*/ std::map<std::string,std::string> myLinks;
 
 private: // disable copying

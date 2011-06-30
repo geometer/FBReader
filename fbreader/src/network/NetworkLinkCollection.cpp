@@ -42,6 +42,9 @@
 
 #include "opds/OPDSLink.h"
 #include "opds/OPDSLink_GenericReader.h"
+#include "opds/OPDSLink_FeedReader.h"
+#include "opds/OPDSXMLParser.h"
+
 #include "opds/URLRewritingRule.h"
 
 
@@ -89,23 +92,32 @@ bool NetworkLinkCollection::Comparator::operator() (
 		removeLeadingNonAscii(second->Title);
 }
 
+static void *upd_gen_links( void *ptr ) {
+	std::string genericUrl = std::string ((const char*)ptr);
+	OPDSLink::GenericReader* reader = new OPDSLink::GenericReader();
+	shared_ptr<ZLXMLReader> zreader = reader;
+	ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, zreader));
+	std::vector<shared_ptr<NetworkLink> > templinks = reader->myNetworkLinks;
+	for (std::vector<shared_ptr<NetworkLink> >::iterator it = templinks.begin(); it != templinks.end(); ++it) {
+		BooksDB::Instance().saveNetworkLink(*it);
+	}
+}
+
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 
-	std::string OPDSXMLURL = "http://data.fbreader.org/catalogs/generic-1.4.xml";
-	std::string OPDSXMLLocal = ZLibrary::ApplicationWritableDirectory() + ZLibrary::FileNameDelimiter + "generic-1.4.xml";
-	ZLFile file = ZLFile(OPDSXMLLocal);
-	if (!file.exists()) {
-		ZLNetworkManager::Instance().downloadFile(OPDSXMLURL, OPDSXMLLocal);
-	}
-	OPDSLink::GenericReader reader;
-	reader.readDocument(file);
-	myLinks = reader.myNetworkLinks;
-
+	BooksDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
+
+	UpdateGenericLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
+}
+
+void NetworkLinkCollection::UpdateGenericLinks(std::string genericUrl) {
+	pthread_create( &upd_thread, NULL, upd_gen_links, (void*) genericUrl.c_str());
 }
 
 NetworkLinkCollection::~NetworkLinkCollection() {
+	pthread_join(upd_thread, NULL);
 }
 
 static std::string normalize(const std::string &url) {

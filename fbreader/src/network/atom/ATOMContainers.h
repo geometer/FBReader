@@ -87,6 +87,7 @@ public:
 	shared_ptr<ATOMLogo> logo() { return myLogo; }
 	const std::string &rights() { return myRights; }
 	const std::string &subtitle() { return mySubtitle; }
+	const std::string &summary() { return mySummary; }
 	const std::string &title() { return myTitle; }
 	shared_ptr<ATOMUpdated> updated() { return myUpdated; }
 
@@ -95,6 +96,7 @@ public:
 	void setLogo(shared_ptr<ATOMLogo> logo) { myLogo = logo; }
 	void setRights(const std::string &rights) { myRights = rights; }
 	void setSubtitle(const std::string &subtitle) { mySubtitle = subtitle; }
+	void setSummary(const std::string &summary) { mySummary = summary; }
 	void setTitle(const std::string &title) { myTitle = title; }
 	void setUpdated(shared_ptr<ATOMUpdated> updated) { myUpdated = updated; }
 	
@@ -113,6 +115,7 @@ private:
 	shared_ptr<ATOMLogo> myLogo;
 	std::string myRights;   // TODO: implement ATOMTextConstruct
 	std::string mySubtitle; // TODO: implement ATOMTextConstruct
+	std::string mySummary; // TODO: implement ATOMTextConstruct
 	std::string myTitle;    // TODO: implement ATOMTextConstruct
 	shared_ptr<ATOMUpdated> myUpdated;
 };

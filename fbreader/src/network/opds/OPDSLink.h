@@ -34,9 +34,6 @@ struct URLRewritingRule;
 class OPDSLink : public NetworkLink {
 
 public:
-	static shared_ptr<NetworkLink> read(const ZLFile &file);
-
-public:
 	enum FeedCondition {
 		CONDITION_NEVER,
 		CONDITION_SIGNED_IN,
@@ -47,8 +44,8 @@ private:
 
 public:
 	class GenericReader;
+	class FeedReader;
 
-private:
 	OPDSLink(
 		const std::string &siteName,
 		const std::string &title,

@@ -28,6 +28,9 @@
 
 #include "../network/NetworkLink.h"
 #include "../network/NetworkLinkCollection.h"
+#include "../network/opds/OPDSLink_FeedReader.h"
+#include "../network/opds/OPDSXMLParser.h"
+#include "../database/booksdb/BooksDB.h"
 
 AddNetworkCatalogAction::AddNetworkCatalogAction() : ModeDependentAction(FBReader::NETWORK_LIBRARY_MODE) {
 }
@@ -43,9 +46,32 @@ void AddNetworkCatalogAction::run() {
 		addDialog->acceptValues();
 		addDialog.reset();
 		std::string url = URLOption.value();
-		std:: string localpath = ZLibrary::ApplicationWritableDirectory() + ZLibrary::FileNameDelimiter + "temp.xml";
-		ZLNetworkManager::Instance().downloadFile(url, localpath);
+		shared_ptr<NetworkLink> link = 0;
+		shared_ptr<OPDSFeedReader> fr = new OPDSLink::FeedReader(link, url);
+		shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
+		ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr));
+
+		shared_ptr<ZLDialog> checkDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("checkNetworkCatalogDialog"));
+		ZLStringOption NameOption(ZLCategoryKey::NETWORK, "name", "title", "");
+		NameOption.setValue(link->Title);
+		checkDialog->addOption(ZLResourceKey("name"), NameOption);
+		ZLStringOption SubNameOption(ZLCategoryKey::NETWORK, "subname", "title", "");
+		SubNameOption.setValue(link->Summary);
+		checkDialog->addOption(ZLResourceKey("subname"), SubNameOption);
+		ZLStringOption IconOption(ZLCategoryKey::NETWORK, "icon", "title", "");
+		IconOption.setValue(link->Icon);
+		checkDialog->addOption(ZLResourceKey("icon"), IconOption);
+
+		checkDialog->addButton(ZLResourceKey("add"), true);
+		checkDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
+		if (checkDialog->run()) {
+			checkDialog->acceptValues();
+			checkDialog.reset();
+			link->Title = NameOption.value();
+			link->Summary = SubNameOption.value();
+			link->Icon = IconOption.value();
+			BooksDB::Instance().saveNetworkLink(link);
+		}
 	}
 }
-
 

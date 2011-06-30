@@ -35,27 +35,27 @@ shared_ptr<NetworkLink> OPDSLink::GenericReader::link() {
 		myIcon,
 		myLinks
 	);
-	if (!mySearchType.empty()) {
-		opdsLink->myAdvancedSearch = new AdvancedSearch(
-			mySearchType,
-			mySearchFields["titleOrSeries"],
-			mySearchFields["author"],
-			mySearchFields["tag"],
-			mySearchFields["annotation"]
-		);
-	}
-	myRelationAliases.swap(opdsLink->myRelationAliases);
-	myFeedConditions.swap(opdsLink->myFeedConditions);
-	myUrlRewritingRules.swap(opdsLink->myUrlRewritingRules);
+//	if (!mySearchType.empty()) {
+//		opdsLink->myAdvancedSearch = new AdvancedSearch(
+//			mySearchType,
+//			mySearchFields["titleOrSeries"],
+//			mySearchFields["author"],
+//			mySearchFields["tag"],
+//			mySearchFields["annotation"]
+//		);
+//	}
+//	myRelationAliases.swap(opdsLink->myRelationAliases);
+//	myFeedConditions.swap(opdsLink->myFeedConditions);
+//	myUrlRewritingRules.swap(opdsLink->myUrlRewritingRules);
 
-	if (myAuthenticationType == "litres") {
-		opdsLink->myAuthenticationManager =
-			new LitResAuthenticationManager(*opdsLink);
-	} else if (myLinks.count("signIn")) {
-		opdsLink->myAuthenticationManager =
-			new BasicAuthenticationManager(*opdsLink);
-	}
-
+//	if (myAuthenticationType == "litres") {
+//		opdsLink->myAuthenticationManager =
+//			new LitResAuthenticationManager(*opdsLink);
+//	} else if (myLinks.count("signIn")) {
+//		opdsLink->myAuthenticationManager =
+//			new BasicAuthenticationManager(*opdsLink);
+//	}
+	opdsLink->PredefinedId = myId;
 	return opdsLink;
 }
 
@@ -165,6 +165,7 @@ void OPDSLink::GenericReader::reset() {
 
 void OPDSLink::GenericReader::endElementHandler(const char *tag) {
 	if (myState == READ_SITENAME) {
+		myId = mySiteName;
 		mySiteName = mySiteName.substr(25, -1);
 	}
 	if (TAG_ENTRY == tag) {
@@ -179,6 +180,7 @@ void OPDSLink::GenericReader::endElementHandler(const char *tag) {
 void OPDSLink::GenericReader::characterDataHandler(const char *text, size_t len) {
 	switch (myState) {
 		case READ_NOTHING:
+		case READ_ENTRY:
 			break;
 		case READ_SITENAME:
 			mySiteName.append(text, len);

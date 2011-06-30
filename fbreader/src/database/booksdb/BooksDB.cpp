@@ -18,6 +18,7 @@
  */
 
 #include <ZLibrary.h>
+#include <stdio.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLLanguageUtil.h>
@@ -111,6 +112,9 @@ void BooksDB::initCommands() {
 	myDeleteBookList = SQLiteFactory::createCommand(BooksDBQuery::DELETE_BOOK_LIST, connection(), "@book_id", DBValue::DBINT);
 	myCheckBookList = SQLiteFactory::createCommand(BooksDBQuery::CHECK_BOOK_LIST, connection(), "@book_id", DBValue::DBINT);
 
+	myLoadNetworkLinks = SQLiteFactory::createCommand(BooksDBQuery::LOAD_NETWORK_LINKS, connection());
+	myLoadNetworkLinkUrls = SQLiteFactory::createCommand(BooksDBQuery::LOAD_NETWORK_LINKURLS, connection(), "@link_id", DBValue::DBINT);
+
 	mySaveTableBook = new SaveTableBookRunnable(connection());
 	mySaveAuthors = new SaveAuthorsRunnable(connection());
 	mySaveSeries = new SaveSeriesRunnable(connection());
@@ -128,6 +132,8 @@ void BooksDB::initCommands() {
 	mySaveBookStateStack = new SaveBookStateStackRunnable(connection());
 
 	myDeleteBook = new DeleteBookRunnable(connection());
+
+	mySaveNetworkLink = new SaveNetworkLinkRunnable(connection());
 }
 
 bool BooksDB::clearDatabase() {
@@ -544,3 +550,44 @@ bool BooksDB::checkBookList(const Book &book) {
 	return checkRes > 0;
 }
 
+bool BooksDB::saveNetworkLink(const shared_ptr<NetworkLink> link) {
+	if (!isInitialized()) {
+		return false;
+	}
+	mySaveNetworkLink->setNetworkLink(link);
+	return executeAsTransaction(*mySaveNetworkLink);
+}
+
+bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
+	shared_ptr<DBDataReader> reader = myLoadNetworkLinks->executeReader();
+
+	links.clear();
+
+	while (reader->next()) {
+		if (reader->type(0) != DBValue::DBINT) {/* link_id */
+			return false;
+		}
+		std::map<std::string,std::string> linkUrls;
+		((DBIntValue &) *myLoadNetworkLinkUrls->parameter("@link_id").value()) = reader->intValue(0);
+		shared_ptr<DBDataReader> urlreader = myLoadNetworkLinkUrls->executeReader();
+		while (urlreader->next()) {
+			linkUrls[urlreader->textValue(0, std::string())] = urlreader->textValue(1, std::string());
+		}
+		std::string iconUrl = "";
+		if (linkUrls.count("icon") != 0) {
+			iconUrl = linkUrls["icon"];
+		}
+		shared_ptr<NetworkLink> link = new OPDSLink(
+			reader->textValue(2, std::string()),
+			reader->textValue(1, std::string()),
+			reader->textValue(3, std::string()),
+			iconUrl,
+			linkUrls
+		);
+		link->Enabled = reader->intValue(6);
+		link->PredefinedId = reader->textValue(5, std::string());
+		links.push_back(link);
+	}
+
+	return true;
+}

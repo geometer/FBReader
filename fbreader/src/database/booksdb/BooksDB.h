@@ -84,6 +84,10 @@ public:
 	bool setNetFile(const std::string &url, const std::string &fileName);
 	bool unsetNetFile(const std::string &url);
 
+	bool saveNetworkLink(const shared_ptr<NetworkLink> link);
+	bool loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links);
+	bool removeNetworkLink(const std::string &siteName);
+
 	bool loadBookState(const Book &book, ReadingState &state);
 	bool setBookState(const Book &book, const ReadingState &state);
 
@@ -132,6 +136,11 @@ private:
 	shared_ptr<SaveBookStateStackRunnable> mySaveBookStateStack;
 	
 	shared_ptr<DeleteBookRunnable> myDeleteBook;
+
+	shared_ptr<SaveNetworkLinkRunnable> mySaveNetworkLink;
+
+	shared_ptr<DBCommand> myLoadNetworkLinks;
+	shared_ptr<DBCommand> myLoadNetworkLinkUrls;
 
 	shared_ptr<DBCommand> myLoadBook;
 

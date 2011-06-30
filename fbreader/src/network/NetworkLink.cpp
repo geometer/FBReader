@@ -21,6 +21,7 @@
 
 #include <ZLibrary.h>
 #include <ZLFile.h>
+#include <ZLStringUtil.h>
 
 #include "NetworkLink.h"
 #include "NetworkOperationData.h"
@@ -48,12 +49,13 @@ NetworkLink::NetworkLink(
 	const std::string &icon,
 	const std::map<std::string,std::string> &links
 ) : 
-	SiteName(siteName), 
+	SiteName(ZLStringUtil::stringStartsWith(siteName, "www.") ? siteName.substr(std::string("www.").length()) : siteName), 
 	Title(title),
 	Summary(summary),
 	Icon(icon),
 	OnOption(ZLCategoryKey::NETWORK, siteName, "on", true),
 	myLinks(links) {
+	myLinks["icon"] = icon;
 }
 
 NetworkLink::~NetworkLink() {

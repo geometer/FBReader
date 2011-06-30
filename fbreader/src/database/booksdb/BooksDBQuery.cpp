@@ -107,19 +107,29 @@ const std::string BooksDBQuery::INIT_DATABASE = \
 	"	file_id INTEGER UNIQUE REFERENCES Files (file_id) " \
 	"); " \
 	" " \
-	"CREATE TABLE IF NOT EXISTS Net.Links ( " \
-	"	link_id INTEGER PRIMARY KEY,  " \
-	"	title TEXT NOT NULL,  " \
-	"	site_name TEXT NOT NULL,  " \
-	"	summary TEXT  " \
+	"CREATE TABLE IF NOT EXISTS Net.Extras( " \
+	"	link_id INTEGER NOT NULL REFERENCES Links(link_id), " \
+	"	key TEXT NOT NULL, " \
+	"	value TEXT NOT NULL, " \
+	"	CONSTRAINT Extras_PK PRIMARY KEY (key, link_id) " \
 	"); " \
 	" " \
-	"CREATE TABLE IF NOT EXISTS Net.LinkUrls ( " \
-	"	key TEXT NOT NULL,  " \
-	"	link_id INTEGER NOT NULL REFERENCES CustomLinks(link_id),  " \
-	"	url TEXT,  " \
-	"	update_time INTEGER,  " \
-	"	CONSTRAINT LinkUrls_PK PRIMARY KEY (key, link_id)  " \
+	"	CREATE TABLE IF NOT EXISTS Net.Links( " \
+	"	link_id INTEGER PRIMARY KEY, " \
+	"	title TEXT NOT NULL, " \
+	"	site_name TEXT NOT NULL, " \
+	"	summary TEXT, " \
+	"	language TEXT, " \
+	"	predefined_id TEXT, " \
+	"	is_enabled INTEGER " \
+	"); " \
+	" " \
+	"CREATE TABLE IF NOT EXISTS Net.LinkUrls( " \
+	"	key TEXT NOT NULL, " \
+	"	link_id INTEGER NOT NULL REFERENCES Links(link_id), " \
+	"	url TEXT, " \
+	"	update_time INTEGER, " \
+	"	CONSTRAINT LinkUrls_PK PRIMARY KEY (key, link_id) " \
 	"); " \
 	" " \
 	"CREATE TABLE IF NOT EXISTS State.StackPosition ( " \
@@ -214,6 +224,9 @@ const std::string BooksDBQuery::CLEAR_DATABASE = \
 	"DROP TABLE State.BookList; " \
 	"DROP TABLE State.StackPosition; " \
 	"DROP TABLE Net.NetFiles; " \
+	"DROP TABLE Net.Links; " \
+	"DROP TABLE Net.LinkUrls; " \
+	"DROP TABLE Net.Extras; " \
 	"DROP TABLE PalmType; " \
 	"DROP TABLE State.BookStateStack; " \
 	"DROP TABLE State.RecentBooks; " \
@@ -349,3 +362,44 @@ const std::string BooksDBQuery::INSERT_BOOK_LIST = "INSERT OR IGNORE INTO BookLi
 const std::string BooksDBQuery::DELETE_BOOK_LIST = "DELETE FROM BookList WHERE book_id = @book_id; ";
 const std::string BooksDBQuery::CHECK_BOOK_LIST = "SELECT COUNT(*) FROM BookList WHERE book_id = @book_id; ";
 
+const std::string BooksDBQuery::FIND_NETWORK_LINK_ID  = "SELECT link_id, predefined_id FROM Net.Links WHERE site_name = @site_name; ";
+const std::string BooksDBQuery::ADD_NETWORK_LINK  = \
+	"INSERT INTO Net.Links (title, site_name, summary, language, predefined_id, is_enabled) " \
+	"	VALUES ( " \
+	"		@title, " \
+	"		@site_name, " \
+	"		@summary, " \
+	"		null, " \
+	"		nullif(@predefined_id,\"\"), " \
+	"		@is_enabled " \
+	"	); " \
+	" " \
+	"SELECT last_insert_rowid() AS book_id; ";
+
+const std::string BooksDBQuery::UPDATE_NETWORK_LINK  = \
+	"UPDATE Net.Links SET " \
+	"	title = @title, " \
+	"	site_name = @site_name, " \
+	"	summary = @summary, " \
+	"	language = null, " \
+	"	predefined_id = nullif(@predefined_id,\"\"), " \
+	"	is_enabled = @is_enabled " \
+	"WHERE " \
+	"	link_id = @link_id; ";
+
+const std::string BooksDBQuery::ADD_NETWORK_LINKURL  = \
+	"INSERT INTO Net.LinkUrls (key, link_id, url) " \
+	"	VALUES ( " \
+	"		@key, " \
+	"		@link_id, " \
+	"		@url " \
+	"	); ";
+
+const std::string BooksDBQuery::DELETE_NETWORK_LINKURLS  = \
+	"DELETE FROM Net.LinkUrls " \
+	"WHERE " \
+	"	link_id = @link_id; ";
+
+const std::string BooksDBQuery::LOAD_NETWORK_LINKS = "SELECT link_id, title, site_name, summary, language, predefined_id, is_enabled FROM Net.Links; ";
+
+const std::string BooksDBQuery::LOAD_NETWORK_LINKURLS = "SELECT key, url FROM Net.LinkUrls WHERE link_id = @link_id; ";
