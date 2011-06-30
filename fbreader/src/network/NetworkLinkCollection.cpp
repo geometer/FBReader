@@ -29,6 +29,7 @@
 #include <ZLNetworkUtil.h>
 #include <stdio.h>
 #include <ZLibrary.h>
+#include "../fbreader/FBReader.h"
 
 #include "NetworkLinkCollection.h"
 
@@ -92,6 +93,14 @@ bool NetworkLinkCollection::Comparator::operator() (
 		removeLeadingNonAscii(second->Title);
 }
 
+void NetworkLinkCollection::reReadLinks() {
+	BooksDB::Instance().loadNetworkLinks(myLinks);
+	std::sort(myLinks.begin(), myLinks.end(), Comparator());
+	FBReader::Instance().invalidateNetworkView();
+	FBReader::Instance().invalidateAccountDependents();
+	FBReader::Instance().updateNetworkView();
+}
+
 void *upd_gen_links( void *ptr ) {
 	NetworkLinkCollection* nc = (NetworkLinkCollection*) ptr;
 	std::string genericUrl = nc->myGenericUrl;
@@ -102,8 +111,7 @@ void *upd_gen_links( void *ptr ) {
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = templinks.begin(); it != templinks.end(); ++it) {
 		BooksDB::Instance().saveNetworkLink(*it);
 	}
-	BooksDB::Instance().loadNetworkLinks(nc->myLinks);
-	std::sort(nc->myLinks.begin(), nc->myLinks.end(), NetworkLinkCollection::Comparator());
+	nc->reReadLinks();
 }
 
 NetworkLinkCollection::NetworkLinkCollection() :

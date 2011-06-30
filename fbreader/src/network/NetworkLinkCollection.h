@@ -60,6 +60,8 @@ public:
 	std::string bookFileName(const BookReference &reference) const;
 	std::string makeBookFileName(const BookReference &reference);
 
+	void reReadLinks();
+
 	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
 
 	shared_ptr<NetworkBookCollection> simpleSearch(const std::string &pattern);
@@ -85,9 +87,11 @@ private:
 	pthread_t upd_thread;
 
 	std::string myErrorMessage;
+
+public:
 	std::string myGenericUrl;
 
-friend void *upd_gen_links( void *ptr );
+
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

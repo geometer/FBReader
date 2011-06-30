@@ -43,6 +43,9 @@ public:
 
 	void invalidate();
 	void invalidateAccountDependents();
+	void makeUpToDate();
+	void paint();
+
 
 	void drawCoverLater(FBReaderNode *node, int vOffset);
 
@@ -50,9 +53,8 @@ private:
 	ZLColor backgroundColor() const;
 	const std::string &caption() const;
 
-	void paint();
 
-	void makeUpToDate();
+
 	void updateAccountDependents();
 	void updateAccountDependents(NetworkCatalogNode &node);
 	bool processAccountDependent(NetworkCatalogItem &item);

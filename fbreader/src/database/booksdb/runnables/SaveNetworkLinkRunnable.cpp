@@ -44,6 +44,12 @@ bool SaveNetworkLinkRunnable::addNetworkLink(const shared_ptr<NetworkLink> link)
 		((DBIntValue &) *myAddNetworkLinkUrl->parameter("@link_id").value()) = ((DBIntValue &) *dbLinkId).value();
 		allExecuted = allExecuted && myAddNetworkLinkUrl->execute();
 	}
+	if (link->myLinks.count("icon") == 0 && link->Icon != std::string()) {
+		((DBTextValue &) *myAddNetworkLinkUrl->parameter("@key").value()) = "icon";
+		((DBTextValue &) *myAddNetworkLinkUrl->parameter("@url").value()) = link->Icon;
+		((DBIntValue &) *myAddNetworkLinkUrl->parameter("@link_id").value()) = ((DBIntValue &) *dbLinkId).value();
+		allExecuted = allExecuted && myAddNetworkLinkUrl->execute();
+	}
 	return allExecuted;
 }
 

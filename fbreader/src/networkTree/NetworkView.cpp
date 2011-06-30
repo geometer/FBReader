@@ -118,6 +118,7 @@ void NetworkView::CoverUpdaterRunner::run() {
 	}
 }
 
+
 void NetworkView::paint() {
 	if (myUpdateChildren) {
 		myUpdateChildren = false;

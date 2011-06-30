@@ -123,6 +123,7 @@ public:
 
 	void invalidateNetworkView();
 	void invalidateAccountDependents();
+	void updateNetworkView();
 
 private:
 	shared_ptr<ProgramCollection> dictionaryCollection() const;

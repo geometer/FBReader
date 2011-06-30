@@ -21,6 +21,7 @@
 #include <ZLDialog.h>
 #include <ZLNetworkManager.h>
 #include <ZLibrary.h>
+#include <stdio.h>
 
 #include "../options/FBCategoryKey.h"
 
@@ -70,7 +71,13 @@ void AddNetworkCatalogAction::run() {
 			link->Title = NameOption.value();
 			link->Summary = SubNameOption.value();
 			link->Icon = IconOption.value();
+			link->myLinks.erase("icon");
+			if (IconOption.value() != std::string()) {
+				link->myLinks["icon"] = IconOption.value();
+			}
+			printf("%s\n", IconOption.value().c_str());
 			BooksDB::Instance().saveNetworkLink(link);
+			NetworkLinkCollection::Instance().reReadLinks();
 		}
 	}
 }

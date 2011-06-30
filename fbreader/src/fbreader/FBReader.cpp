@@ -548,6 +548,10 @@ void FBReader::invalidateNetworkView() {
 	((NetworkView &) *myNetworkLibraryView).invalidate();
 }
 
+void FBReader::updateNetworkView() {
+	((NetworkView &) *myNetworkLibraryView).paint();
+}
+
 void FBReader::invalidateAccountDependents() {
 	((NetworkView &) *myNetworkLibraryView).invalidateAccountDependents();
 }
