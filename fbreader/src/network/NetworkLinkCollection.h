@@ -78,12 +78,16 @@ private:
 
 	void UpdateGenericLinks(std::string genericUrl);
 
+
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 	LinkVector myLinks;
 	pthread_t upd_thread;
 
 	std::string myErrorMessage;
+	std::string myGenericUrl;
+
+friend void *upd_gen_links( void *ptr );
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

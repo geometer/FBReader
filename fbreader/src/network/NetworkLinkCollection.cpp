@@ -92,8 +92,9 @@ bool NetworkLinkCollection::Comparator::operator() (
 		removeLeadingNonAscii(second->Title);
 }
 
-static void *upd_gen_links( void *ptr ) {
-	std::string genericUrl = std::string ((const char*)ptr);
+void *upd_gen_links( void *ptr ) {
+	NetworkLinkCollection* nc = (NetworkLinkCollection*) ptr;
+	std::string genericUrl = nc->myGenericUrl;
 	OPDSLink::GenericReader* reader = new OPDSLink::GenericReader();
 	shared_ptr<ZLXMLReader> zreader = reader;
 	ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, zreader));
@@ -101,6 +102,8 @@ static void *upd_gen_links( void *ptr ) {
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = templinks.begin(); it != templinks.end(); ++it) {
 		BooksDB::Instance().saveNetworkLink(*it);
 	}
+	BooksDB::Instance().loadNetworkLinks(nc->myLinks);
+	std::sort(nc->myLinks.begin(), nc->myLinks.end(), NetworkLinkCollection::Comparator());
 }
 
 NetworkLinkCollection::NetworkLinkCollection() :
@@ -113,7 +116,8 @@ NetworkLinkCollection::NetworkLinkCollection() :
 }
 
 void NetworkLinkCollection::UpdateGenericLinks(std::string genericUrl) {
-	pthread_create( &upd_thread, NULL, upd_gen_links, (void*) genericUrl.c_str());
+	myGenericUrl = genericUrl;
+	pthread_create( &upd_thread, NULL, upd_gen_links, (void*) this);
 }
 
 NetworkLinkCollection::~NetworkLinkCollection() {
