@@ -29,6 +29,7 @@ const std::string ZLMimeType::APPLICATION_CHM = "application/x-chm";
 const std::string ZLMimeType::APPLICATION_PALM_DB = "application/x-palm-database";
 
 const std::string ZLMimeType::APPLICATION_ATOM_XML = "application/atom+xml";
+const std::string ZLMimeType::APPLICATION_ATOM_XML_OPDS = "application/atom+xml;profile=opds-catalog";
 const std::string ZLMimeType::APPLICATION_ATOM_XML_ENTRY = "application/atom+xml;type=entry";
 const std::string ZLMimeType::APPLICATION_LITRES_XML = "application/litres+xml";
 const std::string ZLMimeType::APPLICATION_OPENSEARCH_XML = "application/opensearchdescription+xml";

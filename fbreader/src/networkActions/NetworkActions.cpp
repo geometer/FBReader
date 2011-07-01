@@ -274,12 +274,6 @@ void NetworkBookDeleteAction::run() {
 	FBReader::Instance().refreshWindow();
 }
 
-ParseNetworkCatalogAction::ParseNetworkCatalogAction(const std::string &url) : myURL(url) {
-}
-
-void ParseNetworkCatalogAction::run() {
-
-}
 
 
 

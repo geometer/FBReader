@@ -61,6 +61,7 @@ public:
 	std::string makeBookFileName(const BookReference &reference);
 
 	void reReadLinks();
+	void reReadLinksWithoutRefreshing();
 
 	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
 
@@ -74,6 +75,8 @@ public:
 	const std::string &errorMessage() const;
 
 	void rewriteUrl(std::string &url, bool externalUrl = false) const;
+
+	bool threadUpdating;
 
 private:
 	std::string makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);

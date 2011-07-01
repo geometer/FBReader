@@ -32,6 +32,7 @@ public:
 	static const std::string SHOW_READING;
 	static const std::string SHOW_LIBRARY;
 	static const std::string SHOW_NETWORK_LIBRARY;
+	static const std::string SHOW_NETWORK_LIBRARY_DISABLED;
 	static const std::string SHOW_TOC;
 	static const std::string SHOW_HELP;
 	static const std::string SHOW_OPTIONS_DIALOG;
@@ -162,6 +163,15 @@ class ShowNetworkLibraryAction : public SetModeAction {
 public:
 	ShowNetworkLibraryAction();
 	bool isVisible() const;
+};
+
+class ShowNetworkLibraryDisabledAction : public ModeDependentAction {
+
+
+public:
+	ShowNetworkLibraryDisabledAction(int visibleInModes);
+	bool isVisible() const;
+	void run();
 };
 
 class AddBookAction : public ModeDependentAction {

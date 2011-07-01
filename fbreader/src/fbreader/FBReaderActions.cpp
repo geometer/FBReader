@@ -49,6 +49,7 @@
 #include "../database/booksdb/BooksDB.h"
 #include "../library/Library.h"
 #include "../library/Book.h"
+#include "../network/NetworkLinkCollection.h"
 
 ModeDependentAction::ModeDependentAction(int visibleInModes) : myVisibleInModes(visibleInModes) {
 }
@@ -491,3 +492,13 @@ FilterLibraryAction::FilterLibraryAction() : ModeDependentAction(FBReader::LIBRA
 
 void FilterLibraryAction::run() {
 }
+
+bool ShowNetworkLibraryDisabledAction::isVisible() const {
+	return ModeDependentAction::isVisible() && NetworkLinkCollection::Instance().threadUpdating;
+}
+
+void ShowNetworkLibraryDisabledAction::run() {
+}
+
+ShowNetworkLibraryDisabledAction::ShowNetworkLibraryDisabledAction(int visibleInModes) :
+	ModeDependentAction(visibleInModes) {}

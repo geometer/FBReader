@@ -54,7 +54,7 @@ void NetworkOPDSFeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> fee
 		const std::string &href = link.href();
 		const std::string &type = link.type();
 		const std::string &rel = myLink.relation(link.rel(), type);
-		if (type == ZLMimeType::APPLICATION_ATOM_XML) {
+		if (type == ZLMimeType::APPLICATION_ATOM_XML || type == ZLMimeType::APPLICATION_ATOM_XML_OPDS) {
 			if (rel == "self") {
 			} else if (rel == "next") {
 				myData.ResumeURI = href;
@@ -284,7 +284,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 					(coverURL.empty() && rel == OPDSConstants::REL_COVER)) {
 				coverURL = href;
 			}
-		} else if (type == ZLMimeType::APPLICATION_ATOM_XML) {
+		} else if (type == ZLMimeType::APPLICATION_ATOM_XML || type == ZLMimeType::APPLICATION_ATOM_XML_OPDS) {
 			if (rel == ATOMConstants::REL_ALTERNATE) {
 				if (url.empty()) {
 					url = href;

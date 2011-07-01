@@ -21,6 +21,8 @@
 #include <ZLResource.h>
 #include <ZLImage.h>
 #include <ZLDialogManager.h>
+#include <stdio.h>
+#include <ZLDialog.h>
 
 #include "NetworkNodes.h"
 
@@ -35,6 +37,8 @@
 #include "../networkActions/AuthenticationDialog.h"
 #include "../networkActions/PasswordRecoveryDialog.h"
 #include "../networkActions/RegisterUserDialog.h"
+#include "../database/booksdb/BooksDB.h"
+
 
 class NetworkCatalogAuthAction : public ZLRunnableWithKey {
 
@@ -94,6 +98,34 @@ private:
 	NetworkLink &myLink;
 };
 
+class NetworkCatalogRootNode::EditAction : public ZLRunnableWithKey {
+
+public:
+	EditAction(NetworkLink &link);
+
+private:
+	void run();
+	ZLResourceKey key() const;
+	bool makesSense() const;
+
+private:
+	NetworkLink &myLink;
+};
+
+class NetworkCatalogRootNode::DeleteAction : public ZLRunnableWithKey {
+
+public:
+	DeleteAction(NetworkLink &link);
+
+private:
+	void run();
+	ZLResourceKey key() const;
+	bool makesSense() const;
+
+private:
+	NetworkLink &myLink;
+};
+
 class NetworkCatalogRootNode::PasswordRecoveryAction : public NetworkCatalogAuthAction {
 
 public:
@@ -133,6 +165,8 @@ void NetworkCatalogRootNode::init() {
 		}
 	}
 	registerAction(new DontShowAction(myLink));
+	registerAction(new EditAction(myLink));
+	registerAction(new DeleteAction(myLink));
 }
 
 const ZLTypeId &NetworkCatalogRootNode::typeId() const {
@@ -214,6 +248,67 @@ void NetworkCatalogRootNode::DontShowAction::run() {
 
 bool NetworkCatalogRootNode::DontShowAction::makesSense() const {
 	return NetworkLinkCollection::Instance().numberOfEnabledLinks() > 1;
+}
+
+NetworkCatalogRootNode::DeleteAction::DeleteAction(NetworkLink &link) : myLink(link) {
+}
+
+ZLResourceKey NetworkCatalogRootNode::DeleteAction::key() const {
+	return ZLResourceKey("delete");
+}
+
+void NetworkCatalogRootNode::DeleteAction::run() {
+	ZLResourceKey boxKey("deleteConfirmBox");
+	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myLink.SiteName);
+	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
+		return;
+	}
+	BooksDB::Instance().deleteNetworkLink(myLink.SiteName);
+	NetworkLinkCollection::Instance().reReadLinks();
+}
+
+bool NetworkCatalogRootNode::DeleteAction::makesSense() const {
+	return myLink.PredefinedId == std::string();
+}
+
+NetworkCatalogRootNode::EditAction::EditAction(NetworkLink &link) : myLink(link) {
+}
+
+ZLResourceKey NetworkCatalogRootNode::EditAction::key() const {
+	return ZLResourceKey("edit");
+}
+
+void NetworkCatalogRootNode::EditAction::run() {
+	shared_ptr<ZLDialog> checkDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("editNetworkCatalogDialog"));
+	ZLStringOption NameOption(ZLCategoryKey::NETWORK, "name", "title", "");
+	NameOption.setValue(myLink.Title);
+	checkDialog->addOption(ZLResourceKey("name"), NameOption);
+	ZLStringOption SubNameOption(ZLCategoryKey::NETWORK, "subname", "title", "");
+	SubNameOption.setValue(myLink.Summary);
+	checkDialog->addOption(ZLResourceKey("subname"), SubNameOption);
+	ZLStringOption IconOption(ZLCategoryKey::NETWORK, "icon", "title", "");
+	IconOption.setValue(myLink.Icon);
+	checkDialog->addOption(ZLResourceKey("icon"), IconOption);
+
+	checkDialog->addButton(ZLResourceKey("edit"), true);
+	checkDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
+	if (checkDialog->run()) {
+		checkDialog->acceptValues();
+		checkDialog.reset();
+		myLink.Title = NameOption.value();
+		myLink.Summary = SubNameOption.value();
+		myLink.Icon = IconOption.value();
+		myLink.myLinks.erase("icon");
+		if (IconOption.value() != std::string()) {
+			myLink.myLinks["icon"] = IconOption.value();
+		}
+		BooksDB::Instance().saveNetworkLink(&myLink);
+		NetworkLinkCollection::Instance().reReadLinks();
+	}
+}
+
+bool NetworkCatalogRootNode::EditAction::makesSense() const {
+	return myLink.PredefinedId == std::string();
 }
 
 NetworkCatalogRootNode::RefillAccountAction::RefillAccountAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, true) {

@@ -43,8 +43,6 @@ public:
 
 	void invalidate();
 	void invalidateAccountDependents();
-	void makeUpToDate();
-	void paint();
 
 
 	void drawCoverLater(FBReaderNode *node, int vOffset);
@@ -58,6 +56,8 @@ private:
 	void updateAccountDependents();
 	void updateAccountDependents(NetworkCatalogNode &node);
 	bool processAccountDependent(NetworkCatalogItem &item);
+	void paint();
+	void makeUpToDate();
 
 private:
 	bool myUpdateChildren;

@@ -86,7 +86,7 @@ public:
 
 	bool saveNetworkLink(const shared_ptr<NetworkLink> link);
 	bool loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links);
-	bool removeNetworkLink(const std::string &siteName);
+	bool deleteNetworkLink(const std::string &siteName);
 
 	bool loadBookState(const Book &book, ReadingState &state);
 	bool setBookState(const Book &book, const ReadingState &state);
@@ -140,6 +140,9 @@ private:
 	shared_ptr<SaveNetworkLinkRunnable> mySaveNetworkLink;
 
 	shared_ptr<DBCommand> myLoadNetworkLinks;
+	shared_ptr<DBCommand> myFindNetworkLinkId;
+	shared_ptr<DBCommand> myDeleteNetworkLink;
+	shared_ptr<DBCommand> myDeleteNetworkLinkUrls;
 	shared_ptr<DBCommand> myLoadNetworkLinkUrls;
 
 	shared_ptr<DBCommand> myLoadBook;

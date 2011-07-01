@@ -98,11 +98,17 @@ void NetworkLinkCollection::reReadLinks() {
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 	FBReader::Instance().invalidateNetworkView();
 	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().updateNetworkView();
+	FBReader::Instance().refreshWindow();
+}
+
+void NetworkLinkCollection::reReadLinksWithoutRefreshing() {
+	BooksDB::Instance().loadNetworkLinks(myLinks);
+	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 }
 
 void *upd_gen_links( void *ptr ) {
 	NetworkLinkCollection* nc = (NetworkLinkCollection*) ptr;
+	nc->threadUpdating = true;
 	std::string genericUrl = nc->myGenericUrl;
 	OPDSLink::GenericReader* reader = new OPDSLink::GenericReader();
 	shared_ptr<ZLXMLReader> zreader = reader;
@@ -111,12 +117,17 @@ void *upd_gen_links( void *ptr ) {
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = templinks.begin(); it != templinks.end(); ++it) {
 		BooksDB::Instance().saveNetworkLink(*it);
 	}
-	nc->reReadLinks();
+	nc->reReadLinksWithoutRefreshing();
+	nc->threadUpdating = false;
+	FBReader::Instance().invalidateNetworkView();
+	FBReader::Instance().invalidateAccountDependents();
+	FBReader::Instance().refreshWindow();
 }
 
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 
+	threadUpdating = false;
 	BooksDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 

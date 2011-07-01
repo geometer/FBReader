@@ -114,6 +114,9 @@ void BooksDB::initCommands() {
 
 	myLoadNetworkLinks = SQLiteFactory::createCommand(BooksDBQuery::LOAD_NETWORK_LINKS, connection());
 	myLoadNetworkLinkUrls = SQLiteFactory::createCommand(BooksDBQuery::LOAD_NETWORK_LINKURLS, connection(), "@link_id", DBValue::DBINT);
+	myFindNetworkLinkId = SQLiteFactory::createCommand(BooksDBQuery::FIND_NETWORK_LINK_ID, connection(), "@site_name", DBValue::DBTEXT);
+	myDeleteNetworkLinkUrls = SQLiteFactory::createCommand(BooksDBQuery::DELETE_NETWORK_LINKURLS, connection(), "@link_id", DBValue::DBINT);
+	myDeleteNetworkLink = SQLiteFactory::createCommand(BooksDBQuery::DELETE_NETWORK_LINK, connection(), "@link_id", DBValue::DBINT);
 
 	mySaveTableBook = new SaveTableBookRunnable(connection());
 	mySaveAuthors = new SaveAuthorsRunnable(connection());
@@ -590,4 +593,17 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 	}
 
 	return true;
+}
+
+bool BooksDB::deleteNetworkLink(const std::string &siteName){
+	((DBTextValue &) *myFindNetworkLinkId->parameter("@site_name").value()) = siteName;
+	shared_ptr<DBDataReader> reader = myFindNetworkLinkId->executeReader();
+	if (reader.isNull() || !reader->next()) {
+		return false;
+	} else {
+		int linkId = reader->intValue(0);
+		((DBIntValue &) *myDeleteNetworkLink->parameter("@link_id").value()) = linkId;
+		((DBIntValue &) *myDeleteNetworkLinkUrls->parameter("@link_id").value()) = linkId;
+		return myDeleteNetworkLinkUrls->execute() && myDeleteNetworkLink->execute();
+	}
 }

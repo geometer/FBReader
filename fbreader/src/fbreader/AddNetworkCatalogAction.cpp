@@ -75,7 +75,6 @@ void AddNetworkCatalogAction::run() {
 			if (IconOption.value() != std::string()) {
 				link->myLinks["icon"] = IconOption.value();
 			}
-			printf("%s\n", IconOption.value().c_str());
 			BooksDB::Instance().saveNetworkLink(link);
 			NetworkLinkCollection::Instance().reReadLinks();
 		}

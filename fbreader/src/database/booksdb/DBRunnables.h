@@ -328,8 +328,11 @@ private:
 	shared_ptr<DBCommand> myAddNetworkLink;
 	shared_ptr<DBCommand> myUpdateNetworkLink;
 
+	shared_ptr<DBCommand> myFindNetworkLinkUrls;
 	shared_ptr<DBCommand> myAddNetworkLinkUrl;
-	shared_ptr<DBCommand> myDeleteNetworkLinkUrls;
+	shared_ptr<DBCommand> myUpdateNetworkLinkUrl;
+	shared_ptr<DBCommand> myDeleteNetworkLinkUrl;
+
 };
 
 #endif /* __DBRUNNABLES_H__ */

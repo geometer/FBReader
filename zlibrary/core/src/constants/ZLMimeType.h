@@ -34,6 +34,7 @@ public:
 	static const std::string APPLICATION_CHM;
 	static const std::string APPLICATION_PALM_DB;
 	static const std::string APPLICATION_ATOM_XML;
+	static const std::string APPLICATION_ATOM_XML_OPDS;
 	static const std::string APPLICATION_ATOM_XML_ENTRY;
 	static const std::string APPLICATION_LITRES_XML;
 	static const std::string APPLICATION_OPENSEARCH_XML;

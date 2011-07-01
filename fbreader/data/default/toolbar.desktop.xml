@@ -8,6 +8,7 @@
 	<menuButton id="showLibrary"/>
 	<button id="addBook"/>
 	<button id="showNetLibrary"/>
+	<button id="showNetLibraryDisabled"/>
 	<separator/>
 	<button id="addNetworkCatalog"/>
 	<button id="advancedSearchOnNetwork"/>

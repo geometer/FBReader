@@ -172,35 +172,15 @@ void NetworkView::makeUpToDate() {
 //		if (!link.OnOption.value()) {
 //			continue;
 //		}
-		bool processed = false;
 		while (nodeIt != rootChildren.end() &&
 					 (*nodeIt)->isInstanceOf(NetworkCatalogNode::TYPE_ID)) {
 			const NetworkLink &nodeLink = ((NetworkCatalogRootNode*)*nodeIt)->link();
-			if (false) {
-				++nodeIt;
-				++nodeCount;
-				processed = true;
-				break;
-			} else {
-				bool found = false;
-				for (size_t j = i + 1; j < collection.size(); ++j) {
-					if (&nodeLink == &collection.link(j)) {
-						found = true;
-						break;
-					}
-				}
-				if (!found) {
-					nodesToDelete.insert(*nodeIt++);
-					++nodeCount;
-				} else {
-					break;
-				}
-			}
+							bool found = false;
+			nodesToDelete.insert(*nodeIt++);
+			++nodeCount;
 		}
-		if (!processed) {
-			NetworkCatalogNode *ptr = new NetworkCatalogRootNode(&rootNode(), link, nodeCount++);
-			ptr->item().onDisplayItem();
-		}
+		NetworkCatalogNode *ptr = new NetworkCatalogRootNode(&rootNode(), link, nodeCount++);
+		ptr->item().onDisplayItem();
 	}
 
 	SearchResultNode *srNode = 0;

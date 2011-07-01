@@ -374,7 +374,10 @@ const std::string BooksDBQuery::ADD_NETWORK_LINK  = \
 	"		@is_enabled " \
 	"	); " \
 	" " \
-	"SELECT last_insert_rowid() AS book_id; ";
+	"SELECT last_insert_rowid() AS link_id; ";
+
+const std::string BooksDBQuery::DELETE_NETWORK_LINK  = \
+	"DELETE FROM Net.Links WHERE link_id = @link_id; ";
 
 const std::string BooksDBQuery::UPDATE_NETWORK_LINK  = \
 	"UPDATE Net.Links SET " \
@@ -395,10 +398,23 @@ const std::string BooksDBQuery::ADD_NETWORK_LINKURL  = \
 	"		@url " \
 	"	); ";
 
+const std::string BooksDBQuery::FIND_NETWORK_LINKURLS  = "SELECT key, url FROM Net.LinkUrls WHERE link_id = @link_id; ";
+
+const std::string BooksDBQuery::UPDATE_NETWORK_LINKURL  = \
+	"UPDATE Net.LinkUrls SET " \
+	"	url = @url " \
+	"WHERE " \
+	"	link_id = @link_id AND key = @key; ";
+
 const std::string BooksDBQuery::DELETE_NETWORK_LINKURLS  = \
 	"DELETE FROM Net.LinkUrls " \
 	"WHERE " \
 	"	link_id = @link_id; ";
+
+const std::string BooksDBQuery::DELETE_NETWORK_LINKURL  = \
+	"DELETE FROM Net.LinkUrls " \
+	"WHERE " \
+	"	link_id = @link_id AND key = @key; ";
 
 const std::string BooksDBQuery::LOAD_NETWORK_LINKS = "SELECT link_id, title, site_name, summary, language, predefined_id, is_enabled FROM Net.Links; ";
 
