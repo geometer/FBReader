@@ -21,7 +21,6 @@
 #include <ZLResource.h>
 #include <ZLImage.h>
 #include <ZLDialogManager.h>
-#include <stdio.h>
 #include <ZLDialog.h>
 
 #include "NetworkNodes.h"
@@ -37,7 +36,6 @@
 #include "../networkActions/AuthenticationDialog.h"
 #include "../networkActions/PasswordRecoveryDialog.h"
 #include "../networkActions/RegisterUserDialog.h"
-#include "../database/booksdb/BooksDB.h"
 
 
 class NetworkCatalogAuthAction : public ZLRunnableWithKey {
@@ -241,7 +239,7 @@ void NetworkCatalogRootNode::DontShowAction::run() {
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
 		return;
 	}
-	myLink.OnOption.setValue(false);
+	myLink.setEnabled(false);
 	FBReader::Instance().invalidateNetworkView();
 	FBReader::Instance().refreshWindow();
 }
@@ -263,8 +261,7 @@ void NetworkCatalogRootNode::DeleteAction::run() {
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
 		return;
 	}
-	BooksDB::Instance().deleteNetworkLink(myLink.SiteName);
-	NetworkLinkCollection::Instance().reReadLinks();
+	NetworkLinkCollection::Instance().deleteLink(myLink);
 }
 
 bool NetworkCatalogRootNode::DeleteAction::makesSense() const {
@@ -281,13 +278,13 @@ ZLResourceKey NetworkCatalogRootNode::EditAction::key() const {
 void NetworkCatalogRootNode::EditAction::run() {
 	shared_ptr<ZLDialog> checkDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("editNetworkCatalogDialog"));
 	ZLStringOption NameOption(ZLCategoryKey::NETWORK, "name", "title", "");
-	NameOption.setValue(myLink.Title);
+	NameOption.setValue(myLink.getTitle());
 	checkDialog->addOption(ZLResourceKey("name"), NameOption);
 	ZLStringOption SubNameOption(ZLCategoryKey::NETWORK, "subname", "title", "");
-	SubNameOption.setValue(myLink.Summary);
+	SubNameOption.setValue(myLink.getSummary());
 	checkDialog->addOption(ZLResourceKey("subname"), SubNameOption);
 	ZLStringOption IconOption(ZLCategoryKey::NETWORK, "icon", "title", "");
-	IconOption.setValue(myLink.Icon);
+	IconOption.setValue(myLink.getIcon());
 	checkDialog->addOption(ZLResourceKey("icon"), IconOption);
 
 	checkDialog->addButton(ZLResourceKey("edit"), true);
@@ -295,15 +292,10 @@ void NetworkCatalogRootNode::EditAction::run() {
 	if (checkDialog->run()) {
 		checkDialog->acceptValues();
 		checkDialog.reset();
-		myLink.Title = NameOption.value();
-		myLink.Summary = SubNameOption.value();
-		myLink.Icon = IconOption.value();
-		myLink.myLinks.erase("icon");
-		if (IconOption.value() != std::string()) {
-			myLink.myLinks["icon"] = IconOption.value();
-		}
-		BooksDB::Instance().saveNetworkLink(&myLink);
-		NetworkLinkCollection::Instance().reReadLinks();
+		myLink.setTitle(NameOption.value());
+		myLink.setSummary(SubNameOption.value());
+		myLink.setIcon(IconOption.value());
+		NetworkLinkCollection::Instance().saveLink(myLink);
 	}
 }
 

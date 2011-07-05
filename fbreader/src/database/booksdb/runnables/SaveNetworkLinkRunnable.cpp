@@ -1,9 +1,23 @@
 /*
- * qqqqqqqqqqqqqqqqqqqqqqqqqqq
+ * Copyright (C) 2008-2010 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
  */
 
 #include "../DBRunnables.h"
-#include <stdio.h>
 #include "../../../network/NetworkLink.h"
 #include "../../sqldb/implsqlite/SQLiteFactory.h"
 
@@ -21,29 +35,30 @@ SaveNetworkLinkRunnable::SaveNetworkLinkRunnable(DBConnection &connection) {
 bool SaveNetworkLinkRunnable::run() {
 	((DBTextValue &) *myFindNetworkLinkId->parameter("@site_name").value()) = myNetworkLink->SiteName;
 	shared_ptr<DBDataReader> reader = myFindNetworkLinkId->executeReader();
-	if (myNetworkLink->myLinks.count("icon") == 0 && myNetworkLink->Icon != std::string()) {
-		myNetworkLink->myLinks["icon"] = myNetworkLink->Icon;
-	}
 	if (reader.isNull() || !reader->next()) {
-		return addNetworkLink(myNetworkLink);
+		return addNetworkLink();
 	} else if (reader->textValue(1, std::string()) == std::string() || myNetworkLink->PredefinedId != std::string()) {
-		return updateNetworkLink(myNetworkLink, reader->intValue(0));
+		return updateNetworkLink(reader->intValue(0));
 	}
 }
 
-bool SaveNetworkLinkRunnable::addNetworkLink(const shared_ptr<NetworkLink> link) {
-	((DBTextValue &) *myAddNetworkLink->parameter("@title").value()) = link->Title;
-	((DBTextValue &) *myAddNetworkLink->parameter("@site_name").value()) = link->SiteName;
-	((DBTextValue &) *myAddNetworkLink->parameter("@summary").value()) = link->Summary;
-	((DBTextValue &) *myAddNetworkLink->parameter("@predefined_id").value()) = link->PredefinedId;
-	((DBIntValue &) *myAddNetworkLink->parameter("@is_enabled").value()) = link->Enabled;
+bool SaveNetworkLinkRunnable::addNetworkLink() {
+	((DBTextValue &) *myAddNetworkLink->parameter("@title").value()) = myNetworkLink->getTitle();
+	((DBTextValue &) *myAddNetworkLink->parameter("@site_name").value()) = myNetworkLink->SiteName;
+	((DBTextValue &) *myAddNetworkLink->parameter("@summary").value()) = myNetworkLink->getSummary();
+	((DBTextValue &) *myAddNetworkLink->parameter("@predefined_id").value()) = myNetworkLink->PredefinedId;
+	((DBIntValue &) *myAddNetworkLink->parameter("@is_enabled").value()) = myNetworkLink->isEnabled();
 	shared_ptr<DBValue> dbLinkId = myAddNetworkLink->executeScalar();
 	if (dbLinkId.isNull() || dbLinkId->type() != DBValue::DBINT || ((DBIntValue &) *dbLinkId).value() == 0) {
 		return false;
 	}
 
 	bool allExecuted = true;
-	for (std::map<std::string,std::string>::iterator it = link->myLinks.begin(); it != link->myLinks.end(); ++it) {
+	std::map<std::string,std::string> tempLinks = myNetworkLink->Links;
+	if (myNetworkLink->getIcon() != std::string()) {
+		tempLinks["icon"] = myNetworkLink->getIcon();
+	}
+	for (std::map<std::string,std::string>::iterator it = tempLinks.begin(); it != tempLinks.end(); ++it) {
 		((DBTextValue &) *myAddNetworkLinkUrl->parameter("@key").value()) = it->first;
 		((DBTextValue &) *myAddNetworkLinkUrl->parameter("@url").value()) = it->second;
 		((DBIntValue &) *myAddNetworkLinkUrl->parameter("@link_id").value()) = ((DBIntValue &) *dbLinkId).value();
@@ -52,18 +67,21 @@ bool SaveNetworkLinkRunnable::addNetworkLink(const shared_ptr<NetworkLink> link)
 	return allExecuted;
 }
 
-bool SaveNetworkLinkRunnable::updateNetworkLink(const shared_ptr<NetworkLink> link, int linkId) {
-	((DBTextValue &) *myUpdateNetworkLink->parameter("@title").value()) = link->Title;
-	((DBTextValue &) *myUpdateNetworkLink->parameter("@site_name").value()) = link->SiteName;
-	((DBTextValue &) *myUpdateNetworkLink->parameter("@summary").value()) = link->Summary;
-	((DBTextValue &) *myUpdateNetworkLink->parameter("@predefined_id").value()) = link->PredefinedId;
-	((DBIntValue &) *myUpdateNetworkLink->parameter("@is_enabled").value()) = link->Enabled;
+bool SaveNetworkLinkRunnable::updateNetworkLink(int linkId) {
+	((DBTextValue &) *myUpdateNetworkLink->parameter("@title").value()) = myNetworkLink->getTitle();
+	((DBTextValue &) *myUpdateNetworkLink->parameter("@site_name").value()) = myNetworkLink->SiteName;
+	((DBTextValue &) *myUpdateNetworkLink->parameter("@summary").value()) = myNetworkLink->getSummary();
+	((DBTextValue &) *myUpdateNetworkLink->parameter("@predefined_id").value()) = myNetworkLink->PredefinedId;
+	((DBIntValue &) *myUpdateNetworkLink->parameter("@is_enabled").value()) = myNetworkLink->isEnabled();
 	((DBIntValue &) *myUpdateNetworkLink->parameter("@link_id").value()) = linkId;
 
 	bool allExecuted = true;
 	((DBIntValue &) *myFindNetworkLinkUrls->parameter("@link_id").value()) = linkId;
 	shared_ptr<DBDataReader> reader = myFindNetworkLinkUrls->executeReader();
-	std::map<std::string,std::string> linksToCheck = link->myLinks;
+	std::map<std::string,std::string> linksToCheck = myNetworkLink->Links;
+	if (myNetworkLink->getIcon() != std::string()) {
+		linksToCheck["icon"] = myNetworkLink->getIcon();
+	}
 	while (reader->next()) {
 		if (reader->type(0) != DBValue::DBTEXT || reader->type(1) != DBValue::DBTEXT) {
 			return false;
@@ -93,6 +111,6 @@ bool SaveNetworkLinkRunnable::updateNetworkLink(const shared_ptr<NetworkLink> li
 	return allExecuted && myUpdateNetworkLink->execute();
 }
 
-void SaveNetworkLinkRunnable::setNetworkLink(shared_ptr<NetworkLink> link) {
+void SaveNetworkLinkRunnable::setNetworkLink(NetworkLink* link) {
 	myNetworkLink = link;
 }

@@ -52,15 +52,24 @@ public:
 protected:
 	NetworkLink(
 		const std::string &siteName,
-		const std::string &title,
-		const std::string &summary,
-		const std::string &icon,
-		const std::map<std::string,std::string> &links
+		const std::map<std::string,std::string> &links,
+		const std::string &predefinedId = std::string()
 	);
 
 public:
 	virtual ~NetworkLink();
 	std::string url(const std::string &urlId) const;
+
+	void setTitle(const std::string& title);
+	void setSummary(const std::string& summary);
+	void setIcon(const std::string& icon);
+	void setEnabled(bool enabled);
+
+	std::string getTitle() const;
+	std::string getSummary() const;
+	std::string getIcon() const;
+	bool isEnabled() const;
+
 
 public:
 	virtual shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &data, const std::string &pattern) const = 0;
@@ -73,16 +82,15 @@ public:
 	virtual void rewriteUrl(std::string &url, bool isUrlExternal = false) const = 0;
 
 public:
-	std::string SiteName;
-	std::string Title;
-	std::string Summary;
-	std::string Icon;
-	ZLBooleanOption OnOption;
-	std::string PredefinedId;
-	bool Enabled;
+	const std::string SiteName;
+	const std::map<std::string,std::string> Links;
+	const std::string PredefinedId;
 
-public:
-	/*const*/ std::map<std::string,std::string> myLinks;
+private:
+	std::string myTitle;
+	std::string myIcon;
+	std::string mySummary;
+	bool myEnabled;
 
 private: // disable copying
 	NetworkLink(const NetworkLink &);

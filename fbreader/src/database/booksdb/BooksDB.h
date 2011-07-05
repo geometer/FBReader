@@ -84,7 +84,7 @@ public:
 	bool setNetFile(const std::string &url, const std::string &fileName);
 	bool unsetNetFile(const std::string &url);
 
-	bool saveNetworkLink(const shared_ptr<NetworkLink> link);
+	bool saveNetworkLink(NetworkLink& link);
 	bool loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links);
 	bool deleteNetworkLink(const std::string &siteName);
 

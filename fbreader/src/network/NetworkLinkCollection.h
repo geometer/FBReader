@@ -60,9 +60,6 @@ public:
 	std::string bookFileName(const BookReference &reference) const;
 	std::string makeBookFileName(const BookReference &reference);
 
-	void reReadLinks();
-	void reReadLinksWithoutRefreshing();
-
 	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
 
 	shared_ptr<NetworkBookCollection> simpleSearch(const std::string &pattern);
@@ -76,6 +73,10 @@ public:
 
 	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
+	void deleteLink(NetworkLink& link);
+
+	void saveLink(NetworkLink& link);
+
 	bool threadUpdating;
 
 private:
@@ -83,18 +84,20 @@ private:
 
 	void UpdateGenericLinks(std::string genericUrl);
 
+	void reReadLinks();
+	void reReadLinksWithoutRefreshing();
+
 
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 	LinkVector myLinks;
-	pthread_t upd_thread;
+	pthread_t myUpdThread;
 
 	std::string myErrorMessage;
 
-public:
 	std::string myGenericUrl;
 
-
+friend void *updGenLinks( void *ptr );
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

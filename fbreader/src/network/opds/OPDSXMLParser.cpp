@@ -18,7 +18,6 @@
  */
 
 #include <cstdlib>
-#include <cstdio>
 
 #include <ZLStringUtil.h>
 #include <ZLXMLNamespace.h>

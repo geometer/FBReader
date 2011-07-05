@@ -18,7 +18,6 @@
  */
 
 #include <ZLibrary.h>
-#include <stdio.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLLanguageUtil.h>
@@ -553,11 +552,11 @@ bool BooksDB::checkBookList(const Book &book) {
 	return checkRes > 0;
 }
 
-bool BooksDB::saveNetworkLink(const shared_ptr<NetworkLink> link) {
+bool BooksDB::saveNetworkLink(NetworkLink& link) {
 	if (!isInitialized()) {
 		return false;
 	}
-	mySaveNetworkLink->setNetworkLink(link);
+	mySaveNetworkLink->setNetworkLink(&link);
 	return executeAsTransaction(*mySaveNetworkLink);
 }
 
@@ -576,19 +575,26 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 		while (urlreader->next()) {
 			linkUrls[urlreader->textValue(0, std::string())] = urlreader->textValue(1, std::string());
 		}
-		std::string iconUrl = "";
+		std::string iconUrl;
 		if (linkUrls.count("icon") != 0) {
 			iconUrl = linkUrls["icon"];
+			linkUrls.erase("icon");
 		}
+		std::string siteName = reader->textValue(2, std::string());
+		std::string predId = reader->textValue(5, std::string());
+		std::string title = reader->textValue(1, std::string());
+		std::string summary = reader->textValue(3, std::string());
+
 		shared_ptr<NetworkLink> link = new OPDSLink(
-			reader->textValue(2, std::string()),
-			reader->textValue(1, std::string()),
-			reader->textValue(3, std::string()),
-			iconUrl,
-			linkUrls
+			siteName,
+			linkUrls,
+			predId
 		);
-		link->Enabled = reader->intValue(6);
-		link->PredefinedId = reader->textValue(5, std::string());
+		link->setTitle(title);
+		link->setSummary(summary);
+		link->setIcon(iconUrl);
+		link->setEnabled(reader->intValue(6));
+
 		links.push_back(link);
 	}
 

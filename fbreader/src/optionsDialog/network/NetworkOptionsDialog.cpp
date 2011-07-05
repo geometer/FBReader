@@ -88,16 +88,16 @@ NetworkOptionsDialog::NetworkOptionsDialog() : AbstractOptionsDialog(ZLResourceK
 	NetworkLinkCollection &linkCollection = NetworkLinkCollection::Instance();
 	const size_t linkCollectionSize = linkCollection.size();
 	const size_t linkCollectionSizeMinusOne = linkCollectionSize - 1;
-	for (size_t i = 0; i < linkCollectionSize; ++i) {
-		NetworkLink &link = linkCollection.link(i);
-		if (i < linkCollectionSizeMinusOne) {
-			NetworkLink &link2 = linkCollection.link(++i);
-			libraryTab.addOptions(link.SiteName, "", new NetworkLinkBooleanOptionEntry(link.OnOption),
-					link2.SiteName, "", new NetworkLinkBooleanOptionEntry(link2.OnOption));
-		} else {
-			libraryTab.addOption(link.SiteName, "", new NetworkLinkBooleanOptionEntry(link.OnOption));
-		}
-	}
+//	for (size_t i = 0; i < linkCollectionSize; ++i) {
+//		NetworkLink &link = linkCollection.link(i);
+//		if (i < linkCollectionSizeMinusOne) {
+//			NetworkLink &link2 = linkCollection.link(++i);
+//			libraryTab.addOptions(link.SiteName, "", new NetworkLinkBooleanOptionEntry(link.OnOption),
+//					link2.SiteName, "", new NetworkLinkBooleanOptionEntry(link2.OnOption));
+//		} else {
+//			libraryTab.addOption(link.SiteName, "", new NetworkLinkBooleanOptionEntry(link.OnOption));
+//		}
+//	}
 
 	std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > additional;
 	createIntegrationTab(fbreader.webBrowserCollection(), ZLResourceKey("Web"), additional);

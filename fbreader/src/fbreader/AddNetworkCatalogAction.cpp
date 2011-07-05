@@ -21,7 +21,6 @@
 #include <ZLDialog.h>
 #include <ZLNetworkManager.h>
 #include <ZLibrary.h>
-#include <stdio.h>
 
 #include "../options/FBCategoryKey.h"
 
@@ -31,7 +30,6 @@
 #include "../network/NetworkLinkCollection.h"
 #include "../network/opds/OPDSLink_FeedReader.h"
 #include "../network/opds/OPDSXMLParser.h"
-#include "../database/booksdb/BooksDB.h"
 
 AddNetworkCatalogAction::AddNetworkCatalogAction() : ModeDependentAction(FBReader::NETWORK_LIBRARY_MODE) {
 }
@@ -54,13 +52,13 @@ void AddNetworkCatalogAction::run() {
 
 		shared_ptr<ZLDialog> checkDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("checkNetworkCatalogDialog"));
 		ZLStringOption NameOption(ZLCategoryKey::NETWORK, "name", "title", "");
-		NameOption.setValue(link->Title);
+		NameOption.setValue(link->getTitle());
 		checkDialog->addOption(ZLResourceKey("name"), NameOption);
 		ZLStringOption SubNameOption(ZLCategoryKey::NETWORK, "subname", "title", "");
-		SubNameOption.setValue(link->Summary);
+		SubNameOption.setValue(link->getSummary());
 		checkDialog->addOption(ZLResourceKey("subname"), SubNameOption);
 		ZLStringOption IconOption(ZLCategoryKey::NETWORK, "icon", "title", "");
-		IconOption.setValue(link->Icon);
+		IconOption.setValue(link->getIcon());
 		checkDialog->addOption(ZLResourceKey("icon"), IconOption);
 
 		checkDialog->addButton(ZLResourceKey("add"), true);
@@ -68,15 +66,10 @@ void AddNetworkCatalogAction::run() {
 		if (checkDialog->run()) {
 			checkDialog->acceptValues();
 			checkDialog.reset();
-			link->Title = NameOption.value();
-			link->Summary = SubNameOption.value();
-			link->Icon = IconOption.value();
-			link->myLinks.erase("icon");
-			if (IconOption.value() != std::string()) {
-				link->myLinks["icon"] = IconOption.value();
-			}
-			BooksDB::Instance().saveNetworkLink(link);
-			NetworkLinkCollection::Instance().reReadLinks();
+			link->setTitle(NameOption.value());
+			link->setSummary(SubNameOption.value());
+			link->setIcon(IconOption.value());
+			NetworkLinkCollection::Instance().saveLink(*link);
 		}
 	}
 }

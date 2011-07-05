@@ -21,7 +21,6 @@
 #include <ZLImage.h>
 #include <ZLExecutionData.h>
 #include <ZLTimeManager.h>
-#include <stdio.h>
 
 #include "NetworkView.h"
 #include "NetworkNodes.h"

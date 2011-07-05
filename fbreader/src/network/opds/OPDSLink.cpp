@@ -113,12 +113,10 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 }
 
 OPDSLink::OPDSLink(
-	const std::string &siteName,
-	const std::string &title,
-	const std::string &summary,
-	const std::string &icon,
-	const std::map<std::string,std::string> &links
-) : NetworkLink(siteName, title, summary, icon, links) {
+		const std::string &siteName,
+		const std::map<std::string,std::string> &links,
+		const std::string &predefinedId
+) : NetworkLink(siteName, links, predefinedId) {
 }
 
 OPDSLink::~OPDSLink() {
@@ -126,9 +124,9 @@ OPDSLink::~OPDSLink() {
 
 shared_ptr<NetworkItem> OPDSLink::libraryItem() const {
 	std::map<NetworkItem::URLType,std::string> urlMap;
-	urlMap[NetworkItem::URL_COVER] = Icon;
+	urlMap[NetworkItem::URL_COVER] = getIcon();
 	urlMap[NetworkItem::URL_CATALOG] = url(URL_MAIN);
-	return new OPDSCatalogItem(*this, Title, Summary, urlMap);
+	return new OPDSCatalogItem(*this, getTitle(), getSummary(), urlMap);
 }
 
 const std::string OPDSLink::searchURL(const std::string &query) const {

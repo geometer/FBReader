@@ -30,7 +30,6 @@
 #include <ZLTimeManager.h>
 #include <ZLLogger.h>
 #include <ZLNetworkManager.h>
-#include <stdio.h>
 
 #include <ZLTextStyleCollection.h>
 #include <ZLTextHyphenator.h>

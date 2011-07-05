@@ -27,7 +27,6 @@
 #include <ZLResource.h>
 #include <ZLNetworkManager.h>
 #include <ZLNetworkUtil.h>
-#include <stdio.h>
 #include <ZLibrary.h>
 #include "../fbreader/FBReader.h"
 
@@ -89,15 +88,24 @@ bool NetworkLinkCollection::Comparator::operator() (
 	const shared_ptr<NetworkLink> &second
 ) const {
 	return
-		removeLeadingNonAscii(first->Title) <
-		removeLeadingNonAscii(second->Title);
+		removeLeadingNonAscii(first->getTitle()) <
+		removeLeadingNonAscii(second->getTitle());
+}
+
+void NetworkLinkCollection::deleteLink(NetworkLink& link) {
+	BooksDB::Instance().deleteNetworkLink(link.SiteName);
+	reReadLinks();
+}
+
+void NetworkLinkCollection::saveLink(NetworkLink& link) {
+	BooksDB::Instance().saveNetworkLink(link);
+	reReadLinks();
 }
 
 void NetworkLinkCollection::reReadLinks() {
 	BooksDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 	FBReader::Instance().invalidateNetworkView();
-	FBReader::Instance().invalidateAccountDependents();
 	FBReader::Instance().refreshWindow();
 }
 
@@ -106,7 +114,7 @@ void NetworkLinkCollection::reReadLinksWithoutRefreshing() {
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 }
 
-void *upd_gen_links( void *ptr ) {
+void *updGenLinks( void *ptr ) {
 	NetworkLinkCollection* nc = (NetworkLinkCollection*) ptr;
 	nc->threadUpdating = true;
 	std::string genericUrl = nc->myGenericUrl;
@@ -115,7 +123,7 @@ void *upd_gen_links( void *ptr ) {
 	ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, zreader));
 	std::vector<shared_ptr<NetworkLink> > templinks = reader->myNetworkLinks;
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = templinks.begin(); it != templinks.end(); ++it) {
-		BooksDB::Instance().saveNetworkLink(*it);
+		BooksDB::Instance().saveNetworkLink(**it);
 	}
 	nc->reReadLinksWithoutRefreshing();
 	nc->threadUpdating = false;
@@ -136,11 +144,11 @@ NetworkLinkCollection::NetworkLinkCollection() :
 
 void NetworkLinkCollection::UpdateGenericLinks(std::string genericUrl) {
 	myGenericUrl = genericUrl;
-	pthread_create( &upd_thread, NULL, upd_gen_links, (void*) this);
+	pthread_create( &myUpdThread, NULL, updGenLinks, (void*) this);
 }
 
 NetworkLinkCollection::~NetworkLinkCollection() {
-	pthread_join(upd_thread, NULL);
+	pthread_join(myUpdThread, NULL);
 }
 
 static std::string normalize(const std::string &url) {
@@ -309,7 +317,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std:
 
 	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		NetworkLink &link = **it;
-		if (link.OnOption.value()) {
+		if (link.isEnabled()) {
 			shared_ptr<NetworkOperationData> opData = new NetworkOperationData(link);
 			opDataVector.push_back(opData);
 			shared_ptr<ZLExecutionData> data = link.simpleSearchData(*opData, pattern);
@@ -354,7 +362,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 
 	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		NetworkLink &link = **it;
-		if (link.OnOption.value()) {
+		if (link.isEnabled()) {
 			shared_ptr<NetworkOperationData> opData = new NetworkOperationData(link);
 			opDataVector.push_back(opData);
 			shared_ptr<ZLExecutionData> data = link.advancedSearchData(*opData, titleAndSeries, author, tag, annotation);
@@ -401,7 +409,7 @@ NetworkLink &NetworkLinkCollection::link(size_t index) const {
 size_t NetworkLinkCollection::numberOfEnabledLinks() const {
 	size_t count = 0;
 	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
-		if ((*it)->OnOption.value()) {
+		if ((*it)->isEnabled()) {
 			++count;
 		}
 	}
