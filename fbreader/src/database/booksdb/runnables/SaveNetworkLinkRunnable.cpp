@@ -94,7 +94,7 @@ bool SaveNetworkLinkRunnable::updateNetworkLink(int linkId) {
 			allExecuted = allExecuted && myDeleteNetworkLinkUrl->execute();
 		} else {
 			((DBTextValue &) *myUpdateNetworkLinkUrl->parameter("@key").value()) = key;
-			((DBTextValue &) *myUpdateNetworkLinkUrl->parameter("@url").value()) = url;
+			((DBTextValue &) *myUpdateNetworkLinkUrl->parameter("@url").value()) = linksToCheck[key];
 			((DBIntValue &) *myUpdateNetworkLinkUrl->parameter("@link_id").value()) = linkId;
 			linksToCheck.erase(key);
 			allExecuted = allExecuted && myUpdateNetworkLinkUrl->execute();
