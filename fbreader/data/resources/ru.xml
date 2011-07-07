@@ -616,7 +616,7 @@
 		</node>
 		<node name="errorLinkBox">
 			<node name="title" value="Ошибка при получении данных" />
-			<node name="message" value="Неправильный адрес или отсутствует сеть." />
+			<node name="message" value="%s" />
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" value="Удалить книгу" />

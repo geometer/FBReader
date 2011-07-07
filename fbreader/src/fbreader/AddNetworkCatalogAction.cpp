@@ -21,6 +21,8 @@
 #include <ZLDialog.h>
 #include <ZLNetworkManager.h>
 #include <ZLibrary.h>
+#include <ZLStringUtil.h>
+
 
 #include "../options/FBCategoryKey.h"
 
@@ -48,10 +50,9 @@ void AddNetworkCatalogAction::run() {
 		shared_ptr<NetworkLink> link = 0;
 		shared_ptr<OPDSFeedReader> fr = new OPDSLink::FeedReader(link, url);
 		shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
-		ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr));
-
+		const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(ZLResourceKey("errorLinkBox")), ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr)));
 		if (link == 0) {
-			ZLDialogManager::Instance().informationBox(ZLResourceKey("errorLinkBox"));
+			ZLDialogManager::Instance().informationBox(ZLResourceKey("errorLinkBox"), message);
 			return;
 		}
 
