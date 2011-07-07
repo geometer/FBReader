@@ -45,11 +45,10 @@ private:
 public:
 	class GenericReader;
 	class FeedReader;
+	class GenericFeedReader;
 
 	OPDSLink(
-		const std::string &siteName,
-		const std::map<std::string,std::string> &links,
-		const std::string &predefinedId = std::string()
+		const std::string &siteName
 	);
 
 public:

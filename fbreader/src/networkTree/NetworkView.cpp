@@ -168,18 +168,40 @@ void NetworkView::makeUpToDate() {
 	size_t nodeCount = 0;
 	for (size_t i = 0; i < collection.size(); ++i) {
 		NetworkLink &link = collection.link(i);
-//		if (!link.OnOption.value()) {
+//		if (!link.isEnabled()) {
 //			continue;
 //		}
+		bool processed = false;
 		while (nodeIt != rootChildren.end() &&
 					 (*nodeIt)->isInstanceOf(NetworkCatalogNode::TYPE_ID)) {
 			const NetworkLink &nodeLink = ((NetworkCatalogRootNode*)*nodeIt)->link();
-							bool found = false;
-			nodesToDelete.insert(*nodeIt++);
-			++nodeCount;
+			if (&nodeLink == &link && nodeLink.SiteName == link.SiteName) {
+				((NetworkCatalogRootNode*)*nodeIt)->reloadLink();
+				++nodeIt;
+				++nodeCount;
+				processed = true;
+				break;
+			} else {
+				bool found = false;
+				for (size_t j = i + 1; j < collection.size(); ++j) {
+					if (&nodeLink == &collection.link(j) && nodeLink.SiteName == collection.link(j).SiteName) {
+						found = true;
+						((NetworkCatalogRootNode*)*nodeIt)->reloadLink();
+						break;
+					}
+				}
+				if (!found) {
+					nodesToDelete.insert(*nodeIt++);
+					++nodeCount;
+				} else {
+					break;
+				}
+			}
 		}
-		NetworkCatalogNode *ptr = new NetworkCatalogRootNode(&rootNode(), link, nodeCount++);
-		ptr->item().onDisplayItem();
+		if (!processed) {
+			NetworkCatalogNode *ptr = new NetworkCatalogRootNode(&rootNode(), link, nodeCount++);
+			ptr->item().onDisplayItem();
+		}
 	}
 
 	SearchResultNode *srNode = 0;

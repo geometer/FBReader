@@ -492,13 +492,3 @@ FilterLibraryAction::FilterLibraryAction() : ModeDependentAction(FBReader::LIBRA
 
 void FilterLibraryAction::run() {
 }
-
-bool ShowNetworkLibraryDisabledAction::isVisible() const {
-	return ModeDependentAction::isVisible() && NetworkLinkCollection::Instance().threadUpdating;
-}
-
-void ShowNetworkLibraryDisabledAction::run() {
-}
-
-ShowNetworkLibraryDisabledAction::ShowNetworkLibraryDisabledAction(int visibleInModes) :
-	ModeDependentAction(visibleInModes) {}

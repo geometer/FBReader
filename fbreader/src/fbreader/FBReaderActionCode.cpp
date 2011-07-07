@@ -22,7 +22,6 @@
 const std::string ActionCode::SHOW_READING = "showReading";
 const std::string ActionCode::SHOW_LIBRARY = "showLibrary";
 const std::string ActionCode::SHOW_NETWORK_LIBRARY = "showNetLibrary";
-const std::string ActionCode::SHOW_NETWORK_LIBRARY_DISABLED = "showNetLibraryDisabled";
 const std::string ActionCode::SHOW_TOC = "toc";
 const std::string ActionCode::SHOW_HELP = "showHelp";
 const std::string ActionCode::SHOW_BOOK_INFO_DIALOG = "bookInfo";

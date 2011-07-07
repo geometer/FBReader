@@ -113,10 +113,8 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 }
 
 OPDSLink::OPDSLink(
-		const std::string &siteName,
-		const std::map<std::string,std::string> &links,
-		const std::string &predefinedId
-) : NetworkLink(siteName, links, predefinedId) {
+		const std::string &siteName
+) : NetworkLink(siteName) {
 }
 
 OPDSLink::~OPDSLink() {

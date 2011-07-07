@@ -74,20 +74,20 @@ void OPDSLink::FeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed
 	}
 
 	myLink = new OPDSLink(
-		myBaseURL,
-		links
+		myBaseURL
 	);
 
 	myLink->setTitle(feed->title());
 	myLink->setSummary(summary);
 	myLink->setIcon(iconURL);
+	myLink->setLinks(links);
 }
 
 
 void OPDSLink::FeedReader::processFeedEnd() {
 }
 
-void OPDSLink::FeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
+void OPDSLink::FeedReader::processFeedEntry(shared_ptr<OPDSEntry>) {
 }
 
 

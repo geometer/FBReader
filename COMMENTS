@@ -5,12 +5,5 @@
 
 
 *** Code
-  ** No C headers in cpp code: newer use <stdio.h>, <cstdio> is much better
-  ** And <ZLLogger.h> is much better than <cstdio>
-  ** naming convention is broken (class fields with no 'my' prefix, underscores in names)
-  ** header style is broken: please separate fields and methods and avoid public (non-const) fields usages (see fbreader/src/network/NetworkLinkCollection.h for an example of bad code)
   ** ZLMimeType::APPLICATION_ATOM_XML_OPDS: ZLMimeType should be converted into a class with name (application/atom+xml) and attribute (profile=opds-catalog), see java code for a sample
-  ** ShowNetworkLibraryDisabledAction should be removed; network library should be available everytime; if we cannot show a list of catalogs, waiting message (see ZLDialogManager) should be shown
-  ** Please avoid comments like 'qqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq'; copyright notices should be added into all the new files
-  ** XML parser for OPDS is written twice (OPDSLink::Reader and OPDSLink::GenericReader); this code should be rewritten as we discussed a time ago
   ** network database should be implemented as a separate class, not as a part of BooksDB

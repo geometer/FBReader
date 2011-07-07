@@ -245,7 +245,7 @@ void NetworkCatalogRootNode::DontShowAction::run() {
 }
 
 bool NetworkCatalogRootNode::DontShowAction::makesSense() const {
-	return NetworkLinkCollection::Instance().numberOfEnabledLinks() > 1;
+	return NetworkLinkCollection::Instance().numberOfEnabledLinks() > 1 && myLink.getPredefinedId() != std::string();
 }
 
 NetworkCatalogRootNode::DeleteAction::DeleteAction(NetworkLink &link) : myLink(link) {
@@ -265,7 +265,7 @@ void NetworkCatalogRootNode::DeleteAction::run() {
 }
 
 bool NetworkCatalogRootNode::DeleteAction::makesSense() const {
-	return myLink.PredefinedId == std::string();
+	return myLink.getPredefinedId() == std::string();
 }
 
 NetworkCatalogRootNode::EditAction::EditAction(NetworkLink &link) : myLink(link) {
@@ -283,9 +283,6 @@ void NetworkCatalogRootNode::EditAction::run() {
 	ZLStringOption SubNameOption(ZLCategoryKey::NETWORK, "subname", "title", "");
 	SubNameOption.setValue(myLink.getSummary());
 	checkDialog->addOption(ZLResourceKey("subname"), SubNameOption);
-	ZLStringOption IconOption(ZLCategoryKey::NETWORK, "icon", "title", "");
-	IconOption.setValue(myLink.getIcon());
-	checkDialog->addOption(ZLResourceKey("icon"), IconOption);
 
 	checkDialog->addButton(ZLResourceKey("edit"), true);
 	checkDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
@@ -294,13 +291,12 @@ void NetworkCatalogRootNode::EditAction::run() {
 		checkDialog.reset();
 		myLink.setTitle(NameOption.value());
 		myLink.setSummary(SubNameOption.value());
-		myLink.setIcon(IconOption.value());
 		NetworkLinkCollection::Instance().saveLink(myLink);
 	}
 }
 
 bool NetworkCatalogRootNode::EditAction::makesSense() const {
-	return myLink.PredefinedId == std::string();
+	return myLink.getPredefinedId() == std::string();
 }
 
 NetworkCatalogRootNode::RefillAccountAction::RefillAccountAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, true) {
@@ -361,4 +357,8 @@ void NetworkCatalogRootNode::RegisterUserAction::run() {
 	RegisterUserDialog::run(myManager);
 	FBReader::Instance().invalidateAccountDependents();
 	FBReader::Instance().refreshWindow();
+}
+
+void NetworkCatalogRootNode::reloadLink() {
+	reloadItem(myLink.libraryItem());
 }

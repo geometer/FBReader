@@ -50,6 +50,11 @@ void AddNetworkCatalogAction::run() {
 		shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
 		ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr));
 
+		if (link == 0) {
+			ZLDialogManager::Instance().informationBox(ZLResourceKey("errorLinkBox"));
+			return;
+		}
+
 		shared_ptr<ZLDialog> checkDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("checkNetworkCatalogDialog"));
 		ZLStringOption NameOption(ZLCategoryKey::NETWORK, "name", "title", "");
 		NameOption.setValue(link->getTitle());
@@ -58,8 +63,6 @@ void AddNetworkCatalogAction::run() {
 		SubNameOption.setValue(link->getSummary());
 		checkDialog->addOption(ZLResourceKey("subname"), SubNameOption);
 		ZLStringOption IconOption(ZLCategoryKey::NETWORK, "icon", "title", "");
-		IconOption.setValue(link->getIcon());
-		checkDialog->addOption(ZLResourceKey("icon"), IconOption);
 
 		checkDialog->addButton(ZLResourceKey("add"), true);
 		checkDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
@@ -68,7 +71,6 @@ void AddNetworkCatalogAction::run() {
 			checkDialog.reset();
 			link->setTitle(NameOption.value());
 			link->setSummary(SubNameOption.value());
-			link->setIcon(IconOption.value());
 			NetworkLinkCollection::Instance().saveLink(*link);
 		}
 	}

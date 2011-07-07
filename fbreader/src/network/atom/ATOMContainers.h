@@ -40,12 +40,14 @@ public:
 	std::vector<shared_ptr<ATOMLink> > &links() { return myLinks; }
 
 	shared_ptr<ATOMPublished> published() { return myPublished; }
+	shared_ptr<ATOMIcon> icon() { return myIcon; }
 	const std::string &rights() { return myRights; }
 	const std::string &summary() { return mySummary; }
 	const std::string &title() { return myTitle; }
 	shared_ptr<ATOMUpdated> updated() { return myUpdated; }
 
 	void setPublished(shared_ptr<ATOMPublished> published) { myPublished = published; }
+	void setIcon(shared_ptr<ATOMIcon> icon) { myIcon = icon; }
 	void setRights(const std::string &rights) { myRights = rights; }
 	void setSummary(const std::string &summary) { mySummary = summary; }
 	void setTitle(const std::string &title) { myTitle = title; }
@@ -62,6 +64,7 @@ private:
 	//shared_ptr<ATOMContent> myContent; TODO: implement ATOMContent
 	std::vector<shared_ptr<ATOMContributor> > myContributors;
 	std::vector<shared_ptr<ATOMLink> > myLinks;
+	shared_ptr<ATOMIcon> myIcon;
 	shared_ptr<ATOMPublished> myPublished;
 	std::string myRights;  // TODO: implement ATOMTextConstruct
 	//shared_ptr<ATOMSource> mySource; // TODO: implement ATOMSource

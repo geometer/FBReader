@@ -41,7 +41,7 @@
 			<node name="reload" value="Обновить" />
 			<node name="dontShow" value="Скрыть этот каталог" />
 			<node name="delete" value="Удалить этот каталог" />
-			<node name="edit" value="Редактировать этот каталог" />
+			<node name="edit" value="Редактировать описание" />
 			<node name="refillAccount" value="Пополнить счёт (текущий счёт: %s)" />
 			<node name="register" value="Зарегистрироваться" />
 			<node name="passwordRecovery" value="Забыли пароль?" />
@@ -613,6 +613,10 @@
 		<node name="deleteConfirmBox">
 			<node name="title" value="Отключение каталога" />
 			<node name="message" value="Вы уверены, что хотите удалить&#10;каталог «%s»?&#10;&#10;" />
+		</node>
+		<node name="errorLinkBox">
+			<node name="title" value="Ошибка при получении данных" />
+			<node name="message" value="Неправильный адрес или отсутствует сеть." />
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" value="Удалить книгу" />

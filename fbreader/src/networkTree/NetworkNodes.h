@@ -24,8 +24,9 @@
 
 #include "../network/NetworkItems.h"
 
-class NetworkBookCollection;
 class NetworkLink;
+
+class NetworkBookCollection;
 
 class NetworkContainerNode : public FBReaderNode {
 
@@ -94,6 +95,7 @@ protected:
 	std::string title() const;
 	std::string summary() const;
 	virtual shared_ptr<ZLImage> lastResortCoverImage() const;
+	void reloadItem(shared_ptr<NetworkItem> item);
 
 private:
 	shared_ptr<NetworkItem> myItem;
@@ -119,6 +121,8 @@ public:
 	NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition = (size_t)-1);
 
 	const NetworkLink &link() const;
+
+	void reloadLink();
 
 private:
 	void init();

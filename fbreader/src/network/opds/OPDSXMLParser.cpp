@@ -60,6 +60,11 @@ const std::string OPDSXMLParser::KEY_PRICE = "price";
 const std::string OPDSXMLParser::KEY_CURRENCY = "currency";
 const std::string OPDSXMLParser::KEY_FORMAT = "format";
 
+static const std::string TAG_SEARCH_DESCRIPTION = "fbreader:advancedSearch";
+static const std::string TAG_AUTHENTICATION = "fbreader:authentication";
+static const std::string TAG_URL_REWRITING_RULES = "fbreader:urlRewritingRule";
+static const std::string TAG_RELATION_ALIASES = "fbreader:relationAlias";
+
 OPDSXMLParser::OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader) :myFeedReader(feedReader) {
 	myState = START;
 }
@@ -186,6 +191,10 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 					myCategory = new ATOMCategory();
 					myCategory->readAttributes(attributeMap);
 					myState = FE_CATEGORY;
+				} else if (tagName == TAG_ICON) {
+					myIcon = new ATOMIcon();
+					myIcon->readAttributes(attributeMap);
+					myState = FE_ICON;
 				} else if (tagName == TAG_LINK) {
 					myLink = new ATOMLink();
 					myLink->readAttributes(attributeMap);
@@ -440,6 +449,16 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			if (tagPrefix == myAtomNamespaceId && tagName == TAG_AUTHOR) {
 				myEntry->authors().push_back(myAuthor);
 				myAuthor.reset();
+				myState = F_ENTRY;
+			} 
+			break;
+		case FE_ICON:
+			if (tagPrefix == myAtomNamespaceId && tagName == TAG_ICON) {
+				myIcon->setUri(myBuffer);
+				if (!myEntry.isNull()) {
+					myEntry->setIcon(myIcon);
+				}
+				myIcon.reset();
 				myState = F_ENTRY;
 			} 
 			break;

@@ -43,13 +43,9 @@ std::string NetworkLink::CertificatesPathPrefix() {
 }
 
 NetworkLink::NetworkLink(
-	const std::string &siteName,
-	const std::map<std::string,std::string> &links,
-	const std::string &predefinedId
+	const std::string &siteName
 ) :
 	SiteName(ZLStringUtil::stringStartsWith(siteName, "www.") ? siteName.substr(std::string("www.").length()) : siteName),
-	Links(links),
-	PredefinedId(predefinedId),
 	myEnabled(true) {
 }
 
@@ -57,8 +53,8 @@ NetworkLink::~NetworkLink() {
 }
 
 std::string NetworkLink::url(const std::string &urlId) const {
-	std::map<std::string,std::string>::const_iterator it = Links.find(urlId);
-	return (it != Links.end()) ? it->second : std::string();
+	std::map<std::string,std::string>::const_iterator it = myLinks.find(urlId);
+	return (it != myLinks.end()) ? it->second : std::string();
 }
 
 shared_ptr<ZLExecutionData> NetworkLink::resume(NetworkOperationData &result) const {
@@ -75,6 +71,15 @@ void NetworkLink::setSummary(const std::string& summary) {
 void NetworkLink::setIcon(const std::string& icon) {
 	myIcon = icon;
 }
+
+void NetworkLink::setPredefinedId(const std::string& id) {
+	myPredefinedId = id;
+}
+
+void NetworkLink::setLinks(const std::map<std::string,std::string>& links) {
+	myLinks = links;
+}
+
 void NetworkLink::setEnabled(bool enabled) {
 	myEnabled = enabled;
 }
@@ -85,9 +90,26 @@ std::string NetworkLink::getTitle() const {
 std::string NetworkLink::getSummary() const {
 	return mySummary;
 }
+
+std::string NetworkLink::getPredefinedId() const {
+	return myPredefinedId;
+}
+
+const std::map<std::string,std::string>& NetworkLink::getLinks() const {
+	return myLinks;
+}
+
 std::string NetworkLink::getIcon() const {
 	return myIcon;
 }
 bool NetworkLink::isEnabled() const {
 	return myEnabled;
+}
+
+void NetworkLink::loadFrom(const NetworkLink & link) {
+	myTitle = link.myTitle;
+	myIcon = link.myIcon;
+	mySummary = link.mySummary;
+	myLinks = link.myLinks;
+	myPredefinedId = link.myPredefinedId;
 }

@@ -51,9 +51,7 @@ public:
 
 protected:
 	NetworkLink(
-		const std::string &siteName,
-		const std::map<std::string,std::string> &links,
-		const std::string &predefinedId = std::string()
+		const std::string &siteName
 	);
 
 public:
@@ -63,12 +61,18 @@ public:
 	void setTitle(const std::string& title);
 	void setSummary(const std::string& summary);
 	void setIcon(const std::string& icon);
+	void setLinks(const std::map<std::string,std::string>& links);
+	void setPredefinedId(const std::string& id);
 	void setEnabled(bool enabled);
 
 	std::string getTitle() const;
 	std::string getSummary() const;
 	std::string getIcon() const;
+	const std::map<std::string,std::string>& getLinks() const;
+	std::string getPredefinedId() const;
 	bool isEnabled() const;
+
+	void loadFrom(const NetworkLink & link);
 
 
 public:
@@ -83,13 +87,13 @@ public:
 
 public:
 	const std::string SiteName;
-	const std::map<std::string,std::string> Links;
-	const std::string PredefinedId;
 
 private:
 	std::string myTitle;
 	std::string myIcon;
 	std::string mySummary;
+	std::map<std::string,std::string> myLinks;
+	std::string myPredefinedId;
 	bool myEnabled;
 
 private: // disable copying

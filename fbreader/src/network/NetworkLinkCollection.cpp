@@ -41,7 +41,7 @@
 #include "BookReference.h"
 
 #include "opds/OPDSLink.h"
-#include "opds/OPDSLink_GenericReader.h"
+#include "opds/OPDSLink_GenericFeedReader.h"
 #include "opds/OPDSLink_FeedReader.h"
 #include "opds/OPDSXMLParser.h"
 
@@ -88,48 +88,57 @@ bool NetworkLinkCollection::Comparator::operator() (
 	const shared_ptr<NetworkLink> &second
 ) const {
 	return
-		removeLeadingNonAscii(first->getTitle()) <
-		removeLeadingNonAscii(second->getTitle());
+		removeLeadingNonAscii(first->SiteName) <
+		removeLeadingNonAscii(second->SiteName);
 }
 
 void NetworkLinkCollection::deleteLink(NetworkLink& link) {
 	BooksDB::Instance().deleteNetworkLink(link.SiteName);
-	reReadLinks();
-}
-
-void NetworkLinkCollection::saveLink(NetworkLink& link) {
-	BooksDB::Instance().saveNetworkLink(link);
-	reReadLinks();
-}
-
-void NetworkLinkCollection::reReadLinks() {
-	BooksDB::Instance().loadNetworkLinks(myLinks);
-	std::sort(myLinks.begin(), myLinks.end(), Comparator());
+	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+		if (&(**it) == &link) {
+			myLinks.erase(it);
+			break;
+		}
+	}
 	FBReader::Instance().invalidateNetworkView();
 	FBReader::Instance().refreshWindow();
 }
 
-void NetworkLinkCollection::reReadLinksWithoutRefreshing() {
-	BooksDB::Instance().loadNetworkLinks(myLinks);
-	std::sort(myLinks.begin(), myLinks.end(), Comparator());
+void NetworkLinkCollection::saveLink(NetworkLink& link) {
+	bool found = false;
+	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+		if (&(**it) == &link) {
+			found = true;
+			break;
+		} else if ((**it).SiteName == link.SiteName) {
+			(*it)->loadFrom(link);
+			found = true;
+			break;
+		}
+	}
+	if (!found) {
+		shared_ptr<NetworkLink> newlink = new OPDSLink(link.SiteName);
+		newlink->loadFrom(link);
+		myLinks.push_back(newlink);
+		std::sort(myLinks.begin(), myLinks.end(), Comparator());
+	}
+	BooksDB::Instance().saveNetworkLink(link);
+	FBReader::Instance().invalidateNetworkView();
+	FBReader::Instance().refreshWindow();
 }
 
 void *updGenLinks( void *ptr ) {
 	NetworkLinkCollection* nc = (NetworkLinkCollection*) ptr;
 	nc->threadUpdating = true;
 	std::string genericUrl = nc->myGenericUrl;
-	OPDSLink::GenericReader* reader = new OPDSLink::GenericReader();
-	shared_ptr<ZLXMLReader> zreader = reader;
-	ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, zreader));
-	std::vector<shared_ptr<NetworkLink> > templinks = reader->myNetworkLinks;
-	for (std::vector<shared_ptr<NetworkLink> >::iterator it = templinks.begin(); it != templinks.end(); ++it) {
-		BooksDB::Instance().saveNetworkLink(**it);
+	std::vector<shared_ptr<NetworkLink> > links;
+	shared_ptr<OPDSFeedReader> fr = new OPDSLink::GenericFeedReader(links);
+	shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
+	ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, prsr));
+	for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
+		nc->saveLink(**it);
 	}
-	nc->reReadLinksWithoutRefreshing();
 	nc->threadUpdating = false;
-	FBReader::Instance().invalidateNetworkView();
-	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().refreshWindow();
 }
 
 NetworkLinkCollection::NetworkLinkCollection() :
