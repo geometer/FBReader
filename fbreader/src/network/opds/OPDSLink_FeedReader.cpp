@@ -41,7 +41,7 @@ void OPDSLink::FeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed
 	for (size_t i = 0; i < feed->links().size(); ++i) {
 		ATOMLink &link = *(feed->links()[i]);
 		const std::string &href = link.href();
-		const std::string &type = link.type();
+		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = link.rel();
 		if (rel == "search") {
 			if (type == ZLMimeType::APPLICATION_ATOM_XML) {

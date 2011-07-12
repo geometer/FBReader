@@ -30,7 +30,7 @@ std::string OpenSearchXMLReader::convertOpenSearchURL(const std::string& raws) {
 void OpenSearchXMLReader::startElementHandler(const char *tag, const char **attributes) {
 	if (TAG_URL == tag) {
 		const char *type = attributeValue(attributes, "type");
-		if (std::string(type) == ZLMimeType::APPLICATION_ATOM_XML) {
+		if (ZLMimeType::get(std::string(type)) == ZLMimeType::APPLICATION_ATOM_XML) {
 			const char *templ = attributeValue(attributes, "template");
 			if (templ != 0) {
 				myTemplateURL = convertOpenSearchURL(templ);

@@ -52,9 +52,9 @@ void NetworkOPDSFeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> fee
 	for (size_t i = 0; i < feed->links().size(); ++i) {
 		ATOMLink &link = *(feed->links()[i]);
 		const std::string &href = link.href();
-		const std::string &type = link.type();
-		const std::string &rel = myLink.relation(link.rel(), type);
-		if (type == ZLMimeType::APPLICATION_ATOM_XML || type == ZLMimeType::APPLICATION_ATOM_XML_OPDS) {
+		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
+		const std::string &rel = myLink.relation(link.rel(), link.type());
+		if (type == ZLMimeType::APPLICATION_ATOM_XML) {
 			if (rel == "self") {
 			} else if (rel == "next") {
 				myData.ResumeURI = href;
@@ -78,11 +78,12 @@ void NetworkOPDSFeedReader::processFeedEnd() {
 
 
 static BookReference::Format formatByZLMimeType(const std::string &mimeType) {
-	if (mimeType == ZLMimeType::APPLICATION_FB2_ZIP) {
+	shared_ptr<ZLMimeType> type = ZLMimeType::get(mimeType);
+	if (type == ZLMimeType::APPLICATION_FB2_ZIP) {
 		return BookReference::FB2_ZIP;
-	} else if (mimeType == ZLMimeType::APPLICATION_EPUB_ZIP) {
+	} else if (type == ZLMimeType::APPLICATION_EPUB_ZIP) {
 		return BookReference::EPUB;
-	} else if (mimeType == ZLMimeType::APPLICATION_MOBIPOCKET_EBOOK) {
+	} else if (type == ZLMimeType::APPLICATION_MOBIPOCKET_EBOOK) {
 		return BookReference::MOBIPOCKET;
 	}
 	return BookReference::NONE;
@@ -159,8 +160,8 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 	for (size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
 		const std::string &href = link.href();
-		const std::string &type = link.type();
-		const std::string &rel = myLink.relation(link.rel(), type);
+		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
+		const std::string &rel = myLink.relation(link.rel(), link.type());
 		const BookReference::Type referenceType = typeByRelation(rel);
 		if (rel == OPDSConstants::REL_COVER) {
 			if (urlMap[NetworkItem::URL_COVER].empty() && ZLMimeType::isImage(type)) {
@@ -194,7 +195,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 				}
 			}
 		} else if (referenceType != BookReference::UNKNOWN) {
-			BookReference::Format format = formatByZLMimeType(type);
+			BookReference::Format format = formatByZLMimeType(link.type());
 			if (format != BookReference::NONE) {
 				references.push_back(new BookReference(href, format, referenceType));
 			}
@@ -277,14 +278,14 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	for (size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
 		const std::string &href = link.href();
-		const std::string &type = link.type();
-		const std::string &rel = myLink.relation(link.rel(), type);
+		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
+		const std::string &rel = myLink.relation(link.rel(), link.type());
 		if (ZLMimeType::isImage(type)) {
 			if (rel == OPDSConstants::REL_THUMBNAIL ||
 					(coverURL.empty() && rel == OPDSConstants::REL_COVER)) {
 				coverURL = href;
 			}
-		} else if (type == ZLMimeType::APPLICATION_ATOM_XML || type == ZLMimeType::APPLICATION_ATOM_XML_OPDS) {
+		} else if (type == ZLMimeType::APPLICATION_ATOM_XML) {
 			if (rel == ATOMConstants::REL_ALTERNATE) {
 				if (url.empty()) {
 					url = href;

@@ -122,7 +122,7 @@ void RtfSpecialCommand::run(RtfReader &reader, int*) const {
 	reader.mySpecialMode = true;
 }
 
-RtfPictureCommand::RtfPictureCommand(const std::string &mimeType) : myMimeType(mimeType) {
+RtfPictureCommand::RtfPictureCommand(shared_ptr<ZLMimeType> mimeType) : myMimeType(mimeType) {
 }
 
 void RtfPictureCommand::run(RtfReader &reader, int*) const {
@@ -186,8 +186,8 @@ void RtfReader::fillKeywordMap() {
 		addAction("ldblquote",	new RtfCharCommand("\xE2\x80\x9C"));	// &ldquo;
 		addAction("rdblquote",	new RtfCharCommand("\xE2\x80\x9D"));	// &rdquo;
 
-		addAction("jpegblip",	new RtfPictureCommand("image/jpeg"));
-		addAction("pngblip",	new RtfPictureCommand("image/png"));
+		addAction("jpegblip",	new RtfPictureCommand(ZLMimeType::IMAGE_JPEG));
+		addAction("pngblip",	new RtfPictureCommand(ZLMimeType::IMAGE_PNG));
 
 		addAction("s",	new RtfStyleCommand());
 

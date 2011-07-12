@@ -33,7 +33,7 @@ private:
 protected:
 	void normalizeRealPath(std::string &path) const;
 	std::string convertFilenameToUtf8(const std::string &name) const;
-	std::string mimeType(const std::string &path) const;
+	shared_ptr<ZLMimeType> mimeType(const std::string &path) const;
 };
 
 #endif /* __ZLCOCOAFSMANAGER_H__ */

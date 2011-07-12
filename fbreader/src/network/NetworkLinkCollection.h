@@ -75,7 +75,7 @@ public:
 
 	void deleteLink(NetworkLink& link);
 
-	void saveLink(NetworkLink& link);
+	void saveLink(NetworkLink& link, bool automatic = false);
 
 	bool threadUpdating;
 
@@ -83,6 +83,7 @@ private:
 	std::string makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);
 
 	void UpdateGenericLinks(std::string genericUrl);
+	void saveLinkWithoutRefreshing(NetworkLink& link, bool automatic);
 
 	void reReadLinks();
 	void reReadLinksWithoutRefreshing();

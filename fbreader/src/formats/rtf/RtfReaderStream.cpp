@@ -33,7 +33,7 @@ public:
 
 protected:
 	void addCharData(const char *data, size_t len, bool convert);
-	void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size);
+	void insertImage(shared_ptr<ZLMimeType> mimeType, const std::string &fileName, size_t startOffset, size_t size);
 	void setEncoding(int code);
 	void switchDestination(DestinationType destination, bool on);
 	void setAlignment();
@@ -84,7 +84,7 @@ size_t RtfTextOnlyReader::readSize() const {
 	return myFilledSize;
 }
 
-void RtfTextOnlyReader::insertImage(const std::string&, const std::string&, size_t, size_t) {
+void RtfTextOnlyReader::insertImage(shared_ptr<ZLMimeType>, const std::string&, size_t, size_t) {
 }
 
 void RtfTextOnlyReader::setEncoding(int) {

@@ -104,7 +104,12 @@ void NetworkLinkCollection::deleteLink(NetworkLink& link) {
 	FBReader::Instance().refreshWindow();
 }
 
-void NetworkLinkCollection::saveLink(NetworkLink& link) {
+void NetworkLinkCollection::saveLink(NetworkLink& link, bool automatic) {
+	saveLinkWithoutRefreshing(link, automatic)
+	FBReader::Instance().refreshWindow();
+}
+
+void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool automatic) {
 	bool found = false;
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		if (&(**it) == &link) {
@@ -122,9 +127,8 @@ void NetworkLinkCollection::saveLink(NetworkLink& link) {
 		myLinks.push_back(newlink);
 		std::sort(myLinks.begin(), myLinks.end(), Comparator());
 	}
-	BooksDB::Instance().saveNetworkLink(link);
+	BooksDB::Instance().saveNetworkLink(link, automatic);
 	FBReader::Instance().invalidateNetworkView();
-	FBReader::Instance().refreshWindow();
 }
 
 void *updGenLinks( void *ptr ) {
@@ -136,7 +140,7 @@ void *updGenLinks( void *ptr ) {
 	shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
 	ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, prsr));
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
-		nc->saveLink(**it);
+		nc->saveLinkWithoutRefreshing(**it);
 	}
 	nc->threadUpdating = false;
 }
