@@ -18,8 +18,9 @@
   ** обновление предустановленных сетевых библиотек с сервера fbreader в отдельном потоке
     * запускается при инициализации NetworkLinkCollection
 
+  ** синхронизация работы с базой данных и с curl
+
 ** НУЖНО СДЕЛАТЬ
-  ** сделать обновления и для пользовательских каталогов, при этом обновлять только links, а вручную - только title и summary
   ** записывать время обновления ссылок в базу данных и обновлять периодически
   ** кэшировать картинки в отдельном потоке
-  ** добавить в базу данных таблицы fbreader:authentication, fbreader:urlRewritingRule и fbreader:advancedSearch
+  ** добавить в базу данных таблицы для fbreader:authentication, fbreader:urlRewritingRule и fbreader:advancedSearch
