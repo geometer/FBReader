@@ -34,10 +34,6 @@ class FBReaderNode;
 
 class NetworkView : public ZLBlockTreeView {
 
-private:
-	class CoverUpdater;
-	class CoverUpdaterRunner;
-
 public:
 	NetworkView(ZLPaintContext &context);
 
