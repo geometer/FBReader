@@ -118,6 +118,11 @@ void NetworkView::CoverUpdaterRunner::run() {
 	}
 }
 
+static void *updCovers(void *ptr) {
+	ZLExecutionData::Vector* v = (ZLExecutionData::Vector*) ptr;
+	ZLExecutionData::perform(*v);
+	delete v;
+}
 
 void NetworkView::paint() {
 	if (myUpdateChildren) {
@@ -133,16 +138,30 @@ void NetworkView::paint() {
 	std::map<FBReaderNode*,int> nodes;
 	nodes.swap(myNodesToPaintCovers);
 	shared_ptr<CoverUpdater> updater = CoverUpdater::create();
+	ZLExecutionData::Vector* coverVector = new ZLExecutionData::Vector();
 	if (!updater.isNull()) {
 		for (std::map<FBReaderNode*,int>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
 			shared_ptr<ZLImage> coverImage = it->first->coverImage();
 			if (!coverImage.isNull()) {
-				updater->addTask(coverImage->synchronizationData());
+				bool found = false;
+				for (std::vector<shared_ptr<ZLImage> >::iterator it1 = myStartedCovers.begin(); it1 != myStartedCovers.end(); ++it1) {
+					if (*it1 == coverImage) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					myStartedCovers.push_back(coverImage);
+					coverVector->push_back(coverImage->synchronizationData());
+				}
 			}
 		}
-		if (updater->hasTasks()) {
-			ZLTimeManager::Instance().addAutoRemovableTask(new CoverUpdaterRunner(updater));
+		if (!coverVector->empty()) {
+			pthread_create(new pthread_t(), NULL, updCovers, (void*) coverVector);
 		}
+//		if (updater->hasTasks()) {
+//			ZLTimeManager::Instance().addAutoRemovableTask(new CoverUpdaterRunner(updater));
+//		}
 	}
 	for (std::map<FBReaderNode*,int>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
 		it->first->drawCoverReal(context(), it->second);

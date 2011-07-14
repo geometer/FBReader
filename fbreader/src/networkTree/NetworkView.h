@@ -63,6 +63,7 @@ private:
 	bool myUpdateChildren;
 	bool myUpdateAccountDependents;
 
+	std::vector<shared_ptr<ZLImage> > myStartedCovers;
 	std::map<FBReaderNode*,int> myNodesToPaintCovers;
 };
 
