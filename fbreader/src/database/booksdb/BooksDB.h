@@ -24,6 +24,8 @@
 #include <map>
 #include <deque>
 
+#include <pthread.h>
+
 #include "../sqldb/implsqlite/SQLiteDataBase.h"
 #include "DBRunnables.h"
 
@@ -84,7 +86,7 @@ public:
 	bool setNetFile(const std::string &url, const std::string &fileName);
 	bool unsetNetFile(const std::string &url);
 
-	bool saveNetworkLink(NetworkLink& link);
+	bool saveNetworkLink(NetworkLink& link, bool isAuto);
 	bool loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links);
 	bool deleteNetworkLink(const std::string &siteName);
 
@@ -172,6 +174,8 @@ private:
 	shared_ptr<DBCommand> myInsertBookList;
 	shared_ptr<DBCommand> myDeleteBookList;
 	shared_ptr<DBCommand> myCheckBookList;
+
+	shared_ptr<pthread_mutex_t> myNetworkLock;
 
 private: // disable copying
 	BooksDB(const BooksDB &);

@@ -317,9 +317,13 @@ public:
 	bool run();
 	void setNetworkLink(NetworkLink* link);
 
+public:
+	bool isAuto;
+
 private:
 	bool addNetworkLink();
 	bool updateNetworkLink(int linkId);
+	bool updateNetworkLinkUrls(int linkId);
 
 private:
 	NetworkLink* myNetworkLink;

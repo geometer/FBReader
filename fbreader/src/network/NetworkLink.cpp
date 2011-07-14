@@ -113,3 +113,13 @@ void NetworkLink::loadFrom(const NetworkLink & link) {
 	myLinks = link.myLinks;
 	myPredefinedId = link.myPredefinedId;
 }
+
+void NetworkLink::loadLinksFrom(const NetworkLink & link) {
+	myIcon = link.myIcon;
+	myLinks = link.myLinks;
+}
+
+void NetworkLink::loadSummaryFrom(const NetworkLink & link) {
+	myTitle = link.myTitle;
+	mySummary = link.mySummary;
+}

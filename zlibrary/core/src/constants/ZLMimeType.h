@@ -49,6 +49,7 @@ public:
 	const std::string& getName() const;
 
 	bool operator ==(const ZLMimeType& t) const;
+	bool operator !=(const ZLMimeType& t) const;
 
 	static const shared_ptr<ZLMimeType> APPLICATION_XML;
 	static const shared_ptr<ZLMimeType> APPLICATION_ZIP;

@@ -75,30 +75,27 @@ public:
 
 	void deleteLink(NetworkLink& link);
 
-	void saveLink(NetworkLink& link, bool automatic = false);
-
-	bool threadUpdating;
+	void saveLink(NetworkLink& link, bool isAuto = false);
 
 private:
 	std::string makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);
 
-	void UpdateGenericLinks(std::string genericUrl);
-	void saveLinkWithoutRefreshing(NetworkLink& link, bool automatic);
-
-	void reReadLinks();
-	void reReadLinksWithoutRefreshing();
+	void UpdateLinks(std::string genericUrl);
+	void saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto);
 
 
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
-	LinkVector myLinks;
+	LinkVector myLinks, myTempCustomLinks;
 	pthread_t myUpdThread;
+	std::map<std::string, shared_ptr<pthread_mutex_t> > myLocks;
+	std::map<std::string, bool> myExists;
 
 	std::string myErrorMessage;
 
 	std::string myGenericUrl;
 
-friend void *updGenLinks( void *ptr );
+friend void *updLinks( void *ptr );
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

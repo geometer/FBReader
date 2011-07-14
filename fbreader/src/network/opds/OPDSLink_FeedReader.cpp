@@ -44,12 +44,12 @@ void OPDSLink::FeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = link.rel();
 		if (rel == "search") {
-			if (type == ZLMimeType::APPLICATION_ATOM_XML) {
+			if (*type == *ZLMimeType::APPLICATION_ATOM_XML) {
 				links[rel] = ZLNetworkUtil::url(myBaseURL, OpenSearchXMLReader::convertOpenSearchURL(href));
-			} else if (type == ZLMimeType::APPLICATION_OPENSEARCH_XML) {
+			} else if (*type == *ZLMimeType::APPLICATION_OPENSEARCH_XML) {
 				OpenSearchXMLReader* osr = new OpenSearchXMLReader();
 				shared_ptr<ZLXMLReader> zr = osr;
-				ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(ZLNetworkUtil::url(myBaseURL, href), zr));
+				ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(ZLNetworkUtil::url(myBaseURL, href), zr));
 				links[rel] = osr->templateURL();
 			}
 		} else if (rel == "self") {

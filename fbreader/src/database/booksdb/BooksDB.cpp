@@ -50,6 +50,8 @@ BooksDB &BooksDB::Instance() {
 
 BooksDB::BooksDB(const std::string &path) : SQLiteDataBase(path), myInitialized(false) {
 	initCommands();
+	myNetworkLock = new pthread_mutex_t();
+	pthread_mutex_init(&*myNetworkLock, 0);
 }
 
 BooksDB::~BooksDB() {
@@ -552,21 +554,27 @@ bool BooksDB::checkBookList(const Book &book) {
 	return checkRes > 0;
 }
 
-bool BooksDB::saveNetworkLink(NetworkLink& link) {
+bool BooksDB::saveNetworkLink(NetworkLink& link, bool isAuto) {
 	if (!isInitialized()) {
 		return false;
 	}
+	pthread_mutex_lock(&*myNetworkLock);
 	mySaveNetworkLink->setNetworkLink(&link);
-	return executeAsTransaction(*mySaveNetworkLink);
+	mySaveNetworkLink->isAuto = isAuto;
+	bool result = executeAsTransaction(*mySaveNetworkLink);
+	pthread_mutex_unlock(&*myNetworkLock);
+	return result;
 }
 
 bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
+	pthread_mutex_lock(&*myNetworkLock);
 	shared_ptr<DBDataReader> reader = myLoadNetworkLinks->executeReader();
 
 	links.clear();
 
 	while (reader->next()) {
 		if (reader->type(0) != DBValue::DBINT) {/* link_id */
+			pthread_mutex_unlock(&*myNetworkLock);
 			return false;
 		}
 		std::map<std::string,std::string> linkUrls;
@@ -597,19 +605,24 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 
 		links.push_back(link);
 	}
-
+	pthread_mutex_unlock(&*myNetworkLock);
 	return true;
 }
 
 bool BooksDB::deleteNetworkLink(const std::string &siteName){
+	pthread_mutex_lock(&*myNetworkLock);
 	((DBTextValue &) *myFindNetworkLinkId->parameter("@site_name").value()) = siteName;
 	shared_ptr<DBDataReader> reader = myFindNetworkLinkId->executeReader();
+	bool result;
 	if (reader.isNull() || !reader->next()) {
+		pthread_mutex_unlock(&*myNetworkLock);
 		return false;
 	} else {
 		int linkId = reader->intValue(0);
 		((DBIntValue &) *myDeleteNetworkLink->parameter("@link_id").value()) = linkId;
 		((DBIntValue &) *myDeleteNetworkLinkUrls->parameter("@link_id").value()) = linkId;
-		return myDeleteNetworkLinkUrls->execute() && myDeleteNetworkLink->execute();
+		result = myDeleteNetworkLinkUrls->execute() && myDeleteNetworkLink->execute();
 	}
+	pthread_mutex_unlock(&*myNetworkLock);
+	return result;
 }

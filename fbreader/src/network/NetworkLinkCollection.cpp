@@ -47,7 +47,6 @@
 
 #include "opds/URLRewritingRule.h"
 
-
 NetworkLinkCollection *NetworkLinkCollection::ourInstance = 0;
 
 NetworkLinkCollection &NetworkLinkCollection::Instance() {
@@ -93,6 +92,9 @@ bool NetworkLinkCollection::Comparator::operator() (
 }
 
 void NetworkLinkCollection::deleteLink(NetworkLink& link) {
+	if (myLocks.count(link.SiteName)) {
+		pthread_mutex_lock(&*(myLocks[link.SiteName]));
+	}
 	BooksDB::Instance().deleteNetworkLink(link.SiteName);
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		if (&(**it) == &link) {
@@ -100,23 +102,33 @@ void NetworkLinkCollection::deleteLink(NetworkLink& link) {
 			break;
 		}
 	}
+	if (myLocks.count(link.SiteName)) {
+		myExists[link.SiteName] = false;
+		pthread_mutex_unlock(&*(myLocks[link.SiteName]));
+	}
 	FBReader::Instance().invalidateNetworkView();
 	FBReader::Instance().refreshWindow();
 }
 
-void NetworkLinkCollection::saveLink(NetworkLink& link, bool automatic) {
-	saveLinkWithoutRefreshing(link, automatic)
+void NetworkLinkCollection::saveLink(NetworkLink& link, bool isAuto) {
+	saveLinkWithoutRefreshing(link, isAuto);
 	FBReader::Instance().refreshWindow();
 }
 
-void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool automatic) {
+void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto) {
 	bool found = false;
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		if (&(**it) == &link) {
 			found = true;
 			break;
 		} else if ((**it).SiteName == link.SiteName) {
-			(*it)->loadFrom(link);
+			if (link.getPredefinedId() != std::string()) {
+				(*it)->loadFrom(link);
+			} else if (isAuto) {
+				(*it)->loadLinksFrom(link);
+			} else {
+				(*it)->loadSummaryFrom(link);
+			}
 			found = true;
 			break;
 		}
@@ -127,37 +139,58 @@ void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool au
 		myLinks.push_back(newlink);
 		std::sort(myLinks.begin(), myLinks.end(), Comparator());
 	}
-	BooksDB::Instance().saveNetworkLink(link, automatic);
+	BooksDB::Instance().saveNetworkLink(link, isAuto);
 	FBReader::Instance().invalidateNetworkView();
 }
 
-void *updGenLinks( void *ptr ) {
+void *updLinks( void *ptr ) {
 	NetworkLinkCollection* nc = (NetworkLinkCollection*) ptr;
-	nc->threadUpdating = true;
 	std::string genericUrl = nc->myGenericUrl;
 	std::vector<shared_ptr<NetworkLink> > links;
 	shared_ptr<OPDSFeedReader> fr = new OPDSLink::GenericFeedReader(links);
 	shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
-	ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, prsr));
+	ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, prsr));
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
-		nc->saveLinkWithoutRefreshing(**it);
+		nc->saveLinkWithoutRefreshing(**it, true);
 	}
-	nc->threadUpdating = false;
+	for (std::vector<shared_ptr<NetworkLink> >::iterator it = nc->myTempCustomLinks.begin(); it != nc->myTempCustomLinks.end(); ++it) {
+		shared_ptr<NetworkLink> link = 0;
+		std::string url = (*it)->url(NetworkLink::URL_MAIN);
+		shared_ptr<OPDSFeedReader> fr = new OPDSLink::FeedReader(link, url);
+		shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
+		ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr));
+		if (link != 0) {
+			if (nc->myLocks[link->SiteName] != 0 && pthread_mutex_trylock(&*(nc->myLocks[link->SiteName])) == 0) {//TODO: why it can be 0?
+				if (nc->myExists[link->SiteName]) {
+					nc->saveLinkWithoutRefreshing(*link, true);
+				}
+				pthread_mutex_unlock(&*(nc->myLocks[link->SiteName]));
+			}
+		}
+	}
 }
 
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 
-	threadUpdating = false;
 	BooksDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 
-	UpdateGenericLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
+	UpdateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
 }
 
-void NetworkLinkCollection::UpdateGenericLinks(std::string genericUrl) {
+void NetworkLinkCollection::UpdateLinks(std::string genericUrl) {
 	myGenericUrl = genericUrl;
-	pthread_create( &myUpdThread, NULL, updGenLinks, (void*) this);
+	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+		if ((*it)->getPredefinedId() == std::string()) {
+			myTempCustomLinks.push_back(*it);
+			pthread_mutex_t* m = new pthread_mutex_t();
+			pthread_mutex_init(m, 0);
+			myLocks[(*it)->SiteName] = m;
+			myExists[(*it)->SiteName] = true;
+		}
+	}
+	pthread_create(&myUpdThread, NULL, updLinks, (void*) this);
 }
 
 NetworkLinkCollection::~NetworkLinkCollection() {
@@ -328,7 +361,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std:
 
 	myErrorMessage.clear();
 
-	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+	for (std::vector<shared_ptr<NetworkLink> >::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		NetworkLink &link = **it;
 		if (link.isEnabled()) {
 			shared_ptr<NetworkOperationData> opData = new NetworkOperationData(link);
@@ -373,7 +406,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 
 	myErrorMessage.clear();
 
-	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+	for (std::vector<shared_ptr<NetworkLink> >::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		NetworkLink &link = **it;
 		if (link.isEnabled()) {
 			shared_ptr<NetworkOperationData> opData = new NetworkOperationData(link);
@@ -421,7 +454,7 @@ NetworkLink &NetworkLinkCollection::link(size_t index) const {
 
 size_t NetworkLinkCollection::numberOfEnabledLinks() const {
 	size_t count = 0;
-	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+	for (std::vector<shared_ptr<NetworkLink> >::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		if ((*it)->isEnabled()) {
 			++count;
 		}
@@ -432,7 +465,7 @@ size_t NetworkLinkCollection::numberOfEnabledLinks() const {
 void NetworkLinkCollection::rewriteUrl(std::string &url, bool externalUrl) const {
 	const std::string host =
 		ZLUnicodeUtil::toLower(ZLNetworkUtil::hostFromUrl(url));
-	for (LinkVector::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+	for (std::vector<shared_ptr<NetworkLink> >::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		if (host.find((*it)->SiteName) != std::string::npos) {
 			(*it)->rewriteUrl(url, externalUrl);
 		}

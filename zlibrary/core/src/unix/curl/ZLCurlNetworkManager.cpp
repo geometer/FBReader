@@ -91,6 +91,12 @@ void ZLCurlNetworkManager::createInstance() {
 	ourInstance = new ZLCurlNetworkManager();
 }
 
+ZLCurlNetworkManager::ZLCurlNetworkManager() {
+	myLock = new pthread_mutex_t();
+	myLockAttr = new pthread_mutexattr_t();
+	pthread_mutexattr_settype(&*myLockAttr, PTHREAD_MUTEX_RECURSIVE);
+	pthread_mutex_init(&*myLock, &*myLockAttr);
+}
 
 void ZLCurlNetworkManager::setStandardOptions(CURL *handle, const std::string &proxy) const {
 	const std::string &agent = userAgent();
@@ -198,6 +204,7 @@ void ZLCurlNetworkManager::clearRequestOptions(ZLNetworkRequest &request) const 
 
 
 std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {
+	pthread_mutex_lock(&*myLock);
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 
 	if (dataList.empty()) {
@@ -235,7 +242,6 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 	do {
 		res = curl_multi_perform(handle, &counter);
 	} while ((res == CURLM_CALL_MULTI_PERFORM) || (counter > 0));
-
 	CURLMsg *message;
 	do {
 		int queueSize;
@@ -316,5 +322,6 @@ std::string ZLCurlNetworkManager::perform(const ZLExecutionData::Vector &dataLis
 		}
 		result += *et;
 	}
+	pthread_mutex_unlock(&*myLock);
 	return result;
 }

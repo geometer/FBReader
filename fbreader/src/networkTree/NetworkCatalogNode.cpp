@@ -164,7 +164,7 @@ void NetworkCatalogNode::ExpandCatalogAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
 		return;
 	}
-
+	FBReader::Instance().refreshWindow();
 	const NetworkLink &link = myNode.item().Link;
 	if (!link.authenticationManager().isNull()) {
 		NetworkAuthenticationManager &mgr = *link.authenticationManager();

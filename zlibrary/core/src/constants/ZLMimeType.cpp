@@ -52,22 +52,22 @@ const shared_ptr<ZLMimeType> ZLMimeType::TEXT_HTML = ZLMimeType::get("text/html"
 const shared_ptr<ZLMimeType> ZLMimeType::TEXT_PLAIN = ZLMimeType::get("text/plain");
 const shared_ptr<ZLMimeType> ZLMimeType::TEXT_XML = ZLMimeType::get("text/xml");
 
-const shared_ptr<ZLMimeType> ZLMimeType::EMPTY = ZLMimeType::get("");
+const shared_ptr<ZLMimeType> ZLMimeType::EMPTY = ZLMimeType::get("empty");
 
 bool ZLMimeType::isImage(shared_ptr<ZLMimeType> mimeType) {
 	return
-		mimeType == IMAGE_PNG ||
-		mimeType == IMAGE_JPEG ||
-		mimeType == IMAGE_SVG;
+		*mimeType == *IMAGE_PNG ||
+		*mimeType == *IMAGE_JPEG ||
+		*mimeType == *IMAGE_SVG;
 }
 
 shared_ptr<ZLMimeType> ZLMimeType::get(std::string text) {
 	if (text == "") {
-		return 0;
+		return EMPTY;
 	}
 	std::string name = text.substr(0, text.find(';'));
 	if (name == "") {
-		return 0;
+		return EMPTY;
 	}
 	std::map<std::string,std::string> parameters;
 	bool fin = (text.find(';') == -1);
@@ -75,7 +75,7 @@ shared_ptr<ZLMimeType> ZLMimeType::get(std::string text) {
 		std::string rest = text.substr(text.find(';') + 1);
 		while (!fin) {
 			if (rest.find('=') == -1) {
-				return 0;
+				return EMPTY;
 			}
 			std::string key = rest.substr(0, rest.find('='));
 			std::string value = rest.substr(rest.find('=') + 1, rest.find(';'));
@@ -99,6 +99,10 @@ shared_ptr<ZLMimeType> ZLMimeType::get(std::string text) {
 
 bool ZLMimeType::operator ==(const ZLMimeType& t) const {
 	return myName == t.myName;
+}
+
+bool ZLMimeType::operator !=(const ZLMimeType& t) const {
+	return myName != t.myName;
 }
 
 ZLMimeType::ZLMimeType(std::string& name, std::map<std::string,std::string>& parameters) : myParameters(parameters), myName(name) {

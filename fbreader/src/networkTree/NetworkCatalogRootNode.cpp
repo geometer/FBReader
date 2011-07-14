@@ -162,7 +162,7 @@ void NetworkCatalogRootNode::init() {
 			registerAction(new PasswordRecoveryAction(*mgr), true);
 		}
 	}
-	registerAction(new DontShowAction(myLink));
+//	registerAction(new DontShowAction(myLink));
 	registerAction(new EditAction(myLink));
 	registerAction(new DeleteAction(myLink));
 }

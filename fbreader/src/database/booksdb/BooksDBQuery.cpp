@@ -382,7 +382,6 @@ const std::string BooksDBQuery::DELETE_NETWORK_LINK  = \
 const std::string BooksDBQuery::UPDATE_NETWORK_LINK  = \
 	"UPDATE Net.Links SET " \
 	"	title = @title, " \
-	"	site_name = @site_name, " \
 	"	summary = @summary, " \
 	"	language = null, " \
 	"	predefined_id = nullif(@predefined_id,\"\"), " \

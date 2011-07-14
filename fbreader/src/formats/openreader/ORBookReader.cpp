@@ -65,7 +65,7 @@ void ORBookReader::startElementHandler(const char *tag, const char **xmlattribut
 		shared_ptr<ZLMimeType> mediaType = ZLMimeType::get(attributeValue(xmlattributes, "media-type"));
 		if ((resid != 0) && (resource != 0)) {
 			myResources[resid] = resource;
-			if (mediaType != ZLMimeType::EMPTY) {
+			if (*mediaType != *ZLMimeType::EMPTY) {
 				if (ZLMimeType::APPLICATION_OR_XML == mediaType) {
 					myHtmlFileIDs.insert(resid);
 				} else if (ZLMimeType::isImage(mediaType)) {

@@ -73,6 +73,8 @@ public:
 	bool isEnabled() const;
 
 	void loadFrom(const NetworkLink & link);
+	void loadLinksFrom(const NetworkLink & link);
+	void loadSummaryFrom(const NetworkLink & link);
 
 
 public:

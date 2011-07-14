@@ -50,7 +50,7 @@ void AddNetworkCatalogAction::run() {
 		shared_ptr<NetworkLink> link = 0;
 		shared_ptr<OPDSFeedReader> fr = new OPDSLink::FeedReader(link, url);
 		shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
-		const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(ZLResourceKey("errorLinkBox")), ZLExecutionData::perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr)));
+		const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(ZLResourceKey("errorLinkBox")), ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr)));
 		if (link == 0) {
 			ZLDialogManager::Instance().informationBox(ZLResourceKey("errorLinkBox"), message);
 			return;

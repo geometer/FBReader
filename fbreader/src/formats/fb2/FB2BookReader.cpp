@@ -200,7 +200,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		case _BINARY:
 		{
 			shared_ptr<ZLMimeType> contentType = ZLMimeType::get(attributeValue(xmlattributes, "content-type"));
-			if ((contentType != 0) && (id != 0) && (ZLMimeType::TEXT_XML != contentType)) {
+			if ((contentType != 0) && (id != 0) && (*ZLMimeType::TEXT_XML != *contentType)) {
 				myCurrentImage = new ZLBase64EncodedImage(contentType);
 				myModelReader.addImage(id, myCurrentImage);
 				myProcessingImage = true;

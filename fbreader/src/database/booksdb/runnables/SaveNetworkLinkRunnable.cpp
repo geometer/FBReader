@@ -24,7 +24,7 @@
 SaveNetworkLinkRunnable::SaveNetworkLinkRunnable(DBConnection &connection) {
 	myFindNetworkLinkId = SQLiteFactory::createCommand(BooksDBQuery::FIND_NETWORK_LINK_ID, connection, "@site_name", DBValue::DBTEXT);
 	myAddNetworkLink    = SQLiteFactory::createCommand(BooksDBQuery::ADD_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@site_name", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT);
-	myUpdateNetworkLink    = SQLiteFactory::createCommand(BooksDBQuery::UPDATE_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@site_name", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT, "@link_id", DBValue::DBINT);
+	myUpdateNetworkLink    = SQLiteFactory::createCommand(BooksDBQuery::UPDATE_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT, "@link_id", DBValue::DBINT);
 
 	myFindNetworkLinkUrls = SQLiteFactory::createCommand(BooksDBQuery::FIND_NETWORK_LINKURLS, connection, "@link_id", DBValue::DBINT);
 	myAddNetworkLinkUrl    = SQLiteFactory::createCommand(BooksDBQuery::ADD_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT, "@url", DBValue::DBTEXT);
@@ -37,9 +37,16 @@ bool SaveNetworkLinkRunnable::run() {
 	shared_ptr<DBDataReader> reader = myFindNetworkLinkId->executeReader();
 	if (reader.isNull() || !reader->next()) {
 		return addNetworkLink();
-	} else if (reader->textValue(1, std::string()) == std::string() || myNetworkLink->getPredefinedId() != std::string()) {
-		return updateNetworkLink(reader->intValue(0));
+	} else if (myNetworkLink->getPredefinedId() != std::string()) {
+		return updateNetworkLink(reader->intValue(0)) && updateNetworkLinkUrls(reader->intValue(0));
+	} else if (reader->textValue(1, std::string()) == std::string()) {
+		if (isAuto) {
+			return updateNetworkLinkUrls(reader->intValue(0));
+		} else {
+			return updateNetworkLink(reader->intValue(0));
+		}
 	}
+	return false;
 }
 
 bool SaveNetworkLinkRunnable::addNetworkLink() {
@@ -69,12 +76,15 @@ bool SaveNetworkLinkRunnable::addNetworkLink() {
 
 bool SaveNetworkLinkRunnable::updateNetworkLink(int linkId) {
 	((DBTextValue &) *myUpdateNetworkLink->parameter("@title").value()) = myNetworkLink->getTitle();
-	((DBTextValue &) *myUpdateNetworkLink->parameter("@site_name").value()) = myNetworkLink->SiteName;
 	((DBTextValue &) *myUpdateNetworkLink->parameter("@summary").value()) = myNetworkLink->getSummary();
 	((DBTextValue &) *myUpdateNetworkLink->parameter("@predefined_id").value()) = myNetworkLink->getPredefinedId();
 	((DBIntValue &) *myUpdateNetworkLink->parameter("@is_enabled").value()) = myNetworkLink->isEnabled();
 	((DBIntValue &) *myUpdateNetworkLink->parameter("@link_id").value()) = linkId;
 
+	return myUpdateNetworkLink->execute();
+}
+
+bool SaveNetworkLinkRunnable::updateNetworkLinkUrls(int linkId) {
 	bool allExecuted = true;
 	((DBIntValue &) *myFindNetworkLinkUrls->parameter("@link_id").value()) = linkId;
 	shared_ptr<DBDataReader> reader = myFindNetworkLinkUrls->executeReader();
@@ -107,8 +117,7 @@ bool SaveNetworkLinkRunnable::updateNetworkLink(int linkId) {
 		((DBIntValue &) *myAddNetworkLinkUrl->parameter("@link_id").value()) = linkId;
 		allExecuted = allExecuted && myAddNetworkLinkUrl->execute();
 	}
-
-	return allExecuted && myUpdateNetworkLink->execute();
+	return allExecuted;
 }
 
 void SaveNetworkLinkRunnable::setNetworkLink(NetworkLink* link) {
