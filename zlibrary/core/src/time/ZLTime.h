@@ -19,7 +19,6 @@
 
 #ifndef __ZLTIME_H__
 #define __ZLTIME_H__
-#include <string>
 
 class ZLTime {
 
