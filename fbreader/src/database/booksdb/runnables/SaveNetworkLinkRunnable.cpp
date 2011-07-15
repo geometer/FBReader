@@ -27,8 +27,8 @@ SaveNetworkLinkRunnable::SaveNetworkLinkRunnable(DBConnection &connection) {
 	myUpdateNetworkLink    = SQLiteFactory::createCommand(BooksDBQuery::UPDATE_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT, "@link_id", DBValue::DBINT);
 
 	myFindNetworkLinkUrls = SQLiteFactory::createCommand(BooksDBQuery::FIND_NETWORK_LINKURLS, connection, "@link_id", DBValue::DBINT);
-	myAddNetworkLinkUrl    = SQLiteFactory::createCommand(BooksDBQuery::ADD_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT, "@url", DBValue::DBTEXT);
-	myUpdateNetworkLinkUrl    = SQLiteFactory::createCommand(BooksDBQuery::UPDATE_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT, "@url", DBValue::DBTEXT);
+	myAddNetworkLinkUrl    = SQLiteFactory::createCommand(BooksDBQuery::ADD_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT, "@url", DBValue::DBTEXT, "@update_time", DBValue::DBINT);
+	myUpdateNetworkLinkUrl    = SQLiteFactory::createCommand(BooksDBQuery::UPDATE_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT, "@url", DBValue::DBTEXT, "@update_time", DBValue::DBINT);
 	myDeleteNetworkLinkUrl    = SQLiteFactory::createCommand(BooksDBQuery::DELETE_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT);
 }
 
@@ -65,10 +65,15 @@ bool SaveNetworkLinkRunnable::addNetworkLink() {
 	if (myNetworkLink->getIcon() != std::string()) {
 		tempLinks["icon"] = myNetworkLink->getIcon();
 	}
+	long t = 0;
+	if (myNetworkLink->getUpdated() != 0) {
+		t = myNetworkLink->getUpdated()->getLongSeconds_stupid();
+	}
 	for (std::map<std::string,std::string>::iterator it = tempLinks.begin(); it != tempLinks.end(); ++it) {
 		((DBTextValue &) *myAddNetworkLinkUrl->parameter("@key").value()) = it->first;
 		((DBTextValue &) *myAddNetworkLinkUrl->parameter("@url").value()) = it->second;
 		((DBIntValue &) *myAddNetworkLinkUrl->parameter("@link_id").value()) = ((DBIntValue &) *dbLinkId).value();
+		((DBIntValue &) *myAddNetworkLinkUrl->parameter("@update_time").value()) = t;
 		allExecuted = allExecuted && myAddNetworkLinkUrl->execute();
 	}
 	return allExecuted;
@@ -92,6 +97,10 @@ bool SaveNetworkLinkRunnable::updateNetworkLinkUrls(int linkId) {
 	if (myNetworkLink->getIcon() != std::string()) {
 		linksToCheck["icon"] = myNetworkLink->getIcon();
 	}
+	long t = 0;
+	if (myNetworkLink->getUpdated() != 0) {
+		t = myNetworkLink->getUpdated()->getLongSeconds_stupid();
+	}
 	while (reader->next()) {
 		if (reader->type(0) != DBValue::DBTEXT || reader->type(1) != DBValue::DBTEXT) {
 			return false;
@@ -106,6 +115,7 @@ bool SaveNetworkLinkRunnable::updateNetworkLinkUrls(int linkId) {
 			((DBTextValue &) *myUpdateNetworkLinkUrl->parameter("@key").value()) = key;
 			((DBTextValue &) *myUpdateNetworkLinkUrl->parameter("@url").value()) = linksToCheck[key];
 			((DBIntValue &) *myUpdateNetworkLinkUrl->parameter("@link_id").value()) = linkId;
+			((DBIntValue &) *myUpdateNetworkLinkUrl->parameter("@update_time").value()) = t;
 			linksToCheck.erase(key);
 			allExecuted = allExecuted && myUpdateNetworkLinkUrl->execute();
 		}

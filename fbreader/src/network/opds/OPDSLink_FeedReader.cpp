@@ -76,7 +76,7 @@ void OPDSLink::FeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed
 	myLink = new OPDSLink(
 		myBaseURL
 	);
-
+	myLink->setUpdated(feed->updated());
 	myLink->setTitle(feed->title());
 	myLink->setSummary(summary);
 	myLink->setIcon(iconURL);

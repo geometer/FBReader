@@ -20,6 +20,8 @@
 #include <sys/timeb.h>
 #include <time.h>
 
+#include <cstdio>
+
 #include <ZLTime.h>
 
 #include "ZLUnixTime.h"

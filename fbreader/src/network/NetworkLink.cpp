@@ -46,7 +46,8 @@ NetworkLink::NetworkLink(
 	const std::string &siteName
 ) :
 	SiteName(ZLStringUtil::stringStartsWith(siteName, "www.") ? siteName.substr(std::string("www.").length()) : siteName),
-	myEnabled(true) {
+	myEnabled(true),
+	myUpdated(0) {
 }
 
 NetworkLink::~NetworkLink() {
@@ -80,6 +81,10 @@ void NetworkLink::setLinks(const std::map<std::string,std::string>& links) {
 	myLinks = links;
 }
 
+void NetworkLink::setUpdated(shared_ptr<ATOMUpdated> u) {
+	myUpdated = u;
+}
+
 void NetworkLink::setEnabled(bool enabled) {
 	myEnabled = enabled;
 }
@@ -99,6 +104,10 @@ const std::map<std::string,std::string>& NetworkLink::getLinks() const {
 	return myLinks;
 }
 
+shared_ptr<ATOMUpdated> NetworkLink::getUpdated() const {
+	return myUpdated;
+}
+
 std::string NetworkLink::getIcon() const {
 	return myIcon;
 }
@@ -112,11 +121,13 @@ void NetworkLink::loadFrom(const NetworkLink & link) {
 	mySummary = link.mySummary;
 	myLinks = link.myLinks;
 	myPredefinedId = link.myPredefinedId;
+	myUpdated = link.myUpdated;
 }
 
 void NetworkLink::loadLinksFrom(const NetworkLink & link) {
 	myIcon = link.myIcon;
 	myLinks = link.myLinks;
+	myUpdated = link.myUpdated;
 }
 
 void NetworkLink::loadSummaryFrom(const NetworkLink & link) {

@@ -390,18 +390,20 @@ const std::string BooksDBQuery::UPDATE_NETWORK_LINK  = \
 	"	link_id = @link_id; ";
 
 const std::string BooksDBQuery::ADD_NETWORK_LINKURL  = \
-	"INSERT INTO Net.LinkUrls (key, link_id, url) " \
+	"INSERT INTO Net.LinkUrls (key, link_id, url, update_time) " \
 	"	VALUES ( " \
 	"		@key, " \
 	"		@link_id, " \
-	"		@url " \
+	"		@url, " \
+	"		@update_time " \
 	"	); ";
 
-const std::string BooksDBQuery::FIND_NETWORK_LINKURLS  = "SELECT key, url FROM Net.LinkUrls WHERE link_id = @link_id; ";
+const std::string BooksDBQuery::FIND_NETWORK_LINKURLS  = "SELECT key, url, update_time FROM Net.LinkUrls WHERE link_id = @link_id; ";
 
 const std::string BooksDBQuery::UPDATE_NETWORK_LINKURL  = \
 	"UPDATE Net.LinkUrls SET " \
-	"	url = @url " \
+	"	url = @url, " \
+	"	update_time = @update_time " \
 	"WHERE " \
 	"	link_id = @link_id AND key = @key; ";
 
@@ -417,4 +419,4 @@ const std::string BooksDBQuery::DELETE_NETWORK_LINKURL  = \
 
 const std::string BooksDBQuery::LOAD_NETWORK_LINKS = "SELECT link_id, title, site_name, summary, language, predefined_id, is_enabled FROM Net.Links; ";
 
-const std::string BooksDBQuery::LOAD_NETWORK_LINKURLS = "SELECT key, url FROM Net.LinkUrls WHERE link_id = @link_id; ";
+const std::string BooksDBQuery::LOAD_NETWORK_LINKURLS = "SELECT key, url, update_time FROM Net.LinkUrls WHERE link_id = @link_id; ";

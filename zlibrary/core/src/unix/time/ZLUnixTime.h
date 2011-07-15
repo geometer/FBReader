@@ -26,6 +26,7 @@ class ZLUnixTimeManager : public ZLTimeManager {
 
 private:
 	ZLTime currentTime() const;
+	ZLTime fromString(std::string s) const;
 	short hoursBySeconds(long seconds) const;
 	short minutesBySeconds(long seconds) const;
 

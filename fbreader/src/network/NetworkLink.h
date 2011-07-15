@@ -28,6 +28,7 @@
 #include <ZLOptions.h>
 
 #include "NetworkItems.h"
+#include "atom/ATOMMetadata.h"
 
 class ZLExecutionData;
 
@@ -64,6 +65,7 @@ public:
 	void setLinks(const std::map<std::string,std::string>& links);
 	void setPredefinedId(const std::string& id);
 	void setEnabled(bool enabled);
+	void setUpdated(shared_ptr<ATOMUpdated> u);
 
 	std::string getTitle() const;
 	std::string getSummary() const;
@@ -71,6 +73,7 @@ public:
 	const std::map<std::string,std::string>& getLinks() const;
 	std::string getPredefinedId() const;
 	bool isEnabled() const;
+	shared_ptr<ATOMUpdated> getUpdated() const;
 
 	void loadFrom(const NetworkLink & link);
 	void loadLinksFrom(const NetworkLink & link);
@@ -97,6 +100,7 @@ private:
 	std::map<std::string,std::string> myLinks;
 	std::string myPredefinedId;
 	bool myEnabled;
+	shared_ptr<ATOMUpdated> myUpdated;
 
 private: // disable copying
 	NetworkLink(const NetworkLink &);

@@ -117,17 +117,26 @@ void NetworkLinkCollection::saveLink(NetworkLink& link, bool isAuto) {
 
 void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto) {
 	bool found = false;
+	bool updated = false;
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		if (&(**it) == &link) {
 			found = true;
+			updated = true;
 			break;
 		} else if ((**it).SiteName == link.SiteName) {
 			if (link.getPredefinedId() != std::string()) {
-				(*it)->loadFrom(link);
+				if (*(link.getUpdated()) > *((**it).getUpdated())) {
+					(*it)->loadFrom(link);
+					updated = true;
+				}
 			} else if (isAuto) {
-				(*it)->loadLinksFrom(link);
+				if (*(link.getUpdated()) > *((**it).getUpdated())) {
+					(*it)->loadLinksFrom(link);
+					updated = true;
+				}
 			} else {
 				(*it)->loadSummaryFrom(link);
+				updated = true;
 			}
 			found = true;
 			break;
@@ -138,9 +147,12 @@ void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool is
 		newlink->loadFrom(link);
 		myLinks.push_back(newlink);
 		std::sort(myLinks.begin(), myLinks.end(), Comparator());
+		updated = true;
 	}
-	BooksDB::Instance().saveNetworkLink(link, isAuto);
-	FBReader::Instance().invalidateNetworkView();
+	if (updated) {
+		BooksDB::Instance().saveNetworkLink(link, isAuto);
+		FBReader::Instance().invalidateNetworkView();
+	}
 }
 
 void *updLinks( void *ptr ) {
