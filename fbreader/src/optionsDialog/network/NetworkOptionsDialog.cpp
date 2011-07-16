@@ -31,8 +31,8 @@
 
 #include "../../fbreader/FBReader.h"
 
-#include "../../network/NetworkLinkCollection.h"
-#include "../../network/NetworkLink.h"
+//#include "../../network/NetworkLinkCollection.h"
+//#include "../../network/NetworkLink.h"
 #include "../../network/UserList.h"
 
 
@@ -83,11 +83,11 @@ NetworkOptionsDialog::NetworkOptionsDialog() : AbstractOptionsDialog(ZLResourceK
 		useProxyEntry->onStateChanged(useProxyEntry->initialState());
 	}
 
-	ZLDialogContent &libraryTab = dialog().createTab(ZLResourceKey("NetworkLibrary"));
+//	ZLDialogContent &libraryTab = dialog().createTab(ZLResourceKey("NetworkLibrary"));
 
-	NetworkLinkCollection &linkCollection = NetworkLinkCollection::Instance();
-	const size_t linkCollectionSize = linkCollection.size();
-	const size_t linkCollectionSizeMinusOne = linkCollectionSize - 1;
+//	NetworkLinkCollection &linkCollection = NetworkLinkCollection::Instance();
+//	const size_t linkCollectionSize = linkCollection.size();
+//	const size_t linkCollectionSizeMinusOne = linkCollectionSize - 1;
 //	for (size_t i = 0; i < linkCollectionSize; ++i) {
 //		NetworkLink &link = linkCollection.link(i);
 //		if (i < linkCollectionSizeMinusOne) {
