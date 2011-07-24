@@ -48,7 +48,6 @@ do_install:
 	@install -d $(FBSHAREDIR)/formats/xhtml
 	@install -m 0644 $(wildcard data/formats/xhtml/*.ent) $(FBSHAREDIR)/formats/xhtml
 	@install -d $(FBSHAREDIR)/formats/fb2
-	@sed "s/VERSION/$(VERSION)/" data/formats/fb2/FBReaderVersion.ent > $(FBSHAREDIR)/formats/fb2/FBReaderVersion.ent
 	@install -m 0644 data/formats/fb2/fb2genres.xml $(FBSHAREDIR)/formats/fb2
 	@install -d $(FBSHAREDIR)/default
 	@./scripts/install_toolbar_and_menu.sh $(VARIANT) $(UI_TYPE) $(FBSHAREDIR)/default

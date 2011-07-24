@@ -134,3 +134,7 @@ std::string ZLibrary::Country() {
 	}
 	return ourCountry;
 }
+
+std::string ZLibrary::Version() {
+	return VERSION;
+}
