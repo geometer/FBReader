@@ -39,8 +39,11 @@ protected:
 public:
 	virtual ~ZLApplicationWindow();
 
+	virtual void sendPaintEvent() {}
+
 public:
 	ZLApplication &application() const;
+
 
 protected:
 	virtual ZLViewWidget *createViewWidget() = 0;

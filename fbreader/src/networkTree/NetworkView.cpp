@@ -47,6 +47,7 @@ void NetworkView::drawCoverLater(FBReaderNode *node, int vOffset) {
 static void *updCovers(void *ptr) {
 	ZLExecutionData::Vector* v = (ZLExecutionData::Vector*) ptr;
 	ZLExecutionData::perform(*v);
+	FBReader::Instance().sendRefresh();
 	delete v;
 }
 

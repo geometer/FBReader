@@ -317,3 +317,8 @@ void ZLQtApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 void ZLQtApplicationWindow::setFocusToMainWidget() {
 	centralWidget()->setFocus();
 }
+
+void ZLQtApplicationWindow::sendPaintEvent() {
+//	QCoreApplication::postEvent(centralWidget(), new QPaintEvent(centralWidget()->rect()));
+	centralWidget()->update();
+}

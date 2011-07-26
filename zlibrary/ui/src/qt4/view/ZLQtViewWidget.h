@@ -54,6 +54,8 @@ public:
 	ZLQtViewWidget(QWidget *parent, ZLApplication *application);
 	QWidget *widget();
 
+	void sendPaintEvent();
+
 private Q_SLOTS:
 	void onVerticalSliderMoved(int value);
 	void onHorizontalSliderMoved(int value);

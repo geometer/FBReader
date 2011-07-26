@@ -24,6 +24,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QMouseEvent>
+#include <QtCore/QCoreApplication>
 
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
@@ -296,4 +297,9 @@ void ZLQtViewWidget::onHorizontalSliderClicked(int value) {
 
 QWidget *ZLQtViewWidget::widget() {
 	return myFrame;
+}
+
+void ZLQtViewWidget::sendPaintEvent() {
+//	QCoreApplication::postEvent(myQWidget, new QPaintEvent(myQWidget->rect()));
+	myQWidget->update();
 }

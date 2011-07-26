@@ -139,6 +139,15 @@ void ZLApplication::refreshWindow() {
 	}
 }
 
+void ZLApplication::sendRefresh() {
+	if (!myViewWidget.isNull()) {
+		myViewWidget->sendPaintEvent();
+	}
+	if (!myWindow.isNull()) {
+		myWindow->sendPaintEvent();
+	}
+}
+
 void ZLApplication::presentWindow() {
 	if (!myWindow.isNull()) {
 		myWindow->present();

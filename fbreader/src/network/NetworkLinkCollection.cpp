@@ -152,6 +152,7 @@ void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool is
 	if (updated) {
 		BooksDB::Instance().saveNetworkLink(link, isAuto);
 		FBReader::Instance().invalidateNetworkView();
+		FBReader::Instance().sendRefresh();
 	}
 }
 
