@@ -364,3 +364,7 @@ GtkWidget *ZLGtkViewWidget::area() {
 GtkWidget *ZLGtkViewWidget::areaWithScrollbars() {
 	return GTK_WIDGET(myTable);
 }
+
+void ZLGtkViewWidget::sendPaintEvent() {
+	repaint();
+}
