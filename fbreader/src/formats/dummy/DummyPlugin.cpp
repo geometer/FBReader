@@ -47,6 +47,6 @@ bool DummyPlugin::readModel(BookModel &model) const {
 	return DummyBookReader(model).readBook(ZLFile(book.fileName()).inputStream());
 }
 
-shared_ptr<ZLImage> DummyPlugin::coverImage(const Book &book) const {
-	return DummyCoverReader(book).readCover();
+shared_ptr<ZLImage> DummyPlugin::coverImage(const ZLFile &file) const {
+	return DummyCoverReader(file).readCover();
 }

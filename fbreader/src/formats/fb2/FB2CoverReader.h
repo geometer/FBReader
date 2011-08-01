@@ -29,7 +29,7 @@ class ZLImage;
 class FB2CoverReader : public FB2Reader {
 
 public:
-	FB2CoverReader(const Book &book);
+	FB2CoverReader(const ZLFile &file);
 	shared_ptr<ZLImage> readCover();
 
 private:
