@@ -17,16 +17,27 @@
  * 02110-1301, USA.
  */
 
-#include <cctype>
+#ifndef __ZLQTDIALOG_H__
+#define __ZLQTDIALOG_H__
 
-#include <QtGui/QKeyEvent>
+#include <QtGui/QDialog>
+#include <QtGui/QLayout>
 
-#include <ZLUnicodeUtil.h>
+#include <ZLDialog.h>
 
-#include "ZLQtKeyUtil.h"
+class ZLQtDialog : public QDialog, public ZLDialog {
 
-std::string ZLQtKeyUtil::keyName(QKeyEvent *keyEvent) {
-	const QString s = keyEvent->text();
-	const int unicode = s.isEmpty() ? 0 : s[0].unicode();
-	return ZLKeyUtil::keyName(unicode, keyEvent->key(), keyEvent->modifiers());
-}
+public:
+	ZLQtDialog(const ZLResource &resource);
+	~ZLQtDialog();
+
+	void addButton(const ZLResourceKey &key, bool accept);
+	bool run();
+
+private:
+	QGridLayout *myButtonLayout;
+	QWidget *myButtonGroup;
+	int myButtonNumber;
+};
+
+#endif /* __ZLQTDIALOG_H__ */

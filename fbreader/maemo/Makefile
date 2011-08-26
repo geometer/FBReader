@@ -8,6 +8,12 @@ DESKTOP_FILE = FBReader.desktop
 SERVICE_FILE = FBReader.service
 BACKUP_CONF = FBReader.backup
 
+ifeq "$(UI_TYPE)" "qml"
+	DESKTOP_DIR = ""
+else
+	DESKTOP_DIR = "hildon"
+endif
+
 install:
 	@install -m 0644 ../data/default/keymap.maemo.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
 	@install -m 0644 ../data/default/styles.maemo.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
@@ -19,10 +25,10 @@ install:
 	@install -m 0644 ../data/icons/application/48x48.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/48x48/apps/FBReader.png
 	@install -d $(DESTDIR)$(SHAREDIR)/icons/hicolor/64x64/apps
 	@install -m 0644 ../data/icons/application/64x64.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/64x64/apps/FBReader.png
-	@install -d $(DESTDIR)$(SHAREDIR)/applications/hildon
-	@install -m 0644 $(DESKTOP_FILE) $(DESTDIR)$(SHAREDIR)/applications/hildon
+	@install -d $(DESTDIR)$(SHAREDIR)/applications/$(DESKTOP_DIR)
+	@install -m 0644 $(DESKTOP_FILE) $(DESTDIR)$(SHAREDIR)/applications/$(DESKTOP_DIR)
 	@install -d $(DESTDIR)$(MENUDIR)
-	@cd $(DESTDIR)$(MENUDIR); ln -sf ../../../usr/share/applications/hildon/$(DESKTOP_FILE) 0000_$(DESKTOP_FILE)
+	@cd $(DESTDIR)$(MENUDIR); ln -sf ../../../usr/share/applications/$(DESKTOP_DIR)/$(DESKTOP_FILE) 0000_$(DESKTOP_FILE)
 	@install -d $(DESTDIR)$(DBUSDIR)
 	@install -m 0644 $(SERVICE_FILE) $(DESTDIR)$(DBUSDIR)
 	@install -d $(DESTDIR)/etc/osso-backup/applications

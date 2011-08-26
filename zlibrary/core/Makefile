@@ -27,6 +27,11 @@ ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pepperpad3>)"
   SUBDIRS += src/desktop/application src/desktop/dialogs
 endif
 
+# TODO: Temporary, remove it
+ifeq "$(UI_TYPE)" "qml"
+  SUBDIRS += src/desktop/application src/desktop/dialogs
+endif
+
 ifeq "$(TARGET_ARCH)" "pdaxrom"
   SUBDIRS += src/desktop/dialogs
 endif

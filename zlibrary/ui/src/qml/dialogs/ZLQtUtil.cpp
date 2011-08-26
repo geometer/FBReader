@@ -17,16 +17,17 @@
  * 02110-1301, USA.
  */
 
-#include <cctype>
+#include <ZLDialogManager.h>
 
-#include <QtGui/QKeyEvent>
+#include "ZLQtUtil.h"
 
-#include <ZLUnicodeUtil.h>
+QString qtString(const std::string &text) {
+	return QString::fromUtf8(text.c_str());
+}
 
-#include "ZLQtKeyUtil.h"
-
-std::string ZLQtKeyUtil::keyName(QKeyEvent *keyEvent) {
-	const QString s = keyEvent->text();
-	const int unicode = s.isEmpty() ? 0 : s[0].unicode();
-	return ZLKeyUtil::keyName(unicode, keyEvent->key(), keyEvent->modifiers());
+QString qtButtonName(const ZLResourceKey &key) {
+	if (key.Name.empty()) {
+		return QString::null;
+	}
+	return ::qtString(ZLDialogManager::buttonName(key));
 }

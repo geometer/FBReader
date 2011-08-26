@@ -13,8 +13,9 @@ RM_QUIET = rm -rf
 
 LD = g++
 ifeq "$(UI_TYPE)" "qml" # Meego 1.2 Harmattan
+	CC = gcc
 	CFLAGS = -DMEEGO_VERSION_MAJOR=1 -DMEEGO_VERSION_MINOR=2 -DMEEGO_VERSION_PATCH=0 -DMEEGO_EDITION=harmattan -DMEEGO_EDITION_HARMATTAN
-	CFLAGS = $(CFLAGS) -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
+	CFLAGS += -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
 	MOC = moc-qt4
 	QTINCLUDE = -I/usr/include/qt4 -I/usr/include/qt4/QtDeclarative -I/usr/include/qt4/QtScript -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtNetwork -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtOpenGL
 	UILIBS = -lQtCore -lQtGui -lQtDeclarative -lQtOpenGL

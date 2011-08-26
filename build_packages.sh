@@ -90,6 +90,10 @@ build_package() {
 					/scratchbox/login sb-conf se FREMANTLE_ARMEL
 					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
 					;;
+				maemo6)
+					/scratchbox/login sb-conf se HARMATTAN_ARMEL
+					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
+					;;
 				*)
 					$make_package ARCHITECTURE=$1 $2
 					;;
