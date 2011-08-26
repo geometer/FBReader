@@ -46,6 +46,10 @@ ifeq "$(UI_TYPE)" "qt4"
   QTSUBDIRS = src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/filesystem src/qt4/library src/unix/message src/qt4/application
 endif
 
+ifeq "$(UI_TYPE)" "qml"
+  QTSUBDIRS = src/qml/time src/qml/dialogs src/qml/view src/qml/image src/qml/util src/qml/filesystem src/qml/library src/unix/message src/qml/application
+endif
+
 ifeq "$(UI_TYPE)" "gtk"
   GTKSUBDIRS = src/gtk/time src/gtk/dialogs src/gtk/optionView src/gtk/image src/gtk/util src/gtk/filesystem src/gtk/library src/gtk/view src/unix/message src/gtk/application-$(TARGET_ARCH) src/gtk/pixbuf
 endif
