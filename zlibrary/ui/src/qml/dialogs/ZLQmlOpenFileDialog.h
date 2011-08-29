@@ -20,29 +20,40 @@
 #ifndef __ZLQTOPENFILEDIALOG_H__
 #define __ZLQTOPENFILEDIALOG_H__
 
-#include "../../../../core/src/desktop/dialogs/ZLDesktopOpenFileDialog.h"
+#include "../../../../core/src/dialogs/ZLOpenFileDialog.h"
+#include <QtCore/QObject>
 
 class QFileDialog;
 
-class ZLQtOpenFileDialog : public ZLDesktopOpenFileDialog {
-
+class ZLQmlOpenFileDialog : public QObject, public ZLOpenFileDialog {
+	Q_OBJECT
+	Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
+	Q_PROPERTY(QString directoryPath READ dirPath WRITE setDirPath NOTIFY dirPathChanged)
 public:
-	ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter);
-	~ZLQtOpenFileDialog();
-
-	bool runInternal();
+	ZLQmlOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter);
+	~ZLQmlOpenFileDialog();
+	
+	bool run();
 	std::string filePath() const;
 	std::string directoryPath() const;
-
-	void setPosition(int x, int y);
-	void setSize(int width, int height);
-	int x() const;
-	int y() const;
-	int width() const;
-	int height() const;
+	QString fileName() const;
+	void setFileName(const QString &fileName);
+	QString dirPath() const;
+	void setDirPath(const QString &dirPath);
+	
+public Q_SLOTS:
+	void finish();
+	bool check(const QString &filePath);
+	
+Q_SIGNALS:
+	void finished();
+	void fileNameChanged(const QString &fileName);
+	void dirPathChanged(const QString &dirPath);
 
 private:
-	QFileDialog *myDialog;
+	const Filter &myFilter;
+	QString myFilePath;
+	QString myDirPath;
 };
 
 #endif /* __ZLQTOPENFILEDIALOG_H__ */

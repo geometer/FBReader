@@ -12,6 +12,9 @@ case "$1" in
 		;;
 	maemo)
 		case "$2" in
+			qml)
+				config_file=data/default/config.maemo6.xml
+				;;
 			maemo5)
 				config_file=data/default/config.maemo5.xml
 				;;

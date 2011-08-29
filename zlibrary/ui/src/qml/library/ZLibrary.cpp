@@ -27,9 +27,9 @@
 
 #include "../filesystem/ZLQtFSManager.h"
 #include "../time/ZLQtTime.h"
-#include "../dialogs/ZLQtDialogManager.h"
+#include "../dialogs/ZLQmlDialogManager.h"
 #include "../image/ZLQtImageManager.h"
-#include "../view/ZLQtPaintContext.h"
+#include "../view/ZLQmlPaintContext.h"
 #include "../../unix/message/ZLUnixMessage.h"
 #include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
@@ -56,7 +56,7 @@ void ZLQmlLibraryImplementation::init(int &argc, char **&argv) {
 	XMLConfigManager::createInstance();
 	ZLQtTimeManager::createInstance();
 	ZLQtFSManager::createInstance();
-	ZLQtDialogManager::createInstance();
+	ZLQmlDialogManager::createInstance();
 	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
 	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
@@ -66,7 +66,7 @@ void ZLQmlLibraryImplementation::init(int &argc, char **&argv) {
 }
 
 ZLPaintContext *ZLQmlLibraryImplementation::createContext() {
-	return new ZLQtPaintContext();
+	return new ZLQmlPaintContext();
 }
 
 void ZLQmlLibraryImplementation::run(ZLApplication *application) {

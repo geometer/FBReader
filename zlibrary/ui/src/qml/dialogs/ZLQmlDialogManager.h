@@ -21,16 +21,18 @@
 #define __ZLQTDIALOGMANAGER_H__
 
 #include <ZLDialogManager.h>
+#include <QtCore/QObject>
 
 class QWidget;
 
-class ZLQtDialogManager : public ZLDialogManager {
+class ZLQmlDialogManager : public QObject, public ZLDialogManager {
+	Q_OBJECT
 
 public:
-	static void createInstance() { ourInstance = new ZLQtDialogManager(); }
+	static void createInstance() { ourInstance = new ZLQmlDialogManager(); }
 
 private:
-	ZLQtDialogManager() : myStoredWindow(0) {}
+	ZLQmlDialogManager() : myStoredWindow(0) {}
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
@@ -46,6 +48,9 @@ public:
 	bool isClipboardSupported(ClipboardType type) const;
 	void setClipboardText(const std::string &text, ClipboardType type) const;
 	void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const;
+
+Q_SIGNALS:
+	void fileDialogRequested(QObject *object);
 
 private:
 	mutable QWidget *myStoredWindow;

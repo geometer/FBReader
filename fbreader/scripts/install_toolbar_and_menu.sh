@@ -15,6 +15,9 @@ case "$1" in
 		;;
 	maemo)
 		case "$2" in
+			qml)
+			toolbar_file=data/default/toolbar.maemo6.xml
+				;;
 			maemo5)
 				;;
 			*)
@@ -39,6 +42,9 @@ case "$1" in
 		;;
 	maemo)
 		case "$2" in
+			qml)
+				menubar_file=data/default/menubar.maemo6.xml
+				;;
 			maemo5)
 				menubar_file=data/default/menubar.maemo5.xml
 				;;

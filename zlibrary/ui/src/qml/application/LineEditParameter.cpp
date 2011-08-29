@@ -22,24 +22,24 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QKeyEvent>
 
-#include "ZLQtApplicationWindow.h"
+#include "ZLQmlApplicationWindow.h"
 #include "../util/ZLQtKeyUtil.h"
 
 class ZLQtLineEdit : public QLineEdit {
 
 public:
-	ZLQtLineEdit(QToolBar *toolbar, ZLQtApplicationWindow &window, ZLQtApplicationWindow::LineEditParameter &parameter, const std::string &actionId);
+	ZLQtLineEdit(QToolBar *toolbar, ZLQmlApplicationWindow &window, ZLQmlApplicationWindow::LineEditParameter &parameter, const std::string &actionId);
 
 private:
 	void keyReleaseEvent(QKeyEvent *event);
 
 private:
-	ZLQtApplicationWindow &myWindow;
-	ZLQtApplicationWindow::LineEditParameter &myParameter;
+	ZLQmlApplicationWindow &myWindow;
+	ZLQmlApplicationWindow::LineEditParameter &myParameter;
 	const std::string myActionId;
 };
 
-ZLQtLineEdit::ZLQtLineEdit(QToolBar *toolbar, ZLQtApplicationWindow &window, ZLQtApplicationWindow::LineEditParameter &parameter, const std::string &actionId) : QLineEdit(toolbar), myWindow(window), myParameter(parameter), myActionId(actionId) {
+ZLQtLineEdit::ZLQtLineEdit(QToolBar *toolbar, ZLQmlApplicationWindow &window, ZLQmlApplicationWindow::LineEditParameter &parameter, const std::string &actionId) : QLineEdit(toolbar), myWindow(window), myParameter(parameter), myActionId(actionId) {
 }
 
 void ZLQtLineEdit::keyReleaseEvent(QKeyEvent *event) {
@@ -54,7 +54,7 @@ void ZLQtLineEdit::keyReleaseEvent(QKeyEvent *event) {
 	}
 }
 
-ZLQtApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::ParameterItem &textFieldItem) {
+ZLQmlApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, ZLQmlApplicationWindow &window, const ZLToolbar::ParameterItem &textFieldItem) {
 	myEdit = new ZLQtLineEdit(toolbar, window, *this, textFieldItem.actionId());
 	myEdit->setAlignment(Qt::AlignHCenter);
 	myEdit->setMaxLength(textFieldItem.maxWidth());
@@ -67,18 +67,18 @@ ZLQtApplicationWindow::LineEditParameter::LineEditParameter(QToolBar *toolbar, Z
 	//layout->addStretch();
 }
 
-QAction *ZLQtApplicationWindow::LineEditParameter::action() const {
+QAction *ZLQmlApplicationWindow::LineEditParameter::action() const {
 	return myAction;
 }
 
-std::string ZLQtApplicationWindow::LineEditParameter::internalValue() const {
+std::string ZLQmlApplicationWindow::LineEditParameter::internalValue() const {
 	return (const char*)myEdit->text().toUtf8();
 }
 
-void ZLQtApplicationWindow::LineEditParameter::internalSetValue(const std::string &value) {
+void ZLQmlApplicationWindow::LineEditParameter::internalSetValue(const std::string &value) {
 	myEdit->setText(QString::fromUtf8(value.c_str()));
 }
 
-void ZLQtApplicationWindow::LineEditParameter::restoreOldValue() {
+void ZLQmlApplicationWindow::LineEditParameter::restoreOldValue() {
 	VisualParameter::restoreOldValue();
 }
