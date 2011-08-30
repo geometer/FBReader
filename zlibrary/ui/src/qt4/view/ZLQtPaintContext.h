@@ -17,23 +17,23 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQmlPaintContext_H__
-#define __ZLQmlPaintContext_H__
+#ifndef __ZLQTPAINTCONTEXT_H__
+#define __ZLQTPAINTCONTEXT_H__
 
 #include <ZLPaintContext.h>
 
-#include <QtGui/QFont>
 class QPainter;
 class QPixmap;
 
-class ZLQmlPaintContext : public ZLPaintContext {
+class ZLQtPaintContext : public ZLPaintContext {
 
 public:
-	ZLQmlPaintContext();
-	~ZLQmlPaintContext();
+	ZLQtPaintContext();
+	~ZLQtPaintContext();
 
-	void beginPaint(int w, int h, QPainter *painter);
-	void endPaint();
+	const QPixmap &pixmap() const { return *myPixmap; }
+
+	void setSize(int w, int h);
 
 	int width() const;
 	int height() const;
@@ -62,11 +62,15 @@ public:
 
 private:
 	QPainter *myPainter;
-	int myWidth;
-	int myHeight;
+	QPixmap *myPixmap;
 	mutable int mySpaceWidth;
 	int myDescent;
-	QFont myFont;	
+
+	bool myFontIsStored;
+	std::string myStoredFamily;
+	int myStoredSize;
+	bool myStoredBold;
+	bool myStoredItalic;	
 };
 
-#endif /* __ZLQmlPaintContext_H__ */
+#endif /* __ZLQTPAINTCONTEXT_H__ */

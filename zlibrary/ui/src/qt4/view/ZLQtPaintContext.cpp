@@ -25,40 +25,54 @@
 
 #include <ZLImage.h>
 
-#include "ZLQmlPaintContext.h"
+#include "ZLQtPaintContext.h"
 #include "../image/ZLQtImageManager.h"
 
-ZLQmlPaintContext::ZLQmlPaintContext() {
-	myPainter = 0;
-	myWidth = 0;
-	myHeight = 0;
+ZLQtPaintContext::ZLQtPaintContext() {
+	myPainter = new QPainter();
+	myPixmap = 0;
 	mySpaceWidth = -1;
 	myDescent = 0;
+	myFontIsStored = false;
 }
 
-ZLQmlPaintContext::~ZLQmlPaintContext() {
+ZLQtPaintContext::~ZLQtPaintContext() {
+	if (myPixmap != 0) {
+		myPainter->end();
+		delete myPixmap;
+	}
+	delete myPainter;
 }
 
-void ZLQmlPaintContext::beginPaint(int w, int h, QPainter *painter) {
-	myPainter = painter;
-	myWidth = w;
-	myHeight = h;
-	myPainter->setFont(myFont);
-}
-
-void ZLQmlPaintContext::endPaint() {
-	myPainter = 0;
+void ZLQtPaintContext::setSize(int w, int h) {
+	if (myPixmap != 0) {
+		if ((myPixmap->width() != w) || (myPixmap->height() != h)) {
+			myPainter->end();
+			delete myPixmap;
+			myPixmap = 0;
+		}
+	}
+	if ((myPixmap == 0) && (w > 0) && (h > 0)) {
+		myPixmap = new QPixmap(w, h);
+		myPainter->begin(myPixmap);
+		if (myFontIsStored) {
+			myFontIsStored = false;
+			setFont(myStoredFamily, myStoredSize, myStoredBold, myStoredItalic);
+		}
+	}
 }
 
 static const std::string HELVETICA = "Helvetica";
 
-void ZLQmlPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
+void ZLQtPaintContext::fillFamiliesList(std::vector<std::string> &families) const {
 	QFontDatabase db;
-	const QStringList qFamilies = db.families();
+	QStringList qFamilies = db.families();
 	bool helveticaFlag = false;
-	for (QStringList::ConstIterator it = qFamilies.begin(); it != qFamilies.end(); ++it) {
-		std::string family = it->toUtf8().constData();
-		helveticaFlag |= (family == HELVETICA);
+	for (QStringList::Iterator it = qFamilies.begin(); it != qFamilies.end(); ++it) {
+		std::string family = (const char*)(*it).toUtf8();
+		if (family == HELVETICA) {
+			helveticaFlag = true;
+		}
 		families.push_back(family);
 	}
 	if (!helveticaFlag) {
@@ -66,7 +80,7 @@ void ZLQmlPaintContext::fillFamiliesList(std::vector<std::string> &families) con
 	}
 }
 
-const std::string ZLQmlPaintContext::realFontFamilyName(std::string &fontFamily) const {
+const std::string ZLQtPaintContext::realFontFamilyName(std::string &fontFamily) const {
 	QString fullName = QFontInfo(QFont(QString::fromUtf8(fontFamily.c_str()))).family();
 	if (fullName.isNull() || fullName.isEmpty()) {
 		return HELVETICA;
@@ -75,41 +89,46 @@ const std::string ZLQmlPaintContext::realFontFamilyName(std::string &fontFamily)
 	return (const char*)fullName.toUtf8();
 }
 
-void ZLQmlPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
-	bool fontChanged = false;
+void ZLQtPaintContext::setFont(const std::string &family, int size, bool bold, bool italic) {
+	if (myPainter->device() == 0) {
+		myFontIsStored = true;
+		myStoredFamily = family;
+		myStoredSize = size;
+		myStoredBold = bold;
+		myStoredItalic= italic;
+	} else {
+		QFont font = myPainter->font();
+		bool fontChanged = false;
 
-	if (myFont.family() != QLatin1String(family.c_str())) {
-		myFont.setFamily(QLatin1String(family.c_str()));
-		fontChanged = true;
-	}
+		if (font.family() != family.c_str()) {
+			font.setFamily(family.c_str());
+			fontChanged = true;
+		}
 
-	if (myFont.pointSize() != size) {
-		myFont.setPointSize(size);
-		fontChanged = true;
-	}
+		if (font.pointSize() != size) {
+			font.setPointSize(size);
+			fontChanged = true;
+		}
 
-	if ((myFont.weight() != (bold ? QFont::Bold : QFont::Normal))) {
-		myFont.setWeight(bold ? QFont::Bold : QFont::Normal);
-		fontChanged = true;
-	}
+		if ((font.weight() != (bold ? QFont::Bold : QFont::Normal))) {
+			font.setWeight(bold ? QFont::Bold : QFont::Normal);
+			fontChanged = true;
+		}
 
-	if (myFont.italic() != italic) {
-		myFont.setItalic(italic);
-		fontChanged = true;
-	}
+		if (font.italic() != italic) {
+			font.setItalic(italic);
+			fontChanged = true;
+		}
 
-	if (fontChanged) {
-		mySpaceWidth = -1;
-		QFontMetrics fontMetrics(myFont);
-		myDescent = fontMetrics.descent();
-		if (myPainter)
-			myPainter->setFont(myFont);
+		if (fontChanged) {
+			myPainter->setFont(font);
+			mySpaceWidth = -1;
+			myDescent = myPainter->fontMetrics().descent();
+		}
 	}
 }
 
-void ZLQmlPaintContext::setColor(ZLColor color, LineStyle style) {
-	if (!myPainter)
-		return;
+void ZLQtPaintContext::setColor(ZLColor color, LineStyle style) {
 	myPainter->setPen(QPen(
 		QColor(color.Red, color.Green, color.Blue),
 		1,
@@ -117,60 +136,51 @@ void ZLQmlPaintContext::setColor(ZLColor color, LineStyle style) {
 	));
 }
 
-void ZLQmlPaintContext::setFillColor(ZLColor color, FillStyle style) {
-	if (!myPainter)
-		return;
+void ZLQtPaintContext::setFillColor(ZLColor color, FillStyle style) {
 	myPainter->setBrush(QBrush(
 		QColor(color.Red, color.Green, color.Blue),
 		(style == SOLID_FILL) ? Qt::SolidPattern : Qt::Dense4Pattern
 	));
 }
 
-int ZLQmlPaintContext::stringWidth(const char *str, int len, bool) const {
-	QFontMetrics fontMetrics(myFont);
-	return fontMetrics.width(QString::fromUtf8(str, len));
+int ZLQtPaintContext::stringWidth(const char *str, int len, bool) const {
+	return myPainter->fontMetrics().width(QString::fromUtf8(str, len));
 }
 
-int ZLQmlPaintContext::spaceWidth() const {
-	if (mySpaceWidth == -1 && myPainter) {
+int ZLQtPaintContext::spaceWidth() const {
+	if (mySpaceWidth == -1) {
 		mySpaceWidth = myPainter->fontMetrics().width(' ');
 	}
 	return mySpaceWidth;
 }
 
-int ZLQmlPaintContext::descent() const {
+int ZLQtPaintContext::descent() const {
 	return myDescent;
 }
 
-int ZLQmlPaintContext::stringHeight() const {
-	return myFont.pointSize() + 2;
+int ZLQtPaintContext::stringHeight() const {
+	return myPainter->font().pointSize() + 2;
 }
 
-void ZLQmlPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
-	if (!myPainter)
-		return;
+void ZLQtPaintContext::drawString(int x, int y, const char *str, int len, bool rtl) {
 	QString qStr = QString::fromUtf8(str, len);
 	myPainter->setLayoutDirection(rtl ? Qt::RightToLeft : Qt::LeftToRight);
 	myPainter->drawText(x, y, qStr);
 }
 
-void ZLQmlPaintContext::drawImage(int x, int y, const ZLImageData &image) {
-	if (!myPainter)
-		return;
+void ZLQtPaintContext::drawImage(int x, int y, const ZLImageData &image) {
 	const QImage *qImage = ((ZLQtImageData&)image).image();
 	if (qImage != 0) {
 		myPainter->drawImage(x, y - image.height(), *qImage);
 	}
 }
 
-void ZLQmlPaintContext::drawImage(int x, int y, const ZLImageData &image, int width, int height, ScalingType type) {
-	if (!myPainter)
-		return;
+void ZLQtPaintContext::drawImage(int x, int y, const ZLImageData &image, int width, int height, ScalingType type) {
 	const QImage *qImage = ((ZLQtImageData&)image).image();
 	if (qImage == 0) {
 		return;
 	}
-	const QImage scaled = qImage->scaled(
+	const QImage &scaled = qImage->scaled(
 		QSize(imageWidth(image, width, height, type),
 					imageHeight(image, width, height, type)),
 		Qt::KeepAspectRatio,
@@ -179,17 +189,13 @@ void ZLQmlPaintContext::drawImage(int x, int y, const ZLImageData &image, int wi
 	myPainter->drawImage(x, y - scaled.height(), scaled);
 }
 
-void ZLQmlPaintContext::drawLine(int x0, int y0, int x1, int y1) {
-	if (!myPainter)
-		return;
+void ZLQtPaintContext::drawLine(int x0, int y0, int x1, int y1) {
 	myPainter->drawPoint(x0, y0);
 	myPainter->drawLine(x0, y0, x1, y1);
 	myPainter->drawPoint(x1, y1);
 }
 
-void ZLQmlPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
-	if (!myPainter)
-		return;
+void ZLQtPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 	if (x1 < x0) {
 		int tmp = x1;
 		x1 = x0;
@@ -205,23 +211,26 @@ void ZLQmlPaintContext::fillRectangle(int x0, int y0, int x1, int y1) {
 											myPainter->brush());
 }
 
-void ZLQmlPaintContext::drawFilledCircle(int x, int y, int r) {
-	if (!myPainter)
-		return;
+void ZLQtPaintContext::drawFilledCircle(int x, int y, int r) {
 	myPainter->drawEllipse(x - r, y - r, 2 * r + 1, 2 * r + 1);
 }
 
-void ZLQmlPaintContext::clear(ZLColor color) {
-	if (!myPainter)
-		return;
-	myPainter->fillRect(0, 0, myWidth, myHeight,
-	                    QColor(color.Red, color.Green, color.Blue));
+void ZLQtPaintContext::clear(ZLColor color) {
+	if (myPixmap != 0) {
+		myPixmap->fill(QColor(color.Red, color.Green, color.Blue));
+	}
 }
 
-int ZLQmlPaintContext::width() const {
-	return myWidth;
+int ZLQtPaintContext::width() const {
+	if (myPixmap == 0) {
+		return 0;
+	}
+	return myPixmap->width();
 }
 
-int ZLQmlPaintContext::height() const {
-	return myHeight;
+int ZLQtPaintContext::height() const {
+	if (myPixmap == 0) {
+		return 0;
+	}
+	return myPixmap->height();
 }
