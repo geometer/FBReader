@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2011 Ruslan Nigmatullin <euroelessar@ya.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +17,32 @@
  * 02110-1301, USA.
  */
 
-#include <ZLDialogManager.h>
+import QtQuick 1.0
+import com.nokia.meego 1.0
 
-#include "ZLQtUtil.h"
-#include <ZLColor.h>
-#include <QtGui/QColor>
+Item {
+	id: root
+	property variant handler
+	width: parent.width
+	height: switchItem.height
+	visible: handler.visible
+	enabled: handler.enabled
+	
+	Label {
+		anchors { left: root.left; right: switchItem.left; verticalCenter: switchItem.verticalCenter }
+		anchors.rightMargin: 15
+		text: handler.name
+	}
 
-QString qtButtonName(const ZLResourceKey &key) {
-	if (key.Name.empty())
-		return QString();
-	// We don't have shortcuts
-	return QString::fromStdString(ZLDialogManager::buttonName(key)).remove('&');
-}
-
-QColor qtColor(const ZLColor &color) {
-	return QColor(color.Red, color.Green, color.Blue);
+	Switch {
+		id: switchItem
+		anchors { top: root.top; right: root.right }
+		visible: handler.visible
+		onCheckedChanged: if (handler.checked != switchItem.checked) handler.checked = switchItem.checked
+	}
+	
+	Connections {
+		target: root.handler
+		onCheckedChanged: switchItem.checked = root.handler.checked
+	}
 }

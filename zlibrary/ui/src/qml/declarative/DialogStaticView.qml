@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2011 Ruslan Nigmatullin <euroelessar@ya.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,14 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQTDIALOG_H__
-#define __ZLQTDIALOG_H__
+import QtQuick 1.0
+import com.nokia.meego 1.0
 
-#include <QtGui/QDialog>
-#include <QtGui/QLayout>
-
-#include <ZLDialog.h>
-
-class ZLQtDialog : public QDialog, public ZLDialog {
-
-public:
-	ZLQtDialog(const ZLResource &resource);
-	~ZLQtDialog();
-
-	void addButton(const ZLResourceKey &key, bool accept);
-	bool run();
-
-private:
-	QGridLayout *myButtonLayout;
-	QWidget *myButtonGroup;
-	int myButtonNumber;
-};
-
-#endif /* __ZLQTDIALOG_H__ */
+Label {
+	id: root
+	property variant handler
+	width: parent.width
+	visible: handler.visible
+	enabled: handler.enabled
+	text: handler.text
+}

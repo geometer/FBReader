@@ -32,7 +32,7 @@ public:
 	static void createInstance() { ourInstance = new ZLQmlDialogManager(); }
 
 private:
-	ZLQmlDialogManager() : myStoredWindow(0) {}
+	ZLQmlDialogManager();
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
@@ -50,10 +50,12 @@ public:
 	void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const;
 
 Q_SIGNALS:
+	void privateDialogRequested(QObject *object);
+	void dialogRequested(QObject *object);
+	void privateFileDialogRequested(QObject *object);
 	void fileDialogRequested(QObject *object);
-
-private:
-	mutable QWidget *myStoredWindow;
+	void privateOptionsDialogRequested(QObject *object);
+	void optionsDialogRequested(QObject *object);
 };
 
 #endif /* __ZLQTDIALOGMANAGER_H__ */

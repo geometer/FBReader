@@ -21,35 +21,36 @@
 #define __ZLQTDIALOGCONTENT_H__
 
 #include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include <QObject>
 
 class QWidget;
 class QGridLayout;
 
-class ZLQtDialogContent : public ZLDialogContent {
-
+class ZLQmlDialogContent : public QObject, public ZLDialogContent {
+	Q_OBJECT
+	Q_PROPERTY(QObjectList items READ items NOTIFY itemsChanged)
+	Q_PROPERTY(QString title READ title CONSTANT)
 public:
-	ZLQtDialogContent(QWidget *parent, const ZLResource &resource);
-	~ZLQtDialogContent();
+	ZLQmlDialogContent(const ZLResource &resource, QObject *parent);
+	~ZLQmlDialogContent();
 
 	void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);
 	void addOptions(const std::string &name0, const std::string &tooltip0, ZLOptionEntry *option0,
 									const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1);
 
-	void addItem(QWidget *widget, int row, int fromColumn, int toColumn);
-
-	void close();
-
-	QWidget *widget();
-	QWidget *parentWidget();
+	QObjectList items() const;
+	QString title() const;
 
 private:
 	void createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option, int fromColumn, int toColumn);
 
+Q_SIGNALS:
+	void itemsChanged(const QObjectList &items);
+	
 private:
-	QWidget *myWidget;
-	QGridLayout *myLayout;
+	QObjectList myItems;
+	QString myTitle;
 	int myRowCounter;
-	QWidget *myParentWidget;
 };
 
 #endif /* __ZLQTDIALOGCONTENT_H__ */

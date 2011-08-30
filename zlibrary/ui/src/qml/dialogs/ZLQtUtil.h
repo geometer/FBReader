@@ -21,10 +21,12 @@
 #define __ZLQTUTIL_H__
 
 #include <QtCore/QString>
-
 #include <ZLResource.h>
 
-QString qtString(const std::string &text);
+class ZLColor;
+class QColor;
+
 QString qtButtonName(const ZLResourceKey &key);
+QColor qtColor(const ZLColor &color);
 
 #endif /* __ZLQTUTIL_H__ */

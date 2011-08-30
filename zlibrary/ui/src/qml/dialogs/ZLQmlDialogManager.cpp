@@ -24,54 +24,59 @@
 #include <QtGui/QDesktopWidget>
 
 #include "ZLQmlDialogManager.h"
-#include "ZLQtDialog.h"
-#include "ZLQtOptionsDialog.h"
+#include "ZLQmlDialog.h"
+#include "ZLQmlOptionsDialog.h"
 #include "ZLQmlOpenFileDialog.h"
-#include "ZLQtDialogContent.h"
+#include "ZLQmlDialogContent.h"
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
+#include <QtDeclarative/qdeclarative.h>
 
 #include "../image/ZLQtImageManager.h"
+#include "ZLQmlOptionView.h"
+
+ZLQmlDialogManager::ZLQmlDialogManager() {
+	connect(this, SIGNAL(privateDialogRequested(QObject*)),
+	        SIGNAL(dialogRequested(QObject*)), Qt::QueuedConnection);
+	connect(this, SIGNAL(privateFileDialogRequested(QObject*)),
+	        SIGNAL(fileDialogRequested(QObject*)), Qt::QueuedConnection);
+	connect(this, SIGNAL(privateOptionsDialogRequested(QObject*)),
+	        SIGNAL(optionsDialogRequested(QObject*)), Qt::QueuedConnection);
+	qmlRegisterUncreatableType<ZLQmlOptionView>("org.fbreader", 0, 14, "OptionView", "Uncreatable type");
+	qmlRegisterUncreatableType<ZLQmlBoolean3OptionView>("org.fbreader", 0, 14, "BooleanOptionView", "Uncreatable type");
+}
 
 shared_ptr<ZLDialog> ZLQmlDialogManager::createDialog(const ZLResourceKey &key) const {
-	myStoredWindow = qApp->activeWindow();
-	return new ZLQtDialog(resource()[key]);
+	ZLQmlDialog *dialog = new ZLQmlDialog(resource()[key]);
+	emit const_cast<ZLQmlDialogManager*>(this)->privateDialogRequested(dialog);
+	return dialog;
 }
 
 shared_ptr<ZLOptionsDialog> ZLQmlDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
-	myStoredWindow = qApp->activeWindow();
-	return new ZLQtOptionsDialog(resource()[key], applyAction, showApplyButton);
+	ZLQmlOptionsDialog *dialog = new ZLQmlOptionsDialog(resource()[key], applyAction, showApplyButton);
+	emit const_cast<ZLQmlDialogManager*>(this)->privateOptionsDialogRequested(dialog);
+	return dialog;
 }
 
 shared_ptr<ZLOpenFileDialog> ZLQmlDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
 	ZLQmlOpenFileDialog *dialog = new ZLQmlOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
-	qDebug("%s", Q_FUNC_INFO);
-	emit const_cast<ZLQmlDialogManager*>(this)->fileDialogRequested(dialog);
+	emit const_cast<ZLQmlDialogManager*>(this)->privateFileDialogRequested(dialog);
 	return dialog;
 }
 
 void ZLQmlDialogManager::informationBox(const std::string &title, const std::string &message) const {
 	QWidget *parent = qApp->activeWindow();
-	if (parent == 0) {
-		parent = myStoredWindow;
-	}
-	QMessageBox::information(parent, ::qtString(title), ::qtString(message), ::qtButtonName(OK_BUTTON));
+	QMessageBox::information(parent, QString::fromStdString(title), QString::fromStdString(message), ::qtButtonName(OK_BUTTON));
 }
 
 void ZLQmlDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
 	QWidget *parent = qApp->activeWindow();
-	if (parent == 0) {
-		parent = myStoredWindow;
-	}
-	QMessageBox::critical(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(OK_BUTTON));
+	QMessageBox::critical(parent, QString::fromStdString(dialogTitle(key)), QString::fromStdString(message), ::qtButtonName(OK_BUTTON));
 }
 
 int ZLQmlDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
 	QWidget *parent = qApp->activeWindow();
-	if (parent == 0) {
-		parent = myStoredWindow;
-	}
-	return QMessageBox::question(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
+	return QMessageBox::question(parent, QString::fromStdString(dialogTitle(key)), QString::fromStdString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
 }
 
 shared_ptr<ZLProgressDialog> ZLQmlDialogManager::createProgressDialog(const ZLResourceKey &key) const {
@@ -83,17 +88,17 @@ bool ZLQmlDialogManager::isClipboardSupported(ClipboardType type) const {
 }
 
 void ZLQmlDialogManager::setClipboardText(const std::string &text, ClipboardType type) const {
-	if (!text.empty()) {
-		qApp->clipboard()->setText(
-			::qtString(text),
-			(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
-		);
-	}
+	if (text.empty())
+		return;
+	qApp->clipboard()->setText(
+				QString::fromStdString(text),
+				(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
+							  );
 }
 
 void ZLQmlDialogManager::setClipboardImage(const ZLImageData &imageData, ClipboardType type) const {
 	qApp->clipboard()->setImage(
-		*((ZLQtImageData&)imageData).image(),
-		(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
-	);
+	            *static_cast<const ZLQtImageData&>(imageData).image(),
+	            (type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
+	                           );
 }

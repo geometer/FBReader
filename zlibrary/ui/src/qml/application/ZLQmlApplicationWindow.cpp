@@ -388,8 +388,8 @@ QStringList ZLQmlToolBarMenu::items() {
 }
 
 void ZLQmlToolBarMenu::setPopupData(const shared_ptr<ZLPopupData> &popupData) {
-	if ((myPopupData.isNull() ? -1 : myPopupData->id()) == (popupData.isNull() ? -1 : popupData->id()))
-		return;
+//	if ((myPopupData.isNull() ? -1 : myPopupData->id()) == (popupData.isNull() ? -1 : popupData->id()))
+//		return;
 	myPopupData = popupData;
 	myItems.clear();
 	if (!myPopupData.isNull()) {

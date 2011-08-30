@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2011 Ruslan Nigmatullin <euroelessar@ya.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +17,21 @@
  * 02110-1301, USA.
  */
 
-#include <ZLDialogManager.h>
+import QtQuick 1.0
+import com.nokia.meego 1.0
 
-#include "ZLQtUtil.h"
-#include <ZLColor.h>
-#include <QtGui/QColor>
-
-QString qtButtonName(const ZLResourceKey &key) {
-	if (key.Name.empty())
-		return QString();
-	// We don't have shortcuts
-	return QString::fromStdString(ZLDialogManager::buttonName(key)).remove('&');
-}
-
-QColor qtColor(const ZLColor &color) {
-	return QColor(color.Red, color.Green, color.Blue);
+ButtonColumn {
+	id: root
+	property variant handler
+	spacing: 10
+	visible: handler.visible
+	enabled: handler.enabled
+	
+	Repeater {
+		model: handler.options
+		RadioButton {
+			text: modelData
+			checked: handler.currentIndex == index
+		}
+	}
 }

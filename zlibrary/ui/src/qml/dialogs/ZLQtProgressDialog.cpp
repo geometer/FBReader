@@ -44,7 +44,7 @@ void ZLQtProgressDialog::setMessage(const std::string &message) {
 		return;
 	}
 
-	myWaitMessage->myLabel->setText(::qtString(message));
+	myWaitMessage->myLabel->setText(QString::fromStdString(message));
 
 	myWaitMessage->myLayout->invalidate();
 	myWaitMessage->repaint();
@@ -65,7 +65,7 @@ ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, Qt::Sp
 	qApp->processEvents();
 
 	myLayout = new QBoxLayout(QBoxLayout::LeftToRight, this);
-	myLabel = new QLabel(::qtString(message), this);
+	myLabel = new QLabel(QString::fromStdString(message), this);
 	myLayout->addWidget(myLabel);
 
 	if (main == 0) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2011 Ruslan Nigmatullin <euroelessar@ya.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,19 +17,39 @@
  * 02110-1301, USA.
  */
 
-#include <ZLDialogManager.h>
+import QtQuick 1.0
+import com.nokia.meego 1.0
 
-#include "ZLQtUtil.h"
-#include <ZLColor.h>
-#include <QtGui/QColor>
+Dialog {
+	id: root
+	property variant handler;
+	
+	title: handler.title
+	content: DialogContent {
+		id: dialogContent
+		handler: handler.content
+	}
 
-QString qtButtonName(const ZLResourceKey &key) {
-	if (key.Name.empty())
-		return QString();
-	// We don't have shortcuts
-	return QString::fromStdString(ZLDialogManager::buttonName(key)).remove('&');
-}
-
-QColor qtColor(const ZLColor &color) {
-	return QColor(color.Red, color.Green, color.Blue);
+	buttons: ButtonRow {
+		anchors.horizontalCenter: parent.horizontalCenter
+		Repeater {
+			model: root.handler.buttonNames
+			Button {
+				text: modelData
+				onClicked: {
+					var names = root.handler.acceptButtons;
+					for (var i = 0; i < names.length; ++i) {
+						if (names[i] == text) {
+							accept();
+							return;
+						}
+					}
+					reject();
+				}
+			}
+		}
+	}
+	MouseArea { anchors.fill: parent }
+	onAccepted: root.handler.accept()
+	onRejected: root.handler.reject()
 }

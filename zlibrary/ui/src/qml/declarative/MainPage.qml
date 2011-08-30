@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2011 Ruslan Nigmatullin <euroelessar@ya.ru>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 import QtQuick 1.0
 import com.nokia.meego 1.0
 import Qt.labs.gestures 1.0
@@ -21,15 +40,17 @@ Page {
 						break;
 					case ToolBarItem.MenuButton:
 						if (menu === undefined) {
+							console.log("menu", JSON.stringify(modelData.items));
 							var component = Qt.createComponent("DynamicMenu.qml");
 							var args = { item: modelData, visualParent: root.pageStack };
 							menu = component.createObject(root, args);
+							menu.open()
+						} else if (menu.status == DialogStatus.Closed) {
+							menu.open()
+						} else {
+							menu.close();
 						}
 
-						if (menu.status == DialogStatus.Closed)
-							menu.open()
-						else
-							menu.close();
 						break;
 					default:
 						break;
@@ -55,17 +76,6 @@ Page {
 		id: bookView
 		anchors.fill: parent
 		holder: objectHolder
-//		onTap: {
-//			console.log("tap pos = (", gesture.position.x, "," ,gesture.position.y, ")");
-//			objectHolder.handleFingerTap(gesture.position.x, gesture.position.y);
-//		}
-//		onSwipe: {
-//			console.log("swipe angle=", gesture.swipeAngle);
-//			if (gesture.swipeAngle > 180)
-//				objectHolder.handleScrollBarPageStep(-1);
-//			else
-//				objectHolder.handleScrollBarPageStep(+1);
-//		}
 		Component.onCompleted: objectHolder.bookView = bookView
 		MouseArea {
 			anchors.fill: parent
@@ -75,19 +85,4 @@ Page {
 			}
 		}
 	}
-//	GestureArea {
-//		anchors.fill: parent
-//		focus: true
-//		onTap: {
-//			console.log("tap pos = (", gesture.position.x, "," ,gesture.position.y, ")");
-//			objectHolder.handleFingerTap(gesture.position.x, gesture.position.y);
-//		}
-//		onSwipe: {
-//			console.log("swipe angle=", gesture.swipeAngle);
-//			if (gesture.swipeAngle > 180)
-//				objectHolder.handleScrollBarPageStep(-1);
-//			else
-//				objectHolder.handleScrollBarPageStep(+1);
-//		}
-//	}
 }

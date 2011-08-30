@@ -28,20 +28,15 @@ ZLQmlOpenFileDialog::ZLQmlOpenFileDialog(const std::string &title, const std::st
 	Q_UNUSED(title);
 	myFilePath = QString::fromUtf8(filePath.c_str());
 	myDirPath = QString::fromUtf8(directoryPath.c_str());
-	qDebug("%s", Q_FUNC_INFO);
 }
 
 ZLQmlOpenFileDialog::~ZLQmlOpenFileDialog() {
-	qDebug("%s", Q_FUNC_INFO);
 }
 
 bool ZLQmlOpenFileDialog::run() {
-	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
     QEventLoop eventLoop;
 	connect(this, SIGNAL(finished()), &eventLoop, SLOT(quit()), Qt::QueuedConnection);
-	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
     eventLoop.exec(QEventLoop::AllEvents);
-	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 	return !myFilePath.isEmpty();
 }
 
@@ -58,7 +53,6 @@ QString ZLQmlOpenFileDialog::fileName() const {
 }
 
 void ZLQmlOpenFileDialog::setFileName(const QString &fileName) {
-	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 	myFilePath = fileName;
 	emit fileNameChanged(myFilePath);
 }
@@ -68,13 +62,11 @@ QString ZLQmlOpenFileDialog::dirPath() const {
 }
 
 void ZLQmlOpenFileDialog::setDirPath(const QString &dirPath) {
-	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 	myDirPath = dirPath;
 	emit dirPathChanged(myDirPath);
 }
 
 void ZLQmlOpenFileDialog::finish() {
-	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 	emit finished();
 }
 

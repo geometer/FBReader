@@ -24,29 +24,43 @@
 #include <QtGui/QTabWidget>
 #include <QtGui/QDialog>
 
-#include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include "../../../../core/src/dialogs/ZLOptionsDialog.h"
 
-class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
+class ZLQmlOptionsDialog : public QObject, public ZLOptionsDialog {
 	Q_OBJECT
-
+	Q_PROPERTY(QObjectList sections READ sections NOTIFY sectionsChanged)
+	Q_PROPERTY(QString okButtonText READ applyButtonText CONSTANT)
+	Q_PROPERTY(QString applyButtonText READ applyButtonText CONSTANT)
+	Q_PROPERTY(QString cancelButtonText READ cancelButtonText CONSTANT)
 public:
-	ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
+	ZLQmlOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
 	ZLDialogContent &createTab(const ZLResourceKey &key);
 
 protected:
+	QObjectList sections() const;
 	const std::string &selectedTabKey() const;
 	void selectTab(const ZLResourceKey &key);
 	bool runInternal();
-
-	void setSize(int width, int height) { QDialog::resize(width, height); }
-	int width() const { return QDialog::width(); }
-	int height() const { return QDialog::height(); }
-
-private Q_SLOTS:
-	void apply();
+	
+	QString okButtonText() const;
+	QString applyButtonText() const;
+	QString cancelButtonText() const;
+	
+	Q_INVOKABLE void accept();
+	Q_INVOKABLE void reject();
+	
+Q_SIGNALS:
+	void sectionsChanged(const QObjectList &sections);
+	void finished();
 
 private:
-	QTabWidget *myTabWidget;
+	QObjectList mySections;
+	QString myOkButtonText;
+	QString myApplyButtonText;
+	QString myCancelButtonText;
+	std::string myEmptyString;
+	bool myShowApplyButton;
+	bool myResult;
 };
 
 #endif /* __ZLQTOPTIONSDIALOG_H__ */

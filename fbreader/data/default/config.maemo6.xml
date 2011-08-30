@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
 	<group name="Style">
-		<option name="Base:fontFamily" value="Nokia Pure"/>
+		<option name="Base:fontFamily" value="Nokia Pure Text"/>
 		<option name="Base:fontSize" value="18"/>
 	</group>
   <group name="Options">

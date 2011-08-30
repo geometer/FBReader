@@ -16,6 +16,7 @@
 	<button id="redo"/>
 	<textField id="gotoPageNumberWithParameter" parameterId="pageIndex" maxWidth="4" symbols="digits"/>
 	<button id="toc"/>
+	<menuButton id="preferences"/>
 	<separator/>
 	<button id="search"/>
 	<button id="findPrevious"/>

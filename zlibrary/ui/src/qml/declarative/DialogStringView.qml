@@ -20,19 +20,32 @@
 import QtQuick 1.0
 import com.nokia.meego 1.0
 
-Menu {
+Item {
 	id: root
-	property variant item
-	MenuLayout {
-		id: menuLayout
-		Repeater {
-			id: repeater
-			model: root.item ? root.item.items : null
-			MenuItem {
-				parent: menuLayout
-				text: modelData
-				onClicked: root.item.activate(index);
-			}
-		}
+	property variant handler
+	width: parent.width
+	height: textField.height
+	visible: handler.visible
+	enabled: handler.enabled
+	
+	Label {
+		anchors { left: root.left; right: textField.left; verticalCenter: textField.verticalCenter }
+		anchors.rightMargin: 15
+		text: handler.name
+	}
+
+	TextField {
+		id: textField
+		anchors { left: root.horizontalCenter; top: root.top; right: root.right }
+		visible: handler.visible
+		enabled: handler.enabled
+		text: handler.text
+		echoMode: handler.password ? TextInput.PasswordEchoOnEdit : TextInput.Normal
+		onTextChanged: if (root.handler.text != text) root.handler.text = text
+	}
+	
+	Connections {
+		target: root.handler
+		onTextChanged: textField.text = root.handler.text
 	}
 }
