@@ -43,6 +43,7 @@ public:
 		ORDER,
 		MULTILINE,
 		STATIC,
+		PATH,
 	};
 
 public:
@@ -236,6 +237,15 @@ public:
 	virtual const std::string &initialValue() const = 0;
 };
 
+class ZLPathOptionEntry : public ZLTextOptionEntry {
+
+protected:
+	ZLPathOptionEntry();
+
+public:
+	ZLOptionKind kind() const;
+};
+
 
 inline ZLOptionEntry::ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
 inline ZLOptionEntry::~ZLOptionEntry() {}
@@ -290,5 +300,8 @@ inline ZLOptionEntry::ZLOptionKind ZLOrderOptionEntry::kind() const { return ORD
 inline std::vector<std::string> &ZLOrderOptionEntry::values() { return myValues; }
 
 inline ZLOptionEntry::ZLOptionKind ZLStaticTextOptionEntry::kind() const { return STATIC; }
+
+inline ZLPathOptionEntry::ZLPathOptionEntry() {}
+inline ZLOptionEntry::ZLOptionKind ZLPathOptionEntry::kind() const { return PATH; }
 
 #endif /* __ZLOPTIONENTRY_H__ */
