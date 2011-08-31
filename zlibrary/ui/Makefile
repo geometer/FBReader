@@ -23,6 +23,7 @@ SUBDIRS_ALL = \
   src/iphone/application src/iphone/filesystem src/iphone/library src/iphone/view \
   src/iphone/dialogs src/iphone/image src/iphone/time
 QTSUBDIRS_ALL = src/qt/time src/qtopia/message src/qtopia/application src/qtopia/dialogs src/qtopia/optionView src/qtopia/view src/qt/dialogs src/qt/view src/qt/image src/qt/util src/opie/view src/opie/dialogs src/opie/application src/qt/application-desktop src/qt/application-pdaxrom src/opie/library src/qt/library src/qtopia/library src/qt/filesystem src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/application src/qt4/library src/qt4/filesystem src/ezx/library src/ezx/application src/ezx/dialogs src/ezx/view src/ezx/optionView
+QTSUBDIRS_ALL += src/qml/application src/qml/dialogs src/qml/view src/qml/library
 GTKSUBDIRS_ALL = src/gtk/time src/gtk/dialogs src/gtk/optionView src/gtk/view src/gtk/image src/gtk/util src/maemo/dialogs src/maemo/optionView src/maemo/view src/gpe/dialogs src/gpe/view src/gtk/application-desktop src/gtk/application-pdaxrom src/maemo/application src/maemo5/application src/maemo5/dialogs src/maemo5/optionView src/maemo5/library src/maemo5/network src/gpe/application src/maemo/library src/gtk/library src/gpe/library src/gtk/filesystem src/maemo/message src/maemo/network src/gtk/pixbuf
 
 SUBDIRS =
@@ -44,6 +45,10 @@ endif
 
 ifeq "$(UI_TYPE)" "qt4"
   QTSUBDIRS = src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/filesystem src/qt4/library src/unix/message src/qt4/application
+endif
+
+ifeq "$(UI_TYPE)" "qml"
+  QTSUBDIRS = src/qml/time src/qml/dialogs src/qml/view src/qml/image src/qml/util src/qml/filesystem src/qml/library src/unix/message src/qml/application
 endif
 
 ifeq "$(UI_TYPE)" "gtk"
@@ -134,6 +139,10 @@ do_install:
 ifeq "$(ZLSHARED)" "yes"
 	@install -d $(LIB_ZLIBRARY)/ui
 	@install $(TARGET) $(LIB_ZLIBRARY)/ui
+endif
+ifeq "$(UI_TYPE)" "qml"
+	@install -d $(SHARE_ZLIBRARY)/declarative
+	@install -m 0644 $(wildcard src/qml/declarative/*.qml) $(SHARE_ZLIBRARY)/declarative
 endif
 
 do_install_dev:

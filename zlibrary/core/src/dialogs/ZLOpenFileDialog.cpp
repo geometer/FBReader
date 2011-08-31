@@ -21,3 +21,7 @@
 
 ZLOpenFileDialog::Filter::~Filter() {
 }
+
+ZLOpenFileDialog::~ZLOpenFileDialog()
+{
+}
