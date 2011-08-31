@@ -49,10 +49,22 @@ Flickable {
 				visible: modelData.visible
 				enabled: modelData.enabled
 				property variant child
-				Component.onCompleted: child = root.createChild(contentArea, modelData)
+				Component.onCompleted: {
+					if (modelData.created)
+						child = root.createChild(contentArea, modelData)
+				}
+				Connections {
+					target: modelData
+					onCreatedChanged: {
+						if (!contentArea.child)
+							contentArea.child = root.createChild(contentArea, modelData)
+					}
+				}
 			}
 		}
     }
+	
+	property variant __componentCache: {}
 	
 	function createChild(item, object) {
 		var componentName;
@@ -65,7 +77,7 @@ Flickable {
 			break;
 		case OptionView.Boolean3:
 			// TODO
-			componentName = "DialogBoolean3View.qml"
+//			componentName = "DialogBoolean3View.qml"
 			break;
 		case OptionView.String:
 			componentName = "DialogStringView.qml"
@@ -85,11 +97,11 @@ Flickable {
 			break;
 		case OptionView.Key:
 			// TODO
-			componentName = "DialogKeyView.qml"
+//			componentName = "DialogKeyView.qml"
 			break;
 		case OptionView.Order:
 			// TODO
-			componentName = "DialogOrderView.qml"
+//			componentName = "DialogOrderView.qml"
 			break;
 		case OptionView.Multiline:
 			componentName = "DialogMultilineView.qml"
@@ -101,7 +113,11 @@ Flickable {
 			break;
 		}
 		if (componentName !== undefined) {
-			var component = Qt.createComponent(componentName);
+			var component = __componentCache[componentName];
+			if (!component) {
+				component = Qt.createComponent(componentName);
+				__componentCache[componentName] = component;
+			}
 			if (component !== null)
 				component.createObject(item, { handler: object });
 		}

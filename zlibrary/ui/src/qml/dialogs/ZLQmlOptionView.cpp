@@ -44,6 +44,7 @@ ZLQmlOptionView::ZLQmlOptionView(const std::string &name, const std::string &too
     : QObject(parent), ZLOptionView(name, tooltip, option) {
 	myVisible = false;
 	myEnabled = true;
+	myCreated = false;
 }
 
 ZLQmlOptionView::~ZLQmlOptionView() {
@@ -65,8 +66,16 @@ bool ZLQmlOptionView::enabled() const {
 	return myEnabled;
 }
 
+bool ZLQmlOptionView::created() const {
+	return myCreated;
+}
+
 void ZLQmlOptionView::_createItem() {
 	// Do nothing, items are created through QML
+	if (myCreated)
+		return;
+	myCreated = true;
+	emit createdChanged(myCreated);
 }
 
 void ZLQmlOptionView::_show() {
