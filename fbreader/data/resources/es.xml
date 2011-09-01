@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Información sobre el libro..." />
 		<node name="toc" value="Índice de contenidos" />
-		<node name="showLibrary" value="Abrir biblioteca" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" value="Abrir biblioteca" />
+		<node name="netLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Biblioteca">
-			<node name="showLibrary" value="Abrir" />
+			<node name="library" value="Abrir" />
 			<node name="previousBook" value="Libro anterior" />
 			<node name="showRecent" value="Reciente" />
 			<node name="addBook" value="Añadir libro..." />
@@ -120,7 +120,7 @@
 			<node name="label" value="Leer Librok" />
 			<node name="tooltip" value="Volver al Modo de Lectura" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Biblioteca" />
 			<node name="tooltip" value="Mostrar contenido de la Biblioteca" />
 			<node name="popup" value="Mostrar lista de libros recientes" />
@@ -141,7 +141,7 @@
 			<node name="label" value="Añadir Libro" />
 			<node name="tooltip" value="Añadir Libro a la Biblioteca" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="netLibrary">
 			<node name="label" value="Red" />
 			<node name="tooltip" value="Buscar Libros en la Web" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Ninguno" />
-						<node name="showLibrary" value="Mostrar la Biblioteca" />
-						<node name="showNetLibrary" value="Mostrar Bibliotecas en la Web" />
+						<node name="library" value="Mostrar la Biblioteca" />
+						<node name="netLibrary" value="Mostrar Bibliotecas en la Web" />
 						<node name="showRecent" value="Mostrar libros recientes" />
 						<node name="previousBook" value="Abrir el libro anterior" />
 						<node name="toc" value="Ver índice de contenidos" />

@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Bokinformation..." />
 		<node name="toc" value="Innehållsförteckning" />
-		<node name="showLibrary" toBeTranslated="true" value="Open library" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" toBeTranslated="true" value="Open library" />
+		<node name="netLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Bibliotek">
-			<node name="showLibrary" value="Öppna" />
+			<node name="library" value="Öppna" />
 			<node name="previousBook" value="Föregående bok" />
 			<node name="showRecent" value="Tidigare" />
 			<node name="addBook" value="Lägg till bok..." />
@@ -120,7 +120,7 @@
 			<node name="label" toBeTranslated="true" value="Read Book" />
 			<node name="tooltip" toBeTranslated="true" value="Show Reading Mode" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" toBeTranslated="true" value="Library" />
 			<node name="tooltip" value="Visa biblioteksträd" />
 			<node name="popup" toBeTranslated="true" value="Show Recent Books List" />
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Lägg till fil till bibliotek" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="netLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" toBeTranslated="true" value="Search in Network Libraries" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Ingen" />
-						<node name="showLibrary" value="Visa bibliotek" />
-						<node name="showNetLibrary" toBeTranslated="true" value="Show network library" />
+						<node name="library" value="Visa bibliotek" />
+						<node name="netLibrary" toBeTranslated="true" value="Show network library" />
 						<node name="showRecent" value="Visa tidigare böcker" />
 						<node name="previousBook" value="Öppna föregående bok" />
 						<node name="toc" value="Visa innehållsförteckning" />

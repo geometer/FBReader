@@ -3,8 +3,8 @@
 @@ -1,36 +1,8 @@
  <?xml version="1.0" encoding="UTF-8"?>
  <keymap>
--	<binding key="&lt;L&gt;" action="showLibrary"/>
--	<binding key="&lt;W&gt;" action="showNetLibrary"/>
+-	<binding key="&lt;L&gt;" action="library"/>
+-	<binding key="&lt;W&gt;" action="netLibrary"/>
 -	<binding key="&lt;O&gt;" action="preferences"/>
 -	<binding key="&lt;LeftArrow&gt;" action="undo"/>
 -	<binding key="&lt;RightArrow&gt;" action="redo"/>

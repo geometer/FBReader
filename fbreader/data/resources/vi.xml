@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Thông tin sách..." />
 		<node name="toc" value="Mục lục" />
-		<node name="showLibrary" value="Mở Thư	viện" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" value="Mở Thư	viện" />
+		<node name="netLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Thư viện">
-			<node name="showLibrary" value="Mở" />
+			<node name="library" value="Mở" />
 			<node name="previousBook" value="Quyển trước" />
 			<node name="showRecent" value="Vừa xem" />
 			<node name="addBook" value="Thêm sách..." />
@@ -120,7 +120,7 @@
 			<node name="label" value="Đọc Sách" />
 			<node name="tooltip" value="Xem Chế độ Đọc sách" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Thư viện" />
 			<node name="tooltip" value="Xem Cây tổ chức Thư viện" />
 			<node name="popup" value="Xem danh sách vừa đọc" />
@@ -141,7 +141,7 @@
 			<node name="label" value="Thêm Tập tin" />
 			<node name="tooltip" value="Thêm Tập tin vào Thư viện" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="netLibrary">
 			<node name="label" value="Mạng" />
 			<node name="tooltip" value="Tìm kiếm trong các Thư viện trên	Mạng" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Không" />
-						<node name="showLibrary" value="Hiện thư viện" />
-						<node name="showNetLibrary" value="Hiện thư viện mạng" />
+						<node name="library" value="Hiện thư viện" />
+						<node name="netLibrary" value="Hiện thư viện mạng" />
 						<node name="showRecent" value="Hiện những cuốn vừa đọc" />
 						<node name="previousBook" value="Mở Cuốn trước " />
 						<node name="toc" value="Hiện mục lục" />

@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Informace o knize..." />
 		<node name="toc" value="Obsah" />
-		<node name="showLibrary" value="Otevřít knihovnu" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" value="Otevřít knihovnu" />
+		<node name="netLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Knihovna">
-			<node name="showLibrary" value="Otevřít" />
+			<node name="library" value="Otevřít" />
 			<node name="previousBook" value="Předchozí kniha" />
 			<node name="showRecent" value="Nedávné" />
 			<node name="addBook" value="Přidat knihu..." />
@@ -120,7 +120,7 @@
 			<node name="label" toBeTranslated="true" value="Read Book" />
 			<node name="tooltip" value="Čtecí režim" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" toBeTranslated="true" value="Library" />
 			<node name="tooltip" value="Knihovna - stromový pohled" />
 			<node name="popup" value="Nedávno otevřené knihy" />
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Vložit do knihovny" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="netLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" value="Hledat v knihovně na síti" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Žádné" />
-						<node name="showLibrary" value="Zobrazit knihovnu" />
-						<node name="showNetLibrary" value="Zobrazit knihovnu na síti" />
+						<node name="library" value="Zobrazit knihovnu" />
+						<node name="netLibrary" value="Zobrazit knihovnu na síti" />
 						<node name="showRecent" value="Zobrazit nedávné" />
 						<node name="previousBook" value="Otevřít předchozí knihu" />
 						<node name="toc" value="Zobrazit obsah" />

@@ -239,11 +239,14 @@ public:
 
 class ZLPathOptionEntry : public ZLTextOptionEntry {
 
-protected:
-	ZLPathOptionEntry();
-
 public:
+	ZLPathOptionEntry(ZLStringOption &option);
 	ZLOptionKind kind() const;
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
+
+private:
+	ZLStringOption &myOption;
 };
 
 
@@ -301,7 +304,9 @@ inline std::vector<std::string> &ZLOrderOptionEntry::values() { return myValues;
 
 inline ZLOptionEntry::ZLOptionKind ZLStaticTextOptionEntry::kind() const { return STATIC; }
 
-inline ZLPathOptionEntry::ZLPathOptionEntry() {}
+inline ZLPathOptionEntry::ZLPathOptionEntry(ZLStringOption &option): myOption(option) { }
 inline ZLOptionEntry::ZLOptionKind ZLPathOptionEntry::kind() const { return PATH; }
+inline const std::string &ZLPathOptionEntry::initialValue() const { return myOption.value(); }
+inline void ZLPathOptionEntry::onAccept(const std::string &value) {	myOption.setValue(value); }
 
 #endif /* __ZLOPTIONENTRY_H__ */

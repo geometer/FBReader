@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Інформація про книгу..."/>
 		<node name="toc" value="Зміст"/>
-		<node name="showLibrary" value="Відкрити бібліотеку"/>
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" value="Відкрити бібліотеку"/>
+		<node name="netLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Бібліотека">
-			<node name="showLibrary" value="Відкрити бібліотеку"/>
+			<node name="library" value="Відкрити бібліотеку"/>
 			<node name="previousBook" value="Попередня книга"/>
 			<node name="showRecent" value="Прочитані книги"/>
 			<node name="addBook" value="Додати файл..."/>
@@ -120,7 +120,7 @@
 			<node name="label" value="Читати книгу"/>
 			<node name="tooltip" value="Повернутися до читання" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Бібліотека" />
 			<node name="tooltip" value="Бібліотека" />
 			<node name="popup" value="Прочитані книги" />
@@ -141,7 +141,7 @@
 			<node name="label" value="Додати файл" />
 			<node name="tooltip" value="Додати файл до бібліотеки" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="netLibrary">
 			<node name="label" value="Мережа" />
 			<node name="tooltip" value="Шукати у електронних бібліотеках" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Ніяких дій"/>
-						<node name="showLibrary" value="Показати бібліотеку"/>
-						<node name="showNetLibrary" value="Показати електронну бібліотеку"/>
+						<node name="library" value="Показати бібліотеку"/>
+						<node name="netLibrary" value="Показати електронну бібліотеку"/>
 						<node name="showRecent" value="Показати прочитані книги"/>
 						<node name="previousBook" value="Відкрити попередню книгу"/>
 						<node name="toc" value="Показати зміст"/>

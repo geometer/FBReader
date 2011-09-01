@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Kirjan tiedot..." />
 		<node name="toc" value="Sisällysluettelo" />
-		<node name="showLibrary" value="Avaa kirjasto" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" value="Avaa kirjasto" />
+		<node name="netLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Kirjasto">
-			<node name="showLibrary" value="Avaa kirjasto" />
+			<node name="library" value="Avaa kirjasto" />
 			<node name="previousBook" value="Edellinen kirja" />
 			<node name="showRecent" value="Viimeisimmät kirjat" />
 			<node name="addBook" value="Lisää kirja..." />
@@ -120,7 +120,7 @@
 			<node name="label" toBeTranslated="true" value="Read Book" />
 			<node name="tooltip" value="Näytä lukutila" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" toBeTranslated="true" value="Library" />
 			<node name="tooltip" value="Näytä kirjastopuu" />
 			<node name="popup" value="Näytä viimeisimmät kirjat lista" />
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Lisää tiedosto kirjastoon" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="netLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" value="Etsi verkkokirjastoista" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Ei mitään" />
-						<node name="showLibrary" value="Näytä kirjasto" />
-						<node name="showNetLibrary" value="Näytä verkkokirjasto" />
+						<node name="library" value="Näytä kirjasto" />
+						<node name="netLibrary" value="Näytä verkkokirjasto" />
 						<node name="showRecent" value="Näytä viimeisimmät kirjat" />
 						<node name="previousBook" value="Avaa edellinen kirja" />
 						<node name="toc" value="Näytä sisällysluettelo" />

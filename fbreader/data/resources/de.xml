@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="E-Book Info..." />
 		<node name="toc" value="Inhaltsverzeichnis" />
-		<node name="showLibrary" value="Bibliothek öffnen" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" value="Bibliothek öffnen" />
+		<node name="netLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Bibliothek">
-			<node name="showLibrary" value="Öffnen" />
+			<node name="library" value="Öffnen" />
 			<node name="previousBook" value="Vorheriges E-Book" />
 			<node name="showRecent" value="Aktuell" />
 			<node name="addBook" value="E-Book hinzufügen..." />
@@ -121,7 +121,7 @@
 			<node name="tooltip" value="Lese-Modus anzeigen" />
 			<node name="popup" value="Aktuelle Liste der E-Books anzeigen" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" toBeTranslated="true" value="Library" />
 			<node name="tooltip" value="Baumansicht der Bibliothek anzeigen" />
 		</node>
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Datei zur Bibliothek hinzufügen" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="netLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" value="In Netzwerk-Bibliotheken suchen" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Keine" />
-						<node name="showLibrary" value="Bibliothek zeigen" />
-						<node name="showNetLibrary" value="Netzwerk Bibliothek zeigen" />
+						<node name="library" value="Bibliothek zeigen" />
+						<node name="netLibrary" value="Netzwerk Bibliothek zeigen" />
 						<node name="showRecent" value="Aktuelle E-Books zeigen" />
 						<node name="previousBook" value="Vorheriges E-Book zeigen" />
 						<node name="toc" value="Inhaltsverzeichnis zeigen" />

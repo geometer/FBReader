@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Könyv adatai..." />
 		<node name="toc" value="Tartalomjegyzék" />
-		<node name="showLibrary" value="Könyvtár megnyitása" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" value="Könyvtár megnyitása" />
+		<node name="netLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Könyvtár">
-			<node name="showLibrary" value="Megnyitás" />
+			<node name="library" value="Megnyitás" />
 			<node name="previousBook" value="Előző kötet" />
 			<node name="showRecent" value="Legutóbbi" />
 			<node name="addBook" value="Könyv hozzáadása..." />
@@ -120,7 +120,7 @@
 			<node name="label" value="Kötet olvasása" />
 			<node name="tooltip" value="Olvasó ablak" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Könyvtár" />
 			<node name="tooltip" value="Könyvtár" />
 			<node name="popup" value="Legutóbbi kötetek listája" />
@@ -141,7 +141,7 @@
 			<node name="label" value="Fájl hozzáadása" />
 			<node name="tooltip" value="Fájl hozzáadása a könyvtárhoz" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="netLibrary">
 			<node name="label" value="Internet" />
 			<node name="tooltip" value="Keresés az Internetes könyvtárakban" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Nem" />
-						<node name="showLibrary" value="Könyvtár mutatása" />
-						<node name="showNetLibrary" value="Internetes könyvtár mutatása" />
+						<node name="library" value="Könyvtár mutatása" />
+						<node name="netLibrary" value="Internetes könyvtár mutatása" />
 						<node name="showRecent" value="Legutóbbi kötetek" />
 						<node name="previousBook" value="Előző kötet megnyitása" />
 						<node name="toc" value="Tartalomjegyzék" />
