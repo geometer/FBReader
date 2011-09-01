@@ -22,47 +22,30 @@ import com.nokia.meego 1.0
 import org.fbreader 0.14
 import "DialogUtils.js" as Utils
 
-Flickable {
+ListView {
 	id: root
 	
 	property variant handler
 
 	anchors.fill: parent
-	anchors.margins: 15
-    contentWidth: column.width
-    contentHeight: column.height
-    flickableDirection: Flickable.VerticalFlick
-
-    Column {
-        id: column
-        anchors.top: parent.top
-        spacing: 10
-		width: root.width
-//		height: childrenRect.height
-		
-		Repeater {
-			model: handler.items
-			Item {
-				id: contentArea
-				width: column.width
-				height: visible ? childrenRect.height : 0
-				visible: modelData.visible
-				enabled: modelData.enabled
-				property variant child
-				Component.onCompleted: {
-					if (modelData.created)
-						child = root.createChild(contentArea, modelData)
-				}
-				Connections {
-					target: modelData
-					onCreatedChanged: {
-						if (!contentArea.child)
-							contentArea.child = root.createChild(contentArea, modelData)
-					}
-				}
+	anchors { leftMargin: 15; topMargin: 15; rightMargin: 15 }
+	model: VisualDataModel {
+		id: itemModel
+		model: handler ? handler.items : null
+		delegate: Item {
+			id: contentArea
+			width: root.width
+			height: modelData.visible ? childrenRect.height + 15 : 0
+			visible: modelData.visible
+			enabled: modelData.enabled
+			property variant child: __ensureChild(modelData, modelData.visible)
+			function __ensureChild(modelData, visible) {
+				if (!child && visible)
+					child = root.createChild(contentArea, modelData)
+				return child;
 			}
 		}
-    }
+	}
 	
 	property variant __componentCache: {}
 	

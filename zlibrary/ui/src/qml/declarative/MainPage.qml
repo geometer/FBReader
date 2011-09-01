@@ -50,7 +50,6 @@ Page {
 						} else {
 							menu.close();
 						}
-
 						break;
 					default:
 						break;

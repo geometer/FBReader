@@ -5,7 +5,11 @@
 	<item id="showRecent"/>
 	<item id="addBook"/>
 	<item id="toc"/>
+<!--
 	<item id="preferences"/>
+-->
 	<item id="bookInfo"/>
+<!--
 	<item id="toggleFullscreen"/>
+-->
 </menubar>

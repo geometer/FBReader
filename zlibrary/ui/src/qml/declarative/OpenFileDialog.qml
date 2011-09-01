@@ -22,29 +22,12 @@ import com.nokia.meego 1.0
 import com.nokia.extras 1.0
 import org.fbreader 0.14
 
-Page {
+Sheet {
 	id: root
 	property variant handler
-	
-	tools: ToolBarLayout {
-		ToolIcon {
-			platformIconId: "toolbar-previous"
-			onClicked: {
-				handler.directoryPath = dirModel.rootPath;
-				handler.fileName = "";
-				handler.finish();
-				root.pageStack.pop();
-			}
-		}
-		ToolIcon {
-			platformIconId: "toolbar-up"
-			onClicked: {
-				visualModel.rootIndex = visualModel.parentModelIndex()
-			}
-		}
-	}
+	rejectButtonText: qsTr("Cancel")
 
-	ListView {
+	content: ListView {
         id: view
 		anchors.fill: parent
         model: VisualDataModel {
@@ -52,46 +35,40 @@ Page {
             model: FileSystemModel {
 				id: dirModel
 			}
-   
-            delegate: Item {
-				height: Math.max(textLabel.height, indicator.height)
-				width: parent.width
-				anchors.bottomMargin: 2
-                Text {
-					anchors.verticalCenter: parent.verticalCenter
-					id: textLabel
-					text: fileName
+            delegate: ListDelegate {
+				id: itemDelegate
+				// TODO: Find why dirModel ignores filter QDir::NoDot
+				visible: model.directory
+						 ? model.fileName != "."
+						 : (root.handler !== null && root.handler.check(model.filePath))
+				height: visible ? 88 : 0 // UI.LIST_ITEM_HEIGHT
+				onClicked: {
+					console.log("clicked", model.filePath)
+					if (model.directory) {
+						if (model.fileName == "..")
+							view.model.rootIndex = view.model.parentModelIndex();
+						else
+							view.model.rootIndex = view.model.modelIndex(index);
+						dirModel.rootPath = model.filePath
+					} else {
+						console.log("finish", dirModel.rootPath, model.fileName)
+						handler.directoryPath = dirModel.rootPath;
+						handler.fileName = model.filePath;
+						handler.finish();
+						accept();
+					}
 				}
-//				visible: model.hasModelChildren || handler.check(model.filePath)
-   
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        if (model.hasModelChildren) {
-                            view.model.rootIndex = view.model.modelIndex(index)
-						} else {
-							handler.directoryPath = dirModel.rootPath;
-							handler.fileName = model.fileName;
-							handler.finish();
-						}
-                    }
-                }
 				MoreIndicator {
 					id: indicator
 					anchors { verticalCenter: parent.verticalCenter; right: parent.right }
-					visible: model.hasModelChildren
+					visible: model.directory
 				}
-            }
+			}
         }
     }
-//	MouseArea { anchors.fill: parent }
 	Component.onCompleted: {
 		console.log(handler, dirModel, handler.directoryPath)
 		visualModel.rootIndex = dirModel.setRootPath(handler.directoryPath)
 		console.log(visualModel.count)
-	}
-	Connections {
-		target: handler
-		onFinished: root.pageStack.pop()
 	}
 }

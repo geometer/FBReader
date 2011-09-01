@@ -27,7 +27,7 @@ Dialog {
 	title: handler.title
 	content: DialogContent {
 		id: dialogContent
-		handler: handler.content
+		handler: root.handler.content
 	}
 
 	buttons: ButtonRow {
@@ -49,7 +49,7 @@ Dialog {
 			}
 		}
 	}
-	MouseArea { anchors.fill: parent }
+//	MouseArea { anchors.fill: parent }
 	onAccepted: root.handler.accept()
 	onRejected: root.handler.reject()
 }
