@@ -26,6 +26,7 @@ ListView {
 	id: root
 	
 	property variant handler
+	property bool invertedTheme: false
 
 	anchors.fill: parent
 	anchors { leftMargin: 15; topMargin: 15; rightMargin: 15 }
@@ -48,6 +49,18 @@ ListView {
 	}
 	
 	property variant __componentCache: {}
+	
+	onInvertedThemeChanged: fixChildren(root)
+
+	function fixChildren(child) {
+		if (child.platformStyle !== undefined
+				&& child.platformStyle.inverted !== undefined) {
+			child.platformStyle.inverted = root.invertedTheme;
+		}
+		var children = child.children;
+		for (var i = 0; i < children.length; ++i)
+			fixChildren(children[i]);
+	}
 	
 	function createChild(item, object) {
 		var componentName;
@@ -95,14 +108,24 @@ ListView {
 		default:
 			break;
 		}
+		var child;
 		if (componentName !== undefined) {
 			var component = __componentCache[componentName];
 			if (!component) {
 				component = Qt.createComponent(componentName);
 				__componentCache[componentName] = component;
 			}
-			if (component !== null)
-				component.createObject(item, { handler: object });
+			if (component.status == Component.Error) {
+				// Error Handling
+				console.log("Error loading component:", component.errorString());
+				return null;
+			}
+			if (component !== null) {
+				child = component.createObject(item, { handler: object });
+				if (root.invertedTheme)
+					fixChildren(child)
+			}
 		}
+		return child;
 	}
 }
