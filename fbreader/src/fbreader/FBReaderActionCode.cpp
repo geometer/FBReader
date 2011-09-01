@@ -70,3 +70,5 @@ const std::string ActionCode::ADVANCED_SEARCH_ON_NETWORK = "advancedSearchOnNetw
 const std::string ActionCode::ORGANIZE_BOOKS_BY_AUTHOR = "byAuthor";
 const std::string ActionCode::ORGANIZE_BOOKS_BY_TAG = "byTag";
 const std::string ActionCode::FILTER_LIBRARY = "filterLibrary";
+const std::string ActionCode::SWITCH_TO_NIGHT_PROFILE = "night";
+const std::string ActionCode::SWITCH_TO_DAY_PROFILE = "day";

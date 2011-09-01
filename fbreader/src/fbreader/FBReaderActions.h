@@ -80,6 +80,8 @@ public:
 	static const std::string ORGANIZE_BOOKS_BY_AUTHOR;
 	static const std::string ORGANIZE_BOOKS_BY_TAG;
 	static const std::string FILTER_LIBRARY;
+	static const std::string SWITCH_TO_NIGHT_PROFILE;
+	static const std::string SWITCH_TO_DAY_PROFILE;
 
 private:
 	ActionCode();
