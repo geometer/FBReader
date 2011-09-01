@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="E-Book Info..." />
 		<node name="toc" value="Inhaltsverzeichnis" />
 		<node name="library" value="Bibliothek öffnen" />
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Bibliothek">
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Datei zur Bibliothek hinzufügen" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" value="In Netzwerk-Bibliotheken suchen" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Keine" />
 						<node name="library" value="Bibliothek zeigen" />
-						<node name="netLibrary" value="Netzwerk Bibliothek zeigen" />
+						<node name="networkLibrary" value="Netzwerk Bibliothek zeigen" />
 						<node name="showRecent" value="Aktuelle E-Books zeigen" />
 						<node name="previousBook" value="Vorheriges E-Book zeigen" />
 						<node name="toc" value="Inhaltsverzeichnis zeigen" />

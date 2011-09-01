@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Könyv adatai..." />
 		<node name="toc" value="Tartalomjegyzék" />
 		<node name="library" value="Könyvtár megnyitása" />
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Könyvtár">
@@ -141,7 +141,7 @@
 			<node name="label" value="Fájl hozzáadása" />
 			<node name="tooltip" value="Fájl hozzáadása a könyvtárhoz" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="Internet" />
 			<node name="tooltip" value="Keresés az Internetes könyvtárakban" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Nem" />
 						<node name="library" value="Könyvtár mutatása" />
-						<node name="netLibrary" value="Internetes könyvtár mutatása" />
+						<node name="networkLibrary" value="Internetes könyvtár mutatása" />
 						<node name="showRecent" value="Legutóbbi kötetek" />
 						<node name="previousBook" value="Előző kötet megnyitása" />
 						<node name="toc" value="Tartalomjegyzék" />

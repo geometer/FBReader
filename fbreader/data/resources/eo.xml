@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Informoj pri la libro..." />
 		<node name="toc" value="Enhavo" />
 		<node name="library" value="Malfermi librejon">
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Knihovna">
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Aldoni en librejon" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" value="Serĉi en reta librejo" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Neniu" />
 						<node name="library" value="Aperigi librejon" />
-						<node name="netLibrary" toBeTranslated="true" value="Aperigu retan librejon" />
+						<node name="networkLibrary" toBeTranslated="true" value="Aperigu retan librejon" />
 						<node name="showRecent" value="Aperigu lastatempe malfermitajn librojn" />
 						<node name="previousBook" value="Malfermi la antaŭan libron" />
 						<node name="toc" value="Aperigi enhavon" />

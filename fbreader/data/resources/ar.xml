@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="معلومات الكتاب..." />
 		<node name="toc" value="جدول المحتويات" />
 		<node name="library" value="افتح المكتبة" />
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="المكتبة">
@@ -141,7 +141,7 @@
 			<node name="label" value="أضف ملفا" />
 			<node name="tooltip" value="أضف ملفا إلى المكتبة" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="الشبكة" />
 			<node name="tooltip" value="ابحث في مكتبات الشبكة" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="لا شيء" />
 						<node name="library" value="أظهر المكتبة" />
-						<node name="netLibrary" value="أظهر مكتبة الشبكة" />
+						<node name="networkLibrary" value="أظهر مكتبة الشبكة" />
 						<node name="showRecent" value="أظهر الكتب الأخيرة" />
 						<node name="previousBook" value="افتح الكتاب السابق" />
 						<node name="toc" value="أظهر جدول المحتويات" />

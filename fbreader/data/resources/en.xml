@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Book Info..." />
 		<node name="toc" value="Table of Contents" />
 		<node name="library" value="Open library" />
-		<node name="netLibrary" value="Network library" />
+		<node name="networkLibrary" value="Network library" />
 		<node name="addBook" value="Open file..." />
 		<node name="showRecent" value="Recent books" />
 		<node name="library" value="Library">
@@ -141,7 +141,7 @@
 			<node name="label" value="Add File" />
 			<node name="tooltip" value="Add File to Library" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="Network" />
 			<node name="tooltip" value="Search in Network Libraries" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="None" />
 						<node name="library" value="Show library" />
-						<node name="netLibrary" value="Show network library" />
+						<node name="networkLibrary" value="Show network library" />
 						<node name="showRecent" value="Show recent books" />
 						<node name="previousBook" value="Open previous book" />
 						<node name="toc" value="Show table of contents" />

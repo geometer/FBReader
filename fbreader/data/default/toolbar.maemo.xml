@@ -7,7 +7,7 @@
 	<separator/>
 	<menuButton id="library"/>
 	<button id="addBook"/>
-	<button id="netLibrary"/>
+	<button id="networkLibrary"/>
 	<separator/>
 	<button id="advancedSearchOnNetwork"/>
 	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>

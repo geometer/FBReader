@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Informacje o książce..." />
 		<node name="toc" value="Spis zawartości" />
 		<node name="library" value="Otwórz bibliotekę" />
-		<node name="netLibrary" value="Biblioteka sieciowa" />
+		<node name="networkLibrary" value="Biblioteka sieciowa" />
 		<node name="addBook" value="Otwórz plik..." />
 		<node name="showRecent" value="Ostatnio czytane" />
 		<node name="library" value="Biblioteka">
@@ -141,7 +141,7 @@
 			<node name="label" value="Dodaj plik" />
 			<node name="tooltip" value="Dodaj plik do biblioteki" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="Sieć" />
 			<node name="tooltip" value="Szukaj w bibliotece sieciowej" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Nic" />
 						<node name="library" value="Pokaż bibliotekę" />
-						<node name="netLibrary" value="Pokaż bibliotekę sieciową" />
+						<node name="networkLibrary" value="Pokaż bibliotekę sieciową" />
 						<node name="showRecent" value="Pokaż ostatnie książki" />
 						<node name="previousBook" value="Otwórz poprzednią książkę" />
 						<node name="toc" value="Pokaż spis zawartości" />

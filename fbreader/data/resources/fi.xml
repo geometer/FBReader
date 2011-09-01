@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Kirjan tiedot..." />
 		<node name="toc" value="Sisällysluettelo" />
 		<node name="library" value="Avaa kirjasto" />
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Kirjasto">
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Lisää tiedosto kirjastoon" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" value="Etsi verkkokirjastoista" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Ei mitään" />
 						<node name="library" value="Näytä kirjasto" />
-						<node name="netLibrary" value="Näytä verkkokirjasto" />
+						<node name="networkLibrary" value="Näytä verkkokirjasto" />
 						<node name="showRecent" value="Näytä viimeisimmät kirjat" />
 						<node name="previousBook" value="Avaa edellinen kirja" />
 						<node name="toc" value="Näytä sisällysluettelo" />

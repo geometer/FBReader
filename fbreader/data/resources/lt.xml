@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Apie knygą..." />
 		<node name="toc" value="Turinys" />
 		<node name="library" value="Atidaryti biblioteką" />
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Biblioteka">
@@ -141,7 +141,7 @@
 			<node name="label" value="Pridėti failą" />
 			<node name="tooltip" value="Pridėti failą prie bibliotekos" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="Internetas" />
 			<node name="tooltip" value="Ieškoti Interneto bibliotekose" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Nieko" />
 						<node name="library" value="Rodyti biblioteką" />
-						<node name="netLibrary" value="Rodyti Interneto biblioteką" />
+						<node name="networkLibrary" value="Rodyti Interneto biblioteką" />
 						<node name="showRecent" value="Rodyti neseniai žiūrėtas knygas" />
 						<node name="previousBook" value="Atidaryti ankstesnę knygą" />
 						<node name="toc" value="Rodyti turinį" />

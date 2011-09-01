@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Bokinformation..." />
 		<node name="toc" value="Innehållsförteckning" />
 		<node name="library" toBeTranslated="true" value="Open library" />
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Bibliotek">
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Lägg till fil till bibliotek" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" toBeTranslated="true" value="Search in Network Libraries" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Ingen" />
 						<node name="library" value="Visa bibliotek" />
-						<node name="netLibrary" toBeTranslated="true" value="Show network library" />
+						<node name="networkLibrary" toBeTranslated="true" value="Show network library" />
 						<node name="showRecent" value="Visa tidigare böcker" />
 						<node name="previousBook" value="Öppna föregående bok" />
 						<node name="toc" value="Visa innehållsförteckning" />

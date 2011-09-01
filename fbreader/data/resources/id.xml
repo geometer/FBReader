@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Informasi Buku..." />
 		<node name="toc" value="Daftar Isi" />
 		<node name="library" toBeTranslated="true" value="Open library" />
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Pustaka">
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Tambahkan Berkas ke Pustaka" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" value="Cari dalam Pustaka Jaringan" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Tidak Terpakai" />
 						<node name="library" value="Tampilkan Pustaka" />
-						<node name="netLibrary" value="Tampilkan Pustaka Jaringan" />
+						<node name="networkLibrary" value="Tampilkan Pustaka Jaringan" />
 						<node name="showRecent" value="Tampilkan Buku-buku Sebelumnya" />
 						<node name="previousBook" value="Buka Buku Sebelumnya" />
 						<node name="toc" value="Tampilkan Daftar Isi" />

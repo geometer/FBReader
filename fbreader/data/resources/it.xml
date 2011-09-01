@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Informazioni Libro..." />
 		<node name="toc" value="Indice" />
 		<node name="library" value="Apri biblioteca" />
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Biblioteca">
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Aggiungi File alla Biblioteca" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" value="Cerca in Biblioteche in Rete" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Nessuno" />
 						<node name="library" value="Mostra Biblioteca" />
-						<node name="netLibrary" value="Mostra biblioteca in rete" />
+						<node name="networkLibrary" value="Mostra biblioteca in rete" />
 						<node name="showRecent" value="Mostra Libri Recenti" />
 						<node name="previousBook" value="Apri Libro Precedente" />
 						<node name="toc" value="Mostra Indice" />

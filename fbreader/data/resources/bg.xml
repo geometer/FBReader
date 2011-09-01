@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Информация за книгата..."/>
 		<node name="toc" value="Съдържание"/>
 		<node name="library" value="Отваряне на библиотека"/>
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Библиотека">
@@ -141,7 +141,7 @@
 			<node name="label" value="Добавяне на файл"/>
 			<node name="tooltip" value="Добавяне на файл в библиотеката"/>
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="Интернет"/>
 			<node name="tooltip" value="Търсене в интернет библиотеки"/>
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Няма"/>
 						<node name="library" value="Показване на библиотеката"/>
-						<node name="netLibrary" value="Показване на интернет библиотеки"/>
+						<node name="networkLibrary" value="Показване на интернет библиотеки"/>
 						<node name="showRecent" value="Показване на последните книги"/>
 						<node name="previousBook" value="Отваряне на предишната книга"/>
 						<node name="toc" value="Показване на съдържанието"/>

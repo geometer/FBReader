@@ -71,7 +71,7 @@
 		<node name="bookInfo" value="Інформація про книгу..."/>
 		<node name="toc" value="Зміст"/>
 		<node name="library" value="Відкрити бібліотеку"/>
-		<node name="netLibrary" toBeTranslated="true" value="Network library" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Бібліотека">
@@ -141,7 +141,7 @@
 			<node name="label" value="Додати файл" />
 			<node name="tooltip" value="Додати файл до бібліотеки" />
 		</node>
-		<node name="netLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="Мережа" />
 			<node name="tooltip" value="Шукати у електронних бібліотеках" />
 		</node>
@@ -342,7 +342,7 @@
 					<node name="action">
 						<node name="none" value="Ніяких дій"/>
 						<node name="library" value="Показати бібліотеку"/>
-						<node name="netLibrary" value="Показати електронну бібліотеку"/>
+						<node name="networkLibrary" value="Показати електронну бібліотеку"/>
 						<node name="showRecent" value="Показати прочитані книги"/>
 						<node name="previousBook" value="Відкрити попередню книгу"/>
 						<node name="toc" value="Показати зміст"/>
