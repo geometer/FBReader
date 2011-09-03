@@ -20,7 +20,6 @@
 import QtQuick 1.0
 import com.nokia.meego 1.0
 import org.fbreader 0.14
-import "DialogUtils.js" as Utils
 
 ListView {
 	id: root
