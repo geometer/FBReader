@@ -25,6 +25,8 @@
 #include "../ZLInputStream.h"
 #include "../ZLDir.h"
 
+class ZLFSArchiverTar;
+
 class ZLTarInputStream : public ZLInputStream {
 
 private:
@@ -46,7 +48,7 @@ private:
 	size_t myCompressedFileSize;
 	size_t myOffset;
 
-friend class ZLFile;
+friend class ZLFSArchiverTar;
 };
 
 class ZLTarDir : public ZLDir {
@@ -62,7 +64,7 @@ public:
 protected:
 	std::string delimiter() const;
 
-friend class ZLFile;
+friend class ZLFSArchiverTar;
 };
 
 inline ZLTarDir::ZLTarDir(const std::string &path) : ZLDir(path) {}
