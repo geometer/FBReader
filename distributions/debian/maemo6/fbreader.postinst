@@ -19,3 +19,9 @@ if [ "$1" = "configure" -a -z "$2" -a -x /usr/bin/maemo-select-menu-location ]
 then
 	/usr/bin/maemo-select-menu-location FBReader.desktop
 fi
+
+set -e
+
+if [ "$1" = "configure" ]; then
+	ldconfig
+fi
