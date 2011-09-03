@@ -30,6 +30,12 @@ VARIANT = $(TARGET_ARCH)
 ifneq "$(RESOLUTION)" "" 
   VARIANT = $(TARGET_ARCH)_$(RESOLUTION)
 endif
+EXTERNAL_FILE = "external.$(TARGET_ARCH).xml"
+ifeq "$(TARGET_ARCH)" "maemo"
+  ifeq "$(UI_TYPE)" "qml"
+	EXTERNAL_FILE = "external.maemo6.xml"
+  endif
+endif
 
 APPIMAGEDIR_REAL = $(subst %application_name%,$(target),$(subst %APPLICATION_NAME%,$(TARGET),$(APPIMAGEDIR)))
 
@@ -53,7 +59,7 @@ do_install:
 	@install -d $(FBSHAREDIR)/default
 	@./scripts/install_toolbar_and_menu.sh $(VARIANT) $(UI_TYPE) $(FBSHAREDIR)/default
 	@./scripts/install_config.sh $(VARIANT) $(UI_TYPE) $(FBSHAREDIR)/default
-	@install -m 0644 data/default/external.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/external.xml
+	@install -m 0644 data/default/$(EXTERNAL_FILE) $(FBSHAREDIR)/default/external.xml
 	@if [ -f data/default/messages.$(TARGET_ARCH).xml ]; then \
 		install -m 0644 data/default/messages.$(TARGET_ARCH).xml $(FBSHAREDIR)/default/messages.xml; \
 	fi
