@@ -11,13 +11,15 @@ BACKUP_CONF = FBReader.backup
 ifeq "$(UI_TYPE)" "qml"
 	DESKTOP_DIR = ""
 	DESKTOP_FILE = FBReader-maemo6.desktop
+	KEYMAP_FILE = "keymap.maemo6.xml"
 else
 	DESKTOP_DIR = "hildon"
 	DESKTOP_FILE = FBReader.desktop
+	KEYMAP_FILE = "keymap.maemo.xml"
 endif
 
 install:
-	@install -m 0644 ../data/default/keymap.maemo.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
+	@install -m 0644 ../data/default/$(KEYMAP_FILE) $(DESTDIR)$(SHAREDIR)/FBReader/default/keymap.xml
 	@install -m 0644 ../data/default/styles.maemo.xml $(DESTDIR)$(SHAREDIR)/FBReader/default/styles.xml
 	@install -d $(DESTDIR)$(SHAREDIR)/icons/hicolor/16x16/apps
 	@install -m 0644 ../data/icons/application/16x16.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/16x16/apps/FBReader.png

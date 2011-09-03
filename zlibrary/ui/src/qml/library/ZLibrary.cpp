@@ -63,8 +63,6 @@ void ZLQmlLibraryImplementation::init(int &argc, char **&argv) {
 	ZLQtImageManager::createInstance();
 	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 	ZLCurlNetworkManager::createInstance();
-
-	ZLKeyUtil::setKeyNamesFileName("keynames-qml.xml");
 }
 
 ZLPaintContext *ZLQmlLibraryImplementation::createContext() {

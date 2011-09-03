@@ -17,7 +17,7 @@ Package: fbreader-dev
 Section: libdevel
 Priority: optional
 Architecture: armel i386
-Depends: libzlibrary (= ${Source-Version})
+Depends: fbreader (= ${Source-Version})
 Description: zlibrary - development files
  Home page: http://www.fbreader.org/
 
