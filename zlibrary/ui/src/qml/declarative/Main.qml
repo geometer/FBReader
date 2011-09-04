@@ -53,5 +53,24 @@ PageStackWindow {
 			dialog.open();
 //			root.pageStack.push(dialog);
 		}
+		
+		onInformationBoxRequested: {
+			// var title, message, button
+			var args = { "titleText": title, "message": message, "acceptButtonText": button };
+			var dialog = queryDialog.createObject(mainPage, args);
+			dialog.open();
+		}
+		onErrorBoxRequested: {
+			// var title, message, button
+			var args = { "titleText": title, "message": message, "acceptButtonText": button };
+			var dialog = queryDialog.createObject(mainPage, args);
+			dialog.open();
+		}
+	}
+	
+	Component {
+		id: queryDialog
+		QueryDialog {
+		}
 	}
 }

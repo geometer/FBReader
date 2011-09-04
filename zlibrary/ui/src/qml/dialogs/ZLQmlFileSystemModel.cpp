@@ -41,6 +41,7 @@ ZLQmlFileSystemModel::ZLQmlFileSystemModel(QObject *parent) :
 	names.insertMulti(FileNameRole, "title");
 	setRoleNames(names);
 	setFilter(QDir::AllEntries | QDir::NoDot);
+	connect(this, SIGNAL(layoutChanged()), SLOT(onLayoutChanged()));
 	sort(0, Qt::AscendingOrder);
 }
 
@@ -62,5 +63,16 @@ QVariant ZLQmlFileSystemModel::data(const QModelIndex &index, int role) const {
 		return type(index);
 	default:
 		return QFileSystemModel::data(index, role);
+	}
+}
+
+void ZLQmlFileSystemModel::onLayoutChanged() {
+	QModelIndex rootIndex = index(rootPath());
+	int rows = rowCount(rootIndex);
+	qDebug("%s %d", Q_FUNC_INFO, rows);
+	if (rows > 0) {
+		const QModelIndex begin = index(0, 0);
+		const QModelIndex end = rootIndex.child(rows - 1, 0);
+		emit dataChanged(begin, end);
 	}
 }

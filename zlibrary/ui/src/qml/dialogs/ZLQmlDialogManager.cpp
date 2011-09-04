@@ -42,6 +42,10 @@ ZLQmlDialogManager::ZLQmlDialogManager() {
 	        SIGNAL(fileDialogRequested(QObject*)), Qt::QueuedConnection);
 	connect(this, SIGNAL(privateOptionsDialogRequested(QObject*)),
 	        SIGNAL(optionsDialogRequested(QObject*)), Qt::QueuedConnection);
+	connect(this, SIGNAL(privateInformationBoxRequested(QString,QString,QString)),
+	        SIGNAL(informationBoxRequested(QString,QString,QString)), Qt::QueuedConnection);
+	connect(this, SIGNAL(privateErrorBoxRequested(QString,QString,QString)),
+	        SIGNAL(errorBoxRequested(QString,QString,QString)), Qt::QueuedConnection);
 	qmlRegisterUncreatableType<ZLQmlOptionView>("org.fbreader", 0, 14, "OptionView", "Uncreatable type");
 	qmlRegisterUncreatableType<ZLQmlBoolean3OptionView>("org.fbreader", 0, 14, "BooleanOptionView", "Uncreatable type");
 }
@@ -65,13 +69,15 @@ shared_ptr<ZLOpenFileDialog> ZLQmlDialogManager::createOpenFileDialog(const ZLRe
 }
 
 void ZLQmlDialogManager::informationBox(const std::string &title, const std::string &message) const {
-	QWidget *parent = qApp->activeWindow();
-	QMessageBox::information(parent, QString::fromStdString(title), QString::fromStdString(message), ::qtButtonName(OK_BUTTON));
+	emit const_cast<ZLQmlDialogManager*>(this)->privateInformationBoxRequested(QString::fromStdString(title),
+	                                                                           QString::fromStdString(message),
+	                                                                           ::qtButtonName(OK_BUTTON));
 }
 
 void ZLQmlDialogManager::errorBox(const ZLResourceKey &key, const std::string &message) const {
-	QWidget *parent = qApp->activeWindow();
-	QMessageBox::critical(parent, QString::fromStdString(dialogTitle(key)), QString::fromStdString(message), ::qtButtonName(OK_BUTTON));
+	emit const_cast<ZLQmlDialogManager*>(this)->privateErrorBoxRequested(QString::fromStdString(dialogTitle(key)),
+	                                                                     QString::fromStdString(message),
+	                                                                     ::qtButtonName(OK_BUTTON));
 }
 
 int ZLQmlDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
