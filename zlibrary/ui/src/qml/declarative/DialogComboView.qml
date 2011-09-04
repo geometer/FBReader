@@ -23,47 +23,54 @@ import com.nokia.meego 1.0
 Item {
 	id: root
 	property variant handler
+	property variant widget: handler.editable ? textField : combobox
 	width: parent.width
-	height: combobox.height
+	height: widget.height
 	visible: handler.visible
 	enabled: handler.enabled
 	
 	Label {
-		anchors { left: root.left; right: combobox.left; verticalCenter: combobox.verticalCenter }
+		id: label
+		anchors { left: root.left; verticalCenter: root.widget.verticalCenter }
 		anchors.rightMargin: 15
 		text: handler.name
 	}
 	
 	Button {
 		id: combobox
-		anchors { top: root.top; right: root.right }
-		text: handler.currentText
-		onClicked: {
-			var values = handler.values;
-			dialog.selectedIndex = -1;
-			for (var i = 0; i < values.length; ++i) {
-				dialog.model.append({ "name": values[i] });
-				if (values[i] == text)
-					dialog.selectedIndex = i;
-			}
-			dialog.open();
+		anchors {
+			left: label.text == "" ? root.left : label.right
+			top: root.top
+			right: root.right
 		}
+		visible: !root.handler.editable
+		text: handler.currentText
+		onClicked: dialog.chooseValue()
+	}
+	
+	TextField {
+		id: textField
+		anchors {
+			left: label.text == "" ? root.left : label.right
+			top: root.top
+			right: root.right
+		}
+		visible: root.handler.editable
+		onTextChanged: if (root.handler.currentText != text) root.handler.currentText = text
+		Component.onCompleted: text = handler.currentText
 	}
 	Image {
 		id: image
-		anchors { right: combobox.right; verticalCenter: combobox.verticalCenter }
+		anchors { right: root.widget.right; verticalCenter: root.widget.verticalCenter }
 		property variant __invertedString: theme.inverted ? "-inverted" : ""
-		property variant __enabled: combobox.enabled ? "" : "-disabled"
+		property variant __enabled: root.widget.enabled ? "" : "-disabled"
 		property variant __pressed: combobox.pressed ? "-pressed" : ""
 		source: "image://theme/meegotouch-combobox-indicator" + __invertedString + __enabled + __pressed
+		MouseArea {
+			enabled: root.handler.editable
+			onClicked: dialog.chooseValue()
+		}
 	}
-
-//	TextField {
-//		id: combobox
-//		anchors.fill: combobox
-//		visible: false
-//		text: handler.currentText
-//	}
 	
 	SelectionDialog {
 		id: dialog
@@ -73,10 +80,25 @@ Item {
 			dialog.model.clear();
 		}
 		onRejected: dialog.model.clear()
+		
+		function chooseValue() {
+			var values = root.handler.values;
+			var text = root.handler.currentText;
+			dialog.selectedIndex = -1;
+			for (var i = 0; i < values.length; ++i) {
+				dialog.model.append({ "name": values[i] });
+				if (values[i] == text)
+					dialog.selectedIndex = i;
+			}
+			dialog.open();
+		}
 	}
 	
 	Connections {
 		target: root.handler
-		onCurrentTextChanged: combobox.text = root.handler.currentText
+		onCurrentTextChanged: {
+			if (root.widget.text != root.handler.currentText)
+				root.widget.text = root.handler.currentText;
+		}
 	}
 }

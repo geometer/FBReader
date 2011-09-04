@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ExternalPrograms>
+<!--
+	<section name="Dictionary">
+		<program name="FDictionary" protocol="osso-rpc" testFile="/usr/bin/FDictionary">
+			<action name="present" service="FDictionary" command="present"/>
+			<action name="showWord" service="FDictionary" command="openWord"/>
+		</program>
+	</section>
+-->
+	<section name="Web Browser">
+		<program name="%browser" protocol="execute">
+			<action name="openLink" command="%command"/>
+			<option name="command" defaultValue="xdg-open %1 &amp;"/>
+		</program>
+	</section>
+</ExternalPrograms>

@@ -39,6 +39,7 @@ Item {
 		anchors { top: root.top; right: root.right }
 		visible: handler.visible
 		onCheckedChanged: if (handler.checked != switchItem.checked) handler.checked = switchItem.checked
+		Component.onCompleted: switchItem.checked = root.handler.checked
 	}
 	
 	Connections {

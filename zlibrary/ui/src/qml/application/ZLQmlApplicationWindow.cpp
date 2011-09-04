@@ -39,7 +39,6 @@
 #include "../dialogs/ZLQmlDialogManager.h"
 #include "../dialogs/ZLQmlFileSystemModel.h"
 #include "../view/ZLQmlViewWidget.h"
-#include "../util/ZLQtKeyUtil.h"
 
 void ZLQmlDialogManager::createApplicationWindow(ZLApplication *application) const {
 	new ZLQmlApplicationWindow(application);
@@ -54,6 +53,12 @@ void ZLQmlApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonI
 ZLQmlApplicationWindow::ZLQmlApplicationWindow(ZLApplication *application) :
 	ZLApplicationWindow(application), myFullScreen(false) {
 	myMenu = new ZLQmlMenuBar(this);
+#ifdef MEEGO_EDITION
+	myResourceSet = new ResourcePolicy::ResourceSet(QLatin1String("player"), this);
+	myResourceSet->addResourceObject(new ResourcePolicy::ScaleButtonResource);
+	myResourceSet->acquire();
+	qApp->installEventFilter(this);
+#endif
 }
 
 void ZLQmlApplicationWindow::init() {
@@ -79,20 +84,6 @@ void ZLQmlApplicationWindow::setFullscreen(bool fullscreen) {
 
 bool ZLQmlApplicationWindow::isFullscreen() const {
 	return myFullScreen;
-}
-
-void ZLQmlApplicationWindow::keyPressEvent(QKeyEvent *event) {
-	application().doActionByKey(ZLQtKeyUtil::keyName(event));
-}
-
-void ZLQmlApplicationWindow::wheelEvent(QWheelEvent *event) {
-	if (event->orientation() == Qt::Vertical) {
-		if (event->delta() > 0) {
-			application().doActionByKey(ZLApplication::MouseScrollUpKey);
-		} else {
-			application().doActionByKey(ZLApplication::MouseScrollDownKey);
-		}
-	}
 }
 
 ZLQmlMenuBar::ZLQmlMenuBar(ZLQmlApplicationWindow *window) : QObject(window) {
@@ -162,12 +153,14 @@ void ZLQmlMenuBar::Builder::processSepartor(ZLMenubar::Separator &separator) {
 	Q_UNUSED(separator);
 }
 
-void ZLQmlApplicationWindow::closeEvent(QCloseEvent *event) {
-	if (application().closeView()) {
-		event->accept();
-	} else {
-		event->ignore();
-	}
+bool ZLQmlApplicationWindow::eventFilter(QObject *obj, QEvent *event) {
+#ifdef MEEGO_EDITION
+	if (event->type() == QEvent::ApplicationActivate)
+		myResourceSet->acquire();
+	else if (event->type() == QEvent::ApplicationDeactivate)
+		myResourceSet->release();
+#endif
+	return QObject::eventFilter(obj, event);
 }
 
 void ZLQmlApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {

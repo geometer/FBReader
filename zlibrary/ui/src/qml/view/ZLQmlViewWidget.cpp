@@ -34,6 +34,8 @@
 #include <QtDeclarative/QDeclarativeEngine>
 #include "../dialogs/ZLQmlDialogManager.h"
 #include "ZLQmlSwipeGestureRecognizer.h"
+#include "../util/ZLQtKeyUtil.h"
+#include "../../../../core/src/application/ZLApplicationWindow.h"
 
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
@@ -358,103 +360,17 @@ ZLQmlViewWidget::ZLQmlViewWidget(QWidget *parent, ZLQmlViewObject &holder) : QDe
 	QObject *qDialogManager = static_cast<ZLQmlDialogManager*>(dialogManager);
 	rootContext()->setContextProperty(QLatin1String("dialogManager"), qDialogManager);
 	setViewport(new QGLWidget(this));
-	
-	// TODO: Find the way to get this path through API
-	setSource(QUrl::fromLocalFile("/usr/share/zlibrary/declarative/Main.qml"));
+	setSource(QUrl::fromLocalFile(QString::fromStdString(ZLibrary::ZLibraryDirectory())
+	                              + "/declarative/Main.qml"));
 }
 
-//void ZLQmlViewWidget::paintEvent(QPaintEvent*) {
-//	ZLQtPaintContext &context = (ZLQtPaintContext&)myHolder.view()->context();
-//	switch (myHolder.rotation()) {
-//		default:
-//			context.setSize(width(), height());
-//			break;
-//		case ZLView::DEGREES90:
-//		case ZLView::DEGREES270:
-//			context.setSize(height(), width());
-//			break;
-//	}
-//	myHolder.view()->paint();
-//	QPainter realPainter(this);
-//	switch (myHolder.rotation()) {
-//		default:
-//			realPainter.drawPixmap(0, 0, context.pixmap());
-//			break;
-//		case ZLView::DEGREES90:
-//			realPainter.rotate(270);
-//			realPainter.drawPixmap(1 - height(), -1, context.pixmap());
-//			break;
-//		case ZLView::DEGREES180:
-//			realPainter.rotate(180);
-//			realPainter.drawPixmap(1 - width(), 1 - height(), context.pixmap());
-//			break;
-//		case ZLView::DEGREES270:
-//			realPainter.rotate(90);
-//			realPainter.drawPixmap(-1, 1 - width(), context.pixmap());
-//			break;
-//	}
-//}
-
-//void ZLQmlViewWidget::mousePressEvent(QMouseEvent *event) {
-//	myHolder.view()->onStylusMove(x(event), y(event));
-//	myHolder.view()->onStylusPress(x(event), y(event));
-//}
-
-//void ZLQmlViewWidget::mouseReleaseEvent(QMouseEvent *event) {
-//	myHolder.view()->onStylusRelease(x(event), y(event));
-//}
-
-//void ZLQmlViewWidget::mouseMoveEvent(QMouseEvent *event) {
-//	switch (event->buttons()) {
-//		case Qt::LeftButton:
-//			myHolder.view()->onStylusMovePressed(x(event), y(event));
-//			break;
-//		case Qt::NoButton:
-//			myHolder.view()->onStylusMove(x(event), y(event));
-//			break;
-//		default:
-//			break;
-//	}
-//}
-
-//int ZLQmlViewWidget::x(const QMouseEvent *event) const {
-//	const int maxX = width() - 1;
-//	const int maxY = height() - 1;
-//	switch (myHolder.rotation()) {
-//		default:
-//			return std::min(std::max(event->x(), 0), maxX);
-//		case ZLView::DEGREES90:
-//			return maxY - std::min(std::max(event->y(), 0), maxY);
-//		case ZLView::DEGREES180:
-//			return maxX - std::min(std::max(event->x(), 0), maxX);
-//		case ZLView::DEGREES270:
-//			return std::min(std::max(event->y(), 0), maxY);
-//	}
-//}
-
-//int ZLQmlViewWidget::y(const QMouseEvent *event) const {
-//	const int maxX = width() - 1;
-//	const int maxY = height() - 1;
-//	switch (myHolder.rotation()) {
-//		default:
-//			return std::min(std::max(event->y(), 0), maxY);
-//		case ZLView::DEGREES90:
-//			return std::min(std::max(event->x(), 0), maxX);
-//		case ZLView::DEGREES180:
-//			return maxY - std::min(std::max(event->y(), 0), maxY);
-//		case ZLView::DEGREES270:
-//			return maxX - std::min(std::max(event->x(), 0), maxX);
-//	}
-//}
+void ZLQmlViewWidget::keyPressEvent(QKeyEvent *event) {
+	ZLApplicationWindow::Instance().application().doActionByKey(ZLQtKeyUtil::keyName(event));
+	return QDeclarativeView::keyPressEvent(event);
+}
 
 ZLQmlBookContent::ZLQmlBookContent(QDeclarativeItem *parent) : QDeclarativeItem(parent), myHolder(0) {
 	setFlag(ItemHasNoContents, false);
-//	setFlag(ItemUsesExtendedStyleOption, false);
-//	setAcceptedMouseButtons(Qt::LeftButton);
-//	setAcceptTouchEvents(true);
-//	setFiltersChildEvents(true);
-//	grabGesture(Qt::TapGesture, Qt::IgnoredGesturesPropagateToParent);
-//	grabGesture(ZLQmlSwipeGestureRecognizer::gestureType());
 	myVisibleHeight = 400;
 }
 

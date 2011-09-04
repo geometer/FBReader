@@ -20,39 +20,46 @@
 import QtQuick 1.0
 import com.nokia.meego 1.0
 import org.fbreader 0.14
-import "DialogUtils.js" as Utils
 
-Flickable {
+ListView {
 	id: root
 	
 	property variant handler
+	property bool invertedTheme: false
 
 	anchors.fill: parent
-	anchors.margins: 15
-    contentWidth: column.width
-    contentHeight: column.height
-    flickableDirection: Flickable.VerticalFlick
-
-    Column {
-        id: column
-        anchors.top: parent.top
-        spacing: 10
-		width: root.width
-//		height: childrenRect.height
-		
-		Repeater {
-			model: handler.items
-			Item {
-				id: contentArea
-				width: column.width
-				height: visible ? childrenRect.height : 0
-				visible: modelData.visible
-				enabled: modelData.enabled
-				property variant child
-				Component.onCompleted: child = root.createChild(contentArea, modelData)
+	anchors { leftMargin: 15; topMargin: 15; rightMargin: 15 }
+	model: VisualDataModel {
+		id: itemModel
+		model: handler ? handler.items : null
+		delegate: Item {
+			id: contentArea
+			width: root.width
+			height: modelData.visible ? childrenRect.height + 15 : 0
+			visible: modelData.visible
+			enabled: modelData.enabled
+			property variant child: __ensureChild(modelData, modelData.visible)
+			function __ensureChild(modelData, visible) {
+				if (!child && visible)
+					child = root.createChild(contentArea, modelData)
+				return child;
 			}
 		}
-    }
+	}
+	
+	property variant __componentCache: {}
+	
+	onInvertedThemeChanged: fixChildren(root)
+
+	function fixChildren(child) {
+		if (child.platformStyle !== undefined
+				&& child.platformStyle.inverted !== undefined) {
+			child.platformStyle.inverted = root.invertedTheme;
+		}
+		var children = child.children;
+		for (var i = 0; i < children.length; ++i)
+			fixChildren(children[i]);
+	}
 	
 	function createChild(item, object) {
 		var componentName;
@@ -65,7 +72,7 @@ Flickable {
 			break;
 		case OptionView.Boolean3:
 			// TODO
-			componentName = "DialogBoolean3View.qml"
+//			componentName = "DialogBoolean3View.qml"
 			break;
 		case OptionView.String:
 			componentName = "DialogStringView.qml"
@@ -85,11 +92,11 @@ Flickable {
 			break;
 		case OptionView.Key:
 			// TODO
-			componentName = "DialogKeyView.qml"
+//			componentName = "DialogKeyView.qml"
 			break;
 		case OptionView.Order:
 			// TODO
-			componentName = "DialogOrderView.qml"
+//			componentName = "DialogOrderView.qml"
 			break;
 		case OptionView.Multiline:
 			componentName = "DialogMultilineView.qml"
@@ -100,10 +107,24 @@ Flickable {
 		default:
 			break;
 		}
+		var child;
 		if (componentName !== undefined) {
-			var component = Qt.createComponent(componentName);
-			if (component !== null)
-				component.createObject(item, { handler: object });
+			var component = __componentCache[componentName];
+			if (!component) {
+				component = Qt.createComponent(componentName);
+				__componentCache[componentName] = component;
+			}
+			if (component.status == Component.Error) {
+				// Error Handling
+				console.log("Error loading component:", component.errorString());
+				return null;
+			}
+			if (component !== null) {
+				child = component.createObject(item, { handler: object });
+				if (root.invertedTheme)
+					fixChildren(child)
+			}
 		}
+		return child;
 	}
 }

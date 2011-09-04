@@ -27,6 +27,10 @@
 #include <QtGui/QCursor>
 #include <QtDeclarative/qdeclarative.h>
 
+#ifdef MEEGO_EDITION
+#include <policy/resource-set.h>
+#endif
+
 class QDockWidget;
 class QToolBar;
 class QToolButton;
@@ -76,9 +80,7 @@ private:
 	
 	QDeclarativeListProperty<QObject> actions();
 
-	void closeEvent(QCloseEvent *event);
-	void keyPressEvent(QKeyEvent *event);
-	void wheelEvent(QWheelEvent *event);
+	bool eventFilter(QObject *, QEvent *);
 	
 Q_SIGNALS:
 	void fullScreenChanged(bool fullScreen);
@@ -88,7 +90,9 @@ private:
 	QObjectList myActions;
 	QHash<const ZLToolbar::Item*, ZLQmlToolBarItem*> myActionsHash;
 	ZLQmlMenuBar *myMenu;
-
+#ifdef MEEGO_EDITION
+	ResourcePolicy::ResourceSet *myResourceSet;
+#endif
 	bool myFullScreen;
 
 private:

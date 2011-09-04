@@ -23,15 +23,33 @@ import com.nokia.meego 1.0
 Dialog {
 	id: root
 	property variant handler;
+    property Style platformStyle: QueryDialogStyle {}
 	
-	title: handler.title
-	content: DialogContent {
-		id: dialogContent
-		handler: handler.content
+//	title: handler.title
+	content: Item {
+		property int upperBound: visualParent ? visualParent.height - buttonsRow.height - 64
+												: root.parent.height - buttonsRow.height - 64
+		property int __sizeHint: Math.min(Math.max(root.platformStyle.contentFieldMinSize,
+												   dialogContent.contentHeight),
+										  upperBound)
+		height: __sizeHint + root.platformStyle.contentTopMargin
+		width: root.width
+		DialogContent {
+			id: dialogContent
+			invertedTheme: true
+			handler: root.handler.content
+		}
+		Component.onCompleted: {
+			console.log(__sizeHint, upperBound, root.platformStyle.contentTopMargin, dialogContent.contentHeight)
+		}
 	}
 
-	buttons: ButtonRow {
-		anchors.horizontalCenter: parent.horizontalCenter
+	buttons: Column {
+        id: buttonsRow
+        anchors.top: parent.top
+        width: parent.width
+        height: childrenRect.height
+//		anchors.horizontalCenter: parent.horizontalCenter
 		Repeater {
 			model: root.handler.buttonNames
 			Button {
@@ -46,10 +64,11 @@ Dialog {
 					}
 					reject();
 				}
+				platformStyle: ButtonStyle { inverted: true }
 			}
 		}
 	}
-	MouseArea { anchors.fill: parent }
-	onAccepted: root.handler.accept()
-	onRejected: root.handler.reject()
+//	MouseArea { anchors.fill: parent }
+	onAccepted: if (root.handler) root.handler.accept()
+	onRejected: if (root.handler) root.handler.reject()
 }
