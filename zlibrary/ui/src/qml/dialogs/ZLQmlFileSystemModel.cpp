@@ -28,20 +28,39 @@
 Q_DECLARE_METATYPE(QModelIndex)
 
 enum {
-//	ZLQmlFileName
+	ZLQmlDirectoryRole = Qt::UserRole + 100,
+	ZLQmlRootRole,
+	ZLQmlFileTypeRole
 };
 
 ZLQmlFileSystemModel::ZLQmlFileSystemModel(QObject *parent) :
-    QFileSystemModel(parent)
-{
+    QFileSystemModel(parent) {
+	QHash<int, QByteArray> names = roleNames();
+	names[ZLQmlDirectoryRole] = "directory";
+	names[ZLQmlFileTypeRole] = "subtitle";
+	names.insertMulti(FileNameRole, "title");
+	setRoleNames(names);
+	setFilter(QDir::AllEntries | QDir::NoDot);
+	sort(0, Qt::AscendingOrder);
 }
 
-QVariant ZLQmlFileSystemModel::setRootPath(const QString &path)
-{
+QVariant ZLQmlFileSystemModel::setRootPath(const QString &path) {
 	return qVariantFromValue(QFileSystemModel::setRootPath(path));
 }
 
-QVariant ZLQmlFileSystemModel::data(const QModelIndex &index, int role) const
-{
-	return QFileSystemModel::data(index, role);
+QVariant ZLQmlFileSystemModel::data(const QModelIndex &index, int role) const {
+	switch (role) {
+	case ZLQmlDirectoryRole: {
+		QFileInfo info = fileInfo(index);
+		return info.isDir();
+	}
+	case ZLQmlRootRole: {
+		QFileInfo info = fileInfo(index);
+		return info.isRoot();
+	}
+	case ZLQmlFileTypeRole:
+		return type(index);
+	default:
+		return QFileSystemModel::data(index, role);
+	}
 }

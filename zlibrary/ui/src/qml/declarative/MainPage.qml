@@ -50,7 +50,6 @@ Page {
 						} else {
 							menu.close();
 						}
-
 						break;
 					default:
 						break;
@@ -79,9 +78,21 @@ Page {
 		Component.onCompleted: objectHolder.bookView = bookView
 		MouseArea {
 			anchors.fill: parent
-			onClicked: {
-				console.log("tap pos = (", mouse.x, "," ,mouse.y, ")");
-				objectHolder.handleFingerTap(mouse.x, mouse.y);
+//			onClicked: {
+//				console.log("tap pos = (", mouse.x, "," ,mouse.y, ")");
+//				objectHolder.handleFingerTap(mouse.x, mouse.y);
+//			}
+			onPressed: {
+				// Don't know why I should call this
+//				objectHolder.handleMove(mouse.x, mouse.y)
+				objectHolder.handlePress(mouse.x, mouse.y)
+			}
+			onReleased: objectHolder.handleRelease(mouse.x, mouse.y)
+			onPositionChanged: {
+				if (pressed)
+					objectHolder.handleMovePressed(mouse.x, mouse.y)
+				else
+					objectHolder.handleMove(mouse.x, mouse.y)
 			}
 		}
 	}

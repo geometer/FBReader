@@ -17,8 +17,8 @@ ifeq "$(UI_TYPE)" "qml" # Meego 1.2 Harmattan
 	CFLAGS = -DMEEGO_VERSION_MAJOR=1 -DMEEGO_VERSION_MINOR=2 -DMEEGO_VERSION_PATCH=0 -DMEEGO_EDITION=harmattan -DMEEGO_EDITION_HARMATTAN
 	CFLAGS += -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
 	MOC = moc-qt4
-	QTINCLUDE = -I/usr/include/qt4 -I/usr/include/qt4/QtDeclarative -I/usr/include/qt4/QtScript -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtNetwork -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtOpenGL
-	UILIBS = -lQtCore -lQtGui -lQtDeclarative -lQtOpenGL
+	QTINCLUDE = -I/usr/include/qt4 -I/usr/include/qt4/QtDeclarative -I/usr/include/qt4/QtScript -I/usr/include/qt4/QtGui -I/usr/include/qt4/QtNetwork -I/usr/include/qt4/QtCore -I/usr/include/qt4/QtOpenGL -I/usr/include/resource/qt4
+	UILIBS = -lQtCore -lQtGui -lQtDeclarative -lQtOpenGL -lresourceqt
 else ifeq "$(UI_TYPE)" "maemo5"
 	CFLAGS = -pipe -fno-exceptions -fno-rtti -Wall -Wno-ctor-dtor-privacy -W -pthread -DMAEMO_VERSION=5
 	GTKINCLUDE = -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/freetype2 -I/usr/include/libpng12 -DMAEMO_CHANGES -I/usr/include/hildon-1 -I/usr/include/hildon-fm-2 -I/usr/include/dbus-1.0 -I/usr/lib/dbus-1.0/include -I/usr/include/conic

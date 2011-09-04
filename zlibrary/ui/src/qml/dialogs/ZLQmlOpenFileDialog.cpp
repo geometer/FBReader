@@ -41,11 +41,11 @@ bool ZLQmlOpenFileDialog::run() {
 }
 
 std::string ZLQmlOpenFileDialog::filePath() const {
-	return myFilePath.toUtf8().constData();
+	return myFilePath.toStdString();
 }
 
 std::string ZLQmlOpenFileDialog::directoryPath() const {
-	return myDirPath.toUtf8().constData();
+	return myDirPath.toStdString();
 }
 
 QString ZLQmlOpenFileDialog::fileName() const {
@@ -71,7 +71,7 @@ void ZLQmlOpenFileDialog::finish() {
 }
 
 bool ZLQmlOpenFileDialog::check(const QString &filePath) {
-	std::string fileName = filePath.toUtf8().constData();
+	std::string fileName = filePath.toStdString();
 	ZLFile file(fileName);
 	return myFilter.accepts(file);
 }

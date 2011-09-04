@@ -24,13 +24,15 @@ import com.nokia.extras 1.0
 Sheet {
 	id: root
 	property variant handler
+	property variant sections: handler ? handler.sections : null
 	acceptButtonText: handler ? handler.okButtonText : ""
 	rejectButtonText: handler ? handler.cancelButtonText : ""
 	
-	onHandlerChanged: pagesModel.update()
+	onSectionsChanged: pagesModel.update()
 	
-	content: MouseArea {
+	content: Item {
 		id: contentArea
+		objectName: "contentArea"
 		anchors.fill: parent
 		anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom; }
 		anchors.bottomMargin: toolBar.visible || (toolBar.opacity==1)? toolBar.height : 0
@@ -39,63 +41,78 @@ Sheet {
 			anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom; }
 			anchors.bottomMargin: toolBar.visible || (toolBar.opacity==1)? toolBar.height : 0
 			toolBar: toolBar
-			Page {
-				id: mainPage
-//				tools: ToolBarLayout {
-//				}
-				
-				ListModel {
-					id: pagesModel
-					
-					function update() {
-						pagesModel.clear()
-						if (!root.handler)
-							return;
-						var sections = root.handler.sections;
-						for (var i = 0; i < sections.length; ++i) {
-							var section = sections[i];
-							console.log("append", section.title, section);
-							pagesModel.append({ "title": section.title, "subtitle": "", "section": section });
-						}
-					}
-				}
-				
-				ListView {
-					id: pagesView
-					anchors.fill: parent
-					model: pagesModel
-					delegate: ListDelegate {
-						MoreIndicator {
-							anchors.right: parent.right;
-							anchors.verticalCenter: parent.verticalCenter
-						}
-						onClicked: pageStack.push(contentComponent, { handler: model.section })
-					}
-				}
-			}
-			Component.onCompleted: pageStack.push(mainPage)
 		}
 		ToolBar {
+			objectName: "toolBar"
 			anchors.top: contentArea.bottom
 			id: toolBar
+			// Don't know why I have to do it manually
+			onVisibleChanged: if (__currentContainer) __currentContainer.visible = visible;
+		}
+	}
+	Page {
+		id: mainPage
+		tools: ToolBarLayout {
+			id: toolsLayout
+		}
+		ListModel {
+			id: pagesModel
+			
+			function update() {
+				pagesModel.clear();
+				if (!root.sections)
+					return;
+				var sections = root.sections;
+				for (var i = 0; i < sections.length; ++i) {
+					var section = sections[i];
+					pagesModel.append({ "title": section.title, "subtitle": "", "section": section });
+				}
+			}
+		}
+		
+		ListView {
+			id: pagesView
+			anchors.fill: parent
+			model: pagesModel
+			delegate: ListDelegate {
+				MoreIndicator {
+					anchors.right: parent.right;
+					anchors.verticalCenter: parent.verticalCenter
+				}
+				onClicked: {
+					pageStack.push(contentComponent, { handler: model.section });
+					toolBar.__currentContainer.visible = true;
+				}
+			}
 		}
 	}
 	Component {
 		id: contentComponent
 		Page {
+			id: contentPage
 			property alias handler: content.handler
 			DialogContent {
 				id: content
 			}
 			tools: ToolBarLayout {
 				ToolIcon {
+					visible: true
 					platformIconId: "toolbar-previous"
 					onClicked: pageStack.pop()
 				}
 			}
 		}
 	}
-	MouseArea { anchors.fill: pageStack }
-	onAccepted: { handler.accept(); while (pageStack.depth > 1) pageStack.pop().visible = false; }
-	onRejected: { handler.reject(); while (pageStack.depth > 1) pageStack.pop().visible = false; }
+	onAccepted: handler.accept()
+	onRejected: handler.reject()
+	onStatusChanged: {
+		if (status == PageStatus.Inactive && pageStack.currentPage != mainPage) {
+			pageStack.clear();
+			pageStack.push(mainPage);
+		}
+	}
+	Component.onCompleted: {
+		__owner = parent;
+		pageStack.push(mainPage);
+	}
 }

@@ -4,20 +4,20 @@ Maintainer: Nikolay Pultsin <geometer@fbreader.org>
 Standards-Version: 3.6.1
 Build-Depends: debhelper (>= 5), libexpat1-dev, libbz2-dev, libz-dev, liblinebreak-dev, libfribidi-dev, libcurl4-openssl-dev, libsqlite3-dev, libqt4-dev
 
-Package: libzlibrary
-Section: user/libs
-Priority: optional
-Architecture: armel i386
-Conflicts: fbreader (<< 0.8.0)
-Depends: ${shlibs:Depends}
-Description: Platform-dependent part of fbreader
- Home page: http://www.fbreader.org/
+#Package: libzlibrary
+#Section: user/libs
+#Priority: optional
+#Architecture: armel i386
+#Conflicts: fbreader (<< 0.8.0)
+#Depends: ${shlibs:Depends}
+#Description: Platform-dependent part of fbreader
+# Home page: http://www.fbreader.org/
 
-Package: libzlibrary-dev
+Package: fbreader-dev
 Section: libdevel
 Priority: optional
 Architecture: armel i386
-Depends: libzlibrary (= ${Source-Version})
+Depends: fbreader (= ${Source-Version})
 Description: zlibrary - development files
  Home page: http://www.fbreader.org/
 

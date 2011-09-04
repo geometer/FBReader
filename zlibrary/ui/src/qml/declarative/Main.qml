@@ -36,7 +36,7 @@ PageStackWindow {
 		onDialogRequested: {
 			console.log("simple dialog", object, object.title)
 			var component = Qt.createComponent("SimpleDialog.qml");
-			var dialog = component.createObject(root.content, { handler: object });
+			var dialog = component.createObject(mainPage, { handler: object });
 			dialog.open();
 		}
 		
@@ -44,20 +44,14 @@ PageStackWindow {
 			console.log("options dialog", object, object.title);
 			optionsDialog.handler = object;
 			optionsDialog.open();
-//			var component = Qt.createComponent("OptionsDialog.qml");
-//			if (component.status == Component.Ready) {
-//				var dialog = component.createObject(root.content, { handler: object });
-//				dialog.open();
-//			} else {
-//				console.log("Error loading component:", component.errorString());
-//			}
 		}
 
         onFileDialogRequested: {
 			console.log("file dialog", object, object.directoryPath)
 			var component = Qt.createComponent("OpenFileDialog.qml");
-			var dialog = component.createObject(root, { handler: object });
-			root.pageStack.push(dialog);
+			var dialog = component.createObject(mainPage, { handler: object });
+			dialog.open();
+//			root.pageStack.push(dialog);
 		}
 	}
 }

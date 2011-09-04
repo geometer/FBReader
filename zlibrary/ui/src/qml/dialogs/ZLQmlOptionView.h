@@ -50,6 +50,7 @@ class ZLQmlOptionView : public QObject, public ZLOptionView {
 	Q_PROPERTY(Type type READ type CONSTANT)
 	Q_PROPERTY(bool visible READ visible NOTIFY visibleChanged)
 	Q_PROPERTY(bool enabled READ enabled NOTIFY enabledChanged)
+	Q_PROPERTY(bool created READ created NOTIFY createdChanged)
 
 public:
 	enum Type {
@@ -74,6 +75,7 @@ public:
 	QString name() const;
 	bool visible() const;
 	bool enabled() const;
+	bool created() const;
 	
 	void _createItem();
 	void _show();
@@ -83,10 +85,12 @@ public:
 Q_SIGNALS:
 	void visibleChanged(bool visible);
 	void enabledChanged(bool enabled);
+	void createdChanged(bool created);
 
 protected:
 	bool myVisible;
 	bool myEnabled;
+	bool myCreated;
 };
 
 class ZLQmlChoiceOptionView : public ZLQmlOptionView {
