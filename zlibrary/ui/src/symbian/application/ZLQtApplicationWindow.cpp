@@ -102,9 +102,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
         myMenuBar = new ZLQtMenuBar(this);
         setMenuBar(myMenuBar);
 
-		#ifdef SYMBIAN
-			myVolumeKeyCapture = new VolumeKeysCapturer(this);
-		#endif
+		myVolumeKeyCapture = new VolumeKeysCapturer(this);
 }
 
 
