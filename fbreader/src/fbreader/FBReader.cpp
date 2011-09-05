@@ -43,6 +43,7 @@
 #include "RecentBooksPopupData.h"
 #include "PreferencesPopupData.h"
 #include "TimeUpdater.h"
+#include "SwitchProfileAction.h"
 
 #include "../libraryTree/LibraryView.h"
 #include "../network/NetworkLinkCollection.h"
@@ -52,12 +53,16 @@
 #include "../migration/migrate.h"
 
 #include "../options/FBCategoryKey.h"
+#include "../options/ColorProfile.h"
 #include "../bookmodel/BookModel.h"
 #include "../formats/FormatPlugin.h"
 
 #include "../database/booksdb/BooksDB.h"
 #include "../database/booksdb/BooksDBUtil.h"
 #include "../library/Book.h"
+
+#include "../../../zlibrary/ui/src/symbian/actions/PreferencesActions.h"
+#include "../../../zlibrary/ui/src/symbian/actions/LibraryActions.h"
 
 static const std::string OPTIONS = "Options";
 
@@ -112,12 +117,16 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	setMode(BOOK_TEXT_MODE);
 
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
-	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+//	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+	addAction(ActionCode::SHOW_LIBRARY, new ShowMenuLibraryAction() );
+	addAction(ActionCode::SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(ColorProfile::NIGHT));
+	addAction(ActionCode::SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(ColorProfile::DAY));
 	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction());
 	addAction(ActionCode::SEARCH_ON_NETWORK, new SimpleSearchOnNetworkAction());
 	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction());
 	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
-	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
+//	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
+	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowPreferencesMenuItemAction());
 	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
 	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
 	addAction(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG, new ShowLibraryOptionsDialogAction());

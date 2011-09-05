@@ -28,6 +28,8 @@
 #include <ZLOptions.h>
 #include <ZLTextStyle.h>
 
+#include "ColorProfile.h"
+
 class FBOptions {
 
 public:
@@ -37,12 +39,17 @@ private:
 	static FBOptions *ourInstance;
 
 public:
+	ColorProfile& getColorProfile();
+	const std::string& getColorProfileName() const;
+	void setColorProfileName(const std::string& name);
+public:
 	ZLIntegerRangeOption LeftMarginOption;
 	ZLIntegerRangeOption RightMarginOption;
 	ZLIntegerRangeOption TopMarginOption;
 	ZLIntegerRangeOption BottomMarginOption;
-	ZLColorOption BackgroundColorOption;
-	ZLColorOption RegularTextColorOption;
+
+	ZLColorOption& backgroundColorOption();
+	ZLColorOption& regularTextColorOption();
 
 	ZLColorOption &colorOption(const std::string &style);
 
@@ -52,6 +59,9 @@ private:
 	const FBOptions &operator = (const FBOptions&);
 
 private:
+	ZLStringOption ColorProfileOption;
+	ColorProfile dayColorProfile;
+	ColorProfile nightColorProfile;
 	std::map<std::string,shared_ptr<ZLColorOption> > myColorOptions;
 };
 

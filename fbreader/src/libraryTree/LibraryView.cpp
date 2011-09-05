@@ -46,7 +46,7 @@ const std::string &LibraryView::caption() const {
 }
 
 ZLColor LibraryView::backgroundColor() const {
-	return FBOptions::Instance().BackgroundColorOption.value();
+	return FBOptions::Instance().backgroundColorOption().value();
 }
 
 void LibraryView::showBook(shared_ptr<Book> book) {

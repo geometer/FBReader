@@ -24,6 +24,7 @@
 
 #include "ZLApplication.h"
 #include "ZLToolbar.h"
+#include "ZLMenu.h"
 
 class ZLApplicationWindow {
 
@@ -56,8 +57,14 @@ private:
 	void initToolbar(ToolbarType type);
 
 protected:
+
+	virtual void initMenu();
+	void refreshMenu();
 	// TODO: change to pure virtual
-	virtual void initMenu() {};
+	virtual void addMenuItem(ZLMenu::ItemPtr item) {};
+	void onMenuItemPress(const ZLMenubar::PlainItem& menuItem);
+	// TODO: change to pure virtual
+	virtual void setMenuItemState(ZLMenu::ItemPtr item, bool visible, bool enabled) {}
 
 	ToolbarType type(const ZLToolbar::Item &item) const;
 	bool hasFullscreenToolbar() const;

@@ -114,7 +114,7 @@ void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset) {
 
 	context.setColor(highlighted() ?
 		FBOptions::Instance().colorOption(ZLTextStyle::HIGHLIGHTED_TEXT).value() :
-		FBOptions::Instance().RegularTextColorOption.value());
+		FBOptions::Instance().regularTextColorOption().value());
 	context.setFont(style.fontFamily(), style.fontSize(), style.bold(), style.italic());
 
 	const std::string text = title();
@@ -133,7 +133,7 @@ void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset) {
 
 	context.setColor(highlighted() ?
 		FBOptions::Instance().colorOption(ZLTextStyle::HIGHLIGHTED_TEXT).value() :
-		FBOptions::Instance().RegularTextColorOption.value());
+		FBOptions::Instance().regularTextColorOption().value());
 	context.setFont(style.fontFamily(), style.fontSize() * 2 / 3, style.bold(), style.italic());
 
 	context.drawString(hOffset, vOffset + 13 * unit / 4, text.data(), text.size(), false);

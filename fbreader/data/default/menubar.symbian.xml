@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menubar>
+	<item id="library"/>
+	<item id="networkLibrary"/>
+	<item id="search"/>
+	<item id="toc"/>
+	<item id="night"/>
+	<item id="day"/>
+	<item id="preferences"/>
+	<item id="rotate"/>
+	<item id="increaseFont"/>
+	<item id="decreaseFont"/>
+	<item id="toggleFullscreen"/>
+	<item id="quit"/>
+</menubar>
