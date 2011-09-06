@@ -27,7 +27,7 @@ ifeq "$(ZLSHARED)" "yes"
 endif
 
 ifeq "$(TARGET_STATUS)" "release"
-	CFLAGS += -O3
+#	CFLAGS += -O3
 	LDFLAGS += -s
 endif
 ifeq "$(TARGET_STATUS)" "debug"
@@ -46,8 +46,13 @@ ifeq "$(ZLSHARED)" "yes"
   CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/core -lzlcore -ldl
 	TEXT_LIBS = -lzltext
 else
-  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/ui -L$(ROOTDIR)/zlibrary/core -lzlcore -lzlui-$(UI_TYPE) -lzlcore $(UILIBS) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS)
-	TEXT_LIBS = -lzltext $(EXTERNAL_LIBS) -llinebreak -lfribidi
+#  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/ui -L$(ROOTDIR)/zlibrary/core -lzlcore -lzlui-$(UI_TYPE) -lzlcore $(UILIBS) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS)
+# TEXT_LIBS = -lzltext $(EXTERNAL_LIBS) -llinebreak -lfribidi
+
+  TEXT_LIBS = -L$(ROOTDIR)/zlibrary/text -L$(ROOTDIR)/libs/symbian  -l:zltext.lib -l:linebreak.lib  -l:fribidi.lib -l:libm.dso
+
+  CORE_LIBS = -L$(ROOTDIR)/zlibrary/core -L$(ROOTDIR)/zlibrary/ui -l:zlcore.lib -l:zlui.lib -l:zlcore.lib  -l:expat.lib -l:ezlib.dso -l:bz2.lib -l:sqlite3.dso \
+-l:libc.dso -l:libdl.dso -l:euser.dso -l:eexe.lib -l:usrt2_2.lib -l:qtmain.lib -l:dfpaeabi.dso -l:drtaeabi.dso -l:scppnwdl.dso -lsupc++ -lgcc -l:remconcoreapi.dso -l:remconinterfacebase.dso -l:libstdcpp.dso -l:QtGui.dso -l:QtCore.dso -l:libpthread.dso 
 endif
 
 ifneq "$(BUILD_RESOURCE_OBJECT)" "yes"

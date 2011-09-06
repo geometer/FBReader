@@ -3,6 +3,11 @@
 
 #include <string>
 
+#include <QtGui/QApplication>
+#include <QVBoxLayout>
+#include <QAction>
+#include <QDesktopWidget>
+#include <QMessageBox>
 #include <QDialog>
 #include <QListWidget>
 #include <QListWidgetItem>

@@ -12,12 +12,12 @@ OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
 
 .cpp.o:
 	@echo -n 'Compiling $@ ...'
-	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
+	$(CC) -c $(CFLAGS) $(INCLUDE) $<
 	@echo ' OK'
 
 .h.moc.cpp:
 	@echo -n 'Generating $@ ...'
-	@$(MOC) $< -o $@
+	$(MOC) $< -o $@
 	@echo ' OK'
 
 all: $(OBJECTS) $(OBJMOC)

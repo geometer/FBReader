@@ -3,7 +3,8 @@
 
 #include <ZLApplication.h>
 
-#include "../menu/DrillDownMenu.h"
+class DrillDownMenuDialog;
+class DrillDownMenu;
 
 class MenuAction : public ZLApplication::Action {
 public:

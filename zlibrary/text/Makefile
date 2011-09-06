@@ -16,7 +16,7 @@ ifeq "$(ZLSHARED)" "yes"
     TARGET_SHORTNAME = libzltext.so
   endif
 else
-  TARGET = libzltext.a
+  TARGET = zltext.lib
 endif
 
 SUBDIRS = src/model src/area src/view src/style src/styleOptions src/hyphenation
@@ -39,7 +39,7 @@ ifeq "$(ZLSHARED)" "yes"
 	@ln -sf $(TARGET) $(TARGET_SONAME)
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else
-	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS))
+	$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS))
 endif
 	@echo ' OK'
 
