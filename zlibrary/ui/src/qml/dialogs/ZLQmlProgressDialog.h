@@ -20,44 +20,44 @@
 #ifndef __ZLQTWAITMESSAGE_H__
 #define __ZLQTWAITMESSAGE_H__
 
-#include <string>
-
-#include <QtGui/QWidget>
-#include <QtGui/QCursor>
+#include <QtCore/QObject>
+#include <QtCore/QRunnable>
 
 #include <ZLProgressDialog.h>
 
-class QLabel;
-class QLayout;
-
 class ZLQtWaitMessage;
 
-class ZLQtProgressDialog : public ZLProgressDialog {
-
+class ZLQmlProgressDialog : public QObject, public ZLProgressDialog {
+	Q_OBJECT
+	Q_PROPERTY(QString text READ text NOTIFY textChanged)
 public:
-	ZLQtProgressDialog(const ZLResourceKey &key);
+	ZLQmlProgressDialog(const ZLResourceKey &key);
+	~ZLQmlProgressDialog();
+	
+	QString text() const;
+	
+signals:
+	void textChanged(const QString &text);
+	void finished();
 
 private:
 	void run(ZLRunnable &runnable);
 	void setMessage(const std::string &message);
 
 private:
-	ZLQtWaitMessage *myWaitMessage;
+	QString myText;
 };
 
-class ZLQtWaitMessage : public QWidget {
-
+class ZLQmlRunnable : public QRunnable {
 public:
-	ZLQtWaitMessage(const std::string &message);
-	~ZLQtWaitMessage();
-
+	ZLQmlRunnable(ZLRunnable &runnable, QObject *eventLoop);
+	virtual ~ZLQmlRunnable();
+	
+    void run();
+	
 private:
-	QCursor myStoredCursor;
-	QWidget *myMainWidget;
-	QLayout *myLayout;
-	QLabel *myLabel;
-
-friend class ZLQtProgressDialog;
+	ZLRunnable &myRunnable;
+	QObject *myEventLoop;
 };
 
 #endif /* __ZLQTWAITMESSAGE_H__ */

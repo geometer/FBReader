@@ -18,22 +18,34 @@
  */
 
 #include "ZLQtTime.h"
+#include <QtCore/QThread>
 
 void ZLQtTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
-	removeTask(task);
-	if ((interval > 0) && !task.isNull()) {
-		int id = startTimer(interval);
-		myTimers[task] = id;
-		myTasks[id] = task;
+	if (thread() != QThread::currentThread()) {
+		QMetaObject::invokeMethod(this, "addTask", Qt::QueuedConnection,
+		                          Q_ARG(shared_ptr<ZLRunnable>, task),
+		                          Q_ARG(int, interval));
+	} else {
+		removeTask(task);
+		if ((interval > 0) && !task.isNull()) {
+			int id = startTimer(interval);
+			myTimers[task] = id;
+			myTasks[id] = task;
+		}
 	}
 }
 
 void ZLQtTimeManager::removeTaskInternal(shared_ptr<ZLRunnable> task) {
-	std::map<shared_ptr<ZLRunnable>,int>::iterator it = myTimers.find(task);
-	if (it != myTimers.end()) {
-		killTimer(it->second);
-		myTasks.erase(myTasks.find(it->second));
-		myTimers.erase(it);
+	if (thread() != QThread::currentThread()) {
+		QMetaObject::invokeMethod(this, "removeTaskInternal", Qt::QueuedConnection,
+		                          Q_ARG(shared_ptr<ZLRunnable>, task));
+	} else {
+		QMap<shared_ptr<ZLRunnable>,int>::iterator it = myTimers.find(task);
+		if (it != myTimers.end()) {
+			killTimer(it.value());
+			myTasks.remove(it.value());
+			myTimers.erase(it);
+		}
 	}
 }
 

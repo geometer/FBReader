@@ -28,7 +28,7 @@
 #include "ZLQmlOptionsDialog.h"
 #include "ZLQmlOpenFileDialog.h"
 #include "ZLQmlDialogContent.h"
-#include "ZLQtProgressDialog.h"
+#include "ZLQmlProgressDialog.h"
 #include "ZLQtUtil.h"
 #include <QtDeclarative/qdeclarative.h>
 
@@ -42,6 +42,8 @@ ZLQmlDialogManager::ZLQmlDialogManager() {
 	        SIGNAL(fileDialogRequested(QObject*)), Qt::QueuedConnection);
 	connect(this, SIGNAL(privateOptionsDialogRequested(QObject*)),
 	        SIGNAL(optionsDialogRequested(QObject*)), Qt::QueuedConnection);
+	connect(this, SIGNAL(privateProgressDialogRequested(QObject*)),
+	        SIGNAL(progressDialogRequested(QObject*)), Qt::QueuedConnection);
 	connect(this, SIGNAL(privateInformationBoxRequested(QString,QString,QString)),
 	        SIGNAL(informationBoxRequested(QString,QString,QString)), Qt::QueuedConnection);
 	connect(this, SIGNAL(privateErrorBoxRequested(QString,QString,QString)),
@@ -86,7 +88,9 @@ int ZLQmlDialogManager::questionBox(const ZLResourceKey &key, const std::string 
 }
 
 shared_ptr<ZLProgressDialog> ZLQmlDialogManager::createProgressDialog(const ZLResourceKey &key) const {
-	return new ZLQtProgressDialog(key);
+	ZLQmlProgressDialog *dialog = new ZLQmlProgressDialog(key);
+	emit const_cast<ZLQmlDialogManager*>(this)->privateProgressDialogRequested(dialog);
+	return dialog;
 }
 
 bool ZLQmlDialogManager::isClipboardSupported(ClipboardType type) const {
