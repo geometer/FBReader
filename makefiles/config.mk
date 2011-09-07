@@ -28,7 +28,7 @@ endif
 
 ifeq "$(TARGET_STATUS)" "release"
 #	CFLAGS += -O3
-	LDFLAGS += -s
+#	LDFLAGS += -s
 endif
 ifeq "$(TARGET_STATUS)" "debug"
 	CFLAGS += -O0 -g

@@ -21,9 +21,9 @@ INCPATH       = -I/usr/share/qt4/qt-symbian/mkspecs/symbian/linux-gcce -I. -I/us
 #CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
 CFLAGS = $(DEFINES) $(CXXFLAGS) $(INCPATH) -w
 LDFLAGS = --target1-abs --no-undefined --nostdlib \
--L/usr/arm-none-symbianelf/bin/../lib/gcc/arm-none-symbianelf/4.4.1/ -L/usr/arm-none-symbianelf/bin/../lib/gcc/ -L/usr/arm-none-symbianelf/bin/../lib/gcc/arm-none-symbianelf/4.4.1/../../../../arm-none-symbianelf/lib/arm-none-symbianelf/4.4.1/ -L/usr/arm-none-symbianelf/bin/../lib/gcc/arm-none-symbianelf/4.4.1/../../../../arm-none-symbianelf/lib/  \
+-L/usr/arm-none-symbianelf/lib/gcc/arm-none-symbianelf/4.4.1/ -L/usr/arm-none-symbianelf/lib/gcc/ -L/usr/arm-none-symbianelf/arm-none-symbianelf/lib/arm-none-symbianelf/4.4.1/ -L/usr/arm-none-symbianelf/arm-none-symbianelf/lib/  \
 -L/usr/s60-sdk/epoc32/release/armv5/udeb/ -L/usr/s60-sdk//epoc32/release/armv5/lib -L/usr/s60-sdk/epoc32/release/armv5/urel -L/usr/share/qt4/qt-symbian/lib -L/usr/s60-sdk/epoc32/release/armv5/udeb \
--Tdata 0x700000 -Ttext 0x80000 --shared --soname fbreader\{00040701\}\[e87cc83c\].exe --entry=_E32Startup -u _E32Startup 
+-Tdata 0x700000 -Ttext 0x80000 --shared --soname fbreader\{00040701\}\[e87cc83c\].exe --entry=_E32Startup -u _E32Startup
 
 
 # -Iinclude -I../text/include -I../../libs/symbian/include
@@ -33,17 +33,10 @@ QTINCLUDE = -I/usr/share/qt4/qt-symbian/include/QtCore -I/usr/share/qt4/qt-symbi
 EXTERNAL_INCLUDE = -I$(ROOTDIR)/libs/symbian/include
 ZLSHARED=no
 
-ifeq "$(UI_TYPE)" "qt"
-  UILIBS = -lqt-mt
-endif
-
 ifeq "$(UI_TYPE)" "qt4"
   UILIBS = -lQtGui
 endif
 
-ifeq "$(UI_TYPE)" "gtk"
-  UILIBS = $(shell pkg-config --libs gtk+-2.0 gio-2.0) -lpng -ljpeg
-endif
 
 RM = rm -rvf
 RM_QUIET = rm -rf
