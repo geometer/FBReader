@@ -7,11 +7,11 @@
 			<action name="showWord" service="FDictionary" command="openWord"/>
 		</program>
 	</section>
--->
 	<section name="Web Browser">
 		<program name="%browser" protocol="execute">
 			<action name="openLink" command="%command"/>
 			<option name="command" defaultValue="xdg-open %1 &amp;"/>
 		</program>
 	</section>
+-->
 </ExternalPrograms>

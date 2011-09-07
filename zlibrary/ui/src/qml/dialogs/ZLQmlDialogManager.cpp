@@ -22,6 +22,8 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QClipboard>
 #include <QtGui/QDesktopWidget>
+#include <QtGui/QDesktopServices>
+#include <QtCore/QUrl>
 
 #include "ZLQmlDialogManager.h"
 #include "ZLQmlDialog.h"
@@ -91,6 +93,10 @@ shared_ptr<ZLProgressDialog> ZLQmlDialogManager::createProgressDialog(const ZLRe
 	ZLQmlProgressDialog *dialog = new ZLQmlProgressDialog(key);
 	emit const_cast<ZLQmlDialogManager*>(this)->privateProgressDialogRequested(dialog);
 	return dialog;
+}
+
+bool ZLQmlDialogManager::openURL(const std::string &url) const {
+	return QDesktopServices::openUrl(QUrl::fromUserInput(QString::fromStdString(url)));
 }
 
 bool ZLQmlDialogManager::isClipboardSupported(ClipboardType type) const {

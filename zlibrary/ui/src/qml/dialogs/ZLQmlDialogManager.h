@@ -45,6 +45,7 @@ public:
 	int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const;
 	shared_ptr<ZLProgressDialog> createProgressDialog(const ZLResourceKey &key) const;
 
+	bool openURL(const std::string &url) const;
 	bool isClipboardSupported(ClipboardType type) const;
 	void setClipboardText(const std::string &text, ClipboardType type) const;
 	void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const;

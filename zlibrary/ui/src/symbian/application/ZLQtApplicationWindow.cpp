@@ -26,6 +26,11 @@
 
 #include "../VolumeKeysCapturer.h"
 
+// Why should I use ifdef's? Isn't it special for Symbian file?
+//#ifdef SYMBIAN
+#include "../../../zlibrary/ui/src/symbian/actions/PreferencesActions.h"
+#include "../../../zlibrary/ui/src/symbian/actions/LibraryActions.h"
+//#endif
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 		new ZLQtApplicationWindow(application);
@@ -80,6 +85,9 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 		const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
         QPixmap icon(iconFileName.c_str());
         setWindowIcon(icon);
+		// FIXME: Find the way to get somewhere this action names
+		application->addAction("library", new ShowMenuLibraryAction());
+		application->addAction("preferences", new ShowPreferencesMenuItemAction());
 
         myWindowToolBar = new QToolBar(this);
         myWindowToolBar->setFocusPolicy(Qt::NoFocus);
