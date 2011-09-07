@@ -17,7 +17,7 @@ OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
 
 .h.moc.cpp:
 	@echo -n 'Generating $@ ...'
-	$(MOC) $< -o $@
+	@$(MOC) $< -o $@
 	@echo ' OK'
 
 all: $(OBJECTS) $(OBJMOC)

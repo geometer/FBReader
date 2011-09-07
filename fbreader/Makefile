@@ -24,11 +24,6 @@ all: .resources
 	@echo -n 'Linking $(TARGET) ...'
 	$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` -L$(ROOTDIR)/zlibrary/text $(TEXT_LIBS) $(CORE_LIBS)
 # -lsqlite3
-	mifconv ./fbreader.mif /c32 $(ROOTDIR)/fbreader/data/icons/application/symbian.svg
-	mv $(TARGET) $(TARGET).sym 
-	/usr/share/qt4/qt-symbian/bin/elf2e32_qtwrapper --version 4.1793 --sid=0xE87CC83C --uid1=0x1000007a --uid2=0x100039CE --uid3=0xE87CC83C --targettype=EXE --elfinput=./FBReader.sym --output=./FBReader.exe --linkas=FBReader\{00040701\}\[e87cc83c\].exe --heap=0x20000,0x2000000 --stack=0x14000 --libpath=/usr/s60-sdk/epoc32/release/armv5/udeb/ --libpath=/usr/s60-sdk//epoc32/release/armv5/lib --libpath=/usr/s60-sdk/epoc32/release/armv5/urel --libpath=/usr/share/qt4/qt-symbian/lib --libpath=/usr/s60-sdk/epoc32/release/armv5/udeb --libpath=../zlibrary --libpath=../libs/symbian --capability=NetworkServices+ReadUserData+WriteUserData --dlldata --fpu=softvfp --unfrozen --compressionmethod bytepair --unpaged
-	cp $(TARGET).exe ./$(TARGET)
-
 	@echo ' OK'
 
 FBSHAREDIR = $(DESTDIR)$(SHAREDIR)/FBReader

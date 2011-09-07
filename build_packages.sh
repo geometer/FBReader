@@ -65,7 +65,7 @@ create_tmpdir() {
 }
 
 remove_tmpdir() {
-#	rm -rf $tmpdir
+	rm -rf $tmpdir
 	echo "remove tmpdir"
 }
 
@@ -152,7 +152,7 @@ else
 		if [ "$pkgtype" != "" -a "$extra" == "" -a -d $distdir/$pkgtype/$archtype ]; then
 			create_tmpdir
 			build_package $archtype $pkgtype
-			remove_tmpdir
+			#remove_tmpdir
 		else 
 			echo "unknown architecture: $1"
 		fi;

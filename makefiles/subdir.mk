@@ -13,10 +13,9 @@ OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES_CPP)) $(patsubst %.M, %.o, $(SOURCES_
 .cpp.o:
 	@echo -n 'Compiling $@ ...'
 ifdef CFLAGS_NOARCH
-	$(CC)  $(CFLAGS_PRE) $(INCLUDE) $< -o `basename $< .cpp`.d
-	$(CC) -c $(CFLAGS) $(INCLUDE) $<
+	@$(CC) -MM $(CFLAGS_PRE) $(INCLUDE) $< -o `basename $< .cpp`.d
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $<
 else
-#	$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
 	$(CC) -c $(CFLAGS) $(INCLUDE) $<
 endif
 	@echo ' OK'
@@ -24,20 +23,20 @@ endif
 .M.o:
 	@echo -n 'Compiling $@ ...'
 ifdef CFLAGS_NOARCH
-	$(CC)  $(CFLAGS_PRE) $(INCLUDE) $< -o `basename $< .M`.d
-	$(CC) -c $(CFLAGS) $(INCLUDE) $<
+	@$(CC) -MM $(CFLAGS_PRE) $(INCLUDE) $< -o `basename $< .M`.d
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $<
 else
-	$(CC) -c $(CFLAGS) $(INCLUDE) $<
+	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
 endif
 	@echo ' OK'
 
 .m.o:
 	@echo -n 'Compiling $@ ...'
 ifdef CFLAGS_NOARCH
-	$(CC)  $(CFLAGS_PRE) $(INCLUDE) $< -o `basename $< .m`.d
-	$(CC) -c $(CFLAGS) $(INCLUDE) $<
+	@$(CC) -MM $(CFLAGS_PRE) $(INCLUDE) $< -o `basename $< .m`.d
+	@$(CC) -c $(CFLAGS) $(INCLUDE) $<
 else
-	$(CC)  -c $(CFLAGS) $(INCLUDE) $<
+	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
 endif
 	@echo ' OK'
 
