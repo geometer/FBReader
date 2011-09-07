@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keymap>
+	<binding key="&lt;Down&gt;" action="pageForward"/>
+	<binding key="&lt;Up&gt;" action="pageBackward"/>
+	<binding key="&lt;Right&gt;" action="pageForward"/>
+	<binding key="&lt;Left&gt;" action="pageBackward"/>
+	<binding key="&lt;VolumeUp&gt;" action="pageBackward"/>
+	<binding key="&lt;VolumeDown&gt;" action="pageForward"/>
+	<binding key="&lt;1&gt;" action="increaseFont"/>
+	<binding key="&lt;4&gt;" action="decreaseFont"/>
+	<binding key="&lt;0&gt;" action="toggleIndicator"/>
+	<binding key="&lt;#&gt;" action="toggleFullscreen"/>
+	<binding key="&lt;*&gt;" action="rotate"/>
+	<binding key="&lt;8&gt;" action="nextTOCSection"/>
+	<binding key="&lt;2&gt;" action="previousTOCSection"/>
+</keymap>

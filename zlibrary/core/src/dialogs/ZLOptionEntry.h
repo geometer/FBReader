@@ -43,6 +43,7 @@ public:
 		ORDER,
 		MULTILINE,
 		STATIC,
+		PATH,
 	};
 
 public:
@@ -236,6 +237,18 @@ public:
 	virtual const std::string &initialValue() const = 0;
 };
 
+class ZLPathOptionEntry : public ZLTextOptionEntry {
+
+public:
+	ZLPathOptionEntry(ZLStringOption &option);
+	ZLOptionKind kind() const;
+	const std::string &initialValue() const;
+	void onAccept(const std::string &value);
+
+private:
+	ZLStringOption &myOption;
+};
+
 
 inline ZLOptionEntry::ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
 inline ZLOptionEntry::~ZLOptionEntry() {}
@@ -290,5 +303,10 @@ inline ZLOptionEntry::ZLOptionKind ZLOrderOptionEntry::kind() const { return ORD
 inline std::vector<std::string> &ZLOrderOptionEntry::values() { return myValues; }
 
 inline ZLOptionEntry::ZLOptionKind ZLStaticTextOptionEntry::kind() const { return STATIC; }
+
+inline ZLPathOptionEntry::ZLPathOptionEntry(ZLStringOption &option): myOption(option) { }
+inline ZLOptionEntry::ZLOptionKind ZLPathOptionEntry::kind() const { return PATH; }
+inline const std::string &ZLPathOptionEntry::initialValue() const { return myOption.value(); }
+inline void ZLPathOptionEntry::onAccept(const std::string &value) {	myOption.setValue(value); }
 
 #endif /* __ZLOPTIONENTRY_H__ */

@@ -154,7 +154,7 @@ const std::string &NetworkView::caption() const {
 }
 
 ZLColor NetworkView::backgroundColor() const {
-	return FBOptions::Instance().BackgroundColorOption.value();
+	return FBOptions::Instance().backgroundColorOption().value();
 }
 
 void NetworkView::makeUpToDate() {

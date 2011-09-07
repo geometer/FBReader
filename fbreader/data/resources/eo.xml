@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Informoj pri la libro..." />
 		<node name="toc" value="Enhavo" />
-		<node name="showLibrary" value="Malfermi librejon">
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" value="Malfermi librejon">
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Knihovna">
-			<node name="showLibrary" value="Malfermi" />
+			<node name="library" value="Malfermi" />
 			<node name="previousBook" value="Antaŭa libro" />
 			<node name="showRecent" value="Lastatempe malfermitaj" />
 			<node name="addBook" value="Aldoni libron..." />
@@ -120,7 +120,7 @@
 			<node name="label" toBeTranslated="true" value="Read Book" />
 			<node name="tooltip" value="Reĝimo de legado" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" toBeTranslated="true" value="Library" />
 			<node name="tooltip" value="Librejo - la tuta arbo" />
 			<node name="popup" value="Lastatempe malfermitaj libroj" />
@@ -141,7 +141,7 @@
 			<node name="label" toBeTranslated="true" value="Add File" />
 			<node name="tooltip" value="Aldoni en librejon" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="networkLibrary">
 			<node name="label" toBeTranslated="true" value="Network" />
 			<node name="tooltip" value="Serĉi en reta librejo" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Neniu" />
-						<node name="showLibrary" value="Aperigi librejon" />
-						<node name="showNetLibrary" toBeTranslated="true" value="Aperigu retan librejon" />
+						<node name="library" value="Aperigi librejon" />
+						<node name="networkLibrary" toBeTranslated="true" value="Aperigu retan librejon" />
 						<node name="showRecent" value="Aperigu lastatempe malfermitajn librojn" />
 						<node name="previousBook" value="Malfermi la antaŭan libron" />
 						<node name="toc" value="Aperigi enhavon" />

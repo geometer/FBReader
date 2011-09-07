@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Информация о книге..." />
 		<node name="toc" value="Содержание" />
-		<node name="showLibrary" value="Открыть библиотеку" />
-		<node name="showNetLibrary" value="Сетевая библиотека" />
+		<node name="library" value="Открыть библиотеку" />
+		<node name="networkLibrary" value="Сетевая библиотека" />
 		<node name="addBook" value="Открыть файл..." />
 		<node name="showRecent" value="Недавние книги" />
 		<node name="library" value="Библиотека">
-			<node name="showLibrary" value="Открыть" />
+			<node name="library" value="Открыть" />
 			<node name="previousBook" value="Предыдущая книга" />
 			<node name="showRecent" value="Прочитанные книги" />
 			<node name="addBook" value="Добавить файл..." />
@@ -120,7 +120,7 @@
 			<node name="label" value="Читать книгу" />
 			<node name="tooltip" value="Вернуться к чтению" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Библиотека" />
 			<node name="tooltip" value="Библиотека" />
 			<node name="popup" value="Недавно прочитанные книги" />
@@ -141,7 +141,7 @@
 			<node name="label" value="Добавить" />
 			<node name="tooltip" value="Добавить файл в библиотеку" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="Сеть" />
 			<node name="tooltip" value="Доступ к сетевым библиотекам" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Никакого действия" />
-						<node name="showLibrary" value="Показать библиотеку" />
-						<node name="showNetLibrary" value="Сетевые библиотеки" />
+						<node name="library" value="Показать библиотеку" />
+						<node name="networkLibrary" value="Сетевые библиотеки" />
 						<node name="showRecent" value="Показать прочитанные книги" />
 						<node name="previousBook" value="Открыть предыдущую книгу" />
 						<node name="toc" value="Показать оглавление" />

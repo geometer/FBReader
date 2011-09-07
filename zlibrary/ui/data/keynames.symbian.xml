@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keynames>
+	<key code="0x30" name="&lt;0&gt;"/>
+	<key code="0x31" name="&lt;1&gt;"/>
+	<key code="0x32" name="&lt;2&gt;"/>
+	<key code="0x33" name="&lt;3&gt;"/>
+	<key code="0x34" name="&lt;4&gt;"/>
+	<key code="0x35" name="&lt;5&gt;"/>
+	<key code="0x36" name="&lt;6&gt;"/>
+	<key code="0x37" name="&lt;7&gt;"/>
+	<key code="0x38" name="&lt;8&gt;"/>
+	<key code="0x39" name="&lt;9&gt;"/>
+	<key code="0x52" name="&lt;*&gt;"/>
+	<key code="0x43" name="&lt;#&gt;"/>
+
+	<key code="0x1100000" name="&lt;LeftSoft&gt;"/>
+	<key code="0x1100001" name="&lt;RightSoft&gt;"/>
+
+	<key code="0x1010001" name="&lt;Call&gt;"/>
+	<key code="0x1010002" name="&lt;Drop&gt;"/>
+
+	<key code="0x1010000" name="&lt;Center&gt;"/>
+	<key code="0x1000012" name="&lt;Left&gt;"/>
+	<key code="0x1000013" name="&lt;Up&gt;"/>
+	<key code="0x1000014" name="&lt;Right&gt;"/>
+	<key code="0x1000015" name="&lt;Down&gt;"/>
+
+	<key code="0x1000055" name="&lt;Home&gt;"/>
+	<key code="0x1000003" name="&lt;Clear&gt;"/>
+
+	<key code="0xa2" name="&lt;VolumeUp&gt;"/>
+	<key code="0xa3" name="&lt;VolumeDown&gt;"/>
+</keynames>

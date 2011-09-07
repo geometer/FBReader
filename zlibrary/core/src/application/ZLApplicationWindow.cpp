@@ -50,6 +50,7 @@ void ZLApplicationWindow::initToolbar(ToolbarType type) {
 void ZLApplicationWindow::refresh() {
 	refreshToolbar(WINDOW_TOOLBAR);
 	refreshToolbar(FULLSCREEN_TOOLBAR);
+	refreshMenu();
 	processAllEvents();
 }
 
@@ -133,6 +134,33 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 	if (!lastSeparator.isNull()) {
 		setToolbarItemState(lastSeparator, false, true);
 	}
+}
+
+
+void ZLApplicationWindow::initMenu() {
+	const ZLMenu::ItemVector& items = application().menubar().items();
+	for (ZLMenu::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+			addMenuItem(*it);
+	}
+}
+
+void ZLApplicationWindow::refreshMenu() {
+	const ZLMenu::ItemVector& items = application().menubar().items();
+	for (ZLMenu::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
+		ZLMenu::ItemPtr item = *it;
+		switch (item->type()) {
+				case ZLMenu::Item::ITEM:
+					const std::string &id = ((ZLMenubar::PlainItem&)*item).actionId();
+					const bool visible = application().isActionVisible(id);
+					const bool enabled = application().isActionEnabled(id);
+					setMenuItemState(item,visible,enabled);
+					break;
+		}
+	}
+}
+
+void ZLApplicationWindow::onMenuItemPress(const ZLMenubar::PlainItem& menuItem) {
+		application().doAction(menuItem.actionId());
 }
 
 ZLApplicationWindow::ToolbarType ZLApplicationWindow::type(const ZLToolbar::Item &item) const {

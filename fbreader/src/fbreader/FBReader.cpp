@@ -43,6 +43,7 @@
 #include "RecentBooksPopupData.h"
 #include "PreferencesPopupData.h"
 #include "TimeUpdater.h"
+#include "SwitchProfileAction.h"
 
 #include "../libraryTree/LibraryView.h"
 #include "../network/NetworkLinkCollection.h"
@@ -52,12 +53,16 @@
 #include "../migration/migrate.h"
 
 #include "../options/FBCategoryKey.h"
+#include "../options/ColorProfile.h"
 #include "../bookmodel/BookModel.h"
 #include "../formats/FormatPlugin.h"
 
 #include "../database/booksdb/BooksDB.h"
 #include "../database/booksdb/BooksDBUtil.h"
 #include "../library/Book.h"
+
+#include "../../../zlibrary/ui/src/symbian/actions/PreferencesActions.h"
+#include "../../../zlibrary/ui/src/symbian/actions/LibraryActions.h"
 
 static const std::string OPTIONS = "Options";
 
@@ -112,12 +117,16 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	setMode(BOOK_TEXT_MODE);
 
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
-	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+//	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+	addAction(ActionCode::SHOW_LIBRARY, new ShowMenuLibraryAction() );
+	addAction(ActionCode::SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(ColorProfile::NIGHT));
+	addAction(ActionCode::SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(ColorProfile::DAY));
 	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction());
 	addAction(ActionCode::SEARCH_ON_NETWORK, new SimpleSearchOnNetworkAction());
 	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction());
 	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
-	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
+//	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
+	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowPreferencesMenuItemAction());
 	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
 	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
 	addAction(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG, new ShowLibraryOptionsDialogAction());
@@ -317,6 +326,10 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 	if (url.empty()) {
 		return;
 	}
+	if (!ZLDialogManager::Instance().openURL(url)) {
+		// TODO: show error message
+	}
+	/*
 	shared_ptr<ProgramCollection> collection = webBrowserCollection();
 	if (collection.isNull()) {
 		return;
@@ -329,11 +342,17 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 	NetworkLinkCollection::Instance().rewriteUrl(copy, true);
 	ZLLogger::Instance().println("URL", copy);
 	program->run("openLink", copy);
+	*/
 }
 
 void FBReader::tryShowFootnoteView(const std::string &id, const std::string &type) {
 	if (type == "external") {
-		openLinkInBrowser(id);
+		static const std::string HYPERLINK_FBREADER_ACTION("fbreader-action://");
+		if (ZLStringUtil::stringStartsWith(id, HYPERLINK_FBREADER_ACTION)) {
+			ZLApplication::doAction(id.substr(HYPERLINK_FBREADER_ACTION.length()));
+		} else {
+			openLinkInBrowser(id);
+		}
 	} else if (type == "internal") {
 		if (myMode == BOOK_TEXT_MODE && !myModel.isNull()) {
 			BookModel::Label label = myModel->label(id);

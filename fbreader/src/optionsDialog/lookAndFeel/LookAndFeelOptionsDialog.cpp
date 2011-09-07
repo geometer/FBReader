@@ -63,9 +63,9 @@ LookAndFeelOptionsDialog::LookAndFeelOptionsDialog() : AbstractOptionsDialog(ZLR
 	const ZLResource &resource = colorsTab.resource(colorKey);
 	ZLColorOptionBuilder builder;
 	const std::string BACKGROUND = resource["background"].value();
-	builder.addOption(BACKGROUND, options.BackgroundColorOption);
+	builder.addOption(BACKGROUND, options.backgroundColorOption());
 	builder.addOption(resource["selectionBackground"].value(), options.colorOption(ZLTextStyle::SELECTION_BACKGROUND));
-	builder.addOption(resource["text"].value(), options.RegularTextColorOption);
+	builder.addOption(resource["text"].value(), options.regularTextColorOption());
 	builder.addOption(resource["internalLink"].value(), options.colorOption("internal"));
 	builder.addOption(resource["externalLink"].value(), options.colorOption("external"));
 	builder.addOption(resource["bookLink"].value(), options.colorOption("book"));

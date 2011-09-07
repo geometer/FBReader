@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Polish FBReader resources, by Rafał Bakuła -->
 <resources>
 	<node name="libraryView">
@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Informacje o książce..." />
 		<node name="toc" value="Spis zawartości" />
-		<node name="showLibrary" value="Otwórz bibliotekę" />
-		<node name="showNetLibrary" value="Biblioteka sieciowa" />
+		<node name="library" value="Otwórz bibliotekę" />
+		<node name="networkLibrary" value="Biblioteka sieciowa" />
 		<node name="addBook" value="Otwórz plik..." />
 		<node name="showRecent" value="Ostatnio czytane" />
 		<node name="library" value="Biblioteka">
-			<node name="showLibrary" value="Otwórz" />
+			<node name="library" value="Otwórz" />
 			<node name="previousBook" value="Poprzednia książka" />
 			<node name="showRecent" value="Poprzednia" />
 			<node name="addBook" value="Dodaj książkę..." />
@@ -120,7 +120,7 @@
 			<node name="label" value="Czytaj książkę" />
 			<node name="tooltip" value="Czytaj" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Biblioteka" />
 			<node name="tooltip" value="Pokaż książki" />
 			<node name="popup" value="Pokaż ostatnio otwierane książki" />
@@ -141,7 +141,7 @@
 			<node name="label" value="Dodaj plik" />
 			<node name="tooltip" value="Dodaj plik do biblioteki" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="Sieć" />
 			<node name="tooltip" value="Szukaj w bibliotece sieciowej" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Nic" />
-						<node name="showLibrary" value="Pokaż bibliotekę" />
-						<node name="showNetLibrary" value="Pokaż bibliotekę sieciową" />
+						<node name="library" value="Pokaż bibliotekę" />
+						<node name="networkLibrary" value="Pokaż bibliotekę sieciową" />
 						<node name="showRecent" value="Pokaż ostatnie książki" />
 						<node name="previousBook" value="Otwórz poprzednią książkę" />
 						<node name="toc" value="Pokaż spis zawartości" />

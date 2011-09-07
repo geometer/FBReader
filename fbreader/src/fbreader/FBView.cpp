@@ -285,7 +285,7 @@ int FBView::bottomMargin() const {
 }
 
 ZLColor FBView::backgroundColor() const {
-	return FBOptions::Instance().BackgroundColorOption.value();
+	return FBOptions::Instance().backgroundColorOption().value();
 }
 
 ZLColor FBView::color(const std::string &colorStyle) const {

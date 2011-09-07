@@ -23,6 +23,8 @@
 #include <vector>
 #include <shared_ptr.h>
 
+#include <ZLRunnable.h>
+
 class ZLOptionsDialog;
 class ZLResourceKey;
 class ProgramCollection;
@@ -46,5 +48,11 @@ private:
 };
 
 inline ZLOptionsDialog &AbstractOptionsDialog::dialog() { return *myDialog; }
+
+class OptionsApplyRunnable : public ZLRunnable {
+
+public:
+	void run();
+};
 
 #endif /* __ABSTRACTOPTIONSDIALOG_H__ */
