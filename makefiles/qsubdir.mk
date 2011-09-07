@@ -12,7 +12,7 @@ OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
 
 .cpp.o:
 	@echo -n 'Compiling $@ ...'
-	$(CC) -c $(CFLAGS) $(INCLUDE) $<
+	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
 	@echo ' OK'
 
 .h.moc.cpp:

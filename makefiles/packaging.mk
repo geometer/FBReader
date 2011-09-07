@@ -101,7 +101,6 @@ nsi:
 	@echo ' OK'
 
 sis:
-	@echo "OK"	
 	cp -rf ../libs/ ./
 	@make
 	cd fbreader && mv FBReader FBReader.sym  && \
@@ -116,3 +115,4 @@ sis:
 
 	/usr/share/qt4/qt-symbian/bin/createpackage  FBReader_template.pkg
 	/usr/share/qt4/qt-symbian/bin/createpackage  FBReader_installer.pkg
+	@echo "OK"	

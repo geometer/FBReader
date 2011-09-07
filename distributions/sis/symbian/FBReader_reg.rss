@@ -1,0 +1,12 @@
+#include <FBReader.rsg>
+#include <appinfo.rh>
+
+UID2 KUidAppRegistrationResourceFile
+UID3 0xE87CC83C
+
+RESOURCE APP_REGISTRATION_INFO
+	{
+	app_file="FBReader";
+	localisable_resource_file="\\resource\\apps\\FBReader";
+
+	}

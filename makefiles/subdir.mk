@@ -16,7 +16,7 @@ ifdef CFLAGS_NOARCH
 	@$(CC) -MM $(CFLAGS_PRE) $(INCLUDE) $< -o `basename $< .cpp`.d
 	@$(CC) -c $(CFLAGS) $(INCLUDE) $<
 else
-	$(CC) -c $(CFLAGS) $(INCLUDE) $<
+	@$(CC) -MMD -c $(CFLAGS) $(INCLUDE) $<
 endif
 	@echo ' OK'
 

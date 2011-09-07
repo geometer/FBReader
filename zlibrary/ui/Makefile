@@ -8,7 +8,7 @@ ifeq "$(ZLSHARED)" "yes"
   #TARGET = zlui-$(UI_TYPE).dylib
   TARGET = zlui-$(UI_TYPE).so
 else
-  TARGET = zlui.lib #libzlui-$(UI_TYPE).a
+  TARGET = libzlui-$(UI_TYPE).a
 endif
 
 SUBDIRS_ALL = \
@@ -24,7 +24,6 @@ SUBDIRS_ALL = \
   src/iphone/dialogs src/iphone/image src/iphone/time
 QTSUBDIRS_ALL = src/qt/time src/qtopia/message src/qtopia/application src/qtopia/dialogs src/qtopia/optionView src/qtopia/view src/qt/dialogs src/qt/view src/qt/image src/qt/util src/opie/view src/opie/dialogs src/opie/application src/qt/application-desktop src/qt/application-pdaxrom src/opie/library src/qt/library src/qtopia/library src/qt/filesystem src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/application src/qt4/library src/qt4/filesystem src/ezx/library src/ezx/application src/ezx/dialogs src/ezx/view src/ezx/optionView \
 src/symbian/time src/symbian/dialogs src/symbian/view src/symbian/image src/symbian/util src/symbian/filesystem src/symbian/library src/symbian/message src/symbian/application src/symbian/menu src/symbian/actions src/symbian src/symbian/network
-
 GTKSUBDIRS_ALL = src/gtk/time src/gtk/dialogs src/gtk/optionView src/gtk/view src/gtk/image src/gtk/util src/maemo/dialogs src/maemo/optionView src/maemo/view src/gpe/dialogs src/gpe/view src/gtk/application-desktop src/gtk/application-pdaxrom src/maemo/application src/maemo5/application src/maemo5/dialogs src/maemo5/optionView src/maemo5/library src/maemo5/network src/gpe/application src/maemo/library src/gtk/library src/gpe/library src/gtk/filesystem src/maemo/message src/maemo/network src/gtk/pixbuf
 
 SUBDIRS =
@@ -41,13 +40,14 @@ ifeq "$(UI_TYPE)" "nanoX"
 endif
 
 ifeq "$(UI_TYPE)" "qt"
-#  QTSUBDIRS = src/qt/time src/qt/dialogs src/qt/view src/qt/image src/qt/util src/qt/filesystem src/qt/library src/unix/message src/qt/#application-$(TARGET_ARCH)
-  QTSUBDIRS = src/symbian/time src/symbian/dialogs src/symbian/view src/symbian/image src/symbian/util src/symbian/filesystem src/symbian/library src/symbian/message src/symbian/application src/symbian/menu src/symbian/actions src/symbian src/symbian/network
-
+  QTSUBDIRS = src/qt/time src/qt/dialogs src/qt/view src/qt/image src/qt/util src/qt/filesystem src/qt/library src/unix/message src/qt/application-$(TARGET_ARCH)
 endif
 
 ifeq "$(UI_TYPE)" "qt4"
-#  QTSUBDIRS = src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/filesystem src/qt4/library src/unix/message src/qt4/application
+  QTSUBDIRS = src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/filesystem src/qt4/library src/unix/message src/qt4/application
+endif
+
+ifeq "$(UI_TYPE)" "qtmobile"
   QTSUBDIRS = src/symbian/time src/symbian/dialogs src/symbian/view src/symbian/image src/symbian/util src/symbian/filesystem src/symbian/library src/symbian/message src/symbian/application src/symbian/menu src/symbian/actions src/symbian src/symbian/network
 endif
 
@@ -117,7 +117,7 @@ ifeq "$(ZLSHARED)" "yes"
 	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(CORE_LIBS)
 	#@$(LD) $(LDFLAGS) -dynamiclib -dylinker_install_name $(TARGET) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(CORE_LIBS)
 else
-	$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
+	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
 endif
 	@echo ' OK'
 
