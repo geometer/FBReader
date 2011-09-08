@@ -3,7 +3,7 @@
 
 #include <QDir>
 
-#include "../../../../core/src/desktop/dialogs/ZLDesktopOpenFileDialog.h"
+#include "../../../../core/src/dialogs/ZLOpenFileDialog.h"
 #include "../menu/DrillDownMenu.h"
 #include "../actions/DrillDownMenuActions.h"
 
@@ -13,22 +13,16 @@
 
 #include "../filesystem/ZLQtFSManager.h"
 
-class ZLQtOpenFileDialog : public ZLDesktopOpenFileDialog {
+class ZLQtOpenFileDialog : public ZLOpenFileDialog {
 
 public:
 	ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter);
 	~ZLQtOpenFileDialog();
 
+	bool run();
 	bool runInternal();
 	std::string filePath() const;
 	std::string directoryPath() const;
-
-	void setPosition(int x, int y);
-	void setSize(int width, int height);
-	int x() const;
-	int y() const;
-	int width() const;
-	int height() const;
 
 public:
 	void selectDirectoriesOnly();

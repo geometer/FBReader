@@ -28,6 +28,10 @@ void ZLQtOpenFileDialog::selectDirectoriesOnly() {
 	mySelectDirsOnlyMode = true;
 }
 
+bool ZLQtOpenFileDialog::run() {
+	return runInternal();
+}
+
 ZLQtOpenFileDialog::~ZLQtOpenFileDialog() {
 	delete myDialog;
 }
@@ -68,30 +72,6 @@ std::string ZLQtOpenFileDialog::directoryPath() const {
 	//return (const char*)myDialog->directory().absolutePath().toUtf8();
 	//QMessageBox::information(0, "", "directoryPath: " + myDirectoryPath, QMessageBox::Ok);
 	return  ::stdString(myDirectoryPath);
-}
-
-void ZLQtOpenFileDialog::setPosition(int x, int y) {
-	myDialog->move(x, y);
-}
-
-void ZLQtOpenFileDialog::setSize(int width, int height) {
-	myDialog->resize(width, height);
-}
-
-int ZLQtOpenFileDialog::x() const {
-	return myDialog->x();
-}
-
-int ZLQtOpenFileDialog::y() const {
-	return myDialog->y();
-}
-
-int ZLQtOpenFileDialog::width() const {
-	return myDialog->width();
-}
-
-int ZLQtOpenFileDialog::height() const {
-	return myDialog->height();
 }
 
 

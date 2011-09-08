@@ -45,7 +45,7 @@ endif
 
 ifeq "$(TARGET_ARCH)" "symbian"
   SUBDIRS = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language  src/runnable src/network src/network/requests src/blockTreeView
-  SUBDIRS += src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/desktop/dialogs
+  SUBDIRS += src/unix/xmlconfig src/unix/filesystem src/unix/iconv
 endif 
 
 .objects:
