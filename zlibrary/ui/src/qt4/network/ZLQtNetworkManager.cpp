@@ -20,6 +20,10 @@ ZLQtNetworkManager::ZLQtNetworkManager() {
 	myManager.setCache(myCache);
 	myCookieJar = new ZLQtNetworkCookieJar(QString::fromStdString(CookiesPath()), &myManager);
 	myManager.setCookieJar(myCookieJar);
+	connect(&myManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
+	        SLOT(onAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
+	connect(&myManager, SIGNAL(finished(QNetworkReply*)),
+	        SLOT(onFinished(QNetworkReply*)));
 }
 
 ZLQtNetworkManager::~ZLQtNetworkManager() {
@@ -93,6 +97,7 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 			reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
 		}
 		Q_ASSERT(reply);
+		connect(reply, SIGNAL(readyRead()), SLOT(onReplyReadyRead()));
 		ZLQtNetworkReplyScope scope = { &request, &booleans[replies.size()], &replies, &errors, &eventLoop };
 		replies << reply;
 		reply->setProperty("scope", qVariantFromValue(scope));
