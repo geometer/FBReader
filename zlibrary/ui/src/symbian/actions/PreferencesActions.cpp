@@ -6,7 +6,7 @@
 #include "../../../../../fbreader/src/optionsDialog/AbstractOptionsDialog.h"
 
 #include "../menu/DrillDownMenu.h"
-#include "../menu/PreferencesMenuBuilder.h"
+#include "../../../../../fbreader/src/optionsDialogMobile/PreferencesMenuBuilder.h"
 
 #include "PreferencesActions.h"
 

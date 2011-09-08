@@ -14,24 +14,24 @@
 #include <optionEntries/ZLColorOptionBuilder.h>
 #include <optionEntries/ZLLanguageOptionEntry.h>
 
-#include "../../../../../fbreader/src/options/FBOptions.h"
-#include "../../../../../fbreader/src/options/FBTextStyle.h"
+#include "../options/FBOptions.h"
+#include "../options/FBTextStyle.h"
 
-#include "../../../../../fbreader/src/fbreader/FBReader.h"
-#include "../../../../../fbreader/src/fbreader/FBView.h"
-#include "../../../../../fbreader/src/fbreader/BookTextView.h"
+#include "../fbreader/FBReader.h"
+#include "../fbreader/FBView.h"
+#include "../fbreader/BookTextView.h"
 
-#include "../../../../../fbreader/src/bookmodel/FBTextKind.h"
+#include "../bookmodel/FBTextKind.h"
 
-#include "../../../../../fbreader/src/formats/FormatPlugin.h"
-#include "../../../../../fbreader/src/encodingOption/EncodingOptionEntry.h"
+#include "../formats/FormatPlugin.h"
+#include "../encodingOption/EncodingOptionEntry.h"
 
-#include "../../../../../fbreader/src/optionsDialog/library/LibraryOptionsDialog.h"
-#include "../../../../../fbreader/src/optionsDialog/reading/ReadingOptionsDialog.h"
-#include "../../../../../fbreader/src/optionsDialog/system/SystemOptionsDialog.h"
-#include "../../../../../fbreader/src/optionsDialog/network/NetworkOptionsDialog.h"
+#include "../optionsDialog/library/LibraryOptionsDialog.h"
+#include "../optionsDialog/reading/ReadingOptionsDialog.h"
+#include "../optionsDialog/system/SystemOptionsDialog.h"
+#include "../optionsDialog/network/NetworkOptionsDialog.h"
 
-#include "../../../../../fbreader/src/network/NetworkLinkCollection.h"
+#include "../network/NetworkLinkCollection.h"
 
 #include "PreferencesMenuBuilder.h"
 
@@ -49,9 +49,9 @@ const std::string PreferencesMenuCode::DICTIONARY("dictionary");
 const std::string PreferencesMenuCode::IMAGES("images");
 const std::string PreferencesMenuCode::CANCEL_MENU("cancelMenu");
 
-class SymbianComboOptionEntry : public ZLComboOptionEntry {
+class OptionsPageComboOptionEntry : public ZLComboOptionEntry {
 public:
-		SymbianComboOptionEntry(const std::string &initialValue);
+		OptionsPageComboOptionEntry(const std::string &initialValue);
 		const std::string &initialValue() const;
 		const std::vector<std::string> &values() const;
 		void onAccept(const std::string&);
@@ -66,13 +66,13 @@ private:
 		std::vector< std::pair<ZLOptionEntry*,std::string> > myEntries;
 };
 
-SymbianComboOptionEntry::SymbianComboOptionEntry(const std::string &initialValue) : myInitialValue(initialValue) {}
-const std::string &SymbianComboOptionEntry::initialValue() const { return myInitialValue; }
-const std::vector<std::string> &SymbianComboOptionEntry::values() const { return myValues; }
-void SymbianComboOptionEntry::onAccept(const std::string&) {}
-void SymbianComboOptionEntry::addValue(const std::string &value) { myValues.push_back(value); }
+OptionsPageComboOptionEntry::OptionsPageComboOptionEntry(const std::string &initialValue) : myInitialValue(initialValue) {}
+const std::string &OptionsPageComboOptionEntry::initialValue() const { return myInitialValue; }
+const std::vector<std::string> &OptionsPageComboOptionEntry::values() const { return myValues; }
+void OptionsPageComboOptionEntry::onAccept(const std::string&) {}
+void OptionsPageComboOptionEntry::addValue(const std::string &value) { myValues.push_back(value); }
 
-void SymbianComboOptionEntry::onValueSelected(int index) {
+void OptionsPageComboOptionEntry::onValueSelected(int index) {
         const std::string &selectedValue = values()[index];
         int count = 0;
         for (std::vector< std::pair<ZLOptionEntry*,std::string> >::const_iterator it = myEntries.begin(); it != myEntries.end(); ++it, ++count) {
@@ -80,7 +80,7 @@ void SymbianComboOptionEntry::onValueSelected(int index) {
         }
 }
 
-void SymbianComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLResourceKey &entryKey, ZLOptionEntry *entry, const std::string &name) {
+void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLResourceKey &entryKey, ZLOptionEntry *entry, const std::string &name) {
         if (entry != 0) {
                 entry->setVisible(false);
                 myEntries.push_back( std::pair<ZLOptionEntry*,std::string>(entry,name));
@@ -151,7 +151,7 @@ void SymbianComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLResour
 
      const ZLResource &styleResource = ZLResource::resource(KEY_STYLE);
 
-	 SymbianComboOptionEntry* myComboEntry = new SymbianComboOptionEntry(styleResource[KEY_BASE].value());
+	 OptionsPageComboOptionEntry* myComboEntry = new OptionsPageComboOptionEntry(styleResource[KEY_BASE].value());
      myComboEntry->addValue(myComboEntry->initialValue());
 
      ZLTextStyleCollection &collection = ZLTextStyleCollection::Instance();

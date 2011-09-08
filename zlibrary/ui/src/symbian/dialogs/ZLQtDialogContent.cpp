@@ -30,7 +30,6 @@ void ZLQtDialogContent::addOptions(const std::string &name0, const std::string &
 	createViewByEntry(name1, tooltip1, option1);
 }
 
-#include <QDebug>
 void ZLQtDialogContent::addItem(QWidget *widget) {
         if (isFirstWidget == true) {
             myWidget->setFocusProxy(widget);
