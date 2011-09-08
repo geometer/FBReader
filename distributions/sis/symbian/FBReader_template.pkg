@@ -88,7 +88,7 @@
 "fbreader/data/default/config.symbian.xml" - "!:\private\e87cc83c\FBReader\default\config.xml"
 "fbreader/data/default/menubar.symbian.xml" - "!:\private\e87cc83c\FBReader\default\menubar.xml"
 "fbreader/data/default/external.symbian.xml" - "!:\private\e87cc83c\FBReader\default\external.xml"
-"fbreader/data/default/fullscreen_toolbar.symbian.xml" - "!:\private\e87cc83c\FBReader\default\fullscreen_toolbar.xml"
+
 "fbreader/data/default/keymap.symbian.xml" - "!:\private\e87cc83c\FBReader\default\keymap.xml"
 "fbreader/data/default/styles.symbian.xml" - "!:\private\e87cc83c\FBReader\default\styles.xml"
 "fbreader/data/help/MiniHelp.symbian.vi.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.vi.fb2"
