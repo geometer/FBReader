@@ -3,7 +3,7 @@
 DONE Закончить слияние
 DONE Научиться строить в рамках общей процедуры
 DONE OptionsDialogMobile -- папка в fbreader/
-** убрать картинки для toolbar, код для toolbar из UI части и default configs для toolbar и external 
+DONE убрать картинки для toolbar, код для toolbar из UI части
 ** убрать "десктоповость" из ui кода
 ** свое меню вместо встроенного (которое с showOpenApps)
 ** исправить хак: перехват нажатий пальцем в BookTextView, так, чтобы перехватывались нажатия 

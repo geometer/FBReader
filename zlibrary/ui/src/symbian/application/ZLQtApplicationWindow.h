@@ -5,22 +5,17 @@
 
 #include <QtGui/QMainWindow>
 #include <QtGui/QAction>
-#include <QtGui/QCursor>
 #include <QtGui/QMenuBar>
 
-class QDockWidget;
-class QToolBar;
 class QMenu;
 //class QMenuBar;
-class QToolButton;
-class QLineEdit;
 class VolumeKeysCapturer;
 class QFocusEvent; ////
 
 class ZLPopupData;
 
 
-#include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
+#include "../../../../core/src/application/ZLApplicationWindow.h"
 #include "../../../../core/src/application/ZLMenu.h"
 
 
@@ -31,12 +26,9 @@ public:
     explicit ZLQtMenuBar(QWidget *parent = 0): QMenuBar(parent) { }
 protected:
     void  focusOutEvent ( QFocusEvent * );
-
-
-
 };
 
-class ZLQtApplicationWindow : public QMainWindow, public ZLDesktopApplicationWindow {
+class ZLQtApplicationWindow : public QMainWindow, public ZLApplicationWindow {
 	Q_OBJECT
 
 public:
@@ -61,10 +53,8 @@ private:
 
 	void setCaption(const std::string &caption);
 
-	void setHyperlinkCursor(bool hyperlink);
-
 	bool isFullscreen() const;
-	void setFullscreen(bool fullscreen);
+	void setFullscreen(bool fullscreen=true);
 
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
@@ -77,38 +67,14 @@ private:
 		VolumeKeysCapturer* myVolumeKeyCapture;
 private:
 	ZLQtMenuBar *myMenuBar;
-	QDockWidget *myDocWidget;
 
 	friend class ZLQtMenuBarAction;
 	std::map<const ZLMenu::Item*,QAction*> myMenuActions;
-	std::map<const ZLToolbar::MenuButtonItem*,QToolButton*> myMenuButtons;
 	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
-
-	bool myFullScreen;
-	bool myWasMaximized;
 
 	bool myCursorIsHyperlink;
 	QCursor myStoredCursor;
 
-private:
-	class LineEditParameter : public VisualParameter {
-
-	public:
-		LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::ParameterItem &textFieldItem);
-		QAction *action() const;
-		void restoreOldValue();
-
-	private:
-		std::string internalValue() const;
-		void internalSetValue(const std::string &value);
-		void setValueList(const std::vector<std::string> &values) {}
-
-	private:
-		QLineEdit *myEdit;
-		QAction *myAction;
-	};
-
-friend class ZLQtLineEdit;
 };
 
 

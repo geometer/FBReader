@@ -55,10 +55,7 @@ void ZLQtMenuBarAction::onActivated() {
 void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &) { }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
-        ZLDesktopApplicationWindow(application),
-        myDocWidget(0),
-        myFullScreen(false),
-        myWasMaximized(false),
+		ZLApplicationWindow(application),
         myCursorIsHyperlink(false) {
 
 		const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
@@ -68,9 +65,6 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 		// FIXME: Find the way to get somewhere this action names
 		application->addAction("library", new ShowMenuLibraryAction());
 		application->addAction("preferences", new ShowPreferencesMenuItemAction());
-
-        resize(myWidthOption.value(), myHeightOption.value());
-        //move(myXOption.value(), myYOption.value());
 
         ////menuBar()->hide();
         myMenuBar = new ZLQtMenuBar(this);
@@ -82,24 +76,9 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 
 void ZLQtApplicationWindow::init() {
-        ZLDesktopApplicationWindow::init();
-
+		ZLApplicationWindow::init();
         //setGeometry(qApp->desktop()->availableGeometry());
-
-        switch (myWindowStateOption.value()) {
-                case NORMAL:
-                    show();
-                    break;
-                case MAXIMIZED:
-                    showMaximized();
-                    break;
-                case FULLSCREEN:
-                    setFullscreen(true);
-                    break;
-        }
-
-
-
+		setFullscreen();
 }
 
 void ZLQtApplicationWindow::initMenu() {
@@ -122,7 +101,6 @@ void ZLQtApplicationWindow::_addMenuItem(ZLMenu::ItemPtr item, QMenu* addToMenu)
                     break;
                 case ZLMenu::Item::SUBMENU:
                         menu = new QMenu( QString::fromUtf8(((ZLMenubar::Submenu&)*item).menuName().c_str()), menuOrMenuBar );
-                        //// to avoid crosses initialization
                         for (ZLMenu::ItemVector::const_iterator it = ((ZLMenubar::Submenu&)*item).items().begin();
                                                                 it != ((ZLMenubar::Submenu&)*item).items().end(); ++it) {
 								_addMenuItem(*it, menu);
@@ -134,12 +112,10 @@ void ZLQtApplicationWindow::_addMenuItem(ZLMenu::ItemPtr item, QMenu* addToMenu)
                             ((QMenu&)*menuOrMenuBar).addSeparator();
                         } else {
                             ((ZLQtMenuBar&)*menuOrMenuBar).addSeparator();
-                            //((QMenuBar&)*menuOrMenuBar).addSeparator();
                         }
 
                         break;
         }
-
         if (action != 0) {
                 myMenuActions[&*item] = action;
         }
@@ -158,22 +134,6 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 
 		// delete myVolumeKeyCapture; // TODO fix app crashing here
 
-        if (isFullscreen()) {
-                myWindowStateOption.setValue(FULLSCREEN);
-        } else if (isMaximized()) {
-                myWindowStateOption.setValue(MAXIMIZED);
-        } else {
-                myWindowStateOption.setValue(NORMAL);
-                QPoint position = pos();
-                if (position.x() != -1) {
-                        myXOption.setValue(position.x());
-                }
-                if (position.y() != -1) {
-                        myYOption.setValue(position.y());
-                }
-                myWidthOption.setValue(width());
-                myHeightOption.setValue(height());
-        }
         for (std::map<const ZLMenu::Item*,QAction*>::iterator it = myMenuActions.begin(); it != myMenuActions.end(); ++it) {
                 if (it->second != 0) {
                         delete it->second;
@@ -183,35 +143,15 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 }
 
 void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
-        if (fullscreen == myFullScreen) {
-                return;
-        }
-        myFullScreen = fullscreen;
-        if (myFullScreen) {
-                myWasMaximized = isMaximized();
-                ////myWindowToolBar->hide();
-
-                // to show soft buttons in fullscreen mode:
-                showFullScreen();
-                Qt::WindowFlags flags = windowFlags();
-                flags |= Qt::WindowSoftkeysVisibleHint;
-                setWindowFlags( flags );
-                showFullScreen();
-        } else {
-                ////myWindowToolBar->show();
-                showNormal();
-                if (myWasMaximized) {
-                        showMaximized();
-                }
-//                if (myDocWidget != 0) {
-//                        //myFullscreenToolBar->hide();
-//                        myDocWidget->hide();
-//                }
-        }
+		showFullScreen();
+		Qt::WindowFlags flags = windowFlags();
+		flags |= Qt::WindowSoftkeysVisibleHint;
+		setWindowFlags( flags );
+		showFullScreen();
 }
 
 bool ZLQtApplicationWindow::isFullscreen() const {
-        return myFullScreen;
+		return true;
 }
 
 void ZLQtApplicationWindow::keyPressEvent(QKeyEvent *event) {
@@ -275,8 +215,6 @@ void ZLQtApplicationWindow::grabAllKeys(bool mode) {  }
 void ZLQtApplicationWindow::setCaption(const std::string &caption) {
         QMainWindow::setWindowTitle(QString::fromUtf8(caption.c_str()));
 }
-
-void ZLQtApplicationWindow::setHyperlinkCursor(bool hyperlink) {}
 
 void ZLQtApplicationWindow::setFocusToMainWidget() {
         centralWidget()->setFocus();
