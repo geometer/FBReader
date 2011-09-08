@@ -31,11 +31,12 @@
 #include "../dialogs/ZLQmlDialogManager.h"
 #include "../image/ZLQtImageManager.h"
 #include "../view/ZLQmlPaintContext.h"
+#include "../network/ZLQtNetworkManager.h"
 #include "../../unix/message/ZLUnixMessage.h"
 #include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
-#include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
+//#include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
 
 class ZLQmlLibraryImplementation : public ZLibraryImplementation {
 
@@ -62,7 +63,7 @@ void ZLQmlLibraryImplementation::init(int &argc, char **&argv) {
 	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
 	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
-	ZLCurlNetworkManager::createInstance();
+	ZLQtNetworkManager::createInstance();
 }
 
 ZLPaintContext *ZLQmlLibraryImplementation::createContext() {

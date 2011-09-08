@@ -44,11 +44,11 @@ ifeq "$(UI_TYPE)" "qt"
 endif
 
 ifeq "$(UI_TYPE)" "qt4"
-  QTSUBDIRS = src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/filesystem src/qt4/library src/unix/message src/qt4/application
+  QTSUBDIRS = src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/filesystem src/qt4/library src/unix/message src/qt4/application src/qt4/network
 endif
 
 ifeq "$(UI_TYPE)" "qml"
-  QTSUBDIRS = src/qml/time src/qml/dialogs src/qml/view src/qml/image src/qml/util src/qml/filesystem src/qml/library src/unix/message src/qml/application
+  QTSUBDIRS = src/qml/time src/qml/dialogs src/qml/view src/qml/image src/qml/util src/qml/filesystem src/qml/library src/unix/message src/qml/application src/qml/network
 endif
 
 ifeq "$(UI_TYPE)" "gtk"

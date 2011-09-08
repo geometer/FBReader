@@ -113,14 +113,18 @@ public:
 public:
 	ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
 		const std::vector<std::pair<std::string, std::string> > &postData);
+	ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
+		const std::string &postData);
 
-	const std::vector<std::pair<std::string, std::string> > &postData() const;
+	const std::vector<std::pair<std::string, std::string> > &postParameters() const;
+	const std::string &postData() const;
 
 private:
 	const ZLTypeId &typeId() const;
 
 private:
-	std::vector<std::pair<std::string, std::string> > myData;
+	std::vector<std::pair<std::string, std::string> > myParameters;
+	std::string myData;
 };
 
 #endif /* __ZLNETWORKREQUEST_H__ */

@@ -69,13 +69,24 @@ const ZLTypeId &ZLNetworkGetRequest::typeId() const {
 ZLNetworkPostRequest::ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
 		const std::vector<std::pair<std::string, std::string> > &postData) :
 	ZLNetworkRequest(url, sslCertificate),
-	myData(postData) {
+	myParameters(postData) {
+}
+
+ZLNetworkPostRequest::ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate,
+	const std::string &postData) :
+    ZLNetworkRequest(url, sslCertificate),
+    myData(postData) {
+	
 }
 
 const ZLTypeId &ZLNetworkPostRequest::typeId() const {
 	return TYPE_ID;
 }
 
-const std::vector<std::pair<std::string, std::string> > &ZLNetworkPostRequest::postData() const {
+const std::vector<std::pair<std::string, std::string> > &ZLNetworkPostRequest::postParameters() const {
+	return myParameters;
+}
+
+const std::string &ZLNetworkPostRequest::postData() const {
 	return myData;
 }
