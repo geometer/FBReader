@@ -28,8 +28,8 @@
 
 // Why should I use ifdef's? Isn't it special for Symbian file?
 //#ifdef SYMBIAN
-#include "../../../zlibrary/ui/src/symbian/actions/PreferencesActions.h"
-#include "../../../zlibrary/ui/src/symbian/actions/LibraryActions.h"
+#include "../actions/PreferencesActions.h"
+#include "../actions/LibraryActions.h"
 //#endif
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
@@ -110,9 +110,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
         myMenuBar = new ZLQtMenuBar(this);
         setMenuBar(myMenuBar);
 
-		#ifdef SYMBIAN
-			myVolumeKeyCapture = new VolumeKeysCapturer(this);
-		#endif
+		myVolumeKeyCapture = new VolumeKeysCapturer(this);
 }
 
 

@@ -1,7 +1,5 @@
 #include <QKeyEvent>
 
-#ifdef SYMBIAN
-
 #include "VolumeKeysCapturer.h"
 
 #include <e32keys.h>
@@ -32,5 +30,3 @@ void VolumeKeysCapturer::MrccatoCommand(TRemConCoreApiOperationId aOperationId,
         break;
     }
 }
-
-#endif

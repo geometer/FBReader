@@ -6,6 +6,8 @@
 #include "../../../../../fbreader/src/fbreader/FBReader.h"
 #include "../../../../../fbreader/src/formats/FormatPlugin.h"
 
+#include "../menu/DrillDownMenu.h"
+
 #include "LibraryActions.h"
 
 void ShowMenuLibraryAction::run() {

@@ -5,6 +5,8 @@
 
 #include "DrillDownMenuActions.h"
 
+class DrillDownMenu;
+
 class ShowPreferencesMenuItemAction : public ZLApplication::Action {
 public:
 		ShowPreferencesMenuItemAction();
