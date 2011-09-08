@@ -10,6 +10,5 @@
 	<item id="rotate"/>
 	<item id="increaseFont"/>
 	<item id="decreaseFont"/>
-	<item id="toggleFullscreen"/>
 	<item id="quit"/>
 </menubar>
