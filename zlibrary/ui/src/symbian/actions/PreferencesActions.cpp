@@ -5,8 +5,11 @@
 
 #include "../../../../../fbreader/src/optionsDialog/AbstractOptionsDialog.h"
 
-#include "PreferencesActions.h"
+#include "../menu/DrillDownMenu.h"
 #include "../menu/PreferencesMenuBuilder.h"
+
+#include "PreferencesActions.h"
+
 
 ShowPreferencesMenuItemAction::ShowPreferencesMenuItemAction()
 	:  myPreferenceResource(ZLResource::resource(PreferencesMenuCode::PREFERENCES) ) {  }

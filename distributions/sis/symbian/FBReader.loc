@@ -1,0 +1,7 @@
+#ifdef LANGUAGE_SC
+#define STRING_r_short_caption "FBReader"
+#define STRING_r_caption "FBReader"
+#else
+#define STRING_r_short_caption "FBReader"
+#define STRING_r_caption "FBReader"
+#endif

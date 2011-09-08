@@ -1,0 +1,1 @@
+SRCMOC = ZLQtApplicationWindow.moc.cpp

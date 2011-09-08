@@ -1,0 +1,27 @@
+; Language
+&EN
+
+
+; SIS header: name, uid, version
+#{"FBReader installer"},(0xA000D7CE),4,7,1
+
+; Localised Vendor name
+%{"Vendor"}
+
+; Unique Vendor name
+:"Vendor"
+
+
+; Manual PKG pre-rules from PRO files
+; Default dependency to Qt libraries
+; Default HW/platform dependencies
+[0x102032BE],0,0,0,{"S60ProductID"}
+[0x102752AE],0,0,0,{"S60ProductID"}
+[0x1028315F],0,0,0,{"S60ProductID"}
+[0x20022E6D],0,0,0,{"S60ProductID"}
+[0x20032DE7],0,0,0,{"S60ProductID"}
+ 
+
+
+"./FBReader.sis" - "!:\private\2002CCCE\import\FBReader.sis"
+@"/usr/share/qt4/qt-symbian/smartinstaller.sis",(0x2002CCCD)

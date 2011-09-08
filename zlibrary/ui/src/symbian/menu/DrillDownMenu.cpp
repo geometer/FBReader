@@ -1,9 +1,3 @@
-#include <QVBoxLayout>
-#include <QAction>
-#include <QtGui/QApplication>
-#include <QDesktopWidget>
-#include <QMessageBox>
-
 #include "../dialogs/ZLQtUtil.h"
 
 #include "DrillDownMenu.h"

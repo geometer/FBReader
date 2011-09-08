@@ -1,7 +1,6 @@
 #ifndef __VOLUMEKEYSCAPTURER_H__
 #define __VOLUMEKEYSCAPTURER_H__
 
-#ifdef SYMBIAN
 #include <remconcoreapitargetobserver.h>    // link against RemConCoreApi.lib
 #include <remconcoreapitarget.h>            // and
 #include <remconinterfaceselector.h>        // RemConInterfaceBase.lib
@@ -19,7 +18,6 @@ private:
     CRemConCoreApiTarget*     iCoreTarget;
     QObject *myReceiver;
 };
-#endif
 
 
 #endif /* __VOLUMEKEYSCAPTURER_H__ */

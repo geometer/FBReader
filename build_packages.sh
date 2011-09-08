@@ -121,6 +121,11 @@ build_package() {
 			mkdir -p $pkgdir/$1
 			mv -f $tmpdir/*.exe $pkgdir/$1
 			;;
+		sis)
+			$make_package ARCHITECTURE=$1 $2
+			mkdir -p $pkgdir/$1
+			mv -f $tmpdir/*.sis $pkgdir/$1
+			;;
 		*)
 			echo no rule is defined for package type ''$2'';
 			;;

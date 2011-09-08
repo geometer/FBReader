@@ -3,6 +3,8 @@
 
 #include <ZLOpenFileDialog.h>
 
+#include "../../../../../fbreader/src/library/Library.h"
+
 #include "DrillDownMenuActions.h"
 
 class ShowMenuLibraryAction : public ZLApplication::Action {
