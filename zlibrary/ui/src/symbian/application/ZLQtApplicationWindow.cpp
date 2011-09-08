@@ -52,31 +52,10 @@ void ZLQtMenuBarAction::onActivated() {
 }
 
 
-ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), myItem(item) {
-        static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-        QPixmap icon((imagePrefix + myItem.iconName() + ".png").c_str());
-        setIcon(QIcon(icon));
-        QSize size = icon.size();
-        if (item.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
-                setCheckable(true);
-        }
-        QString text = QString::fromUtf8(myItem.tooltip().c_str());
-        setText(text);
-        setToolTip(text);
-        connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
-}
-
-void ZLQtToolBarAction::onActivated() {
-        ((ZLQtApplicationWindow*)parent())->onButtonPress(myItem);
-}
-
-void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
-        myActions[&button]->setChecked(button.isPressed());
-}
+void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &) { }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
         ZLDesktopApplicationWindow(application),
-        myFullscreenToolBar(0),
         myDocWidget(0),
         myFullScreen(false),
         myWasMaximized(false),
@@ -85,26 +64,13 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 		const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
         QPixmap icon(iconFileName.c_str());
         setWindowIcon(icon);
+
 		// FIXME: Find the way to get somewhere this action names
 		application->addAction("library", new ShowMenuLibraryAction());
 		application->addAction("preferences", new ShowPreferencesMenuItemAction());
 
-        myWindowToolBar = new QToolBar(this);
-        myWindowToolBar->setFocusPolicy(Qt::NoFocus);
-        myWindowToolBar->setMovable(false);
-        //addToolBar(myWindowToolBar);
-        myWindowToolBar->setIconSize(QSize(12, 12));
-
-        if (hasFullscreenToolbar()) {
-                myFullscreenToolBar = new QToolBar();
-                myFullscreenToolBar->setMovable(false);
-                myFullscreenToolBar->setIconSize(QSize(32, 32));
-                myFullscreenToolBar->hide();
-        }
-
         resize(myWidthOption.value(), myHeightOption.value());
         //move(myXOption.value(), myYOption.value());
-
 
         ////menuBar()->hide();
         myMenuBar = new ZLQtMenuBar(this);
@@ -119,8 +85,6 @@ void ZLQtApplicationWindow::init() {
         ZLDesktopApplicationWindow::init();
 
         //setGeometry(qApp->desktop()->availableGeometry());
-
-        //m_bgc = (void*) CEikButtonGroupContainer::Current();
 
         switch (myWindowStateOption.value()) {
                 case NORMAL:
@@ -210,11 +174,6 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
                 myWidthOption.setValue(width());
                 myHeightOption.setValue(height());
         }
-        for (std::map<const ZLToolbar::Item*,QAction*>::iterator it = myActions.begin(); it != myActions.end(); ++it) {
-                if (it->second != 0) {
-                        delete it->second;
-                }
-        }
         for (std::map<const ZLMenu::Item*,QAction*>::iterator it = myMenuActions.begin(); it != myMenuActions.end(); ++it) {
                 if (it->second != 0) {
                         delete it->second;
@@ -278,53 +237,9 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
         }
 }
 
-void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
-        QToolBar *tb = toolbar(type(*item));
-        QAction *action = 0;
-
-        switch (item->type()) {
-                case ZLToolbar::Item::PLAIN_BUTTON:
-                case ZLToolbar::Item::TOGGLE_BUTTON:
-                        action = new ZLQtToolBarAction(this, (ZLToolbar::AbstractButtonItem&)*item);
-                        tb->addAction(action);
-                        break;
-                case ZLToolbar::Item::MENU_BUTTON:
-                {
-                        ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
-                        QToolButton *button = new QToolButton(tb);
-                        button->setFocusPolicy(Qt::NoFocus);
-                        button->setDefaultAction(new ZLQtToolBarAction(this, buttonItem));
-                        button->setMenu(new QMenu(button));
-                        button->setPopupMode(QToolButton::MenuButtonPopup);
-                        action = tb->addWidget(button);
-                        myMenuButtons[&buttonItem] = button;
-                        shared_ptr<ZLPopupData> popupData = buttonItem.popupData();
-                        myPopupIdMap[&buttonItem] =
-                                popupData.isNull() ? (size_t)-1 : (popupData->id() - 1);
-                        break;
-                }
-                case ZLToolbar::Item::TEXT_FIELD:
-                case ZLToolbar::Item::SEARCH_FIELD:
-                {
-                        ZLToolbar::ParameterItem &textFieldItem =
-                                (ZLToolbar::ParameterItem&)*item;
-                        LineEditParameter *para = new LineEditParameter(tb, *this, textFieldItem);
-                        addVisualParameter(textFieldItem.parameterId(), para);
-                        action = para->action();
-                        break;
-                }
-                case ZLToolbar::Item::SEPARATOR:
-                        action = tb->addSeparator();
-                        break;
-        }
-
-        if (action != 0) {
-                myActions[&*item] = action;
-        }
+void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr) {
+	// do nothing; no toolbars
 }
-
-
-
 
 ZLQtRunPopupAction::ZLQtRunPopupAction(QObject *parent, shared_ptr<ZLPopupData> data, size_t index) : QAction(parent), myData(data), myIndex(index) {
         setText(QString::fromUtf8(myData->text(myIndex).c_str()));
@@ -338,33 +253,7 @@ void ZLQtRunPopupAction::onActivated() {
         myData->run(myIndex);
 }
 
-void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-        QAction *action = myActions[&*item];
-        if (action != 0) {
-                action->setEnabled(enabled);
-                action->setVisible(visible);
-        }
-        switch (item->type()) {
-                default:
-                        break;
-                case ZLToolbar::Item::MENU_BUTTON:
-                {
-                        ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
-                        shared_ptr<ZLPopupData> data = buttonItem.popupData();
-                        if (!data.isNull() && (data->id() != myPopupIdMap[&buttonItem])) {
-                                myPopupIdMap[&buttonItem] = data->id();
-                                QToolButton *button = myMenuButtons[&buttonItem];
-                                QMenu *menu = button->menu();
-                                menu->clear();
-                                const size_t count = data->count();
-                                for (size_t i = 0; i < count; ++i) {
-                                        menu->addAction(new ZLQtRunPopupAction(menu, data, i));
-                                }
-                        }
-                        break;
-                }
-        }
-}
+void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr, bool, bool) { }
 
 void ZLQtApplicationWindow::processAllEvents() {
         qApp->processEvents();
@@ -381,25 +270,13 @@ void ZLQtApplicationWindow::close() {
         QMainWindow::close();
 }
 
-void ZLQtApplicationWindow::grabAllKeys(bool mode) {
-}
+void ZLQtApplicationWindow::grabAllKeys(bool mode) {  }
 
 void ZLQtApplicationWindow::setCaption(const std::string &caption) {
         QMainWindow::setWindowTitle(QString::fromUtf8(caption.c_str()));
 }
 
-void ZLQtApplicationWindow::setHyperlinkCursor(bool hyperlink) {
-        if (hyperlink == myCursorIsHyperlink) {
-                return;
-        }
-        myCursorIsHyperlink = hyperlink;
-        if (hyperlink) {
-                myStoredCursor = cursor();
-                setCursor(Qt::PointingHandCursor);
-        } else {
-                setCursor(myStoredCursor);
-        }
-}
+void ZLQtApplicationWindow::setHyperlinkCursor(bool hyperlink) {}
 
 void ZLQtApplicationWindow::setFocusToMainWidget() {
         centralWidget()->setFocus();

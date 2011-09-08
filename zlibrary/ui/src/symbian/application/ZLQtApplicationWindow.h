@@ -76,14 +76,10 @@ private:
 private:
 		VolumeKeysCapturer* myVolumeKeyCapture;
 private:
-	QToolBar *myWindowToolBar;
-	QToolBar *myFullscreenToolBar;
 	ZLQtMenuBar *myMenuBar;
 	QDockWidget *myDocWidget;
-	QToolBar *toolbar(ToolbarType type) { return (type == WINDOW_TOOLBAR) ? myWindowToolBar : myFullscreenToolBar; }
-	friend class ZLQtToolBarAction;
+
 	friend class ZLQtMenuBarAction;
-	std::map<const ZLToolbar::Item*,QAction*> myActions;
 	std::map<const ZLMenu::Item*,QAction*> myMenuActions;
 	std::map<const ZLToolbar::MenuButtonItem*,QToolButton*> myMenuButtons;
 	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
@@ -129,19 +125,6 @@ private:
         ZLMenubar::PlainItem &myItem;
 };
 
-
-class ZLQtToolBarAction : public QAction {
-	Q_OBJECT
-
-public:
-	ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item);
-
-private Q_SLOTS:
-	void onActivated();
-
-private:
-	ZLToolbar::AbstractButtonItem &myItem;
-};
 
 class ZLQtRunPopupAction : public QAction {
 	Q_OBJECT
