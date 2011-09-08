@@ -22,27 +22,46 @@ import com.nokia.meego 1.0
 import com.nokia.extras 1.0
 import org.fbreader 0.14
 
-Sheet {
+Rectangle {
 	id: root
 	property variant handler
+	color: Qt.rgba(0.0, 0.0, 0.0, 0.9)
+	anchors.margins: -1
 
-	content: Item {
+	anchors.fill: parent
+	Label {
+		id: label
+		anchors { horizontalCenter: parent.horizontalCenter; bottom: dummySpace.top }
+		horizontalAlignment: Text.AlignHCenter
+		wrapMode: Text.Wrap
+		width: parent.width
+		text: root.handler.text
+	}
+	Item {
+		id: dummySpace
+		anchors { bottom: indicator.top }
+		height: ((parent.height - indicator.height) / 2.0 - label.height) / 2.0
+	}
+	BusyIndicator {
+		id: indicator
+		anchors.centerIn: parent
+		platformStyle: BusyIndicatorStyle { size: "large" }
+		running: root.visible
+	}
+	Component.onCompleted: {
+		label.style.inverted = true;
+		indicator.style.inverted = true;
+	}
+		
+	// eat mouse events
+	MouseArea {
+		id: mouseEventEater
 		anchors.fill: parent
-		Label {
-			anchors { verticalCenter: parent.verticalCenter; bottom: indicator.top }
-			width: parent.width
-			text: root.handler.text
-		}
-		BusyIndicator {
-			id: indicator
-			anchors.centerIn: parent
-			platformStyle: BusyIndicatorStyle { size: "large" }
-			running: root.status == DialogStatus.Open
-		}
+		enabled: parent.visible
 	}
 	
 	Connections {
 		target: root.handler
-		onFinished: root.close()
+		onFinished: root.destroy()
 	}
 }

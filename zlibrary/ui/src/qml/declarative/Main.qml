@@ -57,7 +57,7 @@ PageStackWindow {
 		onProgressDialogRequested: {
 			console.log("progress dialog", object)
 			var component = Qt.createComponent("ProgressDialog.qml");
-			var dialog = component.createObject(mainPage, { handler: object });
+			var dialog = component.createObject(root.pageStack.parent.parent, { handler: object });
 			dialog.open();
 		}
 		
