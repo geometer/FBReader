@@ -55,8 +55,7 @@ void ZLQtMenuBarAction::onActivated() {
 void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &) { }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
-		ZLApplicationWindow(application),
-        myCursorIsHyperlink(false) {
+		ZLApplicationWindow(application) {
 
 		const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
         QPixmap icon(iconFileName.c_str());

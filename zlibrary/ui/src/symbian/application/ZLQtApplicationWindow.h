@@ -71,12 +71,7 @@ private:
 	friend class ZLQtMenuBarAction;
 	std::map<const ZLMenu::Item*,QAction*> myMenuActions;
 	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
-
-	bool myCursorIsHyperlink;
-	QCursor myStoredCursor;
-
 };
-
 
 class ZLQtMenuBarAction : public QAction {
         Q_OBJECT
