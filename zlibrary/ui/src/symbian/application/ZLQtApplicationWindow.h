@@ -19,6 +19,8 @@ class DrillDownMenuItem;
 #include "../../../../core/src/application/ZLApplicationWindow.h"
 #include "../../../../core/src/application/ZLMenu.h"
 
+#include "../actions/DrillDownMenuActions.h"
+
 
 class ZLQtApplicationWindow : public QMainWindow, public ZLApplicationWindow {
 	Q_OBJECT
@@ -71,9 +73,9 @@ private:
 
 };
 
-class ZLQtMenuAction : public ZLApplication::Action {
+class ZLQtMenuAction : public MenuAction {
 public:
-	ZLQtMenuAction(ZLQtApplicationWindow* parent, ZLMenubar::PlainItem& item);
+	ZLQtMenuAction(ZLQtApplicationWindow* parent, DrillDownMenuDialog* dialog, ZLMenubar::PlainItem& item);
 	void run();
 private:
 	ZLMenubar::PlainItem& myItem;

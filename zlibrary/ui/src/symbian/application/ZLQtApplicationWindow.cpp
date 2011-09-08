@@ -38,10 +38,11 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 		new ZLQtApplicationWindow(application);
 }
 
-ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow* parent, ZLMenubar::PlainItem& item) : myParent(parent), myItem(item) { }
+ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow* parent, DrillDownMenuDialog* dialog,  ZLMenubar::PlainItem& item) : myParent(parent), MenuAction(dialog), myItem(item) { }
 
 void ZLQtMenuAction::run() {
 	myParent->onMenuItemPress(myItem);
+	myDialog->close();
 }
 
 void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &) { }
@@ -108,7 +109,7 @@ void ZLQtApplicationWindow::addMenuItem(ZLMenu::ItemPtr item) {
 				{
 					ZLMenubar::PlainItem& plainItem = (ZLMenubar::PlainItem&)*item;
 					QString text = QString::fromUtf8(plainItem.name().c_str());
-					menuItem = new DrillDownMenuItem(text, new ZLQtMenuAction(this,plainItem) );
+					menuItem = new DrillDownMenuItem(text, new ZLQtMenuAction(this,myMenuDialog,plainItem) );
 					myMenu->addItem(menuItem);
 				}
 				break;
