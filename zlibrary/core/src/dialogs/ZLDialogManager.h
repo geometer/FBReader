@@ -86,7 +86,8 @@ public:
 	virtual shared_ptr<ZLProgressDialog> createProgressDialog(const ZLResourceKey &key) const = 0;
 	void wait(const ZLResourceKey &key, ZLRunnable &runnable) const;
 
-	virtual bool openURL(const std::string &url) const = 0;
+	//TODO make pure virtual
+	virtual bool openURL(const std::string &url) const {}
 
 	enum ClipboardType {
 		CLIPBOARD_MAIN,
