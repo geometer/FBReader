@@ -35,7 +35,6 @@
 
 #include "PreferencesMenuBuilder.h"
 
-const std::string PreferencesMenuCode::PREFERENCES("Preferences");
 const std::string PreferencesMenuCode::DIRECTORIES("directories");
 const std::string PreferencesMenuCode::APPEARANCE("appearance");
 const std::string PreferencesMenuCode::TEXT("text");
@@ -121,7 +120,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
 
  void PreferencesMenuBuilder::addDirectoriesOptions(ZLDialogContent& content) {
      Library &library = Library::Instance();
-	 ZLPathOptionEntry* entry = new ZLPathOptionEntry( library.PathOption );
+	 ZLPathOptionEntry* entry = new ZLPathOptionEntry(library.PathOption);
 	 content.addOption(ZLResourceKey("books"), entry );
      //content.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
  }

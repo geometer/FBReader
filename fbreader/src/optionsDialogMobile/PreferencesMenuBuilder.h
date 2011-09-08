@@ -11,7 +11,6 @@
 
 class PreferencesMenuCode {
 public:
-	const static std::string PREFERENCES;
 	const static std::string DIRECTORIES;
 	const static std::string APPEARANCE;
 	const static std::string TEXT;
