@@ -14,24 +14,24 @@
 #include <optionEntries/ZLColorOptionBuilder.h>
 #include <optionEntries/ZLLanguageOptionEntry.h>
 
-#include "../../../../../fbreader/src/options/FBOptions.h"
-#include "../../../../../fbreader/src/options/FBTextStyle.h"
+#include "../options/FBOptions.h"
+#include "../options/FBTextStyle.h"
 
-#include "../../../../../fbreader/src/fbreader/FBReader.h"
-#include "../../../../../fbreader/src/fbreader/FBView.h"
-#include "../../../../../fbreader/src/fbreader/BookTextView.h"
+#include "../fbreader/FBReader.h"
+#include "../fbreader/FBView.h"
+#include "../fbreader/BookTextView.h"
 
-#include "../../../../../fbreader/src/bookmodel/FBTextKind.h"
+#include "../bookmodel/FBTextKind.h"
 
-#include "../../../../../fbreader/src/formats/FormatPlugin.h"
-#include "../../../../../fbreader/src/encodingOption/EncodingOptionEntry.h"
+#include "../formats/FormatPlugin.h"
+#include "../encodingOption/EncodingOptionEntry.h"
 
-#include "../../../../../fbreader/src/optionsDialog/library/LibraryOptionsDialog.h"
-#include "../../../../../fbreader/src/optionsDialog/reading/ReadingOptionsDialog.h"
-#include "../../../../../fbreader/src/optionsDialog/system/SystemOptionsDialog.h"
-#include "../../../../../fbreader/src/optionsDialog/network/NetworkOptionsDialog.h"
+#include "../optionsDialog/library/LibraryOptionsDialog.h"
+#include "../optionsDialog/reading/ReadingOptionsDialog.h"
+#include "../optionsDialog/system/SystemOptionsDialog.h"
+#include "../optionsDialog/network/NetworkOptionsDialog.h"
 
-#include "../../../../../fbreader/src/network/NetworkLinkCollection.h"
+#include "../network/NetworkLinkCollection.h"
 
 #include "PreferencesMenuBuilder.h"
 
