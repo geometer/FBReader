@@ -78,6 +78,10 @@ void DrillDownMenu::addItem(const QIcon& icon, const std::string &text, ZLApplic
     QListWidget::addItem( item );
 }
 
+void DrillDownMenu::addItem(DrillDownMenuItem* item) {
+	QListWidget::addItem( item );
+}
+
 DrillDownMenu::DrillDownMenu(QWidget *parent) : QListWidget(parent) {
     connect(this, SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)));
 	//connect(this, SIGNAL(itemActivated(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)));

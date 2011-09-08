@@ -5,28 +5,20 @@
 
 #include <QtGui/QMainWindow>
 #include <QtGui/QAction>
-#include <QtGui/QMenuBar>
 
 class QMenu;
-//class QMenuBar;
 class VolumeKeysCapturer;
 class QFocusEvent; ////
 
 class ZLPopupData;
 
+class DrillDownMenuDialog;
+class DrillDownMenu;
+class DrillDownMenuItem;
 
 #include "../../../../core/src/application/ZLApplicationWindow.h"
 #include "../../../../core/src/application/ZLMenu.h"
 
-
-class ZLQtMenuBar : public QMenuBar {
-    Q_OBJECT
-
-public:
-    explicit ZLQtMenuBar(QWidget *parent = 0): QMenuBar(parent) { }
-protected:
-    void  focusOutEvent ( QFocusEvent * );
-};
 
 class ZLQtApplicationWindow : public QMainWindow, public ZLApplicationWindow {
 	Q_OBJECT
@@ -46,7 +38,6 @@ private:
 
 	void initMenu();
 	void addMenuItem(ZLMenu::ItemPtr item);
-	void _addMenuItem(ZLMenu::ItemPtr item, QMenu* menuOrMenuBar=0);
 	void setMenuItemState(ZLMenu::ItemPtr item, bool visible, bool enabled);
 
 	void grabAllKeys(bool grab);
@@ -66,26 +57,28 @@ private:
 private:
 		VolumeKeysCapturer* myVolumeKeyCapture;
 private:
-	ZLQtMenuBar *myMenuBar;
 
-	friend class ZLQtMenuBarAction;
-	std::map<const ZLMenu::Item*,QAction*> myMenuActions;
+	friend class ZLQtMenuAction;
+	std::map<const ZLMenu::Item*,DrillDownMenuItem*> myMenuItems;
 	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
-};
 
-class ZLQtMenuBarAction : public QAction {
-        Q_OBJECT
-
-public:
-        ZLQtMenuBarAction(ZLQtApplicationWindow *parent, ZLMenubar::PlainItem &item);
-
-private Q_SLOTS:
-        void onActivated();
+private slots:
+	void showMenu();
 
 private:
-        ZLMenubar::PlainItem &myItem;
+	DrillDownMenuDialog* myMenuDialog;
+	DrillDownMenu* myMenu;
+
 };
 
+class ZLQtMenuAction : public ZLApplication::Action {
+public:
+	ZLQtMenuAction(ZLQtApplicationWindow* parent, ZLMenubar::PlainItem& item);
+	void run();
+private:
+	ZLMenubar::PlainItem& myItem;
+	ZLQtApplicationWindow* myParent;
+};
 
 class ZLQtRunPopupAction : public QAction {
 	Q_OBJECT

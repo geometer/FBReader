@@ -24,6 +24,8 @@
 #include "../view/ZLQtViewWidget.h"
 #include "../util/ZLQtKeyUtil.h"
 
+#include "../menu/DrillDownMenu.h"
+
 #include "../VolumeKeysCapturer.h"
 
 // Why should I use ifdef's? Isn't it special for Symbian file?
@@ -36,21 +38,11 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 		new ZLQtApplicationWindow(application);
 }
 
-void  ZLQtMenuBar::focusOutEvent ( QFocusEvent * event) {
+ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow* parent, ZLMenubar::PlainItem& item) : myParent(parent), myItem(item) { }
+
+void ZLQtMenuAction::run() {
+	myParent->onMenuItemPress(myItem);
 }
-
-
-ZLQtMenuBarAction::ZLQtMenuBarAction(ZLQtApplicationWindow *parent, ZLMenubar::PlainItem &item) : QAction(parent), myItem(item) {
-    QString text = QString::fromUtf8(myItem.name().c_str());
-    setText(text);
-    setToolTip(text);
-    connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
-}
-
-void ZLQtMenuBarAction::onActivated() {
-        ((ZLQtApplicationWindow*)parent())->onMenuItemPress(myItem);
-}
-
 
 void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &) { }
 
@@ -65,9 +57,8 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 		application->addAction("library", new ShowMenuLibraryAction());
 		application->addAction("preferences", new ShowPreferencesMenuItemAction());
 
-        ////menuBar()->hide();
-        myMenuBar = new ZLQtMenuBar(this);
-        setMenuBar(myMenuBar);
+		myMenuDialog = new DrillDownMenuDialog(this);
+		myMenu = new DrillDownMenu;
 
 		myVolumeKeyCapture = new VolumeKeysCapturer(this);
 }
@@ -77,68 +68,21 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 void ZLQtApplicationWindow::init() {
 		ZLApplicationWindow::init();
         //setGeometry(qApp->desktop()->availableGeometry());
+
+		//TODO add ZLResource here
+		const std::string& mainMenu = "Menu";
+		QAction* action = new QAction(mainMenu.c_str(),this);
+		action->setSoftKeyRole( QAction::PositiveSoftKey );
+		connect(action, SIGNAL(triggered()), this, SLOT(showMenu()));
+		addAction( action );
+
+		myMenuDialog->showDrillDownMenu(myMenu);
+
 		setFullscreen();
 }
 
-void ZLQtApplicationWindow::initMenu() {
-	ZLApplicationWindow::initMenu();
-    myMenuBar->setContextMenuPolicy(Qt::NoContextMenu);
-}
-
-void ZLQtApplicationWindow::addMenuItem(ZLMenu::ItemPtr item) {
-	_addMenuItem(item);
-}
-
-void ZLQtApplicationWindow::_addMenuItem(ZLMenu::ItemPtr item, QMenu* addToMenu) {
-        QWidget* menuOrMenuBar = addToMenu == 0 ? (QWidget*) myMenuBar : (QWidget*)addToMenu;
-        QAction *action = 0;
-        QMenu* menu = 0;
-        switch (item->type()) {
-                case ZLMenu::Item::ITEM:
-                    action = new ZLQtMenuBarAction(this, (ZLMenubar::PlainItem&)*item);
-                    menuOrMenuBar->addAction(action);
-                    break;
-                case ZLMenu::Item::SUBMENU:
-                        menu = new QMenu( QString::fromUtf8(((ZLMenubar::Submenu&)*item).menuName().c_str()), menuOrMenuBar );
-                        for (ZLMenu::ItemVector::const_iterator it = ((ZLMenubar::Submenu&)*item).items().begin();
-                                                                it != ((ZLMenubar::Submenu&)*item).items().end(); ++it) {
-								_addMenuItem(*it, menu);
-                        }
-                        menuOrMenuBar->addAction(menu->menuAction());
-                        break;
-                case ZLMenu::Item::SEPARATOR:
-                        if (addToMenu != 0) {
-                            ((QMenu&)*menuOrMenuBar).addSeparator();
-                        } else {
-                            ((ZLQtMenuBar&)*menuOrMenuBar).addSeparator();
-                        }
-
-                        break;
-        }
-        if (action != 0) {
-                myMenuActions[&*item] = action;
-        }
-}
-
-
-void ZLQtApplicationWindow::setMenuItemState(ZLMenu::ItemPtr item, bool visible, bool enabled) {
-	QAction *action = myMenuActions[&*item];
-	if (action != 0) {
-		action->setEnabled(enabled);
-		action->setVisible(visible);
-	}
-}
-
-ZLQtApplicationWindow::~ZLQtApplicationWindow() {
-
-		// delete myVolumeKeyCapture; // TODO fix app crashing here
-
-        for (std::map<const ZLMenu::Item*,QAction*>::iterator it = myMenuActions.begin(); it != myMenuActions.end(); ++it) {
-                if (it->second != 0) {
-                        delete it->second;
-                }
-        }
-
+void ZLQtApplicationWindow::showMenu() {
+	myMenuDialog->run();
 }
 
 void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
@@ -151,6 +95,44 @@ void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
 
 bool ZLQtApplicationWindow::isFullscreen() const {
 		return true;
+}
+
+void ZLQtApplicationWindow::initMenu() {
+	ZLApplicationWindow::initMenu();
+}
+
+void ZLQtApplicationWindow::addMenuItem(ZLMenu::ItemPtr item) {
+	DrillDownMenuItem* menuItem = 0;
+	switch (item->type()) {
+			case ZLMenu::Item::ITEM:
+				{
+					ZLMenubar::PlainItem& plainItem = (ZLMenubar::PlainItem&)*item;
+					QString text = QString::fromUtf8(plainItem.name().c_str());
+					menuItem = new DrillDownMenuItem(text, new ZLQtMenuAction(this,plainItem) );
+					myMenu->addItem(menuItem);
+				}
+				break;
+			case ZLMenu::Item::SUBMENU:
+					//TODO make support for submenu
+					break;
+			case ZLMenu::Item::SEPARATOR:
+					//TODO make support for separator
+					break;
+	}
+	if (menuItem != 0) {
+			myMenuItems[&*item] = menuItem;
+	}
+}
+
+void ZLQtApplicationWindow::setMenuItemState(ZLMenu::ItemPtr item, bool visible, bool enabled) {
+	DrillDownMenuItem *menuItem = myMenuItems[&*item];
+	if (menuItem != 0) {
+		menuItem->setHidden(!visible);
+	}
+}
+
+ZLQtApplicationWindow::~ZLQtApplicationWindow() {
+		// delete myVolumeKeyCapture; // TODO fix app crashing here
 }
 
 void ZLQtApplicationWindow::keyPressEvent(QKeyEvent *event) {

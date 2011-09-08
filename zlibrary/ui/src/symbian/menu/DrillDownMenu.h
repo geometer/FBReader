@@ -33,6 +33,7 @@ public:
     explicit DrillDownMenu(QWidget *parent = 0);
     void addItem(const std::string &text, ZLApplication::Action* action=0);
     void addItem(const QIcon& icon, const std::string &text, ZLApplication::Action* action=0);
+	void addItem(DrillDownMenuItem* item);
 public:
 	void setMessage(const std::string& message);
 	std::string getMessage() const;
