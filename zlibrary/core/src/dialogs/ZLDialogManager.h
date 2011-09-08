@@ -87,7 +87,7 @@ public:
 	void wait(const ZLResourceKey &key, ZLRunnable &runnable) const;
 
 	//TODO make pure virtual
-	virtual bool openURL(const std::string &url) const {}
+	virtual bool openURL(const std::string &url) const { (void)url; return false; }
 
 	enum ClipboardType {
 		CLIPBOARD_MAIN,

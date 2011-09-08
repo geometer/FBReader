@@ -21,10 +21,14 @@ endif
 
 SUBDIRS_ALL = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/runnable src/network src/network/requests src/blockTreeView src/desktop/application src/desktop/dialogs src/unix/time src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library src/unix/curl src/win32/encoding src/win32/filesystem src/win32/config
 
-SUBDIRS = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/unix/time src/runnable src/network src/network/requests src/blockTreeView src/unix/curl
+SUBDIRS = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/unix/time src/runnable src/network src/network/requests src/blockTreeView
 
 ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pepperpad3>)"
   SUBDIRS += src/desktop/application src/desktop/dialogs
+endif
+
+ifneq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <qt4> <qml> <symbian>)"
+  SUBDIRS += src/unix/curl
 endif
 
 # TODO: Temporary, remove it

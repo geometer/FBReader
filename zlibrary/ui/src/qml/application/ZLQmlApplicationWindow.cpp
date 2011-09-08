@@ -330,7 +330,7 @@ ZLQmlToolBarAction::ZLQmlToolBarAction(ZLToolbar::AbstractButtonItem &item, QObj
 	myIconSource += '/';
 	myIconSource += QString::fromUtf8(myItem.iconName().c_str());
 	myIconSource += QLatin1String(".png");
-	for (int i = 0; i < sizeof(platformIcons)/sizeof(platformIcons[0]); ++i) {
+	for (uint i = 0; i < sizeof(platformIcons)/sizeof(platformIcons[0]); ++i) {
 		if (platformIcons[i][0] == myItem.iconName()) {
 			myPlatformIconId = QLatin1String(platformIcons[i][1]);
 			break;
@@ -386,7 +386,7 @@ void ZLQmlToolBarMenu::setPopupData(const shared_ptr<ZLPopupData> &popupData) {
 	myPopupData = popupData;
 	myItems.clear();
 	if (!myPopupData.isNull()) {
-		for (int i = 0; i < myPopupData->count(); ++i)
+		for (uint i = 0; i < myPopupData->count(); ++i)
 			myItems << QString::fromUtf8(myPopupData->text(i).c_str());
 	}
 	emit itemsChanged(myItems);
