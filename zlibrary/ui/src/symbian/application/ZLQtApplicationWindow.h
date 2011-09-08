@@ -7,6 +7,7 @@
 #include <QtGui/QAction>
 
 class QMenu;
+class QAction;
 class VolumeKeysCapturer;
 class QFocusEvent; ////
 
@@ -70,6 +71,7 @@ private slots:
 private:
 	DrillDownMenuDialog* myMenuDialog;
 	DrillDownMenu* myMenu;
+	QAction* myShowMenuAction;
 
 };
 

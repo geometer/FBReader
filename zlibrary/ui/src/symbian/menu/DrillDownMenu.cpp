@@ -17,8 +17,8 @@ DrillDownMenuDialog::DrillDownMenuDialog(QWidget* parent) : QDialog(parent) {
     connect(action, SIGNAL(triggered()), this, SLOT(back()));
     addAction( action );
 
-    setModal(true);
-    setGeometry( qApp->desktop()->availableGeometry() );
+//    setModal(true);
+//	setGeometry(qApp->desktop()->availableGeometry());
 }
 
 void DrillDownMenuDialog::paintEvent(QPaintEvent *event) {
@@ -26,6 +26,15 @@ void DrillDownMenuDialog::paintEvent(QPaintEvent *event) {
 }
 
 bool DrillDownMenuDialog::run() {
+	Qt::WindowFlags flags = windowFlags();
+	flags |= Qt::WindowSoftkeysVisibleHint;
+	setWindowFlags( flags );
+	showFullScreen();
+	return exec() == QDialog::Accepted;
+}
+
+bool DrillDownMenuDialog::runNoFullScreen() {
+	show();
 	return exec() == QDialog::Accepted;
 }
 

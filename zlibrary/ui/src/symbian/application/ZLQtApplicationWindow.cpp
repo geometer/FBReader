@@ -13,6 +13,7 @@
 #include <QtCore/QObjectList>
 #include <QtGui/QMessageBox>
 #include <QtGui/QFocusEvent>
+#include <QAction>
 
 #include <QtGui/QDesktopWidget>
 
@@ -41,8 +42,8 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow* parent, DrillDownMenuDialog* dialog,  ZLMenubar::PlainItem& item) : myParent(parent), MenuAction(dialog), myItem(item) { }
 
 void ZLQtMenuAction::run() {
-	myParent->onMenuItemPress(myItem);
 	myDialog->close();
+	myParent->onMenuItemPress(myItem);
 }
 
 void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &) { }
@@ -72,10 +73,10 @@ void ZLQtApplicationWindow::init() {
 
 		//TODO add ZLResource here
 		const std::string& mainMenu = "Menu";
-		QAction* action = new QAction(mainMenu.c_str(),this);
-		action->setSoftKeyRole( QAction::PositiveSoftKey );
-		connect(action, SIGNAL(triggered()), this, SLOT(showMenu()));
-		addAction( action );
+		myShowMenuAction = new QAction(mainMenu.c_str(),this);
+		myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
+		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
+		addAction( myShowMenuAction );
 
 		myMenuDialog->showDrillDownMenu(myMenu);
 
@@ -83,7 +84,8 @@ void ZLQtApplicationWindow::init() {
 }
 
 void ZLQtApplicationWindow::showMenu() {
-	myMenuDialog->run();
+	myMenuDialog->runNoFullScreen();
+	myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey);
 }
 
 void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {

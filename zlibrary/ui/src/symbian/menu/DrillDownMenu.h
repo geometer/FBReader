@@ -51,6 +51,7 @@ public:
 	void showMessage(std::string message);
 public:
 	bool run();
+	bool runNoFullScreen();
 public:
 	void paintEvent(QPaintEvent *event);
 public slots:
