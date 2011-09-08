@@ -12,7 +12,7 @@
 
 
 ShowPreferencesMenuItemAction::ShowPreferencesMenuItemAction()
-	:  myPreferenceResource(ZLResource::resource(PreferencesMenuCode::PREFERENCES) ) {  }
+	:  myPreferenceResource(ZLResource::resource("dialog")["MobileOptionsDialog"]["tab"]) {  }
 
 shared_ptr<ZLOptionsDialog> ShowPreferenceMenuAction::createDialog(std::string key) {
    return ZLDialogManager::Instance().createOptionsDialog(ZLResourceKey(key), new OptionsApplyRunnable());
