@@ -14,3 +14,18 @@ zlibrary/ui/zlui-qtmobile.so
 fbreader/FBReader
 
 *.pro
+*.pro.user
+*.dso
+*.lib
+*.dll
+*.sis
+*.sym
+*.exe
+*.rpp
+*.rsc
+*.rsg
+*.mbm
+*.mif
+*.a
+
+*.moc.cpp

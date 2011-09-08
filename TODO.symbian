@@ -3,27 +3,24 @@
 TODO на сегодня:
 
 DONE Закончить слияние
-** Научиться строить в рамках общей процедуры
-
-
-
+DONE Научиться строить в рамках общей процедуры
+** OptionsDialogMobile -- папка в fbreader/
+** свое меню вместо встроенного (которое с showOpenApps)
+** убрать toolbar и external из ресурсов
+** исправить хак: перехват нажатий пальцем в BookTextView, так, чтобы перехватвыалиьс нажатия 
 
 ________________________________________________________
 ** поместить исходный код библиотек в third-parties
-** стиль кода: правильные инлайны							
 ** сделать иконки разных размеров для всего fbreader как в java версии
 ?? поместить preferences в dialog section
 ** убрать библиотеки из репозитория, положить из в дропбокс
-** SDK tarball
-** реализовать QtNetworkManager
-** убрать toolbar и external из ресурсов
+DONE SDK tarball
 ?? добавить VOLUME_KEY_SCROLL_FORWARD и VOLUME_KEY_SCROLL_BACK в Actions
-** поместить в правильные места PreferencesMenu и проч., что не относится к dialogs
 ** ZLQtViewWidget: посмотреть, нужно ли вообще заменять стд. скроллбары на свои
 ** избавиться от наследования от Desktop элементов
 ** избавиться от тулбаров в ZLQtApplicationWindow
 ** перейти с ZLOptionsDialog на ZLDialog
-** Устранить unix/message в  ui папке
+DONE Устранить unix/message в  ui папке
 ?? VolumeKeysCapturer -> SymbianVolumeKeysCapturer
 ?? Изменения в ZLQtPaintContext, связанные со шрифтом, перенести в desktop версию.
 ** найти хороший стиль Widgets для QtSymbian 
