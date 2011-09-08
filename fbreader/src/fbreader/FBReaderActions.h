@@ -36,6 +36,7 @@ public:
 	static const std::string SHOW_HELP;
 	static const std::string SHOW_OPTIONS_DIALOG;
 	static const std::string SHOW_BOOK_INFO_DIALOG;
+	static const std::string SHOW_MOBILE_OPTIONS_DIALOG;
 	static const std::string SHOW_LIBRARY_OPTIONS_DIALOG;
 	static const std::string SHOW_NETWORK_OPTIONS_DIALOG;
 	static const std::string SHOW_SYSTEM_OPTIONS_DIALOG;
@@ -120,6 +121,13 @@ class ShowOptionsDialogAction : public ZLApplication::Action {
 public:
 	void run();
 };
+
+class ShowMobileOptionsDialogAction : public ZLApplication::Action {
+
+public:
+	void run();
+};
+
 
 class ShowLibraryOptionsDialogAction : public ZLApplication::Action {
 

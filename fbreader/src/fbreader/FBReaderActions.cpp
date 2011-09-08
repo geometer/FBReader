@@ -35,6 +35,7 @@
 #include "BookTextView.h"
 #include "ContentsView.h"
 #include "../optionsDialog/bookInfo/BookInfoDialog.h"
+#include "../optionsDialogMobile/MobileOptionsDialog.h"
 #include "../optionsDialog/library/LibraryOptionsDialog.h"
 #include "../optionsDialog/network/NetworkOptionsDialog.h"
 #include "../optionsDialog/system/SystemOptionsDialog.h"
@@ -85,6 +86,11 @@ void ShowOptionsDialogAction::run() {
 		return;
 	}
 	FBReader::Instance().doAction(actionId);
+}
+
+void ShowMobileOptionsDialogAction::run() {
+	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_MOBILE_OPTIONS_DIALOG);
+	MobileOptionsDialog().dialog().run();
 }
 
 void ShowLibraryOptionsDialogAction::run() {

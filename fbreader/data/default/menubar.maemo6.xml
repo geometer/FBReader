@@ -5,9 +5,7 @@
 	<item id="showRecent"/>
 	<item id="addBook"/>
 	<item id="toc"/>
-<!--
-	<item id="preferences"/>
--->
+	<item id="mobileOptions"/>
 	<item id="bookInfo"/>
 <!--
 	<item id="toggleFullscreen"/>

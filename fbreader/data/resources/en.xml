@@ -86,6 +86,7 @@
 			<node name="addBook" value="Add Book..." />
 			<node name="showHelp" value="About FBReader" />
 		</node>
+		<node name="mobileOptions" value="Preferences" />
 		<node name="gotoHome" value="Go to Start of Document" />
 		<node name="gotoPageNumber" value="Go to Page..." />
 		<node name="gotoSectionStart" value="Go to Start of Text Section" />

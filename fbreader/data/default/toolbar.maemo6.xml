@@ -15,8 +15,8 @@
 	<textField id="gotoPageNumberWithParameter" parameterId="pageIndex" maxWidth="4" symbols="digits"/>
 <!--
 	<button id="toc"/>
--->
 	<menuButton id="preferences"/>
+-->
 	<button id="search"/>
 	<button id="findPrevious"/>
 	<button id="findNext"/>
