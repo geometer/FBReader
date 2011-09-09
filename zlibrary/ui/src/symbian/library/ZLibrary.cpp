@@ -30,6 +30,13 @@
 
 #include "../../../../core/src/unix/library/ZLibraryImplementation.h"
 
+// for qDebug:
+#include <stdio.h>
+#include <stdlib.h>
+#include <QApplication>
+
+
+
 const std::string ZLibrary::FileNameDelimiter("\\");
 const std::string ZLibrary::PathDelimiter(";");
 const std::string ZLibrary::EndOfLine("\n");         // don't know exactly what should be here
@@ -69,7 +76,10 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary:: init(int &argc, char **&argv) {
-		initLibrary();
+	freopen("E:\\fbreader-log.txt", "w", stdout);
+	fprintf(stdout,"\n");
+
+	initLibrary();
 
 	if (ZLibraryImplementation::Instance == 0) {
 		return false;
@@ -100,7 +110,28 @@ void initLibrary() {
 	new ZLQtLibraryImplementation();
 }
 
+void myMessageOutput(QtMsgType type, const char *msg)
+ {
+	 switch (type) {
+	 case QtDebugMsg:
+		 fprintf(stdout, "Debug: %s\n", msg);
+		 break;
+	 case QtWarningMsg:
+		 fprintf(stdout, "Warning: %s\n", msg);
+		 break;
+	 case QtCriticalMsg:
+		 fprintf(stdout, "Critical: %s\n", msg);
+		 break;
+	 case QtFatalMsg:
+		 fprintf(stdout, "Fatal: %s\n", msg);
+		 //abort();
+	 }
+	 fflush(stdout);
+ }
+
+
 void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
+	qInstallMsgHandler(myMessageOutput);
 	new QApplication(argc, argv);
         ZLibrary::parseArguments(argc, argv);
         XMLConfigManager::createInstance();
