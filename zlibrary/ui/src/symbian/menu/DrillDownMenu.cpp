@@ -16,9 +16,6 @@ DrillDownMenuDialog::DrillDownMenuDialog(QWidget* parent) : QDialog(parent) {
     action->setSoftKeyRole( QAction::NegativeSoftKey );
     connect(action, SIGNAL(triggered()), this, SLOT(back()));
     addAction( action );
-
-//    setModal(true);
-//	setGeometry(qApp->desktop()->availableGeometry());
 }
 
 void DrillDownMenuDialog::paintEvent(QPaintEvent *event) {
@@ -60,7 +57,6 @@ void DrillDownMenuDialog::showDrillDownMenu(DrillDownMenu* menu) {
     menu->setEditFocus(true); // for phones with keyboard: need to activate for single-click
 	showMessage(menu->getMessage());
     myStackedWidget->update();
-
  }
 
 void DrillDownMenuDialog::back() {

@@ -69,7 +69,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 void ZLQtApplicationWindow::init() {
 		ZLApplicationWindow::init();
-        //setGeometry(qApp->desktop()->availableGeometry());
+		setGeometry(qApp->desktop()->availableGeometry());
 
 		//TODO add ZLResource here
 		const std::string& mainMenu = "Menu";
@@ -84,8 +84,12 @@ void ZLQtApplicationWindow::init() {
 }
 
 void ZLQtApplicationWindow::showMenu() {
+	myMenuDialog->setFixedHeight(  qApp->desktop()->availableGeometry().height() * 2 / 3 );
 	myMenuDialog->runNoFullScreen();
-	myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey);
+//	myShowMenuAction->setSoftKeyRole(QAction::PositiveSoftKey);
+//	addAction(myShowMenuAction);
+	update();
+	refresh();
 }
 
 void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
