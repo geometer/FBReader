@@ -140,12 +140,33 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	QByteArray data;
 	if (!*scope.headerHandled) {
-		*scope.headerHandled = true;
-		foreach (const QByteArray &line, reply->rawHeaderList()) {
-			data += line;
-			data += '\n';
+		QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+		if (redirect.isValid()) {
+			reply->deleteLater();
+			Q_ASSERT(scope.replies->removeOne(reply));
+			reply->setProperty("redirected", true);
+			QNetworkRequest request = reply->request();
+			request.setUrl(reply->url().resolved(redirect));
+			reply = myManager.get(request);
+			scope.replies->append(reply);
+			QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
+			reply->setProperty("scope", qVariantFromValue(scope));
+			return;
 		}
-		qDebug() << "HEADER\n" << QLatin1String(data);
+		
+		// We should fool the request about received header
+		*scope.headerHandled = true;
+		data = "HTTP/1.1 ";
+		data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
+		data += " ";
+		data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
+		foreach (const QNetworkReply::RawHeaderPair &pair, reply->rawHeaderPairs()) {
+			data += '\n';
+			data += pair.first;
+			data += ": ";
+			data += pair.second;
+		}
+		data += '\n';
 		scope.request->handleHeader(data.data(), data.size());
 	}
 	data = reply->readAll();
@@ -157,6 +178,8 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	reply->deleteLater();
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	Q_ASSERT(scope.request);
+	if (reply->property("redirected").toBool())
+		return;
 	Q_ASSERT(scope.replies->removeOne(reply));
 	if (scope.replies->isEmpty())
 		scope.eventLoop->quit();
