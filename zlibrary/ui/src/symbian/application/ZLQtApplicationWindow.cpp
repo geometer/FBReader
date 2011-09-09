@@ -69,18 +69,19 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 void ZLQtApplicationWindow::init() {
 		ZLApplicationWindow::init();
-		setGeometry(qApp->desktop()->availableGeometry());
 
 		//TODO add ZLResource here
 		const std::string& mainMenu = "Menu";
 		myShowMenuAction = new QAction(mainMenu.c_str(),this);
 		myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
-		addAction( myShowMenuAction );
+		addAction(myShowMenuAction);
 
 		myMenuDialog->showDrillDownMenu(myMenu);
 
+		show();
 		setFullscreen();
+		show();
 }
 
 void ZLQtApplicationWindow::showMenu() {
@@ -88,12 +89,9 @@ void ZLQtApplicationWindow::showMenu() {
 	myMenuDialog->runNoFullScreen();
 }
 
-void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
-		showFullScreen();
-		Qt::WindowFlags flags = windowFlags();
-		flags |= Qt::WindowSoftkeysVisibleHint;
-		setWindowFlags( flags );
-		showFullScreen();
+void ZLQtApplicationWindow::setFullscreen(bool) {
+	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+	setWindowState(Qt::WindowFullScreen);
 }
 
 bool ZLQtApplicationWindow::isFullscreen() const {
@@ -186,7 +184,7 @@ void ZLQtApplicationWindow::processAllEvents() {
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
 		ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application());
 		setCentralWidget(viewWidget->widget());
-		////viewWidget->widget()->show();  //// because central widget should not be showed before Window shows;
+		//viewWidget->widget()->show();
 		return viewWidget;
 }
 

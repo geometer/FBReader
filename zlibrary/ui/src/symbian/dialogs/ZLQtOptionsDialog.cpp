@@ -58,16 +58,15 @@ void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
 
 bool ZLQtOptionsDialog::run() {
 		myScrollArea->setWidget(myWidget);
-		setModal(true);
-		showFullScreenWithSoftButtons();
+		//setModal(true);
+		setFullScreenWithSoftButtons();
 		bool code = ZLOptionsDialog::run();
 		return code;
 }
 
-void ZLQtOptionsDialog::showFullScreenWithSoftButtons() {
-	// not used showFullScreen method because in this case
-	// previous window won't be active after close()
-	QWidget::setGeometry(parentWidget()->geometry());
+void ZLQtOptionsDialog::setFullScreenWithSoftButtons() {
+	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+	setWindowState(Qt::WindowFullScreen);
 }
 
 bool ZLQtOptionsDialog::runInternal() {

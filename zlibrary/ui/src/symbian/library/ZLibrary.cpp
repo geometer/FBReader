@@ -102,7 +102,6 @@ void initLibrary() {
 
 void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	new QApplication(argc, argv);
-        //qApp->setStyle( new QS60Style() );
         ZLibrary::parseArguments(argc, argv);
         XMLConfigManager::createInstance();
         ZLQtTimeManager::createInstance();

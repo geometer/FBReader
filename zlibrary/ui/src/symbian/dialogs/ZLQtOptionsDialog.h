@@ -35,7 +35,7 @@ protected:
 	int height() const { return QDialog::height(); }
 
 protected:
-		void showFullScreenWithSoftButtons();
+		void setFullScreenWithSoftButtons();
 
 private Q_SLOTS:
 	void apply();

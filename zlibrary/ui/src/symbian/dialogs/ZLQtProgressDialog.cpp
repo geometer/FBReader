@@ -50,9 +50,6 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message) : QDialog(0) {
 	   // for what reasons we use processEvents here?
 	   // qApp->processEvents();
 
-		setGeometry(qApp->desktop()->availableGeometry());
-
-
 		myLayout = new QVBoxLayout;
 
 		myLabel = new QLabel(::qtString(message));
@@ -71,6 +68,8 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message) : QDialog(0) {
 
 		this->setLayout(myLayout);
 
+		//setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+		setWindowState(Qt::WindowFullScreen);
 
 
 //        qApp->processEvents();
