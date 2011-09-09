@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Ruslan Nigmatullin <euroelessar@ya.ru>
+ * Copyright (C) 2004-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -73,6 +73,9 @@ ListView {
 		case OptionView.Boolean3:
 			// TODO
 //			componentName = "DialogBoolean3View.qml"
+			break;
+		case OptionView.Path:
+			componentName = "DialogPathView.qml"
 			break;
 		case OptionView.String:
 			componentName = "DialogStringView.qml"

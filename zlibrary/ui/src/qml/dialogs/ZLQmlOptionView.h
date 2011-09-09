@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -65,7 +65,8 @@ public:
 		Key = ZLOptionEntry::KEY,
 		Order = ZLOptionEntry::ORDER,
 		Multiline = ZLOptionEntry::MULTILINE,
-		Static = ZLOptionEntry::STATIC
+		Static = ZLOptionEntry::STATIC,
+		Path = ZLOptionEntry::PATH
 	};
 	
 	ZLQmlOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
@@ -230,6 +231,7 @@ class ZLQmlTextOptionView : public ZLQmlOptionView {
 	Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
 	Q_PROPERTY(bool multiline READ isMultiline CONSTANT)
 	Q_PROPERTY(bool password READ isPassword CONSTANT)
+	Q_PROPERTY(QString pathDelimiter READ pathDelimiter CONSTANT)
 public:
 	ZLQmlTextOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
 	~ZLQmlTextOptionView();
@@ -238,6 +240,7 @@ public:
 	void setText(const QString &text);
 	bool isMultiline() const;
 	bool isPassword() const;
+	QString pathDelimiter() const;
 	
 private:
 	void _onAccept() const;

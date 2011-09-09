@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,6 +69,7 @@ void ZLQmlDialogContent::createViewByEntry(const std::string &name, const std::s
 	case ZLOptionEntry::MULTILINE:
 	case ZLOptionEntry::STRING:
 	case ZLOptionEntry::PASSWORD:
+	case ZLOptionEntry::PATH:
 		view = new ZLQmlTextOptionView(name, tooltip, option, this);
 		break;
 	case ZLOptionEntry::CHOICE:

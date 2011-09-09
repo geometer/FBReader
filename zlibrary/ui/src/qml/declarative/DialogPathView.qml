@@ -23,27 +23,31 @@ import com.nokia.meego 1.0
 Item {
 	id: root
 	property variant handler
+	property variant pathDelimiter: handler.pathDelimiter
+	property variant paths: handler.text.split(pathDelimiter)
 	width: parent.width
-	height: switchItem.height
+	height: textField.height
 	visible: handler.visible
 	enabled: handler.enabled
 	
 	Label {
-		anchors { left: root.left; right: switchItem.left; verticalCenter: switchItem.verticalCenter }
+		anchors { left: root.left; right: textField.left; verticalCenter: textField.verticalCenter }
 		anchors.rightMargin: 15
 		text: handler.name
 	}
 
-	Switch {
-		id: switchItem
-		anchors { top: root.top; right: root.right }
+	TextField {
+		id: textField
+		anchors { left: root.horizontalCenter; top: root.top; right: root.right }
 		visible: handler.visible
-		onCheckedChanged: if (handler.checked != switchItem.checked) handler.checked = switchItem.checked
-		Component.onCompleted: switchItem.checked = root.handler.checked
+		enabled: handler.enabled
+		text: handler.text
+		echoMode: handler.password ? TextInput.PasswordEchoOnEdit : TextInput.Normal
+		onTextChanged: if (root.handler.text != text) root.handler.text = text
 	}
 	
 	Connections {
 		target: root.handler
-		onCheckedChanged: switchItem.checked = root.handler.checked
+		onTextChanged: textField.text = root.handler.text
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@
 
 #include <ZLStringUtil.h>
 #include <ZLDialogManager.h>
+#include <ZLibrary.h>
 #include "../util/ZLQtKeyUtil.h"
 
 #include "ZLQmlOptionView.h"
@@ -333,6 +334,10 @@ bool ZLQmlTextOptionView::isMultiline() const {
 
 bool ZLQmlTextOptionView::isPassword() const {
 	return myOption->kind() == ZLOptionEntry::PASSWORD;
+}
+
+QString ZLQmlTextOptionView::pathDelimiter() const {
+	return QString::fromStdString(ZLibrary::PathDelimiter);
 }
 
 void ZLQmlTextOptionView::_onAccept() const {

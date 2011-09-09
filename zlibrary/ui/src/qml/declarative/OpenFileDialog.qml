@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 Ruslan Nigmatullin <euroelessar@ya.ru>
+ * Copyright (C) 2004-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -32,8 +32,10 @@ Sheet {
 		anchors.fill: parent
         model: VisualDataModel {
 			id: visualModel
+			rootIndex: dirModel.rootIndex
             model: FileSystemModel {
 				id: dirModel
+				rootPath: handler.directoryPath
 			}
             delegate: ListDelegate {
 				id: itemDelegate
@@ -43,12 +45,7 @@ Sheet {
 						 : (root.handler !== null && root.handler.check(model.filePath))
 				height: visible ? 88 : 0 // UI.LIST_ITEM_HEIGHT
 				onClicked: {
-					console.log("clicked", model.filePath)
 					if (model.directory) {
-						if (model.fileName == "..")
-							view.model.rootIndex = view.model.parentModelIndex();
-						else
-							view.model.rootIndex = view.model.modelIndex(index);
 						dirModel.rootPath = model.filePath
 					} else {
 						console.log("finish", dirModel.rootPath, model.fileName)
@@ -66,9 +63,4 @@ Sheet {
 			}
         }
     }
-	Component.onCompleted: {
-		console.log(handler, dirModel, handler.directoryPath)
-		visualModel.rootIndex = dirModel.setRootPath(handler.directoryPath)
-		console.log(visualModel.count)
-	}
 }
