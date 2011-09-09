@@ -14,6 +14,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QFocusEvent>
 #include <QAction>
+#include <QDebug>
 
 #include <QtGui/QDesktopWidget>
 
@@ -29,11 +30,9 @@
 
 #include "../VolumeKeysCapturer.h"
 
-// Why should I use ifdef's? Isn't it special for Symbian file?
-//#ifdef SYMBIAN
 #include "../actions/PreferencesActions.h"
 #include "../actions/LibraryActions.h"
-//#endif
+
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 		new ZLQtApplicationWindow(application);
@@ -79,9 +78,12 @@ void ZLQtApplicationWindow::init() {
 
 		myMenuDialog->showDrillDownMenu(myMenu);
 
+		// don't know exactly why, but if show() doesn't call before setWindowFlags,
+		// it crashes.
+		// Flag is necessary for showing SoftKeys Action
 		show();
-		setFullscreen();
-		show();
+		setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+		showFullScreen();
 }
 
 void ZLQtApplicationWindow::showMenu() {
@@ -90,8 +92,7 @@ void ZLQtApplicationWindow::showMenu() {
 }
 
 void ZLQtApplicationWindow::setFullscreen(bool) {
-	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
-	setWindowState(Qt::WindowFullScreen);
+	return;
 }
 
 bool ZLQtApplicationWindow::isFullscreen() const {
