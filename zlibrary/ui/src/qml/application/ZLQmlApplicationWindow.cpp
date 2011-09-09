@@ -102,6 +102,7 @@ void ZLQmlMenuBar::init() {
 	builder.processMenu(window->application());
 	myIds = builder.ids();
 	myNames = builder.names();
+	recheckItems();
 	emit itemsChanged(myNames);
 }
 
@@ -109,8 +110,33 @@ QStringList ZLQmlMenuBar::items() {
 	return myNames;
 }
 
+QStringList ZLQmlMenuBar::visibleItems() {
+	return myVisibleItems;
+}
+
+QStringList ZLQmlMenuBar::enabledItems() {
+	return myEnabledItems;
+}
+
 void ZLQmlMenuBar::activate(int index) {
 	emit activated(index);
+}
+
+void ZLQmlMenuBar::recheckItems() {
+	ZLQmlApplicationWindow *window = static_cast<ZLQmlApplicationWindow*>(parent());
+	ZLApplication &application = window->application();
+	myVisibleItems.clear();
+	myEnabledItems.clear();
+	for (int i = 0; i < myIds.size(); ++i) {
+		shared_ptr<ZLApplication::Action> action = application.action(myIds.at(i));
+		Q_ASSERT(!action.isNull());
+		if (action->isEnabled())
+			myEnabledItems << myNames.at(i);
+		if (action->isVisible())
+			myVisibleItems << myNames.at(i);
+	}
+	emit enabledItemsChanged(myEnabledItems);
+	emit visibleItemsChanged(myVisibleItems);
 }
 
 void ZLQmlMenuBar::delayedActivate(int index) {
@@ -330,7 +356,7 @@ ZLQmlToolBarAction::ZLQmlToolBarAction(ZLToolbar::AbstractButtonItem &item, QObj
 	myIconSource += '/';
 	myIconSource += QString::fromUtf8(myItem.iconName().c_str());
 	myIconSource += QLatin1String(".png");
-	for (int i = 0; i < sizeof(platformIcons)/sizeof(platformIcons[0]); ++i) {
+	for (uint i = 0; i < sizeof(platformIcons)/sizeof(platformIcons[0]); ++i) {
 		if (platformIcons[i][0] == myItem.iconName()) {
 			myPlatformIconId = QLatin1String(platformIcons[i][1]);
 			break;
@@ -386,7 +412,7 @@ void ZLQmlToolBarMenu::setPopupData(const shared_ptr<ZLPopupData> &popupData) {
 	myPopupData = popupData;
 	myItems.clear();
 	if (!myPopupData.isNull()) {
-		for (int i = 0; i < myPopupData->count(); ++i)
+		for (uint i = 0; i < myPopupData->count(); ++i)
 			myItems << QString::fromUtf8(myPopupData->text(i).c_str());
 	}
 	emit itemsChanged(myItems);

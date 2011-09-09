@@ -119,13 +119,18 @@ friend class ZLQtLineEdit;
 class ZLQmlMenuBar : public QObject {
 	Q_OBJECT
 	Q_PROPERTY(QStringList items READ items NOTIFY itemsChanged)
+	Q_PROPERTY(QStringList visibleItems READ visibleItems NOTIFY visibleItemsChanged)
+	Q_PROPERTY(QStringList enabledItems READ enabledItems NOTIFY enabledItemsChanged)
 public:
 	ZLQmlMenuBar(ZLQmlApplicationWindow *window);
 	virtual ~ZLQmlMenuBar();
 	
 	void init();
 	QStringList items();
+	QStringList visibleItems();
+	QStringList enabledItems();
 	Q_INVOKABLE void activate(int index);
+	Q_INVOKABLE void recheckItems();
 	
 public Q_SLOTS:
 	void delayedActivate(int index);
@@ -133,10 +138,14 @@ public Q_SLOTS:
 Q_SIGNALS:
 	void itemsChanged(const QStringList &items);
 	void activated(int index);
+	void visibleItemsChanged(const QStringList &items);
+	void enabledItemsChanged(const QStringList &items);
 	
 private:
 	QList<std::string> myIds;
 	QStringList myNames;
+	QStringList myVisibleItems;
+	QStringList myEnabledItems;
 	
 	class Builder : public ZLMenuVisitor {
 	public:

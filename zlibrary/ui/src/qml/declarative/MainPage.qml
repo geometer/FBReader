@@ -61,9 +61,14 @@ Page {
 		}
 		ToolIcon {
 			platformIconId: "toolbar-view-menu"
-			onClicked: (mainMenu.status == DialogStatus.Closed)
-					   ? mainMenu.open()
-					   : mainMenu.close();
+			onClicked: {
+				if (mainMenu.status == DialogStatus.Closed) {
+					mainMenu.item.recheckItems();
+					mainMenu.open()
+				} else {
+					mainMenu.close();
+				}
+			}
 		}
 	}
 	DynamicMenu {

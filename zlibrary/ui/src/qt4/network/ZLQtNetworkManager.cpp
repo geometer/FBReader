@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #include <ZLStringUtil.h>
 #include <ZLLogger.h>
 #include <ZLResource.h>
@@ -121,12 +140,33 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	QByteArray data;
 	if (!*scope.headerHandled) {
-		*scope.headerHandled = true;
-		foreach (const QByteArray &line, reply->rawHeaderList()) {
-			data += line;
-			data += '\n';
+		QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+		if (redirect.isValid()) {
+			reply->deleteLater();
+			Q_ASSERT(scope.replies->removeOne(reply));
+			reply->setProperty("redirected", true);
+			QNetworkRequest request = reply->request();
+			request.setUrl(reply->url().resolved(redirect));
+			reply = myManager.get(request);
+			scope.replies->append(reply);
+			QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
+			reply->setProperty("scope", qVariantFromValue(scope));
+			return;
 		}
-		qDebug() << "HEADER\n" << QLatin1String(data);
+		
+		// We should fool the request about received header
+		*scope.headerHandled = true;
+		data = "HTTP/1.1 ";
+		data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
+		data += " ";
+		data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
+		foreach (const QNetworkReply::RawHeaderPair &pair, reply->rawHeaderPairs()) {
+			data += '\n';
+			data += pair.first;
+			data += ": ";
+			data += pair.second;
+		}
+		data += '\n';
 		scope.request->handleHeader(data.data(), data.size());
 	}
 	data = reply->readAll();
@@ -138,6 +178,8 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	reply->deleteLater();
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	Q_ASSERT(scope.request);
+	if (reply->property("redirected").toBool())
+		return;
 	Q_ASSERT(scope.replies->removeOne(reply));
 	if (scope.replies->isEmpty())
 		scope.eventLoop->quit();
