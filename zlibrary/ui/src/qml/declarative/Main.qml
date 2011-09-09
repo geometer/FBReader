@@ -22,6 +22,9 @@ import com.nokia.meego 1.0
 
 PageStackWindow {
 	id: root
+	showToolBar: pageStack.currentPage === null
+				 || pageStack.currentPage.showToolBar === undefined
+				 || pageStack.currentPage.showToolBar
 	
 	initialPage: MainPage {
 		id: mainPage

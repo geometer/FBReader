@@ -24,7 +24,9 @@ import org.fbreader 0.14
 
 Page {
 	id: root
+    property bool showToolBar: true
 	tools: ToolBarLayout {
+		id: toolBarLayout
 		Repeater {
 			model: applicationInfo.actions
 			ToolIcon {
@@ -54,7 +56,7 @@ Page {
 					default:
 						break;
 					}
-
+					
 				}
 				visible: modelData.visible && modelData.enabled
 			}
@@ -83,15 +85,7 @@ Page {
 		Component.onCompleted: objectHolder.bookView = bookView
 		MouseArea {
 			anchors.fill: parent
-//			onClicked: {
-//				console.log("tap pos = (", mouse.x, "," ,mouse.y, ")");
-//				objectHolder.handleFingerTap(mouse.x, mouse.y);
-//			}
-			onPressed: {
-				// Don't know why I should call this
-//				objectHolder.handleMove(mouse.x, mouse.y)
-				objectHolder.handlePress(mouse.x, mouse.y)
-			}
+			onPressed: objectHolder.handlePress(mouse.x, mouse.y)
 			onReleased: objectHolder.handleRelease(mouse.x, mouse.y)
 			onPositionChanged: {
 				if (pressed)
@@ -100,5 +94,38 @@ Page {
 					objectHolder.handleMove(mouse.x, mouse.y)
 			}
 		}
+	}
+	states: [
+		State {
+			name: ""
+			when: toolBarArea.pressed || mainMenu.status != DialogStatus.Closed
+			PropertyChanges {
+				target: root
+				showToolBar: true
+			}
+		},
+		State {
+			name: "hidden"
+			PropertyChanges {
+				target: root
+				showToolBar: false
+			}
+		}
+	]
+	Timer {
+		id: toolBarTimer
+		running: root.state == "" && mainMenu.status == DialogStatus.Closed
+		interval: 3000
+		property bool triggered: false
+		onTriggered: root.state = "hidden"
+	}
+	MouseArea {
+		id: toolBarArea
+		enabled: root.state == "hidden"
+		anchors.bottom: parent.bottom
+		width: parent.width
+		// FIXME: Find the way to find actual ToolBar's height without hardcoding
+		height: 72
+		z: bookView.z + 1
 	}
 }
