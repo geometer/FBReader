@@ -23,20 +23,17 @@ void DrillDownMenuDialog::paintEvent(QPaintEvent *event) {
 }
 
 bool DrillDownMenuDialog::run() {
-	Qt::WindowFlags flags = windowFlags();
-	flags |= Qt::WindowSoftkeysVisibleHint;
-	setWindowFlags( flags );
-	showFullScreen();
+	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+	setWindowState(Qt::WindowFullScreen);
 	return exec() == QDialog::Accepted;
 }
 
 bool DrillDownMenuDialog::runNoFullScreen() {
-	show();
 	return exec() == QDialog::Accepted;
 }
 
 int DrillDownMenuDialog::exec() {
-	QDialog::exec();
+	return QDialog::exec();
 }
 
 void DrillDownMenuDialog::showMessage(std::string message) {

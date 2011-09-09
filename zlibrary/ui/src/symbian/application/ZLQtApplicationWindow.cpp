@@ -86,10 +86,6 @@ void ZLQtApplicationWindow::init() {
 void ZLQtApplicationWindow::showMenu() {
 	myMenuDialog->setFixedHeight(  qApp->desktop()->availableGeometry().height() * 2 / 3 );
 	myMenuDialog->runNoFullScreen();
-//	myShowMenuAction->setSoftKeyRole(QAction::PositiveSoftKey);
-//	addAction(myShowMenuAction);
-	update();
-	refresh();
 }
 
 void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
