@@ -96,7 +96,7 @@ void ZLQtApplicationWindow::setFullscreen(bool) {
 }
 
 bool ZLQtApplicationWindow::isFullscreen() const {
-		return true;
+	return true;
 }
 
 void ZLQtApplicationWindow::initMenu() {

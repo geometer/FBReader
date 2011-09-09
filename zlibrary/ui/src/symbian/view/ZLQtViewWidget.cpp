@@ -120,12 +120,12 @@ void ZLQtViewWidget::Widget::paintEvent(QPaintEvent*) {
 
 void ZLQtViewWidget::Widget::mousePressEvent(QMouseEvent *event) {
 	//myHolder.view()->onStylusMove(x(event), y(event));
-	BookTextView* bookTextView = dynamic_cast<BookTextView*>(&(*myHolder.view()));
-	if (bookTextView != 0) {
-		bookTextView->onStylusClick(x(event),y(event),0);
-	} else {
+	//BookTextView* bookTextView = dynamic_cast<BookTextView*>(&(*myHolder.view()));
+//	if (bookTextView != 0) {
+//		bookTextView->onStylusClick(x(event),y(event),0);
+//	} else {
 		myHolder.view()->onStylusPress(x(event), y(event));
-	}
+	//}
 }
 
 void ZLQtViewWidget::Widget::mouseReleaseEvent(QMouseEvent *event) {
