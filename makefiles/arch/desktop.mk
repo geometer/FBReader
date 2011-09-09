@@ -28,7 +28,7 @@ ifeq "$(UI_TYPE)" "qt"
 endif
 
 ifeq "$(UI_TYPE)" "qt4"
-  UILIBS = -lQtGui
+  UILIBS = -lQtGui -lQtNetwork
   NETWORK_LIBS ?= -lQtNetwork
 endif
 

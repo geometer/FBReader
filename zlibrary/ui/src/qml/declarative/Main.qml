@@ -51,7 +51,6 @@ PageStackWindow {
 			var component = Qt.createComponent("OpenFileDialog.qml");
 			var dialog = component.createObject(mainPage, { handler: object });
 			dialog.open();
-//			root.pageStack.push(dialog);
 		}
 		
 		onProgressDialogRequested: {

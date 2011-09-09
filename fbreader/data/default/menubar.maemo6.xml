@@ -2,12 +2,10 @@
 <menubar>
 	<item id="library"/>
 	<item id="networkLibrary"/>
-	<item id="showRecent"/>
 	<item id="addBook"/>
 	<item id="toc"/>
+	<item id="night"/>
+	<item id="day"/>
 	<item id="mobileOptions"/>
 	<item id="bookInfo"/>
-<!--
-	<item id="toggleFullscreen"/>
--->
 </menubar>

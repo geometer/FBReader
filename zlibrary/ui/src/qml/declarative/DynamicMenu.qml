@@ -31,7 +31,9 @@ Menu {
 			MenuItem {
 				parent: menuLayout
 				text: modelData
-				onClicked: root.item.activate(index);
+				enabled: root.item.enabledItems.indexOf(modelData) != -1
+				visible: root.item.visibleItems.indexOf(modelData) != -1
+				onClicked: root.item.activate(index)
 			}
 		}
 	}

@@ -102,6 +102,7 @@ void ZLQmlMenuBar::init() {
 	builder.processMenu(window->application());
 	myIds = builder.ids();
 	myNames = builder.names();
+	recheckItems();
 	emit itemsChanged(myNames);
 }
 
@@ -109,8 +110,33 @@ QStringList ZLQmlMenuBar::items() {
 	return myNames;
 }
 
+QStringList ZLQmlMenuBar::visibleItems() {
+	return myVisibleItems;
+}
+
+QStringList ZLQmlMenuBar::enabledItems() {
+	return myEnabledItems;
+}
+
 void ZLQmlMenuBar::activate(int index) {
 	emit activated(index);
+}
+
+void ZLQmlMenuBar::recheckItems() {
+	ZLQmlApplicationWindow *window = static_cast<ZLQmlApplicationWindow*>(parent());
+	ZLApplication &application = window->application();
+	myVisibleItems.clear();
+	myEnabledItems.clear();
+	for (int i = 0; i < myIds.size(); ++i) {
+		shared_ptr<ZLApplication::Action> action = application.action(myIds.at(i));
+		Q_ASSERT(!action.isNull());
+		if (action->isEnabled())
+			myEnabledItems << myNames.at(i);
+		if (action->isVisible())
+			myVisibleItems << myNames.at(i);
+	}
+	emit enabledItemsChanged(myEnabledItems);
+	emit visibleItemsChanged(myVisibleItems);
 }
 
 void ZLQmlMenuBar::delayedActivate(int index) {
