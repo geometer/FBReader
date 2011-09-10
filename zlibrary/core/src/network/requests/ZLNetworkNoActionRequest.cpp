@@ -28,7 +28,8 @@ bool ZLNetworkNoActionRequest::doBefore() {
 	return true;
 }
 
-bool ZLNetworkNoActionRequest::doAfter(bool) {
+bool ZLNetworkNoActionRequest::doAfter(const std::string &error) {
+	finished(error);
 	return true;
 }
 

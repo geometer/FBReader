@@ -35,7 +35,8 @@ bool ZLNetworkReadToStringRequest::doBefore() {
 	return true;
 }
 
-bool ZLNetworkReadToStringRequest::doAfter(bool) {
+bool ZLNetworkReadToStringRequest::doAfter(const std::string &error) {
+	finished(error);
 	return true;
 }
 

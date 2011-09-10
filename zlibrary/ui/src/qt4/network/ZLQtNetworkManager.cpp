@@ -25,6 +25,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QFile>
 #include <QtCore/QEventLoop>
+#include <QtCore/QDir>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkProxy>
@@ -34,9 +35,12 @@
 //#include "ZLQtPostDevice.h"
 
 ZLQtNetworkManager::ZLQtNetworkManager() {
-	myCache = new QNetworkDiskCache(&myManager);
-	myCache->setCacheDirectory(QString::fromStdString(CacheDirectory()));
-	myManager.setCache(myCache);
+//	myCache = new QNetworkDiskCache(&myManager);
+//	QDir cacheDirectory = QString::fromStdString(CacheDirectory());
+//	if (!cacheDirectory.exists())
+//		cacheDirectory.mkpath(cacheDirectory.absolutePath());
+//	myCache->setCacheDirectory(cacheDirectory.absolutePath());
+//	myManager.setCache(myCache);
 	myCookieJar = new ZLQtNetworkCookieJar(QString::fromStdString(CookiesPath()), &myManager);
 	myManager.setCookieJar(myCookieJar);
 	QObject::connect(&myManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
@@ -60,7 +64,6 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		const_cast<QNetworkAccessManager&>(myManager).setProxy(proxy);
 	}
 	QList<QNetworkReply*> replies;
-	QVector<bool> booleans(dataList.size(), false);
 	QStringList errors;
 	QEventLoop eventLoop;
 
@@ -72,13 +75,15 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		networkRequest.setUrl(QUrl::fromUserInput(QString::fromStdString(request.url())));
 		
 		if (!request.doBefore()) {
-			std::string error = request.errorMessage();
-			if (error.empty()) {
-				const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
-				error = ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(),
-				                             networkRequest.url().host().toStdString());
+			if (!request.hasListener()) {
+				std::string error = request.errorMessage();
+				if (error.empty()) {
+					const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
+					error = ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(),
+												 networkRequest.url().host().toStdString());
+				}
+				errors << QString::fromStdString(error);
 			}
-			errors << QString::fromStdString(error);
 			continue;
 		}
 		
@@ -117,9 +122,16 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		}
 		Q_ASSERT(reply);
 		QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
-		ZLQtNetworkReplyScope scope = { &request, &booleans[replies.size()], &replies, &errors, &eventLoop };
-		replies << reply;
+		ZLQtNetworkReplyScope scope = { &request, &replies, &errors, &eventLoop };
+		if (!request.hasListener()) {
+			replies << reply;
+		} else {
+			scope.replies = 0;
+			scope.errors = 0;
+			scope.eventLoop = 0;
+		}
 		reply->setProperty("scope", qVariantFromValue(scope));
+		reply->setProperty("executionData", qVariantFromValue(data));
 	}
 	if (!replies.isEmpty())
 		eventLoop.exec(QEventLoop::AllEvents);
@@ -139,35 +151,37 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 	Q_UNUSED(reply);
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	QByteArray data;
-	if (!*scope.headerHandled) {
+	if (!reply->property("headerHandled").toBool()) {
 		QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
 		if (redirect.isValid()) {
 			reply->deleteLater();
-			Q_ASSERT(scope.replies->removeOne(reply));
+			Q_ASSERT(scope.request->hasListener() || scope.replies->removeOne(reply));
 			reply->setProperty("redirected", true);
+			QVariant executionData = reply->property("executionData");
 			QNetworkRequest request = reply->request();
 			request.setUrl(reply->url().resolved(redirect));
 			reply = myManager.get(request);
-			scope.replies->append(reply);
+			if (!scope.request->hasListener())
+				scope.replies->append(reply);
 			QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
 			reply->setProperty("scope", qVariantFromValue(scope));
+			reply->setProperty("executionData", executionData);
 			return;
 		}
 		
-		// We should fool the request about received header
-		*scope.headerHandled = true;
+		// We should fool the request about the received headers
+		reply->setProperty("headerHandled", true);
 		data = "HTTP/1.1 ";
 		data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
 		data += " ";
 		data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
+		scope.request->handleHeader(data.data(), data.size());
 		foreach (const QNetworkReply::RawHeaderPair &pair, reply->rawHeaderPairs()) {
-			data += '\n';
-			data += pair.first;
+			data  = pair.first;
 			data += ": ";
 			data += pair.second;
+			scope.request->handleHeader(data.data(), data.size());
 		}
-		data += '\n';
-		scope.request->handleHeader(data.data(), data.size());
 	}
 	data = reply->readAll();
 	if (!data.isEmpty())
@@ -180,18 +194,26 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	Q_ASSERT(scope.request);
 	if (reply->property("redirected").toBool())
 		return;
+	if (scope.request->hasListener()) {
+		scope.request->doAfter(reply->error() == QNetworkReply::NoError
+		                       ? std::string()
+		                       : reply->errorString().toStdString());
+		return;
+	}
+
 	Q_ASSERT(scope.replies->removeOne(reply));
-	if (scope.replies->isEmpty())
+	if (scope.eventLoop && scope.replies->isEmpty())
 		scope.eventLoop->quit();
 	if (reply->error() != QNetworkReply::NoError) {
+		scope.request->doAfter(reply->errorString().toStdString());
 		scope.errors->append(reply->errorString());
 	} else {
 		QByteArray data = reply->readAll();
 		if (!data.isEmpty())
 			scope.request->handleContent(data.data(), data.size());
+		if (!scope.request->doAfter(std::string()))
+			scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
 	}
-	if (!scope.request->doAfter(reply->error() == QNetworkReply::NoError))
-		scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
 }
 	
 ZLQtNetworkCookieJar::ZLQtNetworkCookieJar(const QString &filePath, QObject *parent) 

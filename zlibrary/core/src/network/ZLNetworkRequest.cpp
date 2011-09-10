@@ -18,6 +18,9 @@
  */
 
 #include <ZLLogger.h>
+#include <ZLResource.h>
+#include <ZLStringUtil.h>
+#include <ZLNetworkUtil.h>
 
 #include "ZLNetworkRequest.h"
 
@@ -48,6 +51,12 @@ const ZLNetworkSSLCertificate &ZLNetworkRequest::sslCertificate() const {
 
 void ZLNetworkRequest::setErrorMessage(const std::string &message) {
 	myErrorMessage = message;
+}
+
+std::string ZLNetworkRequest::unknownNetworkError() const {
+	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
+	return ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(),
+	                            ZLNetworkUtil::hostFromUrl(url()));
 }
 
 bool ZLNetworkRequest::handleHeader(void *, size_t) {

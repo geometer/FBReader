@@ -47,7 +47,8 @@ bool ZLNetworkXMLParserRequest::doBefore() {
 	return true;
 }
 
-bool ZLNetworkXMLParserRequest::doAfter(bool) {
+bool ZLNetworkXMLParserRequest::doAfter(const std::string &error) {
+	finished(error);
 	return true;
 }
 
