@@ -148,12 +148,12 @@ void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthent
 
 void ZLQtNetworkManager::onReplyReadyRead() {
 	QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
-	Q_UNUSED(reply);
+	Q_ASSERT(reply);
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	QByteArray data;
 	if (!reply->property("headerHandled").toBool()) {
 		QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-		if (redirect.isValid()) {
+		if (redirect.isValid() && scope.request->isRedirectionSupported()) {
 			reply->deleteLater();
 			Q_ASSERT(scope.request->hasListener() || scope.replies->removeOne(reply));
 			reply->setProperty("redirected", true);
@@ -161,6 +161,7 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 			QNetworkRequest request = reply->request();
 			request.setUrl(reply->url().resolved(redirect));
 			reply = myManager.get(request);
+			Q_ASSERT(reply);
 			if (!scope.request->hasListener())
 				scope.replies->append(reply);
 			QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));

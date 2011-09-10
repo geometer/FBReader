@@ -19,6 +19,7 @@
 
 #include <ZLDialogManager.h>
 #include <QtCore/QEventLoop>
+#include <QtCore/QCoreApplication>
 
 #include "ZLQmlDialog.h"
 #include "ZLQmlDialogContent.h"
@@ -63,6 +64,7 @@ bool ZLQmlDialog::run() {
     QEventLoop eventLoop;
 	connect(this, SIGNAL(finished()), &eventLoop, SLOT(quit()), Qt::QueuedConnection);
     eventLoop.exec(QEventLoop::AllEvents);
+	qApp->sendPostedEvents(0, QEvent::DeferredDelete);
 	return myResult;
 }
 

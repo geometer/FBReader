@@ -22,6 +22,8 @@
 
 #include <ZLDialogManager.h>
 #include <QtCore/QObject>
+#include <QtCore/QWeakPointer>
+#include <QtCore/QEvent>
 
 class QWidget;
 
@@ -36,6 +38,8 @@ private:
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
+	
+	Q_INVOKABLE void kill(QObject *dialog);
 
 	shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const;
 	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
@@ -49,6 +53,9 @@ public:
 	bool isClipboardSupported(ClipboardType type) const;
 	void setClipboardText(const std::string &text, ClipboardType type) const;
 	void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const;
+	
+private Q_SLOTS:
+	void onObjectDestroyed(QObject *object);
 
 Q_SIGNALS:
 	void privateDialogRequested(QObject *object);
@@ -64,6 +71,23 @@ Q_SIGNALS:
 	void privateErrorBoxRequested(const QString &title, const QString &message, const QString &button);
 	void errorBoxRequested(const QString &title, const QString &message, const QString &button);
 //	void privateQuestionBoxRequested(QObject *object);
+	
+protected:
+	typedef void (ZLQmlDialogManager::*DialogRequestedSignal)(QObject *);
+	
+	class Event : public QEvent {
+	public:
+		template <typename Method>
+		Event(QObject *o, const ZLQmlDialogManager *p, Method m);
+		virtual ~Event();
+		
+		static Type eventType();
+
+	private:
+		QWeakPointer<QObject> object;
+		QWeakPointer<ZLQmlDialogManager> parent;
+		DialogRequestedSignal method;
+	};
 };
 
 #endif /* __ZLQTDIALOGMANAGER_H__ */

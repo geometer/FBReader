@@ -36,6 +36,9 @@ public:
 	
 	QString text() const;
 	
+protected slots:
+	void finish();
+	
 signals:
 	void textChanged(const QString &text);
 	void finished();

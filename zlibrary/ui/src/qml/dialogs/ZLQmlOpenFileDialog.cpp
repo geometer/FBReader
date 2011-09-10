@@ -19,6 +19,7 @@
 
 #include <QtGui/QFileDialog>
 #include <QtCore/QEventLoop>
+#include <QtCore/QCoreApplication>
 
 #include "ZLQmlOpenFileDialog.h"
 #include <ZLFile.h>
@@ -37,6 +38,7 @@ bool ZLQmlOpenFileDialog::run() {
     QEventLoop eventLoop;
 	connect(this, SIGNAL(finished()), &eventLoop, SLOT(quit()), Qt::QueuedConnection);
     eventLoop.exec(QEventLoop::AllEvents);
+	qApp->sendPostedEvents(0, QEvent::DeferredDelete);
 	return !myFilePath.isEmpty();
 }
 

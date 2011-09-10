@@ -67,9 +67,8 @@ private:
 };
 
 void ZLQmlViewObject::repaint()	{
-	qDebug() << Q_FUNC_INFO;
 	if (myContent)
-		myContent->update();
+		QMetaObject::invokeMethod(myContent, "repaint", Qt::QueuedConnection);
 }
 
 void ZLQmlViewObject::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {
@@ -210,7 +209,7 @@ QDeclarativeItem *ZLQmlViewObject::bookView() const {
 void ZLQmlViewObject::setBookView(QDeclarativeItem *bookView) {
 	if (myContent == bookView)
 		return;
-	myContent = bookView;
+	myContent = qobject_cast<ZLQmlBookContent*>(bookView);
 	emit bookViewChanged(myContent);
 }
 
@@ -372,16 +371,18 @@ void ZLQmlViewWidget::keyPressEvent(QKeyEvent *event) {
 ZLQmlBookContent::ZLQmlBookContent(QDeclarativeItem *parent) : QDeclarativeItem(parent), myHolder(0) {
 	setFlag(ItemHasNoContents, false);
 	myVisibleHeight = 400;
+//	connect(this, SIGNAL(widthChanged()), this, SLOT(repaint()), Qt::QueuedConnection);
+	connect(this, SIGNAL(heightChanged()), this, SLOT(repaint()), Qt::QueuedConnection);
 }
 
 ZLQmlBookContent::~ZLQmlBookContent() {
 }
 
 bool ZLQmlBookContent::eventFilter(QObject *obj, QEvent *event) {
-	if (event->type() == QEvent::Gesture) {;
-		QGestureEvent *gestureEvent = static_cast<QGestureEvent*>(event);
-		qDebug() << Q_FUNC_INFO << obj << gestureEvent->gestures();
-	}
+//	if (event->type() == QEvent::Gesture) {;
+//		QGestureEvent *gestureEvent = static_cast<QGestureEvent*>(event);
+//		qDebug() << Q_FUNC_INFO << obj << gestureEvent->gestures();
+//	}
 	return QDeclarativeItem::eventFilter(obj, event);
 }
 
@@ -407,22 +408,30 @@ void ZLQmlBookContent::setVisibleHeight(int visibleHeight) {
 	emit visibleHeightChanged(myVisibleHeight);
 }
 
+void ZLQmlBookContent::repaint() {
+	if (!myHolder) {
+		qDebug("%s: Can't find objectHolder", Q_FUNC_INFO);
+		return;
+	}
+	if (myHolder->view().isNull())
+		return;
+	// Mey be there is way of optimization?
+	if (myPixmap.size() != QSize(width(), height()))
+		myPixmap = QPixmap(width(), height());
+	ZLQmlPaintContext &context = static_cast<ZLQmlPaintContext&>(myHolder->view()->context());
+	QPainter painter(&myPixmap);
+	context.beginPaint(width(), height(), &painter);
+	myHolder->view()->paint();
+	context.endPaint();
+	update();
+}
+
 void ZLQmlBookContent::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) {
 	if (!myHolder) {
 		qDebug("%s: Can't find objectHolder", Q_FUNC_INFO);
 		return;
 	}
-	QElapsedTimer timer;
-	timer.start();
-//	painter->save();
-//	painter->translate(0, myVisibleHeight);
-	ZLQmlPaintContext &context = static_cast<ZLQmlPaintContext&>(myHolder->view()->context());
-	context.beginPaint(width(), height(), painter);
-	myHolder->view()->paint();
-	context.endPaint();
-//	painter->translate(0, -myVisibleHeight);
-//	painter->restore();
-//	qDebug("%s %lld ms", Q_FUNC_INFO, timer.elapsed());
+	painter->drawPixmap(0, 0, myPixmap);
 }
 
 bool ZLQmlBookContent::sceneEvent(QEvent *event) {

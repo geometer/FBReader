@@ -133,7 +133,7 @@ void NetworkView::paint() {
 	nodes.swap(myNodesToPaintCovers);
 	shared_ptr<CoverUpdater> updater = CoverUpdater::create();
 	if (!updater.isNull()) {
-		for (std::map<FBReaderNode*,int>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
+		for (std::map<FBReaderNode*,int>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
 			shared_ptr<ZLImage> coverImage = it->first->coverImage();
 			if (!coverImage.isNull()) {
 				updater->addTask(coverImage->synchronizationData());
@@ -143,7 +143,7 @@ void NetworkView::paint() {
 			ZLTimeManager::Instance().addAutoRemovableTask(new CoverUpdaterRunner(updater));
 		}
 	}
-	for (std::map<FBReaderNode*,int>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
+	for (std::map<FBReaderNode*,int>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
 		it->first->drawCoverReal(context(), it->second);
 	}
 	myNodesToPaintCovers.clear();

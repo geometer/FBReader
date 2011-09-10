@@ -76,7 +76,7 @@ private:
 
 private:
 	ZLQmlViewWidget *myWidget;
-	QDeclarativeItem *myContent;
+	ZLQmlBookContent *myContent;
 	ZLQmlScrollBarInfo *myVerticalInfo;
 	ZLQmlScrollBarInfo *myHorizontalInfo;
 //	int myPageSize;
@@ -164,6 +164,9 @@ public:
 //	void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 //	void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 	
+public Q_SLOTS:
+	void repaint();
+	
 Q_SIGNALS:
 	void objectHolderChanged(QObject *objectHolder);
 	void visibleHeightChanged(int visibleHeight);
@@ -171,6 +174,7 @@ Q_SIGNALS:
 	void swipe(QObject *gesture);
 	
 private:
+	QPixmap myPixmap;
 	ZLQmlViewObject *myHolder;
 	int myVisibleHeight;
 //	QPointF myMousePos;

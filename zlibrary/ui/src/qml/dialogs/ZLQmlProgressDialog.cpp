@@ -19,15 +19,18 @@
 
 #include <QtCore/QThreadPool>
 #include <QtCore/QEventLoop>
+#include <QtCore/QCoreApplication>
 
 #include "ZLQmlProgressDialog.h"
 #include "ZLQtUtil.h"
 
 ZLQmlProgressDialog::ZLQmlProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key) {
 	myText = QString::fromStdString(messageText());
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 }
 
 ZLQmlProgressDialog::~ZLQmlProgressDialog() {
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 }
 
 QString ZLQmlProgressDialog::text() const {
@@ -39,9 +42,14 @@ void ZLQmlProgressDialog::run(ZLRunnable &runnable) {
 	QThreadPool::globalInstance()->start(new ZLQmlRunnable(runnable, &eventLoop));
 	eventLoop.exec(QEventLoop::AllEvents);
 	emit finished();
+	qApp->sendPostedEvents(0, QEvent::DeferredDelete);
+}
+
+void ZLQmlProgressDialog::finish() {
 }
 
 void ZLQmlProgressDialog::setMessage(const std::string &message) {
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 	const QString text = QString::fromStdString(message);
 	if (text == myText)
 		return;
@@ -52,9 +60,11 @@ void ZLQmlProgressDialog::setMessage(const std::string &message) {
 ZLQmlRunnable::ZLQmlRunnable(ZLRunnable &runnable, QObject *eventLoop)
     : myRunnable(runnable), myEventLoop(eventLoop) {
 	setAutoDelete(true);
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 }
 
 ZLQmlRunnable::~ZLQmlRunnable() {
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 }
 
 void ZLQmlRunnable::run() {

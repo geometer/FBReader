@@ -24,6 +24,7 @@
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QDesktopServices>
 #include <QtCore/QUrl>
+#include <QtCore/QDebug>
 
 #include "ZLQmlDialogManager.h"
 #include "ZLQmlDialog.h"
@@ -54,21 +55,31 @@ ZLQmlDialogManager::ZLQmlDialogManager() {
 	qmlRegisterUncreatableType<ZLQmlBoolean3OptionView>("org.fbreader", 0, 14, "BooleanOptionView", "Uncreatable type");
 }
 
+void ZLQmlDialogManager::kill(QObject *dialog) {
+	qDebug() << "Try to kill" << dialog;
+	dialog->deleteLater();
+	connect(dialog, SIGNAL(destroyed(QObject*)), this, SLOT(onObjectDestroyed(QObject*)));
+}
+
+void ZLQmlDialogManager::onObjectDestroyed(QObject *object) {
+	qDebug("Destroyed %p", object);
+}
+
 shared_ptr<ZLDialog> ZLQmlDialogManager::createDialog(const ZLResourceKey &key) const {
 	ZLQmlDialog *dialog = new ZLQmlDialog(resource()[key]);
-	emit const_cast<ZLQmlDialogManager*>(this)->privateDialogRequested(dialog);
+	new Event(dialog, this, &ZLQmlDialogManager::dialogRequested);
 	return dialog;
 }
 
 shared_ptr<ZLOptionsDialog> ZLQmlDialogManager::createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const {
 	ZLQmlOptionsDialog *dialog = new ZLQmlOptionsDialog(resource()[key], applyAction, showApplyButton);
-	emit const_cast<ZLQmlDialogManager*>(this)->privateOptionsDialogRequested(dialog);
+	new Event(dialog, this, &ZLQmlDialogManager::optionsDialogRequested);
 	return dialog;
 }
 
 shared_ptr<ZLOpenFileDialog> ZLQmlDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
 	ZLQmlOpenFileDialog *dialog = new ZLQmlOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
-	emit const_cast<ZLQmlDialogManager*>(this)->privateFileDialogRequested(dialog);
+	new Event(dialog, this, &ZLQmlDialogManager::fileDialogRequested);
 	return dialog;
 }
 
@@ -91,7 +102,7 @@ int ZLQmlDialogManager::questionBox(const ZLResourceKey &key, const std::string 
 
 shared_ptr<ZLProgressDialog> ZLQmlDialogManager::createProgressDialog(const ZLResourceKey &key) const {
 	ZLQmlProgressDialog *dialog = new ZLQmlProgressDialog(key);
-	emit const_cast<ZLQmlDialogManager*>(this)->privateProgressDialogRequested(dialog);
+	new Event(dialog, this, &ZLQmlDialogManager::progressDialogRequested);
 	return dialog;
 }
 
@@ -117,4 +128,21 @@ void ZLQmlDialogManager::setClipboardImage(const ZLImageData &imageData, Clipboa
 	            *static_cast<const ZLQtImageData&>(imageData).image(),
 	            (type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
 	                           );
+}
+
+template <typename Method>
+ZLQmlDialogManager::Event::Event(QObject *o, const ZLQmlDialogManager *p, Method m)
+    : QEvent(eventType()), object(o), parent(const_cast<ZLQmlDialogManager*>(p)) {
+	method = static_cast<DialogRequestedSignal>(m);
+	qApp->postEvent(parent.data(), this);
+}
+
+ZLQmlDialogManager::Event::~Event() {
+	if (parent && object)
+		(parent.data()->*method)(object.data());
+}
+
+QEvent::Type ZLQmlDialogManager::Event::eventType() {
+	static QEvent::Type type = static_cast<QEvent::Type>(registerEventType());
+	return type;
 }

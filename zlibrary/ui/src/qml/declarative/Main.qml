@@ -60,7 +60,6 @@ PageStackWindow {
 			console.log("progress dialog", object)
 			var component = Qt.createComponent("ProgressDialog.qml");
 			var dialog = component.createObject(root.pageStack.parent.parent, { handler: object });
-			dialog.open();
 		}
 		
 		onInformationBoxRequested: {
@@ -74,6 +73,12 @@ PageStackWindow {
 			var args = { "titleText": title, "message": message, "acceptButtonText": button };
 			var dialog = queryDialog.createObject(mainPage, args);
 			dialog.open();
+		}
+	}
+	
+	Component {
+		id: progressDialog
+		ProgressDialog {
 		}
 	}
 	
