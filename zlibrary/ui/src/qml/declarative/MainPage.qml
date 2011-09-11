@@ -98,7 +98,7 @@ Page {
 	states: [
 		State {
 			name: ""
-			when: toolBarArea.pressed || mainMenu.status != DialogStatus.Closed
+			when: toolBarArea.pressed || mainMenu.status != DialogStatus.Closed || pageStack.currentPage !== root
 			PropertyChanges {
 				target: root
 				showToolBar: true
@@ -114,7 +114,7 @@ Page {
 	]
 	Timer {
 		id: toolBarTimer
-		running: root.state == "" && mainMenu.status == DialogStatus.Closed
+		running: root.state == "" && mainMenu.status == DialogStatus.Closed && pageStack.currentPage === root
 		interval: 3000
 		property bool triggered: false
 		onTriggered: root.state = "hidden"

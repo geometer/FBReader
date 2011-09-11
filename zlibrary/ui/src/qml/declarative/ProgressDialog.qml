@@ -25,8 +25,12 @@ import org.fbreader 0.14
 Rectangle {
 	id: root
 	property variant handler
-	color: Qt.rgba(0.0, 0.0, 0.0, 0.9)
+	property real alpha: 0
+	color: Qt.rgba(0.0, 0.0, 0.0, alpha)
 	anchors.margins: -1
+	property int status: DialogStatus.Closed
+	visible: status != DialogStatus.Closed;
+	state: "closed"
 
 	anchors.fill: parent
 	Label {
@@ -48,10 +52,73 @@ Rectangle {
 		platformStyle: BusyIndicatorStyle { size: "large" }
 		running: root.visible
 	}
-	Component.onCompleted: {
-		label.style.inverted = true;
-		indicator.style.inverted = true;
+	
+	function open() {
+		root.state = "";
 	}
+	
+	function close() {
+		root.state = "closed";
+	}
+	
+	function transitionStarted() {
+        status = (state == "closed") ? DialogStatus.Closing : DialogStatus.Opening;
+    }
+    
+    function transitionEnded() {
+        status = (state == "closed") ? DialogStatus.Closed : DialogStatus.Open;
+    }
+	
+	states: [
+        State {
+            name: ""
+            PropertyChanges {
+				target: root
+				alpha: 0.9
+			}
+        },
+        State {
+            name: "closed"
+            PropertyChanges {
+				target: root
+				alpha: 0
+			}
+        }
+    ]
+
+    transitions: [
+        Transition {
+            from: ""
+			to: "closed"
+			reversible: true
+            SequentialAnimation {
+                ScriptAction {
+					script: {
+						if (root.state == "closed")
+							root.transitionStarted();
+						else
+							root.transitionEnded();
+						console.log("transition start to", root.state);
+					}
+				}
+                NumberAnimation {
+					target: root
+					properties: "alpha"
+					easing.type: Easing.InOutCubic
+					duration: 250
+				}
+                ScriptAction {
+					script: {
+						if (root.state == "closed")
+							root.transitionEnded();
+						else
+							root.transitionStarted();
+						console.log("transition end to", root.state);
+					}
+				}
+            }
+        }
+    ]
 		
 	// eat mouse events
 	MouseArea {
@@ -60,8 +127,14 @@ Rectangle {
 		enabled: parent.visible
 	}
 	
-	Connections {
-		target: root.handler
-		onFinished: root.destroy()
+	Component.onCompleted: {
+		label.style.inverted = true;
+		indicator.style.inverted = true;
+		root.handler.finished.connect(root.close);
 	}
+	
+//	Connections {
+//		target: root.handler
+//		onFinished: root.close() // root.destroy()
+//	}
 }

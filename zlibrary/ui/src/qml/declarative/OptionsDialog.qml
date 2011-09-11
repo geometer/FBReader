@@ -106,13 +106,13 @@ Sheet {
 	onAccepted: handler.accept()
 	onRejected: handler.reject()
 	onStatusChanged: {
-		if (status == PageStatus.Inactive && pageStack.currentPage != mainPage) {
+		if (status == DialogStatus.Closed && pageStack.currentPage != mainPage) {
 			pageStack.clear();
 			pageStack.push(mainPage);
 		}
 	}
-	Component.onCompleted: {
-		__owner = parent;
-		pageStack.push(mainPage);
-	}
+//	Component.onCompleted: {
+//		__owner = parent;
+////		pageStack.push(mainPage);
+//	}
 }

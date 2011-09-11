@@ -37,42 +37,50 @@ PageStackWindow {
 		target: dialogManager
 
 		onDialogRequested: {
-			console.log("simple dialog", object, object.title)
 			var component = Qt.createComponent("SimpleDialog.qml");
-			var dialog = component.createObject(mainPage, { handler: object });
-			dialog.open();
+			root.openDialog(component.createObject(mainPage, { handler: object }));
 		}
 		
 		onOptionsDialogRequested: {
-			console.log("options dialog", object, object.title);
 			optionsDialog.handler = object;
-			optionsDialog.open();
+			root.openDialog(optionsDialog);
 		}
 
         onFileDialogRequested: {
-			console.log("file dialog", object, object.directoryPath)
 			var component = Qt.createComponent("OpenFileDialog.qml");
-			var dialog = component.createObject(mainPage, { handler: object });
-			dialog.open();
+			root.openDialog(component.createObject(mainPage, { handler: object }));
 		}
 		
 		onProgressDialogRequested: {
-			console.log("progress dialog", object)
-			var component = Qt.createComponent("ProgressDialog.qml");
-			var dialog = component.createObject(root.pageStack.parent.parent, { handler: object });
+			root.openDialog(progressDialog.createObject(root.pageStack.parent.parent, { handler: object }));
 		}
 		
 		onInformationBoxRequested: {
 			// var title, message, button
 			var args = { "titleText": title, "message": message, "acceptButtonText": button };
-			var dialog = queryDialog.createObject(mainPage, args);
-			dialog.open();
+			root.openDialog(queryDialog.createObject(mainPage, args));
 		}
 		onErrorBoxRequested: {
 			// var title, message, button
 			var args = { "titleText": title, "message": message, "acceptButtonText": button };
-			var dialog = queryDialog.createObject(mainPage, args);
+			root.openDialog(queryDialog.createObject(mainPage, args));
+		}
+	}
+	
+	function openDialog(dialog) {
+		if (dialog.open !== undefined)
 			dialog.open();
+		if (dialog.statusChanged !== undefined) {
+			dialog.statusChanged.connect(
+						function() {
+							if (dialog.status == DialogStatus.Closed) {
+								if (dialog !== optionsDialog)
+									dialog.destroy();
+								// hook for toolbar activity
+								if (root.pageStack.currentPage == mainPage)
+									mainPage.state = ""
+							}
+						});
 		}
 	}
 	
