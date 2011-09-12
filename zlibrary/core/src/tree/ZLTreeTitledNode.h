@@ -7,6 +7,7 @@ class ZLTreeTitledNode : public ZLTreeNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
+	const ZLTypeId &typeId() const;
 
 public:
 	// TODO: new API, there are listed methods of ZLTreeTitledNode
