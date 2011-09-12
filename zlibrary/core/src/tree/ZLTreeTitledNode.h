@@ -3,7 +3,11 @@
 
 #include "ZLTreeNode.h"
 
-class ZLTreeTitledNode : public  ZLTreeNode {
+class ZLTreeTitledNode : public ZLTreeNode {
+
+public:
+	static const ZLTypeId TYPE_ID;
+
 public:
 	// TODO: new API, there are listed methods of ZLTreeTitledNode
 	// ** begin
