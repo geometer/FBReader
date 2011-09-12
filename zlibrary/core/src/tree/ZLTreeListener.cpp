@@ -29,9 +29,12 @@ const ZLTypeId &ZLTreeListener::RootNode::typeId() const {
 	return TYPE_ID;
 }
 
-const ZLTypeId ZLTreeListener::TYPE_ID;
+const ZLTypeId ZLTreeListener::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
-ZLTreeListener::ZLTreeListener(ZLPaintContext &context) {
+ZLTreeListener::ZLTreeListener() : myRootNode(*this) {
+}
+
+ZLTreeListener::~ZLTreeListener() {
 }
 
 const ZLTypeId &ZLTreeListener::typeId() const {
@@ -39,6 +42,7 @@ const ZLTypeId &ZLTreeListener::typeId() const {
 }
 
 ZLTreeListener::RootNode &ZLTreeListener::rootNode() {
+	return myRootNode;
 }
 
 void ZLTreeListener::clear() {

@@ -63,7 +63,7 @@ std::string BookNode::title() const {
 	return myBook->title();
 }
 
-std::string BookNode::summary() const {
+std::string BookNode::subtitle() const {
 	FBReaderNode *parent = (FBReaderNode*)this->parent();
 	while (!parent->isInstanceOf(AuthorNode::TYPE_ID) &&
 				 !parent->isInstanceOf(TagNode::TYPE_ID)) {

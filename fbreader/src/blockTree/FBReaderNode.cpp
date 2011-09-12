@@ -59,7 +59,7 @@ const ZLTypeId &FBReaderNode::typeId() const {
 	return TYPE_ID;
 }
 
-shared_ptr<ZLImage> FBReaderNode::coverImage() const {
+shared_ptr<ZLImage> FBReaderNode::image() const {
 	if (!myCoverImageIsStored) {
 		myCoverImageIsStored = true;
 		myStoredCoverImage = extractCoverImage();
@@ -72,7 +72,7 @@ void FBReaderNode::drawCover(ZLPaintContext &context, int vOffset) {
 }
 
 void FBReaderNode::drawCoverReal(ZLPaintContext &context, int vOffset) {
-	shared_ptr<ZLImage> cover = coverImage();
+	shared_ptr<ZLImage> cover = image();
 	if (cover.isNull()) {
 		return;
 	}
@@ -122,7 +122,7 @@ void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset) {
 }
 
 void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset) {
-	const std::string text = summary();
+	const std::string text = subtitle();
 	if (text.empty()) {
 		return;
 	}
@@ -232,7 +232,7 @@ int FBReaderNode::unitSize(ZLPaintContext &context, const FBTextStyle &style) co
 	return (context.stringHeight() * 2 + 2) / 3;
 }
 
-std::string FBReaderNode::summary() const {
+std::string FBReaderNode::subtitle() const {
 	std::string result;
 	int count = 0;
 	const ZLBlockTreeNode::List &subNodes = children();

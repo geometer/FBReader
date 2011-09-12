@@ -25,6 +25,16 @@ const ZLTypeId ZLTreeNode::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 ZLTreeNode::ZLTreeNode() : myParent(0), myChildIndex(-1) {
 }
 
+ZLTreeNode::~ZLTreeNode() {
+	for (List::iterator it = myChildren.begin(); it != myChildren.end(); ++it) {
+		delete *it;
+	}
+}
+
+const ZLTypeId &ZLTreeNode::typeId() const {
+	return TYPE_ID;
+}
+
 void ZLTreeNode::clear() {
 	ZLTreeListener * const handler = listener();
 	List::iterator it;
@@ -33,13 +43,7 @@ void ZLTreeNode::clear() {
 		delete *it;
 		myChildren.erase(it);
 		if (handler)
-			handler->onChildRemoved(this, index);
-	}
-}
-
-ZLTreeNode::~ZLTreeNode() {
-	for (List::iterator it = myChildren.begin(); it != myChildren.end(); ++it) {
-		delete *it;
+			handler->onChildRemoved(this, i);
 	}
 }
 
@@ -52,7 +56,7 @@ size_t ZLTreeNode::level() const {
 }
 
 ZLTreeListener *ZLTreeNode::listener() const {
-	if (const ZLTreeListener::RootNode *node = zlobject_cast<ZLTreeListener::RootNode*>(this))
+	if (const ZLTreeListener::RootNode *node = zlobject_cast<const ZLTreeListener::RootNode*>(this))
 		return &node->myListener;
 	else if (myParent)
 		return myParent->listener();
@@ -65,13 +69,13 @@ ZLTreeNode *ZLTreeNode::parent() const {
 }
 
 ZLTreeNode *ZLTreeNode::previous() const {
-	if (myChildIndex <= 0)
+	if (myChildIndex == 0)
 		return 0;
 	return myParent->children().at(myChildIndex - 1);
 }
 
 ZLTreeNode *ZLTreeNode::next() const {
-	if (myChildIndex < 0 || myChildIndex + 1 >= myParent->children().size())
+	if (myChildIndex + 1 >= myParent->children().size())
 		return 0;
 	return myParent->children().at(myChildIndex + 1);
 }
@@ -83,8 +87,8 @@ const ZLTreeNode::List &ZLTreeNode::children() const {
 void ZLTreeNode::requestChildren() {
 }
 
-void ZLTreeNode::insert(ZLTreeNode *node, int index) {
-	index = std::max(0, std::min(index, myChildren.size()));
+void ZLTreeNode::insert(ZLTreeNode *node, size_t index) {
+	index = std::min(index, myChildren.size());
 	node->myChildIndex = index;
 	List::iterator it = myChildren.insert(myChildren.begin() + index, node);
 	for (; it != myChildren.end(); ++it) {
@@ -94,8 +98,8 @@ void ZLTreeNode::insert(ZLTreeNode *node, int index) {
 		handler->onChildAdded(this, index);
 }
 
-void ZLTreeNode::remove(int index) {
-	if (index < 0 || index >= myChildren.size())
+void ZLTreeNode::remove(size_t index) {
+	if (index >= myChildren.size())
 		return;
 	List::iterator it = myChildren.erase(myChildren.begin() + index);
 	for (; it != myChildren.end(); ++it) {

@@ -25,14 +25,21 @@ const ZLTypeId &ZLTreeTitledNode::typeId() const {
 	return TYPE_ID;
 }
 
-ZLTreeTitledNode::ZLTreeTitledNode(ZLTreeNode *parent, size_t atPosition)
-    : ZLTreeNode(parent, atPosition) {
+ZLTreeTitledNode::ZLTreeTitledNode() {
 }
 
 ZLTreeTitledNode::~ZLTreeTitledNode() {
 }
 
+std::string ZLTreeTitledNode::subtitle() const {
+	return std::string();
+}
+
 std::string ZLTreeTitledNode::imageUrl() const {
 	return std::string();
+}
+
+shared_ptr<ZLImage> ZLTreeTitledNode::image() const {
+	return shared_ptr<ZLImage>();
 }
 
