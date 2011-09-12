@@ -80,5 +80,5 @@ void ZLQtDialogManager::setClipboardImage(const ZLImageData &imageData, Clipboar
 }
 
 bool ZLQtDialogManager::openURL(const std::string& url) const {
-	return QDesktopServices::openUrl( QUrl(url.c_str()) );
+	return QDesktopServices::openUrl(QUrl::fromUserInput(QString::fromStdString(url)));
 }
