@@ -17,21 +17,30 @@
  * 02110-1301, USA.
  */
 
-#include "ZLTreeTitledNode.h"
+#include "ZLTreeListener.h"
 
-const ZLTypeId ZLTreeTitledNode::TYPE_ID(ZLTreeNode::TYPE_ID);
+const ZLTypeId ZLTreeListener::RootNode::TYPE_ID(ZLTreeNode::TYPE_ID);
 
-const ZLTypeId &ZLTreeTitledNode::typeId() const {
+ZLTreeListener::RootNode::RootNode(ZLTreeListener &listener)
+    : myListener(listener) {
+}
+
+const ZLTypeId &ZLTreeListener::RootNode::typeId() const {
 	return TYPE_ID;
 }
 
-ZLTreeTitledNode::ZLTreeTitledNode(ZLTreeNode *parent, size_t atPosition)
-    : ZLTreeNode(parent, atPosition) {
+const ZLTypeId ZLTreeListener::TYPE_ID;
+
+ZLTreeListener::ZLTreeListener(ZLPaintContext &context) {
 }
 
-ZLTreeTitledNode::~ZLTreeTitledNode() {
+const ZLTypeId &ZLTreeListener::typeId() const {
+	return TYPE_ID;
 }
 
-std::string ZLTreeTitledNode::imageUrl() const {
-	return std::string();
+ZLTreeListener::RootNode &ZLTreeListener::rootNode() {
+}
+
+void ZLTreeListener::clear() {
+	myRootNode.clear();
 }

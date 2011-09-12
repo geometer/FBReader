@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2009-2011 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #ifndef __ZLTREENODE_H__
 #define __ZLTREENODE_H__
 
@@ -30,10 +49,10 @@ public:
 
 public:
 	static const ZLTypeId TYPE_ID;
+	const ZLTypeId &typeId() const;
 
 protected:
-	ZLTreeNode(ZLTreeListener &view);
-	ZLTreeNode(ZLTreeNode *parent, size_t atPosition = -1);
+	ZLTreeNode();
 
 public:
 	virtual ~ZLTreeNode();
@@ -44,25 +63,25 @@ public:
 	ZLTreeNode *previous() const;
 	ZLTreeNode *next() const;
 	const List &children() const;
-
-	void open(bool openNotClose);
-	bool isOpen() const;
+	// Children should be requested from network only if we need them
+	virtual void requestChildren();
+	
+	void insert(ZLTreeNode *node, int index);
+	void remove(int index);
+	void updated();
 
 protected:
 	size_t level() const;
 
-	ZLTreeListener &view();
+	ZLTreeListener *listener() const;
 
 private:
-	// I don't see any reasons to store myListener in every node, 
-	// maximum level is not so big to suffer from getting it from top parent
-	ZLTreeListener &myListener;
 	ZLTreeNode *myParent;
 	size_t myChildIndex;
 
 	List myChildren;
-	// Should this be removed?
-	bool myIsOpen;
+	// Looks like we should also handle actions for menu on "Tap and hold"
+//	std::vector<shared_ptr<ZLRunnableWithKey>> myActions;
 
 private:
 	ZLTreeNode(const ZLTreeNode&);

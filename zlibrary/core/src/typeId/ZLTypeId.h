@@ -51,6 +51,20 @@ protected:
 	virtual const ZLTypeId &typeId() const = 0;
 };
 
+template <typename T>
+T zlobject_cast(ZLObjectWithRTTI *object) {
+	if (!object || !object->isInstanceOf(T))
+		return 0;
+	return static_cast<T>(object);
+}
+
+template <typename T>
+T zlobject_cast(const ZLObjectWithRTTI *object) {
+	if (!object || !object->isInstanceOf(T))
+		return 0;
+	return static_cast<T>(object);
+}
+
 inline bool ZLTypeId::operator == (const ZLTypeId &type) const {
 	return this == &type;
 }
