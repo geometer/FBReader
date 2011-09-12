@@ -28,19 +28,6 @@ class ZLTreeNode : public ZLObjectWithRTTI {
 public:
 	typedef std::vector<ZLTreeNode*> List;
 
-protected:
-	struct Rectangle {
-		const size_t Left;
-		const size_t Top;
-		const size_t Right;
-		const size_t Bottom;
-
-		Rectangle(size_t left, size_t vOffset, size_t right, size_t bottom);
-
-		bool contains(size_t x, size_t y) const;
-		bool operator < (const Rectangle &r) const;
-	};
-
 public:
 	static const ZLTypeId TYPE_ID;
 
