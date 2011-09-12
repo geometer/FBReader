@@ -22,7 +22,6 @@
 
 #include "../blockTree/FBReaderNode.h"
 
-#include <FBTreeNode.h>
 #include "../library/Author.h"
 
 class ZLImage;
@@ -40,19 +39,13 @@ public:
 //	AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author);
 //	void init();
 
-//	shared_ptr<Author> author() const;
-
 private:
 //	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 //	shared_ptr<ZLImage> extractCoverImage() const;
-//	std::string title() const;
-
-//private:
-//	shared_ptr<Author> myAuthor;
 
 public:
-	AuthorNode();
+	AuthorNode(ZLTreeNode *parent, shared_ptr<Author> author);
 
 public:
 	std::string title() const;
@@ -116,20 +109,29 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	BookNode(AuthorNode *parent, shared_ptr<Book> book);
-	BookNode(SeriesNode *parent, shared_ptr<Book> book);
-	BookNode(TagNode *parent, size_t atPosition, shared_ptr<Book> book);
+	BookNode(ZLTreeNode *parent, shared_ptr<Book> book);
+	//BookNode(SeriesNode *parent, shared_ptr<Book> book);
+	//BookNode(TagNode *parent, size_t atPosition, shared_ptr<Book> book);
 
-	shared_ptr<Book> book() const;
+	//shared_ptr<Book> book() const;
+
+public:
+	std::string title() const;
+	std::string subtitle() const;
+	std::string imageUrl() const;
+	shared_ptr<ZLImage> image() const;
+	void requestChildren();
+	ZLTreeNode::List &children() const;
+	void activate();
 
 private:
-	void init();
-	bool highlighted() const;
-	const ZLResource &resource() const;
+//	void init();
+//	bool highlighted() const;
+//	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
-	std::string title() const;
-	std::string summary() const;
+//	shared_ptr<ZLImage> extractCoverImage() const;
+//	std::string title() const;
+//	std::string summary() const;
 
 private:
 	const shared_ptr<Book> myBook;
