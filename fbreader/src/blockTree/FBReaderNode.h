@@ -23,13 +23,13 @@
 #include <map>
 #include <vector>
 
-#include <ZLTreeTitledNode.h>
+#include <ZLBlockTreeView.h>
 
 class ZLImage;
 class ZLResource;
 class FBTextStyle;
 
-class FBReaderNode : public ZLTreeTitledNode {
+class FBReaderNode : public ZLBlockTreeNode {
 
 protected:
 	static shared_ptr<ZLImage> defaultCoverImage(const std::string &id);
@@ -37,56 +37,56 @@ protected:
 private:
 	static std::map<std::string,shared_ptr<ZLImage> > ourDefaultCovers;
 
-//private:
-//	class ExpandTreeAction;
+private:
+	class ExpandTreeAction;
 
 public:
 	static const ZLTypeId TYPE_ID;
 
-//protected:
-//	FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition = (size_t)-1);
-//	virtual void init();
-//	virtual const ZLResource &resource() const = 0;
-//	virtual bool highlighted() const;
+protected:
+	FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition = (size_t)-1);
+	virtual void init();
+	virtual const ZLResource &resource() const = 0;
+	virtual bool highlighted() const;
 
-//public:
-//	~FBReaderNode();
+public:
+	~FBReaderNode();
 
-//	void drawCoverReal(ZLPaintContext &context, int vOffset);
+	void drawCoverReal(ZLPaintContext &context, int vOffset);
 
-//protected:
-//	virtual void drawCover(ZLPaintContext &context, int vOffset);
-//	void drawTitle(ZLPaintContext &context, int vOffset);
-//	void drawSummary(ZLPaintContext &context, int vOffset);
-//	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
+protected:
+	virtual void drawCover(ZLPaintContext &context, int vOffset);
+	void drawTitle(ZLPaintContext &context, int vOffset);
+	void drawSummary(ZLPaintContext &context, int vOffset);
+	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
 
-//private:
-//	int unitSize(ZLPaintContext &context, const FBTextStyle &style) const;
+private:
+	int unitSize(ZLPaintContext &context, const FBTextStyle &style) const;
 
-//protected:
-//	void paint(ZLPaintContext &context, int vOffset);
-//	void registerAction(shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
-//	void registerExpandTreeAction();
-//	virtual shared_ptr<ZLImage> extractCoverImage() const = 0;
+protected:
+	void paint(ZLPaintContext &context, int vOffset);
+	void registerAction(shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
+	void registerExpandTreeAction();
+	virtual shared_ptr<ZLImage> extractCoverImage() const = 0;
 
 private:
 	const ZLTypeId &typeId() const;
 
-//public:
-//	shared_ptr<ZLImage> coverImage() const;
-//	virtual std::string title() const = 0;
-//	virtual std::string summary() const;
+public:
+	shared_ptr<ZLImage> image() const;
+	virtual std::string title() const = 0;
+	virtual std::string subtitle() const;
 
-//	void expandOrCollapseSubtree();
+	void expandOrCollapseSubtree();
 
-//protected:
-//	int height(ZLPaintContext &context) const;
+protected:
+	int height(ZLPaintContext &context) const;
 
-//private:
-//	mutable bool myCoverImageIsStored;
-//	mutable shared_ptr<ZLImage> myStoredCoverImage;
-//	std::vector<std::pair<shared_ptr<ZLRunnableWithKey>,bool> > myActions;
-//	bool myIsInitialized;
+private:
+	mutable bool myCoverImageIsStored;
+	mutable shared_ptr<ZLImage> myStoredCoverImage;
+	std::vector<std::pair<shared_ptr<ZLRunnableWithKey>,bool> > myActions;
+	bool myIsInitialized;
 };
 
 #endif /* __FBREADERNODE_H__ */

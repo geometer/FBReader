@@ -52,7 +52,7 @@ std::string SeriesNode::title() const {
 shared_ptr<ZLImage> SeriesNode::extractCoverImage() const {
 	const std::vector<ZLBlockTreeNode*> &books = children();
 	for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
-		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->coverImage();
+		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->image();
 		if (!bookCover.isNull()) {
 			return bookCover;
 		}

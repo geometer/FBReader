@@ -21,6 +21,7 @@
 #define __ZLTREETITLEDNODE_H__
 
 #include "ZLTreeNode.h"
+#include <ZLImage.h>
 
 class ZLTreeTitledNode : public ZLTreeNode {
 
@@ -29,7 +30,7 @@ public:
 	const ZLTypeId &typeId() const;
 
 public:
-	ZLTreeTitledNode(ZLTreeNode *parent, size_t atPosition = -1);
+	ZLTreeTitledNode();
 	virtual ~ZLTreeTitledNode();
 	
 	// Usually node looks like
@@ -41,11 +42,11 @@ public:
 	// Name of book
 	virtual std::string title() const = 0;
 	// Short description
-	virtual std::string subtitle() const = 0;
+	virtual std::string subtitle() const;
 	// Url to image
 	virtual std::string imageUrl() const;
 	// Or the image if there is no url
-	virtual shared_ptr<ZLImage> image() const  = 0;
+	virtual shared_ptr<ZLImage> image() const;
 };
 
 #endif /* __ZLTREETITLEDNODE_H__ */

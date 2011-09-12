@@ -22,6 +22,8 @@
 
 #include "../blockTree/FBReaderNode.h"
 
+#include <ZLTreeNode.h>
+
 #include "../network/NetworkItems.h"
 
 class NetworkBookCollection;
@@ -37,7 +39,7 @@ protected:
 	NetworkContainerNode(NetworkContainerNode *parent, size_t atPosition = (size_t)-1);
 
 private:
-	void drawCover(ZLPaintContext &context, int vOffset);
+//	void drawCover(ZLPaintContext &context, int vOffset);
 	const ZLTypeId &typeId() const;
 };
 
@@ -223,7 +225,7 @@ private:
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
-	std::string summary() const;
+	std::string subtitle() const;
 	void drawCover(ZLPaintContext &context, int vOffset);
 
 private:

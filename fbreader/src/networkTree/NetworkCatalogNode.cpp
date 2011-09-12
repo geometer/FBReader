@@ -116,7 +116,7 @@ shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
 }
 
 shared_ptr<ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
-	return ((FBReaderNode*)parent())->coverImage();
+	return ((FBReaderNode*)parent())->image();
 }
 
 void NetworkCatalogNode::updateChildren() {

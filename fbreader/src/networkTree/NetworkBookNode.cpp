@@ -62,7 +62,7 @@ std::string NetworkBookNode::title() const {
 	return myBook->Title;
 }
 
-std::string NetworkBookNode::summary() const {
+std::string NetworkBookNode::subtitle() const {
 	int count = 0;
 	std::string authorsString;
 	const std::vector<NetworkBookItem::AuthorData> authors = book().Authors;

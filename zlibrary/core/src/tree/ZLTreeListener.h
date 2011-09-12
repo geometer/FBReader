@@ -39,12 +39,16 @@ public:
 		const ZLTypeId &typeId() const;
 		
 		ZLTreeListener &myListener;
+		
+		friend class ZLTreeNode;
 	};
 	
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	ZLTreeListener(ZLPaintContext &context);
+	ZLTreeListener();
+	virtual ~ZLTreeListener();
+	
 	const ZLTypeId &typeId() const;
 
 	RootNode &rootNode();

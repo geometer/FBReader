@@ -131,7 +131,7 @@ private:
 	const ZLTypeId &typeId() const;
 //	shared_ptr<ZLImage> extractCoverImage() const;
 //	std::string title() const;
-//	std::string summary() const;
+	std::string subtitle() const;
 
 private:
 	const shared_ptr<Book> myBook;

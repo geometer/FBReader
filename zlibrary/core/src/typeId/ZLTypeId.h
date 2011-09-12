@@ -53,14 +53,14 @@ protected:
 
 template <typename T>
 T zlobject_cast(ZLObjectWithRTTI *object) {
-	if (!object || !object->isInstanceOf(T))
+	if (!object || !object->isInstanceOf(reinterpret_cast<T>(0)->TYPE_ID))
 		return 0;
 	return static_cast<T>(object);
 }
 
 template <typename T>
 T zlobject_cast(const ZLObjectWithRTTI *object) {
-	if (!object || !object->isInstanceOf(T))
+	if (!object || !object->isInstanceOf(reinterpret_cast<T>(0)->TYPE_ID))
 		return 0;
 	return static_cast<T>(object);
 }

@@ -66,8 +66,8 @@ public:
 	// Children should be requested from network only if we need them
 	virtual void requestChildren();
 	
-	void insert(ZLTreeNode *node, int index);
-	void remove(int index);
+	void insert(ZLTreeNode *node, size_t index);
+	void remove(size_t index);
 	void updated();
 
 protected:

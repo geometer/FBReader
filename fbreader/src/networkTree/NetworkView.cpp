@@ -134,7 +134,7 @@ void NetworkView::paint() {
 	shared_ptr<CoverUpdater> updater = CoverUpdater::create();
 	if (!updater.isNull()) {
 		for (std::map<FBReaderNode*,int>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
-			shared_ptr<ZLImage> coverImage = it->first->coverImage();
+			shared_ptr<ZLImage> coverImage = it->first->image();
 			if (!coverImage.isNull()) {
 				updater->addTask(coverImage->synchronizationData());
 			}
