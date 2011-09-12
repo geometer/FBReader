@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2009-2011 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 #ifndef __ZLTREETITLEDNODE_H__
 #define __ZLTREETITLEDNODE_H__
 
@@ -10,8 +29,9 @@ public:
 	const ZLTypeId &typeId() const;
 
 public:
-	// TODO: new API, there are listed methods of ZLTreeTitledNode
-	// ** begin
+	ZLTreeTitledNode(ZLTreeNode *parent, size_t atPosition = -1);
+	virtual ~ZLTreeTitledNode();
+	
 	// Usually node looks like
 	// +-------+---------------+
 	// |       |  TITLE        |
@@ -19,16 +39,13 @@ public:
 	// |       |  subtitle     |
 	// +-------+---------------+
 	// Name of book
-	virtual std::string title() const { return std::string(); }
+	virtual std::string title() const = 0;
 	// Short description
-	virtual std::string subtitle() const { return std::string(); }
+	virtual std::string subtitle() const = 0;
 	// Url to image
-	virtual std::string imageUrl() const { return std::string(); }
+	virtual std::string imageUrl() const;
 	// Or the image if there is no url
-	virtual shared_ptr<ZLImage> image() const { return shared_ptr<ZLImage>(); }
-	// Children should be requested from network only if we need them
-	virtual void requestChildren() {}
-	virtual List &children() const {}
+	virtual shared_ptr<ZLImage> image() const  = 0;
 };
 
 #endif /* __ZLTREETITLEDNODE_H__ */
