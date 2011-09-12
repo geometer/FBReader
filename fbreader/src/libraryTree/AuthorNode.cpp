@@ -23,6 +23,7 @@
 
 #include "LibraryNodes.h"
 
+#include "../library/Library.h"
 #include "../library/Author.h"
 #include "../libraryActions/LibraryAuthorActions.h"
 
@@ -59,6 +60,10 @@ const ZLTypeId &AuthorNode::typeId() const {
 //	return defaultCoverImage("booktree-author.png");
 //}
 
+AuthorNode::AuthorNode(ZLTreeNode *parent, shared_ptr<Author> author): myAuthor(author) {
+	//TODO parent should be sended to ZLTreeNode
+}
+
 
 std::string AuthorNode::title() const {
 	return myAuthor->name();
@@ -76,8 +81,13 @@ shared_ptr<ZLImage> AuthorNode::image() const {
 }
 
 void AuthorNode::requestChildren() {
+	const BookList &books = Library::Instance().books(myAuthor);
+	//TODO add code for series retrieving here
+	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
+		myChildren.push_back( new BookNode(this, *it) );
+	}
 }
 
 ZLTreeNode::List &AuthorNode::children() const {
-
+	//TODO remove it
 }
