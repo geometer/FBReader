@@ -28,33 +28,56 @@
 
 const ZLTypeId AuthorNode::TYPE_ID(FBReaderNode::TYPE_ID);
 
-const ZLResource &AuthorNode::resource() const {
-	return ZLResource::resource("libraryView")["authorNode"];
-}
+//const ZLResource &AuthorNode::resource() const {
+//	return ZLResource::resource("libraryView")["authorNode"];
+//}
 
 const ZLTypeId &AuthorNode::typeId() const {
 	return TYPE_ID;
 }
 
-AuthorNode::AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author) : FBReaderNode(parent, atPosition), myAuthor(author) {
-}
+//AuthorNode::AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author) : FBReaderNode(parent, atPosition), myAuthor(author) {
+//}
 
-void AuthorNode::init() {
-	registerExpandTreeAction();
-	if (!myAuthor.isNull()) {
-		registerAction(new AuthorEditInfoAction(myAuthor));
-	}
-}
+//void AuthorNode::init() {
+//	registerExpandTreeAction();
+//	if (!myAuthor.isNull()) {
+//		registerAction(new AuthorEditInfoAction(myAuthor));
+//	}
+//}
 
-shared_ptr<Author> AuthorNode::author() const {
-	return myAuthor;
-}
+//shared_ptr<Author> AuthorNode::author() const {
+//	return myAuthor;
+//}
+
+//std::string AuthorNode::title() const {
+//	return myAuthor.isNull() ?
+//		resource()["unknownAuthor"].value() : myAuthor->name();
+//}
+
+//shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
+//	return defaultCoverImage("booktree-author.png");
+//}
+
 
 std::string AuthorNode::title() const {
-	return myAuthor.isNull() ?
-		resource()["unknownAuthor"].value() : myAuthor->name();
+	return myAuthor->name();
+}
+std::string AuthorNode::subtitle() const {
+	return std::string();
 }
 
-shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
+std::string AuthorNode::imageUrl() const {
+	return std::string();
+}
+
+shared_ptr<ZLImage> AuthorNode::image() const {
 	return defaultCoverImage("booktree-author.png");
+}
+
+void AuthorNode::requestChildren() {
+}
+
+ZLTreeNode::List &AuthorNode::children() const {
+
 }

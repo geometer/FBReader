@@ -22,6 +22,9 @@
 
 #include "../blockTree/FBReaderNode.h"
 
+#include <FBTreeNode.h>
+#include "../library/Author.h"
+
 class ZLImage;
 
 class Author;
@@ -33,21 +36,36 @@ class AuthorNode : public FBReaderNode {
 public:
 	static const ZLTypeId TYPE_ID;
 
-public:
-	AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author);
-	void init();
+//public:
+//	AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author);
+//	void init();
 
-	shared_ptr<Author> author() const;
+//	shared_ptr<Author> author() const;
 
 private:
-	const ZLResource &resource() const;
+//	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+//	shared_ptr<ZLImage> extractCoverImage() const;
+//	std::string title() const;
+
+//private:
+//	shared_ptr<Author> myAuthor;
+
+public:
+	AuthorNode();
+
+public:
 	std::string title() const;
+	std::string subtitle() const;
+	std::string imageUrl() const;
+	shared_ptr<ZLImage> image() const;
+	void requestChildren();
+	ZLTreeNode::List &children() const;
 
 private:
 	shared_ptr<Author> myAuthor;
 };
+
 
 class SeriesNode : public FBReaderNode {
 
