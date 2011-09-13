@@ -13,8 +13,7 @@ protected:
 public:
 	virtual ~ZLTreeDialog();
 
-	// TODO: change return type to int (or std::string?)
-	virtual bool run() = 0;
+	virtual void run() = 0;
 
 protected:
 };
