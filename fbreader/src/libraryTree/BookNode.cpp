@@ -43,8 +43,42 @@ BookNode::BookNode(ZLTreeNode *parent, shared_ptr<Book> book): myBook(book) {
 std::string BookNode::title() const {
 	return myBook->title();
 }
+
 std::string BookNode::subtitle() const {
-	return myBook->seriesTitle();
+	FBReaderNode *parent = (FBReaderNode*)this->parent();
+	while (!parent->isInstanceOf(AuthorNode::TYPE_ID) &&
+				 !parent->isInstanceOf(TagNode::TYPE_ID)) {
+		parent = (FBReaderNode*)parent->parent();
+	}
+	if (parent->isInstanceOf(AuthorNode::TYPE_ID)) {
+		const TagList &tags = myBook->tags();
+		if (tags.empty()) {
+			return std::string();
+		} else {
+			std::string tagsText;
+			for (TagList::const_iterator it = tags.begin(); it != tags.end(); ++it) {
+				if (!tagsText.empty()) {
+					tagsText += ", ";
+				}
+				tagsText += (*it)->name();
+			}
+			return tagsText;
+		}
+	} else {
+		const AuthorList &authors = myBook->authors();
+		if (authors.empty()) {
+			return ZLResource::resource("libraryView")["authorNode"]["unknownAuthor"].value();
+		} else {
+			std::string authorsText;
+			for (AuthorList::const_iterator it = authors.begin(); it != authors.end(); ++it) {
+				if (!authorsText.empty()) {
+					authorsText += ", ";
+				}
+				authorsText += (*it)->name();
+			}
+			return authorsText;
+		}
+	}
 }
 
 std::string BookNode::imageUrl() const {

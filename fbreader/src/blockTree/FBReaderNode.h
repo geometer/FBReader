@@ -72,10 +72,10 @@ public:
 private:
 	const ZLTypeId &typeId() const;
 
-//public:
-//	shared_ptr<ZLImage> coverImage() const;
-//	virtual std::string title() const = 0;
-//	virtual std::string summary() const;
+public:
+	shared_ptr<ZLImage> image() const;
+	virtual std::string title() const = 0;
+	virtual std::string subtitle() const;
 
 //	void expandOrCollapseSubtree();
 

@@ -48,7 +48,7 @@ std::string NetworkSeriesNode::title() const {
 std::string NetworkSeriesNode::summary() const {
 	if (mySummary.empty()) {
 		if (mySummaryType == BOOKS) {
-			mySummary = FBReaderNode::summary();
+			mySummary = FBReaderNode::subtitle();
 		} else {
 			std::set<NetworkBookItem::AuthorData> authorSet;
 			const std::vector<ZLBlockTreeNode*> &books = children();
@@ -74,7 +74,7 @@ std::string NetworkSeriesNode::summary() const {
 shared_ptr<ZLImage> NetworkSeriesNode::extractCoverImage() const {
 	const std::vector<ZLBlockTreeNode*> &books = children();
 	for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
-		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->coverImage();
+		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->image();
 		if (!bookCover.isNull()) {
 			return bookCover;
 		}

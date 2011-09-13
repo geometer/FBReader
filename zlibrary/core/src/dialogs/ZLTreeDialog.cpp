@@ -2,3 +2,6 @@
 
 ZLTreeDialog::ZLTreeDialog() {
 }
+
+ZLTreeDialog::~ZLTreeDialog() {
+}

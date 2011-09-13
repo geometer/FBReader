@@ -17,29 +17,34 @@
  * 02110-1301, USA.
  */
 
-#include "ZLTreeTitledNode.h"
+#include "ZLTreeListener.h"
 
-const ZLTypeId ZLTreeTitledNode::TYPE_ID(ZLTreeNode::TYPE_ID);
+const ZLTypeId ZLTreeListener::RootNode::TYPE_ID(ZLTreeNode::TYPE_ID);
 
-const ZLTypeId &ZLTreeTitledNode::typeId() const {
+ZLTreeListener::RootNode::RootNode(ZLTreeListener &listener)
+    : myListener(listener) {
+}
+
+const ZLTypeId &ZLTreeListener::RootNode::typeId() const {
 	return TYPE_ID;
 }
 
-ZLTreeTitledNode::ZLTreeTitledNode() {
+const ZLTypeId ZLTreeListener::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
+
+ZLTreeListener::ZLTreeListener() : myRootNode(*this) {
 }
 
-ZLTreeTitledNode::~ZLTreeTitledNode() {
+ZLTreeListener::~ZLTreeListener() {
 }
 
-std::string ZLTreeTitledNode::subtitle() const {
-	return std::string();
+const ZLTypeId &ZLTreeListener::typeId() const {
+	return TYPE_ID;
 }
 
-std::string ZLTreeTitledNode::imageUrl() const {
-	return std::string();
+ZLTreeListener::RootNode &ZLTreeListener::rootNode() {
+	return myRootNode;
 }
 
-shared_ptr<ZLImage> ZLTreeTitledNode::image() const {
-	return shared_ptr<ZLImage>();
+void ZLTreeListener::clear() {
+	myRootNode.clear();
 }
-

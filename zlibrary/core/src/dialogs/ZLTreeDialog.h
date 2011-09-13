@@ -1,11 +1,11 @@
 #ifndef __ZLTREEDIALOG_H__
 #define __ZLTREEDIALOG_H__
 
-#include <ZLDialogContent.h>
+#include <ZLTreeListener.h>
 
 // This object should be pure successor of ZLTreeListener
 // or be merged with it.
-class ZLTreeDialog {
+class ZLTreeDialog : public ZLTreeListener {
 
 protected:
 	ZLTreeDialog();
