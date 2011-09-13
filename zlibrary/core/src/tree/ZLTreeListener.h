@@ -57,11 +57,13 @@ protected:
 public:
 
 	// Parent has new child at index
-	virtual void onChildAdded(ZLTreeNode *parent, int index) = 0;
+	virtual void onNodeBeginInsert(ZLTreeNode *parent, size_t index) = 0;
+	virtual void onNodeEndInsert() = 0;
 	// This is also easy to understand
-	virtual void onChildRemoved(ZLTreeNode *parent, int index) = 0;
+	virtual void onNodeBeginRemove(ZLTreeNode *parent, size_t index) = 0;
+	virtual void onNodeEndRemove() = 0;
 	// This method should be called at every node state change except of adding/removing of children
-	virtual void onChildUpdated(ZLTreeNode *node) = 0;
+	virtual void onNodeUpdated(ZLTreeNode *node) = 0;
 
 private:
 	RootNode myRootNode;
