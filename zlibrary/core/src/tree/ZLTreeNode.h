@@ -63,10 +63,15 @@ public:
 	ZLTreeNode *previous() const;
 	ZLTreeNode *next() const;
 	const List &children() const;
+	size_t childIndex() const;
 	// Children should be requested from network only if we need them
 	virtual void requestChildren();
 	
+	void registerAction(shared_ptr<ZLRunnableWithKey> action);
+	const std::vector<shared_ptr<ZLRunnableWithKey> > &actions() const;
+	
 	void insert(ZLTreeNode *node, size_t index);
+	void append(ZLTreeNode *node);
 	void remove(size_t index);
 	void updated();
 
@@ -81,7 +86,7 @@ private:
 
 	List myChildren;
 	// Looks like we should also handle actions for menu on "Tap and hold"
-//	std::vector<shared_ptr<ZLRunnableWithKey>> myActions;
+	std::vector<shared_ptr<ZLRunnableWithKey> > myActions;
 
 private:
 	ZLTreeNode(const ZLTreeNode&);

@@ -40,10 +40,12 @@ void ZLTreeNode::clear() {
 	List::iterator it;
 	for (int i = myChildren.size() - 1; i >= 0; --i) {
 		it = myChildren.begin() + i;
+		if (handler)
+			handler->onNodeBeginRemove(this, i);
 		delete *it;
 		myChildren.erase(it);
 		if (handler)
-			handler->onChildRemoved(this, i);
+			handler->onNodeEndRemove();
 	}
 }
 
@@ -69,13 +71,13 @@ ZLTreeNode *ZLTreeNode::parent() const {
 }
 
 ZLTreeNode *ZLTreeNode::previous() const {
-	if (myChildIndex == 0)
+	if (!myParent || myChildIndex == 0)
 		return 0;
 	return myParent->children().at(myChildIndex - 1);
 }
 
 ZLTreeNode *ZLTreeNode::next() const {
-	if (myChildIndex + 1 >= myParent->children().size())
+	if (!myParent || myChildIndex + 1 >= myParent->children().size())
 		return 0;
 	return myParent->children().at(myChildIndex + 1);
 }
@@ -84,32 +86,57 @@ const ZLTreeNode::List &ZLTreeNode::children() const {
 	return myChildren;
 }
 
+size_t ZLTreeNode::childIndex() const {
+	return myChildIndex;
+}
+
 void ZLTreeNode::requestChildren() {
+}
+
+void ZLTreeNode::registerAction(shared_ptr<ZLRunnableWithKey> action) {
+	if (!action.isNull()) {
+		myActions.push_back(action);
+	}
+}
+
+const std::vector<shared_ptr<ZLRunnableWithKey> > &ZLTreeNode::actions() const {
+	return myActions;
 }
 
 void ZLTreeNode::insert(ZLTreeNode *node, size_t index) {
 	index = std::min(index, myChildren.size());
 	node->myChildIndex = index;
+	node->myParent = this;
+	ZLTreeListener * const handler = listener();
+	if (handler)
+		handler->onNodeBeginInsert(this, index);
 	List::iterator it = myChildren.insert(myChildren.begin() + index, node);
 	for (; it != myChildren.end(); ++it) {
 		++(*it)->myChildIndex;
 	}
-	if (ZLTreeListener *handler = listener())
-		handler->onChildAdded(this, index);
+	if (handler)
+		handler->onNodeEndInsert();
+}
+
+void ZLTreeNode::append(ZLTreeNode *node) {
+	insert(node, myChildren.size());
 }
 
 void ZLTreeNode::remove(size_t index) {
 	if (index >= myChildren.size())
 		return;
+	ZLTreeListener * const handler = listener();
+	if (handler)
+		handler->onNodeBeginRemove(this, index);
 	List::iterator it = myChildren.erase(myChildren.begin() + index);
 	for (; it != myChildren.end(); ++it) {
 		--(*it)->myChildIndex;
 	}
-	if (ZLTreeListener *handler = listener())
-		handler->onChildRemoved(this, index);
+	if (handler)
+		handler->onNodeEndRemove();
 }
 
 void ZLTreeNode::updated() {
 	if (ZLTreeListener *handler = listener())
-		handler->onChildUpdated(this);
+		handler->onNodeUpdated(this);
 }
