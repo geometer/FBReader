@@ -27,18 +27,18 @@
 #include "../options/FBOptions.h"
 #include "../options/FBTextStyle.h"
 
-const ZLTypeId FBReaderNode::TYPE_ID(ZLTreeTitledNode::TYPE_ID);
+const ZLTypeId FBReaderNode::TYPE_ID(ZLBlockTreeNode::TYPE_ID);
 
-//class FBReaderNode::ExpandTreeAction : public ZLRunnableWithKey {
+class FBReaderNode::ExpandTreeAction : public ZLRunnableWithKey {
 
-//public:
-//	ExpandTreeAction(FBReaderNode &node);
-//	void run();
-//	ZLResourceKey key() const;
+public:
+	ExpandTreeAction(FBReaderNode &node);
+	void run();
+	ZLResourceKey key() const;
 
-//private:
-//	FBReaderNode &myNode;
-//};
+private:
+	FBReaderNode &myNode;
+};
 
 std::map<std::string,shared_ptr<ZLImage> > FBReaderNode::ourDefaultCovers;
 
@@ -152,9 +152,9 @@ void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOf
 
 	context.setColor(FBOptions::Instance().colorOption("internal").value());
 	context.setFont(
-		style.fontFamily(), 
-		auxiliary ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3), 
-		style.bold(), 
+		style.fontFamily(),
+		auxiliary ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3),
+		style.bold(),
 		style.italic()
 	);
 

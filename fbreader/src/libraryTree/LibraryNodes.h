@@ -20,7 +20,7 @@
 #ifndef __LIBRARYNODES_H__
 #define __LIBRARYNODES_H__
 
-#include "../blockTree/FBReaderNode.h"
+#include "../tree/FBNode.h"
 
 #include "../library/Author.h"
 
@@ -30,7 +30,7 @@ class Author;
 class Book;
 class Tag;
 
-class AuthorNode : public FBReaderNode {
+class AuthorNode : public FBNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -40,34 +40,35 @@ public:
 //	void init();
 
 private:
-//	const ZLResource &resource() const;
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 //	shared_ptr<ZLImage> extractCoverImage() const;
 
 public:
-	AuthorNode(ZLTreeNode *parent, shared_ptr<Author> author);
+	AuthorNode(shared_ptr<Author> author);
 
 public:
 	std::string title() const;
 	std::string subtitle() const;
 	std::string imageUrl() const;
-	shared_ptr<ZLImage> image() const;
 	void requestChildren();
-	ZLTreeNode::List &children() const;
+
+protected:
+	shared_ptr<ZLImage> extractCoverImage() const;
 
 private:
 	shared_ptr<Author> myAuthor;
 };
 
 
-class SeriesNode : public FBReaderNode {
+class SeriesNode : public FBNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
 
 public:
 	SeriesNode(AuthorNode *parent);
-	void init();
+	//void init();
 
 	shared_ptr<Book> book() const;
 
@@ -78,38 +79,41 @@ private:
 	std::string title() const;
 };
 
-class TagNode : public FBReaderNode {
+class TagNode : public FBNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
 
-private:
-	static size_t positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag);
+//private:
+//	static size_t positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag);
 
 public:
-	TagNode(ZLBlockTreeView::RootNode *parent, shared_ptr<Tag> tag);
-	TagNode(TagNode *parent, shared_ptr<Tag> tag);
-	void init();
+	TagNode(shared_ptr<Tag> tag);
+	//TagNode(ZLBlockTreeView::RootNode *parent, shared_ptr<Tag> tag);
+	//TagNode(TagNode *parent, shared_ptr<Tag> tag);
+	//void init();
 
-	shared_ptr<Tag> tag() const;
+	//shared_ptr<Tag> tag() const;
 
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	void requestChildren();
 	std::string title() const;
+	std::string subtitle() const;
 
 private:
 	const shared_ptr<Tag> myTag;
 };
 
-class BookNode : public FBReaderNode {
+class BookNode : public FBNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	BookNode(ZLTreeNode *parent, shared_ptr<Book> book);
+	BookNode(shared_ptr<Book> book);
 	//BookNode(SeriesNode *parent, shared_ptr<Book> book);
 	//BookNode(TagNode *parent, size_t atPosition, shared_ptr<Book> book);
 
@@ -119,19 +123,15 @@ public:
 	std::string title() const;
 	std::string subtitle() const;
 	std::string imageUrl() const;
-	shared_ptr<ZLImage> image() const;
 	void requestChildren();
-	ZLTreeNode::List &children() const;
 	void activate();
 
+protected:
+	virtual shared_ptr<ZLImage> extractCoverImage() const;
+
 private:
-//	void init();
-//	bool highlighted() const;
-//	const ZLResource &resource() const;
+	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
-	std::string title() const;
-	std::string subtitle() const;
 
 private:
 	const shared_ptr<Book> myBook;

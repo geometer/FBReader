@@ -17,19 +17,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FBREADERNODE_H__
-#define __FBREADERNODE_H__
+#ifndef __FBNODE_H__
+#define __FBNODE_H__
 
 #include <map>
 #include <vector>
 
-#include <ZLBlockTreeView.h>
+#include <ZLTreeTitledNode.h>
 
 class ZLImage;
 class ZLResource;
-class FBTextStyle;
 
-class FBReaderNode : public ZLBlockTreeNode {
+class FBNode : public ZLTreeTitledNode {
 
 protected:
 	static shared_ptr<ZLImage> defaultCoverImage(const std::string &id);
@@ -37,37 +36,14 @@ protected:
 private:
 	static std::map<std::string,shared_ptr<ZLImage> > ourDefaultCovers;
 
-private:
-	class ExpandTreeAction;
-
 public:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition = (size_t)-1);
-	virtual void init();
 	virtual const ZLResource &resource() const = 0;
-	virtual bool highlighted() const;
-
-public:
-	~FBReaderNode();
-
-	void drawCoverReal(ZLPaintContext &context, int vOffset);
 
 protected:
-	virtual void drawCover(ZLPaintContext &context, int vOffset);
-	void drawTitle(ZLPaintContext &context, int vOffset);
-	void drawSummary(ZLPaintContext &context, int vOffset);
-	void drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOffset, shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
-
-private:
-	int unitSize(ZLPaintContext &context, const FBTextStyle &style) const;
-
-protected:
-	void paint(ZLPaintContext &context, int vOffset);
-	void registerAction(shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
-	void registerExpandTreeAction();
-	virtual shared_ptr<ZLImage> extractCoverImage() const = 0;
+	virtual shared_ptr<ZLImage> extractCoverImage() const;
 
 private:
 	const ZLTypeId &typeId() const;
@@ -75,18 +51,11 @@ private:
 public:
 	shared_ptr<ZLImage> image() const;
 	virtual std::string title() const = 0;
-	virtual std::string subtitle() const;
-
-	void expandOrCollapseSubtree();
-
-protected:
-	int height(ZLPaintContext &context) const;
+	virtual std::string subtitle() const = 0;
 
 private:
 	mutable bool myCoverImageIsStored;
 	mutable shared_ptr<ZLImage> myStoredCoverImage;
-	std::vector<std::pair<shared_ptr<ZLRunnableWithKey>,bool> > myActions;
-	bool myIsInitialized;
 };
 
-#endif /* __FBREADERNODE_H__ */
+#endif /* __FBNODE_H__ */

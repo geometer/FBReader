@@ -27,43 +27,18 @@
 #include "../library/Author.h"
 #include "../libraryActions/LibraryAuthorActions.h"
 
-const ZLTypeId AuthorNode::TYPE_ID(FBReaderNode::TYPE_ID);
-
-//const ZLResource &AuthorNode::resource() const {
-//	return ZLResource::resource("libraryView")["authorNode"];
-//}
+const ZLTypeId AuthorNode::TYPE_ID(FBNode::TYPE_ID);
 
 const ZLTypeId &AuthorNode::typeId() const {
 	return TYPE_ID;
 }
 
-//AuthorNode::AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author) : FBReaderNode(parent, atPosition), myAuthor(author) {
-//}
-
-//void AuthorNode::init() {
-//	registerExpandTreeAction();
-//	if (!myAuthor.isNull()) {
-//		registerAction(new AuthorEditInfoAction(myAuthor));
-//	}
-//}
-
-//shared_ptr<Author> AuthorNode::author() const {
-//	return myAuthor;
-//}
-
-//std::string AuthorNode::title() const {
-//	return myAuthor.isNull() ?
-//		resource()["unknownAuthor"].value() : myAuthor->name();
-//}
-
-//shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
-//	return defaultCoverImage("booktree-author.png");
-//}
-
-AuthorNode::AuthorNode(ZLTreeNode *parent, shared_ptr<Author> author): myAuthor(author) {
-	//TODO parent should be sended to ZLTreeNode
+const ZLResource &AuthorNode::resource() const {
+	return ZLResource::resource("libraryView")["authorNode"];
 }
 
+AuthorNode::AuthorNode(shared_ptr<Author> author): myAuthor(author) {
+}
 
 std::string AuthorNode::title() const {
 	return myAuthor->name();
@@ -76,18 +51,15 @@ std::string AuthorNode::imageUrl() const {
 	return std::string();
 }
 
-shared_ptr<ZLImage> AuthorNode::image() const {
+shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
 	return defaultCoverImage("booktree-author.png");
 }
 
 void AuthorNode::requestChildren() {
 	const BookList &books = Library::Instance().books(myAuthor);
 	//TODO add code for series retrieving here
+	size_t index = 0;
 	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
-		myChildren.push_back( new BookNode(this, *it) );
+		insert(new BookNode(*it),index++);
 	}
-}
-
-ZLTreeNode::List &AuthorNode::children() const {
-	//TODO remove it
 }
