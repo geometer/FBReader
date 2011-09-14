@@ -122,7 +122,7 @@ public:
 	void run();
 };
 
-class ShowLibraryAction : public ZLApplication::Action {
+class ShowLibraryTreeAction : public ZLApplication::Action {
 
 public:
 	void run();
