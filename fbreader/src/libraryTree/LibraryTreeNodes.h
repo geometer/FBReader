@@ -10,6 +10,9 @@
 class LibraryTreeNode : ZLTreeListener::RootNode {
 
 public:
+	static const ZLTypeId TYPE_ID;
+
+public:
 	const ZLTypeId &typeId() const;
 
 public:
@@ -17,7 +20,7 @@ public:
 
 };
 
-class AuthorTreeNode : FBNode {
+class AuthorTreeNode : public FBNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -31,7 +34,7 @@ public:
 	std::string subtitle() const;
 };
 
-class TagTreeNode : FBNode {
+class TagTreeNode : public FBNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -45,7 +48,7 @@ public:
 	std::string subtitle() const;
 };
 
-class RecentBooksTreeNode : FBNode {
+class RecentBooksTreeNode : public FBNode {
 
 public:
 	static const ZLTypeId TYPE_ID;

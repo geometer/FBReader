@@ -40,7 +40,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	virtual const ZLResource &resource() const = 0;
+	virtual const ZLResource &resource() const;
 
 protected:
 	virtual shared_ptr<ZLImage> extractCoverImage() const;
