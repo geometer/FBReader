@@ -1,5 +1,6 @@
 #include <ZLTreeTitledNode.h>
 #include <ZLTreeActionNode.h>
+#include <ZLApplication.h>
 
 #include "ZLQtTreeModel.h"
 
@@ -29,6 +30,7 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
 	if (ZLTreeActionNode *actionNode = zlobject_cast<ZLTreeActionNode*>(node)) {
 		bool result = actionNode->activate();
 		if (result == true) {
+			ZLApplication::Instance().refreshWindow();
 			return false;
 		}
 	} else {

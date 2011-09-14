@@ -6,7 +6,7 @@
 
 #include <QDirModel>
 
-ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
+ZLQtTreeDialog::ZLQtTreeDialog(QWidget* parent) : QDialog(parent) {
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	myView = new QListView;
 	myModel = new ZLQtTreeModel(rootNode(), this);
@@ -19,7 +19,8 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	connect(action, SIGNAL(triggered()), this, SLOT(back()));
 	addAction( action );
 
-	connect(myView, SIGNAL(activated(QModelIndex)), this, SLOT(enter(QModelIndex)));
+	connect(myView, SIGNAL(clicked(QModelIndex)), this, SLOT(enter(QModelIndex)));
+	myView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	layout->addWidget(myView);
 }
@@ -39,6 +40,8 @@ void ZLQtTreeDialog::enter(QModelIndex index) {
 void ZLQtTreeDialog::run() {
 	//TODO should return QDialog::Accepted ??
 	//return exec() == QDialog::Accepted;
+	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+	setWindowState(Qt::WindowFullScreen);
 	exec();
 }
 
