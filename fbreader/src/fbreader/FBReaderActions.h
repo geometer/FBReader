@@ -122,12 +122,17 @@ public:
 	void run();
 };
 
-class ShowMobileOptionsDialogAction : public ZLApplication::Action {
+class ShowLibraryAction : public ZLApplication::Action {
 
 public:
 	void run();
 };
 
+class ShowMobileOptionsDialogAction : public ZLApplication::Action {
+
+public:
+	void run();
+};
 
 class ShowLibraryOptionsDialogAction : public ZLApplication::Action {
 

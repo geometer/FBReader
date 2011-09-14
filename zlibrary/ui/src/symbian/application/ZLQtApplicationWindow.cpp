@@ -56,7 +56,6 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
         setWindowIcon(icon);
 
 		// FIXME: Find the way to get somewhere this action names
-		application->addAction("library", new ShowMenuLibraryAction());
 		application->addAction("preferences", new ShowPreferencesMenuItemAction());
 
 		myMenuDialog = new DrillDownMenuDialog(this);
