@@ -26,7 +26,9 @@ public:
 
 signals:
 
-public slots:
+public:
+	bool back();
+	bool enter(QModelIndex index);
 
 private:
 	ZLTreeListener::RootNode& myRootNode;

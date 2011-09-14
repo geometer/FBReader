@@ -2,6 +2,9 @@
 
 #include <ZLDialogManager.h>
 
+#include "../../../../../fbreader/src/libraryTree/LibraryTreeNodes.h"
+#include "../dialogs/ZLQtTreeDialog.h"
+
 #include "../../../../../fbreader/src/library/Library.h"
 #include "../../../../../fbreader/src/fbreader/FBReader.h"
 #include "../../../../../fbreader/src/formats/FormatPlugin.h"
@@ -11,21 +14,13 @@
 #include "LibraryActions.h"
 
 void ShowMenuLibraryAction::run() {
-	DrillDownMenuDialog dialog(qApp->activeWindow());
-	DrillDownMenu* rootMenu = new DrillDownMenu;
+	ZLQtTreeDialog dialog;
 
-	AuthorsMenuAction* showAuthors = new AuthorsMenuAction(&dialog);
-	TagsMenuAction* showTags = new TagsMenuAction(&dialog);
-	AddBookMenuAction* addBook = new AddBookMenuAction(&dialog);
-	//AddBookAction* addBook = new AddBookAction(FBReader::BOOK_TEXT_MODE | FBReader::LIBRARY_MODE | FBReader::CONTENTS_MODE);
+	size_t index = 0;
+	dialog.rootNode().insert(new AuthorTreeNode, index++);
+	dialog.rootNode().insert(new TagTreeNode, index++);
+	dialog.rootNode().insert(new RecentBooksTreeNode, index++);
 
-	const ZLResource &toolbarResource = ZLResource::resource("toolbar");
-	rootMenu->addItem( toolbarResource["byAuthor"]["label"].value(), showAuthors);
-	rootMenu->addItem( toolbarResource["byTag"]["label"].value(), showTags);
-	rootMenu->addItem( ZLResource::resource("menu")["showRecent"].value(), 0);
-	rootMenu->addItem( ZLResource::resource("menu")["addBook"].value(), addBook );
-
-	dialog.showDrillDownMenu(rootMenu);
 	dialog.run();
 }
 
