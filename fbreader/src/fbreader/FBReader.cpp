@@ -105,6 +105,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myFootnoteView = new FootnoteView(*context());
 	myContentsView = new ContentsView(*context());
 	myNetworkLibraryView = new NetworkView(*context());
+	//TODO remove these 2 views completely??
 //	myLibraryByAuthorView = new LibraryByAuthorView(*context());
 //	myLibraryByTagView = new LibraryByTagView(*context());
 	myRecentBooksPopupData = new RecentBooksPopupData();
@@ -114,7 +115,9 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	setMode(BOOK_TEXT_MODE);
 
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
-	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+	//TODO left just one item here (ShowLibraryAction or SetModeAction)
+	//addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+	addAction(ActionCode::SHOW_LIBRARY, new ShowLibraryAction);
 	addAction(ActionCode::SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(ColorProfile::NIGHT));
 	addAction(ActionCode::SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(ColorProfile::DAY));
 	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction());
@@ -392,6 +395,7 @@ bool FBReader::isViewFinal() const {
 
 void FBReader::showLibraryView() {
 	if (ZLStringOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", "booksOrder", "").value() == ActionCode::ORGANIZE_BOOKS_BY_TAG) {
+		//TODO remove ByTagView and ByAuthorView completely?
 //		setView(myLibraryByTagView);
 	} else {
 //		setView(myLibraryByAuthorView);
@@ -426,6 +430,7 @@ void FBReader::setMode(ViewMode mode) {
 		case LIBRARY_MODE:
 		{
 			shared_ptr<Book> currentBook = myModel->book();
+			//TODO remove ByTagView and ByAuthorView completely?
 //			((LibraryView&)*myLibraryByAuthorView).showBook(currentBook);
 //			((LibraryView&)*myLibraryByTagView).showBook(currentBook);
 //			showLibraryView();

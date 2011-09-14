@@ -31,8 +31,6 @@ public slots:
 private:
 	QListView* myView;
 	ZLQtTreeModel* myModel;
-
-friend class ShowMenuLibraryAction; // for using protected rootNode() method
 };
 
 #endif /* __ZLQTTREEDIALOG_H__ */

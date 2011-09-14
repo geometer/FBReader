@@ -13,6 +13,7 @@
 #include "ZLQtOpenFileDialog.h"
 #include "ZLQtDialogContent.h"
 #include "ZLQtProgressDialog.h"
+#include "ZLQtTreeDialog.h"
 #include "ZLQtUtil.h"
 
 #include "../image/ZLQtImageManager.h"
@@ -30,6 +31,11 @@ shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResou
 shared_ptr<ZLOpenFileDialog> ZLQtDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
 	return new ZLQtOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
 }
+
+shared_ptr<ZLTreeDialog> ZLQtDialogManager::createTreeDialog() const {
+	return new ZLQtTreeDialog;
+}
+
 
 void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
 	QWidget *parent = qApp->activeWindow();

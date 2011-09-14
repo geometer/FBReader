@@ -51,6 +51,8 @@
 #include "../library/Library.h"
 #include "../library/Book.h"
 
+#include "../libraryTree/LibraryTreeNodes.h"
+
 ModeDependentAction::ModeDependentAction(int visibleInModes) : myVisibleInModes(visibleInModes) {
 }
 
@@ -88,10 +90,21 @@ void ShowOptionsDialogAction::run() {
 	FBReader::Instance().doAction(actionId);
 }
 
+void ShowLibraryAction::run() {
+	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog();
+	size_t index = 0;
+	dialog->rootNode().insert(new AuthorTreeNode, index++);
+	dialog->rootNode().insert(new TagTreeNode, index++);
+	dialog->rootNode().insert(new RecentBooksTreeNode, index++);
+	dialog->run();
+}
+
 void ShowMobileOptionsDialogAction::run() {
 	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_MOBILE_OPTIONS_DIALOG);
 	MobileOptionsDialog().dialog().run();
 }
+
+
 
 void ShowLibraryOptionsDialogAction::run() {
 	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG);
