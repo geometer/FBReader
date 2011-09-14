@@ -90,7 +90,7 @@ void ShowOptionsDialogAction::run() {
 	FBReader::Instance().doAction(actionId);
 }
 
-void ShowLibraryAction::run() {
+void ShowLibraryTreeAction::run() {
 	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog();
 	size_t index = 0;
 	dialog->rootNode().insert(new AuthorTreeNode, index++);

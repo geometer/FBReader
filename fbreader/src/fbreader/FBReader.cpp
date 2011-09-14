@@ -117,7 +117,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
 	//TODO left just one item here (ShowLibraryAction or SetModeAction)
 	//addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
-	addAction(ActionCode::SHOW_LIBRARY, new ShowLibraryAction);
+	addAction(ActionCode::SHOW_LIBRARY, new ShowLibraryTreeAction);
 	addAction(ActionCode::SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(ColorProfile::NIGHT));
 	addAction(ActionCode::SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(ColorProfile::DAY));
 	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction());
