@@ -140,7 +140,6 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
         ZLQtDialogManager::createInstance();
 		ZLSymbianCommunicationManager::createInstance();
         ZLQtImageManager::createInstance();
-        ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 		ZLQtNetworkManager::createInstance();
 
 		ZLKeyUtil::setKeyNamesFileName("keynames.xml");
