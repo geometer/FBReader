@@ -1,19 +1,39 @@
 #include <QVBoxLayout>
-#include <QPushButton>
-
+#include <QAction>
+#include <QDebug>
+#include <ZLResource.h>
 #include "ZLQtTreeDialog.h"
 
+#include <QDirModel>
 
-ZLQtTreeDialog::ZLQtTreeDialog(QWidget* parent) : QDialog(parent) {
+ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	QVBoxLayout* layout = new QVBoxLayout(this);
-	QPushButton* button = new QPushButton("back");
-	myListView = new QListView;
+	myView = new QListView;
 	myModel = new ZLQtTreeModel(rootNode(), this);
 
-	myListView->setModel(myModel);
+	myView->setModel(myModel);
 
-	layout->addWidget(myListView);
-	layout->addWidget(button);
+	const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
+	QAction* action = new QAction(back.value().c_str(),this);
+	action->setSoftKeyRole( QAction::NegativeSoftKey );
+	connect(action, SIGNAL(triggered()), this, SLOT(back()));
+	addAction( action );
+
+	connect(myView, SIGNAL(activated(QModelIndex)), this, SLOT(enter(QModelIndex)));
+
+	layout->addWidget(myView);
+}
+
+void ZLQtTreeDialog::back() {
+	if (!myModel->back()) {
+		close();
+	}
+}
+
+void ZLQtTreeDialog::enter(QModelIndex index) {
+	if (!myModel->enter(index)) {
+		close();
+	}
 }
 
 void ZLQtTreeDialog::run() {
@@ -23,21 +43,31 @@ void ZLQtTreeDialog::run() {
 }
 
 void ZLQtTreeDialog::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
-	myModel->onNodeBeginInsert(parent,index);
+	qDebug() << "onNodeBeginInsert";
+	//myModel->onNodeBeginInsert(parent,index);
+	//myListView->update();
 }
 
 void ZLQtTreeDialog::onNodeEndInsert() {
-	myModel->onNodeEndInsert();
+	qDebug() << "onNodeEndInsert";
+	//myModel->onNodeEndInsert();
+	//myListView->update();
 }
 
 void ZLQtTreeDialog::onNodeBeginRemove(ZLTreeNode *parent, size_t index) {
-	myModel->onNodeBeginRemove(parent,index);
+	qDebug() << "onNodeBeginRemove";
+	//myModel->onNodeBeginRemove(parent,index);
+	//myListView->update();
 }
 
 void ZLQtTreeDialog::onNodeEndRemove() {
-	myModel->onNodeEndRemove();
+	qDebug() << "onNodeEndRemove";
+	//myModel->onNodeEndRemove();
+	//myListView->update();
 }
 
 void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode *node) {
-	myModel->onNodeUpdated(node);
+	qDebug() << "onNodeUpdated";
+	//myModel->onNodeUpdated(node);
+	//myListView->update();
 }

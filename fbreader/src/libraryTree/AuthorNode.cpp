@@ -38,10 +38,16 @@ const ZLResource &AuthorNode::resource() const {
 }
 
 AuthorNode::AuthorNode(shared_ptr<Author> author): myAuthor(author) {
+	const BookList &books = Library::Instance().books(myAuthor);
+	//TODO add code for series retrieving here
+	size_t index = 0;
+	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
+		insert(new BookNode(*it),index++);
+	}
 }
 
 std::string AuthorNode::title() const {
-	return myAuthor->name();
+	return myAuthor.isNull() ? resource()["unknownAuthor"].value() : myAuthor->name();
 }
 std::string AuthorNode::subtitle() const {
 	return std::string();
@@ -56,10 +62,5 @@ shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
 }
 
 void AuthorNode::requestChildren() {
-	const BookList &books = Library::Instance().books(myAuthor);
-	//TODO add code for series retrieving here
-	size_t index = 0;
-	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
-		insert(new BookNode(*it),index++);
-	}
+
 }

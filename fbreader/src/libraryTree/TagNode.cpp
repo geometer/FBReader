@@ -32,13 +32,7 @@ const ZLTypeId &TagNode::typeId() const {
 	return TYPE_ID;
 }
 
-TagNode::TagNode(shared_ptr<Tag> tag): myTag(tag) {}
-
-const ZLResource &TagNode::resource() const {
-	return ZLResource::resource("libraryView")["tagNode"];
-}
-
-void TagNode::requestChildren() {
+TagNode::TagNode(shared_ptr<Tag> tag): myTag(tag) {
 	//TODO add support for subtags here
 	const BookList &books = Library::Instance().books(myTag);
 	//TODO add code for series retrieving here
@@ -46,6 +40,14 @@ void TagNode::requestChildren() {
 	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
 		insert(new BookNode(*it),index++);
 	}
+}
+
+const ZLResource &TagNode::resource() const {
+	return ZLResource::resource("libraryView")["tagNode"];
+}
+
+void TagNode::requestChildren() {
+
 }
 
 //size_t TagNode::positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag) {

@@ -24,6 +24,8 @@
 
 #include "../library/Author.h"
 
+#include <ZLTreeActionNode.h>
+
 class ZLImage;
 
 class Author;
@@ -107,27 +109,24 @@ private:
 	const shared_ptr<Tag> myTag;
 };
 
-class BookNode : public FBNode {
+class BookNode : public ZLTreeActionNode  {
 
 public:
 	static const ZLTypeId TYPE_ID;
 
 public:
 	BookNode(shared_ptr<Book> book);
-	//BookNode(SeriesNode *parent, shared_ptr<Book> book);
-	//BookNode(TagNode *parent, size_t atPosition, shared_ptr<Book> book);
-
-	//shared_ptr<Book> book() const;
 
 public:
 	std::string title() const;
 	std::string subtitle() const;
+	shared_ptr<ZLImage> image() const;
 	std::string imageUrl() const;
 	void requestChildren();
-	void activate();
+	bool activate();
 
 protected:
-	virtual shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<ZLImage> extractCoverImage() const;
 
 private:
 	const ZLResource &resource() const;

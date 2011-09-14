@@ -7,19 +7,6 @@
 
 #include "../tree/FBNode.h"
 
-class LibraryTreeNode : ZLTreeListener::RootNode {
-
-public:
-	static const ZLTypeId TYPE_ID;
-
-public:
-	const ZLTypeId &typeId() const;
-
-public:
-	LibraryTreeNode(ZLTreeListener &listener);
-
-};
-
 class AuthorTreeNode : public FBNode {
 
 public:
