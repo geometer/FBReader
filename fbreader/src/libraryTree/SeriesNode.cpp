@@ -24,7 +24,7 @@
 
 #include "../library/Book.h"
 
-const ZLTypeId SeriesNode::TYPE_ID(FBReaderNode::TYPE_ID);
+const ZLTypeId SeriesNode::TYPE_ID(FBNode::TYPE_ID);
 
 const ZLResource &SeriesNode::resource() const {
 	return ZLResource::resource("libraryView")["seriesNode"];
@@ -37,9 +37,9 @@ const ZLTypeId &SeriesNode::typeId() const {
 SeriesNode::SeriesNode(AuthorNode *parent) : FBReaderNode(parent) {
 }
 
-void SeriesNode::init() {
-	registerExpandTreeAction();
-}
+//void SeriesNode::init() {
+//	registerExpandTreeAction();
+//}
 
 shared_ptr<Book> SeriesNode::book() const {
 	return ((BookNode&)*children().front()).book();

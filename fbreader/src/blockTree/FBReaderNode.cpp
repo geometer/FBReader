@@ -152,9 +152,9 @@ void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOf
 
 	context.setColor(FBOptions::Instance().colorOption("internal").value());
 	context.setFont(
-		style.fontFamily(), 
-		auxiliary ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3), 
-		style.bold(), 
+		style.fontFamily(),
+		auxiliary ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3),
+		style.bold(),
 		style.italic()
 	);
 
