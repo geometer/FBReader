@@ -70,12 +70,12 @@ public:
 	SeriesNode(AuthorNode *parent);
 	//void init();
 
-	shared_ptr<Book> book() const;
+	//shared_ptr<Book> book() const;
 
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	//shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
 };
 

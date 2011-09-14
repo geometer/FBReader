@@ -53,7 +53,7 @@ ifeq "$(UI_TYPE)" "qml"
 endif
 
 ifeq "$(UI_TYPE)" "qtmobile"
-  QTSUBDIRS = src/symbian/time src/symbian/dialogs src/symbian/view src/symbian/image src/symbian/util src/symbian/filesystem src/symbian/library src/symbian/message src/symbian/application src/symbian/menu src/symbian/actions src/symbian src/symbian/network
+  QTSUBDIRS = src/symbian/time src/symbian/dialogs src/symbian/view src/symbian/image src/symbian/util src/symbian/filesystem src/symbian/library src/symbian/message src/symbian/application src/symbian/menu src/symbian/actions src/symbian src/symbian/network src/symbian/tree
 endif
 
 ifeq "$(UI_TYPE)" "gtk"

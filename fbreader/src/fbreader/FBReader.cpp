@@ -105,8 +105,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myFootnoteView = new FootnoteView(*context());
 	myContentsView = new ContentsView(*context());
 	myNetworkLibraryView = new NetworkView(*context());
-	myLibraryByAuthorView = new LibraryByAuthorView(*context());
-	myLibraryByTagView = new LibraryByTagView(*context());
+//	myLibraryByAuthorView = new LibraryByAuthorView(*context());
+//	myLibraryByTagView = new LibraryByTagView(*context());
 	myRecentBooksPopupData = new RecentBooksPopupData();
 	myPreferencesPopupData = new PreferencesPopupData();
 	myMode = UNDEFINED_MODE;
@@ -392,9 +392,9 @@ bool FBReader::isViewFinal() const {
 
 void FBReader::showLibraryView() {
 	if (ZLStringOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", "booksOrder", "").value() == ActionCode::ORGANIZE_BOOKS_BY_TAG) {
-		setView(myLibraryByTagView);
+//		setView(myLibraryByTagView);
 	} else {
-		setView(myLibraryByAuthorView);
+//		setView(myLibraryByAuthorView);
 	}
 }
 
@@ -426,9 +426,9 @@ void FBReader::setMode(ViewMode mode) {
 		case LIBRARY_MODE:
 		{
 			shared_ptr<Book> currentBook = myModel->book();
-			((LibraryView&)*myLibraryByAuthorView).showBook(currentBook);
-			((LibraryView&)*myLibraryByTagView).showBook(currentBook);
-			showLibraryView();
+//			((LibraryView&)*myLibraryByAuthorView).showBook(currentBook);
+//			((LibraryView&)*myLibraryByTagView).showBook(currentBook);
+//			showLibraryView();
 			break;
 		}
 		case BOOKMARKS_MODE:

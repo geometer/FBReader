@@ -35,6 +35,10 @@ const ZLTypeId &FBNode::typeId() const {
 	return TYPE_ID;
 }
 
+const ZLResource &FBNode::resource() const {
+	return ZLResource::resource("libraryView");
+}
+
 shared_ptr<ZLImage> FBNode::image() const {
 	if (!myCoverImageIsStored) {
 		myCoverImageIsStored = true;
