@@ -55,7 +55,7 @@ Q_SIGNALS:
 	
 private:
 	QModelIndex createIndex(ZLTreeNode *node) const;
-	ZLTreeNode *treeNode(const QModelIndex &index);
+	ZLTreeNode *treeNode(const QModelIndex &index) const;
 };
 
 #endif // ZLQMLTREE_H

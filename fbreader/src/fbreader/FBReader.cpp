@@ -48,7 +48,6 @@
 #include "../libraryTree/LibraryView.h"
 #include "../network/NetworkLinkCollection.h"
 #include "../networkActions/NetworkOperationRunnable.h"
-#include "../networkTree/NetworkView.h"
 
 #include "../migration/migrate.h"
 
@@ -104,7 +103,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBookTextView = new BookTextView(*context());
 	myFootnoteView = new FootnoteView(*context());
 	myContentsView = new ContentsView(*context());
-	myNetworkLibraryView = new NetworkView(*context());
+	myNetworkLibraryView = new NetworkView();
 	//TODO remove these 2 views completely??
 //	myLibraryByAuthorView = new LibraryByAuthorView(*context());
 //	myLibraryByTagView = new LibraryByTagView(*context());
@@ -442,7 +441,8 @@ void FBReader::setMode(ViewMode mode) {
 		case BOOKMARKS_MODE:
 			break;
 		case NETWORK_LIBRARY_MODE:
-			setView(myNetworkLibraryView);
+			myNetworkLibraryView->showDialog();
+//			setView(myNetworkLibraryView);
 			break;
 		case UNDEFINED_MODE:
 		case ALL_MODES:
@@ -567,9 +567,9 @@ shared_ptr<Book> FBReader::currentBook() const {
 }
 
 void FBReader::invalidateNetworkView() {
-	((NetworkView &) *myNetworkLibraryView).invalidate();
+	myNetworkLibraryView->invalidate();
 }
 
 void FBReader::invalidateAccountDependents() {
-	((NetworkView &) *myNetworkLibraryView).invalidateAccountDependents();
+	myNetworkLibraryView->invalidateAccountDependents();
 }
