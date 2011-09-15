@@ -46,31 +46,31 @@ void ZLQtTreeDialog::run() {
 }
 
 void ZLQtTreeDialog::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
-	qDebug() << "onNodeBeginInsert";
+	//qDebug() << "onNodeBeginInsert";
 	//myModel->onNodeBeginInsert(parent,index);
 	//myListView->update();
 }
 
 void ZLQtTreeDialog::onNodeEndInsert() {
-	qDebug() << "onNodeEndInsert";
+	//qDebug() << "onNodeEndInsert";
 	//myModel->onNodeEndInsert();
 	//myListView->update();
 }
 
 void ZLQtTreeDialog::onNodeBeginRemove(ZLTreeNode *parent, size_t index) {
-	qDebug() << "onNodeBeginRemove";
+	//qDebug() << "onNodeBeginRemove";
 	//myModel->onNodeBeginRemove(parent,index);
 	//myListView->update();
 }
 
 void ZLQtTreeDialog::onNodeEndRemove() {
-	qDebug() << "onNodeEndRemove";
+	//qDebug() << "onNodeEndRemove";
 	//myModel->onNodeEndRemove();
 	//myListView->update();
 }
 
 void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode *node) {
-	qDebug() << "onNodeUpdated";
+	//qDebug() << "onNodeUpdated";
 	//myModel->onNodeUpdated(node);
 	//myListView->update();
 }

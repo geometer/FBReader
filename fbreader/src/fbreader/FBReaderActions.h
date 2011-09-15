@@ -171,6 +171,13 @@ public:
 	bool isVisible() const;
 };
 
+class ShowTOCTreeAction : public ZLApplication::Action {
+
+public:
+	void run();
+	bool isVisible() const;
+};
+
 class ShowNetworkLibraryAction : public SetModeAction {
 
 public:

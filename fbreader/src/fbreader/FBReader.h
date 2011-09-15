@@ -173,6 +173,11 @@ friend class OptionsDialog;
 friend class SystemOptionsDialog;
 friend class FBView;
 
+//TODO remove it?
+friend class ShowTOCTreeAction;
+//TODO remove it?
+friend class ReferenceNode;
+
 //friend class ShowCollectionAction;
 friend class ShowHelpAction;
 //friend class ShowOptionsDialogAction;
