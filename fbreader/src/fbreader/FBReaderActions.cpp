@@ -52,6 +52,7 @@
 #include "../library/Book.h"
 
 #include "../libraryTree/LibraryTreeNodes.h"
+#include "../bookmodel/TOCTreeNodes.h"
 
 ModeDependentAction::ModeDependentAction(int visibleInModes) : myVisibleInModes(visibleInModes) {
 }
@@ -137,6 +138,28 @@ ShowContentsAction::ShowContentsAction() : SetModeAction(FBReader::CONTENTS_MODE
 bool ShowContentsAction::isVisible() const {
 	return ModeDependentAction::isVisible() && !((ContentsView&)*FBReader::Instance().myContentsView).isEmpty();
 }
+
+void ShowTOCTreeAction::run() {
+	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog();
+	shared_ptr<ZLTextModel> contentsModel = FBReader::Instance().myModel->contentsModel();
+	const ZLTextTreeParagraph& rootParagraph = ((ContentsModel&)*contentsModel).getRootParagraph();
+	const std::vector<ZLTextTreeParagraph*>& children = rootParagraph.children();
+	for (size_t index=0; index<children.size(); ++index) {
+		const ZLTextTreeParagraph& paragraph = *children.at(index);
+		if (paragraph.children().size() == 0) {
+			dialog->rootNode().insert(new ReferenceNode(paragraph), index);
+		} else {
+			dialog->rootNode().insert(new ReferenceTreeNode(paragraph), index);
+		}
+	}
+	dialog->run();
+}
+
+bool ShowTOCTreeAction::isVisible() const {
+	shared_ptr<BookModel> model = FBReader::Instance().myModel;
+	return !(model.isNull() || model->contentsModel().isNull() || model->contentsModel()->paragraphsNumber() == 0);
+}
+
 
 ScrollToHomeAction::ScrollToHomeAction() : ModeDependentAction(FBReader::BOOK_TEXT_MODE) {
 }
