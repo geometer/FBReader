@@ -141,6 +141,10 @@ void ZLTextTreeModel::selectParagraph(size_t index) const {
 	}
 }
 
+const ZLTextTreeParagraph& ZLTextTreeModel::getRootParagraph() const {
+	return *myRoot;
+}
+
 ZLTextPlainModel::ZLTextPlainModel(const std::string &language, const size_t rowSize) : ZLTextModel(language, rowSize) {
 }
 
