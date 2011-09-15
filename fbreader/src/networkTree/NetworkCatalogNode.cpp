@@ -50,14 +50,11 @@ private:
 
 const ZLTypeId NetworkCatalogNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
-NetworkCatalogNode::NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) : 
-	NetworkContainerNode(parent, atPosition), 
-	myItem(item) {
+NetworkCatalogNode::NetworkCatalogNode(shared_ptr<NetworkItem> item) : myItem(item) {
+//	init();
 }
 
-NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) : 
-	NetworkContainerNode(parent, atPosition), 
-	myItem(item) {
+NetworkCatalogNode::~NetworkCatalogNode() {
 }
 
 void NetworkCatalogNode::init() {
@@ -70,6 +67,11 @@ void NetworkCatalogNode::init() {
 		registerAction(new OpenInBrowserAction(htmlUrl));
 	}
 	registerAction(new ReloadAction(*this));
+}
+
+void NetworkCatalogNode::requestChildren() {
+	if (children().empty())
+		updateChildren();
 }
 
 NetworkCatalogItem &NetworkCatalogNode::item() {
@@ -96,23 +98,24 @@ std::string NetworkCatalogNode::summary() const {
 	return ((const NetworkCatalogItem&)*myItem).Summary;
 }
 
-shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
-	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
+shared_ptr<ZLImage> NetworkCatalogNode::image() const {
+//	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
 
-	if (url.empty()) {
-		return lastResortCoverImage();
-	}
+//	if (url.empty()) {
+//		return lastResortCoverImage();
+//	}
 
-	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(url);
-	if (!image.isNull()) {
-		return image;
-	}
+//	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(url);
+//	if (!image.isNull()) {
+//		return image;
+//	}
 
-	if (url.find(':') == std::string::npos) {
-		return defaultCoverImage(url);
-	}
+//	if (url.find(':') == std::string::npos) {
+//		return defaultCoverImage(url);
+//	}
 
-	return lastResortCoverImage();
+//	return lastResortCoverImage();
+	return shared_ptr<ZLImage>();
 }
 
 shared_ptr<ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
@@ -120,9 +123,6 @@ shared_ptr<ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
 }
 
 void NetworkCatalogNode::updateChildren() {
-	if (isOpen()) {
-		open(false);
-	}
 	clear();
 
 	myChildrenItems.clear();
@@ -157,7 +157,7 @@ NetworkCatalogNode::ExpandCatalogAction::ExpandCatalogAction(NetworkCatalogNode 
 }
 
 ZLResourceKey NetworkCatalogNode::ExpandCatalogAction::key() const {
-	return ZLResourceKey(myNode.isOpen() ? "collapseTree" : "expandTree");
+	return ZLResourceKey("collapseTree");
 }
 
 void NetworkCatalogNode::ExpandCatalogAction::run() {
@@ -187,7 +187,7 @@ void NetworkCatalogNode::ExpandCatalogAction::run() {
 	if (myNode.myChildrenItems.empty()) {
 		myNode.updateChildren();
 	}
-	myNode.expandOrCollapseSubtree();
+//	myNode.expandOrCollapseSubtree();
 	FBReader::Instance().refreshWindow();
 }
 
@@ -210,7 +210,8 @@ ZLResourceKey NetworkCatalogNode::ReloadAction::key() const {
 }
 
 bool NetworkCatalogNode::ReloadAction::makesSense() const {
-	return myNode.isOpen();
+//	return myNode.isOpen();
+	return true;
 }
 
 void NetworkCatalogNode::ReloadAction::run() {
@@ -219,6 +220,6 @@ void NetworkCatalogNode::ReloadAction::run() {
 	}
 
 	myNode.updateChildren();
-	myNode.expandOrCollapseSubtree();
+//	myNode.expandOrCollapseSubtree();
 	FBReader::Instance().refreshWindow();
 }

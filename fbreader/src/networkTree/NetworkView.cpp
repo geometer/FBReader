@@ -21,6 +21,8 @@
 #include <ZLImage.h>
 #include <ZLExecutionData.h>
 #include <ZLTimeManager.h>
+#include <ZLTreeDialog.h>
+#include <ZLDialogManager.h>
 
 #include "NetworkView.h"
 #include "NetworkNodes.h"
@@ -37,7 +39,11 @@
 
 #include "../fbreader/FBReader.h"
 
-NetworkView::NetworkView(ZLPaintContext &context) : ZLBlockTreeView(context), myUpdateChildren(true), myUpdateAccountDependents(false) {
+NetworkView::NetworkView() : myUpdateChildren(true), myUpdateAccountDependents(false) {
+}
+
+void NetworkView::showDialog() {
+	ZLTreeDialog *dialog = ZLDialogManager::Instance().createTreeDialog();
 }
 
 void NetworkView::drawCoverLater(FBReaderNode *node, int vOffset) {

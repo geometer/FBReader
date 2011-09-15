@@ -23,11 +23,12 @@
 
 #include "../network/NetworkBookCollection.h"
 
-FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) {
+ZLTreeNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) {
 	if (item->isInstanceOf(NetworkCatalogItem::TYPE_ID)) {
-		NetworkCatalogNode *ptr = new NetworkCatalogNode(parent, item, atPosition);
-		ptr->item().onDisplayItem();
-		return ptr;
+		NetworkCatalogNode *node = new NetworkCatalogNode(item);
+		node->item().onDisplayItem();
+		parent->insert(node, atPosition);
+		return node;
 	} else if (item->isInstanceOf(NetworkBookItem::TYPE_ID)) {
 		return new NetworkBookNode(parent, item, NetworkBookNode::AUTHORS);
 	}
@@ -37,10 +38,9 @@ FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent,
 void NetworkNodesFactory::createSubnodes(SearchResultNode *parent, NetworkBookCollection &books) {
 	const NetworkAuthorBooksMap &map = books.authorBooksMap();
 	for (NetworkAuthorBooksMap::const_iterator it = map.begin(); it != map.end(); ++it) {
-		fillAuthorNode(
-			new NetworkAuthorNode(parent, it->first), 
-			it->second
-		);
+		NetworkAuthorNode *node = new NetworkAuthorNode(it->first);
+		fillAuthorNode(node, it->second);
+		parent->append(node);
 	}
 }
 
@@ -78,14 +78,20 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 			}
 		}
 
+		ZLTreeNode *node = 0;
 		if (seriesTitle.empty()) {
 			seriesNode = 0;
-			new NetworkBookNode(parent, *it, booksSummaryType);
+			node = new NetworkBookNode(parent, *it, booksSummaryType);
 		} else {
 			if (seriesNode == 0 || seriesNode->title() != seriesTitle) {
 				seriesNode = new NetworkSeriesNode(parent, seriesTitle, seriesSummaryType);
+				parent->append(seriesNode);
 			}
-			new NetworkBookNode(seriesNode, *it, booksSummaryType);
+			node = new NetworkBookNode(seriesNode, *it, booksSummaryType);
 		}
+		if (seriesNode)
+			seriesNode->append(node);
+		else
+			parent->append(node);
 	}	
 }

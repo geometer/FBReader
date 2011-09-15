@@ -29,8 +29,7 @@ enum {
 	PageRole
 };
 
-ZLQmlTreeDialog::ZLQmlTreeDialog(QObject *parent) :
-    QAbstractItemModel(parent)
+ZLQmlTreeDialog::ZLQmlTreeDialog()
 {
 	QHash<int, QByteArray> names = roleNames();
 	names[Qt::DisplayRole] = "title";
@@ -41,22 +40,19 @@ ZLQmlTreeDialog::ZLQmlTreeDialog(QObject *parent) :
 	setRoleNames(names);
 }
 
-ZLQmlTreeDialog::ZLQmlTreeDialog() {
-}
-
 ZLQmlTreeDialog::~ZLQmlTreeDialog() {
 }
 
 QModelIndex ZLQmlTreeDialog::index(int row, int column, const QModelIndex &parent) const {
 	Q_UNUSED(column);
 	ZLTreeNode *node = treeNode(parent);
-	if (row < 0 || row >= node->children().size())
+	if (row < 0 || uint(row) >= node->children().size())
 		return QModelIndex();
 	return createIndex(node->children().at(row));
 }
 
 QModelIndex ZLQmlTreeDialog::parent(const QModelIndex &child) const {
-	ZLTreeNode *node = treeNode(parent);
+	ZLTreeNode *node = treeNode(child);
 	if (node->parent())
 		return createIndex(node->parent());
 	else
@@ -79,9 +75,9 @@ bool ZLQmlTreeDialog::hasChildren(const QModelIndex &parent) const {
 }
 
 QVariant ZLQmlTreeDialog::data(const QModelIndex &index, int role) const {
-	ZLTreeNode *node = treeNode(parent);
+	ZLTreeNode *node = treeNode(index);
 	if (!node)
-		return;
+		return QVariant();
 	
 	switch (role) {
 	case Qt::DisplayRole:
@@ -109,12 +105,12 @@ QVariant ZLQmlTreeDialog::data(const QModelIndex &index, int role) const {
 }
 
 void ZLQmlTreeDialog::fetchChildren(const QModelIndex &index) {
-	ZLTreeNode *node = treeNode(parent);
+	ZLTreeNode *node = treeNode(index);
 	node->requestChildren();
 }
 
 void ZLQmlTreeDialog::activate(const QModelIndex &index) {
-	if (ZLTreeActionNode *node = zlobject_cast<ZLTreeActionNode*>(treeNode(parent)))
+	if (ZLTreeActionNode *node = zlobject_cast<ZLTreeActionNode*>(treeNode(index)))
 		node->activate();
 }
 
@@ -156,9 +152,9 @@ QModelIndex ZLQmlTreeDialog::createIndex(ZLTreeNode *node) const {
 	return QAbstractItemModel::createIndex(node->childIndex(), 0, node);
 }
 
-ZLTreeNode *ZLQmlTreeDialog::treeNode(const QModelIndex &index) {
+ZLTreeNode *ZLQmlTreeDialog::treeNode(const QModelIndex &index) const {
 	if (!index.isValid())
-		return &rootNode();
+		return &const_cast<ZLQmlTreeDialog*>(this)->rootNode();
 	else
 		return reinterpret_cast<ZLTreeNode*>(index.internalPointer());
 }

@@ -36,7 +36,8 @@ const ZLResource &NetworkBookNode::resource() const {
 	return ZLResource::resource("networkView")["bookNode"];
 }
 
-NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book, SummaryType summaryType) : FBReaderNode(parent), myBook(book), mySummaryType(summaryType) {
+NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book, SummaryType summaryType) : myBook(book), mySummaryType(summaryType) {
+	parent->append(this);
 }
 
 void NetworkBookNode::init() {
@@ -79,13 +80,10 @@ std::string NetworkBookNode::subtitle() const {
 	return authorsString;
 }
 
-void NetworkBookNode::drawCover(ZLPaintContext&, int vOffset) {
-	((NetworkView&)view()).drawCoverLater(this, vOffset);
-}
-
-shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {
-	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
-	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
+shared_ptr<ZLImage> NetworkBookNode::image() const {
+//	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
+//	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
+	return shared_ptr<ZLImage>();
 }
 
 const NetworkBookItem &NetworkBookNode::book() const {

@@ -32,17 +32,19 @@ class NetworkCatalogNode;
 class NetworkItem;
 class FBReaderNode;
 
-class NetworkView : public ZLBlockTreeView {
+class NetworkView {
 
 private:
 	class CoverUpdater;
 	class CoverUpdaterRunner;
 
 public:
-	NetworkView(ZLPaintContext &context);
+	NetworkView();
 
 	void invalidate();
 	void invalidateAccountDependents();
+	
+	void showDialog();
 
 	void drawCoverLater(FBReaderNode *node, int vOffset);
 
