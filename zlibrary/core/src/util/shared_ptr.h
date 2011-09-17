@@ -20,11 +20,29 @@
 #ifndef __SHARED_PTR_H__
 #define __SHARED_PTR_H__
 
-template<class T> class shared_ptr_storage {
+class shared_ptr_counter {
+	public:
+		shared_ptr_counter();
+		~shared_ptr_counter();
+		
+		void addReference();
+		bool removeReference();
+		void addWeakReference();
+		bool removeWeakReference();
+		unsigned int counter() const;
+		unsigned int weakCounter() const;
+
 	private:
 		unsigned int myCounter;
 		unsigned int myWeakCounter;
+};
+
+template<class T> class shared_ptr_storage {
+	template <class V> friend class shared_ptr_storage;
+	private:
+		shared_ptr_storage(T *pointer, shared_ptr_counter *counter);
 		T* myPointer;
+		shared_ptr_counter *myCounter;
 
 	public:
 		shared_ptr_storage(T *pointer);
@@ -32,11 +50,19 @@ template<class T> class shared_ptr_storage {
 
 		T* pointer() const;
 		T& content() const;
+		
+		template<class V>
+		shared_ptr_storage<V> *staticCast() const {
+			if (myCounter->counter() == 0)
+				return 0;
+			V *ptr = static_cast<V*>(myPointer);
+			return new shared_ptr_storage<V>(ptr, myCounter);
+		}
 
 		void addReference();
-		void removeReference();
+		bool removeReference();
 		void addWeakReference();
-		void removeWeakReference();
+		bool removeWeakReference();
 		unsigned int counter() const;
 };
 
@@ -44,6 +70,7 @@ template<class T> class weak_ptr;
 
 template<class T> class shared_ptr {
 	friend class weak_ptr<T>;
+	template <class V> friend class shared_ptr;
 
 	private:
 		shared_ptr_storage<T> *myStorage;
@@ -62,6 +89,13 @@ template<class T> class shared_ptr {
 		const shared_ptr<T> &operator = (T *t);
 		const shared_ptr<T> &operator = (const shared_ptr<T> &t);
 		const shared_ptr<T> &operator = (const weak_ptr<T> &t);
+		
+		template<class V>
+		shared_ptr<V> staticCast() const {
+			shared_ptr<V> v;
+			v.attachStorage(myStorage->staticCast<V>());
+			return v;
+		}
 
 		T* operator -> () const;
 		T& operator * () const;
@@ -117,47 +151,70 @@ template<class T> class weak_ptr {
 		bool operator >= (const shared_ptr<T> &t) const;
 };
 
+inline shared_ptr_counter::shared_ptr_counter() : myCounter(0), myWeakCounter(0) {
+}
+inline shared_ptr_counter::~shared_ptr_counter() {
+}
+inline void shared_ptr_counter::addReference() {
+	myCounter++;
+}
+inline bool shared_ptr_counter::removeReference() {
+	return (--myCounter) == 0;
+}
+inline void shared_ptr_counter::addWeakReference() {
+	myWeakCounter++;
+}
+inline bool shared_ptr_counter::removeWeakReference() {
+	return (--myWeakCounter) == 0;
+}
+inline unsigned int shared_ptr_counter::counter() const {
+	return myCounter;
+}
+inline unsigned int shared_ptr_counter::weakCounter() const {
+	return myWeakCounter;
+}
 template<class T>
-inline shared_ptr_storage<T>::shared_ptr_storage(T *pointer) {
-	myPointer = pointer;
-	myCounter = 0;
-	myWeakCounter = 0;
+inline shared_ptr_storage<T>::shared_ptr_storage(T *pointer) : myPointer(pointer), myCounter(new shared_ptr_counter) {
+}
+template<class T>
+inline shared_ptr_storage<T>::shared_ptr_storage(T *pointer, shared_ptr_counter *counter) : myPointer(pointer), myCounter(counter) {
 }
 template<class T>
 inline shared_ptr_storage<T>::~shared_ptr_storage() {
 }
 template<class T>
 inline T* shared_ptr_storage<T>::pointer() const {
-	return myPointer;
+	return myCounter->counter() == 0 ? 0 : myPointer;
 }
 template<class T>
 inline T& shared_ptr_storage<T>::content() const {
-	return *myPointer;
+	return *pointer();
 }
 template<class T>
 inline void shared_ptr_storage<T>::addReference() {
-	++myCounter;
+	myCounter->addReference();
 }
 template<class T>
-inline void shared_ptr_storage<T>::removeReference() {
-	--myCounter;
-	if (myCounter == 0) {
+inline bool shared_ptr_storage<T>::removeReference() {
+	if (myCounter->removeReference()) {
 		T* ptr = myPointer;
 		myPointer = 0;
 		delete ptr;
+		return counter() == 0;
 	}
+	return false;
 }
 template<class T>
 inline void shared_ptr_storage<T>::addWeakReference() {
-	++myWeakCounter;
+	myCounter->addWeakReference();
 }
 template<class T>
-inline void shared_ptr_storage<T>::removeWeakReference() {
-	--myWeakCounter;
+inline bool shared_ptr_storage<T>::removeWeakReference() {
+	return myCounter->removeWeakReference();
 }
 template<class T>
 inline unsigned int shared_ptr_storage<T>::counter() const {
-	return myCounter + myWeakCounter;
+	return myCounter->counter() + myCounter->weakCounter();
 }
 
 template<class T>
@@ -173,13 +230,8 @@ inline void shared_ptr<T>::attachStorage(shared_ptr_storage<T> *storage) {
 }
 template<class T>
 inline void shared_ptr<T>::detachStorage() {
-	if (myStorage != 0) {
-		if (myStorage->counter() == 1) {
-			myStorage->removeReference();
-			delete myStorage;
-		} else {
-			myStorage->removeReference();
-		}
+	if (myStorage != 0 && myStorage->removeReference()) {
+		delete myStorage;
 	}
 }
 
@@ -307,11 +359,8 @@ inline void weak_ptr<T>::attachStorage(shared_ptr_storage<T> *storage) {
 }
 template<class T>
 inline void weak_ptr<T>::detachStorage() {
-	if (myStorage != 0) {
-		myStorage->removeWeakReference();
-		if (myStorage->counter() == 0) {
-			delete myStorage;
-		}
+	if (myStorage != 0 && myStorage->removeWeakReference()) {
+		delete myStorage;
 	}
 }
 
