@@ -58,10 +58,10 @@ size_t ZLTreeNode::level() const {
 }
 
 ZLTreeListener *ZLTreeNode::listener() const {
-	if (const ZLTreeListener::RootNode *node = zlobject_cast<const ZLTreeListener::RootNode*>(this))
-		return &node->myListener;
-	else if (myParent)
+	if (myParent)
 		return myParent->listener();
+	else if (const ZLTreeListener::RootNode *node = zlobject_cast<const ZLTreeListener::RootNode*>(this))
+		return &node->myListener;
 	else
 		return 0;
 }
