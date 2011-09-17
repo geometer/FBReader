@@ -50,8 +50,8 @@ protected:
 	virtual ~ZLTreeListener();
 	
 	const ZLTypeId &typeId() const;
-
-public: //TODO it's temporary; should it be public or protected?
+	
+public:
 	RootNode &rootNode();
 
 protected:
