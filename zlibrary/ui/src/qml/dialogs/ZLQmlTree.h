@@ -21,10 +21,10 @@
 #define ZLQMLTREE_H
 
 #include <QtCore/QAbstractItemModel>
+#include <QtCore/QWeakPointer>
 #include <ZLTreeDialog.h>
 
-class ZLQmlTreeDialog : public QAbstractItemModel, public ZLTreeDialog
-{
+class ZLQmlTreeDialog : public QAbstractItemModel, public ZLTreeDialog {
     Q_OBJECT
 public:
     ZLQmlTreeDialog();
@@ -35,7 +35,7 @@ public:
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
+//    virtual bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
 
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 	
@@ -56,6 +56,43 @@ Q_SIGNALS:
 private:
 	QModelIndex createIndex(ZLTreeNode *node) const;
 	ZLTreeNode *treeNode(const QModelIndex &index) const;
+};
+
+class ZLQmlDataModel : public QAbstractListModel {
+	Q_OBJECT
+	Q_PROPERTY(QObject* model READ model WRITE setModel NOTIFY modelChanged)
+	Q_PROPERTY(QModelIndex rootIndex READ rootIndex WRITE setRootIndex NOTIFY rootIndexChanged)
+public:
+    ZLQmlDataModel();
+	~ZLQmlDataModel();
+	
+	QObject *model() const;
+	void setModel(QObject *model);
+	QModelIndex rootIndex() const;
+	void setRootIndex(const QModelIndex &index);
+	
+	Q_INVOKABLE QModelIndex modelIndex(int index) const;
+	
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+	
+protected Q_SLOTS:
+    void onRowsAboutToBeInserted(const QModelIndex &parent, int first, int last);
+    void onRowsInserted(const QModelIndex &parent, int first, int last);
+    void onRowsAboutToBeRemoved(const QModelIndex &parent, int first, int last);
+    void onRowsRemoved(const QModelIndex &parent, int first, int last);
+    void onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+	
+protected:
+	void doSetModel(QAbstractItemModel *model);
+	
+Q_SIGNALS:
+	void modelChanged(QObject *model);
+	void rootIndexChanged(const QModelIndex &index);
+	
+private:
+	QWeakPointer<QAbstractItemModel> myModel;
+	QModelIndex myIndex;
 };
 
 #endif // ZLQMLTREE_H

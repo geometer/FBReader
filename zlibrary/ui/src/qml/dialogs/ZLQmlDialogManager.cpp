@@ -32,6 +32,7 @@
 #include "ZLQmlOpenFileDialog.h"
 #include "ZLQmlDialogContent.h"
 #include "ZLQmlProgressDialog.h"
+#include "ZLQmlTree.h"
 #include "ZLQtUtil.h"
 #include <QtDeclarative/qdeclarative.h>
 
@@ -39,14 +40,6 @@
 #include "ZLQmlOptionView.h"
 
 ZLQmlDialogManager::ZLQmlDialogManager() {
-	connect(this, SIGNAL(privateDialogRequested(QObject*)),
-	        SIGNAL(dialogRequested(QObject*)), Qt::QueuedConnection);
-	connect(this, SIGNAL(privateFileDialogRequested(QObject*)),
-	        SIGNAL(fileDialogRequested(QObject*)), Qt::QueuedConnection);
-	connect(this, SIGNAL(privateOptionsDialogRequested(QObject*)),
-	        SIGNAL(optionsDialogRequested(QObject*)), Qt::QueuedConnection);
-	connect(this, SIGNAL(privateProgressDialogRequested(QObject*)),
-	        SIGNAL(progressDialogRequested(QObject*)), Qt::QueuedConnection);
 	connect(this, SIGNAL(privateInformationBoxRequested(QString,QString,QString)),
 	        SIGNAL(informationBoxRequested(QString,QString,QString)), Qt::QueuedConnection);
 	connect(this, SIGNAL(privateErrorBoxRequested(QString,QString,QString)),
@@ -80,6 +73,12 @@ shared_ptr<ZLOptionsDialog> ZLQmlDialogManager::createOptionsDialog(const ZLReso
 shared_ptr<ZLOpenFileDialog> ZLQmlDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
 	ZLQmlOpenFileDialog *dialog = new ZLQmlOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
 	new Event(dialog, this, &ZLQmlDialogManager::fileDialogRequested);
+	return dialog;
+}
+
+shared_ptr<ZLTreeDialog> ZLQmlDialogManager::createTreeDialog() const {
+	ZLQmlTreeDialog *dialog = new ZLQmlTreeDialog();
+	new Event(dialog, this, &ZLQmlDialogManager::treeDialogRequested);
 	return dialog;
 }
 
