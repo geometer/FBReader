@@ -45,10 +45,16 @@ PageStackWindow {
 			optionsDialog.handler = object;
 			root.openDialog(optionsDialog);
 		}
-
+		
         onFileDialogRequested: {
 			var component = Qt.createComponent("OpenFileDialog.qml");
 			root.openDialog(component.createObject(mainPage, { handler: object }));
+		}
+		
+        onTreeDialogRequested: {
+			console.log("bla-bla", object)
+			var component = Qt.createComponent("TreeDialogPage.qml");
+			root.pageStack.push(component, { handler: object, component: component });
 		}
 		
 		onProgressDialogRequested: {

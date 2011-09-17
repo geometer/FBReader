@@ -44,6 +44,7 @@ public:
 	shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const;
 	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
 	shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const;
+	shared_ptr<ZLTreeDialog> createTreeDialog() const;
 	void informationBox(const std::string &title, const std::string &message) const;
 	void errorBox(const ZLResourceKey &key, const std::string &message) const;
 	int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const;
@@ -58,14 +59,12 @@ private Q_SLOTS:
 	void onObjectDestroyed(QObject *object);
 
 Q_SIGNALS:
-	void privateDialogRequested(QObject *object);
 	void dialogRequested(QObject *object);
-	void privateFileDialogRequested(QObject *object);
 	void fileDialogRequested(QObject *object);
-	void privateOptionsDialogRequested(QObject *object);
 	void optionsDialogRequested(QObject *object);
-	void privateProgressDialogRequested(QObject *object);
+	void treeDialogRequested(QObject *object);
 	void progressDialogRequested(QObject *object);
+	
 	void privateInformationBoxRequested(const QString &title, const QString &message, const QString &button);
 	void informationBoxRequested(const QString &title, const QString &message, const QString &button);
 	void privateErrorBoxRequested(const QString &title, const QString &message, const QString &button);

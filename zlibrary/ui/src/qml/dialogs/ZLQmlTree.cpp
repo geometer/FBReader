@@ -19,9 +19,12 @@
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 #include "ZLQmlTree.h"
 #include <ZLTreeActionNode.h>
 #include <ZLTreePageNode.h>
+
+Q_DECLARE_METATYPE(QModelIndex)
 
 enum {
 	SubTitleRole = Qt::UserRole,
@@ -31,6 +34,7 @@ enum {
 
 ZLQmlTreeDialog::ZLQmlTreeDialog()
 {
+	qRegisterMetaType<QModelIndex>();
 	QHash<int, QByteArray> names = roleNames();
 	names[Qt::DisplayRole] = "title";
 	names[SubTitleRole] = "subtitle";
@@ -61,6 +65,8 @@ QModelIndex ZLQmlTreeDialog::parent(const QModelIndex &child) const {
 
 int ZLQmlTreeDialog::rowCount(const QModelIndex &parent) const {
 	ZLTreeNode *node = treeNode(parent);
+	qDebug() << Q_FUNC_INFO << &const_cast<ZLQmlTreeDialog*>(this)->rootNode()
+	         << parent << node << node->children().size();
 	return node->children().size();
 }
 
@@ -69,10 +75,10 @@ int ZLQmlTreeDialog::columnCount(const QModelIndex &parent) const {
 	return 0;
 }
 
-bool ZLQmlTreeDialog::hasChildren(const QModelIndex &parent) const {
-	ZLTreeNode *node = treeNode(parent);
-	return zlobject_cast<ZLTreeActionNode*>(node) != NULL;
-}
+//bool ZLQmlTreeDialog::hasChildren(const QModelIndex &parent) const {
+//	ZLTreeNode *node = treeNode(parent);
+//	return zlobject_cast<ZLTreeActionNode*>(node) == NULL;
+//}
 
 QVariant ZLQmlTreeDialog::data(const QModelIndex &index, int role) const {
 	ZLTreeNode *node = treeNode(index);
@@ -84,7 +90,7 @@ QVariant ZLQmlTreeDialog::data(const QModelIndex &index, int role) const {
 		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node))
 			return QString::fromStdString(titledNode->title());
 		else
-			return QString();
+			return QString("No title");
 	case Qt::DecorationRole:
 		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node))
 			return QString::fromStdString(titledNode->imageUrl());
@@ -94,7 +100,7 @@ QVariant ZLQmlTreeDialog::data(const QModelIndex &index, int role) const {
 		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node))
 			return QString::fromStdString(titledNode->subtitle());
 		else
-			return QString();
+			return QString("No subtitle");
 	case ActivatableRole:
 		return zlobject_cast<ZLTreeActionNode*>(node) != NULL;
 	case PageRole:
@@ -119,18 +125,22 @@ void ZLQmlTreeDialog::finish() {
 }
 
 void ZLQmlTreeDialog::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
+	qDebug() << Q_FUNC_INFO << parent << index;
 	beginInsertRows(createIndex(parent), index, index);
 }
 
 void ZLQmlTreeDialog::onNodeEndInsert() {
+	qDebug() << Q_FUNC_INFO;
 	endInsertRows();
 }
 
 void ZLQmlTreeDialog::onNodeBeginRemove(ZLTreeNode *parent, size_t index) {
+	qDebug() << Q_FUNC_INFO << parent << index;
 	beginRemoveRows(createIndex(parent), index, index);
 }
 
 void ZLQmlTreeDialog::onNodeEndRemove() {
+	qDebug() << Q_FUNC_INFO;
 	endRemoveRows();
 }
 
@@ -157,4 +167,105 @@ ZLTreeNode *ZLQmlTreeDialog::treeNode(const QModelIndex &index) const {
 		return &const_cast<ZLQmlTreeDialog*>(this)->rootNode();
 	else
 		return reinterpret_cast<ZLTreeNode*>(index.internalPointer());
+}
+
+ZLQmlDataModel::ZLQmlDataModel() {
+}
+
+ZLQmlDataModel::~ZLQmlDataModel() {
+}
+
+QObject *ZLQmlDataModel::model() const {
+	return myModel.data();
+}
+
+void ZLQmlDataModel::setModel(QObject *model) {
+	if (model == myModel.data())
+		return;
+	beginResetModel();
+	doSetModel(qobject_cast<QAbstractItemModel*>(model));
+	myIndex = QModelIndex();
+	emit rootIndexChanged(myIndex);
+	endResetModel();
+}
+
+void ZLQmlDataModel::doSetModel(QAbstractItemModel *model) {
+	if (myModel.data() == model)
+		return;
+	myModel = model;
+	connect(model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
+	        SLOT(onRowsAboutToBeInserted(QModelIndex,int,int)));
+	connect(model, SIGNAL(rowsInserted(QModelIndex,int,int)),
+	        SLOT(onRowsInserted(QModelIndex,int,int)));
+	connect(model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+	        SLOT(onRowsAboutToBeInserted(QModelIndex,int,int)));
+	connect(model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+	        SLOT(onRowsRemoved(QModelIndex,int,int)));
+	connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+	        SLOT(onDataChanged(QModelIndex,QModelIndex)));
+	emit modelChanged(myModel.data());
+}
+
+QModelIndex ZLQmlDataModel::rootIndex() const {
+	return myIndex;
+}
+
+void ZLQmlDataModel::setRootIndex(const QModelIndex &index) {
+	if (myIndex == index)
+		return;
+	beginResetModel();
+	myIndex = index;
+	if (index.model())
+		doSetModel(const_cast<QAbstractItemModel*>(myIndex.model()));
+	emit rootIndexChanged(myIndex);
+	endResetModel();
+}
+
+QModelIndex ZLQmlDataModel::modelIndex(int index) const {
+	return myIndex.child(index, 0);
+}
+
+int ZLQmlDataModel::rowCount(const QModelIndex &parent) const {
+	Q_UNUSED(parent);
+	return myIndex.row();
+}
+
+QVariant ZLQmlDataModel::data(const QModelIndex &index, int role) const {
+	QModelIndex mappedIndex = myIndex.child(index.row(), 0);
+	if (mappedIndex.isValid())
+		return mappedIndex.data(role);
+	else
+		return QVariant();
+}
+
+void ZLQmlDataModel::onRowsAboutToBeInserted(const QModelIndex &parent, int first, int last) {
+	if (parent == myIndex)
+		beginInsertRows(QModelIndex(), first, last);
+}
+
+void ZLQmlDataModel::onRowsInserted(const QModelIndex &parent, int first, int last) {
+	Q_UNUSED(first);
+	Q_UNUSED(last);
+	if (parent == myIndex)
+		endInsertRows();
+}
+
+void ZLQmlDataModel::onRowsAboutToBeRemoved(const QModelIndex &parent, int first, int last) {
+	if (parent == myIndex)
+		beginRemoveRows(QModelIndex(), first, last);
+}
+
+void ZLQmlDataModel::onRowsRemoved(const QModelIndex &parent, int first, int last) {
+	Q_UNUSED(first);
+	Q_UNUSED(last);
+	if (parent == myIndex)
+		endRemoveRows();
+}
+
+void ZLQmlDataModel::onDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight) {
+	if (topLeft.parent() == myIndex || bottomRight.parent() == myIndex) {
+		QModelIndex left = createIndex(qMin(topLeft.row(), bottomRight.row()), 0, 0);
+		QModelIndex right = createIndex(qMax(topLeft.row(), bottomRight.row()), 0, 0);
+		emit dataChanged(left, right);
+	}
 }
