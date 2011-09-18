@@ -26,7 +26,7 @@
 
 #include "../networkActions/NetworkActions.h"
 
-const ZLTypeId NetworkBookNode::TYPE_ID(FBReaderNode::TYPE_ID);
+const ZLTypeId NetworkBookNode::TYPE_ID(ZLTreeActionNode::TYPE_ID);
 
 const ZLTypeId &NetworkBookNode::typeId() const {
 	return TYPE_ID;
@@ -37,6 +37,7 @@ const ZLResource &NetworkBookNode::resource() const {
 }
 
 NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book, SummaryType summaryType) : myBook(book), mySummaryType(summaryType) {
+	init();
 	parent->append(this);
 }
 
@@ -78,6 +79,10 @@ std::string NetworkBookNode::subtitle() const {
 		return std::string();
 	}
 	return authorsString;
+}
+
+bool NetworkBookNode::activate() {
+	return false;
 }
 
 shared_ptr<ZLImage> NetworkBookNode::image() const {

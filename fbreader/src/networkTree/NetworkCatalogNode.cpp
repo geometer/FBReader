@@ -123,14 +123,15 @@ shared_ptr<ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
 }
 
 void NetworkCatalogNode::updateChildren() {
+	new LoadSubCatalogRunnable(this);
+}
+	
+void NetworkCatalogNode::onChildrenReceived(LoadSubCatalogRunnable *runnable) {
 	clear();
+	myChildrenItems = runnable->children();
 
-	myChildrenItems.clear();
-	LoadSubCatalogRunnable loader(item(), myChildrenItems);
-	loader.executeWithUI();
-
-	if (loader.hasErrors()) {
-		loader.showErrorMessage();
+	if (runnable->hasErrors()) {
+		runnable->showErrorMessage();
 	} else if (myChildrenItems.empty()) {
 		ZLDialogManager::Instance().informationBox(ZLResourceKey("emptyCatalogBox"));
 	}

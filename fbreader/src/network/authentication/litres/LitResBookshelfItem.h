@@ -24,6 +24,23 @@
 
 class NetworkLink;
 
+class LitResBookshelfItemLoader : public ZLExecutionData::Listener {
+public:
+	LitResBookshelfItemLoader(const NetworkLink &link, NetworkItem::List &children, bool forceReload, shared_ptr<ZLExecutionData::Listener> listener);
+	~LitResBookshelfItemLoader();
+	
+	virtual void showPercent(int ready, int full);
+	virtual void finished(const std::string &error = std::string());
+	
+private:
+	void die();
+	const NetworkLink &myLink;
+	NetworkItem::List &myChildren;
+	bool myForceReload;
+	shared_ptr<ZLExecutionData::Listener> myListener;
+	shared_ptr<ZLExecutionData::Listener> myHolder;
+};
+
 class LitResBookshelfItem : public NetworkCatalogItem {
 
 public:
@@ -37,7 +54,7 @@ public:
 
 private:
 	void onDisplayItem();
-	std::string loadChildren(NetworkItem::List &children);
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
 
 private:
 	bool myForceReload;

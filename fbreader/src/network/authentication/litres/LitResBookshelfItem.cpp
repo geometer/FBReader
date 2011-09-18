@@ -20,6 +20,7 @@
 #include <algorithm>
 
 #include <ZLExecutionData.h>
+#include <ZLTimeManager.h>
 
 #include "LitResBookshelfItem.h"
 #include "LitResAuthenticationManager.h"
@@ -27,6 +28,30 @@
 #include "../../NetworkLink.h"
 #include "../../NetworkComparators.h"
 #include "../../NetworkErrors.h"
+
+LitResBookshelfItemLoader::LitResBookshelfItemLoader(const NetworkLink &link, NetworkItem::List &children,
+                                                     bool forceReload, shared_ptr<ZLExecutionData::Listener> listener)
+    : myLink(link), myChildren(children), myForceReload(forceReload), myListener(listener), myHolder(this) {
+	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*myLink.authenticationManager());
+	NetworkAuthenticationManager::AuthenticationStatus status =  mgr.isAuthorised(true, myHolder);
+	if (status.Status == B3_UNDEFINED)
+		return;
+}
+
+LitResBookshelfItemLoader::~LitResBookshelfItemLoader() {
+}
+
+void LitResBookshelfItemLoader::showPercent(int ready, int full) {
+	myListener->showPercent(ready, full);
+}
+
+void LitResBookshelfItemLoader::finished(const std::string &error) {
+}
+
+void LitResBookshelfItemLoader::die() {
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
+}
 
 LitResBookshelfItem::LitResBookshelfItem(
 	const NetworkLink &link,
@@ -48,9 +73,11 @@ void LitResBookshelfItem::onDisplayItem() {
 	myForceReload = false;
 }
 
-std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children) {
-	LitResAuthenticationManager &mgr =
-		(LitResAuthenticationManager&)*Link.authenticationManager();
+std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener) {
+	new LitResBookshelfItemLoader(Link, children, myForceReload, listener);
+	myForceReload = true;
+
+	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
 	if (mgr.isAuthorised().Status == B3_FALSE) {
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}

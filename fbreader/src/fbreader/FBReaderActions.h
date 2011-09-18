@@ -178,11 +178,12 @@ public:
 	bool isVisible() const;
 };
 
-class ShowNetworkLibraryAction : public SetModeAction {
+class ShowNetworkLibraryAction : public ZLApplication::Action {
 
 public:
 	ShowNetworkLibraryAction();
 	bool isVisible() const;
+	void run();
 };
 
 class AddBookAction : public ModeDependentAction {

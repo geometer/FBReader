@@ -20,6 +20,7 @@
 #include <ZLDialogManager.h>
 #include <ZLProgressDialog.h>
 #include <ZLNetworkManager.h>
+#include <ZLTimeManager.h>
 
 #include "NetworkOperationRunnable.h"
 
@@ -27,13 +28,22 @@
 #include "../network/NetworkLink.h"
 #include "../network/NetworkLinkCollection.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
+#include "../networkTree/NetworkNodes.h"
 
 NetworkOperationRunnable::NetworkOperationRunnable(const std::string &uiMessageKey) {
 	myDialog =
 		ZLDialogManager::Instance().createProgressDialog(ZLResourceKey(uiMessageKey));
 }
 
+NetworkOperationRunnable::NetworkOperationRunnable() : myHolder(this) {
+}
+
 NetworkOperationRunnable::~NetworkOperationRunnable() {
+}
+
+void NetworkOperationRunnable::showPercent(int ready, int full) {
+	(void)ready;
+	(void)full;
 }
 
 void NetworkOperationRunnable::executeWithUI() {
@@ -204,12 +214,17 @@ void AdvancedSearchRunnable::run() {
 }
 
 
-LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkItem::List &children) : 
-	NetworkOperationRunnable("loadSubCatalog"), 
-	myItem(item), 
-	myChildren(children) {
+LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogNode *node) : myNode(node) {
+	myNode->item().loadChildren(myChildren, myHolder);
+}
+
+void LoadSubCatalogRunnable::finished(const std::string &error) {
+	myErrorMessage = error;
+	myNode->onChildrenReceived(this);
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
 }
 
 void LoadSubCatalogRunnable::run() {
-	myErrorMessage = myItem.loadChildren(myChildren);
+//	myErrorMessage = myItem.loadChildren(myChildren);
 }

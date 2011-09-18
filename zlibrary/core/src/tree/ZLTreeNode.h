@@ -67,11 +67,14 @@ public:
 	// Children should be requested from network only if we need them
 	virtual void requestChildren();
 	
+	virtual const ZLResource &resource() const;
 	void registerAction(shared_ptr<ZLRunnableWithKey> action);
 	const std::vector<shared_ptr<ZLRunnableWithKey> > &actions() const;
+	std::string actionText(const shared_ptr<ZLRunnableWithKey> &action) const;
 	
 	void insert(ZLTreeNode *node, size_t index);
 	void append(ZLTreeNode *node);
+	void remove(ZLTreeNode *node);
 	void remove(size_t index);
 	void updated();
 

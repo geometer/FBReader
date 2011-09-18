@@ -23,6 +23,7 @@
 #include "ZLQmlTree.h"
 #include <ZLTreeActionNode.h>
 #include <ZLTreePageNode.h>
+#include <ZLTimeManager.h>
 
 Q_DECLARE_METATYPE(QModelIndex)
 
@@ -118,6 +119,27 @@ void ZLQmlTreeDialog::fetchChildren(const QModelIndex &index) {
 void ZLQmlTreeDialog::activate(const QModelIndex &index) {
 	if (ZLTreeActionNode *node = zlobject_cast<ZLTreeActionNode*>(treeNode(index)))
 		node->activate();
+}
+
+typedef std::vector<shared_ptr<ZLRunnableWithKey> > ActionVector;
+
+QStringList ZLQmlTreeDialog::actions(const QModelIndex &index) {
+	QStringList result;
+	ZLTreeNode *node = treeNode(index);
+	const ActionVector &actions = node->actions();
+	for (ActionVector::const_iterator it = actions.begin(); it != actions.end(); ++it) {
+		result << QString::fromStdString(node->actionText(*it));
+	}
+	return result;
+}
+
+void ZLQmlTreeDialog::run(const QModelIndex &index, int action) {
+	ZLTreeNode *node = treeNode(index);
+	const ActionVector &actions = node->actions();
+	if (action >= 0 && action < actions.size()) {
+		shared_ptr<ZLRunnableWithKey> runnable = actions.at(action);
+		ZLTimeManager::Instance().addAutoRemovableTask(runnable.staticCast<ZLRunnable>());
+	}
 }
 
 void ZLQmlTreeDialog::finish() {

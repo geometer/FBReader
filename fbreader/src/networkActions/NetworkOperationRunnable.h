@@ -32,8 +32,9 @@
 class ZLProgressDialog;
 
 class NetworkAuthenticationManager;
+class NetworkCatalogNode;
 
-class NetworkOperationRunnable : public ZLRunnable {
+class NetworkOperationRunnable : public ZLRunnable, public ZLExecutionData::Listener {
 
 public:
 	static void showErrorMessage(const std::string &message);
@@ -41,7 +42,10 @@ public:
 
 protected:
 	NetworkOperationRunnable(const std::string &uiMessageKey);
+	NetworkOperationRunnable();
 	~NetworkOperationRunnable();
+	
+	void showPercent(int ready, int full);
 
 public:
 	void executeWithUI();
@@ -51,6 +55,7 @@ public:
 
 protected:
 	std::string myErrorMessage;
+	shared_ptr<ZLExecutionData::Listener> myHolder;
 	shared_ptr<ZLProgressDialog> myDialog;
 };
 
@@ -193,12 +198,17 @@ private:
 class LoadSubCatalogRunnable : public NetworkOperationRunnable {
 
 public:
-	LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkItem::List &children);
+	LoadSubCatalogRunnable(NetworkCatalogNode *node);
+	
+	inline NetworkItem::List children() const { return myChildren; }
+	
+protected:
 	void run();
+	void finished(const std::string &error = std::string());
 
 private:
-	NetworkCatalogItem &myItem;
-	NetworkItem::List &myChildren;
+	NetworkCatalogNode *myNode;
+	NetworkItem::List myChildren;
 };
 
 #endif /* __NETWORKOPERATIONRUNNABLE_H__ */

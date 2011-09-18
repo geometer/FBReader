@@ -20,7 +20,7 @@
 #include "NetworkNodes.h"
 #include "NetworkView.h"
 
-const ZLTypeId NetworkContainerNode::TYPE_ID(ZLTreeNode::TYPE_ID);
+const ZLTypeId NetworkContainerNode::TYPE_ID(ZLTreeTitledNode::TYPE_ID);
 
 const ZLTypeId &NetworkContainerNode::typeId() const {
 	return TYPE_ID;
