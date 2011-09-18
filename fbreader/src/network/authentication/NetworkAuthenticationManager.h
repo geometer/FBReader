@@ -51,7 +51,7 @@ public:
 		AuthenticationStatus(const std::string &msg);
 	};
 
-	virtual AuthenticationStatus isAuthorised(bool useNetwork = true) = 0;
+	virtual AuthenticationStatus isAuthorised(bool useNetwork = true, shared_ptr<ZLExecutionData::Listener> listener = 0) = 0;
 	virtual std::string authorise(const std::string &pwd) = 0; // returns error message
 	virtual void logOut() = 0;
 

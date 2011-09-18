@@ -23,12 +23,15 @@
 #include "../blockTree/FBReaderNode.h"
 
 #include <ZLTreeTitledNode.h>
+#include <ZLTreePageNode.h>
+#include <ZLTreeActionNode.h>
 #include <ZLTreeListener.h>
 
 #include "../network/NetworkItems.h"
 
 class NetworkBookCollection;
 class NetworkLink;
+class LoadSubCatalogRunnable;
 
 class NetworkContainerNode : public ZLTreeTitledNode {
 
@@ -94,12 +97,14 @@ public:
 	void updateChildren();
 
 protected:
+	void onChildrenReceived(LoadSubCatalogRunnable *runnable);
 	shared_ptr<ZLImage> image() const;
 	std::string title() const;
 	std::string summary() const;
 	virtual shared_ptr<ZLImage> lastResortCoverImage() const;
 
 private:
+	friend class LoadSubCatalogRunnable;
 	shared_ptr<NetworkItem> myItem;
 	NetworkItem::List myChildrenItems;
 };
@@ -147,7 +152,7 @@ private:
 	void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<ZLImage> image() const;
 	std::string title() const;
 	std::string summary() const;
 
@@ -207,7 +212,7 @@ private:
 	mutable std::string mySummary;
 };
 
-class NetworkBookNode : public ZLTreeTitledNode {
+class NetworkBookNode : public ZLTreeActionNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -229,6 +234,7 @@ private:
 	shared_ptr<ZLImage> image() const;
 	std::string title() const;
 	std::string subtitle() const;
+	bool activate();
 
 private:
 	shared_ptr<NetworkItem> myBook;

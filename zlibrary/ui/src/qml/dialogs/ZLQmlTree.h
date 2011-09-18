@@ -22,6 +22,7 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QWeakPointer>
+#include <QtCore/QStringList>
 #include <ZLTreeDialog.h>
 
 class ZLQmlTreeDialog : public QAbstractItemModel, public ZLTreeDialog {
@@ -41,6 +42,8 @@ public:
 	
 	Q_INVOKABLE void fetchChildren(const QModelIndex &index);
 	Q_INVOKABLE void activate(const QModelIndex &index);
+	Q_INVOKABLE QStringList actions(const QModelIndex &index);
+	Q_INVOKABLE void run(const QModelIndex &index, int action);
 	Q_INVOKABLE void finish();
 	
 	virtual void onNodeBeginInsert(ZLTreeNode *parent, size_t index);

@@ -78,20 +78,15 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 			}
 		}
 
-		ZLTreeNode *node = 0;
 		if (seriesTitle.empty()) {
 			seriesNode = 0;
-			node = new NetworkBookNode(parent, *it, booksSummaryType);
+			new NetworkBookNode(parent, *it, booksSummaryType);
 		} else {
 			if (seriesNode == 0 || seriesNode->title() != seriesTitle) {
 				seriesNode = new NetworkSeriesNode(parent, seriesTitle, seriesSummaryType);
 				parent->append(seriesNode);
 			}
-			node = new NetworkBookNode(seriesNode, *it, booksSummaryType);
+			new NetworkBookNode(seriesNode, *it, booksSummaryType);
 		}
-		if (seriesNode)
-			seriesNode->append(node);
-		else
-			parent->append(node);
 	}	
 }

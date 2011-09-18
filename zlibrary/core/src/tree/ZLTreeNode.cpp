@@ -19,6 +19,8 @@
 
 #include "ZLTreeNode.h"
 #include "ZLTreeListener.h"
+#include "../resources/ZLResource.h"
+#include <algorithm>
 
 const ZLTypeId ZLTreeNode::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
@@ -93,6 +95,11 @@ size_t ZLTreeNode::childIndex() const {
 void ZLTreeNode::requestChildren() {
 }
 
+const ZLResource &ZLTreeNode::resource() const {
+	static const ZLResource &emptyResource = ZLResource::resource(std::string());
+	return emptyResource;
+}
+
 void ZLTreeNode::registerAction(shared_ptr<ZLRunnableWithKey> action) {
 	if (!action.isNull()) {
 		myActions.push_back(action);
@@ -103,7 +110,13 @@ const std::vector<shared_ptr<ZLRunnableWithKey> > &ZLTreeNode::actions() const {
 	return myActions;
 }
 
+std::string ZLTreeNode::actionText(const shared_ptr<ZLRunnableWithKey> &action) const {
+	return action.isNull() ? std::string() : action->text(resource());
+}
+
 void ZLTreeNode::insert(ZLTreeNode *node, size_t index) {
+	if (myChildren.end() != std::find(myChildren.begin(), myChildren.end(), node))
+		return;
 	index = std::min(index, myChildren.size());
 	node->myChildIndex = index;
 	node->myParent = this;
@@ -120,6 +133,11 @@ void ZLTreeNode::insert(ZLTreeNode *node, size_t index) {
 
 void ZLTreeNode::append(ZLTreeNode *node) {
 	insert(node, myChildren.size());
+}
+
+void ZLTreeNode::remove(ZLTreeNode *node) {
+	if (node->parent() == this)
+		remove(node->childIndex());
 }
 
 void ZLTreeNode::remove(size_t index) {

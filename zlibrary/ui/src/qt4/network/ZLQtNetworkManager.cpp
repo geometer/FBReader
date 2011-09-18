@@ -86,6 +86,7 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 			}
 			continue;
 		}
+		qDebug("Do request to %s", qPrintable(networkRequest.url().toString()));
 		
 		networkRequest.setRawHeader("User-Agent", userAgent().c_str());
 		QSslConfiguration configuration;
@@ -190,6 +191,9 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 }
 
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
+	qDebug("Finished request with code %d to %s",
+	       reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(),
+	       qPrintable(reply->url().toString()));
 	reply->deleteLater();
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	Q_ASSERT(scope.request);

@@ -141,7 +141,7 @@ private:
 	shared_ptr<ZLView> myFootnoteView;
 	shared_ptr<ZLView> myBookTextView;
 	shared_ptr<ZLView> myContentsView;
-	shared_ptr<NetworkView> myNetworkLibraryView;
+//	shared_ptr<NetworkView> myNetworkLibraryView;
 	shared_ptr<ZLView> myLibraryByAuthorView;
 	shared_ptr<ZLView> myLibraryByTagView;
 	shared_ptr<ZLPopupData> myRecentBooksPopupData;

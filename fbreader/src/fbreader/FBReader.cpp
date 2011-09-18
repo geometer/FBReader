@@ -103,7 +103,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBookTextView = new BookTextView(*context());
 	myFootnoteView = new FootnoteView(*context());
 	myContentsView = new ContentsView(*context());
-	myNetworkLibraryView = new NetworkView();
+//	myNetworkLibraryView = new NetworkView();
 	//TODO remove these 2 views completely??
 //	myLibraryByAuthorView = new LibraryByAuthorView(*context());
 //	myLibraryByTagView = new LibraryByTagView(*context());
@@ -441,7 +441,7 @@ void FBReader::setMode(ViewMode mode) {
 		case BOOKMARKS_MODE:
 			break;
 		case NETWORK_LIBRARY_MODE:
-			myNetworkLibraryView->showDialog();
+//			myNetworkLibraryView->showDialog();
 //			setView(myNetworkLibraryView);
 			break;
 		case UNDEFINED_MODE:
@@ -567,9 +567,9 @@ shared_ptr<Book> FBReader::currentBook() const {
 }
 
 void FBReader::invalidateNetworkView() {
-	myNetworkLibraryView->invalidate();
+//	myNetworkLibraryView->invalidate();
 }
 
 void FBReader::invalidateAccountDependents() {
-	myNetworkLibraryView->invalidateAccountDependents();
+//	myNetworkLibraryView->invalidateAccountDependents();
 }
