@@ -46,10 +46,14 @@ Page {
 					menu.destroy();
 				}
 
-				console.log("tap and hold on " + model.title, ":",
-							root.handler.actions(visualModel.modelIndex(index)))
+				console.log("tap and hold on " + model.title, model.iconSource)
 			}
-
+			
+			MoreIndicator {
+				id: indicator
+				anchors { verticalCenter: parent.verticalCenter; right: parent.right }
+				visible: !model.activatable
+			}
 			Timer {
 				interval: 800
 				running: parent.pressed

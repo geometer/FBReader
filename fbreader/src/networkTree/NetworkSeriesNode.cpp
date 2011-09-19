@@ -72,14 +72,24 @@ std::string NetworkSeriesNode::summary() const {
 	return mySummary;
 }
 
-shared_ptr<ZLImage> NetworkSeriesNode::extractCoverImage() const {
+shared_ptr<ZLImage> NetworkSeriesNode::image() const {
 	const std::vector<ZLTreeNode*> &books = children();
 	for (std::vector<ZLTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
-		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->image();
+		shared_ptr<ZLImage> bookCover = ((ZLTreeTitledNode*)*it)->image();
 		if (!bookCover.isNull()) {
 			return bookCover;
 		}
 	}
-	return 0;
-//	return defaultCoverImage("booktree-book.png");
+	return FBNode::defaultCoverImage("booktree-book.png");
+}
+
+std::string NetworkSeriesNode::imageUrl() const {
+//	const std::vector<ZLTreeNode*> &books = children();
+//	for (std::vector<ZLTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
+//		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->image();
+//		if (!bookCover.isNull()) {
+//			return bookCover;
+//		}
+//	}
+	return FBNode::defaultImageUrl("booktree-book.png");
 }

@@ -30,6 +30,7 @@
 const ZLTypeId FBNode::TYPE_ID(ZLTreeTitledNode::TYPE_ID);
 
 std::map<std::string,shared_ptr<ZLImage> > FBNode::ourDefaultCovers;
+std::map<std::string,std::string> FBNode::ourDefaultUrls;
 
 const ZLTypeId &FBNode::typeId() const {
 	return TYPE_ID;
@@ -60,6 +61,40 @@ shared_ptr<ZLImage> FBNode::defaultCoverImage(const std::string &id) {
 		ourDefaultCovers[id] = cover;
 	}
 	return cover;
+}
+
+// is there already any implementation of this stuff anywhere?
+static char hex_helper(char c) {
+	static char tmp[] = "0123456789ABCDEF";
+	return tmp[c];
+}
+
+static std::string percent_encoding(const std::string &str) {
+	std::string result;
+	for (int i = 0; i < str.size(); ++i) {
+		const char c = str[i];
+		if (str[i] == '\\') {
+			result += '/';
+		} else if (isalpha(c) || isdigit(c) || c == '.' || c == '-' || c == '_' || c == '~') {
+			result += str[i];
+		} else {
+			result += "%";
+			result += hex_helper((c & 0xf0) >> 4);
+			result += hex_helper(c & 0x0f);
+		}
+	}
+	return result;
+}
+
+std::string FBNode::defaultImageUrl(const std::string &id) {
+	std::string &url = ourDefaultUrls[id];
+	if (url.empty()) {
+		url = ZLibrary::ApplicationImageDirectory();
+		url += "/";
+		url += id;
+		url = "file://" + percent_encoding(url);
+	}
+	return url;
 }
 
 

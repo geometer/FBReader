@@ -57,8 +57,11 @@ std::string SearchResultNode::summary() const {
 }
 
 shared_ptr<ZLImage> SearchResultNode::image() const {
-	return shared_ptr<ZLImage>();
-//	return defaultCoverImage("searchresult.png");
+	return FBNode::defaultCoverImage("searchresult.png");
+}
+
+std::string SearchResultNode::imageUrl() const {
+	return FBNode::defaultImageUrl("searchresult.png");
 }
 
 shared_ptr<NetworkBookCollection> SearchResultNode::searchResult() { 

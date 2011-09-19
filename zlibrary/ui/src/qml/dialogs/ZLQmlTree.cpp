@@ -39,7 +39,7 @@ ZLQmlTreeDialog::ZLQmlTreeDialog()
 	QHash<int, QByteArray> names = roleNames();
 	names[Qt::DisplayRole] = "title";
 	names[SubTitleRole] = "subtitle";
-	names[Qt::DecorationRole] = "imageSource";
+	names[Qt::DecorationRole] = "iconSource";
 	names[ActivatableRole] = "activatable";
 	names[PageRole] = "page";
 	setRoleNames(names);
@@ -66,8 +66,8 @@ QModelIndex ZLQmlTreeDialog::parent(const QModelIndex &child) const {
 
 int ZLQmlTreeDialog::rowCount(const QModelIndex &parent) const {
 	ZLTreeNode *node = treeNode(parent);
-	qDebug() << Q_FUNC_INFO << &const_cast<ZLQmlTreeDialog*>(this)->rootNode()
-	         << parent << node << node->children().size();
+//	qDebug() << Q_FUNC_INFO << &const_cast<ZLQmlTreeDialog*>(this)->rootNode()
+//	         << parent << node << node->children().size();
 	return node->children().size();
 }
 
@@ -147,22 +147,22 @@ void ZLQmlTreeDialog::finish() {
 }
 
 void ZLQmlTreeDialog::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
-	qDebug() << Q_FUNC_INFO << parent << index;
+//	qDebug() << Q_FUNC_INFO << parent << index;
 	beginInsertRows(createIndex(parent), index, index);
 }
 
 void ZLQmlTreeDialog::onNodeEndInsert() {
-	qDebug() << Q_FUNC_INFO;
+//	qDebug() << Q_FUNC_INFO;
 	endInsertRows();
 }
 
 void ZLQmlTreeDialog::onNodeBeginRemove(ZLTreeNode *parent, size_t index) {
-	qDebug() << Q_FUNC_INFO << parent << index;
+//	qDebug() << Q_FUNC_INFO << parent << index;
 	beginRemoveRows(createIndex(parent), index, index);
 }
 
 void ZLQmlTreeDialog::onNodeEndRemove() {
-	qDebug() << Q_FUNC_INFO;
+//	qDebug() << Q_FUNC_INFO;
 	endRemoveRows();
 }
 

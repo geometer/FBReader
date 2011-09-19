@@ -118,8 +118,20 @@ shared_ptr<ZLImage> NetworkCatalogNode::image() const {
 	return shared_ptr<ZLImage>();
 }
 
+std::string NetworkCatalogNode::imageUrl() const {
+	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
+	if (url.empty()) {
+		if (ZLTreeTitledNode *node = zlobject_cast<ZLTreeTitledNode*>(parent()))
+			return node->imageUrl();
+	} else if (url.find(':') == std::string::npos) {
+		return FBNode::defaultImageUrl(url);
+	}
+	return url;
+}
+
 shared_ptr<ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
-	return ((FBReaderNode*)parent())->image();
+	return 0;
+//	return ((FBReaderNode*)parent())->image();
 }
 
 void NetworkCatalogNode::updateChildren() {

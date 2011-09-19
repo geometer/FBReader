@@ -91,6 +91,13 @@ shared_ptr<ZLImage> NetworkBookNode::image() const {
 	return shared_ptr<ZLImage>();
 }
 
+std::string NetworkBookNode::imageUrl() const {
+	std::string url = myBook->URLByType[NetworkItem::URL_COVER];
+	if (url.empty())
+		url = FBNode::defaultImageUrl("booktree-book.png");
+	return url;
+}
+
 const NetworkBookItem &NetworkBookNode::book() const {
 	return (const NetworkBookItem&)*myBook;
 }
