@@ -14,7 +14,10 @@ Page {
 		model: root.handler
 		delegate: ListDelegate {
 			signal tapAndHold
+			property bool hasTapAndHold: false
 			onClicked: {
+				if (hasTapAndHold)
+					return;
 				console.log(model.title, model.activatable, model.page)
 				if (model.activatable) {
 					if (root.handler.activate(visualModel.modelIndex(index))) {
@@ -32,15 +35,17 @@ Page {
 					});
 				}
 			}
+			onPressedChanged: if (pressed) hasTapAndHold = false
 			onTapAndHold: {
 				var index = visualModel.modelIndex(index);
 				var menu = menuComponent.createObject(listView.parent, { "modelIndex": index });
-				menu.open();
-				menu.statusChanged.connect(
-							function() {
-								if (menu.status == DialogStatus.Closed)
-									menu.destroy();
-							});
+				if (menu.hasChildren) {
+					hasTapAndHold = true;
+					menu.show();
+				} else {
+					menu.destroy();
+				}
+
 				console.log("tap and hold on " + model.title, ":",
 							root.handler.actions(visualModel.modelIndex(index)))
 			}
@@ -68,49 +73,32 @@ Page {
 		}
 		
 		ToolIcon {
-			// TODO: Add menu
+			visible: mainMenu.hasChildren
 			platformIconId: "toolbar-view-menu"
-//			onClicked: {
-//				if (mainMenu.status == DialogStatus.Closed) {
-//					mainMenu.item.recheckItems();
-//					mainMenu.open()
-//				} else {
-//					mainMenu.close();
-//				}
-//			}
+			onClicked: (mainMenu.status == DialogStatus.Closed)
+					   ? mainMenu.open()
+					   : mainMenu.close()
 		}
 	}
+	TreeDialogMenu {
+		id: mainMenu
+		modelIndex: root.rootIndex
+		visualParent: root.pageStack
+	}
+
 	Component {
 		id: menuComponent
-		Menu {
+		TreeDialogMenu {
 			id: menu
-			property variant modelIndex
-			MenuLayout {
-				id: menuLayout
-				Repeater {
-					id: menuRepeater
-					model: root.handler.actions(menu.modelIndex)
-					MenuItem {
-						text: modelData
-						onClicked: root.handler.run(menu.modelIndex, index)
-					}
-				}
-				Component.onCompleted: menuRepeater.destroy()
+			visualParent: root.pageStack
+			function show() {
+				open();
+				menu.statusChanged.connect(
+							function() {
+								if (menu.status == DialogStatus.Closed)
+									menu.destroy();
+							});
 			}
-//			Component.onCompleted: {
-//				var actions = root.handler.actions(index);
-//				console.log(menuLayout.menuChildren);
-//				console.log(JSON.stringify(menuLayout.menuChildren));
-//				for (var prop in menuLayout.menuChildren)
-//					console.log(prop, menuLayout.menuChildren[prop]);
-//				var items = [];
-//				for (var i = 0; i < actions.length; ++i) {
-//					var args = { "index": menu.index, "actionId": i };
-//					var item = menuItemComponent.createObject(null, args);
-//					menuLayout.menuChildren.push(item);
-//				}
-////				menuLayout.menuChildren = items;
-//			}
 		}
 	}
 	Component {

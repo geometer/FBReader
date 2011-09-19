@@ -416,7 +416,7 @@ void ZLQmlBookContent::repaint() {
 	if (myHolder->view().isNull())
 		return;
 	// Mey be there is way of optimization?
-	if (myPixmap.size() != QSize(width(), height()))
+	if (myPixmap.width() != width() || myPixmap.height() < height())
 		myPixmap = QPixmap(width(), height());
 	ZLQmlPaintContext &context = static_cast<ZLQmlPaintContext&>(myHolder->view()->context());
 	QPainter painter(&myPixmap);
