@@ -34,14 +34,19 @@
 #include <QtNetwork/QAuthenticator>
 //#include "ZLQtPostDevice.h"
 
+Q_GLOBAL_STATIC(QWeakPointer<QNetworkDiskCache>, globalCache)
+Q_GLOBAL_STATIC(QMutex, globalCacheMutex)
+
+static QString fixPath(const QString &path) {
+	if (path.startsWith('~'))
+		return QDir::homePath() + path.mid(1);
+	return path;
+}
+
 ZLQtNetworkManager::ZLQtNetworkManager() {
-//	myCache = new QNetworkDiskCache(&myManager);
-//	QDir cacheDirectory = QString::fromStdString(CacheDirectory());
-//	if (!cacheDirectory.exists())
-//		cacheDirectory.mkpath(cacheDirectory.absolutePath());
-//	myCache->setCacheDirectory(cacheDirectory.absolutePath());
-//	myManager.setCache(myCache);
-	myCookieJar = new ZLQtNetworkCookieJar(QString::fromStdString(CookiesPath()), &myManager);
+	myCache = new ZLQtNetworkCache(&myManager);
+	myManager.setCache(myCache);
+	myCookieJar = new ZLQtNetworkCookieJar(&myManager);
 	myManager.setCookieJar(myCookieJar);
 	QObject::connect(&myManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
 	                 this, SLOT(onAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
@@ -56,6 +61,22 @@ void ZLQtNetworkManager::createInstance() {
 	ourInstance = new ZLQtNetworkManager();
 }
 
+void ZLQtNetworkManager::initPaths() {
+	QMutexLocker locker(globalCacheMutex());
+	qDebug() << QString::fromStdString(CookiesPath())
+	            << fixPath(QString::fromStdString(CookiesPath()));
+	myCookieJar->setFilePath(QString::fromStdString(CookiesPath()));
+	Q_ASSERT(!globalCache()->isNull());
+	QDir cacheDirectory = fixPath(QString::fromStdString(ZLNetworkManager::CacheDirectory()))
+	        + QLatin1String("/qt4");
+	if (!cacheDirectory.exists())
+		cacheDirectory.mkpath(cacheDirectory.absolutePath());
+	(*globalCache()).toStrongRef()->setCacheDirectory(cacheDirectory.absolutePath());
+}
+
+QNetworkCookieJar *ZLQtNetworkManager::cookieJar() const {
+	return myCookieJar;
+}
 
 std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {
 	if (useProxy()) {
@@ -220,18 +241,78 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 			scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
 	}
 }
+
+ZLQtNetworkCache::ZLQtNetworkCache(QObject *parent) : QAbstractNetworkCache(parent) {
+	QMutexLocker locker(globalCacheMutex());
+	QWeakPointer<QNetworkDiskCache> &diskCache = *globalCache();
+	if (diskCache.isNull()) {
+		myCache = QSharedPointer<QNetworkDiskCache>::create();
+		diskCache = myCache.toWeakRef();
+	} else {
+		myCache = diskCache.toStrongRef();
+	}
+}
+
+ZLQtNetworkCache::~ZLQtNetworkCache() {
+	QMutexLocker locker(globalCacheMutex());
+	myCache.clear();
+}
+
+QNetworkCacheMetaData ZLQtNetworkCache::metaData(const QUrl &url) {
+	QMutexLocker locker(globalCacheMutex());
+	return myCache->metaData(url);
+}
+
+void ZLQtNetworkCache::updateMetaData(const QNetworkCacheMetaData &metaData) {
+	QMutexLocker locker(globalCacheMutex());
+	myCache->updateMetaData(metaData);
+}
+
+QIODevice *ZLQtNetworkCache::data(const QUrl &url) {
+	QMutexLocker locker(globalCacheMutex());
+	return myCache->data(url);
+}
+
+bool ZLQtNetworkCache::remove(const QUrl &url) {
+	QMutexLocker locker(globalCacheMutex());
+	return myCache->remove(url);
+}
+
+qint64 ZLQtNetworkCache::cacheSize() const {
+	QMutexLocker locker(globalCacheMutex());
+	return myCache->cacheSize();
+}
+
+QIODevice *ZLQtNetworkCache::prepare(const QNetworkCacheMetaData &metaData) {
+	QMutexLocker locker(globalCacheMutex());
+	return myCache->prepare(metaData);
+}
+
+void ZLQtNetworkCache::insert(QIODevice *device) {
+	QMutexLocker locker(globalCacheMutex());
+	myCache->insert(device);
+}
+
+void ZLQtNetworkCache::clear() {
+	QMutexLocker locker(globalCacheMutex());
+	myCache.clear();
+}
 	
-ZLQtNetworkCookieJar::ZLQtNetworkCookieJar(const QString &filePath, QObject *parent) 
-    : QNetworkCookieJar(parent), myFilePath(filePath + QLatin1String("/cache.dat")) {
+ZLQtNetworkCookieJar::ZLQtNetworkCookieJar(QObject *parent) 
+    : QNetworkCookieJar(parent) {
+}
+
+ZLQtNetworkCookieJar::~ZLQtNetworkCookieJar() {
+	save();
+}
+
+void ZLQtNetworkCookieJar::setFilePath(const QString &filePath) {
+	myFilePath = fixPath(filePath) + QLatin1String("/cache.dat");
 	QFile file(myFilePath);
 	QList<QNetworkCookie> cookies;
 	if (file.open(QFile::ReadOnly))
 		cookies = QNetworkCookie::parseCookies(file.readAll());
 	setAllCookies(cookies);
-}
-
-ZLQtNetworkCookieJar::~ZLQtNetworkCookieJar() {
-	save();
 }
 
 bool ZLQtNetworkCookieJar::setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl &url) {
@@ -241,7 +322,12 @@ bool ZLQtNetworkCookieJar::setCookiesFromUrl(const QList<QNetworkCookie> &cookie
 }
 
 void ZLQtNetworkCookieJar::save() {
+	if (myFilePath.isEmpty())
+		return;
 	QFile file(myFilePath);
+	QDir dir = QFileInfo(myFilePath).absoluteDir();
+	if (!dir.exists())
+		dir.mkpath(dir.absolutePath());
 	if (file.open(QFile::WriteOnly)) {
 		bool first = true;
 		foreach (const QNetworkCookie &cookie, allCookies()) {

@@ -30,11 +30,13 @@ class ZLResource;
 
 class FBNode : public ZLTreeTitledNode {
 
-protected:
+public:
 	static shared_ptr<ZLImage> defaultCoverImage(const std::string &id);
+	static std::string defaultImageUrl(const std::string &id);
 
 private:
 	static std::map<std::string,shared_ptr<ZLImage> > ourDefaultCovers;
+	static std::map<std::string,std::string> ourDefaultUrls;
 
 public:
 	static const ZLTypeId TYPE_ID;

@@ -50,9 +50,12 @@ std::string NetworkAuthorNode::title() const {
 	return myAuthor.DisplayName;
 }
 
-shared_ptr<ZLImage> NetworkAuthorNode::extractCoverImage() const {
-//	return defaultCoverImage("booktree-author.png");
-	return shared_ptr<ZLImage>();
+shared_ptr<ZLImage> NetworkAuthorNode::image() const {
+	return FBNode::defaultCoverImage("booktree-author.png");
+}
+
+std::string NetworkAuthorNode::imageUrl() const {
+	return FBNode::defaultImageUrl("booktree-author.png");
 }
 
 const NetworkBookItem::AuthorData &NetworkAuthorNode::author() {

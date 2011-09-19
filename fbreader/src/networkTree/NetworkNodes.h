@@ -20,7 +20,7 @@
 #ifndef __NETWORKNODES_H__
 #define __NETWORKNODES_H__
 
-#include "../blockTree/FBReaderNode.h"
+#include "../tree/FBNode.h"
 
 #include <ZLTreeTitledNode.h>
 #include <ZLTreePageNode.h>
@@ -99,6 +99,7 @@ public:
 protected:
 	void onChildrenReceived(LoadSubCatalogRunnable *runnable);
 	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
 	std::string title() const;
 	std::string summary() const;
 	virtual shared_ptr<ZLImage> lastResortCoverImage() const;
@@ -153,6 +154,7 @@ private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
 	std::string title() const;
 	std::string summary() const;
 
@@ -179,7 +181,8 @@ private:
 	void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
 	std::string title() const;
 
 private:
@@ -202,7 +205,8 @@ private:
 	void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
 	std::string title() const;
 	std::string summary() const;
 
@@ -232,6 +236,7 @@ private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
 	std::string title() const;
 	std::string subtitle() const;
 	bool activate();
