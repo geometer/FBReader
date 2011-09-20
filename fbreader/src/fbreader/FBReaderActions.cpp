@@ -92,6 +92,7 @@ void ShowOptionsDialogAction::run() {
 }
 
 void ShowLibraryTreeAction::run() {
+	//TODO maybe use call LibraryView().showDialog here?
 	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog();
 	size_t index = 0;
 	dialog->rootNode().insert(new AuthorTreeNode, index++);

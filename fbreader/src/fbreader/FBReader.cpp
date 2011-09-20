@@ -396,12 +396,13 @@ bool FBReader::isViewFinal() const {
 }
 
 void FBReader::showLibraryView() {
-	if (ZLStringOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", "booksOrder", "").value() == ActionCode::ORGANIZE_BOOKS_BY_TAG) {
-		//TODO remove ByTagView and ByAuthorView completely?
+	doAction(ActionCode::SHOW_LIBRARY);
+	//TODO maybe remove this code
+//	if (ZLStringOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", "booksOrder", "").value() == ActionCode::ORGANIZE_BOOKS_BY_TAG) {
 //		setView(myLibraryByTagView);
-	} else {
+//	} else {
 //		setView(myLibraryByAuthorView);
-	}
+//	}
 }
 
 void FBReader::setMode(ViewMode mode) {
@@ -431,8 +432,8 @@ void FBReader::setMode(ViewMode mode) {
 			break;
 		case LIBRARY_MODE:
 		{
-			shared_ptr<Book> currentBook = myModel->book();
-			//TODO remove ByTagView and ByAuthorView completely?
+			//may be remove this code completely
+//			shared_ptr<Book> currentBook = myModel->book();
 //			((LibraryView&)*myLibraryByAuthorView).showBook(currentBook);
 //			((LibraryView&)*myLibraryByTagView).showBook(currentBook);
 //			showLibraryView();
