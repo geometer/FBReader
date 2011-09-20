@@ -83,25 +83,46 @@ void NetworkOperationRunnable::showErrorMessage() const {
 	}
 }
 
-DownloadBookRunnable::DownloadBookRunnable(shared_ptr<BookReference> reference, shared_ptr<NetworkAuthenticationManager> authManager) : NetworkOperationRunnable("downloadBook") {
-	myReference = reference;
-	myAuthManager = authManager;
+DownloadBookListener::~DownloadBookListener() {
 }
 
-DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook") {
+DownloadBookRunnable::DownloadBookRunnable(shared_ptr<BookReference> reference, shared_ptr<NetworkAuthenticationManager> authManager) {
+	myReference = reference;
+	myAuthManager = authManager;
+	myListener = 0;
+}
+
+DownloadBookRunnable::DownloadBookRunnable(const std::string &url) {
 	myReference = new BookReference(url, BookReference::NONE, BookReference::DOWNLOAD_FULL);
+	myListener = 0;
 }
 
 DownloadBookRunnable::~DownloadBookRunnable() {
+}
+
+void DownloadBookRunnable::setListener(DownloadBookListener *listener) {
+	myListener = listener;
 }
 
 void DownloadBookRunnable::run() {
 	NetworkLinkCollection::Instance().downloadBook(
 		*myReference, myFileName,
 		myAuthManager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : myAuthManager->certificate(),
-		myDialog->listener()
+		myHolder
 	);
-	myErrorMessage = NetworkLinkCollection::Instance().errorMessage();
+}
+
+void DownloadBookRunnable::finished(const std::string &error) {
+	myErrorMessage = error;
+	if (!myListener)
+		return;
+	myListener->bookDownloaded(this);
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
+}
+
+shared_ptr<BookReference> DownloadBookRunnable::reference() const {
+	return myReference;
 }
 
 const std::string &DownloadBookRunnable::fileName() const {

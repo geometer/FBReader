@@ -58,6 +58,7 @@ protected Q_SLOTS:
     void onFinished(QNetworkReply *reply);
 
 private:
+	bool checkReply(QNetworkReply *reply);
 	QNetworkAccessManager myManager;
 	ZLQtNetworkCache *myCache;
 	ZLQtNetworkCookieJar *myCookieJar;

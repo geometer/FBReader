@@ -32,6 +32,7 @@
 #include "../library/Library.h"
 #include "../external/ProgramCollection.h"
 #include "../networkTree/NetworkView.h"
+#include "../networkActions/NetworkOperationRunnable.h"
 
 class ZLFile;
 class ZLMessageHandler;
@@ -40,7 +41,7 @@ class Book;
 class BookModel;
 class BookTextView;
 
-class FBReader : public ZLApplication {
+class FBReader : public ZLApplication, public DownloadBookListener {
 
 public:
 	static FBReader &Instance();
@@ -118,6 +119,7 @@ public:
 	void openLinkInBrowser(const std::string &url) const;
 
 	void tryShowFootnoteView(const std::string &id, const std::string &type);
+	void bookDownloaded(DownloadBookRunnable *runnable);
 	BookTextView &bookTextView() const;
 	void showBookTextView();
 	void openBook(shared_ptr<Book> book);
