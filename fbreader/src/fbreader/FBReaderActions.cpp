@@ -98,6 +98,7 @@ void ShowLibraryTreeAction::run() {
 	dialog->rootNode().insert(new AuthorTreeNode, index++);
 	dialog->rootNode().insert(new TagTreeNode, index++);
 	dialog->rootNode().insert(new RecentBooksTreeNode, index++);
+	dialog->rootNode().insert(new OpenFileSystemNode, index++);
 	dialog->run();
 }
 
