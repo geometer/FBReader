@@ -64,9 +64,9 @@ void ZLQtFSManager::normalizeRealPath(std::string &path) const {
 	// Qt in some cases (resolving current dir, home dir) returns filepaths with slashes,
 	// that should be replaced with backslashes:
 
-	QString qpath(path.c_str());
-	qpath.replace("/",ZLibrary::FileNameDelimiter.c_str());
-	qpath.replace("!!", QString( PwdDir.c_str()));  //TODO remove !! hardcoding
+	QString qpath = QString::fromStdString(path);
+	qpath.replace("/",QString::fromStdString(ZLibrary::FileNameDelimiter));
+	qpath.replace("!!", QString::fromStdString(PwdDir));  //TODO remove !! hardcoding
 	path = qpath.toStdString();
 
 	if (path[0] == '~') {

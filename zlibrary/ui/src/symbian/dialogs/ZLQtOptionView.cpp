@@ -317,8 +317,8 @@ void PathOptionView::_createItem() {
 
 	const ZLResource& buttonsResource = ZLResource::resource("dialog")[ADD_BOOKS_DIR_DIALOG]["buttons"];
 
-	myAddButton = new QPushButton(buttonsResource["add"].value().c_str());
-	myDeleteButton = new QPushButton(buttonsResource["delete"].value().c_str());
+	myAddButton = new QPushButton(QString::fromStdString(buttonsResource["add"].value()));
+	myDeleteButton = new QPushButton(QString::fromStdString(buttonsResource["delete"].value()));
 	myDirsListWidget = new QListWidget;
 	myDirsListWidget->setFrameShape(QFrame::StyledPanel);
 
@@ -352,7 +352,7 @@ void PathOptionView::_setActive(bool active) {
 
 void PathOptionView::_onAccept() const {
 	ZLPathOptionEntry& entry = (ZLPathOptionEntry&)*myOption;
-	QString string = myDirsList.join(ZLibrary::PathDelimiter.c_str());
+	QString string = myDirsList.join(QString::fromStdString(ZLibrary::PathDelimiter));
 	entry.onAccept( ::stdString(string) );
 }
 
@@ -363,7 +363,7 @@ void PathOptionView::reset() {
 
 	ZLPathOptionEntry& entry = (ZLPathOptionEntry&)*myOption;
 	QString dirsString = ::qtString(entry.initialValue());
-	myDirsList = dirsString.split(ZLibrary::PathDelimiter.c_str(),QString::SkipEmptyParts);
+	myDirsList = dirsString.split(QString::fromStdString(ZLibrary::PathDelimiter),QString::SkipEmptyParts);
 	update();
 
 }
@@ -429,7 +429,7 @@ KeyLineEdit::KeyLineEdit(KeyOptionView &keyView, QWidget *parent) : QLineEdit(pa
 
 void KeyLineEdit::keyPressEvent(QKeyEvent *keyEvent) {
 	std::string keyText = ZLQtKeyUtil::keyName(keyEvent);
-	setText(keyText.c_str());
+	setText(QString::fromStdString(keyText));
 	if (!keyText.empty()) {
 		myKeyView.myCurrentKey = keyText;
 		myKeyView.myComboBox->setCurrentIndex(((ZLKeyOptionEntry&)*myKeyView.myOption).actionIndex(keyText));
