@@ -229,6 +229,32 @@ std::string NetworkLinkCollection::bookFileName(const BookReference &reference) 
 	return BooksDB::Instance().getNetFile(::normalize(reference.cleanURL()));
 }
 
+class BookDownloaderListener : public ZLExecutionData::Listener {
+public:
+	BookDownloaderListener(const std::string &bookId, const std::string &fileName, shared_ptr<ZLExecutionData::Listener> listener)
+	    : myBookId(bookId), myFileName(fileName), myListener(listener) {
+	}
+
+	virtual ~BookDownloaderListener() {
+	}
+	
+	void showPercent(int ready, int full) {
+		myListener->showPercent(ready, full);
+	}
+
+	void finished(const std::string &error = std::string()) {
+		if (error.empty()) {
+			BooksDB::Instance().setNetFile(myBookId, myFileName);
+		}
+		myListener->finished(error);
+	}
+
+private:
+	const std::string myBookId;
+	const std::string myFileName;
+	shared_ptr<ZLExecutionData::Listener> myListener;
+};
+
 bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
 	std::string nURL = ::normalize(reference.URL);
 	rewriteUrl(nURL);
@@ -238,11 +264,13 @@ bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::st
 
 	if (nURL.empty() || nNetworkBookId.empty()) {
 		myErrorMessage = errorResource["unknownErrorMessage"].value();
+		listener->finished(myErrorMessage);
 		return false;
 	}
 	std::string storedFileName = BooksDB::Instance().getNetFile(nNetworkBookId);
 	if (!storedFileName.empty() && ZLFile(storedFileName).exists()) {
 		fileName = storedFileName;
+		listener->finished();
 		return true;
 	}
 	fileName = makeBookFileName(nNetworkBookId, reference.BookFormat, reference.ReferenceType, true);
@@ -250,17 +278,17 @@ bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::st
 		if (myErrorMessage.empty()) {
 			myErrorMessage = errorResource["unknownErrorMessage"].value();
 		}
+		listener->finished(myErrorMessage);
 		return false;
 	}
 	if (ZLFile(fileName).exists()) {
 		ZLFile(fileName).remove();
 	}
-	myErrorMessage = ZLNetworkManager::Instance().downloadFile(nURL, sslCertificate, fileName, listener);
-	if (!myErrorMessage.empty()) {
-		return false;
-	}
-	BooksDB::Instance().setNetFile(nNetworkBookId, fileName);
-	return true;
+	shared_ptr<ZLExecutionData::Listener> downloader = shared_ptr<ZLExecutionData::Listener>(
+	            new BookDownloaderListener(nNetworkBookId, fileName, listener)
+	            );
+	myErrorMessage = ZLNetworkManager::Instance().downloadFile(nURL, sslCertificate, fileName, downloader);
+	return myErrorMessage.empty();
 }
 
 shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std::string &pattern) {

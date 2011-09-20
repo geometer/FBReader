@@ -47,7 +47,6 @@
 
 #include "../libraryTree/LibraryView.h"
 #include "../network/NetworkLinkCollection.h"
-#include "../networkActions/NetworkOperationRunnable.h"
 
 #include "../migration/migrate.h"
 
@@ -371,18 +370,23 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 			}
 		}
 	} else if (type == "book") {
-		DownloadBookRunnable downloader(id);
-		downloader.executeWithUI();
-		if (downloader.hasErrors()) {
-			downloader.showErrorMessage();
-		} else {
-			shared_ptr<Book> book;
-			createBook(ZLFile(downloader.fileName()), book);
-			if (!book.isNull()) {
-				Library::Instance().addBook(book);
-				openBook(book);
-				refreshWindow();
-			}
+		DownloadBookRunnable *downloader = new DownloadBookRunnable(id);
+		downloader->setListener(this);
+		downloader->run();
+		
+	}
+}
+
+void FBReader::bookDownloaded(DownloadBookRunnable *downloader) {
+	if (downloader->hasErrors()) {
+		downloader->showErrorMessage();
+	} else {
+		shared_ptr<Book> book;
+		createBook(ZLFile(downloader->fileName()), book);
+		if (!book.isNull()) {
+			Library::Instance().addBook(book);
+			openBook(book);
+			refreshWindow();
 		}
 	}
 }
