@@ -50,8 +50,11 @@ protected:
 	virtual ~ZLTreeListener();
 	
 	const ZLTypeId &typeId() const;
-
+	
+public:
 	RootNode &rootNode();
+
+protected:
 	void clear();
 
 public:

@@ -26,7 +26,7 @@
 
 #include "../networkActions/NetworkActions.h"
 
-const ZLTypeId NetworkBookNode::TYPE_ID(FBReaderNode::TYPE_ID);
+const ZLTypeId NetworkBookNode::TYPE_ID(ZLTreeActionNode::TYPE_ID);
 
 const ZLTypeId &NetworkBookNode::typeId() const {
 	return TYPE_ID;
@@ -36,7 +36,9 @@ const ZLResource &NetworkBookNode::resource() const {
 	return ZLResource::resource("networkView")["bookNode"];
 }
 
-NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book, SummaryType summaryType) : FBReaderNode(parent), myBook(book), mySummaryType(summaryType) {
+NetworkBookNode::NetworkBookNode(NetworkContainerNode *parent, shared_ptr<NetworkItem> book, SummaryType summaryType) : myBook(book), mySummaryType(summaryType) {
+	init();
+	parent->append(this);
 }
 
 void NetworkBookNode::init() {
@@ -79,13 +81,21 @@ std::string NetworkBookNode::subtitle() const {
 	return authorsString;
 }
 
-void NetworkBookNode::drawCover(ZLPaintContext&, int vOffset) {
-	((NetworkView&)view()).drawCoverLater(this, vOffset);
+bool NetworkBookNode::activate() {
+	return false;
 }
 
-shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {
-	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
-	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
+shared_ptr<ZLImage> NetworkBookNode::image() const {
+//	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
+//	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
+	return shared_ptr<ZLImage>();
+}
+
+std::string NetworkBookNode::imageUrl() const {
+	std::string url = myBook->URLByType[NetworkItem::URL_COVER];
+	if (url.empty())
+		url = FBNode::defaultImageUrl("booktree-book.png");
+	return url;
 }
 
 const NetworkBookItem &NetworkBookNode::book() const {

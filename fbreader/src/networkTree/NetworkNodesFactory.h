@@ -20,7 +20,7 @@
 #ifndef __NETWORKNODESFACTORY_H__
 #define __NETWORKNODESFACTORY_H__
 
-#include <ZLBlockTreeView.h>
+#include <ZLTreeListener.h>
 
 #include "../network/NetworkItems.h"
 
@@ -38,7 +38,7 @@ private:
 	NetworkNodesFactory();
 
 public:
-	static FBReaderNode *createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
+	static ZLTreeNode *createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
 	static void createSubnodes(SearchResultNode *parent, NetworkBookCollection &books);
 	static void fillAuthorNode(NetworkContainerNode *parent, const NetworkItem::List &books);
 };

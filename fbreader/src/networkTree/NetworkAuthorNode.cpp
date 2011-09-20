@@ -33,19 +33,29 @@ const ZLResource &NetworkAuthorNode::resource() const {
 	return ZLResource::resource("networkView")["authorNode"];
 }
 
-NetworkAuthorNode::NetworkAuthorNode(NetworkContainerNode *parent, const NetworkBookItem::AuthorData &author) : NetworkContainerNode(parent), myAuthor(author) {
+NetworkAuthorNode::NetworkAuthorNode(NetworkContainerNode *parent, const NetworkBookItem::AuthorData &author)
+    : myAuthor(author) {
+	parent->append(this);
+}
+
+NetworkAuthorNode::NetworkAuthorNode(const NetworkBookItem::AuthorData &author)
+    : myAuthor(author) {
 }
 
 void NetworkAuthorNode::init() {
-	registerExpandTreeAction();
+//	registerExpandTreeAction();
 }
 
 std::string NetworkAuthorNode::title() const {
 	return myAuthor.DisplayName;
 }
 
-shared_ptr<ZLImage> NetworkAuthorNode::extractCoverImage() const {
-	return defaultCoverImage("booktree-author.png");
+shared_ptr<ZLImage> NetworkAuthorNode::image() const {
+	return FBNode::defaultCoverImage("booktree-author.png");
+}
+
+std::string NetworkAuthorNode::imageUrl() const {
+	return FBNode::defaultImageUrl("booktree-author.png");
 }
 
 const NetworkBookItem::AuthorData &NetworkAuthorNode::author() {

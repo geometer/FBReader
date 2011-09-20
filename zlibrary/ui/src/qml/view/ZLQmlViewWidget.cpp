@@ -36,6 +36,7 @@
 #include "ZLQmlSwipeGestureRecognizer.h"
 #include "../util/ZLQtKeyUtil.h"
 #include "../../../../core/src/application/ZLApplicationWindow.h"
+#include "ZLQmlNetworkAccessFactory.h"
 
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
@@ -348,6 +349,7 @@ int ZLQmlScrollBarInfo::bottom() const {
 
 ZLQmlViewWidget::ZLQmlViewWidget(QWidget *parent, ZLQmlViewObject &holder) : QDeclarativeView(parent), myHolder(holder) {
 	//setBackgroundMode(NoBackground);
+	engine()->setNetworkAccessManagerFactory(new ZLQmlNetworkAccessFactory);
 	QFont font;
 	font.setFamily(QLatin1String("Nokia Pure"));
 	font.setPointSize(24);
@@ -416,8 +418,10 @@ void ZLQmlBookContent::repaint() {
 	if (myHolder->view().isNull())
 		return;
 	// Mey be there is way of optimization?
-	if (myPixmap.size() != QSize(width(), height()))
+	if (myPixmap.width() != width() || myPixmap.height() < height()) {
+		qDebug() << "Change size from" << myPixmap.size() << "to" << QSize(width(), height());
 		myPixmap = QPixmap(width(), height());
+	}
 	ZLQmlPaintContext &context = static_cast<ZLQmlPaintContext&>(myHolder->view()->context());
 	QPainter painter(&myPixmap);
 	context.beginPaint(width(), height(), &painter);

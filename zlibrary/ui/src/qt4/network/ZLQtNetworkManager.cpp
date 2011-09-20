@@ -34,14 +34,19 @@
 #include <QtNetwork/QAuthenticator>
 //#include "ZLQtPostDevice.h"
 
+Q_GLOBAL_STATIC(QWeakPointer<QNetworkDiskCache>, globalCache)
+Q_GLOBAL_STATIC(QMutex, globalCacheMutex)
+
+static QString fixPath(const QString &path) {
+	if (path.startsWith('~'))
+		return QDir::homePath() + path.mid(1);
+	return path;
+}
+
 ZLQtNetworkManager::ZLQtNetworkManager() {
-//	myCache = new QNetworkDiskCache(&myManager);
-//	QDir cacheDirectory = QString::fromStdString(CacheDirectory());
-//	if (!cacheDirectory.exists())
-//		cacheDirectory.mkpath(cacheDirectory.absolutePath());
-//	myCache->setCacheDirectory(cacheDirectory.absolutePath());
-//	myManager.setCache(myCache);
-	myCookieJar = new ZLQtNetworkCookieJar(QString::fromStdString(CookiesPath()), &myManager);
+	myCache = new ZLQtNetworkCache(&myManager);
+	myManager.setCache(myCache);
+	myCookieJar = new ZLQtNetworkCookieJar(&myManager);
 	myManager.setCookieJar(myCookieJar);
 	QObject::connect(&myManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
 	                 this, SLOT(onAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
@@ -56,6 +61,20 @@ void ZLQtNetworkManager::createInstance() {
 	ourInstance = new ZLQtNetworkManager();
 }
 
+void ZLQtNetworkManager::initPaths() {
+	QMutexLocker locker(globalCacheMutex());
+	myCookieJar->setFilePath(QString::fromStdString(CookiesPath()));
+	Q_ASSERT(!globalCache()->isNull());
+	QDir cacheDirectory = fixPath(QString::fromStdString(ZLNetworkManager::CacheDirectory()))
+	        + QLatin1String("/qt4");
+	if (!cacheDirectory.exists())
+		cacheDirectory.mkpath(cacheDirectory.absolutePath());
+	(*globalCache()).toStrongRef()->setCacheDirectory(cacheDirectory.absolutePath());
+}
+
+QNetworkCookieJar *ZLQtNetworkManager::cookieJar() const {
+	return myCookieJar;
+}
 
 std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {
 	if (useProxy()) {
@@ -86,6 +105,7 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 			}
 			continue;
 		}
+		qDebug("Do request to %s", qPrintable(networkRequest.url().toString()));
 		
 		networkRequest.setRawHeader("User-Agent", userAgent().c_str());
 		QSslConfiguration configuration;
@@ -149,52 +169,23 @@ void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthent
 void ZLQtNetworkManager::onReplyReadyRead() {
 	QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
 	Q_ASSERT(reply);
+	if (!checkReply(reply))
+		return;
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	QByteArray data;
-	if (!reply->property("headerHandled").toBool()) {
-		QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-		if (redirect.isValid() && scope.request->isRedirectionSupported()) {
-			reply->deleteLater();
-			Q_ASSERT(scope.request->hasListener() || scope.replies->removeOne(reply));
-			reply->setProperty("redirected", true);
-			QVariant executionData = reply->property("executionData");
-			QNetworkRequest request = reply->request();
-			request.setUrl(reply->url().resolved(redirect));
-			reply = myManager.get(request);
-			Q_ASSERT(reply);
-			if (!scope.request->hasListener())
-				scope.replies->append(reply);
-			QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
-			reply->setProperty("scope", qVariantFromValue(scope));
-			reply->setProperty("executionData", executionData);
-			return;
-		}
-		
-		// We should fool the request about the received headers
-		reply->setProperty("headerHandled", true);
-		data = "HTTP/1.1 ";
-		data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
-		data += " ";
-		data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
-		scope.request->handleHeader(data.data(), data.size());
-		foreach (const QNetworkReply::RawHeaderPair &pair, reply->rawHeaderPairs()) {
-			data  = pair.first;
-			data += ": ";
-			data += pair.second;
-			scope.request->handleHeader(data.data(), data.size());
-		}
-	}
-	data = reply->readAll();
+	QByteArray data = reply->readAll();
 	if (!data.isEmpty())
 		scope.request->handleContent(data.data(), data.size());
 }
 
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
+	if (!checkReply(reply))
+		return;
+	qDebug("Finished request with code %d to %s",
+	       reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(),
+	       qPrintable(reply->url().toString()));
 	reply->deleteLater();
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	Q_ASSERT(scope.request);
-	if (reply->property("redirected").toBool())
-		return;
 	if (scope.request->hasListener()) {
 		scope.request->doAfter(reply->error() == QNetworkReply::NoError
 		                       ? std::string()
@@ -216,18 +207,122 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 			scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
 	}
 }
+
+bool ZLQtNetworkManager::checkReply(QNetworkReply *reply) {
+	if (reply->property("headerHandled").toBool())
+		return true;
+	if (reply->property("redirected").toBool())
+		return false;
+	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+	qDebug() << "request to" << reply->url() << "was redirected to" << redirect;
+	qDebug() << "request's http code is" << reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt()
+			 << "and it's redirectionSupported =" << scope.request->isRedirectionSupported();
+	if (redirect.isValid() && scope.request->isRedirectionSupported()) {
+		reply->deleteLater();
+		Q_ASSERT(scope.request->hasListener() || scope.replies->removeOne(reply));
+		reply->setProperty("redirected", true);
+		QVariant executionData = reply->property("executionData");
+		QNetworkRequest request = reply->request();
+		request.setUrl(reply->url().resolved(redirect));
+		QObject::disconnect(reply, 0, this, 0);
+		reply = myManager.get(request);
+		Q_ASSERT(reply);
+		if (!scope.request->hasListener())
+			scope.replies->append(reply);
+		QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
+		reply->setProperty("scope", qVariantFromValue(scope));
+		reply->setProperty("executionData", executionData);
+		return false;
+	}
 	
-ZLQtNetworkCookieJar::ZLQtNetworkCookieJar(const QString &filePath, QObject *parent) 
-    : QNetworkCookieJar(parent), myFilePath(filePath + QLatin1String("/cache.dat")) {
+	// We should fool the request about the received headers
+	reply->setProperty("headerHandled", true);
+	QByteArray data = "HTTP/1.1 ";
+	data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
+	data += " ";
+	data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
+	scope.request->handleHeader(data.data(), data.size());
+	foreach (const QNetworkReply::RawHeaderPair &pair, reply->rawHeaderPairs()) {
+		data  = pair.first;
+		data += ": ";
+		data += pair.second;
+		scope.request->handleHeader(data.data(), data.size());
+	}
+	return true;
+}
+
+ZLQtNetworkCache::ZLQtNetworkCache(QObject *parent) : QAbstractNetworkCache(parent) {
+	QMutexLocker locker(globalCacheMutex());
+	QWeakPointer<QNetworkDiskCache> &diskCache = *globalCache();
+	if (diskCache.isNull()) {
+		myCache = QSharedPointer<QNetworkDiskCache>::create();
+		diskCache = myCache.toWeakRef();
+	} else {
+		myCache = diskCache.toStrongRef();
+	}
+}
+
+ZLQtNetworkCache::~ZLQtNetworkCache() {
+	QMutexLocker locker(globalCacheMutex());
+	myCache.clear();
+}
+
+QNetworkCacheMetaData ZLQtNetworkCache::metaData(const QUrl &url) {
+	QMutexLocker locker(globalCacheMutex());
+	return myCache->metaData(url);
+}
+
+void ZLQtNetworkCache::updateMetaData(const QNetworkCacheMetaData &metaData) {
+	QMutexLocker locker(globalCacheMutex());
+	myCache->updateMetaData(metaData);
+}
+
+QIODevice *ZLQtNetworkCache::data(const QUrl &url) {
+	QMutexLocker locker(globalCacheMutex());
+	return myCache->data(url);
+}
+
+bool ZLQtNetworkCache::remove(const QUrl &url) {
+	QMutexLocker locker(globalCacheMutex());
+	return myCache->remove(url);
+}
+
+qint64 ZLQtNetworkCache::cacheSize() const {
+	QMutexLocker locker(globalCacheMutex());
+	return myCache->cacheSize();
+}
+
+QIODevice *ZLQtNetworkCache::prepare(const QNetworkCacheMetaData &metaData) {
+	QMutexLocker locker(globalCacheMutex());
+	return myCache->prepare(metaData);
+}
+
+void ZLQtNetworkCache::insert(QIODevice *device) {
+	QMutexLocker locker(globalCacheMutex());
+	myCache->insert(device);
+}
+
+void ZLQtNetworkCache::clear() {
+	QMutexLocker locker(globalCacheMutex());
+	myCache.clear();
+}
+	
+ZLQtNetworkCookieJar::ZLQtNetworkCookieJar(QObject *parent) 
+    : QNetworkCookieJar(parent) {
+}
+
+ZLQtNetworkCookieJar::~ZLQtNetworkCookieJar() {
+	save();
+}
+
+void ZLQtNetworkCookieJar::setFilePath(const QString &filePath) {
+	myFilePath = fixPath(filePath) + QLatin1String("/cache.dat");
 	QFile file(myFilePath);
 	QList<QNetworkCookie> cookies;
 	if (file.open(QFile::ReadOnly))
 		cookies = QNetworkCookie::parseCookies(file.readAll());
 	setAllCookies(cookies);
-}
-
-ZLQtNetworkCookieJar::~ZLQtNetworkCookieJar() {
-	save();
 }
 
 bool ZLQtNetworkCookieJar::setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl &url) {
@@ -237,7 +332,12 @@ bool ZLQtNetworkCookieJar::setCookiesFromUrl(const QList<QNetworkCookie> &cookie
 }
 
 void ZLQtNetworkCookieJar::save() {
+	if (myFilePath.isEmpty())
+		return;
 	QFile file(myFilePath);
+	QDir dir = QFileInfo(myFilePath).absoluteDir();
+	if (!dir.exists())
+		dir.mkpath(dir.absolutePath());
 	if (file.open(QFile::WriteOnly)) {
 		bool first = true;
 		foreach (const QNetworkCookie &cookie, allCookies()) {

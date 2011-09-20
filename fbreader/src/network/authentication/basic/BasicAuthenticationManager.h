@@ -56,7 +56,7 @@ public:
 	BasicAuthenticationManager(const NetworkLink &link);
 
 public:
-	AuthenticationStatus isAuthorised(bool useNetwork = true);
+	AuthenticationStatus isAuthorised(bool useNetwork = true, shared_ptr<ZLExecutionData::Listener> listener = 0);
 	std::string authorise(const std::string &pwd); // returns error message
 	void logOut();
 

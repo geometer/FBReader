@@ -20,6 +20,7 @@
 #include <ZLDialogManager.h>
 #include <ZLProgressDialog.h>
 #include <ZLNetworkManager.h>
+#include <ZLTimeManager.h>
 
 #include "NetworkOperationRunnable.h"
 
@@ -27,13 +28,22 @@
 #include "../network/NetworkLink.h"
 #include "../network/NetworkLinkCollection.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
+#include "../networkTree/NetworkNodes.h"
 
 NetworkOperationRunnable::NetworkOperationRunnable(const std::string &uiMessageKey) {
 	myDialog =
 		ZLDialogManager::Instance().createProgressDialog(ZLResourceKey(uiMessageKey));
 }
 
+NetworkOperationRunnable::NetworkOperationRunnable() : myHolder(this) {
+}
+
 NetworkOperationRunnable::~NetworkOperationRunnable() {
+}
+
+void NetworkOperationRunnable::showPercent(int ready, int full) {
+	(void)ready;
+	(void)full;
 }
 
 void NetworkOperationRunnable::executeWithUI() {
@@ -73,25 +83,46 @@ void NetworkOperationRunnable::showErrorMessage() const {
 	}
 }
 
-DownloadBookRunnable::DownloadBookRunnable(shared_ptr<BookReference> reference, shared_ptr<NetworkAuthenticationManager> authManager) : NetworkOperationRunnable("downloadBook") {
-	myReference = reference;
-	myAuthManager = authManager;
+DownloadBookListener::~DownloadBookListener() {
 }
 
-DownloadBookRunnable::DownloadBookRunnable(const std::string &url) : NetworkOperationRunnable("downloadBook") {
+DownloadBookRunnable::DownloadBookRunnable(shared_ptr<BookReference> reference, shared_ptr<NetworkAuthenticationManager> authManager) {
+	myReference = reference;
+	myAuthManager = authManager;
+	myListener = 0;
+}
+
+DownloadBookRunnable::DownloadBookRunnable(const std::string &url) {
 	myReference = new BookReference(url, BookReference::NONE, BookReference::DOWNLOAD_FULL);
+	myListener = 0;
 }
 
 DownloadBookRunnable::~DownloadBookRunnable() {
+}
+
+void DownloadBookRunnable::setListener(DownloadBookListener *listener) {
+	myListener = listener;
 }
 
 void DownloadBookRunnable::run() {
 	NetworkLinkCollection::Instance().downloadBook(
 		*myReference, myFileName,
 		myAuthManager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : myAuthManager->certificate(),
-		myDialog->listener()
+		myHolder
 	);
-	myErrorMessage = NetworkLinkCollection::Instance().errorMessage();
+}
+
+void DownloadBookRunnable::finished(const std::string &error) {
+	myErrorMessage = error;
+	if (!myListener)
+		return;
+	myListener->bookDownloaded(this);
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
+}
+
+shared_ptr<BookReference> DownloadBookRunnable::reference() const {
+	return myReference;
 }
 
 const std::string &DownloadBookRunnable::fileName() const {
@@ -204,12 +235,17 @@ void AdvancedSearchRunnable::run() {
 }
 
 
-LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkItem::List &children) : 
-	NetworkOperationRunnable("loadSubCatalog"), 
-	myItem(item), 
-	myChildren(children) {
+LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogNode *node) : myNode(node) {
+	myNode->item().loadChildren(myChildren, myHolder);
+}
+
+void LoadSubCatalogRunnable::finished(const std::string &error) {
+	myErrorMessage = error;
+	myNode->onChildrenReceived(this);
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
 }
 
 void LoadSubCatalogRunnable::run() {
-	myErrorMessage = myItem.loadChildren(myChildren);
+//	myErrorMessage = myItem.loadChildren(myChildren);
 }

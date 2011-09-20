@@ -19,13 +19,47 @@
 
 #include <ZLExecutionData.h>
 #include <ZLNetworkManager.h>
+#include <ZLTimeManager.h>
 
 #include "OPDSCatalogItem.h"
 #include "OPDSLink.h"
 #include "OPDSXMLParser.h"
 #include "NetworkOPDSFeedReader.h"
 
-#include "../NetworkOperationData.h"
+
+OPDSCatalogItemLoader::OPDSCatalogItemLoader(const OPDSLink &link, const std::string &url,
+                                 NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener)
+    : myLink(link), myChildren(children), myData(myLink), myListener(listener), myHolder(this) {
+	shared_ptr<ZLExecutionData> networkData = myLink.createNetworkData(url, myData);
+	networkData->setListener(myHolder);
+	ZLNetworkManager::Instance().perform(networkData);
+}
+
+OPDSCatalogItemLoader::~OPDSCatalogItemLoader() {
+}
+
+void OPDSCatalogItemLoader::showPercent(int ready, int full) {
+	myListener->showPercent(ready, full);
+}
+
+void OPDSCatalogItemLoader::finished(const std::string &error) {
+	if (!error.empty()) {
+		myListener->finished(error);
+		ZLTimeManager::deleteLater(myHolder);
+		myHolder.reset();
+		return;
+	}
+	myChildren.insert(myChildren.end(), myData.Items.begin(), myData.Items.end());
+	shared_ptr<ZLExecutionData> networkData = myData.resume();
+	if (networkData.isNull()) {
+		myListener->finished();
+		ZLTimeManager::deleteLater(myHolder);
+		myHolder.reset();
+	} else {
+		networkData->setListener(myHolder);
+		ZLNetworkManager::Instance().perform(networkData);
+	}
+}
 
 OPDSCatalogItem::OPDSCatalogItem(
 	const OPDSLink &link,
@@ -37,21 +71,8 @@ OPDSCatalogItem::OPDSCatalogItem(
 ) : NetworkCatalogItem(link, title, summary, urlByType, visibility, catalogType) {
 }
 
-std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {
-	NetworkOperationData data(Link);
-
-	shared_ptr<ZLExecutionData> networkData =
-		((OPDSLink&)Link).createNetworkData(URLByType[URL_CATALOG], data);
-
-	while (!networkData.isNull()) {
-		std::string error = ZLNetworkManager::Instance().perform(networkData);
-		if (!error.empty()) {
-			return error;
-		}
-
-		children.insert(children.end(), data.Items.begin(), data.Items.end());
-		networkData = data.resume();
-	}
-
-	return "";
+std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener) {
+	// loader will surely kill itself in some future
+	new OPDSCatalogItemLoader(static_cast<const OPDSLink&>(Link), URLByType[URL_CATALOG], children, listener);
+	return std::string();
 }

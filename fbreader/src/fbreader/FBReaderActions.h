@@ -122,12 +122,17 @@ public:
 	void run();
 };
 
-class ShowMobileOptionsDialogAction : public ZLApplication::Action {
+class ShowLibraryTreeAction : public ZLApplication::Action {
 
 public:
 	void run();
 };
 
+class ShowMobileOptionsDialogAction : public ZLApplication::Action {
+
+public:
+	void run();
+};
 
 class ShowLibraryOptionsDialogAction : public ZLApplication::Action {
 
@@ -166,11 +171,19 @@ public:
 	bool isVisible() const;
 };
 
-class ShowNetworkLibraryAction : public SetModeAction {
+class ShowTOCTreeAction : public ZLApplication::Action {
+
+public:
+	void run();
+	bool isVisible() const;
+};
+
+class ShowNetworkLibraryAction : public ZLApplication::Action {
 
 public:
 	ShowNetworkLibraryAction();
 	bool isVisible() const;
+	void run();
 };
 
 class AddBookAction : public ModeDependentAction {

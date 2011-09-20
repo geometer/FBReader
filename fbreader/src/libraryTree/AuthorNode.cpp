@@ -23,38 +23,44 @@
 
 #include "LibraryNodes.h"
 
+#include "../library/Library.h"
 #include "../library/Author.h"
 #include "../libraryActions/LibraryAuthorActions.h"
 
-const ZLTypeId AuthorNode::TYPE_ID(FBReaderNode::TYPE_ID);
-
-const ZLResource &AuthorNode::resource() const {
-	return ZLResource::resource("libraryView")["authorNode"];
-}
+const ZLTypeId AuthorNode::TYPE_ID(FBNode::TYPE_ID);
 
 const ZLTypeId &AuthorNode::typeId() const {
 	return TYPE_ID;
 }
 
-AuthorNode::AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author) : FBReaderNode(parent, atPosition), myAuthor(author) {
+const ZLResource &AuthorNode::resource() const {
+	return ZLResource::resource("libraryView")["authorNode"];
 }
 
-void AuthorNode::init() {
-	registerExpandTreeAction();
-	if (!myAuthor.isNull()) {
-		registerAction(new AuthorEditInfoAction(myAuthor));
+AuthorNode::AuthorNode(shared_ptr<Author> author): myAuthor(author) {
+	const BookList &books = Library::Instance().books(myAuthor);
+	//TODO add code for series retrieving here
+	size_t index = 0;
+	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
+		insert(new BookNode(*it),index++);
 	}
 }
 
-shared_ptr<Author> AuthorNode::author() const {
-	return myAuthor;
+std::string AuthorNode::title() const {
+	return myAuthor.isNull() ? resource()["unknownAuthor"].value() : myAuthor->name();
+}
+std::string AuthorNode::subtitle() const {
+	return std::string();
 }
 
-std::string AuthorNode::title() const {
-	return myAuthor.isNull() ?
-		resource()["unknownAuthor"].value() : myAuthor->name();
+std::string AuthorNode::imageUrl() const {
+	return std::string();
 }
 
 shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
 	return defaultCoverImage("booktree-author.png");
+}
+
+void AuthorNode::requestChildren() {
+
 }

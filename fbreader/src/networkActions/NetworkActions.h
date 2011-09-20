@@ -21,16 +21,18 @@
 #define __NETWORKACTIONS_H__
 
 #include <ZLRunnable.h>
+#include "NetworkOperationRunnable.h"
 
 class NetworkBookItem;
 
-class NetworkBookDownloadAction : public ZLRunnableWithKey {
+class NetworkBookDownloadAction : public ZLRunnableWithKey, public DownloadBookListener {
 
 public:
 	NetworkBookDownloadAction(const NetworkBookItem &book, bool demo, const std::string &tag = std::string());
 	ZLResourceKey key() const;
 	bool makesSense() const;
 	void run();
+	void bookDownloaded(DownloadBookRunnable *runnable);
 
 private:
 	const NetworkBookItem &myBook;

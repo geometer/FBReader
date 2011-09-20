@@ -38,6 +38,7 @@
 #include "ZLQmlApplicationWindow.h"
 #include "../dialogs/ZLQmlDialogManager.h"
 #include "../dialogs/ZLQmlFileSystemModel.h"
+#include "../dialogs/ZLQmlTree.h"
 #include "../view/ZLQmlViewWidget.h"
 
 void ZLQmlDialogManager::createApplicationWindow(ZLApplication *application) const {
@@ -64,6 +65,7 @@ ZLQmlApplicationWindow::ZLQmlApplicationWindow(ZLApplication *application) :
 void ZLQmlApplicationWindow::init() {
 	qmlRegisterType<ZLQmlFileSystemModel>("org.fbreader", 0, 14, "FileSystemModel");
 	qmlRegisterType<ZLQmlBookContent>("org.fbreader", 0, 14, "BookView");
+	qmlRegisterType<ZLQmlDataModel>("org.fbreader", 0, 14, "DataModel");
 	qmlRegisterUncreatableType<ZLQmlToolBarItem>("org.fbreader", 0, 14, "ToolBarItem", "Type is uncreatable");
 	ZLApplicationWindow::init();
 }

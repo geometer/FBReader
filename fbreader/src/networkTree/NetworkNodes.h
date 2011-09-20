@@ -20,26 +20,29 @@
 #ifndef __NETWORKNODES_H__
 #define __NETWORKNODES_H__
 
-#include "../blockTree/FBReaderNode.h"
+#include "../tree/FBNode.h"
 
-#include <ZLTreeNode.h>
+#include <ZLTreeTitledNode.h>
+#include <ZLTreePageNode.h>
+#include <ZLTreeActionNode.h>
+#include <ZLTreeListener.h>
 
 #include "../network/NetworkItems.h"
 
 class NetworkBookCollection;
 class NetworkLink;
+class LoadSubCatalogRunnable;
 
-class NetworkContainerNode : public FBReaderNode {
+class NetworkContainerNode : public ZLTreeTitledNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	NetworkContainerNode(ZLBlockTreeView::RootNode *parent, size_t atPosition = (size_t)-1);
-	NetworkContainerNode(NetworkContainerNode *parent, size_t atPosition = (size_t)-1);
+	NetworkContainerNode();
+	~NetworkContainerNode();
 
 private:
-//	void drawCover(ZLPaintContext &context, int vOffset);
 	const ZLTypeId &typeId() const;
 };
 
@@ -75,8 +78,10 @@ protected:
 	class OpenInBrowserAction;
 
 protected:
-	NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
-	NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
+	NetworkCatalogNode(shared_ptr<NetworkItem> item);
+	~NetworkCatalogNode();
+	
+	void requestChildren();
 
 private:
 	void init();
@@ -92,12 +97,15 @@ public:
 	void updateChildren();
 
 protected:
-	shared_ptr<ZLImage> extractCoverImage() const;
+	void onChildrenReceived(LoadSubCatalogRunnable *runnable);
+	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
 	std::string title() const;
 	std::string summary() const;
 	virtual shared_ptr<ZLImage> lastResortCoverImage() const;
 
 private:
+	friend class LoadSubCatalogRunnable;
 	shared_ptr<NetworkItem> myItem;
 	NetworkItem::List myChildrenItems;
 };
@@ -116,7 +124,7 @@ private:
 	class RegisterUserAction;
 
 public:
-	NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition = (size_t)-1);
+	NetworkCatalogRootNode(ZLTreeListener::RootNode *parent, NetworkLink &link, size_t atPosition = (size_t)-1);
 
 	const NetworkLink &link() const;
 
@@ -137,7 +145,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition = (size_t)-1);
+	SearchResultNode(ZLTreeListener::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition = (size_t)-1);
 
 	shared_ptr<NetworkBookCollection> searchResult();
 
@@ -145,7 +153,8 @@ private:
 	void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
 	std::string title() const;
 	std::string summary() const;
 
@@ -161,6 +170,7 @@ public:
 
 protected:
 	NetworkAuthorNode(NetworkContainerNode *parent, const NetworkBookItem::AuthorData &author);
+	NetworkAuthorNode(const NetworkBookItem::AuthorData &author);
 
 friend class NetworkNodesFactory;
 
@@ -171,7 +181,8 @@ private:
 	void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
 	std::string title() const;
 
 private:
@@ -194,7 +205,8 @@ private:
 	void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
 	std::string title() const;
 	std::string summary() const;
 
@@ -204,7 +216,7 @@ private:
 	mutable std::string mySummary;
 };
 
-class NetworkBookNode : public FBReaderNode {
+class NetworkBookNode : public ZLTreeActionNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -223,10 +235,11 @@ public:
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
 	std::string title() const;
 	std::string subtitle() const;
-	void drawCover(ZLPaintContext &context, int vOffset);
+	bool activate();
 
 private:
 	shared_ptr<NetworkItem> myBook;

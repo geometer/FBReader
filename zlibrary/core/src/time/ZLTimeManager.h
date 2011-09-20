@@ -30,7 +30,22 @@ class ZLTime;
 class ZLTimeManager {
 
 private:
+	typedef void (*DeleteFunc)(void*);
 	class AutoRemovableTask;
+	template <typename T> struct DeleteHelper {
+		static void func(T *object) { delete object; }
+	};
+	
+	class DeleteTask : public ZLRunnable {
+	
+	public:
+		DeleteTask(void *object, DeleteFunc func) : myObject(object), myFunc(func) {}
+	private:
+		void run() { myFunc(myObject); }
+
+		void *myObject;
+		DeleteFunc myFunc;
+	};
 
 protected:
 	static ZLTimeManager *ourInstance;
@@ -47,6 +62,13 @@ public:
 	virtual void addTask(shared_ptr<ZLRunnable> task, int interval) = 0;
 	void addAutoRemovableTask(shared_ptr<ZLRunnable> task, int delay = 0);
 	void removeTask(shared_ptr<ZLRunnable> task);
+	template <typename T> static void deleteLater(shared_ptr<T> object, int delay = 0) {
+		deleteLater(new shared_ptr<T>(object), delay);
+	}
+	template <typename T> static void deleteLater(T *object, int delay = 0) {
+		DeleteFunc func = reinterpret_cast<DeleteFunc>(&DeleteHelper<T>::func);
+		ZLTimeManager::Instance().addAutoRemovableTask(new DeleteTask(object, func), delay);
+	}
 	
 protected:
 	virtual void removeTaskInternal(shared_ptr<ZLRunnable> task) = 0;

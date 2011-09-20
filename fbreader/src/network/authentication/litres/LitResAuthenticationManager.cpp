@@ -41,7 +41,7 @@ const ZLNetworkSSLCertificate &LitResAuthenticationManager::certificate() {
 	return myCertificate;
 }
 
-NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::isAuthorised(bool useNetwork) {
+NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::isAuthorised(bool useNetwork, shared_ptr<ZLExecutionData::Listener> listener) {
 	bool authState = !mySidUserNameOption.value().empty() && !mySidOption.value().empty();
 	if (mySidChecked || !useNetwork) {
 		return AuthenticationStatus(authState);
@@ -54,8 +54,10 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 		return AuthenticationStatus(false);
 	}
 
-	std::string firstName, lastName, newSid;
-	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(firstName, lastName, newSid);
+//	std::string firstName, lastName, newSid;
+	shared_ptr<LitResLoginDataParser> parser = new LitResLoginDataParser(this, listener);
+	shared_ptr<ZLXMLReader> xmlReader = parser.staticCast<ZLXMLReader>();
+	shared_ptr<ZLExecutionData::Listener> loginListener = parser.staticCast<ZLExecutionData::Listener>();
 
 	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
 	ZLNetworkUtil::appendParameter(url, "sid", mySidOption.value());
@@ -64,25 +66,27 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 		ZLNetworkManager::Instance().createXMLParserRequest(
 			url, certificate(), xmlReader
 		);
-	std::string error = ZLNetworkManager::Instance().perform(networkData);
+	networkData->setListener(loginListener);
+	ZLNetworkManager::Instance().perform(networkData);
+	return AuthenticationStatus(std::string());
 
-	if (!error.empty()) {
-		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
-			return AuthenticationStatus(error);
-		}
-		mySidChecked = true;
-		mySidUserNameOption.setValue("");
-		mySidOption.setValue("");
-		return AuthenticationStatus(false);
-	}
-	mySidChecked = true;
-	mySidOption.setValue(newSid);
-	return AuthenticationStatus(true);
+//	if (!error.empty()) {
+//		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
+//			return AuthenticationStatus(error);
+//		}
+//		mySidChecked = true;
+//		mySidUserNameOption.setValue("");
+//		mySidOption.setValue("");
+//		return AuthenticationStatus(false);
+//	}
+//	mySidChecked = true;
+//	mySidOption.setValue(newSid);
+//	return AuthenticationStatus(true);
 }
 
 std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 	std::string firstName, lastName, newSid;
-	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(firstName, lastName, newSid);
+	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(this, 0);
 
 	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
 	ZLNetworkUtil::appendParameter(url, "login", UserNameOption.value());
