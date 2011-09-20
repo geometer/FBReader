@@ -1,4 +1,4 @@
-#include <QDateTime>
+#include <QtCore/QDateTime>
 
 #include <time.h>
 

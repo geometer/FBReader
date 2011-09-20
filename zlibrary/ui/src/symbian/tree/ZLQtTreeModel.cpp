@@ -6,7 +6,7 @@
 
 #include "../dialogs/ZLQtUtil.h"
 
-#include <QDebug>
+#include <QtCore/QDebug>
 
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QObject *parent) :  QAbstractListModel(parent), myRootNode(rootNode) {
 	myCurrentNode = &myRootNode;
@@ -63,7 +63,7 @@ bool ZLQtTreeModel::insertRows(int row, int count, const QModelIndex &parent) {
 }
 
 bool ZLQtTreeModel::removeRows(int row, int count, const QModelIndex &parent) {
-//	beginRemoveRows();
+//	beginRemoveRows
 //	endRemoveRows();
 }
 

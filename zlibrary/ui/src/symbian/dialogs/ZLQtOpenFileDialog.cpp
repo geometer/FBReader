@@ -1,8 +1,9 @@
-#include <QApplication>
-#include <QDir>
-#include <QFileInfo>
-#include <QFileInfoList>
-#include <QAction>
+#include <QtGui/QApplication>
+#include <QtCore/QDir>
+#include <QtCore/QFileInfo>
+#include <QtCore/QFileInfoList>
+#include <QtGui/QAction>
+#include <QtGui/QPushButton>
 
 #include <ZLApplication.h>
 
@@ -53,6 +54,13 @@ bool ZLQtOpenFileDialog::runInternal() {
 		action->setSoftKeyRole( QAction::PositiveSoftKey );
 		QObject::connect(action, SIGNAL(triggered()), myDialog, SLOT(accept()));
 		myDialog->addAction( action );
+
+#ifndef 	__SYMBIAN__
+		QPushButton* button = new QPushButton( select.value().c_str() );
+		QObject::connect(button, SIGNAL(clicked()), myDialog, SLOT(accept()));
+		myDialog->layout()->addWidget(button);
+#endif
+
 	}
 
 	return myDialog->run();

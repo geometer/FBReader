@@ -1,13 +1,12 @@
 #ifndef __ZLQTTREEDIALOG_H__
 #define __ZLQTTREEDIALOG_H__
 
-#include <QDialog>
-#include <QListView>
+#include <QtGui/QDialog>
+#include <QtGui/QListView>
 
 #include <ZLTreeDialog.h>
 
 #include "../tree/ZLQtTreeModel.h"
-#include "../actions/LibraryActions.h"
 
 class ZLQtTreeDialog : public QDialog, public ZLTreeDialog{
 	Q_OBJECT;

@@ -1,7 +1,7 @@
 #ifndef __ZLQTTREEMODEL_H__
 #define __ZLQTTREEMODEL_H__
 
-#include <QAbstractListModel>
+#include <QtCore/QAbstractListModel>
 
 #include <ZLTreeListener.h>
 

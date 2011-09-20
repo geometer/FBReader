@@ -4,7 +4,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QResizeEvent>
 #include <QtGui/QScrollArea>
-#include <QAction>
+#include <QtGui/QAction>
 
 #include <ZLDialogManager.h>
 
@@ -38,6 +38,11 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 		addAction( cancelButton );
 		connect(cancelButton, SIGNAL(triggered()), this, SLOT(reject()));
 
+#ifndef 	__SYMBIAN__
+		QPushButton* realOkButton = new QPushButton( ::qtButtonName(ZLDialogManager::OK_BUTTON), this );
+		layout->addWidget(realOkButton);
+		connect(realOkButton, SIGNAL(clicked()), this, SLOT(accept()));
+#endif
 }
 
 

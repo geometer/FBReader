@@ -4,7 +4,7 @@
 
 #include <QtGui/QWidget>
 #include <QtGui/QDialog>
-#include <QApplication>
+#include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QScrollArea>
 #include <QtGui/QPaintEvent>

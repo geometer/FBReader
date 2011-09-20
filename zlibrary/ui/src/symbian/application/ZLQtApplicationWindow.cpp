@@ -13,10 +13,9 @@
 #include <QtCore/QObjectList>
 #include <QtGui/QMessageBox>
 #include <QtGui/QFocusEvent>
-#include <QAction>
-#include <QDebug>
-
+#include <QtGui/QAction>
 #include <QtGui/QDesktopWidget>
+#include <QtCore/QDebug>
 
 #include <ZLibrary.h>
 #include <ZLPopupData.h>
@@ -28,11 +27,11 @@
 
 #include "../menu/DrillDownMenu.h"
 
-#include "../VolumeKeysCapturer.h"
+#ifdef 	__SYMBIAN__
+#include "../platform/VolumeKeysCapturer.h"
+#endif
 
 #include "../actions/PreferencesActions.h"
-#include "../actions/LibraryActions.h"
-
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 		new ZLQtApplicationWindow(application);
@@ -60,7 +59,9 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 		myMenuDialog = new DrillDownMenuDialog(this);
 		myMenu = new DrillDownMenu;
 
+#ifdef 	__SYMBIAN__
 		myVolumeKeyCapture = new VolumeKeysCapturer(this);
+#endif
 }
 
 
@@ -74,6 +75,10 @@ void ZLQtApplicationWindow::init() {
 		myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
 		addAction(myShowMenuAction);
+
+#ifndef 	__SYMBIAN__
+		this->menuBar()->addAction(myShowMenuAction);
+#endif
 
 		myMenuDialog->showDrillDownMenu(myMenu);
 

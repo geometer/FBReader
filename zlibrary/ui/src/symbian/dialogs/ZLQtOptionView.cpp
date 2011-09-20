@@ -15,7 +15,7 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QFrame>
 
-#include <QStringList>
+#include <QtCore/QStringList>
 
 #include <ZLStringUtil.h>
 #include <ZLDialogManager.h>

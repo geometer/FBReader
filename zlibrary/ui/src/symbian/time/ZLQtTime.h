@@ -5,7 +5,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QTimerEvent>
-#include <QMetaType>
+#include <QtCore/QMetaType>
 
 #include <ZLTimeManager.h>
 

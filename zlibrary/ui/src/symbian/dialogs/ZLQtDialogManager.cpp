@@ -4,8 +4,8 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QDesktopWidget>
 
-#include <QDesktopServices>
-#include <QUrl>
+#include <QtGui/QDesktopServices>
+#include <QtCore/QUrl>
 
 #include "ZLQtDialogManager.h"
 #include "ZLQtDialog.h"
