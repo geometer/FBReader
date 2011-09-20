@@ -73,7 +73,7 @@ int ZLQmlTreeDialog::rowCount(const QModelIndex &parent) const {
 
 int ZLQmlTreeDialog::columnCount(const QModelIndex &parent) const {
 	Q_UNUSED(parent);
-	return 0;
+	return 1;
 }
 
 //bool ZLQmlTreeDialog::hasChildren(const QModelIndex &parent) const {

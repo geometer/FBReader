@@ -59,20 +59,34 @@ protected:
 	shared_ptr<ZLProgressDialog> myDialog;
 };
 
+class DownloadBookRunnable;
+
+class DownloadBookListener {
+
+public:
+	virtual ~DownloadBookListener();
+	
+	virtual void bookDownloaded(DownloadBookRunnable *runnable) = 0;
+};
+
 class DownloadBookRunnable : public NetworkOperationRunnable {
 
 public:
 	DownloadBookRunnable(shared_ptr<BookReference> reference, shared_ptr<NetworkAuthenticationManager> authManager);
 	DownloadBookRunnable(const std::string &url);
 	~DownloadBookRunnable();
+	void setListener(DownloadBookListener *listener);
 	void run();
+	void finished(const std::string &error = std::string());
 
+	shared_ptr<BookReference> reference() const;
 	const std::string &fileName() const;
 
 private:
 	shared_ptr<BookReference> myReference;
 	shared_ptr<NetworkAuthenticationManager> myAuthManager;
 	std::string myFileName;
+	DownloadBookListener *myListener;
 };
 
 class IsAuthorisedRunnable : public NetworkOperationRunnable {
