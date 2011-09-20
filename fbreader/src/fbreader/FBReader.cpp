@@ -45,7 +45,8 @@
 #include "TimeUpdater.h"
 #include "SwitchProfileAction.h"
 
-#include "../libraryTree/LibraryView.h"
+//TODO may be remove it
+//#include "../libraryTree/LibraryView.h"
 #include "../network/NetworkLinkCollection.h"
 
 #include "../migration/migrate.h"
