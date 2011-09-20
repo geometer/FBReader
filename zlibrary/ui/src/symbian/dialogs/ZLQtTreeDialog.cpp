@@ -1,16 +1,17 @@
-#include <QVBoxLayout>
-#include <QAction>
-#include <QDebug>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QAction>
+#include <QtGui/QPushButton>
+#include <QtGui/QDirModel>
+
+#include <QtCore/QDebug>
+
 #include <ZLResource.h>
 #include "ZLQtTreeDialog.h"
 
-#include <QDirModel>
-
-ZLQtTreeDialog::ZLQtTreeDialog(QWidget* parent) : QDialog(parent) {
+ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	myView = new QListView;
 	myModel = new ZLQtTreeModel(rootNode(), this);
-
 	myView->setModel(myModel);
 
 	const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
@@ -23,6 +24,13 @@ ZLQtTreeDialog::ZLQtTreeDialog(QWidget* parent) : QDialog(parent) {
 	myView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	layout->addWidget(myView);
+
+#ifndef 	__SYMBIAN__
+	QPushButton* button = new QPushButton("back");
+	connect(button, SIGNAL(clicked()), this, SLOT(back()));
+	layout->addWidget(button);
+#endif
+
 }
 
 void ZLQtTreeDialog::back() {

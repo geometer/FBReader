@@ -32,8 +32,6 @@
 #endif
 
 #include "../actions/PreferencesActions.h"
-#include "../actions/LibraryActions.h"
-
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 		new ZLQtApplicationWindow(application);
@@ -76,6 +74,10 @@ void ZLQtApplicationWindow::init() {
 		myShowMenuAction = new QAction(QString::fromStdString(mainMenu),this);
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
 		addAction(myShowMenuAction);
+
+#ifndef 	__SYMBIAN__
+		this->menuBar()->addAction(myShowMenuAction);
+#endif
 
 #ifdef __SYMBIAN__
 myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
