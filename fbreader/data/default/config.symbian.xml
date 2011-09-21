@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<group name="Config">
+		<option name="AutoSave" value="true"/>
+		<option name="Timeout" value="30"/>
+	</group>
+
+	<group name="Format">
+	</group>
+
+	<group name="Indicator">
+		<option name="FontSize" value="5"/>
+		<option name="Height" value="15"/>
+		<option name="Offset" value="2"/>
+		<option name="PositionText" value="true"/>
+		<option name="Time" value="true"/>
+		<option name="Type" value="1"/>
+		<option name="Offset" value="2"/>
+	    <option name="TouchSensitive" value="false"/>
+	</group>
+
+	<group name="Options">
+	    <option name="BookPath" value="E:/Books" />
+	    <option name="DownloadDirectory" value="E:/Books" />
+		<option name="CollectAllBooks" value="true" />
+		<option name="ScanSubdirs" value="true"/>
+		<option name="Timeout" value="20" />
+		<option name="IsSelectionEnabled" value="false"/>
+		<option name="LeftMargin" value="5"/>
+		<option name="RightMargin" value="5"/>
+		<option name="KeyDelay" value="0"/>
+	</group>
+
+	<group name="Rotation">
+		<option name="Angle" value="270" />
+	</group>
+
+	<group name="Scrollings">
+		<option name="Delay" value="0"/>
+	</group>
+
+	<group name="Style">
+		<option name="Base:fontFamily" value="Series 60 Sans"/>
+		<option name="Base:fontSize" value="8"/>
+	    <option name="UseCustomFonts" value="true" />
+	</group>
+
+	<group name="TapScrolling">
+		<option name="Enabled" value="true"/>
+	</group>
+
+	<group name="Web Browser">
+		<option name="Enabled" value="true"/>
+	</group>
+
+</config>

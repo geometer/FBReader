@@ -59,7 +59,7 @@ const ZLTypeId &FBReaderNode::typeId() const {
 	return TYPE_ID;
 }
 
-shared_ptr<ZLImage> FBReaderNode::coverImage() const {
+shared_ptr<ZLImage> FBReaderNode::image() const {
 	if (!myCoverImageIsStored) {
 		myCoverImageIsStored = true;
 		myStoredCoverImage = extractCoverImage();
@@ -72,7 +72,7 @@ void FBReaderNode::drawCover(ZLPaintContext &context, int vOffset) {
 }
 
 void FBReaderNode::drawCoverReal(ZLPaintContext &context, int vOffset) {
-	shared_ptr<ZLImage> cover = coverImage();
+	shared_ptr<ZLImage> cover = image();
 	if (cover.isNull()) {
 		return;
 	}
@@ -114,7 +114,7 @@ void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset) {
 
 	context.setColor(highlighted() ?
 		FBOptions::Instance().colorOption(ZLTextStyle::HIGHLIGHTED_TEXT).value() :
-		FBOptions::Instance().RegularTextColorOption.value());
+		FBOptions::Instance().regularTextColorOption().value());
 	context.setFont(style.fontFamily(), style.fontSize(), style.bold(), style.italic());
 
 	const std::string text = title();
@@ -122,7 +122,7 @@ void FBReaderNode::drawTitle(ZLPaintContext &context, int vOffset) {
 }
 
 void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset) {
-	const std::string text = summary();
+	const std::string text = subtitle();
 	if (text.empty()) {
 		return;
 	}
@@ -133,7 +133,7 @@ void FBReaderNode::drawSummary(ZLPaintContext &context, int vOffset) {
 
 	context.setColor(highlighted() ?
 		FBOptions::Instance().colorOption(ZLTextStyle::HIGHLIGHTED_TEXT).value() :
-		FBOptions::Instance().RegularTextColorOption.value());
+		FBOptions::Instance().regularTextColorOption().value());
 	context.setFont(style.fontFamily(), style.fontSize() * 2 / 3, style.bold(), style.italic());
 
 	context.drawString(hOffset, vOffset + 13 * unit / 4, text.data(), text.size(), false);
@@ -152,9 +152,9 @@ void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOf
 
 	context.setColor(FBOptions::Instance().colorOption("internal").value());
 	context.setFont(
-		style.fontFamily(), 
-		auxiliary ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3), 
-		style.bold(), 
+		style.fontFamily(),
+		auxiliary ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3),
+		style.bold(),
 		style.italic()
 	);
 
@@ -232,7 +232,7 @@ int FBReaderNode::unitSize(ZLPaintContext &context, const FBTextStyle &style) co
 	return (context.stringHeight() * 2 + 2) / 3;
 }
 
-std::string FBReaderNode::summary() const {
+std::string FBReaderNode::subtitle() const {
 	std::string result;
 	int count = 0;
 	const ZLBlockTreeNode::List &subNodes = children();

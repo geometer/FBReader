@@ -9,7 +9,7 @@
 	<binding key="&lt;OK&gt;+&lt;Left&gt;" action="decreaseFont"/>
 	<binding key="&lt;OK&gt;+&lt;Right&gt;" action="increaseFont"/>
 	<binding key="&lt;OK&gt;+&lt;Down&gt;" action="toc"/>
-	<binding key="&lt;OK&gt;+&lt;Up&gt;" action="showLibrary"/>
+	<binding key="&lt;OK&gt;+&lt;Up&gt;" action="library"/>
 	<binding key="&lt;Esc&gt;+&lt;Left&gt;" action="gotoSectionStart"/>
 	<binding key="&lt;Esc&gt;+&lt;Right&gt;" action="gotoSectionEnd"/>
 	<binding key="&lt;Esc&gt;+&lt;Down&gt;" action="toggleIndicator"/>

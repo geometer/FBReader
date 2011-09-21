@@ -34,11 +34,12 @@ const ZLResource &NetworkSeriesNode::resource() const {
 }
 
 NetworkSeriesNode::NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle, SummaryType summaryType) : 
-	NetworkContainerNode(parent), mySeriesTitle(seriesTitle), mySummaryType(summaryType) {
+	mySeriesTitle(seriesTitle), mySummaryType(summaryType) {
+	parent->append(this);
 }
 
 void NetworkSeriesNode::init() {
-	registerExpandTreeAction();
+//	registerExpandTreeAction();
 }
 
 std::string NetworkSeriesNode::title() const {
@@ -48,11 +49,11 @@ std::string NetworkSeriesNode::title() const {
 std::string NetworkSeriesNode::summary() const {
 	if (mySummary.empty()) {
 		if (mySummaryType == BOOKS) {
-			mySummary = FBReaderNode::summary();
+			mySummary = NetworkContainerNode::subtitle();
 		} else {
 			std::set<NetworkBookItem::AuthorData> authorSet;
-			const std::vector<ZLBlockTreeNode*> &books = children();
-			for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
+			const std::vector<ZLTreeNode*> &books = children();
+			for (std::vector<ZLTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
 				const NetworkBookItem &book = ((NetworkBookNode*)*it)->book();
 				const std::vector<NetworkBookItem::AuthorData> &authors = book.Authors;
 				for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
@@ -71,13 +72,24 @@ std::string NetworkSeriesNode::summary() const {
 	return mySummary;
 }
 
-shared_ptr<ZLImage> NetworkSeriesNode::extractCoverImage() const {
-	const std::vector<ZLBlockTreeNode*> &books = children();
-	for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
-		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->coverImage();
+shared_ptr<ZLImage> NetworkSeriesNode::image() const {
+	const std::vector<ZLTreeNode*> &books = children();
+	for (std::vector<ZLTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
+		shared_ptr<ZLImage> bookCover = ((ZLTreeTitledNode*)*it)->image();
 		if (!bookCover.isNull()) {
 			return bookCover;
 		}
 	}
-	return defaultCoverImage("booktree-book.png");
+	return FBNode::defaultCoverImage("booktree-book.png");
+}
+
+std::string NetworkSeriesNode::imageUrl() const {
+//	const std::vector<ZLTreeNode*> &books = children();
+//	for (std::vector<ZLTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
+//		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->image();
+//		if (!bookCover.isNull()) {
+//			return bookCover;
+//		}
+//	}
+	return FBNode::defaultImageUrl("booktree-book.png");
 }

@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Boek Info..." />
 		<node name="toc" value="Inhoudsopgave" />
-		<node name="showLibrary" value="Open bibliotheek" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" value="Open bibliotheek" />
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Bibliotheek">
-			<node name="showLibrary" value="Open" />
+			<node name="library" value="Open" />
 			<node name="previousBook" value="Vorig boek" />
 			<node name="showRecent" value="Recent" />
 			<node name="addBook" value="Boek toevoegen..." />
@@ -120,7 +120,7 @@
 			<node name="label" value="Boek lezen" />
 			<node name="tooltip" value="Leesmodus tonen" />
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Bibliotheek" />
 			<node name="tooltip" value="Bibliotheek tonen" />
 			<node name="popup" value="Recente boekenlijst tonen" />
@@ -141,7 +141,7 @@
 			<node name="label" value="Bestand toevoegen" />
 			<node name="tooltip" value="Bestand aan de bibliotheek toevoegen" />
 		</node>
-		<node name="showNetLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="Netwerk" />
 			<node name="tooltip" value="Zoeken in netwerk bibliotheken" />
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Geen" />
-						<node name="showLibrary" value="Toon bibliotheek" />
-						<node name="showNetLibrary" value="Toon netwerk bibliotheek" />
+						<node name="library" value="Toon bibliotheek" />
+						<node name="networkLibrary" value="Toon netwerk bibliotheek" />
 						<node name="showRecent" value="Toon recente boeken" />
 						<node name="previousBook" value="Toon vorig boek" />
 						<node name="toc" value="Toon inhoudsopgave" />

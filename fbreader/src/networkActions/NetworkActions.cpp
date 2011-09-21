@@ -24,7 +24,6 @@
 
 #include "NetworkActions.h"
 #include "AuthenticationDialog.h"
-#include "NetworkOperationRunnable.h"
 
 #include "../network/NetworkItems.h"
 #include "../network/NetworkLink.h"
@@ -112,16 +111,20 @@ void NetworkBookDownloadAction::run() {
 		return;
 	}
 
-	DownloadBookRunnable downloader(reference, myBook.Link.authenticationManager());
-	downloader.executeWithUI();
-	if (downloader.hasErrors()) {
-		downloader.showErrorMessage();
+	DownloadBookRunnable *downloader = new DownloadBookRunnable(reference, myBook.Link.authenticationManager());
+	downloader->setListener(this);
+	downloader->run();
+}
+	
+void NetworkBookDownloadAction::bookDownloaded(DownloadBookRunnable *downloader) {
+	if (downloader->hasErrors()) {
+		downloader->showErrorMessage();
 		return;
 	}
 
 	FBReader &fbreader = FBReader::Instance();
 	shared_ptr<Book> downloaderBook;
-	const std::string fileName = downloader.fileName();
+	const std::string fileName = downloader->fileName();
 	fbreader.createBook(ZLFile(fileName), downloaderBook);
 	if (downloaderBook.isNull()) {
 		ZLFile(fileName).remove();

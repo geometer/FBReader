@@ -20,12 +20,13 @@
 #include "FBReaderActions.h"
 
 const std::string ActionCode::SHOW_READING = "showReading";
-const std::string ActionCode::SHOW_LIBRARY = "showLibrary";
-const std::string ActionCode::SHOW_NETWORK_LIBRARY = "showNetLibrary";
+const std::string ActionCode::SHOW_LIBRARY = "library";
+const std::string ActionCode::SHOW_NETWORK_LIBRARY = "networkLibrary";
 const std::string ActionCode::SHOW_TOC = "toc";
 const std::string ActionCode::SHOW_HELP = "showHelp";
 const std::string ActionCode::SHOW_BOOK_INFO_DIALOG = "bookInfo";
 const std::string ActionCode::SHOW_OPTIONS_DIALOG = "preferences";
+const std::string ActionCode::SHOW_MOBILE_OPTIONS_DIALOG = "mobileOptions";
 const std::string ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG = "libraryOptions";
 const std::string ActionCode::SHOW_NETWORK_OPTIONS_DIALOG = "networkOptions";
 const std::string ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG = "systemOptions";
@@ -70,3 +71,5 @@ const std::string ActionCode::ADVANCED_SEARCH_ON_NETWORK = "advancedSearchOnNetw
 const std::string ActionCode::ORGANIZE_BOOKS_BY_AUTHOR = "byAuthor";
 const std::string ActionCode::ORGANIZE_BOOKS_BY_TAG = "byTag";
 const std::string ActionCode::FILTER_LIBRARY = "filterLibrary";
+const std::string ActionCode::SWITCH_TO_NIGHT_PROFILE = "night";
+const std::string ActionCode::SWITCH_TO_DAY_PROFILE = "day";

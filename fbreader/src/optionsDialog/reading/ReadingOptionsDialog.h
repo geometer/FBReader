@@ -20,8 +20,10 @@
 #ifndef __READINGOPTIONSDIALOG_H__
 #define __READINGOPTIONSDIALOG_H__
 
-#include "../AbstractOptionsDialog.h"
+#include <optionEntries/ZLSimpleOptionEntry.h>
+#include <optionEntries/ZLToggleBooleanOptionEntry.h>
 
+#include "../AbstractOptionsDialog.h"
 
 class ReadingOptionsDialog : public AbstractOptionsDialog {
 
@@ -31,6 +33,61 @@ private:
 
 public:
 	ReadingOptionsDialog();
+};
+
+class RotationTypeEntry : public ZLComboOptionEntry {
+
+public:
+	RotationTypeEntry(const ZLResource &resource, ZLIntegerOption &angleOption);
+
+	const std::string &initialValue() const;
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
+
+private:
+	ZLIntegerOption &myAngleOption;
+	std::vector<std::string> myValues;
+};
+
+class StateOptionEntry : public ZLToggleBooleanOptionEntry {
+
+public:
+	StateOptionEntry(ZLBooleanOption &option);
+	void onStateChanged(bool state);
+
+private:
+	bool myState;
+
+friend class SpecialFontSizeEntry;
+};
+
+class SpecialFontSizeEntry : public ZLSimpleSpinOptionEntry {
+
+public:
+	SpecialFontSizeEntry(ZLIntegerRangeOption &option, int step, StateOptionEntry &first, StateOptionEntry &second);
+	void setVisible(bool state);
+
+private:
+	StateOptionEntry &myFirst;
+	StateOptionEntry &mySecond;
+};
+
+class IndicatorTypeEntry : public ZLComboOptionEntry {
+
+public:
+	IndicatorTypeEntry(const ZLResource &resource, ZLIntegerRangeOption &typeOption);
+	void addDependentEntry(ZLOptionEntry *entry);
+	const std::string &initialValue() const;
+
+private:
+	const std::vector<std::string> &values() const;
+	void onAccept(const std::string &value);
+	void onValueSelected(int index);
+
+private:
+	ZLIntegerRangeOption &myOption;
+	std::vector<std::string> myValues;
+	std::vector<ZLOptionEntry*> myDependentEntries;
 };
 
 #endif /* __READINGOPTIONSDIALOG_H__ */

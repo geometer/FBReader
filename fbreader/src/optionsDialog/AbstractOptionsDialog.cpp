@@ -25,11 +25,7 @@
 #include "../fbreader/FBReader.h"
 
 
-class OptionsApplyRunnable : public ZLRunnable {
 
-public:
-	void run();
-};
 
 void OptionsApplyRunnable::run() {
 	FBReader &fbreader = FBReader::Instance();

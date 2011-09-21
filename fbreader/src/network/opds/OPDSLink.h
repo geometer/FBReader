@@ -100,6 +100,7 @@ private:
 
 friend class NetworkOPDSFeedReader;
 friend class OPDSCatalogItem;
+friend class OPDSCatalogItemLoader;
 };
 
 #endif /* __OPDSLINK_H__ */

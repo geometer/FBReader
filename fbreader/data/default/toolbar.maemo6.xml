@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbar>
+	<button id="showReading"/>
+	<toggleButton id="byAuthor" group="booksOrder" default="yes"/>
+	<toggleButton id="byTag" group="booksOrder"/>
+<!--
+	<button id="addBook"/>
+	<button id="showNetLibrary"/>
+-->
+	<button id="advancedSearchOnNetwork"/>
+	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>
+	<button id="gotoHome"/>
+	<button id="undo"/>
+	<button id="redo"/>
+	<textField id="gotoPageNumberWithParameter" parameterId="pageIndex" maxWidth="4" symbols="digits"/>
+<!--
+	<button id="toc"/>
+	<menuButton id="preferences"/>
+-->
+	<button id="search"/>
+	<button id="findPrevious"/>
+	<button id="findNext"/>
+<!--
+	<menuButton id="showLibrary"/>
+-->
+</toolbar>

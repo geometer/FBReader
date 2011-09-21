@@ -35,7 +35,7 @@ BasicAuthenticationManager::BasicAuthenticationManager(const NetworkLink &link) 
 }
 
 
-NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::isAuthorised(bool useNetwork) {
+NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::isAuthorised(bool useNetwork, shared_ptr<ZLExecutionData::Listener> listener) {
 	bool authState = !myAccountUserNameOption.value().empty();
 	if (myAccountChecked || !useNetwork) {
 		return AuthenticationStatus(authState);

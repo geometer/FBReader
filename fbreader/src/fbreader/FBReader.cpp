@@ -43,15 +43,16 @@
 #include "RecentBooksPopupData.h"
 #include "PreferencesPopupData.h"
 #include "TimeUpdater.h"
+#include "SwitchProfileAction.h"
 
-#include "../libraryTree/LibraryView.h"
+//TODO may be remove it
+//#include "../libraryTree/LibraryView.h"
 #include "../network/NetworkLinkCollection.h"
-#include "../networkActions/NetworkOperationRunnable.h"
-#include "../networkTree/NetworkView.h"
 
 #include "../migration/migrate.h"
 
 #include "../options/FBCategoryKey.h"
+#include "../options/ColorProfile.h"
 #include "../bookmodel/BookModel.h"
 #include "../formats/FormatPlugin.h"
 
@@ -102,9 +103,10 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBookTextView = new BookTextView(*context());
 	myFootnoteView = new FootnoteView(*context());
 	myContentsView = new ContentsView(*context());
-	myNetworkLibraryView = new NetworkView(*context());
-	myLibraryByAuthorView = new LibraryByAuthorView(*context());
-	myLibraryByTagView = new LibraryByTagView(*context());
+//	myNetworkLibraryView = new NetworkView();
+	//TODO remove these 2 views completely??
+//	myLibraryByAuthorView = new LibraryByAuthorView(*context());
+//	myLibraryByTagView = new LibraryByTagView(*context());
 	myRecentBooksPopupData = new RecentBooksPopupData();
 	myPreferencesPopupData = new PreferencesPopupData();
 	myMode = UNDEFINED_MODE;
@@ -112,14 +114,22 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	setMode(BOOK_TEXT_MODE);
 
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
-	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+	//TODO left just one item here (ShowLibraryAction or SetModeAction)
+	//addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
+	addAction(ActionCode::SHOW_LIBRARY, new ShowLibraryTreeAction);
+	addAction(ActionCode::SWITCH_TO_NIGHT_PROFILE, new SwitchProfileAction(ColorProfile::NIGHT));
+	addAction(ActionCode::SWITCH_TO_DAY_PROFILE, new SwitchProfileAction(ColorProfile::DAY));
 	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkLibraryAction());
 	addAction(ActionCode::SEARCH_ON_NETWORK, new SimpleSearchOnNetworkAction());
 	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction());
 	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
 	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
-	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
+	//TODO left just one item here (ShowContentsAction or ShowTOCTreeAction)
+	//addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
+	addAction(ActionCode::SHOW_TOC, new ShowTOCTreeAction());
+
 	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
+	addAction(ActionCode::SHOW_MOBILE_OPTIONS_DIALOG, new ShowMobileOptionsDialogAction());
 	addAction(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG, new ShowLibraryOptionsDialogAction());
 	addAction(ActionCode::SHOW_NETWORK_OPTIONS_DIALOG, new ShowNetworkOptionsDialogAction());
 	addAction(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG, new ShowSystemOptionsDialogAction());
@@ -317,6 +327,10 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 	if (url.empty()) {
 		return;
 	}
+	if (!ZLDialogManager::Instance().openURL(url)) {
+		// TODO: show error message
+	}
+	/*
 	shared_ptr<ProgramCollection> collection = webBrowserCollection();
 	if (collection.isNull()) {
 		return;
@@ -329,11 +343,17 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 	NetworkLinkCollection::Instance().rewriteUrl(copy, true);
 	ZLLogger::Instance().println("URL", copy);
 	program->run("openLink", copy);
+	*/
 }
 
 void FBReader::tryShowFootnoteView(const std::string &id, const std::string &type) {
 	if (type == "external") {
-		openLinkInBrowser(id);
+		static const std::string HYPERLINK_FBREADER_ACTION("fbreader-action://");
+		if (ZLStringUtil::stringStartsWith(id, HYPERLINK_FBREADER_ACTION)) {
+			ZLApplication::doAction(id.substr(HYPERLINK_FBREADER_ACTION.length()));
+		} else {
+			openLinkInBrowser(id);
+		}
 	} else if (type == "internal") {
 		if (myMode == BOOK_TEXT_MODE && !myModel.isNull()) {
 			BookModel::Label label = myModel->label(id);
@@ -351,18 +371,23 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 			}
 		}
 	} else if (type == "book") {
-		DownloadBookRunnable downloader(id);
-		downloader.executeWithUI();
-		if (downloader.hasErrors()) {
-			downloader.showErrorMessage();
-		} else {
-			shared_ptr<Book> book;
-			createBook(ZLFile(downloader.fileName()), book);
-			if (!book.isNull()) {
-				Library::Instance().addBook(book);
-				openBook(book);
-				refreshWindow();
-			}
+		DownloadBookRunnable *downloader = new DownloadBookRunnable(id);
+		downloader->setListener(this);
+		downloader->run();
+		
+	}
+}
+
+void FBReader::bookDownloaded(DownloadBookRunnable *downloader) {
+	if (downloader->hasErrors()) {
+		downloader->showErrorMessage();
+	} else {
+		shared_ptr<Book> book;
+		createBook(ZLFile(downloader->fileName()), book);
+		if (!book.isNull()) {
+			Library::Instance().addBook(book);
+			openBook(book);
+			refreshWindow();
 		}
 	}
 }
@@ -376,11 +401,13 @@ bool FBReader::isViewFinal() const {
 }
 
 void FBReader::showLibraryView() {
-	if (ZLStringOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", "booksOrder", "").value() == ActionCode::ORGANIZE_BOOKS_BY_TAG) {
-		setView(myLibraryByTagView);
-	} else {
-		setView(myLibraryByAuthorView);
-	}
+	doAction(ActionCode::SHOW_LIBRARY);
+	//TODO maybe remove this code
+//	if (ZLStringOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", "booksOrder", "").value() == ActionCode::ORGANIZE_BOOKS_BY_TAG) {
+//		setView(myLibraryByTagView);
+//	} else {
+//		setView(myLibraryByAuthorView);
+//	}
 }
 
 void FBReader::setMode(ViewMode mode) {
@@ -410,16 +437,18 @@ void FBReader::setMode(ViewMode mode) {
 			break;
 		case LIBRARY_MODE:
 		{
-			shared_ptr<Book> currentBook = myModel->book();
-			((LibraryView&)*myLibraryByAuthorView).showBook(currentBook);
-			((LibraryView&)*myLibraryByTagView).showBook(currentBook);
-			showLibraryView();
+			//may be remove this code completely
+//			shared_ptr<Book> currentBook = myModel->book();
+//			((LibraryView&)*myLibraryByAuthorView).showBook(currentBook);
+//			((LibraryView&)*myLibraryByTagView).showBook(currentBook);
+//			showLibraryView();
 			break;
 		}
 		case BOOKMARKS_MODE:
 			break;
 		case NETWORK_LIBRARY_MODE:
-			setView(myNetworkLibraryView);
+//			myNetworkLibraryView->showDialog();
+//			setView(myNetworkLibraryView);
 			break;
 		case UNDEFINED_MODE:
 		case ALL_MODES:
@@ -544,9 +573,9 @@ shared_ptr<Book> FBReader::currentBook() const {
 }
 
 void FBReader::invalidateNetworkView() {
-	((NetworkView &) *myNetworkLibraryView).invalidate();
+//	myNetworkLibraryView->invalidate();
 }
 
 void FBReader::invalidateAccountDependents() {
-	((NetworkView &) *myNetworkLibraryView).invalidateAccountDependents();
+//	myNetworkLibraryView->invalidateAccountDependents();
 }

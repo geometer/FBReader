@@ -35,6 +35,8 @@
 	<key code="0x0100003a" name="&lt;F11&gt;"/>
 	<key code="0x0100003b" name="&lt;F12&gt;"/>
 	<key code="0x0100003c" name="&lt;F13&gt;"/>
+	<key code="0x01000070" name="&lt;XF86AudioLowerVolume&gt;"/>
+	<key code="0x01000072" name="&lt;XF86AudioRaiseVolume&gt;"/>
 	<key code="0x20" name="&lt;Space&gt;"/>
 	<key code="0x01000024" name="&lt;CapsLock&gt;"/>
 	<key code="0x01000025" name="&lt;NumLock&gt;"/>

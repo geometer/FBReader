@@ -5,7 +5,7 @@
 		<option name="Base:fontSize" value="18"/>
 	</group>
   <group name="Options">
-		<option name="IsSelectionEnabled" value="false"/>
+	<option name="IsSelectionEnabled" value="false"/>
     <option name="Timeout" value="30"/>
     <option name="LeftMargin" value="20"/>
     <option name="TopMargin" value="4"/>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menubar>
+	<item id="library"/>
+	<item id="networkLibrary"/>
+	<item id="addBook"/>
+	<item id="toc"/>
+	<item id="night"/>
+	<item id="day"/>
+	<item id="mobileOptions"/>
+	<item id="bookInfo"/>
+</menubar>

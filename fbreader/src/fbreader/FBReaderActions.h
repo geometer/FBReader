@@ -36,6 +36,7 @@ public:
 	static const std::string SHOW_HELP;
 	static const std::string SHOW_OPTIONS_DIALOG;
 	static const std::string SHOW_BOOK_INFO_DIALOG;
+	static const std::string SHOW_MOBILE_OPTIONS_DIALOG;
 	static const std::string SHOW_LIBRARY_OPTIONS_DIALOG;
 	static const std::string SHOW_NETWORK_OPTIONS_DIALOG;
 	static const std::string SHOW_SYSTEM_OPTIONS_DIALOG;
@@ -80,6 +81,8 @@ public:
 	static const std::string ORGANIZE_BOOKS_BY_AUTHOR;
 	static const std::string ORGANIZE_BOOKS_BY_TAG;
 	static const std::string FILTER_LIBRARY;
+	static const std::string SWITCH_TO_NIGHT_PROFILE;
+	static const std::string SWITCH_TO_DAY_PROFILE;
 
 private:
 	ActionCode();
@@ -114,6 +117,18 @@ public:
 };
 
 class ShowOptionsDialogAction : public ZLApplication::Action {
+
+public:
+	void run();
+};
+
+class ShowLibraryTreeAction : public ZLApplication::Action {
+
+public:
+	void run();
+};
+
+class ShowMobileOptionsDialogAction : public ZLApplication::Action {
 
 public:
 	void run();
@@ -156,11 +171,19 @@ public:
 	bool isVisible() const;
 };
 
-class ShowNetworkLibraryAction : public SetModeAction {
+class ShowTOCTreeAction : public ZLApplication::Action {
+
+public:
+	void run();
+	bool isVisible() const;
+};
+
+class ShowNetworkLibraryAction : public ZLApplication::Action {
 
 public:
 	ShowNetworkLibraryAction();
 	bool isVisible() const;
+	void run();
 };
 
 class AddBookAction : public ModeDependentAction {

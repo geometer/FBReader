@@ -33,7 +33,7 @@ fi
 
 create_tmpdir() {
 	mkdir $tmpdir
-	cp -r Makefile build_packages.sh zlibrary fbreader makefiles README.build CHANGES* distributions distributions-nonGPL ChangeLog $tmpdir
+	cp -r Makefile build_packages.sh libs zlibrary fbreader makefiles README.build CHANGES* distributions distributions-nonGPL ChangeLog $tmpdir
 	rm -rf `find $tmpdir -name ".svn"`
 	make -C $tmpdir distclean 1> /dev/null 2>&1
 
@@ -90,6 +90,10 @@ build_package() {
 					/scratchbox/login sb-conf se FREMANTLE_ARMEL
 					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
 					;;
+				maemo6)
+					/scratchbox/login sb-conf se HARMATTAN_ARMEL
+					/scratchbox/login -d `pwd` $make_package ARCHITECTURE=$1 $2
+					;;
 				*)
 					$make_package ARCHITECTURE=$1 $2
 					;;
@@ -116,6 +120,11 @@ build_package() {
 			$make_package ARCHITECTURE=$1 $2
 			mkdir -p $pkgdir/$1
 			mv -f $tmpdir/*.exe $pkgdir/$1
+			;;
+		sis)
+			$make_package ARCHITECTURE=$1 $2
+			mkdir -p $pkgdir/$1
+			mv -f $tmpdir/*.sis $pkgdir/$1
 			;;
 		*)
 			echo no rule is defined for package type ''$2'';

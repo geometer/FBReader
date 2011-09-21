@@ -119,7 +119,11 @@ public:
 protected:
 	ZLApplication(const std::string &name);
 
+	// FIXME: publicity of this method is TEMPORARY hook
+public:
 	void addAction(const std::string &actionId, shared_ptr<Action> action);
+
+protected:
 	void registerPopupData(const std::string &actionId, shared_ptr<ZLPopupData> popupData);
 
 	void setView(shared_ptr<ZLView> view);

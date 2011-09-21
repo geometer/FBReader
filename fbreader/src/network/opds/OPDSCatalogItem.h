@@ -21,8 +21,25 @@
 #define __OPDSCATALOGITEM_H__
 
 #include "../NetworkItems.h"
+#include "../NetworkOperationData.h"
 
 class OPDSLink;
+
+class OPDSCatalogItemLoader : public ZLExecutionData::Listener {
+public:
+	OPDSCatalogItemLoader(const OPDSLink &link, const std::string &url, NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
+	~OPDSCatalogItemLoader();
+	
+	virtual void showPercent(int ready, int full);
+	virtual void finished(const std::string &error = std::string());
+	
+private:
+	const OPDSLink &myLink;
+	NetworkItem::List &myChildren;
+	NetworkOperationData myData;
+	shared_ptr<ZLExecutionData::Listener> myListener;
+	shared_ptr<ZLExecutionData::Listener> myHolder;
+};
 
 class OPDSCatalogItem : public NetworkCatalogItem {
 
@@ -37,7 +54,7 @@ public:
 	);
 
 private:
-	std::string loadChildren(NetworkItem::List &children);
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
 };
 
 #endif /* __OPDSCATALOGITEM_H__ */

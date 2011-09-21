@@ -70,12 +70,12 @@
 	<node name="menu">
 		<node name="bookInfo" value="Информация за книгата..."/>
 		<node name="toc" value="Съдържание"/>
-		<node name="showLibrary" value="Отваряне на библиотека"/>
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
+		<node name="library" value="Отваряне на библиотека"/>
+		<node name="networkLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
 		<node name="library" value="Библиотека">
-			<node name="showLibrary" value="Отваряне"/>
+			<node name="library" value="Отваряне"/>
 			<node name="previousBook" value="Предишна книга"/>
 			<node name="showRecent" value="Последна"/>
 			<node name="addBook" value="Добавяне на книга..."/>
@@ -120,7 +120,7 @@
 			<node name="label" value="Четене на книгата"/>
 			<node name="tooltip" value="Връщане към четенето"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Библиотека"/>
 			<node name="tooltip" value="Библиотека"/>
 			<node name="popup" value="Показване на списък с наскоро прочетените книги"/>
@@ -141,7 +141,7 @@
 			<node name="label" value="Добавяне на файл"/>
 			<node name="tooltip" value="Добавяне на файл в библиотеката"/>
 		</node>
-		<node name="showNetLibrary">
+		<node name="networkLibrary">
 			<node name="label" value="Интернет"/>
 			<node name="tooltip" value="Търсене в интернет библиотеки"/>
 		</node>
@@ -341,8 +341,8 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Няма"/>
-						<node name="showLibrary" value="Показване на библиотеката"/>
-						<node name="showNetLibrary" value="Показване на интернет библиотеки"/>
+						<node name="library" value="Показване на библиотеката"/>
+						<node name="networkLibrary" value="Показване на интернет библиотеки"/>
 						<node name="showRecent" value="Показване на последните книги"/>
 						<node name="previousBook" value="Отваряне на предишната книга"/>
 						<node name="toc" value="Показване на съдържанието"/>

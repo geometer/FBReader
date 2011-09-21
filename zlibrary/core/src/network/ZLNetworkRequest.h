@@ -35,16 +35,19 @@ protected:
 	ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
 
 public:
+	// TODO: May be we should provide info about HTTP status code by special method?
+	// Why every request implementation should do it itself?
 	virtual bool handleHeader(void *ptr, size_t size);
 	virtual bool handleContent(void *ptr, size_t size) = 0;
 
 	virtual bool doBefore() = 0;
 
 	// When `success == true` return false MUST make request fail; when `success == false` return value MUST be ignored.
-	virtual bool doAfter(bool success) = 0;
+	virtual bool doAfter(const std::string &error) = 0;
 
 protected:
 	void setErrorMessage(const std::string &message);
+	std::string unknownNetworkError() const;
 
 public:
 	const std::string &errorMessage() const;
@@ -113,14 +116,18 @@ public:
 public:
 	ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
 		const std::vector<std::pair<std::string, std::string> > &postData);
+	ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
+		const std::string &postData);
 
-	const std::vector<std::pair<std::string, std::string> > &postData() const;
+	const std::vector<std::pair<std::string, std::string> > &postParameters() const;
+	const std::string &postData() const;
 
 private:
 	const ZLTypeId &typeId() const;
 
 private:
-	std::vector<std::pair<std::string, std::string> > myData;
+	std::vector<std::pair<std::string, std::string> > myParameters;
+	std::string myData;
 };
 
 #endif /* __ZLNETWORKREQUEST_H__ */

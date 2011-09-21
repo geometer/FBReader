@@ -20,27 +20,26 @@
 #ifndef __ZLQTTIME_H__
 #define __ZLQTTIME_H__
 
-#include <map>
-
 #include <QtCore/QObject>
 #include <QtCore/QTimerEvent>
+#include <QtCore/QMap>
 
 #include "../../../../core/src/unix/time/ZLUnixTime.h"
 
 class ZLQtTimeManager : public QObject, public ZLUnixTimeManager {
-
+	Q_OBJECT
 public:
 	static void createInstance() { ourInstance = new ZLQtTimeManager(); }
 
-	void addTask(shared_ptr<ZLRunnable> task, int interval);
-	void removeTaskInternal(shared_ptr<ZLRunnable> task);
+	Q_INVOKABLE void addTask(shared_ptr<ZLRunnable> task, int interval);
+	Q_INVOKABLE void removeTaskInternal(shared_ptr<ZLRunnable> task);
 
 private:
 	void timerEvent(QTimerEvent *event);
 
 private:
-	std::map<shared_ptr<ZLRunnable>,int> myTimers;
-	std::map<int,shared_ptr<ZLRunnable> > myTasks;
+	QMap<shared_ptr<ZLRunnable>,int> myTimers;
+	QMap<int,shared_ptr<ZLRunnable> > myTasks;
 };
 
 #endif /* __ZLQTTIME_H__ */

@@ -36,6 +36,18 @@
 #include "requests/ZLNetworkReadToStringRequest.h"
 #include "requests/ZLNetworkXMLParserRequest.h"
 
+class ZLNetworkNullListener : public ZLExecutionData::Listener {
+public:
+	ZLNetworkNullListener() {}
+	virtual ~ZLNetworkNullListener() {}
+	virtual void showPercent(int ready, int full) {
+		(void) ready;
+		(void) full;
+	}
+	virtual void finished(const std::string &error = std::string()) {
+		(void) error;
+	}
+};
 
 ZLNetworkManager *ZLNetworkManager::ourInstance = 0;
 
@@ -146,8 +158,6 @@ std::string ZLNetworkManager::downloadFile(const std::string &url, const ZLNetwo
 	return perform(data);
 }
 
-
-
 shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, const std::string &fileName) const {
 	return new ZLNetworkDownloadRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, fileName);
 }
@@ -165,11 +175,13 @@ shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::s
 }
 
 shared_ptr<ZLExecutionData> ZLNetworkManager::createNoActionRequest(const std::string &url) const {
-	return new ZLNetworkNoActionRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE);
+	return createNoActionRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE);
 }
 
 shared_ptr<ZLExecutionData> ZLNetworkManager::createNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) const {
-	return new ZLNetworkNoActionRequest(url, sslCertificate);
+	ZLNetworkNoActionRequest *actionRequest = new ZLNetworkNoActionRequest(url, sslCertificate);
+	actionRequest->setListener(new ZLNetworkNullListener);
+	return actionRequest;
 }
 
 shared_ptr<ZLExecutionData> ZLNetworkManager::createReadToStringRequest(const std::string &url, std::string &buffer) const {

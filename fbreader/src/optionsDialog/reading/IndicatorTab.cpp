@@ -29,66 +29,6 @@
 #include "../../fbreader/FBView.h"
 #include "../../fbreader/BookTextView.h"
 
-class StateOptionEntry : public ZLToggleBooleanOptionEntry {
-
-public:
-	StateOptionEntry(ZLBooleanOption &option);
-	void onStateChanged(bool state);
-
-private:
-	bool myState;
-
-friend class SpecialFontSizeEntry;
-};
-
-class SpecialFontSizeEntry : public ZLSimpleSpinOptionEntry {
-
-public:
-	SpecialFontSizeEntry(ZLIntegerRangeOption &option, int step, StateOptionEntry &first, StateOptionEntry &second);
-	void setVisible(bool state);
-
-private:
-	StateOptionEntry &myFirst;
-	StateOptionEntry &mySecond;
-};
-
-StateOptionEntry::StateOptionEntry(ZLBooleanOption &option) : ZLToggleBooleanOptionEntry(option) {
-	myState = option.value();
-}
-
-void StateOptionEntry::onStateChanged(bool state) {
-	myState = state;
-	ZLToggleBooleanOptionEntry::onStateChanged(state);
-}
-
-SpecialFontSizeEntry::SpecialFontSizeEntry(ZLIntegerRangeOption &option, int step, StateOptionEntry &first, StateOptionEntry &second) : ZLSimpleSpinOptionEntry(option, step), myFirst(first), mySecond(second) {
-}
-
-void SpecialFontSizeEntry::setVisible(bool) {
-	ZLSimpleSpinOptionEntry::setVisible(
-		(myFirst.isVisible() && myFirst.myState) ||
-		(mySecond.isVisible() && mySecond.myState)
-	);
-}
-
-class IndicatorTypeEntry : public ZLComboOptionEntry {
-
-public:
-	IndicatorTypeEntry(const ZLResource &resource, ZLIntegerRangeOption &typeOption);
-	void addDependentEntry(ZLOptionEntry *entry);
-	const std::string &initialValue() const;
-
-private:
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value);
-	void onValueSelected(int index);
-
-private:
-	ZLIntegerRangeOption &myOption; 
-	std::vector<std::string> myValues;
-	std::vector<ZLOptionEntry*> myDependentEntries;
-};
-
 IndicatorTypeEntry::IndicatorTypeEntry(const ZLResource &resource, ZLIntegerRangeOption &typeOption) : myOption(typeOption) {
 	myValues.push_back(resource["osScrollbar"].value());
 	myValues.push_back(resource["fbIndicator"].value());

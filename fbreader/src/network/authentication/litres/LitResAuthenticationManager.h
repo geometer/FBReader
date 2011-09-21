@@ -27,13 +27,15 @@
 #include "../NetworkAuthenticationManager.h"
 #include "../../NetworkItems.h"
 
+class LitResAuthenticationDataParser;
+
 class LitResAuthenticationManager : public NetworkAuthenticationManager {
 
 public:
 	LitResAuthenticationManager(const NetworkLink &link);
 
 public:
-	AuthenticationStatus isAuthorised(bool useNetwork = true);
+	AuthenticationStatus isAuthorised(bool useNetwork = true, shared_ptr<ZLExecutionData::Listener> listener = 0);
 	std::string authorise(const std::string &pwd);
 	void logOut();
 	bool skipIPSupported();
@@ -59,6 +61,8 @@ private:
 	shared_ptr<ZLExecutionData> loadAccount(std::string &dummy1);
 	void loadAccountOnError();
 	void loadAccountOnSuccess();
+	
+	void onRequestFinished(LitResAuthenticationDataParser *data);
 
 	const ZLNetworkSSLCertificate &certificate();
 
@@ -82,6 +86,8 @@ private:
 	std::string myAccount;
 
 	ZLNetworkSSLCertificate myCertificate;
+	
+	friend class LitResAuthenticationDataParser;
 };
 
 #endif /* __LITRESAUTHENTICATIONMANAGER_H__ */

@@ -28,20 +28,24 @@
 #include "../../fbreader/FBReader.h"
 #include "../../fbreader/FBView.h"
 
+StateOptionEntry::StateOptionEntry(ZLBooleanOption &option) : ZLToggleBooleanOptionEntry(option) {
+	myState = option.value();
+}
 
-class RotationTypeEntry : public ZLComboOptionEntry {
+void StateOptionEntry::onStateChanged(bool state) {
+	myState = state;
+	ZLToggleBooleanOptionEntry::onStateChanged(state);
+}
 
-public:
-	RotationTypeEntry(const ZLResource &resource, ZLIntegerOption &angleOption);
+SpecialFontSizeEntry::SpecialFontSizeEntry(ZLIntegerRangeOption &option, int step, StateOptionEntry &first, StateOptionEntry &second) : ZLSimpleSpinOptionEntry(option, step), myFirst(first), mySecond(second) {
+}
 
-	const std::string &initialValue() const;
-	const std::vector<std::string> &values() const;
-	void onAccept(const std::string &value);
-
-private:
-	ZLIntegerOption &myAngleOption;
-	std::vector<std::string> myValues;
-};
+void SpecialFontSizeEntry::setVisible(bool) {
+	ZLSimpleSpinOptionEntry::setVisible(
+		(myFirst.isVisible() && myFirst.myState) ||
+		(mySecond.isVisible() && mySecond.myState)
+	);
+}
 
 RotationTypeEntry::RotationTypeEntry(const ZLResource &resource, ZLIntegerOption &angleOption) : myAngleOption(angleOption) {
 	myValues.push_back(resource["disabled"].value());
@@ -83,8 +87,6 @@ void RotationTypeEntry::onAccept(const std::string &value) {
 	}
 	myAngleOption.setValue(angle);
 }
-
-
 
 ReadingOptionsDialog::ReadingOptionsDialog() : AbstractOptionsDialog(ZLResourceKey("ReadingOptionsDialog"), true) {
 	FBReader &fbreader = FBReader::Instance();

@@ -112,7 +112,9 @@ public:
 
 const ZLTypeId NetworkCatalogRootNode::TYPE_ID(NetworkCatalogNode::TYPE_ID);
 
-NetworkCatalogRootNode::NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition) : NetworkCatalogNode(parent, link.libraryItem(), atPosition), myLink(link) {
+NetworkCatalogRootNode::NetworkCatalogRootNode(ZLTreeListener::RootNode *parent, NetworkLink &link, size_t atPosition) : NetworkCatalogNode(link.libraryItem()), myLink(link) {
+	init();
+	parent->insert(this, atPosition);
 }
 
 void NetworkCatalogRootNode::init() {
@@ -126,10 +128,10 @@ void NetworkCatalogRootNode::init() {
 			registerAction(new RefillAccountAction(*mgr));
 		}
 		if (mgr->registrationSupported()) {
-			registerAction(new RegisterUserAction(*mgr), true);
+			registerAction(new RegisterUserAction(*mgr));
 		}
 		if (mgr->passwordRecoverySupported()) {
-			registerAction(new PasswordRecoveryAction(*mgr), true);
+			registerAction(new PasswordRecoveryAction(*mgr));
 		}
 	}
 	registerAction(new DontShowAction(myLink));

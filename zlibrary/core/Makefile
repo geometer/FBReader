@@ -19,11 +19,21 @@ else
   TARGET = libzlcore.a
 endif
 
-SUBDIRS_ALL = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/runnable src/network src/network/requests src/blockTreeView src/desktop/application src/desktop/dialogs src/unix/time src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library src/unix/curl src/win32/encoding src/win32/filesystem src/win32/config
+SUBDIRS_ALL = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/runnable src/network src/network/requests src/blockTreeView src/tree src/desktop/application src/desktop/dialogs src/unix/time src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library src/unix/curl src/win32/encoding src/win32/filesystem src/win32/config \
+src/tree
 
-SUBDIRS = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/unix/time src/runnable src/network src/network/requests src/blockTreeView src/unix/curl
+SUBDIRS = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/unix/time src/runnable src/network src/network/requests src/blockTreeView src/tree
 
 ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pepperpad3>)"
+  SUBDIRS += src/desktop/application src/desktop/dialogs
+endif
+
+ifneq "<$(UI_TYPE)>" "$(findstring <$(UI_TYPE)>, <qt4> <qml>)"
+  SUBDIRS += src/unix/curl
+endif
+
+# TODO: Temporary, remove it
+ifeq "$(UI_TYPE)" "qml"
   SUBDIRS += src/desktop/application src/desktop/dialogs
 endif
 
@@ -35,6 +45,19 @@ ifeq "$(TARGET_ARCH)" "win32"
   SUBDIRS += src/desktop/application src/desktop/dialogs src/win32/encoding src/win32/filesystem src/win32/config
 else
   SUBDIRS += src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library
+endif
+
+# TODO: Temporary, remove it
+ifeq "$(TARGET_ARCH)" "symbian"
+  SUBDIRS = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language  src/runnable src/network src/network/requests src/blockTreeView
+  SUBDIRS += src/unix/xmlconfig src/unix/filesystem src/tree
+endif 
+# TODO: Temporary, remove it
+ifeq "$(TARGET_ARCH)" "desktop"
+	ifeq "$(UI_TYPE)" "qtwidgets"
+	SUBDIRS = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language  src/runnable src/network src/network/requests src/blockTreeView
+	SUBDIRS += src/unix/xmlconfig src/unix/filesystem src/tree
+	endif
 endif
 
 .objects:
