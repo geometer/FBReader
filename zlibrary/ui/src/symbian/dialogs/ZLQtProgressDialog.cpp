@@ -12,6 +12,7 @@
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
 
+
 ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myDialog(0) {
 
 }

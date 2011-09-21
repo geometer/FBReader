@@ -1,0 +1,5 @@
+* version number should be changed to 0.99.0
+* right text margin is too small; should be equal to the left one
+* "About fbreader" text should be changed to the version without icons
+  (I was sure that's already done -- in symbian version at least)
+* all the QML list dialogs: add left/right margins (~1 mm)
