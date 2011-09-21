@@ -52,7 +52,7 @@ std::string SearchResultNode::title() const {
 	return resource()["title"].value();
 }
 
-std::string SearchResultNode::summary() const {
+std::string SearchResultNode::subtitle() const {
 	return mySummary;
 }
 

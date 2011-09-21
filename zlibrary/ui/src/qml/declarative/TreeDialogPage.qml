@@ -64,7 +64,7 @@ Page {
 	
 	ListView {
 		id: listView
-		anchors.fill: parent
+		anchors { leftMargin: 14; fill: parent; rightMargin: 14 }
 		model: visualModel
 	}
 	

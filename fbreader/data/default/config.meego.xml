@@ -7,8 +7,10 @@
   <group name="Options">
 	<option name="IsSelectionEnabled" value="false"/>
     <option name="Timeout" value="30"/>
-    <option name="LeftMargin" value="20"/>
+    <option name="LeftMargin" value="14"/>
+	<option name="RightMargin" value="14"/>
     <option name="TopMargin" value="4"/>
+	<option name="BottomMargin" value="2"/>
     <option name="BookPath" value="~/MyDocs/Books"/>
     <option name="DownloadDirectory" value="~/MyDocs/Books"/>
   </group>

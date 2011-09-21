@@ -101,7 +101,7 @@ protected:
 	shared_ptr<ZLImage> image() const;
 	std::string imageUrl() const;
 	std::string title() const;
-	std::string summary() const;
+	std::string subtitle() const;
 	virtual shared_ptr<ZLImage> lastResortCoverImage() const;
 
 private:
@@ -145,7 +145,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	SearchResultNode(ZLTreeListener::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition = (size_t)-1);
+	SearchResultNode(ZLTreeListener::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &subtitle, size_t atPosition = (size_t)-1);
 
 	shared_ptr<NetworkBookCollection> searchResult();
 
@@ -156,7 +156,7 @@ private:
 	shared_ptr<ZLImage> image() const;
 	std::string imageUrl() const;
 	std::string title() const;
-	std::string summary() const;
+	std::string subtitle() const;
 
 private:
 	shared_ptr<NetworkBookCollection> mySearchResult;
@@ -208,7 +208,7 @@ private:
 	shared_ptr<ZLImage> image() const;
 	std::string imageUrl() const;
 	std::string title() const;
-	std::string summary() const;
+	std::string subtitle() const;
 
 private:
 	std::string mySeriesTitle;
