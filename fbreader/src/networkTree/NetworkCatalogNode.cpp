@@ -94,7 +94,7 @@ std::string NetworkCatalogNode::title() const {
 	return myItem->Title;
 }
 
-std::string NetworkCatalogNode::summary() const {
+std::string NetworkCatalogNode::subtitle() const {
 	return ((const NetworkCatalogItem&)*myItem).Summary;
 }
 

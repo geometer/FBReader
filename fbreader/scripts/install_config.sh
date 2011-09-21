@@ -10,6 +10,9 @@ case "$1" in
 		;;
 	macosx)
 		;;
+	meego)
+		config_file=data/default/config.meego.xml
+		;;
 	maemo)
 		case "$2" in
 			qml)
