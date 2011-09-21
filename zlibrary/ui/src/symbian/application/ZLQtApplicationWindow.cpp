@@ -75,9 +75,12 @@ void ZLQtApplicationWindow::init() {
 		//TODO add ZLResource here
 		const std::string& mainMenu = "Menu";
 		myShowMenuAction = new QAction(QString::fromStdString(mainMenu),this);
-		myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
 		addAction(myShowMenuAction);
+
+#ifdef __SYMBIAN__
+myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
+#endif
 
 #ifndef 	__SYMBIAN__
 		this->menuBar()->addAction(myShowMenuAction);
@@ -89,7 +92,9 @@ void ZLQtApplicationWindow::init() {
 		// it crashes.
 		// Flag is necessary for showing SoftKeys Action
 		show();
+#ifdef __SYMBIAN__
 		setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+#endif
 		showFullScreen();
 }
 
