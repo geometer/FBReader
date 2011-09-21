@@ -1,5 +1,6 @@
 As for TODO file, we never delete items from this file, we just
-replace a bullet (*) with DONE word.
+replace a bullet (*) with DONE word. We also add a comments into
+this file; comment are marked with double bullet (**).
 
 DONE version number should be changed to 0.99.0
 DONE right text margin is too small; should be equal to the left one
