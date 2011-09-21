@@ -16,7 +16,9 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 
 	const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
 	QAction* action = new QAction(QString::fromStdString(back.value()),this);
+#ifdef 	__SYMBIAN__
 	action->setSoftKeyRole( QAction::NegativeSoftKey );
+#endif
 	connect(action, SIGNAL(triggered()), this, SLOT(back()));
 	addAction( action );
 
