@@ -138,16 +138,17 @@ void myMessageOutput(QtMsgType type, const char *msg)
 void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	qInstallMsgHandler(myMessageOutput);
 	new QApplication(argc, argv);
-        ZLibrary::parseArguments(argc, argv);
-        XMLConfigManager::createInstance();
-        ZLQtTimeManager::createInstance();
-        ZLQtFSManager::createInstance();
-        ZLQtDialogManager::createInstance();
-		ZLSymbianCommunicationManager::createInstance();
-        ZLQtImageManager::createInstance();
-		ZLQtNetworkManager::createInstance();
+	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
+	ZLibrary::parseArguments(argc, argv);
+	XMLConfigManager::createInstance();
+	ZLQtTimeManager::createInstance();
+	ZLQtFSManager::createInstance();
+	ZLQtDialogManager::createInstance();
+	ZLSymbianCommunicationManager::createInstance();
+	ZLQtImageManager::createInstance();
+	ZLQtNetworkManager::createInstance();
 
-		ZLKeyUtil::setKeyNamesFileName("keynames.xml");
+	ZLKeyUtil::setKeyNamesFileName("keynames.xml");
 }
 
 ZLPaintContext *ZLQtLibraryImplementation::createContext() {

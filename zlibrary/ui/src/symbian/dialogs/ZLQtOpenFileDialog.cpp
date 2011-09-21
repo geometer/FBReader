@@ -20,9 +20,9 @@ ZLQtOpenFileDialog::ZLQtOpenFileDialog(const std::string &title, const std::stri
 	myDialog = new DrillDownMenuDialog(qApp->activeWindow());
 	mySelectDirsOnlyMode = false;
 
-//	myDialog->setWindowTitle(QString::fromUtf8(title.c_str()));
-//	myDialog->setDirectory(QString::fromUtf8(directoryPath.c_str()));
-//	myDialog->selectFile(QString::fromUtf8(filePath.c_str()));hg
+//	myDialog->setWindowTitle(QString::fromStdString(title));
+//	myDialog->setDirectory(QString::fromStdString(directoryPath));
+//	myDialog->selectFile(QString::fromStdString(filePath));
 }
 
 void ZLQtOpenFileDialog::selectDirectoriesOnly() {
@@ -50,8 +50,8 @@ bool ZLQtOpenFileDialog::runInternal() {
 
 	if (mySelectDirsOnlyMode == true) {
 		const ZLResource& select = ZLResource::resource("dialog")["button"]["selectDir"];
-		QAction* action = new QAction(select.value().c_str(),myDialog);
-		action->setSoftKeyRole( QAction::PositiveSoftKey );
+		QAction* action = new QAction(QString::fromStdString(select.value()),myDialog);
+		action->setSoftKeyRole(QAction::PositiveSoftKey);
 		QObject::connect(action, SIGNAL(triggered()), myDialog, SLOT(accept()));
 		myDialog->addAction( action );
 
@@ -114,12 +114,12 @@ void DirAction::run_init() {
 			newDir.cd(info.fileName());
 			std::string image = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + "folder.png";
 			ZLFSManager::Instance().normalize(image);
-			QIcon icon(image.c_str());
+			QIcon icon(QString::fromStdString(image));
 			myMenu->addItem(icon, ::stdString(info.fileName()), new DirAction(myOpenFileDialog, myDialog,  newDir.absolutePath(),myFilter));
 		} else if (myOpenFileDialog->mySelectDirsOnlyMode == false &&  myFilter.accepts(ZLFile(::stdString(info.absoluteFilePath())))) {
 			std::string image = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + "fb2.png";
 			ZLFSManager::Instance().normalize(image);
-			QIcon icon(image.c_str());
+			QIcon icon(QString::fromStdString(image));
 			myMenu->addItem(icon, ::stdString(info.fileName()), new FileAction(myOpenFileDialog, myDialog, info.absoluteFilePath() ));
 		}
 	}

@@ -52,7 +52,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 		ZLApplicationWindow(application) {
 
 		const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
-        QPixmap icon(iconFileName.c_str());
+		QPixmap icon(QString::fromStdString(iconFileName));
         setWindowIcon(icon);
 
 		// FIXME: Find the way to get somewhere this action names
@@ -74,7 +74,7 @@ void ZLQtApplicationWindow::init() {
 
 		//TODO add ZLResource here
 		const std::string& mainMenu = "Menu";
-		myShowMenuAction = new QAction(mainMenu.c_str(),this);
+		myShowMenuAction = new QAction(QString::fromStdString(mainMenu),this);
 		myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
 		addAction(myShowMenuAction);
@@ -116,7 +116,7 @@ void ZLQtApplicationWindow::addMenuItem(ZLMenu::ItemPtr item) {
 			case ZLMenu::Item::ITEM:
 				{
 					ZLMenubar::PlainItem& plainItem = (ZLMenubar::PlainItem&)*item;
-					QString text = QString::fromUtf8(plainItem.name().c_str());
+					QString text = QString::fromStdString(plainItem.name());
 					menuItem = new DrillDownMenuItem(text, new ZLQtMenuAction(this,myMenuDialog,plainItem) );
 					myMenu->addItem(menuItem);
 				}
@@ -172,7 +172,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr) {
 }
 
 ZLQtRunPopupAction::ZLQtRunPopupAction(QObject *parent, shared_ptr<ZLPopupData> data, size_t index) : QAction(parent), myData(data), myIndex(index) {
-        setText(QString::fromUtf8(myData->text(myIndex).c_str()));
+		setText(QString::fromStdString(myData->text(myIndex)));
         connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
 }
 
@@ -203,7 +203,7 @@ void ZLQtApplicationWindow::close() {
 void ZLQtApplicationWindow::grabAllKeys(bool mode) {  }
 
 void ZLQtApplicationWindow::setCaption(const std::string &caption) {
-        QMainWindow::setWindowTitle(QString::fromUtf8(caption.c_str()));
+		QMainWindow::setWindowTitle(QString::fromStdString(caption));
 }
 
 void ZLQtApplicationWindow::setFocusToMainWidget() {
