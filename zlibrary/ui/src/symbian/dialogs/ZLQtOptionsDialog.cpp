@@ -29,12 +29,16 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 		myTabs.push_back(myContent);
 
 		QAction* okButton = new QAction(::qtButtonName(ZLDialogManager::OK_BUTTON),this);
-		okButton->setSoftKeyRole( QAction::PositiveSoftKey );
+#ifdef __SYMBIAN__
+		okButton->setSoftKeyRole(QAction::PositiveSoftKey);
+#endif
 		addAction( okButton );
 		connect(okButton, SIGNAL(triggered()), this, SLOT(accept()));
 
 		QAction* cancelButton = new QAction(::qtButtonName(ZLDialogManager::CANCEL_BUTTON),this);
-		cancelButton->setSoftKeyRole( QAction::NegativeSoftKey);
+#ifdef __SYMBIAN__
+		cancelButton->setSoftKeyRole(QAction::NegativeSoftKey);
+#endif
 		addAction( cancelButton );
 		connect(cancelButton, SIGNAL(triggered()), this, SLOT(reject()));
 
@@ -70,7 +74,9 @@ bool ZLQtOptionsDialog::run() {
 }
 
 void ZLQtOptionsDialog::setFullScreenWithSoftButtons() {
+#ifdef __SYMBIAN__
 	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+#endif
 	setWindowState(Qt::WindowFullScreen);
 }
 

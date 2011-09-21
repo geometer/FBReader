@@ -51,7 +51,9 @@ bool ZLQtOpenFileDialog::runInternal() {
 	if (mySelectDirsOnlyMode == true) {
 		const ZLResource& select = ZLResource::resource("dialog")["button"]["selectDir"];
 		QAction* action = new QAction(QString::fromStdString(select.value()),myDialog);
+#ifdef __SYMBIAN__
 		action->setSoftKeyRole(QAction::PositiveSoftKey);
+#endif
 		QObject::connect(action, SIGNAL(triggered()), myDialog, SLOT(accept()));
 		myDialog->addAction( action );
 
