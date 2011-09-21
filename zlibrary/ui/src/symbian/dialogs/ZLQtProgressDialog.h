@@ -1,14 +1,14 @@
 #ifndef __ZLQTPROGRESSDIALOG_H__
 #define __ZLQTPROGRESSDIALOG_H__
 
-#include <QApplication>
-#include <QDialog>
-#include <QWidget>
+#include <QtGui/QApplication>
+#include <QtGui/QDialog>
+#include <QtGui/QWidget>
 
-#include <QLabel>
-#include <QProgressBar>
+#include <QtGui/QLabel>
+#include <QtGui/QProgressBar>
 #include <QtGui/QPaintEvent>
-#include <QThread>
+#include <QtCore/QThread>
 
 
 #include <ZLProgressDialog.h>

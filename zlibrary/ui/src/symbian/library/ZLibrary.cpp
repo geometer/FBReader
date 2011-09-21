@@ -7,8 +7,9 @@
 
 #include <QtGui/QApplication>
 #include <QtCore/QDebug>
-#include <QLocale>
-#include <QS60Style>
+#include <QtCore/QTextCodec>
+#include <QtCore/QLocale>
+#include <QtGui/QS60Style>
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
@@ -33,12 +34,16 @@
 // for qDebug:
 #include <stdio.h>
 #include <stdlib.h>
-#include <QApplication>
+#include <QtGui/QApplication>
 
 
-
+#ifdef __SYMBIAN__
 const std::string ZLibrary::FileNameDelimiter("\\");
 const std::string ZLibrary::PathDelimiter(";");
+#else
+const std::string ZLibrary::FileNameDelimiter("/");
+const std::string ZLibrary::PathDelimiter(":");
+#endif
 const std::string ZLibrary::EndOfLine("\n");         // don't know exactly what should be here
 
 void ZLibrary::initLocale() {
@@ -76,8 +81,8 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary:: init(int &argc, char **&argv) {
-	freopen("E:\\fbreader-log.txt", "w", stdout);
-	fprintf(stdout,"\n");
+	//freopen("E:\\fbreader-log.txt", "w", stdout);
+	//fprintf(stdout,"\n");
 
 	initLibrary();
 
@@ -133,16 +138,17 @@ void myMessageOutput(QtMsgType type, const char *msg)
 void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	qInstallMsgHandler(myMessageOutput);
 	new QApplication(argc, argv);
-        ZLibrary::parseArguments(argc, argv);
-        XMLConfigManager::createInstance();
-        ZLQtTimeManager::createInstance();
-        ZLQtFSManager::createInstance();
-        ZLQtDialogManager::createInstance();
-		ZLSymbianCommunicationManager::createInstance();
-        ZLQtImageManager::createInstance();
-		ZLQtNetworkManager::createInstance();
+	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
+	ZLibrary::parseArguments(argc, argv);
+	XMLConfigManager::createInstance();
+	ZLQtTimeManager::createInstance();
+	ZLQtFSManager::createInstance();
+	ZLQtDialogManager::createInstance();
+	ZLSymbianCommunicationManager::createInstance();
+	ZLQtImageManager::createInstance();
+	ZLQtNetworkManager::createInstance();
 
-		ZLKeyUtil::setKeyNamesFileName("keynames.xml");
+	ZLKeyUtil::setKeyNamesFileName("keynames.xml");
 }
 
 ZLPaintContext *ZLQtLibraryImplementation::createContext() {

@@ -1,7 +1,7 @@
 #ifndef __ZLQTOPENFILEDIALOG_H__
 #define __ZLQTOPENFILEDIALOG_H__
 
-#include <QDir>
+#include <QtCore/QDir>
 
 #include "../../../../core/src/dialogs/ZLOpenFileDialog.h"
 #include "../menu/DrillDownMenu.h"

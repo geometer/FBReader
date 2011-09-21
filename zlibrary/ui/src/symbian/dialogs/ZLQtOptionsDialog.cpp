@@ -4,7 +4,8 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QResizeEvent>
 #include <QtGui/QScrollArea>
-#include <QAction>
+#include <QtGui/QAction>
+#include <QtCore/QDebug>
 
 #include <ZLDialogManager.h>
 
@@ -13,20 +14,62 @@
 #include "ZLQtUtil.h"
 
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : QDialog(qApp->activeWindow()), ZLOptionsDialog(resource, applyAction), myKey(resource.value()) {
+MyTabWidget::MyTabWidget(QWidget* parent): QWidget(parent) {
+	QVBoxLayout *layout = new QVBoxLayout(this);
+	//TODO remove myScrollArea from the class state?
+	//TODO check order of commands here
+	myScrollArea = new QScrollArea;
+	myStackedWidget = new QStackedWidget;
+
+	//TODO menu showing
+	myMenuWidget = new QListWidget;
+
+//TODO setHorRules for myMenuWidget;
+	myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	myScrollArea->setWidgetResizable(false);
+
+	myScrollArea->setWidget(myStackedWidget);
+//TODO hide myMenuWidget and myStackedWidget in right time
+
+	connect(myMenuWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(clicked(QModelIndex)));
+//TODO remove PrefActions totally
+	layout->addWidget(myMenuWidget);
+	layout->addWidget(myScrollArea);
+}
+
+//TODO rename addTab
+void MyTabWidget::addTab(QWidget *widget, const QString &label) {
+	myMenuWidget->addItem(label);
+	myStackedWidget->addWidget(widget);
+}
+
+int MyTabWidget::currentIndex() const {
+	return myStackedWidget->currentIndex();
+}
+
+void MyTabWidget::setCurrentWidget(QWidget *widget) {
+	//TODO check for already containg
+	myStackedWidget->setCurrentWidget(widget);
+	//myStackedWidget->update();
+}
+
+void MyTabWidget::setCurrentIndex(int index) {
+	myStackedWidget->setCurrentIndex(index);
+}
+
+void MyTabWidget::clicked(const QModelIndex &index) {
+	//TODO may be here we should emit signal to stackedWidget
+	qDebug() << Q_FUNC_INFO << index.row();
+	setCurrentIndex(index.row());
+}
+
+ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : QDialog(qApp->activeWindow()), ZLOptionsDialog(resource, applyAction) {
 		//setModal(true);
 		setWindowTitle(::qtString(caption()));
 		QVBoxLayout *layout = new QVBoxLayout(this);
 
-		myScrollArea = new QScrollArea;
-		myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-		myScrollArea->setWidgetResizable(false);
-		layout->addWidget(myScrollArea);
-
-		myWidget = new QWidget;
-		myContent = new ZLQtDialogContent(myWidget, resource );
-		// to enable setting accepting, that executes in ZLOptionsDialog::accept() :
-		myTabs.push_back(myContent);
+		myTabWidget = new MyTabWidget(this);
+		layout->addWidget(myTabWidget);
 
 		QAction* okButton = new QAction(::qtButtonName(ZLDialogManager::OK_BUTTON),this);
 		okButton->setSoftKeyRole( QAction::PositiveSoftKey );
@@ -38,27 +81,46 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 		addAction( cancelButton );
 		connect(cancelButton, SIGNAL(triggered()), this, SLOT(reject()));
 
+#ifndef 	__SYMBIAN__
+		QPushButton* realOkButton = new QPushButton( ::qtButtonName(ZLDialogManager::OK_BUTTON), this );
+		layout->addWidget(realOkButton);
+		connect(realOkButton, SIGNAL(clicked()), this, SLOT(accept()));
+#endif
 }
-
 
 void ZLQtOptionsDialog::apply() {
 	ZLOptionsDialog::accept();
 }
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
-	return *myContent;
+	//TODO look at what deletes DialogContent and QWidget (QStackedWidget itself owns these elements)
+	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget, tabResource(key));
+	myTabWidget->addTab(tab->widget(), ::qtString(tab->displayName()));
+	myTabs.push_back(tab);
+	return *tab;
 }
 
 const std::string &ZLQtOptionsDialog::selectedTabKey() const {
-		return myKey.Name;
+	//TODO may be remove it?
+	return myTabs[myTabWidget->currentIndex()]->key();
 }
 
 void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
+	//TODO may be remove it?
+//	for (std::vector<shared_ptr<ZLDialogContent> >::const_iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+//		if ((*it)->key() == key.Name) {
+//			myTabWidget->setCurrentWidget(((ZLQtDialogContent&)**it).widget());
+//			break;
+//		}
+//	}
 }
 
 bool ZLQtOptionsDialog::run() {
-		myScrollArea->setWidget(myWidget);
+		//TODO should we call myScrollArea?
+		//myScrollArea->setWidget(myWidget);
 		//setModal(true);
+		ZLQtDialogContent* tab = (ZLQtDialogContent*)(&(*myTabs[2]));
+		myTabWidget->setCurrentWidget( tab->widget() );
 		setFullScreenWithSoftButtons();
 		bool code = ZLOptionsDialog::run();
 		return code;
@@ -70,8 +132,12 @@ void ZLQtOptionsDialog::setFullScreenWithSoftButtons() {
 }
 
 bool ZLQtOptionsDialog::runInternal() {
-	myContent->close();
-	myWidget->setFocus();
+	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		((ZLQtDialogContent&)**it).close();
+	}
+	//TODO set focus to current widget
+	//TODO maybe it should be in MyTabWidget
+	//myWidget->setFocus();
 	return exec() == QDialog::Accepted;
 }
 

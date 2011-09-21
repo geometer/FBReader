@@ -2,6 +2,7 @@
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QWidget>
 #include <QtGui/QLayout>
+#include <QtCore/QDebug>
 
 #include "ZLQtDialogContent.h"
 #include "ZLQtOptionView.h"

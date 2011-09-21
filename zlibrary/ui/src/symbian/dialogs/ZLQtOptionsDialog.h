@@ -4,16 +4,37 @@
 
 #include <QtGui/QWidget>
 #include <QtGui/QDialog>
-#include <QApplication>
+#include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QScrollArea>
 #include <QtGui/QPaintEvent>
+#include <QtGui/QStackedWidget>
+#include <QtGui/QListWidget>
 
 #include "ZLQtDialogContent.h"
 
 #include <string>
 
 #include <ZLOptionsDialog.h>
+
+//TODO rename it
+class MyTabWidget : public QWidget {
+	Q_OBJECT;
+public:
+	MyTabWidget(QWidget* parent=0);
+	void addTab(QWidget *widget, const QString &label);
+	int currentIndex() const;
+	//TODO make slots
+	void setCurrentWidget(QWidget *widget);
+	void setCurrentIndex(int index);
+public slots:
+	//TODO rename
+	void clicked(const QModelIndex &index);
+private:
+	QStackedWidget* myStackedWidget;
+	QScrollArea* myScrollArea;
+	QListWidget* myMenuWidget;
+};
 
 class ZLQtOptionsDialog : public QDialog, public ZLOptionsDialog {
 	Q_OBJECT
@@ -41,10 +62,13 @@ private Q_SLOTS:
 	void apply();
 
 private:
-	ZLQtDialogContent* myContent;
-	QWidget* myWidget;
-	ZLResourceKey myKey;
-	QScrollArea* myScrollArea;
+	//TODO rename it
+	MyTabWidget *myTabWidget;
+	//ZLQtDialogContent* myContent;
+	//QWidget* myWidget;
+	//ZLResourceKey myKey;
+	//TODO may be place it to myTabWidget
+	//QScrollArea* myScrollArea;
 
 };
 #endif /* __ZLQTOPTIONSDIALOG_H__ */

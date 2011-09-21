@@ -1,15 +1,14 @@
 #include <unistd.h>
 
 
-#include <QVBoxLayout>
-#include <QDesktopWidget>
-#include <ZLTimeManager.h>
-
-#include <QProgressDialog>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QProgressDialog>
+#include <QtCore/QDebug>
 
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
-#include <QDebug>
+#include <QtCore/QDebug>
 
 ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myDialog(0) {
 

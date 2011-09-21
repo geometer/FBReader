@@ -12,7 +12,7 @@ DrillDownMenuDialog::DrillDownMenuDialog(QWidget* parent) : QDialog(parent) {
     layout->addWidget(myStackedWidget);
 
 	const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
-	QAction* action = new QAction(back.value().c_str(),this);
+	QAction* action = new QAction(QString::fromStdString(back.value()),this);
     action->setSoftKeyRole( QAction::NegativeSoftKey );
     connect(action, SIGNAL(triggered()), this, SLOT(back()));
     addAction( action );
@@ -51,7 +51,9 @@ void DrillDownMenuDialog::showDrillDownMenu(DrillDownMenu* menu) {
 
  void DrillDownMenuDialog::setCurrentMenu(DrillDownMenu* menu) {
     myStackedWidget->setCurrentWidget(menu);
+#ifdef __SYMBIAN__
     menu->setEditFocus(true); // for phones with keyboard: need to activate for single-click
+#endif
 	showMessage(menu->getMessage());
     myStackedWidget->update();
  }

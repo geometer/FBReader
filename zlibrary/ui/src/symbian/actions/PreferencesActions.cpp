@@ -1,5 +1,5 @@
-#include <QApplication>
-#include <QMessageBox>
+#include <QtGui/QApplication>
+#include <QtGui/QMessageBox>
 
 #include <ZLDialogManager.h>
 
