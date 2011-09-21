@@ -19,6 +19,8 @@ DEFINES = -DUNICODE -DQT_KEYPAD_NAVIGATION -DQT_SOFTKEYS_ENABLED -DQT_USE_MATH_H
 CXXFLAGS = -pipe --include=${EPOCROOT}/epoc32/include/gcce/gcce.h -march=armv5t -mapcs -mthumb-interwork -nostdinc -c -msoft-float -T script -x c++ -fexceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG -fno-unit-at-a-time -fvisibility-inlines-hidden 
 CXXFLAGS += -DLIBICONV_PLUG -DDO_ICONV_CAST  -DROOTPATH=\"\" -fvisibility-inlines-hidden
 
+CXXFLAGS += -D__SYMBIAN__
+
 INCPATH = -I${QTSYMBIAN_DIR}/mkspecs/symbian/linux-gcce -I. -I${QTSYMBIAN_DIR}/include -I${EPOCROOT}/epoc32/include/ -I${EPOCROOT}/epoc32/include/variant -I${EPOCROOT}/epoc32/include/stdapis -I${EPOCROOT}/epoc32/include/gcce -I${EPOCROOT}/epoc32/include/stdapis/sys -I${EPOCROOT}/epoc32/include/stdapis/stlport -I${EPOCROOT}/epoc32-s60/include -I${EPOCROOT}/epoc32/include/oem -I${EPOCROOT}/epoc32/include/middleware -I${EPOCROOT}/epoc32/include/domain/middleware -I${EPOCROOT}/epoc32/include/osextensions -I${EPOCROOT}/epoc32/include/domain/osextensions -I${EPOCROOT}/epoc32/include/domain/osextensions/loc -I${EPOCROOT}/epoc32/include/domain/middleware/loc -I${EPOCROOT}/epoc32/include/domain/osextensions/loc/sc -I${EPOCROOT}/epoc32/include/domain/middleware/loc/sc -I. 
 
 DISABLE_WARNINGS = -w

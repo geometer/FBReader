@@ -1,7 +1,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QPushButton>
-#include <QAction>
-#include <QVBoxLayout>
+#include <QtGui/QAction>
+#include <QtGui/QVBoxLayout>
 
 #include <ZLDialogManager.h>
 
@@ -28,6 +28,12 @@ void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
 
 	button->setSoftKeyRole( accept ?  QAction::PositiveSoftKey : QAction::NegativeSoftKey );
 	connect(button, SIGNAL(triggered()), this, accept ? SLOT(accept()) : SLOT(reject()));
+
+#ifndef 	__SYMBIAN__
+	QPushButton* realButton = new QPushButton(::qtButtonName(key), this );
+	layout()->addWidget(realButton);
+	connect(realButton, SIGNAL(triggered()), this, accept ? SLOT(accept()) : SLOT(reject()));
+#endif
 }
 
 bool ZLQtDialog::run() {

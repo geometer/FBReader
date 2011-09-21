@@ -3,7 +3,7 @@
 
 #include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
 
-#include <QString>
+#include <QtCore/QString>
 
 class QWidget;
 class QVBoxLayout;

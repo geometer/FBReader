@@ -3,17 +3,17 @@
 
 #include <string>
 
+#include <QtCore/QList>
 #include <QtGui/QApplication>
-#include <QVBoxLayout>
-#include <QAction>
-#include <QDesktopWidget>
-#include <QMessageBox>
-#include <QDialog>
-#include <QListWidget>
-#include <QListWidgetItem>
-#include <QStackedWidget>
-#include <QList>
-#include <QLabel>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QAction>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QMessageBox>
+#include <QtGui/QDialog>
+#include <QtGui/QListWidget>
+#include <QtGui/QListWidgetItem>
+#include <QtGui/QStackedWidget>
+#include <QtGui/QLabel>
 #include <QtGui/QPaintEvent>
 
 #include <ZLApplication.h>

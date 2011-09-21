@@ -32,6 +32,14 @@ ifeq "$(UI_TYPE)" "qt4"
   NETWORK_LIBS ?= -lQtNetwork
 endif
 
+ifeq "$(UI_TYPE)" "qtwidgets"
+  UILIBS = -lQtGui -lQtNetwork
+  NETWORK_LIBS ?= -lQtNetwork
+  #TODO maybe remove ZLSHARED
+  ZLSHARED = no
+  CFLAGS += -DROOTPATH=\"/\"
+endif
+
 ifeq "$(UI_TYPE)" "gtk"
   UILIBS = $(shell pkg-config --libs gtk+-2.0 gio-2.0) -lpng -ljpeg
 endif

@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #include <QtCore/QString>
-#include <QDir>
+#include <QtCore/QDir>
 #include <ZLLogger.h>
 
 #include <set>
@@ -13,7 +13,6 @@
 #include <ZLStringUtil.h>
 
 #include "ZLQtFSManager.h"
-
 
 
 std::string ZLQtFSManager::convertFilenameToUtf8(const std::string &name) const {
@@ -32,11 +31,11 @@ std::string ZLQtFSManager::mimeType(const std::string &path) const {
 
 
 static std::string getPwdDir() {
-	return QDir::current().absolutePath().replace("/","\\").toStdString();
+	return QDir::current().absolutePath().replace("/",QString::fromStdString(ZLibrary::FileNameDelimiter)).toStdString();
 }
 
 static std::string getHomeDir() {
-	return QDir::home().absolutePath().replace("/","\\").toStdString();
+	return QDir::home().absolutePath().replace("/",QString::fromStdString(ZLibrary::FileNameDelimiter)).toStdString();
 }
 
 std::string ZLQtFSManager::resolveSymlink(const std::string &path) const {
@@ -48,6 +47,12 @@ ZLFSDir *ZLQtFSManager::createPlainDirectory(const std::string &path) const {
 }
 
 void ZLQtFSManager::normalizeRealPath(std::string &path) const {
+
+#ifndef __SYMBIAN__
+	//TODO write ZLQtFSManager using only Qt instruments for this (to avoid these hacks)
+	ZLUnixFSManager::normalizeRealPath(path);
+	return;
+#endif
 
 	// TODO
 	// code written in this method was taken from win32 normalizeRealPath (with some additions)
@@ -95,7 +100,7 @@ int ZLQtFSManager::findArchiveFileNameDelimiter(const std::string &path) const {
 	return (index == 1) ? -1 : index;
 }
 
-static const std::string RootPath = ROOTPATH; // Symbian uses a windows-style for paths
+static const std::string RootPath = ROOTPATH;
 
 
 shared_ptr<ZLDir> ZLQtFSManager::rootDirectory() const {

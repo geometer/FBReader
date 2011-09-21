@@ -51,7 +51,9 @@ void DrillDownMenuDialog::showDrillDownMenu(DrillDownMenu* menu) {
 
  void DrillDownMenuDialog::setCurrentMenu(DrillDownMenu* menu) {
     myStackedWidget->setCurrentWidget(menu);
+#ifdef __SYMBIAN__
     menu->setEditFocus(true); // for phones with keyboard: need to activate for single-click
+#endif
 	showMessage(menu->getMessage());
     myStackedWidget->update();
  }
