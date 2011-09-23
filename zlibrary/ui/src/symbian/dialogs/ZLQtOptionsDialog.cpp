@@ -24,17 +24,20 @@ MyTabWidget::MyTabWidget(QWidget* parent): QWidget(parent) {
 	//TODO menu showing
 	myMenuWidget = new QListWidget;
 
+	layout->addWidget(myMenuWidget);
+	layout->addWidget(myScrollArea);
+
 //TODO setHorRules for myMenuWidget;
 	myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	myScrollArea->setWidgetResizable(false);
 
-	myScrollArea->setWidget(myStackedWidget);
+
 //TODO hide myMenuWidget and myStackedWidget in right time
 
 	connect(myMenuWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(clicked(QModelIndex)));
 //TODO remove PrefActions totally
-	layout->addWidget(myMenuWidget);
-	layout->addWidget(myScrollArea);
+
+
 }
 
 //TODO rename addTab
@@ -49,12 +52,17 @@ int MyTabWidget::currentIndex() const {
 
 void MyTabWidget::setCurrentWidget(QWidget *widget) {
 	//TODO check for already containg
+	//TODO remove setWidget method to one place
+	myScrollArea->setWidget(myStackedWidget);
 	myStackedWidget->setCurrentWidget(widget);
-	//myStackedWidget->update();
+	myStackedWidget->update();
 }
 
 void MyTabWidget::setCurrentIndex(int index) {
+	//TODO remove setWidget method to one place
+	myScrollArea->setWidget(myStackedWidget);
 	myStackedWidget->setCurrentIndex(index);
+	myStackedWidget->update();
 }
 
 void MyTabWidget::clicked(const QModelIndex &index) {
