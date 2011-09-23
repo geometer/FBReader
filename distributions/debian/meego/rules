@@ -10,6 +10,8 @@
 ## ----------------------------------------------------------------------
 DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+TARGET_STATUS ?= release
+# TARGET_STATUS = debug
 
 ## ----------------------------------------------------------------------
 DEB_DIR		= $(CURDIR)/debian
@@ -26,10 +28,10 @@ clean:
 build:		build-stamp
 build-stamp:
 		dh_testdir
-		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=qml
-		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=qml
-		$(MAKE) -C zlibrary/ui TARGET_ARCH=maemo UI_TYPE=qml
-		$(MAKE) -C fbreader TARGET_ARCH=maemo UI_TYPE=qml
+		$(MAKE) -C zlibrary/core TARGET_ARCH=meego UI_TYPE=qml TARGET_STATUS=$(TARGET_STATUS)
+		$(MAKE) -C zlibrary/text TARGET_ARCH=meego UI_TYPE=qml TARGET_STATUS=$(TARGET_STATUS)
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=meego UI_TYPE=qml TARGET_STATUS=$(TARGET_STATUS)
+		$(MAKE) -C fbreader TARGET_ARCH=meego UI_TYPE=qml TARGET_STATUS=$(TARGET_STATUS)
 		touch build-stamp 
 
 install:	install-stamp
@@ -38,12 +40,12 @@ install-stamp:	build
 		dh_testroot
 		dh_clean -k
 		dh_installdirs
-		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader do_install
-		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader do_install
-		$(MAKE) -C zlibrary/ui TARGET_ARCH=maemo UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader do_install
-		$(MAKE) -C fbreader TARGET_ARCH=maemo UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader do_install
-		$(MAKE) -C zlibrary/core TARGET_ARCH=maemo UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader-dev do_install_dev
-		$(MAKE) -C zlibrary/text TARGET_ARCH=maemo UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader-dev do_install_dev
+		$(MAKE) -C zlibrary/core TARGET_ARCH=meego UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader do_install
+		$(MAKE) -C zlibrary/text TARGET_ARCH=meego UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader do_install
+		$(MAKE) -C zlibrary/ui TARGET_ARCH=meego UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader do_install
+		$(MAKE) -C fbreader TARGET_ARCH=meego UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader do_install
+		$(MAKE) -C zlibrary/core TARGET_ARCH=meego UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader-dev do_install_dev
+		$(MAKE) -C zlibrary/text TARGET_ARCH=meego UI_TYPE=qml DESTDIR=$(DEB_DIR)/fbreader-dev do_install_dev
 		touch install-stamp
 
 binary-indep:

@@ -21,6 +21,9 @@ case "$1" in
 	win32)
 		platform=win32;
 		;;
+	symbian|meego)
+		platform=mobile;
+		;;
 	*)
 		echo "$0: unknown platform \"$1\"";
 		exit 0;

@@ -4,7 +4,8 @@
 	<site>litres.ru</site>
 	<title>Каталог LitRes</title>
 	<summary>Продажа электронных книг.</summary>
-	<link rel="main" type="application/atom+xml">http://data.fbreader.org/catalogs/litres/index.php</link>
+	<link rel="main" type="application/atom+xml">http://data.fbreader.org/catalogs/litres2/index.php5</link>
+<!--	<link rel="main" type="application/atom+xml">http://data.fbreader.org/catalogs/litres/index.php</link> -->
 	<link rel="search" type="application/atom+xml">http://data.fbreader.org/catalogs/litres/search.php?query=%s</link>
 	<link rel="signIn" type="text/html">https://robot.litres.ru/pages/catalit_authorise/?lfrom=51</link>
 	<link rel="signUp" type="text/html">https://robot.litres.ru/pages/catalit_register_user/?lfrom=51</link>
