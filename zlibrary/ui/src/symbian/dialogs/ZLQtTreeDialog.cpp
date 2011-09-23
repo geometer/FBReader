@@ -50,7 +50,9 @@ void ZLQtTreeDialog::enter(QModelIndex index) {
 void ZLQtTreeDialog::run() {
 	//TODO should return QDialog::Accepted ??
 	//return exec() == QDialog::Accepted;
+#ifdef __SYMBIAN__
 	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+#endif
 	setWindowState(Qt::WindowFullScreen);
 	exec();
 }
