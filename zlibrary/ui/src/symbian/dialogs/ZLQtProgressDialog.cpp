@@ -7,6 +7,7 @@
 #include <QtCore/QDebug>
 
 #include <ZLTimeManager.h>
+
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
 

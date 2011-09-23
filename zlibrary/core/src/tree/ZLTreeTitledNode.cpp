@@ -42,3 +42,4 @@ std::string ZLTreeTitledNode::imageUrl() const {
 shared_ptr<ZLImage> ZLTreeTitledNode::image() const {
 	return shared_ptr<ZLImage>();
 }
+
