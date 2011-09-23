@@ -53,5 +53,31 @@ PageStackWindow {
 			dialog.open();
 //			root.pageStack.push(dialog);
 		}
+		
+		onProgressDialogRequested: {
+			console.log("progress dialog", object)
+			var component = Qt.createComponent("ProgressDialog.qml");
+			var dialog = component.createObject(mainPage, { handler: object });
+			dialog.open();
+		}
+		
+		onInformationBoxRequested: {
+			// var title, message, button
+			var args = { "titleText": title, "message": message, "acceptButtonText": button };
+			var dialog = queryDialog.createObject(mainPage, args);
+			dialog.open();
+		}
+		onErrorBoxRequested: {
+			// var title, message, button
+			var args = { "titleText": title, "message": message, "acceptButtonText": button };
+			var dialog = queryDialog.createObject(mainPage, args);
+			dialog.open();
+		}
+	}
+	
+	Component {
+		id: queryDialog
+		QueryDialog {
+		}
 	}
 }

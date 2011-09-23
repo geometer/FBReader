@@ -1,0 +1,1 @@
+SRCMOC = ZLQtTime.moc.cpp

@@ -41,8 +41,8 @@ public:
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
 signals:
 
-public slots:
-
+private slots:
+	void onLayoutChanged();
 };
 
 #endif // ZLQMLFILESYSTEMMODEL_H

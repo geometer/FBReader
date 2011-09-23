@@ -56,6 +56,13 @@ Q_SIGNALS:
 	void fileDialogRequested(QObject *object);
 	void privateOptionsDialogRequested(QObject *object);
 	void optionsDialogRequested(QObject *object);
+	void privateProgressDialogRequested(QObject *object);
+	void progressDialogRequested(QObject *object);
+	void privateInformationBoxRequested(const QString &title, const QString &message, const QString &button);
+	void informationBoxRequested(const QString &title, const QString &message, const QString &button);
+	void privateErrorBoxRequested(const QString &title, const QString &message, const QString &button);
+	void errorBoxRequested(const QString &title, const QString &message, const QString &button);
+//	void privateQuestionBoxRequested(QObject *object);
 };
 
 #endif /* __ZLQTDIALOGMANAGER_H__ */

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2011 Ruslan Nigmatullin <euroelessar@ya.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,29 +17,32 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQTTIME_H__
-#define __ZLQTTIME_H__
+import QtQuick 1.0
+import com.nokia.meego 1.0
+import com.nokia.extras 1.0
+import org.fbreader 0.14
 
-#include <QtCore/QObject>
-#include <QtCore/QTimerEvent>
-#include <QtCore/QMap>
+Sheet {
+	id: root
+	property variant handler
 
-#include "../../../../core/src/unix/time/ZLUnixTime.h"
-
-class ZLQtTimeManager : public QObject, public ZLUnixTimeManager {
-	Q_OBJECT
-public:
-	static void createInstance() { ourInstance = new ZLQtTimeManager(); }
-
-	Q_INVOKABLE void addTask(shared_ptr<ZLRunnable> task, int interval);
-	Q_INVOKABLE void removeTaskInternal(shared_ptr<ZLRunnable> task);
-
-private:
-	void timerEvent(QTimerEvent *event);
-
-private:
-	QMap<shared_ptr<ZLRunnable>,int> myTimers;
-	QMap<int,shared_ptr<ZLRunnable> > myTasks;
-};
-
-#endif /* __ZLQTTIME_H__ */
+	content: Item {
+		anchors.fill: parent
+		Label {
+			anchors { verticalCenter: parent.verticalCenter; bottom: indicator.top }
+			width: parent.width
+			text: root.handler.text
+		}
+		BusyIndicator {
+			id: indicator
+			anchors.centerIn: parent
+			platformStyle: BusyIndicatorStyle { size: "large" }
+			running: root.status == DialogStatus.Open
+		}
+	}
+	
+	Connections {
+		target: root.handler
+		onFinished: root.close()
+	}
+}
