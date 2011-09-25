@@ -22,7 +22,7 @@ DONE The default font size value should be 22.
 * By default progress indcator option is set to 'vertical scrollbar' value. However
   scrollbar is not shown. Should be.
 * Default option value should be changed to 'horizontal indicator'.
-* Is it possible to draw 'bootom toolbar' without resizing of text area? That's not
+DONE Is it possible to draw 'bootom toolbar' without resizing of text area? That's not
   convinient that text area receives a resize event every time this toolbar is
   shown/hidden.
 * In preferences dialog combo boxes are too wide. There is no space between label
