@@ -9,16 +9,16 @@ DONE right text margin is too small; should be equal to the left one
   ** Is this done for all languages?
 DONE all the QML list dialogs: add left/right margins (~1 mm)
 
-* 'About FBReader' book should be listed in the library in both 'by author'
+*'About FBReader' book should be listed in the library in both 'by author'
   and 'by tag' subtrees. (In 'Unknown author' and 'Books with no tags' branches.)
-* I've put a file *.fb2.zip into ~/MyDocs/Books directory, however the book
+DONE I've put a file *.fb2.zip into ~/MyDocs/Books directory, however the book
   was not added into the library. It is now listed after manual adding. Should be
   added automatically.
-* I tried to increase font (just edited corresponding field in Preferences dialog).
+DONE I tried to increase font (just edited corresponding field in Preferences dialog).
   The program has crashed and font is not changed after restarting.
   ** Looks like there is an issue in integer (integer range?) field editor. I found
      the same bahaviour when tried to edit progress indicator height.
-* The default font size value should be 22.
+DONE The default font size value should be 22.
 * By default progress indcator option is set to 'vertical scrollbar' value. However
   scrollbar is not shown. Should be.
 * Default option value should be changed to 'horizontal indicator'.
