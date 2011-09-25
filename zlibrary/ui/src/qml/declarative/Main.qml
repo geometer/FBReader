@@ -40,7 +40,7 @@ PageStackWindow {
 		
 		onOptionsDialogRequested: {
 			var component = Qt.createComponent("OptionsDialog.qml");
-			root.openDialog(component.createObject(mainPage, { handler: object }));
+			root.pageStack.push(component, { handler: object, component: component });
 		}
 		
         onFileDialogRequested: {

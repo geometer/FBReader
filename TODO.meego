@@ -27,6 +27,6 @@ DONE The default font size value should be 22.
   shown/hidden.
 * In preferences dialog combo boxes are too wide. There is no space between label
   and combo box (e.g. for font setting). Should be changed.
-* 'Apply' button semantics in preferences dialog is not clear. Does it apply
+DONE 'Apply' button semantics in preferences dialog is not clear. Does it apply
   preferences in current window only, or all the settings over the dialog? Is this
   preferences dialog look/behaviour consistent with guidelines/other meego applications?
