@@ -19,6 +19,13 @@
 
 #include "ZLQtTime.h"
 #include <QtCore/QThread>
+#include <QtCore/QMetaType>
+
+Q_DECLARE_METATYPE(shared_ptr<ZLRunnable>)
+
+ZLQtTimeManager::ZLQtTimeManager() {
+	qRegisterMetaType<shared_ptr<ZLRunnable> >();
+}
 
 void ZLQtTimeManager::addTask(shared_ptr<ZLRunnable> task, int interval) {
 	if (thread() != QThread::currentThread()) {

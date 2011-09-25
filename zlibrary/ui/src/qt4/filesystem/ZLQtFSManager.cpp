@@ -18,6 +18,7 @@
  */
 
 #include <QtCore/QString>
+#include <QtCore/QDir>
 
 #include "ZLQtFSManager.h"
 
@@ -29,14 +30,23 @@ ZLQtFSManager::ZLQtFSManager() {
 ZLQtFSManager::~ZLQtFSManager() {
 }
 
+static QString fixPath(const QString &path) {
+	if (path.startsWith('~'))
+		return QDir::homePath().append(path.midRef(1));
+	else if (path.isEmpty())
+		return QDir::homePath();
+	else
+		return path;
+}
+
 void ZLQtFSManager::addWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher) {
-	QString qPath = QString::fromStdString(path);
+	QString qPath = fixPath(QString::fromStdString(path));
 	myWatchers.insert(qPath, watcher);
 	myWatcher.addPath(qPath);
 }
 
 void ZLQtFSManager::removeWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher) {
-	QString qPath = QString::fromStdString(path);
+	QString qPath = fixPath(QString::fromStdString(path));
 	myWatchers.remove(qPath, watcher);
 	if (!myWatchers.contains(qPath))
 		myWatcher.removePath(qPath);

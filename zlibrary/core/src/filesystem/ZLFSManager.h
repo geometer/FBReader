@@ -25,17 +25,12 @@
 
 #include <ZLFileInfo.h>
 #include <ZLFile.h>
+#include "ZLFSWatcher.h"
 
 class ZLDir;
 class ZLFSDir;
 class ZLInputStream;
 class ZLOutputStream;
-
-class ZLFSWatcher {
-public:
-	virtual ~ZLFSWatcher();
-	virtual void onPathChanged(const std::string &path) = 0;
-};
 
 class ZLFSManager {
 

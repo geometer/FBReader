@@ -88,9 +88,6 @@ void ZLQmlOptionsDialog::reject() {
 	emit finished();
 }
 
-void ZLQmlOptionsDialog::doFinish() {
-}
-
 QString ZLQmlOptionsDialog::okButtonText() const {
 	return myOkButtonText;
 }

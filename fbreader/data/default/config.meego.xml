@@ -2,7 +2,7 @@
 <config>
 	<group name="Style">
 		<option name="Base:fontFamily" value="Nokia Pure Text"/>
-		<option name="Base:fontSize" value="18"/>
+		<option name="Base:fontSize" value="22"/>
 	</group>
   <group name="Options">
 	<option name="IsSelectionEnabled" value="false"/>

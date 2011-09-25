@@ -49,9 +49,6 @@ protected:
 	
 	Q_INVOKABLE void accept();
 	Q_INVOKABLE void reject();
-	
-private Q_SLOTS:
-	void doFinish();
 
 Q_SIGNALS:
 	void sectionsChanged(const QObjectList &sections);
