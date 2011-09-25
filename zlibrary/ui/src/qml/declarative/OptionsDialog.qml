@@ -59,9 +59,11 @@ Sheet {
 			id: pagesModel
 			
 			function update() {
+				console.log(root, root.sections, root.sections.length)
 				pagesModel.clear();
 				if (!root.sections)
 					return;
+				console.log(root, root.sections[0])
 				var sections = root.sections;
 				for (var i = 0; i < sections.length; ++i) {
 					var section = sections[i];

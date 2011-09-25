@@ -31,6 +31,12 @@ class ZLFSDir;
 class ZLInputStream;
 class ZLOutputStream;
 
+class ZLFSWatcher {
+public:
+	virtual ~ZLFSWatcher();
+	virtual void onPathChanged(const std::string &path) = 0;
+};
+
 class ZLFSManager {
 
 public:
@@ -47,6 +53,10 @@ protected:
 public:
 	void normalize(std::string &path) const;
 	virtual std::string resolveSymlink(const std::string &path) const = 0;
+	// TODO: pure virtual
+	virtual void addWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher);
+	// TODO: pure virtual
+	virtual void removeWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher);
 
 protected:
 	virtual void normalizeRealPath(std::string &path) const = 0;

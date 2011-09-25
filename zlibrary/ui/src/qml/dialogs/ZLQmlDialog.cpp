@@ -28,7 +28,7 @@
 ZLQmlDialog::ZLQmlDialog(const ZLResource &resource) {
 	myResult = false;
 	myTitle = QString::fromStdString(resource[ZLDialogManager::DIALOG_TITLE].value());
-	myTab = new ZLQmlDialogContent(resource, this);
+	myTab = new ZLQmlDialogContent(resource);
 }
 
 ZLQmlDialog::~ZLQmlDialog() {

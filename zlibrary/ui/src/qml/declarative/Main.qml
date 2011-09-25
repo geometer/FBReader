@@ -28,9 +28,6 @@ PageStackWindow {
 	
 	initialPage: MainPage {
 		id: mainPage
-		OptionsDialog {
-			id: optionsDialog
-		}
 	}
 
 	Connections {
@@ -42,8 +39,8 @@ PageStackWindow {
 		}
 		
 		onOptionsDialogRequested: {
-			optionsDialog.handler = object;
-			root.openDialog(optionsDialog);
+			var component = Qt.createComponent("OptionsDialog.qml");
+			root.openDialog(component.createObject(mainPage, { handler: object }));
 		}
 		
         onFileDialogRequested: {
@@ -80,8 +77,7 @@ PageStackWindow {
 			dialog.statusChanged.connect(
 						function() {
 							if (dialog.status == DialogStatus.Closed) {
-								if (dialog !== optionsDialog)
-									dialog.destroy();
+								dialog.destroy();
 								// hook for toolbar activity
 								if (root.pageStack.currentPage == mainPage)
 									mainPage.state = ""

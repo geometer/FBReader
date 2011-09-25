@@ -57,7 +57,7 @@ public:
 protected:
 	void addView(ZLOptionView *view);
 
-private:
+//private:
 	const ZLResource &myResource;
 	std::vector<ZLOptionView*> myViews;
 };

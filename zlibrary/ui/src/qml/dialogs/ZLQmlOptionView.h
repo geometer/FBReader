@@ -69,7 +69,7 @@ public:
 		Path = ZLOptionEntry::PATH
 	};
 	
-	ZLQmlOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
+	ZLQmlOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 	virtual ~ZLQmlOptionView();
 	
 	Type type() const;
@@ -99,7 +99,7 @@ class ZLQmlChoiceOptionView : public ZLQmlOptionView {
 	Q_PROPERTY(QStringList options READ options CONSTANT)
 	Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex NOTIFY currentIndexChanged)
 public:
-	ZLQmlChoiceOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
+	ZLQmlChoiceOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 	~ZLQmlChoiceOptionView();
 	
 	QStringList options() const;
@@ -123,7 +123,7 @@ class ZLQmlBooleanOptionView : public ZLQmlOptionView {
 	Q_PROPERTY(bool checked READ isChecked WRITE setChecked NOTIFY checkedChanged)
 
 public:
-	ZLQmlBooleanOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
+	ZLQmlBooleanOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 	~ZLQmlBooleanOptionView();
 	
 	bool isChecked();
@@ -151,7 +151,7 @@ public:
         Checked = B3_TRUE
 	};
 
-	ZLQmlBoolean3OptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
+	ZLQmlBoolean3OptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 	~ZLQmlBoolean3OptionView();
 	
 	State state() const;
@@ -175,7 +175,7 @@ class ZLQmlSpinOptionView : public ZLQmlOptionView {
 	Q_PROPERTY(int stepSize READ stepSize CONSTANT)
 	Q_PROPERTY(int value READ value WRITE setValue NOTIFY valueChanged)
 public:
-	ZLQmlSpinOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
+	ZLQmlSpinOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 	~ZLQmlSpinOptionView();
 	
 	int minimumValue() const;
@@ -202,7 +202,7 @@ class ZLQmlComboOptionView : public ZLQmlOptionView {
 	Q_PROPERTY(QString currentText READ currentText WRITE setCurrentText NOTIFY currentTextChanged)
 	Q_PROPERTY(bool editable READ isEditable CONSTANT)
 public:
-	ZLQmlComboOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
+	ZLQmlComboOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 	~ZLQmlComboOptionView();
 	
 	QStringList values() const;
@@ -233,7 +233,7 @@ class ZLQmlTextOptionView : public ZLQmlOptionView {
 	Q_PROPERTY(bool password READ isPassword CONSTANT)
 	Q_PROPERTY(QString pathDelimiter READ pathDelimiter CONSTANT)
 public:
-	ZLQmlTextOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
+	ZLQmlTextOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 	~ZLQmlTextOptionView();
 	
 	QString text() const;
@@ -257,7 +257,7 @@ class ZLQmlColorOptionView : public ZLQmlOptionView {
 	Q_OBJECT
 	Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged)
 public:
-	ZLQmlColorOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
+	ZLQmlColorOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 	~ZLQmlColorOptionView();
 	
 	QColor color() const;
@@ -304,7 +304,7 @@ class ZLQmlStaticTextOptionView : public ZLQmlOptionView {
 	Q_OBJECT
 	Q_PROPERTY(QString text READ text CONSTANT)
 public:
-	ZLQmlStaticTextOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option, QObject *parent);
+	ZLQmlStaticTextOptionView(const std::string &name, const std::string &tooltip, shared_ptr<ZLOptionEntry> option);
 	~ZLQmlStaticTextOptionView();
 	
 	QString text() const;

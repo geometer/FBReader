@@ -34,6 +34,7 @@ class ZLQmlOptionsDialog : public QObject, public ZLOptionsDialog {
 	Q_PROPERTY(QString cancelButtonText READ cancelButtonText CONSTANT)
 public:
 	ZLQmlOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton);
+	~ZLQmlOptionsDialog();
 	ZLDialogContent &createTab(const ZLResourceKey &key);
 
 protected:
@@ -49,12 +50,15 @@ protected:
 	Q_INVOKABLE void accept();
 	Q_INVOKABLE void reject();
 	
+private Q_SLOTS:
+	void doFinish();
+
 Q_SIGNALS:
 	void sectionsChanged(const QObjectList &sections);
 	void finished();
 
 private:
-	QObjectList mySections;
+	QList<QWeakPointer<QObject> > mySections;
 	QString myOkButtonText;
 	QString myApplyButtonText;
 	QString myCancelButtonText;
