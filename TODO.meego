@@ -4,13 +4,14 @@ this file; comment are marked with double bullet (**).
 
 DONE version number should be changed to 0.99.0
 DONE right text margin is too small; should be equal to the left one
-* "About fbreader" text should be changed to the version without icons
+DONE "About fbreader" text should be changed to the version without icons
   (I was sure that's already done -- in symbian version at least)
   ** Is this done for all languages?
 DONE all the QML list dialogs: add left/right margins (~1 mm)
 
 *'About FBReader' book should be listed in the library in both 'by author'
   and 'by tag' subtrees. (In 'Unknown author' and 'Books with no tags' branches.)
+  ** It looks like already been listed at both subtrees
 DONE I've put a file *.fb2.zip into ~/MyDocs/Books directory, however the book
   was not added into the library. It is now listed after manual adding. Should be
   added automatically.
@@ -25,7 +26,7 @@ DONE The default font size value should be 22.
 DONE Is it possible to draw 'bootom toolbar' without resizing of text area? That's not
   convinient that text area receives a resize event every time this toolbar is
   shown/hidden.
-* In preferences dialog combo boxes are too wide. There is no space between label
+DONE In preferences dialog combo boxes are too wide. There is no space between label
   and combo box (e.g. for font setting). Should be changed.
 DONE 'Apply' button semantics in preferences dialog is not clear. Does it apply
   preferences in current window only, or all the settings over the dialog? Is this

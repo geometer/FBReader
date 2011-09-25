@@ -154,7 +154,6 @@ Library::Watcher::Watcher(Library &library) : myLibrary(library) {
 
 void Library::Watcher::onPathChanged(const std::string &) {
 	myLibrary.myBuildMode = Library::BUILD_ALL;
-//	static_cast<Library::BuildMode>(myLibrary.myBuildMode | Library::BUILD_UPDATE_BOOKS_INFO);
 }
 
 class LibrarySynchronizer : public ZLRunnable {
