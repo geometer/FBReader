@@ -32,14 +32,16 @@ void ShowMenuLibraryAction::run() {
 void AuthorsMenuAction::run_init() {
 	const AuthorList &authors = Library::Instance().authors();
 	for (AuthorList::const_iterator it=authors.begin(); it!=authors.end(); ++it) {
-		myMenu->addItem( (*it)->name(),  new BooksByAuthorMenuAction(myDialog,*it) );
+		std::string authorName = (*it).isNull() ? ZLResource::resource("libraryView")["authorNode"]["unknownAuthor"].value() : (*it)->name();
+		myMenu->addItem(authorName,  new BooksByAuthorMenuAction(myDialog,*it));
 	}
 }
 
 void TagsMenuAction::run_init() {
 	const TagList &tags = Library::Instance().tags();
 	for (TagList::const_iterator it=tags.begin(); it!=tags.end(); ++it) {
-		myMenu->addItem( (*it)->name()  , new BooksByTagMenuAction(myDialog,*it) );
+		std::string tagName = (*it).isNull() ? ZLResource::resource("libraryView")["tagNode"]["noTags"].value() : (*it)->name();
+		myMenu->addItem(tagName, new BooksByTagMenuAction(myDialog,*it));
 	}
 }
 
