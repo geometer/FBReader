@@ -35,7 +35,7 @@
 #include "../dialogs/ZLQmlDialogManager.h"
 #include "ZLQmlSwipeGestureRecognizer.h"
 #include "../util/ZLQtKeyUtil.h"
-#include "../../../../core/src/application/ZLApplicationWindow.h"
+#include "../application/ZLQmlApplicationWindow.h"
 #include "ZLQmlNetworkAccessFactory.h"
 
 #include <ZLibrary.h>
@@ -275,8 +275,8 @@ QScrollBar *ZLQmlViewObject::addScrollBar(QGridLayout *layout, Qt::Orientation o
 	return 0;
 }
 
-ZLQmlViewObject::ZLQmlViewObject(QObject *parent, ZLApplication *application)
-    : QObject(parent), ZLViewWidget((ZLView::Angle)application->AngleStateOption.value()), myApplication(application) {
+ZLQmlViewObject::ZLQmlViewObject(ZLApplication *application)
+    : ZLViewWidget((ZLView::Angle)application->AngleStateOption.value()), myApplication(application) {
 //	myFrame = new QWidget();
 //	QGridLayout *layout = new QGridLayout();
 //	layout->setMargin(0);
@@ -355,7 +355,9 @@ ZLQmlViewWidget::ZLQmlViewWidget(QWidget *parent, ZLQmlViewObject &holder) : QDe
 	font.setPointSize(24);
 	qApp->setFont(font);
 	setOptimizationFlags(QGraphicsView::DontSavePainterState);
-	rootContext()->setContextProperty(QLatin1String("applicationInfo"), holder.parent());
+	
+	rootContext()->setContextProperty(QLatin1String("applicationInfo"),
+	                                  static_cast<ZLQmlApplicationWindow*>(&ZLApplicationWindow::Instance()));
 	rootContext()->setContextProperty(QLatin1String("objectHolder"), &holder);
 	ZLDialogManager *dialogManager = &ZLDialogManager::Instance();
 	QObject *qDialogManager = static_cast<ZLQmlDialogManager*>(dialogManager);

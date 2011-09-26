@@ -41,8 +41,8 @@
 #include "ZLQtUtil.h"
 
 ZLQmlOptionView::ZLQmlOptionView(const std::string &name, const std::string &tooltip,
-                                 shared_ptr<ZLOptionEntry> option, QObject *parent)
-    : QObject(parent), ZLOptionView(name, tooltip, option) {
+                                 shared_ptr<ZLOptionEntry> option)
+    : ZLOptionView(name, tooltip, option) {
 	myVisible = false;
 	myEnabled = true;
 	myCreated = false;
@@ -101,8 +101,8 @@ void ZLQmlOptionView::_setActive(bool active) {
 }
 
 ZLQmlChoiceOptionView::ZLQmlChoiceOptionView(const std::string &name, const std::string &tooltip,
-                                             shared_ptr<ZLOptionEntry> option, QObject *parent)
-    : ZLQmlOptionView(name, tooltip, option, parent) {
+                                             shared_ptr<ZLOptionEntry> option)
+    : ZLQmlOptionView(name, tooltip, option) {
 	ZLChoiceOptionEntry *entry = static_cast<ZLChoiceOptionEntry*>(&*myOption);
 	for (int i = 0; i < entry->choiceNumber(); ++i)
 		myOptions << QString::fromStdString(entry->text(i));
@@ -137,8 +137,8 @@ void ZLQmlChoiceOptionView::reset() {
 }
 
 ZLQmlBooleanOptionView::ZLQmlBooleanOptionView(const std::string &name, const std::string &tooltip,
-                                               shared_ptr<ZLOptionEntry> option, QObject *parent)
-    : ZLQmlOptionView(name, tooltip, option, parent) {
+                                               shared_ptr<ZLOptionEntry> option)
+    : ZLQmlOptionView(name, tooltip, option) {
 	ZLBooleanOptionEntry *entry = static_cast<ZLBooleanOptionEntry*>(&*myOption);
 	myChecked = entry->initialState();
 }
@@ -169,8 +169,8 @@ void ZLQmlBooleanOptionView::reset() {
 }
 
 ZLQmlBoolean3OptionView::ZLQmlBoolean3OptionView(const std::string &name, const std::string &tooltip,
-                                                 shared_ptr<ZLOptionEntry> option, QObject *parent)
-    : ZLQmlOptionView(name, tooltip, option, parent) {
+                                                 shared_ptr<ZLOptionEntry> option)
+    : ZLQmlOptionView(name, tooltip, option) {
 	ZLBoolean3OptionEntry *entry = static_cast<ZLBoolean3OptionEntry*>(&*myOption);
 	myState = static_cast<State>(entry->initialState());
 }
@@ -202,8 +202,8 @@ void ZLQmlBoolean3OptionView::reset() {
 }
 
 ZLQmlSpinOptionView::ZLQmlSpinOptionView(const std::string &name, const std::string &tooltip,
-                                         shared_ptr<ZLOptionEntry> option, QObject *parent)
-    : ZLQmlOptionView(name, tooltip, option, parent) {
+                                         shared_ptr<ZLOptionEntry> option)
+    : ZLQmlOptionView(name, tooltip, option) {
 	ZLSpinOptionEntry *entry = static_cast<ZLSpinOptionEntry*>(&*myOption);
 	myValue = entry->initialValue();
 }
@@ -228,6 +228,7 @@ int ZLQmlSpinOptionView::value() {
 }
 
 void ZLQmlSpinOptionView::setValue(int value) {
+	value = qBound(minimumValue(), value, maximumValue());
 	if (value == myValue)
 		return;
 	myValue = value;
@@ -244,8 +245,8 @@ void ZLQmlSpinOptionView::reset() {
 }
 
 ZLQmlComboOptionView::ZLQmlComboOptionView(const std::string &name, const std::string &tooltip,
-                                           shared_ptr<ZLOptionEntry> option, QObject *parent)
-      : ZLQmlOptionView(name, tooltip, option, parent) {
+                                           shared_ptr<ZLOptionEntry> option)
+      : ZLQmlOptionView(name, tooltip, option) {
 	ZLComboOptionEntry *entry = static_cast<ZLComboOptionEntry*>(&*myOption);
 	foreach (const std::string &str, entry->values())
 		myValues << QString::fromStdString(str);
@@ -306,8 +307,8 @@ void ZLQmlComboOptionView::reset() {
 }
 
 ZLQmlTextOptionView::ZLQmlTextOptionView(const std::string &name, const std::string &tooltip,
-                                         shared_ptr<ZLOptionEntry> option, QObject *parent)
-    : ZLQmlOptionView(name, tooltip, option, parent) {
+                                         shared_ptr<ZLOptionEntry> option)
+    : ZLQmlOptionView(name, tooltip, option) {
   ZLComboOptionEntry *entry = static_cast<ZLComboOptionEntry*>(&*myOption);
   myText = QString::fromStdString(entry->initialValue());
 }
@@ -351,8 +352,8 @@ void ZLQmlTextOptionView::reset() {
 }
 
 ZLQmlColorOptionView::ZLQmlColorOptionView(const std::string &name, const std::string &tooltip,
-                                           shared_ptr<ZLOptionEntry> option, QObject *parent)
-    : ZLQmlOptionView(name, tooltip, option, parent) {
+                                           shared_ptr<ZLOptionEntry> option)
+    : ZLQmlOptionView(name, tooltip, option) {
     ZLColorOptionEntry *entry = static_cast<ZLColorOptionEntry*>(&*myOption);
 	myColor = qtColor(entry->initialColor());
 }
@@ -490,8 +491,8 @@ void ZLQmlColorOptionView::reset() {
 //}
 
 ZLQmlStaticTextOptionView::ZLQmlStaticTextOptionView(const std::string &name, const std::string &tooltip,
-                                                     shared_ptr<ZLOptionEntry> option, QObject *parent)
-    : ZLQmlOptionView(name, tooltip, option, parent) {
+                                                     shared_ptr<ZLOptionEntry> option)
+    : ZLQmlOptionView(name, tooltip, option) {
 	ZLStaticTextOptionEntry *entry = static_cast<ZLStaticTextOptionEntry*>(&*myOption);
 	myText = QString::fromStdString(entry->initialValue());
 }

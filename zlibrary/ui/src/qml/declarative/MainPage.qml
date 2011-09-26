@@ -80,7 +80,8 @@ Page {
 	}
 	BookView {
 		id: bookView
-		anchors.fill: parent
+		width: parent.width
+		height: parent.height + root.pageStack.toolBar.height
 		holder: objectHolder
 		Component.onCompleted: objectHolder.bookView = bookView
 		MouseArea {

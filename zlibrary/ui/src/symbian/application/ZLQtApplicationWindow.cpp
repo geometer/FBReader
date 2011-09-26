@@ -75,6 +75,10 @@ void ZLQtApplicationWindow::init() {
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
 		addAction(myShowMenuAction);
 
+#ifndef 	__SYMBIAN__
+		this->menuBar()->addAction(myShowMenuAction);
+#endif
+
 #ifdef __SYMBIAN__
 myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
 #endif

@@ -43,6 +43,7 @@ debian:
 	done
 	@cd $(TMPDIR); dpkg-buildpackage -rfakeroot -us -uc 1> $(CURDIR)/$(ARCHITECTURE)-debian.log 2>&1; cd $(CURDIR)
 	@rm -rf $(TMPDIR)
+	@cat $(CURDIR)/$(ARCHITECTURE)-debian.log
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-debian.log
 	@echo ' OK'
 

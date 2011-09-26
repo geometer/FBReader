@@ -31,8 +31,7 @@ Item {
 	
 	Label {
 		id: label
-		anchors { left: root.left; verticalCenter: root.widget.verticalCenter }
-		anchors.rightMargin: 15
+		anchors { left: root.left; rightMargin: 15; verticalCenter: root.widget.verticalCenter }
 		text: handler.name
 	}
 	
@@ -40,6 +39,7 @@ Item {
 		id: combobox
 		anchors {
 			left: label.text == "" ? root.left : label.right
+			leftMargin: label.text == "" ? 0 : 15
 			top: root.top
 			right: root.right
 		}
@@ -50,18 +50,20 @@ Item {
 	
 	TextField {
 		id: textField
-		anchors {
-			left: label.text == "" ? root.left : label.right
-			top: root.top
-			right: root.right
-		}
+		anchors.fill: combobox
+//		anchors {
+//			left: label.text == "" ? root.left : label.right
+//			leftMargin: label.text == "" ? 0 : 15
+//			top: root.top
+//			right: root.right
+//		}
 		visible: root.handler.editable
 		onTextChanged: if (root.handler.currentText != text) root.handler.currentText = text
 		Component.onCompleted: text = handler.currentText
 	}
 	Image {
 		id: image
-		anchors { right: root.widget.right; verticalCenter: root.widget.verticalCenter }
+		anchors { right: root.widget.right; rightMargin: 5; verticalCenter: root.widget.verticalCenter }
 		property variant __invertedString: theme.inverted ? "-inverted" : ""
 		property variant __enabled: root.widget.enabled ? "" : "-disabled"
 		property variant __pressed: combobox.pressed ? "-pressed" : ""

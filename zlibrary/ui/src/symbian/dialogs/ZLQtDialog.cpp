@@ -27,6 +27,7 @@ void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
 
 	addAction( button );
 #ifdef __SYMBIAN__
+
 	button->setSoftKeyRole( accept ?  QAction::PositiveSoftKey : QAction::NegativeSoftKey );
 #endif
 	connect(button, SIGNAL(triggered()), this, accept ? SLOT(accept()) : SLOT(reject()));

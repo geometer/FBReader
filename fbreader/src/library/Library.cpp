@@ -52,6 +52,7 @@ Library::Library() :
 	PathOption(ZLCategoryKey::CONFIG, OPTIONS, "BookPath", ""),
 	ScanSubdirsOption(ZLCategoryKey::CONFIG, OPTIONS, "ScanSubdirs", false),
 	CollectAllBooksOption(ZLCategoryKey::CONFIG, OPTIONS, "CollectAllBooks", false),
+    myWatcher(new Watcher(*this)),
 	myBuildMode(BUILD_ALL),
 	myRevision(0) {
 	BooksDBUtil::getRecentBooks(myRecentBooks);
@@ -148,6 +149,13 @@ size_t Library::revision() const {
 	return (myBuildMode == BUILD_NOTHING) ? myRevision : myRevision + 1;
 }
 
+Library::Watcher::Watcher(Library &library) : myLibrary(library) {
+}
+
+void Library::Watcher::onPathChanged(const std::string &) {
+	myLibrary.myBuildMode = Library::BUILD_ALL;
+}
+
 class LibrarySynchronizer : public ZLRunnable {
 
 public:
@@ -178,8 +186,10 @@ void LibrarySynchronizer::run() {
 void Library::synchronize() const {
 	if (myScanSubdirs != ScanSubdirsOption.value() ||
 			myPath != PathOption.value()) {
+		ZLFSWatcher::removeWatcher(myPath, myWatcher);
 		myPath = PathOption.value();
 		myScanSubdirs = ScanSubdirsOption.value();
+		ZLFSWatcher::addWatcher(myPath, myWatcher);
 		myBuildMode = BUILD_ALL;
 	}
 

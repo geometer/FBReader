@@ -23,11 +23,12 @@ import com.nokia.extras 1.0
 
 Item {
 	id: root
-	property variant handler
+	property QtObject handler
 	width: parent.width
 	height: textField.height
 	visible: handler.visible
 	enabled: handler.enabled
+	onHandlerChanged: console.log("DialogSpinView", handler)
 	
 	Label {
 		anchors { left: root.left; right: textField.left; verticalCenter: textField.verticalCenter }
@@ -43,7 +44,11 @@ Item {
 		validator: IntValidator { bottom: handler.minimumValue; top: handler.maximumValue }
 		errorHighlight: !acceptableInput
 		inputMethodHints: Qt.ImhDigitsOnly | Qt.ImhNoPredictiveText
-		onTextChanged: if (root.handler.value != text) root.handler.value = text
+		onTextChanged: {
+			console.log("onTextChanged")
+			console.log(root.handler, root.handler.value, text, parseInt(text))
+			if (root.handler.value != text) root.handler.value = parseInt(text)
+		}
 	}
 	
 	Connections {

@@ -6,12 +6,10 @@
 #include <QtGui/QProgressDialog>
 #include <QtCore/QDebug>
 
-
 #include <ZLTimeManager.h>
 
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
-
 
 ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myDialog(0) {
 

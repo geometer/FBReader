@@ -46,7 +46,7 @@ std::string NetworkSeriesNode::title() const {
 	return mySeriesTitle;
 }
 
-std::string NetworkSeriesNode::summary() const {
+std::string NetworkSeriesNode::subtitle() const {
 	if (mySummary.empty()) {
 		if (mySummaryType == BOOKS) {
 			mySummary = NetworkContainerNode::subtitle();

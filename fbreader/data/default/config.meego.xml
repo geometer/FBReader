@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+	<group name="Style">
+		<option name="Base:fontFamily" value="Nokia Pure Text"/>
+		<option name="Base:fontSize" value="22"/>
+	</group>
+	<group name="Indicator">
+		<option name="Type" value="1" category="ui"/>
+	</group>
+	<group name="Options">
+	<option name="IsSelectionEnabled" value="false"/>
+		<option name="Timeout" value="30"/>
+		<option name="LeftMargin" value="14"/>
+	<option name="RightMargin" value="14"/>
+		<option name="TopMargin" value="4"/>
+	<option name="BottomMargin" value="2"/>
+		<option name="BookPath" value="~/MyDocs/Books"/>
+		<option name="DownloadDirectory" value="~/MyDocs/Books"/>
+	</group>
+	<group name="TapScrolling">
+		<option name="FingerOnly" value="false" category="options"/>
+	</group>
+</config>
