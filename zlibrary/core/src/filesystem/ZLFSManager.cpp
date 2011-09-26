@@ -54,3 +54,13 @@ void ZLFSManager::normalize(std::string &path) const {
 		path = realPath + ':' + ZLFileUtil::normalizeUnixPath(path.substr(index + 1));
 	}
 }
+
+void ZLFSManager::addWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher) {
+	(void)path;
+	(void)watcher;
+}
+
+void ZLFSManager::removeWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher) {
+	(void)path;
+	(void)watcher;
+}

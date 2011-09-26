@@ -25,6 +25,7 @@
 
 #include <ZLFileInfo.h>
 #include <ZLFile.h>
+#include "ZLFSWatcher.h"
 
 class ZLDir;
 class ZLFSDir;
@@ -47,6 +48,10 @@ protected:
 public:
 	void normalize(std::string &path) const;
 	virtual std::string resolveSymlink(const std::string &path) const = 0;
+	// TODO: pure virtual
+	virtual void addWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher);
+	// TODO: pure virtual
+	virtual void removeWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher);
 
 protected:
 	virtual void normalizeRealPath(std::string &path) const = 0;

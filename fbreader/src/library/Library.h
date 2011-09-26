@@ -33,6 +33,7 @@
 #include "Author.h"
 #include "Tag.h"
 #include "Lists.h"
+#include <ZLFSWatcher.h>
 
 class Library {
 
@@ -96,6 +97,16 @@ private:
 	void insertIntoBookSet(shared_ptr<Book> book) const;
 
 private:
+	class Watcher : public ZLFSWatcher {
+	public:
+		Watcher(Library &library);
+		void onPathChanged(const std::string &path);
+		
+	private:
+		Library &myLibrary;
+	};
+	friend class Watcher;
+	
 	mutable BookSet myBooks;
 	mutable BookSet myExternalBooks;
 
@@ -109,6 +120,7 @@ private:
 
 	mutable std::string myPath;
 	mutable bool myScanSubdirs;
+	shared_ptr<ZLFSWatcher> myWatcher;
 
 	enum BuildMode {
 		BUILD_NOTHING = 0,

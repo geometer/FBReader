@@ -270,7 +270,7 @@ void ZLQmlApplicationWindow::processAllEvents() {
 }
 
 ZLViewWidget *ZLQmlApplicationWindow::createViewWidget() {
-	ZLQmlViewObject *viewWidget = new ZLQmlViewObject(this, &application());
+	ZLQmlViewObject *viewWidget = new ZLQmlViewObject(&application());
 	viewWidget->widget()->showFullScreen();
 	return viewWidget;
 }

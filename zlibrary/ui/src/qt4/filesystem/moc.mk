@@ -1,0 +1,1 @@
+SRCMOC = ZLQtFSManager.moc.cpp

@@ -31,8 +31,6 @@
 #include "../platform/VolumeKeysCapturer.h"
 #endif
 
-#include "../actions/PreferencesActions.h"
-
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 		new ZLQtApplicationWindow(application);
 }
@@ -53,9 +51,6 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 		QPixmap icon(QString::fromStdString(iconFileName));
         setWindowIcon(icon);
 
-		// FIXME: Find the way to get somewhere this action names
-		application->addAction("preferences", new ShowPreferencesMenuItemAction());
-
 		myMenuDialog = new DrillDownMenuDialog(this);
 		myMenu = new DrillDownMenu;
 
@@ -75,8 +70,12 @@ void ZLQtApplicationWindow::init() {
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
 		addAction(myShowMenuAction);
 
+#ifndef 	__SYMBIAN__
+		this->menuBar()->addAction(myShowMenuAction);
+#endif
+
 #ifdef __SYMBIAN__
-myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
+		myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
 #endif
 
 #ifndef 	__SYMBIAN__
@@ -89,7 +88,7 @@ myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
 		// it crashes.
 		// Flag is necessary for showing SoftKeys Action
 		show();
-#ifdef __SYMBIAN__
+#ifdef 	__SYMBIAN__
 		setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
 #endif
 		showFullScreen();

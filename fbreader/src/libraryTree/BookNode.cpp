@@ -42,7 +42,6 @@ BookNode::BookNode(shared_ptr<Book> book): myBook(book) {
 std::string BookNode::title() const {
 	return myBook->title();
 }
-
 std::string BookNode::subtitle() const {
 	//TODO add more verbose subtitle here
 	return myBook->title();

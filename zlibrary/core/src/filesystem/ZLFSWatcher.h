@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,30 +17,19 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQTTIME_H__
-#define __ZLQTTIME_H__
+#ifndef ZLFSWATCHER_H
+#define ZLFSWATCHER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QTimerEvent>
-#include <QtCore/QMap>
+#include <string>
+#include <shared_ptr.h>
 
-#include "../../../../core/src/unix/time/ZLUnixTime.h"
-
-class ZLQtTimeManager : public QObject, public ZLUnixTimeManager {
-	Q_OBJECT
+class ZLFSWatcher {
 public:
-	static void createInstance() { ourInstance = new ZLQtTimeManager(); }
-
-	Q_INVOKABLE void addTask(shared_ptr<ZLRunnable> task, int interval);
-	Q_INVOKABLE void removeTaskInternal(shared_ptr<ZLRunnable> task);
-
-private:
-	ZLQtTimeManager();
-	void timerEvent(QTimerEvent *event);
-
-private:
-	QMap<shared_ptr<ZLRunnable>,int> myTimers;
-	QMap<int,shared_ptr<ZLRunnable> > myTasks;
+	virtual ~ZLFSWatcher();
+	virtual void onPathChanged(const std::string &path) = 0;
+	
+	static void addWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher);
+	static void removeWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher);
 };
 
-#endif /* __ZLQTTIME_H__ */
+#endif // ZLFSWATCHER_H

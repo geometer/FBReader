@@ -31,7 +31,7 @@ class ZLQmlDialogContent : public QObject, public ZLDialogContent {
 	Q_PROPERTY(QObjectList items READ items NOTIFY itemsChanged)
 	Q_PROPERTY(QString title READ title CONSTANT)
 public:
-	ZLQmlDialogContent(const ZLResource &resource, QObject *parent);
+	ZLQmlDialogContent(const ZLResource &resource);
 	~ZLQmlDialogContent();
 
 	void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);

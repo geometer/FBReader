@@ -40,8 +40,6 @@ public:
 	// |       |  subtitle     |
 	// +-------+---------------+
 	// Name of book
-
-	// TODO we should return const link to std::string instead of std::string
 	virtual std::string title() const = 0;
 	// Short description
 	virtual std::string subtitle() const;
