@@ -12,62 +12,96 @@
 #include "ZLQtDialogContent.h"
 #include "ZLQtUtil.h"
 
+TabMenuWidget::TabMenuWidget(QWidget* parent): QWidget(parent) {
+	QVBoxLayout *layout = new QVBoxLayout(this);
+	myScrollArea = new QScrollArea;
+	myStackedWidget = new QStackedWidget;
+	myMenuWidget = new QListWidget;
+	myMenuWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	myScrollArea->setWidgetResizable(false);
+	layout->addWidget(myMenuWidget);
+	layout->addWidget(myScrollArea);
+	setStatus(MENU);
+	connect(myMenuWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(menuItemClicked(QModelIndex)));
+}
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : QDialog(qApp->activeWindow()), ZLOptionsDialog(resource, applyAction), myKey(resource.value()) {
-		//setModal(true);
+void TabMenuWidget::addItem(QWidget *widget, const QString &label) {
+	myMenuWidget->addItem(label);
+	myStackedWidget->addWidget(widget);
+}
+
+TabMenuWidget::ShowStatus TabMenuWidget::getStatus() const {
+	return myMenuWidget->isVisible() ? MENU : TAB;
+}
+
+void TabMenuWidget::setStatus(ShowStatus status) {
+	if (status == MENU) {
+		myScrollArea->hide();
+		myMenuWidget->show();
+#ifdef __SYMBIAN__
+		// for phones with keyboard (activating for single-click):
+		myMenuWidget->setEditFocus(true);
+#endif
+	} else if (status == TAB) {
+		myScrollArea->show();
+		myMenuWidget->hide();
+		myStackedWidget->setFocus();
+	}
+}
+
+void TabMenuWidget::menuItemClicked(const QModelIndex &index) {
+	if (!myScrollArea->widget()) {
+		myScrollArea->setWidget(myStackedWidget);
+	}
+	myStackedWidget->setCurrentIndex(index.row());
+	setStatus(TAB);
+}
+
+ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : QDialog(qApp->activeWindow()), ZLOptionsDialog(resource, applyAction) {
 		setWindowTitle(::qtString(caption()));
 		QVBoxLayout *layout = new QVBoxLayout(this);
 
-		myScrollArea = new QScrollArea;
-		myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-		myScrollArea->setWidgetResizable(false);
-		layout->addWidget(myScrollArea);
+		myTabMenuWidget = new TabMenuWidget(this);
+		layout->addWidget(myTabMenuWidget);
 
-		myWidget = new QWidget;
-		myContent = new ZLQtDialogContent(myWidget, resource );
-		// to enable setting accepting, that executes in ZLOptionsDialog::accept() :
-		myTabs.push_back(myContent);
-
-		QAction* okButton = new QAction(::qtButtonName(ZLDialogManager::OK_BUTTON),this);
-#ifdef __SYMBIAN__
-		okButton->setSoftKeyRole(QAction::PositiveSoftKey);
-#endif
-		addAction( okButton );
-		connect(okButton, SIGNAL(triggered()), this, SLOT(accept()));
-
-		QAction* cancelButton = new QAction(::qtButtonName(ZLDialogManager::CANCEL_BUTTON),this);
-#ifdef __SYMBIAN__
-		cancelButton->setSoftKeyRole(QAction::NegativeSoftKey);
-#endif
-		addAction( cancelButton );
-		connect(cancelButton, SIGNAL(triggered()), this, SLOT(reject()));
+		const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
+		QAction* backAction = new QAction(QString::fromStdString(back.value()),this);
+		backAction->setSoftKeyRole( QAction::NegativeSoftKey);
+		addAction( backAction );
+		connect(backAction, SIGNAL(triggered()), this, SLOT(back()));
 
 #ifndef 	__SYMBIAN__
-		QPushButton* realOkButton = new QPushButton( ::qtButtonName(ZLDialogManager::OK_BUTTON), this );
-		layout->addWidget(realOkButton);
-		connect(realOkButton, SIGNAL(clicked()), this, SLOT(accept()));
+		QPushButton* backButton = new QPushButton(QString::fromStdString(back.value()));
+		layout->addWidget(backButton);
+		connect(backButton, SIGNAL(clicked()), this, SLOT(back()));
 #endif
 }
 
-
-void ZLQtOptionsDialog::apply() {
-	ZLOptionsDialog::accept();
+void ZLQtOptionsDialog::back() {
+	if (myTabMenuWidget->getStatus() == TabMenuWidget::MENU) {
+		QDialog::accept();
+		return;
+	}
+	myTabMenuWidget->setStatus(TabMenuWidget::MENU);
 }
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
-	return *myContent;
+	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget, tabResource(key));
+	myTabMenuWidget->addItem(tab->widget(), ::qtString(tab->displayName()));
+	myTabs.push_back(tab);
+	return *tab;
 }
 
 const std::string &ZLQtOptionsDialog::selectedTabKey() const {
-		return myKey.Name;
+	return myEmptyString;
 }
 
 void ZLQtOptionsDialog::selectTab(const ZLResourceKey &key) {
+	Q_UNUSED(key);
 }
 
 bool ZLQtOptionsDialog::run() {
-		myScrollArea->setWidget(myWidget);
-		//setModal(true);
 		setFullScreenWithSoftButtons();
 		bool code = ZLOptionsDialog::run();
 		return code;
@@ -81,8 +115,9 @@ void ZLQtOptionsDialog::setFullScreenWithSoftButtons() {
 }
 
 bool ZLQtOptionsDialog::runInternal() {
-	myContent->close();
-	myWidget->setFocus();
+	for (std::vector<shared_ptr<ZLDialogContent> >::iterator it = myTabs.begin(); it != myTabs.end(); ++it) {
+		((ZLQtDialogContent&)**it).close();
+	}
 	return exec() == QDialog::Accepted;
 }
 
