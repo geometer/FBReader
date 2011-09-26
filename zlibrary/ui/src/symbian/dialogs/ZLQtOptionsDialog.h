@@ -17,19 +17,24 @@
 
 #include <ZLOptionsDialog.h>
 
-//TODO rename it
-class MyTabWidget : public QWidget {
+class TabMenuWidget : public QWidget {
 	Q_OBJECT;
+
 public:
-	MyTabWidget(QWidget* parent=0);
-	void addTab(QWidget *widget, const QString &label);
-	int currentIndex() const;
-	//TODO make slots
-	void setCurrentWidget(QWidget *widget);
-	void setCurrentIndex(int index);
+	TabMenuWidget(QWidget* parent=0);
+	void addItem(QWidget *widget, const QString &label);
+
+public:
+	enum ShowStatus {
+		MENU,
+		TAB,
+	};
+	ShowStatus getStatus() const;
+	void setStatus(ShowStatus status);
+
 public slots:
-	//TODO rename
-	void clicked(const QModelIndex &index);
+	void menuItemClicked(const QModelIndex &index);
+
 private:
 	QStackedWidget* myStackedWidget;
 	QScrollArea* myScrollArea;
@@ -59,16 +64,11 @@ protected:
 		void setFullScreenWithSoftButtons();
 
 private Q_SLOTS:
-	void apply();
+	void back();
 
 private:
-	//TODO rename it
-	MyTabWidget *myTabWidget;
-	//ZLQtDialogContent* myContent;
-	//QWidget* myWidget;
-	//ZLResourceKey myKey;
-	//TODO may be place it to myTabWidget
-	//QScrollArea* myScrollArea;
+	TabMenuWidget *myTabMenuWidget;
+	std::string myEmptyString;
 
 };
 #endif /* __ZLQTOPTIONSDIALOG_H__ */

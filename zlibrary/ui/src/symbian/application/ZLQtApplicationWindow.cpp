@@ -31,7 +31,6 @@
 #include "../platform/VolumeKeysCapturer.h"
 #endif
 
-#include "../actions/PreferencesActions.h"
 #include "../actions/LibraryActions.h"
 
 
@@ -88,7 +87,9 @@ void ZLQtApplicationWindow::init() {
 		// it crashes.
 		// Flag is necessary for showing SoftKeys Action
 		show();
+#ifdef 	__SYMBIAN__
 		setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+#endif
 		showFullScreen();
 }
 

@@ -20,6 +20,7 @@ ZLQtDialogContent::ZLQtDialogContent(QWidget *widget, const ZLResource &resource
 }
 
 ZLQtDialogContent::~ZLQtDialogContent() {
+	delete myWidget;
 }
 
 void ZLQtDialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
