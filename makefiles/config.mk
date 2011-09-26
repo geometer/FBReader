@@ -52,7 +52,7 @@ else
   TEXT_LIBS = -lzltext $(EXTERNAL_LIBS) -llinebreak -lfribidi
 endif
 
-ifeq "$(TARGET_ARCH)" "symbian"
+ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <symbian> <symbian^3>)"
   FBREADER_LIBS =  -l:sqlite3.dso 
   EXTERNAL_LIBS = -l:libc.dso -l:libdl.dso -l:euser.dso -l:eexe.lib -l:usrt2_2.lib -l:qtmain.lib -l:dfpaeabi.dso -l:drtaeabi.dso -l:scppnwdl.dso -lsupc++ -lgcc -l:remconcoreapi.dso -l:remconinterfacebase.dso -l:libstdcpp.dso -l:libpthread.dso
   CORE_LIBS = -l:libm.dso -L$(ROOTDIR)/zlibrary/ui -L$(ROOTDIR)/zlibrary/core -lzlcore -lzlui-$(UI_TYPE) -lzlcore  -l:QtGui.dso -l:QtCore.dso -l:QtNetwork.dso -l:expat.lib -l:ezlib.dso -l:bz2.lib $(FBREADER_LIBS) $(EXTERNAL_LIBS)

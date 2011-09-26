@@ -25,6 +25,7 @@ SUBDIRS_ALL = \
 QTSUBDIRS_ALL = src/qt/time src/qtopia/message src/qtopia/application src/qtopia/dialogs src/qtopia/optionView src/qtopia/view src/qt/dialogs src/qt/view src/qt/image src/qt/util src/opie/view src/opie/dialogs src/opie/application src/qt/application-desktop src/qt/application-pdaxrom src/opie/library src/qt/library src/qtopia/library src/qt/filesystem src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/application src/qt4/library src/qt4/filesystem src/ezx/library src/ezx/application src/ezx/dialogs src/ezx/view src/ezx/optionView
 QTSUBDIRS_ALL += src/qml/application src/qml/dialogs src/qml/view src/qml/library
 QTSUBDIRS_ALL += src/symbian/time src/symbian/dialogs src/symbian/view src/symbian/image src/symbian/util src/symbian/filesystem src/symbian/library src/symbian/message src/symbian/application src/symbian/menu src/symbian/actions src/symbian/platform src/symbian/network src/symbian/tree
+QTSUBDIRS_ALL += src/symbian^3/time src/symbian^3/dialogs src/symbian^3/view src/symbian^3/image src/symbian^3/util src/symbian^3/filesystem src/symbian^3/library src/symbian^3/message src/symbian^3/application src/symbian^3/network
 GTKSUBDIRS_ALL = src/gtk/time src/gtk/dialogs src/gtk/optionView src/gtk/view src/gtk/image src/gtk/util src/maemo/dialogs src/maemo/optionView src/maemo/view src/gpe/dialogs src/gpe/view src/gtk/application-desktop src/gtk/application-pdaxrom src/maemo/application src/maemo5/application src/maemo5/dialogs src/maemo5/optionView src/maemo5/library src/maemo5/network src/gpe/application src/maemo/library src/gtk/library src/gpe/library src/gtk/filesystem src/maemo/message src/maemo/network src/gtk/pixbuf
 
 SUBDIRS =
@@ -48,15 +49,21 @@ ifeq "$(UI_TYPE)" "qt4"
   QTSUBDIRS = src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/filesystem src/qt4/library src/unix/message src/qt4/application src/qt4/network
 endif
 
-ifeq "$(UI_TYPE)" "qml"
-  QTSUBDIRS = src/qml/time src/qml/dialogs src/qml/view src/qml/image src/qml/util src/qml/filesystem src/qml/library src/unix/message src/qml/application src/qml/network
-endif
+#ifeq "$(UI_TYPE)" "qml"
+#  QTSUBDIRS = src/qml/time src/qml/dialogs src/qml/view src/qml/image src/qml/util src/qml/filesystem src/qml/library src/unix/message src/qml/application src/qml/network
+#endif
 
 ifeq "$(UI_TYPE)" "qtwidgets"
   QTSUBDIRS = src/symbian/time src/symbian/dialogs src/symbian/view src/symbian/image src/symbian/util src/symbian/filesystem src/symbian/library src/symbian/message src/symbian/application src/symbian/menu src/symbian/actions src/symbian/network src/symbian/tree
   ifeq "$(TARGET_ARCH)" "symbian"
     QTSUBDIRS += src/symbian/platform
   endif
+endif
+
+ifeq "$(UI_TYPE)" "qml"
+	ifeq "$(TARGET_ARCH)" "symbian^3"
+    	QTSUBDIRS = src/symbian^3/time src/symbian^3/dialogs src/symbian^3/view src/symbian^3/image src/symbian^3/util src/symbian^3/filesystem src/symbian^3/library src/symbian^3/message src/symbian^3/application src/symbian^3/network
+	endif
 endif
 
 ifeq "$(UI_TYPE)" "gtk"
