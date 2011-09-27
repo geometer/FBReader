@@ -102,4 +102,20 @@ PageStackWindow {
 	Component.onCompleted: {
 		theme.inverted = true
 	}
+	
+	Rectangle {
+		id: overlayRect
+		anchors.fill: parent
+		color: "#60000000"
+		visible: !platformWindow.active
+		Label {
+			anchors.centerIn: parent
+			width: parent.width
+			text: applicationInfo.bookTitle
+			font.pixelSize: 70
+			font.bold: true
+			color: "white"
+			horizontalAlignment: Text.AlignHCenter
+		}
+	}
 }
