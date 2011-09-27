@@ -39,6 +39,22 @@ public:
 
 	static std::string doubleToString(double value);
 	static double stringToDouble(const std::string &value, double defaultValue);
+
+	template <typename T, typename F>
+	//TODO add default simple functor, that returns itselfs
+	static std::string join(T iterable, const std::string& separator, F functor);
 };
+
+template <typename T, typename F>
+std::string ZLStringUtil::join(T iterable, const std::string& separator, F functor) {
+	std::string result;
+	for (typename T::const_iterator it=iterable.begin(); it != iterable.end(); ++it) {
+		if (it != iterable.begin()) {
+			result += separator;
+		}
+		result += functor(*it);
+	}
+	return result;
+}
 
 #endif /* __ZLSTRINGUTIL_H__ */

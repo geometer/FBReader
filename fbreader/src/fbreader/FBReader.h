@@ -178,6 +178,7 @@ friend class ShowHelpAction;
 //friend class ShowOptionsDialogAction;
 friend class ShowContentsAction;
 friend class AddBookAction;
+friend class ShowMobileBookInfoAction;
 friend class ShowBookInfoAction;
 //friend class ScrollToHomeAction;
 //friend class ScrollToStartOfTextAction;

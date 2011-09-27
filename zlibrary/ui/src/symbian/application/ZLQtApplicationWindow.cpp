@@ -32,6 +32,8 @@
 #endif
 
 #include "../actions/LibraryActions.h"
+//TODO remove it:
+#include "../../../../../fbreader/src/fbreader/FBReaderActions.h"
 
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
@@ -56,6 +58,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 		// FIXME: Find the way to get somewhere this action names
 		application->addAction("library", new ShowMenuLibraryAction());
+		application->addAction("bookInfo", new ShowMobileBookInfoAction());
 
 		myMenuDialog = new DrillDownMenuDialog(this);
 		myMenu = new DrillDownMenu;

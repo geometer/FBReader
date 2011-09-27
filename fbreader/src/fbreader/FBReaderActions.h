@@ -187,6 +187,13 @@ public:
 	void run();
 };
 
+class ShowMobileBookInfoAction : public ZLApplication::Action  {
+
+public:
+	ShowMobileBookInfoAction();
+	void run();
+};
+
 class ShowBookInfoAction : public ModeDependentAction {
 
 public:

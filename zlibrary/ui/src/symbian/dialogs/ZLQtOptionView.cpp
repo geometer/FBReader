@@ -573,7 +573,8 @@ void ColorOptionView::_onAccept() const {
 
 void StaticTextOptionView::_createItem() {
 	const std::string &text = ((ZLStaticTextOptionEntry&)*myOption).initialValue();
-	QLabel *label = new QLabel(::qtString(text), myTab->widget());
+	QLabel *label = new QLabel(::qtString("<b>" + name() + ":</b> " + text), myTab->widget());
+	label->setWordWrap(true);
 	myWidgets.push_back(label);
 	myTab->addItem(label);
 }

@@ -35,6 +35,7 @@
 #include "BookTextView.h"
 #include "ContentsView.h"
 #include "../optionsDialog/bookInfo/BookInfoDialog.h"
+#include "../optionsDialogMobile/MobileBookInfoDialog.h"
 #include "../optionsDialogMobile/MobileOptionsDialog.h"
 #include "../optionsDialog/library/LibraryOptionsDialog.h"
 #include "../optionsDialog/network/NetworkOptionsDialog.h"
@@ -170,6 +171,19 @@ void ScrollToEndOfTextAction::run() {
 	FBReader::Instance().bookTextView().scrollToEndOfText();
 }
 
+
+ShowMobileBookInfoAction::ShowMobileBookInfoAction()  {
+}
+
+void ShowMobileBookInfoAction::run() {
+	FBReader &fbreader = FBReader::Instance();
+	shared_ptr<Book> book = fbreader.myModel->book();
+	if (MobileBookInfoDialog(book).dialog().run()) {
+		fbreader.openBook(book);
+		fbreader.refreshWindow();
+	}
+}
+
 ShowBookInfoAction::ShowBookInfoAction() : ModeDependentAction(FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE | FBReader::FOOTNOTE_MODE) {
 }
 
@@ -182,6 +196,7 @@ void ShowBookInfoAction::run() {
 		fbreader.refreshWindow();
 	}
 }
+
 
 UndoAction::UndoAction(int visibleInModes) : ModeDependentAction(visibleInModes) {
 }

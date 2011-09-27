@@ -33,11 +33,11 @@ void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
 #ifndef 	__SYMBIAN__
 	QPushButton* realButton = new QPushButton(::qtButtonName(key), this );
 	layout()->addWidget(realButton);
-	connect(realButton, SIGNAL(triggered()), this, accept ? SLOT(accept()) : SLOT(reject()));
+	connect(realButton, SIGNAL(clicked()), this, accept ? SLOT(accept()) : SLOT(reject()));
 #endif
 }
 
 bool ZLQtDialog::run() {
 	((ZLQtDialogContent*)myTab)->close();
-	return exec();
+	return exec() == QDialog::Accepted;
 }
