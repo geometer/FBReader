@@ -112,6 +112,8 @@ sis:
 
 	mv fbreader/FBReader.exe ./
 
+	@sed "s/VERSION/$(VERSION)/" fbreader/data/formats/fb2/FBReaderVersion.ent > FBReaderVersion.ent
+
 	/usr/share/qt4/qt-symbian/bin/createpackage  FBReader_template.pkg
 	/usr/share/qt4/qt-symbian/bin/createpackage  FBReader_installer.pkg
 	@echo "OK"	
