@@ -6,7 +6,7 @@ IMAGEDIR = !!\\\\pixmaps
 APPIMAGEDIR = !!\\\\pixmaps\\\\FBReader
 
 EPOCROOT = /usr/s60-sdk
-QTSYMBIAN_DIR = /usr/share/qt4/qt-symbian
+QTSYMBIAN_DIR = /usr/share/qt4/Symbian3Qt473
 ARM_DIR = /usr/arm-none-symbianelf
 
 CC = arm-none-symbianelf-g++
@@ -40,9 +40,6 @@ ZLSHARED = no
 TARGET_STATUS = symbian^3
 
 QTINCLUDE = -I${QTSYMBIAN_DIR}/include/ -I${QTSYMBIAN_DIR}/include/QtDeclarative -I${QTSYMBIAN_DIR}/include/QtScript -I${QTSYMBIAN_DIR}/include/QtGui -I${QTSYMBIAN_DIR}/include/QtNetwork -I${QTSYMBIAN_DIR}/include/QtCore -I${QTSYMBIAN_DIR}/include/QtOpenGL
-#UILIBS = -lQtCore -lQtGui -lQtDeclarative -lQtOpenGL -lresourceqt
-
-UILIBS = -lQtGui -QtDeclarative
 
 RM = rm -rvf
 RM_QUIET = rm -rf

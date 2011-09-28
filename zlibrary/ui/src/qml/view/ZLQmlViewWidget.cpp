@@ -40,6 +40,7 @@
 
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
+#include <ZLFSManager.h>
 
 #include "ZLQmlViewWidget.h"
 #include "ZLQmlPaintContext.h"
@@ -362,9 +363,11 @@ ZLQmlViewWidget::ZLQmlViewWidget(QWidget *parent, ZLQmlViewObject &holder) : QDe
 	ZLDialogManager *dialogManager = &ZLDialogManager::Instance();
 	QObject *qDialogManager = static_cast<ZLQmlDialogManager*>(dialogManager);
 	rootContext()->setContextProperty(QLatin1String("dialogManager"), qDialogManager);
-	setViewport(new QGLWidget(this));
-	setSource(QUrl::fromLocalFile(QString::fromStdString(ZLibrary::ZLibraryDirectory())
-	                              + "/declarative/Main.qml"));
+        setViewport(new QGLWidget(this));
+
+        std::string qmlPath = ZLibrary::ZLibraryDirectory() + "/declarative/Main.qml" ;
+        ZLFSManager::Instance().normalize(qmlPath);
+        setSource(QUrl::fromLocalFile(QString::fromStdString(qmlPath)));
 }
 
 void ZLQmlViewWidget::keyPressEvent(QKeyEvent *event) {

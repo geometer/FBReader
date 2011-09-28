@@ -33,6 +33,7 @@
 #include <QtCore/QTimer>
 
 #include <ZLibrary.h>
+#include <ZLFSManager.h>
 #include <ZLPopupData.h>
 
 #include "ZLQmlApplicationWindow.h"
@@ -354,7 +355,9 @@ const char *platformIcons[][2] = {
 
 ZLQmlToolBarAction::ZLQmlToolBarAction(ZLToolbar::AbstractButtonItem &item, QObject *parent)
     : ZLQmlToolBarItem(item.type(), parent), myChecked(false), myItem(item) {
-	myIconSource = QString::fromUtf8(ZLibrary::ApplicationImageDirectory().c_str());
+        std::string appImageDir = ZLibrary::ApplicationImageDirectory();
+        ZLFSManager::Instance().normalize(appImageDir);
+        myIconSource = QString::fromUtf8(appImageDir.c_str());
 	myIconSource += '/';
 	myIconSource += QString::fromUtf8(myItem.iconName().c_str());
 	myIconSource += QLatin1String(".png");

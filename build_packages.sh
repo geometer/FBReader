@@ -122,7 +122,11 @@ build_package() {
 			mv -f $tmpdir/*.exe $pkgdir/$1
 			;;
 		sis)
-			$make_package ARCHITECTURE=$1 $2
+			case "$1" in
+				symbian|symbian^3)
+					$make_package ARCHITECTURE=$1 $2
+					;;
+			esac
 			mkdir -p $pkgdir/$1
 			mv -f $tmpdir/*.sis $pkgdir/$1
 			;;

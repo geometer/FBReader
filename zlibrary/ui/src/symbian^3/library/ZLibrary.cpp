@@ -19,6 +19,7 @@
 
 #include <QtGui/QApplication>
 #include <QtCore/QTextCodec>
+#include <QtCore/QLocale>
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
@@ -37,6 +38,66 @@
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 //#include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
+
+const std::string ZLibrary::FileNameDelimiter("\\");
+const std::string ZLibrary::PathDelimiter(";");
+const std::string ZLibrary::EndOfLine("\n");
+
+
+void ZLibrary::initLocale() {
+		std::string localeQtStdString = QLocale::system().name().toStdString();
+		const char *localeQt = localeQtStdString.c_str();
+		const char* locale = localeQt;
+	if (locale != 0) {
+		std::string sLocale = locale;
+		const int dotIndex = sLocale.find('.');
+		if (dotIndex != -1) {
+			sLocale = sLocale.substr(0, dotIndex);
+		}
+		const int dashIndex = std::min(sLocale.find('_'), sLocale.find('-'));
+		if (dashIndex == -1) {
+			ourLanguage = sLocale;
+		} else {
+			ourLanguage = sLocale.substr(0, dashIndex);
+			ourCountry = sLocale.substr(dashIndex + 1);
+			if ((ourLanguage == "es") && (ourCountry != "ES")) {
+				ourCountry = "LA";
+			}
+		}
+	}
+
+}
+
+ZLibraryImplementation *ZLibraryImplementation::Instance = 0;
+
+ZLibraryImplementation::ZLibraryImplementation() {
+	Instance = this;
+}
+
+ZLibraryImplementation::~ZLibraryImplementation() {
+}
+
+bool ZLibrary:: init(int &argc, char **&argv) {
+	//freopen("E:\\fbreader-log.txt", "w", stdout);
+	//fprintf(stdout,"\n");
+
+	initLibrary();
+
+	if (ZLibraryImplementation::Instance == 0) {
+		return false;
+	}
+
+	ZLibraryImplementation::Instance->init(argc, argv);
+	return true;
+}
+
+ZLPaintContext *ZLibrary::createContext() {
+	return ZLibraryImplementation::Instance->createContext();
+}
+
+void ZLibrary::run(ZLApplication *application) {
+		ZLibraryImplementation::Instance->run(application);
+}
 
 class ZLQmlLibraryImplementation : public ZLibraryImplementation {
 
@@ -62,7 +123,7 @@ void ZLQmlLibraryImplementation::init(int &argc, char **&argv) {
 	ZLQmlDialogManager::createInstance();
 	ZLSymbianCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
-	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
+	//ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 	ZLQtNetworkManager::createInstance();
 }
 
