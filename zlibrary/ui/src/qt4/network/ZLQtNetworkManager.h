@@ -101,4 +101,6 @@ private:
 Q_DECLARE_METATYPE(shared_ptr<ZLExecutionData>)
 Q_DECLARE_METATYPE(ZLQtNetworkReplyScope)
 
+typedef QPair<QByteArray, QByteArray>  RawHeaderPair;
+
 #endif /* __ZLQTNETWORKMANAGER_H__ */
