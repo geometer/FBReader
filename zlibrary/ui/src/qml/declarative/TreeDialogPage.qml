@@ -7,7 +7,29 @@ Page {
 	id: root
 	property variant handler
 	property variant component
+	property variant progressData: handler.progressData(root.rootIndex)
+	property bool infiniteProgress: progressData === undefined ? false : progressData.infinite
+	property bool finiteProgress: progressData === undefined ? false : !progressData.infinite
+	property real progressValue: progressData === undefined ? 0.0 : (progressData.value * 1.0 / progressData.maximumValue)
 	property alias rootIndex: visualModel.rootIndex
+	property int revision: 0
+	
+	Connections {
+		target: root.handler
+		onProgressChanged: {
+			++root.revision;
+			root.progressData = handler.progressData(root.rootIndex);
+		}
+		onFinished: root.__close()
+	}
+	
+	function __close() {
+		if (root.pageStack.depth == 1)
+			return;
+		var i = root.pageStack.depth;
+		var item = root.pageStack.find(function() { return (--i) === 0; })
+		root.pageStack.pop(item);
+	}
 	
 	VisualDataModel {
 		id: visualModel
@@ -21,18 +43,16 @@ Page {
 				console.log(model.title, model.activatable, model.page)
 				if (model.activatable) {
 					if (root.handler.activate(visualModel.modelIndex(index))) {
-						var i = root.pageStack.depth;
-						var item = root.pageStack.find(function() { return (--i) === 0; })
-						root.pageStack.pop(item);
+//						root.__close();
 						root.handler.finish();
 					}
 				} else {
 					var rootIndex = visualModel.modelIndex(index);
-					root.pageStack.push(root.component, {
-										"handler": root.handler,
-										"component": root.component,
-										"rootIndex": rootIndex
-					});
+					var page = root.pageStack.push(root.component, {
+												   "handler": root.handler,
+												   "component": root.component,
+												   "rootIndex": rootIndex
+												   });
 				}
 			}
 			onPressedChanged: if (pressed) hasTapAndHold = false
@@ -45,14 +65,18 @@ Page {
 				} else {
 					menu.destroy();
 				}
-
-				console.log("tap and hold on " + model.title, model.iconSource)
 			}
 			
 			MoreIndicator {
 				id: indicator
 				anchors { verticalCenter: parent.verticalCenter; right: parent.right }
-				visible: !model.activatable
+				visible: !model.activatable && !itemBusyIndicator.visible
+			}
+			BusyIndicator {
+				id: itemBusyIndicator
+				anchors { verticalCenter: parent.verticalCenter; right: parent.right; rightMargin: 5 }
+				visible: root.revision >= 0 && root.handler.progressData(visualModel.modelIndex(index)) !== undefined
+				running: visible
 			}
 			Timer {
 				interval: 800
@@ -64,8 +88,18 @@ Page {
 	
 	ListView {
 		id: listView
-		anchors { leftMargin: 14; fill: parent; rightMargin: 14 }
+		anchors { leftMargin: 14; top: parent.top; bottom: progressBar.top; rightMargin: 14 }
+		width: parent.width
 		model: visualModel
+	}
+	
+	ProgressBar {
+		id: progressBar
+		anchors { margins: 5; bottom: parent.bottom }
+		height: visible ? implicitHeight : 0
+		width: parent.width
+		visible: root.finiteProgress
+		value: root.progressValue
 	}
 	
 	tools: ToolBarLayout {
@@ -74,6 +108,13 @@ Page {
 			visible: true
 			platformIconId: "toolbar-previous"
 			onClicked: { pageStack.pop(); if (pageStack.depth == 1) root.handler.finish(); }
+		}
+		
+		BusyIndicator {
+			id: busyIndicator
+			anchors.centerIn: parent
+			visible: root.infiniteProgress
+			running: root.infiniteProgress
 		}
 		
 		ToolIcon {
@@ -114,5 +155,8 @@ Page {
 		}
 	}
 
-	Component.onCompleted: root.handler.fetchChildren(rootIndex)
+	Component.onCompleted: {
+		root.handler.fetchChildren(rootIndex)
+		console.log("Component.onCompleted", root.rootModel, root.fetchingChildren)
+	}
 }

@@ -36,7 +36,7 @@
 #include "../networkActions/PasswordRecoveryDialog.h"
 #include "../networkActions/RegisterUserDialog.h"
 
-class NetworkCatalogAuthAction : public ZLRunnableWithKey {
+class NetworkCatalogAuthAction : public ZLTreeAction {
 
 protected:
 	NetworkCatalogAuthAction(NetworkAuthenticationManager &mgr, bool forLoggedUsers);
@@ -80,7 +80,7 @@ private:
 	bool makesSense() const;
 };
 
-class NetworkCatalogRootNode::DontShowAction : public ZLRunnableWithKey {
+class NetworkCatalogRootNode::DontShowAction : public ZLTreeAction {
 
 public:
 	DontShowAction(NetworkLink &link);
@@ -119,7 +119,6 @@ NetworkCatalogRootNode::NetworkCatalogRootNode(ZLTreeListener::RootNode *parent,
 
 void NetworkCatalogRootNode::init() {
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
-	registerAction(new ExpandCatalogAction(*this));
 	registerAction(new ReloadAction(*this));
 	if (!mgr.isNull()) {
 		registerAction(new LoginAction(*mgr));
@@ -185,7 +184,7 @@ ZLResourceKey NetworkCatalogRootNode::LogoutAction::key() const {
 }
 
 std::string NetworkCatalogRootNode::LogoutAction::text(const ZLResource &resource) const {
-	const std::string text = ZLRunnableWithKey::text(resource);
+	const std::string text = ZLTreeAction::text(resource);
 	return ZLStringUtil::printf(text, myManager.currentUserName());
 }
 
@@ -226,7 +225,7 @@ ZLResourceKey NetworkCatalogRootNode::RefillAccountAction::key() const {
 }
 
 std::string NetworkCatalogRootNode::RefillAccountAction::text(const ZLResource &resource) const {
-	const std::string text = ZLRunnableWithKey::text(resource);
+	const std::string text = ZLTreeAction::text(resource);
 	std::string account = myManager.currentAccount();
 	if (!account.empty() && !myManager.refillAccountLink().empty()) {
 		return ZLStringUtil::printf(text, account);

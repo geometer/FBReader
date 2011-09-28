@@ -28,6 +28,7 @@
 #include <ZLTypeId.h>
 #include <ZLRunnable.h>
 #include <ZLPaintContext.h>
+#include <ZLExecutionData.h>
 
 // Nowadays I see hierarchy in this way:
 //
@@ -41,6 +42,21 @@
 //                     and some actions, i.e. BookInfo page at network library
 
 class ZLTreeListener;
+
+class ZLTreeAction : public ZLExecutionData {
+public:
+	static const ZLTypeId TYPE_ID;
+	
+	ZLTreeAction();
+	~ZLTreeAction();
+	
+	const ZLTypeId &typeId() const;
+
+	virtual void run() = 0;
+	virtual ZLResourceKey key() const = 0;
+	virtual std::string text(const ZLResource &resource) const;
+	virtual bool makesSense() const;
+};
 
 class ZLTreeNode : public ZLObjectWithRTTI {
 
@@ -65,13 +81,14 @@ public:
 	const List &children() const;
 	size_t childIndex() const;
 	// Children should be requested from network only if we need them
-	virtual void requestChildren();
+	virtual void requestChildren(shared_ptr<ZLExecutionData::Listener> listener = 0);
 	
 	virtual const ZLResource &resource() const;
-	void registerAction(shared_ptr<ZLRunnableWithKey> action);
-	const std::vector<shared_ptr<ZLRunnableWithKey> > &actions() const;
-	std::string actionText(const shared_ptr<ZLRunnableWithKey> &action) const;
+	void registerAction(shared_ptr<ZLTreeAction> action);
+	const std::vector<shared_ptr<ZLTreeAction> > &actions() const;
+	std::string actionText(const shared_ptr<ZLTreeAction> &action) const;
 	
+	void close();
 	void insert(ZLTreeNode *node, size_t index);
 	void append(ZLTreeNode *node);
 	void remove(ZLTreeNode *node);
@@ -89,7 +106,7 @@ private:
 
 	List myChildren;
 	// Looks like we should also handle actions for menu on "Tap and hold"
-	std::vector<shared_ptr<ZLRunnableWithKey> > myActions;
+	std::vector<shared_ptr<ZLTreeAction> > myActions;
 
 private:
 	ZLTreeNode(const ZLTreeNode&);

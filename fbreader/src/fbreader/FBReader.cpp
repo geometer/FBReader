@@ -293,6 +293,7 @@ void FBReader::openBook(shared_ptr<Book> book) {
 	OpenBookRunnable runnable(book);
 	ZLDialogManager::Instance().wait(ZLResourceKey("loadingBook"), runnable);
 	resetWindowCaption();
+	refreshWindow();
 }
 
 void FBReader::openBookInternal(shared_ptr<Book> book) {
@@ -376,6 +377,13 @@ void FBReader::tryShowFootnoteView(const std::string &id, const std::string &typ
 		downloader->run();
 		
 	}
+}
+
+void FBReader::bookDownloadingProgress(DownloadBookRunnable *downloader, int downloaded, int size) {
+	// TODO: Implement me
+	(void) downloader;
+	(void) downloaded;
+	(void) size;
 }
 
 void FBReader::bookDownloaded(DownloadBookRunnable *downloader) {
@@ -482,6 +490,17 @@ bool FBReader::closeView() {
 
 std::string FBReader::helpFileName(const std::string &language) const {
 	return ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "help" + ZLibrary::FileNameDelimiter + "MiniHelp." + language + ".fb2";
+}
+
+shared_ptr<Book> FBReader::helpFile(const std::string &language) const {
+	return BooksDBUtil::getBook(helpFileName(language));
+}
+
+shared_ptr<Book> FBReader::helpFile() const {
+	shared_ptr<Book> book = helpFile(ZLibrary::Language());
+	if (book.isNull())
+		book = helpFile("en");
+	return book;
 }
 
 void FBReader::openFile(const ZLFile &file) {
