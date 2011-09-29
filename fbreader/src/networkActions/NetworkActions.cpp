@@ -174,7 +174,7 @@ void NetworkBookDownloadAction::bookDownloaded(DownloadBookRunnable *downloader)
 	myNode->close();
 }
 
-NetworkBookBuyDirectlyAction::NetworkBookBuyDirectlyAction(const NetworkBookItem &book) : myBook(book) {
+NetworkBookBuyDirectlyAction::NetworkBookBuyDirectlyAction(ZLTreeNode *node, const NetworkBookItem &book) : NetworkBookDownloadAction(node, book, false) {
 }
 
 ZLResourceKey NetworkBookBuyDirectlyAction::key() const {
@@ -236,14 +236,15 @@ void NetworkBookBuyDirectlyAction::run() {
 			downloadBook = false;
 		}
 	}
-	if (downloadBook) {
-		NetworkBookDownloadAction(0, myBook, false).run();
-	}
-	if (mgr.isAuthorised().Status == B3_FALSE) {
-		fbreader.invalidateAccountDependents();
-	}
-	fbreader.refreshWindow();
-	finished(std::string());
+	NetworkBookDownloadAction::run();
+//	if (downloadBook) {
+//		NetworkBookDownloadAction(0, myBook, false).run();
+//	}
+//	if (mgr.isAuthorised().Status == B3_FALSE) {
+//		fbreader.invalidateAccountDependents();
+//	}
+//	fbreader.refreshWindow();
+//	finished(std::string());
 }
 
 NetworkBookBuyInBrowserAction::NetworkBookBuyInBrowserAction(const NetworkBookItem &book) : myBook(book) {
