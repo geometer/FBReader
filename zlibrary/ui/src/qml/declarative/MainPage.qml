@@ -24,7 +24,8 @@ import org.fbreader 0.14
 
 Page {
 	id: root
-    property bool showToolBar: true
+	property bool showToolBar: true
+	orientationLock: (rootWindow.portraitMode) ? PageOrientation.LockPortrait : PageOrientation.LockLandscape
 	tools: ToolBarLayout {
 		id: toolBarLayout
 		Repeater {
@@ -59,6 +60,12 @@ Page {
 					
 				}
 				visible: modelData.visible && modelData.enabled
+			}
+		}
+		ToolIcon {
+			iconId: (rootWindow.portraitMode) ? "icon-m-image-edit-rotate-right" : "icon-m-image-edit-rotate-left"
+			onClicked: {
+				rootWindow.portraitMode = !rootWindow.portraitMode
 			}
 		}
 		ToolIcon {

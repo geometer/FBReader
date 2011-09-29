@@ -25,7 +25,8 @@ Page {
 	id: root
 	property variant handler
 	property variant sections: handler ? handler.sections : null
-	
+
+	orientationLock: (rootWindow.portraitMode) ? PageOrientation.LockPortrait : PageOrientation.LockLandscape	
 	onSectionsChanged: pagesModel.update()
 	tools: ToolBarLayout {
 		id: toolsLayout
@@ -68,6 +69,7 @@ Page {
 		Page {
 			id: contentPage
 			property alias handler: content.handler
+			orientationLock: (rootWindow.portraitMode) ? PageOrientation.LockPortrait : PageOrientation.LockLandscape	
 			DialogContent {
 				id: content
 			}
