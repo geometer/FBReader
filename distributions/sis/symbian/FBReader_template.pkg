@@ -3,7 +3,8 @@
 
 
 ; SIS header: name, uid, version
-#{"FBReader"},(0xE87CC83C),4,7,1
+; TODO version should be generated automatically
+#{"FBReader"},(0xE87CC83C),0,99,0
 
 ; Localised Vendor name
 %{"Vendor"}
