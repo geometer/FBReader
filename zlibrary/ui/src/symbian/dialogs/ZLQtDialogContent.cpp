@@ -2,6 +2,7 @@
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QWidget>
 #include <QtGui/QLayout>
+#include <QtCore/QDebug>
 
 #include "ZLQtDialogContent.h"
 #include "ZLQtOptionView.h"
@@ -19,6 +20,7 @@ ZLQtDialogContent::ZLQtDialogContent(QWidget *widget, const ZLResource &resource
 }
 
 ZLQtDialogContent::~ZLQtDialogContent() {
+	delete myWidget;
 }
 
 void ZLQtDialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {

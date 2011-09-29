@@ -154,8 +154,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
      myComboEntry->addValue(myComboEntry->initialValue());
 
      ZLTextStyleCollection &collection = ZLTextStyleCollection::Instance();
-     //ZLTextKind styles[] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATEKIND, POEM_TITLE, STANZA, VERSE };
-     ZLTextKind styles[] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, CONTENTS_TABLE_ENTRY, LIBRARY_ENTRY, ANNOTATION, EPIGRAPH, AUTHOR, DATEKIND, POEM_TITLE, STANZA, VERSE, CITE, INTERNAL_HYPERLINK, EXTERNAL_HYPERLINK, BOOK_HYPERLINK, FOOTNOTE, ITALIC, EMPHASIS, BOLD, STRONG, DEFINITION, DEFINITION_DESCRIPTION, PREFORMATTED, CODE };
+	 ZLTextKind styles[] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATEKIND, POEM_TITLE, STANZA, VERSE };
      const int STYLES_NUMBER = sizeof(styles) / sizeof(ZLTextKind);
      for (int i = 0; i < STYLES_NUMBER; ++i) {
              const ZLTextStyleDecoration *decoration = collection.decoration(styles[i]);

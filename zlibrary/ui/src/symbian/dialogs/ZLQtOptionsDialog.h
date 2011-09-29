@@ -8,12 +8,38 @@
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QScrollArea>
 #include <QtGui/QPaintEvent>
+#include <QtGui/QStackedWidget>
+#include <QtGui/QListWidget>
 
 #include "ZLQtDialogContent.h"
 
 #include <string>
 
 #include <ZLOptionsDialog.h>
+
+class TabMenuWidget : public QWidget {
+	Q_OBJECT;
+
+public:
+	TabMenuWidget(QWidget* parent=0);
+	void addItem(QWidget *widget, const QString &label);
+
+public:
+	enum ShowStatus {
+		MENU,
+		TAB,
+	};
+	ShowStatus getStatus() const;
+	void setStatus(ShowStatus status);
+
+public slots:
+	void menuItemClicked(const QModelIndex &index);
+
+private:
+	QStackedWidget* myStackedWidget;
+	QScrollArea* myScrollArea;
+	QListWidget* myMenuWidget;
+};
 
 class ZLQtOptionsDialog : public QDialog, public ZLOptionsDialog {
 	Q_OBJECT
@@ -38,13 +64,11 @@ protected:
 		void setFullScreenWithSoftButtons();
 
 private Q_SLOTS:
-	void apply();
+	void back();
 
 private:
-	ZLQtDialogContent* myContent;
-	QWidget* myWidget;
-	ZLResourceKey myKey;
-	QScrollArea* myScrollArea;
+	TabMenuWidget *myTabMenuWidget;
+	std::string myEmptyString;
 
 };
 #endif /* __ZLQTOPTIONSDIALOG_H__ */

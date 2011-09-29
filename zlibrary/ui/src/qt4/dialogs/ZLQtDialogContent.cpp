@@ -35,6 +35,8 @@ ZLQtDialogContent::ZLQtDialogContent(QWidget *widget, const ZLResource &resource
 }
 
 ZLQtDialogContent::~ZLQtDialogContent() {
+	//TODO should myWidget be deleete here? Cause in OptionsDialog it's deleting by StackedWidget
+	//delete myWidget;
 }
 
 void ZLQtDialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
