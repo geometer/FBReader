@@ -120,20 +120,19 @@ NetworkCatalogRootNode::NetworkCatalogRootNode(ZLTreeListener::RootNode *parent,
 void NetworkCatalogRootNode::init() {
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
 	registerAction(new ReloadAction(*this));
-	if (!mgr.isNull()) {
-		registerAction(new LoginAction(*mgr));
-		registerAction(new LogoutAction(*mgr));
-		if (!mgr->refillAccountLink().empty()) {
-			registerAction(new RefillAccountAction(*mgr));
-		}
-		if (mgr->registrationSupported()) {
-			registerAction(new RegisterUserAction(*mgr));
-		}
-		if (mgr->passwordRecoverySupported()) {
-			registerAction(new PasswordRecoveryAction(*mgr));
-		}
-	}
-	registerAction(new DontShowAction(myLink));
+//	if (!mgr.isNull()) {
+//		registerAction(new LoginAction(*mgr));
+//		registerAction(new LogoutAction(*mgr));
+//		if (!mgr->refillAccountLink().empty()) {
+//			registerAction(new RefillAccountAction(*mgr));
+//		}
+//		if (mgr->registrationSupported()) {
+//			registerAction(new RegisterUserAction(*mgr));
+//		}
+//		if (mgr->passwordRecoverySupported()) {
+//			registerAction(new PasswordRecoveryAction(*mgr));
+//		}
+//	}
 }
 
 const ZLTypeId &NetworkCatalogRootNode::typeId() const {
