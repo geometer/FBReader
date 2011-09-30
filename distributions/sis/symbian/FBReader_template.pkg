@@ -3,7 +3,8 @@
 
 
 ; SIS header: name, uid, version
-#{"FBReader"},(0xE87CC83C),4,7,1
+; TODO version should be generated automatically
+#{"FBReader"},(0xE87CC83C),0,99,0
 
 ; Localised Vendor name
 %{"Vendor"}
@@ -82,7 +83,7 @@
 "fbreader/data/formats/docbook/ISOamsb.ent" - "!:\private\e87cc83c\FBReader\formats\docbook\ISOamsb.ent"
 "fbreader/data/formats/docbook/ISOlat2.ent" - "!:\private\e87cc83c\FBReader\formats\docbook\ISOlat2.ent"
 "fbreader/data/formats/docbook/ISOgrk1.ent" - "!:\private\e87cc83c\FBReader\formats\docbook\ISOgrk1.ent"
-"fbreader/data/formats/fb2/FBReaderVersion.ent" - "!:\private\e87cc83c\FBReader\formats\fb2\FBReaderVersion.ent"
+"FBReaderVersion.ent"                       - "!:\private\e87cc83c\FBReader\formats\fb2\FBReaderVersion.ent"
 "fbreader/data/formats/fb2/fb2genres.xml" - "!:\private\e87cc83c\FBReader\formats\fb2\fb2genres.xml"
 "fbreader/data/default/toolbar.symbian.xml" - "!:\private\e87cc83c\FBReader\default\toolbar.xml"
 "fbreader/data/default/config.symbian.xml" - "!:\private\e87cc83c\FBReader\default\config.xml"

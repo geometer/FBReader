@@ -26,6 +26,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QEventLoop>
 #include <QtCore/QDir>
+#include <QtCore/QList>
+#include <QtCore/QPair>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkProxy>
@@ -243,12 +245,21 @@ bool ZLQtNetworkManager::checkReply(QNetworkReply *reply) {
 	data += " ";
 	data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
 	scope.request->handleHeader(data.data(), data.size());
-	foreach (const QNetworkReply::RawHeaderPair &pair, reply->rawHeaderPairs()) {
-		data  = pair.first;
-		data += ": ";
-		data += pair.second;
-		scope.request->handleHeader(data.data(), data.size());
-	}
+
+    //to use API of 4.6.2 Qt version
+    QList<RawHeaderPair> rawHeaderPairs;
+    foreach(const QByteArray& headerName, reply->rawHeaderList()) {
+        rawHeaderPairs.append(RawHeaderPair(headerName, reply->rawHeader(headerName)));
+    }
+    //following string (with foreach) has been commented, because
+    //method QNetworkReply::rawHeaderPairs is not exist in Qt 4.6.2
+    //foreach (const QNetworkReply::RawHeaderPair &pair, reply->rawHeaderPairs()) {
+    foreach (const RawHeaderPair &pair, rawHeaderPairs) {
+            data  = pair.first;
+            data += ": ";
+            data += pair.second;
+            scope.request->handleHeader(data.data(), data.size());
+    }
 	return true;
 }
 

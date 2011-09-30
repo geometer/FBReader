@@ -59,7 +59,8 @@ ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <symbian> <symbian^3>)"
   ifeq "$(TARGET_ARCH)" "symbian^3"
 	QT_LIBS += -l:QtDeclarative.dso -l:QtOpenGL.dso
   endif
-  CORE_LIBS = -l:libm.dso -L$(ROOTDIR)/zlibrary/ui -L$(ROOTDIR)/zlibrary/core -lzlcore -lzlui-$(UI_TYPE) -lzlcore $(QT_LIBS) -l:expat.lib -l:ezlib.dso -l:bz2.lib $(FBREADER_LIBS) $(EXTERNAL_LIBS)
+#TODO: in S60, there's no libzcore.dso, ezlib.dso should be used instead
+  CORE_LIBS = -l:libm.dso -L$(ROOTDIR)/zlibrary/ui -L$(ROOTDIR)/zlibrary/core -lzlcore -lzlui-$(UI_TYPE) -lzlcore $(QT_LIBS) -l:expat.lib  -l:libzcore.dso -l:bz2.lib $(FBREADER_LIBS) $(EXTERNAL_LIBS)
   TEXT_LIBS =  -lzltext -l:linebreak.lib  -l:fribidi.lib
 endif
 
