@@ -75,6 +75,10 @@ void ZLExecutionData::finished(const std::string &error) {
 	}
 }
 
+shared_ptr<ZLExecutionData::Listener> ZLExecutionData::listener() const {
+	return myListener;
+}
+
 void ZLExecutionData::onCancel() {
 }
 

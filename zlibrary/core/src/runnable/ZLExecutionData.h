@@ -89,6 +89,7 @@ public:
 	
 protected:
 	void finished(const std::string &error);
+	shared_ptr<Listener> listener() const;
 
 private:
 	shared_ptr<Listener> myListener;
