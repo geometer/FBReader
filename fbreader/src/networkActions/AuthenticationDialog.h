@@ -27,6 +27,8 @@
 class ZLDialog;
 class NetworkAuthenticationManager;
 
+class AuthenticationListener;
+
 class AuthenticationDialog {
 
 private:

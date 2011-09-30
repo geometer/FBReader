@@ -36,7 +36,7 @@ public:
 	void bookDownloadingProgress(DownloadBookRunnable *downloader, int downloaded, int size);
 	void bookDownloaded(DownloadBookRunnable *runnable);
 
-private:
+protected:
 	ZLTreeNode *myNode;
 	const NetworkBookItem &myBook;
 	const bool myDemo;
@@ -57,17 +57,14 @@ private:
 	const bool myDemo;
 };
 
-class NetworkBookBuyDirectlyAction : public ZLTreeAction {
+class NetworkBookBuyDirectlyAction : public NetworkBookDownloadAction {
 
 public:
-	NetworkBookBuyDirectlyAction(const NetworkBookItem &book);
+	NetworkBookBuyDirectlyAction(ZLTreeNode *node, const NetworkBookItem &book);
 	ZLResourceKey key() const;
 	bool makesSense() const;
 	std::string text(const ZLResource &resource) const;
 	void run();
-
-private:
-	const NetworkBookItem &myBook;
 };
 
 class NetworkBookBuyInBrowserAction : public ZLTreeAction {

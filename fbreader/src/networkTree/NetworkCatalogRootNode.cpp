@@ -168,6 +168,7 @@ ZLResourceKey NetworkCatalogRootNode::LoginAction::key() const {
 
 void NetworkCatalogRootNode::LoginAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
+		finished(std::string());
 		return;
 	}
 
@@ -235,6 +236,7 @@ std::string NetworkCatalogRootNode::RefillAccountAction::text(const ZLResource &
 
 void NetworkCatalogRootNode::RefillAccountAction::run() {
 	FBReader::Instance().openLinkInBrowser(myManager.refillAccountLink());
+	finished(std::string());
 }
 
 bool NetworkCatalogRootNode::RefillAccountAction::makesSense() const {
