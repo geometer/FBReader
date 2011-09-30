@@ -40,7 +40,7 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
 }
 
 int ZLQtTreeModel::rowCount(const QModelIndex &parent) const {
-        qDebug() << "asking for rowCount... returning " << myCurrentNode->children().size();
+        //qDebug() << "asking for rowCount... returning " << myCurrentNode->children().size();
 	return myCurrentNode->children().size();
 }
 
@@ -51,9 +51,9 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
             if (index.row() >= myCurrentNode->children().size()) {
                 return QVariant();
             }
-            qDebug() << "asking for data... at " << role << index.row() << index.column();
+            //qDebug() << "asking for data... at " << role << index.row() << index.column();
             const ZLTreeNode* node = myCurrentNode->children().at(index.row());
-            qDebug() << "after asking";
+            //qDebug() << "after asking";
             if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
                     //qDebug() << "return " << ::qtString(titledNode->title());
                     return ::qtString(titledNode->title());

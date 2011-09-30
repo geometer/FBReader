@@ -5,6 +5,9 @@
 
 #include <QtCore/QString>
 #include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDebug>
 #include <ZLLogger.h>
 
 #include <set>
@@ -13,7 +16,46 @@
 #include <ZLStringUtil.h>
 
 #include "ZLQtFSManager.h"
+#include "ZLQtFileInputStream.h"
+#include "ZLQtFileOutputStream.h"
+#include "ZLQtFSDir.h"
 
+
+ZLQtFSManager::ZLQtFSManager() : myRootPath(QDir::rootPath().toStdString()) {
+        connect(&myWatcher, SIGNAL(directoryChanged(QString)), SLOT(onPathChanged(QString)));
+        connect(&myWatcher, SIGNAL(fileChanged(QString)), SLOT(onPathChanged(QString)));
+}
+
+ZLQtFSManager::~ZLQtFSManager() {
+}
+
+static QString fixPath(const QString &path) {
+        if (path.startsWith('~'))
+            return QDir::homePath().append(path.midRef(1));
+        else if (path.isEmpty())
+            return QDir::homePath();
+        else
+            return path;
+}
+
+void ZLQtFSManager::addWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher) {
+        QString qPath = fixPath(QString::fromStdString(path));
+        myWatchers.insert(qPath, watcher);
+        myWatcher.addPath(qPath);
+}
+
+void ZLQtFSManager::removeWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher) {
+        QString qPath = fixPath(QString::fromStdString(path));
+        myWatchers.remove(qPath, watcher);
+        if (!myWatchers.contains(qPath))
+                myWatcher.removePath(qPath);
+}
+
+void ZLQtFSManager::onPathChanged(const QString &path) {
+        std::string stlPath = path.toStdString();
+        foreach (shared_ptr<ZLFSWatcher> watcher, myWatchers.values(path))
+                watcher->onPathChanged(stlPath);
+}
 
 std::string ZLQtFSManager::convertFilenameToUtf8(const std::string &name) const {
 	if (name.empty()) {
@@ -29,121 +71,86 @@ std::string ZLQtFSManager::mimeType(const std::string &path) const {
 	return std::string();
 }
 
+//static std::string getPwdDir() {
+//	return QDir::current().absolutePath().replace("/",QString::fromStdString(ZLibrary::FileNameDelimiter)).toStdString();
+//}
 
-static std::string getPwdDir() {
-	return QDir::current().absolutePath().replace("/",QString::fromStdString(ZLibrary::FileNameDelimiter)).toStdString();
-}
-
-static std::string getHomeDir() {
-	return QDir::home().absolutePath().replace("/",QString::fromStdString(ZLibrary::FileNameDelimiter)).toStdString();
-}
+//static std::string getHomeDir() {
+//	return QDir::home().absolutePath().replace("/",QString::fromStdString(ZLibrary::FileNameDelimiter)).toStdString();
+//}
 
 std::string ZLQtFSManager::resolveSymlink(const std::string &path) const {
-		return path;
+    QString qpath = QString::fromStdString(path);
+    QString symLink = QFile::symLinkTarget(qpath);
+    return symLink.isEmpty() ? path : symLink.toStdString();
 }
 
 ZLFSDir *ZLQtFSManager::createPlainDirectory(const std::string &path) const {
-	return new ZLUnixFSDir(path);
+        return new ZLQtFSDir(path);
 }
 
 void ZLQtFSManager::normalizeRealPath(std::string &path) const {
-
-#ifndef __SYMBIAN__
-	//TODO write ZLQtFSManager using only Qt instruments for this (to avoid these hacks)
-	ZLUnixFSManager::normalizeRealPath(path);
-	return;
-#endif
-
-	// TODO
-	// code written in this method was taken from win32 normalizeRealPath (with some additions)
-	// and may be does not check all cases
-
-	static std::string HomeDir = getHomeDir();
-	static std::string PwdDir = getPwdDir();
-
-	// Qt in some cases (resolving current dir, home dir) returns filepaths with slashes,
-	// that should be replaced with backslashes:
-
 	QString qpath = QString::fromStdString(path);
-	qpath.replace("/",QString::fromStdString(ZLibrary::FileNameDelimiter));
-	qpath.replace("!!", QString::fromStdString(PwdDir));  //TODO remove !! hardcoding
-	path = qpath.toStdString();
+        //qpath.replace("!!", QString::fromStdString(PwdDir));  //TODO remove !! hardcoding
+        qpath = fixPath(qpath);
+        qpath = QDir::cleanPath(qpath);
 
-	if (path[0] == '~') {
-		path = HomeDir + path.substr(1);
-	} else if ((path.length() > 1) && (path[1] != ':') &&
-													!ZLStringUtil::stringStartsWith(path, "\\\\")) {
-			path = PwdDir + ZLibrary::FileNameDelimiter + path;
-	}
-
-	int index;
-	while ((index = path.find(ZLibrary::FileNameDelimiter+"..")) != -1) {
-		int prevIndex = path.rfind(ZLibrary::FileNameDelimiter[0], index - 1);
-			if (prevIndex == -1) {
-					break;
-			}
-			path.erase(prevIndex, index + 3 - prevIndex);
-	}
-	while ((index = path.find(ZLibrary::FileNameDelimiter+ZLibrary::FileNameDelimiter, 1)) > 0) {
-			path.erase(index, 1);
-	}
-
-	if (!path.empty()) {
-			path[0] = toupper(path[0]);
-	}
-
+        path = qpath.toStdString();
 }
 
 
 int ZLQtFSManager::findArchiveFileNameDelimiter(const std::string &path) const {
-	int index = path.rfind(':');
+        QString qpath = QString::fromStdString(path);
+        int index = qpath.lastIndexOf(":");
 	return (index == 1) ? -1 : index;
 }
 
-static const std::string RootPath = ROOTPATH;
-
-
 shared_ptr<ZLDir> ZLQtFSManager::rootDirectory() const {
-		return (ZLDir*)createPlainDirectory(RootPath);
+                return (ZLDir*)createPlainDirectory(rootDirectoryPath());
 }
 
 const std::string &ZLQtFSManager::rootDirectoryPath() const {
-		return RootPath;
+                return myRootPath;
 }
 
 std::string ZLQtFSManager::parentPath(const std::string &path) const {
-		if (path == RootPath) {
-				return path;
-		}
-		int index = findLastFileNameDelimiter(path);
-		return (index <= 0) ? RootPath : path.substr(0, index);
+                QDir dir(QString::fromStdString(path));
+                if (!dir.cdUp()) {
+                    return rootDirectoryPath();
+                }
+                return dir.absolutePath().toStdString();
 }
 
 ZLFSDir *ZLQtFSManager::createNewDirectory(const std::string &path) const {
-		std::vector<std::string> subpaths;
-		std::string current = path;
+    //TODO check is it working right;
+    QDir().mkpath(QString::fromStdString(path));
+    return createPlainDirectory(path);
+}
 
-		while (current.length() > 1) {
-				struct stat fileStat;
-				if (stat(current.c_str(), &fileStat) == 0) {
-						if (!S_ISDIR(fileStat.st_mode)) {
-								return 0;
-						}
-						break;
-				} else {
-						subpaths.push_back(current);
-						int index = current.rfind('\\');
-						if (index == -1) {
-								return 0;
-						}
-						current.erase(index);
-				}
-		}
+ZLInputStream *ZLQtFSManager::createPlainInputStream(const std::string &path) const {
+    return new ZLQtFileInputStream(path);
+}
 
-		for (int i = subpaths.size() - 1; i >= 0; --i) {
-				if (mkdir(subpaths[i].c_str(), 0x1FF) != 0) {
-						return 0;
-				}
-		}
-		return createPlainDirectory(path);
+ZLOutputStream *ZLQtFSManager::createOutputStream(const std::string &path) const {
+    return new ZLQtFileOutputStream(path);
+}
+
+ZLFileInfo ZLQtFSManager::fileInfo(const std::string &path) const {
+    QFileInfo fileInfo(QString::fromStdString(path));
+    ZLFileInfo info;
+    info.Exists = fileInfo.exists();
+    if (info.Exists) {
+        info.IsDirectory = fileInfo.isDir();
+        info.Size = fileInfo.size();
+    }
+    return info;
+}
+
+bool ZLQtFSManager::removeFile(const std::string &path) const {
+    return QFile::remove(QString::fromStdString(path));
+}
+
+bool ZLQtFSManager::canRemoveFile(const std::string &path) const {
+    QFile file(QString::fromStdString(path));
+    return file.exists() && (file.permissions() & QFile::WriteUser);
 }

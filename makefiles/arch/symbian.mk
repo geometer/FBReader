@@ -1,9 +1,9 @@
 ifeq "$(INSTALLDIR)" ""
   INSTALLDIR=/usr
 endif
-SHAREDIR_MACRO=!!
-IMAGEDIR = !!\\\\pixmaps
-APPIMAGEDIR = !!\\\\pixmaps\\\\FBReader
+SHAREDIR_MACRO=C:/private/e87cc83c
+IMAGEDIR = $(SHAREDIR_MACRO)/pixmaps
+APPIMAGEDIR = $(SHAREDIR_MACRO)/pixmaps/FBReader
 
 SDK_ROOT = /opt/QtSDK/Symbian/SDKs/Symbian1
 ARM_DIR = /usr/arm-none-symbianelf

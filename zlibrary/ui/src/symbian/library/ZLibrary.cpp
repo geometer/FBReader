@@ -40,13 +40,14 @@
 #include <QtGui/QApplication>
 
 
-#ifdef __SYMBIAN__
-const std::string ZLibrary::FileNameDelimiter("\\");
-const std::string ZLibrary::PathDelimiter(";");
-#else
+//#ifdef __SYMBIAN__
+//const std::string ZLibrary::FileNameDelimiter("\\");
+//const std::string ZLibrary::PathDelimiter(";");
+//#else
 const std::string ZLibrary::FileNameDelimiter("/");
-const std::string ZLibrary::PathDelimiter(":");
-#endif
+//TODO may be always! use semicolon as a path delimeter?
+const std::string ZLibrary::PathDelimiter(";");
+//#endif
 const std::string ZLibrary::EndOfLine("\n");         // don't know exactly what should be here
 
 void ZLibrary::initLocale() {
