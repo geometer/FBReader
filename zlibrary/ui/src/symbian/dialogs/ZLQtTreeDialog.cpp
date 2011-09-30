@@ -57,6 +57,10 @@ void ZLQtTreeDialog::run() {
 	exec();
 }
 
+void ZLQtTreeDialog::onCloseRequest() {
+    //TODO implement
+}
+
 void ZLQtTreeDialog::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
 	//qDebug() << "onNodeBeginInsert";
 	//myModel->onNodeBeginInsert(parent,index);
