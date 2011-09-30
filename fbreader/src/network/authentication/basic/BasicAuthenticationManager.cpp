@@ -19,6 +19,7 @@
 
 #include <ZLNetworkManager.h>
 #include <ZLNetworkRequest.h>
+#include <ZLTimeManager.h>
 
 #include "BasicAuthenticationManager.h"
 #include "BasicAuthenticationRequest.h"
@@ -69,7 +70,40 @@ NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::i
 	return AuthenticationStatus(true);
 }
 
-std::string BasicAuthenticationManager::authorise(const std::string &pwd) {
+class BasicAuthenticationManagerListener : public ZLExecutionData::Listener {
+public:
+	BasicAuthenticationManagerListener(BasicAuthenticationManager &manager, shared_ptr<ZLExecutionData::Listener> listener);
+
+	virtual void showPercent(int ready, int full);
+	virtual void finished(const std::string &error = std::string());
+	
+private:
+	BasicAuthenticationManager &myManager;
+	shared_ptr<ZLExecutionData::Listener> myHolder;
+	shared_ptr<ZLExecutionData::Listener> myListener;
+};
+
+BasicAuthenticationManagerListener::BasicAuthenticationManagerListener(BasicAuthenticationManager &manager, shared_ptr<ZLExecutionData::Listener> listener)
+    : myManager(manager), myHolder(this), myListener(listener) {
+}
+
+void BasicAuthenticationManagerListener::showPercent(int ready, int full) {
+	(void) ready;
+	(void) full;
+}
+
+void BasicAuthenticationManagerListener::finished(const std::string &error) {
+	myManager.myAccountChecked = true;
+	if (!error.empty())
+		myManager.myAccountUserNameOption.setValue("");
+	else
+		myManager.myAccountUserNameOption.setValue(UserNameOption.value());
+	myListener->finished(error);
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
+}
+
+std::string BasicAuthenticationManager::authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener) {
 	shared_ptr<ZLExecutionData> data = new BasicAuthenticationRequest(
 		Link.url(NetworkLink::URL_SIGN_IN),
 		certificate()
@@ -78,19 +112,12 @@ std::string BasicAuthenticationManager::authorise(const std::string &pwd) {
 
 	request.setRedirectionSupported(false);
 	request.setupAuthentication(ZLNetworkRequest::BASIC, UserNameOption.value(), pwd);
+	request.setListener(new BasicAuthenticationManagerListener(*this, listener));
 
-	std::string error = ZLNetworkManager::Instance().perform(data);
-
-	myAccountChecked = true;
-	if (!error.empty()) {
-		myAccountUserNameOption.setValue("");
-		return error;
-	}
-	myAccountUserNameOption.setValue(UserNameOption.value());
-	return "";
+	return ZLNetworkManager::Instance().perform(data);
 }
 
-void BasicAuthenticationManager::logOut() {
+void BasicAuthenticationManager::logOut(shared_ptr<ZLExecutionData::Listener> listener) {
 	myAccountChecked = true;
 	myAccountUserNameOption.setValue("");
 
@@ -101,6 +128,7 @@ void BasicAuthenticationManager::logOut() {
 			signOutUrl,
 			certificate()
 		);
+		data->setListener(listener);
 		ZLNetworkManager::Instance().perform(data);
 	}
 }

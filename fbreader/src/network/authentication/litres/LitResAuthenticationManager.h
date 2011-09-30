@@ -36,18 +36,18 @@ public:
 
 public:
 	AuthenticationStatus isAuthorised(bool useNetwork = true, shared_ptr<ZLExecutionData::Listener> listener = 0);
-	std::string authorise(const std::string &pwd);
-	void logOut();
+	std::string authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener);
+	void logOut(shared_ptr<ZLExecutionData::Listener> listener);
 	bool skipIPSupported();
 
 	const std::string &currentUserName();
 	bool needsInitialization();
-	std::string initialize();
+	std::string initialize(shared_ptr<ZLExecutionData::Listener> listener);
 	bool needPurchase(const NetworkBookItem &book);
-	std::string purchaseBook(const NetworkBookItem &book);
+	std::string purchaseBook(const NetworkBookItem &book, shared_ptr<ZLExecutionData::Listener> listener);
 	shared_ptr<BookReference> downloadReference(const NetworkBookItem &book);
 
-	std::string refillAccountLink();
+	std::string refillAccountLink(shared_ptr<ZLExecutionData::Listener> listener);
 	std::string currentAccount();
 
 	std::string reloadPurchasedBooks();
@@ -68,11 +68,11 @@ private:
 
 public: // new User Registration
 	bool registrationSupported();
-	std::string registerUser(const std::string &login, const std::string &password, const std::string &email);
+	std::string registerUser(const std::string &login, const std::string &password, const std::string &email, shared_ptr<ZLExecutionData::Listener> listener);
 
 public: // Password Recovery
 	bool passwordRecoverySupported();
-	std::string recoverPassword(const std::string &email);
+	std::string recoverPassword(const std::string &email, shared_ptr<ZLExecutionData::Listener> listener);
 
 private:
 	bool mySidChecked;

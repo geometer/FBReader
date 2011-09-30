@@ -19,6 +19,7 @@
 
 #include <ZLNetworkUtil.h>
 #include <ZLNetworkManager.h>
+#include <ZLTimeManager.h>
 
 #include "LitResAuthenticationManager.h"
 #include "LitResDataParser.h"
@@ -84,7 +85,44 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 //	return AuthenticationStatus(true);
 }
 
-std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
+class LitResAuthenticationManagerListener : public ZLExecutionData::Listener {
+public:
+	LitResAuthenticationManagerListener(LitResAuthenticationManager &manager, shared_ptr<ZLExecutionData::Listener> listener);
+
+	virtual void showPercent(int ready, int full);
+	virtual void finished(const std::string &error = std::string());
+	
+private:
+	LitResAuthenticationManager &myManager;
+	shared_ptr<ZLExecutionData::Listener> myHolder;
+	shared_ptr<ZLExecutionData::Listener> myListener;
+};
+
+LitResAuthenticationManagerListener::LitResAuthenticationManagerListener(LitResAuthenticationManager &manager, shared_ptr<ZLExecutionData::Listener> listener)
+    : myManager(manager), myHolder(this), myListener(listener) {
+}
+
+void LitResAuthenticationManagerListener::showPercent(int ready, int full) {
+	(void) ready;
+	(void) full;
+}
+
+void LitResAuthenticationManagerListener::finished(const std::string &error) {
+	myManager.mySidChecked = true;
+	if (!error.empty()) {
+		myManager.mySidUserNameOption.setValue("");
+		myManager.mySidOption.setValue("");
+	} else {
+		myManager.mySidOption.setValue(newSid);
+		myManager.mySidUserNameOption.setValue(UserNameOption.value());
+	}
+	
+	myListener->finished(error);
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
+}
+
+std::string LitResAuthenticationManager::authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener) {
 	std::string firstName, lastName, newSid;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(this, 0);
 
@@ -101,23 +139,15 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 			certificate(),
 			xmlReader
 		);
-	std::string error = ZLNetworkManager::Instance().perform(networkData);
-
-	mySidChecked = true;
-	if (!error.empty()) {
-		mySidUserNameOption.setValue("");
-		mySidOption.setValue("");
-		return error;
-	}
-	mySidOption.setValue(newSid);
-	mySidUserNameOption.setValue(UserNameOption.value());
-	return "";
+	networkData->setListener(new LitResAuthenticationManagerListener(*this, listener));
+	return ZLNetworkManager::Instance().perform(networkData);
 }
 
-void LitResAuthenticationManager::logOut() {
+void LitResAuthenticationManager::logOut(shared_ptr<ZLExecutionData::Listener> listener) {
 	mySidChecked = true;
 	mySidUserNameOption.setValue("");
 	mySidOption.setValue("");
+	listener->finished(std::string());
 }
 
 const std::string &LitResAuthenticationManager::currentUserName() {
@@ -191,7 +221,7 @@ void LitResAuthenticationManager::collectPurchasedBooks(NetworkItem::List &list)
 	list.assign(myPurchasedBooksList.begin(), myPurchasedBooksList.end());
 }
 
-std::string LitResAuthenticationManager::refillAccountLink() {
+std::string LitResAuthenticationManager::refillAccountLink(shared_ptr<ZLExecutionData::Listener> listener) {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
 		return std::string();
@@ -215,7 +245,7 @@ bool LitResAuthenticationManager::needsInitialization() {
 	return sid != myInitializedDataSid;
 }
 
-std::string LitResAuthenticationManager::initialize() {
+std::string LitResAuthenticationManager::initialize(shared_ptr<ZLExecutionData::Listener> listener) {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
@@ -304,7 +334,7 @@ bool LitResAuthenticationManager::registrationSupported() {
 	return true;
 }
 
-std::string LitResAuthenticationManager::registerUser(const std::string &login, const std::string &password, const std::string &email) {
+std::string LitResAuthenticationManager::registerUser(const std::string &login, const std::string &password, const std::string &email, shared_ptr<ZLExecutionData::Listener> listener) {
 	std::string newSid;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResRegisterUserDataParser(newSid);
 
@@ -334,7 +364,7 @@ bool LitResAuthenticationManager::passwordRecoverySupported() {
 	return true;
 }
 
-std::string LitResAuthenticationManager::recoverPassword(const std::string &email) {
+std::string LitResAuthenticationManager::recoverPassword(const std::string &email, shared_ptr<ZLExecutionData::Listener> listener) {
 	std::string url = Link.url(NetworkLink::URL_RECOVER_PASSWORD);
 	ZLNetworkUtil::appendParameter(url, "mail", email);
 
@@ -342,7 +372,7 @@ std::string LitResAuthenticationManager::recoverPassword(const std::string &emai
 		ZLNetworkManager::Instance().createXMLParserRequest(
 			url, certificate(), new LitResPasswordRecoveryDataParser()
 		);
-	return ZLNetworkManager::Instance().perform(networkData);
+	return networkData->setListener(listener);
 }
 
 std::string LitResAuthenticationManager::reloadPurchasedBooks() {
@@ -353,7 +383,7 @@ std::string LitResAuthenticationManager::reloadPurchasedBooks() {
 	if (sid != myInitializedDataSid) {
 		mySidChecked = true;
 		mySidUserNameOption.setValue("");
-		mySidOption.setValue("");		
+		mySidOption.setValue("");
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
 

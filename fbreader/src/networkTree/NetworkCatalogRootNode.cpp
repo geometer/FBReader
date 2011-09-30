@@ -172,9 +172,9 @@ void NetworkCatalogRootNode::LoginAction::run() {
 		return;
 	}
 
-	AuthenticationDialog::run(myManager);
-	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().refreshWindow();
+	AuthenticationDialog::run(myManager, myListener);
+//	FBReader::Instance().invalidateAccountDependents();
+//	FBReader::Instance().refreshWindow();
 }
 
 NetworkCatalogRootNode::LogoutAction::LogoutAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, true) {
@@ -190,10 +190,10 @@ std::string NetworkCatalogRootNode::LogoutAction::text(const ZLResource &resourc
 }
 
 void NetworkCatalogRootNode::LogoutAction::run() {
-	LogOutRunnable logout(myManager);
-	logout.executeWithUI();
-	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().refreshWindow();
+	new LogOutRunnable(myManager, myListener);
+//	logout.executeWithUI();
+//	FBReader::Instance().invalidateAccountDependents();
+//	FBReader::Instance().refreshWindow();
 }
 
 NetworkCatalogRootNode::DontShowAction::DontShowAction(NetworkLink &link) : myLink(link) {

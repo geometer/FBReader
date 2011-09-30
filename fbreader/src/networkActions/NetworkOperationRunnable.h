@@ -45,6 +45,7 @@ protected:
 	NetworkOperationRunnable();
 	~NetworkOperationRunnable();
 	
+	void destroy();
 	void showPercent(int ready, int full);
 
 public:
@@ -55,7 +56,8 @@ public:
 
 protected:
 	std::string myErrorMessage;
-	shared_ptr<ZLExecutionData::Listener> myHolder;
+	shared_ptr<ZLExecutionData::Listener> myListenerHolder;
+	shared_ptr<ZLRunnable> myRunnableHolder;
 	shared_ptr<ZLProgressDialog> myDialog;
 };
 
@@ -107,11 +109,14 @@ class AuthoriseRunnable : public NetworkOperationRunnable {
 
 public:
 	AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password);
+	AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password, shared_ptr<ZLExecutionData::Listener> listener);
 	void run();
+	void finished(const std::string &error = std::string());
 
 private:
 	NetworkAuthenticationManager &myManager;
-	const std::string &myPassword;
+	std::string myPassword;
+	shared_ptr<ZLExecutionData::Listener> myListener;
 };
 
 class InitializeAuthenticationManagerRunnable : public NetworkOperationRunnable {
@@ -128,10 +133,13 @@ class LogOutRunnable : public NetworkOperationRunnable {
 
 public:
 	LogOutRunnable(NetworkAuthenticationManager &mgr);
+	LogOutRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
 	void run();
+	void finished(const std::string &error = std::string());
 
 private:
 	NetworkAuthenticationManager &myManager;
+	shared_ptr<ZLExecutionData::Listener> myListener;
 };
 
 class PurchaseBookRunnable : public NetworkOperationRunnable {

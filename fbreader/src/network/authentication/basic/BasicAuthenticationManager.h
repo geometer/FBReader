@@ -57,8 +57,8 @@ public:
 
 public:
 	AuthenticationStatus isAuthorised(bool useNetwork = true, shared_ptr<ZLExecutionData::Listener> listener = 0);
-	std::string authorise(const std::string &pwd); // returns error message
-	void logOut();
+	std::string authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener); // returns error message
+	void logOut(shared_ptr<ZLExecutionData::Listener> listener);
 
 	shared_ptr<BookReference> downloadReference(const NetworkBookItem &book);
 

@@ -35,10 +35,19 @@ NetworkOperationRunnable::NetworkOperationRunnable(const std::string &uiMessageK
 		ZLDialogManager::Instance().createProgressDialog(ZLResourceKey(uiMessageKey));
 }
 
-NetworkOperationRunnable::NetworkOperationRunnable() : myHolder(this) {
+NetworkOperationRunnable::NetworkOperationRunnable() {
+	shared_ptr<NetworkOperationRunnable> holder = this;
+	myListenerHolder = holder.staticCast<ZLExecutionData::Listener>();
+	myRunnableHolder = holder.staticCast<ZLRunnable>();
 }
 
 NetworkOperationRunnable::~NetworkOperationRunnable() {
+}
+
+void NetworkOperationRunnable::destroy() {
+	ZLTimeManager::deleteLater(myListenerHolder);
+	myRunnableHolder.reset();
+	myListenerHolder.reset();
 }
 
 void NetworkOperationRunnable::showPercent(int ready, int full) {
@@ -108,7 +117,7 @@ void DownloadBookRunnable::run() {
 	NetworkLinkCollection::Instance().downloadBook(
 		*myReference, myFileName,
 		myAuthManager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : myAuthManager->certificate(),
-		myHolder
+		myListenerHolder
 	);
 }
 
@@ -117,8 +126,7 @@ void DownloadBookRunnable::finished(const std::string &error) {
 	if (!myListener)
 		return;
 	myListener->bookDownloaded(this);
-	ZLTimeManager::deleteLater(myHolder);
-	myHolder.reset();
+	destroy();
 }
 
 shared_ptr<BookReference> DownloadBookRunnable::reference() const {
@@ -153,8 +161,24 @@ AuthoriseRunnable::AuthoriseRunnable(NetworkAuthenticationManager &mgr, const st
 	myPassword(password) {
 }
 
+AuthoriseRunnable::AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password, shared_ptr<ZLExecutionData::Listener> listener)
+    : myManager(mgr), 
+      myPassword(password),
+      myListener(listener) {
+	ZLTimeManager::addAutoRemovableTask(myRunnableHolder);
+}
+
 void AuthoriseRunnable::run() {
-	myErrorMessage = myManager.authorise(myPassword);
+	if (myListener.isNull())
+		myErrorMessage = myManager.authorise(myPassword);
+	else
+		myManager.authorise(myPassword, myListenerHolder);
+}
+
+void AuthoriseRunnable::finished(const std::string &error) {
+	myErrorMessage = error;
+	myListener->finished(myErrorMessage);
+	destroy();
 }
 
 
@@ -173,12 +197,24 @@ LogOutRunnable::LogOutRunnable(NetworkAuthenticationManager &mgr) :
 	myManager(mgr) {
 }
 
+LogOutRunnable::LogOutRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener) :
+	myManager(mgr), myListener(listener) {
+	ZLTimeManager::addAutoRemovableTask(myRunnableHolder);
+}
+
 void LogOutRunnable::run() {
 	if (myManager.isAuthorised(false).Status != B3_FALSE) {
-		myManager.logOut();
+		myManager.logOut(myListenerHolder);
+	} else if (myListener) {
+		myListener->finished(std::string());
+		destroy();
 	}
 }
 
+void LogOutRunnable::finished(const std::string &error) {
+	myListener->finished(error);
+	destroy();
+}
 
 PurchaseBookRunnable::PurchaseBookRunnable(NetworkAuthenticationManager &mgr, const NetworkBookItem &book) : 
 	NetworkOperationRunnable("purchaseBook"), 
@@ -236,14 +272,13 @@ void AdvancedSearchRunnable::run() {
 
 
 LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogNode *node) : myNode(node) {
-	myNode->item().loadChildren(myChildren, myHolder);
+	myNode->item().loadChildren(myChildren, myListenerHolder);
 }
 
 void LoadSubCatalogRunnable::finished(const std::string &error) {
 	myErrorMessage = error;
 	myNode->onChildrenReceived(this);
-	ZLTimeManager::deleteLater(myHolder);
-	myHolder.reset();
+	destroy();
 }
 
 void LoadSubCatalogRunnable::run() {
