@@ -365,9 +365,11 @@ ZLQmlViewWidget::ZLQmlViewWidget(QWidget *parent, ZLQmlViewObject &holder) : QDe
 	rootContext()->setContextProperty(QLatin1String("dialogManager"), qDialogManager);
         setViewport(new QGLWidget(this));
 
-        std::string qmlPath = ZLibrary::ZLibraryDirectory() + "/declarative/Main.qml" ;
-        ZLFSManager::Instance().normalize(qmlPath);
-        setSource(QUrl::fromLocalFile(QString::fromStdString(qmlPath)));
+        //std::string qmlPath = ZLibrary::ZLibraryDirectory() + "/declarative/Main.qml" ;
+        //ZLFSManager::Instance().normalize(qmlPath);
+        //setSource(QUrl::fromLocalFile(QString::fromStdString(qmlPath)));
+        setSource(QUrl::fromLocalFile("C:/private/e87cc83c/zlibrary/declarative/Main.qml"));
+
 }
 
 void ZLQmlViewWidget::keyPressEvent(QKeyEvent *event) {
