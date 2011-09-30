@@ -3,6 +3,7 @@
 * Redesigned Options at Meego, fixed segfaults
 * Fixed lookup of books added to Books directory during FBReader's run
 * Fixed default configuration of FBReader
+* Added orientation lock button
 
 ===== 0.99.0 (September 29, 2011) =====
 
