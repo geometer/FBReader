@@ -53,7 +53,6 @@ ZLDialogContent &ZLQmlOptionsDialog::createTab(const ZLResourceKey &key) {
 QObjectList ZLQmlOptionsDialog::sections() const {
 	QObjectList result;
 	foreach (const QWeakPointer<QObject> &obj, mySections) {
-		qDebug() << Q_FUNC_INFO << result << obj.data();
 		if (!obj.isNull())
 			result << obj.data();
 	}

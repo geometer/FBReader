@@ -5,6 +5,8 @@ import org.fbreader 0.14
 
 Page {
 	id: root
+	orientationLock: rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic
+	property variant rootWindow
 	property variant handler
 	property variant component
 	property variant progressData: handler.progressData(root.rootIndex)
@@ -50,6 +52,7 @@ Page {
 					var rootIndex = visualModel.modelIndex(index);
 					var page = root.pageStack.push(root.component, {
 												   "handler": root.handler,
+												   "rootWindow": root.rootWindow,
 												   "component": root.component,
 												   "rootIndex": rootIndex
 												   });

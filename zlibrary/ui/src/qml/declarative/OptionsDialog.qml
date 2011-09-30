@@ -24,9 +24,10 @@ import com.nokia.extras 1.0
 Page {
 	id: root
 	property variant handler
+	property variant rootWindow
 	property variant sections: handler ? handler.sections : null
-
-	orientationLock: (rootWindow.portraitMode) ? PageOrientation.LockPortrait : PageOrientation.LockLandscape	
+	
+	orientationLock: rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic	
 	onSectionsChanged: pagesModel.update()
 	tools: ToolBarLayout {
 		id: toolsLayout
@@ -69,7 +70,7 @@ Page {
 		Page {
 			id: contentPage
 			property alias handler: content.handler
-			orientationLock: (rootWindow.portraitMode) ? PageOrientation.LockPortrait : PageOrientation.LockLandscape	
+			orientationLock: root.rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic	
 			DialogContent {
 				id: content
 			}

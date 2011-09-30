@@ -21,14 +21,20 @@ import QtQuick 1.0
 import com.nokia.meego 1.0
 
 PageStackWindow {
-	id: rootWindow
-	property bool portraitMode: true
+	id: root
+	property bool fixedOrientation: false
 	showToolBar: pageStack.currentPage === null
 				 || pageStack.currentPage.showToolBar === undefined
 				 || pageStack.currentPage.showToolBar
 	
 	initialPage: MainPage {
 		id: mainPage
+		rootWindow: root
+	}
+	
+	Connections {
+		target: screen
+		onCurrentOrientationChanged: root.fixedOrientation = false
 	}
 
 	Connections {
@@ -36,12 +42,12 @@ PageStackWindow {
 
 		onDialogRequested: {
 			var component = Qt.createComponent("SimpleDialog.qml");
-			rootWindow.openDialog(component.createObject(mainPage, { handler: object }));
+			root.openDialog(component.createObject(mainPage, { handler: object }));
 		}
 		
 		onOptionsDialogRequested: {
 			var component = Qt.createComponent("OptionsDialog.qml");
-			rootWindow.pageStack.push(component, { handler: object, component: component });
+			root.pageStack.push(component, { handler: object, rootWindow: root, component: component });
 		}
 		
         onFileDialogRequested: {
@@ -52,22 +58,22 @@ PageStackWindow {
         onTreeDialogRequested: {
 			console.log("bla-bla", object)
 			var component = Qt.createComponent("TreeDialogPage.qml");
-			rootWindow.pageStack.push(component, { handler: object, component: component });
+			root.pageStack.push(component, { handler: object, rootWindow: root, component: component });
 		}
 		
 		onProgressDialogRequested: {
-			rootWindow.openDialog(progressDialog.createObject(rootWindow.pageStack.parent.parent, { handler: object }));
+			root.openDialog(progressDialog.createObject(root.pageStack.parent.parent, { handler: object }));
 		}
 		
 		onInformationBoxRequested: {
 			// var title, message, button
 			var args = { "titleText": title, "message": message, "acceptButtonText": button };
-			rootWindow.openDialog(queryDialog.createObject(mainPage, args));
+			root.openDialog(queryDialog.createObject(mainPage, args));
 		}
 		onErrorBoxRequested: {
 			// var title, message, button
 			var args = { "titleText": title, "message": message, "acceptButtonText": button };
-			rootWindow.openDialog(queryDialog.createObject(mainPage, args));
+			root.openDialog(queryDialog.createObject(mainPage, args));
 		}
 	}
 	
@@ -80,7 +86,7 @@ PageStackWindow {
 							if (dialog.status == DialogStatus.Closed) {
 								dialog.destroy();
 								// hook for toolbar activity
-								if (rootWindow.pageStack.currentPage == mainPage)
+								if (root.pageStack.currentPage == mainPage)
 									mainPage.state = ""
 							}
 						});
@@ -99,23 +105,24 @@ PageStackWindow {
 		}
 	}
 
-	Component.onCompleted: {
-		theme.inverted = true
-	}
-	
-	Rectangle {
-		id: overlayRect
-		anchors.fill: parent
-		color: "#60000000"
-		visible: !platformWindow.active
-		Label {
-			anchors.centerIn: parent
-			width: parent.width
-			text: applicationInfo.bookTitle
-			font.pixelSize: 70
-			font.bold: true
-			color: "white"
-			horizontalAlignment: Text.AlignHCenter
-		}
-	}
+//	Component.onCompleted: {
+//		theme.inverted = true
+//	}
+
+// TODO: Check why it doesn't dissapear sometimes	
+//	Rectangle {
+//		id: overlayRect
+//		anchors.fill: parent
+//		color: "#60000000"
+//		visible: !platformWindow.active
+//		Label {
+//			anchors.centerIn: parent
+//			width: parent.width
+//			text: applicationInfo.bookTitle
+//			font.pixelSize: 70
+//			font.bold: true
+//			color: "white"
+//			horizontalAlignment: Text.AlignHCenter
+//		}
+//	}
 }

@@ -24,8 +24,9 @@ import org.fbreader 0.14
 
 Page {
 	id: root
+	property variant rootWindow
 	property bool showToolBar: true
-	orientationLock: (rootWindow.portraitMode) ? PageOrientation.LockPortrait : PageOrientation.LockLandscape
+	orientationLock: rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic
 	tools: ToolBarLayout {
 		id: toolBarLayout
 		Repeater {
@@ -36,6 +37,8 @@ Page {
 				iconSource: modelData.platformIconId === "" ? modelData.iconSource : ""
 				platformIconId: modelData.platformIconId
 				onClicked: {
+					if (toolBarTimer.running)
+						toolBarTimer.restart();
 					switch (modelData.type) {
 					case ToolBarItem.PlainButton:
 					case ToolBarItem.ToggleButton:
@@ -63,9 +66,14 @@ Page {
 			}
 		}
 		ToolIcon {
-			iconId: (rootWindow.portraitMode) ? "icon-m-image-edit-rotate-right" : "icon-m-image-edit-rotate-left"
+			platformIconId: "icon-m-common-" + __iconType + __inverseString
+			property string __iconType: rootWindow.fixedOrientation ? "locked" : "unlocked"
+			property string __inverseString: style.inverted ? "-inverse" : ""
+
 			onClicked: {
-				rootWindow.portraitMode = !rootWindow.portraitMode
+				if (toolBarTimer.running)
+					toolBarTimer.restart();
+				rootWindow.fixedOrientation = !rootWindow.fixedOrientation
 			}
 		}
 		ToolIcon {
