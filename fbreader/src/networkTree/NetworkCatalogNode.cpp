@@ -37,7 +37,7 @@
 #include "../network/authentication/NetworkAuthenticationManager.h"
 #include "../networkActions/NetworkOperationRunnable.h"
 
-class NetworkCatalogNode::OpenInBrowserAction : public ZLRunnableWithKey {
+class NetworkCatalogNode::OpenInBrowserAction : public ZLTreeAction {
 
 public:
 	OpenInBrowserAction(const std::string &url);
@@ -58,9 +58,6 @@ NetworkCatalogNode::~NetworkCatalogNode() {
 }
 
 void NetworkCatalogNode::init() {
-	if (!item().URLByType[NetworkItem::URL_CATALOG].empty()) {
-		registerAction(new ExpandCatalogAction(*this));
-	}
 	const std::string htmlUrl =
 		item().URLByType[NetworkItem::URL_HTML_PAGE];
 	if (!htmlUrl.empty()) {
@@ -69,9 +66,11 @@ void NetworkCatalogNode::init() {
 	registerAction(new ReloadAction(*this));
 }
 
-void NetworkCatalogNode::requestChildren() {
+void NetworkCatalogNode::requestChildren(shared_ptr<ZLExecutionData::Listener> listener) {
 	if (children().empty())
-		updateChildren();
+		updateChildren(listener);
+	else
+		listener->finished();
 }
 
 NetworkCatalogItem &NetworkCatalogNode::item() {
@@ -134,8 +133,10 @@ shared_ptr<ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
 //	return ((FBReaderNode*)parent())->image();
 }
 
-void NetworkCatalogNode::updateChildren() {
-	new LoadSubCatalogRunnable(this);
+void NetworkCatalogNode::updateChildren(shared_ptr<ZLExecutionData::Listener> listener) {
+	myListeners.push_back(listener);
+	if (myListeners.size() == 1)
+		new LoadSubCatalogRunnable(this);
 }
 	
 void NetworkCatalogNode::onChildrenReceived(LoadSubCatalogRunnable *runnable) {
@@ -164,44 +165,11 @@ void NetworkCatalogNode::onChildrenReceived(LoadSubCatalogRunnable *runnable) {
 		NetworkNodesFactory::fillAuthorNode(this, myChildrenItems);
 	}
 	FBReader::Instance().invalidateAccountDependents();
-}
-
-NetworkCatalogNode::ExpandCatalogAction::ExpandCatalogAction(NetworkCatalogNode &node) : myNode(node) {
-}
-
-ZLResourceKey NetworkCatalogNode::ExpandCatalogAction::key() const {
-	return ZLResourceKey("collapseTree");
-}
-
-void NetworkCatalogNode::ExpandCatalogAction::run() {
-	if (!NetworkOperationRunnable::tryConnect()) {
-		return;
+	for (int i = 0; i < myListeners.size(); ++i) {
+		if (!myListeners.at(i).isNull())
+			myListeners.at(i)->finished(runnable->errorMessage());
 	}
-
-	const NetworkLink &link = myNode.item().Link;
-	if (!link.authenticationManager().isNull()) {
-		NetworkAuthenticationManager &mgr = *link.authenticationManager();
-		IsAuthorisedRunnable checker(mgr);
-		checker.executeWithUI();
-		if (checker.hasErrors()) {
-			checker.showErrorMessage();
-			return;
-		}
-		if (checker.result() == B3_TRUE && mgr.needsInitialization()) {
-			InitializeAuthenticationManagerRunnable initializer(mgr);
-			initializer.executeWithUI();
-			if (initializer.hasErrors()) {
-				LogOutRunnable logout(mgr);
-				logout.executeWithUI();
-			}
-		}
-	}
-
-	if (myNode.myChildrenItems.empty()) {
-		myNode.updateChildren();
-	}
-//	myNode.expandOrCollapseSubtree();
-	FBReader::Instance().refreshWindow();
+	myListeners.clear();
 }
 
 NetworkCatalogNode::OpenInBrowserAction::OpenInBrowserAction(const std::string &url) : myURL(url) {
@@ -232,7 +200,7 @@ void NetworkCatalogNode::ReloadAction::run() {
 		return;
 	}
 
-	myNode.updateChildren();
+	myNode.updateChildren(0);
 //	myNode.expandOrCollapseSubtree();
 	FBReader::Instance().refreshWindow();
 }

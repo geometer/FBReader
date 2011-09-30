@@ -52,18 +52,8 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	class ExpandCatalogAction : public ZLRunnableWithKey {
 
-	public:
-		ExpandCatalogAction(NetworkCatalogNode &node);
-		ZLResourceKey key() const;
-		void run();
-
-	private:
-		NetworkCatalogNode &myNode;
-	};
-
-	class ReloadAction : public ZLRunnableWithKey {
+	class ReloadAction : public ZLTreeAction {
 
 	public:
 		ReloadAction(NetworkCatalogNode &node);
@@ -81,7 +71,7 @@ protected:
 	NetworkCatalogNode(shared_ptr<NetworkItem> item);
 	~NetworkCatalogNode();
 	
-	void requestChildren();
+	void requestChildren(shared_ptr<ZLExecutionData::Listener> listener = 0);
 
 private:
 	void init();
@@ -94,7 +84,7 @@ public:
 	NetworkCatalogItem &item();
 	const NetworkItem::List &childrenItems();
 
-	void updateChildren();
+	void updateChildren(shared_ptr<ZLExecutionData::Listener> listener);
 
 protected:
 	void onChildrenReceived(LoadSubCatalogRunnable *runnable);
@@ -108,6 +98,7 @@ private:
 	friend class LoadSubCatalogRunnable;
 	shared_ptr<NetworkItem> myItem;
 	NetworkItem::List myChildrenItems;
+	std::vector<shared_ptr<ZLExecutionData::Listener> > myListeners;
 };
 
 class NetworkCatalogRootNode : public NetworkCatalogNode {

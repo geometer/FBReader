@@ -87,6 +87,7 @@ public:
 	ViewMode mode() const;
 
 	shared_ptr<Book> currentBook() const;
+	shared_ptr<Book> helpFile() const;
 
 	void refreshWindow();
 
@@ -99,6 +100,7 @@ private:
 
 	bool closeView();
 	std::string helpFileName(const std::string &language) const;
+	shared_ptr<Book> helpFile(const std::string &language) const;
 
 	void openFile(const ZLFile &file);
 	bool canDragFiles(const std::vector<std::string> &filePaths) const;
@@ -119,6 +121,7 @@ public:
 	void openLinkInBrowser(const std::string &url) const;
 
 	void tryShowFootnoteView(const std::string &id, const std::string &type);
+	void bookDownloadingProgress(DownloadBookRunnable *downloader, int downloaded, int size);
 	void bookDownloaded(DownloadBookRunnable *runnable);
 	BookTextView &bookTextView() const;
 	void showBookTextView();

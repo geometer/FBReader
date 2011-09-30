@@ -66,6 +66,7 @@ class DownloadBookListener {
 public:
 	virtual ~DownloadBookListener();
 	
+	virtual void bookDownloadingProgress(DownloadBookRunnable *downloader, int downloaded, int size) = 0;
 	virtual void bookDownloaded(DownloadBookRunnable *runnable) = 0;
 };
 
