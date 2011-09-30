@@ -24,8 +24,7 @@ bool ZLQtTreeModel::back() {
 
 bool  ZLQtTreeModel::enter(QModelIndex index) {
 	//return false if it was action that sucessfully executed
-	//qDebug() << "entering " << index.row() << index.column();
-
+        qDebug() << "entering " << index.row() << index.column();
 	ZLTreeNode* node = myCurrentNode->children().at(index.row());
 	if (ZLTreeActionNode *actionNode = zlobject_cast<ZLTreeActionNode*>(node)) {
 		bool result = actionNode->activate();
@@ -36,23 +35,29 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
 	} else {
 		myCurrentNode = node;
 	}
-	emit layoutChanged();
+        emit layoutChanged();
 	return true;
 }
 
 int ZLQtTreeModel::rowCount(const QModelIndex &parent) const {
-	//qDebug() << "asking for rowCount... returning " << myCurrentNode->children().size();
+        qDebug() << "asking for rowCount... returning " << myCurrentNode->children().size();
 	return myCurrentNode->children().size();
 }
 
 QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
 	if (index.isValid() && role == Qt::DisplayRole) {
-		//qDebug() << "asking for data... at " << role << index.row() << index.column();
-		const ZLTreeNode* node = myCurrentNode->children().at(index.row());
-		if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
-			//qDebug() << "return " << ::qtString(titledNode->title());
-			return ::qtString(titledNode->title());
-		}
+            //TODO remove it:
+            // it needs in case if view don't take attention to rowCount
+            if (index.row() >= myCurrentNode->children().size()) {
+                return QVariant();
+            }
+            qDebug() << "asking for data... at " << role << index.row() << index.column();
+            const ZLTreeNode* node = myCurrentNode->children().at(index.row());
+            qDebug() << "after asking";
+            if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
+                    //qDebug() << "return " << ::qtString(titledNode->title());
+                    return ::qtString(titledNode->title());
+            }
 	}
 	return QVariant();
 }
