@@ -113,7 +113,8 @@ size_t ZLTreeNode::childIndex() const {
 }
 
 void ZLTreeNode::requestChildren(shared_ptr<ZLExecutionData::Listener> listener) {
-	listener->finished();
+        if (!listener.isNull())
+            listener->finished();
 }
 
 const ZLResource &ZLTreeNode::resource() const {
