@@ -57,6 +57,7 @@ void LitResAuthenticationDataParser::finished(const std::string &error) {
 }
 
 void LitResAuthenticationDataParser::finish() {
+	myListener->finished(errorMessage());
 }
 
 LitResLoginDataParser::LitResLoginDataParser(LitResAuthenticationManager *manager, shared_ptr<ZLExecutionData::Listener> listener) : 

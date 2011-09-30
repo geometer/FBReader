@@ -31,11 +31,15 @@
 
 LitResBookshelfItemLoader::LitResBookshelfItemLoader(const NetworkLink &link, NetworkItem::List &children,
                                                      bool forceReload, shared_ptr<ZLExecutionData::Listener> listener)
-    : myLink(link), myChildren(children), myForceReload(forceReload), myListener(listener), myHolder(this) {
+    : myLink(link), myChildren(children), myForceReload(forceReload), myState(Authorization), myListener(listener), myHolder(this) {
 	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*myLink.authenticationManager());
 	NetworkAuthenticationManager::AuthenticationStatus status =  mgr.isAuthorised(true, myHolder);
 	if (status.Status == B3_UNDEFINED)
 		return;
+	if (status.Status == B3_FALSE)
+		finished(NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED));
+	else
+		finished(std::string());
 }
 
 LitResBookshelfItemLoader::~LitResBookshelfItemLoader() {
@@ -46,6 +50,11 @@ void LitResBookshelfItemLoader::showPercent(int ready, int full) {
 }
 
 void LitResBookshelfItemLoader::finished(const std::string &error) {
+	if (myState == Authorization) {
+		if (!error.empty()) {
+			myListener->finished(error);
+		}
+	}
 }
 
 void LitResBookshelfItemLoader::die() {
@@ -76,17 +85,18 @@ void LitResBookshelfItem::onDisplayItem() {
 std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener) {
 	new LitResBookshelfItemLoader(Link, children, myForceReload, listener);
 	myForceReload = true;
+	return std::string();
 
-	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
-	if (mgr.isAuthorised().Status == B3_FALSE) {
-		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
-	}
-	std::string error;
-	if (myForceReload) {
-		error = mgr.reloadPurchasedBooks();
-	}
-	myForceReload = true;
-	mgr.collectPurchasedBooks(children);
-	std::sort(children.begin(), children.end(), NetworkBookItemComparator());
-	return error;
+//	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
+//	if (mgr.isAuthorised().Status == B3_FALSE) {
+//		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+//	}
+//	std::string error;
+//	if (myForceReload) {
+//		error = mgr.reloadPurchasedBooks();
+//	}
+//	myForceReload = true;
+//	mgr.collectPurchasedBooks(children);
+//	std::sort(children.begin(), children.end(), NetworkBookItemComparator());
+//	return error;
 }

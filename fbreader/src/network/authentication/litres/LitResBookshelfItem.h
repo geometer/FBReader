@@ -33,10 +33,12 @@ public:
 	virtual void finished(const std::string &error = std::string());
 	
 private:
+	enum State { Authorization, Loading };
 	void die();
 	const NetworkLink &myLink;
 	NetworkItem::List &myChildren;
 	bool myForceReload;
+	State myState;
 	shared_ptr<ZLExecutionData::Listener> myListener;
 	shared_ptr<ZLExecutionData::Listener> myHolder;
 };
