@@ -5,8 +5,9 @@
 * Fixed default configuration of FBReader
 * Added orientation lock button
 
-===== 0.99.0 (September 29, 2011) =====
+===== 0.99.0 (September 21, 2011) =====
 
+* Bulgarian interface localization has been added (by Alexander Ivanov)
 * Esperanto interface localization has been added (by Katarína Nosková)
 * Hyphenation patterns for Polish (by Tomasz Długosz)
 * Polish interface localization (by Tomasz Długosz)
