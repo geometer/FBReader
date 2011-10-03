@@ -23,6 +23,8 @@ install:
 	@install -m 0644 ../data/icons/application/48x48.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/48x48/apps/FBReader.png
 	@install -d $(DESTDIR)$(SHAREDIR)/icons/hicolor/64x64/apps
 	@install -m 0644 ../data/icons/application/64x64.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/64x64/apps/FBReader.png
+	@install -d $(DESTDIR)$(SHAREDIR)/icons/hicolor/80x80/apps
+	@install -m 0644 ../data/icons/application/meego_80x80.png $(DESTDIR)$(SHAREDIR)/icons/hicolor/80x80/apps/FBReader.png
 	@install -d $(DESTDIR)$(SHAREDIR)/applications/$(DESKTOP_DIR)
 	@install -m 0644 $(DESKTOP_FILE) $(DESTDIR)$(SHAREDIR)/applications/$(DESKTOP_DIR)/FBReader.desktop
 

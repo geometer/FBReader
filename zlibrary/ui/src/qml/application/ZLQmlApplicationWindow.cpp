@@ -89,6 +89,10 @@ bool ZLQmlApplicationWindow::isFullscreen() const {
 	return myFullScreen;
 }
 
+QString ZLQmlApplicationWindow::bookTitle() const {
+	return myBookTitle;
+}
+
 ZLQmlMenuBar::ZLQmlMenuBar(ZLQmlApplicationWindow *window) : QObject(window) {
 	connect(this, SIGNAL(activated(int)),
 	        this, SLOT(delayedActivate(int)),
@@ -283,7 +287,8 @@ void ZLQmlApplicationWindow::grabAllKeys(bool) {
 }
 
 void ZLQmlApplicationWindow::setCaption(const std::string &caption) {
-	Q_UNUSED(caption);
+	myBookTitle = QString::fromStdString(caption).remove("FBReader - ");
+	emit bookTitleChanged();
 }
 
 void ZLQmlApplicationWindow::setHyperlinkCursor(bool hyperlink) {

@@ -22,38 +22,42 @@
 
 #include <ZLRunnable.h>
 #include "NetworkOperationRunnable.h"
+#include <ZLTreeNode.h>
 
 class NetworkBookItem;
 
-class NetworkBookDownloadAction : public ZLRunnableWithKey, public DownloadBookListener {
+class NetworkBookDownloadAction : public ZLTreeAction, public DownloadBookListener {
 
 public:
-	NetworkBookDownloadAction(const NetworkBookItem &book, bool demo, const std::string &tag = std::string());
+	NetworkBookDownloadAction(ZLTreeNode *node, const NetworkBookItem &book, bool demo, const std::string &tag = std::string());
 	ZLResourceKey key() const;
 	bool makesSense() const;
 	void run();
+	void bookDownloadingProgress(DownloadBookRunnable *downloader, int downloaded, int size);
 	void bookDownloaded(DownloadBookRunnable *runnable);
 
 private:
+	ZLTreeNode *myNode;
 	const NetworkBookItem &myBook;
 	const bool myDemo;
 	const std::string myTag;
 };
 
-class NetworkBookReadAction : public ZLRunnableWithKey {
+class NetworkBookReadAction : public ZLTreeAction {
 
 public:
-	NetworkBookReadAction(const NetworkBookItem &book, bool demo);
+	NetworkBookReadAction(ZLTreeNode *node, const NetworkBookItem &book, bool demo);
 	ZLResourceKey key() const;
 	bool makesSense() const;
 	void run();
 
 private:
+	ZLTreeNode *myNode;
 	const NetworkBookItem &myBook;
 	const bool myDemo;
 };
 
-class NetworkBookBuyDirectlyAction : public ZLRunnableWithKey {
+class NetworkBookBuyDirectlyAction : public ZLTreeAction {
 
 public:
 	NetworkBookBuyDirectlyAction(const NetworkBookItem &book);
@@ -66,7 +70,7 @@ private:
 	const NetworkBookItem &myBook;
 };
 
-class NetworkBookBuyInBrowserAction : public ZLRunnableWithKey {
+class NetworkBookBuyInBrowserAction : public ZLTreeAction {
 
 public:
 	NetworkBookBuyInBrowserAction(const NetworkBookItem &book);
@@ -79,7 +83,7 @@ private:
 	const NetworkBookItem &myBook;
 };
 
-class NetworkBookDeleteAction : public ZLRunnableWithKey {
+class NetworkBookDeleteAction : public ZLTreeAction {
 
 public:
 	NetworkBookDeleteAction(const NetworkBookItem &book);

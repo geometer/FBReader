@@ -17,6 +17,7 @@ public:
 	void run();
 
 public:
+        void onCloseRequest();
 	void onNodeBeginInsert(ZLTreeNode *parent, size_t index);
 	void onNodeEndInsert();
 	void onNodeBeginRemove(ZLTreeNode *parent, size_t index);

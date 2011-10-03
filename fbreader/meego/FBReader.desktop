@@ -4,5 +4,5 @@ Version=1.0
 Type=Application
 Name=FBReader
 Comment=E-Book Reader
-Exec=FBReader
-Icon=FBReader
+Exec=/usr/bin/single-instance /usr/bin/FBReader
+Icon=/usr/share/icons/hicolor/80x80/apps/FBReader.png
