@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include <ZLFSManager.h>
+
 class ZLApplication;
 class ZLPaintContext;
 
@@ -77,13 +79,4 @@ private:
 
 friend class ZLApplicationBase;
 };
-
-inline const std::string &ZLibrary::ZLibraryDirectory() { return ourZLibraryDirectory; }
-inline const std::string &ZLibrary::ApplicationName() { return ourApplicationName; }
-inline const std::string &ZLibrary::ImageDirectory() { return ourImageDirectory; }
-inline const std::string &ZLibrary::ApplicationImageDirectory() { return ourApplicationImageDirectory; }
-inline const std::string &ZLibrary::ApplicationDirectory() { return ourApplicationDirectory; }
-inline const std::string &ZLibrary::ApplicationWritableDirectory() { return ourApplicationWritableDirectory; }
-inline const std::string &ZLibrary::DefaultFilesPathPrefix() { return ourDefaultFilesPathPrefix; }
-
 #endif /* __ZLIBRARY_H__ */

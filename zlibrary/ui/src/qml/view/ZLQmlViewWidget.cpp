@@ -29,7 +29,7 @@
 #include <QtGui/QStyleOptionGraphicsItem>
 #include <QtCore/QElapsedTimer>
 #include <QtCore/QDebug>
-#include <QtOpenGL/QGLWidget>
+//#include <QtOpenGL/QGLWidget>
 #include <QtDeclarative/QDeclarativeContext>
 #include <QtDeclarative/QDeclarativeEngine>
 #include "../dialogs/ZLQmlDialogManager.h"
@@ -44,6 +44,7 @@
 
 #include "ZLQmlViewWidget.h"
 #include "ZLQmlPaintContext.h"
+
 
 class MyQScrollBar : public QScrollBar {
 
@@ -363,12 +364,19 @@ ZLQmlViewWidget::ZLQmlViewWidget(QWidget *parent, ZLQmlViewObject &holder) : QDe
 	ZLDialogManager *dialogManager = &ZLDialogManager::Instance();
 	QObject *qDialogManager = static_cast<ZLQmlDialogManager*>(dialogManager);
 	rootContext()->setContextProperty(QLatin1String("dialogManager"), qDialogManager);
-        setViewport(new QGLWidget(this));
+        //setViewport(new QGLWidget(this));
 
-        //std::string qmlPath = ZLibrary::ZLibraryDirectory() + "/declarative/Main.qml" ;
+        std::string qmlPath = ZLibrary::ZLibraryDirectory() + "\\declarative\\SampleColumn.qml" ;
+        QUrl::fromLocalFile(QString::fromStdString(qmlPath));
+        qDebug() << QString::fromStdString(qmlPath);
+
+        //TODO file from decalarative folder on memory card to try
+        QString rightPath = "E:/declarative/SampleColumn.qml";
+        QUrl url = QUrl::fromLocalFile(rightPath);
+        qDebug() << url;
         //ZLFSManager::Instance().normalize(qmlPath);
-        //setSource(QUrl::fromLocalFile(QString::fromStdString(qmlPath)));
-        setSource(QUrl::fromLocalFile("C:/private/e87cc83c/zlibrary/declarative/Main.qml"));
+        setSource(url);
+        //setSource(QUrl::fromLocalFile("C:/private/e87cc83c/zlibrary/declarative/Main.qml"));
 
 }
 

@@ -211,5 +211,7 @@
 "zlibrary/ui/src/symbian^3/declarative/SimpleDialog.qml" - "!:\private\e87cc83c\zlibrary\declarative\SimpleDialog.qml"
 "zlibrary/ui/src/symbian^3/declarative/TreeDialogMenu.qml" - "!:\private\e87cc83c\zlibrary\declarative\TreeDialogMenu.qml"
 "zlibrary/ui/src/symbian^3/declarative/TreeDialogPage.qml" - "!:\private\e87cc83c\zlibrary\declarative\TreeDialogPage.qml"
+"zlibrary/ui/src/symbian^3/declarative/SampleColumn.qml" - "!:\private\e87cc83c\zlibrary\declarative\SampleColumn.qml"
+
 
 ; Manual PKG post-rules from PRO files

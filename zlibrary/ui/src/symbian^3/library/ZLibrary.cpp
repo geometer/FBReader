@@ -39,9 +39,43 @@
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 //#include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
 
+#include <QtCore/QDebug>
+
 const std::string ZLibrary::FileNameDelimiter("\\");
 const std::string ZLibrary::PathDelimiter(";");
 const std::string ZLibrary::EndOfLine("\n");
+
+std::string ZLibrary::ZLibraryDirectory() {
+    std::string s = ourZLibraryDirectory;
+    ZLFSManager::Instance().normalize(s);
+    return s;
+}
+std::string ZLibrary::ApplicationName() { return ourApplicationName; }
+std::string ZLibrary::ImageDirectory() {
+    std::string s(ourImageDirectory);
+    ZLFSManager::Instance().normalize(s);
+    return s;
+}
+std::string ZLibrary::ApplicationImageDirectory() {
+    std::string s(ourApplicationImageDirectory);
+    ZLFSManager::Instance().normalize(s);
+    return s;
+}
+std::string ZLibrary::ApplicationDirectory() {
+    std::string s(ourApplicationDirectory);
+    ZLFSManager::Instance().normalize(s);
+    return s;
+}
+std::string ZLibrary::ApplicationWritableDirectory() {
+    std::string s(ourApplicationWritableDirectory);
+    ZLFSManager::Instance().normalize(s);
+    return s;
+}
+std::string ZLibrary::DefaultFilesPathPrefix() {
+    std::string s(ourDefaultFilesPathPrefix);
+    ZLFSManager::Instance().normalize(s);
+    return s;
+}
 
 
 void ZLibrary::initLocale() {
@@ -68,6 +102,26 @@ void ZLibrary::initLocale() {
 
 }
 
+void myMessageOutput(QtMsgType type, const char *msg)
+ {
+         switch (type) {
+         case QtDebugMsg:
+                 fprintf(stdout, "Debug: %s\n", msg);
+                 break;
+         case QtWarningMsg:
+                 fprintf(stdout, "Warning: %s\n", msg);
+                 break;
+         case QtCriticalMsg:
+                 fprintf(stdout, "Critical: %s\n", msg);
+                 break;
+         case QtFatalMsg:
+                 fprintf(stdout, "Fatal: %s\n", msg);
+                 //abort();
+         }
+         fflush(stdout);
+ }
+
+
 ZLibraryImplementation *ZLibraryImplementation::Instance = 0;
 
 ZLibraryImplementation::ZLibraryImplementation() {
@@ -78,8 +132,8 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary:: init(int &argc, char **&argv) {
-	//freopen("E:\\fbreader-log.txt", "w", stdout);
-	//fprintf(stdout,"\n");
+        freopen("E:\\fbreader-log.txt", "w", stdout);
+        fprintf(stdout,"\n");
 
 	initLibrary();
 
@@ -112,7 +166,8 @@ void initLibrary() {
 }
 
 void ZLQmlLibraryImplementation::init(int &argc, char **&argv) {
-	new QApplication(argc, argv);
+        new QApplication(argc, argv);
+        qInstallMsgHandler(myMessageOutput);
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
 
 	ZLibrary::parseArguments(argc, argv);

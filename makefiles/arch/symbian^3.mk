@@ -66,7 +66,8 @@ EXTERNAL_INCLUDE = -I$(ROOTDIR)/libs/symbian/include
 ZLSHARED = no
 TARGET_STATUS = symbian^3
 
-QTINCLUDE = -I${SDK_ROOT}/include/ -I${SDK_ROOT}/include/QtDeclarative -I${SDK_ROOT}/include/QtScript -I${SDK_ROOT}/include/QtGui -I${SDK_ROOT}/include/QtNetwork -I${SDK_ROOT}/include/QtCore -I${SDK_ROOT}/include/QtOpenGL
+QTINCLUDE = -I${SDK_ROOT}/include/ -I${SDK_ROOT}/include/QtDeclarative -I${SDK_ROOT}/include/QtScript -I${SDK_ROOT}/include/QtGui -I${SDK_ROOT}/include/QtNetwork -I${SDK_ROOT}/include/QtCore 
+#-I${SDK_ROOT}/include/QtOpenGL
 
 RM = rm -rvf
 RM_QUIET = rm -rf
