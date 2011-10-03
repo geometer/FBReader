@@ -34,7 +34,6 @@ public:
 	static std::string Language();
 	static std::string Country();
 
-	static const std::string BaseDirectory;
 	static const std::string &ZLibraryDirectory();
 
 	static const std::string &ImageDirectory();
@@ -59,8 +58,9 @@ private:
 	static bool ourLocaleIsInitialized;
 	static std::string ourLanguage;
 	static std::string ourCountry;
-	static std::string ourZLibraryDirectory;
 
+        static std::string ourBaseDirectory;
+        static std::string ourZLibraryDirectory;
 	static std::string ourImageDirectory;
 	static std::string ourApplicationImageDirectory;
 	static std::string ourApplicationName;

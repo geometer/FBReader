@@ -23,6 +23,8 @@
 #include "ZLFSManager.h"
 #include "ZLFSDir.h"
 
+#include <iostream>
+
 ZLFSManager *ZLFSManager::ourInstance = 0;
 
 void ZLFSManager::deleteInstance() {
@@ -51,8 +53,12 @@ void ZLFSManager::normalize(std::string &path) const {
 	} else {
 		std::string realPath = path.substr(0, index);
 		normalizeRealPath(realPath);
-		path = realPath + ':' + ZLFileUtil::normalizeUnixPath(path.substr(index + 1));
+                path = realPath + ':' + ZLFileUtil::normalizeUnixPath(path.substr(index + 1));
 	}
+}
+
+std::string ZLFSManager::toNativeFileName(const std::string &path) const {
+    return path;
 }
 
 void ZLFSManager::addWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher) {

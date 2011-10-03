@@ -54,6 +54,7 @@ private:
 
 private:
 	const std::string myName;
+        const std::string myNativeName;
 	sqlite3 *myDatabase;
 	std::vector<sqlite3_stmt *> myStatements;
 

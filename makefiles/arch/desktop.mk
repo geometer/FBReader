@@ -37,7 +37,6 @@ ifeq "$(UI_TYPE)" "qtwidgets"
   NETWORK_LIBS ?= -lQtNetwork
   #TODO maybe remove ZLSHARED
   ZLSHARED = no
-  CFLAGS += -DROOTPATH=\"/\"
 endif
 
 ifeq "$(UI_TYPE)" "gtk"

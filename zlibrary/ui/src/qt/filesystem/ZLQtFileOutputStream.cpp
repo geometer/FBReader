@@ -26,10 +26,12 @@ ZLQtFileOutputStream::ZLQtFileOutputStream(const std::string &name) : myName(nam
 }
 
 ZLQtFileOutputStream::~ZLQtFileOutputStream() {
+                                                                                                                qDebug() << Q_FUNC_INFO;
         close();
 }
 
 bool ZLQtFileOutputStream::open() {
+        qDebug() << Q_FUNC_INFO;
         close();
 
         myFile.setFileName(QString::fromStdString(myName));
@@ -49,18 +51,22 @@ bool ZLQtFileOutputStream::open() {
 }
 
 void ZLQtFileOutputStream::write(const char *data, size_t len) {
+        qDebug() << Q_FUNC_INFO;
         if (myFile.write(data,len) != len) {
                 myHasErrors = true;
         }
 }
 
 void ZLQtFileOutputStream::write(const std::string &str) {
+        //qDebug() << Q_FUNC_INFO << QString::fromStdString(str);
         if (myFile.write(str.data(),str.length()) != (size_t)str.length()) {
+            qDebug() << "MY HAS ERRORS!";
                 myHasErrors = true;
         }
 }
 
 void ZLQtFileOutputStream::close() {
+    qDebug() << Q_FUNC_INFO;
         if (myFile.isOpen()) {
             myFile.close();
         }

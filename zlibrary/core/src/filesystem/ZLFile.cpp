@@ -30,6 +30,8 @@
 #include "bzip2/ZLBzip2InputStream.h"
 #include "ZLFSManager.h"
 
+#include <iostream>
+
 const ZLFile ZLFile::NO_FILE;
 
 std::map<std::string,weak_ptr<ZLInputStream> > ZLFile::ourPlainStreamCache;
@@ -44,7 +46,7 @@ ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(pa
 		if (index < myPath.length() - 1) {
 			myNameWithExtension = myPath.substr(index + 1);
 		} else {
-			myNameWithExtension = myPath;
+                myNameWithExtension = myPath;
 		}
 	}
 	myNameWithoutExtension = myNameWithExtension;
@@ -209,6 +211,7 @@ std::string ZLFile::physicalFilePath() const {
 	while ((index = manager.findArchiveFileNameDelimiter(path)) != -1) {
 		path = path.substr(0, index);
 	}
+        std::cout << "ZLFile::physicalFilePath " << path << std::endl;
 	return path;
 }
 
@@ -256,6 +259,7 @@ bool ZLFile::canRemove() const {
 }
 
 std::string ZLFile::replaceIllegalCharacters(const std::string &fileName, char replaceWith) {
+        std::cout << "ZLFile::replaceIllegalCharacters " << fileName;
 	static const char charsToReplace[] = ":;<|>+\\/\"*?";
 	const size_t len = fileName.length();
 	char *data = new char[len];
@@ -268,5 +272,6 @@ std::string ZLFile::replaceIllegalCharacters(const std::string &fileName, char r
 	}
 	std::string result(data, len);
 	delete[] data;
+        std::cout << " result is" << result << std::endl;
 	return result;
 }

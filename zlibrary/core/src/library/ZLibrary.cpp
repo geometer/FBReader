@@ -29,6 +29,8 @@
 #include "../options/ZLConfig.h"
 #include "../network/ZLNetworkManager.h"
 
+#include <iostream>
+
 bool ZLibrary::ourLocaleIsInitialized = false;
 std::string ZLibrary::ourLanguage;
 std::string ZLibrary::ourCountry;
@@ -40,8 +42,7 @@ std::string ZLibrary::ourApplicationImageDirectory;
 std::string ZLibrary::ourApplicationDirectory;
 std::string ZLibrary::ourApplicationWritableDirectory;
 std::string ZLibrary::ourDefaultFilesPathPrefix;
-
-const std::string ZLibrary::BaseDirectory = std::string(BASEDIR);
+std::string ZLibrary::ourBaseDirectory;
 
 void ZLibrary::parseArguments(int &argc, char **&argv) {
 	static const std::string LANGUAGE_OPTION = "-lang";
@@ -71,7 +72,6 @@ void ZLibrary::parseArguments(int &argc, char **&argv) {
 		argc -= 2;
 		argv += 2;
 	}
-	ourZLibraryDirectory = BaseDirectory + FileNameDelimiter + "zlibrary";
 }
 
 void ZLibrary::shutdown() {
@@ -97,14 +97,18 @@ std::string ZLibrary::replaceRegExps(const std::string &pattern) {
 	  str.erase(index, LOWERCASENAME_PATTERN.length());
 		str.insert(index, ZLUnicodeUtil::toLower(ourApplicationName));
 	}
+        ZLFSManager::Instance().normalize(str);
 	return str;
 }
 
 void ZLibrary::initApplication(const std::string &name) {
 	ourApplicationName = name;
+
+        ourBaseDirectory = replaceRegExps(BASEDIR);
 	ourImageDirectory = replaceRegExps(IMAGEDIR);
 	ourApplicationImageDirectory = replaceRegExps(APPIMAGEDIR);
-	ourApplicationDirectory = BaseDirectory + FileNameDelimiter + ourApplicationName;
+        ourZLibraryDirectory = ourBaseDirectory + FileNameDelimiter + "zlibrary";
+        ourApplicationDirectory = ourBaseDirectory + FileNameDelimiter + ourApplicationName;
 	ourApplicationWritableDirectory =
 #ifdef XMLCONFIGHOMEDIR
 		XMLCONFIGHOMEDIR + FileNameDelimiter + "." + name;
@@ -112,6 +116,14 @@ void ZLibrary::initApplication(const std::string &name) {
 		"~" + FileNameDelimiter + "." + name;
 #endif
 	ourDefaultFilesPathPrefix = ourApplicationDirectory + FileNameDelimiter + "default" + FileNameDelimiter;
+
+        std::cout << ourBaseDirectory << " "
+                  << ourImageDirectory << " "
+                  << ourApplicationImageDirectory << " "
+                  << ourZLibraryDirectory << " "
+                  << ourApplicationDirectory << " "
+                  << ourApplicationWritableDirectory << " "
+                  << ourDefaultFilesPathPrefix << " " << std::endl;
 }
 
 std::string ZLibrary::Language() {

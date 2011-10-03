@@ -1,9 +1,9 @@
 ifeq "$(INSTALLDIR)" ""
-  INSTALLDIR=/usr
+INSTALLDIR=!
 endif
-SHAREDIR_MACRO=C:/private/e87cc83c
+SHAREDIR_MACRO=$(INSTALLDIR)
 IMAGEDIR = $(SHAREDIR_MACRO)/pixmaps
-APPIMAGEDIR = $(SHAREDIR_MACRO)/pixmaps/FBReader
+APPIMAGEDIR = $(SHAREDIR_MACRO)/pixmaps/%APPLICATION_NAME%
 
 SDK_ROOT = /opt/QtSDK/Symbian/SDKs/Symbian1
 ARM_DIR = /usr/arm-none-symbianelf
@@ -20,7 +20,7 @@ LD = arm-none-symbianelf-ld
 DEFINES = -DUNICODE -DQT_KEYPAD_NAVIGATION -DQT_SOFTKEYS_ENABLED -DQT_USE_MATH_H_FLOATS -D__PRODUCT_INCLUDE__=\<${SDK_ROOT}/epoc32/include/variant/symbian_os.hrh\> -D__SYMBIAN32__ -D__MARM_INTERWORK__ -D_UNICODE -D__S60_50__ -D__S60_3X__ -D__SERIES60_3X__ -D__EPOC32__ -D__MARM__ -D__EABI__ -D__MARM_ARMV5__ -D__SUPPORT_CPP_EXCEPTIONS__ -D__GCCE__ -DUNICODE -D_STLP_NO_EXCEPTION_HEADER -DQT_GUI_LIB -DQT_CORE_LIB
 
 CXXFLAGS = -pipe --include=${SDK_ROOT}/epoc32/include/gcce/gcce.h -march=armv5t -mapcs -mthumb-interwork -nostdinc -c -msoft-float -T script -x c++ -fexceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG -fno-unit-at-a-time -fvisibility-inlines-hidden 
-CXXFLAGS += -DLIBICONV_PLUG -DDO_ICONV_CAST  -DROOTPATH=\"\" -fvisibility-inlines-hidden
+CXXFLAGS += -DLIBICONV_PLUG -DDO_ICONV_CAST  -fvisibility-inlines-hidden
 
 CXXFLAGS += -D__SYMBIAN__
 

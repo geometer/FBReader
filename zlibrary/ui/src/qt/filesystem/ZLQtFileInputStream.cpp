@@ -23,13 +23,16 @@
 
 ZLQtFileInputStream::ZLQtFileInputStream(const std::string &name) : myName(name), myNeedRepositionToStart(false)
 {
+    //qDebug() << Q_FUNC_INFO;
 }
 
 ZLQtFileInputStream::~ZLQtFileInputStream() {
+       // qDebug() << Q_FUNC_INFO;
         myFile.close();
 }
 
 bool ZLQtFileInputStream::open() {
+    //qDebug() << Q_FUNC_INFO;
         if(!myFile.isOpen()) {
             myFile.setFileName(QString::fromStdString(myName));
             //qDebug() << "opening" << myFile.fileName();
@@ -42,12 +45,15 @@ bool ZLQtFileInputStream::open() {
 }
 
 size_t ZLQtFileInputStream::read(char *buffer, size_t maxSize) {
+    qDebug() << "ZLQtFileInputStream::read" << QString::fromStdString(myName);
 	if (buffer != 0) {
 		if (myNeedRepositionToStart) {
                         myFile.seek(0);
 			myNeedRepositionToStart = false;
 		}
-                return myFile.read(buffer, maxSize);
+                size_t result = myFile.read(buffer, maxSize);
+                qDebug() << "resulf of reading is ok";
+                return result;
 	} else {
 		if (myNeedRepositionToStart) {
                         //tell size?
@@ -64,11 +70,13 @@ size_t ZLQtFileInputStream::read(char *buffer, size_t maxSize) {
 }
 
 void ZLQtFileInputStream::close() {
+   // qDebug() << Q_FUNC_INFO;
     //in original it was commented
     myFile.close();
 }
 
 size_t ZLQtFileInputStream::sizeOfOpened() {
+   // qDebug() << Q_FUNC_INFO;
         if (!myFile.isOpen()) {
             return 0;
         }
@@ -76,6 +84,7 @@ size_t ZLQtFileInputStream::sizeOfOpened() {
 }
 
 void ZLQtFileInputStream::seek(int offset, bool absoluteOffset) {
+   // qDebug() << Q_FUNC_INFO;
 	if (myNeedRepositionToStart) {
 		absoluteOffset = true;
 		myNeedRepositionToStart = false;
@@ -90,5 +99,6 @@ void ZLQtFileInputStream::seek(int offset, bool absoluteOffset) {
 }
 
 size_t ZLQtFileInputStream::offset() const {
+   // qDebug() << Q_FUNC_INFO;
         return myNeedRepositionToStart ? 0 : myFile.pos();
 }

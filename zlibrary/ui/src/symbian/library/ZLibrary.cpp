@@ -16,6 +16,9 @@
 #include <ZLLanguageUtil.h>
 #include <ZLStringUtil.h>
 
+#include <QtCore/QDir>
+#include <QtGui/QMessageBox>
+
 
 
 #include "../../../../core/src/unix/library/ZLibraryImplementation.h"
@@ -40,14 +43,9 @@
 #include <QtGui/QApplication>
 
 
-//#ifdef __SYMBIAN__
-//const std::string ZLibrary::FileNameDelimiter("\\");
-//const std::string ZLibrary::PathDelimiter(";");
-//#else
 const std::string ZLibrary::FileNameDelimiter("/");
 //TODO may be always! use semicolon as a path delimeter?
 const std::string ZLibrary::PathDelimiter(";");
-//#endif
 const std::string ZLibrary::EndOfLine("\n");         // don't know exactly what should be here
 
 void ZLibrary::initLocale() {
@@ -85,8 +83,10 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary:: init(int &argc, char **&argv) {
-	//freopen("E:\\fbreader-log.txt", "w", stdout);
-	//fprintf(stdout,"\n");
+#ifdef __SYMBIAN__
+        freopen("E:\\fbreader-log.txt", "w", stdout);
+        fprintf(stdout,"\n");
+#endif
 
 	initLibrary();
 
@@ -123,7 +123,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
  {
 	 switch (type) {
 	 case QtDebugMsg:
-		 fprintf(stdout, "Debug: %s\n", msg);
+                 fprintf(stdout, "Debug: %s\n", msg);
 		 break;
 	 case QtWarningMsg:
 		 fprintf(stdout, "Warning: %s\n", msg);
@@ -165,6 +165,7 @@ void ZLQtLibraryImplementation::run(ZLApplication *application) {
         }
         ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
+        //QMessageBox::warning(0,"",QDir::current().absolutePath(),QMessageBox::Ok);
         qApp->exec(); //static_cast<QApplication *>(QCoreApplication::instance())->exec()
         delete application;
 }

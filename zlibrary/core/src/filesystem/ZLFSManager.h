@@ -47,6 +47,12 @@ protected:
 	
 public:
 	void normalize(std::string &path) const;
+
+        // toNativeFileName method is used when we should send filename to library,
+        // which access it directly, use native API, for i.e. sqlite3
+        // TODO: pure virtual
+        virtual std::string toNativeFileName(const std::string &path) const;
+
 	virtual std::string resolveSymlink(const std::string &path) const = 0;
 	// TODO: pure virtual
 	virtual void addWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher);

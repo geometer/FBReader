@@ -19,11 +19,14 @@
 
 #include <iostream>
 
+#include <ZLFSManager.h>
+
 #include "SQLiteConnection.h"
 
 SQLiteConnection::SQLiteConnection(const std::string &name)
 	: DBConnection() 
-	, myName(name) 
+        , myName(name)
+        , myNativeName(ZLFSManager::Instance().toNativeFileName(name))
 	, myDatabase(0) {
 }
 
@@ -38,8 +41,10 @@ bool SQLiteConnection::open() {
 	if (myDatabase != 0) {
 		return true;
 	}
-	int res = sqlite3_open(myName.c_str(), &myDatabase);
+        std::cout << "database opening: " << myName << " " << myNativeName << std::endl;
+        int res = sqlite3_open(myNativeName.c_str(), &myDatabase);
 	if (res == SQLITE_OK) {
+                std::cout << "connection ok" << std::endl;
 		return true;
 	}
 	dumpError();

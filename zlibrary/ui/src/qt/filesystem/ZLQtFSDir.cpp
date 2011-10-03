@@ -25,18 +25,22 @@
 
 void ZLQtFSDir::collectSubDirs(std::vector<std::string> &names, bool includeSymlinks) {
     //TODO don't collect not-permissed dirs
+    //qDebug() << Q_FUNC_INFO;
     collect(QDir::AllDirs | QDir::NoDotAndDotDot, names, includeSymlinks);
 }
 
 void ZLQtFSDir::collectFiles(std::vector<std::string> &names, bool includeSymlinks) {
+    //qDebug() << Q_FUNC_INFO;
     collect(QDir::Files, names, includeSymlinks);
 }
 
 void ZLQtFSDir::collect(QDir::Filters filters, std::vector<std::string> &names, bool includeSymlinks) {
+    //qDebug() << Q_FUNC_INFO;
     QDir dir(QString::fromStdString(path()));
-    if (!includeSymlinks) {
+    //TODO uncomment it
+    //if (!includeSymlinks) {
         filters |= QDir::NoSymLinks;
-    }
+    //}
     dir.setFilter(filters);
     dir.setSorting(QDir::Name);
     QStringList list = dir.entryList();
