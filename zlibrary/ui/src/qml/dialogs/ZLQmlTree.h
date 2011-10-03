@@ -54,7 +54,7 @@ public:
 	Q_INVOKABLE QVariant progressData(const QModelIndex &index);
 	Q_INVOKABLE bool activate(const QModelIndex &index);
 	Q_INVOKABLE QStringList actions(const QModelIndex &index);
-	bool isVisibleAction(const QModelIndex &index, int action);
+	Q_INVOKABLE bool isVisibleAction(const QModelIndex &index, int action);
 	Q_INVOKABLE void run(const QModelIndex &index, int action);
 	Q_INVOKABLE void finish();
 	

@@ -53,11 +53,11 @@ void NetworkBookNode::init() {
 		registerAction(new NetworkBookReadAction(this, book, true));
 		registerAction(new NetworkBookDownloadAction(this, book, true, resource()["demo"].value()));
 	}
-	if (!book.reference(BookReference::BUY).isNull()) {
-		registerAction(new NetworkBookBuyDirectlyAction(book));
-	} else if (!book.reference(BookReference::BUY_IN_BROWSER).isNull()) {
-		registerAction(new NetworkBookBuyInBrowserAction(book));
-	}
+//	if (!book.reference(BookReference::BUY).isNull()) {
+//		registerAction(new NetworkBookBuyDirectlyAction(book));
+//	} else if (!book.reference(BookReference::BUY_IN_BROWSER).isNull()) {
+//		registerAction(new NetworkBookBuyInBrowserAction(book));
+//	}
 }
 
 std::string NetworkBookNode::title() const {
