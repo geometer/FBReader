@@ -24,10 +24,13 @@ CXXFLAGS += -DLIBICONV_PLUG -DDO_ICONV_CAST  -DROOTPATH=\"\" -fvisibility-inline
 
 CXXFLAGS += -D__SYMBIAN__
 
+#-I${SDK_ROOT}/epoc32/include/platform is needed for S^3 (and this dir absent in S^1) SDK, for using remconcoreapi (for capturing volume keys)
+
 INCPATH = -I. \
 -I$(ROOTDIR)/libs/symbian/include \
 -I${SDK_ROOT}/mkspecs/symbian/linux-gcce  \
 -I${SDK_ROOT}/epoc32/include/ \
+-I${SDK_ROOT}/epoc32/include/platform \
 -I${SDK_ROOT}/epoc32/include/variant \
 -I${SDK_ROOT}/epoc32/include/stdapis \
 -I${SDK_ROOT}/epoc32/include/stdapis/sys \
