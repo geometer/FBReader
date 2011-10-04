@@ -75,15 +75,24 @@ void DrillDownMenuDialog::back() {
     setCurrentMenu(myHistory.last());
 }
 
+QSize DrillDownMenu::generateSizeHint() const{
+    QRect rect = qApp->desktop()->availableGeometry();
+    int height = std::min(rect.height()/5, 40);
+    return QSize(rect.width(), height);
+}
+
 void DrillDownMenu::addItem(const std::string &text, ZLApplication::Action* action) {
     DrillDownMenuItem* item = new DrillDownMenuItem( ::qtString(text), action, this);
     QListWidget::addItem( item );
-
+    //item->setSizeHint(generateSizeHint());
+    //this->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Maximum);
 }
 
 void DrillDownMenu::addItem(const QIcon& icon, const std::string &text, ZLApplication::Action* action) {
     DrillDownMenuItem* item = new DrillDownMenuItem(icon, ::qtString(text), action, this);
     QListWidget::addItem( item );
+ //   item->setSizeHint(generateSizeHint());
+//    this->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Maximum);
 }
 
 void DrillDownMenu::addItem(DrillDownMenuItem* item) {
@@ -114,7 +123,7 @@ DrillDownMenuItem::DrillDownMenuItem(const QIcon &icon, const QString &text, ZLA
     QListWidgetItem(icon,text,view,type), myAction(action) {
     QFont font(this->font());
     font.setBold(true);
-	setFont(font);
+    setFont(font);
 }
 
 DrillDownMenuItem::DrillDownMenuItem(const QString &text, ZLApplication::Action* action, QListWidget *view, int type) :

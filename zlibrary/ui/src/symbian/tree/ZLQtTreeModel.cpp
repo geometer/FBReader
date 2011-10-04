@@ -7,6 +7,8 @@
 #include "../dialogs/ZLQtUtil.h"
 
 #include <QtCore/QDebug>
+#include <QtGui/QDesktopWidget>
+#include <QtGui/QApplication>
 
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QObject *parent) :  QAbstractListModel(parent), myRootNode(rootNode) {
 	myCurrentNode = &myRootNode;
@@ -58,7 +60,12 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                     //qDebug() << "return " << ::qtString(titledNode->title());
                     return ::qtString(titledNode->title());
             }
-	}
+        } else if (role == Qt::SizeHintRole){
+            //qDebug() << Q_FUNC_INFO << role << index;
+            QRect rect = qApp->desktop()->availableGeometry();
+            int height = std::min(rect.height()/5, 40);
+            return QSize(rect.width(), height);
+        }
 	return QVariant();
 }
 
