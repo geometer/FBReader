@@ -7,10 +7,7 @@ APPIMAGEDIR = !!\\\\pixmaps\\\\FBReader
 
 SDK_ROOT = /opt/QtSDK/Symbian/SDKs/Symbian1
 ARM_DIR = /usr/arm-none-symbianelf
-#TODO: it should be generated automatically
-#00040701 => 4.07(1)
-#00009900 => 0.99(0)
-SYMBIAN_VERSION=00009900
+SYMBIAN_VERSION=$(shell tools/symbian_versions.py $(VERSION))
 
 CC = arm-none-symbianelf-g++
 AR = arm-none-symbianelf-ar cqs
@@ -24,10 +21,13 @@ CXXFLAGS += -DLIBICONV_PLUG -DDO_ICONV_CAST  -DROOTPATH=\"\" -fvisibility-inline
 
 CXXFLAGS += -D__SYMBIAN__
 
+#-I${SDK_ROOT}/epoc32/include/platform is needed for S^3 (and this dir absent in S^1) SDK, for using remconcoreapi (for capturing volume keys)
+
 INCPATH = -I. \
 -I$(ROOTDIR)/libs/symbian/include \
 -I${SDK_ROOT}/mkspecs/symbian/linux-gcce  \
 -I${SDK_ROOT}/epoc32/include/ \
+-I${SDK_ROOT}/epoc32/include/platform \
 -I${SDK_ROOT}/epoc32/include/variant \
 -I${SDK_ROOT}/epoc32/include/stdapis \
 -I${SDK_ROOT}/epoc32/include/stdapis/sys \
@@ -48,7 +48,6 @@ CFLAGS = $(DEFINES) $(CXXFLAGS) $(INCPATH) $(DISABLE_WARNINGS)
 
 LDFLAGS = --target1-abs --no-undefined --nostdlib \
 -Tdata 0x700000 -Ttext 0x80000 --shared --soname fbreader\{$(SYMBIAN_VERSION)\}\[e87cc83c\].exe --entry=_E32Startup -u _E32Startup
-#TODO: does it need in LDFLAGS --  ??
 
 LDFLAGS += \
 -L$(ROOTDIR)/libs/symbian \

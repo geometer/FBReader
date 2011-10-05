@@ -65,12 +65,10 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message) : QDialog(0) {
 		myLayout->addWidget(myLabel);
 		myLayout->addWidget(myProgressBar);
 
-
 		this->setLayout(myLayout);
 
 		//setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
 		setWindowState(Qt::WindowFullScreen);
-
 
 //        qApp->processEvents();
 //        usleep(5000);

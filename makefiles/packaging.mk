@@ -4,7 +4,8 @@ SOVERSIONTEXT = $(shell cat zlibrary/text/SOVERSION)
 TMPDIR = $(CURDIR)/fbreader-$(VERSION)
 #TODO: temporary, it shuld be declared once, in symbian.mk
 SYMBIAN_SDK=/opt/QtSDK/Symbian/SDKs/Symbian1
-SYMBIAN_VERSION=00009900
+SYMBIAN_VERSION=$(shell tools/symbian_versions.py $(VERSION))
+SYMBIAN_PKG_VERSION=$(shell tools/symbian_versions.py $(VERSION) "PKG")
 
 motopkg:
 	@echo -n 'Building $(ARCHITECTURE) $@ package...'
@@ -116,6 +117,10 @@ sis:
 	mv fbreader/FBReader.exe ./
 
 	@sed "s/VERSION/$(VERSION)/" fbreader/data/formats/fb2/FBReaderVersion.ent > FBReaderVersion.ent
+	@sed "s/VERSION/$(SYMBIAN_PKG_VERSION)/" FBReader_installer.pkg > temp_FBReader_installer.pkg
+	@sed "s/VERSION/$(SYMBIAN_PKG_VERSION)/" FBReader_template.pkg > temp_FBReader_template.pkg
+	@mv temp_FBReader_template.pkg FBReader_template.pkg
+	@mv temp_FBReader_installer.pkg FBReader_installer.pkg
 
 	/usr/share/qt4/qt-symbian/bin/createpackage  FBReader_template.pkg
 	/usr/share/qt4/qt-symbian/bin/createpackage  FBReader_installer.pkg

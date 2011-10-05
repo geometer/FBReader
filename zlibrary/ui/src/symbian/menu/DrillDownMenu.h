@@ -7,6 +7,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QAction>
+#include <QtGui/QPushButton>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QMessageBox>
 #include <QtGui/QDialog>
@@ -22,6 +23,7 @@ class DrillDownMenuItem : public QListWidgetItem {
 public:
     explicit DrillDownMenuItem(const QString &text, ZLApplication::Action* action, QListWidget *view = 0, int type = Type);
     explicit DrillDownMenuItem(const QIcon &icon, const QString &text, ZLApplication::Action* action, QListWidget *view = 0, int type = Type);
+    //TODO support for isVisible method of Action
     void run();
 private:
 	shared_ptr<ZLApplication::Action> myAction;
@@ -49,7 +51,7 @@ class DrillDownMenuDialog : public QDialog {
 public:
     DrillDownMenuDialog(QWidget* parent=0);
     void showDrillDownMenu(DrillDownMenu* menu);
-	void showMessage(std::string message);
+    void showMessage(std::string message);
 public:
 	bool run();
 	bool runNoFullScreen();
