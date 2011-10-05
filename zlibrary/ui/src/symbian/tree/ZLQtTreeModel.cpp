@@ -24,8 +24,7 @@ bool ZLQtTreeModel::back() {
 
 bool  ZLQtTreeModel::enter(QModelIndex index) {
 	//return false if it was action that sucessfully executed
-	//qDebug() << "entering " << index.row() << index.column();
-
+        qDebug() << "entering " << index.row() << index.column();
 	ZLTreeNode* node = myCurrentNode->children().at(index.row());
 	if (ZLTreeActionNode *actionNode = zlobject_cast<ZLTreeActionNode*>(node)) {
 		bool result = actionNode->activate();
@@ -35,55 +34,82 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
 		}
 	} else {
 		myCurrentNode = node;
+                qDebug() << "\nrequesting children";
+                myCurrentNode->requestChildren();
 	}
-	emit layoutChanged();
+        emit layoutChanged();
 	return true;
 }
 
 int ZLQtTreeModel::rowCount(const QModelIndex &parent) const {
-	//qDebug() << "asking for rowCount... returning " << myCurrentNode->children().size();
+        qDebug() << "asking for rowCount... returning " << myCurrentNode->children().size();
 	return myCurrentNode->children().size();
 }
 
 QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
 	if (index.isValid() && role == Qt::DisplayRole) {
-		//qDebug() << "asking for data... at " << role << index.row() << index.column();
-		const ZLTreeNode* node = myCurrentNode->children().at(index.row());
-		if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
-			//qDebug() << "return " << ::qtString(titledNode->title());
-			return ::qtString(titledNode->title());
-		}
+            //TODO remove it:
+            // it needs in case if view don't take attention to rowCount
+            if (index.row() >= myCurrentNode->children().size()) {
+                return QVariant();
+            }
+            //qDebug() << "asking for data... at " << role << index.row() << index.column();
+            const ZLTreeNode* node = myCurrentNode->children().at(index.row());
+            if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
+                    //qDebug() << "return " << ::qtString(titledNode->title());
+                    return ::qtString(titledNode->title());
+            }
 	}
 	return QVariant();
 }
 
-bool ZLQtTreeModel::insertRows(int row, int count, const QModelIndex &parent) {
-//	beginInsertRows();
-//	endInsertRows();
-}
 
-bool ZLQtTreeModel::removeRows(int row, int count, const QModelIndex &parent) {
-//	beginRemoveRows
-//	endRemoveRows();
+const ZLTreeNode* ZLQtTreeModel::getTreeNode(const QModelIndex& index) const {
+    qDebug() << Q_FUNC_INFO << index;
+    if (index.isValid()) {
+        //TODO remove it:
+        // it needs in case if view don't take attention to rowCount
+        if (index.row() >= myCurrentNode->children().size()) {
+            return 0;
+        }
+        const ZLTreeNode* node = myCurrentNode->children().at(index.row());
+        qDebug() << "returns node";
+        return node;
+    }
+    return 0;
 }
-
 
 void ZLQtTreeModel::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
-
+    qDebug() << Q_FUNC_INFO << parent << index << parent->childIndex();
+    //TODO there should be beginInsertRows instead of layoutChanged()
+    emit layoutChanged();
+//    beginInsertRows(createIndex(parent), index, index);
 }
 
 void ZLQtTreeModel::onNodeEndInsert() {
-
+    qDebug() << Q_FUNC_INFO;
+    //TODO there should be endInsertRows instead of layoutChanged()
+    emit layoutChanged();
+//    endInsertRows();
 }
 
 void ZLQtTreeModel::onNodeBeginRemove(ZLTreeNode *parent, size_t index) {
-
+    qDebug() << Q_FUNC_INFO << parent << index;
+    //TODO there should be beginRemoveRows instead of layoutChanged()
+    emit layoutChanged();
+//    beginRemoveRows(createIndex(parent), index, index);
 }
 
 void ZLQtTreeModel::onNodeEndRemove() {
-
+    qDebug() << Q_FUNC_INFO;
+    //TODO there should be endRemoveRows instead of layoutChanged()
+    emit layoutChanged();
+//    endRemoveRows();
 }
-
 void ZLQtTreeModel::onNodeUpdated(ZLTreeNode *node) {
-	emit layoutChanged();
+    qDebug() << Q_FUNC_INFO << node;
+    //TODO there should be dataChanged instead of layoutChanged()
+    emit layoutChanged();
+//    QModelIndex index = createIndex(node);
+//    emit dataChanged(index, index);
 }
