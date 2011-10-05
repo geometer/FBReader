@@ -22,6 +22,26 @@
 #include "../resources/ZLResource.h"
 #include <algorithm>
 
+const ZLTypeId ZLTreeAction::TYPE_ID(ZLExecutionData::TYPE_ID);
+
+ZLTreeAction::ZLTreeAction() {
+}
+
+ZLTreeAction::~ZLTreeAction() {
+}
+
+const ZLTypeId &ZLTreeAction::typeId() const {
+	return TYPE_ID;
+}
+
+std::string ZLTreeAction::text(const ZLResource &resource) const {
+	return resource[key()].value();
+}
+
+bool ZLTreeAction::makesSense() const {
+	return true;
+}
+
 const ZLTypeId ZLTreeNode::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
 ZLTreeNode::ZLTreeNode() : myParent(0), myChildIndex(-1) {
@@ -92,7 +112,9 @@ size_t ZLTreeNode::childIndex() const {
 	return myChildIndex;
 }
 
-void ZLTreeNode::requestChildren() {
+void ZLTreeNode::requestChildren(shared_ptr<ZLExecutionData::Listener> listener) {
+        if (!listener.isNull())
+            listener->finished();
 }
 
 const ZLResource &ZLTreeNode::resource() const {
@@ -100,18 +122,23 @@ const ZLResource &ZLTreeNode::resource() const {
 	return emptyResource;
 }
 
-void ZLTreeNode::registerAction(shared_ptr<ZLRunnableWithKey> action) {
+void ZLTreeNode::registerAction(shared_ptr<ZLTreeAction> action) {
 	if (!action.isNull()) {
 		myActions.push_back(action);
 	}
 }
 
-const std::vector<shared_ptr<ZLRunnableWithKey> > &ZLTreeNode::actions() const {
+const std::vector<shared_ptr<ZLTreeAction> > &ZLTreeNode::actions() const {
 	return myActions;
 }
 
-std::string ZLTreeNode::actionText(const shared_ptr<ZLRunnableWithKey> &action) const {
+std::string ZLTreeNode::actionText(const shared_ptr<ZLTreeAction> &action) const {
 	return action.isNull() ? std::string() : action->text(resource());
+}
+
+void ZLTreeNode::close() {
+	if (ZLTreeListener *treeListener = listener())
+		treeListener->onCloseRequest();
 }
 
 void ZLTreeNode::insert(ZLTreeNode *node, size_t index) {

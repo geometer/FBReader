@@ -30,6 +30,7 @@
 #include "Book.h"
 #include "Author.h"
 #include "Tag.h"
+#include "../fbreader/FBReader.h"
 
 #include "../formats/FormatPlugin.h"
 
@@ -134,6 +135,13 @@ void Library::rebuildBookSet() const {
 				myExternalBooks.insert(book);
 			}
 		}
+	}
+	
+	// help file
+	shared_ptr<Book> help = FBReader::Instance().helpFile();
+	if (!help.isNull()) {
+		insertIntoBookSet(help);
+		myExternalBooks.insert(help);
 	}
 }
 

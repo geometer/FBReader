@@ -70,10 +70,7 @@ void SetModeAction::run() {
 
 void ShowHelpAction::run() {
 	FBReader &fbreader = FBReader::Instance();
-	shared_ptr<Book> book = BooksDBUtil::getBook(fbreader.helpFileName(ZLibrary::Language()));
-	if (book.isNull()) {
-		book = BooksDBUtil::getBook(fbreader.helpFileName("en"));
-	}
+	shared_ptr<Book> book = fbreader.helpFile();
 	if (!book.isNull()) {
 		fbreader.openBook(book);
 		fbreader.setMode(FBReader::BOOK_TEXT_MODE);

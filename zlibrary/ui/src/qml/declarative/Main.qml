@@ -22,12 +22,19 @@ import com.nokia.meego 1.0
 
 PageStackWindow {
 	id: root
+	property bool fixedOrientation: false
 	showToolBar: pageStack.currentPage === null
 				 || pageStack.currentPage.showToolBar === undefined
 				 || pageStack.currentPage.showToolBar
 	
 	initialPage: MainPage {
 		id: mainPage
+		rootWindow: root
+	}
+	
+	Connections {
+		target: screen
+		onCurrentOrientationChanged: root.fixedOrientation = false
 	}
 
 	Connections {
@@ -40,18 +47,18 @@ PageStackWindow {
 		
 		onOptionsDialogRequested: {
 			var component = Qt.createComponent("OptionsDialog.qml");
-			root.pageStack.push(component, { handler: object, component: component });
+			root.pageStack.push(component, { handler: object, rootWindow: root, component: component });
 		}
 		
         onFileDialogRequested: {
 			var component = Qt.createComponent("OpenFileDialog.qml");
-			root.openDialog(component.createObject(mainPage, { handler: object }));
+			rootWindow.openDialog(component.createObject(mainPage, { handler: object }));
 		}
 		
         onTreeDialogRequested: {
 			console.log("bla-bla", object)
 			var component = Qt.createComponent("TreeDialogPage.qml");
-			root.pageStack.push(component, { handler: object, component: component });
+			root.pageStack.push(component, { handler: object, rootWindow: root, component: component });
 		}
 		
 		onProgressDialogRequested: {
@@ -97,4 +104,25 @@ PageStackWindow {
 		QueryDialog {
 		}
 	}
+
+//	Component.onCompleted: {
+//		theme.inverted = true
+//	}
+
+// TODO: Check why it doesn't dissapear sometimes	
+//	Rectangle {
+//		id: overlayRect
+//		anchors.fill: parent
+//		color: "#60000000"
+//		visible: !platformWindow.active
+//		Label {
+//			anchors.centerIn: parent
+//			width: parent.width
+//			text: applicationInfo.bookTitle
+//			font.pixelSize: 70
+//			font.bold: true
+//			color: "white"
+//			horizontalAlignment: Text.AlignHCenter
+//		}
+//	}
 }
