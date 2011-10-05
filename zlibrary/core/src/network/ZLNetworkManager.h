@@ -87,12 +87,21 @@ public:
 	shared_ptr<ZLExecutionData> createXMLParserRequest(const std::string &url, shared_ptr<ZLXMLReader> reader) const;
 	shared_ptr<ZLExecutionData> createXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader) const;
 
+public:
+	void setUserAgent(const std::string &userAgent);
+	const std::string &userAgent() const;
+
 private:
 	mutable shared_ptr<ZLIntegerRangeOption> myConnectTimeoutOption;
 	mutable shared_ptr<ZLIntegerRangeOption> myTimeoutOption;
 	mutable shared_ptr<ZLBooleanOption> myUseProxyOption;
 	mutable shared_ptr<ZLStringOption> myProxyHostOption;
 	mutable shared_ptr<ZLStringOption> myProxyPortOption;
+
+	std::string myUserAgent;
 };
+
+inline void ZLNetworkManager::setUserAgent(const std::string &userAgent) { myUserAgent = userAgent; }
+inline const std::string &ZLNetworkManager::userAgent() const { return myUserAgent; }
 
 #endif /* __ZLNETWORKMANAGER_H__ */

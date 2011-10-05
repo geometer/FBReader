@@ -10,24 +10,24 @@
 			<node name="apply" value="&amp;Zastosuj" />
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Zapis Konfiguracji..." />
+			<node name="savingConfig" value="Zapis konfiguracji..." />
 		</node>
 		<node name="networkError">
-			<node name="title" value="Błąd Sieci" />
-			<node name="unknownErrorMessage" value="Nieznany Błąd" />
-			<node name="couldntCreateDirectoryMessage" value="Nie Można Utworzyć Katalogu&#10;%s" />
-			<node name="couldntCreateFileMessage" value="Nie Można Utworzyć Pliku&#10;%s" />
-			<node name="couldntConnectToNetworkMessage" value="Nie Można Połączyć z Siecią" />
-			<node name="couldntConnectMessage" value="Nie Można Połączyć z %s" />
-			<node name="couldntResolveHostMessage" value="%s Nie Odpowiada" />
-			<node name="couldntResolveProxyMessage" value="Proxy %s Nie Odpowiada" />
-			<node name="operationTimedOutMessage" value="Przekroczony Czas Operacji" />
-			<node name="somethingWrongMessage" value="Dzieje Się Coś Złego z&#10;%s" />
-			<node name="sslConnectErrorMessage" value="Problem z Połączeniem SSL/TLS:&#10;%s" />
-			<node name="peerFailedVerificationMessage" value="Certyfikat SSL z %s&#10;Został Odrzucony" />
-			<node name="sslCertificateAuthorityMessage" value="Certyfikat SSL z %s&#10;Nie Może Być Potwierdzony Znanymi Certyfikatami SSL CA" />
-			<node name="sslBadCertificateFileMessage" value="Nie Można Odczytać Pliku Certyfikatu SSL CA:&#10;%s" />
-			<node name="sslShutdownFailedMessage" value="Nie Można Zamknąć Połączenia SSL z&#10;%s" />
+			<node name="title" value="Błąd sieci" />
+			<node name="unknownErrorMessage" value="Nieznany błąd" />
+			<node name="couldntCreateDirectoryMessage" value="Nie można utworzyć katalogu&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Nie można utworzyć pliku&#10;%s" />
+			<node name="couldntConnectToNetworkMessage" value="Nie można połączyć z siecią" />
+			<node name="couldntConnectMessage" value="Nie można połączyć z %s" />
+			<node name="couldntResolveHostMessage" value="%s nie odpowiada" />
+			<node name="couldntResolveProxyMessage" value="Proxy %s nie odpowiada" />
+			<node name="operationTimedOutMessage" value="Przekroczony czas operacji" />
+			<node name="somethingWrongMessage" value="Dzieje się coś złego z&#10;%s" />
+			<node name="sslConnectErrorMessage" value="Problem z połączeniem SSL/TLS:&#10;%s" />
+			<node name="peerFailedVerificationMessage" value="Certyfikat SSL z %s&#10;został odrzucony" />
+			<node name="sslCertificateAuthorityMessage" value="Certyfikat SSL z %s&#10;nie może być potwierdzony znanymi certyfikatami SSL CA" />
+			<node name="sslBadCertificateFileMessage" value="Nie można odczytać pliku certyfikatu SSL CA:&#10;%s" />
+			<node name="sslShutdownFailedMessage" value="Nie można zamknąć połączenia SSL z&#10;%s" />
 		</node>
 	</node>
 	<node name="color">
@@ -51,6 +51,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="Arabski" />
+		<node name="bg" toBeTranslated="true" value="Bulgarian" />
 		<node name="cs" value="Czeski" />
 		<node name="de" value="Niemiecki" />
 		<node name="de-traditional" value="Niemiecki (tradycyjna ortografia)" />
@@ -67,8 +68,8 @@
 		<node name="lt" value="Litewski" />
 		<node name="nl" value="Duński" />
 		<node name="no" value="Norweski" />
-		<node name="pt" value="Portugalski" />
 		<node name="pl" value="Polski" />
+		<node name="pt" value="Portugalski" />
 		<node name="ru" value="Rosyjski" />
 		<node name="sv" value="Szwedzki" />
 		<node name="tr" value="Turecki" />
@@ -80,9 +81,9 @@
 	<node name="boolean3">
 		<node name="on" value="Wł." />
 		<node name="off" value="Wył." />
-		<node name="unchanged" value="Nie Zmieniony" />
+		<node name="unchanged" value="Nie zmieniony" />
 	</node>
 	<node name="keyOptionView">
-		<node name="actionFor" value="Wybierz Klawisz" />
+		<node name="actionFor" value="Wybierz klawisz" />
 	</node>
 </resources>

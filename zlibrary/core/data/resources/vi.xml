@@ -51,6 +51,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="Tiếng Ả Rập" />
+		<node name="bg" toBeTranslated="true" value="Bulgarian" />
 		<node name="cs" value="Tiếng CH Séc" />
 		<node name="de" value="Tiếng Đức" />
 		<node name="de-traditional" value="Tiếng Đức (truyền thống)" />

@@ -50,6 +50,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="арабский" />
+		<node name="bg" value="болгарский" />
 		<node name="cs" value="чешский" />
 		<node name="de" value="немецкий" />
 		<node name="de-traditional" value="немецкий (старая орфография)" />
@@ -69,8 +70,8 @@
 		<node name="pl" value="польский" />
 		<node name="pt" value="португальский" />
 		<node name="ru" value="русский" />
-		<node name="tr" value="турецкий" />
 		<node name="sv" value="шведский" />
+		<node name="tr" value="турецкий" />
 		<node name="uk" value="украинский" />
 		<node name="vi" value="вьетнамский" />
 		<node name="zh" value="китайский" />

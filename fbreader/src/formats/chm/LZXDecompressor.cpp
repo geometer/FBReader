@@ -181,16 +181,19 @@ bool LZXDecompressor::decodeBytes(DecodingState &state, size_t bytesToDecode) {
 				break;
 		}
 
-		std::vector<unsigned char>::iterator srcIt = state.WindowIterator - offset + myWindow.size();
-		if (srcIt < myWindow.begin()) {
+		if ((state.WindowIterator - myWindow.begin()) + myWindow.size() < offset) {
 			return false;
 		}
+		if (myWindow.size() >= offset + (myWindow.end() - state.WindowIterator)) {
+			offset += myWindow.size();
+			if (myWindow.size() >= offset + (myWindow.end() - state.WindowIterator)) {
+				return false;
+			}
+		}
+		std::vector<unsigned char>::iterator srcIt = state.WindowIterator + (myWindow.size() - offset);
 		for (size_t i = 0; i < length; ++i) {
-			if (srcIt >= myWindow.end()) {
+			if (srcIt == myWindow.end()) {
 				srcIt -= myWindow.size();
-				if (srcIt >= myWindow.end()) {
-					return false;
-				}
 			}
 			*state.WindowIterator++ = *srcIt++;
 		}

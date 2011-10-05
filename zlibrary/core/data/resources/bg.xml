@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Bulgarian zlibrary resources, by Alexander Ivanov -->
+<resources>
+	<node name="dialog">
+		<node name="button">
+			<node name="ok" value="&amp;ОК" />
+			<node name="cancel" value="&amp;Отмяна" />
+			<node name="yes" value="&amp;Да" />
+			<node name="no" value="&amp;Не" />
+			<node name="apply" value="&amp;Прилагане" />
+		</node>
+		<node name="waitMessage">
+			<node name="savingConfig" value="Записване на конфигурациите..." />
+		</node>
+		<node name="networkError">
+			<node name="title" value="Грешка при работа в мрежата" />
+			<node name="unknownErrorMessage" value="Неизвестна грешка" />
+			<node name="couldntCreateDirectoryMessage" value="Не може да се създаде директорията&#10;%s" />
+			<node name="couldntCreateFileMessage" value="Не може да се създаде файла&#10;%s" />
+			<node name="couldntConnectToNetworkMessage" value="Не може да се установи връзка с мрежата" />
+			<node name="couldntConnectMessage" value="Не може да се установи връзка с хоста %s" />
+			<node name="couldntResolveHostMessage" value="Не може да се определи хоста %s" />
+			<node name="couldntResolveProxyMessage" value="Не може да се определи прокси-съръра %s" />
+			<node name="operationTimedOutMessage" value="Времето за операцията изтече" />
+			<node name="somethingWrongMessage" value="Нещо се обърка за&#10;%s" />
+			<node name="sslConnectErrorMessage" value="Проблем при установяване на SSL/TLS връзка:&#10;%s" />
+			<node name="peerFailedVerificationMessage" value="SSL сертификата от %s&#10;беше счетен за нередовен" />
+			<node name="sslCertificateAuthorityMessage" value="SSL сертификата от %s&#10;не може да бъде удостоверен с познатите SSL CA сертификати" />
+			<node name="sslBadCertificateFileMessage" value="Не може да се прочете файла с SSL CA сертификата:&#10;%s" />
+			<node name="sslShutdownFailedMessage" value="Не може да се затвори SSL връзката за&#10;%s" />
+		</node>
+	</node>
+	<node name="color">
+		<node name="red" value="Червен" />
+		<node name="green" value="Зелен" />
+		<node name="blue" value="Син" />
+		<node name="black" value="Черен" />
+		<node name="white" value="Бял" />
+		<node name="maroon" value="Кестеняв" />
+		<node name="olive" value="Маслинено зелен " />
+		<node name="navy" value="Тъмносин" />
+		<node name="purple" value="Лилав" />
+		<node name="teal" value="Синьо-зелен" />
+		<node name="silver" value="Сребърен" />
+		<node name="gray" value="Сив" />
+		<node name="lime" value="Лимонено зелен" />
+		<node name="yellow" value="Жълт" />
+		<node name="magenta" value="Виолетово-червен" />
+		<node name="cyan" value="Небесно син" />
+		<node name="custom..." value="По избор..." />
+	</node>
+	<node name="language">
+		<node name="ar" value="Арабски" />
+		<node name="bg" value="Български" />
+		<node name="cs" value="Чешки" />
+		<node name="de" value="Немски" />
+		<node name="de-traditional" value="Немски (традиционни правопис)" />
+		<node name="el" value="Гръцки" />
+		<node name="en" value="Английски" />
+		<node name="eo" value="Есперанто" />
+		<node name="es" value="Испански" />
+		<node name="fi" value="Фински" />
+		<node name="fr" value="Френски" />
+		<node name="he" value="Иврит" />
+		<node name="hu" value="Унгарски" />
+		<node name="id" value="Индонезийски" />
+		<node name="it" value="Италиански" />
+		<node name="lt" value="Литовски" />
+		<node name="nl" value="Холандски" />
+		<node name="no" value="Норвежки" />
+		<node name="pl" toBeTranslated="true" value="Polish" />
+		<node name="pt" value="Португалски" />
+		<node name="ru" value="Руски" />
+		<node name="sv" value="Шведски" />
+		<node name="tr" value="Турски" />
+		<node name="uk" value="Украински" />
+		<node name="vi" value="Виетнамски" />
+		<node name="zh" value="Китайски" />
+		<node name="other" value="Друг" />
+	</node>
+	<node name="boolean3">
+		<node name="on" value="вкл." />
+		<node name="off" value="изкл." />
+		<node name="unchanged" value="непроменено" />
+	</node>
+	<node name="keyOptionView">
+		<node name="actionFor" value="Действие за клавиш" />
+	</node>
+</resources>

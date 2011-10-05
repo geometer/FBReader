@@ -51,6 +51,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="Arab" />
+		<node name="bg" toBeTranslated="true" value="Bulgarian" />
 		<node name="cs" value="Cekoslowakia" />
 		<node name="de" value="Jerman" />
 		<node name="de-traditional" value="Jerman (tradisionil)" />

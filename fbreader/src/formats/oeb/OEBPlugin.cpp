@@ -113,6 +113,6 @@ bool OEBPlugin::readModel(BookModel &model) const {
 	return OEBBookReader(model).readBook(opfFile(file));
 }
 
-shared_ptr<ZLImage> OEBPlugin::coverImage(const Book &book) const {
-	return OEBCoverReader().readCover(opfFile(book.file()));
+shared_ptr<ZLImage> OEBPlugin::coverImage(const ZLFile &file) const {
+	return OEBCoverReader().readCover(opfFile(file));
 }
