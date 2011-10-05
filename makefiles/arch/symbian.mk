@@ -5,8 +5,9 @@ SHAREDIR_MACRO=!!
 IMAGEDIR = !!\\\\pixmaps
 APPIMAGEDIR = !!\\\\pixmaps\\\\FBReader
 
-SDK_ROOT = /opt/QtSDK/Symbian/SDKs/SymbianS60
+SDK_ROOT = /opt/QtSDK/Symbian/SDKs/Symbian1
 ARM_DIR = /usr/arm-none-symbianelf
+SYMBIAN_VERSION=$(shell tools/symbian_versions.py $(VERSION))
 
 CC = arm-none-symbianelf-g++
 AR = arm-none-symbianelf-ar cqs
@@ -20,23 +21,46 @@ CXXFLAGS += -DLIBICONV_PLUG -DDO_ICONV_CAST  -DROOTPATH=\"\" -fvisibility-inline
 
 CXXFLAGS += -D__SYMBIAN__
 
-INCPATH = -I${SDK_ROOT}/mkspecs/symbian/linux-gcce -I. -I${SDK_ROOT}/include -I${SDK_ROOT}/epoc32/include/ \
--I${SDK_ROOT}/epoc32/include/variant -I${SDK_ROOT}/epoc32/include/stdapis -I${SDK_ROOT}/epoc32/include/gcce \
--I${SDK_ROOT}/epoc32/include/stdapis/sys -I${SDK_ROOT}/epoc32/include/stdapis/stlport -I${SDK_ROOT}/epoc32-s60/include \
--I${SDK_ROOT}/epoc32/include/oem -I${SDK_ROOT}/epoc32/include/middleware -I${SDK_ROOT}/epoc32/include/domain/middleware \
--I${SDK_ROOT}/epoc32/include/osextensions -I${SDK_ROOT}/epoc32/include/domain/osextensions \
--I${SDK_ROOT}/epoc32/include/domain/osextensions/loc -I${SDK_ROOT}/epoc32/include/domain/middleware/loc \
--I${SDK_ROOT}/epoc32/include/domain/osextensions/loc/sc -I${SDK_ROOT}/epoc32/include/domain/middleware/loc/sc -I. 
+
+#-I${SDK_ROOT}/epoc32/include/platform is needed for S^3 (and this dir absent in S^1) SDK, for using remconcoreapi (for capturing volume keys)
+
+INCPATH = -I. \
+-I$(ROOTDIR)/libs/symbian/include \
+-I${SDK_ROOT}/mkspecs/symbian/linux-gcce  \
+-I${SDK_ROOT}/epoc32/include/ \
+-I${SDK_ROOT}/epoc32/include/platform \
+-I${SDK_ROOT}/epoc32/include/variant \
+-I${SDK_ROOT}/epoc32/include/stdapis \
+-I${SDK_ROOT}/epoc32/include/stdapis/sys \
+-I${SDK_ROOT}/epoc32/include/stdapis/stlport \
+-I${SDK_ROOT}/epoc32/include/oem \
+-I${SDK_ROOT}/epoc32/include/middleware \
+-I${SDK_ROOT}/epoc32/include/osextensions \
+-I${SDK_ROOT}/epoc32/include/domain/middleware \
+-I${SDK_ROOT}/epoc32/include/domain/osextensions \
+-I${SDK_ROOT}/epoc32/include/domain/osextensions/loc \
+-I${SDK_ROOT}/epoc32/include/domain/osextensions/loc/sc \
+-I${SDK_ROOT}/epoc32/include/domain/middleware/loc \
+-I${SDK_ROOT}/epoc32/include/domain/middleware/loc/sc
 
 DISABLE_WARNINGS = -w
 
 CFLAGS = $(DEFINES) $(CXXFLAGS) $(INCPATH) $(DISABLE_WARNINGS)
 
 LDFLAGS = --target1-abs --no-undefined --nostdlib \
--L${ARM_DIR}/lib/gcc/arm-none-symbianelf/4.4.1/ -L${ARM_DIR}/lib/gcc/ -L${ARM_DIR}/arm-none-symbianelf/lib/arm-none-symbianelf/4.4.1/ -L${ARM_DIR}/arm-none-symbianelf/lib/  \
+-Tdata 0x700000 -Ttext 0x80000 --shared --soname fbreader\{$(SYMBIAN_VERSION)\}\[e87cc83c\].exe --entry=_E32Startup -u _E32Startup
+
+LDFLAGS += \
 -L$(ROOTDIR)/libs/symbian \
--L${SDK_ROOT}/epoc32/release/armv5/udeb/ -L${SDK_ROOT}/epoc32/release/armv5/lib -L${SDK_ROOT}/epoc32/release/armv5/urel -L${SDK_ROOT}/epoc32/release/armv5/udeb \
--Tdata 0x700000 -Ttext 0x80000 --shared --soname fbreader\{00040701\}\[e87cc83c\].exe --entry=_E32Startup -u _E32Startup
+-L${ARM_DIR}/lib/gcc/arm-none-symbianelf/4.4.1/ \
+-L${ARM_DIR}/lib/gcc/ \
+-L${ARM_DIR}/arm-none-symbianelf/lib/arm-none-symbianelf/4.4.1/ \
+-L${ARM_DIR}/arm-none-symbianelf/lib/  \
+-L${SDK_ROOT}/epoc32/release/armv5/udeb/ \
+-L${SDK_ROOT}/epoc32/release/armv5/lib \
+-L${SDK_ROOT}/epoc32/release/armv5/urel \
+-L${SDK_ROOT}/epoc32/release/armv5/udeb 
+
 
 
 MOC = moc-symbian
