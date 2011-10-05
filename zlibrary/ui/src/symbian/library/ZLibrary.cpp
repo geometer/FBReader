@@ -84,8 +84,8 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary:: init(int &argc, char **&argv) {
-	//freopen("E:\\fbreader-log.txt", "w", stdout);
-	//fprintf(stdout,"\n");
+        freopen("E:\\fbreader-log.txt", "w", stdout);
+        fprintf(stdout,"\n");
 
 	initLibrary();
 

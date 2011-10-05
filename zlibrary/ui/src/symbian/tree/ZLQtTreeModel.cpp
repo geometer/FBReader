@@ -10,6 +10,8 @@
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QApplication>
 
+#include "../menu/DrillDownMenu.h"
+
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QObject *parent) :  QAbstractListModel(parent), myRootNode(rootNode) {
 	myCurrentNode = &myRootNode;
 }
@@ -44,7 +46,7 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
 }
 
 int ZLQtTreeModel::rowCount(const QModelIndex &parent) const {
-        qDebug() << "asking for rowCount... returning " << myCurrentNode->children().size();
+        //qDebug() << "asking for rowCount... returning " << myCurrentNode->children().size();
 	return myCurrentNode->children().size();
 }
 
@@ -63,11 +65,12 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
             }
         } else if (role == Qt::SizeHintRole){
             //qDebug() << Q_FUNC_INFO << role << index;
-            QRect rect = qApp->desktop()->availableGeometry();
-            int height = std::min(rect.height()/5, 40);
-            return QSize(rect.width(), height);
+            return MenuItemParameters::getSize();
         }
-	return QVariant();
+        else if (role == Qt::FontRole) {
+            return MenuItemParameters::getFont();
+        }
+        return QVariant();
 }
 
 

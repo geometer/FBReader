@@ -12,6 +12,8 @@
 #include "ZLQtDialogContent.h"
 #include "ZLQtUtil.h"
 
+#include "../menu/DrillDownMenu.h"
+
 TabMenuWidget::TabMenuWidget(QWidget* parent): QWidget(parent) {
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	myScrollArea = new QScrollArea;
@@ -27,7 +29,8 @@ TabMenuWidget::TabMenuWidget(QWidget* parent): QWidget(parent) {
 }
 
 void TabMenuWidget::addItem(QWidget *widget, const QString &label) {
-	myMenuWidget->addItem(label);
+        //myMenuWidget->addItem(label);
+        myMenuWidget->addItem( new NiceSizeListWidgetItem(label) );
 	myStackedWidget->addWidget(widget);
 }
 

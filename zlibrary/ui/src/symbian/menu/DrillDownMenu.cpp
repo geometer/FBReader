@@ -1,3 +1,5 @@
+#include <QtCore/QDebug>
+
 #include "../dialogs/ZLQtUtil.h"
 
 #include "DrillDownMenu.h"
@@ -126,17 +128,11 @@ std::string DrillDownMenu::getMessage() const {
 }
 
 DrillDownMenuItem::DrillDownMenuItem(const QIcon &icon, const QString &text, ZLApplication::Action* action, QListWidget *view, int type) :
-    QListWidgetItem(icon,text,view,type), myAction(action) {
-    QFont font(this->font());
-    font.setBold(true);
-    setFont(font);
+    NiceSizeListWidgetItem(icon,text,view,type), myAction(action) {
 }
 
 DrillDownMenuItem::DrillDownMenuItem(const QString &text, ZLApplication::Action* action, QListWidget *view, int type) :
-    QListWidgetItem(text,view,type), myAction(action) {
-    QFont font(this->font());
-    font.setBold(true);
-	setFont(font);
+    NiceSizeListWidgetItem(text,view,type), myAction(action) {
 }
 
 void DrillDownMenuItem::run() {
@@ -145,4 +141,41 @@ void DrillDownMenuItem::run() {
         return;
     }
     myAction->checkAndRun();
+}
+
+NiceSizeListWidgetItem::NiceSizeListWidgetItem(const QString &text, QListWidget *view , int type)
+    : QListWidgetItem(text,view,type) { }
+
+NiceSizeListWidgetItem::NiceSizeListWidgetItem(const QIcon &icon, const QString &text,QListWidget *view, int type)
+    : QListWidgetItem(icon,text,view,type) {}
+
+
+QVariant NiceSizeListWidgetItem::data (int role) const {
+    if (role == Qt::SizeHintRole){
+        //qDebug() << Q_FUNC_INFO << role << index;
+        return MenuItemParameters::getSize();
+    } else if (role == Qt::FontRole) {
+        return MenuItemParameters::getFont();
+    }
+    return QListWidgetItem::data(role);
+}
+
+QSize MenuItemParameters::getSize() {
+    static const int SIZE_FOR_FINGERS_MM = 8; // in millimetres
+    static const int MAX_PART_OF_SCREEN = 5;  // if 1/5 of screen if less than sizeForFingersMM,
+                                           // set size as 1/5 of screen
+    QRect rect = qApp->desktop()->availableGeometry();
+    int coef = qApp->desktop()->height() / qApp->desktop()->heightMM();;
+    int height = std::min(rect.height()/MAX_PART_OF_SCREEN, coef*SIZE_FOR_FINGERS_MM);
+    return QSize(rect.width(), height);
+}
+
+QFont MenuItemParameters::getFont() {
+    static const int FONT_SIZE_IN_POINTS = 8;
+    QFont font = qApp->desktop()->font();
+    qDebug() << "font default size" <<  font.pointSize();
+    font.setPointSize(FONT_SIZE_IN_POINTS);
+    //font.setStyleStrategy(QFont::PreferDevice);
+    font.setBold(true);
+    return font;
 }

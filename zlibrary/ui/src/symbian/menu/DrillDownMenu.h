@@ -19,7 +19,19 @@
 
 #include <ZLApplication.h>
 
-class DrillDownMenuItem : public QListWidgetItem {
+class NiceSizeListWidgetItem : public QListWidgetItem {
+public:
+    explicit NiceSizeListWidgetItem(const QString &text, QListWidget *view = 0, int type = Type);
+    explicit NiceSizeListWidgetItem(const QIcon &icon, const QString &text,QListWidget *view = 0, int type = Type);
+    QVariant data (int role) const;
+};
+
+namespace MenuItemParameters {
+    QSize getSize();
+    QFont getFont();
+}
+
+class DrillDownMenuItem : public NiceSizeListWidgetItem {
 public:
     explicit DrillDownMenuItem(const QString &text, ZLApplication::Action* action, QListWidget *view = 0, int type = Type);
     explicit DrillDownMenuItem(const QIcon &icon, const QString &text, ZLApplication::Action* action, QListWidget *view = 0, int type = Type);
