@@ -120,30 +120,7 @@ std::string ZLQtFSManager::parentPath(const std::string &path) const {
 }
 
 ZLFSDir *ZLQtFSManager::createNewDirectory(const std::string &path) const {
-		std::vector<std::string> subpaths;
-		std::string current = path;
-
-		while (current.length() > 1) {
-				struct stat fileStat;
-				if (stat(current.c_str(), &fileStat) == 0) {
-						if (!S_ISDIR(fileStat.st_mode)) {
-								return 0;
-						}
-						break;
-				} else {
-						subpaths.push_back(current);
-						int index = current.rfind('\\');
-						if (index == -1) {
-								return 0;
-						}
-						current.erase(index);
-				}
-		}
-
-		for (int i = subpaths.size() - 1; i >= 0; --i) {
-				if (mkdir(subpaths[i].c_str(), 0x1FF) != 0) {
-						return 0;
-				}
-		}
-		return createPlainDirectory(path);
+        //TODO check is it working right;
+        QDir().mkpath(QString::fromStdString(path));
+        return createPlainDirectory(path);
 }

@@ -5,14 +5,20 @@
 
 #include <QtCore/QDebug>
 
+#include <ZLDialogManager.h>
 #include <ZLResource.h>
 #include "ZLQtTreeDialog.h"
+
+#include "../menu/DrillDownMenu.h"
 
 ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	myView = new QListView;
 	myModel = new ZLQtTreeModel(rootNode(), this);
 	myView->setModel(myModel);
+
+        //TODO should use this?
+        //connect(myModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), myView, SLOT(dataChanged(QModelIndex,QModelIndex)))
 
 	const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
 	QAction* action = new QAction(QString::fromStdString(back.value()),this);
@@ -22,7 +28,8 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	connect(action, SIGNAL(triggered()), this, SLOT(back()));
 	addAction( action );
 
-	connect(myView, SIGNAL(clicked(QModelIndex)), this, SLOT(enter(QModelIndex)));
+        connect(myView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(showMenu(QModelIndex)));
+        connect(myView, SIGNAL(clicked(QModelIndex)), this, SLOT(enter(QModelIndex)));
 	myView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
 	layout->addWidget(myView);
@@ -42,9 +49,42 @@ void ZLQtTreeDialog::back() {
 }
 
 void ZLQtTreeDialog::enter(QModelIndex index) {
+        qDebug() << Q_FUNC_INFO << index;
 	if (!myModel->enter(index)) {
 		close();
 	}
+}
+
+class WrapperAction : public ZLApplication::Action {
+public:
+    WrapperAction(shared_ptr<ZLTreeAction> runnable) : myRunnable(runnable) {}
+    bool isVisible() const { return myRunnable->makesSense(); }
+    void run() {
+        //ZLDialogManager::Instance().wait(ZLResourceKey("loadingBook"),*myRunnable);
+        myRunnable->run();
+    }
+
+private:
+    shared_ptr<ZLTreeAction> myRunnable;
+};
+
+void ZLQtTreeDialog::showMenu(QModelIndex index) {
+        qDebug() << Q_FUNC_INFO << index;
+        const ZLTreeNode* node = myModel->getTreeNode(index);
+        if (node == 0) {
+            return;
+        }
+        DrillDownMenuDialog dialog;
+        DrillDownMenu* menu = new DrillDownMenu;
+
+        const std::vector<shared_ptr<ZLTreeAction> > & actions = node->actions();
+        for (size_t i=0; i<actions.size(); ++i) {
+            if (actions[i]->makesSense()) {
+                menu->addItem(node->actionText(actions[i]), new WrapperAction(actions[i]));
+            }
+        }
+        dialog.showDrillDownMenu(menu);
+        dialog.runNoFullScreen();
 }
 
 void ZLQtTreeDialog::run() {
@@ -62,31 +102,20 @@ void ZLQtTreeDialog::onCloseRequest() {
 }
 
 void ZLQtTreeDialog::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
-	//qDebug() << "onNodeBeginInsert";
-	//myModel->onNodeBeginInsert(parent,index);
-	//myListView->update();
+        myModel->onNodeBeginInsert(parent,index);
 }
 
 void ZLQtTreeDialog::onNodeEndInsert() {
-	//qDebug() << "onNodeEndInsert";
-	//myModel->onNodeEndInsert();
-	//myListView->update();
+        myModel->onNodeEndInsert();
 }
 
 void ZLQtTreeDialog::onNodeBeginRemove(ZLTreeNode *parent, size_t index) {
-	//qDebug() << "onNodeBeginRemove";
-	//myModel->onNodeBeginRemove(parent,index);
-	//myListView->update();
+        myModel->onNodeBeginRemove(parent,index);
 }
-
 void ZLQtTreeDialog::onNodeEndRemove() {
-	//qDebug() << "onNodeEndRemove";
-	//myModel->onNodeEndRemove();
-	//myListView->update();
+        myModel->onNodeEndRemove();
 }
 
 void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode *node) {
-	//qDebug() << "onNodeUpdated";
-	//myModel->onNodeUpdated(node);
-	//myListView->update();
+        myModel->onNodeUpdated(node);
 }

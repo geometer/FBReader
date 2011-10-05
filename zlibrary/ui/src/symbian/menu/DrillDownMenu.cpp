@@ -9,15 +9,21 @@ DrillDownMenuDialog::DrillDownMenuDialog(QWidget* parent) : QDialog(parent) {
 	myLabel->setWordWrap(true);
 
 	layout->addWidget(myLabel);
-    layout->addWidget(myStackedWidget);
+        layout->addWidget(myStackedWidget);
 
 	const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
 	QAction* action = new QAction(QString::fromStdString(back.value()),this);
 #ifdef __SYMBIAN__
-    action->setSoftKeyRole( QAction::NegativeSoftKey );
+        action->setSoftKeyRole( QAction::NegativeSoftKey );
 #endif
-    connect(action, SIGNAL(triggered()), this, SLOT(back()));
-    addAction( action );
+        connect(action, SIGNAL(triggered()), this, SLOT(back()));
+        addAction( action );
+
+#ifndef __SYMBIAN__
+        QPushButton* button = new QPushButton(QString::fromStdString(back.value()));
+        connect(button, SIGNAL(clicked()), this, SLOT(back()));
+        layout->addWidget(button);
+#endif
 }
 
 void DrillDownMenuDialog::paintEvent(QPaintEvent *event) {
