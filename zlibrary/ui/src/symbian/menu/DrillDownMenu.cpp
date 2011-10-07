@@ -1,5 +1,7 @@
 #include <QtCore/QDebug>
 
+#include <QtScroller>
+
 #include "../dialogs/ZLQtUtil.h"
 
 #include "DrillDownMenu.h"
@@ -62,6 +64,7 @@ void DrillDownMenuDialog::showDrillDownMenu(DrillDownMenu* menu) {
 }
 
  void DrillDownMenuDialog::setCurrentMenu(DrillDownMenu* menu) {
+    QtScroller::grabGesture(menu->viewport(), QtScroller::LeftMouseButtonGesture);
     myStackedWidget->setCurrentWidget(menu);
 #ifdef __SYMBIAN__
     menu->setEditFocus(true); // for phones with keyboard: need to activate for single-click
@@ -113,6 +116,9 @@ DrillDownMenu::DrillDownMenu(QWidget *parent) : QListWidget(parent) {
     // don't close DrillDownMenu after options dialog was closed:
     //connect(this, SIGNAL(itemActivated(QListWidgetItem*)),parent,SLOT(close()));
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
 }
 
 void DrillDownMenu::run(QListWidgetItem* item) {

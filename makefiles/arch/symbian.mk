@@ -68,7 +68,5 @@ EXTERNAL_INCLUDE = -I$(ROOTDIR)/libs/symbian/include
 ZLSHARED = no
 TARGET_STATUS = symbian
 
-UILIBS = -lQtGui
-
 RM = rm -rvf
 RM_QUIET = rm -rf

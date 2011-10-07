@@ -5,6 +5,7 @@
 #include <QtGui/QResizeEvent>
 #include <QtGui/QScrollArea>
 #include <QtGui/QAction>
+#include <QtScroller>
 
 #include <ZLDialogManager.h>
 
@@ -25,7 +26,12 @@ TabMenuWidget::TabMenuWidget(QWidget* parent): QWidget(parent) {
 	layout->addWidget(myMenuWidget);
 	layout->addWidget(myScrollArea);
 	setStatus(MENU);
-	connect(myMenuWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(menuItemClicked(QModelIndex)));
+        connect(myMenuWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(menuItemClicked(QModelIndex)));
+
+        myMenuWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+        QtScroller::grabGesture(myMenuWidget->viewport(), QtScroller::LeftMouseButtonGesture);
+        QtScroller::grabGesture(myScrollArea->viewport(), QtScroller::LeftMouseButtonGesture);
+
 }
 
 void TabMenuWidget::addItem(QWidget *widget, const QString &label) {

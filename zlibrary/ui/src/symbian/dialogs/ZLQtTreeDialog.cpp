@@ -9,6 +9,8 @@
 #include <ZLResource.h>
 #include "ZLQtTreeDialog.h"
 
+#include <QtScroller>
+
 #include "../menu/DrillDownMenu.h"
 
 ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
@@ -16,6 +18,9 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	myView = new QListView;
 	myModel = new ZLQtTreeModel(rootNode(), this);
 	myView->setModel(myModel);
+
+        myView->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+        QtScroller::grabGesture(myView->viewport(), QtScroller::LeftMouseButtonGesture);
 
         //TODO should use this?
         //connect(myModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)), myView, SLOT(dataChanged(QModelIndex,QModelIndex)))
