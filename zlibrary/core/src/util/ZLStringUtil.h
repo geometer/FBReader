@@ -39,6 +39,8 @@ public:
 
 	static std::string doubleToString(double value);
 	static double stringToDouble(const std::string &value, double defaultValue);
+        static void split(const std::string& str, std::vector<std::string>& result,const std::string& delimiters = " ");
 };
+
 
 #endif /* __ZLSTRINGUTIL_H__ */

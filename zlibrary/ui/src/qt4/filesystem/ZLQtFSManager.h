@@ -28,7 +28,7 @@
 class ZLQtFSManager : public QObject, public ZLUnixFSManager {
 	Q_OBJECT
 
-private:
+protected:
 	ZLQtFSManager();
 	~ZLQtFSManager();
 

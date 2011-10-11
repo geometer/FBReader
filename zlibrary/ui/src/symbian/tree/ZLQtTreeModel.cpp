@@ -28,7 +28,7 @@ bool ZLQtTreeModel::back() {
 
 bool  ZLQtTreeModel::enter(QModelIndex index) {
 	//return false if it was action that sucessfully executed
-        qDebug() << "entering " << index.row() << index.column();
+        //qDebug() << "entering " << index.row() << index.column();
 	ZLTreeNode* node = myCurrentNode->children().at(index.row());
 	if (ZLTreeActionNode *actionNode = zlobject_cast<ZLTreeActionNode*>(node)) {
 		bool result = actionNode->activate();
@@ -38,7 +38,7 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
 		}
 	} else {
 		myCurrentNode = node;
-                qDebug() << "\nrequesting children";
+                //qDebug() << "\nrequesting children";
                 myCurrentNode->requestChildren();
 	}
         emit layoutChanged();
@@ -75,7 +75,7 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
 
 
 const ZLTreeNode* ZLQtTreeModel::getTreeNode(const QModelIndex& index) const {
-    qDebug() << Q_FUNC_INFO << index;
+    //qDebug() << Q_FUNC_INFO << index;
     if (index.isValid()) {
         //TODO remove it:
         // it needs in case if view don't take attention to rowCount
@@ -83,41 +83,41 @@ const ZLTreeNode* ZLQtTreeModel::getTreeNode(const QModelIndex& index) const {
             return 0;
         }
         const ZLTreeNode* node = myCurrentNode->children().at(index.row());
-        qDebug() << "returns node";
+        //qDebug() << "returns node";
         return node;
     }
     return 0;
 }
 
 void ZLQtTreeModel::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
-    qDebug() << Q_FUNC_INFO << parent << index << parent->childIndex();
+    //qDebug() << Q_FUNC_INFO << parent << index << parent->childIndex();
     //TODO there should be beginInsertRows instead of layoutChanged()
     emit layoutChanged();
 //    beginInsertRows(createIndex(parent), index, index);
 }
 
 void ZLQtTreeModel::onNodeEndInsert() {
-    qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO;
     //TODO there should be endInsertRows instead of layoutChanged()
     emit layoutChanged();
 //    endInsertRows();
 }
 
 void ZLQtTreeModel::onNodeBeginRemove(ZLTreeNode *parent, size_t index) {
-    qDebug() << Q_FUNC_INFO << parent << index;
+    //qDebug() << Q_FUNC_INFO << parent << index;
     //TODO there should be beginRemoveRows instead of layoutChanged()
     emit layoutChanged();
 //    beginRemoveRows(createIndex(parent), index, index);
 }
 
 void ZLQtTreeModel::onNodeEndRemove() {
-    qDebug() << Q_FUNC_INFO;
+    //qDebug() << Q_FUNC_INFO;
     //TODO there should be endRemoveRows instead of layoutChanged()
     emit layoutChanged();
 //    endRemoveRows();
 }
 void ZLQtTreeModel::onNodeUpdated(ZLTreeNode *node) {
-    qDebug() << Q_FUNC_INFO << node;
+    //qDebug() << Q_FUNC_INFO << node;
     //TODO there should be dataChanged instead of layoutChanged()
     emit layoutChanged();
 //    QModelIndex index = createIndex(node);
