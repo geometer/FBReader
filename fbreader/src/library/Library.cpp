@@ -194,10 +194,18 @@ void LibrarySynchronizer::run() {
 void Library::synchronize() const {
 	if (myScanSubdirs != ScanSubdirsOption.value() ||
 			myPath != PathOption.value()) {
-		ZLFSWatcher::removeWatcher(myPath, myWatcher);
+                std::vector<std::string> oldPathes;
+                ZLStringUtil::split(myPath, oldPathes, ZLibrary::PathDelimiter);
+                for (size_t i = 0; i < oldPathes.size(); ++i) {
+                    ZLFSWatcher::removeWatcher(oldPathes.at(i), myWatcher);
+                }
 		myPath = PathOption.value();
 		myScanSubdirs = ScanSubdirsOption.value();
-		ZLFSWatcher::addWatcher(myPath, myWatcher);
+                std::vector<std::string> pathes;
+                ZLStringUtil::split(myPath, pathes, ZLibrary::PathDelimiter);
+                for (size_t i = 0; i < pathes.size(); ++i) {
+                    ZLFSWatcher::addWatcher(pathes.at(i), myWatcher);
+                }
 		myBuildMode = BUILD_ALL;
 	}
 

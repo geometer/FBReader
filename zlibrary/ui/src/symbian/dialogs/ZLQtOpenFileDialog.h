@@ -11,7 +11,7 @@
 #include <ZLFile.h>
 #include <ZLOpenFileDialog.h>
 
-#include "../filesystem/ZLQtFSManager.h"
+#include "../filesystem/ZLSymbianFSManager.h"
 
 class ZLQtOpenFileDialog : public ZLOpenFileDialog {
 

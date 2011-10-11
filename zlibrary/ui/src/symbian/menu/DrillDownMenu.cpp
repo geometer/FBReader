@@ -173,7 +173,7 @@ QSize MenuItemParameters::getSize() {
 QFont MenuItemParameters::getFont() {
     static const int FONT_SIZE_IN_POINTS = 8;
     QFont font = qApp->desktop()->font();
-    qDebug() << "font default size" <<  font.pointSize();
+    //qDebug() << "font default size" <<  font.pointSize();
     font.setPointSize(FONT_SIZE_IN_POINTS);
     //font.setStyleStrategy(QFont::PreferDevice);
     font.setBold(true);

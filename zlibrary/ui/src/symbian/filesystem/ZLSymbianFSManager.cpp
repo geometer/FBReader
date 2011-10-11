@@ -12,23 +12,7 @@
 #include <ZLibrary.h>
 #include <ZLStringUtil.h>
 
-#include "ZLQtFSManager.h"
-
-
-std::string ZLQtFSManager::convertFilenameToUtf8(const std::string &name) const {
-	if (name.empty()) {
-		return name;
-	}
-
-	QString qString = QString::fromLocal8Bit(name.c_str());
-	return (qString == QString::null) ? "" : (const char*)qString.toUtf8();
-}
-
-std::string ZLQtFSManager::mimeType(const std::string &path) const {
-	// TODO: implement
-	return std::string();
-}
-
+#include "ZLSymbianFSManager.h"
 
 static std::string getPwdDir() {
 	return QDir::current().absolutePath().replace("/",QString::fromStdString(ZLibrary::FileNameDelimiter)).toStdString();
@@ -38,15 +22,15 @@ static std::string getHomeDir() {
 	return QDir::home().absolutePath().replace("/",QString::fromStdString(ZLibrary::FileNameDelimiter)).toStdString();
 }
 
-std::string ZLQtFSManager::resolveSymlink(const std::string &path) const {
+std::string ZLSymbianFSManager::resolveSymlink(const std::string &path) const {
 		return path;
 }
 
-ZLFSDir *ZLQtFSManager::createPlainDirectory(const std::string &path) const {
+ZLFSDir *ZLSymbianFSManager::createPlainDirectory(const std::string &path) const {
 	return new ZLUnixFSDir(path);
 }
 
-void ZLQtFSManager::normalizeRealPath(std::string &path) const {
+void ZLSymbianFSManager::normalizeRealPath(std::string &path) const {
 
 #ifndef __SYMBIAN__
 	//TODO write ZLQtFSManager using only Qt instruments for this (to avoid these hacks)
@@ -95,7 +79,7 @@ void ZLQtFSManager::normalizeRealPath(std::string &path) const {
 }
 
 
-int ZLQtFSManager::findArchiveFileNameDelimiter(const std::string &path) const {
+int ZLSymbianFSManager::findArchiveFileNameDelimiter(const std::string &path) const {
 	int index = path.rfind(':');
 	return (index == 1) ? -1 : index;
 }
@@ -103,15 +87,15 @@ int ZLQtFSManager::findArchiveFileNameDelimiter(const std::string &path) const {
 static const std::string RootPath = ROOTPATH;
 
 
-shared_ptr<ZLDir> ZLQtFSManager::rootDirectory() const {
+shared_ptr<ZLDir> ZLSymbianFSManager::rootDirectory() const {
 		return (ZLDir*)createPlainDirectory(RootPath);
 }
 
-const std::string &ZLQtFSManager::rootDirectoryPath() const {
+const std::string &ZLSymbianFSManager::rootDirectoryPath() const {
 		return RootPath;
 }
 
-std::string ZLQtFSManager::parentPath(const std::string &path) const {
+std::string ZLSymbianFSManager::parentPath(const std::string &path) const {
 		if (path == RootPath) {
 				return path;
 		}
@@ -119,7 +103,7 @@ std::string ZLQtFSManager::parentPath(const std::string &path) const {
 		return (index <= 0) ? RootPath : path.substr(0, index);
 }
 
-ZLFSDir *ZLQtFSManager::createNewDirectory(const std::string &path) const {
+ZLFSDir *ZLSymbianFSManager::createNewDirectory(const std::string &path) const {
         //TODO check is it working right;
         QDir().mkpath(QString::fromStdString(path));
         return createPlainDirectory(path);

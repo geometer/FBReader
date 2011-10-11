@@ -49,7 +49,7 @@ void ZLQtTreeDialog::back() {
 }
 
 void ZLQtTreeDialog::enter(QModelIndex index) {
-        qDebug() << Q_FUNC_INFO << index;
+        //qDebug() << Q_FUNC_INFO << index;
 	if (!myModel->enter(index)) {
 		close();
 	}
@@ -69,7 +69,7 @@ private:
 };
 
 void ZLQtTreeDialog::showMenu(QModelIndex index) {
-        qDebug() << Q_FUNC_INFO << index;
+        //qDebug() << Q_FUNC_INFO << index;
         const ZLTreeNode* node = myModel->getTreeNode(index);
         if (node == 0) {
             return;
