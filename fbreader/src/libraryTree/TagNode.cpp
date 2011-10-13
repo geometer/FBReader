@@ -19,6 +19,7 @@
 
 #include <ZLResource.h>
 #include <ZLImage.h>
+#include <ZLStringUtil.h>
 
 #include "LibraryNodes.h"
 
@@ -38,7 +39,7 @@ TagNode::TagNode(shared_ptr<Tag> tag): myTag(tag) {
 	//TODO add code for series retrieving here
 	size_t index = 0;
 	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
-		insert(new BookNode(*it),index++);
+                insert(new BookNode(*it, BookNode::SHOW_AUTHORS),index++);
 	}
 }
 
@@ -47,39 +48,8 @@ const ZLResource &TagNode::resource() const {
 }
 
 void TagNode::requestChildren() {
-
+    //TODO may be add lazy initialization here
 }
-
-//size_t TagNode::positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag) {
-//	const ZLBlockTreeNode::List &children = parent->children();
-//	ZLBlockTreeNode::List::const_reverse_iterator it = children.rbegin();
-//	for (; it != children.rend(); ++it) {
-//		if (!(*it)->isInstanceOf(TagNode::TYPE_ID) ||
-//				TagComparator()(((TagNode*)*it)->tag(), tag)) {
-//			break;
-//		}
-//	}
-//	return children.rend() - it;
-//}
-
-//TagNode::TagNode(ZLBlockTreeView::RootNode *parent, shared_ptr<Tag> tag) : FBReaderNode(parent, positionToInsert(parent, tag)), myTag(tag) {
-//}
-
-//TagNode::TagNode(TagNode *parent, shared_ptr<Tag> tag) : FBReaderNode(parent, positionToInsert(parent, tag)), myTag(tag) {
-//}
-
-//void TagNode::init() {
-//	registerExpandTreeAction();
-//	if (!myTag.isNull()) {
-//		registerAction(new TagEditAction(myTag));
-//		registerAction(new TagCloneAction(myTag));
-//		registerAction(new TagRemoveAction(myTag));
-//	}
-//}
-
-//shared_ptr<Tag> TagNode::tag() const {
-//	return myTag;
-//}
 
 std::string TagNode::title() const {
 	if (myTag.isNull()) {
@@ -89,8 +59,7 @@ std::string TagNode::title() const {
 }
 
 std::string TagNode::subtitle() const {
-	//TODO add more verbose info about subtitle here
-	return title();
+   return ZLStringUtil::join(Library::Instance().books(myTag), BookFunctor(), COMMA_JOIN_SEPARATOR);
 }
 
 shared_ptr<ZLImage> TagNode::extractCoverImage() const {

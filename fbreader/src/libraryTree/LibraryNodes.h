@@ -23,6 +23,8 @@
 #include "../tree/FBNode.h"
 
 #include "../library/Author.h"
+#include "../library/Tag.h"
+#include "../library/Book.h"
 
 #include <ZLTreeActionNode.h>
 
@@ -115,7 +117,13 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	BookNode(shared_ptr<Book> book);
+        enum SubtitleMode {
+            SHOW_AUTHORS,
+            SHOW_TAGS
+        };
+
+public:
+        BookNode(shared_ptr<Book> book, SubtitleMode subtitleMode = SHOW_AUTHORS);
 
 public:
 	std::string title() const;
@@ -134,6 +142,34 @@ private:
 
 private:
 	const shared_ptr<Book> myBook;
+        const std::string mySubtitle;
 };
+
+class AuthorFunctor {
+public:
+    std::string operator()(shared_ptr<Author> author) const;
+};
+
+class TagFunctor {
+public:
+    std::string operator()(shared_ptr<Tag> tag) const;
+};
+
+class BookFunctor {
+public:
+    std::string operator()(shared_ptr<Book> book) const;
+};
+
+inline std::string AuthorFunctor::operator()(shared_ptr<Author> author) const {
+    return author.isNull() ? std::string() : author->name();
+}
+
+inline std::string TagFunctor::operator()(shared_ptr<Tag> tag) const {
+    return tag.isNull() ? std::string() : tag->name();
+}
+
+inline std::string BookFunctor::operator()(shared_ptr<Book> book) const {
+    return book.isNull() ? std::string() : book->title();
+}
 
 #endif /* __LIBRARYNODES_H__ */

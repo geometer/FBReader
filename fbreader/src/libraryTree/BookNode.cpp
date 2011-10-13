@@ -19,6 +19,7 @@
 
 #include <ZLResource.h>
 #include <ZLImage.h>
+#include <ZLStringUtil.h>
 
 #include "LibraryNodes.h"
 
@@ -30,21 +31,31 @@
 #include "../fbreader/FBReader.h"
 #include "../formats/FormatPlugin.h"
 
+static std::string generateSubtitle(const shared_ptr<Book> book, BookNode::SubtitleMode subtitleMode) {
+    switch (subtitleMode) {
+        case BookNode::SHOW_AUTHORS:
+            return ZLStringUtil::join(book->authors(), AuthorFunctor(), FBNode::COMMA_JOIN_SEPARATOR);
+        case BookNode::SHOW_TAGS:
+            return ZLStringUtil::join(book->tags(), TagFunctor(), FBNode::COMMA_JOIN_SEPARATOR);
+    }
+    return std::string();
+}
+
 const ZLTypeId BookNode::TYPE_ID(ZLTreeActionNode::TYPE_ID);
 
 const ZLTypeId &BookNode::typeId() const {
 	return TYPE_ID;
 }
 
-BookNode::BookNode(shared_ptr<Book> book): myBook(book) {
+BookNode::BookNode(shared_ptr<Book> book, SubtitleMode subtitleMode):
+    myBook(book), mySubtitle(generateSubtitle(book,subtitleMode)) {
 }
 
 std::string BookNode::title() const {
 	return myBook->title();
 }
 std::string BookNode::subtitle() const {
-	//TODO add more verbose subtitle here
-	return myBook->title();
+    return mySubtitle;
 }
 
 std::string BookNode::imageUrl() const {

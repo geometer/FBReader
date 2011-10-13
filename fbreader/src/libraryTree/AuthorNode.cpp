@@ -20,6 +20,7 @@
 #include <ZLResource.h>
 #include <ZLImage.h>
 #include <ZLOptionsDialog.h>
+#include <ZLStringUtil.h>
 
 #include "LibraryNodes.h"
 
@@ -42,7 +43,7 @@ AuthorNode::AuthorNode(shared_ptr<Author> author): myAuthor(author) {
 	//TODO add code for series retrieving here
 	size_t index = 0;
 	for (BookList::const_iterator it = books.begin(); it != books.end(); ++it) {
-		insert(new BookNode(*it),index++);
+                insert(new BookNode(*it, BookNode::SHOW_TAGS),index++);
 	}
 }
 
@@ -50,7 +51,7 @@ std::string AuthorNode::title() const {
 	return myAuthor.isNull() ? resource()["unknownAuthor"].value() : myAuthor->name();
 }
 std::string AuthorNode::subtitle() const {
-	return std::string();
+    return ZLStringUtil::join(Library::Instance().books(myAuthor), BookFunctor(), COMMA_JOIN_SEPARATOR);
 }
 
 std::string AuthorNode::imageUrl() const {
@@ -62,5 +63,5 @@ shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
 }
 
 void AuthorNode::requestChildren() {
-
+    //TODO may be add lazy initialization here
 }

@@ -10,19 +10,20 @@ const ZLTypeId &RecentBooksTreeNode::typeId() const {
 }
 
 RecentBooksTreeNode::RecentBooksTreeNode() {
+        //TODO may be add lazy initialization here
 	const BookList &books = Library::Instance().recentBooks();
 	size_t index = 0;
 	for (BookList::const_iterator it=books.begin(); it!=books.end(); ++it) {
-		insert(new BookNode(*it), index++);
+                insert(new BookNode(*it), index++);
 	}
 }
 
 std::string RecentBooksTreeNode::title() const {
-	//TODO add resource for this node
-	return ZLResource::resource("menu")["showRecent"].value();
+        //TODO add not-toolbar resource for this node
+        return ZLResource::resource("toolbar")["showRecent"]["label"].value();
 }
 
 std::string RecentBooksTreeNode::subtitle() const {
-	//TODO add another subtitle here
-	return ZLResource::resource("menu")["showRecent"].value();
+        //TODO add not-toolbar resource for this node
+        return ZLResource::resource("toolbar")["showRecent"]["tooltip"].value();
 }
