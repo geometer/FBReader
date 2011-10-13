@@ -12,8 +12,9 @@ import alsaaudio
 def transform(version):
 	#4.07.1 => 00040701
 	#0.99.0 => 00009900
+	#0.99.2.35 => 00009902
 
-	versions = version.split('.')
+	versions = version.split('.')[:3]
 	result = "00"
 	for ver in versions:
 		if len(ver) > 2:
@@ -26,7 +27,8 @@ def transform(version):
 def transform_pkg(version):
 	#4.07.1 => 4,7,1
 	#0.99.0 => 0,99,0
-	versions = [int(v) for v in version.split('.')]
+	#0.99.2.35 => 0,99,2
+	versions = [int(v) for v in version.split('.')[:3]]
 	return ",".join( [str(v) for v in versions] )
 	
 
@@ -34,6 +36,7 @@ def tests_pkg():
 	examples = [ ("4.07.1" , "4,7,1"),  
 			     ("0.99.0" , "0,99,0"),
 			     ("0.99.2" , "0,99,2"),
+			     ("0.99.2.3" , "0,99,2"),
 			   ]
 	for initial, out in examples:
 		if transform_pkg(initial) != out:
@@ -44,6 +47,7 @@ def tests():
 	examples = [ ("4.07.1" , "00040701"),  
 			     ("0.99.0" , "00009900"),
 			     ("0.99.2" , "00009902"),
+			     ("0.99.2.3" , "00009902"),
 			   ]
 	for initial, out in examples:
 		if transform(initial) != out:
