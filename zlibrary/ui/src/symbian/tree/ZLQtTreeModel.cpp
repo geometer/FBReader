@@ -16,7 +16,6 @@ ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QObject *parent
 	myCurrentNode = &myRootNode;
 }
 
-
 bool ZLQtTreeModel::back() {
 	if (myCurrentNode == &myRootNode) {
 		return false;
@@ -51,24 +50,36 @@ int ZLQtTreeModel::rowCount(const QModelIndex &parent) const {
 }
 
 QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
-	if (index.isValid() && role == Qt::DisplayRole) {
-            //TODO remove it:
-            // it needs in case if view don't take attention to rowCount
-            if (index.row() >= myCurrentNode->children().size()) {
-                return QVariant();
-            }
-            //qDebug() << "asking for data... at " << role << index.row() << index.column();
-            const ZLTreeNode* node = myCurrentNode->children().at(index.row());
-            if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
-                    //qDebug() << "return " << ::qtString(titledNode->title());
-                    return ::qtString(titledNode->title());
-            }
-        } else if (role == Qt::SizeHintRole){
-            //qDebug() << Q_FUNC_INFO << role << index;
-            return MenuItemParameters::getSize();
+        if (!index.isValid() || index.row() >= myCurrentNode->children().size()) {
+            //TODO may be remove second statement in 'if' above:
+            //it is need in case if view don't take attention to rowCount
+            //const ZLTreeNode* node = myCurrentNode->children().at(index.row());
+            return QVariant();
         }
-        else if (role == Qt::FontRole) {
-            return MenuItemParameters::getFont();
+
+        const ZLTreeNode* node = myCurrentNode->children().at(index.row());
+        switch (role) {
+            case Qt::DisplayRole:
+                    if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node))
+                            return QString::fromStdString(titledNode->title());
+                    else
+                            return QString("No title");
+//            case Qt::DecorationRole:
+//                    if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
+//                        return titledNode->image();
+//                    }
+            case SubTitleRole:
+                    if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
+                            return QString::fromStdString(titledNode->subtitle());
+                    }
+            case Qt::SizeHintRole:
+                    return MenuItemParameters::getSize();
+            case Qt::FontRole:
+                return MenuItemParameters::getFont();
+//        case ActivatableRole:
+//                return zlobject_cast<ZLTreeActionNode*>(node) != NULL;
+//        case PageRole:
+//                return zlobject_cast<ZLTreePageNode*>(node) != NULL;
         }
         return QVariant();
 }

@@ -177,11 +177,17 @@ QSize MenuItemParameters::getSize() {
 }
 
 QFont MenuItemParameters::getFont() {
-    static const int FONT_SIZE_IN_POINTS = 8;
+    static const qreal COEF = 1.15;
     QFont font = qApp->desktop()->font();
-    //qDebug() << "font default size" <<  font.pointSize();
-    font.setPointSize(FONT_SIZE_IN_POINTS);
-    //font.setStyleStrategy(QFont::PreferDevice);
+    font.setPointSizeF( qreal(font.pointSizeF()*COEF) );
     font.setBold(true);
+    return font;
+}
+
+QFont MenuItemParameters::getSubtitleFont() {
+    static const qreal COEF = 0.85;
+    QFont font = qApp->desktop()->font();
+    font.setPointSizeF( qreal(font.pointSizeF()*COEF) );
+    font.setBold(false);
     return font;
 }

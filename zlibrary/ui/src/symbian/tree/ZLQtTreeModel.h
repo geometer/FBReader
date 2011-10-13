@@ -9,6 +9,13 @@ class ZLQtTreeModel : public QAbstractListModel {
 	Q_OBJECT;
 
 public:
+        enum TreeRoles {
+                SubTitleRole = Qt::UserRole,
+                ActivatableRole,
+                PageRole
+        };
+
+public:
 	explicit ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QObject *parent = 0);
 
 public:

@@ -29,6 +29,7 @@ public:
 namespace MenuItemParameters {
     QSize getSize();
     QFont getFont();
+    QFont getSubtitleFont();
 }
 
 class DrillDownMenuItem : public NiceSizeListWidgetItem {
