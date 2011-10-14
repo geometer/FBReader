@@ -135,8 +135,9 @@ shared_ptr<ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
 
 void NetworkCatalogNode::updateChildren(shared_ptr<ZLExecutionData::Listener> listener) {
 	myListeners.push_back(listener);
-	if (myListeners.size() == 1)
+	if (myListeners.size() == 1) {
 		new LoadSubCatalogRunnable(this);
+	}
 }
 	
 void NetworkCatalogNode::onChildrenReceived(LoadSubCatalogRunnable *runnable) {

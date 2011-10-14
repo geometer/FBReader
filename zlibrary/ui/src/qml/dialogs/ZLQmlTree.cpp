@@ -256,10 +256,13 @@ void ZLQmlTreeDialog::onNodeUpdated(ZLTreeNode *node) {
 }
 
 void ZLQmlTreeDialog::run() {
+	qDebug() << Q_FUNC_INFO << __LINE__;
     QEventLoop eventLoop;
 	connect(this, SIGNAL(finished()), &eventLoop, SLOT(quit()), Qt::QueuedConnection);
     eventLoop.exec(QEventLoop::AllEvents);
+	qDebug() << Q_FUNC_INFO << __LINE__;
 	qApp->sendPostedEvents(0, QEvent::DeferredDelete);
+	qDebug() << Q_FUNC_INFO << __LINE__;
 }
 
 void ZLQmlTreeDialog::onCloseRequest() {

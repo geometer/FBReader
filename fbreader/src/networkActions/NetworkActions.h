@@ -65,6 +65,11 @@ public:
 	bool makesSense() const;
 	std::string text(const ZLResource &resource) const;
 	void run();
+	
+private:
+	void onAuthorisationCheck(ZLUserDataHolder &data, const std::string &error);
+	void onAuthorised(ZLUserDataHolder &data, const std::string &error);
+	void onPurchased(ZLUserDataHolder &data, const std::string &error);
 };
 
 class NetworkBookBuyInBrowserAction : public ZLTreeAction {

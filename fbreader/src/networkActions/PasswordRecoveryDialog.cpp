@@ -22,6 +22,7 @@
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
+#include <ZLTimeManager.h>
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 #include <optionEntries/ZLStringEditOptionEntry.h>
@@ -68,30 +69,70 @@ bool PasswordRecoveryDialog::runDialog(std::string &email, std::string &errorMes
 	}
 }
 
-bool PasswordRecoveryDialog::run(NetworkAuthenticationManager &mgr) {
+class PasswordRecoveryDialogRunnable : public ZLRunnable {
+public:
+	
+	PasswordRecoveryDialogRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
+	void run();
+	
+	NetworkAuthenticationManager &mgr;
+	shared_ptr<ZLExecutionData::Listener> listener;
+	shared_ptr<ZLRunnable> myHolder;
 	std::string errorMessage;
 	std::string email;
-	while (true) {
-		if (!runDialog(email, errorMessage)) {
-			LogOutRunnable logout(mgr);
-			logout.executeWithUI();
-			return false;
-		}
 
-		PasswordRecoveryRunnable recovery(mgr, email);
-		recovery.executeWithUI();
-		if (recovery.hasErrors()) {
-			errorMessage = recovery.errorMessage();
-			LogOutRunnable logout(mgr);
-			logout.executeWithUI();
-			continue;
-		}
+private:
+	void finish(const std::string &error);
+	void onLogOut(ZLUserDataHolder &data, const std::string &error);
+	void onRun(ZLUserDataHolder &data, const std::string &error);
+	void onRecovered(ZLUserDataHolder &data, const std::string &error);
+};
 
-		ZLResourceKey boxKey("recoverySuccessfulBox");
-		const std::string message =
-			ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), email);
-		ZLDialogManager::Instance().informationBox(boxKey, message);
+PasswordRecoveryDialogRunnable::PasswordRecoveryDialogRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener)
+    : mgr(mgr), listener(listener), myHolder(this) {
+	ZLTimeManager::Instance().addAutoRemovableTask(myHolder);
+}
 
-		return true;
+void PasswordRecoveryDialogRunnable::finish(const std::string &error) {
+	listener->finished(error);
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
+}
+
+void PasswordRecoveryDialogRunnable::run() {
+	if (!PasswordRecoveryDialog::runDialog(email, errorMessage)) {
+		errorMessage = "Canceled";
+		new LogOutRunnable(mgr, ZLExecutionData::createListener(this, &PasswordRecoveryDialogRunnable::onLogOut));
+		return;
 	}
+	
+	mgr.recoverPassword(email,
+	                    ZLExecutionData::createListener(this, &PasswordRecoveryDialogRunnable::onRecovered));
+}
+
+void PasswordRecoveryDialogRunnable::onLogOut(ZLUserDataHolder &, const std::string &) {
+	finish(errorMessage);
+}
+
+void PasswordRecoveryDialogRunnable::onRun(ZLUserDataHolder &, const std::string &) {
+	run();
+}
+
+void PasswordRecoveryDialogRunnable::onRecovered(ZLUserDataHolder &, const std::string &error) {
+	if (!error.empty()) {
+		errorMessage = error;
+		new LogOutRunnable(mgr, ZLExecutionData::createListener(this, &PasswordRecoveryDialogRunnable::onRun));
+		return;
+	}
+	
+	ZLResourceKey boxKey("recoverySuccessfulBox");
+	const std::string message =
+		ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), email);
+	ZLDialogManager::Instance().informationBox(boxKey, message);
+	finish(std::string());
+}
+
+bool PasswordRecoveryDialog::run(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener) {
+	new PasswordRecoveryDialogRunnable(mgr, listener);
+	return false;
 }

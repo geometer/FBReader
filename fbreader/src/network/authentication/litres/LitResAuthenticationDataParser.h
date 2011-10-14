@@ -66,15 +66,15 @@ inline std::map<std::string, std::string> &LitResAuthenticationDataParser::attri
 class LitResLoginDataParser : public LitResAuthenticationDataParser {
 
 public:
-	LitResLoginDataParser(LitResAuthenticationManager *manager, shared_ptr<ZLExecutionData::Listener> listener);
+	LitResLoginDataParser(std::string &firstName, std::string &lastName, std::string &sid);
 
 private:
 	void processTag(const std::string &tag);
 
 private:
-	std::string myFirstName;
-	std::string myLastName;
-	std::string mySid;
+	std::string &myFirstName;
+	std::string &myLastName;
+	std::string &mySid;
 };
 
 

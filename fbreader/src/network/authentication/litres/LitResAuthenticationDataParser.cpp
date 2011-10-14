@@ -60,19 +60,17 @@ void LitResAuthenticationDataParser::finish() {
 	myListener->finished(errorMessage());
 }
 
-LitResLoginDataParser::LitResLoginDataParser(LitResAuthenticationManager *manager, shared_ptr<ZLExecutionData::Listener> listener) : 
-	LitResAuthenticationDataParser(Login, manager, listener) {
+LitResLoginDataParser::LitResLoginDataParser(std::string &firstName, std::string &lastName, std::string &sid) : 
+	LitResAuthenticationDataParser(), myFirstName(firstName), myLastName(lastName), mySid(sid) {
 }
 
 void LitResLoginDataParser::processTag(const std::string &tag) {
 	if (TAG_AUTHORIZATION_FAILED == tag) {
 		setErrorCode(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
-		finish();
 	} else if (TAG_AUTHORIZATION_OK == tag) {
 		myFirstName = attributes()["first-name"];
 		myLastName = attributes()["first-name"];
 		mySid = attributes()["sid"];
-		finish();
 	}
 }
 

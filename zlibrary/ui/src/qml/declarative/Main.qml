@@ -52,7 +52,7 @@ PageStackWindow {
 		
         onFileDialogRequested: {
 			var component = Qt.createComponent("OpenFileDialog.qml");
-			rootWindow.openDialog(component.createObject(mainPage, { handler: object }));
+			root.openDialog(component.createObject(mainPage, { handler: object }));
 		}
 		
         onTreeDialogRequested: {
@@ -63,6 +63,11 @@ PageStackWindow {
 		
 		onProgressDialogRequested: {
 			root.openDialog(progressDialog.createObject(root.pageStack.parent.parent, { handler: object }));
+		}
+		
+		onQuestionDialogRequested: {
+			var component = Qt.createComponent("QuestionDialog.qml");
+			root.openDialog(component.createObject(root.pageStack.parent.parent, { handler: object }));
 		}
 		
 		onInformationBoxRequested: {

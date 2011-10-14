@@ -33,15 +33,17 @@ public:
 
 class ZLUserDataHolder {
 
-protected:
-	virtual ~ZLUserDataHolder();
-
 public:
+	ZLUserDataHolder();
+	ZLUserDataHolder(const ZLUserDataHolder &other);
+	virtual ~ZLUserDataHolder();
+	
 	void addUserData(const std::string &key, shared_ptr<ZLUserData> data);
 	void removeUserData(const std::string &key);
 	shared_ptr<ZLUserData> getUserData(const std::string &key) const;
 
 private:
+	ZLUserDataHolder &operator =(const ZLUserDataHolder &other);
 	std::map<std::string,shared_ptr<ZLUserData> > myDataMap;
 };
 

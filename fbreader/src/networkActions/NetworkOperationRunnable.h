@@ -37,13 +37,14 @@ class NetworkCatalogNode;
 class NetworkOperationRunnable : public ZLRunnable, public ZLExecutionData::Listener {
 
 public:
+	~NetworkOperationRunnable();
+	
 	static void showErrorMessage(const std::string &message);
 	static bool tryConnect();
 
 protected:
-	NetworkOperationRunnable(const std::string &uiMessageKey);
+//	NetworkOperationRunnable(const std::string &uiMessageKey);
 	NetworkOperationRunnable();
-	~NetworkOperationRunnable();
 	
 	void destroy();
 	void showPercent(int ready, int full);
@@ -92,47 +93,9 @@ private:
 	DownloadBookListener *myListener;
 };
 
-class IsAuthorisedRunnable : public NetworkOperationRunnable {
-
-public:
-	IsAuthorisedRunnable(NetworkAuthenticationManager &mgr);
-	void run();
-
-	ZLBoolean3 result();
-
-private:
-	NetworkAuthenticationManager &myManager;
-	ZLBoolean3 myResult;
-};
-
-class AuthoriseRunnable : public NetworkOperationRunnable {
-
-public:
-	AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password);
-	AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password, shared_ptr<ZLExecutionData::Listener> listener);
-	void run();
-	void finished(const std::string &error = std::string());
-
-private:
-	NetworkAuthenticationManager &myManager;
-	std::string myPassword;
-	shared_ptr<ZLExecutionData::Listener> myListener;
-};
-
-class InitializeAuthenticationManagerRunnable : public NetworkOperationRunnable {
-
-public:
-	InitializeAuthenticationManagerRunnable(NetworkAuthenticationManager &mgr);
-	void run();
-
-private:
-	NetworkAuthenticationManager &myManager;
-};
-
 class LogOutRunnable : public NetworkOperationRunnable {
 
 public:
-	LogOutRunnable(NetworkAuthenticationManager &mgr);
 	LogOutRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
 	void run();
 	void finished(const std::string &error = std::string());
@@ -140,41 +103,6 @@ public:
 private:
 	NetworkAuthenticationManager &myManager;
 	shared_ptr<ZLExecutionData::Listener> myListener;
-};
-
-class PurchaseBookRunnable : public NetworkOperationRunnable {
-
-public:
-	PurchaseBookRunnable(NetworkAuthenticationManager &mgr, const NetworkBookItem &book);
-	void run();
-
-private:
-	NetworkAuthenticationManager &myManager;
-	const NetworkBookItem &myBook;
-};
-
-class PasswordRecoveryRunnable : public NetworkOperationRunnable {
-
-public:
-	PasswordRecoveryRunnable(NetworkAuthenticationManager &mgr, const std::string &email);
-	void run();
-
-private:
-	NetworkAuthenticationManager &myManager;
-	const std::string &myEMail;
-};
-
-class RegisterUserRunnable : public NetworkOperationRunnable {
-
-public:
-	RegisterUserRunnable(NetworkAuthenticationManager &mgr, const std::string &login, const std::string &password, const std::string &email);
-	void run();
-
-private:
-	NetworkAuthenticationManager &myManager;
-	const std::string &myLogin;
-	const std::string &myPassword;
-	const std::string &myEMail;
 };
 
 

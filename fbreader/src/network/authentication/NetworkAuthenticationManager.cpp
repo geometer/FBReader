@@ -37,8 +37,10 @@ bool NetworkAuthenticationManager::needsInitialization() {
 	return false;
 }
 
-std::string NetworkAuthenticationManager::initialize() {
-	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
+std::string NetworkAuthenticationManager::initialize(shared_ptr<ZLExecutionData::Listener> listener) {
+	std::string error = NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
+	listener->finished(error);
+	return error;
 }
 
 bool NetworkAuthenticationManager::needPurchase(const NetworkBookItem &) {
@@ -51,13 +53,11 @@ std::string NetworkAuthenticationManager::purchaseBook(const NetworkBookItem &, 
 	return error;
 }
 
-std::string NetworkAuthenticationManager::refillAccountLink(shared_ptr<ZLExecutionData::Listener> listener) {
-	listener->finished(std::string());
+std::string NetworkAuthenticationManager::refillAccountLink() {
 	return "";
 }
 
-std::string NetworkAuthenticationManager::currentAccount(shared_ptr<ZLExecutionData::Listener> listener) {
-	listener->finished(std::string());
+std::string NetworkAuthenticationManager::currentAccount() {
 	return "";
 }
 

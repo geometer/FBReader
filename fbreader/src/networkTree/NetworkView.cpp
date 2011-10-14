@@ -93,7 +93,7 @@ shared_ptr<NetworkView::CoverUpdater> NetworkView::CoverUpdater::create() {
 	return Counter == 0 ? new CoverUpdater() : 0;
 }
 
-NetworkView::CoverUpdater::CoverUpdater() : NetworkOperationRunnable("downloadImages") {
+NetworkView::CoverUpdater::CoverUpdater() { //: NetworkOperationRunnable("downloadImages") {
 	++Counter;
 }
 
@@ -322,12 +322,13 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 }
 
 bool NetworkView::processAccountDependent(NetworkCatalogItem &item) {
-	if (item.Visibility == NetworkCatalogItem::Always) {
-		return true;
-	}
-	const NetworkLink &link = item.Link;
-	if (link.authenticationManager().isNull()) {
-		return false;
-	}
-	return link.authenticationManager()->isAuthorised().Status != B3_FALSE;
+//	if (item.Visibility == NetworkCatalogItem::Always) {
+//		return true;
+//	}
+//	const NetworkLink &link = item.Link;
+//	if (link.authenticationManager().isNull()) {
+//		return false;
+//	}
+//	return link.authenticationManager()->isAuthorised().Status != B3_FALSE;
+	return false;
 }

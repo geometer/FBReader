@@ -60,8 +60,8 @@ Page {
 			}
 			onPressedChanged: if (pressed) hasTapAndHold = false
 			onTapAndHold: {
-				var index = visualModel.modelIndex(index);
-				var menu = menuComponent.createObject(listView.parent, { "modelIndex": index });
+				console.log("Tap on", model.title)
+				var menu = menuComponent.createObject(listView.parent, { "modelIndex": visualModel.modelIndex(index) });
 				if (menu.hasChildren) {
 					hasTapAndHold = true;
 					menu.show();

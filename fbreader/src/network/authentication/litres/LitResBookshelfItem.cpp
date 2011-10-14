@@ -29,39 +29,6 @@
 #include "../../NetworkComparators.h"
 #include "../../NetworkErrors.h"
 
-LitResBookshelfItemLoader::LitResBookshelfItemLoader(const NetworkLink &link, NetworkItem::List &children,
-                                                     bool forceReload, shared_ptr<ZLExecutionData::Listener> listener)
-    : myLink(link), myChildren(children), myForceReload(forceReload), myState(Authorization), myListener(listener), myHolder(this) {
-	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*myLink.authenticationManager());
-	NetworkAuthenticationManager::AuthenticationStatus status =  mgr.isAuthorised(true, myHolder);
-	if (status.Status == B3_UNDEFINED)
-		return;
-	if (status.Status == B3_FALSE)
-		finished(NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED));
-	else
-		finished(std::string());
-}
-
-LitResBookshelfItemLoader::~LitResBookshelfItemLoader() {
-}
-
-void LitResBookshelfItemLoader::showPercent(int ready, int full) {
-	myListener->showPercent(ready, full);
-}
-
-void LitResBookshelfItemLoader::finished(const std::string &error) {
-	if (myState == Authorization) {
-		if (!error.empty()) {
-			myListener->finished(error);
-		}
-	}
-}
-
-void LitResBookshelfItemLoader::die() {
-	ZLTimeManager::deleteLater(myHolder);
-	myHolder.reset();
-}
-
 LitResBookshelfItem::LitResBookshelfItem(
 	const NetworkLink &link,
 	const std::string &title,
@@ -82,21 +49,43 @@ void LitResBookshelfItem::onDisplayItem() {
 	myForceReload = false;
 }
 
-std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener) {
-	new LitResBookshelfItemLoader(Link, children, myForceReload, listener);
-	myForceReload = true;
-	return std::string();
+class LitResBookshelfItemLoaderScope : public ZLUserData {
+public:
+	NetworkItem::List *children;
+	shared_ptr<ZLExecutionData::Listener> listener;
+};
 
-//	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
-//	if (mgr.isAuthorised().Status == B3_FALSE) {
-//		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
-//	}
-//	std::string error;
-//	if (myForceReload) {
-//		error = mgr.reloadPurchasedBooks();
-//	}
-//	myForceReload = true;
-//	mgr.collectPurchasedBooks(children);
-//	std::sort(children.begin(), children.end(), NetworkBookItemComparator());
-//	return error;
+std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener) {
+	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
+	shared_ptr<ZLUserDataHolder> data = new ZLUserDataHolder;
+	LitResBookshelfItemLoaderScope *scope = new LitResBookshelfItemLoaderScope;
+	scope->children = &children;
+	scope->listener = listener;
+	data->addUserData("scope", scope);
+	mgr.isAuthorised(ZLExecutionData::createListener(data, this, &LitResBookshelfItem::onAuthorised));
+	return std::string();
+}
+
+void LitResBookshelfItem::onAuthorised(ZLUserDataHolder &data, const std::string &error) {
+	LitResBookshelfItemLoaderScope &scope = static_cast<LitResBookshelfItemLoaderScope&>(*data.getUserData("scope"));
+	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
+	if (!error.empty()) {
+		scope.listener->finished(error);
+		return;
+	}
+	if (myForceReload) {
+		ZLUserDataHolder *dataCopy = new ZLUserDataHolder(data);
+		mgr.reloadPurchasedBooks(ZLExecutionData::createListener(dataCopy, this, &LitResBookshelfItem::onReloaded));
+		return;
+	}
+	onReloaded(data, error);
+}
+
+void LitResBookshelfItem::onReloaded(ZLUserDataHolder &data, const std::string &error) {
+	LitResBookshelfItemLoaderScope &scope = static_cast<LitResBookshelfItemLoaderScope&>(*data.getUserData("scope"));
+	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
+	myForceReload = true;
+	mgr.collectPurchasedBooks(*scope.children);
+	std::sort(scope.children->begin(), scope.children->end(), NetworkBookItemComparator());
+	scope.listener->finished(error);
 }

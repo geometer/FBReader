@@ -51,7 +51,8 @@ public:
 		AuthenticationStatus(const std::string &msg);
 	};
 
-	virtual AuthenticationStatus isAuthorised(bool useNetwork = true, shared_ptr<ZLExecutionData::Listener> listener = 0) = 0;
+	// if listener is null then don't use network
+	virtual AuthenticationStatus isAuthorised(shared_ptr<ZLExecutionData::Listener> listener) = 0;
 	virtual std::string authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener) = 0; // returns error message
 	virtual void logOut(shared_ptr<ZLExecutionData::Listener> listener) = 0;
 
@@ -66,7 +67,7 @@ public: // Account specific methods (can be called only if authorised!!!)
 	virtual bool needPurchase(const NetworkBookItem &book); // returns true if link must be purchased before downloading
 	virtual std::string purchaseBook(const NetworkBookItem &book, shared_ptr<ZLExecutionData::Listener> listener); // returns error message
 
-	virtual std::string refillAccountLink(shared_ptr<ZLExecutionData::Listener> listener);
+	virtual std::string refillAccountLink();
 	virtual std::string currentAccount();
 
 	virtual const ZLNetworkSSLCertificate &certificate() = 0;

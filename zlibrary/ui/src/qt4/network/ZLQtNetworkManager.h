@@ -58,6 +58,7 @@ protected Q_SLOTS:
     void onFinished(QNetworkReply *reply);
 
 private:
+	void readData(QNetworkReply *reply, ZLNetworkRequest *request);
 	bool checkReply(QNetworkReply *reply);
 	QNetworkAccessManager myManager;
 	ZLQtNetworkCache *myCache;
@@ -100,7 +101,5 @@ private:
 
 Q_DECLARE_METATYPE(shared_ptr<ZLExecutionData>)
 Q_DECLARE_METATYPE(ZLQtNetworkReplyScope)
-
-typedef QPair<QByteArray, QByteArray>  RawHeaderPair;
 
 #endif /* __ZLQTNETWORKMANAGER_H__ */

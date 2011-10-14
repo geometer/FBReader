@@ -56,7 +56,7 @@ public:
 	BasicAuthenticationManager(const NetworkLink &link);
 
 public:
-	AuthenticationStatus isAuthorised(bool useNetwork = true, shared_ptr<ZLExecutionData::Listener> listener = 0);
+	AuthenticationStatus isAuthorised(shared_ptr<ZLExecutionData::Listener> listener);
 	std::string authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener); // returns error message
 	void logOut(shared_ptr<ZLExecutionData::Listener> listener);
 
@@ -74,6 +74,8 @@ public: // Account specific methods (can be called only if authorised!!!)
 	//std::string currentAccount();
 
 private:
+	void onAuthorised(ZLUserDataHolder &data, const std::string &error);
+	void onAuthorisationCheck(ZLUserDataHolder &data, const std::string &error);
 	const ZLNetworkSSLCertificate &certificate();
 
 private: // config data

@@ -36,15 +36,19 @@ BasicAuthenticationManager::BasicAuthenticationManager(const NetworkLink &link) 
 }
 
 
-NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::isAuthorised(bool useNetwork, shared_ptr<ZLExecutionData::Listener> listener) {
+NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::isAuthorised(shared_ptr<ZLExecutionData::Listener> listener) {
+	const bool useNetwork = !listener.isNull();
 	bool authState = !myAccountUserNameOption.value().empty();
 	if (myAccountChecked || !useNetwork) {
+		if (!listener.isNull())
+			listener->finished(authState ? std::string() : "Not authorised");
 		return AuthenticationStatus(authState);
 	}
 
 	if (!authState) {
 		myAccountChecked = true;
 		myAccountUserNameOption.setValue("");
+		listener->finished("Not authorised");
 		return AuthenticationStatus(false);
 	}
 
@@ -55,52 +59,24 @@ NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::i
 	ZLNetworkRequest &request = (ZLNetworkRequest &)*data;
 
 	request.setRedirectionSupported(false);
+	request.setHandler(this, &BasicAuthenticationManager::onAuthorisationCheck);
+	request.addUserData("listener", listener.staticCast<ZLUserData>());
 
-	std::string error = ZLNetworkManager::Instance().perform(data);
+	return ZLNetworkManager::Instance().perform(data);
+}
 
+void BasicAuthenticationManager::onAuthorisationCheck(ZLUserDataHolder &data, const std::string &error) {
+	shared_ptr<ZLExecutionData::Listener> listener = data.getUserData("listener").staticCast<ZLExecutionData::Listener>();
 	if (!error.empty()) {
-		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
-			return AuthenticationStatus(error);
+		if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
+			myAccountChecked = true;
+			myAccountUserNameOption.setValue("");
 		}
-		myAccountChecked = true;
-		myAccountUserNameOption.setValue("");
-		return AuthenticationStatus(false);
+		listener->finished(error);
+		return;
 	}
 	myAccountChecked = true;
-	return AuthenticationStatus(true);
-}
-
-class BasicAuthenticationManagerListener : public ZLExecutionData::Listener {
-public:
-	BasicAuthenticationManagerListener(BasicAuthenticationManager &manager, shared_ptr<ZLExecutionData::Listener> listener);
-
-	virtual void showPercent(int ready, int full);
-	virtual void finished(const std::string &error = std::string());
-	
-private:
-	BasicAuthenticationManager &myManager;
-	shared_ptr<ZLExecutionData::Listener> myHolder;
-	shared_ptr<ZLExecutionData::Listener> myListener;
-};
-
-BasicAuthenticationManagerListener::BasicAuthenticationManagerListener(BasicAuthenticationManager &manager, shared_ptr<ZLExecutionData::Listener> listener)
-    : myManager(manager), myHolder(this), myListener(listener) {
-}
-
-void BasicAuthenticationManagerListener::showPercent(int ready, int full) {
-	(void) ready;
-	(void) full;
-}
-
-void BasicAuthenticationManagerListener::finished(const std::string &error) {
-	myManager.myAccountChecked = true;
-	if (!error.empty())
-		myManager.myAccountUserNameOption.setValue("");
-	else
-		myManager.myAccountUserNameOption.setValue(UserNameOption.value());
-	myListener->finished(error);
-	ZLTimeManager::deleteLater(myHolder);
-	myHolder.reset();
+	listener->finished(std::string());
 }
 
 std::string BasicAuthenticationManager::authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener) {
@@ -112,9 +88,20 @@ std::string BasicAuthenticationManager::authorise(const std::string &pwd, shared
 
 	request.setRedirectionSupported(false);
 	request.setupAuthentication(ZLNetworkRequest::BASIC, UserNameOption.value(), pwd);
-	request.setListener(new BasicAuthenticationManagerListener(*this, listener));
+	request.setHandler(this, &BasicAuthenticationManager::onAuthorised);
+	request.addUserData("listener", listener.staticCast<ZLUserData>());
 
 	return ZLNetworkManager::Instance().perform(data);
+}
+
+
+void BasicAuthenticationManager::onAuthorised(ZLUserDataHolder &data, const std::string &error) {
+	myAccountChecked = true;
+	if (!error.empty())
+		myAccountUserNameOption.setValue("");
+	else
+		myAccountUserNameOption.setValue(UserNameOption.value());
+	data.getUserData("listener").staticCast<ZLExecutionData::Listener>()->finished(error);
 }
 
 void BasicAuthenticationManager::logOut(shared_ptr<ZLExecutionData::Listener> listener) {

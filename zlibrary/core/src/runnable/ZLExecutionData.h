@@ -50,7 +50,9 @@ public:
 	};
 
 public:
-	class Listener {
+	typedef void (*Handler)(ZLUserDataHolder &data, const std::string &error);
+	
+	class Listener : public ZLUserData {
 
 	protected:
 		Listener();
@@ -68,6 +70,29 @@ public:
 
 	friend class ZLExecutionData;
 	};
+	
+private:
+	class AbstractHandlerHelper : public ZLUserData {
+	public:
+		virtual void handle(ZLUserDataHolder &data, const std::string &error) = 0;
+	};
+
+	template <typename T, typename Method>
+	class HandlerHelper : public AbstractHandlerHelper {
+	public:
+		HandlerHelper(T object, Method method) : myObject(object), myMethod(method) {
+		}
+
+		void handle(ZLUserDataHolder &data, const std::string &error) {
+			(myObject->*myMethod)(data, error);
+		}
+
+	private:
+		T myObject;
+		Method myMethod;
+	};
+	static void handleHelper(ZLUserDataHolder &data, const std::string &error);
+	static shared_ptr<Listener> createListener(shared_ptr<ZLUserDataHolder> data);
 
 public:
 	static std::string perform(shared_ptr<ZLExecutionData> data);
@@ -75,6 +100,7 @@ public:
 
 private:
 	static std::set<Runner*> ourRunners;
+	static std::string ourHandlerId;
 
 protected:
 	ZLExecutionData();
@@ -84,6 +110,22 @@ public:
 	
 	bool hasListener() const;
 	void setListener(shared_ptr<Listener> listener);
+	void setHandler(Handler handler);
+	template <typename T, typename Method>
+	inline void setHandler(T object, Method method) {
+		addUserData(ourHandlerId, new HandlerHelper<T, Method>(object, method));
+		setHandler(handleHelper);
+	}
+	template <typename T, typename Method>
+	static shared_ptr<Listener> createListener(shared_ptr<ZLUserDataHolder> data, T object, Method method) {
+		data->addUserData(ourHandlerId, new HandlerHelper<T, Method>(object, method));
+		return createListener(data);
+	}
+	template <typename T, typename Method>
+	static shared_ptr<Listener> createListener(T object, Method method) {
+		return createListener(new ZLUserDataHolder, object, method);
+	}
+
 	virtual void onCancel();
 	void setPercent(int ready, int full);
 	

@@ -22,18 +22,12 @@
 
 #include <string>
 #include <shared_ptr.h>
+#include <ZLExecutionData.h>
 #include "../network/UserList.h"
 
 class ZLDialog;
 class NetworkAuthenticationManager;
 class AuthenticationDialogListener;
-
-class AuthenticationListener {
-public:
-	virtual ~AuthenticationListener();
-	
-	virtual void onAuthenticationFinished(bool result) = 0;
-};
 
 class AuthenticationDialog {
 
@@ -45,7 +39,7 @@ private:
 	static bool runDialog(NetworkAuthenticationManager &mgr, UserList &userList, const std::string &errorMessage, std::string &password);
 
 public:
-	static bool run(NetworkAuthenticationManager &mgr, shared_ptr<AuthenticationListener> listener = 0);
+	static bool run(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener = 0);
 
 private:
 	shared_ptr<ZLDialog> myDialog;

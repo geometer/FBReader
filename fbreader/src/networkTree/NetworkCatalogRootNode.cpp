@@ -155,7 +155,7 @@ NetworkCatalogAuthAction::NetworkCatalogAuthAction(NetworkAuthenticationManager 
 }
 
 bool NetworkCatalogAuthAction::makesSense() const {
-	return (myManager.isAuthorised(false).Status == B3_FALSE) != myForLoggedUsers;
+	return (myManager.isAuthorised(0).Status == B3_FALSE) != myForLoggedUsers;
 }
 
 NetworkCatalogRootNode::LoginAction::LoginAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, false) {
@@ -171,7 +171,7 @@ void NetworkCatalogRootNode::LoginAction::run() {
 		return;
 	}
 
-	AuthenticationDialog::run(myManager, myListener);
+	AuthenticationDialog::run(myManager, listener());
 //	FBReader::Instance().invalidateAccountDependents();
 //	FBReader::Instance().refreshWindow();
 }
@@ -189,7 +189,7 @@ std::string NetworkCatalogRootNode::LogoutAction::text(const ZLResource &resourc
 }
 
 void NetworkCatalogRootNode::LogoutAction::run() {
-	new LogOutRunnable(myManager, myListener);
+	new LogOutRunnable(myManager, listener());
 //	logout.executeWithUI();
 //	FBReader::Instance().invalidateAccountDependents();
 //	FBReader::Instance().refreshWindow();
@@ -256,9 +256,7 @@ void NetworkCatalogRootNode::PasswordRecoveryAction::run() {
 		return;
 	}
 
-	PasswordRecoveryDialog::run(myManager);
-	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().refreshWindow();
+	PasswordRecoveryDialog::run(myManager, listener());
 }
 
 NetworkCatalogRootNode::RegisterUserAction::RegisterUserAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, false) {
@@ -273,7 +271,5 @@ void NetworkCatalogRootNode::RegisterUserAction::run() {
 		return;
 	}
 
-	RegisterUserDialog::run(myManager);
-	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().refreshWindow();
+	RegisterUserDialog::run(myManager, listener());
 }

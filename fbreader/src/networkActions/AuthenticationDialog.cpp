@@ -113,7 +113,7 @@ bool AuthenticationDialog::runDialog(NetworkAuthenticationManager &mgr, UserList
 	return false;
 }
 
-class AuthenticationHelper : ZLRunnable {
+class AuthenticationHelper : public ZLRunnable {
 public:
 	AuthenticationHelper(shared_ptr<ZLExecutionData::Listener> listener, const std::string &error)
 	    : myListener(listener), myError(error) {
@@ -130,26 +130,27 @@ private:
 
 class AuthenticationDialogListener : public ZLExecutionData::Listener {
 public:
-	AuthenticationDialogListener(NetworkAuthenticationManager &mgr, shared_ptr<AuthenticationListener> listener);
+	AuthenticationDialogListener(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
 	
 	void finish(bool result);
 	virtual void showPercent(int ready, int full);
 	virtual void finished(const std::string &error = std::string());
 	
 private:
+	void onFinished(ZLUserDataHolder &data, const std::string &error);
 	void restart(const std::string &error);
 	
 	enum State { LogOut, LogOutFinal, Authorisation, Initialization };
 	shared_ptr<ZLExecutionData::Listener> myHolder;
 	NetworkAuthenticationManager &myManager;
-	shared_ptr<AuthenticationListener> myListener;
+	shared_ptr<ZLExecutionData::Listener> myListener;
 	std::string myPassword;
 	UserList *myUserList;
 	std::string myError;
 	State myState;
 };
 
-AuthenticationDialogListener::AuthenticationDialogListener(NetworkAuthenticationManager &mgr, shared_ptr<AuthenticationListener> listener)
+AuthenticationDialogListener::AuthenticationDialogListener(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener)
     : myHolder(this), myManager(mgr), myListener(listener), myUserList(new UserList), myState(LogOut) {
 	finished(std::string());
 }
@@ -160,7 +161,8 @@ void AuthenticationDialogListener::finish(bool result) {
 		delete myUserList;
 		myUserList = NULL;
 	}
-	myListener->onAuthenticationFinished(result);
+	// FIXME: Return notable error
+	myListener->finished(result ? std::string() : "Some error");
 	ZLTimeManager::deleteLater(myHolder);
 	myHolder.reset();
 }
@@ -183,7 +185,8 @@ void AuthenticationDialogListener::finished(const std::string &error) {
 			restart(resource["loginIsEmpty"].value());
 		} else {
 			myState = Authorisation;
-			new AuthoriseRunnable(myManager, myPassword, myHolder);
+			myManager.authorise(myPassword, ZLExecutionData::createListener(this, &AuthenticationDialogListener::onFinished));
+			return;
 		}
 	} else if (myState == LogOutFinal) {
 		finish(false);
@@ -192,9 +195,9 @@ void AuthenticationDialogListener::finished(const std::string &error) {
 			restart(myError);
 			return;
 		}
-		if (mgr.needsInitialization()) {
+		if (myManager.needsInitialization()) {
 			myState = Initialization;
-			new InitializeAuthenticationManagerRunnable(myManager, myHolder);
+			myManager.initialize(myHolder);
 		} else {
 			finish(true);
 		}
@@ -207,52 +210,18 @@ void AuthenticationDialogListener::finished(const std::string &error) {
 	}
 }
 
+void AuthenticationDialogListener::onFinished(ZLUserDataHolder &data, const std::string &error) {
+	(void) data;
+	finished(error);
+}
+
 void AuthenticationDialogListener::restart(const std::string &error) {
 	myPassword.clear();
 	myState = LogOut;
-	new AuthenticationHelper(myHolder, error);
+	ZLTimeManager::Instance().addAutoRemovableTask(new AuthenticationHelper(myHolder, error));
 }
 
-bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr, shared_ptr<AuthenticationListener> listener) {
-	if (listener) {
-		new AuthenticationDialogListener(mgr, listener);
-		return false;
-	}
-	std::string errorMessage;
-	UserList userList;
-	while (true) {
-		std::string password;
-		if (!runDialog(mgr, userList, errorMessage, password)) {
-			LogOutRunnable logout(mgr);
-			logout.executeWithUI();
-			return false;
-		}
-
-		if (mgr.UserNameOption.value().empty()) {
-			const ZLResource &resource = ZLResource::resource("dialog")["AuthenticationDialog"];
-			errorMessage = resource["loginIsEmpty"].value();
-			continue;
-		}
-
-		AuthoriseRunnable authoriser(mgr, password);
-		authoriser.executeWithUI();
-		if (authoriser.hasErrors()) {
-			errorMessage = authoriser.errorMessage();
-			LogOutRunnable logout(mgr);
-			logout.executeWithUI();
-			continue;
-		}
-		if (mgr.needsInitialization()) {
-			InitializeAuthenticationManagerRunnable initializer(mgr);
-			initializer.executeWithUI();
-			if (initializer.hasErrors()) {
-				errorMessage = initializer.errorMessage();
-				LogOutRunnable logout(mgr);
-				logout.executeWithUI();
-				continue;
-			}
-		}
-		userList.saveUser(mgr.currentUserName());
-		return true;
-	}
+bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener) {
+	new AuthenticationDialogListener(mgr, listener);
+	return false;
 }

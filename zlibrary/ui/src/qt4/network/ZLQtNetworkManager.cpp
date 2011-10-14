@@ -115,7 +115,10 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 			QFile file(QString::fromStdString(request.sslCertificate().Path));
 			if (file.open(QFile::ReadOnly)) {
 				QSslCertificate certificate(&file);
-				configuration.setLocalCertificate(certificate);
+				QList<QSslCertificate> list = configuration.caCertificates();
+				list.clear();
+				list.append(certificate);
+				configuration.setCaCertificates(list);
 			}
 		} else if (!request.sslCertificate().DoVerify) {
 			configuration.setPeerVerifyMode(QSslSocket::VerifyNone);
@@ -174,9 +177,7 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 	if (!checkReply(reply))
 		return;
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	QByteArray data = reply->readAll();
-	if (!data.isEmpty())
-		scope.request->handleContent(data.data(), data.size());
+	readData(reply, scope.request);
 }
 
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
@@ -189,6 +190,7 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	Q_ASSERT(scope.request);
 	if (scope.request->hasListener()) {
+		readData(reply, scope.request);
 		scope.request->doAfter(reply->error() == QNetworkReply::NoError
 		                       ? std::string()
 		                       : reply->errorString().toStdString());
@@ -202,11 +204,18 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 		scope.request->doAfter(reply->errorString().toStdString());
 		scope.errors->append(reply->errorString());
 	} else {
-		QByteArray data = reply->readAll();
-		if (!data.isEmpty())
-			scope.request->handleContent(data.data(), data.size());
+		readData(reply, scope.request);
 		if (!scope.request->doAfter(std::string()))
 			scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
+	}
+}
+
+void ZLQtNetworkManager::readData(QNetworkReply *reply, ZLNetworkRequest *request) {
+	QByteArray data = reply->property("content").toByteArray() + reply->readAll();
+	if (!data.isEmpty()) {
+		bool result = request->handleContent(data.data(), data.size());
+		qDebug() << result << QLatin1String(data) << QString::fromStdString(request->errorMessage());
+		reply->setProperty("content", result ? QByteArray() : data);
 	}
 }
 
@@ -245,20 +254,15 @@ bool ZLQtNetworkManager::checkReply(QNetworkReply *reply) {
 	data += " ";
 	data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
 	scope.request->handleHeader(data.data(), data.size());
-
-    //to use API of 4.6.2 Qt version
-    QList<RawHeaderPair> rawHeaderPairs;
-    foreach(const QByteArray& headerName, reply->rawHeaderList()) {
-        rawHeaderPairs.append(RawHeaderPair(headerName, reply->rawHeader(headerName)));
-    }
-    //following string (with foreach) has been commented, because
-    //method QNetworkReply::rawHeaderPairs is not exist in Qt 4.6.2
-    //foreach (const QNetworkReply::RawHeaderPair &pair, reply->rawHeaderPairs()) {
-    foreach (const RawHeaderPair &pair, rawHeaderPairs) {
-            data  = pair.first;
-            data += ": ";
-            data += pair.second;
-            scope.request->handleHeader(data.data(), data.size());
+    foreach (const QByteArray &name, reply->rawHeaderList()) {
+		const QByteArray value = reply->rawHeader(name);
+		data  = name;
+		data += ": ";
+		data += value;
+		qDebug() << "header" << QLatin1String(data);
+		if (!qstricmp(name, "content-encoding") && value.contains("gzip"))
+			continue;
+		scope.request->handleHeader(data.data(), data.size());
     }
 	return true;
 }

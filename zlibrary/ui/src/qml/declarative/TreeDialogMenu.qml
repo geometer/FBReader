@@ -1,11 +1,11 @@
 import QtQuick 1.0
 import com.nokia.meego 1.0
+import "TreeDialogMenu.js" as Engine
 
 Menu {
 	id: menu
 	property variant modelIndex
 	property bool hasChildren: false
-	property variant menuItems: []
 	MenuLayout {
 		id: menuLayout
 		Repeater {
@@ -13,10 +13,10 @@ Menu {
 			model: root.handler.actions(menu.modelIndex)
 			MenuItem {
 				id: menuItem
-				text: modelData
+				text: ""
 				height: visible ? platformStyle.height : 0
 				onClicked: root.handler.run(menu.modelIndex, index)
-				Component.onCompleted: menu.menuItems.push(parent)
+				Component.onCompleted: Engine.pushItem(menuItem)
 			}
 		}
 		Component.onCompleted: {
@@ -25,9 +25,9 @@ Menu {
 		}
 	}
 	onStatusChanged: {
+		console.log("statusChanged", status, DialogStatus.Opening, Engine.menuItems)
 		if (status == DialogStatus.Opening) {
-			for (var i = 0; i < menu.menuItems.length; ++i)
-				menu.menuItems[i].visible = root.handler.isVisibleAction(menu.modelIndex, i);
+			Engine.prepareItems(root.handler, menu.modelIndex);
 		}
 	}
 }

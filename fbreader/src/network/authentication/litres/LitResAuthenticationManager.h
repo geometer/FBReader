@@ -35,7 +35,7 @@ public:
 	LitResAuthenticationManager(const NetworkLink &link);
 
 public:
-	AuthenticationStatus isAuthorised(bool useNetwork = true, shared_ptr<ZLExecutionData::Listener> listener = 0);
+	AuthenticationStatus isAuthorised(shared_ptr<ZLExecutionData::Listener> listener);
 	std::string authorise(const std::string &pwd, shared_ptr<ZLExecutionData::Listener> listener);
 	void logOut(shared_ptr<ZLExecutionData::Listener> listener);
 	bool skipIPSupported();
@@ -47,13 +47,20 @@ public:
 	std::string purchaseBook(const NetworkBookItem &book, shared_ptr<ZLExecutionData::Listener> listener);
 	shared_ptr<BookReference> downloadReference(const NetworkBookItem &book);
 
-	std::string refillAccountLink(shared_ptr<ZLExecutionData::Listener> listener);
+	std::string refillAccountLink();
 	std::string currentAccount();
 
-	std::string reloadPurchasedBooks();
+	std::string reloadPurchasedBooks(shared_ptr<ZLExecutionData::Listener> listener);
 	void collectPurchasedBooks(NetworkItem::List &list);
 
 private:
+	void onAuthorised(ZLUserDataHolder &data, const std::string &error);
+	void onBookPurchased(ZLUserDataHolder &data, const std::string &error);
+	void onBooksLoaded(ZLUserDataHolder &data, const std::string &error);
+	void onAccountReceived(ZLUserDataHolder &data, const std::string &error);
+	void onBooksReloaded(ZLUserDataHolder &data, const std::string &error);
+	void onUserRegistered(ZLUserDataHolder &data, const std::string &error);
+	void onPasswordRecovered(ZLUserDataHolder &data, const std::string &error);
 	shared_ptr<ZLExecutionData> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
 	void loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
 	void loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);

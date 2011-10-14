@@ -64,6 +64,7 @@ Q_SIGNALS:
 	void optionsDialogRequested(QObject *object);
 	void treeDialogRequested(QObject *object);
 	void progressDialogRequested(QObject *object);
+	void questionDialogRequested(QObject *object);
 	
 	void privateInformationBoxRequested(const QString &title, const QString &message, const QString &button);
 	void informationBoxRequested(const QString &title, const QString &message, const QString &button);

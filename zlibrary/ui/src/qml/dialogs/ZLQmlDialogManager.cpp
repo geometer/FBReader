@@ -32,6 +32,7 @@
 #include "ZLQmlOpenFileDialog.h"
 #include "ZLQmlDialogContent.h"
 #include "ZLQmlProgressDialog.h"
+#include "ZLQmlQuestionDialog.h"
 #include "ZLQmlTree.h"
 #include "ZLQtUtil.h"
 #include <QtDeclarative/qdeclarative.h>
@@ -95,8 +96,13 @@ void ZLQmlDialogManager::errorBox(const ZLResourceKey &key, const std::string &m
 }
 
 int ZLQmlDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
-	QWidget *parent = qApp->activeWindow();
-	return QMessageBox::question(parent, QString::fromStdString(dialogTitle(key)), QString::fromStdString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
+	ZLQmlQuestionDialog *dialog = new ZLQmlQuestionDialog(QString::fromStdString(dialogTitle(key)), QString::fromStdString(message),
+	                                                      ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
+	emit const_cast<ZLQmlDialogManager*>(this)->questionDialogRequested(dialog);
+	int result = dialog->run();
+	qDebug() << Q_FUNC_INFO << result;
+	dialog->deleteLater();
+	return result;
 }
 
 shared_ptr<ZLProgressDialog> ZLQmlDialogManager::createProgressDialog(const ZLResourceKey &key) const {
