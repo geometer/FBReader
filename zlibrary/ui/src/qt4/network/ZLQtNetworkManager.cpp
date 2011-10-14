@@ -111,52 +111,18 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		
 		networkRequest.setRawHeader("User-Agent", userAgent().c_str());
 		QSslConfiguration configuration;
-		if (!request.sslCertificate().Path.empty()) {
-			QFile file(QString::fromStdString(request.sslCertificate().Path));
-			if (file.open(QFile::ReadOnly)) {
-				QSslCertificate certificate(&file);
-				QList<QSslCertificate> list = configuration.caCertificates();
-				list.clear();
-				list.append(certificate);
-				configuration.setCaCertificates(list);
-			}
-		} else if (!request.sslCertificate().DoVerify) {
+		if (!request.sslCertificate().DoVerify)
 			configuration.setPeerVerifyMode(QSslSocket::VerifyNone);
-		}
 		networkRequest.setSslConfiguration(configuration);
 		
-		QNetworkReply *reply = NULL;
-		if (request.isInstanceOf(ZLNetworkPostRequest::TYPE_ID)) {
-			QByteArray data;
-			ZLNetworkPostRequest &postRequest = static_cast<ZLNetworkPostRequest&>(request);
-			if (postRequest.postParameters().empty()) {
-				const std::string &postData = postRequest.postData();
-				data = QByteArray(postData.c_str(), postData.length());
-			} else {
-				QUrl tmp;
-				typedef std::pair<std::string, std::string> string_pair;
-				foreach (const string_pair &pair, postRequest.postParameters()) {
-					tmp.addQueryItem(QString::fromStdString(pair.first),
-					                 QString::fromStdString(pair.second));
-				}
-				data = tmp.encodedQuery();
-			}
-			reply = const_cast<QNetworkAccessManager&>(myManager).post(networkRequest, data);
-		} else {
-			reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
-		}
-		Q_ASSERT(reply);
-		QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
 		ZLQtNetworkReplyScope scope = { &request, &replies, &errors, &eventLoop };
-		if (!request.hasListener()) {
-			replies << reply;
-		} else {
+		if (request.hasListener()) {
 			scope.replies = 0;
 			scope.errors = 0;
 			scope.eventLoop = 0;
 		}
-		reply->setProperty("scope", qVariantFromValue(scope));
-		reply->setProperty("executionData", qVariantFromValue(data));
+		
+		prepareReply(scope, qVariantFromValue(data), networkRequest);
 	}
 	if (!replies.isEmpty())
 		eventLoop.exec(QEventLoop::AllEvents);
@@ -178,6 +144,23 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 		return;
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	readData(reply, scope.request);
+}
+
+void ZLQtNetworkManager::onSslErrors(const QList<QSslError> &errors) {
+	QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
+	Q_ASSERT(reply);
+	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	Q_ASSERT(scope.request);
+	Q_ASSERT(!scope.request->sslCertificate().Path.empty());
+	QFile file(QString::fromStdString(scope.request->sslCertificate().Path));
+	file.open(QFile::ReadOnly);
+	QSslCertificate certificate(&file);
+	QList<QSslError> ignoredErrors = errors;
+	foreach (const QSslError &error, errors) {
+		if (error.certificate() == certificate)
+			ignoredErrors << error;
+	}
+	reply->ignoreSslErrors(ignoredErrors);
 }
 
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
@@ -214,7 +197,6 @@ void ZLQtNetworkManager::readData(QNetworkReply *reply, ZLNetworkRequest *reques
 	QByteArray data = reply->property("content").toByteArray() + reply->readAll();
 	if (!data.isEmpty()) {
 		bool result = request->handleContent(data.data(), data.size());
-		qDebug() << result << QLatin1String(data) << QString::fromStdString(request->errorMessage());
 		reply->setProperty("content", result ? QByteArray() : data);
 	}
 }
@@ -231,19 +213,11 @@ bool ZLQtNetworkManager::checkReply(QNetworkReply *reply) {
 			 << "and it's redirectionSupported =" << scope.request->isRedirectionSupported();
 	if (redirect.isValid() && scope.request->isRedirectionSupported()) {
 		reply->deleteLater();
+		QObject::disconnect(reply, 0, this, 0);
 		Q_ASSERT(scope.request->hasListener() || scope.replies->removeOne(reply));
 		reply->setProperty("redirected", true);
 		QVariant executionData = reply->property("executionData");
-		QNetworkRequest request = reply->request();
-		request.setUrl(reply->url().resolved(redirect));
-		QObject::disconnect(reply, 0, this, 0);
-		reply = myManager.get(request);
-		Q_ASSERT(reply);
-		if (!scope.request->hasListener())
-			scope.replies->append(reply);
-		QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
-		reply->setProperty("scope", qVariantFromValue(scope));
-		reply->setProperty("executionData", executionData);
+		prepareReply(scope, executionData, reply->request());
 		return false;
 	}
 	
@@ -259,12 +233,45 @@ bool ZLQtNetworkManager::checkReply(QNetworkReply *reply) {
 		data  = name;
 		data += ": ";
 		data += value;
-		qDebug() << "header" << QLatin1String(data);
 		if (!qstricmp(name, "content-encoding") && value.contains("gzip"))
 			continue;
 		scope.request->handleHeader(data.data(), data.size());
     }
 	return true;
+}
+
+void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, const QVariant &executionData, QNetworkRequest networkRequest) const {
+	QNetworkReply *reply = NULL;
+	if (scope.request->isInstanceOf(ZLNetworkPostRequest::TYPE_ID)) {
+		QByteArray data;
+		ZLNetworkPostRequest &postRequest = static_cast<ZLNetworkPostRequest&>(*scope.request);
+		if (postRequest.postParameters().empty()) {
+			const std::string &postData = postRequest.postData();
+			data = QByteArray(postData.c_str(), postData.length());
+		} else {
+			QUrl tmp;
+			typedef std::pair<std::string, std::string> string_pair;
+			foreach (const string_pair &pair, postRequest.postParameters()) {
+				tmp.addQueryItem(QString::fromStdString(pair.first),
+				                 QString::fromStdString(pair.second));
+			}
+			data = tmp.encodedQuery();
+		}
+		reply = const_cast<QNetworkAccessManager&>(myManager).post(networkRequest, data);
+	} else {
+		reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
+	}
+	Q_ASSERT(reply);
+	
+	if (!scope.request->hasListener())
+		scope.replies->append(reply);
+	QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
+	if (!scope.request->sslCertificate().Path.empty()) {
+		QObject::connect(reply, SIGNAL(sslErrors(QList<QSslError>)),
+		                 this, SLOT(onSslErrors(QList<QSslError>)));
+	}
+	reply->setProperty("scope", qVariantFromValue(scope));
+	reply->setProperty("executionData", executionData);
 }
 
 ZLQtNetworkCache::ZLQtNetworkCache(QObject *parent) : QAbstractNetworkCache(parent) {

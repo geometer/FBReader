@@ -25,6 +25,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkDiskCache>
 #include <QtNetwork/QNetworkCookieJar>
+#include <QtNetwork/QSslError>
 #include <QtCore/QMutex>
 #include <QtCore/QSharedPointer>
 
@@ -55,11 +56,13 @@ public:
 protected Q_SLOTS:
     void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
     void onReplyReadyRead();
+    void onSslErrors(const QList<QSslError> &errors);
     void onFinished(QNetworkReply *reply);
 
 private:
 	void readData(QNetworkReply *reply, ZLNetworkRequest *request);
 	bool checkReply(QNetworkReply *reply);
+	void prepareReply(ZLQtNetworkReplyScope &scope, const QVariant &executionData, QNetworkRequest networkRequest) const;
 	QNetworkAccessManager myManager;
 	ZLQtNetworkCache *myCache;
 	ZLQtNetworkCookieJar *myCookieJar;
