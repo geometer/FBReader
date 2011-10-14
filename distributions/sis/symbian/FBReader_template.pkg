@@ -3,7 +3,7 @@
 
 
 ; SIS header: name, uid, version
-#{"FBReader"},(0xE87CC83C),4,7,1
+#{"FBReader"},(0xE87CC83C),VERSION
 
 ; Localised Vendor name
 %{"Vendor"}

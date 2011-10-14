@@ -28,7 +28,12 @@
 class ZLImage;
 class ZLResource;
 
+
+
 class FBNode : public ZLTreeTitledNode {
+
+public:
+    const static std::string COMMA_JOIN_SEPARATOR;
 
 public:
 	static shared_ptr<ZLImage> defaultCoverImage(const std::string &id);

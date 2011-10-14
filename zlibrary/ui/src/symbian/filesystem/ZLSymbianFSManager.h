@@ -1,21 +1,17 @@
-#ifndef __ZLQTFSMANAGER_H__
-#define __ZLQTFSMANAGER_H__
+#ifndef __ZLSYMBIANFSMANAGER_H__
+#define __ZLSYMBIANFSMANAGER_H__
 
-#include "../../../../core/src/unix/filesystem/ZLUnixFSManager.h"
 #include "../../../../core/src/unix/filesystem/ZLUnixFSDir.h"
+#include "../../qt4/filesystem/ZLQtFSManager.h"
 
-class ZLQtFSManager : public ZLUnixFSManager {
+class ZLSymbianFSManager : public ZLQtFSManager {
 
 public:
-	static void createInstance() { ourInstance = new ZLQtFSManager(); }
-	
-private:
-	ZLQtFSManager() {}
+        static void createInstance() { ourInstance = new ZLSymbianFSManager(); }
 	
 protected:
-	std::string convertFilenameToUtf8(const std::string &name) const;
-	std::string mimeType(const std::string &path) const;
-
+        ZLSymbianFSManager() {}
+	
 protected:
 	void normalizeRealPath(std::string &path) const;
 
@@ -30,4 +26,4 @@ private:
 
 };
 
-#endif /* __ZLQTFSMANAGER_H__ */
+#endif /* __ZLSYMBIANFSMANAGER_H__ */

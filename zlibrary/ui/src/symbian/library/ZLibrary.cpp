@@ -32,7 +32,7 @@
 
 #include "../../../../core/src/unix/library/ZLibraryImplementation.h"
 
-#include "../filesystem/ZLQtFSManager.h"
+#include "../filesystem/ZLSymbianFSManager.h"
 
 // for qDebug:
 #include <stdio.h>
@@ -84,8 +84,8 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary:: init(int &argc, char **&argv) {
-	//freopen("E:\\fbreader-log.txt", "w", stdout);
-	//fprintf(stdout,"\n");
+        freopen("E:\\fbreader-log.txt", "w", stdout);
+        fprintf(stdout,"\n");
 
 	initLibrary();
 
@@ -145,7 +145,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	ZLibrary::parseArguments(argc, argv);
 	XMLConfigManager::createInstance();
 	ZLQtTimeManager::createInstance();
-	ZLQtFSManager::createInstance();
+	ZLSymbianFSManager::createInstance();
 	ZLQtDialogManager::createInstance();
 	ZLSymbianCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();

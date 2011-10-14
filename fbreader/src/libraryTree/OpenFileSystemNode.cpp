@@ -16,13 +16,13 @@ const ZLTypeId &OpenFileSystemNode::typeId() const {
 }
 
 std::string OpenFileSystemNode::title() const {
-	//TODO add resource for this node
-	return ZLResource::resource("menu")["addBook"].value();
+        //TODO add not-toolbar resource for this node
+        return ZLResource::resource("toolbar")["addBook"]["label"].value();
 }
 
 std::string OpenFileSystemNode::subtitle() const {
-	//TODO add another subtitle here
-	return ZLResource::resource("menu")["addBook"].value();
+        //TODO add not-toolbar resource for this node
+        return ZLResource::resource("toolbar")["addBook"]["tooltip"].value();
 }
 
 static const std::string GROUP_NAME = "OpenFileDialog";

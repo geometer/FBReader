@@ -1,0 +1,1 @@
+../../symbian/include/qtscrollerproperties.h

@@ -1,4 +1,4 @@
-#include <QKeyEvent>
+#include <QtGui/QKeyEvent>
 
 #include "VolumeKeysCapturer.h"
 

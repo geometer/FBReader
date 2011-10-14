@@ -9,13 +9,19 @@ class ZLQtTreeModel : public QAbstractListModel {
 	Q_OBJECT;
 
 public:
+        enum TreeRoles {
+                SubTitleRole = Qt::UserRole,
+                ActivatableRole,
+                PageRole
+        };
+
+public:
 	explicit ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QObject *parent = 0);
 
 public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
 	QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-	bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
-	bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+        const ZLTreeNode* getTreeNode(const QModelIndex& index) const;
 
 public:
 	void onNodeBeginInsert(ZLTreeNode *parent, size_t index);

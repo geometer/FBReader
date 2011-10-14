@@ -27,6 +27,8 @@
 #include "../options/FBOptions.h"
 #include "../options/FBTextStyle.h"
 
+const std::string FBNode::COMMA_JOIN_SEPARATOR = ", "; //used for ZLStringUtil::join
+
 const ZLTypeId FBNode::TYPE_ID(ZLTreeTitledNode::TYPE_ID);
 
 std::map<std::string,shared_ptr<ZLImage> > FBNode::ourDefaultCovers;

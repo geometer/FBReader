@@ -5,7 +5,7 @@
 #include <remconcoreapitarget.h>            // and
 #include <remconinterfaceselector.h>        // RemConInterfaceBase.lib
 
-#include <QCoreApplication>
+#include <QtCore/QCoreApplication>
 
 class VolumeKeysCapturer : public MRemConCoreApiTargetObserver {
 public:
