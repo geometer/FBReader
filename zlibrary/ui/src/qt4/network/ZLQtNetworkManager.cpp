@@ -28,6 +28,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QList>
 #include <QtCore/QPair>
+#include <QtCore/QDebug>
 #include <QtNetwork/QNetworkRequest>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkProxy>
@@ -147,18 +148,25 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 }
 
 void ZLQtNetworkManager::onSslErrors(const QList<QSslError> &errors) {
+        qDebug() << "onSSLErrors:" << errors;
 	QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
 	Q_ASSERT(reply);
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	Q_ASSERT(scope.request);
 	Q_ASSERT(!scope.request->sslCertificate().Path.empty());
+        qDebug() << "opening file" << QString::fromStdString(scope.request->sslCertificate().Path);
 	QFile file(QString::fromStdString(scope.request->sslCertificate().Path));
-	file.open(QFile::ReadOnly);
+	file.open(QFile::ReadOnly);        
+        qDebug() << "file.isOpen()? " << file.isOpen();
 	QSslCertificate certificate(&file);
+        qDebug() << "certificate is valid? " << certificate.isValid();
+        qDebug() << "digest =" << certificate.digest();
 	QList<QSslError> ignoredErrors = errors;
 	foreach (const QSslError &error, errors) {
-		if (error.certificate() == certificate)
+                qDebug() << "error.certificate() == certificate ? " << (error.certificate() == certificate);
+                if (error.certificate() == certificate) {
 			ignoredErrors << error;
+                }
 	}
 	reply->ignoreSslErrors(ignoredErrors);
 }
@@ -217,7 +225,10 @@ bool ZLQtNetworkManager::checkReply(QNetworkReply *reply) {
 		Q_ASSERT(scope.request->hasListener() || scope.replies->removeOne(reply));
 		reply->setProperty("redirected", true);
 		QVariant executionData = reply->property("executionData");
-		prepareReply(scope, executionData, reply->request());
+                QNetworkRequest request = reply->request();
+                request.setUrl(request.url().resolved(redirect));
+                //prepareReply(scope, executionData, reply->request());
+                prepareReply(scope, executionData, request);
 		return false;
 	}
 	

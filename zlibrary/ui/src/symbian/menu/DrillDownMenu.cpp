@@ -86,23 +86,15 @@ void DrillDownMenuDialog::back() {
     setCurrentMenu(myHistory.last());
 }
 
-QSize DrillDownMenu::generateSizeHint() const{
-    QRect rect = qApp->desktop()->availableGeometry();
-    int height = std::min(rect.height()/5, 40);
-    return QSize(rect.width(), height);
-}
-
 void DrillDownMenu::addItem(const std::string &text, ZLApplication::Action* action) {
     DrillDownMenuItem* item = new DrillDownMenuItem( ::qtString(text), action, this);
     QListWidget::addItem( item );
-    //item->setSizeHint(generateSizeHint());
     //this->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Maximum);
 }
 
 void DrillDownMenu::addItem(const QIcon& icon, const std::string &text, ZLApplication::Action* action) {
     DrillDownMenuItem* item = new DrillDownMenuItem(icon, ::qtString(text), action, this);
     QListWidget::addItem( item );
- //   item->setSizeHint(generateSizeHint());
 //    this->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Maximum);
 }
 
