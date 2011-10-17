@@ -17,21 +17,12 @@
  * 02110-1301, USA.
  */
 
-#ifndef __FOOTNOTEVIEW_H__
-#define __FOOTNOTEVIEW_H__
+#include "FootnoteView.h"
 
-#include "FBView.h"
+const ZLTypeId FootnoteView::TYPE_ID(FBView::TYPE_ID);
 
-class FootnoteView : public FBView {
+const ZLTypeId &FootnoteView::typeId() const {
+        return TYPE_ID;
+}
 
-public:
-        static const ZLTypeId TYPE_ID;
-
-public:
-	FootnoteView(ZLPaintContext &context);
-
-private:
-        const ZLTypeId &typeId() const;
-};
-
-#endif /* __FOOTNOTEVIEW_H__ */
+FootnoteView::FootnoteView(ZLPaintContext &context) : FBView(context) {}

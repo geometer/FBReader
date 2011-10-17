@@ -33,6 +33,9 @@ class Book;
 class BookTextView : public FBView {
 
 public:
+        static const ZLTypeId TYPE_ID;
+
+public:
 	ZLBooleanOption ShowTOCMarksOption;
 
 public:
@@ -55,6 +58,9 @@ public:
 	bool _onStylusMove(int x, int y);
 	bool _onStylusRelease(int x, int y);
 	bool onStylusClick(int x, int y, int count);
+
+private:
+        const ZLTypeId &typeId() const;
 
 private:
 	typedef ReadingState Position;

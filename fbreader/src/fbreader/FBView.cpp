@@ -30,6 +30,12 @@
 #include "../options/FBOptions.h"
 #include "../options/FBTextStyle.h"
 
+const ZLTypeId FBView::TYPE_ID(ZLTextView::TYPE_ID);
+
+const ZLTypeId &FBView::typeId() const {
+        return TYPE_ID;
+}
+
 static const std::string INDICATOR = "Indicator";
 
 FBIndicatorStyle::FBIndicatorStyle() :
