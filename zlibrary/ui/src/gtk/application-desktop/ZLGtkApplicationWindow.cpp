@@ -254,3 +254,6 @@ void ZLGtkApplicationWindow::setPosition() {
 	gtk_window_move(myMainWindow, myXOption.value(), myYOption.value());
 }
 
+void ZLGtkApplicationWindow::sendPaintEvent() {
+	refresh();
+}

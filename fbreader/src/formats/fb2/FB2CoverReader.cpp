@@ -51,8 +51,8 @@ void FB2CoverReader::startElementHandler(int tag, const char **attributes) {
 		case _BINARY:
 		{
 			const char *id = attributeValue(attributes, "id");
-			const char *contentType = attributeValue(attributes, "content-type");
-			if (id != 0 && contentType != 0 && myImageReference == id) {
+			shared_ptr<ZLMimeType> contentType = ZLMimeType::get(attributeValue(attributes, "content-type"));
+			if (id != 0 && *contentType != *ZLMimeType::EMPTY && myImageReference == id) {
 				myImage = new ZLBase64EncodedImage(contentType);
 			}
 		}

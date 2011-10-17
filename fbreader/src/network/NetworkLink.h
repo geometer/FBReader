@@ -28,6 +28,7 @@
 #include <ZLOptions.h>
 
 #include "NetworkItems.h"
+#include "atom/ATOMMetadata.h"
 
 class ZLExecutionData;
 
@@ -51,16 +52,33 @@ public:
 
 protected:
 	NetworkLink(
-		const std::string &siteName,
-		const std::string &title,
-		const std::string &summary,
-		const std::string &icon,
-		const std::map<std::string,std::string> &links
+		const std::string &siteName
 	);
 
 public:
 	virtual ~NetworkLink();
 	std::string url(const std::string &urlId) const;
+
+	void setTitle(const std::string& title);
+	void setSummary(const std::string& summary);
+	void setIcon(const std::string& icon);
+	void setLinks(const std::map<std::string,std::string>& links);
+	void setPredefinedId(const std::string& id);
+	void setEnabled(bool enabled);
+	void setUpdated(shared_ptr<ATOMUpdated> u);
+
+	std::string getTitle() const;
+	std::string getSummary() const;
+	std::string getIcon() const;
+	const std::map<std::string,std::string>& getLinks() const;
+	std::string getPredefinedId() const;
+	bool isEnabled() const;
+	shared_ptr<ATOMUpdated> getUpdated() const;
+
+	void loadFrom(const NetworkLink & link);
+	void loadLinksFrom(const NetworkLink & link);
+	void loadSummaryFrom(const NetworkLink & link);
+
 
 public:
 	virtual shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &data, const std::string &pattern) const = 0;
@@ -74,14 +92,15 @@ public:
 
 public:
 	const std::string SiteName;
-	const std::string Title;
-	const std::string Summary;
-	const std::string Icon;
-	ZLBooleanOption OnOption;
 
 private:
-protected:
-	/*const*/ std::map<std::string,std::string> myLinks;
+	std::string myTitle;
+	std::string myIcon;
+	std::string mySummary;
+	std::map<std::string,std::string> myLinks;
+	std::string myPredefinedId;
+	bool myEnabled;
+	shared_ptr<ATOMUpdated> myUpdated;
 
 private: // disable copying
 	NetworkLink(const NetworkLink &);

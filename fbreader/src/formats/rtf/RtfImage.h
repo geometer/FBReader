@@ -27,7 +27,7 @@
 class RtfImage : public ZLSingleImage {
 
 public:
-	RtfImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length);
+	RtfImage(shared_ptr<ZLMimeType> mimeType, const std::string &fileName, size_t startOffset, size_t length);
 	~RtfImage();
 	const shared_ptr<std::string> stringData() const;
 
@@ -41,7 +41,7 @@ private:
 	mutable shared_ptr<std::string> myData;
 };
 
-inline RtfImage::RtfImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length) : ZLSingleImage(mimeType), myFileName(fileName), myStartOffset(startOffset), myLength(length) {}
+inline RtfImage::RtfImage(shared_ptr<ZLMimeType> mimeType, const std::string &fileName, size_t startOffset, size_t length) : ZLSingleImage(mimeType), myFileName(fileName), myStartOffset(startOffset), myLength(length) {}
 inline RtfImage::~RtfImage() {}
 
 #endif /* __RTFIMAGE_H__ */

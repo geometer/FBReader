@@ -50,6 +50,8 @@ BooksDB &BooksDB::Instance() {
 
 BooksDB::BooksDB(const std::string &path) : SQLiteDataBase(path), myInitialized(false) {
 	initCommands();
+	myNetworkLock = new pthread_mutex_t();
+	pthread_mutex_init(&*myNetworkLock, 0);
 }
 
 BooksDB::~BooksDB() {
@@ -111,6 +113,12 @@ void BooksDB::initCommands() {
 	myDeleteBookList = SQLiteFactory::createCommand(BooksDBQuery::DELETE_BOOK_LIST, connection(), "@book_id", DBValue::DBINT);
 	myCheckBookList = SQLiteFactory::createCommand(BooksDBQuery::CHECK_BOOK_LIST, connection(), "@book_id", DBValue::DBINT);
 
+	myLoadNetworkLinks = SQLiteFactory::createCommand(BooksDBQuery::LOAD_NETWORK_LINKS, connection());
+	myLoadNetworkLinkUrls = SQLiteFactory::createCommand(BooksDBQuery::LOAD_NETWORK_LINKURLS, connection(), "@link_id", DBValue::DBINT);
+	myFindNetworkLinkId = SQLiteFactory::createCommand(BooksDBQuery::FIND_NETWORK_LINK_ID, connection(), "@site_name", DBValue::DBTEXT);
+	myDeleteNetworkLinkUrls = SQLiteFactory::createCommand(BooksDBQuery::DELETE_NETWORK_LINKURLS, connection(), "@link_id", DBValue::DBINT);
+	myDeleteNetworkLink = SQLiteFactory::createCommand(BooksDBQuery::DELETE_NETWORK_LINK, connection(), "@link_id", DBValue::DBINT);
+
 	mySaveTableBook = new SaveTableBookRunnable(connection());
 	mySaveAuthors = new SaveAuthorsRunnable(connection());
 	mySaveSeries = new SaveSeriesRunnable(connection());
@@ -128,6 +136,8 @@ void BooksDB::initCommands() {
 	mySaveBookStateStack = new SaveBookStateStackRunnable(connection());
 
 	myDeleteBook = new DeleteBookRunnable(connection());
+
+	mySaveNetworkLink = new SaveNetworkLinkRunnable(connection());
 }
 
 bool BooksDB::clearDatabase() {
@@ -544,3 +554,83 @@ bool BooksDB::checkBookList(const Book &book) {
 	return checkRes > 0;
 }
 
+bool BooksDB::saveNetworkLink(NetworkLink& link, bool isAuto) {
+	if (!isInitialized()) {
+		return false;
+	}
+	pthread_mutex_lock(&*myNetworkLock);
+	mySaveNetworkLink->setNetworkLink(&link);
+	mySaveNetworkLink->isAuto = isAuto;
+	bool result = executeAsTransaction(*mySaveNetworkLink);
+	pthread_mutex_unlock(&*myNetworkLock);
+	return result;
+}
+
+bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
+	pthread_mutex_lock(&*myNetworkLock);
+	shared_ptr<DBDataReader> reader = myLoadNetworkLinks->executeReader();
+
+	links.clear();
+
+	while (reader->next()) {
+		if (reader->type(0) != DBValue::DBINT) {/* link_id */
+			pthread_mutex_unlock(&*myNetworkLock);
+			return false;
+		}
+		std::map<std::string,std::string> linkUrls;
+		((DBIntValue &) *myLoadNetworkLinkUrls->parameter("@link_id").value()) = reader->intValue(0);
+		shared_ptr<DBDataReader> urlreader = myLoadNetworkLinkUrls->executeReader();
+		long t;
+		while (urlreader->next()) {
+			linkUrls[urlreader->textValue(0, std::string())] = urlreader->textValue(1, std::string());
+			t = urlreader->intValue(2);
+		}
+		shared_ptr<ATOMUpdated> au;
+		if (t != 0) {
+			au = new ATOMUpdated();
+		}
+		au->setLongSeconds_stupid(t);
+		std::string iconUrl;
+		if (linkUrls.count("icon") != 0) {
+			iconUrl = linkUrls["icon"];
+			linkUrls.erase("icon");
+		}
+		std::string siteName = reader->textValue(2, std::string());
+		std::string predId = reader->textValue(5, std::string());
+		std::string title = reader->textValue(1, std::string());
+		std::string summary = reader->textValue(3, std::string());
+
+		shared_ptr<NetworkLink> link = new OPDSLink(
+			siteName
+		);
+		link->setTitle(title);
+		link->setSummary(summary);
+		link->setIcon(iconUrl);
+		link->setLinks(linkUrls);
+		link->setPredefinedId(predId);
+		link->setEnabled(reader->intValue(6));
+		link->setUpdated(au);
+
+		links.push_back(link);
+	}
+	pthread_mutex_unlock(&*myNetworkLock);
+	return true;
+}
+
+bool BooksDB::deleteNetworkLink(const std::string &siteName){
+	pthread_mutex_lock(&*myNetworkLock);
+	((DBTextValue &) *myFindNetworkLinkId->parameter("@site_name").value()) = siteName;
+	shared_ptr<DBDataReader> reader = myFindNetworkLinkId->executeReader();
+	bool result;
+	if (reader.isNull() || !reader->next()) {
+		pthread_mutex_unlock(&*myNetworkLock);
+		return false;
+	} else {
+		int linkId = reader->intValue(0);
+		((DBIntValue &) *myDeleteNetworkLink->parameter("@link_id").value()) = linkId;
+		((DBIntValue &) *myDeleteNetworkLinkUrls->parameter("@link_id").value()) = linkId;
+		result = myDeleteNetworkLinkUrls->execute() && myDeleteNetworkLink->execute();
+	}
+	pthread_mutex_unlock(&*myNetworkLock);
+	return result;
+}

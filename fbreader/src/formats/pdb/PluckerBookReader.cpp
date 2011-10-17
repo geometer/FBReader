@@ -431,7 +431,7 @@ void PluckerBookReader::readRecord(size_t recordSize) {
 			case 3: // compressed image
 			{
 				ZLImage *image = 0;
-				const ZLFile imageFile(myFile.path(), "image/palm");
+				const ZLFile imageFile(myFile.path(), ZLMimeType::IMAGE_PALM);
 				if (type == 2) {
 					image = new ZLFileImage(imageFile, myStream->offset(), recordSize - 8);
 				} else if (myCompressionVersion == 1) {

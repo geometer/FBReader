@@ -301,7 +301,7 @@ shared_ptr<ZLImageData> ZLImageManager::imageData(const ZLImage &image) const {
 			return 0;
 		}
 		data = createData();
-		if (singleImage.mimeType() == "image/palm") {
+		if (*singleImage.mimeType() == *ZLMimeType::IMAGE_PALM) {
 			if (!convertFromPalmImageFormat(*stringData, *data)) {
 				return 0;
 			}

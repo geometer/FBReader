@@ -48,6 +48,8 @@ public:
 	void onScrollbarStep(ZLView::Direction direction, int steps);
 	void onScrollbarPageStep(ZLView::Direction direction, int steps);
 
+	virtual void sendPaintEvent() {}
+
 private:
 	void correctDirection(ZLView::Direction &direction, bool &invert);
 

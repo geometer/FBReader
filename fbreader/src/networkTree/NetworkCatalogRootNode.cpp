@@ -21,6 +21,7 @@
 #include <ZLResource.h>
 #include <ZLImage.h>
 #include <ZLDialogManager.h>
+#include <ZLDialog.h>
 
 #include "NetworkNodes.h"
 
@@ -94,6 +95,34 @@ private:
 	NetworkLink &myLink;
 };
 
+class NetworkCatalogRootNode::EditAction : public ZLTreeAction {
+
+public:
+	EditAction(NetworkLink &link);
+
+private:
+	void run();
+	ZLResourceKey key() const;
+	bool makesSense() const;
+
+private:
+	NetworkLink &myLink;
+};
+
+class NetworkCatalogRootNode::DeleteAction : public ZLTreeAction {
+
+public:
+	DeleteAction(NetworkLink &link);
+
+private:
+	void run();
+	ZLResourceKey key() const;
+	bool makesSense() const;
+
+private:
+	NetworkLink &myLink;
+};
+
 class NetworkCatalogRootNode::PasswordRecoveryAction : public NetworkCatalogAuthAction {
 
 public:
@@ -133,6 +162,9 @@ void NetworkCatalogRootNode::init() {
 			registerAction(new PasswordRecoveryAction(*mgr));
 		}
 	}
+//	registerAction(new DontShowAction(myLink));
+	registerAction(new EditAction(myLink));
+	registerAction(new DeleteAction(myLink));
 }
 
 const ZLTypeId &NetworkCatalogRootNode::typeId() const {
@@ -208,13 +240,64 @@ void NetworkCatalogRootNode::DontShowAction::run() {
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
 		return;
 	}
-	myLink.OnOption.setValue(false);
+	myLink.setEnabled(false);
 	FBReader::Instance().invalidateNetworkView();
 	FBReader::Instance().refreshWindow();
 }
 
 bool NetworkCatalogRootNode::DontShowAction::makesSense() const {
-	return NetworkLinkCollection::Instance().numberOfEnabledLinks() > 1;
+	return NetworkLinkCollection::Instance().numberOfEnabledLinks() > 1 && myLink.getPredefinedId() != std::string();
+}
+
+NetworkCatalogRootNode::DeleteAction::DeleteAction(NetworkLink &link) : myLink(link) {
+}
+
+ZLResourceKey NetworkCatalogRootNode::DeleteAction::key() const {
+	return ZLResourceKey("delete");
+}
+
+void NetworkCatalogRootNode::DeleteAction::run() {
+	ZLResourceKey boxKey("deleteConfirmBox");
+	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myLink.SiteName);
+	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
+		return;
+	}
+	NetworkLinkCollection::Instance().deleteLink(myLink);
+}
+
+bool NetworkCatalogRootNode::DeleteAction::makesSense() const {
+	return myLink.getPredefinedId() == std::string();
+}
+
+NetworkCatalogRootNode::EditAction::EditAction(NetworkLink &link) : myLink(link) {
+}
+
+ZLResourceKey NetworkCatalogRootNode::EditAction::key() const {
+	return ZLResourceKey("edit");
+}
+
+void NetworkCatalogRootNode::EditAction::run() {
+	shared_ptr<ZLDialog> checkDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("editNetworkCatalogDialog"));
+	ZLStringOption NameOption(ZLCategoryKey::NETWORK, "name", "title", "");
+	NameOption.setValue(myLink.getTitle());
+	checkDialog->addOption(ZLResourceKey("name"), NameOption);
+	ZLStringOption SubNameOption(ZLCategoryKey::NETWORK, "subname", "title", "");
+	SubNameOption.setValue(myLink.getSummary());
+	checkDialog->addOption(ZLResourceKey("subname"), SubNameOption);
+
+	checkDialog->addButton(ZLResourceKey("edit"), true);
+	checkDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
+	if (checkDialog->run()) {
+		checkDialog->acceptValues();
+		checkDialog.reset();
+		myLink.setTitle(NameOption.value());
+		myLink.setSummary(SubNameOption.value());
+		NetworkLinkCollection::Instance().saveLink(myLink);
+	}
+}
+
+bool NetworkCatalogRootNode::EditAction::makesSense() const {
+	return myLink.getPredefinedId() == std::string();
 }
 
 NetworkCatalogRootNode::RefillAccountAction::RefillAccountAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, true) {
@@ -272,4 +355,8 @@ void NetworkCatalogRootNode::RegisterUserAction::run() {
 	}
 
 	RegisterUserDialog::run(myManager, listener());
+}
+
+void NetworkCatalogRootNode::reloadLink() {
+	reloadItem(myLink.libraryItem());
 }

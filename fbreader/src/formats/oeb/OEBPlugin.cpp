@@ -45,13 +45,13 @@ bool OEBPlugin::providesMetaInfo() const {
 }
 
 bool OEBPlugin::acceptsFile(const ZLFile &file) const {
-	const std::string &mimeType = file.mimeType();
+	shared_ptr<ZLMimeType> mimeType = file.mimeType();
 	const std::string &extension = file.extension();
-	if (!mimeType.empty()) {
-		return 
-			mimeType == ZLMimeType::APPLICATION_EPUB_ZIP ||
-			(mimeType == ZLMimeType::APPLICATION_XML && extension == OPF) ||
-			(mimeType == ZLMimeType::APPLICATION_ZIP && extension == OEBZIP);
+	if (*(file.mimeType()) != *ZLMimeType::EMPTY) {
+		return
+			*mimeType == *ZLMimeType::APPLICATION_EPUB_ZIP ||
+			(*mimeType == *ZLMimeType::APPLICATION_XML && extension == OPF) ||
+			(*mimeType == *ZLMimeType::APPLICATION_ZIP && extension == OEBZIP);
 	}
 	return extension == OPF || extension == OEBZIP || extension == EPUB;
 }

@@ -25,6 +25,7 @@
 #include <ZLTreeNode.h>
 
 class NetworkBookItem;
+class NetworkLink;
 
 class NetworkBookDownloadAction : public ZLTreeAction, public DownloadBookListener {
 

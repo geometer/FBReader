@@ -217,6 +217,8 @@ bool ZLQtNetworkManager::checkReply(QNetworkReply *reply) {
 		Q_ASSERT(scope.request->hasListener() || scope.replies->removeOne(reply));
 		reply->setProperty("redirected", true);
 		QVariant executionData = reply->property("executionData");
+		QNetworkRequest request = reply->request();
+		request.setUrl(request.url().resolved(redirect));
 		prepareReply(scope, executionData, reply->request());
 		return false;
 	}

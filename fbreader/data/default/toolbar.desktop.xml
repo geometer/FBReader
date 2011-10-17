@@ -9,6 +9,7 @@
 	<button id="addBook"/>
 	<button id="networkLibrary"/>
 	<separator/>
+	<button id="addNetworkCatalog"/>
 	<button id="advancedSearchOnNetwork"/>
 	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>
 	<separator/>

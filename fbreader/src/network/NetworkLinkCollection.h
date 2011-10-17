@@ -27,6 +27,7 @@
 
 #include <ZLOptions.h>
 #include <ZLExecutionData.h>
+#include <pthread.h>
 
 #include "NetworkItems.h"
 
@@ -37,6 +38,7 @@ class BookReference;
 class ZLNetworkSSLCertificate;
 
 class NetworkLinkCollection {
+
 
 private:
 	class Comparator;
@@ -71,14 +73,29 @@ public:
 
 	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
+	void deleteLink(NetworkLink& link);
+
+	void saveLink(NetworkLink& link, bool isAuto = false);
+
 private:
 	std::string makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);
 
+	void UpdateLinks(std::string genericUrl);
+	void saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto);
+
+
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
-	LinkVector myLinks;
+	LinkVector myLinks, myTempCustomLinks;
+	pthread_t myUpdThread;
+	std::map<std::string, shared_ptr<pthread_mutex_t> > myLocks;
+	std::map<std::string, bool> myExists;
 
 	std::string myErrorMessage;
+
+	std::string myGenericUrl;
+
+friend void *updLinks( void *ptr );
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

@@ -39,8 +39,7 @@ ShowNetworkLibraryAction::ShowNetworkLibraryAction() {
 }
 
 bool ShowNetworkLibraryAction::isVisible() const {
-	return (FBReader::Instance().mode() & FBReader::BOOK_TEXT_MODE) != 0
-	        && NetworkLinkCollection::Instance().numberOfEnabledLinks() > 0;
+	return true; // NetworkLinkCollection::Instance().numberOfEnabledLinks() > 0;
 }
 
 void ShowNetworkLibraryAction::run() {
@@ -54,7 +53,7 @@ void SearchOnNetworkAction::run() {
 //	NetworkLinkCollection &collection = NetworkLinkCollection::Instance();
 //	for (size_t i = 0; i < collection.size(); ++i) {
 //		NetworkLink &link = collection.link(i);
-//		if (link.OnOption.value()) {
+//		if (link.isEnabled()) {
 //			shared_ptr<NetworkAuthenticationManager> mgr = link.authenticationManager();
 //			if (!mgr.isNull()) {
 //				IsAuthorisedRunnable checker(*mgr);

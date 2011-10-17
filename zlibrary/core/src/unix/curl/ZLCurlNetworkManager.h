@@ -21,6 +21,7 @@
 #define __ZLCURLNETWORKMANAGER_H__
 
 #include <curl/curl.h>
+#include <pthread.h>
 
 #include "../../network/ZLNetworkManager.h"
 
@@ -34,6 +35,7 @@ class ZLCurlNetworkManager : public ZLNetworkManager {
 
 public:
 	static void createInstance();
+	ZLCurlNetworkManager();
 
 private:
 	std::string perform(const ZLExecutionData::Vector &dataList) const;
@@ -46,6 +48,10 @@ private:
 	void setRequestOptions(CURL *handle, const ZLNetworkRequest &request) const;
 
 	void clearRequestOptions(ZLNetworkRequest &request) const;
+
+private:
+	shared_ptr<pthread_mutex_t> myLock;
+	shared_ptr<pthread_mutexattr_t> myLockAttr;
 };
 
 #endif /* __ZLCURLNETWORKMANAGER_H__ */

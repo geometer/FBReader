@@ -23,6 +23,7 @@
 #include <string>
 #include <map>
 #include <stack>
+#include <ZLMimeType.h>
 
 #include <ZLEncodingConverter.h>
 
@@ -69,7 +70,7 @@ protected:
 	};
 		
 	virtual void addCharData(const char *data, size_t len, bool convert) = 0;
-	virtual void insertImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
+	virtual void insertImage(shared_ptr<ZLMimeType> mimeType, const std::string &fileName, size_t startOffset, size_t size) = 0;
 	virtual void setEncoding(int code) = 0;
 	virtual void switchDestination(DestinationType destination, bool on) = 0;
 	virtual void setAlignment() = 0;
@@ -106,7 +107,7 @@ private:
 	std::stack<RtfReaderState> myStateStack;
 
 	int myBinaryDataSize;
-	std::string myNextImageMimeType;
+	shared_ptr<ZLMimeType> myNextImageMimeType;
 
 	int myIsInterrupted;	
 
@@ -183,11 +184,11 @@ class RtfSpecialCommand : public RtfCommand {
 
 class RtfPictureCommand : public RtfCommand {
 public:
-	RtfPictureCommand(const std::string &mimeType);
+	RtfPictureCommand(shared_ptr<ZLMimeType> mimeType);
 	void run(RtfReader &reader, int *parameter) const;
 
 private:
-	const std::string myMimeType;
+	const shared_ptr<ZLMimeType> myMimeType;
 };
 
 class RtfFontResetCommand : public RtfCommand {

@@ -21,41 +21,68 @@
 #define __ZLMIMETYPE_H__
 
 #include <string>
+#include <shared_ptr.h>
+#include <map>
 
 class ZLMimeType {
 
-public:
-	static const std::string APPLICATION_XML;
-	static const std::string APPLICATION_ZIP;
-	static const std::string APPLICATION_EPUB_ZIP;
-	static const std::string APPLICATION_FB2_ZIP;
-	static const std::string APPLICATION_MOBIPOCKET_EBOOK;
-	static const std::string APPLICATION_PDF;
-	static const std::string APPLICATION_CHM;
-	static const std::string APPLICATION_PALM_DB;
-	static const std::string APPLICATION_ATOM_XML;
-	static const std::string APPLICATION_ATOM_XML_ENTRY;
-	static const std::string APPLICATION_LITRES_XML;
+private:
 
-	static const std::string APPLICATION_GZIP;
-	static const std::string APPLICATION_BZIP2;
-	static const std::string APPLICATION_TAR;
-	static const std::string APPLICATION_TAR_GZIP;
-	static const std::string APPLICATION_TAR_BZIP2;
-	static const std::string APPLICATION_TAR_7Z;
-
-	static const std::string IMAGE_PNG;
-	static const std::string IMAGE_JPEG;
-	static const std::string IMAGE_SVG;
-
-	static const std::string TEXT_HTML;
-	static const std::string TEXT_PLAIN;
-
-public:
-	static bool isImage(const std::string &mimeType);
+	ZLMimeType(std::string& name, std::map<std::string,std::string>& parameters);
 
 private:
-	ZLMimeType();
+
+	static std::map<std::string,shared_ptr<ZLMimeType> > ourSimpleTypesMap;
+
+public:
+
+	static shared_ptr<ZLMimeType> get(std::string text);
+	static bool isImage(shared_ptr<ZLMimeType> mimeType);
+
+private:
+
+	const std::map<std::string,std::string> myParameters;
+	const std::string myName;
+
+public:
+
+	const std::string& getName() const;
+
+	bool operator ==(const ZLMimeType& t) const;
+	bool operator !=(const ZLMimeType& t) const;
+
+	static const shared_ptr<ZLMimeType> APPLICATION_XML;
+	static const shared_ptr<ZLMimeType> APPLICATION_ZIP;
+	static const shared_ptr<ZLMimeType> APPLICATION_EPUB_ZIP;
+	static const shared_ptr<ZLMimeType> APPLICATION_FB2_ZIP;
+	static const shared_ptr<ZLMimeType> APPLICATION_MOBIPOCKET_EBOOK;
+	static const shared_ptr<ZLMimeType> APPLICATION_PDF;
+	static const shared_ptr<ZLMimeType> APPLICATION_CHM;
+	static const shared_ptr<ZLMimeType> APPLICATION_PALM_DB;
+	static const shared_ptr<ZLMimeType> APPLICATION_ATOM_XML;
+	static const shared_ptr<ZLMimeType> APPLICATION_LITRES_XML;
+	static const shared_ptr<ZLMimeType> APPLICATION_OPENSEARCH_XML;
+	static const shared_ptr<ZLMimeType> APPLICATION_OR_XML;
+
+	static const shared_ptr<ZLMimeType> APPLICATION_GZIP;
+	static const shared_ptr<ZLMimeType> APPLICATION_BZIP2;
+	static const shared_ptr<ZLMimeType> APPLICATION_TAR;
+	static const shared_ptr<ZLMimeType> APPLICATION_TAR_GZIP;
+	static const shared_ptr<ZLMimeType> APPLICATION_TAR_BZIP2;
+	static const shared_ptr<ZLMimeType> APPLICATION_TAR_7Z;
+
+	static const shared_ptr<ZLMimeType> IMAGE_PNG;
+	static const shared_ptr<ZLMimeType> IMAGE_JPEG;
+	static const shared_ptr<ZLMimeType> IMAGE_SVG;
+	static const shared_ptr<ZLMimeType> IMAGE_PALM;
+	static const shared_ptr<ZLMimeType> IMAGE_AUTO;
+
+	static const shared_ptr<ZLMimeType> TEXT_HTML;
+	static const shared_ptr<ZLMimeType> TEXT_PLAIN;
+	static const shared_ptr<ZLMimeType> TEXT_XML;
+
+	static const shared_ptr<ZLMimeType> EMPTY;
+
 };
 
 #endif /* __ZLMIMETYPE_H__ */

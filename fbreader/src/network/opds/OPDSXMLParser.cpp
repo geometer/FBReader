@@ -40,6 +40,7 @@ static const std::string TAG_SUBTITLE = "subtitle";
 static const std::string TAG_TITLE = "title";
 static const std::string TAG_UPDATED = "updated";
 static const std::string TAG_PRICE = "price";
+static const std::string TAG_ICON = "icon";
 
 static const std::string TAG_HACK_SPAN = "span";
 
@@ -58,6 +59,11 @@ static const std::string OPENSEARCH_TAG_STARTINDEX = "startIndex";
 const std::string OPDSXMLParser::KEY_PRICE = "price";
 const std::string OPDSXMLParser::KEY_CURRENCY = "currency";
 const std::string OPDSXMLParser::KEY_FORMAT = "format";
+
+static const std::string TAG_SEARCH_DESCRIPTION = "fbreader:advancedSearch";
+static const std::string TAG_AUTHENTICATION = "fbreader:authentication";
+static const std::string TAG_URL_REWRITING_RULES = "fbreader:urlRewritingRule";
+static const std::string TAG_RELATION_ALIASES = "fbreader:relationAlias";
 
 OPDSXMLParser::OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader) :myFeedReader(feedReader) {
 	myState = START;
@@ -131,6 +137,10 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 					myId = new ATOMId();
 					myId->readAttributes(attributeMap);
 					myState = F_ID;
+				} else if (tagName == TAG_ICON) {
+					myIcon = new ATOMIcon();
+					myIcon->readAttributes(attributeMap);
+					myState = F_ICON;
 				} else if (tagName == TAG_LINK) {
 					myLink = new ATOMLink();
 					myLink->readAttributes(attributeMap);
@@ -143,6 +153,10 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 					//myTitle = new ATOMTitle(); // TODO:implement ATOMTextConstruct & ATOMTitle
 					//myTitle->readAttributes(attributeMap);
 					myState = F_TITLE;
+				} else if (tagName == TAG_SUBTITLE) {
+					myState = F_SUBTITLE;
+				} else if (tagName == TAG_SUMMARY) {
+					myState = F_SUMMARY;
 				} else if (tagName == TAG_UPDATED) {
 					myUpdated = new ATOMUpdated();
 					myUpdated->readAttributes(attributeMap);
@@ -177,6 +191,10 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 					myCategory = new ATOMCategory();
 					myCategory->readAttributes(attributeMap);
 					myState = FE_CATEGORY;
+				} else if (tagName == TAG_ICON) {
+					myIcon = new ATOMIcon();
+					myIcon->readAttributes(attributeMap);
+					myState = FE_ICON;
 				} else if (tagName == TAG_LINK) {
 					myLink = new ATOMLink();
 					myLink->readAttributes(attributeMap);
@@ -305,6 +323,16 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 				myState = FEED;
 			} 
 			break;
+		case F_ICON:
+			if (tagPrefix == myAtomNamespaceId && tagName == TAG_ICON) {
+				myIcon->setUri(myBuffer);
+				if (!myFeed.isNull()) {
+					myFeed->setIcon(myIcon);
+				}
+				myIcon.reset();
+				myState = FEED;
+			} 
+			break;
 		case F_LINK:
 			if (tagPrefix == myAtomNamespaceId && tagName == TAG_LINK) {
 				if (!myFeed.isNull()) {
@@ -329,6 +357,22 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 				// TODO:implement ATOMTextConstruct & ATOMTitle
 				if (!myFeed.isNull()) {
 					myFeed->setTitle(myBuffer);
+				}
+				myState = FEED;
+			} 
+			break;
+		case F_SUBTITLE:
+			if (tagPrefix == myAtomNamespaceId && tagName == TAG_SUBTITLE) {
+				if (!myFeed.isNull()) {
+					myFeed->setSubtitle(myBuffer);
+				}
+				myState = FEED;
+			} 
+			break;
+		case F_SUMMARY:
+			if (tagPrefix == myAtomNamespaceId && tagName == TAG_SUMMARY) {
+				if (!myFeed.isNull()) {
+					myFeed->setSummary(myBuffer);
 				}
 				myState = FEED;
 			} 
@@ -405,6 +449,16 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			if (tagPrefix == myAtomNamespaceId && tagName == TAG_AUTHOR) {
 				myEntry->authors().push_back(myAuthor);
 				myAuthor.reset();
+				myState = F_ENTRY;
+			} 
+			break;
+		case FE_ICON:
+			if (tagPrefix == myAtomNamespaceId && tagName == TAG_ICON) {
+				myIcon->setUri(myBuffer);
+				if (!myEntry.isNull()) {
+					myEntry->setIcon(myIcon);
+				}
+				myIcon.reset();
 				myState = F_ENTRY;
 			} 
 			break;

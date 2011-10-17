@@ -50,6 +50,11 @@ public:
 		const std::string &name1, DBValue::ValueType type1, const std::string &name2, DBValue::ValueType type2,
 		const std::string &name3, DBValue::ValueType type3, const std::string &name4, DBValue::ValueType type4,
 		const std::string &name5, DBValue::ValueType type5);
+
+	static shared_ptr<DBCommand> createCommand(const std::string &command, DBConnection &connection, 
+		const std::string &name1, DBValue::ValueType type1, const std::string &name2, DBValue::ValueType type2,
+		const std::string &name3, DBValue::ValueType type3, const std::string &name4, DBValue::ValueType type4,
+		const std::string &name5, DBValue::ValueType type5, const std::string &name6, DBValue::ValueType type6);
 };
 
 

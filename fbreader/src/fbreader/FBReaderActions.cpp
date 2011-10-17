@@ -50,6 +50,7 @@
 #include "../database/booksdb/BooksDB.h"
 #include "../library/Library.h"
 #include "../library/Book.h"
+#include "../network/NetworkLinkCollection.h"
 
 #include "../libraryTree/LibraryTreeNodes.h"
 #include "../bookmodel/TOCTreeNodes.h"

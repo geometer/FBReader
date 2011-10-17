@@ -205,3 +205,7 @@ void NetworkCatalogNode::ReloadAction::run() {
 //	myNode.expandOrCollapseSubtree();
 	FBReader::Instance().refreshWindow();
 }
+
+void NetworkCatalogNode::reloadItem(shared_ptr<NetworkItem> item) {
+	myItem = item;
+}

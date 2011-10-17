@@ -44,6 +44,8 @@ public:
 
 	void setFocusToMainWidget();
 
+	void sendPaintEvent();
+
 private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLToolbar::ItemPtr item);
