@@ -511,6 +511,11 @@
 					<node name="enableTapScrolling" value="Enable Tap Scrolling" />
 					<node name="fingerOnly" value="Scroll on Finger Tap Only" />
 
+					<node name="tabScrollingZones" value="Tap Scroll Zones">
+						<node name="left-right" value="Scroll on Left/Right zones"/>
+						<node name="up-bottom" value="Scroll on Up/Bottom zones"/>
+					</node>
+
 					<node name="fingerScrolling" value="Touch screen scrolling">
 						<node name="byTap" value="Scroll pages by finger tap"/>
 						<node name="byFlick" value="Scroll pages by finger flick"/>

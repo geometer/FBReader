@@ -71,7 +71,7 @@ private:
 	static shared_ptr<ZLBooleanOption> ourSelectionOption;
 
 protected:
-	void doTapScrolling(int y);
+        void doTapScrolling(int x, int y);
 
 public:
 	FBView(ZLPaintContext &context);

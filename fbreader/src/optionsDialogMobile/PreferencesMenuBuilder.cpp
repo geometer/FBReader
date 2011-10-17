@@ -33,6 +33,7 @@
 
 #include "../network/NetworkLinkCollection.h"
 
+#include "MobileOptionsDialog.h"
 #include "PreferencesMenuBuilder.h"
 
 const std::string PreferencesMenuCode::DIRECTORIES("directories");
@@ -357,11 +358,12 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
  void PreferencesMenuBuilder::addScrollingOptions(ZLDialogContent& content) {
      FBReader &fbreader = FBReader::Instance();
      const bool hasTouchScreen = ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::TOUCHSCREEN_PRESENTED, false).value();
-     if (hasTouchScreen) {
-             ZLToggleBooleanOptionEntry *enableTapScrollingEntry =
-                     new ZLToggleBooleanOptionEntry(fbreader.EnableTapScrollingOption);
-             content.addOption(ZLResourceKey("enableTapScrolling"), enableTapScrollingEntry);
-     }
+     //if (hasTouchScreen) {
+         static ZLResourceKey zonesKey("tabScrollingZones");
+         ScrollingZonesEntry *scrollingZonesEntry =
+                        new ScrollingZonesEntry(content.resource(zonesKey), fbreader.TapScrollingZonesOption);
+         content.addOption(zonesKey, scrollingZonesEntry);
+     //}
  }
 
 void PreferencesMenuBuilder::addTapZonesOptions(ZLDialogContent& content) { }
