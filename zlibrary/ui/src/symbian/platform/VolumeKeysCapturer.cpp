@@ -18,13 +18,14 @@ VolumeKeysCapturer::~VolumeKeysCapturer() {
 void VolumeKeysCapturer::MrccatoCommand(TRemConCoreApiOperationId aOperationId,
                                         TRemConCoreApiButtonAction aButtonAct)
 {
+    //TODO if FBReader::Instance.EnableTapScrollingByVolumeKeysOption is false, don't capture it
     switch( aOperationId )
     {
     case ERemConCoreApiVolumeUp:
-        qApp->postEvent( myReceiver, new QKeyEvent(QEvent::KeyPress, EStdKeyIncVolume , 0, "VolumeUpButton"));
+        qApp->postEvent( myReceiver, new QKeyEvent(QEvent::KeyPress, EStdKeyIncVolume , 0));
         break;
     case ERemConCoreApiVolumeDown:        
-        qApp->postEvent( myReceiver, new QKeyEvent(QEvent::KeyPress, EStdKeyDecVolume , 0, "VolumeDownButton"));
+        qApp->postEvent( myReceiver, new QKeyEvent(QEvent::KeyPress, EStdKeyDecVolume , 0));
         break;
     default:
         break;

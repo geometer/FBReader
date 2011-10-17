@@ -356,14 +356,20 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
  void PreferencesMenuBuilder::addDisplayOptions(ZLDialogContent& content) { }
 
  void PreferencesMenuBuilder::addScrollingOptions(ZLDialogContent& content) {
-     FBReader &fbreader = FBReader::Instance();
-     const bool hasTouchScreen = ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::TOUCHSCREEN_PRESENTED, false).value();
-     //if (hasTouchScreen) {
-         static ZLResourceKey zonesKey("tabScrollingZones");
-         ScrollingZonesEntry *scrollingZonesEntry =
-                        new ScrollingZonesEntry(content.resource(zonesKey), fbreader.TapScrollingZonesOption);
-         content.addOption(zonesKey, scrollingZonesEntry);
-     //}
+    FBReader &fbreader = FBReader::Instance();
+    const bool hasTouchScreen = ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::TOUCHSCREEN_PRESENTED, false).value();
+    const bool hasVolumeKeys = ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::VOLUME_KEYS_PRESENTED, false).value();
+    if (hasTouchScreen) {
+        static ZLResourceKey zonesKey("tabScrollingZones");
+        ScrollingZonesEntry *scrollingZonesEntry =
+                new ScrollingZonesEntry(content.resource(zonesKey), fbreader.TapScrollingZonesOption);
+        content.addOption(zonesKey, scrollingZonesEntry);
+    }
+    if (hasVolumeKeys) {
+        ZLToggleBooleanOptionEntry *volumeKeysEntry =
+                new ZLToggleBooleanOptionEntry(fbreader.EnableTapScrollingByVolumeKeysOption);
+        content.addOption(ZLResourceKey("volumeKeys"), volumeKeysEntry);
+    }
  }
 
 void PreferencesMenuBuilder::addTapZonesOptions(ZLDialogContent& content) { }

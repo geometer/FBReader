@@ -49,6 +49,8 @@ public:
 	static const std::string FIND_NEXT;
 	static const std::string PAGE_SCROLL_FORWARD;
 	static const std::string PAGE_SCROLL_BACKWARD;
+        static const std::string VOLUME_KEY_SCROLL_FORWARD;
+        static const std::string VOLUME_KEY_SCROLL_BACKWARD;
 	static const std::string LINE_SCROLL_FORWARD;
 	static const std::string LINE_SCROLL_BACKWARD;
 	static const std::string MOUSE_SCROLL_FORWARD;

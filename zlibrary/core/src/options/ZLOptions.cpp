@@ -91,6 +91,7 @@ const std::string ZLOption::KEYBOARD_PRESENTED = "KeyboardPresented";
 const std::string ZLOption::MOUSE_PRESENTED = "MousePresented";
 const std::string ZLOption::TOUCHSCREEN_PRESENTED = "TouchScreenPresented";
 const std::string ZLOption::FINGER_TAP_DETECTABLE = "FingerTapDetectable";
+const std::string ZLOption::VOLUME_KEYS_PRESENTED = "VolumeKeysPresented";
 
 void ZLOption::clearGroup(const std::string &groupName) {
 	ourConfig->removeGroup(groupName);
