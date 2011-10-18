@@ -104,7 +104,14 @@ public:
 		void run();
 	};
 	friend class FullscreenAction;
-	
+
+        class ShowMenuAction : public Action {
+
+        public:
+                void run();
+        };
+        friend class ShowMenuAction;
+
 	class PresentWindowHandler : public ZLMessageHandler {
 
 	public:

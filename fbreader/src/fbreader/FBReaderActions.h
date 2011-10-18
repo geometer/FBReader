@@ -34,6 +34,7 @@ public:
 	static const std::string SHOW_NETWORK_LIBRARY;
 	static const std::string SHOW_TOC;
 	static const std::string SHOW_HELP;
+        static const std::string SHOW_MENU;
 	static const std::string SHOW_OPTIONS_DIALOG;
 	static const std::string SHOW_BOOK_INFO_DIALOG;
 	static const std::string SHOW_MOBILE_OPTIONS_DIALOG;
