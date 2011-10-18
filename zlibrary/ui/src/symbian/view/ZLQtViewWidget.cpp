@@ -123,13 +123,15 @@ void ZLQtViewWidget::Widget::mousePressEvent(QMouseEvent *event) {
     //it doesn't use internal code of ZLView for recognizing mouse's click
     //it just calls onFingerTap and onStylusClick directly
     //TODO reimplement using just onStylusPressed and onStylusReleased methods of ZLView class
+    bool isLink = false;
     if (BookTextView* bookTextView = zlobject_cast<BookTextView*>(&*myHolder.view())) {
         // count == 0 means that it returns false in case it's not a link in text
-        bookTextView->onStylusClick(x(event), y(event), 0);
+        isLink = bookTextView->onStylusClick(x(event), y(event), 0);
     }
-
-    // if it's not a link in BookTextView, do a finger tap for scrolling on prev/next page
-    myHolder.view()->onFingerTap(x(event), y(event));
+    if (!isLink) {
+        // if it's not a link in BookTextView, do a finger tap for scrolling on prev/next page
+        myHolder.view()->onFingerTap(x(event), y(event));
+    }
 }
 
 void ZLQtViewWidget::Widget::mouseReleaseEvent(QMouseEvent *event) {
