@@ -75,7 +75,7 @@ static std::string percent_encoding(const std::string &str) {
 	std::string result;
 	for (int i = 0; i < str.size(); ++i) {
 		const char c = str[i];
-		if (str[i] == '\\') {
+		if (str[i] == '\\' || str[i] == '/') {
 			result += '/';
 		} else if (isalpha(c) || isdigit(c) || c == '.' || c == '-' || c == '_' || c == '~') {
 			result += str[i];

@@ -17,14 +17,17 @@
  * 02110-1301, USA.
  */
 
-import QtQuick 1.0
-import com.nokia.meego 1.0
+#ifndef ZLQMLTREEIMAGEPROVIDER_H
+#define ZLQMLTREEIMAGEPROVIDER_H
 
-Label {
-	id: root
-	property variant handler
-	width: parent.width
-	visible: handler.visible
-	enabled: handler.enabled
-	text: handler.name + ": " + handler.text
-}
+#include <QtDeclarative/QDeclarativeImageProvider>
+
+class ZLQmlTreeImageProvider : public QDeclarativeImageProvider
+{
+public:
+    ZLQmlTreeImageProvider();
+	
+    QPixmap requestPixmap(const QString &id, QSize *size, const QSize &requestedSize);
+};
+
+#endif // ZLQMLTREEIMAGEPROVIDER_H

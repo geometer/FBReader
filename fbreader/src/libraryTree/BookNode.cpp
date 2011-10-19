@@ -48,7 +48,7 @@ const ZLTypeId &BookNode::typeId() const {
 }
 
 BookNode::BookNode(shared_ptr<Book> book, SubtitleMode subtitleMode):
-    myBook(book), mySubtitle(generateSubtitle(book,subtitleMode)) {
+    myBook(book), mySubtitle(generateSubtitle(book,subtitleMode)), myCoverImageIsStored(false) {
 }
 
 std::string BookNode::title() const {
@@ -59,22 +59,28 @@ std::string BookNode::subtitle() const {
 }
 
 std::string BookNode::imageUrl() const {
+	shared_ptr<ZLImage> image = originalImage();
+	if (image.isNull())
+		return FBNode::defaultImageUrl("booktree-book.png");
 	return std::string();
 }
 
-shared_ptr<ZLImage> BookNode::extractCoverImage() const {
-	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*myBook);
-	if (!plugin.isNull()) {
-		shared_ptr<ZLImage> cover = plugin->coverImage(myBook->file());
-		if (!cover.isNull()) {
-			return cover;
-		}
-	}
-	return 0; //defaultCoverImage("booktree-book.png");
+shared_ptr<ZLImage> BookNode::image() const {
+	shared_ptr<ZLImage> image = originalImage();
+	if (image.isNull())
+		image = FBNode::defaultCoverImage("booktree-book.png");
+	return image;
 }
 
-shared_ptr<ZLImage> BookNode::image() const {
-	return 0;
+shared_ptr<ZLImage> BookNode::originalImage() const {
+	if (myCoverImageIsStored)
+		return myStoredCoverImage;
+	myCoverImageIsStored = true;
+	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*myBook);
+	if (!plugin.isNull()) {
+		myStoredCoverImage = plugin->coverImage(myBook->file());
+	}
+	return myStoredCoverImage;
 }
 
 void BookNode::requestChildren() {
