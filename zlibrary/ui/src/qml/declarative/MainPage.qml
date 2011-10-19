@@ -144,4 +144,8 @@ Page {
 		height: 72
 		z: bookView.z + 1
 	}
+	Connections {
+		target: applicationInfo
+		onMainMenuRequested: mainMenu.open()
+	}
 }

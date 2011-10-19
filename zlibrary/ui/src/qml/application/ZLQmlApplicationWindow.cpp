@@ -74,6 +74,10 @@ void ZLQmlApplicationWindow::initMenu() {
 	myMenu->init();
 }
 
+void ZLQmlApplicationWindow::showMenu() {
+	emit mainMenuRequested();
+}
+
 ZLQmlApplicationWindow::~ZLQmlApplicationWindow() {
 }
 

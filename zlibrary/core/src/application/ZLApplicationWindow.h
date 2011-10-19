@@ -59,7 +59,7 @@ private:
 protected:
 
 	virtual void initMenu();
-        virtual void showMenu() = 0;
+	virtual void showMenu() = 0;
 	void refreshMenu();
 	// TODO: change to pure virtual
 	virtual void addMenuItem(ZLMenu::ItemPtr item) {};

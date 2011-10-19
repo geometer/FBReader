@@ -64,6 +64,7 @@ private:
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void init();
 	void initMenu();
+	void showMenu();
 	void processAllEvents();
 	void close();
 
@@ -89,6 +90,7 @@ Q_SIGNALS:
 	void fullScreenChanged(bool fullScreen);
 	void actionsChanged(const QDeclarativeListProperty<QObject> &actions);
 	void bookTitleChanged();
+	void mainMenuRequested();
 
 private:
 	QObjectList myActions;
