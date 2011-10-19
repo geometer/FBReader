@@ -66,6 +66,9 @@ public:
 	virtual void run();
 	virtual void onCloseRequest();
 	
+public Q_SLOTS:
+	void finishLater();
+	
 Q_SIGNALS:
 	void finished();
 	void progressChanged();

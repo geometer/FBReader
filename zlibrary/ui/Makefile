@@ -151,6 +151,7 @@ endif
 ifeq "$(UI_TYPE)" "qml"
 	@install -d $(SHARE_ZLIBRARY)/declarative
 	@install -m 0644 $(wildcard src/qml/declarative/*.qml) $(SHARE_ZLIBRARY)/declarative
+	@install -m 0644 $(wildcard src/qml/declarative/*.js) $(SHARE_ZLIBRARY)/declarative
 endif
 
 do_install_dev:

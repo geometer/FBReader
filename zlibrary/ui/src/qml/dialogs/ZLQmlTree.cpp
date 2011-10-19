@@ -24,6 +24,7 @@
 #include <ZLTreeActionNode.h>
 #include <ZLTreePageNode.h>
 #include <ZLTimeManager.h>
+#include <QtCore/QTimer>
 
 Q_DECLARE_METATYPE(QModelIndex)
 
@@ -266,6 +267,10 @@ void ZLQmlTreeDialog::run() {
 }
 
 void ZLQmlTreeDialog::onCloseRequest() {
+	QTimer::singleShot(0, this, SLOT(finishLater()));
+}
+
+void ZLQmlTreeDialog::finishLater() {
 	finish();
 }
 
