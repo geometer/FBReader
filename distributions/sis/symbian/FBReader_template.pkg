@@ -3,7 +3,7 @@
 
 
 ; SIS header: name, uid, version
-#{"FBReader"},(0xE87CC83C),4,7,1
+#{"FBReader"},(0xE87CC83C),VERSION
 
 ; Localised Vendor name
 %{"Vendor"}
@@ -82,7 +82,7 @@
 "fbreader/data/formats/docbook/ISOamsb.ent" - "!:\private\e87cc83c\FBReader\formats\docbook\ISOamsb.ent"
 "fbreader/data/formats/docbook/ISOlat2.ent" - "!:\private\e87cc83c\FBReader\formats\docbook\ISOlat2.ent"
 "fbreader/data/formats/docbook/ISOgrk1.ent" - "!:\private\e87cc83c\FBReader\formats\docbook\ISOgrk1.ent"
-"fbreader/data/formats/fb2/FBReaderVersion.ent" - "!:\private\e87cc83c\FBReader\formats\fb2\FBReaderVersion.ent"
+"FBReaderVersion.ent"                       - "!:\private\e87cc83c\FBReader\formats\fb2\FBReaderVersion.ent"
 "fbreader/data/formats/fb2/fb2genres.xml" - "!:\private\e87cc83c\FBReader\formats\fb2\fb2genres.xml"
 "fbreader/data/default/toolbar.symbian.xml" - "!:\private\e87cc83c\FBReader\default\toolbar.xml"
 "fbreader/data/default/config.symbian.xml" - "!:\private\e87cc83c\FBReader\default\config.xml"
@@ -91,21 +91,21 @@
 
 "fbreader/data/default/keymap.symbian.xml" - "!:\private\e87cc83c\FBReader\default\keymap.xml"
 "fbreader/data/default/styles.symbian.xml" - "!:\private\e87cc83c\FBReader\default\styles.xml"
-"fbreader/data/help/MiniHelp.symbian.vi.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.vi.fb2"
-"fbreader/data/help/MiniHelp.symbian.es.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.es.fb2"
-"fbreader/data/help/MiniHelp.symbian.ru.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.ru.fb2"
-"fbreader/data/help/MiniHelp.symbian.cs.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.cs.fb2"
-"fbreader/data/help/MiniHelp.symbian.th.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.th.fb2"
-"fbreader/data/help/MiniHelp.symbian.nl.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.nl.fb2"
-"fbreader/data/help/MiniHelp.symbian.hu.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.hu.fb2"
-"fbreader/data/help/MiniHelp.symbian.gl.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.gl.fb2"
-"fbreader/data/help/MiniHelp.symbian.de.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.de.fb2"
-"fbreader/data/help/MiniHelp.symbian.zh.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.zh.fb2"
-"fbreader/data/help/MiniHelp.symbian.en.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.en.fb2"
-"fbreader/data/help/MiniHelp.symbian.fr.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.fr.fb2"
-"fbreader/data/help/MiniHelp.symbian.it.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.it.fb2"
-"fbreader/data/help/MiniHelp.symbian.uk.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.uk.fb2"
-"fbreader/data/help/MiniHelp.symbian.zh_TW.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.zh_TW.fb2"
+"fbreader/data/help/MiniHelp.mobile.vi.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.vi.fb2"
+"fbreader/data/help/MiniHelp.mobile.es.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.es.fb2"
+"fbreader/data/help/MiniHelp.mobile.ru.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.ru.fb2"
+"fbreader/data/help/MiniHelp.mobile.cs.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.cs.fb2"
+"fbreader/data/help/MiniHelp.mobile.th.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.th.fb2"
+"fbreader/data/help/MiniHelp.mobile.nl.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.nl.fb2"
+"fbreader/data/help/MiniHelp.mobile.hu.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.hu.fb2"
+"fbreader/data/help/MiniHelp.mobile.gl.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.gl.fb2"
+"fbreader/data/help/MiniHelp.mobile.de.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.de.fb2"
+"fbreader/data/help/MiniHelp.mobile.zh.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.zh.fb2"
+"fbreader/data/help/MiniHelp.mobile.en.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.en.fb2"
+"fbreader/data/help/MiniHelp.mobile.fr.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.fr.fb2"
+"fbreader/data/help/MiniHelp.mobile.it.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.it.fb2"
+"fbreader/data/help/MiniHelp.mobile.uk.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.uk.fb2"
+"fbreader/data/help/MiniHelp.mobile.zh_TW.fb2" - "!:\private\e87cc83c\FBReader\help\MiniHelp.zh_TW.fb2"
 
 "fbreader/data/icons/booktree/symbian/tree-removebook.png" - "!:\private\e87cc83c\pixmaps\FBReader\tree-removebook.png"
 "fbreader/data/icons/booktree/symbian/tree-taginfo.png" - "!:\private\e87cc83c\pixmaps\FBReader\tree-taginfo.png"

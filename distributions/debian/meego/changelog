@@ -1,0 +1,16 @@
+fbreader (0.99.3) oneiric; urgency=low
+
+  * Added option for volume keys scrolling turning on/off
+  * Added option for configuration of scrolling pages zones by tap
+  * Fixed bug with page scroll by tapping screen
+  * Added subtitles to local library and network library
+  * Added kinetic scrolling for menu
+  * Added ability to purchase books from network library
+
+ -- Ruslan Nigmatullin <euroelessar@yandex.ru>  Wed, 19 Oct 2011 17:29:59 +0600
+
+fbreader (0.99.1-1) stable; urgency=low
+
+  * Initial release.
+
+ -- Nikolay Pultsin <geometer@fbreader.org>  Thu, 24 Mar 2010 14:49:00 +0300

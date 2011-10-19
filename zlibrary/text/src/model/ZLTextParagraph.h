@@ -273,6 +273,8 @@ public:
 	size_t textDataLength() const;
 	size_t characterNumber() const;
 
+	std::string text() const;
+
 private:
 	void addEntry(char *address);
 

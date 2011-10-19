@@ -37,6 +37,12 @@
 #include "../database/booksdb/BooksDB.h"
 #include "../library/Book.h"
 
+const ZLTypeId BookTextView::TYPE_ID(FBView::TYPE_ID);
+
+const ZLTypeId &BookTextView::typeId() const {
+        return TYPE_ID;
+}
+
 class BookTextView::PositionIndicatorWithLabels : public PositionIndicator {
 
 public:

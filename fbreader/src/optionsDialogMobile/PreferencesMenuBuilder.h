@@ -7,8 +7,6 @@
 #include <ZLDialogContent.h>
 #include <ZLOptionEntry.h>
 
-#include "PreferencesMenuBuilder.h"
-
 class PreferencesMenuCode {
 public:
 	const static std::string DIRECTORIES;

@@ -21,9 +21,11 @@
 #define __PASSWORDRECOVERYDIALOG_H__
 
 #include <string>
+#include <ZLExecutionData.h>
 
 class ZLDialog;
 class NetworkAuthenticationManager;
+class PasswordRecoveryDialogRunnable;
 
 class PasswordRecoveryDialog {
 
@@ -35,10 +37,11 @@ private:
 	static bool runDialog(std::string &email, std::string &errorMessage);
 
 public:
-	static bool run(NetworkAuthenticationManager &mgr);
+	static bool run(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
 
 private:
 	shared_ptr<ZLDialog> myDialog;
+	friend class PasswordRecoveryDialogRunnable;
 };
 
 inline ZLDialog &PasswordRecoveryDialog::dialog() { return *myDialog; }

@@ -21,9 +21,11 @@
 #define __REGISTERUSERDIALOG_H__
 
 #include <string>
+#include <ZLExecutionData.h>
 
 class ZLDialog;
 class NetworkAuthenticationManager;
+class RegisterUserDialogRunnable;
 
 class RegisterUserDialog {
 
@@ -35,7 +37,7 @@ private:
 	static bool runDialog(std::string &login, std::string &password, std::string &email, std::string &errorMessage);
 
 public:
-	static bool run(NetworkAuthenticationManager &mgr);
+	static bool run(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
 
 private:
 	shared_ptr<ZLDialog> myDialog;
@@ -43,6 +45,7 @@ private:
 	std::string myPassword0;
 	std::string myPassword1;
 	std::string myEMail;
+	friend class RegisterUserDialogRunnable;
 };
 
 inline ZLDialog &RegisterUserDialog::dialog() { return *myDialog; }

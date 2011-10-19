@@ -15,6 +15,7 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QFrame>
 
+#include <QtCore/QRegExp>
 #include <QtCore/QStringList>
 
 #include <ZLStringUtil.h>
@@ -40,13 +41,24 @@ void ZLQtOptionView::_hide() {
 	}
 }
 
+std::string ZLQtOptionView::removeShortcut(const std::string& name) const {
+    const static QString ampersand = "&";
+    QString nameWithoutAmps = QString::fromStdString(name);
+    int pos = 0;
+    //TODO maybe 'while' loop should be used here, for removing all & (shortcuts) characthres
+    if ((pos = QRegExp(ampersand+"\\S").indexIn(nameWithoutAmps)) != -1) {
+        nameWithoutAmps = nameWithoutAmps.remove(pos,ampersand.size());
+    }
+    return nameWithoutAmps.toStdString();
+}
+
 
 void BooleanOptionView::_createItem() {
 	QWidget* widget = new QWidget(myTab->widget());
 	QHBoxLayout* layout = new QHBoxLayout();
 	widget->setLayout(layout);
 	myCheckBox = new QCheckBox(" ");
-	myLabel = new PressLabel( ::qtString(ZLOptionView::name()));
+        myLabel = new PressLabel( ::qtString(removeShortcut(ZLOptionView::name())));
 	myCheckBox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
 	myLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
 	widget->setFocusProxy(myCheckBox);

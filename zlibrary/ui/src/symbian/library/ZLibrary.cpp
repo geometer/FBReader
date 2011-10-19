@@ -16,9 +16,10 @@
 #include <ZLLanguageUtil.h>
 #include <ZLStringUtil.h>
 
+
+
 #include "../../../../core/src/unix/library/ZLibraryImplementation.h"
 
-#include "../filesystem/ZLQtFSManager.h"
 #include "../time/ZLQtTime.h"
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../image/ZLQtImageManager.h"
@@ -30,6 +31,8 @@
 #include "../network/ZLQtNetworkManager.h"
 
 #include "../../../../core/src/unix/library/ZLibraryImplementation.h"
+
+#include "../filesystem/ZLSymbianFSManager.h"
 
 // for qDebug:
 #include <stdio.h>
@@ -81,8 +84,8 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary:: init(int &argc, char **&argv) {
-	//freopen("E:\\fbreader-log.txt", "w", stdout);
-	//fprintf(stdout,"\n");
+        freopen("E:\\fbreader-log.txt", "w", stdout);
+        fprintf(stdout,"\n");
 
 	initLibrary();
 
@@ -120,6 +123,7 @@ void myMessageOutput(QtMsgType type, const char *msg)
 	 switch (type) {
 	 case QtDebugMsg:
 		 fprintf(stdout, "Debug: %s\n", msg);
+                 fflush(stdout);
 		 break;
 	 case QtWarningMsg:
 		 fprintf(stdout, "Warning: %s\n", msg);
@@ -142,7 +146,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	ZLibrary::parseArguments(argc, argv);
 	XMLConfigManager::createInstance();
 	ZLQtTimeManager::createInstance();
-	ZLQtFSManager::createInstance();
+	ZLSymbianFSManager::createInstance();
 	ZLQtDialogManager::createInstance();
 	ZLSymbianCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();

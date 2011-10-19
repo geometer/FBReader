@@ -1,3 +1,7 @@
+#include <QtCore/QDebug>
+
+#include <QtScroller>
+
 #include "../dialogs/ZLQtUtil.h"
 
 #include "DrillDownMenu.h"
@@ -9,15 +13,21 @@ DrillDownMenuDialog::DrillDownMenuDialog(QWidget* parent) : QDialog(parent) {
 	myLabel->setWordWrap(true);
 
 	layout->addWidget(myLabel);
-    layout->addWidget(myStackedWidget);
+        layout->addWidget(myStackedWidget);
 
 	const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
 	QAction* action = new QAction(QString::fromStdString(back.value()),this);
 #ifdef __SYMBIAN__
-    action->setSoftKeyRole( QAction::NegativeSoftKey );
+        action->setSoftKeyRole( QAction::NegativeSoftKey );
 #endif
-    connect(action, SIGNAL(triggered()), this, SLOT(back()));
-    addAction( action );
+        connect(action, SIGNAL(triggered()), this, SLOT(back()));
+        addAction( action );
+
+#ifndef __SYMBIAN__
+        QPushButton* button = new QPushButton(QString::fromStdString(back.value()));
+        connect(button, SIGNAL(clicked()), this, SLOT(back()));
+        layout->addWidget(button);
+#endif
 }
 
 void DrillDownMenuDialog::paintEvent(QPaintEvent *event) {
@@ -54,6 +64,7 @@ void DrillDownMenuDialog::showDrillDownMenu(DrillDownMenu* menu) {
 }
 
  void DrillDownMenuDialog::setCurrentMenu(DrillDownMenu* menu) {
+    QtScroller::grabGesture(menu->viewport(), QtScroller::LeftMouseButtonGesture);
     myStackedWidget->setCurrentWidget(menu);
 #ifdef __SYMBIAN__
     menu->setEditFocus(true); // for phones with keyboard: need to activate for single-click
@@ -78,12 +89,13 @@ void DrillDownMenuDialog::back() {
 void DrillDownMenu::addItem(const std::string &text, ZLApplication::Action* action) {
     DrillDownMenuItem* item = new DrillDownMenuItem( ::qtString(text), action, this);
     QListWidget::addItem( item );
-
+    //this->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Maximum);
 }
 
 void DrillDownMenu::addItem(const QIcon& icon, const std::string &text, ZLApplication::Action* action) {
     DrillDownMenuItem* item = new DrillDownMenuItem(icon, ::qtString(text), action, this);
     QListWidget::addItem( item );
+//    this->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Maximum);
 }
 
 void DrillDownMenu::addItem(DrillDownMenuItem* item) {
@@ -96,6 +108,9 @@ DrillDownMenu::DrillDownMenu(QWidget *parent) : QListWidget(parent) {
     // don't close DrillDownMenu after options dialog was closed:
     //connect(this, SIGNAL(itemActivated(QListWidgetItem*)),parent,SLOT(close()));
     this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+
 }
 
 void DrillDownMenu::run(QListWidgetItem* item) {
@@ -111,17 +126,11 @@ std::string DrillDownMenu::getMessage() const {
 }
 
 DrillDownMenuItem::DrillDownMenuItem(const QIcon &icon, const QString &text, ZLApplication::Action* action, QListWidget *view, int type) :
-    QListWidgetItem(icon,text,view,type), myAction(action) {
-    QFont font(this->font());
-    font.setBold(true);
-	setFont(font);
+    NiceSizeListWidgetItem(icon,text,view,type), myAction(action) {
 }
 
 DrillDownMenuItem::DrillDownMenuItem(const QString &text, ZLApplication::Action* action, QListWidget *view, int type) :
-    QListWidgetItem(text,view,type), myAction(action) {
-    QFont font(this->font());
-    font.setBold(true);
-	setFont(font);
+    NiceSizeListWidgetItem(text,view,type), myAction(action) {
 }
 
 void DrillDownMenuItem::run() {
@@ -130,4 +139,47 @@ void DrillDownMenuItem::run() {
         return;
     }
     myAction->checkAndRun();
+}
+
+NiceSizeListWidgetItem::NiceSizeListWidgetItem(const QString &text, QListWidget *view , int type)
+    : QListWidgetItem(text,view,type) { }
+
+NiceSizeListWidgetItem::NiceSizeListWidgetItem(const QIcon &icon, const QString &text,QListWidget *view, int type)
+    : QListWidgetItem(icon,text,view,type) {}
+
+
+QVariant NiceSizeListWidgetItem::data (int role) const {
+    if (role == Qt::SizeHintRole){
+        //qDebug() << Q_FUNC_INFO << role << index;
+        return MenuItemParameters::getSize();
+    } else if (role == Qt::FontRole) {
+        return MenuItemParameters::getFont();
+    }
+    return QListWidgetItem::data(role);
+}
+
+QSize MenuItemParameters::getSize() {
+    static const int SIZE_FOR_FINGERS_MM = 8; // in millimetres
+    static const int MAX_PART_OF_SCREEN = 5;  // if 1/5 of screen if less than sizeForFingersMM,
+                                           // set size as 1/5 of screen
+    QRect rect = qApp->desktop()->availableGeometry();
+    int coef = qApp->desktop()->height() / qApp->desktop()->heightMM();;
+    int height = std::min(rect.height()/MAX_PART_OF_SCREEN, coef*SIZE_FOR_FINGERS_MM);
+    return QSize(rect.width(), height);
+}
+
+QFont MenuItemParameters::getFont() {
+    static const qreal COEF = 1.15;
+    QFont font = qApp->desktop()->font();
+    font.setPointSizeF( qreal(font.pointSizeF()*COEF) );
+    font.setBold(true);
+    return font;
+}
+
+QFont MenuItemParameters::getSubtitleFont() {
+    static const qreal COEF = 0.85;
+    QFont font = qApp->desktop()->font();
+    font.setPointSizeF( qreal(font.pointSizeF()*COEF) );
+    font.setBold(false);
+    return font;
 }

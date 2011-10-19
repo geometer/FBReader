@@ -49,6 +49,7 @@ Before building FBReader, you should check (and maybe edit) 2 files:
         TARGET_ARCH = opensimpad-0.9.0      UI_TYPE = opie
         TARGET_ARCH = maemo                 UI_TYPE = maemo2
         TARGET_ARCH = maemo                 UI_TYPE = maemo4
+        TARGET_ARCH = meego                 UI_TYPE = qml
         TARGET_ARCH = pma400                UI_TYPE = qtopia
         TARGET_ARCH = moto                  UI_TYPE = ezx
         TARGET_ARCH = win32                 UI_TYPE = win32

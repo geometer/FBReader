@@ -36,8 +36,10 @@ public:
 	);
 
 private:
+	void onAuthorised(ZLUserDataHolder &data, const std::string &error);
+	void onReloaded(ZLUserDataHolder &data, const std::string &error);
 	void onDisplayItem();
-	std::string loadChildren(NetworkItem::List &children);
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
 
 private:
 	bool myForceReload;

@@ -59,13 +59,13 @@ private:
 protected:
 
 	virtual void initMenu();
+	virtual void showMenu() = 0;
 	void refreshMenu();
 	// TODO: change to pure virtual
 	virtual void addMenuItem(ZLMenu::ItemPtr item) {};
 	void onMenuItemPress(const ZLMenubar::PlainItem& menuItem);
 	// TODO: change to pure virtual
-	virtual void setMenuItemState(ZLMenu::ItemPtr item, bool visible, bool enabled) {}
-
+	virtual void setMenuItemState(ZLMenu::ItemPtr item, bool visible, bool enabled) {}        
 	ToolbarType type(const ZLToolbar::Item &item) const;
 	bool hasFullscreenToolbar() const;
 	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);

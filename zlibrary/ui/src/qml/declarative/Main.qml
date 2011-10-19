@@ -22,15 +22,19 @@ import com.nokia.meego 1.0
 
 PageStackWindow {
 	id: root
+	property bool fixedOrientation: false
 	showToolBar: pageStack.currentPage === null
 				 || pageStack.currentPage.showToolBar === undefined
 				 || pageStack.currentPage.showToolBar
 	
 	initialPage: MainPage {
 		id: mainPage
-		OptionsDialog {
-			id: optionsDialog
-		}
+		rootWindow: root
+	}
+	
+	Connections {
+		target: screen
+		onCurrentOrientationChanged: root.fixedOrientation = false
 	}
 
 	Connections {
@@ -42,17 +46,28 @@ PageStackWindow {
 		}
 		
 		onOptionsDialogRequested: {
-			optionsDialog.handler = object;
-			root.openDialog(optionsDialog);
+			var component = Qt.createComponent("OptionsDialog.qml");
+			root.pageStack.push(component, { handler: object, rootWindow: root, component: component });
 		}
-
+		
         onFileDialogRequested: {
 			var component = Qt.createComponent("OpenFileDialog.qml");
 			root.openDialog(component.createObject(mainPage, { handler: object }));
 		}
 		
+        onTreeDialogRequested: {
+			console.log("bla-bla", object)
+			var component = Qt.createComponent("TreeDialogPage.qml");
+			root.pageStack.push(component, { handler: object, rootWindow: root, component: component });
+		}
+		
 		onProgressDialogRequested: {
 			root.openDialog(progressDialog.createObject(root.pageStack.parent.parent, { handler: object }));
+		}
+		
+		onQuestionDialogRequested: {
+			var component = Qt.createComponent("QuestionDialog.qml");
+			root.openDialog(component.createObject(root.pageStack.parent.parent, { handler: object }));
 		}
 		
 		onInformationBoxRequested: {
@@ -74,8 +89,7 @@ PageStackWindow {
 			dialog.statusChanged.connect(
 						function() {
 							if (dialog.status == DialogStatus.Closed) {
-								if (dialog !== optionsDialog)
-									dialog.destroy();
+								dialog.destroy();
 								// hook for toolbar activity
 								if (root.pageStack.currentPage == mainPage)
 									mainPage.state = ""
@@ -95,4 +109,25 @@ PageStackWindow {
 		QueryDialog {
 		}
 	}
+
+//	Component.onCompleted: {
+//		theme.inverted = true
+//	}
+
+// TODO: Check why it doesn't dissapear sometimes	
+//	Rectangle {
+//		id: overlayRect
+//		anchors.fill: parent
+//		color: "#60000000"
+//		visible: !platformWindow.active
+//		Label {
+//			anchors.centerIn: parent
+//			width: parent.width
+//			text: applicationInfo.bookTitle
+//			font.pixelSize: 70
+//			font.bold: true
+//			color: "white"
+//			horizontalAlignment: Text.AlignHCenter
+//		}
+//	}
 }

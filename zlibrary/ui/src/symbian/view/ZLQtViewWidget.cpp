@@ -119,11 +119,23 @@ void ZLQtViewWidget::Widget::paintEvent(QPaintEvent*) {
 }
 
 void ZLQtViewWidget::Widget::mousePressEvent(QMouseEvent *event) {
-		myHolder.view()->onStylusPress(x(event), y(event));
+    //Implementation of this method is hack, because
+    //it doesn't use internal code of ZLView for recognizing mouse's click
+    //it just calls onFingerTap and onStylusClick directly
+    //TODO reimplement using just onStylusPressed and onStylusReleased methods of ZLView class
+    bool isLink = false;
+    if (BookTextView* bookTextView = zlobject_cast<BookTextView*>(&*myHolder.view())) {
+        // count == 0 means that it returns false in case it's not a link in text
+        isLink = bookTextView->onStylusClick(x(event), y(event), 0);
+    }
+    if (!isLink) {
+        // if it's not a link in BookTextView, do a finger tap for scrolling on prev/next page
+        myHolder.view()->onFingerTap(x(event), y(event));
+    }
 }
 
 void ZLQtViewWidget::Widget::mouseReleaseEvent(QMouseEvent *event) {
-	myHolder.view()->onStylusRelease(x(event), y(event));
+    //why empty implentation? see comment in mousePressentEvent method
 }
 
 

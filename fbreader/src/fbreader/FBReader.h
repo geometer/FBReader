@@ -31,6 +31,8 @@
 
 #include "../library/Library.h"
 #include "../external/ProgramCollection.h"
+#include "../networkTree/NetworkView.h"
+#include "../networkActions/NetworkOperationRunnable.h"
 
 class ZLFile;
 class ZLMessageHandler;
@@ -39,7 +41,7 @@ class Book;
 class BookModel;
 class BookTextView;
 
-class FBReader : public ZLApplication {
+class FBReader : public ZLApplication, public DownloadBookListener {
 
 public:
 	static FBReader &Instance();
@@ -68,7 +70,9 @@ public:
 	ZLIntegerRangeOption KeyScrollingDelayOption;
 	ZLIntegerRangeOption LinesToScrollOption;
 	ZLIntegerRangeOption LinesToKeepOption;
+        ZLIntegerRangeOption TapScrollingZonesOption;
 	ZLBooleanOption EnableTapScrollingOption;
+        ZLBooleanOption EnableTapScrollingByVolumeKeysOption;
 	ZLBooleanOption TapScrollingOnFingerOnlyOption;
 
 	ZLBooleanOption UseSeparateBindingsOption;
@@ -85,6 +89,7 @@ public:
 	ViewMode mode() const;
 
 	shared_ptr<Book> currentBook() const;
+	shared_ptr<Book> helpFile() const;
 
 	void refreshWindow();
 
@@ -97,6 +102,7 @@ private:
 
 	bool closeView();
 	std::string helpFileName(const std::string &language) const;
+	shared_ptr<Book> helpFile(const std::string &language) const;
 
 	void openFile(const ZLFile &file);
 	bool canDragFiles(const std::vector<std::string> &filePaths) const;
@@ -117,6 +123,8 @@ public:
 	void openLinkInBrowser(const std::string &url) const;
 
 	void tryShowFootnoteView(const std::string &id, const std::string &type);
+	void bookDownloadingProgress(DownloadBookRunnable *downloader, int downloaded, int size);
+	void bookDownloaded(DownloadBookRunnable *runnable);
 	BookTextView &bookTextView() const;
 	void showBookTextView();
 	void openBook(shared_ptr<Book> book);
@@ -140,9 +148,10 @@ private:
 	shared_ptr<ZLView> myFootnoteView;
 	shared_ptr<ZLView> myBookTextView;
 	shared_ptr<ZLView> myContentsView;
-	shared_ptr<ZLView> myNetworkLibraryView;
-	shared_ptr<ZLView> myLibraryByAuthorView;
-	shared_ptr<ZLView> myLibraryByTagView;
+//TODO maybe remove this code completely?
+//	shared_ptr<NetworkView> myNetworkLibraryView;
+//	shared_ptr<ZLView> myLibraryByAuthorView;
+//	shared_ptr<ZLView> myLibraryByTagView;
 	shared_ptr<ZLPopupData> myRecentBooksPopupData;
 	shared_ptr<ZLPopupData> myPreferencesPopupData;
 
@@ -172,6 +181,11 @@ friend class OpenFileHandler;
 friend class OptionsDialog;
 friend class SystemOptionsDialog;
 friend class FBView;
+
+//TODO remove it?
+friend class ShowTOCTreeAction;
+//TODO remove it?
+friend class ReferenceNode;
 
 //friend class ShowCollectionAction;
 friend class ShowHelpAction;

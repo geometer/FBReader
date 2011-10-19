@@ -37,6 +37,7 @@
 #include "../library/Book.h"
 #include "../library/Tag.h"
 #include "../library/Author.h"
+#include "../tree/FBNode.h"
 
 class MobileDisplayNameEntry : public ZLStaticTextOptionEntry {
 
@@ -78,10 +79,10 @@ MobileBookInfoDialog::MobileBookInfoDialog(shared_ptr<Book> book) : myBook(book)
 	myDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("MobileInfoDialog"));
 	myDialog->addOption(ZLResourceKey("title"), new MobileDisplayNameEntry(myBook->title()));
 
-	std::string authors = ZLStringUtil::join(myBook->authors(), ", ", AuthorJoinFunctor());
+        std::string authors = ZLStringUtil::join(myBook->authors(), AuthorJoinFunctor(), FBNode::COMMA_JOIN_SEPARATOR);
 	myDialog->addOption(ZLResourceKey("authorDisplayName"), new MobileDisplayNameEntry(authors));
 
-	std::string tags = ZLStringUtil::join(myBook->tags(), "; ", TagJoinFunctor());
+        std::string tags = ZLStringUtil::join(myBook->tags(), TagJoinFunctor(),  "; ");
 	myDialog->addOption(ZLResourceKey("tags"), new MobileDisplayNameEntry(tags));
 
 	std::string language = ZLLanguageList::languageName(myBook->language());

@@ -25,12 +25,18 @@
 class ContentsView : public FBView {
 
 public:
+    static const ZLTypeId TYPE_ID;
+
+public:
 	ContentsView(ZLPaintContext &context);
 	~ContentsView();
 
 	bool isEmpty() const;
 	size_t currentTextViewParagraph(bool includeStart = true) const;
 	void gotoReference();
+
+private:
+    const ZLTypeId &typeId() const;
 
 private:
 	bool _onStylusPress(int x, int y);

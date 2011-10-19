@@ -1,0 +1,3 @@
+[D-BUS Service]
+Name=com.nokia.FBReader
+Exec=/usr/bin/FBReader

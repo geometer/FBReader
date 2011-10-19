@@ -48,6 +48,7 @@ class ZLQmlApplicationWindow : public QObject, public ZLApplicationWindow {
 	Q_PROPERTY(bool fullSreen READ isFullscreen NOTIFY fullScreenChanged)
 	Q_PROPERTY(QDeclarativeListProperty<QObject> actions READ actions NOTIFY actionsChanged)
 	Q_PROPERTY(QObject* menuBar READ menuBar CONSTANT)
+	Q_PROPERTY(QString bookTitle READ bookTitle NOTIFY bookTitleChanged)
 
 public:
 	ZLQmlApplicationWindow(ZLApplication *application);
@@ -63,6 +64,7 @@ private:
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void init();
 	void initMenu();
+	void showMenu();
 	void processAllEvents();
 	void close();
 
@@ -75,6 +77,8 @@ private:
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
+	QString bookTitle() const;
+
 	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 	
@@ -85,6 +89,8 @@ private:
 Q_SIGNALS:
 	void fullScreenChanged(bool fullScreen);
 	void actionsChanged(const QDeclarativeListProperty<QObject> &actions);
+	void bookTitleChanged();
+	void mainMenuRequested();
 
 private:
 	QObjectList myActions;
@@ -94,6 +100,7 @@ private:
 	ResourcePolicy::ResourceSet *myResourceSet;
 #endif
 	bool myFullScreen;
+	QString myBookTitle;
 
 private:
 	class LineEditParameter : public VisualParameter {

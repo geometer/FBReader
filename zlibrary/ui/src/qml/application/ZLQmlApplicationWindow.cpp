@@ -38,6 +38,7 @@
 #include "ZLQmlApplicationWindow.h"
 #include "../dialogs/ZLQmlDialogManager.h"
 #include "../dialogs/ZLQmlFileSystemModel.h"
+#include "../dialogs/ZLQmlTree.h"
 #include "../view/ZLQmlViewWidget.h"
 
 void ZLQmlDialogManager::createApplicationWindow(ZLApplication *application) const {
@@ -64,12 +65,17 @@ ZLQmlApplicationWindow::ZLQmlApplicationWindow(ZLApplication *application) :
 void ZLQmlApplicationWindow::init() {
 	qmlRegisterType<ZLQmlFileSystemModel>("org.fbreader", 0, 14, "FileSystemModel");
 	qmlRegisterType<ZLQmlBookContent>("org.fbreader", 0, 14, "BookView");
+	qmlRegisterType<ZLQmlDataModel>("org.fbreader", 0, 14, "DataModel");
 	qmlRegisterUncreatableType<ZLQmlToolBarItem>("org.fbreader", 0, 14, "ToolBarItem", "Type is uncreatable");
 	ZLApplicationWindow::init();
 }
 
 void ZLQmlApplicationWindow::initMenu() {
 	myMenu->init();
+}
+
+void ZLQmlApplicationWindow::showMenu() {
+	emit mainMenuRequested();
 }
 
 ZLQmlApplicationWindow::~ZLQmlApplicationWindow() {
@@ -84,6 +90,10 @@ void ZLQmlApplicationWindow::setFullscreen(bool fullscreen) {
 
 bool ZLQmlApplicationWindow::isFullscreen() const {
 	return myFullScreen;
+}
+
+QString ZLQmlApplicationWindow::bookTitle() const {
+	return myBookTitle;
 }
 
 ZLQmlMenuBar::ZLQmlMenuBar(ZLQmlApplicationWindow *window) : QObject(window) {
@@ -268,7 +278,7 @@ void ZLQmlApplicationWindow::processAllEvents() {
 }
 
 ZLViewWidget *ZLQmlApplicationWindow::createViewWidget() {
-	ZLQmlViewObject *viewWidget = new ZLQmlViewObject(this, &application());
+	ZLQmlViewObject *viewWidget = new ZLQmlViewObject(&application());
 	viewWidget->widget()->showFullScreen();
 	return viewWidget;
 }
@@ -280,7 +290,8 @@ void ZLQmlApplicationWindow::grabAllKeys(bool) {
 }
 
 void ZLQmlApplicationWindow::setCaption(const std::string &caption) {
-	Q_UNUSED(caption);
+	myBookTitle = QString::fromStdString(caption).remove("FBReader - ");
+	emit bookTitleChanged();
 }
 
 void ZLQmlApplicationWindow::setHyperlinkCursor(bool hyperlink) {

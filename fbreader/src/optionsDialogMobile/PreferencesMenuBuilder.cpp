@@ -33,6 +33,7 @@
 
 #include "../network/NetworkLinkCollection.h"
 
+#include "MobileOptionsDialog.h"
 #include "PreferencesMenuBuilder.h"
 
 const std::string PreferencesMenuCode::DIRECTORIES("directories");
@@ -154,7 +155,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
      myComboEntry->addValue(myComboEntry->initialValue());
 
      ZLTextStyleCollection &collection = ZLTextStyleCollection::Instance();
-	 ZLTextKind styles[] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, CONTENTS_TABLE_ENTRY, LIBRARY_ENTRY, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATEKIND, POEM_TITLE, STANZA, VERSE };
+	 ZLTextKind styles[] = { REGULAR, TITLE, SECTION_TITLE, SUBTITLE, H1, H2, H3, H4, H5, H6, ANNOTATION, EPIGRAPH, PREFORMATTED, AUTHOR, DATEKIND, POEM_TITLE, STANZA, VERSE };
      const int STYLES_NUMBER = sizeof(styles) / sizeof(ZLTextKind);
      for (int i = 0; i < STYLES_NUMBER; ++i) {
              const ZLTextStyleDecoration *decoration = collection.decoration(styles[i]);
@@ -355,13 +356,20 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
  void PreferencesMenuBuilder::addDisplayOptions(ZLDialogContent& content) { }
 
  void PreferencesMenuBuilder::addScrollingOptions(ZLDialogContent& content) {
-     FBReader &fbreader = FBReader::Instance();
-     const bool hasTouchScreen = ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::TOUCHSCREEN_PRESENTED, false).value();
-     if (hasTouchScreen) {
-             ZLToggleBooleanOptionEntry *enableTapScrollingEntry =
-                     new ZLToggleBooleanOptionEntry(fbreader.EnableTapScrollingOption);
-             content.addOption(ZLResourceKey("enableTapScrolling"), enableTapScrollingEntry);
-     }
+    FBReader &fbreader = FBReader::Instance();
+    const bool hasTouchScreen = ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::TOUCHSCREEN_PRESENTED, false).value();
+    const bool hasVolumeKeys = ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::VOLUME_KEYS_PRESENTED, false).value();
+    if (hasTouchScreen) {
+        static ZLResourceKey zonesKey("tabScrollingZones");
+        ScrollingZonesEntry *scrollingZonesEntry =
+                new ScrollingZonesEntry(content.resource(zonesKey), fbreader.TapScrollingZonesOption);
+        content.addOption(zonesKey, scrollingZonesEntry);
+    }
+    if (hasVolumeKeys) {
+        ZLToggleBooleanOptionEntry *volumeKeysEntry =
+                new ZLToggleBooleanOptionEntry(fbreader.EnableTapScrollingByVolumeKeysOption);
+        content.addOption(ZLResourceKey("volumeKeys"), volumeKeysEntry);
+    }
  }
 
 void PreferencesMenuBuilder::addTapZonesOptions(ZLDialogContent& content) { }

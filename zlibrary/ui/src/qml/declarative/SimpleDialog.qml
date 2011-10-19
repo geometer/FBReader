@@ -44,11 +44,12 @@ Dialog {
 		}
 	}
 
-	buttons: Column {
+	buttons: ButtonRow {
         id: buttonsRow
         anchors.top: parent.top
-        width: parent.width
-        height: childrenRect.height
+		anchors.horizontalCenter: parent.horizontalCenter
+//        width: parent.width
+//        height: childrenRect.height
 //		anchors.horizontalCenter: parent.horizontalCenter
 		Repeater {
 			model: root.handler.buttonNames

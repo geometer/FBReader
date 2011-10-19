@@ -30,6 +30,7 @@
 #include "Book.h"
 #include "Author.h"
 #include "Tag.h"
+#include "../fbreader/FBReader.h"
 
 #include "../formats/FormatPlugin.h"
 
@@ -52,6 +53,7 @@ Library::Library() :
 	PathOption(ZLCategoryKey::CONFIG, OPTIONS, "BookPath", ""),
 	ScanSubdirsOption(ZLCategoryKey::CONFIG, OPTIONS, "ScanSubdirs", false),
 	CollectAllBooksOption(ZLCategoryKey::CONFIG, OPTIONS, "CollectAllBooks", false),
+    myWatcher(new Watcher(*this)),
 	myBuildMode(BUILD_ALL),
 	myRevision(0) {
 	BooksDBUtil::getRecentBooks(myRecentBooks);
@@ -134,6 +136,13 @@ void Library::rebuildBookSet() const {
 			}
 		}
 	}
+	
+	// help file
+	shared_ptr<Book> help = FBReader::Instance().helpFile();
+	if (!help.isNull()) {
+		insertIntoBookSet(help);
+		myExternalBooks.insert(help);
+	}
 }
 
 size_t Library::revision() const {
@@ -146,6 +155,13 @@ size_t Library::revision() const {
 	}
 
 	return (myBuildMode == BUILD_NOTHING) ? myRevision : myRevision + 1;
+}
+
+Library::Watcher::Watcher(Library &library) : myLibrary(library) {
+}
+
+void Library::Watcher::onPathChanged(const std::string &) {
+	myLibrary.myBuildMode = Library::BUILD_ALL;
 }
 
 class LibrarySynchronizer : public ZLRunnable {
@@ -178,8 +194,18 @@ void LibrarySynchronizer::run() {
 void Library::synchronize() const {
 	if (myScanSubdirs != ScanSubdirsOption.value() ||
 			myPath != PathOption.value()) {
+                std::vector<std::string> oldPathes;
+                ZLStringUtil::split(myPath, oldPathes, ZLibrary::PathDelimiter);
+                for (size_t i = 0; i < oldPathes.size(); ++i) {
+                    ZLFSWatcher::removeWatcher(oldPathes.at(i), myWatcher);
+                }
 		myPath = PathOption.value();
 		myScanSubdirs = ScanSubdirsOption.value();
+                std::vector<std::string> pathes;
+                ZLStringUtil::split(myPath, pathes, ZLibrary::PathDelimiter);
+                for (size_t i = 0; i < pathes.size(); ++i) {
+                    ZLFSWatcher::addWatcher(pathes.at(i), myWatcher);
+                }
 		myBuildMode = BUILD_ALL;
 	}
 

@@ -35,6 +35,8 @@ protected:
 	void _show();
 	void _hide();
 
+        std::string removeShortcut(const std::string& name) const;
+
 protected:
 	ZLQtDialogContent *myTab;
 	std::vector<QWidget*> myWidgets;

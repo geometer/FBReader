@@ -20,6 +20,7 @@
 #include <QtCore/QThreadPool>
 #include <QtCore/QEventLoop>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 
 #include "ZLQmlProgressDialog.h"
 #include "ZLQtUtil.h"
@@ -38,11 +39,16 @@ QString ZLQmlProgressDialog::text() const {
 }
 
 void ZLQmlProgressDialog::run(ZLRunnable &runnable) {
+	qDebug() << Q_FUNC_INFO << __LINE__;
 	QEventLoop eventLoop;
 	QThreadPool::globalInstance()->start(new ZLQmlRunnable(runnable, &eventLoop));
+	qDebug() << Q_FUNC_INFO << __LINE__;
 	eventLoop.exec(QEventLoop::AllEvents);
+	qDebug() << Q_FUNC_INFO << __LINE__;
 	emit finished();
+	qDebug() << Q_FUNC_INFO << __LINE__;
 	qApp->sendPostedEvents(0, QEvent::DeferredDelete);
+	qDebug() << Q_FUNC_INFO << __LINE__;
 }
 
 void ZLQmlProgressDialog::finish() {

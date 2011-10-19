@@ -21,6 +21,7 @@
 #include <ZLDialogManager.h>
 #include <ZLOptionsDialog.h>
 #include <ZLOptionEntry.h>
+#include <ZLTimeManager.h>
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 #include <optionEntries/ZLStringEditOptionEntry.h>
@@ -112,37 +113,89 @@ bool RegisterUserDialog::runDialog(std::string &login, std::string &password, st
 	}
 }
 
-bool RegisterUserDialog::run(NetworkAuthenticationManager &mgr) {
+class RegisterUserDialogRunnable : public ZLRunnable {
+public:
+	RegisterUserDialogRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener);
+	void run();
+	
+	NetworkAuthenticationManager &mgr;
+	shared_ptr<ZLExecutionData::Listener> listener;
+	shared_ptr<ZLRunnable> myHolder;
 	std::string errorMessage;
 	std::string login;
 	std::string password;
 	std::string email;
-	while (true) {
-		if (!runDialog(login, password, email, errorMessage)) {
-			LogOutRunnable logout(mgr);
-			logout.executeWithUI();
-			return false;
-		}
+	
+private:
+	void finish(const std::string &error);
+	void onRun(ZLUserDataHolder &data, const std::string &error);
+	void onLogOut(ZLUserDataHolder &data, const std::string &error);
+	void onRegistered(ZLUserDataHolder &data, const std::string &error);
+	void onAuthorisationCheck(ZLUserDataHolder &data, const std::string &error);
+	void onInitialized(ZLUserDataHolder &data, const std::string &error);
+};
 
-		RegisterUserRunnable registration(mgr, login, password, email);
-		registration.executeWithUI();
-		if (registration.hasErrors()) {
-			errorMessage = registration.errorMessage();
-			LogOutRunnable logout(mgr);
-			logout.executeWithUI();
-			continue;
-		}
+RegisterUserDialogRunnable::RegisterUserDialogRunnable(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener)
+    : mgr(mgr), listener(listener), myHolder(this) {
+	ZLTimeManager::Instance().addAutoRemovableTask(myHolder);
+}
 
-		if (mgr.isAuthorised().Status != B3_FALSE && mgr.needsInitialization()) {
-			InitializeAuthenticationManagerRunnable initializer(mgr);
-			initializer.executeWithUI();
-			if (initializer.hasErrors()) {
-				initializer.showErrorMessage();
-				LogOutRunnable logout(mgr);
-				logout.executeWithUI();
-				return false;
-			}
-		}
-		return true;
+void RegisterUserDialogRunnable::finish(const std::string &error) {
+	listener->finished(error);
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
+}
+
+void RegisterUserDialogRunnable::run() {
+	if (!RegisterUserDialog::runDialog(login, password, email, errorMessage)) {
+		errorMessage = "Canceled";
+		new LogOutRunnable(mgr, ZLExecutionData::createListener(this, &RegisterUserDialogRunnable::onLogOut));
+		return;
 	}
+	
+	mgr.registerUser(login, password, email,
+	                 ZLExecutionData::createListener(this, &RegisterUserDialogRunnable::onRegistered));
+}
+
+void RegisterUserDialogRunnable::onRun(ZLUserDataHolder &, const std::string &) {
+	run();
+}
+
+void RegisterUserDialogRunnable::onLogOut(ZLUserDataHolder &, const std::string &) {
+	finish(errorMessage);
+}
+
+void RegisterUserDialogRunnable::onRegistered(ZLUserDataHolder &, const std::string &error) {
+	if (!error.empty()) {
+		errorMessage = error;
+		new LogOutRunnable(mgr, ZLExecutionData::createListener(this, &RegisterUserDialogRunnable::onRun));
+		return;
+	}
+	mgr.isAuthorised(ZLExecutionData::createListener(this, &RegisterUserDialogRunnable::onAuthorisationCheck));
+}
+
+void RegisterUserDialogRunnable::onAuthorisationCheck(ZLUserDataHolder &, const std::string &error) {
+	if (error.empty() && mgr.needsInitialization()) {
+		mgr.initialize(ZLExecutionData::createListener(this, &RegisterUserDialogRunnable::onInitialized));
+	} else {
+		finish(error);
+	}
+}
+
+void RegisterUserDialogRunnable::onInitialized(ZLUserDataHolder &data, const std::string &error) {
+	if (error.empty()) {
+		finish(std::string());
+		return;
+	}
+	ZLDialogManager::Instance().errorBox(
+		ZLResourceKey("networkError"),
+		error
+	);
+	errorMessage = error;
+	new LogOutRunnable(mgr, ZLExecutionData::createListener(this, &RegisterUserDialogRunnable::onLogOut));
+}
+
+bool RegisterUserDialog::run(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener) {
+	new RegisterUserDialogRunnable(mgr, listener);
+	return false;
 }

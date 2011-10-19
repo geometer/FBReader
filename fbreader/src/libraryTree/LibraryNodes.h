@@ -20,7 +20,13 @@
 #ifndef __LIBRARYNODES_H__
 #define __LIBRARYNODES_H__
 
-#include "../blockTree/FBReaderNode.h"
+#include "../tree/FBNode.h"
+
+#include "../library/Author.h"
+#include "../library/Tag.h"
+#include "../library/Book.h"
+
+#include <ZLTreeActionNode.h>
 
 class ZLImage;
 
@@ -28,93 +34,142 @@ class Author;
 class Book;
 class Tag;
 
-class AuthorNode : public FBReaderNode {
+class AuthorNode : public FBNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
 
-public:
-	AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author);
-	void init();
-
-	shared_ptr<Author> author() const;
+//public:
+//	AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author);
+//	void init();
 
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+//	shared_ptr<ZLImage> extractCoverImage() const;
+
+public:
+	AuthorNode(shared_ptr<Author> author);
+
+public:
 	std::string title() const;
+	std::string subtitle() const;
+	std::string imageUrl() const;
+	void requestChildren();
+
+protected:
+	shared_ptr<ZLImage> extractCoverImage() const;
 
 private:
 	shared_ptr<Author> myAuthor;
 };
 
-class SeriesNode : public FBReaderNode {
+
+class SeriesNode : public FBNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
 
 public:
 	SeriesNode(AuthorNode *parent);
-	void init();
+	//void init();
 
-	shared_ptr<Book> book() const;
+	//shared_ptr<Book> book() const;
 
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	//shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
 };
 
-class TagNode : public FBReaderNode {
+class TagNode : public FBNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
 
-private:
-	static size_t positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag);
+//private:
+//	static size_t positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag);
 
 public:
-	TagNode(ZLBlockTreeView::RootNode *parent, shared_ptr<Tag> tag);
-	TagNode(TagNode *parent, shared_ptr<Tag> tag);
-	void init();
+	TagNode(shared_ptr<Tag> tag);
+	//TagNode(ZLBlockTreeView::RootNode *parent, shared_ptr<Tag> tag);
+	//TagNode(TagNode *parent, shared_ptr<Tag> tag);
+	//void init();
 
-	shared_ptr<Tag> tag() const;
+	//shared_ptr<Tag> tag() const;
 
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	void requestChildren();
 	std::string title() const;
+	std::string subtitle() const;
 
 private:
 	const shared_ptr<Tag> myTag;
 };
 
-class BookNode : public FBReaderNode {
+class BookNode : public ZLTreeActionNode  {
 
 public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	BookNode(AuthorNode *parent, shared_ptr<Book> book);
-	BookNode(SeriesNode *parent, shared_ptr<Book> book);
-	BookNode(TagNode *parent, size_t atPosition, shared_ptr<Book> book);
+        enum SubtitleMode {
+            SHOW_AUTHORS,
+            SHOW_TAGS
+        };
 
-	shared_ptr<Book> book() const;
+public:
+        BookNode(shared_ptr<Book> book, SubtitleMode subtitleMode = SHOW_AUTHORS);
+
+public:
+	std::string title() const;
+	std::string subtitle() const;
+	shared_ptr<ZLImage> image() const;
+	std::string imageUrl() const;
+	void requestChildren();
+	bool activate();
+
+protected:
+	shared_ptr<ZLImage> extractCoverImage() const;
 
 private:
-	void init();
-	bool highlighted() const;
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
-	std::string title() const;
-	std::string summary() const;
 
 private:
 	const shared_ptr<Book> myBook;
+        const std::string mySubtitle;
 };
+
+class AuthorFunctor {
+public:
+    std::string operator()(shared_ptr<Author> author) const;
+};
+
+class TagFunctor {
+public:
+    std::string operator()(shared_ptr<Tag> tag) const;
+};
+
+class BookFunctor {
+public:
+    std::string operator()(shared_ptr<Book> book) const;
+};
+
+inline std::string AuthorFunctor::operator()(shared_ptr<Author> author) const {
+    return author.isNull() ? std::string() : author->name();
+}
+
+inline std::string TagFunctor::operator()(shared_ptr<Tag> tag) const {
+    return tag.isNull() ? std::string() : tag->name();
+}
+
+inline std::string BookFunctor::operator()(shared_ptr<Book> book) const {
+    return book.isNull() ? std::string() : book->title();
+}
 
 #endif /* __LIBRARYNODES_H__ */

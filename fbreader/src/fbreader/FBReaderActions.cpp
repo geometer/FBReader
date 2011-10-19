@@ -52,6 +52,9 @@
 #include "../library/Library.h"
 #include "../library/Book.h"
 
+#include "../libraryTree/LibraryTreeNodes.h"
+#include "../bookmodel/TOCTreeNodes.h"
+
 ModeDependentAction::ModeDependentAction(int visibleInModes) : myVisibleInModes(visibleInModes) {
 }
 
@@ -68,10 +71,7 @@ void SetModeAction::run() {
 
 void ShowHelpAction::run() {
 	FBReader &fbreader = FBReader::Instance();
-	shared_ptr<Book> book = BooksDBUtil::getBook(fbreader.helpFileName(ZLibrary::Language()));
-	if (book.isNull()) {
-		book = BooksDBUtil::getBook(fbreader.helpFileName("en"));
-	}
+	shared_ptr<Book> book = fbreader.helpFile();
 	if (!book.isNull()) {
 		fbreader.openBook(book);
 		fbreader.setMode(FBReader::BOOK_TEXT_MODE);
@@ -89,10 +89,23 @@ void ShowOptionsDialogAction::run() {
 	FBReader::Instance().doAction(actionId);
 }
 
+void ShowLibraryTreeAction::run() {
+	//TODO maybe use call LibraryView().showDialog here?
+	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog();
+	size_t index = 0;
+	dialog->rootNode().insert(new AuthorTreeNode, index++);
+	dialog->rootNode().insert(new TagTreeNode, index++);
+	dialog->rootNode().insert(new RecentBooksTreeNode, index++);
+	dialog->rootNode().insert(new OpenFileSystemNode, index++);
+	dialog->run();
+}
+
 void ShowMobileOptionsDialogAction::run() {
 	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_MOBILE_OPTIONS_DIALOG);
 	MobileOptionsDialog().dialog().run();
 }
+
+
 
 void ShowLibraryOptionsDialogAction::run() {
 	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG);
@@ -125,6 +138,28 @@ ShowContentsAction::ShowContentsAction() : SetModeAction(FBReader::CONTENTS_MODE
 bool ShowContentsAction::isVisible() const {
 	return ModeDependentAction::isVisible() && !((ContentsView&)*FBReader::Instance().myContentsView).isEmpty();
 }
+
+void ShowTOCTreeAction::run() {
+	shared_ptr<ZLTreeDialog> dialog = ZLDialogManager::Instance().createTreeDialog();
+	shared_ptr<ZLTextModel> contentsModel = FBReader::Instance().myModel->contentsModel();
+	const ZLTextTreeParagraph& rootParagraph = ((ContentsModel&)*contentsModel).getRootParagraph();
+	const std::vector<ZLTextTreeParagraph*>& children = rootParagraph.children();
+	for (size_t index=0; index<children.size(); ++index) {
+		const ZLTextTreeParagraph& paragraph = *children.at(index);
+		if (paragraph.children().size() == 0) {
+			dialog->rootNode().insert(new ReferenceNode(paragraph), index);
+		} else {
+			dialog->rootNode().insert(new ReferenceTreeNode(paragraph), index);
+		}
+	}
+	dialog->run();
+}
+
+bool ShowTOCTreeAction::isVisible() const {
+	shared_ptr<BookModel> model = FBReader::Instance().myModel;
+	return !(model.isNull() || model->contentsModel().isNull() || model->contentsModel()->paragraphsNumber() == 0);
+}
+
 
 ScrollToHomeAction::ScrollToHomeAction() : ModeDependentAction(FBReader::BOOK_TEXT_MODE) {
 }

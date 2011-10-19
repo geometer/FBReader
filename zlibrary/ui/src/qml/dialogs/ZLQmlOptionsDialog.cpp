@@ -21,6 +21,7 @@
 #include <QtCore/QCoreApplication>
 
 #include <ZLDialogManager.h>
+#include <QtCore/QDebug>
 
 #include "ZLQmlOptionsDialog.h"
 #include "ZLQmlDialogContent.h"
@@ -36,16 +37,26 @@ ZLQmlOptionsDialog::ZLQmlOptionsDialog(const ZLResource &resource,
 	myCancelButtonText = ::qtButtonName(ZLDialogManager::CANCEL_BUTTON);
 }
 
+ZLQmlOptionsDialog::~ZLQmlOptionsDialog() {
+	mySections.clear();
+	emit sectionsChanged(sections());
+}
+
 ZLDialogContent &ZLQmlOptionsDialog::createTab(const ZLResourceKey &key) {
-	ZLQmlDialogContent *tab = new ZLQmlDialogContent(tabResource(key), this);
-	mySections << tab;
+	ZLQmlDialogContent *tab = new ZLQmlDialogContent(tabResource(key));
+	mySections << QWeakPointer<QObject>(tab);
 	myTabs.push_back(tab);
-	emit sectionsChanged(mySections);
+	emit sectionsChanged(sections());
 	return *tab;
 }
 
 QObjectList ZLQmlOptionsDialog::sections() const {
-	return mySections;
+	QObjectList result;
+	foreach (const QWeakPointer<QObject> &obj, mySections) {
+		if (!obj.isNull())
+			result << obj.data();
+	}
+	return result;
 }
 
 // We don't surely provide tabs at mobile devices

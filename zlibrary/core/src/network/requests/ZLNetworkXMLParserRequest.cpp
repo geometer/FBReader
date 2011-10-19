@@ -48,7 +48,10 @@ bool ZLNetworkXMLParserRequest::doBefore() {
 }
 
 bool ZLNetworkXMLParserRequest::doAfter(const std::string &error) {
-	finished(error);
+	if (error.empty())
+		finished(myReader->errorMessage());
+	else
+		finished(error);
 	return true;
 }
 

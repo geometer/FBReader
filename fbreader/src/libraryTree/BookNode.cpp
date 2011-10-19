@@ -19,6 +19,7 @@
 
 #include <ZLResource.h>
 #include <ZLImage.h>
+#include <ZLStringUtil.h>
 
 #include "LibraryNodes.h"
 
@@ -30,78 +31,35 @@
 #include "../fbreader/FBReader.h"
 #include "../formats/FormatPlugin.h"
 
-const ZLTypeId BookNode::TYPE_ID(FBReaderNode::TYPE_ID);
+static std::string generateSubtitle(const shared_ptr<Book> book, BookNode::SubtitleMode subtitleMode) {
+    switch (subtitleMode) {
+        case BookNode::SHOW_AUTHORS:
+            return ZLStringUtil::join(book->authors(), AuthorFunctor(), FBNode::COMMA_JOIN_SEPARATOR);
+        case BookNode::SHOW_TAGS:
+            return ZLStringUtil::join(book->tags(), TagFunctor(), FBNode::COMMA_JOIN_SEPARATOR);
+    }
+    return std::string();
+}
+
+const ZLTypeId BookNode::TYPE_ID(ZLTreeActionNode::TYPE_ID);
 
 const ZLTypeId &BookNode::typeId() const {
 	return TYPE_ID;
 }
 
-const ZLResource &BookNode::resource() const {
-	return ZLResource::resource("libraryView")["bookNode"];
-}
-
-BookNode::BookNode(AuthorNode *parent, shared_ptr<Book> book) : FBReaderNode(parent), myBook(book) {
-}
-
-BookNode::BookNode(SeriesNode *parent, shared_ptr<Book> book) : FBReaderNode(parent), myBook(book) {
-}
-
-BookNode::BookNode(TagNode *parent, size_t atPosition, shared_ptr<Book> book) : FBReaderNode(parent, atPosition), myBook(book) {
-}
-
-void BookNode::init() {
-	registerAction(new BookReadAction(myBook));
-	registerAction(new BookEditInfoAction(myBook));
-	registerAction(new BookRemoveAction(myBook));
-}
-
-shared_ptr<Book> BookNode::book() const {
-	return myBook;
+BookNode::BookNode(shared_ptr<Book> book, SubtitleMode subtitleMode):
+    myBook(book), mySubtitle(generateSubtitle(book,subtitleMode)) {
 }
 
 std::string BookNode::title() const {
 	return myBook->title();
 }
-
-std::string BookNode::summary() const {
-	FBReaderNode *parent = (FBReaderNode*)this->parent();
-	while (!parent->isInstanceOf(AuthorNode::TYPE_ID) &&
-				 !parent->isInstanceOf(TagNode::TYPE_ID)) {
-		parent = (FBReaderNode*)parent->parent();
-	}
-	if (parent->isInstanceOf(AuthorNode::TYPE_ID)) {
-		const TagList &tags = myBook->tags();
-		if (tags.empty()) {
-			return std::string();
-		} else {
-			std::string tagsText;
-			for (TagList::const_iterator it = tags.begin(); it != tags.end(); ++it) {
-				if (!tagsText.empty()) {
-					tagsText += ", ";
-				}
-				tagsText += (*it)->name();
-			}
-			return tagsText;
-		}
-	} else {
-		const AuthorList &authors = myBook->authors();
-		if (authors.empty()) {
-			return ZLResource::resource("libraryView")["authorNode"]["unknownAuthor"].value();
-		} else {
-			std::string authorsText;
-			for (AuthorList::const_iterator it = authors.begin(); it != authors.end(); ++it) {
-				if (!authorsText.empty()) {
-					authorsText += ", ";
-				}
-				authorsText += (*it)->name();
-			}
-			return authorsText;
-		}
-	}
+std::string BookNode::subtitle() const {
+    return mySubtitle;
 }
 
-bool BookNode::highlighted() const {
-	return myBook->file() == FBReader::Instance().currentBook()->file();
+std::string BookNode::imageUrl() const {
+	return std::string();
 }
 
 shared_ptr<ZLImage> BookNode::extractCoverImage() const {
@@ -112,5 +70,22 @@ shared_ptr<ZLImage> BookNode::extractCoverImage() const {
 			return cover;
 		}
 	}
-	return defaultCoverImage("booktree-book.png");
+	return 0; //defaultCoverImage("booktree-book.png");
+}
+
+shared_ptr<ZLImage> BookNode::image() const {
+	return 0;
+}
+
+void BookNode::requestChildren() {
+}
+
+bool BookNode::activate() {
+	FBReader &fbreader = FBReader::Instance();
+	fbreader.openBook(myBook);
+	return true;
+}
+
+const ZLResource &BookNode::resource() const {
+	return ZLResource::resource("libraryView")["bookNode"];
 }

@@ -21,69 +21,48 @@ import QtQuick 1.0
 import com.nokia.meego 1.0
 import com.nokia.extras 1.0
 
-Sheet {
+Page {
 	id: root
 	property variant handler
+	property variant rootWindow
 	property variant sections: handler ? handler.sections : null
-	acceptButtonText: handler ? handler.okButtonText : ""
-	rejectButtonText: handler ? handler.cancelButtonText : ""
 	
+	orientationLock: rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic	
 	onSectionsChanged: pagesModel.update()
-	
-	content: Item {
-		id: contentArea
-		objectName: "contentArea"
-		anchors.fill: parent
-		anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom; }
-		anchors.bottomMargin: toolBar.visible || (toolBar.opacity==1)? toolBar.height : 0
-		PageStack {
-			id: pageStack
-			anchors { top: parent.top; left: parent.left; right: parent.right; bottom: parent.bottom; }
-			anchors.bottomMargin: toolBar.visible || (toolBar.opacity==1)? toolBar.height : 0
-			toolBar: toolBar
-		}
-		ToolBar {
-			objectName: "toolBar"
-			anchors.top: contentArea.bottom
-			id: toolBar
-			// Don't know why I have to do it manually
-			onVisibleChanged: if (__currentContainer) __currentContainer.visible = visible;
+	tools: ToolBarLayout {
+		id: toolsLayout
+		ToolIcon {
+			platformIconId: "toolbar-previous"
+			onClicked: pageStack.pop()
 		}
 	}
-	Page {
-		id: mainPage
-		tools: ToolBarLayout {
-			id: toolsLayout
-		}
-		ListModel {
-			id: pagesModel
-			
-			function update() {
-				pagesModel.clear();
-				if (!root.sections)
-					return;
-				var sections = root.sections;
-				for (var i = 0; i < sections.length; ++i) {
-					var section = sections[i];
-					pagesModel.append({ "title": section.title, "subtitle": "", "section": section });
-				}
-			}
-		}
+	
+	ListModel {
+		id: pagesModel
 		
-		ListView {
-			id: pagesView
-			anchors.fill: parent
-			model: pagesModel
-			delegate: ListDelegate {
-				MoreIndicator {
-					anchors.right: parent.right;
-					anchors.verticalCenter: parent.verticalCenter
-				}
-				onClicked: {
-					pageStack.push(contentComponent, { handler: model.section });
-					toolBar.__currentContainer.visible = true;
-				}
+		function update() {
+			console.log(root, root.sections, root.sections.length)
+			pagesModel.clear();
+			if (!root.sections)
+				return;
+			console.log(root, root.sections[0])
+			var sections = root.sections;
+			for (var i = 0; i < sections.length; ++i) {
+				var section = sections[i];
+				pagesModel.append({ "title": section.title, "subtitle": "", "section": section });
 			}
+		}
+	}
+	ListView {
+		id: pagesView
+		anchors { leftMargin: 14; fill: parent; rightMargin: 14 }
+		model: pagesModel
+		delegate: ListDelegate {
+			MoreIndicator {
+				anchors.right: parent.right;
+				anchors.verticalCenter: parent.verticalCenter
+			}
+			onClicked: pageStack.push(contentComponent, { handler: model.section });
 		}
 	}
 	Component {
@@ -91,28 +70,20 @@ Sheet {
 		Page {
 			id: contentPage
 			property alias handler: content.handler
+			orientationLock: root.rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic	
 			DialogContent {
 				id: content
 			}
 			tools: ToolBarLayout {
 				ToolIcon {
-					visible: true
 					platformIconId: "toolbar-previous"
 					onClicked: pageStack.pop()
 				}
 			}
 		}
 	}
-	onAccepted: handler.accept()
-	onRejected: handler.reject()
 	onStatusChanged: {
-		if (status == DialogStatus.Closed && pageStack.currentPage != mainPage) {
-			pageStack.clear();
-			pageStack.push(mainPage);
-		}
+		if (status == PageStatus.Deactivating && pageStack.depth == 1)
+			handler.accept();
 	}
-//	Component.onCompleted: {
-//		__owner = parent;
-////		pageStack.push(mainPage);
-//	}
 }

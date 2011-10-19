@@ -25,9 +25,13 @@
 class FootnoteView : public FBView {
 
 public:
-	FootnoteView(ZLPaintContext &context);
-};
+        static const ZLTypeId TYPE_ID;
 
-inline FootnoteView::FootnoteView(ZLPaintContext &context) : FBView(context) {}
+public:
+	FootnoteView(ZLPaintContext &context);
+
+private:
+        const ZLTypeId &typeId() const;
+};
 
 #endif /* __FOOTNOTEVIEW_H__ */

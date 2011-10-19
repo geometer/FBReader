@@ -21,18 +21,32 @@
 #define __ZLQTFSMANAGER_H__
 
 #include "../../../../core/src/unix/filesystem/ZLUnixFSManager.h"
+#include <QtCore/QHash>
+#include <QtCore/QString>
+#include <QtCore/QFileSystemWatcher>
 
-class ZLQtFSManager : public ZLUnixFSManager {
+class ZLQtFSManager : public QObject, public ZLUnixFSManager {
+	Q_OBJECT
+
+protected:
+	ZLQtFSManager();
+	~ZLQtFSManager();
 
 public:
 	static void createInstance() { ourInstance = new ZLQtFSManager(); }
+
+	void addWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher);
+	void removeWatcher(const std::string &path, shared_ptr<ZLFSWatcher> watcher);
 	
-private:
-	ZLQtFSManager() {}
+protected Q_SLOTS:
+	void onPathChanged(const QString &path);
 	
 protected:
 	std::string convertFilenameToUtf8(const std::string &name) const;
 	std::string mimeType(const std::string &path) const;
+	
+	QFileSystemWatcher myWatcher;
+	QMultiHash<QString, shared_ptr<ZLFSWatcher> > myWatchers;
 };
 
 #endif /* __ZLQTFSMANAGER_H__ */

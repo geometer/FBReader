@@ -22,6 +22,7 @@
 const ZLTypeId ZLExecutionData::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
 std::set<ZLExecutionData::Runner*> ZLExecutionData::ourRunners;
+std::string ZLExecutionData::ourHandlerId = "_zl_handler";
 
 std::string ZLExecutionData::perform(shared_ptr<ZLExecutionData> data) {
 	Vector dataVector;
@@ -59,6 +60,45 @@ void ZLExecutionData::setListener(shared_ptr<Listener> listener) {
 	}
 }
 
+class ZLExecutionHandler : public ZLExecutionData::Listener {
+public:
+	ZLExecutionHandler(ZLUserDataHolder &data, ZLExecutionData::Handler handler)
+	    : myData(data), myHandler(handler) {
+	}
+	
+	ZLExecutionHandler(shared_ptr<ZLUserDataHolder> data, ZLExecutionData::Handler handler)
+	    : myData(*data), myHolder(data), myHandler(handler) {
+	}
+	
+	virtual void showPercent(int ready, int full) {
+		(void) ready;
+		(void) full;
+	}
+
+	virtual void finished(const std::string &error = std::string()) {
+		(*myHandler)(myData, error);
+	}
+	
+private:
+	ZLUserDataHolder &myData;
+	shared_ptr<ZLUserDataHolder> myHolder;
+	ZLExecutionData::Handler myHandler;
+};
+
+void ZLExecutionData::setHandler(Handler handler) {
+	setListener(new ZLExecutionHandler(*this, handler));
+}
+
+shared_ptr<ZLExecutionData::Listener> ZLExecutionData::createListener(shared_ptr<ZLUserDataHolder> data) {
+	return new ZLExecutionHandler(data, handleHelper);
+}
+
+void ZLExecutionData::handleHelper(ZLUserDataHolder &data, const std::string &error) {
+	shared_ptr<ZLUserData> userData = data.getUserData(ourHandlerId);
+	if (!userData.isNull())
+		static_cast<AbstractHandlerHelper&>(*userData).handle(data, error);
+}
+
 bool ZLExecutionData::hasListener() const {
 	return !myListener.isNull();
 }
@@ -73,6 +113,10 @@ void ZLExecutionData::finished(const std::string &error) {
 	if (!myListener.isNull()) {
 		myListener->finished(error);
 	}
+}
+
+shared_ptr<ZLExecutionData::Listener> ZLExecutionData::listener() const {
+	return myListener;
 }
 
 void ZLExecutionData::onCancel() {
