@@ -34,6 +34,7 @@ public:
 	static const std::string SHOW_NETWORK_LIBRARY;
 	static const std::string SHOW_TOC;
 	static const std::string SHOW_HELP;
+        static const std::string SHOW_MENU;
 	static const std::string SHOW_OPTIONS_DIALOG;
 	static const std::string SHOW_BOOK_INFO_DIALOG;
 	static const std::string SHOW_MOBILE_OPTIONS_DIALOG;
@@ -49,6 +50,8 @@ public:
 	static const std::string FIND_NEXT;
 	static const std::string PAGE_SCROLL_FORWARD;
 	static const std::string PAGE_SCROLL_BACKWARD;
+        static const std::string VOLUME_KEY_SCROLL_FORWARD;
+        static const std::string VOLUME_KEY_SCROLL_BACKWARD;
 	static const std::string LINE_SCROLL_FORWARD;
 	static const std::string LINE_SCROLL_BACKWARD;
 	static const std::string MOUSE_SCROLL_FORWARD;

@@ -82,6 +82,12 @@ size_t PageScrollingAction::textOptionValue() const {
 	return FBReader::Instance().LinesToKeepOption.value();
 }
 
+VolumeKeyTurnPageAction::VolumeKeyTurnPageAction(bool forward) : PageScrollingAction(forward) {}
+
+bool VolumeKeyTurnPageAction::isEnabled() const {
+    return FBReader::Instance().EnableTapScrollingByVolumeKeysOption.value() && PageScrollingAction::isEnabled();
+}
+
 MouseWheelScrollingAction::MouseWheelScrollingAction(bool forward) : ScrollingAction(ZLTextAreaController::SCROLL_LINES, ZLBlockTreeView::ITEM, forward) {
 }
 

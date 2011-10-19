@@ -33,7 +33,7 @@
 	<binding key="&lt;Ctrl&gt;+&lt;C&gt;" action="copyToClipboard"/>
 	<binding key="&lt;G&gt;" action="gotoPageNumber"/>
 	<binding key="&lt;Z&gt;" action="debugNL"/>
-	<binding key="&lt;XF86AudioLowerVolume&gt;" action="pageForward"/>
-	<binding key="&lt;XF86AudioRaiseVolume&gt;" action="pageBackward"/>
+	<binding key="&lt;XF86AudioLowerVolume&gt;" action="volumeKeyScrollBackward"/>
+	<binding key="&lt;XF86AudioRaiseVolume&gt;" action="volumeKeyScrollForward"/>
 	<binding key="&lt;Ctrl&gt;+&lt;Q&gt;" action="quit"/>
 </keymap>

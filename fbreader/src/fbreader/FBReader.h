@@ -72,6 +72,7 @@ public:
 	ZLIntegerRangeOption LinesToKeepOption;
         ZLIntegerRangeOption TapScrollingZonesOption;
 	ZLBooleanOption EnableTapScrollingOption;
+        ZLBooleanOption EnableTapScrollingByVolumeKeysOption;
 	ZLBooleanOption TapScrollingOnFingerOnlyOption;
 
 	ZLBooleanOption UseSeparateBindingsOption;

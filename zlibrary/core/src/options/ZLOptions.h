@@ -72,6 +72,7 @@ public:
 	static const std::string MOUSE_PRESENTED;
 	static const std::string TOUCHSCREEN_PRESENTED;
 	static const std::string FINGER_TAP_DETECTABLE;
+        static const std::string VOLUME_KEYS_PRESENTED;
 
 public:
 	static void clearGroup(const std::string &group);

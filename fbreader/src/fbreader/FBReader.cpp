@@ -89,6 +89,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	LinesToKeepOption(ZLCategoryKey::CONFIG, "LargeScrolling", "LinesToKeepOption", 0, 20, 0),
         TapScrollingZonesOption(ZLCategoryKey::CONFIG, "TapScrolling", "Zones", 0,1,0),
 	EnableTapScrollingOption(ZLCategoryKey::CONFIG, "TapScrolling", "Enabled", true),
+        EnableTapScrollingByVolumeKeysOption(ZLCategoryKey::CONFIG, "TapScrolling", "VolumeKeys", true),
 	TapScrollingOnFingerOnlyOption(ZLCategoryKey::CONFIG, "TapScrolling", "FingerOnly", true),
 	UseSeparateBindingsOption(ZLCategoryKey::CONFIG, "KeysOptions", "UseSeparateBindings", false),
 	EnableSingleClickDictionaryOption(ZLCategoryKey::CONFIG, "Dictionary", "SingleClick", false),
@@ -128,7 +129,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	//TODO left just one item here (ShowContentsAction or ShowTOCTreeAction)
 	//addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
 	addAction(ActionCode::SHOW_TOC, new ShowTOCTreeAction());
-
+        addAction(ActionCode::SHOW_MENU, new ShowMenuAction());
 	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
 	addAction(ActionCode::SHOW_MOBILE_OPTIONS_DIALOG, new ShowMobileOptionsDialogAction());
 	addAction(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG, new ShowLibraryOptionsDialogAction());
@@ -147,6 +148,8 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::SCROLL_TO_END_OF_TEXT, new ScrollToEndOfTextAction());
 	addAction(ActionCode::PAGE_SCROLL_FORWARD, new PageScrollingAction(true));
 	addAction(ActionCode::PAGE_SCROLL_BACKWARD, new PageScrollingAction(false));
+        addAction(ActionCode::VOLUME_KEY_SCROLL_FORWARD, new VolumeKeyTurnPageAction(true));
+        addAction(ActionCode::VOLUME_KEY_SCROLL_BACKWARD, new VolumeKeyTurnPageAction(false));
 	addAction(ActionCode::LINE_SCROLL_FORWARD, new LineScrollingAction(true));
 	addAction(ActionCode::LINE_SCROLL_BACKWARD, new LineScrollingAction(false));
 	addAction(ActionCode::MOUSE_SCROLL_FORWARD, new MouseWheelScrollingAction(true));
