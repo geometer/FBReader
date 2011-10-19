@@ -357,6 +357,8 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
 
  void PreferencesMenuBuilder::addScrollingOptions(ZLDialogContent& content) {
     FBReader &fbreader = FBReader::Instance();
+	content.addOption(ZLResourceKey("keyLinesToKeep"), new ZLSimpleSpinOptionEntry(fbreader.LinesToKeepOption, 1));
+//	content.addOption(ZLResourceKey("keyScrollDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyScrollingDelayOption, 50));
     const bool hasTouchScreen = ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::TOUCHSCREEN_PRESENTED, false).value();
     const bool hasVolumeKeys = ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::VOLUME_KEYS_PRESENTED, false).value();
     if (hasTouchScreen) {

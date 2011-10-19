@@ -510,6 +510,7 @@
 
 					<node name="enableTapScrolling" value="Enable Tap Scrolling" />
 					<node name="fingerOnly" value="Scroll on Finger Tap Only" />
+					<node name="keyLinesToKeep" value="Lines to Keep per Page Scrolling" />
 
 					<node name="tabScrollingZones" value="Tap Scroll Zones">
 						<node name="left-right" value="Scroll on Left/Right zones"/>
