@@ -41,5 +41,5 @@ void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
 
 bool ZLQtDialog::run() {
 	((ZLQtDialogContent*)myTab)->close();
-	return exec();
+	return exec() == QDialog::Accepted;
 }

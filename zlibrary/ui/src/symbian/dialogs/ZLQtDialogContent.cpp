@@ -40,7 +40,7 @@ void ZLQtDialogContent::addItem(QWidget *widget) {
         myLayout->addWidget(widget);
 
         //Expanding
-        widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+		widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 }
 
 void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
