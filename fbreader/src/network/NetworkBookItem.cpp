@@ -149,3 +149,38 @@ void NetworkBookItem::removeLocalFiles() const {
 		}
 	}
 }
+
+NetworkBookInfo::NetworkBookInfo(shared_ptr<NetworkBookItem> book) : myBook(book) {
+}
+
+std::string NetworkBookInfo::title() const {
+	return myBook->Title;
+}
+
+std::string NetworkBookInfo::file() const {
+	return std::string();
+}
+
+std::string NetworkBookInfo::language() const {
+	return myBook->Language;
+}
+
+std::string NetworkBookInfo::encoding() const {
+	return std::string();
+}
+
+std::string NetworkBookInfo::seriesTitle() const {
+	return myBook->SeriesTitle;
+}
+
+std::vector<std::string> NetworkBookInfo::tags() const {
+	return myBook->Tags;
+}
+
+std::vector<std::string> NetworkBookInfo::authors() const {
+	std::vector<std::string> result;
+	std::vector<NetworkBookItem::AuthorData>::const_iterator it;
+	for (it = myBook->Authors.begin(); it != myBook->Authors.end(); ++it)
+		result.push_back(it->DisplayName);
+	return result;
+}

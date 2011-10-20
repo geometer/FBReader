@@ -73,6 +73,8 @@ Page {
 			orientationLock: root.rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic	
 			DialogContent {
 				id: content
+				anchors.fill: parent
+				anchors { leftMargin: 15; topMargin: 15; rightMargin: 15 }
 			}
 			tools: ToolBarLayout {
 				ToolIcon {

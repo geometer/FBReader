@@ -25,8 +25,9 @@
 #include "NetworkCatalogUtil.h"
 
 #include "../networkActions/NetworkActions.h"
+#include "../optionsDialogMobile/MobileBookInfoDialog.h"
 
-const ZLTypeId NetworkBookNode::TYPE_ID(ZLTreeActionNode::TYPE_ID);
+const ZLTypeId NetworkBookNode::TYPE_ID(ZLTreePageNode::TYPE_ID);
 
 const ZLTypeId &NetworkBookNode::typeId() const {
 	return TYPE_ID;
@@ -81,8 +82,12 @@ std::string NetworkBookNode::subtitle() const {
 	return authorsString;
 }
 
-bool NetworkBookNode::activate() {
-	return false;
+void NetworkBookNode::fillContent(ZLDialogContent &content) const {
+	MobileBookInfoDialog::fillContent(content, NetworkBookInfo(myBook.staticCast<NetworkBookItem>()));
+}
+
+ZLResourceKey NetworkBookNode::contentKey() const {
+	return MobileBookInfoDialog::resourceKey();
 }
 
 shared_ptr<ZLImage> NetworkBookNode::image() const {

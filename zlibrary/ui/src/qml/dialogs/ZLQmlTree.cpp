@@ -20,6 +20,7 @@
 #include <QtCore/QEventLoop>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
+#include "ZLQmlDialogContent.h"
 #include "ZLQmlTree.h"
 #include <ZLTreeActionNode.h>
 #include <ZLTreePageNode.h>
@@ -206,6 +207,16 @@ bool ZLQmlTreeDialog::isVisibleAction(const QModelIndex &index, int action) {
 	if (action < 0 || action >= actions.size())
 		return true;
 	return actions.at(action)->makesSense();
+}
+
+QObject *ZLQmlTreeDialog::createPageContent(const QModelIndex &index) {
+	if (ZLTreePageNode *pageNode = zlobject_cast<ZLTreePageNode*>(treeNode(index))) {
+		shared_ptr<ZLDialogContent> content = pageNode->content();
+		if (content.isNull())
+			return 0;
+		return &static_cast<ZLQmlDialogContent&>(*content);
+	}
+	return 0;
 }
 
 class ZLQmlRunnableHelper : public ZLRunnable {

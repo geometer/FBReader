@@ -27,6 +27,7 @@
 #include "../library/Book.h"
 
 #include <ZLTreeActionNode.h>
+#include <ZLTreePageNode.h>
 
 class ZLImage;
 
@@ -113,7 +114,7 @@ private:
 	const shared_ptr<Tag> myTag;
 };
 
-class BookNode : public ZLTreeActionNode  {
+class BookNode : public ZLTreePageNode  {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -133,7 +134,8 @@ public:
 	shared_ptr<ZLImage> image() const;
 	std::string imageUrl() const;
 	void requestChildren();
-	bool activate();
+	void fillContent(ZLDialogContent &content) const;
+	ZLResourceKey contentKey() const;
 	shared_ptr<Book> book() const;
 
 private:

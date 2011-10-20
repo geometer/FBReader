@@ -207,7 +207,7 @@ private:
 	mutable std::string mySummary;
 };
 
-class NetworkBookNode : public ZLTreeActionNode {
+class NetworkBookNode : public ZLTreePageNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -230,7 +230,8 @@ private:
 	std::string imageUrl() const;
 	std::string title() const;
 	std::string subtitle() const;
-	bool activate();
+	void fillContent(ZLDialogContent &content) const;
+	ZLResourceKey contentKey() const;
 
 private:
 	shared_ptr<NetworkItem> myBook;

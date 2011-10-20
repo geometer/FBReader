@@ -27,6 +27,7 @@
 #include <ZLResource.h>
 #include <ZLOpenFileDialog.h>
 #include <ZLTreeDialog.h>
+#include <ZLDialogContent.h>
 
 class ZLDialog;
 class ZLOptionsDialog;
@@ -74,6 +75,7 @@ public:
 	virtual shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction = 0, bool showApplyButton = false) const = 0;
 	virtual shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const = 0;
 	virtual shared_ptr<ZLTreeDialog> createTreeDialog() const = 0;
+	virtual shared_ptr<ZLDialogContent> createContent(const ZLResourceKey &key) const = 0;
 
 	void informationBox(const ZLResourceKey &key) const;
 	void informationBox(const ZLResourceKey &key, const std::string &message) const;

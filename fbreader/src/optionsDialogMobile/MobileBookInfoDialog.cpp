@@ -56,48 +56,42 @@ const std::string& MobileDisplayNameEntry::initialValue() const {
 	return myValue;
 }
 
-class TagJoinFunctor {
-public:
-	std::string operator()(const shared_ptr<Tag> tag) const;
-};
-
-std::string TagJoinFunctor::operator()(const shared_ptr<Tag> tag) const {
-	return tag->fullName();
-}
-
-class AuthorJoinFunctor {
-public:
-	std::string operator()(const shared_ptr<Author> author) const;
-};
-
-std::string AuthorJoinFunctor::operator()(const shared_ptr<Author> author) const {
-	return author->name();
-}
-
 MobileBookInfoDialog::MobileBookInfoDialog(shared_ptr<Book> book) : myBook(book) {
 	//TODO add fullscreen for dialog
-	myDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("MobileInfoDialog"));
-	myDialog->addOption(ZLResourceKey("title"), new MobileDisplayNameEntry(myBook->title()));
+	myDialog = ZLDialogManager::Instance().createDialog(resourceKey());
+	fillContent(*myDialog, LocalBookInfo(myBook));
+	myDialog->addButton(ZLResourceKey("back"), true);
+}
 
-        std::string authors = ZLStringUtil::join(myBook->authors(), AuthorJoinFunctor(), FBNode::COMMA_JOIN_SEPARATOR);
-	myDialog->addOption(ZLResourceKey("authorDisplayName"), new MobileDisplayNameEntry(authors));
 
-        std::string tags = ZLStringUtil::join(myBook->tags(), TagJoinFunctor(),  "; ");
-	myDialog->addOption(ZLResourceKey("tags"), new MobileDisplayNameEntry(tags));
+void MobileBookInfoDialog::fillContent(ZLDialogContent &content, const AbstractBookInfo &info) {
+	doFillContent(content, info);
+}
 
-	std::string language = ZLLanguageList::languageName(myBook->language());
-	myDialog->addOption(ZLResourceKey("language"), new MobileDisplayNameEntry(language));
+void MobileBookInfoDialog::fillContent(ZLDialog &content, const AbstractBookInfo &info) {
+	doFillContent(content, info);
+}
 
-	//TODO add seriers showing
-//	std::string series;
-//	const std::vector<std::string> & seriesList = MobileSeriesTitleEntry(*this).values();
-//	for (size_t i=0; i < seriesList.size(); ++i) {
-//		//TODO add separator here
-//		series += seriesList.at(i);
-//	}
-//	myTab->addOption(ZLResourceKey("seriesTitle"), new MobileDisplayNameEntry(myBook->seriesTitle()));
+template <typename T>
+void MobileBookInfoDialog::doFillContent(T &content, const AbstractBookInfo &book) {
+	content.addOption(ZLResourceKey("title"), new MobileDisplayNameEntry(book.title()));
+	
+	std::string authors = ZLStringUtil::join(book.authors(), FBNode::COMMA_JOIN_SEPARATOR);
+	content.addOption(ZLResourceKey("authorDisplayName"), new MobileDisplayNameEntry(authors));
+	
+	std::string tags = ZLStringUtil::join(book.tags(), "; ");
+	content.addOption(ZLResourceKey("tags"), new MobileDisplayNameEntry(tags));
+	
+	std::string language = ZLLanguageList::languageName(book.language());
+	content.addOption(ZLResourceKey("language"), new MobileDisplayNameEntry(language));
+	
+	content.addOption(ZLResourceKey("seriesTitle"), new MobileDisplayNameEntry(book.seriesTitle()));
+	
+	std::string filePath = book.file();
+	if (!filePath.empty())
+		content.addOption(ZLResourceKey("file"), new MobileDisplayNameEntry(filePath));
+}
 
-	myDialog->addOption(ZLResourceKey("file"),	new MobileDisplayNameEntry(ZLFile::fileNameToUtf8(book->file().path())));
-
-	myDialog->addButton(ZLResourceKey("back"),true);
+ZLResourceKey MobileBookInfoDialog::resourceKey() {
+	return ZLResourceKey("MobileInfoDialog");
 }

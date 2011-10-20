@@ -31,6 +31,8 @@
 #include "../fbreader/FBReader.h"
 #include "../formats/FormatPlugin.h"
 
+#include "../optionsDialogMobile/MobileBookInfoDialog.h"
+
 static std::string generateSubtitle(const shared_ptr<Book> book, BookNode::SubtitleMode subtitleMode) {
     switch (subtitleMode) {
         case BookNode::SHOW_AUTHORS:
@@ -41,7 +43,7 @@ static std::string generateSubtitle(const shared_ptr<Book> book, BookNode::Subti
     return std::string();
 }
 
-const ZLTypeId BookNode::TYPE_ID(ZLTreeActionNode::TYPE_ID);
+const ZLTypeId BookNode::TYPE_ID(ZLTreePageNode::TYPE_ID);
 
 const ZLTypeId &BookNode::typeId() const {
 	return TYPE_ID;
@@ -106,10 +108,12 @@ shared_ptr<ZLImage> BookNode::originalImage() const {
 void BookNode::requestChildren() {
 }
 
-bool BookNode::activate() {
-	FBReader &fbreader = FBReader::Instance();
-	fbreader.openBook(myBook);
-	return true;
+void BookNode::fillContent(ZLDialogContent &content) const {
+	MobileBookInfoDialog::fillContent(content, LocalBookInfo(myBook));
+}
+
+ZLResourceKey BookNode::contentKey() const {
+	return MobileBookInfoDialog::resourceKey();
 }
 
 shared_ptr<Book> BookNode::book() const {

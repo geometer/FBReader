@@ -19,34 +19,35 @@
 
 import QtQuick 1.0
 import com.nokia.meego 1.0
-import "TreeDialogMenu.js" as Engine
+import com.nokia.extras 1.0
+import org.fbreader 0.14
 
-Menu {
-	id: menu
-	property variant modelIndex
-	property bool hasChildren: false
-	MenuLayout {
-		id: menuLayout
-		Repeater {
-			id: menuRepeater
-			model: root.handler.actions(menu.modelIndex)
-			MenuItem {
-				id: menuItem
-				text: ""
-				height: visible ? platformStyle.height : 0
-				onClicked: root.handler.run(menu.modelIndex, index)
-				Component.onCompleted: Engine.pushItem(menuItem)
-			}
+BaseTreeDialogPage {
+	id: root
+	property alias imageSource: content.imageSource
+	
+//	VisualItemModel {
+//		id: visualModel
+		DialogContent {
+			id: content
+			handler: root.handler.createPageContent(root.rootIndex)
+//			height: childrenRect.height
+//			width: listView.parent.width
+//			height: childrenRect.height
+//			anchors.top: image.bottom
+//			anchors.bottom: parent.bottom
+//			width: parent.width
+//			anchors { leftMargin: 0; topMargin: 0; rightMargin: 0 }
+			anchors { fill: parent; topMargin: 14 }
+			
+			Component.onCompleted: console.log("Yahoo!", content.handler, content.height, content.childrenRect.height, content.implicitHeight, content.contentHeight)
 		}
-		Component.onCompleted: {
-			menu.hasChildren = menuRepeater.count > 0;
-			menuRepeater.destroy();
-		}
-	}
-	onStatusChanged: {
-		console.log("statusChanged", status, DialogStatus.Opening, Engine.menuItems)
-		if (status == DialogStatus.Opening) {
-			Engine.prepareItems(root.handler, menu.modelIndex);
-		}
-	}
+//	}
+	
+//	ListView {
+//		id: listView
+//		model: visualModel
+//		anchors.fill: parent
+//		anchors { topMargin: 14 }
+//	}
 }
