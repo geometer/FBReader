@@ -55,3 +55,7 @@ bool OpenFileSystemNode::activate() {
 bool OpenFileSystemNode::FileFilter::accepts(const ZLFile &file) const {
 	return file.isArchive() || !PluginCollection::Instance().plugin(file, false).isNull();
 }
+
+std::string OpenFileSystemNode::imageUrl() const {
+	return FBNode::defaultImageUrl("booktree-folder.png");
+}

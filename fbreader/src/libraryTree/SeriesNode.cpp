@@ -50,6 +50,11 @@ std::string SeriesNode::title() const {
 	return std::string();
 }
 
+std::string SeriesNode::imageUrl() const {
+//	return FBNode::defaultImageUrl("")
+	return std::string();
+}
+
 shared_ptr<ZLImage> SeriesNode::extractCoverImage() const {
 //	const std::vector<ZLBlockTreeNode*> &books = children();
 //	for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {

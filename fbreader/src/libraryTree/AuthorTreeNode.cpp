@@ -27,3 +27,7 @@ std::string AuthorTreeNode::subtitle() const {
         //TODO add not-toolbar resource for this node
         return ZLResource::resource("toolbar")["byAuthor"]["tooltip"].value();
 }
+
+std::string AuthorTreeNode::imageUrl() const {
+	return FBNode::defaultImageUrl("booktree-authors.png");
+}

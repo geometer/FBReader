@@ -23,6 +23,7 @@ public:
 	AuthorTreeNode();
 	std::string title() const;
 	std::string subtitle() const;
+	std::string imageUrl() const;
 };
 
 class TagTreeNode : public FBNode {
@@ -37,6 +38,7 @@ public:
 	TagTreeNode();
 	std::string title() const;
 	std::string subtitle() const;
+	std::string imageUrl() const;
 };
 
 class RecentBooksTreeNode : public FBNode {
@@ -51,6 +53,7 @@ public:
 	RecentBooksTreeNode();
 	std::string title() const;
 	std::string subtitle() const;
+	std::string imageUrl() const;
 };
 
 class OpenFileSystemNode : public ZLTreeActionNode {
@@ -72,6 +75,7 @@ class OpenFileSystemNode : public ZLTreeActionNode {
 		std::string title() const;
 		std::string subtitle() const;
 		virtual bool activate();
+		std::string imageUrl() const;
 
 	private:
 		ZLStringOption DirectoryOption;

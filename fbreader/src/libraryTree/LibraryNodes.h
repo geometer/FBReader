@@ -81,6 +81,7 @@ private:
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
+	std::string imageUrl() const;
 };
 
 class TagNode : public FBNode {
@@ -133,6 +134,7 @@ public:
 	std::string imageUrl() const;
 	void requestChildren();
 	bool activate();
+	shared_ptr<Book> book() const;
 
 private:
 	shared_ptr<ZLImage> originalImage() const;

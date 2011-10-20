@@ -47,8 +47,28 @@ const ZLTypeId &BookNode::typeId() const {
 	return TYPE_ID;
 }
 
+class ReadBookAction : public ZLTreeAction {
+public:
+	ReadBookAction(BookNode *node) : myNode(node) {
+	}
+	
+	virtual void run() {
+		FBReader::Instance().openBook(myNode->book());
+		finished(std::string());
+		myNode->close();
+	}
+
+	virtual ZLResourceKey key() const {
+		return ZLResourceKey("read");
+	}
+	
+private:
+	BookNode *myNode;
+};
+
 BookNode::BookNode(shared_ptr<Book> book, SubtitleMode subtitleMode):
     myBook(book), mySubtitle(generateSubtitle(book,subtitleMode)), myCoverImageIsStored(false) {
+	registerAction(new ReadBookAction(this));
 }
 
 std::string BookNode::title() const {
@@ -90,6 +110,10 @@ bool BookNode::activate() {
 	FBReader &fbreader = FBReader::Instance();
 	fbreader.openBook(myBook);
 	return true;
+}
+
+shared_ptr<Book> BookNode::book() const {
+	return myBook;
 }
 
 const ZLResource &BookNode::resource() const {
