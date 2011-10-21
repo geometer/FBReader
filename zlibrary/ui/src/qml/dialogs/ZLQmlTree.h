@@ -38,6 +38,8 @@ public:
 	ZLQmlTreeDialog();
 	~ZLQmlTreeDialog();
 	
+	static bool isAlive(ZLQmlTreeDialog *dialog);
+	
 	virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 	virtual QModelIndex parent(const QModelIndex &child) const;
 	
@@ -55,6 +57,7 @@ public:
 	Q_INVOKABLE bool activate(const QModelIndex &index);
 	Q_INVOKABLE QStringList actions(const QModelIndex &index);
 	Q_INVOKABLE bool isVisibleAction(const QModelIndex &index, int action);
+	Q_INVOKABLE QObject *createPageContent(const QModelIndex &index);
 	Q_INVOKABLE void run(const QModelIndex &index, int action);
 	Q_INVOKABLE void finish();
 	

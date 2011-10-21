@@ -36,6 +36,8 @@ Dialog {
 		width: root.width
 		DialogContent {
 			id: dialogContent
+			anchors.fill: parent
+			anchors { leftMargin: 15; topMargin: 15; rightMargin: 15 }
 			invertedTheme: true
 			handler: root.handler.content
 		}

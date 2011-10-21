@@ -27,3 +27,7 @@ std::string RecentBooksTreeNode::subtitle() const {
         //TODO add not-toolbar resource for this node
         return ZLResource::resource("toolbar")["showRecent"]["tooltip"].value();
 }
+
+std::string RecentBooksTreeNode::imageUrl() const {
+	return FBNode::defaultImageUrl("booktree-recent.png");
+}

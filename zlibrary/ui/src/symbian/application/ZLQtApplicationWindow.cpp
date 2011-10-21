@@ -33,6 +33,10 @@
 #include "../platform/VolumeKeysCapturer.h"
 #endif
 
+//#include "../actions/LibraryActions.h"
+//TODO remove it:
+//#include "../../../../../fbreader/src/fbreader/FBReaderActions.h"
+
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 		new ZLQtApplicationWindow(application);
 }
@@ -51,7 +55,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 		const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
 		QPixmap icon(QString::fromStdString(iconFileName));
-        setWindowIcon(icon);
+                setWindowIcon(icon);
 
 		myMenuDialog = new DrillDownMenuDialog(this);
 		myMenu = new DrillDownMenu;

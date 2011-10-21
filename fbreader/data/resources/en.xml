@@ -806,6 +806,14 @@
 				</node>
 			</node>
 		</node>
+		<node name="MobileInfoDialog">
+			<node name="file" value="Filename" />
+			<node name="title" value="Title" />
+			<node name="language" value="Language" />
+			<node name="authorDisplayName" value="Authors" />
+			<node name="seriesTitle" value="Series" />
+			<node name="tags" value="Tags" />
+		</node>
 		<node name="InfoDialog">
 			<node name="title" value="FBReader - Book Info" />
 			<node name="tab">

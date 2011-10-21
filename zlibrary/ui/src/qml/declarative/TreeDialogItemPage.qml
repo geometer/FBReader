@@ -19,12 +19,35 @@
 
 import QtQuick 1.0
 import com.nokia.meego 1.0
+import com.nokia.extras 1.0
+import org.fbreader 0.14
 
-Label {
+BaseTreeDialogPage {
 	id: root
-	property variant handler
-	width: parent.width
-	visible: handler.visible
-	enabled: handler.enabled
-	text: handler.name + ": " + handler.text
+	property alias imageSource: content.imageSource
+	
+//	VisualItemModel {
+//		id: visualModel
+		DialogContent {
+			id: content
+			handler: root.handler.createPageContent(root.rootIndex)
+//			height: childrenRect.height
+//			width: listView.parent.width
+//			height: childrenRect.height
+//			anchors.top: image.bottom
+//			anchors.bottom: parent.bottom
+//			width: parent.width
+//			anchors { leftMargin: 0; topMargin: 0; rightMargin: 0 }
+			anchors { fill: parent; topMargin: 14 }
+			
+			Component.onCompleted: console.log("Yahoo!", content.handler, content.height, content.childrenRect.height, content.implicitHeight, content.contentHeight)
+		}
+//	}
+	
+//	ListView {
+//		id: listView
+//		model: visualModel
+//		anchors.fill: parent
+//		anchors { topMargin: 14 }
+//	}
 }

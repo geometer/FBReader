@@ -20,13 +20,23 @@
 #ifndef ZLTREEPAGENODE_H
 #define ZLTREEPAGENODE_H
 
-#include "ZLTreeNode.h"
+#include "ZLTreeTitledNode.h"
+#include <ZLDialogContent.h>
 
-class ZLTreePageNode : public ZLTreeNode {
+class ZLTreePageNode : public ZLTreeTitledNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
 	const ZLTypeId &typeId() const;
+	
+	shared_ptr<ZLDialogContent> content() const;
+	
+protected:
+	virtual void fillContent(ZLDialogContent &content) const = 0;
+	virtual ZLResourceKey contentKey() const = 0;
+	
+private:
+	mutable shared_ptr<ZLDialogContent> myContent;
 };
 
 #endif // ZLTREEPAGENODE_H

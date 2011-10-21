@@ -1,41 +1,34 @@
+/*
+ * Copyright (C) 2004-2011 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
 import QtQuick 1.0
 import com.nokia.meego 1.0
 import com.nokia.extras 1.0
 import org.fbreader 0.14
 
-Page {
+BaseTreeDialogPage {
 	id: root
-	orientationLock: rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic
-	property variant rootWindow
-	property variant handler
-	property variant component
-	property variant progressData: handler.progressData(root.rootIndex)
-	property bool infiniteProgress: progressData === undefined ? false : progressData.infinite
-	property bool finiteProgress: progressData === undefined ? false : !progressData.infinite
-	property real progressValue: progressData === undefined ? 0.0 : (progressData.value * 1.0 / progressData.maximumValue)
-	property alias rootIndex: visualModel.rootIndex
-	property int revision: 0
-	
-	Connections {
-		target: root.handler
-		onProgressChanged: {
-			++root.revision;
-			root.progressData = handler.progressData(root.rootIndex);
-		}
-		onFinished: root.__close()
-	}
-	
-	function __close() {
-		if (root.pageStack.depth == 1)
-			return;
-		var i = root.pageStack.depth;
-		var item = root.pageStack.find(function() { return (--i) === 0; })
-		root.pageStack.pop(item);
-	}
 	
 	VisualDataModel {
 		id: visualModel
 		model: root.handler
+		rootIndex: root.rootIndex
 		delegate: ListDelegate {
 			signal tapAndHold
 			property bool hasTapAndHold: false
@@ -50,17 +43,21 @@ Page {
 					}
 				} else {
 					var rootIndex = visualModel.modelIndex(index);
-					var page = root.pageStack.push(root.component, {
-												   "handler": root.handler,
-												   "rootWindow": root.rootWindow,
-												   "component": root.component,
-												   "rootIndex": rootIndex
-												   });
+					var component = model.page ? itemPageComponent : root.component;
+					var args = {
+						"handler": root.handler,
+					    "rootWindow": root.rootWindow,
+					    "component": root.component,
+					    "rootIndex": rootIndex
+					};
+					if (model.page)
+						args["imageSource"] = model.iconSource;
+					var page = root.pageStack.push(component, args);
 				}
 			}
 			onPressedChanged: if (pressed) hasTapAndHold = false
 			onTapAndHold: {
-				console.log("Tap on", model.title)
+				console.log("Tap on", model.title, model.iconSource)
 				var menu = menuComponent.createObject(listView.parent, { "modelIndex": visualModel.modelIndex(index) });
 				if (menu.hasChildren) {
 					hasTapAndHold = true;
@@ -91,49 +88,16 @@ Page {
 	
 	ListView {
 		id: listView
-		anchors { leftMargin: 14; top: parent.top; bottom: progressBar.top; rightMargin: 14 }
-		width: parent.width
+		anchors.fill: parent
 		model: visualModel
 	}
 	
-	ProgressBar {
-		id: progressBar
-		anchors { margins: 5; bottom: parent.bottom }
-		height: visible ? implicitHeight : 0
-		width: parent.width
-		visible: root.finiteProgress
-		value: root.progressValue
+	Component {
+		id: itemPageComponent
+		TreeDialogItemPage {
+		}
 	}
 	
-	tools: ToolBarLayout {
-		id: toolBarLayout
-		ToolIcon {
-			visible: true
-			platformIconId: "toolbar-previous"
-			onClicked: { pageStack.pop(); if (pageStack.depth == 1) root.handler.finish(); }
-		}
-		
-		BusyIndicator {
-			id: busyIndicator
-			anchors.centerIn: parent
-			visible: root.infiniteProgress
-			running: root.infiniteProgress
-		}
-		
-		ToolIcon {
-			visible: mainMenu.hasChildren
-			platformIconId: "toolbar-view-menu"
-			onClicked: (mainMenu.status == DialogStatus.Closed)
-					   ? mainMenu.open()
-					   : mainMenu.close()
-		}
-	}
-	TreeDialogMenu {
-		id: mainMenu
-		modelIndex: root.rootIndex
-		visualParent: root.pageStack
-	}
-
 	Component {
 		id: menuComponent
 		TreeDialogMenu {
@@ -149,17 +113,6 @@ Page {
 			}
 		}
 	}
-	Component {
-		id: menuItemComponent
-		MenuItem {
-			property variant index
-			property int actionId
-			onClicked: root.handler.run(index, actionId)
-		}
-	}
 
-	Component.onCompleted: {
-		root.handler.fetchChildren(rootIndex)
-		console.log("Component.onCompleted", root.rootModel, root.fetchingChildren)
-	}
+	Component.onCompleted: root.handler.fetchChildren(rootIndex)
 }

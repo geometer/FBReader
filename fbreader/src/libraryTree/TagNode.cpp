@@ -65,3 +65,7 @@ std::string TagNode::subtitle() const {
 shared_ptr<ZLImage> TagNode::extractCoverImage() const {
 	return defaultCoverImage("booktree-tag.png");
 }
+
+std::string TagNode::imageUrl() const {
+	return defaultImageUrl("booktree-tag.png");
+}

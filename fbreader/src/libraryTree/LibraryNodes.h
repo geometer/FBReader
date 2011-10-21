@@ -27,6 +27,7 @@
 #include "../library/Book.h"
 
 #include <ZLTreeActionNode.h>
+#include <ZLTreePageNode.h>
 
 class ZLImage;
 
@@ -46,7 +47,7 @@ public:
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-//	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<ZLImage> extractCoverImage() const;
 
 public:
 	AuthorNode(shared_ptr<Author> author);
@@ -58,7 +59,7 @@ public:
 	void requestChildren();
 
 protected:
-	shared_ptr<ZLImage> extractCoverImage() const;
+//	shared_ptr<ZLImage> image() const;
 
 private:
 	shared_ptr<Author> myAuthor;
@@ -79,8 +80,9 @@ public:
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	//shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string title() const;
+	std::string imageUrl() const;
 };
 
 class TagNode : public FBNode {
@@ -103,6 +105,7 @@ private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
+	std::string imageUrl() const;
 	void requestChildren();
 	std::string title() const;
 	std::string subtitle() const;
@@ -111,7 +114,7 @@ private:
 	const shared_ptr<Tag> myTag;
 };
 
-class BookNode : public ZLTreeActionNode  {
+class BookNode : public ZLTreePageNode  {
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -131,18 +134,20 @@ public:
 	shared_ptr<ZLImage> image() const;
 	std::string imageUrl() const;
 	void requestChildren();
-	bool activate();
-
-protected:
-	shared_ptr<ZLImage> extractCoverImage() const;
+	void fillContent(ZLDialogContent &content) const;
+	ZLResourceKey contentKey() const;
+	shared_ptr<Book> book() const;
 
 private:
+	shared_ptr<ZLImage> originalImage() const;
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 
 private:
 	const shared_ptr<Book> myBook;
-        const std::string mySubtitle;
+	const std::string mySubtitle;
+	mutable bool myCoverImageIsStored;
+	mutable shared_ptr<ZLImage> myStoredCoverImage;
 };
 
 class AuthorFunctor {

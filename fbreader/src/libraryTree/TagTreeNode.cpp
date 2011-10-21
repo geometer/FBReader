@@ -27,3 +27,7 @@ std::string TagTreeNode::subtitle() const {
         //TODO add not-toolbar resource for this node
         return ZLResource::resource("toolbar")["byTag"]["tooltip"].value();
 }
+
+std::string TagTreeNode::imageUrl() const {
+	return FBNode::defaultImageUrl("booktree-tags.png");
+}

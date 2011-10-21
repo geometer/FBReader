@@ -55,11 +55,11 @@ std::string AuthorNode::subtitle() const {
 }
 
 std::string AuthorNode::imageUrl() const {
-	return std::string();
+	return FBNode::defaultImageUrl("booktree-author.png");
 }
 
 shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
-	return defaultCoverImage("booktree-author.png");
+	return FBNode::defaultCoverImage("booktree-author.png");
 }
 
 void AuthorNode::requestChildren() {

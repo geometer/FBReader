@@ -36,6 +36,7 @@
 #include "ZLQmlSwipeGestureRecognizer.h"
 #include "../util/ZLQtKeyUtil.h"
 #include "../application/ZLQmlApplicationWindow.h"
+#include "ZLQmlTreeImageProvider.h"
 #include "ZLQmlNetworkAccessFactory.h"
 
 #include <ZLibrary.h>
@@ -350,6 +351,7 @@ int ZLQmlScrollBarInfo::bottom() const {
 ZLQmlViewWidget::ZLQmlViewWidget(QWidget *parent, ZLQmlViewObject &holder) : QDeclarativeView(parent), myHolder(holder) {
 	//setBackgroundMode(NoBackground);
 	engine()->setNetworkAccessManagerFactory(new ZLQmlNetworkAccessFactory);
+	engine()->addImageProvider(QLatin1String("tree"), new ZLQmlTreeImageProvider);
 	QFont font;
 	font.setFamily(QLatin1String("Nokia Pure"));
 	font.setPointSize(24);

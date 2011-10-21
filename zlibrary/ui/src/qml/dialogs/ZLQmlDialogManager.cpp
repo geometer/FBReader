@@ -83,6 +83,10 @@ shared_ptr<ZLTreeDialog> ZLQmlDialogManager::createTreeDialog() const {
 	return dialog;
 }
 
+shared_ptr<ZLDialogContent> ZLQmlDialogManager::createContent(const ZLResourceKey &key) const {
+	return new ZLQmlDialogContent(resource()[key]);
+}
+
 void ZLQmlDialogManager::informationBox(const std::string &title, const std::string &message) const {
 	emit const_cast<ZLQmlDialogManager*>(this)->privateInformationBoxRequested(QString::fromStdString(title),
 	                                                                           QString::fromStdString(message),

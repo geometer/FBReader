@@ -31,6 +31,8 @@
 #include <ZLTypeId.h>
 
 #include "BookReference.h"
+#include "../library/Lists.h"
+#include "../library/Book.h"
 
 class NetworkAuthenticationManager;
 class NetworkLink;
@@ -162,6 +164,23 @@ public:
 
 private:
 	std::vector<shared_ptr<BookReference> > myReferences;
+};
+
+class NetworkBookInfo : public AbstractBookInfo {
+public:
+	NetworkBookInfo(shared_ptr<NetworkBookItem> book);
+	
+	virtual std::string title() const;
+	virtual std::string file() const;
+	virtual std::string language() const;
+	virtual std::string encoding() const;
+	virtual std::string seriesTitle() const;
+
+	virtual std::vector<std::string> tags() const;
+	virtual std::vector<std::string> authors() const;
+	
+private:
+	shared_ptr<NetworkBookItem> myBook;
 };
 
 #endif /* __NETWORKITEMS_H__ */

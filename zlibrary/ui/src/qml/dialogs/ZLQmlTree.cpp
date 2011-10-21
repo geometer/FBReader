@@ -20,6 +20,7 @@
 #include <QtCore/QEventLoop>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
+#include "ZLQmlDialogContent.h"
 #include "ZLQmlTree.h"
 #include <ZLTreeActionNode.h>
 #include <ZLTreePageNode.h>
@@ -27,6 +28,7 @@
 #include <QtCore/QTimer>
 
 Q_DECLARE_METATYPE(QModelIndex)
+Q_GLOBAL_STATIC(QSet<ZLQmlTreeDialog*>, aliveTrees)
 
 class ZLQmlActionListener : public ZLExecutionData::Listener {
 public:
@@ -62,6 +64,7 @@ void ZLQmlActionListener::finished(const std::string &error) {
 
 ZLQmlTreeDialog::ZLQmlTreeDialog()
 {
+	aliveTrees()->insert(this);
 	qRegisterMetaType<QModelIndex>();
 	QHash<int, QByteArray> names = roleNames();
 	names[Qt::DisplayRole] = "title";
@@ -73,6 +76,11 @@ ZLQmlTreeDialog::ZLQmlTreeDialog()
 }
 
 ZLQmlTreeDialog::~ZLQmlTreeDialog() {
+	aliveTrees()->remove(this);
+}
+
+bool ZLQmlTreeDialog::isAlive(ZLQmlTreeDialog *dialog) {
+	return aliveTrees()->contains(dialog);
 }
 
 QModelIndex ZLQmlTreeDialog::index(int row, int column, const QModelIndex &parent) const {
@@ -120,10 +128,19 @@ QVariant ZLQmlTreeDialog::data(const QModelIndex &index, int role) const {
 		else
 			return QString("No title");
 	case Qt::DecorationRole:
-		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node))
-			return QString::fromStdString(titledNode->imageUrl());
-		else
+		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node)) {
+			QString url = QString::fromStdString(titledNode->imageUrl());
+			if (url.isEmpty()) {
+				url.reserve(45);
+				url = QLatin1String("image://tree/");
+				url += QString::number(reinterpret_cast<qptrdiff>(this), 16);
+				url += QLatin1Char('$');
+				url += QString::number(reinterpret_cast<qptrdiff>(node), 16);
+			}
+			return url;
+		} else {
 			return QString();
+		}
 	case SubTitleRole:
 		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node))
 			return QString::fromStdString(titledNode->subtitle());
@@ -190,6 +207,16 @@ bool ZLQmlTreeDialog::isVisibleAction(const QModelIndex &index, int action) {
 	if (action < 0 || action >= actions.size())
 		return true;
 	return actions.at(action)->makesSense();
+}
+
+QObject *ZLQmlTreeDialog::createPageContent(const QModelIndex &index) {
+	if (ZLTreePageNode *pageNode = zlobject_cast<ZLTreePageNode*>(treeNode(index))) {
+		shared_ptr<ZLDialogContent> content = pageNode->content();
+		if (content.isNull())
+			return 0;
+		return &static_cast<ZLQmlDialogContent&>(*content);
+	}
+	return 0;
 }
 
 class ZLQmlRunnableHelper : public ZLRunnable {

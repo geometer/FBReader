@@ -31,6 +31,8 @@
 #include "../fbreader/FBReader.h"
 #include "../formats/FormatPlugin.h"
 
+#include "../optionsDialogMobile/MobileBookInfoDialog.h"
+
 static std::string generateSubtitle(const shared_ptr<Book> book, BookNode::SubtitleMode subtitleMode) {
     switch (subtitleMode) {
         case BookNode::SHOW_AUTHORS:
@@ -41,14 +43,34 @@ static std::string generateSubtitle(const shared_ptr<Book> book, BookNode::Subti
     return std::string();
 }
 
-const ZLTypeId BookNode::TYPE_ID(ZLTreeActionNode::TYPE_ID);
+const ZLTypeId BookNode::TYPE_ID(ZLTreePageNode::TYPE_ID);
 
 const ZLTypeId &BookNode::typeId() const {
 	return TYPE_ID;
 }
 
+class ReadBookAction : public ZLTreeAction {
+public:
+	ReadBookAction(BookNode *node) : myNode(node) {
+	}
+	
+	virtual void run() {
+		FBReader::Instance().openBook(myNode->book());
+		finished(std::string());
+		myNode->close();
+	}
+
+	virtual ZLResourceKey key() const {
+		return ZLResourceKey("read");
+	}
+	
+private:
+	BookNode *myNode;
+};
+
 BookNode::BookNode(shared_ptr<Book> book, SubtitleMode subtitleMode):
-    myBook(book), mySubtitle(generateSubtitle(book,subtitleMode)) {
+    myBook(book), mySubtitle(generateSubtitle(book,subtitleMode)), myCoverImageIsStored(false) {
+	registerAction(new ReadBookAction(this));
 }
 
 std::string BookNode::title() const {
@@ -59,31 +81,43 @@ std::string BookNode::subtitle() const {
 }
 
 std::string BookNode::imageUrl() const {
+	shared_ptr<ZLImage> image = originalImage();
+	if (image.isNull())
+		return FBNode::defaultImageUrl("booktree-book.png");
 	return std::string();
 }
 
-shared_ptr<ZLImage> BookNode::extractCoverImage() const {
-	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*myBook);
-	if (!plugin.isNull()) {
-		shared_ptr<ZLImage> cover = plugin->coverImage(myBook->file());
-		if (!cover.isNull()) {
-			return cover;
-		}
-	}
-	return 0; //defaultCoverImage("booktree-book.png");
+shared_ptr<ZLImage> BookNode::image() const {
+	shared_ptr<ZLImage> image = originalImage();
+	if (image.isNull())
+		image = FBNode::defaultCoverImage("booktree-book.png");
+	return image;
 }
 
-shared_ptr<ZLImage> BookNode::image() const {
-	return 0;
+shared_ptr<ZLImage> BookNode::originalImage() const {
+	if (myCoverImageIsStored)
+		return myStoredCoverImage;
+	myCoverImageIsStored = true;
+	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*myBook);
+	if (!plugin.isNull()) {
+		myStoredCoverImage = plugin->coverImage(myBook->file());
+	}
+	return myStoredCoverImage;
 }
 
 void BookNode::requestChildren() {
 }
 
-bool BookNode::activate() {
-	FBReader &fbreader = FBReader::Instance();
-	fbreader.openBook(myBook);
-	return true;
+void BookNode::fillContent(ZLDialogContent &content) const {
+	MobileBookInfoDialog::fillContent(content, LocalBookInfo(myBook));
+}
+
+ZLResourceKey BookNode::contentKey() const {
+	return MobileBookInfoDialog::resourceKey();
+}
+
+shared_ptr<Book> BookNode::book() const {
+	return myBook;
 }
 
 const ZLResource &BookNode::resource() const {
