@@ -96,7 +96,7 @@ void ZLQtOptionsDialog::back() {
 }
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
-	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget, tabResource(key));
+        ZLQtDialogContent *tab = new ZLQtDialogContent(tabResource(key));
 	myTabMenuWidget->addItem(tab->widget(), ::qtString(tab->displayName()));
 	myTabs.push_back(tab);
 	return *tab;

@@ -14,9 +14,9 @@ ZLQtDialog::ZLQtDialog(const ZLResource &resource) : QDialog(qApp->activeWindow(
 	setWindowTitle(::qtString(resource[ZLDialogManager::DIALOG_TITLE].value()));
 
 	QVBoxLayout *layout = new QVBoxLayout(this);
-	QWidget *widget = new QWidget(this);
-	layout->addWidget(widget);
-	myTab = new ZLQtDialogContent(widget, resource);
+        myTab = new ZLQtDialogContent(resource);
+        layout->addWidget(((ZLQtDialogContent*)myTab)->widget());
+
 }
 
 ZLQtDialog::~ZLQtDialog() {

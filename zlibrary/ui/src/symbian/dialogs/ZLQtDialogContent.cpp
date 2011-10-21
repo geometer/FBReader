@@ -12,7 +12,8 @@ void ZLQtDialogContent::close() {
     // for instance, here can be addStretch
 }
 
-ZLQtDialogContent::ZLQtDialogContent(QWidget *widget, const ZLResource &resource) : ZLDialogContent(resource), myWidget(widget) {
+ZLQtDialogContent::ZLQtDialogContent(const ZLResource &resource) : ZLDialogContent(resource) {
+        myWidget = new QWidget;
         myLayout = new QVBoxLayout;
         myLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
         myWidget->setLayout(myLayout);
