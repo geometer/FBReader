@@ -37,6 +37,9 @@ shared_ptr<ZLTreeDialog> ZLQtDialogManager::createTreeDialog() const {
 	return new ZLQtTreeDialog;
 }
 
+shared_ptr<ZLDialogContent> ZLQtDialogManager::createContent(const ZLResourceKey &key) const {
+        return new ZLQtDialogContent(resource()[key]);
+}
 
 void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
 	QWidget *parent = qApp->activeWindow();

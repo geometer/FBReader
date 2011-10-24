@@ -21,7 +21,9 @@ ZLQtDialogContent::ZLQtDialogContent(const ZLResource &resource) : ZLDialogConte
 }
 
 ZLQtDialogContent::~ZLQtDialogContent() {
-	delete myWidget;
+        //TODO check responsibility from life time for this object.
+        //best case -- ZLQtDialogContent deletes it's widget itself
+        //delete myWidget;
 }
 
 void ZLQtDialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
@@ -95,5 +97,5 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 }
 
 QWidget *ZLQtDialogContent::widget() {
-	return myWidget;
+        return myWidget;
 }

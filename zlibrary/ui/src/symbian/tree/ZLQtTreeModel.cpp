@@ -1,8 +1,10 @@
 #include <ZLTreeTitledNode.h>
 #include <ZLTreeActionNode.h>
+#include <ZLTreePageNode.h>
 #include <ZLApplication.h>
 
 #include "ZLQtTreeModel.h"
+#include "../dialogs/ZLQtPageDialog.h"
 
 #include "../dialogs/ZLQtUtil.h"
 
@@ -35,6 +37,9 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
 			ZLApplication::Instance().refreshWindow();
 			return false;
 		}
+        } else if (ZLTreePageNode *pageNode = zlobject_cast<ZLTreePageNode*>(node)) {
+                ZLQtPageDialog dialog(pageNode->content());
+                dialog.run();
 	} else {
 		myCurrentNode = node;
                 //qDebug() << "\nrequesting children";
