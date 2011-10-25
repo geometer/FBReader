@@ -132,8 +132,12 @@ QPixmap ZLQtTreeModel::ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, 
 QPixmap ZLQtTreeModel::urlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize) {
     QPixmap pixmap(url.toLocalFile());
     QImage finalImage = pixmap.toImage();
-    if (size)
+    if (size) {
         *size = finalImage.size();
+    }
+    if (finalImage.isNull()) {
+        return QPixmap();
+    }
     if (requestedSize.isValid())
             finalImage = finalImage.scaled(requestedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     return QPixmap::fromImage(finalImage);

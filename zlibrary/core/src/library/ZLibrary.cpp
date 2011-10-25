@@ -112,6 +112,10 @@ void ZLibrary::initApplication(const std::string &name) {
 		"~" + FileNameDelimiter + "." + name;
 #endif
 	ourDefaultFilesPathPrefix = ourApplicationDirectory + FileNameDelimiter + "default" + FileNameDelimiter;
+
+        //TODO add others pathes to this
+        //normalizing path for platfrom-specific FS
+        ZLFSManager::Instance().normalize(ourApplicationImageDirectory);
 }
 
 std::string ZLibrary::Language() {
