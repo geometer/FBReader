@@ -1,11 +1,21 @@
-fbreader (0.99.3) oneiric; urgency=low
+fbreader (0.99.4) stable; urgency=low
 
-  * Added option for volume keys scrolling turning on/off
-  * Added option for configuration of scrolling pages zones by tap
-  * Fixed bug with page scroll by tapping screen
-  * Added subtitles to local library and network library
-  * Added kinetic scrolling for menu
-  * Added ability to purchase books from network library
+  * Fixed several segfaults connected with network library.
+  * Removed '&' charachter from field names in dialogs.
+  * Color scheme in options and trees is changed to inverted.
+  * Added icons to items in local library.
+  * Implemented book information dialog.
+
+ -- Ruslan Nigmatullin <euroelessar@yandex.ru>  Tue, 25 Oct 2011 15:40:52 +0600
+
+fbreader (0.99.3) stable; urgency=low
+
+  * Added option for volume keys scrolling turning on/off.
+  * Added option for configuration of scrolling pages zones by tap.
+  * Fixed bug with page scroll by tapping screen.
+  * Added subtitles to local library and network library.
+  * Added kinetic scrolling for menu.
+  * Added ability to purchase books from network library.
 
  -- Ruslan Nigmatullin <euroelessar@yandex.ru>  Wed, 19 Oct 2011 17:29:59 +0600
 

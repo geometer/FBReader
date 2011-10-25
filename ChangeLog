@@ -1,3 +1,10 @@
+===== 0.99.4 (October 25, 2011) =====
+* Fixed several segfaults connected with network library.
+* Removed '&' charachter from field names in dialogs.
+* Color scheme in options and trees is changed to inverted.
+* Added icons to items in local library.
+* Implemented book information dialog.
+
 ===== 0.99.3 (October 17, 2011) =====
 * Added option for volume keys scrolling turning on/off
 * Added option for configuration of scrolling pages zones by tap
