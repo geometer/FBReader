@@ -91,6 +91,7 @@ void ZLQtApplicationWindow::init() {
 #endif
 
                 myMenuDialog->showDrillDownMenu(myMenu);
+
                 showFullScreen();
 }
 
@@ -191,7 +192,8 @@ void ZLQtApplicationWindow::processAllEvents() {
 }
 
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
-		ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application());
+                ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application());
+                connect(viewWidget, SIGNAL(tapBottomZoneClicked()), this, SLOT(showMenu()));
 		setCentralWidget(viewWidget->widget());
 		//viewWidget->widget()->show();
 		return viewWidget;

@@ -26,6 +26,9 @@ private:
 		int x(const QMouseEvent *event) const;
 		int y(const QMouseEvent *event) const;
 
+        private:
+                bool isTapBottomZone(QPoint coords);
+
 	private:
 		ZLQtViewWidget &myHolder;
 	};
@@ -33,6 +36,9 @@ private:
 public:
 	ZLQtViewWidget(QWidget *parent, ZLApplication *application);
 	QWidget *widget();
+
+signals:
+        void tapBottomZoneClicked();
 
 private Q_SLOTS:
 	void onVerticalSliderMoved(int value);

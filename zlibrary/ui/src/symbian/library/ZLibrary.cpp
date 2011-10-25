@@ -129,12 +129,15 @@ void myMessageOutput(QtMsgType type, const char *msg)
 		 break;
 	 case QtWarningMsg:
 		 fprintf(stdout, "Warning: %s\n", msg);
+                 fflush(stdout);
 		 break;
 	 case QtCriticalMsg:
 		 fprintf(stdout, "Critical: %s\n", msg);
+                 fflush(stdout);
 		 break;
 	 case QtFatalMsg:
 		 fprintf(stdout, "Fatal: %s\n", msg);
+                 fflush(stdout);
 		 //abort();
 	 }
 	 fflush(stdout);

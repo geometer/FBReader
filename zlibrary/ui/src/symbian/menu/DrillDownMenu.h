@@ -28,10 +28,12 @@ public:
 
 namespace MenuItemParameters {
     int getMenuDialogHeight();
+    int getTapBottomZoneSize();
     QSize getItemSize();
     QSize getImageSize();
     QFont getFont();
     QFont getSubtitleFont();
+    int MMtoPixels(int mm);
 }
 
 class DrillDownMenuItem : public NiceSizeListWidgetItem {

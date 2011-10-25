@@ -159,8 +159,18 @@ QVariant NiceSizeListWidgetItem::data (int role) const {
 }
 
 int MenuItemParameters::getMenuDialogHeight() {
-    static const qreal COEF = 2/3;
-    return qApp->desktop()->availableGeometry().height()*COEF;
+    return qApp->desktop()->availableGeometry().height()*2/3;
+}
+
+int MenuItemParameters::getTapBottomZoneSize() {
+    static const int TAP_BOTTOM_SIZE_MM = 10;
+    return MMtoPixels(TAP_BOTTOM_SIZE_MM);
+}
+
+int MenuItemParameters::MMtoPixels(int mm) {
+    const int coef = qApp->desktop()->height() / qApp->desktop()->heightMM();
+    //qDebug() << "desktop height" << qApp->desktop()->height() << "in mm:" << qApp->desktop()->heightMM();
+    return coef*mm;
 }
 
 QSize MenuItemParameters::getItemSize() {
@@ -168,9 +178,7 @@ QSize MenuItemParameters::getItemSize() {
     static const int MAX_PART_OF_SCREEN = 5;  // if 1/5 of screen if less than sizeForFingersMM,
                                            // set size as 1/5 of screen
     QRect rect = qApp->desktop()->availableGeometry();
-    int coef = qApp->desktop()->height() / qApp->desktop()->heightMM();
-    //qDebug() << "desktop height" << qApp->desktop()->height() << "in mm:" << qApp->desktop()->heightMM();
-    int height = std::min(rect.height()/MAX_PART_OF_SCREEN, coef*SIZE_FOR_FINGERS_MM);
+    int height = std::min(rect.height()/MAX_PART_OF_SCREEN, MMtoPixels(SIZE_FOR_FINGERS_MM));
     return QSize(rect.width(), height);
 }
 
