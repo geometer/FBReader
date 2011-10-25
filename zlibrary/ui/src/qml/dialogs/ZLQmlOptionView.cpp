@@ -56,7 +56,7 @@ ZLQmlOptionView::Type ZLQmlOptionView::type() const {
 }
 
 QString ZLQmlOptionView::name() const {
-	return QString::fromStdString(myName);
+	return QString::fromStdString(myName).remove(QLatin1Char('&'));
 }
 
 bool ZLQmlOptionView::visible() const {

@@ -26,6 +26,7 @@ Page {
 	property variant handler
 	property variant rootWindow
 	property variant sections: handler ? handler.sections : null
+	property bool invertedTheme: true
 	
 	orientationLock: rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic	
 	onSectionsChanged: pagesModel.update()
@@ -70,6 +71,7 @@ Page {
 		Page {
 			id: contentPage
 			property alias handler: content.handler
+			property bool invertedTheme: true
 			orientationLock: root.rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic	
 			DialogContent {
 				id: content

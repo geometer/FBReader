@@ -23,9 +23,14 @@ import com.nokia.meego 1.0
 PageStackWindow {
 	id: root
 	property bool fixedOrientation: false
+	property bool invertedTheme: pageStack.currentPage !== null
+								 && pageStack.currentPage.invertedTheme !== undefined
+								 && pageStack.currentPage.invertedTheme
 	showToolBar: pageStack.currentPage === null
 				 || pageStack.currentPage.showToolBar === undefined
 				 || pageStack.currentPage.showToolBar
+	
+	onInvertedThemeChanged: theme.inverted = root.invertedTheme
 	
 	initialPage: MainPage {
 		id: mainPage
