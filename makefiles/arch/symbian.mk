@@ -4,6 +4,7 @@ endif
 SHAREDIR_MACRO=!!
 IMAGEDIR = !!\\\\pixmaps
 APPIMAGEDIR = !!\\\\pixmaps\\\\FBReader
+OSNAME = Symbian
 
 SDK_ROOT = /opt/QtSDK/Symbian/SDKs/Symbian1
 ARM_DIR = /usr/arm-none-symbianelf

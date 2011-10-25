@@ -77,6 +77,9 @@ void ZLQmlLibraryImplementation::run(ZLApplication *application) {
 	static_cast<ZLQtNetworkManager&>(ZLNetworkManager::Instance()).initPaths();
 	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 	qApp->exec();
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 	delete application;
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 }

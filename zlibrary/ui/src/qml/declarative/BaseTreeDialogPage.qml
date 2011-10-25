@@ -35,6 +35,7 @@ Page {
 	property variant rootIndex
 	property int revision: 0
     default property alias contentChildren: content.data
+	property bool invertedTheme: true
 	
 	Connections {
 		target: root.handler

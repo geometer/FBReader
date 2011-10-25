@@ -3,6 +3,8 @@
 
 #include <QtCore/QAbstractListModel>
 
+#include <QtGui/QDialog>
+
 #include <ZLTreeListener.h>
 
 class ZLQtTreeModel : public QAbstractListModel {
@@ -44,6 +46,8 @@ public:
 private:
 	ZLTreeListener::RootNode& myRootNode;
 	ZLTreeNode* myCurrentNode;
+        //TODO remove two-sided connection
+        QDialog* myTreeDialog;
 
 };
 

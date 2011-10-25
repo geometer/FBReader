@@ -42,6 +42,7 @@ ZLQmlFileSystemModel::ZLQmlFileSystemModel(QObject *parent) :
 
 void ZLQmlFileSystemModel::setRootPath(const QString &path) {
 	QFileSystemModel::setRootPath(path);
+	sort(0, Qt::AscendingOrder);
 }
 
 QVariant ZLQmlFileSystemModel::rootIndex() const {

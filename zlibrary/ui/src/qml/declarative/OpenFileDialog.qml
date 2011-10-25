@@ -29,7 +29,7 @@ Sheet {
 
 	content: ListView {
         id: view
-		anchors.fill: parent
+		anchors { leftMargin: 14; fill: parent; rightMargin: 14 }
         model: VisualDataModel {
 			id: visualModel
 			rootIndex: dirModel.rootIndex

@@ -26,7 +26,6 @@ public:
 
 public slots:
 	void back();
-        void showMenu(QModelIndex index);
 	void enter(QModelIndex index);
 
 private:
