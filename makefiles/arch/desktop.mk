@@ -5,6 +5,7 @@ ifeq "$(INSTALLDIR)" ""
 endif
 IMAGEDIR = $(INSTALLDIR)/share/pixmaps
 APPIMAGEDIR = $(INSTALLDIR)/share/pixmaps/%APPLICATION_NAME%
+OSNAME = TestOnDesktop
 
 CC = ccache gcc
 AR = ar rsu

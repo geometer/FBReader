@@ -75,7 +75,6 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	connect(action, SIGNAL(triggered()), this, SLOT(back()));
 	addAction( action );
 
-        connect(myView, SIGNAL(doubleClicked(QModelIndex)), this, SLOT(showMenu(QModelIndex)));
         connect(myView, SIGNAL(clicked(QModelIndex)), this, SLOT(enter(QModelIndex)));
 	myView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 

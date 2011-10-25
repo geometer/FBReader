@@ -2,11 +2,13 @@
 #include <ZLTreeActionNode.h>
 #include <ZLTreePageNode.h>
 #include <ZLApplication.h>
+#include <ZLNetworkManager.h>
 
 #include "ZLQtTreeModel.h"
 #include "../image/ZLQtImageManager.h"
 #include "../dialogs/ZLQtPageDialog.h"
 #include "../menu/DrillDownMenu.h"
+#include "../network/ZLQtNetworkManager.h"
 
 #include "../dialogs/ZLQtUtil.h"
 
@@ -15,11 +17,18 @@
 #include <QtGui/QPainter>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QApplication>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
 
 #include "../menu/DrillDownMenu.h"
 
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, QObject *parent) :  QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog) {
 	myCurrentNode = &myRootNode;
+
+        //network
+        connect(&myManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
+        myEmptyPixmap = QPixmap(MenuItemParameters::getImageSize());
+        myEmptyPixmap.fill(Qt::transparent);
 }
 
 bool ZLQtTreeModel::back() {
@@ -74,10 +83,6 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                             return QString::fromStdString(titledNode->title());
                     else
                             return QString("No title");
-//            case Qt::DecorationRole:
-//                    if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
-//                        return titledNode->image();
-//                    }
             case Qt::DecorationRole:
                 if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
                     QString imageUrl = QString::fromStdString(titledNode->imageUrl());
@@ -87,10 +92,12 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                         return ZLImageToQPixmap(titledNode->image(), 0, MenuItemParameters::getImageSize() );
                     } else {
                         QUrl url = QUrl::fromEncoded(titledNode->imageUrl().c_str());
-                        qDebug() << "URL" << url << url.toLocalFile();
+                        //qDebug() << "URL" << url << url.toLocalFile();
                         if (url.scheme() == QLatin1String("file")) {
                             qDebug() << url << url.toLocalFile();
                             return urlToQPixmap(url, 0, MenuItemParameters::getImageSize());
+                        } else {
+                            return downloadImage(url);
                         }
                     }
                 }
@@ -146,7 +153,8 @@ QPixmap ZLQtTreeModel::scalePixmap(const QPixmap& pixmap, const QSize& requested
     if (!requestedSize.isValid()) {
         return pixmap;
     }
-    if (notScaleIfLess && requestedSize.width() <= pixmap.width() && requestedSize.height() <= pixmap.height()) {
+    if (notScaleIfLess && requestedSize.width() > pixmap.width() && requestedSize.height() > pixmap.height()) {
+        //qDebug() << "notScaleifLess!" << requestedSize << pixmap.size();
         return pixmap;
     }
     return pixmap.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
@@ -214,3 +222,27 @@ void ZLQtTreeModel::onNodeUpdated(ZLTreeNode *node) {
 //    QModelIndex index = createIndex(node);
 //    emit dataChanged(index, index);
 }
+
+void ZLQtTreeModel::onRequestFinished(QNetworkReply* reply) {
+    //qDebug() << Q_FUNC_INFO<< reply << reply->url();
+    QPixmap pixmap;
+    pixmap.loadFromData(reply->readAll());
+    QSize imageSize =  MenuItemParameters::getImageSize();
+    pixmap = centerPixmap(scalePixmap(pixmap, imageSize, false), imageSize);
+    myCache[reply->url().toString()] = pixmap;
+    //TODO there should be dataChanged instead of layoutChanged()
+    emit layoutChanged();
+}
+
+ QPixmap ZLQtTreeModel::downloadImage(QUrl url) const {
+     if (!url.isValid()) {
+         return myEmptyPixmap;
+     }
+     if (myCache.contains(url.toString())) {
+         return myCache.value(url.toString());
+     }
+     QNetworkRequest request(url);
+     myManager.get(request);
+     qDebug() << myEmptyPixmap.size();
+     return myEmptyPixmap;
+ }

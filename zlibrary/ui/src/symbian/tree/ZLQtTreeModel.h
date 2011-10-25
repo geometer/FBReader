@@ -1,8 +1,10 @@
 #ifndef __ZLQTTREEMODEL_H__
 #define __ZLQTTREEMODEL_H__
 
-#include <QtCore/QAbstractListModel>
+#include <QtCore/QMap>
 
+#include <QtCore/QAbstractListModel>
+#include <QtNetwork/QNetworkAccessManager>
 #include <QtGui/QDialog>
 
 #include <ZLTreeListener.h>
@@ -13,7 +15,6 @@ class ZLQtTreeModel : public QAbstractListModel {
 public:
         enum TreeRoles {
                 SubTitleRole = Qt::UserRole,
-                ImageSizeRole,
                 ActivatableRole,
                 PageRole
         };
@@ -41,16 +42,28 @@ public:
 
 signals:
 
-public:
+public slots:
 	bool back();
 	bool enter(QModelIndex index);
+
+private slots: //network
+        void onRequestFinished(QNetworkReply*);
+
+private: //network
+        QPixmap downloadImage(QUrl url) const;
 
 private:
 	ZLTreeListener::RootNode& myRootNode;
 	ZLTreeNode* myCurrentNode;
-        //TODO remove two-sided connection
+        //TODO remove two-sided pointing (model should not know about ui element)
         QDialog* myTreeDialog;
 
+private: //network
+        //TODO refactor it: network manager in model is bad
+        mutable QNetworkAccessManager myManager;
+        QPixmap myEmptyPixmap;
+        //TODO cache should not be deleted after closing net library dialog (??)
+        QMap<QString,QPixmap> myCache;
 };
 
 #endif /* __ZLQTTREEMODEL_H__ */
