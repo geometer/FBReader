@@ -39,7 +39,9 @@ void SubtitleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
                          option.palette.highlightedText().color() :
                          option.palette.text().color());
         const int textMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, &option) + 2;
-        QRect textRect = option.rect.adjusted(textMargin, 0, -textMargin, 0);
+        const int iconMargin = MenuItemParameters::getImageSize().width() +
+                QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing, &option);
+        QRect textRect = option.rect.adjusted(textMargin+iconMargin, 0, -(textMargin+iconMargin), 0);
         painter->setFont(MenuItemParameters::getSubtitleFont());
         QString elidedSubtitle = painter->fontMetrics().elidedText(subtitle,Qt::ElideRight, textRect.width());
         painter->drawText(textRect, Qt::AlignBottom,  elidedSubtitle);

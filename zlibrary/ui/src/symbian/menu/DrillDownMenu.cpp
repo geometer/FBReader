@@ -168,6 +168,11 @@ QSize MenuItemParameters::getSize() {
     return QSize(rect.width(), height);
 }
 
+QSize MenuItemParameters::getImageSize() {
+    int height = getSize().height();
+    return QSize(height,height);
+}
+
 QFont MenuItemParameters::getFont() {
     static const qreal COEF = 1.15;
     QFont font = qApp->desktop()->font();

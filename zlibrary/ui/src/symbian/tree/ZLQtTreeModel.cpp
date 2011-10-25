@@ -4,11 +4,14 @@
 #include <ZLApplication.h>
 
 #include "ZLQtTreeModel.h"
+#include "../image/ZLQtImageManager.h"
 #include "../dialogs/ZLQtPageDialog.h"
+#include "../menu/DrillDownMenu.h"
 
 #include "../dialogs/ZLQtUtil.h"
 
 #include <QtCore/QDebug>
+#include <QtCore/QUrl>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QApplication>
 
@@ -73,6 +76,23 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
 //                    if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
 //                        return titledNode->image();
 //                    }
+            case Qt::DecorationRole:
+                if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
+                    QString imageUrl = QString::fromStdString(titledNode->imageUrl());
+                    if (!imageUrl.isEmpty()) {
+                        //TODO change pictures for symbian on android's
+                        //TODO c_str or fromStdString?
+                        QUrl url = QUrl::fromEncoded(titledNode->imageUrl().c_str());
+                        qDebug() << "URL" << url << url.toLocalFile();
+                        if (url.scheme() == QLatin1String("file")) {
+                            qDebug() << url << url.toLocalFile();
+                            return urlToQPixmap(url, 0, MenuItemParameters::getImageSize());
+                        }
+                    } else {
+                        return ZLImageToQPixmap(titledNode->image(), 0, MenuItemParameters::getImageSize() );
+                    }
+                }
+                break;
             case SubTitleRole:
                     if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
                             return QString::fromStdString(titledNode->subtitle());
@@ -89,6 +109,35 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
         return QVariant();
 }
 
+QPixmap ZLQtTreeModel::ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, const QSize &requestedSize) {
+    if (image.isNull()) {
+       return QPixmap();
+    }
+    shared_ptr<ZLImageData> imageData = ZLImageManager::Instance().imageData(*image);
+    if (imageData.isNull()) {
+        return QPixmap();
+    }
+    const QImage *qImage = static_cast<ZLQtImageData&>(*imageData).image();
+    if (qImage) {
+            if (size)
+                *size = qImage->size();
+            QImage finalImage = *qImage;
+            if (requestedSize.isValid())
+                    finalImage = finalImage.scaled(requestedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+            return QPixmap::fromImage(finalImage);
+    }
+    return QPixmap();
+}
+
+QPixmap ZLQtTreeModel::urlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize) {
+    QPixmap pixmap(url.toLocalFile());
+    QImage finalImage = pixmap.toImage();
+    if (size)
+        *size = finalImage.size();
+    if (requestedSize.isValid())
+            finalImage = finalImage.scaled(requestedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    return QPixmap::fromImage(finalImage);
+}
 
 const ZLTreeNode* ZLQtTreeModel::getTreeNode(const QModelIndex& index) const {
     //qDebug() << Q_FUNC_INFO << index;

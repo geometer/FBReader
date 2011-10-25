@@ -28,6 +28,7 @@ public:
 
 namespace MenuItemParameters {
     QSize getSize();
+    QSize getImageSize();
     QFont getFont();
     QFont getSubtitleFont();
 }

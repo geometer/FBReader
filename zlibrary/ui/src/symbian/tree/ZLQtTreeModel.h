@@ -11,9 +11,14 @@ class ZLQtTreeModel : public QAbstractListModel {
 public:
         enum TreeRoles {
                 SubTitleRole = Qt::UserRole,
+                ImageSizeRole,
                 ActivatableRole,
                 PageRole
         };
+
+public:
+        static QPixmap ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, const QSize &requestedSize);
+        static QPixmap urlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize);
 
 public:
 	explicit ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QObject *parent = 0);

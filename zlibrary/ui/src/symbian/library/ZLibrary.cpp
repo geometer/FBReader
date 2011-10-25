@@ -84,8 +84,10 @@ ZLibraryImplementation::~ZLibraryImplementation() {
 }
 
 bool ZLibrary:: init(int &argc, char **&argv) {
+#ifdef __SYMBIAN__
         freopen("E:\\fbreader-log.txt", "w", stdout);
         fprintf(stdout,"\n");
+#endif
 
 	initLibrary();
 
