@@ -76,34 +76,26 @@ void ZLQtApplicationWindow::init() {
 		const std::string& mainMenu = "Menu";
 		myShowMenuAction = new QAction(QString::fromStdString(mainMenu),this);
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
-		addAction(myShowMenuAction);
+                addAction(myShowMenuAction);
 
 #ifndef 	__SYMBIAN__
 		this->menuBar()->addAction(myShowMenuAction);
 #endif
 
 #ifdef __SYMBIAN__
-		myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
+                myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
 #endif
 
 #ifndef 	__SYMBIAN__
 		this->menuBar()->addAction(myShowMenuAction);
 #endif
 
-		myMenuDialog->showDrillDownMenu(myMenu);
-
-		// don't know exactly why, but if show() doesn't call before setWindowFlags,
-		// it crashes.
-		// Flag is necessary for showing SoftKeys Action
-		show();
-#ifdef 	__SYMBIAN__
-		setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
-#endif
-		showFullScreen();
+                myMenuDialog->showDrillDownMenu(myMenu);
+                showFullScreen();
 }
 
 void ZLQtApplicationWindow::showMenu() {
-	myMenuDialog->setFixedHeight(  qApp->desktop()->availableGeometry().height() * 2 / 3 );
+        myMenuDialog->setFixedHeight(MenuItemParameters::getMenuDialogHeight());
 	myMenuDialog->runNoFullScreen();
 }
 

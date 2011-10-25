@@ -27,6 +27,7 @@ public:
 };
 
 namespace MenuItemParameters {
+    int getMenuDialogHeight();
     QSize getItemSize();
     QSize getImageSize();
     QFont getFont();
@@ -63,7 +64,8 @@ class DrillDownMenuDialog : public QDialog {
     Q_OBJECT
 public:
     DrillDownMenuDialog(QWidget* parent=0);
-    void showDrillDownMenu(DrillDownMenu* menu);
+    //TODO rename next method (because show doesn't mean show)
+    void showDrillDownMenu(DrillDownMenu* menu); //actually, it doesn't show menu, it set it as first
     void showMessage(std::string message);
 public:
 	bool run();

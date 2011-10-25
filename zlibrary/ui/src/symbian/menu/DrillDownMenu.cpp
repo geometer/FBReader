@@ -158,6 +158,11 @@ QVariant NiceSizeListWidgetItem::data (int role) const {
     return QListWidgetItem::data(role);
 }
 
+int MenuItemParameters::getMenuDialogHeight() {
+    static const qreal COEF = 2/3;
+    return qApp->desktop()->availableGeometry().height()*COEF;
+}
+
 QSize MenuItemParameters::getItemSize() {
     static const int SIZE_FOR_FINGERS_MM = 8; // in millimetres
     static const int MAX_PART_OF_SCREEN = 5;  // if 1/5 of screen if less than sizeForFingersMM,
