@@ -12,6 +12,7 @@
 
 #include <QtCore/QDebug>
 #include <QtCore/QUrl>
+#include <QtGui/QPainter>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QApplication>
 
@@ -80,17 +81,17 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
             case Qt::DecorationRole:
                 if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
                     QString imageUrl = QString::fromStdString(titledNode->imageUrl());
-                    if (!imageUrl.isEmpty()) {
-                        //TODO change pictures for symbian on android's
-                        //TODO c_str or fromStdString?
+                    if (imageUrl.isEmpty()) {
+                        //TODO add caching here; at first, std image should be called, then
+                        //in other thread should be transform operations, and dataChanged callings
+                        return ZLImageToQPixmap(titledNode->image(), 0, MenuItemParameters::getImageSize() );
+                    } else {
                         QUrl url = QUrl::fromEncoded(titledNode->imageUrl().c_str());
                         qDebug() << "URL" << url << url.toLocalFile();
                         if (url.scheme() == QLatin1String("file")) {
                             qDebug() << url << url.toLocalFile();
                             return urlToQPixmap(url, 0, MenuItemParameters::getImageSize());
                         }
-                    } else {
-                        return ZLImageToQPixmap(titledNode->image(), 0, MenuItemParameters::getImageSize() );
                     }
                 }
                 break;
@@ -99,7 +100,7 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                             return QString::fromStdString(titledNode->subtitle());
                     }
             case Qt::SizeHintRole:
-                    return MenuItemParameters::getSize();
+                    return MenuItemParameters::getItemSize();
             case Qt::FontRole:
                 return MenuItemParameters::getFont();
 //        case ActivatableRole:
@@ -124,9 +125,7 @@ QPixmap ZLQtTreeModel::ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, 
             if (size)
                 *size = qImage->size();
             QImage finalImage = *qImage;
-            if (requestedSize.isValid())
-                    finalImage = finalImage.scaled(requestedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-            return QPixmap::fromImage(finalImage);
+            return centerPixmap(scalePixmap(QPixmap::fromImage(finalImage), requestedSize, false), requestedSize);
     }
     return QPixmap();
 }
@@ -140,9 +139,30 @@ QPixmap ZLQtTreeModel::urlToQPixmap(QUrl url, QSize *size, const QSize &requeste
     if (finalImage.isNull()) {
         return QPixmap();
     }
-    if (requestedSize.isValid())
-            finalImage = finalImage.scaled(requestedSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    return QPixmap::fromImage(finalImage);
+    return scalePixmap(QPixmap::fromImage(finalImage), requestedSize, true);
+}
+
+QPixmap ZLQtTreeModel::scalePixmap(const QPixmap& pixmap, const QSize& requestedSize, bool notScaleIfLess) {
+    if (!requestedSize.isValid()) {
+        return pixmap;
+    }
+    if (notScaleIfLess && requestedSize.width() <= pixmap.width() && requestedSize.height() <= pixmap.height()) {
+        return pixmap;
+    }
+    return pixmap.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+}
+
+QPixmap ZLQtTreeModel::centerPixmap(const QPixmap& pixmap, const QSize& requestedSize) {
+    if (!requestedSize.isValid()) {
+        return pixmap;
+    }
+    QPixmap centeredPixmap(requestedSize);
+    centeredPixmap.fill(Qt::transparent);
+    QPainter painter(&centeredPixmap);
+    qreal diffX = (requestedSize.width() - pixmap.width()) / 2;
+    qreal diffY = (requestedSize.height() - pixmap.height()) / 2;
+    painter.drawPixmap(QPointF(diffX, diffY), pixmap);
+    return centeredPixmap;
 }
 
 const ZLTreeNode* ZLQtTreeModel::getTreeNode(const QModelIndex& index) const {

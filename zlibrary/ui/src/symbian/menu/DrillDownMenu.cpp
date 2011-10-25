@@ -151,25 +151,28 @@ NiceSizeListWidgetItem::NiceSizeListWidgetItem(const QIcon &icon, const QString 
 QVariant NiceSizeListWidgetItem::data (int role) const {
     if (role == Qt::SizeHintRole){
         //qDebug() << Q_FUNC_INFO << role << index;
-        return MenuItemParameters::getSize();
+        return MenuItemParameters::getItemSize();
     } else if (role == Qt::FontRole) {
         return MenuItemParameters::getFont();
     }
     return QListWidgetItem::data(role);
 }
 
-QSize MenuItemParameters::getSize() {
+QSize MenuItemParameters::getItemSize() {
     static const int SIZE_FOR_FINGERS_MM = 8; // in millimetres
     static const int MAX_PART_OF_SCREEN = 5;  // if 1/5 of screen if less than sizeForFingersMM,
                                            // set size as 1/5 of screen
     QRect rect = qApp->desktop()->availableGeometry();
-    int coef = qApp->desktop()->height() / qApp->desktop()->heightMM();;
+    int coef = qApp->desktop()->height() / qApp->desktop()->heightMM();
+    //qDebug() << "desktop height" << qApp->desktop()->height() << "in mm:" << qApp->desktop()->heightMM();
     int height = std::min(rect.height()/MAX_PART_OF_SCREEN, coef*SIZE_FOR_FINGERS_MM);
     return QSize(rect.width(), height);
 }
 
 QSize MenuItemParameters::getImageSize() {
-    int height = getSize().height();
+    static const qreal COEF = 0.9;
+    int height = getItemSize().height();
+    height *= COEF;
     return QSize(height,height);
 }
 

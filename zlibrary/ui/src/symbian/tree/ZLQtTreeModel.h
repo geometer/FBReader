@@ -21,9 +21,11 @@ public:
 public:
         static QPixmap ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, const QSize &requestedSize);
         static QPixmap urlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize);
+        static QPixmap scalePixmap(const QPixmap& image, const QSize& requestedSize, bool notScaleIfLess);
+        static QPixmap centerPixmap(const QPixmap& image, const QSize& requestedSize);
 
 public:
-	explicit ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QObject *parent = 0);
+        explicit ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, QObject *parent = 0);
 
 public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
