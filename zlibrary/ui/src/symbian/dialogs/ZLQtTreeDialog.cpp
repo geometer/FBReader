@@ -100,38 +100,6 @@ void ZLQtTreeDialog::enter(QModelIndex index) {
 	}
 }
 
-class WrapperAction : public ZLApplication::Action {
-public:
-    WrapperAction(shared_ptr<ZLTreeAction> runnable) : myRunnable(runnable) {}
-    bool isVisible() const { return myRunnable->makesSense(); }
-    void run() {
-        //ZLDialogManager::Instance().wait(ZLResourceKey("loadingBook"),*myRunnable);
-        myRunnable->run();
-    }
-
-private:
-    shared_ptr<ZLTreeAction> myRunnable;
-};
-
-void ZLQtTreeDialog::showMenu(QModelIndex index) {
-        //qDebug() << Q_FUNC_INFO << index;
-        const ZLTreeNode* node = myModel->getTreeNode(index);
-        if (node == 0) {
-            return;
-        }
-        DrillDownMenuDialog dialog;
-        DrillDownMenu* menu = new DrillDownMenu;
-
-        const std::vector<shared_ptr<ZLTreeAction> > & actions = node->actions();
-        for (size_t i=0; i<actions.size(); ++i) {
-            if (actions[i]->makesSense()) {
-                menu->addItem(node->actionText(actions[i]), new WrapperAction(actions[i]));
-            }
-        }
-        dialog.showDrillDownMenu(menu);
-        dialog.runNoFullScreen();
-}
-
 void ZLQtTreeDialog::run() {
 	//TODO should return QDialog::Accepted ??
 	//return exec() == QDialog::Accepted;
@@ -143,7 +111,7 @@ void ZLQtTreeDialog::run() {
 }
 
 void ZLQtTreeDialog::onCloseRequest() {
-    //TODO implement
+    this->close();
 }
 
 void ZLQtTreeDialog::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {

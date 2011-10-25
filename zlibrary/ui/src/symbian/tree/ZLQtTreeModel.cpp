@@ -14,7 +14,7 @@
 
 #include "../menu/DrillDownMenu.h"
 
-ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QObject *parent) :  QAbstractListModel(parent), myRootNode(rootNode) {
+ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, QObject *parent) :  QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog) {
 	myCurrentNode = &myRootNode;
 }
 
@@ -38,7 +38,8 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
 			return false;
 		}
         } else if (ZLTreePageNode *pageNode = zlobject_cast<ZLTreePageNode*>(node)) {
-                ZLQtPageDialog dialog(pageNode->content());
+                ZLQtPageDialog dialog(*pageNode,myTreeDialog);
+                connect(myTreeDialog, SIGNAL(finished(int)), &dialog, SLOT(done(int)));
                 dialog.run();
 	} else {
 		myCurrentNode = node;
@@ -84,6 +85,7 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
 //        case ActivatableRole:
 //                return zlobject_cast<ZLTreeActionNode*>(node) != NULL;
 //        case PageRole:
+                  //TODO move code from this model to view, that will be work with roles
 //                return zlobject_cast<ZLTreePageNode*>(node) != NULL;
         }
         return QVariant();
