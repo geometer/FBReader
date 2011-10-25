@@ -4,6 +4,7 @@ include $(ROOTDIR)/makefiles/arch/unix.mk
 INSTALLDIR = /usr
 IMAGEDIR = $(INSTALLDIR)/share/%APPLICATION_NAME%/icons
 APPIMAGEDIR = $(IMAGEDIR)
+OSNAME = MeeGo
 
 CC = gcc
 AR = ar rsu
