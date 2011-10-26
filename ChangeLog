@@ -1,4 +1,5 @@
 ===== 0.99.4 (October 26, 2011) =====
+* Added option to keep lines at page scrolling
 * Fixed several segfaults connected with network library.
 * Removed '&' charachter from field names in dialogs.
 * Color scheme in options and trees is changed to inverted (Meego).
