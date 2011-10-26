@@ -77,6 +77,7 @@ Item {
 	SelectionDialog {
 		id: dialog
 		titleText: handler.name
+		model: ListModel{}
 		onAccepted: {
 			handler.currentIndex = dialog.selectedIndex;
 			dialog.model.clear();
