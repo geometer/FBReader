@@ -17,6 +17,8 @@
 #include <QtGui/QDesktopWidget>
 #include <QtCore/QDebug>
 
+#include <QtScrollerProperties>
+
 #include <ZLibrary.h>
 #include <ZLPopupData.h>
 
@@ -31,8 +33,9 @@
 #include "../platform/VolumeKeysCapturer.h"
 #endif
 
-#include "../actions/LibraryActions.h"
-
+//#include "../actions/LibraryActions.h"
+//TODO remove it:
+//#include "../../../../../fbreader/src/fbreader/FBReaderActions.h"
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 		new ZLQtApplicationWindow(application);
@@ -52,13 +55,12 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 		const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
 		QPixmap icon(QString::fromStdString(iconFileName));
-        setWindowIcon(icon);
-
-		// FIXME: Find the way to get somewhere this action names
-		application->addAction("library", new ShowMenuLibraryAction());
+                setWindowIcon(icon);
 
 		myMenuDialog = new DrillDownMenuDialog(this);
 		myMenu = new DrillDownMenu;
+
+                setScrollerProperties();
 
 #ifdef 	__SYMBIAN__
 		myVolumeKeyCapture = new VolumeKeysCapturer(this);
@@ -74,30 +76,27 @@ void ZLQtApplicationWindow::init() {
 		const std::string& mainMenu = "Menu";
 		myShowMenuAction = new QAction(QString::fromStdString(mainMenu),this);
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
-		addAction(myShowMenuAction);
+                addAction(myShowMenuAction);
+
+#ifndef 	__SYMBIAN__
+		this->menuBar()->addAction(myShowMenuAction);
+#endif
 
 #ifdef __SYMBIAN__
-		myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
+                myShowMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
 #endif
 
 #ifndef 	__SYMBIAN__
 		this->menuBar()->addAction(myShowMenuAction);
 #endif
 
-		myMenuDialog->showDrillDownMenu(myMenu);
+                myMenuDialog->showDrillDownMenu(myMenu);
 
-		// don't know exactly why, but if show() doesn't call before setWindowFlags,
-		// it crashes.
-		// Flag is necessary for showing SoftKeys Action
-		show();
-#ifdef 	__SYMBIAN__
-		setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
-#endif
-		showFullScreen();
+                showFullScreen();
 }
 
 void ZLQtApplicationWindow::showMenu() {
-	myMenuDialog->setFixedHeight(  qApp->desktop()->availableGeometry().height() * 2 / 3 );
+        myMenuDialog->setFixedHeight(MenuItemParameters::getMenuDialogHeight());
 	myMenuDialog->runNoFullScreen();
 }
 
@@ -193,7 +192,8 @@ void ZLQtApplicationWindow::processAllEvents() {
 }
 
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
-		ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application());
+                ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application());
+                connect(viewWidget, SIGNAL(tapBottomZoneClicked()), this, SLOT(showMenu()));
 		setCentralWidget(viewWidget->widget());
 		//viewWidget->widget()->show();
 		return viewWidget;
@@ -211,4 +211,16 @@ void ZLQtApplicationWindow::setCaption(const std::string &caption) {
 
 void ZLQtApplicationWindow::setFocusToMainWidget() {
         centralWidget()->setFocus();
+}
+
+void ZLQtApplicationWindow::setScrollerProperties() const {
+    QtScrollerProperties sp;
+    sp.setScrollMetric(QtScrollerProperties::MousePressEventDelay,  qreal(0.1));
+    sp.setScrollMetric(QtScrollerProperties::DragStartDistance,   qreal(2.5/1000) );
+    sp.setScrollMetric(QtScrollerProperties::DragVelocitySmoothingFactor, qreal(0.85));
+    sp.setScrollMetric(QtScrollerProperties::DecelerationFactor, 0.3);
+    sp.setScrollMetric(QtScrollerProperties::AcceleratingFlickMaximumTime,  qreal(0.125));
+    sp.setScrollMetric(QtScrollerProperties::SnapTime,  qreal(1));
+    sp.setScrollMetric(QtScrollerProperties::FrameRate,   QtScrollerProperties::Fps60);
+    QtScrollerProperties::setDefaultScrollerProperties(sp);
 }

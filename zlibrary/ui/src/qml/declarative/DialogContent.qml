@@ -25,13 +25,12 @@ ListView {
 	id: root
 	
 	property variant handler
+	property string imageSource: ""
 	property bool invertedTheme: false
 
-	anchors.fill: parent
-	anchors { leftMargin: 15; topMargin: 15; rightMargin: 15 }
 	model: VisualDataModel {
 		id: itemModel
-		model: handler ? handler.items : null
+		model: handler ? fixItems(handler.items, imageSource) : null
 		delegate: Item {
 			id: contentArea
 			width: root.width
@@ -40,7 +39,9 @@ ListView {
 			enabled: modelData.enabled
 			property variant child: __ensureChild(modelData, modelData.visible)
 			function __ensureChild(modelData, visible) {
-				if (!child && visible)
+				if (!child && modelData.imageSource !== undefined)
+					child = imageComponent.createObject(contentArea);
+				else if (!child && visible)
 					child = root.createChild(contentArea, modelData)
 				return child;
 			}
@@ -50,6 +51,13 @@ ListView {
 	property variant __componentCache: {}
 	
 	onInvertedThemeChanged: fixChildren(root)
+	
+	function fixItems(items, imageSource) {
+		if (imageSource === "")
+			return items;
+		items.unshift({ "imageSource": imageSource, "enabled": true, "visible": true });
+		return items;
+	}
 
 	function fixChildren(child) {
 		if (child.platformStyle !== undefined
@@ -129,5 +137,19 @@ ListView {
 			}
 		}
 		return child;
+	}
+	
+	Component {
+		id: imageComponent
+		Image {
+			id: image
+			anchors.horizontalCenter: parent.horizontalCenter
+//			anchors.fill: parent
+			fillMode: Image.PreserveAspectFit
+			source: root.imageSource
+			smooth: true
+			
+//			Component.onCompleted: 
+		}
 	}
 }

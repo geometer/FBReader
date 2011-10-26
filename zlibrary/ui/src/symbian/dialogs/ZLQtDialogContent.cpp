@@ -12,7 +12,8 @@ void ZLQtDialogContent::close() {
     // for instance, here can be addStretch
 }
 
-ZLQtDialogContent::ZLQtDialogContent(QWidget *widget, const ZLResource &resource) : ZLDialogContent(resource), myWidget(widget) {
+ZLQtDialogContent::ZLQtDialogContent(const ZLResource &resource) : ZLDialogContent(resource) {
+        myWidget = new QWidget;
         myLayout = new QVBoxLayout;
         myLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
         myWidget->setLayout(myLayout);
@@ -20,7 +21,9 @@ ZLQtDialogContent::ZLQtDialogContent(QWidget *widget, const ZLResource &resource
 }
 
 ZLQtDialogContent::~ZLQtDialogContent() {
-	delete myWidget;
+        //TODO check responsibility from life time for this object.
+        //best case -- ZLQtDialogContent deletes it's widget itself
+        //delete myWidget;
 }
 
 void ZLQtDialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
@@ -40,7 +43,7 @@ void ZLQtDialogContent::addItem(QWidget *widget) {
         myLayout->addWidget(widget);
 
         //Expanding
-        widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+		widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 }
 
 void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
@@ -94,5 +97,5 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 }
 
 QWidget *ZLQtDialogContent::widget() {
-	return myWidget;
+        return myWidget;
 }

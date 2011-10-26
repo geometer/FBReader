@@ -35,6 +35,7 @@ public:
 	Q_INVOKABLE void removeTaskInternal(shared_ptr<ZLRunnable> task);
 
 private:
+	ZLQtTimeManager();
 	void timerEvent(QTimerEvent *event);
 
 private:

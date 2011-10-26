@@ -33,6 +33,7 @@ public:
 
 private:
 	static shared_ptr<ZLImage> getImageByNetworkUrl(const std::string &url, const std::string &prefix);
+	static shared_ptr<ZLImage> getImageByFileUrl(const std::string &url);
 	static shared_ptr<ZLImage> getImageByDataUrl(const std::string &url);
 
 private:

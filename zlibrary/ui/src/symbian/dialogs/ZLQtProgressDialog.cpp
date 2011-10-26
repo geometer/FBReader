@@ -6,9 +6,10 @@
 #include <QtGui/QProgressDialog>
 #include <QtCore/QDebug>
 
+#include <ZLTimeManager.h>
+
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
-#include <QtCore/QDebug>
 
 ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myDialog(0) {
 
@@ -64,12 +65,10 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message) : QDialog(0) {
 		myLayout->addWidget(myLabel);
 		myLayout->addWidget(myProgressBar);
 
-
 		this->setLayout(myLayout);
 
 		//setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
 		setWindowState(Qt::WindowFullScreen);
-
 
 //        qApp->processEvents();
 //        usleep(5000);

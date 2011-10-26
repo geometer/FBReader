@@ -35,7 +35,9 @@
 #include "../dialogs/ZLQmlDialogManager.h"
 #include "ZLQmlSwipeGestureRecognizer.h"
 #include "../util/ZLQtKeyUtil.h"
-#include "../../../../core/src/application/ZLApplicationWindow.h"
+#include "../application/ZLQmlApplicationWindow.h"
+#include "ZLQmlTreeImageProvider.h"
+#include "ZLQmlNetworkAccessFactory.h"
 
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
@@ -274,8 +276,8 @@ QScrollBar *ZLQmlViewObject::addScrollBar(QGridLayout *layout, Qt::Orientation o
 	return 0;
 }
 
-ZLQmlViewObject::ZLQmlViewObject(QObject *parent, ZLApplication *application)
-    : QObject(parent), ZLViewWidget((ZLView::Angle)application->AngleStateOption.value()), myApplication(application) {
+ZLQmlViewObject::ZLQmlViewObject(ZLApplication *application)
+    : ZLViewWidget((ZLView::Angle)application->AngleStateOption.value()), myApplication(application) {
 //	myFrame = new QWidget();
 //	QGridLayout *layout = new QGridLayout();
 //	layout->setMargin(0);
@@ -348,12 +350,16 @@ int ZLQmlScrollBarInfo::bottom() const {
 
 ZLQmlViewWidget::ZLQmlViewWidget(QWidget *parent, ZLQmlViewObject &holder) : QDeclarativeView(parent), myHolder(holder) {
 	//setBackgroundMode(NoBackground);
+	engine()->setNetworkAccessManagerFactory(new ZLQmlNetworkAccessFactory);
+	engine()->addImageProvider(QLatin1String("tree"), new ZLQmlTreeImageProvider);
 	QFont font;
 	font.setFamily(QLatin1String("Nokia Pure"));
 	font.setPointSize(24);
 	qApp->setFont(font);
 	setOptimizationFlags(QGraphicsView::DontSavePainterState);
-	rootContext()->setContextProperty(QLatin1String("applicationInfo"), holder.parent());
+	
+	rootContext()->setContextProperty(QLatin1String("applicationInfo"),
+	                                  static_cast<ZLQmlApplicationWindow*>(&ZLApplicationWindow::Instance()));
 	rootContext()->setContextProperty(QLatin1String("objectHolder"), &holder);
 	ZLDialogManager *dialogManager = &ZLDialogManager::Instance();
 	QObject *qDialogManager = static_cast<ZLQmlDialogManager*>(dialogManager);
@@ -416,8 +422,10 @@ void ZLQmlBookContent::repaint() {
 	if (myHolder->view().isNull())
 		return;
 	// Mey be there is way of optimization?
-	if (myPixmap.size() != QSize(width(), height()))
+	if (myPixmap.width() != width() || myPixmap.height() < height()) {
+		qDebug() << "Change size from" << myPixmap.size() << "to" << QSize(width(), height());
 		myPixmap = QPixmap(width(), height());
+	}
 	ZLQmlPaintContext &context = static_cast<ZLQmlPaintContext&>(myHolder->view()->context());
 	QPainter painter(&myPixmap);
 	context.beginPaint(width(), height(), &painter);

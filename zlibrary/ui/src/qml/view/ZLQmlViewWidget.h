@@ -39,7 +39,7 @@ class ZLQmlViewObject : public QObject, public ZLViewWidget {
 	Q_PROPERTY(QObject* horizontalScrollBar READ horizontalScrollBar CONSTANT)
 	
 public:
-	ZLQmlViewObject(QObject *parent, ZLApplication *application);
+	ZLQmlViewObject(ZLApplication *application);
 	QWidget *widget();
 	QDeclarativeItem *bookView() const;
 	void setBookView(QDeclarativeItem *bookView);

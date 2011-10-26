@@ -20,6 +20,7 @@
 #include <algorithm>
 
 #include <ZLExecutionData.h>
+#include <ZLTimeManager.h>
 
 #include "LitResBookshelfItem.h"
 #include "LitResAuthenticationManager.h"
@@ -48,18 +49,43 @@ void LitResBookshelfItem::onDisplayItem() {
 	myForceReload = false;
 }
 
-std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children) {
-	LitResAuthenticationManager &mgr =
-		(LitResAuthenticationManager&)*Link.authenticationManager();
-	if (mgr.isAuthorised().Status == B3_FALSE) {
-		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+class LitResBookshelfItemLoaderScope : public ZLUserData {
+public:
+	NetworkItem::List *children;
+	shared_ptr<ZLExecutionData::Listener> listener;
+};
+
+std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener) {
+	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
+	shared_ptr<ZLUserDataHolder> data = new ZLUserDataHolder;
+	LitResBookshelfItemLoaderScope *scope = new LitResBookshelfItemLoaderScope;
+	scope->children = &children;
+	scope->listener = listener;
+	data->addUserData("scope", scope);
+	mgr.isAuthorised(ZLExecutionData::createListener(data, this, &LitResBookshelfItem::onAuthorised));
+	return std::string();
+}
+
+void LitResBookshelfItem::onAuthorised(ZLUserDataHolder &data, const std::string &error) {
+	LitResBookshelfItemLoaderScope &scope = static_cast<LitResBookshelfItemLoaderScope&>(*data.getUserData("scope"));
+	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
+	if (!error.empty()) {
+		scope.listener->finished(error);
+		return;
 	}
-	std::string error;
 	if (myForceReload) {
-		error = mgr.reloadPurchasedBooks();
+		ZLUserDataHolder *dataCopy = new ZLUserDataHolder(data);
+		mgr.reloadPurchasedBooks(ZLExecutionData::createListener(dataCopy, this, &LitResBookshelfItem::onReloaded));
+		return;
 	}
+	onReloaded(data, error);
+}
+
+void LitResBookshelfItem::onReloaded(ZLUserDataHolder &data, const std::string &error) {
+	LitResBookshelfItemLoaderScope &scope = static_cast<LitResBookshelfItemLoaderScope&>(*data.getUserData("scope"));
+	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
 	myForceReload = true;
-	mgr.collectPurchasedBooks(children);
-	std::sort(children.begin(), children.end(), NetworkBookItemComparator());
-	return error;
+	mgr.collectPurchasedBooks(*scope.children);
+	std::sort(scope.children->begin(), scope.children->end(), NetworkBookItemComparator());
+	scope.listener->finished(error);
 }

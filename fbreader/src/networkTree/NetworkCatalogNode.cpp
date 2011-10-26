@@ -37,7 +37,7 @@
 #include "../network/authentication/NetworkAuthenticationManager.h"
 #include "../networkActions/NetworkOperationRunnable.h"
 
-class NetworkCatalogNode::OpenInBrowserAction : public ZLRunnableWithKey {
+class NetworkCatalogNode::OpenInBrowserAction : public ZLTreeAction {
 
 public:
 	OpenInBrowserAction(const std::string &url);
@@ -50,26 +50,27 @@ private:
 
 const ZLTypeId NetworkCatalogNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
-NetworkCatalogNode::NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) : 
-	NetworkContainerNode(parent, atPosition), 
-	myItem(item) {
+NetworkCatalogNode::NetworkCatalogNode(shared_ptr<NetworkItem> item) : myItem(item) {
+//	init();
 }
 
-NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) : 
-	NetworkContainerNode(parent, atPosition), 
-	myItem(item) {
+NetworkCatalogNode::~NetworkCatalogNode() {
 }
 
 void NetworkCatalogNode::init() {
-	if (!item().URLByType[NetworkItem::URL_CATALOG].empty()) {
-		registerAction(new ExpandCatalogAction(*this));
-	}
 	const std::string htmlUrl =
 		item().URLByType[NetworkItem::URL_HTML_PAGE];
 	if (!htmlUrl.empty()) {
 		registerAction(new OpenInBrowserAction(htmlUrl));
 	}
 	registerAction(new ReloadAction(*this));
+}
+
+void NetworkCatalogNode::requestChildren(shared_ptr<ZLExecutionData::Listener> listener) {
+	if (children().empty())
+		updateChildren(listener);
+	else
+		listener->finished();
 }
 
 NetworkCatalogItem &NetworkCatalogNode::item() {
@@ -92,45 +93,59 @@ std::string NetworkCatalogNode::title() const {
 	return myItem->Title;
 }
 
-std::string NetworkCatalogNode::summary() const {
+std::string NetworkCatalogNode::subtitle() const {
 	return ((const NetworkCatalogItem&)*myItem).Summary;
 }
 
-shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
+shared_ptr<ZLImage> NetworkCatalogNode::image() const {
+//	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
+
+//	if (url.empty()) {
+//		return lastResortCoverImage();
+//	}
+
+//	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(url);
+//	if (!image.isNull()) {
+//		return image;
+//	}
+
+//	if (url.find(':') == std::string::npos) {
+//		return defaultCoverImage(url);
+//	}
+
+//	return lastResortCoverImage();
+	return shared_ptr<ZLImage>();
+}
+
+std::string NetworkCatalogNode::imageUrl() const {
 	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
-
 	if (url.empty()) {
-		return lastResortCoverImage();
+		if (ZLTreeTitledNode *node = zlobject_cast<ZLTreeTitledNode*>(parent()))
+			return node->imageUrl();
+	} else if (url.find(':') == std::string::npos) {
+		return FBNode::defaultImageUrl(url);
 	}
-
-	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(url);
-	if (!image.isNull()) {
-		return image;
-	}
-
-	if (url.find(':') == std::string::npos) {
-		return defaultCoverImage(url);
-	}
-
-	return lastResortCoverImage();
+	return url;
 }
 
 shared_ptr<ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
-	return ((FBReaderNode*)parent())->coverImage();
+	return 0;
+//	return ((FBReaderNode*)parent())->image();
 }
 
-void NetworkCatalogNode::updateChildren() {
-	if (isOpen()) {
-		open(false);
+void NetworkCatalogNode::updateChildren(shared_ptr<ZLExecutionData::Listener> listener) {
+	myListeners.push_back(listener);
+	if (myListeners.size() == 1) {
+		new LoadSubCatalogRunnable(this);
 	}
+}
+	
+void NetworkCatalogNode::onChildrenReceived(LoadSubCatalogRunnable *runnable) {
 	clear();
+	myChildrenItems = runnable->children();
 
-	myChildrenItems.clear();
-	LoadSubCatalogRunnable loader(item(), myChildrenItems);
-	loader.executeWithUI();
-
-	if (loader.hasErrors()) {
-		loader.showErrorMessage();
+	if (runnable->hasErrors()) {
+		runnable->showErrorMessage();
 	} else if (myChildrenItems.empty()) {
 		ZLDialogManager::Instance().informationBox(ZLResourceKey("emptyCatalogBox"));
 	}
@@ -151,44 +166,11 @@ void NetworkCatalogNode::updateChildren() {
 		NetworkNodesFactory::fillAuthorNode(this, myChildrenItems);
 	}
 	FBReader::Instance().invalidateAccountDependents();
-}
-
-NetworkCatalogNode::ExpandCatalogAction::ExpandCatalogAction(NetworkCatalogNode &node) : myNode(node) {
-}
-
-ZLResourceKey NetworkCatalogNode::ExpandCatalogAction::key() const {
-	return ZLResourceKey(myNode.isOpen() ? "collapseTree" : "expandTree");
-}
-
-void NetworkCatalogNode::ExpandCatalogAction::run() {
-	if (!NetworkOperationRunnable::tryConnect()) {
-		return;
+	for (int i = 0; i < myListeners.size(); ++i) {
+		if (!myListeners.at(i).isNull())
+			myListeners.at(i)->finished(runnable->errorMessage());
 	}
-
-	const NetworkLink &link = myNode.item().Link;
-	if (!link.authenticationManager().isNull()) {
-		NetworkAuthenticationManager &mgr = *link.authenticationManager();
-		IsAuthorisedRunnable checker(mgr);
-		checker.executeWithUI();
-		if (checker.hasErrors()) {
-			checker.showErrorMessage();
-			return;
-		}
-		if (checker.result() == B3_TRUE && mgr.needsInitialization()) {
-			InitializeAuthenticationManagerRunnable initializer(mgr);
-			initializer.executeWithUI();
-			if (initializer.hasErrors()) {
-				LogOutRunnable logout(mgr);
-				logout.executeWithUI();
-			}
-		}
-	}
-
-	if (myNode.myChildrenItems.empty()) {
-		myNode.updateChildren();
-	}
-	myNode.expandOrCollapseSubtree();
-	FBReader::Instance().refreshWindow();
+	myListeners.clear();
 }
 
 NetworkCatalogNode::OpenInBrowserAction::OpenInBrowserAction(const std::string &url) : myURL(url) {
@@ -210,7 +192,8 @@ ZLResourceKey NetworkCatalogNode::ReloadAction::key() const {
 }
 
 bool NetworkCatalogNode::ReloadAction::makesSense() const {
-	return myNode.isOpen();
+//	return myNode.isOpen();
+	return true;
 }
 
 void NetworkCatalogNode::ReloadAction::run() {
@@ -218,7 +201,7 @@ void NetworkCatalogNode::ReloadAction::run() {
 		return;
 	}
 
-	myNode.updateChildren();
-	myNode.expandOrCollapseSubtree();
+	myNode.updateChildren(0);
+//	myNode.expandOrCollapseSubtree();
 	FBReader::Instance().refreshWindow();
 }

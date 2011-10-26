@@ -25,13 +25,15 @@
 #include "ZLQmlDialogContent.h"
 #include "ZLQmlOptionView.h"
 
-ZLQmlDialogContent::ZLQmlDialogContent(const ZLResource &resource, QObject *parent)
-    : QObject(parent), ZLDialogContent(resource) {
+ZLQmlDialogContent::ZLQmlDialogContent(const ZLResource &resource)
+    : ZLDialogContent(resource) {
 	myTitle = QString::fromStdString(ZLDialogContent::displayName());
 	myRowCounter = 0;
 }
 
 ZLQmlDialogContent::~ZLQmlDialogContent() {
+	myItems.clear();
+	emit itemsChanged(myItems);
 }
 
 void ZLQmlDialogContent::addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
@@ -61,37 +63,37 @@ void ZLQmlDialogContent::createViewByEntry(const std::string &name, const std::s
 	ZLQmlOptionView *view = 0;
 	switch (option->kind()) {
 	case ZLOptionEntry::BOOLEAN:
-		view = new ZLQmlBooleanOptionView(name, tooltip, option, this);
+		view = new ZLQmlBooleanOptionView(name, tooltip, option);
 		break;
 	case ZLOptionEntry::BOOLEAN3:
-		view = new ZLQmlBoolean3OptionView(name, tooltip, option, this);
+		view = new ZLQmlBoolean3OptionView(name, tooltip, option);
 		break;
 	case ZLOptionEntry::MULTILINE:
 	case ZLOptionEntry::STRING:
 	case ZLOptionEntry::PASSWORD:
 	case ZLOptionEntry::PATH:
-		view = new ZLQmlTextOptionView(name, tooltip, option, this);
+		view = new ZLQmlTextOptionView(name, tooltip, option);
 		break;
 	case ZLOptionEntry::CHOICE:
-		view = new ZLQmlChoiceOptionView(name, tooltip, option, this);
+		view = new ZLQmlChoiceOptionView(name, tooltip, option);
 		break;
 	case ZLOptionEntry::SPIN:
-		view = new ZLQmlSpinOptionView(name, tooltip, option, this);
+		view = new ZLQmlSpinOptionView(name, tooltip, option);
 		break;
 	case ZLOptionEntry::COMBO:
-		view = new ZLQmlComboOptionView(name, tooltip, option, this);
+		view = new ZLQmlComboOptionView(name, tooltip, option);
 		break;
 	case ZLOptionEntry::COLOR:
-		view = new ZLQmlColorOptionView(name, tooltip, option, this);
+		view = new ZLQmlColorOptionView(name, tooltip, option);
 		break;
 	case ZLOptionEntry::KEY:
-//		view = new KeyOptionView(name, tooltip, option, this);
+//		view = new KeyOptionView(name, tooltip, option);
 		break;
 	case ZLOptionEntry::ORDER:
-//		view = new OrderOptionView(name, tooltip, option, this);
+//		view = new OrderOptionView(name, tooltip, option);
 		break;
 	case ZLOptionEntry::STATIC:
-		view = new ZLQmlStaticTextOptionView(name, tooltip, option, this);
+		view = new ZLQmlStaticTextOptionView(name, tooltip, option);
 		break;
 	}
 

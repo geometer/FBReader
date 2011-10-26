@@ -1,8 +1,39 @@
-===== 0.99.0 (????????, 2011) =====
+===== 0.99.4 (October 26, 2011) =====
+* Added option to keep lines at page scrolling
+* Fixed several segfaults connected with network library.
+* Removed '&' charachter from field names in dialogs.
+* Color scheme in options and trees is changed to inverted (Meego).
+* Implemented book information dialog.
+* Icons in local/network library views.
+* Fullscreen mode (Symbian).
 
+===== 0.99.3 (October 17, 2011) =====
+* Added option for volume keys scrolling turning on/off
+* Added option for configuration of scrolling pages zones by tap
+* Fixed bug with page scroll by tapping screen
+* Added subtitles to local library and network library
+* Added kinetic scrolling for menu
+* Added ability to purchase books from network library
+
+===== 0.99.2 (October 5, 2011) =====
+* Symbian S^3 support
+* Large menu items in Symbian version
+
+===== 0.99.1 (October 3, 2011) =====
+
+* First release for Symbian^1
+* Redesigned Options at Meego, fixed segfaults
+* Fixed lookup of books added to Books directory during FBReader's run
+* Fixed default configuration of FBReader
+* Added orientation lock button
+
+===== 0.99.0 (September 21, 2011) =====
+
+* Bulgarian interface localization has been added (by Alexander Ivanov)
 * Esperanto interface localization has been added (by Katarína Nosková)
 * Hyphenation patterns for Polish (by Tomasz Długosz)
 * Polish interface localization (by Tomasz Długosz)
+* Added QtQuick interface for Meego
 
 ===== 0.14.20100422 (April 22, 2010) =====
 

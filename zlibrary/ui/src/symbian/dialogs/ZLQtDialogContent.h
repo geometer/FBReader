@@ -11,7 +11,7 @@ class QVBoxLayout;
 class ZLQtDialogContent : public ZLDialogContent {
 
 public:
-	ZLQtDialogContent(QWidget *parent, const ZLResource &resource);
+        ZLQtDialogContent(const ZLResource &resource);
 	~ZLQtDialogContent();
 
 	void addOption(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);

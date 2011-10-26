@@ -5,12 +5,15 @@
 #include <QtGui/QResizeEvent>
 #include <QtGui/QScrollArea>
 #include <QtGui/QAction>
+#include <QtScroller>
 
 #include <ZLDialogManager.h>
 
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
 #include "ZLQtUtil.h"
+
+#include "../menu/DrillDownMenu.h"
 
 TabMenuWidget::TabMenuWidget(QWidget* parent): QWidget(parent) {
 	QVBoxLayout *layout = new QVBoxLayout(this);
@@ -23,11 +26,17 @@ TabMenuWidget::TabMenuWidget(QWidget* parent): QWidget(parent) {
 	layout->addWidget(myMenuWidget);
 	layout->addWidget(myScrollArea);
 	setStatus(MENU);
-	connect(myMenuWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(menuItemClicked(QModelIndex)));
+        connect(myMenuWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(menuItemClicked(QModelIndex)));
+
+        myMenuWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
+        QtScroller::grabGesture(myMenuWidget->viewport(), QtScroller::LeftMouseButtonGesture);
+        QtScroller::grabGesture(myScrollArea->viewport(), QtScroller::LeftMouseButtonGesture);
+
 }
 
 void TabMenuWidget::addItem(QWidget *widget, const QString &label) {
-	myMenuWidget->addItem(label);
+        //myMenuWidget->addItem(label);
+        myMenuWidget->addItem( new NiceSizeListWidgetItem(label) );
 	myStackedWidget->addWidget(widget);
 }
 
@@ -87,7 +96,7 @@ void ZLQtOptionsDialog::back() {
 }
 
 ZLDialogContent &ZLQtOptionsDialog::createTab(const ZLResourceKey &key) {
-	ZLQtDialogContent *tab = new ZLQtDialogContent(new QWidget, tabResource(key));
+        ZLQtDialogContent *tab = new ZLQtDialogContent(tabResource(key));
 	myTabMenuWidget->addItem(tab->widget(), ::qtString(tab->displayName()));
 	myTabs.push_back(tab);
 	return *tab;

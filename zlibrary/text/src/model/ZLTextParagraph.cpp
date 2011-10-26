@@ -215,6 +215,16 @@ size_t ZLTextParagraph::characterNumber() const {
 	return len;
 }
 
+std::string ZLTextParagraph::text() const {
+	for (Iterator it = *this; !it.isEnd(); it.next()) {
+		if (it.entryKind() == ZLTextParagraphEntry::TEXT_ENTRY) {
+			const ZLTextEntry& textEntry = (ZLTextEntry&)*it.entry();
+			return std::string(textEntry.data(), textEntry.dataLength());
+		}
+	}
+	return std::string();
+}
+
 shared_ptr<const ZLImage> ImageEntry::image() const {
 	ZLImageMap::const_iterator it = myMap->find(myId);
 	return (it != myMap->end()) ? (*it).second : 0;

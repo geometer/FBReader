@@ -25,6 +25,12 @@
 
 #include "../bookmodel/BookModel.h"
 
+const ZLTypeId ContentsView::TYPE_ID(FBView::TYPE_ID);
+
+const ZLTypeId &ContentsView::typeId() const {
+        return TYPE_ID;
+}
+
 ContentsView::ContentsView(ZLPaintContext &context) : FBView(context) {
 }
 

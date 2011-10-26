@@ -4,8 +4,8 @@
 	<binding key="&lt;Up&gt;" action="pageBackward"/>
 	<binding key="&lt;Right&gt;" action="pageForward"/>
 	<binding key="&lt;Left&gt;" action="pageBackward"/>
-	<binding key="&lt;VolumeUp&gt;" action="pageBackward"/>
-	<binding key="&lt;VolumeDown&gt;" action="pageForward"/>
+	<binding key="&lt;VolumeUp&gt;" action="volumeKeyScrollBackward"/>
+	<binding key="&lt;VolumeDown&gt;" action="volumeKeyScrollForward"/>
 	<binding key="&lt;1&gt;" action="increaseFont"/>
 	<binding key="&lt;4&gt;" action="decreaseFont"/>
 	<binding key="&lt;0&gt;" action="toggleIndicator"/>

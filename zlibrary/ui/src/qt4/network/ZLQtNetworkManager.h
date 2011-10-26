@@ -25,7 +25,11 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkDiskCache>
 #include <QtNetwork/QNetworkCookieJar>
+#include <QtNetwork/QSslError>
+#include <QtCore/QMutex>
+#include <QtCore/QSharedPointer>
 
+class ZLQtNetworkCache;
 class ZLQtNetworkCookieJar;
 class QNetworkReply;
 class QEventLoop;
@@ -44,26 +48,53 @@ public:
 	~ZLQtNetworkManager();
 	
 	static void createInstance();
-
+	void initPaths();
+	
+	QNetworkCookieJar *cookieJar() const;
 	std::string perform(const ZLExecutionData::Vector &dataList) const;
 	
 protected Q_SLOTS:
     void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
     void onReplyReadyRead();
+    void onSslErrors(const QList<QSslError> &errors);
     void onFinished(QNetworkReply *reply);
 
 private:
+	void readData(QNetworkReply *reply, ZLNetworkRequest *request);
+	bool checkReply(QNetworkReply *reply);
+	void prepareReply(ZLQtNetworkReplyScope &scope, const QVariant &executionData, QNetworkRequest networkRequest) const;
 	QNetworkAccessManager myManager;
-	QNetworkDiskCache *myCache;
+	ZLQtNetworkCache *myCache;
 	ZLQtNetworkCookieJar *myCookieJar;
+};
+
+class ZLQtNetworkCache : public QAbstractNetworkCache {
+	Q_OBJECT
+public:
+	ZLQtNetworkCache(QObject *parent);
+	virtual ~ZLQtNetworkCache();
+	
+    virtual QNetworkCacheMetaData metaData(const QUrl &url);
+    virtual void updateMetaData(const QNetworkCacheMetaData &metaData);
+    virtual QIODevice *data(const QUrl &url);
+    virtual bool remove(const QUrl &url);
+    virtual qint64 cacheSize() const;
+
+    virtual QIODevice *prepare(const QNetworkCacheMetaData &metaData);
+    virtual void insert(QIODevice *device);
+    virtual void clear();
+	
+private:
+	QSharedPointer<QNetworkDiskCache> myCache;
 };
 
 class ZLQtNetworkCookieJar : public QNetworkCookieJar {
 	Q_OBJECT
 public:
-    ZLQtNetworkCookieJar(const QString &filePath, QObject *parent = 0);
+    ZLQtNetworkCookieJar(QObject *parent = 0);
     ~ZLQtNetworkCookieJar();
 	
+	void setFilePath(const QString &filePath);
     bool setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl &url);
     void save();
 	
@@ -73,7 +104,5 @@ private:
 
 Q_DECLARE_METATYPE(shared_ptr<ZLExecutionData>)
 Q_DECLARE_METATYPE(ZLQtNetworkReplyScope)
-
-typedef QPair<QByteArray, QByteArray>  RawHeaderPair;
 
 #endif /* __ZLQTNETWORKMANAGER_H__ */

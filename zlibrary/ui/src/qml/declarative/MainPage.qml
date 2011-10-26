@@ -24,7 +24,9 @@ import org.fbreader 0.14
 
 Page {
 	id: root
-    property bool showToolBar: true
+	property variant rootWindow
+	property bool showToolBar: true
+	orientationLock: rootWindow.fixedOrientation ? PageOrientation.LockPrevious : PageOrientation.Automatic
 	tools: ToolBarLayout {
 		id: toolBarLayout
 		Repeater {
@@ -35,6 +37,8 @@ Page {
 				iconSource: modelData.platformIconId === "" ? modelData.iconSource : ""
 				platformIconId: modelData.platformIconId
 				onClicked: {
+					if (toolBarTimer.running)
+						toolBarTimer.restart();
 					switch (modelData.type) {
 					case ToolBarItem.PlainButton:
 					case ToolBarItem.ToggleButton:
@@ -62,6 +66,17 @@ Page {
 			}
 		}
 		ToolIcon {
+			platformIconId: "icon-m-common-" + __iconType + __inverseString
+			property string __iconType: rootWindow.fixedOrientation ? "locked" : "unlocked"
+			property string __inverseString: style.inverted ? "-inverse" : ""
+
+			onClicked: {
+				if (toolBarTimer.running)
+					toolBarTimer.restart();
+				rootWindow.fixedOrientation = !rootWindow.fixedOrientation
+			}
+		}
+		ToolIcon {
 			platformIconId: "toolbar-view-menu"
 			onClicked: {
 				if (mainMenu.status == DialogStatus.Closed) {
@@ -80,7 +95,8 @@ Page {
 	}
 	BookView {
 		id: bookView
-		anchors.fill: parent
+		width: parent.width
+		height: parent.height + root.pageStack.toolBar.height
 		holder: objectHolder
 		Component.onCompleted: objectHolder.bookView = bookView
 		MouseArea {
@@ -127,5 +143,9 @@ Page {
 		// FIXME: Find the way to find actual ToolBar's height without hardcoding
 		height: 72
 		z: bookView.z + 1
+	}
+	Connections {
+		target: applicationInfo
+		onMainMenuRequested: mainMenu.open()
 	}
 }

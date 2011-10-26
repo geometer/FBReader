@@ -36,6 +36,8 @@ Dialog {
 		width: root.width
 		DialogContent {
 			id: dialogContent
+			anchors.fill: parent
+			anchors { leftMargin: 15; topMargin: 15; rightMargin: 15 }
 			invertedTheme: true
 			handler: root.handler.content
 		}
@@ -44,11 +46,12 @@ Dialog {
 		}
 	}
 
-	buttons: Column {
+	buttons: ButtonRow {
         id: buttonsRow
         anchors.top: parent.top
-        width: parent.width
-        height: childrenRect.height
+		anchors.horizontalCenter: parent.horizontalCenter
+//        width: parent.width
+//        height: childrenRect.height
 //		anchors.horizontalCenter: parent.horizontalCenter
 		Repeater {
 			model: root.handler.buttonNames

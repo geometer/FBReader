@@ -5,6 +5,7 @@ ifeq "$(INSTALLDIR)" ""
 endif
 IMAGEDIR = $(INSTALLDIR)/share/pixmaps
 APPIMAGEDIR = $(INSTALLDIR)/share/pixmaps/%APPLICATION_NAME%
+OSNAME = TestOnDesktop
 
 CC = ccache gcc
 AR = ar rsu
@@ -33,7 +34,8 @@ ifeq "$(UI_TYPE)" "qt4"
 endif
 
 ifeq "$(UI_TYPE)" "qtwidgets"
-  UILIBS = -lQtGui -lQtNetwork
+  CFLAGS += -I$(ROOTDIR)/libs/i386/include
+  UILIBS = -lQtGui -lQtNetwork -L$(ROOTDIR)/libs/i386 -lQtScroller
   NETWORK_LIBS ?= -lQtNetwork
   #TODO maybe remove ZLSHARED
   ZLSHARED = no

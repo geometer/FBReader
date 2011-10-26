@@ -24,6 +24,7 @@
 #include <map>
 
 #include <ZLBlockTreeView.h>
+#include <ZLTreeDialog.h>
 
 #include "../network/NetworkItems.h"
 
@@ -32,25 +33,24 @@ class NetworkCatalogNode;
 class NetworkItem;
 class FBReaderNode;
 
-class NetworkView : public ZLBlockTreeView {
+class NetworkView {
 
 private:
 	class CoverUpdater;
 	class CoverUpdaterRunner;
 
 public:
-	NetworkView(ZLPaintContext &context);
+	NetworkView();
 
 	void invalidate();
 	void invalidateAccountDependents();
+	
+	void showDialog();
 
-	void drawCoverLater(FBReaderNode *node, int vOffset);
+//	void drawCoverLater(FBReaderNode *node, int vOffset);
 
 private:
-	ZLColor backgroundColor() const;
 	const std::string &caption() const;
-
-	void paint();
 
 	void makeUpToDate();
 	void updateAccountDependents();
@@ -58,10 +58,10 @@ private:
 	bool processAccountDependent(NetworkCatalogItem &item);
 
 private:
+	shared_ptr<ZLTreeDialog> myDialog;
 	bool myUpdateChildren;
 	bool myUpdateAccountDependents;
-
-	std::map<FBReaderNode*,int> myNodesToPaintCovers;
+//	std::map<FBReaderNode*,int> myNodesToPaintCovers;
 };
 
 inline void NetworkView::invalidate() { myUpdateChildren = true; }

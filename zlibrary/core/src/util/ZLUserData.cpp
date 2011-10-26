@@ -22,6 +22,13 @@
 ZLUserData::~ZLUserData() {
 }
 
+ZLUserDataHolder::ZLUserDataHolder() {
+}
+
+ZLUserDataHolder::ZLUserDataHolder(const ZLUserDataHolder &other)
+    : myDataMap(other.myDataMap) {
+}
+
 ZLUserDataHolder::~ZLUserDataHolder() {
 }
 

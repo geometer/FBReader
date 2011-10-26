@@ -2,6 +2,10 @@ VERSION = $(shell cat fbreader/VERSION)
 SOVERSIONCORE = $(shell cat zlibrary/core/SOVERSION)
 SOVERSIONTEXT = $(shell cat zlibrary/text/SOVERSION)
 TMPDIR = $(CURDIR)/fbreader-$(VERSION)
+#TODO: temporary, it shuld be declared once, in symbian.mk
+SYMBIAN_SDK=/opt/QtSDK/Symbian/SDKs/Symbian1
+SYMBIAN_VERSION=$(shell tools/symbian_versions.py $(VERSION))
+SYMBIAN_PKG_VERSION=$(shell tools/symbian_versions.py $(VERSION) "PKG")
 
 motopkg:
 	@echo -n 'Building $(ARCHITECTURE) $@ package...'
@@ -43,6 +47,7 @@ debian:
 	done
 	@cd $(TMPDIR); dpkg-buildpackage -rfakeroot -us -uc 1> $(CURDIR)/$(ARCHITECTURE)-debian.log 2>&1; cd $(CURDIR)
 	@rm -rf $(TMPDIR)
+	@cat $(CURDIR)/$(ARCHITECTURE)-debian.log
 	@rm -f $(CURDIR)/$(ARCHITECTURE)-debian.log
 	@echo ' OK'
 
@@ -103,16 +108,19 @@ nsi:
 sis:
 	@make TARGET_ARCH=symbian UI_TYPE=qtwidgets
 	cd fbreader && mv FBReader FBReader.sym  && \
-	/usr/share/qt4/qt-symbian/bin/elf2e32_qtwrapper --version 4.1793 --sid=0xE87CC83C --uid1=0x1000007a --uid2=0x100039CE --uid3=0xE87CC83C --targettype=EXE --elfinput=./FBReader.sym --output=./FBReader.exe --linkas=FBReader\{00040701\}\[e87cc83c\].exe --heap=0x20000,0x2000000 --stack=0x14000 --libpath=/usr/s60-sdk/epoc32/release/armv5/udeb/ --libpath=/usr/s60-sdk//epoc32/release/armv5/lib --libpath=/usr/s60-sdk/epoc32/release/armv5/urel --libpath=/usr/share/qt4/qt-symbian/lib --libpath=/usr/s60-sdk/epoc32/release/armv5/udeb --libpath=../zlibrary --libpath=../libs/symbian --capability=NetworkServices+ReadUserData+WriteUserData --dlldata --fpu=softvfp --unfrozen --compressionmethod bytepair --unpaged
+	/usr/share/qt4/qt-symbian/bin/elf2e32_qtwrapper --version 4.1793 --sid=0xE87CC83C --uid1=0x1000007a --uid2=0x100039CE --uid3=0xE87CC83C --targettype=EXE --elfinput=./FBReader.sym --output=./FBReader.exe --linkas=FBReader\{$(SYMBIAN_VERSION)\}\[e87cc83c\].exe --heap=0x20000,0x2000000 --stack=0x14000 --libpath=$(SYMBIAN_SDK)/epoc32/release/armv5/lib --libpath=$(SYMBIAN_SDK)/epoc32/release/armv5/urel --libpath=../zlibrary --libpath=../libs/symbian --capability=NetworkServices+ReadUserData+WriteUserData --dlldata --fpu=softvfp --unfrozen --compressionmethod bytepair --unpaged
 	mifconv ./FBReader.mif /c32 fbreader/data/icons/application/symbian.svg
 	cp $(DIST_DIR)/sis/symbian/* ./
-	cpp -nostdinc -undef -I/usr/share/qt4/qt-symbian/include/QtCore -I/usr/share/qt4/qt-symbian/include/QtGui -I/usr/share/qt4/qt-symbian/include -I/usr/s60-sdk/epoc32/include/ -I/usr/s60-sdk//epoc32/include/variant -I/usr/s60-sdk//epoc32/include/stdapis -I/usr/s60-sdk//epoc32/include/gcce -I/usr/s60-sdk/epoc32/include/stdapis/sys -I/usr/s60-sdk/epoc32/include/stdapis/stlport -I../zlibrary/core/include -I../zlibrary/text/include -I../libs/symbian/include -I/usr/s60-sdk/epoc32/include/osextensions/stdapis/stlport -I/usr/s60-sdk/epoc32/include/stdapis/stlport -I/usr/s60-sdk/epoc32/include -I/usr/s60-sdk/epoc32/include/oem -I/usr/s60-sdk/epoc32/include/middleware -I/usr/s60-sdk/epoc32/include/domain/middleware -I/usr/s60-sdk/epoc32/include/osextensions -I/usr/s60-sdk/epoc32/include/domain/osextensions -I/usr/s60-sdk/epoc32/include/domain/osextensions/loc -I/usr/s60-sdk/epoc32/include/domain/middleware/loc -I/usr/s60-sdk/epoc32/include/domain/osextensions/loc/sc -I/usr/s60-sdk/epoc32/include/domain/middleware/loc/sc -I/usr/share/qt4/qt-symbian/mkspecs/features/symbian/../../common/symbian/header-wrappers -I . -DUNICODE -DQT_KEYPAD_NAVIGATION -DQT_SOFTKEYS_ENABLED -DQT_USE_MATH_H_FLOATS -D__PRODUCT_INCLUDE__=\</usr/s60-sdk/epoc32/include/variant/symbian_os.hrh\> -D__SYMBIAN32__ -D__MARM_INTERWORK__ -D_UNICODE -D__S60_50__ -D__S60_3X__ -D__SERIES60_3X__ -D__EPOC32__ -D__MARM__ -D__EABI__ -D__MARM_ARMV5__ -D__SUPPORT_CPP_EXCEPTIONS__ -D__GCCE__ -DUNICODE -D_STLP_NO_EXCEPTION_HEADER -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -D__EXE__ FBReader.rss -o ./FBReader.rpp && rcomp -u -m045,046,047 -s./FBReader.rpp -o./FBReader.rsc -h./FBReader.rsg -iFBReader.rss
-
-	cpp -nostdinc -undef -I/usr/share/qt4/qt-symbian/include/QtCore -I/usr/share/qt4/qt-symbian/include/QtGui -I/usr/share/qt4/qt-symbian/include -I/usr/s60-sdk/epoc32/include/ -I/usr/s60-sdk//epoc32/include/variant -I/usr/s60-sdk//epoc32/include/stdapis -I/usr/s60-sdk//epoc32/include/gcce -I/usr/s60-sdk/epoc32/include/stdapis/sys -I/usr/s60-sdk/epoc32/include/stdapis/stlport -I../zlibrary/core/include -I../zlibrary/text/include -I../libs/symbian/include -I/usr/s60-sdk/epoc32/include/osextensions/stdapis/stlport -I/usr/s60-sdk/epoc32/include/stdapis/stlport -I/usr/s60-sdk/epoc32/include -I/usr/s60-sdk/epoc32/include/oem -I/usr/s60-sdk/epoc32/include/middleware -I/usr/s60-sdk/epoc32/include/domain/middleware -I/usr/s60-sdk/epoc32/include/osextensions -I/usr/s60-sdk/epoc32/include/domain/osextensions -I/usr/s60-sdk/epoc32/include/domain/osextensions/loc -I/usr/s60-sdk/epoc32/include/domain/middleware/loc -I/usr/s60-sdk/epoc32/include/domain/osextensions/loc/sc -I/usr/s60-sdk/epoc32/include/domain/middleware/loc/sc -I/usr/share/qt4/qt-symbian/mkspecs/features/symbian/../../common/symbian/header-wrappers -I . -DUNICODE -DQT_KEYPAD_NAVIGATION -DQT_SOFTKEYS_ENABLED -DQT_USE_MATH_H_FLOATS -D__PRODUCT_INCLUDE__=\</usr/s60-sdk/epoc32/include/variant/symbian_os.hrh\> -D__SYMBIAN32__ -D__MARM_INTERWORK__ -D_UNICODE -D__S60_50__ -D__S60_3X__ -D__SERIES60_3X__ -D__EPOC32__ -D__MARM__ -D__EABI__ -D__MARM_ARMV5__ -D__SUPPORT_CPP_EXCEPTIONS__ -D__GCCE__ -DUNICODE -D_STLP_NO_EXCEPTION_HEADER -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_CORE_LIB -D__EXE__ FBReader_reg.rss -o ./FBReader_reg.rpp && rcomp -u -m045,046,047 -s./FBReader_reg.rpp -o./FBReader_reg.rsc -h./FBReader_reg.rsg -iFBReader_reg.rss
+	cpp -nostdinc -undef -I. -I$(SYMBIAN_SDK)/epoc32/include -DUNICODE -D__SYMBIAN32__ -D__MARM_INTERWORK__ -D_UNICODE -D__S60_50__ -D__S60_3X__ -D__SERIES60_3X__ -D__EPOC32__ -D__MARM__ -D__EABI__ -D__MARM_ARMV5__ -D__SUPPORT_CPP_EXCEPTIONS__ -D__GCCE__ -DUNICODE -D_STLP_NO_EXCEPTION_HEADER  -D__EXE__  FBReader.rss -o ./FBReader.rpp && rcomp -u -m045,046,047 -s./FBReader.rpp -o./FBReader.rsc -h./FBReader.rsg -iFBReader.rss
+	cpp -nostdinc -undef -I. -I$(SYMBIAN_SDK)/epoc32/include -DUNICODE -D__SYMBIAN32__ -D__MARM_INTERWORK__ -D_UNICODE -D__S60_50__ -D__S60_3X__ -D__SERIES60_3X__ -D__EPOC32__ -D__MARM__ -D__EABI__ -D__MARM_ARMV5__ -D__SUPPORT_CPP_EXCEPTIONS__ -D__GCCE__ -DUNICODE -D_STLP_NO_EXCEPTION_HEADER  -D__EXE__ FBReader_reg.rss -o ./FBReader_reg.rpp && rcomp -u -m045,046,047 -s./FBReader_reg.rpp -o./FBReader_reg.rsc -h./FBReader_reg.rsg -iFBReader_reg.rss
 
 	mv fbreader/FBReader.exe ./
 
 	@sed "s/VERSION/$(VERSION)/" fbreader/data/formats/fb2/FBReaderVersion.ent > FBReaderVersion.ent
+	@sed "s/VERSION/$(SYMBIAN_PKG_VERSION)/" FBReader_installer.pkg > temp_FBReader_installer.pkg
+	@sed "s/VERSION/$(SYMBIAN_PKG_VERSION)/" FBReader_template.pkg > temp_FBReader_template.pkg
+	@mv temp_FBReader_template.pkg FBReader_template.pkg
+	@mv temp_FBReader_installer.pkg FBReader_installer.pkg
 
 	/usr/share/qt4/qt-symbian/bin/createpackage  FBReader_template.pkg
 	/usr/share/qt4/qt-symbian/bin/createpackage  FBReader_installer.pkg

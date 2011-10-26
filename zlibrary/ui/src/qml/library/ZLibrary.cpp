@@ -74,8 +74,12 @@ void ZLQmlLibraryImplementation::run(ZLApplication *application) {
 	if (ZLLanguageUtil::isRTLLanguage(ZLibrary::Language())) {
 		qApp->setLayoutDirection(Qt::RightToLeft);
 	}
+	static_cast<ZLQtNetworkManager&>(ZLNetworkManager::Instance()).initPaths();
 	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 	qApp->exec();
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 	delete application;
+	qDebug("%s %d", Q_FUNC_INFO, __LINE__);
 }

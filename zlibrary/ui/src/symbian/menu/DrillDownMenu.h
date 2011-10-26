@@ -7,6 +7,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QAction>
+#include <QtGui/QPushButton>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QMessageBox>
 #include <QtGui/QDialog>
@@ -18,10 +19,29 @@
 
 #include <ZLApplication.h>
 
-class DrillDownMenuItem : public QListWidgetItem {
+class NiceSizeListWidgetItem : public QListWidgetItem {
+public:
+    explicit NiceSizeListWidgetItem(const QString &text, QListWidget *view = 0, int type = Type);
+    explicit NiceSizeListWidgetItem(const QIcon &icon, const QString &text,QListWidget *view = 0, int type = Type);
+    QVariant data (int role) const;
+};
+
+namespace MenuItemParameters {
+    //TODO replace MenuItemsParameters implementation to separate file
+    int getMenuDialogHeight();
+    int getTapBottomZoneSize();
+    QSize getItemSize();
+    QSize getImageSize();
+    QFont getFont();
+    QFont getSubtitleFont();
+    int MMtoPixels(int mm);
+}
+
+class DrillDownMenuItem : public NiceSizeListWidgetItem {
 public:
     explicit DrillDownMenuItem(const QString &text, ZLApplication::Action* action, QListWidget *view = 0, int type = Type);
     explicit DrillDownMenuItem(const QIcon &icon, const QString &text, ZLApplication::Action* action, QListWidget *view = 0, int type = Type);
+    //TODO support for isVisible method of Action
     void run();
 private:
 	shared_ptr<ZLApplication::Action> myAction;
@@ -33,7 +53,7 @@ public:
     explicit DrillDownMenu(QWidget *parent = 0);
     void addItem(const std::string &text, ZLApplication::Action* action=0);
     void addItem(const QIcon& icon, const std::string &text, ZLApplication::Action* action=0);
-	void addItem(DrillDownMenuItem* item);
+    void addItem(DrillDownMenuItem* item);
 public:
 	void setMessage(const std::string& message);
 	std::string getMessage() const;
@@ -47,8 +67,9 @@ class DrillDownMenuDialog : public QDialog {
     Q_OBJECT
 public:
     DrillDownMenuDialog(QWidget* parent=0);
-    void showDrillDownMenu(DrillDownMenu* menu);
-	void showMessage(std::string message);
+    //TODO rename next method (because show doesn't mean show)
+    void showDrillDownMenu(DrillDownMenu* menu); //actually, it doesn't show menu, it set it as first
+    void showMessage(std::string message);
 public:
 	bool run();
 	bool runNoFullScreen();

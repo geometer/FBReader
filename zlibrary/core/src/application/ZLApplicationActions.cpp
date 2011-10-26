@@ -18,6 +18,7 @@
  */
 
 #include "ZLApplication.h"
+#include "../application/ZLApplicationWindow.h"
 #include "../view/ZLView.h"
 #include "../view/ZLViewWidget.h"
 
@@ -61,4 +62,9 @@ void ZLApplication::RotationAction::run() {
 void ZLApplication::FullscreenAction::run() {
 	ZLApplication &application = ZLApplication::Instance();
 	application.setFullscreen(!application.isFullscreen());
+}
+
+void ZLApplication::ShowMenuAction::run() {
+        ZLApplication &application = ZLApplication::Instance();
+        application.myWindow->showMenu();
 }

@@ -510,6 +510,12 @@
 
 					<node name="enableTapScrolling" value="Enable Tap Scrolling" />
 					<node name="fingerOnly" value="Scroll on Finger Tap Only" />
+					<node name="keyLinesToKeep" value="Lines to Keep per Page Scrolling" />
+
+					<node name="tabScrollingZones" value="Tap Scroll Zones">
+						<node name="left-right" value="Scroll on Left/Right zones"/>
+						<node name="up-bottom" value="Scroll on Up/Bottom zones"/>
+					</node>
 
 					<node name="fingerScrolling" value="Touch screen scrolling">
 						<node name="byTap" value="Scroll pages by finger tap"/>
@@ -799,6 +805,14 @@
 					</node>
 				</node>
 			</node>
+		</node>
+		<node name="MobileInfoDialog">
+			<node name="file" value="Filename" />
+			<node name="title" value="Title" />
+			<node name="language" value="Language" />
+			<node name="authorDisplayName" value="Authors" />
+			<node name="seriesTitle" value="Series" />
+			<node name="tags" value="Tags" />
 		</node>
 		<node name="InfoDialog">
 			<node name="title" value="FBReader - Book Info" />

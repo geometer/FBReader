@@ -5,12 +5,14 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QMouseEvent>
+#include <QtCore/QDebug>
 
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
 
 #include "ZLQtViewWidget.h"
 #include "ZLQtPaintContext.h"
+#include "../menu/DrillDownMenu.h"
 
 #include "../../../../../fbreader/src/fbreader/BookTextView.h"
 
@@ -119,13 +121,32 @@ void ZLQtViewWidget::Widget::paintEvent(QPaintEvent*) {
 }
 
 void ZLQtViewWidget::Widget::mousePressEvent(QMouseEvent *event) {
-		myHolder.view()->onStylusPress(x(event), y(event));
+    //Implementation of this method is kind of hack, because
+    //it doesn't use internal code of ZLView for recognizing mouse's click
+    //it just calls onFingerTap and onStylusClick directly
+    //TODO reimplement using just onStylusPressed and onStylusReleased methods of ZLView class
+    bool isLink = false;   
+    if (BookTextView* bookTextView = zlobject_cast<BookTextView*>(&*myHolder.view())) {
+        // count == 0 means that it returns false in case it's not a link in text
+        isLink = bookTextView->onStylusClick(x(event), y(event), 0);
+    }
+    if (!isLink) {
+        if (isTapBottomZone(QPoint(event->pos()))) {
+            emit myHolder.tapBottomZoneClicked();
+            return;
+        }
+        // if it's not a link in BookTextView, do a finger tap for scrolling on prev/next page
+        myHolder.view()->onFingerTap(x(event), y(event));
+    }
 }
 
 void ZLQtViewWidget::Widget::mouseReleaseEvent(QMouseEvent *event) {
-	myHolder.view()->onStylusRelease(x(event), y(event));
+    //why empty implentation? see comment in mousePressentEvent method
 }
 
+bool ZLQtViewWidget::Widget::isTapBottomZone(QPoint coords) {
+    return coords.y() >= (this->size().height() - MenuItemParameters::getTapBottomZoneSize());
+}
 
 int ZLQtViewWidget::Widget::x(const QMouseEvent *event) const {
 	const int maxX = width() - 1;

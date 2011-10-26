@@ -3,6 +3,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QClipboard>
 #include <QtGui/QDesktopWidget>
+#include <QtCore/QStringList>
 
 #include <QtGui/QDesktopServices>
 #include <QtCore/QUrl>
@@ -13,6 +14,7 @@
 #include "ZLQtOpenFileDialog.h"
 #include "ZLQtDialogContent.h"
 #include "ZLQtProgressDialog.h"
+#include "ZLQtTreeDialog.h"
 #include "ZLQtUtil.h"
 
 #include "../image/ZLQtImageManager.h"
@@ -29,6 +31,14 @@ shared_ptr<ZLOptionsDialog> ZLQtDialogManager::createOptionsDialog(const ZLResou
 
 shared_ptr<ZLOpenFileDialog> ZLQtDialogManager::createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const {
 	return new ZLQtOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
+}
+
+shared_ptr<ZLTreeDialog> ZLQtDialogManager::createTreeDialog() const {
+	return new ZLQtTreeDialog;
+}
+
+shared_ptr<ZLDialogContent> ZLQtDialogManager::createContent(const ZLResourceKey &key) const {
+        return new ZLQtDialogContent(resource()[key]);
 }
 
 void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
@@ -48,11 +58,18 @@ void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &me
 }
 
 int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
-	QWidget *parent = qApp->activeWindow();
-	if (parent == 0) {
-		parent = myStoredWindow;
-	}
-	return QMessageBox::question(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
+//        //TODO reimplement this, due to errors on Symbian (how to show 3 buttons as soft buttons?)
+        QWidget *parent = qApp->activeWindow();
+        if (parent == 0) {
+                parent = myStoredWindow;
+        }
+        // button2, button0, button1 -- because on symbian, there's no third button (middle button is missed)
+        // we don't show button 1
+        int result = QMessageBox::question(parent, ::qtString(dialogTitle(key)), ::qtString(message), QMessageBox::Ok, QMessageBox::Cancel );
+        if (result == QMessageBox::Ok) {
+            return 1;
+        }
+        return 2;
 }
 
 shared_ptr<ZLProgressDialog> ZLQtDialogManager::createProgressDialog(const ZLResourceKey &key) const {

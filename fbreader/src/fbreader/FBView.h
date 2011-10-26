@@ -55,17 +55,23 @@ private:
 	class TapScroller;
 
 public:
+        static const ZLTypeId TYPE_ID;
+
+public:
 	static FBIndicatorStyle& commonIndicatorInfo();
 	static ZLBooleanOption &selectionOption();
 
 	virtual bool hasContents() const;
 
 private:
+        const ZLTypeId &typeId() const;
+
+private:
 	static shared_ptr<ZLTextPositionIndicatorInfo> ourIndicatorInfo;
 	static shared_ptr<ZLBooleanOption> ourSelectionOption;
 
 protected:
-	void doTapScrolling(int y);
+        void doTapScrolling(int x, int y);
 
 public:
 	FBView(ZLPaintContext &context);

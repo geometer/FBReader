@@ -24,7 +24,7 @@
 
 #include "../library/Book.h"
 
-const ZLTypeId SeriesNode::TYPE_ID(FBReaderNode::TYPE_ID);
+const ZLTypeId SeriesNode::TYPE_ID(FBNode::TYPE_ID);
 
 const ZLResource &SeriesNode::resource() const {
 	return ZLResource::resource("libraryView")["seriesNode"];
@@ -34,28 +34,34 @@ const ZLTypeId &SeriesNode::typeId() const {
 	return TYPE_ID;
 }
 
-SeriesNode::SeriesNode(AuthorNode *parent) : FBReaderNode(parent) {
+SeriesNode::SeriesNode(AuthorNode *parent) {
 }
 
-void SeriesNode::init() {
-	registerExpandTreeAction();
-}
+//void SeriesNode::init() {
+//	registerExpandTreeAction();
+//}
 
-shared_ptr<Book> SeriesNode::book() const {
-	return ((BookNode&)*children().front()).book();
-}
+//shared_ptr<Book> SeriesNode::book() const {
+//	return ((BookNode&)*children().front()).book();
+//}
 
 std::string SeriesNode::title() const {
-	return book()->seriesTitle();
+	//return book()->seriesTitle();
+	return std::string();
+}
+
+std::string SeriesNode::imageUrl() const {
+//	return FBNode::defaultImageUrl("")
+	return std::string();
 }
 
 shared_ptr<ZLImage> SeriesNode::extractCoverImage() const {
-	const std::vector<ZLBlockTreeNode*> &books = children();
-	for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
-		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->coverImage();
-		if (!bookCover.isNull()) {
-			return bookCover;
-		}
-	}
+//	const std::vector<ZLBlockTreeNode*> &books = children();
+//	for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
+//		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->image();
+//		if (!bookCover.isNull()) {
+//			return bookCover;
+//		}
+//	}
 	return 0;
 }

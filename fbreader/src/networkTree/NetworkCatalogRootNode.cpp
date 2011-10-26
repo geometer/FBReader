@@ -36,7 +36,7 @@
 #include "../networkActions/PasswordRecoveryDialog.h"
 #include "../networkActions/RegisterUserDialog.h"
 
-class NetworkCatalogAuthAction : public ZLRunnableWithKey {
+class NetworkCatalogAuthAction : public ZLTreeAction {
 
 protected:
 	NetworkCatalogAuthAction(NetworkAuthenticationManager &mgr, bool forLoggedUsers);
@@ -80,7 +80,7 @@ private:
 	bool makesSense() const;
 };
 
-class NetworkCatalogRootNode::DontShowAction : public ZLRunnableWithKey {
+class NetworkCatalogRootNode::DontShowAction : public ZLTreeAction {
 
 public:
 	DontShowAction(NetworkLink &link);
@@ -112,12 +112,13 @@ public:
 
 const ZLTypeId NetworkCatalogRootNode::TYPE_ID(NetworkCatalogNode::TYPE_ID);
 
-NetworkCatalogRootNode::NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition) : NetworkCatalogNode(parent, link.libraryItem(), atPosition), myLink(link) {
+NetworkCatalogRootNode::NetworkCatalogRootNode(ZLTreeListener::RootNode *parent, NetworkLink &link, size_t atPosition) : NetworkCatalogNode(link.libraryItem()), myLink(link) {
+	init();
+	parent->insert(this, atPosition);
 }
 
 void NetworkCatalogRootNode::init() {
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
-	registerAction(new ExpandCatalogAction(*this));
 	registerAction(new ReloadAction(*this));
 	if (!mgr.isNull()) {
 		registerAction(new LoginAction(*mgr));
@@ -126,13 +127,12 @@ void NetworkCatalogRootNode::init() {
 			registerAction(new RefillAccountAction(*mgr));
 		}
 		if (mgr->registrationSupported()) {
-			registerAction(new RegisterUserAction(*mgr), true);
+			registerAction(new RegisterUserAction(*mgr));
 		}
 		if (mgr->passwordRecoverySupported()) {
-			registerAction(new PasswordRecoveryAction(*mgr), true);
+			registerAction(new PasswordRecoveryAction(*mgr));
 		}
 	}
-	registerAction(new DontShowAction(myLink));
 }
 
 const ZLTypeId &NetworkCatalogRootNode::typeId() const {
@@ -155,7 +155,7 @@ NetworkCatalogAuthAction::NetworkCatalogAuthAction(NetworkAuthenticationManager 
 }
 
 bool NetworkCatalogAuthAction::makesSense() const {
-	return (myManager.isAuthorised(false).Status == B3_FALSE) != myForLoggedUsers;
+	return (myManager.isAuthorised(0).Status == B3_FALSE) != myForLoggedUsers;
 }
 
 NetworkCatalogRootNode::LoginAction::LoginAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, false) {
@@ -167,12 +167,13 @@ ZLResourceKey NetworkCatalogRootNode::LoginAction::key() const {
 
 void NetworkCatalogRootNode::LoginAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
+		finished(std::string());
 		return;
 	}
 
-	AuthenticationDialog::run(myManager);
-	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().refreshWindow();
+	AuthenticationDialog::run(myManager, listener());
+//	FBReader::Instance().invalidateAccountDependents();
+//	FBReader::Instance().refreshWindow();
 }
 
 NetworkCatalogRootNode::LogoutAction::LogoutAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, true) {
@@ -183,15 +184,15 @@ ZLResourceKey NetworkCatalogRootNode::LogoutAction::key() const {
 }
 
 std::string NetworkCatalogRootNode::LogoutAction::text(const ZLResource &resource) const {
-	const std::string text = ZLRunnableWithKey::text(resource);
+	const std::string text = ZLTreeAction::text(resource);
 	return ZLStringUtil::printf(text, myManager.currentUserName());
 }
 
 void NetworkCatalogRootNode::LogoutAction::run() {
-	LogOutRunnable logout(myManager);
-	logout.executeWithUI();
-	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().refreshWindow();
+	new LogOutRunnable(myManager, listener());
+//	logout.executeWithUI();
+//	FBReader::Instance().invalidateAccountDependents();
+//	FBReader::Instance().refreshWindow();
 }
 
 NetworkCatalogRootNode::DontShowAction::DontShowAction(NetworkLink &link) : myLink(link) {
@@ -224,7 +225,7 @@ ZLResourceKey NetworkCatalogRootNode::RefillAccountAction::key() const {
 }
 
 std::string NetworkCatalogRootNode::RefillAccountAction::text(const ZLResource &resource) const {
-	const std::string text = ZLRunnableWithKey::text(resource);
+	const std::string text = ZLTreeAction::text(resource);
 	std::string account = myManager.currentAccount();
 	if (!account.empty() && !myManager.refillAccountLink().empty()) {
 		return ZLStringUtil::printf(text, account);
@@ -234,6 +235,7 @@ std::string NetworkCatalogRootNode::RefillAccountAction::text(const ZLResource &
 
 void NetworkCatalogRootNode::RefillAccountAction::run() {
 	FBReader::Instance().openLinkInBrowser(myManager.refillAccountLink());
+	finished(std::string());
 }
 
 bool NetworkCatalogRootNode::RefillAccountAction::makesSense() const {
@@ -254,9 +256,7 @@ void NetworkCatalogRootNode::PasswordRecoveryAction::run() {
 		return;
 	}
 
-	PasswordRecoveryDialog::run(myManager);
-	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().refreshWindow();
+	PasswordRecoveryDialog::run(myManager, listener());
 }
 
 NetworkCatalogRootNode::RegisterUserAction::RegisterUserAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, false) {
@@ -271,7 +271,5 @@ void NetworkCatalogRootNode::RegisterUserAction::run() {
 		return;
 	}
 
-	RegisterUserDialog::run(myManager);
-	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().refreshWindow();
+	RegisterUserDialog::run(myManager, listener());
 }

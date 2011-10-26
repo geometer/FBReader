@@ -66,6 +66,13 @@ private:
 	size_t textOptionValue() const;
 };
 
+class VolumeKeyTurnPageAction : public PageScrollingAction {
+
+public:
+        VolumeKeyTurnPageAction(bool forward);
+        bool isEnabled() const;
+};
+
 class MouseWheelScrollingAction : public ScrollingAction {
 
 public:

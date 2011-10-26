@@ -26,5 +26,5 @@ Label {
 	width: parent.width
 	visible: handler.visible
 	enabled: handler.enabled
-	text: handler.text
+	text: handler.name + ": " + handler.text
 }

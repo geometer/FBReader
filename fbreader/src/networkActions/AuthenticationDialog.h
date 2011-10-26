@@ -21,11 +21,13 @@
 #define __AUTHENTICATIONDIALOG_H__
 
 #include <string>
-
+#include <shared_ptr.h>
+#include <ZLExecutionData.h>
 #include "../network/UserList.h"
 
 class ZLDialog;
 class NetworkAuthenticationManager;
+class AuthenticationDialogListener;
 
 class AuthenticationDialog {
 
@@ -37,11 +39,12 @@ private:
 	static bool runDialog(NetworkAuthenticationManager &mgr, UserList &userList, const std::string &errorMessage, std::string &password);
 
 public:
-	static bool run(NetworkAuthenticationManager &mgr);
+	static bool run(NetworkAuthenticationManager &mgr, shared_ptr<ZLExecutionData::Listener> listener = 0);
 
 private:
 	shared_ptr<ZLDialog> myDialog;
 	UserList &myUserList;
+	friend class AuthenticationDialogListener;
 };
 
 inline ZLDialog &AuthenticationDialog::dialog() { return *myDialog; }

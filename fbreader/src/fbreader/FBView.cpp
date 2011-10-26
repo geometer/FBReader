@@ -30,6 +30,14 @@
 #include "../options/FBOptions.h"
 #include "../options/FBTextStyle.h"
 
+#include "../optionsDialogMobile/MobileOptionsDialog.h"
+
+const ZLTypeId FBView::TYPE_ID(ZLTextView::TYPE_ID);
+
+const ZLTypeId &FBView::typeId() const {
+        return TYPE_ID;
+}
+
 static const std::string INDICATOR = "Indicator";
 
 FBIndicatorStyle::FBIndicatorStyle() :
@@ -95,16 +103,25 @@ shared_ptr<ZLTextPositionIndicatorInfo> FBView::indicatorInfo() const {
 	return ourIndicatorInfo;
 }
 
-void FBView::doTapScrolling(int y) {
-	if (2 * y < context().height()) {
-		FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
-	} else {
-		FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
-	}
+void FBView::doTapScrolling(int x, int y) {
+        ZLIntegerRangeOption& scrollZones = FBReader::Instance().TapScrollingZonesOption;
+        int coord, sideLength;
+        if (scrollZones.value() == ScrollingZonesEntry::LEFT_AND_RIGHT) {
+            coord = x;
+            sideLength = context().width();
+        } else {
+            coord = y;
+            sideLength = context().height();
+        }
+        if (2 * coord < sideLength) {
+            FBReader::Instance().doAction(ActionCode::TAP_SCROLL_BACKWARD);
+        } else {
+            FBReader::Instance().doAction(ActionCode::TAP_SCROLL_FORWARD);
+        }
 }
 
-bool FBView::onFingerTap(int, int y) {
-	doTapScrolling(y);
+bool FBView::onFingerTap(int x, int y) {
+        doTapScrolling(x,y);
 	return true;
 }
 
@@ -149,21 +166,22 @@ bool FBView::_onStylusPress(int, int) {
 class FBView::TapScroller : public ZLRunnable {
 
 public:
-	TapScroller(FBView &view, int y);
+        TapScroller(FBView &view, int x, int y);
 
 private:
 	void run();
 
 private:
 	FBView &myView;
+        const int myX;
 	const int myY;
 };
 
-FBView::TapScroller::TapScroller(FBView &view, int y) : myView(view), myY(y) {
+FBView::TapScroller::TapScroller(FBView &view, int x, int y) : myView(view), myX(x), myY(y) {
 }
 
 void FBView::TapScroller::run() {
-	myView.doTapScrolling(myY);
+        myView.doTapScrolling(myX, myY);
 }
 
 bool FBView::onStylusRelease(int x, int y) {
@@ -189,7 +207,7 @@ bool FBView::onStylusRelease(int x, int y) {
 			fbreader.EnableTapScrollingOption.value() &&
 			(!ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value() ||
 			 !fbreader.TapScrollingOnFingerOnlyOption.value())) {
-		myTapScroller = new TapScroller(*this, y);
+                myTapScroller = new TapScroller(*this, x, y);
 		ZLTimeManager::Instance().addAutoRemovableTask(myTapScroller, doubleClickDelay());
 		return true;
 	}
