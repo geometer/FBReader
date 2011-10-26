@@ -1,3 +1,15 @@
+fbreader (0.99.4-2) stable; urgency=low
+
+  * Fixed behaviour of ComboBox in MeeGo PR 1.1.
+
+ -- Ruslan Nigmatullin <euroelessar@yandex.ru>  Wed, 26 Oct 2011 23:59:44 +0600
+
+fbreader (0.99.4-1) stable; urgency=low
+
+  * Improved quality of local library's icons.
+
+ -- Ruslan Nigmatullin <euroelessar@yandex.ru>  Wed, 22 Oct 2011 22:20:50 +0600
+
 fbreader (0.99.4) stable; urgency=low
 
   * Fixed several segfaults connected with network library.
