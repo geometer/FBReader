@@ -14,6 +14,7 @@
 #include <QtGui/QLayout>
 #include <QtGui/QListWidget>
 #include <QtGui/QFrame>
+#include <QtGui/QPainter>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QStringList>
@@ -27,7 +28,8 @@
 #include "ZLQtUtil.h"
 
 #include "ZLQtOpenFileDialog.h"
-#include "ZLQtOpenFileDialog.h"
+#include "../view/ImageUtils.h"
+#include "../menu/DrillDownMenu.h"
 
 void ZLQtOptionView::_show() {
 	for (std::vector<QWidget*>::iterator it = myWidgets.begin(); it != myWidgets.end(); ++it) {
@@ -592,5 +594,50 @@ void StaticTextOptionView::_createItem() {
 }
 
 void StaticTextOptionView::_onAccept() const {
+}
+
+class PictureWidget : public QWidget {
+public:
+    PictureWidget(const QPixmap& picture, QWidget* parent = 0);
+    QSize sizeHint () const;
+
+private:
+    //TODO implement caching of image and ResizeEvent
+    //void resizeEvent ( QResizeEvent * event )
+    void paintEvent(QPaintEvent *event);
+
+private:
+    const QPixmap myPicture;
+};
+
+PictureWidget::PictureWidget(const QPixmap& picture, QWidget* parent): QWidget(parent), myPicture(picture) {
+
+}
+
+QSize PictureWidget::sizeHint () const {
+    QSize hint = myPicture.size();
+    hint.scale(MenuItemParameters::getMaximumBookCoverSize(), Qt::KeepAspectRatio);
+    return hint;
+}
+
+void PictureWidget::paintEvent(QPaintEvent *event) {
+    QPainter painter(this);
+    painter.drawPixmap(QPoint(0,0), ImageUtils::scaleAndCenterPixmap(myPicture, event->rect().size(), true));
+}
+
+PictureView::PictureView(const std::string &name, const std::string &tooltip, ZLPictureOptionEntry *option, ZLQtDialogContent *tab) : ZLQtOptionView(name, tooltip, option, tab) {
+    myImage = option->image();
+}
+
+void PictureView::_createItem() {
+    if (myImage.isNull()) {
+        return;
+    }
+    QWidget* widget = new PictureWidget(ImageUtils::ZLImageToQPixmap(myImage,0, QSize()));
+    myWidgets.push_back(widget);
+    myTab->addItem(widget);
+}
+
+void PictureView::_onAccept() const {
 }
 

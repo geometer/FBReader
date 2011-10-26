@@ -21,6 +21,7 @@
 #include <QtNetwork/QNetworkRequest>
 
 #include "../menu/DrillDownMenu.h"
+#include "../view/ImageUtils.h"
 
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, QObject *parent) :  QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog) {
 	myCurrentNode = &myRootNode;
@@ -89,13 +90,13 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                     if (imageUrl.isEmpty()) {
                         //TODO add caching here; at first, std image should be called, then
                         //in other thread should be transform operations, and dataChanged callings
-                        return ZLImageToQPixmap(titledNode->image(), 0, MenuItemParameters::getImageSize() );
+                        return ImageUtils::ZLImageToQPixmap(titledNode->image(), 0, MenuItemParameters::getImageSize() );
                     } else {
                         QUrl url = QUrl::fromEncoded(titledNode->imageUrl().c_str());
                         //qDebug() << "URL" << url << url.toLocalFile();
                         if (url.scheme() == QLatin1String("file")) {
                             qDebug() << url << url.toLocalFile();
-                            return urlToQPixmap(url, 0, MenuItemParameters::getImageSize());
+                            return ImageUtils::urlToQPixmap(url, 0, MenuItemParameters::getImageSize());
                         } else {
                             return downloadImage(url);
                         }
@@ -117,60 +118,6 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
 //                return zlobject_cast<ZLTreePageNode*>(node) != NULL;
         }
         return QVariant();
-}
-
-QPixmap ZLQtTreeModel::ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, const QSize &requestedSize) {
-    if (image.isNull()) {
-       return QPixmap();
-    }
-    shared_ptr<ZLImageData> imageData = ZLImageManager::Instance().imageData(*image);
-    if (imageData.isNull()) {
-        return QPixmap();
-    }
-    const QImage *qImage = static_cast<ZLQtImageData&>(*imageData).image();
-    if (qImage) {
-            if (size)
-                *size = qImage->size();
-            QImage finalImage = *qImage;
-            return centerPixmap(scalePixmap(QPixmap::fromImage(finalImage), requestedSize, false), requestedSize);
-    }
-    return QPixmap();
-}
-
-QPixmap ZLQtTreeModel::urlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize) {
-    QPixmap pixmap(url.toLocalFile());
-    QImage finalImage = pixmap.toImage();
-    if (size) {
-        *size = finalImage.size();
-    }
-    if (finalImage.isNull()) {
-        return QPixmap();
-    }
-    return scalePixmap(QPixmap::fromImage(finalImage), requestedSize, true);
-}
-
-QPixmap ZLQtTreeModel::scalePixmap(const QPixmap& pixmap, const QSize& requestedSize, bool notScaleIfLess) {
-    if (!requestedSize.isValid()) {
-        return pixmap;
-    }
-    if (notScaleIfLess && requestedSize.width() > pixmap.width() && requestedSize.height() > pixmap.height()) {
-        //qDebug() << "notScaleifLess!" << requestedSize << pixmap.size();
-        return pixmap;
-    }
-    return pixmap.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-}
-
-QPixmap ZLQtTreeModel::centerPixmap(const QPixmap& pixmap, const QSize& requestedSize) {
-    if (!requestedSize.isValid()) {
-        return pixmap;
-    }
-    QPixmap centeredPixmap(requestedSize);
-    centeredPixmap.fill(Qt::transparent);
-    QPainter painter(&centeredPixmap);
-    qreal diffX = (requestedSize.width() - pixmap.width()) / 2;
-    qreal diffY = (requestedSize.height() - pixmap.height()) / 2;
-    painter.drawPixmap(QPointF(diffX, diffY), pixmap);
-    return centeredPixmap;
 }
 
 const ZLTreeNode* ZLQtTreeModel::getTreeNode(const QModelIndex& index) const {
@@ -228,7 +175,7 @@ void ZLQtTreeModel::onRequestFinished(QNetworkReply* reply) {
     QPixmap pixmap;
     pixmap.loadFromData(reply->readAll());
     QSize imageSize =  MenuItemParameters::getImageSize();
-    pixmap = centerPixmap(scalePixmap(pixmap, imageSize, false), imageSize);
+    pixmap = ImageUtils::scaleAndCenterPixmap(pixmap, imageSize, true);
     myCache[reply->url().toString()] = pixmap;
     //TODO there should be dataChanged instead of layoutChanged()
     emit layoutChanged();

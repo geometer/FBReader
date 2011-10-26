@@ -74,6 +74,9 @@ void MobileBookInfoDialog::fillContent(ZLDialog &content, const AbstractBookInfo
 
 template <typename T>
 void MobileBookInfoDialog::doFillContent(T &content, const AbstractBookInfo &book) {
+
+        content.addOption(ZLResourceKey("cover"), new ZLPictureOptionEntry(book.image()));
+
 	content.addOption(ZLResourceKey("title"), new MobileDisplayNameEntry(book.title()));
 	
 	std::string authors = ZLStringUtil::join(book.authors(), FBNode::COMMA_JOIN_SEPARATOR);

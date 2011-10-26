@@ -88,6 +88,9 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 		case ZLOptionEntry::PATH:
 			view = new PathOptionView(name, tooltip, (ZLPathOptionEntry*)option, this);
 			break;
+                case ZLOptionEntry::PICTURE:
+                        view = new PictureView(name, tooltip, (ZLPictureOptionEntry*)option, this);
+                        break;
 	}
 
 	if (view != 0) {

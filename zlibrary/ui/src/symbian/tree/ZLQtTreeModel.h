@@ -9,6 +9,8 @@
 
 #include <ZLTreeListener.h>
 
+#include "../view/ImageUtils.h"
+
 class ZLQtTreeModel : public QAbstractListModel {
 	Q_OBJECT;
 
@@ -18,12 +20,6 @@ public:
                 ActivatableRole,
                 PageRole
         };
-
-public:
-        static QPixmap ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, const QSize &requestedSize);
-        static QPixmap urlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize);
-        static QPixmap scalePixmap(const QPixmap& image, const QSize& requestedSize, bool notScaleIfLess);
-        static QPixmap centerPixmap(const QPixmap& image, const QSize& requestedSize);
 
 public:
         explicit ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, QObject *parent = 0);

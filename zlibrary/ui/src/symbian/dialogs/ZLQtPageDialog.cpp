@@ -90,9 +90,9 @@ ZLQtPageDialog::ZLQtPageDialog(const ZLTreePageNode& pageNode, QWidget* parent) 
     connect(action, SIGNAL(triggered()), this, SLOT(accept()));
     addAction( action );
 #ifndef __SYMBIAN__
-    QPushButton* button = new QPushButton(QString::fromStdString(back.value()));
-    connect(button, SIGNAL(clicked()), this, SLOT(accept()));
-    layout->addWidget(button);
+    QPushButton* backButton = new QPushButton(QString::fromStdString(back.value()));
+    connect(backButton, SIGNAL(clicked()), this, SLOT(accept()));
+    layout->addWidget(backButton);
 #endif
 
     QAction* pageMenuAction = new QAction(this);
@@ -104,9 +104,9 @@ ZLQtPageDialog::ZLQtPageDialog(const ZLTreePageNode& pageNode, QWidget* parent) 
     connect(pageMenuAction, SIGNAL(triggered()), myPageMenu, SLOT(activate()));
     connect(this,SIGNAL(finished(int)), myPageMenu, SLOT(onFinish(int)));
 #ifndef __SYMBIAN__
-        QPushButton* button = new QPushButton(pageMenuAction->text());
-        connect(button, SIGNAL(clicked()), myPageMenu, SLOT(activate()));
-        layout->addWidget(button);
+        QPushButton* menuButton = new QPushButton(pageMenuAction->text());
+        connect(menuButton, SIGNAL(clicked()), myPageMenu, SLOT(activate()));
+        layout->addWidget(menuButton);
 #endif
 
     this->setLayout(layout);

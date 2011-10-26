@@ -24,6 +24,7 @@
 #include <string>
 
 #include <ZLOptions.h>
+#include <ZLImageManager.h>
 
 class ZLOptionView;
 
@@ -44,6 +45,7 @@ public:
 		MULTILINE,
 		STATIC,
 		PATH,
+                PICTURE,
 	};
 
 public:
@@ -249,6 +251,22 @@ private:
 	ZLStringOption &myOption;
 };
 
+class ZLPictureOptionEntry : public ZLOptionEntry {
+
+public:
+        ZLPictureOptionEntry(shared_ptr<ZLImage> image);
+        ZLOptionKind kind() const;
+        //TODO may be there should be link to:
+        //1) book-id:///45 (for cover)
+        //2) file:/// for file
+        //3) http:/// for url
+        // all of it instead of ZLImage
+        const shared_ptr<ZLImage> image() const;
+
+private:
+        shared_ptr<ZLImage> myImage;
+};
+
 
 inline ZLOptionEntry::ZLOptionEntry() : myView(0), myIsVisible(true), myIsActive(true) {}
 inline ZLOptionEntry::~ZLOptionEntry() {}
@@ -308,5 +326,9 @@ inline ZLPathOptionEntry::ZLPathOptionEntry(ZLStringOption &option): myOption(op
 inline ZLOptionEntry::ZLOptionKind ZLPathOptionEntry::kind() const { return PATH; }
 inline const std::string &ZLPathOptionEntry::initialValue() const { return myOption.value(); }
 inline void ZLPathOptionEntry::onAccept(const std::string &value) {	myOption.setValue(value); }
+
+inline ZLPictureOptionEntry::ZLPictureOptionEntry(shared_ptr<ZLImage> image): myImage(image) { }
+inline ZLOptionEntry::ZLOptionKind ZLPictureOptionEntry::kind() const { return PICTURE; }
+inline const shared_ptr<ZLImage> ZLPictureOptionEntry::image() const { return myImage; }
 
 #endif /* __ZLOPTIONENTRY_H__ */

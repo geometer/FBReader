@@ -270,4 +270,17 @@ private:
 	QLabel *myLabel;
 };
 
+class PictureView : public ZLQtOptionView {
+
+public:
+        PictureView(const std::string &name, const std::string &tooltip, ZLPictureOptionEntry *option, ZLQtDialogContent *tab);
+
+private:
+        void _createItem();
+        void _onAccept() const;
+
+private:
+        shared_ptr<ZLImage> myImage;
+};
+
 #endif /* __ZLQTOPTIONVIEW_H__ */

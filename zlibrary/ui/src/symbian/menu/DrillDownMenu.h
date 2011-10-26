@@ -34,6 +34,7 @@ namespace MenuItemParameters {
     QSize getImageSize();
     QFont getFont();
     QFont getSubtitleFont();
+    QSize getMaximumBookCoverSize();
     int MMtoPixels(int mm);
 }
 

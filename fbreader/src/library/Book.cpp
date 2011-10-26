@@ -301,6 +301,14 @@ std::string LocalBookInfo::seriesTitle() const {
 	return myBook->seriesTitle();
 }
 
+shared_ptr<ZLImage> LocalBookInfo::image() const {
+    shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*myBook);
+    if (plugin.isNull()) {
+        return 0;
+    }
+    return plugin->coverImage(myBook->file());
+}
+
 std::vector<std::string> LocalBookInfo::tags() const {
 	std::vector<std::string> result;
 	TagList::const_iterator it;
