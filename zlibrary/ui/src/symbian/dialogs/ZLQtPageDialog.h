@@ -12,11 +12,8 @@
 class PageMenu : public QObject {
     Q_OBJECT
 
-
-
 public:
-    PageMenu(const ZLTreePageNode& pageNode);
-    void setWidget(QWidget* widget); //widget where action will be placed
+    PageMenu(const ZLTreePageNode& pageNode, QAction* action, QObject* parent = 0);
 
 public:
     static std::vector<shared_ptr<ZLTreeAction> > filterSensibleActions(const std::vector<shared_ptr<ZLTreeAction> > & actions);
@@ -26,7 +23,7 @@ signals:
 
 public slots:
     void activate();
-    void finished(int);
+    void onFinish(int);
 
 private:
     void setActionButton();
@@ -34,7 +31,6 @@ private:
 private:
     QAction* myAction;
     const ZLTreePageNode& myPageNode;
-    QWidget* myWidget;
 };
 
 
@@ -43,6 +39,7 @@ class ZLQtPageDialog : public QDialog {
 
 public:
     ZLQtPageDialog(const ZLTreePageNode& pageNode, QWidget* parent = 0);
+    ~ZLQtPageDialog();
 
 public:
     bool run();
@@ -50,7 +47,7 @@ public:
 private:
     shared_ptr<ZLDialogContent> myContent;
     const ZLTreePageNode& myPageNode;
-    PageMenu myPageMenu;
+    PageMenu* myPageMenu;
 };
 
 class WrapperAction : public ZLApplication::Action {

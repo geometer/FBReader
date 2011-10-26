@@ -36,7 +36,7 @@ protected:
 	virtual ZLResourceKey contentKey() const = 0;
 	
 private:
-	mutable shared_ptr<ZLDialogContent> myContent;
+        mutable shared_ptr<ZLDialogContent> myContent;
 };
 
 #endif // ZLTREEPAGENODE_H

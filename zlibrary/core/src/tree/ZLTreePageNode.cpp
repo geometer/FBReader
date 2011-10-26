@@ -27,10 +27,12 @@ const ZLTypeId &ZLTreePageNode::typeId() const {
 }
 
 shared_ptr<ZLDialogContent> ZLTreePageNode::content() const {
-	if (myContent.isNull()) {
-		ZLDialogManager &manager = ZLDialogManager::Instance();
-		myContent = manager.createContent(contentKey());
-		fillContent(*myContent);
-	}
+        // if was commented, because there's necessary to make new content each time,
+        //because object ZLQtDialogContent has inner widget, that can become invalidated
+        //if (myContent.isNull()) {
+                ZLDialogManager &manager = ZLDialogManager::Instance();
+                myContent = manager.createContent(contentKey());
+                fillContent(*myContent);
+        //}
 	return myContent;
 }

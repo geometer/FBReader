@@ -27,6 +27,7 @@ public:
 };
 
 namespace MenuItemParameters {
+    //TODO replace MenuItemsParameters implementation to separate file
     int getMenuDialogHeight();
     int getTapBottomZoneSize();
     QSize getItemSize();
