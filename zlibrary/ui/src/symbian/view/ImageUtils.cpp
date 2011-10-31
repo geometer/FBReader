@@ -1,3 +1,4 @@
+#include <QtCore/QDebug>
 #include <QtGui/QPainter>
 
 #include "../image/ZLQtImageManager.h"
@@ -22,7 +23,7 @@ QPixmap ImageUtils::ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, con
     return QPixmap();
 }
 
-QPixmap ImageUtils::urlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize) {
+QPixmap ImageUtils::fileUrlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize) {
     QPixmap pixmap(url.toLocalFile());
     QImage finalImage = pixmap.toImage();
     if (size) {
