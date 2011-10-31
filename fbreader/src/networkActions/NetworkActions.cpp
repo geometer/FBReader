@@ -32,6 +32,8 @@
 #include "../library/Book.h"
 #include "../fbreader/FBReader.h"
 
+const ZLTypeId NetworkBookDownloadAction::TYPE_ID(ZLTreeAction::TYPE_ID);
+
 NetworkBookReadAction::NetworkBookReadAction(ZLTreeNode *node, const NetworkBookItem &book, bool demo) : myNode(node), myBook(book), myDemo(demo) {
 }
 
@@ -76,6 +78,10 @@ void NetworkBookReadAction::run() {
 		}
 	}
 	finished(std::string());
+}
+
+const ZLTypeId &NetworkBookDownloadAction::typeId() const {
+        return TYPE_ID;
 }
 
 NetworkBookDownloadAction::NetworkBookDownloadAction(ZLTreeNode *node, const NetworkBookItem &book, bool demo, const std::string &tag) : myNode(node), myBook(book), myDemo(demo), myTag(tag) {

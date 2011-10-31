@@ -61,7 +61,3 @@ std::string AuthorNode::imageUrl() const {
 shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
 	return FBNode::defaultCoverImage("booktree-author.png");
 }
-
-void AuthorNode::requestChildren() {
-    //TODO may be add lazy initialization here
-}

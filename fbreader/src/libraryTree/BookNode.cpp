@@ -55,9 +55,9 @@ public:
 	}
 	
 	virtual void run() {
-		FBReader::Instance().openBook(myNode->book());
-		finished(std::string());
-		myNode->close();
+                FBReader::Instance().openBook(myNode->book());
+                finished(std::string());
+                myNode->close();
 	}
 
 	virtual ZLResourceKey key() const {
@@ -103,9 +103,6 @@ shared_ptr<ZLImage> BookNode::originalImage() const {
 		myStoredCoverImage = plugin->coverImage(myBook->file());
 	}
 	return myStoredCoverImage;
-}
-
-void BookNode::requestChildren() {
 }
 
 void BookNode::fillContent(ZLDialogContent &content) const {

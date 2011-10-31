@@ -23,7 +23,9 @@
 #include "../menu/DrillDownMenu.h"
 #include "../view/ImageUtils.h"
 
-ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, QObject *parent) :  QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog) {
+ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog,
+                             shared_ptr<ZLExecutionData::Listener> listener, QObject *parent) :
+    QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog), myListener(listener) {
 	myCurrentNode = &myRootNode;
 
         //network
@@ -58,7 +60,12 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
 	} else {
 		myCurrentNode = node;
                 //qDebug() << "\nrequesting children";
-                myCurrentNode->requestChildren();
+                myListener->showPercent(0,0); // indeterminant progress-bar
+                //TODO implement each listener for each current node, because:
+                //in case if one catalog item will requesting childrens,
+                //then another item will requesting others,
+                //progress bar will be hided if one will completed before other
+                myCurrentNode->requestChildren(myListener);
 	}
         emit layoutChanged();
 	return true;
@@ -175,8 +182,10 @@ void ZLQtTreeModel::onRequestFinished(QNetworkReply* reply) {
     QPixmap pixmap;
     pixmap.loadFromData(reply->readAll());
     QSize imageSize =  MenuItemParameters::getImageSize();
-    pixmap = ImageUtils::scaleAndCenterPixmap(pixmap, imageSize, true);
-    myCache[reply->url().toString()] = pixmap;
+    if (!pixmap.isNull()) {
+        pixmap = ImageUtils::scaleAndCenterPixmap(pixmap, imageSize, true);
+    }
+    myCache[reply->url().toString()] = pixmap.isNull() ? myEmptyPixmap : pixmap;
     //TODO there should be dataChanged instead of layoutChanged()
     emit layoutChanged();
 }
@@ -190,6 +199,6 @@ void ZLQtTreeModel::onRequestFinished(QNetworkReply* reply) {
      }
      QNetworkRequest request(url);
      myManager.get(request);
-     qDebug() << myEmptyPixmap.size();
+     //qDebug() << myEmptyPixmap.size();
      return myEmptyPixmap;
  }

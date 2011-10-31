@@ -22,7 +22,8 @@ public:
         };
 
 public:
-        explicit ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, QObject *parent = 0);
+        explicit ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog,
+                               shared_ptr<ZLExecutionData::Listener> listener, QObject *parent = 0);
 
 public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -53,6 +54,8 @@ private:
 	ZLTreeNode* myCurrentNode;
         //TODO remove two-sided pointing (model should not know about ui element)
         QDialog* myTreeDialog;
+
+        shared_ptr<ZLExecutionData::Listener> myListener;
 
 private: //network
         //TODO refactor it: network manager in model is bad

@@ -47,10 +47,6 @@ const ZLResource &TagNode::resource() const {
 	return ZLResource::resource("libraryView")["tagNode"];
 }
 
-void TagNode::requestChildren() {
-    //TODO may be add lazy initialization here
-}
-
 std::string TagNode::title() const {
 	if (myTag.isNull()) {
 		return resource()["noTags"].value();

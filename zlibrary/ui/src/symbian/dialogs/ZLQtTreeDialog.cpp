@@ -56,8 +56,14 @@ QSize SubtitleDelegate::sizeHint(const QStyleOptionViewItem &option, const QMode
 
 ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	QVBoxLayout* layout = new QVBoxLayout(this);
+        myWaitWidget = new WaitWidget;
+
+        TreeActionListener* listener = new TreeActionListener;
+        //because we should have a shared_ptr
+        myListener = listener;
+
 	myView = new QListView;
-	myModel = new ZLQtTreeModel(rootNode(), this);
+        myModel = new ZLQtTreeModel(rootNode(), this, myListener);
 	myView->setModel(myModel);
         myView->setItemDelegate(new SubtitleDelegate);
 
@@ -78,6 +84,7 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
         connect(myView, SIGNAL(clicked(QModelIndex)), this, SLOT(enter(QModelIndex)));
 	myView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+        layout->addWidget(myWaitWidget);
 	layout->addWidget(myView);
 
 #ifndef 	__SYMBIAN__
@@ -85,7 +92,8 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	connect(button, SIGNAL(clicked()), this, SLOT(back()));
 	layout->addWidget(button);
 #endif
-
+        connect(listener,SIGNAL(percentChanged(int,int)), myWaitWidget, SLOT(showPercent(int,int)));
+        connect(listener,SIGNAL(finishedHappened(std::string)), myWaitWidget, SLOT(finished(std::string)));
 }
 
 void ZLQtTreeDialog::back() {
@@ -132,4 +140,31 @@ void ZLQtTreeDialog::onNodeEndRemove() {
 
 void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode *node) {
         myModel->onNodeUpdated(node);
+}
+
+WaitWidget::WaitWidget(QWidget* parent) : QWidget(parent) {
+    myProgressBar = new QProgressBar;
+    QHBoxLayout* layout = new QHBoxLayout;
+    layout->addWidget(myProgressBar);
+    this->setLayout(layout);
+    this->hide(); // hide by default
+
+}
+
+void WaitWidget::showPercent(int ready, int full) {
+    myProgressBar->setRange(0,full);
+    myProgressBar->setValue(ready);
+    this->show();
+}
+
+void WaitWidget::finished(const std::string &error) {
+    this->hide();
+}
+
+void TreeActionListener::showPercent(int ready, int full) {
+    emit percentChanged(ready,full);
+}
+
+void TreeActionListener::finished(const std::string &error) {
+    emit finishedHappened(error);
 }

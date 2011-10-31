@@ -29,6 +29,12 @@ class NetworkBookItem;
 class NetworkBookDownloadAction : public ZLTreeAction, public DownloadBookListener {
 
 public:
+    static const ZLTypeId TYPE_ID;
+
+private:
+    const ZLTypeId &typeId() const;
+
+public:
 	NetworkBookDownloadAction(ZLTreeNode *node, const NetworkBookItem &book, bool demo, const std::string &tag = std::string());
 	ZLResourceKey key() const;
 	bool makesSense() const;

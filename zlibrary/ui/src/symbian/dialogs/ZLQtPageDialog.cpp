@@ -2,11 +2,18 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QAction>
 #include <QtGui/QPushButton>
+#include <QtCore/QDebug>
 
+#include <ZLDialogManager.h>
+#include "ZLQtProgressDialog.h"
 #include "ZLQtPageDialog.h"
 #include "ZLQtDialogContent.h"
 
 #include "../menu/DrillDownMenu.h"
+#include "ZLQtTreeDialog.h"
+
+//remove this:
+#include "../../../fbreader/src/networkActions/NetworkActions.h"
 
 WrapperAction::WrapperAction(shared_ptr<ZLTreeAction> runnable) : myRunnable(runnable) {
 
@@ -16,9 +23,24 @@ bool WrapperAction::isVisible() const {
     return myRunnable->makesSense();
 }
 
-void WrapperAction::run() {
-    //ZLDialogManager::Instance().wait(ZLResourceKey("loadingBook"),*myRunnable);
+void WrapperAction::run() {   
+    if (!zlobject_cast<NetworkBookDownloadAction*>(&*myRunnable)) {
+        myRunnable->run();
+        return;
+    }
+
+    //todo remove this hack (UI shoud not know about fbreader)
+    shared_ptr<ZLExecutionData::Listener> listener = new TreeActionListener;
+    myRunnable->setListener(listener);
+    //TODO here should be some 'wait text', that's can be taken from ZLRunnable
+
+    shared_ptr<ZLProgressDialog> dialog = ZLDialogManager::Instance().createProgressDialog(ZLResourceKey("downloadBook"));
+
+    //TODO remove static_casts
+    ZLQtProgressDialog* tmpDialog = static_cast<ZLQtProgressDialog*>(&*dialog);
+    TreeActionListener* treeActionListener = static_cast<TreeActionListener*>(&*listener);
     myRunnable->run();
+    tmpDialog->run(treeActionListener);
 }
 
 PageMenu::PageMenu(const ZLTreePageNode& pageNode, QAction* action, QObject* parent): QObject(parent), myPageNode(pageNode), myAction(action) {
@@ -64,7 +86,7 @@ void PageMenu::activate() {
         return;
     }
     if (senseActions.size() == 1) {
-        senseActions.at(0)->run();
+        WrapperAction(senseActions.at(0)).run();
         return;
     }
     DrillDownMenuDialog dialog;
