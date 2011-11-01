@@ -28,10 +28,14 @@ QPixmap ImageProvider::getFromZLImage(shared_ptr<ZLImage> image) const {
 QPixmap ImageProvider::getUrlImage(QUrl url) const {
     //qDebug() << Q_FUNC_INFO << url;
     //TODO implement retransfrom image if MenuItemParamters has been changed
+    if (myCache.contains(url.toString())) {
+        return myCache[url.toString()];
+    }
     if (url.scheme() == QLatin1String("file")) {
         qDebug() << url << url.toLocalFile();
-        //TODO add cache here
-        return ImageUtils::fileUrlToQPixmap(url, 0, MenuItemParameters::getImageSize());
+        QPixmap pixmap = ImageUtils::fileUrlToQPixmap(url, 0, MenuItemParameters::getImageSize());
+        myCache[url.toString()] = pixmap.isNull() ? myEmptyPixmap : pixmap;
+        return pixmap;
     } else {
         return downloadImage(url);
     }
@@ -53,11 +57,7 @@ void ImageProvider::onRequestFinished(QNetworkReply* reply) {
      if (!url.isValid()) {
          return myEmptyPixmap;
      }
-     if (myCache.contains(url.toString())) {
-         return myCache.value(url.toString());
-     }
      QNetworkRequest request(url);
      myManager.get(request);
-     //qDebug() << myEmptyPixmap.size();
      return myEmptyPixmap;
  }

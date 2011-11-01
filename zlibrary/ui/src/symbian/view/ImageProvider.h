@@ -37,9 +37,10 @@ private:
 
 private:
         mutable QNetworkAccessManager myManager;
+        mutable QMap<QString,QPixmap> myCache;
         QPixmap myEmptyPixmap;
         //TODO cache should not be deleted after closing net library dialog (??)
-        QMap<QString,QPixmap> myCache;
+
 
 private:
     static ImageProvider* myInstance;
@@ -48,3 +49,4 @@ private:
 };
 
 #endif /* __IMAGEPROVIDER_H__ */
+
