@@ -20,6 +20,7 @@ ImageProvider::ImageProvider() {
 }
 
 QPixmap ImageProvider::getFromZLImage(shared_ptr<ZLImage> image) const {
+    qDebug() << Q_FUNC_INFO;
     //implement caching
     //qDebug() << Q_FUNC_INFO << MenuItemParameters::getImageSize();
     return ImageUtils::ZLImageToQPixmap(image, 0, MenuItemParameters::getImageSize() );
@@ -27,7 +28,7 @@ QPixmap ImageProvider::getFromZLImage(shared_ptr<ZLImage> image) const {
 
 QPixmap ImageProvider::getUrlImage(QUrl url) const {
     //qDebug() << Q_FUNC_INFO << url;
-    //TODO implement retransfrom image if MenuItemParamters has been changed
+    //TODO implement retransform image if MenuItemParamters has been changed
     if (myCache.contains(url.toString())) {
         return myCache[url.toString()];
     }
@@ -50,7 +51,18 @@ void ImageProvider::onRequestFinished(QNetworkReply* reply) {
         pixmap = ImageUtils::scaleAndCenterPixmap(pixmap, imageSize, true);
     }
     myCache[reply->url().toString()] = pixmap.isNull() ? myEmptyPixmap : pixmap;
-    emit updated();
+    emit cacheUpdated();
+}
+
+QPixmap ImageProvider::getFromZLImage(QString cacheId, shared_ptr<ZLImage> image) const {
+    qDebug() << Q_FUNC_INFO << cacheId;
+    if (myZLImageCache.contains(cacheId)) {
+        return myZLImageCache[cacheId];
+    }
+    //TODO implement rescaling in other thread
+    QPixmap pixmap = getFromZLImage(image);
+    myZLImageCache[cacheId] = pixmap.isNull() ? myEmptyPixmap : pixmap;
+    return pixmap;
 }
 
  const QPixmap& ImageProvider::downloadImage(QUrl url) const {

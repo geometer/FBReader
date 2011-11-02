@@ -20,11 +20,12 @@ public:
 public:
     QPixmap getUrlImage(QUrl url) const;
     QPixmap getFromZLImage(shared_ptr<ZLImage> image) const;
+    QPixmap getFromZLImage(QString cacheId, shared_ptr<ZLImage> image) const;
 
 signals:
 //    void imageTransfromed();
 //    void imageLoaded();
-    void updated();
+    void cacheUpdated();
 
 private:
     ImageProvider();
@@ -38,6 +39,7 @@ private:
 private:
         mutable QNetworkAccessManager myManager;
         mutable QMap<QString,QPixmap> myCache;
+        mutable QMap<QString,QPixmap> myZLImageCache;
         QPixmap myEmptyPixmap;
         //TODO cache should not be deleted after closing net library dialog (??)
 

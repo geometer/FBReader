@@ -84,7 +84,9 @@ std::string BookNode::imageUrl() const {
 	shared_ptr<ZLImage> image = originalImage();
 	if (image.isNull())
 		return FBNode::defaultImageUrl("booktree-book.png");
-	return std::string();
+        std::string url("ZLImage://");
+        ZLStringUtil::appendNumber(url, (unsigned int)myBook->bookId());
+        return url;
 }
 
 shared_ptr<ZLImage> BookNode::image() const {
