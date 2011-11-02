@@ -43,7 +43,8 @@ QPixmap ImageUtils::scalePixmap(const QPixmap& pixmap, const QSize& requestedSiz
         //qDebug() << "notScaleifLess!" << requestedSize << pixmap.size();
         return pixmap;
     }
-    return pixmap.scaled(requestedSize, Qt::KeepAspectRatio, Qt::FastTransformation);
+    //TODO for small item we should use Qt::FastTransformation
+    return pixmap.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 QPixmap ImageUtils::centerPixmap(const QPixmap& pixmap, const QSize& requestedSize) {

@@ -89,6 +89,7 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                     else
                             return QString("No title");
             case Qt::DecorationRole:
+                //TODO check for asking decoration role only for items on screen
                 if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
                     QString imageUrl = QString::fromStdString(titledNode->imageUrl());
                     qDebug() << Q_FUNC_INFO << imageUrl;

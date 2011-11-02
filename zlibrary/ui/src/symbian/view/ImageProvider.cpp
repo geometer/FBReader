@@ -15,6 +15,11 @@ ImageProvider& ImageProvider::Instance() {
 
 ImageProvider::ImageProvider() {
     connect(&myManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
+    myTransformer.start();
+    connect(&myTransformer, SIGNAL(ZLImageIsReady(QString,QPixmap)), this, SLOT(onZLImageIsReady(QString,QPixmap)));
+    connect(this, SIGNAL(ZLImageToQPixmap(QString,shared_ptr<ZLImage>,QSize)), &myTransformer, SLOT(ZLImageToQPixmap(QString,shared_ptr<ZLImage>,QSize)));
+    connect(&myTransformer, SIGNAL(fileUrlIsReady(QUrl,QPixmap)), this, SLOT(onFileUrlIsReady(QUrl,QPixmap)));
+    connect(this, SIGNAL(fileUrlToQPixmap(QUrl,QSize)), &myTransformer, SLOT(fileUrlToQPixmap(QUrl,QSize)));
     myEmptyPixmap = QPixmap(MenuItemParameters::getImageSize());
     myEmptyPixmap.fill(Qt::transparent);
 }
@@ -34,9 +39,8 @@ QPixmap ImageProvider::getUrlImage(QUrl url) const {
     }
     if (url.scheme() == QLatin1String("file")) {
         qDebug() << url << url.toLocalFile();
-        QPixmap pixmap = ImageUtils::fileUrlToQPixmap(url, 0, MenuItemParameters::getImageSize());
-        myCache[url.toString()] = pixmap.isNull() ? myEmptyPixmap : pixmap;
-        return pixmap;
+        emit fileUrlToQPixmap(url, MenuItemParameters::getImageSize());
+        return myEmptyPixmap;
     } else {
         return downloadImage(url);
     }
@@ -54,15 +58,25 @@ void ImageProvider::onRequestFinished(QNetworkReply* reply) {
     emit cacheUpdated();
 }
 
+void ImageProvider::onZLImageIsReady(QString cacheId, QPixmap pixmap) {
+    qDebug() << Q_FUNC_INFO << cacheId;
+    myZLImageCache[cacheId] = pixmap.isNull() ? myEmptyPixmap : pixmap;
+    emit cacheUpdated();
+}
+
+void ImageProvider::onFileUrlIsReady(QUrl url, QPixmap pixmap) {
+    qDebug() << Q_FUNC_INFO << url;
+    myCache[url.toString()] = pixmap.isNull() ? myEmptyPixmap : pixmap;
+    emit cacheUpdated();
+}
+
 QPixmap ImageProvider::getFromZLImage(QString cacheId, shared_ptr<ZLImage> image) const {
     qDebug() << Q_FUNC_INFO << cacheId;
     if (myZLImageCache.contains(cacheId)) {
         return myZLImageCache[cacheId];
     }
-    //TODO implement rescaling in other thread
-    QPixmap pixmap = getFromZLImage(image);
-    myZLImageCache[cacheId] = pixmap.isNull() ? myEmptyPixmap : pixmap;
-    return pixmap;
+    emit ZLImageToQPixmap(cacheId, image, MenuItemParameters::getImageSize());
+    return myEmptyPixmap;
 }
 
  const QPixmap& ImageProvider::downloadImage(QUrl url) const {
@@ -73,3 +87,19 @@ QPixmap ImageProvider::getFromZLImage(QString cacheId, shared_ptr<ZLImage> image
      myManager.get(request);
      return myEmptyPixmap;
  }
+
+ PixmapTransfomer::PixmapTransfomer(QObject *parent) : QThread(parent) {
+
+ }
+
+void PixmapTransfomer::ZLImageToQPixmap(QString cacheId, shared_ptr<ZLImage> image,QSize size) {
+    qDebug() << Q_FUNC_INFO << cacheId << size;
+    QPixmap pixmap = ImageUtils::ZLImageToQPixmap(image, 0, size);
+    emit ZLImageIsReady(cacheId, pixmap);
+}
+
+void PixmapTransfomer::fileUrlToQPixmap(QUrl url, QSize size) {
+    qDebug() << Q_FUNC_INFO << url << size;
+    QPixmap pixmap = ImageUtils::fileUrlToQPixmap(url, 0, size);
+    emit fileUrlIsReady(url, pixmap);
+}
