@@ -94,7 +94,7 @@ std::string FBNode::defaultImageUrl(const std::string &id) {
 		url = ZLibrary::ApplicationImageDirectory();
 		url += "/";
 		url += id;
-		url = "file://" + percent_encoding(url);
+                url = LOCALFILE_SCHEME + SCHEME_POSTFIX + percent_encoding(url);
 	}
 	return url;
 }

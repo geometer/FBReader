@@ -10,6 +10,7 @@
 #include <ZLTreeListener.h>
 
 #include "../view/ImageUtils.h"
+#include "../view/ImageProvider.h"
 
 class ZLQtTreeModel : public QAbstractListModel {
 	Q_OBJECT;
@@ -46,6 +47,7 @@ public slots:
 
 private:
 	ZLTreeListener::RootNode& myRootNode;
+        ImageProvider myImageProvider;
 	ZLTreeNode* myCurrentNode;
         //TODO remove two-sided pointing (model should not know about ui element)
         QDialog* myTreeDialog;

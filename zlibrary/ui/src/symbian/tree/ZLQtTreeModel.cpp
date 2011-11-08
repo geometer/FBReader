@@ -19,12 +19,11 @@
 #include <QtGui/QApplication>
 
 #include "../menu/DrillDownMenu.h"
-#include "../view/ImageProvider.h"
 
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, shared_ptr<ZLExecutionData::Listener> listener, QObject *parent) :
     QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog), myListener(listener) {
     myCurrentNode = &myRootNode;
-    connect(&ImageProvider::Instance(), SIGNAL(cacheUpdated()), this, SLOT(update()));
+    connect(&myImageProvider, SIGNAL(cacheUpdated()), this, SLOT(update()));
 }
 
 bool ZLQtTreeModel::back() {
@@ -91,23 +90,7 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
             case Qt::DecorationRole:
                 //TODO check for asking decoration role only for items on screen
                 if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
-                    QString imageUrl = QString::fromStdString(titledNode->imageUrl());
-                    qDebug() << Q_FUNC_INFO << imageUrl;
-                    if (imageUrl.isEmpty()) {
-                        //TODO move all logic about QUrl and stuff like that to ImageProvider
-                        //TODO add caching here; at first, std image should be called, then
-                        //in other thread should be transform operations, and dataChanged callings
-                        return ImageProvider::Instance().getFromZLImage(titledNode->image());
-                        //return ImageProvider::Instance().getBookCover(bookID);
-                    } else {
-                        QUrl url = QUrl::fromEncoded(titledNode->imageUrl().c_str());
-                        //TODO place 'cover' in one place
-                        if (url.scheme() == QLatin1String("ZLImage")) {
-                            return ImageProvider::Instance().getFromZLImage(url.toString(QUrl::RemoveScheme),titledNode->image());
-                        }
-                        //qDebug() << "URL" << url << url.toLocalFile();
-                        return ImageProvider::Instance().getUrlImage(url);
-                    }
+                    return myImageProvider.getImageForNode(titledNode);
                 }
                 break;
             case SubTitleRole:
