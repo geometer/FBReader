@@ -8,6 +8,7 @@
 #include <ZLTreeDialog.h>
 
 #include "../tree/ZLQtTreeModel.h"
+#include "../tree/ZLQtTreeView.h"
 
 class WaitWidget;
 class TreeActionListener;
@@ -35,7 +36,7 @@ public slots:
 private:
         WaitWidget* myWaitWidget;
         shared_ptr<ZLExecutionData::Listener> myListener;
-	QListView* myView;
+        ZLQtTreeView* myView;
 	ZLQtTreeModel* myModel;
 };
 

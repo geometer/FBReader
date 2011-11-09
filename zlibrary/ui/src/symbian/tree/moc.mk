@@ -1,1 +1,2 @@
-SRCMOC = ZLQtTreeModel.moc.cpp
+SRCMOC = ZLQtTreeModel.moc.cpp ZLQtTreeView.moc.cpp
+
