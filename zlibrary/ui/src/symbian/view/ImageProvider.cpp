@@ -35,7 +35,7 @@ void ImageProvider::imageIsReady(const ZLTreeTitledNode* node, QPixmap pixmap) c
 
 void PixmapTransfomer::needImage(const ZLTreeTitledNode* titledNode) const {
     QString imageUrl = QString::fromStdString(titledNode->imageUrl());
-    qDebug() << Q_FUNC_INFO << imageUrl;
+    //qDebug() << Q_FUNC_INFO << imageUrl;
     if (imageUrl.isEmpty()) {
         //emit imageIsReady(titledNode,getZLImage(titledNode->image()));
 
@@ -53,6 +53,8 @@ void PixmapTransfomer::needImage(const ZLTreeTitledNode* titledNode) const {
     }
     if (url.scheme() == QLatin1String(ZLTreeTitledNode::ZLIMAGE_SCHEME.c_str())) {
         if (titledNode->image().isNull()) {
+            qDebug() << "situation where ZLImage is 0, and link to ZLImage";
+            emit imageIsReady(titledNode, QPixmap());
             return;
         }
         myCache[url] = getZLImage(titledNode->image());
