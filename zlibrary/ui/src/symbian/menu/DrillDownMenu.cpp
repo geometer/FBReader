@@ -174,7 +174,11 @@ int MenuItemParameters::MMtoPixels(int mm) {
 }
 
 QSize MenuItemParameters::getItemSize() {
+#ifdef 	__SYMBIAN__
     static const int SIZE_FOR_FINGERS_MM = 8; // in millimetres
+#else
+    static const int SIZE_FOR_FINGERS_MM = 25; // in millimetres
+#endif
     static const int MAX_PART_OF_SCREEN = 5;  // if 1/5 of screen if less than sizeForFingersMM,
                                            // set size as 1/5 of screen
     QRect rect = qApp->desktop()->availableGeometry();
