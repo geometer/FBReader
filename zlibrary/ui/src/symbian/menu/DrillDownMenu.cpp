@@ -187,10 +187,21 @@ QSize MenuItemParameters::getItemSize() {
 }
 
 QSize MenuItemParameters::getImageSize() {
-    static const qreal COEF = 0.9;
+    static const qreal COEF_W = 0.7;
+    static const qreal COEF_H = 0.5;
+    int height = getImageZoneSize().height();
+    int width = getImageZoneSize().width();
+    width  *= COEF_W;
+    height *= COEF_H;
+    return QSize(width,height);
+}
+
+QSize MenuItemParameters::getImageZoneSize() {
+    static const qreal COEF_W = 0.75;
     int height = getItemSize().height();
-    height *= COEF;
-    return QSize(height,height);
+    int width = height;
+    width *= COEF_W;
+    return QSize(width,height);
 }
 
 QFont MenuItemParameters::getFont() {

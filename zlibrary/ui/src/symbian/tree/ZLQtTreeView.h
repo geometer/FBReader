@@ -31,6 +31,10 @@ private:
     void drawSubtitle(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void drawIcon(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
     void drawHighlight(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
+private:
+    static QRect getCenteredRectangle(QRect zoneRect, QSize imageSize);
+    static int getTextLeftMargin(const QStyleOptionViewItem &option);
+    static int getLeftMargin();
 
 };
 
