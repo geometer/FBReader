@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,20 @@
  * 02110-1301, USA.
  */
 
-#include "../options/FBCategoryKey.h"
+#include <map>
+
+#include <ZLStringUtil.h>
 
 #include "Migration.h"
-#include "migrate.h"
+#include "../fbreader/FBReaderActions.h"
+#include "../database/booksdb/BooksDBUtil.h"
+#include "../database/booksdb/BooksDB.h"
 
-MigrationRunnable::MigrationRunnable() :
-	myVersionOption(FBCategoryKey::SYSTEM, "Version", "FBReaderVersion", "0") {
+Migration_0_99_5::Migration_0_99_5() : Migration("0.99.5") {
 }
 
-bool MigrationRunnable::shouldMigrate() const {
-	return
-		Migration::extractVersionInformation(myVersionOption.value()) <
-		Migration::extractVersionInformation(VERSION);
-}
-
-void MigrationRunnable::run() {
-	Migration_0_8_11().doMigration();
-	Migration_0_8_13().doMigration();
-	Migration_0_8_16().doMigration();
-	Migration_0_10_4().doMigration();
-	Migration_0_11_0().doMigration();
-	Migration_0_99_5().doMigration();
-
-	myVersionOption.setValue(VERSION);
+void Migration_0_99_5::doMigrationInternal() {
+	shared_ptr<DBCommand> cmd;
+	cmd = SQLiteFactory::createCommand("DROP TABLE NetFiles", BooksDB::Instance().connection());
+	cmd->execute();
 }

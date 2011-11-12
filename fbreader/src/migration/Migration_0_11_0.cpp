@@ -511,18 +511,19 @@ bool Migration_0_11_0_Runnable::migrateBookLastState(const std::string &fileName
 
 bool Migration_0_11_0_Runnable::migrateNetwork() {
 	bool res = true;
-	std::vector<std::string> urls;
-	ZLOption::listOptionNames(NET_FILES_GROUP, urls);
-	for (std::vector<std::string>::const_iterator it = urls.begin(); it != urls.end(); ++it) {
-		const std::string &url = *it;
-		const std::string fileName = ZLStringOption(ZLCategoryKey::NETWORK, NET_FILES_GROUP, url, "").value();
-		if (!BooksDB::Instance().setNetFile(url, fileName)) {
-			std::cerr << "ERROR: saving file's URL failed: " << std::endl 
-				<< "\tURL = " << url << std::endl
-				<< "\tfileName = " << fileName << std::endl;
-			res = false;
-		}
-	}
+//	0.99.4 deprecates NetFiles table, so don't fill it
+//	std::vector<std::string> urls;
+//	ZLOption::listOptionNames(NET_FILES_GROUP, urls);
+//	for (std::vector<std::string>::const_iterator it = urls.begin(); it != urls.end(); ++it) {
+//		const std::string &url = *it;
+//		const std::string fileName = ZLStringOption(ZLCategoryKey::NETWORK, NET_FILES_GROUP, url, "").value();
+//		if (!BooksDB::Instance().setNetFile(url, fileName)) {
+//			std::cerr << "ERROR: saving file's URL failed: " << std::endl 
+//				<< "\tURL = " << url << std::endl
+//				<< "\tfileName = " << fileName << std::endl;
+//			res = false;
+//		}
+//	}
 	ZLOption::clearGroup(NET_FILES_GROUP); // clean state.xml
 	return res;
 }

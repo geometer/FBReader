@@ -51,14 +51,7 @@ const std::string &DecoratedBookReference::cleanURL() const {
 }
 
 std::string BookReference::localCopyFileName() const {
-	std::string fileName =
-		NetworkLinkCollection::Instance().bookFileName(*this);
-	if (!fileName.empty() && ZLFile(fileName).exists()) {
-		return fileName;
-	}
-
-	fileName =
-		NetworkLinkCollection::Instance().makeBookFileName(*this);
+	std::string fileName = NetworkLinkCollection::Instance().bookFileName(*this);
 	if (!fileName.empty() && ZLFile(fileName).exists()) {
 		return fileName;
 	}
