@@ -213,7 +213,7 @@ ShowMobileBookInfoAction::ShowMobileBookInfoAction()  {
 void ShowMobileBookInfoAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	shared_ptr<Book> book = fbreader.myModel->book();
-	if (MobileBookInfoDialog(book).dialog().run()) {
+        if (MobileBookInfoDialog(book).dialog().runFullscreen()) {
 		fbreader.openBook(book);
 		fbreader.refreshWindow();
 	}

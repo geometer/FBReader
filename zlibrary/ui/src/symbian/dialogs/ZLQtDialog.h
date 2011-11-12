@@ -14,6 +14,7 @@ public:
 
 	void addButton(const ZLResourceKey &key, bool accept);
 	bool run();
+        bool runFullscreen();
 
 private:
 };

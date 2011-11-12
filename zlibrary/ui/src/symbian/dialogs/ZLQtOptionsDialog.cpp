@@ -119,8 +119,10 @@ bool ZLQtOptionsDialog::run() {
 void ZLQtOptionsDialog::setFullScreenWithSoftButtons() {
 #ifdef __SYMBIAN__
 	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+        setWindowState(Qt::WindowFullScreen);
+#else
+        setFixedSize(400,600);
 #endif
-	setWindowState(Qt::WindowFullScreen);
 }
 
 bool ZLQtOptionsDialog::runInternal() {
