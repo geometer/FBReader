@@ -50,6 +50,7 @@ ZLQtNetworkManager::ZLQtNetworkManager() {
 	myCache = new ZLQtNetworkCache(&myManager);
 	myManager.setCache(myCache);
 	myCookieJar = new ZLQtNetworkCookieJar(&myManager);
+	myManager.setProxyFactory(new ZLQtNetworkProxyFactory);
 	myManager.setCookieJar(myCookieJar);
 	QObject::connect(&myManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
 	                 this, SLOT(onAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
@@ -79,12 +80,16 @@ QNetworkCookieJar *ZLQtNetworkManager::cookieJar() const {
 	return myCookieJar;
 }
 
-std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {
+QNetworkProxy ZLQtNetworkManager::proxy() const {
 	if (useProxy()) {
-		QString proxyHost = QString::fromStdString(ZLNetworkManager::proxyHost());
-		QNetworkProxy proxy(QNetworkProxy::HttpProxy, proxyHost, atoi(proxyPort().c_str()));
-		const_cast<QNetworkAccessManager&>(myManager).setProxy(proxy);
+		const QString proxyHost = QString::fromStdString(ZLNetworkManager::proxyHost());
+		const int proxyPort = atoi(ZLNetworkManager::proxyPort().c_str());
+		return QNetworkProxy(QNetworkProxy::HttpProxy, proxyHost, proxyPort);
 	}
+	return QNetworkProxy(QNetworkProxy::DefaultProxy);
+}
+
+std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {
 	QList<QNetworkReply*> replies;
 	QStringList errors;
 	QEventLoop eventLoop;
@@ -283,6 +288,14 @@ void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, const QVaria
 	}
 	reply->setProperty("scope", qVariantFromValue(scope));
 	reply->setProperty("executionData", executionData);
+}
+
+QList<QNetworkProxy> ZLQtNetworkProxyFactory::queryProxy(const QNetworkProxyQuery &query) {
+	ZLQtNetworkManager &manager = static_cast<ZLQtNetworkManager&>(ZLNetworkManager::Instance());
+	QNetworkProxy proxy = manager.proxy();
+	if (proxy.type() == QNetworkProxy::DefaultProxy)
+		return proxyForQuery(query);
+	return QList<QNetworkProxy>() << proxy;
 }
 
 ZLQtNetworkCache::ZLQtNetworkCache(QObject *parent) : QAbstractNetworkCache(parent) {

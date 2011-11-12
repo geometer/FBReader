@@ -22,8 +22,7 @@
 
 #include <QtDeclarative/QDeclarativeNetworkAccessManagerFactory>
 
-class ZLQmlNetworkAccessFactory : public QDeclarativeNetworkAccessManagerFactory
-{
+class ZLQmlNetworkAccessFactory : public QDeclarativeNetworkAccessManagerFactory {
 public:
     ZLQmlNetworkAccessFactory();
 	

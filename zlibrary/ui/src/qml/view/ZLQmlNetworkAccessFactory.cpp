@@ -25,6 +25,7 @@ ZLQmlNetworkAccessFactory::ZLQmlNetworkAccessFactory() {
 
 QNetworkAccessManager *ZLQmlNetworkAccessFactory::create(QObject *parent) {
 	QNetworkAccessManager *manager = new QNetworkAccessManager(parent);
+	manager->setProxyFactory(new ZLQtNetworkProxyFactory);
 	manager->setCache(new ZLQtNetworkCache(manager));
 	ZLQtNetworkManager &globalManager = static_cast<ZLQtNetworkManager&>(ZLNetworkManager::Instance());
 	manager->setCookieJar(globalManager.cookieJar());

@@ -23,6 +23,7 @@
 #include <ZLNetworkManager.h>
 #include <ZLNetworkRequest.h>
 #include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkProxyFactory>
 #include <QtNetwork/QNetworkDiskCache>
 #include <QtNetwork/QNetworkCookieJar>
 #include <QtNetwork/QSslError>
@@ -51,6 +52,7 @@ public:
 	void initPaths();
 	
 	QNetworkCookieJar *cookieJar() const;
+	QNetworkProxy proxy() const;
 	std::string perform(const ZLExecutionData::Vector &dataList) const;
 	
 protected Q_SLOTS:
@@ -66,6 +68,11 @@ private:
 	QNetworkAccessManager myManager;
 	ZLQtNetworkCache *myCache;
 	ZLQtNetworkCookieJar *myCookieJar;
+};
+
+class ZLQtNetworkProxyFactory : public QNetworkProxyFactory {
+public:
+    virtual QList<QNetworkProxy> queryProxy(const QNetworkProxyQuery &query = QNetworkProxyQuery());
 };
 
 class ZLQtNetworkCache : public QAbstractNetworkCache {
