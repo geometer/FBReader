@@ -59,18 +59,21 @@ std::string ZLQtOptionView::removeShortcut(const std::string& name) const {
 void BooleanOptionView::_createItem() {
 	QWidget* widget = new QWidget(myTab->widget());
 	QHBoxLayout* layout = new QHBoxLayout();
-	widget->setLayout(layout);
+
 	myCheckBox = new QCheckBox(" ");
         myLabel = new PressLabel( ::qtString(removeShortcut(ZLOptionView::name())));
-	myCheckBox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
-	myLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+        //myLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+        myLabel->setWordWrap(true);
+//	myCheckBox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
+//	myLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
 	widget->setFocusProxy(myCheckBox);
-	myLabel->setWordWrap(true);
-	layout->addWidget(myCheckBox);
-	layout->addSpacing(10);
-	layout->addWidget(myLabel);
+
+        layout->addWidget(myCheckBox);
+        layout->addWidget(myLabel,1);
 	myCheckBox->setChecked(((ZLBooleanOptionEntry&)*myOption).initialState());
 	myWidgets.push_back(widget);
+
+        widget->setLayout(layout);
 	myTab->addItem(widget);
 	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onStateChanged(bool)));
 	connect(myLabel, SIGNAL(labelPressed()), this, SLOT(onLabelPressed()));

@@ -17,21 +17,16 @@
 
 TabMenuWidget::TabMenuWidget(QWidget* parent): QWidget(parent) {
 	QVBoxLayout *layout = new QVBoxLayout(this);
-	myScrollArea = new QScrollArea;
 	myStackedWidget = new QStackedWidget;
 	myMenuWidget = new QListWidget;
 	myMenuWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	myScrollArea->setWidgetResizable(false);
 	layout->addWidget(myMenuWidget);
-	layout->addWidget(myScrollArea);
+        layout->addWidget(myStackedWidget);
 	setStatus(MENU);
         connect(myMenuWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(menuItemClicked(QModelIndex)));
 
         myMenuWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
         QtScroller::grabGesture(myMenuWidget->viewport(), QtScroller::LeftMouseButtonGesture);
-        QtScroller::grabGesture(myScrollArea->viewport(), QtScroller::LeftMouseButtonGesture);
-
 }
 
 void TabMenuWidget::addItem(QWidget *widget, const QString &label) {
@@ -46,23 +41,20 @@ TabMenuWidget::ShowStatus TabMenuWidget::getStatus() const {
 
 void TabMenuWidget::setStatus(ShowStatus status) {
 	if (status == MENU) {
-		myScrollArea->hide();
+                myStackedWidget->hide();
 		myMenuWidget->show();
 #ifdef __SYMBIAN__
 		// for phones with keyboard (activating for single-click):
 		myMenuWidget->setEditFocus(true);
 #endif
 	} else if (status == TAB) {
-		myScrollArea->show();
-		myMenuWidget->hide();
-		myStackedWidget->setFocus();
+                myMenuWidget->hide();
+                myStackedWidget->show();
+                myStackedWidget->setFocus();
 	}
 }
 
 void TabMenuWidget::menuItemClicked(const QModelIndex &index) {
-	if (!myScrollArea->widget()) {
-		myScrollArea->setWidget(myStackedWidget);
-	}
 	myStackedWidget->setCurrentIndex(index.row());
 	setStatus(TAB);
 }

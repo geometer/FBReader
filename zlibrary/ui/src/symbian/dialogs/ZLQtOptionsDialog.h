@@ -37,7 +37,6 @@ public slots:
 
 private:
 	QStackedWidget* myStackedWidget;
-	QScrollArea* myScrollArea;
 	QListWidget* myMenuWidget;
 };
 
