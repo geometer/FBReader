@@ -15,6 +15,7 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QFrame>
 #include <QtGui/QPainter>
+#include <QtGui/QFormLayout>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QStringList>
@@ -587,10 +588,17 @@ void ColorOptionView::_onAccept() const {
 
 void StaticTextOptionView::_createItem() {
 	const std::string &text = ((ZLStaticTextOptionEntry&)*myOption).initialValue();
-	QLabel *label = new QLabel(::qtString("<b>" + name() + ":</b> " + text), myTab->widget());
-	label->setWordWrap(true);
-	myWidgets.push_back(label);
-	myTab->addItem(label);
+        QWidget* widget = new QWidget;
+        QFormLayout* layout = new QFormLayout;
+        QLabel *label = new QLabel(QString::fromStdString(text));
+        layout->addRow(QString::fromStdString("<b>" + name() + ":</b>"), label);
+        label->setWordWrap(true);
+//      label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+        layout->setRowWrapPolicy(QFormLayout::WrapAllRows);
+        layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+        widget->setLayout(layout);
+        myWidgets.push_back(widget);
+        myTab->addItem(widget);
 }
 
 void StaticTextOptionView::_onAccept() const {
