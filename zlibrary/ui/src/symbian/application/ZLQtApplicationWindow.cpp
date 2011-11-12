@@ -38,7 +38,7 @@
 //#include "../../../../../fbreader/src/fbreader/FBReaderActions.h"
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
-		new ZLQtApplicationWindow(application);
+        myApplicationWindow = new ZLQtApplicationWindow(application);
 }
 
 ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow* parent, DrillDownMenuDialog* dialog,  ZLMenubar::PlainItem& item) : myParent(parent), MenuAction(dialog), myItem(item) { }

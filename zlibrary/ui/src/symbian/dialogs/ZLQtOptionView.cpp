@@ -616,7 +616,7 @@ PictureWidget::PictureWidget(const QPixmap& picture, QWidget* parent): QWidget(p
 
 QSize PictureWidget::sizeHint () const {
     QSize hint = myPicture.size();
-    hint.scale(MenuItemParameters::getMaximumBookCoverSize(), Qt::KeepAspectRatio);
+    hint.scale(MenuItemParameters::getMaximumBookCoverSize(this->parentWidget()->geometry().size()), Qt::KeepAspectRatio);
     return hint;
 }
 

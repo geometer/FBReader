@@ -220,8 +220,8 @@ QFont MenuItemParameters::getSubtitleFont() {
     return font;
 }
 
-QSize MenuItemParameters::getMaximumBookCoverSize() {
+QSize MenuItemParameters::getMaximumBookCoverSize(QSize window) {
     static const qreal COEF = 0.5;
-    QSize size = qApp->desktop()->availableGeometry().size();
+    QSize size = window;
     return QSize(size.width(), size.height()*COEF);
 }

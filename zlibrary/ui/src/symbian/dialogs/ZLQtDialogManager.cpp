@@ -34,7 +34,7 @@ shared_ptr<ZLOpenFileDialog> ZLQtDialogManager::createOpenFileDialog(const ZLRes
 }
 
 shared_ptr<ZLTreeDialog> ZLQtDialogManager::createTreeDialog() const {
-	return new ZLQtTreeDialog;
+        return new ZLQtTreeDialog(myApplicationWindow);
 }
 
 shared_ptr<ZLDialogContent> ZLQtDialogManager::createContent(const ZLResourceKey &key) const {
