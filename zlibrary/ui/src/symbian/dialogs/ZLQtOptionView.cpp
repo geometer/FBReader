@@ -2,6 +2,7 @@
 
 #include <ZLibrary.h>
 
+#include <QtCore/QDebug>
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QLabel>
@@ -619,6 +620,7 @@ private:
 
 private:
     const QPixmap myPicture;
+    QPixmap myCachePicture;
 };
 
 PictureWidget::PictureWidget(const QPixmap& picture, QWidget* parent): QWidget(parent), myPicture(picture) {
@@ -627,13 +629,18 @@ PictureWidget::PictureWidget(const QPixmap& picture, QWidget* parent): QWidget(p
 
 QSize PictureWidget::sizeHint () const {
     QSize hint = myPicture.size();
+//    qDebug() << Q_FUNC_INFO << MenuItemParameters::getMaximumBookCoverSize(this->parentWidget()->geometry().size()) <<
+//                                this->parentWidget()->geometry().size();
     hint.scale(MenuItemParameters::getMaximumBookCoverSize(this->parentWidget()->geometry().size()), Qt::KeepAspectRatio);
     return hint;
 }
 
 void PictureWidget::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    painter.drawPixmap(QPoint(0,0), ImageUtils::scaleAndCenterPixmap(myPicture, event->rect().size(), true));
+    if (myCachePicture.isNull() || myCachePicture.size() != size()) {
+        myCachePicture = ImageUtils::scaleAndCenterPixmap(myPicture, size(), true);
+    }
+    painter.drawPixmap(event->rect(), myCachePicture.copy(event->rect()));
 }
 
 PictureView::PictureView(const std::string &name, const std::string &tooltip, ZLPictureOptionEntry *option, ZLQtDialogContent *tab) : ZLQtOptionView(name, tooltip, option, tab) {
