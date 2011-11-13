@@ -59,7 +59,7 @@ void TabMenuWidget::menuItemClicked(const QModelIndex &index) {
 	setStatus(TAB);
 }
 
-ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction) : QDialog(qApp->activeWindow()), ZLOptionsDialog(resource, applyAction) {
+ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, QWidget* parent) : QDialog(parent), ZLOptionsDialog(resource, applyAction) {
 		setWindowTitle(::qtString(caption()));
 		QVBoxLayout *layout = new QVBoxLayout(this);
 

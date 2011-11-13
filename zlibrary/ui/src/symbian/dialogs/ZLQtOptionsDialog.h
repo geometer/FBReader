@@ -44,7 +44,7 @@ class ZLQtOptionsDialog : public QDialog, public ZLOptionsDialog {
 	Q_OBJECT
 
 public:
-	ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction);
+        ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, QWidget* parent);
 	ZLDialogContent &createTab(const ZLResourceKey &key);	
 
 public:

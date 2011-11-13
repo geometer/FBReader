@@ -14,7 +14,7 @@ public:
 	static void createInstance() { ourInstance = new ZLQtDialogManager(); }
 
 protected   :
-        ZLQtDialogManager() : myStoredWindow(0), myApplicationWindow(0) {}
+        ZLQtDialogManager() :  myApplicationWindow(0) {}
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
@@ -35,7 +35,9 @@ public:
 	bool openURL(const std::string& url) const;
 
 protected:
-	mutable QWidget *myStoredWindow;
+        QWidget* getParentWidget() const;
+
+protected:
         mutable QMainWindow* myApplicationWindow;
 };
 

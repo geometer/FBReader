@@ -9,7 +9,7 @@
 #include "ZLQtDialogContent.h"
 #include "ZLQtUtil.h"
 
-ZLQtDialog::ZLQtDialog(const ZLResource &resource) : QDialog(qApp->activeWindow()) {
+ZLQtDialog::ZLQtDialog(const ZLResource &resource, QWidget* parent) : QDialog(parent) {
 	setModal(true);
 	setWindowTitle(::qtString(resource[ZLDialogManager::DIALOG_TITLE].value()));
 
