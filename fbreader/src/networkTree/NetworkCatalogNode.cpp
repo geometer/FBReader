@@ -182,6 +182,7 @@ ZLResourceKey NetworkCatalogNode::OpenInBrowserAction::key() const {
 
 void NetworkCatalogNode::OpenInBrowserAction::run() {
 	FBReader::Instance().openLinkInBrowser(myURL);
+	finished(std::string());
 }
 
 NetworkCatalogNode::ReloadAction::ReloadAction(NetworkCatalogNode &node) : myNode(node) {
@@ -198,10 +199,18 @@ bool NetworkCatalogNode::ReloadAction::makesSense() const {
 
 void NetworkCatalogNode::ReloadAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
+		finished(std::string());
 		return;
 	}
 
 	myNode.updateChildren(0);
+	myNode.updated();
+	finished(std::string());
 //	myNode.expandOrCollapseSubtree();
-	FBReader::Instance().refreshWindow();
+//	FBReader::Instance().refreshWindow();
+}
+
+void NetworkCatalogNode::reloadItem(shared_ptr<NetworkItem> item) {
+	myItem = item;
+	updated();
 }

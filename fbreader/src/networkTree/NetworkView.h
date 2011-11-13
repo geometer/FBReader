@@ -35,10 +35,6 @@ class FBReaderNode;
 
 class NetworkView {
 
-private:
-	class CoverUpdater;
-	class CoverUpdaterRunner;
-
 public:
 	NetworkView();
 
@@ -46,22 +42,30 @@ public:
 	void invalidateAccountDependents();
 	
 	void showDialog();
+	
+
 
 //	void drawCoverLater(FBReaderNode *node, int vOffset);
 
 private:
 	const std::string &caption() const;
 
-	void makeUpToDate();
+
 	void updateAccountDependents();
 	void updateAccountDependents(NetworkCatalogNode &node);
 	bool processAccountDependent(NetworkCatalogItem &item);
+	void paint();
+	void makeUpToDate();
+	
+	class AddCatalogAction;
+	friend class AddCatalogAction;
 
 private:
 	shared_ptr<ZLTreeDialog> myDialog;
 	bool myUpdateChildren;
 	bool myUpdateAccountDependents;
 //	std::map<FBReaderNode*,int> myNodesToPaintCovers;
+	std::vector<shared_ptr<ZLImage> > myStartedCovers;
 };
 
 inline void NetworkView::invalidate() { myUpdateChildren = true; }

@@ -62,13 +62,13 @@ void ORBookReader::startElementHandler(const char *tag, const char **xmlattribut
 	} else if ((myState == READ_RESOURCES) && (TAG_ITEM == tagString)) {
 		const char *resid = attributeValue(xmlattributes, "resid");
 		const char *resource = attributeValue(xmlattributes, "resource");
-		const char *mediaType = attributeValue(xmlattributes, "media-type");
+		shared_ptr<ZLMimeType> mediaType = ZLMimeType::get(attributeValue(xmlattributes, "media-type"));
 		if ((resid != 0) && (resource != 0)) {
 			myResources[resid] = resource;
-			if (mediaType != 0) {
-				if (xhtmlMediaType == mediaType) {
+			if (*mediaType != *ZLMimeType::EMPTY) {
+				if (ZLMimeType::APPLICATION_OR_XML == mediaType) {
 					myHtmlFileIDs.insert(resid);
-				} else if (std::string(mediaType, 6) == "image/") {
+				} else if (ZLMimeType::isImage(mediaType)) {
 					myImageIDs[resid] = mediaType;
 				}
 			}
@@ -177,7 +177,7 @@ bool ORBookReader::readBook() {
 		XHTMLReader(myModelReader).readFile(ZLFile(myFilePrefix + myResources[*it]), *it);
 	}
 
-	for (std::map<std::string,std::string>::const_iterator it = myImageIDs.begin(); it != myImageIDs.end(); ++it) {
+	for (std::map<std::string,shared_ptr<ZLMimeType> >::const_iterator it = myImageIDs.begin(); it != myImageIDs.end(); ++it) {
 		myModelReader.addImage(it->first, new ZLFileImage(ZLFile(myFilePrefix + myResources[it->first], it->second), 0));
 	}
 

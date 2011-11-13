@@ -40,6 +40,8 @@ public:
 
 	bool scrollbarEvent(ZLView::Direction direction, GtkRange *range, GtkScrollType type, double newValue);
 
+	void sendPaintEvent();
+
 private:
 	void trackStylus(bool track);
 	void repaint();

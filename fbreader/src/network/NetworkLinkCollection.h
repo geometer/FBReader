@@ -38,6 +38,7 @@ class ZLNetworkSSLCertificate;
 
 class NetworkLinkCollection {
 
+
 private:
 	class Comparator;
 
@@ -70,14 +71,31 @@ public:
 
 	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
+	void deleteLink(NetworkLink& link);
+	void saveLink(NetworkLink& link, bool isAuto = false);
+	void addNetworkCatalogByUser(shared_ptr<ZLExecutionData::Listener> listener = 0);
+
 private:
 	std::string bookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);
+	void onNetworkCatalogReply(ZLUserDataHolder &data, const std::string &error);
+
+	void updateLinks(std::string genericUrl);
+	void onLinksUpdated(ZLUserDataHolder &data, const std::string &error);
+	void onLinkLoaded(ZLUserDataHolder &data, const std::string &error);
+	void saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto);
+	class UpdateLinksScope;
+	class LoadLinkScope;
+	class AddNetworkCatalogScope;
+
 
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
-	LinkVector myLinks;
+	LinkVector myLinks, myTempCustomLinks;
+	std::set<std::string> myExists;
 
 	std::string myErrorMessage;
+
+	std::string myGenericUrl;
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

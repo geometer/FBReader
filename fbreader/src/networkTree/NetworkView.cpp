@@ -38,8 +38,40 @@
 
 #include "../fbreader/FBReader.h"
 
+class NetworkView::AddCatalogAction : public ZLTreeAction {
+public:
+	AddCatalogAction(NetworkView *view);
+	ZLResourceKey key() const;
+	void run();
+
+private:
+	void onCatalogAdded(ZLUserDataHolder &data, const std::string &error);
+	NetworkView *myView;
+};
+
+NetworkView::AddCatalogAction::AddCatalogAction(NetworkView *view)
+    : myView(view) {
+}
+
+ZLResourceKey NetworkView::AddCatalogAction::key() const {
+	return ZLResourceKey("networkView");
+}
+
+void NetworkView::AddCatalogAction::run() {
+	NetworkLinkCollection::Instance().addNetworkCatalogByUser(
+	            ZLExecutionData::createListener(this, &NetworkView::AddCatalogAction::onCatalogAdded));
+}
+
+void NetworkView::AddCatalogAction::onCatalogAdded(ZLUserDataHolder &data, const std::string &error) {
+	(void) data;
+	if (error.empty())
+		myView->makeUpToDate();
+	finished(error);
+}
+
 NetworkView::NetworkView() : myUpdateChildren(true), myUpdateAccountDependents(false) {
 	myDialog = ZLDialogManager::Instance().createTreeDialog();
+	myDialog->rootNode().registerAction(new AddCatalogAction(this));
 }
 
 void NetworkView::showDialog() {
@@ -51,79 +83,8 @@ void NetworkView::showDialog() {
 //	myNodesToPaintCovers[node] = vOffset;
 //}
 
-class NetworkView::CoverUpdater : public NetworkOperationRunnable {
-
-private:
-	static volatile int Counter;
-
-public:
-	static shared_ptr<CoverUpdater> create();
-
-private:
-	CoverUpdater();
-
-public:
-	~CoverUpdater();
-
-	void addTask(shared_ptr<ZLExecutionData> data);
-	bool hasTasks() const;
-
-private:
-	void run();
-
-private:
-	ZLExecutionData::Vector myDataVector;
-};
-
-class NetworkView::CoverUpdaterRunner : public ZLRunnable {
-
-public:
-	CoverUpdaterRunner(shared_ptr<CoverUpdater> updater);
-
-private:
-	void run();
-
-private:
-	shared_ptr<CoverUpdater> myUpdater;
-};
-
-volatile int NetworkView::CoverUpdater::Counter = 0;
-
-shared_ptr<NetworkView::CoverUpdater> NetworkView::CoverUpdater::create() {
-	return Counter == 0 ? new CoverUpdater() : 0;
-}
-
-NetworkView::CoverUpdater::CoverUpdater() { //: NetworkOperationRunnable("downloadImages") {
-	++Counter;
-}
-
-NetworkView::CoverUpdater::~CoverUpdater() {
-	--Counter;
-}
-
-void NetworkView::CoverUpdater::addTask(shared_ptr<ZLExecutionData> data) {
-	if (!data.isNull()) {
-		myDataVector.push_back(data);
-	}
-}
-
-bool NetworkView::CoverUpdater::hasTasks() const {
-	return !myDataVector.empty();
-}
-
-void NetworkView::CoverUpdater::run() {
-	ZLExecutionData::perform(myDataVector);
-}
-
-NetworkView::CoverUpdaterRunner::CoverUpdaterRunner(shared_ptr<CoverUpdater> updater) : myUpdater(updater) {
-}
-
-void NetworkView::CoverUpdaterRunner::run() {
-	if (myUpdater->hasTasks()) {
-		myUpdater->executeWithUI();
-		FBReader::Instance().refreshWindow();
-	}
-}
+//NetworkView::CoverUpdater::CoverUpdater() { //: NetworkOperationRunnable("downloadImages") {
+//}
 
 //void NetworkView::paint() {
 //	if (myUpdateChildren) {
@@ -138,23 +99,26 @@ void NetworkView::CoverUpdaterRunner::run() {
 //	ZLBlockTreeView::paint();
 //	std::map<FBReaderNode*,int> nodes;
 //	nodes.swap(myNodesToPaintCovers);
-//	shared_ptr<CoverUpdater> updater = CoverUpdater::create();
-//	if (!updater.isNull()) {
-//		for (std::map<FBReaderNode*,int>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
-//			shared_ptr<ZLImage> coverImage = it->first->image();
-//			if (!coverImage.isNull()) {
-//				updater->addTask(coverImage->synchronizationData());
+//	ZLExecutionData::Vector* coverVector = new ZLExecutionData::Vector();
+//	for (std::map<FBReaderNode*,int>::const_iterator it = nodes.begin(); it != nodes.end(); ++it) {
+//		shared_ptr<ZLImage> coverImage = it->first->coverImage();
+//		if (!coverImage.isNull()) {
+//			bool found = false;
+//			for (std::vector<shared_ptr<ZLImage> >::iterator it1 = myStartedCovers.begin(); it1 != myStartedCovers.end(); ++it1) {
+//				if (*it1 == coverImage) {
+//					found = true;
+//					break;
+//				}
+//			}
+//			if (!found) {
+//				myStartedCovers.push_back(coverImage);
+//				coverVector->push_back(coverImage->synchronizationData());
 //			}
 //		}
-//		if (updater->hasTasks()) {
-//			ZLTimeManager::Instance().addAutoRemovableTask(new CoverUpdaterRunner(updater));
-//		}
 //	}
-//	for (std::map<FBReaderNode*,int>::iterator it = nodes.begin(); it != nodes.end(); ++it) {
-//		it->first->drawCoverReal(context(), it->second);
+//	if (!coverVector->empty()) {
+//		pthread_create(new pthread_t(), NULL, updCovers, (void*) coverVector);
 //	}
-//	myNodesToPaintCovers.clear();
-//}
 
 //const std::string &NetworkView::caption() const {
 //	return ZLResource::resource("networkLibrary")["caption"].value();
@@ -171,14 +135,15 @@ void NetworkView::makeUpToDate() {
 	size_t nodeCount = 0;
 	for (size_t i = 0; i < collection.size(); ++i) {
 		NetworkLink &link = collection.link(i);
-		if (!link.OnOption.value()) {
-			continue;
-		}
+//		if (!link.isEnabled()) {
+//			continue;
+//		}
 		bool processed = false;
 		while (nodeIt != rootChildren.end() &&
 					 (*nodeIt)->isInstanceOf(NetworkCatalogNode::TYPE_ID)) {
 			const NetworkLink &nodeLink = ((NetworkCatalogRootNode*)*nodeIt)->link();
-			if (&nodeLink == &link) {
+			if (&nodeLink == &link && nodeLink.SiteName == link.SiteName) {
+				((NetworkCatalogRootNode*)*nodeIt)->reloadLink();
 				++nodeIt;
 				++nodeCount;
 				processed = true;
@@ -186,8 +151,9 @@ void NetworkView::makeUpToDate() {
 			} else {
 				bool found = false;
 				for (size_t j = i + 1; j < collection.size(); ++j) {
-					if (&nodeLink == &collection.link(j)) {
+					if (&nodeLink == &collection.link(j) && nodeLink.SiteName == collection.link(j).SiteName) {
 						found = true;
+						((NetworkCatalogRootNode*)*nodeIt)->reloadLink();
 						break;
 					}
 				}

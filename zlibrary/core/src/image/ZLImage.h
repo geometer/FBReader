@@ -24,6 +24,8 @@
 
 #include <shared_ptr.h>
 
+#include <ZLMimeType.h>
+
 class ZLExecutionData;
 
 class ZLImage {
@@ -41,17 +43,17 @@ public:
 class ZLSingleImage : public ZLImage {
 
 protected:
-	ZLSingleImage(const std::string &mimeType);
+	ZLSingleImage(shared_ptr<ZLMimeType> mimeType);
 	virtual ~ZLSingleImage();
 
 public:
 	bool isSingle() const { return true; }
-	const std::string &mimeType() const;
+	shared_ptr<ZLMimeType> mimeType() const;
 	bool good() const;
 	virtual const shared_ptr<std::string> stringData() const = 0;
 
 private:
-	std::string myMimeType;
+	shared_ptr<ZLMimeType> myMimeType;
 };
 
 class ZLMultiImage : public ZLImage {
@@ -71,9 +73,9 @@ public:
 inline ZLImage::ZLImage() {}
 inline ZLImage::~ZLImage() {}
 
-inline ZLSingleImage::ZLSingleImage(const std::string &mimeType) : myMimeType(mimeType) {}
+inline ZLSingleImage::ZLSingleImage(shared_ptr<ZLMimeType> mimeType) : myMimeType(mimeType) {}
 inline ZLSingleImage::~ZLSingleImage() {}
-inline const std::string &ZLSingleImage::mimeType() const { return myMimeType; }
+inline shared_ptr<ZLMimeType> ZLSingleImage::mimeType() const { return myMimeType; }
 
 inline ZLMultiImage::ZLMultiImage() : ZLImage() {}
 inline ZLMultiImage::~ZLMultiImage() {}

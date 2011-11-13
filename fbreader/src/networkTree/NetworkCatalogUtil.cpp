@@ -31,7 +31,7 @@ shared_ptr<ZLImage> NetworkCatalogUtil::getImageByNetworkUrl(const std::string &
 		return 0;
 	}
 
-	return new ZLNetworkImage("image/auto", url);
+	return new ZLNetworkImage(ZLMimeType::IMAGE_AUTO, url);
 }
 
 shared_ptr<ZLImage> NetworkCatalogUtil::getImageByFileUrl(const std::string &url) {
@@ -51,7 +51,7 @@ shared_ptr<ZLImage> NetworkCatalogUtil::getImageByDataUrl(const std::string &url
 		return 0;
 	}
 
-	ZLBase64EncodedImage *image = new ZLBase64EncodedImage("image/auto");
+	ZLBase64EncodedImage *image = new ZLBase64EncodedImage(ZLMimeType::IMAGE_AUTO);
 	image->addData(url, index + 1, std::string::npos);
 	return image;
 }

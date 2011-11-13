@@ -42,6 +42,8 @@ public:
 	ZLGtkApplicationWindow(ZLApplication *application);
 	~ZLGtkApplicationWindow();
 
+	void sendPaintEvent();
+
 private:
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLToolbar::ItemPtr item);

@@ -43,7 +43,7 @@ protected Q_SLOTS:
 	
 protected:
 	std::string convertFilenameToUtf8(const std::string &name) const;
-	std::string mimeType(const std::string &path) const;
+	shared_ptr<ZLMimeType> mimeType(const std::string &path) const;
 	
 	QFileSystemWatcher myWatcher;
 	QMultiHash<QString, shared_ptr<ZLFSWatcher> > myWatchers;

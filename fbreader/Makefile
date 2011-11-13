@@ -48,7 +48,6 @@ do_install:
 	@install -d $(FBSHAREDIR)/help
 	@./scripts/install_help.sh $(VARIANT) $(FBSHAREDIR)/help
 	@install -d $(FBSHAREDIR)/network
-	@install -m 0644 $(wildcard data/network/*.xml) $(FBSHAREDIR)/network
 	@install -d $(FBSHAREDIR)/network/certificates
 	@install -m 0644 $(wildcard data/network/certificates/*.crt) $(FBSHAREDIR)/network/certificates
 	@install -d $(FBSHAREDIR)/formats/html

@@ -58,6 +58,7 @@ const std::string ActionCode::SHOW_HIDE_POSITION_INDICATOR = "toggleIndicator";
 const std::string ActionCode::TOGGLE_FULLSCREEN = "toggleFullscreen";
 const std::string ActionCode::FULLSCREEN_ON = "onFullscreen";
 const std::string ActionCode::ADD_BOOK = "addBook";
+const std::string ActionCode::ADD_NETWORK_CATALOG = "addNetworkCatalog";
 const std::string ActionCode::ROTATE_SCREEN = "rotate";
 const std::string ActionCode::QUIT = "quit";
 const std::string ActionCode::FORCE_QUIT = "forceQuit";

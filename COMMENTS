@@ -1,0 +1,9 @@
+*** Documentation
+  ** in 'done' section any feature description should include detailed instruction about how to run it
+  ** 'invisible features' (like loading catalog list from the network) are not described in 'done' section
+  ** in 'planned' features list 'invisible features are missing too; all the multi-thread related features should be listed separately
+
+
+*** Code
+  ** ZLMimeType::APPLICATION_ATOM_XML_OPDS: ZLMimeType should be converted into a class with name (application/atom+xml) and attribute (profile=opds-catalog), see java code for a sample
+  ** network database should be implemented as a separate class, not as a part of BooksDB

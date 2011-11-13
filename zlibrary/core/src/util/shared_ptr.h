@@ -71,8 +71,8 @@ template<class T> class weak_ptr;
 template<class T> class shared_ptr {
 	friend class weak_ptr<T>;
 	template <class V> friend class shared_ptr;
-	template <class V> friend class enable_shared_from_this;
-	template <class V> void __shared_from_this_helper(shared_ptr<V> &storage, V *pointer, ...);
+//	template <class V> friend class enable_shared_from_this;
+//	template <class V> void __shared_from_this_helper(shared_ptr<V> &storage, V *pointer, ...);
 
 	private:
 		shared_ptr_storage<T> *myStorage;
@@ -151,13 +151,13 @@ template<class T> class weak_ptr {
 		bool operator >= (const shared_ptr<T> &t) const;
 };
 
-template<class T> class enable_shared_from_this {
-public:
-	shared_ptr<T> shared_from_this();
+//template<class T> class enable_shared_from_this {
+//public:
+//	shared_ptr<T> shared_from_this();
 
-private:
-	weak_ptr<T> myThisWeak;
-};
+//private:
+//	weak_ptr<T> myThisWeak;
+//};
 
 inline shared_ptr_counter::shared_ptr_counter() : myCounter(0), myWeakCounter(0) {
 }
@@ -228,24 +228,24 @@ inline unsigned int shared_ptr_storage<T>::counter() const {
 	return myCounter->counter() + myCounter->weakCounter();
 }
 
-template<class T>
-shared_ptr<T> enable_shared_from_this<T>::shared_from_this() {
-	shared_ptr<T> shared = myThisWeak;
-	if (shared.isNull()) {
-		shared.setStorage(shared.newStorage(this));
-		myThisWeak = shared;
-	}
-	return shared;
-}
+//template<class T>
+//shared_ptr<T> enable_shared_from_this<T>::shared_from_this() {
+//	shared_ptr<T> shared = myThisWeak;
+//	if (shared.isNull()) {
+//		shared.setStorage(shared.newStorage(this));
+//		myThisWeak = shared;
+//	}
+//	return shared;
+//}
 
-template<class T>
-void __shared_from_this_helper(shared_ptr<T> &storage, T *, enable_shared_from_this<T> *pointer) {
-	storage = pointer->shared_from_this();
-}
-template<class T>
-void __shared_from_this_helper(shared_ptr<T> &storage, T *pointer, ...) {
-	storage.setStorage(storage.newStorage(pointer));
-}
+//template<class T>
+//void __shared_from_this_helper(shared_ptr<T> &storage, T *, enable_shared_from_this<T> *pointer) {
+//	storage = pointer->shared_from_this();
+//}
+//template<class T>
+//void __shared_from_this_helper(shared_ptr<T> &storage, T *pointer, ...) {
+//	storage.setStorage(storage.newStorage(pointer));
+//}
 
 template<class T>
 inline shared_ptr_storage<T> *shared_ptr<T>::newStorage(T *t) {
@@ -269,9 +269,9 @@ inline shared_ptr<T>::shared_ptr() : myStorage(0) {
 }
 template<class T>
 inline shared_ptr<T>::shared_ptr(T *t) : myStorage(0) {
-//	setStorage(newStorage(t))
+	setStorage(newStorage(t));
 //	*this = __shared_from_this_helper(t);
-	__shared_from_this_helper(*this, t, t);
+//	__shared_from_this_helper(*this, t, t);
 }
 template<class T>
 inline shared_ptr<T>::shared_ptr(const shared_ptr<T> &t) : myStorage(0) {

@@ -21,6 +21,7 @@
 #define __NETWORKNODES_H__
 
 #include "../tree/FBNode.h"
+#include "../network/NetworkBookCollection.h"
 
 #include <ZLTreeTitledNode.h>
 #include <ZLTreePageNode.h>
@@ -29,11 +30,11 @@
 
 #include "../network/NetworkItems.h"
 
-class NetworkBookCollection;
 class NetworkLink;
 class LoadSubCatalogRunnable;
 
 class NetworkContainerNode : public ZLTreeTitledNode {
+
 
 public:
 	static const ZLTypeId TYPE_ID;
@@ -93,6 +94,7 @@ protected:
 	std::string title() const;
 	std::string subtitle() const;
 	virtual shared_ptr<ZLImage> lastResortCoverImage() const;
+	void reloadItem(shared_ptr<NetworkItem> item);
 
 private:
 	friend class LoadSubCatalogRunnable;
@@ -113,11 +115,15 @@ private:
 	class DontShowAction;
 	class PasswordRecoveryAction;
 	class RegisterUserAction;
+	class EditAction;
+	class DeleteAction;
 
 public:
 	NetworkCatalogRootNode(ZLTreeListener::RootNode *parent, NetworkLink &link, size_t atPosition = (size_t)-1);
 
 	const NetworkLink &link() const;
+
+	void reloadLink();
 
 private:
 	void init();

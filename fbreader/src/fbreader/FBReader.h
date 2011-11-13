@@ -193,6 +193,7 @@ friend class ShowHelpAction;
 friend class ShowContentsAction;
 friend class AddBookAction;
 friend class ShowMobileBookInfoAction;
+friend class AddNetworkCatalogActionAction;
 friend class ShowBookInfoAction;
 //friend class ScrollToHomeAction;
 //friend class ScrollToStartOfTextAction;

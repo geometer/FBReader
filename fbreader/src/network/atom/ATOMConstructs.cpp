@@ -88,7 +88,53 @@ ATOMDateConstruct::ATOMDateConstruct(int year, int month, int day, int hour, int
 	myHour(hour), myMinutes(minutes), mySeconds(seconds), mySecondFraction(sfract), myTZHour(tzhour), myTZMinutes(tzminutes) {
 }
 
+bool ATOMDateConstruct::operator<(const ATOMDateConstruct &a) const {
+	if (myYear < a.myYear) return true;
+	if (myYear > a.myYear) return false;
 
+	if (myMonth < a.myMonth) return true;
+	if (myMonth > a.myMonth) return false;
+
+	if (myDay < a.myDay) return true;
+	if (myDay > a.myDay) return false;
+
+	if (myHour < a.myHour) return true;
+	if (myHour > a.myHour) return false;
+
+	if (myMinutes < a.myMinutes) return true;
+	if (myMinutes > a.myMinutes) return false;
+
+	if (mySeconds < a.mySeconds) return true;
+	if (mySeconds > a.mySeconds) return false;
+
+//	if (mySecondFraction < a.mySecondFraction) return true;
+//	if (mySecondFraction > a.mySecondFraction) return false;
+	return false;
+}
+
+bool ATOMDateConstruct::operator>(const ATOMDateConstruct &a) const {
+	if (myYear > a.myYear) return true;
+	if (myYear < a.myYear) return false;
+
+	if (myMonth > a.myMonth) return true;
+	if (myMonth < a.myMonth) return false;
+
+	if (myDay > a.myDay) return true;
+	if (myDay < a.myDay) return false;
+
+	if (myHour > a.myHour) return true;
+	if (myHour < a.myHour) return false;
+
+	if (myMinutes > a.myMinutes) return true;
+	if (myMinutes < a.myMinutes) return false;
+
+	if (mySeconds > a.mySeconds) return true;
+	if (mySeconds < a.mySeconds) return false;
+
+//	if (mySecondFraction < a.mySecondFraction) return true;
+//	if (mySecondFraction > a.mySecondFraction) return false;
+	return false;
+}
 
 void ATOMDateConstruct::makeStringLength(std::string &str, int len) {
 	const int lendiff = str.length() - len;
@@ -275,3 +321,20 @@ bool ATOMDateConstruct::parse(const std::string &str, ATOMDateConstruct &dateTim
 	return false;
 }
 
+long ATOMDateConstruct::getLongSeconds_stupid() {
+	return 	((((((myYear - 2000) * 12 + myMonth) * 31 + myDay) * 24 + myHour) * 60 + myMinutes) * 60 + mySeconds);
+}
+
+void ATOMDateConstruct::setLongSeconds_stupid(long t) {
+	myYear = t / (12*31*24*60*60) + 2000;
+	t = t % (12*31*24*60*60);
+	myMonth = t / (31*24*60*60);
+	t = t % (31*24*60*60);
+	myDay = t / (24*60*60);
+	t = t % (24*60*60);
+	myHour = t / (60*60);
+	t = t % (60*60);
+	myMinutes = t / (60);
+	t = t % (60);
+	mySeconds = t;
+}
