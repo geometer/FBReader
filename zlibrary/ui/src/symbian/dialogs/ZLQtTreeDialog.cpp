@@ -73,8 +73,10 @@ void ZLQtTreeDialog::run() {
 	//return exec() == QDialog::Accepted;
 #ifdef __SYMBIAN__
 	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+        setWindowState(Qt::WindowFullScreen);
+#else
+        setFixedSize(400,300);
 #endif
-	setWindowState(Qt::WindowFullScreen);
 	exec();
 }
 
