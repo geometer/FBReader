@@ -9,6 +9,7 @@
 #include <ZLTimeManager.h>
 
 #include "ZLQtProgressDialog.h"
+#include "ZLQtTreeDialog.h" // for TreeActionListener
 #include "ZLQtUtil.h"
 
 ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myDialog(0) {
@@ -28,6 +29,19 @@ void ZLQtProgressDialog::run(ZLRunnable &runnable) {
 
 		delete myDialog;
 		myDialog = 0;
+}
+
+void ZLQtProgressDialog::run(TreeActionListener* listener) {
+                if (!listener) {
+                    return;
+                }
+                //TODO add check for casting here
+                myDialog = new ZLQtWaitDialog(messageText());
+                QObject::connect(listener, SIGNAL(finishedHappened(std::string)), myDialog, SLOT(close()));
+                myDialog->exec();
+
+                delete myDialog;
+                myDialog = 0;
 }
 
 void ZLQtProgressDialog::setMessage(const std::string &message) {

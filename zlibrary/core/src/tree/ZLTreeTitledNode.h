@@ -29,6 +29,10 @@ public:
 	static const ZLTypeId TYPE_ID;
 	const ZLTypeId &typeId() const;
 
+        static const std::string ZLIMAGE_SCHEME;
+        static const std::string LOCALFILE_SCHEME;
+        static const std::string SCHEME_POSTFIX;
+
 public:
 	ZLTreeTitledNode();
 	virtual ~ZLTreeTitledNode();

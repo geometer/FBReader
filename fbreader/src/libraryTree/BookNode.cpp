@@ -55,9 +55,9 @@ public:
 	}
 	
 	virtual void run() {
-		FBReader::Instance().openBook(myNode->book());
-		finished(std::string());
-		myNode->close();
+                FBReader::Instance().openBook(myNode->book());
+                finished(std::string());
+                myNode->close();
 	}
 
 	virtual ZLResourceKey key() const {
@@ -84,7 +84,12 @@ std::string BookNode::imageUrl() const {
 	shared_ptr<ZLImage> image = originalImage();
 	if (image.isNull())
 		return FBNode::defaultImageUrl("booktree-book.png");
-	return std::string();
+        //TODO may be use this type of link: ZLImage://book_id
+        //this is useful for cache
+//        std::string url(ZLIMAGE_SCHEME+SCHEME_POSTFIX);
+//        ZLStringUtil::appendNumber(url, (unsigned int)myBook->bookId());
+//        return url;
+        return std::string();
 }
 
 shared_ptr<ZLImage> BookNode::image() const {
@@ -103,9 +108,6 @@ shared_ptr<ZLImage> BookNode::originalImage() const {
 		myStoredCoverImage = plugin->coverImage(myBook->file());
 	}
 	return myStoredCoverImage;
-}
-
-void BookNode::requestChildren() {
 }
 
 void BookNode::fillContent(ZLDialogContent &content) const {

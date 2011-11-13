@@ -1,3 +1,4 @@
+#include <QtCore/QDebug>
 #include <QtGui/QPainter>
 
 #include "../image/ZLQtImageManager.h"
@@ -22,31 +23,35 @@ QPixmap ImageUtils::ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, con
     return QPixmap();
 }
 
-QPixmap ImageUtils::urlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize) {
+QPixmap ImageUtils::fileUrlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize) {
     QPixmap pixmap(url.toLocalFile());
-    QImage finalImage = pixmap.toImage();
+    qDebug() << "fileUrlToQPixmap! asking for file" << url << url.toLocalFile() << "is pixmap null?" << pixmap.isNull();
     if (size) {
-        *size = finalImage.size();
+        *size = pixmap.size();
     }
-    if (finalImage.isNull()) {
-        return QPixmap();
-    }
-    return scalePixmap(QPixmap::fromImage(finalImage), requestedSize, false);
+//    if (pixmap.isNull()) {
+//        qDebug() << "ImageUtils:: final image is null by undefined reasons";
+//        return QPixmap();
+//    }
+    return scaleAndCenterPixmap(pixmap, requestedSize, false);
 }
 
 QPixmap ImageUtils::scalePixmap(const QPixmap& pixmap, const QSize& requestedSize, bool scaleIfLess) {
-    if (!requestedSize.isValid()) {
+    if (pixmap.isNull() || !requestedSize.isValid()) {
+        qDebug() << "ImageUtils: scaling -- pixmap is null or req size is not valid";
         return pixmap;
     }
     if (!scaleIfLess && requestedSize.width() > pixmap.width() && requestedSize.height() > pixmap.height()) {
         //qDebug() << "notScaleifLess!" << requestedSize << pixmap.size();
         return pixmap;
     }
+    //TODO for small item we should use Qt::FastTransformation
     return pixmap.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 QPixmap ImageUtils::centerPixmap(const QPixmap& pixmap, const QSize& requestedSize) {
-    if (!requestedSize.isValid()) {
+    if (pixmap.isNull() || !requestedSize.isValid()) {
+        qDebug() << "ImageUtils: centring -- pixmap is null or req size is not valid";
         return pixmap;
     }
     QPixmap centeredPixmap(requestedSize);

@@ -2,10 +2,6 @@
 #include <QtGui/QAction>
 #include <QtGui/QPushButton>
 #include <QtGui/QDirModel>
-#include <QtGui/QStyledItemDelegate>
-#include <QtGui/QPainter>
-#include <QtGui/QStyleOption>
-#include <QtGui/QStyle>
 
 #include <QtCore/QDebug>
 
@@ -17,47 +13,16 @@
 
 #include "../menu/DrillDownMenu.h"
 
-class SubtitleDelegate : public QStyledItemDelegate {
-public:
-    explicit SubtitleDelegate(QObject *parent = 0);
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
-    QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const;
-};
-
-SubtitleDelegate::SubtitleDelegate(QObject *parent) : QStyledItemDelegate(parent) {
-
-}
-
-void SubtitleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    //qDebug() << Q_FUNC_INFO << index.data() << index.data(ZLQtTreeModel::SubTitleRole);
-    QStyledItemDelegate::paint(painter,option,index);
-    QString subtitle = index.data(ZLQtTreeModel::SubTitleRole).toString();
-    if (!subtitle.isEmpty()) {
-        painter->save();
-        painter->setClipRect(option.rect);
-        painter->setPen( option.state & QStyle::State_HasFocus ?
-                         option.palette.highlightedText().color() :
-                         option.palette.text().color());
-        const int textMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, &option) + 2;
-        const int iconMargin = MenuItemParameters::getImageSize().width() +
-                QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing, &option);
-        QRect textRect = option.rect.adjusted(textMargin+iconMargin, 0, -(textMargin+iconMargin), 0);
-        painter->setFont(MenuItemParameters::getSubtitleFont());
-        QString elidedSubtitle = painter->fontMetrics().elidedText(subtitle,Qt::ElideRight, textRect.width());
-        painter->drawText(textRect, Qt::AlignBottom,  elidedSubtitle);
-        painter->restore();
-    }
-
-}
-QSize SubtitleDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    //qDebug() << Q_FUNC_INFO << index;
-    return QStyledItemDelegate::sizeHint(option,index);
-}
-
 ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	QVBoxLayout* layout = new QVBoxLayout(this);
-	myView = new QListView;
-	myModel = new ZLQtTreeModel(rootNode(), this);
+        myWaitWidget = new WaitWidget;
+
+        TreeActionListener* listener = new TreeActionListener;
+        //because we should have a shared_ptr
+        myListener = listener;
+
+        myView = new ZLQtTreeView;
+        myModel = new ZLQtTreeModel(rootNode(), this, myListener);
 	myView->setModel(myModel);
         myView->setItemDelegate(new SubtitleDelegate);
 
@@ -78,6 +43,7 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
         connect(myView, SIGNAL(clicked(QModelIndex)), this, SLOT(enter(QModelIndex)));
 	myView->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+        layout->addWidget(myWaitWidget);
 	layout->addWidget(myView);
 
 #ifndef 	__SYMBIAN__
@@ -85,7 +51,8 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	connect(button, SIGNAL(clicked()), this, SLOT(back()));
 	layout->addWidget(button);
 #endif
-
+        connect(listener,SIGNAL(percentChanged(int,int)), myWaitWidget, SLOT(showPercent(int,int)));
+        connect(listener,SIGNAL(finishedHappened(std::string)), myWaitWidget, SLOT(finished(std::string)));
 }
 
 void ZLQtTreeDialog::back() {
@@ -132,4 +99,31 @@ void ZLQtTreeDialog::onNodeEndRemove() {
 
 void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode *node) {
         myModel->onNodeUpdated(node);
+}
+
+WaitWidget::WaitWidget(QWidget* parent) : QWidget(parent) {
+    myProgressBar = new QProgressBar;
+    QHBoxLayout* layout = new QHBoxLayout;
+    layout->addWidget(myProgressBar);
+    this->setLayout(layout);
+    this->hide(); // hide by default
+
+}
+
+void WaitWidget::showPercent(int ready, int full) {
+    myProgressBar->setRange(0,full);
+    myProgressBar->setValue(ready);
+    this->show();
+}
+
+void WaitWidget::finished(const std::string &error) {
+    this->hide();
+}
+
+void TreeActionListener::showPercent(int ready, int full) {
+    emit percentChanged(ready,full);
+}
+
+void TreeActionListener::finished(const std::string &error) {
+    emit finishedHappened(error);
 }

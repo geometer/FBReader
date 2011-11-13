@@ -32,6 +32,7 @@ namespace MenuItemParameters {
     int getTapBottomZoneSize();
     QSize getItemSize();
     QSize getImageSize();
+    QSize getImageZoneSize();
     QFont getFont();
     QFont getSubtitleFont();
     QSize getMaximumBookCoverSize();

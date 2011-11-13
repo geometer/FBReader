@@ -56,7 +56,6 @@ public:
 	std::string title() const;
 	std::string subtitle() const;
 	std::string imageUrl() const;
-	void requestChildren();
 
 protected:
 //	shared_ptr<ZLImage> image() const;
@@ -106,7 +105,6 @@ private:
 	const ZLTypeId &typeId() const;
 	shared_ptr<ZLImage> extractCoverImage() const;
 	std::string imageUrl() const;
-	void requestChildren();
 	std::string title() const;
 	std::string subtitle() const;
 
@@ -133,7 +131,6 @@ public:
 	std::string subtitle() const;
 	shared_ptr<ZLImage> image() const;
 	std::string imageUrl() const;
-	void requestChildren();
 	void fillContent(ZLDialogContent &content) const;
 	ZLResourceKey contentKey() const;
 	shared_ptr<Book> book() const;

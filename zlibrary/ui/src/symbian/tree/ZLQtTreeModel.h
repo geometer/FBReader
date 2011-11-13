@@ -10,6 +10,7 @@
 #include <ZLTreeListener.h>
 
 #include "../view/ImageUtils.h"
+#include "../view/ImageProvider.h"
 
 class ZLQtTreeModel : public QAbstractListModel {
 	Q_OBJECT;
@@ -22,7 +23,8 @@ public:
         };
 
 public:
-        explicit ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, QObject *parent = 0);
+        explicit ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog,
+                               shared_ptr<ZLExecutionData::Listener> listener, QObject *parent = 0);
 
 public:
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -41,25 +43,16 @@ signals:
 public slots:
 	bool back();
 	bool enter(QModelIndex index);
-
-private slots: //network
-        void onRequestFinished(QNetworkReply*);
-
-private: //network
-        QPixmap downloadImage(QUrl url) const;
+        void update();
 
 private:
 	ZLTreeListener::RootNode& myRootNode;
+        ImageProvider myImageProvider;
 	ZLTreeNode* myCurrentNode;
         //TODO remove two-sided pointing (model should not know about ui element)
         QDialog* myTreeDialog;
 
-private: //network
-        //TODO refactor it: network manager in model is bad
-        mutable QNetworkAccessManager myManager;
-        QPixmap myEmptyPixmap;
-        //TODO cache should not be deleted after closing net library dialog (??)
-        QMap<QString,QPixmap> myCache;
+        shared_ptr<ZLExecutionData::Listener> myListener;
 };
 
 #endif /* __ZLQTTREEMODEL_H__ */

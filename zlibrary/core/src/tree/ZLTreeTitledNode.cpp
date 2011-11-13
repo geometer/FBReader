@@ -21,6 +21,10 @@
 
 const ZLTypeId ZLTreeTitledNode::TYPE_ID(ZLTreeNode::TYPE_ID);
 
+const std::string ZLTreeTitledNode::ZLIMAGE_SCHEME("ZLImage");
+const std::string ZLTreeTitledNode::LOCALFILE_SCHEME("file");
+const std::string ZLTreeTitledNode::SCHEME_POSTFIX("://");
+
 const ZLTypeId &ZLTreeTitledNode::typeId() const {
 	return TYPE_ID;
 }

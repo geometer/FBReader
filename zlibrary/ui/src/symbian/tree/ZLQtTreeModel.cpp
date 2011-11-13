@@ -17,19 +17,13 @@
 #include <QtGui/QPainter>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QApplication>
-#include <QtNetwork/QNetworkReply>
-#include <QtNetwork/QNetworkRequest>
 
 #include "../menu/DrillDownMenu.h"
-#include "../view/ImageUtils.h"
 
-ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, QObject *parent) :  QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog) {
-	myCurrentNode = &myRootNode;
-
-        //network
-        connect(&myManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
-        myEmptyPixmap = QPixmap(MenuItemParameters::getImageSize());
-        myEmptyPixmap.fill(Qt::transparent);
+ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, shared_ptr<ZLExecutionData::Listener> listener, QObject *parent) :
+    QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog), myListener(listener) {
+    myCurrentNode = &myRootNode;
+    connect(&myImageProvider, SIGNAL(cacheUpdated()), this, SLOT(update()));
 }
 
 bool ZLQtTreeModel::back() {
@@ -58,10 +52,19 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
 	} else {
 		myCurrentNode = node;
                 //qDebug() << "\nrequesting children";
-                myCurrentNode->requestChildren();
+                myListener->showPercent(0,0); // indeterminant progress-bar
+                //TODO implement each listener for each current node, because:
+                //in case if one catalog item will requesting childrens,
+                //then another item will requesting others,
+                //progress bar will be hided if one will completed before other
+                myCurrentNode->requestChildren(myListener);
 	}
         emit layoutChanged();
 	return true;
+}
+
+void ZLQtTreeModel::update() {
+    emit layoutChanged();
 }
 
 int ZLQtTreeModel::rowCount(const QModelIndex &parent) const {
@@ -85,22 +88,9 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                     else
                             return QString("No title");
             case Qt::DecorationRole:
+                //TODO check for asking decoration role only for items on screen
                 if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
-                    QString imageUrl = QString::fromStdString(titledNode->imageUrl());
-                    if (imageUrl.isEmpty()) {
-                        //TODO add caching here; at first, std image should be called, then
-                        //in other thread should be transform operations, and dataChanged callings
-                        return ImageUtils::ZLImageToQPixmap(titledNode->image(), 0, MenuItemParameters::getImageSize() );
-                    } else {
-                        QUrl url = QUrl::fromEncoded(titledNode->imageUrl().c_str());
-                        //qDebug() << "URL" << url << url.toLocalFile();
-                        if (url.scheme() == QLatin1String("file")) {
-                            qDebug() << url << url.toLocalFile();
-                            return ImageUtils::urlToQPixmap(url, 0, MenuItemParameters::getImageSize());
-                        } else {
-                            return downloadImage(url);
-                        }
-                    }
+                    return myImageProvider.getImageForNode(titledNode);
                 }
                 break;
             case SubTitleRole:
@@ -170,26 +160,4 @@ void ZLQtTreeModel::onNodeUpdated(ZLTreeNode *node) {
 //    emit dataChanged(index, index);
 }
 
-void ZLQtTreeModel::onRequestFinished(QNetworkReply* reply) {
-    //qDebug() << Q_FUNC_INFO<< reply << reply->url();
-    QPixmap pixmap;
-    pixmap.loadFromData(reply->readAll());
-    QSize imageSize =  MenuItemParameters::getImageSize();
-    pixmap = ImageUtils::scaleAndCenterPixmap(pixmap, imageSize, true);
-    myCache[reply->url().toString()] = pixmap;
-    //TODO there should be dataChanged instead of layoutChanged()
-    emit layoutChanged();
-}
 
- QPixmap ZLQtTreeModel::downloadImage(QUrl url) const {
-     if (!url.isValid()) {
-         return myEmptyPixmap;
-     }
-     if (myCache.contains(url.toString())) {
-         return myCache.value(url.toString());
-     }
-     QNetworkRequest request(url);
-     myManager.get(request);
-     qDebug() << myEmptyPixmap.size();
-     return myEmptyPixmap;
- }

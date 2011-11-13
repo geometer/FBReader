@@ -14,6 +14,8 @@
 #include <ZLProgressDialog.h>
 #include <ZLRunnable.h>
 
+#include "ZLQtTreeDialog.h"
+
 
 class ZLQtWaitDialog : public QDialog {
 
@@ -36,8 +38,9 @@ class ZLQtProgressDialog : public ZLProgressDialog {
 public:
 		ZLQtProgressDialog(const ZLResourceKey &key);
 
-private:
-		void run(ZLRunnable &runnable);
+                void run(ZLRunnable &runnable);
+                void run(TreeActionListener* listener); // for wait dialog while loading book
+
 		void setMessage(const std::string &message);
 
 private:

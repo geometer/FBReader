@@ -174,8 +174,12 @@ int MenuItemParameters::MMtoPixels(int mm) {
 }
 
 QSize MenuItemParameters::getItemSize() {
-    static const int SIZE_FOR_FINGERS_MM = 8; // in millimetres
-    static const int MAX_PART_OF_SCREEN = 5;  // if 1/5 of screen if less than sizeForFingersMM,
+#ifdef 	__SYMBIAN__
+    static const int SIZE_FOR_FINGERS_MM = 12; // in millimetres
+#else
+    static const int SIZE_FOR_FINGERS_MM = 25; // in millimetres
+#endif
+    static const int MAX_PART_OF_SCREEN = 5;  // if 1/5 of screen if less than SIZE_FOR_FINGERS_MM,
                                            // set size as 1/5 of screen
     QRect rect = qApp->desktop()->availableGeometry();
     int height = std::min(rect.height()/MAX_PART_OF_SCREEN, MMtoPixels(SIZE_FOR_FINGERS_MM));
@@ -183,10 +187,21 @@ QSize MenuItemParameters::getItemSize() {
 }
 
 QSize MenuItemParameters::getImageSize() {
-    static const qreal COEF = 0.9;
+    static const qreal COEF_W = 0.7;
+    static const qreal COEF_H = 0.5;
+    int height = getImageZoneSize().height();
+    int width = getImageZoneSize().width();
+    width  *= COEF_W;
+    height *= COEF_H;
+    return QSize(width,height);
+}
+
+QSize MenuItemParameters::getImageZoneSize() {
+    static const qreal COEF_W = 0.75;
     int height = getItemSize().height();
-    height *= COEF;
-    return QSize(height,height);
+    int width = height;
+    width *= COEF_W;
+    return QSize(width,height);
 }
 
 QFont MenuItemParameters::getFont() {
