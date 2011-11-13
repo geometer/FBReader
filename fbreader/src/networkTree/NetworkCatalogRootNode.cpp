@@ -98,7 +98,7 @@ private:
 class NetworkCatalogRootNode::EditAction : public ZLTreeAction {
 
 public:
-	EditAction(NetworkLink &link);
+	EditAction(ZLTreeNode *node, NetworkLink &link);
 
 private:
 	void run();
@@ -106,13 +106,14 @@ private:
 	bool makesSense() const;
 
 private:
+	ZLTreeNode *myNode;
 	NetworkLink &myLink;
 };
 
 class NetworkCatalogRootNode::DeleteAction : public ZLTreeAction {
 
 public:
-	DeleteAction(NetworkLink &link);
+	DeleteAction(ZLTreeNode *node, NetworkLink &link);
 
 private:
 	void run();
@@ -120,6 +121,7 @@ private:
 	bool makesSense() const;
 
 private:
+	ZLTreeNode *myNode;
 	NetworkLink &myLink;
 };
 
@@ -163,8 +165,8 @@ void NetworkCatalogRootNode::init() {
 		}
 	}
 //	registerAction(new DontShowAction(myLink));
-	registerAction(new EditAction(myLink));
-	registerAction(new DeleteAction(myLink));
+	registerAction(new EditAction(this, myLink));
+	registerAction(new DeleteAction(this, myLink));
 }
 
 const ZLTypeId &NetworkCatalogRootNode::typeId() const {
@@ -238,18 +240,20 @@ void NetworkCatalogRootNode::DontShowAction::run() {
 	ZLResourceKey boxKey("dontShowConfirmBox");
 	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myLink.SiteName);
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
+		finished(std::string());
 		return;
 	}
 	myLink.setEnabled(false);
 	FBReader::Instance().invalidateNetworkView();
 	FBReader::Instance().refreshWindow();
+	finished(std::string());
 }
 
 bool NetworkCatalogRootNode::DontShowAction::makesSense() const {
 	return NetworkLinkCollection::Instance().numberOfEnabledLinks() > 1 && myLink.getPredefinedId() != std::string();
 }
 
-NetworkCatalogRootNode::DeleteAction::DeleteAction(NetworkLink &link) : myLink(link) {
+NetworkCatalogRootNode::DeleteAction::DeleteAction(ZLTreeNode *node, NetworkLink &link) : myNode(node), myLink(link) {
 }
 
 ZLResourceKey NetworkCatalogRootNode::DeleteAction::key() const {
@@ -260,16 +264,19 @@ void NetworkCatalogRootNode::DeleteAction::run() {
 	ZLResourceKey boxKey("deleteConfirmBox");
 	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myLink.SiteName);
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
+		finished(std::string());
 		return;
 	}
 	NetworkLinkCollection::Instance().deleteLink(myLink);
+	myNode->parent()->remove(myNode);
+	finished(std::string());
 }
 
 bool NetworkCatalogRootNode::DeleteAction::makesSense() const {
 	return myLink.getPredefinedId() == std::string();
 }
 
-NetworkCatalogRootNode::EditAction::EditAction(NetworkLink &link) : myLink(link) {
+NetworkCatalogRootNode::EditAction::EditAction(ZLTreeNode *node, NetworkLink &link) : myNode(node), myLink(link) {
 }
 
 ZLResourceKey NetworkCatalogRootNode::EditAction::key() const {
@@ -293,7 +300,9 @@ void NetworkCatalogRootNode::EditAction::run() {
 		myLink.setTitle(NameOption.value());
 		myLink.setSummary(SubNameOption.value());
 		NetworkLinkCollection::Instance().saveLink(myLink);
+		myNode->updated();
 	}
+	finished(std::string());
 }
 
 bool NetworkCatalogRootNode::EditAction::makesSense() const {

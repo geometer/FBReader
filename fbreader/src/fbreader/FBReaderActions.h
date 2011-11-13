@@ -394,12 +394,11 @@ public:
 	void run();
 };
 
-class AddNetworkCatalogAction : public ModeDependentAction {
+class AddNetworkCatalogAction : public ZLApplication::Action {
 
 public:
 	AddNetworkCatalogAction();
 	void run();
-
 };
 
 class SearchOnNetworkAction : public ModeDependentAction {

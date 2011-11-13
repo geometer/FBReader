@@ -27,7 +27,6 @@
 
 #include <ZLOptions.h>
 #include <ZLExecutionData.h>
-#include <pthread.h>
 
 #include "NetworkItems.h"
 
@@ -74,28 +73,30 @@ public:
 	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
 	void deleteLink(NetworkLink& link);
-
 	void saveLink(NetworkLink& link, bool isAuto = false);
+	void addNetworkCatalogByUser(shared_ptr<ZLExecutionData::Listener> listener = 0);
 
 private:
+	void onNetworkCatalogReply(ZLUserDataHolder &data, const std::string &error);
 	std::string makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);
 
-	void UpdateLinks(std::string genericUrl);
+	void updateLinks(std::string genericUrl);
+	void onLinksUpdated(ZLUserDataHolder &data, const std::string &error);
+	void onLinkLoaded(ZLUserDataHolder &data, const std::string &error);
 	void saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto);
+	class UpdateLinksScope;
+	class LoadLinkScope;
+	class AddNetworkCatalogScope;
 
 
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 	LinkVector myLinks, myTempCustomLinks;
-	pthread_t myUpdThread;
-	std::map<std::string, shared_ptr<pthread_mutex_t> > myLocks;
-	std::map<std::string, bool> myExists;
+	std::set<std::string> myExists;
 
 	std::string myErrorMessage;
 
 	std::string myGenericUrl;
-
-friend void *updLinks( void *ptr );
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

@@ -28,6 +28,8 @@
 #include <ZLNetworkManager.h>
 #include <ZLNetworkUtil.h>
 #include <ZLibrary.h>
+#include <ZLDialogManager.h>
+#include <ZLDialog.h>
 #include "../fbreader/FBReader.h"
 
 #include "NetworkLinkCollection.h"
@@ -44,7 +46,6 @@
 #include "opds/OPDSLink_GenericFeedReader.h"
 #include "opds/OPDSLink_FeedReader.h"
 #include "opds/OPDSXMLParser.h"
-
 #include "opds/URLRewritingRule.h"
 
 NetworkLinkCollection *NetworkLinkCollection::ourInstance = 0;
@@ -92,9 +93,6 @@ bool NetworkLinkCollection::Comparator::operator() (
 }
 
 void NetworkLinkCollection::deleteLink(NetworkLink& link) {
-	if (myLocks.count(link.SiteName)) {
-		pthread_mutex_lock(&*(myLocks[link.SiteName]));
-	}
 	BooksDB::Instance().deleteNetworkLink(link.SiteName);
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		if (&(**it) == &link) {
@@ -102,10 +100,7 @@ void NetworkLinkCollection::deleteLink(NetworkLink& link) {
 			break;
 		}
 	}
-	if (myLocks.count(link.SiteName)) {
-		myExists[link.SiteName] = false;
-		pthread_mutex_unlock(&*(myLocks[link.SiteName]));
-	}
+	myExists.erase(link.SiteName);
 	FBReader::Instance().invalidateNetworkView();
 	FBReader::Instance().refreshWindow();
 }
@@ -113,6 +108,72 @@ void NetworkLinkCollection::deleteLink(NetworkLink& link) {
 void NetworkLinkCollection::saveLink(NetworkLink& link, bool isAuto) {
 	saveLinkWithoutRefreshing(link, isAuto);
 	FBReader::Instance().refreshWindow();
+}
+
+class NetworkLinkCollection::AddNetworkCatalogScope : public ZLUserData {
+public:
+	shared_ptr<NetworkLink> link;
+	shared_ptr<OPDSFeedReader> fr;
+	shared_ptr<ZLXMLReader> prsr;
+	shared_ptr<ZLExecutionData::Listener> listener;
+};
+
+void NetworkLinkCollection::addNetworkCatalogByUser(shared_ptr<ZLExecutionData::Listener> listener) {
+	shared_ptr<ZLDialog> addDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("addNetworkCatalogDialog"));
+	ZLStringOption URLOption(ZLCategoryKey::NETWORK, "url", "title", "");
+	addDialog->addOption(ZLResourceKey("url"), URLOption);
+	addDialog->addButton(ZLResourceKey("add"), true);
+	addDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
+
+	if (addDialog->run()) {
+		addDialog->acceptValues();
+		addDialog.reset();
+		std::string url = URLOption.value();
+		AddNetworkCatalogScope *scope = new AddNetworkCatalogScope;
+		scope->fr = new OPDSLink::FeedReader(scope->link, url);
+		scope->prsr = new OPDSXMLParser(scope->fr);
+		scope->listener = listener;
+		shared_ptr<ZLExecutionData> request = ZLNetworkManager::Instance().createXMLParserRequest(url, scope->prsr);
+		request->addUserData("scope", scope);
+		request->setHandler(this, &NetworkLinkCollection::onNetworkCatalogReply);
+		ZLNetworkManager::Instance().perform(request);
+	} else {
+		if (!listener.isNull())
+			listener->finished(std::string());
+	}
+}
+
+void NetworkLinkCollection::onNetworkCatalogReply(ZLUserDataHolder &data, const std::string &error) {
+	// scope is not reference, because data is died somewhere at ZLDialog's run call a bit lower
+	AddNetworkCatalogScope scope = static_cast<AddNetworkCatalogScope&>(*data.getUserData("scope"));
+	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(ZLResourceKey("errorLinkBox")), error);
+	if (scope.link == 0) {
+		ZLDialogManager::Instance().informationBox(ZLResourceKey("errorLinkBox"), message);
+		if (!scope.listener.isNull())
+			scope.listener->finished(error);
+		return;
+	}
+
+	shared_ptr<ZLDialog> checkDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("checkNetworkCatalogDialog"));
+	ZLStringOption NameOption(ZLCategoryKey::NETWORK, "name", "title", "");
+	NameOption.setValue(scope.link->getTitle());
+	checkDialog->addOption(ZLResourceKey("name"), NameOption);
+	ZLStringOption SubNameOption(ZLCategoryKey::NETWORK, "subname", "title", "");
+	SubNameOption.setValue(scope.link->getSummary());
+	checkDialog->addOption(ZLResourceKey("subname"), SubNameOption);
+	ZLStringOption IconOption(ZLCategoryKey::NETWORK, "icon", "title", "");
+
+	checkDialog->addButton(ZLResourceKey("add"), true);
+	checkDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
+	if (checkDialog->run()) {
+		checkDialog->acceptValues();
+		checkDialog.reset();
+		scope.link->setTitle(NameOption.value());
+		scope.link->setSummary(SubNameOption.value());
+		NetworkLinkCollection::Instance().saveLink(*scope.link);
+	}
+	if (!scope.listener.isNull())
+		scope.listener->finished(std::string());
 }
 
 void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto) {
@@ -156,58 +217,71 @@ void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool is
 	}
 }
 
-void *updLinks( void *ptr ) {
-	NetworkLinkCollection* nc = (NetworkLinkCollection*) ptr;
-	std::string genericUrl = nc->myGenericUrl;
-	std::vector<shared_ptr<NetworkLink> > links;
-	shared_ptr<OPDSFeedReader> fr = new OPDSLink::GenericFeedReader(links);
-	shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
-	ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, prsr));
-	for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
-		nc->saveLinkWithoutRefreshing(**it, true);
-	}
-	for (std::vector<shared_ptr<NetworkLink> >::iterator it = nc->myTempCustomLinks.begin(); it != nc->myTempCustomLinks.end(); ++it) {
-		shared_ptr<NetworkLink> link = 0;
-		std::string url = (*it)->url(NetworkLink::URL_MAIN);
-		shared_ptr<OPDSFeedReader> fr = new OPDSLink::FeedReader(link, url);
-		shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
-		ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr));
-		if (link != 0) {
-			if (nc->myLocks[link->SiteName] != 0 && pthread_mutex_trylock(&*(nc->myLocks[link->SiteName])) == 0) {//TODO: why it can be 0?
-				if (nc->myExists[link->SiteName]) {
-					nc->saveLinkWithoutRefreshing(*link, true);
-				}
-				pthread_mutex_unlock(&*(nc->myLocks[link->SiteName]));
-			}
-		}
-	}
-}
-
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 
 	BooksDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 
-	UpdateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
+	updateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
 }
 
-void NetworkLinkCollection::UpdateLinks(std::string genericUrl) {
+class NetworkLinkCollection::UpdateLinksScope : public ZLUserData {
+public:
+	std::vector<shared_ptr<NetworkLink> > links;
+};
+
+class NetworkLinkCollection::LoadLinkScope : public ZLUserData {
+public:
+	shared_ptr<NetworkLink> link;
+};
+
+void NetworkLinkCollection::updateLinks(std::string genericUrl) {
 	myGenericUrl = genericUrl;
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		if ((*it)->getPredefinedId() == std::string()) {
 			myTempCustomLinks.push_back(*it);
-			pthread_mutex_t* m = new pthread_mutex_t();
-			pthread_mutex_init(m, 0);
-			myLocks[(*it)->SiteName] = m;
-			myExists[(*it)->SiteName] = true;
+			myExists.insert((*it)->SiteName);
 		}
 	}
-	pthread_create(&myUpdThread, NULL, updLinks, (void*) this);
+	UpdateLinksScope *scope = new UpdateLinksScope;
+	shared_ptr<OPDSFeedReader> fr = new OPDSLink::GenericFeedReader(scope->links);
+	shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
+	shared_ptr<ZLExecutionData> request = ZLNetworkManager::Instance().createXMLParserRequest(myGenericUrl, prsr);
+	request->addUserData("scope", scope);
+	request->setHandler(this, &NetworkLinkCollection::onLinksUpdated);
+	ZLNetworkManager::Instance().perform(request);
+}
+
+void NetworkLinkCollection::onLinksUpdated(ZLUserDataHolder &data, const std::string &error) {
+	(void) error;
+	UpdateLinksScope &scope = static_cast<UpdateLinksScope&>(*data.getUserData("scope"));
+	for (std::vector<shared_ptr<NetworkLink> >::iterator it = scope.links.begin(); it != scope.links.end(); ++it) {
+		saveLinkWithoutRefreshing(**it, true);
+	}
+	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myTempCustomLinks.begin(); it != myTempCustomLinks.end(); ++it) {
+		LoadLinkScope *loadScope = new LoadLinkScope;
+		std::string url = (*it)->url(NetworkLink::URL_MAIN);
+		shared_ptr<OPDSFeedReader> fr = new OPDSLink::FeedReader(loadScope->link, url);
+		shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
+		shared_ptr<ZLExecutionData> request = ZLNetworkManager::Instance().createXMLParserRequest(url, prsr);
+		request->addUserData("scope", loadScope);
+		request->setHandler(this, &NetworkLinkCollection::onLinkLoaded);
+		ZLNetworkManager::Instance().perform(request);
+	}
+}
+
+void NetworkLinkCollection::onLinkLoaded(ZLUserDataHolder &data, const std::string &error) {
+	(void) error;
+	LoadLinkScope &scope = static_cast<LoadLinkScope&>(*data.getUserData("scope"));
+	if (scope.link != 0) {
+		if (myExists.find(scope.link->SiteName) != myExists.end()) {
+			saveLinkWithoutRefreshing(*scope.link, true);
+		}
+	}
 }
 
 NetworkLinkCollection::~NetworkLinkCollection() {
-	pthread_join(myUpdThread, NULL);
 }
 
 static std::string normalize(const std::string &url) {

@@ -47,10 +47,11 @@ void OPDSLink::FeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed
 			if (*type == *ZLMimeType::APPLICATION_ATOM_XML) {
 				links[rel] = ZLNetworkUtil::url(myBaseURL, OpenSearchXMLReader::convertOpenSearchURL(href));
 			} else if (*type == *ZLMimeType::APPLICATION_OPENSEARCH_XML) {
-				OpenSearchXMLReader* osr = new OpenSearchXMLReader();
-				shared_ptr<ZLXMLReader> zr = osr;
-				ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(ZLNetworkUtil::url(myBaseURL, href), zr));
-				links[rel] = osr->templateURL();
+				// FIXME: Add back OpenSearch support in some feature
+//				OpenSearchXMLReader* osr = new OpenSearchXMLReader();
+//				shared_ptr<ZLXMLReader> zr = osr;
+//				ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(ZLNetworkUtil::url(myBaseURL, href), zr));
+//				links[rel] = osr->templateURL();
 			}
 		} else if (rel == "self") {
 			links[NetworkLink::URL_MAIN] = ZLNetworkUtil::url(myBaseURL, href);

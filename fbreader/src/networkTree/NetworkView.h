@@ -56,6 +56,9 @@ private:
 	bool processAccountDependent(NetworkCatalogItem &item);
 	void paint();
 	void makeUpToDate();
+	
+	class AddCatalogAction;
+	friend class AddCatalogAction;
 
 private:
 	shared_ptr<ZLTreeDialog> myDialog;

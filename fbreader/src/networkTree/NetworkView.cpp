@@ -38,8 +38,40 @@
 
 #include "../fbreader/FBReader.h"
 
+class NetworkView::AddCatalogAction : public ZLTreeAction {
+public:
+	AddCatalogAction(NetworkView *view);
+	ZLResourceKey key() const;
+	void run();
+
+private:
+	void onCatalogAdded(ZLUserDataHolder &data, const std::string &error);
+	NetworkView *myView;
+};
+
+NetworkView::AddCatalogAction::AddCatalogAction(NetworkView *view)
+    : myView(view) {
+}
+
+ZLResourceKey NetworkView::AddCatalogAction::key() const {
+	return ZLResourceKey("networkView");
+}
+
+void NetworkView::AddCatalogAction::run() {
+	NetworkLinkCollection::Instance().addNetworkCatalogByUser(
+	            ZLExecutionData::createListener(this, &NetworkView::AddCatalogAction::onCatalogAdded));
+}
+
+void NetworkView::AddCatalogAction::onCatalogAdded(ZLUserDataHolder &data, const std::string &error) {
+	(void) data;
+	if (error.empty())
+		myView->makeUpToDate();
+	finished(error);
+}
+
 NetworkView::NetworkView() : myUpdateChildren(true), myUpdateAccountDependents(false) {
 	myDialog = ZLDialogManager::Instance().createTreeDialog();
+	myDialog->rootNode().registerAction(new AddCatalogAction(this));
 }
 
 void NetworkView::showDialog() {
