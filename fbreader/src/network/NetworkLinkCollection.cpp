@@ -401,7 +401,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 	fileName += ext;
 	if (createDirectories) {
 		const size_t directoryIndex = fileName.find_last_of(ZLibrary::FileNameDelimiter);
-		const std::string directoryPath = fileName.substr(0, directoryIndex - 1);
+		const std::string directoryPath = fileName.substr(0, directoryIndex);
 		ZLFile(directoryPath).directory(true);
 	}
 	return fileName;
