@@ -23,7 +23,8 @@
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, shared_ptr<ZLExecutionData::Listener> listener, QObject *parent) :
     QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog), myListener(listener) {
     myCurrentNode = &myRootNode;
-    connect(&myImageProvider, SIGNAL(cacheUpdated()), this, SLOT(update()));
+    myImageProvider = new ImageProvider(this);
+    connect(myImageProvider, SIGNAL(cacheUpdated()), this, SLOT(update()));
 }
 
 bool ZLQtTreeModel::back() {
@@ -90,7 +91,7 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
             case Qt::DecorationRole:
                 //TODO check for asking decoration role only for items on screen
                 if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
-                    return myImageProvider.getImageForNode(titledNode);
+                    return myImageProvider->getImageForNode(titledNode);
                 }
                 break;
             case SubTitleRole:

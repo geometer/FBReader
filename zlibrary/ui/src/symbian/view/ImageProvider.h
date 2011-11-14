@@ -2,72 +2,63 @@
 #define __IMAGEPROVIDER_H__
 
 #include <QtCore/QObject>
-#include <QtCore/QThread>
+#include <QtCore/QRunnable>
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QNetworkRequest>
 #include <QtCore/QUrl>
+#include <QtCore/QSet>
 #include <QtGui/QPixmap>
 
 #include <ZLTreeTitledNode.h>
 
 #include <ZLImageManager.h>
 
-class PixmapTransfomer : public QThread {
-    Q_OBJECT
+Q_DECLARE_METATYPE(const ZLTreeTitledNode*)
+Q_DECLARE_METATYPE(shared_ptr<ZLImage>)
 
+class ImageRunnable : public QRunnable {
 public:
-   explicit PixmapTransfomer(QObject *parent = 0);
-
-public slots:
-    void needImage(const ZLTreeTitledNode* node) const;
-
-signals:
-    void imageIsReady(const ZLTreeTitledNode* node, QPixmap pixmap) const;
-
-private slots:
-    void onRequestFinished(QNetworkReply*);
+    ImageRunnable(const ZLTreeTitledNode *node, QObject *requester);
+    void run();
 
 private:
-    QPixmap getZLImage(shared_ptr<ZLImage> image) const;
-    QPixmap getFSImage(QUrl imageUrl) const;
-    void getNetworkImage(const ZLTreeTitledNode* node, QUrl url) const;
-
-private:
-    mutable QNetworkAccessManager myManager;
-    mutable QMap<QUrl, const ZLTreeTitledNode*> myNetworkImageCache;
-    mutable QMap<QUrl,QPixmap> myCache;
-
+    QWeakPointer<QObject> myRequester;
+    const ZLTreeTitledNode *myNode;
 };
-
 
 class ImageProvider : public QObject {
     Q_OBJECT
 
 public:
-    ImageProvider();
+    ImageProvider(QObject* parent = 0);
 
 public:
-    QPixmap getImageForNode(const ZLTreeTitledNode *titledNode) const;
-//public:
-//    QPixmap getUrlImage(QUrl url) const;
-//    QPixmap getFromZLImage(shared_ptr<ZLImage> image) const;
-//    QPixmap getFromZLImage(QString cacheId, shared_ptr<ZLImage> image) const;
+    QPixmap getImageForNode(const ZLTreeTitledNode *titledNode);
 
 signals:
     void cacheUpdated() const;
-    void needImage(const ZLTreeTitledNode* node) const;
 
-public slots:
-    void imageIsReady(const ZLTreeTitledNode* node, QPixmap pixmap) const;
-
-private:
-        const QPixmap& downloadImage(QUrl url) const;
+private slots:
+    void onRequestFinished(QNetworkReply*);
+    void handleImageResult(const ZLTreeTitledNode *node, shared_ptr<ZLImage> image);
 
 private:
-        PixmapTransfomer* myTransformer;
-        mutable QMap<const ZLTreeTitledNode*,QPixmap> myCache;
+    QPixmap getZLImage(shared_ptr<ZLImage> image) const;
+    QPixmap getFSImage(QUrl imageUrl) const;
+    void getNetworkImage(QUrl url) const;
+
+private:
+    void updateCache(QString cacheUrl, QPixmap pixmap);
+
+private:
+    static QUrl generateUrl(const ZLTreeTitledNode* node);
+
+private:
+        QMap<QString,QPixmap> myCache;
+        QSet<const ZLTreeTitledNode*> myProcessedNodes;
         QPixmap myEmptyPixmap;
+        mutable QNetworkAccessManager myManager;
         //TODO cache should not be deleted after closing net library dialog (??)
 
 };
