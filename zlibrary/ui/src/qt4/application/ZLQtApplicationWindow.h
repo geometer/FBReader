@@ -48,6 +48,7 @@ public:
 
 private:
 	ZLViewWidget *createViewWidget();
+	virtual void showMenu();
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void init();
 	void processAllEvents();

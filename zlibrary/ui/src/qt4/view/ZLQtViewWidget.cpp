@@ -1,22 +1,3 @@
-/*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- * 02110-1301, USA.
- */
-
 #include <algorithm>
 
 #include <QtGui/QLayout>
@@ -24,13 +5,15 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QMouseEvent>
-#include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
 
 #include "ZLQtViewWidget.h"
 #include "ZLQtPaintContext.h"
+
+#include <ZLTextView.h>
 
 class MyQScrollBar : public QScrollBar {
 
@@ -40,20 +23,24 @@ public:
 
 private:
 	void mouseMoveEvent(QMouseEvent *event) {
-		if (orientation() == Qt::Vertical) {
-			const int y = event->y();
-			if ((y <= 0) || (y >= height())) {
-				return;
-			}
-		} else {
-			const int x = event->x();
-			if ((x <= 0) || (x >= width())) {
-				return;
-			}
+		if (event->type() == QEvent::MouseMove) {
+			return;
 		}
+//		if (orientation() == Qt::Vertical) {
+//			const int y = event->y();
+//			if ((y <= 0) || (y >= height())) {
+//				return;
+//			}
+//		} else {
+//			const int x = event->x();
+//			if ((x <= 0) || (x >= width())) {
+//				return;
+//			}
+//		}
 		QScrollBar::mouseMoveEvent(event);
 	}
 };
+
 
 ZLQtViewWidget::Widget::Widget(QWidget *parent, ZLQtViewWidget &holder) : QWidget(parent), myHolder(holder) {
 	//setBackgroundMode(NoBackground);
@@ -89,6 +76,11 @@ ZLQtViewWidget::ZLQtViewWidget(QWidget *parent, ZLApplication *application) : ZL
 	myBottomScrollBar = addScrollBar(layout, Qt::Horizontal, 2, 1);
 	myTopScrollBar = addScrollBar(layout, Qt::Horizontal, 0, 1);
 	myShowScrollBarAtBottom = true;
+
+	myRightScrollBar->setDisabled(true);
+	myLeftScrollBar->setDisabled(true);
+	myTopScrollBar->setDisabled(true);
+	myBottomScrollBar->setDisabled(true);
 }
 
 void ZLQtViewWidget::trackStylus(bool track) {
@@ -127,26 +119,38 @@ void ZLQtViewWidget::Widget::paintEvent(QPaintEvent*) {
 	}
 }
 
+class ZLTextViewHook : public ZLTextView {
+public:
+	using ZLTextView::onStylusClick;
+};
+
 void ZLQtViewWidget::Widget::mousePressEvent(QMouseEvent *event) {
-	myHolder.view()->onStylusMove(x(event), y(event));
-	myHolder.view()->onStylusPress(x(event), y(event));
+    //Implementation of this method is kind of hack, because
+    //it doesn't use internal code of ZLView for recognizing mouse's click
+    //it just calls onFingerTap and onStylusClick directly
+    //TODO reimplement using just onStylusPressed and onStylusReleased methods of ZLView class
+    bool isLink = false;   
+    if (ZLTextViewHook* bookTextView = zlobject_cast<ZLTextViewHook*>(&*myHolder.view())) {
+        // count == 0 means that it returns false in case it's not a link in text
+        isLink = bookTextView->onStylusClick(x(event), y(event), 0);
+    }
+    if (!isLink) {
+        if (isTapBottomZone(QPoint(event->pos()))) {
+            emit myHolder.tapBottomZoneClicked();
+            return;
+        }
+        // if it's not a link in BookTextView, do a finger tap for scrolling on prev/next page
+        myHolder.view()->onFingerTap(x(event), y(event));
+    }
 }
 
 void ZLQtViewWidget::Widget::mouseReleaseEvent(QMouseEvent *event) {
-	myHolder.view()->onStylusRelease(x(event), y(event));
+    //why empty implentation? see comment in mousePressentEvent method
 }
 
-void ZLQtViewWidget::Widget::mouseMoveEvent(QMouseEvent *event) {
-	switch (event->buttons()) {
-		case Qt::LeftButton:
-			myHolder.view()->onStylusMovePressed(x(event), y(event));
-			break;
-		case Qt::NoButton:
-			myHolder.view()->onStylusMove(x(event), y(event));
-			break;
-		default:
-			break;
-	}
+bool ZLQtViewWidget::Widget::isTapBottomZone(QPoint coords) {
+//    return coords.y() >= (this->size().height() - MenuItemParameters::getTapBottomZoneSize());
+	return false;
 }
 
 int ZLQtViewWidget::Widget::x(const QMouseEvent *event) const {
@@ -206,7 +210,7 @@ void ZLQtViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool sta
 			QScrollBar *current = standard ? myRightScrollBar : myLeftScrollBar;
 			if (old->isVisible()) {
 				old->hide();
-				current->show();
+                                current->show();
 			}
 		}
 	} else {
@@ -214,9 +218,9 @@ void ZLQtViewWidget::setScrollbarPlacement(ZLView::Direction direction, bool sta
 			myShowScrollBarAtBottom = standard;
 			QScrollBar *old = standard ? myTopScrollBar : myBottomScrollBar;
 			QScrollBar *current = standard ? myBottomScrollBar : myTopScrollBar;
-			if (old->isVisible()) {
+                        if (old->isVisible()) {
 				old->hide();
-				current->show();
+                                current->show();
 			}
 		}
 	}
@@ -297,9 +301,4 @@ void ZLQtViewWidget::onHorizontalSliderClicked(int value) {
 
 QWidget *ZLQtViewWidget::widget() {
 	return myFrame;
-}
-
-void ZLQtViewWidget::sendPaintEvent() {
-//	QCoreApplication::postEvent(myQWidget, new QPaintEvent(myQWidget->rect()));
-	myQWidget->update();
 }

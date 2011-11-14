@@ -45,7 +45,7 @@ ifeq "$(UI_TYPE)" "qt"
 endif
 
 ifeq "$(UI_TYPE)" "qt4"
-  QTSUBDIRS = src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/filesystem src/qt4/library src/unix/message src/qt4/application src/qt4/network
+  QTSUBDIRS = src/qt4/time src/qt4/dialogs src/qt4/view src/qt4/image src/qt4/util src/qt4/filesystem src/qt4/library src/unix/message src/qt4/application src/qt4/network src/qt4/tree
 endif
 
 ifeq "$(UI_TYPE)" "qml"

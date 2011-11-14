@@ -207,6 +207,8 @@ inline void shared_ptr_storage<T>::addReference() {
 template<class T>
 inline bool shared_ptr_storage<T>::removeReference() {
 	if (myCounter->removeReference()) {
+		char checkIfValid[sizeof(T) ? 1 : -1];
+		(void) checkIfValid;
 		T* ptr = myPointer;
 		myPointer = 0;
 		delete ptr;

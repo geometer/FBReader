@@ -290,6 +290,9 @@ ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
 	return viewWidget;
 }
 
+void ZLQtApplicationWindow::showMenu() {
+}
+
 void ZLQtApplicationWindow::close() {
 	QMainWindow::close();
 }

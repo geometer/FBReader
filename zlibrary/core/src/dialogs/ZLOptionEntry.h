@@ -25,6 +25,7 @@
 
 #include <ZLOptions.h>
 #include <ZLImageManager.h>
+#include <ZLImage.h>
 
 class ZLOptionView;
 
