@@ -9,13 +9,14 @@
 
 void ScrollerManager::setScrollerProperties() {
     QtScrollerProperties sp;
-    sp.setScrollMetric(QtScrollerProperties::MousePressEventDelay,  qreal(0.1));
+    sp.setScrollMetric(QtScrollerProperties::MousePressEventDelay,  qreal(0.5));
     sp.setScrollMetric(QtScrollerProperties::DragStartDistance,   qreal(2.5/1000) );
-    sp.setScrollMetric(QtScrollerProperties::DragVelocitySmoothingFactor, qreal(0.85));
-    sp.setScrollMetric(QtScrollerProperties::DecelerationFactor, 0.3);
-    sp.setScrollMetric(QtScrollerProperties::AcceleratingFlickMaximumTime,  qreal(0.125));
-    sp.setScrollMetric(QtScrollerProperties::SnapTime,  qreal(1));
-    sp.setScrollMetric(QtScrollerProperties::FrameRate,   QtScrollerProperties::Fps60);
+    sp.setScrollMetric(QtScrollerProperties::MaximumClickThroughVelocity,   qreal(0) );
+//    sp.setScrollMetric(QtScrollerProperties::DragVelocitySmoothingFactor, qreal(0.85));
+//    sp.setScrollMetric(QtScrollerProperties::DecelerationFactor, 0.3);
+//    sp.setScrollMetric(QtScrollerProperties::AcceleratingFlickMaximumTime,  qreal(0.125));
+//    sp.setScrollMetric(QtScrollerProperties::SnapTime,  qreal(1));
+//    sp.setScrollMetric(QtScrollerProperties::FrameRate,   QtScrollerProperties::Standard);
     QtScrollerProperties::setDefaultScrollerProperties(sp);
 }
 
