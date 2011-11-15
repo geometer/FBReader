@@ -42,6 +42,7 @@ public:
 
 	// TODO: change return type to int (or std::string?)
 	virtual bool run() = 0;
+        virtual bool runFullscreen();
 	void acceptValues();
 
 protected:

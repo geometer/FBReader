@@ -15,9 +15,9 @@
 static const std::string EMPTY_MESSAGE("emptyMessage");
 
 
-ZLQtOpenFileDialog::ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter)
+ZLQtOpenFileDialog::ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter, QWidget* parent)
 	: myFilter(filter) {
-	myDialog = new DrillDownMenuDialog(qApp->activeWindow());
+        myDialog = new DrillDownMenuDialog(parent);
 	mySelectDirsOnlyMode = false;
 
 //	myDialog->setWindowTitle(QString::fromStdString(title));

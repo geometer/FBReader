@@ -1,14 +1,15 @@
 #ifndef __ZLQTDIALOGCONTENT_H__
 #define __ZLQTDIALOGCONTENT_H__
 
-#include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
+#include <ZLDialogContent.h>
 
 #include <QtCore/QString>
+#include <QtGui/QScrollArea>
 
 class QWidget;
 class QVBoxLayout;
 
-class ZLQtDialogContent : public ZLDialogContent {
+class ZLQtDialogContent : public QObject, public ZLDialogContent {
 
 public:
         ZLQtDialogContent(const ZLResource &resource);
@@ -28,9 +29,16 @@ private:
 	void createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option);
 
 private:
+        bool eventFilter(QObject *obj, QEvent *event);
+
+private:
+        QScrollArea* myScrollArea;
 	QWidget *myWidget;
 	QVBoxLayout *myLayout;
-	bool isFirstWidget;
+
+        //isFirstWidget were used to set focus on first widget, this is necessary only for
+        //phones without touch screen
+        //bool isFirstWidget;
 };
 
 #endif /* __ZLQTDIALOGCONTENT_H__ */

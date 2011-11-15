@@ -9,7 +9,7 @@
 #include "ZLQtDialogContent.h"
 #include "ZLQtUtil.h"
 
-ZLQtDialog::ZLQtDialog(const ZLResource &resource) : QDialog(qApp->activeWindow()) {
+ZLQtDialog::ZLQtDialog(const ZLResource &resource, QWidget* parent) : QDialog(parent) {
 	setModal(true);
 	setWindowTitle(::qtString(resource[ZLDialogManager::DIALOG_TITLE].value()));
 
@@ -42,4 +42,15 @@ void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
 bool ZLQtDialog::run() {
 	((ZLQtDialogContent*)myTab)->close();
 	return exec() == QDialog::Accepted;
+}
+
+bool ZLQtDialog::runFullscreen() {
+    #ifdef __SYMBIAN__
+        setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+        setWindowState(Qt::WindowFullScreen);
+    #else
+        setFixedSize(400,600);
+    #endif
+
+    return run();
 }

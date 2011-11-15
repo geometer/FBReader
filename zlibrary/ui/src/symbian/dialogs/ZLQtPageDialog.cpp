@@ -143,7 +143,10 @@ ZLQtPageDialog::~ZLQtPageDialog() {
 bool ZLQtPageDialog::run() {
 #ifdef __SYMBIAN__
     setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
-#endif
     setWindowState(Qt::WindowFullScreen);
+#else
+    setFixedSize(400, 600);
+#endif
+    static_cast<ZLQtDialogContent&>(*myContent).close();
     return exec() == QDialog::Accepted;
 }

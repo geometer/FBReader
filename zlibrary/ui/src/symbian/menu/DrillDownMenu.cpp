@@ -1,6 +1,6 @@
 #include <QtCore/QDebug>
 
-#include <QtScroller>
+#include "../dialogs/ScrollerManager.h"
 
 #include "../dialogs/ZLQtUtil.h"
 
@@ -64,7 +64,7 @@ void DrillDownMenuDialog::showDrillDownMenu(DrillDownMenu* menu) {
 }
 
  void DrillDownMenuDialog::setCurrentMenu(DrillDownMenu* menu) {
-    QtScroller::grabGesture(menu->viewport(), QtScroller::LeftMouseButtonGesture);
+    ScrollerManager::setScroll(menu);
     myStackedWidget->setCurrentWidget(menu);
 #ifdef __SYMBIAN__
     menu->setEditFocus(true); // for phones with keyboard: need to activate for single-click
@@ -103,13 +103,10 @@ void DrillDownMenu::addItem(DrillDownMenuItem* item) {
 }
 
 DrillDownMenu::DrillDownMenu(QWidget *parent) : QListWidget(parent) {
-    connect(this, SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)));
+    connect(this, SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)), Qt::QueuedConnection);
 	//connect(this, SIGNAL(itemActivated(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)));
     // don't close DrillDownMenu after options dialog was closed:
     //connect(this, SIGNAL(itemActivated(QListWidgetItem*)),parent,SLOT(close()));
-    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
 }
 
@@ -220,8 +217,8 @@ QFont MenuItemParameters::getSubtitleFont() {
     return font;
 }
 
-QSize MenuItemParameters::getMaximumBookCoverSize() {
+QSize MenuItemParameters::getMaximumBookCoverSize(QSize window) {
     static const qreal COEF = 0.5;
-    QSize size = qApp->desktop()->availableGeometry().size();
+    QSize size = window;
     return QSize(size.width(), size.height()*COEF);
 }

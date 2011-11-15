@@ -10,14 +10,23 @@
 void ZLQtDialogContent::close() {
     // calls before showing content, so,
     // for instance, here can be addStretch
+    myScrollArea->setWidget(myWidget);
+    myScrollArea->viewport()->installEventFilter(this);
+    myLayout->addStretch();
 }
 
 ZLQtDialogContent::ZLQtDialogContent(const ZLResource &resource) : ZLDialogContent(resource) {
+        myScrollArea = new QScrollArea;
         myWidget = new QWidget;
         myLayout = new QVBoxLayout;
-        myLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+        //myLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
         myWidget->setLayout(myLayout);
-        isFirstWidget = true;
+//        isFirstWidget = true;
+
+        myScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+        myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+        myScrollArea->setWidgetResizable(true);
+
 }
 
 ZLQtDialogContent::~ZLQtDialogContent() {
@@ -36,14 +45,13 @@ void ZLQtDialogContent::addOptions(const std::string &name0, const std::string &
 }
 
 void ZLQtDialogContent::addItem(QWidget *widget) {
-        if (isFirstWidget == true) {
-            myWidget->setFocusProxy(widget);
-            isFirstWidget = false;
-        }
+//        if (isFirstWidget == true) {
+//            myWidget->setFocusProxy(widget);
+//            isFirstWidget = false;
+//        }
         myLayout->addWidget(widget);
-
         //Expanding
-		widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+        //widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 }
 
 void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {
@@ -100,5 +108,16 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 }
 
 QWidget *ZLQtDialogContent::widget() {
-        return myWidget;
+        return myScrollArea;
+}
+
+bool ZLQtDialogContent::eventFilter(QObject *obj, QEvent *ev) {
+    //TODO fix it, this is kind of hack.
+    //Goal is to set to content widget viewport's size by width (to use only vertical scrolling)
+    if (obj == myScrollArea->viewport() && ev->type() == QEvent::Resize ) {
+//        QResizeEvent *resizeEvent = static_cast<QResizeEvent *>(resizeEvent);
+//        qDebug() << Q_FUNC_INFO << resizeEvent << myScrollArea->viewport()->width();
+        myWidget->setFixedWidth(myScrollArea->viewport()->width());
+    }
+    return false;
 }
