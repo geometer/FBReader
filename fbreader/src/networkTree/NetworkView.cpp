@@ -54,7 +54,7 @@ NetworkView::AddCatalogAction::AddCatalogAction(NetworkView *view)
 }
 
 ZLResourceKey NetworkView::AddCatalogAction::key() const {
-	return ZLResourceKey("networkView");
+        return ZLResourceKey("addCustomCatalog");
 }
 
 void NetworkView::AddCatalogAction::run() {
@@ -71,6 +71,10 @@ void NetworkView::AddCatalogAction::onCatalogAdded(ZLUserDataHolder &data, const
 
 NetworkView::NetworkView() : myUpdateChildren(true), myUpdateAccountDependents(false) {
 	myDialog = ZLDialogManager::Instance().createTreeDialog();
+        //TODO fix hack:
+        //to right retrieving resource, ZLTreeListener::RootNode has resource method, that
+        //returns ZLResource::resource("networkView");
+        //but RootNode is base class for both: networkView and libraryView
 	myDialog->rootNode().registerAction(new AddCatalogAction(this));
 }
 

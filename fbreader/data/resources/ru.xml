@@ -27,6 +27,7 @@
 		</node>
 	</node>
 	<node name="networkView">
+        <node name="addCustomCatalog" value="Добавить сетевую библиотеку"/>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Развернуть" />
 			<node name="collapseTree" value="Свернуть" />

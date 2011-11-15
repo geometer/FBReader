@@ -35,6 +35,9 @@ public:
 	public:
 		RootNode(ZLTreeListener &listener);
 
+        public:
+                const ZLResource &resource() const;
+
 	private:
 		const ZLTypeId &typeId() const;
 		

@@ -27,6 +27,7 @@
 		</node>
 	</node>
 	<node name="networkView">
+        <node name="addCustomCatalog" value="Add network library"/>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Expand"/>
 			<node name="collapseTree" value="Collapse"/>
@@ -148,7 +149,11 @@
 			<node name="label" value="Add File" />
 			<node name="tooltip" value="Add File to Library" />
 		</node>
-		<node name="networkLibrary">
+        <node name="addNetworkCatalog">
+            <node name="label" value="Add" />
+            <node name="tooltip" value="Add network library" />
+        </node>	
+        <node name="netLibrary">
 			<node name="label" value="Network" />
 			<node name="tooltip" value="Search in Network Libraries" />
 		</node>
@@ -236,6 +241,8 @@
 	<node name="dialog">
 		<node name="button">
 			<node name="go" value="&amp;Go!" />
+            <node name="add" value="Add" />
+            <node name="edit" value="Edit" />
 			<node name="thisOnly" value="This only" />
 			<node name="withSubtags" value="With subtags" />
 			<node name="removeLink" value="Remove from library" />
@@ -881,6 +888,22 @@
 			<node name="description" value="Description" />
 			<node name="annotation" value="Search results for: %s" />
 		</node>
+		<node name="addNetworkCatalogDialog">
+			<node name="title" value="Add network library" />
+			<node name="url" value="Url" />
+		</node>
+		<node name="checkNetworkCatalogDialog">
+			<node name="title" value="Check your input" />
+			<node name="name" value="Name" />
+			<node name="subname" value="Description" />
+			<node name="icon" value="Icon" />
+		</node>
+		<node name="editNetworkCatalogDialog">
+			<node name="title" value="Edit" />
+			<node name="name" value="Name" />
+			<node name="subname" value="Description" />
+			<node name="icon" value="Icon" />
+		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Go To Page" />
 			<node name="pageNumber" value="Go to Page Number" />
@@ -972,6 +995,14 @@
 		<node name="dontShowConfirmBox">
 			<node name="title" value="Disable catalog" />
 			<node name="message" value="Are you sure you want to disable&#10;&#8220;%s&#8221; catalog?&#10;&#10;You can enable this catalog again at&#10;&#8220;Network Search&#8221; tab in the Preferences dialog." />
+		</node>
+		<node name="deleteConfirmBox">
+			<node name="title" value="Deleting catalog" />
+			<node name="message" value="Are you sure you want to delete&#10;catalog «%s»?&#10;&#10;" />
+		</node>
+		<node name="errorLinkBox">
+			<node name="title" value="Error with recieving data" />
+			<node name="message" value="%s" />
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" value="Delete Book" />
