@@ -5,13 +5,13 @@
 #include <QtGui/QResizeEvent>
 #include <QtGui/QScrollArea>
 #include <QtGui/QAction>
-#include <QtScroller>
 
 #include <ZLDialogManager.h>
 
 #include "ZLQtOptionsDialog.h"
 #include "ZLQtDialogContent.h"
 #include "ZLQtUtil.h"
+#include "ScrollerManager.h"
 
 #include "../menu/DrillDownMenu.h"
 
@@ -19,14 +19,12 @@ TabMenuWidget::TabMenuWidget(QWidget* parent): QWidget(parent) {
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	myStackedWidget = new QStackedWidget;
 	myMenuWidget = new QListWidget;
-	myMenuWidget->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	layout->addWidget(myMenuWidget);
         layout->addWidget(myStackedWidget);
 	setStatus(MENU);
-        connect(myMenuWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(menuItemClicked(QModelIndex)));
+        connect(myMenuWidget, SIGNAL(clicked(QModelIndex)), this, SLOT(menuItemClicked(QModelIndex)), Qt::QueuedConnection);
 
-        myMenuWidget->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-        QtScroller::grabGesture(myMenuWidget->viewport(), QtScroller::LeftMouseButtonGesture);
+        ScrollerManager::setScroll(myMenuWidget);
 }
 
 void TabMenuWidget::addItem(QWidget *widget, const QString &label) {
