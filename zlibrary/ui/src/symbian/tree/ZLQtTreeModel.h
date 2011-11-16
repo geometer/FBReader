@@ -39,6 +39,7 @@ public:
 	void onNodeUpdated(ZLTreeNode *node);
 
 signals:
+        void currentNodeChanged(const ZLTreeNode* node);
 
 public slots:
 	bool back();
@@ -47,7 +48,8 @@ public slots:
 
 private:
 	ZLTreeListener::RootNode& myRootNode;
-        ImageProvider myImageProvider;
+        //FIXME remove mutable
+        mutable ImageProvider* myImageProvider;
 	ZLTreeNode* myCurrentNode;
         //TODO remove two-sided pointing (model should not know about ui element)
         QDialog* myTreeDialog;

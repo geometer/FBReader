@@ -11,13 +11,15 @@
 
 #include "ZLQtUtil.h"
 
+#include "../menu/ActionButtons.h"
+
 
 static const std::string EMPTY_MESSAGE("emptyMessage");
 
 
-ZLQtOpenFileDialog::ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter)
+ZLQtOpenFileDialog::ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter, QWidget* parent)
 	: myFilter(filter) {
-	myDialog = new DrillDownMenuDialog(qApp->activeWindow());
+        myDialog = new DrillDownMenuDialog(false,parent);
 	mySelectDirsOnlyMode = false;
 
 //	myDialog->setWindowTitle(QString::fromStdString(title));
@@ -50,7 +52,7 @@ bool ZLQtOpenFileDialog::runInternal() {
 
 	if (mySelectDirsOnlyMode == true) {
 		const ZLResource& select = ZLResource::resource("dialog")["button"]["selectDir"];
-		QAction* action = new QAction(QString::fromStdString(select.value()),myDialog);
+                QAction* action = new QAction(QString::fromStdString(select.value()),myDialog);
 #ifdef __SYMBIAN__
 		action->setSoftKeyRole(QAction::PositiveSoftKey);
 #endif
@@ -58,8 +60,7 @@ bool ZLQtOpenFileDialog::runInternal() {
 		myDialog->addAction( action );
 
 #ifndef 	__SYMBIAN__
-		QPushButton* button = new QPushButton(QString::fromStdString(select.value()));
-		QObject::connect(button, SIGNAL(clicked()), myDialog, SLOT(accept()));
+                QPushButton* button = new ButtonAction(action);
 		myDialog->layout()->addWidget(button);
 #endif
 

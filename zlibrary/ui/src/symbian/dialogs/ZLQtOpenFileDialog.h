@@ -16,7 +16,7 @@
 class ZLQtOpenFileDialog : public ZLOpenFileDialog {
 
 public:
-	ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter);
+        ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter, QWidget* parent);
 	~ZLQtOpenFileDialog();
 
 	bool run();

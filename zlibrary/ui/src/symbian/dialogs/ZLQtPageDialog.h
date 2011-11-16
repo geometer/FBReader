@@ -9,30 +9,7 @@
 #include <ZLApplication.h>
 #include <ZLTreePageNode.h>
 
-class PageMenu : public QObject {
-    Q_OBJECT
-
-public:
-    PageMenu(const ZLTreePageNode& pageNode, QAction* action, QObject* parent = 0);
-
-public:
-    static std::vector<shared_ptr<ZLTreeAction> > filterSensibleActions(const std::vector<shared_ptr<ZLTreeAction> > & actions);
-
-signals:
-    void drillDownMenuClose();
-
-public slots:
-    void activate();
-    void onFinish(int);
-
-private:
-    void setActionButton();
-
-private:
-    QAction* myAction;
-    const ZLTreePageNode& myPageNode;
-};
-
+#include "ZLQtTreeDialog.h"
 
 class ZLQtPageDialog : public QDialog {
     Q_OBJECT
@@ -47,17 +24,7 @@ public:
 private:
     shared_ptr<ZLDialogContent> myContent;
     const ZLTreePageNode& myPageNode;
-    PageMenu* myPageMenu;
-};
-
-class WrapperAction : public ZLApplication::Action {
-public:
-    WrapperAction(shared_ptr<ZLTreeAction> runnable);
-    bool isVisible() const;
-    void run();
-
-private:
-    shared_ptr<ZLTreeAction> myRunnable;
+    TreeNodeActionsMenu* myPageMenu;
 };
 
 #endif // __ZLQTPAGEDIALOG_H__

@@ -11,12 +11,11 @@
 #include "ZLQtProgressDialog.h"
 #include "ZLQtTreeDialog.h" // for TreeActionListener
 #include "ZLQtUtil.h"
+#include "ZLQtDialogManager.h"
 
 ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myDialog(0) {
 
 }
-
-static const double COEF_PROGRESS_BAR_WIDTH = 0.75;
 
 void ZLQtProgressDialog::run(ZLRunnable &runnable) {
 		myDialog = new ZLQtWaitDialog(messageText());
@@ -35,8 +34,13 @@ void ZLQtProgressDialog::run(TreeActionListener* listener) {
                 if (!listener) {
                     return;
                 }
-                //TODO add check for casting here
-                myDialog = new ZLQtWaitDialog(messageText());
+                if (listener->isFinished()) {
+                    qDebug() << Q_FUNC_INFO << "is finished yet!";
+                    return;
+                }
+                ZLQtDialogManager& dialogManager = static_cast<ZLQtDialogManager&>(ZLQtDialogManager::Instance());
+                myDialog = new ZLQtWaitDialog(messageText(),dialogManager.getParentWidget());
+
                 QObject::connect(listener, SIGNAL(finishedHappened(std::string)), myDialog, SLOT(close()));
                 myDialog->exec();
 
@@ -59,7 +63,7 @@ void ZLQtProgressDialog::setMessage(const std::string &message) {
 
 
 
-ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message) : QDialog(0) {
+ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message, QWidget* parent) : QDialog(parent) {
 
 	   // for what reasons we use processEvents here?
 	   // qApp->processEvents();
@@ -72,7 +76,6 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message) : QDialog(0) {
 
 		myProgressBar = new QProgressBar;
 		myProgressBar->setRange(0,0);
-		myProgressBar->setFixedWidth( qApp->desktop()->availableGeometry().width()*COEF_PROGRESS_BAR_WIDTH );
 
 		myLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
@@ -94,6 +97,11 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message) : QDialog(0) {
  void ZLQtWaitDialog::paintEvent(QPaintEvent *event) {
 	myLayout->invalidate();
 	QDialog::paintEvent(event);
+ }
+
+ void ZLQtWaitDialog::resizeEvent(QResizeEvent *event) {
+    static const double COEF_PROGRESS_BAR_WIDTH = 0.75;
+    myProgressBar->setFixedWidth(event->size().width()*COEF_PROGRESS_BAR_WIDTH);
  }
 
 ZLQtWaitDialog::~ZLQtWaitDialog() {

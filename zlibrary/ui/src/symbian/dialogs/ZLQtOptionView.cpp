@@ -2,6 +2,7 @@
 
 #include <ZLibrary.h>
 
+#include <QtCore/QDebug>
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QLabel>
@@ -15,6 +16,7 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QFrame>
 #include <QtGui/QPainter>
+#include <QtGui/QFormLayout>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QStringList>
@@ -58,18 +60,21 @@ std::string ZLQtOptionView::removeShortcut(const std::string& name) const {
 void BooleanOptionView::_createItem() {
 	QWidget* widget = new QWidget(myTab->widget());
 	QHBoxLayout* layout = new QHBoxLayout();
-	widget->setLayout(layout);
+
 	myCheckBox = new QCheckBox(" ");
         myLabel = new PressLabel( ::qtString(removeShortcut(ZLOptionView::name())));
-	myCheckBox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
-	myLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+        //myLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+        myLabel->setWordWrap(true);
+//	myCheckBox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
+//	myLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
 	widget->setFocusProxy(myCheckBox);
-	myLabel->setWordWrap(true);
-	layout->addWidget(myCheckBox);
-	layout->addSpacing(10);
-	layout->addWidget(myLabel);
+
+        layout->addWidget(myCheckBox);
+        layout->addWidget(myLabel,1);
 	myCheckBox->setChecked(((ZLBooleanOptionEntry&)*myOption).initialState());
 	myWidgets.push_back(widget);
+
+        widget->setLayout(layout);
 	myTab->addItem(widget);
 	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onStateChanged(bool)));
 	connect(myLabel, SIGNAL(labelPressed()), this, SLOT(onLabelPressed()));
@@ -587,10 +592,17 @@ void ColorOptionView::_onAccept() const {
 
 void StaticTextOptionView::_createItem() {
 	const std::string &text = ((ZLStaticTextOptionEntry&)*myOption).initialValue();
-	QLabel *label = new QLabel(::qtString("<b>" + name() + ":</b> " + text), myTab->widget());
-	label->setWordWrap(true);
-	myWidgets.push_back(label);
-	myTab->addItem(label);
+        QWidget* widget = new QWidget;
+        QFormLayout* layout = new QFormLayout;
+        QLabel *label = new QLabel(QString::fromStdString(text));
+        layout->addRow(QString::fromStdString("<b>" + name() + ":</b>"), label);
+        label->setWordWrap(true);
+//      label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+        layout->setRowWrapPolicy(QFormLayout::WrapAllRows);
+        layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+        widget->setLayout(layout);
+        myWidgets.push_back(widget);
+        myTab->addItem(widget);
 }
 
 void StaticTextOptionView::_onAccept() const {
@@ -608,6 +620,7 @@ private:
 
 private:
     const QPixmap myPicture;
+    QPixmap myCachePicture;
 };
 
 PictureWidget::PictureWidget(const QPixmap& picture, QWidget* parent): QWidget(parent), myPicture(picture) {
@@ -616,13 +629,18 @@ PictureWidget::PictureWidget(const QPixmap& picture, QWidget* parent): QWidget(p
 
 QSize PictureWidget::sizeHint () const {
     QSize hint = myPicture.size();
-    hint.scale(MenuItemParameters::getMaximumBookCoverSize(), Qt::KeepAspectRatio);
+//    qDebug() << Q_FUNC_INFO << MenuItemParameters::getMaximumBookCoverSize(this->parentWidget()->geometry().size()) <<
+//                                this->parentWidget()->geometry().size();
+    hint.scale(MenuItemParameters::getMaximumBookCoverSize(this->parentWidget()->geometry().size()), Qt::KeepAspectRatio);
     return hint;
 }
 
 void PictureWidget::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
-    painter.drawPixmap(QPoint(0,0), ImageUtils::scaleAndCenterPixmap(myPicture, event->rect().size(), true));
+    if (myCachePicture.isNull() || myCachePicture.size() != size()) {
+        myCachePicture = ImageUtils::scaleAndCenterPixmap(myPicture, size(), true);
+    }
+    painter.drawPixmap(event->rect(), myCachePicture.copy(event->rect()));
 }
 
 PictureView::PictureView(const std::string &name, const std::string &tooltip, ZLPictureOptionEntry *option, ZLQtDialogContent *tab) : ZLQtOptionView(name, tooltip, option, tab) {

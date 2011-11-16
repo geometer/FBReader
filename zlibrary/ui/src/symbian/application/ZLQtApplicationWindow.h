@@ -58,9 +58,6 @@ private:
 	void wheelEvent(QWheelEvent *event);
 
 private:
-        void setScrollerProperties() const;
-
-private:
 		VolumeKeysCapturer* myVolumeKeyCapture;
 private:
 

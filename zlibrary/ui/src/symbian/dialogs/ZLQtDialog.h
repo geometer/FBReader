@@ -9,11 +9,12 @@
 class ZLQtDialog : public QDialog, public ZLDialog {
 
 public:
-	ZLQtDialog(const ZLResource &resource);
+        ZLQtDialog(const ZLResource &resource, QWidget* parent);
 	~ZLQtDialog();
 
 	void addButton(const ZLResourceKey &key, bool accept);
 	bool run();
+        bool runFullscreen();
 
 private:
 };

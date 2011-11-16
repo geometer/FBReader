@@ -9,7 +9,9 @@
 #include "ZLQtDialogContent.h"
 #include "ZLQtUtil.h"
 
-ZLQtDialog::ZLQtDialog(const ZLResource &resource) : QDialog(qApp->activeWindow()) {
+#include "../menu/ActionButtons.h"
+
+ZLQtDialog::ZLQtDialog(const ZLResource &resource, QWidget* parent) : QDialog(parent) {
 	setModal(true);
 	setWindowTitle(::qtString(resource[ZLDialogManager::DIALOG_TITLE].value()));
 
@@ -23,7 +25,7 @@ ZLQtDialog::~ZLQtDialog() {
 }
 
 void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
-	QAction* button = new QAction( ::qtButtonName(key) ,this);
+        QAction* button = new QAction( ::qtButtonName(key) ,this);
 
 	addAction( button );
 #ifdef __SYMBIAN__
@@ -33,13 +35,23 @@ void ZLQtDialog::addButton(const ZLResourceKey &key, bool accept) {
 	connect(button, SIGNAL(triggered()), this, accept ? SLOT(accept()) : SLOT(reject()));
 
 #ifndef 	__SYMBIAN__
-	QPushButton* realButton = new QPushButton(::qtButtonName(key), this );
+        QPushButton* realButton = new ButtonAction(button, this );
 	layout()->addWidget(realButton);
-        connect(realButton, SIGNAL(clicked()), this, accept ? SLOT(accept()) : SLOT(reject()));
 #endif
 }
 
 bool ZLQtDialog::run() {
 	((ZLQtDialogContent*)myTab)->close();
 	return exec() == QDialog::Accepted;
+}
+
+bool ZLQtDialog::runFullscreen() {
+    #ifdef __SYMBIAN__
+        setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+        setWindowState(Qt::WindowFullScreen);
+    #else
+        setFixedSize(400,600);
+    #endif
+
+    return run();
 }

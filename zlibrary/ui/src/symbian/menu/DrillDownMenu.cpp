@@ -1,12 +1,15 @@
 #include <QtCore/QDebug>
 
-#include <QtScroller>
+#include <ZLDialogManager.h>
+
+#include "../dialogs/ScrollerManager.h"
 
 #include "../dialogs/ZLQtUtil.h"
 
 #include "DrillDownMenu.h"
+#include "ActionButtons.h"
 
-DrillDownMenuDialog::DrillDownMenuDialog(QWidget* parent) : QDialog(parent) {
+DrillDownMenuDialog::DrillDownMenuDialog(bool closeAfterRun, QWidget* parent) : QDialog(parent) {
 	QVBoxLayout* layout = new QVBoxLayout(this);
 	myStackedWidget = new QStackedWidget;
 	myLabel = new QLabel;
@@ -15,8 +18,8 @@ DrillDownMenuDialog::DrillDownMenuDialog(QWidget* parent) : QDialog(parent) {
 	layout->addWidget(myLabel);
         layout->addWidget(myStackedWidget);
 
-	const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
-	QAction* action = new QAction(QString::fromStdString(back.value()),this);
+        const std::string& back = ZLDialogManager::Instance().buttonName(ZLResourceKey("back"));
+        QAction* action = new QAction(QString::fromStdString(back),this);
 #ifdef __SYMBIAN__
         action->setSoftKeyRole( QAction::NegativeSoftKey );
 #endif
@@ -24,10 +27,14 @@ DrillDownMenuDialog::DrillDownMenuDialog(QWidget* parent) : QDialog(parent) {
         addAction( action );
 
 #ifndef __SYMBIAN__
-        QPushButton* button = new QPushButton(QString::fromStdString(back.value()));
-        connect(button, SIGNAL(clicked()), this, SLOT(back()));
+        QPushButton* button = new ButtonAction(action);
         layout->addWidget(button);
 #endif
+
+        if (closeAfterRun) {
+            connect(this, SIGNAL(itemRunBefore(QListWidgetItem*)), this, SLOT(hide()));
+            connect(this, SIGNAL(itemRunAfter(QListWidgetItem*)), this, SLOT(close()));
+        }
 }
 
 void DrillDownMenuDialog::paintEvent(QPaintEvent *event) {
@@ -57,6 +64,7 @@ void DrillDownMenuDialog::showMessage(std::string message) {
 
 void DrillDownMenuDialog::showDrillDownMenu(DrillDownMenu* menu) {
     if (myStackedWidget->indexOf(menu) == -1) {
+        connect(menu, SIGNAL(itemRunned(QListWidgetItem*)), this, SLOT(onItemRunned(QListWidgetItem*)));
         myStackedWidget->addWidget(menu);
     }
     setCurrentMenu(menu);
@@ -64,7 +72,7 @@ void DrillDownMenuDialog::showDrillDownMenu(DrillDownMenu* menu) {
 }
 
  void DrillDownMenuDialog::setCurrentMenu(DrillDownMenu* menu) {
-    QtScroller::grabGesture(menu->viewport(), QtScroller::LeftMouseButtonGesture);
+    ScrollerManager::setScroll(menu);
     myStackedWidget->setCurrentWidget(menu);
 #ifdef __SYMBIAN__
     menu->setEditFocus(true); // for phones with keyboard: need to activate for single-click
@@ -86,6 +94,14 @@ void DrillDownMenuDialog::back() {
     setCurrentMenu(myHistory.last());
 }
 
+void DrillDownMenuDialog::onItemRunned(QListWidgetItem* item) {
+    DrillDownMenuItem* menuItem = static_cast<DrillDownMenuItem*>(item);
+    emit itemRunBefore(item);
+    menuItem->run();
+    emit itemRunAfter(item);
+
+}
+
 void DrillDownMenu::addItem(const std::string &text, ZLApplication::Action* action) {
     DrillDownMenuItem* item = new DrillDownMenuItem( ::qtString(text), action, this);
     QListWidget::addItem( item );
@@ -103,18 +119,15 @@ void DrillDownMenu::addItem(DrillDownMenuItem* item) {
 }
 
 DrillDownMenu::DrillDownMenu(QWidget *parent) : QListWidget(parent) {
-    connect(this, SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)));
+    connect(this, SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)), Qt::QueuedConnection);
 	//connect(this, SIGNAL(itemActivated(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)));
     // don't close DrillDownMenu after options dialog was closed:
     //connect(this, SIGNAL(itemActivated(QListWidgetItem*)),parent,SLOT(close()));
-    this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
-    this->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
 
 }
 
 void DrillDownMenu::run(QListWidgetItem* item) {
-    ((DrillDownMenuItem*)item)->run();
+    emit itemRunned(item);
 }
 
 void DrillDownMenu::setMessage(const std::string& message) {
@@ -134,8 +147,8 @@ DrillDownMenuItem::DrillDownMenuItem(const QString &text, ZLApplication::Action*
 }
 
 void DrillDownMenuItem::run() {
-    if (myAction == 0) {
-        QMessageBox::information(0,"","Sorry!\nIt's not implemented yet", QMessageBox::Ok);
+    if (myAction.isNull()) {
+        qWarning() << "DrillDownMenuItem::run" << "run with empty action";
         return;
     }
     myAction->checkAndRun();
@@ -220,8 +233,8 @@ QFont MenuItemParameters::getSubtitleFont() {
     return font;
 }
 
-QSize MenuItemParameters::getMaximumBookCoverSize() {
+QSize MenuItemParameters::getMaximumBookCoverSize(QSize window) {
     static const qreal COEF = 0.5;
-    QSize size = qApp->desktop()->availableGeometry().size();
+    QSize size = window;
     return QSize(size.width(), size.height()*COEF);
 }
