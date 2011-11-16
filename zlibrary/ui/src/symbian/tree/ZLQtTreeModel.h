@@ -39,6 +39,7 @@ public:
 	void onNodeUpdated(ZLTreeNode *node);
 
 signals:
+        void currentNodeChanged(const ZLTreeNode* node);
 
 public slots:
 	bool back();

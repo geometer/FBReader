@@ -20,9 +20,10 @@
 class ZLQtWaitDialog : public QDialog {
 
 public:
-		ZLQtWaitDialog(const std::string &message);
+                ZLQtWaitDialog(const std::string &message, QWidget* parent=0);
 		~ZLQtWaitDialog();
 		void paintEvent(QPaintEvent *event);
+                void resizeEvent(QResizeEvent *event);
 
 private:
 		QLayout* myLayout;

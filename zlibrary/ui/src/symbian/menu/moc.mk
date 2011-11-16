@@ -1,1 +1,1 @@
-SRCMOC = DrillDownMenu.moc.cpp
+SRCMOC = DrillDownMenu.moc.cpp ActionButtons.moc.cpp

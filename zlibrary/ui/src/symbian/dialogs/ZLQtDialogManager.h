@@ -34,7 +34,7 @@ public:
 	void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const;
 	bool openURL(const std::string& url) const;
 
-protected:
+public:
         QWidget* getParentWidget() const;
 
 protected:

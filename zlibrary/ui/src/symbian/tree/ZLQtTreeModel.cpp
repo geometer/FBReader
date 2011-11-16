@@ -32,6 +32,9 @@ bool ZLQtTreeModel::back() {
 		return false;
 	}
 	myCurrentNode = myCurrentNode->parent();
+        emit currentNodeChanged(myCurrentNode);
+        //TODO fix problem:
+        //when change description of catalog, it changes just in case when net libraries is opened again
 	emit layoutChanged();
 	return true;
 }
@@ -59,6 +62,8 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
                 //then another item will requesting others,
                 //progress bar will be hided if one will completed before other
                 myCurrentNode->requestChildren(myListener);
+                qDebug() << Q_FUNC_INFO << "emitting current node changed";
+                emit currentNodeChanged(myCurrentNode);
 	}
         emit layoutChanged();
 	return true;
@@ -129,6 +134,8 @@ const ZLTreeNode* ZLQtTreeModel::getTreeNode(const QModelIndex& index) const {
 void ZLQtTreeModel::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
     //qDebug() << Q_FUNC_INFO << parent << index << parent->childIndex();
     //TODO there should be beginInsertRows instead of layoutChanged()
+    //TODO remove it, emitting signal is needed to set actions for left soft-button
+    emit currentNodeChanged(myCurrentNode);
     emit layoutChanged();
 //    beginInsertRows(createIndex(parent), index, index);
 }

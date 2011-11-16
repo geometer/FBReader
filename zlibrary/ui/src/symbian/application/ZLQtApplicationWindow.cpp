@@ -44,7 +44,9 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow* parent, DrillDownMenuDialog* dialog,  ZLMenubar::PlainItem& item) : myParent(parent), MenuAction(dialog), myItem(item) { }
 
 void ZLQtMenuAction::run() {
-	myDialog->close();
+        //commented, because
+        //DrillDownMenuDialog will be close due to parameters of it's constructor
+        //myDialog->close();
 	myParent->onMenuItemPress(myItem);
 }
 
@@ -59,7 +61,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
                 ScrollerManager::setScrollerProperties();
 
-		myMenuDialog = new DrillDownMenuDialog(this);
+                myMenuDialog = new DrillDownMenuDialog(true,this);
 		myMenu = new DrillDownMenu;
 
 #ifdef 	__SYMBIAN__
@@ -70,8 +72,7 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 void ZLQtApplicationWindow::init() {
 		ZLApplicationWindow::init();
 
-		//TODO add ZLResource here
-		const std::string& mainMenu = "Menu";
+                const std::string& mainMenu = ZLDialogManager::Instance().buttonName(ZLResourceKey("menu"));
 		myShowMenuAction = new QAction(QString::fromStdString(mainMenu),this);
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
                 addAction(myShowMenuAction);

@@ -14,6 +14,7 @@
 #include "ScrollerManager.h"
 
 #include "../menu/DrillDownMenu.h"
+#include "../menu/ActionButtons.h"
 
 TabMenuWidget::TabMenuWidget(QWidget* parent): QWidget(parent) {
 	QVBoxLayout *layout = new QVBoxLayout(this);
@@ -64,16 +65,15 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 		myTabMenuWidget = new TabMenuWidget(this);
 		layout->addWidget(myTabMenuWidget);
 
-		const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
-		QAction* backAction = new QAction(QString::fromStdString(back.value()),this);
+                const std::string& back = ZLDialogManager::Instance().buttonName(ZLResourceKey("back"));
+                QAction* backAction = new QAction(QString::fromStdString(back),this);
 		backAction->setSoftKeyRole( QAction::NegativeSoftKey);
 		addAction( backAction );
 		connect(backAction, SIGNAL(triggered()), this, SLOT(back()));
 
 #ifndef 	__SYMBIAN__
-		QPushButton* backButton = new QPushButton(QString::fromStdString(back.value()));
+                QPushButton* backButton = new ButtonAction(backAction);
 		layout->addWidget(backButton);
-		connect(backButton, SIGNAL(clicked()), this, SLOT(back()));
 #endif
 }
 
