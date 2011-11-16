@@ -245,6 +245,7 @@
 			<node name="buyAndDownload" value="Buy and &amp;download" />
 			<node name="selectDir" value="Select Dir" />
 			<node name="back" value="Back" />
+			<node name="menu" value="Menu" />
 		</node>
 		<node name="MobileOptionsDialog"> 
 			<node name="title" value="Preferences"/>
