@@ -30,14 +30,8 @@
 "./FBReader.mif" - "!:/resource/apps/FBReader.mif"
 
 ; DEPLOYMENT
-"fbreader/data/network/smashwords.com.xml" - "!:\private\e87cc83c\FBReader\network\smashwords.com.xml"
-"fbreader/data/network/feedbooks.com.xml" - "!:\private\e87cc83c\FBReader\network\feedbooks.com.xml"
-"fbreader/data/network/manybooks.net.xml" - "!:\private\e87cc83c\FBReader\network\manybooks.net.xml"
 "fbreader/data/network/certificates/litres.ru.crt" - "!:\private\e87cc83c\FBReader\network\certificates\litres.ru.crt"
-"fbreader/data/network/shucang.com.xml" - "!:\private\e87cc83c\FBReader\network\shucang.com.xml"
 "fbreader/data/network/catalog.dtd" - "!:\private\e87cc83c\FBReader\network\catalog.dtd"
-"fbreader/data/network/litres.ru.xml" - "!:\private\e87cc83c\FBReader\network\litres.ru.xml"
-"fbreader/data/network/booksonboard.com.xml" - "!:\private\e87cc83c\FBReader\network\booksonboard.com.xml"
 "fbreader/data/resources/uk.xml" - "!:\private\e87cc83c\FBReader\resources\uk.xml"
 "fbreader/data/resources/eo.xml" - "!:\private\e87cc83c\FBReader\resources\eo.xml"
 "fbreader/data/resources/zh.xml" - "!:\private\e87cc83c\FBReader\resources\zh.xml"
