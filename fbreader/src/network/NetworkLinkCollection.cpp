@@ -207,6 +207,7 @@ void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool is
 	if (!found) {
 		shared_ptr<NetworkLink> newlink = new OPDSLink(link.SiteName);
 		newlink->loadFrom(link);
+		newlink->init();
 		myLinks.push_back(newlink);
 		std::sort(myLinks.begin(), myLinks.end(), Comparator());
 		updated = true;

@@ -142,10 +142,18 @@ QVariant ZLQmlTreeDialog::data(const QModelIndex &index, int role) const {
 			return QString();
 		}
 	case SubTitleRole:
-		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node))
-			return QString::fromStdString(titledNode->subtitle());
-		else
+		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node)) {
+			QString subtitle = QString::fromStdString(titledNode->subtitle());
+			int index = subtitle.indexOf('\n');
+			if (index > 0)
+				subtitle.resize(index);
+			index = subtitle.indexOf(QLatin1String("</p>"));
+			if (index > 0)
+				subtitle.resize(index + 4);
+			return subtitle;
+		} else {
 			return QString("No subtitle");
+		}
 	case ActivatableRole:
 		return zlobject_cast<ZLTreeActionNode*>(node) != NULL;
 	case PageRole:

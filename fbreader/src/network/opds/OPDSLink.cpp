@@ -31,6 +31,8 @@
 
 #include "../NetworkOperationData.h"
 #include "../authentication/NetworkAuthenticationManager.h"
+#include "../authentication/basic/BasicAuthenticationManager.h"
+#include "../authentication/litres/LitResAuthenticationManager.h"
 
 #include "URLRewritingRule.h"
 
@@ -180,6 +182,18 @@ void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
 			ZLNetworkUtil::appendParameter(url, rule.Name, rule.Value);
 			break;
 		}
+	}
+}
+
+void OPDSLink::init() {
+	const std::map<std::string,std::string> &links = getLinks();
+	std::map<std::string,std::string>::const_iterator it = links.find(URL_SIGN_IN);
+	if (it != links.end()) {
+		const std::string &url = it->second;
+		if (url.find("https://robot.litres.ru/") == 0)
+			myAuthenticationManager = new LitResAuthenticationManager(*this);
+		else
+			myAuthenticationManager = new BasicAuthenticationManager(*this);
 	}
 }
 
