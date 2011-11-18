@@ -11,7 +11,7 @@
 DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 TARGET_STATUS ?= release
-TARGET_STATUS = debug
+#TARGET_STATUS = debug
 
 ## ----------------------------------------------------------------------
 DEB_DIR		= $(CURDIR)/debian
