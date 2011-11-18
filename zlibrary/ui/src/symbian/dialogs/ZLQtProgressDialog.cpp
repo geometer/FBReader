@@ -17,6 +17,8 @@ ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key) : ZLProgressDia
 
 }
 
+static const double COEF_PROGRESS_BAR_WIDTH = 0.75;
+
 void ZLQtProgressDialog::run(ZLRunnable &runnable) {
 		myDialog = new ZLQtWaitDialog(messageText());
 
@@ -76,6 +78,7 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message, QWidget* parent) : QD
 
 		myProgressBar = new QProgressBar;
 		myProgressBar->setRange(0,0);
+                myProgressBar->setFixedWidth(qApp->desktop()->geometry().width()*COEF_PROGRESS_BAR_WIDTH);
 
 		myLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
@@ -95,12 +98,11 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message, QWidget* parent) : QD
 }
 
  void ZLQtWaitDialog::paintEvent(QPaintEvent *event) {
-	myLayout->invalidate();
+        //myLayout->invalidate();
 	QDialog::paintEvent(event);
  }
 
  void ZLQtWaitDialog::resizeEvent(QResizeEvent *event) {
-    static const double COEF_PROGRESS_BAR_WIDTH = 0.75;
     myProgressBar->setFixedWidth(event->size().width()*COEF_PROGRESS_BAR_WIDTH);
  }
 
