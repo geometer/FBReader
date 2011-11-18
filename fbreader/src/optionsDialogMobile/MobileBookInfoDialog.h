@@ -18,14 +18,14 @@ public:
 	MobileBookInfoDialog(shared_ptr<Book> book);
 	
 	static ZLResourceKey resourceKey();
-	static void fillContent(ZLDialogContent &content, const AbstractBookInfo &info);
-	static void fillContent(ZLDialog &content, const AbstractBookInfo &info);
+        static void fillContent(ZLDialogContent &content, const AbstractBookInfo &info, bool cover=false);
+        static void fillContent(ZLDialog &content, const AbstractBookInfo &info, bool cover=false);
 
 	ZLDialog &dialog();
 
 private:
 	template <typename T>
-	static void doFillContent(T &content, const AbstractBookInfo &info);
+        static void doFillContent(T &content, const AbstractBookInfo &info, bool cover);
 	shared_ptr<Book> myBook;
 	shared_ptr<ZLDialog> myDialog;
 

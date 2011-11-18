@@ -10,6 +10,7 @@
 #include <ZLTreePageNode.h>
 
 #include "ZLQtTreeDialog.h"
+#include "ZLQtOptionView.h"
 
 class ZLQtPageDialog : public QDialog {
     Q_OBJECT
@@ -25,6 +26,17 @@ private:
     shared_ptr<ZLDialogContent> myContent;
     const ZLTreePageNode& myPageNode;
     TreeNodeActionsMenu* myPageMenu;
+};
+
+class NodePictureWidget : public PictureWidget {
+    Q_OBJECT
+public:
+    NodePictureWidget(const ZLTreePageNode& pageNode, QWidget* parent = 0);
+public slots:
+    void refresh();
+private:
+    ImageProvider* myImageProvider;
+    const ZLTreePageNode& myPageNode;
 };
 
 #endif // __ZLQTPAGEDIALOG_H__

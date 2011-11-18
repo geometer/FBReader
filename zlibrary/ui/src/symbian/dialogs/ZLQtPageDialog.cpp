@@ -61,6 +61,26 @@ bool ZLQtPageDialog::run() {
 #else
     setFixedSize(400, 600);
 #endif
-    static_cast<ZLQtDialogContent&>(*myContent).close();
+    NodePictureWidget* picture = new NodePictureWidget(myPageNode);
+    ZLQtDialogContent* content = static_cast<ZLQtDialogContent*>(&*myContent);
+    content->addItem(0, picture);
+    content->close();
     return exec() == QDialog::Accepted;
+}
+
+NodePictureWidget::NodePictureWidget(const ZLTreePageNode& pageNode, QWidget* parent) : PictureWidget(QPixmap(), parent), myPageNode(pageNode) {
+    //TODO implement a way for caching cover, if it has been loaded yet via network manager
+    myImageProvider = new ImageProvider(ImageProvider::FULL, this);
+    connect(myImageProvider, SIGNAL(cacheUpdated()), this, SLOT(refresh()));
+    myPicture = myImageProvider->getImageForNode(&myPageNode);
+}
+
+void NodePictureWidget::refresh() {
+    //qDebug() << Q_FUNC_INFO;
+    if (ImageProvider::generateUrl(&myPageNode).scheme() == QLatin1String(ZLTreeTitledNode::LOCALFILE_SCHEME.c_str())) {
+        return;
+    }
+    myPicture = myImageProvider->getImageForNode(&myPageNode);
+    //qDebug() << Q_FUNC_INFO << myPicture.size();
+    updateGeometry();
 }

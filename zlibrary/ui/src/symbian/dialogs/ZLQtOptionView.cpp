@@ -608,26 +608,16 @@ void StaticTextOptionView::_createItem() {
 void StaticTextOptionView::_onAccept() const {
 }
 
-class PictureWidget : public QWidget {
-public:
-    PictureWidget(const QPixmap& picture, QWidget* parent = 0);
-    QSize sizeHint () const;
-
-private:
-    //TODO implement caching of image and ResizeEvent
-    //void resizeEvent ( QResizeEvent * event )
-    void paintEvent(QPaintEvent *event);
-
-private:
-    const QPixmap myPicture;
-    QPixmap myCachePicture;
-};
-
-PictureWidget::PictureWidget(const QPixmap& picture, QWidget* parent): QWidget(parent), myPicture(picture) {
+PictureWidget::PictureWidget(QPixmap picture, QWidget* parent): QWidget(parent), myPicture(picture) {
 
 }
 
 QSize PictureWidget::sizeHint () const {
+    //qDebug() << Q_FUNC_INFO;
+    if (myPicture.isNull()) {
+//        qDebug() << Q_FUNC_INFO << "my picture is null";
+        return QSize();
+    }
     QSize hint = myPicture.size();
 //    qDebug() << Q_FUNC_INFO << MenuItemParameters::getMaximumBookCoverSize(this->parentWidget()->geometry().size()) <<
 //                                this->parentWidget()->geometry().size();
@@ -636,10 +626,15 @@ QSize PictureWidget::sizeHint () const {
 }
 
 void PictureWidget::paintEvent(QPaintEvent *event) {
+//  qDebug() << Q_FUNC_INFO << size();
+    if (myPicture.isNull()) {
+        return;
+    }
     QPainter painter(this);
     if (myCachePicture.isNull() || myCachePicture.size() != size()) {
-        myCachePicture = ImageUtils::scaleAndCenterPixmap(myPicture, size(), true);
+        myCachePicture = ImageUtils::scaleAndCenterPixmap(myPicture, size(), true, Qt::SmoothTransformation);
     }
+//    qDebug() << Q_FUNC_INFO << event->rect();
     painter.drawPixmap(event->rect(), myCachePicture.copy(event->rect()));
 }
 
@@ -651,7 +646,7 @@ void PictureView::_createItem() {
     if (myImage.isNull()) {
         return;
     }
-    QWidget* widget = new PictureWidget(ImageUtils::ZLImageToQPixmap(myImage,0, QSize()));
+    QWidget* widget = new PictureWidget(ImageUtils::ZLImageToQPixmap(myImage,0, QSize(), Qt::SmoothTransformation));
     myWidgets.push_back(widget);
     myTab->addItem(widget);
 }

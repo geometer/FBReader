@@ -18,12 +18,12 @@ void ImageRunnable::run() {
 }
 
 
-ImageProvider::ImageProvider(QObject* parent) : QObject(parent) {
+ImageProvider::ImageProvider(Mode mode, QObject* parent) : QObject(parent), myMode(mode) {
 
     qRegisterMetaType<const ZLTreeTitledNode*>();
     qRegisterMetaType<shared_ptr<ZLImage> >();
 
-    myEmptyPixmap = QPixmap(MenuItemParameters::getImageSize());
+    myEmptyPixmap = QPixmap(getImageSize());
     myEmptyPixmap.fill(Qt::transparent);
 
     connect(&myManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
@@ -38,6 +38,10 @@ QPixmap ImageProvider::getImageForNode(const ZLTreeTitledNode *titledNode) {
         return myEmptyPixmap;
     }
     return myCache.value(generateUrl(titledNode).toString());
+}
+
+QSize ImageProvider::getImageSize() const {
+    return myMode == THUMBNAIL ? MenuItemParameters::getImageSize() : QSize();
 }
 
 void ImageProvider::updateCache(QString cacheUrl, QPixmap pixmap) {
@@ -83,11 +87,11 @@ void ImageProvider::handleImageResult(const ZLTreeTitledNode* titledNode, shared
 }
 
 QPixmap ImageProvider::getZLImage(shared_ptr<ZLImage> image) const {
-    return ImageUtils::ZLImageToQPixmap(image, 0, MenuItemParameters::getImageSize());
+    return ImageUtils::ZLImageToQPixmap(image, 0, getImageSize());
 }
 
 QPixmap ImageProvider::getFSImage(QUrl url) const {
-    return ImageUtils::fileUrlToQPixmap(url, 0, MenuItemParameters::getImageSize());
+    return ImageUtils::fileUrlToQPixmap(url, 0, getImageSize(), Qt::SmoothTransformation);
 }
 
 void ImageProvider::getNetworkImage(QUrl url) const {
@@ -95,9 +99,10 @@ void ImageProvider::getNetworkImage(QUrl url) const {
         return;
     }
     QNetworkRequest request(url);
+    request.setPriority(myMode == THUMBNAIL ? QNetworkRequest::LowPriority : QNetworkRequest::HighPriority);
+    myManager.get(request);
     //TODO maybe use qt standart cache instead of ImageProvider's (for network images)
     //and do not use cache (issue #69) to avoid memory errors
-    myManager.get(request);
     return;
 }
 
@@ -109,9 +114,8 @@ void ImageProvider::onRequestFinished(QNetworkReply* reply) {
 
     QPixmap pixmap;
     pixmap.loadFromData(reply->readAll());
-    QSize imageSize =  MenuItemParameters::getImageSize();
     if (!pixmap.isNull()) {
-        pixmap = ImageUtils::scaleAndCenterPixmap(pixmap, imageSize, true);
+        pixmap = ImageUtils::scaleAndCenterPixmap(pixmap, getImageSize(), true, Qt::SmoothTransformation);
     }
     updateCache(reply->url().toString(), pixmap);
 }

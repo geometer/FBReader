@@ -16,6 +16,7 @@ void ZLQtDialogContent::close() {
 }
 
 ZLQtDialogContent::ZLQtDialogContent(const ZLResource &resource) : ZLDialogContent(resource) {
+        //TODO set parent for scrollArea
         myScrollArea = new QScrollArea;
         myWidget = new QWidget;
         myLayout = new QVBoxLayout;
@@ -52,6 +53,10 @@ void ZLQtDialogContent::addItem(QWidget *widget) {
         myLayout->addWidget(widget);
         //Expanding
         //widget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+}
+
+void ZLQtDialogContent::addItem(int index, QWidget *widget) {
+    myLayout->insertWidget(index, widget);
 }
 
 void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::string &tooltip, ZLOptionEntry *option) {

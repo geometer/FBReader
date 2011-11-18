@@ -59,23 +59,25 @@ const std::string& MobileDisplayNameEntry::initialValue() const {
 MobileBookInfoDialog::MobileBookInfoDialog(shared_ptr<Book> book) : myBook(book) {
 	//TODO add fullscreen for dialog
 	myDialog = ZLDialogManager::Instance().createDialog(resourceKey());
-	fillContent(*myDialog, LocalBookInfo(myBook));
+        fillContent(*myDialog, LocalBookInfo(myBook),true);
 	myDialog->addButton(ZLResourceKey("back"), true);
 }
 
 
-void MobileBookInfoDialog::fillContent(ZLDialogContent &content, const AbstractBookInfo &info) {
-	doFillContent(content, info);
+void MobileBookInfoDialog::fillContent(ZLDialogContent &content, const AbstractBookInfo &info, bool showCover) {
+        doFillContent(content, info, showCover);
 }
 
-void MobileBookInfoDialog::fillContent(ZLDialog &content, const AbstractBookInfo &info) {
-	doFillContent(content, info);
+void MobileBookInfoDialog::fillContent(ZLDialog &content, const AbstractBookInfo &info, bool showCover) {
+        doFillContent(content, info, showCover);
 }
 
 template <typename T>
-void MobileBookInfoDialog::doFillContent(T &content, const AbstractBookInfo &book) {
+void MobileBookInfoDialog::doFillContent(T &content, const AbstractBookInfo &book, bool showCover) {
 
-        content.addOption(ZLResourceKey("cover"), new ZLPictureOptionEntry(book.image()));
+        if (showCover) {
+            content.addOption(ZLResourceKey("cover"), new ZLPictureOptionEntry(book.image()));
+        }
 
 	content.addOption(ZLResourceKey("title"), new MobileDisplayNameEntry(book.title()));
 	

@@ -20,6 +20,7 @@ public:
 									const std::string &name1, const std::string &tooltip1, ZLOptionEntry *option1);
 
 	void addItem(QWidget *widget);
+        void addItem(int index, QWidget *widget);
 
 	void close();
 

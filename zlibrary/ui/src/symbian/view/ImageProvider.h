@@ -31,7 +31,16 @@ class ImageProvider : public QObject {
     Q_OBJECT
 
 public:
-    ImageProvider(QObject* parent = 0);
+    enum Mode {
+        THUMBNAIL,
+        FULL
+    };
+
+public:
+    static QUrl generateUrl(const ZLTreeTitledNode* node);
+
+public:
+    ImageProvider(Mode mode, QObject* parent = 0);
 
 public:
     QPixmap getImageForNode(const ZLTreeTitledNode *titledNode);
@@ -49,15 +58,15 @@ private:
     void getNetworkImage(QUrl url) const;
 
 private:
+    QSize getImageSize() const;
     void updateCache(QString cacheUrl, QPixmap pixmap);
 
 private:
-    static QUrl generateUrl(const ZLTreeTitledNode* node);
-
-private:
+        Mode myMode;
         QMap<QString,QPixmap> myCache;
         QSet<const ZLTreeTitledNode*> myProcessedNodes;
         QPixmap myEmptyPixmap;
+        //TODO implement download manager in other class, or using ZLQtNetworkManager
         mutable QNetworkAccessManager myManager;
         //TODO cache should not be deleted after closing net library dialog (??)
 

@@ -23,7 +23,7 @@
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, shared_ptr<ZLExecutionData::Listener> listener, QObject *parent) :
     QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog), myListener(listener) {
     myCurrentNode = &myRootNode;
-    myImageProvider = new ImageProvider(this);
+    myImageProvider = new ImageProvider(ImageProvider::THUMBNAIL, this);
     connect(myImageProvider, SIGNAL(cacheUpdated()), this, SLOT(update()));
 }
 
