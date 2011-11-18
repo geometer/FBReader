@@ -27,13 +27,14 @@
 #include <ZLTreeDialog.h>
 
 #include "../network/NetworkItems.h"
+#include "../network/NetworkLinkCollection.h"
 
 class NetworkAuthorNode;
 class NetworkCatalogNode;
 class NetworkItem;
 class FBReaderNode;
 
-class NetworkView {
+class NetworkView : public NetworkLinkCollection::Listener {
 
 public:
 	NetworkView();
@@ -42,6 +43,7 @@ public:
 	void invalidateAccountDependents();
 	
 	void showDialog();
+	virtual void onLinksChanged();
 	
 
 

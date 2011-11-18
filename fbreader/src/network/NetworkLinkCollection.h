@@ -56,6 +56,15 @@ private:
 	~NetworkLinkCollection();
 
 public:
+	class Listener {
+	public:
+		virtual ~Listener() {}
+		virtual void onLinksChanged() = 0;
+	};
+	
+	void addListener(Listener *listener);
+	void removeListener(Listener *listener);
+	
 	std::string bookFileName(const BookReference &reference);
 
 	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
@@ -89,9 +98,11 @@ private:
 
 
 private:
+	struct UpdateListeners;
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 	LinkVector myLinks, myTempCustomLinks;
 	std::set<std::string> myExists;
+	std::set<Listener*> myListeners;
 
 	std::string myErrorMessage;
 
