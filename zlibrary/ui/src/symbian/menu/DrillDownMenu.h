@@ -35,7 +35,7 @@ namespace MenuItemParameters {
     QSize getImageZoneSize();
     QFont getFont();
     QFont getSubtitleFont();
-    QSize getMaximumBookCoverSize();
+    QSize getMaximumBookCoverSize(QSize window);
     int MMtoPixels(int mm);
 }
 
@@ -59,6 +59,8 @@ public:
 public:
 	void setMessage(const std::string& message);
 	std::string getMessage() const;
+signals:
+    void itemRunned(QListWidgetItem* item);
 private slots:
     void run(QListWidgetItem* item);
 private:
@@ -68,7 +70,7 @@ private:
 class DrillDownMenuDialog : public QDialog {
     Q_OBJECT
 public:
-    DrillDownMenuDialog(QWidget* parent=0);
+    DrillDownMenuDialog(bool closeAfterRun, QWidget* parent=0);
     //TODO rename next method (because show doesn't mean show)
     void showDrillDownMenu(DrillDownMenu* menu); //actually, it doesn't show menu, it set it as first
     void showMessage(std::string message);
@@ -79,6 +81,10 @@ public:
 	void paintEvent(QPaintEvent *event);
 public slots:
     void back();
+    void onItemRunned(QListWidgetItem* item);
+signals:
+    void itemRunBefore(QListWidgetItem* item);
+    void itemRunAfter(QListWidgetItem* item);
 private: // exec() should not be executed directly, use run()
 	int exec();
 private:

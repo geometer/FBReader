@@ -1,113 +1,122 @@
 #include <QtCore/QDebug>
+#include <QtCore/QThreadPool>
 
 #include "ImageProvider.h"
 #include "ImageUtils.h"
 #include "../menu/DrillDownMenu.h"
 
-ImageProvider::ImageProvider() {
-    myTransformer = new PixmapTransfomer(this);
-    myTransformer->start();
+ImageRunnable::ImageRunnable(const ZLTreeTitledNode *node, QObject *requester) : myRequester(requester), myNode(node) {
+    setAutoDelete(true);
+}
 
-    myEmptyPixmap = QPixmap(MenuItemParameters::getImageSize());
+void ImageRunnable::run() {
+    shared_ptr<ZLImage> image = myNode->image();
+    if (!myRequester)
+        return;
+    QMetaObject::invokeMethod(myRequester.data(), "handleImageResult", Qt::QueuedConnection,
+                              Q_ARG(const ZLTreeTitledNode*, myNode), Q_ARG(shared_ptr<ZLImage>, image));
+}
+
+
+ImageProvider::ImageProvider(Mode mode, QObject* parent) : QObject(parent), myMode(mode) {
+
+    qRegisterMetaType<const ZLTreeTitledNode*>();
+    qRegisterMetaType<shared_ptr<ZLImage> >();
+
+    myEmptyPixmap = QPixmap(getImageSize());
     myEmptyPixmap.fill(Qt::transparent);
 
-    connect(this, SIGNAL(needImage(const ZLTreeTitledNode*)), myTransformer, SLOT(needImage(const ZLTreeTitledNode*)), Qt::QueuedConnection);
-    connect(myTransformer, SIGNAL(imageIsReady(const ZLTreeTitledNode*,QPixmap)), this, SLOT(imageIsReady(const ZLTreeTitledNode*,QPixmap)));
+    connect(&myManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
 }
 
-QPixmap ImageProvider::getImageForNode(const ZLTreeTitledNode *titledNode) const {
-    if (myCache.contains(titledNode)) {
-        return myCache.value(titledNode);
+QPixmap ImageProvider::getImageForNode(const ZLTreeTitledNode *titledNode) {
+    if (!myProcessedNodes.contains(titledNode)) {
+        QThreadPool::globalInstance()->start(new ImageRunnable(titledNode, this));
+        return myEmptyPixmap;
     }
-    emit needImage(titledNode);
-    return myEmptyPixmap;
-
+    if (!myCache.contains(generateUrl(titledNode).toString())) {
+        return myEmptyPixmap;
+    }
+    return myCache.value(generateUrl(titledNode).toString());
 }
 
-void ImageProvider::imageIsReady(const ZLTreeTitledNode* node, QPixmap pixmap) const {
-    myCache[node] = pixmap.isNull() ? myEmptyPixmap : pixmap;
+QSize ImageProvider::getImageSize() const {
+    return myMode == THUMBNAIL ? MenuItemParameters::getImageSize() : QSize();
+}
+
+void ImageProvider::updateCache(QString cacheUrl, QPixmap pixmap) {
+    myCache[cacheUrl] = pixmap.isNull() ? myEmptyPixmap : pixmap;
     emit cacheUpdated();
 }
 
- PixmapTransfomer::PixmapTransfomer(QObject *parent) : QThread(parent) {
-    connect(&myManager, SIGNAL(finished(QNetworkReply*)), this, SLOT(onRequestFinished(QNetworkReply*)));
- }
-
-void PixmapTransfomer::needImage(const ZLTreeTitledNode* titledNode) const {
-    QString imageUrl = QString::fromStdString(titledNode->imageUrl());
-    //qDebug() << Q_FUNC_INFO << imageUrl;
+QUrl ImageProvider::generateUrl(const ZLTreeTitledNode* node) {
+    QString imageUrl = QString::fromStdString(node->imageUrl());
     if (imageUrl.isEmpty()) {
-        //emit imageIsReady(titledNode,getZLImage(titledNode->image()));
-
         imageUrl = QString::fromStdString(ZLTreeTitledNode::ZLIMAGE_SCHEME + ZLTreeTitledNode::SCHEME_POSTFIX) +
-                   QString::number(reinterpret_cast<qptrdiff>(titledNode), 16);
+                   QString::number(reinterpret_cast<qptrdiff>(node), 16);
     }
+    return QUrl::fromEncoded(imageUrl.toStdString().c_str());
+}
 
-    QUrl url = QUrl::fromEncoded(imageUrl.toStdString().c_str());
-    //FIXME looks like this qDebug() output helps to show FS pictures with incorrect path (maybe because of url.toString)
-    //without it, there's a problem with showing pictures from FS
-    qDebug() << "PixmapTransfomer::needImage" << titledNode->imageUrl().c_str() <<  url.toString();
-    if (myCache.contains(url)) {
-        emit imageIsReady(titledNode, myCache.value(url));
+void ImageProvider::handleImageResult(const ZLTreeTitledNode* titledNode, shared_ptr<ZLImage> image) {
+    myProcessedNodes.insert(titledNode);
+    QUrl url = generateUrl(titledNode);
+
+    if (myCache.contains(url.toString())) {
+        emit cacheUpdated();
         return;
     }
+
     if (url.scheme() == QLatin1String(ZLTreeTitledNode::ZLIMAGE_SCHEME.c_str())) {
         if (titledNode->image().isNull()) {
             qDebug() << "situation where ZLImage is 0, and link to ZLImage";
-            emit imageIsReady(titledNode, QPixmap());
+            updateCache(url.toString(), QPixmap());
             return;
         }
-        myCache[url] = getZLImage(titledNode->image());
-        emit imageIsReady(titledNode, myCache[url]);
+        updateCache(url.toString(), getZLImage(titledNode->image()));
         return;
     } else if (url.scheme() == QLatin1String(ZLTreeTitledNode::LOCALFILE_SCHEME.c_str())) {
-        myCache[url] = getFSImage(url);
-        emit imageIsReady(titledNode, myCache[url]);
+        updateCache(url.toString(), getFSImage(url));
         return;
     } else {
-        getNetworkImage(titledNode, url);
+        getNetworkImage(url);
         return;
     }
 
     return;
 }
 
-QPixmap PixmapTransfomer::getZLImage(shared_ptr<ZLImage> image) const {
-    return ImageUtils::ZLImageToQPixmap(image, 0, MenuItemParameters::getImageSize());
+QPixmap ImageProvider::getZLImage(shared_ptr<ZLImage> image) const {
+    return ImageUtils::ZLImageToQPixmap(image, 0, getImageSize());
 }
 
-QPixmap PixmapTransfomer::getFSImage(QUrl url) const {
-    return ImageUtils::fileUrlToQPixmap(url, 0, MenuItemParameters::getImageSize());
+QPixmap ImageProvider::getFSImage(QUrl url) const {
+    return ImageUtils::fileUrlToQPixmap(url, 0, getImageSize(), Qt::SmoothTransformation);
 }
 
-void PixmapTransfomer::getNetworkImage(const ZLTreeTitledNode* node, QUrl url) const {
+void ImageProvider::getNetworkImage(QUrl url) const {
     if (!url.isValid()) {
         return;
     }
     QNetworkRequest request(url);
-    myNetworkImageCache[url] = node;
+    request.setPriority(myMode == THUMBNAIL ? QNetworkRequest::LowPriority : QNetworkRequest::HighPriority);
     myManager.get(request);
+    //TODO maybe use qt standart cache instead of ImageProvider's (for network images)
+    //and do not use cache (issue #69) to avoid memory errors
     return;
 }
 
-void PixmapTransfomer::onRequestFinished(QNetworkReply* reply) {
-    if (!myNetworkImageCache.contains(reply->url())) {
+void ImageProvider::onRequestFinished(QNetworkReply* reply) {
+    if (myCache.contains(reply->url().toString())) {
+        emit cacheUpdated();
         return;
     }
 
     QPixmap pixmap;
     pixmap.loadFromData(reply->readAll());
-    QSize imageSize =  MenuItemParameters::getImageSize();
     if (!pixmap.isNull()) {
-        pixmap = ImageUtils::scaleAndCenterPixmap(pixmap, imageSize, true);
+        pixmap = ImageUtils::scaleAndCenterPixmap(pixmap, getImageSize(), true, Qt::SmoothTransformation);
     }
-    const ZLTreeTitledNode* node = myNetworkImageCache.value(reply->url());
-    myNetworkImageCache.remove(reply->url());
-
-    if (pixmap.isNull()) {
-        return;
-    }
-    myCache[reply->url()] = pixmap;
-    emit imageIsReady(node, pixmap);
+    updateCache(reply->url().toString(), pixmap);
 }
 

@@ -2,6 +2,7 @@
 
 #include <ZLibrary.h>
 
+#include <QtCore/QDebug>
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QLabel>
@@ -15,6 +16,7 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QFrame>
 #include <QtGui/QPainter>
+#include <QtGui/QFormLayout>
 
 #include <QtCore/QRegExp>
 #include <QtCore/QStringList>
@@ -58,18 +60,21 @@ std::string ZLQtOptionView::removeShortcut(const std::string& name) const {
 void BooleanOptionView::_createItem() {
 	QWidget* widget = new QWidget(myTab->widget());
 	QHBoxLayout* layout = new QHBoxLayout();
-	widget->setLayout(layout);
+
 	myCheckBox = new QCheckBox(" ");
         myLabel = new PressLabel( ::qtString(removeShortcut(ZLOptionView::name())));
-	myCheckBox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
-	myLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
+        //myLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+        myLabel->setWordWrap(true);
+//	myCheckBox->setSizePolicy(QSizePolicy::Minimum,QSizePolicy::Fixed);
+//	myLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Fixed);
 	widget->setFocusProxy(myCheckBox);
-	myLabel->setWordWrap(true);
-	layout->addWidget(myCheckBox);
-	layout->addSpacing(10);
-	layout->addWidget(myLabel);
+
+        layout->addWidget(myCheckBox);
+        layout->addWidget(myLabel,1);
 	myCheckBox->setChecked(((ZLBooleanOptionEntry&)*myOption).initialState());
 	myWidgets.push_back(widget);
+
+        widget->setLayout(layout);
 	myTab->addItem(widget);
 	connect(myCheckBox, SIGNAL(toggled(bool)), this, SLOT(onStateChanged(bool)));
 	connect(myLabel, SIGNAL(labelPressed()), this, SLOT(onLabelPressed()));
@@ -587,42 +592,50 @@ void ColorOptionView::_onAccept() const {
 
 void StaticTextOptionView::_createItem() {
 	const std::string &text = ((ZLStaticTextOptionEntry&)*myOption).initialValue();
-	QLabel *label = new QLabel(::qtString("<b>" + name() + ":</b> " + text), myTab->widget());
-	label->setWordWrap(true);
-	myWidgets.push_back(label);
-	myTab->addItem(label);
+        QWidget* widget = new QWidget;
+        QFormLayout* layout = new QFormLayout;
+        QLabel *label = new QLabel(QString::fromStdString(text));
+        layout->addRow(QString::fromStdString("<b>" + name() + ":</b>"), label);
+        label->setWordWrap(true);
+//      label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+        layout->setRowWrapPolicy(QFormLayout::WrapAllRows);
+        layout->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
+        widget->setLayout(layout);
+        myWidgets.push_back(widget);
+        myTab->addItem(widget);
 }
 
 void StaticTextOptionView::_onAccept() const {
 }
 
-class PictureWidget : public QWidget {
-public:
-    PictureWidget(const QPixmap& picture, QWidget* parent = 0);
-    QSize sizeHint () const;
-
-private:
-    //TODO implement caching of image and ResizeEvent
-    //void resizeEvent ( QResizeEvent * event )
-    void paintEvent(QPaintEvent *event);
-
-private:
-    const QPixmap myPicture;
-};
-
-PictureWidget::PictureWidget(const QPixmap& picture, QWidget* parent): QWidget(parent), myPicture(picture) {
+PictureWidget::PictureWidget(QPixmap picture, QWidget* parent): QWidget(parent), myPicture(picture) {
 
 }
 
 QSize PictureWidget::sizeHint () const {
+    //qDebug() << Q_FUNC_INFO;
+    if (myPicture.isNull()) {
+//        qDebug() << Q_FUNC_INFO << "my picture is null";
+        return QSize();
+    }
     QSize hint = myPicture.size();
-    hint.scale(MenuItemParameters::getMaximumBookCoverSize(), Qt::KeepAspectRatio);
+//    qDebug() << Q_FUNC_INFO << MenuItemParameters::getMaximumBookCoverSize(this->parentWidget()->geometry().size()) <<
+//                                this->parentWidget()->geometry().size();
+    hint.scale(MenuItemParameters::getMaximumBookCoverSize(this->parentWidget()->geometry().size()), Qt::KeepAspectRatio);
     return hint;
 }
 
 void PictureWidget::paintEvent(QPaintEvent *event) {
+//  qDebug() << Q_FUNC_INFO << size();
+    if (myPicture.isNull()) {
+        return;
+    }
     QPainter painter(this);
-    painter.drawPixmap(QPoint(0,0), ImageUtils::scaleAndCenterPixmap(myPicture, event->rect().size(), true));
+    if (myCachePicture.isNull() || myCachePicture.size() != size()) {
+        myCachePicture = ImageUtils::scaleAndCenterPixmap(myPicture, size(), true, Qt::SmoothTransformation);
+    }
+//    qDebug() << Q_FUNC_INFO << event->rect();
+    painter.drawPixmap(event->rect(), myCachePicture.copy(event->rect()));
 }
 
 PictureView::PictureView(const std::string &name, const std::string &tooltip, ZLPictureOptionEntry *option, ZLQtDialogContent *tab) : ZLQtOptionView(name, tooltip, option, tab) {
@@ -633,7 +646,7 @@ void PictureView::_createItem() {
     if (myImage.isNull()) {
         return;
     }
-    QWidget* widget = new PictureWidget(ImageUtils::ZLImageToQPixmap(myImage,0, QSize()));
+    QWidget* widget = new PictureWidget(ImageUtils::ZLImageToQPixmap(myImage,0, QSize(), Qt::SmoothTransformation));
     myWidgets.push_back(widget);
     myTab->addItem(widget);
 }

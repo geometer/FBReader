@@ -27,6 +27,7 @@
 		</node>
 	</node>
 	<node name="networkView">
+        <node name="addCustomCatalog" value="Добавить сетевую библиотеку"/>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Развернуть" />
 			<node name="collapseTree" value="Свернуть" />
@@ -244,6 +245,8 @@
 			<node name="yesToAll" value="Да для &amp;всех" />
 			<node name="buy" value="&amp;Купить" />
 			<node name="buyAndDownload" value="Купить и &amp;скачать" />
+			<node name="back" value="Назад" />
+			<node name="menu" value="Меню" />
 		</node>
 		<node name="LibraryOptionsDialog">
 			<node name="title" value="FBReader - Настройки библиотеки" />

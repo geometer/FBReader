@@ -283,4 +283,19 @@ private:
         shared_ptr<ZLImage> myImage;
 };
 
+class PictureWidget : public QWidget {
+public:
+    PictureWidget(QPixmap picture, QWidget* parent = 0);
+    QSize sizeHint () const;
+
+protected:
+    //TODO implement caching of image and ResizeEvent
+    //void resizeEvent ( QResizeEvent * event )
+    void paintEvent(QPaintEvent *event);
+
+protected:
+    /*const*/ QPixmap myPicture;
+    QPixmap myCachePicture;
+};
+
 #endif /* __ZLQTOPTIONVIEW_H__ */

@@ -5,115 +5,29 @@
 #include <QtCore/QDebug>
 
 #include <ZLDialogManager.h>
-#include "ZLQtProgressDialog.h"
+
 #include "ZLQtPageDialog.h"
 #include "ZLQtDialogContent.h"
 
 #include "../menu/DrillDownMenu.h"
+#include "../menu/ActionButtons.h"
+
 #include "ZLQtTreeDialog.h"
 
-//remove this:
-#include "../../../fbreader/src/networkActions/NetworkActions.h"
-
-WrapperAction::WrapperAction(shared_ptr<ZLTreeAction> runnable) : myRunnable(runnable) {
-
-}
-
-bool WrapperAction::isVisible() const {
-    return myRunnable->makesSense();
-}
-
-void WrapperAction::run() {   
-    if (!zlobject_cast<NetworkBookDownloadAction*>(&*myRunnable)) {
-        myRunnable->run();
-        return;
-    }
-
-    //todo remove this hack (UI shoud not know about fbreader)
-    shared_ptr<ZLExecutionData::Listener> listener = new TreeActionListener;
-    myRunnable->setListener(listener);
-    //TODO here should be some 'wait text', that's can be taken from ZLRunnable
-
-    shared_ptr<ZLProgressDialog> dialog = ZLDialogManager::Instance().createProgressDialog(ZLResourceKey("downloadBook"));
-
-    //TODO remove static_casts
-    ZLQtProgressDialog* tmpDialog = static_cast<ZLQtProgressDialog*>(&*dialog);
-    TreeActionListener* treeActionListener = static_cast<TreeActionListener*>(&*listener);
-    myRunnable->run();
-    tmpDialog->run(treeActionListener);
-}
-
-PageMenu::PageMenu(const ZLTreePageNode& pageNode, QAction* action, QObject* parent): QObject(parent), myPageNode(pageNode), myAction(action) {
-    setActionButton();
-}
-
-std::vector<shared_ptr<ZLTreeAction> > PageMenu::filterSensibleActions(const std::vector<shared_ptr<ZLTreeAction> > & actions) {
-    std::vector<shared_ptr<ZLTreeAction> > senseActions;
-    for (size_t i=0; i<actions.size(); ++i) {
-        if (actions[i]->makesSense()) {
-            senseActions.push_back(actions[i]);
-        }
-    }
-    return senseActions;
-}
-
-void PageMenu::setActionButton() {
-    //TODO setActionButton should calls when some changes are happened
-    if (!myAction) {
-        return;
-    }
-    const std::vector<shared_ptr<ZLTreeAction> > senseActions = filterSensibleActions(myPageNode.actions());
-    if (senseActions.size() == 0) {
-        myAction->setText(QString());
-        return;
-    }
-    if (senseActions.size() == 1) {
-        myAction->setText(QString::fromStdString(myPageNode.actionText(senseActions[0])));
-    } else {
-        //TODO add ZLResource here
-        myAction->setText("Options");
-    }
-}
-
-void PageMenu::onFinish(int) {
-    //TODO remove this slot and signal; DrillDownMenu dialog should close automatically by other way
-    emit drillDownMenuClose();
-}
-
-void PageMenu::activate() {
-    const std::vector<shared_ptr<ZLTreeAction> > senseActions = filterSensibleActions(myPageNode.actions());
-    if (senseActions.size() == 0) {
-        return;
-    }
-    if (senseActions.size() == 1) {
-        WrapperAction(senseActions.at(0)).run();
-        return;
-    }
-    DrillDownMenuDialog dialog;
-    connect(this, SIGNAL(drillDownMenuClose()), &dialog, SLOT(close()));
-    DrillDownMenu* menu = new DrillDownMenu;
-    for (size_t i=0; i < senseActions.size(); ++i) {
-        menu->addItem(myPageNode.actionText(senseActions[i]), new WrapperAction(senseActions[i]));
-    }
-    dialog.showDrillDownMenu(menu);
-    dialog.runNoFullScreen();
-}
-
-ZLQtPageDialog::ZLQtPageDialog(const ZLTreePageNode& pageNode, QWidget* parent) : QDialog(parent), myPageNode(pageNode), myContent(pageNode.content()) {
+ZLQtPageDialog::ZLQtPageDialog(const ZLTreePageNode& pageNode, QWidget* parent) : QDialog(parent), myContent(pageNode.content()), myPageNode(pageNode) {
 
     QVBoxLayout* layout = new QVBoxLayout;
     layout->addWidget(static_cast<ZLQtDialogContent&>(*myContent).widget());
 
-    const ZLResource& back = ZLResource::resource("dialog")["button"]["back"];
-    QAction* action = new QAction(QString::fromStdString(back.value()),this);
+    const std::string& back = ZLDialogManager::Instance().buttonName(ZLResourceKey("back"));
+    QAction* action = new QAction(QString::fromStdString(back),this);
 #ifdef __SYMBIAN__
     action->setSoftKeyRole( QAction::NegativeSoftKey );
 #endif
     connect(action, SIGNAL(triggered()), this, SLOT(accept()));
     addAction( action );
 #ifndef __SYMBIAN__
-    QPushButton* backButton = new QPushButton(QString::fromStdString(back.value()));
-    connect(backButton, SIGNAL(clicked()), this, SLOT(accept()));
+    QPushButton* backButton = new ButtonAction(action);
     layout->addWidget(backButton);
 #endif
 
@@ -121,13 +35,13 @@ ZLQtPageDialog::ZLQtPageDialog(const ZLTreePageNode& pageNode, QWidget* parent) 
 #ifdef __SYMBIAN__
     pageMenuAction->setSoftKeyRole( QAction::PositiveSoftKey );
 #endif
-    myPageMenu = new PageMenu(pageNode, pageMenuAction, this);
+    myPageMenu = new TreeNodeActionsMenu(pageMenuAction, this);
+    myPageMenu->setTreeNode(&pageNode);
     addAction(pageMenuAction);
     connect(pageMenuAction, SIGNAL(triggered()), myPageMenu, SLOT(activate()));
     connect(this,SIGNAL(finished(int)), myPageMenu, SLOT(onFinish(int)));
 #ifndef __SYMBIAN__
-        QPushButton* menuButton = new QPushButton(pageMenuAction->text());
-        connect(menuButton, SIGNAL(clicked()), myPageMenu, SLOT(activate()));
+        QPushButton* menuButton = new ButtonAction(pageMenuAction);
         layout->addWidget(menuButton);
 #endif
 
@@ -143,7 +57,30 @@ ZLQtPageDialog::~ZLQtPageDialog() {
 bool ZLQtPageDialog::run() {
 #ifdef __SYMBIAN__
     setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
-#endif
     setWindowState(Qt::WindowFullScreen);
+#else
+    setFixedSize(400, 600);
+#endif
+    NodePictureWidget* picture = new NodePictureWidget(myPageNode);
+    ZLQtDialogContent* content = static_cast<ZLQtDialogContent*>(&*myContent);
+    content->addItem(0, picture);
+    content->close();
     return exec() == QDialog::Accepted;
+}
+
+NodePictureWidget::NodePictureWidget(const ZLTreePageNode& pageNode, QWidget* parent) : PictureWidget(QPixmap(), parent), myPageNode(pageNode) {
+    //TODO implement a way for caching cover, if it has been loaded yet via network manager
+    myImageProvider = new ImageProvider(ImageProvider::FULL, this);
+    connect(myImageProvider, SIGNAL(cacheUpdated()), this, SLOT(refresh()));
+    myPicture = myImageProvider->getImageForNode(&myPageNode);
+}
+
+void NodePictureWidget::refresh() {
+    //qDebug() << Q_FUNC_INFO;
+    if (ImageProvider::generateUrl(&myPageNode).scheme() == QLatin1String(ZLTreeTitledNode::LOCALFILE_SCHEME.c_str())) {
+        return;
+    }
+    myPicture = myImageProvider->getImageForNode(&myPageNode);
+    //qDebug() << Q_FUNC_INFO << myPicture.size();
+    updateGeometry();
 }

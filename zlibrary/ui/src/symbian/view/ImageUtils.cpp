@@ -5,7 +5,7 @@
 
 #include "ImageUtils.h"
 
-QPixmap ImageUtils::ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, const QSize &requestedSize) {
+QPixmap ImageUtils::ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, const QSize &requestedSize, Qt::TransformationMode mode) {
     if (image.isNull()) {
        return QPixmap();
     }
@@ -18,12 +18,12 @@ QPixmap ImageUtils::ZLImageToQPixmap(shared_ptr<ZLImage> image, QSize *size, con
             if (size)
                 *size = qImage->size();
             QImage finalImage = *qImage;
-            return centerPixmap(scalePixmap(QPixmap::fromImage(finalImage), requestedSize, true), requestedSize);
+            return centerPixmap(scalePixmap(QPixmap::fromImage(finalImage), requestedSize, true, mode), requestedSize);
     }
     return QPixmap();
 }
 
-QPixmap ImageUtils::fileUrlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize) {
+QPixmap ImageUtils::fileUrlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize,  Qt::TransformationMode mode) {
     QPixmap pixmap(url.toLocalFile());
     qDebug() << "fileUrlToQPixmap! asking for file" << url << url.toLocalFile() << "is pixmap null?" << pixmap.isNull();
     if (size) {
@@ -33,10 +33,10 @@ QPixmap ImageUtils::fileUrlToQPixmap(QUrl url, QSize *size, const QSize &request
 //        qDebug() << "ImageUtils:: final image is null by undefined reasons";
 //        return QPixmap();
 //    }
-    return scaleAndCenterPixmap(pixmap, requestedSize, false);
+    return scaleAndCenterPixmap(pixmap, requestedSize, false, mode);
 }
 
-QPixmap ImageUtils::scalePixmap(const QPixmap& pixmap, const QSize& requestedSize, bool scaleIfLess) {
+QPixmap ImageUtils::scalePixmap(const QPixmap& pixmap, const QSize& requestedSize, bool scaleIfLess, Qt::TransformationMode mode) {
     if (pixmap.isNull() || !requestedSize.isValid()) {
         qDebug() << "ImageUtils: scaling -- pixmap is null or req size is not valid";
         return pixmap;
@@ -46,7 +46,7 @@ QPixmap ImageUtils::scalePixmap(const QPixmap& pixmap, const QSize& requestedSiz
         return pixmap;
     }
     //TODO for small item we should use Qt::FastTransformation
-    return pixmap.scaled(requestedSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    return pixmap.scaled(requestedSize, Qt::KeepAspectRatio, mode);
 }
 
 QPixmap ImageUtils::centerPixmap(const QPixmap& pixmap, const QSize& requestedSize) {
@@ -63,7 +63,7 @@ QPixmap ImageUtils::centerPixmap(const QPixmap& pixmap, const QSize& requestedSi
     return centeredPixmap;
 }
 
-QPixmap ImageUtils::scaleAndCenterPixmap(const QPixmap& image, const QSize& requestedSize, bool scaleIfLess) {
+QPixmap ImageUtils::scaleAndCenterPixmap(const QPixmap& image, const QSize& requestedSize, bool scaleIfLess,  Qt::TransformationMode mode) {
     //this is a shortcut
-    return centerPixmap(scalePixmap(image, requestedSize, scaleIfLess), requestedSize);
+    return centerPixmap(scalePixmap(image, requestedSize, scaleIfLess, mode), requestedSize);
 }

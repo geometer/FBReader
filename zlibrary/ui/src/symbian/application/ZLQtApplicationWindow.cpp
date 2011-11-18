@@ -17,8 +17,6 @@
 #include <QtGui/QDesktopWidget>
 #include <QtCore/QDebug>
 
-#include <QtScrollerProperties>
-
 #include <ZLibrary.h>
 #include <ZLPopupData.h>
 
@@ -29,6 +27,8 @@
 
 #include "../menu/DrillDownMenu.h"
 
+#include "../dialogs/ScrollerManager.h"
+
 #ifdef 	__SYMBIAN__
 #include "../platform/VolumeKeysCapturer.h"
 #endif
@@ -38,13 +38,15 @@
 //#include "../../../../../fbreader/src/fbreader/FBReaderActions.h"
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
-		new ZLQtApplicationWindow(application);
+        myApplicationWindow = new ZLQtApplicationWindow(application);
 }
 
 ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow* parent, DrillDownMenuDialog* dialog,  ZLMenubar::PlainItem& item) : myParent(parent), MenuAction(dialog), myItem(item) { }
 
 void ZLQtMenuAction::run() {
-	myDialog->close();
+        //commented, because
+        //DrillDownMenuDialog will be close due to parameters of it's constructor
+        //myDialog->close();
 	myParent->onMenuItemPress(myItem);
 }
 
@@ -57,23 +59,20 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 		QPixmap icon(QString::fromStdString(iconFileName));
                 setWindowIcon(icon);
 
-		myMenuDialog = new DrillDownMenuDialog(this);
-		myMenu = new DrillDownMenu;
+                ScrollerManager::setScrollerProperties();
 
-                setScrollerProperties();
+                myMenuDialog = new DrillDownMenuDialog(true,this);
+		myMenu = new DrillDownMenu;
 
 #ifdef 	__SYMBIAN__
 		myVolumeKeyCapture = new VolumeKeysCapturer(this);
 #endif
 }
 
-
-
 void ZLQtApplicationWindow::init() {
 		ZLApplicationWindow::init();
 
-		//TODO add ZLResource here
-		const std::string& mainMenu = "Menu";
+                const std::string& mainMenu = ZLDialogManager::Instance().buttonName(ZLResourceKey("menu"));
 		myShowMenuAction = new QAction(QString::fromStdString(mainMenu),this);
 		connect(myShowMenuAction, SIGNAL(triggered()), this, SLOT(showMenu()));
                 addAction(myShowMenuAction);
@@ -213,14 +212,4 @@ void ZLQtApplicationWindow::setFocusToMainWidget() {
         centralWidget()->setFocus();
 }
 
-void ZLQtApplicationWindow::setScrollerProperties() const {
-    QtScrollerProperties sp;
-    sp.setScrollMetric(QtScrollerProperties::MousePressEventDelay,  qreal(0.1));
-    sp.setScrollMetric(QtScrollerProperties::DragStartDistance,   qreal(2.5/1000) );
-    sp.setScrollMetric(QtScrollerProperties::DragVelocitySmoothingFactor, qreal(0.85));
-    sp.setScrollMetric(QtScrollerProperties::DecelerationFactor, 0.3);
-    sp.setScrollMetric(QtScrollerProperties::AcceleratingFlickMaximumTime,  qreal(0.125));
-    sp.setScrollMetric(QtScrollerProperties::SnapTime,  qreal(1));
-    sp.setScrollMetric(QtScrollerProperties::FrameRate,   QtScrollerProperties::Fps60);
-    QtScrollerProperties::setDefaultScrollerProperties(sp);
-}
+

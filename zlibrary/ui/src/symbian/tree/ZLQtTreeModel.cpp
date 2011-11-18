@@ -23,7 +23,8 @@
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, shared_ptr<ZLExecutionData::Listener> listener, QObject *parent) :
     QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog), myListener(listener) {
     myCurrentNode = &myRootNode;
-    connect(&myImageProvider, SIGNAL(cacheUpdated()), this, SLOT(update()));
+    myImageProvider = new ImageProvider(ImageProvider::THUMBNAIL, this);
+    connect(myImageProvider, SIGNAL(cacheUpdated()), this, SLOT(update()));
 }
 
 bool ZLQtTreeModel::back() {
@@ -31,6 +32,9 @@ bool ZLQtTreeModel::back() {
 		return false;
 	}
 	myCurrentNode = myCurrentNode->parent();
+        emit currentNodeChanged(myCurrentNode);
+        //TODO fix problem:
+        //when change description of catalog, it changes just in case when net libraries is opened again
 	emit layoutChanged();
 	return true;
 }
@@ -58,6 +62,8 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
                 //then another item will requesting others,
                 //progress bar will be hided if one will completed before other
                 myCurrentNode->requestChildren(myListener);
+                qDebug() << Q_FUNC_INFO << "emitting current node changed";
+                emit currentNodeChanged(myCurrentNode);
 	}
         emit layoutChanged();
 	return true;
@@ -90,7 +96,7 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
             case Qt::DecorationRole:
                 //TODO check for asking decoration role only for items on screen
                 if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
-                    return myImageProvider.getImageForNode(titledNode);
+                    return myImageProvider->getImageForNode(titledNode);
                 }
                 break;
             case SubTitleRole:
@@ -128,6 +134,8 @@ const ZLTreeNode* ZLQtTreeModel::getTreeNode(const QModelIndex& index) const {
 void ZLQtTreeModel::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
     //qDebug() << Q_FUNC_INFO << parent << index << parent->childIndex();
     //TODO there should be beginInsertRows instead of layoutChanged()
+    //TODO remove it, emitting signal is needed to set actions for left soft-button
+    emit currentNodeChanged(myCurrentNode);
     emit layoutChanged();
 //    beginInsertRows(createIndex(parent), index, index);
 }

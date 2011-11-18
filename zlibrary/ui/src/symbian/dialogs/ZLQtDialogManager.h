@@ -1,6 +1,8 @@
 #ifndef __ZLQTDIALOGMANAGER_H__
 #define __ZLQTDIALOGMANAGER_H__
 
+#include <QtGui/QMainWindow>
+
 #include <ZLDialogManager.h>
 #include "ZLQtOptionsDialog.h"
 
@@ -12,7 +14,7 @@ public:
 	static void createInstance() { ourInstance = new ZLQtDialogManager(); }
 
 protected   :
-        ZLQtDialogManager() : myStoredWindow(0) {}
+        ZLQtDialogManager() :  myApplicationWindow(0) {}
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
@@ -32,8 +34,11 @@ public:
 	void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const;
 	bool openURL(const std::string& url) const;
 
+public:
+        QWidget* getParentWidget() const;
+
 protected:
-	mutable QWidget *myStoredWindow;
+        mutable QMainWindow* myApplicationWindow;
 };
 
 #endif /* __ZLQTDIALOGMANAGER_H__ */

@@ -17,12 +17,20 @@
  * 02110-1301, USA.
  */
 
+#include <ZLResource.h>
+
 #include "ZLTreeListener.h"
 
 const ZLTypeId ZLTreeListener::RootNode::TYPE_ID(ZLTreeNode::TYPE_ID);
 
 ZLTreeListener::RootNode::RootNode(ZLTreeListener &listener)
     : myListener(listener) {
+}
+
+const ZLResource &ZLTreeListener::RootNode::resource() const {
+    //TODO remove this;
+    //it's used for registrating action AddCatalogAction ("addCustomCatalog")
+    return ZLResource::resource("networkView");
 }
 
 const ZLTypeId &ZLTreeListener::RootNode::typeId() const {
