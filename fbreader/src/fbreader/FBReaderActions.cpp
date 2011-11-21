@@ -102,7 +102,7 @@ void ShowLibraryTreeAction::run() {
 }
 
 void ShowMobileOptionsDialogAction::run() {
-	FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_MOBILE_OPTIONS_DIALOG);
+        FBReader::Instance().LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_OPTIONS_DIALOG);
 	MobileOptionsDialog().dialog().run();
 }
 

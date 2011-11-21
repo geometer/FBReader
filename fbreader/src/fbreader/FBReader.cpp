@@ -125,14 +125,14 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::SEARCH_ON_NETWORK, new SimpleSearchOnNetworkAction());
 	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction());
 	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
-	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
+        //addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
+        addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowMobileOptionsDialogAction());
 	//TODO left just one item here (ShowContentsAction or ShowTOCTreeAction)
 	//addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
 	addAction(ActionCode::SHOW_TOC, new ShowTOCTreeAction());
         addAction(ActionCode::SHOW_MENU, new ShowMenuAction());
         //addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
         addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowMobileBookInfoAction());
-	addAction(ActionCode::SHOW_MOBILE_OPTIONS_DIALOG, new ShowMobileOptionsDialogAction());
 	addAction(ActionCode::SHOW_LIBRARY_OPTIONS_DIALOG, new ShowLibraryOptionsDialogAction());
 	addAction(ActionCode::SHOW_NETWORK_OPTIONS_DIALOG, new ShowNetworkOptionsDialogAction());
 	addAction(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG, new ShowSystemOptionsDialogAction());
