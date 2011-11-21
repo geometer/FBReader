@@ -26,6 +26,62 @@ private:
         std::vector<std::string> myValues;
 };
 
+class AbstractFontStyleEntry : public ZLComboOptionEntry {
+
+protected:
+    const std::vector<std::string> &values() const;
+    void onAccept(const std::string &value);
+    virtual void _onAccept(size_t value) = 0;
+
+protected:
+    std::vector<std::string> myValues;
+
+};
+
+class FontStyleEntry : public AbstractFontStyleEntry {
+
+public:
+        enum FontStyle {
+            REGULAR = 0,
+            BOLD,
+            ITALIC,
+            BOLD_ITALIC
+        };
+
+public:
+        FontStyleEntry(const ZLResource &resource, ZLBooleanOption& boldOption, ZLBooleanOption& italicOption);
+        const std::string &initialValue() const;
+
+private:
+        void _onAccept(size_t i);
+
+private:
+        ZLBooleanOption& myBoldOption;
+        ZLBooleanOption& myItalicOption;
+};
+
+class FontStyleBoolean3Entry : public AbstractFontStyleEntry {
+
+public:
+        enum FontBoolean3Style {
+            ON = 0,
+            OFF,
+            UNCHANGED
+        };
+
+public:
+        FontStyleBoolean3Entry(const ZLResource &resource, ZLBoolean3Option &option);
+        const std::string &initialValue() const;
+
+private:
+        void _onAccept(size_t i);
+
+private:
+        ZLBoolean3Option & myOption;
+};
+
+
+
 class MobileOptionsDialog : public AbstractOptionsDialog {
 public:
     MobileOptionsDialog();

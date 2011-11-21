@@ -141,6 +141,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
      static const ZLResourceKey KEY_STARTINDENT("leftIndent");
      static const ZLResourceKey KEY_ENDINDENT("rightIndent");
 
+     static const ZLResourceKey KEY_FONTSTYLE("fontStyle");
      static const ZLResourceKey KEY_BOLD("bold");
      static const ZLResourceKey KEY_ITALIC("italic");
      static const ZLResourceKey KEY_FONTFAMILY("font");
@@ -183,14 +184,21 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
              );
 
              myComboEntry->registerEntry(content,
-                     KEY_BOLD, new ZLSimpleBooleanOptionEntry(baseStyle.BoldOption),
+                     KEY_FONTSTYLE,
+                     new FontStyleEntry(content.resource(KEY_FONTSTYLE),
+                                        baseStyle.BoldOption, baseStyle.ItalicOption),
                      name
              );
 
-             myComboEntry->registerEntry(content,
-                     KEY_ITALIC, new ZLSimpleBooleanOptionEntry(baseStyle.ItalicOption),
-                     name
-             );
+//             myComboEntry->registerEntry(content,
+//                     KEY_BOLD, new ZLSimpleBooleanOptionEntry(baseStyle.BoldOption),
+//                     name
+//             );
+
+//             myComboEntry->registerEntry(content,
+//                     KEY_ITALIC, new ZLSimpleBooleanOptionEntry(baseStyle.ItalicOption),
+//                     name
+//             );
 
              myComboEntry->registerEntry(content,
                      KEY_LINESPACING, new ZLTextLineSpaceOptionEntry(baseStyle.LineSpacePercentOption, content.resource(KEY_LINESPACING), false),
@@ -226,14 +234,24 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
                      );
 
                      myComboEntry->registerEntry(content,
-                             KEY_BOLD, new ZLSimpleBoolean3OptionEntry(decoration->BoldOption),
+                             KEY_BOLD, new FontStyleBoolean3Entry(content.resource(KEY_BOLD), decoration->BoldOption),
                              name
                      );
 
                      myComboEntry->registerEntry(content,
-                             KEY_ITALIC, new ZLSimpleBoolean3OptionEntry(decoration->ItalicOption),
+                             KEY_ITALIC, new FontStyleBoolean3Entry(content.resource(KEY_ITALIC), decoration->ItalicOption),
                              name
                      );
+
+//                     myComboEntry->registerEntry(content,
+//                             KEY_BOLD, new ZLSimpleBoolean3OptionEntry(decoration->BoldOption),
+//                             name
+//                     );
+
+//                     myComboEntry->registerEntry(content,
+//                             KEY_ITALIC, new ZLSimpleBoolean3OptionEntry(decoration->ItalicOption),
+//                             name
+//                     );
 
                      myComboEntry->registerEntry(content,
                              KEY_ALLOWHYPHENATIONS, new ZLSimpleBoolean3OptionEntry(decoration->AllowHyphenationsOption),
