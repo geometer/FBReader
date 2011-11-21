@@ -1,3 +1,11 @@
+fbreader (0.99.5) stable; urgency=low
+
+  * Added support for custom OPDS catalogs.
+  * Added proxy support (currently through config files).
+  * Books' local path is equal to FBReaderJ's one.
+
+ -- Ruslan Nigmatullin <euroelessar@yandex.ru>  Wed, 19 Nov 2011 00:13:16 +0600
+
 fbreader (0.99.4-2) stable; urgency=low
 
   * Fixed behaviour of ComboBox in MeeGo PR 1.1.

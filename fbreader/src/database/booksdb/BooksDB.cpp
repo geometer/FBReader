@@ -541,16 +541,19 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 		std::map<std::string,std::string> linkUrls;
 		((DBIntValue &) *myLoadNetworkLinkUrls->parameter("@link_id").value()) = reader->intValue(0);
 		shared_ptr<DBDataReader> urlreader = myLoadNetworkLinkUrls->executeReader();
-		long t;
+		long t = 0;
 		while (urlreader->next()) {
 			linkUrls[urlreader->textValue(0, std::string())] = urlreader->textValue(1, std::string());
 			t = urlreader->intValue(2);
 		}
+//		if (t == 0) {
+//			deleteNetworkLink()
+//		}
 		shared_ptr<ATOMUpdated> au;
 		if (t != 0) {
 			au = new ATOMUpdated();
+			au->setLongSeconds_stupid(t);
 		}
-		au->setLongSeconds_stupid(t);
 		std::string iconUrl;
 		if (linkUrls.count("icon") != 0) {
 			iconUrl = linkUrls["icon"];
@@ -571,6 +574,7 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 		link->setPredefinedId(predId);
 		link->setEnabled(reader->intValue(6));
 		link->setUpdated(au);
+		link->init();
 
 		links.push_back(link);
 	}

@@ -89,6 +89,8 @@ public:
 	virtual shared_ptr<NetworkItem> libraryItem() const = 0;
 
 	virtual void rewriteUrl(std::string &url, bool isUrlExternal = false) const = 0;
+	
+	virtual void init() = 0;
 
 public:
 	const std::string SiteName;

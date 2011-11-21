@@ -82,6 +82,7 @@ void OPDSLink::FeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed
 	myLink->setSummary(summary);
 	myLink->setIcon(iconURL);
 	myLink->setLinks(links);
+	myLink->init();
 }
 
 

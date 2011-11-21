@@ -74,6 +74,8 @@ private:
 	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;
 
 	void rewriteUrl(std::string &url, bool isUrlExternal = false) const;
+	
+	void init();
 
 	const std::string &relation(const std::string &rel, const std::string &type) const;
 

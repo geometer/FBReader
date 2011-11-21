@@ -18,7 +18,7 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	myListener = listener;
 	
 	myView = new QTreeView(this);
-	myModel = new ZLQtTreeModel(rootNode(), this, myListener);
+	myModel = new ZLQtTreeDialogModel(&rootNode(), this);
 	myView->setModel(myModel);
 	myView->setItemDelegate(new SubtitleDelegate);
 	
@@ -51,30 +51,27 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 }
 
 void ZLQtTreeDialog::back() {
-	if (!myModel->back()) {
-		close();
-	}
+//	if (!myModel->back()) {
+//		close();
+//	}
 }
 
 void ZLQtTreeDialog::enter(QModelIndex index) {
 	//qDebug() << Q_FUNC_INFO << index;
-	if (!myModel->enter(index)) {
-		close();
-	}
+//	if (!myModel->enter(index)) {
+//		close();
+//	}
 }
 
 void ZLQtTreeDialog::run() {
 	//TODO should return QDialog::Accepted ??
 	//return exec() == QDialog::Accepted;
-#ifdef __SYMBIAN__
-	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
-#endif
-	setWindowState(Qt::WindowFullScreen);
+	show();
 	exec();
 }
 
 void ZLQtTreeDialog::onCloseRequest() {
-    this->close();
+	close();
 }
 
 void ZLQtTreeDialog::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {

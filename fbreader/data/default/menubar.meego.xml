@@ -6,6 +6,6 @@
 	<item id="toc"/>
 	<item id="night"/>
 	<item id="day"/>
-	<item id="mobileOptions"/>
+	<item id="preferences"/>
 	<item id="bookInfo"/>
 </menubar>

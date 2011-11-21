@@ -51,6 +51,12 @@
 
 NetworkLinkCollection *NetworkLinkCollection::ourInstance = 0;
 
+struct NetworkLinkCollection::UpdateListeners {
+	void operator() (NetworkLinkCollection::Listener *listener) {
+		listener->onLinksChanged();
+	}
+};
+
 NetworkLinkCollection &NetworkLinkCollection::Instance() {
 	if (ourInstance == 0) {
 		ourInstance = new NetworkLinkCollection();
@@ -102,13 +108,11 @@ void NetworkLinkCollection::deleteLink(NetworkLink& link) {
 		}
 	}
 	myExists.erase(link.SiteName);
-	FBReader::Instance().invalidateNetworkView();
-	FBReader::Instance().refreshWindow();
+	std::for_each(myListeners.begin(), myListeners.end(), UpdateListeners());
 }
 
 void NetworkLinkCollection::saveLink(NetworkLink& link, bool isAuto) {
 	saveLinkWithoutRefreshing(link, isAuto);
-	FBReader::Instance().refreshWindow();
 }
 
 class NetworkLinkCollection::AddNetworkCatalogScope : public ZLUserData {
@@ -207,14 +211,14 @@ void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool is
 	if (!found) {
 		shared_ptr<NetworkLink> newlink = new OPDSLink(link.SiteName);
 		newlink->loadFrom(link);
+		newlink->init();
 		myLinks.push_back(newlink);
 		std::sort(myLinks.begin(), myLinks.end(), Comparator());
 		updated = true;
 	}
 	if (updated) {
 		BooksDB::Instance().saveNetworkLink(link, isAuto);
-		FBReader::Instance().invalidateNetworkView();
-		FBReader::Instance().sendRefresh();
+		std::for_each(myListeners.begin(), myListeners.end(), UpdateListeners());
 	}
 }
 
@@ -298,6 +302,14 @@ static std::string normalize(const std::string &url) {
 		nURL = PREFIX0 + "book/" + nURL.substr(STANZA_PREFIX.length()) + ".epub";
 	}
 	return nURL;
+}
+
+void NetworkLinkCollection::addListener(NetworkLinkCollection::Listener *listener) {
+	myListeners.insert(listener);
+}
+
+void NetworkLinkCollection::removeListener(NetworkLinkCollection::Listener *listener) {
+	myListeners.erase(listener);
 }
 
 std::string NetworkLinkCollection::bookFileName(const BookReference &reference) {

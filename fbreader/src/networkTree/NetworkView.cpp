@@ -28,7 +28,6 @@
 #include "NetworkNodesFactory.h"
 
 #include "../network/NetworkItems.h"
-#include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkLink.h"
 #include "../network/SearchResult.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
@@ -80,7 +79,13 @@ NetworkView::NetworkView() : myUpdateChildren(true), myUpdateAccountDependents(f
 
 void NetworkView::showDialog() {
 	makeUpToDate();
+	NetworkLinkCollection::Instance().addListener(this);
 	myDialog->run();
+	NetworkLinkCollection::Instance().removeListener(this);
+}
+
+void NetworkView::onLinksChanged() {
+	makeUpToDate();
 }
 
 //void NetworkView::drawCoverLater(FBReaderNode *node, int vOffset) {
@@ -202,7 +207,9 @@ void NetworkView::makeUpToDate() {
 	}
 
 	for (std::set<ZLTreeNode*>::iterator it = nodesToDelete.begin(); it != nodesToDelete.end(); ++it) {
-		delete *it;
+		ZLTreeNode *node = *it;
+		node->parent()->remove(node);
+		delete node;
 	}
 
 //	if (srNode != 0) {
