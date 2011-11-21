@@ -73,7 +73,7 @@
 		<node name="toc" value="Table of Contents" />
 		<node name="library" value="Library" />
 		<node name="networkLibrary" value="Network library" />
-		<node name="addBook" value="Open File..." />
+		<node name="addBook" value="Open Book..." />
 		<node name="night" value="Night" />
 		<node name="day" value="Day" />
 		<node name="showRecent" value="Recent books" />
@@ -146,8 +146,8 @@
 			<node name="tooltip" value="Organize Books by Tag" />
 		</node>
 		<node name="addBook">
-			<node name="label" value="Add File" />
-			<node name="tooltip" value="Add File to Library" />
+			<node name="label" value="Add Book" />
+			<node name="tooltip" value="Add Book to Library" />
 		</node>
         <node name="addNetworkCatalog">
             <node name="label" value="Add" />
@@ -297,13 +297,13 @@
 						<node name="boldItalic" value="Bold Italic"/>
 					</node>
 					<node name="bold" value="Bold">
-						<node name="on" value="bold"/>
-						<node name="off" value="regular"/>
+						<node name="on" value="use bold font style"/>
+						<node name="off" value="use regular font style"/>
 						<node name="unchanged" value="&lt;unchanged&gt;"/>
 					</node>
 					<node name="italic" value="Italic">
-						<node name="on" value="italic"/>
-						<node name="off" value="regular"/>
+						<node name="on" value="use italic font style"/>
+						<node name="off" value="use regular font style"/>
 						<node name="unchanged" value="&lt;unchanged&gt;"/>
 					</node>
 					<node name="lineSpacing" value="Line Spacing">
