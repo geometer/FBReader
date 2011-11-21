@@ -129,6 +129,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
  void PreferencesMenuBuilder::addAppearanceOptions(ZLDialogContent& content) { }
 
  void PreferencesMenuBuilder::addTextOptions(ZLDialogContent& content) {
+
      static const ZLResourceKey KEY_STYLE("style");
      static const ZLResourceKey KEY_BASE("Base");
 
@@ -179,7 +180,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
              );
 
              myComboEntry->registerEntry(content,
-                     KEY_FONTSIZE, new ZLSimpleSpinOptionEntry(baseStyle.FontSizeOption, 2),
+                     KEY_FONTSIZE, new ZLSimpleSpinOptionEntry(baseStyle.FontSizeOption, FBTextStyle::CHANGE_FONT_SIZE_DELTA),
                      name
              );
 
@@ -229,7 +230,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
                      );
 
                      myComboEntry->registerEntry(content,
-                             KEY_FONTSIZEDIFFERENCE, new ZLSimpleSpinOptionEntry(decoration->FontSizeDeltaOption, 2),
+                             KEY_FONTSIZEDIFFERENCE, new ZLSimpleSpinOptionEntry(decoration->FontSizeDeltaOption, FBTextStyle::CHANGE_FONT_SIZE_DELTA),
                              name
                      );
 
@@ -355,7 +356,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
      indicatorTypeEntry->addDependentEntry(showTextPositionEntry);
 
      SpecialFontSizeEntry *fontSizeEntry =
-             new SpecialFontSizeEntry(indicatorInfo.FontSizeOption, 2, *showTextPositionEntry, *showTimeEntry);
+             new SpecialFontSizeEntry(indicatorInfo.FontSizeOption, FBTextStyle::CHANGE_FONT_SIZE_DELTA, *showTextPositionEntry, *showTimeEntry);
      content.addOption(ZLResourceKey("fontSize"), fontSizeEntry);
      indicatorTypeEntry->addDependentEntry(fontSizeEntry);
      showTextPositionEntry->addDependentEntry(fontSizeEntry);

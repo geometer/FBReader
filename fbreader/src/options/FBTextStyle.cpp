@@ -21,6 +21,8 @@
 
 #include "FBTextStyle.h"
 
+const int FBTextStyle::CHANGE_FONT_SIZE_DELTA = 1;
+
 shared_ptr<ZLTextStyle> FBTextStyle::ourInstance;
 
 shared_ptr<ZLTextStyle> FBTextStyle::InstanceAsPtr() {
