@@ -81,7 +81,7 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, this);
 			break;
 		case ZLOptionEntry::SPIN:
-			view = new SpinOptionView(name, tooltip, (ZLSpinOptionEntry*)option, this);
+                        view = new SpinComboOptionView(name, tooltip, (ZLSpinOptionEntry*)option, this);
 			break;
 		case ZLOptionEntry::COMBO:
 			view = new ComboOptionView(name, tooltip, (ZLComboOptionEntry*)option, this);

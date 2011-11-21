@@ -4,6 +4,7 @@
 
 #include <QtCore/QDebug>
 #include <QtGui/QCheckBox>
+#include <QtGui/QApplication>
 #include <QtGui/QComboBox>
 #include <QtGui/QLabel>
 #include <QtGui/QGroupBox>
@@ -32,6 +33,8 @@
 #include "ZLQtOpenFileDialog.h"
 #include "../view/ImageUtils.h"
 #include "../menu/DrillDownMenu.h"
+
+#include "NewComboBox.h"
 
 void ZLQtOptionView::_show() {
 	for (std::vector<QWidget*>::iterator it = myWidgets.begin(); it != myWidgets.end(); ++it) {
@@ -152,7 +155,7 @@ void Boolean3OptionView::onStateChanged(int state) const {
 			value = B3_UNDEFINED;
 			break;
 	}
-	((ZLBoolean3OptionEntry&)*myOption).onStateChanged(value);
+        ((ZLBoolean3OptionEntry&)*myOption).onStateChanged(value);
 }
 
 void ChoiceOptionView::_createItem() {
@@ -193,8 +196,9 @@ void ComboOptionView::_createItem() {
 	if (!name.empty()) {
 		label = new QLabel(::qtString(name), myTab->widget());
 	}
-	myComboBox = new QComboBox(myTab->widget());
+        myComboBox = new NewComboBox(myTab->widget());
 	myComboBox->setEditable(comboOption.isEditable());
+        //myComboBox->setView(new ComboBoxListView(myComboBox));
 
 	if (label != 0) {
 		myWidgets.push_back(label);
@@ -262,6 +266,58 @@ void ComboOptionView::onValueEdited(const QString &value) {
         if (o.useOnValueEdited()) {
                 o.onValueEdited((const char*)value.toUtf8());
         }
+}
+
+
+void SpinComboOptionView::_createItem() {
+        ZLSpinOptionEntry &entry = (ZLSpinOptionEntry&)*myOption;
+        QWidget* widget = new QWidget;
+        QVBoxLayout* layout = new QVBoxLayout;
+        layout->setContentsMargins(0,0,0,0);
+
+        const std::string &name = ZLOptionView::name();
+        QLabel *label = name.empty() ? 0 : new QLabel(::qtString(name));
+
+        myComboBox = new QComboBox;
+
+        myList = range(entry.minValue(), entry.maxValue(), entry.step());
+        for (size_t i=0; i<myList.size(); ++i) {
+            myComboBox->addItem(QVariant(myList.at(i)).toString());
+        }
+        qDebug() << Q_FUNC_INFO << "entry init value" << entry.initialValue();
+        qDebug() << Q_FUNC_INFO << myList.contains(entry.initialValue()) << myList.indexOf(entry.initialValue());
+        if (myList.contains(entry.initialValue())) {
+            myComboBox->setCurrentIndex(myList.indexOf(entry.initialValue()));
+        }
+
+        if (label) {
+            label->setWordWrap(true);
+            label->setFocusProxy(myComboBox);
+            layout->addWidget(label);
+        }
+        layout->addWidget(myComboBox);
+
+        widget->setLayout(layout);
+        myWidgets.push_back(widget);
+        myTab->addItem(widget);
+
+}
+
+void SpinComboOptionView::_onAccept() const {
+        ((ZLSpinOptionEntry&)*myOption).onAccept(myList.at(myComboBox->currentIndex()));
+}
+
+QList<int> SpinComboOptionView::range(int min, int max, int range) {
+    qDebug() << Q_FUNC_INFO << min << max << range;
+    QList<int> list;
+    for (int i=min; i<=max; i+=range) {
+        //qDebug() <<Q_FUNC_INFO << "pushing back" << i;
+        list.push_back(i);
+    }
+    if (list.last() != max) {
+        list.push_back(max);
+    }
+    return list;
 }
 
 void SpinOptionView::_createItem() {

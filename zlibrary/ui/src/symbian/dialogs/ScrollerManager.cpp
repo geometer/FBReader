@@ -20,7 +20,7 @@ void ScrollerManager::setScrollerProperties() {
     QtScrollerProperties::setDefaultScrollerProperties(sp);
 }
 
-void ScrollerManager::setScroll(QListView *scrollable) {
+void ScrollerManager::setScroll(QAbstractItemView *scrollable) {
     scrollable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     scrollable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     scrollable->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);

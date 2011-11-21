@@ -8,7 +8,7 @@ public:
     //ScrollerManager();
 public:
     static void setScrollerProperties();
-    static void setScroll(QListView* widget);
+    static void setScroll(QAbstractItemView* widget);
 
 
 };

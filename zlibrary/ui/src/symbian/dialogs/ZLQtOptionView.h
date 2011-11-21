@@ -174,8 +174,6 @@ private:
 };
 
 
-
-
 class SpinOptionView : public ZLQtOptionView {
 
 public:
@@ -188,6 +186,24 @@ protected:
 private:
 	QSpinBox *mySpinBox;
 };
+
+class SpinComboOptionView : public ZLQtOptionView {
+
+public:
+        SpinComboOptionView(const std::string &name, const std::string &tooltip, ZLSpinOptionEntry *option, ZLQtDialogContent *tab) : ZLQtOptionView(name, tooltip, option, tab), myComboBox(0) {}
+
+protected:
+        void _createItem();
+        void _onAccept() const;
+
+private:
+        static QList<int> range(int min, int max, int range=1);
+
+private:
+        QComboBox *myComboBox;
+        QList<int> myList;
+};
+
 
 class ComboOptionView : public QObject, public ZLQtOptionView {
 
