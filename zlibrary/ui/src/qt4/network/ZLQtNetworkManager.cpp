@@ -139,8 +139,14 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	Q_ASSERT(scope.request);
+	const std::string key = "__networkManager_authentication";
+	if (!scope.request->getUserData(key).isNull()) {
+		reply->close();
+		return;
+	}
 	authenticator->setUser(QString::fromStdString(scope.request->userName()));
 	authenticator->setPassword(QString::fromStdString(scope.request->password()));
+	scope.request->addUserData(key, new ZLUserData());
 }
 
 void ZLQtNetworkManager::onReplyReadyRead() {
