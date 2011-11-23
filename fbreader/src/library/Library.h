@@ -87,7 +87,7 @@ public:
 
 private:
 	void collectDirNames(std::set<std::string> &names) const;
-	void collectBookFileNames(std::set<std::string> &bookFileNames) const;
+	void collectBookFileNames(std::set<std::string> &bookFileNames, std::vector<shared_ptr<ZLInputStream> > &inputStreamCache) const;
 
 	void synchronize() const;
 

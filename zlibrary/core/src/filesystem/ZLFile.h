@@ -51,7 +51,7 @@ public:
 		COMPRESSED = 0x00ff,
 		ZIP = 0x0100,
 		TAR = 0x0200,
-		ARCHIVE = 0xff00,
+		ARCHIVE = 0xff00
 	};
 	
 private:

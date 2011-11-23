@@ -25,6 +25,7 @@
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLDialogManager.h>
+#include <ZLInputStream.h>
 
 #include "Library.h"
 #include "Book.h"
@@ -59,7 +60,28 @@ Library::Library() :
 	BooksDBUtil::getRecentBooks(myRecentBooks);
 }
 
-void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
+#include <ctime>
+#include <iostream>
+
+struct FunctionTimer
+{
+	FunctionTimer(const char *f) : funcName(f), start(clock()) {
+		std::cerr << "Entered " << funcName << std::endl;
+		std::cerr.flush();
+	}
+	~FunctionTimer() {
+		std::cerr << funcName << " finished at "
+		          << (double(clock() - start) * 1000. / CLOCKS_PER_SEC) << " ms"
+		          << std::endl;
+		std::cerr.flush();
+	}
+
+	const char *funcName;
+	clock_t start;
+};
+
+void Library::collectBookFileNames(std::set<std::string> &bookFileNames, std::vector<shared_ptr<ZLInputStream> > &inputStreamCache) const {
+	FunctionTimer timer(__PRETTY_FUNCTION__);
 	std::set<std::string> dirs;
 	collectDirNames(dirs);
 
@@ -75,6 +97,9 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 		if (dir.isNull()) {
 			continue;
 		}
+		
+		if (!dirfile.isDirectory())
+			inputStreamCache.push_back(dirfile.inputStream());
 
 		if (dirfile.extension() == "zip") {
 			ZLFile phys(dirfile.physicalFilePath());
@@ -87,11 +112,15 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 		} else {
 			dir->collectFiles(files, true);
 		}
+		std::cerr.precision(5);
 		if (!files.empty()) {
 			const bool collectBookWithoutMetaInfo = CollectAllBooksOption.value();
 			for (std::vector<std::string>::const_iterator jt = files.begin(); jt != files.end(); ++jt) {
 				const std::string fileName = (inZip) ? (*jt) : (dir->itemPath(*jt));
 				ZLFile file(fileName);
+//				std::cerr << "Check file \"" << fileName << "\" ... ";
+//				std::cerr.flush();
+//				clock_t start = clock();
 				if (PluginCollection::Instance().plugin(file, !collectBookWithoutMetaInfo) != 0) {
 					bookFileNames.insert(fileName);
 				// TODO: zip -> any archive
@@ -100,12 +129,15 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 						dirs.insert(fileName);
 					}
 				}
+//				std::cerr << (double(clock() - start) * 1000. / CLOCKS_PER_SEC) << " ms" << std::endl;
+//				std::cerr.flush();
 			}
 		}
 	}
 }
 
 void Library::rebuildBookSet() const {
+	FunctionTimer timer(__PRETTY_FUNCTION__);
 	myBooks.clear();
 	myExternalBooks.clear();
 	
@@ -113,13 +145,19 @@ void Library::rebuildBookSet() const {
 	BooksDBUtil::getBooks(booksMap);
 
 	std::set<std::string> fileNamesSet;
-	collectBookFileNames(fileNamesSet);
+	std::vector<shared_ptr<ZLInputStream> > inputStreamCache;
+	collectBookFileNames(fileNamesSet, inputStreamCache);
 
 	// collect books from book path
 	for (std::set<std::string>::iterator it = fileNamesSet.begin(); it != fileNamesSet.end(); ++it) {
 		std::map<std::string, shared_ptr<Book> >::iterator jt = booksMap.find(*it);
 		if (jt == booksMap.end()) {
+			std::cerr << "Check file \"" << (*it) << "\" ... ";
+			std::cerr.flush();
+			clock_t start = clock();
 			insertIntoBookSet(BooksDBUtil::getBook(*it));
+			std::cerr << (double(clock() - start) * 1000. / CLOCKS_PER_SEC) << " ms" << std::endl;
+			std::cerr.flush();
 		} else {
 			insertIntoBookSet(jt->second);
 			booksMap.erase(jt);
@@ -180,6 +218,7 @@ LibrarySynchronizer::LibrarySynchronizer(Library::BuildMode mode) : myBuildMode(
 }
 
 void LibrarySynchronizer::run() {
+	FunctionTimer timer(__PRETTY_FUNCTION__);
 	Library &library = Library::Instance();
 
 	if (myBuildMode & Library::BUILD_COLLECT_FILES_INFO) {
@@ -221,6 +260,7 @@ void Library::synchronize() const {
 }
 
 void Library::rebuildMaps() const {
+	FunctionTimer timer(__PRETTY_FUNCTION__);
 	myAuthors.clear();
 	myBooksByAuthor.clear();
 	myTags.clear();
@@ -260,6 +300,7 @@ void Library::rebuildMaps() const {
 }
 
 void Library::collectDirNames(std::set<std::string> &nameSet) const {
+	FunctionTimer timer(__PRETTY_FUNCTION__);
 	std::queue<std::string> nameQueue;
 
 	std::string path = myPath;

@@ -28,31 +28,64 @@
 #include "../../library/Tag.h"
 #include "../../library/Author.h"
 
+#include <ctime>
+#include <iostream>
+
+struct LineTimer
+{
+	LineTimer(int line) : lastLine(line), start(clock()) {
+	}
+	~LineTimer() {
+	}
+	
+	void reset(int line)
+	{
+//		std::cerr << "Section " << lastLine << ":" << line << " finished at "
+//		          << (double(clock() - start) * 1000. / CLOCKS_PER_SEC) << " ms"
+//		          << std::endl;
+//		std::cerr.flush();
+		lastLine = line;
+		start = clock();
+	}
+
+	int lastLine;
+	clock_t start;
+};
+
 shared_ptr<Book> BooksDBUtil::getBook(const std::string &filePath, bool checkFile) {
+	LineTimer timer(__LINE__);
 	const std::string physicalFilePath = ZLFile(filePath).physicalFilePath();
 
 	ZLFile file(physicalFilePath);
+	timer.reset(__LINE__);
 	if (checkFile && !file.exists()) {
 		return 0;
 	}
-
+	
+	timer.reset(__LINE__);
 	if (!checkFile || checkInfo(file)) {
 		shared_ptr<Book> book = loadFromDB(filePath);
+		timer.reset(__LINE__);
 		if (!book.isNull() && isBookFull(*book)) {
+			timer.reset(__LINE__);
 			return book;
 		}
 	} else {
 		if (physicalFilePath != filePath) {
 			resetZipInfo(file);
 		}
+		timer.reset(__LINE__);
 		saveInfo(file);
 	}
+	timer.reset(__LINE__);
 
 	shared_ptr<Book> book = Book::loadFromFile(ZLFile(filePath));
 	if (book.isNull()) {
 		return 0;
 	}
+	timer.reset(__LINE__);
 	BooksDB::Instance().saveBook(book);
+	timer.reset(__LINE__);
 	return book;
 }
 

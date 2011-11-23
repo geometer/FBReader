@@ -18,6 +18,7 @@
  */
 
 #include <string>
+#include <cstring>
 
 #include "ZLCharSequence.h"
 
@@ -76,6 +77,7 @@ ZLCharSequence& ZLCharSequence::operator= (const ZLCharSequence& other) {
 
 std::string ZLCharSequence::toHexSequence() const { 
 	std::string result;
+	result.reserve(mySize * 4);
 	static const char table[] = "0123456789abcdef";
 	for (size_t count = 0;; ++count) {
 		result += "0x";
@@ -90,17 +92,8 @@ std::string ZLCharSequence::toHexSequence() const {
 }
 
 int ZLCharSequence::compareTo(const ZLCharSequence &other) const {
-	int difference = mySize - other.mySize;
-	if (difference != 0) {
-		return difference;
+	if (mySize != other.mySize) {
+		return mySize - other.mySize;
 	}
-	for (size_t i = 0; i < mySize; ++i) {
-		int a = (int)(unsigned int)(unsigned char) myHead[i];
-		int b = (int)(unsigned int)(unsigned char) other.myHead[i];
-		difference = a - b;
-		if (difference != 0) {
-			return difference;
-		}
-	}
-	return 0;
+	return memcmp(myHead, other.myHead, mySize);
 }

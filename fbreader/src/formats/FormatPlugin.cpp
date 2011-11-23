@@ -25,7 +25,32 @@
 
 #include "../library/Book.h"
 
+#include <ctime>
+#include <iostream>
+
+struct LineTimer
+{
+	LineTimer(int line) : lastLine(line), start(clock()) {
+	}
+	~LineTimer() {
+	}
+	
+	void reset(int line)
+	{
+		std::cerr << "Section " << lastLine << ":" << line << " finished at "
+		          << (double(clock() - start) * 1000. / CLOCKS_PER_SEC) << " ms"
+		          << std::endl;
+		std::cerr.flush();
+		lastLine = line;
+		start = clock();
+	}
+
+	int lastLine;
+	clock_t start;
+};
+
 void FormatPlugin::detectEncodingAndLanguage(Book &book, ZLInputStream &stream) {
+	LineTimer timer(__LINE__);
 	std::string language = book.language();
 	std::string encoding = book.encoding();
 	if (!encoding.empty() && !language.empty()) {
@@ -33,32 +58,41 @@ void FormatPlugin::detectEncodingAndLanguage(Book &book, ZLInputStream &stream) 
 	}
 
 	PluginCollection &collection = PluginCollection::Instance();
+	timer.reset(__LINE__);
 	if (language.empty()) {
 		language = collection.DefaultLanguageOption.value();
 	}
 	if (encoding.empty()) {
 		encoding = collection.DefaultEncodingOption.value();
 	}
+	timer.reset(__LINE__);
 	if (collection.LanguageAutoDetectOption.value() && stream.open()) {
+		timer.reset(__LINE__);
 		static const int BUFSIZE = 65536;
 		char *buffer = new char[BUFSIZE];
 		const size_t size = stream.read(buffer, BUFSIZE);
 		stream.close();
-		shared_ptr<ZLLanguageDetector::LanguageInfo> info =
-			ZLLanguageDetector().findInfo(buffer, size);
+		timer.reset(__LINE__);
+		ZLLanguageDetector detector;
+		timer.reset(__LINE__);
+		shared_ptr<ZLLanguageDetector::LanguageInfo> info = detector.findInfo(buffer, size);
+		timer.reset(__LINE__);
 		delete[] buffer;
+		timer.reset(__LINE__);
 		if (!info.isNull()) {
 			if (!info->Language.empty()) {
 				language = info->Language;
 			}
 			encoding = info->Encoding;
-			if ((encoding == "US-ASCII") || (encoding == "ISO-8859-1")) {
+			if ((encoding == "ASCII") || (encoding == "ISO-8859-1") || (encoding == "US-ASCII")) {
 				encoding = "windows-1252";
 			}
 		}
 	}
+	timer.reset(__LINE__);
 	book.setEncoding(encoding);
 	book.setLanguage(language);
+	timer.reset(__LINE__);
 }
 
 void FormatPlugin::detectLanguage(Book &book, ZLInputStream &stream) {

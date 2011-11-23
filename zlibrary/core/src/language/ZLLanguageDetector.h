@@ -43,6 +43,8 @@ public:
 	shared_ptr<LanguageInfo> findInfo(const char *buffer, size_t length, int matchingCriterion = 0);
 
 private:
+	static const unsigned char utf8Length[256];
+	static std::string detectUtf8(const unsigned char *s, int maxLen, bool zeroInvalid);
     typedef std::vector<shared_ptr<ZLStatisticsBasedMatcher> > SBVector;
 	SBVector myMatchers;
 };

@@ -97,6 +97,8 @@ shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStr
 	return base;
 }
 
+#include <iostream>
+
 shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 	shared_ptr<ZLInputStream> stream;
 	
@@ -107,6 +109,7 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 			if (isDirectory()) {
 				return 0;
 			}
+			std::cerr << "Create stream " << myPath << std::endl;
 			stream = ZLFSManager::Instance().createPlainInputStream(myPath);
 			stream = envelopeCompressedStream(stream);
 			ourPlainStreamCache[myPath] = stream;
