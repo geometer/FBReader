@@ -1,5 +1,6 @@
 #include <QtScroller>
 #include <QtScrollerProperties>
+#include <QtCore/QDebug>
 
 #include "ScrollerManager.h"
 
@@ -20,10 +21,17 @@ void ScrollerManager::setScrollerProperties() {
     QtScrollerProperties::setDefaultScrollerProperties(sp);
 }
 
-void ScrollerManager::setScroll(QAbstractItemView *scrollable) {
+
+void ScrollerManager::setScroll(QAbstractItemView* scrollable) {
+    qDebug() << Q_FUNC_INFO;
     scrollable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
-    scrollable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     scrollable->setHorizontalScrollMode(QAbstractItemView::ScrollPerPixel);
+    setScroll(static_cast<QAbstractScrollArea*>(scrollable));
+}
+
+void ScrollerManager::setScroll(QAbstractScrollArea *scrollable) {
+    qDebug() << Q_FUNC_INFO;
+    scrollable->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     scrollable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     QtScroller::grabGesture(scrollable->viewport(), QtScroller::LeftMouseButtonGesture);
 }

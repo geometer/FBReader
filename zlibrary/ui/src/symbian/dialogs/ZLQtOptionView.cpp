@@ -278,7 +278,7 @@ void SpinComboOptionView::_createItem() {
         const std::string &name = ZLOptionView::name();
         QLabel *label = name.empty() ? 0 : new QLabel(::qtString(name));
 
-        myComboBox = new QComboBox;
+        myComboBox = new NewComboBox;
 
         myList = range(entry.minValue(), entry.maxValue(), entry.step());
         for (size_t i=0; i<myList.size(); ++i) {

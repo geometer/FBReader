@@ -6,12 +6,14 @@
 
 #include "ZLQtDialogContent.h"
 #include "ZLQtOptionView.h"
+#include "ScrollerManager.h"
 
 void ZLQtDialogContent::close() {
     // calls before showing content, so,
     // for instance, here can be addStretch
     myScrollArea->setWidget(myWidget);
     myScrollArea->viewport()->installEventFilter(this);
+    ScrollerManager::setScroll(myScrollArea);
     myLayout->addStretch();
 }
 
