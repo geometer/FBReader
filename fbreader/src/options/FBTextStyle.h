@@ -25,6 +25,9 @@
 class FBTextStyle : public ZLTextStyle {
 
 public:
+        static const int CHANGE_FONT_SIZE_DELTA;
+
+public:
 	static shared_ptr<ZLTextStyle> InstanceAsPtr();
 	static FBTextStyle &Instance();
 
@@ -66,6 +69,7 @@ public:
 	ZLIntegerOption AlignmentOption;
 	ZLDoubleOption LineSpaceOption;
 	ZLIntegerOption LineSpacePercentOption;
+
 };
 
 #endif /* __FBTEXTSTYLE_H__ */

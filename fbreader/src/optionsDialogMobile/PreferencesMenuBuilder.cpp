@@ -129,6 +129,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
  void PreferencesMenuBuilder::addAppearanceOptions(ZLDialogContent& content) { }
 
  void PreferencesMenuBuilder::addTextOptions(ZLDialogContent& content) {
+
      static const ZLResourceKey KEY_STYLE("style");
      static const ZLResourceKey KEY_BASE("Base");
 
@@ -141,6 +142,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
      static const ZLResourceKey KEY_STARTINDENT("leftIndent");
      static const ZLResourceKey KEY_ENDINDENT("rightIndent");
 
+     static const ZLResourceKey KEY_FONTSTYLE("fontStyle");
      static const ZLResourceKey KEY_BOLD("bold");
      static const ZLResourceKey KEY_ITALIC("italic");
      static const ZLResourceKey KEY_FONTFAMILY("font");
@@ -178,19 +180,26 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
              );
 
              myComboEntry->registerEntry(content,
-                     KEY_FONTSIZE, new ZLSimpleSpinOptionEntry(baseStyle.FontSizeOption, 2),
+                     KEY_FONTSIZE, new ZLSimpleSpinOptionEntry(baseStyle.FontSizeOption, FBTextStyle::CHANGE_FONT_SIZE_DELTA),
                      name
              );
 
              myComboEntry->registerEntry(content,
-                     KEY_BOLD, new ZLSimpleBooleanOptionEntry(baseStyle.BoldOption),
+                     KEY_FONTSTYLE,
+                     new FontStyleEntry(content.resource(KEY_FONTSTYLE),
+                                        baseStyle.BoldOption, baseStyle.ItalicOption),
                      name
              );
 
-             myComboEntry->registerEntry(content,
-                     KEY_ITALIC, new ZLSimpleBooleanOptionEntry(baseStyle.ItalicOption),
-                     name
-             );
+//             myComboEntry->registerEntry(content,
+//                     KEY_BOLD, new ZLSimpleBooleanOptionEntry(baseStyle.BoldOption),
+//                     name
+//             );
+
+//             myComboEntry->registerEntry(content,
+//                     KEY_ITALIC, new ZLSimpleBooleanOptionEntry(baseStyle.ItalicOption),
+//                     name
+//             );
 
              myComboEntry->registerEntry(content,
                      KEY_LINESPACING, new ZLTextLineSpaceOptionEntry(baseStyle.LineSpacePercentOption, content.resource(KEY_LINESPACING), false),
@@ -221,19 +230,29 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
                      );
 
                      myComboEntry->registerEntry(content,
-                             KEY_FONTSIZEDIFFERENCE, new ZLSimpleSpinOptionEntry(decoration->FontSizeDeltaOption, 2),
+                             KEY_FONTSIZEDIFFERENCE, new ZLSimpleSpinOptionEntry(decoration->FontSizeDeltaOption, FBTextStyle::CHANGE_FONT_SIZE_DELTA),
                              name
                      );
 
                      myComboEntry->registerEntry(content,
-                             KEY_BOLD, new ZLSimpleBoolean3OptionEntry(decoration->BoldOption),
+                             KEY_BOLD, new FontStyleBoolean3Entry(content.resource(KEY_BOLD), decoration->BoldOption),
                              name
                      );
 
                      myComboEntry->registerEntry(content,
-                             KEY_ITALIC, new ZLSimpleBoolean3OptionEntry(decoration->ItalicOption),
+                             KEY_ITALIC, new FontStyleBoolean3Entry(content.resource(KEY_ITALIC), decoration->ItalicOption),
                              name
                      );
+
+//                     myComboEntry->registerEntry(content,
+//                             KEY_BOLD, new ZLSimpleBoolean3OptionEntry(decoration->BoldOption),
+//                             name
+//                     );
+
+//                     myComboEntry->registerEntry(content,
+//                             KEY_ITALIC, new ZLSimpleBoolean3OptionEntry(decoration->ItalicOption),
+//                             name
+//                     );
 
                      myComboEntry->registerEntry(content,
                              KEY_ALLOWHYPHENATIONS, new ZLSimpleBoolean3OptionEntry(decoration->AllowHyphenationsOption),
@@ -337,7 +356,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
      indicatorTypeEntry->addDependentEntry(showTextPositionEntry);
 
      SpecialFontSizeEntry *fontSizeEntry =
-             new SpecialFontSizeEntry(indicatorInfo.FontSizeOption, 2, *showTextPositionEntry, *showTimeEntry);
+             new SpecialFontSizeEntry(indicatorInfo.FontSizeOption, FBTextStyle::CHANGE_FONT_SIZE_DELTA, *showTextPositionEntry, *showTimeEntry);
      content.addOption(ZLResourceKey("fontSize"), fontSizeEntry);
      indicatorTypeEntry->addDependentEntry(fontSizeEntry);
      showTextPositionEntry->addDependentEntry(fontSizeEntry);

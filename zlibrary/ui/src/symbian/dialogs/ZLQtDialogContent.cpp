@@ -6,12 +6,14 @@
 
 #include "ZLQtDialogContent.h"
 #include "ZLQtOptionView.h"
+#include "ScrollerManager.h"
 
 void ZLQtDialogContent::close() {
     // calls before showing content, so,
     // for instance, here can be addStretch
     myScrollArea->setWidget(myWidget);
     myScrollArea->viewport()->installEventFilter(this);
+    ScrollerManager::setScroll(myScrollArea);
     myLayout->addStretch();
 }
 
@@ -81,7 +83,7 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 			view = new ChoiceOptionView(name, tooltip, (ZLChoiceOptionEntry*)option, this);
 			break;
 		case ZLOptionEntry::SPIN:
-			view = new SpinOptionView(name, tooltip, (ZLSpinOptionEntry*)option, this);
+                        view = new SpinComboOptionView(name, tooltip, (ZLSpinOptionEntry*)option, this);
 			break;
 		case ZLOptionEntry::COMBO:
 			view = new ComboOptionView(name, tooltip, (ZLComboOptionEntry*)option, this);
