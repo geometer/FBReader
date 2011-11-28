@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <resources>
+    <node name="library" value="FBReader library">
+        <node name="byAuthor" value="By author">
+			<node name="summary" value="Books sorted by author"/>
+		</node>
+		<node name="byTitle" value="By title">
+			<node name="summary" value="Books sorted by title"/>
+		</node>
+		<node name="bySeries" value="By series">
+			<node name="summary" value="Books sorted by series"/>
+		</node>
+		<node name="byTag" value="By tag">
+			<node name="summary" value="Books sorted by tag"/>
+		</node>
+		<node name="recent" value="Recent">
+			<node name="summary" value="Recently opened books"/>
+		</node>
+		<node name="favorites" value="Favorites">
+			<node name="summary" value="My selected books"/>
+		</node>
+		<node name="searchResults" value="Found">
+			<node name="summary" value="Search results for: %s"/>
+		</node>
+		<node name="fileTree" value="File tree">
+			<node name="summary" value="Browse file system"/>
+		</node>
+		<node name="fileTreeRoot" value="Device">
+			<node name="summary" value="Full file system of the device"/>
+		</node>
+		<node name="fileTreeCard" value="Memory card">
+			<node name="summary" value="Memory card inserted into the device"/>
+		</node>
+		<node name="fileTreeLibrary" value="FBReader library">
+			<node name="summary" value="FBReader books directory"/>
+		</node>
+		<node name="menu">
+			<node name="localSearch" value="Local search"/>
+		</node>
+		<node name="openBook" value="Open book"/>
+		<node name="showBookInfo" value="Book info"/>
+		<node name="deleteBook" value="Delete book"/>
+		<node name="addToFavorites" value="Add to favorites"/>
+		<node name="removeFromFavorites" value="Remove from favorites"/>
+	</node>
 	<node name="libraryView">
 		<node name="authorNode">
 			<node name="expandTree" value="Show books"/>

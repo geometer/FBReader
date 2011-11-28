@@ -367,6 +367,10 @@ bool ZLUnicodeUtil::isLetter(Ucs4Char ch) {
 	}
 }
 
+bool ZLUnicodeUtil::isDigit(Ucs4Char ch) {
+    return ((48 <= ch) && (ch <= 57));
+}
+
 bool ZLUnicodeUtil::isSpace(Ucs4Char ch) {
 	return
 		((9 <= ch) && (ch <= 13)) ||

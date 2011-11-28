@@ -19,13 +19,11 @@ RecentBooksTreeNode::RecentBooksTreeNode() {
 }
 
 std::string RecentBooksTreeNode::title() const {
-        //TODO add not-toolbar resource for this node
-        return ZLResource::resource("toolbar")["showRecent"]["label"].value();
+        return ZLResource::resource("library")["recent"].value();
 }
 
 std::string RecentBooksTreeNode::subtitle() const {
-        //TODO add not-toolbar resource for this node
-        return ZLResource::resource("toolbar")["showRecent"]["tooltip"].value();
+        return ZLResource::resource("library")["recent"]["summary"].value();
 }
 
 std::string RecentBooksTreeNode::imageUrl() const {

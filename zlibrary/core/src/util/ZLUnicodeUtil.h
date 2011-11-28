@@ -59,6 +59,7 @@ public:
 	static void ucs2ToUtf8(std::string &to, const Ucs2String &from, int toLength = -1);
 	static int ucs2ToUtf8(char *to, Ucs2Char ch);
 	static bool isLetter(Ucs4Char ch);
+        static bool isDigit(Ucs4Char ch);
 	static bool isSpace(Ucs4Char ch);
 	static bool isNBSpace(Ucs4Char ch);
 	static Breakable isBreakable(Ucs4Char ch);

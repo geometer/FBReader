@@ -19,9 +19,11 @@
 
 #include <queue>
 #include <algorithm>
+#include <ZLLogger.h>
 
 #include <ZLibrary.h>
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLFile.h>
 #include <ZLDir.h>
 #include <ZLDialogManager.h>
@@ -265,6 +267,8 @@ void Library::rebuildMaps() const {
 	myBooksByAuthor.clear();
 	myTags.clear();
 	myBooksByTag.clear();
+        myFirstLetters.clear();
+        myBooksByFirstLetter.clear();
 
 	for (BookSet::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
 		if ((*it).isNull()) {
@@ -288,6 +292,12 @@ void Library::rebuildMaps() const {
 				myBooksByTag[*kt].push_back(*it);
 			}
 		}
+
+                std::string firstLetter = getFirstTitleLetter((*it)->title());
+                if (!firstLetter.empty()) {
+                    myBooksByFirstLetter[firstLetter].push_back(*it);
+                }
+
 	}
 	for (BooksByAuthor::iterator mit = myBooksByAuthor.begin(); mit != myBooksByAuthor.end(); ++mit) {
 		myAuthors.push_back(mit->first);
@@ -297,6 +307,10 @@ void Library::rebuildMaps() const {
 		myTags.push_back(mjt->first);
 		std::sort(mjt->second.begin(), mjt->second.end(), BookComparator());
 	}
+        for (BooksByFirstLetter::iterator mit = myBooksByFirstLetter.begin(); mit != myBooksByFirstLetter.end(); ++mit) {
+                myFirstLetters.push_back(mit->first);
+                std::sort(mit->second.begin(), mit->second.end(), BookComparator());
+        }
 }
 
 void Library::collectDirNames(std::set<std::string> &nameSet) const {
@@ -383,6 +397,11 @@ const TagList &Library::tags() const {
 	return myTags;
 }
 
+const FirstLetterList &Library::firstLetterTitles() const {
+        synchronize();
+        return myFirstLetters;
+}
+
 const BookList &Library::books(shared_ptr<Author> author) const {
 	synchronize();
 	return myBooksByAuthor[author];
@@ -391,6 +410,39 @@ const BookList &Library::books(shared_ptr<Author> author) const {
 const BookList &Library::books(shared_ptr<Tag> tag) const {
 	synchronize();
 	return myBooksByTag[tag];
+}
+
+const BookList &Library::books(std::string firstLetter) const {
+        synchronize();
+        return myBooksByFirstLetter[firstLetter];
+}
+
+std::string Library::getFirstTitleLetter(std::string bookTitle) {
+    const static std::string EMPTY_STRING = "";
+    ZLStringUtil::stripWhiteSpaces(bookTitle);
+    if (bookTitle.empty()) {
+        return EMPTY_STRING;
+    }
+    if (!ZLUnicodeUtil::isUtf8String(bookTitle)) {
+        ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "Library::getFirstTitleLetter   Warning! bookTitle is not in UTF-8");
+        return EMPTY_STRING;
+    }
+    ZLUnicodeUtil::Ucs4String ucs4Title;
+    ZLUnicodeUtil::utf8ToUcs4(ucs4Title,bookTitle);
+    if (ucs4Title.empty()) {
+        return EMPTY_STRING;
+    }
+
+    std::string result = EMPTY_STRING;
+    for (size_t i=0; i < ucs4Title.size(); ++i) {
+        ZLUnicodeUtil::Ucs4Char ch = ucs4Title.at(i);
+        if (ZLUnicodeUtil::isLetter(ch) || ZLUnicodeUtil::isDigit(ch)) {
+            ZLUnicodeUtil::ucs4ToUtf8(result, ZLUnicodeUtil::Ucs4String(1,ZLUnicodeUtil::toUpper(ch)));
+            return result;
+        }
+    }
+    ZLUnicodeUtil::ucs4ToUtf8(result, ZLUnicodeUtil::Ucs4String(1,ZLUnicodeUtil::toUpper(ucs4Title.at(0))));
+    return result;
 }
 
 void Library::collectSeriesTitles(shared_ptr<Author> author, std::set<std::string> &titles) const {

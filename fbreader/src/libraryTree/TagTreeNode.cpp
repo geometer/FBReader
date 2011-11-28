@@ -19,13 +19,11 @@ TagTreeNode::TagTreeNode() {
 }
 
 std::string TagTreeNode::title() const {
-        //TODO add not-toolbar resource for this node
-        return ZLResource::resource("toolbar")["byTag"]["label"].value();
+        return ZLResource::resource("library")["byTag"].value();
 }
 
 std::string TagTreeNode::subtitle() const {
-        //TODO add not-toolbar resource for this node
-        return ZLResource::resource("toolbar")["byTag"]["tooltip"].value();
+        return ZLResource::resource("library")["byTag"]["summary"].value();
 }
 
 std::string TagTreeNode::imageUrl() const {

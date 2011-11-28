@@ -22,6 +22,9 @@ CXXFLAGS += -DLIBICONV_PLUG -DDO_ICONV_CAST  -DROOTPATH=\"\" -fvisibility-inline
 
 CXXFLAGS += -D__SYMBIAN__
 
+#symbian compiler doesn't know about CLOCKS_PER_SEC, setting it manually (at random value)
+CXXFLAGS += -DCLOCKS_PER_SEC=1000
+
 #-I${SDK_ROOT}/epoc32/include/platform is needed for S^3 (and this dir absent in S^1) SDK, for using remconcoreapi (for capturing volume keys)
 
 INCPATH = -I. \

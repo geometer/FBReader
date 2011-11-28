@@ -41,6 +41,21 @@ public:
 	std::string imageUrl() const;
 };
 
+class TitleTreeNode : public FBNode {
+
+public:
+        static const ZLTypeId TYPE_ID;
+
+public:
+        const ZLTypeId &typeId() const;
+
+public:
+        TitleTreeNode();
+        std::string title() const;
+        std::string subtitle() const;
+        std::string imageUrl() const;
+};
+
 class RecentBooksTreeNode : public FBNode {
 
 public:

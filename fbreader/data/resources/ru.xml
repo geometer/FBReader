@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <resources>
+    <node name="library" value="FBReader: библиотека">
+		<node name="byAuthor" value="Авторы">
+			<node name="summary" value="Книги, разложенные по авторам"/>
+		</node>
+		<node name="byTitle" value="Названия">
+			<node name="summary" value="Книги, разложенные по названиям"/>
+		</node>
+		<node name="bySeries" value="По сериям">
+			<node name="summary" value="Книги, разложенные по сериям"/>
+		</node>
+		<node name="byTag" value="Категории">
+			<node name="summary" value="Книги, разложенные по категориям"/>
+		</node>
+		<node name="recent" value="Недавние">
+			<node name="summary" value="Книги, которые недавно открывались"/>
+		</node>
+		<node name="favorites" value="Избранное">
+			<node name="summary" value="Мои любимые книги"/>
+		</node>
+		<node name="searchResults" value="Найдено">
+			<node name="summary" value="Результаты поиска для: %s" />
+		</node>
+		<node name="fileTree" value="Файловая система">
+			<node name="summary" value="Файлы на моем устройстве"/>
+		</node>
+		<node name="fileTreeRoot" value="Устройство">
+			<node name="summary" value="Просмотр всех файлов на устройстве"/>
+		</node>
+		<node name="fileTreeCard" value="Карта памяти">
+			<node name="summary" value="Просмотр карты памяти"/>
+		</node>
+		<node name="fileTreeLibrary" value="Библиотека FBReader">
+			<node name="summary" value="Просмотр каталога с книгами"/>
+		</node>
+		<node name="menu">
+			<node name="localSearch" value="Поиск"/>
+		</node>
+		<node name="openBook" value="Читать книгу"/>
+		<node name="showBookInfo" value="Информация о книге"/>
+		<node name="deleteBook" value="Удалить книгу"/>
+		<node name="addToFavorites" value="Добавить в избранное"/>
+		<node name="removeFromFavorites" value="Убрать из избранного"/>
+	</node>
 	<node name="libraryView">
 		<node name="authorNode">
 			<node name="expandTree" value="Показать книги" />

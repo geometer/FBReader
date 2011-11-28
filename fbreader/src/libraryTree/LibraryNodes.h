@@ -112,6 +112,25 @@ private:
 	const shared_ptr<Tag> myTag;
 };
 
+class TitleNode : public FBNode {
+
+public:
+        static const ZLTypeId TYPE_ID;
+
+public:
+        TitleNode(std::string firstLetter);
+
+private:
+        const ZLResource &resource() const;
+        const ZLTypeId &typeId() const;
+        std::string imageUrl() const;
+        std::string title() const;
+        std::string subtitle() const;
+
+private:
+        const std::string myFirstLetter;
+};
+
 class BookNode : public ZLTreePageNode  {
 
 public:

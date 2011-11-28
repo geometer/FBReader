@@ -1,3 +1,6 @@
+===== 0.99.6 (future release) =====
+* Added 'By Title' library classification
+
 ===== 0.99.5 (November 21, 2011) =====
 * Added support for custom OPDS catalogs.
 * Feedbooks catalog works

@@ -19,13 +19,11 @@ AuthorTreeNode::AuthorTreeNode() {
 }
 
 std::string AuthorTreeNode::title() const {
-        //TODO add not-toolbar resource for this node
-	return ZLResource::resource("toolbar")["byAuthor"]["label"].value();
+        return ZLResource::resource("library")["byAuthor"].value();
 }
 
 std::string AuthorTreeNode::subtitle() const {
-        //TODO add not-toolbar resource for this node
-        return ZLResource::resource("toolbar")["byAuthor"]["tooltip"].value();
+        return ZLResource::resource("library")["byAuthor"]["summary"].value();
 }
 
 std::string AuthorTreeNode::imageUrl() const {

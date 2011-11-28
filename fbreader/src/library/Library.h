@@ -55,8 +55,10 @@ private:
 public:
 	const AuthorList &authors() const;
 	const TagList &tags() const;
+        const FirstLetterList &firstLetterTitles() const;
 	const BookList &books(shared_ptr<Author> author) const;
 	const BookList &books(shared_ptr<Tag> tag) const;
+        const BookList &books(std::string firstLetter) const;
 	const BookList &recentBooks() const;
 
 	enum RemoveType {
@@ -96,6 +98,8 @@ private:
 
 	void insertIntoBookSet(shared_ptr<Book> book) const;
 
+        static std::string getFirstTitleLetter(std::string bookTitle);
+
 private:
 	class Watcher : public ZLFSWatcher {
 	public:
@@ -112,11 +116,14 @@ private:
 
 	mutable AuthorList myAuthors;
 	mutable TagList myTags;
+        mutable FirstLetterList myFirstLetters;
 	typedef std::map<shared_ptr<Author>,BookList,AuthorComparator> BooksByAuthor;
 	mutable BooksByAuthor myBooksByAuthor;
 	typedef std::map<shared_ptr<Tag>,BookList,TagComparator> BooksByTag;
 	mutable BooksByTag myBooksByTag;
 	mutable BookList myRecentBooks;
+        typedef std::map<std::string,BookList/*,TitleComparator*/> BooksByFirstLetter;
+        mutable BooksByFirstLetter myBooksByFirstLetter;
 
 	mutable std::string myPath;
 	mutable bool myScanSubdirs;
