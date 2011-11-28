@@ -64,6 +64,10 @@ shared_ptr<Book> Book::loadFromFile(const ZLFile &file) {
 		return 0;	
 	}
 
+        std::string bookTitle = book->title();
+        ZLStringUtil::stripWhiteSpaces(bookTitle);
+        book->setTitle(bookTitle);
+
 	if (book->title().empty()) {
 		book->setTitle(ZLFile::fileNameToUtf8(file.name(true)));
 	}
