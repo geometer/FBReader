@@ -1008,20 +1008,34 @@
 			<node name="message" value="Не удалось загрузить книгу из сети" />
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Загрузка книги. Подождите, пожалуйста..." />
-			<node name="loadingBookList" value="Загрузка списка книг. Подождите, пожалуйста..." />
-			<node name="migrate" value="Переход на новую версию. Подождите, пожалуйста..." />
-			<node name="downloadBookList" value="Загрузка списка книг. Подождите, пожалуйста..." />
-			<node name="downloadBook" value="Загрузка книги. Подождите, пожалуйста..." />
-			<node name="downloadImages" value="Загрузка изображений. Подождите, пожалуйста..." />
-			<node name="authentication" value="Идет авторизация. Подождите, пожалуйста..." />
-			<node name="purchaseBook" value="Идет покупка книги. Подождите, пожалуйста..." />
-			<node name="initializeAuthenticationManager" value="Загрузка пользовательской информации. Подождите, пожалуйста..." />
-			<node name="loadSubCatalog" value="Загрузка каталога. Подождите, пожалуйста..." />
-			<node name="registerUser" value="Регистрируем пользователя. Подождите, пожалуйста..." />
-			<node name="passwordRecovery" value="Просим восстановить пароль. Подождите, пожалуйста..." />
-			<node name="authenticationCheck" value="Проверка учетной записи. Подождите, пожалуйста..." />
-			<node name="signOut" value="Выход из системы. Подождите, пожалуйста..." />
+			<node name="loadingBook" value="Загрузка книги..." />
+			<node name="loadingBookList" value="Загрузка списка книг..." />
+			<node name="migrate" value="Переход на новую версию..." />
+			<node name="downloadBookList" value="Загрузка списка книг..." />
+			<node name="downloadBook" value="Загрузка книги..." />
+			<node name="downloadImages" value="Загрузка изображений..." />
+			<node name="authentication" value="Идет авторизация..." />
+			<node name="purchaseBook" value="Идет покупка книги..." />
+			<node name="initializeAuthenticationManager" value="Загрузка пользовательской информации..." />
+			<node name="loadSubCatalog" value="Загрузка каталога..." />
+			<node name="registerUser" value="Регистрируем пользователя..." />
+			<node name="passwordRecovery" value="Просим восстановить пароль..." />
+			<node name="authenticationCheck" value="Проверка учетной записи..." />
+			<node name="signOut" value="Выход из системы..." />
+
+            <node name="read" value="Загрузка книги..." />
+			<node name="readDemo" value="Загрузка фрагмента..." />
+			<node name="downloadDemo" value="Скачивание фрагмента..." />
+			<node name="download" value="Скачивание книги..." />
+			<node name="buy" value="Покупка книги..." />
+			<node name="delete" value="Удаление книги..." />
+			<node name="openInBrowser" value="Открытие браузера..." />
+			<node name="dontShow" value="Подождите, пожалуйста..." />
+			<node name="login" value="Авторизация..." />
+			<node name="logout" value="Выход..." />
+			<node name="refillAccount" value="Пополнение счета..." />
+			<node name="register" value="Регистрация нового аккаунта..." />
+			<node name="reload" value="Обновление..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Покупка книги" />

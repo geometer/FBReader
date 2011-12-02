@@ -1006,34 +1006,34 @@
 			<node name="message" value="Can&apos;t download this book at the moment" />
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Loading book. Please, wait..." />
-			<node name="loadingBookList" value="Loading library. Please, wait..." />
-			<node name="migrate" value="Upgrading to the new version. Please, wait..." />
-			<node name="downloadBookList" value="Downloading book list. Please, wait..." />
-			<node name="downloadBook" value="Downloading book. Please, wait..." />
-			<node name="downloadImages" value="Downloading images. Please, wait..." />
-			<node name="authentication" value="Authentication. Please, wait..." />
-			<node name="purchaseBook" value="Purchase book. Please, wait..." />
-			<node name="initializeAuthenticationManager" value="Downloading account information. Please, wait..." />
-			<node name="loadSubCatalog" value="Loading catalog. Please, wait..." />
-			<node name="registerUser" value="Registering new account. Please, wait..." />
-			<node name="passwordRecovery" value="Recovering password. Please, wait..." />
-			<node name="authenticationCheck" value="Account validation. Please, wait..." />
-			<node name="signOut" value="Signing out. Please, wait..." />
+			<node name="loadingBook" value="Loading book..." />
+			<node name="loadingBookList" value="Loading library..." />
+			<node name="migrate" value="Upgrading to the new version..." />
+			<node name="downloadBookList" value="Downloading book list..." />
+			<node name="downloadBook" value="Downloading book..." />
+			<node name="downloadImages" value="Downloading images..." />
+			<node name="authentication" value="Authentication..." />
+			<node name="purchaseBook" value="Purchase book..." />
+			<node name="initializeAuthenticationManager" value="Downloading account information..." />
+			<node name="loadSubCatalog" value="Loading catalog..." />
+			<node name="registerUser" value="Registering new account..." />
+			<node name="passwordRecovery" value="Recovering password..." />
+			<node name="authenticationCheck" value="Account validation..." />
+			<node name="signOut" value="Signing out..." />
 
-			<node name="read" value="Loading book. Please, wait..." />
-			<node name="readDemo" value="Loading demo. Please, wait..." />
-			<node name="downloadDemo" value="Downloading demo. Please, wait..." />
-			<node name="download" value="Downloading book. Please, wait..." />
-			<node name="buy" value="Purchase book. Please, wait..." />
-			<node name="delete" value="Deleting book. Please, wait..." />
-			<node name="openInBrowser" value="Opening in browser. Please, wait..." />
+			<node name="read" value="Loading book..." />
+			<node name="readDemo" value="Loading demo..." />
+			<node name="downloadDemo" value="Downloading demo..." />
+			<node name="download" value="Downloading book..." />
+			<node name="buy" value="Purchase book..." />
+			<node name="delete" value="Deleting book..." />
+			<node name="openInBrowser" value="Opening in browser..." />
 			<node name="dontShow" value="Please, wait..." />
-			<node name="login" value="Login. Please, wait..." />
-			<node name="logout" value="Logout. Please, wait..." />
-			<node name="refillAccount" value="Refilling account. Please, wait..." />
-			<node name="register" value="Registering new account. Please, wait..." />
-			<node name="reload" value="Refreshing. Please, wait..." />
+			<node name="login" value="Login..." />
+			<node name="logout" value="Logout..." />
+			<node name="refillAccount" value="Refilling account..." />
+			<node name="register" value="Registering new account..." />
+			<node name="reload" value="Refreshing..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Purchase book" />

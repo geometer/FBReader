@@ -128,6 +128,8 @@
 "fbreader/data/icons/filetree/symbian/tcr.png" - "!:\private\e87cc83c\pixmaps\FBReader\tcr.png"
 "fbreader/data/icons/filetree/symbian/palm.png" - "!:\private\e87cc83c\pixmaps\FBReader\palm.png"
 
+"fbreader/data/icons/loading_icon.svg" - "!:\private\e87cc83c\pixmaps\FBReader\loading_icon.svg"
+
 "zlibrary/ui/data/keynames.symbian.xml" - "!:\private\e87cc83c\zlibrary\keynames.xml"
 "zlibrary/core/data/resources/uk.xml" - "!:\private\e87cc83c\zlibrary\resources\uk.xml"
 "zlibrary/core/data/resources/eo.xml" - "!:\private\e87cc83c\zlibrary\resources\eo.xml"

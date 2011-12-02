@@ -6,9 +6,11 @@
 #include <QtGui/QWidget>
 
 #include <QtGui/QLabel>
+#include <QtGui/QPixmap>
 #include <QtGui/QProgressBar>
 #include <QtGui/QPaintEvent>
 #include <QtCore/QThread>
+#include <QtCore/QTimer>
 
 
 #include <ZLProgressDialog.h>
@@ -16,6 +18,17 @@
 
 #include "ZLQtTreeDialog.h"
 
+class LoadingIcon : public QLabel {
+    Q_OBJECT
+public:
+    LoadingIcon(QWidget* parent=0);
+private slots:
+    void rotate();
+private:
+    int myAngle;
+    QPixmap myPixmap;
+    QTimer* myTimer;
+};
 
 class ZLQtWaitDialog : public QDialog {
 
@@ -28,7 +41,8 @@ public:
 private:
 		QLayout* myLayout;
 		QLabel* myLabel;
-		QProgressBar* myProgressBar;
+                LoadingIcon* myLoadingIcon;
+                //QProgressBar* myProgressBar;
 
 friend class ZLQtProgressDialog;
 };
