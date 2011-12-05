@@ -31,6 +31,7 @@ namespace MenuItemParameters {
     int getMenuDialogHeight();
     int getTapBottomZoneSize();
     QSize getItemSize();
+    QSize getSmallItemSize();
     QSize getImageSize();
     QSize getImageZoneSize();
     QFont getFont();
