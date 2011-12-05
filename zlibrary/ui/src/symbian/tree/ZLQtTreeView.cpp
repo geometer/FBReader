@@ -3,10 +3,46 @@
 
 #include "ZLQtTreeModel.h"
 #include "ZLQtTreeView.h"
+#include "../dialogs/ZLQtProgressDialog.h"
 
 ZLQtTreeView::ZLQtTreeView(QWidget *parent) :  QListView(parent) {
+
+//    myLoadingIcon = new LoadingIconV2(this);
+
+//    connect(myLoadingIcon, SIGNAL(rotated()), this, SLOT(paint()));
+//    //connect(myLoadingIcon, SIGNAL(rotated()), this, SLOT(update());
+
+//    this->setUpdatesEnabled(true);
+
 }
 
+void ZLQtTreeView::paintEvent(QPaintEvent *event) {
+    //qDebug() << Q_FUNC_INFO;
+    QListView::paintEvent(event);
+//    QPixmap currentFrame = myLoadingIcon->getPixmap();
+
+//    QRect frameRect = currentFrame.rect();
+
+//   // Only redraw when the frame is in the invalidated area
+//   frameRect.moveCenter(rect().center());
+//   if (frameRect.intersects(event->rect()))
+//   {
+//      QPainter painter(this->viewport());
+//      painter.drawPixmap(
+//         frameRect.left(),
+//         frameRect.top(),
+//         currentFrame);
+//   }
+
+//    QPainter painter2(this->viewport());
+//    painter2.drawPixmap(0,0,myPixmap);
+//    painter2.end();
+}
+
+void ZLQtTreeView::paint() {
+    qDebug() << Q_FUNC_INFO;
+    update();
+}
 
 SubtitleDelegate::SubtitleDelegate(QObject *parent) : QStyledItemDelegate(parent) {
 

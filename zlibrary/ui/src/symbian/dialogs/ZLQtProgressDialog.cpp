@@ -19,7 +19,6 @@
 LoadingIcon::LoadingIcon(QWidget* parent) : QLabel(parent), myAngle(0) {
     const int ICON_WIDTH = 30;
     const int ICON_HEIGHT = ICON_WIDTH;
-    const int REFRESH_TIME = 100;
     QString iconFile = QString::fromStdString(ZLibrary::ApplicationImageDirectory()) +
                        QString::fromStdString(ZLibrary::FileNameDelimiter) +
                        "loading_icon.svg";
@@ -27,9 +26,28 @@ LoadingIcon::LoadingIcon(QWidget* parent) : QLabel(parent), myAngle(0) {
     myTimer = new QTimer(this);
     myPixmap = QPixmap(iconFile);
     myPixmap = myPixmap.scaled(QSize(ICON_WIDTH, ICON_HEIGHT), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    this->setPixmap(myPixmap);
+    //this->setPixmap(myPixmap);
     connect(myTimer,SIGNAL(timeout()), this, SLOT(rotate()));
+    this->hide();
+
+}
+
+void LoadingIcon::moveToCenter(QSize size) {
+    move( (size.width() - myPixmap.width()) / 2,
+          (size.height() - myPixmap.height()) / 2
+        );
+}
+
+void LoadingIcon::start() {
+    this->show();
+    const int REFRESH_TIME = 100;
     myTimer->start(REFRESH_TIME);
+}
+
+void LoadingIcon::finish() {
+    qDebug() << Q_FUNC_INFO;
+    myTimer->stop();
+    this->hide();
 }
 
 void LoadingIcon::rotate() {
@@ -48,6 +66,7 @@ void LoadingIcon::rotate() {
     painter.drawPixmap(0,0,myPixmap);
     painter.end();
     this->setPixmap(tmpPixmap);
+    QWidget::raise();
 }
 
 ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myDialog(0) {
@@ -114,6 +133,7 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message, QWidget* parent) : QD
 		myLabel->setWordWrap(true);
 
                 myLoadingIcon = new LoadingIcon;
+                myLoadingIcon->start();
 
 //		myProgressBar = new QProgressBar;
 //		myProgressBar->setRange(0,0);

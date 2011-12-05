@@ -13,6 +13,7 @@
 class WaitWidget;
 class TreeActionListener;
 class TreeNodeActionsMenu;
+class LoadingIcon;
 
 class ZLQtTreeDialog : public QDialog, public ZLTreeDialog{
 	Q_OBJECT;
@@ -30,36 +31,21 @@ public:
 	void onNodeEndRemove();
 	void onNodeUpdated(ZLTreeNode *node);
 
+public:
+        void paintEvent(QPaintEvent *event);
+        void resizeEvent(QResizeEvent *event);
+
 public slots:
 	void back();
 	void enter(QModelIndex index);
         void onCurrentNodeChanged(const ZLTreeNode* node);
 
 private:
-        WaitWidget* myWaitWidget;
-        shared_ptr<ZLExecutionData::Listener> myWaitWidgetListener;
+        shared_ptr<ZLExecutionData::Listener> myListener;
         ZLQtTreeView* myView;
 	ZLQtTreeModel* myModel;
+        LoadingIcon* myLoadingIcon;
         TreeNodeActionsMenu* myActionsMenu;
-};
-
-class WaitWidget : public QWidget {
-    Q_OBJECT
-public:
-    WaitWidget(QWidget* parent = 0);
-
-public slots:
-    void showPercent(int ready, int full);
-    void finished(const std::string &error);
-
-//    int value() const { return myValue; }
-//    int maximumValue() const { return myMaximum; }
-//    bool isInfinite() const { return myValue == -1; }
-
-private:
-    QProgressBar* myProgressBar;
-//    int myValue;
-//    int myMaximum;
 };
 
 class TreeActionListener : public QObject, public ZLExecutionData::Listener {

@@ -22,6 +22,10 @@ class LoadingIcon : public QLabel {
     Q_OBJECT
 public:
     LoadingIcon(QWidget* parent=0);
+    void moveToCenter(QSize size);
+public slots:
+    void start();
+    void finish();
 private slots:
     void rotate();
 private:

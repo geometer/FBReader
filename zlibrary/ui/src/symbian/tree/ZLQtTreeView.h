@@ -10,15 +10,21 @@
 
 #include "../menu/DrillDownMenu.h"
 
+class LoadingIconV2;
+
 class ZLQtTreeView : public QListView {
     Q_OBJECT
 public:
     explicit ZLQtTreeView(QWidget *parent = 0);
+    void paintEvent(QPaintEvent *e);
 
 signals:
 
 public slots:
+    void paint();
 
+private:
+    LoadingIconV2* myLoadingIcon;
 };
 
 class SubtitleDelegate : public QStyledItemDelegate {

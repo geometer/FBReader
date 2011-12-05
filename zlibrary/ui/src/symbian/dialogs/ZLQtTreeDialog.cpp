@@ -20,14 +20,14 @@
 
 ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	QVBoxLayout* layout = new QVBoxLayout(this);
-        myWaitWidget = new WaitWidget;
-
         TreeActionListener* listener = new TreeActionListener;
         //because we should have a shared_ptr
-        myWaitWidgetListener = listener;
+        myListener = listener;
+
+        myLoadingIcon = new LoadingIcon(this);
 
         myView = new ZLQtTreeView;
-        myModel = new ZLQtTreeModel(rootNode(), this, myWaitWidgetListener);
+        myModel = new ZLQtTreeModel(rootNode(), this, myListener);
 	myView->setModel(myModel);
         myView->setItemDelegate(new SubtitleDelegate);
 
@@ -46,15 +46,15 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 
         connect(myView, SIGNAL(clicked(QModelIndex)), this, SLOT(enter(QModelIndex)), Qt::QueuedConnection);
 
-        layout->addWidget(myWaitWidget);
 	layout->addWidget(myView);
 
 #ifndef 	__SYMBIAN__
         QPushButton* button = new ButtonAction(action);
 	layout->addWidget(button);
 #endif
-        connect(listener,SIGNAL(percentChanged(int,int)), myWaitWidget, SLOT(showPercent(int,int)));
-        connect(listener,SIGNAL(finishedHappened(std::string)), myWaitWidget, SLOT(finished(std::string)));
+
+        connect(listener, SIGNAL(percentChanged(int,int)), myLoadingIcon, SLOT(start()));
+        connect(listener, SIGNAL(finishedHappened(std::string)), myLoadingIcon, SLOT(finish()));
 
     QAction* treeActionsMenu = new QAction(this);
 #ifdef __SYMBIAN__
@@ -101,6 +101,7 @@ void ZLQtTreeDialog::run() {
 #else
         setFixedSize(400,300);
 #endif
+        myLoadingIcon->moveToCenter(this->size());
 	exec();
 }
 
@@ -127,24 +128,13 @@ void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode *node) {
         myModel->onNodeUpdated(node);
 }
 
-WaitWidget::WaitWidget(QWidget* parent) : QWidget(parent) {
-    myProgressBar = new QProgressBar;
-    QHBoxLayout* layout = new QHBoxLayout;
-    layout->addWidget(myProgressBar);
-    this->setLayout(layout);
-    this->hide(); // hide by default
-
+void ZLQtTreeDialog::paintEvent(QPaintEvent *event) {
+    QDialog::paintEvent(event);
 }
 
-void WaitWidget::showPercent(int ready, int full) {
-    myProgressBar->setRange(0,full);
-    myProgressBar->setValue(ready);
-    this->show();
-}
-
-void WaitWidget::finished(const std::string &error) {
-    Q_UNUSED(error);
-    this->hide();
+void ZLQtTreeDialog::resizeEvent(QResizeEvent *event) {
+    QDialog::resizeEvent(event);
+    myLoadingIcon->moveToCenter(event->size());
 }
 
 TreeActionListener::TreeActionListener() : myIsFinished(false) {
