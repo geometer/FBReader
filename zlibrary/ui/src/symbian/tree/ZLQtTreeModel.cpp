@@ -20,6 +20,9 @@
 
 #include "../menu/DrillDownMenu.h"
 
+//TODO remove including this:
+#include "../../../fbreader/src/bookmodel/TOCTreeNodes.h"
+
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, shared_ptr<ZLExecutionData::Listener> listener, QObject *parent) :
     QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog), myListener(listener) {
     myCurrentNode = &myRootNode;
@@ -94,6 +97,25 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                     else
                             return QString("No title");
             case Qt::DecorationRole:
+
+                //TODO move this hack away (should not know about fbreader's TOC Tree)
+                /*
+                  This is was made because of following reasons (it's need simple nice solve):
+                  1. Very long time extracting of Book Covers (BookNode)
+                  2. And, we can't call imageUrl() from Node to see, will it be long,
+                     so imageUrl() calls from other thread
+                  3. Also, there's caching used.
+
+                  Summary: Looks like, ImageProvider class is very unnecessary here, and
+                  should load book cover as lazy operations in FBReader code (maybe?)
+                */
+                if (const ReferenceTreeNode *titledNode = zlobject_cast<const ReferenceTreeNode*>(node)) {
+                    return QVariant();
+                }
+                if (const ReferenceNode *titledNode = zlobject_cast<const ReferenceNode*>(node)) {
+                    return QVariant();
+                }
+
                 //TODO check for asking decoration role only for items on screen
                 if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
                     return myImageProvider->getImageForNode(titledNode);
@@ -104,6 +126,7 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                             return QString::fromStdString(titledNode->subtitle());
                     }
             case Qt::SizeHintRole:
+                    //return MenuItemParameters::getSmallItemSize();
                     return MenuItemParameters::getItemSize();
             case Qt::FontRole:
                 return MenuItemParameters::getFont();

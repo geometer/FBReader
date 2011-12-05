@@ -70,7 +70,7 @@
 		</node>
 	</node>
 	<node name="networkView">
-        <node name="addCustomCatalog" value="Add network library"/>
+        <node name="addCustomCatalog" value="Add..."/>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Expand"/>
 			<node name="collapseTree" value="Collapse"/>
@@ -577,7 +577,7 @@
 						<node name="summaryOn" value="Double tap to run navigation dialog/menu"/>
 						<node name="summaryOff" value="Ignore double taps"/>
 					</node>
-					<node name="volumeKeys" value="Turn page with volume keys">
+					<node name="volumeKeys" value="Also turn page with volume keys">
 						<node name="summaryOn" value="Use volume keys to turn the pages"/>
 						<node name="summaryOff" value="Keep volume keys for sound"/>
 					</node>
