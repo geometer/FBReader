@@ -39,7 +39,7 @@ private:
     void drawHighlight(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 private:
     static QRect getCenteredRectangle(QRect zoneRect, QSize imageSize);
-    static int getTextLeftMargin(const QStyleOptionViewItem &option);
+    static int getTextLeftMargin(const QStyleOptionViewItem &option, const QModelIndex &index);
     static int getLeftMargin();
 
 };

@@ -72,6 +72,7 @@ void SubtitleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
 void SubtitleDelegate::drawTitle(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
     QString title = index.data(Qt::DisplayRole).toString();
+    QString subtitle = index.data(ZLQtTreeModel::SubTitleRole).toString();
     if (title.isEmpty()) {
         return;
     }
@@ -80,13 +81,22 @@ void SubtitleDelegate::drawTitle(QPainter *painter, const QStyleOptionViewItem &
     painter->setPen( option.state & QStyle::State_HasFocus ?
                      option.palette.highlightedText().color() :
                      option.palette.text().color());
-    int centerY = option.rect.bottom() - option.rect.size().height()/2;
-    QRect textRect(option.rect.topLeft(), QPoint(option.rect.right(), centerY));
-    textRect.adjust(getTextLeftMargin(option), 0,0,0);
+
+    QRect textRect;
+    int alignFlags = Qt::AlignCenter;
+    if (subtitle.isEmpty()) {
+        textRect = option.rect;
+        alignFlags = Qt::AlignVCenter;
+    } else {
+        int centerY = option.rect.bottom() - option.rect.size().height()/2;
+        textRect = QRect(option.rect.topLeft(), QPoint(option.rect.right(), centerY));
+        alignFlags = Qt::AlignBottom;
+    }
+    textRect.adjust(getTextLeftMargin(option, index), 0,0,0);
 
     painter->setFont(MenuItemParameters::getFont());
     QString elidedSubtitle = painter->fontMetrics().elidedText(title,Qt::ElideRight, textRect.width());
-    painter->drawText(textRect, Qt::AlignBottom,  elidedSubtitle);
+    painter->drawText(textRect, alignFlags,  elidedSubtitle);
     painter->restore();
 }
 
@@ -104,7 +114,7 @@ void SubtitleDelegate::drawSubtitle(QPainter *painter, const QStyleOptionViewIte
     int centerY = option.rect.top() + option.rect.size().height()/2;
     QRect textRect(QPoint(option.rect.left(), centerY), option.rect.bottomRight());
 
-    textRect.adjust(getTextLeftMargin(option), 0,0,0);
+    textRect.adjust(getTextLeftMargin(option, index), 0,0,0);
 
     painter->setFont(MenuItemParameters::getSubtitleFont());
     QString elidedSubtitle = painter->fontMetrics().elidedText(subtitle,Qt::ElideRight, textRect.width());
@@ -169,10 +179,15 @@ void SubtitleDelegate::drawHighlight(QPainter *painter, const QStyleOptionViewIt
 
 QSize SubtitleDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
     //qDebug() << Q_FUNC_INFO << index << QStyledItemDelegate::sizeHint(option,index) << MenuItemParameters::getItemSize();
-    //return MenuItemParameters::getItemSize();
-    return QStyledItemDelegate::sizeHint(option,index);
+    QPixmap pixmap = index.data(Qt::DecorationRole).value<QPixmap>();
+    if (pixmap.isNull()) {
+        qDebug() << Q_FUNC_INFO << "pixmap is null";
+        return MenuItemParameters::getSmallItemSize();
+    }
+    return MenuItemParameters::getItemSize();
+    //return QStyledItemDelegate::sizeHint(option,index);
 }
-\
+
 QRect SubtitleDelegate::getCenteredRectangle(QRect zoneRect, QSize imageSize) {
     if (zoneRect.width() < zoneRect.width() || zoneRect.height() < zoneRect.height() ) {
         qDebug() << "SubtitleDelegate::getCenteredRectangle -- imageSize is more then zoneRect" << zoneRect << imageSize;
@@ -183,16 +198,21 @@ QRect SubtitleDelegate::getCenteredRectangle(QRect zoneRect, QSize imageSize) {
                           imageSize);
 }
 
-int SubtitleDelegate::getTextLeftMargin(const QStyleOptionViewItem &option) {
+int SubtitleDelegate::getTextLeftMargin(const QStyleOptionViewItem &option, const QModelIndex &index) {
 //    qDebug() << "GET_TEXT_LEFT_MARGIN";
 //    qDebug() << QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, &option); // 3
 //    qDebug() << QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing, &option); // 6
 //    const int textMargin = QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, &option) + 2;
 //    const int iconMargin = MenuItemParameters::getImageZoneSize().width() +
 //                           QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing, &option);
-    const int textMargin = 0;
-    const int iconMargin = MenuItemParameters::getImageZoneSize().width(); //+
-                           //QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing, &option);
+    int textMargin = 0;
+    int iconMargin = 0;
+
+    QPixmap pixmap = index.data(Qt::DecorationRole).value<QPixmap>();
+    if (!pixmap.isNull()) {
+        iconMargin = MenuItemParameters::getImageZoneSize().width(); //+
+                     //QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing, &option);
+    }
     return getLeftMargin() + textMargin + iconMargin;
 }
 

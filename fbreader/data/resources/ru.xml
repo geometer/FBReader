@@ -70,7 +70,7 @@
 		</node>
 	</node>
 	<node name="networkView">
-        <node name="addCustomCatalog" value="Добавить сетевую библиотеку"/>
+        <node name="addCustomCatalog" value="Добавить..."/>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Развернуть" />
 			<node name="collapseTree" value="Свернуть" />
@@ -478,7 +478,7 @@
 						</node>
 					</node>
 				</node>
-				<node name="colors" value="Цвета и обои">
+				<node name="colors" value="Цвета">
 					<node name="summary" value="Настройки цвета"/>
 					<node name="backgroundtype" value="Фон">
 						<node name="solidColor" value="Сплошной цвет"/>
@@ -500,12 +500,12 @@
 					<node name="indicator" value="Индикатор позиции" />
 					<node name="footer" value="Подвал" />
 				</node>
-				<node name="margins" value="Отступы">
+				<node name="margins" value="Поля">
 					<node name="summary" value="Поля вокруг текста"/>
-					<node name="left" value="Отступ слева"/>
-					<node name="right" value="Отступ справа"/>
-					<node name="top" value="Отступ сверху"/>
-					<node name="bottom" value="Отступ снизу"/>
+					<node name="left" value="Поле слева"/>
+					<node name="right" value="Поле справа"/>
+					<node name="top" value="Поле сверху"/>
+					<node name="bottom" value="Поле снизу"/>
 				</node>
 				<node name="scrollBar" value="Полоса прокрутки">
 					<node name="summary" value="Индикатор количества прочитанного"/>
@@ -562,12 +562,12 @@
 					<node name="summary" value="Как листать страницы"/>
 
 					<node name="enableTapScrolling" value="Листать нажатием на экран" />
-					<node name="fingerOnly" value="Scroll on Finger Tap Only" />
-					<node name="keyLinesToKeep" value="Lines to Keep per Page Scrolling" />
+					<node name="fingerOnly" value="Листать только при нажатии пальцем" />
+					<node name="keyLinesToKeep" value="Сколько строк оставлять с предыдущей страницы" />
 
-					<node name="tabScrollingZones" value="Настройка зон нажатия">
-						<node name="left-right" value="Листать при нажатии правой или левой части экрана"/>
-						<node name="up-bottom" value="Листать при нажатии верхней или нижней части экрана"/>
+					<node name="tabScrollingZones" value="Листать при нажатии">
+						<node name="left-right" value="правой/левой части экрана"/>
+						<node name="up-bottom" value="верхней/нижней части экрана"/>
 					</node>
 
 					<node name="fingerScrolling" value="Листание нажатиями">
@@ -579,7 +579,7 @@
 						<node name="summaryOn" value="По двойному нажатию открывать диалог перемещения/меню"/>
 						<node name="summaryOff" value="Игнорировать двойные нажатия"/>
 					</node>
-					<node name="volumeKeys" value="Использовать кнопки регулировки звука">
+					<node name="volumeKeys" value="В том числе иметь возможность листать кнопками регулировки звука">
 						<node name="summaryOn" value="Кнопки увеличения/уменьшения звука перелистывают страницы"/>
 						<node name="summaryOff" value="Кнопки увеличения/уменьшения звука работают как обычно"/>
 					</node>

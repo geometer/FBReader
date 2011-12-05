@@ -164,7 +164,7 @@ NiceSizeListWidgetItem::NiceSizeListWidgetItem(const QIcon &icon, const QString 
 QVariant NiceSizeListWidgetItem::data (int role) const {
     if (role == Qt::SizeHintRole){
         //qDebug() << Q_FUNC_INFO << role << index;
-        return MenuItemParameters::getItemSize();
+        return MenuItemParameters::getSmallItemSize();
     } else if (role == Qt::FontRole) {
         return MenuItemParameters::getFont();
     }
@@ -191,6 +191,19 @@ QSize MenuItemParameters::getItemSize() {
     static const int SIZE_FOR_FINGERS_MM = 12; // in millimetres
 #else
     static const int SIZE_FOR_FINGERS_MM = 25; // in millimetres
+#endif
+    static const int MAX_PART_OF_SCREEN = 5;  // if 1/5 of screen if less than SIZE_FOR_FINGERS_MM,
+                                           // set size as 1/5 of screen
+    QRect rect = qApp->desktop()->availableGeometry();
+    int height = std::min(rect.height()/MAX_PART_OF_SCREEN, MMtoPixels(SIZE_FOR_FINGERS_MM));
+    return QSize(rect.width(), height);
+}
+
+QSize MenuItemParameters::getSmallItemSize() {
+#ifdef 	__SYMBIAN__
+    static const int SIZE_FOR_FINGERS_MM = 8; // in millimetres
+#else
+    static const int SIZE_FOR_FINGERS_MM = 16; // in millimetres
 #endif
     static const int MAX_PART_OF_SCREEN = 5;  // if 1/5 of screen if less than SIZE_FOR_FINGERS_MM,
                                            // set size as 1/5 of screen
