@@ -55,6 +55,9 @@ private:
         QDialog* myTreeDialog;
 
         shared_ptr<ZLExecutionData::Listener> myListener;
+
+private: //TODO (ROOTNODE_WAITING_HACK) clean this hack
+        bool rootNodeListWaiting;
 };
 
 #endif /* __ZLQTTREEMODEL_H__ */

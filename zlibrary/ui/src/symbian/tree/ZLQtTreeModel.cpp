@@ -25,39 +25,48 @@
 
 ZLQtTreeModel::ZLQtTreeModel(ZLTreeListener::RootNode& rootNode, QDialog* treeDialog, shared_ptr<ZLExecutionData::Listener> listener, QObject *parent) :
     QAbstractListModel(parent), myRootNode(rootNode), myTreeDialog(treeDialog), myListener(listener) {
+    myRootNode.requestChildren(myListener);
+
+    //TODO (ROOTNODE_WAITING_HACK) move out this hack:
+    //it's need for showing loading icon at the time there's empty list;
+    //it's finished with first element has been added to list
+    //qDebug() << Q_FUNC_INFO << "showPercent(0,0)";
+    rootNodeListWaiting = true;
+    myListener->showPercent(0,0);
+
     myCurrentNode = &myRootNode;
     myImageProvider = new ImageProvider(ImageProvider::THUMBNAIL, this);
     connect(myImageProvider, SIGNAL(cacheUpdated()), this, SLOT(update()));
 }
 
 bool ZLQtTreeModel::back() {
-	if (myCurrentNode == &myRootNode) {
-		return false;
-	}
-	myCurrentNode = myCurrentNode->parent();
+        if (myCurrentNode == &myRootNode) {
+                return false;
+        }
+        myCurrentNode = myCurrentNode->parent();
         emit currentNodeChanged(myCurrentNode);
         //TODO fix problem:
         //when change description of catalog, it changes just in case when net libraries is opened again
-	emit layoutChanged();
-	return true;
+        emit layoutChanged();
+        return true;
 }
 
 bool  ZLQtTreeModel::enter(QModelIndex index) {
-	//return false if it was action that sucessfully executed
+        //return false if it was action that sucessfully executed
         //qDebug() << "entering " << index.row() << index.column();
-	ZLTreeNode* node = myCurrentNode->children().at(index.row());
-	if (ZLTreeActionNode *actionNode = zlobject_cast<ZLTreeActionNode*>(node)) {
-		bool result = actionNode->activate();
-		if (result == true) {
-			ZLApplication::Instance().refreshWindow();
-			return false;
-		}
+        ZLTreeNode* node = myCurrentNode->children().at(index.row());
+        if (ZLTreeActionNode *actionNode = zlobject_cast<ZLTreeActionNode*>(node)) {
+                bool result = actionNode->activate();
+                if (result == true) {
+                        ZLApplication::Instance().refreshWindow();
+                        return false;
+                }
         } else if (ZLTreePageNode *pageNode = zlobject_cast<ZLTreePageNode*>(node)) {
                 ZLQtPageDialog dialog(*pageNode,myTreeDialog);
                 connect(myTreeDialog, SIGNAL(finished(int)), &dialog, SLOT(done(int)));
                 dialog.run();
-	} else {
-		myCurrentNode = node;
+        } else {
+                myCurrentNode = node;
                 //qDebug() << "\nrequesting children";
                 myListener->showPercent(0,0); // indeterminant progress-bar
                 //TODO implement each listener for each current node, because:
@@ -67,9 +76,9 @@ bool  ZLQtTreeModel::enter(QModelIndex index) {
                 myCurrentNode->requestChildren(myListener);
                 qDebug() << Q_FUNC_INFO << "emitting current node changed";
                 emit currentNodeChanged(myCurrentNode);
-	}
+        }
         emit layoutChanged();
-	return true;
+        return true;
 }
 
 void ZLQtTreeModel::update() {
@@ -78,7 +87,7 @@ void ZLQtTreeModel::update() {
 
 int ZLQtTreeModel::rowCount(const QModelIndex &parent) const {
         //qDebug() << "asking for rowCount... returning " << myCurrentNode->children().size();
-	return myCurrentNode->children().size();
+        return myCurrentNode->children().size();
 }
 
 QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
@@ -155,6 +164,13 @@ const ZLTreeNode* ZLQtTreeModel::getTreeNode(const QModelIndex& index) const {
 }
 
 void ZLQtTreeModel::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
+
+    //TODO (ROOTNODE_WAITING_HACK) clean this hack
+    if (rootNodeListWaiting) {
+        myListener->finished();
+        rootNodeListWaiting = false;
+    }
+
     //qDebug() << Q_FUNC_INFO << parent << index << parent->childIndex();
     //TODO there should be beginInsertRows instead of layoutChanged()
     //TODO remove it, emitting signal is needed to set actions for left soft-button

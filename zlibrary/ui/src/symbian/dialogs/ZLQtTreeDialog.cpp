@@ -25,6 +25,8 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
         myListener = listener;
 
         myLoadingIcon = new LoadingIcon(this);
+        connect(listener, SIGNAL(percentChanged(int,int)), myLoadingIcon, SLOT(start()));
+        connect(listener, SIGNAL(finishedHappened(std::string)), myLoadingIcon, SLOT(finish()));
 
         myView = new ZLQtTreeView;
         myModel = new ZLQtTreeModel(rootNode(), this, myListener);
@@ -52,9 +54,6 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
         QPushButton* button = new ButtonAction(action);
 	layout->addWidget(button);
 #endif
-
-        connect(listener, SIGNAL(percentChanged(int,int)), myLoadingIcon, SLOT(start()));
-        connect(listener, SIGNAL(finishedHappened(std::string)), myLoadingIcon, SLOT(finish()));
 
     QAction* treeActionsMenu = new QAction(this);
 #ifdef __SYMBIAN__
