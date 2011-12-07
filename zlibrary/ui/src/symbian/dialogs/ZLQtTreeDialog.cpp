@@ -101,7 +101,7 @@ void ZLQtTreeDialog::run() {
 #else
         setFixedSize(400,300);
 #endif
-        myLoadingIcon->moveToCenter(this->size());
+        myLoadingIcon->moveToPosition(this->size());
 	exec();
 }
 
@@ -134,7 +134,7 @@ void ZLQtTreeDialog::paintEvent(QPaintEvent *event) {
 
 void ZLQtTreeDialog::resizeEvent(QResizeEvent *event) {
     QDialog::resizeEvent(event);
-    myLoadingIcon->moveToCenter(event->size());
+    myLoadingIcon->moveToPosition(event->size());
 }
 
 TreeActionListener::TreeActionListener() : myIsFinished(false) {

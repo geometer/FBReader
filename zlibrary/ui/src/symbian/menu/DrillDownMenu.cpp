@@ -238,6 +238,14 @@ QFont MenuItemParameters::getFont() {
     return font;
 }
 
+QFont MenuItemParameters::getWaitMessageFont() {
+    static const qreal COEF = 1.3;
+    QFont font = qApp->desktop()->font();
+    font.setPointSizeF( qreal(font.pointSizeF()*COEF) );
+    font.setBold(false);
+    return font;
+}
+
 QFont MenuItemParameters::getSubtitleFont() {
     static const qreal COEF = 0.85;
     QFont font = qApp->desktop()->font();

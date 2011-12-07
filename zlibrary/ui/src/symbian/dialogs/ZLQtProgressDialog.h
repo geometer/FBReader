@@ -22,7 +22,7 @@ class LoadingIcon : public QLabel {
     Q_OBJECT
 public:
     LoadingIcon(QWidget* parent=0);
-    void moveToCenter(QSize size);
+    void moveToPosition(QSize size);
 public slots:
     void start();
     void finish();
@@ -43,7 +43,10 @@ public:
                 void resizeEvent(QResizeEvent *event);
 
 private:
-		QLayout* myLayout;
+                static QString oneWordWrapped(QString string);
+
+private:
+                QVBoxLayout* myLayout;
 		QLabel* myLabel;
                 LoadingIcon* myLoadingIcon;
                 //QProgressBar* myProgressBar;

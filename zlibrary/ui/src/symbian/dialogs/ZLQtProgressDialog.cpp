@@ -17,7 +17,7 @@
 #include "ZLQtDialogManager.h"
 
 LoadingIcon::LoadingIcon(QWidget* parent) : QLabel(parent), myAngle(0) {
-    const int ICON_WIDTH = 30;
+    const int ICON_WIDTH = 60;
     const int ICON_HEIGHT = ICON_WIDTH;
     QString iconFile = QString::fromStdString(ZLibrary::ApplicationImageDirectory()) +
                        QString::fromStdString(ZLibrary::FileNameDelimiter) +
@@ -26,13 +26,13 @@ LoadingIcon::LoadingIcon(QWidget* parent) : QLabel(parent), myAngle(0) {
     myTimer = new QTimer(this);
     myPixmap = QPixmap(iconFile);
     myPixmap = myPixmap.scaled(QSize(ICON_WIDTH, ICON_HEIGHT), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    //this->setPixmap(myPixmap);
+    this->setFixedSize(ICON_WIDTH, ICON_HEIGHT);
     connect(myTimer,SIGNAL(timeout()), this, SLOT(rotate()));
     this->hide();
 
 }
 
-void LoadingIcon::moveToCenter(QSize size) {
+void LoadingIcon::moveToPosition(QSize size) {
     move( (size.width() - myPixmap.width()) / 2,
           (size.height() - myPixmap.height()) / 2
         );
@@ -51,6 +51,7 @@ void LoadingIcon::finish() {
 }
 
 void LoadingIcon::rotate() {
+    qDebug() << this->size();
     const int ANGLE_SPEED = 360/10;
     myAngle += ANGLE_SPEED;
     if (myAngle >= 360) {
@@ -126,10 +127,13 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message, QWidget* parent) : QD
 	   // for what reasons we use processEvents here?
 	   // qApp->processEvents();
 
-                myLayout = new QHBoxLayout;
+                myLayout = new QVBoxLayout;
 
-		myLabel = new QLabel(::qtString(message));
-		myLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+                QHBoxLayout* layout = new QHBoxLayout;
+
+                myLabel = new QLabel(oneWordWrapped(::qtString(message)));
+                myLabel->setFont(MenuItemParameters::getWaitMessageFont());
+                //myLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 		myLabel->setWordWrap(true);
 
                 myLoadingIcon = new LoadingIcon;
@@ -139,11 +143,16 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message, QWidget* parent) : QD
 //		myProgressBar->setRange(0,0);
 //                myProgressBar->setFixedWidth(qApp->desktop()->geometry().width()*COEF_PROGRESS_BAR_WIDTH);
 
-		myLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
-
-                myLayout->addWidget(myLoadingIcon);
-		myLayout->addWidget(myLabel);
+                layout->setAlignment(Qt::AlignHCenter);
+                layout->addWidget(myLoadingIcon);
+                layout->addWidget(myLabel);
                 //myLayout->addWidget(myProgressBar);
+                layout->setSpacing(10);
+
+                myLayout->addLayout(layout);
+                myLayout->addSpacing(myLoadingIcon->size().height()); // to be on bottom of center line
+
+                myLayout->setAlignment(Qt::AlignVCenter);
 
 		this->setLayout(myLayout);
 
@@ -174,4 +183,18 @@ ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message, QWidget* parent) : QD
  }
 
 ZLQtWaitDialog::~ZLQtWaitDialog() {
+}
+
+QString ZLQtWaitDialog::oneWordWrapped(QString string) {
+    const static QString SPACE = " ";
+    const static QString WRAP = "\n";
+    QString result = string.trimmed();
+
+    int index = 0;
+    while ((index = result.indexOf(SPACE + SPACE)) != -1) {
+        result.replace(SPACE + SPACE, SPACE);
+    }
+
+    result.replace(SPACE, WRAP);
+    return result;
 }
