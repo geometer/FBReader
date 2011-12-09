@@ -147,7 +147,8 @@ void myMessageOutput(QtMsgType type, const char *msg)
 void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	qInstallMsgHandler(myMessageOutput);
 	new QApplication(argc, argv);
-	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
+        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
+        QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
 	ZLibrary::parseArguments(argc, argv);
 	XMLConfigManager::createInstance();
 	ZLQtTimeManager::createInstance();
