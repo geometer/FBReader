@@ -7,36 +7,6 @@
 
 ZLQtTreeView::ZLQtTreeView(QWidget *parent) :  QListView(parent) {
 
-//    myLoadingIcon = new LoadingIconV2(this);
-
-//    connect(myLoadingIcon, SIGNAL(rotated()), this, SLOT(paint()));
-//    //connect(myLoadingIcon, SIGNAL(rotated()), this, SLOT(update());
-
-//    this->setUpdatesEnabled(true);
-
-}
-
-void ZLQtTreeView::paintEvent(QPaintEvent *event) {
-    //qDebug() << Q_FUNC_INFO;
-    QListView::paintEvent(event);
-//    QPixmap currentFrame = myLoadingIcon->getPixmap();
-
-//    QRect frameRect = currentFrame.rect();
-
-//   // Only redraw when the frame is in the invalidated area
-//   frameRect.moveCenter(rect().center());
-//   if (frameRect.intersects(event->rect()))
-//   {
-//      QPainter painter(this->viewport());
-//      painter.drawPixmap(
-//         frameRect.left(),
-//         frameRect.top(),
-//         currentFrame);
-//   }
-
-//    QPainter painter2(this->viewport());
-//    painter2.drawPixmap(0,0,myPixmap);
-//    painter2.end();
 }
 
 void ZLQtTreeView::paint() {
@@ -44,30 +14,16 @@ void ZLQtTreeView::paint() {
     update();
 }
 
-SubtitleDelegate::SubtitleDelegate(QObject *parent) : QStyledItemDelegate(parent) {
+SubtitleDelegate::SubtitleDelegate(QObject *parent) : SeparatorDelegate(parent) {
 
 }
 
 void SubtitleDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-    //qDebug() << Q_FUNC_INFO << index.data() << index.data(ZLQtTreeModel::SubTitleRole);
-    //QStyledItemDelegate::paint(painter,option,index);
-    //qDebug() << Q_FUNC_INFO << option.rect;
-
     drawHighlight(painter,option,index);
     drawIcon(painter,option,index);
     drawTitle(painter,option,index);
     drawSubtitle(painter,option,index);
-
-    //TODO clear it up before compile for Symbian
-    //draw border
-#ifndef	__SYMBIAN__
-    painter->save();
-    painter->setPen(Qt::black);
-    painter->drawPolygon(QPolygon(option.rect, true),Qt::WindingFill);
-    painter->restore();
-#endif
-
-
+    drawSeparator(painter,option,index);
 }
 
 void SubtitleDelegate::drawTitle(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
@@ -179,13 +135,7 @@ void SubtitleDelegate::drawHighlight(QPainter *painter, const QStyleOptionViewIt
 
 QSize SubtitleDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const {
     //qDebug() << Q_FUNC_INFO << index << QStyledItemDelegate::sizeHint(option,index) << MenuItemParameters::getItemSize();
-    QPixmap pixmap = index.data(Qt::DecorationRole).value<QPixmap>();
-    if (pixmap.isNull()) {
-        qDebug() << Q_FUNC_INFO << "pixmap is null";
-        return MenuItemParameters::getSmallItemSize();
-    }
-    return MenuItemParameters::getItemSize();
-    //return QStyledItemDelegate::sizeHint(option,index);
+    return QStyledItemDelegate::sizeHint(option,index);
 }
 
 QRect SubtitleDelegate::getCenteredRectangle(QRect zoneRect, QSize imageSize) {

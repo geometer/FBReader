@@ -8,14 +8,15 @@
 
 #include "DrillDownMenu.h"
 #include "ActionButtons.h"
+#include "MenuDelegate.h"
 
 DrillDownMenuDialog::DrillDownMenuDialog(bool closeAfterRun, QWidget* parent) : QDialog(parent) {
-	QVBoxLayout* layout = new QVBoxLayout(this);
-	myStackedWidget = new QStackedWidget;
-	myLabel = new QLabel;
-	myLabel->setWordWrap(true);
+        QVBoxLayout* layout = new QVBoxLayout(this);
+        myStackedWidget = new QStackedWidget;
+        myLabel = new QLabel;
+        myLabel->setWordWrap(true);
 
-	layout->addWidget(myLabel);
+        layout->addWidget(myLabel);
         layout->addWidget(myStackedWidget);
 
         const std::string& back = ZLDialogManager::Instance().buttonName(ZLResourceKey("back"));
@@ -43,23 +44,23 @@ void DrillDownMenuDialog::paintEvent(QPaintEvent *event) {
 
 bool DrillDownMenuDialog::run() {
 #ifdef __SYMBIAN__
-	setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
+        setWindowFlags(windowFlags() | Qt::WindowSoftkeysVisibleHint);
 #endif
-	setWindowState(Qt::WindowFullScreen);
-	return exec() == QDialog::Accepted;
+        setWindowState(Qt::WindowFullScreen);
+        return exec() == QDialog::Accepted;
 }
 
 bool DrillDownMenuDialog::runNoFullScreen() {
-	return exec() == QDialog::Accepted;
+        return exec() == QDialog::Accepted;
 }
 
 int DrillDownMenuDialog::exec() {
-	return QDialog::exec();
+        return QDialog::exec();
 }
 
 void DrillDownMenuDialog::showMessage(std::string message) {
-	myLabel->setText(::qtString(message));
-	myLabel->setVisible(message.empty() == false);
+        myLabel->setText(::qtString(message));
+        myLabel->setVisible(message.empty() == false);
 }
 
 void DrillDownMenuDialog::showDrillDownMenu(DrillDownMenu* menu) {
@@ -77,7 +78,7 @@ void DrillDownMenuDialog::showDrillDownMenu(DrillDownMenu* menu) {
 #ifdef __SYMBIAN__
     menu->setEditFocus(true); // for phones with keyboard: need to activate for single-click
 #endif
-	showMessage(menu->getMessage());
+        showMessage(menu->getMessage());
     myStackedWidget->update();
  }
 
@@ -88,7 +89,7 @@ void DrillDownMenuDialog::back() {
     }
     myHistory.pop_back();
     if (myHistory.isEmpty()) {
-		reject();
+                reject();
         return;
     }
     setCurrentMenu(myHistory.last());
@@ -115,15 +116,15 @@ void DrillDownMenu::addItem(const QIcon& icon, const std::string &text, ZLApplic
 }
 
 void DrillDownMenu::addItem(DrillDownMenuItem* item) {
-	QListWidget::addItem( item );
+        QListWidget::addItem( item );
 }
 
 DrillDownMenu::DrillDownMenu(QWidget *parent) : QListWidget(parent) {
+    this->setItemDelegate(new SeparatorDelegate);
     connect(this, SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)), Qt::QueuedConnection);
-	//connect(this, SIGNAL(itemActivated(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)));
+        //connect(this, SIGNAL(itemActivated(QListWidgetItem*)),this,SLOT(run(QListWidgetItem*)));
     // don't close DrillDownMenu after options dialog was closed:
     //connect(this, SIGNAL(itemActivated(QListWidgetItem*)),parent,SLOT(close()));
-
 }
 
 void DrillDownMenu::run(QListWidgetItem* item) {
@@ -131,11 +132,11 @@ void DrillDownMenu::run(QListWidgetItem* item) {
 }
 
 void DrillDownMenu::setMessage(const std::string& message) {
-	myMessage = ::qtString(message);
+        myMessage = ::qtString(message);
 }
 
 std::string DrillDownMenu::getMessage() const {
-	return ::stdString(myMessage);
+        return ::stdString(myMessage);
 }
 
 DrillDownMenuItem::DrillDownMenuItem(const QIcon &icon, const QString &text, ZLApplication::Action* action, QListWidget *view, int type) :

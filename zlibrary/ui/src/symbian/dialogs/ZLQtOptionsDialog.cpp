@@ -13,6 +13,7 @@
 #include "ZLQtUtil.h"
 #include "ScrollerManager.h"
 
+#include "../menu/MenuDelegate.h"
 #include "../menu/DrillDownMenu.h"
 #include "../menu/ActionButtons.h"
 
@@ -20,6 +21,7 @@ TabMenuWidget::TabMenuWidget(QWidget* parent): QWidget(parent) {
 	QVBoxLayout *layout = new QVBoxLayout(this);
 	myStackedWidget = new QStackedWidget;
 	myMenuWidget = new QListWidget;
+        myMenuWidget->setItemDelegate(new SeparatorDelegate);
 	layout->addWidget(myMenuWidget);
         layout->addWidget(myStackedWidget);
 	setStatus(MENU);

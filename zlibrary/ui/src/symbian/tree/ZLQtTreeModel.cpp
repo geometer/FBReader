@@ -135,7 +135,10 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                             return QString::fromStdString(titledNode->subtitle());
                     }
             case Qt::SizeHintRole:
-                    //return MenuItemParameters::getSmallItemSize();
+                    if (index.data(Qt::DecorationRole).value<QPixmap>().isNull()) {
+                        //qDebug() << Q_FUNC_INFO << "pixmap is null";
+                        return MenuItemParameters::getSmallItemSize();
+                    }
                     return MenuItemParameters::getItemSize();
             case Qt::FontRole:
                 return MenuItemParameters::getFont();
