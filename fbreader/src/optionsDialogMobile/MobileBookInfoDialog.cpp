@@ -81,16 +81,20 @@ void MobileBookInfoDialog::doFillContent(T &content, const AbstractBookInfo &boo
 
 	content.addOption(ZLResourceKey("title"), new MobileDisplayNameEntry(book.title()));
 	
-	std::string authors = ZLStringUtil::join(book.authors(), FBNode::COMMA_JOIN_SEPARATOR);
-	content.addOption(ZLResourceKey("authorDisplayName"), new MobileDisplayNameEntry(authors));
+        if (!book.authors().empty()) {
+            std::string authors = ZLStringUtil::join(book.authors(), FBNode::COMMA_JOIN_SEPARATOR);
+            content.addOption(ZLResourceKey("authorDisplayName"), new MobileDisplayNameEntry(authors));
+        }
 	
 	if (!book.tags().empty()) {
 		std::string tags = ZLStringUtil::join(book.tags(), "; ");
 		content.addOption(ZLResourceKey("tags"), new MobileDisplayNameEntry(tags));
 	}
 	
-	std::string language = ZLLanguageList::languageName(book.language());
-	content.addOption(ZLResourceKey("language"), new MobileDisplayNameEntry(language));
+        if (!book.language().empty()) {
+            std::string language = ZLLanguageList::languageName(book.language());
+            content.addOption(ZLResourceKey("language"), new MobileDisplayNameEntry(language));
+        }
 	
 	if (!book.seriesTitle().empty())
 		content.addOption(ZLResourceKey("seriesTitle"), new MobileDisplayNameEntry(book.seriesTitle()));
