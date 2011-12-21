@@ -6,6 +6,8 @@ IMAGEDIR = !!\\\\pixmaps
 APPIMAGEDIR = !!\\\\pixmaps\\\\FBReader
 OSNAME = Symbian
 
+#if change SDK_ROOT, please, repeate this change in makefiles/packaging.mk (variable SYMBIAN_SDK)
+#this is temporal approach and path to SDK should be setted in one place
 SDK_ROOT = /opt/QtSDK/Symbian/SDKs/Symbian1
 ARM_DIR = /usr/arm-none-symbianelf
 SYMBIAN_VERSION=$(shell tools/symbian_versions.py $(VERSION))

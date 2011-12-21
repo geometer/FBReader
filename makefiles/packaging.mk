@@ -2,7 +2,7 @@ VERSION = $(shell cat fbreader/VERSION)
 SOVERSIONCORE = $(shell cat zlibrary/core/SOVERSION)
 SOVERSIONTEXT = $(shell cat zlibrary/text/SOVERSION)
 TMPDIR = $(CURDIR)/fbreader-$(VERSION)
-#TODO: temporary, it shuld be declared once, in symbian.mk
+#TODO: temporary, it should be declared once, in makefiles/arch/symbian.mk
 SYMBIAN_SDK=/opt/QtSDK/Symbian/SDKs/Symbian1
 SYMBIAN_VERSION=$(shell tools/symbian_versions.py $(VERSION))
 SYMBIAN_PKG_VERSION=$(shell tools/symbian_versions.py $(VERSION) "PKG")
@@ -124,4 +124,5 @@ sis:
 
 	/usr/share/qt4/qt-symbian/bin/createpackage  FBReader_template.pkg
 	/usr/share/qt4/qt-symbian/bin/createpackage  FBReader_installer.pkg
+	@rm *.loc *.mif *.rss *.rsg *.rpp *.rsc *.pkg FBReaderVersion.ent
 	@echo "OK"	

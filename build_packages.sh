@@ -33,7 +33,7 @@ fi
 
 create_tmpdir() {
 	mkdir $tmpdir
-	cp -r Makefile build_packages.sh libs zlibrary fbreader makefiles README.build CHANGES* distributions distributions-nonGPL ChangeLog $tmpdir
+	cp -r Makefile build_packages.sh libs zlibrary fbreader makefiles tools README.build CHANGES* distributions distributions-nonGPL ChangeLog $tmpdir
 	rm -rf `find $tmpdir -name ".svn"`
 	make -C $tmpdir distclean 1> /dev/null 2>&1
 
