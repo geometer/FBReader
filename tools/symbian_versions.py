@@ -2,12 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import sys
-#import optparse
-import re
-import os
-import random
-import time
-import alsaaudio
 
 def transform(version):
 	#4.07.1 => 00040701
