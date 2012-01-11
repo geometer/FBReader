@@ -47,6 +47,7 @@ ZLMenubarCreator::ZLMenubarCreator(ZLMenubar &menubar) : myMenubar(menubar) {
 
 static const std::string ITEM = "item";
 static const std::string SUBMENU = "submenu";
+static const std::string SEPARATOR = "separator";
 
 void ZLMenubarCreator::startElementHandler(const char *tag, const char **attributes) {
 	ZLMenu &menu =
@@ -62,7 +63,9 @@ void ZLMenubarCreator::startElementHandler(const char *tag, const char **attribu
 		if (id != 0) {
 			mySubmenuStack.push_back(menu.addSubmenu(ZLResourceKey(id)));
 		}
-	}
+        } else if (SEPARATOR == tag) {
+               menu.addSeparator();
+        }
 }
 
 void ZLMenubarCreator::endElementHandler(const char *tag) {
