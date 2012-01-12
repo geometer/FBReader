@@ -151,6 +151,7 @@ void ZLTreeNode::insert(ZLTreeNode *node, size_t index) {
 	if (handler)
 		handler->onNodeBeginInsert(this, index);
 	List::iterator it = myChildren.insert(myChildren.begin() + index, node);
+        ++it; //because insert returns iterator to inserted item, and there's no necessary to increase it's index
 	for (; it != myChildren.end(); ++it) {
 		++(*it)->myChildIndex;
 	}
