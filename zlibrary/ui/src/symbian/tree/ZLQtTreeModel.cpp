@@ -86,6 +86,7 @@ void ZLQtTreeModel::update() {
 }
 
 int ZLQtTreeModel::rowCount(const QModelIndex &parent) const {
+        Q_UNUSED(parent);
         //qDebug() << "asking for rowCount... returning " << myCurrentNode->children().size();
         return myCurrentNode->children().size();
 }
@@ -119,9 +120,11 @@ QVariant ZLQtTreeModel::data(const QModelIndex &index, int role) const {
                   should load book cover as lazy operations in FBReader code (maybe?)
                 */
                 if (const ReferenceTreeNode *titledNode = zlobject_cast<const ReferenceTreeNode*>(node)) {
+                    Q_UNUSED(titledNode);
                     return QVariant();
                 }
                 if (const ReferenceNode *titledNode = zlobject_cast<const ReferenceNode*>(node)) {
+                    Q_UNUSED(titledNode);
                     return QVariant();
                 }
 
@@ -167,7 +170,8 @@ const ZLTreeNode* ZLQtTreeModel::getTreeNode(const QModelIndex& index) const {
 }
 
 void ZLQtTreeModel::onNodeBeginInsert(ZLTreeNode *parent, size_t index) {
-
+    Q_UNUSED(parent);
+    Q_UNUSED(index);
     //TODO (ROOTNODE_WAITING_HACK) clean this hack
     if (rootNodeListWaiting) {
         myListener->finished();
@@ -190,6 +194,8 @@ void ZLQtTreeModel::onNodeEndInsert() {
 }
 
 void ZLQtTreeModel::onNodeBeginRemove(ZLTreeNode *parent, size_t index) {
+    Q_UNUSED(parent);
+    Q_UNUSED(index);
     //qDebug() << Q_FUNC_INFO << parent << index;
     //TODO there should be beginRemoveRows instead of layoutChanged()
     emit layoutChanged();
@@ -203,6 +209,7 @@ void ZLQtTreeModel::onNodeEndRemove() {
 //    endRemoveRows();
 }
 void ZLQtTreeModel::onNodeUpdated(ZLTreeNode *node) {
+    Q_UNUSED(node);
     //qDebug() << Q_FUNC_INFO << node;
     //TODO there should be dataChanged instead of layoutChanged()
     emit layoutChanged();

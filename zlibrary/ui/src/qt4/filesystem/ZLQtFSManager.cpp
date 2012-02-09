@@ -68,6 +68,7 @@ std::string ZLQtFSManager::convertFilenameToUtf8(const std::string &name) const 
 }
 
 shared_ptr<ZLMimeType> ZLQtFSManager::mimeType(const std::string &path) const {
+        Q_UNUSED(path);
 	// TODO: implement
 	return ZLMimeType::EMPTY;
 }

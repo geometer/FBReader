@@ -141,6 +141,7 @@ void ZLQtViewWidget::Widget::mousePressEvent(QMouseEvent *event) {
 }
 
 void ZLQtViewWidget::Widget::mouseReleaseEvent(QMouseEvent *event) {
+    Q_UNUSED(event);
     //why empty implentation? see comment in mousePressentEvent method
 }
 

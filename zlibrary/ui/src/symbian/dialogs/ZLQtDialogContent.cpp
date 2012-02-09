@@ -100,6 +100,8 @@ void ZLQtDialogContent::createViewByEntry(const std::string &name, const std::st
 		case ZLOptionEntry::STATIC:
 			view = new StaticTextOptionView(name, tooltip, (ZLStaticTextOptionEntry*)option, this);
 			break;
+                case ZLOptionEntry::MULTILINE:
+                        break;
 		case ZLOptionEntry::PATH:
 			view = new PathOptionView(name, tooltip, (ZLPathOptionEntry*)option, this);
 			break;

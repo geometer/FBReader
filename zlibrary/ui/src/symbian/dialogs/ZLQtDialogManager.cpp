@@ -49,6 +49,9 @@ void ZLQtDialogManager::errorBox(const ZLResourceKey &key, const std::string &me
 }
 
 int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const {
+        Q_UNUSED(button0);
+        Q_UNUSED(button1);
+        Q_UNUSED(button2);
 //        //TODO reimplement this, due to errors on Symbian (how to show 3 buttons as soft buttons?)
         // button2, button0, button1 -- because on symbian, there's no third button (middle button is missed)
         // we don't show button 1
@@ -64,6 +67,7 @@ shared_ptr<ZLProgressDialog> ZLQtDialogManager::createProgressDialog(const ZLRes
 }
 
 bool ZLQtDialogManager::isClipboardSupported(ClipboardType type) const {
+        Q_UNUSED(type);
 	return true;
 }
 

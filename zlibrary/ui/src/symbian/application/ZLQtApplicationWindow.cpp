@@ -41,7 +41,8 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
         myApplicationWindow = new ZLQtApplicationWindow(application);
 }
 
-ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow* parent, DrillDownMenuDialog* dialog,  ZLMenubar::PlainItem& item) : myParent(parent), MenuAction(dialog), myItem(item) { }
+ZLQtMenuAction::ZLQtMenuAction(ZLQtApplicationWindow* parent, DrillDownMenuDialog* dialog,  ZLMenubar::PlainItem& item)
+    : MenuAction(dialog), myItem(item), myParent(parent) { }
 
 void ZLQtMenuAction::run() {
         //commented, because
@@ -135,6 +136,7 @@ void ZLQtApplicationWindow::addMenuItem(ZLMenu::ItemPtr item) {
 }
 
 void ZLQtApplicationWindow::setMenuItemState(ZLMenu::ItemPtr item, bool visible, bool enabled) {
+        Q_UNUSED(enabled);
 	DrillDownMenuItem *menuItem = myMenuItems[&*item];
 	if (menuItem != 0) {
 		menuItem->setHidden(!visible);
@@ -202,7 +204,7 @@ void ZLQtApplicationWindow::close() {
         QMainWindow::close();
 }
 
-void ZLQtApplicationWindow::grabAllKeys(bool mode) {  }
+void ZLQtApplicationWindow::grabAllKeys(bool mode) { Q_UNUSED(mode); }
 
 void ZLQtApplicationWindow::setCaption(const std::string &caption) {
 		QMainWindow::setWindowTitle(QString::fromStdString(caption));

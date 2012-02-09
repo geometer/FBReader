@@ -40,5 +40,6 @@ ZLSymbianExecMessageSender::ZLSymbianExecMessageSender(const std::string &comman
 }
 
 void ZLSymbianExecMessageSender::sendStringMessage(const std::string &message) {
+    (void)message;
 	// DO NOTHING
 }

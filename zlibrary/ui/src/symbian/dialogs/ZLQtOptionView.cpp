@@ -422,7 +422,8 @@ void PathOptionView::_createItem() {
 }
 
 void PathOptionView::_setActive(bool active) {
-	myDeleteButton->setEnabled(false);
+    Q_UNUSED(active);
+    myDeleteButton->setEnabled(false);
 }
 
 void PathOptionView::_onAccept() const {

@@ -19,6 +19,9 @@ static const std::string EMPTY_MESSAGE("emptyMessage");
 
 ZLQtOpenFileDialog::ZLQtOpenFileDialog(const std::string &title, const std::string &directoryPath, const std::string &filePath, const Filter &filter, QWidget* parent)
 	: myFilter(filter) {
+        Q_UNUSED(title);
+        Q_UNUSED(directoryPath);
+        Q_UNUSED(filePath);
         myDialog = new DrillDownMenuDialog(false,parent);
 	mySelectDirsOnlyMode = false;
 
@@ -86,7 +89,8 @@ std::string ZLQtOpenFileDialog::directoryPath() const {
 }
 
 
-FileAction::FileAction(ZLQtOpenFileDialog* openFileDialog, DrillDownMenuDialog* dialog, QString filePath): MenuAction(dialog),myOpenFileDialog(openFileDialog), myFile(filePath) {
+FileAction::FileAction(ZLQtOpenFileDialog* openFileDialog, DrillDownMenuDialog* dialog, QString filePath):
+    MenuAction(dialog), myFile(filePath), myOpenFileDialog(openFileDialog) {
 }
 
 void FileAction::run() {
@@ -94,7 +98,8 @@ void FileAction::run() {
 		myDialog->accept();
 	}
 
-DirAction::DirAction(ZLQtOpenFileDialog* openFileDialog, DrillDownMenuDialog* dialog, QString dirPath, const ZLOpenFileDialog::Filter &filter) : MenuAction(dialog), myOpenFileDialog(openFileDialog), myDir(dirPath), myFilter(filter), myMenu(0) {
+DirAction::DirAction(ZLQtOpenFileDialog* openFileDialog, DrillDownMenuDialog* dialog, QString dirPath, const ZLOpenFileDialog::Filter &filter)
+    : MenuAction(dialog), myDir(dirPath),  myMenu(0), myFilter(filter), myOpenFileDialog(openFileDialog) {
 }
 
 void DirAction::run() {

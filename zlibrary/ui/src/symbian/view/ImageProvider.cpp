@@ -59,6 +59,7 @@ QUrl ImageProvider::generateUrl(const ZLTreeTitledNode* node) {
 }
 
 void ImageProvider::handleImageResult(const ZLTreeTitledNode* titledNode, shared_ptr<ZLImage> image) {
+    Q_UNUSED(image);
     myProcessedNodes.insert(titledNode);
     QUrl url = generateUrl(titledNode);
 

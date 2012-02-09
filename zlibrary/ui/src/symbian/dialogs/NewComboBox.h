@@ -46,6 +46,8 @@ protected:
     }
     QSize sizeHint(const QStyleOptionViewItem &option,
                    const QModelIndex &index) const {
+        Q_UNUSED(option);
+        Q_UNUSED(index);
         return MenuItemParameters::getSmallItemSize();
 //        QStyleOptionMenuItem opt = getStyleOption(option, index);
 //        return mCombo->style()->sizeFromContents(

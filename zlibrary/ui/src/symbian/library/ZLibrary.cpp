@@ -52,7 +52,7 @@ const std::string ZLibrary::EndOfLine("\n");         // don't know exactly what 
 void ZLibrary::initLocale() {
 		std::string localeQtStdString = QLocale::system().name().toStdString();
 		const char *localeQt = localeQtStdString.c_str();
-		const char *localeSystem = setlocale(LC_MESSAGES, "");
+                //const char *localeSystem = setlocale(LC_MESSAGES, "");
 		const char* locale = localeQt;
 	if (locale != 0) {
 		std::string sLocale = locale;

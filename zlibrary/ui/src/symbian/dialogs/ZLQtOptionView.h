@@ -162,6 +162,7 @@ private:
 
 	private:
 		bool accepts(const ZLFile &file) const {
+                        Q_UNUSED(file);
 			return true;
 		}
 	};

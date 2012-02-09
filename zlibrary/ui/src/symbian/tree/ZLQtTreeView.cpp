@@ -92,7 +92,7 @@ void SubtitleDelegate::drawIcon(QPainter *painter, const QStyleOptionViewItem &o
 }
 
 void SubtitleDelegate::drawHighlight(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const {
-
+    Q_UNUSED(index);
     const QStyleOptionViewItemV4 *vopt = qstyleoption_cast<const QStyleOptionViewItemV4 *>(&option);
     QStyleOptionViewItemV4 voptAdj = *vopt;
     const QWidget* widget = voptAdj.widget;
@@ -149,6 +149,7 @@ QRect SubtitleDelegate::getCenteredRectangle(QRect zoneRect, QSize imageSize) {
 }
 
 int SubtitleDelegate::getTextLeftMargin(const QStyleOptionViewItem &option, const QModelIndex &index) {
+    Q_UNUSED(option);
 //    qDebug() << "GET_TEXT_LEFT_MARGIN";
 //    qDebug() << QApplication::style()->pixelMetric(QStyle::PM_FocusFrameHMargin, &option); // 3
 //    qDebug() << QApplication::style()->pixelMetric(QStyle::PM_DefaultLayoutSpacing, &option); // 6
