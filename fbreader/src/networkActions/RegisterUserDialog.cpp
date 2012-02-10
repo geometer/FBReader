@@ -183,6 +183,7 @@ void RegisterUserDialogRunnable::onAuthorisationCheck(ZLUserDataHolder &, const 
 }
 
 void RegisterUserDialogRunnable::onInitialized(ZLUserDataHolder &data, const std::string &error) {
+        (void)data;
 	if (error.empty()) {
 		finish(std::string());
 		return;

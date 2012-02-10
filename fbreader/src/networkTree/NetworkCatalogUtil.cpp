@@ -35,6 +35,7 @@ shared_ptr<ZLImage> NetworkCatalogUtil::getImageByNetworkUrl(const std::string &
 }
 
 shared_ptr<ZLImage> NetworkCatalogUtil::getImageByFileUrl(const std::string &url) {
+        (void)url;
 	// TODO: Unescape path? Fix path delimiters?
 	// strlen("file://") == 7
 //	return new ZLFileImage(url.substr(7));

@@ -306,6 +306,8 @@ bool BookTextView::getHyperlinkInfo(const ZLTextElementRectangle &rectangle, std
 }
 
 bool BookTextView::_onStylusPress(int x, int y) {
+        (void)x;
+        (void)y;
 	return false;
 }
 

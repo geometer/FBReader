@@ -126,7 +126,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
      //content.addOption(ZLResourceKey("downloadDirectory"), NetworkLinkCollection::Instance().DirectoryOption);
  }
 
- void PreferencesMenuBuilder::addAppearanceOptions(ZLDialogContent& content) { }
+ void PreferencesMenuBuilder::addAppearanceOptions(ZLDialogContent& content) { (void)content; }
 
  void PreferencesMenuBuilder::addTextOptions(ZLDialogContent& content) {
 
@@ -372,7 +372,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
      showTimeEntry->onStateChanged(showTimeEntry->initialState());
  }
 
- void PreferencesMenuBuilder::addDisplayOptions(ZLDialogContent& content) { }
+ void PreferencesMenuBuilder::addDisplayOptions(ZLDialogContent& content) { (void)content; }
 
  void PreferencesMenuBuilder::addScrollingOptions(ZLDialogContent& content) {
     FBReader &fbreader = FBReader::Instance();
@@ -393,7 +393,7 @@ void OptionsPageComboOptionEntry::registerEntry(ZLDialogContent &tab, const ZLRe
     }
  }
 
-void PreferencesMenuBuilder::addTapZonesOptions(ZLDialogContent& content) { }
-void PreferencesMenuBuilder::addDictionaryOptions(ZLDialogContent& content) { }
-void PreferencesMenuBuilder::addImagesOptions(ZLDialogContent& content) { }
-void PreferencesMenuBuilder::addCancelMenuOptions(ZLDialogContent& content) { }
+void PreferencesMenuBuilder::addTapZonesOptions(ZLDialogContent& content) { (void)content; }
+void PreferencesMenuBuilder::addDictionaryOptions(ZLDialogContent& content) { (void)content; }
+void PreferencesMenuBuilder::addImagesOptions(ZLDialogContent& content) { (void)content; }
+void PreferencesMenuBuilder::addCancelMenuOptions(ZLDialogContent& content) { (void)content; }

@@ -148,13 +148,11 @@ void ZLApplicationWindow::refreshMenu() {
 	const ZLMenu::ItemVector& items = application().menubar().items();
 	for (ZLMenu::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		ZLMenu::ItemPtr item = *it;
-		switch (item->type()) {
-				case ZLMenu::Item::ITEM:
-					const std::string &id = ((ZLMenubar::PlainItem&)*item).actionId();
-					const bool visible = application().isActionVisible(id);
-					const bool enabled = application().isActionEnabled(id);
-					setMenuItemState(item,visible,enabled);
-					break;
+                if (item->type() == ZLMenu::Item::ITEM) {
+                    const std::string &id = ((ZLMenubar::PlainItem&)*item).actionId();
+                    const bool visible = application().isActionVisible(id);
+                    const bool enabled = application().isActionEnabled(id);
+                    setMenuItemState(item,visible,enabled);
 		}
 	}
 }

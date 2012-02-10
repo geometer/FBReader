@@ -44,7 +44,7 @@ protected:
 	virtual void _hide() = 0;
 	virtual void _show() = 0;
 	// TODO: replace by pure virtual method
-	virtual void _setActive(bool active) {}
+        virtual void _setActive(bool active) { (void)active; }
 	virtual void _onAccept() const = 0;
 
 	const std::string &name() const;

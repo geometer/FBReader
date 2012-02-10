@@ -56,16 +56,16 @@ private:
 };
 
 struct ZLArrayBasedStatisticsItem : public ZLStatisticsItem {
-  ZLArrayBasedStatisticsItem(size_t sequenceLength, char* sequencePtr, unsigned short* frequencyPtr, size_t index);
+    ZLArrayBasedStatisticsItem(size_t sequenceLength, char* sequencePtr, unsigned short* frequencyPtr, size_t index);
 
-  ZLCharSequence sequence() const;
-  size_t frequency() const;
-  void next();
+    ZLCharSequence sequence() const;
+    size_t frequency() const;
+    void next();
 
 private:
-  char const *mySequencePtr;
-  unsigned short const *myFrequencyPtr;
-	const size_t mySequenceLength;
+    char const *mySequencePtr;
+    unsigned short const *myFrequencyPtr;
+    const size_t mySequenceLength;
 };
 
 inline ZLStatisticsItem::ZLStatisticsItem(size_t index) : myIndex(index) {

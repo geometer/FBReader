@@ -89,6 +89,7 @@ int ZLDialogManager::questionBox(const ZLResourceKey &key, const ZLResourceKey &
 }
 
 shared_ptr<ZLProgressDialog> ZLDialogManager::createProgressDialog(const ZLResourceKey &key) const {
+        (void)key;
 	return 0;
 }
 

@@ -51,9 +51,12 @@ void LitResAuthenticationDataParser::startElementHandler(const char *tag, const 
 }
 
 void LitResAuthenticationDataParser::showPercent(int ready, int full) {
+    (void)ready;
+    (void)full;
 }
 
 void LitResAuthenticationDataParser::finished(const std::string &error) {
+    (void)error;
 }
 
 void LitResAuthenticationDataParser::finish() {

@@ -35,6 +35,7 @@ const ZLTypeId &SeriesNode::typeId() const {
 }
 
 SeriesNode::SeriesNode(AuthorNode *parent) {
+    (void)parent;
 }
 
 //void SeriesNode::init() {

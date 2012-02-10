@@ -230,6 +230,7 @@ void NetworkView::updateAccountDependents() {
 }
 
 void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
+    (void)node;
 //	std::set<ZLTreeNode*> nodesToDelete;
 
 //	const NetworkItem::List &nodeItems = node.childrenItems();
@@ -299,6 +300,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 }
 
 bool NetworkView::processAccountDependent(NetworkCatalogItem &item) {
+    (void)item;
 //	if (item.Visibility == NetworkCatalogItem::Always) {
 //		return true;
 //	}

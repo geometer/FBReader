@@ -129,5 +129,6 @@ const ZLNetworkSSLCertificate &BasicAuthenticationManager::certificate() {
 }
 
 shared_ptr<BookReference> BasicAuthenticationManager::downloadReference(const NetworkBookItem &book) {
+        (void)book;
 	return 0;
 }

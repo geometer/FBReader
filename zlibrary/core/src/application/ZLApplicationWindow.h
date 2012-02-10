@@ -65,16 +65,16 @@ protected:
 	virtual void showMenu() = 0;
 	void refreshMenu();
 	// TODO: change to pure virtual
-	virtual void addMenuItem(ZLMenu::ItemPtr item) {};
+        virtual void addMenuItem(ZLMenu::ItemPtr item) { (void)item; }
 	void onMenuItemPress(const ZLMenubar::PlainItem& menuItem);
 	// TODO: change to pure virtual
-	virtual void setMenuItemState(ZLMenu::ItemPtr item, bool visible, bool enabled) {}        
+        virtual void setMenuItemState(ZLMenu::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {}
 	ToolbarType type(const ZLToolbar::Item &item) const;
-	bool hasFullscreenToolbar() const;
+        bool hasFullscreenToolbar() const;
 	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);
 	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
 	// TODO: change to pure virtual
-	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {};
+        virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {}
 	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
 
 	virtual void refresh();

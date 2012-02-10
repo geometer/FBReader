@@ -49,5 +49,5 @@ const ZLResource &ZLDialog::resource(const ZLResourceKey &key) const {
 bool ZLDialog::runFullscreen() {
     //MAYBE reimplement in meego UI
     //this method is supposed to run dialog in fullscreen mode
-    run();
+    return run();
 }

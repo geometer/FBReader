@@ -40,7 +40,10 @@ void OpenSearchXMLReader::startElementHandler(const char *tag, const char **attr
 }
 
 void OpenSearchXMLReader::endElementHandler(const char *tag) {
+    (void)tag;
 }
 
 void OpenSearchXMLReader::characterDataHandler(const char *text, size_t len) {
+    (void)text;
+    (void)len;
 }
