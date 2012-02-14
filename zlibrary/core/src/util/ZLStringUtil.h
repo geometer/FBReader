@@ -39,6 +39,9 @@ public:
 	
 	static std::string doubleToString(double value);
 	static double stringToDouble(const std::string &value, double defaultValue);
+
+        static bool matchesIgnoreCase(std::string text, std::string lowerCasePattern);
+
 	static void split(const std::string& str, std::vector<std::string>& result,const std::string& delimiters = " ");
 	
 	template <typename T, typename F>

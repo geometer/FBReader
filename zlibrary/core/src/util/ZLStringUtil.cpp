@@ -22,6 +22,8 @@
 #include <cstdlib>
 #include <locale.h>
 
+#include <ZLUnicodeUtil.h>
+
 #include "ZLStringUtil.h"
 
 #include <iostream>
@@ -114,6 +116,12 @@ double ZLStringUtil::stringToDouble(const std::string &value, double defaultValu
 	} else {
 		return defaultValue;
 	}
+}
+
+bool ZLStringUtil::matchesIgnoreCase(std::string text, std::string lowerCasePattern) {
+    lowerCasePattern = ZLUnicodeUtil::toLower(lowerCasePattern);
+    return (text.length() >= lowerCasePattern.length()) &&
+           (ZLUnicodeUtil::toLower(text).find(lowerCasePattern) != std::string::npos);
 }
 
 void ZLStringUtil::split(const std::string& str,  std::vector<std::string>& result, const std::string& delimiters) {

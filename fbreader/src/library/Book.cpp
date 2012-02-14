@@ -282,6 +282,33 @@ void Book::removeAllAuthors() {
 	myAuthors.clear();
 }
 
+bool Book::matches(std::string pattern) const {
+    if (!myTitle.empty() && ZLStringUtil::matchesIgnoreCase(myTitle, pattern)) {
+       return true;
+    }
+    if (!mySeriesTitle.empty() && ZLStringUtil::matchesIgnoreCase(mySeriesTitle, pattern)) {
+        return true;
+    }
+    if (!myAuthors.empty()) {
+        for (size_t i=0; i < myAuthors.size(); ++i) {
+            if (ZLStringUtil::matchesIgnoreCase(myAuthors.at(i)->name(), pattern)) {
+                return true;
+            }
+        }
+    }
+    if (!myTags.empty()) {
+        for (size_t i=0; i < myTags.size(); ++i) {
+            if (ZLStringUtil::matchesIgnoreCase(myTags.at(i)->name(), pattern)) {
+                return true;
+            }
+        }
+    }
+    if (ZLStringUtil::matchesIgnoreCase(myFile.name(true), pattern)) {
+        return true;
+    }
+    return false;
+}
+
 LocalBookInfo::LocalBookInfo(shared_ptr<Book> book) : myBook(book) {
 }
 

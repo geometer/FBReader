@@ -547,3 +547,19 @@ void Library::addBookToRecentList(shared_ptr<Book> book) {
 	}
 	BooksDB::Instance().saveRecentBooks(myRecentBooks);
 }
+
+
+const BookList Library::searchBooks(std::string pattern) /*const*/ {
+    //TODO make this method as const
+    BookList bookList;
+    for (BookSet::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
+        if ((*it).isNull()) {
+                continue;
+        }
+        shared_ptr<Book> book = *it;
+        if (book->matches(pattern)) {
+            bookList.push_back(book);
+        }
+    }
+    return bookList;
+}

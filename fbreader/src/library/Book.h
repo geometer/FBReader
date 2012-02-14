@@ -108,6 +108,9 @@ public:
 	void removeAllAuthors();
 
 public:
+        bool matches(std::string pattern) const;
+
+public:
 	int bookId() const;
 	void setBookId(int bookId);
 
