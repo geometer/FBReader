@@ -106,6 +106,10 @@ void BooksDB::initCommands() {
 	myLoadStackPos = SQLiteFactory::createCommand(BooksDBQuery::LOAD_STACK_POS, connection(), "@book_id", DBValue::DBINT);
 	mySetStackPos = SQLiteFactory::createCommand(BooksDBQuery::SET_STACK_POS, connection(), "@book_id", DBValue::DBINT, "@stack_pos", DBValue::DBINT);
 
+        myLoadReadingProgress = SQLiteFactory::createCommand(BooksDBQuery::LOAD_READING_PROGRESS, connection(), "@book_id", DBValue::DBINT);
+        myLoadAllReadingProgress = SQLiteFactory::createCommand(BooksDBQuery::LOAD_ALL_READING_PROGRESS, connection());
+        mySetReadingProgress = SQLiteFactory::createCommand(BooksDBQuery::SET_READING_PROGRESS, connection(), "@book_id", DBValue::DBINT, "@cur_page", DBValue::DBINT, "@all_pages", DBValue::DBINT);
+
 	myLoadBookState = SQLiteFactory::createCommand(BooksDBQuery::LOAD_BOOK_STATE, connection(), "@book_id", DBValue::DBINT);
 	mySetBookState = SQLiteFactory::createCommand(BooksDBQuery::SET_BOOK_STATE, connection(), "@book_id", DBValue::DBINT, "@paragraph", DBValue::DBINT, "@word", DBValue::DBINT, "@char", DBValue::DBINT);
 
@@ -484,6 +488,52 @@ bool BooksDB::setStackPos(const Book &book, int stackPos) {
 	((DBIntValue&)*mySetStackPos->parameter("@book_id").value()) = book.bookId();
 	((DBIntValue&)*mySetStackPos->parameter("@stack_pos").value()) = stackPos;
 	return mySetStackPos->execute();
+}
+
+bool BooksDB::loadReadingProgress(const Book &book, ReadingProgress& progress) {
+        progress.CurPage = progress.AllPages = 0;
+        if (book.bookId() == 0) {
+                return false;
+        }
+        ((DBIntValue&)*myLoadReadingProgress->parameter("@book_id").value()) = book.bookId();
+        shared_ptr<DBDataReader> reader = myLoadReadingProgress->executeReader();
+        if (reader.isNull()) {
+                return false;
+        }
+        if (!reader->next()
+                || reader->type(0) != DBValue::DBINT /* cur_page */
+                || reader->type(1) != DBValue::DBINT /* all_pages    */) {
+                return false;
+        }
+        progress.CurPage = reader->intValue(0);
+        progress.AllPages = reader->intValue(1);
+        return true;
+}
+
+bool BooksDB::loadAllReadingProgresses(std::map<int,ReadingProgress>& progress) {
+    shared_ptr<DBDataReader> reader = myLoadAllReadingProgress->executeReader();
+    progress.clear();
+    while (reader->next()) {
+            if (reader->type(0) != DBValue::DBINT || /* book_id */
+                reader->type(1) != DBValue::DBINT || /* cur_page */
+                reader->type(2) != DBValue::DBINT) { /* all_pages */
+                    return false;
+            }
+            const int bookId = reader->intValue(0);
+            ReadingProgress rp(reader->intValue(1), reader->intValue(2));
+            progress[bookId] = rp;
+    }
+    return true;
+}
+
+bool BooksDB::setReadingProgress(const Book &book, const ReadingProgress& progress) {
+        if (book.bookId() == 0) {
+                return false;
+        }
+        ((DBIntValue&)*mySetReadingProgress->parameter("@book_id").value()) = book.bookId();
+        ((DBIntValue&)*mySetReadingProgress->parameter("@cur_page").value()) = progress.CurPage;
+        ((DBIntValue&)*mySetReadingProgress->parameter("@all_pages").value()) = progress.AllPages;
+        return mySetReadingProgress->execute();
 }
 
 bool BooksDB::insertIntoBookList(const Book &book) {

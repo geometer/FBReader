@@ -114,12 +114,12 @@ protected:
 	virtual int topMargin() const = 0;
 	virtual int bottomMargin() const = 0;
 
+        shared_ptr<ZLTextView::PositionIndicator> positionIndicator();
+
 private:
 	void clear();
 
 	std::vector<size_t>::const_iterator nextBreakIterator() const;
-
-	shared_ptr<ZLTextView::PositionIndicator> positionIndicator();
 
 	void gotoCharIndex(size_t charIndex);
 

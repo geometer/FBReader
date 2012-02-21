@@ -113,10 +113,11 @@ void BookTextView::saveBookState(const Book &book) {
 }
 
 void BookTextView::setModel(shared_ptr<ZLTextModel> model, shared_ptr<Book> book) {
+        saveReadingProgress(true);
 	FBView::setModel(model);
-	if (!myBook.isNull()) {
-		saveBookState(*myBook);
-	}
+        if (!myBook.isNull()) {
+                saveBookState(*myBook);
+        }
 	myBook = book;
 	if (book.isNull()) {
 		return;
@@ -164,7 +165,20 @@ void BookTextView::saveState() {
 			BooksDB::Instance().saveBookStateStack(*myBook, myPositionStack);
 			myStackChanged = false;
 		}
+                saveReadingProgress(false);
 	}
+}
+
+void BookTextView::saveReadingProgress(bool writeToDB) {
+    if (!myBook.isNull() && !positionIndicator().isNull()) {
+        ReadingProgress readingProgress((int)positionIndicator()->currentPageNumber(), (int)positionIndicator()->allPagesNumber());
+        //setting it to library is a way to optimize number of DB write operations (there's no necessary to update library from DB)
+        Library::Instance().setReadingProgress(myBook, readingProgress);
+        if (writeToDB) {
+            //writing to DB happens when new model is setted for BookTextView (when opening new book, when closing app)
+            BooksDB::Instance().setReadingProgress(*myBook, readingProgress);
+        }
+    }
 }
 
 BookTextView::Position BookTextView::cursorPosition(const ZLTextWordCursor &cursor) const {

@@ -269,6 +269,7 @@ void Library::rebuildMaps() const {
 	myBooksByTag.clear();
         myFirstLetters.clear();
         myBooksByFirstLetter.clear();
+        myReadingProgressByBookId.clear();
 
 	for (BookSet::const_iterator it = myBooks.begin(); it != myBooks.end(); ++it) {
 		if ((*it).isNull()) {
@@ -297,7 +298,6 @@ void Library::rebuildMaps() const {
                 if (!firstLetter.empty()) {
                     myBooksByFirstLetter[firstLetter].push_back(*it);
                 }
-
 	}
 	for (BooksByAuthor::iterator mit = myBooksByAuthor.begin(); mit != myBooksByAuthor.end(); ++mit) {
 		myAuthors.push_back(mit->first);
@@ -311,6 +311,7 @@ void Library::rebuildMaps() const {
                 myFirstLetters.push_back(mit->first);
                 std::sort(mit->second.begin(), mit->second.end(), BookComparator());
         }
+        BooksDB::Instance().loadAllReadingProgresses(myReadingProgressByBookId);
 }
 
 void Library::collectDirNames(std::set<std::string> &nameSet) const {
@@ -415,6 +416,19 @@ const BookList &Library::books(shared_ptr<Tag> tag) const {
 const BookList &Library::books(std::string firstLetter) const {
         synchronize();
         return myBooksByFirstLetter[firstLetter];
+}
+
+const ReadingProgress &Library::readingProgress(shared_ptr<Book> book) const {
+    synchronize();
+    return myReadingProgressByBookId[book->bookId()];
+}
+
+bool Library::setReadingProgress(shared_ptr<Book> book, const ReadingProgress& progress) {
+    //NOTE: reading progress is changed directly, so library should not be rebuild
+    //NOTE: in case we have not write new progress to DB, there can be data asynchronization:
+    //in DB there's old values, but in Library instance current right values
+    myReadingProgressByBookId[book->bookId()] = progress;
+    return true;
 }
 
 std::string Library::getFirstTitleLetter(std::string bookTitle) {

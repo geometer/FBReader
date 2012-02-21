@@ -132,6 +132,12 @@ const std::string BooksDBQuery::INIT_DATABASE = \
 	"	stack_pos INTEGER NOT NULL " \
 	"); " \
 	" " \
+        "CREATE TABLE IF NOT EXISTS State.ReadingProgress ( " \
+        "	book_id INTEGER UNIQUE NOT NULL REFERENCES Books (book_id), " \
+        "	cur_page INTEGER NOT NULL, " \
+        "	all_pages INTEGER NOT NULL " \
+        "); " \
+        " " \
 	"CREATE TABLE IF NOT EXISTS State.BookList ( " \
 	"	book_id INTEGER UNIQUE NOT NULL REFERENCES Books (book_id) " \
 	"); ";
@@ -144,6 +150,7 @@ const std::string BooksDBQuery::SECOND_INIT_DATABASE = \
 	"	DELETE FROM BookSeries WHERE book_id = OLD.book_id; " \
 	"	DELETE FROM BookTag WHERE book_id = OLD.book_id; " \
 	"	DELETE FROM StackPosition WHERE book_id = OLD.book_id; " \
+        "	DELETE FROM ReadingProgress WHERE book_id = OLD.book_id; " \
 	"	DELETE FROM BookStateStack WHERE book_id = OLD.book_id; " \
 	"	DELETE FROM RecentBooks WHERE book_id = OLD.book_id; " \
 	"	DELETE FROM BookList WHERE book_id = OLD.book_id; " \
@@ -217,6 +224,7 @@ const std::string BooksDBQuery::CLEAR_DATABASE = \
 	" " \
 	"DROP TABLE State.BookList; " \
 	"DROP TABLE State.StackPosition; " \
+        "DROP TABLE State.ReadingProgress; " \
 	"DROP TABLE Net.Links; " \
 	"DROP TABLE Net.LinkUrls; " \
 	"DROP TABLE Net.Extras; " \
@@ -347,6 +355,10 @@ const std::string BooksDBQuery::GET_PALM_TYPE = "SELECT type FROM PalmType WHERE
 
 const std::string BooksDBQuery::LOAD_STACK_POS = "SELECT stack_pos FROM StackPosition WHERE book_id = @book_id; ";
 const std::string BooksDBQuery::SET_STACK_POS = "INSERT OR REPLACE INTO StackPosition(book_id, stack_pos) VALUES (@book_id, @stack_pos); ";
+
+const std::string BooksDBQuery::LOAD_READING_PROGRESS = "SELECT cur_page, all_pages FROM ReadingProgress WHERE book_id = @book_id; ";
+const std::string BooksDBQuery::LOAD_ALL_READING_PROGRESS = "SELECT book_id, cur_page, all_pages FROM ReadingProgress; ";
+const std::string BooksDBQuery::SET_READING_PROGRESS = "INSERT OR REPLACE INTO ReadingProgress(book_id, cur_page, all_pages) VALUES (@book_id, @cur_page, @all_pages); ";
 
 const std::string BooksDBQuery::LOAD_BOOK_STATE = "SELECT paragraph, word, char FROM BookStateStack WHERE book_id = @book_id AND position = 0; ";
 const std::string BooksDBQuery::SET_BOOK_STATE = "INSERT OR REPLACE INTO BookStateStack(book_id, position, paragraph, word, char) VALUES (@book_id, 0, @paragraph, @word, @char); ";

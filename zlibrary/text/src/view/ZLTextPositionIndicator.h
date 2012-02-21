@@ -32,6 +32,9 @@ public:
 	bool isResponsibleFor(int x, int y);
 	bool onStylusPress(int x, int y);
 
+        size_t currentPageNumber() const;
+        size_t allPagesNumber() const;
+
 protected:
 	const ZLTextView &textView() const;
 	ZLPaintContext &context() const;

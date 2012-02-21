@@ -87,6 +87,9 @@ public:
 	static const std::string SET_BOOK_STATE;
 	static const std::string LOAD_STACK_POS;
 	static const std::string SET_STACK_POS;
+        static const std::string LOAD_READING_PROGRESS;
+        static const std::string LOAD_ALL_READING_PROGRESS;
+        static const std::string SET_READING_PROGRESS;
 
 	static const std::string INSERT_BOOK_LIST;
 	static const std::string DELETE_BOOK_LIST;

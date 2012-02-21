@@ -23,6 +23,7 @@
 #include <deque>
 
 #include "ReadingState.h"
+#include "ReadingProgress.h"
 
 #include <ZLOptions.h>
 
@@ -83,6 +84,7 @@ private:
 	void readBookState(const Book &book);
 	int readStackPos(const Book &book);
 	void saveBookState(const Book &book);
+        void saveReadingProgress(bool writeToDB);
 
 private:
 	shared_ptr<ZLTextModel> myContentsModel;

@@ -30,6 +30,7 @@
 #include "DBRunnables.h"
 
 #include "../../fbreader/ReadingState.h"
+#include "../../fbreader/ReadingProgress.h"
 
 class Book;
 
@@ -91,6 +92,10 @@ public:
 
 	int loadStackPos(const Book &book);
 	bool setStackPos(const Book &book, int stackPos);
+
+        bool loadReadingProgress(const Book &book, ReadingProgress& progress);
+        bool loadAllReadingProgresses(std::map<int,ReadingProgress>& progress);
+        bool setReadingProgress(const Book &book, const ReadingProgress& progress);
 	
 	bool insertIntoBookList(const Book &book);
 	bool deleteFromBookList(const Book &book);
@@ -166,6 +171,11 @@ private:
 	shared_ptr<DBCommand> mySetStackPos;
 	shared_ptr<DBCommand> myLoadBookState;
 	shared_ptr<DBCommand> mySetBookState;
+
+        shared_ptr<DBCommand> myLoadReadingProgress;
+        shared_ptr<DBCommand> myLoadAllReadingProgress;
+        shared_ptr<DBCommand> mySetReadingProgress;
+
 
 	shared_ptr<DBCommand> myInsertBookList;
 	shared_ptr<DBCommand> myDeleteBookList;

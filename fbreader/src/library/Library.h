@@ -35,6 +35,8 @@
 #include "Lists.h"
 #include <ZLFSWatcher.h>
 
+#include "../fbreader/ReadingProgress.h"
+
 class Library {
 
 public:
@@ -60,6 +62,10 @@ public:
 	const BookList &books(shared_ptr<Tag> tag) const;
         const BookList &books(std::string firstLetter) const;
 	const BookList &recentBooks() const;
+
+        /* reading progress */
+        const ReadingProgress &readingProgress(shared_ptr<Book> book) const;
+        bool setReadingProgress(shared_ptr<Book> book, const ReadingProgress& progress);
 
 	enum RemoveType {
 		REMOVE_DONT_REMOVE = 0,
@@ -127,6 +133,8 @@ private:
 	mutable BookList myRecentBooks;
         typedef std::map<std::string,BookList/*,TitleComparator*/> BooksByFirstLetter;
         mutable BooksByFirstLetter myBooksByFirstLetter;
+        typedef std::map<int,ReadingProgress> ReadingProgressByBookId;
+        mutable ReadingProgressByBookId myReadingProgressByBookId;
 
 	mutable std::string myPath;
 	mutable bool myScanSubdirs;

@@ -162,9 +162,9 @@ size_t ZLTextView::PositionIndicator::sizeOfTextBeforeCursor(const ZLTextWordCur
 
 std::string ZLTextView::PositionIndicator::textPositionString() const {
 	std::string buffer;
-	ZLStringUtil::appendNumber(buffer, 1 + sizeOfTextBeforeCursor(myTextView.textArea().endCursor()) / 2048);
+        ZLStringUtil::appendNumber(buffer, currentPageNumber());
 	buffer += '/';
-	ZLStringUtil::appendNumber(buffer, 1 + sizeOfTextBeforeParagraph(endTextIndex()) / 2048);
+        ZLStringUtil::appendNumber(buffer, allPagesNumber());
 
 	return buffer;
 
@@ -268,6 +268,15 @@ bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 	myTextView.gotoCharIndex(textSize);
 
 	return true;
+}
+
+size_t ZLTextView::PositionIndicator::currentPageNumber() const {
+    return (1 + sizeOfTextBeforeCursor(myTextView.textArea().endCursor()) / 2048);
+
+}
+
+size_t ZLTextView::PositionIndicator::allPagesNumber() const {
+    return (1 + sizeOfTextBeforeParagraph(endTextIndex()) / 2048);
 }
 
 shared_ptr<ZLTextView::PositionIndicator> ZLTextView::createPositionIndicator(const ZLTextPositionIndicatorInfo &info) {
