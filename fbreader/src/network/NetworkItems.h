@@ -139,6 +139,7 @@ public:
 		const std::vector<std::string> &tags,
 		const std::string &seriesTitle,
 		unsigned int indexInSeries,
+                const std::vector<std::string> &categories,
 		const std::map<URLType,std::string> &urlByType,
 		const std::vector<shared_ptr<BookReference> > references
 	);
@@ -161,6 +162,7 @@ public:
 	const std::vector<std::string> Tags;
 	const std::string SeriesTitle;
 	const int IndexInSeries;
+        const std::vector<std::string> Categories;
 
 private:
 	std::vector<shared_ptr<BookReference> > myReferences;

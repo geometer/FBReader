@@ -40,6 +40,7 @@ NetworkBookItem::NetworkBookItem(
 	const std::vector<std::string> &tags,
 	const std::string &seriesTitle,
 	unsigned int indexInSeries,
+        const std::vector<std::string> &categories,
 	const std::map<URLType,std::string> &urlByType,
 	const std::vector<shared_ptr<BookReference> > references
 ) : 
@@ -52,7 +53,8 @@ NetworkBookItem::NetworkBookItem(
 	Tags(tags),
 	SeriesTitle(seriesTitle),
 	IndexInSeries(indexInSeries),
-	myReferences(references) {
+        Categories(categories),
+        myReferences(references) {
 }
 
 NetworkBookItem::NetworkBookItem(const NetworkBookItem &book, unsigned int index) :
@@ -64,7 +66,8 @@ NetworkBookItem::NetworkBookItem(const NetworkBookItem &book, unsigned int index
 	Authors(book.Authors), 
 	Tags(book.Tags),
 	SeriesTitle(book.SeriesTitle),
-	IndexInSeries(book.IndexInSeries) {
+        IndexInSeries(book.IndexInSeries),
+        Categories(book.Categories) {
 }
 
 const ZLTypeId &NetworkBookItem::typeId() const {

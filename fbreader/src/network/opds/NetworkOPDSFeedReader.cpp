@@ -236,6 +236,14 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		authors.push_back(authorData);
 	}
 
+        //categories
+        std::vector<std::string> categories;
+        for (size_t i = 0; i < entry.categories().size(); ++i) {
+            ATOMCategory &category = *(entry.categories()[i]);
+            categories.push_back(category.label());
+        }
+
+
 	//entry.dcPublisher();
 	//entry.updated();
 	//entry.published();
@@ -261,6 +269,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		tags,
 		entry.seriesTitle(),
 		entry.seriesIndex(),
+                categories,
 		urlMap,
 		references
 	);

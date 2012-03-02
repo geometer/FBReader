@@ -110,6 +110,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				myTags,
 				mySeriesTitle,
 				myIndexInSeries,
+                                std::vector<std::string>(), //TODO implement filling categories list?
 				myURLByType,
 				myReferences
 			));
