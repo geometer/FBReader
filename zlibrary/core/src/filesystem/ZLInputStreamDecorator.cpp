@@ -20,6 +20,16 @@
 #include "ZLInputStream.h"
 
 ZLInputStreamDecorator::ZLInputStreamDecorator(shared_ptr<ZLInputStream> decoratee) : myBaseStream(decoratee), myBaseOffset(0) {
+    myBaseStream->decoratorsCounter++;
+    static const std::string zipEntryMapKey = "zipEntryMap";
+    shared_ptr<ZLUserData> data = decoratee->getUserData(zipEntryMapKey);
+    if (!data.isNull()) {
+        addUserData(zipEntryMapKey, data);
+    }
+}
+
+ZLInputStreamDecorator::~ZLInputStreamDecorator(){
+        myBaseStream->decoratorsCounter--;
 }
 
 bool ZLInputStreamDecorator::open() {
@@ -36,7 +46,9 @@ size_t ZLInputStreamDecorator::read(char *buffer, size_t maxSize) {
 }
 
 void ZLInputStreamDecorator::close() {
-	myBaseStream->close();
+    if (myBaseStream->decoratorsCounter < 2) {
+        myBaseStream->close();
+    }
 }
 
 void ZLInputStreamDecorator::seek(int offset, bool absoluteOffset) {

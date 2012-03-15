@@ -44,12 +44,17 @@ private:
 	// disable copying
 	ZLInputStream(const ZLInputStream&);
 	const ZLInputStream &operator = (const ZLInputStream&);
+
+private:
+        unsigned int decoratorsCounter;
+        friend class ZLInputStreamDecorator;
 };
 
 class ZLInputStreamDecorator : public ZLInputStream {
 
 public:
-	ZLInputStreamDecorator(shared_ptr<ZLInputStream> decoratee);
+        ZLInputStreamDecorator(shared_ptr<ZLInputStream> decoratee);
+        ~ZLInputStreamDecorator();
 
 private:
 	bool open();
@@ -65,7 +70,7 @@ private:
 	size_t myBaseOffset;
 };
 
-inline ZLInputStream::ZLInputStream() {}
+inline ZLInputStream::ZLInputStream(): decoratorsCounter(0) {}
 inline ZLInputStream::~ZLInputStream() {}
 
 #endif /* __ZLINPUTSTREAM_H__ */
