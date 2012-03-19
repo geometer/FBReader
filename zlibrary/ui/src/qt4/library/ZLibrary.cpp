@@ -18,6 +18,7 @@
  */
 
 #include <QtGui/QApplication>
+#include <QtCore/QTextCodec>
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
@@ -51,6 +52,10 @@ void initLibrary() {
 
 void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	new QApplication(argc, argv);
+
+        QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
+        QTextCodec::setCodecForLocale(QTextCodec::codecForName("utf-8"));
+
 
 	ZLibrary::parseArguments(argc, argv);
 

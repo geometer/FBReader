@@ -8,7 +8,7 @@
 
 #include <ZLTreeDialog.h>
 
-#include "ZLQtTree.h"
+#include "../tree/ZLQtTreeModel.h"
 #include "../tree/ZLQtTreeView.h"
 
 class WaitWidget;
@@ -38,7 +38,7 @@ private:
 	WaitWidget* myWaitWidget;
 	shared_ptr<ZLExecutionData::Listener> myListener;
 	QTreeView *myView;
-	ZLQtTreeDialogModel* myModel;
+        ZLQtTreeModel* myModel;
 };
 
 class WaitWidget : public QWidget {

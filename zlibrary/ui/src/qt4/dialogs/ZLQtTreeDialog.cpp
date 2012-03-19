@@ -18,7 +18,7 @@ ZLQtTreeDialog::ZLQtTreeDialog( QWidget* parent) : QDialog(parent) {
 	myListener = listener;
 	
 	myView = new QTreeView(this);
-	myModel = new ZLQtTreeDialogModel(&rootNode(), this);
+        myModel = new ZLQtTreeModel(rootNode(), this, myListener);
 	myView->setModel(myModel);
 	myView->setItemDelegate(new SubtitleDelegate);
 	
