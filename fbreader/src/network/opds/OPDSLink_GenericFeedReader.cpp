@@ -54,13 +54,15 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 		} else if (rel == "") {
 			links[NetworkLink::URL_MAIN] = href;
 		} else if (rel == "http://data.fbreader.org/catalog/sign-in") {
-			links["signIn"] = href;
+                        links[NetworkLink::URL_SIGN_IN] = href;
 		} else if (rel == "http://data.fbreader.org/catalog/sign-out") {
-			links["signOut"] = href;
+                        links[NetworkLink::URL_SIGN_OUT] = href;
+                } else if (rel == "http://data.fbreader.org/catalog/sign-up") {
+                        links[NetworkLink::URL_SIGN_UP] = href;
 		} else if (rel == "http://data.fbreader.org/catalog/refill-account") {
-			links["refillAccount"] = href;
+                        links[NetworkLink::URL_REFILL_ACCOUNT] = href;
 		} else if (rel == "http://data.fbreader.org/catalog/recover-password") {
-			links["recoverPassword"] = href;
+                        links[NetworkLink::URL_RECOVER_PASSWORD] = href;
 		} else if (rel == "http://opds-spec.org/thumbnail") {
 			iconURL = href;
 		} else {
