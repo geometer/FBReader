@@ -30,12 +30,70 @@
 #include "ZLQtDialogContent.h"
 #include "ZLQtUtil.h"
 
+//NEW TAB CLASS BEGIN==================================================
+NewTabWidget::NewTabWidget(QWidget *parent) :
+    QWidget(parent)
+{
+
+    QHBoxLayout *layout = new QHBoxLayout(this);
+    myListWidget = new QListWidget();
+    layout->addWidget(myListWidget);
+
+    myStackedWidget = new QStackedWidget;
+    layout->addWidget(myStackedWidget);
+
+    connect(myListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+            this, SLOT(listViewItemChanged(QListWidgetItem*,QListWidgetItem*)));
+    setLayout(layout);
+}
+
+void NewTabWidget::listViewItemChanged(QListWidgetItem* current, QListWidgetItem* prev)
+{
+    qDebug() << myListWidget->row(current);
+    myStackedWidget->setCurrentIndex(myListWidget->row(current));
+}
+
+void NewTabWidget::addStringToList(QString newString)
+{
+    myListWidget->addItem(newString);
+}
+
+int NewTabWidget::addTab(QWidget *widget, const QString &tabLabel)
+{
+    if (!tabLabel.isNull() && !tabLabel.isEmpty())
+    {
+        myListWidget->addItem(tabLabel);
+    }
+    int tabIndex = myStackedWidget->addWidget(widget);
+}
+
+int NewTabWidget::currentIndex() const
+{
+    return myStackedWidget->currentIndex();
+}
+
+void NewTabWidget::setCurrentWidget(QWidget *widget)
+{
+    if(widget)
+    {
+        int index = myStackedWidget->indexOf(widget);
+        if (index >= 0)
+        {
+            myListWidget->setCurrentRow(index);
+        }
+        myStackedWidget->setCurrentWidget(widget);
+    }
+}
+
+//NEW TAB CLASS END====================================================
+
+
 ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) : QDialog(qApp->activeWindow()), ZLDesktopOptionsDialog(resource, applyAction) {
 	setModal(true);
 	setWindowTitle(::qtString(caption()));
 	QVBoxLayout *layout = new QVBoxLayout(this);
 
-	myTabWidget = new QTabWidget(this);
+    myTabWidget = new NewTabWidget(this);
 	layout->addWidget(myTabWidget);
 
 	QWidget *group = new QWidget(this);

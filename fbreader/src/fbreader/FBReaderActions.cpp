@@ -168,13 +168,13 @@ ShowBookInfoAction::ShowBookInfoAction() : ModeDependentAction(FBReader::BOOK_TE
 }
 
 void ShowBookInfoAction::run() {
-	FBReader &fbreader = FBReader::Instance();
-	fbreader.LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_BOOK_INFO_DIALOG);
-	shared_ptr<Book> book = fbreader.myModel->book();
-	if (BookInfoDialog(book).dialog().run()) {
-		fbreader.openBook(book);
-		fbreader.refreshWindow();
-	}
+    FBReader &fbreader = FBReader::Instance();
+    fbreader.LastOpenedPreferencesDialog.setValue(ActionCode::SHOW_BOOK_INFO_DIALOG);
+    shared_ptr<Book> book = fbreader.myModel->book();
+    if (BookInfoDialog(book).dialog().run()) {
+        fbreader.openBook(book);
+        fbreader.refreshWindow();
+    }
 }
 
 UndoAction::UndoAction(int visibleInModes) : ModeDependentAction(visibleInModes) {

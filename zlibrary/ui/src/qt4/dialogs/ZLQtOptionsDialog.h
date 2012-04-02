@@ -21,10 +21,50 @@
 #define __ZLQTOPTIONSDIALOG_H__
 
 #include <QtGui/QWidget>
-#include <QtGui/QTabWidget>
+//#include <QtGui/QTabWidget>
+
 #include <QtGui/QDialog>
 
 #include "../../../../core/src/desktop/dialogs/ZLDesktopOptionsDialog.h"
+
+
+//NEW TAB CLASS BEGIN==================================================
+
+#include <QtGui/QWidget>
+#include <QtGui/QListWidget>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QStringListModel>
+#include <QtGui/QStackedWidget>
+#include <QtGui/QComboBox>
+#include <QtGui/QLabel>
+#include <QtCore/QDebug>
+#include <QtCore/QString>
+
+class NewTabWidget : public QWidget
+{
+    Q_OBJECT
+public:
+    void setCurrentWidget(QWidget *widget);
+    int currentIndex() const;
+    int addTab(QWidget *widget, const QString &tabLabel);
+    void addStringToList(QString newString);
+    explicit NewTabWidget(QWidget *parent = 0);
+private:
+    QListWidget    *myListWidget;
+    QStackedWidget *myStackedWidget;
+signals:
+
+public slots:
+    void listViewItemChanged(QListWidgetItem* current, QListWidgetItem* prev);
+
+};
+
+//NEW TAB CLASS END====================================================
+
+
+
+
+
 
 class ZLQtOptionsDialog : public QDialog, public ZLDesktopOptionsDialog {
 	Q_OBJECT
@@ -46,7 +86,7 @@ private Q_SLOTS:
 	void apply();
 
 private:
-	QTabWidget *myTabWidget;
+    NewTabWidget *myTabWidget;
 };
 
 #endif /* __ZLQTOPTIONSDIALOG_H__ */
