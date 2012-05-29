@@ -35,7 +35,8 @@
 
 const static std::string WORD_DOCUMENT = "WordDocument";
 
-DocBookReader::DocBookReader(BookModel &model) : myModelReader(model) {
+DocBookReader::DocBookReader(BookModel &model, const std::string &encoding) :
+	OleStreamReader(encoding), myModelReader(model) {
 }
 
 bool DocBookReader::readBook() {

@@ -48,7 +48,7 @@ bool DocPlugin::readMetaInfo(Book &book) const {
 }
 
 bool DocPlugin::readModel(BookModel &model) const {
-	return DocBookReader(model).readBook();
+	return DocBookReader(model, model.book()->encoding()).readBook();
 }
 
 shared_ptr<ZLImage> DocPlugin::coverImage(const ZLFile &file) const {

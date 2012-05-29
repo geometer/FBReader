@@ -28,7 +28,7 @@
 class DocBookReader : public OleStreamReader {
 
 public:
-    DocBookReader(BookModel &model);
+	DocBookReader(BookModel &model, const std::string &encoding);
 	~DocBookReader();
 	bool readBook();
 

@@ -36,7 +36,7 @@ public:
 	long tell();
 
 public:
-	long getLength() const { return myLength; }
+	long getLength() const;
 
 public: //TODO make private
 	shared_ptr<OleStorage> myStorage; //for calling calculateBlockOffset function
@@ -53,5 +53,7 @@ private:
 
 
 };
+
+inline long OleStream::getLength() const { return myLength; }
 
 #endif /* __OLESTREAM_H__ */

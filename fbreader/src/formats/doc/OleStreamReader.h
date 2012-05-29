@@ -20,11 +20,14 @@
 #ifndef __OLESTREAMREADER_H__
 #define __OLESTREAMREADER_H__
 
+#include <ZLUnicodeUtil.h>
+#include <ZLEncodingConverter.h>
+
 #include "OleStream.h"
 
 class OleStreamReader {
 public:
-	OleStreamReader();
+	OleStreamReader(const std::string& encoding);
 
 	bool readStream(OleStream &stream);
 
@@ -33,15 +36,16 @@ protected:
 
 private:
 	//TODO implement get8BitChar method
-	//TODO may be make getUnicodeChar method as static
-	int getUnicodeChar(OleStream& stream,long *offset,long fileend);
-
-	static std::string convertToUtf8String(std::vector<unsigned short int>& buffer);
+	//TODO may be make getUcs2Char method as static
+	ZLUnicodeUtil::Ucs2Char getUcs2Char(OleStream& stream,long *offset,long fileend);
 
 private:
-	std::vector<unsigned short int> myBuffer;
+	ZLUnicodeUtil::Ucs2String myBuffer;
 	char myTmpBuffer[256];
 	bool myBufIsUnicode;
+
+	shared_ptr<ZLEncodingConverter> myConverter;
+	const std::string myEncoding;
 };
 
 #endif /* __OLESTREAMREADER_H__ */

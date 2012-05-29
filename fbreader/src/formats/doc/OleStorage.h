@@ -56,12 +56,10 @@ public:
 	OleStorage();
 	bool init(shared_ptr<ZLInputStream>, size_t streamSize);
 	void clear();
-	const std::vector<OleEntry>& getEntries() const { return myEntries; }
+	const std::vector<OleEntry>& getEntries() const;
 
-public:
-
-	long int getSectorSize() { return mySectorSize; }
-	long int getShortSectorSize() { return myShortSectorSize; }
+	long int getSectorSize();
+	long int getShortSectorSize();
 
 public: //TODO make private
 	long int calculateBlockOffset(OleEntry& e, long int blk);
@@ -88,5 +86,9 @@ private:
 	OleEntry *myRootEntry;
 
 };
+
+inline const std::vector<OleEntry>& OleStorage::getEntries() const { return myEntries; }
+inline long int OleStorage::getSectorSize() { return mySectorSize; }
+inline long int OleStorage::getShortSectorSize() { return myShortSectorSize; }
 
 #endif /* __OLESTORAGE_H__ */

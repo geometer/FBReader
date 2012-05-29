@@ -45,6 +45,7 @@ bool DocMetaInfoReader::readMetaInfo() {
 	myBook.removeAllAuthors();
 	myBook.setTitle(myBook.file().name(true));
 	myBook.setLanguage("ru");
+	myBook.setEncoding("windows-1251");
 	myBook.removeAllTags();
 	return true;
 }
