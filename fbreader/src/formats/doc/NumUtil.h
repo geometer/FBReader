@@ -20,11 +20,13 @@
 #ifndef __NUMUTIL_H__
 #define __NUMUTIL_H__
 
+#include <stdint.h>
+
 class NumUtil {
 public:
-	static long int getLong(const char *buffer,int offset);
-	static unsigned long int getUnsignedLong(const char *buffer,int offset);
-	static unsigned int getShort(const char *buffer,int offset);
+	static int32_t getInt32(const char *buffer,int offset);
+	static uint32_t getUInt32(const char *buffer,int offset);
+	static uint16_t getUInt16(const char *buffer,int offset);
 };
 
 #endif /* __NUMUTIL_H__ */

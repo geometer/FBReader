@@ -62,7 +62,7 @@ bool OleStream::open() {
 	char header[HEADER_SIZE];
 	long offset = read(header, 1, HEADER_SIZE);
 
-	int flags = NumUtil::getShort(header, FLAGS_OFFSET);
+	int flags = NumUtil::getUInt16(header, FLAGS_OFFSET);
 
 	if (flags & FLAG_COMPLEX) {
 		ZLLogger::Instance().println("OleStream","This was fast-saved. Some information is lost");
@@ -81,15 +81,15 @@ bool OleStream::open() {
 		return false;
 	}
 
-	unsigned int charset = NumUtil::getShort(header,CHARSET);
+	unsigned int charset = NumUtil::getUInt16(header,CHARSET);
 	if (charset&&charset !=DEFAULT_CHARSET) {
 		ZLLogger::Instance().println("OleStream", "Using not default character set %d");
 	} else {
 		ZLLogger::Instance().println("OleStream","Using default character set");
 	}
 
-	long startOfText = NumUtil::getLong(header,START_OF_TEXT);
-	long endOfText = NumUtil::getLong(header,END_OF_TEXT);
+	long startOfText = NumUtil::getInt32(header,START_OF_TEXT);
+	long endOfText = NumUtil::getInt32(header,END_OF_TEXT);
 	myLength = endOfText - startOfText;
 	startOfText -= offset;
 

@@ -19,19 +19,20 @@
 
 #include "NumUtil.h"
 
-unsigned int NumUtil::getShort(const char *buffer,int offset) {
+int32_t NumUtil::getInt32(const char *buffer,int offset) {
 	const unsigned char* buf = (const unsigned char*)buffer;
-	return (unsigned short int)buf[offset] | ((unsigned short int)buf[offset+1]<<8);
+	return   (int32_t)buf[offset]         | ((int32_t)buf[offset+1]<<8L) |
+			((int32_t)buf[offset+2]<<16L) | ((int32_t)buf[offset+3]<<24L);
 }
 
-long int NumUtil::getLong(const char *buffer,int offset) {
+uint32_t NumUtil::getUInt32(const char *buffer,int offset) {
 	const unsigned char* buf = (const unsigned char*)buffer;
-	return   (long)buf[offset]         | ((long)buf[offset+1]<<8L) |
-			((long)buf[offset+2]<<16L) | ((long)buf[offset+3]<<24L);
+	return (uint32_t)buf[offset]         | ((uint32_t)buf[offset+1]<<8L) |
+		  ((uint32_t)buf[offset+2]<<16L) | ((uint32_t)buf[offset+3]<<24L);
 }
 
-unsigned long int NumUtil::getUnsignedLong(const char *buffer,int offset) {
-	const unsigned char* buf = (const unsigned char*)buffer;
-	return (unsigned long)buf[offset]         | ((unsigned long)buf[offset+1]<<8L) |
-		  ((unsigned long)buf[offset+2]<<16L) | ((unsigned long)buf[offset+3]<<24L);
+uint16_t NumUtil::getUInt16(const char *buffer,int offset) {
+   const unsigned char* buf = (const unsigned char*)buffer;
+   return (uint16_t)buf[offset] | ((uint16_t)buf[offset+1]<<8);
 }
+
