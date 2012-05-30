@@ -62,7 +62,7 @@ public:
 	long int getShortSectorSize();
 
 public: //TODO make private
-	long int calculateBlockOffset(OleEntry& e, long int blk);
+	long int calcFileOffsetByBlockNumber(OleEntry& e, long int blockNumber);
 
 private:
 	bool readMSAT(char* oleBuf, std::string& MSAT);

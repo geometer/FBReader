@@ -31,29 +31,29 @@ public:
 	bool eof();
 	bool close();
 
-	size_t read(void *ptr, size_t size, size_t nmemb);
-	int seek(long offset, bool absoluteOffset);
+	size_t read(char *ptr, size_t size, size_t nmemb);
+	bool seek(long offset, bool absoluteOffset);
 	long tell();
 
 public:
-	long getLength() const;
+	long getTextLength() const;
 
 public: //TODO make private
-	shared_ptr<OleStorage> myStorage; //for calling calculateBlockOffset function
+	shared_ptr<OleStorage> myStorage; //for calling calcFileOffsetByBlockNumber function
 
 private:
 	OleEntry myOleEntry;
 	shared_ptr<ZLInputStream> myInputStream;
 
-	long int myCurBlock;
-	long int myOleOffset;
-	long int myFileOffset;
+	long myCurBlock;
+	long myOleOffset;
+	//long myFileOffset;
 
-	long myLength; //TODO ole entry has a length yet?
+	long myTextLength;
 
 
 };
 
-inline long OleStream::getLength() const { return myLength; }
+inline long OleStream::getTextLength() const { return myTextLength; }
 
 #endif /* __OLESTREAM_H__ */

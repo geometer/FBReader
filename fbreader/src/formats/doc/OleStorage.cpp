@@ -252,14 +252,14 @@ bool OleStorage::readOleEntry(long propNumber, OleEntry& e) {
 	return true;
 }
 
-long int OleStorage::calculateBlockOffset(OleEntry& e, long int blk) {
+long int OleStorage::calcFileOffsetByBlockNumber(OleEntry& e, long int blockNumber) {
 	long int res;
 	if (e.isBigBlock) {
-		res = BBD_BLOCK_SIZE + e.blocks.at(blk) * mySectorSize;
+		res = BBD_BLOCK_SIZE + e.blocks.at(blockNumber) * mySectorSize;
 	} else {
 		long int sbdPerSector = mySectorSize/myShortSectorSize;
-		long int sbdSecNum = e.blocks.at(blk) / sbdPerSector;
-		long int sbdSecMod = e.blocks.at(blk) % sbdPerSector;
+		long int sbdSecNum = e.blocks.at(blockNumber) / sbdPerSector;
+		long int sbdSecMod = e.blocks.at(blockNumber) % sbdPerSector;
 		res = BBD_BLOCK_SIZE + myRootEntry->blocks.at(sbdSecNum) * mySectorSize + sbdSecMod * myShortSectorSize;
 	}
 	return res;

@@ -70,7 +70,7 @@ bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream,size_t st
 	const std::vector<OleEntry>& entries = storage->getEntries();
 	for (size_t i = 0; i < entries.size(); ++i ) {
 		const OleEntry& entry = entries.at(i);
-		ZLLogger::Instance().print("DocBookReader", "ole file named... " + entry.name);
+		ZLLogger::Instance().println("DocBookReader", "ole file named... " + entry.name);
 		if (entry.type != OleEntry::STREAM || entry.name != WORD_DOCUMENT) {
 			ZLLogger::Instance().println("DocBookReader", "is not ole stream");
 			continue;

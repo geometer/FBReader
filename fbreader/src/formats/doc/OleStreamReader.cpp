@@ -34,7 +34,7 @@
 
 //word's control chars:
 static const ZLUnicodeUtil::Ucs2Char WORD_FOOTNOTE_MARK = 0x0002;
-static const ZLUnicodeUtil::Ucs2Char  WORD_TABLE_SEPARATOR = 0x0007;
+static const ZLUnicodeUtil::Ucs2Char WORD_TABLE_SEPARATOR = 0x0007;
 static const ZLUnicodeUtil::Ucs2Char WORD_HORIZONTAL_TAB = 0x0009;
 static const ZLUnicodeUtil::Ucs2Char WORD_HARD_RETURN = 0x000b;
 static const ZLUnicodeUtil::Ucs2Char WORD_PAGE_BREAK = 0x000c;
@@ -56,27 +56,34 @@ static const ZLUnicodeUtil::Ucs2Char SPACE = 0x20;
 
 
 OleStreamReader::OleStreamReader(const std::string &encoding) : myEncoding(encoding) {
+	clear();
+}
+
+
+void OleStreamReader::clear() {
+	myBuffer.clear();
+	myTextOffset = 0;
 	myBufIsUnicode = false;
 }
 
+
 bool OleStreamReader::readStream(OleStream &oleStream) {
+	clear();
 	bool res = oleStream.open();
 	if (!res) {
 		ZLLogger::Instance().println("DocReader", " doesn't open correct");
 		return false;
 	}
 	//TODO maybe split this method on simplier parts
-
 	int tabmode = 0;
-	long offset = 0;
 	int hyperlink_mode = 0;
 	ZLUnicodeUtil::Ucs2Char ucs2char;
 	bool paragraphEndSymbol = false;
-	while (!oleStream.eof() && offset < oleStream.getLength()) {
+	while (!oleStream.eof() && myTextOffset < oleStream.getTextLength()) {
 		myBuffer.clear();
 		paragraphEndSymbol = false;
 		do {
-			ucs2char = getUcs2Char(oleStream, &offset, oleStream.getLength());
+			ucs2char = getUcs2Char(oleStream);
 			if (ucs2char == NULL_SYMBOL) {
 				//ignore 0x0 symbols
 				continue;
@@ -91,6 +98,7 @@ bool OleStreamReader::readStream(OleStream &oleStream) {
 				}
 			}
 			if (ucs2char < 32) {
+				printf("[0x%x]", ucs2char);
 				switch (ucs2char) {
 					case WORD_TABLE_SEPARATOR:
 						tabmode = 1;
@@ -116,14 +124,12 @@ bool OleStreamReader::readStream(OleStream &oleStream) {
 						 break;
 					case WORD_START_EMB_HYPERLINK:
 						 hyperlink_mode=1;
-						 myBuffer.push_back(' ');
 						 break;
 					case WORD_SEPARATE_HYPERLINK_FROM_TEXT:
 						 hyperlink_mode = 0;
-						 /*fall through */
+						 break;
 					case WORD_END_EMB_HYPERLINK:
-						 /* just treat hyperlink separators as space */
-						 myBuffer.push_back(' ');
+
 						 break;
 					case START_OF_HEADING:
 						 if (hyperlink_mode) {
@@ -137,31 +143,36 @@ bool OleStreamReader::readStream(OleStream &oleStream) {
 			} else if (ucs2char == WORD_ZERO_WIDTH_UNBREAKABLE_SPACE) {
 				//skip
 			} else {
-				myBuffer.push_back(ucs2char);
+				std::string utf8String;
+				ZLUnicodeUtil::Ucs2String ucs2String;
+				ucs2String.push_back(ucs2char);
+				ZLUnicodeUtil::ucs2ToUtf8(utf8String,ucs2String);
+				printf("%s", utf8String.c_str());
+				if (hyperlink_mode != 1) {
+					myBuffer.push_back(ucs2char);
+				}
 			}
 		} while (!oleStream.eof() && !paragraphEndSymbol);
 		if (!myBuffer.empty()) {
 			std::string utf8String;
 			ZLUnicodeUtil::ucs2ToUtf8(utf8String, myBuffer);
 			parapgraphHandler(utf8String);
+			printf("\n");
 		}
 	}
 	return 0;
 }
 
-ZLUnicodeUtil::Ucs2Char OleStreamReader::getUcs2Char(OleStream& stream,long *offset,long fileend) {
-	//TODO remove sending offset by pointer
-	static const long BLOCK_SIZE = 256;
-	int count,i;
+ZLUnicodeUtil::Ucs2Char OleStreamReader::getUcs2Char(OleStream& stream) {
+	static const size_t BLOCK_SIZE = 256;
+	long count,i;
 	ZLUnicodeUtil::Ucs2Char u;
 	char c;
-	if ((i=(*offset)%BLOCK_SIZE) == 0) {
+	if ((i=(myTextOffset)%BLOCK_SIZE) == 0) {
 		count=stream.read(myTmpBuffer,1,BLOCK_SIZE);
 		memset(myTmpBuffer+count,0,BLOCK_SIZE - count);
 		myBufIsUnicode = false;
-		if (*offset+(long)count > fileend) {
-			count = fileend - (*offset);
-		}
+		count = std::min(count, stream.getTextLength() - myTextOffset);
 		while (i < count) {
 			c = myTmpBuffer[i++];
 			//does it a reliable way to check on unicode?
@@ -176,7 +187,7 @@ ZLUnicodeUtil::Ucs2Char OleStreamReader::getUcs2Char(OleStream& stream,long *off
 
 	if (myBufIsUnicode) {
 		u = NumUtil::getUInt16(myTmpBuffer, i);
-		(*offset)+=2;
+		myTextOffset += 2;
 	} else {
 		if (myConverter.isNull()) {
 			//lazy convertor loading, because documents can be in Unicode only and don't need to be converted
@@ -195,7 +206,7 @@ ZLUnicodeUtil::Ucs2Char OleStreamReader::getUcs2Char(OleStream& stream,long *off
 		} else {
 			u = ucs2string.at(0);
 		}
-		(*offset)+=1;
+		myTextOffset += 1;
 	}
 	return u;
 }
