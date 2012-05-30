@@ -26,6 +26,32 @@
 #include "OleStream.h"
 
 class OleStreamReader {
+
+public:
+	//word's control chars:
+	static const ZLUnicodeUtil::Ucs2Char WORD_FOOTNOTE_MARK;
+	static const ZLUnicodeUtil::Ucs2Char WORD_TABLE_SEPARATOR;
+	static const ZLUnicodeUtil::Ucs2Char WORD_HORIZONTAL_TAB;
+	static const ZLUnicodeUtil::Ucs2Char WORD_HARD_LINEBREAK;
+	static const ZLUnicodeUtil::Ucs2Char WORD_PAGE_BREAK;
+	static const ZLUnicodeUtil::Ucs2Char WORD_END_OF_PARAGRAPH;
+	static const ZLUnicodeUtil::Ucs2Char WORD_SHORT_DEFIS;
+	static const ZLUnicodeUtil::Ucs2Char WORD_SOFT_HYPHEN;
+	static const ZLUnicodeUtil::Ucs2Char WORD_START_FIELD;
+	static const ZLUnicodeUtil::Ucs2Char WORD_SEPARATOR_FIELD;
+	static const ZLUnicodeUtil::Ucs2Char WORD_END_FIELD;
+	static const ZLUnicodeUtil::Ucs2Char WORD_ZERO_WIDTH_UNBREAKABLE_SPACE;
+
+	//unicode values:
+	static const ZLUnicodeUtil::Ucs2Char NULL_SYMBOL;
+	static const ZLUnicodeUtil::Ucs2Char FILE_SEPARATOR;
+	static const ZLUnicodeUtil::Ucs2Char LINE_FEED;
+	static const ZLUnicodeUtil::Ucs2Char SOFT_HYPHEN;
+	static const ZLUnicodeUtil::Ucs2Char START_OF_HEADING;
+	static const ZLUnicodeUtil::Ucs2Char SPACE;
+	static const ZLUnicodeUtil::Ucs2Char SHORT_DEFIS;
+	static const ZLUnicodeUtil::Ucs2Char VERTICAL_LINE;
+
 public:
 	OleStreamReader(const std::string& encoding);
 
@@ -33,14 +59,26 @@ public:
 	void clear();
 
 protected:
-	virtual void parapgraphHandler(std::string paragraph) = 0;
+	//virtual void parapgraphHandler(std::string paragraph) = 0;
+
+	virtual void handleChar(ZLUnicodeUtil::Ucs2Char ucs2char) = 0;
+	virtual void handleHardLinebreak() = 0;
+	virtual void handleParagraphEnd() = 0;
+	virtual void handlePageBreak() = 0;
+	virtual void handleTableSeparator() = 0;
+	virtual void handleTableEndRow() = 0;
+	virtual void handleFootNoteMark() = 0;
+	virtual void handleStartField() = 0;
+	virtual void handleSeparatorField() = 0;
+	virtual void handleEndField() = 0;
+	virtual void handleStartOfHeading() = 0;
+	virtual void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) = 0;
 
 private:
 	//TODO implement get8BitChar method
-	ZLUnicodeUtil::Ucs2Char getUcs2Char(OleStream& stream);
+	bool getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char);
 
 private:
-	ZLUnicodeUtil::Ucs2String myBuffer;
 	char myTmpBuffer[256];
 	long myTextOffset;
 	bool myBufIsUnicode;

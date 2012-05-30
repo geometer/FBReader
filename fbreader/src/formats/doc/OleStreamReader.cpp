@@ -33,26 +33,28 @@
 #include "NumUtil.h"
 
 //word's control chars:
-static const ZLUnicodeUtil::Ucs2Char WORD_FOOTNOTE_MARK = 0x0002;
-static const ZLUnicodeUtil::Ucs2Char WORD_TABLE_SEPARATOR = 0x0007;
-static const ZLUnicodeUtil::Ucs2Char WORD_HORIZONTAL_TAB = 0x0009;
-static const ZLUnicodeUtil::Ucs2Char WORD_HARD_RETURN = 0x000b;
-static const ZLUnicodeUtil::Ucs2Char WORD_PAGE_BREAK = 0x000c;
-static const ZLUnicodeUtil::Ucs2Char WORD_END_OF_PARAGRAPH =  0x000d;
-static const ZLUnicodeUtil::Ucs2Char WORD_SHORT_DEFIS = 0x001e;
-static const ZLUnicodeUtil::Ucs2Char WORD_SOFT_HYPHEN = 0x001f;
-static const ZLUnicodeUtil::Ucs2Char WORD_START_EMB_HYPERLINK = 0x0013;
-static const ZLUnicodeUtil::Ucs2Char WORD_SEPARATE_HYPERLINK_FROM_TEXT = 0x0014;
-static const ZLUnicodeUtil::Ucs2Char WORD_END_EMB_HYPERLINK = 0x0015;
-static const ZLUnicodeUtil::Ucs2Char WORD_ZERO_WIDTH_UNBREAKABLE_SPACE = 0xfeff;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_FOOTNOTE_MARK = 0x0002;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_TABLE_SEPARATOR = 0x0007;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_HORIZONTAL_TAB = 0x0009;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_HARD_LINEBREAK = 0x000b;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_PAGE_BREAK = 0x000c;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_END_OF_PARAGRAPH =  0x000d;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_SHORT_DEFIS = 0x001e;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_SOFT_HYPHEN = 0x001f;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_START_FIELD = 0x0013;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_SEPARATOR_FIELD = 0x0014;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_END_FIELD = 0x0015;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_ZERO_WIDTH_UNBREAKABLE_SPACE = 0xfeff;
 
 //unicode values:
-static const ZLUnicodeUtil::Ucs2Char NULL_SYMBOL = 0x0;
-static const ZLUnicodeUtil::Ucs2Char FILE_SEPARATOR = 0x1c;
-static const ZLUnicodeUtil::Ucs2Char LINE_FEED = 0x000a;
-static const ZLUnicodeUtil::Ucs2Char SOFT_HYPHEN = 0xad;
-static const ZLUnicodeUtil::Ucs2Char START_OF_HEADING = 0x0001;
-static const ZLUnicodeUtil::Ucs2Char SPACE = 0x20;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::NULL_SYMBOL = 0x0;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::FILE_SEPARATOR = 0x1c;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::LINE_FEED = 0x000a;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::SOFT_HYPHEN = 0xad;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::START_OF_HEADING = 0x0001;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::SPACE = 0x20;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::SHORT_DEFIS = 0x2D;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::VERTICAL_LINE = 0x7C;
 
 
 OleStreamReader::OleStreamReader(const std::string &encoding) : myEncoding(encoding) {
@@ -61,7 +63,6 @@ OleStreamReader::OleStreamReader(const std::string &encoding) : myEncoding(encod
 
 
 void OleStreamReader::clear() {
-	myBuffer.clear();
 	myTextOffset = 0;
 	myBufIsUnicode = false;
 }
@@ -74,99 +75,77 @@ bool OleStreamReader::readStream(OleStream &oleStream) {
 		ZLLogger::Instance().println("DocReader", " doesn't open correct");
 		return false;
 	}
-	//TODO maybe split this method on simplier parts
-	int tabmode = 0;
-	int hyperlink_mode = 0;
 	ZLUnicodeUtil::Ucs2Char ucs2char;
-	bool paragraphEndSymbol = false;
+	bool tabMode = false;
 	while (!oleStream.eof() && myTextOffset < oleStream.getTextLength()) {
-		myBuffer.clear();
-		paragraphEndSymbol = false;
-		do {
-			ucs2char = getUcs2Char(oleStream);
+		bool result = getUcs2Char(oleStream, ucs2char);
+		if (!result) {
+			continue;
+		}
+
+		if (ucs2char < 32) {
+			printf("[0x%x]", ucs2char); //debug output
+		}
+
+		if (tabMode) {
+			tabMode = false;
+			if (ucs2char == WORD_TABLE_SEPARATOR) {
+				handleTableEndRow();
+				continue;
+			} else {
+				handleTableSeparator();
+			}
+		}
+
+		if (ucs2char < 32) {
 			if (ucs2char == NULL_SYMBOL) {
 				//ignore 0x0 symbols
 				continue;
-			}
-			if (tabmode) {
-				tabmode=0;
-				if (ucs2char == WORD_TABLE_SEPARATOR) {
-					myBuffer.push_back(WORD_SHORT_DEFIS);
-					continue;
-				} else {
-					myBuffer.push_back(FILE_SEPARATOR);
-				}
-			}
-			if (ucs2char < 32) {
-				printf("[0x%x]", ucs2char);
-				switch (ucs2char) {
-					case WORD_TABLE_SEPARATOR:
-						tabmode = 1;
-						break;
-					case WORD_HARD_RETURN:
-					case WORD_END_OF_PARAGRAPH:
-						myBuffer.push_back(LINE_FEED);
-						paragraphEndSymbol = true;
-						break;
-					case WORD_PAGE_BREAK:
-						myBuffer.push_back(ucs2char);
-						break;
-					case WORD_SHORT_DEFIS:
-						myBuffer.push_back('-');
-						break;
-					case WORD_FOOTNOTE_MARK: 
-						break;
-					case WORD_SOFT_HYPHEN:
-						myBuffer.push_back(SOFT_HYPHEN);
-						break;
-					case WORD_HORIZONTAL_TAB:
-						myBuffer.push_back(ucs2char);
-						 break;
-					case WORD_START_EMB_HYPERLINK:
-						 hyperlink_mode=1;
-						 break;
-					case WORD_SEPARATE_HYPERLINK_FROM_TEXT:
-						 hyperlink_mode = 0;
-						 break;
-					case WORD_END_EMB_HYPERLINK:
-
-						 break;
-					case START_OF_HEADING:
-						 if (hyperlink_mode) {
-							break;
-						 }
-						 /* else fall through */
-					default:
-						 // If any other control char, then current paragraph is discarded
-						 myBuffer.clear();
-				}
-			} else if (ucs2char == WORD_ZERO_WIDTH_UNBREAKABLE_SPACE) {
-				//skip
+			} else	if (ucs2char == WORD_HARD_LINEBREAK) {
+				printf("\n"); //debug output
+				handleHardLinebreak();
+			} else if (ucs2char == 	WORD_END_OF_PARAGRAPH) {
+				printf("\n"); //debug output
+				handleParagraphEnd();
+			} else if (ucs2char == WORD_PAGE_BREAK) {
+				handlePageBreak();
+			} else if (ucs2char == WORD_TABLE_SEPARATOR) {
+				tabMode = true;
+				continue;
+			} else if (ucs2char == WORD_FOOTNOTE_MARK) {
+				handleFootNoteMark();
+			} else if (ucs2char == WORD_START_FIELD) {
+				handleStartField();
+			} else if (ucs2char == WORD_SEPARATOR_FIELD) {
+				handleSeparatorField();
+			} else if (ucs2char == WORD_END_FIELD) {
+				handleEndField();
+			} else if (ucs2char == START_OF_HEADING) {
+				handleStartOfHeading();
 			} else {
-				std::string utf8String;
-				ZLUnicodeUtil::Ucs2String ucs2String;
-				ucs2String.push_back(ucs2char);
-				ZLUnicodeUtil::ucs2ToUtf8(utf8String,ucs2String);
-				printf("%s", utf8String.c_str());
-				if (hyperlink_mode != 1) {
-					myBuffer.push_back(ucs2char);
-				}
+				// If any other control char, then current paragraph is discarded
+				handleOtherControlChar(ucs2char);
 			}
-		} while (!oleStream.eof() && !paragraphEndSymbol);
-		if (!myBuffer.empty()) {
+		} else if (ucs2char == WORD_ZERO_WIDTH_UNBREAKABLE_SPACE) {
+			continue; //skip
+		} else {
+
+			//debug output
 			std::string utf8String;
-			ZLUnicodeUtil::ucs2ToUtf8(utf8String, myBuffer);
-			parapgraphHandler(utf8String);
-			printf("\n");
+			ZLUnicodeUtil::Ucs2String ucs2String;
+			ucs2String.push_back(ucs2char);
+			ZLUnicodeUtil::ucs2ToUtf8(utf8String,ucs2String);
+			printf("%s", utf8String.c_str());
+
+			handleChar(ucs2char);
 		}
 	}
 	return 0;
 }
 
-ZLUnicodeUtil::Ucs2Char OleStreamReader::getUcs2Char(OleStream& stream) {
+bool OleStreamReader::getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char) {
 	static const size_t BLOCK_SIZE = 256;
 	long count,i;
-	ZLUnicodeUtil::Ucs2Char u;
 	char c;
 	if ((i=(myTextOffset)%BLOCK_SIZE) == 0) {
 		count=stream.read(myTmpBuffer,1,BLOCK_SIZE);
@@ -186,7 +165,7 @@ ZLUnicodeUtil::Ucs2Char OleStreamReader::getUcs2Char(OleStream& stream) {
 	}
 
 	if (myBufIsUnicode) {
-		u = NumUtil::getUInt16(myTmpBuffer, i);
+		ucs2char = NumUtil::getUInt16(myTmpBuffer, i);
 		myTextOffset += 2;
 	} else {
 		if (myConverter.isNull()) {
@@ -200,13 +179,14 @@ ZLUnicodeUtil::Ucs2Char OleStreamReader::getUcs2Char(OleStream& stream) {
 		myConverter->convert(utf8String, std::string(1,myTmpBuffer[i]));
 		ZLUnicodeUtil::Ucs2String ucs2string;
 		ZLUnicodeUtil::utf8ToUcs2(ucs2string, utf8String);
+		myTextOffset += 1;
 		if (ucs2string.empty()) {
 			//in some word documents, there's 0x0 symbols in 256 not unicodes block exist -- ignore them
-			u = NULL_SYMBOL;
+			return false;
 		} else {
-			u = ucs2string.at(0);
+			ucs2char = ucs2string.at(0);
 		}
-		myTextOffset += 1;
+
 	}
-	return u;
+	return true;
 }

@@ -34,16 +34,33 @@ public:
 
 private:
 	bool readDocument(shared_ptr<ZLInputStream> stream, size_t streamSize);
-	void parapgraphHandler(std::string paragraph);
+	//void parapgraphHandler(std::string paragraph);
 
-	/*
-	void startElementHandler(int tag, const char **attributes);
-	void endElementHandler(int tag);
-	void characterDataHandler(const char *text, size_t len);
-	*/
+	void handleChar(ZLUnicodeUtil::Ucs2Char ucs2char);
+	void handleHardLinebreak();
+	void handleParagraphEnd();
+	void handlePageBreak();
+	void handleTableSeparator();
+	void handleTableEndRow();
+	void handleFootNoteMark();
+	void handleStartField();
+	void handleSeparatorField();
+	void handleEndField();
+	void handleStartOfHeading();
+	void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char);
 
 private:
 	BookReader myModelReader;
+
+	ZLUnicodeUtil::Ucs2String myFieldInfoBuffer;
+	bool myFieldReading;
+	bool myHyperlinkInserted;
+
+	bool myTabMode;
+
+
+
+
 };
 
 inline DocBookReader::~DocBookReader() {}
