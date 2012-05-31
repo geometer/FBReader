@@ -20,13 +20,11 @@
 #ifndef __OLEUTIL_H__
 #define __OLEUTIL_H__
 
-#include <stdint.h>
-
 class OleUtil {
 public:
-	static int32_t getInt32(const char *buffer, int offset);
-	static uint32_t getUInt32(const char *buffer, int offset);
-	static uint16_t getUInt16(const char *buffer, int offset);
+	static long getLong(const char *buffer, unsigned int offset);
+	static unsigned long getULong(const char *buffer, unsigned int offset);
+	static unsigned short getUShort(const char *buffer, unsigned int offset);
 };
 
 #endif /* __OLEUTIL_H__ */

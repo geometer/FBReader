@@ -40,11 +40,10 @@ struct OleEntry {
 		LOCK_BYTES =3
 	};
 
-	typedef std::vector<long int> Blocks;
+	typedef std::vector<unsigned long> Blocks;
 
 	std::string name;
-	long int startBlock;
-	unsigned long int length;
+	unsigned long length;
 	Type type;
 	Blocks blocks;
 	bool isBigBlock;
@@ -58,11 +57,11 @@ public:
 	void clear();
 	const std::vector<OleEntry>& getEntries() const;
 
-	long int getSectorSize();
-	long int getShortSectorSize();
+	unsigned int getSectorSize();
+	unsigned int getShortSectorSize();
 
 public: //TODO make private
-	long int calcFileOffsetByBlockNumber(OleEntry& e, long int blockNumber);
+	unsigned long calcFileOffsetByBlockNumber(OleEntry& e, unsigned int  blockNumber);
 
 private:
 	bool readMSAT(char* oleBuf, std::string& msat);
@@ -76,7 +75,7 @@ private:
 private:
 
 	shared_ptr<ZLInputStream> myInputStream;
-	long int mySectorSize, myShortSectorSize;
+	unsigned int mySectorSize, myShortSectorSize;
 
 	size_t myStreamSize;
 	std::string myBBD; //Big Block Depot
@@ -88,7 +87,7 @@ private:
 };
 
 inline const std::vector<OleEntry>& OleStorage::getEntries() const { return myEntries; }
-inline long int OleStorage::getSectorSize() { return mySectorSize; }
-inline long int OleStorage::getShortSectorSize() { return myShortSectorSize; }
+inline unsigned int OleStorage::getSectorSize() { return mySectorSize; }
+inline unsigned int OleStorage::getShortSectorSize() { return myShortSectorSize; }
 
 #endif /* __OLESTORAGE_H__ */

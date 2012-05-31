@@ -142,8 +142,8 @@ bool OleStreamReader::readStream(OleStream &oleStream) {
 }
 
 bool OleStreamReader::getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char) {
-	static const size_t BLOCK_SIZE = 256;
-	long count, i;
+	static const unsigned long BLOCK_SIZE = 256;
+	unsigned long count, i;
 	char c;
 	if ((i = myTextOffset % BLOCK_SIZE) == 0) {
 		count = stream.read(myTmpBuffer, 1, BLOCK_SIZE);
@@ -163,7 +163,7 @@ bool OleStreamReader::getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& uc
 	}
 
 	if (myBufIsUnicode) {
-		ucs2char = OleUtil::getUInt16(myTmpBuffer, i);
+		ucs2char = OleUtil::getUShort(myTmpBuffer, i);
 		myTextOffset += 2;
 	} else {
 		if (myConverter.isNull()) {

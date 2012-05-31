@@ -1,6 +1,9 @@
 DONE Добавить поддержку чтения 8 битных частей документа
 DONE Отображение word fields без служебных данных(гиперссылки, TOC, PAGEREF и др.)
-* Убрать warnings, связанные с сравнением signed и unsigned + переименовать класс NumUtil
+DONE Убрать warnings, связанные с сравнением signed и unsigned
+
+* Поправить алгоритм чтения для выявления "мусорных данных"
+
 
 Refactoring:
 * OleStream -- stream interface?

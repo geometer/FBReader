@@ -79,7 +79,7 @@ private:
 
 private:
 	char myTmpBuffer[256];
-	long myTextOffset;
+	unsigned long myTextOffset;
 	bool myBufIsUnicode;
 
 	shared_ptr<ZLEncodingConverter> myConverter;

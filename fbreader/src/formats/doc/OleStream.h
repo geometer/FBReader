@@ -32,11 +32,11 @@ public:
 	bool close();
 
 	size_t read(char *ptr, size_t size, size_t nmemb);
-	bool seek(long offset, bool absoluteOffset);
-	long tell();
+	bool seek(unsigned long offset, bool absoluteOffset);
+	unsigned long tell();
 
 public:
-	long getTextLength() const;
+	unsigned long getTextLength() const;
 
 public: //TODO make private
 	shared_ptr<OleStorage> myStorage; //for calling calcFileOffsetByBlockNumber function
@@ -46,12 +46,12 @@ private:
 	shared_ptr<ZLInputStream> myInputStream;
 
 	long myCurBlock;
-	long myOleOffset;
+	unsigned long myOleOffset;
 	//long myFileOffset;
 
-	long myTextLength;
+	unsigned long myTextLength;
 };
 
-inline long OleStream::getTextLength() const { return myTextLength; }
+inline unsigned long OleStream::getTextLength() const { return myTextLength; }
 
 #endif /* __OLESTREAM_H__ */

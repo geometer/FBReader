@@ -20,6 +20,7 @@
 #include <ZLFile.h>
 #include <ZLInputStream.h>
 #include <ZLLogger.h>
+#include <ZLImage.h>
 
 #include <iostream>
 
@@ -51,7 +52,7 @@ bool DocPlugin::readModel(BookModel &model) const {
 	return DocBookReader(model, model.book()->encoding()).readBook();
 }
 
-shared_ptr<ZLImage> DocPlugin::coverImage(const ZLFile &file) const {
+shared_ptr<ZLImage> DocPlugin::coverImage(const ZLFile &/*file*/) const {
 	return 0; //DocCoverReader(file).readCover();
 }
 

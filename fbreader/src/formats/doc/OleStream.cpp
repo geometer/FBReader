@@ -38,7 +38,7 @@ static const int PRODUCT_VERSION = 0x4;
 static const int LANGUAGE = 0x6;
 
 static const int CHARSET = 0x14;
-static const int DEFAULT_CHARSET = 0x100;
+static const unsigned int DEFAULT_CHARSET = 0x100;
 
 static const int START_OF_TEXT = 0x18;
 static const int END_OF_TEXT = 0x1c;
@@ -67,7 +67,7 @@ bool OleStream::open() {
 		return false;
 	}
 
-	int flags = OleUtil::getUInt16(header, FLAGS_OFFSET);
+	int flags = OleUtil::getUShort(header, FLAGS_OFFSET);
 
 	if (flags & FLAG_COMPLEX) {
 		ZLLogger::Instance().println("OleStream", "This was fast-saved. Some information is lost");
@@ -86,15 +86,15 @@ bool OleStream::open() {
 		return false;
 	}
 
-	unsigned int charset = OleUtil::getUInt16(header, CHARSET);
+	unsigned int charset = OleUtil::getUShort(header, CHARSET);
 	if (charset && charset != DEFAULT_CHARSET) {
 		ZLLogger::Instance().println("OleStream", "Using not default character set %d");
 	} else {
 		ZLLogger::Instance().println("OleStream", "Using default character set");
 	}
 
-	long startOfText = OleUtil::getInt32(header, START_OF_TEXT);
-	long endOfText = OleUtil::getInt32(header, END_OF_TEXT);
+	long startOfText = OleUtil::getLong(header, START_OF_TEXT);
+	long endOfText = OleUtil::getLong(header, END_OF_TEXT);
 	myTextLength = endOfText - startOfText;
 
 	if (!seek(startOfText, true)) {
@@ -105,22 +105,23 @@ bool OleStream::open() {
 }
 
 size_t OleStream::read(char *ptr, size_t size, size_t nmemb) {
-	long int length = size * nmemb;
-	long int readedBytes = 0;
-	long int curBlockNumber, modBlock, toReadBlocks, toReadBytes, bytesLeftInCurBlock;
-	long int sectorSize;
-	long int newFileOffset;
+	size_t length = size * nmemb;
+	size_t readedBytes = 0;
+	unsigned long newFileOffset;
+
+	unsigned int curBlockNumber, modBlock, toReadBlocks, toReadBytes, bytesLeftInCurBlock;
+	unsigned int sectorSize;
+
 	if( myOleOffset + length > myOleEntry.length ) {
 		length = myOleEntry.length - myOleOffset;
 	}
 
 	sectorSize = (myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
-	curBlockNumber = myOleOffset / sectorSize;
 
-	if (curBlockNumber >= myOleEntry.blocks.size() || length <=0) {
+	curBlockNumber = myOleOffset / sectorSize;
+	if (curBlockNumber >= myOleEntry.blocks.size()) {
 		return 0;
 	}
-
 	modBlock = myOleOffset % sectorSize;
 	bytesLeftInCurBlock = sectorSize - modBlock;
 	if (bytesLeftInCurBlock < length) {
@@ -134,8 +135,8 @@ size_t OleStream::read(char *ptr, size_t size, size_t nmemb) {
 	myInputStream->seek(newFileOffset, true);
 
 	readedBytes = myInputStream->read(ptr, std::min(length, bytesLeftInCurBlock));
-	for(long int i = 0; i < toReadBlocks; ++i) {
-		int readbytes;
+	for(unsigned long i = 0; i < toReadBlocks; ++i) {
+		size_t readbytes;
 		++curBlockNumber;
 		newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, curBlockNumber);
 		myInputStream->seek(newFileOffset, true);
@@ -143,7 +144,7 @@ size_t OleStream::read(char *ptr, size_t size, size_t nmemb) {
 		readedBytes += readbytes;
 	}
 	if(toReadBytes > 0) {
-		int readbytes;
+		size_t readbytes;
 		++curBlockNumber;
 		newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, curBlockNumber);
 		myInputStream->seek(newFileOffset, true);
@@ -155,7 +156,6 @@ size_t OleStream::read(char *ptr, size_t size, size_t nmemb) {
 }
 
 bool OleStream::eof() {
-	//TODO fix comparing signed/unsigned
 	return (myOleOffset >= myOleEntry.length);
 }
 
@@ -164,10 +164,10 @@ bool OleStream::close() {
 	return true;
 }
 
-bool OleStream::seek(long offset, bool absoluteOffset) {
-	long int newOleOffset=0;
-	long int newFileOffset;
-	int sectorSize, modBlock, blockNumber;
+bool OleStream::seek(unsigned long offset, bool absoluteOffset) {
+	unsigned long newOleOffset = 0;
+	unsigned long newFileOffset;
+	unsigned int sectorSize, modBlock, blockNumber;
 
 	if (absoluteOffset) {
 		newOleOffset = offset;
@@ -175,15 +175,11 @@ bool OleStream::seek(long offset, bool absoluteOffset) {
 		newOleOffset = myOleOffset + offset;
 	}
 
-	if (newOleOffset < 0) {
-		newOleOffset = 0;
-	}
-
-	newOleOffset = std::min((unsigned long int)newOleOffset, myOleEntry.length);
+	newOleOffset = std::min(newOleOffset, myOleEntry.length);
 
 	sectorSize = (myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
 	blockNumber = newOleOffset / sectorSize;
-	if ( blockNumber >= myOleEntry.blocks.size() ) {
+	if (blockNumber >= myOleEntry.blocks.size()) {
 		return false;
 	}
 
@@ -194,6 +190,6 @@ bool OleStream::seek(long offset, bool absoluteOffset) {
 	return true;
 }
 
-long OleStream::tell() {
+unsigned long OleStream::tell() {
 	return myOleOffset;
 }
