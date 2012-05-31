@@ -20,7 +20,7 @@
 #include <ZLLogger.h>
 
 #include "OleStream.h"
-#include "NumUtil.h"
+#include "OleUtil.h"
 
 static const int FLAG_DOT = 0x0001;
 static const int FLAG_GLSY = 0x0002;
@@ -44,8 +44,9 @@ static const int START_OF_TEXT = 0x18;
 static const int END_OF_TEXT = 0x1c;
 
 OleStream::OleStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream) :
-	myStorage(storage), myOleEntry(oleEntry), myInputStream(stream)  {
-
+	myStorage(storage),
+	myOleEntry(oleEntry),
+	myInputStream(stream) {
 	myCurBlock = 0;
 	myOleOffset = 0;
 	//myFileOffset = 0;
@@ -62,91 +63,92 @@ bool OleStream::open() {
 	char header[HEADER_SIZE];
 	seek(0, true);
 	if (read(header, 1, HEADER_SIZE) != HEADER_SIZE) {
-		ZLLogger::Instance().println("OleStream","Can't read FIB from WordDocument stream");
+		ZLLogger::Instance().println("OleStream", "Can't read FIB from WordDocument stream");
 		return false;
 	}
 
-	int flags = NumUtil::getUInt16(header, FLAGS_OFFSET);
+	int flags = OleUtil::getUInt16(header, FLAGS_OFFSET);
 
 	if (flags & FLAG_COMPLEX) {
-		ZLLogger::Instance().println("OleStream","This was fast-saved. Some information is lost");
-		//lost_info = (flags & 0xF0)>>4);
+		ZLLogger::Instance().println("OleStream", "This was fast-saved. Some information is lost");
+		//lost_info = (flags & 0xF0) >> 4);
 	}
 
 	if (flags & FLAG_EXTCHAR) {
-		ZLLogger::Instance().println("OleStream","File uses extended character set (get_word8_char)");
+		ZLLogger::Instance().println("OleStream", "File uses extended character set (get_word8_char)");
 	} else {
-		ZLLogger::Instance().println("OleStream","File uses get_8bit_char character set");
+		ZLLogger::Instance().println("OleStream", "File uses get_8bit_char character set");
 	}
 
 	if (flags & FLAG_ENCRYPTED) {
-		ZLLogger::Instance().println("OleStream","File is encrypted");
-		// Encryption key = %08lx ; NumUtil::getlong(header,14)
+		ZLLogger::Instance().println("OleStream", "File is encrypted");
+		// Encryption key = %08lx ; NumUtil::getlong(header, 14)
 		return false;
 	}
 
-	unsigned int charset = NumUtil::getUInt16(header,CHARSET);
-	if (charset&&charset !=DEFAULT_CHARSET) {
+	unsigned int charset = OleUtil::getUInt16(header, CHARSET);
+	if (charset && charset != DEFAULT_CHARSET) {
 		ZLLogger::Instance().println("OleStream", "Using not default character set %d");
 	} else {
-		ZLLogger::Instance().println("OleStream","Using default character set");
+		ZLLogger::Instance().println("OleStream", "Using default character set");
 	}
 
-	long startOfText = NumUtil::getInt32(header,START_OF_TEXT);
-	long endOfText = NumUtil::getInt32(header,END_OF_TEXT);
+	long startOfText = OleUtil::getInt32(header, START_OF_TEXT);
+	long endOfText = OleUtil::getInt32(header, END_OF_TEXT);
 	myTextLength = endOfText - startOfText;
 
 	if (!seek(startOfText, true)) {
-		ZLLogger::Instance().println("OleStream","Can't move to start of text, maybe word document stream is broken");
+		ZLLogger::Instance().println("OleStream", "Can't move to start of text, maybe word document stream is broken");
 		return false;
 	}
 	return true;
 }
 
 size_t OleStream::read(char *ptr, size_t size, size_t nmemb) {
-	long int length = size*nmemb, readedBytes=0;
+	long int length = size * nmemb;
+	long int readedBytes = 0;
 	long int curBlockNumber, modBlock, toReadBlocks, toReadBytes, bytesLeftInCurBlock;
 	long int sectorSize;
 	long int newFileOffset;
-	if( myOleOffset+length > myOleEntry.length ) {
+	if( myOleOffset + length > myOleEntry.length ) {
 		length = myOleEntry.length - myOleOffset;
 	}
 
 	sectorSize = (myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
-	curBlockNumber = myOleOffset/sectorSize;
+	curBlockNumber = myOleOffset / sectorSize;
 
-	if ( curBlockNumber >= myOleEntry.blocks.size() || length <=0 ) {
+	if (curBlockNumber >= myOleEntry.blocks.size() || length <=0) {
 		return 0;
 	}
 
 	modBlock = myOleOffset % sectorSize;
 	bytesLeftInCurBlock = sectorSize - modBlock;
-	if(bytesLeftInCurBlock < length) {
+	if (bytesLeftInCurBlock < length) {
 		toReadBlocks = (length - bytesLeftInCurBlock) / sectorSize;
 		toReadBytes  = (length - bytesLeftInCurBlock) % sectorSize;
 	} else {
 		toReadBlocks = toReadBytes = 0;
 	}
 
-	newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry,curBlockNumber) + modBlock;
+	newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, curBlockNumber) + modBlock;
 	myInputStream->seek(newFileOffset, true);
 
-	readedBytes = myInputStream->read(ptr, std::min(length,bytesLeftInCurBlock));
+	readedBytes = myInputStream->read(ptr, std::min(length, bytesLeftInCurBlock));
 	for(long int i = 0; i < toReadBlocks; ++i) {
 		int readbytes;
-		curBlockNumber++;
-		newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry,curBlockNumber);
+		++curBlockNumber;
+		newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, curBlockNumber);
 		myInputStream->seek(newFileOffset, true);
-		readbytes = myInputStream->read(ptr+readedBytes, std::min(length - readedBytes, sectorSize));
-		readedBytes +=readbytes;
+		readbytes = myInputStream->read(ptr + readedBytes, std::min(length - readedBytes, sectorSize));
+		readedBytes += readbytes;
 	}
 	if(toReadBytes > 0) {
 		int readbytes;
-		curBlockNumber++;
-		newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry,curBlockNumber);
+		++curBlockNumber;
+		newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, curBlockNumber);
 		myInputStream->seek(newFileOffset, true);
-		readbytes = myInputStream->read(ptr+readedBytes, toReadBytes);
-		readedBytes +=readbytes;
+		readbytes = myInputStream->read(ptr + readedBytes, toReadBytes);
+		readedBytes += readbytes;
 	}
 	myOleOffset += readedBytes;
 	return readedBytes;
@@ -173,7 +175,7 @@ bool OleStream::seek(long offset, bool absoluteOffset) {
 		newOleOffset = myOleOffset + offset;
 	}
 
-	if(newOleOffset < 0) {
+	if (newOleOffset < 0) {
 		newOleOffset = 0;
 	}
 
@@ -186,10 +188,9 @@ bool OleStream::seek(long offset, bool absoluteOffset) {
 	}
 
 	modBlock = newOleOffset % sectorSize;
-	newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry,blockNumber) + modBlock;
+	newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, blockNumber) + modBlock;
 	myInputStream->seek(newFileOffset, true);
 	myOleOffset = newOleOffset;
-
 	return true;
 }
 

@@ -25,7 +25,7 @@
 class OleStream {
 
 public:
-	OleStream(shared_ptr<OleStorage> storage, OleEntry oleEntry,shared_ptr<ZLInputStream> stream);
+	OleStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream);
 
 	bool open();
 	bool eof();
@@ -50,8 +50,6 @@ private:
 	//long myFileOffset;
 
 	long myTextLength;
-
-
 };
 
 inline long OleStream::getTextLength() const { return myTextLength; }

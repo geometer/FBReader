@@ -17,21 +17,21 @@
  * 02110-1301, USA.
  */
 
-#include "NumUtil.h"
+#include "OleUtil.h"
 
-int32_t NumUtil::getInt32(const char *buffer,int offset) {
+int32_t OleUtil::getInt32(const char *buffer, int offset) {
 	const unsigned char* buf = (const unsigned char*)buffer;
 	return   (int32_t)buf[offset]         | ((int32_t)buf[offset+1]<<8L) |
 			((int32_t)buf[offset+2]<<16L) | ((int32_t)buf[offset+3]<<24L);
 }
 
-uint32_t NumUtil::getUInt32(const char *buffer,int offset) {
+uint32_t OleUtil::getUInt32(const char *buffer, int offset) {
 	const unsigned char* buf = (const unsigned char*)buffer;
 	return (uint32_t)buf[offset]         | ((uint32_t)buf[offset+1]<<8L) |
 		  ((uint32_t)buf[offset+2]<<16L) | ((uint32_t)buf[offset+3]<<24L);
 }
 
-uint16_t NumUtil::getUInt16(const char *buffer,int offset) {
+uint16_t OleUtil::getUInt16(const char *buffer, int offset) {
    const unsigned char* buf = (const unsigned char*)buffer;
    return (uint16_t)buf[offset] | ((uint16_t)buf[offset+1]<<8);
 }

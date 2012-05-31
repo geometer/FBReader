@@ -60,7 +60,6 @@ public:
 
 protected:
 	//virtual void parapgraphHandler(std::string paragraph) = 0;
-
 	virtual void handleChar(ZLUnicodeUtil::Ucs2Char ucs2char) = 0;
 	virtual void handleHardLinebreak() = 0;
 	virtual void handleParagraphEnd() = 0;

@@ -17,16 +17,16 @@
  * 02110-1301, USA.
  */
 
-#ifndef __NUMUTIL_H__
-#define __NUMUTIL_H__
+#ifndef __OLEUTIL_H__
+#define __OLEUTIL_H__
 
 #include <stdint.h>
 
-class NumUtil {
+class OleUtil {
 public:
-	static int32_t getInt32(const char *buffer,int offset);
-	static uint32_t getUInt32(const char *buffer,int offset);
-	static uint16_t getUInt16(const char *buffer,int offset);
+	static int32_t getInt32(const char *buffer, int offset);
+	static uint32_t getUInt32(const char *buffer, int offset);
+	static uint16_t getUInt16(const char *buffer, int offset);
 };
 
-#endif /* __NUMUTIL_H__ */
+#endif /* __OLEUTIL_H__ */

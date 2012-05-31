@@ -30,7 +30,7 @@
 
 #include "OleStreamReader.h"
 #include "DocBookReader.h"
-#include "NumUtil.h"
+#include "OleUtil.h"
 
 //word's control chars:
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_FOOTNOTE_MARK = 0x0002;
@@ -57,22 +57,21 @@ const ZLUnicodeUtil::Ucs2Char OleStreamReader::SHORT_DEFIS = 0x2D;
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::VERTICAL_LINE = 0x7C;
 
 
-OleStreamReader::OleStreamReader(const std::string &encoding) : myEncoding(encoding) {
+OleStreamReader::OleStreamReader(const std::string &encoding) :
+	myEncoding(encoding) {
 	clear();
 }
-
 
 void OleStreamReader::clear() {
 	myTextOffset = 0;
 	myBufIsUnicode = false;
 }
 
-
 bool OleStreamReader::readStream(OleStream &oleStream) {
 	clear();
 	bool res = oleStream.open();
 	if (!res) {
-		ZLLogger::Instance().println("DocReader", " doesn't open correct");
+		ZLLogger::Instance().println("DocReader", "doesn't open correct");
 		return false;
 	}
 	ZLUnicodeUtil::Ucs2Char ucs2char;
@@ -129,12 +128,11 @@ bool OleStreamReader::readStream(OleStream &oleStream) {
 		} else if (ucs2char == WORD_ZERO_WIDTH_UNBREAKABLE_SPACE) {
 			continue; //skip
 		} else {
-
 			//debug output
 			std::string utf8String;
 			ZLUnicodeUtil::Ucs2String ucs2String;
 			ucs2String.push_back(ucs2char);
-			ZLUnicodeUtil::ucs2ToUtf8(utf8String,ucs2String);
+			ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
 			printf("%s", utf8String.c_str());
 
 			handleChar(ucs2char);
@@ -145,17 +143,17 @@ bool OleStreamReader::readStream(OleStream &oleStream) {
 
 bool OleStreamReader::getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char) {
 	static const size_t BLOCK_SIZE = 256;
-	long count,i;
+	long count, i;
 	char c;
-	if ((i=(myTextOffset)%BLOCK_SIZE) == 0) {
-		count=stream.read(myTmpBuffer,1,BLOCK_SIZE);
-		memset(myTmpBuffer+count,0,BLOCK_SIZE - count);
+	if ((i = myTextOffset % BLOCK_SIZE) == 0) {
+		count = stream.read(myTmpBuffer, 1, BLOCK_SIZE);
+		memset(myTmpBuffer + count, 0, BLOCK_SIZE - count);
 		myBufIsUnicode = false;
 		count = std::min(count, stream.getTextLength() - myTextOffset);
 		while (i < count) {
 			c = myTmpBuffer[i++];
 			//does it a reliable way to check on unicode?
-			if (myTmpBuffer[i] == 0 && (c == SPACE || c == WORD_END_OF_PARAGRAPH || ispunct(c)) && i<count) {
+			if (myTmpBuffer[i] == 0 && (c == SPACE || c == WORD_END_OF_PARAGRAPH || ispunct(c)) && i < count) {
 				myBufIsUnicode = true;
 				break;
 			}
@@ -165,7 +163,7 @@ bool OleStreamReader::getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& uc
 	}
 
 	if (myBufIsUnicode) {
-		ucs2char = NumUtil::getUInt16(myTmpBuffer, i);
+		ucs2char = OleUtil::getUInt16(myTmpBuffer, i);
 		myTextOffset += 2;
 	} else {
 		if (myConverter.isNull()) {
@@ -176,7 +174,7 @@ bool OleStreamReader::getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& uc
 		}
 		//TODO is there's a way to convert to ucs2string at once?
 		std::string utf8String;
-		myConverter->convert(utf8String, std::string(1,myTmpBuffer[i]));
+		myConverter->convert(utf8String, std::string(1, myTmpBuffer[i]));
 		ZLUnicodeUtil::Ucs2String ucs2string;
 		ZLUnicodeUtil::utf8ToUcs2(ucs2string, utf8String);
 		myTextOffset += 1;
@@ -186,7 +184,6 @@ bool OleStreamReader::getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& uc
 		} else {
 			ucs2char = ucs2string.at(0);
 		}
-
 	}
 	return true;
 }

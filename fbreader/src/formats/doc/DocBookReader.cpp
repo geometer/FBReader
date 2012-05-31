@@ -35,11 +35,11 @@
 #include "OleStorage.h"
 #include "OleStream.h"
 
-const static std::string WORD_DOCUMENT = "WordDocument";
+static const std::string WORD_DOCUMENT = "WordDocument";
 
 DocBookReader::DocBookReader(BookModel &model, const std::string &encoding) :
-	OleStreamReader(encoding), myModelReader(model) {
-	myTabMode = false;
+	OleStreamReader(encoding),
+	myModelReader(model) {
 	myFieldReading = false;
 	myHyperlinkInserted = false;
 }
@@ -53,7 +53,7 @@ bool DocBookReader::readBook() {
 	return readDocument(stream, file.size());
 }
 
-bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream,size_t streamSize) {
+bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream, size_t streamSize) {
 	if (inputStream.isNull() || !inputStream->open()) {
 		return false;
 	}
@@ -121,7 +121,7 @@ void DocBookReader::handleParagraphEnd() {
 }
 
 void DocBookReader::handlePageBreak() {
-	//myModelReader.insertEndOfSectionParagraph();
+	myModelReader.insertEndOfSectionParagraph();
 }
 
 void DocBookReader::handleTableSeparator() {

@@ -40,13 +40,13 @@ struct OleEntry {
 		LOCK_BYTES =3
 	};
 
-	typedef std::vector<long int> BLOCKS;
+	typedef std::vector<long int> Blocks;
 
 	std::string name;
 	long int startBlock;
 	unsigned long int length;
 	Type type;
-	BLOCKS blocks;
+	Blocks blocks;
 	bool isBigBlock;
 };
 
@@ -65,7 +65,7 @@ public: //TODO make private
 	long int calcFileOffsetByBlockNumber(OleEntry& e, long int blockNumber);
 
 private:
-	bool readMSAT(char* oleBuf, std::string& MSAT);
+	bool readMSAT(char* oleBuf, std::string& msat);
 	bool readBBD(char* oleBuf);
 	bool readSBD(char* oleBuf);
 	bool readProperties(char* oleBuf);

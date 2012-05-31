@@ -55,12 +55,6 @@ private:
 	ZLUnicodeUtil::Ucs2String myFieldInfoBuffer;
 	bool myFieldReading;
 	bool myHyperlinkInserted;
-
-	bool myTabMode;
-
-
-
-
 };
 
 inline DocBookReader::~DocBookReader() {}
