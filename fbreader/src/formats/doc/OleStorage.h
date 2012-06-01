@@ -29,6 +29,7 @@
 //#include <stdlib.h>
 //#include <string.h>
 //#include <errno.h>
+#include <stdint.h>
 
 #include <ZLInputStream.h>
 
@@ -64,7 +65,7 @@ public: //TODO make private
 	unsigned long calcFileOffsetByBlockNumber(OleEntry& e, unsigned int  blockNumber);
 
 private:
-	bool readMSAT(char* oleBuf, std::string& msat);
+	bool readDIFAT(char* oleBuf);
 	bool readBBD(char* oleBuf);
 	bool readSBD(char* oleBuf);
 	bool readProperties(char* oleBuf);
@@ -78,9 +79,10 @@ private:
 	unsigned int mySectorSize, myShortSectorSize;
 
 	size_t myStreamSize;
-	std::string myBBD; //Big Block Depot
-	std::string mySBD; //Small Block Depot
-	std::string myProperties;
+	std::vector<long> myDIFAT; //double-indirect file allocation table
+	std::vector<long> myBBD; //Big Block Depot
+	std::vector<long> mySBD; //Small Block Depot
+	std::vector<std::string> myProperties;
 	std::vector<OleEntry> myEntries;
 	OleEntry *myRootEntry;
 

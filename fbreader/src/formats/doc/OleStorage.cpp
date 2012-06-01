@@ -34,11 +34,33 @@ static const long PROP_BLOCK_SIZE = 128;
 static const int OFFSET_SECTOR_SIZE = 0x1e;
 static const int OFFSET_SHORT_SECTOR_SIZE = 0x20;
 
+static const int OFFSET_MAJOR_VERSION = 0x1A;
+static const int OFFSET_MINOR_VERSION = 0x18;
+
+static const unsigned long ENDOFCHAIN = 0xFFFFFFFE;
+static const unsigned long FREESECT   = 0xFFFFFFFF;
+
 static const std::string ROOT_ENTRY = "Root Entry";
 
 OleStorage::OleStorage()  {
 	clear();
 }
+
+void OleStorage::clear() {
+	myInputStream = 0;
+	mySectorSize = 0;
+	myShortSectorSize = 0;
+	myStreamSize = 0;
+	myRootEntry = 0;
+
+	myDIFAT.clear();
+	myBBD.clear();
+	mySBD.clear();
+	myProperties.clear();
+	myEntries.clear();
+}
+
+
 
 bool OleStorage::init(shared_ptr<ZLInputStream> stream, size_t streamSize)  {
 	clear();
@@ -60,38 +82,47 @@ bool OleStorage::init(shared_ptr<ZLInputStream> stream, size_t streamSize)  {
 	mySectorSize = 1 << OleUtil::getUShort(oleBuf, OFFSET_SECTOR_SIZE);
 	myShortSectorSize = 1 << OleUtil::getUShort(oleBuf, OFFSET_SHORT_SECTOR_SIZE);
 
-	if (readBBD(oleBuf) && readSBD(oleBuf) && readProperties(oleBuf) && readAllEntries()) {
+//	printf("Major version: %u, minor version: %u\n", OleUtil::getUShort(oleBuf, OFFSET_MAJOR_VERSION),
+//		   OleUtil::getUShort(oleBuf, OFFSET_MINOR_VERSION));
+
+	if (readDIFAT(oleBuf) && readBBD(oleBuf) && readSBD(oleBuf) && readProperties(oleBuf) && readAllEntries()) {
 		return true;
 	}
 	clear();
 	return false;
 }
 
-bool OleStorage::readMSAT(char* oleBuf, std::string& msat) {
-	static const int MSAT_ORIG_SIZE = 436;
-	static const int OFFSET_MSAT_BLOCK = 0x44;
-	static const int OFFSET_MSAT_SIZE = 0x48;
-	static const int OFFSET_MSAT_IN_HEADER = 0x4c;
+bool OleStorage::readDIFAT(char* oleBuf) {
+	static const int DIFAT_IN_HEADER_SIZE = 436;
+	static const int OFFSET_FIRST_DIFAT_BLOCK = 0x44;
+	static const int OFFSET_DIFAT_SECTOR_NUMBERS = 0x48;
+	static const int OFFSET_DIFAT_IN_HEADER = 0x4c;
 
-	long msatBlock = OleUtil::getLong(oleBuf, OFFSET_MSAT_BLOCK);
-	long msatSize = OleUtil::getLong(oleBuf, OFFSET_MSAT_SIZE);
+	long difatBlock = OleUtil::getLong(oleBuf, OFFSET_FIRST_DIFAT_BLOCK);
+	long difatSectorNumbers = OleUtil::getLong(oleBuf, OFFSET_DIFAT_SECTOR_NUMBERS);
 
-	msat = std::string(oleBuf + OFFSET_MSAT_IN_HEADER, MSAT_ORIG_SIZE);
+	for (int i = 0; i < DIFAT_IN_HEADER_SIZE; i += 4)  {
+		myDIFAT.push_back(OleUtil::getLong(oleBuf + OFFSET_DIFAT_IN_HEADER, i));
+	}
 
-	for (int i = 0; msatBlock > 0 && i < msatSize; ++i) {
-		ZLLogger::Instance().println("OleStorage", "Read additional data for MSAT");
+	//for files > 6.78 mb we need read additional DIFAT fields
+	for (int i = 0; difatBlock > 0 && i < difatSectorNumbers; ++i) {
+		ZLLogger::Instance().println("OleStorage", "Read additional data for DIFAT");
 		char buffer[mySectorSize];
-		myInputStream->seek(BBD_BLOCK_SIZE + msatBlock * mySectorSize, true);
-		size_t res = myInputStream->read(buffer, mySectorSize);
-		if(res != mySectorSize) {
-			ZLLogger::Instance().println("OleStorage", "Error read MSAT!");
+		myInputStream->seek(BBD_BLOCK_SIZE + difatBlock * mySectorSize, true);
+		if (myInputStream->read(buffer, mySectorSize) != mySectorSize) {
+			ZLLogger::Instance().println("OleStorage", "Error read DIFAT!");
 			return false;
 		}
-		if (msat.size() >= MSAT_ORIG_SIZE + 4) {
-			msat.resize(msat.size() - 4);
+		for (unsigned int j = 0; j < (mySectorSize - 4); j += 4) {
+			myDIFAT.push_back(OleUtil::getLong(buffer, j));
 		}
-		msat += std::string(buffer, mySectorSize);
-		msatBlock = OleUtil::getLong(msat.c_str(), MSAT_ORIG_SIZE + (int)(mySectorSize - 4) * i);
+		difatBlock = OleUtil::getLong(buffer, mySectorSize - 4); //next DIFAT block is pointed at the end of the sector
+	}
+
+	//removing unusiable DIFAT links
+	while (myDIFAT.back() == FREESECT) {
+		myDIFAT.pop_back();
 	}
 	return true;
 }
@@ -99,14 +130,13 @@ bool OleStorage::readMSAT(char* oleBuf, std::string& msat) {
 bool OleStorage::readBBD(char* oleBuf) {
 	static const int OFFSET_BBD_NUM_BLOCKS = 0x2c;
 
-	std::string msat;
-	readMSAT(oleBuf, msat);
-
 	char buffer[mySectorSize];
 	unsigned long bbdNumberBlocks = OleUtil::getULong(oleBuf, OFFSET_BBD_NUM_BLOCKS);
 
-	for(unsigned long i = 0; i < bbdNumberBlocks; ++i) {
-		long bbdSector = OleUtil::getLong(msat.c_str(), 4 * i);
+	printf("bbdNumberBlocks: %u\n", bbdNumberBlocks);
+
+	for (unsigned long i = 0; i < bbdNumberBlocks; ++i) {
+		long bbdSector = myDIFAT.at(i);
 		if (bbdSector >= (long)(myStreamSize/mySectorSize) || bbdSector < 0) {
 			ZLLogger::Instance().println("OleStorage", "Bad BBD entry!");
 			return false;
@@ -116,25 +146,37 @@ bool OleStorage::readBBD(char* oleBuf) {
 			ZLLogger::Instance().println("OleStorage", "Can't read BBD!");
 			return false;
 		}
-		myBBD += std::string(buffer, mySectorSize);
+		for (unsigned int j = 0; j < mySectorSize; j += 4) {
+			myBBD.push_back(OleUtil::getLong(buffer, j));
+		}
 	}
+
+	printf("Length of BBD: %d\n", myBBD.size());
 	return true;
 }
 
 bool OleStorage::readSBD(char* oleBuf) {
 	static const int OFFSET_SBD_START = 0x3c;
-	long sbdStart, sbdCur;
-	sbdCur = sbdStart = OleUtil::getLong(oleBuf, OFFSET_SBD_START);
-	if (sbdStart <= 0) {
+	static const int OFFSET_SBD_COUNT = 0x40;
+
+	long sbdCur = OleUtil::getLong(oleBuf, OFFSET_SBD_START);
+	long sbdCount = OleUtil::getLong(oleBuf, OFFSET_SBD_COUNT);
+
+	if (sbdCur <= 0) {
 		return true;
 	}
+	printf("sbdCount = %ld\n", sbdCount);
 
 	char buffer[mySectorSize];
 	do {
 		myInputStream->seek(BBD_BLOCK_SIZE + sbdCur * mySectorSize, true);
 		myInputStream->read(buffer, mySectorSize);
-		mySBD += std::string(buffer, mySectorSize);
-		sbdCur = OleUtil::getLong(myBBD.c_str(), sbdCur * 4);
+		for (unsigned int j = 0; j < mySectorSize; j += 4) {
+			mySBD.push_back(OleUtil::getLong(buffer, j));
+		}
+		sbdCur = myBBD.at(sbdCur);
+		printf("sbdCur = %d\n", sbdCur);
+
 	} while (sbdCur >=0 && sbdCur < (long)(myStreamSize / mySectorSize));
 
 	//mySBDNumber = (mySBDLength * mySectorSize) / myShortSectorSize;
@@ -153,15 +195,17 @@ bool OleStorage::readProperties(char* oleBuf) {
 	do {
 		myInputStream->seek(BBD_BLOCK_SIZE + propCur * mySectorSize, true);
 		myInputStream->read(buffer, mySectorSize);
-		myProperties += std::string(buffer, mySectorSize);
-		propCur = OleUtil::getLong(myBBD.c_str(), propCur * 4);
+		for (unsigned int j = 0; j < mySectorSize; j += 128) {
+			myProperties.push_back(std::string(buffer + j, 128));
+		}
+		propCur = myBBD.at(propCur);
 	} while (propCur >= 0 && propCur < (long)(myStreamSize / mySectorSize));
 	//myPropNumber = (myPropLength * mySectorSize) / PROP_BLOCK_SIZE;
 	return true;
 }
 
 bool OleStorage::readAllEntries() {
-	long propCount = myProperties.size() / PROP_BLOCK_SIZE;
+	long propCount = myProperties.size();
 	for (long i = 0; i < propCount; ++i) {
 		OleEntry entry;
 		bool result = readOleEntry(i, entry);
@@ -186,13 +230,9 @@ bool OleStorage::readOleEntry(long propNumber, OleEntry& e) {
 	static const int OFFSET_NAME_LENGTH = 0x40;
 	static const int OFFSET_ENTRY_LENGTH = 0x78;
 
-	char oleBuf[PROP_BLOCK_SIZE];
-	for (long i = 0; i < PROP_BLOCK_SIZE; ++i) {
-		oleBuf[i] = myProperties.at(i + propNumber * PROP_BLOCK_SIZE);
-	}
-	//unsigned char* oleBuf = (unsigned char*)myProperties.c_str() + propNumber * PROP_BLOCK_SIZE;
+	std::string property = myProperties.at(propNumber);
 
-	char oleType = oleBuf[OFFSET_OLE_TYPE];
+	char oleType = property.at(OFFSET_OLE_TYPE);
 	if (oleType != 1 && oleType != 2 && oleType != 3 && oleType != 5) {
 		ZLLogger::Instance().println("OleStorage", "entry -- not right ole type");
 		return false;
@@ -200,21 +240,21 @@ bool OleStorage::readOleEntry(long propNumber, OleEntry& e) {
 
 	e.type = (OleEntry::Type)oleType;
 
-	int nameLength = OleUtil::getUShort(oleBuf, OFFSET_NAME_LENGTH);
+	int nameLength = OleUtil::getUShort(property.c_str(), OFFSET_NAME_LENGTH);
 	e.name.clear();
 	e.name.reserve(OLE_NAME_LENGTH + 1);
 	for (int i = 0; i < nameLength; i+=2) {
-		char c = oleBuf[i];
+		char c = property.at(i);
 		if (c != 0) {
 			e.name += c;
 		}
 	}
 
-	e.length = OleUtil::getULong(oleBuf, OFFSET_ENTRY_LENGTH);
+	e.length = OleUtil::getULong(property.c_str(), OFFSET_ENTRY_LENGTH);
 	e.isBigBlock = e.length >= 0x1000 || e.name == ROOT_ENTRY;
 
 	// Read sector chain
-	long chainCur = OleUtil::getLong(oleBuf, OFFSET_START_BLOCK);
+	long chainCur = OleUtil::getLong(property.c_str(), OFFSET_START_BLOCK);
 	if (chainCur >= 0 &&
 	   (chainCur <= (long)(myStreamSize / (e.isBigBlock ? mySectorSize : myShortSectorSize)))) {
 
@@ -222,14 +262,14 @@ bool OleStorage::readOleEntry(long propNumber, OleEntry& e) {
 		do {
 			e.blocks.push_back((unsigned long)chainCur);
 			if (e.isBigBlock) {
-				chainCur = OleUtil::getLong(myBBD.c_str(), chainCur * 4);
+				chainCur = myBBD.at(chainCur);
 			} else if (!mySBD.empty()) {
-				chainCur = OleUtil::getLong(mySBD.c_str(), chainCur * 4);
+				chainCur = mySBD.at(chainCur);
 			} else {
 				chainCur = -1;
 			}
 		} while (chainCur > 0 &&
-				 chainCur < e.isBigBlock ? (myBBD.size() / 4) : (mySBD.size() / 4) &&
+				 chainCur < (e.isBigBlock ? myBBD.size() : mySBD.size()) &&
 				 e.blocks.size() <= e.length / (e.isBigBlock ? mySectorSize : myShortSectorSize));
 	}
 	e.length = std::min(e.length, (unsigned long)(e.isBigBlock ? mySectorSize : myShortSectorSize) * e.blocks.size());
@@ -248,17 +288,3 @@ unsigned long OleStorage::calcFileOffsetByBlockNumber(OleEntry& e, unsigned int 
 	}
 	return res;
 }
-
-void OleStorage::clear() {
-	myInputStream = 0;
-	mySectorSize = 0;
-	myShortSectorSize = 0;
-	myStreamSize = 0;
-	myRootEntry = 0;
-
-	myBBD.clear();
-	mySBD.clear();
-	myProperties.clear();
-	myEntries.clear();
-}
-
