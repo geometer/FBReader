@@ -33,7 +33,7 @@
 #include "../../library/Book.h"
 
 #include "OleStorage.h"
-#include "OleStream.h"
+#include "OleMainStream.h"
 
 static const std::string WORD_DOCUMENT = "WordDocument";
 
@@ -77,7 +77,7 @@ bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream, size_t s
 			continue;
 		}
 
-		OleStream oleStream(storage, entry, inputStream);
+		OleMainStream oleStream(storage, entry, inputStream);
 		bool result = readStream(oleStream);
 		if (!result) {
 			return false;

@@ -37,8 +37,8 @@ static const int OFFSET_SHORT_SECTOR_SIZE = 0x20;
 static const int OFFSET_MAJOR_VERSION = 0x1A;
 static const int OFFSET_MINOR_VERSION = 0x18;
 
-static const unsigned long ENDOFCHAIN = 0xFFFFFFFE;
-static const unsigned long FREESECT   = 0xFFFFFFFF;
+static const long ENDOFCHAIN = 0xFFFFFFFE;
+static const long FREESECT   = 0xFFFFFFFF;
 
 static const std::string ROOT_ENTRY = "Root Entry";
 
@@ -133,7 +133,7 @@ bool OleStorage::readBBD(char* oleBuf) {
 	char buffer[mySectorSize];
 	unsigned long bbdNumberBlocks = OleUtil::getULong(oleBuf, OFFSET_BBD_NUM_BLOCKS);
 
-	printf("bbdNumberBlocks: %u\n", bbdNumberBlocks);
+	//printf("bbdNumberBlocks: %lu\n", bbdNumberBlocks);
 
 	for (unsigned long i = 0; i < bbdNumberBlocks; ++i) {
 		long bbdSector = myDIFAT.at(i);
@@ -151,7 +151,7 @@ bool OleStorage::readBBD(char* oleBuf) {
 		}
 	}
 
-	printf("Length of BBD: %d\n", myBBD.size());
+	//printf("Length of BBD: %d\n", myBBD.size());
 	return true;
 }
 
@@ -165,7 +165,7 @@ bool OleStorage::readSBD(char* oleBuf) {
 	if (sbdCur <= 0) {
 		return true;
 	}
-	printf("sbdCount = %ld\n", sbdCount);
+	//printf("sbdCount = %ld\n", sbdCount);
 
 	char buffer[mySectorSize];
 	do {
@@ -175,11 +175,9 @@ bool OleStorage::readSBD(char* oleBuf) {
 			mySBD.push_back(OleUtil::getLong(buffer, j));
 		}
 		sbdCur = myBBD.at(sbdCur);
-		printf("sbdCur = %d\n", sbdCur);
+		//printf("sbdCur = %ld\n", sbdCur);
 
 	} while (sbdCur >=0 && sbdCur < (long)(myStreamSize / mySectorSize));
-
-	//mySBDNumber = (mySBDLength * mySectorSize) / myShortSectorSize;
 	return true;
 }
 
@@ -200,18 +198,19 @@ bool OleStorage::readProperties(char* oleBuf) {
 		}
 		propCur = myBBD.at(propCur);
 	} while (propCur >= 0 && propCur < (long)(myStreamSize / mySectorSize));
-	//myPropNumber = (myPropLength * mySectorSize) / PROP_BLOCK_SIZE;
 	return true;
 }
 
 bool OleStorage::readAllEntries() {
 	long propCount = myProperties.size();
+	//printf("propCount = %u\n", myProperties.size());
 	for (long i = 0; i < propCount; ++i) {
 		OleEntry entry;
 		bool result = readOleEntry(i, entry);
 		if (!result) {
 			break;
 		}
+		//printf("%ld entry name is %s\n", i, entry.name.c_str());
 		if (entry.type == OleEntry::ROOT_DIR) {
 			myRootEntry = &entry;
 		}
@@ -287,4 +286,15 @@ unsigned long OleStorage::calcFileOffsetByBlockNumber(OleEntry& e, unsigned int 
 		res = BBD_BLOCK_SIZE + myRootEntry->blocks.at(sbdSecNum) * mySectorSize + sbdSecMod * myShortSectorSize;
 	}
 	return res;
+}
+
+bool OleStorage::getEntryByName(std::string name, OleEntry &returnEntry) const {
+	for (size_t i = 0; i < myEntries.size(); ++i ) {
+		const OleEntry& entry = myEntries.at(i);
+		if (entry.name == name) {
+			returnEntry = entry;
+			return true;
+		}
+	}
+	return false;
 }

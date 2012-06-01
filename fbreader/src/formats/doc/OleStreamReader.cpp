@@ -26,7 +26,7 @@
 
 #include <ZLLogger.h>
 
-#include "OleStream.h"
+#include "OleMainStream.h"
 
 #include "OleStreamReader.h"
 #include "DocBookReader.h"
@@ -63,27 +63,23 @@ OleStreamReader::OleStreamReader(const std::string &encoding) :
 }
 
 void OleStreamReader::clear() {
-	myTextOffset = 0;
-	myBufIsUnicode = false;
+	myBuffer.clear();
+	myCurBufferPosition = 0;
+	myNextPieceNumber = 0;
 }
 
-bool OleStreamReader::readStream(OleStream &oleStream) {
+bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 	clear();
-	bool res = oleStream.open();
+	bool res = oleMainStream.open();
 	if (!res) {
-		ZLLogger::Instance().println("DocReader", "doesn't open correct");
+		ZLLogger::Instance().println("OleStreamReader", "doesn't open correct");
 		return false;
 	}
 	ZLUnicodeUtil::Ucs2Char ucs2char;
 	bool tabMode = false;
-	while (!oleStream.eof() && myTextOffset < oleStream.getTextLength()) {
-		bool result = getUcs2Char(oleStream, ucs2char);
-		if (!result) {
-			continue;
-		}
-
+	while (getUcs2Char(oleMainStream, ucs2char)) {
 		if (ucs2char < 32) {
-			printf("[0x%x]", ucs2char); //debug output
+			//printf("[0x%x]", ucs2char); //debug output
 		}
 
 		if (tabMode) {
@@ -101,10 +97,10 @@ bool OleStreamReader::readStream(OleStream &oleStream) {
 				//ignore 0x0 symbols
 				continue;
 			} else	if (ucs2char == WORD_HARD_LINEBREAK) {
-				printf("\n"); //debug output
+				//printf("\n"); //debug output
 				handleHardLinebreak();
 			} else if (ucs2char == 	WORD_END_OF_PARAGRAPH) {
-				printf("\n"); //debug output
+				//printf("\n"); //debug output
 				handleParagraphEnd();
 			} else if (ucs2char == WORD_PAGE_BREAK) {
 				handlePageBreak();
@@ -133,7 +129,7 @@ bool OleStreamReader::readStream(OleStream &oleStream) {
 			ZLUnicodeUtil::Ucs2String ucs2String;
 			ucs2String.push_back(ucs2char);
 			ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
-			printf("%s", utf8String.c_str());
+			//printf("%s", utf8String.c_str());
 
 			handleChar(ucs2char);
 		}
@@ -141,30 +137,32 @@ bool OleStreamReader::readStream(OleStream &oleStream) {
 	return 0;
 }
 
-bool OleStreamReader::getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char) {
-	static const unsigned long BLOCK_SIZE = 256;
-	unsigned long count, i;
-	char c;
-	if ((i = myTextOffset % BLOCK_SIZE) == 0) {
-		count = stream.read(myTmpBuffer, 1, BLOCK_SIZE);
-		memset(myTmpBuffer + count, 0, BLOCK_SIZE - count);
-		myBufIsUnicode = false;
-		count = std::min(count, stream.getTextLength() - myTextOffset);
-		while (i < count) {
-			c = myTmpBuffer[i++];
-			//does it a reliable way to check on unicode?
-			if (myTmpBuffer[i] == 0 && (c == SPACE || c == WORD_END_OF_PARAGRAPH || ispunct(c)) && i < count) {
-				myBufIsUnicode = true;
-				break;
-			}
-			i++;
+bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char) {
+	if (myCurBufferPosition >= myBuffer.size()) {
+		if (!fillBuffer(stream)) {
+			return false;
 		}
-		i=0;
 	}
+	ucs2char = myBuffer.at(myCurBufferPosition++);
+	return true;
+}
 
-	if (myBufIsUnicode) {
-		ucs2char = OleUtil::getUShort(myTmpBuffer, i);
-		myTextOffset += 2;
+bool OleStreamReader::fillBuffer(OleMainStream& stream) {
+	const OleMainStream::Pieces& pieces = stream.getPieces();
+	if (myNextPieceNumber >= pieces.size()) {
+		return false; //end of reading
+	}
+	const OleMainStream::Piece& piece = pieces.at(myNextPieceNumber);
+	char* textBuffer = new char[piece.length];
+	stream.seek(piece.offset, true);
+	stream.read(textBuffer, piece.length);
+
+	myBuffer.clear();
+	if (!piece.isANSI) {
+		for (long i = 0; i < piece.length; i += 2) {
+			ZLUnicodeUtil::Ucs2Char ch = OleUtil::getUShort(textBuffer, i);
+			myBuffer.push_back(ch);
+		}
 	} else {
 		if (myConverter.isNull()) {
 			//lazy convertor loading, because documents can be in Unicode only and don't need to be converted
@@ -172,18 +170,12 @@ bool OleStreamReader::getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& uc
 			ZLEncodingConverterInfoPtr info = collection.info(myEncoding);
 			myConverter = (!info.isNull()) ? info->createConverter() : collection.defaultConverter();
 		}
-		//TODO is there's a way to convert to ucs2string at once?
 		std::string utf8String;
-		myConverter->convert(utf8String, std::string(1, myTmpBuffer[i]));
-		ZLUnicodeUtil::Ucs2String ucs2string;
-		ZLUnicodeUtil::utf8ToUcs2(ucs2string, utf8String);
-		myTextOffset += 1;
-		if (ucs2string.empty()) {
-			//in some word documents, there's 0x0 symbols in 256 not unicodes block exist -- ignore them
-			return false;
-		} else {
-			ucs2char = ucs2string.at(0);
-		}
+		myConverter->convert(utf8String, std::string(textBuffer, piece.length));
+		ZLUnicodeUtil::utf8ToUcs2(myBuffer, utf8String);
 	}
+	myCurBufferPosition = 0;
+	++myNextPieceNumber;
+	delete textBuffer;
 	return true;
 }

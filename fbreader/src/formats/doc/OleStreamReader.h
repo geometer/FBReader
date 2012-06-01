@@ -23,7 +23,7 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLEncodingConverter.h>
 
-#include "OleStream.h"
+#include "OleMainStream.h"
 
 class OleStreamReader {
 
@@ -55,7 +55,7 @@ public:
 public:
 	OleStreamReader(const std::string& encoding);
 
-	bool readStream(OleStream &stream);
+	bool readStream(OleMainStream &stream);
 	void clear();
 
 protected:
@@ -74,13 +74,13 @@ protected:
 	virtual void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) = 0;
 
 private:
-	//TODO implement get8BitChar method
-	bool getUcs2Char(OleStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char);
+	bool getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char);
+	bool fillBuffer(OleMainStream& stream);
 
 private:
-	char myTmpBuffer[256];
-	unsigned long myTextOffset;
-	bool myBufIsUnicode;
+	ZLUnicodeUtil::Ucs2String myBuffer;
+	size_t myCurBufferPosition;
+	size_t myNextPieceNumber;
 
 	shared_ptr<ZLEncodingConverter> myConverter;
 	const std::string myEncoding;

@@ -17,39 +17,38 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OLESTREAM_H__
-#define __OLESTREAM_H__
+#ifndef __OLEMAINSTREAM_H__
+#define __OLEMAINSTREAM_H__
 
-#include "OleStorage.h"
+#include "OleStream.h"
 
-class OleStream {
-
+class OleMainStream : public OleStream {
 public:
-	OleStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream);
+	struct Piece {
+		long offset;
+		long length;
+		bool isANSI;
+	};
+	typedef std::vector<Piece> Pieces;
+public:
+	OleMainStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream);
 
 public:
 	bool open();
-	size_t read(char *buffer, size_t maxSize);
-	void close();
+	const Pieces& getPieces() const;
 
-public:
-	bool seek(unsigned long offset, bool absoluteOffset);
-	size_t offset();
-	//size_t sizeOfOpened();
+private:
+	bool readFIB();
 
-public:
-	bool eof() const;
+private: //pieces table methods
+	bool readPieceTable();
+	static std::string getPiecesTableBuffer(char* headerBuffer, OleStream& tableStream);
+	static long getLastCP(char* buffer);
 
-protected:
-	shared_ptr<OleStorage> myStorage;
+private:
+	long myStartOfText;
+	long myEndOfText;
 
-	OleEntry myOleEntry;
-	shared_ptr<ZLInputStream> myBaseStream;
-
-	long myCurBlock;
-	unsigned long myOleOffset;
+	Pieces myPieces;
 };
-
-
-
-#endif /* __OLESTREAM_H__ */
+#endif /* __OLEMAINSTREAM_H__ */

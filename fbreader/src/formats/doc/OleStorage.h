@@ -57,6 +57,7 @@ public:
 	bool init(shared_ptr<ZLInputStream>, size_t streamSize);
 	void clear();
 	const std::vector<OleEntry>& getEntries() const;
+	bool getEntryByName(std::string name, OleEntry& entry) const;
 
 	unsigned int getSectorSize();
 	unsigned int getShortSectorSize();
