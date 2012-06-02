@@ -85,7 +85,7 @@ private:
 	std::vector<long> mySBD; //Small Block Depot
 	std::vector<std::string> myProperties;
 	std::vector<OleEntry> myEntries;
-	OleEntry *myRootEntry;
+	long myRootEntryIndex;
 
 };
 

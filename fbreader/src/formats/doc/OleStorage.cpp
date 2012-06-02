@@ -51,7 +51,7 @@ void OleStorage::clear() {
 	mySectorSize = 0;
 	myShortSectorSize = 0;
 	myStreamSize = 0;
-	myRootEntry = 0;
+	myRootEntryIndex = -1;
 
 	myDIFAT.clear();
 	myBBD.clear();
@@ -212,11 +212,11 @@ bool OleStorage::readAllEntries() {
 		}
 		//printf("%ld entry name is %s\n", i, entry.name.c_str());
 		if (entry.type == OleEntry::ROOT_DIR) {
-			myRootEntry = &entry;
+			myRootEntryIndex = i;
 		}
 		myEntries.push_back(entry);
 	}
-	if (!myRootEntry) {
+	if (myRootEntryIndex < 0) {
 		return false;
 	}
 	return true;
@@ -283,7 +283,7 @@ unsigned long OleStorage::calcFileOffsetByBlockNumber(OleEntry& e, unsigned int 
 		unsigned long sbdPerSector = mySectorSize / myShortSectorSize;
 		unsigned long sbdSecNum = e.blocks.at(blockNumber) / sbdPerSector;
 		unsigned long sbdSecMod = e.blocks.at(blockNumber) % sbdPerSector;
-		res = BBD_BLOCK_SIZE + myRootEntry->blocks.at(sbdSecNum) * mySectorSize + sbdSecMod * myShortSectorSize;
+		res = BBD_BLOCK_SIZE + myEntries.at(myRootEntryIndex).blocks.at(sbdSecNum) * mySectorSize + sbdSecMod * myShortSectorSize;
 	}
 	return res;
 }
