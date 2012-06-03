@@ -17,12 +17,12 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <ZLFile.h>
 #include <ZLInputStream.h>
 #include <ZLLogger.h>
 #include <ZLImage.h>
-
-#include <iostream>
 
 #include "DocPlugin.h"
 #include "DocMetaInfoReader.h"

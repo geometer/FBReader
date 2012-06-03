@@ -20,8 +20,9 @@
 #ifndef __DOCBOOKREADER_H__
 #define __DOCBOOKREADER_H__
 
-#include "../../bookmodel/BookReader.h"
 #include <ZLFile.h>
+
+#include "../../bookmodel/BookReader.h"
 
 #include "OleStreamReader.h"
 

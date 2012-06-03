@@ -17,16 +17,15 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+#include <vector>
+#include <string>
+
 #include <ZLInputStream.h>
 #include <ZLLogger.h>
 #include <ZLBase64EncodedImage.h>
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
-
-#include <iostream>
-#include <vector>
-#include <string>
-#include <stdio.h>
 
 #include "DocBookReader.h"
 #include "../../bookmodel/BookModel.h"
@@ -69,7 +68,7 @@ bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream, size_t s
 	}
 
 	const std::vector<OleEntry>& entries = storage->getEntries();
-	for (size_t i = 0; i < entries.size(); ++i ) {
+	for (size_t i = 0; i < entries.size(); ++i) {
 		const OleEntry& entry = entries.at(i);
 		ZLLogger::Instance().println("DocBookReader", "ole file named... " + entry.name);
 		if (entry.type != OleEntry::STREAM || entry.name != WORD_DOCUMENT) {
@@ -183,7 +182,7 @@ void DocBookReader::handleEndField() {
 
 	if (myHyperlinkInserted) {
 		myModelReader.addControl(EXTERNAL_HYPERLINK, false);
-		myHyperlinkInserted  = false;
+		myHyperlinkInserted = false;
 	}
 }
 

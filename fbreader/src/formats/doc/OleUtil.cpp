@@ -21,17 +21,17 @@
 
 long OleUtil::getLong(const char *buffer, unsigned int offset) {
 	const unsigned char* buf = (const unsigned char*)buffer;
-	return   (long)buf[offset]         | ((long)buf[offset+1]<<8L) |
-			((long)buf[offset+2]<<16L) | ((long)buf[offset+3]<<24L);
+	return   (long)buf[offset]           | ((long)buf[offset+1] << 8L) |
+			((long)buf[offset+2] << 16L) | ((long)buf[offset+3] << 24L);
 }
 
 unsigned long OleUtil::getULong(const char *buffer, unsigned int offset) {
 	const unsigned char* buf = (const unsigned char*)buffer;
-	return (unsigned long)buf[offset]         | ((unsigned long)buf[offset+1]<<8L) |
-		  ((unsigned long)buf[offset+2]<<16L) | ((unsigned long)buf[offset+3]<<24L);
+	return   (unsigned long)buf[offset]           | ((unsigned long)buf[offset+1] << 8L) |
+			((unsigned long)buf[offset+2] << 16L) | ((unsigned long)buf[offset+3] << 24L);
 }
 
 unsigned short OleUtil::getUShort(const char *buffer, unsigned int offset) {
-   const unsigned char* buf = (const unsigned char*)buffer;
-   return (unsigned short)buf[offset] | ((unsigned short)buf[offset+1]<<8);
+	const unsigned char* buf = (const unsigned char*)buffer;
+	return (unsigned short)buf[offset] | ((unsigned short)buf[offset+1] << 8);
 }

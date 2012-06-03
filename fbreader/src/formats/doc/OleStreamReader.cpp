@@ -18,19 +18,16 @@
  */
 
 
-#include <stdio.h>
-#include <ctype.h>
-
-#include <string.h>
-#include <stdio.h>
+#include <cctype>
+#include <cstring>
 
 #include <ZLLogger.h>
 
 #include "OleMainStream.h"
-
-#include "OleStreamReader.h"
 #include "DocBookReader.h"
 #include "OleUtil.h"
+
+#include "OleStreamReader.h"
 
 //word's control chars:
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_FOOTNOTE_MARK = 0x0002;
@@ -38,7 +35,7 @@ const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_TABLE_SEPARATOR = 0x0007;
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_HORIZONTAL_TAB = 0x0009;
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_HARD_LINEBREAK = 0x000b;
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_PAGE_BREAK = 0x000c;
-const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_END_OF_PARAGRAPH =  0x000d;
+const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_END_OF_PARAGRAPH = 0x000d;
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_SHORT_DEFIS = 0x001e;
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_SOFT_HYPHEN = 0x001f;
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::WORD_START_FIELD = 0x0013;
@@ -93,33 +90,39 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 		}
 
 		if (ucs2char < 32) {
-			if (ucs2char == NULL_SYMBOL) {
-				//ignore 0x0 symbols
-				continue;
-			} else	if (ucs2char == WORD_HARD_LINEBREAK) {
-				//printf("\n"); //debug output
-				handleHardLinebreak();
-			} else if (ucs2char == 	WORD_END_OF_PARAGRAPH) {
-				//printf("\n"); //debug output
-				handleParagraphEnd();
-			} else if (ucs2char == WORD_PAGE_BREAK) {
-				handlePageBreak();
-			} else if (ucs2char == WORD_TABLE_SEPARATOR) {
-				tabMode = true;
-				continue;
-			} else if (ucs2char == WORD_FOOTNOTE_MARK) {
-				handleFootNoteMark();
-			} else if (ucs2char == WORD_START_FIELD) {
-				handleStartField();
-			} else if (ucs2char == WORD_SEPARATOR_FIELD) {
-				handleSeparatorField();
-			} else if (ucs2char == WORD_END_FIELD) {
-				handleEndField();
-			} else if (ucs2char == START_OF_HEADING) {
-				handleStartOfHeading();
-			} else {
-				// If any other control char, then current paragraph is discarded
-				handleOtherControlChar(ucs2char);
+			switch (ucs2char) {
+				case NULL_SYMBOL:
+					break;
+				case WORD_HARD_LINEBREAK:
+					handleHardLinebreak();
+					break;
+				case WORD_END_OF_PARAGRAPH:
+					handleParagraphEnd();
+					break;
+				case WORD_PAGE_BREAK:
+					handlePageBreak();
+					break;
+				case WORD_TABLE_SEPARATOR:
+					tabMode = true;
+					break;
+				case WORD_FOOTNOTE_MARK:
+					handleFootNoteMark();
+					break;
+				case WORD_START_FIELD:
+					handleStartField();
+					break;
+				case WORD_SEPARATOR_FIELD:
+					handleSeparatorField();
+					break;
+				case WORD_END_FIELD:
+					handleEndField();
+					break;
+				case START_OF_HEADING:
+					handleStartOfHeading();
+					break;
+				default:
+					handleOtherControlChar(ucs2char);
+					break;
 			}
 		} else if (ucs2char == WORD_ZERO_WIDTH_UNBREAKABLE_SPACE) {
 			continue; //skip

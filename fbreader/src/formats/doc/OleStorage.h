@@ -20,16 +20,9 @@
 #ifndef __OLESTORAGE_H__
 #define __OLESTORAGE_H__
 
-
 #include <algorithm>
 #include <vector>
 #include <string>
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <errno.h>
-#include <stdint.h>
 
 #include <ZLInputStream.h>
 
@@ -63,7 +56,7 @@ public:
 	unsigned int getShortSectorSize();
 
 public: //TODO make private
-	unsigned long calcFileOffsetByBlockNumber(OleEntry& e, unsigned int  blockNumber);
+	unsigned long calcFileOffsetByBlockNumber(OleEntry& e, unsigned int blockNumber);
 
 private:
 	bool readDIFAT(char* oleBuf);

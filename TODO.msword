@@ -14,7 +14,6 @@ Refactoring:
 	* footnotes
 	* Построение TOC
 
-* BUG: в тексте иногда показывается "мусор"
 DONE BUG: падение при открытии файлов,созданных в Google Docs и OpenOffice
 DONE BUG: падение при открытии файлов, созданных в TextEdit (Mac OS X) 
 

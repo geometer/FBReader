@@ -17,13 +17,10 @@
  * 02110-1301, USA.
  */
 
-#include <stdio.h>
-
 #include <ZLLogger.h>
 #include <ZLUnicodeUtil.h>
 
 #include "OleUtil.h"
-
 #include "OleStorage.h"
 
 #include "OleMainStream.h"
@@ -54,7 +51,7 @@ static const size_t EXTENDED_HEADER_SIZE = 512;
 
 static const unsigned int TABLE_NUMBER_FLAG = 0x0200;
 
-//following constants getted from p. 56-57 from official documentation ([MS-DOC])
+//following constants were getted from p. 56-57 from official documentation ([MS-DOC])
 static const unsigned int CCP_TEXT_OFFSET = 0x004C;
 static const unsigned int CCP_FTN_OFFSET = 0x0050;
 static const unsigned int CCP_HDD_OFFSET = 0x0054;
@@ -168,11 +165,11 @@ std::string OleMainStream::getPiecesTableBuffer(char* headerBuffer, OleStream& t
 		unsigned long pieceTableLength = OleUtil::getULong(clx.c_str(), i + 1);
 		pieceTableBuffer = std::string(clx, i + 1 + 4);
 		if (pieceTableBuffer.length() != pieceTableLength) {
-		   from = i + 1;
-		   continue;
-	   }
-	   //printf("lcbPieceTable = %lu, from = %lu, i = %lu \n", pieceTableLength, from, i);
-	   break;
+			from = i + 1;
+			continue;
+		}
+		//printf("lcbPieceTable = %lu, from = %lu, i = %lu \n", pieceTableLength, from, i);
+		break;
 	}
 	return pieceTableBuffer;
 }
@@ -217,16 +214,16 @@ bool OleMainStream::readPieceTable() {
 		descriptors.push_back(piecesTableBuffer.substr(j + 4 + k * 8, 8));
 	}
 
-//	for (size_t i = 0; i < piecesStartPositions.size(); ++i) {
-//		printf("myPieceTable[%lu] = %ld\n", i, piecesStartPositions.at(i));
-//	}
-//	printf("count of descriptors = %lu\n", piecesDescriptors.size());
-//	for (size_t i = 0; i < piecesDescriptors.size(); ++i) {
-//		for (size_t j = 0; j < 8; ++j) {
-//			printf("%d ", piecesDescriptors.at(i)[j]);
-//		}
-//		printf("\n");
-//	}
+	//for (size_t i = 0; i < piecesStartPositions.size(); ++i) {
+	//	printf("myPieceTable[%lu] = %ld\n", i, piecesStartPositions.at(i));
+	//}
+	//printf("count of descriptors = %lu\n", piecesDescriptors.size());
+	//for (size_t i = 0; i < piecesDescriptors.size(); ++i) {
+	//	for (size_t j = 0; j < 8; ++j) {
+	//		printf("%d ", piecesDescriptors.at(i)[j]);
+	//	}
+	//	printf("\n");
+	//}
 
 	//filling the Pieces vector
 	for (size_t i = 0; i < descriptors.size(); ++i) {
@@ -242,8 +239,8 @@ bool OleMainStream::readPieceTable() {
 			piece.offset /= 2;
 		}
 		myPieces.push_back(piece);
-//		printf("\n\n\n");
-//		printf("fcValue = %ld, isAnsi = %s, fc = %ld, lcb = %ld, total = %ld\n", fcValue, piece.isANSI ? "true" : "false", piece.offset, piece.length, piece.offset + piece.length);
+		//printf("\n\n\n");
+		//printf("fcValue = %ld, isAnsi = %s, fc = %ld, lcb = %ld, total = %ld\n", fcValue, piece.isANSI ? "true" : "false", piece.offset, piece.length, piece.offset + piece.length);
 	}
 	return true;
 }

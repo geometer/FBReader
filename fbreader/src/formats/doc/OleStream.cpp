@@ -19,8 +19,6 @@
 
 #include <ZLLogger.h>
 
-#include <stdio.h>
-
 #include "OleStream.h"
 #include "OleUtil.h"
 
@@ -49,7 +47,7 @@ size_t OleStream::read(char *buffer, size_t maxSize) {
 	unsigned int curBlockNumber, modBlock, toReadBlocks, toReadBytes, bytesLeftInCurBlock;
 	unsigned int sectorSize;
 
-	if( myOleOffset + length > myOleEntry.length ) {
+	if (myOleOffset + length > myOleEntry.length) {
 		length = myOleEntry.length - myOleOffset;
 	}
 
@@ -63,7 +61,7 @@ size_t OleStream::read(char *buffer, size_t maxSize) {
 	bytesLeftInCurBlock = sectorSize - modBlock;
 	if (bytesLeftInCurBlock < length) {
 		toReadBlocks = (length - bytesLeftInCurBlock) / sectorSize;
-		toReadBytes  = (length - bytesLeftInCurBlock) % sectorSize;
+		toReadBytes = (length - bytesLeftInCurBlock) % sectorSize;
 	} else {
 		toReadBlocks = toReadBytes = 0;
 	}
@@ -71,16 +69,16 @@ size_t OleStream::read(char *buffer, size_t maxSize) {
 	newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, curBlockNumber) + modBlock;
 	myBaseStream->seek(newFileOffset, true);
 
-	readedBytes = myBaseStream->read(buffer, std::min(length, bytesLeftInCurBlock));
-	for(unsigned long i = 0; i < toReadBlocks; ++i) {
+	readedBytes = myBaseStream->read(buffer, std::min(length, (size_t)bytesLeftInCurBlock));
+	for (unsigned long i = 0; i < toReadBlocks; ++i) {
 		size_t readbytes;
 		++curBlockNumber;
 		newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, curBlockNumber);
 		myBaseStream->seek(newFileOffset, true);
-		readbytes = myBaseStream->read(buffer + readedBytes, std::min(length - readedBytes, sectorSize));
+		readbytes = myBaseStream->read(buffer + readedBytes, std::min(length - readedBytes, (size_t)sectorSize));
 		readedBytes += readbytes;
 	}
-	if(toReadBytes > 0) {
+	if (toReadBytes > 0) {
 		size_t readbytes;
 		++curBlockNumber;
 		newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, curBlockNumber);
