@@ -22,9 +22,9 @@
 
 class OleUtil {
 public:
-	static long getLong(const char *buffer, unsigned int offset);
-	static unsigned long getULong(const char *buffer, unsigned int offset);
-	static unsigned short getUShort(const char *buffer, unsigned int offset);
+	static int get4Bytes(const char *buffer, unsigned int offset);
+	static unsigned int getU2Bytes(const char *buffer, unsigned int offset);
+	static unsigned int get2Bytes(const char *buffer, unsigned int offset);
 };
 
 #endif /* __OLEUTIL_H__ */

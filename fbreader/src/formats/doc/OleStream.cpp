@@ -26,9 +26,7 @@ OleStream::OleStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_p
 	myStorage(storage),
 	myOleEntry(oleEntry),
 	myBaseStream(stream) {
-	myCurBlock = 0;
 	myOleOffset = 0;
-	//myFileOffset = 0;
 }
 
 
@@ -42,16 +40,17 @@ bool OleStream::open() {
 size_t OleStream::read(char *buffer, size_t maxSize) {
 	size_t length = maxSize;
 	size_t readedBytes = 0;
-	unsigned long newFileOffset;
+	size_t bytesLeftInCurBlock;
+	unsigned int newFileOffset;
 
-	unsigned int curBlockNumber, modBlock, toReadBlocks, toReadBytes, bytesLeftInCurBlock;
-	unsigned int sectorSize;
+	unsigned int curBlockNumber, modBlock;
+	size_t toReadBlocks, toReadBytes;
 
 	if (myOleOffset + length > myOleEntry.length) {
 		length = myOleEntry.length - myOleOffset;
 	}
 
-	sectorSize = (myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
+	size_t sectorSize = (size_t)(myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
 
 	curBlockNumber = myOleOffset / sectorSize;
 	if (curBlockNumber >= myOleEntry.blocks.size()) {
@@ -69,13 +68,13 @@ size_t OleStream::read(char *buffer, size_t maxSize) {
 	newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, curBlockNumber) + modBlock;
 	myBaseStream->seek(newFileOffset, true);
 
-	readedBytes = myBaseStream->read(buffer, std::min(length, (size_t)bytesLeftInCurBlock));
-	for (unsigned long i = 0; i < toReadBlocks; ++i) {
+	readedBytes = myBaseStream->read(buffer, std::min(length, bytesLeftInCurBlock));
+	for (size_t i = 0; i < toReadBlocks; ++i) {
 		size_t readbytes;
 		++curBlockNumber;
 		newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, curBlockNumber);
 		myBaseStream->seek(newFileOffset, true);
-		readbytes = myBaseStream->read(buffer + readedBytes, std::min(length - readedBytes, (size_t)sectorSize));
+		readbytes = myBaseStream->read(buffer + readedBytes, std::min(length - readedBytes, sectorSize));
 		readedBytes += readbytes;
 	}
 	if (toReadBytes > 0) {
@@ -98,10 +97,9 @@ bool OleStream::eof() const {
 void OleStream::close() {
 }
 
-bool OleStream::seek(unsigned long offset, bool absoluteOffset) {
-	unsigned long newOleOffset = 0;
-	unsigned long newFileOffset;
-	unsigned int sectorSize, modBlock, blockNumber;
+bool OleStream::seek(unsigned int offset, bool absoluteOffset) {
+	unsigned int newOleOffset = 0;
+	unsigned int newFileOffset;
 
 	if (absoluteOffset) {
 		newOleOffset = offset;
@@ -111,13 +109,13 @@ bool OleStream::seek(unsigned long offset, bool absoluteOffset) {
 
 	newOleOffset = std::min(newOleOffset, myOleEntry.length);
 
-	sectorSize = (myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
-	blockNumber = newOleOffset / sectorSize;
+	unsigned int sectorSize = (myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
+	unsigned int blockNumber = newOleOffset / sectorSize;
 	if (blockNumber >= myOleEntry.blocks.size()) {
 		return false;
 	}
 
-	modBlock = newOleOffset % sectorSize;
+	unsigned int modBlock = newOleOffset % sectorSize;
 	newFileOffset = myStorage->calcFileOffsetByBlockNumber(myOleEntry, blockNumber) + modBlock;
 	myBaseStream->seek(newFileOffset, true);
 	myOleOffset = newOleOffset;

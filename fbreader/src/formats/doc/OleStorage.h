@@ -34,10 +34,10 @@ struct OleEntry {
 		LOCK_BYTES =3
 	};
 
-	typedef std::vector<unsigned long> Blocks;
+	typedef std::vector<unsigned int> Blocks;
 
 	std::string name;
-	unsigned long length;
+	unsigned int length;
 	Type type;
 	Blocks blocks;
 	bool isBigBlock;
@@ -56,7 +56,7 @@ public:
 	unsigned int getShortSectorSize();
 
 public: //TODO make private
-	unsigned long calcFileOffsetByBlockNumber(OleEntry& e, unsigned int blockNumber);
+	unsigned int calcFileOffsetByBlockNumber(OleEntry& e, unsigned int blockNumber);
 
 private:
 	bool readDIFAT(char* oleBuf);
@@ -65,7 +65,7 @@ private:
 	bool readProperties(char* oleBuf);
 
 	bool readAllEntries();
-	bool readOleEntry(long propNumber, OleEntry& entry);
+	bool readOleEntry(int propNumber, OleEntry& entry);
 
 private:
 
@@ -73,12 +73,12 @@ private:
 	unsigned int mySectorSize, myShortSectorSize;
 
 	size_t myStreamSize;
-	std::vector<long> myDIFAT; //double-indirect file allocation table
-	std::vector<long> myBBD; //Big Block Depot
-	std::vector<long> mySBD; //Small Block Depot
+	std::vector<int> myDIFAT; //double-indirect file allocation table
+	std::vector<int> myBBD; //Big Block Depot
+	std::vector<int> mySBD; //Small Block Depot
 	std::vector<std::string> myProperties;
 	std::vector<OleEntry> myEntries;
-	long myRootEntryIndex;
+	int myRootEntryIndex;
 
 };
 

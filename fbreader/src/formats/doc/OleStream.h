@@ -33,9 +33,8 @@ public:
 	void close();
 
 public:
-	bool seek(unsigned long offset, bool absoluteOffset);
+	bool seek(unsigned int offset, bool absoluteOffset);
 	size_t offset();
-	//size_t sizeOfOpened();
 
 public:
 	bool eof() const;
@@ -46,8 +45,7 @@ protected:
 	OleEntry myOleEntry;
 	shared_ptr<ZLInputStream> myBaseStream;
 
-	long myCurBlock;
-	unsigned long myOleOffset;
+	unsigned int myOleOffset;
 };
 
 

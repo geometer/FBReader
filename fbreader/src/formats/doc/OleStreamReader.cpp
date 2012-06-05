@@ -162,8 +162,8 @@ bool OleStreamReader::fillBuffer(OleMainStream& stream) {
 
 	myBuffer.clear();
 	if (!piece.isANSI) {
-		for (long i = 0; i < piece.length; i += 2) {
-			ZLUnicodeUtil::Ucs2Char ch = OleUtil::getUShort(textBuffer, i);
+		for (int i = 0; i < piece.length; i += 2) {
+			ZLUnicodeUtil::Ucs2Char ch = OleUtil::get2Bytes(textBuffer, i);
 			myBuffer.push_back(ch);
 		}
 	} else {

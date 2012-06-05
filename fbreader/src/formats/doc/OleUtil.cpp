@@ -19,19 +19,17 @@
 
 #include "OleUtil.h"
 
-long OleUtil::getLong(const char *buffer, unsigned int offset) {
+int OleUtil::get4Bytes(const char *buffer, unsigned int offset) {
 	const unsigned char* buf = (const unsigned char*)buffer;
-	return   (long)buf[offset]           | ((long)buf[offset+1] << 8L) |
-			((long)buf[offset+2] << 16L) | ((long)buf[offset+3] << 24L);
+	return (int)buf[offset] | ((int)buf[offset+1] << 8L) | ((int)buf[offset+2] << 16L) | ((int)buf[offset+3] << 24L);
 }
 
-unsigned long OleUtil::getULong(const char *buffer, unsigned int offset) {
+unsigned int OleUtil::getU2Bytes(const char *buffer, unsigned int offset) {
 	const unsigned char* buf = (const unsigned char*)buffer;
-	return   (unsigned long)buf[offset]           | ((unsigned long)buf[offset+1] << 8L) |
-			((unsigned long)buf[offset+2] << 16L) | ((unsigned long)buf[offset+3] << 24L);
+	return (unsigned int)buf[offset] | ((unsigned int)buf[offset+1] << 8L) | ((unsigned int)buf[offset+2] << 16L) | ((unsigned int)buf[offset+3] << 24L);
 }
 
-unsigned short OleUtil::getUShort(const char *buffer, unsigned int offset) {
+unsigned int OleUtil::get2Bytes(const char *buffer, unsigned int offset) {
 	const unsigned char* buf = (const unsigned char*)buffer;
-	return (unsigned short)buf[offset] | ((unsigned short)buf[offset+1] << 8);
+	return (unsigned int)buf[offset] | ((unsigned int)buf[offset+1] << 8);
 }

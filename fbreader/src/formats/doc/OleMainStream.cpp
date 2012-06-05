@@ -64,8 +64,8 @@ static const unsigned int CCP_HDR_TXBX_OFFSET = 0x0068;
 static const unsigned int FC_CLX_OFFSET = 0x01A2;
 static const unsigned int LCB_CLX_OFFSET = 0x01A6;
 
-const static long PIECE_ANSI_FLAG = 0x40000000;
-const static long PIECE_OFFSET_FLAG = 0x3FFFFFFF;
+const static int PIECE_ANSI_FLAG = 0x40000000;
+const static int PIECE_OFFSET_FLAG = 0x3FFFFFFF;
 const static unsigned int PIECE_VALUE_OFFSET = 0x2;
 
 static const char START_CHAR_OF_PIECE_TABLE = 0x02;
@@ -93,7 +93,7 @@ bool OleMainStream::readFIB() {
 		return false;
 	}
 
-	int flags = OleUtil::getUShort(header, FLAGS_OFFSET);
+	int flags = OleUtil::get2Bytes(header, FLAGS_OFFSET);
 
 	if (flags & FLAG_COMPLEX) {
 		ZLLogger::Instance().println("OleMainStream", "This was fast-saved. Some information is lost");
@@ -108,33 +108,33 @@ bool OleMainStream::readFIB() {
 
 	if (flags & FLAG_ENCRYPTED) {
 		ZLLogger::Instance().println("OleMainStream", "File is encrypted");
-		// Encryption key = %08lx ; NumUtil::getlong(header, 14)
+		// Encryption key = %08lx ; NumUtil::get4Bytes(header, 14)
 		return false;
 	}
 
-	unsigned int charset = OleUtil::getUShort(header, CHARSET);
+	unsigned int charset = OleUtil::get2Bytes(header, CHARSET);
 	if (charset && charset != DEFAULT_CHARSET) {
 		ZLLogger::Instance().println("OleMainStream", "Using not default character set %d");
 	} else {
 		ZLLogger::Instance().println("OleMainStream", "Using default character set");
 	}
 
-	myStartOfText = OleUtil::getLong(header, START_OF_TEXT);
-	myEndOfText = OleUtil::getLong(header, END_OF_TEXT);
+	myStartOfText = OleUtil::get4Bytes(header, START_OF_TEXT);
+	myEndOfText = OleUtil::get4Bytes(header, END_OF_TEXT);
 	//printf("length of text = %lu\n", myEndOfText - myStartOfText);
 	return true;
 }
 
-long OleMainStream::getLastCP(char* buffer) {
-	long ccpText = OleUtil::getLong(buffer, CCP_TEXT_OFFSET);
-	long ccpFtn = OleUtil::getLong(buffer, CCP_FTN_OFFSET);
-	long ccpHdd = OleUtil::getLong(buffer, CCP_HDD_OFFSET);
-	long ccpMcr = OleUtil::getLong(buffer, CCP_MCR_OFFSET);
-	long ccpAtn = OleUtil::getLong(buffer, CCP_ATN_OFFSET);
-	long ccpEdn = OleUtil::getLong(buffer, CCP_EDN_OFFSET);
-	long ccpTxbx = OleUtil::getLong(buffer, CCP_TXBX_OFFSET);
-	long ccpHdrTxbx = OleUtil::getLong(buffer, CCP_HDR_TXBX_OFFSET);
-	long lastCP = ccpFtn + ccpHdd + ccpMcr + ccpAtn + ccpEdn + ccpTxbx + ccpHdrTxbx;
+int OleMainStream::getLastCP(char* buffer) {
+	int ccpText = OleUtil::get4Bytes(buffer, CCP_TEXT_OFFSET);
+	int ccpFtn = OleUtil::get4Bytes(buffer, CCP_FTN_OFFSET);
+	int ccpHdd = OleUtil::get4Bytes(buffer, CCP_HDD_OFFSET);
+	int ccpMcr = OleUtil::get4Bytes(buffer, CCP_MCR_OFFSET);
+	int ccpAtn = OleUtil::get4Bytes(buffer, CCP_ATN_OFFSET);
+	int ccpEdn = OleUtil::get4Bytes(buffer, CCP_EDN_OFFSET);
+	int ccpTxbx = OleUtil::get4Bytes(buffer, CCP_TXBX_OFFSET);
+	int ccpHdrTxbx = OleUtil::get4Bytes(buffer, CCP_HDR_TXBX_OFFSET);
+	int lastCP = ccpFtn + ccpHdd + ccpMcr + ccpAtn + ccpEdn + ccpTxbx + ccpHdrTxbx;
 	if (lastCP != 0) {
 		++lastCP;
 	}
@@ -145,8 +145,8 @@ long OleMainStream::getLastCP(char* buffer) {
 }
 
 std::string OleMainStream::getPiecesTableBuffer(char* headerBuffer, OleStream& tableStream) {
-	unsigned long clxOffset = OleUtil::getULong(headerBuffer, FC_CLX_OFFSET);
-	unsigned long clxLength = OleUtil::getULong(headerBuffer, LCB_CLX_OFFSET);
+	unsigned int clxOffset = OleUtil::getU2Bytes(headerBuffer, FC_CLX_OFFSET);
+	unsigned int clxLength = OleUtil::getU2Bytes(headerBuffer, LCB_CLX_OFFSET);
 	//printf("fcClx = %lu, lcbClx = %lu\n", clxOffset, clxLength);
 
 	//1 step : loading CLX table from table stream
@@ -162,7 +162,7 @@ std::string OleMainStream::getPiecesTableBuffer(char* headerBuffer, OleStream& t
 	size_t i;
 	std::string pieceTableBuffer;
 	while ((i = clx.find_first_of(START_CHAR_OF_PIECE_TABLE, from)) != std::string::npos) {
-		unsigned long pieceTableLength = OleUtil::getULong(clx.c_str(), i + 1);
+		unsigned int pieceTableLength = OleUtil::getU2Bytes(clx.c_str(), i + 1);
 		pieceTableBuffer = std::string(clx, i + 1 + 4);
 		if (pieceTableBuffer.length() != pieceTableLength) {
 			from = i + 1;
@@ -179,7 +179,7 @@ bool OleMainStream::readPieceTable() {
 	char headerBuffer[EXTENDED_HEADER_SIZE];
 	seek(0, true);
 	read(headerBuffer, EXTENDED_HEADER_SIZE);
-	unsigned short tableNumber = (OleUtil::getUShort(headerBuffer, FLAGS_OFFSET) & TABLE_NUMBER_FLAG) ? 1 : 0;
+	unsigned int tableNumber = (OleUtil::get2Bytes(headerBuffer, FLAGS_OFFSET) & TABLE_NUMBER_FLAG) ? 1 : 0;
 	//printf("myTableNumber = %d\n", tableNumber);
 	std::string tableName = tableNumber == 0 ? "0" : "1";
 	tableName += "Table";
@@ -197,11 +197,11 @@ bool OleMainStream::readPieceTable() {
 	std::string piecesTableBuffer = getPiecesTableBuffer(headerBuffer, tableStream);
 
 	//getting the CP (character positions) and CP descriptors
-	long lastCP = getLastCP(headerBuffer);
-	std::vector<long> cp; //array of charachter positions for pieces
+	int lastCP = getLastCP(headerBuffer);
+	std::vector<int> cp; //array of charachter positions for pieces
 	unsigned int j = 0;
 	for (j = 0; ; j += 4) {
-		long curCP = OleUtil::getLong(piecesTableBuffer.c_str(), j);
+		int curCP = OleUtil::get4Bytes(piecesTableBuffer.c_str(), j);
 		cp.push_back(curCP);
 		if (curCP == lastCP) {
 			break;
@@ -227,8 +227,8 @@ bool OleMainStream::readPieceTable() {
 
 	//filling the Pieces vector
 	for (size_t i = 0; i < descriptors.size(); ++i) {
-		//long integer with offset and ANSI flag
-		long fcValue = OleUtil::getLong(descriptors.at(i).c_str(), PIECE_VALUE_OFFSET);
+		//4byte integer with offset and ANSI flag
+		int fcValue = OleUtil::get4Bytes(descriptors.at(i).c_str(), PIECE_VALUE_OFFSET);
 		Piece piece;
 		piece.isANSI = (fcValue & PIECE_ANSI_FLAG) == PIECE_ANSI_FLAG;
 		piece.offset = fcValue & PIECE_OFFSET_FLAG;

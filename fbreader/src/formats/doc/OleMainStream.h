@@ -25,8 +25,8 @@
 class OleMainStream : public OleStream {
 public:
 	struct Piece {
-		long offset;
-		long length;
+		int offset;
+		int length;
 		bool isANSI;
 	};
 	typedef std::vector<Piece> Pieces;
@@ -43,11 +43,11 @@ private:
 private: //pieces table methods
 	bool readPieceTable();
 	static std::string getPiecesTableBuffer(char* headerBuffer, OleStream& tableStream);
-	static long getLastCP(char* buffer);
+	static int getLastCP(char* buffer);
 
 private:
-	long myStartOfText;
-	long myEndOfText;
+	int myStartOfText;
+	int myEndOfText;
 
 	Pieces myPieces;
 };
