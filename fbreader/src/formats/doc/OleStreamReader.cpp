@@ -20,6 +20,7 @@
 
 #include <cctype>
 #include <cstring>
+#include <cstdio>
 
 #include <ZLLogger.h>
 
@@ -53,7 +54,6 @@ const ZLUnicodeUtil::Ucs2Char OleStreamReader::SPACE = 0x20;
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::SHORT_DEFIS = 0x2D;
 const ZLUnicodeUtil::Ucs2Char OleStreamReader::VERTICAL_LINE = 0x7C;
 
-
 OleStreamReader::OleStreamReader(const std::string &encoding) :
 	myEncoding(encoding) {
 	clear();
@@ -63,6 +63,7 @@ void OleStreamReader::clear() {
 	myBuffer.clear();
 	myCurBufferPosition = 0;
 	myNextPieceNumber = 0;
+	myCurCP = 0;
 }
 
 bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
@@ -75,8 +76,8 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 	ZLUnicodeUtil::Ucs2Char ucs2char;
 	bool tabMode = false;
 	while (getUcs2Char(oleMainStream, ucs2char)) {
-		if (ucs2char < 32) {
-			//printf("[0x%x]", ucs2char); //debug output
+		if (ucs2char < 32) { //< 32 are control symbols
+			printf("[0x%x]", ucs2char); //debug output
 		}
 
 		if (tabMode) {
@@ -94,12 +95,15 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 				case NULL_SYMBOL:
 					break;
 				case WORD_HARD_LINEBREAK:
+					printf("\n");
 					handleHardLinebreak();
 					break;
 				case WORD_END_OF_PARAGRAPH:
+					printf("\n");
 					handleParagraphEnd();
 					break;
 				case WORD_PAGE_BREAK:
+					printf("\n");
 					handlePageBreak();
 					break;
 				case WORD_TABLE_SEPARATOR:
@@ -132,7 +136,7 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 			ZLUnicodeUtil::Ucs2String ucs2String;
 			ucs2String.push_back(ucs2char);
 			ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
-			//printf("%s", utf8String.c_str());
+			printf("%s", utf8String.c_str());
 
 			handleChar(ucs2char);
 		}
@@ -146,7 +150,59 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 			return false;
 		}
 	}
+
+//	const OleMainStream::StyleInfoList& list = stream.getStyleInfoList();
+//	for (size_t i = 0; i < list.size(); ++i) {
+//		OleMainStream::StyleInfo info = list.at(i);
+//		if (info.fileOffset == myCurCP + myCurOffset) {
+//			if (info.alignment == 0) {
+//				printf("{LEFT}");
+//			} else if (info.alignment == 1) {
+//				printf("{CENTER}");
+//			} else if (info.alignment == 2) {
+//				printf("{RIGHT}");
+//			} else if (info.alignment == 3) {
+//				printf("{JUSTIFY}");
+//			}
+
+//			if (info.leftIndent > 0) {
+//				printf("\\%d\\", info.leftIndent);
+//			}
+////			if (info.ucListLevel >= 0) {
+////				printf("{%u}", info.ucListLevel);
+////			}
+//			if (info.istd >= 0) {
+//				printf("{%u}", info.istd);
+//			}
+//		}
+//	}
+
+	const OleMainStream::CharInfoList& clist = stream.getCharInfoList();
+	for (size_t i = 0; i < clist.size(); ++i) {
+		OleMainStream::CharInfo info = clist.at(i);
+		if (info.offset == myCurCP + myCurOffset) {
+			printf("[%u,b=%d,i=%d]", i, info.fontStyle & 0x0001, info.fontStyle & 0x0002);
+			break;
+		}
+	}
+
+
+
+//	const OleMainStream::SectionInfoList& list = stream.getSectionInfoList();
+//	for (size_t i = 0; i < list.size(); ++i) {
+//		OleMainStream::SectionInfo info = list.at(i);
+//		if (info.ulCharPos == myCurCP + myCurOffset) {
+//			if (info.bNewPage == true) {
+//				printf("{NEW_PAGE}");
+//			} else {
+//				printf("{USUAL_PAGE}");
+//			}
+//		}
+//	}
+
+
 	ucs2char = myBuffer.at(myCurBufferPosition++);
+	myCurCP += myCurInc;
 	return true;
 }
 
@@ -157,13 +213,14 @@ bool OleStreamReader::fillBuffer(OleMainStream& stream) {
 	}
 	const OleMainStream::Piece& piece = pieces.at(myNextPieceNumber);
 	char* textBuffer = new char[piece.length];
+
 	stream.seek(piece.offset, true);
 	stream.read(textBuffer, piece.length);
 
 	myBuffer.clear();
 	if (!piece.isANSI) {
-		for (long i = 0; i < piece.length; i += 2) {
-			ZLUnicodeUtil::Ucs2Char ch = OleUtil::getUShort(textBuffer, i);
+		for (int i = 0; i < piece.length; i += 2) {
+			ZLUnicodeUtil::Ucs2Char ch = OleUtil::getU2Bytes(textBuffer, i);
 			myBuffer.push_back(ch);
 		}
 	} else {
@@ -180,5 +237,13 @@ bool OleStreamReader::fillBuffer(OleMainStream& stream) {
 	myCurBufferPosition = 0;
 	++myNextPieceNumber;
 	delete textBuffer;
+
+	myCurOffset = piece.offset;
+	myCurCP = 0;
+	if (piece.isANSI) {
+		myCurInc = 1;
+	} else {
+		myCurInc = 2;
+	}
 	return true;
 }

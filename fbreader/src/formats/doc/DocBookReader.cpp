@@ -34,8 +34,6 @@
 #include "OleStorage.h"
 #include "OleMainStream.h"
 
-static const std::string WORD_DOCUMENT = "WordDocument";
-
 DocBookReader::DocBookReader(BookModel &model, const std::string &encoding) :
 	OleStreamReader(encoding),
 	myModelReader(model) {
@@ -53,6 +51,8 @@ bool DocBookReader::readBook() {
 }
 
 bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream, size_t streamSize) {
+	static const std::string WORD_DOCUMENT = "WordDocument";
+
 	if (inputStream.isNull() || !inputStream->open()) {
 		return false;
 	}

@@ -84,6 +84,10 @@ private:
 
 	shared_ptr<ZLEncodingConverter> myConverter;
 	const std::string myEncoding;
+
+	unsigned int myCurCP;
+	unsigned int myCurOffset;
+	unsigned int myCurInc;
 };
 
 #endif /* __OLESTREAMREADER_H__ */
