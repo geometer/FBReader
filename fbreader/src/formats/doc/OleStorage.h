@@ -46,6 +46,9 @@ struct OleEntry {
 class OleStorage {
 
 public:
+	static const size_t BBD_BLOCK_SIZE;
+
+public:
 	OleStorage();
 	bool init(shared_ptr<ZLInputStream>, size_t streamSize);
 	void clear();
