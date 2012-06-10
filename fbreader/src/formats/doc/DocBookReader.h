@@ -24,6 +24,7 @@
 
 #include "../../bookmodel/BookReader.h"
 
+#include "OleMainStream.h"
 #include "OleStreamReader.h"
 
 class DocBookReader : public OleStreamReader {
@@ -64,6 +65,7 @@ private:
 	//formatting
 	std::vector<FBTextKind> myKindStack;
 	shared_ptr<ZLTextStyleEntry> myCurStyleEntry;
+	OleMainStream::StyleInfo myCurStyleInfo;
 };
 
 inline DocBookReader::~DocBookReader() {}

@@ -156,6 +156,7 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 		OleMainStream::StyleInfo info = list.at(i);
 		if (info.offset == myCurCP + myCurOffset) {
 			handleParagraphStyle(info);
+			printf("|%u|", i);
 			if (info.alignment == 0) {
 				printf("{LEFT}");
 			} else if (info.alignment == 1) {

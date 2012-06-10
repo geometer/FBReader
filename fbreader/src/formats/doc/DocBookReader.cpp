@@ -126,7 +126,6 @@ void DocBookReader::handleParagraphEnd() {
 		myModelReader.endParagraph();
 	}
 	myModelReader.beginParagraph();
-	myKindStack.clear();
 	myCurStyleEntry = 0;
 }
 
@@ -134,7 +133,6 @@ void DocBookReader::handlePageBreak() {
 	if (myModelReader.paragraphIsOpen()) {
 		myModelReader.endParagraph();
 	}
-	myKindStack.clear();
 	myCurStyleEntry = 0;
 	myModelReader.insertEndOfSectionParagraph();
 	myModelReader.beginParagraph();
@@ -253,6 +251,7 @@ void DocBookReader::handleParagraphStyle(const OleMainStream::StyleInfo &styleIn
 		entry->setAlignmentType(ALIGN_JUSTIFY);
 	}
 
+	//TODO in case, where style is heading, but size is small it works wrong
 	if (styleInfo.istd == OleMainStream::H1) {
 		entry->setFontSizeMag(3);
 	} else if (styleInfo.istd == OleMainStream::H2) {
@@ -261,10 +260,18 @@ void DocBookReader::handleParagraphStyle(const OleMainStream::StyleInfo &styleIn
 		entry->setFontSizeMag(1);
 	}
 
-
 	myCurStyleEntry = entry;
 	myModelReader.addControl(*myCurStyleEntry);
 
-	handleFontStyle(styleInfo.fontStyle);
+	//we should have the same font style, as for the previous paragraph, if it has the same istd
+	if (myCurStyleInfo.istd != OleMainStream::ISTD_INVALID && myCurStyleInfo.istd == styleInfo.istd) {
+		for (size_t i = 0; i < myKindStack.size(); ++i) {
+			myModelReader.addControl(myKindStack.at(i), true);
+		}
+	} else {
+		myKindStack.clear();
+		handleFontStyle(styleInfo.fontStyle); //fill by the fontstyle, that was got from Stylesheet
+	}
+	myCurStyleInfo = styleInfo;
 }
 
