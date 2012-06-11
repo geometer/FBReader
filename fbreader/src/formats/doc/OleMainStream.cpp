@@ -32,9 +32,8 @@ OleMainStream::StyleInfo::StyleInfo() {
 	(void)memset(this, 0, sizeof(*this));
 	istd = ISTD_INVALID;
 	istdNext = ISTD_INVALID;
-	startAt = 1;
-	listLevel = 9;
 	hasPageBreakBefore = false;
+	fontSize = 20;
 }
 
 OleMainStream::CharInfo::CharInfo():
@@ -88,7 +87,7 @@ bool OleMainStream::open() {
 
 	return readPieceTable(headerBuffer, tableEntry) &&
 			readStylesheet(headerBuffer, tableEntry) &&
-			readSectionsInfoTable(headerBuffer, tableEntry) &&
+			//readSectionsInfoTable(headerBuffer, tableEntry) && //it doesn't uses now
 			readParagraphStyleTable(headerBuffer, tableEntry) &&
 			readCharInfoTable(headerBuffer, tableEntry);
 
@@ -104,10 +103,6 @@ const OleMainStream::CharInfoList &OleMainStream::getCharInfoList() const {
 
 const OleMainStream::StyleInfoList &OleMainStream::getStyleInfoList() const {
 	return myStyleInfoList;
-}
-
-const OleMainStream::SectionInfoList &OleMainStream::getSectionInfoList() const {
-	return mySectionInfoList;
 }
 
 bool OleMainStream::readFIB(const char* headerBuffer) {
@@ -195,7 +190,7 @@ bool OleMainStream::readPieceTable(const char* headerBuffer, const OleEntry& tab
 
 	//getting the CP (character positions) and CP descriptors
 	int lastCP = getLastCP(headerBuffer);
-	std::vector<int> cp; //array of charachter positions for pieces
+	std::vector<int> cp; //array of character positions for pieces
 	unsigned int j = 0;
 	for (j = 0; ; j += 4) {
 		int curCP = OleUtil::get4Bytes(piecesTableBuffer.c_str(), j);
@@ -516,16 +511,6 @@ void OleMainStream::getStyleInfo(unsigned int papxOffset, const char *grpprlBuff
 			case 0x2403:
 				styleInfo.alignment = OleUtil::getU1Byte(grpprlBuffer, papxOffset + offset + 2);
 				break;
-			case 0x260a:
-				styleInfo.listLevel =	OleUtil::getU1Byte(grpprlBuffer, papxOffset + offset + 2);
-				styleInfo.numLevel = styleInfo.listLevel;
-				break;
-			case 0x4600: //istd
-				//tmp = OleUtil::getU2Bytes(grpprlBuffer, papxOffset + offset + 2);
-				break;
-			case 0x460b:
-				styleInfo.listIndex =	OleUtil::getU2Bytes(grpprlBuffer, papxOffset + offset + 2);
-				break;
 			case 0x4610:
 				styleInfo.leftIndent += OleUtil::getU2Bytes(grpprlBuffer, papxOffset + offset + 2);
 				if (styleInfo.leftIndent < 0) {
@@ -557,7 +542,7 @@ void OleMainStream::getStyleInfo(unsigned int papxOffset, const char *grpprlBuff
 				styleInfo.leftIndent = (int)OleUtil::getU2Bytes(grpprlBuffer, papxOffset + offset + 2);
 				break;
 			case 0x8411:
-				styleInfo.leftIndent1 = (int)OleUtil::getU2Bytes(grpprlBuffer, papxOffset + offset + 2);
+				styleInfo.firstLineIndent = (int)OleUtil::getU2Bytes(grpprlBuffer, papxOffset + offset + 2);
 				break;
 			case 0xa413:
 				styleInfo.beforeIndent = OleUtil::getU2Bytes(grpprlBuffer, papxOffset + offset + 2);

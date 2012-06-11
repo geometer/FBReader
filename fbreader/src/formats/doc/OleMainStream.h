@@ -66,32 +66,22 @@ public:
 			JUSTIFY = 0x03
 		};
 
-		unsigned int offset; // The style start with this character
-		bool numPause;
-		bool noRestart; // Don't restart by more significant levels
-		unsigned int istd; // Current style
-		unsigned int istdNext; // Next style unless overruled
+		unsigned int offset; //The style start with this character
+		unsigned int istd; //Current style
+		unsigned int istdNext; //Next style unless overruled
 		bool hasPageBreakBefore;
-		unsigned int startAt;	 // Number at the start of a list
-		unsigned int beforeIndent; // Vertical indent before paragraph in twips
-		unsigned int afterIndent; // Vertical indent after paragraph in twips
-		unsigned int listIndex; // Before Word 8 this field was not filled
-		unsigned int listChar; // Character for an itemized list (Unicode)
-		int	leftIndent; // Left indentation in twips
-		int	leftIndent1; // First line left indentation in twips
-		int	rightIndent; // Right indentation in twips
+		unsigned int beforeIndent; //Vertical indent before paragraph
+		unsigned int afterIndent; //Vertical indent after paragraph
+		int	leftIndent; //Left indent
+		int	firstLineIndent; //First line left indent
+		int	rightIndent; //Right indent
 		unsigned int alignment;
-		unsigned int numberFormatCode; // Number format code
-		unsigned int numLevel;
-		unsigned int listLevel; // Before Word 8 this field was not filled
 
 		unsigned int fontStyle;
 		unsigned int fontSize;
 		StyleInfo();
 	};
 	typedef std::vector<StyleInfo> StyleInfoList;
-
-
 
 	enum StyleID {
 		H1 = 0x1,
@@ -118,7 +108,6 @@ public:
 	const Pieces& getPieces() const;
 	const CharInfoList& getCharInfoList() const;
 	const StyleInfoList& getStyleInfoList() const;
-	const SectionInfoList& getSectionInfoList() const;
 
 private:
 	bool readFIB(const char* headerBuffer);

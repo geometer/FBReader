@@ -153,7 +153,6 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 		OleMainStream::StyleInfo info = list.at(i);
 		if (info.offset == myCurCP + myCurOffset) {
 			handleParagraphStyle(info);
-			printf("|%u|", i);
 			if (info.alignment == 0) {
 				printf("{LEFT}");
 			} else if (info.alignment == 1) {
@@ -169,13 +168,10 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 			if (info.hasPageBreakBefore) {
 				printf("|PGBRK|");
 			}
-//			if (info.ucListLevel >= 0) {
-//				printf("{%u}", info.ucListLevel);
-//			}
 			if (info.istd >= 0) {
 				printf("{%u}", info.istd);
 			}
-			//printf("=%u=", info.fontSize);
+			printf("=%u=", info.fontSize);
 		}
 	}
 
@@ -183,23 +179,11 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 	for (size_t i = 0; i < clist.size(); ++i) {
 		OleMainStream::CharInfo info = clist.at(i);
 		if (info.offset == myCurCP + myCurOffset) {
-			printf("[b=%d,i=%d]", info.fontStyle & 0x0001, info.fontStyle & 0x0002);
+			printf("[b=%d,i=%d,%u]", info.fontStyle & 0x0001, info.fontStyle & 0x0002, info.fontSize);
 			handleFontStyle(info.fontStyle);
 			break;
 		}
 	}
-
-//	const OleMainStream::SectionInfoList& list = stream.getSectionInfoList();
-//	for (size_t i = 0; i < list.size(); ++i) {
-//		OleMainStream::SectionInfo info = list.at(i);
-//		if (info.ulCharPos == myCurCP + myCurOffset) {
-//			if (info.bNewPage == true) {
-//				printf("{NEW_PAGE}");
-//			} else {
-//				printf("{USUAL_PAGE}");
-//			}
-//		}
-//	}
 
 	ucs2char = myBuffer.at(myCurBufferPosition++);
 	myCurCP += myCurInc;
