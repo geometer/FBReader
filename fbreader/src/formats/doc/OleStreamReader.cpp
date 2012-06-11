@@ -99,12 +99,9 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 					handleHardLinebreak();
 					break;
 				case WORD_END_OF_PARAGRAPH:
-					printf("\n");
-					handleParagraphEnd();
-					break;
 				case WORD_PAGE_BREAK:
 					printf("\n");
-					handlePageBreak();
+					handleParagraphEnd();
 					break;
 				case WORD_TABLE_SEPARATOR:
 					tabMode = true;
@@ -168,6 +165,9 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 			}
 			if (info.leftIndent > 0) {
 				printf("\\%d\\", info.leftIndent);
+			}
+			if (info.hasPageBreakBefore) {
+				printf("|PGBRK|");
 			}
 //			if (info.ucListLevel >= 0) {
 //				printf("{%u}", info.ucListLevel);

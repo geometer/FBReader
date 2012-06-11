@@ -71,6 +71,7 @@ public:
 		bool noRestart; // Don't restart by more significant levels
 		unsigned int istd; // Current style
 		unsigned int istdNext; // Next style unless overruled
+		bool hasPageBreakBefore;
 		unsigned int startAt;	 // Number at the start of a list
 		unsigned int beforeIndent; // Vertical indent before paragraph in twips
 		unsigned int afterIndent; // Vertical indent after paragraph in twips

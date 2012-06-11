@@ -239,6 +239,9 @@ void DocBookReader::handleFontStyle(unsigned int fontStyle) {
 }
 
 void DocBookReader::handleParagraphStyle(const OleMainStream::StyleInfo &styleInfo) {
+	if (styleInfo.hasPageBreakBefore) {
+		handlePageBreak();
+	}
 	shared_ptr<ZLTextStyleEntry> entry = new ZLTextStyleEntry();
 
 	if (styleInfo.alignment == OleMainStream::StyleInfo::LEFT) {

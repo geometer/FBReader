@@ -34,6 +34,7 @@ OleMainStream::StyleInfo::StyleInfo() {
 	istdNext = ISTD_INVALID;
 	startAt = 1;
 	listLevel = 9;
+	hasPageBreakBefore = false;
 }
 
 OleMainStream::CharInfo::CharInfo():
@@ -563,6 +564,9 @@ void OleMainStream::getStyleInfo(unsigned int papxOffset, const char *grpprlBuff
 				break;
 			case 0xa414:
 				styleInfo.afterIndent = OleUtil::getU2Bytes(grpprlBuffer, papxOffset + offset + 2);
+				break;
+			case 0x2407:
+				styleInfo.hasPageBreakBefore = OleUtil::getU1Byte(grpprlBuffer, papxOffset + offset + 2) == 0x01;
 				break;
 			default:
 				break;
