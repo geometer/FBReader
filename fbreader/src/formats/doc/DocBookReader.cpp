@@ -109,7 +109,16 @@ void DocBookReader::handleChar(ZLUnicodeUtil::Ucs2Char ucs2char) {
 }
 
 void DocBookReader::handleHardLinebreak() {
-	handleParagraphEnd();
+	if (myModelReader.paragraphIsOpen()) {
+		myModelReader.endParagraph();
+	}
+	myModelReader.beginParagraph();
+	if (!myCurStyleEntry.isNull()) {
+		myModelReader.addControl(*myCurStyleEntry);
+	}
+	for (size_t i = 0; i < myKindStack.size(); ++i) {
+		myModelReader.addControl(myKindStack.at(i), true);
+	}
 }
 
 void DocBookReader::handleParagraphEnd() {
@@ -117,10 +126,18 @@ void DocBookReader::handleParagraphEnd() {
 		myModelReader.endParagraph();
 	}
 	myModelReader.beginParagraph();
+	myKindStack.clear();
+	myCurStyleEntry = 0;
 }
 
 void DocBookReader::handlePageBreak() {
+	if (myModelReader.paragraphIsOpen()) {
+		myModelReader.endParagraph();
+	}
+	myKindStack.clear();
+	myCurStyleEntry = 0;
 	myModelReader.insertEndOfSectionParagraph();
+	myModelReader.beginParagraph();
 }
 
 void DocBookReader::handleTableSeparator() {
@@ -201,5 +218,53 @@ void DocBookReader::handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) {
 	} else {
 //		myTextBuffer.clear();
 	}
+}
+
+void DocBookReader::handleFontStyle(unsigned int fontStyle) {
+	while (!myKindStack.empty()) {
+		myModelReader.addControl(myKindStack.back(), false);
+		myKindStack.pop_back();
+	}
+//	while (!myModelReader.isKindStackEmpty()) {
+//		myModelReader.popKind();
+//	}
+	if (fontStyle & OleMainStream::CharInfo::BOLD) {
+		myKindStack.push_back(BOLD);
+	}
+	if (fontStyle & OleMainStream::CharInfo::ITALIC) {
+		myKindStack.push_back(ITALIC);
+	}
+	for (size_t i = 0; i < myKindStack.size(); ++i) {
+		//myModelReader.pushKind(myKindStack.at(i));
+		myModelReader.addControl(myKindStack.at(i), true);
+	}
+}
+
+void DocBookReader::handleParagraphStyle(const OleMainStream::StyleInfo &styleInfo) {
+	shared_ptr<ZLTextStyleEntry> entry = new ZLTextStyleEntry();
+
+	if (styleInfo.alignment == OleMainStream::StyleInfo::LEFT) {
+		entry->setAlignmentType(ALIGN_LEFT);
+	} else if (styleInfo.alignment == OleMainStream::StyleInfo::CENTER) {
+		entry->setAlignmentType(ALIGN_CENTER);
+	} else if (styleInfo.alignment == OleMainStream::StyleInfo::RIGHT) {
+		entry->setAlignmentType(ALIGN_RIGHT);
+	} else if (styleInfo.alignment == OleMainStream::StyleInfo::JUSTIFY) {
+		entry->setAlignmentType(ALIGN_JUSTIFY);
+	}
+
+	if (styleInfo.istd == OleMainStream::H1) {
+		entry->setFontSizeMag(3);
+	} else if (styleInfo.istd == OleMainStream::H2) {
+		entry->setFontSizeMag(2);
+	} else if (styleInfo.istd == OleMainStream::H3) {
+		entry->setFontSizeMag(1);
+	}
+
+
+	myCurStyleEntry = entry;
+	myModelReader.addControl(*myCurStyleEntry);
+
+	handleFontStyle(styleInfo.fontStyle);
 }
 

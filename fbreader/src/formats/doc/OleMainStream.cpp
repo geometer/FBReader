@@ -38,7 +38,8 @@ OleMainStream::StyleInfo::StyleInfo() {
 
 OleMainStream::CharInfo::CharInfo():
 	offset(0),
-	fontStyle(0) {
+	fontStyle(0),
+	fontSize(20) {
 }
 
 
@@ -427,6 +428,9 @@ bool OleMainStream::readParagraphStyleTable(const char *headerBuffer, const OleE
 			unsigned int istd = OleUtil::getU2Bytes(formatPageBuffer, papxOffset + 1);
 			StyleInfo styleInfo = getStyleInfoFromStylesheet(istd, myStyleSheetStyleInfo);
 			styleInfo.offset = charPos;
+			CharInfo charInfo = getCharInfoFromStylesheet(istd, myStyleSheetStyleInfo, myStyleSheetCharInfo);
+			styleInfo.fontStyle = charInfo.fontStyle;
+			styleInfo.fontSize = charInfo.fontSize;
 
 			if (len >= 3) {
 				getStyleInfo(papxOffset, formatPageBuffer + 3, len - 3, styleInfo);
@@ -614,6 +618,9 @@ void OleMainStream::getCharInfo(unsigned int chpxOffset, unsigned int /*istd*/, 
 						break;
 					}
 				break;
+			case 0x4a43: //size of font
+				charInfo.fontSize = OleUtil::getU2Bytes(grpprlBuffer, chpxOffset + offset + 2);
+			break;
 			default:
 				break;
 		}

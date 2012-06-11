@@ -50,12 +50,20 @@ private:
 	void handleStartOfHeading();
 	void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char);
 
+	//formatting:
+	void handleFontStyle(unsigned int fontStyle);
+	void handleParagraphStyle(const OleMainStream::StyleInfo& styleInfo);
+
 private:
 	BookReader myModelReader;
 
 	ZLUnicodeUtil::Ucs2String myFieldInfoBuffer;
 	bool myFieldReading;
 	bool myHyperlinkInserted;
+
+	//formatting
+	std::vector<FBTextKind> myKindStack;
+	shared_ptr<ZLTextStyleEntry> myCurStyleEntry;
 };
 
 inline DocBookReader::~DocBookReader() {}

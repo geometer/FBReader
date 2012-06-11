@@ -51,12 +51,21 @@ public:
 
 		unsigned int offset;
 		unsigned int fontStyle;
+		unsigned int fontSize;
 
 		CharInfo();
 	};
 	typedef std::vector<CharInfo> CharInfoList;
 
 	struct StyleInfo {
+
+		enum Alignment {
+			LEFT = 0x00,
+			CENTER = 0x01,
+			RIGHT = 0x02,
+			JUSTIFY = 0x03
+		};
+
 		unsigned int offset; // The style start with this character
 		bool numPause;
 		bool noRestart; // Don't restart by more significant levels
@@ -74,28 +83,22 @@ public:
 		unsigned int numberFormatCode; // Number format code
 		unsigned int numLevel;
 		unsigned int listLevel; // Before Word 8 this field was not filled
+
+		unsigned int fontStyle;
+		unsigned int fontSize;
 		StyleInfo();
 	};
 	typedef std::vector<StyleInfo> StyleInfoList;
 
-	enum Alignment {
-		LEFT = 0x00,
-		CENTER = 0x01,
-		RIGHT = 0x02,
-		JUSTIFY = 0x03
-	};
+
 
 	enum StyleID {
+		H1 = 0x1,
+		H2 = 0x2,
+		H3 = 0x3,
 		STI_USER = 0xFFE,
 		STI_NIL = 0xFFF,
 		ISTD_INVALID = 0xFFFF
-	};
-
-	enum PrlFlag {
-		UNSET = 0,
-		SET = 1,
-		UNCHANGED = 128,
-		NEGATION = 129
 	};
 
 	struct SectionInfo {
@@ -137,6 +140,14 @@ private: //formatting reader helpers methods
 	static CharInfo getCharInfoFromStylesheet(unsigned int istd, const OleMainStream::StyleInfoList &styleInfoList, const OleMainStream::CharInfoList &charInfoList);
 	static int getStyleIndex(unsigned int istd, const std::vector<bool>& isFilled, const StyleInfoList& styleInfoList);
 	static unsigned int getIstdByOffset(unsigned int offset, const StyleInfoList& styleInfoList);
+
+private:
+	enum PrlFlag {
+		UNSET = 0,
+		SET = 1,
+		UNCHANGED = 128,
+		NEGATION = 129
+	};
 
 private:
 	int myStartOfText;

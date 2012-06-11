@@ -73,6 +73,9 @@ protected:
 	virtual void handleStartOfHeading() = 0;
 	virtual void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) = 0;
 
+	virtual void handleFontStyle(unsigned int fontStyle) = 0;
+	virtual void handleParagraphStyle(const OleMainStream::StyleInfo& styleInfo) = 0;
+
 private:
 	bool getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char);
 	bool fillBuffer(OleMainStream& stream);

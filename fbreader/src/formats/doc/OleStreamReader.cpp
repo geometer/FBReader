@@ -151,42 +151,42 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 		}
 	}
 
-//	const OleMainStream::StyleInfoList& list = stream.getStyleInfoList();
-//	for (size_t i = 0; i < list.size(); ++i) {
-//		OleMainStream::StyleInfo info = list.at(i);
-//		if (info.fileOffset == myCurCP + myCurOffset) {
-//			if (info.alignment == 0) {
-//				printf("{LEFT}");
-//			} else if (info.alignment == 1) {
-//				printf("{CENTER}");
-//			} else if (info.alignment == 2) {
-//				printf("{RIGHT}");
-//			} else if (info.alignment == 3) {
-//				printf("{JUSTIFY}");
+	const OleMainStream::StyleInfoList& list = stream.getStyleInfoList();
+	for (size_t i = 0; i < list.size(); ++i) {
+		OleMainStream::StyleInfo info = list.at(i);
+		if (info.offset == myCurCP + myCurOffset) {
+			handleParagraphStyle(info);
+			if (info.alignment == 0) {
+				printf("{LEFT}");
+			} else if (info.alignment == 1) {
+				printf("{CENTER}");
+			} else if (info.alignment == 2) {
+				printf("{RIGHT}");
+			} else if (info.alignment == 3) {
+				printf("{JUSTIFY}");
+			}
+			if (info.leftIndent > 0) {
+				printf("\\%d\\", info.leftIndent);
+			}
+//			if (info.ucListLevel >= 0) {
+//				printf("{%u}", info.ucListLevel);
 //			}
-
-//			if (info.leftIndent > 0) {
-//				printf("\\%d\\", info.leftIndent);
-//			}
-////			if (info.ucListLevel >= 0) {
-////				printf("{%u}", info.ucListLevel);
-////			}
-//			if (info.istd >= 0) {
-//				printf("{%u}", info.istd);
-//			}
-//		}
-//	}
+			if (info.istd >= 0) {
+				printf("{%u}", info.istd);
+			}
+			//printf("=%u=", info.fontSize);
+		}
+	}
 
 	const OleMainStream::CharInfoList& clist = stream.getCharInfoList();
 	for (size_t i = 0; i < clist.size(); ++i) {
 		OleMainStream::CharInfo info = clist.at(i);
 		if (info.offset == myCurCP + myCurOffset) {
-			printf("[%u,b=%d,i=%d]", i, info.fontStyle & 0x0001, info.fontStyle & 0x0002);
+			printf("[b=%d,i=%d]", info.fontStyle & 0x0001, info.fontStyle & 0x0002);
+			handleFontStyle(info.fontStyle);
 			break;
 		}
 	}
-
-
 
 //	const OleMainStream::SectionInfoList& list = stream.getSectionInfoList();
 //	for (size_t i = 0; i < list.size(); ++i) {
@@ -199,7 +199,6 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 //			}
 //		}
 //	}
-
 
 	ucs2char = myBuffer.at(myCurBufferPosition++);
 	myCurCP += myCurInc;
