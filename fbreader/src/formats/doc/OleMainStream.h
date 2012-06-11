@@ -27,9 +27,16 @@
 class OleMainStream : public OleStream {
 public:
 	struct Piece {
+		enum PieceType {
+			TEXT,
+			FOOTNOTE,
+			OTHER
+		};
+
 		int offset;
 		int length;
 		bool isANSI;
+		PieceType type;
 	};
 	typedef std::vector<Piece> Pieces;
 
@@ -119,7 +126,7 @@ private:
 
 private: //readPieceTable helpers methods
 	static std::string getPiecesTableBuffer(const char* headerBuffer, OleStream& tableStream);
-	static int getLastCP(const char* buffer);
+	static void splitPieces(const Pieces& source, Pieces& dest1, Pieces& dest2, Piece::PieceType type1, Piece::PieceType type2, int boundary);
 
 private: //formatting reader helpers methods
 	static unsigned int getInfoLength(const char *grpprlBuffer, unsigned int byteNumber);

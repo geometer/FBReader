@@ -196,6 +196,13 @@ bool OleStreamReader::fillBuffer(OleMainStream& stream) {
 		return false; //end of reading
 	}
 	const OleMainStream::Piece& piece = pieces.at(myNextPieceNumber);
+
+	if (piece.type == OleMainStream::Piece::FOOTNOTE) {
+		handlePageBreak();
+	} else if (piece.type == OleMainStream::Piece::OTHER) {
+		return false;
+	}
+
 	char* textBuffer = new char[piece.length];
 
 	stream.seek(piece.offset, true);

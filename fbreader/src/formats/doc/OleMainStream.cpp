@@ -79,7 +79,7 @@ bool OleMainStream::open() {
 
 	if (!result) {
 		//cant't find table stream (that can be only in case if file format is below Word 7/8), so building simple table stream
-		Piece piece = {myStartOfText, myEndOfText - myStartOfText, true}; //CHECK may be not all old documents have ANSI
+		Piece piece = {myStartOfText, myEndOfText - myStartOfText, true, Piece::TEXT}; //CHECK may be not all old documents have ANSI
 		myPieces.push_back(piece);
 		return true;
 	}
@@ -137,22 +137,44 @@ bool OleMainStream::readFIB(const char* headerBuffer) {
 	return true;
 }
 
-int OleMainStream::getLastCP(const char* buffer) {
-	//getting count of Character Positions for different types of subdocuments in Main Stream
-	int ccpText = OleUtil::get4Bytes(buffer, 0x004C); //text
-	int ccpFtn = OleUtil::get4Bytes(buffer, 0x0050); //footnote subdocument
-	int ccpHdd = OleUtil::get4Bytes(buffer, 0x0054); //header subdocument
-	int ccpMcr = OleUtil::get4Bytes(buffer, 0x0058); //macro subdocument
-	int ccpAtn = OleUtil::get4Bytes(buffer, 0x005C); //comment subdocument
-	int ccpEdn = OleUtil::get4Bytes(buffer, 0x0060); //endnote subdocument
-	int ccpTxbx = OleUtil::get4Bytes(buffer, 0x0064); //textbox subdocument
-	int ccpHdrTxbx = OleUtil::get4Bytes(buffer, 0x0068); //textbox subdocument of the header
-	int lastCP = ccpFtn + ccpHdd + ccpMcr + ccpAtn + ccpEdn + ccpTxbx + ccpHdrTxbx;
-	if (lastCP != 0) {
-		++lastCP;
+void OleMainStream::splitPieces(const Pieces& s, Pieces& dest1, Pieces& dest2, Piece::PieceType type1, Piece::PieceType type2, int boundary) {
+	Pieces source = s;
+	dest1.clear();
+	dest2.clear();
+
+	int sumLength = 0;
+	size_t i = 0;
+	for (i = 0; i < source.size(); ++i) {
+		Piece piece = source.at(i);
+		if (piece.length + sumLength >= boundary) {
+			Piece piece2 = piece;
+
+			piece.length = boundary - sumLength;
+			piece.type = type1;
+
+			piece2.type = type2;
+			piece2.offset += piece.length * 2;
+			piece2.length -= piece.length;
+
+			if (piece.length > 0) {
+				dest1.push_back(piece);
+			}
+			if (piece2.length > 0) {
+				dest2.push_back(piece2);
+			}
+			++i;
+			break;
+		}
+		sumLength += piece.length;
+		piece.type = type1;
+		dest1.push_back(piece);
 	}
-	lastCP += ccpText;
-	return lastCP;
+	for (; i < source.size(); ++i) {
+		Piece piece = source.at(i);
+		piece.type = type2;
+		dest2.push_back(piece);
+	}
+
 }
 
 std::string OleMainStream::getPiecesTableBuffer(const char* headerBuffer, OleStream& tableStream) {
@@ -188,8 +210,23 @@ bool OleMainStream::readPieceTable(const char* headerBuffer, const OleEntry& tab
 	OleStream tableStream(myStorage, tableEntry, myBaseStream);
 	std::string piecesTableBuffer = getPiecesTableBuffer(headerBuffer, tableStream);
 
+	//getting count of Character Positions for different types of subdocuments in Main Stream
+	int ccpText = OleUtil::get4Bytes(headerBuffer, 0x004C); //text
+	int ccpFtn = OleUtil::get4Bytes(headerBuffer, 0x0050); //footnote subdocument
+	int ccpHdd = OleUtil::get4Bytes(headerBuffer, 0x0054); //header subdocument
+	int ccpMcr = OleUtil::get4Bytes(headerBuffer, 0x0058); //macro subdocument
+	int ccpAtn = OleUtil::get4Bytes(headerBuffer, 0x005C); //comment subdocument
+	int ccpEdn = OleUtil::get4Bytes(headerBuffer, 0x0060); //endnote subdocument
+	int ccpTxbx = OleUtil::get4Bytes(headerBuffer, 0x0064); //textbox subdocument
+	int ccpHdrTxbx = OleUtil::get4Bytes(headerBuffer, 0x0068); //textbox subdocument of the header
+	int lastCP = ccpFtn + ccpHdd + ccpMcr + ccpAtn + ccpEdn + ccpTxbx + ccpHdrTxbx;
+	if (lastCP != 0) {
+		++lastCP;
+	}
+	lastCP += ccpText;
+	//printf("ccpText = %d, ccpFtn = %d, ccpHdd = %d, ccpMcr = %d, ccpAtn = %d, ccpTxbx = %d, ccpHdrTxbc = %d\n", ccpText, ccpFtn, ccpHdd, ccpMcr, ccpAtn, ccpTxbx, ccpHdrTxbx);
+
 	//getting the CP (character positions) and CP descriptors
-	int lastCP = getLastCP(headerBuffer);
 	std::vector<int> cp; //array of character positions for pieces
 	unsigned int j = 0;
 	for (j = 0; ; j += 4) {
@@ -199,6 +236,11 @@ bool OleMainStream::readPieceTable(const char* headerBuffer, const OleEntry& tab
 			break;
 		}
 	}
+
+	for (size_t i = 0; i < cp.size(); ++i) {
+		printf("cp[%u] = %d\n", i, cp.at(i));
+	}
+
 	std::vector<std::string> descriptors;
 	for (size_t k = 0; k < cp.size() - 1; ++k) {
 		//j + 4, because it should be taken after CP in PiecesTable Buffer
@@ -214,12 +256,42 @@ bool OleMainStream::readPieceTable(const char* headerBuffer, const OleEntry& tab
 		piece.isANSI = (fcValue & 0x40000000) == 0x40000000; //ansi flag
 		piece.offset = fcValue & 0x3FFFFFFF; //gettting offset for current piece
 		piece.length = cp[i + 1] - cp[i];
+		printf("draft piece, offset = %d, length = %d, would become ", piece.offset, piece.length);
+		if (!piece.isANSI) {
+			printf("offset = %d, length = %d\n", piece.offset, piece.length * 2);
+		} else {
+			printf("offset = %d, length = %d\n", piece.offset / 2, piece.length);
+		}
+
+		myPieces.push_back(piece);
+	}
+
+	//split pieces into different types
+	Pieces piecesText, piecesFootnote, piecesOther;
+	splitPieces(myPieces, piecesText, piecesFootnote, Piece::TEXT, Piece::FOOTNOTE, ccpText);
+	splitPieces(piecesFootnote, piecesFootnote, piecesOther, Piece::FOOTNOTE, Piece::OTHER, ccpFtn);
+
+	myPieces.clear();
+	for (size_t i = 0; i < piecesText.size(); ++i) {
+		myPieces.push_back(piecesText.at(i));
+	}
+	for (size_t i = 0; i < piecesFootnote.size(); ++i) {
+		myPieces.push_back(piecesFootnote.at(i));
+	}
+	for (size_t i = 0; i < piecesOther.size(); ++i) {
+		myPieces.push_back(piecesOther.at(i));
+	}
+
+	//converting length and offset depending on isANSI
+	for (size_t i = 0; i < myPieces.size(); ++i) {
+		Piece& piece = myPieces.at(i);
+		printf("new piece, offset = %d, length = %d, type = %d, ansi = %d becomes", piece.offset, piece.length, piece.type, piece.isANSI);
 		if (!piece.isANSI) {
 			piece.length *= 2;
 		} else {
 			piece.offset /= 2;
 		}
-		myPieces.push_back(piece);
+		printf(" offset = %d, length = %d\n", piece.offset, piece.length);
 	}
 	return true;
 }
