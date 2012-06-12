@@ -20,6 +20,8 @@
 #ifndef __DOCBOOKREADER_H__
 #define __DOCBOOKREADER_H__
 
+#include <vector>
+
 #include <ZLFile.h>
 
 #include "../../bookmodel/BookReader.h"
@@ -36,7 +38,6 @@ public:
 
 private:
 	bool readDocument(shared_ptr<ZLInputStream> stream, size_t streamSize);
-	//void parapgraphHandler(std::string paragraph);
 
 	void handleChar(ZLUnicodeUtil::Ucs2Char ucs2char);
 	void handleHardLinebreak();
@@ -54,13 +55,33 @@ private:
 	//formatting:
 	void handleFontStyle(unsigned int fontStyle);
 	void handleParagraphStyle(const OleMainStream::StyleInfo& styleInfo);
+	void handleBookmark(const std::string& name);
+
+private:
+	static std::string parseLink(ZLUnicodeUtil::Ucs2String s, bool urlencode = false);
 
 private:
 	BookReader myModelReader;
 
 	ZLUnicodeUtil::Ucs2String myFieldInfoBuffer;
-	bool myFieldReading;
-	bool myHyperlinkInserted;
+
+	enum {
+		READ_FIELD,
+		READ_TEXT
+	} myReadState;
+
+	enum {
+		READ_FIELD_TEXT,
+		DONT_READ_FIELD_TEXT,
+		READ_FIELD_INFO
+	} myReadFieldState;
+
+	//maybe it should be flag?
+	enum {
+		NO_HYPERLINK,
+		EXT_HYPERLINK_INSERTED,
+		INT_HYPERLINK_INSERTED
+	} myHyperlinkTypeState;
 
 	//formatting
 	std::vector<FBTextKind> myKindStack;

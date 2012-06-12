@@ -20,6 +20,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstdio>
 
 #include <ZLInputStream.h>
 #include <ZLLogger.h>
@@ -37,8 +38,7 @@
 DocBookReader::DocBookReader(BookModel &model, const std::string &encoding) :
 	OleStreamReader(encoding),
 	myModelReader(model) {
-	myFieldReading = false;
-	myHyperlinkInserted = false;
+	myReadState = READ_TEXT;
 }
 
 bool DocBookReader::readBook() {
@@ -87,15 +87,17 @@ bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream, size_t s
 	return true;
 }
 
-//void DocBookReader::parapgraphHandler(std::string paragraph) {
-//	myModelReader.beginParagraph();
-//	myModelReader.addData(paragraph);
-//	myModelReader.endParagraph();
-//}
-
 void DocBookReader::handleChar(ZLUnicodeUtil::Ucs2Char ucs2char) {
-	if (myFieldReading) {
+	if (myReadState == READ_FIELD && myReadFieldState == READ_FIELD_INFO) {
 		myFieldInfoBuffer.push_back(ucs2char);
+		return;
+	}
+	if (myReadState == READ_FIELD && myReadFieldState == DONT_READ_FIELD_TEXT) {
+		return;
+	}
+	if (myReadState == READ_FIELD && myReadFieldState == READ_FIELD_TEXT && ucs2char == WORD_HORIZONTAL_TAB) {
+		//to remove pagination from TOC (from doc saved in OpenOffice)
+		myReadFieldState = DONT_READ_FIELD_TEXT;
 		return;
 	}
 	std::string utf8String;
@@ -153,10 +155,12 @@ void DocBookReader::handleFootNoteMark() {
 }
 
 void DocBookReader::handleStartField() {
-	if (myFieldReading) { //for nested fields
+	if (myReadState == READ_FIELD) { //for nested fields
 		handleEndField();
 	}
-	myFieldReading = true;
+	myReadState = READ_FIELD;
+	myReadFieldState = READ_FIELD_INFO;
+	myHyperlinkTypeState = NO_HYPERLINK;
 }
 
 void DocBookReader::handleSeparatorField() {
@@ -166,10 +170,13 @@ void DocBookReader::handleSeparatorField() {
 //	static const std::string SHAPE = "SHAPE";
 	static const std::string SPACE_DELIMETER = " ";
 	static const std::string LOCAL_LINK = "\\l";
-	myFieldReading = false;
-	std::string utf8String;
-	ZLUnicodeUtil::ucs2ToUtf8(utf8String, myFieldInfoBuffer);
+	static const std::string QUOTE = "\"";
+	myReadFieldState = READ_FIELD_TEXT;
+	myHyperlinkTypeState = NO_HYPERLINK;
+	ZLUnicodeUtil::Ucs2String buffer = myFieldInfoBuffer;
 	myFieldInfoBuffer.clear();
+	std::string utf8String;
+	ZLUnicodeUtil::ucs2ToUtf8(utf8String, buffer);
 	ZLStringUtil::stripWhiteSpaces(utf8String);
 	if (utf8String.empty()) {
 		return;
@@ -177,28 +184,43 @@ void DocBookReader::handleSeparatorField() {
 	std::vector<std::string> result;
 	ZLStringUtil::split(utf8String, result, SPACE_DELIMETER);
 
-	if (result.size() >= 2 && result.at(0) == HYPERLINK && result.size() > 1) {
-		std::string link = result.at(1);
-		if (link == LOCAL_LINK) {
-			return; //TODO implement local links
-		}
-		myModelReader.addHyperlinkControl(EXTERNAL_HYPERLINK, link);
-		myHyperlinkInserted = true;
-	} else {
-		myFieldReading = true;
+	if (result.size() < 2 || result.at(0) != HYPERLINK) {
+		myReadFieldState = DONT_READ_FIELD_TEXT;
+		//to remove pagination from TOC and not hyperlink fields
+		return;
 	}
 
+	if (result.at(1) == LOCAL_LINK) {
+		std::string link = parseLink(buffer);
+		printf("  internal link: '%s'\n", link.c_str());
+		if (!link.empty()) {
+			myModelReader.addHyperlinkControl(INTERNAL_HYPERLINK, link);
+			myHyperlinkTypeState = INT_HYPERLINK_INSERTED;
+		}
+	} else {
+		std::string link = parseLink(buffer, true);
+		link = QUOTE + link + QUOTE;
+		printf("  external link: '%s'\n", link.c_str());
+		if (!link.empty()) {
+			myModelReader.addHyperlinkControl(EXTERNAL_HYPERLINK, link);
+			myHyperlinkTypeState = EXT_HYPERLINK_INSERTED;
+		}
+	}
 }
 
 void DocBookReader::handleEndField() {
-	//for case if there's no Separator Field
-	myFieldReading = false;
 	myFieldInfoBuffer.clear();
-
-	if (myHyperlinkInserted) {
-		myModelReader.addControl(EXTERNAL_HYPERLINK, false);
-		myHyperlinkInserted = false;
+	if (myReadState == READ_TEXT) {
+		return;
 	}
+	if (myHyperlinkTypeState == EXT_HYPERLINK_INSERTED) {
+		myModelReader.addControl(EXTERNAL_HYPERLINK, false);
+	} else if (myHyperlinkTypeState == INT_HYPERLINK_INSERTED) {
+		myModelReader.addControl(INTERNAL_HYPERLINK, false);
+	}
+	myReadState = READ_TEXT;
+	myHyperlinkTypeState = NO_HYPERLINK;
+
 }
 
 void DocBookReader::handleStartOfHeading() {
@@ -219,13 +241,14 @@ void DocBookReader::handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) {
 }
 
 void DocBookReader::handleFontStyle(unsigned int fontStyle) {
+	if (myReadState == READ_FIELD && myReadFieldState == READ_FIELD_TEXT && myHyperlinkTypeState != NO_HYPERLINK) {
+		//to fix bug with hyperlink, that's only bold and doesn't looks like hyperlink
+		return;
+	}
 	while (!myKindStack.empty()) {
 		myModelReader.addControl(myKindStack.back(), false);
 		myKindStack.pop_back();
 	}
-//	while (!myModelReader.isKindStackEmpty()) {
-//		myModelReader.popKind();
-//	}
 	if (fontStyle & OleMainStream::CharInfo::BOLD) {
 		myKindStack.push_back(BOLD);
 	}
@@ -233,7 +256,6 @@ void DocBookReader::handleFontStyle(unsigned int fontStyle) {
 		myKindStack.push_back(ITALIC);
 	}
 	for (size_t i = 0; i < myKindStack.size(); ++i) {
-		//myModelReader.pushKind(myKindStack.at(i));
 		myModelReader.addControl(myKindStack.at(i), true);
 	}
 }
@@ -276,5 +298,61 @@ void DocBookReader::handleParagraphStyle(const OleMainStream::StyleInfo &styleIn
 		handleFontStyle(styleInfo.fontStyle); //fill by the fontstyle, that was got from Stylesheet
 	}
 	myCurStyleInfo = styleInfo;
+}
+
+void DocBookReader::handleBookmark(const std::string& name) {
+	myModelReader.addHyperlinkLabel(name);
+}
+
+std::string DocBookReader::parseLink(ZLUnicodeUtil::Ucs2String s, bool urlencode) {
+	//TODO add support for HYPERLINK like that:
+	// [0x13] HYPERLINK "http://site.ru/some text" \t "_blank" [0x14] text [0x15]
+	//Current implementation search for last QUOTE, so, it reads \t and _blank as part of link
+	//Last quote searching is need to handle link like that:
+	// [0x13] HYPERLINK "http://yandex.ru/yandsearch?text='some text' и "some text2"" [0x14] link text [0x15]
+
+	static const ZLUnicodeUtil::Ucs2Char QUOTE = 0x22;
+	size_t i, first;
+	//TODO maybe functions findFirstOf and findLastOf should be in ZLUnicodeUtil class
+	for (i = 0; i < s.size(); ++i) {
+		if (s.at(i) == QUOTE) {
+			first = i;
+			break;
+		}
+	}
+	if (i == s.size()) {
+		return std::string();
+	}
+	size_t j, last;
+	for (j = s.size(); j > 0 ; --j) {
+		if (s.at(j - 1) == QUOTE) {
+			last = j - 1;
+			break;
+		}
+	}
+	if (j == 0 || last == first) {
+		return std::string();
+	}
+
+	ZLUnicodeUtil::Ucs2String link;
+	for (size_t k = first + 1; k < last; ++k) {
+		ZLUnicodeUtil::Ucs2Char ch = s.at(k);
+		if (urlencode && ZLUnicodeUtil::isSpace(ch)) {
+			//TODO maybe implement function for encoding all signs in url, not only spaces and quotes
+			//TODO maybe add backslash support
+			link.push_back('%');
+			link.push_back('2');
+			link.push_back('0');
+		} else if (urlencode && ch == QUOTE) {
+			link.push_back('%');
+			link.push_back('2');
+			link.push_back('2');
+		} else {
+			link.push_back(ch);
+		}
+	}
+	std::string utf8String;
+	ZLUnicodeUtil::ucs2ToUtf8(utf8String, link);
+	return utf8String;
 }
 

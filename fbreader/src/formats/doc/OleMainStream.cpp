@@ -19,6 +19,7 @@
 
 #include <cstdio>
 #include <cstring> //for memset
+#include <string>
 
 #include <ZLLogger.h>
 #include <ZLUnicodeUtil.h>
@@ -86,6 +87,7 @@ bool OleMainStream::open() {
 	//printf("Table Name: %s\n", tableName.c_str());
 
 	return readPieceTable(headerBuffer, tableEntry) &&
+			readBookmarks(headerBuffer, tableEntry) &&
 			readStylesheet(headerBuffer, tableEntry) &&
 			//readSectionsInfoTable(headerBuffer, tableEntry) && //it doesn't uses now
 			readParagraphStyleTable(headerBuffer, tableEntry) &&
@@ -103,6 +105,10 @@ const OleMainStream::CharInfoList &OleMainStream::getCharInfoList() const {
 
 const OleMainStream::StyleInfoList &OleMainStream::getStyleInfoList() const {
 	return myStyleInfoList;
+}
+
+const OleMainStream::Bookmarks &OleMainStream::getBookmarks() const {
+	return myBookmarks;
 }
 
 bool OleMainStream::readFIB(const char* headerBuffer) {
@@ -294,6 +300,91 @@ bool OleMainStream::readPieceTable(const char* headerBuffer, const OleEntry& tab
 		printf(" offset = %d, length = %d\n", piece.offset, piece.length);
 	}
 	return true;
+}
+
+bool OleMainStream::readBookmarks(const char *headerBuffer, const OleEntry &tableEntry) {
+	//SttbfBkmk structure is a table of bookmark name strings
+	unsigned int beginBkmkInfo = OleUtil::getU4Bytes(headerBuffer, 0x142); // address of SttbfBkmk structure
+	size_t bkmkInfoLen = (size_t)OleUtil::getU4Bytes(headerBuffer, 0x146); // length of SttbfBkmk structure
+
+	if (bkmkInfoLen == 0) {
+		return true; //there's no bookmarks
+	}
+
+	printf("bkmkInfoLen = %u\n", bkmkInfoLen);
+
+	OleStream tableStream(myStorage, tableEntry, myBaseStream);
+	char* buffer = new char[bkmkInfoLen];
+	tableStream.seek(beginBkmkInfo, true);
+	if (tableStream.read(buffer, bkmkInfoLen) != bkmkInfoLen) {
+		return false;
+	}
+	std::string bkmk(buffer, bkmkInfoLen);
+	delete buffer;
+
+	unsigned int recordsNumber = OleUtil::getU2Bytes(bkmk.c_str(), 0x2); //count of records
+
+	printf("cData = %u\n", recordsNumber);
+
+	std::vector<std::string> names;
+	unsigned int offset = 0x6; //initial offset
+	for (unsigned int i = 0; i < recordsNumber; ++i) {
+		unsigned int length = OleUtil::getU2Bytes(bkmk.c_str(), offset) * 2; //legnth of string in bytes
+		printf("cchData = %u\n", length);
+		ZLUnicodeUtil::Ucs2String name;
+		for (unsigned int j = 0; j < length; j+=2) {
+			char ch1 = bkmk.at(offset + 2 + j);
+			char ch2 = bkmk.at(offset + 2 + j + 1);
+			ZLUnicodeUtil::Ucs2Char ucs2Char = (unsigned int)ch1 | ((unsigned int)ch2 << 8);
+			name.push_back(ucs2Char);
+		}
+		std::string utf8Name;
+		ZLUnicodeUtil::ucs2ToUtf8(utf8Name, name);
+		names.push_back(utf8Name);
+		printf("name of bookmark is %s\n", utf8Name.c_str());
+		offset += length + 2;
+	}
+
+	//plcfBkmkf structure is table recording beginning CPs of bookmarks
+	unsigned int beginPlcfBkmkInfo = OleUtil::getU4Bytes(headerBuffer, 0x14A); // address of plcfBkmkf structure
+	size_t plcfBkmkInfoLen = (size_t)OleUtil::getU4Bytes(headerBuffer, 0x14E); // length of plcfBkmkf structure
+
+	if (plcfBkmkInfoLen == 0) {
+		return true; //there's no bookmarks
+	}
+
+	printf("plcfBkmkInfoLen = %u\n", plcfBkmkInfoLen);
+
+	buffer = new char[plcfBkmkInfoLen];
+	tableStream.seek(beginPlcfBkmkInfo, true);
+	if (tableStream.read(buffer, plcfBkmkInfoLen) != plcfBkmkInfoLen) {
+		return false;
+	}
+	std::string plcfBkmk(buffer, plcfBkmkInfoLen);
+	delete buffer;
+
+	size_t size = (plcfBkmkInfoLen / 4 - 1) / 2;
+	std::vector<unsigned int> charPage;
+	for (size_t index = 0, offset = 0; index < size; ++index, offset += 4) {
+		charPage.push_back(OleUtil::getU4Bytes(plcfBkmk.c_str(), offset));
+	}
+
+	for (size_t i = 0; i < charPage.size(); ++i) {
+		printf("CP[%u] = %u\n", i, charPage.at(i));
+	}
+
+	for (size_t i = 0; i < names.size(); ++i) {
+		if (i >= charPage.size()) {
+			break; //for the case if something in these structures goes wrong, to not to lose all bookmarks
+		}
+		Bookmark bookmark;
+		bookmark.charPos = charPage.at(i);
+		bookmark.name = names.at(i);
+		myBookmarks.push_back(bookmark);
+	}
+
+	return true;
+
 }
 
 bool OleMainStream::readStylesheet(const char *headerBuffer, const OleEntry &tableEntry) {

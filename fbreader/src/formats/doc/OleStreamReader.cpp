@@ -63,6 +63,8 @@ void OleStreamReader::clear() {
 	myBuffer.clear();
 	myCurBufferPosition = 0;
 	myNextPieceNumber = 0;
+
+	myCurLength = 0;
 	myCurCP = 0;
 }
 
@@ -151,7 +153,7 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 	const OleMainStream::StyleInfoList& list = stream.getStyleInfoList();
 	for (size_t i = 0; i < list.size(); ++i) {
 		OleMainStream::StyleInfo info = list.at(i);
-		if (info.offset == myCurCP + myCurOffset) {
+		if (info.offset == myCurLength + myCurOffset) {
 			handleParagraphStyle(info);
 			if (info.alignment == 0) {
 				printf("{LEFT}");
@@ -168,9 +170,7 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 			if (info.hasPageBreakBefore) {
 				printf("|PGBRK|");
 			}
-			if (info.istd >= 0) {
-				printf("{%u}", info.istd);
-			}
+			printf("{%u}", info.istd);
 			printf("=%u=", info.fontSize);
 		}
 	}
@@ -178,15 +178,26 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 	const OleMainStream::CharInfoList& clist = stream.getCharInfoList();
 	for (size_t i = 0; i < clist.size(); ++i) {
 		OleMainStream::CharInfo info = clist.at(i);
-		if (info.offset == myCurCP + myCurOffset) {
-			printf("[b=%d,i=%d,%u]", info.fontStyle & 0x0001, info.fontStyle & 0x0002, info.fontSize);
+		if (info.offset == myCurLength + myCurOffset) {
+			//printf("[b=%d,i=%d,%u]", info.fontStyle & 0x0001, info.fontStyle & 0x0002, info.fontSize);
 			handleFontStyle(info.fontStyle);
 			break;
 		}
 	}
 
+	const OleMainStream::Bookmarks& blist = stream.getBookmarks();
+	for (size_t i = 0; i < blist.size(); ++i) {
+		OleMainStream::Bookmark bookmark = blist.at(i);
+		if (bookmark.charPos == myCurCP) {
+			printf("-'%s'-", bookmark.name.c_str());
+			handleBookmark(bookmark.name);
+			//break; //if we have some equal bookmarks, we shouldn't break
+		}
+	}
+
 	ucs2char = myBuffer.at(myCurBufferPosition++);
-	myCurCP += myCurInc;
+	myCurLength += myCurInc;
+	myCurCP += 1;
 	return true;
 }
 
@@ -230,7 +241,7 @@ bool OleStreamReader::fillBuffer(OleMainStream& stream) {
 	delete textBuffer;
 
 	myCurOffset = piece.offset;
-	myCurCP = 0;
+	myCurLength = 0;
 	if (piece.isANSI) {
 		myCurInc = 1;
 	} else {

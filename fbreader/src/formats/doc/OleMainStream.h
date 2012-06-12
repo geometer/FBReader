@@ -21,6 +21,7 @@
 #define __OLEMAINSTREAM_H__
 
 #include <vector>
+#include <string>
 
 #include "OleStream.h"
 
@@ -107,6 +108,13 @@ public:
 
 	typedef std::vector<SectionInfo> SectionInfoList;
 
+	struct Bookmark {
+		unsigned int charPos;
+		std::string name;
+	};
+
+	typedef std::vector<Bookmark> Bookmarks;
+
 public:
 	OleMainStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream);
 
@@ -115,10 +123,12 @@ public:
 	const Pieces& getPieces() const;
 	const CharInfoList& getCharInfoList() const;
 	const StyleInfoList& getStyleInfoList() const;
+	const Bookmarks& getBookmarks() const;
 
 private:
 	bool readFIB(const char* headerBuffer);
 	bool readPieceTable(const char* headerBuffer, const OleEntry& tableEntry);
+	bool readBookmarks(const char* headerBuffer, const OleEntry& tableEntry);
 	bool readStylesheet(const char* headerBuffer, const OleEntry& tableEntry);
 	bool readSectionsInfoTable(const char* headerBuffer, const OleEntry& tableEntry);
 	bool readParagraphStyleTable(const char* headerBuffer, const OleEntry& tableEntry);
@@ -158,6 +168,8 @@ private:
 	CharInfoList myCharInfoList;
 	StyleInfoList myStyleInfoList;
 	SectionInfoList mySectionInfoList;
+
+	Bookmarks myBookmarks;
 };
 
 #endif /* __OLEMAINSTREAM_H__ */
