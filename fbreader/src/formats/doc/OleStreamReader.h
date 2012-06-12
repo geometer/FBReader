@@ -53,7 +53,7 @@ public:
 	static const ZLUnicodeUtil::Ucs2Char VERTICAL_LINE;
 
 public:
-	OleStreamReader(const std::string& encoding);
+	OleStreamReader(const std::string &encoding);
 
 	bool readStream(OleMainStream &stream);
 	void clear();
@@ -74,12 +74,12 @@ protected:
 	virtual void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) = 0;
 
 	virtual void handleFontStyle(unsigned int fontStyle) = 0;
-	virtual void handleParagraphStyle(const OleMainStream::Style& styleInfo) = 0;
-	virtual void handleBookmark(const std::string& name) = 0;
+	virtual void handleParagraphStyle(const OleMainStream::Style &styleInfo) = 0;
+	virtual void handleBookmark(const std::string &name) = 0;
 
 private:
-	bool getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char);
-	bool fillBuffer(OleMainStream& stream);
+	bool getUcs2Char(OleMainStream &stream, ZLUnicodeUtil::Ucs2Char &ucs2char);
+	bool fillBuffer(OleMainStream &stream);
 
 private:
 	ZLUnicodeUtil::Ucs2String myBuffer;

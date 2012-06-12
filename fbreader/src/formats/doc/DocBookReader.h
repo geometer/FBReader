@@ -54,8 +54,8 @@ private:
 
 	//formatting:
 	void handleFontStyle(unsigned int fontStyle);
-	void handleParagraphStyle(const OleMainStream::Style& styleInfo);
-	void handleBookmark(const std::string& name);
+	void handleParagraphStyle(const OleMainStream::Style &styleInfo);
+	void handleBookmark(const std::string &name);
 
 private:
 	static std::string parseLink(ZLUnicodeUtil::Ucs2String s, bool urlencode = false);

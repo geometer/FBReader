@@ -20,7 +20,6 @@
 
 #include <cctype>
 #include <cstring>
-#include <cstdio>
 
 #include <ZLLogger.h>
 
@@ -134,10 +133,10 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 			continue; //skip
 		} else {
 			//debug output
-			std::string utf8String;
-			ZLUnicodeUtil::Ucs2String ucs2String;
-			ucs2String.push_back(ucs2char);
-			ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
+			//std::string utf8String;
+			//ZLUnicodeUtil::Ucs2String ucs2String;
+			//ucs2String.push_back(ucs2char);
+			//ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
 			//printf("%s", utf8String.c_str());
 
 			handleChar(ucs2char);
@@ -147,54 +146,35 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 	return true;
 }
 
-bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char) {
+bool OleStreamReader::getUcs2Char(OleMainStream &stream, ZLUnicodeUtil::Ucs2Char &ucs2char) {
 	if (myCurBufferPosition >= myBuffer.size()) {
 		if (!fillBuffer(stream)) {
 			return false;
 		}
 	}
 
-	const OleMainStream::StyleInfoList& styleInfoList = stream.getStyleInfoList();
+	const OleMainStream::StyleInfoList &styleInfoList = stream.getStyleInfoList();
 	if (!styleInfoList.empty()) {
 		while (myNextStyleInfoIndex < styleInfoList.size() && styleInfoList.at(myNextStyleInfoIndex).first == myCurCharPos) {
 			OleMainStream::Style info = styleInfoList.at(myNextStyleInfoIndex).second;
 			handleParagraphStyle(info);
-//			if (info.alignment == 0) {
-//				printf("{LEFT}");
-//			} else if (info.alignment == 1) {
-//				printf("{CENTER}");
-//			} else if (info.alignment == 2) {
-//				printf("{RIGHT}");
-//			} else if (info.alignment == 3) {
-//				printf("{JUSTIFY}");
-//			}
-//			if (info.leftIndent > 0) {
-//				printf("\\%d\\", info.leftIndent);
-//			}
-//			if (info.hasPageBreakBefore) {
-//				printf("|PGBRK|");
-//			}
-//			printf("{%u}", info.istd);
-//			printf("=%u=", info.charInfo.fontSize);
 			++myNextStyleInfoIndex;
 		}
 	}
 
-	const OleMainStream::CharInfoList& charInfoList = stream.getCharInfoList();
+	const OleMainStream::CharInfoList &charInfoList = stream.getCharInfoList();
 	if (!charInfoList.empty()) {
 		while (myNextCharInfoIndex < charInfoList.size() && charInfoList.at(myNextCharInfoIndex).first == myCurCharPos) {
 			OleMainStream::CharInfo info = charInfoList.at(myNextCharInfoIndex).second;
-			//printf("[b=%d,i=%d,%u]", info.fontStyle & 0x0001, info.fontStyle & 0x0002, info.fontSize);
 			handleFontStyle(info.fontStyle);
 			++myNextCharInfoIndex;
 		}
 	}
 
-	const OleMainStream::Bookmarks& bookmarksList = stream.getBookmarks();
+	const OleMainStream::Bookmarks &bookmarksList = stream.getBookmarks();
 	if (!bookmarksList.empty()) {
-		while(myNextBookmarkIndex < bookmarksList.size() && bookmarksList.at(myNextBookmarkIndex).charPos == myCurCharPos) {
+		while (myNextBookmarkIndex < bookmarksList.size() && bookmarksList.at(myNextBookmarkIndex).charPos == myCurCharPos) {
 			OleMainStream::Bookmark bookmark = bookmarksList.at(myNextBookmarkIndex);
-			//printf("-'%s'-", bookmark.name.c_str());
 			handleBookmark(bookmark.name);
 			++myNextBookmarkIndex;
 		}
@@ -205,12 +185,12 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 	return true;
 }
 
-bool OleStreamReader::fillBuffer(OleMainStream& stream) {
-	const OleMainStream::Pieces& pieces = stream.getPieces();
+bool OleStreamReader::fillBuffer(OleMainStream &stream) {
+	const OleMainStream::Pieces &pieces = stream.getPieces();
 	if (myNextPieceNumber >= pieces.size()) {
 		return false; //end of reading
 	}
-	const OleMainStream::Piece& piece = pieces.at(myNextPieceNumber);
+	const OleMainStream::Piece &piece = pieces.at(myNextPieceNumber);
 
 	if (piece.type == OleMainStream::Piece::FOOTNOTE) {
 		handlePageBreak();
@@ -218,7 +198,7 @@ bool OleStreamReader::fillBuffer(OleMainStream& stream) {
 		return false;
 	}
 
-	char* textBuffer = new char[piece.length];
+	char *textBuffer = new char[piece.length];
 
 	stream.seek(piece.offset, true);
 	stream.read(textBuffer, piece.length);

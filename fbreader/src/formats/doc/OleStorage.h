@@ -52,23 +52,23 @@ public:
 	OleStorage();
 	bool init(shared_ptr<ZLInputStream>, size_t streamSize);
 	void clear();
-	const std::vector<OleEntry>& getEntries() const;
-	bool getEntryByName(std::string name, OleEntry& entry) const;
+	const std::vector<OleEntry> &getEntries() const;
+	bool getEntryByName(std::string name, OleEntry &entry) const;
 
 	unsigned int getSectorSize();
 	unsigned int getShortSectorSize();
 
 public: //TODO make private
-	unsigned int calcFileOffsetByBlockNumber(OleEntry& e, unsigned int blockNumber);
+	unsigned int getFileOffsetOfBlock(OleEntry &e, unsigned int blockNumber);
 
 private:
-	bool readDIFAT(char* oleBuf);
-	bool readBBD(char* oleBuf);
-	bool readSBD(char* oleBuf);
-	bool readProperties(char* oleBuf);
+	bool readDIFAT(char *oleBuf);
+	bool readBBD(char *oleBuf);
+	bool readSBD(char *oleBuf);
+	bool readProperties(char *oleBuf);
 
 	bool readAllEntries();
-	bool readOleEntry(int propNumber, OleEntry& entry);
+	bool readOleEntry(int propNumber, OleEntry &entry);
 
 private:
 
@@ -85,7 +85,7 @@ private:
 
 };
 
-inline const std::vector<OleEntry>& OleStorage::getEntries() const { return myEntries; }
+inline const std::vector<OleEntry> &OleStorage::getEntries() const { return myEntries; }
 inline unsigned int OleStorage::getSectorSize() { return mySectorSize; }
 inline unsigned int OleStorage::getShortSectorSize() { return myShortSectorSize; }
 

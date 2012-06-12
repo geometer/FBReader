@@ -67,9 +67,6 @@ bool OleStorage::init(shared_ptr<ZLInputStream> stream, size_t streamSize) {
 	mySectorSize = 1 << OleUtil::getU2Bytes(oleBuf, 0x1e); //offset for value of big sector size
 	myShortSectorSize = 1 << OleUtil::getU2Bytes(oleBuf, 0x20); //offset for value of small sector size
 
-	//printf("Major version: %u, minor version: %u\n", OleUtil::getUShort(oleBuf, 0x1A), OleUtil::getUShort(oleBuf, 0x18));
-	//printf("mySectorSize: %u, myShortSectorSize = %u\n", mySectorSize, myShortSectorSize);
-
 	if (readDIFAT(oleBuf) && readBBD(oleBuf) && readSBD(oleBuf) && readProperties(oleBuf) && readAllEntries()) {
 		return true;
 	}
@@ -77,7 +74,7 @@ bool OleStorage::init(shared_ptr<ZLInputStream> stream, size_t streamSize) {
 	return false;
 }
 
-bool OleStorage::readDIFAT(char* oleBuf) {
+bool OleStorage::readDIFAT(char *oleBuf) {
 	int difatBlock = OleUtil::get4Bytes(oleBuf, 0x44); //address for first difat sector
 	int difatSectorNumbers = OleUtil::get4Bytes(oleBuf, 0x48); //numbers of additional difat records
 
@@ -109,11 +106,9 @@ bool OleStorage::readDIFAT(char* oleBuf) {
 	return true;
 }
 
-bool OleStorage::readBBD(char* oleBuf) {
+bool OleStorage::readBBD(char *oleBuf) {
 	char buffer[mySectorSize];
 	unsigned int bbdNumberBlocks = OleUtil::getU4Bytes(oleBuf, 0x2c); //number of big blocks
-
-	//printf("bbdNumberBlocks: %lu\n", bbdNumberBlocks);
 
 	for (unsigned int i = 0; i < bbdNumberBlocks; ++i) {
 		int bbdSector = myDIFAT.at(i);
@@ -130,12 +125,10 @@ bool OleStorage::readBBD(char* oleBuf) {
 			myBBD.push_back(OleUtil::get4Bytes(buffer, j));
 		}
 	}
-
-	//printf("Length of BBD: %d\n", myBBD.size());
 	return true;
 }
 
-bool OleStorage::readSBD(char* oleBuf) {
+bool OleStorage::readSBD(char *oleBuf) {
 	int sbdCur = OleUtil::get4Bytes(oleBuf, 0x3c); //address of first small sector
 	int sbdCount = OleUtil::get4Bytes(oleBuf, 0x40); //count of small sectors
 
@@ -143,7 +136,6 @@ bool OleStorage::readSBD(char* oleBuf) {
 		ZLLogger::Instance().println("OleStorage", "There's no SBD, don't read it");
 		return true;
 	}
-	//printf("sbdCount = %ld\n", sbdCount);
 
 	char buffer[mySectorSize];
 	for (int i = 0; i < sbdCount; ++i) {
@@ -153,7 +145,6 @@ bool OleStorage::readSBD(char* oleBuf) {
 		if (sbdCur <= 0) {
 			break;
 		}
-		//printf("sbdCur = %ld\n", sbdCur);
 		myInputStream->seek(BBD_BLOCK_SIZE + sbdCur * mySectorSize, true);
 		myInputStream->read(buffer, mySectorSize);
 		for (unsigned int j = 0; j < mySectorSize; j += 4) {
@@ -164,7 +155,7 @@ bool OleStorage::readSBD(char* oleBuf) {
 	return true;
 }
 
-bool OleStorage::readProperties(char* oleBuf) {
+bool OleStorage::readProperties(char *oleBuf) {
 	int propCur = OleUtil::get4Bytes(oleBuf, 0x30); //offset for address of sector with first property
 	if (propCur < 0) {
 		ZLLogger::Instance().println("OleStorage", "Wrong first directory sector location");
@@ -205,7 +196,7 @@ bool OleStorage::readAllEntries() {
 	return true;
 }
 
-bool OleStorage::readOleEntry(int propNumber, OleEntry& e) {
+bool OleStorage::readOleEntry(int propNumber, OleEntry &e) {
 	static const std::string ROOT_ENTRY = "Root Entry";
 
 	std::string property = myProperties.at(propNumber);
@@ -252,22 +243,22 @@ bool OleStorage::readOleEntry(int propNumber, OleEntry& e) {
 	return true;
 }
 
-unsigned int OleStorage::calcFileOffsetByBlockNumber(OleEntry& e, unsigned int blockNumber) {
+unsigned int OleStorage::getFileOffsetOfBlock(OleEntry &e, unsigned int blockNumber) {
 	unsigned int res;
 	if (e.isBigBlock) {
 		res = BBD_BLOCK_SIZE + e.blocks.at(blockNumber) * mySectorSize;
 	} else {
 		unsigned int sbdPerSector = mySectorSize / myShortSectorSize;
-		unsigned int sbdSecNum = e.blocks.at(blockNumber) / sbdPerSector;
-		unsigned int sbdSecMod = e.blocks.at(blockNumber) % sbdPerSector;
-		res = BBD_BLOCK_SIZE + myEntries.at(myRootEntryIndex).blocks.at(sbdSecNum) * mySectorSize + sbdSecMod * myShortSectorSize;
+		unsigned int sbdSectorNumber = e.blocks.at(blockNumber) / sbdPerSector;
+		unsigned int sbdSectorMod = e.blocks.at(blockNumber) % sbdPerSector;
+		res = BBD_BLOCK_SIZE + myEntries.at(myRootEntryIndex).blocks.at(sbdSectorNumber) * mySectorSize + sbdSectorMod * myShortSectorSize;
 	}
 	return res;
 }
 
 bool OleStorage::getEntryByName(std::string name, OleEntry &returnEntry) const {
 	for (size_t i = 0; i < myEntries.size(); ++i) {
-		const OleEntry& entry = myEntries.at(i);
+		const OleEntry &entry = myEntries.at(i);
 		if (entry.name == name) {
 			returnEntry = entry;
 			return true;

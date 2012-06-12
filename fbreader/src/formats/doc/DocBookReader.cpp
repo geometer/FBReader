@@ -20,7 +20,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <cstdio>
 
 #include <ZLInputStream.h>
 #include <ZLLogger.h>
@@ -190,14 +189,12 @@ void DocBookReader::handleSeparatorField() {
 	if (result.at(1) == LOCAL_LINK) {
 		std::string link = parseLink(buffer);
 		if (!link.empty()) {
-			//printf("  internal link: '%s'\n", link.c_str());
 			myModelReader.addHyperlinkControl(INTERNAL_HYPERLINK, link);
 			myHyperlinkTypeState = INT_HYPERLINK_INSERTED;
 		}
 	} else {
 		std::string link = parseLink(buffer, true);
 		link = QUOTE + link + QUOTE;
-		//printf("  external link: '%s'\n", link.c_str());
 		if (!link.empty()) {
 			myModelReader.addHyperlinkControl(EXTERNAL_HYPERLINK, link);
 			myHyperlinkTypeState = EXT_HYPERLINK_INSERTED;
@@ -297,8 +294,7 @@ void DocBookReader::handleParagraphStyle(const OleMainStream::Style &styleInfo) 
 	myCurStyleInfo = styleInfo;
 }
 
-void DocBookReader::handleBookmark(const std::string& name) {
-	//printf("handleBookmark %s\n", name.c_str());
+void DocBookReader::handleBookmark(const std::string &name) {
 	myModelReader.addHyperlinkLabel(name);
 }
 
