@@ -67,20 +67,17 @@ bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream, size_t s
 		return false;
 	}
 
-	const std::vector<OleEntry>& entries = storage->getEntries();
-	for (size_t i = 0; i < entries.size(); ++i) {
-		const OleEntry& entry = entries.at(i);
-		ZLLogger::Instance().println("DocBookReader", "ole file named... " + entry.name);
-		if (entry.type != OleEntry::STREAM || entry.name != WORD_DOCUMENT) {
-			ZLLogger::Instance().println("DocBookReader", "is not ole stream");
-			continue;
-		}
 
-		OleMainStream oleStream(storage, entry, inputStream);
-		bool result = readStream(oleStream);
-		if (!result) {
-			return false;
-		}
+	OleEntry wordDocumentEntry;
+	bool result = storage->getEntryByName(WORD_DOCUMENT, wordDocumentEntry);
+	if (!result) {
+		return false;
+	}
+
+	OleMainStream oleStream(storage, wordDocumentEntry, inputStream);
+	result = readStream(oleStream);
+	if (!result) {
+		return false;
 	}
 
 	myModelReader.insertEndOfTextParagraph();
@@ -192,15 +189,15 @@ void DocBookReader::handleSeparatorField() {
 
 	if (result.at(1) == LOCAL_LINK) {
 		std::string link = parseLink(buffer);
-		printf("  internal link: '%s'\n", link.c_str());
 		if (!link.empty()) {
+			//printf("  internal link: '%s'\n", link.c_str());
 			myModelReader.addHyperlinkControl(INTERNAL_HYPERLINK, link);
 			myHyperlinkTypeState = INT_HYPERLINK_INSERTED;
 		}
 	} else {
 		std::string link = parseLink(buffer, true);
 		link = QUOTE + link + QUOTE;
-		printf("  external link: '%s'\n", link.c_str());
+		//printf("  external link: '%s'\n", link.c_str());
 		if (!link.empty()) {
 			myModelReader.addHyperlinkControl(EXTERNAL_HYPERLINK, link);
 			myHyperlinkTypeState = EXT_HYPERLINK_INSERTED;
@@ -260,19 +257,19 @@ void DocBookReader::handleFontStyle(unsigned int fontStyle) {
 	}
 }
 
-void DocBookReader::handleParagraphStyle(const OleMainStream::StyleInfo &styleInfo) {
+void DocBookReader::handleParagraphStyle(const OleMainStream::Style &styleInfo) {
 	if (styleInfo.hasPageBreakBefore) {
 		handlePageBreak();
 	}
 	shared_ptr<ZLTextStyleEntry> entry = new ZLTextStyleEntry();
 
-	if (styleInfo.alignment == OleMainStream::StyleInfo::LEFT) {
+	if (styleInfo.alignment == OleMainStream::Style::LEFT) {
 		entry->setAlignmentType(ALIGN_LEFT);
-	} else if (styleInfo.alignment == OleMainStream::StyleInfo::CENTER) {
+	} else if (styleInfo.alignment == OleMainStream::Style::CENTER) {
 		entry->setAlignmentType(ALIGN_CENTER);
-	} else if (styleInfo.alignment == OleMainStream::StyleInfo::RIGHT) {
+	} else if (styleInfo.alignment == OleMainStream::Style::RIGHT) {
 		entry->setAlignmentType(ALIGN_RIGHT);
-	} else if (styleInfo.alignment == OleMainStream::StyleInfo::JUSTIFY) {
+	} else if (styleInfo.alignment == OleMainStream::Style::JUSTIFY) {
 		entry->setAlignmentType(ALIGN_JUSTIFY);
 	}
 
@@ -295,12 +292,13 @@ void DocBookReader::handleParagraphStyle(const OleMainStream::StyleInfo &styleIn
 		}
 	} else {
 		myKindStack.clear();
-		handleFontStyle(styleInfo.fontStyle); //fill by the fontstyle, that was got from Stylesheet
+		handleFontStyle(styleInfo.charInfo.fontStyle); //fill by the fontstyle, that was got from Stylesheet
 	}
 	myCurStyleInfo = styleInfo;
 }
 
 void DocBookReader::handleBookmark(const std::string& name) {
+	//printf("handleBookmark %s\n", name.c_str());
 	myModelReader.addHyperlinkLabel(name);
 }
 

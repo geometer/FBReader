@@ -74,7 +74,7 @@ protected:
 	virtual void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) = 0;
 
 	virtual void handleFontStyle(unsigned int fontStyle) = 0;
-	virtual void handleParagraphStyle(const OleMainStream::StyleInfo& styleInfo) = 0;
+	virtual void handleParagraphStyle(const OleMainStream::Style& styleInfo) = 0;
 	virtual void handleBookmark(const std::string& name) = 0;
 
 private:
@@ -89,11 +89,11 @@ private:
 	shared_ptr<ZLEncodingConverter> myConverter;
 	const std::string myEncoding;
 
-	unsigned int myCurLength;
-	unsigned int myCurOffset;
-	unsigned int myCurInc;
+	unsigned int myCurCharPos;
 
-	unsigned int myCurCP;
+	size_t myNextStyleInfoIndex;
+	size_t myNextCharInfoIndex;
+	size_t myNextBookmarkIndex;
 };
 
 #endif /* __OLESTREAMREADER_H__ */

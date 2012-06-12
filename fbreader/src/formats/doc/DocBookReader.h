@@ -54,7 +54,7 @@ private:
 
 	//formatting:
 	void handleFontStyle(unsigned int fontStyle);
-	void handleParagraphStyle(const OleMainStream::StyleInfo& styleInfo);
+	void handleParagraphStyle(const OleMainStream::Style& styleInfo);
 	void handleBookmark(const std::string& name);
 
 private:
@@ -86,7 +86,7 @@ private:
 	//formatting
 	std::vector<FBTextKind> myKindStack;
 	shared_ptr<ZLTextStyleEntry> myCurStyleEntry;
-	OleMainStream::StyleInfo myCurStyleInfo;
+	OleMainStream::Style myCurStyleInfo;
 };
 
 inline DocBookReader::~DocBookReader() {}

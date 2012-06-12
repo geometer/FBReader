@@ -38,6 +38,7 @@ public:
 		int length;
 		bool isANSI;
 		PieceType type;
+		unsigned int startCP;
 	};
 	typedef std::vector<Piece> Pieces;
 
@@ -57,15 +58,15 @@ public:
 			SUBSCRIPT = 0x0200
 		};
 
-		unsigned int offset;
 		unsigned int fontStyle;
 		unsigned int fontSize;
 
 		CharInfo();
 	};
-	typedef std::vector<CharInfo> CharInfoList;
+	typedef std::pair<unsigned int, CharInfo> CharPosToCharInfo;
+	typedef std::vector<CharPosToCharInfo > CharInfoList;
 
-	struct StyleInfo {
+	struct Style {
 
 		enum Alignment {
 			LEFT = 0x00,
@@ -74,7 +75,6 @@ public:
 			JUSTIFY = 0x03
 		};
 
-		unsigned int offset; //The style start with this character
 		unsigned int istd; //Current style
 		unsigned int istdNext; //Next style unless overruled
 		bool hasPageBreakBefore;
@@ -85,11 +85,12 @@ public:
 		int	rightIndent; //Right indent
 		unsigned int alignment;
 
-		unsigned int fontStyle;
-		unsigned int fontSize;
-		StyleInfo();
+		CharInfo charInfo;
+		Style();
 	};
-	typedef std::vector<StyleInfo> StyleInfoList;
+	typedef std::pair<unsigned int, Style> CharPosToStyle;
+	typedef std::vector<CharPosToStyle> StyleInfoList;
+	typedef std::vector<Style> StyleSheet;
 
 	enum StyleID {
 		H1 = 0x1,
@@ -126,27 +127,29 @@ public:
 	const Bookmarks& getBookmarks() const;
 
 private:
-	bool readFIB(const char* headerBuffer);
-	bool readPieceTable(const char* headerBuffer, const OleEntry& tableEntry);
-	bool readBookmarks(const char* headerBuffer, const OleEntry& tableEntry);
-	bool readStylesheet(const char* headerBuffer, const OleEntry& tableEntry);
-	bool readSectionsInfoTable(const char* headerBuffer, const OleEntry& tableEntry);
-	bool readParagraphStyleTable(const char* headerBuffer, const OleEntry& tableEntry);
-	bool readCharInfoTable(const char* headerBuffer, const OleEntry& tableEntry);
+	bool readFIB(const char *headerBuffer);
+	bool readPieceTable(const char *headerBuffer, const OleEntry& tableEntry);
+	bool readBookmarks(const char *headerBuffer, const OleEntry& tableEntry);
+	bool readStylesheet(const char *headerBuffer, const OleEntry& tableEntry);
+	bool readSectionsInfoTable(const char *headerBuffer, const OleEntry& tableEntry);
+	bool readParagraphStyleTable(const char *headerBuffer, const OleEntry& tableEntry);
+	bool readCharInfoTable(const char *headerBuffer, const OleEntry& tableEntry);
 
 private: //readPieceTable helpers methods
-	static std::string getPiecesTableBuffer(const char* headerBuffer, OleStream& tableStream);
-	static void splitPieces(const Pieces& source, Pieces& dest1, Pieces& dest2, Piece::PieceType type1, Piece::PieceType type2, int boundary);
+	static std::string getPiecesTableBuffer(const char *headerBuffer, OleStream& tableStream);
+	static void splitPieces(const Pieces &source, Pieces &dest1, Pieces &dest2, Piece::PieceType type1, Piece::PieceType type2, int boundary);
 
 private: //formatting reader helpers methods
 	static unsigned int getInfoLength(const char *grpprlBuffer, unsigned int byteNumber);
-	static void getCharInfo(unsigned int chpxOffset, unsigned int istd, const char *grpprlBuffer, unsigned int iBytes, CharInfo& charInfo);
-	static void getStyleInfo(unsigned int papxOffset, const char *grpprlBuffer, unsigned int bytes, StyleInfo& styleInfo);
-	static void getSectionInfo(const char* grpprlBuffer, size_t bytes, SectionInfo& sectionInfo);
-	static StyleInfo getStyleInfoFromStylesheet(unsigned int istd, const OleMainStream::StyleInfoList &styleInfoList);
-	static CharInfo getCharInfoFromStylesheet(unsigned int istd, const OleMainStream::StyleInfoList &styleInfoList, const OleMainStream::CharInfoList &charInfoList);
-	static int getStyleIndex(unsigned int istd, const std::vector<bool>& isFilled, const StyleInfoList& styleInfoList);
-	static unsigned int getIstdByOffset(unsigned int offset, const StyleInfoList& styleInfoList);
+	static void getCharInfo(unsigned int chpxOffset, unsigned int istd, const char *grpprlBuffer, unsigned int iBytes, CharInfo &charInfo);
+	static void getStyleInfo(unsigned int papxOffset, const char *grpprlBuffer, unsigned int bytes, Style &styleInfo);
+	static void getSectionInfo(const char *grpprlBuffer, size_t bytes, SectionInfo &sectionInfo);
+
+	static Style getStyleFromStylesheet(unsigned int istd,  const StyleSheet &stylesheet);
+	static int getStyleIndex(unsigned int istd, const std::vector<bool> &isFilled, const StyleSheet &stylesheet);
+	static unsigned int getIstdByCharPos(unsigned int offset, const StyleInfoList &styleInfoList);
+
+	static bool offsetToCharPos(unsigned int offset, unsigned int &charPos, const Pieces &pieces);
 
 private:
 	enum PrlFlag {
@@ -162,8 +165,7 @@ private:
 
 	Pieces myPieces;
 
-	CharInfoList myStyleSheetCharInfo;
-	StyleInfoList myStyleSheetStyleInfo;
+	StyleSheet myStyleSheet;
 
 	CharInfoList myCharInfoList;
 	StyleInfoList myStyleInfoList;

@@ -64,12 +64,15 @@ void OleStreamReader::clear() {
 	myCurBufferPosition = 0;
 	myNextPieceNumber = 0;
 
-	myCurLength = 0;
-	myCurCP = 0;
+	myCurCharPos = 0;
+	myNextStyleInfoIndex = 0;
+	myNextCharInfoIndex = 0;
+	myNextBookmarkIndex = 0;
 }
 
 bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 	clear();
+
 	bool res = oleMainStream.open();
 	if (!res) {
 		ZLLogger::Instance().println("OleStreamReader", "doesn't open correct");
@@ -79,7 +82,7 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 	bool tabMode = false;
 	while (getUcs2Char(oleMainStream, ucs2char)) {
 		if (ucs2char < 32) { //< 32 are control symbols
-			printf("[0x%x]", ucs2char); //debug output
+			//printf("[0x%x]", ucs2char); //debug output
 		}
 
 		if (tabMode) {
@@ -97,12 +100,12 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 				case NULL_SYMBOL:
 					break;
 				case WORD_HARD_LINEBREAK:
-					printf("\n");
+					//printf("\n");
 					handleHardLinebreak();
 					break;
 				case WORD_END_OF_PARAGRAPH:
 				case WORD_PAGE_BREAK:
-					printf("\n");
+					//printf("\n");
 					handleParagraphEnd();
 					break;
 				case WORD_TABLE_SEPARATOR:
@@ -135,12 +138,13 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 			ZLUnicodeUtil::Ucs2String ucs2String;
 			ucs2String.push_back(ucs2char);
 			ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
-			printf("%s", utf8String.c_str());
+			//printf("%s", utf8String.c_str());
 
 			handleChar(ucs2char);
 		}
 	}
-	return 0;
+
+	return true;
 }
 
 bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char& ucs2char) {
@@ -150,54 +154,54 @@ bool OleStreamReader::getUcs2Char(OleMainStream& stream, ZLUnicodeUtil::Ucs2Char
 		}
 	}
 
-	const OleMainStream::StyleInfoList& list = stream.getStyleInfoList();
-	for (size_t i = 0; i < list.size(); ++i) {
-		OleMainStream::StyleInfo info = list.at(i);
-		if (info.offset == myCurLength + myCurOffset) {
+	const OleMainStream::StyleInfoList& styleInfoList = stream.getStyleInfoList();
+	if (!styleInfoList.empty()) {
+		while (myNextStyleInfoIndex < styleInfoList.size() && styleInfoList.at(myNextStyleInfoIndex).first == myCurCharPos) {
+			OleMainStream::Style info = styleInfoList.at(myNextStyleInfoIndex).second;
 			handleParagraphStyle(info);
-			if (info.alignment == 0) {
-				printf("{LEFT}");
-			} else if (info.alignment == 1) {
-				printf("{CENTER}");
-			} else if (info.alignment == 2) {
-				printf("{RIGHT}");
-			} else if (info.alignment == 3) {
-				printf("{JUSTIFY}");
-			}
-			if (info.leftIndent > 0) {
-				printf("\\%d\\", info.leftIndent);
-			}
-			if (info.hasPageBreakBefore) {
-				printf("|PGBRK|");
-			}
-			printf("{%u}", info.istd);
-			printf("=%u=", info.fontSize);
+//			if (info.alignment == 0) {
+//				printf("{LEFT}");
+//			} else if (info.alignment == 1) {
+//				printf("{CENTER}");
+//			} else if (info.alignment == 2) {
+//				printf("{RIGHT}");
+//			} else if (info.alignment == 3) {
+//				printf("{JUSTIFY}");
+//			}
+//			if (info.leftIndent > 0) {
+//				printf("\\%d\\", info.leftIndent);
+//			}
+//			if (info.hasPageBreakBefore) {
+//				printf("|PGBRK|");
+//			}
+//			printf("{%u}", info.istd);
+//			printf("=%u=", info.charInfo.fontSize);
+			++myNextStyleInfoIndex;
 		}
 	}
 
-	const OleMainStream::CharInfoList& clist = stream.getCharInfoList();
-	for (size_t i = 0; i < clist.size(); ++i) {
-		OleMainStream::CharInfo info = clist.at(i);
-		if (info.offset == myCurLength + myCurOffset) {
+	const OleMainStream::CharInfoList& charInfoList = stream.getCharInfoList();
+	if (!charInfoList.empty()) {
+		while (myNextCharInfoIndex < charInfoList.size() && charInfoList.at(myNextCharInfoIndex).first == myCurCharPos) {
+			OleMainStream::CharInfo info = charInfoList.at(myNextCharInfoIndex).second;
 			//printf("[b=%d,i=%d,%u]", info.fontStyle & 0x0001, info.fontStyle & 0x0002, info.fontSize);
 			handleFontStyle(info.fontStyle);
-			break;
+			++myNextCharInfoIndex;
 		}
 	}
 
-	const OleMainStream::Bookmarks& blist = stream.getBookmarks();
-	for (size_t i = 0; i < blist.size(); ++i) {
-		OleMainStream::Bookmark bookmark = blist.at(i);
-		if (bookmark.charPos == myCurCP) {
-			printf("-'%s'-", bookmark.name.c_str());
+	const OleMainStream::Bookmarks& bookmarksList = stream.getBookmarks();
+	if (!bookmarksList.empty()) {
+		while(myNextBookmarkIndex < bookmarksList.size() && bookmarksList.at(myNextBookmarkIndex).charPos == myCurCharPos) {
+			OleMainStream::Bookmark bookmark = bookmarksList.at(myNextBookmarkIndex);
+			//printf("-'%s'-", bookmark.name.c_str());
 			handleBookmark(bookmark.name);
-			//break; //if we have some equal bookmarks, we shouldn't break
+			++myNextBookmarkIndex;
 		}
 	}
 
 	ucs2char = myBuffer.at(myCurBufferPosition++);
-	myCurLength += myCurInc;
-	myCurCP += 1;
+	++myCurCharPos;
 	return true;
 }
 
@@ -240,12 +244,5 @@ bool OleStreamReader::fillBuffer(OleMainStream& stream) {
 	++myNextPieceNumber;
 	delete textBuffer;
 
-	myCurOffset = piece.offset;
-	myCurLength = 0;
-	if (piece.isANSI) {
-		myCurInc = 1;
-	} else {
-		myCurInc = 2;
-	}
 	return true;
 }
