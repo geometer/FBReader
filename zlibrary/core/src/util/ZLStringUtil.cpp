@@ -54,7 +54,7 @@ void ZLStringUtil::appendNumber(std::string &str, unsigned int n) {
 	} else {
 		len = 1;
 	}
-	
+
 	str.append(len, '\0');
 	char *ptr = (char*)str.data() + str.length() - 1;
 	for (int i = 0; i < len; ++i) {
@@ -114,12 +114,15 @@ double ZLStringUtil::stringToDouble(const std::string &value, double defaultValu
 	}
 }
 
-void ZLStringUtil::split(const std::string &str, std::vector<std::string> &result, const std::string &delimiters) {
-	std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
-	std::string::size_type pos = str.find_first_of(delimiters, lastPos);
-	while (std::string::npos != pos || std::string::npos != lastPos) {
-		result.push_back(str.substr(lastPos, pos - lastPos));
-		lastPos = str.find_first_not_of(delimiters, pos);
-		pos = str.find_first_of(delimiters, lastPos);
+std::vector<std::string> ZLStringUtil::split(const std::string &str, const std::string &delimiter) {
+	std::vector<std::string> result;
+	size_t start = 0;
+	size_t index = str.find(delimiter);
+	while (index != std::string::npos) {
+		result.push_back(str.substr(start, index - start));
+		start = index + delimiter.length();
+		index = str.find(delimiter, start);
 	}
+	result.push_back(str.substr(start, index - start));
+	return result;
 }

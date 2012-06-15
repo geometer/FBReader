@@ -40,6 +40,10 @@ bool DocPlugin::providesMetaInfo() const {
 	return true;
 }
 
+const std::string DocPlugin::supportedFileType() const {
+	return "doc";
+}
+
 bool DocPlugin::acceptsFile(const ZLFile &file) const {
 	return file.extension() == "doc";
 }
@@ -48,11 +52,10 @@ bool DocPlugin::readMetaInfo(Book &book) const {
 	return DocMetaInfoReader(book).readMetaInfo();
 }
 
+bool DocPlugin::readLanguageAndEncoding(Book &/*book*/) const {
+	return true;
+}
+
 bool DocPlugin::readModel(BookModel &model) const {
 	return DocBookReader(model, model.book()->encoding()).readBook();
 }
-
-shared_ptr<ZLImage> DocPlugin::coverImage(const ZLFile &/*file*/) const {
-	return 0; //DocCoverReader(file).readCover();
-}
-

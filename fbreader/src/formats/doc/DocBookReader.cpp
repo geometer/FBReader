@@ -23,7 +23,6 @@
 
 #include <ZLInputStream.h>
 #include <ZLLogger.h>
-#include <ZLBase64EncodedImage.h>
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
 
@@ -177,16 +176,22 @@ void DocBookReader::handleSeparatorField() {
 	if (utf8String.empty()) {
 		return;
 	}
-	std::vector<std::string> result;
-	ZLStringUtil::split(utf8String, result, SPACE_DELIMETER);
+	std::vector<std::string> result = ZLStringUtil::split(utf8String, SPACE_DELIMETER);
+	//TODO split function can returns empty string, maybe fix it
+	std::vector<std::string> splitted;
+	for (size_t i = 0; i < result.size(); ++i) {
+		if (!result.at(i).empty()) {
+			splitted.push_back(result.at(i));
+		}
+	}
 
-	if (result.size() < 2 || result.at(0) != HYPERLINK) {
+	if (splitted.size() < 2 || splitted.at(0) != HYPERLINK) {
 		myReadFieldState = DONT_READ_FIELD_TEXT;
 		//to remove pagination from TOC and not hyperlink fields
 		return;
 	}
 
-	if (result.at(1) == LOCAL_LINK) {
+	if (splitted.at(1) == LOCAL_LINK) {
 		std::string link = parseLink(buffer);
 		if (!link.empty()) {
 			myModelReader.addHyperlinkControl(INTERNAL_HYPERLINK, link);
@@ -194,7 +199,6 @@ void DocBookReader::handleSeparatorField() {
 		}
 	} else {
 		std::string link = parseLink(buffer, true);
-		link = QUOTE + link + QUOTE;
 		if (!link.empty()) {
 			myModelReader.addHyperlinkControl(EXTERNAL_HYPERLINK, link);
 			myHyperlinkTypeState = EXT_HYPERLINK_INSERTED;
@@ -261,7 +265,7 @@ void DocBookReader::handleParagraphStyle(const OleMainStream::Style &styleInfo) 
 	shared_ptr<ZLTextStyleEntry> entry = new ZLTextStyleEntry();
 
 	if (styleInfo.alignment == OleMainStream::Style::LEFT) {
-		entry->setAlignmentType(ALIGN_LEFT);
+		entry->setAlignmentType(ALIGN_JUSTIFY); //force justify align
 	} else if (styleInfo.alignment == OleMainStream::Style::CENTER) {
 		entry->setAlignmentType(ALIGN_CENTER);
 	} else if (styleInfo.alignment == OleMainStream::Style::RIGHT) {
@@ -306,7 +310,7 @@ std::string DocBookReader::parseLink(ZLUnicodeUtil::Ucs2String s, bool urlencode
 	// [0x13] HYPERLINK "http://yandex.ru/yandsearch?text='some text' и "some text2"" [0x14] link text [0x15]
 
 	static const ZLUnicodeUtil::Ucs2Char QUOTE = 0x22;
-	size_t i, first;
+	size_t i, first = 0;
 	//TODO maybe functions findFirstOf and findLastOf should be in ZLUnicodeUtil class
 	for (i = 0; i < s.size(); ++i) {
 		if (s.at(i) == QUOTE) {
@@ -317,7 +321,7 @@ std::string DocBookReader::parseLink(ZLUnicodeUtil::Ucs2String s, bool urlencode
 	if (i == s.size()) {
 		return std::string();
 	}
-	size_t j, last;
+	size_t j, last = 0;
 	for (j = s.size(); j > 0 ; --j) {
 		if (s.at(j - 1) == QUOTE) {
 			last = j - 1;

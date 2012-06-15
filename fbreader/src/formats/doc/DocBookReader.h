@@ -22,7 +22,9 @@
 
 #include <vector>
 
+#include <shared_ptr.h>
 #include <ZLFile.h>
+#include <ZLTextStyleEntry.h>
 
 #include "../../bookmodel/BookReader.h"
 

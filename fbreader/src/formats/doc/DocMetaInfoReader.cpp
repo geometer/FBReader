@@ -44,8 +44,7 @@ void DocMetaInfoReader::endElementHandler(int tag) {
 bool DocMetaInfoReader::readMetaInfo() {
 	myBook.removeAllAuthors();
 	myBook.setTitle(myBook.file().name(true));
-	myBook.setLanguage("ru");
-	myBook.setEncoding("windows-1251");
+	myBook.setEncoding("windows-1251"); //TODO implement encoding retrieving
 	myBook.removeAllTags();
 	return true;
 }
