@@ -70,7 +70,7 @@
 	<node name="menu">
 		<node name="bookInfo" value="Informoj pri la libro..." />
 		<node name="toc" value="Enhavo" />
-		<node name="showLibrary" value="Malfermi librejon">
+		<node name="showLibrary" value="Malfermi librejon" />
 		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
 		<node name="addBook" toBeTranslated="true" value="Open file..." />
 		<node name="showRecent" toBeTranslated="true" value="Recent books" />
@@ -333,7 +333,7 @@
 				<node name="Keys" value="Fulmoklavoj">
 					<node name="grabSystemKeys" value="Kapti sistemajn fulmoklavojn" />
 					<node name="separate" value="Propraj fulmoklavoj, dependantaj de tekst-orientiĝo" />
-					<node name="orientation" value="Orientiĝo" />
+					<node name="orientation" value="Orientiĝo">
 						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
 						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
 						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />

@@ -119,11 +119,11 @@
 		<node name="showReading">
 			<node name="label" toBeTranslated="true" value="Read Book" />
 			<node name="tooltip" value="Lese-Modus anzeigen" />
-			<node name="popup" value="Aktuelle Liste der E-Books anzeigen" />
 		</node>
 		<node name="showLibrary">
 			<node name="label" toBeTranslated="true" value="Library" />
 			<node name="tooltip" value="Baumansicht der Bibliothek anzeigen" />
+			<node name="popup" value="Aktuelle Liste der E-Books anzeigen" />
 		</node>
 		<node name="showRecent">
 			<node name="label" toBeTranslated="true" value="Recent Books" />
