@@ -72,6 +72,7 @@
 		<node name="pt" value="Portugis" />
 		<node name="ru" value="Rusia" />
 		<node name="sv" value="Swedia" />
+		<node name="ta" toBeTranslated="true" value="Tamil" />
 		<node name="tr" value="Turki" />
 		<node name="uk" value="Ukraina" />
 		<node name="vi" value="Vietnam" />

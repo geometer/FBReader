@@ -72,6 +72,7 @@
 		<node name="pt" value="البرتغالية" />
 		<node name="ru" value="الروسية" />
 		<node name="sv" value="السويدية" />
+		<node name="ta" toBeTranslated="true" value="Tamil" />
 		<node name="tr" value="التركية" />
 		<node name="uk" value="الأكرانية" />
 		<node name="vi" toBeTranslated="true" value="Vietnamese" />

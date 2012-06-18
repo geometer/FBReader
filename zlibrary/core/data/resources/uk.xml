@@ -72,6 +72,7 @@
 		<node name="pt" value="Португальська"/>
 		<node name="ru" value="Російська"/>
 		<node name="sv" value="Шведська"/>
+		<node name="ta" toBeTranslated="true" value="Tamil" />
 		<node name="tr" value="Турецька"/>
 		<node name="uk" value="Українська"/>
 		<node name="vi" value="В'єтнамська" />

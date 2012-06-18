@@ -72,6 +72,7 @@
 		<node name="pt" value="Portugisiska" />
 		<node name="ru" value="Ryska" />
 		<node name="sv" value="Svenska" />
+		<node name="ta" toBeTranslated="true" value="Tamil" />
 		<node name="tr" value="Turkiska" />
 		<node name="uk" value="Ukrainska" />
 		<node name="vi" value="Vietnamesiska" />
