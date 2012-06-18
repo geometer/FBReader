@@ -44,7 +44,7 @@ ZLCharSequence::ZLCharSequence(const ZLCharSequence& other) : mySize(other.mySiz
 }
 
 ZLCharSequence::ZLCharSequence(const std::string &hexSequence) {
-	mySize = (hexSequence.size() + 1) / 5;  
+	mySize = (hexSequence.size() + 1) / 5;
 	myHead = new char[mySize];
 	for (size_t count = 0; count < mySize; ++count){
 		char a = hexSequence[count * 5 + 2];
