@@ -19,19 +19,21 @@
 
 #include <shared_ptr.h>
 #include <ZLEncodingConverter.h>
+#include <ZLUnicodeUtil.h>
 
 #include "EncodingOptionEntry.h"
 
 #include "../library/Book.h"
 
 AbstractEncodingEntry::AbstractEncodingEntry(const std::string &currentValue) {
-	const std::string &value = currentValue;
-	if (value == Book::AutoEncoding) {
-		myInitialSetName = value;
-		myInitialValues[value] = value;
+	if (currentValue == Book::AutoEncoding) {
+		myInitialSetName = currentValue;
+		myInitialValues[currentValue] = currentValue;
 		setActive(false);
 		return;
 	}
+
+	const std::string &value = ZLUnicodeUtil::toLower(currentValue);
 
 	const std::vector<shared_ptr<ZLEncodingSet> > &sets = ZLEncodingCollection::Instance().sets();
 	for (std::vector<shared_ptr<ZLEncodingSet> >::const_iterator it = sets.begin(); it != sets.end(); ++it) {
@@ -39,9 +41,13 @@ AbstractEncodingEntry::AbstractEncodingEntry(const std::string &currentValue) {
 		mySetNames.push_back((*it)->name());
 		std::vector<std::string> &names = myValues[(*it)->name()];
 		for (std::vector<ZLEncodingConverterInfoPtr>::const_iterator jt = infos.begin(); jt != infos.end(); ++jt) {
-			if ((*jt)->name() == value) {
-				myInitialSetName = (*it)->name();
-				myInitialValues[myInitialSetName] = (*jt)->visibleName();
+			const std::vector<std::string> &aliases = (*jt)->aliases();
+			for (std::vector<std::string>::const_iterator kt = aliases.begin(); kt != aliases.end(); ++kt) {
+				if (value == ZLUnicodeUtil::toLower(*kt)) {
+					myInitialSetName = (*it)->name();
+					myInitialValues[myInitialSetName] = (*jt)->visibleName();
+					break;
+				}
 			}
 			names.push_back((*jt)->visibleName());
 			myValueByName[(*jt)->visibleName()] = (*jt)->name();
@@ -87,8 +93,8 @@ void AbstractEncodingEntry::onValueSelected(int index) {
 
 
 
-EncodingEntry::EncodingEntry(ZLStringOption &encodingOption) : 
-	AbstractEncodingEntry(encodingOption.value()), 
+EncodingEntry::EncodingEntry(ZLStringOption &encodingOption) :
+	AbstractEncodingEntry(encodingOption.value()),
 	myEncodingOption(encodingOption) {
 }
 

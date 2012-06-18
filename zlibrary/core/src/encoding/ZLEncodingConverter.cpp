@@ -79,6 +79,10 @@ const std::string &ZLEncodingConverterInfo::visibleName() const {
 	return myVisibleName;
 }
 
+const std::vector<std::string> &ZLEncodingConverterInfo::aliases() const {
+	return myAliases;
+}
+
 void ZLEncodingConverterInfo::addAlias(const std::string &alias) {
 	myAliases.push_back(alias);
 }

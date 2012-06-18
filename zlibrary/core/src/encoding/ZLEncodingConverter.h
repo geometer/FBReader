@@ -55,6 +55,7 @@ public:
 
 	const std::string &name() const;
 	const std::string &visibleName() const;
+	const std::vector<std::string> &aliases() const;
 	shared_ptr<ZLEncodingConverter> createConverter() const;
 	bool canCreateConverter() const;
 
