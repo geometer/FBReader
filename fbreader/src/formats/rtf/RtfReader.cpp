@@ -46,7 +46,7 @@ RtfFontPropertyCommand::RtfFontPropertyCommand(RtfReader::FontProperty property)
 }
 
 void RtfFontPropertyCommand::run(RtfReader &reader, int *parameter) const {
-	bool start = (parameter == 0) || (*parameter != 0);
+	const bool start = (parameter == 0) || (*parameter != 0);
 	switch (myProperty) {
 		case RtfReader::FONT_BOLD:
 			if (reader.myState.Bold != start) {
@@ -103,7 +103,7 @@ void RtfDestinationCommand::run(RtfReader &reader, int*) const {
 void RtfStyleCommand::run(RtfReader &reader, int*) const {
 	if (reader.myState.Destination == RtfReader::DESTINATION_STYLESHEET) {
 		//std::cerr << "Add style index: " << val << "\n";
-		
+
 		//sprintf(style_attributes[0], "%i", val);
 	} else /*if (myState.Destination == rdsContent)*/ {
 		//std::cerr << "Set style index: " << val << "\n";
@@ -269,19 +269,19 @@ bool RtfReader::parseDocument() {
 								parserState = READ_END_OF_FILE;
 								break;
 							}
-							
+
 							if (myState.Destination != myStateStack.top().Destination) {
 								switchDestination(myState.Destination, false);
 								switchDestination(myStateStack.top().Destination, true);
 							}
-							
+
 							bool oldItalic = myState.Italic;
 							bool oldBold = myState.Bold;
 							bool oldUnderlined = myState.Underlined;
 							ZLTextAlignmentType oldAlignment = myState.Alignment;
 							myState = myStateStack.top();
 							myStateStack.pop();
-					
+
 							if (myState.Italic != oldItalic) {
 								setFontProperty(RtfReader::FONT_ITALIC);
 							}
@@ -294,7 +294,7 @@ bool RtfReader::parseDocument() {
 							if (myState.Alignment != oldAlignment) {
 								setAlignment();
 							}
-							
+
 							break;
 						}
 						case '\\':
@@ -324,7 +324,7 @@ bool RtfReader::parseDocument() {
 				case READ_HEX_SYMBOL:
 					hexString += *ptr;
 					if (hexString.size() == 2) {
-						char ch = strtol(hexString.c_str(), 0, 16); 
+						char ch = strtol(hexString.c_str(), 0, 16);
 						hexString.erase();
 						processCharData(&ch, 1);
 						parserState = READ_NORMAL_DATA;
@@ -394,22 +394,23 @@ bool RtfReader::parseDocument() {
 			}
 		}
 	}
-	
+
 	return myIsInterrupted || myStateStack.empty();
 }
 
 void RtfReader::processKeyword(const std::string &keyword, int *parameter) {
-	bool wasSpecialMode = mySpecialMode;
+	const bool wasSpecialMode = mySpecialMode;
 	mySpecialMode = false;
 	if (myState.Destination == RtfReader::DESTINATION_SKIP) {
 		return;
 	}
 
 	std::map<std::string, RtfCommand*>::const_iterator it = ourKeywordMap.find(keyword);
-	
+
 	if (it == ourKeywordMap.end()) {
-		if (wasSpecialMode)
+		if (wasSpecialMode) {
 			myState.Destination = RtfReader::DESTINATION_SKIP;
+		}
 		return;
 	}
 
@@ -437,7 +438,7 @@ bool RtfReader::readDocument(const ZLFile &file) {
 	fillKeywordMap();
 
 	myStreamBuffer = new char[rtfStreamBufferSize];
-	
+
 	myIsInterrupted = false;
 
 	mySpecialMode = false;
@@ -454,9 +455,9 @@ bool RtfReader::readDocument(const ZLFile &file) {
 	while (!myStateStack.empty()) {
 		myStateStack.pop();
 	}
-	
+
 	delete[] myStreamBuffer;
 	myStream->close();
-	
+
 	return code;
 }
