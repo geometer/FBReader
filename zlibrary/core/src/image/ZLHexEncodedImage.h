@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __RTFIMAGE_H__
-#define __RTFIMAGE_H__
+#ifndef __ZLHEXENCODEDIMAGE_H__
+#define __ZLHEXENCODEDIMAGE_H__
 
 #include <vector>
 
 #include <ZLImage.h>
 
-class RtfImage : public ZLSingleImage {
+class ZLHexEncodedImage : public ZLSingleImage {
 
 public:
-	RtfImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length);
-	~RtfImage();
+	ZLHexEncodedImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length);
+	~ZLHexEncodedImage();
 	const shared_ptr<std::string> stringData() const;
 
 private:
@@ -41,7 +41,7 @@ private:
 	mutable shared_ptr<std::string> myData;
 };
 
-inline RtfImage::RtfImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length) : ZLSingleImage(mimeType), myFileName(fileName), myStartOffset(startOffset), myLength(length) {}
-inline RtfImage::~RtfImage() {}
+inline ZLHexEncodedImage::ZLHexEncodedImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length) : ZLSingleImage(mimeType), myFileName(fileName), myStartOffset(startOffset), myLength(length) {}
+inline ZLHexEncodedImage::~ZLHexEncodedImage() {}
 
-#endif /* __RTFIMAGE_H__ */
+#endif /* __ZLHEXENCODEDIMAGE_H__ */

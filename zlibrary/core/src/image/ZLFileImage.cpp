@@ -21,6 +21,7 @@
 #include <ZLLogger.h>
 #include <ZLInputStream.h>
 #include <ZLBase64EncodedImage.h>
+#include "ZLHexEncodedImage.h"
 
 #include "ZLFileImage.h"
 
@@ -61,7 +62,9 @@ const shared_ptr<std::string> ZLFileImage::stringData() const {
 	delete[] buffer;
 
 	if (myEncoding == ENCODING_HEX) {
-		//TODO
+		//TODO implement image reading on streams
+		ZLHexEncodedImage image(myFile.mimeType(), myFile.path(), myOffset, mySize);
+		return image.stringData();
 	} else if (myEncoding == ENCODING_BASE64) {
 		ZLBase64EncodedImage image(mimeType());
 		std::vector<std::string> text;

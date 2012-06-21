@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@
 #include <ZLInputStream.h>
 #include <ZLFile.h>
 
-#include "RtfImage.h"
+#include "ZLHexEncodedImage.h"
 
 inline static char convertXDigit(char d) {
 	if (isdigit(d)) {
@@ -33,7 +33,7 @@ inline static char convertXDigit(char d) {
 	}
 }
 
-void RtfImage::read() const {
+void ZLHexEncodedImage::read() const {
 	shared_ptr<ZLInputStream> stream = ZLFile(myFileName).inputStream();
 	if (!stream.isNull() && stream->open()) {
 		myData = new std::string();
@@ -56,7 +56,7 @@ void RtfImage::read() const {
 	}
 }
 
-const shared_ptr<std::string> RtfImage::stringData() const {
+const shared_ptr<std::string> ZLHexEncodedImage::stringData() const {
 	if (myData.isNull()) {
 		read();
 	}

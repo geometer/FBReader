@@ -28,7 +28,6 @@
 class ZLFile;
 
 class BookModel;
-class RtfImage;
 
 class RtfBookReader : public RtfReader {
 
