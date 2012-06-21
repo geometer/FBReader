@@ -93,6 +93,7 @@ protected:
 	virtual const std::vector<std::string> &externalDTDs() const;
 
 	bool isInterrupted() const;
+	size_t getCurrentPosition() const;
 
 protected:
 	void interrupt();
