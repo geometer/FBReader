@@ -227,7 +227,7 @@ bool OleStreamReader::fillBuffer(OleMainStream &stream) {
 	}
 	myCurBufferPosition = 0;
 	++myNextPieceNumber;
-	delete textBuffer;
+	delete[] textBuffer;
 
 	return true;
 }
