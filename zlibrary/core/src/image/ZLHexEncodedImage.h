@@ -27,21 +27,15 @@
 class ZLHexEncodedImage : public ZLSingleImage {
 
 public:
-	ZLHexEncodedImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length);
-	~ZLHexEncodedImage();
+	ZLHexEncodedImage(const std::string &mimeType, shared_ptr<std::string> encodedData);
 	const shared_ptr<std::string> stringData() const;
 
 private:
 	void read() const;
 
 private:
-	std::string myFileName;
-	size_t myStartOffset;
-	size_t myLength;
+	shared_ptr<std::string> myEncodedData;
 	mutable shared_ptr<std::string> myData;
 };
-
-inline ZLHexEncodedImage::ZLHexEncodedImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length) : ZLSingleImage(mimeType), myFileName(fileName), myStartOffset(startOffset), myLength(length) {}
-inline ZLHexEncodedImage::~ZLHexEncodedImage() {}
 
 #endif /* __ZLHEXENCODEDIMAGE_H__ */

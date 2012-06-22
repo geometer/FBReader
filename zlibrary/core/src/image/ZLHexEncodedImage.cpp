@@ -37,37 +37,32 @@ inline static int decode(char b) {
 	}
 }
 
+ZLHexEncodedImage::ZLHexEncodedImage(const std::string &mimeType, shared_ptr<std::string> encodedData) :
+	ZLSingleImage(mimeType),
+	myEncodedData(encodedData),
+	myData(0) {
+}
+
 void ZLHexEncodedImage::read() const {
-	shared_ptr<ZLInputStream> stream = ZLFile(myFileName).inputStream();
-	if (stream.isNull() || !stream->open()) {
+	if (myEncodedData.isNull()) {
 		return;
 	}
 	myData = new std::string();
-	myData->reserve(myLength / 2);
-	stream->seek(myStartOffset, false);
-	const size_t bufferSize = 1024;
-	char *buffer = new char[bufferSize];
+	const size_t length = myEncodedData->length();
+	myData->reserve(length / 2);
 
 	int first = -1;
-	for (unsigned int i = 0; i < myLength; i += bufferSize) {
-		size_t toRead = std::min(bufferSize, myLength - i);
-		if (stream->read(buffer, toRead) != toRead) {
-			break;
-		}
-		for (size_t j = 0; j < toRead; j += 1) {
-			const int digit = decode(buffer[j]);
-			if (digit != -1) {
-				if (first == -1) {
-					first = digit;
-				} else {
-					*myData += (char)((first << 4) + digit);
-					first = -1;
-				}
+	for (unsigned int i = 0; i < length; i += 1) {
+		const int digit = decode(myEncodedData->at(i));
+		if (digit != -1) {
+			if (first == -1) {
+				first = digit;
+			} else {
+				*myData += (char)((first << 4) + digit);
+				first = -1;
 			}
 		}
 	}
-	delete[] buffer;
-	stream->close();
 }
 
 const shared_ptr<std::string> ZLHexEncodedImage::stringData() const {

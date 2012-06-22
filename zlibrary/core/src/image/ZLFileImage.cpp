@@ -62,34 +62,13 @@ const shared_ptr<std::string> ZLFileImage::stringData() const {
 	delete[] buffer;
 
 	if (myEncoding == ENCODING_HEX) {
-		//TODO implement image reading on streams
-		ZLHexEncodedImage image(myFile.mimeType(), myFile.path(), myOffset, mySize);
+		ZLHexEncodedImage image(mimeType(), imageData);
 		return image.stringData();
 	} else if (myEncoding == ENCODING_BASE64) {
 		ZLBase64EncodedImage image(mimeType());
-		std::vector<std::string> text;
-		text.push_back(*imageData);
-		image.addData(text);
+		image.addData(*imageData, 0, std::string::npos);
 		return image.stringData();
 	}
 
 	return imageData;
 }
-
-/*
-shared_ptr<ZLInputStream> ZLFileImage::inputStream() const {
-	shared_ptr<ZLInputStream> stream = new SliceInputStream(myFile.inputStream(), myOffset, mySize);
-	switch (myEncoding) {
-		case ENCODING_NONE:
-			return stream;
-		case ENCODING_HEX:
-			return new HexInputStream(stream);
-		case ENCODING_BASE64:
-			return new Base64InputStream(stream);
-		default:
-			ZLLogger::Instance().println("ZLFileImage", "unsupported encoding: " + myEncoding);
-			break;
-	}
-	return 0;
-}
-*/
