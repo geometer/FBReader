@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,33 +17,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLFILEIMAGE_H__
-#define __ZLFILEIMAGE_H__
+#ifndef __ZLSLICEINPUTSTREAM_H__
+#define __ZLSLICEINPUTSTREAM_H__
 
-#include <string>
+#include <ZLInputStream.h>
 
-#include <ZLFile.h>
-#include <ZLImage.h>
-
-class ZLFileImage : public ZLSingleImage {
-
+class ZLSliceInputStream : public ZLInputStream {
 public:
-	static const std::string ENCODING_NONE;
-	static const std::string ENCODING_HEX;
-	static const std::string ENCODING_BASE64;
+	ZLSliceInputStream(shared_ptr<ZLInputStream> base, size_t start, size_t length);
 
-public:
-	ZLFileImage(const ZLFile &file, size_t offset, size_t size = 0, const std::string &encoding = ZLFileImage::ENCODING_NONE);
-	const shared_ptr<std::string> stringData() const;
+	bool open();
+	size_t read(char *buffer, size_t maxSize);
+	void close();
 
-protected:
-	shared_ptr<ZLInputStream> inputStream() const;
+	void seek(int offset, bool absoluteOffset);
+	size_t offset() const;
+	size_t sizeOfOpened();
 
 private:
-	const ZLFile myFile;
-	const std::string myEncoding;
-	const size_t myOffset;
-	const size_t mySize;
+	shared_ptr<ZLInputStream> myBaseStream;
+	size_t myStart;
+	size_t myLength;
 };
 
-#endif /* __ZLFILEIMAGE_H__ */
+#endif /* __ZLSLICEINPUTSTREAM_H__ */

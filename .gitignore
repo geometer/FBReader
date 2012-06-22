@@ -11,3 +11,8 @@ zlibrary/ui/zlui-qt4.so
 zlibrary/ui/zlui-gtk.so
 zlibrary/ui/zlui-qt.so
 fbreader/FBReader
+
+*.a
+*.pro
+*.pro.user*
+*.moc.cpp
