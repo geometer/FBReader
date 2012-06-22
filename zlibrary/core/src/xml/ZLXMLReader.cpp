@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <string.h>
+#include <cstring>
 
 #include <algorithm>
 
@@ -59,9 +59,6 @@ void ZLXMLReaderHandler::shutdown() {
 bool ZLXMLReaderHandler::handleBuffer(const char *data, size_t len) {
 	return myReader.readFromBuffer(data, len);
 }
-
-
-
 
 static const size_t BUFFER_SIZE = 2048;
 
