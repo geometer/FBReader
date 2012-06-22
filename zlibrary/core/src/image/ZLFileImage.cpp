@@ -24,8 +24,8 @@
 #include <ZLBase64InputStream.h>
 #include <ZLHexInputStream.h>
 
-//#include <ZLHexEncodedImage.h>
-//#include <ZLBase64EncodedImage.h>
+//#include "ZLHexEncodedImage.h"
+//#include "ZLBase64EncodedImage.h"
 
 #include "ZLFileImage.h"
 
@@ -64,7 +64,23 @@ const shared_ptr<std::string> ZLFileImage::stringData() const {
 	imageData->append(buffer, readed);
 	delete[] buffer;
 
-	//old code for not-stream reading:
+	return imageData;
+
+
+//old code for not-stream reading:
+//const shared_ptr<std::string> ZLFileImage::stringData() const {
+//	shared_ptr<ZLInputStream> stream = myFile.inputStream();
+//	if (stream.isNull() || !stream->open()) {
+//		return 0;
+//	}
+//	size_t size = mySize;
+//	if (size == 0) {
+//		size = stream->sizeOfOpened();
+//		if (size == 0) {
+//			return 0;
+//		}
+//	}
+
 //	shared_ptr<std::string> imageData = new std::string();
 //	stream->seek(myOffset, true);
 //	char *buffer = new char[size];
@@ -84,7 +100,7 @@ const shared_ptr<std::string> ZLFileImage::stringData() const {
 //		return image.stringData();
 //	}
 
-	return imageData;
+//	return imageData;
 }
 
 

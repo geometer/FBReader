@@ -31,6 +31,12 @@ bool ZLSliceInputStream::open() {
 	if (!myBaseStream->open()) {
 		return false;
 	}
+	if (myLength == 0) {
+		myLength = myBaseStream->sizeOfOpened();
+		if (myLength == 0) {
+			return false;
+		}
+	}
 	myBaseStream->seek(myStart, true);
 	return true;
 }
