@@ -55,6 +55,6 @@ std::string AuthorNode::title() const {
 		resource()["unknownAuthor"].value() : myAuthor->name();
 }
 
-shared_ptr<ZLImage> AuthorNode::extractCoverImage() const {
+shared_ptr<const ZLImage> AuthorNode::extractCoverImage() const {
 	return defaultCoverImage("booktree-author.png");
 }

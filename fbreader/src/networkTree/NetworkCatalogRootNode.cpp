@@ -147,7 +147,7 @@ const NetworkLink &NetworkCatalogRootNode::link() const {
 	return myLink;
 }
 
-shared_ptr<ZLImage> NetworkCatalogRootNode::lastResortCoverImage() const {
+shared_ptr<const ZLImage> NetworkCatalogRootNode::lastResortCoverImage() const {
 	return 0;
 }
 
@@ -238,7 +238,7 @@ void NetworkCatalogRootNode::RefillAccountAction::run() {
 
 bool NetworkCatalogRootNode::RefillAccountAction::makesSense() const {
 	return
-		NetworkCatalogAuthAction::makesSense() && 
+		NetworkCatalogAuthAction::makesSense() &&
 		!myManager.currentAccount().empty();
 }
 

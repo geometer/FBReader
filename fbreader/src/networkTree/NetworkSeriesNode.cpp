@@ -33,7 +33,7 @@ const ZLResource &NetworkSeriesNode::resource() const {
 	return ZLResource::resource("networkView")["seriesNode"];
 }
 
-NetworkSeriesNode::NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle, SummaryType summaryType) : 
+NetworkSeriesNode::NetworkSeriesNode(NetworkContainerNode *parent, const std::string &seriesTitle, SummaryType summaryType) :
 	NetworkContainerNode(parent), mySeriesTitle(seriesTitle), mySummaryType(summaryType) {
 }
 
@@ -67,14 +67,14 @@ std::string NetworkSeriesNode::summary() const {
 			}
 		}
 	}
-	
+
 	return mySummary;
 }
 
-shared_ptr<ZLImage> NetworkSeriesNode::extractCoverImage() const {
+shared_ptr<const ZLImage> NetworkSeriesNode::extractCoverImage() const {
 	const std::vector<ZLBlockTreeNode*> &books = children();
 	for (std::vector<ZLBlockTreeNode*>::const_iterator it = books.begin(); it != books.end(); ++it) {
-		shared_ptr<ZLImage> bookCover = ((FBReaderNode*)*it)->coverImage();
+		shared_ptr<const ZLImage> bookCover = ((FBReaderNode*)*it)->coverImage();
 		if (!bookCover.isNull()) {
 			return bookCover;
 		}

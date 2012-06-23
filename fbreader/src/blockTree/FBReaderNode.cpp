@@ -40,7 +40,7 @@ private:
 	FBReaderNode &myNode;
 };
 
-std::map<std::string,shared_ptr<ZLImage> > FBReaderNode::ourDefaultCovers;
+std::map<std::string,shared_ptr<const ZLImage> > FBReaderNode::ourDefaultCovers;
 
 FBReaderNode::FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition) : ZLBlockTreeNode(parent, atPosition), myCoverImageIsStored(false), myIsInitialized(false) {
 }
@@ -59,7 +59,7 @@ const ZLTypeId &FBReaderNode::typeId() const {
 	return TYPE_ID;
 }
 
-shared_ptr<ZLImage> FBReaderNode::coverImage() const {
+shared_ptr<const ZLImage> FBReaderNode::coverImage() const {
 	if (!myCoverImageIsStored) {
 		myCoverImageIsStored = true;
 		myStoredCoverImage = extractCoverImage();
@@ -72,7 +72,7 @@ void FBReaderNode::drawCover(ZLPaintContext &context, int vOffset) {
 }
 
 void FBReaderNode::drawCoverReal(ZLPaintContext &context, int vOffset) {
-	shared_ptr<ZLImage> cover = coverImage();
+	shared_ptr<const ZLImage> cover = coverImage();
 	if (cover.isNull()) {
 		return;
 	}
@@ -152,9 +152,9 @@ void FBReaderNode::drawHyperlink(ZLPaintContext &context, int &hOffset, int &vOf
 
 	context.setColor(FBOptions::Instance().colorOption("internal").value());
 	context.setFont(
-		style.fontFamily(), 
-		auxiliary ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3), 
-		style.bold(), 
+		style.fontFamily(),
+		auxiliary ? (7 * style.fontSize() / 15) : (style.fontSize() * 2 / 3),
+		style.bold(),
 		style.italic()
 	);
 
@@ -203,8 +203,8 @@ void FBReaderNode::registerExpandTreeAction() {
 	registerAction(new ExpandTreeAction(*this));
 }
 
-shared_ptr<ZLImage> FBReaderNode::defaultCoverImage(const std::string &id) {
-	shared_ptr<ZLImage> cover = ourDefaultCovers[id];
+shared_ptr<const ZLImage> FBReaderNode::defaultCoverImage(const std::string &id) {
+	shared_ptr<const ZLImage> cover = ourDefaultCovers[id];
 	if (cover.isNull()) {
 		cover = new ZLFileImage(
 			ZLFile(ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + id), 0

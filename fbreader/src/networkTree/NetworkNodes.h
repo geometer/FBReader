@@ -90,10 +90,10 @@ public:
 	void updateChildren();
 
 protected:
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<const ZLImage> extractCoverImage() const;
 	std::string title() const;
 	std::string summary() const;
-	virtual shared_ptr<ZLImage> lastResortCoverImage() const;
+	virtual shared_ptr<const ZLImage> lastResortCoverImage() const;
 
 private:
 	shared_ptr<NetworkItem> myItem;
@@ -123,7 +123,7 @@ private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
 
-	shared_ptr<ZLImage> lastResortCoverImage() const;
+	shared_ptr<const ZLImage> lastResortCoverImage() const;
 
 private:
 	NetworkLink &myLink;
@@ -143,7 +143,7 @@ private:
 	void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<const ZLImage> extractCoverImage() const;
 	std::string title() const;
 	std::string summary() const;
 
@@ -169,7 +169,7 @@ private:
 	void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<const ZLImage> extractCoverImage() const;
 	std::string title() const;
 
 private:
@@ -192,7 +192,7 @@ private:
 	void init();
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<const ZLImage> extractCoverImage() const;
 	std::string title() const;
 	std::string summary() const;
 
@@ -221,7 +221,7 @@ public:
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<const ZLImage> extractCoverImage() const;
 	std::string title() const;
 	std::string summary() const;
 	void drawCover(ZLPaintContext &context, int vOffset);

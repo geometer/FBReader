@@ -95,11 +95,11 @@ void OEBBookReader::startElementHandler(const char *tag, const char **xmlattribu
 					ZLFile imageFile(myFilePrefix + reference);
 					myCoverFileName = imageFile.path();
 					const std::string imageName = imageFile.name(false);
-					shared_ptr<ZLImage> image = XHTMLImageFinder().readImage(imageFile);
+					shared_ptr<const ZLImage> image = XHTMLImageFinder().readImage(imageFile);
 					if (!image.isNull()) {
 						myModelReader.setMainTextModel();
 						myModelReader.addImageReference(imageName, 0);
-						//myModelReader.addImage(imageName, image);
+						myModelReader.addImage(imageName, image);
 						myModelReader.insertEndOfSectionParagraph();
 					} else {
 						myCoverFileName.erase();

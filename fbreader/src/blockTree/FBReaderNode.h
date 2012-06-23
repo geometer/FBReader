@@ -32,10 +32,10 @@ class FBTextStyle;
 class FBReaderNode : public ZLBlockTreeNode {
 
 protected:
-	static shared_ptr<ZLImage> defaultCoverImage(const std::string &id);
+	static shared_ptr<const ZLImage> defaultCoverImage(const std::string &id);
 
 private:
-	static std::map<std::string,shared_ptr<ZLImage> > ourDefaultCovers;
+	static std::map<std::string,shared_ptr<const ZLImage> > ourDefaultCovers;
 
 private:
 	class ExpandTreeAction;
@@ -67,13 +67,13 @@ protected:
 	void paint(ZLPaintContext &context, int vOffset);
 	void registerAction(shared_ptr<ZLRunnableWithKey> action, bool auxiliary = false);
 	void registerExpandTreeAction();
-	virtual shared_ptr<ZLImage> extractCoverImage() const = 0;
+	virtual shared_ptr<const ZLImage> extractCoverImage() const = 0;
 
 private:
 	const ZLTypeId &typeId() const;
 
 public:
-	shared_ptr<ZLImage> coverImage() const;
+	shared_ptr<const ZLImage> coverImage() const;
 	virtual std::string title() const = 0;
 	virtual std::string summary() const;
 
@@ -84,7 +84,7 @@ protected:
 
 private:
 	mutable bool myCoverImageIsStored;
-	mutable shared_ptr<ZLImage> myStoredCoverImage;
+	mutable shared_ptr<const ZLImage> myStoredCoverImage;
 	std::vector<std::pair<shared_ptr<ZLRunnableWithKey>,bool> > myActions;
 	bool myIsInitialized;
 };

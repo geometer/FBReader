@@ -26,7 +26,7 @@
 
 #include "../network/NetworkLinkCollection.h"
 
-shared_ptr<ZLImage> NetworkCatalogUtil::getImageByNetworkUrl(const std::string &url, const std::string &prefix) {
+shared_ptr<const ZLImage> NetworkCatalogUtil::getImageByNetworkUrl(const std::string &url, const std::string &prefix) {
 	if (!ZLStringUtil::stringStartsWith(url, prefix)) {
 		return 0;
 	}
@@ -34,7 +34,7 @@ shared_ptr<ZLImage> NetworkCatalogUtil::getImageByNetworkUrl(const std::string &
 	return new ZLNetworkImage("image/auto", url);
 }
 
-shared_ptr<ZLImage> NetworkCatalogUtil::getImageByDataUrl(const std::string &url) {
+shared_ptr<const ZLImage> NetworkCatalogUtil::getImageByDataUrl(const std::string &url) {
 	if (!ZLStringUtil::stringStartsWith(url, "data:")) {
 		return 0;
 	}
@@ -49,8 +49,8 @@ shared_ptr<ZLImage> NetworkCatalogUtil::getImageByDataUrl(const std::string &url
 	return image;
 }
 
-shared_ptr<ZLImage> NetworkCatalogUtil::getImageByUrl(const std::string &url) {
-	shared_ptr<ZLImage> image;
+shared_ptr<const ZLImage> NetworkCatalogUtil::getImageByUrl(const std::string &url) {
+	shared_ptr<const ZLImage> image;
 
 	image = getImageByNetworkUrl(url, "http://");
 	if (!image.isNull()) {

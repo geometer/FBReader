@@ -30,9 +30,9 @@
 
 const ZLTypeId SearchResultNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
-SearchResultNode::SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition) : 
-	NetworkContainerNode(parent, atPosition), 
-	mySearchResult(searchResult), 
+SearchResultNode::SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition) :
+	NetworkContainerNode(parent, atPosition),
+	mySearchResult(searchResult),
 	mySummary(summary) {
 }
 
@@ -56,10 +56,10 @@ std::string SearchResultNode::summary() const {
 	return mySummary;
 }
 
-shared_ptr<ZLImage> SearchResultNode::extractCoverImage() const {
+shared_ptr<const ZLImage> SearchResultNode::extractCoverImage() const {
 	return defaultCoverImage("searchresult.png");
 }
 
-shared_ptr<NetworkBookCollection> SearchResultNode::searchResult() { 
+shared_ptr<NetworkBookCollection> SearchResultNode::searchResult() {
 	return mySearchResult;
 }

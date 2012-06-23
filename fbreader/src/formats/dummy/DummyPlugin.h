@@ -31,7 +31,7 @@ public:
 	bool acceptsFile(const ZLFile &file) const;
 	bool readMetaInfo(Book &book) const;
 	bool readModel(BookModel &model) const;
-	shared_ptr<ZLImage> coverImage(const ZLFile &file) const;
+	shared_ptr<const ZLImage> coverImage(const ZLFile &file) const;
 };
 
 #endif /* __DUMMYPLUGIN_H__ */
