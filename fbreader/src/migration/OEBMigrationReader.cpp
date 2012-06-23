@@ -28,7 +28,6 @@ OEBMigrationReader::OEBMigrationReader(BookInfo &info) : myInfo(info) {
 
 static const std::string METADATA = "metadata";
 static const std::string DC_METADATA = "dc-metadata";
-static const std::string SUBJECT_TAG = ":subject";
 
 void OEBMigrationReader::characterDataHandler(const char *text, size_t len) {
 	if (myReadSubject) {
@@ -36,13 +35,10 @@ void OEBMigrationReader::characterDataHandler(const char *text, size_t len) {
 	}
 }
 
-bool OEBMigrationReader::isDublinCoreNamespace(const std::string &nsId) const {
-	const std::map<std::string,std::string> &namespaceMap = namespaces();
-	std::map<std::string,std::string>::const_iterator iter = namespaceMap.find(nsId);
+bool OEBMigrationReader::testDCTag(const std::string &name, const std::string &tag) const {
 	return
-		((iter != namespaceMap.end()) &&
-		 (ZLStringUtil::stringStartsWith(iter->second, ZLXMLNamespace::DublinCorePrefix) ||
-		  ZLStringUtil::stringStartsWith(iter->second, ZLXMLNamespace::DublinCoreLegacyPrefix)));
+		testTag(ZLXMLNamespace::DublinCore, name, tag) ||
+		testTag(ZLXMLNamespace::DublinCoreLegacy, name, tag);
 }
 
 void OEBMigrationReader::startElementHandler(const char *tag, const char**) {
@@ -51,10 +47,8 @@ void OEBMigrationReader::startElementHandler(const char *tag, const char**) {
 		myDCMetadataTag = tagString;
 		myReadMetaData = true;
 	} else if (myReadMetaData) {
-		if (ZLStringUtil::stringEndsWith(tagString, SUBJECT_TAG)) {
-			if (isDublinCoreNamespace(tagString.substr(0, tagString.length() - SUBJECT_TAG.length()))) {
+		if (testDCTag("subject", tagString)) {
 				myReadSubject = true;
-			}
 		}
 	}
 }

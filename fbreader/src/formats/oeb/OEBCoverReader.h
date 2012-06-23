@@ -36,6 +36,7 @@ public:
 private:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
+	bool processNamespaces() const;
 
 	void createImage(const char *href);
 

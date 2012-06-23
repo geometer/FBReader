@@ -84,6 +84,10 @@ static const std::string REFERENCE = "reference";
 static const std::string COVER = "cover";
 static const std::string COVER_IMAGE = "other.ms-coverimage-standard";
 
+bool OEBCoverReader::processNamespaces() const {
+	return true;
+}
+
 void OEBCoverReader::startElementHandler(const char *tag, const char **attributes) {
 	switch (myReadState) {
 		case READ_NOTHING:
