@@ -215,7 +215,7 @@ void ZLTextModel::addControl(ZLTextKind textKind, bool isStart) {
 
 void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
 	int len = sizeof(int) + 5 + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
-	if (entry.fontFamilySupported()) {
+	if (entry.isFontFamilySupported()) {
 		len += entry.fontFamily().length() + 1;
 	}
 	myLastEntryStart = myAllocator.allocate(len);
@@ -232,7 +232,7 @@ void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
 	*address++ = entry.myFontModifier;
 	*address++ = entry.myAlignmentType;
 	*address++ = entry.myFontSizeMag;
-	if (entry.fontFamilySupported()) {
+	if (entry.isFontFamilySupported()) {
 		memcpy(address, entry.fontFamily().data(), entry.fontFamily().length());
 		address += entry.fontFamily().length();
 		*address++ = '\0';

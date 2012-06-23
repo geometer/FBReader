@@ -69,7 +69,7 @@ ZLTextStyleEntry::ZLTextStyleEntry(char *address) {
 	myFontModifier = *address++;
 	myAlignmentType = (ZLTextAlignmentType)*address++;
 	myFontSizeMag = (signed char)*address++;
-	if (fontFamilySupported()) {
+	if (isFontFamilySupported()) {
 		myFontFamily = address;
 	}
 }
@@ -149,7 +149,7 @@ void ZLTextParagraph::Iterator::next() {
 			{
 				int mask;
 				memcpy(&mask, myPointer + 1, sizeof(int));
-				bool withFontFamily = (mask & ZLTextStyleEntry::SUPPORT_FONT_FAMILY) == ZLTextStyleEntry::SUPPORT_FONT_FAMILY;
+				bool withFontFamily = (mask & ZLTextStyleEntry::SUPPORTS_FONT_FAMILY) == ZLTextStyleEntry::SUPPORTS_FONT_FAMILY;
 				myPointer += sizeof(int) + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 5;
 				if (withFontFamily) {
 					while (*myPointer != '\0') {
@@ -184,7 +184,7 @@ shared_ptr<ZLTextParagraphEntry> ZLTextControlEntryPool::controlEntry(ZLTextKind
 	entries[kind] = entry;
 	return entry;
 }
-	
+
 size_t ZLTextParagraph::textDataLength() const {
 	size_t len = 0;
 	for (Iterator it = *this; !it.isEnd(); it.next()) {

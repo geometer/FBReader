@@ -126,7 +126,7 @@ short ZLTextForcedStyle::lineStartIndent(const ZLTextStyleEntry::Metrics &metric
 		ZLTextStyleEntry::LENGTH_RIGHT_INDENT :
 		ZLTextStyleEntry::LENGTH_LEFT_INDENT;
 	return
-		myEntry.lengthSupported(lengthType) ?
+		myEntry.isLengthSupported(lengthType) ?
 			myEntry.length(lengthType, metrics) :
 			base()->lineStartIndent(metrics, rtl);
 }
@@ -136,34 +136,34 @@ short ZLTextForcedStyle::lineEndIndent(const ZLTextStyleEntry::Metrics &metrics,
 		ZLTextStyleEntry::LENGTH_LEFT_INDENT :
 		ZLTextStyleEntry::LENGTH_RIGHT_INDENT;
 	return
-		myEntry.lengthSupported(lengthType) ?
+		myEntry.isLengthSupported(lengthType) ?
 			myEntry.length(lengthType, metrics) :
 			base()->lineEndIndent(metrics, rtl);
 }
 
 short ZLTextForcedStyle::spaceBefore(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.lengthSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE) ?
+		myEntry.isLengthSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE) ?
 			myEntry.length(ZLTextStyleEntry::LENGTH_SPACE_BEFORE, metrics) :
 			base()->spaceBefore(metrics);
 }
 
 short ZLTextForcedStyle::spaceAfter(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.lengthSupported(ZLTextStyleEntry::LENGTH_SPACE_AFTER) ?
+		myEntry.isLengthSupported(ZLTextStyleEntry::LENGTH_SPACE_AFTER) ?
 			myEntry.length(ZLTextStyleEntry::LENGTH_SPACE_AFTER, metrics) :
 			base()->spaceAfter(metrics);
 }
 
 short ZLTextForcedStyle::firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.lengthSupported(ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA) ?
+		myEntry.isLengthSupported(ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA) ?
 			myEntry.length(ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA, metrics) :
 			base()->firstLineIndentDelta(metrics);
 }
 
 ZLTextAlignmentType ZLTextForcedStyle::alignment() const {
-	return myEntry.alignmentTypeSupported() ? myEntry.alignmentType() : base()->alignment();
+	return myEntry.isAlignmentTypeSupported() ? myEntry.alignmentType() : base()->alignment();
 }
 
 bool ZLTextForcedStyle::bold() const {
@@ -177,7 +177,7 @@ bool ZLTextForcedStyle::italic() const {
 }
 
 int ZLTextForcedStyle::fontSize() const {
-	if (myEntry.fontSizeSupported()) {
+	if (myEntry.isFontSizeMagSupported()) {
 		shared_ptr<ZLTextStyle> base = this->base();
 		while (base->isDecorated()) {
 			base = ((ZLTextDecoratedStyle&)*base).base();
@@ -207,7 +207,7 @@ int ZLTextForcedStyle::fontSize() const {
 
 const std::string &ZLTextForcedStyle::fontFamily() const {
 	return (!ZLTextStyleCollection::Instance().OverrideSpecifiedFontsOption.value() &&
-					myEntry.fontFamilySupported()) ?
+					myEntry.isFontFamilySupported()) ?
 						myEntry.fontFamily() : base()->fontFamily();
 }
 
