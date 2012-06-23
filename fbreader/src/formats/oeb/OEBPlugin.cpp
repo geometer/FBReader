@@ -128,7 +128,6 @@ ZLFile OEBPlugin::opfFile(const ZLFile &oebFile) {
 
 bool OEBPlugin::readMetaInfo(Book &book) const {
 	const ZLFile &file = book.file();
-	shared_ptr<ZLInputStream> lock = file.inputStream();
 	const ZLFile opfFile = this->opfFile(file);
 	bool code = OEBMetaInfoReader(book).readMetaInfo(opfFile);
 	if (code && book.language().empty()) {
@@ -138,24 +137,8 @@ bool OEBPlugin::readMetaInfo(Book &book) const {
 	return code;
 }
 
-class InputStreamLock : public ZLUserData {
-
-public:
-	InputStreamLock(shared_ptr<ZLInputStream> stream);
-
-private:
-	shared_ptr<ZLInputStream> myStream;
-};
-
-InputStreamLock::InputStreamLock(shared_ptr<ZLInputStream> stream) : myStream(stream) {
-}
-
 bool OEBPlugin::readModel(BookModel &model) const {
 	const ZLFile &file = model.book()->file();
-	model.addUserData(
-		"inputStreamLock",
-		new InputStreamLock(file.inputStream())
-	);
 	return OEBBookReader(model).readBook(opfFile(file));
 }
 
