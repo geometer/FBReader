@@ -41,6 +41,9 @@ public:
 	size_t getCurrentPosition() const;
 
 private:
+	void setupEntities();
+
+private:
 	ZLXMLReader &myReader;
 	XML_Parser myParser;
 	bool myInitialized;

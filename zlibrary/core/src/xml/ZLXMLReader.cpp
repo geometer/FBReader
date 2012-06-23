@@ -25,7 +25,6 @@
 #include <ZLInputStream.h>
 #include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
-#include <ZLEncodingConverter.h>
 
 #include "ZLAsynchronousInputStream.h"
 
@@ -70,9 +69,6 @@ void ZLXMLReader::endElementHandler(const char*) {
 }
 
 void ZLXMLReader::characterDataHandler(const char*, size_t) {
-}
-
-void ZLXMLReader::namespaceListChangedHandler() {
 }
 
 const ZLXMLReader::nsMap &ZLXMLReader::namespaces() const {
@@ -150,6 +146,9 @@ const std::vector<std::string> &ZLXMLReader::externalDTDs() const {
 	return EMPTY_VECTOR;
 }
 
+void ZLXMLReader::collectExternalEntities(std::map<std::string,std::string> &entityMap) {
+}
+
 const char *ZLXMLReader::attributeValue(const char **xmlattributes, const char *name) {
 	while (*xmlattributes != 0) {
 		bool useNext = strcmp(*xmlattributes, name) == 0;
@@ -179,13 +178,17 @@ ZLXMLReader::NamespaceAttributeNamePredicate::NamespaceAttributeNamePredicate(co
 }
 
 bool ZLXMLReader::NamespaceAttributeNamePredicate::accepts(const ZLXMLReader &reader, const char *name) const {
+	const std::string full(name);
+	const size_t index = full.find(':');
+	const std::string namespaceId =
+		index == std::string::npos ? std::string() : full.substr(0, index);
+
 	const nsMap &namespaces = reader.namespaces();
-	for (nsMap::const_iterator it = namespaces.begin(); it != namespaces.end(); ++it) {
-		if (it->second == myNamespaceName) {
-			return it->first + ':' + myAttributeName == name;
-		}
-	}
-	return false;
+	nsMap::const_iterator it = namespaces.find(namespaceId);
+	return
+		it != namespaces.end() &&
+		it->second == myNamespaceName &&
+		full.substr(index + 1) == myAttributeName;
 }
 
 const char *ZLXMLReader::attributeValue(const char **xmlattributes, const AttributeNamePredicate &predicate) {

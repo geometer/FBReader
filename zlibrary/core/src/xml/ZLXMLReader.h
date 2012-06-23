@@ -90,8 +90,8 @@ protected:
 	virtual void endElementHandler(const char *tag);
 	virtual void characterDataHandler(const char *text, size_t len);
 	virtual bool processNamespaces() const;
-	virtual void namespaceListChangedHandler();
 	virtual const std::vector<std::string> &externalDTDs() const;
+	virtual void collectExternalEntities(std::map<std::string,std::string> &entityMap);
 
 	bool testTag(const std::string &ns, const std::string &name, const std::string &tag) const;
 	bool isInterrupted() const;
