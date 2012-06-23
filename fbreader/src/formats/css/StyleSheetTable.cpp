@@ -20,6 +20,7 @@
 #include <cstdlib>
 
 #include <ZLStringUtil.h>
+#include <ZLLogger.h>
 
 #include "StyleSheetTable.h"
 
@@ -54,20 +55,25 @@ void StyleSheetTable::addMap(const std::string &tag, const std::string &aClass, 
 	}
 }
 
-static void parseLength(const std::string &toParse, short &size, ZLTextStyleEntry::SizeUnit &unit) {
+static bool parseLength(const std::string &toParse, short &size, ZLTextStyleEntry::SizeUnit &unit) {
 	if (ZLStringUtil::stringEndsWith(toParse, "%")) {
 		unit = ZLTextStyleEntry::SIZE_UNIT_PERCENT;
 		size = atoi(toParse.c_str());
+		return true;
 	} else if (ZLStringUtil::stringEndsWith(toParse, "em")) {
 		unit = ZLTextStyleEntry::SIZE_UNIT_EM_100;
 		size = (short)(100 * ZLStringUtil::stringToDouble(toParse, 0));
+		return true;
 	} else if (ZLStringUtil::stringEndsWith(toParse, "ex")) {
 		unit = ZLTextStyleEntry::SIZE_UNIT_EX_100;
 		size = (short)(100 * ZLStringUtil::stringToDouble(toParse, 0));
+		return true;
 	} else {
 		unit = ZLTextStyleEntry::SIZE_UNIT_PIXEL;
 		size = atoi(toParse.c_str());
+		return true;
 	}
+	return false;
 }
 
 void StyleSheetTable::setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Length name, const AttributeMap &map, const std::string &attributeName) {
@@ -79,8 +85,9 @@ void StyleSheetTable::setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Lengt
 	if (!values.empty() && !values[0].empty()) {
 		short size;
 		ZLTextStyleEntry::SizeUnit unit;
-		parseLength(values[0], size, unit);
-		entry.setLength(name, size, unit);
+		if (parseLength(values[0], size, unit)) {
+			entry.setLength(name, size, unit);
+		}
 	}
 }
 
@@ -155,6 +162,7 @@ shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &
 
 	const std::vector<std::string> &bold = values(styles, "font-weight");
 	if (!bold.empty()) {
+		//ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "bold: " + bold[0]);
 		int num = -1;
 		if (bold[0] == "bold") {
 			num = 700;
@@ -170,41 +178,42 @@ shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &
 		} else if (bold[0] == "lighter") {
 		}
 		if (num != -1) {
-			entry->setFontModifier(FONT_MODIFIER_BOLD, num >= 600);
+			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_BOLD, num >= 600);
 		}
 	}
 
 	const std::vector<std::string> &italic = values(styles, "font-style");
 	if (!italic.empty()) {
-		entry->setFontModifier(FONT_MODIFIER_ITALIC, italic[0] == "italic");
+		entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_ITALIC, italic[0] == "italic");
 	}
 
 	const std::vector<std::string> &variant = values(styles, "font-variant");
 	if (!variant.empty()) {
-		entry->setFontModifier(FONT_MODIFIER_SMALLCAPS, variant[0] == "small-caps");
+		entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_SMALLCAPS, variant[0] == "small-caps");
 	}
 
 	const std::vector<std::string> &fontFamily = values(styles, "font-family");
 	if (!fontFamily.empty() && !fontFamily[0].empty()) {
 		entry->setFontFamily(fontFamily[0]);
+		//ZLLogger::Instance().println(ZLLogger::DEFAULT_CLASS, "font family: " + fontFamily[0]);
 	}
 
 	const std::vector<std::string> &fontSize = values(styles, "font-size");
 	if (!fontSize.empty()) {
 		if (fontSize[0] == "xx-small") {
-			entry->setFontSizeMag(-3);
+			entry->setFontSizeMagnification(-3);
 		} else if (fontSize[0] == "x-small") {
-			entry->setFontSizeMag(-2);
+			entry->setFontSizeMagnification(-2);
 		} else if (fontSize[0] == "small") {
-			entry->setFontSizeMag(-1);
+			entry->setFontSizeMagnification(-1);
 		} else if (fontSize[0] == "medium") {
-			entry->setFontSizeMag(0);
+			entry->setFontSizeMagnification(0);
 		} else if (fontSize[0] == "large") {
-			entry->setFontSizeMag(1);
+			entry->setFontSizeMagnification(1);
 		} else if (fontSize[0] == "x-large") {
-			entry->setFontSizeMag(2);
+			entry->setFontSizeMagnification(2);
 		} else if (fontSize[0] == "xx-large") {
-			entry->setFontSizeMag(3);
+			entry->setFontSizeMagnification(3);
 		}
 	}
 

@@ -90,6 +90,19 @@ void ZLStringUtil::stripWhiteSpaces(std::string &str) {
 	str.erase(r_counter, length - r_counter);
 }
 
+std::vector<std::string> ZLStringUtil::split(const std::string &str, const std::string &delimiter) {
+	std::vector<std::string> result;
+	size_t start = 0;
+	size_t index = str.find(delimiter);
+	while (index != std::string::npos) {
+		result.push_back(str.substr(start, index - start));
+		start = index + delimiter.length();
+		index = str.find(delimiter, start);
+	}
+	result.push_back(str.substr(start, index - start));
+	return result;
+}
+
 std::string ZLStringUtil::printf(const std::string &format, const std::string &arg0) {
 	int index = format.find("%s");
 	if (index == -1) {
@@ -105,11 +118,28 @@ std::string ZLStringUtil::doubleToString(double value) {
 	return buf;
 }
 
-double ZLStringUtil::stringToDouble(const std::string &value, double defaultValue) {
-	if (!value.empty()) {
+double ZLStringUtil::stringToDouble(const std::string &str, double defaultValue) {
+	if (!str.empty()) {
 		setlocale(LC_NUMERIC, "C");
-		return atof(value.c_str());
+		return atof(str.c_str());
 	} else {
 		return defaultValue;
 	}
+}
+
+int ZLStringUtil::stringToInteger(const std::string &str, int defaultValue) {
+	if (str.empty()) {
+		return defaultValue;
+	}
+	if (!isdigit(str[0]) && (str.length() == 1 || str[0] != '-' || !isdigit(str[1]))) {
+		return defaultValue;
+	}
+
+	for (size_t i = 1; i < str.length(); ++i) {
+		if (!isdigit(str[i])) {
+			return defaultValue;
+		}
+	}
+
+	return atoi(str.c_str());
 }

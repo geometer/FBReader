@@ -31,14 +31,18 @@ private:
 public:
 	static bool stringStartsWith(const std::string &str, const std::string &start);
 	static bool stringEndsWith(const std::string &str, const std::string &end);
+
 	static void appendNumber(std::string &str, unsigned int n);
 	static void append(std::string &str, const std::vector<std::string> &buffer);
 	static void stripWhiteSpaces(std::string &str);
+
+	static std::vector<std::string> split(const std::string &str, const std::string &delimiter);
 
 	static std::string printf(const std::string &format, const std::string &arg0);
 
 	static std::string doubleToString(double value);
 	static double stringToDouble(const std::string &value, double defaultValue);
+	static int stringToInteger(const std::string &str, int defaultValue);
 };
 
 #endif /* __ZLSTRINGUTIL_H__ */

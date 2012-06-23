@@ -20,6 +20,7 @@
 #include "ZLTextStyle.h"
 #include "ZLTextStyleCollection.h"
 #include "ZLTextDecoratedStyle.h"
+#include <ZLTextStyleEntry.h>
 
 static const std::string STYLE = "Style";
 
@@ -167,13 +168,13 @@ ZLTextAlignmentType ZLTextForcedStyle::alignment() const {
 }
 
 bool ZLTextForcedStyle::bold() const {
-	return (myEntry.supportedFontModifier() & FONT_MODIFIER_BOLD) ?
-					 (myEntry.fontModifier() & FONT_MODIFIER_BOLD) : base()->bold();
+	return (myEntry.supportedFontModifier() & ZLTextStyleEntry::FONT_MODIFIER_BOLD) ?
+					 (myEntry.fontModifier() & ZLTextStyleEntry::FONT_MODIFIER_BOLD) : base()->bold();
 }
 
 bool ZLTextForcedStyle::italic() const {
-	return (myEntry.supportedFontModifier() & FONT_MODIFIER_ITALIC) ?
-					 (myEntry.fontModifier() & FONT_MODIFIER_ITALIC) : base()->italic();
+	return (myEntry.supportedFontModifier() & ZLTextStyleEntry::FONT_MODIFIER_ITALIC) ?
+					 (myEntry.fontModifier() & ZLTextStyleEntry::FONT_MODIFIER_ITALIC) : base()->italic();
 }
 
 int ZLTextForcedStyle::fontSize() const {

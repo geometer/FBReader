@@ -45,6 +45,15 @@ public:
 		int FullHeight;
 	};
 
+	enum FontModifier {
+		FONT_MODIFIER_DEFAULT =             0,
+		FONT_MODIFIER_BOLD =           1 << 0,
+		FONT_MODIFIER_ITALIC =         1 << 1,
+		FONT_MODIFIER_UNDERLINED =     1 << 2,
+		FONT_MODIFIER_STRIKEDTHROUGH = 1 << 3,
+		FONT_MODIFIER_SMALLCAPS =      1 << 4,
+	};
+
 	enum Length {
 		LENGTH_LEFT_INDENT = 0,
 		LENGTH_RIGHT_INDENT = 1,
@@ -77,11 +86,11 @@ public:
 
 	unsigned char supportedFontModifier() const;
 	unsigned char fontModifier() const;
-	void setFontModifier(ZLTextFontModifier style, bool set);
+	void setFontModifier(FontModifier style, bool set);
 
 	bool isFontSizeMagSupported() const;
 	signed char fontSizeMag() const;
-	void setFontSizeMag(signed char fontSizeMag);
+	void setFontSizeMagnification(signed char fontSizeMag);
 
 	bool isFontFamilySupported() const;
 	const std::string &fontFamily() const;
@@ -125,7 +134,7 @@ inline void ZLTextStyleEntry::setAlignmentType(ZLTextAlignmentType alignmentType
 
 inline unsigned char ZLTextStyleEntry::supportedFontModifier() const { return mySupportedFontModifier; }
 inline unsigned char ZLTextStyleEntry::fontModifier() const { return myFontModifier; }
-inline void ZLTextStyleEntry::setFontModifier(ZLTextFontModifier style, bool set) {
+inline void ZLTextStyleEntry::setFontModifier(FontModifier style, bool set) {
 	if (set) {
 		myFontModifier |= style;
 	} else {
@@ -136,7 +145,7 @@ inline void ZLTextStyleEntry::setFontModifier(ZLTextFontModifier style, bool set
 
 inline bool ZLTextStyleEntry::isFontSizeMagSupported() const { return (myMask & SUPPORTS_FONT_SIZE_MAG) == SUPPORTS_FONT_SIZE_MAG; }
 inline signed char ZLTextStyleEntry::fontSizeMag() const { return myFontSizeMag; }
-inline void ZLTextStyleEntry::setFontSizeMag(signed char fontSizeMag) { myFontSizeMag = fontSizeMag; myMask |= SUPPORTS_FONT_SIZE_MAG; }
+inline void ZLTextStyleEntry::setFontSizeMagnification(signed char fontSizeMag) { myFontSizeMag = fontSizeMag; myMask |= SUPPORTS_FONT_SIZE_MAG; }
 
 inline bool ZLTextStyleEntry::isFontFamilySupported() const { return (myMask & SUPPORTS_FONT_FAMILY) == SUPPORTS_FONT_FAMILY; }
 inline const std::string &ZLTextStyleEntry::fontFamily() const { return myFontFamily; }

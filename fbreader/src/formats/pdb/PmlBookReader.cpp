@@ -182,10 +182,10 @@ void PmlBookReader::setFontSize() {
 	ZLTextStyleEntry entry;
     switch(myState.FontSize) {
 		case SMALLER: 
-			entry.setFontSizeMag(-1);
+			entry.setFontSizeMagnification(-1);
 			break;
 		case LARGER:
-			entry.setFontSizeMag(1);
+			entry.setFontSizeMagnification(1);
 			break;
 		default:
 			break;

@@ -28,7 +28,6 @@
 
 #include <ZLTextKind.h>
 #include <ZLTextAlignmentType.h>
-#include <ZLTextFontModifier.h>
 
 class ZLImage;
 typedef std::map<std::string,shared_ptr<const ZLImage> > ZLImageMap;
