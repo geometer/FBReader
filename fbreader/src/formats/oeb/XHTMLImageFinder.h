@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,40 +17,26 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OEBCOVERREADER_H__
-#define __OEBCOVERREADER_H__
-
-#include <vector>
+#ifndef __XHTMLIMAGEFINDER_H__
+#define __XHTMLIMAGEFINDER_H__
 
 #include <shared_ptr.h>
 #include <ZLXMLReader.h>
 
+class ZLFile;
 class ZLImage;
 
-class OEBCoverReader : public ZLXMLReader {
+class XHTMLImageFinder : public ZLXMLReader {
 
 public:
-	OEBCoverReader();
-	shared_ptr<ZLImage> readCover(const ZLFile &file);
+	shared_ptr<ZLImage> readImage(const ZLFile &file);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
-	void endElementHandler(const char *tag);
-	bool processNamespaces() const;
-
-	void createImage(const char *href);
 
 private:
-	shared_ptr<ZLImage> myImage;
 	std::string myPathPrefix;
-	std::string myCoverXHTML;
-	std::string myCoverId;
-	enum {
-		READ_NOTHING,
-		READ_METADATA,
-		READ_MANIFEST,
-		READ_GUIDE
-	} myReadState;
+	shared_ptr<ZLImage> myImage;
 };
 
-#endif /* __OEBCOVERREADER_H__ */
+#endif /* __XHTMLIMAGEFINDER_H__ */
