@@ -26,6 +26,7 @@
 
 #include "ZLTextModel.h"
 #include "ZLTextParagraph.h"
+#include "ZLTextStyleEntry.h"
 
 ZLTextModel::ZLTextModel(const std::string &language, const size_t rowSize) : myLanguage(language.empty() ? ZLibrary::Language() : language), myAllocator(rowSize), myLastEntryStart(0) {
 }

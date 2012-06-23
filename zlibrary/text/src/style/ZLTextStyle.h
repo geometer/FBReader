@@ -26,6 +26,7 @@
 
 #include <ZLTextAlignmentType.h>
 #include <ZLTextParagraph.h>
+#include <ZLTextStyleEntry.h>
 
 class ZLTextStyle {
 

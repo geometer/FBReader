@@ -31,9 +31,10 @@
 
 class ZLTextParagraph;
 class ZLTextTreeParagraph;
+class ZLTextStyleEntry;
 
 class ZLTextModel {
-	
+
 public:
 	enum Kind {
 		PLAIN_TEXT_MODEL,
@@ -75,7 +76,7 @@ public:
 
 protected:
 	void addParagraphInternal(ZLTextParagraph *paragraph);
-	
+
 private:
 	const std::string myLanguage;
 	std::vector<ZLTextParagraph*> myParagraphs;

@@ -25,6 +25,7 @@
 #include <string>
 
 #include <ZLTextParagraph.h>
+#include <ZLTextStyleEntry.h>
 
 #include "FBTextKind.h"
 
