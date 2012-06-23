@@ -27,6 +27,7 @@
 #include <ZLStringUtil.h>
 #include <ZLXMLNamespace.h>
 #include <ZLLogger.h>
+#include <ZLInputStream.h>
 
 #include "XHTMLReader.h"
 #include "../util/EntityFilesCollector.h"
@@ -347,10 +348,16 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 		const FBTextKind hyperlinkType = MiscUtil::referenceType(href);
 		std::string link = MiscUtil::decodeHtmlURL(href);
 		if (hyperlinkType == INTERNAL_HYPERLINK) {
-			link = (link[0] == '#') ?
-				reader.myReferenceName + link :
-				reader.myReferenceDirName + link;
-			link = ZLFileUtil::normalizeUnixPath(link);
+			if (link[0] == '#') {
+				link = reader.myReferenceAlias + link;
+			} else {
+				const size_t index = link.find('#');
+				if (index == std::string::npos) {
+					link = reader.fileAlias(reader.myReferenceDirName + link);
+				} else {
+					link = reader.fileAlias(reader.myReferenceDirName + link.substr(0, index)) + link.substr(index);
+				}
+			}
 		}
 		myHyperlinkStack.push(hyperlinkType);
 		bookReader(reader).addHyperlinkControl(hyperlinkType, link);
@@ -360,7 +367,7 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 	const char *name = reader.attributeValue(xmlattributes, "name");
 	if (name != 0) {
 		bookReader(reader).addHyperlinkLabel(
-			reader.myReferenceName + "#" + MiscUtil::decodeHtmlURL(name)
+			reader.myReferenceAlias + "#" + MiscUtil::decodeHtmlURL(name)
 		);
 	}
 }
@@ -489,12 +496,12 @@ XHTMLReader::XHTMLReader(BookReader &modelReader) : myModelReader(modelReader) {
 }
 
 bool XHTMLReader::readFile(const ZLFile &file, const std::string &referenceName) {
-	myModelReader.addHyperlinkLabel(referenceName);
-
 	fillTagTable();
 
 	myPathPrefix = MiscUtil::htmlDirectoryPrefix(file.path());
-	myReferenceName = referenceName;
+	myReferenceAlias = fileAlias(referenceName);
+	myModelReader.addHyperlinkLabel(myReferenceAlias);
+
 	const int index = referenceName.rfind('/', referenceName.length() - 1);
 	myReferenceDirName = referenceName.substr(0, index + 1);
 
@@ -529,7 +536,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 	static const std::string HASH = "#";
 	const char *id = attributeValue(attributes, "id");
 	if (id != 0) {
-		myModelReader.addHyperlinkLabel(myReferenceName + HASH + id);
+		myModelReader.addHyperlinkLabel(myReferenceAlias + HASH + id);
 	}
 
 	const std::string sTag = ZLUnicodeUtil::toLower(tag);
@@ -680,4 +687,24 @@ const std::vector<std::string> &XHTMLReader::externalDTDs() const {
 
 bool XHTMLReader::processNamespaces() const {
 	return true;
+}
+
+const std::string &XHTMLReader::fileAlias(const std::string &fileName) const {
+	std::map<std::string,std::string>::const_iterator it = myFileNumbers.find(fileName);
+	if (it != myFileNumbers.end()) {
+		return it->second;
+	}
+
+	const std::string correctedFileName =
+		ZLFileUtil::normalizeUnixPath(MiscUtil::decodeHtmlURL(fileName));
+	it = myFileNumbers.find(correctedFileName);
+	if (it != myFileNumbers.end()) {
+		return it->second;
+	}
+
+	std::string num;
+	ZLStringUtil::appendNumber(num, myFileNumbers.size());
+	myFileNumbers.insert(std::make_pair(correctedFileName, num));
+	it = myFileNumbers.find(correctedFileName);
+	return it->second;
 }
