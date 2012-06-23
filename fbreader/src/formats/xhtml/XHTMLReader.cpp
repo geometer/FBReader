@@ -511,12 +511,14 @@ bool XHTMLReader::readFile(const ZLFile &file, const std::string &referenceName)
 	return readDocument(file);
 }
 
-void XHTMLReader::addStyleEntry(const std::string tag, const std::string aClass) {
+bool XHTMLReader::addStyleEntry(const std::string tag, const std::string aClass) {
 	shared_ptr<ZLTextStyleEntry> entry = myStyleSheetTable.control(tag, aClass);
 	if (!entry.isNull()) {
-		myModelReader.addControl(*entry);
+		myModelReader.addStyleEntry(*entry);
 		myStyleEntryStack.push_back(entry);
+		return true;
 	}
+	return false;
 }
 
 void XHTMLReader::startElementHandler(const char *tag, const char **attributes) {
@@ -549,8 +551,9 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 	if (style != 0) {
 		ZLLogger::Instance().println("CSS", std::string("parsing style attribute: ") + style);
 		shared_ptr<ZLTextStyleEntry> entry = myStyleParser.parseString(style);
-		myModelReader.addControl(*entry);
+		myModelReader.addStyleEntry(*entry);
 		myStyleEntryStack.push_back(entry);
+	} else {
 	}
 	myCSSStack.push_back(myStyleEntryStack.size() - sizeBefore);
 }
@@ -558,6 +561,8 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 void XHTMLReader::endElementHandler(const char *tag) {
 	for (int i = myCSSStack.back(); i > 0; --i) {
 		myModelReader.addControl(REGULAR, false);
+		//TODO implement
+		//myModelReader.addStyleCloseEntry();
 	}
 	myStylesToRemove = myCSSStack.back();
 	myCSSStack.pop_back();
@@ -583,7 +588,7 @@ void XHTMLReader::beginParagraph() {
 	myModelReader.beginParagraph();
 	bool doBlockSpaceBefore = false;
 	for (std::vector<shared_ptr<ZLTextStyleEntry> >::const_iterator it = myStyleEntryStack.begin(); it != myStyleEntryStack.end(); ++it) {
-		myModelReader.addControl(**it);
+		myModelReader.addStyleEntry(**it);
 		doBlockSpaceBefore =
 			doBlockSpaceBefore ||
 			(*it)->isLengthSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE);
@@ -596,7 +601,7 @@ void XHTMLReader::beginParagraph() {
 			0,
 			ZLTextStyleEntry::SIZE_UNIT_PIXEL
 		);
-		myModelReader.addControl(blockingEntry);
+		myModelReader.addStyleEntry(blockingEntry);
 	}
 }
 
@@ -614,10 +619,10 @@ void XHTMLReader::endParagraph() {
 			0,
 			ZLTextStyleEntry::SIZE_UNIT_PIXEL
 		);
-		myModelReader.addControl(blockingEntry);
+		myModelReader.addStyleEntry(blockingEntry);
 	}
 	for (; myStylesToRemove > 0; --myStylesToRemove) {
-		myModelReader.addControl(*myStyleEntryStack.back());
+		myModelReader.addStyleEntry(*myStyleEntryStack.back());
 		myStyleEntryStack.pop_back();
 	}
 	myModelReader.endParagraph();

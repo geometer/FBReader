@@ -109,7 +109,7 @@ void BookReader::addFixedHSpace(unsigned char length) {
 	}
 }
 
-void BookReader::addControl(const ZLTextStyleEntry &entry) {
+void BookReader::addStyleEntry(const ZLTextStyleEntry &entry) {
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
 		myCurrentTextModel->addControl(entry);
