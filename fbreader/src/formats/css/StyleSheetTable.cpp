@@ -177,14 +177,12 @@ shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &
 			num = 700;
 		} else if (bold[0] == "normal") {
 			num = 400;
-		} else if ((bold[0].length() == 3) &&
-							 (bold[0][1] == '0') &&
-							 (bold[0][2] == '0') &&
-							 (bold[0][0] >= '1') &&
-							 (bold[0][0] <= '9')) {
-			num = 100 * (bold[0][0] - '0');
 		} else if (bold[0] == "bolder") {
+			// TODO: implement
 		} else if (bold[0] == "lighter") {
+			// TODO: implement
+		} else {
+			num = ZLStringUtil::stringToInteger(bold[0], -1);
 		}
 		if (num != -1) {
 			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_BOLD, num >= 600);
@@ -225,6 +223,42 @@ shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &
 			entry->setFontSizeMagnification(3);
 		}
 	}
+
+	//TODO implement  SIZE_UNIT_PERCENT, LENGTH_FONT_SIZE and FONT_MODIFIERS support
+//	if (!fontSize.empty()) {
+//		bool doSetFontSize = true;
+//		short size = 100;
+//		ZLTextStyleEntry::SizeUnit unit = ZLTextStyleEntry::SIZE_UNIT_PERCENT;
+//		if (fontSize[0] == "xx-small") {
+//			size = 58;
+//		} else if (fontSize[0] == "x-small") {
+//			size = 69;
+//		} else if (fontSize[0] == "small") {
+//			size = 83;
+//		} else if (fontSize[0] == "medium") {
+//			size = 100;
+//		} else if (fontSize[0] == "large") {
+//			size = 120;
+//		} else if (fontSize[0] == "x-large") {
+//			size = 144;
+//		} else if (fontSize[0] == "xx-large") {
+//			size = 173;
+//		} else if (fontSize[0] == "inherit") {
+//			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_INHERIT, true);
+//			doSetFontSize = false;
+//		} else if (fontSize[0] == "smaller") {
+//			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_SMALLER, true);
+//			doSetFontSize = false;
+//		} else if (fontSize[0] == "larger") {
+//			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_LARGER, true);
+//			doSetFontSize = false;
+//		} else if (!parseLength(fontSize[0], size, unit)) {
+//			doSetFontSize = false;
+//		}
+//		if (doSetFontSize) {
+//			entry->setLength(ZLTextStyleEntry::LENGTH_FONT_SIZE, size, unit);
+//		}
+//	}
 
 	setLength(*entry, ZLTextStyleEntry::LENGTH_LEFT_INDENT, styles, "margin-left");
 	setLength(*entry, ZLTextStyleEntry::LENGTH_RIGHT_INDENT, styles, "margin-right");
