@@ -214,7 +214,7 @@ void ZLTextModel::addControl(ZLTextKind textKind, bool isStart) {
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
-void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
+void ZLTextModel::addStyleEntry(const ZLTextStyleEntry &entry) {
 	int len = sizeof(int) + 5 + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
 	if (entry.isFontFamilySupported()) {
 		len += entry.fontFamily().length() + 1;
@@ -239,6 +239,19 @@ void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
 		*address++ = '\0';
 	}
 	myParagraphs.back()->addEntry(myLastEntryStart);
+}
+
+void ZLTextModel::addStyleCloseEntry() {
+//TODO implement
+//code below is from FBReaderJ
+//	myLastEntryStart = myAllocator->allocate(2);
+//	char *address = myLastEntryStart;
+
+//	*address++ = ZLTextParagraphEntry::STYLE_CLOSE_ENTRY;
+//	*address++ = 0;
+
+//	myParagraphs.back()->addEntry(myLastEntryStart);
+//	++myParagraphLengths.back();
 }
 
 void ZLTextModel::addHyperlinkControl(ZLTextKind textKind, const std::string &label, const std::string &hyperlinkType) {

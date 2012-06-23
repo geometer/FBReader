@@ -55,6 +55,7 @@ public:
 	bool paragraphIsOpen() const;
 	void addControl(FBTextKind kind, bool start);
 	void addStyleEntry(const ZLTextStyleEntry &entry);
+	void addStyleCloseEntry(); //TODO reimplement
 	void addHyperlinkControl(FBTextKind kind, const std::string &label);
 	void addHyperlinkLabel(const std::string &label);
 	void addHyperlinkLabel(const std::string &label, int paragraphNumber);

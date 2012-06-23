@@ -21,6 +21,7 @@
 
 #include <ZLStringUtil.h>
 #include <ZLFileImage.h>
+#include <ZLTextStyleEntry.h>
 
 #include "RtfBookReader.h"
 #include "../../bookmodel/BookModel.h"
@@ -226,4 +227,5 @@ void RtfBookReader::setAlignment() {
 	ZLTextStyleEntry entry;
 	entry.setAlignmentType(myState.Alignment);
 	myBookReader.addStyleEntry(entry);
+	// TODO: call addStyleCloseEntry somewhere (?)
 }

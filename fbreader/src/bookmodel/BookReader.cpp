@@ -103,16 +103,25 @@ void BookReader::addControl(FBTextKind kind, bool start) {
 	}
 }
 
-void BookReader::addFixedHSpace(unsigned char length) {
-	if (myTextParagraphExists) {
-		myCurrentTextModel->addFixedHSpace(length);
-	}
-}
-
 void BookReader::addStyleEntry(const ZLTextStyleEntry &entry) {
 	if (myTextParagraphExists) {
 		flushTextBufferToParagraph();
-		myCurrentTextModel->addControl(entry);
+		myCurrentTextModel->addStyleEntry(entry);
+	}
+}
+
+void BookReader::addStyleCloseEntry() {
+	addControl(REGULAR, false); //used instead in XHTMLReader
+	//TODO implement ZLTextModel::addStyleCloseEntry()
+//	if (myTextParagraphExists) {
+//		flushTextBufferToParagraph();
+//		myCurrentTextModel->addStyleCloseEntry();
+//	}
+}
+
+void BookReader::addFixedHSpace(unsigned char length) {
+	if (myTextParagraphExists) {
+		myCurrentTextModel->addFixedHSpace(length);
 	}
 }
 

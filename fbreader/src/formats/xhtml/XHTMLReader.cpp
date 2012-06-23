@@ -36,8 +36,6 @@
 #include "../../bookmodel/BookReader.h"
 #include "../../bookmodel/BookModel.h"
 
-static const bool USE_CSS = false;
-
 std::map<std::string,XHTMLTagAction*> XHTMLReader::ourTagActions;
 
 XHTMLTagAction::~XHTMLTagAction() {
@@ -566,9 +564,7 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 
 void XHTMLReader::endElementHandler(const char *tag) {
 	for (int i = myCSSStack.back(); i > 0; --i) {
-		myModelReader.addControl(REGULAR, false);
-		//TODO implement
-		//myModelReader.addStyleCloseEntry();
+		myModelReader.addStyleCloseEntry();
 	}
 	myStylesToRemove = myCSSStack.back();
 	myCSSStack.pop_back();
