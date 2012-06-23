@@ -37,6 +37,7 @@ public:
 
 protected:
 	virtual void storeData(const std::string &selector, const StyleSheetTable::AttributeMap &map);
+	virtual void processAtRule(const std::string &name, const StyleSheetTable::AttributeMap &map);
 
 private:
 	bool isControlSymbol(const char symbol);
@@ -48,10 +49,11 @@ private:
 	std::string myWord;
 	std::string myAttributeName;
 	enum {
+		WAITING_FOR_SELECTOR,
 		SELECTOR,
+		WAITING_FOR_ATTRIBUTE,
 		ATTRIBUTE_NAME,
 		ATTRIBUTE_VALUE,
-		BROKEN,
 	} myReadState;
 	bool myInsideComment;
 	std::string mySelectorString;
@@ -67,6 +69,7 @@ public:
 
 private:
 	void storeData(const std::string &selector, const StyleSheetTable::AttributeMap &map);
+	void processAtRule(const std::string &name, const StyleSheetTable::AttributeMap &map);
 
 private:
 	StyleSheetTable &myTable;

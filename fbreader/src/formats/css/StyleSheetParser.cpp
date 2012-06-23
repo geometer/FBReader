@@ -31,7 +31,19 @@ StyleSheetTableParser::StyleSheetTableParser(StyleSheetTable &table) : myTable(t
 }
 
 void StyleSheetTableParser::storeData(const std::string &selector, const StyleSheetTable::AttributeMap &map) {
-	const std::vector<std::string> ids = ZLStringUtil::split(selector, ",");
+	std::string s = selector;
+	ZLStringUtil::stripWhiteSpaces(s);
+
+	if (s.empty()) {
+		return;
+	}
+
+	if (s[0] == '@') {
+		processAtRule(s, map);
+		return;
+	}
+
+	const std::vector<std::string> ids = ZLStringUtil::split(s, ",");
 	for (std::vector<std::string>::const_iterator it = ids.begin(); it != ids.end(); ++it) {
 		std::string id = *it;
 		ZLStringUtil::stripWhiteSpaces(id);
@@ -46,15 +58,22 @@ void StyleSheetTableParser::storeData(const std::string &selector, const StyleSh
 	}
 }
 
+void StyleSheetTableParser::processAtRule(const std::string &name, const StyleSheetTable::AttributeMap &map) {
+	(void)map;
+	if (name == "@font-face") {
+	}
+}
+
 shared_ptr<ZLTextStyleEntry> StyleSheetSingleStyleParser::parseString(const char *text) {
-	myReadState = ATTRIBUTE_NAME;
+	myReadState = WAITING_FOR_ATTRIBUTE;
 	parse(text, strlen(text), true);
 	shared_ptr<ZLTextStyleEntry> control = StyleSheetTable::createControl(myMap);
 	reset();
 	return control;
 }
 
-StyleSheetParser::StyleSheetParser() : myReadState(SELECTOR), myInsideComment(false) {
+StyleSheetParser::StyleSheetParser() {
+	reset();
 }
 
 StyleSheetParser::~StyleSheetParser() {
@@ -63,7 +82,7 @@ StyleSheetParser::~StyleSheetParser() {
 void StyleSheetParser::reset() {
 	myWord.erase();
 	myAttributeName.erase();
-	myReadState = SELECTOR;
+	myReadState = WAITING_FOR_SELECTOR;
 	myInsideComment = false;
 	mySelectorString.erase();
 	myMap.clear();
@@ -115,40 +134,59 @@ void StyleSheetParser::parse(const char *text, int len, bool final) {
 }
 
 bool StyleSheetParser::isControlSymbol(const char symbol) {
-	switch (symbol) {
-		case '{':
-		case '}':
-		case ';':
-		case ':':
-			return true;
+	switch (myReadState) {
 		default:
+		case WAITING_FOR_SELECTOR:
 			return false;
+		case SELECTOR:
+			return symbol == '{' || symbol == ';';
+		case WAITING_FOR_ATTRIBUTE:
+			return symbol == '}' || symbol == ':';
+		case ATTRIBUTE_NAME:
+			return symbol == ':';
+		case ATTRIBUTE_VALUE:
+			return symbol == ';';
 	}
 }
 
 void StyleSheetParser::storeData(const std::string&, const StyleSheetTable::AttributeMap&) {
 }
 
+void StyleSheetParser::processAtRule(const std::string&, const StyleSheetTable::AttributeMap&) {
+}
+
 void StyleSheetParser::processControl(const char control) {
-	switch (control) {
-		case '{':
-			myReadState = (myReadState == SELECTOR) ? ATTRIBUTE_NAME : BROKEN;
+	switch (myReadState) {
+		case WAITING_FOR_SELECTOR:
 			break;
-		case '}':
-			if (myReadState != BROKEN) {
-				storeData(mySelectorString, myMap);
+		case SELECTOR:
+			switch (control) {
+				case '{':
+					myReadState = WAITING_FOR_ATTRIBUTE;
+					break;
+				case ';':
+					myReadState = WAITING_FOR_SELECTOR;
+					mySelectorString.erase();
+					break;
 			}
-			myReadState = SELECTOR;
-			mySelectorString.erase();
-			myMap.clear();
 			break;
-		case ';':
-			myReadState =
-				((myReadState == ATTRIBUTE_VALUE) ||
-				 (myReadState == ATTRIBUTE_NAME)) ? ATTRIBUTE_NAME : BROKEN;
+		case WAITING_FOR_ATTRIBUTE:
+			if (control == '}') {
+				myReadState = WAITING_FOR_SELECTOR;
+				storeData(mySelectorString, myMap);
+				mySelectorString.erase();
+				myMap.clear();
+			}
 			break;
-		case ':':
-			myReadState = (myReadState == ATTRIBUTE_NAME) ? ATTRIBUTE_VALUE : BROKEN;
+		case ATTRIBUTE_NAME:
+			if (control == ':') {
+				myReadState = ATTRIBUTE_VALUE;
+			}
+			break;
+		case ATTRIBUTE_VALUE:
+			if (control == ';') {
+				myReadState = WAITING_FOR_ATTRIBUTE;
+			}
 			break;
 	}
 }
@@ -170,19 +208,19 @@ void StyleSheetParser::processWord(std::string &word) {
 		word.erase(0, index + 2);
 	}
 }
-	
-void StyleSheetParser::processWordWithoutComments(const std::string &word) {	
+
+void StyleSheetParser::processWordWithoutComments(const std::string &word) {
 	switch (myReadState) {
-		case SELECTOR:
-		{
-			if (mySelectorString.empty()) {
-				mySelectorString = word;
-			} else {
-				mySelectorString += ' ' + word;
-			}
-			myMap.clear();
+		case WAITING_FOR_SELECTOR:
+			myReadState = SELECTOR;
+			mySelectorString = word;
 			break;
-		}
+		case SELECTOR:
+			mySelectorString += ' ' + word;
+			break;
+		case WAITING_FOR_ATTRIBUTE:
+			myReadState = ATTRIBUTE_NAME;
+			// go through
 		case ATTRIBUTE_NAME:
 			myAttributeName = word;
 			myMap[myAttributeName].clear();
@@ -197,7 +235,5 @@ void StyleSheetParser::processWordWithoutComments(const std::string &word) {
 			}
 			break;
 		}
-		case BROKEN:
-			break;
 	}
 }
