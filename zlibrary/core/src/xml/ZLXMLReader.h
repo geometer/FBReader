@@ -74,7 +74,8 @@ public:
 
 	const std::string &errorMessage() const;
 
-	const std::map<std::string,std::string> &namespaces() const;
+	typedef std::map<std::string,std::string> nsMap;
+	const nsMap &namespaces() const;
 
 	const char *attributeValue(const char **xmlattributes, const char *name);
 	const char *attributeValue(const char **xmlattributes, const AttributeNamePredicate &predicate);
@@ -92,6 +93,7 @@ protected:
 	virtual void namespaceListChangedHandler();
 	virtual const std::vector<std::string> &externalDTDs() const;
 
+	bool testTag(const std::string &ns, const std::string &name, const std::string &tag) const;
 	bool isInterrupted() const;
 	size_t getCurrentPosition() const;
 
@@ -103,7 +105,7 @@ private:
 	bool myInterrupted;
 	ZLXMLReaderInternal *myInternalReader;
 	char *myParserBuffer;
-	std::vector<shared_ptr<std::map<std::string,std::string> > > myNamespaces;
+	std::vector<shared_ptr<nsMap> > myNamespaces;
 
 	std::string myErrorMessage;
 
