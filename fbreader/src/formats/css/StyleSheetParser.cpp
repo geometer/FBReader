@@ -145,7 +145,7 @@ bool StyleSheetParser::isControlSymbol(const char symbol) {
 		case ATTRIBUTE_NAME:
 			return symbol == ':';
 		case ATTRIBUTE_VALUE:
-			return symbol == ';';
+			return symbol == '}' || symbol == ';';
 	}
 }
 
@@ -186,6 +186,11 @@ void StyleSheetParser::processControl(const char control) {
 		case ATTRIBUTE_VALUE:
 			if (control == ';') {
 				myReadState = WAITING_FOR_ATTRIBUTE;
+			} else if (control == '}') {
+				myReadState = WAITING_FOR_SELECTOR;
+				storeData(mySelectorString, myMap);
+				mySelectorString.erase();
+				myMap.clear();
 			}
 			break;
 	}
