@@ -40,6 +40,9 @@ short ZLTextStyleEntry::length(Length name, const Metrics &metrics) const {
 		default:
 		case SIZE_UNIT_PIXEL:
 			return myLengths[name].Size;
+		case SIZE_UNIT_POINT:
+			//TODO implement SIZE_UNIT_POINT support (now returns as for pixels)
+			return myLengths[name].Size;
 		case SIZE_UNIT_EM_100:
 			return (myLengths[name].Size * metrics.FontSize + 50) / 100;
 		case SIZE_UNIT_EX_100:
