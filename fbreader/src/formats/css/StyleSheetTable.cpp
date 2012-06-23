@@ -270,3 +270,9 @@ shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &
 
 	return entry;
 }
+
+void StyleSheetTable::clear() {
+	myControlMap.clear();
+	myPageBreakBeforeMap.clear();
+	myPageBreakAfterMap.clear();
+}
