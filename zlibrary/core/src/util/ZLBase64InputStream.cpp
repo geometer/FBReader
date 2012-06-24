@@ -19,6 +19,8 @@
 
 #include "ZLBase64InputStream.h"
 
+static const size_t BUFFER_SIZE = 32768;
+
 ZLBase64InputStream::ZLBase64InputStream(shared_ptr<ZLInputStream> base) :
 	myBaseStream(base) {
 	myBufferOffset = 0;
@@ -26,7 +28,7 @@ ZLBase64InputStream::ZLBase64InputStream(shared_ptr<ZLInputStream> base) :
 	myDecoded0 = -1;
 	myDecoded1 = -1;
 	myDecoded2 = -1;
-	myBuffer = new char[32768];
+	myBuffer = new char[BUFFER_SIZE];
 }
 
 ZLBase64InputStream::~ZLBase64InputStream() {
@@ -64,7 +66,7 @@ size_t ZLBase64InputStream::read(char *buffer, size_t maxSize) {
 		return 0;
 	}
 	size_t offset = 0;
-	int ready = 0;
+	size_t ready = 0;
 	if (myDecoded0 != -1) {
 		buffer[offset] = (char)myDecoded0;
 		myDecoded0 = -1;
@@ -185,7 +187,7 @@ void ZLBase64InputStream::fillDecodedBuffer() {
 }
 
 bool ZLBase64InputStream::fillBuffer() {
-	myBufferLength = myBaseStream->read(myBuffer, 32768);
+	myBufferLength = myBaseStream->read(myBuffer, BUFFER_SIZE);
 	myBufferOffset = 0;
 	if (myBufferLength == 0) {
 		return false;
