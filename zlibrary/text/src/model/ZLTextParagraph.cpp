@@ -35,28 +35,28 @@ size_t ZLTextEntry::dataLength() const {
 	return len;
 }
 
-short ZLTextStyleEntry::length(Length name, const Metrics &metrics) const {
-	switch (myLengths[name].Unit) {
+short ZLTextStyleEntry::length(Feature featureId, const Metrics &metrics) const {
+	switch (myLengths[featureId].Unit) {
 		default:
 		case SIZE_UNIT_PIXEL:
-			return myLengths[name].Size;
+			return myLengths[featureId].Size;
 		case SIZE_UNIT_POINT:
 			//TODO implement SIZE_UNIT_POINT support (now returns as for pixels)
-			return myLengths[name].Size;
+			return myLengths[featureId].Size;
 		case SIZE_UNIT_EM_100:
-			return (myLengths[name].Size * metrics.FontSize + 50) / 100;
+			return (myLengths[featureId].Size * metrics.FontSize + 50) / 100;
 		case SIZE_UNIT_EX_100:
-			return (myLengths[name].Size * metrics.FontXHeight + 50) / 100;
+			return (myLengths[featureId].Size * metrics.FontXHeight + 50) / 100;
 		case SIZE_UNIT_PERCENT:
-			switch (name) {
+			switch (featureId) {
 				default:
 				case LENGTH_LEFT_INDENT:
 				case LENGTH_RIGHT_INDENT:
 				case LENGTH_FIRST_LINE_INDENT_DELTA:
-					return (myLengths[name].Size * metrics.FullWidth + 50) / 100;
+					return (myLengths[featureId].Size * metrics.FullWidth + 50) / 100;
 				case LENGTH_SPACE_BEFORE:
 				case LENGTH_SPACE_AFTER:
-					return (myLengths[name].Size * metrics.FullHeight + 50) / 100;
+					return (myLengths[featureId].Size * metrics.FullHeight + 50) / 100;
 			}
 	}
 }

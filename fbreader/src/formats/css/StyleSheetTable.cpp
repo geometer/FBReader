@@ -80,7 +80,7 @@ static bool parseLength(const std::string &toParse, short &size, ZLTextStyleEntr
 	return false;
 }
 
-void StyleSheetTable::setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Length name, const AttributeMap &map, const std::string &attributeName) {
+void StyleSheetTable::setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Feature featureId, const AttributeMap &map, const std::string &attributeName) {
 	StyleSheetTable::AttributeMap::const_iterator it = map.find(attributeName);
 	if (it == map.end()) {
 		return;
@@ -90,7 +90,7 @@ void StyleSheetTable::setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Lengt
 		short size;
 		ZLTextStyleEntry::SizeUnit unit;
 		if (parseLength(values[0], size, unit)) {
-			entry.setLength(name, size, unit);
+			entry.setLength(featureId, size, unit);
 		}
 	}
 }

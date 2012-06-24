@@ -595,7 +595,7 @@ void XHTMLReader::beginParagraph() {
 		myModelReader.addStyleEntry(**it);
 		doBlockSpaceBefore =
 			doBlockSpaceBefore ||
-			(*it)->isLengthSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE);
+			(*it)->isFeatureSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE);
 	}
 
 	if (doBlockSpaceBefore) {
@@ -614,7 +614,7 @@ void XHTMLReader::endParagraph() {
 	for (std::vector<shared_ptr<ZLTextStyleEntry> >::const_iterator it = myStyleEntryStack.begin(); it != myStyleEntryStack.end() - myStylesToRemove; ++it) {
 		doBlockSpaceAfter =
 			doBlockSpaceAfter ||
-			(*it)->isLengthSupported(ZLTextStyleEntry::LENGTH_SPACE_AFTER);
+			(*it)->isFeatureSupported(ZLTextStyleEntry::LENGTH_SPACE_AFTER);
 	}
 	if (doBlockSpaceAfter) {
 		ZLTextStyleEntry blockingEntry;

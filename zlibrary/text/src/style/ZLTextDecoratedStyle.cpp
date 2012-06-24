@@ -123,42 +123,42 @@ const std::string &ZLTextFullDecoratedStyle::colorStyle() const {
 }
 
 short ZLTextForcedStyle::lineStartIndent(const ZLTextStyleEntry::Metrics &metrics, bool rtl) const {
-	ZLTextStyleEntry::Length lengthType = rtl ?
+	ZLTextStyleEntry::Feature lengthType = rtl ?
 		ZLTextStyleEntry::LENGTH_RIGHT_INDENT :
 		ZLTextStyleEntry::LENGTH_LEFT_INDENT;
 	return
-		myEntry.isLengthSupported(lengthType) ?
+		myEntry.isFeatureSupported(lengthType) ?
 			myEntry.length(lengthType, metrics) :
 			base()->lineStartIndent(metrics, rtl);
 }
 
 short ZLTextForcedStyle::lineEndIndent(const ZLTextStyleEntry::Metrics &metrics, bool rtl) const {
-	ZLTextStyleEntry::Length lengthType = rtl ?
+	ZLTextStyleEntry::Feature lengthType = rtl ?
 		ZLTextStyleEntry::LENGTH_LEFT_INDENT :
 		ZLTextStyleEntry::LENGTH_RIGHT_INDENT;
 	return
-		myEntry.isLengthSupported(lengthType) ?
+		myEntry.isFeatureSupported(lengthType) ?
 			myEntry.length(lengthType, metrics) :
 			base()->lineEndIndent(metrics, rtl);
 }
 
 short ZLTextForcedStyle::spaceBefore(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.isLengthSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE) ?
+		myEntry.isFeatureSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE) ?
 			myEntry.length(ZLTextStyleEntry::LENGTH_SPACE_BEFORE, metrics) :
 			base()->spaceBefore(metrics);
 }
 
 short ZLTextForcedStyle::spaceAfter(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.isLengthSupported(ZLTextStyleEntry::LENGTH_SPACE_AFTER) ?
+		myEntry.isFeatureSupported(ZLTextStyleEntry::LENGTH_SPACE_AFTER) ?
 			myEntry.length(ZLTextStyleEntry::LENGTH_SPACE_AFTER, metrics) :
 			base()->spaceAfter(metrics);
 }
 
 short ZLTextForcedStyle::firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const {
 	return
-		myEntry.isLengthSupported(ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA) ?
+		myEntry.isFeatureSupported(ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA) ?
 			myEntry.length(ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA, metrics) :
 			base()->firstLineIndentDelta(metrics);
 }

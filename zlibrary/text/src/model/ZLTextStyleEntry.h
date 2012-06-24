@@ -47,7 +47,6 @@ public:
 	};
 
 	enum FontModifier {
-		FONT_MODIFIER_DEFAULT =             0,
 		FONT_MODIFIER_BOLD =           1 << 0,
 		FONT_MODIFIER_ITALIC =         1 << 1,
 		FONT_MODIFIER_UNDERLINED =     1 << 2,
@@ -58,13 +57,13 @@ public:
 		FONT_MODIFIER_LARGER =         1 << 7,
 	};
 
-	enum Length {
-		LENGTH_LEFT_INDENT = 0,
-		LENGTH_RIGHT_INDENT = 1,
-		LENGTH_FIRST_LINE_INDENT_DELTA = 2,
-		LENGTH_SPACE_BEFORE = 3,
-		LENGTH_SPACE_AFTER = 4,
-		NUMBER_OF_LENGTHS = 5,
+	enum Feature {
+		LENGTH_LEFT_INDENT =                0,
+		LENGTH_RIGHT_INDENT =               1,
+		LENGTH_FIRST_LINE_INDENT_DELTA =    2,
+		LENGTH_SPACE_BEFORE =               3,
+		LENGTH_SPACE_AFTER =                4,
+		NUMBER_OF_LENGTHS =                 5,
 	};
 
 private:
@@ -79,10 +78,10 @@ public:
 	~ZLTextStyleEntry();
 
 	bool isEmpty() const;
+	bool isFeatureSupported(Feature featureId) const;
 
-	bool isLengthSupported(Length name) const;
-	short length(Length name, const Metrics &metrics) const;
-	void setLength(Length name, short length, SizeUnit unit);
+	short length(Feature featureId, const Metrics &metrics) const;
+	void setLength(Feature featureId, short length, SizeUnit unit);
 
 	bool isAlignmentTypeSupported() const;
 	ZLTextAlignmentType alignmentType() const;
@@ -125,11 +124,11 @@ inline ZLTextStyleEntry::Metrics::Metrics(int fontSize, int fontXHeight, int ful
 
 inline bool ZLTextStyleEntry::isEmpty() const { return myMask == 0; }
 
-inline bool ZLTextStyleEntry::isLengthSupported(Length name) const { return (myMask & (1 << name)) != 0; }
-inline void ZLTextStyleEntry::setLength(Length name, short length, SizeUnit unit) {
-	myLengths[name].Size = length;
-	myLengths[name].Unit = unit;
-	myMask |= 1 << name;
+inline bool ZLTextStyleEntry::isFeatureSupported(Feature featureId) const { return (myMask & (1 << featureId)) != 0; }
+inline void ZLTextStyleEntry::setLength(Feature featureId, short length, SizeUnit unit) {
+	myLengths[featureId].Size = length;
+	myLengths[featureId].Unit = unit;
+	myMask |= 1 << featureId;
 }
 
 inline bool ZLTextStyleEntry::isAlignmentTypeSupported() const { return (myMask & SUPPORTS_ALIGNMENT_TYPE) == SUPPORTS_ALIGNMENT_TYPE; }
