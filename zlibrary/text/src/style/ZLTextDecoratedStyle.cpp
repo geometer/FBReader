@@ -164,43 +164,27 @@ short ZLTextForcedStyle::firstLineIndentDelta(const ZLTextStyleEntry::Metrics &m
 }
 
 ZLTextAlignmentType ZLTextForcedStyle::alignment() const {
-	return myEntry.isAlignmentTypeSupported() ? myEntry.alignmentType() : base()->alignment();
+	return myEntry.isFeatureSupported(ZLTextStyleEntry::ALIGNMENT_TYPE) ? myEntry.alignmentType() : base()->alignment();
 }
 
 bool ZLTextForcedStyle::bold() const {
-	return (myEntry.supportedFontModifier() & ZLTextStyleEntry::FONT_MODIFIER_BOLD) ?
-					 (myEntry.fontModifier() & ZLTextStyleEntry::FONT_MODIFIER_BOLD) : base()->bold();
+	ZLBoolean3 support = myEntry.fontModifier(ZLTextStyleEntry::FONT_MODIFIER_BOLD);
+	return (support == B3_UNDEFINED) ? base()->bold() : (support == B3_TRUE);
 }
 
 bool ZLTextForcedStyle::italic() const {
-	return (myEntry.supportedFontModifier() & ZLTextStyleEntry::FONT_MODIFIER_ITALIC) ?
-					 (myEntry.fontModifier() & ZLTextStyleEntry::FONT_MODIFIER_ITALIC) : base()->italic();
+	ZLBoolean3 support = myEntry.fontModifier(ZLTextStyleEntry::FONT_MODIFIER_ITALIC);
+	return (support == B3_UNDEFINED) ? base()->italic() : (support == B3_TRUE);
 }
 
 int ZLTextForcedStyle::fontSize() const {
-	if (myEntry.isFontSizeMagSupported()) {
+	if (myEntry.isFeatureSupported(ZLTextStyleEntry::LENGTH_FONT_SIZE)) {
 		shared_ptr<ZLTextStyle> base = this->base();
 		while (base->isDecorated()) {
 			base = ((ZLTextDecoratedStyle&)*base).base();
 		}
-		int size = base->fontSize();
-		const int mag = myEntry.fontSizeMag();
-		if (mag >= 0) {
-			for (int i = 0; i < mag; ++i) {
-				size *= 6;
-			}
-			for (int i = 0; i < mag; ++i) {
-				size /= 5;
-			}
-		} else {
-			for (int i = 0; i > mag; --i) {
-				size *= 5;
-			}
-			for (int i = 0; i > mag; --i) {
-				size /= 6;
-			}
-		}
-		return size;
+		ZLTextStyleEntry::Metrics metrics(base->fontSize(), 0, 0, 0);
+		return myEntry.length(ZLTextStyleEntry::LENGTH_FONT_SIZE, metrics);
 	} else {
 		return base()->fontSize();
 	}
@@ -208,7 +192,7 @@ int ZLTextForcedStyle::fontSize() const {
 
 const std::string &ZLTextForcedStyle::fontFamily() const {
 	return (!ZLTextStyleCollection::Instance().OverrideSpecifiedFontsOption.value() &&
-					myEntry.isFontFamilySupported()) ?
+					myEntry.isFeatureSupported(ZLTextStyleEntry::FONT_FAMILY)) ?
 						myEntry.fontFamily() : base()->fontFamily();
 }
 

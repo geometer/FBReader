@@ -214,58 +214,40 @@ shared_ptr<ZLTextStyleEntry> StyleSheetTable::createControl(const AttributeMap &
 
 	const std::vector<std::string> &fontSize = values(styles, "font-size");
 	if (!fontSize.empty()) {
+		//TODO implement FONT_MODIFIER_INHERIT, SMALLER and LARGER support
+		bool doSetFontSize = true;
+		short size = 100;
+		ZLTextStyleEntry::SizeUnit unit = ZLTextStyleEntry::SIZE_UNIT_PERCENT;
 		if (fontSize[0] == "xx-small") {
-			entry->setFontSizeMagnification(-3);
+			size = 58;
 		} else if (fontSize[0] == "x-small") {
-			entry->setFontSizeMagnification(-2);
+			size = 69;
 		} else if (fontSize[0] == "small") {
-			entry->setFontSizeMagnification(-1);
+			size = 83;
 		} else if (fontSize[0] == "medium") {
-			entry->setFontSizeMagnification(0);
+			size = 100;
 		} else if (fontSize[0] == "large") {
-			entry->setFontSizeMagnification(1);
+			size = 120;
 		} else if (fontSize[0] == "x-large") {
-			entry->setFontSizeMagnification(2);
+			size = 144;
 		} else if (fontSize[0] == "xx-large") {
-			entry->setFontSizeMagnification(3);
+			size = 173;
+		} else if (fontSize[0] == "inherit") {
+			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_INHERIT, true);
+			doSetFontSize = false;
+		} else if (fontSize[0] == "smaller") {
+			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_SMALLER, true);
+			doSetFontSize = false;
+		} else if (fontSize[0] == "larger") {
+			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_LARGER, true);
+			doSetFontSize = false;
+		} else if (!parseLength(fontSize[0], size, unit)) {
+			doSetFontSize = false;
+		}
+		if (doSetFontSize) {
+			entry->setLength(ZLTextStyleEntry::LENGTH_FONT_SIZE, size, unit);
 		}
 	}
-
-	//TODO implement  SIZE_UNIT_PERCENT, LENGTH_FONT_SIZE and FONT_MODIFIERS support
-//	if (!fontSize.empty()) {
-//		bool doSetFontSize = true;
-//		short size = 100;
-//		ZLTextStyleEntry::SizeUnit unit = ZLTextStyleEntry::SIZE_UNIT_PERCENT;
-//		if (fontSize[0] == "xx-small") {
-//			size = 58;
-//		} else if (fontSize[0] == "x-small") {
-//			size = 69;
-//		} else if (fontSize[0] == "small") {
-//			size = 83;
-//		} else if (fontSize[0] == "medium") {
-//			size = 100;
-//		} else if (fontSize[0] == "large") {
-//			size = 120;
-//		} else if (fontSize[0] == "x-large") {
-//			size = 144;
-//		} else if (fontSize[0] == "xx-large") {
-//			size = 173;
-//		} else if (fontSize[0] == "inherit") {
-//			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_INHERIT, true);
-//			doSetFontSize = false;
-//		} else if (fontSize[0] == "smaller") {
-//			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_SMALLER, true);
-//			doSetFontSize = false;
-//		} else if (fontSize[0] == "larger") {
-//			entry->setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_LARGER, true);
-//			doSetFontSize = false;
-//		} else if (!parseLength(fontSize[0], size, unit)) {
-//			doSetFontSize = false;
-//		}
-//		if (doSetFontSize) {
-//			entry->setLength(ZLTextStyleEntry::LENGTH_FONT_SIZE, size, unit);
-//		}
-//	}
 
 	setLength(*entry, ZLTextStyleEntry::LENGTH_LEFT_INDENT, styles, "margin-left");
 	setLength(*entry, ZLTextStyleEntry::LENGTH_RIGHT_INDENT, styles, "margin-right");

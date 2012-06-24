@@ -57,13 +57,15 @@ short ZLTextStyleEntry::length(Feature featureId, const Metrics &metrics) const 
 				case LENGTH_SPACE_BEFORE:
 				case LENGTH_SPACE_AFTER:
 					return (myLengths[featureId].Size * metrics.FullHeight + 50) / 100;
+				case LENGTH_FONT_SIZE:
+					return (myLengths[featureId].Size * metrics.FontSize + 50) / 100;
 			}
 	}
 }
 
 ZLTextStyleEntry::ZLTextStyleEntry(char *address) {
-	memcpy(&myMask, address, sizeof(int));
-	address += sizeof(int);
+	memcpy(&myFeatureMask, address, sizeof(unsigned short));
+	address += sizeof(unsigned short);
 	for (int i = 0; i < NUMBER_OF_LENGTHS; ++i) {
 		myLengths[i].Unit = (SizeUnit)*address++;
 		memcpy(&myLengths[i].Size, address, sizeof(short));
@@ -72,8 +74,7 @@ ZLTextStyleEntry::ZLTextStyleEntry(char *address) {
 	mySupportedFontModifier = *address++;
 	myFontModifier = *address++;
 	myAlignmentType = (ZLTextAlignmentType)*address++;
-	myFontSizeMag = (signed char)*address++;
-	if (isFontFamilySupported()) {
+	if (isFeatureSupported(FONT_FAMILY)) {
 		myFontFamily = address;
 	}
 }
@@ -151,10 +152,10 @@ void ZLTextParagraph::Iterator::next() {
 				break;
 			case ZLTextParagraphEntry::STYLE_ENTRY:
 			{
-				int mask;
-				memcpy(&mask, myPointer + 1, sizeof(int));
-				bool withFontFamily = (mask & ZLTextStyleEntry::SUPPORTS_FONT_FAMILY) == ZLTextStyleEntry::SUPPORTS_FONT_FAMILY;
-				myPointer += sizeof(int) + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 5;
+				unsigned short mask;
+				memcpy(&mask, myPointer + 1, sizeof(unsigned short));
+				bool withFontFamily = (mask & (1 << ZLTextStyleEntry::FONT_FAMILY)) != 0;
+				myPointer += sizeof(unsigned short) + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 4;
 				if (withFontFamily) {
 					while (*myPointer != '\0') {
 						++myPointer;

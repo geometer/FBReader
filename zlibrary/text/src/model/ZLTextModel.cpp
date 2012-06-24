@@ -215,15 +215,15 @@ void ZLTextModel::addControl(ZLTextKind textKind, bool isStart) {
 }
 
 void ZLTextModel::addStyleEntry(const ZLTextStyleEntry &entry) {
-	int len = sizeof(int) + 5 + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
-	if (entry.isFontFamilySupported()) {
+	int len = sizeof(unsigned short) + 4 + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
+	if (entry.isFeatureSupported(ZLTextStyleEntry::FONT_FAMILY)) {
 		len += entry.fontFamily().length() + 1;
 	}
 	myLastEntryStart = myAllocator.allocate(len);
 	char *address = myLastEntryStart;
 	*address++ = ZLTextParagraphEntry::STYLE_ENTRY;
-	memcpy(address, &entry.myMask, sizeof(int));
-	address += sizeof(int);
+	memcpy(address, &entry.myFeatureMask, sizeof(unsigned short));
+	address += sizeof(unsigned short);
 	for (int i = 0; i < ZLTextStyleEntry::NUMBER_OF_LENGTHS; ++i) {
 		*address++ = entry.myLengths[i].Unit;
 		memcpy(address, &entry.myLengths[i].Size, sizeof(short));
@@ -232,8 +232,7 @@ void ZLTextModel::addStyleEntry(const ZLTextStyleEntry &entry) {
 	*address++ = entry.mySupportedFontModifier;
 	*address++ = entry.myFontModifier;
 	*address++ = entry.myAlignmentType;
-	*address++ = entry.myFontSizeMag;
-	if (entry.isFontFamilySupported()) {
+	if (entry.isFeatureSupported(ZLTextStyleEntry::FONT_FAMILY)) {
 		memcpy(address, entry.fontFamily().data(), entry.fontFamily().length());
 		address += entry.fontFamily().length();
 		*address++ = '\0';
