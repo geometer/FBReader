@@ -20,6 +20,7 @@
 #include <ZLTextParagraph.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
+#include <ZLTextStyleEntry.h>
 
 #include "PmlBookReader.h"
 #include "../../bookmodel/BookModel.h"

@@ -90,8 +90,8 @@ int BookTextView::readStackPos(const Book &book) {
 
 void BookTextView::saveBookState(const Book &book) {
 	const ReadingState state(
-		ZLIntegerOption(ZLCategoryKey::STATE, LAST_STATE_GROUP, PARAGRAPH_OPTION_NAME, 0).value(), 
-		ZLIntegerOption(ZLCategoryKey::STATE, LAST_STATE_GROUP, WORD_OPTION_NAME, 0).value(), 
+		ZLIntegerOption(ZLCategoryKey::STATE, LAST_STATE_GROUP, PARAGRAPH_OPTION_NAME, 0).value(),
+		ZLIntegerOption(ZLCategoryKey::STATE, LAST_STATE_GROUP, WORD_OPTION_NAME, 0).value(),
 		ZLIntegerOption(ZLCategoryKey::STATE, LAST_STATE_GROUP, CHAR_OPTION_NAME, 0).value()
 	);
 	const int stackPos = ZLIntegerOption(ZLCategoryKey::STATE, LAST_STATE_GROUP, POSITION_IN_BUFFER, 0).value();
@@ -272,7 +272,7 @@ void BookTextView::redoPageMove() {
 	}
 }
 
-bool BookTextView::getHyperlinkInfo(const ZLTextElementRectangle &rectangle, std::string &id, std::string &type) const {
+bool BookTextView::getHyperlinkInfo(const ZLTextElementRectangle &rectangle, std::string &id, ZLHyperlinkType &type) const {
 	if ((rectangle.Kind != ZLTextElement::WORD_ELEMENT) &&
 			(rectangle.Kind != ZLTextElement::IMAGE_ELEMENT)) {
 		return false;
@@ -308,12 +308,12 @@ bool BookTextView::onStylusClick(int x, int y, int count) {
 	const ZLTextElementRectangle *rectangle = textArea().elementByCoordinates(x, y);
 	if (rectangle != 0) {
 		std::string id;
-		std::string type;
+		ZLHyperlinkType type;
 		if (getHyperlinkInfo(*rectangle, id, type)) {
 			fbreader.tryShowFootnoteView(id, type);
 			return true;
 		}
-		
+
 		if (fbreader.isDictionarySupported() &&
 				fbreader.EnableSingleClickDictionaryOption.value()) {
 			const std::string txt = word(*rectangle);
@@ -336,12 +336,12 @@ bool BookTextView::_onStylusRelease(int x, int y) {
 	const ZLTextElementRectangle *rectangle = textArea().elementByCoordinates(x, y);
 	if (rectangle != 0) {
 		std::string id;
-		std::string type;
+		ZLHyperlinkType type;
 		if (getHyperlinkInfo(*rectangle, id, type)) {
 			fbreader.tryShowFootnoteView(id, type);
 			return true;
 		}
-		
+
 		if (fbreader.isDictionarySupported() &&
 				fbreader.EnableSingleClickDictionaryOption.value()) {
 			const std::string txt = word(*rectangle);
@@ -358,7 +358,7 @@ bool BookTextView::_onStylusRelease(int x, int y) {
 bool BookTextView::_onStylusMove(int x, int y) {
 	const ZLTextElementRectangle *rectangle = textArea().elementByCoordinates(x, y);
 	std::string id;
-	std::string type;
+	ZLHyperlinkType type;
 	FBReader::Instance().setHyperlinkCursor((rectangle != 0) && getHyperlinkInfo(*rectangle, id, type));
 	return true;
 }

@@ -25,13 +25,14 @@
 #include <string>
 
 #include <ZLTextParagraph.h>
-#include <ZLTextStyleEntry.h>
 
+#include "FBHyperlinkType.h"
 #include "FBTextKind.h"
 
 class BookModel;
 class ZLTextModel;
 class ZLInputStream;
+class ZLTextStyleEntry;
 
 class BookReader {
 
@@ -101,7 +102,7 @@ private:
 	std::vector<std::string> myContentsBuffer;
 
 	std::string myHyperlinkReference;
-	std::string myHyperlinkType;
+	FBHyperlinkType myHyperlinkType;
 	FBTextKind myHyperlinkKind;
 };
 

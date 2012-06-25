@@ -27,6 +27,7 @@
 #include <ZLImage.h>
 #include <ZLFileImage.h>
 #include <ZLFile.h>
+#include <ZLTextStyleEntry.h>
 
 #include "PdbReader.h"
 #include "PluckerBookReader.h"

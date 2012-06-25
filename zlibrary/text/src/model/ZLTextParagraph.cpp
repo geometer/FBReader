@@ -133,11 +133,7 @@ void ZLTextParagraph::Iterator::next() {
 				myPointer += 2;
 				break;
 			case ZLTextParagraphEntry::HYPERLINK_CONTROL_ENTRY:
-				myPointer += 2;
-				while (*myPointer != '\0') {
-					++myPointer;
-				}
-				++myPointer;
+				myPointer += 3;
 				while (*myPointer != '\0') {
 					++myPointer;
 				}
