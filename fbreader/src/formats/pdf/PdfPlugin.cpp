@@ -33,6 +33,10 @@ bool PdfPlugin::readMetaInfo(Book &book) const {
 	return PdfDescriptionReader(book).readMetaInfo(ZLFile(path).inputStream());
 }
 
+bool PdfPlugin::readLanguageAndEncoding(Book &book) const {
+	return true;
+}
+
 bool PdfPlugin::readModel(BookModel &model) const {
 	return PdfBookReader(model).readBook(ZLFile(book.fileName()).inputStream());
 }

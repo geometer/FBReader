@@ -141,6 +141,11 @@ bool CHMPlugin::readMetaInfo(Book &book) const {
 	return true;
 }
 
+bool CHMPlugin::readLanguageAndEncoding(Book &book) const {
+	(void)book;
+	return true;
+}
+
 class CHMHyperlinkMatcher : public BookModel::HyperlinkMatcher {
 
 public:
@@ -184,7 +189,7 @@ bool CHMPlugin::readModel(BookModel &model) const {
 
 	referenceCollection.addReference(names.Start, false);
 	referenceCollection.addReference(names.Home, false);
-	
+
 	const std::string &encoding = book.encoding();
 
 	shared_ptr<ZLInputStream> tocStream = info->entryStream(stream, names.TOC);
@@ -209,7 +214,7 @@ bool CHMPlugin::readModel(BookModel &model) const {
 	while (referenceCollection.containsNonProcessedReferences()) {
 		const std::string fileName = referenceCollection.nextReference();
 		if (ZLStringUtil::stringEndsWith(fileName, ".jpg") ||
-		    ZLStringUtil::stringEndsWith(fileName, ".gif")) {
+			ZLStringUtil::stringEndsWith(fileName, ".gif")) {
 			std::string lowerCasedFileName = ZLUnicodeUtil::toLower(fileName);
 			BookReader bookReader(model);
 			bookReader.setMainTextModel();

@@ -128,13 +128,7 @@ ZLFile OEBPlugin::opfFile(const ZLFile &oebFile) {
 
 bool OEBPlugin::readMetaInfo(Book &book) const {
 	const ZLFile &file = book.file();
-	const ZLFile opfFile = this->opfFile(file);
-	bool code = OEBMetaInfoReader(book).readMetaInfo(opfFile);
-	if (code && book.language().empty()) {
-		shared_ptr<ZLInputStream> oebStream = new OEBTextStream(opfFile);
-		detectLanguage(book, *oebStream);
-	}
-	return code;
+	return OEBMetaInfoReader(book).readMetaInfo(opfFile(file));
 }
 
 bool OEBPlugin::readModel(BookModel &model) const {
@@ -144,4 +138,12 @@ bool OEBPlugin::readModel(BookModel &model) const {
 
 shared_ptr<const ZLImage> OEBPlugin::coverImage(const ZLFile &file) const {
 	return OEBCoverReader().readCover(opfFile(file));
+}
+
+bool OEBPlugin::readLanguageAndEncoding(Book &book) const {
+	if (book.language().empty()) {
+		shared_ptr<ZLInputStream> oebStream = new OEBTextStream(opfFile(book.file()));
+		detectLanguage(book, *oebStream);
+	}
+	return true;
 }

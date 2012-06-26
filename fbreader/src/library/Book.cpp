@@ -61,8 +61,9 @@ shared_ptr<Book> Book::loadFromFile(const ZLFile &file) {
 
 	shared_ptr<Book> book = new Book(file, 0);
 	if (!plugin->readMetaInfo(*book)) {
-		return 0;	
+		return 0;
 	}
+	plugin->readLanguageAndEncoding(*book);
 
 	if (book->title().empty()) {
 		book->setTitle(ZLFile::fileNameToUtf8(file.name(true)));

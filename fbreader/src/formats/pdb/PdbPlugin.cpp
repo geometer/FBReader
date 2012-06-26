@@ -62,3 +62,8 @@ std::string PdbPlugin::fileType(const ZLFile &file) {
 	}
 	return palmType;
 }
+
+bool PdbPlugin::readLanguageAndEncoding(Book &book) const {
+	(void)book;
+	return true;
+}

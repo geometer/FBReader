@@ -49,11 +49,15 @@ bool RtfPlugin::readMetaInfo(Book &book) const {
 	if (!RtfDescriptionReader(book).readDocument(book.file())) {
 		return false;
 	}
-	
+
 	return true;
 }
 
 bool RtfPlugin::readModel(BookModel &model) const {
 	const Book &book = *model.book();
 	return RtfBookReader(model, book.encoding()).readDocument(book.file());
+}
+bool RtfPlugin::readLanguageAndEncoding(Book &book) const {
+	(void)book;
+	return true;
 }

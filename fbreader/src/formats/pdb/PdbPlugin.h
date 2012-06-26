@@ -28,6 +28,7 @@ class PdbPlugin : public FormatPlugin {
 
 public:
 	static std::string fileType(const ZLFile &file);
+	bool readLanguageAndEncoding(Book &book) const;
 
 protected:
 	PdbPlugin();

@@ -42,3 +42,7 @@ bool FB2Plugin::readModel(BookModel &model) const {
 shared_ptr<const ZLImage> FB2Plugin::coverImage(const ZLFile &file) const {
 	return FB2CoverReader(file).readCover();
 }
+bool FB2Plugin::readLanguageAndEncoding(Book &book) const {
+	(void)book;
+	return true;
+}

@@ -42,6 +42,11 @@ bool OpenReaderPlugin::readMetaInfo(Book &book) const {
 	return ORDescriptionReader(book).readMetaInfo();
 }
 
+bool OpenReaderPlugin::readLanguageAndEncoding(Book &book) const {
+	(void)book;
+	return true;
+}
+
 bool OpenReaderPlugin::readModel(BookModel &model) const {
 	return ORBookReader(model).readBook();
 }
