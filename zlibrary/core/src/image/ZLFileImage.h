@@ -37,7 +37,7 @@ public:
 	const shared_ptr<std::string> stringData() const;
 
 protected:
-	shared_ptr<ZLInputStream> inputStream() const;
+	//shared_ptr<ZLInputStream> inputStream() const;
 
 private:
 	const ZLFile myFile;

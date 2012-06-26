@@ -20,12 +20,13 @@
 #include <ZLFile.h>
 #include <ZLLogger.h>
 #include <ZLInputStream.h>
-#include <ZLSliceInputStream.h>
-#include <ZLBase64InputStream.h>
-#include <ZLHexInputStream.h>
 
-//#include "ZLHexEncodedImage.h"
-//#include "ZLBase64EncodedImage.h"
+//#include <ZLSliceInputStream.h>
+//#include <ZLBase64InputStream.h>
+//#include <ZLHexInputStream.h>
+
+#include "ZLHexEncodedImage.h"
+#include "ZLBase64EncodedImage.h"
 
 #include "ZLFileImage.h"
 
@@ -42,34 +43,9 @@ ZLFileImage::ZLFileImage(const ZLFile &file, size_t offset, size_t size, const s
 }
 
 const shared_ptr<std::string> ZLFileImage::stringData() const {
-	shared_ptr<ZLInputStream> stream = inputStream();
-	if (stream.isNull() || !stream->open()) {
-		return 0;
-	}
-	size_t size = mySize;
-	if (size == 0) {
-		size = stream->sizeOfOpened();
-		if (size == 0) {
-			return 0;
-		}
-	}
 
-	shared_ptr<std::string> imageData = new std::string();
-
-	char *buffer = new char[size];
-	size_t readed = stream->read(buffer, size);
-	if (readed != size) {
-		ZLLogger::Instance().println("ZLFileImage", "stringData(), not all bytes readed");
-	}
-	imageData->append(buffer, readed);
-	delete[] buffer;
-
-	return imageData;
-
-
-//old code for not-stream reading:
-//const shared_ptr<std::string> ZLFileImage::stringData() const {
-//	shared_ptr<ZLInputStream> stream = myFile.inputStream();
+//code for using streams for images
+//	shared_ptr<ZLInputStream> stream = inputStream();
 //	if (stream.isNull() || !stream->open()) {
 //		return 0;
 //	}
@@ -82,7 +58,7 @@ const shared_ptr<std::string> ZLFileImage::stringData() const {
 //	}
 
 //	shared_ptr<std::string> imageData = new std::string();
-//	stream->seek(myOffset, true);
+
 //	char *buffer = new char[size];
 //	size_t readed = stream->read(buffer, size);
 //	if (readed != size) {
@@ -91,28 +67,52 @@ const shared_ptr<std::string> ZLFileImage::stringData() const {
 //	imageData->append(buffer, readed);
 //	delete[] buffer;
 
-//	if (myEncoding == ENCODING_HEX) {
-//		ZLHexEncodedImage image(mimeType(), imageData);
-//		return image.stringData();
-//	} else if (myEncoding == ENCODING_BASE64) {
-//		ZLBase64EncodedImage image(mimeType());
-//		image.addData(*imageData, 0, std::string::npos);
-//		return image.stringData();
-//	}
-
 //	return imageData;
-}
 
+	shared_ptr<ZLInputStream> stream = myFile.inputStream();
+	if (stream.isNull() || !stream->open()) {
+		return 0;
+	}
+	size_t size = mySize;
+	if (size == 0) {
+		size = stream->sizeOfOpened();
+		if (size == 0) {
+			return 0;
+		}
+	}
 
-shared_ptr<ZLInputStream> ZLFileImage::inputStream() const {
-	shared_ptr<ZLInputStream> stream = new ZLSliceInputStream(myFile.inputStream(), myOffset, mySize);
+	shared_ptr<std::string> imageData = new std::string();
+	stream->seek(myOffset, true);
+	char *buffer = new char[size];
+	size_t readed = stream->read(buffer, size);
+	if (readed != size) {
+		ZLLogger::Instance().println("ZLFileImage", "stringData(), not all bytes readed");
+	}
+	imageData->append(buffer, readed);
+	delete[] buffer;
+
 	if (myEncoding == ENCODING_HEX) {
-		return new ZLHexInputStream(stream);
+		ZLHexEncodedImage image(mimeType(), imageData);
+		return image.stringData();
 	} else if (myEncoding == ENCODING_BASE64) {
-		return new ZLBase64InputStream(stream);
+		ZLBase64EncodedImage image(mimeType());
+		image.addData(*imageData, 0, std::string::npos);
+		return image.stringData();
 	}
-	if (myEncoding != ENCODING_NONE) {
-		ZLLogger::Instance().println("ZLFileImage", "unsupported encoding: " + myEncoding);
-	}
-	return stream;
+
+	return imageData;
 }
+
+
+//shared_ptr<ZLInputStream> ZLFileImage::inputStream() const {
+//	shared_ptr<ZLInputStream> stream = new ZLSliceInputStream(myFile.inputStream(), myOffset, mySize);
+//	if (myEncoding == ENCODING_HEX) {
+//		return new ZLHexInputStream(stream);
+//	} else if (myEncoding == ENCODING_BASE64) {
+//		return new ZLBase64InputStream(stream);
+//	}
+//	if (myEncoding != ENCODING_NONE) {
+//		ZLLogger::Instance().println("ZLFileImage", "unsupported encoding: " + myEncoding);
+//	}
+//	return stream;
+//}
