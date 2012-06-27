@@ -33,6 +33,11 @@ bool DocBookPlugin::readMetaInfo(Book &book) const {
 	return DocBookDescriptionReader(book).readMetaInfo(ZLFile(path).inputStream());
 }
 
+bool DocBookPlugin::readLanguageAndEncoding(Book &book) const {
+	(void)book;
+	return true;
+}
+
 bool DocBookPlugin::readModel(BookModel &model) const {
 	return DocBookBookReader(model).readDocument(ZLFile(book.fileName()).inputStream());
 }

@@ -72,6 +72,7 @@
 		<node name="pt" value="Portugalų" />
 		<node name="ru" value="Rusų" />
 		<node name="sv" value="Švedų" />
+		<node name="ta" toBeTranslated="true" value="Tamil" />
 		<node name="tr" value="Turkų" />
 		<node name="uk" value="Ukrainiečių" />
 		<node name="vi" value="Vietnamiečių" />

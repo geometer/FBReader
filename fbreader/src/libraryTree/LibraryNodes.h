@@ -42,7 +42,7 @@ public:
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<const ZLImage> extractCoverImage() const;
 	std::string title() const;
 
 private:
@@ -63,7 +63,7 @@ public:
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<const ZLImage> extractCoverImage() const;
 	std::string title() const;
 };
 
@@ -85,7 +85,7 @@ public:
 private:
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<const ZLImage> extractCoverImage() const;
 	std::string title() const;
 
 private:
@@ -109,7 +109,7 @@ private:
 	bool highlighted() const;
 	const ZLResource &resource() const;
 	const ZLTypeId &typeId() const;
-	shared_ptr<ZLImage> extractCoverImage() const;
+	shared_ptr<const ZLImage> extractCoverImage() const;
 	std::string title() const;
 	std::string summary() const;
 

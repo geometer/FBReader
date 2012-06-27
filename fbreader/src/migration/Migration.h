@@ -98,4 +98,13 @@ protected:
 	void doMigrationInternal();
 };
 
+class Migration_0_99_0 : public Migration {
+
+public:
+	Migration_0_99_0();
+
+protected:
+	void doMigrationInternal();
+};
+
 #endif /* __MIGRATION_H__ */

@@ -27,6 +27,7 @@
 #include "../EncodedTextReader.h"
 
 class ZLInputStream;
+class TxtReaderCore;
 
 class TxtReader : public EncodedTextReader {
 
@@ -43,6 +44,13 @@ protected:
 
 	virtual bool characterDataHandler(std::string &str) = 0;
 	virtual bool newLineHandler() = 0;
+
+private:
+	shared_ptr<TxtReaderCore> myCore;
+
+friend class TxtReaderCore;
+friend class TxtReaderCoreUtf16;
+friend class TxtReaderCoreUtf16BE;
 };
 
 #endif /* __TXTREADER_H__ */

@@ -18,6 +18,7 @@
  */
 
 #include <cstring>
+#include <cctype>
 
 #include <ZLFile.h>
 #include <ZLFileUtil.h>
@@ -25,6 +26,8 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
 #include <ZLXMLNamespace.h>
+#include <ZLLogger.h>
+#include <ZLInputStream.h>
 
 #include "XHTMLReader.h"
 #include "../util/EntityFilesCollector.h"
@@ -33,8 +36,6 @@
 
 #include "../../bookmodel/BookReader.h"
 #include "../../bookmodel/BookModel.h"
-
-static const bool USE_CSS = false;
 
 std::map<std::string,XHTMLTagAction*> XHTMLReader::ourTagActions;
 
@@ -187,6 +188,7 @@ void XHTMLTagStyleAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 	if (reader.myReadState == XHTMLReader::READ_NOTHING) {
 		reader.myReadState = XHTMLReader::READ_STYLE;
 		reader.myTableParser = new StyleSheetTableParser(reader.myStyleSheetTable);
+		ZLLogger::Instance().println("CSS", "parsing style tag content");
 	}
 }
 
@@ -215,10 +217,12 @@ void XHTMLTagLinkAction::doAtStart(XHTMLReader &reader, const char **xmlattribut
 		return;
 	}
 
+	ZLLogger::Instance().println("CSS", "style file: " + reader.myPathPrefix + MiscUtil::decodeHtmlURL(href));
 	shared_ptr<ZLInputStream> cssStream = ZLFile(reader.myPathPrefix + MiscUtil::decodeHtmlURL(href)).inputStream();
 	if (cssStream.isNull()) {
 		return;
 	}
+	ZLLogger::Instance().println("CSS", "parsing file");
 	StyleSheetTableParser parser(reader.myStyleSheetTable);
 	parser.parse(*cssStream);
 	//reader.myStyleSheetTable.dump();
@@ -344,10 +348,11 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 		const FBTextKind hyperlinkType = MiscUtil::referenceType(href);
 		std::string link = MiscUtil::decodeHtmlURL(href);
 		if (hyperlinkType == INTERNAL_HYPERLINK) {
-			link = (link[0] == '#') ?
-				reader.myReferenceName + link :
-				reader.myReferenceDirName + link;
-			link = ZLFileUtil::normalizeUnixPath(link);
+			if (link[0] == '#') {
+				link = reader.myReferenceAlias + link;
+			} else {
+				link = reader.normalizedReference(reader.myReferenceDirName + link);
+			}
 		}
 		myHyperlinkStack.push(hyperlinkType);
 		bookReader(reader).addHyperlinkControl(hyperlinkType, link);
@@ -357,7 +362,7 @@ void XHTMLTagHyperlinkAction::doAtStart(XHTMLReader &reader, const char **xmlatt
 	const char *name = reader.attributeValue(xmlattributes, "name");
 	if (name != 0) {
 		bookReader(reader).addHyperlinkLabel(
-			reader.myReferenceName + "#" + MiscUtil::decodeHtmlURL(name)
+			reader.myReferenceAlias + "#" + MiscUtil::decodeHtmlURL(name)
 		);
 	}
 }
@@ -486,39 +491,47 @@ XHTMLReader::XHTMLReader(BookReader &modelReader) : myModelReader(modelReader) {
 }
 
 bool XHTMLReader::readFile(const ZLFile &file, const std::string &referenceName) {
-	myModelReader.addHyperlinkLabel(referenceName);
-
 	fillTagTable();
 
 	myPathPrefix = MiscUtil::htmlDirectoryPrefix(file.path());
-	myReferenceName = referenceName;
+	myReferenceAlias = fileAlias(referenceName);
+	myModelReader.addHyperlinkLabel(myReferenceAlias);
+
 	const int index = referenceName.rfind('/', referenceName.length() - 1);
 	myReferenceDirName = referenceName.substr(0, index + 1);
 
 	myPreformatted = false;
 	myNewParagraphInProgress = false;
 	myReadState = READ_NOTHING;
+	myCurrentParagraphIsEmpty = true;
 
+	myStyleSheetTable.clear();
 	myCSSStack.clear();
 	myStyleEntryStack.clear();
 	myStylesToRemove = 0;
 
+	myDoPageBreakAfterStack.clear();
+	myStyleParser = new StyleSheetSingleStyleParser();
+	myTableParser.reset();
+
 	return readDocument(file);
 }
 
-void XHTMLReader::addStyleEntry(const std::string tag, const std::string aClass) {
+bool XHTMLReader::addStyleEntry(const std::string tag, const std::string aClass) {
 	shared_ptr<ZLTextStyleEntry> entry = myStyleSheetTable.control(tag, aClass);
 	if (!entry.isNull()) {
-		myModelReader.addControl(*entry);
+		myModelReader.addStyleEntry(*entry);
 		myStyleEntryStack.push_back(entry);
+		return true;
 	}
+	return false;
 }
 
 void XHTMLReader::startElementHandler(const char *tag, const char **attributes) {
 	static const std::string HASH = "#";
 	const char *id = attributeValue(attributes, "id");
 	if (id != 0) {
-		myModelReader.addHyperlinkLabel(myReferenceName + HASH + id);
+		myModelReader.addHyperlinkLabel(myReferenceAlias + HASH + id);
 	}
 
 	const std::string sTag = ZLUnicodeUtil::toLower(tag);
@@ -542,16 +555,18 @@ void XHTMLReader::startElementHandler(const char *tag, const char **attributes) 
 	addStyleEntry(sTag, sClass);
 	const char *style = attributeValue(attributes, "style");
 	if (style != 0) {
-		shared_ptr<ZLTextStyleEntry> entry = myStyleParser.parseString(style);
-		myModelReader.addControl(*entry);
+		ZLLogger::Instance().println("CSS", std::string("parsing style attribute: ") + style);
+		shared_ptr<ZLTextStyleEntry> entry = myStyleParser->parseString(style);
+		myModelReader.addStyleEntry(*entry);
 		myStyleEntryStack.push_back(entry);
+	} else {
 	}
 	myCSSStack.push_back(myStyleEntryStack.size() - sizeBefore);
 }
 
 void XHTMLReader::endElementHandler(const char *tag) {
 	for (int i = myCSSStack.back(); i > 0; --i) {
-		myModelReader.addControl(REGULAR, false);
+		myModelReader.addStyleCloseEntry();
 	}
 	myStylesToRemove = myCSSStack.back();
 	myCSSStack.pop_back();
@@ -577,10 +592,10 @@ void XHTMLReader::beginParagraph() {
 	myModelReader.beginParagraph();
 	bool doBlockSpaceBefore = false;
 	for (std::vector<shared_ptr<ZLTextStyleEntry> >::const_iterator it = myStyleEntryStack.begin(); it != myStyleEntryStack.end(); ++it) {
-		myModelReader.addControl(**it);
+		myModelReader.addStyleEntry(**it);
 		doBlockSpaceBefore =
 			doBlockSpaceBefore ||
-			(*it)->lengthSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE);
+			(*it)->isFeatureSupported(ZLTextStyleEntry::LENGTH_SPACE_BEFORE);
 	}
 
 	if (doBlockSpaceBefore) {
@@ -590,7 +605,7 @@ void XHTMLReader::beginParagraph() {
 			0,
 			ZLTextStyleEntry::SIZE_UNIT_PIXEL
 		);
-		myModelReader.addControl(blockingEntry);
+		myModelReader.addStyleEntry(blockingEntry);
 	}
 }
 
@@ -599,7 +614,7 @@ void XHTMLReader::endParagraph() {
 	for (std::vector<shared_ptr<ZLTextStyleEntry> >::const_iterator it = myStyleEntryStack.begin(); it != myStyleEntryStack.end() - myStylesToRemove; ++it) {
 		doBlockSpaceAfter =
 			doBlockSpaceAfter ||
-			(*it)->lengthSupported(ZLTextStyleEntry::LENGTH_SPACE_AFTER);
+			(*it)->isFeatureSupported(ZLTextStyleEntry::LENGTH_SPACE_AFTER);
 	}
 	if (doBlockSpaceAfter) {
 		ZLTextStyleEntry blockingEntry;
@@ -608,10 +623,10 @@ void XHTMLReader::endParagraph() {
 			0,
 			ZLTextStyleEntry::SIZE_UNIT_PIXEL
 		);
-		myModelReader.addControl(blockingEntry);
+		myModelReader.addStyleEntry(blockingEntry);
 	}
 	for (; myStylesToRemove > 0; --myStylesToRemove) {
-		myModelReader.addControl(*myStyleEntryStack.back());
+		myModelReader.addStyleEntry(*myStyleEntryStack.back());
 		myStyleEntryStack.pop_back();
 	}
 	myModelReader.endParagraph();
@@ -667,4 +682,33 @@ const std::vector<std::string> &XHTMLReader::externalDTDs() const {
 
 bool XHTMLReader::processNamespaces() const {
 	return true;
+}
+
+const std::string XHTMLReader::normalizedReference(const std::string &reference) const {
+	const size_t index = reference.find('#');
+	if (index == std::string::npos) {
+		return fileAlias(reference);
+	} else {
+		return fileAlias(reference.substr(0, index)) + reference.substr(index);
+	}
+}
+
+const std::string &XHTMLReader::fileAlias(const std::string &fileName) const {
+	std::map<std::string,std::string>::const_iterator it = myFileNumbers.find(fileName);
+	if (it != myFileNumbers.end()) {
+		return it->second;
+	}
+
+	const std::string correctedFileName =
+		ZLFileUtil::normalizeUnixPath(MiscUtil::decodeHtmlURL(fileName));
+	it = myFileNumbers.find(correctedFileName);
+	if (it != myFileNumbers.end()) {
+		return it->second;
+	}
+
+	std::string num;
+	ZLStringUtil::appendNumber(num, myFileNumbers.size());
+	myFileNumbers.insert(std::make_pair(correctedFileName, num));
+	it = myFileNumbers.find(correctedFileName);
+	return it->second;
 }

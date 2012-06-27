@@ -45,6 +45,11 @@ bool TcrPlugin::readMetaInfo(Book &book) const {
 	return true;
 }
 
+bool TcrPlugin::readLanguageAndEncoding(Book &book) const {
+	(void)book;
+	return true;
+}
+
 bool TcrPlugin::readModel(BookModel &model) const {
 	const Book &book = *model.book();
 	const ZLFile &file = book.file();

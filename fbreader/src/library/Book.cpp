@@ -33,7 +33,7 @@
 
 const std::string Book::AutoEncoding = "auto";
 
-Book::Book(const ZLFile &file, int id) : myBookId(id), myFile(file), myIndexInSeries(0) {
+Book::Book(const ZLFile &file, int id) : myBookId(id), myFile(file) {
 }
 
 Book::~Book() {
@@ -61,8 +61,9 @@ shared_ptr<Book> Book::loadFromFile(const ZLFile &file) {
 
 	shared_ptr<Book> book = new Book(file, 0);
 	if (!plugin->readMetaInfo(*book)) {
-		return 0;	
+		return 0;
 	}
+	plugin->readLanguageAndEncoding(*book);
 
 	if (book->title().empty()) {
 		book->setTitle(ZLFile::fileNameToUtf8(file.name(true)));
@@ -190,7 +191,7 @@ shared_ptr<Book> Book::loadFromBookInfo(const ZLFile &file) {
 
 	book->setSeries(
 		info.SeriesTitleOption.value(),
-		info.IndexInSeriesOption.value()
+		Number(info.IndexInSeriesOption.value())
 	);
 
 	if (book->language().empty()) {
@@ -255,7 +256,7 @@ void Book::setEncoding(const std::string &encoding) {
 	myEncoding = encoding;
 }
 
-void Book::setSeries(const std::string &title, int index) {
+void Book::setSeries(const std::string &title, const Number &index) {
 	mySeriesTitle = title;
 	myIndexInSeries = index;
 }

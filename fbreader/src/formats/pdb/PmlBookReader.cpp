@@ -20,6 +20,7 @@
 #include <ZLTextParagraph.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
+#include <ZLTextStyleEntry.h>
 
 #include "PmlBookReader.h"
 #include "../../bookmodel/BookModel.h"
@@ -31,11 +32,11 @@ PmlBookReader::~PmlBookReader() {
 }
 
 bool PmlBookReader::readDocument(ZLInputStream& stream) {
-    myBookReader.pushKind(REGULAR);
-    myBookReader.beginParagraph();
+	myBookReader.pushKind(REGULAR);
+	myBookReader.beginParagraph();
 	myParagraphIsEmpty = true;
-    bool code = PmlReader::readDocument(stream);
-    myBookReader.endParagraph();
+	bool code = PmlReader::readDocument(stream);
+	myBookReader.endParagraph();
 	return code;
 }
 
@@ -83,7 +84,7 @@ void PmlBookReader::switchFontProperty(FontProperty property) {
 				} else {
 					myBookReader.popKind();
 					myBookReader.addControl(STRONG, false);
-	
+
 					myBookReader.pushKind(EMPHASIS);
 					myBookReader.addControl(EMPHASIS, true);
 					myBookReader.pushKind(STRONG);
@@ -98,7 +99,7 @@ void PmlBookReader::switchFontProperty(FontProperty property) {
 					myBookReader.popKind();
 					myBookReader.addControl(EMPHASIS, false);
 					myBookReader.popKind();
-	
+
 					myBookReader.pushKind(STRONG);
 					myBookReader.addControl(STRONG, true);
 				}
@@ -113,7 +114,7 @@ void PmlBookReader::switchFontProperty(FontProperty property) {
 				myBookReader.popKind();
 			}
 			myBookReader.addControl(SUB, myState.Subscript);
-			break;			
+			break;
 		case FONT_SUPERSCRIPT: //Should not be mixed with other style tags
 			if (myState.Superscript) {
 				myBookReader.pushKind(SUP);
@@ -121,7 +122,7 @@ void PmlBookReader::switchFontProperty(FontProperty property) {
 				myBookReader.popKind();
 			}
 			myBookReader.addControl(SUP, myState.Superscript);
-			break;			
+			break;
 	}
 }
 
@@ -130,12 +131,12 @@ void PmlBookReader::newLine() {
 		myBookReader.endParagraph();
 	}
 	if (myParagraphIsEmpty)	{
-		myBookReader.beginParagraph(ZLTextParagraph::EMPTY_LINE_PARAGRAPH);	
+		myBookReader.beginParagraph(ZLTextParagraph::EMPTY_LINE_PARAGRAPH);
 		myBookReader.endParagraph();
 	} else {
 		myParagraphIsEmpty = true;
 	}
-	newParagraph();	
+	newParagraph();
 }
 
 void PmlBookReader::newPage() {
@@ -150,10 +151,10 @@ void PmlBookReader::newParagraph() {
 	if (myBookReader.paragraphIsOpen()) {
 		myBookReader.endParagraph();
 	}
-	myBookReader.beginParagraph();	
+	myBookReader.beginParagraph();
 	if (myState.Alignment != ALIGN_UNDEFINED) {
-        setAlignment();
-    }
+		setAlignment();
+	}
 	if (myState.FontSize != NORMAL) {
 		setFontSize();
 	}
@@ -164,15 +165,15 @@ void PmlBookReader::newParagraph() {
 
 void PmlBookReader::setAlignment() {
 	ZLTextStyleEntry entry;
-    entry.setAlignmentType(myState.Alignment);
-    myBookReader.addControl(entry);
+	entry.setAlignmentType(myState.Alignment);
+	myBookReader.addStyleEntry(entry);
 }
 
 void PmlBookReader::setIndent() {
 	ZLTextStyleEntry entry;
 	entry.setLength(ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA, 0, ZLTextStyleEntry::SIZE_UNIT_PERCENT);
 	entry.setLength(ZLTextStyleEntry::LENGTH_LEFT_INDENT, (short)myState.Indent, ZLTextStyleEntry::SIZE_UNIT_PERCENT);
-	myBookReader.addControl(entry);
+	myBookReader.addStyleEntry(entry);
 }
 
 void PmlBookReader::setFontSize() {
@@ -180,29 +181,29 @@ void PmlBookReader::setFontSize() {
 		myBookReader.beginParagraph();
 	}
 	ZLTextStyleEntry entry;
-    switch(myState.FontSize) {
-		case SMALLER: 
-			entry.setFontSizeMag(-1);
+	switch(myState.FontSize) {
+		case SMALLER:
+			entry.setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_SMALLER, true);
 			break;
 		case LARGER:
-			entry.setFontSizeMag(1);
+			entry.setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_LARGER, true);
 			break;
 		default:
 			break;
 	}
-    myBookReader.addControl(entry);
+	myBookReader.addStyleEntry(entry);
 }
 
 void PmlBookReader::addLink(FBTextKind kind, const std::string &id, bool on) {
 	switch (kind) {
 		case INTERNAL_HYPERLINK:
-        case FOOTNOTE:
-        //case EXTERNAL_HYPERLINK:
-        //case BOOK_HYPERLINK:
+		case FOOTNOTE:
+		//case EXTERNAL_HYPERLINK:
+		//case BOOK_HYPERLINK:
 			if (on) {
-    			myBookReader.addHyperlinkControl(kind, id);
+				myBookReader.addHyperlinkControl(kind, id);
 			} else {
-    			myBookReader.addControl(kind, false);
+				myBookReader.addControl(kind, false);
 			}
 			break;
 		default:
@@ -217,10 +218,10 @@ void PmlBookReader::addLinkLabel(const std::string &label) {
 void PmlBookReader::addImageReference(const std::string &id) {
 	const bool stopParagraph = myBookReader.paragraphIsOpen();
 	if (stopParagraph) {
-    	myBookReader.endParagraph();
+		myBookReader.endParagraph();
 	}
 	myBookReader.addImageReference(id);
 	if (stopParagraph) {
-    	myBookReader.beginParagraph();
+		myBookReader.beginParagraph();
 	}
 }

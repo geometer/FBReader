@@ -73,6 +73,6 @@ std::string TagNode::title() const {
 	return myTag->name();
 }
 
-shared_ptr<ZLImage> TagNode::extractCoverImage() const {
+shared_ptr<const ZLImage> TagNode::extractCoverImage() const {
 	return defaultCoverImage("booktree-tag.png");
 }

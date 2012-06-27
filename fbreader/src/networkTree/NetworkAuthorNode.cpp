@@ -44,7 +44,7 @@ std::string NetworkAuthorNode::title() const {
 	return myAuthor.DisplayName;
 }
 
-shared_ptr<ZLImage> NetworkAuthorNode::extractCoverImage() const {
+shared_ptr<const ZLImage> NetworkAuthorNode::extractCoverImage() const {
 	return defaultCoverImage("booktree-author.png");
 }
 

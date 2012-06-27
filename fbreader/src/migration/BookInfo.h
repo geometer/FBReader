@@ -36,11 +36,11 @@ struct BookInfo {
 	ZLStringOption AuthorSortKeyOption;
 	ZLStringOption TitleOption;
 	ZLStringOption SeriesTitleOption;
-	ZLIntegerRangeOption IndexInSeriesOption;
+	ZLStringOption IndexInSeriesOption;
 	ZLStringOption LanguageOption;
 	ZLStringOption EncodingOption;
 	ZLStringOption TagsOption;
-	
+
 	const BookInfo &operator = (const BookInfo &bi);
 };
 

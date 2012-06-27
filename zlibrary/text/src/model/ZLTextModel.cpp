@@ -26,6 +26,7 @@
 
 #include "ZLTextModel.h"
 #include "ZLTextParagraph.h"
+#include "ZLTextStyleEntry.h"
 
 ZLTextModel::ZLTextModel(const std::string &language, const size_t rowSize) : myLanguage(language.empty() ? ZLibrary::Language() : language), myAllocator(rowSize), myLastEntryStart(0) {
 }
@@ -213,16 +214,16 @@ void ZLTextModel::addControl(ZLTextKind textKind, bool isStart) {
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
-void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
-	int len = sizeof(int) + 5 + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
-	if (entry.fontFamilySupported()) {
+void ZLTextModel::addStyleEntry(const ZLTextStyleEntry &entry) {
+	int len = sizeof(unsigned short) + 4 + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1);
+	if (entry.isFeatureSupported(ZLTextStyleEntry::FONT_FAMILY)) {
 		len += entry.fontFamily().length() + 1;
 	}
 	myLastEntryStart = myAllocator.allocate(len);
 	char *address = myLastEntryStart;
 	*address++ = ZLTextParagraphEntry::STYLE_ENTRY;
-	memcpy(address, &entry.myMask, sizeof(int));
-	address += sizeof(int);
+	memcpy(address, &entry.myFeatureMask, sizeof(unsigned short));
+	address += sizeof(unsigned short);
 	for (int i = 0; i < ZLTextStyleEntry::NUMBER_OF_LENGTHS; ++i) {
 		*address++ = entry.myLengths[i].Unit;
 		memcpy(address, &entry.myLengths[i].Size, sizeof(short));
@@ -231,8 +232,7 @@ void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
 	*address++ = entry.mySupportedFontModifier;
 	*address++ = entry.myFontModifier;
 	*address++ = entry.myAlignmentType;
-	*address++ = entry.myFontSizeMag;
-	if (entry.fontFamilySupported()) {
+	if (entry.isFeatureSupported(ZLTextStyleEntry::FONT_FAMILY)) {
 		memcpy(address, entry.fontFamily().data(), entry.fontFamily().length());
 		address += entry.fontFamily().length();
 		*address++ = '\0';
@@ -240,14 +240,26 @@ void ZLTextModel::addControl(const ZLTextStyleEntry &entry) {
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 
-void ZLTextModel::addHyperlinkControl(ZLTextKind textKind, const std::string &label, const std::string &hyperlinkType) {
-	myLastEntryStart = myAllocator.allocate(label.length() + hyperlinkType.length() + 4);
+void ZLTextModel::addStyleCloseEntry() {
+//TODO implement
+//code below is from FBReaderJ
+//	myLastEntryStart = myAllocator->allocate(2);
+//	char *address = myLastEntryStart;
+
+//	*address++ = ZLTextParagraphEntry::STYLE_CLOSE_ENTRY;
+//	*address++ = 0;
+
+//	myParagraphs.back()->addEntry(myLastEntryStart);
+//	++myParagraphLengths.back();
+}
+
+void ZLTextModel::addHyperlinkControl(ZLTextKind textKind, ZLHyperlinkType hyperlinkType, const std::string &label) {
+	myLastEntryStart = myAllocator.allocate(label.length() + 4);
 	*myLastEntryStart = ZLTextParagraphEntry::HYPERLINK_CONTROL_ENTRY;
 	*(myLastEntryStart + 1) = textKind;
-	memcpy(myLastEntryStart + 2, label.data(), label.length());
-	*(myLastEntryStart + label.length() + 2) = '\0';
-	memcpy(myLastEntryStart + label.length() + 3, hyperlinkType.data(), hyperlinkType.length());
-	*(myLastEntryStart + label.length() + hyperlinkType.length() + 3) = '\0';
+	*(myLastEntryStart + 2) = hyperlinkType;
+	memcpy(myLastEntryStart + 3, label.data(), label.length());
+	*(myLastEntryStart + label.length() + 3) = '\0';
 	myParagraphs.back()->addEntry(myLastEntryStart);
 }
 

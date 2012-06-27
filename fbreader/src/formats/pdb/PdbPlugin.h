@@ -28,6 +28,7 @@ class PdbPlugin : public FormatPlugin {
 
 public:
 	static std::string fileType(const ZLFile &file);
+	bool readLanguageAndEncoding(Book &book) const;
 
 protected:
 	PdbPlugin();
@@ -84,7 +85,7 @@ private:
 	bool readMetaInfo(Book &book) const;
 
 	void readDocumentInternal(const ZLFile &file, BookModel &model, const class PlainTextFormat &format, const std::string &encoding, ZLInputStream &stream) const;
-	shared_ptr<ZLImage> coverImage(const ZLFile &file) const;
+	shared_ptr<const ZLImage> coverImage(const ZLFile &file) const;
 };
 
 class EReaderPlugin : public SimplePdbPlugin {

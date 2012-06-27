@@ -43,10 +43,15 @@ bool DummyPlugin::readMetaInfo(Book &book) const {
 	return DummyMetaInfoReader(book).readMetaInfo(ZLFile(path).inputStream());
 }
 
+bool DummyPlugin::readLanguageAndEncoding(Book &book) const {
+	(void)book;
+	return true;
+}
+
 bool DummyPlugin::readModel(BookModel &model) const {
 	return DummyBookReader(model).readBook(ZLFile(book.fileName()).inputStream());
 }
 
-shared_ptr<ZLImage> DummyPlugin::coverImage(const ZLFile &file) const {
+shared_ptr<const ZLImage> DummyPlugin::coverImage(const ZLFile &file) const {
 	return DummyCoverReader(file).readCover();
 }

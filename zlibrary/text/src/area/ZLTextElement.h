@@ -24,6 +24,7 @@
 
 #include <ZLTextKind.h>
 #include <ZLTextParagraph.h>
+#include <ZLTextStyleEntry.h>
 
 class ZLTextElement {
 

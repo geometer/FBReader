@@ -76,3 +76,8 @@ bool HtmlPlugin::readModel(BookModel &model) const {
 FormatInfoPage *HtmlPlugin::createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file) {
 	return new PlainTextInfoPage(dialog, file, ZLResourceKey("<PRE>"), false);
 }
+
+bool HtmlPlugin::readLanguageAndEncoding(Book &book) const {
+	(void)book;
+	return true;
+}

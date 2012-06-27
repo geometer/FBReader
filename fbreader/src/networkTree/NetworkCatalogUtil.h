@@ -29,11 +29,11 @@ class ZLImage;
 class NetworkCatalogUtil {
 
 public:
-	static shared_ptr<ZLImage> getImageByUrl(const std::string &url);
+	static shared_ptr<const ZLImage> getImageByUrl(const std::string &url);
 
 private:
-	static shared_ptr<ZLImage> getImageByNetworkUrl(const std::string &url, const std::string &prefix);
-	static shared_ptr<ZLImage> getImageByDataUrl(const std::string &url);
+	static shared_ptr<const ZLImage> getImageByNetworkUrl(const std::string &url, const std::string &prefix);
+	static shared_ptr<const ZLImage> getImageByDataUrl(const std::string &url);
 
 private:
 	NetworkCatalogUtil();

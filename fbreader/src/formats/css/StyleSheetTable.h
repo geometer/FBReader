@@ -27,6 +27,7 @@
 #include <shared_ptr.h>
 
 #include <ZLTextParagraph.h>
+#include <ZLTextStyleEntry.h>
 
 class StyleSheetTable {
 
@@ -37,7 +38,7 @@ public:
 private:
 	void addMap(const std::string &tag, const std::string &aClass, const AttributeMap &map);
 
-	static void setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Length name, const AttributeMap &map, const std::string &attributeName);
+	static void setLength(ZLTextStyleEntry &entry, ZLTextStyleEntry::Feature featureId, const AttributeMap &map, const std::string &attributeName);
 	static const std::vector<std::string> &values(const AttributeMap &map, const std::string &name);
 
 public:
@@ -45,6 +46,8 @@ public:
 	bool doBreakBefore(const std::string &tag, const std::string &aClass) const;
 	bool doBreakAfter(const std::string &tag, const std::string &aClass) const;
 	shared_ptr<ZLTextStyleEntry> control(const std::string &tag, const std::string &aClass) const;
+
+	void clear();
 
 private:
 	struct Key {

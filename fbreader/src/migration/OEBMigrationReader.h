@@ -38,7 +38,7 @@ public:
 	bool processNamespaces() const;
 
 private:
-	bool isDublinCoreNamespace(const std::string &nsId) const;
+	bool testDCTag(const std::string &name, const std::string &tag) const;
 
 private:
 	BookInfo &myInfo;

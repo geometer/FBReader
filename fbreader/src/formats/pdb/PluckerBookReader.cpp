@@ -27,6 +27,7 @@
 #include <ZLImage.h>
 #include <ZLFileImage.h>
 #include <ZLFile.h>
+#include <ZLTextStyleEntry.h>
 
 #include "PdbReader.h"
 #include "PluckerBookReader.h"
@@ -73,7 +74,7 @@ void PluckerBookReader::safeBeginParagraph() {
 			addControl(it->first, it->second);
 		}
 		if (myForcedEntry != 0) {
-			addControl(*myForcedEntry);
+			addStyleEntry(*myForcedEntry);
 		} else {
 			addControl(REGULAR, true);
 		}
@@ -169,16 +170,16 @@ void PluckerBookReader::changeFont(FontType font) {
 /*
 static void listParameters(char *ptr) {
 	int argc = ((unsigned char)*ptr) % 8;
-	std::cerr << (int)(unsigned char)*ptr << "(";	
+	std::cerr << (int)(unsigned char)*ptr << "(";
 	for (int i = 0; i < argc - 1; ++i) {
 		++ptr;
-		std::cerr << (int)*ptr << ", ";	
+		std::cerr << (int)*ptr << ", ";
 	}
 	if (argc > 0) {
 		++ptr;
-		std::cerr << (int)*ptr;	
+		std::cerr << (int)*ptr;
 	}
-	std::cerr << ")\n";	
+	std::cerr << ")\n";
 }
 */
 
@@ -253,7 +254,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 		case 0x38:
 			safeEndParagraph();
 			break;
-		case 0x40: 
+		case 0x40:
 			safeAddControl(EMPHASIS, true);
 			break;
 		case 0x48:
@@ -272,7 +273,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 			break;
 		case 0x78: // strike-through text is ignored
 			break;
-		case 0x83: 
+		case 0x83:
 		case 0x85:
 		{
 			ZLUnicodeUtil::Ucs4Char symbol =

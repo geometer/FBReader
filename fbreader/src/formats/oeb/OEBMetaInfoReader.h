@@ -39,15 +39,15 @@ public:
 	const std::vector<std::string> &externalDTDs() const;
 
 private:
-	bool isDublinCoreNamespace(const std::string &nsId) const;
+	bool testDCTag(const std::string &name, const std::string &tag) const;
 	bool isNSName(const std::string &fullName, const std::string &shortName, const std::string &fullNSId) const;
 
 private:
 	Book &myBook;
 
-	bool myReadMetaData;
 	enum {
 		READ_NONE,
+		READ_METADATA,
 		READ_AUTHOR,
 		READ_AUTHOR2,
 		READ_TITLE,
@@ -55,7 +55,6 @@ private:
 		READ_LANGUAGE,
 	} myReadState;
 
-	std::string myDCMetadataTag;
 	std::string myBuffer;
 	std::vector<std::string> myAuthorList;
 	std::vector<std::string> myAuthorList2;

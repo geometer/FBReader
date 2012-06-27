@@ -180,7 +180,7 @@ void ZLMapBasedStatistics::calculateVolumes() const {
 }
 
 ZLMapBasedStatistics ZLMapBasedStatistics::top(size_t amount) const {
-	if (myDictionary.empty())  {
+	if (myDictionary.empty()) {
 		return ZLMapBasedStatistics();
 	}
 	if (amount >= myDictionary.size()) {
@@ -262,7 +262,7 @@ shared_ptr<ZLStatisticsItem> ZLMapBasedStatistics::end() const {
 	return new ZLMapBasedStatisticsItem(myDictionary.end(), myDictionary.size());
 }
 
-ZLArrayBasedStatistics::ZLArrayBasedStatistics() :  ZLStatistics(),
+ZLArrayBasedStatistics::ZLArrayBasedStatistics() : ZLStatistics(),
 		myCapacity(0), myBack(0), mySequences(0), myFrequencies(0) {
 }
 

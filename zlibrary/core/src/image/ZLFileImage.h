@@ -20,22 +20,30 @@
 #ifndef __ZLFILEIMAGE_H__
 #define __ZLFILEIMAGE_H__
 
+#include <string>
+
 #include <ZLFile.h>
+#include <ZLImage.h>
 
-#include "ZLStreamImage.h"
-
-class ZLFileImage : public ZLStreamImage {
+class ZLFileImage : public ZLSingleImage {
 
 public:
-	ZLFileImage(const ZLFile &file, size_t offset, size_t size = 0);
+	static const std::string ENCODING_NONE;
+	static const std::string ENCODING_HEX;
+	static const std::string ENCODING_BASE64;
+
+public:
+	ZLFileImage(const ZLFile &file, size_t offset, size_t size = 0, const std::string &encoding = ZLFileImage::ENCODING_NONE);
+	const shared_ptr<std::string> stringData() const;
 
 protected:
-	shared_ptr<ZLInputStream> inputStream() const;
+	//shared_ptr<ZLInputStream> inputStream() const;
 
 private:
 	const ZLFile myFile;
+	const std::string myEncoding;
+	const size_t myOffset;
+	const size_t mySize;
 };
-
-inline ZLFileImage::ZLFileImage(const ZLFile &file, size_t offset, size_t size) : ZLStreamImage(file.mimeType(), offset, size), myFile(file) {}
 
 #endif /* __ZLFILEIMAGE_H__ */

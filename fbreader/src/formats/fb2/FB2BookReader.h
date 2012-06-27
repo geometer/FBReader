@@ -24,7 +24,6 @@
 #include "../../bookmodel/BookReader.h"
 
 class BookModel;
-class ZLBase64EncodedImage;
 
 class FB2BookReader : public FB2Reader {
 
@@ -32,6 +31,7 @@ public:
 	FB2BookReader(BookModel &model);
 	bool readBook();
 
+	bool processNamespaces() const;
 	void startElementHandler(int tag, const char **attributes);
 	void endElementHandler(int tag);
 	void characterDataHandler(const char *text, size_t len);
@@ -46,9 +46,9 @@ private:
 	bool myInsidePoem;
 	BookReader myModelReader;
 
-	ZLBase64EncodedImage *myCurrentImage;
-	bool myProcessingImage;
-	std::vector<std::string> myImageBuffer;
+	int myCurrentImageStart;
+	std::string myCurrentImageId;
+	std::string myCurrentContentType;
 
 	bool mySectionStarted;
 	bool myInsideTitle;

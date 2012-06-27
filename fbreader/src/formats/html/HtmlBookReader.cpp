@@ -433,7 +433,7 @@ bool HtmlBookReader::tagHandler(const HtmlTag &tag) {
 		if (tag.Attributes[i].Name == "ID") {
 			myBookReader.addHyperlinkLabel(tag.Attributes[i].Value);
 			break;
-		}	
+		}
 	}
 	shared_ptr<HtmlTagAction> action = myActionMap[tag.Name];
 	if (action.isNull()) {

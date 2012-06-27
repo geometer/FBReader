@@ -28,6 +28,8 @@
 
 #include "../../bookmodel/BookReader.h"
 
+class XHTMLReader;
+
 class OEBBookReader : public ZLXMLReader {
 
 public:
@@ -38,10 +40,10 @@ private:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
 	bool processNamespaces() const;
-	void namespaceListChangedHandler();
+	bool isOPFTag(const std::string &expected, const std::string &tag) const;
 	const std::vector<std::string> &externalDTDs() const;
 
-	void generateTOC();
+	void generateTOC(const XHTMLReader &xhtmlReader);
 
 private:
 	enum ReaderState {
@@ -55,12 +57,11 @@ private:
 	BookReader myModelReader;
 	ReaderState myState;
 
-	std::string myOPFSchemePrefix;
-
 	std::string myFilePrefix;
 	std::map<std::string,std::string> myIdToHref;
 	std::vector<std::string> myHtmlFileNames;
 	std::string myNCXTOCFileName;
+	std::string myCoverFileName;
 	std::vector<std::pair<std::string,std::string> > myTourTOC;
 	std::vector<std::pair<std::string,std::string> > myGuideTOC;
 };

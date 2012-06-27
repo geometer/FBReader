@@ -31,6 +31,7 @@ public:
 	bool providesMetaInfo() const;
 	bool acceptsFile(const ZLFile &file) const;
 	bool readMetaInfo(Book &book) const;
+	bool readLanguageAndEncoding(Book &book) const;
 	bool readModel(BookModel &model) const;
 	FormatInfoPage *createInfoPage(ZLOptionsDialog &dialog, const ZLFile &file);
 };

@@ -20,6 +20,9 @@
 #include "ZLEncodingConverter.h"
 #include "ZLEncodingConverterProvider.h"
 
+const std::string ZLEncodingConverter::UTF16 = "UTF-16";
+const std::string ZLEncodingConverter::UTF16BE = "UTF-16BE";
+
 ZLEncodingConverterProvider::ZLEncodingConverterProvider() {
 }
 
@@ -74,6 +77,10 @@ const std::string &ZLEncodingConverterInfo::name() const {
 
 const std::string &ZLEncodingConverterInfo::visibleName() const {
 	return myVisibleName;
+}
+
+const std::vector<std::string> &ZLEncodingConverterInfo::aliases() const {
+	return myAliases;
 }
 
 void ZLEncodingConverterInfo::addAlias(const std::string &alias) {

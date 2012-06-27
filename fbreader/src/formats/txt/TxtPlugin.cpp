@@ -51,6 +51,11 @@ bool TxtPlugin::readMetaInfo(Book &book) const {
 	return true;
 }
 
+bool TxtPlugin::readLanguageAndEncoding(Book &book) const {
+	(void)book;
+	return true;
+}
+
 bool TxtPlugin::readModel(BookModel &model) const {
 	const Book &book = *model.book();
 	const ZLFile &file = book.file();

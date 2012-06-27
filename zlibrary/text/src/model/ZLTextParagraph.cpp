@@ -25,6 +25,7 @@
 #include <ZLImage.h>
 
 #include "ZLTextParagraph.h"
+#include "ZLTextStyleEntry.h"
 
 const shared_ptr<ZLTextParagraphEntry> ResetBidiEntry::Instance = new ResetBidiEntry();
 
@@ -34,32 +35,37 @@ size_t ZLTextEntry::dataLength() const {
 	return len;
 }
 
-short ZLTextStyleEntry::length(Length name, const Metrics &metrics) const {
-	switch (myLengths[name].Unit) {
+short ZLTextStyleEntry::length(Feature featureId, const Metrics &metrics) const {
+	switch (myLengths[featureId].Unit) {
 		default:
 		case SIZE_UNIT_PIXEL:
-			return myLengths[name].Size;
+			return myLengths[featureId].Size;
+		case SIZE_UNIT_POINT:
+			//TODO implement SIZE_UNIT_POINT support (now returns as for pixels)
+			return myLengths[featureId].Size;
 		case SIZE_UNIT_EM_100:
-			return (myLengths[name].Size * metrics.FontSize + 50) / 100;
+			return (myLengths[featureId].Size * metrics.FontSize + 50) / 100;
 		case SIZE_UNIT_EX_100:
-			return (myLengths[name].Size * metrics.FontXHeight + 50) / 100;
+			return (myLengths[featureId].Size * metrics.FontXHeight + 50) / 100;
 		case SIZE_UNIT_PERCENT:
-			switch (name) {
+			switch (featureId) {
 				default:
 				case LENGTH_LEFT_INDENT:
 				case LENGTH_RIGHT_INDENT:
 				case LENGTH_FIRST_LINE_INDENT_DELTA:
-					return (myLengths[name].Size * metrics.FullWidth + 50) / 100;
+					return (myLengths[featureId].Size * metrics.FullWidth + 50) / 100;
 				case LENGTH_SPACE_BEFORE:
 				case LENGTH_SPACE_AFTER:
-					return (myLengths[name].Size * metrics.FullHeight + 50) / 100;
+					return (myLengths[featureId].Size * metrics.FullHeight + 50) / 100;
+				case LENGTH_FONT_SIZE:
+					return (myLengths[featureId].Size * metrics.FontSize + 50) / 100;
 			}
 	}
 }
 
 ZLTextStyleEntry::ZLTextStyleEntry(char *address) {
-	memcpy(&myMask, address, sizeof(int));
-	address += sizeof(int);
+	memcpy(&myFeatureMask, address, sizeof(unsigned short));
+	address += sizeof(unsigned short);
 	for (int i = 0; i < NUMBER_OF_LENGTHS; ++i) {
 		myLengths[i].Unit = (SizeUnit)*address++;
 		memcpy(&myLengths[i].Size, address, sizeof(short));
@@ -68,8 +74,7 @@ ZLTextStyleEntry::ZLTextStyleEntry(char *address) {
 	mySupportedFontModifier = *address++;
 	myFontModifier = *address++;
 	myAlignmentType = (ZLTextAlignmentType)*address++;
-	myFontSizeMag = (signed char)*address++;
-	if (fontFamilySupported()) {
+	if (isFeatureSupported(FONT_FAMILY)) {
 		myFontFamily = address;
 	}
 }
@@ -128,11 +133,7 @@ void ZLTextParagraph::Iterator::next() {
 				myPointer += 2;
 				break;
 			case ZLTextParagraphEntry::HYPERLINK_CONTROL_ENTRY:
-				myPointer += 2;
-				while (*myPointer != '\0') {
-					++myPointer;
-				}
-				++myPointer;
+				myPointer += 3;
 				while (*myPointer != '\0') {
 					++myPointer;
 				}
@@ -147,10 +148,10 @@ void ZLTextParagraph::Iterator::next() {
 				break;
 			case ZLTextParagraphEntry::STYLE_ENTRY:
 			{
-				int mask;
-				memcpy(&mask, myPointer + 1, sizeof(int));
-				bool withFontFamily = (mask & ZLTextStyleEntry::SUPPORT_FONT_FAMILY) == ZLTextStyleEntry::SUPPORT_FONT_FAMILY;
-				myPointer += sizeof(int) + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 5;
+				unsigned short mask;
+				memcpy(&mask, myPointer + 1, sizeof(unsigned short));
+				bool withFontFamily = (mask & (1 << ZLTextStyleEntry::FONT_FAMILY)) != 0;
+				myPointer += sizeof(unsigned short) + ZLTextStyleEntry::NUMBER_OF_LENGTHS * (sizeof(short) + 1) + 4;
 				if (withFontFamily) {
 					while (*myPointer != '\0') {
 						++myPointer;
@@ -184,7 +185,7 @@ shared_ptr<ZLTextParagraphEntry> ZLTextControlEntryPool::controlEntry(ZLTextKind
 	entries[kind] = entry;
 	return entry;
 }
-	
+
 size_t ZLTextParagraph::textDataLength() const {
 	size_t len = 0;
 	for (Iterator it = *this; !it.isEnd(); it.next()) {

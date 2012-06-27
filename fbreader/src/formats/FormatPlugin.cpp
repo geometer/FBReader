@@ -77,7 +77,7 @@ void FormatPlugin::detectLanguage(Book &book, ZLInputStream &stream) {
 		const size_t size = stream.read(buffer, BUFSIZE);
 		stream.close();
 		shared_ptr<ZLLanguageDetector::LanguageInfo> info =
-			ZLLanguageDetector().findInfo(buffer, size);
+			ZLLanguageDetector().findInfoForEncoding(book.encoding(), buffer, size, -20000);
 		delete[] buffer;
 		if (!info.isNull()) {
 			if (!info->Language.empty()) {
@@ -93,6 +93,6 @@ const std::string &FormatPlugin::tryOpen(const ZLFile&) const {
 	return EMPTY;
 }
 
-shared_ptr<ZLImage> FormatPlugin::coverImage(const ZLFile &file) const {
+shared_ptr<const ZLImage> FormatPlugin::coverImage(const ZLFile &file) const {
 	return 0;
 }

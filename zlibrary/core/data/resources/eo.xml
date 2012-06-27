@@ -72,6 +72,7 @@
 		<node name="pt" value="La portugala"/>
 		<node name="ru" value="La rusa"/>
 		<node name="sv" value="La sveda"/>
+		<node name="ta" toBeTranslated="true" value="Tamil" />
 		<node name="tr" value="La turka"/>
 		<node name="uk" value="La ukraina"/>
 		<node name="vi" toBeTranslated="true" value="Vietnamese" />

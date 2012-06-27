@@ -23,12 +23,12 @@
 
 static const std::string EMPTY = "";
 
-BookInfo::BookInfo(const std::string &fileName) : 
+BookInfo::BookInfo(const std::string &fileName) :
 	AuthorDisplayNameOption(FBCategoryKey::BOOKS, fileName, "AuthorDisplayName", EMPTY),
 	AuthorSortKeyOption(FBCategoryKey::BOOKS, fileName, "AuthorSortKey", EMPTY),
 	TitleOption(FBCategoryKey::BOOKS, fileName, "Title", EMPTY),
 	SeriesTitleOption(FBCategoryKey::BOOKS, fileName, "Sequence", EMPTY),
-	IndexInSeriesOption(FBCategoryKey::BOOKS, fileName, "Number in seq", 0, 100, 0),
+	IndexInSeriesOption(FBCategoryKey::BOOKS, fileName, "Series Number in Sequence", EMPTY),
 	LanguageOption(FBCategoryKey::BOOKS, fileName, "Language", EMPTY),
 	EncodingOption(FBCategoryKey::BOOKS, fileName, "Encoding", EMPTY),
 	TagsOption(FBCategoryKey::BOOKS, fileName, "TagList", EMPTY) {
@@ -39,7 +39,7 @@ void BookInfo::reset() {
 	AuthorSortKeyOption.setValue(EMPTY);
 	TitleOption.setValue(EMPTY);
 	SeriesTitleOption.setValue(EMPTY);
-	IndexInSeriesOption.setValue(0);
+	IndexInSeriesOption.setValue(EMPTY);
 	LanguageOption.setValue(EMPTY);
 	EncodingOption.setValue(EMPTY);
 	TagsOption.setValue(EMPTY);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,31 +17,27 @@
  * 02110-1301, USA.
  */
 
-#ifndef __RTFIMAGE_H__
-#define __RTFIMAGE_H__
+#ifndef __XHTMLIMAGEFINDER_H__
+#define __XHTMLIMAGEFINDER_H__
 
-#include <vector>
+#include <shared_ptr.h>
+#include <ZLXMLReader.h>
 
-#include <ZLImage.h>
+class ZLFile;
+class ZLImage;
 
-class RtfImage : public ZLSingleImage {
+class XHTMLImageFinder : public ZLXMLReader {
 
 public:
-	RtfImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length);
-	~RtfImage();
-	const shared_ptr<std::string> stringData() const;
+	shared_ptr<const ZLImage> readImage(const ZLFile &file);
 
 private:
-	void read() const;
+	bool processNamespaces() const;
+	void startElementHandler(const char *tag, const char **attributes);
 
 private:
-	std::string myFileName;
-	size_t myStartOffset;
-	size_t myLength;
-	mutable shared_ptr<std::string> myData;
+	std::string myPathPrefix;
+	shared_ptr<const ZLImage> myImage;
 };
 
-inline RtfImage::RtfImage(const std::string &mimeType, const std::string &fileName, size_t startOffset, size_t length) : ZLSingleImage(mimeType), myFileName(fileName), myStartOffset(startOffset), myLength(length) {}
-inline RtfImage::~RtfImage() {}
-
-#endif /* __RTFIMAGE_H__ */
+#endif /* __XHTMLIMAGEFINDER_H__ */

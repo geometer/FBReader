@@ -22,7 +22,7 @@
 
 #include <ZLInputStream.h>
 #include <ZLStringUtil.h>
-#include <ZLBase64EncodedImage.h>
+#include <ZLFileImage.h>
 
 #include <ZLTextParagraph.h>
 
@@ -37,17 +37,18 @@ FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 	mySectionDepth = 0;
 	myBodyCounter = 0;
 	myReadMainText = false;
-	myCurrentImage = 0;
-	myProcessingImage = false;
+	myCurrentImageStart = -1;
 	mySectionStarted = false;
 	myInsideTitle = false;
 }
 
 void FB2BookReader::characterDataHandler(const char *text, size_t len) {
-	if ((len > 0) && (myProcessingImage || myModelReader.paragraphIsOpen())) {
+	if ((len > 0) && (!myCurrentImageId.empty() || myModelReader.paragraphIsOpen())) {
 		std::string str(text, len);
-		if (myProcessingImage) {
-			myImageBuffer.push_back(str);
+		if (!myCurrentImageId.empty()) {
+			if (myCurrentImageStart == -1) {
+				myCurrentImageStart = getCurrentPosition();
+			}
 		} else {
 			myModelReader.addData(str);
 			if (myInsideTitle) {
@@ -57,9 +58,13 @@ void FB2BookReader::characterDataHandler(const char *text, size_t len) {
 	}
 }
 
+bool FB2BookReader::processNamespaces() const {
+	return true;
+}
+
 void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 	const char *id = attributeValue(xmlattributes, "id");
-	if (id != 0) {
+	if (id != 0 && tag != _BINARY) {
 		if (!myReadMainText) {
 			myModelReader.setFootnoteTextModel(id);
 		}
@@ -157,8 +162,7 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			break;
 		case _A:
 		{
-			const std::string hrefName = xlinkNamespace() + ":href";
-			const char *ref = attributeValue(xmlattributes, hrefName.c_str());
+			const char *ref = attributeValue(xmlattributes, myHrefPredicate);
 			if (ref != 0) {
 				if (ref[0] == '#') {
 					const char *type = attributeValue(xmlattributes, "type");
@@ -181,15 +185,16 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		}
 		case _IMAGE:
 		{
-			const std::string hrefName = xlinkNamespace() + ":href";
-			const char *ref = attributeValue(xmlattributes, hrefName.c_str());
-			//const char *vOffset = attributeValue(xmlattributes, "voffset");
-			//char offset = (vOffset != 0) ? atoi(vOffset) : 0;
+			const char *ref = attributeValue(xmlattributes, myHrefPredicate);
+			const char *vOffset = attributeValue(xmlattributes, "voffset");
+			char offset = (vOffset != 0) ? atoi(vOffset) : 0;
 			if ((ref != 0) && (*ref == '#')) {
 				++ref;
-				if ((myCoverImageReference != ref) ||
-						(myParagraphsBeforeBodyNumber != myModelReader.model().bookTextModel()->paragraphsNumber())) {
-					myModelReader.addImageReference(ref);
+				const bool isCoverImage =
+					myParagraphsBeforeBodyNumber ==
+					myModelReader.model().bookTextModel()->paragraphsNumber();
+				if (myCoverImageReference != ref || !isCoverImage) {
+					myModelReader.addImageReference(ref, offset);
 				}
 				if (myInsideCoverpage) {
 					myCoverImageReference = ref;
@@ -202,9 +207,8 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 			static const std::string STRANGE_MIME_TYPE = "text/xml";
 			const char *contentType = attributeValue(xmlattributes, "content-type");
 			if ((contentType != 0) && (id != 0) && (STRANGE_MIME_TYPE != contentType)) {
-				myCurrentImage = new ZLBase64EncodedImage(contentType);
-				myModelReader.addImage(id, myCurrentImage);
-				myProcessingImage = true;
+				myCurrentContentType = contentType;
+				myCurrentImageId.assign(id);
 			}
 			break;
 		}
@@ -302,12 +306,17 @@ void FB2BookReader::endElementHandler(int tag) {
 			myModelReader.addControl(myHyperlinkType, false);
 			break;
 		case _BINARY:
-			if (!myImageBuffer.empty() && (myCurrentImage != 0)) {
-				myCurrentImage->addData(myImageBuffer);
-				myImageBuffer.clear();
-				myCurrentImage = 0;
+			if (!myCurrentImageId.empty() && myCurrentImageStart != -1) {
+				myModelReader.addImage(myCurrentImageId, new ZLFileImage(
+					ZLFile(myModelReader.model().book()->file().path(), myCurrentContentType),
+					myCurrentImageStart,
+					getCurrentPosition() - myCurrentImageStart,
+					ZLFileImage::ENCODING_BASE64
+				));
 			}
-			myProcessingImage = false;
+			myCurrentImageId.clear();
+			myCurrentContentType.clear();
+			myCurrentImageStart = -1;
 			break;
 		case _BODY:
 			myModelReader.popKind();

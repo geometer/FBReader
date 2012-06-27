@@ -50,13 +50,13 @@ private:
 
 const ZLTypeId NetworkCatalogNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
-NetworkCatalogNode::NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) : 
-	NetworkContainerNode(parent, atPosition), 
+NetworkCatalogNode::NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) :
+	NetworkContainerNode(parent, atPosition),
 	myItem(item) {
 }
 
-NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) : 
-	NetworkContainerNode(parent, atPosition), 
+NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) :
+	NetworkContainerNode(parent, atPosition),
 	myItem(item) {
 }
 
@@ -96,14 +96,14 @@ std::string NetworkCatalogNode::summary() const {
 	return ((const NetworkCatalogItem&)*myItem).Summary;
 }
 
-shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
+shared_ptr<const ZLImage> NetworkCatalogNode::extractCoverImage() const {
 	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
 
 	if (url.empty()) {
 		return lastResortCoverImage();
 	}
 
-	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(url);
+	shared_ptr<const ZLImage> image = NetworkCatalogUtil::getImageByUrl(url);
 	if (!image.isNull()) {
 		return image;
 	}
@@ -115,7 +115,7 @@ shared_ptr<ZLImage> NetworkCatalogNode::extractCoverImage() const {
 	return lastResortCoverImage();
 }
 
-shared_ptr<ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
+shared_ptr<const ZLImage> NetworkCatalogNode::lastResortCoverImage() const {
 	return ((FBReaderNode*)parent())->coverImage();
 }
 

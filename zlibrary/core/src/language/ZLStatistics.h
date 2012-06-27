@@ -61,7 +61,7 @@ class ZLMapBasedStatistics : public ZLStatistics {
 
 private:
 	typedef std::vector<std::pair<ZLCharSequence, size_t> > Vector; 
-	typedef std::map<ZLCharSequence, size_t>                Dictionary; 
+	typedef std::map<ZLCharSequence, size_t>                Dictionary;
 
 public:
 	ZLMapBasedStatistics();

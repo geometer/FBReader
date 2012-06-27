@@ -104,10 +104,10 @@ bool BookNode::highlighted() const {
 	return myBook->file() == FBReader::Instance().currentBook()->file();
 }
 
-shared_ptr<ZLImage> BookNode::extractCoverImage() const {
+shared_ptr<const ZLImage> BookNode::extractCoverImage() const {
 	shared_ptr<FormatPlugin> plugin = PluginCollection::Instance().plugin(*myBook);
 	if (!plugin.isNull()) {
-		shared_ptr<ZLImage> cover = plugin->coverImage(myBook->file());
+		shared_ptr<const ZLImage> cover = plugin->coverImage(myBook->file());
 		if (!cover.isNull()) {
 			return cover;
 		}

@@ -83,8 +83,8 @@ void NetworkBookNode::drawCover(ZLPaintContext&, int vOffset) {
 	((NetworkView&)view()).drawCoverLater(this, vOffset);
 }
 
-shared_ptr<ZLImage> NetworkBookNode::extractCoverImage() const {
-	shared_ptr<ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
+shared_ptr<const ZLImage> NetworkBookNode::extractCoverImage() const {
+	shared_ptr<const ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
 	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
 }
 

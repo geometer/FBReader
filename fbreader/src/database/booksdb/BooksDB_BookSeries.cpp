@@ -33,6 +33,18 @@ static const std::string LOAD_ALL_SERIES_QUERY =
 	" FROM BookSeries" \
 	" INNER JOIN Series ON Series.series_id = BookSeries.series_id";
 
+static Number getSeriesIndex(shared_ptr<DBDataReader> reader) {
+	Number seriesIndex;
+	if (reader->type(1) == DBValue::DBTEXT) {
+		seriesIndex = Number(reader->textValue(1, std::string()));
+	} else if (reader->type(1) == DBValue::DBREAL){ //for old database scheme
+		seriesIndex = Number((int)reader->realValue(1));
+	} else { //for old database scheme
+		seriesIndex = Number(reader->intValue(1));
+	}
+	return seriesIndex;
+}
+
 void BooksDB::loadSeries(Book &book) {
 	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
 		LOAD_SERIES_QUERY, connection(), "@book_id", DBValue::DBINT
@@ -45,7 +57,7 @@ void BooksDB::loadSeries(Book &book) {
 		if (!seriesTitle.empty()) {
 			book.setSeries(
 				seriesTitle,
-				(reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0
+				getSeriesIndex(reader)
 			);
 		}
 	}
@@ -64,7 +76,7 @@ void BooksDB::loadSeries(const std::map<int,shared_ptr<Book> > &books) {
 		if (!seriesTitle.empty() && it != books.end()) {
 			it->second->setSeries(
 				seriesTitle,
-				(reader->type(1) == DBValue::DBINT) ? reader->intValue(1) : 0
+				getSeriesIndex(reader)
 			);
 		}
 	}

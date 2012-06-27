@@ -112,7 +112,7 @@
 			<node name="toggleFullscreen" value="На весь экран" />
 			<node name="toggleIndicator" value="Индикатор позиции" />
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Последние настройки..." />
+		<node name="preferences" value="Последние настройки..." />
 		<node name="quit" value="Закрыть" />
 	</node>
 	<node name="toolbar">

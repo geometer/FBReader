@@ -61,6 +61,8 @@ private:
 public:
 	XHTMLReader(BookReader &modelReader);
 	bool readFile(const ZLFile &file, const std::string &referenceName);
+	const std::string &fileAlias(const std::string &fileName) const;
+	const std::string normalizedReference(const std::string &reference) const;
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
@@ -73,12 +75,14 @@ private:
 
 	void beginParagraph();
 	void endParagraph();
-	void addStyleEntry(const std::string tag, const std::string aClass);
+	bool addStyleEntry(const std::string tag, const std::string aClass);
 
 private:
+	mutable std::map<std::string,std::string> myFileNumbers;
+
 	BookReader &myModelReader;
 	std::string myPathPrefix;
-	std::string myReferenceName;
+	std::string myReferenceAlias;
 	std::string myReferenceDirName;
 	bool myPreformatted;
 	bool myNewParagraphInProgress;
@@ -88,7 +92,7 @@ private:
 	int myStylesToRemove;
 	std::vector<bool> myDoPageBreakAfterStack;
 	bool myCurrentParagraphIsEmpty;
-	StyleSheetSingleStyleParser myStyleParser;
+	shared_ptr<StyleSheetSingleStyleParser> myStyleParser;
 	shared_ptr<StyleSheetTableParser> myTableParser;
 	enum {
 		READ_NOTHING,

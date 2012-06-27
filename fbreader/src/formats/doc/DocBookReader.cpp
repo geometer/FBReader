@@ -111,7 +111,7 @@ void DocBookReader::handleHardLinebreak() {
 	}
 	myModelReader.beginParagraph();
 	if (!myCurStyleEntry.isNull()) {
-		myModelReader.addControl(*myCurStyleEntry);
+		myModelReader.addStyleEntry(*myCurStyleEntry);
 	}
 	for (size_t i = 0; i < myKindStack.size(); ++i) {
 		myModelReader.addControl(myKindStack.at(i), true);
@@ -275,16 +275,17 @@ void DocBookReader::handleParagraphStyle(const OleMainStream::Style &styleInfo) 
 	}
 
 	//TODO in case, where style is heading, but size is small it works wrong
+	ZLTextStyleEntry::SizeUnit unit = ZLTextStyleEntry::SIZE_UNIT_PERCENT;
 	if (styleInfo.istd == OleMainStream::H1) {
-		entry->setFontSizeMag(3);
+		entry->setLength(ZLTextStyleEntry::LENGTH_FONT_SIZE, 140, unit);
 	} else if (styleInfo.istd == OleMainStream::H2) {
-		entry->setFontSizeMag(2);
+		entry->setLength(ZLTextStyleEntry::LENGTH_FONT_SIZE, 120, unit);
 	} else if (styleInfo.istd == OleMainStream::H3) {
-		entry->setFontSizeMag(1);
+		entry->setLength(ZLTextStyleEntry::LENGTH_FONT_SIZE, 110, unit);
 	}
 
 	myCurStyleEntry = entry;
-	myModelReader.addControl(*myCurStyleEntry);
+	myModelReader.addStyleEntry(*myCurStyleEntry);
 
 	//we should have the same font style, as for the previous paragraph, if it has the same istd
 	if (myCurStyleInfo.istd != OleMainStream::ISTD_INVALID && myCurStyleInfo.istd == styleInfo.istd) {

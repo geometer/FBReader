@@ -21,6 +21,7 @@
 #include <ZLInputStream.h>
 #include <ZLDir.h>
 #include <ZLUnicodeUtil.h>
+#include <ZLEncodingConverter.h>
 
 #include "ZLLanguageList.h"
 #include "ZLLanguageDetector.h"
@@ -54,34 +55,75 @@ ZLLanguageDetector::ZLLanguageDetector() {
 ZLLanguageDetector::~ZLLanguageDetector() {
 }
 
+static std::string naiveEncodingDetection(const unsigned char *buffer, size_t length) {
+	if (buffer[0] == 0xFE && buffer[1] == 0xFF) {
+		return ZLEncodingConverter::UTF16BE;
+	}
+	if (buffer[0] == 0xFF && buffer[1] == 0xFE) {
+		return ZLEncodingConverter::UTF16;
+	}
+
+	bool ascii = true;
+	const unsigned char *end = buffer + length;
+	int utf8count = 0;
+	for (const unsigned char *ptr = buffer; ptr < end; ++ptr) {
+		if (utf8count > 0) {
+			if ((*ptr & 0xc0) != 0x80) {
+				return std::string();
+			}
+			--utf8count;
+		} else if ((*ptr & 0x80) == 0) {
+		} else if ((*ptr & 0xe0) == 0xc0) {
+			ascii = false;
+			utf8count = 1;
+		} else if ((*ptr & 0xf0) == 0xe0) {
+			ascii = false;
+			utf8count = 2;
+		} else if ((*ptr & 0xf8) == 0xf0) {
+			ascii = false;
+			utf8count = 3;
+		} else {
+			return std::string();
+		}
+	}
+	return ascii ? "US-ASCII" : "UTF-8";
+}
+
 shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfo(const char *buffer, size_t length, int matchingCriterion) {
-	shared_ptr<LanguageInfo> info;
-	std::map<int,shared_ptr<ZLMapBasedStatistics> > statisticsMap;
-	std::string ucs2;
+	std::string naive;
 	if ((unsigned char)buffer[0] == 0xFE &&
 			(unsigned char)buffer[1] == 0xFF) {
-		ucs2 = "UTF-16BE";	
-	} else 
-	if ((unsigned char)buffer[0] == 0xFF &&
+		naive = ZLEncodingConverter::UTF16BE;
+	} else if ((unsigned char)buffer[0] == 0xFF &&
 			(unsigned char)buffer[1] == 0xFE) {
-		ucs2 = "UTF-16";	
+		naive = ZLEncodingConverter::UTF16;
+	} else {
+		naive = naiveEncodingDetection((const unsigned char*)buffer, length);
 	}
+	return findInfoForEncoding(naive, buffer, length, matchingCriterion);
+}
+
+shared_ptr<ZLLanguageDetector::LanguageInfo> ZLLanguageDetector::findInfoForEncoding(const std::string &encoding, const char *buffer, size_t length, int matchingCriterion) {
+	shared_ptr<LanguageInfo> info;
+	std::map<int,shared_ptr<ZLMapBasedStatistics> > statisticsMap;
 	for (SBVector::const_iterator it = myMatchers.begin(); it != myMatchers.end(); ++it) {
-		if (ucs2.empty() || (*it)->info()->Encoding == ucs2) {
-			const int charSequenceLength = (*it)->charSequenceLength();
-			shared_ptr<ZLMapBasedStatistics> stat = statisticsMap[charSequenceLength];
-			if (stat.isNull()) {
-				stat = new ZLMapBasedStatistics();
-				ZLStatisticsGenerator("\r\n ").generate(
-					buffer, length, charSequenceLength, *stat
-				);
-				statisticsMap[charSequenceLength] = stat;
-			}
-			const int criterion = (*it)->criterion(*stat);
-			if (criterion > matchingCriterion) {
-				info = (*it)->info();
-				matchingCriterion = criterion;
-			}
+		if (!encoding.empty() && (*it)->info()->Encoding != encoding) {
+			continue;
+		}
+
+		const int charSequenceLength = (*it)->charSequenceLength();
+		shared_ptr<ZLMapBasedStatistics> stat = statisticsMap[charSequenceLength];
+		if (stat.isNull()) {
+			stat = new ZLMapBasedStatistics();
+			ZLStatisticsGenerator("\r\n ").generate(
+				buffer, length, charSequenceLength, *stat
+			);
+			statisticsMap[charSequenceLength] = stat;
+		}
+		const int criterion = (*it)->criterion(*stat);
+		if (criterion > matchingCriterion) {
+			info = (*it)->info();
+			matchingCriterion = criterion;
 		}
 	}
 	return info;

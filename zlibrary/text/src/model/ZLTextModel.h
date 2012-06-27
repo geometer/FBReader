@@ -24,6 +24,7 @@
 #include <string>
 #include <algorithm>
 
+#include <ZLHyperlinkType.h>
 #include <ZLTextParagraph.h>
 #include <ZLTextKind.h>
 #include <ZLTextMark.h>
@@ -31,9 +32,10 @@
 
 class ZLTextParagraph;
 class ZLTextTreeParagraph;
+class ZLTextStyleEntry;
 
 class ZLTextModel {
-	
+
 public:
 	enum Kind {
 		PLAIN_TEXT_MODEL,
@@ -65,8 +67,9 @@ public:
 	ZLTextMark previousMark(ZLTextMark position) const;
 
 	void addControl(ZLTextKind textKind, bool isStart);
-	void addControl(const ZLTextStyleEntry &entry);
-	void addHyperlinkControl(ZLTextKind textKind, const std::string &label, const std::string &hyperlinkType);
+	void addStyleEntry(const ZLTextStyleEntry &entry);
+	void addStyleCloseEntry();
+	void addHyperlinkControl(ZLTextKind textKind, ZLHyperlinkType hyperlinkType, const std::string &label);
 	void addText(const std::string &text);
 	void addText(const std::vector<std::string> &text);
 	void addImage(const std::string &id, const ZLImageMap &imageMap, short vOffset);
@@ -75,7 +78,7 @@ public:
 
 protected:
 	void addParagraphInternal(ZLTextParagraph *paragraph);
-	
+
 private:
 	const std::string myLanguage;
 	std::vector<ZLTextParagraph*> myParagraphs;
