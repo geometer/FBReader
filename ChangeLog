@@ -1,8 +1,14 @@
-===== 0.99.0 (????????, 2011) =====
+===== 0.99.0 (????????, 2012) =====
 
 * Esperanto interface localization has been added (by Katarína Nosková)
 * Hyphenation patterns for Polish (by Tomasz Długosz)
 * Polish interface localization (by Tomasz Długosz)
+* Speed of library scanning has been increased
+* Plugin for reading MsWord (*.doc) books
+* Fixed zip reading for several ePub books (e.g. for “die Zeit” ePubs)
+* Support for book series in ePubs with point format (e.g. "2.5") has been added
+* Fixed image support in RTF books
+* Encoding & language recognizing has been improved
 
 ===== 0.14.20100422 (April 22, 2010) =====
 
