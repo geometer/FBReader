@@ -260,7 +260,7 @@ const std::string BooksDBQuery::SET_BOOKSERIES = \
 	"INSERT OR REPLACE INTO BookSeries (book_id, series_id, book_index) VALUES (" \
 	"	@book_id, " \
 	"	@series_id, " \
-	"	nullif(@book_index, 0) " \
+	"	nullif(@book_index, \"\") " \
 	"); ";
 
 const std::string BooksDBQuery::DELETE_BOOKSERIES = \

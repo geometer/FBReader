@@ -22,7 +22,7 @@
 #include "../../sqldb/implsqlite/SQLiteFactory.h"
 
 SaveSeriesRunnable::SaveSeriesRunnable(DBConnection &connection) {
-	mySetBookSeries    = SQLiteFactory::createCommand(BooksDBQuery::SET_BOOKSERIES, connection, "@book_id", DBValue::DBINT, "@series_id", DBValue::DBINT, "@book_index", DBValue::DBINT);
+	mySetBookSeries    = SQLiteFactory::createCommand(BooksDBQuery::SET_BOOKSERIES, connection, "@book_id", DBValue::DBINT, "@series_id", DBValue::DBINT, "@book_index", DBValue::DBTEXT);
 	myDeleteBookSeries = SQLiteFactory::createCommand(BooksDBQuery::DELETE_BOOKSERIES, connection, "@book_id", DBValue::DBINT);
 	myFindSeriesId     = SQLiteFactory::createCommand(BooksDBQuery::FIND_SERIES_ID, connection, "@name", DBValue::DBTEXT);
 	myAddSeries        = SQLiteFactory::createCommand(BooksDBQuery::ADD_SERIES, connection, "@name", DBValue::DBTEXT);
@@ -49,7 +49,7 @@ bool SaveSeriesRunnable::run() {
 	}
 	((DBIntValue &) *mySetBookSeries->parameter("@book_id").value()) = myBook->bookId();
 	mySetBookSeries->parameter("@series_id").setValue( tableSeriesId );
-	((DBIntValue &) *mySetBookSeries->parameter("@book_index").value()) = myBook->indexInSeries();
+	((DBTextValue &) *mySetBookSeries->parameter("@book_index").value()) = myBook->indexInSeries().value();
 	return mySetBookSeries->execute();
 }
 

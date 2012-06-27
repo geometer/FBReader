@@ -107,7 +107,7 @@ void OEBMetaInfoReader::startElementHandler(const char *tag, const char **attrib
 					if (sName == "calibre:series" || isNSName(sName, "series", ZLXMLNamespace::CalibreMetadata)) {
 						myBook.setSeries(content, myBook.indexInSeries());
 					} else if (sName == "calibre:series_index" || isNSName(sName, "series_index", ZLXMLNamespace::CalibreMetadata)) {
-						myBook.setSeries(myBook.seriesTitle(), atoi(content));
+						myBook.setSeries(myBook.seriesTitle(), std::string(content));
 					}
 				}
 			}
@@ -122,8 +122,7 @@ void OEBMetaInfoReader::endElementHandler(const char *tag) {
 		case READ_NONE:
 			break;
 		case READ_METADATA:
-			if (testTag(ZLXMLNamespace::OpenPackagingFormat, METADATA, tagString) ||
-		 			DC_METADATA == tagString) {
+			if (testTag(ZLXMLNamespace::OpenPackagingFormat, METADATA, tagString) || DC_METADATA == tagString) {
 				interrupt();
 				myReadState = READ_NONE;
 				return;

@@ -27,6 +27,7 @@
 #include <ZLFile.h>
 
 #include "Lists.h"
+#include "Number.h"
 
 class Author;
 class Tag;
@@ -62,7 +63,7 @@ public: // unmodifiable book methods
 	const std::string &language() const;
 	const std::string &encoding() const;
 	const std::string &seriesTitle() const;
-	int indexInSeries() const;
+	const Number &indexInSeries() const;
 
 	const TagList &tags() const;
 	const AuthorList &authors() const;
@@ -71,7 +72,7 @@ public: // modifiable book methods
 	void setTitle(const std::string &title);
 	void setLanguage(const std::string &language);
 	void setEncoding(const std::string &encoding);
-	void setSeries(const std::string &title, int index);
+	void setSeries(const std::string &title, const Number &index);
 
 public:
 	bool addTag(shared_ptr<Tag> tag);
@@ -98,7 +99,7 @@ private:
 	std::string myLanguage;
 	std::string myEncoding;
 	std::string mySeriesTitle;
-	int myIndexInSeries;
+	Number myIndexInSeries;
 	TagList myTags;
 	AuthorList myAuthors;
 
@@ -130,7 +131,7 @@ inline const ZLFile &Book::file() const { return myFile; }
 inline const std::string &Book::language() const { return myLanguage; }
 inline const std::string &Book::encoding() const { return myEncoding; }
 inline const std::string &Book::seriesTitle() const { return mySeriesTitle; }
-inline int Book::indexInSeries() const { return myIndexInSeries; }
+inline const Number &Book::indexInSeries() const { return myIndexInSeries; }
 
 inline const TagList &Book::tags() const { return myTags; }
 inline const AuthorList &Book::authors() const { return myAuthors; }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,33 +17,29 @@
  * 02110-1301, USA.
  */
 
-#ifndef __BOOKINFO_H__
-#define __BOOKINFO_H__
+#ifndef __NUMBER_H__
+#define __NUMBER_H__
 
 #include <string>
 
-#include <ZLOptions.h>
+class Number {
+public:
+	Number();
+	Number(std::string number);
+	Number(int number);
 
+	static std::string validate(const std::string& value);
 
-struct BookInfo {
-	BookInfo(const std::string &fileName);
-	~BookInfo();
+	const std::string &value() const;
+	void setValue(const std::string &value);
 
-	bool isFull() const;
-	void reset();
+	//TODO implement validation
 
-	ZLStringOption AuthorDisplayNameOption;
-	ZLStringOption AuthorSortKeyOption;
-	ZLStringOption TitleOption;
-	ZLStringOption SeriesTitleOption;
-	ZLStringOption IndexInSeriesOption;
-	ZLStringOption LanguageOption;
-	ZLStringOption EncodingOption;
-	ZLStringOption TagsOption;
+	bool operator< (const Number &number) const;
+	bool operator== (const Number &number) const;
 
-	const BookInfo &operator = (const BookInfo &bi);
+private:
+	std::string myNumber;
 };
 
-inline BookInfo::~BookInfo() {}
-
-#endif /* __BOOKINFO_H__ */
+#endif /* __NUMBER_H__ */
