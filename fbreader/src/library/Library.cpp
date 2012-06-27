@@ -64,7 +64,7 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 	while (!dirs.empty()) {
 		std::string dirname = *dirs.begin();
 		dirs.erase(dirs.begin());
-		
+
 		ZLFile dirfile(dirname);
 		std::vector<std::string> files;
 		bool inZip = false;
@@ -106,7 +106,7 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 void Library::rebuildBookSet() const {
 	myBooks.clear();
 	myExternalBooks.clear();
-	
+
 	std::map<std::string, shared_ptr<Book> > booksMap;
 	BooksDBUtil::getBooks(booksMap);
 
@@ -148,13 +148,13 @@ size_t Library::revision() const {
 	return (myBuildMode == BUILD_NOTHING) ? myRevision : myRevision + 1;
 }
 
-class LibrarySynchronizer : public ZLRunnable {
+class LibrarySynchronizer : public DBRunnable {
 
 public:
 	LibrarySynchronizer(Library::BuildMode mode);
 
 private:
-	void run();
+	bool run();
 
 private:
 	const Library::BuildMode myBuildMode;
@@ -163,7 +163,7 @@ private:
 LibrarySynchronizer::LibrarySynchronizer(Library::BuildMode mode) : myBuildMode(mode) {
 }
 
-void LibrarySynchronizer::run() {
+bool LibrarySynchronizer::run() {
 	Library &library = Library::Instance();
 
 	if (myBuildMode & Library::BUILD_COLLECT_FILES_INFO) {
@@ -173,7 +173,28 @@ void LibrarySynchronizer::run() {
 	if (myBuildMode & Library::BUILD_UPDATE_BOOKS_INFO) {
 		library.rebuildMaps();
 	}
+	return true;
 }
+
+class LibrarySynchronizerWrapper : public ZLRunnable {
+
+public:
+	LibrarySynchronizerWrapper(Library::BuildMode mode);
+
+private:
+	void run();
+
+private:
+	LibrarySynchronizer myRunnable;
+};
+
+LibrarySynchronizerWrapper::LibrarySynchronizerWrapper(Library::BuildMode mode) : myRunnable(mode) {
+}
+
+void LibrarySynchronizerWrapper::run() {
+	BooksDB::Instance().executeAsTransaction(myRunnable);
+}
+
 
 void Library::synchronize() const {
 	if (myScanSubdirs != ScanSubdirsOption.value() ||
@@ -187,7 +208,7 @@ void Library::synchronize() const {
 		return;
 	}
 
-	LibrarySynchronizer synchronizer(myBuildMode);
+	LibrarySynchronizerWrapper synchronizer(myBuildMode);
 	myBuildMode = BUILD_NOTHING;
 	ZLDialogManager::Instance().wait(ZLResourceKey("loadingBookList"), synchronizer);
 

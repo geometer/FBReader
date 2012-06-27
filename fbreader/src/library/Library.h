@@ -64,7 +64,7 @@ public:
 		REMOVE_FROM_DISK = 2,
 		REMOVE_FROM_LIBRARY_AND_DISK = REMOVE_FROM_LIBRARY | REMOVE_FROM_DISK
 	};
-		
+
 	RemoveType canRemove(shared_ptr<Book> book) const;
 
 	void collectSeriesTitles(shared_ptr<Author> author, std::set<std::string> &titles) const;
@@ -120,6 +120,7 @@ private:
 	mutable size_t myRevision;
 
 friend class LibrarySynchronizer;
+friend class LibrarySynchronizerWrapper;
 };
 
 #endif /* __LIBRARY_H__ */
