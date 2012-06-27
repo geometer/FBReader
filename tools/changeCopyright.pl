@@ -32,7 +32,7 @@ while (<SOURCE_FILE>) {
 	++$index;
 }
 $copyright_notice_end_line > 0 || die "File $source_file doesn't contain copyright notice\n";
-$years = ($min_year == 2010) ? 2010 : "$min_year-2010";
+$years = ($min_year == 2012) ? 2012 : "$min_year-2012";
 
 open(TMP_FILE, ">TMP");
 
