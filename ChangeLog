@@ -9,6 +9,7 @@
 * Support for book series in ePubs with point format (e.g. "2.5") has been added
 * Fixed image support in RTF books
 * Encoding & language recognizing has been improved
+* As from version 0.99.0 FBReader for Linux supports qt4 interface only
 
 ===== 0.14.20100422 (April 22, 2010) =====
 

@@ -1,3 +1,10 @@
+fbreader (0.99.0-1) stable; urgency=low
+
+  * new upstream version
+  * as from version 0.99.0 FBReader for Linux supports qt4 interface only
+
+ -- Alexander Turkin <snowwlex@fbreader.org>  Thu, 28 Jun 2012 20:02:00 +0300
+
 fbreader (0.14.20100422-1) stable; urgency=low
 
   * new upstream version

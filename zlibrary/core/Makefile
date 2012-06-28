@@ -50,7 +50,7 @@ $(TARGET): .objects
 	@echo -n 'Creating $@ ...'
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(ZLSHARED)" "yes"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS) -ldl
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS)
 	#@$(LD) $(LDFLAGS) -dynamiclib -dylinker_install_name $(TARGET_SONAME) -o $(TARGET) -lc $(patsubst %, %/*.o, $(SUBDIRS)) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS) -ldl -liconv
 	@ln -sf $(TARGET) $(TARGET_SONAME)
 	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
@@ -85,6 +85,7 @@ ifeq "$(ZLSHARED)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)
 	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SONAME)
+	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SHORTNAME)
 endif
 
 do_install_dev:

@@ -3,12 +3,20 @@ MAKEFILESDIR = $(ROOTDIR)/makefiles
 include $(MAKEFILESDIR)/config.mk
 
 VERSION = $(shell cat ../VERSION)
+SOVERSION = $(shell cat SOVERSION)
 
 ifeq "$(ZLSHARED)" "yes"
-  #TARGET = zlui-$(UI_TYPE).dylib
-  TARGET = zlui-$(UI_TYPE).so
+  ifeq "$(TARGET_ARCH)" "macosx"
+    TARGET = libzlui.$(VERSION).dylib
+    TARGET_SONAME = libzlui.$(SOVERSION).dylib
+    TARGET_SHORTNAME = libzlui.dylib
+  else
+    TARGET = libzlui.so.$(VERSION)
+    TARGET_SONAME = libzlui.so.$(SOVERSION)
+    TARGET_SHORTNAME = libzlui.so
+  endif
 else
-  TARGET = libzlui-$(UI_TYPE).a
+  TARGET = libzlui.a
 endif
 
 SUBDIRS_ALL = \
@@ -109,15 +117,16 @@ $(TARGET): .objects
 	@echo -n 'Creating $@ ...'
 	@$(RM_QUIET) $(TARGET)
 ifeq "$(ZLSHARED)" "yes"
-	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(CORE_LIBS)
-	#@$(LD) $(LDFLAGS) -dynamiclib -dylinker_install_name $(TARGET) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(CORE_LIBS)
+	@$(LD) $(LDFLAGS) -shared -Wl,-soname,$(TARGET_SONAME) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(CORE_LIBS)
+	#@$(LD) $(LDFLAGS) -dynamiclib -dylinker_install_name $(TARGET_SONAME) -o $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS)) $(UILIBS) $(CORE_LIBS)
+	@ln -sf $(TARGET) $(TARGET_SONAME)
+	@ln -sf $(TARGET) $(TARGET_SHORTNAME)
 else
 	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS) $(QTSUBDIRS) $(GTKSUBDIRS))
 endif
 	@echo ' OK'
 
 SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
-LIB_ZLIBRARY = $(DESTDIR)$(LIBDIR)/zlibrary
 
 ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pdaxrom>)"
   KEYNAMES = keynames-$(UI_TYPE).xml
@@ -132,8 +141,10 @@ do_install:
 	fi
 	@install -m 0644 data/keynames.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/$(KEYNAMES)
 ifeq "$(ZLSHARED)" "yes"
-	@install -d $(LIB_ZLIBRARY)/ui
-	@install $(TARGET) $(LIB_ZLIBRARY)/ui
+	@install -d $(DESTDIR)$(LIBDIR)
+	@install $(TARGET) $(DESTDIR)$(LIBDIR)
+	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SONAME)
+	@ln -sf $(TARGET) $(DESTDIR)$(LIBDIR)/$(TARGET_SHORTNAME)
 endif
 
 do_install_dev:

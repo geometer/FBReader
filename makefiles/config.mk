@@ -43,10 +43,11 @@ ZINCLUDE = -I $(ROOTDIR)/zlibrary/core/include -I $(ROOTDIR)/zlibrary/text/inclu
 ZLSHARED ?= yes
 
 ifeq "$(ZLSHARED)" "yes"
-  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/core -lzlcore -ldl
+  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/core -lzlcore
 	TEXT_LIBS = -lzltext
+	ZLUI_LIB = -L$(ROOTDIR)/zlibrary/ui -lzlui
 else
-  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/ui -L$(ROOTDIR)/zlibrary/core -lzlcore -lzlui-$(UI_TYPE) -lzlcore $(UILIBS) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS)
+  CORE_LIBS = -lm -L$(ROOTDIR)/zlibrary/ui -L$(ROOTDIR)/zlibrary/core -lzlcore -lzlui -lzlcore $(UILIBS) $(XML_LIBS) $(ARCHIVER_LIBS) $(NETWORK_LIBS)
 	TEXT_LIBS = -lzltext $(EXTERNAL_LIBS) -llinebreak -lfribidi
 endif
 
