@@ -71,7 +71,7 @@ protected:
 	virtual void handleStartField() = 0;
 	virtual void handleSeparatorField() = 0;
 	virtual void handleEndField() = 0;
-	virtual void handlePicture(size_t offset, size_t size) = 0;
+	virtual void handlePicture(const ZLBlockedFileImage::Blocks &blocks) = 0;
 	virtual void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) = 0;
 
 	virtual void handleFontStyle(unsigned int fontStyle) = 0;

@@ -70,20 +70,17 @@ size_t OleStream::read(char *buffer, size_t maxSize) {
 
 	readedBytes = myBaseStream->read(buffer, std::min(length, bytesLeftInCurBlock));
 	for (size_t i = 0; i < toReadBlocks; ++i) {
-		size_t readbytes;
-		++curBlockNumber;
+		if (++curBlockNumber >= myOleEntry.blocks.size()) {
+			break;
+		}
 		newFileOffset = myStorage->getFileOffsetOfBlock(myOleEntry, curBlockNumber);
 		myBaseStream->seek(newFileOffset, true);
-		readbytes = myBaseStream->read(buffer + readedBytes, std::min(length - readedBytes, sectorSize));
-		readedBytes += readbytes;
+		readedBytes += myBaseStream->read(buffer + readedBytes, std::min(length - readedBytes, sectorSize));
 	}
-	if (toReadBytes > 0) {
-		size_t readbytes;
-		++curBlockNumber;
+	if (toReadBytes > 0 && ++curBlockNumber < myOleEntry.blocks.size()) {
 		newFileOffset = myStorage->getFileOffsetOfBlock(myOleEntry, curBlockNumber);
 		myBaseStream->seek(newFileOffset, true);
-		readbytes = myBaseStream->read(buffer + readedBytes, toReadBytes);
-		readedBytes += readbytes;
+		readedBytes += myBaseStream->read(buffer + readedBytes, toReadBytes);
 	}
 	myOleOffset += readedBytes;
 	return readedBytes;
@@ -126,8 +123,8 @@ size_t OleStream::offset() {
 	return myOleOffset;
 }
 
-OleStream::BlockPieceInfoList OleStream::getBlockPieceInfoList(unsigned int offset, unsigned int size) const {
-	BlockPieceInfoList list;
+ZLBlockedFileImage::Blocks OleStream::getBlockPieceInfoList(unsigned int offset, unsigned int size) const {
+	ZLBlockedFileImage::Blocks list;
 	unsigned int sectorSize = (myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
 	unsigned int curBlockNumber = offset / sectorSize;
 	if (curBlockNumber >= myOleEntry.blocks.size()) {
@@ -144,26 +141,21 @@ OleStream::BlockPieceInfoList OleStream::getBlockPieceInfoList(unsigned int offs
 	}
 
 	unsigned int readedBytes = std::min(size, bytesLeftInCurBlock);
-	list.push_back(BlockPieceInfo(startFileOffset, readedBytes));
+	list.push_back(ZLBlockedFileImage::Block(startFileOffset, readedBytes));
 
 	for (unsigned int i = 0; i < toReadBlocks; ++i) {
-		++curBlockNumber;
-		if (curBlockNumber >= myOleEntry.blocks.size()) {
-			return list;
+		if (++curBlockNumber >= myOleEntry.blocks.size()) {
+			break;
 		}
 		unsigned int newFileOffset = myStorage->getFileOffsetOfBlock(myOleEntry, curBlockNumber);
 		unsigned int readbytes = std::min(size - readedBytes, sectorSize);
-		list.push_back(BlockPieceInfo(newFileOffset, readbytes));
+		list.push_back(ZLBlockedFileImage::Block(newFileOffset, readbytes));
 		readedBytes += readbytes;
 	}
-	if (toReadBytes > 0) {
-		++curBlockNumber;
-		if (curBlockNumber >= myOleEntry.blocks.size()) {
-			return list;
-		}
+	if (toReadBytes > 0 && ++curBlockNumber < myOleEntry.blocks.size()) {
 		unsigned int newFileOffset = myStorage->getFileOffsetOfBlock(myOleEntry, curBlockNumber);
 		unsigned int readbytes = toReadBytes;
-		list.push_back(BlockPieceInfo(newFileOffset, readbytes));
+		list.push_back(ZLBlockedFileImage::Block(newFileOffset, readbytes));
 		readedBytes += readbytes;
 	}
 	return list;

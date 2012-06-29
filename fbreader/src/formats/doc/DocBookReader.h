@@ -51,7 +51,7 @@ private:
 	void handleStartField();
 	void handleSeparatorField();
 	void handleEndField();
-	void handlePicture(size_t offset, size_t size);
+	void handlePicture(const ZLBlockedFileImage::Blocks &blocks);
 	void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char);
 
 	//formatting:

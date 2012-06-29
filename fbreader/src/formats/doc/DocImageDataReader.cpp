@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,13 +27,13 @@ DocImageDataReader::DocImageDataReader(shared_ptr<OleStream> dataStream) :
 	myDataStream(dataStream) {
 }
 
-OleStream::BlockPieceInfoList DocImageDataReader::getImagePieceInfo(unsigned int dataPos) {
+ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) {
 	if (myDataStream.isNull()) {
 		printf("data stream is null\n");
-		return OleStream::BlockPieceInfoList();
+		return ZLBlockedFileImage::Blocks();
 	}
 	if (!myDataStream->seek(dataPos, true)) {
-		return OleStream::BlockPieceInfoList();
+		return ZLBlockedFileImage::Blocks();
 	}
 
 	size_t dataPosFileOffset = myDataStream->fileOffset();
@@ -42,7 +42,7 @@ OleStream::BlockPieceInfoList DocImageDataReader::getImagePieceInfo(unsigned int
 	unsigned int picfHeaderSize = 4 + 2 + 8; //record length, headerLength and storage format
 	char headerBuffer[picfHeaderSize];
 	if (myDataStream->read(headerBuffer, picfHeaderSize) != picfHeaderSize) {
-		return OleStream::BlockPieceInfoList();
+		return ZLBlockedFileImage::Blocks();
 	}
 	unsigned int length = OleUtil::getU4Bytes(headerBuffer, 0);
 	unsigned int headerLength = OleUtil::getU2Bytes(headerBuffer, 4);
@@ -50,15 +50,15 @@ OleStream::BlockPieceInfoList DocImageDataReader::getImagePieceInfo(unsigned int
 
 	if (formatType != 0x0064) { //external link to some file; see p.394 [MS-DOC]
 		//TODO implement
-		return OleStream::BlockPieceInfoList();
+		return ZLBlockedFileImage::Blocks();
 	}
 	if (headerLength >= length) {
-		return OleStream::BlockPieceInfoList();
+		return ZLBlockedFileImage::Blocks();
 	}
 
 	//reading OfficeArtInlineSpContainer structure; see p.421 [MS-DOC] and p.56 [MS-ODRAW]
 	if (!myDataStream->seek(headerLength - picfHeaderSize, false)) {  //skip header
-		return OleStream::BlockPieceInfoList();
+		return ZLBlockedFileImage::Blocks();
 	}
 
 	char buffer[8]; //for OfficeArtRecordHeader structure; see p.69 [MS-ODRAW]
@@ -66,7 +66,7 @@ OleStream::BlockPieceInfoList DocImageDataReader::getImagePieceInfo(unsigned int
 	unsigned int curOffset = 0;
 	for (curOffset = headerLength; !found && curOffset + 8 <= length; curOffset += 8) {
 		if (myDataStream->read(buffer, 8) != 8) {
-			return OleStream::BlockPieceInfoList();
+			return ZLBlockedFileImage::Blocks();
 		}
 		unsigned int recordInstance = OleUtil::getU2Bytes(buffer, 0) >> 4;
 		unsigned int recordType = OleUtil::getU2Bytes(buffer, 2);
@@ -103,7 +103,7 @@ OleStream::BlockPieceInfoList DocImageDataReader::getImagePieceInfo(unsigned int
 			case 0xF01B: //WMF
 			case 0xF01C: //PICT
 				//TODO implement
-				return OleStream::BlockPieceInfoList();
+				return ZLBlockedFileImage::Blocks();
 			case 0xF01D: //JPEG
 				myDataStream->seek(17, false);
 				curOffset += 17;
@@ -142,24 +142,24 @@ OleStream::BlockPieceInfoList DocImageDataReader::getImagePieceInfo(unsigned int
 				break;
 			case 0xF00C:
 			default:
-				return OleStream::BlockPieceInfoList();
+				return ZLBlockedFileImage::Blocks();
 			}
 	}
 
 	if (!found) {
 		printf("\n!found\n");
-		return OleStream::BlockPieceInfoList();
+		return ZLBlockedFileImage::Blocks();
 	}
 
 	printf("\nfound!!!!\n");
-	OleStream::BlockPieceInfoList list2 = myDataStream->getBlockPieceInfoList(dataPos + curOffset, length - curOffset);
-	OleStream::BlockPieceInfoList list;
-	OleStream::BlockPieceInfo info(dataPosFileOffset + curOffset, length - curOffset);
+	ZLBlockedFileImage::Blocks list2 = myDataStream->getBlockPieceInfoList(dataPos + curOffset, length - curOffset);
+	ZLBlockedFileImage::Blocks list;
+	ZLBlockedFileImage::Block info(dataPosFileOffset + curOffset, length - curOffset);
 	list.push_back(info);
 
 	printf("one big piece: off=%u, size=%u\n", info.offset, info.size);
 	for (size_t i = 0; i < list2.size(); ++i) {
 		printf("piece[%u] = off=%u, size=%u, next=%u\n", i, list2.at(i).offset, list2.at(i).size,  list2.at(i).offset + list2.at(i).size);
 	}
-	return list;
+	return list2;
 }

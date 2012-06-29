@@ -183,9 +183,9 @@ void OleStreamReader::processPicture(OleMainStream &stream) {
 		if (pictureInfoList.at(i).charPos == myCurCharPos) {
 			OleMainStream::PictureInfo info = pictureInfoList.at(i);
 			DocImageDataReader imageReader(dataStream);
-			OleStream::BlockPieceInfoList list = imageReader.getImagePieceInfo(info.dataPos);
+			ZLBlockedFileImage::Blocks list = imageReader.getImagePieceInfo(info.dataPos);
 			if (!list.empty()) {
-				handlePicture(list.at(0).offset, list.at(0).size);
+				handlePicture(list);
 			}
 			break;
 		}

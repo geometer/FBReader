@@ -223,13 +223,13 @@ void DocBookReader::handleEndField() {
 
 }
 
-void DocBookReader::handlePicture(size_t offset, size_t size) {
-	std::cout << std::endl << "handlePicture " << offset << " " << size << std::endl;
+void DocBookReader::handlePicture(const ZLBlockedFileImage::Blocks &blocks) {
+	//std::cout << std::endl << "handlePicture " << offset << " " << size << std::endl;
 	std::string number;
 	ZLStringUtil::appendNumber(number, myPictureCounter++);
 	myModelReader.addImageReference(number);
 	ZLFile file(myModelReader.model().book()->file().path(), "image/auto");
-	myModelReader.addImage(number, new ZLFileImage(file, offset, size,  ZLFileImage::ENCODING_NONE));
+	myModelReader.addImage(number, new ZLBlockedFileImage(file, blocks));
 }
 
 void DocBookReader::handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) {

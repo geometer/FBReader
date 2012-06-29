@@ -17,21 +17,35 @@
  * 02110-1301, USA.
  */
 
-#ifndef __DOCIMAGEDATAREADER_H__
-#define __DOCIMAGEDATAREADER_H__
+#ifndef __ZLBLOCKEDFILEIMAGE_H__
+#define __ZLBLOCKEDFILEIMAGE_H__
 
+#include <string>
 #include <vector>
 
-#include "OleStream.h"
+#include <ZLFile.h>
+#include <ZLImage.h>
 
-class DocImageDataReader {
+class ZLBlockedFileImage : public ZLSingleImage {
 
 public:
-	DocImageDataReader(shared_ptr<OleStream> dataStream);
-	ZLBlockedFileImage::Blocks getImagePieceInfo(unsigned int dataPos);
+	struct Block {
+		unsigned int offset;
+		unsigned int size;
+
+		Block(unsigned int off, unsigned int s);
+	};
+	typedef std::vector<Block> Blocks;
+
+public:
+	ZLBlockedFileImage(const ZLFile &file, const Blocks &blocks);
+	const shared_ptr<std::string> stringData() const;
 
 private:
-	shared_ptr<OleStream> myDataStream;
+	const ZLFile myFile;
+	const Blocks myBlocks;
 };
 
-#endif /* __DOCIMAGEDATAREADER_H__ */
+inline ZLBlockedFileImage::Block::Block(unsigned int off, unsigned int s) : offset(off), size(s) { }
+
+#endif /* __ZLBLOCKEDFILEIMAGE_H__ */
