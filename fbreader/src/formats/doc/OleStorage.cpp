@@ -259,7 +259,7 @@ bool OleStorage::readOleEntry(int propNumber, OleEntry &e) {
 						chainCur < (int)(e.isBigBlock ? myBBD.size() : mySBD.size()) &&
 						e.blocks.size() <= e.length / (e.isBigBlock ? mySectorSize : myShortSectorSize));
 	}
-	e.length = std::min(e.length, (unsigned int)(e.isBigBlock ? mySectorSize : myShortSectorSize) * e.blocks.size());
+	e.length = std::min(e.length, (unsigned int)((e.isBigBlock ? mySectorSize : myShortSectorSize) * e.blocks.size()));
 	return true;
 }
 
