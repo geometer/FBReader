@@ -18,6 +18,7 @@
  */
 
 #include <ZLLogger.h>
+#include <cstdio>
 
 #include "OleStorage.h"
 #include "OleUtil.h"
@@ -204,6 +205,7 @@ bool OleStorage::readAllEntries() {
 		if (entry.type == OleEntry::ROOT_DIR) {
 			myRootEntryIndex = i;
 		}
+		printf("entry name is '%s'\n", entry.name.c_str());
 		myEntries.push_back(entry);
 	}
 	if (myRootEntryIndex < 0) {
@@ -263,7 +265,7 @@ bool OleStorage::readOleEntry(int propNumber, OleEntry &e) {
 	return true;
 }
 
-unsigned int OleStorage::getFileOffsetOfBlock(OleEntry &e, unsigned int blockNumber) {
+unsigned int OleStorage::getFileOffsetOfBlock(const OleEntry &e, unsigned int blockNumber) const {
 	unsigned int res;
 	if (e.isBigBlock) {
 		res = BBD_BLOCK_SIZE + e.blocks.at(blockNumber) * mySectorSize;

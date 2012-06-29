@@ -25,6 +25,15 @@
 class OleStream {
 
 public:
+	struct BlockPieceInfo {
+		unsigned int offset;
+		unsigned int size;
+
+		BlockPieceInfo(unsigned int off, unsigned int s);
+	};
+	typedef std::vector<BlockPieceInfo> BlockPieceInfoList;
+
+public:
 	OleStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream);
 
 public:
@@ -37,6 +46,10 @@ public:
 	size_t offset();
 
 public:
+	BlockPieceInfoList getBlockPieceInfoList(unsigned int offset, unsigned int size) const;
+	size_t fileOffset();
+
+public:
 	bool eof() const;
 
 protected:
@@ -47,6 +60,8 @@ protected:
 
 	unsigned int myOleOffset;
 };
+
+inline OleStream::BlockPieceInfo::BlockPieceInfo(unsigned int off, unsigned int s) : offset(off), size(s) { }
 
 
 

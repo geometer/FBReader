@@ -20,6 +20,8 @@
 #include <cstring> //for memset
 #include <string>
 
+#include <cstdio>
+
 #include <ZLLogger.h>
 #include <ZLUnicodeUtil.h>
 
@@ -45,6 +47,11 @@ OleMainStream::CharInfo::CharInfo():
 OleMainStream::SectionInfo::SectionInfo() :
 	charPos(0),
 	newPage(true) {
+}
+
+OleMainStream::PictureInfo::PictureInfo() :
+	charPos(0),
+	dataPos(0) {
 }
 
 OleMainStream::OleMainStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream) :
@@ -90,6 +97,11 @@ bool OleMainStream::open() {
 		return false;
 	}
 
+	OleEntry dataEntry;
+	if (myStorage->getEntryByName("Data", dataEntry)) {
+		myDataStream = new OleStream(myStorage, dataEntry, myBaseStream);
+	}
+
 	//result of reading following structures doesn't check, because all these
 	//problems can be ignored, and document can be showed anyway, maybe with wrong formatting
 	readBookmarks(headerBuffer, tableEntry);
@@ -114,6 +126,14 @@ const OleMainStream::StyleInfoList &OleMainStream::getStyleInfoList() const {
 
 const OleMainStream::Bookmarks &OleMainStream::getBookmarks() const {
 	return myBookmarks;
+}
+
+const OleMainStream::PictureInfoList &OleMainStream::getPictureInfoList() const {
+	return myPictureInfoList;
+}
+
+shared_ptr<OleStream> OleMainStream::dataStream() const {
+	return myDataStream;
 }
 
 bool OleMainStream::readFIB(const char *headerBuffer) {
@@ -313,7 +333,6 @@ bool OleMainStream::readBookmarks(const char *headerBuffer, const OleEntry &tabl
 	if (namesInfoLength == 0) {
 		return true; //there's no bookmarks
 	}
-
 
 	OleStream tableStream(myStorage, tableEntry, myBaseStream);
 	std::string buffer;
@@ -520,6 +539,20 @@ bool OleMainStream::readCharInfoTable(const char *headerBuffer, const OleEntry &
 				getCharInfo(chpxOffset, istd, formatPageBuffer + 1, len - 1, charInfo);
 			}
 			myCharInfoList.push_back(CharPosToCharInfo(charPos, charInfo));
+
+			if (chpxOffset == 0) {
+				continue;
+			}
+
+			PictureInfo pictureInfo;
+			if (getPictureInfo(chpxOffset, formatPageBuffer + 1, len - 1, pictureInfo)) {
+				pictureInfo.charPos = charPos;
+				myPictureInfoList.push_back(pictureInfo);
+				printf("pictureInfo: char offset = %u, data offset = %u\n", pictureInfo.charPos, pictureInfo.dataPos);
+			} else {
+				//printf("meet ole object, char offset = %u\n", charPos);
+			}
+
 		}
 	}
 	delete[] formatPageBuffer;
@@ -780,6 +813,30 @@ void OleMainStream::getSectionInfo(const char *grpprlBuffer, size_t bytes, Secti
 	}
 }
 
+bool OleMainStream::getPictureInfo(unsigned int chpxOffset, const char *grpprlBuffer, unsigned int bytes, PictureInfo &pictureInfo) {
+	//p. 105 of [MS-DOC] documentation
+	unsigned int offset = 0;
+	bool isFound = false;
+	while (bytes >= offset + 2) {
+		switch (OleUtil::getU2Bytes(grpprlBuffer, chpxOffset + offset)) {
+			case 0x080a: // ole object
+				if (OleUtil::getU1Byte(grpprlBuffer, chpxOffset + offset + 2) == 0x01) {
+					return false;
+				}
+				break;
+			case 0x6a03: // location
+				//TODO maybe we should return true immediately here?
+				pictureInfo.dataPos = OleUtil::getU4Bytes(grpprlBuffer, chpxOffset + offset + 2);
+				isFound = true;
+				break;
+			default:
+				break;
+		}
+		offset += getPrlLength(grpprlBuffer, chpxOffset + offset);
+	}
+	return isFound;
+}
+
 OleMainStream::Style OleMainStream::getStyleFromStylesheet(unsigned int istd, const StyleSheet &stylesheet) {
 	//TODO optimize it: StyleSheet can be map structure with istd key
 	Style style;
@@ -899,3 +956,4 @@ unsigned int OleMainStream::getPrlLength(const char *grpprlBuffer, unsigned int 
 			return 1;
 	}
 }
+

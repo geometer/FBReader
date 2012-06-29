@@ -25,6 +25,7 @@
 #include <ZLLogger.h>
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
+#include <ZLFileImage.h>
 
 #include "DocBookReader.h"
 #include "../../bookmodel/BookModel.h"
@@ -35,7 +36,8 @@
 
 DocBookReader::DocBookReader(BookModel &model, const std::string &encoding) :
 	OleStreamReader(encoding),
-	myModelReader(model) {
+	myModelReader(model),
+	myPictureCounter(0) {
 	myReadState = READ_TEXT;
 }
 
@@ -221,9 +223,13 @@ void DocBookReader::handleEndField() {
 
 }
 
-void DocBookReader::handleStartOfHeading() {
-	//heading can be, for example, a picture
-	//TODO implement
+void DocBookReader::handlePicture(size_t offset, size_t size) {
+	std::cout << std::endl << "handlePicture " << offset << " " << size << std::endl;
+	std::string number;
+	ZLStringUtil::appendNumber(number, myPictureCounter++);
+	myModelReader.addImageReference(number);
+	ZLFile file(myModelReader.model().book()->file().path(), "image/auto");
+	myModelReader.addImage(number, new ZLFileImage(file, offset, size,  ZLFileImage::ENCODING_NONE));
 }
 
 void DocBookReader::handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) {

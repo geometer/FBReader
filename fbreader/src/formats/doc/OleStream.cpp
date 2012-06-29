@@ -125,3 +125,56 @@ bool OleStream::seek(unsigned int offset, bool absoluteOffset) {
 size_t OleStream::offset() {
 	return myOleOffset;
 }
+
+OleStream::BlockPieceInfoList OleStream::getBlockPieceInfoList(unsigned int offset, unsigned int size) const {
+	BlockPieceInfoList list;
+	unsigned int sectorSize = (myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
+	unsigned int curBlockNumber = offset / sectorSize;
+	if (curBlockNumber >= myOleEntry.blocks.size()) {
+		return list;
+	}
+	unsigned int modBlock = offset % sectorSize;
+	unsigned int startFileOffset = myStorage->getFileOffsetOfBlock(myOleEntry, curBlockNumber) + modBlock;
+
+	unsigned int bytesLeftInCurBlock = sectorSize - modBlock;
+	unsigned int toReadBlocks = 0, toReadBytes = 0;
+	if (bytesLeftInCurBlock < size) {
+		toReadBlocks = (size - bytesLeftInCurBlock) / sectorSize;
+		toReadBytes = (size - bytesLeftInCurBlock) % sectorSize;
+	}
+
+	unsigned int readedBytes = std::min(size, bytesLeftInCurBlock);
+	list.push_back(BlockPieceInfo(startFileOffset, readedBytes));
+
+	for (unsigned int i = 0; i < toReadBlocks; ++i) {
+		++curBlockNumber;
+		if (curBlockNumber >= myOleEntry.blocks.size()) {
+			return list;
+		}
+		unsigned int newFileOffset = myStorage->getFileOffsetOfBlock(myOleEntry, curBlockNumber);
+		unsigned int readbytes = std::min(size - readedBytes, sectorSize);
+		list.push_back(BlockPieceInfo(newFileOffset, readbytes));
+		readedBytes += readbytes;
+	}
+	if (toReadBytes > 0) {
+		++curBlockNumber;
+		if (curBlockNumber >= myOleEntry.blocks.size()) {
+			return list;
+		}
+		unsigned int newFileOffset = myStorage->getFileOffsetOfBlock(myOleEntry, curBlockNumber);
+		unsigned int readbytes = toReadBytes;
+		list.push_back(BlockPieceInfo(newFileOffset, readbytes));
+		readedBytes += readbytes;
+	}
+	return list;
+}
+
+size_t OleStream::fileOffset() {
+	size_t sectorSize = (size_t)(myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
+	unsigned int curBlockNumber = myOleOffset / sectorSize;
+	if (curBlockNumber >= myOleEntry.blocks.size()) {
+		return 0;
+	}
+	unsigned int modBlock = myOleOffset % sectorSize;
+	return myStorage->getFileOffsetOfBlock(myOleEntry, curBlockNumber) + modBlock;
+}

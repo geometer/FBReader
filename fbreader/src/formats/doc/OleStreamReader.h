@@ -41,13 +41,14 @@ public:
 	static const ZLUnicodeUtil::Ucs2Char WORD_SEPARATOR_FIELD;
 	static const ZLUnicodeUtil::Ucs2Char WORD_END_FIELD;
 	static const ZLUnicodeUtil::Ucs2Char WORD_ZERO_WIDTH_UNBREAKABLE_SPACE;
+	static const ZLUnicodeUtil::Ucs2Char PICTURE;
+	static const ZLUnicodeUtil::Ucs2Char DRAWN_OBJECT;
 
 	//unicode values:
 	static const ZLUnicodeUtil::Ucs2Char NULL_SYMBOL;
 	static const ZLUnicodeUtil::Ucs2Char FILE_SEPARATOR;
 	static const ZLUnicodeUtil::Ucs2Char LINE_FEED;
 	static const ZLUnicodeUtil::Ucs2Char SOFT_HYPHEN;
-	static const ZLUnicodeUtil::Ucs2Char START_OF_HEADING;
 	static const ZLUnicodeUtil::Ucs2Char SPACE;
 	static const ZLUnicodeUtil::Ucs2Char SHORT_DEFIS;
 	static const ZLUnicodeUtil::Ucs2Char VERTICAL_LINE;
@@ -70,7 +71,7 @@ protected:
 	virtual void handleStartField() = 0;
 	virtual void handleSeparatorField() = 0;
 	virtual void handleEndField() = 0;
-	virtual void handleStartOfHeading() = 0;
+	virtual void handlePicture(size_t offset, size_t size) = 0;
 	virtual void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) = 0;
 
 	virtual void handleFontStyle(unsigned int fontStyle) = 0;
@@ -79,6 +80,8 @@ protected:
 
 private:
 	bool getUcs2Char(OleMainStream &stream, ZLUnicodeUtil::Ucs2Char &ucs2char);
+	void processPicture(OleMainStream &stream);
+	void processStyles(OleMainStream &stream);
 	bool fillBuffer(OleMainStream &stream);
 
 private:

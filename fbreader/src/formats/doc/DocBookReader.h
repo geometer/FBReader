@@ -51,7 +51,7 @@ private:
 	void handleStartField();
 	void handleSeparatorField();
 	void handleEndField();
-	void handleStartOfHeading();
+	void handlePicture(size_t offset, size_t size);
 	void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char);
 
 	//formatting:
@@ -89,6 +89,7 @@ private:
 	std::vector<FBTextKind> myKindStack;
 	shared_ptr<ZLTextStyleEntry> myCurStyleEntry;
 	OleMainStream::Style myCurStyleInfo;
+	unsigned int myPictureCounter;
 };
 
 inline DocBookReader::~DocBookReader() {}
