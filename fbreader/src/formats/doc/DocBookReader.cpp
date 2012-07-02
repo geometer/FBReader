@@ -162,6 +162,7 @@ void DocBookReader::handleStartField() {
 
 void DocBookReader::handleSeparatorField() {
 	static const std::string HYPERLINK = "HYPERLINK";
+	static const std::string SEQUENCE = "SEQ";
 //	static const std::string PAGE = "PAGE";
 //	static const std::string PAGEREF = "PAGEREF";
 //	static const std::string SHAPE = "SHAPE";
@@ -185,6 +186,12 @@ void DocBookReader::handleSeparatorField() {
 		if (!result.at(i).empty()) {
 			splitted.push_back(result.at(i));
 		}
+	}
+
+	if (!splitted.empty() && splitted.at(0) == SEQUENCE) {
+		myReadFieldState = READ_FIELD_TEXT;
+		myHyperlinkTypeState = NO_HYPERLINK;
+		return;
 	}
 
 	if (splitted.size() < 2 || splitted.at(0) != HYPERLINK) {

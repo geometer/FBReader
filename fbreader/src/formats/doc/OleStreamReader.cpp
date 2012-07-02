@@ -84,7 +84,7 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 	bool tabMode = false;
 	while (getUcs2Char(oleMainStream, ucs2char)) {
 		if (ucs2char < 32) { //< 32 are control symbols
-			//printf("[0x%x]", ucs2char); //debug output
+			printf("[0x%x]", ucs2char); //debug output
 		}
 
 		if (tabMode) {
@@ -102,12 +102,12 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 				case NULL_SYMBOL:
 					break;
 				case WORD_HARD_LINEBREAK:
-					//printf("\n");
+					printf("\n");
 					handleHardLinebreak();
 					break;
 				case WORD_END_OF_PARAGRAPH:
 				case WORD_PAGE_BREAK:
-					//printf("\n");
+					printf("\n");
 					handleParagraphEnd();
 					break;
 				case WORD_TABLE_SEPARATOR:
@@ -136,11 +136,11 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 			continue; //skip
 		} else {
 			//debug output
-//			std::string utf8String;
-//			ZLUnicodeUtil::Ucs2String ucs2String;
-//			ucs2String.push_back(ucs2char);
-//			ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
-//			printf("%s", utf8String.c_str());
+			std::string utf8String;
+			ZLUnicodeUtil::Ucs2String ucs2String;
+			ucs2String.push_back(ucs2char);
+			ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
+			printf("%s", utf8String.c_str());
 
 			handleChar(ucs2char);
 		}
