@@ -50,8 +50,12 @@ OleMainStream::SectionInfo::SectionInfo() :
 }
 
 OleMainStream::PictureInfo::PictureInfo() :
-	charPos(0),
 	dataPos(0) {
+}
+
+OleMainStream::FloatPictureInfo::FloatPictureInfo() :
+	charPos(0),
+	lid(0) {
 }
 
 OleMainStream::OleMainStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream) :
@@ -109,6 +113,7 @@ bool OleMainStream::open() {
 	//readSectionsInfoTable(headerBuffer, tableEntry); //it isn't used now
 	readParagraphStyleTable(headerBuffer, tableEntry);
 	readCharInfoTable(headerBuffer, tableEntry);
+	readFloatingPicturesTable(headerBuffer, tableEntry);
 	return true;
 }
 
@@ -371,7 +376,8 @@ bool OleMainStream::readBookmarks(const char *headerBuffer, const OleEntry &tabl
 		return false;
 	}
 
-	size_t size = (charPosInfoLen / 4 - 1) / 2;
+	static const unsigned int BKF_SIZE = 4;
+	size_t size = calcCountOfPLC(charPosInfoLen, BKF_SIZE);
 	std::vector<unsigned int> charPage;
 	for (size_t index = 0, offset = 0; index < size; ++index, offset += 4) {
 		charPage.push_back(OleUtil::getU4Bytes(buffer.c_str(), offset));
@@ -498,9 +504,9 @@ bool OleMainStream::readStylesheet(const char *headerBuffer, const OleEntry &tab
 }
 
 bool OleMainStream::readCharInfoTable(const char *headerBuffer, const OleEntry &tableEntry) {
-	//fcPlcfbteChpx structure is table with formatting for particular run of text
-	unsigned int beginCharInfo = OleUtil::getU4Bytes(headerBuffer, 0xfa); // address of fcPlcfbteChpx structure
-	size_t charInfoLength = (size_t)OleUtil::getU4Bytes(headerBuffer, 0xfe); // length of fcPlcfbteChpx structure
+	//PlcfbteChpx structure is table with formatting for particular run of text
+	unsigned int beginCharInfo = OleUtil::getU4Bytes(headerBuffer, 0xfa); // address of PlcfbteChpx structure
+	size_t charInfoLength = (size_t)OleUtil::getU4Bytes(headerBuffer, 0xfe); // length of PlcfbteChpx structure
 	if (charInfoLength < 4) {
 		return false;
 	}
@@ -511,9 +517,10 @@ bool OleMainStream::readCharInfoTable(const char *headerBuffer, const OleEntry &
 		return false;
 	}
 
-	size_t size = (charInfoLength / 4 - 1) / 2;
+	static const unsigned int CHPX_SIZE = 4;
+	size_t size = calcCountOfPLC(charInfoLength, CHPX_SIZE);
 	std::vector<unsigned int> charBlocks;
-	for (size_t index = 0, offset = (size + 1) * 4; index < size; ++index, offset += 4) {
+	for (size_t index = 0, offset = (size + 1) * 4; index < size; ++index, offset += CHPX_SIZE) {
 		charBlocks.push_back(OleUtil::getU4Bytes(buffer.c_str(), offset));
 	}
 
@@ -540,23 +547,134 @@ bool OleMainStream::readCharInfoTable(const char *headerBuffer, const OleEntry &
 			}
 			myCharInfoList.push_back(CharPosToCharInfo(charPos, charInfo));
 
-			if (chpxOffset == 0) {
-				continue;
-			}
-
-			PictureInfo pictureInfo;
-			if (getPictureInfo(chpxOffset, formatPageBuffer + 1, len - 1, pictureInfo)) {
-				pictureInfo.charPos = charPos;
-				myPictureInfoList.push_back(pictureInfo);
-				printf("pictureInfo: char offset = %u, data offset = %u\n", pictureInfo.charPos, pictureInfo.dataPos);
-			} else {
-				//printf("meet ole object, char offset = %u\n", charPos);
+			if (chpxOffset != 0) {
+				PictureInfo pictureInfo;
+				if (getPictureInfo(chpxOffset, formatPageBuffer + 1, len - 1, pictureInfo)) {
+					myPictureInfoList.push_back(CharPosToPictureInfo(charPos, pictureInfo));
+					printf("pictureInfo: char offset = %u, data offset = %u\n", charPos, pictureInfo.dataPos);
+				}
 			}
 
 		}
 	}
 	delete[] formatPageBuffer;
 	return true;
+}
+
+bool OleMainStream::readFloatingPicturesTable(const char *headerBuffer, const OleEntry &tableEntry) {
+	//Plcspa structure is a table with information for FSPA (File Shape Address)
+	unsigned int beginPicturesInfo = OleUtil::getU4Bytes(headerBuffer, 0x01DA); // address of Plcspa structure
+	if (beginPicturesInfo == 0) {
+		return true; //there's no office art objects
+	}
+	unsigned int picturesInfoLength = OleUtil::getU4Bytes(headerBuffer, 0x01DE); // length of Plcspa structure
+	if (picturesInfoLength < 4) {
+		return false;
+	}
+
+	OleStream tableStream(myStorage, tableEntry, myBaseStream);
+	std::string buffer;
+	if (!readToBuffer(buffer, beginPicturesInfo, picturesInfoLength, tableStream)) {
+		return false;
+	}
+
+
+	static const unsigned int SPA_SIZE = 26;
+	size_t size = calcCountOfPLC(picturesInfoLength, SPA_SIZE);
+
+	std::vector<unsigned int> picturesBlocks;
+	for (size_t index = 0, tOffset = 0; index < size; ++index, tOffset += 4) {
+		picturesBlocks.push_back(OleUtil::getU4Bytes(buffer.c_str(), tOffset));
+	}
+
+	std::vector<unsigned int> lids;
+	for (size_t index = 0, tOffset = (size + 1) * 4; index < size; ++index, tOffset += SPA_SIZE) {
+		unsigned int lid = OleUtil::getU4Bytes(buffer.c_str(), tOffset);
+		lids.push_back(lid);
+		FloatPictureInfo info;
+		info.charPos = picturesBlocks.at(index);
+		info.lid = lid;
+		myFloatPictureInfoList.push_back(info);
+	}
+
+	for (size_t i = 0; i < myFloatPictureInfoList.size(); ++i) {
+		printf("CP[%u] = %u, lid = %u\n", i, myFloatPictureInfoList.at(i).charPos, myFloatPictureInfoList.at(i).lid);
+	}
+
+
+
+
+	//DggInfo structure is office art object table data
+	unsigned int beginOfficeArtContent = OleUtil::getU4Bytes(headerBuffer, 0x22A); // address of DggInfo structure
+	if (beginOfficeArtContent == 0) {
+		return true; //there's no office art objects
+	}
+	unsigned int officeArtContentLength = OleUtil::getU4Bytes(headerBuffer, 0x01DE); // length of DggInfo structure
+	if (officeArtContentLength < 4) {
+		return false;
+	}
+
+//	buffer.clear();
+//	if (!readToBuffer(buffer, beginOfficeArtContent, officeArtContentLength, tableStream)) {
+//		return false;
+//	}
+
+	char buf[8];
+	tableStream.seek(beginOfficeArtContent,true);
+	tableStream.read(buf, 8);
+	unsigned int recordLen = OleUtil::getU4Bytes(buf, 4);
+	unsigned int recordType = OleUtil::getU2Bytes(buf, 2);
+	printf("dgg containter art: recordLen = %u, type = 0x%X\n", recordLen, recordType);
+
+	tableStream.seek(recordLen, false);
+	tableStream.read(buf, 8);
+	unsigned int recordLen2 = OleUtil::getU4Bytes(buf, 4);
+	unsigned int recordType2 = OleUtil::getU2Bytes(buf, 2);
+	printf("drawings: recordLen = %u, type = 0x%X\n", recordLen2, recordType2);
+
+//	for (unsigned int i = 0; i < 9999; ++i) {
+//		tableStream.seek(recordLen,false);
+//		tableStream.read(buf, 8);
+//		recordLen = OleUtil::getU4Bytes(buf, 4);
+//		unsigned int recordType2 = OleUtil::getU2Bytes(buf, 2);
+//		printf("[%u] recordLen = %u, type = 0x%X\n", recordLen, recordType2);
+//	}
+
+
+	//reading drawing Group
+//	tableStream.read(buf, 8);
+//	unsigned int recordLen2 = OleUtil::getU4Bytes(buf, 4);
+//	unsigned int recordType2 = OleUtil::getU2Bytes(buf, 2);
+//	printf("drawing group: recordLen = %u, type = 0x%X\n", recordLen2, recordType2);
+
+//	//reading blipStore
+//	tableStream.seek(recordLen2, false);
+//	tableStream.read(buf, 8);
+//	unsigned int recordLen3 = OleUtil::getU4Bytes(buf, 4);
+//	unsigned int recordType3 = OleUtil::getU2Bytes(buf, 2);
+//	printf("blipStore: recordLen = %u, type = 0x%X\n", recordLen3, recordType3);
+
+//	tableStream.seek(recordLen3, false);
+//	tableStream.read(buf, 8);
+//	unsigned int recordLen4 = OleUtil::getU4Bytes(buf, 4);
+//	unsigned int recordType4 = OleUtil::getU2Bytes(buf, 2);
+//	printf("1st record: recordLen = %u, type = 0x%X\n", recordLen4, recordType4);
+
+//	tableStream.seek(recordLen4, false);
+//	tableStream.read(buf, 8);
+//	unsigned int recordLen5 = OleUtil::getU4Bytes(buf, 4);
+//	unsigned int recordType5 = OleUtil::getU2Bytes(buf, 2);
+//	printf("2nd record: recordLen = %u, type = 0x%X\n", recordLen5, recordType5);
+
+//	tableStream.seek(recordLen5, false);
+//	tableStream.read(buf, 8);
+//	unsigned int recordLen6 = OleUtil::getU4Bytes(buf, 4);
+//	unsigned int recordType6 = OleUtil::getU2Bytes(buf, 2);
+//	printf("3nd record: recordLen = %u, type = 0x%X\n", recordLen6, recordType6);
+
+
+	return true;
+
 }
 
 bool OleMainStream::readParagraphStyleTable(const char *headerBuffer, const OleEntry &tableEntry) {
@@ -573,10 +691,11 @@ bool OleMainStream::readParagraphStyleTable(const char *headerBuffer, const OleE
 		return false;
 	}
 
-	size_t size = (paragraphInfoLength / 4 - 1) / 2;
+	static const unsigned int PAPX_SIZE = 4;
+	size_t size = calcCountOfPLC(paragraphInfoLength, PAPX_SIZE);
 
 	std::vector<unsigned int> paragraphBlocks;
-	for (size_t index = 0, tOffset = (size + 1) * 4; index < size; ++index, tOffset += 4) {
+	for (size_t index = 0, tOffset = (size + 1) * 4; index < size; ++index, tOffset += PAPX_SIZE) {
 		paragraphBlocks.push_back(OleUtil::getU4Bytes(buffer.c_str(), tOffset));
 	}
 
@@ -633,7 +752,8 @@ bool OleMainStream::readSectionsInfoTable(const char *headerBuffer, const OleEnt
 		return false;
 	}
 
-	size_t decriptorsCount = (sectInfoLen - 4) / 16;
+	static const unsigned int SED_SIZE = 12;
+	size_t decriptorsCount = calcCountOfPLC(sectInfoLen, SED_SIZE);
 
 	//saving the section offsets (in character positions)
 	std::vector<unsigned int> charPos;
@@ -644,7 +764,7 @@ bool OleMainStream::readSectionsInfoTable(const char *headerBuffer, const OleEnt
 
 	//saving sepx offsets
 	std::vector<unsigned int> sectPage;
-	for (size_t index = 0, tOffset = (decriptorsCount + 1) * 4; index < decriptorsCount; ++index, tOffset += 12) {
+	for (size_t index = 0, tOffset = (decriptorsCount + 1) * 4; index < decriptorsCount; ++index, tOffset += SED_SIZE) {
 		sectPage.push_back(OleUtil::getU4Bytes(buffer.c_str(), tOffset + 2));
 	}
 
@@ -819,13 +939,22 @@ bool OleMainStream::getPictureInfo(unsigned int chpxOffset, const char *grpprlBu
 	bool isFound = false;
 	while (bytes >= offset + 2) {
 		switch (OleUtil::getU2Bytes(grpprlBuffer, chpxOffset + offset)) {
-			case 0x080a: // ole object
+			case 0x080a: // ole object, p.107 [MS-DOC]
 				if (OleUtil::getU1Byte(grpprlBuffer, chpxOffset + offset + 2) == 0x01) {
 					return false;
 				}
 				break;
-			case 0x6a03: // location
-				//TODO maybe we should return true immediately here?
+			case 0x0806: // is not a picture, but a binary data? (sprmCFData, p.106 [MS-DOC])
+				if (OleUtil::getU4Bytes(grpprlBuffer, chpxOffset + offset + 2) == 0x01) {
+					return false;
+				}
+				break;
+//			case 0x0855: // sprmCFSpec, p.117 [MS-DOC], MUST BE applied with a value of 1 (see p.105 [MS-DOC])
+//				if (OleUtil::getU1Byte(grpprlBuffer, chpxOffset + offset + 2) != 0x01) {
+//					return false;
+//				}
+//				break;
+			case 0x6a03: // location p.105 [MS-DOC]
 				pictureInfo.dataPos = OleUtil::getU4Bytes(grpprlBuffer, chpxOffset + offset + 2);
 				isFound = true;
 				break;
@@ -926,6 +1055,11 @@ bool OleMainStream::readToBuffer(std::string &result, unsigned int offset, size_
 	result = std::string(buffer, length);
 	delete[] buffer;
 	return true;
+}
+
+unsigned int OleMainStream::calcCountOfPLC(unsigned int totalSize, unsigned int elementSize) {
+	//calculates count of elements in PLC structure, formula from p.30 [MS-DOC]
+	return (totalSize - 4) / (4 + elementSize);
 }
 
 unsigned int OleMainStream::getPrlLength(const char *grpprlBuffer, unsigned int byteNumber) {

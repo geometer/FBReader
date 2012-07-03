@@ -40,6 +40,7 @@ public:
 
 public:
 	ZLBlockedFileImage::Blocks getBlockPieceInfoList(unsigned int offset, unsigned int size) const;
+	static ZLBlockedFileImage::Blocks concatBlocks(const ZLBlockedFileImage::Blocks &blocks);
 	size_t fileOffset();
 
 public:

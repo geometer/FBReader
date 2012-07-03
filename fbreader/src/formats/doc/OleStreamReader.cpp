@@ -70,6 +70,7 @@ void OleStreamReader::clear() {
 	myNextStyleInfoIndex = 0;
 	myNextCharInfoIndex = 0;
 	myNextBookmarkIndex = 0;
+	myNextPictureInfoIndex = 0;
 }
 
 bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
@@ -84,7 +85,7 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 	bool tabMode = false;
 	while (getUcs2Char(oleMainStream, ucs2char)) {
 		if (ucs2char < 32) { //< 32 are control symbols
-			printf("[0x%x]", ucs2char); //debug output
+			//printf("[0x%x]", ucs2char); //debug output
 		}
 
 		if (tabMode) {
@@ -102,12 +103,12 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 				case NULL_SYMBOL:
 					break;
 				case WORD_HARD_LINEBREAK:
-					printf("\n");
+					//printf("\n");
 					handleHardLinebreak();
 					break;
 				case WORD_END_OF_PARAGRAPH:
 				case WORD_PAGE_BREAK:
-					printf("\n");
+					//printf("\n");
 					handleParagraphEnd();
 					break;
 				case WORD_TABLE_SEPARATOR:
@@ -136,11 +137,11 @@ bool OleStreamReader::readStream(OleMainStream &oleMainStream) {
 			continue; //skip
 		} else {
 			//debug output
-			std::string utf8String;
-			ZLUnicodeUtil::Ucs2String ucs2String;
-			ucs2String.push_back(ucs2char);
-			ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
-			printf("%s", utf8String.c_str());
+//			std::string utf8String;
+//			ZLUnicodeUtil::Ucs2String ucs2String;
+//			ucs2String.push_back(ucs2char);
+//			ZLUnicodeUtil::ucs2ToUtf8(utf8String, ucs2String);
+//			printf("%s", utf8String.c_str());
 
 			handleChar(ucs2char);
 		}
@@ -158,16 +159,15 @@ bool OleStreamReader::getUcs2Char(OleMainStream &stream, ZLUnicodeUtil::Ucs2Char
 
 	ucs2char = myBuffer.at(myCurBufferPosition++);
 
-	if (ucs2char == PICTURE) {
-		printf("{%u}", myCurCharPos);
-		processPicture(stream);
-	}
-	if (ucs2char == DRAWN_OBJECT) {
-		printf("\\%u\\", myCurCharPos);
-	}
-
 	processStyles(stream);
 
+	if (ucs2char == PICTURE) {
+		printf("{%u}\n", myCurCharPos);
+		processPicture(stream);
+	}
+//	if (ucs2char == DRAWN_OBJECT) {
+//		printf("\\%u\\", myCurCharPos);
+//	}
 
 	++myCurCharPos;
 	return true;
@@ -179,16 +179,21 @@ void OleStreamReader::processPicture(OleMainStream &stream) {
 		return;
 	}
 	const OleMainStream::PictureInfoList &pictureInfoList = stream.getPictureInfoList();
-	for (size_t i = 0; i < pictureInfoList.size(); ++i) {
-		if (pictureInfoList.at(i).charPos == myCurCharPos) {
-			OleMainStream::PictureInfo info = pictureInfoList.at(i);
-			DocImageDataReader imageReader(dataStream);
-			ZLBlockedFileImage::Blocks list = imageReader.getImagePieceInfo(info.dataPos);
-			if (!list.empty()) {
-				handlePicture(list);
-			}
-			break;
+	if (pictureInfoList.empty()) {
+		return;
+	}
+	//seek to curCharPos, because not all entries in PictureInfo are real pictures
+	while(myNextPictureInfoIndex < pictureInfoList.size() && pictureInfoList.at(myNextPictureInfoIndex).first < myCurCharPos) {
+		++myNextPictureInfoIndex;
+	}
+	while (myNextPictureInfoIndex < pictureInfoList.size() && pictureInfoList.at(myNextPictureInfoIndex).first == myCurCharPos) {
+		OleMainStream::PictureInfo info = pictureInfoList.at(myNextPictureInfoIndex).second;
+		DocImageDataReader imageReader(dataStream);
+		ZLBlockedFileImage::Blocks list = imageReader.getImagePieceInfo(info.dataPos);
+		if (!list.empty()) {
+			handlePicture(list);
 		}
+		++myNextPictureInfoIndex;
 	}
 }
 

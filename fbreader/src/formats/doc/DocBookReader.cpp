@@ -234,7 +234,12 @@ void DocBookReader::handlePicture(const ZLBlockedFileImage::Blocks &blocks) {
 	//std::cout << std::endl << "handlePicture " << offset << " " << size << std::endl;
 	std::string number;
 	ZLStringUtil::appendNumber(number, myPictureCounter++);
+
+//	shared_ptr<ZLTextStyleEntry> entry = new ZLTextStyleEntry();
+//	entry->setAlignmentType(ALIGN_RIGHT);
+//	myModelReader.addStyleEntry(*entry);
 	myModelReader.addImageReference(number);
+
 	ZLFile file(myModelReader.model().book()->file().path(), "image/auto");
 	myModelReader.addImage(number, new ZLBlockedFileImage(file, blocks));
 }

@@ -158,7 +158,30 @@ ZLBlockedFileImage::Blocks OleStream::getBlockPieceInfoList(unsigned int offset,
 		list.push_back(ZLBlockedFileImage::Block(newFileOffset, readbytes));
 		readedBytes += readbytes;
 	}
-	return list;
+
+	return concatBlocks(list);
+}
+
+ZLBlockedFileImage::Blocks OleStream::concatBlocks(const ZLBlockedFileImage::Blocks &blocks) {
+	if (blocks.size() < 2) {
+		return blocks;
+	}
+	ZLBlockedFileImage::Blocks optList;
+	ZLBlockedFileImage::Block curBlock = blocks.at(0);
+	unsigned int nextOffset = curBlock.offset + curBlock.size;
+	for (size_t i = 1; i < blocks.size(); ++i) {
+		ZLBlockedFileImage::Block b = blocks.at(i);
+		if (b.offset == nextOffset) {
+			curBlock.size += b.size;
+			nextOffset += b.size;
+		} else {
+			optList.push_back(curBlock);
+			curBlock = b;
+			nextOffset = curBlock.offset + curBlock.size;
+		}
+	}
+	optList.push_back(curBlock);
+	return optList;
 }
 
 size_t OleStream::fileOffset() {

@@ -115,12 +115,20 @@ public:
 	typedef std::vector<Bookmark> Bookmarks;
 
 	struct PictureInfo {
-			unsigned int charPos;
 			unsigned int dataPos;
 
 			PictureInfo();
 	};
-	typedef std::vector<PictureInfo> PictureInfoList;
+	typedef std::pair<unsigned int, PictureInfo> CharPosToPictureInfo;
+	typedef std::vector<CharPosToPictureInfo> PictureInfoList;
+
+	struct FloatPictureInfo {
+			unsigned int charPos;
+			unsigned int lid;
+
+			FloatPictureInfo();
+	};
+	typedef std::vector<FloatPictureInfo> FloatPictureInfoList;
 
 
 public:
@@ -143,6 +151,7 @@ private:
 	bool readSectionsInfoTable(const char *headerBuffer, const OleEntry &tableEntry);
 	bool readParagraphStyleTable(const char *headerBuffer, const OleEntry &tableEntry);
 	bool readCharInfoTable(const char *headerBuffer, const OleEntry &tableEntry);
+	bool readFloatingPicturesTable(const char *headerBuffer, const OleEntry &tableEntry);
 
 private: //readPieceTable helpers methods
 	static std::string getPiecesTableBuffer(const char *headerBuffer, OleStream &tableStream);
@@ -161,6 +170,8 @@ private: //formatting reader helpers methods
 
 	static bool offsetToCharPos(unsigned int offset, unsigned int &charPos, const Pieces &pieces);
 	static bool readToBuffer(std::string &result, unsigned int offset, size_t length, OleStream &stream);
+
+	static unsigned int calcCountOfPLC(unsigned int totalSize, unsigned int elementSize);
 
 private:
 	enum PrlFlag {
@@ -182,6 +193,7 @@ private:
 	StyleInfoList myStyleInfoList;
 	SectionInfoList mySectionInfoList;
 	PictureInfoList myPictureInfoList;
+	FloatPictureInfoList myFloatPictureInfoList;
 
 	Bookmarks myBookmarks;
 

@@ -38,7 +38,7 @@ ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int da
 
 	size_t dataPosFileOffset = myDataStream->fileOffset();
 
-	//reading PICF structure
+	//reading PICF structure (see p. 421 [MS-DOC])
 	unsigned int picfHeaderSize = 4 + 2 + 8; //record length, headerLength and storage format
 	char headerBuffer[picfHeaderSize];
 	if (myDataStream->read(headerBuffer, picfHeaderSize) != picfHeaderSize) {
