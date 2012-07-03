@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <cstdio>
-
 #include "OleUtil.h"
 
 #include "DocImageDataReader.h"
@@ -29,16 +27,13 @@ DocImageDataReader::DocImageDataReader(shared_ptr<OleStream> dataStream) :
 
 ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) {
 	if (myDataStream.isNull()) {
-		printf("data stream is null\n");
 		return ZLBlockedFileImage::Blocks();
 	}
 	if (!myDataStream->seek(dataPos, true)) {
 		return ZLBlockedFileImage::Blocks();
 	}
 
-	size_t dataPosFileOffset = myDataStream->fileOffset();
-
-	//reading PICF structure
+	//reading PICF structure (see p. 421 [MS-DOC])
 	unsigned int picfHeaderSize = 4 + 2 + 8; //record length, headerLength and storage format
 	char headerBuffer[picfHeaderSize];
 	if (myDataStream->read(headerBuffer, picfHeaderSize) != picfHeaderSize) {
@@ -71,8 +66,6 @@ ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int da
 		unsigned int recordInstance = OleUtil::getU2Bytes(buffer, 0) >> 4;
 		unsigned int recordType = OleUtil::getU2Bytes(buffer, 2);
 		unsigned int recordLen = OleUtil::getU4Bytes(buffer, 4);
-
-		printf("RecordType: 0x%X (%u)\n", recordType, recordLen);
 
 		switch (recordType) {
 			case 0xF000: case 0xF001: case 0xF002: case 0xF003: case 0xF004: case 0xF005:
@@ -147,19 +140,7 @@ ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int da
 	}
 
 	if (!found) {
-		printf("\n!found\n");
 		return ZLBlockedFileImage::Blocks();
 	}
-
-	printf("\nfound!!!!\n");
-	ZLBlockedFileImage::Blocks list2 = myDataStream->getBlockPieceInfoList(dataPos + curOffset, length - curOffset);
-	ZLBlockedFileImage::Blocks list;
-	ZLBlockedFileImage::Block info(dataPosFileOffset + curOffset, length - curOffset);
-	list.push_back(info);
-
-	printf("one big piece: off=%u, size=%u\n", info.offset, info.size);
-	for (size_t i = 0; i < list2.size(); ++i) {
-		printf("piece[%u] = off=%u, size=%u, next=%u\n", i, list2.at(i).offset, list2.at(i).size,  list2.at(i).offset + list2.at(i).size);
-	}
-	return list2;
+	return myDataStream->getBlockPieceInfoList(dataPos + curOffset, length - curOffset);
 }

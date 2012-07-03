@@ -97,6 +97,7 @@ private:
 	size_t myNextStyleInfoIndex;
 	size_t myNextCharInfoIndex;
 	size_t myNextBookmarkIndex;
+	size_t myNextPictureInfoIndex;
 };
 
 #endif /* __OLESTREAMREADER_H__ */

@@ -20,8 +20,6 @@
 #include <cstring> //for memset
 #include <string>
 
-#include <cstdio>
-
 #include <ZLLogger.h>
 #include <ZLUnicodeUtil.h>
 
@@ -50,7 +48,6 @@ OleMainStream::SectionInfo::SectionInfo() :
 }
 
 OleMainStream::PictureInfo::PictureInfo() :
-	charPos(0),
 	dataPos(0) {
 }
 
@@ -371,7 +368,8 @@ bool OleMainStream::readBookmarks(const char *headerBuffer, const OleEntry &tabl
 		return false;
 	}
 
-	size_t size = (charPosInfoLen / 4 - 1) / 2;
+	static const unsigned int BKF_SIZE = 4;
+	size_t size = calcCountOfPLC(charPosInfoLen, BKF_SIZE);
 	std::vector<unsigned int> charPage;
 	for (size_t index = 0, offset = 0; index < size; ++index, offset += 4) {
 		charPage.push_back(OleUtil::getU4Bytes(buffer.c_str(), offset));
@@ -498,9 +496,9 @@ bool OleMainStream::readStylesheet(const char *headerBuffer, const OleEntry &tab
 }
 
 bool OleMainStream::readCharInfoTable(const char *headerBuffer, const OleEntry &tableEntry) {
-	//fcPlcfbteChpx structure is table with formatting for particular run of text
-	unsigned int beginCharInfo = OleUtil::getU4Bytes(headerBuffer, 0xfa); // address of fcPlcfbteChpx structure
-	size_t charInfoLength = (size_t)OleUtil::getU4Bytes(headerBuffer, 0xfe); // length of fcPlcfbteChpx structure
+	//PlcfbteChpx structure is table with formatting for particular run of text
+	unsigned int beginCharInfo = OleUtil::getU4Bytes(headerBuffer, 0xfa); // address of PlcfbteChpx structure
+	size_t charInfoLength = (size_t)OleUtil::getU4Bytes(headerBuffer, 0xfe); // length of PlcfbteChpx structure
 	if (charInfoLength < 4) {
 		return false;
 	}
@@ -511,9 +509,10 @@ bool OleMainStream::readCharInfoTable(const char *headerBuffer, const OleEntry &
 		return false;
 	}
 
-	size_t size = (charInfoLength / 4 - 1) / 2;
+	static const unsigned int CHPX_SIZE = 4;
+	size_t size = calcCountOfPLC(charInfoLength, CHPX_SIZE);
 	std::vector<unsigned int> charBlocks;
-	for (size_t index = 0, offset = (size + 1) * 4; index < size; ++index, offset += 4) {
+	for (size_t index = 0, offset = (size + 1) * 4; index < size; ++index, offset += CHPX_SIZE) {
 		charBlocks.push_back(OleUtil::getU4Bytes(buffer.c_str(), offset));
 	}
 
@@ -540,17 +539,11 @@ bool OleMainStream::readCharInfoTable(const char *headerBuffer, const OleEntry &
 			}
 			myCharInfoList.push_back(CharPosToCharInfo(charPos, charInfo));
 
-			if (chpxOffset == 0) {
-				continue;
-			}
-
-			PictureInfo pictureInfo;
-			if (getPictureInfo(chpxOffset, formatPageBuffer + 1, len - 1, pictureInfo)) {
-				pictureInfo.charPos = charPos;
-				myPictureInfoList.push_back(pictureInfo);
-				printf("pictureInfo: char offset = %u, data offset = %u\n", pictureInfo.charPos, pictureInfo.dataPos);
-			} else {
-				//printf("meet ole object, char offset = %u\n", charPos);
+			if (chpxOffset != 0) {
+				PictureInfo pictureInfo;
+				if (getPictureInfo(chpxOffset, formatPageBuffer + 1, len - 1, pictureInfo)) {
+					myPictureInfoList.push_back(CharPosToPictureInfo(charPos, pictureInfo));
+				}
 			}
 
 		}
@@ -573,10 +566,11 @@ bool OleMainStream::readParagraphStyleTable(const char *headerBuffer, const OleE
 		return false;
 	}
 
-	size_t size = (paragraphInfoLength / 4 - 1) / 2;
+	static const unsigned int PAPX_SIZE = 4;
+	size_t size = calcCountOfPLC(paragraphInfoLength, PAPX_SIZE);
 
 	std::vector<unsigned int> paragraphBlocks;
-	for (size_t index = 0, tOffset = (size + 1) * 4; index < size; ++index, tOffset += 4) {
+	for (size_t index = 0, tOffset = (size + 1) * 4; index < size; ++index, tOffset += PAPX_SIZE) {
 		paragraphBlocks.push_back(OleUtil::getU4Bytes(buffer.c_str(), tOffset));
 	}
 
@@ -633,7 +627,8 @@ bool OleMainStream::readSectionsInfoTable(const char *headerBuffer, const OleEnt
 		return false;
 	}
 
-	size_t decriptorsCount = (sectInfoLen - 4) / 16;
+	static const unsigned int SED_SIZE = 12;
+	size_t decriptorsCount = calcCountOfPLC(sectInfoLen, SED_SIZE);
 
 	//saving the section offsets (in character positions)
 	std::vector<unsigned int> charPos;
@@ -644,7 +639,7 @@ bool OleMainStream::readSectionsInfoTable(const char *headerBuffer, const OleEnt
 
 	//saving sepx offsets
 	std::vector<unsigned int> sectPage;
-	for (size_t index = 0, tOffset = (decriptorsCount + 1) * 4; index < decriptorsCount; ++index, tOffset += 12) {
+	for (size_t index = 0, tOffset = (decriptorsCount + 1) * 4; index < decriptorsCount; ++index, tOffset += SED_SIZE) {
 		sectPage.push_back(OleUtil::getU4Bytes(buffer.c_str(), tOffset + 2));
 	}
 
@@ -819,13 +814,22 @@ bool OleMainStream::getPictureInfo(unsigned int chpxOffset, const char *grpprlBu
 	bool isFound = false;
 	while (bytes >= offset + 2) {
 		switch (OleUtil::getU2Bytes(grpprlBuffer, chpxOffset + offset)) {
-			case 0x080a: // ole object
+			case 0x080a: // ole object, p.107 [MS-DOC]
 				if (OleUtil::getU1Byte(grpprlBuffer, chpxOffset + offset + 2) == 0x01) {
 					return false;
 				}
 				break;
-			case 0x6a03: // location
-				//TODO maybe we should return true immediately here?
+			case 0x0806: // is not a picture, but a binary data? (sprmCFData, p.106 [MS-DOC])
+				if (OleUtil::getU4Bytes(grpprlBuffer, chpxOffset + offset + 2) == 0x01) {
+					return false;
+				}
+				break;
+//			case 0x0855: // sprmCFSpec, p.117 [MS-DOC], MUST BE applied with a value of 1 (see p.105 [MS-DOC])
+//				if (OleUtil::getU1Byte(grpprlBuffer, chpxOffset + offset + 2) != 0x01) {
+//					return false;
+//				}
+//				break;
+			case 0x6a03: // location p.105 [MS-DOC]
 				pictureInfo.dataPos = OleUtil::getU4Bytes(grpprlBuffer, chpxOffset + offset + 2);
 				isFound = true;
 				break;
@@ -926,6 +930,11 @@ bool OleMainStream::readToBuffer(std::string &result, unsigned int offset, size_
 	result = std::string(buffer, length);
 	delete[] buffer;
 	return true;
+}
+
+unsigned int OleMainStream::calcCountOfPLC(unsigned int totalSize, unsigned int elementSize) {
+	//calculates count of elements in PLC structure, formula from p.30 [MS-DOC]
+	return (totalSize - 4) / (4 + elementSize);
 }
 
 unsigned int OleMainStream::getPrlLength(const char *grpprlBuffer, unsigned int byteNumber) {

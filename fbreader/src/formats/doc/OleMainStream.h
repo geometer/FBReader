@@ -115,13 +115,12 @@ public:
 	typedef std::vector<Bookmark> Bookmarks;
 
 	struct PictureInfo {
-			unsigned int charPos;
 			unsigned int dataPos;
 
 			PictureInfo();
 	};
-	typedef std::vector<PictureInfo> PictureInfoList;
-
+	typedef std::pair<unsigned int, PictureInfo> CharPosToPictureInfo;
+	typedef std::vector<CharPosToPictureInfo> PictureInfoList;
 
 public:
 	OleMainStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream);
@@ -161,6 +160,8 @@ private: //formatting reader helpers methods
 
 	static bool offsetToCharPos(unsigned int offset, unsigned int &charPos, const Pieces &pieces);
 	static bool readToBuffer(std::string &result, unsigned int offset, size_t length, OleStream &stream);
+
+	static unsigned int calcCountOfPLC(unsigned int totalSize, unsigned int elementSize);
 
 private:
 	enum PrlFlag {
