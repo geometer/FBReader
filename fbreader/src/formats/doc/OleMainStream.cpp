@@ -892,7 +892,8 @@ bool OleMainStream::offsetToCharPos(unsigned int offset, unsigned int &charPos, 
 		return false;
 	}
 	if ((unsigned int)pieces.front().offset > offset) {
-		return false;
+		charPos = 0;
+		return true;
 	}
 	if ((unsigned int)(pieces.back().offset + pieces.back().length) <= offset) {
 		return false;
