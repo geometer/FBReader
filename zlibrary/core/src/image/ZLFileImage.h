@@ -21,11 +21,21 @@
 #define __ZLFILEIMAGE_H__
 
 #include <string>
+#include <vector>
 
 #include <ZLFile.h>
 #include <ZLImage.h>
 
 class ZLFileImage : public ZLSingleImage {
+
+public:
+	struct Block {
+		unsigned int offset;
+		unsigned int size;
+
+		Block(unsigned int off, unsigned int s);
+	};
+	typedef std::vector<Block> Blocks;
 
 public:
 	static const std::string ENCODING_NONE;
@@ -34,6 +44,7 @@ public:
 
 public:
 	ZLFileImage(const ZLFile &file, size_t offset, size_t size = 0, const std::string &encoding = ZLFileImage::ENCODING_NONE);
+	ZLFileImage(const ZLFile &file, const Blocks &blocks, const std::string &encoding = ZLFileImage::ENCODING_NONE);
 	const shared_ptr<std::string> stringData() const;
 
 protected:
@@ -42,8 +53,9 @@ protected:
 private:
 	const ZLFile myFile;
 	const std::string myEncoding;
-	const size_t myOffset;
-	const size_t mySize;
+	Blocks myBlocks;
 };
+
+inline ZLFileImage::Block::Block(unsigned int off, unsigned int s) : offset(off), size(s) {}
 
 #endif /* __ZLFILEIMAGE_H__ */

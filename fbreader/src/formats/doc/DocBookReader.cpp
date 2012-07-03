@@ -230,18 +230,12 @@ void DocBookReader::handleEndField() {
 
 }
 
-void DocBookReader::handlePicture(const ZLBlockedFileImage::Blocks &blocks) {
-	//std::cout << std::endl << "handlePicture " << offset << " " << size << std::endl;
+void DocBookReader::handlePicture(const ZLFileImage::Blocks &blocks) {
 	std::string number;
 	ZLStringUtil::appendNumber(number, myPictureCounter++);
-
-//	shared_ptr<ZLTextStyleEntry> entry = new ZLTextStyleEntry();
-//	entry->setAlignmentType(ALIGN_RIGHT);
-//	myModelReader.addStyleEntry(*entry);
 	myModelReader.addImageReference(number);
-
 	ZLFile file(myModelReader.model().book()->file().path(), "image/auto");
-	myModelReader.addImage(number, new ZLBlockedFileImage(file, blocks));
+	myModelReader.addImage(number, new ZLFileImage(file, blocks, ZLFileImage::ENCODING_NONE));
 }
 
 void DocBookReader::handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) {

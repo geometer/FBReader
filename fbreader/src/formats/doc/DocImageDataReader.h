@@ -28,7 +28,7 @@ class DocImageDataReader {
 
 public:
 	DocImageDataReader(shared_ptr<OleStream> dataStream);
-	ZLBlockedFileImage::Blocks getImagePieceInfo(unsigned int dataPos);
+	ZLFileImage::Blocks getImagePieceInfo(unsigned int dataPos);
 
 private:
 	shared_ptr<OleStream> myDataStream;
