@@ -27,13 +27,12 @@ DocImageDataReader::DocImageDataReader(shared_ptr<OleStream> dataStream) :
 	myDataStream(dataStream) {
 }
 
-ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) {
+ZLFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) {
 	if (myDataStream.isNull()) {
-		printf("data stream is null\n");
-		return ZLBlockedFileImage::Blocks();
+		return ZLFileImage::Blocks();
 	}
 	if (!myDataStream->seek(dataPos, true)) {
-		return ZLBlockedFileImage::Blocks();
+		return ZLFileImage::Blocks();
 	}
 
 	size_t dataPosFileOffset = myDataStream->fileOffset();
@@ -42,7 +41,7 @@ ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int da
 	unsigned int picfHeaderSize = 4 + 2 + 8; //record length, headerLength and storage format
 	char headerBuffer[picfHeaderSize];
 	if (myDataStream->read(headerBuffer, picfHeaderSize) != picfHeaderSize) {
-		return ZLBlockedFileImage::Blocks();
+		return ZLFileImage::Blocks();
 	}
 	unsigned int length = OleUtil::getU4Bytes(headerBuffer, 0);
 	unsigned int headerLength = OleUtil::getU2Bytes(headerBuffer, 4);
@@ -50,15 +49,15 @@ ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int da
 
 	if (formatType != 0x0064) { //external link to some file; see p.394 [MS-DOC]
 		//TODO implement
-		return ZLBlockedFileImage::Blocks();
+		return ZLFileImage::Blocks();
 	}
 	if (headerLength >= length) {
-		return ZLBlockedFileImage::Blocks();
+		return ZLFileImage::Blocks();
 	}
 
 	//reading OfficeArtInlineSpContainer structure; see p.421 [MS-DOC] and p.56 [MS-ODRAW]
 	if (!myDataStream->seek(headerLength - picfHeaderSize, false)) {  //skip header
-		return ZLBlockedFileImage::Blocks();
+		return ZLFileImage::Blocks();
 	}
 
 	char buffer[8]; //for OfficeArtRecordHeader structure; see p.69 [MS-ODRAW]
@@ -66,7 +65,7 @@ ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int da
 	unsigned int curOffset = 0;
 	for (curOffset = headerLength; !found && curOffset + 8 <= length; curOffset += 8) {
 		if (myDataStream->read(buffer, 8) != 8) {
-			return ZLBlockedFileImage::Blocks();
+			return ZLFileImage::Blocks();
 		}
 		unsigned int recordInstance = OleUtil::getU2Bytes(buffer, 0) >> 4;
 		unsigned int recordType = OleUtil::getU2Bytes(buffer, 2);
@@ -103,7 +102,7 @@ ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int da
 			case 0xF01B: //WMF
 			case 0xF01C: //PICT
 				//TODO implement
-				return ZLBlockedFileImage::Blocks();
+				return ZLFileImage::Blocks();
 			case 0xF01D: //JPEG
 				myDataStream->seek(17, false);
 				curOffset += 17;
@@ -142,19 +141,19 @@ ZLBlockedFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int da
 				break;
 			case 0xF00C:
 			default:
-				return ZLBlockedFileImage::Blocks();
+				return ZLFileImage::Blocks();
 			}
 	}
 
 	if (!found) {
-		printf("\n!found\n");
-		return ZLBlockedFileImage::Blocks();
+		printf("\nnot found!\n");
+		return ZLFileImage::Blocks();
 	}
 
 	printf("\nfound!!!!\n");
-	ZLBlockedFileImage::Blocks list2 = myDataStream->getBlockPieceInfoList(dataPos + curOffset, length - curOffset);
-	ZLBlockedFileImage::Blocks list;
-	ZLBlockedFileImage::Block info(dataPosFileOffset + curOffset, length - curOffset);
+	ZLFileImage::Blocks list2 = myDataStream->getBlockPieceInfoList(dataPos + curOffset, length - curOffset);
+	ZLFileImage::Blocks list;
+	ZLFileImage::Block info(dataPosFileOffset + curOffset, length - curOffset);
 	list.push_back(info);
 
 	printf("one big piece: off=%u, size=%u\n", info.offset, info.size);

@@ -123,8 +123,8 @@ size_t OleStream::offset() {
 	return myOleOffset;
 }
 
-ZLBlockedFileImage::Blocks OleStream::getBlockPieceInfoList(unsigned int offset, unsigned int size) const {
-	ZLBlockedFileImage::Blocks list;
+ZLFileImage::Blocks OleStream::getBlockPieceInfoList(unsigned int offset, unsigned int size) const {
+	ZLFileImage::Blocks list;
 	unsigned int sectorSize = (myOleEntry.isBigBlock ? myStorage->getSectorSize() : myStorage->getShortSectorSize());
 	unsigned int curBlockNumber = offset / sectorSize;
 	if (curBlockNumber >= myOleEntry.blocks.size()) {
@@ -141,7 +141,7 @@ ZLBlockedFileImage::Blocks OleStream::getBlockPieceInfoList(unsigned int offset,
 	}
 
 	unsigned int readedBytes = std::min(size, bytesLeftInCurBlock);
-	list.push_back(ZLBlockedFileImage::Block(startFileOffset, readedBytes));
+	list.push_back(ZLFileImage::Block(startFileOffset, readedBytes));
 
 	for (unsigned int i = 0; i < toReadBlocks; ++i) {
 		if (++curBlockNumber >= myOleEntry.blocks.size()) {
@@ -149,28 +149,28 @@ ZLBlockedFileImage::Blocks OleStream::getBlockPieceInfoList(unsigned int offset,
 		}
 		unsigned int newFileOffset = myStorage->getFileOffsetOfBlock(myOleEntry, curBlockNumber);
 		unsigned int readbytes = std::min(size - readedBytes, sectorSize);
-		list.push_back(ZLBlockedFileImage::Block(newFileOffset, readbytes));
+		list.push_back(ZLFileImage::Block(newFileOffset, readbytes));
 		readedBytes += readbytes;
 	}
 	if (toReadBytes > 0 && ++curBlockNumber < myOleEntry.blocks.size()) {
 		unsigned int newFileOffset = myStorage->getFileOffsetOfBlock(myOleEntry, curBlockNumber);
 		unsigned int readbytes = toReadBytes;
-		list.push_back(ZLBlockedFileImage::Block(newFileOffset, readbytes));
+		list.push_back(ZLFileImage::Block(newFileOffset, readbytes));
 		readedBytes += readbytes;
 	}
 
 	return concatBlocks(list);
 }
 
-ZLBlockedFileImage::Blocks OleStream::concatBlocks(const ZLBlockedFileImage::Blocks &blocks) {
+ZLFileImage::Blocks OleStream::concatBlocks(const ZLFileImage::Blocks &blocks) {
 	if (blocks.size() < 2) {
 		return blocks;
 	}
-	ZLBlockedFileImage::Blocks optList;
-	ZLBlockedFileImage::Block curBlock = blocks.at(0);
+	ZLFileImage::Blocks optList;
+	ZLFileImage::Block curBlock = blocks.at(0);
 	unsigned int nextOffset = curBlock.offset + curBlock.size;
 	for (size_t i = 1; i < blocks.size(); ++i) {
-		ZLBlockedFileImage::Block b = blocks.at(i);
+		ZLFileImage::Block b = blocks.at(i);
 		if (b.offset == nextOffset) {
 			curBlock.size += b.size;
 			nextOffset += b.size;

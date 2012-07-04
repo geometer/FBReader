@@ -20,7 +20,7 @@
 #ifndef __OLESTREAM_H__
 #define __OLESTREAM_H__
 
-#include <ZLBlockedFileImage.h>
+#include <ZLFileImage.h>
 
 #include "OleStorage.h"
 
@@ -39,8 +39,8 @@ public:
 	size_t offset();
 
 public:
-	ZLBlockedFileImage::Blocks getBlockPieceInfoList(unsigned int offset, unsigned int size) const;
-	static ZLBlockedFileImage::Blocks concatBlocks(const ZLBlockedFileImage::Blocks &blocks);
+	ZLFileImage::Blocks getBlockPieceInfoList(unsigned int offset, unsigned int size) const;
+	static ZLFileImage::Blocks concatBlocks(const ZLFileImage::Blocks &blocks);
 	size_t fileOffset();
 
 public:

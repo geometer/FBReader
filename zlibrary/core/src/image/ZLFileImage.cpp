@@ -37,9 +37,15 @@ const std::string ZLFileImage::ENCODING_BASE64 = "base64";
 ZLFileImage::ZLFileImage(const ZLFile &file, size_t offset, size_t size, const std::string &encoding) :
 	ZLSingleImage(file.mimeType()),
 	myFile(file),
+	myEncoding(encoding) {
+	myBlocks.push_back(Block(offset, size));
+}
+
+ZLFileImage::ZLFileImage(const ZLFile &file, const ZLFileImage::Blocks &blocks, const std::string &encoding) :
+	ZLSingleImage(file.mimeType()),
+	myFile(file),
 	myEncoding(encoding),
-	myOffset(offset),
-	mySize(size) {
+	myBlocks(blocks) {
 }
 
 const shared_ptr<std::string> ZLFileImage::stringData() const {
@@ -73,23 +79,34 @@ const shared_ptr<std::string> ZLFileImage::stringData() const {
 	if (stream.isNull() || !stream->open()) {
 		return 0;
 	}
-	size_t size = mySize;
-	if (size == 0) {
-		size = stream->sizeOfOpened();
-		if (size == 0) {
-			return 0;
-		}
-	}
 
 	shared_ptr<std::string> imageData = new std::string();
-	stream->seek(myOffset, true);
-	char *buffer = new char[size];
-	size_t readed = stream->read(buffer, size);
-	if (readed != size) {
-		ZLLogger::Instance().println("ZLFileImage", "stringData(), not all bytes readed");
+	for (size_t i = 0; i < myBlocks.size(); ++i) {
+		Block block = myBlocks.at(i);
+		stream->seek(block.offset, true);
+		size_t size = block.size;
+		if (size == 0) {
+			if (myBlocks.size() != 1) {
+				continue;
+			} else {
+				size = stream->sizeOfOpened();
+				if (size == 0) {
+					return 0;
+				}
+			}
+		}
+		char* buffer = new char[size];
+		size_t readed = stream->read(buffer, size);
+		if (readed != size) {
+			ZLLogger::Instance().println("ZLFileImage", "stringData(), not all bytes readed");
+		}
+		imageData->append(buffer, readed);
+		delete[] buffer;
 	}
-	imageData->append(buffer, readed);
-	delete[] buffer;
+
+	if (imageData->empty()) {
+		return 0;
+	}
 
 	if (myEncoding == ENCODING_HEX) {
 		ZLHexEncodedImage image(mimeType(), imageData);
