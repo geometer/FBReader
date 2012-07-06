@@ -18,7 +18,6 @@
  */
 
 #include <ZLLogger.h>
-#include <cstdio>
 
 #include "OleStorage.h"
 #include "OleUtil.h"
@@ -205,7 +204,6 @@ bool OleStorage::readAllEntries() {
 		if (entry.type == OleEntry::ROOT_DIR) {
 			myRootEntryIndex = i;
 		}
-		printf("entry name is '%s'\n", entry.name.c_str());
 		myEntries.push_back(entry);
 	}
 	if (myRootEntryIndex < 0) {

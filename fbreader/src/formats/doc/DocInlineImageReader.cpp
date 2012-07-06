@@ -17,17 +17,16 @@
  * 02110-1301, USA.
  */
 
-#include <cstdio>
-
 #include "OleUtil.h"
+#include "OleMainStream.h"
 
-#include "DocImageDataReader.h"
+#include "DocInlineImageReader.h"
 
-DocImageDataReader::DocImageDataReader(shared_ptr<OleStream> dataStream) :
+DocInlineImageReader::DocInlineImageReader(shared_ptr<OleStream> dataStream) :
 	myDataStream(dataStream) {
 }
 
-ZLFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) {
+ZLFileImage::Blocks DocInlineImageReader::getImagePieceInfo(unsigned int dataPos) {
 	if (myDataStream.isNull()) {
 		return ZLFileImage::Blocks();
 	}
@@ -71,8 +70,6 @@ ZLFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) 
 		unsigned int recordType = OleUtil::getU2Bytes(buffer, 2);
 		unsigned int recordLen = OleUtil::getU4Bytes(buffer, 4);
 
-		printf("RecordType: 0x%X (%u)\n", recordType, recordLen);
-
 		switch (recordType) {
 			case 0xF000: case 0xF001: case 0xF002: case 0xF003: case 0xF004: case 0xF005:
 				break;
@@ -98,12 +95,12 @@ ZLFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) 
 				myDataStream->seek(recordLen, false);
 				curOffset += recordLen;
 				break;
-			case 0xF01A: //EMF
-			case 0xF01B: //WMF
-			case 0xF01C: //PICT
+			case OleMainStream::EMF: //EMF
+			case OleMainStream::WMF: //WMF
+			case OleMainStream::PICT: //PICT
 				//TODO implement
 				return ZLFileImage::Blocks();
-			case 0xF01D: //JPEG
+			case OleMainStream::JPEG: case OleMainStream::JPEG2: //JPEG
 				myDataStream->seek(17, false);
 				curOffset += 17;
 				if (recordInstance == 0x46B || recordInstance == 0x6E3) {
@@ -112,7 +109,7 @@ ZLFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) 
 				}
 				found = true;
 				break;
-			case 0xF01E: //PNG
+			case OleMainStream::PNG: //PNG
 				myDataStream->seek(17, false);
 				curOffset += 17;
 				if (recordInstance == 0x6E1) {
@@ -121,7 +118,7 @@ ZLFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) 
 				}
 				found = true;
 				break;
-			case 0xF01F: //DIB (BMP without 14-bytes header)
+			case OleMainStream::DIB: //DIB (BMP without 14-bytes header)
 				myDataStream->seek(17, false);
 				curOffset += 17;
 				if (recordInstance == 0x7A9) {
@@ -130,7 +127,7 @@ ZLFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) 
 				}
 				found = true;
 				break;
-			case 0xF020: //TIFF
+			case OleMainStream::TIFF: //TIFF
 				myDataStream->seek(17, false);
 				curOffset += 17;
 				if (recordInstance == 0x6E5) {
@@ -146,19 +143,7 @@ ZLFileImage::Blocks DocImageDataReader::getImagePieceInfo(unsigned int dataPos) 
 	}
 
 	if (!found) {
-		printf("\nnot found!\n");
 		return ZLFileImage::Blocks();
 	}
-
-	printf("\nfound!!!!\n");
-	ZLFileImage::Blocks list2 = myDataStream->getBlockPieceInfoList(dataPos + curOffset, length - curOffset);
-	ZLFileImage::Blocks list;
-	ZLFileImage::Block info(dataPosFileOffset + curOffset, length - curOffset);
-	list.push_back(info);
-
-	printf("one big piece: off=%u, size=%u\n", info.offset, info.size);
-	for (size_t i = 0; i < list2.size(); ++i) {
-		printf("piece[%u] = off=%u, size=%u, next=%u\n", i, list2.at(i).offset, list2.at(i).size,  list2.at(i).offset + list2.at(i).size);
-	}
-	return list2;
+	return myDataStream->getBlockPieceInfoList(dataPos + curOffset, length - curOffset);
 }

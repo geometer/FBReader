@@ -20,13 +20,13 @@
 #include <cstring> //for memset
 #include <string>
 
-#include <cstdio>
-
 #include <ZLLogger.h>
 #include <ZLUnicodeUtil.h>
 
 #include "OleUtil.h"
 #include "OleStorage.h"
+
+#include "DocInlineImageReader.h"
 
 #include "OleMainStream.h"
 
@@ -49,13 +49,12 @@ OleMainStream::SectionInfo::SectionInfo() :
 	newPage(true) {
 }
 
-OleMainStream::PictureInfo::PictureInfo() :
+OleMainStream::InlineImageInfo::InlineImageInfo() :
 	dataPos(0) {
 }
 
-OleMainStream::FloatPictureInfo::FloatPictureInfo() :
-	charPos(0),
-	lid(0) {
+OleMainStream::FloatImageInfo::FloatImageInfo() :
+	shapeID(0) {
 }
 
 OleMainStream::OleMainStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream) :
@@ -113,7 +112,7 @@ bool OleMainStream::open() {
 	//readSectionsInfoTable(headerBuffer, tableEntry); //it isn't used now
 	readParagraphStyleTable(headerBuffer, tableEntry);
 	readCharInfoTable(headerBuffer, tableEntry);
-	readFloatingPicturesTable(headerBuffer, tableEntry);
+	readFloatingImages(headerBuffer, tableEntry);
 	return true;
 }
 
@@ -133,12 +132,27 @@ const OleMainStream::Bookmarks &OleMainStream::getBookmarks() const {
 	return myBookmarks;
 }
 
-const OleMainStream::PictureInfoList &OleMainStream::getPictureInfoList() const {
-	return myPictureInfoList;
+const OleMainStream::InlineImageInfoList &OleMainStream::getInlineImageInfoList() const {
+	return myInlineImageInfoList;
 }
 
-shared_ptr<OleStream> OleMainStream::dataStream() const {
-	return myDataStream;
+const OleMainStream::FloatImageInfoList &OleMainStream::getFloatImageInfoList() const {
+	return myFloatImageInfoList;
+}
+
+ZLFileImage::Blocks OleMainStream::getFloatImage(unsigned int shapeID) const {
+	if (myFLoatImageReader.isNull()) {
+		return ZLFileImage::Blocks();
+	}
+	return myFLoatImageReader->getBlocksForShapeID(shapeID);
+}
+
+ZLFileImage::Blocks OleMainStream::getInlineImage(unsigned int dataPos) const {
+	if (myDataStream.isNull()) {
+		return ZLFileImage::Blocks();
+	}
+	DocInlineImageReader imageReader(myDataStream);
+	return imageReader.getImagePieceInfo(dataPos);
 }
 
 bool OleMainStream::readFIB(const char *headerBuffer) {
@@ -548,10 +562,9 @@ bool OleMainStream::readCharInfoTable(const char *headerBuffer, const OleEntry &
 			myCharInfoList.push_back(CharPosToCharInfo(charPos, charInfo));
 
 			if (chpxOffset != 0) {
-				PictureInfo pictureInfo;
+				InlineImageInfo pictureInfo;
 				if (getPictureInfo(chpxOffset, formatPageBuffer + 1, len - 1, pictureInfo)) {
-					myPictureInfoList.push_back(CharPosToPictureInfo(charPos, pictureInfo));
-					printf("pictureInfo: char offset = %u, data offset = %u\n", charPos, pictureInfo.dataPos);
+					myInlineImageInfoList.push_back(CharPosToInlineImageInfo(charPos, pictureInfo));
 				}
 			}
 
@@ -561,7 +574,7 @@ bool OleMainStream::readCharInfoTable(const char *headerBuffer, const OleEntry &
 	return true;
 }
 
-bool OleMainStream::readFloatingPicturesTable(const char *headerBuffer, const OleEntry &tableEntry) {
+bool OleMainStream::readFloatingImages(const char *headerBuffer, const OleEntry &tableEntry) {
 	//Plcspa structure is a table with information for FSPA (File Shape Address)
 	unsigned int beginPicturesInfo = OleUtil::getU4Bytes(headerBuffer, 0x01DA); // address of Plcspa structure
 	if (beginPicturesInfo == 0) {
@@ -587,94 +600,31 @@ bool OleMainStream::readFloatingPicturesTable(const char *headerBuffer, const Ol
 		picturesBlocks.push_back(OleUtil::getU4Bytes(buffer.c_str(), tOffset));
 	}
 
-	std::vector<unsigned int> lids;
 	for (size_t index = 0, tOffset = (size + 1) * 4; index < size; ++index, tOffset += SPA_SIZE) {
-		unsigned int lid = OleUtil::getU4Bytes(buffer.c_str(), tOffset);
-		lids.push_back(lid);
-		FloatPictureInfo info;
-		info.charPos = picturesBlocks.at(index);
-		info.lid = lid;
-		myFloatPictureInfoList.push_back(info);
+		unsigned int spid = OleUtil::getU4Bytes(buffer.c_str(), tOffset);
+		FloatImageInfo info;
+		unsigned int charPos = picturesBlocks.at(index);
+		info.shapeID = spid;
+		myFloatImageInfoList.push_back(CharPosToFloatImageInfo(charPos, info));
 	}
-
-	for (size_t i = 0; i < myFloatPictureInfoList.size(); ++i) {
-		printf("CP[%u] = %u, lid = %u\n", i, myFloatPictureInfoList.at(i).charPos, myFloatPictureInfoList.at(i).lid);
-	}
-
-
-
 
 	//DggInfo structure is office art object table data
 	unsigned int beginOfficeArtContent = OleUtil::getU4Bytes(headerBuffer, 0x22A); // address of DggInfo structure
 	if (beginOfficeArtContent == 0) {
 		return true; //there's no office art objects
 	}
-	unsigned int officeArtContentLength = OleUtil::getU4Bytes(headerBuffer, 0x01DE); // length of DggInfo structure
+	unsigned int officeArtContentLength = OleUtil::getU4Bytes(headerBuffer, 0x022E); // length of DggInfo structure
 	if (officeArtContentLength < 4) {
 		return false;
 	}
 
-//	buffer.clear();
-//	if (!readToBuffer(buffer, beginOfficeArtContent, officeArtContentLength, tableStream)) {
-//		return false;
-//	}
-
-	char buf[8];
-	tableStream.seek(beginOfficeArtContent,true);
-	tableStream.read(buf, 8);
-	unsigned int recordLen = OleUtil::getU4Bytes(buf, 4);
-	unsigned int recordType = OleUtil::getU2Bytes(buf, 2);
-	printf("dgg containter art: recordLen = %u, type = 0x%X\n", recordLen, recordType);
-
-	tableStream.seek(recordLen, false);
-	tableStream.read(buf, 8);
-	unsigned int recordLen2 = OleUtil::getU4Bytes(buf, 4);
-	unsigned int recordType2 = OleUtil::getU2Bytes(buf, 2);
-	printf("drawings: recordLen = %u, type = 0x%X\n", recordLen2, recordType2);
-
-//	for (unsigned int i = 0; i < 9999; ++i) {
-//		tableStream.seek(recordLen,false);
-//		tableStream.read(buf, 8);
-//		recordLen = OleUtil::getU4Bytes(buf, 4);
-//		unsigned int recordType2 = OleUtil::getU2Bytes(buf, 2);
-//		printf("[%u] recordLen = %u, type = 0x%X\n", recordLen, recordType2);
-//	}
-
-
-	//reading drawing Group
-//	tableStream.read(buf, 8);
-//	unsigned int recordLen2 = OleUtil::getU4Bytes(buf, 4);
-//	unsigned int recordType2 = OleUtil::getU2Bytes(buf, 2);
-//	printf("drawing group: recordLen = %u, type = 0x%X\n", recordLen2, recordType2);
-
-//	//reading blipStore
-//	tableStream.seek(recordLen2, false);
-//	tableStream.read(buf, 8);
-//	unsigned int recordLen3 = OleUtil::getU4Bytes(buf, 4);
-//	unsigned int recordType3 = OleUtil::getU2Bytes(buf, 2);
-//	printf("blipStore: recordLen = %u, type = 0x%X\n", recordLen3, recordType3);
-
-//	tableStream.seek(recordLen3, false);
-//	tableStream.read(buf, 8);
-//	unsigned int recordLen4 = OleUtil::getU4Bytes(buf, 4);
-//	unsigned int recordType4 = OleUtil::getU2Bytes(buf, 2);
-//	printf("1st record: recordLen = %u, type = 0x%X\n", recordLen4, recordType4);
-
-//	tableStream.seek(recordLen4, false);
-//	tableStream.read(buf, 8);
-//	unsigned int recordLen5 = OleUtil::getU4Bytes(buf, 4);
-//	unsigned int recordType5 = OleUtil::getU2Bytes(buf, 2);
-//	printf("2nd record: recordLen = %u, type = 0x%X\n", recordLen5, recordType5);
-
-//	tableStream.seek(recordLen5, false);
-//	tableStream.read(buf, 8);
-//	unsigned int recordLen6 = OleUtil::getU4Bytes(buf, 4);
-//	unsigned int recordType6 = OleUtil::getU2Bytes(buf, 2);
-//	printf("3nd record: recordLen = %u, type = 0x%X\n", recordLen6, recordType6);
-
-
+	shared_ptr<OleStream> newTableStream = new OleStream(myStorage, tableEntry, myBaseStream);
+	shared_ptr<OleStream> newMainStream = new OleStream(myStorage, myOleEntry, myBaseStream);
+	if (newTableStream->open() && newMainStream->open()) {
+		myFLoatImageReader = new DocFloatImageReader(beginOfficeArtContent, officeArtContentLength, newTableStream, newMainStream);
+		myFLoatImageReader->readAll();
+	}
 	return true;
-
 }
 
 bool OleMainStream::readParagraphStyleTable(const char *headerBuffer, const OleEntry &tableEntry) {
@@ -933,7 +883,7 @@ void OleMainStream::getSectionInfo(const char *grpprlBuffer, size_t bytes, Secti
 	}
 }
 
-bool OleMainStream::getPictureInfo(unsigned int chpxOffset, const char *grpprlBuffer, unsigned int bytes, PictureInfo &pictureInfo) {
+bool OleMainStream::getPictureInfo(unsigned int chpxOffset, const char *grpprlBuffer, unsigned int bytes, InlineImageInfo &pictureInfo) {
 	//p. 105 of [MS-DOC] documentation
 	unsigned int offset = 0;
 	bool isFound = false;
