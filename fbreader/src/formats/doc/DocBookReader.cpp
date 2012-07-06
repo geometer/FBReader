@@ -230,7 +230,7 @@ void DocBookReader::handleEndField() {
 
 }
 
-void DocBookReader::handlePicture(const ZLFileImage::Blocks &blocks) {
+void DocBookReader::handleImage(const ZLFileImage::Blocks &blocks) {
 	std::string number;
 	ZLStringUtil::appendNumber(number, myPictureCounter++);
 	myModelReader.addImageReference(number);
