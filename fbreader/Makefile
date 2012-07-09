@@ -22,7 +22,7 @@ all: .resources
 		fi; \
 	done;
 	@echo -n 'Linking $(TARGET) ...'
-	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` -L$(ROOTDIR)/zlibrary/text $(TEXT_LIBS) $(CORE_LIBS) $(ZLUI_LIB) -lsqlite3
+	@$(LD) $(LDFLAGS) -o $(TARGET) `find src -name *.o` -L$(ROOTDIR)/zlibrary/text $(TEXT_LIBS) $(CORE_LIBS) -lsqlite3
 	@echo ' OK'
 
 FBSHAREDIR = $(DESTDIR)$(SHAREDIR)/FBReader
