@@ -40,9 +40,9 @@ ZLQtNetworkManager::ZLQtNetworkManager() {
 	myCookieJar = new ZLQtNetworkCookieJar(QString::fromStdString(CookiesPath()), &myManager);
 	myManager.setCookieJar(myCookieJar);
 	QObject::connect(&myManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
-	                 this, SLOT(onAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
+					 this, SLOT(onAuthenticationRequired(QNetworkReply*,QAuthenticator*)));
 	QObject::connect(&myManager, SIGNAL(finished(QNetworkReply*)),
-	                 this, SLOT(onFinished(QNetworkReply*)));
+					 this, SLOT(onFinished(QNetworkReply*)));
 }
 
 ZLQtNetworkManager::~ZLQtNetworkManager() {
@@ -135,12 +135,33 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	QByteArray data;
 	if (!*scope.headerHandled) {
-		*scope.headerHandled = true;
-		foreach (const QByteArray &line, reply->rawHeaderList()) {
-			data += line;
-			data += '\n';
+		QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+		if (redirect.isValid()) {
+			reply->deleteLater();
+			Q_ASSERT(scope.replies->removeOne(reply));
+			reply->setProperty("redirected", true);
+			QNetworkRequest request = reply->request();
+			request.setUrl(reply->url().resolved(redirect));
+			reply = myManager.get(request);
+			scope.replies->append(reply);
+			QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
+			reply->setProperty("scope", qVariantFromValue(scope));
+			return;
 		}
-		qDebug() << "HEADER\n" << QLatin1String(data);
+		
+		// We should fool the request about received header
+		*scope.headerHandled = true;
+		data = "HTTP/1.1 ";
+		data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
+		data += " ";
+		data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
+		foreach(const QByteArray& headerName, reply->rawHeaderList()) {
+			data += '\n';
+			data += headerName;
+			data += ": ";
+			data += reply->rawHeader(headerName);
+		}
+		data += '\n';
 		scope.request->handleHeader(data.data(), data.size());
 	}
 	data = reply->readAll();
@@ -165,9 +186,9 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	if (!scope.request->doAfter(reply->error() == QNetworkReply::NoError))
 		scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
 }
-	
-ZLQtNetworkCookieJar::ZLQtNetworkCookieJar(const QString &filePath, QObject *parent) 
-    : QNetworkCookieJar(parent), myFilePath(filePath + QLatin1String("/cache.dat")) {
+
+ZLQtNetworkCookieJar::ZLQtNetworkCookieJar(const QString &filePath, QObject *parent)
+	: QNetworkCookieJar(parent), myFilePath(filePath + QLatin1String("/cache.dat")) {
 	QFile file(myFilePath);
 	QList<QNetworkCookie> cookies;
 	if (file.open(QFile::ReadOnly))
