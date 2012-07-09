@@ -23,9 +23,11 @@ ZLInputStreamDecorator::ZLInputStreamDecorator(shared_ptr<ZLInputStream> decorat
 }
 
 bool ZLInputStreamDecorator::open() {
-	bool result = myBaseStream->open();
+	if (!myBaseStream->open()) {
+		return false;
+	}
 	myBaseOffset = myBaseStream->offset();
-	return result;
+	return true;
 }
 
 size_t ZLInputStreamDecorator::read(char *buffer, size_t maxSize) {
