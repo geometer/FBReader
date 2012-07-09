@@ -19,7 +19,7 @@ FBReader requires
      OR
        GTK+ library, version >= 2.4 
      should be installed
-  ** liblinebreak (http://vimgadgets.cvs.sourceforge.net/vimgadgets/common/tools/linebreak/) -- library for line breaking in a Unicode sequence
+  ** libunibreak (http://vimgadgets.cvs.sourceforge.net/vimgadgets/common/tools/linebreak/) -- library for line breaking in a Unicode sequence
   ** libfribidi -- for bidirectional text support
   ** lincurl, version >= 7.17 -- for network libraries integration
 	** libsqlite3

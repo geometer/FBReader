@@ -1,0 +1,33 @@
+Format: 1.8
+Date: Fri, 9 Jul 2012 17:00:00 +0300
+Source: libunibreak
+Binary: libunibreak1 libunibreak-dev
+Architecture: source i386
+Version: 1.0-1
+Distribution: unstable
+Urgency: low
+Maintainer: Eugene V. Lyubimkin <jackyf.devel@gmail.com>
+Changed-By: Alexander Turkin <snowwlex@fbreader.org>
+Description: 
+ libunibreak-dev - line breaking library (development files)
+ libunibreak1 - line breaking library
+Changes: 
+ libunibreak (1.0-1) unstable; urgency=low
+ .
+   * new upstream release
+   * package's name has been changed to "libunibreak"
+Checksums-Sha1: 
+ 9916464b78b1b553287225891e6e81e22d664c78 499 libunibreak_1.0-1.dsc
+ b7d7540aa063d44424dea41b0c4b323a2af91ddc 409496 libunibreak_1.0-1.tar.gz
+ 3c9fc28f5a31847e4536c0a023d7675287ed0e4a 26900 libunibreak1_1.0-1_i386.deb
+ ca33fde582067d9b51561ef7c0f6dc82f2f55556 118272 libunibreak-dev_1.0-1_i386.deb
+Checksums-Sha256: 
+ ce27186bd9ae7e8c646dc4f4c76ae4d2b2b68e4aec89f4fae5fbf7b2cc5d511b 499 libunibreak_1.0-1.dsc
+ 36d3926a1b9ba089d90f324ae05714bed91717a11479ea0bc4198629eed6e200 409496 libunibreak_1.0-1.tar.gz
+ 251281ec0fdf5f4b7e1fabf044b5b5ad0b256ec87e6e631b8250105f0667e01a 26900 libunibreak1_1.0-1_i386.deb
+ e48a3736045e76eadf4897ec75ce3e25cd5984c9f97bd0e67fecbaef7bc6f004 118272 libunibreak-dev_1.0-1_i386.deb
+Files: 
+ 255ea30e1a48b8fe086cf3093cebd344 499 text optional libunibreak_1.0-1.dsc
+ 0504342e15fb5643d94b9f0b6e709482 409496 text optional libunibreak_1.0-1.tar.gz
+ 36e6c86232a48cdefcea24a8f3165c7f 26900 libs optional libunibreak1_1.0-1_i386.deb
+ 70674afc558ad94a267497021a4ae4a7 118272 libdevel optional libunibreak-dev_1.0-1_i386.deb
