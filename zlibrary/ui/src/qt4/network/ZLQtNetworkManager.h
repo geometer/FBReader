@@ -32,7 +32,6 @@ class QEventLoop;
 
 struct ZLQtNetworkReplyScope {
 	ZLNetworkRequest *request;
-	bool *headerHandled;
 	QList<QNetworkReply*> *replies;
 	QStringList *errors;
 	QEventLoop *eventLoop;
@@ -52,8 +51,12 @@ public:
 
 protected Q_SLOTS:
 	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
-	void onReplyReadyRead();
 	void onFinished(QNetworkReply *reply);
+
+protected:
+	bool handleRedirect(QNetworkReply *reply);
+	void handleHeaders(QNetworkReply *reply);
+	void handleContent(QNetworkReply *reply);
 
 private:
 	QNetworkAccessManager myManager;

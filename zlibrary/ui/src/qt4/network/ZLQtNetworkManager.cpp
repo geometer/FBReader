@@ -78,7 +78,7 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		const_cast<QNetworkAccessManager&>(myManager).setProxy(proxy);
 	}
 	QList<QNetworkReply*> replies;
-	QVector<bool> booleans(dataList.size(), false);
+	//QVector<bool> booleans(dataList.size(), false);
 	QStringList errors;
 	QEventLoop eventLoop;
 
@@ -120,8 +120,7 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 			QUrl tmp;
 			typedef std::pair<std::string, std::string> string_pair;
 			foreach (const string_pair &pair, postRequest.postData()) {
-				tmp.addQueryItem(QString::fromStdString(pair.first),
-								 QString::fromStdString(pair.second));
+				tmp.addQueryItem(QString::fromStdString(pair.first), QString::fromStdString(pair.second));
 			}
 			data = tmp.encodedQuery();
 			reply = const_cast<QNetworkAccessManager&>(myManager).post(networkRequest, data);
@@ -129,9 +128,9 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 			reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
 		}
 		Q_ASSERT(reply);
-		QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
-		ZLQtNetworkReplyScope scope = { &request, &booleans[replies.size()], &replies, &errors, &eventLoop };
-		replies << reply;
+		//QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
+		ZLQtNetworkReplyScope scope = { &request, &replies, &errors, &eventLoop };
+		replies.push_back(reply);
 		reply->setProperty("scope", qVariantFromValue(scope));
 	}
 	if (!replies.isEmpty())
@@ -147,60 +146,65 @@ void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthent
 	authenticator->setPassword(QString::fromStdString(scope.request->password()));
 }
 
-void ZLQtNetworkManager::onReplyReadyRead() {
-	QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
-	Q_UNUSED(reply);
-	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	QByteArray data;
-	if (!*scope.headerHandled) {
-		QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
-		if (redirect.isValid()) {
-			reply->deleteLater();
-			Q_ASSERT(scope.replies->removeOne(reply));
-			reply->setProperty("redirected", true);
-			QNetworkRequest request = reply->request();
-			request.setUrl(reply->url().resolved(redirect));
-			reply = myManager.get(request);
-			scope.replies->append(reply);
-			QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
-			reply->setProperty("scope", qVariantFromValue(scope));
-			return;
-		}
-
-		*scope.headerHandled = true;
-		QByteArray data = "HTTP/1.1 ";
-		data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
-		data += " ";
-		data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
-		scope.request->handleHeader(data.data(), data.size());
-		foreach (const QByteArray &headerName, reply->rawHeaderList()) {
-			data  = headerName;
-			data += ": ";
-			data += reply->rawHeader(headerName);
-			scope.request->handleHeader(data.data(), data.size());
-		}
-	}
-	data = reply->readAll();
-	if (!data.isEmpty())
-		scope.request->handleContent(data.data(), data.size());
-}
-
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	reply->deleteLater();
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	Q_ASSERT(scope.request);
-	Q_ASSERT(scope.replies->removeOne(reply));
-	if (scope.replies->isEmpty())
-		scope.eventLoop->quit();
-	if (reply->error() != QNetworkReply::NoError) {
-		scope.errors->append(reply->errorString());
-	} else {
-		QByteArray data = reply->readAll();
-		if (!data.isEmpty())
-			scope.request->handleContent(data.data(), data.size());
+	if (handleRedirect(reply)) {
+		return;
 	}
-	if (!scope.request->doAfter(reply->error() == QNetworkReply::NoError))
+	handleHeaders(reply);
+	handleContent(reply);
+
+	if (!scope.request->doAfter(reply->error() == QNetworkReply::NoError)) {
 		scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
+	}
+
+	scope.replies->removeOne(reply);
+	if (scope.replies->isEmpty()) {
+		scope.eventLoop->quit();
+	}
+}
+
+bool ZLQtNetworkManager::handleRedirect(QNetworkReply *reply) {
+	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
+	if (!redirect.isValid()) {
+		return false;
+	}
+	scope.replies->removeOne(reply);
+	QNetworkRequest request = reply->request();
+	request.setUrl(reply->url().resolved(redirect));
+	reply = myManager.get(request);
+	scope.replies->append(reply);
+	reply->setProperty("scope", qVariantFromValue(scope));
+	return true;
+}
+
+void ZLQtNetworkManager::handleHeaders(QNetworkReply *reply) {
+	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	QByteArray data = "HTTP/1.1 ";
+	data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
+	data += " ";
+	data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
+	scope.request->handleHeader(data.data(), data.size());
+	foreach (const QByteArray &headerName, reply->rawHeaderList()) {
+		data  = headerName;
+		data += ": ";
+		data += reply->rawHeader(headerName);
+		scope.request->handleHeader(data.data(), data.size());
+	}
+}
+
+void ZLQtNetworkManager::handleContent(QNetworkReply *reply) {
+	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	if (reply->error() == QNetworkReply::NoError) {
+		QByteArray data = reply->readAll();
+		if (!data.isEmpty()) {
+			scope.request->handleContent(data.data(), data.size());
+		}
+	} else {
+		scope.errors->append(reply->errorString());
+	}
 }
 
 ZLQtNetworkCookieJar::ZLQtNetworkCookieJar(QObject *parent) :
