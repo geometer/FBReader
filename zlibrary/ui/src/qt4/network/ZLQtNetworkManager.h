@@ -43,15 +43,17 @@ class ZLQtNetworkManager : public QObject, public ZLNetworkManager {
 public:
 	ZLQtNetworkManager();
 	~ZLQtNetworkManager();
-	
+
 	static void createInstance();
 
+	void initPaths();
+
 	std::string perform(const ZLExecutionData::Vector &dataList) const;
-	
+
 protected Q_SLOTS:
-    void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
-    void onReplyReadyRead();
-    void onFinished(QNetworkReply *reply);
+	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
+	void onReplyReadyRead();
+	void onFinished(QNetworkReply *reply);
 
 private:
 	QNetworkAccessManager myManager;
@@ -62,12 +64,14 @@ private:
 class ZLQtNetworkCookieJar : public QNetworkCookieJar {
 	Q_OBJECT
 public:
-    ZLQtNetworkCookieJar(const QString &filePath, QObject *parent = 0);
-    ~ZLQtNetworkCookieJar();
-	
-    bool setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl &url);
-    void save();
-	
+	ZLQtNetworkCookieJar(QObject *parent = 0);
+	~ZLQtNetworkCookieJar();
+
+	void setFilePath(const QString &filePath);
+
+	bool setCookiesFromUrl(const QList<QNetworkCookie> &cookieList, const QUrl &url);
+	void save();
+
 private:
 	QString myFilePath;
 };
