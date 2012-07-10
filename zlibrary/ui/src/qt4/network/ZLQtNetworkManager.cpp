@@ -34,7 +34,6 @@
 #include <QtNetwork/QSslConfiguration>
 #include <QtNetwork/QSslCertificate>
 #include <QtNetwork/QAuthenticator>
-//#include "ZLQtPostDevice.h"
 
 static QString fixPath(const QString &path) {
 	if (path.startsWith('~')) {
@@ -168,20 +167,18 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 			return;
 		}
 
-		// We should fool the request about received header
 		*scope.headerHandled = true;
-		data = "HTTP/1.1 ";
+		QByteArray data = "HTTP/1.1 ";
 		data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
 		data += " ";
 		data += reply->attribute(QNetworkRequest::HttpReasonPhraseAttribute).toByteArray();
-		foreach(const QByteArray& headerName, reply->rawHeaderList()) {
-			data += '\n';
-			data += headerName;
+		scope.request->handleHeader(data.data(), data.size());
+		foreach (const QByteArray &headerName, reply->rawHeaderList()) {
+			data  = headerName;
 			data += ": ";
 			data += reply->rawHeader(headerName);
+			scope.request->handleHeader(data.data(), data.size());
 		}
-		data += '\n';
-		scope.request->handleHeader(data.data(), data.size());
 	}
 	data = reply->readAll();
 	if (!data.isEmpty())
