@@ -49,7 +49,7 @@ void SearchOnNetworkAction::run() {
 	NetworkLinkCollection &collection = NetworkLinkCollection::Instance();
 	for (size_t i = 0; i < collection.size(); ++i) {
 		NetworkLink &link = collection.link(i);
-		if (link.OnOption.value()) {
+		if (link.isEnabled()) {
 			shared_ptr<NetworkAuthenticationManager> mgr = link.authenticationManager();
 			if (!mgr.isNull()) {
 				IsAuthorisedRunnable checker(*mgr);

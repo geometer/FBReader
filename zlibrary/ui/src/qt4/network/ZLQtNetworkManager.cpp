@@ -73,12 +73,11 @@ void ZLQtNetworkManager::initPaths() {
 
 std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {
 	if (useProxy()) {
-		QString proxyHost = QString::fromStdString(ZLNetworkManager::proxyHost());
-		QNetworkProxy proxy(QNetworkProxy::HttpProxy, proxyHost, atoi(proxyPort().c_str()));
+		QString host = QString::fromStdString(proxyHost());
+		QNetworkProxy proxy(QNetworkProxy::HttpProxy, host, atoi(proxyPort().c_str()));
 		const_cast<QNetworkAccessManager&>(myManager).setProxy(proxy);
 	}
 	QList<QNetworkReply*> replies;
-	//QVector<bool> booleans(dataList.size(), false);
 	QStringList errors;
 	QEventLoop eventLoop;
 
@@ -128,7 +127,6 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 			reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
 		}
 		Q_ASSERT(reply);
-		//QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
 		ZLQtNetworkReplyScope scope = { &request, &replies, &errors, &eventLoop };
 		replies.push_back(reply);
 		reply->setProperty("scope", qVariantFromValue(scope));

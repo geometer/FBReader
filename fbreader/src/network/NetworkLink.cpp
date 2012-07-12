@@ -21,6 +21,7 @@
 
 #include <ZLibrary.h>
 #include <ZLFile.h>
+#include <ZLStringUtil.h>
 
 #include "NetworkLink.h"
 #include "NetworkOperationData.h"
@@ -42,18 +43,11 @@ std::string NetworkLink::CertificatesPathPrefix() {
 }
 
 NetworkLink::NetworkLink(
-	const std::string &siteName,
-	const std::string &title,
-	const std::string &summary,
-	const std::string &icon,
-	const std::map<std::string,std::string> &links
-) : 
-	SiteName(siteName), 
-	Title(title),
-	Summary(summary),
-	Icon(icon),
-	OnOption(ZLCategoryKey::NETWORK, siteName, "on", true),
-	myLinks(links) {
+	const std::string &siteName
+) :
+	SiteName(ZLStringUtil::stringStartsWith(siteName, "www.") ? siteName.substr(std::string("www.").length()) : siteName),
+	myEnabled(true),
+	myUpdated(0) {
 }
 
 NetworkLink::~NetworkLink() {
@@ -67,4 +61,76 @@ std::string NetworkLink::url(const std::string &urlId) const {
 shared_ptr<ZLExecutionData> NetworkLink::resume(NetworkOperationData &result) const {
 	result.clear();
 	return 0;
+}
+
+void NetworkLink::setTitle(const std::string& title) {
+	myTitle = title;
+}
+void NetworkLink::setSummary(const std::string& summary) {
+	mySummary = summary;
+}
+void NetworkLink::setIcon(const std::string& icon) {
+	myIcon = icon;
+}
+
+void NetworkLink::setPredefinedId(const std::string& id) {
+	myPredefinedId = id;
+}
+
+void NetworkLink::setLinks(const std::map<std::string,std::string>& links) {
+	myLinks = links;
+}
+
+void NetworkLink::setUpdated(shared_ptr<ATOMUpdated> u) {
+	myUpdated = u;
+}
+
+void NetworkLink::setEnabled(bool enabled) {
+	myEnabled = enabled;
+}
+
+std::string NetworkLink::getTitle() const {
+	return myTitle;
+}
+std::string NetworkLink::getSummary() const {
+	return mySummary;
+}
+
+std::string NetworkLink::getPredefinedId() const {
+	return myPredefinedId;
+}
+
+const std::map<std::string,std::string>& NetworkLink::getLinks() const {
+	return myLinks;
+}
+
+shared_ptr<ATOMUpdated> NetworkLink::getUpdated() const {
+	return myUpdated;
+}
+
+std::string NetworkLink::getIcon() const {
+	return myIcon;
+}
+bool NetworkLink::isEnabled() const {
+	return myEnabled;
+}
+
+void NetworkLink::loadFrom(const NetworkLink & link) {
+	myTitle = link.myTitle;
+	myIcon = link.myIcon;
+	mySummary = link.mySummary;
+	myLinks = link.myLinks;
+	myPredefinedId = link.myPredefinedId;
+	myUpdated = link.myUpdated;
+}
+
+void NetworkLink::loadLinksFrom(const NetworkLink & link) {
+	myIcon = link.myIcon;
+	myLinks = link.myLinks;
+	myUpdated = link.myUpdated;
+}
+
+void NetworkLink::loadSummaryFrom(const NetworkLink & link) {
+	myTitle = link.myTitle;
+	mySummary = link.mySummary;
 }
