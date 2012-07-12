@@ -36,8 +36,8 @@ std::string ZLGtkFSManager::convertFilenameToUtf8(const std::string &name) const
 	return convertedName;
 }
 
-std::string ZLGtkFSManager::mimeType(const std::string &path) const {
-	std::string type;
+shared_ptr<ZLMimeType> ZLGtkFSManager::mimeType(const std::string &path) const {
+	shared_ptr<ZLMimeType> type = 0;
 
 	GFile *file = g_file_new_for_path(path.c_str());
 	if (file != 0) {
@@ -50,7 +50,7 @@ std::string ZLGtkFSManager::mimeType(const std::string &path) const {
 		if (info != 0) {
 			const char *pType = g_file_info_get_content_type(info);
 			if (pType != 0) {
-				type = pType;
+				type = ZLMimeType::get(pType);
 			}
 			g_object_unref(info);
 		}

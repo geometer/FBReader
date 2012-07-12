@@ -61,6 +61,13 @@ bool ZLMimeType::isImage(shared_ptr<ZLMimeType> mimeType) {
 		*mimeType == *IMAGE_SVG;
 }
 
+shared_ptr<ZLMimeType> ZLMimeType::get(const char *text) {
+	if (text == 0) {
+		return EMPTY;
+	}
+	return get(std::string(text));
+}
+
 shared_ptr<ZLMimeType> ZLMimeType::get(std::string text) {
 	if (text == "") {
 		return EMPTY;
@@ -70,17 +77,17 @@ shared_ptr<ZLMimeType> ZLMimeType::get(std::string text) {
 		return EMPTY;
 	}
 	std::map<std::string,std::string> parameters;
-	bool fin = (text.find(';') == -1);
-	if (!fin) {
+	bool final = (text.find(';') == std::string::npos);
+	if (!final) {
 		std::string rest = text.substr(text.find(';') + 1);
-		while (!fin) {
-			if (rest.find('=') == -1) {
+		while (!final) {
+			if (rest.find('=') == std::string::npos) {
 				return EMPTY;
 			}
 			std::string key = rest.substr(0, rest.find('='));
 			std::string value = rest.substr(rest.find('=') + 1, rest.find(';'));
 			parameters[key] = value;
-			fin = (rest.find(';') == -1);
+			final = (rest.find(';') == std::string::npos);
 			rest = rest.substr(rest.find(';') + 1);
 		}
 	}

@@ -80,7 +80,6 @@ private:
 	void updateLinks(std::string genericUrl);
 	void saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto);
 
-
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 	LinkVector myLinks, myTempCustomLinks;

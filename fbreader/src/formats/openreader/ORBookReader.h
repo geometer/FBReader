@@ -56,7 +56,7 @@ private:
 	std::map<std::string,std::string> myResources;
 	std::string myCoverReference;
 	std::set<std::string> myHtmlFileIDs;
-	std::map<std::string,std::string> myImageIDs;
+	std::map<std::string,shared_ptr<ZLMimeType> > myImageIDs;
 	std::vector<std::string> myHtmlFilesOrder;
 
 	struct TOCItem {

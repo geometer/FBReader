@@ -23,6 +23,7 @@
 #include <map>
 
 #include "PalmDocLikeStream.h"
+#include <ZLMimeType.h>
 
 class ZLFile;
 
@@ -40,7 +41,7 @@ public:
 	struct ImageInfo {
 		unsigned long Offset;
 		unsigned short Size;
-		std::string Type;
+		shared_ptr<ZLMimeType> Type;
 	};
 
 	ImageInfo imageLocation(const std::string& id);

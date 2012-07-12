@@ -35,7 +35,7 @@ private:
 	static std::map<std::string,shared_ptr<ZLMimeType> > ourSimpleTypesMap;
 
 public:
-
+	static shared_ptr<ZLMimeType> get(const char *text);
 	static shared_ptr<ZLMimeType> get(std::string text);
 	static bool isImage(shared_ptr<ZLMimeType> mimeType);
 

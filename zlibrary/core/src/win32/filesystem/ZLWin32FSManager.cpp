@@ -120,9 +120,9 @@ void ZLWin32FSManager::normalizeRealPath(std::string &path) const {
 	}
 }
 
-std::string ZLWin32FSManager::mimeType(const std::string &path) const {
+shared_ptr<ZLMimeType> ZLWin32FSManager::mimeType(const std::string &path) const {
 	// TODO: implement
-	return std::string();
+	return ZLMimeType::EMPTY;
 }
 
 ZLFSDir *ZLWin32FSManager::createNewDirectory(const std::string &path) const {

@@ -20,6 +20,8 @@
 #ifndef __FB2BOOKREADER_H__
 #define __FB2BOOKREADER_H__
 
+#include <ZLMimeType.h>
+
 #include "FB2Reader.h"
 #include "../../bookmodel/BookReader.h"
 
@@ -48,7 +50,7 @@ private:
 
 	int myCurrentImageStart;
 	std::string myCurrentImageId;
-	std::string myCurrentContentType;
+	shared_ptr<ZLMimeType> myCurrentContentType;
 
 	bool mySectionStarted;
 	bool myInsideTitle;

@@ -37,7 +37,7 @@ inline static int decode(char b) {
 	}
 }
 
-ZLHexEncodedImage::ZLHexEncodedImage(const std::string &mimeType, shared_ptr<std::string> encodedData) :
+ZLHexEncodedImage::ZLHexEncodedImage(shared_ptr<ZLMimeType> mimeType, shared_ptr<std::string> encodedData) :
 	ZLSingleImage(mimeType),
 	myEncodedData(encodedData),
 	myData(0) {

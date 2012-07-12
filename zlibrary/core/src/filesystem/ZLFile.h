@@ -25,6 +25,7 @@
 
 #include <shared_ptr.h>
 #include <ZLFileInfo.h>
+#include <ZLMimeType.h>
 
 class ZLDir;
 class ZLInputStream;
@@ -57,7 +58,7 @@ private:
 	ZLFile();
 
 public:
-	explicit ZLFile(const std::string &path, const std::string &mimeType = std::string());
+	explicit ZLFile(const std::string &path, shared_ptr<ZLMimeType> mimeType = ZLMimeType::EMPTY);
 	~ZLFile();
 
 	bool exists() const;
@@ -76,7 +77,7 @@ public:
 	const std::string &name(bool hideExtension) const;
 	const std::string &extension() const;
 
-	const std::string &mimeType() const;
+	shared_ptr<ZLMimeType> mimeType() const;
 
 	std::string physicalFilePath() const;
 	std::string resolvedPath() const;
@@ -98,7 +99,7 @@ private:
 	std::string myNameWithExtension;
 	std::string myNameWithoutExtension;
 	std::string myExtension;
-	mutable std::string myMimeType;
+	mutable shared_ptr<ZLMimeType> myMimeType;
 	mutable bool myMimeTypeIsUpToDate;
 	mutable ArchiveType myArchiveType;
 	mutable ZLFileInfo myInfo;

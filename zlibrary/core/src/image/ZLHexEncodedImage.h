@@ -27,7 +27,7 @@
 class ZLHexEncodedImage : public ZLSingleImage {
 
 public:
-	ZLHexEncodedImage(const std::string &mimeType, shared_ptr<std::string> encodedData);
+	ZLHexEncodedImage(shared_ptr<ZLMimeType> mimeType, shared_ptr<std::string> encodedData);
 	const shared_ptr<std::string> stringData() const;
 
 private:

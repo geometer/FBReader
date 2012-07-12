@@ -39,9 +39,9 @@ NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	NetworkOperationData &result
 ) :
 	myLink(link),
-	myBaseURL(baseURL), 
-	myData(result), 
-	myIndex(0), 
+	myBaseURL(baseURL),
+	myData(result),
+	myIndex(0),
 	myOpenSearchStartIndex(0) {
 }
 

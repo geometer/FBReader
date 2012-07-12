@@ -27,7 +27,7 @@
 class ZLBase64EncodedImage : public ZLSingleImage {
 
 public:
-	ZLBase64EncodedImage(const std::string &mimeType);
+	ZLBase64EncodedImage(shared_ptr<ZLMimeType> mimeType);
 	~ZLBase64EncodedImage();
 	void addData(const std::string &text, size_t offset, size_t len);
 	void addData(const std::vector<std::string> &text);
@@ -41,7 +41,7 @@ private:
 	mutable shared_ptr<std::string> myData;
 };
 
-inline ZLBase64EncodedImage::ZLBase64EncodedImage(const std::string &mimeType) : ZLSingleImage(mimeType) {}
+inline ZLBase64EncodedImage::ZLBase64EncodedImage(shared_ptr<ZLMimeType> mimeType) : ZLSingleImage(mimeType) {}
 inline ZLBase64EncodedImage::~ZLBase64EncodedImage() {}
 
 #endif /* __ZLBASE64ENCODEDIMAGE_H__ */
