@@ -369,7 +369,7 @@ const std::string BooksDBQuery::ADD_NETWORK_LINK  = \
 	"		@title, " \
 	"		@site_name, " \
 	"		@summary, " \
-	"		null, " \
+	"		nullif(@language,\"\"), " \
 	"		nullif(@predefined_id,\"\"), " \
 	"		@is_enabled " \
 	"	); " \
@@ -383,7 +383,7 @@ const std::string BooksDBQuery::UPDATE_NETWORK_LINK  = \
 	"UPDATE Net.Links SET " \
 	"	title = @title, " \
 	"	summary = @summary, " \
-	"	language = null, " \
+	"	language = nullif(@language,\"\"), " \
 	"	predefined_id = nullif(@predefined_id,\"\"), " \
 	"	is_enabled = @is_enabled " \
 	"WHERE " \

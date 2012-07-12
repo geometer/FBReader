@@ -23,8 +23,8 @@
 
 SaveNetworkLinkRunnable::SaveNetworkLinkRunnable(DBConnection &connection) {
 	myFindNetworkLinkId = SQLiteFactory::createCommand(BooksDBQuery::FIND_NETWORK_LINK_ID, connection, "@site_name", DBValue::DBTEXT);
-	myAddNetworkLink    = SQLiteFactory::createCommand(BooksDBQuery::ADD_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@site_name", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT);
-	myUpdateNetworkLink    = SQLiteFactory::createCommand(BooksDBQuery::UPDATE_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT, "@link_id", DBValue::DBINT);
+	myAddNetworkLink    = SQLiteFactory::createCommand(BooksDBQuery::ADD_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@site_name", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@language", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT);
+	myUpdateNetworkLink    = SQLiteFactory::createCommand(BooksDBQuery::UPDATE_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@language", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT, "@link_id", DBValue::DBINT);
 
 	myFindNetworkLinkUrls = SQLiteFactory::createCommand(BooksDBQuery::FIND_NETWORK_LINKURLS, connection, "@link_id", DBValue::DBINT);
 	myAddNetworkLinkUrl    = SQLiteFactory::createCommand(BooksDBQuery::ADD_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT, "@url", DBValue::DBTEXT, "@update_time", DBValue::DBINT);
@@ -53,6 +53,7 @@ bool SaveNetworkLinkRunnable::addNetworkLink() {
 	((DBTextValue &) *myAddNetworkLink->parameter("@title").value()) = myNetworkLink->getTitle();
 	((DBTextValue &) *myAddNetworkLink->parameter("@site_name").value()) = myNetworkLink->SiteName;
 	((DBTextValue &) *myAddNetworkLink->parameter("@summary").value()) = myNetworkLink->getSummary();
+	((DBTextValue &) *myAddNetworkLink->parameter("@language").value()) = myNetworkLink->getLanguage();
 	((DBTextValue &) *myAddNetworkLink->parameter("@predefined_id").value()) = myNetworkLink->getPredefinedId();
 	((DBIntValue &) *myAddNetworkLink->parameter("@is_enabled").value()) = myNetworkLink->isEnabled();
 	shared_ptr<DBValue> dbLinkId = myAddNetworkLink->executeScalar();
@@ -82,6 +83,7 @@ bool SaveNetworkLinkRunnable::addNetworkLink() {
 bool SaveNetworkLinkRunnable::updateNetworkLink(int linkId) {
 	((DBTextValue &) *myUpdateNetworkLink->parameter("@title").value()) = myNetworkLink->getTitle();
 	((DBTextValue &) *myUpdateNetworkLink->parameter("@summary").value()) = myNetworkLink->getSummary();
+	((DBTextValue &) *myUpdateNetworkLink->parameter("@language").value()) = myNetworkLink->getLanguage();
 	((DBTextValue &) *myUpdateNetworkLink->parameter("@predefined_id").value()) = myNetworkLink->getPredefinedId();
 	((DBIntValue &) *myUpdateNetworkLink->parameter("@is_enabled").value()) = myNetworkLink->isEnabled();
 	((DBIntValue &) *myUpdateNetworkLink->parameter("@link_id").value()) = linkId;

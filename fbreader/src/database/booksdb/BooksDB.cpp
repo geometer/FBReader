@@ -596,12 +596,14 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 		std::string predId = reader->textValue(5, std::string());
 		std::string title = reader->textValue(1, std::string());
 		std::string summary = reader->textValue(3, std::string());
+		std::string language = reader->textValue(4, std::string());
 
 		shared_ptr<NetworkLink> link = new OPDSLink(
 			siteName
 		);
 		link->setTitle(title);
 		link->setSummary(summary);
+		link->setLanguage(language);
 		link->setIcon(iconUrl);
 		link->setLinks(linkUrls);
 		link->setPredefinedId(predId);

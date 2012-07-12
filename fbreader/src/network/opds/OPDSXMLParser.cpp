@@ -73,32 +73,6 @@ bool OPDSXMLParser::processNamespaces() const {
 	return true;
 }
 
-void OPDSXMLParser::namespaceListChangedHandler() {
-	myDublinCoreNamespaceId.erase();
-	myAtomNamespaceId.erase();
-	myOpenSearchNamespaceId.erase();
-	myCalibreNamespaceId.erase();
-	myOpdsNamespaceId.erase();
-
-	const std::map<std::string,std::string> &nsMap = namespaces();
-	for (std::map<std::string,std::string>::const_iterator it = nsMap.begin(); it != nsMap.end(); ++it) {
-		if (it->first.empty()) {
-			continue;
-		}
-		if (it->second == ZLXMLNamespace::DublinCoreTerms) {
-			myDublinCoreNamespaceId = it->first;
-		} else if (it->second == ZLXMLNamespace::Atom) {
-			myAtomNamespaceId = it->first;
-		} else if (it->second == ZLXMLNamespace::OpenSearch) {
-			myOpenSearchNamespaceId = it->first;
-		} else if (it->second == ZLXMLNamespace::CalibreMetadata) {
-			myCalibreNamespaceId = it->first;
-		} else if (it->second == ZLXMLNamespace::Opds) {
-			myOpdsNamespaceId = it->first;
-		}
-	}
-}
-
 void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes) {
 	std::map<std::string,std::string> attributeMap;
 	while (*attributes != 0) {
@@ -110,17 +84,9 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 		attributeMap.insert(std::make_pair(name, value));
 	}
 
-	std::string tagPrefix;
-	std::string tagName = tag;
-	const int index = tagName.find(':');
-	if (index != -1) {
-		tagPrefix = tagName.substr(0, index);
-		tagName.erase(0, index + 1);
-	}
-		
 	switch (myState) {
 		case START:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_FEED) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_FEED, tag)) {
 				myFeedReader->processFeedStart();
 				myFeed = new OPDSFeedMetadata();
 				myFeed->readAttributes(attributeMap);
@@ -128,152 +94,138 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 			}
 			break;
 		case FEED:
-			if (tagPrefix == myAtomNamespaceId) {
-				if (tagName == TAG_AUTHOR) {
-					myAuthor = new ATOMAuthor();
-					myAuthor->readAttributes(attributeMap);
-					myState = F_AUTHOR;
-				} else if (tagName == TAG_ID) {
-					myId = new ATOMId();
-					myId->readAttributes(attributeMap);
-					myState = F_ID;
-				} else if (tagName == TAG_ICON) {
-					myIcon = new ATOMIcon();
-					myIcon->readAttributes(attributeMap);
-					myState = F_ICON;
-				} else if (tagName == TAG_LINK) {
-					myLink = new ATOMLink();
-					myLink->readAttributes(attributeMap);
-					myState = F_LINK;
-				} else if (tagName == TAG_CATEGORY) {
-					myCategory = new ATOMCategory();
-					myCategory->readAttributes(attributeMap);
-					myState = F_CATEGORY;
-				} else if (tagName == TAG_TITLE) {
-					//myTitle = new ATOMTitle(); // TODO:implement ATOMTextConstruct & ATOMTitle
-					//myTitle->readAttributes(attributeMap);
-					myState = F_TITLE;
-				} else if (tagName == TAG_SUBTITLE) {
-					myState = F_SUBTITLE;
-				} else if (tagName == TAG_SUMMARY) {
-					myState = F_SUMMARY;
-				} else if (tagName == TAG_UPDATED) {
-					myUpdated = new ATOMUpdated();
-					myUpdated->readAttributes(attributeMap);
-					myState = F_UPDATED;
-				} else if (tagName == TAG_ENTRY) {
-					myEntry = new OPDSEntry();
-					myEntry->readAttributes(attributeMap);
-					mySummaryTagFound = false;
-					myState = F_ENTRY;
-				} 
-			} else if (tagPrefix == myOpenSearchNamespaceId) {
-				if (tagName == OPENSEARCH_TAG_TOTALRESULTS) {
-					myState = OPENSEARCH_TOTALRESULTS;
-				} else if (tagName == OPENSEARCH_TAG_ITEMSPERPAGE) {
-					myState = OPENSEARCH_ITEMSPERPAGE;
-				} else if (tagName == OPENSEARCH_TAG_STARTINDEX) {
-					myState = OPENSEARCH_STARTINDEX;
-				} 
-			} 
+			if (testTag(ZLXMLNamespace::Atom, TAG_AUTHOR, tag)) {
+				myAuthor = new ATOMAuthor();
+				myAuthor->readAttributes(attributeMap);
+				myState = F_AUTHOR;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_ID, tag)) {
+				myId = new ATOMId();
+				myId->readAttributes(attributeMap);
+				myState = F_ID;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_ICON, tag)) {
+				myIcon = new ATOMIcon();
+				myIcon->readAttributes(attributeMap);
+				myState = F_ICON;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_LINK, tag)) {
+				myLink = new ATOMLink();
+				myLink->readAttributes(attributeMap);
+				myState = F_LINK;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_CATEGORY, tag)) {
+				myCategory = new ATOMCategory();
+				myCategory->readAttributes(attributeMap);
+				myState = F_CATEGORY;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_TITLE, tag)) {
+				//myTitle = new ATOMTitle(); // TODO:implement ATOMTextConstruct & ATOMTitle
+				//myTitle->readAttributes(attributeMap);
+				myState = F_TITLE;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_SUBTITLE, tag)) {
+				myState = F_SUBTITLE;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_SUMMARY, tag)) {
+				myState = F_SUMMARY;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_UPDATED, tag)) {
+				myUpdated = new ATOMUpdated();
+				myUpdated->readAttributes(attributeMap);
+				myState = F_UPDATED;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_ENTRY, tag)) {
+				myEntry = new OPDSEntry();
+				myEntry->readAttributes(attributeMap);
+				mySummaryTagFound = false;
+				myState = F_ENTRY;
+			} else if (testTag(ZLXMLNamespace::OpenSearch, OPENSEARCH_TAG_TOTALRESULTS, tag)) {
+				myState = OPENSEARCH_TOTALRESULTS;
+			} else if (testTag(ZLXMLNamespace::OpenSearch, OPENSEARCH_TAG_ITEMSPERPAGE, tag)) {
+				myState = OPENSEARCH_ITEMSPERPAGE;
+			} else if (testTag(ZLXMLNamespace::OpenSearch, OPENSEARCH_TAG_STARTINDEX, tag)) {
+				myState = OPENSEARCH_STARTINDEX;
+			}
 			break;
 		case F_ENTRY:
-			if (tagPrefix == myAtomNamespaceId) {
-				if (tagName == TAG_AUTHOR) {
-					myAuthor = new ATOMAuthor();
-					myAuthor->readAttributes(attributeMap);
-					myState = FE_AUTHOR;
-				} else if (tagName == TAG_ID) {
-					myId = new ATOMId();
-					myId->readAttributes(attributeMap);
-					myState = FE_ID;
-				} else if (tagName == TAG_CATEGORY) {
-					myCategory = new ATOMCategory();
-					myCategory->readAttributes(attributeMap);
-					myState = FE_CATEGORY;
-				} else if (tagName == TAG_ICON) {
-					myIcon = new ATOMIcon();
-					myIcon->readAttributes(attributeMap);
-					myState = FE_ICON;
-				} else if (tagName == TAG_LINK) {
-					myLink = new ATOMLink();
-					myLink->readAttributes(attributeMap);
-					myState = FE_LINK;
-				} else if (tagName == TAG_PUBLISHED) {
-					myPublished = new ATOMPublished();
-					myPublished->readAttributes(attributeMap);
-					myState = FE_PUBLISHED;
-				} else if (tagName == TAG_SUMMARY) {
-					//mySummary = new ATOMSummary(); // TODO:implement ATOMTextConstruct & ATOMSummary
-					//mySummary->readAttributes(attributeMap);
-					myState = FE_SUMMARY;
-				} else if (tagName == TAG_CONTENT) {
-					// ???
-					myState = FE_CONTENT;
-				} else if (tagName == TAG_SUBTITLE) {
-					// ???
-					myState = FE_SUBTITLE;
-				} else if (tagName == TAG_TITLE) {
-					//myTitle = new ATOMTitle(); // TODO:implement ATOMTextConstruct & ATOMTitle
-					//myTitle->readAttributes(attributeMap);
-					myState = FE_TITLE;
-				} else if (tagName == TAG_UPDATED) {
-					myUpdated = new ATOMUpdated();
-					myUpdated->readAttributes(attributeMap);
-					myState = FE_UPDATED;
-				}
-			} else if (tagPrefix == myDublinCoreNamespaceId) {
-				if (tagName == DC_TAG_LANGUAGE) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_AUTHOR, tag)) {
+				myAuthor = new ATOMAuthor();
+				myAuthor->readAttributes(attributeMap);
+				myState = FE_AUTHOR;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_ID, tag)) {
+				myId = new ATOMId();
+				myId->readAttributes(attributeMap);
+				myState = FE_ID;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_CATEGORY, tag)) {
+				myCategory = new ATOMCategory();
+				myCategory->readAttributes(attributeMap);
+				myState = FE_CATEGORY;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_ICON, tag)) {
+				myIcon = new ATOMIcon();
+				myIcon->readAttributes(attributeMap);
+				myState = FE_ICON;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_LINK, tag)) {
+				myLink = new ATOMLink();
+				myLink->readAttributes(attributeMap);
+				myState = FE_LINK;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_PUBLISHED, tag)) {
+				myPublished = new ATOMPublished();
+				myPublished->readAttributes(attributeMap);
+				myState = FE_PUBLISHED;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_SUMMARY, tag)) {
+				//mySummary = new ATOMSummary(); // TODO:implement ATOMTextConstruct & ATOMSummary
+				//mySummary->readAttributes(attributeMap);
+				myState = FE_SUMMARY;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_CONTENT, tag)) {
+				// ???
+				myState = FE_CONTENT;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_SUBTITLE, tag)) {
+				// ???
+				myState = FE_SUBTITLE;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_TITLE, tag)) {
+				//myTitle = new ATOMTitle(); // TODO:implement ATOMTextConstruct & ATOMTitle
+				//myTitle->readAttributes(attributeMap);
+				myState = FE_TITLE;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_UPDATED, tag)) {
+				myUpdated = new ATOMUpdated();
+				myUpdated->readAttributes(attributeMap);
+				myState = FE_UPDATED;
+			} else if (testTag(ZLXMLNamespace::DublinCoreTerms, DC_TAG_LANGUAGE, tag)) {
 					myState = FE_DC_LANGUAGE;
-				} else if (tagName == DC_TAG_ISSUED) {
-					myState = FE_DC_ISSUED;
-				} else if (tagName == DC_TAG_PUBLISHER) {
-					myState = FE_DC_PUBLISHER;
-				} 
-			} else if (tagPrefix == myCalibreNamespaceId) {
-				if (tagName == CALIBRE_TAG_SERIES) {
-					myState = FE_CALIBRE_SERIES;
-				} else if (tagName == CALIBRE_TAG_SERIES_INDEX) {
-					myState = FE_CALIBRE_SERIES_INDEX;
-				}
+			} else if (testTag(ZLXMLNamespace::DublinCoreTerms, DC_TAG_ISSUED, tag)) {
+				myState = FE_DC_ISSUED;
+			} else if (testTag(ZLXMLNamespace::DublinCoreTerms, DC_TAG_PUBLISHER, tag)) {
+				myState = FE_DC_PUBLISHER;
+			} else if (testTag(ZLXMLNamespace::CalibreMetadata, CALIBRE_TAG_SERIES, tag)) {
+				myState = FE_CALIBRE_SERIES;
+			} else if (testTag(ZLXMLNamespace::CalibreMetadata, CALIBRE_TAG_SERIES_INDEX, tag)) {
+				myState = FE_CALIBRE_SERIES_INDEX;
 			}
 			break;
 		case F_AUTHOR:
-			if (tagPrefix == myAtomNamespaceId) {
-				if (tagName == TAG_NAME) {
-					myState = FA_NAME;
-				} else if (tagName == TAG_URI) {
-					myState = FA_URI;
-				} else if (tagName == TAG_EMAIL) {
-					myState = FA_EMAIL;
-				} 
-			} 
+			if (testTag(ZLXMLNamespace::Atom, TAG_NAME, tag)) {
+				myState = FA_NAME;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_URI, tag)) {
+				myState = FA_URI;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_EMAIL, tag)) {
+				myState = FA_EMAIL;
+			}
 			break;
 		case FE_TITLE:
 			// TODO: remove this temporary code
 			// DON'T clear myBuffer
 			return;
 		case FE_LINK:
-			if (tagPrefix == myOpdsNamespaceId && tagName == TAG_PRICE) {
+			if (testTag(ZLXMLNamespace::Opds, TAG_PRICE, tag)) {
 				myLink->setUserData(KEY_CURRENCY, attributeMap["currencycode"]);
 				myState = FEL_PRICE;
-			} if (tagPrefix == myDublinCoreNamespaceId && tagName == DC_TAG_FORMAT) {
+			} if (testTag(ZLXMLNamespace::DublinCoreTerms, DC_TAG_FORMAT, tag)) {
 				myState = FEL_FORMAT;
 			}
 			break;
 		case FE_AUTHOR:
-			if (tagPrefix == myAtomNamespaceId) {
-				if (tagName == TAG_NAME) {
-					myState = FEA_NAME;
-				} else if (tagName == TAG_URI) {
-					myState = FEA_URI;
-				} else if (tagName == TAG_EMAIL) {
-					myState = FEA_EMAIL;
-				} 
+			if (testTag(ZLXMLNamespace::Atom, TAG_NAME, tag)) {
+				myState = FEA_NAME;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_URI, tag)) {
+				myState = FEA_URI;
+			} else if (testTag(ZLXMLNamespace::Atom, TAG_EMAIL, tag)) {
+				myState = FEA_EMAIL;
 			}
 			break;
 		case FE_CONTENT:
-			if (tagName == TAG_HACK_SPAN || attributeMap["class"] == "price") {
+			if (TAG_HACK_SPAN == tag || attributeMap["class"] == "price") {
 				myState = FEC_HACK_SPAN;
 			}
 			break;
@@ -285,35 +237,28 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 }
 
 void OPDSXMLParser::endElementHandler(const char *tag) {
-	std::string tagPrefix;
-	std::string tagName = tag;
-	const int index = tagName.find(':');
-	if (index != -1) {
-		tagPrefix = tagName.substr(0, index);
-		tagName.erase(0, index + 1);
-	}
 	ZLStringUtil::stripWhiteSpaces(myBuffer);
 
 	switch (myState) {
 		case START:
 			break;
 		case FEED:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_FEED) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_FEED, tag)) {
 				myFeedReader->processFeedMetadata(myFeed);
 				myFeed.reset();
 				myFeedReader->processFeedEnd();
 				myState = START;
-			} 
+			}
 			break;
 		case F_ENTRY:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_ENTRY) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_ENTRY, tag)) {
 				myFeedReader->processFeedEntry(myEntry);
 				myEntry.reset();
 				myState = FEED;
 			}
 			break;
 		case F_ID:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_ID) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_ID, tag)) {
 				// FIXME:uri can be lost:buffer will be truncated, if there are extension tags inside the <id> tag
 				myId->setUri(myBuffer);
 				if (!myFeed.isNull()) {
@@ -321,64 +266,64 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 				}
 				myId.reset();
 				myState = FEED;
-			} 
+			}
 			break;
 		case F_ICON:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_ICON) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_ICON, tag)) {
 				myIcon->setUri(myBuffer);
 				if (!myFeed.isNull()) {
 					myFeed->setIcon(myIcon);
 				}
 				myIcon.reset();
 				myState = FEED;
-			} 
+			}
 			break;
 		case F_LINK:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_LINK) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_LINK, tag)) {
 				if (!myFeed.isNull()) {
 					myFeed->links().push_back(myLink);
 				}
 				myLink.reset();
 				myState = FEED;
-			} 
+			}
 			break;
 		case F_CATEGORY:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_CATEGORY) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_CATEGORY, tag)) {
 				if (!myFeed.isNull()) {
 					myFeed->categories().push_back(myCategory);
 				}
 				myCategory.reset();
 				myState = FEED;
-			} 
+			}
 			break;
 		case F_TITLE:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_TITLE) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_TITLE, tag)) {
 				// FIXME:title can be lost:buffer will be truncated, if there are extension tags inside the <title> tag
 				// TODO:implement ATOMTextConstruct & ATOMTitle
 				if (!myFeed.isNull()) {
 					myFeed->setTitle(myBuffer);
 				}
 				myState = FEED;
-			} 
+			}
 			break;
 		case F_SUBTITLE:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_SUBTITLE) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_SUBTITLE, tag)) {
 				if (!myFeed.isNull()) {
 					myFeed->setSubtitle(myBuffer);
 				}
 				myState = FEED;
-			} 
+			}
 			break;
 		case F_SUMMARY:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_SUMMARY) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_SUMMARY, tag)) {
 				if (!myFeed.isNull()) {
 					myFeed->setSummary(myBuffer);
 				}
 				myState = FEED;
-			} 
+			}
 			break;
 		case F_UPDATED:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_UPDATED) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_UPDATED, tag)) {
 				// FIXME:uri can be lost:buffer will be truncated, if there are extension tags inside the <id> tag
 				ATOMDateConstruct::parse(myBuffer, *myUpdated);
 				if (!myFeed.isNull()) {
@@ -386,84 +331,84 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 				}
 				myUpdated.reset();
 				myState = FEED;
-			} 
+			}
 			break;
 		case F_AUTHOR:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_AUTHOR) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_AUTHOR, tag)) {
 				if (!myFeed.isNull()) {
 					myFeed->authors().push_back(myAuthor);
 				}
 				myAuthor.reset();
 				myState = FEED;
-			} 
+			}
 			break;
 		case FA_NAME:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_NAME) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_NAME, tag)) {
 				myAuthor->setName(myBuffer);
 				myState = F_AUTHOR;
 			}
 			break;
 		case FEA_NAME:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_NAME) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_NAME, tag)) {
 				myAuthor->setName(myBuffer);
 				myState = FE_AUTHOR;
 			}
 			break;
 		case FEL_PRICE:
-			if (tagPrefix == myOpdsNamespaceId && tagName == TAG_PRICE) {
+			if (testTag(ZLXMLNamespace::Opds, TAG_PRICE, tag)) {
 				myLink->setUserData(KEY_PRICE, myBuffer);
 				myState = FE_LINK;
 			}
 			break;
 		case FEL_FORMAT:
-			if (tagPrefix == myDublinCoreNamespaceId && tagName == DC_TAG_FORMAT) {
+			if (testTag(ZLXMLNamespace::DublinCoreTerms, DC_TAG_FORMAT, tag)) {
 				myLink->setUserData(KEY_FORMAT, myBuffer);
 				myState = FE_LINK;
 			}
 			break;
 		case FA_URI:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_URI) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_URI, tag)) {
 				myAuthor->setUri(myBuffer);
 				myState = F_AUTHOR;
 			}
 			break;
 		case FEA_URI:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_URI) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_URI, tag)) {
 				myAuthor->setUri(myBuffer);
 				myState = FE_AUTHOR;
 			}
 			break;
 		case FA_EMAIL:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_EMAIL) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_EMAIL, tag)) {
 				myAuthor->setEmail(myBuffer);
 				myState = F_AUTHOR;
 			}
 			break;
 		case FEA_EMAIL:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_EMAIL) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_EMAIL, tag)) {
 				myAuthor->setEmail(myBuffer);
 				myState = FE_AUTHOR;
 			}
 			break;
 		case FE_AUTHOR:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_AUTHOR) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_AUTHOR, tag)) {
 				myEntry->authors().push_back(myAuthor);
 				myAuthor.reset();
 				myState = F_ENTRY;
-			} 
+			}
 			break;
 		case FE_ICON:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_ICON) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_ICON, tag)) {
 				myIcon->setUri(myBuffer);
 				if (!myEntry.isNull()) {
 					myEntry->setIcon(myIcon);
 				}
 				myIcon.reset();
 				myState = F_ENTRY;
-			} 
+			}
 			break;
 		case FE_ID:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_ID) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_ID, tag)) {
 				// FIXME:uri can be lost:buffer will be truncated, if there are extension tags inside the <id> tag
 				myId->setUri(myBuffer);
 				myEntry->setId(myId);
@@ -472,21 +417,21 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			}
 			break;
 		case FE_CATEGORY:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_CATEGORY) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_CATEGORY, tag)) {
 				myEntry->categories().push_back(myCategory);
 				myCategory.reset();
 				myState = F_ENTRY;
 			}
 			break;
 		case FE_LINK:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_LINK) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_LINK, tag)) {
 				myEntry->links().push_back(myLink);
 				myLink.reset();
 				myState = F_ENTRY;
 			}
 			break;
 		case FE_PUBLISHED:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_PUBLISHED) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_PUBLISHED, tag)) {
 				// FIXME:uri can be lost:buffer will be truncated, if there are extension tags inside the <id> tag
 				ATOMDateConstruct::parse(myBuffer, *myPublished);
 				myEntry->setPublished(myPublished);
@@ -495,7 +440,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			}
 			break;
 		case FE_SUMMARY:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_SUMMARY) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_SUMMARY, tag)) {
 				// FIXME:summary can be lost:buffer will be truncated, if there are extension tags inside the <summary> tag
 				// TODO:implement ATOMTextConstruct & ATOMSummary
 				myEntry->setSummary(myBuffer);
@@ -504,7 +449,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			}
 			break;
 		case FE_CONTENT:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_CONTENT) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_CONTENT, tag)) {
 				// TODO:check this accurately
 				if (!mySummaryTagFound) {
 					myEntry->setSummary(myBuffer);
@@ -517,7 +462,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			myState = FE_CONTENT;
 			break;
 		case FE_SUBTITLE:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_SUBTITLE) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_SUBTITLE, tag)) {
 				// TODO:check this accurately
 				if (!mySummaryTagFound) {
 					myEntry->setSummary(myBuffer);
@@ -526,7 +471,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			}
 			break;
 		case FE_TITLE:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_TITLE) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_TITLE, tag)) {
 				// FIXME:title can be lost:buffer will be truncated, if there are extension tags inside the <title> tag
 				// TODO:implement ATOMTextConstruct & ATOMTitle
 				myEntry->setTitle(myBuffer);
@@ -538,7 +483,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			}
 			break;
 		case FE_UPDATED:
-			if (tagPrefix == myAtomNamespaceId && tagName == TAG_UPDATED) {
+			if (testTag(ZLXMLNamespace::Atom, TAG_UPDATED, tag)) {
 				// FIXME:uri can be lost:buffer will be truncated, if there are extension tags inside the <id> tag
 				ATOMDateConstruct::parse(myBuffer, *myUpdated);
 				myEntry->setUpdated(myUpdated);
@@ -547,14 +492,14 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			}
 			break;
 		case FE_DC_LANGUAGE:
-			if (tagPrefix == myDublinCoreNamespaceId && tagName == DC_TAG_LANGUAGE) {
+			if (testTag(ZLXMLNamespace::DublinCoreTerms, DC_TAG_LANGUAGE, tag)) {
 				// FIXME:language can be lost:buffer will be truncated, if there are extension tags inside the <dc:language> tag
 				myEntry->setDCLanguage(myBuffer);
 				myState = F_ENTRY;
 			}
 			break;
 		case FE_DC_ISSUED:
-			if (tagPrefix == myDublinCoreNamespaceId && tagName == DC_TAG_ISSUED) {
+			if (testTag(ZLXMLNamespace::DublinCoreTerms, DC_TAG_ISSUED, tag)) {
 				// FIXME:issued can be lost:buffer will be truncated, if there are extension tags inside the <dc:issued> tag
 				DCDate *issued = new DCDate();
 				ATOMDateConstruct::parse(myBuffer, *issued);
@@ -563,27 +508,26 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			}
 			break;
 		case FE_DC_PUBLISHER:
-			if (tagPrefix == myDublinCoreNamespaceId && tagName == DC_TAG_PUBLISHER) {
+			if (testTag(ZLXMLNamespace::DublinCoreTerms, DC_TAG_PUBLISHER, tag)) {
 				// FIXME:publisher can be lost:buffer will be truncated, if there are extension tags inside the <dc:publisher> tag
 				myEntry->setDCPublisher(myBuffer);
 				myState = F_ENTRY;
 			}
 			break;
 		case FE_CALIBRE_SERIES:
-			if (tagPrefix == myCalibreNamespaceId && tagName == CALIBRE_TAG_SERIES) {
+			if (testTag(ZLXMLNamespace::CalibreMetadata, CALIBRE_TAG_SERIES, tag)) {
 				myEntry->setSeriesTitle(myBuffer);
 				myState = F_ENTRY;
 			}
 			break;
 		case FE_CALIBRE_SERIES_INDEX:
-			if (tagPrefix == myCalibreNamespaceId && tagName == CALIBRE_TAG_SERIES_INDEX) {
+			if (testTag(ZLXMLNamespace::CalibreMetadata, CALIBRE_TAG_SERIES_INDEX, tag)) {
 				myEntry->setSeriesIndex(atoi(myBuffer.c_str()));
 				myState = F_ENTRY;
 			}
 			break;
 		case OPENSEARCH_TOTALRESULTS:
-			if (tagPrefix == myOpenSearchNamespaceId &&
-					tagName == OPENSEARCH_TAG_TOTALRESULTS) {
+			if (testTag(ZLXMLNamespace::OpenSearch, OPENSEARCH_TAG_TOTALRESULTS, tag)) {
 				int number = atoi(myBuffer.c_str());
 				if (!myFeed.isNull()) {
 					myFeed->setOpensearchTotalResults(number);
@@ -592,8 +536,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			}
 			break;
 		case OPENSEARCH_ITEMSPERPAGE:
-			if (tagPrefix == myOpenSearchNamespaceId &&
-					tagName == OPENSEARCH_TAG_ITEMSPERPAGE) {
+			if (testTag(ZLXMLNamespace::OpenSearch, OPENSEARCH_TAG_ITEMSPERPAGE, tag)) {
 				int number = atoi(myBuffer.c_str());
 				if (!myFeed.isNull()) {
 					myFeed->setOpensearchItemsPerPage(number);
@@ -602,8 +545,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			}
 			break;
 		case OPENSEARCH_STARTINDEX:
-			if (tagPrefix == myOpenSearchNamespaceId &&
-					tagName == OPENSEARCH_TAG_STARTINDEX) {
+			if (testTag(ZLXMLNamespace::OpenSearch, OPENSEARCH_TAG_STARTINDEX, tag)) {
 				int number = atoi(myBuffer.c_str());
 				if (!myFeed.isNull()) {
 					myFeed->setOpensearchStartIndex(number);

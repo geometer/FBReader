@@ -77,10 +77,12 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 	}
 	std::string id = entry->id()->uri();
 	std::string summary = entry->summary();
+	std::string language = entry->dcLanguage();
 
 	shared_ptr<NetworkLink> link = new OPDSLink(id.substr(25, -1));
 	link->setTitle(entry->title());
 	link->setSummary(summary);
+	link->setLanguage(language);
 	link->setIcon(iconURL);
 	link->setLinks(links);
 	link->setPredefinedId(id);

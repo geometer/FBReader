@@ -61,6 +61,7 @@ public:
 
 	void setTitle(const std::string& title);
 	void setSummary(const std::string& summary);
+	void setLanguage(const std::string& language);
 	void setIcon(const std::string& icon);
 	void setLinks(const std::map<std::string,std::string>& links);
 	void setPredefinedId(const std::string& id);
@@ -69,6 +70,7 @@ public:
 
 	std::string getTitle() const;
 	std::string getSummary() const;
+	std::string getLanguage() const;
 	std::string getIcon() const;
 	const std::map<std::string,std::string>& getLinks() const;
 	std::string getPredefinedId() const;
@@ -97,6 +99,7 @@ private:
 	std::string myTitle;
 	std::string myIcon;
 	std::string mySummary;
+	std::string myLanguage;
 	std::map<std::string,std::string> myLinks;
 	std::string myPredefinedId;
 	bool myEnabled;

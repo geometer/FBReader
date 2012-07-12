@@ -69,6 +69,11 @@ void NetworkLink::setTitle(const std::string& title) {
 void NetworkLink::setSummary(const std::string& summary) {
 	mySummary = summary;
 }
+
+void NetworkLink::setLanguage(const std::string &language) {
+	myLanguage = language;
+}
+
 void NetworkLink::setIcon(const std::string& icon) {
 	myIcon = icon;
 }
@@ -96,6 +101,10 @@ std::string NetworkLink::getSummary() const {
 	return mySummary;
 }
 
+std::string NetworkLink::getLanguage() const {
+	return myLanguage;
+}
+
 std::string NetworkLink::getPredefinedId() const {
 	return myPredefinedId;
 }
@@ -119,6 +128,7 @@ void NetworkLink::loadFrom(const NetworkLink & link) {
 	myTitle = link.myTitle;
 	myIcon = link.myIcon;
 	mySummary = link.mySummary;
+	myLanguage = link.myLanguage;
 	myLinks = link.myLinks;
 	myPredefinedId = link.myPredefinedId;
 	myUpdated = link.myUpdated;
