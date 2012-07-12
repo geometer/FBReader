@@ -429,45 +429,6 @@ bool BooksDB::setPalmType(const std::string &fileName, const std::string &type) 
 	return mySetPalmType->execute();
 }
 
-std::string BooksDB::getNetFile(const std::string &url) {
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
-		"SELECT file_id FROM NetFiles WHERE url = @url;",
-		connection(), "@url", DBValue::DBTEXT
-	);
-
-	((DBTextValue&)*command->parameter("@url").value()) = url;
-	shared_ptr<DBValue> value = command->executeScalar();
-	if (value.isNull() || value->type() != DBValue::DBINT) {
-		return std::string();
-	}
-	return getFileName(((DBIntValue&)*value).value());
-}
-
-bool BooksDB::setNetFile(const std::string &url, const std::string &fileName) {
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
-		"INSERT OR REPLACE INTO NetFiles (url, file_id) VALUES (@url, @file_id);",
-		connection(), "@file_id", DBValue::DBINT, "@url", DBValue::DBTEXT
-	);
-
-	myFindFileId->setFileName(fileName, true);
-	if (!myFindFileId->run()) {
-		return false;
-	}
-	((DBIntValue&)*command->parameter("@file_id").value()) = myFindFileId->fileId();
-	((DBTextValue&)*command->parameter("@url").value()) = url;
-	return command->execute();
-}
-
-bool BooksDB::unsetNetFile(const std::string &url) {
-	static shared_ptr<DBCommand> command = SQLiteFactory::createCommand(
-		"SELECT file_id FROM NetFiles WHERE url = @url;",
-		connection(), "@url", DBValue::DBTEXT
-	);
-
-	((DBTextValue&)*command->parameter("@url").value()) = url;
-	return command->execute();
-}
-
 bool BooksDB::loadBookState(const Book &book, ReadingState &state) {
 	state.Paragraph = state.Word = state.Character = 0;
 	if (book.bookId() == 0) {

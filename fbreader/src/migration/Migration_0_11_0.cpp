@@ -166,7 +166,7 @@ void Migration_0_11_0_Runnable::moveBookGroup(const std::string &oldgroup, const
 		ZLStringUtil::appendNumber(bufferWord, i);
 		moveOption(ZLCategoryKey::STATE, oldgroup, newgroup, bufferParagraph, -1);
 		moveOption(ZLCategoryKey::STATE, oldgroup, newgroup, bufferWord, -1);
-	}	
+	}
 	moveOption(ZLCategoryKey::STATE, oldgroup, newgroup, BUFFER_SIZE, 0);
 }
 
@@ -223,7 +223,7 @@ bool Migration_0_11_0_Runnable::migrateBooks() {
 	for (std::vector<std::string>::const_iterator it = optionGroups.begin(); it != optionGroups.end(); ++it) {
 		const std::string &name = *it;
 		if (Migration::isLikeToFileName(name)) {
-			/* TODO: check correctness of migration order: 
+			/* TODO: check correctness of migration order:
 			 *   1) palmType
 			 *   2) size
 			 *   3) book (depends on palmType and size)
@@ -274,12 +274,12 @@ bool Migration_0_11_0_Runnable::migrateBooks() {
 		const std::string &ext = it->first;
 		unsigned long time = it->second;
 		unsigned long num = ext2num[ext];
-		std::cerr << std::setw(8) << ext << std::setw(10) << time << std::setw(15) << ((float) time) / totalTime * 100.0 
+		std::cerr << std::setw(8) << ext << std::setw(10) << time << std::setw(15) << ((float) time) / totalTime * 100.0
 			<< std::setw(18) << num << std::setw(22) << ((float) time) / num << std::endl;
 	}
 	std::cerr << "---------------------------------------------------------------------------" << std::endl;
 	std::cerr << "total:" << std::endl;
-	std::cerr << std::setw(8) << "" << std::setw(10) << totalTime << std::setw(15) << "" 
+	std::cerr << std::setw(8) << "" << std::setw(10) << totalTime << std::setw(15) << ""
 		<< std::setw(20) << totalNum << std::setw(20) << "" << std::endl;*/
 
 	return res;
@@ -466,8 +466,8 @@ bool Migration_0_11_0_Runnable::migrateBookStateStack(const std::string &fileNam
 			ZLStringUtil::appendNumber(bufferParagraph, i);
 			ZLStringUtil::appendNumber(bufferWord, i);
 			ReadingState pos(
-				ZLIntegerOption(ZLCategoryKey::STATE, fileName, bufferParagraph, -1).value(), 
-				ZLIntegerOption(ZLCategoryKey::STATE, fileName, bufferWord, -1).value(), 
+				ZLIntegerOption(ZLCategoryKey::STATE, fileName, bufferParagraph, -1).value(),
+				ZLIntegerOption(ZLCategoryKey::STATE, fileName, bufferWord, -1).value(),
 				0
 			);
 			stack.push_back(pos);
@@ -486,8 +486,8 @@ bool Migration_0_11_0_Runnable::migrateBookStateStack(const std::string &fileNam
 
 bool Migration_0_11_0_Runnable::migrateBookLastState(const std::string &fileName, const Book &book) {
 	const ReadingState state(
-		ZLIntegerOption(ZLCategoryKey::STATE, fileName, PARAGRAPH_OPTION_NAME, 0).value(), 
-		ZLIntegerOption(ZLCategoryKey::STATE, fileName, WORD_OPTION_NAME, 0).value(), 
+		ZLIntegerOption(ZLCategoryKey::STATE, fileName, PARAGRAPH_OPTION_NAME, 0).value(),
+		ZLIntegerOption(ZLCategoryKey::STATE, fileName, WORD_OPTION_NAME, 0).value(),
 		ZLIntegerOption(ZLCategoryKey::STATE, fileName, CHAR_OPTION_NAME, 0).value()
 	);
 	const int stackPos  = ZLIntegerOption(ZLCategoryKey::STATE, fileName, POSITION_IN_BUFFER, 0).value();
@@ -511,18 +511,19 @@ bool Migration_0_11_0_Runnable::migrateBookLastState(const std::string &fileName
 
 bool Migration_0_11_0_Runnable::migrateNetwork() {
 	bool res = true;
-	std::vector<std::string> urls;
-	ZLOption::listOptionNames(NET_FILES_GROUP, urls);
-	for (std::vector<std::string>::const_iterator it = urls.begin(); it != urls.end(); ++it) {
-		const std::string &url = *it;
-		const std::string fileName = ZLStringOption(ZLCategoryKey::NETWORK, NET_FILES_GROUP, url, "").value();
-		if (!BooksDB::Instance().setNetFile(url, fileName)) {
-			std::cerr << "ERROR: saving file's URL failed: " << std::endl 
-				<< "\tURL = " << url << std::endl
-				<< "\tfileName = " << fileName << std::endl;
-			res = false;
-		}
-	}
+//	FBReader desktop 0.99.1 deprecates NetFiles table, so don't fill it
+//	std::vector<std::string> urls;
+//	ZLOption::listOptionNames(NET_FILES_GROUP, urls);
+//	for (std::vector<std::string>::const_iterator it = urls.begin(); it != urls.end(); ++it) {
+//		const std::string &url = *it;
+//		const std::string fileName = ZLStringOption(ZLCategoryKey::NETWORK, NET_FILES_GROUP, url, "").value();
+//		if (!BooksDB::Instance().setNetFile(url, fileName)) {
+//			std::cerr << "ERROR: saving file's URL failed: " << std::endl
+//				<< "\tURL = " << url << std::endl
+//				<< "\tfileName = " << fileName << std::endl;
+//			res = false;
+//		}
+//	}
 	ZLOption::clearGroup(NET_FILES_GROUP); // clean state.xml
 	return res;
 }

@@ -102,11 +102,6 @@ const std::string BooksDBQuery::INIT_DATABASE = \
 	"	type TEXT NOT NULL " \
 	"); " \
 	" " \
-	"CREATE TABLE IF NOT EXISTS Net.NetFiles ( " \
-	"	url TEXT PRIMARY KEY,  " \
-	"	file_id INTEGER UNIQUE REFERENCES Files (file_id) " \
-	"); " \
-	" " \
 	"	CREATE TABLE IF NOT EXISTS Net.Links( " \
 	"	link_id INTEGER PRIMARY KEY, " \
 	"	title TEXT NOT NULL, " \
@@ -152,7 +147,6 @@ const std::string BooksDBQuery::SECOND_INIT_DATABASE = \
 	"BEGIN " \
 	"	DELETE FROM Books WHERE file_id = OLD.file_id; " \
 	"	DELETE FROM PalmType WHERE file_id = OLD.file_id; " \
-	"	DELETE FROM NetFiles WHERE file_id = OLD.file_id; " \
 	"END; " \
 	" " \
 	" " \
@@ -216,7 +210,6 @@ const std::string BooksDBQuery::CLEAR_DATABASE = \
 	" " \
 	"DROP TABLE State.BookList; " \
 	"DROP TABLE State.StackPosition; " \
-	"DROP TABLE Net.NetFiles; " \
 	"DROP TABLE Net.Links; " \
 	"DROP TABLE Net.LinkUrls; " \
 	"DROP TABLE PalmType; " \

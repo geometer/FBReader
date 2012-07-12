@@ -55,8 +55,7 @@ private:
 	~NetworkLinkCollection();
 
 public:
-	std::string bookFileName(const BookReference &reference) const;
-	std::string makeBookFileName(const BookReference &reference);
+	std::string bookFileName(const BookReference &reference);
 
 	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
 
@@ -76,7 +75,7 @@ public:
 	void saveLink(NetworkLink& link, bool isAuto = false);
 
 private:
-	std::string makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);
+	std::string bookFileName(const std::string &url, BookReference::Format format, BookReference::Type type);
 
 	void updateLinks(std::string genericUrl);
 	void saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto);
