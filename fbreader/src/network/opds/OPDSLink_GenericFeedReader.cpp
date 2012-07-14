@@ -87,6 +87,7 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 	link->setLinks(links);
 	link->setPredefinedId(id);
 	link->setUpdated(entry->updated());
+	link->init();
 	myLinks.push_back(link);
 }
 

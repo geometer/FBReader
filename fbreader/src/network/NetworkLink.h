@@ -38,10 +38,6 @@ class NetworkAuthenticationManager;
 class NetworkLink {
 
 public:
-	static std::string NetworkDataDirectory();
-	static std::string CertificatesPathPrefix();
-
-public:
 	static const std::string URL_MAIN;
 	static const std::string URL_SEARCH;
 	static const std::string URL_SIGN_IN;
@@ -91,6 +87,8 @@ public:
 	virtual shared_ptr<NetworkItem> libraryItem() const = 0;
 
 	virtual void rewriteUrl(std::string &url, bool isUrlExternal = false) const = 0;
+
+	virtual void init() = 0;
 
 public:
 	const std::string SiteName;

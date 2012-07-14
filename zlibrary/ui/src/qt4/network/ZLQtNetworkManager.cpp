@@ -66,7 +66,6 @@ void ZLQtNetworkManager::initPaths() {
 	if (!cacheDirectory.exists()) {
 		cacheDirectory.mkpath(cacheDirectory.absolutePath());
 	}
-	qDebug() << cacheDirectory.absolutePath();
 	myCache->setCacheDirectory(cacheDirectory.absolutePath());
 }
 
@@ -100,14 +99,8 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		}
 
 		networkRequest.setRawHeader("User-Agent", userAgent().c_str());
-		QSslConfiguration configuration;
-		if (!request.sslCertificate().Path.empty()) {
-			QFile file(QString::fromStdString(request.sslCertificate().Path));
-			if (file.open(QFile::ReadOnly)) {
-				QSslCertificate certificate(&file);
-				configuration.setLocalCertificate(certificate);
-			}
-		} else if (!request.sslCertificate().DoVerify) {
+		QSslConfiguration configuration = QSslConfiguration::defaultConfiguration();
+		if (!request.sslCertificate().DoVerify) {
 			configuration.setPeerVerifyMode(QSslSocket::VerifyNone);
 		}
 		networkRequest.setSslConfiguration(configuration);
@@ -126,27 +119,38 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		} else {
 			reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
 		}
-		Q_ASSERT(reply);
 		ZLQtNetworkReplyScope scope = { &request, &replies, &errors, &eventLoop };
 		replies.push_back(reply);
+		QObject::connect(reply, SIGNAL(sslErrors(QList<QSslError>)),this, SLOT(onSslErrors(QList<QSslError>)));
 		reply->setProperty("scope", qVariantFromValue(scope));
 	}
-	if (!replies.isEmpty())
+	if (!replies.isEmpty()) {
 		eventLoop.exec(QEventLoop::AllEvents);
+	}
 
 	return errors.join(QLatin1String("\n")).toStdString();
 }
 
 void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	Q_ASSERT(scope.request);
 	authenticator->setUser(QString::fromStdString(scope.request->userName()));
 	authenticator->setPassword(QString::fromStdString(scope.request->password()));
+}
+
+void ZLQtNetworkManager::onSslErrors(const QList<QSslError> &errors) {
+	qDebug() << Q_FUNC_INFO << errors;
+	QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
+	QList<QSslError> ignoredErrors = errors;
+	foreach (const QSslError &error, errors) {
+			ignoredErrors << error;
+	}
+	reply->ignoreSslErrors(ignoredErrors);
 }
 
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	reply->deleteLater();
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	qDebug() << Q_FUNC_INFO << reply->url();
 	if (handleRedirect(reply)) {
 		return;
 	}
@@ -165,10 +169,14 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 
 bool ZLQtNetworkManager::handleRedirect(QNetworkReply *reply) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	if (!scope.request->isRedirectionSupported()) {
+		return false;
+	}
 	QUrl redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute).toUrl();
 	if (!redirect.isValid()) {
 		return false;
 	}
+	QObject::disconnect(reply, 0, this, 0);
 	scope.replies->removeOne(reply);
 	QNetworkRequest request = reply->request();
 	request.setUrl(reply->url().resolved(redirect));
@@ -187,8 +195,12 @@ void ZLQtNetworkManager::handleHeaders(QNetworkReply *reply) {
 	scope.request->handleHeader(data.data(), data.size());
 	foreach (const QByteArray &headerName, reply->rawHeaderList()) {
 		data  = headerName;
+		QByteArray value = reply->rawHeader(headerName);
 		data += ": ";
-		data += reply->rawHeader(headerName);
+		data += value;
+		if (headerName.toLower() == QString("content-encoding") && value.toLower().contains("gzip")) {
+			continue;
+		}
 		scope.request->handleHeader(data.data(), data.size());
 	}
 }
@@ -233,20 +245,20 @@ void ZLQtNetworkCookieJar::save() {
 		return;
 	QFile file(myFilePath);
 	QDir dir = QFileInfo(myFilePath).absoluteDir();
-	if (!dir.exists())
+	if (!dir.exists()) {
 		dir.mkpath(dir.absolutePath());
-	if (file.open(QFile::WriteOnly)) {
-		bool first = true;
-		foreach (const QNetworkCookie &cookie, allCookies()) {
-			if (first)
-				first = false;
-			else
-				file.write("\n", 1);
-			file.write(cookie.toRawForm(QNetworkCookie::Full));
+	}
+	if (!file.open(QFile::WriteOnly)) {
+		ZLLogger::Instance().println("ZLQtNetworkCookieJar", myFilePath.toStdString() + " can't be open for writing");
+		return;
+	}
+	bool first = true;
+	foreach (const QNetworkCookie &cookie, allCookies()) {
+		if (first) {
+			first = false;
+		} else {
+			file.write("\n", 1);
 		}
-	} else {
-		qDebug() << Q_FUNC_INFO << myFilePath << "can't be open for writing";
-		ZLLogger::Instance().println("ZLQtNetworkCookieJar",
-									 myFilePath.toStdString() + " can't be open for writing");
+		file.write(cookie.toRawForm(QNetworkCookie::Full));
 	}
 }

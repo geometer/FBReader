@@ -139,6 +139,7 @@ void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool is
 	if (!found) {
 		shared_ptr<NetworkLink> newlink = new OPDSLink(link.SiteName);
 		newlink->loadFrom(link);
+		newlink->init();
 		myLinks.push_back(newlink);
 		std::sort(myLinks.begin(), myLinks.end(), Comparator());
 		updated = true;
@@ -150,13 +151,14 @@ void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool is
 	}
 }
 
+
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 
 	BooksDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 
-	updateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
+	updateLinks("http://data.fbreader.org/catalogs/generic-1.7.xml");
 }
 
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {
@@ -213,15 +215,18 @@ std::string NetworkLinkCollection::bookFileName(const BookReference &reference) 
 
 static bool parseUrl(const std::string &url, std::string &hostAndPath, std::string &query) {
 	size_t hostBegin = url.find("://");
-	if (hostBegin == std::string::npos)
+	if (hostBegin == std::string::npos) {
 		return false;
+	}
 	hostBegin += 3;
-	if (!url.compare(hostBegin, 4, "www."))
+	if (!url.compare(hostBegin, 4, "www.")) {
 		hostBegin += 4;
+	}
 	size_t pathEnd = url.find('?', hostBegin);
 	hostAndPath = url.substr(hostBegin, pathEnd - hostBegin);
-	if (pathEnd != std::string::npos)
+	if (pathEnd != std::string::npos) {
 		query = url.substr(pathEnd + 1);
+	}
 	return true;
 }
 
@@ -230,8 +235,9 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 
 	std::string path;
 	std::string query;
-	if (!::parseUrl(url, path, query))
+	if (!::parseUrl(url, path, query)) {
 		return std::string();
+	}
 
 	std::string fileName = DirectoryOption.value();
 	if (!ZLStringUtil::stringEndsWith(fileName, ZLibrary::FileNameDelimiter)) {
@@ -241,18 +247,19 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 		fileName += "Demos" + ZLibrary::FileNameDelimiter;
 	}
 
-	const size_t nameIndex = path.find_last_of('/');
 	for (size_t i = 0; i < path.size(); ++i) {
 		char ch = path[i];
 		if (escapeChars.find(ch) != std::string::npos) {
-			path[i] = ch;
-		} else if (ch == '/') {
-			if (ZLibrary::FileNameDelimiter.size() == 1) {
-				path[i] = ZLibrary::FileNameDelimiter[0];
-			} else {
-				path.replace(i, 1, ZLibrary::FileNameDelimiter);
-			}
+			path[i] = '_';
 		}
+		if (ch == '/') {
+			path[i] = ZLibrary::FileNameDelimiter[0];
+		}
+	}
+
+	const size_t nameIndex = path.find_last_of(ZLibrary::FileNameDelimiter);
+	if (nameIndex + 1 == path.length()) {
+		path.resize(path.length() - 1); //removing ending / if exists
 	}
 
 	std::string ext;
@@ -279,7 +286,6 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 	} else if (ZLStringUtil::stringEndsWith(path, ext)) {
 		path.resize(path.size() - ext.size());
 	}
-	fileName.append(path);
 
 	if (!query.empty()) {
 		size_t index = 0;
@@ -305,6 +311,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 			index = j + 1;
 		}
 	}
+	fileName.append(path);
 	fileName.append(ext);
 	return fileName;
 }

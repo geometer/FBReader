@@ -25,6 +25,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkDiskCache>
 #include <QtNetwork/QNetworkCookieJar>
+#include <QtNetwork/QSslError>
 
 class ZLQtNetworkCookieJar;
 class QNetworkReply;
@@ -52,6 +53,8 @@ public:
 protected Q_SLOTS:
 	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
 	void onFinished(QNetworkReply *reply);
+    void onSslErrors(const QList<QSslError> &errors);
+
 
 protected:
 	bool handleRedirect(QNetworkReply *reply);

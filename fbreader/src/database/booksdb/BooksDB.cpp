@@ -570,7 +570,7 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 		link->setPredefinedId(predId);
 		link->setEnabled(reader->intValue(6));
 		link->setUpdated(au);
-//		link->init();
+		link->init();
 
 		links.push_back(link);
 	}

@@ -81,7 +81,7 @@ private:
 	NetworkItem::List myPurchasedBooksList;
 	std::string myAccount;
 
-	ZLNetworkSSLCertificate myCertificate;
+	const ZLNetworkSSLCertificate &myCertificate;
 };
 
 #endif /* __LITRESAUTHENTICATIONMANAGER_H__ */

@@ -34,14 +34,6 @@ const std::string NetworkLink::URL_SIGN_UP = "signUp";
 const std::string NetworkLink::URL_REFILL_ACCOUNT = "refillAccount";
 const std::string NetworkLink::URL_RECOVER_PASSWORD = "recoverPassword";
 
-std::string NetworkLink::NetworkDataDirectory() {
-	return ZLFile(ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "network").path();
-}
-
-std::string NetworkLink::CertificatesPathPrefix() {
-	return NetworkDataDirectory() + ZLibrary::FileNameDelimiter + "certificates" + ZLibrary::FileNameDelimiter;
-}
-
 NetworkLink::NetworkLink(
 	const std::string &siteName
 ) :
