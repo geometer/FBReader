@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,32 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLCOCOAFSMANAGER_H__
-#define __ZLCOCOAFSMANAGER_H__
+#ifndef __OPDSLINK_FEEDREADER_H__
+#define __OPDSLINK_FEEDREADER_H__
 
-#include "../../../../core/src/unix/filesystem/ZLUnixFSManager.h"
+#include <map>
+#include <string>
 
-class ZLCocoaFSManager : public ZLUnixFSManager {
+#include "OPDSFeedReader.h"
+#include "OPDSLink.h"
+
+class OPDSLink::FeedReader : public OPDSFeedReader {
 
 public:
-	static void createInstance() { ourInstance = new ZLCocoaFSManager(); }
-	
+	FeedReader(
+		shared_ptr<NetworkLink>& link,
+		const std::string &baseURL
+	);
+
+public:
+	void processFeedEntry(shared_ptr<OPDSEntry> entry);
+	void processFeedStart();
+	void processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed);
+	void processFeedEnd();
+
 private:
-	ZLCocoaFSManager() {}
-	
-protected:
-	void normalizeRealPath(std::string &path) const;
-	std::string convertFilenameToUtf8(const std::string &name) const;
-	shared_ptr<ZLMimeType> mimeType(const std::string &path) const;
+	const std::string myBaseURL;
+	shared_ptr<NetworkLink>& myLink;
 };
 
-#endif /* __ZLCOCOAFSMANAGER_H__ */
+#endif /* __OPDSLINK_FEEDREADER_H__ */

@@ -30,11 +30,11 @@
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../image/ZLQtImageManager.h"
 #include "../view/ZLQtPaintContext.h"
+#include "../network/ZLQtNetworkManager.h"
 #include "../../unix/message/ZLUnixMessage.h"
 #include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
 #include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
-#include "../../../../core/src/unix/curl/ZLCurlNetworkManager.h"
 
 class ZLQtLibraryImplementation : public ZLibraryImplementation {
 
@@ -60,7 +60,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
 	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
-	ZLCurlNetworkManager::createInstance();
+	ZLQtNetworkManager::createInstance();
 
 	ZLKeyUtil::setKeyNamesFileName("keynames-qt4.xml");
 }
@@ -73,6 +73,7 @@ void ZLQtLibraryImplementation::run(ZLApplication *application) {
 	if (ZLLanguageUtil::isRTLLanguage(ZLibrary::Language())) {
 		qApp->setLayoutDirection(Qt::RightToLeft);
 	}
+	static_cast<ZLQtNetworkManager&>(ZLNetworkManager::Instance()).initPaths();
 	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
 	qApp->exec();

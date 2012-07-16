@@ -24,7 +24,6 @@
 #include <ZLNetworkManager.h>
 
 #include "OPDSLink.h"
-#include "OPDSLink_Reader.h"
 #include "OPDSLink_AdvancedSearch.h"
 #include "OPDSCatalogItem.h"
 #include "OPDSXMLParser.h"
@@ -32,6 +31,8 @@
 
 #include "../NetworkOperationData.h"
 #include "../authentication/NetworkAuthenticationManager.h"
+#include "../authentication/basic/BasicAuthenticationManager.h"
+#include "../authentication/litres/LitResAuthenticationManager.h"
 
 #include "URLRewritingRule.h"
 
@@ -95,11 +96,11 @@ std::string OPDSLink::AdvancedSearch::query(
 	return query;
 }
 
-shared_ptr<NetworkLink> OPDSLink::read(const ZLFile &file) {
-	Reader reader;
-	reader.readDocument(file);
-	return reader.link();
-}
+//shared_ptr<NetworkLink> OPDSLink::read(const ZLFile &file) {
+//	Reader reader;
+//	reader.readDocument(file);
+//	return reader.link();
+//}
 
 shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, NetworkOperationData &result) const {
 	if (url.empty()) {
@@ -114,12 +115,8 @@ shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, 
 }
 
 OPDSLink::OPDSLink(
-	const std::string &siteName,
-	const std::string &title,
-	const std::string &summary,
-	const std::string &icon,
-	const std::map<std::string,std::string> &links
-) : NetworkLink(siteName, title, summary, icon, links) {
+		const std::string &siteName
+) : NetworkLink(siteName) {
 }
 
 OPDSLink::~OPDSLink() {
@@ -127,9 +124,9 @@ OPDSLink::~OPDSLink() {
 
 shared_ptr<NetworkItem> OPDSLink::libraryItem() const {
 	std::map<NetworkItem::URLType,std::string> urlMap;
-	urlMap[NetworkItem::URL_COVER] = Icon;
+	urlMap[NetworkItem::URL_COVER] = getIcon();
 	urlMap[NetworkItem::URL_CATALOG] = url(URL_MAIN);
-	return new OPDSCatalogItem(*this, Title, Summary, urlMap);
+	return new OPDSCatalogItem(*this, getTitle(), getSummary(), urlMap);
 }
 
 const std::string OPDSLink::searchURL(const std::string &query) const {
@@ -185,6 +182,18 @@ void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
 			ZLNetworkUtil::appendParameter(url, rule.Name, rule.Value);
 			break;
 		}
+	}
+}
+
+void OPDSLink::init() {
+	const std::map<std::string,std::string> &links = getLinks();
+	std::map<std::string,std::string>::const_iterator it = links.find(URL_SIGN_IN);
+	if (it != links.end()) {
+		const std::string &url = it->second;
+		if (url.find("https://robot.litres.ru/") == 0)
+			myAuthenticationManager = new LitResAuthenticationManager(*this);
+		else
+			myAuthenticationManager = new BasicAuthenticationManager(*this);
 	}
 }
 

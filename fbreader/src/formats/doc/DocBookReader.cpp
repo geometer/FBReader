@@ -234,7 +234,7 @@ void DocBookReader::handleImage(const ZLFileImage::Blocks &blocks) {
 	std::string number;
 	ZLStringUtil::appendNumber(number, myPictureCounter++);
 	myModelReader.addImageReference(number);
-	ZLFile file(myModelReader.model().book()->file().path(), "image/auto");
+	ZLFile file(myModelReader.model().book()->file().path(), ZLMimeType::IMAGE_AUTO);
 	myModelReader.addImage(number, new ZLFileImage(file, blocks, ZLFileImage::ENCODING_NONE));
 }
 

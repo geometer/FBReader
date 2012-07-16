@@ -207,7 +207,7 @@ void NetworkCatalogRootNode::DontShowAction::run() {
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
 		return;
 	}
-	myLink.OnOption.setValue(false);
+	myLink.setEnabled(false);
 	FBReader::Instance().invalidateNetworkView();
 	FBReader::Instance().refreshWindow();
 }

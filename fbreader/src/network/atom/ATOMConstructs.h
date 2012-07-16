@@ -88,6 +88,9 @@ public:
 	ATOMDateConstruct(int year, int month, int day, int hour, int minutes, int seconds, float sfract);
 	ATOMDateConstruct(int year, int month, int day, int hour, int minutes, int seconds, float sfract, int tzhour, int tzminutes);
 
+	bool operator <(const ATOMDateConstruct& a) const;
+	bool operator >(const ATOMDateConstruct& a) const;
+
 	std::string getDateTime(bool brief = false) const;
 
 	int year() const { return myYear; }
@@ -109,6 +112,9 @@ public:
 	void setSecondFraction(float sfract) { mySecondFraction = sfract; }
 	void setTZHour(int tzhour) { myTZHour = tzhour; }
 	void setTZMinutes(int tzminutes) { myTZMinutes = tzminutes; }
+
+	long getLongSeconds_stupid();
+	void setLongSeconds_stupid(long t);
 
 private:
 	static void makeStringLength(std::string &str, int len);

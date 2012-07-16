@@ -29,7 +29,7 @@
 #include "ZLNetworkImage.h"
 
 
-ZLNetworkImage::ZLNetworkImage(const std::string &mimeType, const std::string &url) : ZLSingleImage(mimeType), myURL(url), myIsSynchronized(false) {
+ZLNetworkImage::ZLNetworkImage(shared_ptr<ZLMimeType> mimeType, const std::string &url) : ZLSingleImage(mimeType), myURL(url), myIsSynchronized(false) {
 	static const std::string directoryPath = ZLNetworkManager::CacheDirectory();
 
 	std::string prefix;

@@ -39,6 +39,7 @@ void MigrationRunnable::run() {
 	Migration_0_10_4().doMigration();
 	Migration_0_11_0().doMigration();
 	Migration_0_99_0().doMigration();
+	Migration_0_99_1().doMigration();
 
 	myVersionOption.setValue(VERSION);
 }

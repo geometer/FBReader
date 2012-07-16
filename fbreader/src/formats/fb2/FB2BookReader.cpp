@@ -40,6 +40,7 @@ FB2BookReader::FB2BookReader(BookModel &model) : myModelReader(model) {
 	myCurrentImageStart = -1;
 	mySectionStarted = false;
 	myInsideTitle = false;
+	myCurrentContentType = ZLMimeType::EMPTY;
 }
 
 void FB2BookReader::characterDataHandler(const char *text, size_t len) {
@@ -204,11 +205,13 @@ void FB2BookReader::startElementHandler(int tag, const char **xmlattributes) {
 		}
 		case _BINARY:
 		{
-			static const std::string STRANGE_MIME_TYPE = "text/xml";
 			const char *contentType = attributeValue(xmlattributes, "content-type");
-			if ((contentType != 0) && (id != 0) && (STRANGE_MIME_TYPE != contentType)) {
-				myCurrentContentType = contentType;
-				myCurrentImageId.assign(id);
+			if (contentType != 0) {
+				shared_ptr<ZLMimeType> contentMimeType = ZLMimeType::get(contentType);
+				if ((!contentMimeType.isNull()) && (id != 0) && (ZLMimeType::TEXT_XML != contentMimeType)) {
+					myCurrentContentType = contentMimeType;
+					myCurrentImageId.assign(id);
+				}
 			}
 			break;
 		}
@@ -315,7 +318,7 @@ void FB2BookReader::endElementHandler(int tag) {
 				));
 			}
 			myCurrentImageId.clear();
-			myCurrentContentType.clear();
+			myCurrentContentType = ZLMimeType::EMPTY;
 			myCurrentImageStart = -1;
 			break;
 		case _BODY:

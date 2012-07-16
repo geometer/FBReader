@@ -37,7 +37,7 @@ std::map<std::string,weak_ptr<ZLInputStream> > ZLFile::ourPlainStreamCache;
 ZLFile::ZLFile() : myMimeTypeIsUpToDate(true), myInfoIsFilled(true) {
 }
 
-ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(path), myMimeType(mimeType), myMimeTypeIsUpToDate(!mimeType.empty()), myInfoIsFilled(false) {
+ZLFile::ZLFile(const std::string &path, shared_ptr<ZLMimeType> mimeType) : myPath(path), myMimeType(mimeType), myMimeTypeIsUpToDate(mimeType != ZLMimeType::EMPTY), myInfoIsFilled(false) {
 	ZLFSManager::Instance().normalize(myPath);
 	{
 		size_t index = ZLFSManager::Instance().findLastFileNameDelimiter(myPath);
@@ -244,7 +244,7 @@ bool ZLFile::isDirectory() const {
 	return myInfo.IsDirectory;
 }
 
-const std::string &ZLFile::mimeType() const {
+shared_ptr<ZLMimeType> ZLFile::mimeType() const {
 	if (!myMimeTypeIsUpToDate) {
 		myMimeType = ZLFSManager::Instance().mimeType(myPath);
 		myMimeTypeIsUpToDate = true;

@@ -55,8 +55,7 @@ private:
 	~NetworkLinkCollection();
 
 public:
-	std::string bookFileName(const BookReference &reference) const;
-	std::string makeBookFileName(const BookReference &reference);
+	std::string bookFileName(const BookReference &reference);
 
 	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
 
@@ -71,14 +70,24 @@ public:
 
 	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
+	void deleteLink(NetworkLink& link);
+
+	void saveLink(NetworkLink& link, bool isAuto = false);
+
 private:
-	std::string makeBookFileName(const std::string &url, BookReference::Format format, BookReference::Type type, bool createDirectories);
+	std::string bookFileName(const std::string &url, BookReference::Format format, BookReference::Type type);
+
+	void updateLinks(std::string genericUrl);
+	void saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto);
 
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
-	LinkVector myLinks;
+	LinkVector myLinks, myTempCustomLinks;
+	std::set<std::string> myExists;
 
 	std::string myErrorMessage;
+
+	std::string myGenericUrl;
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

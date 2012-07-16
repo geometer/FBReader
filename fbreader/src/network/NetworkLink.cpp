@@ -21,6 +21,7 @@
 
 #include <ZLibrary.h>
 #include <ZLFile.h>
+#include <ZLStringUtil.h>
 
 #include "NetworkLink.h"
 #include "NetworkOperationData.h"
@@ -33,27 +34,12 @@ const std::string NetworkLink::URL_SIGN_UP = "signUp";
 const std::string NetworkLink::URL_REFILL_ACCOUNT = "refillAccount";
 const std::string NetworkLink::URL_RECOVER_PASSWORD = "recoverPassword";
 
-std::string NetworkLink::NetworkDataDirectory() {
-	return ZLFile(ZLibrary::ApplicationDirectory() + ZLibrary::FileNameDelimiter + "network").path();
-}
-
-std::string NetworkLink::CertificatesPathPrefix() {
-	return NetworkDataDirectory() + ZLibrary::FileNameDelimiter + "certificates" + ZLibrary::FileNameDelimiter;
-}
-
 NetworkLink::NetworkLink(
-	const std::string &siteName,
-	const std::string &title,
-	const std::string &summary,
-	const std::string &icon,
-	const std::map<std::string,std::string> &links
-) : 
-	SiteName(siteName), 
-	Title(title),
-	Summary(summary),
-	Icon(icon),
-	OnOption(ZLCategoryKey::NETWORK, siteName, "on", true),
-	myLinks(links) {
+	const std::string &siteName
+) :
+	SiteName(ZLStringUtil::stringStartsWith(siteName, "www.") ? siteName.substr(std::string("www.").length()) : siteName),
+	myEnabled(true),
+	myUpdated(0) {
 }
 
 NetworkLink::~NetworkLink() {
@@ -67,4 +53,86 @@ std::string NetworkLink::url(const std::string &urlId) const {
 shared_ptr<ZLExecutionData> NetworkLink::resume(NetworkOperationData &result) const {
 	result.clear();
 	return 0;
+}
+
+void NetworkLink::setTitle(const std::string& title) {
+	myTitle = title;
+}
+void NetworkLink::setSummary(const std::string& summary) {
+	mySummary = summary;
+}
+
+void NetworkLink::setLanguage(const std::string &language) {
+	myLanguage = language;
+}
+
+void NetworkLink::setIcon(const std::string& icon) {
+	myIcon = icon;
+}
+
+void NetworkLink::setPredefinedId(const std::string& id) {
+	myPredefinedId = id;
+}
+
+void NetworkLink::setLinks(const std::map<std::string,std::string>& links) {
+	myLinks = links;
+}
+
+void NetworkLink::setUpdated(shared_ptr<ATOMUpdated> u) {
+	myUpdated = u;
+}
+
+void NetworkLink::setEnabled(bool enabled) {
+	myEnabled = enabled;
+}
+
+std::string NetworkLink::getTitle() const {
+	return myTitle;
+}
+std::string NetworkLink::getSummary() const {
+	return mySummary;
+}
+
+std::string NetworkLink::getLanguage() const {
+	return myLanguage;
+}
+
+std::string NetworkLink::getPredefinedId() const {
+	return myPredefinedId;
+}
+
+const std::map<std::string,std::string>& NetworkLink::getLinks() const {
+	return myLinks;
+}
+
+shared_ptr<ATOMUpdated> NetworkLink::getUpdated() const {
+	return myUpdated;
+}
+
+std::string NetworkLink::getIcon() const {
+	return myIcon;
+}
+bool NetworkLink::isEnabled() const {
+	return myEnabled;
+}
+
+void NetworkLink::loadFrom(const NetworkLink & link) {
+	myTitle = link.myTitle;
+	myIcon = link.myIcon;
+	mySummary = link.mySummary;
+	myLanguage = link.myLanguage;
+	myLinks = link.myLinks;
+	myPredefinedId = link.myPredefinedId;
+	myUpdated = link.myUpdated;
+}
+
+void NetworkLink::loadLinksFrom(const NetworkLink & link) {
+	myIcon = link.myIcon;
+	myLinks = link.myLinks;
+	myUpdated = link.myUpdated;
+}
+
+void NetworkLink::loadSummaryFrom(const NetworkLink & link) {
+	myTitle = link.myTitle;
+	mySummary = link.mySummary;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,26 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLCOCOAFSMANAGER_H__
-#define __ZLCOCOAFSMANAGER_H__
+#ifndef __OPENSEARCHXMLREADER_H__
+#define __OPENSEARCHXMLREADER_H__
 
-#include "../../../../core/src/unix/filesystem/ZLUnixFSManager.h"
+#include <string>
+#include <ZLXMLReader.h>
 
-class ZLCocoaFSManager : public ZLUnixFSManager {
+class OpenSearchXMLReader : public ZLXMLReader {
 
 public:
-	static void createInstance() { ourInstance = new ZLCocoaFSManager(); }
-	
+	OpenSearchXMLReader() {}
+	std::string templateURL() {return myTemplateURL;}
+
+	static std::string convertOpenSearchURL(const std::string& raws);
+
 private:
-	ZLCocoaFSManager() {}
-	
-protected:
-	void normalizeRealPath(std::string &path) const;
-	std::string convertFilenameToUtf8(const std::string &name) const;
-	shared_ptr<ZLMimeType> mimeType(const std::string &path) const;
+	void startElementHandler(const char *tag, const char **attributes);
+	void endElementHandler(const char *tag);
+	void characterDataHandler(const char *text, size_t len);
+	std::string myTemplateURL;
+
 };
 
-#endif /* __ZLCOCOAFSMANAGER_H__ */
+#endif /* __OPENSEARCHXMLREADER_H__ */

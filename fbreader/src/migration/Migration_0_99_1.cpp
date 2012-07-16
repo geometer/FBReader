@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008-2011 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,23 +17,19 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLCOCOAFSMANAGER_H__
-#define __ZLCOCOAFSMANAGER_H__
+#include <map>
 
-#include "../../../../core/src/unix/filesystem/ZLUnixFSManager.h"
+#include <ZLStringUtil.h>
 
-class ZLCocoaFSManager : public ZLUnixFSManager {
+#include "Migration.h"
+#include "../fbreader/FBReaderActions.h"
+#include "../database/booksdb/BooksDBUtil.h"
+#include "../database/booksdb/BooksDB.h"
 
-public:
-	static void createInstance() { ourInstance = new ZLCocoaFSManager(); }
-	
-private:
-	ZLCocoaFSManager() {}
-	
-protected:
-	void normalizeRealPath(std::string &path) const;
-	std::string convertFilenameToUtf8(const std::string &name) const;
-	shared_ptr<ZLMimeType> mimeType(const std::string &path) const;
-};
+Migration_0_99_1::Migration_0_99_1() : Migration("0.99.1") {
+}
 
-#endif /* __ZLCOCOAFSMANAGER_H__ */
+void Migration_0_99_1::doMigrationInternal() {
+	shared_ptr<DBCommand> cmd = SQLiteFactory::createCommand("DROP TABLE IF EXISTS NetFiles", BooksDB::Instance().connection());
+	cmd->execute();
+}

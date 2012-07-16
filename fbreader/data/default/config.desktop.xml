@@ -11,7 +11,7 @@
     <option name="LeftMargin" value="50"/>
     <option name="RightMargin" value="50"/>
     <option name="KeyDelay" value="0"/>
-    <option name="BookPath" value="~/FBooks:~/Books"/>
-    <option name="DownloadDirectory" value="~/FBooks"/>
+    <option name="BookPath" value="~/Books:~/FBooks"/>
+    <option name="DownloadDirectory" value="~/Books"/>
   </group>
 </config>

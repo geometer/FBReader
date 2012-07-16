@@ -7,7 +7,7 @@ makefiles/target.mk
 *.pyc
 zlibrary/core/libzlcore.so*
 zlibrary/text/libzltext.so*
-zlibrary/text/libzlui.so*
+zlibrary/ui/libzlui.so*
 zlibrary/ui/zlui-qt4.so
 zlibrary/ui/zlui-gtk.so
 zlibrary/ui/zlui-qt.so

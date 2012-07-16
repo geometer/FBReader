@@ -30,11 +30,12 @@
 #include "../../NetworkLinkCollection.h"
 
 LitResAuthenticationManager::LitResAuthenticationManager(const NetworkLink &link) :
-	NetworkAuthenticationManager(link), 
-	mySidChecked(false), 
-	mySidUserNameOption(ZLCategoryKey::NETWORK, link.SiteName, "sidUserName", ""), 
+	NetworkAuthenticationManager(link),
+	mySidChecked(false),
+	mySidUserNameOption(ZLCategoryKey::NETWORK, link.SiteName, "sidUserName", ""),
 	mySidOption(ZLCategoryKey::NETWORK, link.SiteName, "sid", ""),
-	myCertificate(NetworkLink::CertificatesPathPrefix() + "litres.ru.crt") {
+	//don't use own certificate, retrieve it automatically
+	myCertificate(ZLNetworkSSLCertificate::NULL_CERTIFICATE) {
 }
 
 const ZLNetworkSSLCertificate &LitResAuthenticationManager::certificate() {
@@ -249,7 +250,7 @@ shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std:
 	ZLNetworkUtil::appendParameter(query, "sid", sid);
 
 	return ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::url(Link, "pages/catalit_browser/" + query), 
+		LitResUtil::url(Link, "pages/catalit_browser/" + query),
 		certificate(),
 		new LitResDataParser(Link, purchasedBooksList)
 	);
@@ -349,7 +350,7 @@ std::string LitResAuthenticationManager::reloadPurchasedBooks() {
 	if (sid != myInitializedDataSid) {
 		mySidChecked = true;
 		mySidUserNameOption.setValue("");
-		mySidOption.setValue("");		
+		mySidOption.setValue("");
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
 

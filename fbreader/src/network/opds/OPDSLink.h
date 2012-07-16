@@ -34,25 +34,21 @@ struct URLRewritingRule;
 class OPDSLink : public NetworkLink {
 
 public:
-	static shared_ptr<NetworkLink> read(const ZLFile &file);
-
-public:
 	enum FeedCondition {
 		CONDITION_NEVER,
 		CONDITION_SIGNED_IN,
 	};
 
 private:
-	class Reader;
 	class AdvancedSearch;
 
-private:
+public:
+	class GenericReader;
+	class FeedReader;
+	class GenericFeedReader;
+
 	OPDSLink(
-		const std::string &siteName,
-		const std::string &title,
-		const std::string &summary,
-		const std::string &icon,
-		const std::map<std::string,std::string> &links
+		const std::string &siteName
 	);
 
 public:
@@ -78,6 +74,8 @@ private:
 	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;
 
 	void rewriteUrl(std::string &url, bool isUrlExternal = false) const;
+	
+	void init();
 
 	const std::string &relation(const std::string &rel, const std::string &type) const;
 

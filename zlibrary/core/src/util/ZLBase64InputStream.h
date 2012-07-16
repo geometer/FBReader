@@ -36,7 +36,6 @@ public:
 	size_t offset() const;
 	size_t sizeOfOpened();
 
-
 private:
 	void fillDecodedBuffer();
 	bool fillBuffer();

@@ -21,7 +21,7 @@
 
 #include "CHMFileImage.h"
 
-CHMFileImage::CHMFileImage(shared_ptr<CHMFileInfo> info, const std::string &entry) : ZLStreamImage("image/auto", 0, 0), myInfo(info), myEntry(entry) {
+CHMFileImage::CHMFileImage(shared_ptr<CHMFileInfo> info, const std::string &entry) : ZLStreamImage(ZLMimeType::IMAGE_AUTO, 0, 0), myInfo(info), myEntry(entry) {
 }
 
 shared_ptr<ZLInputStream> CHMFileImage::inputStream() const {

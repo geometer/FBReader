@@ -41,14 +41,13 @@ private:
 	void endElementHandler(const char *tag);
 	void characterDataHandler(const char *text, size_t len);
 	bool processNamespaces() const;
-	void namespaceListChangedHandler();
 
 private:
 	enum State {
-		START, 
-		FEED, F_ENTRY, F_ID, F_LINK, F_CATEGORY, F_TITLE, F_UPDATED, F_AUTHOR,
+		START,
+		FEED, F_ENTRY, F_ID, F_LINK, F_CATEGORY, F_TITLE, F_UPDATED, F_AUTHOR, F_SUBTITLE, F_ICON, F_SUMMARY,
 		FA_NAME, FA_URI, FA_EMAIL,
-		FE_AUTHOR, FE_ID, FE_CATEGORY, FE_LINK, FE_PUBLISHED, FE_SUMMARY, FE_CONTENT, FE_SUBTITLE, FE_TITLE, FE_UPDATED, FE_DC_LANGUAGE, FE_DC_ISSUED, FE_DC_PUBLISHER, FE_CALIBRE_SERIES, FE_CALIBRE_SERIES_INDEX,
+		FE_AUTHOR, FE_ID, FE_CATEGORY, FE_LINK, FE_PUBLISHED, FE_SUMMARY, FE_CONTENT, FE_SUBTITLE, FE_TITLE, FE_ICON, FE_UPDATED, FE_DC_LANGUAGE, FE_DC_ISSUED, FE_DC_PUBLISHER, FE_CALIBRE_SERIES, FE_CALIBRE_SERIES_INDEX,
 		FEL_PRICE, FEL_FORMAT,
 		FEA_NAME, FEA_URI, FEA_EMAIL,
 		OPENSEARCH_TOTALRESULTS, OPENSEARCH_ITEMSPERPAGE, OPENSEARCH_STARTINDEX,
@@ -60,12 +59,6 @@ private:
 
 	std::string myBuffer;
 
-	std::string myDublinCoreNamespaceId;
-	std::string myAtomNamespaceId;
-	std::string myOpenSearchNamespaceId;
-	std::string myCalibreNamespaceId;
-	std::string myOpdsNamespaceId;
-
 	State myState;
 
 	shared_ptr<OPDSFeedMetadata> myFeed;
@@ -73,6 +66,7 @@ private:
 
 	shared_ptr<ATOMAuthor> myAuthor;
 	shared_ptr<ATOMId> myId;
+	shared_ptr<ATOMIcon> myIcon;
 	shared_ptr<ATOMLink> myLink;
 	shared_ptr<ATOMCategory> myCategory;
 	shared_ptr<ATOMUpdated> myUpdated;

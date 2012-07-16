@@ -1,0 +1,1 @@
+SRCMOC = ZLQtNetworkManager.moc.cpp

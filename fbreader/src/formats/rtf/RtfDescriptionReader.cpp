@@ -87,7 +87,7 @@ void RtfDescriptionReader::switchDestination(DestinationType destination, bool o
 	}
 }
 
-void RtfDescriptionReader::insertImage(const std::string&, const std::string&, size_t, size_t) {
+void RtfDescriptionReader::insertImage(shared_ptr<ZLMimeType>, const std::string&, size_t, size_t) {
 }
 
 void RtfDescriptionReader::setFontProperty(FontProperty) {
