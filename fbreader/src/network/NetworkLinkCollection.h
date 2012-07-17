@@ -70,24 +70,19 @@ public:
 
 	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
-	void deleteLink(NetworkLink& link);
-
-	void saveLink(NetworkLink& link, bool isAuto = false);
+	//void deleteLink(NetworkLink& link);
+	//void saveLink(NetworkLink& link, bool isAuto = false);
 
 private:
 	std::string bookFileName(const std::string &url, BookReference::Format format, BookReference::Type type);
 
 	void updateLinks(std::string genericUrl);
-	void saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto);
+	void addOrUpdateLink(shared_ptr<NetworkLink> link);
 
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
-	LinkVector myLinks, myTempCustomLinks;
-	std::set<std::string> myExists;
-
+	LinkVector myLinks;
 	std::string myErrorMessage;
-
-	std::string myGenericUrl;
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

@@ -80,7 +80,7 @@ public:
 	std::string getPalmType(const std::string &fileName);
 	bool setPalmType(const std::string &fileName, const std::string &type);
 
-	bool saveNetworkLink(NetworkLink& link, bool isAuto);
+	bool saveNetworkLink(shared_ptr<NetworkLink> link);
 	bool loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links);
 	bool deleteNetworkLink(const std::string &siteName);
 

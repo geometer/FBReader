@@ -513,12 +513,11 @@ bool BooksDB::checkBookList(const Book &book) {
 	return checkRes > 0;
 }
 
-bool BooksDB::saveNetworkLink(NetworkLink& link, bool isAuto) {
+bool BooksDB::saveNetworkLink(shared_ptr<NetworkLink> link) {
 	if (!isInitialized()) {
 		return false;
 	}
-	mySaveNetworkLink->setNetworkLink(&link);
-	mySaveNetworkLink->isAuto = isAuto;
+	mySaveNetworkLink->setNetworkLink(link);
 	bool result = executeAsTransaction(*mySaveNetworkLink);
 	return result;
 }
@@ -540,16 +539,10 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 			linkUrls[urlreader->textValue(0, std::string())] = urlreader->textValue(1, std::string());
 			t = urlreader->intValue(2);
 		}
-//		if (t == 0) {
-//			deleteNetworkLink()
-//		}
-		shared_ptr<ATOMUpdated> au;
-		if (t != 0) {
-			au = new ATOMUpdated();
-			au->setLongSeconds_stupid(t);
-		}
+		shared_ptr<ATOMUpdated> atomUpdated = new ATOMUpdated();
+		atomUpdated->setLongSeconds_stupid(t);
 		std::string iconUrl;
-		if (linkUrls.count("icon") != 0) {
+		if (linkUrls .count("icon") != 0) {
 			iconUrl = linkUrls["icon"];
 			linkUrls.erase("icon");
 		}
@@ -558,20 +551,18 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 		std::string title = reader->textValue(1, std::string());
 		std::string summary = reader->textValue(3, std::string());
 		std::string language = reader->textValue(4, std::string());
+		bool isEnabled = reader->intValue(6) == 1;
 
-		shared_ptr<NetworkLink> link = new OPDSLink(
-			siteName
-		);
+		shared_ptr<NetworkLink> link = new OPDSLink(siteName);
 		link->setTitle(title);
 		link->setSummary(summary);
 		link->setLanguage(language);
 		link->setIcon(iconUrl);
 		link->setLinks(linkUrls);
 		link->setPredefinedId(predId);
-		link->setEnabled(reader->intValue(6));
-		link->setUpdated(au);
+		link->setEnabled(isEnabled);
+		link->setUpdated(atomUpdated);
 		link->init();
-
 		links.push_back(link);
 	}
 	return true;
@@ -580,14 +571,12 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 bool BooksDB::deleteNetworkLink(const std::string &siteName){
 	((DBTextValue &) *myFindNetworkLinkId->parameter("@site_name").value()) = siteName;
 	shared_ptr<DBDataReader> reader = myFindNetworkLinkId->executeReader();
-	bool result;
 	if (reader.isNull() || !reader->next()) {
 		return false;
-	} else {
-		int linkId = reader->intValue(0);
-		((DBIntValue &) *myDeleteNetworkLink->parameter("@link_id").value()) = linkId;
-		((DBIntValue &) *myDeleteNetworkLinkUrls->parameter("@link_id").value()) = linkId;
-		result = myDeleteNetworkLinkUrls->execute() && myDeleteNetworkLink->execute();
 	}
-	return result;
+	int linkId = reader->intValue(0);
+	((DBIntValue &) *myDeleteNetworkLink->parameter("@link_id").value()) = linkId;
+	((DBIntValue &) *myDeleteNetworkLinkUrls->parameter("@link_id").value()) = linkId;
+	return myDeleteNetworkLinkUrls->execute() && myDeleteNetworkLink->execute();
+
 }

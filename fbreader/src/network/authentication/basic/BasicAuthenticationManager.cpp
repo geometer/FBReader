@@ -29,9 +29,9 @@
 
 BasicAuthenticationManager::BasicAuthenticationManager(const NetworkLink &link) :
 	NetworkAuthenticationManager(link),
-	myCertificate(link.SiteName != "feedbooks.com" ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : ZLNetworkSSLCertificate::DONT_VERIFY_CERTIFICATE),
+	myCertificate(link.getSiteName() != "feedbooks.com" ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : ZLNetworkSSLCertificate::DONT_VERIFY_CERTIFICATE),
 	myAccountChecked(false),
-	myAccountUserNameOption(ZLCategoryKey::NETWORK, link.SiteName, "accountUserName", "") {
+	myAccountUserNameOption(ZLCategoryKey::NETWORK, link.getSiteName(), "accountUserName", "") {
 }
 
 

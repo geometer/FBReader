@@ -26,8 +26,8 @@
 
 NetworkAuthenticationManager::NetworkAuthenticationManager(const NetworkLink &link) :
 	Link(link),
-	UserNameOption(ZLCategoryKey::NETWORK, link.SiteName, "userName", ""),
-	SkipIPOption(ZLCategoryKey::NETWORK, link.SiteName, "skipIP", false) {
+	UserNameOption(ZLCategoryKey::NETWORK, link.getSiteName(), "userName", ""),
+	SkipIPOption(ZLCategoryKey::NETWORK, link.getSiteName(), "skipIP", false) {
 }
 
 NetworkAuthenticationManager::~NetworkAuthenticationManager() {

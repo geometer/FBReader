@@ -64,6 +64,7 @@ public:
 	void setEnabled(bool enabled);
 	void setUpdated(shared_ptr<ATOMUpdated> u);
 
+	std::string getSiteName() const;
 	std::string getTitle() const;
 	std::string getSummary() const;
 	std::string getLanguage() const;
@@ -72,6 +73,8 @@ public:
 	std::string getPredefinedId() const;
 	bool isEnabled() const;
 	shared_ptr<ATOMUpdated> getUpdated() const;
+
+	bool isPredefined() const;
 
 	void loadFrom(const NetworkLink & link);
 	void loadLinksFrom(const NetworkLink & link);
@@ -90,10 +93,8 @@ public:
 
 	virtual void init() = 0;
 
-public:
-	const std::string SiteName;
-
 private:
+	const std::string mySiteName;
 	std::string myTitle;
 	std::string myIcon;
 	std::string mySummary;

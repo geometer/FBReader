@@ -7,17 +7,17 @@
 	DONE добавить везде использование новых Mimetypes
 
 	DONE добавить поддержку автоматической регистрации с SSL сертификатами
-	** переписать saveLinkWithoutRefreshing
-		** протестировать на обновление списка
-		** что такое auto?
-		** добавить поддержку хранения полей fbreader:authentication, fbreader:urlRewritingRule и fbreader:advancedSearch
-			** хранить в базе или _брать с диска_?
+	DONE переписать saveLinkWithoutRefreshing
+		DONE протестировать на обновление списка
+		DONE BUG: при добавлении поля программа падает
+	** добавить поддержку хранения полей fbreader:authentication, fbreader:urlRewritingRule и fbreader:advancedSearch
+		** хранить в базе или _брать с диска_?
+	** network database should be implemented as a separate class, not as a part of BooksDB
 
 	** FIX поиск по сетевым библиотекам (не работает корректно?)
 	** снова добавить поддержку последовательного чтения данных из сети (поправив работу с заголовками -- replyReaded etc) -- для показа прогресса загрузки
 
 	** возможность добавлять OPDS каталоги
-	** network database should be implemented as a separate class, not as a part of BooksDB
 
 	DONE вывод ошибки о том, что авторизация не удается
 	** после скрытия каталога, сделать возможность его показать
@@ -27,6 +27,7 @@
 	DONE FIX каталог "Прочтение" не грузится
 	** реализовать постепенную прогрузку каталогов (сейчас все страницы подгружаются сразу)
 	** реализовать поддержку относительных ссылок (проявляется в каталоге Shucang)
+	** реализовать показ только тех каталогов, которые подходят пользователю по языку (??)
 	DONE проблемы с загрузкой из feedbooks (проблема сайта, отправил ticket https://feedbooks.zendesk.com/requests/3639)
 
 

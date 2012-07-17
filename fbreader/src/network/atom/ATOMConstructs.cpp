@@ -44,7 +44,7 @@ void ATOMCommonAttributes::readAttribute(const std::string &name, const std::map
 	std::map<std::string, std::string>::const_iterator it = attributes.find(name);
 	if (it != attributes.end()) {
 		myAttributes[name] = it->second;
-	}	
+	}
 }
 
 void ATOMCommonAttributes::setUserData(const std::string &key, const std::string &value) {
@@ -63,28 +63,28 @@ ATOMPersonConstruct::ATOMPersonConstruct(const std::string &name) : myName(name)
 }
 
 
-ATOMDateConstruct::ATOMDateConstruct(int year) : 
-	myYear(year), myMonth(0), myDay(0), 
+ATOMDateConstruct::ATOMDateConstruct(int year) :
+	myYear(year), myMonth(0), myDay(0),
 	myHour(0), myMinutes(0), mySeconds(0), mySecondFraction(0), myTZHour(0), myTZMinutes(0) {
 }
 
-ATOMDateConstruct::ATOMDateConstruct(int year, int month, int day) : 
-	myYear(year), myMonth(month), myDay(day), 
+ATOMDateConstruct::ATOMDateConstruct(int year, int month, int day) :
+	myYear(year), myMonth(month), myDay(day),
 	myHour(0), myMinutes(0), mySeconds(0), mySecondFraction(0), myTZHour(0), myTZMinutes(0) {
 }
 
-ATOMDateConstruct::ATOMDateConstruct(int year, int month, int day, int hour, int minutes, int seconds) : 
-	myYear(year), myMonth(month), myDay(day), 
+ATOMDateConstruct::ATOMDateConstruct(int year, int month, int day, int hour, int minutes, int seconds) :
+	myYear(year), myMonth(month), myDay(day),
 	myHour(hour), myMinutes(minutes), mySeconds(seconds), mySecondFraction(0), myTZHour(0), myTZMinutes(0) {
 }
 
-ATOMDateConstruct::ATOMDateConstruct(int year, int month, int day, int hour, int minutes, int seconds, float sfract) : 
-	myYear(year), myMonth(month), myDay(day),  
+ATOMDateConstruct::ATOMDateConstruct(int year, int month, int day, int hour, int minutes, int seconds, float sfract) :
+	myYear(year), myMonth(month), myDay(day),
 	myHour(hour), myMinutes(minutes), mySeconds(seconds), mySecondFraction(sfract), myTZHour(0), myTZMinutes(0) {
 }
 
-ATOMDateConstruct::ATOMDateConstruct(int year, int month, int day, int hour, int minutes, int seconds, float sfract, int tzhour, int tzminutes) : 
-	myYear(year), myMonth(month), myDay(day),  
+ATOMDateConstruct::ATOMDateConstruct(int year, int month, int day, int hour, int minutes, int seconds, float sfract, int tzhour, int tzminutes) :
+	myYear(year), myMonth(month), myDay(day),
 	myHour(hour), myMinutes(minutes), mySeconds(seconds), mySecondFraction(sfract), myTZHour(tzhour), myTZMinutes(tzminutes) {
 }
 
@@ -220,17 +220,16 @@ std::string ATOMDateConstruct::getDateTime(bool brief) const {
 	return date;
 }
 
-
 bool ATOMDateConstruct::parse(const std::string &str, ATOMDateConstruct &dateTime) {
-	dateTime.setYear(0); 
-	dateTime.setMonth(0); 
-	dateTime.setDay(0); 
-	dateTime.setHour(0); 
-	dateTime.setMinutes(0); 
-	dateTime.setSeconds(0); 
+	dateTime.setYear(0);
+	dateTime.setMonth(0);
+	dateTime.setDay(0);
+	dateTime.setHour(0);
+	dateTime.setMinutes(0);
+	dateTime.setSeconds(0);
 	dateTime.setSecondFraction(0);
-	dateTime.setTZHour(0); 
-	dateTime.setTZMinutes(0); 
+	dateTime.setTZHour(0);
+	dateTime.setTZMinutes(0);
 	const int len = str.length();
 	if (len != 4 && len != 7 && len != 10 && len != 17 && len != 20 && len < 22) {
 		return false;

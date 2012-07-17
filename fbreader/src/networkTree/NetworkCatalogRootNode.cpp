@@ -203,7 +203,7 @@ ZLResourceKey NetworkCatalogRootNode::DontShowAction::key() const {
 
 void NetworkCatalogRootNode::DontShowAction::run() {
 	ZLResourceKey boxKey("dontShowConfirmBox");
-	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myLink.SiteName);
+	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myLink.getSiteName());
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
 		return;
 	}

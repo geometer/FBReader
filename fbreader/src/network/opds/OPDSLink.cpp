@@ -186,6 +186,7 @@ void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
 }
 
 void OPDSLink::init() {
+	myAuthenticationManager.reset();
 	const std::map<std::string,std::string> &links = getLinks();
 	std::map<std::string,std::string>::const_iterator it = links.find(URL_SIGN_IN);
 	if (it != links.end()) {

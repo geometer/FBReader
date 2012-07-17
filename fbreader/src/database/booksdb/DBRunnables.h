@@ -42,7 +42,7 @@ class DeleteFileEntriesRunnable;
 /*
  * Save Runnables
  */
- 
+
 
 class InitBooksDBRunnable : public DBRunnable {
 
@@ -145,7 +145,7 @@ private:
 
 class SaveBookRunnable : public DBRunnable {
 public:
-	SaveBookRunnable(SaveTableBookRunnable &saveTableBook, SaveAuthorsRunnable &saveAuthors, 
+	SaveBookRunnable(SaveTableBookRunnable &saveTableBook, SaveAuthorsRunnable &saveAuthors,
 		SaveSeriesRunnable &saveSeries, SaveTagsRunnable &saveTags);
 
 	bool run();
@@ -315,10 +315,7 @@ class SaveNetworkLinkRunnable : public DBRunnable {
 public:
 	SaveNetworkLinkRunnable(DBConnection &connection);
 	bool run();
-	void setNetworkLink(NetworkLink* link);
-
-public:
-	bool isAuto;
+	void setNetworkLink(shared_ptr<NetworkLink> link);
 
 private:
 	bool addNetworkLink();
@@ -326,7 +323,7 @@ private:
 	bool updateNetworkLinkUrls(int linkId);
 
 private:
-	NetworkLink* myNetworkLink;
+	shared_ptr<NetworkLink> myNetworkLink;
 
 	shared_ptr<DBCommand> myFindNetworkLinkId;
 	shared_ptr<DBCommand> myAddNetworkLink;

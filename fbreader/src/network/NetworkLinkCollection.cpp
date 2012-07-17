@@ -87,65 +87,52 @@ bool NetworkLinkCollection::Comparator::operator() (
 	const shared_ptr<NetworkLink> &second
 ) const {
 	return
-		removeLeadingNonAscii(first->SiteName) <
-		removeLeadingNonAscii(second->SiteName);
+		removeLeadingNonAscii(first->getSiteName()) <
+		removeLeadingNonAscii(second->getSiteName());
 }
 
-void NetworkLinkCollection::deleteLink(NetworkLink& link) {
-	BooksDB::Instance().deleteNetworkLink(link.SiteName);
-	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
-		if (&(**it) == &link) {
-			myLinks.erase(it);
-			break;
-		}
-	}
-	myExists.erase(link.SiteName);
-	FBReader::Instance().invalidateNetworkView();
-	FBReader::Instance().refreshWindow();
-}
+//void NetworkLinkCollection::deleteLink(NetworkLink& link) {
+//	BooksDB::Instance().deleteNetworkLink(link.SiteName);
+//	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+//		if (&(**it) == &link) {
+//			myLinks.erase(it);
+//			break;
+//		}
+//	}
+//	FBReader::Instance().invalidateNetworkView();
+//	FBReader::Instance().refreshWindow();
+//}
 
-void NetworkLinkCollection::saveLink(NetworkLink& link, bool isAuto) {
-	saveLinkWithoutRefreshing(link, isAuto);
-	FBReader::Instance().refreshWindow();
-}
+//void NetworkLinkCollection::saveLink(NetworkLink& link, bool isAuto) {
+//	saveLinkWithoutRefreshing(link, isAuto);
+//	FBReader::Instance().refreshWindow();
+//}
 
-void NetworkLinkCollection::saveLinkWithoutRefreshing(NetworkLink& link, bool isAuto) {
+void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 	bool found = false;
 	bool updated = false;
+
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
-		if (&(**it) == &link) {
-			found = true;
-			updated = true;
-			break;
-		} else if ((**it).SiteName == link.SiteName) {
-			if (link.getPredefinedId() != std::string()) {
-				if (*(link.getUpdated()) > *((**it).getUpdated())) {
-					(*it)->loadFrom(link);
-					updated = true;
-				}
-			} else if (isAuto) {
-				if (*(link.getUpdated()) > *((**it).getUpdated())) {
-					(*it)->loadLinksFrom(link);
-					updated = true;
-				}
-			} else {
-				(*it)->loadSummaryFrom(link);
+		shared_ptr<NetworkLink> curLink = *it;
+		if (curLink->getPredefinedId() == link->getPredefinedId()) {
+			if (*(link->getUpdated()) > *(curLink->getUpdated())) {
+				curLink->loadFrom(*link);
+				curLink->init();
 				updated = true;
 			}
+			//TODO implement custom links saving
 			found = true;
 			break;
 		}
 	}
+
 	if (!found) {
-		shared_ptr<NetworkLink> newlink = new OPDSLink(link.SiteName);
-		newlink->loadFrom(link);
-		newlink->init();
-		myLinks.push_back(newlink);
+		myLinks.push_back(link);
 		std::sort(myLinks.begin(), myLinks.end(), Comparator());
 		updated = true;
 	}
 	if (updated) {
-		BooksDB::Instance().saveNetworkLink(link, isAuto);
+		BooksDB::Instance().saveNetworkLink(link);
 		FBReader::Instance().invalidateNetworkView();
 		//FBReader::Instance().sendRefresh();
 	}
@@ -162,31 +149,12 @@ NetworkLinkCollection::NetworkLinkCollection() :
 }
 
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {
-	myGenericUrl = genericUrl;
-	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
-		if ((*it)->getPredefinedId() == std::string()) {
-			myTempCustomLinks.push_back(*it);
-			myExists.insert((*it)->SiteName);
-		}
-	}
 	std::vector<shared_ptr<NetworkLink> > links;
-	shared_ptr<OPDSFeedReader> fr = new OPDSLink::GenericFeedReader(links);
-	shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
-	ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(myGenericUrl, prsr));
+	shared_ptr<OPDSFeedReader> feedReader = new OPDSLink::GenericFeedReader(links);
+	shared_ptr<ZLXMLReader> parser = new OPDSXMLParser(feedReader);
+	ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, parser));
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
-		saveLinkWithoutRefreshing(**it, true);
-	}
-	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myTempCustomLinks.begin(); it != myTempCustomLinks.end(); ++it) {
-		shared_ptr<NetworkLink> link;
-		std::string url = (*it)->url(NetworkLink::URL_MAIN);
-		shared_ptr<OPDSFeedReader> fr = new OPDSLink::FeedReader(link, url);
-		shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
-		ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr));
-		if (!link.isNull()) {
-			if (myExists.find(link->SiteName) != myExists.end()) {
-				saveLinkWithoutRefreshing(*link, true);
-			}
-		}
+		addOrUpdateLink(*it);
 	}
 }
 
@@ -465,7 +433,7 @@ void NetworkLinkCollection::rewriteUrl(std::string &url, bool externalUrl) const
 	const std::string host =
 		ZLUnicodeUtil::toLower(ZLNetworkUtil::hostFromUrl(url));
 	for (std::vector<shared_ptr<NetworkLink> >::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
-		if (host.find((*it)->SiteName) != std::string::npos) {
+		if (host.find((*it)->getSiteName()) != std::string::npos) {
 			(*it)->rewriteUrl(url, externalUrl);
 		}
 	}

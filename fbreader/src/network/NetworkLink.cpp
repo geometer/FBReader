@@ -37,7 +37,7 @@ const std::string NetworkLink::URL_RECOVER_PASSWORD = "recoverPassword";
 NetworkLink::NetworkLink(
 	const std::string &siteName
 ) :
-	SiteName(ZLStringUtil::stringStartsWith(siteName, "www.") ? siteName.substr(std::string("www.").length()) : siteName),
+	mySiteName(ZLStringUtil::stringStartsWith(siteName, "www.") ? siteName.substr(std::string("www.").length()) : siteName),
 	myEnabled(true),
 	myUpdated(0) {
 }
@@ -82,6 +82,10 @@ void NetworkLink::setUpdated(shared_ptr<ATOMUpdated> u) {
 	myUpdated = u;
 }
 
+std::string NetworkLink::getSiteName() const {
+	return mySiteName;
+}
+
 void NetworkLink::setEnabled(bool enabled) {
 	myEnabled = enabled;
 }
@@ -107,6 +111,10 @@ const std::map<std::string,std::string>& NetworkLink::getLinks() const {
 
 shared_ptr<ATOMUpdated> NetworkLink::getUpdated() const {
 	return myUpdated;
+}
+
+bool NetworkLink::isPredefined() const {
+	return !myPredefinedId.empty();
 }
 
 std::string NetworkLink::getIcon() const {

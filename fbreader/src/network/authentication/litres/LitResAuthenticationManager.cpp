@@ -32,8 +32,8 @@
 LitResAuthenticationManager::LitResAuthenticationManager(const NetworkLink &link) :
 	NetworkAuthenticationManager(link),
 	mySidChecked(false),
-	mySidUserNameOption(ZLCategoryKey::NETWORK, link.SiteName, "sidUserName", ""),
-	mySidOption(ZLCategoryKey::NETWORK, link.SiteName, "sid", ""),
+	mySidUserNameOption(ZLCategoryKey::NETWORK, link.getSiteName(), "sidUserName", ""),
+	mySidOption(ZLCategoryKey::NETWORK, link.getSiteName(), "sid", ""),
 	//don't use own certificate, retrieve it automatically
 	myCertificate(ZLNetworkSSLCertificate::NULL_CERTIFICATE) {
 }
@@ -165,7 +165,7 @@ std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &boo
 			return error;
 		}
 		if (bookId != book.Id) {
-			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, Link.SiteName);
+			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, Link.getSiteName());
 		}
 	}
 	myPurchasedBooksIds.insert(book.Id);
