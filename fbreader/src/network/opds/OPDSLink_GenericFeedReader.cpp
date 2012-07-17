@@ -53,17 +53,17 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 			links[rel] = OpenSearchXMLReader::convertOpenSearchURL(href);
 		} else if (rel == "") {
 			links[NetworkLink::URL_MAIN] = href;
-		} else if (rel == "http://data.fbreader.org/catalog/sign-in") {
+		} else if (rel == OPDSConstants::REL_LINK_SIGN_IN) {
 			links[NetworkLink::URL_SIGN_IN] = href;
-		} else if (rel == "http://data.fbreader.org/catalog/sign-out") {
+		} else if (rel == OPDSConstants::REL_LINK_SIGN_OUT) {
 			links[NetworkLink::URL_SIGN_OUT] = href;
-		} else if (rel == "http://data.fbreader.org/catalog/sign-up") {
+		} else if (rel == OPDSConstants::REL_LINK_SIGN_UP) {
 			links[NetworkLink::URL_SIGN_UP] = href;
-		} else if (rel == "http://data.fbreader.org/catalog/refill-account") {
+		} else if (rel == OPDSConstants::REL_LINK_TOPUP) {
 			links[NetworkLink::URL_REFILL_ACCOUNT] = href;
-		} else if (rel == "http://data.fbreader.org/catalog/recover-password") {
+		} else if (rel == OPDSConstants::REL_LINK_RECOVER_PASSWORD) {
 			links[NetworkLink::URL_RECOVER_PASSWORD] = href;
-		} else if (rel == "http://opds-spec.org/thumbnail") {
+		} else if (rel == OPDSConstants::REL_THUMBNAIL) {
 			iconURL = href;
 		} else {
 			links[rel] = href;

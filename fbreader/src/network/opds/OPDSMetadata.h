@@ -31,18 +31,22 @@ private:
 	OPDSConstants();
 
 public:
+
+	//TODO get other relations from FBReaderJ
+
 	// Feed level
 	static const std::string REL_BOOKSHELF;
-	static const std::string REL_SUBSCRIPTIONS;
+	//static const std::string REL_SUBSCRIPTIONS;
 
 	// Entry level / catalog types
 	static const std::string REL_CATALOG_AUTHOR;
 
 	// Entry level / acquisition links
 	static const std::string REL_ACQUISITION;
+	static const std::string REL_ACQUISITION_OPEN;
 	static const std::string REL_ACQUISITION_BUY;
-	static const std::string REL_ACQUISITION_BORROW;
-	static const std::string REL_ACQUISITION_SUBSCRIBE;
+//	static const std::string REL_ACQUISITION_BORROW;
+//	static const std::string REL_ACQUISITION_SUBSCRIBE;
 	static const std::string REL_ACQUISITION_SAMPLE;
 	static const std::string REL_ACQUISITION_CONDITIONAL;
 	static const std::string REL_ACQUISITION_SAMPLE_OR_FULL;
@@ -50,6 +54,13 @@ public:
 	// Entry level / other
 	static const std::string REL_COVER;
 	static const std::string REL_THUMBNAIL;
+
+	// Entry level / OPDS Link Relations
+	static const std::string REL_LINK_SIGN_IN;
+	static const std::string REL_LINK_SIGN_OUT;
+	static const std::string REL_LINK_SIGN_UP;
+	static const std::string REL_LINK_TOPUP;
+	static const std::string REL_LINK_RECOVER_PASSWORD;
 };
 
 

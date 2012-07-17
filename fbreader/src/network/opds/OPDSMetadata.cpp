@@ -19,26 +19,34 @@
 
 #include "OPDSMetadata.h"
 
-
 const std::string OPDSConstants::REL_BOOKSHELF     = "http://opds-spec.org/bookshelf";
-const std::string OPDSConstants::REL_SUBSCRIPTIONS = "http://opds-spec.org/subscriptions";
+//const std::string OPDSConstants::REL_SUBSCRIPTIONS = "http://opds-spec.org/subscriptions";
 const std::string OPDSConstants::REL_CATALOG_AUTHOR = "http://data.fbreader.org/catalog/author";
 const std::string OPDSConstants::REL_ACQUISITION   = "http://opds-spec.org/acquisition";
+const std::string OPDSConstants::REL_ACQUISITION_OPEN = "http://opds-spec.org/acquisition/open-access";
 const std::string OPDSConstants::REL_ACQUISITION_BUY        = "http://opds-spec.org/acquisition/buy";
-const std::string OPDSConstants::REL_ACQUISITION_BORROW     = "http://opds-spec.org/acquisition/borrow";
-const std::string OPDSConstants::REL_ACQUISITION_SUBSCRIBE  = "http://opds-spec.org/acquisition/subscribe";
+//const std::string OPDSConstants::REL_ACQUISITION_BORROW     = "http://opds-spec.org/acquisition/borrow";
+//const std::string OPDSConstants::REL_ACQUISITION_SUBSCRIBE  = "http://opds-spec.org/acquisition/subscribe";
 const std::string OPDSConstants::REL_ACQUISITION_SAMPLE     = "http://opds-spec.org/acquisition/sample";
 const std::string OPDSConstants::REL_ACQUISITION_CONDITIONAL     = "http://data.fbreader.org/acquisition/conditional";
 const std::string OPDSConstants::REL_ACQUISITION_SAMPLE_OR_FULL     = "http://data.fbreader.org/acquisition/sampleOrFull";
 
+// FIXME: This relations have been removed from OPDS-1.0 standard. Use RelationAlias instead???
 const std::string OPDSConstants::REL_COVER         = "http://opds-spec.org/cover";
 const std::string OPDSConstants::REL_THUMBNAIL     = "http://opds-spec.org/thumbnail";
 
-DCDate::DCDate() : 
+// Entry level / OPDS Link Relations
+const std::string OPDSConstants::REL_LINK_SIGN_IN = "http://data.fbreader.org/catalog/sign-in";
+const std::string OPDSConstants::REL_LINK_SIGN_OUT = "http://data.fbreader.org/catalog/sign-out";
+const std::string OPDSConstants::REL_LINK_SIGN_UP = "http://data.fbreader.org/catalog/sign-up";
+const std::string OPDSConstants::REL_LINK_TOPUP = "http://data.fbreader.org/catalog/refill-account";
+const std::string OPDSConstants::REL_LINK_RECOVER_PASSWORD = "http://data.fbreader.org/catalog/recover-password";
+
+DCDate::DCDate() :
 	ATOMDateConstruct(0) {
 }
 
-DCDate::DCDate(int year) : 
+DCDate::DCDate(int year) :
 	ATOMDateConstruct(year) {
 }
 

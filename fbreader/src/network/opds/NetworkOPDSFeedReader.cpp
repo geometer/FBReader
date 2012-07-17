@@ -90,7 +90,7 @@ static BookReference::Format formatByZLMimeType(const std::string &mimeType) {
 }
 
 static BookReference::Type typeByRelation(const std::string &rel) {
-	if (rel == OPDSConstants::REL_ACQUISITION || rel.empty()) {
+	if (rel == OPDSConstants::REL_ACQUISITION || rel == OPDSConstants::REL_ACQUISITION_OPEN || rel.empty()) {
 		return BookReference::DOWNLOAD_FULL;
 	} else if (rel == OPDSConstants::REL_ACQUISITION_SAMPLE) {
 		return BookReference::DOWNLOAD_DEMO;
@@ -109,10 +109,9 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 	if (entry.isNull()) {
 		return;
 	}
-	std::map<std::string,OPDSLink::FeedCondition>::const_iterator it =
-		myLink.myFeedConditions.find(entry->id()->uri());
-	if (it != myLink.myFeedConditions.end() &&
-			it->second == OPDSLink::CONDITION_NEVER) {
+
+	std::map<std::string,OPDSLink::FeedCondition>::const_iterator it = myLink.myFeedConditions.find(entry->id()->uri());
+	if (it != myLink.myFeedConditions.end() && it->second == OPDSLink::CONDITION_NEVER) {
 		return;
 	}
 	OPDSEntry &e = *entry;
@@ -122,6 +121,7 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 		const std::string &type = link.type();
 		const std::string &rel = myLink.relation(link.rel(), type);
 		if (rel == OPDSConstants::REL_ACQUISITION ||
+				rel == OPDSConstants::REL_ACQUISITION_OPEN ||
 				rel == OPDSConstants::REL_ACQUISITION_SAMPLE ||
 				rel == OPDSConstants::REL_ACQUISITION_BUY ||
 				rel == OPDSConstants::REL_ACQUISITION_CONDITIONAL ||
