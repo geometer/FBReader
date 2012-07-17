@@ -100,6 +100,10 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 		);
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
+	if (error.empty() && !xmlReader->errorMessage().empty()) {
+		error = xmlReader->errorMessage();
+	}
+
 	mySidChecked = true;
 	if (!error.empty()) {
 		mySidUserNameOption.setValue("");

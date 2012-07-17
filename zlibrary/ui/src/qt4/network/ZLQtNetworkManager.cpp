@@ -119,33 +119,42 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		} else {
 			reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
 		}
-		ZLQtNetworkReplyScope scope = { &request, &replies, &errors, &eventLoop };
+		ZLQtNetworkReplyScope scope = { &request, &replies, &errors, &eventLoop, false };
 		replies.push_back(reply);
 		QObject::connect(reply, SIGNAL(sslErrors(QList<QSslError>)),this, SLOT(onSslErrors(QList<QSslError>)));
+		//QObject::connect(reply, SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(slotError(QNetworkReply::NetworkError)));
 		reply->setProperty("scope", qVariantFromValue(scope));
 	}
 	if (!replies.isEmpty()) {
 		eventLoop.exec(QEventLoop::AllEvents);
 	}
 
+	qDebug() << "ERRORS: " << errors;
+
 	return errors.join(QLatin1String("\n")).toStdString();
 }
 
 void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	qDebug() << Q_FUNC_INFO << QString::fromStdString(scope.request->userName()) << QString::fromStdString(scope.request->password());
+	if (scope.authAskedAlready) {
+		return;
+	}
 	authenticator->setUser(QString::fromStdString(scope.request->userName()));
 	authenticator->setPassword(QString::fromStdString(scope.request->password()));
+	scope.authAskedAlready = true;
+	reply->setProperty("scope", qVariantFromValue(scope));
 }
 
 void ZLQtNetworkManager::onSslErrors(const QList<QSslError> &errors) {
 	qDebug() << Q_FUNC_INFO << errors;
 	QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
-	QList<QSslError> ignoredErrors = errors;
-	foreach (const QSslError &error, errors) {
-			ignoredErrors << error;
-	}
-	reply->ignoreSslErrors(ignoredErrors);
+	reply->ignoreSslErrors(errors);
 }
+
+//void ZLQtNetworkManager::slotError(QNetworkReply::NetworkError error) {
+//	qDebug() << Q_FUNC_INFO << error;
+//}
 
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	reply->deleteLater();
@@ -213,7 +222,17 @@ void ZLQtNetworkManager::handleContent(QNetworkReply *reply) {
 			scope.request->handleContent(data.data(), data.size());
 		}
 	} else {
-		scope.errors->append(reply->errorString());
+		QString error;
+		const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
+		switch (reply->error()) { //TODO add support of other errors code in our resources
+			case QNetworkReply::AuthenticationRequiredError:
+				error = QString::fromStdString(errorResource["authenticationFailed"].value());
+				break;
+			default:
+				error = reply->errorString();
+				break;
+		}
+		scope.errors->append(error);
 	}
 }
 
@@ -229,8 +248,9 @@ void ZLQtNetworkCookieJar::setFilePath(const QString &filePath) {
 	myFilePath = filePath;
 	QFile file(myFilePath);
 	QList<QNetworkCookie> cookies;
-	if (file.open(QFile::ReadOnly))
+	if (file.open(QFile::ReadOnly)) {
 		cookies = QNetworkCookie::parseCookies(file.readAll());
+	}
 	setAllCookies(cookies);
 }
 

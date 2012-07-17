@@ -25,6 +25,7 @@
 #include <QtNetwork/QNetworkAccessManager>
 #include <QtNetwork/QNetworkDiskCache>
 #include <QtNetwork/QNetworkCookieJar>
+#include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QSslError>
 
 class ZLQtNetworkCookieJar;
@@ -36,6 +37,7 @@ struct ZLQtNetworkReplyScope {
 	QList<QNetworkReply*> *replies;
 	QStringList *errors;
 	QEventLoop *eventLoop;
+	bool authAskedAlready;
 };
 
 class ZLQtNetworkManager : public QObject, public ZLNetworkManager {
@@ -53,7 +55,8 @@ public:
 protected Q_SLOTS:
 	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
 	void onFinished(QNetworkReply *reply);
-    void onSslErrors(const QList<QSslError> &errors);
+	void onSslErrors(const QList<QSslError> &errors);
+	//void slotError(QNetworkReply::NetworkError error);
 
 
 protected:
