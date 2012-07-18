@@ -22,6 +22,9 @@
 #include <ZLExecutionData.h>
 #include <ZLNetworkManager.h>
 
+#include "../authentication/basic/BasicAuthenticationManager.h"
+#include "../authentication/litres/LitResAuthenticationManager.h"
+
 #include "OPDSLink_GenericFeedReader.h"
 #include "OpenSearchXMLReader.h"
 
@@ -49,7 +52,7 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 		ATOMLink &link = *(entry->links()[i]);
 		const std::string &href = link.href();
 		const std::string &rel = link.rel();
-		if (rel == "search") {
+		if (rel == NetworkLink::URL_SEARCH) {
 			links[rel] = OpenSearchXMLReader::convertOpenSearchURL(href);
 		} else if (rel == "") {
 			links[NetworkLink::URL_MAIN] = href;
@@ -79,7 +82,7 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 	std::string summary = entry->summary();
 	std::string language = entry->dcLanguage();
 
-	shared_ptr<NetworkLink> link = new OPDSLink(id.substr(25, -1));
+	shared_ptr<NetworkLink> link = new OPDSLink(id.substr(25)); //why just 25 symbols?
 	link->setTitle(entry->title());
 	link->setSummary(summary);
 	link->setLanguage(language);
@@ -87,8 +90,42 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 	link->setLinks(links);
 	link->setPredefinedId(id);
 	link->setUpdated(entry->updated());
-	link->init();
+
+	OPDSLink &opdsLink = static_cast<OPDSLink&>(*link);
+	opdsLink.setUrlRewritingRules(myUrlRewritingRules);
+	if (!myAdvancedSearch.isNull()) {
+		opdsLink.setAdvancedSearch(myAdvancedSearch);
+	}
+	opdsLink.setRelationAliases(myRelationAliases);
+	if (links.find(NetworkLink::URL_SIGN_IN) != links.end()) {
+		if (myAuthenticationType == "litres") {
+			opdsLink.setAuthenticationManager(new LitResAuthenticationManager(*link));
+		} else {
+			opdsLink.setAuthenticationManager(new BasicAuthenticationManager(*link));
+		}
+	}
 	myLinks.push_back(link);
 }
 
+void OPDSLink::GenericFeedReader::clear() {
+	myAuthenticationType.clear();
+	myUrlRewritingRules.clear();
+	myAdvancedSearch.reset();
+	myRelationAliases.clear();
+}
 
+void OPDSLink::GenericFeedReader::setAdvancedSearch(shared_ptr<OPDSLink::AdvancedSearch> advancedSearch) {
+	myAdvancedSearch = advancedSearch;
+}
+
+void OPDSLink::GenericFeedReader::setAuthenticationType(std::string type) {
+	myAuthenticationType = type;
+}
+
+void OPDSLink::GenericFeedReader::addUrlRewritingRule(shared_ptr<URLRewritingRule> rewritingRule) {
+	myUrlRewritingRules.push_back(rewritingRule);
+}
+
+void OPDSLink::GenericFeedReader::addRelationAlias(const OPDSLink::RelationAlias& alias, std::string name) {
+	myRelationAliases[alias] = name;
+}

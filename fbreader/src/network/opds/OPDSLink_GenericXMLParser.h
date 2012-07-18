@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,28 +17,19 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLXMLNAMESPACE_H__
-#define __ZLXMLNAMESPACE_H__
+#ifndef __OPDSLINK_GENERICXMLPARSER_H__
+#define __OPDSLINK_GENERICXMLPARSER_H__
 
-#include <string>
+#include "OPDSXMLParser.h"
+#include "OPDSLink_GenericFeedReader.h"
 
-class ZLXMLNamespace {
-
-private:
-	ZLXMLNamespace();
-
+class OPDSLink::GenericXMLParser : public OPDSXMLParser {
 public:
-	static const std::string DublinCore;
-	static const std::string DublinCoreLegacy;
-	static const std::string DublinCoreTerms;
-	static const std::string XLink;
-	static const std::string OpenPackagingFormat;
-	static const std::string Atom;
-	static const std::string OpenSearch;
-	static const std::string CalibreMetadata;
-	static const std::string Opds;
-	static const std::string DaisyNCX;
-	static const std::string FBReaderCatalogMetadata;
+	GenericXMLParser(shared_ptr<OPDSFeedReader> feedReader);
+
+protected:
+	void startElementHandler(const char *tag, const char **attributes);
+	OPDSLink::GenericFeedReader &getFeedReader() const;
 };
 
-#endif /* __ZLXMLNAMESPACE_H__ */
+#endif /* __OPDSLINK_GENERICXMLPARSER_H__ */

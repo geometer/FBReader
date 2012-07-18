@@ -562,7 +562,6 @@ bool BooksDB::loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links) {
 		link->setPredefinedId(predId);
 		link->setEnabled(isEnabled);
 		link->setUpdated(atomUpdated);
-		link->init();
 		links.push_back(link);
 	}
 	return true;

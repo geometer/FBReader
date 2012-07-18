@@ -41,6 +41,7 @@
 #include "BookReference.h"
 
 #include "opds/OPDSLink.h"
+#include "opds/OPDSLink_GenericXMLParser.h"
 #include "opds/OPDSLink_GenericFeedReader.h"
 #include "opds/OPDSLink_FeedReader.h"
 #include "opds/OPDSXMLParser.h"
@@ -112,19 +113,20 @@ void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 	bool found = false;
 	bool updated = false;
 
-	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
-		shared_ptr<NetworkLink> curLink = *it;
-		if (curLink->getPredefinedId() == link->getPredefinedId()) {
-			if (*(link->getUpdated()) > *(curLink->getUpdated())) {
-				curLink->loadFrom(*link);
-				curLink->init();
-				updated = true;
-			}
-			//TODO implement custom links saving
-			found = true;
-			break;
-		}
-	}
+//	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+//		shared_ptr<NetworkLink> curLink = *it;
+//		if (curLink->getPredefinedId() == link->getPredefinedId()) {
+//			if (*(link->getUpdated()) > *(curLink->getUpdated())) {
+//				curLink->loadFrom(*link);
+//				//TODO rewrite this code, we should take fbreader: information from the generic.xml
+//				//curLink->init();
+//				updated = true;
+//			}
+//			//TODO implement custom links saving
+//			found = true;
+//			break;
+//		}
+//	}
 
 	if (!found) {
 		myLinks.push_back(link);
@@ -142,17 +144,30 @@ void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 
-	BooksDB::Instance().loadNetworkLinks(myLinks);
-	std::sort(myLinks.begin(), myLinks.end(), Comparator());
+	//commented to not download from DB, because should have only links from generic.xml
+//	BooksDB::Instance().loadNetworkLinks(myLinks);
+//	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 
 	updateLinks("http://data.fbreader.org/catalogs/generic-1.7.xml");
 }
 
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {
+	const std::string FILE_NAME = "fbreader_catalogs-" + genericUrl.substr(genericUrl.find_last_of('/') + 1);
+	ZLFile genericFileDir(ZLNetworkManager::CacheDirectory());
+	genericFileDir.directory(true);
+	ZLFile genericFile(ZLNetworkManager::CacheDirectory() + ZLibrary::FileNameDelimiter + FILE_NAME);
+	shared_ptr<ZLExecutionData> loadingRequest = ZLNetworkManager::Instance().createDownloadRequest(genericUrl, genericFile.physicalFilePath());
+
+	//TODO add error handling (problems with request, no generic file created)
+	//TODO add file loading only if obsolete
+	//TODO use old file if something wrong with loading
+	ZLNetworkManager::Instance().perform(loadingRequest);
+
 	std::vector<shared_ptr<NetworkLink> > links;
 	shared_ptr<OPDSFeedReader> feedReader = new OPDSLink::GenericFeedReader(links);
-	shared_ptr<ZLXMLReader> parser = new OPDSXMLParser(feedReader);
-	ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(genericUrl, parser));
+	shared_ptr<ZLXMLReader> parser = new OPDSLink::GenericXMLParser(feedReader);
+	parser->readDocument(genericFile);
+
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
 		addOrUpdateLink(*it);
 	}

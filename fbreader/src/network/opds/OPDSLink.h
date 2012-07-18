@@ -46,6 +46,7 @@ public:
 	class GenericReader;
 	class FeedReader;
 	class GenericFeedReader;
+	class GenericXMLParser;
 
 	OPDSLink(
 		const std::string &siteName
@@ -53,6 +54,15 @@ public:
 
 public:
 	~OPDSLink();
+
+private:
+	struct RelationAlias;
+
+public:
+	void setUrlRewritingRules(std::vector<shared_ptr<URLRewritingRule> > rules);
+	void setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> manager);
+	void setAdvancedSearch(shared_ptr<OPDSLink::AdvancedSearch> advancedSearch);
+	void setRelationAliases(std::map<RelationAlias, std::string> relationAliases);
 
 private:
 	const std::string searchURL(const std::string &pattern) const;
@@ -74,8 +84,6 @@ private:
 	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;
 
 	void rewriteUrl(std::string &url, bool isUrlExternal = false) const;
-	
-	void init();
 
 	const std::string &relation(const std::string &rel, const std::string &type) const;
 
@@ -89,7 +97,7 @@ private:
 		RelationAlias(const std::string &alias, const std::string &type);
 		bool operator < (const RelationAlias &other) const;
 	};
-	std::map<RelationAlias,std::string> myRelationAliases;
+	std::map<RelationAlias, std::string> myRelationAliases;
 
 	std::map<std::string,FeedCondition> myFeedConditions;
 	std::vector<shared_ptr<URLRewritingRule> > myUrlRewritingRules;
