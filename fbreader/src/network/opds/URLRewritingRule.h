@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,25 +21,30 @@
 #define __URLREWRITINGRULE_H__
 
 #include <string>
+#include <map>
 
-struct URLRewritingRule {
+class URLRewritingRule {
 
+public:
 	enum RuleType {
-		ADD_URL_PARAMETER
+		ADD_URL_PARAMETER,
+		REWRITE,
+		UNKNOWN,
 	};
 
 	enum RuleApply {
 		ALWAYS, EXTERNAL, INTERNAL
 	};
 
-	RuleType Type;
-	RuleApply Apply;
-	std::string Name;
-	std::string Value;
+	URLRewritingRule(const std::map<std::string,std::string> &attributesMap);
+	std::string apply(const std::string &url) const;
+	RuleApply whereToApply() const;
 
-	URLRewritingRule(RuleType type, RuleApply apply, const std::string &name, const std::string &value);
+private:
+	RuleType myType;
+	RuleApply myApply;
+	std::map<std::string, std::string> myParameters;
 };
 
-inline URLRewritingRule::URLRewritingRule(RuleType type, RuleApply apply, const std::string &name, const std::string &value) : Type(type), Apply(apply), Name(name), Value(value) {}
 
 #endif /* __URLREWRITINGRULE_H__ */

@@ -70,30 +70,33 @@ void OPDSLink::GenericXMLParser::startElementHandler(const char *tag, const char
 					getFeedReader().addRelationAlias(OPDSLink::RelationAlias(alias, (type != 0) ? type : std::string()), name);
 				}
 			} else if (testTag(ZLXMLNamespace::FBReaderCatalogMetadata, FBREADER_REWRITING_RULE, tag)) {
-				const char *type  = attributeValue(attributes, "type");
-				const char *apply = attributeValue(attributes, "apply");
-				const char *name  = attributeValue(attributes, "name");
-				const char *value = attributeValue(attributes, "value");
 
-				//TODO add rewrite type of 'rewriting rules'
-				URLRewritingRule::RuleApply ruleApply = URLRewritingRule::ALWAYS;
-				if (apply != 0) {
-					const std::string applyStr = apply;
-					if (applyStr == "external") {
-						ruleApply = URLRewritingRule::EXTERNAL;
-					} else if (applyStr == "internal") {
-						ruleApply = URLRewritingRule::INTERNAL;
-					} else if (applyStr != "always") {
-						type = 0;
-					}
-				}
+				getFeedReader().addUrlRewritingRule(new URLRewritingRule(getAttributesMap(attributes)));
 
-				if (type != 0 && name != 0 && value != 0) {
-					std::string typeStr = type;
-					if (typeStr == "addUrlParameter") {
-						getFeedReader().addUrlRewritingRule(new URLRewritingRule(URLRewritingRule::ADD_URL_PARAMETER, ruleApply, name, value));
-					}
-				}
+//				const char *type  = attributeValue(attributes, "type");
+//				const char *apply = attributeValue(attributes, "apply");
+//				const char *name  = attributeValue(attributes, "name");
+//				const char *value = attributeValue(attributes, "value");
+
+//				//TODO add rewrite type of 'rewriting rules'
+//				URLRewritingRule::RuleApply ruleApply = URLRewritingRule::ALWAYS;
+//				if (apply != 0) {
+//					const std::string applyStr = apply;
+//					if (applyStr == "external") {
+//						ruleApply = URLRewritingRule::EXTERNAL;
+//					} else if (applyStr == "internal") {
+//						ruleApply = URLRewritingRule::INTERNAL;
+//					} else if (applyStr != "always") {
+//						type = 0;
+//					}
+//				}
+
+//				if (type != 0 && name != 0 && value != 0) {
+//					std::string typeStr = type;
+//					if (typeStr == "addUrlParameter") {
+//						getFeedReader().addUrlRewritingRule(new URLRewritingRule(URLRewritingRule::ADD_URL_PARAMETER, ruleApply, name, value));
+//					}
+//				}
 
 				return;
 			}

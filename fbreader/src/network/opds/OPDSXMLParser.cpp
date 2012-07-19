@@ -74,16 +74,7 @@ bool OPDSXMLParser::processNamespaces() const {
 }
 
 void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes) {
-	std::map<std::string,std::string> attributeMap;
-	while (*attributes != 0) {
-		std::string name(*attributes++);
-		if (*attributes == 0) {
-			break;
-		}
-		std::string value(*attributes++);
-		attributeMap.insert(std::make_pair(name, value));
-	}
-
+	std::map<std::string,std::string> attributeMap = getAttributesMap(attributes);
 	switch (myState) {
 		case START:
 			if (testTag(ZLXMLNamespace::Atom, TAG_FEED, tag)) {

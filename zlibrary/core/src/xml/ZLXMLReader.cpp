@@ -206,6 +206,19 @@ const char *ZLXMLReader::attributeValue(const char **xmlattributes, const Attrib
 	return 0;
 }
 
+std::map<std::string,std::string> ZLXMLReader::getAttributesMap(const char **xmlattributes) {
+	std::map<std::string,std::string> attributesMap;
+	while (*xmlattributes != 0) {
+		std::string name(*xmlattributes++);
+		if (*xmlattributes == 0) {
+			break;
+		}
+		std::string value(*xmlattributes++);
+		attributesMap.insert(std::make_pair(name, value));
+	}
+	return attributesMap;
+}
+
 bool ZLXMLReader::testTag(const std::string &ns, const std::string &name, const std::string &tag) const {
 	const nsMap &nspaces = namespaces();
 

@@ -183,20 +183,11 @@ void OPDSLink::setRelationAliases(std::map<RelationAlias, std::string> relationA
 }
 
 void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
+	URLRewritingRule::RuleApply apply = isUrlExternal ? URLRewritingRule::EXTERNAL : URLRewritingRule::INTERNAL;
 	for (std::vector<shared_ptr<URLRewritingRule> >::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
 		const URLRewritingRule &rule = **it;
-
-		if (rule.Apply != URLRewritingRule::ALWAYS) {
-			if ((rule.Apply == URLRewritingRule::EXTERNAL && !isUrlExternal)
-				|| (rule.Apply == URLRewritingRule::INTERNAL && isUrlExternal)) {
-				continue;
-			}
-		}
-
-		switch (rule.Type) {
-		case URLRewritingRule::ADD_URL_PARAMETER:
-			ZLNetworkUtil::appendParameter(url, rule.Name, rule.Value);
-			break;
+		if (rule.whereToApply() == apply) {
+			url = rule.apply(url);
 		}
 	}
 }

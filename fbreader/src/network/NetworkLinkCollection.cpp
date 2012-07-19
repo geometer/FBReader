@@ -148,7 +148,7 @@ NetworkLinkCollection::NetworkLinkCollection() :
 //	BooksDB::Instance().loadNetworkLinks(myLinks);
 //	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 
-	updateLinks("http://data.fbreader.org/catalogs/generic-1.7.xml");
+	updateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
 }
 
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {
