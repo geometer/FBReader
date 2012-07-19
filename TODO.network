@@ -1,4 +1,13 @@
 0.99.1:
+	** what does FBReader do at first start
+		* a) if network is available
+		* b) if network is unavailable
+		* c) if network is "partially avalialbe" (e.g. data.fbreader.org is not available)
+	** do not freeze program for an undeterminate time on start
+	** use program icon from android version; we have this icon in SVG format; generate all files we need
+	** download network catalogs list on network library startm not on the program start
+	** show informative message durin catalogs list loading
+	** downloading network catalogs list in background, do not freeze program
 	DONE скачивание списка каталогов с сервера fbreader
 		DONE скачивание и хранение в БД
 		DONE написать миграцию (для удаления таблицы NetFiles)
