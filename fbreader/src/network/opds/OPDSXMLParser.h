@@ -36,13 +36,13 @@ public:
 public:
 	OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader);
 
-private:
+protected:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
 	void characterDataHandler(const char *text, size_t len);
 	bool processNamespaces() const;
 
-private:
+protected:
 	enum State {
 		START,
 		FEED, F_ENTRY, F_ID, F_LINK, F_CATEGORY, F_TITLE, F_UPDATED, F_AUTHOR, F_SUBTITLE, F_ICON, F_SUMMARY,
@@ -54,13 +54,12 @@ private:
 		FEC_HACK_SPAN,
 	};
 
-private:
+protected:
 	shared_ptr<OPDSFeedReader> myFeedReader;
-
-	std::string myBuffer;
-
 	State myState;
 
+private:
+	std::string myBuffer;
 	shared_ptr<OPDSFeedMetadata> myFeed;
 	shared_ptr<OPDSEntry> myEntry;
 

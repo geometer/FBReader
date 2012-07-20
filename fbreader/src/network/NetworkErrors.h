@@ -47,6 +47,7 @@ public:
 
 	static const std::string ERROR_SOMETHING_WRONG;
 	static const std::string ERROR_UNSUPPORTED_OPERATION;
+	static const std::string ERROR_CANT_DOWNLOAD_LIBRARIES_LIST;
 
 public:
 	static std::string errorMessage(const std::string &error);

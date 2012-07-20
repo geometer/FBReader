@@ -166,35 +166,29 @@ shared_ptr<NetworkAuthenticationManager> OPDSLink::authenticationManager() const
 	return myAuthenticationManager;
 }
 
-void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
-	for (std::vector<shared_ptr<URLRewritingRule> >::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
-		const URLRewritingRule &rule = **it;
-
-		if (rule.Apply != URLRewritingRule::ALWAYS) {
-			if ((rule.Apply == URLRewritingRule::EXTERNAL && !isUrlExternal)
-				|| (rule.Apply == URLRewritingRule::INTERNAL && isUrlExternal)) {
-				continue;
-			}
-		}
-
-		switch (rule.Type) {
-		case URLRewritingRule::ADD_URL_PARAMETER:
-			ZLNetworkUtil::appendParameter(url, rule.Name, rule.Value);
-			break;
-		}
-	}
+void OPDSLink::setUrlRewritingRules(std::vector<shared_ptr<URLRewritingRule> > rules) {
+	myUrlRewritingRules = rules;
 }
 
-void OPDSLink::init() {
-	myAuthenticationManager.reset();
-	const std::map<std::string,std::string> &links = getLinks();
-	std::map<std::string,std::string>::const_iterator it = links.find(URL_SIGN_IN);
-	if (it != links.end()) {
-		const std::string &url = it->second;
-		if (url.find("https://robot.litres.ru/") == 0)
-			myAuthenticationManager = new LitResAuthenticationManager(*this);
-		else
-			myAuthenticationManager = new BasicAuthenticationManager(*this);
+void OPDSLink::setAuthenticationManager(shared_ptr<NetworkAuthenticationManager> manager) {
+	myAuthenticationManager = manager;
+}
+
+void OPDSLink::setAdvancedSearch(shared_ptr<OPDSLink::AdvancedSearch> advancedSearch) {
+	myAdvancedSearch = advancedSearch;
+}
+
+void OPDSLink::setRelationAliases(std::map<RelationAlias, std::string> relationAliases) {
+	myRelationAliases = relationAliases;
+}
+
+void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
+	URLRewritingRule::RuleApply apply = isUrlExternal ? URLRewritingRule::EXTERNAL : URLRewritingRule::INTERNAL;
+	for (std::vector<shared_ptr<URLRewritingRule> >::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
+		const URLRewritingRule &rule = **it;
+		if (rule.whereToApply() == apply) {
+			url = rule.apply(url);
+		}
 	}
 }
 

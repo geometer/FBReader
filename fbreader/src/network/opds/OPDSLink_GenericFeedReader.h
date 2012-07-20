@@ -23,8 +23,10 @@
 #include <map>
 #include <string>
 
+#include "URLRewritingRule.h"
 #include "OPDSFeedReader.h"
 #include "OPDSLink.h"
+#include "OPDSLink_AdvancedSearch.h"
 
 class OPDSLink::GenericFeedReader : public OPDSFeedReader {
 
@@ -39,8 +41,21 @@ public:
 	void processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed);
 	void processFeedEnd();
 
+public:
+	void clear();
+	void setAdvancedSearch(shared_ptr<OPDSLink::AdvancedSearch> advancedSearch);
+	void setAuthenticationType(std::string type);
+	void addUrlRewritingRule(shared_ptr<URLRewritingRule> rewritingRule);
+	void addRelationAlias(const OPDSLink::RelationAlias&, std::string name);
+
 private:
 	std::vector<shared_ptr<NetworkLink> >& myLinks;
+
+private:
+	std::string myAuthenticationType;
+	std::vector<shared_ptr<URLRewritingRule> > myUrlRewritingRules;
+	shared_ptr<OPDSLink::AdvancedSearch> myAdvancedSearch;
+	std::map<OPDSLink::RelationAlias,std::string> myRelationAliases;
 };
 
 #endif /* __OPDSLINK_GENERICFEEDREADER_H__ */

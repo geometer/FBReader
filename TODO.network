@@ -1,13 +1,19 @@
 0.99.1:
+	** do not freeze program for an undeterminate time on start
+	DONE use program icon from android version; we have this icon in SVG format; generate all files we need
+
+	DONE download network catalogs list on network library start not on the program start
+		DONE и должен загружаться, только если прошло длительное время со времени посл. синхронизации с сервером FBReader
+	DONE show informative message during catalogs list loading
+	DONE перезагрузка ссылок, если не удалось загрузить их, при последующей загрузке сетевой библиотеки
+
 	** what does FBReader do at first start
 		* a) if network is available
 		* b) if network is unavailable
 		* c) if network is "partially avalialbe" (e.g. data.fbreader.org is not available)
-	** do not freeze program for an undeterminate time on start
-	DONE use program icon from android version; we have this icon in SVG format; generate all files we need
-	** download network catalogs list on network library startm not on the program start
-	** show informative message durin catalogs list loading
+		* d) if network was unavailable, and then is available
 	** downloading network catalogs list in background, do not freeze program
+
 	DONE скачивание списка каталогов с сервера fbreader
 		DONE скачивание и хранение в БД
 		DONE написать миграцию (для удаления таблицы NetFiles)
@@ -19,11 +25,10 @@
 	DONE переписать saveLinkWithoutRefreshing
 		DONE протестировать на обновление списка
 		DONE BUG: при добавлении поля программа падает
-	** добавить поддержку хранения полей fbreader:authentication, fbreader:urlRewritingRule и fbreader:advancedSearch
-		** хранить в базе или _брать с диска_?
+	DONE добавить поддержку хранения полей fbreader:authentication, fbreader:urlRewritingRule и fbreader:advancedSearch
+
 	** network database should be implemented as a separate class, not as a part of BooksDB
 
-	** FIX поиск по сетевым библиотекам (не работает корректно?)
 	** снова добавить поддержку последовательного чтения данных из сети (поправив работу с заголовками -- replyReaded etc) -- для показа прогресса загрузки
 
 	** возможность добавлять OPDS каталоги
@@ -38,8 +43,6 @@
 	** реализовать поддержку относительных ссылок (проявляется в каталоге Shucang)
 	** реализовать показ только тех каталогов, которые подходят пользователю по языку (??)
 	DONE проблемы с загрузкой из feedbooks (проблема сайта, отправил ticket https://feedbooks.zendesk.com/requests/3639)
-
-
 
 ** разделить диалог настроек на: библиеотка, look & feel, ...
 	DONE сделать выпадающее меню

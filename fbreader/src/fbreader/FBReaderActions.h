@@ -161,6 +161,9 @@ class ShowNetworkLibraryAction : public SetModeAction {
 public:
 	ShowNetworkLibraryAction();
 	bool isVisible() const;
+
+protected:
+	void run();
 };
 
 class AddBookAction : public ModeDependentAction {

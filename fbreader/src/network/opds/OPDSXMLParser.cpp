@@ -65,7 +65,7 @@ static const std::string TAG_AUTHENTICATION = "fbreader:authentication";
 static const std::string TAG_URL_REWRITING_RULES = "fbreader:urlRewritingRule";
 static const std::string TAG_RELATION_ALIASES = "fbreader:relationAlias";
 
-OPDSXMLParser::OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader) :myFeedReader(feedReader) {
+OPDSXMLParser::OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader) : myFeedReader(feedReader) {
 	myState = START;
 }
 
@@ -74,16 +74,7 @@ bool OPDSXMLParser::processNamespaces() const {
 }
 
 void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes) {
-	std::map<std::string,std::string> attributeMap;
-	while (*attributes != 0) {
-		std::string name(*attributes++);
-		if (*attributes == 0) {
-			break;
-		}
-		std::string value(*attributes++);
-		attributeMap.insert(std::make_pair(name, value));
-	}
-
+	std::map<std::string,std::string> attributeMap = getAttributesMap(attributes);
 	switch (myState) {
 		case START:
 			if (testTag(ZLXMLNamespace::Atom, TAG_FEED, tag)) {

@@ -38,8 +38,13 @@ static const std::string SEARCH_PARAMETER_ID = "networkSearchPattern";
 ShowNetworkLibraryAction::ShowNetworkLibraryAction() : SetModeAction(FBReader::NETWORK_LIBRARY_MODE, FBReader::BOOK_TEXT_MODE) {
 }
 
+void ShowNetworkLibraryAction::run() {
+	NetworkLinkCollection::Instance().initialize();
+	SetModeAction::run();
+}
+
 bool ShowNetworkLibraryAction::isVisible() const {
-	return SetModeAction::isVisible() && NetworkLinkCollection::Instance().numberOfEnabledLinks() > 0;
+	return SetModeAction::isVisible();
 }
 
 SearchOnNetworkAction::SearchOnNetworkAction() : ModeDependentAction(FBReader::NETWORK_LIBRARY_MODE) {

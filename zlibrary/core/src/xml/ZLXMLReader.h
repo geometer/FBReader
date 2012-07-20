@@ -79,6 +79,7 @@ public:
 
 	const char *attributeValue(const char **xmlattributes, const char *name);
 	const char *attributeValue(const char **xmlattributes, const AttributeNamePredicate &predicate);
+	static std::map<std::string,std::string> getAttributesMap(const char **xmlattributes);
 
 private:
 	void initialize(const char *encoding = 0);

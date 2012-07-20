@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2008-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,34 +17,19 @@
  * 02110-1301, USA.
  */
 
-#ifndef __URLREWRITINGRULE_H__
-#define __URLREWRITINGRULE_H__
+#ifndef __OPDSLINK_GENERICXMLPARSER_H__
+#define __OPDSLINK_GENERICXMLPARSER_H__
 
-#include <string>
-#include <map>
+#include "OPDSXMLParser.h"
+#include "OPDSLink_GenericFeedReader.h"
 
-class URLRewritingRule {
-
+class OPDSLink::GenericXMLParser : public OPDSXMLParser {
 public:
-	enum RuleType {
-		ADD_URL_PARAMETER,
-		REWRITE,
-		UNKNOWN,
-	};
+	GenericXMLParser(shared_ptr<OPDSFeedReader> feedReader);
 
-	enum RuleApply {
-		ALWAYS, EXTERNAL, INTERNAL
-	};
-
-	URLRewritingRule(const std::map<std::string,std::string> &attributesMap);
-	std::string apply(const std::string &url) const;
-	RuleApply whereToApply() const;
-
-private:
-	RuleType myType;
-	RuleApply myApply;
-	std::map<std::string, std::string> myParameters;
+protected:
+	void startElementHandler(const char *tag, const char **attributes);
+	OPDSLink::GenericFeedReader &getFeedReader() const;
 };
 
-
-#endif /* __URLREWRITINGRULE_H__ */
+#endif /* __OPDSLINK_GENERICXMLPARSER_H__ */

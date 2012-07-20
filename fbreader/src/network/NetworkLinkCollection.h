@@ -49,12 +49,15 @@ private:
 
 public:
 	ZLStringOption DirectoryOption;
+	ZLIntegerOption LastUpdateTimeOption;
 
 private:
 	NetworkLinkCollection();
 	~NetworkLinkCollection();
 
 public:
+	void initialize();
+
 	std::string bookFileName(const BookReference &reference);
 
 	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
@@ -74,15 +77,21 @@ public:
 	//void saveLink(NetworkLink& link, bool isAuto = false);
 
 private:
+	void synchronize();
+
 	std::string bookFileName(const std::string &url, BookReference::Format format, BookReference::Type type);
 
 	void updateLinks(std::string genericUrl);
+	shared_ptr<ZLFile> getGenericFile(std::string genericUrl);
 	void addOrUpdateLink(shared_ptr<NetworkLink> link);
 
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 	LinkVector myLinks;
 	std::string myErrorMessage;
+	bool myIsInitialized;
+
+friend class NetworkLibrarySynchronizer;
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

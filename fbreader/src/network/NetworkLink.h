@@ -80,7 +80,6 @@ public:
 	void loadLinksFrom(const NetworkLink & link);
 	void loadSummaryFrom(const NetworkLink & link);
 
-
 public:
 	virtual shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &data, const std::string &pattern) const = 0;
 	virtual shared_ptr<ZLExecutionData> advancedSearchData(NetworkOperationData &data, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) const = 0;
@@ -90,8 +89,6 @@ public:
 	virtual shared_ptr<NetworkItem> libraryItem() const = 0;
 
 	virtual void rewriteUrl(std::string &url, bool isUrlExternal = false) const = 0;
-
-	virtual void init() = 0;
 
 private:
 	const std::string mySiteName;
