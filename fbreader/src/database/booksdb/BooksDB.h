@@ -80,10 +80,6 @@ public:
 	std::string getPalmType(const std::string &fileName);
 	bool setPalmType(const std::string &fileName, const std::string &type);
 
-	bool saveNetworkLink(shared_ptr<NetworkLink> link);
-	bool loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links);
-	bool deleteNetworkLink(const std::string &siteName);
-
 	bool loadBookState(const Book &book, ReadingState &state);
 	bool setBookState(const Book &book, const ReadingState &state);
 
@@ -132,8 +128,6 @@ private:
 	shared_ptr<SaveBookStateStackRunnable> mySaveBookStateStack;
 
 	shared_ptr<DeleteBookRunnable> myDeleteBook;
-
-	shared_ptr<SaveNetworkLinkRunnable> mySaveNetworkLink;
 
 	shared_ptr<DBCommand> myLoadNetworkLinks;
 	shared_ptr<DBCommand> myFindNetworkLinkId;

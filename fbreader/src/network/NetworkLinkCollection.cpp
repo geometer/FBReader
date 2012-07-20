@@ -38,7 +38,7 @@
 
 #include "../options/FBCategoryKey.h"
 
-#include "../database/booksdb/BooksDB.h"
+#include "../database/networkdb/NetworkDB.h"
 
 #include "NetworkOperationData.h"
 #include "NetworkBookCollection.h"
@@ -136,7 +136,7 @@ void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 		updated = true;
 	}
 	if (updated) {
-		BooksDB::Instance().saveNetworkLink(link);
+		NetworkDB::Instance().saveNetworkLink(link);
 		FBReader::Instance().invalidateNetworkView();
 		//FBReader::Instance().sendRefresh();
 	}
@@ -182,7 +182,7 @@ void NetworkLinkCollection::initialize() {
 
 void NetworkLinkCollection::synchronize() {
 	//commented to not download from DB, because should have only links from generic.xml
-	BooksDB::Instance().loadNetworkLinks(myLinks);
+	NetworkDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 	updateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
 }

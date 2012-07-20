@@ -27,7 +27,7 @@
 		DONE BUG: при добавлении поля программа падает
 	DONE добавить поддержку хранения полей fbreader:authentication, fbreader:urlRewritingRule и fbreader:advancedSearch
 
-	** network database should be implemented as a separate class, not as a part of BooksDB
+	DONE network database should be implemented as a separate class, not as a part of BooksDB
 
 	** снова добавить поддержку последовательного чтения данных из сети (поправив работу с заголовками -- replyReaded etc) -- для показа прогресса загрузки
 

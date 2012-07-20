@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,18 +17,14 @@
  * 02110-1301, USA.
  */
 
-#include <map>
+#include "../DBRunnables.h"
+#include "../../sqldb/implsqlite/SQLiteFactory.h"
 
-#include <ZLStringUtil.h>
-
-#include "Migration.h"
-#include "../fbreader/FBReaderActions.h"
-#include "../database/networkdb/NetworkDB.h"
-
-Migration_0_99_1::Migration_0_99_1() : Migration("0.99.1") {
-}
-
-void Migration_0_99_1::doMigrationInternal() {
-	shared_ptr<DBCommand> cmd = SQLiteFactory::createCommand("DROP TABLE IF EXISTS NetFiles", NetworkDB::Instance().connection());
-	cmd->execute();
+bool InitNetworkDBRunnable::run() {
+	shared_ptr<DBCommand> cmd;
+	cmd = SQLiteFactory::createCommand(NetworkDBQuery::INIT_DATABASE, myConnection);
+	if (!cmd->execute()) {
+		return false;
+	}
+	return true;
 }
