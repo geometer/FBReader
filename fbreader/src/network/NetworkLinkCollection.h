@@ -74,7 +74,7 @@ public:
 	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
 	//void deleteLink(NetworkLink& link);
-	//void saveLink(NetworkLink& link, bool isAuto = false);
+	void saveLink(shared_ptr<NetworkLink>, bool isAuto = false);
 
 private:
 	void synchronize();

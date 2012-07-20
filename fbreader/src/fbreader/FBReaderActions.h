@@ -64,6 +64,7 @@ public:
 	static const std::string TOGGLE_FULLSCREEN;
 	static const std::string FULLSCREEN_ON;
 	static const std::string ADD_BOOK;
+	static const std::string ADD_NETWORK_CATALOG;
 	static const std::string ROTATE_SCREEN;
 	static const std::string QUIT;
 	static const std::string FORCE_QUIT;
@@ -362,6 +363,14 @@ class ClearSelectionAction : public SelectionAction {
 
 public:
 	void run();
+};
+
+class AddNetworkCatalogAction : public ModeDependentAction {
+
+public:
+	AddNetworkCatalogAction();
+	void run();
+
 };
 
 class SearchOnNetworkAction : public ModeDependentAction {

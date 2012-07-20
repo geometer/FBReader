@@ -40,6 +40,8 @@
 			<node name="logout" value="Выйти (%s)" />
 			<node name="reload" value="Обновить" />
 			<node name="dontShow" value="Скрыть этот каталог" />
+			<node name="delete" value="Удалить этот каталог" />
+			<node name="edit" value="Редактировать описание" />
 			<node name="refillAccount" value="Пополнить счёт (текущий счёт: %s)" />
 			<node name="register" value="Зарегистрироваться" />
 			<node name="passwordRecovery" value="Забыли пароль?" />
@@ -141,6 +143,10 @@
 			<node name="label" value="Добавить" />
 			<node name="tooltip" value="Добавить файл в библиотеку" />
 		</node>
+		<node name="addNetworkCatalog">
+			<node name="label" value="Добавить" />
+			<node name="tooltip" value="Добавить сетевую библиотеку" />
+		</node>
 		<node name="showNetLibrary">
 			<node name="label" value="Сеть" />
 			<node name="tooltip" value="Доступ к сетевым библиотекам" />
@@ -229,6 +235,8 @@
 	<node name="dialog">
 		<node name="button">
 			<node name="go" value="&amp;Искать" />
+			<node name="add" value="Добавить" />
+			<node name="edit" value="Редактировать" />
 			<node name="thisOnly" value="Только эту" />
 			<node name="withSubtags" value="С подкатегориями" />
 			<node name="removeLink" value="Удалить из библиотеки" />
@@ -494,6 +502,22 @@
 			<node name="description" value="Описание" />
 			<node name="annotation" value="Результаты поиска для: %s" />
 		</node>
+		<node name="addNetworkCatalogDialog">
+			<node name="title" value="Добавить сетевую библиотеку" />
+			<node name="url" value="Адрес" />
+		</node>
+		<node name="checkNetworkCatalogDialog">
+			<node name="title" value="Проверьте данные" />
+			<node name="name" value="Название" />
+			<node name="subname" value="Описание" />
+			<node name="icon" value="Изображение" />
+		</node>
+		<node name="editNetworkCatalogDialog">
+			<node name="title" value="Редактирование" />
+			<node name="name" value="Название" />
+			<node name="subname" value="Описание" />
+			<node name="icon" value="Изображение" />
+		</node>
 		<node name="gotoPageDialog">
 			<node name="title" value="Перейти на страницу" />
 			<node name="pageNumber" value="Номер страницы" />
@@ -587,6 +611,14 @@
 		<node name="dontShowConfirmBox">
 			<node name="title" value="Отключение каталога" />
 			<node name="message" value="Вы уверены, что хотите отключить&#10;каталог «%s»?&#10;&#10;Вы сможете включить его обратно&#10;на вкладке «Поиск в сети» в диалоге «Настройки»." />
+		</node>
+		<node name="deleteConfirmBox">
+			<node name="title" value="Отключение каталога" />
+			<node name="message" value="Вы уверены, что хотите удалить&#10;каталог «%s»?&#10;&#10;" />
+		</node>
+		<node name="errorLinkBox">
+			<node name="title" value="Ошибка при получении данных" />
+			<node name="message" value="%s" />
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" value="Удалить книгу" />

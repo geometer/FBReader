@@ -112,6 +112,8 @@ private:
 	class DontShowAction;
 	class PasswordRecoveryAction;
 	class RegisterUserAction;
+	class EditAction;
+	class DeleteAction;
 
 public:
 	NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition = (size_t)-1);

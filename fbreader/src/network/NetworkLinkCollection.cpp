@@ -109,10 +109,10 @@ bool NetworkLinkCollection::Comparator::operator() (
 //	FBReader::Instance().refreshWindow();
 //}
 
-//void NetworkLinkCollection::saveLink(NetworkLink& link, bool isAuto) {
-//	saveLinkWithoutRefreshing(link, isAuto);
-//	FBReader::Instance().refreshWindow();
-//}
+void NetworkLinkCollection::saveLink(shared_ptr<NetworkLink> link, bool isAuto) {
+	addOrUpdateLink(link);
+	FBReader::Instance().refreshWindow();
+}
 
 void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 	bool found = false;
