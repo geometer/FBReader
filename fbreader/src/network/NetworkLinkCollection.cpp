@@ -26,9 +26,12 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLResource.h>
 #include <ZLNetworkManager.h>
+#include <ZLTimeManager.h>
 #include <ZLNetworkUtil.h>
 #include <ZLibrary.h>
 #include <ZLDialogManager.h>
+#include <ZLInputStream.h>
+#include <ZLOutputStream.h>
 #include "../fbreader/FBReader.h"
 
 #include "NetworkLinkCollection.h"
@@ -163,6 +166,7 @@ void NetworkLibrarySynchronizer::run() {
 
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", ""),
+	LastUpdateTimeOption(ZLCategoryKey::NETWORK, "Update", "LastUpdateTime", -1),
 	myIsInitialized(false) {
 }
 
@@ -181,32 +185,60 @@ void NetworkLinkCollection::initialize() {
 }
 
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {
-	const std::string FILE_NAME = "fbreader_catalogs-" + genericUrl.substr(genericUrl.find_last_of('/') + 1);
-	ZLFile genericFileDir(ZLNetworkManager::CacheDirectory());
-	genericFileDir.directory(true);
-	ZLFile genericFile(ZLNetworkManager::CacheDirectory() + ZLibrary::FileNameDelimiter + FILE_NAME);
-	shared_ptr<ZLExecutionData> loadingRequest = ZLNetworkManager::Instance().createDownloadRequest(genericUrl, genericFile.physicalFilePath());
-
-	//TODO add error handling (problems with request, no generic file created)
-	//TODO add file loading only if obsolete
-	//TODO use old file if something wrong with loading
-	std::string error = ZLNetworkManager::Instance().perform(loadingRequest);
-
-	if (!error.empty()) {
+	shared_ptr<ZLFile> genericFile = getGenericFile(genericUrl);
+	if (genericFile.isNull()) {
 		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"),	NetworkErrors::errorMessage(NetworkErrors::ERROR_CANT_DOWNLOAD_LIBRARIES_LIST));
 		return;
 	}
-
 	std::vector<shared_ptr<NetworkLink> > links;
 	shared_ptr<OPDSFeedReader> feedReader = new OPDSLink::GenericFeedReader(links);
 	shared_ptr<ZLXMLReader> parser = new OPDSLink::GenericXMLParser(feedReader);
-	parser->readDocument(genericFile);
+	parser->readDocument(*genericFile);
 
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
 		addOrUpdateLink(*it);
 	}
 
 	myIsInitialized = true;
+}
+
+shared_ptr<ZLFile> NetworkLinkCollection::getGenericFile(std::string genericUrl) {
+	const std::string FILE_NAME = "fbreader_catalogs-" + genericUrl.substr(genericUrl.find_last_of('/') + 1);
+	ZLFile genericFileDir(ZLNetworkManager::CacheDirectory());
+	genericFileDir.directory(true);
+	shared_ptr<ZLFile> genericFile = new ZLFile(ZLNetworkManager::CacheDirectory() + ZLibrary::FileNameDelimiter + FILE_NAME);
+
+	long diff = LastUpdateTimeOption.value() == -1 ? -1 : ZLTime().millisecondsFrom(ZLTime(LastUpdateTimeOption.value(), 0));
+
+	if (genericFile->exists() && diff != -1 && diff < 7 * 24 * 60 * 60 * 1000) { //1 week
+		return genericFile;
+	}
+
+	ZLFile tmpFile(ZLNetworkManager::CacheDirectory() + ZLibrary::FileNameDelimiter + "tmp" + FILE_NAME);
+	shared_ptr<ZLExecutionData> loadingRequest = ZLNetworkManager::Instance().createDownloadRequest(genericUrl, tmpFile.physicalFilePath());
+	std::string error = ZLNetworkManager::Instance().perform(loadingRequest);
+	if (!error.empty()) {
+		if (!genericFile->exists()) { //loading list from saved file even if obsolete
+			return 0;
+		} else {
+			return genericFile;
+		}
+	}
+
+	shared_ptr<ZLOutputStream> outputStream = genericFile->outputStream(true);
+	shared_ptr<ZLInputStream>  inputStream = tmpFile.inputStream();
+	if (!outputStream->open() || !inputStream->open()) {
+		tmpFile.remove();
+		return 0;
+	}
+	char buffer[2048];
+	size_t readed = 0;
+	do {
+		readed = inputStream->read(buffer, 2048);
+		outputStream->write(buffer, readed);
+	} while (readed > 0);
+	LastUpdateTimeOption.setValue(ZLTime().inSeconds());
+	return genericFile;
 }
 
 NetworkLinkCollection::~NetworkLinkCollection() {

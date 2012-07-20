@@ -3,7 +3,7 @@
 	DONE use program icon from android version; we have this icon in SVG format; generate all files we need
 
 	DONE download network catalogs list on network library start not on the program start
-		** и должен загружаться, только если прошло длительное время со времени посл. синхронизации с сервером FBReader
+		TODO и должен загружаться, только если прошло длительное время со времени посл. синхронизации с сервером FBReader
 	DONE show informative message during catalogs list loading
 	DONE перезагрузка ссылок, если не удалось загрузить их, при последующей загрузке сетевой библиотеки
 

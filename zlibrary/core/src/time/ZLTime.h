@@ -28,6 +28,9 @@ public:
 	~ZLTime();
 	long millisecondsTo(const ZLTime &time) const;
 	long millisecondsFrom(const ZLTime &time) const;
+
+	long inSeconds() const;
+
 	short hours() const;
 	short minutes() const;
 

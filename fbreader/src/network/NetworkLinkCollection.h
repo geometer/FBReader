@@ -49,6 +49,7 @@ private:
 
 public:
 	ZLStringOption DirectoryOption;
+	ZLIntegerOption LastUpdateTimeOption;
 
 private:
 	NetworkLinkCollection();
@@ -79,6 +80,7 @@ private:
 	std::string bookFileName(const std::string &url, BookReference::Format format, BookReference::Type type);
 
 	void updateLinks(std::string genericUrl);
+	shared_ptr<ZLFile> getGenericFile(std::string genericUrl);
 	void addOrUpdateLink(shared_ptr<NetworkLink> link);
 
 private:
