@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="Некорректный почтовый адрес" />
 			<node name="tooManyRegistrations" value="Слишком много регистраций с вашего IP;&#10;попробуйте еще раз через пару минут" />
 			<node name="noUserEmail" value="Нет пользователя с таким адресом" />
+			<node name="librariesListDownloadingFailed" value="Не удалось загрузить список сетевых библиотек" />
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Ошибка при загрузке" />
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="Просим восстановить пароль. Подождите, пожалуйста..." />
 			<node name="authenticationCheck" value="Проверка учетной записи. Подождите, пожалуйста..." />
 			<node name="signOut" value="Выход из системы. Подождите, пожалуйста..." />
+			<node name="loadingNetworkLibraryList" value="Загрузка списка сетевых библиотек. Подождите, пожалуйста..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Покупка книги" />

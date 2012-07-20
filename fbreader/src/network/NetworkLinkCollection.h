@@ -54,6 +54,8 @@ private:
 	NetworkLinkCollection();
 	~NetworkLinkCollection();
 
+	void initialize();
+
 public:
 	std::string bookFileName(const BookReference &reference);
 
@@ -83,6 +85,8 @@ private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 	LinkVector myLinks;
 	std::string myErrorMessage;
+
+friend class NetworkLibrarySynchronizer;
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }

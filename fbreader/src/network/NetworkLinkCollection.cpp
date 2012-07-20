@@ -28,6 +28,7 @@
 #include <ZLNetworkManager.h>
 #include <ZLNetworkUtil.h>
 #include <ZLibrary.h>
+#include <ZLDialogManager.h>
 #include "../fbreader/FBReader.h"
 
 #include "NetworkLinkCollection.h"
@@ -39,6 +40,7 @@
 #include "NetworkOperationData.h"
 #include "NetworkBookCollection.h"
 #include "BookReference.h"
+#include "NetworkErrors.h"
 
 #include "opds/OPDSLink.h"
 #include "opds/OPDSLink_GenericXMLParser.h"
@@ -141,14 +143,37 @@ void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 }
 
 
+class NetworkLibrarySynchronizer : public ZLRunnable {
+
+public:
+	NetworkLibrarySynchronizer(NetworkLinkCollection &networkLinkCollection);
+
+private:
+	void run();
+
+private:
+	NetworkLinkCollection &myNetworkLinkCollection;
+};
+
+NetworkLibrarySynchronizer::NetworkLibrarySynchronizer(NetworkLinkCollection &networkLinkCollection) : myNetworkLinkCollection(networkLinkCollection) {}
+
+void NetworkLibrarySynchronizer::run() {
+	myNetworkLinkCollection.initialize();
+}
+
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
 
+	NetworkLibrarySynchronizer synchronizer(*this);
+	ZLDialogManager::Instance().wait(ZLResourceKey("loadingNetworkLibraryList"), synchronizer);
+}
+
+void NetworkLinkCollection::initialize() {
 	//commented to not download from DB, because should have only links from generic.xml
 //	BooksDB::Instance().loadNetworkLinks(myLinks);
 //	std::sort(myLinks.begin(), myLinks.end(), Comparator());
-
 	updateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
+
 }
 
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {
@@ -161,7 +186,12 @@ void NetworkLinkCollection::updateLinks(std::string genericUrl) {
 	//TODO add error handling (problems with request, no generic file created)
 	//TODO add file loading only if obsolete
 	//TODO use old file if something wrong with loading
-	ZLNetworkManager::Instance().perform(loadingRequest);
+	std::string error = ZLNetworkManager::Instance().perform(loadingRequest);
+
+	if (!error.empty()) {
+		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"),	NetworkErrors::errorMessage(NetworkErrors::ERROR_CANT_DOWNLOAD_LIBRARIES_LIST));
+		return;
+	}
 
 	std::vector<shared_ptr<NetworkLink> > links;
 	shared_ptr<OPDSFeedReader> feedReader = new OPDSLink::GenericFeedReader(links);

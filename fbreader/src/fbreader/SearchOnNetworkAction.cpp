@@ -39,7 +39,7 @@ ShowNetworkLibraryAction::ShowNetworkLibraryAction() : SetModeAction(FBReader::N
 }
 
 bool ShowNetworkLibraryAction::isVisible() const {
-	return SetModeAction::isVisible() && NetworkLinkCollection::Instance().numberOfEnabledLinks() > 0;
+	return SetModeAction::isVisible();
 }
 
 SearchOnNetworkAction::SearchOnNetworkAction() : ModeDependentAction(FBReader::NETWORK_LIBRARY_MODE) {
