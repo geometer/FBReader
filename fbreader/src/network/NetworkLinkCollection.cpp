@@ -118,20 +118,17 @@ void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 	bool found = false;
 	bool updated = false;
 
-//	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
-//		shared_ptr<NetworkLink> curLink = *it;
-//		if (curLink->getPredefinedId() == link->getPredefinedId()) {
-//			if (*(link->getUpdated()) > *(curLink->getUpdated())) {
-//				curLink->loadFrom(*link);
-//				//TODO rewrite this code, we should take fbreader: information from the generic.xml
-//				//curLink->init();
-//				updated = true;
-//			}
-//			//TODO implement custom links saving
-//			found = true;
-//			break;
-//		}
-//	}
+	for (size_t i = 0; i < myLinks.size(); ++i) {
+		shared_ptr<NetworkLink> curLink = myLinks.at(i);
+		if (curLink->getPredefinedId() == link->getPredefinedId()) {
+			//if (*(link->getUpdated()) > *(curLink->getUpdated())) {
+			myLinks.at(i) = link;
+			updated = true;
+			//TODO implement custom links saving
+			found = true;
+			break;
+		}
+	}
 
 	if (!found) {
 		myLinks.push_back(link);
@@ -161,7 +158,7 @@ private:
 NetworkLibrarySynchronizer::NetworkLibrarySynchronizer(NetworkLinkCollection &networkLinkCollection) : myNetworkLinkCollection(networkLinkCollection) {}
 
 void NetworkLibrarySynchronizer::run() {
-	myNetworkLinkCollection.updateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
+	myNetworkLinkCollection.synchronize();
 }
 
 NetworkLinkCollection::NetworkLinkCollection() :
@@ -171,9 +168,7 @@ NetworkLinkCollection::NetworkLinkCollection() :
 }
 
 void NetworkLinkCollection::initialize() {
-	//commented to not download from DB, because should have only links from generic.xml
-//	BooksDB::Instance().loadNetworkLinks(myLinks);
-//	std::sort(myLinks.begin(), myLinks.end(), Comparator());
+
 
 	if (myIsInitialized) {
 		return;
@@ -182,6 +177,14 @@ void NetworkLinkCollection::initialize() {
 	NetworkLibrarySynchronizer synchronizer(*this);
 	ZLDialogManager::Instance().wait(ZLResourceKey("loadingNetworkLibraryList"), synchronizer);
 
+}
+
+
+void NetworkLinkCollection::synchronize() {
+	//commented to not download from DB, because should have only links from generic.xml
+	BooksDB::Instance().loadNetworkLinks(myLinks);
+	std::sort(myLinks.begin(), myLinks.end(), Comparator());
+	updateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
 }
 
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {
@@ -521,3 +524,4 @@ void NetworkLinkCollection::rewriteUrl(std::string &url, bool externalUrl) const
 		}
 	}
 }
+

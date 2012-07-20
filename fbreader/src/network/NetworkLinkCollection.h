@@ -77,6 +77,8 @@ public:
 	//void saveLink(NetworkLink& link, bool isAuto = false);
 
 private:
+	void synchronize();
+
 	std::string bookFileName(const std::string &url, BookReference::Format format, BookReference::Type type);
 
 	void updateLinks(std::string genericUrl);

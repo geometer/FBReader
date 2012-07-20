@@ -3,7 +3,7 @@
 	DONE use program icon from android version; we have this icon in SVG format; generate all files we need
 
 	DONE download network catalogs list on network library start not on the program start
-		TODO и должен загружаться, только если прошло длительное время со времени посл. синхронизации с сервером FBReader
+		DONE и должен загружаться, только если прошло длительное время со времени посл. синхронизации с сервером FBReader
 	DONE show informative message during catalogs list loading
 	DONE перезагрузка ссылок, если не удалось загрузить их, при последующей загрузке сетевой библиотеки
 
@@ -26,7 +26,7 @@
 		DONE протестировать на обновление списка
 		DONE BUG: при добавлении поля программа падает
 	DONE добавить поддержку хранения полей fbreader:authentication, fbreader:urlRewritingRule и fbreader:advancedSearch
-		** хранить в базе или _брать с диска_?
+
 	** network database should be implemented as a separate class, not as a part of BooksDB
 
 	** снова добавить поддержку последовательного чтения данных из сети (поправив работу с заголовками -- replyReaded etc) -- для показа прогресса загрузки
@@ -43,9 +43,6 @@
 	** реализовать поддержку относительных ссылок (проявляется в каталоге Shucang)
 	** реализовать показ только тех каталогов, которые подходят пользователю по языку (??)
 	DONE проблемы с загрузкой из feedbooks (проблема сайта, отправил ticket https://feedbooks.zendesk.com/requests/3639)
-	** реализовать обновление списка в другом потоке
-
-
 
 ** разделить диалог настроек на: библиеотка, look & feel, ...
 	DONE сделать выпадающее меню
