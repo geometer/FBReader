@@ -5,6 +5,7 @@
 	DONE download network catalogs list on network library start not on the program start
 		** и должен загружаться, только если прошло длительное время со времени посл. синхронизации с сервером FBReader
 	DONE show informative message during catalogs list loading
+	DONE перезагрузка ссылок, если не удалось загрузить их, при последующей загрузке сетевой библиотеки
 
 	** what does FBReader do at first start
 		* a) if network is available

@@ -54,9 +54,9 @@ private:
 	NetworkLinkCollection();
 	~NetworkLinkCollection();
 
+public:
 	void initialize();
 
-public:
 	std::string bookFileName(const BookReference &reference);
 
 	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLExecutionData::Listener> listener);
@@ -85,6 +85,7 @@ private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 	LinkVector myLinks;
 	std::string myErrorMessage;
+	bool myIsInitialized;
 
 friend class NetworkLibrarySynchronizer;
 };

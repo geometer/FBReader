@@ -158,21 +158,25 @@ private:
 NetworkLibrarySynchronizer::NetworkLibrarySynchronizer(NetworkLinkCollection &networkLinkCollection) : myNetworkLinkCollection(networkLinkCollection) {}
 
 void NetworkLibrarySynchronizer::run() {
-	myNetworkLinkCollection.initialize();
+	myNetworkLinkCollection.updateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
 }
 
 NetworkLinkCollection::NetworkLinkCollection() :
-	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", "") {
-
-	NetworkLibrarySynchronizer synchronizer(*this);
-	ZLDialogManager::Instance().wait(ZLResourceKey("loadingNetworkLibraryList"), synchronizer);
+	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", ""),
+	myIsInitialized(false) {
 }
 
 void NetworkLinkCollection::initialize() {
 	//commented to not download from DB, because should have only links from generic.xml
 //	BooksDB::Instance().loadNetworkLinks(myLinks);
 //	std::sort(myLinks.begin(), myLinks.end(), Comparator());
-	updateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
+
+	if (myIsInitialized) {
+		return;
+	}
+
+	NetworkLibrarySynchronizer synchronizer(*this);
+	ZLDialogManager::Instance().wait(ZLResourceKey("loadingNetworkLibraryList"), synchronizer);
 
 }
 
@@ -201,6 +205,8 @@ void NetworkLinkCollection::updateLinks(std::string genericUrl) {
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
 		addOrUpdateLink(*it);
 	}
+
+	myIsInitialized = true;
 }
 
 NetworkLinkCollection::~NetworkLinkCollection() {
