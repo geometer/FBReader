@@ -73,8 +73,8 @@ public:
 
 	void rewriteUrl(std::string &url, bool externalUrl = false) const;
 
-	//void deleteLink(NetworkLink& link);
-	void saveLink(shared_ptr<NetworkLink>, bool isAuto = false);
+	void deleteLink(const NetworkLink& link);
+	void saveLink(const NetworkLink& link, bool isAuto = false);
 
 private:
 	void synchronize();
@@ -83,7 +83,7 @@ private:
 
 	void updateLinks(std::string genericUrl);
 	shared_ptr<ZLFile> getGenericFile(std::string genericUrl);
-	void addOrUpdateLink(shared_ptr<NetworkLink> link);
+	void addOrUpdateLink(const NetworkLink& link);
 
 private:
 	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;

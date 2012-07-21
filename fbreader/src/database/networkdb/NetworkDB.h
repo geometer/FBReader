@@ -47,7 +47,7 @@ public:
 	bool isInitialized() const;
 	bool clearDatabase();
 
-	bool saveNetworkLink(shared_ptr<NetworkLink> link);
+	bool saveNetworkLink(const NetworkLink &link);
 	bool loadNetworkLinks(std::vector<shared_ptr<NetworkLink> >& links);
 	bool deleteNetworkLink(const std::string &siteName);
 

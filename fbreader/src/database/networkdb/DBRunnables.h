@@ -54,7 +54,7 @@ class SaveNetworkLinkRunnable : public DBRunnable {
 public:
 	SaveNetworkLinkRunnable(DBConnection &connection);
 	bool run();
-	void setNetworkLink(shared_ptr<NetworkLink> link);
+	void setNetworkLink(const NetworkLink &link);
 
 private:
 	bool addNetworkLink();
@@ -62,7 +62,7 @@ private:
 	bool updateNetworkLinkUrls(int linkId);
 
 private:
-	shared_ptr<NetworkLink> myNetworkLink;
+	const NetworkLink *myNetworkLink;
 
 	shared_ptr<DBCommand> myFindNetworkLinkId;
 	shared_ptr<DBCommand> myAddNetworkLink;

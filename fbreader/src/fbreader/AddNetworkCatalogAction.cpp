@@ -72,7 +72,7 @@ void AddNetworkCatalogAction::run() {
 			checkDialog.reset();
 			link->setTitle(NameOption.value());
 			link->setSummary(SubNameOption.value());
-			NetworkLinkCollection::Instance().saveLink(link);
+			NetworkLinkCollection::Instance().saveLink(*link);
 		}
 	}
 }

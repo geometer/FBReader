@@ -260,7 +260,7 @@ void NetworkCatalogRootNode::DeleteAction::run() {
 	if (ZLDialogManager::Instance().questionBox(boxKey, message, ZLDialogManager::YES_BUTTON, ZLDialogManager::NO_BUTTON) != 0) {
 		return;
 	}
-	//NetworkLinkCollection::Instance().deleteLink(myLink);
+	NetworkLinkCollection::Instance().deleteLink(myLink);
 }
 
 bool NetworkCatalogRootNode::DeleteAction::makesSense() const {
@@ -290,7 +290,7 @@ void NetworkCatalogRootNode::EditAction::run() {
 		checkDialog.reset();
 		myLink.setTitle(NameOption.value());
 		myLink.setSummary(SubNameOption.value());
-		//NetworkLinkCollection::Instance().saveLink(myLink);
+		NetworkLinkCollection::Instance().saveLink(myLink);
 	}
 }
 

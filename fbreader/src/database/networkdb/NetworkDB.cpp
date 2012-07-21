@@ -84,7 +84,7 @@ bool NetworkDB::clearDatabase() {
 }
 
 
-bool NetworkDB::saveNetworkLink(shared_ptr<NetworkLink> link) {
+bool NetworkDB::saveNetworkLink(const NetworkLink &link) {
 	if (!isInitialized()) {
 		return false;
 	}

@@ -21,19 +21,19 @@
 #include "../../../network/NetworkLink.h"
 #include "../../sqldb/implsqlite/SQLiteFactory.h"
 
-SaveNetworkLinkRunnable::SaveNetworkLinkRunnable(DBConnection &connection) {
+SaveNetworkLinkRunnable::SaveNetworkLinkRunnable(DBConnection &connection) : myNetworkLink(0) {
 	myFindNetworkLinkId = SQLiteFactory::createCommand(NetworkDBQuery::FIND_NETWORK_LINK_ID, connection, "@site_name", DBValue::DBTEXT);
-	myAddNetworkLink    = SQLiteFactory::createCommand(NetworkDBQuery::ADD_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@site_name", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@language", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT);
-	myUpdateNetworkLink    = SQLiteFactory::createCommand(NetworkDBQuery::UPDATE_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@language", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT, "@link_id", DBValue::DBINT);
+	myAddNetworkLink = SQLiteFactory::createCommand(NetworkDBQuery::ADD_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@site_name", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@language", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT);
+	myUpdateNetworkLink = SQLiteFactory::createCommand(NetworkDBQuery::UPDATE_NETWORK_LINK, connection, "@title", DBValue::DBTEXT, "@summary", DBValue::DBTEXT, "@language", DBValue::DBTEXT, "@predefined_id", DBValue::DBTEXT, "@is_enabled", DBValue::DBINT, "@link_id", DBValue::DBINT);
 
 	myFindNetworkLinkUrls = SQLiteFactory::createCommand(NetworkDBQuery::FIND_NETWORK_LINKURLS, connection, "@link_id", DBValue::DBINT);
-	myAddNetworkLinkUrl    = SQLiteFactory::createCommand(NetworkDBQuery::ADD_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT, "@url", DBValue::DBTEXT, "@update_time", DBValue::DBINT);
-	myUpdateNetworkLinkUrl    = SQLiteFactory::createCommand(NetworkDBQuery::UPDATE_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT, "@url", DBValue::DBTEXT, "@update_time", DBValue::DBINT);
-	myDeleteNetworkLinkUrl    = SQLiteFactory::createCommand(NetworkDBQuery::DELETE_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT);
+	myAddNetworkLinkUrl = SQLiteFactory::createCommand(NetworkDBQuery::ADD_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT, "@url", DBValue::DBTEXT, "@update_time", DBValue::DBINT);
+	myUpdateNetworkLinkUrl = SQLiteFactory::createCommand(NetworkDBQuery::UPDATE_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT, "@url", DBValue::DBTEXT, "@update_time", DBValue::DBINT);
+	myDeleteNetworkLinkUrl = SQLiteFactory::createCommand(NetworkDBQuery::DELETE_NETWORK_LINKURL, connection, "@key", DBValue::DBTEXT, "@link_id", DBValue::DBINT);
 }
 
 bool SaveNetworkLinkRunnable::run() {
-	if (myNetworkLink.isNull()) {
+	if (myNetworkLink == 0) {
 		return false;
 	}
 	((DBTextValue &) *myFindNetworkLinkId->parameter("@site_name").value()) = myNetworkLink->getSiteName();
@@ -133,6 +133,6 @@ bool SaveNetworkLinkRunnable::updateNetworkLinkUrls(int linkId) {
 	return allExecuted;
 }
 
-void SaveNetworkLinkRunnable::setNetworkLink(shared_ptr<NetworkLink> link) {
-	myNetworkLink = link;
+void SaveNetworkLinkRunnable::setNetworkLink(const NetworkLink &link) {
+	myNetworkLink = &link;
 }

@@ -97,41 +97,43 @@ bool NetworkLinkCollection::Comparator::operator() (
 		removeLeadingNonAscii(second->getSiteName());
 }
 
-//void NetworkLinkCollection::deleteLink(NetworkLink& link) {
-//	BooksDB::Instance().deleteNetworkLink(link.SiteName);
-//	for (std::vector<shared_ptr<NetworkLink> >::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
-//		if (&(**it) == &link) {
-//			myLinks.erase(it);
-//			break;
-//		}
-//	}
-//	FBReader::Instance().invalidateNetworkView();
-//	FBReader::Instance().refreshWindow();
-//}
+void NetworkLinkCollection::deleteLink(const NetworkLink& link) {
+	NetworkDB::Instance().deleteNetworkLink(link.getSiteName());
+	for (LinkVector::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+		if ((*it)->getSiteName() == link.getSiteName()) {
+			myLinks.erase(it);
+			break;
+		}
+	}
+	FBReader::Instance().invalidateNetworkView();
+	FBReader::Instance().refreshWindow();
+}
 
-void NetworkLinkCollection::saveLink(shared_ptr<NetworkLink> link, bool isAuto) {
+void NetworkLinkCollection::saveLink(const NetworkLink&  link, bool isAuto) {
 	addOrUpdateLink(link);
 	FBReader::Instance().refreshWindow();
 }
 
-void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
+void NetworkLinkCollection::addOrUpdateLink(const NetworkLink& link) {
 	bool found = false;
 	bool updated = false;
 
 	for (size_t i = 0; i < myLinks.size(); ++i) {
 		shared_ptr<NetworkLink> curLink = myLinks.at(i);
-		if (curLink->getPredefinedId() == link->getPredefinedId()) {
+		if (curLink->getPredefinedId() == link.getPredefinedId()) {
 			//if (*(link->getUpdated()) > *(curLink->getUpdated())) {
-			myLinks.at(i) = link;
+			curLink->loadFrom(link); // TODO right loadFrom (loading OPDSLink information also)
 			updated = true;
-			//TODO implement custom links saving
+			//TODO implement comparing for custom links saving
 			found = true;
 			break;
 		}
 	}
 
 	if (!found) {
-		myLinks.push_back(link);
+		shared_ptr<NetworkLink> newlink = new OPDSLink(link.getSiteName());
+		newlink->loadFrom(link);
+		myLinks.push_back(newlink);
 		std::sort(myLinks.begin(), myLinks.end(), Comparator());
 		updated = true;
 	}
@@ -168,8 +170,6 @@ NetworkLinkCollection::NetworkLinkCollection() :
 }
 
 void NetworkLinkCollection::initialize() {
-
-
 	if (myIsInitialized) {
 		return;
 	}
@@ -181,7 +181,6 @@ void NetworkLinkCollection::initialize() {
 
 
 void NetworkLinkCollection::synchronize() {
-	//commented to not download from DB, because should have only links from generic.xml
 	NetworkDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 	updateLinks("http://data.fbreader.org/catalogs/generic-1.4.xml");
@@ -193,14 +192,17 @@ void NetworkLinkCollection::updateLinks(std::string genericUrl) {
 		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"),	NetworkErrors::errorMessage(NetworkErrors::ERROR_CANT_DOWNLOAD_LIBRARIES_LIST));
 		return;
 	}
-	std::vector<shared_ptr<NetworkLink> > links;
+	LinkVector links;
 	shared_ptr<OPDSFeedReader> feedReader = new OPDSLink::GenericFeedReader(links);
 	shared_ptr<ZLXMLReader> parser = new OPDSLink::GenericXMLParser(feedReader);
 	parser->readDocument(*genericFile);
 
 	for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
-		addOrUpdateLink(*it);
+		shared_ptr<NetworkLink> link = *it;
+		addOrUpdateLink(*link);
 	}
+
+	//TODO add refreshing information about links in custom OPDS catalogs
 
 	myIsInitialized = true;
 }
