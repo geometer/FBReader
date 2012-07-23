@@ -132,7 +132,7 @@ void NetworkCatalogRootNode::init() {
 			registerAction(new PasswordRecoveryAction(*mgr), true);
 		}
 	}
-	registerAction(new DontShowAction(myLink));
+//	registerAction(new DontShowAction(myLink));
 }
 
 const ZLTypeId &NetworkCatalogRootNode::typeId() const {
