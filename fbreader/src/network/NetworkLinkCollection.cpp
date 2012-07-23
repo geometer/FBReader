@@ -120,19 +120,20 @@ void NetworkLinkCollection::addOrUpdateLink(const NetworkLink& link) {
 
 	for (size_t i = 0; i < myLinks.size(); ++i) {
 		shared_ptr<NetworkLink> curLink = myLinks.at(i);
-		if (curLink->getPredefinedId() == link.getPredefinedId()) {
-			//if (*(link->getUpdated()) > *(curLink->getUpdated())) {
-			curLink->loadFrom(link); // TODO right loadFrom (loading OPDSLink information also)
-			updated = true;
-			//TODO implement comparing for custom links saving
+		if (curLink->getSiteName() == link.getSiteName()) {
 			found = true;
+			if (!link.getUpdated().isNull() && !curLink->getUpdated().isNull() && *(link.getUpdated()) > *(curLink->getUpdated())) {
+				curLink->loadFrom(link); // TODO right loadFrom (loading OPDSLink information also)
+				updated = true;
+				//TODO implement comparing for custom links saving
+			}
 			break;
 		}
 	}
 
 	if (!found) {
 		shared_ptr<NetworkLink> newlink = new OPDSLink(link.getSiteName());
-		newlink->loadFrom(link);
+		newlink->loadFrom(link); // TODO right loadFrom (loading OPDSLink information also)
 		myLinks.push_back(newlink);
 		std::sort(myLinks.begin(), myLinks.end(), Comparator());
 		updated = true;

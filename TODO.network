@@ -33,16 +33,33 @@
 	** do not freeze program for an undeterminate time on start (тестируется)
 
 	** возможность добавлять OPDS каталоги
-		* http://bookserver.archive.org/catalog/
-			* протестировать на других
+		DONE http://bookserver.archive.org/catalog/
+		* http://flibusta.net/opds (добавляется)
+		* http://www.zone4iphone.ru/catalog.php (считает не OPDS каталогом)
+		* http://dimonvideo.ru/lib.xml (добавляется)
+		* http://www.epubbooks.ru/index.xml (считает не OPDS каталогом)
+	    * http://lib.rus.ec/opds (добавляется)
+		* http://pragprog.com/magazines.opds (добавляется)
+		* http://www.bookglutton.com/api/stanza (добавляется)
+		* http://www.allromanceebooks.com/epub-feed.xml (добавляется, но ссылки уходят в рекурсию)
+		* http://catalog.oreilly.com/stanza/main.xml (считает не OPDS каталогом)
+		* http://bookserver.revues.org/ (добавляется)
+		* http://www.atramenta.net/opds/catalog.atom (добавляется)
+		* http://www.legimi.com/opds/root.atom (добавляется)
+		* http://www.plough.com/ploughCatalog_opds.xml (добавляется)
+		* http://tatsu-zine.com/catalogs.opds (добавляется)
+
 		* новая иконка для кнопки "добавить каталог"
 			* может быть, окошки ввода информации тоже как-то изменить?
+			* пододвинуть окошко ожидания "на центр"
 		DONE окошко с показом ошибки об том, что заданный URL -- не OPDS каталог
 		DONE проверить перевод на английский
 		* реализовать обновление информации про custom каталоги
+		DONE окошко ожидания при обращении к добавляемому OPDS каталогу
 		* убедиться, что
+			DONE custom каталоги добавляются правильно
 			* predefined каталоги добавляются правильно (используют доп. информацию из xml)
-			* custom каталоги добавляются правильно
+			* custom каталоги автоматически обновляются правильно (в частности, остается название, которое дал пользователь)
 			* при повторном добавлении этого же custom каталога происходит корректная обработка
 			* custom каталоги правильно удаляются
 			* custom каталоги правильно редактируются

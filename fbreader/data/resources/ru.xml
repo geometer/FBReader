@@ -593,6 +593,7 @@
 			<node name="authenticationCheck" value="Проверка учетной записи. Подождите, пожалуйста..." />
 			<node name="signOut" value="Выход из системы. Подождите, пожалуйста..." />
 			<node name="loadingNetworkLibraryList" value="Загрузка списка сетевых библиотек. Подождите, пожалуйста..." />
+			<node name="loadingNetworkLibraryInfo" value="Загрузка информации о сетевой библиотеке. Подождите, пожалуйста..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Покупка книги" />

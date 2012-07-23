@@ -43,8 +43,8 @@ bool SaveNetworkLinkRunnable::run() {
 	} else if (myNetworkLink->isPredefined()) {
 		return updateNetworkLink(reader->intValue(0)) && updateNetworkLinkUrls(reader->intValue(0));
 	} else {
-		//TODO implement for custom links
-		return false;
+		//TODO implement for custom links (update not all info)
+		return updateNetworkLink(reader->intValue(0)) && updateNetworkLinkUrls(reader->intValue(0));
 	}
 	return false;
 }

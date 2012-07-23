@@ -37,6 +37,35 @@
 AddNetworkCatalogAction::AddNetworkCatalogAction() : ModeDependentAction(FBReader::NETWORK_LIBRARY_MODE) {
 }
 
+class AddNetworkCatalogRunnable : public ZLRunnable {
+
+public:
+	AddNetworkCatalogRunnable(shared_ptr<ZLXMLReader> parser, std::string url);
+
+	const std::string &getMessage();
+
+private:
+	void run();
+
+private:
+	std::string myMessage;
+	shared_ptr<ZLXMLReader> myParser;
+	std::string myURL;
+
+
+};
+
+AddNetworkCatalogRunnable::AddNetworkCatalogRunnable(shared_ptr<ZLXMLReader> parser, std::string url) : myParser(parser), myURL(url) {
+}
+
+const std::string &AddNetworkCatalogRunnable::getMessage() {
+	return myMessage;
+}
+
+void AddNetworkCatalogRunnable::run() {
+	myMessage = ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(myURL, myParser));
+}
+
 void AddNetworkCatalogAction::run() {
 	shared_ptr<ZLDialog> addDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("addNetworkCatalogDialog"));
 	ZLStringOption URLOption(ZLCategoryKey::NETWORK, "url", "title", "");
@@ -49,9 +78,11 @@ void AddNetworkCatalogAction::run() {
 		addDialog.reset();
 		std::string url = URLOption.value();
 		shared_ptr<NetworkLink> link = 0;
-		shared_ptr<OPDSFeedReader> fr = new OPDSLink::FeedReader(link, url);
-		shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
-		std::string message = ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr));
+		shared_ptr<OPDSFeedReader> feedReader = new OPDSLink::FeedReader(link, url);
+		shared_ptr<ZLXMLReader> parser = new OPDSXMLParser(feedReader);
+		AddNetworkCatalogRunnable runnable(parser, url);
+		ZLDialogManager::Instance().wait(ZLResourceKey("loadingNetworkLibraryInfo"), runnable);
+		std::string message = runnable.getMessage();
 		if (link == 0) {
 			if (message.empty()) {
 				message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(ZLResourceKey("errorLinkBox")),NetworkErrors::errorMessage(NetworkErrors::ERROR_NOT_AN_OPDS_CATALOG));
@@ -68,7 +99,7 @@ void AddNetworkCatalogAction::run() {
 		ZLStringOption SubNameOption(ZLCategoryKey::NETWORK, "subname", "title", "");
 		SubNameOption.setValue(link->getSummary());
 		checkDialog->addOption(ZLResourceKey("subname"), SubNameOption);
-		ZLStringOption IconOption(ZLCategoryKey::NETWORK, "icon", "title", "");
+		//ZLStringOption IconOption(ZLCategoryKey::NETWORK, "icon", "title", "");
 
 		checkDialog->addButton(ZLResourceKey("add"), true);
 		checkDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
@@ -81,4 +112,3 @@ void AddNetworkCatalogAction::run() {
 		}
 	}
 }
-

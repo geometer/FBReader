@@ -593,6 +593,7 @@
 			<node name="authenticationCheck" value="Account validation. Please, wait..." />
 			<node name="signOut" value="Signing out. Please, wait..." />
 			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." />
+			<node name="loadingNetworkLibraryInfo" value="Loading info about network library. Please, wait..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Purchase book" />
