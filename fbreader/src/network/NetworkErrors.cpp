@@ -43,6 +43,7 @@ const std::string NetworkErrors::ERROR_SOMETHING_WRONG = "somethingWrongMessage"
 const std::string NetworkErrors::ERROR_UNSUPPORTED_OPERATION = "unsupportedOperation";
 
 const std::string NetworkErrors::ERROR_CANT_DOWNLOAD_LIBRARIES_LIST = "librariesListDownloadingFailed";
+const std::string NetworkErrors::ERROR_NOT_AN_OPDS_CATALOG = "notAnOPDS";
 
 
 std::string NetworkErrors::errorMessage(const std::string &error) {

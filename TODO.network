@@ -1,5 +1,4 @@
 0.99.1:
-	** do not freeze program for an undeterminate time on start
 	DONE use program icon from android version; we have this icon in SVG format; generate all files we need
 
 	DONE download network catalogs list on network library start not on the program start
@@ -31,12 +30,16 @@
 
 	** снова добавить поддержку последовательного чтения данных из сети (поправив работу с заголовками -- replyReaded etc) -- для показа прогресса загрузки
 
+	** do not freeze program for an undeterminate time on start (тестируется)
+
 	** возможность добавлять OPDS каталоги
 		* http://bookserver.archive.org/catalog/
 			* протестировать на других
 		* новая иконка для кнопки "добавить каталог"
-		* проверить перевод на английский
-		* обновление информации про custom каталоги
+			* может быть, окошки ввода информации тоже как-то изменить?
+		DONE окошко с показом ошибки об том, что заданный URL -- не OPDS каталог
+		DONE проверить перевод на английский
+		* реализовать обновление информации про custom каталоги
 		* убедиться, что
 			* predefined каталоги добавляются правильно (используют доп. информацию из xml)
 			* custom каталоги добавляются правильно

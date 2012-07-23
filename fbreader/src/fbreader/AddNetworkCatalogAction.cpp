@@ -32,6 +32,7 @@
 #include "../network/NetworkLinkCollection.h"
 #include "../network/opds/OPDSLink_FeedReader.h"
 #include "../network/opds/OPDSXMLParser.h"
+#include "../network/NetworkErrors.h"
 
 AddNetworkCatalogAction::AddNetworkCatalogAction() : ModeDependentAction(FBReader::NETWORK_LIBRARY_MODE) {
 }
@@ -50,8 +51,12 @@ void AddNetworkCatalogAction::run() {
 		shared_ptr<NetworkLink> link = 0;
 		shared_ptr<OPDSFeedReader> fr = new OPDSLink::FeedReader(link, url);
 		shared_ptr<ZLXMLReader> prsr = new OPDSXMLParser(fr);
-		const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(ZLResourceKey("errorLinkBox")), ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr)));
+		std::string message = ZLNetworkManager::Instance().perform(ZLNetworkManager::Instance().createXMLParserRequest(url, prsr));
 		if (link == 0) {
+			if (message.empty()) {
+				message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(ZLResourceKey("errorLinkBox")),NetworkErrors::errorMessage(NetworkErrors::ERROR_NOT_AN_OPDS_CATALOG));
+			}
+			message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(ZLResourceKey("errorLinkBox")), message);
 			ZLDialogManager::Instance().informationBox(ZLResourceKey("errorLinkBox"), message);
 			return;
 		}
