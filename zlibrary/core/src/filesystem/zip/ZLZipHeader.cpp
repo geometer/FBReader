@@ -71,7 +71,7 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 			stream.seek(16, false);
 			stream.seek(readShort(stream), false);
 			UncompressedSize = 0;
-			return true;
+			return stream.offset() == startOffset + 18;
 		case SignatureData:
 			CRC32 = readLong(stream);
 			CompressedSize = readLong(stream);
