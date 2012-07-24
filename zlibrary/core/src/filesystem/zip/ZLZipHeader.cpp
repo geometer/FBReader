@@ -35,6 +35,7 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 		default:
 			return stream.offset() == startOffset + 4;
 		case SignatureCentralDirectory:
+		{
 			Version = readLong(stream); // 4
 			Flags = readShort(stream); // + 2 = 6
 			CompressionMethod = readShort(stream); // + 2 = 8
@@ -49,9 +50,10 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 			}
 			NameLength = readShort(stream); // + 2 = 26
 			ExtraLength = readShort(stream); // + 2 = 28
-      const unsigned short toSkip = readShort(stream); // + 2 = 30
+			const unsigned short toSkip = readShort(stream); // + 2 = 30
 			stream.seek(12 + NameLength + ExtraLength + toSkip, false);
-			return stream.offset() = startOffset + 42 + NameLength + ExtraLength + toSkip;
+			return stream.offset() == startOffset + 42 + NameLength + ExtraLength + toSkip;
+		}
 		case SignatureLocalFile:
 			Version = readShort(stream);
 			Flags = readShort(stream);
@@ -69,11 +71,13 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 			ExtraLength = readShort(stream);
 			return stream.offset() == startOffset + 30 && NameLength != 0;
 		case SignatureEndOfCentralDirectory:
+		{
 			stream.seek(16, false);
-      const unsigned short toSkip = readShort(stream);
+			const unsigned short toSkip = readShort(stream);
 			stream.seek(toSkip, false);
 			UncompressedSize = 0;
 			return stream.offset() == startOffset + 18 + toSkip;
+		}
 		case SignatureData:
 			CRC32 = readLong(stream);
 			CompressedSize = readLong(stream);
