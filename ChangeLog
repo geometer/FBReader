@@ -2,6 +2,7 @@
 
 * List of network libraries is updated now from fbreader.org
 * Fixed working with secured connections (now authentification and books buying on LitRes.ru catalog works)
+* Image support for Ms-Word doc format
 
 ===== 0.99.0 (July 5, 2012) =====
 
