@@ -71,8 +71,8 @@ int ZLQtDialogManager::questionBox(const ZLResourceKey &key, const std::string &
 	return QMessageBox::question(parent, ::qtString(dialogTitle(key)), ::qtString(message), ::qtButtonName(button0), ::qtButtonName(button1), ::qtButtonName(button2));
 }
 
-shared_ptr<ZLProgressDialog> ZLQtDialogManager::createProgressDialog(const ZLResourceKey &key) const {
-	return new ZLQtProgressDialog(key);
+shared_ptr<ZLProgressDialog> ZLQtDialogManager::createProgressDialog(const ZLResourceKey &key, bool network) const {
+	return new ZLQtProgressDialog(key, network);
 }
 
 bool ZLQtDialogManager::isClipboardSupported(ClipboardType type) const {

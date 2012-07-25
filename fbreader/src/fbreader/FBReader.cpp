@@ -283,6 +283,9 @@ private:
 void FBReader::openBook(shared_ptr<Book> book) {
 	OpenBookRunnable runnable(book);
 	ZLDialogManager::Instance().wait(ZLResourceKey("loadingBook"), runnable);
+	if (!book.isNull()) {
+		showBookTextView();
+	}
 	resetWindowCaption();
 }
 
@@ -310,7 +313,6 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 		Library::Instance().addBook(book);
 		Library::Instance().addBookToRecentList(book);
 		((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
-		showBookTextView();
 	}
 }
 

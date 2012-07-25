@@ -28,12 +28,17 @@
 #include "../../../../core/src/unix/time/ZLUnixTime.h"
 
 class ZLQtTimeManager : public QObject, public ZLUnixTimeManager {
+	Q_OBJECT;
+public:
+	static void createInstance();
 
 public:
-	static void createInstance() { ourInstance = new ZLQtTimeManager(); }
-
 	void addTask(shared_ptr<ZLRunnable> task, int interval);
 	void removeTaskInternal(shared_ptr<ZLRunnable> task);
+
+private Q_SLOTS:
+	void addTaskSlot(shared_ptr<ZLRunnable> task, int interval);
+	void removeTaskInternalSlot(shared_ptr<ZLRunnable> task);
 
 private:
 	void timerEvent(QTimerEvent *event);

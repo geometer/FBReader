@@ -33,6 +33,7 @@
 #include <ZLInputStream.h>
 #include <ZLOutputStream.h>
 #include "../fbreader/FBReader.h"
+#include "../networkActions/NetworkOperationRunnable.h"
 
 #include "NetworkLinkCollection.h"
 
@@ -143,23 +144,52 @@ void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 }
 
 
-class NetworkLibrarySynchronizer : public ZLRunnable {
 
+static const std::string LOADING_NETWORK_LIBRARY_LIST = "loadingNetworkLibraryList";
+
+class NetworkDownloadListRunnable : public NetworkOperationRunnable {
 public:
-	NetworkLibrarySynchronizer(NetworkLinkCollection &networkLinkCollection);
+	NetworkDownloadListRunnable(ZLFile &tmpFile, const std::string &genericUrl) :
+		NetworkOperationRunnable(LOADING_NETWORK_LIBRARY_LIST),
+		myTmpFile(tmpFile),
+		myGenericUrl(genericUrl) {
+	}
 
 private:
-	void run();
+	void run() {
+		shared_ptr<ZLExecutionData> loadingRequest = ZLNetworkManager::Instance().createDownloadRequest(myGenericUrl, myTmpFile.physicalFilePath());
+		myErrorMessage = ZLNetworkManager::Instance().perform(loadingRequest);
+	}
+
+private:
+	ZLFile &myTmpFile;
+	std::string myGenericUrl;
+};
+
+
+class NetworkLinksUpdater : public ZLRunnable {
+
+public:
+	NetworkLinksUpdater(NetworkLinkCollection &networkLinkCollection, shared_ptr<ZLFile> genericFile) :
+		myNetworkLinkCollection(networkLinkCollection), myGenericFile(genericFile) { }
+
+private:
+	void run() {
+		std::vector<shared_ptr<NetworkLink> > links;
+		shared_ptr<OPDSFeedReader> feedReader = new OPDSLink::GenericFeedReader(links);
+		shared_ptr<ZLXMLReader> parser = new OPDSLink::GenericXMLParser(feedReader);
+		parser->readDocument(*myGenericFile);
+
+		for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
+			myNetworkLinkCollection.addOrUpdateLink(*it);
+		}
+	}
 
 private:
 	NetworkLinkCollection &myNetworkLinkCollection;
+	shared_ptr<ZLFile> myGenericFile;
 };
 
-NetworkLibrarySynchronizer::NetworkLibrarySynchronizer(NetworkLinkCollection &networkLinkCollection) : myNetworkLinkCollection(networkLinkCollection) {}
-
-void NetworkLibrarySynchronizer::run() {
-	myNetworkLinkCollection.synchronize();
-}
 
 NetworkLinkCollection::NetworkLinkCollection() :
 	DirectoryOption(ZLCategoryKey::NETWORK, "Options", "DownloadDirectory", ""),
@@ -168,15 +198,10 @@ NetworkLinkCollection::NetworkLinkCollection() :
 }
 
 void NetworkLinkCollection::initialize() {
-
-
 	if (myIsInitialized) {
 		return;
 	}
-
-	NetworkLibrarySynchronizer synchronizer(*this);
-	ZLDialogManager::Instance().wait(ZLResourceKey("loadingNetworkLibraryList"), synchronizer);
-
+	synchronize();
 }
 
 
@@ -193,15 +218,9 @@ void NetworkLinkCollection::updateLinks(std::string genericUrl) {
 		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"),	NetworkErrors::errorMessage(NetworkErrors::ERROR_CANT_DOWNLOAD_LIBRARIES_LIST));
 		return;
 	}
-	std::vector<shared_ptr<NetworkLink> > links;
-	shared_ptr<OPDSFeedReader> feedReader = new OPDSLink::GenericFeedReader(links);
-	shared_ptr<ZLXMLReader> parser = new OPDSLink::GenericXMLParser(feedReader);
-	parser->readDocument(*genericFile);
 
-	for (std::vector<shared_ptr<NetworkLink> >::iterator it = links.begin(); it != links.end(); ++it) {
-		addOrUpdateLink(*it);
-	}
-
+	NetworkLinksUpdater updater(*this, genericFile);
+	ZLDialogManager::Instance().wait(ZLResourceKey(LOADING_NETWORK_LIBRARY_LIST), updater);
 	myIsInitialized = true;
 }
 
@@ -218,9 +237,9 @@ shared_ptr<ZLFile> NetworkLinkCollection::getGenericFile(std::string genericUrl)
 	}
 
 	ZLFile tmpFile(ZLNetworkManager::CacheDirectory() + ZLibrary::FileNameDelimiter + "tmp" + FILE_NAME);
-	shared_ptr<ZLExecutionData> loadingRequest = ZLNetworkManager::Instance().createDownloadRequest(genericUrl, tmpFile.physicalFilePath());
-	std::string error = ZLNetworkManager::Instance().perform(loadingRequest);
-	if (!error.empty()) {
+	NetworkDownloadListRunnable runnable(tmpFile, genericUrl);
+	runnable.executeWithUI();
+	if (runnable.hasErrors()) {
 		if (!genericFile->exists()) { //loading list from saved file even if obsolete
 			return 0;
 		} else {
@@ -240,6 +259,7 @@ shared_ptr<ZLFile> NetworkLinkCollection::getGenericFile(std::string genericUrl)
 		readed = inputStream->read(buffer, 2048);
 		outputStream->write(buffer, readed);
 	} while (readed > 0);
+
 	LastUpdateTimeOption.setValue(ZLTime().inSeconds());
 	return genericFile;
 }
@@ -524,4 +544,3 @@ void NetworkLinkCollection::rewriteUrl(std::string &url, bool externalUrl) const
 		}
 	}
 }
-

@@ -29,10 +29,10 @@ class ZLApplicationWindow {
 
 public:
 	static ZLApplicationWindow &Instance();
-	
+
 private:
 	static ZLApplicationWindow *ourInstance;
-	
+
 protected:
 	ZLApplicationWindow(ZLApplication *application);
 

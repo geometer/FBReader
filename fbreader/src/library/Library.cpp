@@ -153,7 +153,7 @@ class LibrarySynchronizer : public DBRunnable {
 public:
 	LibrarySynchronizer(Library::BuildMode mode);
 
-private:
+public:
 	bool run();
 
 private:

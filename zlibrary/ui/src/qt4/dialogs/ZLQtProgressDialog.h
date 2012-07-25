@@ -24,40 +24,52 @@
 
 #include <QtGui/QWidget>
 #include <QtGui/QCursor>
+#include <QtGui/QDialog>
+#include <QtGui/QProgressBar>
+#include <QtGui/QLabel>
+#include <QtCore/QRunnable>
 
 #include <ZLProgressDialog.h>
 
 class QLabel;
 class QLayout;
 
-class ZLQtWaitMessage;
+class ZLQtWaitDialog : public QDialog {
+
+public:
+		ZLQtWaitDialog(const std::string &message, QWidget* parent = 0);
+
+private:
+		QLayout* myLayout;
+		QLabel* myLabel;
+		QProgressBar* myProgressBar;
+
+friend class ZLQtProgressDialog;
+};
+
 
 class ZLQtProgressDialog : public ZLProgressDialog {
 
 public:
-	ZLQtProgressDialog(const ZLResourceKey &key);
+	ZLQtProgressDialog(const ZLResourceKey &key, bool network);
 
 private:
 	void run(ZLRunnable &runnable);
 	void setMessage(const std::string &message);
 
 private:
-	ZLQtWaitMessage *myWaitMessage;
+	bool myIsNetworkRunnable;
 };
 
-class ZLQtWaitMessage : public QWidget {
-
+class ZLQtRunnableWrapper : public QObject, public QRunnable {
+	Q_OBJECT;
 public:
-	ZLQtWaitMessage(const std::string &message);
-	~ZLQtWaitMessage();
-
+	ZLQtRunnableWrapper(ZLRunnable& runnable);
+	void run();
+Q_SIGNALS:
+	void finished();
 private:
-	QCursor myStoredCursor;
-	QWidget *myMainWidget;
-	QLayout *myLayout;
-	QLabel *myLabel;
-
-friend class ZLQtProgressDialog;
+	ZLRunnable& myRunnable;
 };
 
 #endif /* __ZLQTWAITMESSAGE_H__ */
