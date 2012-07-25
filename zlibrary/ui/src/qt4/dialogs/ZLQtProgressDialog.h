@@ -56,9 +56,11 @@ public:
 private:
 	void run(ZLRunnable &runnable);
 	void setMessage(const std::string &message);
+	void restoreCursor();
 
 private:
 	bool myIsNetworkRunnable;
+	QWidget* myActiveWindow;
 };
 
 class ZLQtRunnableWrapper : public QObject, public QRunnable {

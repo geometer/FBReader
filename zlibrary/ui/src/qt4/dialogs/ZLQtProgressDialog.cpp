@@ -25,45 +25,50 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtCore/QThreadPool>
+#include <QtCore/QDebug>
 
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
 
-ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key, bool network) : ZLProgressDialog(key), myIsNetworkRunnable(network) {
+ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key, bool network) : ZLProgressDialog(key), myIsNetworkRunnable(network), myActiveWindow(0) {
 }
 
 void ZLQtProgressDialog::run(ZLRunnable &runnable) {
-		ZLQtWaitDialog* dialog = new ZLQtWaitDialog(messageText(), qApp->activeWindow());
+		myActiveWindow = qApp->activeWindow();
+		qDebug() << Q_FUNC_INFO << myActiveWindow;
+		if (myActiveWindow != 0) {
+			myActiveWindow->setCursor(Qt::WaitCursor);
+		}
+
+		ZLQtWaitDialog* dialog = new ZLQtWaitDialog(messageText(), myActiveWindow);
+		dialog->setCursor(Qt::WaitCursor);
 
 		if (myIsNetworkRunnable) {
 			dialog->show();
 			runnable.run();
-			delete dialog;
-			return;
+			dialog->hide();
+		} else {
+			ZLQtRunnableWrapper* wrapper = new ZLQtRunnableWrapper(runnable);
+			wrapper->setAutoDelete(true);
+			QObject::connect(wrapper, SIGNAL(finished()), dialog, SLOT(close()), Qt::QueuedConnection);
+			QThreadPool::globalInstance()->start(wrapper);
+			dialog->exec();
 		}
-
-		ZLQtRunnableWrapper* wrapper = new ZLQtRunnableWrapper(runnable);
-		wrapper->setAutoDelete(true);
-		QObject::connect(wrapper, SIGNAL(finished()), dialog, SLOT(close()), Qt::QueuedConnection);
-		QThreadPool::globalInstance()->start(wrapper);
-		dialog->exec();
 		dialog->deleteLater();
+		restoreCursor();
 }
+
+void ZLQtProgressDialog::restoreCursor() {
+	if (myActiveWindow != 0) {
+		myActiveWindow->setCursor(Qt::ArrowCursor);
+	}
+}
+
 
 void ZLQtProgressDialog::setMessage(const std::string &message) {
 	//qDebug() << QString::fromStdString(message);
 	//TODO implement
-//		if (myDialog == 0) {
-//				return;
-//		}
-
-//		myDialog->myLabel->setText(::qtString(message));
-
-//		myDialog->myLayout->invalidate();
-//		myDialog->repaint();
-//		qApp->processEvents();
 }
-
 
 ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message, QWidget* parent) : QDialog(parent) {
 		setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) ^ Qt::WindowCloseButtonHint); //hide close button

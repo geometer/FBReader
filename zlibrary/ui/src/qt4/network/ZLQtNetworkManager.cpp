@@ -152,7 +152,7 @@ void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequ
 
 
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
-	qDebug() << Q_FUNC_INFO << reply->url();
+	//qDebug() << Q_FUNC_INFO << reply->url();
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	reply->deleteLater();
 	scope.replies->removeOne(reply);
@@ -204,7 +204,7 @@ void ZLQtNetworkManager::onReplyReadyRead() {
 }
 
 void ZLQtNetworkManager::onTimeOut() {
-	qDebug() << Q_FUNC_INFO;
+	//qDebug() << Q_FUNC_INFO;
 	QTimer *timer = qobject_cast<QTimer*>(sender());
 	QNetworkReply* reply = timer->property("reply").value<QNetworkReply*>();
 	timer->stop();
@@ -214,7 +214,7 @@ void ZLQtNetworkManager::onTimeOut() {
 
 void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	qDebug() << Q_FUNC_INFO << QString::fromStdString(scope.request->userName()) << QString::fromStdString(scope.request->password());
+	//qDebug() << Q_FUNC_INFO << QString::fromStdString(scope.request->userName()) << QString::fromStdString(scope.request->password());
 	if (scope.authAskedAlready) {
 		return;
 	}
@@ -225,7 +225,7 @@ void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthent
 }
 
 void ZLQtNetworkManager::onSslErrors(const QList<QSslError> &errors) {
-	qDebug() << Q_FUNC_INFO << errors;
+	//qDebug() << Q_FUNC_INFO << errors;
 	QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
 	reply->ignoreSslErrors(errors);
 }
