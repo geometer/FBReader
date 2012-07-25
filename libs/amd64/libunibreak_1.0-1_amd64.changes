@@ -1,0 +1,33 @@
+Format: 1.8
+Date: Fri, 9 Jul 2012 17:00:00 +0300
+Source: libunibreak
+Binary: libunibreak1 libunibreak-dev
+Architecture: source amd64
+Version: 1.0-1
+Distribution: unstable
+Urgency: low
+Maintainer: Eugene V. Lyubimkin <jackyf.devel@gmail.com>
+Changed-By: Alexander Turkin <snowwlex@fbreader.org>
+Description: 
+ libunibreak-dev - line breaking library (development files)
+ libunibreak1 - line breaking library
+Changes: 
+ libunibreak (1.0-1) unstable; urgency=low
+ .
+   * new upstream release
+   * package's name has been changed to "libunibreak"
+Checksums-Sha1: 
+ 3c3800c3cec2e983ba9ce434506f1c5f1d79169a 499 libunibreak_1.0-1.dsc
+ 6ac1aa3c84f5beb6022f9af1379a432ac245f0a8 411708 libunibreak_1.0-1.tar.gz
+ 1132fd8aca37f9ea23321e84e9090e1c6150162e 27150 libunibreak1_1.0-1_amd64.deb
+ 9f3da2bba5af638fd337e689e361f083e0988c6f 115734 libunibreak-dev_1.0-1_amd64.deb
+Checksums-Sha256: 
+ 5d0046c6ff64ac028e04445c7e049a44fb3a7de653e0de9e95e9b3b23aa48f3f 499 libunibreak_1.0-1.dsc
+ e3abec270b9f544c39af4c32d5d2d6009cce3d6c5814d572c292f763661e996d 411708 libunibreak_1.0-1.tar.gz
+ bab7c5f7c946102f2d2207a047c2513f49f231718a3a6ae1ce2820bc662de71a 27150 libunibreak1_1.0-1_amd64.deb
+ bf9d2052d5b9ddf681ebd04885039cd30ab7967d3b466d843de72a3c3f72d8c5 115734 libunibreak-dev_1.0-1_amd64.deb
+Files: 
+ 118f6b8a091a7dff3a1ba83f13e9011b 499 text optional libunibreak_1.0-1.dsc
+ fcf4090788398f7e50e28190e77179fa 411708 text optional libunibreak_1.0-1.tar.gz
+ 371ceeae8353c2d9bcf496483bf41ba2 27150 libs optional libunibreak1_1.0-1_amd64.deb
+ 4b4019d300b1f33df3c803127f6db188 115734 libdevel optional libunibreak-dev_1.0-1_amd64.deb
