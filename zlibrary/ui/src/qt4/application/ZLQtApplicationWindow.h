@@ -51,6 +51,8 @@ private:
 	void processAllEvents();
 	void close();
 
+	void refresh();
+
 	void grabAllKeys(bool grab);
 
 	void setCaption(const std::string &caption);
@@ -66,6 +68,9 @@ private:
 	void closeEvent(QCloseEvent *event);
 	void keyPressEvent(QKeyEvent *event);
 	void wheelEvent(QWheelEvent *event);
+
+private Q_SLOTS:
+	void onRefresh();
 
 private:
 	QToolBar *myWindowToolBar;

@@ -41,7 +41,7 @@ public:
 	void informationBox(const std::string &title, const std::string &message) const;
 	void errorBox(const ZLResourceKey &key, const std::string &message) const;
 	int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2) const;
-	shared_ptr<ZLProgressDialog> createProgressDialog(const ZLResourceKey &key) const;
+	shared_ptr<ZLProgressDialog> createProgressDialog(const ZLResourceKey &key, bool network) const;
 
 	bool isClipboardSupported(ClipboardType type) const;
 	void setClipboardText(const std::string &text, ClipboardType type) const;

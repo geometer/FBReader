@@ -49,7 +49,7 @@ private:
 	private:
 		ZLQtViewWidget &myHolder;
 	};
-	
+
 public:
 	ZLQtViewWidget(QWidget *parent, ZLApplication *application);
 	QWidget *widget();

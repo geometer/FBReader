@@ -67,10 +67,10 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 				{
 					ZLToolbar::ActionItem &button = (ZLToolbar::ActionItem&)**it;
 					const std::string &id = button.actionId();
-        
+
 					const bool visible = application().isActionVisible(id);
 					const bool enabled = application().isActionEnabled(id);
-        
+
 					if (visible) {
 						if (!lastSeparator.isNull()) {
 							setToolbarItemState(lastSeparator, true, true);
@@ -85,10 +85,10 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 				{
 					ZLToolbar::ToggleButtonItem &button = (ZLToolbar::ToggleButtonItem&)**it;
 					const std::string &id = button.actionId();
-        
+
 					const bool visible = application().isActionVisible(id);
 					const bool enabled = application().isActionEnabled(id);
-        
+
 					if (visible) {
 						if (!lastSeparator.isNull()) {
 							setToolbarItemState(lastSeparator, true, true);

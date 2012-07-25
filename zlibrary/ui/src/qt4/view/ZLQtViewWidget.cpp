@@ -179,7 +179,8 @@ int ZLQtViewWidget::Widget::y(const QMouseEvent *event) const {
 }
 
 void ZLQtViewWidget::repaint()	{
-	myQWidget->repaint();
+	//myQWidget->repaint();
+	myQWidget->update(); //not repaint for thread safety
 }
 
 void ZLQtViewWidget::setScrollbarEnabled(ZLView::Direction direction, bool enabled) {

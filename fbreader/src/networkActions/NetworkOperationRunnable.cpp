@@ -30,7 +30,7 @@
 
 NetworkOperationRunnable::NetworkOperationRunnable(const std::string &uiMessageKey) {
 	myDialog =
-		ZLDialogManager::Instance().createProgressDialog(ZLResourceKey(uiMessageKey));
+		ZLDialogManager::Instance().createProgressDialog(ZLResourceKey(uiMessageKey), true);
 }
 
 NetworkOperationRunnable::~NetworkOperationRunnable() {
@@ -116,9 +116,9 @@ ZLBoolean3 IsAuthorisedRunnable::result() {
 }
 
 
-AuthoriseRunnable::AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password) : 
-	NetworkOperationRunnable("authentication"), 
-	myManager(mgr), 
+AuthoriseRunnable::AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password) :
+	NetworkOperationRunnable("authentication"),
+	myManager(mgr),
 	myPassword(password) {
 }
 
@@ -127,8 +127,8 @@ void AuthoriseRunnable::run() {
 }
 
 
-InitializeAuthenticationManagerRunnable::InitializeAuthenticationManagerRunnable(NetworkAuthenticationManager &mgr) : 
-	NetworkOperationRunnable("initializeAuthenticationManager"), 
+InitializeAuthenticationManagerRunnable::InitializeAuthenticationManagerRunnable(NetworkAuthenticationManager &mgr) :
+	NetworkOperationRunnable("initializeAuthenticationManager"),
 	myManager(mgr) {
 }
 
@@ -138,7 +138,7 @@ void InitializeAuthenticationManagerRunnable::run() {
 
 
 LogOutRunnable::LogOutRunnable(NetworkAuthenticationManager &mgr) :
-	NetworkOperationRunnable("signOut"), 
+	NetworkOperationRunnable("signOut"),
 	myManager(mgr) {
 }
 
@@ -149,9 +149,9 @@ void LogOutRunnable::run() {
 }
 
 
-PurchaseBookRunnable::PurchaseBookRunnable(NetworkAuthenticationManager &mgr, const NetworkBookItem &book) : 
-	NetworkOperationRunnable("purchaseBook"), 
-	myManager(mgr), 
+PurchaseBookRunnable::PurchaseBookRunnable(NetworkAuthenticationManager &mgr, const NetworkBookItem &book) :
+	NetworkOperationRunnable("purchaseBook"),
+	myManager(mgr),
 	myBook(book) {
 }
 
@@ -159,9 +159,9 @@ void PurchaseBookRunnable::run() {
 	myErrorMessage = myManager.purchaseBook(myBook);
 }
 
-PasswordRecoveryRunnable::PasswordRecoveryRunnable(NetworkAuthenticationManager &mgr, const std::string &email) : 
-	NetworkOperationRunnable("passwordRecovery"), 
-	myManager(mgr), 
+PasswordRecoveryRunnable::PasswordRecoveryRunnable(NetworkAuthenticationManager &mgr, const std::string &email) :
+	NetworkOperationRunnable("passwordRecovery"),
+	myManager(mgr),
 	myEMail(email) {
 }
 
@@ -169,11 +169,11 @@ void PasswordRecoveryRunnable::run() {
 	myErrorMessage = myManager.recoverPassword(myEMail);
 }
 
-RegisterUserRunnable::RegisterUserRunnable(NetworkAuthenticationManager &mgr, const std::string &login, const std::string &password, const std::string &email) : 
-	NetworkOperationRunnable("registerUser"), 
-	myManager(mgr), 
-	myLogin(login), 
-	myPassword(password), 
+RegisterUserRunnable::RegisterUserRunnable(NetworkAuthenticationManager &mgr, const std::string &login, const std::string &password, const std::string &email) :
+	NetworkOperationRunnable("registerUser"),
+	myManager(mgr),
+	myLogin(login),
+	myPassword(password),
 	myEMail(email) {
 }
 
@@ -204,9 +204,9 @@ void AdvancedSearchRunnable::run() {
 }
 
 
-LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkItem::List &children) : 
-	NetworkOperationRunnable("loadSubCatalog"), 
-	myItem(item), 
+LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogItem &item, NetworkItem::List &children) :
+	NetworkOperationRunnable("loadSubCatalog"),
+	myItem(item),
 	myChildren(children) {
 }
 
