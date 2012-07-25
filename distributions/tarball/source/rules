@@ -7,7 +7,7 @@ build:
 
 install:
 	mkdir $(DESTDIR)/$(SRCDIR)
-	cp -r Makefile build_packages.sh zlibrary fbreader makefiles distributions README.build CHANGES* $(DESTDIR)/$(SRCDIR)
+	cp -r Makefile build_packages.sh zlibrary fbreader makefiles distributions README.build ChangeLog $(DESTDIR)/$(SRCDIR)
 
 package:
 	tar czf fbreader-sources-$(VERSION).tgz -C $(DESTDIR) $(SRCDIR)

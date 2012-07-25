@@ -3,7 +3,7 @@ Section: text
 Priority: optional
 Maintainer: Nikolay Pultsin <geometer@fbreader.org>
 Standards-Version: 3.8.0
-Build-Depends: debhelper (>= 5), libqt4-dev, libexpat1-dev, libbz2-dev, libz-dev, libunibreak-dev (>= 1.0-1), libjpeg-dev, libfribidi-dev, libcurl-dev, quilt (>= 0.40), libsqlite3-dev
+Build-Depends: debhelper (>= 5), libqt4-dev, libexpat1-dev, libbz2-dev, libz-dev, libunibreak-dev (>= 1.0-1), libfribidi-dev, quilt (>= 0.40), libsqlite3-dev
 
 Package: fbreader
 Priority: optional
