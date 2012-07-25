@@ -27,6 +27,7 @@
 #include <QtNetwork/QNetworkCookieJar>
 #include <QtNetwork/QNetworkReply>
 #include <QtNetwork/QSslError>
+#include <QtCore/QTimer>
 
 class ZLQtNetworkCookieJar;
 class QNetworkReply;
@@ -37,7 +38,8 @@ struct ZLQtNetworkReplyScope {
 	QList<QNetworkReply*> *replies;
 	QStringList *errors;
 	QEventLoop *eventLoop;
-	bool authAskedAlready;
+	QTimer* timeoutTimer;
+	bool authAskedAlready; //to avoid infinite asking about user & password if they're incorrect
 };
 
 class ZLQtNetworkManager : public QObject, public ZLNetworkManager {
@@ -55,14 +57,20 @@ public:
 protected Q_SLOTS:
 	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
 	void onFinished(QNetworkReply *reply);
+	void onReplyReadyRead();
+	void onTimeOut();
 	void onSslErrors(const QList<QSslError> &errors);
 	//void slotError(QNetworkReply::NetworkError error);
 
 
 protected:
 	bool handleRedirect(QNetworkReply *reply);
-	void handleHeaders(QNetworkReply *reply);
-	void handleContent(QNetworkReply *reply);
+	void handleHeaders(QNetworkReply *reply) const;
+	void handleContent(QNetworkReply *reply) const;
+	void handleErrors(QNetworkReply *reply) const;
+
+	int timeoutValue() const;
+	void prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequest networkRequest) const;
 
 private:
 	QNetworkAccessManager myManager;
@@ -85,6 +93,7 @@ private:
 	QString myFilePath;
 };
 
-Q_DECLARE_METATYPE(ZLQtNetworkReplyScope)
+Q_DECLARE_METATYPE(ZLQtNetworkReplyScope);
+Q_DECLARE_METATYPE(QNetworkReply*);
 
 #endif /* __ZLQTNETWORKMANAGER_H__ */
