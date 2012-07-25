@@ -39,7 +39,7 @@
 #include "../util/ZLQtKeyUtil.h"
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
-	new ZLQtApplicationWindow(application);
+	myApplicationWindow = new ZLQtApplicationWindow(application);
 }
 
 ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), myItem(item) {

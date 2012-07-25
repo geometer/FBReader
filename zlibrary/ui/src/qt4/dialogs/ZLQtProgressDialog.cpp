@@ -25,8 +25,8 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtCore/QThreadPool>
-#include <QtCore/QDebug>
 
+#include "../dialogs/ZLQtDialogManager.h"
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
 
@@ -34,8 +34,7 @@ ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key, bool network) :
 }
 
 void ZLQtProgressDialog::run(ZLRunnable &runnable) {
-		myActiveWindow = qApp->activeWindow();
-		qDebug() << Q_FUNC_INFO << myActiveWindow;
+		myActiveWindow = static_cast<ZLQtDialogManager&>(ZLDialogManager::Instance()).getApplicationWindow();
 		if (myActiveWindow != 0) {
 			myActiveWindow->setCursor(Qt::WaitCursor);
 		}

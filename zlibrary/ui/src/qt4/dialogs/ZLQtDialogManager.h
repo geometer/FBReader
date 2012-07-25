@@ -30,7 +30,7 @@ public:
 	static void createInstance() { ourInstance = new ZLQtDialogManager(); }
 
 private:
-	ZLQtDialogManager() : myStoredWindow(0) {}
+	ZLQtDialogManager() : myStoredWindow(0), myApplicationWindow(0) {}
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
@@ -47,8 +47,12 @@ public:
 	void setClipboardText(const std::string &text, ClipboardType type) const;
 	void setClipboardImage(const ZLImageData &imageData, ClipboardType type) const;
 
+	QWidget* getApplicationWindow() const;
+	void notifyApplicationWindowDeleted(); //to avoid errors with deleted application window
+
 private:
 	mutable QWidget *myStoredWindow;
+	mutable QWidget* myApplicationWindow;
 };
 
 #endif /* __ZLQTDIALOGMANAGER_H__ */

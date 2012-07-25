@@ -92,5 +92,13 @@ void ZLQtDialogManager::setClipboardImage(const ZLImageData &imageData, Clipboar
 	qApp->clipboard()->setImage(
 		*((ZLQtImageData&)imageData).image(),
 		(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
-	);
+								   );
+}
+
+QWidget *ZLQtDialogManager::getApplicationWindow() const {
+	return myApplicationWindow;
+}
+
+void ZLQtDialogManager::notifyApplicationWindowDeleted() {
+	myApplicationWindow = 0;
 }
