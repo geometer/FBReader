@@ -17,17 +17,17 @@ Changes:
    * new upstream release
    * package's name has been changed to "libunibreak"
 Checksums-Sha1: 
- 9916464b78b1b553287225891e6e81e22d664c78 499 libunibreak_1.0-1.dsc
- b7d7540aa063d44424dea41b0c4b323a2af91ddc 409496 libunibreak_1.0-1.tar.gz
- 3c9fc28f5a31847e4536c0a023d7675287ed0e4a 26900 libunibreak1_1.0-1_i386.deb
- ca33fde582067d9b51561ef7c0f6dc82f2f55556 118272 libunibreak-dev_1.0-1_i386.deb
+ c05fb716781ce08a7a5dca29edc7b914591fa1d1 499 libunibreak_1.0-1.dsc
+ 302fcb5786119c267d629f4ff840183bbd853ffe 409511 libunibreak_1.0-1.tar.gz
+ db9f62e80e3fa9d2845f8864b11848b07e67a730 26904 libunibreak1_1.0-1_i386.deb
+ 532caaac3b2fc7283bbc03b7d556c4703f82be27 118240 libunibreak-dev_1.0-1_i386.deb
 Checksums-Sha256: 
- ce27186bd9ae7e8c646dc4f4c76ae4d2b2b68e4aec89f4fae5fbf7b2cc5d511b 499 libunibreak_1.0-1.dsc
- 36d3926a1b9ba089d90f324ae05714bed91717a11479ea0bc4198629eed6e200 409496 libunibreak_1.0-1.tar.gz
- 251281ec0fdf5f4b7e1fabf044b5b5ad0b256ec87e6e631b8250105f0667e01a 26900 libunibreak1_1.0-1_i386.deb
- e48a3736045e76eadf4897ec75ce3e25cd5984c9f97bd0e67fecbaef7bc6f004 118272 libunibreak-dev_1.0-1_i386.deb
+ 475d601cc4c3b9e33a3c0fd78d4c0f0a3069df2d22836ebc47d6579e734a147a 499 libunibreak_1.0-1.dsc
+ d288deeb820c589e6df2d4ac14742bf8652663c34c4844ebf7d884132e488d6e 409511 libunibreak_1.0-1.tar.gz
+ 4ceacc9720ad51eba51159f79b09bf304cf2ece846395c66ea5692f5528195fe 26904 libunibreak1_1.0-1_i386.deb
+ 160e4250f532d9fa6d1b43d4df90778628d83dadf549836d71a3b2b6186d1bb3 118240 libunibreak-dev_1.0-1_i386.deb
 Files: 
- 255ea30e1a48b8fe086cf3093cebd344 499 text optional libunibreak_1.0-1.dsc
- 0504342e15fb5643d94b9f0b6e709482 409496 text optional libunibreak_1.0-1.tar.gz
- 36e6c86232a48cdefcea24a8f3165c7f 26900 libs optional libunibreak1_1.0-1_i386.deb
- 70674afc558ad94a267497021a4ae4a7 118272 libdevel optional libunibreak-dev_1.0-1_i386.deb
+ 0cf3438f0d7cb201e0a248051aa6ac1d 499 text optional libunibreak_1.0-1.dsc
+ ff80b6a6e696f960c0711019d9e56ce0 409511 text optional libunibreak_1.0-1.tar.gz
+ 297ad912d0a7a7dafa61ee2e522c8da8 26904 libs optional libunibreak1_1.0-1_i386.deb
+ 171b0bcf8d189e4f9576415c841e8a75 118240 libdevel optional libunibreak-dev_1.0-1_i386.deb
