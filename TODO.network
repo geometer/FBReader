@@ -1,4 +1,5 @@
 0.99.1:
+	DONE do not freeze program for an undeterminate time on start
 	DONE use program icon from android version; we have this icon in SVG format; generate all files we need
 
 	DONE download network catalogs list on network library start not on the program start
@@ -68,7 +69,7 @@
 	DONE вывод ошибки о том, что авторизация не удается
 	** после скрытия каталога, сделать возможность его показать
 	** возможно, BUG: при соединении с литресом по https, происходит редирект на http:
-	** таймер для поддержки TimeoutOption
+	DONE таймер для поддержки TimeoutOption
 
 	DONE FIX каталог "Прочтение" не грузится
 	** реализовать постепенную прогрузку каталогов (сейчас все страницы подгружаются сразу)

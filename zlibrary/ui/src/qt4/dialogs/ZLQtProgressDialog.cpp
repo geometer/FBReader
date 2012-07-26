@@ -20,70 +20,79 @@
 #include <unistd.h>
 
 #include <QtGui/QApplication>
-#include <QtGui/QCursor>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QWidget>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
+#include <QtCore/QThreadPool>
 
+#include "../dialogs/ZLQtDialogManager.h"
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
 
-ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key) : ZLProgressDialog(key), myWaitMessage(0) {
+ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key, bool network) : ZLProgressDialog(key), myIsNetworkRunnable(network), myActiveWindow(0) {
 }
 
 void ZLQtProgressDialog::run(ZLRunnable &runnable) {
-	myWaitMessage = new ZLQtWaitMessage(messageText());
-	runnable.run();
-	delete myWaitMessage;
-	myWaitMessage = 0;
+		myActiveWindow = static_cast<ZLQtDialogManager&>(ZLDialogManager::Instance()).getApplicationWindow();
+		if (myActiveWindow != 0) {
+			myActiveWindow->setCursor(Qt::WaitCursor);
+		}
+
+		ZLQtWaitDialog* dialog = new ZLQtWaitDialog(messageText(), myActiveWindow);
+		dialog->setCursor(Qt::WaitCursor);
+
+		if (myIsNetworkRunnable) {
+			dialog->show();
+			runnable.run();
+			dialog->hide();
+		} else {
+			ZLQtRunnableWrapper* wrapper = new ZLQtRunnableWrapper(runnable);
+			wrapper->setAutoDelete(true);
+			QObject::connect(wrapper, SIGNAL(finished()), dialog, SLOT(close()), Qt::QueuedConnection);
+			QThreadPool::globalInstance()->start(wrapper);
+			dialog->exec();
+		}
+		dialog->deleteLater();
+		restoreCursor();
 }
+
+void ZLQtProgressDialog::restoreCursor() {
+	if (myActiveWindow != 0) {
+		myActiveWindow->setCursor(Qt::ArrowCursor);
+	}
+}
+
 
 void ZLQtProgressDialog::setMessage(const std::string &message) {
-	if (myWaitMessage == 0) {
-		return;
-	}
-
-	myWaitMessage->myLabel->setText(::qtString(message));
-
-	myWaitMessage->myLayout->invalidate();
-	myWaitMessage->repaint();
-	qApp->processEvents();
+	//qDebug() << QString::fromStdString(message);
+	//TODO implement
 }
 
-ZLQtWaitMessage::ZLQtWaitMessage(const std::string &message) : QWidget(0, Qt::SplashScreen) {
-	QWidget *main = qApp->activeWindow();
-	if (main != 0) {
-		myMainWidget = main;
-		myStoredCursor = main->cursor();
-		myMainWidget->setCursor(Qt::WaitCursor);
-	} else {
-		myMainWidget = 0;
-	}
-	setCursor(Qt::WaitCursor);
+ZLQtWaitDialog::ZLQtWaitDialog(const std::string &message, QWidget* parent) : QDialog(parent) {
+		setWindowFlags((windowFlags() | Qt::CustomizeWindowHint) ^ Qt::WindowCloseButtonHint); //hide close button
+		myLayout = new QVBoxLayout;
 
-	qApp->processEvents();
+		myLabel = new QLabel(::qtString(message));
+		myLabel->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
+		myLabel->setWordWrap(true);
 
-	myLayout = new QBoxLayout(QBoxLayout::LeftToRight, this);
-	myLabel = new QLabel(::qtString(message), this);
-	myLayout->addWidget(myLabel);
+		myProgressBar = new QProgressBar;
+		myProgressBar->setRange(0,0);
+		//myProgressBar->setFixedWidth( qApp->desktop()->availableGeometry().width()*COEF_PROGRESS_BAR_WIDTH );
 
-	if (main == 0) {
-		main = QApplication::desktop();
-	}
-	move(
-		main->x() + main->width() / 2 - myLabel->width() / 2 - 10,
-		main->y() + main->height() / 2 - myLabel->height() / 2 - 10
-	);
-	show();
+		myLayout->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);
 
-	qApp->processEvents();
-	usleep(5000);
-	qApp->processEvents();
+		myLayout->addWidget(myLabel);
+		myLayout->addWidget(myProgressBar);
+
+		this->setLayout(myLayout);
 }
 
-ZLQtWaitMessage::~ZLQtWaitMessage() {
-	if (myMainWidget != 0) {
-		myMainWidget->setCursor(myStoredCursor);
-	}
+ZLQtRunnableWrapper::ZLQtRunnableWrapper(ZLRunnable &runnable) : myRunnable(runnable) {
+}
+
+void ZLQtRunnableWrapper::run() {
+	myRunnable.run();
+	emit finished();
 }

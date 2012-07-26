@@ -1,3 +1,10 @@
+fbreader (0.99.1-1) stable; urgency=low
+
+  * new upstream version
+  * instead of liblinebreak package it depends on libunibreak (because this package has been renamed)
+
+ -- Alexander Turkin <snowwlex@fbreader.org>  Wed, 25 Jul 2012 21:47:00 +0300
+
 fbreader (0.99.0-1) stable; urgency=low
 
   * new upstream version

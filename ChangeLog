@@ -1,4 +1,11 @@
-===== 0.99.0 (????????, 2012) =====
+===== 0.99.1 (July 26, 2012) =====
+
+* Fixed bug with freezing at start
+* List of network libraries is updated now from fbreader.org
+* Fixed working with secured connections (now authentification and books buying on LitRes.ru catalog works)
+* Image support for Ms-Word doc format
+
+===== 0.99.0 (July 5, 2012) =====
 
 * Esperanto interface localization has been added (by Katarína Nosková)
 * Hyphenation patterns for Polish (by Tomasz Długosz)

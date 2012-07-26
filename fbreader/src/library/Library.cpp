@@ -151,50 +151,39 @@ size_t Library::revision() const {
 class LibrarySynchronizer : public DBRunnable {
 
 public:
-	LibrarySynchronizer(Library::BuildMode mode);
+	LibrarySynchronizer(Library::BuildMode mode) : myBuildMode(mode) { }
 
 private:
-	bool run();
+	bool run() {
+		Library &library = Library::Instance();
+
+		if (myBuildMode & Library::BUILD_COLLECT_FILES_INFO) {
+			library.rebuildBookSet();
+		}
+
+		if (myBuildMode & Library::BUILD_UPDATE_BOOKS_INFO) {
+			library.rebuildMaps();
+		}
+		return true;
+	}
 
 private:
 	const Library::BuildMode myBuildMode;
 };
 
-LibrarySynchronizer::LibrarySynchronizer(Library::BuildMode mode) : myBuildMode(mode) {
-}
-
-bool LibrarySynchronizer::run() {
-	Library &library = Library::Instance();
-
-	if (myBuildMode & Library::BUILD_COLLECT_FILES_INFO) {
-		library.rebuildBookSet();
-	}
-
-	if (myBuildMode & Library::BUILD_UPDATE_BOOKS_INFO) {
-		library.rebuildMaps();
-	}
-	return true;
-}
-
 class LibrarySynchronizerWrapper : public ZLRunnable {
 
 public:
-	LibrarySynchronizerWrapper(Library::BuildMode mode);
+	LibrarySynchronizerWrapper(Library::BuildMode mode) : myRunnable(mode) { }
 
 private:
-	void run();
+	void run() {
+		BooksDB::Instance().executeAsTransaction(myRunnable);
+	}
 
 private:
 	LibrarySynchronizer myRunnable;
 };
-
-LibrarySynchronizerWrapper::LibrarySynchronizerWrapper(Library::BuildMode mode) : myRunnable(mode) {
-}
-
-void LibrarySynchronizerWrapper::run() {
-	BooksDB::Instance().executeAsTransaction(myRunnable);
-}
-
 
 void Library::synchronize() const {
 	if (myScanSubdirs != ScanSubdirsOption.value() ||

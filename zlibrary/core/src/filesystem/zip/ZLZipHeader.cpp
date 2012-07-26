@@ -35,22 +35,25 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 		default:
 			return stream.offset() == startOffset + 4;
 		case SignatureCentralDirectory:
-			Version = readLong(stream);
-			Flags = readShort(stream);
-			CompressionMethod = readShort(stream);
-			ModificationTime = readShort(stream);
-			ModificationDate = readShort(stream);
-			CRC32 = readLong(stream);
-			CompressedSize = readLong(stream);
-			UncompressedSize = readLong(stream);
+		{
+			Version = readLong(stream); // 4
+			Flags = readShort(stream); // + 2 = 6
+			CompressionMethod = readShort(stream); // + 2 = 8
+			ModificationTime = readShort(stream); // + 2 = 10
+			ModificationDate = readShort(stream); // + 2 = 12
+			CRC32 = readLong(stream); // +4 = 16
+			CompressedSize = readLong(stream); // + 4 = 20
+			UncompressedSize = readLong(stream); // + 4 = 24
 			if (CompressionMethod == 0 && CompressedSize != UncompressedSize) {
 				ZLLogger::Instance().println("zip", "Different compressed & uncompressed size for stored entry; the uncompressed one will be used.");
 				CompressedSize = UncompressedSize;
 			}
-			NameLength = readShort(stream);
-			ExtraLength = readShort(stream);
-			stream.seek(12 + NameLength + ExtraLength + readShort(stream), false);
-			return true;
+			NameLength = readShort(stream); // + 2 = 26
+			ExtraLength = readShort(stream); // + 2 = 28
+			const unsigned short toSkip = readShort(stream); // + 2 = 30
+			stream.seek(12 + NameLength + ExtraLength + toSkip, false);
+			return stream.offset() == startOffset + 42 + NameLength + ExtraLength + toSkip;
+		}
 		case SignatureLocalFile:
 			Version = readShort(stream);
 			Flags = readShort(stream);
@@ -68,10 +71,13 @@ bool ZLZipHeader::readFrom(ZLInputStream &stream) {
 			ExtraLength = readShort(stream);
 			return stream.offset() == startOffset + 30 && NameLength != 0;
 		case SignatureEndOfCentralDirectory:
+		{
 			stream.seek(16, false);
-			stream.seek(readShort(stream), false);
+			const unsigned short toSkip = readShort(stream);
+			stream.seek(toSkip, false);
 			UncompressedSize = 0;
-			return true;
+			return stream.offset() == startOffset + 18 + toSkip;
+		}
 		case SignatureData:
 			CRC32 = readLong(stream);
 			CompressedSize = readLong(stream);

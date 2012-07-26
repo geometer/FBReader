@@ -7,8 +7,8 @@ Maintainer: Eugene V. Lyubimkin <jackyf.devel@gmail.com>
 Standards-Version: 3.8.0
 Build-Depends: debhelper (>= 5)
 Checksums-Sha1: 
- b7d7540aa063d44424dea41b0c4b323a2af91ddc 409496 libunibreak_1.0-1.tar.gz
+ 302fcb5786119c267d629f4ff840183bbd853ffe 409511 libunibreak_1.0-1.tar.gz
 Checksums-Sha256: 
- 36d3926a1b9ba089d90f324ae05714bed91717a11479ea0bc4198629eed6e200 409496 libunibreak_1.0-1.tar.gz
+ d288deeb820c589e6df2d4ac14742bf8652663c34c4844ebf7d884132e488d6e 409511 libunibreak_1.0-1.tar.gz
 Files: 
- 0504342e15fb5643d94b9f0b6e709482 409496 libunibreak_1.0-1.tar.gz
+ ff80b6a6e696f960c0711019d9e56ce0 409511 libunibreak_1.0-1.tar.gz

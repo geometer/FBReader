@@ -77,5 +77,6 @@ void ZLQtLibraryImplementation::run(ZLApplication *application) {
 	ZLDialogManager::Instance().createApplicationWindow(application);
 	application->initWindow();
 	qApp->exec();
+	static_cast<ZLQtDialogManager&>(ZLDialogManager::Instance()).notifyApplicationWindowDeleted();
 	delete application;
 }

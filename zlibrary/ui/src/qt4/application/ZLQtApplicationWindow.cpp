@@ -39,7 +39,7 @@
 #include "../util/ZLQtKeyUtil.h"
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
-	new ZLQtApplicationWindow(application);
+	myApplicationWindow = new ZLQtApplicationWindow(application);
 }
 
 ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), myItem(item) {
@@ -292,6 +292,16 @@ ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
 
 void ZLQtApplicationWindow::close() {
 	QMainWindow::close();
+}
+
+
+
+void ZLQtApplicationWindow::refresh() {
+	QMetaObject::invokeMethod(this, "onRefresh", Qt::AutoConnection);
+}
+
+void ZLQtApplicationWindow::onRefresh() {
+	ZLApplicationWindow::refresh();
 }
 
 void ZLQtApplicationWindow::grabAllKeys(bool) {
