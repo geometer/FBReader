@@ -64,6 +64,8 @@ public:
 	void setAdvancedSearch(shared_ptr<OPDSLink::AdvancedSearch> advancedSearch);
 	void setRelationAliases(std::map<RelationAlias, std::string> relationAliases);
 
+	void loadFrom(const NetworkLink & link);
+
 private:
 	const std::string searchURL(const std::string &pattern) const;
 

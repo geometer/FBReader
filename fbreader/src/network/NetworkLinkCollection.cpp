@@ -115,6 +115,8 @@ void NetworkLinkCollection::saveLink(const NetworkLink&  link, bool isAuto) {
 	FBReader::Instance().refreshWindow();
 }
 
+#include <cstdio>
+
 void NetworkLinkCollection::addOrUpdateLink(const NetworkLink& link) {
 	bool found = false;
 	bool updated = false;
@@ -124,9 +126,16 @@ void NetworkLinkCollection::addOrUpdateLink(const NetworkLink& link) {
 		if (curLink->getSiteName() == link.getSiteName()) {
 			found = true;
 			if (!link.getUpdated().isNull() && !curLink->getUpdated().isNull() && *(link.getUpdated()) > *(curLink->getUpdated())) {
-				curLink->loadFrom(link); // TODO right loadFrom (loading OPDSLink information also)
+				curLink->loadFrom(link);
 				updated = true;
 				//TODO implement comparing for custom links saving
+			} else if (link.isPredefined()) {
+				curLink->loadFrom(link); // for loading OPDS predefined information
+
+				printf("loading pred link: %s\n", link.getSiteName().c_str());
+				for (std::map<std::string,std::string>::const_iterator it = link.myLinks.begin(); it != link.myLinks.end(); ++it) {
+					printf(" %s - %s\n", (*it).first.c_str(), (*it).second.c_str());
+				}
 			}
 			break;
 		}
@@ -134,7 +143,7 @@ void NetworkLinkCollection::addOrUpdateLink(const NetworkLink& link) {
 
 	if (!found) {
 		shared_ptr<NetworkLink> newlink = new OPDSLink(link.getSiteName());
-		newlink->loadFrom(link); // TODO right loadFrom (loading OPDSLink information also)
+		newlink->loadFrom(link);
 		myLinks.push_back(newlink);
 		std::sort(myLinks.begin(), myLinks.end(), Comparator());
 		updated = true;

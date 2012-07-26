@@ -76,7 +76,7 @@ public:
 
 	bool isPredefined() const;
 
-	void loadFrom(const NetworkLink & link);
+	virtual void loadFrom(const NetworkLink & link);
 	void loadLinksFrom(const NetworkLink & link);
 	void loadSummaryFrom(const NetworkLink & link);
 
@@ -90,7 +90,7 @@ public:
 
 	virtual void rewriteUrl(std::string &url, bool isUrlExternal = false) const = 0;
 
-private:
+public:
 	const std::string mySiteName;
 	std::string myTitle;
 	std::string myIcon;

@@ -45,7 +45,17 @@ NetworkLink::NetworkLink(
 NetworkLink::~NetworkLink() {
 }
 
+#include <cstdio>
+#include <iostream>
+
 std::string NetworkLink::url(const std::string &urlId) const {
+
+//	std::cout << urlId << std::endl;
+
+//	for (std::map<std::string,std::string>::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+//		std::cout << "    " << it->first << " - " << it->second << std::endl;
+//	}
+
 	std::map<std::string,std::string>::const_iterator it = myLinks.find(urlId);
 	return (it != myLinks.end()) ? it->second : std::string();
 }
@@ -124,6 +134,8 @@ bool NetworkLink::isEnabled() const {
 	return myEnabled;
 }
 
+#include <cstdio>
+
 void NetworkLink::loadFrom(const NetworkLink & link) {
 	myTitle = link.myTitle;
 	myIcon = link.myIcon;
@@ -132,6 +144,10 @@ void NetworkLink::loadFrom(const NetworkLink & link) {
 	myLinks = link.myLinks;
 	myPredefinedId = link.myPredefinedId;
 	myUpdated = link.myUpdated;
+
+//	for (std::map<std::string,std::string>::iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
+//		printf(" %s - %s\n", (*it).first.c_str(), (*it).second.c_str());
+//	}
 }
 
 void NetworkLink::loadLinksFrom(const NetworkLink & link) {

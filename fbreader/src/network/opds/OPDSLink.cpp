@@ -182,6 +182,18 @@ void OPDSLink::setRelationAliases(std::map<RelationAlias, std::string> relationA
 	myRelationAliases = relationAliases;
 }
 
+#include <cstdio>
+
+void OPDSLink::loadFrom(const NetworkLink &link) {
+	printf("loadFrom %s\n", link.getSiteName().c_str());
+	NetworkLink::loadFrom(link);
+	const OPDSLink &opdsLink = static_cast<const OPDSLink&>(link);
+	myAuthenticationManager = opdsLink.myAuthenticationManager;
+	myUrlRewritingRules = opdsLink.myUrlRewritingRules;
+	myAdvancedSearch = opdsLink.myAdvancedSearch;
+	myRelationAliases = opdsLink.myRelationAliases;
+}
+
 void OPDSLink::rewriteUrl(std::string &url, bool isUrlExternal) const {
 	URLRewritingRule::RuleApply apply = isUrlExternal ? URLRewritingRule::EXTERNAL : URLRewritingRule::INTERNAL;
 	for (std::vector<shared_ptr<URLRewritingRule> >::const_iterator it = myUrlRewritingRules.begin(); it != myUrlRewritingRules.end(); ++it) {
