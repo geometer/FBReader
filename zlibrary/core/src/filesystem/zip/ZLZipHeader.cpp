@@ -111,13 +111,17 @@ void ZLZipHeader::skipEntry(ZLInputStream &stream, ZLZipHeader &header) {
 
 unsigned short ZLZipHeader::readShort(ZLInputStream &stream) {
 	char buffer[2];
-	stream.read(buffer, 2);
+	if (stream.read(buffer, 2) != 2) {
+		return (unsigned short)-1;
+	}
 	return ((((unsigned short)buffer[1]) & 0xFF) << 8) + ((unsigned short)buffer[0] & 0xFF);
 }
 
 unsigned long ZLZipHeader::readLong(ZLInputStream &stream) {
 	char buffer[4];
-	stream.read(buffer, 4);
+	if (stream.read(buffer, 4) != 4) {
+		return (unsigned long)-1;
+	}
 
 	return
 		((((unsigned long)buffer[3]) & 0xFF) << 24) +
