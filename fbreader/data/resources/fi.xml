@@ -71,9 +71,9 @@
 		<node name="bookInfo" value="Kirjan tiedot..." />
 		<node name="toc" value="Sisällysluettelo" />
 		<node name="showLibrary" value="Avaa kirjasto" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
-		<node name="addBook" toBeTranslated="true" value="Open file..." />
-		<node name="showRecent" toBeTranslated="true" value="Recent books" />
+		<node name="showNetLibrary" value="Verkkokirjasto" />
+		<node name="addBook" value="Avaa tiedosto..." />
+		<node name="showRecent" value="Viimeisimmät kirjat" />
 		<node name="library" value="Kirjasto">
 			<node name="showLibrary" value="Avaa kirjasto" />
 			<node name="previousBook" value="Edellinen kirja" />
@@ -112,118 +112,118 @@
 			<node name="toggleFullscreen" value="Koko näyttö" />
 			<node name="toggleIndicator" value="Sijainninilmaisin" />
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
+		<node name="preferences" value="Asetusvalikko..." />
 		<node name="quit" value="Sulje" />
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
-			<node name="label" toBeTranslated="true" value="Read Book" />
+			<node name="label" value="Lue kirja" />
 			<node name="tooltip" value="Näytä lukutila" />
 		</node>
 		<node name="showLibrary">
-			<node name="label" toBeTranslated="true" value="Library" />
+			<node name="label" value="Kirjasto" />
 			<node name="tooltip" value="Näytä kirjastopuu" />
 			<node name="popup" value="Näytä viimeisimmät kirjat lista" />
 		</node>
 		<node name="showRecent">
-			<node name="label" toBeTranslated="true" value="Recent Books" />
+			<node name="label" value="Viimeisimmät kirjat" />
 			<node name="tooltip" value="Näytä viimeisimmät kirjat" />
 		</node>
 		<node name="byAuthor">
-			<node name="label" toBeTranslated="true" value="By Author" />
+			<node name="label" value="Tekijä" />
 			<node name="tooltip" value="Lajittele kirjat tekijän mukaan" />
 		</node>
 		<node name="byTag">
-			<node name="label" toBeTranslated="true" value="By Tag" />
+			<node name="label" value="Luokka" />
 			<node name="tooltip" value="Lajittele kirjat luokan mukaan" />
 		</node>
 		<node name="addBook">
-			<node name="label" toBeTranslated="true" value="Add File" />
+			<node name="label" value="Lisää tiedosto" />
 			<node name="tooltip" value="Lisää tiedosto kirjastoon" />
 		</node>
 		<node name="showNetLibrary">
-			<node name="label" toBeTranslated="true" value="Network" />
+			<node name="label" value="Verkko" />
 			<node name="tooltip" value="Etsi verkkokirjastoista" />
 		</node>
 		<node name="searchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Simple Search" />
+			<node name="label" value="Yksinkertainen haku" />
 			<node name="tooltip" value="Verkkohaku" />
 		</node>
 		<node name="advancedSearchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="label" value="Etsi" />
 			<node name="tooltip" value="Tarkennettu verkkohaku" />
 		</node>
 		<node name="gotoHome">
-			<node name="label" toBeTranslated="true" value="Go to Start" />
+			<node name="label" value="Siirry alkuun" />
 			<node name="tooltip" value="Siirry tekstin alkuun" />
 		</node>
 		<node name="undo">
-			<node name="label" toBeTranslated="true" value="Go Back" />
+			<node name="label" value="Siirry takaisin" />
 			<node name="tooltip" value="Siirry edelliseen kohtaan" />
 		</node>
 		<node name="redo">
-			<node name="label" toBeTranslated="true" value="Go Forward" />
+			<node name="label" value="Siirry eteenpäin" />
 			<node name="tooltip" value="Siirry eteenpäin" />
 		</node>
 		<node name="gotoPageNumberWithParameter">
-			<node name="label" toBeTranslated="true" value="Go to Page" />
+			<node name="label" value="Siirry sivulle" />
 			<node name="tooltip" value="Siirry sivulle" />
 		</node>
 		<node name="toc">
-			<node name="label" toBeTranslated="true" value="TOC" />
+			<node name="label" value="Sisällys" />
 			<node name="tooltip" value="Sisällysluettelo" />
 		</node>
 		<node name="search">
-			<node name="label" toBeTranslated="true" value="Search" />
+			<node name="label" value="Etsi" />
 			<node name="tooltip" value="Etsi teksti" />
 		</node>
 		<node name="findNext">
-			<node name="label" toBeTranslated="true" value="Next" />
+			<node name="label" value="Seuraava" />
 			<node name="tooltip" value="Etsi seuraava" />
 		</node>
 		<node name="findPrevious">
-			<node name="label" toBeTranslated="true" value="Previous" />
+			<node name="label" value="Edellinen" />
 			<node name="tooltip" value="Etsi edellinen" />
 		</node>
 		<node name="rotate">
-			<node name="label" toBeTranslated="true" value="Rotate" />
+			<node name="label" value="Kierrä" />
 			<node name="tooltip" value="Kierrä teksti" />
 		</node>
 		<node name="showHelp">
-			<node name="label" toBeTranslated="true" value="About" />
+			<node name="label" value="Tietoja" />
 			<node name="tooltip" value="Tietoja FBReaderista" />
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter" />
-			<node name="tooltip" toBeTranslated="true" value="Filter" />
+			<node name="label" value="Suodatin" />
+			<node name="tooltip" value="Suodatin" />
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+			<node name="label" value="Edellinen asetusvalikko" />
+			<node name="tooltip" value="Näytä viimeksi avattu asetusvalikko" />
 		</node>
 		<node name="bookInfo">
-			<node name="label" toBeTranslated="true" value="Book Info" />
+			<node name="label" value="Kirjan tiedot" />
 			<node name="tooltip" value="Näytä kirjan tiedot valintaikkuna" />
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences" />
-			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+			<node name="label" value="Kirjaston asetukset" />
+			<node name="tooltip" value="Näytä kirjaston asetusvalikko" />
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+			<node name="label" value="Verkkoasetukset" />
+			<node name="tooltip" value="Näytä verkkoasetusten valikko" />
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+			<node name="label" value="Näytä järjestelmäasetukset" />
+			<node name="tooltip" value="Näytä järjestelmäasetusten valikko" />
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+			<node name="label" value="Lukuasetukset" />
+			<node name="tooltip" value="Näytä lukuasetusten valikko" />
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
+			<node name="label" value="Ulkoasun asetukset" />
+			<node name="tooltip" value="Näytä ulkoasuasetusten valikko" />
 		</node>
 	</node>
 	<node name="dialog">
@@ -238,7 +238,7 @@
 			<node name="buyAndDownload" value="Osta ja &amp;lataa" />
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
+			<node name="title" value="FBReader - Kirjaston asetukset" />
 			<node name="tab">
 				<node name="Library" value="Kirjasto">
 					<node name="bookPath" value="Kirjaston hakemisto" />
@@ -249,7 +249,7 @@
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="title" value="FBReader - Verkkoasetukset" />
 			<node name="tab">
 				<node name="NetworkLibrary" value="Verkkohaku">
 				</node>
@@ -268,7 +268,7 @@
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="title" value="FBReader - Järjestelmäasetukset" />
 			<node name="tab">
 				<node name="Language" value="Kieli">
 					<node name="autoDetect" value="Tunnista kieli ja merkistö automaattisesti" />
@@ -295,7 +295,7 @@
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="title" value="FBReader - Lukuasetukset" />
 			<node name="tab">
 				<node name="Scrolling" value="Vieritys">
 					<node name="keyScrollDelay" value="Näppäinvierityksen painnallusten viive, msecs" />
@@ -334,10 +334,10 @@
 					<node name="grabSystemKeys" value="Valitse järjestelmänäppäimet" />
 					<node name="separate" value="Näytön suunnasta riippuvat näppäintoiminnot" />
 					<node name="orientation" value="Näytön suuntaus">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+						<node name="degrees0" value="0 astetta" />
+						<node name="degrees90ccw" value="90 astetta vastapäivään" />
+						<node name="degrees180" value="180 astetta" />
+						<node name="degrees90cw" value="90 astetta myötäpäivään" />
 					</node>
 					<node name="action">
 						<node name="none" value="Ei mitään" />
@@ -372,7 +372,7 @@
 						<node name="cancel" value="Peru" />
 						<node name="quit" value="Lopeta" />
 						<node name="bookInfo" value="Näytä kirjantiedot valintaikkuna" />
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
+						<node name="preferences" value="Näytä viimeksi avattu asetusvalikko" />
 					</node>
 					<node name="quitOnCancel" value="Sulje sovellus peruttaessa" />
 					<node name="keyDelay" value="Hyväksyttyjen näppäinpainallusten viive" />
@@ -380,7 +380,7 @@
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="title" value="FBReader - Ulkoasun asetukset" />
 			<node name="tab">
 				<node name="CSS" value="CSS">
 					<node name="overrideSpecifiedFonts" value="Käytä aina omaa kirjasinta" />
@@ -564,8 +564,8 @@
 			<node name="loadSubCatalog" value="Ladataan luetteloa. Ole hyvä ja odota..." />
 			<node name="registerUser" value="Rekisteröidään uutta tiliä. Ole hyvä ja odota..." />
 			<node name="passwordRecovery" value="Palautetaan salasanaa. Ole hyvä ja odota..." />
-			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
-			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
+			<node name="authenticationCheck" value="Tilin varmistus. Ole hyvä ja odota..." />
+			<node name="signOut" value="Kirjaudutaan ulos. Ole hyvä ja odota..." />
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Osta kirja" />

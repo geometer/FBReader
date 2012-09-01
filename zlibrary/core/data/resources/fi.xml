@@ -51,7 +51,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="Arabia" />
-		<node name="bg" toBeTranslated="true" value="Bulgarian" />
+		<node name="bg" value="Bulgaria" />
 		<node name="cs" value="Tsekki" />
 		<node name="de" value="Saksa" />
 		<node name="de-traditional" value="Saksa (perinteinen oikeinkirjoitus)" />
@@ -68,14 +68,13 @@
 		<node name="lt" value="Liettua" />
 		<node name="nl" value="Hollanni" />
 		<node name="no" value="Norja" />
-		<node name="pl" toBeTranslated="true" value="Polish" />
+		<node name="pl" value="Puola" />
 		<node name="pt" value="Portugali" />
 		<node name="ru" value="Venäjä" />
 		<node name="sv" value="Ruotsi" />
-		<node name="ta" toBeTranslated="true" value="Tamil" />
 		<node name="tr" value="Turkki" />
 		<node name="uk" value="Ukraina" />
-		<node name="vi" toBeTranslated="true" value="Vietnamese" />
+		<node name="vi" value="Vietnami" />
 		<node name="zh" value="Kiina" />
 		<node name="other" value="Muu" />
 	</node>
