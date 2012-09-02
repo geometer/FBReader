@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- Hebrew FBReader resources, by David Kachan -->
+<resources>
+	<node name="dialog">
+		<node name="button">
+			<node name="ok" value="אישור" />
+			<node name="cancel" value="בטל" />
+			<node name="yes" value="כן" />
+			<node name="no" value="לא" />
+			<node name="apply" value="החל" />
+		</node>
+		<node name="waitMessage">
+			<node name="savingConfig" value="שמירת הגדרות..." />
+		</node>
+		<node name="networkError">
+			<node name="title" value="שגיאה בזמן עבודה ברשת" />
+			<node name="unknownErrorMessage" value="שגיאה לא ידועה" />
+			<node name="couldntCreateDirectoryMessage" value="לא ניתן ליצור קטלוג&#10;%s" />
+			<node name="couldntCreateFileMessage" value="לא ניתן ליצור קובץ&#10;%s" />
+			<node name="couldntConnectToNetworkMessage" value="לא ניתן להתחבר לרשת" />
+			<node name="couldntConnectMessage" value="התחברות לאתר %s לא הצליחה" />
+			<node name="couldntResolveHostMessage" value="לא ניתן לאתר את  %s" />
+			<node name="couldntResolveProxyMessage" value="לא ניתן לאתר את שרת הפרוקסי %s" />
+			<node name="operationTimedOutMessage" value="הזמן המוקצב פג" />
+			<node name="somethingWrongMessage" value="שגיאה בזמן עבודה עם&#10;%s" />
+			<node name="sslConnectErrorMessage" value="בעית התחברות מסוג SSL/TLS:&#10;%s" />
+			<node name="peerFailedVerificationMessage" value="תעודת SSL %s&#10;לא תקינה" />
+			<node name="sslCertificateAuthorityMessage" value="תעודת SSL %s&#10;אינה ניתנת לאישור על ידי תעודות SSL CA מוכרות" />
+			<node name="sslBadCertificateFileMessage" value="לא ניתן לקרוא מתוך תעודת SSL CA:&#10;%s" />
+			<node name="sslShutdownFailedMessage" value="ניתוק התחברות SSL עם &#10;%s לא הצליח" />
+		</node>
+	</node>
+	<node name="color">
+		<node name="red" value="אדום" />
+		<node name="green" value="ירוק" />
+		<node name="blue" value="כחול" />
+		<node name="black" value="שחור" />
+		<node name="white" value="לבן" />
+		<node name="maroon" value="בורדו" />
+		<node name="olive" value="זית" />
+		<node name="navy" value="כחול כהה" />
+		<node name="purple" value="סגול" />
+		<node name="teal" value="תכלת כהה" />
+		<node name="silver" value="כסף" />
+		<node name="gray" value="אפור" />
+		<node name="lime" value="ירוק בהיר" />
+		<node name="yellow" value="צהוב" />
+		<node name="magenta" value="ארגמן" />
+		<node name="cyan" value="תכלת" />
+		<node name="custom..." value="התאמה" />
+	</node>
+	<node name="language">
+		<node name="ar" value="ערבית" />
+		<node name="bg" value="בולגרית" />
+		<node name="cs" value="צ'כית" />
+		<node name="de" value="גרמנית" />
+		<node name="de-traditional" value="גרמנית (דקדוק ישן)" />
+		<node name="el" value="יוונית" />
+		<node name="en" value="אנגלית" />
+		<node name="eo" value="אספרנטו" />
+		<node name="es" value="ספרדית" />
+		<node name="fi" value="פינית" />
+		<node name="fr" value="צרפתית" />
+		<node name="he" value="עברית" />
+		<node name="hu" value="הונגרית" />
+		<node name="id" value="אינדונזית" />
+		<node name="it" value="איטלקית" />
+		<node name="lt" value="ליטאית" />
+		<node name="nl" value="הולנדית" />
+		<node name="no" value="נורבגית" />
+		<node name="pl" value="פולנית" />
+		<node name="pt" value="פורטוגזית" />
+		<node name="ru" value="רוסית" />
+		<node name="sv" value="שבדית" />
+		<node name="tr" value="טורקית" />
+		<node name="uk" value="אוקראינית" />
+		<node name="vi" value="ויאטנמית" />
+		<node name="zh" value="סינית" />
+		<node name="other" value="אחרת" />
+	</node>
+	<node name="boolean3">
+		<node name="on" value="הדלק" />
+		<node name="off" value="כבה" />
+		<node name="unchanged" value="לא לשנות" />
+	</node>
+	<node name="keyOptionView">
+		<node name="actionFor" value="פעולה עבור" />
+	</node>
+</resources>

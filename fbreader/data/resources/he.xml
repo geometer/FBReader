@@ -1,0 +1,647 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Hebrew FBReader resources, by David Kachan -->
+<resources>
+	<node name="libraryView">
+		<node name="authorNode">
+			<node name="expandTree" value="הצג ספרים" />
+			<node name="collapseTree" value="הסתר ספרים" />
+			<node name="edit" value="אודות" />
+			<node name="unknownAuthor" value="מחבר לא ידוע" />
+		</node>
+		<node name="tagNode">
+			<node name="expandTree" value="הצג ספרים" />
+			<node name="collapseTree" value="הסתר ספרים" />
+			<node name="edit" value="שינוי שם" />
+			<node name="clone" value="שיכפול" />
+			<node name="delete" value="מחיקה" />
+			<node name="noTags" value="ספרים ללא תגיות" />
+		</node>
+		<node name="seriesNode">
+			<node name="expandTree" value="הצג ספרים" />
+			<node name="collapseTree" value="הסתר ספרים" />
+		</node>
+		<node name="bookNode">
+			<node name="read" value="קריאה" />
+			<node name="edit" value="אודות" />
+			<node name="delete" value="מחיקה" />
+		</node>
+	</node>
+	<node name="networkView">
+		<node name="libraryItemNode">
+			<node name="expandTree" value="הצג ספרים" />
+			<node name="collapseTree" value="הסתר ספרים" />
+			<node name="reload" value="רענון" />
+			<node name="openInBrowser" value="הצג בדפדפן" />
+		</node>
+		<node name="libraryItemRootNode">
+			<node name="expandTree" value="פתיחת קטלוג" />
+			<node name="collapseTree" value="סגירת קטלוג" />
+			<node name="login" value="כניסה" />
+			<node name="logout" value="יציאה (%s)" />
+			<node name="reload" value="רענון" />
+			<node name="dontShow" value="הסתר קטלוג" />
+			<node name="refillAccount" value="הפקדת כסף (חשבון נוכחי: %s)" />
+			<node name="register" value="הרשמה" />
+			<node name="passwordRecovery" value="שכחת סיסמא?" />
+		</node>
+		<node name="searchResultNode">
+			<node name="title" value="תוצאות חיפוש" />
+			<node name="expandTree" value="הצג תוצאות" />
+			<node name="collapseTree" value="הסתר תוצאות" />
+		</node>
+		<node name="authorNode">
+			<node name="expandTree" value="הצג ספרים" />
+			<node name="collapseTree" value="הסתר ספרים" />
+		</node>
+		<node name="seriesNode">
+			<node name="expandTree" value="הצג ספרים" />
+			<node name="collapseTree" value="הסתר ספרים" />
+		</node>
+		<node name="bookNode">
+			<node name="read" value="קריאת עותק מקומי" />
+			<node name="delete" value="מחיקת עותק מקומי" />
+			<node name="download" value="הורדה" />
+			<node name="readDemo" value="קריאת קטע" />
+			<node name="downloadDemo" value="הורדת קטע" />
+			<node name="demo" value="קטע"/>
+			<node name="buy" value="קניית (%s)" />
+		</node>
+	</node>
+	<node name="menu">
+		<node name="bookInfo" value="אודות הספר" />
+		<node name="toc" value="תוכן הענינים" />
+		<node name="showLibrary" value="פתח ספריה" />
+		<node name="showNetLibrary" value="הצג ספריית רשת" />
+		<node name="addBook" value="פתח קובץ" />
+		<node name="showRecent" value="ספרים קודמים" />
+		<node name="library" value="ספריה">
+			<node name="showLibrary" value="פתיחה" />
+			<node name="previousBook" value="ספר קודם" />
+			<node name="showRecent" value="ספרים שנקראו" />
+			<node name="addBook" value="הוספת ספר" />
+			<node name="showHelp" value="אודות FBReader" />
+		</node>
+		<node name="gotoHome" value="לתחילת הספר" />
+		<node name="gotoPageNumber" value="עבור לעמוד מס' " />
+		<node name="gotoSectionStart" value="לתחילת הסעיף" />
+		<node name="gotoSectionEnd" value="לסוף הסעיף" />
+		<node name="nextTOCSection" value="לפרק הבא" />
+		<node name="previousTOCSection" value="לפרק קודם" />
+		<node name="navigate" value="מעבר">
+			<node name="gotoHome" value="לתחילת הספר" />
+			<node name="gotoPageNumber" value="לעמוד מס' " />
+			<node name="gotoSectionStart" value="לתחילת הסעיף" />
+			<node name="gotoSectionEnd" value="לסוף הסעיף" />
+			<node name="nextTOCSection" value="לפרק הבא" />
+			<node name="previousTOCSection" value="לפרק קודם" />
+			<node name="undo" value="אחורה" />
+			<node name="redo" value="קדימה" />
+		</node>
+		<node name="selection" value="בחירה">
+			<node name="copyToClipboard" value="העתקה" />
+			<node name="openInDictionary" value="פתיחה בתוך מילון" />
+			<node name="clearSelection" value="בטל בחירה" />
+		</node>
+		<node name="search" value="חיפוש">
+			<node name="search" value="חיפוש" />
+			<node name="findNext" value="חפש הבא" />
+			<node name="findPrevious" value="חפש קודם" />
+		</node>
+		<node name="view" value="איור">
+			<node name="rotate" value="סיבוב" />
+			<node name="toggleFullscreen" value="מסך מלא" />
+			<node name="toggleIndicator" value="סמן מיקום" />
+		</node>
+		<node name="preferences" value="הגדרות" />
+		<node name="quit" value="סגירה" />
+	</node>
+	<node name="toolbar">
+		<node name="showReading">
+			<node name="label" value="קריאת ספר" />
+			<node name="tooltip" value="חזור לספר" />
+		</node>
+		<node name="showLibrary">
+			<node name="label" value="ספריה" />
+			<node name="tooltip" value="ספריה" />
+			<node name="popup" value="הצג ספרים בספריה" />
+		</node>
+		<node name="showRecent">
+			<node name="label" value="היסטוריה" />
+			<node name="tooltip" value="ספרים שנקראו לאחרונה" />
+		</node>
+		<node name="byAuthor">
+			<node name="label" value="לפי מחבר" />
+			<node name="tooltip" value="תצוגה לפי מחברים" />
+		</node>
+		<node name="byTag">
+			<node name="label" value="לפי תגיות" />
+			<node name="tooltip" value="לפי תגיות" />
+		</node>
+		<node name="addBook">
+			<node name="label" value="הוספה" />
+			<node name="tooltip" value="הוספת ספר לספריה" />
+		</node>
+		<node name="showNetLibrary">
+			<node name="label" value="רשת" />
+			<node name="tooltip" value="גישה לספריות רשת" />
+		</node>
+		<node name="searchOnNetwork">
+			<node name="label" value="חיפוש מהיר" />
+			<node name="tooltip" value="חיפוש מהיר ברשת" />
+		</node>
+		<node name="advancedSearchOnNetwork">
+			<node name="label" value="חיפוש מתקדם" />
+			<node name="tooltip" value="חיפוש מתקדם ברשת" />
+		</node>
+		<node name="gotoHome">
+			<node name="label" value="להתחלה" />
+			<node name="tooltip" value="לתחילת הספר" />
+		</node>
+		<node name="undo">
+			<node name="label" value="אחורה" />
+			<node name="tooltip" value="אחורה" />
+		</node>
+		<node name="redo">
+			<node name="label" value="קדימה" />
+			<node name="tooltip" value="קדימה" />
+		</node>
+		<node name="gotoPageNumberWithParameter">
+			<node name="label" value="מעבר ל" />
+			<node name="tooltip" value="מעבר לעמוד" />
+		</node>
+		<node name="toc">
+			<node name="label" value="תוכן הענינים" />
+			<node name="tooltip" value="תוכן הענינים" />
+		</node>
+		<node name="search">
+			<node name="label" value="חיפוש" />
+			<node name="tooltip" value="חיפוש" />
+		</node>
+		<node name="findNext">
+			<node name="label" value="הבא" />
+			<node name="tooltip" value="מצא את הבא" />
+		</node>
+		<node name="findPrevious">
+			<node name="label" value="קודם" />
+			<node name="tooltip" value="מצא את הקודם" />
+		</node>
+		<node name="rotate">
+			<node name="label" value="סיבוב" />
+			<node name="tooltip" value="סיבוב של הטקסט" />
+		</node>
+		<node name="showHelp">
+			<node name="label" value="אודות התוכנה" />
+			<node name="tooltip" value="אודות התוכנה" />
+		</node>
+		<node name="filterLibrary">
+			<node name="label" value="סינון" />
+			<node name="tooltip" value="סינון" />
+		</node>
+		<node name="preferences">
+			<node name="label" value="הגדרות" />
+			<node name="tooltip" value="הגדרות" />
+		</node>
+		<node name="bookInfo">
+			<node name="label" value="אודות הספר" />
+			<node name="tooltip" value="אודות הספר" />
+		</node>
+		<node name="libraryOptions">
+			<node name="label" value="הגדרות ספריה" />
+			<node name="tooltip" value="הצגת הגדרות ספריה" />
+		</node>
+		<node name="networkOptions">
+			<node name="label" value="הגדרות רשת" />
+			<node name="tooltip" value="הגדרות רשת" />
+		</node>
+		<node name="systemOptions">
+			<node name="label" value="הגדרות מערכת" />
+			<node name="tooltip" value="הגדרות מערכת" />
+		</node>
+		<node name="readingOptions">
+			<node name="label" value="הגדרות קריאה" />
+			<node name="tooltip" value="הגדרות קריאה" />
+		</node>
+		<node name="lookAndFeelOptions">
+			<node name="label" value="הגדרות מראה" />
+			<node name="tooltip" value="הגדרות מראה" />
+		</node>
+	</node>
+	<node name="dialog">
+		<node name="button">
+			<node name="go" value="&amp;חפש" />
+			<node name="thisOnly" value="רק את זה" />
+			<node name="withSubtags" value="עם תת-קטגוריות" />
+			<node name="removeLink" value="מחיקה מספריה" />
+			<node name="removeFile" value="מחיקה מהמחשב" />
+			<node name="yesToAll" value="כן  &amp;עבור כולם" />
+			<node name="buy" value="&amp;קניה" />
+			<node name="buyAndDownload" value="קניה &amp;והורדה" />
+		</node>
+		<node name="OptionsDialog">
+			<node name="title" value="FBReader - הגדרות" />
+			<node name="tab">
+				<node name="Library" value="ספריה">
+					<node name="bookPath" value="נתיב הספריה" />
+					<node name="lookInSubdirectories" value="חיפוש ספרים בתת-תיקיות" />
+					<node name="collectBooksWithoutMetaInfo" value="חיפוש ספרים ללא תגיות" />
+					<node name="downloadDirectory" value="תיקיה עבור ספרים שהורדו" />
+				</node>
+				<node name="NetworkLibrary" value="חיפוש ברשת">
+					<node name="useProxy" value="השתמש בשרת פרוקסי" />
+					<node name="proxyHost" value="כתובת שרת פרוקסי" />
+					<node name="proxyPort" value="פורט בשרת הפרוקסי" />
+					<node name="timeout" value="זמן העיכוב המקסימלי בשניות" />
+				</node>
+				<node name="Web" value="Web">
+					<node name="enableIntegration" value="פתיחת קישורים חיצוניים על ידי %s" />
+					<node name="defaultText" value="תפיחת קישורים חיצוניים  על ידי דפדפן" />
+					<node name="choice" value="דפדפן" />
+					<node name="command" value="הפעל פקודה" />
+				</node>
+				<node name="Language" value="שפה">
+					<node name="autoDetect" value="זיהוי שפה וקידוד אוטומתי" />
+					<node name="defaultLanguage" value="שפת ברירת מחדל" />
+					<node name="defaultEncodingSet" value="רשימת קידודי ברירת מחדל" />
+					<node name="defaultEncoding" value="קידוד ברירת מחדל" />
+					<node name="useWindows1252Hack" value="השתמש ב-windows-1252 במקום iso-8859-1" />
+				</node>
+				<node name="Config" value="הגדרות">
+					<node name="autoSave" value="שמירה אוטומטית" />
+					<node name="timeout" value="עיכוב בין שמירות אוטומטיות" />
+				</node>
+				<node name="Dictionary" value="מילונים">
+					<node name="enableIntegration" value="הפעל אינטגרציה עם %s" />
+					<node name="defaultText" value="אפשר אינטגרציה עם מילון" />
+					<node name="choice" value="השמשה" />
+					<node name="singleClickOpen" value="פתיחת המילון על ידי לחיצה על המילה" />
+				</node>
+				<node name="Maemo" value="Maemo">
+					<node name="keyActionOnRelease" value="הגב על שחרור מילה ולא על לחיצה על מילה" />
+					<node name="minStylusPressure" value="לחץ חרט מינימלי" />
+					<node name="maxStylusPressure" value="לחץ חרט מקסימלי" />
+				</node>
+				<node name="Scrolling" value="דפדוף">
+					<node name="keyScrollDelay" value="עיכוב בדפדוף על ידי לחצנים" />
+					<node name="keyLinesToScroll" value="כמה שורות לדפדף בבת אחת" />
+					<node name="keyLinesToKeep" value="כמה שורות מעמוד קודם להשאיר" />
+					<node name="enableTapScrolling" value="הפעל דפדוף על ידי לחיצה על המסך" />
+					<node name="fingerOnly" value="רק בעת לחיצה על ידי אצבע" />
+				</node>
+				<node name="Selection" value="בחירה">
+					<node name="enableSelection" value="אפשר בחירת טקסט" />
+				</node>
+				<node name="Indicator" value="שורת מצב">
+					<node name="type" value="מראה">
+						<node name="osScrollbar" value="פס גלילה" />
+						<node name="fbIndicator" value="צג תחתון" />
+						<node name="none" value="לא להציג" />
+					</node>
+					<node name="height" value="גובה צג" />
+					<node name="offset" value="מרחק מהטקסט" />
+					<node name="pageNumber" value="הצג מספרי עמודים" />
+					<node name="time" value="הצג שעון" />
+					<node name="fontSize" value="גודל גופן" />
+					<node name="tocMarks" value="הצג מצייני תחילת פרק" />
+					<node name="navigation" value="הגב ללחיצות" />
+				</node>
+				<node name="Rotation" value="סיבוב">
+					<node name="direction" value="הגדרת סיבוב">
+						<node name="disabled" value="לא לסובב" />
+						<node name="clockwise" value="90 מעלות בכיוון השעון" />
+						<node name="counterclockwise" value="90 מעלות נגד כיוון השעון" />
+						<node name="180" value="180 מעלות" />
+						<node name="cycle" value="לעבור בין 4 כיוונים" />
+					</node>
+				</node>
+				<node name="Keys" value="כפתורים">
+					<node name="grabSystemKeys" value="יירוט לחיצת קיצורי מערכת הפעלה" />
+					<node name="separate" value="הגדרות מיוחדות עבור כל סיבוב של הטקסט" />
+					<node name="orientation" value="בסיבוב של:">
+						<node name="degrees0" value="0 מעלות" />
+						<node name="degrees90ccw" value="90 מעלות נגד כיוון השעו" />
+						<node name="degrees180" value="180 מעלות" />
+						<node name="degrees90cw" value="90 מעלות בכיוון השעו" />
+					</node>
+					<node name="action">
+						<node name="none" value="אין פעולה" />
+						<node name="showLibrary" value="הצג ספריה" />
+						<node name="showNetLibrary" value="ספריות רשת" />
+						<node name="showRecent" value="הצג ספרים שנקראו" />
+						<node name="previousBook" value="פתיחת ספר קודם" />
+						<node name="toc" value="תוכן הענינים" />
+						<node name="gotoHome" value="מעבר להתחלה" />
+						<node name="gotoSectionStart" value="מעבר לתחילת הסעיף" />
+						<node name="gotoSectionEnd" value="מעבר לסוף הסעיף" />
+						<node name="nextTOCSection" value="מעבר לפרק הבא" />
+						<node name="previousTOCSection" value="מעבר לפרק קודם" />
+						<node name="pageForward" value="מעבר לעמוד הבא" />
+						<node name="pageBackward" value="מעבר לעמוד קודם" />
+						<node name="lineForward" value="מעבר לשורה הבאה" />
+						<node name="lineBackward" value="מעבר לשורה קודמת" />
+						<node name="undo" value="ביטול מעבר" />
+						<node name="redo" value="חזרה על המעבר" />
+						<node name="copyToClipboard" value="העתק" />
+						<node name="openInDictionary" value="פתח בתוך מילון" />
+						<node name="clearSelection" value="נקה בחירה" />
+						<node name="search" value="חיפוש" />
+						<node name="findPrevious" value="חיפוש אחורה" />
+						<node name="findNext" value="חיפוש קדימה" />
+						<node name="increaseFont" value="הגדלת גופן" />
+						<node name="decreaseFont" value="הקטנת גופן" />
+						<node name="toggleIndicator" value="הצג\הסתר סמן מצב" />
+						<node name="toggleFullscreen" value="אפשר\בטל מסך מלא" />
+						<node name="rotate" value="סיבוב טקסט" />
+						<node name="addBook" value="הוספת ספר לספריה" />
+						<node name="cancel" value="ביטול" />
+						<node name="quit" value="סגירת התוכנה" />
+						<node name="bookInfo" value="אודות הספר" />
+						<node name="preferences" value="הגדרות" />
+					</node>
+					<node name="quitOnCancel" value="יציאה מהתוכנית" />
+					<node name="keyDelay" value="עיכוב בין לחיצת כפתורים" />
+				</node>
+				<node name="CSS" value="CSS">
+					<node name="overrideSpecifiedFonts" value="לא להשתמש בגופני ברירת מחדל" />
+				</node>
+				<node name="Margins" value="שוליים">
+					<node name="left" value="שול שמאלי" />
+					<node name="right" value="שול ימני" />
+					<node name="top" value="שול עליון" />
+					<node name="bottom" value="שול תחתון" />
+				</node>
+				<node name="Format" value="פירמוט">
+					<node name="optionsFor" value="הגדרות עבור" />
+					<node name="lineSpacing" value="רווח">
+						<node name="unchanged" value="&lt;לא לשנות&gt;" />
+					</node>
+					<node name="firstLineIndent" value="שורה ראשונה" />
+					<node name="alignment" value="קו יישור">
+						<node name="left" value="שמאלה" />
+						<node name="right" value="ימינה" />
+						<node name="center" value="אמצע" />
+						<node name="justify" value="לקצוות" />
+						<node name="unchanged" value="&lt;לא לשנות&gt;" />
+					</node>
+					<node name="spaceBefore" value="רווח לפני" />
+					<node name="spaceAfter" value="רווח אחרי" />
+					<node name="startIndent" value="רווח בתחילת השורה" />
+					<node name="endIndent" value="רווח בסוף השורה" />
+				</node>
+				<node name="Styles" value="סגנונות">
+					<node name="optionsFor" value="הגדרות עבור" />
+					<node name="fontFamily" value="גופן">
+						<node name="unchanged" value="&lt;לא לשנות&gt;" />
+					</node>
+					<node name="fontSize" value="גודל" />
+					<node name="fontSizeDifference" value="גודל" />
+					<node name="bold" value="טקסט מודגש" />
+					<node name="italic" value="טקסט נטוי" />
+					<node name="allowHyphenations" value="מקופים" />
+					<node name="autoHyphenations" value="מקופים" />
+				</node>
+				<node name="Colors" value="צבעים">
+					<node name="colorFor" value="צבע עבור">
+						<node name="background" value="רקע" />
+						<node name="selectionBackground" value="רקע בחירה" />
+						<node name="text" value="טקסט רגיל" />
+						<node name="internalLink" value="קישור" />
+						<node name="externalLink" value="קישור חיצוני" />
+						<node name="bookLink" value="קישור לספר" />
+						<node name="highlighted" value="טקסט מודגש" />
+						<node name="treeLines" value="קווים" />
+						<node name="indicator" value="צג" />
+					</node>
+				</node>
+			</node>
+		</node>
+		<node name="InfoDialog">
+			<node name="title" value="FBReader - אודות הספר" />
+			<node name="tab">
+				<node name="Common" value="מידע בסיסי">
+					<node name="file" value="קובץ" />
+					<node name="title" value="שם" />
+					<node name="language" value="שפה" />
+					<node name="encodingSet" value="רשימת קידודים" />
+					<node name="encoding" value="קידוד" />
+				</node>
+				<node name="Authors" value="מחברים">
+					<node name="authorDisplayName" value="שם מחבר" />
+				</node>
+				<node name="Series" value="סדרה">
+					<node name="seriesTitle" value="שם הסדרה" />
+					<node name="bookIndex" value="מספר הספר בסדרה" />
+				</node>
+				<node name="Tags" value="תגיות">
+					<node name="tags" value="שם תגית" />
+				</node>
+				<node name="Text" value="טקסט">
+					<node name="breakType" value="סעיף חדש לפי" />
+					<node name="ignoreIndent" value="התעלם מרווח פחות מ" />
+					<node name="buildTOC" value="בניית תוכן הענינים" />
+					<node name="emptyLines" value="שורות ריקות בין הפרקים" />
+				</node>
+				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
+					<node name="breakType" value="פרק חדש לפי" />
+					<node name="ignoreIndent" value="התעלם מרווח פחות מ" />
+					<node name="buildTOC" value="בניית תוכן הענינים" />
+					<node name="emptyLines" value="שורות ריקות בין הפרקים" />
+				</node>
+			</node>
+		</node>
+		<node name="AuthorInfoDialog">
+			<node name="title" value="FBReader - אודות מחבר" />
+			<node name="name" value="שם" />
+			<node name="sortKey" value="מיין לפי" />
+		</node>
+		<node name="addFileDialog">
+			<node name="title" value="FBReader - הוספת ספר לספריה" />
+		</node>
+		<node name="textSearchDialog">
+			<node name="title" value="חיפוש בטקסט" />
+			<node name="text" value="" />
+			<node name="ignoreCase" value="התעלמות מגודל האותיות" />
+			<node name="wholeText" value="מתחילת הטקסט" />
+			<node name="backward" value="אחורה" />
+			<node name="currentSection" value="רק בסעיף נוכחי" />
+		</node>
+		<node name="networkSearchDialog">
+			<node name="title" value="חיפוש ברשת" />
+			<node name="titleAndSeries" value="שם ספר\סדרה" />
+			<node name="author" value="מחבר" />
+			<node name="category" value="קטגוריה" />
+			<node name="description" value="תיאור" />
+			<node name="annotation" value="תוצאות חיפוש עבור: %s" />
+		</node>
+		<node name="gotoPageDialog">
+			<node name="title" value="מעבר לעמוד" />
+			<node name="pageNumber" value="מס' עמוד" />
+		</node>
+		<node name="editTagDialog">
+			<node name="title" value="שינוי שם תגית" />
+			<node name="name" value="שם" />
+			<node name="includeSubtags" value="כולל תת-תגיות" />
+		</node>
+		<node name="cloneTagDialog">
+			<node name="title" value="שכפול תגיות" />
+			<node name="name" value="שם" />
+			<node name="includeSubtags" value="כולל תת-תגיות" />
+		</node>
+		<node name="removeBookBox">
+			<node name="title" value="מחיקת ספר" />
+			<node name="message" value="למחוק ספר&#10;«%s»&#10;מספריה?" />
+			<node name="deleteFile" value="האם ברצונך&#10;למחוק קובץ&#10;«%s» מהמחשב?" />
+		</node>
+		<node name="removeTagBox">
+			<node name="title" value="מחיקת תגית" />
+			<node name="message" value="האם למחוק תגית «%s»?" />
+		</node>
+		<node name="openBookErrorBox">
+			<node name="title" value="שגיאה" />
+			<node name="message" value="לא ניתן לפתוח:&#10;%s" />
+		</node>
+		<node name="removeFileErrorBox">
+			<node name="title" value="שגיאה" />
+			<node name="message" value="לא ניתן למחוק קובץ&#10;%s" />
+		</node>
+		<node name="noHelpBox">
+			<node name="title" value="שגיאה" />
+			<node name="message" value="לצערנו קובץ לא קיים" />
+		</node>
+		<node name="networkError">
+			<node name="emptyLibrariesList" value="לא נבחרו ספריות" />
+			<node name="authenticationFailed" value="אימות פרטים נכשל" />
+			<node name="internalError" value="שגיאת שרת פנימית" />
+			<node name="purchaseNotEnoughMoney" value="אין מספיק כסף בחשבון" />
+			<node name="purchaseMissingBook" value="הספר לא קיים במכירות" />
+			<node name="purchaseAlreadyPurchased" value="הספר כבר נרכש" />
+			<node name="bookNotPurchased" value="הספר לא נרכש" />
+			<node name="downloadLimitExceeded" value="חריגה ממגבלת הורדות" />
+			<node name="unsupportedOperation" value="פעולה אינה נתמכת" />
+			<node name="loginAlreadyTaken" value="שם משתמש תפוס" />
+			<node name="loginNotSpecified" value="הזן שם משתמש" />
+			<node name="passwordNotSpecified" value="הזן סיסמא" />
+			<node name="emailNotSpecified" value="הזן כתובת" />
+			<node name="invalidEMail" value="כתובת לא תקינה" />
+			<node name="tooManyRegistrations" value="נסיונות הרשמה רבים מדי מכתובת ה-IP שלך;&#10;נסה שוב בעוד כמה דקות" />
+			<node name="noUserEmail" value="משתמש עם כתובת דוא''ל שצויינה לא קיים" />
+		</node>
+		<node name="downloadError">
+			<node name="title" value="שגיאה בעת הורדה" />
+			<node name="message" value="הורדת ספר לא הצליחה" />
+		</node>
+		<node name="waitMessage">
+			<node name="loadingBook" value="טוען ספר. אנא המתן..." />
+			<node name="loadingBookList" value="טעינת רשימת ספרים. אנא המתן..." />
+			<node name="migrate" value="מעדכן גרסה. אנא המתן..." />
+			<node name="downloadBookList" value="הורדת רשימת ספרים. אנא המתן..." />
+			<node name="downloadBook" value="מוריד ספר. אנא המתן..." />
+			<node name="downloadImages" value="טעינת איורים. אנא המתן..." />
+			<node name="authentication" value="אימות פרטים. אנא המתן...." />
+			<node name="purchaseBook" value="מתבצעת קניית ספר. אנא נמתן..." />
+			<node name="initializeAuthenticationManager" value="טעינת פרטי משתמש. אנא המתן..." />
+			<node name="loadSubCatalog" value="טעינת קטלוג. אנא המתן..." />
+			<node name="registerUser" value="הרשמת משתמש. אנא המתן..." />
+			<node name="passwordRecovery" value="בקשה לשחזור סיסמא מתבצעת. אנא המתן..." />
+			<node name="authenticationCheck" value="אימות פרטים. אנא המתן..." />
+			<node name="signOut" value="התנתקות ממערכת, אנא המתן..." />
+		</node>
+		<node name="purchaseConfirmBox">
+			<node name="title" value="קניית ספר" />
+			<node name="message" value="ברצונך לקנות ספר&#10;«%s» האם להמשיך?" />
+		</node>
+		<node name="AuthenticationDialog">
+			<node name="title" value="אימות פרטים" />
+			<node name="login" value="שם משתמש" />
+			<node name="password" value="סיסמא" />
+			<node name="skipIP" value="לא לזכור כתובת IP" />
+			<node name="loginIsEmpty" value="שדה שם משתמש לא יכול להיות ריק" />
+		</node>
+		<node name="emptyCatalogBox">
+			<node name="title" value="מידע" />
+			<node name="message" value="הקטלוג ריק." />
+		</node>
+		<node name="dontShowConfirmBox">
+			<node name="title" value="השבתת קטלוג" />
+			<node name="message" value="האם אתה בטוח שברצונך להשבית&#10;את קטלוג «%s»?&#10;&#10;תוכל להפעיל אותו מחדש&#10;בתוך לשונית ''חיפוש באינטרנט'' בחלון ההגדרות." />
+		</node>
+		<node name="deleteLocalCopyBox">
+			<node name="title" value="מחיקת ספר" />
+			<node name="message" value="האם ברצונך&#10;למחוק ספר&#10;«%s» מהמחשב?" />
+		</node>
+		<node name="RegisterUserDialog">
+			<node name="title" value="הרשמה" />
+			<node name="login" value="שם משתמש" />
+			<node name="password" value="סיסמא" />
+			<node name="confirmPassword" value="סיסמא שוב" />
+			<node name="email" value="E-mail" />
+			<node name="differentPasswords" value="סיסמאות אינן זהות" />
+		</node>
+		<node name="PasswordRecoveryDialog">
+			<node name="title" value="שחזור סיסמא" />
+			<node name="email" value="E-mail" />
+		</node>
+		<node name="recoverySuccessfulBox">
+			<node name="title" value="שחזור סיסמא" />
+			<node name="message" value="הוראות לשחזור סיסמא&#10;נשלחו לכתובת&#10;%s" />
+		</node>
+		<node name="cantOpenDownloadedFile">
+			<node name="title" value="שגיאה" />
+			<node name="message" value="לא ניתן לפתוח קובץ שהורד&#10;%s." />
+		</node>
+	</node>
+	<node name="style">
+		<node name="Base" value="טקסט ברירת מחדל" />
+		<node name="Regular Paragraph" value="טקסט רגיל" />
+		<node name="Title" value="כותרת" />
+		<node name="Section Title" value="כותרת סעיף" />
+		<node name="Poem Title" value="הכותרת של השיר" />
+		<node name="Subtitle" value="כתובית" />
+		<node name="Annotation" value="ביאור" />
+		<node name="Epigraph" value="אפיגרף" />
+		<node name="Stanza" value="בית" />
+		<node name="Verse" value="פסוק" />
+		<node name="Preformatted text" value="טקסט בתוך &lt;pre&gt;" />
+		<node name="Image" value="איור" />
+		<node name="Cite" value="ציטוט" />
+		<node name="Author" value="שם מחבר" />
+		<node name="Date" value="תאריך" />
+		<node name="Internal Hyperlink" value="קישור פנימי" />
+		<node name="Footnote" value="הערה" />
+		<node name="Emphasis" value="בחירת (emphasis)" />
+		<node name="Strong" value="בחירת (strong)" />
+		<node name="Subscript" value="כתב תחתי" />
+		<node name="Superscript" value="כתב עילי" />
+		<node name="Code" value="קוד" />
+		<node name="StrikeThrough" value="טקסט חצוי" />
+		<node name="Contents Table" value="תוכן העינינים" />
+		<node name="Library Entry" value="ספריה" />
+		<node name="Recent Book List" value="רשימת ספרים" />
+		<node name="Italic" value="טקסט נטוי" />
+		<node name="Bold" value="טקסט מודגש" />
+		<node name="Definition" value="תיאור" />
+		<node name="Definition Description" value="הגדרת תיאור" />
+		<node name="Header 1" value="טקסט בתוך &lt;h1&gt;" />
+		<node name="Header 2" value="טקסט בתוך &lt;h2&gt;" />
+		<node name="Header 3" value="טקסט בתוך &lt;h3&gt;" />
+		<node name="Header 4" value="טקסט בתוך &lt;h4&gt;" />
+		<node name="Header 5" value="טקסט בתוך &lt;h5&gt;" />
+		<node name="Header 6" value="טקסט בתוך &lt;h6&gt;" />
+		<node name="External Hyperlink" value="קישור חיצוני" />
+		<node name="Link to Another Book" value="קישור לספר אחר" />
+	</node>
+	<node name="external">
+		<node name="browser" value="דפדפן" />
+		<node name="defaultBrowser" value="דפדפן" />
+	</node>
+	<node name="mobipocketPlugin">
+		<node name="unknown" value="שגיאה לא ידועה" />
+		<node name="unsupportedCompressionMethod" value="סוג דחיסה זה אינו נתמך" />
+		<node name="encryptedFile" value="קובץ מוגן על ידי DRM" />
+	</node>
+	<node name="networkLibrary">
+		<node name="caption" value="חיפוש בספריות ברשת" />
+	</node>
+	<node name="library">
+		<node name="caption" value="ספריה" />
+	</node>
+</resources>
