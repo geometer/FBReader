@@ -19,6 +19,7 @@ APPIMAGEDIR_MACRO ?= $(APPIMAGEDIR)
 
 XML_LIBS ?= -lexpat
 ARCHIVER_LIBS ?= -lz -lbz2
+NETWORK_LIBS = -lQtNetwork
 
 CFLAGS += -DINSTALLDIR=\"$(INSTALLDIR_MACRO)\" -DBASEDIR=\"$(SHAREDIR_MACRO)\" -DLIBDIR=\"$(LIBDIR_MACRO)\" -DIMAGEDIR=\"$(IMAGEDIR_MACRO)\" -DAPPIMAGEDIR=\"$(APPIMAGEDIR_MACRO)\" -DVERSION=\"$(VERSION)\"
 ifeq "$(ZLSHARED)" "yes"
@@ -37,7 +38,7 @@ ifeq "$(TARGET_STATUS)" "profile"
 	LDFLAGS += -pg
 endif
 
-ZINCLUDE = -I $(ROOTDIR)/zlibrary/core/include -I $(ROOTDIR)/zlibrary/text/include
+ZINCLUDE = $(shell pkg-config --cflags fribidi) -I $(ROOTDIR)/zlibrary/core/include -I $(ROOTDIR)/zlibrary/text/include
 
 ZLSHARED ?= yes
 

@@ -22,7 +22,7 @@ endif
 SUBDIRS = src/model src/area src/view src/style src/styleOptions src/hyphenation
 
 .objects:
-	@for subdir in $(SUBDIRS); do \
+	+@for subdir in $(SUBDIRS); do \
 		if [ -d $$subdir ]; then \
 			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
 				exit 1; \

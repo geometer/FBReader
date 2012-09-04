@@ -17,11 +17,8 @@ ifeq "$(UI_TYPE)" "qt"
   MOC = moc-qt3
   QTINCLUDE = -I /usr/include/qt3
 else
-  #MOC = moc-qt4
-  #QTINCLUDE = -I /usr/include/qt4
-  MOC = ~/QtSDK/Desktop/Qt/4.8.1/gcc/bin/moc
-  QTINCLUDE = -I ~/QtSDK/Desktop/Qt/4.8.1/gcc/include
-  EXTERNAL_LIBS = /usr/local/lib
+  MOC = moc-qt4
+  QTINCLUDE = -I /usr/include/qt4
 endif
 
 GTKINCLUDE = $(shell pkg-config --cflags gtk+-2.0 libpng xft)
@@ -31,7 +28,7 @@ ifeq "$(UI_TYPE)" "qt"
 endif
 
 ifeq "$(UI_TYPE)" "qt4"
-  UILIBS = ~/QtSDK/Desktop/Qt/4.8.1/gcc/lib/QtCore.la ~/QtSDK/Desktop/Qt/4.8.1/gcc/lib/QtGui.la ~/QtSDK/Desktop/Qt/4.8.1/gcc/lib/QtNetwork.la
+  UILIBS = $(shell pkg-config --libs QtCore QtGui)
 endif
 
 ifeq "$(UI_TYPE)" "gtk"
