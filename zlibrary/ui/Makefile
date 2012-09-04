@@ -91,21 +91,21 @@ ifeq "$(UI_TYPE)" "win32"
 endif
 
 .objects:
-	@for subdir in $(SUBDIRS); do \
+	+@for subdir in $(SUBDIRS); do \
 		if [ -d $$subdir ]; then \
 			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
 				exit 1; \
 			fi; \
 		fi; \
 	done;
-	@for subdir in $(QTSUBDIRS); do \
+	+@for subdir in $(QTSUBDIRS); do \
 		if [ -d $$subdir ]; then \
 			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/qsubdir.mk; then \
 				exit 1; \
 			fi; \
 		fi; \
 	done;
-	@for subdir in $(GTKSUBDIRS); do \
+	+@for subdir in $(GTKSUBDIRS); do \
 		if [ -d $$subdir ]; then \
 			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/gtksubdir.mk; then \
 				exit 1; \

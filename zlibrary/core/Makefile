@@ -38,7 +38,7 @@ else
 endif
 
 .objects:
-	@for subdir in $(SUBDIRS); do \
+	+@for subdir in $(SUBDIRS); do \
 		if [ -d $$subdir ]; then \
 			if ! $(LIBMAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk; then \
 				exit 1; \

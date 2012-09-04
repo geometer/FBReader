@@ -21,21 +21,21 @@ install: all do_install
 do_install:
 	@for dir in $(ZLIBDIRS) $(APPDIRS); do \
 		if [ -d $$dir ]; then \
-			cd $$dir; make $@; cd $(ROOTDIR); \
+			cd $$dir; $(MAKE) $@; cd $(ROOTDIR); \
 		fi; \
 	done
 
 do_install_dev:
 	@for dir in $(ZLIBDIRS); do \
 		if [ -d $$dir ]; then \
-			cd $$dir; make $@; cd $(ROOTDIR); \
+			cd $$dir; $(MAKE) $@; cd $(ROOTDIR); \
 		fi; \
 	done
 
 clean:
 	@for dir in $(ZLIBDIRS) $(APPDIRS); do \
 		if [ -d $$dir ]; then \
-			cd $$dir; make $@; cd $(ROOTDIR); \
+			cd $$dir; $(MAKE) $@; cd $(ROOTDIR); \
 		fi; \
 	done
 
