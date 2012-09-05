@@ -19,8 +19,10 @@
 
 #include "OPDSMetadata.h"
 
-const std::string OPDSConstants::REL_BOOKSHELF     = "http://opds-spec.org/bookshelf";
+// Feed level
+const std::string OPDSConstants::REL_BOOKSHELF     = "http://data.fbreader.org/rel/bookshelf";
 //const std::string OPDSConstants::REL_SUBSCRIPTIONS = "http://opds-spec.org/subscriptions";
+
 const std::string OPDSConstants::REL_CATALOG_AUTHOR = "http://data.fbreader.org/catalog/author";
 const std::string OPDSConstants::REL_ACQUISITION   = "http://opds-spec.org/acquisition";
 const std::string OPDSConstants::REL_ACQUISITION_OPEN = "http://opds-spec.org/acquisition/open-access";
