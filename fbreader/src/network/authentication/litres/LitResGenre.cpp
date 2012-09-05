@@ -33,7 +33,7 @@
 #include "LitResUtil.h"
 
 static const std::string GENRES_CACHE_PREFIX = "litres_genres_";
-static const std::string GENRES_CACHE_SUFFIX = ".xml.gz";
+static const std::string GENRES_CACHE_SUFFIX = ".xml";
 
 LitResGenre::LitResGenre() {
 }
@@ -173,7 +173,7 @@ bool LitResGenreMap::loadGenres() const {
 			dayStr = "0" + dayStr;
 		}
 
-		const std::string fileName = dir->path() + ZLibrary::FileNameDelimiter + 
+		const std::string fileName = dir->path() + ZLibrary::FileNameDelimiter +
 			GENRES_CACHE_PREFIX + yearStr + monthStr + dayStr + GENRES_CACHE_SUFFIX;
 
 		const std::string error = ZLNetworkManager::Instance().downloadFile(url, fileName);
