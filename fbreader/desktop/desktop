@@ -1,11 +1,5 @@
 [Desktop Entry]
-Name=E-book reader
-Name[ar]=قارئ الكتب الإلكترونية
-Name[es]=Lector de Libros
-Name[hu]=E-könyv olvasó
-Name[pl]=Czytnik e-książek
-Name[ru]=Чтение электронных книг
-Name[zh_CN]=电子书阅读
+Name=FBReader
 GenericName=E-book reader
 GenericName[ar]=قارئ الكتب الإلكترونية
 GenericName[es]=Lector de Libros
@@ -25,5 +19,5 @@ Exec=FBReader %F
 StartupNotify=true
 Terminal=false
 Type=Application
-Icon=FBReader.png
+Icon=FBReader
 Categories=Office;Viewer;Literature;

@@ -59,13 +59,13 @@ do_install:
 	@install -m 0644 $(wildcard data/icons/toolbar/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
 	@install -m 0644 $(wildcard data/icons/filetree/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
 	@install -m 0644 $(wildcard data/icons/booktree/new/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
-	@make -C $(TARGET_ARCH) RESOLUTION=$(RESOLUTION) install
+	@$(MAKE) -C $(TARGET_ARCH) RESOLUTION=$(RESOLUTION) install
 
 clean:
 	@for subdir in $(ALL_SUBDIRS); do \
 		$(MAKE) -C $$subdir -f $(MAKEFILESDIR)/subdir.mk clean; \
 	done;
 	@for subdir in $(ALL_ARCHSUBDIRS); do \
-		cd $$subdir; make clean; cd ..; \
+		cd $$subdir; $(MAKE) clean; cd ..; \
 	done;
 	@$(RM) $(TARGET) err
