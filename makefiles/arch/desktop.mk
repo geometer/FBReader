@@ -6,7 +6,9 @@ endif
 IMAGEDIR = $(INSTALLDIR)/share/pixmaps
 APPIMAGEDIR = $(INSTALLDIR)/share/pixmaps/%APPLICATION_NAME%
 
-CC = ccache gcc
+
+CCACHE = $(shell if which ccache > /dev/null; then echo "ccache"; fi) #if ccache is not installed, do not use it
+CC = $(CCACHE) gcc
 AR = ar rsu
 LD = g++
 
