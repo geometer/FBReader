@@ -1,8 +1,9 @@
 ===== 0.99.2 (September 7, 2012) =====
 
-* Has been added "My Books" (purchased books) section for LitRes catalog
+* Added "My Books" (purchased books) section for LitRes catalog
 * Hebrew localization (by David Kachan)
 * Updated Finnish localization (by Marko Vertainen)
+* Misc build & installation fixes (by kensington)
 
 ===== 0.99.1 (July 26, 2012) =====
 
