@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Contributed by Serge Osnach <serge.osnach@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,47 +18,7 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLBZIP2INPUTSTREAM_H__
-#define __ZLBZIP2INPUTSTREAM_H__
+#include "ZLFSPlugin.h"
+#include "ZLFile.h"
 
-#include <bzlib.h>
-
-#ifdef WIN32
-#undef min
-#undef max
-#endif
-
-#include <shared_ptr.h>
-
-#include "../ZLInputStream.h"
-
-class ZLFSCompressorBzip2;
-
-class ZLBzip2InputStream : public ZLInputStream {
-
-private:
-	ZLBzip2InputStream(shared_ptr<ZLInputStream> base);
-
-public:
-	~ZLBzip2InputStream();
-	bool open();
-	size_t read(char *buffer, size_t maxSize);
-	void close();
-
-	void seek(int offset, bool absoluteOffset);
-	size_t offset() const;
-	size_t sizeOfOpened();
-
-private:
-	shared_ptr<ZLInputStream> myBaseStream;
-	size_t myOffset;
-
-	bz_stream myBzStream;
-	char *myBaseBuffer;
-	char *myTrashBuffer;
-	size_t myBaseAvailableSize;
-
-friend class ZLFSCompressorBzip2;
-};
-
-#endif /* __ZLBZIP2INPUTSTREAM_H__ */
+#include <ZLibrary.h>

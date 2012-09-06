@@ -29,8 +29,13 @@
 class ZLDir;
 class ZLInputStream;
 class ZLOutputStream;
+class ZLFSCompressor;
+class ZLFSArchiver;
+class ZLFSPluginManager;
 
 class ZLFile {
+  friend class ZLFSPluginManager;
+  friend class ZLFSArchiver;
 
 public:
 	static const ZLFile NO_FILE;
@@ -43,16 +48,20 @@ public:
 	static std::string replaceIllegalCharacters(const std::string &fileName, char replaceWith);
 
 public:
-	enum ArchiveType {
-		NONE = 0,
-		GZIP = 0x0001,
-		BZIP2 = 0x0002,
-		COMPRESSED = 0x00ff,
-		ZIP = 0x0100,
-		TAR = 0x0200,
-		ARCHIVE = 0xff00,
-	};
-	
+	/**
+	 * ArchiveType is a list of compressors, sequentially used to 
+	 * file, with optional archiver prefix. Entries are separated by '.' character.
+	 *
+	 * Example: "tag.gz" means, that for uncompressing this archive we need to
+	 *          get compressor/archiver, that understands "gz" fromat, and
+	 *          then use compressor/archiver for "tar" format.
+	 */
+	typedef std::string ArchiveType;
+	ArchiveType archiveType() const;
+private:
+	void setArchiveType(const ArchiveType type);
+	void setCompressed(bool compressed) const;
+	void setArchived(bool archived) const;
 private:
 	ZLFile();
 
@@ -61,9 +70,9 @@ public:
 	~ZLFile();
 
 	bool exists() const;
-	size_t size() const;	
+	size_t size() const;
 
-	void forceArchiveType(ArchiveType type) const;
+	void forceArchiveType(const std::string & type) const;
 
 	bool isCompressed() const;
 	bool isDirectory() const;
@@ -101,14 +110,19 @@ private:
 	mutable std::string myMimeType;
 	mutable bool myMimeTypeIsUpToDate;
 	mutable ArchiveType myArchiveType;
+	mutable bool myIsCompressed;
+	mutable bool myIsArchive;
 	mutable ZLFileInfo myInfo;
 	mutable bool myInfoIsFilled;
 };
 
 inline ZLFile::~ZLFile() {}
 
-inline bool ZLFile::isCompressed() const { return (myArchiveType & COMPRESSED) != 0; }
-inline bool ZLFile::isArchive() const { return (myArchiveType & ARCHIVE) != 0; }
+inline bool ZLFile::isCompressed() const { return myIsCompressed; }
+inline bool ZLFile::isArchive() const { return myIsArchive; }
+inline ZLFile::ArchiveType ZLFile::archiveType() const { return myArchiveType; }
+inline void ZLFile::setCompressed(bool compressed) const { myIsCompressed = compressed; }
+inline void ZLFile::setArchived(bool archived) const { myIsArchive = archived; }
 
 inline const std::string &ZLFile::path() const { return myPath; }
 inline const std::string &ZLFile::name(bool hideExtension) const { return hideExtension ? myNameWithoutExtension : myNameWithExtension; }

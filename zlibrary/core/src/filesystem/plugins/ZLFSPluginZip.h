@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Contributed by Serge Osnach <serge.osnach@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,47 +18,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLBZIP2INPUTSTREAM_H__
-#define __ZLBZIP2INPUTSTREAM_H__
+#ifndef __ZLFSPLUGINZIP_H__
+#define __ZLFSPLUGINZIP_H__
 
-#include <bzlib.h>
+#include "ZLFSPlugin.h"
 
-#ifdef WIN32
-#undef min
-#undef max
-#endif
+class ZLFile;
 
-#include <shared_ptr.h>
-
-#include "../ZLInputStream.h"
-
-class ZLFSCompressorBzip2;
-
-class ZLBzip2InputStream : public ZLInputStream {
-
-private:
-	ZLBzip2InputStream(shared_ptr<ZLInputStream> base);
-
+class ZLFSArchiverZip : public ZLFSArchiver {
 public:
-	~ZLBzip2InputStream();
-	bool open();
-	size_t read(char *buffer, size_t maxSize);
-	void close();
-
-	void seek(int offset, bool absoluteOffset);
-	size_t offset() const;
-	size_t sizeOfOpened();
-
-private:
-	shared_ptr<ZLInputStream> myBaseStream;
-	size_t myOffset;
-
-	bz_stream myBzStream;
-	char *myBaseBuffer;
-	char *myTrashBuffer;
-	size_t myBaseAvailableSize;
-
-friend class ZLFSCompressorBzip2;
+	ZLFSArchiverZip();
+	virtual ZLFile::ArchiveType PrepareFile(
+		ZLFile *file,
+		std::string &nameWithoutExt,
+		std::string &lowerCaseName);
+	virtual const std::string signature() const;
+	virtual shared_ptr<ZLDir> createDirectory(
+		const ZLFile *file, const std::string &path);
+	virtual shared_ptr<ZLInputStream> archiveInputStream(
+		const ZLFile *file,
+		shared_ptr<ZLInputStream> base,
+		const std::string &subpath);
+	virtual ~ZLFSArchiverZip();
 };
 
-#endif /* __ZLBZIP2INPUTSTREAM_H__ */
+#endif /* __ZLFSPLUGINGZ_H__ */

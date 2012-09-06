@@ -92,8 +92,8 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 				ZLFile file(fileName);
 				if (PluginCollection::Instance().plugin(file, !collectBookWithoutMetaInfo) != 0) {
 					bookFileNames.insert(fileName);
-				// TODO: zip -> any archive
-				} else if (file.extension() == "zip") {
+				// DONE: zip -> any archive
+				} else if (file.isArchive ()) {
 					if (myScanSubdirs || !inZip) {
 						dirs.insert(fileName);
 					}
