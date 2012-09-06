@@ -17,7 +17,7 @@ ifeq "$(UI_TYPE)" "qt"
   MOC = moc-qt3
   QTINCLUDE = -I /usr/include/qt3
 else
-  MOC = moc-qt4
+  MOC = $(shell pkg-config QtCore --variable=moc_location)
   QTINCLUDE = -I $(shell pkg-config --cflags QtCore)
 endif
 
