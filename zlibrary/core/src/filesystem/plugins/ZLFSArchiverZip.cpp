@@ -22,20 +22,18 @@
 #include <ZLStringUtil.h>
 #include <ZLFile.h>
 
-#include "ZLFSPluginZip.h"
+#include "ZLFSArchiverZip.h"
 #include "../zip/ZLZip.h"
 
 
 ZLFSArchiverZip::ZLFSArchiverZip() {
 }
 
-ZLFile::ArchiveType ZLFSArchiverZip::PrepareFile(ZLFile *file,
-		std::string &nameWithoutExt,
-		std::string &lowerCaseName) {
+ZLFile::ArchiveType ZLFSArchiverZip::prepareFile(ZLFile &file, std::string &nameWithoutExt,	std::string &lowerCaseName) {
+    (void)file;
 	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".zip")) {
 		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 3);
 		lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 3);
-
 		return signature();
 	}
 	return std::string();
@@ -45,21 +43,18 @@ const std::string ZLFSArchiverZip::signature() const {
 	return "zip";
 }
 
-shared_ptr<ZLDir> ZLFSArchiverZip::createDirectory(
-	const ZLFile *file, const std::string &path
-) {
-	if (file->archiveType().find("zip") != 0)
-		return NULL;
-	return new ZLZipDir(path);
+shared_ptr<ZLDir> ZLFSArchiverZip::createDirectory(const ZLFile &file, const std::string &path) {
+    if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
+        return new ZLZipDir(path);
+    }
+    return 0;
 }
 
-shared_ptr<ZLInputStream> ZLFSArchiverZip::archiveInputStream(
-	const ZLFile *file, shared_ptr<ZLInputStream> base, const std::string &subpath
-) {
-	if (file->archiveType().find("zip") == 0) {
-		return new ZLZipInputStream(base,subpath);
+shared_ptr<ZLInputStream> ZLFSArchiverZip::archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath) {
+    if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
+        return new ZLZipInputStream(base, subpath);
 	}
-	return NULL;
+    return 0;
 }
 
 ZLFSArchiverZip::~ZLFSArchiverZip() {

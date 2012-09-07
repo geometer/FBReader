@@ -62,7 +62,7 @@ ZLFile OEBPlugin::opfFile(const ZLFile &oebFile) {
 	}
 
 	ZLLogger::Instance().println("epub", "Looking for opf file in " + oebFile.path());
-	oebFile.forceArchiveType("zip");
+    oebFile.forceArchiveType(ZLFile::ZIP);
 	shared_ptr<ZLDir> zipDir = oebFile.directory(false);
 	if (zipDir.isNull()) {
 		ZLLogger::Instance().println("epub", "Couldn't open zip archive");

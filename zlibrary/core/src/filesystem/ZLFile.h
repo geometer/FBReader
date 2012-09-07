@@ -48,15 +48,8 @@ public:
 	static std::string replaceIllegalCharacters(const std::string &fileName, char replaceWith);
 
 public:
-	/**
-	 * ArchiveType is a list of compressors, sequentially used to 
-	 * file, with optional archiver prefix. Entries are separated by '.' character.
-	 *
-	 * Example: "tag.gz" means, that for uncompressing this archive we need to
-	 *          get compressor/archiver, that understands "gz" fromat, and
-	 *          then use compressor/archiver for "tar" format.
-	 */
-	typedef std::string ArchiveType;
+    static const std::string ZIP; // = "zip"
+    typedef std::string ArchiveType; //ArchiveType is a string like "tag.gz", that describes sequence of compressors/archivers need to be used
 	ArchiveType archiveType() const;
 private:
 	void setArchiveType(const ArchiveType type);

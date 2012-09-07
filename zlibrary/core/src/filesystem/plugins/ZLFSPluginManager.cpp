@@ -23,113 +23,109 @@
 #include "ZLFSPlugin.h"
 #include "ZLFSPluginManager.h"
 
-#include "ZLFSPluginGz.h"
-#include "ZLFSPluginBzip2.h"
-#include "ZLFSPluginZip.h"
-#include "ZLFSPluginTar.h"
+#include "ZLFSCompressorGzip.h"
+#include "ZLFSCompressorBzip2.h"
+#include "ZLFSArchiverZip.h"
+#include "ZLFSArchiverTar.h"
+
+static const char ARCHIVERS_SEPARATOR = '.';
 
 ZLFSPluginManager::ZLFSPluginManager() {
-	registerPlugin(new ZLFSCompressorGZ);
-	registerPlugin(new ZLFSCompressorBzip2);
-	registerPlugin(new ZLFSArchiverZip);
-	registerPlugin(new ZLFSArchiverTar);
+    registerPlugin(new ZLFSCompressorGzip);
+    registerPlugin(new ZLFSCompressorBzip2);
+    registerPlugin(new ZLFSArchiverZip);
+    registerPlugin(new ZLFSArchiverTar);
 }
 
-void ZLFSPluginManager::registerPlugin(ZLFSCompressor *plugin) {
-	shared_ptr<ZLFSCompressor>ptr(plugin);
-	myCompressors.push_back(ptr);
+void ZLFSPluginManager::registerPlugin(shared_ptr<ZLFSCompressor> plugin) {
+    myCompressors.push_back(plugin);
 }
 
-void ZLFSPluginManager::registerPlugin(ZLFSArchiver *plugin) {
-	shared_ptr<ZLFSArchiver>ptr(plugin);
-	myArchivers.push_back(ptr);
+void ZLFSPluginManager::registerPlugin(shared_ptr<ZLFSArchiver> plugin) {
+    myArchivers.push_back(plugin);
 }
 
-std::string ZLFSPluginManager::stripLastArchiver(const std::string &archivers_desc) {
-	size_t last_dot = archivers_desc.rfind(ZLFSPluginManager::ArchiversSeparator);
-	if (last_dot != std::string::npos) {
-		return std::string(archivers_desc.begin(), archivers_desc.begin() + last_dot);
+std::string ZLFSPluginManager::stripLastArchiver(const std::string &archiversDesc) {
+    size_t lastDotIndex = archiversDesc.rfind(ARCHIVERS_SEPARATOR);
+    if (lastDotIndex != std::string::npos) {
+        return std::string(archiversDesc.begin(), archiversDesc.begin() + lastDotIndex);
 	}
 	return std::string();
 }
 
-std::string ZLFSPluginManager::getLastArchiver(const std::string &archivers_desc) {
-	std::string last_archiver;
-	size_t last_dot = archivers_desc.rfind(ZLFSPluginManager::ArchiversSeparator);
-	if (last_dot != std::string::npos) {
-		last_archiver = std::string(archivers_desc.begin() + last_dot + 1, archivers_desc.end());
+std::string ZLFSPluginManager::getLastArchiver(const std::string &archiversDesc) {
+    std::string lastArchiver;
+    size_t lastDotIndex = archiversDesc.rfind(ARCHIVERS_SEPARATOR);
+    if (lastDotIndex != std::string::npos) {
+        lastArchiver = std::string(archiversDesc.begin() + lastDotIndex + 1, archiversDesc.end());
 	} else {
-		last_archiver = archivers_desc;
+        lastArchiver = archiversDesc;
 	}
-	return last_archiver;
+    return lastArchiver;
 }
 
-ZLFile::ArchiveType ZLFSPluginManager::combineArchiveTypes(ZLFile::ArchiveType a, ZLFile::ArchiveType b) {
-	if (b.empty())
-		return a;
-	return a + ArchiversSeparator + b;
+ZLFile::ArchiveType ZLFSPluginManager::combineArchiveTypes(ZLFile::ArchiveType type1, ZLFile::ArchiveType type2) {
+    if (type2.empty()) {
+        return type1;
+    }
+    return type1 + ARCHIVERS_SEPARATOR + type2;
 }
 
-ZLFile::ArchiveType ZLFSPluginManager::PrepareFile(ZLFile *file,
-		std::string &nameWithoutExt,
-		std::string lowerCaseName) {
+ZLFile::ArchiveType ZLFSPluginManager::prepareFile(ZLFile &file, std::string &nameWithoutExt, std::string lowerCaseName) {
 	ZLFile::ArchiveType result;
-	bool any_recognized;
+    bool anyRecognized;
 	do {
-		any_recognized = false;
-		for (myCompressors_t::iterator it = myCompressors.begin(); it != myCompressors.end(); ++it) {
-			ZLFile::ArchiveType detected =
-				(*it)->PrepareFile(file, nameWithoutExt, lowerCaseName);
+        anyRecognized = false;
+        for (Compressors::iterator it = myCompressors.begin(); it != myCompressors.end(); ++it) {
+            ZLFile::ArchiveType detected = (*it)->prepareFile(file, nameWithoutExt, lowerCaseName);
 			if (!detected.empty()) {
 				result = combineArchiveTypes(detected, result);
-				file->setCompressed(true);
-				any_recognized = true;
+                file.setCompressed(true);
+                anyRecognized = true;
 			}
 		}
-	} while (any_recognized);
+    } while (anyRecognized);
 
-	for (myArchivers_t::iterator it = myArchivers.begin(); it != myArchivers.end(); ++it) {
-		ZLFile::ArchiveType detected =
-			(*it)->PrepareFile(file, nameWithoutExt, lowerCaseName);
+    for (Archivers::iterator it = myArchivers.begin(); it != myArchivers.end(); ++it) {
+        ZLFile::ArchiveType detected = (*it)->prepareFile(file, nameWithoutExt, lowerCaseName);
 		if (!detected.empty()) {
 			result = combineArchiveTypes(detected, result);
-			file->setArchived(true);
+            file.setArchived(true);
 		}
 	}
 	return result;
 }
 
-shared_ptr<ZLInputStream> ZLFSPluginManager::envelope(
-	const ZLFile *file, shared_ptr<ZLInputStream> & base
-) {
-	ZLFile::ArchiveType archivers_desc = file->archiveType();
-	ZLFile::ArchiveType archivers_desc_orig;
+shared_ptr<ZLInputStream> ZLFSPluginManager::envelope(const ZLFile &file, shared_ptr<ZLInputStream> &base) {
+    ZLFile::ArchiveType archiversDesc = file.archiveType();
+    ZLFile::ArchiveType archiversDescOrig;
 
 	do {
-		archivers_desc_orig = archivers_desc;
-		for (myCompressors_t::iterator it = myCompressors.begin(); it != myCompressors.end(); ++it) {
-			base = (*it)->envelope(archivers_desc, base);
+        archiversDescOrig = archiversDesc;
+        for (Compressors::iterator it = myCompressors.begin(); it != myCompressors.end(); ++it) {
+            base = (*it)->envelope(archiversDesc, base);
 		}
-	} while (!archivers_desc.empty() && archivers_desc_orig != archivers_desc);
+    } while (!archiversDesc.empty() && archiversDescOrig != archiversDesc);
 
 	return base;
 }
 
-shared_ptr<ZLDir> ZLFSPluginManager::createDirectory(
-	const ZLFile *file, const std::string &path) {
-	for (myArchivers_t::iterator it = myArchivers.begin(); it != myArchivers.end(); ++it) {
+shared_ptr<ZLDir> ZLFSPluginManager::createDirectory(const ZLFile &file, const std::string &path) {
+    for (Archivers::iterator it = myArchivers.begin(); it != myArchivers.end(); ++it) {
 		shared_ptr<ZLDir> directory = (*it)->createDirectory(file, path);
-		if (!directory.isNull())
+        if (!directory.isNull()) {
 			return directory;
+        }
 	}
 	return shared_ptr<ZLDir>();
 }
 
-shared_ptr<ZLInputStream> ZLFSPluginManager::archiveInputStream(const ZLFile *file, shared_ptr<ZLInputStream> base, const std::string &subpath) {
-	for (myArchivers_t::iterator it = myArchivers.begin(); it != myArchivers.end(); ++it) {
+shared_ptr<ZLInputStream> ZLFSPluginManager::archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath) {
+    for (Archivers::iterator it = myArchivers.begin(); it != myArchivers.end(); ++it) {
 		shared_ptr<ZLInputStream> stream = (*it)->archiveInputStream(file, base, subpath);
-		if (!stream.isNull())
+        if (!stream.isNull()) {
 			return stream;
+        }
 	}
 	return base;
 }

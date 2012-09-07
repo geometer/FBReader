@@ -18,28 +18,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLFSPLUGINZIP_H__
-#define __ZLFSPLUGINZIP_H__
+#ifndef __ZLFSARCHIVERTAR_H__
+#define __ZLFSARCHIVERTAR_H__
 
 #include "ZLFSPlugin.h"
 
-class ZLFile;
+class ZLFSArchiverTar : public ZLFSArchiver {
 
-class ZLFSArchiverZip : public ZLFSArchiver {
 public:
-	ZLFSArchiverZip();
-	virtual ZLFile::ArchiveType PrepareFile(
-		ZLFile *file,
-		std::string &nameWithoutExt,
-		std::string &lowerCaseName);
-	virtual const std::string signature() const;
-	virtual shared_ptr<ZLDir> createDirectory(
-		const ZLFile *file, const std::string &path);
-	virtual shared_ptr<ZLInputStream> archiveInputStream(
-		const ZLFile *file,
-		shared_ptr<ZLInputStream> base,
-		const std::string &subpath);
-	virtual ~ZLFSArchiverZip();
+	ZLFSArchiverTar();
+    virtual const std::string signature() const;
+    virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string &nameWithoutExt, std::string &lowerCaseName);
+    virtual shared_ptr<ZLDir> createDirectory(const ZLFile &file, const std::string &path);
+    virtual shared_ptr<ZLInputStream> archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath);
+	virtual ~ZLFSArchiverTar();
 };
 
-#endif /* __ZLFSPLUGINGZ_H__ */
+#endif /* __ZLFSARCHIVERTAR_H__ */

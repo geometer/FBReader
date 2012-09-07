@@ -22,30 +22,28 @@
 #include <ZLStringUtil.h>
 #include <ZLFile.h>
 
-#include "ZLFSPluginTar.h"
+#include "ZLFSArchiverTar.h"
 #include "../tar/ZLTar.h"
 
 
 ZLFSArchiverTar::ZLFSArchiverTar() {
 }
 
-ZLFile::ArchiveType ZLFSArchiverTar::PrepareFile(ZLFile *file,
-		std::string &nameWithoutExt,
-		std::string &lowerCaseName) {
+ZLFile::ArchiveType ZLFSArchiverTar::prepareFile(ZLFile &file, std::string &nameWithoutExt, std::string &lowerCaseName) {
 	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tar")) {
 		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 4);
 		lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 4);
 		return "tar";
 	}
-	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tgz")
-			||ZLStringUtil::stringEndsWith(lowerCaseName, ".ipk")) {
+
+    if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tgz")	|| ZLStringUtil::stringEndsWith(lowerCaseName, ".ipk")) {
 		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 4);
 		lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 4);
-
 		// Note, that 'tgz' and 'ipk' files are also compressed
-		setCompressed(file, true);
+        setCompressed(file, true);
 		return "tar.gz";
 	}
+
 	return std::string();
 }
 
@@ -53,19 +51,18 @@ const std::string ZLFSArchiverTar::signature() const {
 	return "tar";
 }
 
-shared_ptr<ZLDir> ZLFSArchiverTar::createDirectory(
-	const ZLFile *file, const std::string &path) {
-	if (file->archiveType().find("tar") != 0)
-		return NULL;
-	return new ZLTarDir(path);
+shared_ptr<ZLDir> ZLFSArchiverTar::createDirectory(const ZLFile &file, const std::string &path) {
+    if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
+        return new ZLTarDir(path);
+    }
+    return 0;
 }
 
-shared_ptr<ZLInputStream> ZLFSArchiverTar::archiveInputStream(
-	const ZLFile *file, shared_ptr<ZLInputStream> base, const std::string &subpath) {
-	if (file->archiveType().find("tar") == 0) {
-		return new ZLTarInputStream(base,subpath);
+shared_ptr<ZLInputStream> ZLFSArchiverTar::archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath) {
+    if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
+        return new ZLTarInputStream(base, subpath);
 	}
-	return NULL;
+    return 0;
 }
 
 

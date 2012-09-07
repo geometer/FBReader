@@ -26,44 +26,38 @@
 #include <ZLFile.h>
 
 class ZLFSCompressor {
+
 public:
-	ZLFSCompressor ();
-	virtual ~ZLFSCompressor ();
+    ZLFSCompressor();
+    virtual ~ZLFSCompressor();
+
 public:
-	virtual ZLFile::ArchiveType PrepareFile (ZLFile * file,
-		std::string & nameWithoutExt,
-		std::string & lowerCaseName) = 0;
-	virtual const std::string signature () const = 0;
-	virtual shared_ptr<ZLInputStream> envelope (
-		ZLFile::ArchiveType & type, shared_ptr<ZLInputStream> base) = 0;
+    virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string &nameWithoutExt, std::string &lowerCaseName) = 0;
+    virtual const std::string signature() const = 0;
+    virtual shared_ptr<ZLInputStream> envelope(ZLFile::ArchiveType &type, shared_ptr<ZLInputStream> base) = 0;
 };
 
-inline ZLFSCompressor::ZLFSCompressor () {}
-inline ZLFSCompressor::~ZLFSCompressor () {}
-
+inline ZLFSCompressor::ZLFSCompressor() {}
+inline ZLFSCompressor::~ZLFSCompressor() {}
 
 class ZLFSArchiver {
-public:
-	ZLFSArchiver ();
-	virtual ~ZLFSArchiver ();
-public:
-	virtual ZLFile::ArchiveType PrepareFile (ZLFile * file,
-		std::string & nameWithoutExt,
-		std::string & lowerCaseName) = 0;
-	virtual shared_ptr<ZLDir> createDirectory( 
-		const ZLFile * file, const std::string & path ) = 0;
 
-	virtual shared_ptr<ZLInputStream> archiveInputStream( 
-		const ZLFile * file, shared_ptr<ZLInputStream> base, const std::string & subpath) = 0;
+public:
+    ZLFSArchiver();
+    virtual ~ZLFSArchiver();
 
-	virtual const std::string signature () const = 0;
+public:
+    virtual ZLFile::ArchiveType prepareFile(ZLFile &file,	std::string &nameWithoutExt, std::string &lowerCaseName) = 0;
+    virtual shared_ptr<ZLDir> createDirectory(const ZLFile &file, const std::string &path ) = 0;
+    virtual shared_ptr<ZLInputStream> archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath) = 0;
+    virtual const std::string signature() const = 0;
+
 protected:
-	void setCompressed(const ZLFile * file, bool flag );
+    void setCompressed(const ZLFile &file, bool compressed);
 };
 
-inline void ZLFSArchiver::setCompressed(const ZLFile * file, bool flag ){ file->setCompressed(flag); }
-
-inline ZLFSArchiver::ZLFSArchiver () {}
-inline ZLFSArchiver::~ZLFSArchiver () {}
+inline ZLFSArchiver::ZLFSArchiver() {}
+inline ZLFSArchiver::~ZLFSArchiver() {}
+inline void ZLFSArchiver::setCompressed(const ZLFile &file, bool compressed) { file.setCompressed(compressed); }
 
 #endif /* __ZLFSPLUGIN_H__ */

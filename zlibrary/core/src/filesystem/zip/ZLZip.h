@@ -108,7 +108,7 @@ private:
 
 	shared_ptr<ZLZDecompressor> myDecompressor;
 
-friend class ZLFSCompressorGZ;
+friend class ZLFSCompressorGzip;
 };
 
 class ZLZipDir : public ZLDir {
