@@ -34,7 +34,7 @@
 #include "../../unix/message/ZLUnixMessage.h"
 #include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
-#include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
+//#include "../../../../core/src/unix/iconv/IConvEncodingConverter.h"
 
 class ZLQtLibraryImplementation : public ZLibraryImplementation {
 
@@ -59,7 +59,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	ZLQtDialogManager::createInstance();
 	ZLUnixCommunicationManager::createInstance();
 	ZLQtImageManager::createInstance();
-	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
+	//ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 	ZLQtNetworkManager::createInstance();
 
 	ZLKeyUtil::setKeyNamesFileName("keynames-qt4.xml");

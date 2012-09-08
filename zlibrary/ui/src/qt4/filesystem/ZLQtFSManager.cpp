@@ -17,7 +17,10 @@
  * 02110-1301, USA.
  */
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QString>
+
+#include <ZLStringUtil.h>
 
 #include "ZLQtFSManager.h"
 
@@ -33,4 +36,12 @@ std::string ZLQtFSManager::convertFilenameToUtf8(const std::string &name) const 
 shared_ptr<ZLMimeType> ZLQtFSManager::mimeType(const std::string &path) const {
 	// TODO: implement
 	return ZLMimeType::EMPTY;
+}
+
+void ZLQtFSManager::normalizeRealPath(std::string &path) const {
+	if (ZLStringUtil::stringStartsWith(path, "~~")) {
+		static const std::string replacement =
+			std::string((const char*)QCoreApplication::applicationDirPath().toUtf8()) + "/..";
+	  path = replacement + path.substr(2);
+	}
 }

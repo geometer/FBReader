@@ -33,6 +33,7 @@ private:
 protected:
 	std::string convertFilenameToUtf8(const std::string &name) const;
 	shared_ptr<ZLMimeType> mimeType(const std::string &path) const;
+	void normalizeRealPath(std::string &path) const;
 };
 
 #endif /* __ZLQTFSMANAGER_H__ */
