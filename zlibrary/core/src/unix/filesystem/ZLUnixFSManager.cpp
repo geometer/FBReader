@@ -165,7 +165,15 @@ bool ZLUnixFSManager::removeFile(const std::string &path) const {
 }
 
 int ZLUnixFSManager::findArchiveFileNameDelimiter(const std::string &path) const {
-	return path.rfind(':');
+	const int index = path.rfind(':');
+	if (index == -1) {
+		return -1;
+	}
+	struct stat fileStat;
+	if (stat(path.c_str(), &fileStat) == 0) {
+		return -1;
+	}
+	return index;
 }
 
 static const std::string RootPath = "/";
