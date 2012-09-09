@@ -12,8 +12,9 @@ CC = $(CCACHE) gcc
 AR = ar rsu
 LD = g++
 
-CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG $(shell pkg-config --cflags fribidi) 
+CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W -DLIBICONV_PLUG
 LDFLAGS =
+EXTERNAL_INCLUDE = $(shell pkg-config --cflags fribidi) 
 
 ifeq "$(UI_TYPE)" "qt"
   MOC = moc-qt3
