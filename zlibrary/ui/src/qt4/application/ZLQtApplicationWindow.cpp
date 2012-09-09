@@ -31,6 +31,7 @@
 #include <QtCore/QObjectList>
 
 #include <ZLibrary.h>
+#include <ZLFile.h>
 #include <ZLPopupData.h>
 
 #include "ZLQtApplicationWindow.h"
@@ -44,7 +45,8 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 
 ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), myItem(item) {
 	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-	QPixmap icon((imagePrefix + myItem.iconName() + ".png").c_str());
+	const QString path = QString::fromUtf8(ZLFile(imagePrefix + myItem.iconName() + ".png").path().c_str());
+	QPixmap icon(path);
 	setIcon(QIcon(icon));
 	QSize size = icon.size();
 	if (item.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
