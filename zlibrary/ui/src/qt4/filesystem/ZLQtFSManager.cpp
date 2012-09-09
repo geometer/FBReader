@@ -18,6 +18,7 @@
  */
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDir>
 #include <QtCore/QString>
 
 #include <ZLStringUtil.h>
@@ -39,9 +40,12 @@ shared_ptr<ZLMimeType> ZLQtFSManager::mimeType(const std::string &path) const {
 }
 
 void ZLQtFSManager::normalizeRealPath(std::string &path) const {
-	if (ZLStringUtil::stringStartsWith(path, "~~")) {
+	if (ZLStringUtil::stringStartsWith(path, "~~/") || path == "~~") {
 		static const std::string replacement =
 			std::string((const char*)QCoreApplication::applicationDirPath().toUtf8()) + "/..";
 	  path = replacement + path.substr(2);
+	} else if (ZLStringUtil::stringStartsWith(path, "~/") || path == "~") {
+		static const std::string replacement = (const char*)QDir::homePath().toUtf8();
+	  path = replacement + path.substr(1);
 	}
 }
