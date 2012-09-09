@@ -34,7 +34,7 @@ endif
 ifeq "$(TARGET_ARCH)" "win32"
   SUBDIRS += src/desktop/application src/desktop/dialogs src/win32/encoding src/win32/filesystem src/win32/config
 else
-  SUBDIRS += src/unix/xmlconfig src/unix/filesystem src/unix/library
+  SUBDIRS += src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library
 endif
 
 .objects:

@@ -10,13 +10,18 @@ SHAREDIR_MACRO = ~~/Resources
 IMAGEDIR_MACRO = $(SHAREDIR_MACRO)/icons
 APPIMAGEDIR_MACRO = $(IMAGEDIR_MACRO)
 
+ZLSHARED = no
+
 CCACHE = $(shell if which ccache > /dev/null; then echo "ccache"; fi) #if ccache is not installed, do not use it
 CC = $(CCACHE) gcc
 AR = ar rsu
 LD = g++
 
-CFLAGS = -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W
-LDFLAGS =
+ARCH_FLAGS = -arch x86_64 -mmacosx-version-min=10.5
+CFLAGS = $(ARCH_FLAGS) -pipe -fno-exceptions -Wall -Wno-ctor-dtor-privacy -W
+LDFLAGS = $(ARCH_FLAGS)
+
+EXTERNAL_LIBS = -liconv
 
 ifeq "$(UI_TYPE)" "qt4"
   QTBASEDIR = ~/QtSDK/Desktop/Qt/4.8.1/gcc
