@@ -1,3 +1,7 @@
+===== 0.99.3 (September ??, 2012) =====
+
+* Code is compilable for MacOS X (10.5+) with Qt library
+
 ===== 0.99.2 (September 7, 2012) =====
 
 * Added "My Books" (purchased books) section for LitRes catalog
