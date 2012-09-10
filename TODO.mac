@@ -1,3 +1,6 @@
+CLEANUP
+	update Info.plist file
+
 BUGS
 	обновление view после 'open file.epub' из командной строки
 
