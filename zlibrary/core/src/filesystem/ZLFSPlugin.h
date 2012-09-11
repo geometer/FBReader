@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  * Contributed by Serge Osnach <serge.osnach@gmail.com> 
  * 
  * This program is free software; you can redistribute it and/or modify
