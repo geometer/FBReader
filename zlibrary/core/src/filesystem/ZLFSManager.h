@@ -30,6 +30,7 @@ class ZLDir;
 class ZLFSDir;
 class ZLInputStream;
 class ZLOutputStream;
+class ZLFSPluginManager;
 
 class ZLFSManager {
 
@@ -39,7 +40,11 @@ public:
 
 protected:
 	static ZLFSManager *ourInstance;
-	
+    ZLFSPluginManager *myPluginManager;
+
+public:
+	ZLFSPluginManager &Plugins();
+
 protected:
 	ZLFSManager();
 	virtual ~ZLFSManager();
@@ -75,7 +80,6 @@ friend class ZLDir;
 };
 
 inline ZLFSManager &ZLFSManager::Instance() { return *ourInstance; }
-inline ZLFSManager::ZLFSManager() {}
-inline ZLFSManager::~ZLFSManager() {}
+inline ZLFSPluginManager &ZLFSManager::Plugins() { return *myPluginManager; }
 
 #endif /* __ZLFSMANAGER_H__ */

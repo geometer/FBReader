@@ -22,6 +22,7 @@
 
 #include "ZLFSManager.h"
 #include "ZLFSDir.h"
+#include "ZLFSPluginManager.h"
 
 ZLFSManager *ZLFSManager::ourInstance = 0;
 
@@ -54,3 +55,12 @@ void ZLFSManager::normalize(std::string &path) const {
 		path = realPath + ':' + ZLFileUtil::normalizeUnixPath(path.substr(index + 1));
 	}
 }
+
+ZLFSManager::ZLFSManager() {
+    myPluginManager = new ZLFSPluginManager();
+}
+
+ZLFSManager::~ZLFSManager() {
+    delete myPluginManager;
+}
+

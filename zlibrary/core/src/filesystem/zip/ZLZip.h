@@ -89,9 +89,11 @@ private:
 
 	shared_ptr<ZLZDecompressor> myDecompressor;
 
-friend class ZLFile;
+friend class ZLFSArchiverZip;
 };
 
+class ZLFSCompresorGz;
+class ZLFSArchiverZip;
 class ZLGzipInputStream : public ZLInputStream {
 
 private:
@@ -115,7 +117,7 @@ private:
 
 	shared_ptr<ZLZDecompressor> myDecompressor;
 
-friend class ZLFile;
+friend class ZLFSCompressorGzip;
 };
 
 class ZLZipDir : public ZLDir {
@@ -131,7 +133,7 @@ public:
 protected:
 	std::string delimiter() const;
 
-friend class ZLFile;
+friend class ZLFSArchiverZip;
 };
 
 inline ZLZipDir::ZLZipDir(const std::string &name) : ZLDir(name) {}

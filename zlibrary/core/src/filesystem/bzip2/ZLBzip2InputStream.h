@@ -31,6 +31,8 @@
 
 #include "../ZLInputStream.h"
 
+class ZLFSCompressorBzip2;
+
 class ZLBzip2InputStream : public ZLInputStream {
 
 private:
@@ -55,7 +57,7 @@ private:
 	char *myTrashBuffer;
 	size_t myBaseAvailableSize;
 
-friend class ZLFile;
+friend class ZLFSCompressorBzip2;
 };
 
 #endif /* __ZLBZIP2INPUTSTREAM_H__ */
