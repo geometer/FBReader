@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2004-2010 Geometer Plus <contact@geometerplus.com>
- * Contributed by Serge Osnach <serge.osnach@gmail.com> 
+ * Contributed by Serge Osnach <serge.osnach@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,19 +18,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLFSCOMPRESSORBZIP2_H__
-#define __ZLFSCOMPRESSORBZIP2_H__
+#ifndef __ZLFSARCHIVERTAR_H__
+#define __ZLFSARCHIVERTAR_H__
 
-#include "ZLFSPlugin.h"
+#include "../ZLFSPlugin.h"
 
-class ZLFSCompressorBzip2 : public ZLFSCompressor {
+class ZLFSArchiverTar : public ZLFSArchiver {
 
 public:
-	ZLFSCompressorBzip2();
-    virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string & nameWithoutExt);
+	ZLFSArchiverTar();
     virtual const std::string signature() const;
-    virtual shared_ptr<ZLInputStream> envelope(ZLFile::ArchiveType &type, shared_ptr<ZLInputStream> base);
-	virtual ~ZLFSCompressorBzip2();
+    virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string &nameWithoutExt);
+    virtual shared_ptr<ZLDir> createDirectory(const ZLFile &file, const std::string &path);
+    virtual shared_ptr<ZLInputStream> archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath);
+	virtual ~ZLFSArchiverTar();
 };
 
-#endif /* __ZLFSCOMPRESSORBZIP2_H__ */
+#endif /* __ZLFSARCHIVERTAR_H__ */

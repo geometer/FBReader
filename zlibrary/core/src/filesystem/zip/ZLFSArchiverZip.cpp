@@ -23,7 +23,7 @@
 #include <ZLFile.h>
 
 #include "ZLFSArchiverZip.h"
-#include "../zip/ZLZip.h"
+#include "ZLZip.h"
 
 ZLFSArchiverZip::ZLFSArchiverZip() {
 }

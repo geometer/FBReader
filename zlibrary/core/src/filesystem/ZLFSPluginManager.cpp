@@ -23,10 +23,10 @@
 #include "ZLFSPlugin.h"
 #include "ZLFSPluginManager.h"
 
-#include "ZLFSCompressorGzip.h"
-#include "ZLFSCompressorBzip2.h"
-#include "ZLFSArchiverZip.h"
-#include "ZLFSArchiverTar.h"
+#include "zip/ZLFSCompressorGzip.h"
+#include "bzip2/ZLFSCompressorBzip2.h"
+#include "zip/ZLFSArchiverZip.h"
+#include "tar/ZLFSArchiverTar.h"
 
 static const char ARCHIVERS_SEPARATOR = '.';
 

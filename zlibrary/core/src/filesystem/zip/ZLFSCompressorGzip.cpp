@@ -22,35 +22,35 @@
 #include <ZLStringUtil.h>
 #include <ZLFile.h>
 
-#include "ZLFSCompressorBzip2.h"
-#include "../bzip2/ZLBzip2InputStream.h"
-#include "ZLFSPluginManager.h"
+#include "ZLFSCompressorGzip.h"
+#include "ZLZip.h"
+#include "../ZLFSPluginManager.h"
 
-ZLFSCompressorBzip2::ZLFSCompressorBzip2() {
+ZLFSCompressorGzip::ZLFSCompressorGzip() {
 }
 
-ZLFile::ArchiveType ZLFSCompressorBzip2::prepareFile(ZLFile &file, std::string &nameWithoutExt) {
+ZLFile::ArchiveType ZLFSCompressorGzip::prepareFile(ZLFile &file, std::string &nameWithoutExt) {
     (void)file;
     std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
-	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".bz2")) {
-		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 4);
+	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".gz")) {
+		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 3);
 		return signature();
 	}
 	return ZLFile::ArchiveType();
 }
 
-const std::string ZLFSCompressorBzip2::signature() const {
-	return "bz2";
+const std::string ZLFSCompressorGzip::signature() const {
+	return "gz";
 }
 
-shared_ptr<ZLInputStream> ZLFSCompressorBzip2::envelope(ZLFile::ArchiveType &type, shared_ptr<ZLInputStream> base) {
+shared_ptr<ZLInputStream> ZLFSCompressorGzip::envelope(ZLFile::ArchiveType &type, shared_ptr<ZLInputStream> base) {
 	ZLFile::ArchiveType lastType = ZLFSPluginManager::getLastArchiver(type);
 	if (lastType == signature()) {
         type = ZLFSPluginManager::stripLastArchiver(type);
-		return new ZLBzip2InputStream(base);
+		return new ZLGzipInputStream(base);
 	}
 	return base;
 }
 
-ZLFSCompressorBzip2::~ZLFSCompressorBzip2() {
+ZLFSCompressorGzip::~ZLFSCompressorGzip() {
 }

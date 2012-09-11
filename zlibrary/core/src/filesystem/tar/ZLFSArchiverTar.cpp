@@ -23,7 +23,7 @@
 #include <ZLFile.h>
 
 #include "ZLFSArchiverTar.h"
-#include "../tar/ZLTar.h"
+#include "ZLTar.h"
 
 ZLFSArchiverTar::ZLFSArchiverTar() {
 }

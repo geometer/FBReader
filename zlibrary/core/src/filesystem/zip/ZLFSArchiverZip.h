@@ -18,19 +18,20 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLFSCOMPRESSORGZIP_H__
-#define __ZLFSCOMPRESSORGZIP_H__
+#ifndef __ZLFSARCHIVERZIP_H__
+#define __ZLFSARCHIVERZIP_H__
 
-#include "ZLFSPlugin.h"
+#include "../ZLFSPlugin.h"
 
-class ZLFSCompressorGzip : public ZLFSCompressor {
+class ZLFSArchiverZip : public ZLFSArchiver {
 
 public:
-    ZLFSCompressorGzip();
+	ZLFSArchiverZip();
     virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string &nameWithoutExt);
-    virtual const std::string signature() const;
-    virtual shared_ptr<ZLInputStream> envelope(ZLFile::ArchiveType &type, shared_ptr<ZLInputStream> base);
-    virtual ~ZLFSCompressorGzip();
+	virtual const std::string signature() const;
+    virtual shared_ptr<ZLDir> createDirectory(const ZLFile &file, const std::string &path);
+    virtual shared_ptr<ZLInputStream> archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath);
+	virtual ~ZLFSArchiverZip();
 };
 
-#endif /* __ZLFSCOMPRESSORGZIP_H__ */
+#endif /* __ZLFSARCHIVERZIP_H__ */

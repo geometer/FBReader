@@ -26,7 +26,7 @@
 #include "ZLFSDir.h"
 #include "ZLOutputStream.h"
 #include "ZLFSManager.h"
-#include "plugins/ZLFSPluginManager.h"
+#include "ZLFSPluginManager.h"
 
 const ZLFile ZLFile::NO_FILE;
 

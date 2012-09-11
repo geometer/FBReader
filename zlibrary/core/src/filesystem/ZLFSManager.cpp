@@ -22,7 +22,7 @@
 
 #include "ZLFSManager.h"
 #include "ZLFSDir.h"
-#include "plugins/ZLFSPluginManager.h"
+#include "ZLFSPluginManager.h"
 
 ZLFSManager *ZLFSManager::ourInstance = 0;
 
