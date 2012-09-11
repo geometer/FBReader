@@ -26,15 +26,14 @@
 #include "../bzip2/ZLBzip2InputStream.h"
 #include "ZLFSPluginManager.h"
 
-
 ZLFSCompressorBzip2::ZLFSCompressorBzip2() {
 }
 
-ZLFile::ArchiveType ZLFSCompressorBzip2::prepareFile(ZLFile &file, std::string &nameWithoutExt, std::string &lowerCaseName) {
+ZLFile::ArchiveType ZLFSCompressorBzip2::prepareFile(ZLFile &file, std::string &nameWithoutExt) {
     (void)file;
+    std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
 	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".bz2")) {
 		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 4);
-		lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 4);
 		return signature();
 	}
 	return ZLFile::ArchiveType();

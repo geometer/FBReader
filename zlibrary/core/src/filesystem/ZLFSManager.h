@@ -40,9 +40,8 @@ public:
 
 protected:
 	static ZLFSManager *ourInstance;
+    ZLFSPluginManager *myPluginManager;
 
-protected:
-	ZLFSPluginManager *pluginManager;
 public:
 	ZLFSPluginManager &Plugins();
 
@@ -81,6 +80,6 @@ friend class ZLDir;
 };
 
 inline ZLFSManager &ZLFSManager::Instance() { return *ourInstance; }
-inline ZLFSPluginManager &ZLFSManager::Plugins(){ return *pluginManager; }
+inline ZLFSPluginManager &ZLFSManager::Plugins() { return *myPluginManager; }
 
 #endif /* __ZLFSMANAGER_H__ */

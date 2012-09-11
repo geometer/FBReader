@@ -57,8 +57,7 @@ ZLFile::ZLFile(const std::string &path, const std::string &mimeType) : myPath(pa
 		myArchiveType = it->second;
 	} else {
 		myArchiveType.clear();
-		std::string lowerCaseName = ZLUnicodeUtil::toLower(myNameWithoutExtension);
-        myArchiveType = ZLFSManager::Instance().Plugins().prepareFile(*this, myNameWithoutExtension, lowerCaseName);
+        myArchiveType = ZLFSManager::Instance().Plugins().prepareFile(*this, myNameWithoutExtension);
 	}
 
 	int index = myNameWithoutExtension.rfind('.');

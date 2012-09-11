@@ -53,8 +53,8 @@ public:
 	ArchiveType archiveType() const;
 private:
 	void setArchiveType(const ArchiveType type);
-	void setCompressed(bool compressed) const;
-	void setArchived(bool archived) const;
+    void setCompressed(bool compressed);
+    void setArchived(bool archived);
 private:
 	ZLFile();
 
@@ -103,8 +103,8 @@ private:
 	mutable std::string myMimeType;
 	mutable bool myMimeTypeIsUpToDate;
 	mutable ArchiveType myArchiveType;
-	mutable bool myIsCompressed;
-	mutable bool myIsArchive;
+    bool myIsCompressed;
+    bool myIsArchive;
 	mutable ZLFileInfo myInfo;
 	mutable bool myInfoIsFilled;
 };
@@ -114,8 +114,8 @@ inline ZLFile::~ZLFile() {}
 inline bool ZLFile::isCompressed() const { return myIsCompressed; }
 inline bool ZLFile::isArchive() const { return myIsArchive; }
 inline ZLFile::ArchiveType ZLFile::archiveType() const { return myArchiveType; }
-inline void ZLFile::setCompressed(bool compressed) const { myIsCompressed = compressed; }
-inline void ZLFile::setArchived(bool archived) const { myIsArchive = archived; }
+inline void ZLFile::setCompressed(bool compressed) { myIsCompressed = compressed; }
+inline void ZLFile::setArchived(bool archived) { myIsArchive = archived; }
 
 inline const std::string &ZLFile::path() const { return myPath; }
 inline const std::string &ZLFile::name(bool hideExtension) const { return hideExtension ? myNameWithoutExtension : myNameWithExtension; }

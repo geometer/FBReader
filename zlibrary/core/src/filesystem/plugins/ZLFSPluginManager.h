@@ -38,7 +38,7 @@ public:
   ~ZLFSPluginManager();
 
 public:
-  ZLFile::ArchiveType prepareFile(ZLFile &file, std::string &nameWithoutExt, std::string lowerCaseName);
+  ZLFile::ArchiveType prepareFile(ZLFile &file, std::string &nameWithoutExt);
   shared_ptr<ZLInputStream> envelope(const ZLFile &file, shared_ptr<ZLInputStream> &base);
   shared_ptr<ZLDir> createDirectory(const ZLFile &file, const std::string &path);
   shared_ptr<ZLInputStream> archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath);

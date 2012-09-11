@@ -25,15 +25,13 @@
 #include "ZLFSArchiverZip.h"
 #include "../zip/ZLZip.h"
 
-
 ZLFSArchiverZip::ZLFSArchiverZip() {
 }
 
-ZLFile::ArchiveType ZLFSArchiverZip::prepareFile(ZLFile &file, std::string &nameWithoutExt,	std::string &lowerCaseName) {
+ZLFile::ArchiveType ZLFSArchiverZip::prepareFile(ZLFile &file, std::string &nameWithoutExt) {
     (void)file;
+    std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
 	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".zip")) {
-		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 3);
-		lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 3);
 		return signature();
 	}
 	return std::string();

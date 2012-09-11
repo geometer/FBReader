@@ -25,20 +25,17 @@
 #include "ZLFSArchiverTar.h"
 #include "../tar/ZLTar.h"
 
-
 ZLFSArchiverTar::ZLFSArchiverTar() {
 }
 
-ZLFile::ArchiveType ZLFSArchiverTar::prepareFile(ZLFile &file, std::string &nameWithoutExt, std::string &lowerCaseName) {
+ZLFile::ArchiveType ZLFSArchiverTar::prepareFile(ZLFile &file, std::string &nameWithoutExt) {
+    std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
 	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tar")) {
-		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 4);
-		lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 4);
-		return "tar";
+        return signature();
 	}
 
     if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tgz")	|| ZLStringUtil::stringEndsWith(lowerCaseName, ".ipk")) {
-		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 4);
-		lowerCaseName = lowerCaseName.substr(0, lowerCaseName.length() - 4);
+        //nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 4);
 		// Note, that 'tgz' and 'ipk' files are also compressed
         setCompressed(file, true);
 		return "tar.gz";

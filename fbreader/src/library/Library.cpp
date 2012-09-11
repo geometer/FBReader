@@ -74,7 +74,7 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 			continue;
 		}
 
-		if (dirfile.extension() == "zip") {
+        if (dirfile.isArchive()) {
 			ZLFile phys(dirfile.physicalFilePath());
 			if (!BooksDBUtil::checkInfo(phys)) {
 				BooksDBUtil::resetZipInfo(phys);
@@ -92,8 +92,7 @@ void Library::collectBookFileNames(std::set<std::string> &bookFileNames) const {
 				ZLFile file(fileName);
 				if (PluginCollection::Instance().plugin(file, !collectBookWithoutMetaInfo) != 0) {
 					bookFileNames.insert(fileName);
-				// DONE: zip -> any archive
-				} else if (file.isArchive ()) {
+                } else if (file.isArchive()) {
 					if (myScanSubdirs || !inZip) {
 						dirs.insert(fileName);
 					}

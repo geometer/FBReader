@@ -27,7 +27,7 @@ class ZLFSCompressorBzip2 : public ZLFSCompressor {
 
 public:
 	ZLFSCompressorBzip2();
-    virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string & nameWithoutExt, std::string & lowerCaseName);
+    virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string & nameWithoutExt);
     virtual const std::string signature() const;
     virtual shared_ptr<ZLInputStream> envelope(ZLFile::ArchiveType &type, shared_ptr<ZLInputStream> base);
 	virtual ~ZLFSCompressorBzip2();
