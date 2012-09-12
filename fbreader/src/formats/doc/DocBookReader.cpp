@@ -47,10 +47,10 @@ bool DocBookReader::readBook() {
 	if (stream.isNull()) {
 		return false;
 	}
-	return readDocument(stream, file.size());
+    return readDocument(stream);
 }
 
-bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream, size_t streamSize) {
+bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream) {
 	static const std::string WORD_DOCUMENT = "WordDocument";
 
 	if (inputStream.isNull() || !inputStream->open()) {
@@ -62,7 +62,7 @@ bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream, size_t s
 
 	shared_ptr<OleStorage> storage = new OleStorage;
 
-	if (!storage->init(inputStream, streamSize)) {
+    if (!storage->init(inputStream, inputStream->sizeOfOpened())) {
 		ZLLogger::Instance().println("DocBookReader", "Broken OLE file!");
 		return false;
 	}
