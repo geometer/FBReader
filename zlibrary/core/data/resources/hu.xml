@@ -3,89 +3,89 @@
 <resources>
 	<node name="dialog">
 		<node name="button">
-			<node name="ok" value="&amp;Ok" />
-			<node name="cancel" value="&amp;Mégsem" />
-			<node name="yes" value="&amp;Igen" />
-			<node name="no" value="&amp;Nem" />
-			<node name="apply" value="&amp;Alkalmaz" />
+			<node name="ok" value="&amp;Ok"/>
+			<node name="cancel" value="&amp;Mégsem"/>
+			<node name="yes" value="&amp;Igen"/>
+			<node name="no" value="&amp;Nem"/>
+			<node name="apply" value="&amp;Alkalmaz"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Beállítás mentése..." />
+			<node name="savingConfig" value="Beállítás mentése..."/>
 		</node>
 		<node name="networkError">
-			<node name="title" value="Hálózati hiba" />
-			<node name="unknownErrorMessage" value="Ismeretlen hiba" />
-			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
-			<node name="couldntCreateDirectoryMessage" value="Nem lehet létrehozni a %s könyvtárat" />
-			<node name="couldntCreateFileMessage" value="Nem lehet létrehozni a %s fájlt" />
-			<node name="couldntConnectToNetworkMessage" value="A hálózati csatlakozás sikertelen" />
-			<node name="couldntConnectMessage" value="A(z) %s neve nem felismerhető" />
-			<node name="couldntResolveHostMessage" value="A(z) %s gépnév nem felismerhető" />
-			<node name="couldntResolveProxyMessage" value="A(z) %s proxy nem felismerhető" />
-			<node name="operationTimedOutMessage" value="A meghatározott időkeret lejárt" />
-			<node name="somethingWrongMessage" value="Valami hiba történt a %s körül" />
-			<node name="sslConnectErrorMessage" value="SSL/TLS kapcsolódási hiba a %s -nál" />
-			<node name="peerFailedVerificationMessage" value="A %s SSL igazolása hibás" />
-			<node name="sslCertificateAuthorityMessage" value="A %s SSL igazolása nincs érvényesíttetve egyetlen ismert szervezettel sem." />
-			<node name="sslBadCertificateFileMessage" value="A %s SSL igazolása nem olvasható" />
-			<node name="sslShutdownFailedMessage" value="A %s SSL kapcsolata nem bontható." />
+			<node name="title" value="Hálózati hiba"/>
+			<node name="unknownErrorMessage" value="Ismeretlen hiba"/>
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true"/>
+			<node name="couldntCreateDirectoryMessage" value="Nem lehet létrehozni a %s könyvtárat"/>
+			<node name="couldntCreateFileMessage" value="Nem lehet létrehozni a %s fájlt"/>
+			<node name="couldntConnectToNetworkMessage" value="A hálózati csatlakozás sikertelen"/>
+			<node name="couldntConnectMessage" value="A(z) %s neve nem felismerhető"/>
+			<node name="couldntResolveHostMessage" value="A(z) %s gépnév nem felismerhető"/>
+			<node name="couldntResolveProxyMessage" value="A(z) %s proxy nem felismerhető"/>
+			<node name="operationTimedOutMessage" value="A meghatározott időkeret lejárt"/>
+			<node name="somethingWrongMessage" value="Valami hiba történt a %s körül"/>
+			<node name="sslConnectErrorMessage" value="SSL/TLS kapcsolódási hiba a %s -nál"/>
+			<node name="peerFailedVerificationMessage" value="A %s SSL igazolása hibás"/>
+			<node name="sslCertificateAuthorityMessage" value="A %s SSL igazolása nincs érvényesíttetve egyetlen ismert szervezettel sem."/>
+			<node name="sslBadCertificateFileMessage" value="A %s SSL igazolása nem olvasható"/>
+			<node name="sslShutdownFailedMessage" value="A %s SSL kapcsolata nem bontható."/>
 		</node>
 	</node>
 	<node name="color">
-		<node name="red" value="Vörös" />
-		<node name="green" value="Zöld" />
-		<node name="blue" value="Kék" />
-		<node name="black" value="Fekete" />
-		<node name="white" value="Fehér" />
-		<node name="maroon" value="Barna" />
-		<node name="olive" value="Olajzöld" />
-		<node name="navy" value="Tengerészkék" />
-		<node name="purple" value="Bíbor" />
-		<node name="teal" value="Kékeszöld" />
-		<node name="silver" value="Ezüst" />
-		<node name="gray" value="Szürke" />
-		<node name="lime" value="Világoszöld" />
-		<node name="yellow" value="Sárga" />
-		<node name="magenta" value="Lila" />
-		<node name="cyan" value="Ciánkék" />
-		<node name="custom..." value="Custom..." />
+		<node name="red" value="Vörös"/>
+		<node name="green" value="Zöld"/>
+		<node name="blue" value="Kék"/>
+		<node name="black" value="Fekete"/>
+		<node name="white" value="Fehér"/>
+		<node name="maroon" value="Barna"/>
+		<node name="olive" value="Olajzöld"/>
+		<node name="navy" value="Tengerészkék"/>
+		<node name="purple" value="Bíbor"/>
+		<node name="teal" value="Kékeszöld"/>
+		<node name="silver" value="Ezüst"/>
+		<node name="gray" value="Szürke"/>
+		<node name="lime" value="Világoszöld"/>
+		<node name="yellow" value="Sárga"/>
+		<node name="magenta" value="Lila"/>
+		<node name="cyan" value="Ciánkék"/>
+		<node name="custom..." value="Custom..."/>
 	</node>
 	<node name="language">
-		<node name="ar" value="Arab" />
-		<node name="bg" toBeTranslated="true" value="Bulgarian" />
-		<node name="cs" value="Cseh" />
-		<node name="de" value="Német" />
-		<node name="de-traditional" value="Német (hagyományos)" />
-		<node name="el" value="Görög" />
-		<node name="en" value="Angol" />
-		<node name="eo" value="Eszperanto" />
-		<node name="es" value="Spanyol" />
-		<node name="fi" value="Finn" />
-		<node name="fr" value="Francia" />
-		<node name="he" value="Héber" />
-		<node name="hu" value="Magyar" />
-		<node name="id" value="Indonéz" />
-		<node name="it" value="Olasz" />
-		<node name="lt" value="Litván" />
-		<node name="nl" value="Holland" />
-		<node name="no" value="Norvég" />
-		<node name="pl" toBeTranslated="true" value="Polish" />
-		<node name="pt" value="Portugugál" />
-		<node name="ru" value="Orosz" />
-		<node name="sv" value="Svéd" />
-		<node name="ta" toBeTranslated="true" value="Tamil" />
-		<node name="tr" value="Török" />
-		<node name="uk" value="Ukrán" />
-		<node name="vi" value="Vietnámi" />
-		<node name="zh" value="Kínai" />
-		<node name="other" value="Egyéb" />
+		<node name="ar" value="Arab"/>
+		<node name="bg" toBeTranslated="true" value="Bulgarian"/>
+		<node name="cs" value="Cseh"/>
+		<node name="de" value="Német"/>
+		<node name="de-traditional" value="Német (hagyományos)"/>
+		<node name="el" value="Görög"/>
+		<node name="en" value="Angol"/>
+		<node name="eo" value="Eszperanto"/>
+		<node name="es" value="Spanyol"/>
+		<node name="fi" value="Finn"/>
+		<node name="fr" value="Francia"/>
+		<node name="he" value="Héber"/>
+		<node name="hu" value="Magyar"/>
+		<node name="id" value="Indonéz"/>
+		<node name="it" value="Olasz"/>
+		<node name="lt" value="Litván"/>
+		<node name="nl" value="Holland"/>
+		<node name="no" value="Norvég"/>
+		<node name="pl" toBeTranslated="true" value="Polish"/>
+		<node name="pt" value="Portugugál"/>
+		<node name="ru" value="Orosz"/>
+		<node name="sv" value="Svéd"/>
+		<node name="ta" toBeTranslated="true" value="Tamil"/>
+		<node name="tr" value="Török"/>
+		<node name="uk" value="Ukrán"/>
+		<node name="vi" value="Vietnámi"/>
+		<node name="zh" value="Kínai"/>
+		<node name="other" value="Egyéb"/>
 	</node>
 	<node name="boolean3">
-		<node name="on" value="be" />
-		<node name="off" value="ki" />
-		<node name="unchanged" value="Változatlan" />
+		<node name="on" value="be"/>
+		<node name="off" value="ki"/>
+		<node name="unchanged" value="Változatlan"/>
 	</node>
 	<node name="keyOptionView">
-		<node name="actionFor" value="Végrehajtandó feladat" />
+		<node name="actionFor" value="Végrehajtandó feladat"/>
 	</node>
 </resources>

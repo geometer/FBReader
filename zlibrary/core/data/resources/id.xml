@@ -3,89 +3,89 @@
 <resources>
 	<node name="dialog">
 		<node name="button">
-			<node name="ok" value="&amp;OK" />
-			<node name="cancel" value="&amp;Batal" />
-			<node name="yes" value="&amp;Ya" />
-			<node name="no" value="&amp;Tidak" />
-			<node name="apply" value="&amp;Terapkan" />
+			<node name="ok" value="&amp;OK"/>
+			<node name="cancel" value="&amp;Batal"/>
+			<node name="yes" value="&amp;Ya"/>
+			<node name="no" value="&amp;Tidak"/>
+			<node name="apply" value="&amp;Terapkan"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Menyimpan pengaturan..." />
+			<node name="savingConfig" value="Menyimpan pengaturan..."/>
 		</node>
 		<node name="networkError">
-			<node name="title" value="Jaringan bermasalah" />
-			<node name="unknownErrorMessage" value="Masalah tidak diketahui" />
-			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
-			<node name="couldntCreateDirectoryMessage" value="Tidak dapat membuat direktori&#10;%s" />
-			<node name="couldntCreateFileMessage" value="Tidak dapat membuat berkas&#10;%s" />
-			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn&apos;t connect to the network" />
-			<node name="couldntConnectMessage" value="Tidak dapat menghubungi alamat %s" />
-			<node name="couldntResolveHostMessage" value="Tidak dapat menerjemahkan alamat %s" />
-			<node name="couldntResolveProxyMessage" value="Tidak dapat menerjemahkan proxy %s" />
-			<node name="operationTimedOutMessage" value="Waktu tunggu operasi terlampaui" />
-			<node name="somethingWrongMessage" value="Terjadi sesuatu yang salah pada&#10;%s" />
-			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s" />
-			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK" />
-			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates" />
-			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn&apos;t read the SSL CA certificate file:&#10;%s" />
-			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s" />
+			<node name="title" value="Jaringan bermasalah"/>
+			<node name="unknownErrorMessage" value="Masalah tidak diketahui"/>
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true"/>
+			<node name="couldntCreateDirectoryMessage" value="Tidak dapat membuat direktori&#10;%s"/>
+			<node name="couldntCreateFileMessage" value="Tidak dapat membuat berkas&#10;%s"/>
+			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn't connect to the network"/>
+			<node name="couldntConnectMessage" value="Tidak dapat menghubungi alamat %s"/>
+			<node name="couldntResolveHostMessage" value="Tidak dapat menerjemahkan alamat %s"/>
+			<node name="couldntResolveProxyMessage" value="Tidak dapat menerjemahkan proxy %s"/>
+			<node name="operationTimedOutMessage" value="Waktu tunggu operasi terlampaui"/>
+			<node name="somethingWrongMessage" value="Terjadi sesuatu yang salah pada&#10;%s"/>
+			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s"/>
+			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK"/>
+			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates"/>
+			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn't read the SSL CA certificate file:&#10;%s"/>
+			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s"/>
 		</node>
 	</node>
 	<node name="color">
-		<node name="red" value="Merah" />
-		<node name="green" value="Hijau" />
-		<node name="blue" value="Biru" />
-		<node name="black" value="Hitam" />
-		<node name="white" value="Putih" />
-		<node name="maroon" value="Merah Gelap" />
-		<node name="olive" value="Hijau Kekuningan" />
-		<node name="navy" value="Biru Gelap" />
-		<node name="purple" value="Ungu" />
-		<node name="teal" value="Hijau Kebiruan" />
-		<node name="silver" value="Perak" />
-		<node name="gray" value="Abu-abu" />
-		<node name="lime" value="Hijau Terang" />
-		<node name="yellow" value="Kuning" />
-		<node name="magenta" value="Merah Keunguan" />
-		<node name="cyan" value="Biru Terang" />
-		<node name="custom..." value="Kustom..." />
+		<node name="red" value="Merah"/>
+		<node name="green" value="Hijau"/>
+		<node name="blue" value="Biru"/>
+		<node name="black" value="Hitam"/>
+		<node name="white" value="Putih"/>
+		<node name="maroon" value="Merah Gelap"/>
+		<node name="olive" value="Hijau Kekuningan"/>
+		<node name="navy" value="Biru Gelap"/>
+		<node name="purple" value="Ungu"/>
+		<node name="teal" value="Hijau Kebiruan"/>
+		<node name="silver" value="Perak"/>
+		<node name="gray" value="Abu-abu"/>
+		<node name="lime" value="Hijau Terang"/>
+		<node name="yellow" value="Kuning"/>
+		<node name="magenta" value="Merah Keunguan"/>
+		<node name="cyan" value="Biru Terang"/>
+		<node name="custom..." value="Kustom..."/>
 	</node>
 	<node name="language">
-		<node name="ar" value="Arab" />
-		<node name="bg" toBeTranslated="true" value="Bulgarian" />
-		<node name="cs" value="Cekoslowakia" />
-		<node name="de" value="Jerman" />
-		<node name="de-traditional" value="Jerman (tradisionil)" />
-		<node name="el" value="Yunani" />
-		<node name="en" value="Inggris" />
-		<node name="eo" value="Esperanto" />
-		<node name="es" value="Spanyol" />
-		<node name="fi" value="Finlandia" />
-		<node name="fr" value="Perancis" />
-		<node name="he" value="Ibrani" />
-		<node name="hu" value="Hongaria" />
-		<node name="id" value="Indonesia" />
-		<node name="it" value="Italia" />
-		<node name="lt" value="Lituavi" />
-		<node name="nl" value="Belanda" />
-		<node name="no" value="Norwegia" />
-		<node name="pl" toBeTranslated="true" value="Polish" />
-		<node name="pt" value="Portugis" />
-		<node name="ru" value="Rusia" />
-		<node name="sv" value="Swedia" />
-		<node name="ta" toBeTranslated="true" value="Tamil" />
-		<node name="tr" value="Turki" />
-		<node name="uk" value="Ukraina" />
-		<node name="vi" value="Vietnam" />
-		<node name="zh" value="Cina" />
-		<node name="other" value="Lainnya" />
+		<node name="ar" value="Arab"/>
+		<node name="bg" toBeTranslated="true" value="Bulgarian"/>
+		<node name="cs" value="Cekoslowakia"/>
+		<node name="de" value="Jerman"/>
+		<node name="de-traditional" value="Jerman (tradisionil)"/>
+		<node name="el" value="Yunani"/>
+		<node name="en" value="Inggris"/>
+		<node name="eo" value="Esperanto"/>
+		<node name="es" value="Spanyol"/>
+		<node name="fi" value="Finlandia"/>
+		<node name="fr" value="Perancis"/>
+		<node name="he" value="Ibrani"/>
+		<node name="hu" value="Hongaria"/>
+		<node name="id" value="Indonesia"/>
+		<node name="it" value="Italia"/>
+		<node name="lt" value="Lituavi"/>
+		<node name="nl" value="Belanda"/>
+		<node name="no" value="Norwegia"/>
+		<node name="pl" toBeTranslated="true" value="Polish"/>
+		<node name="pt" value="Portugis"/>
+		<node name="ru" value="Rusia"/>
+		<node name="sv" value="Swedia"/>
+		<node name="ta" toBeTranslated="true" value="Tamil"/>
+		<node name="tr" value="Turki"/>
+		<node name="uk" value="Ukraina"/>
+		<node name="vi" value="Vietnam"/>
+		<node name="zh" value="Cina"/>
+		<node name="other" value="Lainnya"/>
 	</node>
 	<node name="boolean3">
-		<node name="on" value="Hidup" />
-		<node name="off" value="Mati" />
-		<node name="unchanged" value="tidak berubah" />
+		<node name="on" value="Hidup"/>
+		<node name="off" value="Mati"/>
+		<node name="unchanged" value="tidak berubah"/>
 	</node>
 	<node name="keyOptionView">
-		<node name="actionFor" value="Aksi Tombol" />
+		<node name="actionFor" value="Aksi Tombol"/>
 	</node>
 </resources>

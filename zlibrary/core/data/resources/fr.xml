@@ -15,7 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Erreur réseau"/>
 			<node name="unknownErrorMessage" value="Erreur inconnue"/>
-			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true"/>
 			<node name="couldntCreateDirectoryMessage" value="Impossible de créer un répertoire&#10;%s"/>
 			<node name="couldntCreateFileMessage" value="Impossible de créer un fichier&#10;%s"/>
 			<node name="couldntConnectToNetworkMessage" value="Connexion au réseau impossible"/>
@@ -52,7 +52,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="Arabe"/>
-		<node name="bg" toBeTranslated="true" value="Bulgarian" />
+		<node name="bg" toBeTranslated="true" value="Bulgarian"/>
 		<node name="cs" value="Tchèque"/>
 		<node name="de" value="Allemand"/>
 		<node name="de-traditional" value="Allemand (orthographe traditionnelle)"/>
@@ -63,20 +63,20 @@
 		<node name="fi" value="Finnois"/>
 		<node name="fr" value="Français"/>
 		<node name="he" value="Hébreu"/>
-		<node name="hu" value="Hongrois" />
+		<node name="hu" value="Hongrois"/>
 		<node name="id" value="Indonésien"/>
 		<node name="it" value="Italien"/>
 		<node name="lt" value="Lithuanien"/>
 		<node name="nl" value="Néerlandais"/>
 		<node name="no" value="Norvégien"/>
-		<node name="pl" toBeTranslated="true" value="Polish" />
+		<node name="pl" toBeTranslated="true" value="Polish"/>
 		<node name="pt" value="Portugais"/>
 		<node name="ru" value="Russe"/>
 		<node name="sv" value="Suédois"/>
-		<node name="ta" toBeTranslated="true" value="Tamil" />
+		<node name="ta" toBeTranslated="true" value="Tamil"/>
 		<node name="tr" value="Turc"/>
 		<node name="uk" value="Ukrainien"/>
-		<node name="vi" value="Vietnamien" />
+		<node name="vi" value="Vietnamien"/>
 		<node name="zh" value="Chinois"/>
 		<node name="other" value="Autre"/>
 	</node>

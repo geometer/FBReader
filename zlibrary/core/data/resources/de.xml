@@ -15,7 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Netzwerk Fehler"/>
 			<node name="unknownErrorMessage" value="Unbekannter Fehler"/>
-			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true"/>
 			<node name="couldntCreateDirectoryMessage" value="Verzeichnis&#10;%s konnte nicht erzeugt werden"/>
 			<node name="couldntCreateFileMessage" value="Datei&#10;%s konnte nicht erzeugt werden"/>
 			<node name="couldntConnectToNetworkMessage" value="Keine Verbindung zum Netzwerk"/>
@@ -52,7 +52,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="Arabisch"/>
-		<node name="bg" toBeTranslated="true" value="Bulgarian" />
+		<node name="bg" toBeTranslated="true" value="Bulgarian"/>
 		<node name="cs" value="Tschechisch"/>
 		<node name="de" value="Deutsch"/>
 		<node name="de-traditional" value="Deutsch (alte Schreibweise)"/>
@@ -69,14 +69,14 @@
 		<node name="lt" value="Litauisch"/>
 		<node name="nl" value="Niederländisch"/>
 		<node name="no" value="Norwegisch"/>
-		<node name="pl" value="Polnisch" />
+		<node name="pl" value="Polnisch"/>
 		<node name="pt" value="Portugiesisch"/>
 		<node name="ru" value="Russisch"/>
 		<node name="sv" value="Schwedisch"/>
-		<node name="ta" toBeTranslated="true" value="Tamil" />
+		<node name="ta" toBeTranslated="true" value="Tamil"/>
 		<node name="tr" value="Türkisch"/>
 		<node name="uk" value="Ukrainisch"/>
-		<node name="vi" value="Vietnamesisch" />
+		<node name="vi" value="Vietnamesisch"/>
 		<node name="zh" value="Chinesisch"/>
 		<node name="other" value="Andere"/>
 	</node>

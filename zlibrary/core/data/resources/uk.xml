@@ -15,7 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Помилка при роботі в мережі"/>
 			<node name="unknownErrorMessage" value="Невідома помилка"/>
-			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true"/>
 			<node name="couldntCreateDirectoryMessage" value="Неможливо створити каталог&#10;%s"/>
 			<node name="couldntCreateFileMessage" value="Неможливо створити файл&#10;%s"/>
 			<node name="couldntConnectToNetworkMessage" value="Не вдалося підключитися до мережі"/>
@@ -52,7 +52,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="Арабська"/>
-		<node name="bg" toBeTranslated="true" value="Bulgarian" />
+		<node name="bg" toBeTranslated="true" value="Bulgarian"/>
 		<node name="cs" value="Чеська"/>
 		<node name="de" value="Німецька"/>
 		<node name="de-traditional" value="Німецька (традiцiйна орфографiя)"/>
@@ -67,16 +67,16 @@
 		<node name="id" value="Індонезійська"/>
 		<node name="it" value="Італійська"/>
 		<node name="lt" value="Литовська"/>
-		<node name="nl" value="Нідерландська" />
+		<node name="nl" value="Нідерландська"/>
 		<node name="no" value="Норвезька"/>
-		<node name="pl" toBeTranslated="true" value="Polish" />
+		<node name="pl" toBeTranslated="true" value="Polish"/>
 		<node name="pt" value="Португальська"/>
 		<node name="ru" value="Російська"/>
 		<node name="sv" value="Шведська"/>
-		<node name="ta" toBeTranslated="true" value="Tamil" />
+		<node name="ta" toBeTranslated="true" value="Tamil"/>
 		<node name="tr" value="Турецька"/>
 		<node name="uk" value="Українська"/>
-		<node name="vi" value="В'єтнамська" />
+		<node name="vi" value="В'єтнамська"/>
 		<node name="zh" value="Китайська"/>
 		<node name="other" value="Інша"/>
 	</node>

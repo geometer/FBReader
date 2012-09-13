@@ -15,7 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Netwerk fout"/>
 			<node name="unknownErrorMessage" value="Onbekende fout"/>
-			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true"/>
 			<node name="couldntCreateDirectoryMessage" value="Map&#10;%s kan niet worden gemaakt"/>
 			<node name="couldntCreateFileMessage" value="Bestand&#10;%s kan niet worden gemaakt"/>
 			<node name="couldntConnectToNetworkMessage" value="Geen verbinding met het netwerk"/>
@@ -52,7 +52,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="Arabisch"/>
-		<node name="bg" toBeTranslated="true" value="Bulgarian" />
+		<node name="bg" toBeTranslated="true" value="Bulgarian"/>
 		<node name="cs" value="Tsjechisch"/>
 		<node name="de" value="Duits"/>
 		<node name="de-traditional" value="Duits (oude stijl)"/>
@@ -69,14 +69,14 @@
 		<node name="lt" value="Litouws"/>
 		<node name="nl" value="Nederlands"/>
 		<node name="no" value="Noors"/>
-		<node name="pl" toBeTranslated="true" value="Polish" />
+		<node name="pl" toBeTranslated="true" value="Polish"/>
 		<node name="pt" value="Portugees"/>
 		<node name="ru" value="Russisch"/>
 		<node name="sv" value="Zweeds"/>
-		<node name="ta" toBeTranslated="true" value="Tamil" />
+		<node name="ta" toBeTranslated="true" value="Tamil"/>
 		<node name="tr" value="Turks"/>
 		<node name="uk" value="Ukraiens"/>
-		<node name="vi" value="Vietnamees" />
+		<node name="vi" value="Vietnamees"/>
 		<node name="zh" value="Chinees"/>
 		<node name="other" value="Anders"/>
 	</node>

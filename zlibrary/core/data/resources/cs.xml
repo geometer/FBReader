@@ -15,7 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Chyba sítě"/>
 			<node name="unknownErrorMessage" value="Neznámá chyba"/>
-			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true"/>
 			<node name="couldntCreateDirectoryMessage" value="Nepodařilo se vytvořit složku&#10;%s"/>
 			<node name="couldntCreateFileMessage" value="Nepodařilo se vytvořit soubor&#10;%s"/>
 			<node name="couldntConnectToNetworkMessage" value="Není možné se připojit't k síti"/>
@@ -52,7 +52,7 @@
 	</node>
 	<node name="language">
 		<node name="ar" value="Arabsky"/>
-		<node name="bg" toBeTranslated="true" value="Bulgarian" />
+		<node name="bg" toBeTranslated="true" value="Bulgarian"/>
 		<node name="cs" value="Česky"/>
 		<node name="de" value="Německy"/>
 		<node name="de-traditional" value="Německy (tradiční pravopis)"/>
@@ -69,14 +69,14 @@
 		<node name="lt" value="Litevsky"/>
 		<node name="nl" toBeTranslated="true" value="Dutch"/>
 		<node name="no" value="Norsky"/>
-		<node name="pl" toBeTranslated="true" value="Polish" />
+		<node name="pl" toBeTranslated="true" value="Polish"/>
 		<node name="pt" value="Portugalsky"/>
 		<node name="ru" value="Rusky"/>
 		<node name="sv" value="Švédsky"/>
 		<node name="ta" value="Tamilsky"/>
 		<node name="tr" value="Turecky"/>
 		<node name="uk" value="Ukrajinsky"/>
-		<node name="vi" toBeTranslated="true" value="Vietnamese" />
+		<node name="vi" toBeTranslated="true" value="Vietnamese"/>
 		<node name="zh" value="Čínsky"/>
 		<node name="other" value="Jiný"/>
 	</node>

@@ -1,91 +1,91 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Polish zlibrary resources, by Rafał Bakuła -->
 <resources>
 	<node name="dialog">
 		<node name="button">
-			<node name="ok" value="&amp;Ok" />
-			<node name="cancel" value="&amp;Anuluj" />
-			<node name="yes" value="&amp;Tak" />
-			<node name="no" value="&amp;Nie" />
-			<node name="apply" value="&amp;Zastosuj" />
+			<node name="ok" value="&amp;Ok"/>
+			<node name="cancel" value="&amp;Anuluj"/>
+			<node name="yes" value="&amp;Tak"/>
+			<node name="no" value="&amp;Nie"/>
+			<node name="apply" value="&amp;Zastosuj"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Zapis konfiguracji..." />
+			<node name="savingConfig" value="Zapis konfiguracji..."/>
 		</node>
 		<node name="networkError">
-			<node name="title" value="Błąd sieci" />
-			<node name="unknownErrorMessage" value="Nieznany błąd" />
-			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
-			<node name="couldntCreateDirectoryMessage" value="Nie można utworzyć katalogu&#10;%s" />
-			<node name="couldntCreateFileMessage" value="Nie można utworzyć pliku&#10;%s" />
-			<node name="couldntConnectToNetworkMessage" value="Nie można połączyć z siecią" />
-			<node name="couldntConnectMessage" value="Nie można połączyć z %s" />
-			<node name="couldntResolveHostMessage" value="%s nie odpowiada" />
-			<node name="couldntResolveProxyMessage" value="Proxy %s nie odpowiada" />
-			<node name="operationTimedOutMessage" value="Przekroczony czas operacji" />
-			<node name="somethingWrongMessage" value="Dzieje się coś złego z&#10;%s" />
-			<node name="sslConnectErrorMessage" value="Problem z połączeniem SSL/TLS:&#10;%s" />
-			<node name="peerFailedVerificationMessage" value="Certyfikat SSL z %s&#10;został odrzucony" />
-			<node name="sslCertificateAuthorityMessage" value="Certyfikat SSL z %s&#10;nie może być potwierdzony znanymi certyfikatami SSL CA" />
-			<node name="sslBadCertificateFileMessage" value="Nie można odczytać pliku certyfikatu SSL CA:&#10;%s" />
-			<node name="sslShutdownFailedMessage" value="Nie można zamknąć połączenia SSL z&#10;%s" />
+			<node name="title" value="Błąd sieci"/>
+			<node name="unknownErrorMessage" value="Nieznany błąd"/>
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true"/>
+			<node name="couldntCreateDirectoryMessage" value="Nie można utworzyć katalogu&#10;%s"/>
+			<node name="couldntCreateFileMessage" value="Nie można utworzyć pliku&#10;%s"/>
+			<node name="couldntConnectToNetworkMessage" value="Nie można połączyć z siecią"/>
+			<node name="couldntConnectMessage" value="Nie można połączyć z %s"/>
+			<node name="couldntResolveHostMessage" value="%s nie odpowiada"/>
+			<node name="couldntResolveProxyMessage" value="Proxy %s nie odpowiada"/>
+			<node name="operationTimedOutMessage" value="Przekroczony czas operacji"/>
+			<node name="somethingWrongMessage" value="Dzieje się coś złego z&#10;%s"/>
+			<node name="sslConnectErrorMessage" value="Problem z połączeniem SSL/TLS:&#10;%s"/>
+			<node name="peerFailedVerificationMessage" value="Certyfikat SSL z %s&#10;został odrzucony"/>
+			<node name="sslCertificateAuthorityMessage" value="Certyfikat SSL z %s&#10;nie może być potwierdzony znanymi certyfikatami SSL CA"/>
+			<node name="sslBadCertificateFileMessage" value="Nie można odczytać pliku certyfikatu SSL CA:&#10;%s"/>
+			<node name="sslShutdownFailedMessage" value="Nie można zamknąć połączenia SSL z&#10;%s"/>
 		</node>
 	</node>
 	<node name="color">
-		<node name="red" value="Czerwony" />
-		<node name="green" value="Zielony" />
-		<node name="blue" value="Niebieski" />
-		<node name="black" value="Czarny" />
-		<node name="white" value="Biały" />
-		<node name="maroon" value="Kasztanowy" />
-		<node name="olive" value="Oliwkowy" />
-		<node name="navy" value="Granatowy" />
-		<node name="purple" value="Fioletowy" />
-		<node name="teal" value="Niebiesko-zielony" />
-		<node name="silver" value="Srebrny" />
-		<node name="gray" value="Szary" />
-		<node name="lime" value="Zielono-żółty" />
-		<node name="yellow" value="Żółty" />
-		<node name="magenta" value="Karmazynowy" />
-		<node name="cyan" value="Zielono-niebieski" />
-		<node name="custom..." value="Własny..." />
+		<node name="red" value="Czerwony"/>
+		<node name="green" value="Zielony"/>
+		<node name="blue" value="Niebieski"/>
+		<node name="black" value="Czarny"/>
+		<node name="white" value="Biały"/>
+		<node name="maroon" value="Kasztanowy"/>
+		<node name="olive" value="Oliwkowy"/>
+		<node name="navy" value="Granatowy"/>
+		<node name="purple" value="Fioletowy"/>
+		<node name="teal" value="Niebiesko-zielony"/>
+		<node name="silver" value="Srebrny"/>
+		<node name="gray" value="Szary"/>
+		<node name="lime" value="Zielono-żółty"/>
+		<node name="yellow" value="Żółty"/>
+		<node name="magenta" value="Karmazynowy"/>
+		<node name="cyan" value="Zielono-niebieski"/>
+		<node name="custom..." value="Własny..."/>
 	</node>
 	<node name="language">
-		<node name="ar" value="Arabski" />
-		<node name="bg" toBeTranslated="true" value="Bulgarian" />
-		<node name="cs" value="Czeski" />
-		<node name="de" value="Niemiecki" />
-		<node name="de-traditional" value="Niemiecki (tradycyjna ortografia)" />
-		<node name="el" value="Grecki" />
-		<node name="en" value="Angielski" />
-		<node name="eo" value="Esperanto" />
-		<node name="es" value="Hiszpański" />
-		<node name="fi" value="Fiński" />
-		<node name="fr" value="Francuski" />
-		<node name="he" value="Hebrajski" />
-		<node name="hu" value="Węgierski" />
-		<node name="id" value="Indonezyjski" />
-		<node name="it" value="Włoski" />
-		<node name="lt" value="Litewski" />
-		<node name="nl" value="Duński" />
-		<node name="no" value="Norweski" />
-		<node name="pl" value="Polski" />
-		<node name="pt" value="Portugalski" />
-		<node name="ru" value="Rosyjski" />
-		<node name="sv" value="Szwedzki" />
-		<node name="ta" toBeTranslated="true" value="Tamil" />
-		<node name="tr" value="Turecki" />
-		<node name="uk" value="Ukraiński" />
-		<node name="vi" value="Wietnamski" />
-		<node name="zh" value="Chiński" />
-		<node name="other" value="Inny" />
+		<node name="ar" value="Arabski"/>
+		<node name="bg" toBeTranslated="true" value="Bulgarian"/>
+		<node name="cs" value="Czeski"/>
+		<node name="de" value="Niemiecki"/>
+		<node name="de-traditional" value="Niemiecki (tradycyjna ortografia)"/>
+		<node name="el" value="Grecki"/>
+		<node name="en" value="Angielski"/>
+		<node name="eo" value="Esperanto"/>
+		<node name="es" value="Hiszpański"/>
+		<node name="fi" value="Fiński"/>
+		<node name="fr" value="Francuski"/>
+		<node name="he" value="Hebrajski"/>
+		<node name="hu" value="Węgierski"/>
+		<node name="id" value="Indonezyjski"/>
+		<node name="it" value="Włoski"/>
+		<node name="lt" value="Litewski"/>
+		<node name="nl" value="Duński"/>
+		<node name="no" value="Norweski"/>
+		<node name="pl" value="Polski"/>
+		<node name="pt" value="Portugalski"/>
+		<node name="ru" value="Rosyjski"/>
+		<node name="sv" value="Szwedzki"/>
+		<node name="ta" toBeTranslated="true" value="Tamil"/>
+		<node name="tr" value="Turecki"/>
+		<node name="uk" value="Ukraiński"/>
+		<node name="vi" value="Wietnamski"/>
+		<node name="zh" value="Chiński"/>
+		<node name="other" value="Inny"/>
 	</node>
 	<node name="boolean3">
-		<node name="on" value="Wł." />
-		<node name="off" value="Wył." />
-		<node name="unchanged" value="Nie zmieniony" />
+		<node name="on" value="Wł."/>
+		<node name="off" value="Wył."/>
+		<node name="unchanged" value="Nie zmieniony"/>
 	</node>
 	<node name="keyOptionView">
-		<node name="actionFor" value="Wybierz klawisz" />
+		<node name="actionFor" value="Wybierz klawisz"/>
 	</node>
 </resources>

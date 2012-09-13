@@ -3,89 +3,89 @@
 <resources>
 	<node name="dialog">
 		<node name="button">
-			<node name="ok" value="&amp;Ok" />
-			<node name="cancel" value="&amp;Avbryt" />
-			<node name="yes" value="&amp;Ja" />
-			<node name="no" value="&amp;Nej" />
-			<node name="apply" value="&amp;Verkställ" />
+			<node name="ok" value="&amp;Ok"/>
+			<node name="cancel" value="&amp;Avbryt"/>
+			<node name="yes" value="&amp;Ja"/>
+			<node name="no" value="&amp;Nej"/>
+			<node name="apply" value="&amp;Verkställ"/>
 		</node>
 		<node name="waitMessage">
-			<node name="savingConfig" value="Sparar konfiguration..." />
+			<node name="savingConfig" value="Sparar konfiguration..."/>
 		</node>
 		<node name="networkError">
-			<node name="title" toBeTranslated="true" value="Network error" />
-			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error" />
-			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
-			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn&apos;t create a directory&#10;%s" />
-			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn&apos;t create a file&#10;%s" />
-			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn&apos;t connect to the network" />
-			<node name="couldntConnectMessage" toBeTranslated="true" value="Couldn&apos;t connect to host %s" />
-			<node name="couldntResolveHostMessage" toBeTranslated="true" value="Couldn&apos;t resolve host %s" />
-			<node name="couldntResolveProxyMessage" toBeTranslated="true" value="Couldn&apos;t resolve proxy %s" />
-			<node name="operationTimedOutMessage" toBeTranslated="true" value="Operation is timed out" />
-			<node name="somethingWrongMessage" toBeTranslated="true" value="Something goes wrong for&#10;%s" />
-			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s" />
-			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK" />
-			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates" />
-			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn&apos;t read the SSL CA certificate file:&#10;%s" />
-			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s" />
+			<node name="title" toBeTranslated="true" value="Network error"/>
+			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error"/>
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true"/>
+			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn't create a directory&#10;%s"/>
+			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn't create a file&#10;%s"/>
+			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn't connect to the network"/>
+			<node name="couldntConnectMessage" toBeTranslated="true" value="Couldn't connect to host %s"/>
+			<node name="couldntResolveHostMessage" toBeTranslated="true" value="Couldn't resolve host %s"/>
+			<node name="couldntResolveProxyMessage" toBeTranslated="true" value="Couldn't resolve proxy %s"/>
+			<node name="operationTimedOutMessage" toBeTranslated="true" value="Operation is timed out"/>
+			<node name="somethingWrongMessage" toBeTranslated="true" value="Something goes wrong for&#10;%s"/>
+			<node name="sslConnectErrorMessage" toBeTranslated="true" value="SSL/TLS handshake problem occurred:&#10;%s"/>
+			<node name="peerFailedVerificationMessage" toBeTranslated="true" value="SSL certificate from %s&#10;was deemed not OK"/>
+			<node name="sslCertificateAuthorityMessage" toBeTranslated="true" value="SSL certificate from %s&#10;can't be authenticated with known SSL CA certificates"/>
+			<node name="sslBadCertificateFileMessage" toBeTranslated="true" value="Couldn't read the SSL CA certificate file:&#10;%s"/>
+			<node name="sslShutdownFailedMessage" toBeTranslated="true" value="Failed to shut down the SSL connection for&#10;%s"/>
 		</node>
 	</node>
 	<node name="color">
-		<node name="red" value="Röd" />
-		<node name="green" value="Grön" />
-		<node name="blue" value="Blå" />
-		<node name="black" value="Svart" />
-		<node name="white" value="Vit" />
-		<node name="maroon" value="Mörk brun" />
-		<node name="olive" value="Oliv" />
-		<node name="navy" value="Marin" />
-		<node name="purple" value="Lila" />
-		<node name="teal" value="Teal" />
-		<node name="silver" value="Silver" />
-		<node name="gray" value="Grå" />
-		<node name="lime" value="Lime" />
-		<node name="yellow" value="Gul" />
-		<node name="magenta" value="Magenta" />
-		<node name="cyan" value="Cyan" />
-		<node name="custom..." value="Anpassad..." />
+		<node name="red" value="Röd"/>
+		<node name="green" value="Grön"/>
+		<node name="blue" value="Blå"/>
+		<node name="black" value="Svart"/>
+		<node name="white" value="Vit"/>
+		<node name="maroon" value="Mörk brun"/>
+		<node name="olive" value="Oliv"/>
+		<node name="navy" value="Marin"/>
+		<node name="purple" value="Lila"/>
+		<node name="teal" value="Teal"/>
+		<node name="silver" value="Silver"/>
+		<node name="gray" value="Grå"/>
+		<node name="lime" value="Lime"/>
+		<node name="yellow" value="Gul"/>
+		<node name="magenta" value="Magenta"/>
+		<node name="cyan" value="Cyan"/>
+		<node name="custom..." value="Anpassad..."/>
 	</node>
 	<node name="language">
-		<node name="ar" value="Arabiska" />
-		<node name="bg" toBeTranslated="true" value="Bulgarian" />
-		<node name="cs" value="Tjeckiska" />
-		<node name="de" value="Tyska" />
-		<node name="de-traditional" value="Tyska (traditionell ortografi)" />
-		<node name="el" value="Grekiska" />
-		<node name="en" value="Engelska" />
-		<node name="eo" value="Esperanto" />
-		<node name="es" value="Spanska" />
-		<node name="fi" value="Finska" />
-		<node name="fr" value="Franska" />
-		<node name="he" value="Hebreiska" />
-		<node name="hu" value="Ungerska" />
-		<node name="id" value="Indonesiska" />
-		<node name="it" value="Italienska" />
-		<node name="lt" value="Litauiska" />
-		<node name="nl" value="Nederländska" />
-		<node name="no" value="Norska" />
-		<node name="pl" toBeTranslated="true" value="Polish" />
-		<node name="pt" value="Portugisiska" />
-		<node name="ru" value="Ryska" />
-		<node name="sv" value="Svenska" />
-		<node name="ta" toBeTranslated="true" value="Tamil" />
-		<node name="tr" value="Turkiska" />
-		<node name="uk" value="Ukrainska" />
-		<node name="vi" value="Vietnamesiska" />
-		<node name="zh" value="Kinesiska" />
-		<node name="other" value="Annat" />
+		<node name="ar" value="Arabiska"/>
+		<node name="bg" toBeTranslated="true" value="Bulgarian"/>
+		<node name="cs" value="Tjeckiska"/>
+		<node name="de" value="Tyska"/>
+		<node name="de-traditional" value="Tyska (traditionell ortografi)"/>
+		<node name="el" value="Grekiska"/>
+		<node name="en" value="Engelska"/>
+		<node name="eo" value="Esperanto"/>
+		<node name="es" value="Spanska"/>
+		<node name="fi" value="Finska"/>
+		<node name="fr" value="Franska"/>
+		<node name="he" value="Hebreiska"/>
+		<node name="hu" value="Ungerska"/>
+		<node name="id" value="Indonesiska"/>
+		<node name="it" value="Italienska"/>
+		<node name="lt" value="Litauiska"/>
+		<node name="nl" value="Nederländska"/>
+		<node name="no" value="Norska"/>
+		<node name="pl" toBeTranslated="true" value="Polish"/>
+		<node name="pt" value="Portugisiska"/>
+		<node name="ru" value="Ryska"/>
+		<node name="sv" value="Svenska"/>
+		<node name="ta" toBeTranslated="true" value="Tamil"/>
+		<node name="tr" value="Turkiska"/>
+		<node name="uk" value="Ukrainska"/>
+		<node name="vi" value="Vietnamesiska"/>
+		<node name="zh" value="Kinesiska"/>
+		<node name="other" value="Annat"/>
 	</node>
 	<node name="boolean3">
-		<node name="on" value="på" />
-		<node name="off" value="av" />
-		<node name="unchanged" value="oförändrat" />
+		<node name="on" value="på"/>
+		<node name="off" value="av"/>
+		<node name="unchanged" value="oförändrat"/>
 	</node>
 	<node name="keyOptionView">
-		<node name="actionFor" value="Åtgärd för tangent" />
+		<node name="actionFor" value="Åtgärd för tangent"/>
 	</node>
 </resources>
