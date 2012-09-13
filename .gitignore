@@ -12,6 +12,7 @@ zlibrary/ui/zlui-qt4.so
 zlibrary/ui/zlui-gtk.so
 zlibrary/ui/zlui-qt.so
 fbreader/FBReader
+tools/resources/*.diff
 
 *.a
 *.pro

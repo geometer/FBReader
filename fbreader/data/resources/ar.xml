@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="عنوان بريد إلكتروني خطأ" />
 			<node name="tooManyRegistrations" value="الكثير جدا من التسجيلات من رقمك على الإنترنت (IP);&#10;أعد المحاولة بعد عدة دقائق" />
 			<node name="noUserEmail" value="لم يُسجل أي مستخدم&#10;بالبريد الإلكترني المحدد" />
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="خطأ أثناء التنزيل" />
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="يسترجع كلمة السر، انتظر رجاء..." />
 			<node name="authenticationCheck" value="يتحقق من الحساب، انتظر رجاء..." />
 			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="شراء الكتاب" />

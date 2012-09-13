@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="Nesprávná adresa e-mailu" />
 			<node name="tooManyRegistrations" value="Příliš mnoho registrací pro IP;&#10;zkuste to za několik minut znovu" />
 			<node name="noUserEmail" value="Uživatel nebyl registrován&#10; s udanou e-mailovou adresou" />
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Chyba při stahování" />
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="Obnovení hesla. Čekejte prosím..." />
 			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
 			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Zaplatit knihu" />

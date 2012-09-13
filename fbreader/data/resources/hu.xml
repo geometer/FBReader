@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="Érvénytelen e-mail cím" />
 			<node name="tooManyRegistrations" value="Túl sok regisztrációs kérés az IP-címedről;&#10;próbáld meg pár perc múlva ismét!" />
 			<node name="noUserEmail" value="Nincs regisztrált felhasználónk&#10;ezzel az e-mail címmel" />
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Letöltési hiba" />
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="Jelszó visszaszerzése, türelem..." />
 			<node name="authenticationCheck" value="Adatok ellenörzése, várj egy kicsit..." />
 			<node name="signOut" value="Kijelentkezés. Türelem..." />
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Kötet megvásárlása" />

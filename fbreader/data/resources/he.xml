@@ -252,6 +252,8 @@
 			<node name="title" value="FBReader - Network Options" toBeTranslated="true" />
 			<node name="tab">
 				<node name="NetworkLibrary" value="חיפוש ברשת">
+				</node>
+				<node name="Connection" value="Connection" toBeTranslated="true">
 					<node name="useProxy" value="השתמש בשרת פרוקסי" />
 					<node name="proxyHost" value="כתובת שרת פרוקסי" />
 					<node name="proxyPort" value="פורט בשרת הפרוקסי" />
@@ -544,6 +546,7 @@
 			<node name="invalidEMail" value="כתובת לא תקינה" />
 			<node name="tooManyRegistrations" value="נסיונות הרשמה רבים מדי מכתובת ה-IP שלך;&#10;נסה שוב בעוד כמה דקות" />
 			<node name="noUserEmail" value="משתמש עם כתובת דוא''ל שצויינה לא קיים" />
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="שגיאה בעת הורדה" />
@@ -564,6 +567,7 @@
 			<node name="passwordRecovery" value="בקשה לשחזור סיסמא מתבצעת. אנא המתן..." />
 			<node name="authenticationCheck" value="אימות פרטים. אנא המתן..." />
 			<node name="signOut" value="התנתקות ממערכת, אנא המתן..." />
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="קניית ספר" />

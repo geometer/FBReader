@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="Địa chỉ thư điện tử không đúng" />
 			<node name="tooManyRegistrations" value="Có quá nhiều đăng ký từ địa chỉ IP của bạn;&#10;hãy thử lại trong ít phút nữa" />
 			<node name="noUserEmail" value="Chưa có người nào đăng&#10;với địa chỉ thư điện tử được chỉ định" />
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Có lỗi khi đang tải về" />
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="Đang khôi phục mật khẩu. Vui lòng đợi..." />
 			<node name="authenticationCheck" value="Tài khoản hợp lệ. Vui lòng đợi..." />
 			<node name="signOut" value="Đang đăng xuất. Vui lòng đợi..." />
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Mua sách" />

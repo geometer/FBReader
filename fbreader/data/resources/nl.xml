@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="Ongeldig e-mail adres" />
 			<node name="tooManyRegistrations" value="Teveel registraties van dit IP;&#10;probeer het over enkele minuten opnieuw" />
 			<node name="noUserEmail" value="De gebruiker met het gespecificeerde &#10;e-mail adres is niet bekend" />
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Fout tijden het downloaden" />
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="Het wachtwoord wordt hersteld..." />
 			<node name="authenticationCheck" value="Account wordt gecontroleerd..." />
 			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Koop Boek" />

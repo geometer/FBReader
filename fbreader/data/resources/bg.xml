@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="Невалиден имейл адрес"/>
 			<node name="tooManyRegistrations" value="Твърде много регистрации от вашето IP;&#xA;опитайте отново след няколко минути"/>
 			<node name="noUserEmail" value="Няма регистриран потребител&#xA;с този имейл адрес"/>
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Грешка по време на сваляне"/>
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="Възстановяване на парола. Моля, изчакайте..."/>
 			<node name="authenticationCheck" value="Проверка за валидност на профила. Моля, изчакайте..."/>
 			<node name="signOut" value="Отписване. Моля, изчакайте..."/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Плащане на книга"/>

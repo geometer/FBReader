@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="Malĝusta retpoŝt-adreso" />
 			<node name="tooManyRegistrations" value="Tro multe da registriĝoj por IP;&#10;provu denove post kelkaj minutoj" />
 			<node name="noUserEmail" value="La uzanto ne estis registrita kun ĉi tiu retpoŝt-adreso" />
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Eraro ĉe elŝutado" />
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="Okazas renovigo de pasvorto. Bonvolu atendi..." />
 			<node name="authenticationCheck" toBeTranslated="true" value="Okazas validigo de konto. Bonvolu atendi..." />
 			<node name="signOut" toBeTranslated="true" value="Okazas elsaluto. Bonvolu atendi..." />
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Pagi libron" />

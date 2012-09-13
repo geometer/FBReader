@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="无效的电子邮箱" />
 			<node name="tooManyRegistrations" value="来自你的IP的注册数过多，&#10;请稍候再尝试注册" />
 			<node name="noUserEmail" value="你的电子邮箱可以注册&#10;" />
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="下载出现错误" />
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="请求找回密码中，请稍等..." />
 			<node name="authenticationCheck" value="帐号验证中,请稍等..." />
 			<node name="signOut" value="退出. 正在处理,请稍等..." />
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="购买书籍" />

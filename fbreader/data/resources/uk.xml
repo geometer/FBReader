@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="Невірна адреса електронної пошти"/>
 			<node name="tooManyRegistrations" value="Занадто багато реєстрацій з вашого IP; спробуйте ще раз через пару хвилин"/>
 			<node name="noUserEmail" value="Немає користувача з такою адресою електронної пошти"/>
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Помилка при завантаженні"/>
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="Відновлення пароля. Будь ласка, зачекайте ..."/>
 			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
 			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Купити книгу"/>

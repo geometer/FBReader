@@ -546,6 +546,7 @@
 			<node name="invalidEMail" value="Virheellinen sähköpostiosoite" />
 			<node name="tooManyRegistrations" value="Liian monta rekisteröintiä IP-osoitteestasi;&#10;yritä udelleen muutaman minuutin kuluttua" />
 			<node name="noUserEmail" value="Käyttäjää ei ole rekisteröity&#10;kyseiselle sähköpostiosoitteelle" />
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Virhe latauksessa" />
@@ -566,6 +567,7 @@
 			<node name="passwordRecovery" value="Palautetaan salasanaa. Ole hyvä ja odota..." />
 			<node name="authenticationCheck" value="Tilin varmistus. Ole hyvä ja odota..." />
 			<node name="signOut" value="Kirjaudutaan ulos. Ole hyvä ja odota..." />
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Osta kirja" />
