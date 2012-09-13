@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" toBeTranslated="true" value="Network error" />
 			<node name="unknownErrorMessage" toBeTranslated="true" value="Unknown error" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" toBeTranslated="true" value="Couldn&apos;t create a directory&#10;%s" />
 			<node name="couldntCreateFileMessage" toBeTranslated="true" value="Couldn&apos;t create a file&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn&apos;t connect to the network" />

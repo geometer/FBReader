@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Tinklo klaida" />
 			<node name="unknownErrorMessage" value="Nežinoma klaida" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="Nepavyksta sukurti katalogo&#xD;&#xA;%s" />
 			<node name="couldntCreateFileMessage" value="Napavyksta sukurti failo&#xD;&#xA;%s" />
 			<node name="couldntConnectToNetworkMessage" value="Nepavyksta prisijungti prie tinklo" />

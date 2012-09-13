@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Lỗi về mạng" />
 			<node name="unknownErrorMessage" value="Lỗi chưa biết" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="Không tạo được thư mục&#10;%s" />
 			<node name="couldntCreateFileMessage" value="Không tạo được tập tin&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" value="Không thể kết nối vào mạng" />

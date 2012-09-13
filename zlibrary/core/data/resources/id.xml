@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Jaringan bermasalah" />
 			<node name="unknownErrorMessage" value="Masalah tidak diketahui" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="Tidak dapat membuat direktori&#10;%s" />
 			<node name="couldntCreateFileMessage" value="Tidak dapat membuat berkas&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" toBeTranslated="true" value="Couldn&apos;t connect to the network" />

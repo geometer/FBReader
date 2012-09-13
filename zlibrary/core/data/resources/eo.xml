@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Reta eraro" />
 			<node name="unknownErrorMessage" value="Nekonata eraro" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="Mi ne sukcesis krei la dosierujon&#10;%s" />
 			<node name="couldntCreateFileMessage" value="Mi ne sukcesis krei la dosieron&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" value="Ne eblas konektiĝi al la reto"/>

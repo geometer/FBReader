@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Грешка при работа в мрежата" />
 			<node name="unknownErrorMessage" value="Неизвестна грешка" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="Не може да се създаде директорията&#10;%s" />
 			<node name="couldntCreateFileMessage" value="Не може да се създаде файла&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" value="Не може да се установи връзка с мрежата" />

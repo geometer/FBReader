@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Hálózati hiba" />
 			<node name="unknownErrorMessage" value="Ismeretlen hiba" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="Nem lehet létrehozni a %s könyvtárat" />
 			<node name="couldntCreateFileMessage" value="Nem lehet létrehozni a %s fájlt" />
 			<node name="couldntConnectToNetworkMessage" value="A hálózati csatlakozás sikertelen" />

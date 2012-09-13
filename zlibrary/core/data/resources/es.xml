@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Error de Red" />
 			<node name="unknownErrorMessage" value="Error desconocido" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="No es posible crear un directorio&#10;%s" />
 			<node name="couldntCreateFileMessage" value="No se puede crear un archivo&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" value="No se pudo conectar a la red" />

@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="网络错误" />
 			<node name="unknownErrorMessage" value="未知错误" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="无法创建目录 %s" />
 			<node name="couldntCreateFileMessage" value="无法创建文件 %s" />
 			<node name="couldntConnectToNetworkMessage" value="无法连接到网络" />

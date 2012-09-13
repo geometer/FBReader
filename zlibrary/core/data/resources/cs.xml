@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Chyba sítě"/>
 			<node name="unknownErrorMessage" value="Neznámá chyba"/>
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="Nepodařilo se vytvořit složku&#10;%s"/>
 			<node name="couldntCreateFileMessage" value="Nepodařilo se vytvořit soubor&#10;%s"/>
 			<node name="couldntConnectToNetworkMessage" value="Není možné se připojit't k síti"/>

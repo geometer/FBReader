@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="Verkkovirhe" />
 			<node name="unknownErrorMessage" value="Tuntematon virhe" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="Ei voitu luoda hakemistoa&#10;%s" />
 			<node name="couldntCreateFileMessage" value="Ei voitu luoda tiedostoa&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" value="Ei voitu kytkeytyä verkkoon" />
@@ -72,6 +73,7 @@
 		<node name="pt" value="Portugali" />
 		<node name="ru" value="Venäjä" />
 		<node name="sv" value="Ruotsi" />
+		<node name="ta" value="Tamil" toBeTranslated="true"/>
 		<node name="tr" value="Turkki" />
 		<node name="uk" value="Ukraina" />
 		<node name="vi" value="Vietnami" />

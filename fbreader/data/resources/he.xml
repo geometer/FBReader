@@ -237,8 +237,8 @@
 			<node name="buy" value="&amp;קניה" />
 			<node name="buyAndDownload" value="קניה &amp;והורדה" />
 		</node>
-		<node name="OptionsDialog">
-			<node name="title" value="FBReader - הגדרות" />
+		<node name="LibraryOptionsDialog">
+			<node name="title" value="FBReader - Library Options" toBeTranslated="true" />
 			<node name="tab">
 				<node name="Library" value="ספריה">
 					<node name="bookPath" value="נתיב הספריה" />
@@ -246,6 +246,11 @@
 					<node name="collectBooksWithoutMetaInfo" value="חיפוש ספרים ללא תגיות" />
 					<node name="downloadDirectory" value="תיקיה עבור ספרים שהורדו" />
 				</node>
+			</node>
+		</node>
+		<node name="NetworkOptionsDialog">
+			<node name="title" value="FBReader - Network Options" toBeTranslated="true" />
+			<node name="tab">
 				<node name="NetworkLibrary" value="חיפוש ברשת">
 					<node name="useProxy" value="השתמש בשרת פרוקסי" />
 					<node name="proxyHost" value="כתובת שרת פרוקסי" />
@@ -258,6 +263,11 @@
 					<node name="choice" value="דפדפן" />
 					<node name="command" value="הפעל פקודה" />
 				</node>
+			</node>
+		</node>
+		<node name="SystemOptionsDialog">
+			<node name="title" value="FBReader - System Options" toBeTranslated="true"/>
+			<node name="tab">
 				<node name="Language" value="שפה">
 					<node name="autoDetect" value="זיהוי שפה וקידוד אוטומתי" />
 					<node name="defaultLanguage" value="שפת ברירת מחדל" />
@@ -280,6 +290,11 @@
 					<node name="minStylusPressure" value="לחץ חרט מינימלי" />
 					<node name="maxStylusPressure" value="לחץ חרט מקסימלי" />
 				</node>
+			</node>
+		</node>
+		<node name="ReadingOptionsDialog">
+			<node name="title" value="FBReader - Reading Options" toBeTranslated="true"/>
+			<node name="tab">
 				<node name="Scrolling" value="דפדוף">
 					<node name="keyScrollDelay" value="עיכוב בדפדוף על ידי לחצנים" />
 					<node name="keyLinesToScroll" value="כמה שורות לדפדף בבת אחת" />
@@ -360,6 +375,11 @@
 					<node name="quitOnCancel" value="יציאה מהתוכנית" />
 					<node name="keyDelay" value="עיכוב בין לחיצת כפתורים" />
 				</node>
+			</node>
+		</node>
+		<node name="LookAndFeelOptionsDialog">
+			<node name="title" value="FBReader - Look &amp; Feel Options" toBeTranslated="true" />
+			<node name="tab">
 				<node name="CSS" value="CSS">
 					<node name="overrideSpecifiedFonts" value="לא להשתמש בגופני ברירת מחדל" />
 				</node>

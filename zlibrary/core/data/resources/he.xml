@@ -15,6 +15,7 @@
 		<node name="networkError">
 			<node name="title" value="שגיאה בזמן עבודה ברשת" />
 			<node name="unknownErrorMessage" value="שגיאה לא ידועה" />
+			<node name="authenticationFailed" value="Authentication failed" toBeTranslated="true" />
 			<node name="couldntCreateDirectoryMessage" value="לא ניתן ליצור קטלוג&#10;%s" />
 			<node name="couldntCreateFileMessage" value="לא ניתן ליצור קובץ&#10;%s" />
 			<node name="couldntConnectToNetworkMessage" value="לא ניתן להתחבר לרשת" />
@@ -72,6 +73,7 @@
 		<node name="pt" value="פורטוגזית" />
 		<node name="ru" value="רוסית" />
 		<node name="sv" value="שבדית" />
+		<node name="ta" value="Tamil" toBeTranslated="true"/>
 		<node name="tr" value="טורקית" />
 		<node name="uk" value="אוקראינית" />
 		<node name="vi" value="ויאטנמית" />
