@@ -3,669 +3,669 @@
 <resources>
 	<node name="libraryView">
 		<node name="authorNode">
-			<node name="expandTree" value="أظهر الكتب" />
-			<node name="collapseTree" value="أخف الكتب" />
-			<node name="edit" value="حرر المعلومات" />
-			<node name="unknownAuthor" value="مؤلف مجهول" />
+			<node name="expandTree" value="أظهر الكتب"/>
+			<node name="collapseTree" value="أخف الكتب"/>
+			<node name="edit" value="حرر المعلومات"/>
+			<node name="unknownAuthor" value="مؤلف مجهول"/>
 		</node>
 		<node name="tagNode">
-			<node name="expandTree" value="أظهر الكتب" />
-			<node name="collapseTree" value="أخف الكتب" />
-			<node name="edit" value="حرر الوسم" />
-			<node name="clone" value="انسخ الوسم" />
-			<node name="delete" value="احذف الوسم" />
-			<node name="noTags" value="كتب بلا وسوم" />
+			<node name="expandTree" value="أظهر الكتب"/>
+			<node name="collapseTree" value="أخف الكتب"/>
+			<node name="edit" value="حرر الوسم"/>
+			<node name="clone" value="انسخ الوسم"/>
+			<node name="delete" value="احذف الوسم"/>
+			<node name="noTags" value="كتب بلا وسوم"/>
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" value="أظهر الكتب" />
-			<node name="collapseTree" value="أخف الكتب" />
+			<node name="expandTree" value="أظهر الكتب"/>
+			<node name="collapseTree" value="أخف الكتب"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" value="اقرأ الكتاب" />
-			<node name="edit" value="حرر المعلومات" />
-			<node name="delete" value="احذف الكتاب" />
+			<node name="read" value="اقرأ الكتاب"/>
+			<node name="edit" value="حرر المعلومات"/>
+			<node name="delete" value="احذف الكتاب"/>
 		</node>
 	</node>
 	<node name="networkView">
 		<node name="libraryItemNode">
-			<node name="expandTree" value="مدّد" />
-			<node name="collapseTree" value="قلّص" />
-			<node name="reload" value="أعد التحميل" />
-			<node name="openInBrowser" value="افتح في المتصفح" />
+			<node name="expandTree" value="مدّد"/>
+			<node name="collapseTree" value="قلّص"/>
+			<node name="reload" value="أعد التحميل"/>
+			<node name="openInBrowser" value="افتح في المتصفح"/>
 		</node>
 		<node name="libraryItemRootNode">
-			<node name="expandTree" value="افتح الفهرس" />
-			<node name="collapseTree" value="أغلق الفهرس" />
-			<node name="login" value="ادخل" />
-			<node name="logout" value="اخرج (%s)" />
-			<node name="reload" value="أعد التحميل" />
-			<node name="dontShow" value="لا تُظهر هذا الفهرس" />
-			<node name="refillAccount" value="أعد ملء المحتويات (حاليا: %s)" />
-			<node name="register" value="سجّل" />
-			<node name="passwordRecovery" value="استعد كلمة السر" />
+			<node name="expandTree" value="افتح الفهرس"/>
+			<node name="collapseTree" value="أغلق الفهرس"/>
+			<node name="login" value="ادخل"/>
+			<node name="logout" value="اخرج (%s)"/>
+			<node name="reload" value="أعد التحميل"/>
+			<node name="dontShow" value="لا تُظهر هذا الفهرس"/>
+			<node name="refillAccount" value="أعد ملء المحتويات (حاليا: %s)"/>
+			<node name="register" value="سجّل"/>
+			<node name="passwordRecovery" value="استعد كلمة السر"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="title" value="نتائج البحث" />
-			<node name="expandTree" value="أظهر النتائج" />
-			<node name="collapseTree" value="أخف النتائج" />
+			<node name="title" value="نتائج البحث"/>
+			<node name="expandTree" value="أظهر النتائج"/>
+			<node name="collapseTree" value="أخف النتائج"/>
 		</node>
 		<node name="authorNode">
-			<node name="expandTree" value="أظهر الكتب" />
-			<node name="collapseTree" value="أخف الكتب" />
+			<node name="expandTree" value="أظهر الكتب"/>
+			<node name="collapseTree" value="أخف الكتب"/>
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" value="أظهر الكتب" />
-			<node name="collapseTree" value="أخف الكتب" />
+			<node name="expandTree" value="أظهر الكتب"/>
+			<node name="collapseTree" value="أخف الكتب"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" value="اقرأ النسخة المحلية" />
-			<node name="delete" value="احذف النسخة المحلية" />
-			<node name="download" value="نزّل" />
-			<node name="readDemo" value="اقرأ نسخة العرض" />
-			<node name="downloadDemo" value="نزّل نسخة العرض" />
+			<node name="read" value="اقرأ النسخة المحلية"/>
+			<node name="delete" value="احذف النسخة المحلية"/>
+			<node name="download" value="نزّل"/>
+			<node name="readDemo" value="اقرأ نسخة العرض"/>
+			<node name="downloadDemo" value="نزّل نسخة العرض"/>
 			<node name="demo" toBeTranslated="true" value="sample"/>
-			<node name="buy" value="اشترِ (%s)" />
+			<node name="buy" value="اشترِ (%s)"/>
 		</node>
 	</node>
 	<node name="menu">
-		<node name="bookInfo" value="معلومات الكتاب..." />
-		<node name="toc" value="جدول المحتويات" />
-		<node name="showLibrary" value="افتح المكتبة" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
-		<node name="addBook" toBeTranslated="true" value="Open file..." />
-		<node name="showRecent" toBeTranslated="true" value="Recent books" />
+		<node name="bookInfo" value="معلومات الكتاب..."/>
+		<node name="toc" value="جدول المحتويات"/>
+		<node name="showLibrary" value="افتح المكتبة"/>
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library"/>
+		<node name="addBook" toBeTranslated="true" value="Open file..."/>
+		<node name="showRecent" toBeTranslated="true" value="Recent books"/>
 		<node name="library" value="المكتبة">
-			<node name="showLibrary" value="افتح" />
-			<node name="previousBook" value="الكتاب السابق" />
-			<node name="showRecent" value="الأخيرة" />
-			<node name="addBook" value="أضف كتابا..." />
-			<node name="showHelp" value="عن إف.بي.ريدر" />
+			<node name="showLibrary" value="افتح"/>
+			<node name="previousBook" value="الكتاب السابق"/>
+			<node name="showRecent" value="الأخيرة"/>
+			<node name="addBook" value="أضف كتابا..."/>
+			<node name="showHelp" value="عن إف.بي.ريدر"/>
 		</node>
-		<node name="gotoHome" value="اذهب إلى بداية المستند" />
-		<node name="gotoPageNumber" value="اذهب إلى صفحة..." />
-		<node name="gotoSectionStart" value="اذهب إلى بداية الجزء النصي" />
-		<node name="gotoSectionEnd" value="اذهب إلى نهاية الجزء النصي" />
-		<node name="nextTOCSection" value="اذهب إلى العنصر التالي في جدول المحتويات" />
-		<node name="previousTOCSection" value="اذهب إلى العنصر السابق في جدول المحتويات" />
+		<node name="gotoHome" value="اذهب إلى بداية المستند"/>
+		<node name="gotoPageNumber" value="اذهب إلى صفحة..."/>
+		<node name="gotoSectionStart" value="اذهب إلى بداية الجزء النصي"/>
+		<node name="gotoSectionEnd" value="اذهب إلى نهاية الجزء النصي"/>
+		<node name="nextTOCSection" value="اذهب إلى العنصر التالي في جدول المحتويات"/>
+		<node name="previousTOCSection" value="اذهب إلى العنصر السابق في جدول المحتويات"/>
 		<node name="navigate" value="تصفّح">
-			<node name="gotoHome" value="اذهب إلى بداية المستند" />
-			<node name="gotoPageNumber" value="اذهب إلى صفحة..." />
-			<node name="gotoSectionStart" value="اذهب إلى بداية الجزء النصي" />
-			<node name="gotoSectionEnd" value="اذهب إلى نهاية الجزء النصي" />
-			<node name="nextTOCSection" value="اذهب إلى العنصر التالي في جدول المحتويات" />
-			<node name="previousTOCSection" value="اذهب إلى العنصر السابق في جدول المحتويات" />
-			<node name="undo" value="عد للخلف" />
-			<node name="redo" value="تقدّم للأمام" />
+			<node name="gotoHome" value="اذهب إلى بداية المستند"/>
+			<node name="gotoPageNumber" value="اذهب إلى صفحة..."/>
+			<node name="gotoSectionStart" value="اذهب إلى بداية الجزء النصي"/>
+			<node name="gotoSectionEnd" value="اذهب إلى نهاية الجزء النصي"/>
+			<node name="nextTOCSection" value="اذهب إلى العنصر التالي في جدول المحتويات"/>
+			<node name="previousTOCSection" value="اذهب إلى العنصر السابق في جدول المحتويات"/>
+			<node name="undo" value="عد للخلف"/>
+			<node name="redo" value="تقدّم للأمام"/>
 		</node>
 		<node name="selection" value="التحديد">
-			<node name="copyToClipboard" value="انسخ للحافظة" />
-			<node name="openInDictionary" value="افتح في القاموس" />
-			<node name="clearSelection" value="امسح" />
+			<node name="copyToClipboard" value="انسخ للحافظة"/>
+			<node name="openInDictionary" value="افتح في القاموس"/>
+			<node name="clearSelection" value="امسح"/>
 		</node>
 		<node name="search" value="بحث">
-			<node name="search" value="ابحث عن نص..." />
-			<node name="findNext" value="ابحث عن التالي" />
-			<node name="findPrevious" value="ابحث عن السابق" />
+			<node name="search" value="ابحث عن نص..."/>
+			<node name="findNext" value="ابحث عن التالي"/>
+			<node name="findPrevious" value="ابحث عن السابق"/>
 		</node>
 		<node name="view" value="عرض">
-			<node name="rotate" value="لف الشاشة" />
-			<node name="toggleFullscreen" value="املأ الشاشة" />
-			<node name="toggleIndicator" value="بدّل الموضّح" />
+			<node name="rotate" value="لف الشاشة"/>
+			<node name="toggleFullscreen" value="املأ الشاشة"/>
+			<node name="toggleIndicator" value="بدّل الموضّح"/>
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
-		<node name="quit" value="أغلق" />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..."/>
+		<node name="quit" value="أغلق"/>
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
-			<node name="label" value="اقرأ الكتاب" />
-			<node name="tooltip" value="أظهر وضع القراءة" />
+			<node name="label" value="اقرأ الكتاب"/>
+			<node name="tooltip" value="أظهر وضع القراءة"/>
 		</node>
 		<node name="showLibrary">
-			<node name="label" value="مكتبة" />
-			<node name="tooltip" value="أظهر شجرة المكتبة" />
-			<node name="popup" value="أظهر قائمة الكتب الحديثة" />
+			<node name="label" value="مكتبة"/>
+			<node name="tooltip" value="أظهر شجرة المكتبة"/>
+			<node name="popup" value="أظهر قائمة الكتب الحديثة"/>
 		</node>
 		<node name="showRecent">
-			<node name="label" value="الكتب الحديثة" />
-			<node name="tooltip" value="أظهر قائمة آخر الكتب" />
+			<node name="label" value="الكتب الحديثة"/>
+			<node name="tooltip" value="أظهر قائمة آخر الكتب"/>
 		</node>
 		<node name="byAuthor">
-			<node name="label" value="حسب المؤلف" />
-			<node name="tooltip" value="رتّب الكتب حسب المؤلف" />
+			<node name="label" value="حسب المؤلف"/>
+			<node name="tooltip" value="رتّب الكتب حسب المؤلف"/>
 		</node>
 		<node name="byTag">
-			<node name="label" value="حسب الوسم" />
-			<node name="tooltip" value="رتّب الكتب حسب الوسم" />
+			<node name="label" value="حسب الوسم"/>
+			<node name="tooltip" value="رتّب الكتب حسب الوسم"/>
 		</node>
 		<node name="addBook">
-			<node name="label" value="أضف ملفا" />
-			<node name="tooltip" value="أضف ملفا إلى المكتبة" />
+			<node name="label" value="أضف ملفا"/>
+			<node name="tooltip" value="أضف ملفا إلى المكتبة"/>
 		</node>
 		<node name="showNetLibrary">
-			<node name="label" value="الشبكة" />
-			<node name="tooltip" value="ابحث في مكتبات الشبكة" />
+			<node name="label" value="الشبكة"/>
+			<node name="tooltip" value="ابحث في مكتبات الشبكة"/>
 		</node>
 		<node name="searchOnNetwork">
-			<node name="label" value="بحث بسيط" />
-			<node name="tooltip" value="بحث الشبكة" />
+			<node name="label" value="بحث بسيط"/>
+			<node name="tooltip" value="بحث الشبكة"/>
 		</node>
 		<node name="advancedSearchOnNetwork">
-			<node name="label" value="ابحث" />
-			<node name="tooltip" value="بحث متقدم في الشبكة" />
+			<node name="label" value="ابحث"/>
+			<node name="tooltip" value="بحث متقدم في الشبكة"/>
 		</node>
 		<node name="gotoHome">
-			<node name="label" value="اذهب إلى البداية" />
-			<node name="tooltip" value="اذهب إلى بداية النص" />
+			<node name="label" value="اذهب إلى البداية"/>
+			<node name="tooltip" value="اذهب إلى بداية النص"/>
 		</node>
 		<node name="undo">
-			<node name="label" value="عد إلى الخلف" />
-			<node name="tooltip" value="عد إلى الخلف" />
+			<node name="label" value="عد إلى الخلف"/>
+			<node name="tooltip" value="عد إلى الخلف"/>
 		</node>
 		<node name="redo">
-			<node name="label" value="تقدّم إلى الأمام" />
-			<node name="tooltip" value="تقدّم إلى الأمام" />
+			<node name="label" value="تقدّم إلى الأمام"/>
+			<node name="tooltip" value="تقدّم إلى الأمام"/>
 		</node>
 		<node name="gotoPageNumberWithParameter">
-			<node name="label" value="اذهب إلى صفحة" />
-			<node name="tooltip" value="اذهب إلى صفحة" />
+			<node name="label" value="اذهب إلى صفحة"/>
+			<node name="tooltip" value="اذهب إلى صفحة"/>
 		</node>
 		<node name="toc">
-			<node name="label" value="الفهرس" />
-			<node name="tooltip" value="جدول المحتويات" />
+			<node name="label" value="الفهرس"/>
+			<node name="tooltip" value="جدول المحتويات"/>
 		</node>
 		<node name="search">
-			<node name="label" value="ابحث" />
-			<node name="tooltip" value="ابحث في النص" />
+			<node name="label" value="ابحث"/>
+			<node name="tooltip" value="ابحث في النص"/>
 		</node>
 		<node name="findNext">
-			<node name="label" value="التالي" />
-			<node name="tooltip" value="ابحث عن التالي" />
+			<node name="label" value="التالي"/>
+			<node name="tooltip" value="ابحث عن التالي"/>
 		</node>
 		<node name="findPrevious">
-			<node name="label" value="السابق" />
-			<node name="tooltip" value="ابحث عن السابق" />
+			<node name="label" value="السابق"/>
+			<node name="tooltip" value="ابحث عن السابق"/>
 		</node>
 		<node name="rotate">
-			<node name="label" value="دوّر" />
-			<node name="tooltip" value="لف النص" />
+			<node name="label" value="دوّر"/>
+			<node name="tooltip" value="لف النص"/>
 		</node>
 		<node name="showHelp">
-			<node name="label" value="عن" />
-			<node name="tooltip" value="عن إف.بي.ريدر" />
+			<node name="label" value="عن"/>
+			<node name="tooltip" value="عن إف.بي.ريدر"/>
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter" />
-			<node name="tooltip" toBeTranslated="true" value="Filter" />
+			<node name="label" toBeTranslated="true" value="Filter"/>
+			<node name="tooltip" toBeTranslated="true" value="Filter"/>
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog"/>
 		</node>
 		<node name="bookInfo">
-			<node name="label" value="معلومات الكتاب" />
-			<node name="tooltip" value="أظهر حوار معلومات الكتاب" />
+			<node name="label" value="معلومات الكتاب"/>
+			<node name="tooltip" value="أظهر حوار معلومات الكتاب"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences" />
-			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Library Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Network Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="System Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Reading Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog"/>
 		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
-			<node name="go" value="ا&amp;ذهب" />
-			<node name="thisOnly" value="هذا فقط" />
-			<node name="withSubtags" value="مع الوسوم الثانوية" />
-			<node name="removeLink" value="احذف من المكتبة" />
-			<node name="removeFile" value="احذف من القرص" />
-			<node name="yesToAll" value="نعم لل&amp;ل" />
-			<node name="buy" value="ا&amp;شتر" />
-			<node name="buyAndDownload" value="اصشتر و &amp;نزّل" />
+			<node name="go" value="ا&amp;ذهب"/>
+			<node name="thisOnly" value="هذا فقط"/>
+			<node name="withSubtags" value="مع الوسوم الثانوية"/>
+			<node name="removeLink" value="احذف من المكتبة"/>
+			<node name="removeFile" value="احذف من القرص"/>
+			<node name="yesToAll" value="نعم لل&amp;ل"/>
+			<node name="buy" value="ا&amp;شتر"/>
+			<node name="buyAndDownload" value="اصشتر و &amp;نزّل"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options"/>
 			<node name="tab">
 				<node name="Library" value="المكتبة">
-					<node name="bookPath" value="مسار الكتب" />
-					<node name="lookInSubdirectories" value="ابحث عن الكتب في المجلدات الفرعية" />
-					<node name="collectBooksWithoutMetaInfo" value="اجمع الكتب بلا معلومات فوقية" />
-					<node name="downloadDirectory" value="مجلّد الكتب المنزّلة" />
+					<node name="bookPath" value="مسار الكتب"/>
+					<node name="lookInSubdirectories" value="ابحث عن الكتب في المجلدات الفرعية"/>
+					<node name="collectBooksWithoutMetaInfo" value="اجمع الكتب بلا معلومات فوقية"/>
+					<node name="downloadDirectory" value="مجلّد الكتب المنزّلة"/>
 				</node>
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options"/>
 			<node name="tab">
 				<node name="NetworkLibrary" value="بحث الشبكة">
 				</node>
 				<node name="Connection" value="Connection">
-					<node name="useProxy" value="استخدم وسيطا" />
-					<node name="proxyHost" value="مستضيف الوسيط" />
-					<node name="proxyPort" value="منفذ الوسيط" />
-					<node name="timeout" value="مهلة عمليات الشبكة، بالثواني" />
+					<node name="useProxy" value="استخدم وسيطا"/>
+					<node name="proxyHost" value="مستضيف الوسيط"/>
+					<node name="proxyPort" value="منفذ الوسيط"/>
+					<node name="timeout" value="مهلة عمليات الشبكة، بالثواني"/>
 				</node>
 				<node name="Web" value="الوب">
-					<node name="enableIntegration" value="افتح الوصلات الخارجية في %s" />
-					<node name="defaultText" value="افتح الوصلات الخارجية في المتصفح" />
-					<node name="choice" value="استخدم المتصفح" />
-					<node name="command" value="الأمر" />
+					<node name="enableIntegration" value="افتح الوصلات الخارجية في %s"/>
+					<node name="defaultText" value="افتح الوصلات الخارجية في المتصفح"/>
+					<node name="choice" value="استخدم المتصفح"/>
+					<node name="command" value="الأمر"/>
 				</node>
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - System Options"/>
 			<node name="tab">
 				<node name="Language" value="اللغة">
-					<node name="autoDetect" value="تعرّف على اللغة والترميز آليا" />
-					<node name="defaultLanguage" value="اللغة المبدئية" />
-					<node name="defaultEncodingSet" value="طقم الترميز المبدئي" />
-					<node name="defaultEncoding" value="الترميز المبدئي" />
-					<node name="useWindows1252Hack" value="استخدم windows-1252 بدلا من iso-8859-1" />
+					<node name="autoDetect" value="تعرّف على اللغة والترميز آليا"/>
+					<node name="defaultLanguage" value="اللغة المبدئية"/>
+					<node name="defaultEncodingSet" value="طقم الترميز المبدئي"/>
+					<node name="defaultEncoding" value="الترميز المبدئي"/>
+					<node name="useWindows1252Hack" value="استخدم windows-1252 بدلا من iso-8859-1"/>
 				</node>
 				<node name="Config" value="الإعداد">
-					<node name="autoSave" value="احفظ الحالة تلقائيا" />
-					<node name="timeout" value="الفترة بين الحفظ، بالثواني" />
+					<node name="autoSave" value="احفظ الحالة تلقائيا"/>
+					<node name="timeout" value="الفترة بين الحفظ، بالثواني"/>
 				</node>
 				<node name="Dictionary" value="القاموس">
-					<node name="enableIntegration" value="فعّل التكامل %s" />
-					<node name="defaultText" value="فعّل التكامل مع القاموس" />
-					<node name="choice" value="تكامل مع" />
-					<node name="singleClickOpen" value="افتح بنقرة واحدة" />
+					<node name="enableIntegration" value="فعّل التكامل %s"/>
+					<node name="defaultText" value="فعّل التكامل مع القاموس"/>
+					<node name="choice" value="تكامل مع"/>
+					<node name="singleClickOpen" value="افتح بنقرة واحدة"/>
 				</node>
 				<node name="Maemo" value="ميٰمو">
-					<node name="keyActionOnRelease" value="الإجراءات عند ترك المفتاح، لا عند ضغطه" />
-					<node name="minStylusPressure" value="أدنى ضغط من الريشة" />
-					<node name="maxStylusPressure" value="أقصى ضغط من الريشة" />
+					<node name="keyActionOnRelease" value="الإجراءات عند ترك المفتاح، لا عند ضغطه"/>
+					<node name="minStylusPressure" value="أدنى ضغط من الريشة"/>
+					<node name="maxStylusPressure" value="أقصى ضغط من الريشة"/>
 				</node>
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options"/>
 			<node name="tab">
 				<node name="Scrolling" value="التقليب">
-					<node name="keyScrollDelay" value="التأخير بين التقليب بالفاتيح، بالملي ثانية" />
-					<node name="keyLinesToScroll" value="السطور التي تقلب عند التقليب بالسطر" />
-					<node name="keyLinesToKeep" value="السطور التي تقلب عند التقليب بالصفحة" />
-					<node name="enableTapScrolling" value="فعّل التقليب بعلامة الجدولة" />
-					<node name="fingerOnly" value="اقلب عند الطرق بالأصبع فقط" />
+					<node name="keyScrollDelay" value="التأخير بين التقليب بالفاتيح، بالملي ثانية"/>
+					<node name="keyLinesToScroll" value="السطور التي تقلب عند التقليب بالسطر"/>
+					<node name="keyLinesToKeep" value="السطور التي تقلب عند التقليب بالصفحة"/>
+					<node name="enableTapScrolling" value="فعّل التقليب بعلامة الجدولة"/>
+					<node name="fingerOnly" value="اقلب عند الطرق بالأصبع فقط"/>
 				</node>
 				<node name="Selection" value="التحديد">
-					<node name="enableSelection" value="فعّل تحديد النص" />
+					<node name="enableSelection" value="فعّل تحديد النص"/>
 				</node>
 				<node name="Indicator" value="الموضح">
 					<node name="type" value="اعرض ك‍">
-						<node name="osScrollbar" value="شريط تمرير النظام" />
-						<node name="fbIndicator" value="الموضّح القديم" />
-						<node name="none" value="لا تُظهر" />
+						<node name="osScrollbar" value="شريط تمرير النظام"/>
+						<node name="fbIndicator" value="الموضّح القديم"/>
+						<node name="none" value="لا تُظهر"/>
 					</node>
-					<node name="height" value="ارتفاع الموضح" />
-					<node name="offset" value="بعده من النص" />
-					<node name="pageNumber" value="اعرض الموضع كرقم" />
-					<node name="time" value="أظهر الوقت" />
-					<node name="fontSize" value="حجم" />
-					<node name="tocMarks" value="أظهر علامات جدول المحتويات" />
-					<node name="navigation" value="فعّل التصفّح" />
+					<node name="height" value="ارتفاع الموضح"/>
+					<node name="offset" value="بعده من النص"/>
+					<node name="pageNumber" value="اعرض الموضع كرقم"/>
+					<node name="time" value="أظهر الوقت"/>
+					<node name="fontSize" value="حجم"/>
+					<node name="tocMarks" value="أظهر علامات جدول المحتويات"/>
+					<node name="navigation" value="فعّل التصفّح"/>
 				</node>
 				<node name="Rotation" value="التدوير">
 					<node name="direction" value="نوع التدوير">
-						<node name="disabled" value="معطّل" />
-						<node name="clockwise" value="90 درجة مع عقارب الساعة" />
-						<node name="counterclockwise" value="90 درجة عكس عقارب الساعة" />
-						<node name="180" value="180 درجة" />
-						<node name="cycle" value="بدل بين الاتجاهات الأربع" />
+						<node name="disabled" value="معطّل"/>
+						<node name="clockwise" value="90 درجة مع عقارب الساعة"/>
+						<node name="counterclockwise" value="90 درجة عكس عقارب الساعة"/>
+						<node name="180" value="180 درجة"/>
+						<node name="cycle" value="بدل بين الاتجاهات الأربع"/>
 					</node>
 				</node>
 				<node name="Keys" value="المفاتيح">
-					<node name="grabSystemKeys" value="التقط مفاتيح النظام" />
-					<node name="separate" value="ارتباطات المفاتيح تعتمد على الوضع" />
+					<node name="grabSystemKeys" value="التقط مفاتيح النظام"/>
+					<node name="separate" value="ارتباطات المفاتيح تعتمد على الوضع"/>
 					<node name="orientation" value="الوضع">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+						<node name="degrees0" toBeTranslated="true" value="0 Degrees"/>
+						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise"/>
+						<node name="degrees180" toBeTranslated="true" value="180 Degrees"/>
+						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise"/>
 					</node>
 					<node name="action">
-						<node name="none" value="لا شيء" />
-						<node name="showLibrary" value="أظهر المكتبة" />
-						<node name="showNetLibrary" value="أظهر مكتبة الشبكة" />
-						<node name="showRecent" value="أظهر الكتب الأخيرة" />
-						<node name="previousBook" value="افتح الكتاب السابق" />
-						<node name="toc" value="أظهر جدول المحتويات" />
-						<node name="gotoHome" value="اذهب إلى المنزل" />
-						<node name="gotoSectionStart" value="اذهب إلى بداية القسم" />
-						<node name="gotoSectionEnd" value="اذهب إلى نهاية القسم" />
-						<node name="nextTOCSection" value="اذهب إلى القسم التالي في جدول المحتويات" />
-						<node name="previousTOCSection" value="اذهب إلى قسم جدول المحتويات السابق" />
-						<node name="pageForward" value="اقلب صفحة للأمام" />
-						<node name="pageBackward" value="اقلب صفحة للخلف" />
-						<node name="lineForward" value="اقلب سطرا للأمام" />
-						<node name="lineBackward" value="اقلب سطرا للخلف" />
-						<node name="undo" value="تراجع" />
-						<node name="redo" value="أعد" />
-						<node name="copyToClipboard" value="Copy Selected Text to Clipboard" />
-						<node name="openInDictionary" value="Open Selected Text in Dictionary" />
-						<node name="clearSelection" value="Clear Selection" />
-						<node name="search" value="ابحث" />
-						<node name="findPrevious" value="Find Previous" />
-						<node name="findNext" value="Find Next" />
-						<node name="increaseFont" value="Increase Font Size" />
-						<node name="decreaseFont" value="Decrease Font Size" />
-						<node name="toggleIndicator" value="Toggle Position Indicator" />
-						<node name="toggleFullscreen" value="Toggle Fullscreen Mode" />
-						<node name="rotate" value="Rotate Screen" />
-						<node name="addBook" value="أضف كتابا" />
-						<node name="cancel" value="ألغ" />
-						<node name="quit" value="اخرج" />
-						<node name="bookInfo" value="Show Book Info Dialog" />
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
+						<node name="none" value="لا شيء"/>
+						<node name="showLibrary" value="أظهر المكتبة"/>
+						<node name="showNetLibrary" value="أظهر مكتبة الشبكة"/>
+						<node name="showRecent" value="أظهر الكتب الأخيرة"/>
+						<node name="previousBook" value="افتح الكتاب السابق"/>
+						<node name="toc" value="أظهر جدول المحتويات"/>
+						<node name="gotoHome" value="اذهب إلى المنزل"/>
+						<node name="gotoSectionStart" value="اذهب إلى بداية القسم"/>
+						<node name="gotoSectionEnd" value="اذهب إلى نهاية القسم"/>
+						<node name="nextTOCSection" value="اذهب إلى القسم التالي في جدول المحتويات"/>
+						<node name="previousTOCSection" value="اذهب إلى قسم جدول المحتويات السابق"/>
+						<node name="pageForward" value="اقلب صفحة للأمام"/>
+						<node name="pageBackward" value="اقلب صفحة للخلف"/>
+						<node name="lineForward" value="اقلب سطرا للأمام"/>
+						<node name="lineBackward" value="اقلب سطرا للخلف"/>
+						<node name="undo" value="تراجع"/>
+						<node name="redo" value="أعد"/>
+						<node name="copyToClipboard" value="Copy Selected Text to Clipboard"/>
+						<node name="openInDictionary" value="Open Selected Text in Dictionary"/>
+						<node name="clearSelection" value="Clear Selection"/>
+						<node name="search" value="ابحث"/>
+						<node name="findPrevious" value="Find Previous"/>
+						<node name="findNext" value="Find Next"/>
+						<node name="increaseFont" value="Increase Font Size"/>
+						<node name="decreaseFont" value="Decrease Font Size"/>
+						<node name="toggleIndicator" value="Toggle Position Indicator"/>
+						<node name="toggleFullscreen" value="Toggle Fullscreen Mode"/>
+						<node name="rotate" value="Rotate Screen"/>
+						<node name="addBook" value="أضف كتابا"/>
+						<node name="cancel" value="ألغ"/>
+						<node name="quit" value="اخرج"/>
+						<node name="bookInfo" value="Show Book Info Dialog"/>
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog"/>
 					</node>
-					<node name="quitOnCancel" value="Quit Application on Cancel" />
-					<node name="keyDelay" value="Delay Between Accepted Key Pressings" />
+					<node name="quitOnCancel" value="Quit Application on Cancel"/>
+					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
 				</node>
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options"/>
 			<node name="tab">
 				<node name="CSS" value="الطرز المتراصة">
-					<node name="overrideSpecifiedFonts" value="استخدم دائما خطوطي الخاصة" />
+					<node name="overrideSpecifiedFonts" value="استخدم دائما خطوطي الخاصة"/>
 				</node>
 				<node name="Margins" value="الحواشي">
-					<node name="left" value="الحاشية اليسرى" />
-					<node name="right" value="الحاشية اليمنى" />
-					<node name="top" value="الحاشية العليا" />
-					<node name="bottom" value="الحاشية السفلى" />
+					<node name="left" value="الحاشية اليسرى"/>
+					<node name="right" value="الحاشية اليمنى"/>
+					<node name="top" value="الحاشية العليا"/>
+					<node name="bottom" value="الحاشية السفلى"/>
 				</node>
 				<node name="Format" value="النسق">
-					<node name="optionsFor" value="خيارات" />
+					<node name="optionsFor" value="خيارات"/>
 					<node name="lineSpacing" value="تباعد السطور">
-						<node name="unchanged" value="&lt;بلا تغيير&gt;" />
+						<node name="unchanged" value="&lt;بلا تغيير&gt;"/>
 					</node>
-					<node name="firstLineIndent" value="إزاحة السطر الأول" />
+					<node name="firstLineIndent" value="إزاحة السطر الأول"/>
 					<node name="alignment" value="المحاذاة">
-						<node name="left" value="يسار" />
-						<node name="right" value="يمين" />
-						<node name="center" value="وسط" />
-						<node name="justify" value="مساوى" />
-						<node name="unchanged" value="&lt;بلا تغيير&gt;" />
+						<node name="left" value="يسار"/>
+						<node name="right" value="يمين"/>
+						<node name="center" value="وسط"/>
+						<node name="justify" value="مساوى"/>
+						<node name="unchanged" value="&lt;بلا تغيير&gt;"/>
 					</node>
-					<node name="spaceBefore" value="المسافة قبل" />
-					<node name="spaceAfter" value="المسافة بعد" />
-					<node name="startIndent" value="إزاحة بداية السطر" />
-					<node name="endIndent" value="إزاحة نهاية السطر" />
+					<node name="spaceBefore" value="المسافة قبل"/>
+					<node name="spaceAfter" value="المسافة بعد"/>
+					<node name="startIndent" value="إزاحة بداية السطر"/>
+					<node name="endIndent" value="إزاحة نهاية السطر"/>
 				</node>
 				<node name="Styles" value="الطرز">
-					<node name="optionsFor" value="خيارات" />
+					<node name="optionsFor" value="خيارات"/>
 					<node name="fontFamily" value="العائلة">
-						<node name="unchanged" value="&lt;بلا تغيير&gt;" />
+						<node name="unchanged" value="&lt;بلا تغيير&gt;"/>
 					</node>
-					<node name="fontSize" value="الحجم" />
-					<node name="fontSizeDifference" value="اختلافات الحجم" />
-					<node name="bold" value="عريض" />
-					<node name="italic" value="مائل" />
-					<node name="allowHyphenations" value="اسمح بقطع الكلمات في آخر السطر" />
-					<node name="autoHyphenations" value="قطع تلقائي للكلمات" />
+					<node name="fontSize" value="الحجم"/>
+					<node name="fontSizeDifference" value="اختلافات الحجم"/>
+					<node name="bold" value="عريض"/>
+					<node name="italic" value="مائل"/>
+					<node name="allowHyphenations" value="اسمح بقطع الكلمات في آخر السطر"/>
+					<node name="autoHyphenations" value="قطع تلقائي للكلمات"/>
 				</node>
 				<node name="Colors" value="الألوان">
 					<node name="colorFor" value="لون">
-						<node name="background" value="الخلفية" />
-						<node name="selectionBackground" value="خلفية التحديد" />
-						<node name="text" value="النص العادي" />
-						<node name="internalLink" value="النص التشعبي الداخلي" />
-						<node name="externalLink" value="النص التشعبي الخارجي" />
-						<node name="bookLink" value="وصلة إلى كتاب آخر" />
-						<node name="highlighted" value="النص المُبرز" />
-						<node name="treeLines" value="خطوط الشجرة" />
-						<node name="indicator" value="مُوضّح الموضع" />
+						<node name="background" value="الخلفية"/>
+						<node name="selectionBackground" value="خلفية التحديد"/>
+						<node name="text" value="النص العادي"/>
+						<node name="internalLink" value="النص التشعبي الداخلي"/>
+						<node name="externalLink" value="النص التشعبي الخارجي"/>
+						<node name="bookLink" value="وصلة إلى كتاب آخر"/>
+						<node name="highlighted" value="النص المُبرز"/>
+						<node name="treeLines" value="خطوط الشجرة"/>
+						<node name="indicator" value="مُوضّح الموضع"/>
 					</node>
 				</node>
 			</node>
 		</node>
 		<node name="InfoDialog">
-			<node name="title" value="إف.بي.ريدر - معلومات الكتاب" />
+			<node name="title" value="إف.بي.ريدر - معلومات الكتاب"/>
 			<node name="tab">
 				<node name="Common" value="عام">
-					<node name="file" value="الملف" />
-					<node name="title" value="العنوان" />
-					<node name="language" value="اللغة" />
-					<node name="encodingSet" value="طقم الترميز" />
-					<node name="encoding" value="الترميز" />
+					<node name="file" value="الملف"/>
+					<node name="title" value="العنوان"/>
+					<node name="language" value="اللغة"/>
+					<node name="encodingSet" value="طقم الترميز"/>
+					<node name="encoding" value="الترميز"/>
 				</node>
 				<node name="Authors" value="المؤلفين">
-					<node name="authorDisplayName" value="اسم المؤلف" />
+					<node name="authorDisplayName" value="اسم المؤلف"/>
 				</node>
 				<node name="Series" value="السلسلة">
-					<node name="seriesTitle" value="عنوان السلسلة" />
-					<node name="bookIndex" value="رقم الكتاب" />
+					<node name="seriesTitle" value="عنوان السلسلة"/>
+					<node name="bookIndex" value="رقم الكتاب"/>
 				</node>
 				<node name="Tags" value="الوسوم">
-					<node name="tags" value="اسم الوسم" />
+					<node name="tags" value="اسم الوسم"/>
 				</node>
 				<node name="Text" value="النص">
-					<node name="breakType" value="اقطع الفقرات عند" />
-					<node name="ignoreIndent" value="تجاهل الإزاحة الأقل من" />
-					<node name="buildTOC" value="جهز جدول المحتويات" />
-					<node name="emptyLines" value="الأسطر الفارغة قبل الأقسام الجديدة" />
+					<node name="breakType" value="اقطع الفقرات عند"/>
+					<node name="ignoreIndent" value="تجاهل الإزاحة الأقل من"/>
+					<node name="buildTOC" value="جهز جدول المحتويات"/>
+					<node name="emptyLines" value="الأسطر الفارغة قبل الأقسام الجديدة"/>
 				</node>
 				<node name="&lt;PRE&gt;" value="&lt;قبل&gt;">
-					<node name="breakType" value="اقطع الفقرات عند" />
-					<node name="ignoreIndent" value="تجاهل الإزاحة الأقل من" />
-					<node name="buildTOC" value="جهز جدول المحتويات" />
-					<node name="emptyLines" value="الأسطر الفارغة قبل الأقسام الجديدة" />
+					<node name="breakType" value="اقطع الفقرات عند"/>
+					<node name="ignoreIndent" value="تجاهل الإزاحة الأقل من"/>
+					<node name="buildTOC" value="جهز جدول المحتويات"/>
+					<node name="emptyLines" value="الأسطر الفارغة قبل الأقسام الجديدة"/>
 				</node>
 			</node>
 		</node>
 		<node name="AuthorInfoDialog">
-			<node name="title" value="إف.بي.ريدر - معلومات ا المؤلف" />
-			<node name="name" value="اسم المؤلف" />
-			<node name="sortKey" value="مفتاح ترتيب المؤلف" />
+			<node name="title" value="إف.بي.ريدر - معلومات ا المؤلف"/>
+			<node name="name" value="اسم المؤلف"/>
+			<node name="sortKey" value="مفتاح ترتيب المؤلف"/>
 		</node>
 		<node name="addFileDialog">
-			<node name="title" value="إف.بي.ريدر - أضف كتابا للمكتبة" />
+			<node name="title" value="إف.بي.ريدر - أضف كتابا للمكتبة"/>
 		</node>
 		<node name="textSearchDialog">
-			<node name="title" value="البحث عن النص" />
-			<node name="text" value="" />
-			<node name="ignoreCase" value="&amp;تجاهل حالة الحرف" />
-			<node name="wholeText" value="في &amp;كل النص" />
-			<node name="backward" value="&amp;للخلف" />
-			<node name="currentSection" value="&amp;هذا القسم فقط" />
+			<node name="title" value="البحث عن النص"/>
+			<node name="text" value=""/>
+			<node name="ignoreCase" value="&amp;تجاهل حالة الحرف"/>
+			<node name="wholeText" value="في &amp;كل النص"/>
+			<node name="backward" value="&amp;للخلف"/>
+			<node name="currentSection" value="&amp;هذا القسم فقط"/>
 		</node>
 		<node name="networkSearchDialog">
-			<node name="title" value="بحث الشبكة" />
-			<node name="titleAndSeries" value="العنوان\السلسلة" />
-			<node name="author" value="المؤلف" />
-			<node name="category" value="التصنيف" />
-			<node name="description" value="الوصف" />
-			<node name="annotation" value="نتائج البحث عن: %s" />
+			<node name="title" value="بحث الشبكة"/>
+			<node name="titleAndSeries" value="العنوان\السلسلة"/>
+			<node name="author" value="المؤلف"/>
+			<node name="category" value="التصنيف"/>
+			<node name="description" value="الوصف"/>
+			<node name="annotation" value="نتائج البحث عن: %s"/>
 		</node>
 		<node name="gotoPageDialog">
-			<node name="title" value="اذهب إلى صفحة" />
-			<node name="pageNumber" value="اذهب إلى الصفحة رقم" />
+			<node name="title" value="اذهب إلى صفحة"/>
+			<node name="pageNumber" value="اذهب إلى الصفحة رقم"/>
 		</node>
 		<node name="editTagDialog">
-			<node name="title" value="حرر الوسم" />
-			<node name="name" value="اسم الوسم" />
-			<node name="includeSubtags" value="اشمل الوسوم الفرعيى" />
+			<node name="title" value="حرر الوسم"/>
+			<node name="name" value="اسم الوسم"/>
+			<node name="includeSubtags" value="اشمل الوسوم الفرعيى"/>
 		</node>
 		<node name="cloneTagDialog">
-			<node name="title" value="انسخ الوسم" />
-			<node name="name" value="اسم الوسم" />
-			<node name="includeSubtags" value="اشمل الوسوم الفرعيى" />
+			<node name="title" value="انسخ الوسم"/>
+			<node name="name" value="اسم الوسم"/>
+			<node name="includeSubtags" value="اشمل الوسوم الفرعيى"/>
 		</node>
 		<node name="removeBookBox">
-			<node name="title" value="احذف الكتاب" />
-			<node name="message" value="أأحذف الكتاب&#10;%s”&#10;من المكتبة؟" />
-			<node name="deleteFile" value="أمتأكد أنك تريد&#10;حذف الملف&#10;“%s”&#10;من القرص؟" />
+			<node name="title" value="احذف الكتاب"/>
+			<node name="message" value="أأحذف الكتاب&#10;%s”&#10;من المكتبة؟"/>
+			<node name="deleteFile" value="أمتأكد أنك تريد&#10;حذف الملف&#10;“%s”&#10;من القرص؟"/>
 		</node>
 		<node name="removeTagBox">
-			<node name="title" value="احذف الوسم" />
-			<node name="message" value="أأحذف الوسم “%s”؟" />
+			<node name="title" value="احذف الوسم"/>
+			<node name="message" value="أأحذف الوسم “%s”؟"/>
 		</node>
 		<node name="openBookErrorBox">
-			<node name="title" value="خطأ" />
-			<node name="message" value="تعذّر فتح:&#10;%s" />
+			<node name="title" value="خطأ"/>
+			<node name="message" value="تعذّر فتح:&#10;%s"/>
 		</node>
 		<node name="removeFileErrorBox">
-			<node name="title" value="خطأ" />
-			<node name="message" value="تعذّر حذف الملف&#10;%s" />
+			<node name="title" value="خطأ"/>
+			<node name="message" value="تعذّر حذف الملف&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
-			<node name="title" value="خطأ" />
-			<node name="message" value="آسف، ملف المساعدة غير موجود" />
+			<node name="title" value="خطأ"/>
+			<node name="message" value="آسف، ملف المساعدة غير موجود"/>
 		</node>
 		<node name="networkError">
-			<node name="emptyLibrariesList" value="قائمة مكتبات خالية" />
-			<node name="authenticationFailed" value="فشل الاستيثاق" />
-			<node name="internalError" value="خطأ داخلي في الخادوم" />
-			<node name="purchaseNotEnoughMoney" value="لا ذاكرة كافية" />
-			<node name="purchaseMissingBook" value="كتاب مفقود" />
-			<node name="purchaseAlreadyPurchased" value="اشتريته بالفعل" />
-			<node name="bookNotPurchased" value="لم يُشتر الكتاب" />
-			<node name="downloadLimitExceeded" value="تجاوزت حد التنزيل" />
-			<node name="unsupportedOperation" value="عملية غير مدعومة" />
-			<node name="loginAlreadyTaken" value="اسم المستخدم مستخدم من قبل" />
-			<node name="loginNotSpecified" value="من فضلك أدخل اسم مستخدم" />
-			<node name="passwordNotSpecified" value="من فضلك أدخل كلمة سر غير فارغة" />
-			<node name="emailNotSpecified" value="من فضلك أدخل بريدا إلكترونيا" />
-			<node name="invalidEMail" value="عنوان بريد إلكتروني خطأ" />
-			<node name="tooManyRegistrations" value="الكثير جدا من التسجيلات من رقمك على الإنترنت (IP);&#10;أعد المحاولة بعد عدة دقائق" />
-			<node name="noUserEmail" value="لم يُسجل أي مستخدم&#10;بالبريد الإلكترني المحدد" />
+			<node name="emptyLibrariesList" value="قائمة مكتبات خالية"/>
+			<node name="authenticationFailed" value="فشل الاستيثاق"/>
+			<node name="internalError" value="خطأ داخلي في الخادوم"/>
+			<node name="purchaseNotEnoughMoney" value="لا ذاكرة كافية"/>
+			<node name="purchaseMissingBook" value="كتاب مفقود"/>
+			<node name="purchaseAlreadyPurchased" value="اشتريته بالفعل"/>
+			<node name="bookNotPurchased" value="لم يُشتر الكتاب"/>
+			<node name="downloadLimitExceeded" value="تجاوزت حد التنزيل"/>
+			<node name="unsupportedOperation" value="عملية غير مدعومة"/>
+			<node name="loginAlreadyTaken" value="اسم المستخدم مستخدم من قبل"/>
+			<node name="loginNotSpecified" value="من فضلك أدخل اسم مستخدم"/>
+			<node name="passwordNotSpecified" value="من فضلك أدخل كلمة سر غير فارغة"/>
+			<node name="emailNotSpecified" value="من فضلك أدخل بريدا إلكترونيا"/>
+			<node name="invalidEMail" value="عنوان بريد إلكتروني خطأ"/>
+			<node name="tooManyRegistrations" value="الكثير جدا من التسجيلات من رقمك على الإنترنت (IP);&#10;أعد المحاولة بعد عدة دقائق"/>
+			<node name="noUserEmail" value="لم يُسجل أي مستخدم&#10;بالبريد الإلكترني المحدد"/>
 			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
-			<node name="title" value="خطأ أثناء التنزيل" />
-			<node name="message" value="لا يمكن حاليا تنزيل هذا الكتاب" />
+			<node name="title" value="خطأ أثناء التنزيل"/>
+			<node name="message" value="لا يمكن حاليا تنزيل هذا الكتاب"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="يُحمل الكتاب، انتظر رجاء..." />
-			<node name="loadingBookList" value="يُحمل قائمة الكتب، انتظر رجاء..." />
-			<node name="migrate" value="يُرقي لإصدارة جديدة، انتظر رجاء..." />
-			<node name="downloadBookList" value="يُنزّل قائمة الكتب، انتظر رجاء..." />
-			<node name="downloadBook" value="يُنزّل الكتاب، انتظر رجاء..." />
-			<node name="downloadImages" value="يُنزّل الصور، انتظر رجاء..." />
-			<node name="authentication" value="يستوثق، انتظر رجاء..." />
-			<node name="purchaseBook" value="يشتر الكتاب، انتظر رجاء..." />
-			<node name="initializeAuthenticationManager" value="يُنزّل معلومات الحساب، انتظر رجاء..." />
-			<node name="loadSubCatalog" value="يُحمّل الفهرس، انتظر رجاء..." />
-			<node name="registerUser" value="يسجل حسابا جديدا، انتظر رجاء..." />
-			<node name="passwordRecovery" value="يسترجع كلمة السر، انتظر رجاء..." />
-			<node name="authenticationCheck" value="يتحقق من الحساب، انتظر رجاء..." />
-			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
+			<node name="loadingBook" value="يُحمل الكتاب، انتظر رجاء..."/>
+			<node name="loadingBookList" value="يُحمل قائمة الكتب، انتظر رجاء..."/>
+			<node name="migrate" value="يُرقي لإصدارة جديدة، انتظر رجاء..."/>
+			<node name="downloadBookList" value="يُنزّل قائمة الكتب، انتظر رجاء..."/>
+			<node name="downloadBook" value="يُنزّل الكتاب، انتظر رجاء..."/>
+			<node name="downloadImages" value="يُنزّل الصور، انتظر رجاء..."/>
+			<node name="authentication" value="يستوثق، انتظر رجاء..."/>
+			<node name="purchaseBook" value="يشتر الكتاب، انتظر رجاء..."/>
+			<node name="initializeAuthenticationManager" value="يُنزّل معلومات الحساب، انتظر رجاء..."/>
+			<node name="loadSubCatalog" value="يُحمّل الفهرس، انتظر رجاء..."/>
+			<node name="registerUser" value="يسجل حسابا جديدا، انتظر رجاء..."/>
+			<node name="passwordRecovery" value="يسترجع كلمة السر، انتظر رجاء..."/>
+			<node name="authenticationCheck" value="يتحقق من الحساب، انتظر رجاء..."/>
+			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..."/>
 			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
-			<node name="title" value="شراء الكتاب" />
-			<node name="message" value="أمتأكد أنك تريد شراء كتاب&#10;“%s”&#10;؟" />
+			<node name="title" value="شراء الكتاب"/>
+			<node name="message" value="أمتأكد أنك تريد شراء كتاب&#10;“%s”&#10;؟"/>
 		</node>
 		<node name="AuthenticationDialog">
-			<node name="title" value="الاستيثاق" />
-			<node name="login" value="اسم المستخدم" />
-			<node name="password" value="كلمة السر" />
-			<node name="skipIP" value="لا تربط مع رقم الإنترنت (IP)" />
-			<node name="loginIsEmpty" value="يجب ألا يكون اسم المستخدم خاليا" />
+			<node name="title" value="الاستيثاق"/>
+			<node name="login" value="اسم المستخدم"/>
+			<node name="password" value="كلمة السر"/>
+			<node name="skipIP" value="لا تربط مع رقم الإنترنت (IP)"/>
+			<node name="loginIsEmpty" value="يجب ألا يكون اسم المستخدم خاليا"/>
 		</node>
 		<node name="emptyCatalogBox">
-			<node name="title" value="معلومات" />
-			<node name="message" value="الفهرس خال." />
+			<node name="title" value="معلومات"/>
+			<node name="message" value="الفهرس خال."/>
 		</node>
 		<node name="dontShowConfirmBox">
-			<node name="title" value="عطّل الفهرس" />
-			<node name="message" value="أمتأكد أنك تريد تعطيل الفهرس&#10;“%s”؟&#10;&#10;يمكنك تفعيله لاحقا من&#10;لسان “بحث الشبكة” في حوار الخيارات." />
+			<node name="title" value="عطّل الفهرس"/>
+			<node name="message" value="أمتأكد أنك تريد تعطيل الفهرس&#10;“%s”؟&#10;&#10;يمكنك تفعيله لاحقا من&#10;لسان “بحث الشبكة” في حوار الخيارات."/>
 		</node>
 		<node name="deleteLocalCopyBox">
-			<node name="title" value="احذف الكتاب" />
-			<node name="message" value="أمتأكد أنك تريد&#10;حذف الكتاب&#10;“%s”&#10;من القرص؟" />
+			<node name="title" value="احذف الكتاب"/>
+			<node name="message" value="أمتأكد أنك تريد&#10;حذف الكتاب&#10;“%s”&#10;من القرص؟"/>
 		</node>
 		<node name="RegisterUserDialog">
-			<node name="title" value="سجّل مستخدما" />
-			<node name="login" value="اسم المستخدم" />
-			<node name="password" value="كلمة السر" />
-			<node name="confirmPassword" value="تأكيد كلمة السر" />
-			<node name="email" value="البريد الإلكتروني" />
-			<node name="differentPasswords" value="يجب أن تتطابق كلمة السر مع تأكديها." />
+			<node name="title" value="سجّل مستخدما"/>
+			<node name="login" value="اسم المستخدم"/>
+			<node name="password" value="كلمة السر"/>
+			<node name="confirmPassword" value="تأكيد كلمة السر"/>
+			<node name="email" value="البريد الإلكتروني"/>
+			<node name="differentPasswords" value="يجب أن تتطابق كلمة السر مع تأكديها."/>
 		</node>
 		<node name="PasswordRecoveryDialog">
-			<node name="title" value="استعادة كلمة السر" />
-			<node name="email" value="البريد الإلكتروني" />
+			<node name="title" value="استعادة كلمة السر"/>
+			<node name="email" value="البريد الإلكتروني"/>
 		</node>
 		<node name="recoverySuccessfulBox">
-			<node name="title" value="استعادة كلمة السر" />
-			<node name="message" value="أرسلت رسالة مع مزيد من التوضيحات&#10;إلى&#10;%s" />
+			<node name="title" value="استعادة كلمة السر"/>
+			<node name="message" value="أرسلت رسالة مع مزيد من التوضيحات&#10;إلى&#10;%s"/>
 		</node>
 		<node name="cantOpenDownloadedFile">
-			<node name="title" value="خطأ في التنزيل" />
-			<node name="message" value="تعذّر تنزيل الملف&#10;%s." />
+			<node name="title" value="خطأ في التنزيل"/>
+			<node name="message" value="تعذّر تنزيل الملف&#10;%s."/>
 		</node>
 	</node>
 	<node name="style">
-		<node name="Base" value="القاعدة" />
-		<node name="Regular Paragraph" value="الفقرات العادية" />
-		<node name="Title" value="العناوين" />
-		<node name="Section Title" value="عناوين الأقسام" />
-		<node name="Poem Title" value="عناوين الشعر" />
-		<node name="Subtitle" value="العناوين الفرعية" />
-		<node name="Annotation" value="Annotation" />
-		<node name="Epigraph" value="Epigraph" />
-		<node name="Stanza" value="الأبيات" />
-		<node name="Verse" value="الآيات" />
-		<node name="Preformatted text" value="النص المنسق مسبقا" />
-		<node name="Image" value="الصور" />
-		<node name="Cite" value="الاقتباس" />
-		<node name="Author" value="المؤلف" />
-		<node name="Date" value="التاريخ" />
-		<node name="Internal Hyperlink" value="الوصلات الداخلية" />
-		<node name="Footnote" value="التذييل" />
-		<node name="Emphasis" value="التركيز" />
-		<node name="Strong" value="المهم" />
-		<node name="Subscript" value="النص السفلي" />
-		<node name="Superscript" value="النص العلوي" />
-		<node name="Code" value="الكود" />
-		<node name="StrikeThrough" value="الشطب" />
-		<node name="Contents Table" value="جدول المحتويات" />
-		<node name="Library Entry" value="عنصر في المكتبة" />
-		<node name="Recent Book List" value="قائمة الكتب الأخيرة" />
-		<node name="Italic" value="مائل" />
-		<node name="Bold" value="عريض" />
-		<node name="Definition" value="تعريف" />
-		<node name="Definition Description" value="شرح التعريف" />
-		<node name="Header 1" value="رأس 1" />
-		<node name="Header 2" value="رأس 2" />
-		<node name="Header 3" value="رأس 3" />
-		<node name="Header 4" value="رأس 4" />
-		<node name="Header 5" value="رأس 5" />
-		<node name="Header 6" value="رأس 6" />
-		<node name="External Hyperlink" value="الوصلات الخارجية" />
-		<node name="Link to Another Book" value="وصلة إلى كتاب آخر" />
+		<node name="Base" value="القاعدة"/>
+		<node name="Regular Paragraph" value="الفقرات العادية"/>
+		<node name="Title" value="العناوين"/>
+		<node name="Section Title" value="عناوين الأقسام"/>
+		<node name="Poem Title" value="عناوين الشعر"/>
+		<node name="Subtitle" value="العناوين الفرعية"/>
+		<node name="Annotation" value="Annotation"/>
+		<node name="Epigraph" value="Epigraph"/>
+		<node name="Stanza" value="الأبيات"/>
+		<node name="Verse" value="الآيات"/>
+		<node name="Preformatted text" value="النص المنسق مسبقا"/>
+		<node name="Image" value="الصور"/>
+		<node name="Cite" value="الاقتباس"/>
+		<node name="Author" value="المؤلف"/>
+		<node name="Date" value="التاريخ"/>
+		<node name="Internal Hyperlink" value="الوصلات الداخلية"/>
+		<node name="Footnote" value="التذييل"/>
+		<node name="Emphasis" value="التركيز"/>
+		<node name="Strong" value="المهم"/>
+		<node name="Subscript" value="النص السفلي"/>
+		<node name="Superscript" value="النص العلوي"/>
+		<node name="Code" value="الكود"/>
+		<node name="StrikeThrough" value="الشطب"/>
+		<node name="Contents Table" value="جدول المحتويات"/>
+		<node name="Library Entry" value="عنصر في المكتبة"/>
+		<node name="Recent Book List" value="قائمة الكتب الأخيرة"/>
+		<node name="Italic" value="مائل"/>
+		<node name="Bold" value="عريض"/>
+		<node name="Definition" value="تعريف"/>
+		<node name="Definition Description" value="شرح التعريف"/>
+		<node name="Header 1" value="رأس 1"/>
+		<node name="Header 2" value="رأس 2"/>
+		<node name="Header 3" value="رأس 3"/>
+		<node name="Header 4" value="رأس 4"/>
+		<node name="Header 5" value="رأس 5"/>
+		<node name="Header 6" value="رأس 6"/>
+		<node name="External Hyperlink" value="الوصلات الخارجية"/>
+		<node name="Link to Another Book" value="وصلة إلى كتاب آخر"/>
 	</node>
 	<node name="external">
-		<node name="browser" value="المتصفح" />
-		<node name="defaultBrowser" value="المتصفح الافتراضي" />
+		<node name="browser" value="المتصفح"/>
+		<node name="defaultBrowser" value="المتصفح الافتراضي"/>
 	</node>
 	<node name="mobipocketPlugin">
-		<node name="unknown" value="خطأ غير معروف" />
-		<node name="unsupportedCompressionMethod" value="طريقة ضغط غير مدعومة" />
-		<node name="encryptedFile" value="ملف محمي الحقوق رقميا (DRM)" />
+		<node name="unknown" value="خطأ غير معروف"/>
+		<node name="unsupportedCompressionMethod" value="طريقة ضغط غير مدعومة"/>
+		<node name="encryptedFile" value="ملف محمي الحقوق رقميا (DRM)"/>
 	</node>
 	<node name="networkLibrary">
-		<node name="caption" value="مكتبة الشبكة" />
+		<node name="caption" value="مكتبة الشبكة"/>
 	</node>
 	<node name="library">
-		<node name="caption" value="المكتبة" />
+		<node name="caption" value="المكتبة"/>
 	</node>
 </resources>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <resources>
 	<node name="libraryView">
 		<node name="authorNode">
@@ -31,7 +30,7 @@
 			<node name="expandTree" value="Expand"/>
 			<node name="collapseTree" value="Collapse"/>
 			<node name="reload" value="Reload"/>
-			<node name="openInBrowser" value="Open in browser" />
+			<node name="openInBrowser" value="Open in browser"/>
 		</node>
 		<node name="libraryItemRootNode">
 			<node name="expandTree" value="Open catalog"/>
@@ -39,7 +38,7 @@
 			<node name="login" value="Sign in"/>
 			<node name="logout" value="Sign out (%s)"/>
 			<node name="reload" value="Reload"/>
-			<node name="dontShow" value="Don&apos;t show this catalog"/>
+			<node name="dontShow" value="Don't show this catalog"/>
 			<node name="refillAccount" value="Refill account (currently: %s)"/>
 			<node name="register" value="Sign up"/>
 			<node name="passwordRecovery" value="Recover password"/>
@@ -68,604 +67,604 @@
 		</node>
 	</node>
 	<node name="menu">
-		<node name="bookInfo" value="Book Info..." />
-		<node name="toc" value="Table of Contents" />
-		<node name="showLibrary" value="Open library" />
-		<node name="showNetLibrary" value="Network library" />
-		<node name="addBook" value="Open file..." />
-		<node name="showRecent" value="Recent books" />
+		<node name="bookInfo" value="Book Info..."/>
+		<node name="toc" value="Table of Contents"/>
+		<node name="showLibrary" value="Open library"/>
+		<node name="showNetLibrary" value="Network library"/>
+		<node name="addBook" value="Open file..."/>
+		<node name="showRecent" value="Recent books"/>
 		<node name="library" value="Library">
-			<node name="showLibrary" value="Open" />
-			<node name="previousBook" value="Previous Book" />
-			<node name="showRecent" value="Recent" />
-			<node name="addBook" value="Add Book..." />
-			<node name="showHelp" value="About FBReader" />
+			<node name="showLibrary" value="Open"/>
+			<node name="previousBook" value="Previous Book"/>
+			<node name="showRecent" value="Recent"/>
+			<node name="addBook" value="Add Book..."/>
+			<node name="showHelp" value="About FBReader"/>
 		</node>
-		<node name="gotoHome" value="Go to Start of Document" />
-		<node name="gotoPageNumber" value="Go to Page..." />
-		<node name="gotoSectionStart" value="Go to Start of Text Section" />
-		<node name="gotoSectionEnd" value="Go to End of Text Section" />
-		<node name="nextTOCSection" value="Go to Next TOC Item" />
-		<node name="previousTOCSection" value="Go to Previous TOC Item" />
+		<node name="gotoHome" value="Go to Start of Document"/>
+		<node name="gotoPageNumber" value="Go to Page..."/>
+		<node name="gotoSectionStart" value="Go to Start of Text Section"/>
+		<node name="gotoSectionEnd" value="Go to End of Text Section"/>
+		<node name="nextTOCSection" value="Go to Next TOC Item"/>
+		<node name="previousTOCSection" value="Go to Previous TOC Item"/>
 		<node name="navigate" value="Navigate">
-			<node name="gotoHome" value="Go to Start of Document" />
-			<node name="gotoPageNumber" value="Go to Page..." />
-			<node name="gotoSectionStart" value="Go to Start of Text Section" />
-			<node name="gotoSectionEnd" value="Go to End of Text Section" />
-			<node name="nextTOCSection" value="Go to Next TOC Item" />
-			<node name="previousTOCSection" value="Go to Previous TOC Item" />
-			<node name="undo" value="Go Back" />
-			<node name="redo" value="Go Forward" />
+			<node name="gotoHome" value="Go to Start of Document"/>
+			<node name="gotoPageNumber" value="Go to Page..."/>
+			<node name="gotoSectionStart" value="Go to Start of Text Section"/>
+			<node name="gotoSectionEnd" value="Go to End of Text Section"/>
+			<node name="nextTOCSection" value="Go to Next TOC Item"/>
+			<node name="previousTOCSection" value="Go to Previous TOC Item"/>
+			<node name="undo" value="Go Back"/>
+			<node name="redo" value="Go Forward"/>
 		</node>
 		<node name="selection" value="Selection">
-			<node name="copyToClipboard" value="Copy to Clipboard" />
-			<node name="openInDictionary" value="Open in Dictionary" />
-			<node name="clearSelection" value="Clear" />
+			<node name="copyToClipboard" value="Copy to Clipboard"/>
+			<node name="openInDictionary" value="Open in Dictionary"/>
+			<node name="clearSelection" value="Clear"/>
 		</node>
 		<node name="search" value="Find">
-			<node name="search" value="Find Text..." />
-			<node name="findNext" value="Find Next" />
-			<node name="findPrevious" value="Find Previous" />
+			<node name="search" value="Find Text..."/>
+			<node name="findNext" value="Find Next"/>
+			<node name="findPrevious" value="Find Previous"/>
 		</node>
 		<node name="view" value="View">
-			<node name="rotate" value="Rotate Screen" />
-			<node name="toggleFullscreen" value="Full Screen" />
-			<node name="toggleIndicator" value="Toggle Indicator" />
+			<node name="rotate" value="Rotate Screen"/>
+			<node name="toggleFullscreen" value="Full Screen"/>
+			<node name="toggleIndicator" value="Toggle Indicator"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." />
-		<node name="quit" value="Close" />
+		<node name="preferences" value="Last Preferences Dialog..."/>
+		<node name="quit" value="Close"/>
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
-			<node name="label" value="Read Book" />
-			<node name="tooltip" value="Show Reading Mode" />
+			<node name="label" value="Read Book"/>
+			<node name="tooltip" value="Show Reading Mode"/>
 		</node>
 		<node name="showLibrary">
-			<node name="label" value="Library" />
-			<node name="tooltip" value="Show Library Tree" />
-			<node name="popup" value="Show Recent Books List" />
+			<node name="label" value="Library"/>
+			<node name="tooltip" value="Show Library Tree"/>
+			<node name="popup" value="Show Recent Books List"/>
 		</node>
 		<node name="showRecent">
-			<node name="label" value="Recent Books" />
-			<node name="tooltip" value="Show Recent Books List" />
+			<node name="label" value="Recent Books"/>
+			<node name="tooltip" value="Show Recent Books List"/>
 		</node>
 		<node name="byAuthor">
-			<node name="label" value="By Author" />
-			<node name="tooltip" value="Organize Books by Author" />
+			<node name="label" value="By Author"/>
+			<node name="tooltip" value="Organize Books by Author"/>
 		</node>
 		<node name="byTag">
-			<node name="label" value="By Tag" />
-			<node name="tooltip" value="Organize Books by Tag" />
+			<node name="label" value="By Tag"/>
+			<node name="tooltip" value="Organize Books by Tag"/>
 		</node>
 		<node name="addBook">
-			<node name="label" value="Add File" />
-			<node name="tooltip" value="Add File to Library" />
+			<node name="label" value="Add File"/>
+			<node name="tooltip" value="Add File to Library"/>
 		</node>
 		<node name="showNetLibrary">
-			<node name="label" value="Network" />
-			<node name="tooltip" value="Search in Network Libraries" />
+			<node name="label" value="Network"/>
+			<node name="tooltip" value="Search in Network Libraries"/>
 		</node>
 		<node name="searchOnNetwork">
-			<node name="label" value="Simple Search" />
-			<node name="tooltip" value="Network Search" />
+			<node name="label" value="Simple Search"/>
+			<node name="tooltip" value="Network Search"/>
 		</node>
 		<node name="advancedSearchOnNetwork">
-			<node name="label" value="Search" />
-			<node name="tooltip" value="Advanced Network Search" />
+			<node name="label" value="Search"/>
+			<node name="tooltip" value="Advanced Network Search"/>
 		</node>
 		<node name="gotoHome">
-			<node name="label" value="Go to Start" />
-			<node name="tooltip" value="Go to Start of Text" />
+			<node name="label" value="Go to Start"/>
+			<node name="tooltip" value="Go to Start of Text"/>
 		</node>
 		<node name="undo">
-			<node name="label" value="Go Back" />
-			<node name="tooltip" value="Go Back" />
+			<node name="label" value="Go Back"/>
+			<node name="tooltip" value="Go Back"/>
 		</node>
 		<node name="redo">
-			<node name="label" value="Go Forward" />
-			<node name="tooltip" value="Go Forward" />
+			<node name="label" value="Go Forward"/>
+			<node name="tooltip" value="Go Forward"/>
 		</node>
 		<node name="gotoPageNumberWithParameter">
-			<node name="label" value="Go to Page" />
-			<node name="tooltip" value="Go to Page" />
+			<node name="label" value="Go to Page"/>
+			<node name="tooltip" value="Go to Page"/>
 		</node>
 		<node name="toc">
-			<node name="label" value="TOC" />
-			<node name="tooltip" value="Table of Contents" />
+			<node name="label" value="TOC"/>
+			<node name="tooltip" value="Table of Contents"/>
 		</node>
 		<node name="search">
-			<node name="label" value="Search" />
-			<node name="tooltip" value="Text Search" />
+			<node name="label" value="Search"/>
+			<node name="tooltip" value="Text Search"/>
 		</node>
 		<node name="findNext">
-			<node name="label" value="Next" />
-			<node name="tooltip" value="Find Next" />
+			<node name="label" value="Next"/>
+			<node name="tooltip" value="Find Next"/>
 		</node>
 		<node name="findPrevious">
-			<node name="label" value="Previous" />
-			<node name="tooltip" value="Find Previous" />
+			<node name="label" value="Previous"/>
+			<node name="tooltip" value="Find Previous"/>
 		</node>
 		<node name="rotate">
-			<node name="label" value="Rotate" />
-			<node name="tooltip" value="Rotate Text" />
+			<node name="label" value="Rotate"/>
+			<node name="tooltip" value="Rotate Text"/>
 		</node>
 		<node name="showHelp">
-			<node name="label" value="About" />
-			<node name="tooltip" value="About FBReader" />
+			<node name="label" value="About"/>
+			<node name="tooltip" value="About FBReader"/>
 		</node>
 		<node name="filterLibrary">
-			<node name="label" value="Filter" />
-			<node name="tooltip" value="Filter" />
+			<node name="label" value="Filter"/>
+			<node name="tooltip" value="Filter"/>
 		</node>
 		<node name="preferences">
-			<node name="label" value="Last Preferences Dialog" />
-			<node name="tooltip" value="Show Last Opened Preferences Dialog" />
+			<node name="label" value="Last Preferences Dialog"/>
+			<node name="tooltip" value="Show Last Opened Preferences Dialog"/>
 		</node>
 		<node name="bookInfo">
-			<node name="label" value="Book Info" />
-			<node name="tooltip" value="Show Book Info Dialog" />
+			<node name="label" value="Book Info"/>
+			<node name="tooltip" value="Show Book Info Dialog"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" value="Library Preferences" />
-			<node name="tooltip" value="Show Library Preferences Dialog" />
+			<node name="label" value="Library Preferences"/>
+			<node name="tooltip" value="Show Library Preferences Dialog"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" value="Network Preferences" />
-			<node name="tooltip" value="Show Network Preferences Dialog" />
+			<node name="label" value="Network Preferences"/>
+			<node name="tooltip" value="Show Network Preferences Dialog"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" value="System Preferences" />
-			<node name="tooltip" value="Show System Preferences Dialog" />
+			<node name="label" value="System Preferences"/>
+			<node name="tooltip" value="Show System Preferences Dialog"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" value="Reading Preferences" />
-			<node name="tooltip" value="Show Reading Preferences Dialog" />
+			<node name="label" value="Reading Preferences"/>
+			<node name="tooltip" value="Show Reading Preferences Dialog"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" value="Look &amp; Feel Preferences" />
-			<node name="tooltip" value="Show Look &amp; Feel Preferences Dialog" />
+			<node name="label" value="Look &amp; Feel Preferences"/>
+			<node name="tooltip" value="Show Look &amp; Feel Preferences Dialog"/>
 		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
-			<node name="go" value="&amp;Go!" />
-			<node name="thisOnly" value="This only" />
-			<node name="withSubtags" value="With subtags" />
-			<node name="removeLink" value="Remove from library" />
-			<node name="removeFile" value="Remove from disk" />
-			<node name="yesToAll" value="Yes to &amp;all" />
-			<node name="buy" value="&amp;Buy" />
-			<node name="buyAndDownload" value="Buy and &amp;download" />
+			<node name="go" value="&amp;Go!"/>
+			<node name="thisOnly" value="This only"/>
+			<node name="withSubtags" value="With subtags"/>
+			<node name="removeLink" value="Remove from library"/>
+			<node name="removeFile" value="Remove from disk"/>
+			<node name="yesToAll" value="Yes to &amp;all"/>
+			<node name="buy" value="&amp;Buy"/>
+			<node name="buyAndDownload" value="Buy and &amp;download"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" value="FBReader - Library Options" />
+			<node name="title" value="FBReader - Library Options"/>
 			<node name="tab">
 				<node name="Library" value="Library">
-					<node name="bookPath" value="Book Path" />
-					<node name="lookInSubdirectories" value="Look for Books in Subdirectories" />
-					<node name="collectBooksWithoutMetaInfo" value="Collect Books without MetaInfo" />
-					<node name="downloadDirectory" value="Directory for Downloaded Books" />
+					<node name="bookPath" value="Book Path"/>
+					<node name="lookInSubdirectories" value="Look for Books in Subdirectories"/>
+					<node name="collectBooksWithoutMetaInfo" value="Collect Books without MetaInfo"/>
+					<node name="downloadDirectory" value="Directory for Downloaded Books"/>
 				</node>
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" value="FBReader - Network Options" />
+			<node name="title" value="FBReader - Network Options"/>
 			<node name="tab">
 				<node name="NetworkLibrary" value="Network Library">
 				</node>
 				<node name="Connection" value="Connection">
-					<node name="useProxy" value="Use Proxy" />
-					<node name="proxyHost" value="Proxy Host" />
-					<node name="proxyPort" value="Proxy Port" />
-					<node name="timeout" value="Network Operations Timeout, seconds" />
+					<node name="useProxy" value="Use Proxy"/>
+					<node name="proxyHost" value="Proxy Host"/>
+					<node name="proxyPort" value="Proxy Port"/>
+					<node name="timeout" value="Network Operations Timeout, seconds"/>
 				</node>
 				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Open External Links in %s" />
-					<node name="defaultText" value="Open External Links in Browser" />
-					<node name="choice" value="Use Browser" />
-					<node name="command" value="Command to Execute" />
+					<node name="enableIntegration" value="Open External Links in %s"/>
+					<node name="defaultText" value="Open External Links in Browser"/>
+					<node name="choice" value="Use Browser"/>
+					<node name="command" value="Command to Execute"/>
 				</node>
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" value="FBReader - System Options" />
+			<node name="title" value="FBReader - System Options"/>
 			<node name="tab">
 				<node name="Language" value="Language">
-					<node name="autoDetect" value="Automatically Detect Language and Encoding" />
-					<node name="defaultLanguage" value="Default Language" />
-					<node name="defaultEncodingSet" value="Default Encoding Set" />
-					<node name="defaultEncoding" value="Default Encoding" />
-					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1" />
+					<node name="autoDetect" value="Automatically Detect Language and Encoding"/>
+					<node name="defaultLanguage" value="Default Language"/>
+					<node name="defaultEncodingSet" value="Default Encoding Set"/>
+					<node name="defaultEncoding" value="Default Encoding"/>
+					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1"/>
 				</node>
 				<node name="Config" value="Config">
-					<node name="autoSave" value="Save State Automatically" />
-					<node name="timeout" value="Timeout between Savings, seconds" />
+					<node name="autoSave" value="Save State Automatically"/>
+					<node name="timeout" value="Timeout between Savings, seconds"/>
 				</node>
 				<node name="Dictionary" value="Dictionary">
-					<node name="enableIntegration" value="Enable Integration with %s" />
-					<node name="defaultText" value="Enable Integration with Dictionary" />
-					<node name="choice" value="Integrate with" />
-					<node name="singleClickOpen" value="Open by Single Click" />
+					<node name="enableIntegration" value="Enable Integration with %s"/>
+					<node name="defaultText" value="Enable Integration with Dictionary"/>
+					<node name="choice" value="Integrate with"/>
+					<node name="singleClickOpen" value="Open by Single Click"/>
 				</node>
 				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Action on Key Release, not on Key Press" />
-					<node name="minStylusPressure" value="Minimal Stylus Pressure" />
-					<node name="maxStylusPressure" value="Maximal Stylus Pressure" />
+					<node name="keyActionOnRelease" value="Action on Key Release, not on Key Press"/>
+					<node name="minStylusPressure" value="Minimal Stylus Pressure"/>
+					<node name="maxStylusPressure" value="Maximal Stylus Pressure"/>
 				</node>
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" value="FBReader - Reading Options" />
+			<node name="title" value="FBReader - Reading Options"/>
 			<node name="tab">
 				<node name="Scrolling" value="Scrolling">
-					<node name="keyScrollDelay" value="Delay between Key Scrollings, msecs" />
-					<node name="keyLinesToScroll" value="Lines to Scroll per Line Scrolling" />
-					<node name="keyLinesToKeep" value="Lines to Keep per Page Scrolling" />
-					<node name="enableTapScrolling" value="Enable Tap Scrolling" />
-					<node name="fingerOnly" value="Scroll on Finger Tap Only" />
+					<node name="keyScrollDelay" value="Delay between Key Scrollings, msecs"/>
+					<node name="keyLinesToScroll" value="Lines to Scroll per Line Scrolling"/>
+					<node name="keyLinesToKeep" value="Lines to Keep per Page Scrolling"/>
+					<node name="enableTapScrolling" value="Enable Tap Scrolling"/>
+					<node name="fingerOnly" value="Scroll on Finger Tap Only"/>
 				</node>
 				<node name="Selection" value="Selection">
-					<node name="enableSelection" value="Enable Text Selection" />
+					<node name="enableSelection" value="Enable Text Selection"/>
 				</node>
 				<node name="Indicator" value="Indicator">
 					<node name="type" value="Show as">
-						<node name="osScrollbar" value="OS Scrollbar" />
-						<node name="fbIndicator" value="Old Style Indicator" />
-						<node name="none" value="Don&apos;t Show" />
+						<node name="osScrollbar" value="OS Scrollbar"/>
+						<node name="fbIndicator" value="Old Style Indicator"/>
+						<node name="none" value="Don't Show"/>
 					</node>
-					<node name="height" value="Indicator Height" />
-					<node name="offset" value="Offset from Text" />
-					<node name="pageNumber" value="Show Position as Numbers" />
-					<node name="time" value="Show Time" />
-					<node name="fontSize" value="Font Size" />
-					<node name="tocMarks" value="Show TOC Marks" />
-					<node name="navigation" value="Enable Navigation" />
+					<node name="height" value="Indicator Height"/>
+					<node name="offset" value="Offset from Text"/>
+					<node name="pageNumber" value="Show Position as Numbers"/>
+					<node name="time" value="Show Time"/>
+					<node name="fontSize" value="Font Size"/>
+					<node name="tocMarks" value="Show TOC Marks"/>
+					<node name="navigation" value="Enable Navigation"/>
 				</node>
 				<node name="Rotation" value="Rotation">
 					<node name="direction" value="Rotation Type">
-						<node name="disabled" value="Disabled" />
-						<node name="clockwise" value="90 Degrees Clockwise" />
-						<node name="counterclockwise" value="90 Degrees Counterclockwise" />
-						<node name="180" value="180 Degrees" />
-						<node name="cycle" value="Cycle Through All 4 Directions" />
+						<node name="disabled" value="Disabled"/>
+						<node name="clockwise" value="90 Degrees Clockwise"/>
+						<node name="counterclockwise" value="90 Degrees Counterclockwise"/>
+						<node name="180" value="180 Degrees"/>
+						<node name="cycle" value="Cycle Through All 4 Directions"/>
 					</node>
 				</node>
 				<node name="Keys" value="Keys">
-					<node name="grabSystemKeys" value="Grab System Keys" />
-					<node name="separate" value="Keybindings Depend on Orientation" />
+					<node name="grabSystemKeys" value="Grab System Keys"/>
+					<node name="separate" value="Keybindings Depend on Orientation"/>
 					<node name="orientation" value="Orientation">
-						<node name="degrees0" value="0 Degrees" />
-						<node name="degrees90ccw" value="90 Degrees Counterclockwise" />
-						<node name="degrees180" value="180 Degrees" />
-						<node name="degrees90cw" value="90 Degrees Clockwise" />
+						<node name="degrees0" value="0 Degrees"/>
+						<node name="degrees90ccw" value="90 Degrees Counterclockwise"/>
+						<node name="degrees180" value="180 Degrees"/>
+						<node name="degrees90cw" value="90 Degrees Clockwise"/>
 					</node>
 					<node name="action">
-						<node name="none" value="None" />
-						<node name="showLibrary" value="Show library" />
-						<node name="showNetLibrary" value="Show network library" />
-						<node name="showRecent" value="Show recent books" />
-						<node name="previousBook" value="Open previous book" />
-						<node name="toc" value="Show table of contents" />
-						<node name="gotoHome" value="Go to home" />
-						<node name="gotoSectionStart" value="Go to start of section" />
-						<node name="gotoSectionEnd" value="Go to end of section" />
-						<node name="nextTOCSection" value="Go to next TOC section" />
-						<node name="previousTOCSection" value="Go to previous TOC section" />
-						<node name="pageForward" value="Scroll page forward" />
-						<node name="pageBackward" value="Scroll page backward" />
-						<node name="lineForward" value="Scroll line forward" />
-						<node name="lineBackward" value="Scroll line backward" />
-						<node name="undo" value="Undo" />
-						<node name="redo" value="Redo" />
-						<node name="copyToClipboard" value="Copy selected text to clipboard" />
-						<node name="openInDictionary" value="Open selected text in dictionary" />
-						<node name="clearSelection" value="Clear selection" />
-						<node name="search" value="Search" />
-						<node name="findPrevious" value="Find previous" />
-						<node name="findNext" value="Find next" />
-						<node name="increaseFont" value="Increase font size" />
-						<node name="decreaseFont" value="Decrease font size" />
-						<node name="toggleIndicator" value="Toggle position indicator" />
-						<node name="toggleFullscreen" value="Toggle fullscreen mode" />
-						<node name="rotate" value="Rotate screen" />
-						<node name="addBook" value="Add book" />
-						<node name="cancel" value="Cancel" />
-						<node name="quit" value="Quit" />
-						<node name="bookInfo" value="Show book info dialog" />
-						<node name="preferences" value="Show last opened preferences dialog" />
+						<node name="none" value="None"/>
+						<node name="showLibrary" value="Show library"/>
+						<node name="showNetLibrary" value="Show network library"/>
+						<node name="showRecent" value="Show recent books"/>
+						<node name="previousBook" value="Open previous book"/>
+						<node name="toc" value="Show table of contents"/>
+						<node name="gotoHome" value="Go to home"/>
+						<node name="gotoSectionStart" value="Go to start of section"/>
+						<node name="gotoSectionEnd" value="Go to end of section"/>
+						<node name="nextTOCSection" value="Go to next TOC section"/>
+						<node name="previousTOCSection" value="Go to previous TOC section"/>
+						<node name="pageForward" value="Scroll page forward"/>
+						<node name="pageBackward" value="Scroll page backward"/>
+						<node name="lineForward" value="Scroll line forward"/>
+						<node name="lineBackward" value="Scroll line backward"/>
+						<node name="undo" value="Undo"/>
+						<node name="redo" value="Redo"/>
+						<node name="copyToClipboard" value="Copy selected text to clipboard"/>
+						<node name="openInDictionary" value="Open selected text in dictionary"/>
+						<node name="clearSelection" value="Clear selection"/>
+						<node name="search" value="Search"/>
+						<node name="findPrevious" value="Find previous"/>
+						<node name="findNext" value="Find next"/>
+						<node name="increaseFont" value="Increase font size"/>
+						<node name="decreaseFont" value="Decrease font size"/>
+						<node name="toggleIndicator" value="Toggle position indicator"/>
+						<node name="toggleFullscreen" value="Toggle fullscreen mode"/>
+						<node name="rotate" value="Rotate screen"/>
+						<node name="addBook" value="Add book"/>
+						<node name="cancel" value="Cancel"/>
+						<node name="quit" value="Quit"/>
+						<node name="bookInfo" value="Show book info dialog"/>
+						<node name="preferences" value="Show last opened preferences dialog"/>
 					</node>
-					<node name="quitOnCancel" value="Quit Application on Cancel" />
-					<node name="keyDelay" value="Delay Between Accepted Key Pressings" />
+					<node name="quitOnCancel" value="Quit Application on Cancel"/>
+					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
 				</node>
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" value="FBReader - Look &amp; Feel Options" />
+			<node name="title" value="FBReader - Look &amp; Feel Options"/>
 			<node name="tab">
 				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Always Use My Own Fonts" />
+					<node name="overrideSpecifiedFonts" value="Always Use My Own Fonts"/>
 				</node>
 				<node name="Margins" value="Margins">
-					<node name="left" value="Left Margin" />
-					<node name="right" value="Right Margin" />
-					<node name="top" value="Top Margin" />
-					<node name="bottom" value="Bottom Margin" />
+					<node name="left" value="Left Margin"/>
+					<node name="right" value="Right Margin"/>
+					<node name="top" value="Top Margin"/>
+					<node name="bottom" value="Bottom Margin"/>
 				</node>
 				<node name="Format" value="Format">
-					<node name="optionsFor" value="Options for" />
+					<node name="optionsFor" value="Options for"/>
 					<node name="lineSpacing" value="Line Spacing">
-						<node name="unchanged" value="&lt;unchanged&gt;" />
+						<node name="unchanged" value="&lt;unchanged&gt;"/>
 					</node>
-					<node name="firstLineIndent" value="First Line Indent" />
+					<node name="firstLineIndent" value="First Line Indent"/>
 					<node name="alignment" value="Alignment">
-						<node name="left" value="Left" />
-						<node name="right" value="Right" />
-						<node name="center" value="Center" />
-						<node name="justify" value="Justify" />
-						<node name="unchanged" value="&lt;unchanged&gt;" />
+						<node name="left" value="Left"/>
+						<node name="right" value="Right"/>
+						<node name="center" value="Center"/>
+						<node name="justify" value="Justify"/>
+						<node name="unchanged" value="&lt;unchanged&gt;"/>
 					</node>
-					<node name="spaceBefore" value="Space Before" />
-					<node name="spaceAfter" value="Space After" />
-					<node name="startIndent" value="Line Start Indent" />
-					<node name="endIndent" value="Line End Indent" />
+					<node name="spaceBefore" value="Space Before"/>
+					<node name="spaceAfter" value="Space After"/>
+					<node name="startIndent" value="Line Start Indent"/>
+					<node name="endIndent" value="Line End Indent"/>
 				</node>
 				<node name="Styles" value="Styles">
-					<node name="optionsFor" value="Options for" />
+					<node name="optionsFor" value="Options for"/>
 					<node name="fontFamily" value="Family">
-						<node name="unchanged" value="&lt;unchanged&gt;" />
+						<node name="unchanged" value="&lt;unchanged&gt;"/>
 					</node>
-					<node name="fontSize" value="Size" />
-					<node name="fontSizeDifference" value="Size Difference" />
-					<node name="bold" value="Bold" />
-					<node name="italic" value="Italic" />
-					<node name="allowHyphenations" value="Allow Hyphenations" />
-					<node name="autoHyphenations" value="Auto Hyphenations" />
+					<node name="fontSize" value="Size"/>
+					<node name="fontSizeDifference" value="Size Difference"/>
+					<node name="bold" value="Bold"/>
+					<node name="italic" value="Italic"/>
+					<node name="allowHyphenations" value="Allow Hyphenations"/>
+					<node name="autoHyphenations" value="Auto Hyphenations"/>
 				</node>
 				<node name="Colors" value="Colors">
 					<node name="colorFor" value="Color for">
-						<node name="background" value="Background" />
-						<node name="selectionBackground" value="Selection Background" />
-						<node name="text" value="Regular Text" />
-						<node name="internalLink" value="Internal Hyperlink Text" />
-						<node name="externalLink" value="External Hyperlink Text" />
-						<node name="bookLink" value="Link to Another Book" />
-						<node name="highlighted" value="Highlighted Text" />
-						<node name="treeLines" value="Tree Lines" />
-						<node name="indicator" value="Position Indicator" />
+						<node name="background" value="Background"/>
+						<node name="selectionBackground" value="Selection Background"/>
+						<node name="text" value="Regular Text"/>
+						<node name="internalLink" value="Internal Hyperlink Text"/>
+						<node name="externalLink" value="External Hyperlink Text"/>
+						<node name="bookLink" value="Link to Another Book"/>
+						<node name="highlighted" value="Highlighted Text"/>
+						<node name="treeLines" value="Tree Lines"/>
+						<node name="indicator" value="Position Indicator"/>
 					</node>
 				</node>
 			</node>
 		</node>
 		<node name="InfoDialog">
-			<node name="title" value="FBReader - Book Info" />
+			<node name="title" value="FBReader - Book Info"/>
 			<node name="tab">
 				<node name="Common" value="Common">
-					<node name="file" value="File" />
-					<node name="title" value="Title" />
-					<node name="language" value="Language" />
-					<node name="encodingSet" value="Encoding Set" />
-					<node name="encoding" value="Encoding" />
+					<node name="file" value="File"/>
+					<node name="title" value="Title"/>
+					<node name="language" value="Language"/>
+					<node name="encodingSet" value="Encoding Set"/>
+					<node name="encoding" value="Encoding"/>
 				</node>
 				<node name="Authors" value="Authors">
-					<node name="authorDisplayName" value="Author Name" />
+					<node name="authorDisplayName" value="Author Name"/>
 				</node>
 				<node name="Series" value="Series">
-					<node name="seriesTitle" value="Series Title" />
-					<node name="bookIndex" value="Book Index" />
+					<node name="seriesTitle" value="Series Title"/>
+					<node name="bookIndex" value="Book Index"/>
 				</node>
 				<node name="Tags" value="Tags">
-					<node name="tags" value="Tag Name" />
+					<node name="tags" value="Tag Name"/>
 				</node>
 				<node name="Text" value="Text">
-					<node name="breakType" value="Break Paragraph at" />
-					<node name="ignoreIndent" value="Ignore Indent Less than" />
-					<node name="buildTOC" value="Build Table of Contents" />
-					<node name="emptyLines" value="Empty Lines Before New Section" />
+					<node name="breakType" value="Break Paragraph at"/>
+					<node name="ignoreIndent" value="Ignore Indent Less than"/>
+					<node name="buildTOC" value="Build Table of Contents"/>
+					<node name="emptyLines" value="Empty Lines Before New Section"/>
 				</node>
 				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
-					<node name="breakType" value="Break Paragraph at" />
-					<node name="ignoreIndent" value="Ignore Indent Less than" />
-					<node name="buildTOC" value="Build Table of Contents" />
-					<node name="emptyLines" value="Empty Lines Before New Section" />
+					<node name="breakType" value="Break Paragraph at"/>
+					<node name="ignoreIndent" value="Ignore Indent Less than"/>
+					<node name="buildTOC" value="Build Table of Contents"/>
+					<node name="emptyLines" value="Empty Lines Before New Section"/>
 				</node>
 			</node>
 		</node>
 		<node name="AuthorInfoDialog">
-			<node name="title" value="FBReader - Author Info" />
-			<node name="name" value="Author Name" />
-			<node name="sortKey" value="Author Sort Key" />
+			<node name="title" value="FBReader - Author Info"/>
+			<node name="name" value="Author Name"/>
+			<node name="sortKey" value="Author Sort Key"/>
 		</node>
 		<node name="addFileDialog">
-			<node name="title" value="FBReader - Add Book to the Library" />
+			<node name="title" value="FBReader - Add Book to the Library"/>
 		</node>
 		<node name="textSearchDialog">
-			<node name="title" value="Text Search" />
-			<node name="text" value="" />
-			<node name="ignoreCase" value="&amp;Ignore case" />
-			<node name="wholeText" value="In w&amp;hole text" />
-			<node name="backward" value="&amp;Backward" />
-			<node name="currentSection" value="&amp;This section only" />
+			<node name="title" value="Text Search"/>
+			<node name="text" value=""/>
+			<node name="ignoreCase" value="&amp;Ignore case"/>
+			<node name="wholeText" value="In w&amp;hole text"/>
+			<node name="backward" value="&amp;Backward"/>
+			<node name="currentSection" value="&amp;This section only"/>
 		</node>
 		<node name="networkSearchDialog">
-			<node name="title" value="Network Search" />
-			<node name="titleAndSeries" value="Title/Series" />
-			<node name="author" value="Author" />
-			<node name="category" value="Category" />
-			<node name="description" value="Description" />
-			<node name="annotation" value="Search results for: %s" />
+			<node name="title" value="Network Search"/>
+			<node name="titleAndSeries" value="Title/Series"/>
+			<node name="author" value="Author"/>
+			<node name="category" value="Category"/>
+			<node name="description" value="Description"/>
+			<node name="annotation" value="Search results for: %s"/>
 		</node>
 		<node name="gotoPageDialog">
-			<node name="title" value="Go To Page" />
-			<node name="pageNumber" value="Go to Page Number" />
+			<node name="title" value="Go To Page"/>
+			<node name="pageNumber" value="Go to Page Number"/>
 		</node>
 		<node name="editTagDialog">
-			<node name="title" value="Edit Tag" />
-			<node name="name" value="Tag Name" />
-			<node name="includeSubtags" value="Include Subtags" />
+			<node name="title" value="Edit Tag"/>
+			<node name="name" value="Tag Name"/>
+			<node name="includeSubtags" value="Include Subtags"/>
 		</node>
 		<node name="cloneTagDialog">
-			<node name="title" value="Clone Tag" />
-			<node name="name" value="Tag Name" />
-			<node name="includeSubtags" value="Include Subtags" />
+			<node name="title" value="Clone Tag"/>
+			<node name="name" value="Tag Name"/>
+			<node name="includeSubtags" value="Include Subtags"/>
 		</node>
 		<node name="removeBookBox">
-			<node name="title" value="Remove Book" />
-			<node name="message" value="Remove Book&#10;&#8220;%s&#8221;&#10;from the Library?" />
-			<node name="deleteFile" value="Are you sure you want to&#10;remove file&#10;&#8220;%s&#8221;&#10;from the disk?" />
+			<node name="title" value="Remove Book"/>
+			<node name="message" value="Remove Book&#10;“%s”&#10;from the Library?"/>
+			<node name="deleteFile" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?"/>
 		</node>
 		<node name="removeTagBox">
-			<node name="title" value="Remove Tag" />
-			<node name="message" value="Remove Tag &#8220;%s&#8221;?" />
+			<node name="title" value="Remove Tag"/>
+			<node name="message" value="Remove Tag “%s”?"/>
 		</node>
 		<node name="openBookErrorBox">
-			<node name="title" value="Error" />
-			<node name="message" value="Couldn&apos;t open:&#10;%s" />
+			<node name="title" value="Error"/>
+			<node name="message" value="Couldn't open:&#10;%s"/>
 		</node>
 		<node name="removeFileErrorBox">
-			<node name="title" value="Error" />
-			<node name="message" value="Couldn&apos;t remove file&#10;%s" />
+			<node name="title" value="Error"/>
+			<node name="message" value="Couldn't remove file&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
-			<node name="title" value="Error" />
-			<node name="message" value="Help file not found, sorry" />
+			<node name="title" value="Error"/>
+			<node name="message" value="Help file not found, sorry"/>
 		</node>
 		<node name="networkError">
-			<node name="emptyLibrariesList" value="Empty libraries list" />
-			<node name="authenticationFailed" value="Authentication failed" />
-			<node name="internalError" value="Internal server error" />
-			<node name="purchaseNotEnoughMoney" value="Not enough money" />
-			<node name="purchaseMissingBook" value="Missing book" />
-			<node name="purchaseAlreadyPurchased" value="Already purchased" />
-			<node name="bookNotPurchased" value="Book was not purchased" />
-			<node name="downloadLimitExceeded" value="Download limit exceeded" />
-			<node name="unsupportedOperation" value="Unsupported operation" />
-			<node name="loginAlreadyTaken" value="Username is already in use" />
-			<node name="loginNotSpecified" value="Please, enter a username" />
-			<node name="passwordNotSpecified" value="Please, enter a non-empty password" />
-			<node name="emailNotSpecified" value="Please, enter an e-mail address" />
-			<node name="invalidEMail" value="Invalid e-mail address" />
-			<node name="tooManyRegistrations" value="Too many registrations from your IP;&#10;try again in a few minutes" />
-			<node name="noUserEmail" value="No user was registered&#10;with specified e-mail address" />
-			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" />
+			<node name="emptyLibrariesList" value="Empty libraries list"/>
+			<node name="authenticationFailed" value="Authentication failed"/>
+			<node name="internalError" value="Internal server error"/>
+			<node name="purchaseNotEnoughMoney" value="Not enough money"/>
+			<node name="purchaseMissingBook" value="Missing book"/>
+			<node name="purchaseAlreadyPurchased" value="Already purchased"/>
+			<node name="bookNotPurchased" value="Book was not purchased"/>
+			<node name="downloadLimitExceeded" value="Download limit exceeded"/>
+			<node name="unsupportedOperation" value="Unsupported operation"/>
+			<node name="loginAlreadyTaken" value="Username is already in use"/>
+			<node name="loginNotSpecified" value="Please, enter a username"/>
+			<node name="passwordNotSpecified" value="Please, enter a non-empty password"/>
+			<node name="emailNotSpecified" value="Please, enter an e-mail address"/>
+			<node name="invalidEMail" value="Invalid e-mail address"/>
+			<node name="tooManyRegistrations" value="Too many registrations from your IP;&#10;try again in a few minutes"/>
+			<node name="noUserEmail" value="No user was registered&#10;with specified e-mail address"/>
+			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed"/>
 		</node>
 		<node name="downloadError">
-			<node name="title" value="Error while downloading" />
-			<node name="message" value="Can&apos;t download this book at the moment" />
+			<node name="title" value="Error while downloading"/>
+			<node name="message" value="Can't download this book at the moment"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Loading book. Please, wait..." />
-			<node name="loadingBookList" value="Loading library. Please, wait..." />
-			<node name="migrate" value="Upgrading to the new version. Please, wait..." />
-			<node name="downloadBookList" value="Downloading book list. Please, wait..." />
-			<node name="downloadBook" value="Downloading book. Please, wait..." />
-			<node name="downloadImages" value="Downloading images. Please, wait..." />
-			<node name="authentication" value="Authentication. Please, wait..." />
-			<node name="purchaseBook" value="Purchase book. Please, wait..." />
-			<node name="initializeAuthenticationManager" value="Downloading account information. Please, wait..." />
-			<node name="loadSubCatalog" value="Loading catalog. Please, wait..." />
-			<node name="registerUser" value="Registering new account. Please, wait..." />
-			<node name="passwordRecovery" value="Recovering password. Please, wait..." />
-			<node name="authenticationCheck" value="Account validation. Please, wait..." />
-			<node name="signOut" value="Signing out. Please, wait..." />
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." />
+			<node name="loadingBook" value="Loading book. Please, wait..."/>
+			<node name="loadingBookList" value="Loading library. Please, wait..."/>
+			<node name="migrate" value="Upgrading to the new version. Please, wait..."/>
+			<node name="downloadBookList" value="Downloading book list. Please, wait..."/>
+			<node name="downloadBook" value="Downloading book. Please, wait..."/>
+			<node name="downloadImages" value="Downloading images. Please, wait..."/>
+			<node name="authentication" value="Authentication. Please, wait..."/>
+			<node name="purchaseBook" value="Purchase book. Please, wait..."/>
+			<node name="initializeAuthenticationManager" value="Downloading account information. Please, wait..."/>
+			<node name="loadSubCatalog" value="Loading catalog. Please, wait..."/>
+			<node name="registerUser" value="Registering new account. Please, wait..."/>
+			<node name="passwordRecovery" value="Recovering password. Please, wait..."/>
+			<node name="authenticationCheck" value="Account validation. Please, wait..."/>
+			<node name="signOut" value="Signing out. Please, wait..."/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..."/>
 		</node>
 		<node name="purchaseConfirmBox">
-			<node name="title" value="Purchase book" />
-			<node name="message" value="Are you sure you want to buy&#10;&#8220;%s&#8221;&#10;book?" />
+			<node name="title" value="Purchase book"/>
+			<node name="message" value="Are you sure you want to buy&#10;“%s”&#10;book?"/>
 		</node>
 		<node name="AuthenticationDialog">
-			<node name="title" value="Authentication" />
-			<node name="login" value="Username" />
-			<node name="password" value="Password" />
-			<node name="skipIP" value="Don't bound to ip-address" />
-			<node name="loginIsEmpty" value="Username should be non-empty" />
+			<node name="title" value="Authentication"/>
+			<node name="login" value="Username"/>
+			<node name="password" value="Password"/>
+			<node name="skipIP" value="Don't bound to ip-address"/>
+			<node name="loginIsEmpty" value="Username should be non-empty"/>
 		</node>
 		<node name="emptyCatalogBox">
-			<node name="title" value="Information" />
-			<node name="message" value="Catalog is empty." />
+			<node name="title" value="Information"/>
+			<node name="message" value="Catalog is empty."/>
 		</node>
 		<node name="dontShowConfirmBox">
-			<node name="title" value="Disable catalog" />
-			<node name="message" value="Are you sure you want to disable&#10;&#8220;%s&#8221; catalog?&#10;&#10;You can enable this catalog again at&#10;&#8220;Network Search&#8221; tab in the Preferences dialog." />
+			<node name="title" value="Disable catalog"/>
+			<node name="message" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;You can enable this catalog again at&#10;“Network Search” tab in the Preferences dialog."/>
 		</node>
 		<node name="deleteLocalCopyBox">
-			<node name="title" value="Delete Book" />
-			<node name="message" value="Are you sure&#10;you want to remove&#10;&#8220;%s&#8221; book&#10;from the disk?" />
+			<node name="title" value="Delete Book"/>
+			<node name="message" value="Are you sure&#10;you want to remove&#10;“%s” book&#10;from the disk?"/>
 		</node>
 		<node name="RegisterUserDialog">
-			<node name="title" value="Register User" />
-			<node name="login" value="Username" />
-			<node name="password" value="Password" />
-			<node name="confirmPassword" value="Password confirmation" />
-			<node name="email" value="E-mail" tooltip="E-mail is used to recover your password&#10;in case of loss.&#10;If you have not specified an e-mail&#10;you can't recover your password." />
-			<node name="differentPasswords" value="Password and password confirmation must be the same." />
+			<node name="title" value="Register User"/>
+			<node name="login" value="Username"/>
+			<node name="password" value="Password"/>
+			<node name="confirmPassword" value="Password confirmation"/>
+			<node name="email" value="E-mail" tooltip="E-mail is used to recover your password&#10;in case of loss.&#10;If you have not specified an e-mail&#10;you can't recover your password."/>
+			<node name="differentPasswords" value="Password and password confirmation must be the same."/>
 		</node>
 		<node name="PasswordRecoveryDialog">
-			<node name="title" value="Password Recovery" />
-			<node name="email" value="E-mail" />
+			<node name="title" value="Password Recovery"/>
+			<node name="email" value="E-mail"/>
 		</node>
 		<node name="recoverySuccessfulBox">
-			<node name="title" value="Password Recovery" />
-			<node name="message" value="A message with further instructions&#10;has been sent to&#10;%s" />
+			<node name="title" value="Password Recovery"/>
+			<node name="message" value="A message with further instructions&#10;has been sent to&#10;%s"/>
 		</node>
 		<node name="cantOpenDownloadedFile">
-			<node name="title" value="Download Error" />
-			<node name="message" value="Can&apos;t open downloaded file&#10;%s." />
+			<node name="title" value="Download Error"/>
+			<node name="message" value="Can't open downloaded file&#10;%s."/>
 		</node>
 	</node>
 	<node name="style">
-		<node name="Base" value="Base" />
-		<node name="Regular Paragraph" value="Regular Paragraph" />
-		<node name="Title" value="Title" />
-		<node name="Section Title" value="Section Title" />
-		<node name="Poem Title" value="Poem Title" />
-		<node name="Subtitle" value="Subtitle" />
-		<node name="Annotation" value="Annotation" />
-		<node name="Epigraph" value="Epigraph" />
-		<node name="Stanza" value="Stanza" />
-		<node name="Verse" value="Verse" />
-		<node name="Preformatted text" value="Preformatted text" />
-		<node name="Image" value="Image" />
-		<node name="Cite" value="Cite" />
-		<node name="Author" value="Author" />
-		<node name="Date" value="Date" />
-		<node name="Internal Hyperlink" value="Internal Hyperlink" />
-		<node name="Footnote" value="Footnote" />
-		<node name="Emphasis" value="Emphasis" />
-		<node name="Strong" value="Strong" />
-		<node name="Subscript" value="Subscript" />
-		<node name="Superscript" value="Superscript" />
-		<node name="Code" value="Code" />
-		<node name="StrikeThrough" value="StrikeThrough" />
-		<node name="Contents Table" value="Contents Table" />
-		<node name="Library Entry" value="Library Entry" />
-		<node name="Recent Book List" value="Recent Book List" />
-		<node name="Italic" value="Italic" />
-		<node name="Bold" value="Bold" />
-		<node name="Definition" value="Definition" />
-		<node name="Definition Description" value="Definition Description" />
-		<node name="Header 1" value="Header 1" />
-		<node name="Header 2" value="Header 2" />
-		<node name="Header 3" value="Header 3" />
-		<node name="Header 4" value="Header 4" />
-		<node name="Header 5" value="Header 5" />
-		<node name="Header 6" value="Header 6" />
-		<node name="External Hyperlink" value="External Hyperlink" />
-		<node name="Link to Another Book" value="Link to Another Book" />
+		<node name="Base" value="Base"/>
+		<node name="Regular Paragraph" value="Regular Paragraph"/>
+		<node name="Title" value="Title"/>
+		<node name="Section Title" value="Section Title"/>
+		<node name="Poem Title" value="Poem Title"/>
+		<node name="Subtitle" value="Subtitle"/>
+		<node name="Annotation" value="Annotation"/>
+		<node name="Epigraph" value="Epigraph"/>
+		<node name="Stanza" value="Stanza"/>
+		<node name="Verse" value="Verse"/>
+		<node name="Preformatted text" value="Preformatted text"/>
+		<node name="Image" value="Image"/>
+		<node name="Cite" value="Cite"/>
+		<node name="Author" value="Author"/>
+		<node name="Date" value="Date"/>
+		<node name="Internal Hyperlink" value="Internal Hyperlink"/>
+		<node name="Footnote" value="Footnote"/>
+		<node name="Emphasis" value="Emphasis"/>
+		<node name="Strong" value="Strong"/>
+		<node name="Subscript" value="Subscript"/>
+		<node name="Superscript" value="Superscript"/>
+		<node name="Code" value="Code"/>
+		<node name="StrikeThrough" value="StrikeThrough"/>
+		<node name="Contents Table" value="Contents Table"/>
+		<node name="Library Entry" value="Library Entry"/>
+		<node name="Recent Book List" value="Recent Book List"/>
+		<node name="Italic" value="Italic"/>
+		<node name="Bold" value="Bold"/>
+		<node name="Definition" value="Definition"/>
+		<node name="Definition Description" value="Definition Description"/>
+		<node name="Header 1" value="Header 1"/>
+		<node name="Header 2" value="Header 2"/>
+		<node name="Header 3" value="Header 3"/>
+		<node name="Header 4" value="Header 4"/>
+		<node name="Header 5" value="Header 5"/>
+		<node name="Header 6" value="Header 6"/>
+		<node name="External Hyperlink" value="External Hyperlink"/>
+		<node name="Link to Another Book" value="Link to Another Book"/>
 	</node>
 	<node name="external">
-		<node name="browser" value="Browser" />
-		<node name="defaultBrowser" value="Default Browser" />
+		<node name="browser" value="Browser"/>
+		<node name="defaultBrowser" value="Default Browser"/>
 	</node>
 	<node name="mobipocketPlugin">
-		<node name="unknown" value="Unknown Error" />
-		<node name="unsupportedCompressionMethod" value="Unsupported Compression Method" />
-		<node name="encryptedFile" value="DRM-protected File" />
+		<node name="unknown" value="Unknown Error"/>
+		<node name="unsupportedCompressionMethod" value="Unsupported Compression Method"/>
+		<node name="encryptedFile" value="DRM-protected File"/>
 	</node>
 	<node name="networkLibrary">
-		<node name="caption" value="Network Library" />
+		<node name="caption" value="Network Library"/>
 	</node>
 	<node name="library">
-		<node name="caption" value="Library" />
+		<node name="caption" value="Library"/>
 	</node>
 </resources>

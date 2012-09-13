@@ -3,669 +3,669 @@
 <resources>
 	<node name="libraryView">
 		<node name="authorNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
-			<node name="edit" toBeTranslated="true" value="Edit information" />
-			<node name="unknownAuthor" toBeTranslated="true" value="Unknown Author" />
+			<node name="expandTree" toBeTranslated="true" value="Show books"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide books"/>
+			<node name="edit" toBeTranslated="true" value="Edit information"/>
+			<node name="unknownAuthor" toBeTranslated="true" value="Unknown Author"/>
 		</node>
 		<node name="tagNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
-			<node name="edit" toBeTranslated="true" value="Edit tag" />
-			<node name="clone" toBeTranslated="true" value="Clone tag" />
-			<node name="delete" toBeTranslated="true" value="Remove tag" />
-			<node name="noTags" toBeTranslated="true" value="Books with no tags" />
+			<node name="expandTree" toBeTranslated="true" value="Show books"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide books"/>
+			<node name="edit" toBeTranslated="true" value="Edit tag"/>
+			<node name="clone" toBeTranslated="true" value="Clone tag"/>
+			<node name="delete" toBeTranslated="true" value="Remove tag"/>
+			<node name="noTags" toBeTranslated="true" value="Books with no tags"/>
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" toBeTranslated="true" value="Show books"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide books"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Read book" />
-			<node name="edit" toBeTranslated="true" value="Edit information" />
-			<node name="delete" toBeTranslated="true" value="Remove book" />
+			<node name="read" toBeTranslated="true" value="Read book"/>
+			<node name="edit" toBeTranslated="true" value="Edit information"/>
+			<node name="delete" toBeTranslated="true" value="Remove book"/>
 		</node>
 	</node>
 	<node name="networkView">
 		<node name="libraryItemNode">
-			<node name="expandTree" toBeTranslated="true" value="Expand" />
-			<node name="collapseTree" toBeTranslated="true" value="Collapse" />
-			<node name="reload" toBeTranslated="true" value="Reload" />
-			<node name="openInBrowser" toBeTranslated="true" value="Open in browser" />
+			<node name="expandTree" toBeTranslated="true" value="Expand"/>
+			<node name="collapseTree" toBeTranslated="true" value="Collapse"/>
+			<node name="reload" toBeTranslated="true" value="Reload"/>
+			<node name="openInBrowser" toBeTranslated="true" value="Open in browser"/>
 		</node>
 		<node name="libraryItemRootNode">
-			<node name="expandTree" toBeTranslated="true" value="Open catalog" />
-			<node name="collapseTree" toBeTranslated="true" value="Close catalog" />
-			<node name="login" toBeTranslated="true" value="Sign in" />
-			<node name="logout" toBeTranslated="true" value="Sign out (%s)" />
-			<node name="reload" toBeTranslated="true" value="Reload" />
-			<node name="dontShow" toBeTranslated="true" value="Don&apos;t show this catalog" />
-			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)" />
-			<node name="register" toBeTranslated="true" value="Sign up" />
-			<node name="passwordRecovery" toBeTranslated="true" value="Recover password" />
+			<node name="expandTree" toBeTranslated="true" value="Open catalog"/>
+			<node name="collapseTree" toBeTranslated="true" value="Close catalog"/>
+			<node name="login" toBeTranslated="true" value="Sign in"/>
+			<node name="logout" toBeTranslated="true" value="Sign out (%s)"/>
+			<node name="reload" toBeTranslated="true" value="Reload"/>
+			<node name="dontShow" toBeTranslated="true" value="Don't show this catalog"/>
+			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)"/>
+			<node name="register" toBeTranslated="true" value="Sign up"/>
+			<node name="passwordRecovery" toBeTranslated="true" value="Recover password"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="title" toBeTranslated="true" value="Search results" />
-			<node name="expandTree" toBeTranslated="true" value="Show results" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide results" />
+			<node name="title" toBeTranslated="true" value="Search results"/>
+			<node name="expandTree" toBeTranslated="true" value="Show results"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide results"/>
 		</node>
 		<node name="authorNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" toBeTranslated="true" value="Show books"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide books"/>
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" toBeTranslated="true" value="Show books"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide books"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Read local copy" />
-			<node name="delete" toBeTranslated="true" value="Delete local copy" />
-			<node name="download" toBeTranslated="true" value="Download" />
-			<node name="readDemo" toBeTranslated="true" value="Read sample" />
-			<node name="downloadDemo" toBeTranslated="true" value="Download sample" />
+			<node name="read" toBeTranslated="true" value="Read local copy"/>
+			<node name="delete" toBeTranslated="true" value="Delete local copy"/>
+			<node name="download" toBeTranslated="true" value="Download"/>
+			<node name="readDemo" toBeTranslated="true" value="Read sample"/>
+			<node name="downloadDemo" toBeTranslated="true" value="Download sample"/>
 			<node name="demo" toBeTranslated="true" value="sample"/>
-			<node name="buy" toBeTranslated="true" value="Buy (%s)" />
+			<node name="buy" toBeTranslated="true" value="Buy (%s)"/>
 		</node>
 	</node>
 	<node name="menu">
-		<node name="bookInfo" value="Informasi Buku..." />
-		<node name="toc" value="Daftar Isi" />
-		<node name="showLibrary" toBeTranslated="true" value="Open library" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
-		<node name="addBook" toBeTranslated="true" value="Open file..." />
-		<node name="showRecent" toBeTranslated="true" value="Recent books" />
+		<node name="bookInfo" value="Informasi Buku..."/>
+		<node name="toc" value="Daftar Isi"/>
+		<node name="showLibrary" toBeTranslated="true" value="Open library"/>
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library"/>
+		<node name="addBook" toBeTranslated="true" value="Open file..."/>
+		<node name="showRecent" toBeTranslated="true" value="Recent books"/>
 		<node name="library" value="Pustaka">
-			<node name="showLibrary" value="Buka" />
-			<node name="previousBook" value="Buku Sebelumnya" />
-			<node name="showRecent" value="Buku-buku Sebelumnya" />
-			<node name="addBook" value="Tambah Buku..." />
-			<node name="showHelp" value="Mengenai FBReader" />
+			<node name="showLibrary" value="Buka"/>
+			<node name="previousBook" value="Buku Sebelumnya"/>
+			<node name="showRecent" value="Buku-buku Sebelumnya"/>
+			<node name="addBook" value="Tambah Buku..."/>
+			<node name="showHelp" value="Mengenai FBReader"/>
 		</node>
-		<node name="gotoHome" value="Ke Awal Dokumen" />
-		<node name="gotoPageNumber" value="Ke Halaman..." />
-		<node name="gotoSectionStart" value="Ke Bagian Awal Teks" />
-		<node name="gotoSectionEnd" value="Ke Bagian Akhir Teks" />
-		<node name="nextTOCSection" value="Ke Item Daftar Isi Berikutnya" />
-		<node name="previousTOCSection" value="Ke Item Daftar Isi Sebelumnya" />
+		<node name="gotoHome" value="Ke Awal Dokumen"/>
+		<node name="gotoPageNumber" value="Ke Halaman..."/>
+		<node name="gotoSectionStart" value="Ke Bagian Awal Teks"/>
+		<node name="gotoSectionEnd" value="Ke Bagian Akhir Teks"/>
+		<node name="nextTOCSection" value="Ke Item Daftar Isi Berikutnya"/>
+		<node name="previousTOCSection" value="Ke Item Daftar Isi Sebelumnya"/>
 		<node name="navigate" value="Navigasi">
-			<node name="gotoHome" value="Ke Awal Dokumen" />
-			<node name="gotoPageNumber" value="Ke Halaman..." />
-			<node name="gotoSectionStart" value="Ke Bagian Awal Teks" />
-			<node name="gotoSectionEnd" value="Ke Bagian Akhir Teks" />
-			<node name="nextTOCSection" value="Ke Item Daftar Isi Berikutnya" />
-			<node name="previousTOCSection" value="Ke Item Daftar Isi Sebelumnya" />
-			<node name="undo" value="Mundur" />
-			<node name="redo" value="Maju" />
+			<node name="gotoHome" value="Ke Awal Dokumen"/>
+			<node name="gotoPageNumber" value="Ke Halaman..."/>
+			<node name="gotoSectionStart" value="Ke Bagian Awal Teks"/>
+			<node name="gotoSectionEnd" value="Ke Bagian Akhir Teks"/>
+			<node name="nextTOCSection" value="Ke Item Daftar Isi Berikutnya"/>
+			<node name="previousTOCSection" value="Ke Item Daftar Isi Sebelumnya"/>
+			<node name="undo" value="Mundur"/>
+			<node name="redo" value="Maju"/>
 		</node>
 		<node name="selection" value="Seleksi">
-			<node name="copyToClipboard" value="Salin ke Clipboard" />
-			<node name="openInDictionary" value="Buka di Kamus" />
-			<node name="clearSelection" value="Bersihkan" />
+			<node name="copyToClipboard" value="Salin ke Clipboard"/>
+			<node name="openInDictionary" value="Buka di Kamus"/>
+			<node name="clearSelection" value="Bersihkan"/>
 		</node>
 		<node name="search" value="Cari">
-			<node name="search" value="Pencarian Teks..." />
-			<node name="findNext" value="Pencarian Maju" />
-			<node name="findPrevious" value="Pencarian Mundur" />
+			<node name="search" value="Pencarian Teks..."/>
+			<node name="findNext" value="Pencarian Maju"/>
+			<node name="findPrevious" value="Pencarian Mundur"/>
 		</node>
 		<node name="view" value="Tampilan">
-			<node name="rotate" value="Putar Layar" />
-			<node name="toggleFullscreen" value="Layar Penuh" />
-			<node name="toggleIndicator" value="Hidup/Matikan Indikator" />
+			<node name="rotate" value="Putar Layar"/>
+			<node name="toggleFullscreen" value="Layar Penuh"/>
+			<node name="toggleIndicator" value="Hidup/Matikan Indikator"/>
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
-		<node name="quit" value="Keluar" />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..."/>
+		<node name="quit" value="Keluar"/>
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
-			<node name="label" toBeTranslated="true" value="Read Book" />
-			<node name="tooltip" value="Tampilkan Mode Baca" />
+			<node name="label" toBeTranslated="true" value="Read Book"/>
+			<node name="tooltip" value="Tampilkan Mode Baca"/>
 		</node>
 		<node name="showLibrary">
-			<node name="label" toBeTranslated="true" value="Library" />
-			<node name="tooltip" value="Tampilkan Daftar Pustaka" />
-			<node name="popup" value="Tampilkan Daftar Buku-buku Sebelumnya" />
+			<node name="label" toBeTranslated="true" value="Library"/>
+			<node name="tooltip" value="Tampilkan Daftar Pustaka"/>
+			<node name="popup" value="Tampilkan Daftar Buku-buku Sebelumnya"/>
 		</node>
 		<node name="showRecent">
-			<node name="label" toBeTranslated="true" value="Recent Books" />
-			<node name="tooltip" value="Tampilkan Daftar Buku-buku Sebelumnya" />
+			<node name="label" toBeTranslated="true" value="Recent Books"/>
+			<node name="tooltip" value="Tampilkan Daftar Buku-buku Sebelumnya"/>
 		</node>
 		<node name="byAuthor">
-			<node name="label" toBeTranslated="true" value="By Author" />
-			<node name="tooltip" value="Atur Buku-buku berdasarkan Pengarang" />
+			<node name="label" toBeTranslated="true" value="By Author"/>
+			<node name="tooltip" value="Atur Buku-buku berdasarkan Pengarang"/>
 		</node>
 		<node name="byTag">
-			<node name="label" toBeTranslated="true" value="By Tag" />
-			<node name="tooltip" value="Atur Buku-buku berdasarkan Tag" />
+			<node name="label" toBeTranslated="true" value="By Tag"/>
+			<node name="tooltip" value="Atur Buku-buku berdasarkan Tag"/>
 		</node>
 		<node name="addBook">
-			<node name="label" toBeTranslated="true" value="Add File" />
-			<node name="tooltip" value="Tambahkan Berkas ke Pustaka" />
+			<node name="label" toBeTranslated="true" value="Add File"/>
+			<node name="tooltip" value="Tambahkan Berkas ke Pustaka"/>
 		</node>
 		<node name="showNetLibrary">
-			<node name="label" toBeTranslated="true" value="Network" />
-			<node name="tooltip" value="Cari dalam Pustaka Jaringan" />
+			<node name="label" toBeTranslated="true" value="Network"/>
+			<node name="tooltip" value="Cari dalam Pustaka Jaringan"/>
 		</node>
 		<node name="searchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Simple Search" />
-			<node name="tooltip" value="Pencarian dalam Jaringan" />
+			<node name="label" toBeTranslated="true" value="Simple Search"/>
+			<node name="tooltip" value="Pencarian dalam Jaringan"/>
 		</node>
 		<node name="advancedSearchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Search" />
-			<node name="tooltip" value="Pencarian dalam Jaringan Tingkat Lanjut" />
+			<node name="label" toBeTranslated="true" value="Search"/>
+			<node name="tooltip" value="Pencarian dalam Jaringan Tingkat Lanjut"/>
 		</node>
 		<node name="gotoHome">
-			<node name="label" toBeTranslated="true" value="Go to Start" />
-			<node name="tooltip" value="Ke Bagian Awal Teks" />
+			<node name="label" toBeTranslated="true" value="Go to Start"/>
+			<node name="tooltip" value="Ke Bagian Awal Teks"/>
 		</node>
 		<node name="undo">
-			<node name="label" toBeTranslated="true" value="Go Back" />
-			<node name="tooltip" value="Mundur" />
+			<node name="label" toBeTranslated="true" value="Go Back"/>
+			<node name="tooltip" value="Mundur"/>
 		</node>
 		<node name="redo">
-			<node name="label" toBeTranslated="true" value="Go Forward" />
-			<node name="tooltip" value="Maju" />
+			<node name="label" toBeTranslated="true" value="Go Forward"/>
+			<node name="tooltip" value="Maju"/>
 		</node>
 		<node name="gotoPageNumberWithParameter">
-			<node name="label" toBeTranslated="true" value="Go to Page" />
-			<node name="tooltip" value="Ke Halaman" />
+			<node name="label" toBeTranslated="true" value="Go to Page"/>
+			<node name="tooltip" value="Ke Halaman"/>
 		</node>
 		<node name="toc">
-			<node name="label" toBeTranslated="true" value="TOC" />
-			<node name="tooltip" value="Daftart Isi" />
+			<node name="label" toBeTranslated="true" value="TOC"/>
+			<node name="tooltip" value="Daftart Isi"/>
 		</node>
 		<node name="search">
-			<node name="label" toBeTranslated="true" value="Search" />
-			<node name="tooltip" value="Pencarian Teks" />
+			<node name="label" toBeTranslated="true" value="Search"/>
+			<node name="tooltip" value="Pencarian Teks"/>
 		</node>
 		<node name="findNext">
-			<node name="label" toBeTranslated="true" value="Next" />
-			<node name="tooltip" value="Pencarian Maju" />
+			<node name="label" toBeTranslated="true" value="Next"/>
+			<node name="tooltip" value="Pencarian Maju"/>
 		</node>
 		<node name="findPrevious">
-			<node name="label" toBeTranslated="true" value="Previous" />
-			<node name="tooltip" value="Pencarian Mundur" />
+			<node name="label" toBeTranslated="true" value="Previous"/>
+			<node name="tooltip" value="Pencarian Mundur"/>
 		</node>
 		<node name="rotate">
-			<node name="label" toBeTranslated="true" value="Rotate" />
-			<node name="tooltip" value="Putar Layar" />
+			<node name="label" toBeTranslated="true" value="Rotate"/>
+			<node name="tooltip" value="Putar Layar"/>
 		</node>
 		<node name="showHelp">
-			<node name="label" toBeTranslated="true" value="About" />
-			<node name="tooltip" value="Mengenai FBReader" />
+			<node name="label" toBeTranslated="true" value="About"/>
+			<node name="tooltip" value="Mengenai FBReader"/>
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter" />
-			<node name="tooltip" toBeTranslated="true" value="Filter" />
+			<node name="label" toBeTranslated="true" value="Filter"/>
+			<node name="tooltip" toBeTranslated="true" value="Filter"/>
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog"/>
 		</node>
 		<node name="bookInfo">
-			<node name="label" toBeTranslated="true" value="Book Info" />
-			<node name="tooltip" value="Tampilkan Dialog Informasi Buku" />
+			<node name="label" toBeTranslated="true" value="Book Info"/>
+			<node name="tooltip" value="Tampilkan Dialog Informasi Buku"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences" />
-			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Library Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Network Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="System Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Reading Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog"/>
 		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
-			<node name="go" value="&amp;Mulai!" />
-			<node name="thisOnly" value="Hanya ini" />
-			<node name="withSubtags" value="Dengan subtag" />
-			<node name="removeLink" toBeTranslated="true" value="Remove from library" />
-			<node name="removeFile" toBeTranslated="true" value="Remove from disk" />
-			<node name="yesToAll" toBeTranslated="true" value="Yes to &amp;all" />
-			<node name="buy" toBeTranslated="true" value="&amp;Buy" />
-			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download" />
+			<node name="go" value="&amp;Mulai!"/>
+			<node name="thisOnly" value="Hanya ini"/>
+			<node name="withSubtags" value="Dengan subtag"/>
+			<node name="removeLink" toBeTranslated="true" value="Remove from library"/>
+			<node name="removeFile" toBeTranslated="true" value="Remove from disk"/>
+			<node name="yesToAll" toBeTranslated="true" value="Yes to &amp;all"/>
+			<node name="buy" toBeTranslated="true" value="&amp;Buy"/>
+			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options"/>
 			<node name="tab">
 				<node name="Library" value="Pustaka">
-					<node name="bookPath" value="Lokasi Buku" />
-					<node name="lookInSubdirectories" value="Tampilkan Buku-buku yang Ada di Sub Direktori" />
-					<node name="collectBooksWithoutMetaInfo" value="Kumpulkan Buku-buku tanpa MetaInfo" />
-					<node name="downloadDirectory" value="Direktori Buku-buku hasil Download" />
+					<node name="bookPath" value="Lokasi Buku"/>
+					<node name="lookInSubdirectories" value="Tampilkan Buku-buku yang Ada di Sub Direktori"/>
+					<node name="collectBooksWithoutMetaInfo" value="Kumpulkan Buku-buku tanpa MetaInfo"/>
+					<node name="downloadDirectory" value="Direktori Buku-buku hasil Download"/>
 				</node>
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options"/>
 			<node name="tab">
 				<node name="NetworkLibrary" value="Pencarian Jaringan">
 				</node>
 				<node name="Connection" value="Connection">
-					<node name="useProxy" value="Gunakan Proxy" />
-					<node name="proxyHost" value="Alamat Proxy" />
-					<node name="proxyPort" value="Nomor Port Proxy" />
-					<node name="timeout" value="Waktu Tunggu Operasi Jaringan, detik" />
+					<node name="useProxy" value="Gunakan Proxy"/>
+					<node name="proxyHost" value="Alamat Proxy"/>
+					<node name="proxyPort" value="Nomor Port Proxy"/>
+					<node name="timeout" value="Waktu Tunggu Operasi Jaringan, detik"/>
 				</node>
 				<node name="Web" value="Web">
-					<node name="enableIntegration" value="Buka Tautan Eksternal dengan %s" />
-					<node name="defaultText" value="Buka Tautan Eksternal dengan Browser" />
-					<node name="choice" value="Gunakan Browser" />
-					<node name="command" value="Perintah yang Dieksekusi" />
+					<node name="enableIntegration" value="Buka Tautan Eksternal dengan %s"/>
+					<node name="defaultText" value="Buka Tautan Eksternal dengan Browser"/>
+					<node name="choice" value="Gunakan Browser"/>
+					<node name="command" value="Perintah yang Dieksekusi"/>
 				</node>
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - System Options"/>
 			<node name="tab">
 				<node name="Language" value="Bahasa">
-					<node name="autoDetect" value="Deteksi Bahasa dan Enkode secara Otomatis" />
-					<node name="defaultLanguage" value="Bahasa Standar" />
-					<node name="defaultEncodingSet" value="Set Enkode Standar" />
-					<node name="defaultEncoding" value="Enkode Standar" />
-					<node name="useWindows1252Hack" value="Gunakan windows-1252 daripada iso-8859-1" />
+					<node name="autoDetect" value="Deteksi Bahasa dan Enkode secara Otomatis"/>
+					<node name="defaultLanguage" value="Bahasa Standar"/>
+					<node name="defaultEncodingSet" value="Set Enkode Standar"/>
+					<node name="defaultEncoding" value="Enkode Standar"/>
+					<node name="useWindows1252Hack" value="Gunakan windows-1252 daripada iso-8859-1"/>
 				</node>
 				<node name="Config" value="Konfigurasi">
-					<node name="autoSave" value="Simpan Status Secara Otomatis" />
-					<node name="timeout" value="Waktu Tunda Antara Penyimpanan, detik" />
+					<node name="autoSave" value="Simpan Status Secara Otomatis"/>
+					<node name="timeout" value="Waktu Tunda Antara Penyimpanan, detik"/>
 				</node>
 				<node name="Dictionary" value="Kamus">
-					<node name="enableIntegration" value="Aktifkan Integrasi dengan %s" />
-					<node name="defaultText" value="Aktifkan Integrasi dengan Kamus" />
-					<node name="choice" value="Integrasikan dengan" />
-					<node name="singleClickOpen" value="Buka dengan Klik Tunggal" />
+					<node name="enableIntegration" value="Aktifkan Integrasi dengan %s"/>
+					<node name="defaultText" value="Aktifkan Integrasi dengan Kamus"/>
+					<node name="choice" value="Integrasikan dengan"/>
+					<node name="singleClickOpen" value="Buka dengan Klik Tunggal"/>
 				</node>
 				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Tombol Aktif saat Dilepas, bukan saat Ditekan" />
-					<node name="minStylusPressure" value="Tekanan Minimal Stylus" />
-					<node name="maxStylusPressure" value="Tekanan Maksimal Stylus" />
+					<node name="keyActionOnRelease" value="Tombol Aktif saat Dilepas, bukan saat Ditekan"/>
+					<node name="minStylusPressure" value="Tekanan Minimal Stylus"/>
+					<node name="maxStylusPressure" value="Tekanan Maksimal Stylus"/>
 				</node>
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options"/>
 			<node name="tab">
 				<node name="Scrolling" value="Geser Layar">
-					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs" />
-					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling" />
-					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling" />
-					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling" />
-					<node name="fingerOnly" value="Geser Hanya Menggunakan Layar Sentuh" />
+					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs"/>
+					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling"/>
+					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling"/>
+					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling"/>
+					<node name="fingerOnly" value="Geser Hanya Menggunakan Layar Sentuh"/>
 				</node>
 				<node name="Selection" value="Seleksi">
-					<node name="enableSelection" value="Aktifkan Seleksi Teks" />
+					<node name="enableSelection" value="Aktifkan Seleksi Teks"/>
 				</node>
 				<node name="Indicator" value="Indikator">
 					<node name="type" value="Tampilkan sebagai">
-						<node name="osScrollbar" value="Scrollbar OS" />
-						<node name="fbIndicator" value="Indikator Model Lama" />
-						<node name="none" value="Jangan Ditampilkan" />
+						<node name="osScrollbar" value="Scrollbar OS"/>
+						<node name="fbIndicator" value="Indikator Model Lama"/>
+						<node name="none" value="Jangan Ditampilkan"/>
 					</node>
-					<node name="height" value="Tinggi Indikator" />
-					<node name="offset" value="Jarak dari Teks" />
-					<node name="pageNumber" value="Tampilkan Posisi sebagai Nomor" />
-					<node name="time" value="Tampilkan Waktu" />
-					<node name="fontSize" value="Ukuran Huruf" />
-					<node name="tocMarks" value="Tampilkan Penanda Daftar Isi" />
-					<node name="navigation" value="Aktifkan Navigasi" />
+					<node name="height" value="Tinggi Indikator"/>
+					<node name="offset" value="Jarak dari Teks"/>
+					<node name="pageNumber" value="Tampilkan Posisi sebagai Nomor"/>
+					<node name="time" value="Tampilkan Waktu"/>
+					<node name="fontSize" value="Ukuran Huruf"/>
+					<node name="tocMarks" value="Tampilkan Penanda Daftar Isi"/>
+					<node name="navigation" value="Aktifkan Navigasi"/>
 				</node>
 				<node name="Rotation" value="Rotasi">
 					<node name="direction" value="Tipe Rotasi">
-						<node name="disabled" value="Non-aktifkan" />
-						<node name="clockwise" value="90 Derajat Searah Jarum Jam" />
-						<node name="counterclockwise" value="90 Derajat Berlawanan Jarum Jam" />
-						<node name="180" value="180 Derajat" />
-						<node name="cycle" value="Rotasi 4 Arah Bergantian" />
+						<node name="disabled" value="Non-aktifkan"/>
+						<node name="clockwise" value="90 Derajat Searah Jarum Jam"/>
+						<node name="counterclockwise" value="90 Derajat Berlawanan Jarum Jam"/>
+						<node name="180" value="180 Derajat"/>
+						<node name="cycle" value="Rotasi 4 Arah Bergantian"/>
 					</node>
 				</node>
 				<node name="Keys" value="Tombol">
-					<node name="grabSystemKeys" value="Tangkap Tombol Sistem" />
-					<node name="separate" value="Tombol Tergantung dari Orientasi" />
+					<node name="grabSystemKeys" value="Tangkap Tombol Sistem"/>
+					<node name="separate" value="Tombol Tergantung dari Orientasi"/>
 					<node name="orientation" value="Orientasi">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+						<node name="degrees0" toBeTranslated="true" value="0 Degrees"/>
+						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise"/>
+						<node name="degrees180" toBeTranslated="true" value="180 Degrees"/>
+						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise"/>
 					</node>
 					<node name="action">
-						<node name="none" value="Tidak Terpakai" />
-						<node name="showLibrary" value="Tampilkan Pustaka" />
-						<node name="showNetLibrary" value="Tampilkan Pustaka Jaringan" />
-						<node name="showRecent" value="Tampilkan Buku-buku Sebelumnya" />
-						<node name="previousBook" value="Buka Buku Sebelumnya" />
-						<node name="toc" value="Tampilkan Daftar Isi" />
-						<node name="gotoHome" value="Ke Awal Dokumen" />
-						<node name="gotoSectionStart" value="Ke Awal Seksi" />
-						<node name="gotoSectionEnd" value="Ke Akhir Seksi" />
-						<node name="nextTOCSection" value="Ke Seksi Daftar Isi Berikutnya" />
-						<node name="previousTOCSection" value="Ke Seksi Daftar Isi Sebelumnya" />
-						<node name="pageForward" toBeTranslated="true" value="Scroll page forward" />
-						<node name="pageBackward" toBeTranslated="true" value="Scroll page backward" />
-						<node name="lineForward" toBeTranslated="true" value="Scroll line forward" />
-						<node name="lineBackward" toBeTranslated="true" value="Scroll line backward" />
-						<node name="undo" value="Mundur" />
-						<node name="redo" value="Maju" />
-						<node name="copyToClipboard" value="Salin Teks yang Diseleksi ke Clipboard" />
-						<node name="openInDictionary" value="Buka Teks yang Diseleksi di Kamus" />
-						<node name="clearSelection" value="Bersihkan Seleksi" />
-						<node name="search" value="Pencarian" />
-						<node name="findPrevious" value="Pencarian Mundur" />
-						<node name="findNext" value="Pencarian Maju" />
-						<node name="increaseFont" value="Besarkan Ukuran Huruf" />
-						<node name="decreaseFont" value="Kecilkan Ukuran Huruf" />
-						<node name="toggleIndicator" value="Hidup/Matikan Indikator" />
-						<node name="toggleFullscreen" value="Hidup/Matikan Layar Penuh" />
-						<node name="rotate" value="Putar Layar" />
-						<node name="addBook" value="Tambah Buku" />
-						<node name="cancel" value="Batal" />
-						<node name="quit" value="Keluar" />
-						<node name="bookInfo" value="Tampilkan Dialog Informasi Buku" />
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
+						<node name="none" value="Tidak Terpakai"/>
+						<node name="showLibrary" value="Tampilkan Pustaka"/>
+						<node name="showNetLibrary" value="Tampilkan Pustaka Jaringan"/>
+						<node name="showRecent" value="Tampilkan Buku-buku Sebelumnya"/>
+						<node name="previousBook" value="Buka Buku Sebelumnya"/>
+						<node name="toc" value="Tampilkan Daftar Isi"/>
+						<node name="gotoHome" value="Ke Awal Dokumen"/>
+						<node name="gotoSectionStart" value="Ke Awal Seksi"/>
+						<node name="gotoSectionEnd" value="Ke Akhir Seksi"/>
+						<node name="nextTOCSection" value="Ke Seksi Daftar Isi Berikutnya"/>
+						<node name="previousTOCSection" value="Ke Seksi Daftar Isi Sebelumnya"/>
+						<node name="pageForward" toBeTranslated="true" value="Scroll page forward"/>
+						<node name="pageBackward" toBeTranslated="true" value="Scroll page backward"/>
+						<node name="lineForward" toBeTranslated="true" value="Scroll line forward"/>
+						<node name="lineBackward" toBeTranslated="true" value="Scroll line backward"/>
+						<node name="undo" value="Mundur"/>
+						<node name="redo" value="Maju"/>
+						<node name="copyToClipboard" value="Salin Teks yang Diseleksi ke Clipboard"/>
+						<node name="openInDictionary" value="Buka Teks yang Diseleksi di Kamus"/>
+						<node name="clearSelection" value="Bersihkan Seleksi"/>
+						<node name="search" value="Pencarian"/>
+						<node name="findPrevious" value="Pencarian Mundur"/>
+						<node name="findNext" value="Pencarian Maju"/>
+						<node name="increaseFont" value="Besarkan Ukuran Huruf"/>
+						<node name="decreaseFont" value="Kecilkan Ukuran Huruf"/>
+						<node name="toggleIndicator" value="Hidup/Matikan Indikator"/>
+						<node name="toggleFullscreen" value="Hidup/Matikan Layar Penuh"/>
+						<node name="rotate" value="Putar Layar"/>
+						<node name="addBook" value="Tambah Buku"/>
+						<node name="cancel" value="Batal"/>
+						<node name="quit" value="Keluar"/>
+						<node name="bookInfo" value="Tampilkan Dialog Informasi Buku"/>
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog"/>
 					</node>
-					<node name="quitOnCancel" value="Keluar dari Aplikasi Ketika Pembatalan" />
-					<node name="keyDelay" value="Waktu Tunda Antara Penekanan Tombol" />
+					<node name="quitOnCancel" value="Keluar dari Aplikasi Ketika Pembatalan"/>
+					<node name="keyDelay" value="Waktu Tunda Antara Penekanan Tombol"/>
 				</node>
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options"/>
 			<node name="tab">
 				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Gunakan Selalu Bentuk Huruf Milik Saya" />
+					<node name="overrideSpecifiedFonts" value="Gunakan Selalu Bentuk Huruf Milik Saya"/>
 				</node>
 				<node name="Margins" value="Margin">
-					<node name="left" value="Margin Kiri" />
-					<node name="right" value="Margin Kanan" />
-					<node name="top" value="Margin Atas" />
-					<node name="bottom" value="Margin Bawah" />
+					<node name="left" value="Margin Kiri"/>
+					<node name="right" value="Margin Kanan"/>
+					<node name="top" value="Margin Atas"/>
+					<node name="bottom" value="Margin Bawah"/>
 				</node>
 				<node name="Format" value="Format">
-					<node name="optionsFor" value="Pengaturan untuk" />
+					<node name="optionsFor" value="Pengaturan untuk"/>
 					<node name="lineSpacing" value="Jarak Baris">
-						<node name="unchanged" value="&lt;tidak diubah&gt;" />
+						<node name="unchanged" value="&lt;tidak diubah&gt;"/>
 					</node>
-					<node name="firstLineIndent" value="Indentasi Baris Pertama" />
+					<node name="firstLineIndent" value="Indentasi Baris Pertama"/>
 					<node name="alignment" value="Perataan Teks">
-						<node name="left" value="Kiri" />
-						<node name="right" value="Kanan" />
-						<node name="center" value="Tengah" />
-						<node name="justify" value="Rata Kanan Kiri" />
-						<node name="unchanged" value="&lt;tidak diubah&gt;" />
+						<node name="left" value="Kiri"/>
+						<node name="right" value="Kanan"/>
+						<node name="center" value="Tengah"/>
+						<node name="justify" value="Rata Kanan Kiri"/>
+						<node name="unchanged" value="&lt;tidak diubah&gt;"/>
 					</node>
-					<node name="spaceBefore" value="Jarak Sebelumnya" />
-					<node name="spaceAfter" value="Jarak Setelahnya" />
-					<node name="startIndent" value="Indentasi Baris Awal" />
-					<node name="endIndent" value="Indentasi Baris Akhir" />
+					<node name="spaceBefore" value="Jarak Sebelumnya"/>
+					<node name="spaceAfter" value="Jarak Setelahnya"/>
+					<node name="startIndent" value="Indentasi Baris Awal"/>
+					<node name="endIndent" value="Indentasi Baris Akhir"/>
 				</node>
 				<node name="Styles" value="Bentuk">
-					<node name="optionsFor" value="Pengaturan untuk" />
+					<node name="optionsFor" value="Pengaturan untuk"/>
 					<node name="fontFamily" value="Keluarga">
-						<node name="unchanged" value="&lt;tidak diubah&gt;" />
+						<node name="unchanged" value="&lt;tidak diubah&gt;"/>
 					</node>
-					<node name="fontSize" value="Ukuran" />
-					<node name="fontSizeDifference" value="Perbedaan Ukuran" />
-					<node name="bold" value="Tebal" />
-					<node name="italic" value="Miring" />
-					<node name="allowHyphenations" value="Ijinkan Pemenggalan Kata" />
-					<node name="autoHyphenations" value="Pemenggalan Kata Otomatis" />
+					<node name="fontSize" value="Ukuran"/>
+					<node name="fontSizeDifference" value="Perbedaan Ukuran"/>
+					<node name="bold" value="Tebal"/>
+					<node name="italic" value="Miring"/>
+					<node name="allowHyphenations" value="Ijinkan Pemenggalan Kata"/>
+					<node name="autoHyphenations" value="Pemenggalan Kata Otomatis"/>
 				</node>
 				<node name="Colors" value="Warna">
 					<node name="colorFor" value="Warna untuk">
-						<node name="background" value="Latar Belakang" />
-						<node name="selectionBackground" value="Latar Belakang Seleksi" />
-						<node name="text" value="Teks Biasa" />
-						<node name="internalLink" value="Tautan Teks Internal" />
-						<node name="externalLink" value="Tautan Teks Eksternal" />
-						<node name="bookLink" value="Tautan ke Buku Lainnya" />
-						<node name="highlighted" value="Teks Berwarna Cerah" />
-						<node name="treeLines" value="Garis Diagram Pohon" />
-						<node name="indicator" value="Indikator Posisi" />
+						<node name="background" value="Latar Belakang"/>
+						<node name="selectionBackground" value="Latar Belakang Seleksi"/>
+						<node name="text" value="Teks Biasa"/>
+						<node name="internalLink" value="Tautan Teks Internal"/>
+						<node name="externalLink" value="Tautan Teks Eksternal"/>
+						<node name="bookLink" value="Tautan ke Buku Lainnya"/>
+						<node name="highlighted" value="Teks Berwarna Cerah"/>
+						<node name="treeLines" value="Garis Diagram Pohon"/>
+						<node name="indicator" value="Indikator Posisi"/>
 					</node>
 				</node>
 			</node>
 		</node>
 		<node name="InfoDialog">
-			<node name="title" value="FBReader - Informasi Buku" />
+			<node name="title" value="FBReader - Informasi Buku"/>
 			<node name="tab">
 				<node name="Common" value="Umum">
-					<node name="file" value="Berkas" />
-					<node name="title" value="Judul" />
-					<node name="language" value="Bahasa" />
-					<node name="encodingSet" value="Set Enkode" />
-					<node name="encoding" value="Enkode" />
+					<node name="file" value="Berkas"/>
+					<node name="title" value="Judul"/>
+					<node name="language" value="Bahasa"/>
+					<node name="encodingSet" value="Set Enkode"/>
+					<node name="encoding" value="Enkode"/>
 				</node>
 				<node name="Authors" toBeTranslated="true" value="Authors">
-					<node name="authorDisplayName" toBeTranslated="true" value="Author Name" />
+					<node name="authorDisplayName" toBeTranslated="true" value="Author Name"/>
 				</node>
 				<node name="Series" value="Seri">
-					<node name="seriesTitle" value="Judul Seri" />
-					<node name="bookIndex" value="Nomor Buku" />
+					<node name="seriesTitle" value="Judul Seri"/>
+					<node name="bookIndex" value="Nomor Buku"/>
 				</node>
 				<node name="Tags" value="Tag">
-					<node name="tags" toBeTranslated="true" value="Tag Name" />
+					<node name="tags" toBeTranslated="true" value="Tag Name"/>
 				</node>
 				<node name="Text" value="Teks">
-					<node name="breakType" value="Penggal Paragraf pada" />
-					<node name="ignoreIndent" value="Abaikan Indentasi Kurang dari" />
-					<node name="buildTOC" value="Buat Daftar Isi" />
-					<node name="emptyLines" value="Baris Kosong Sebelum Seksi Baru" />
+					<node name="breakType" value="Penggal Paragraf pada"/>
+					<node name="ignoreIndent" value="Abaikan Indentasi Kurang dari"/>
+					<node name="buildTOC" value="Buat Daftar Isi"/>
+					<node name="emptyLines" value="Baris Kosong Sebelum Seksi Baru"/>
 				</node>
 				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
-					<node name="breakType" value="Penggal Paragraf pada" />
-					<node name="ignoreIndent" value="Abaikan Indentasi Kurang dari" />
-					<node name="buildTOC" value="Buat Daftar Isi" />
-					<node name="emptyLines" value="Baris Kosong Sebelum Seksi Baru" />
+					<node name="breakType" value="Penggal Paragraf pada"/>
+					<node name="ignoreIndent" value="Abaikan Indentasi Kurang dari"/>
+					<node name="buildTOC" value="Buat Daftar Isi"/>
+					<node name="emptyLines" value="Baris Kosong Sebelum Seksi Baru"/>
 				</node>
 			</node>
 		</node>
 		<node name="AuthorInfoDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Author Info" />
-			<node name="name" toBeTranslated="true" value="Author Name" />
-			<node name="sortKey" toBeTranslated="true" value="Author Sort Key" />
+			<node name="title" toBeTranslated="true" value="FBReader - Author Info"/>
+			<node name="name" toBeTranslated="true" value="Author Name"/>
+			<node name="sortKey" toBeTranslated="true" value="Author Sort Key"/>
 		</node>
 		<node name="addFileDialog">
-			<node name="title" value="FBReader - Tambahkan Buku ke Pustaka" />
+			<node name="title" value="FBReader - Tambahkan Buku ke Pustaka"/>
 		</node>
 		<node name="textSearchDialog">
-			<node name="title" value="Pencarian Text" />
-			<node name="text" value="" />
-			<node name="ignoreCase" value="&amp;Abaikan huruf besar/kecil" />
-			<node name="wholeText" value="&amp;Dalam keseluruhan teks" />
-			<node name="backward" value="&amp;Pencarian mundur" />
-			<node name="currentSection" value="&amp;Hanya dalam seksi ini" />
+			<node name="title" value="Pencarian Text"/>
+			<node name="text" value=""/>
+			<node name="ignoreCase" value="&amp;Abaikan huruf besar/kecil"/>
+			<node name="wholeText" value="&amp;Dalam keseluruhan teks"/>
+			<node name="backward" value="&amp;Pencarian mundur"/>
+			<node name="currentSection" value="&amp;Hanya dalam seksi ini"/>
 		</node>
 		<node name="networkSearchDialog">
-			<node name="title" value="Pencarian Jaringan" />
-			<node name="titleAndSeries" value="Judul/Seri" />
-			<node name="author" value="Pengarang" />
-			<node name="category" value="Kategori" />
-			<node name="description" value="Deskripsi" />
-			<node name="annotation" toBeTranslated="true" value="Search results for: %s" />
+			<node name="title" value="Pencarian Jaringan"/>
+			<node name="titleAndSeries" value="Judul/Seri"/>
+			<node name="author" value="Pengarang"/>
+			<node name="category" value="Kategori"/>
+			<node name="description" value="Deskripsi"/>
+			<node name="annotation" toBeTranslated="true" value="Search results for: %s"/>
 		</node>
 		<node name="gotoPageDialog">
-			<node name="title" value="Ke Halaman" />
-			<node name="pageNumber" value="Ke Nomor Halaman" />
+			<node name="title" value="Ke Halaman"/>
+			<node name="pageNumber" value="Ke Nomor Halaman"/>
 		</node>
 		<node name="editTagDialog">
-			<node name="title" value="Ubah Tag" />
-			<node name="name" value="Nama Tag" />
-			<node name="includeSubtags" value="Termasuk Sub Tag" />
+			<node name="title" value="Ubah Tag"/>
+			<node name="name" value="Nama Tag"/>
+			<node name="includeSubtags" value="Termasuk Sub Tag"/>
 		</node>
 		<node name="cloneTagDialog">
-			<node name="title" value="Gandakan Tag" />
-			<node name="name" value="Nama Tag" />
-			<node name="includeSubtags" value="Termasuk Sub Tag" />
+			<node name="title" value="Gandakan Tag"/>
+			<node name="name" value="Nama Tag"/>
+			<node name="includeSubtags" value="Termasuk Sub Tag"/>
 		</node>
 		<node name="removeBookBox">
-			<node name="title" value="Hapus Buku" />
-			<node name="message" value="Hapus buku&#10;&quot;%s&quot;&#10;dari Pustaka?" />
-			<node name="deleteFile" toBeTranslated="true" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?" />
+			<node name="title" value="Hapus Buku"/>
+			<node name="message" value="Hapus buku&#10;&quot;%s&quot;&#10;dari Pustaka?"/>
+			<node name="deleteFile" toBeTranslated="true" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?"/>
 		</node>
 		<node name="removeTagBox">
-			<node name="title" value="Hapus Tag" />
-			<node name="message" value="Hapus Tag “%s”?" />
+			<node name="title" value="Hapus Tag"/>
+			<node name="message" value="Hapus Tag “%s”?"/>
 		</node>
 		<node name="openBookErrorBox">
-			<node name="title" value="Ada Kesalahan" />
-			<node name="message" value="Tidak dapat membuka:&#10;%s" />
+			<node name="title" value="Ada Kesalahan"/>
+			<node name="message" value="Tidak dapat membuka:&#10;%s"/>
 		</node>
 		<node name="removeFileErrorBox">
-			<node name="title" toBeTranslated="true" value="Error" />
-			<node name="message" toBeTranslated="true" value="Couldn&apos;t remove file&#10;%s" />
+			<node name="title" toBeTranslated="true" value="Error"/>
+			<node name="message" toBeTranslated="true" value="Couldn't remove file&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
-			<node name="title" value="Ada Kesalahan" />
-			<node name="message" value="Berkas tidak ditemukan, maaf" />
+			<node name="title" value="Ada Kesalahan"/>
+			<node name="message" value="Berkas tidak ditemukan, maaf"/>
 		</node>
 		<node name="networkError">
-			<node name="emptyLibrariesList" value="Daftar pustaka kosong" />
-			<node name="authenticationFailed" toBeTranslated="true" value="Authentication failed" />
-			<node name="internalError" toBeTranslated="true" value="Internal server error" />
-			<node name="purchaseNotEnoughMoney" toBeTranslated="true" value="Not enough money" />
-			<node name="purchaseMissingBook" toBeTranslated="true" value="Missing book" />
-			<node name="purchaseAlreadyPurchased" toBeTranslated="true" value="Already purchased" />
-			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased" />
-			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded" />
-			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation" />
-			<node name="loginAlreadyTaken" toBeTranslated="true" value="Username is already in use" />
-			<node name="loginNotSpecified" toBeTranslated="true" value="Please, enter a username" />
-			<node name="passwordNotSpecified" toBeTranslated="true" value="Please, enter a non-empty password" />
-			<node name="emailNotSpecified" toBeTranslated="true" value="Please, enter an e-mail address" />
-			<node name="invalidEMail" toBeTranslated="true" value="Invalid e-mail address" />
-			<node name="tooManyRegistrations" toBeTranslated="true" value="Too many registrations from your IP;&#10;try again in a few minutes" />
-			<node name="noUserEmail" toBeTranslated="true" value="No user was registered&#10;with specified e-mail address" />
+			<node name="emptyLibrariesList" value="Daftar pustaka kosong"/>
+			<node name="authenticationFailed" toBeTranslated="true" value="Authentication failed"/>
+			<node name="internalError" toBeTranslated="true" value="Internal server error"/>
+			<node name="purchaseNotEnoughMoney" toBeTranslated="true" value="Not enough money"/>
+			<node name="purchaseMissingBook" toBeTranslated="true" value="Missing book"/>
+			<node name="purchaseAlreadyPurchased" toBeTranslated="true" value="Already purchased"/>
+			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased"/>
+			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded"/>
+			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation"/>
+			<node name="loginAlreadyTaken" toBeTranslated="true" value="Username is already in use"/>
+			<node name="loginNotSpecified" toBeTranslated="true" value="Please, enter a username"/>
+			<node name="passwordNotSpecified" toBeTranslated="true" value="Please, enter a non-empty password"/>
+			<node name="emailNotSpecified" toBeTranslated="true" value="Please, enter an e-mail address"/>
+			<node name="invalidEMail" toBeTranslated="true" value="Invalid e-mail address"/>
+			<node name="tooManyRegistrations" toBeTranslated="true" value="Too many registrations from your IP;&#10;try again in a few minutes"/>
+			<node name="noUserEmail" toBeTranslated="true" value="No user was registered&#10;with specified e-mail address"/>
 			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
-			<node name="title" value="Bermasalah waktu melakukan download" />
-			<node name="message" value="Sementara tidak dapat melakukan download buku ini" />
+			<node name="title" value="Bermasalah waktu melakukan download"/>
+			<node name="message" value="Sementara tidak dapat melakukan download buku ini"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Membaca buku. Silakan tunggu..." />
-			<node name="loadingBookList" value="Membaca daftar buku. Silakan tunggu..." />
-			<node name="migrate" value="Melakukan pembaruan ke versi baru. Silakan tunggu..." />
-			<node name="downloadBookList" value="Daftar buku sedang di-download. Harap tunggu..." />
-			<node name="downloadBook" value="Buku sedang di-download. Harap tunggu..." />
-			<node name="downloadImages" toBeTranslated="true" value="Downloading images. Please, wait..." />
-			<node name="authentication" toBeTranslated="true" value="Authentication. Please, wait..." />
-			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..." />
-			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..." />
-			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..." />
-			<node name="registerUser" toBeTranslated="true" value="Registering new account. Please, wait..." />
-			<node name="passwordRecovery" toBeTranslated="true" value="Recovering password. Please, wait..." />
-			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
-			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
+			<node name="loadingBook" value="Membaca buku. Silakan tunggu..."/>
+			<node name="loadingBookList" value="Membaca daftar buku. Silakan tunggu..."/>
+			<node name="migrate" value="Melakukan pembaruan ke versi baru. Silakan tunggu..."/>
+			<node name="downloadBookList" value="Daftar buku sedang di-download. Harap tunggu..."/>
+			<node name="downloadBook" value="Buku sedang di-download. Harap tunggu..."/>
+			<node name="downloadImages" toBeTranslated="true" value="Downloading images. Please, wait..."/>
+			<node name="authentication" toBeTranslated="true" value="Authentication. Please, wait..."/>
+			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..."/>
+			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..."/>
+			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..."/>
+			<node name="registerUser" toBeTranslated="true" value="Registering new account. Please, wait..."/>
+			<node name="passwordRecovery" toBeTranslated="true" value="Recovering password. Please, wait..."/>
+			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..."/>
+			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..."/>
 			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
-			<node name="title" toBeTranslated="true" value="Purchase book" />
-			<node name="message" toBeTranslated="true" value="Are you sure you want to buy&#10;“%s”&#10;book?" />
+			<node name="title" toBeTranslated="true" value="Purchase book"/>
+			<node name="message" toBeTranslated="true" value="Are you sure you want to buy&#10;“%s”&#10;book?"/>
 		</node>
 		<node name="AuthenticationDialog">
-			<node name="title" toBeTranslated="true" value="Authentication" />
-			<node name="login" toBeTranslated="true" value="Username" />
-			<node name="password" toBeTranslated="true" value="Password" />
-			<node name="skipIP" toBeTranslated="true" value="Don&apos;t bound to ip-address" />
-			<node name="loginIsEmpty" toBeTranslated="true" value="Username should be non-empty" />
+			<node name="title" toBeTranslated="true" value="Authentication"/>
+			<node name="login" toBeTranslated="true" value="Username"/>
+			<node name="password" toBeTranslated="true" value="Password"/>
+			<node name="skipIP" toBeTranslated="true" value="Don't bound to ip-address"/>
+			<node name="loginIsEmpty" toBeTranslated="true" value="Username should be non-empty"/>
 		</node>
 		<node name="emptyCatalogBox">
-			<node name="title" toBeTranslated="true" value="Information" />
-			<node name="message" toBeTranslated="true" value="Catalog is empty." />
+			<node name="title" toBeTranslated="true" value="Information"/>
+			<node name="message" toBeTranslated="true" value="Catalog is empty."/>
 		</node>
 		<node name="dontShowConfirmBox">
-			<node name="title" toBeTranslated="true" value="Disable catalog" />
-			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;ou can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
+			<node name="title" toBeTranslated="true" value="Disable catalog"/>
+			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;ou can enable it in the future at&#10;“Network Search” tab in the Options dialog."/>
 		</node>
 		<node name="deleteLocalCopyBox">
-			<node name="title" toBeTranslated="true" value="Delete Book" />
-			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;“%s” book&#10;from the disk?" />
+			<node name="title" toBeTranslated="true" value="Delete Book"/>
+			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;“%s” book&#10;from the disk?"/>
 		</node>
 		<node name="RegisterUserDialog">
-			<node name="title" toBeTranslated="true" value="Register User" />
-			<node name="login" toBeTranslated="true" value="Username" />
-			<node name="password" toBeTranslated="true" value="Password" />
-			<node name="confirmPassword" toBeTranslated="true" value="Password confirmation" />
-			<node name="email" toBeTranslated="true" value="E-mail" />
-			<node name="differentPasswords" toBeTranslated="true" value="Password and password confirmation must be the same." />
+			<node name="title" toBeTranslated="true" value="Register User"/>
+			<node name="login" toBeTranslated="true" value="Username"/>
+			<node name="password" toBeTranslated="true" value="Password"/>
+			<node name="confirmPassword" toBeTranslated="true" value="Password confirmation"/>
+			<node name="email" toBeTranslated="true" value="E-mail"/>
+			<node name="differentPasswords" toBeTranslated="true" value="Password and password confirmation must be the same."/>
 		</node>
 		<node name="PasswordRecoveryDialog">
-			<node name="title" toBeTranslated="true" value="Password Recovery" />
-			<node name="email" toBeTranslated="true" value="E-mail" />
+			<node name="title" toBeTranslated="true" value="Password Recovery"/>
+			<node name="email" toBeTranslated="true" value="E-mail"/>
 		</node>
 		<node name="recoverySuccessfulBox">
-			<node name="title" toBeTranslated="true" value="Password Recovery" />
-			<node name="message" toBeTranslated="true" value="A message with further instructions&#10;has been sent to&#10;%s" />
+			<node name="title" toBeTranslated="true" value="Password Recovery"/>
+			<node name="message" toBeTranslated="true" value="A message with further instructions&#10;has been sent to&#10;%s"/>
 		</node>
 		<node name="cantOpenDownloadedFile">
-			<node name="title" toBeTranslated="true" value="Download Error" />
-			<node name="message" toBeTranslated="true" value="Can&apos;t open downloaded file&#10;%s." />
+			<node name="title" toBeTranslated="true" value="Download Error"/>
+			<node name="message" toBeTranslated="true" value="Can't open downloaded file&#10;%s."/>
 		</node>
 	</node>
 	<node name="style">
-		<node name="Base" value="Dasar" />
-		<node name="Regular Paragraph" value="Paragraf Biasa" />
-		<node name="Title" value="Judul" />
-		<node name="Section Title" value="Judul Seksi" />
-		<node name="Poem Title" value="Judul Syair" />
-		<node name="Subtitle" value="Sub Judul" />
-		<node name="Annotation" value="Anotasi" />
-		<node name="Epigraph" value="Inskripsi" />
-		<node name="Stanza" value="Bait" />
-		<node name="Verse" value="Ayat" />
-		<node name="Preformatted text" value="Teks Terformat" />
-		<node name="Image" value="Gambar" />
-		<node name="Cite" value="Cuplikan" />
-		<node name="Author" value="Pengarang" />
-		<node name="Date" value="Tanggal" />
-		<node name="Internal Hyperlink" value="Tautan Internal" />
-		<node name="Footnote" value="Catatan Kaki" />
-		<node name="Emphasis" value="Aksentuasi" />
-		<node name="Strong" value="Strong" />
-		<node name="Subscript" value="Subscript" />
-		<node name="Superscript" value="Superscript" />
-		<node name="Code" value="Kode" />
-		<node name="StrikeThrough" value="Teks Tercoret" />
-		<node name="Contents Table" value="Daftar Isi" />
-		<node name="Library Entry" value="Entri Pustaka" />
-		<node name="Recent Book List" value="Daftar Buku-buku Sebelumnya" />
-		<node name="Italic" value="Miring" />
-		<node name="Bold" value="Tebal" />
-		<node name="Definition" value="Definisi" />
-		<node name="Definition Description" value="Deskripsi Definisi" />
-		<node name="Header 1" value="Header 1" />
-		<node name="Header 2" value="Header 2" />
-		<node name="Header 3" value="Header 3" />
-		<node name="Header 4" value="Header 4" />
-		<node name="Header 5" value="Header 5" />
-		<node name="Header 6" value="Header 6" />
-		<node name="External Hyperlink" value="Tautan Eksternal" />
-		<node name="Link to Another Book" value="Tautan ke Buku Lain" />
+		<node name="Base" value="Dasar"/>
+		<node name="Regular Paragraph" value="Paragraf Biasa"/>
+		<node name="Title" value="Judul"/>
+		<node name="Section Title" value="Judul Seksi"/>
+		<node name="Poem Title" value="Judul Syair"/>
+		<node name="Subtitle" value="Sub Judul"/>
+		<node name="Annotation" value="Anotasi"/>
+		<node name="Epigraph" value="Inskripsi"/>
+		<node name="Stanza" value="Bait"/>
+		<node name="Verse" value="Ayat"/>
+		<node name="Preformatted text" value="Teks Terformat"/>
+		<node name="Image" value="Gambar"/>
+		<node name="Cite" value="Cuplikan"/>
+		<node name="Author" value="Pengarang"/>
+		<node name="Date" value="Tanggal"/>
+		<node name="Internal Hyperlink" value="Tautan Internal"/>
+		<node name="Footnote" value="Catatan Kaki"/>
+		<node name="Emphasis" value="Aksentuasi"/>
+		<node name="Strong" value="Strong"/>
+		<node name="Subscript" value="Subscript"/>
+		<node name="Superscript" value="Superscript"/>
+		<node name="Code" value="Kode"/>
+		<node name="StrikeThrough" value="Teks Tercoret"/>
+		<node name="Contents Table" value="Daftar Isi"/>
+		<node name="Library Entry" value="Entri Pustaka"/>
+		<node name="Recent Book List" value="Daftar Buku-buku Sebelumnya"/>
+		<node name="Italic" value="Miring"/>
+		<node name="Bold" value="Tebal"/>
+		<node name="Definition" value="Definisi"/>
+		<node name="Definition Description" value="Deskripsi Definisi"/>
+		<node name="Header 1" value="Header 1"/>
+		<node name="Header 2" value="Header 2"/>
+		<node name="Header 3" value="Header 3"/>
+		<node name="Header 4" value="Header 4"/>
+		<node name="Header 5" value="Header 5"/>
+		<node name="Header 6" value="Header 6"/>
+		<node name="External Hyperlink" value="Tautan Eksternal"/>
+		<node name="Link to Another Book" value="Tautan ke Buku Lain"/>
 	</node>
 	<node name="external">
-		<node name="browser" value="Browser" />
-		<node name="defaultBrowser" value="Browser Standar" />
+		<node name="browser" value="Browser"/>
+		<node name="defaultBrowser" value="Browser Standar"/>
 	</node>
 	<node name="mobipocketPlugin">
-		<node name="unknown" value="Ada Kesalahan" />
-		<node name="unsupportedCompressionMethod" value="Metode kompresi tidak didukung" />
-		<node name="encryptedFile" value="Berkas terproteksi DRM" />
+		<node name="unknown" value="Ada Kesalahan"/>
+		<node name="unsupportedCompressionMethod" value="Metode kompresi tidak didukung"/>
+		<node name="encryptedFile" value="Berkas terproteksi DRM"/>
 	</node>
 	<node name="networkLibrary">
-		<node name="caption" value="Pustaka Jaringan" />
+		<node name="caption" value="Pustaka Jaringan"/>
 	</node>
 	<node name="library">
-		<node name="caption" value="Pustaka" />
+		<node name="caption" value="Pustaka"/>
 	</node>
 </resources>

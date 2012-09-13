@@ -71,9 +71,9 @@
 		<node name="bookInfo" value="Информация за книгата..."/>
 		<node name="toc" value="Съдържание"/>
 		<node name="showLibrary" value="Отваряне на библиотека"/>
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
-		<node name="addBook" toBeTranslated="true" value="Open file..." />
-		<node name="showRecent" toBeTranslated="true" value="Recent books" />
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library"/>
+		<node name="addBook" toBeTranslated="true" value="Open file..."/>
+		<node name="showRecent" toBeTranslated="true" value="Recent books"/>
 		<node name="library" value="Библиотека">
 			<node name="showLibrary" value="Отваряне"/>
 			<node name="previousBook" value="Предишна книга"/>
@@ -112,7 +112,7 @@
 			<node name="toggleFullscreen" value="На цял екран"/>
 			<node name="toggleIndicator" value="Включване на индикатора"/>
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..."/>
 		<node name="quit" value="Затваряне"/>
 	</node>
 	<node name="toolbar">
@@ -198,32 +198,32 @@
 			<node name="tooltip" value="Филтър"/>
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog"/>
 		</node>
 		<node name="bookInfo">
 			<node name="label" value="Информация за книгата"/>
 			<node name="tooltip" value="Информация за книгата"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Library Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Network Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="System Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Reading Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog"/>
 		</node>
 	</node>
 	<node name="dialog">
@@ -238,7 +238,7 @@
 			<node name="buyAndDownload" value="Купуване и &amp;сваляне"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options"/>
 			<node name="tab">
 				<node name="Library" value="Библиотека">
 					<node name="bookPath" value="Папка за съхранение на книгите"/>
@@ -249,7 +249,7 @@
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options"/>
 			<node name="tab">
 				<node name="NetworkLibrary" toBeTranslated="true" value="Network Library">
 				</node>
@@ -268,7 +268,7 @@
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - System Options"/>
 			<node name="tab">
 				<node name="Language" value="Език">
 					<node name="autoDetect" value="Автоматично определяне на езика и кодирането"/>
@@ -295,8 +295,8 @@
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
- 			<node name="tab">
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options"/>
+			<node name="tab">
 				<node name="Scrolling" value="Прелистване">
 					<node name="keyScrollDelay" value="Забавяне между клавишни превъртания в милисекунди"/>
 					<node name="keyLinesToScroll" value="Редове за прелистване при редово прелистване"/>
@@ -334,10 +334,10 @@
 					<node name="grabSystemKeys" value="Прихващане на системните клавиши"/>
 					<node name="separate" value="Бързи клавиши в зависимост от ориентацията"/>
 					<node name="orientation" value="Ориентация">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+						<node name="degrees0" toBeTranslated="true" value="0 Degrees"/>
+						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise"/>
+						<node name="degrees180" toBeTranslated="true" value="180 Degrees"/>
+						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise"/>
 					</node>
 					<node name="action">
 						<node name="none" value="Няма"/>
@@ -372,7 +372,7 @@
 						<node name="cancel" value="Отмяна"/>
 						<node name="quit" value="Изход"/>
 						<node name="bookInfo" value="Показване на диалог за информация за книгата"/>
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog"/>
 					</node>
 					<node name="quitOnCancel" value="Изход от програмата при отмяна"/>
 					<node name="keyDelay" value="Забавяне между натискането на клавиш"/>
@@ -380,7 +380,7 @@
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options"/>
 			<node name="tab">
 				<node name="CSS" value="CSS">
 					<node name="overrideSpecifiedFonts" value="Винаги да се използват собствени шрифтове"/>
@@ -510,8 +510,8 @@
 		</node>
 		<node name="removeBookBox">
 			<node name="title" value="Изтриване на книга"/>
-			<node name="message" value="Изтриване на книгата&#xA;“%s”&#xA;от библиотеката?"/>
-			<node name="deleteFile" value="Сигурни ли сте, че желаете&#xA;да изтриете файла&#xA;“%s”&#xA;от диска?"/>
+			<node name="message" value="Изтриване на книгата&#10;“%s”&#10;от библиотеката?"/>
+			<node name="deleteFile" value="Сигурни ли сте, че желаете&#10;да изтриете файла&#10;“%s”&#10;от диска?"/>
 		</node>
 		<node name="removeTagBox">
 			<node name="title" value="Изтриване на етикета"/>
@@ -519,11 +519,11 @@
 		</node>
 		<node name="openBookErrorBox">
 			<node name="title" value="Грешка"/>
-			<node name="message" value="Не може да се отвори:&#xA;%s"/>
+			<node name="message" value="Не може да се отвори:&#10;%s"/>
 		</node>
 		<node name="removeFileErrorBox">
 			<node name="title" value="Грешка"/>
-			<node name="message" value="Не може да се изтрие файла&#xA;%s"/>
+			<node name="message" value="Не може да се изтрие файла&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Грешка"/>
@@ -544,8 +544,8 @@
 			<node name="passwordNotSpecified" value="Моля, въведете непразна парола"/>
 			<node name="emailNotSpecified" value="Моля, въведете имейл адрес"/>
 			<node name="invalidEMail" value="Невалиден имейл адрес"/>
-			<node name="tooManyRegistrations" value="Твърде много регистрации от вашето IP;&#xA;опитайте отново след няколко минути"/>
-			<node name="noUserEmail" value="Няма регистриран потребител&#xA;с този имейл адрес"/>
+			<node name="tooManyRegistrations" value="Твърде много регистрации от вашето IP;&#10;опитайте отново след няколко минути"/>
+			<node name="noUserEmail" value="Няма регистриран потребител&#10;с този имейл адрес"/>
 			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
@@ -571,7 +571,7 @@
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Плащане на книга"/>
-			<node name="message" value="Сигурни ли сте, че желаете да купите книгата&#xA;“%s”&#xA;?"/>
+			<node name="message" value="Сигурни ли сте, че желаете да купите книгата&#10;“%s”&#10;?"/>
 		</node>
 		<node name="AuthenticationDialog">
 			<node name="title" value="Идентификация"/>
@@ -586,18 +586,18 @@
 		</node>
 		<node name="dontShowConfirmBox">
 			<node name="title" value="Изключване на каталога"/>
-			<node name="message" value="Сигурни ли сте, че желаете да изключите каталога&#xA;“%s” ?&#xA;&#xA;Вие можете да го включите отново на&#xA;“Търсене в интернет” в диалога Настройки."/>
+			<node name="message" value="Сигурни ли сте, че желаете да изключите каталога&#10;“%s” ?&#10;&#10;Вие можете да го включите отново на&#10;“Търсене в интернет” в диалога Настройки."/>
 		</node>
 		<node name="deleteLocalCopyBox">
 			<node name="title" value="Изтриване на книгата"/>
-			<node name="message" value="Сигурни ли сте,&#xA;че желаете да изтриете&#xA;“%s” книгата&#xA;от диска?"/>
+			<node name="message" value="Сигурни ли сте,&#10;че желаете да изтриете&#10;“%s” книгата&#10;от диска?"/>
 		</node>
 		<node name="RegisterUserDialog">
 			<node name="title" value="Регистриране на потребител"/>
 			<node name="login" value="Потребителско име"/>
 			<node name="password" value="Парола"/>
 			<node name="confirmPassword" value="Потвърдете паролата"/>
-			<node name="email" value="Имейл" tooltip="Имейлът се използва за възстановяване на вашата парола&#xA;в случай, че я загубите.&#xA;Ако не укажете имейл&#xA;няма да може да възстановите вашата парола."/>
+			<node name="email" value="Имейл" tooltip="Имейлът се използва за възстановяване на вашата парола&#10;в случай, че я загубите.&#10;Ако не укажете имейл&#10;няма да може да възстановите вашата парола."/>
 			<node name="differentPasswords" value="Паролата и потвърдената парола трябва да бъдат еднакви."/>
 		</node>
 		<node name="PasswordRecoveryDialog">
@@ -606,11 +606,11 @@
 		</node>
 		<node name="recoverySuccessfulBox">
 			<node name="title" value="Възстановяване на парола"/>
-			<node name="message" value="Съобщение с понататъшни  инструкции&#xA;беше изпратена на адрес&#xA;%s"/>
+			<node name="message" value="Съобщение с понататъшни  инструкции&#10;беше изпратена на адрес&#10;%s"/>
 		</node>
 		<node name="cantOpenDownloadedFile">
 			<node name="title" value="Грешка при свалянето"/>
-			<node name="message" value="Не може да се отвори сваления файл&#xA;%s."/>
+			<node name="message" value="Не може да се отвори сваления файл&#10;%s."/>
 		</node>
 	</node>
 	<node name="style">

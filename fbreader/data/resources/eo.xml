@@ -3,669 +3,669 @@
 <resources>
 	<node name="libraryView">
 		<node name="authorNode">
-			<node name="expandTree" value="Aperigi liston de libroj" />
-			<node name="collapseTree" value="Kaŝi liston de libroj" />
-			<node name="edit" value="Redakti informojn pri libro" />
-			<node name="unknownAuthor" value="Nekonata aŭtoro" />
+			<node name="expandTree" value="Aperigi liston de libroj"/>
+			<node name="collapseTree" value="Kaŝi liston de libroj"/>
+			<node name="edit" value="Redakti informojn pri libro"/>
+			<node name="unknownAuthor" value="Nekonata aŭtoro"/>
 		</node>
 		<node name="tagNode">
-			<node name="expandTree" value="Elpaki arbon de libroj" />
-			<node name="collapseTree" value="Paki arbon de libroj" />
-			<node name="edit" value="Redakti informojn pri libro" />
-			<node name="clone" value="Kopii informojn pri libro" />
-			<node name="delete" value="Forigi informojn pri libro" />
-			<node name="noTags" value="Neniuj informoj pri la libro estas je dispono" />
+			<node name="expandTree" value="Elpaki arbon de libroj"/>
+			<node name="collapseTree" value="Paki arbon de libroj"/>
+			<node name="edit" value="Redakti informojn pri libro"/>
+			<node name="clone" value="Kopii informojn pri libro"/>
+			<node name="delete" value="Forigi informojn pri libro"/>
+			<node name="noTags" value="Neniuj informoj pri la libro estas je dispono"/>
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" value="Elpaki arbon de libroj" />
-			<node name="collapseTree" value="Paki arbon de libroj" />
+			<node name="expandTree" value="Elpaki arbon de libroj"/>
+			<node name="collapseTree" value="Paki arbon de libroj"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" value="Legi libron" />
-			<node name="edit" value="Redakti informojn pri libro" />
-			<node name="delete" value="Forigi libron" />
+			<node name="read" value="Legi libron"/>
+			<node name="edit" value="Redakti informojn pri libro"/>
+			<node name="delete" value="Forigi libron"/>
 		</node>
 	</node>
 	<node name="networkView">
 		<node name="libraryItemNode">
-			<node name="expandTree" value="Elpaki" />
-			<node name="collapseTree" value="Paki" />
-			<node name="reload" value="Reŝargi" />
-			<node name="openInBrowser" value="Malfermi en retfoliumilo" />
+			<node name="expandTree" value="Elpaki"/>
+			<node name="collapseTree" value="Paki"/>
+			<node name="reload" value="Reŝargi"/>
+			<node name="openInBrowser" value="Malfermi en retfoliumilo"/>
 		</node>
 		<node name="libraryItemRootNode">
-			<node name="expandTree" value="Malfermi katalogon" />
-			<node name="collapseTree" value="Fermi katalogon" />
-			<node name="login" value="Ensaluto" />
-			<node name="logout" value="Elsaluto (%s)" />
-			<node name="reload" value="Reŝargi" />
-			<node name="dontShow" value="'Ne aperigi ĉi tiun katalogon" />
-			<node name="refillAccount" value="Replenigi konton (aktuale: %s)" />
-			<node name="register" value="Registriĝi" />
-			<node name="passwordRecovery" value="Renovigi pasvorton" />
+			<node name="expandTree" value="Malfermi katalogon"/>
+			<node name="collapseTree" value="Fermi katalogon"/>
+			<node name="login" value="Ensaluto"/>
+			<node name="logout" value="Elsaluto (%s)"/>
+			<node name="reload" value="Reŝargi"/>
+			<node name="dontShow" value="'Ne aperigi ĉi tiun katalogon"/>
+			<node name="refillAccount" value="Replenigi konton (aktuale: %s)"/>
+			<node name="register" value="Registriĝi"/>
+			<node name="passwordRecovery" value="Renovigi pasvorton"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="title" value="Serĉi" />
-			<node name="expandTree" value="Elpaki serĉrezultojn" />
-			<node name="collapseTree" value="Paki serĉrezultojn" />
+			<node name="title" value="Serĉi"/>
+			<node name="expandTree" value="Elpaki serĉrezultojn"/>
+			<node name="collapseTree" value="Paki serĉrezultojn"/>
 		</node>
 		<node name="authorNode">
-			<node name="expandTree" value="Elpaki librojn" />
-			<node name="collapseTree" value="Paki librojn" />
+			<node name="expandTree" value="Elpaki librojn"/>
+			<node name="collapseTree" value="Paki librojn"/>
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" value="Elpaki librojn" />
-			<node name="collapseTree" value="Paki librojn" />
+			<node name="expandTree" value="Elpaki librojn"/>
+			<node name="collapseTree" value="Paki librojn"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" value="Legi lokan version de libro" />
-			<node name="delete" value="Forigi lokan version de libro" />
-			<node name="download" value="Elŝuti" />
-			<node name="readDemo" value="Legi demonstraĵon" />
-			<node name="downloadDemo" value="Elŝuti demonstraĵon" />
+			<node name="read" value="Legi lokan version de libro"/>
+			<node name="delete" value="Forigi lokan version de libro"/>
+			<node name="download" value="Elŝuti"/>
+			<node name="readDemo" value="Legi demonstraĵon"/>
+			<node name="downloadDemo" value="Elŝuti demonstraĵon"/>
 			<node name="demo" toBeTranslated="true" value="sample"/>
-			<node name="buy" value="Pagi (%s)" />
+			<node name="buy" value="Pagi (%s)"/>
 		</node>
 	</node>
 	<node name="menu">
-		<node name="bookInfo" value="Informoj pri la libro..." />
-		<node name="toc" value="Enhavo" />
-		<node name="showLibrary" value="Malfermi librejon" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
-		<node name="addBook" toBeTranslated="true" value="Open file..." />
-		<node name="showRecent" toBeTranslated="true" value="Recent books" />
+		<node name="bookInfo" value="Informoj pri la libro..."/>
+		<node name="toc" value="Enhavo"/>
+		<node name="showLibrary" value="Malfermi librejon"/>
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library"/>
+		<node name="addBook" toBeTranslated="true" value="Open file..."/>
+		<node name="showRecent" toBeTranslated="true" value="Recent books"/>
 		<node name="library" value="Knihovna">
-			<node name="showLibrary" value="Malfermi" />
-			<node name="previousBook" value="Antaŭa libro" />
-			<node name="showRecent" value="Lastatempe malfermitaj" />
-			<node name="addBook" value="Aldoni libron..." />
-			<node name="showHelp" value="Pri la programo FBReader" />
+			<node name="showLibrary" value="Malfermi"/>
+			<node name="previousBook" value="Antaŭa libro"/>
+			<node name="showRecent" value="Lastatempe malfermitaj"/>
+			<node name="addBook" value="Aldoni libron..."/>
+			<node name="showHelp" value="Pri la programo FBReader"/>
 		</node>
-		<node name="gotoHome" value="Al komenco de dokumento" />
-		<node name="gotoPageNumber" value="Al la paĝo..." />
-		<node name="gotoSectionStart" value="Al komenco de sekcio" />
-		<node name="gotoSectionEnd" value="Al fino de sekcio" />
-		<node name="nextTOCSection" value="Al sekva ero de enhavo" />
-		<node name="previousTOCSection" value="Al antaŭa ero de enhavo" />
+		<node name="gotoHome" value="Al komenco de dokumento"/>
+		<node name="gotoPageNumber" value="Al la paĝo..."/>
+		<node name="gotoSectionStart" value="Al komenco de sekcio"/>
+		<node name="gotoSectionEnd" value="Al fino de sekcio"/>
+		<node name="nextTOCSection" value="Al sekva ero de enhavo"/>
+		<node name="previousTOCSection" value="Al antaŭa ero de enhavo"/>
 		<node name="navigate" value="Navigi">
-			<node name="gotoHome" value="Al komenco de dokumento" />
-			<node name="gotoPageNumber" value="Al la paĝo..." />
-			<node name="gotoSectionStart" value="Al komenco de sekcio" />
-			<node name="gotoSectionEnd" value="Al fino de sekcio" />
-			<node name="nextTOCSection" value="Al sekva ero de enhavo" />
-			<node name="previousTOCSection" value="Al antaŭa ero de enhavo" />
-			<node name="undo" value="Reen" />
-			<node name="redo" value="Antaŭen" />
+			<node name="gotoHome" value="Al komenco de dokumento"/>
+			<node name="gotoPageNumber" value="Al la paĝo..."/>
+			<node name="gotoSectionStart" value="Al komenco de sekcio"/>
+			<node name="gotoSectionEnd" value="Al fino de sekcio"/>
+			<node name="nextTOCSection" value="Al sekva ero de enhavo"/>
+			<node name="previousTOCSection" value="Al antaŭa ero de enhavo"/>
+			<node name="undo" value="Reen"/>
+			<node name="redo" value="Antaŭen"/>
 		</node>
 		<node name="selection" value="Elekti">
-			<node name="copyToClipboard" value="Kopii" />
-			<node name="openInDictionary" value="Malfermi en vortaro" />
-			<node name="clearSelection" value="Malplenigi elekton" />
+			<node name="copyToClipboard" value="Kopii"/>
+			<node name="openInDictionary" value="Malfermi en vortaro"/>
+			<node name="clearSelection" value="Malplenigi elekton"/>
 		</node>
 		<node name="search" value="Serĉi">
-			<node name="search" value="Serĉi la tekston..." />
-			<node name="findNext" value="Trovi sekvan" />
-			<node name="findPrevious" value="Trovi antaŭan" />
+			<node name="search" value="Serĉi la tekston..."/>
+			<node name="findNext" value="Trovi sekvan"/>
+			<node name="findPrevious" value="Trovi antaŭan"/>
 		</node>
 		<node name="view" value="Aperigi">
-			<node name="rotate" value="Turni ekranon" />
-			<node name="toggleFullscreen" value="Tutekrana reĝimo" />
-			<node name="toggleIndicator" value="Baskuligo de ekrano" />
+			<node name="rotate" value="Turni ekranon"/>
+			<node name="toggleFullscreen" value="Tutekrana reĝimo"/>
+			<node name="toggleIndicator" value="Baskuligo de ekrano"/>
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
-		<node name="quit" value="Fermi" />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..."/>
+		<node name="quit" value="Fermi"/>
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
-			<node name="label" toBeTranslated="true" value="Read Book" />
-			<node name="tooltip" value="Reĝimo de legado" />
+			<node name="label" toBeTranslated="true" value="Read Book"/>
+			<node name="tooltip" value="Reĝimo de legado"/>
 		</node>
 		<node name="showLibrary">
-			<node name="label" toBeTranslated="true" value="Library" />
-			<node name="tooltip" value="Librejo - la tuta arbo" />
-			<node name="popup" value="Lastatempe malfermitaj libroj" />
+			<node name="label" toBeTranslated="true" value="Library"/>
+			<node name="tooltip" value="Librejo - la tuta arbo"/>
+			<node name="popup" value="Lastatempe malfermitaj libroj"/>
 		</node>
 		<node name="showRecent">
-			<node name="label" toBeTranslated="true" value="Recent Books" />
-			<node name="tooltip" value="Listo de lastatempe malfermitaj libroj" />
+			<node name="label" toBeTranslated="true" value="Recent Books"/>
+			<node name="tooltip" value="Listo de lastatempe malfermitaj libroj"/>
 		</node>
 		<node name="byAuthor">
-			<node name="label" toBeTranslated="true" value="By Author" />
-			<node name="tooltip" value="Ordigi librojn laŭ aŭtoroj" />
+			<node name="label" toBeTranslated="true" value="By Author"/>
+			<node name="tooltip" value="Ordigi librojn laŭ aŭtoroj"/>
 		</node>
 		<node name="byTag">
-			<node name="label" toBeTranslated="true" value="By Tag" />
-			<node name="tooltip" value="Ordigi librojn laŭ kategorioj" />
+			<node name="label" toBeTranslated="true" value="By Tag"/>
+			<node name="tooltip" value="Ordigi librojn laŭ kategorioj"/>
 		</node>
 		<node name="addBook">
-			<node name="label" toBeTranslated="true" value="Add File" />
-			<node name="tooltip" value="Aldoni en librejon" />
+			<node name="label" toBeTranslated="true" value="Add File"/>
+			<node name="tooltip" value="Aldoni en librejon"/>
 		</node>
 		<node name="showNetLibrary">
-			<node name="label" toBeTranslated="true" value="Network" />
-			<node name="tooltip" value="Serĉi en reta librejo" />
+			<node name="label" toBeTranslated="true" value="Network"/>
+			<node name="tooltip" value="Serĉi en reta librejo"/>
 		</node>
 		<node name="searchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Simple Search" />
-			<node name="tooltip" value="Serĉi en la reto" />
+			<node name="label" toBeTranslated="true" value="Simple Search"/>
+			<node name="tooltip" value="Serĉi en la reto"/>
 		</node>
 		<node name="advancedSearchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Search" />
-			<node name="tooltip" value="Detala serĉado en la reto" />
+			<node name="label" toBeTranslated="true" value="Search"/>
+			<node name="tooltip" value="Detala serĉado en la reto"/>
 		</node>
 		<node name="gotoHome">
-			<node name="label" toBeTranslated="true" value="Go to Start" />
-			<node name="tooltip" value="Iru al komenco de teksto" />
+			<node name="label" toBeTranslated="true" value="Go to Start"/>
+			<node name="tooltip" value="Iru al komenco de teksto"/>
 		</node>
 		<node name="undo">
-			<node name="label" toBeTranslated="true" value="Go Back" />
-			<node name="tooltip" value="Reen" />
+			<node name="label" toBeTranslated="true" value="Go Back"/>
+			<node name="tooltip" value="Reen"/>
 		</node>
 		<node name="redo">
-			<node name="label" toBeTranslated="true" value="Go Forward" />
-			<node name="tooltip" value="Denove" />
+			<node name="label" toBeTranslated="true" value="Go Forward"/>
+			<node name="tooltip" value="Denove"/>
 		</node>
 		<node name="gotoPageNumberWithParameter">
-			<node name="label" toBeTranslated="true" value="Go to Page" />
-			<node name="tooltip" value="Iri al la paĝo" />
+			<node name="label" toBeTranslated="true" value="Go to Page"/>
+			<node name="tooltip" value="Iri al la paĝo"/>
 		</node>
 		<node name="toc">
-			<node name="label" toBeTranslated="true" value="TOC" />
-			<node name="tooltip" value="Enhavo" />
+			<node name="label" toBeTranslated="true" value="TOC"/>
+			<node name="tooltip" value="Enhavo"/>
 		</node>
 		<node name="search">
-			<node name="label" toBeTranslated="true" value="Search" />
-			<node name="tooltip" value="Serĉi tekston" />
+			<node name="label" toBeTranslated="true" value="Search"/>
+			<node name="tooltip" value="Serĉi tekston"/>
 		</node>
 		<node name="findNext">
-			<node name="label" toBeTranslated="true" value="Next" />
-			<node name="tooltip" value="Trovi sekvan" />
+			<node name="label" toBeTranslated="true" value="Next"/>
+			<node name="tooltip" value="Trovi sekvan"/>
 		</node>
 		<node name="findPrevious">
-			<node name="label" toBeTranslated="true" value="Previous" />
-			<node name="tooltip" value="Trovi antaŭan" />
+			<node name="label" toBeTranslated="true" value="Previous"/>
+			<node name="tooltip" value="Trovi antaŭan"/>
 		</node>
 		<node name="rotate">
-			<node name="label" toBeTranslated="true" value="Rotate" />
-			<node name="tooltip" value="Turni tekston" />
+			<node name="label" toBeTranslated="true" value="Rotate"/>
+			<node name="tooltip" value="Turni tekston"/>
 		</node>
 		<node name="showHelp">
-			<node name="label" toBeTranslated="true" value="About" />
-			<node name="tooltip" value="Pri la programo FBReader" />
+			<node name="label" toBeTranslated="true" value="About"/>
+			<node name="tooltip" value="Pri la programo FBReader"/>
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter" />
-			<node name="tooltip" toBeTranslated="true" value="Filter" />
+			<node name="label" toBeTranslated="true" value="Filter"/>
+			<node name="tooltip" toBeTranslated="true" value="Filter"/>
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog"/>
 		</node>
 		<node name="bookInfo">
-			<node name="label" toBeTranslated="true" value="Book Info" />
-			<node name="tooltip" value="Informoj pri libro" />
+			<node name="label" toBeTranslated="true" value="Book Info"/>
+			<node name="tooltip" value="Informoj pri libro"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences" />
-			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Library Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Network Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="System Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Reading Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog"/>
 		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
-			<node name="go" value="&amp;Fari" />
-			<node name="thisOnly" value="Nur ĉi tiu" />
-			<node name="withSubtags" value="Kun subkategorioj" />
-			<node name="removeLink" value="Forigi el librejo" />
-			<node name="removeFile" value="Forigi el disko" />
-			<node name="yesToAll" value="&amp;Jes por ĉiuj" />
-			<node name="buy" value="&amp;Pagi" />
-			<node name="buyAndDownload" value="Pagi kaj &amp;elŝuti" />
+			<node name="go" value="&amp;Fari"/>
+			<node name="thisOnly" value="Nur ĉi tiu"/>
+			<node name="withSubtags" value="Kun subkategorioj"/>
+			<node name="removeLink" value="Forigi el librejo"/>
+			<node name="removeFile" value="Forigi el disko"/>
+			<node name="yesToAll" value="&amp;Jes por ĉiuj"/>
+			<node name="buy" value="&amp;Pagi"/>
+			<node name="buyAndDownload" value="Pagi kaj &amp;elŝuti"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options"/>
 			<node name="tab">
 				<node name="Library" value="Librejo">
-					<node name="bookPath" value="Dosierujo kun libroj" />
-					<node name="lookInSubdirectories" value="Libroj en subdosierujoj" />
-					<node name="collectBooksWithoutMetaInfo" value="Amasigi librojn sen meta-informoj" />
-					<node name="downloadDirectory" value="Dosierujo por elŝutitaj libroj" />
+					<node name="bookPath" value="Dosierujo kun libroj"/>
+					<node name="lookInSubdirectories" value="Libroj en subdosierujoj"/>
+					<node name="collectBooksWithoutMetaInfo" value="Amasigi librojn sen meta-informoj"/>
+					<node name="downloadDirectory" value="Dosierujo por elŝutitaj libroj"/>
 				</node>
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options"/>
 			<node name="tab">
 				<node name="NetworkLibrary" value="Reta serĉado">
 				</node>
 				<node name="Connection" value="Connection">
-					<node name="useProxy" value="Uzi prokuran servilon" />
-					<node name="proxyHost" value="Prokura servilo" />
-					<node name="proxyPort" value="Pordo de prokura servilo" />
-					<node name="timeout" value="Tempolimo por ekkonektiĝo en sekundoj" />
+					<node name="useProxy" value="Uzi prokuran servilon"/>
+					<node name="proxyHost" value="Prokura servilo"/>
+					<node name="proxyPort" value="Pordo de prokura servilo"/>
+					<node name="timeout" value="Tempolimo por ekkonektiĝo en sekundoj"/>
 				</node>
 				<node name="Web" value="Reto">
-					<node name="enableIntegration" value="Malfermi eksterajn ligilojn en %s" />
-					<node name="defaultText" value="Malfermi eksterajn ligilojn en la retfoliumilo" />
-					<node name="choice" value="Uzi la retfoliumilon" />
-					<node name="command" value="Enmetu komandon" />
+					<node name="enableIntegration" value="Malfermi eksterajn ligilojn en %s"/>
+					<node name="defaultText" value="Malfermi eksterajn ligilojn en la retfoliumilo"/>
+					<node name="choice" value="Uzi la retfoliumilon"/>
+					<node name="command" value="Enmetu komandon"/>
 				</node>
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - System Options"/>
 			<node name="tab">
 				<node name="Language" value="Lingvo">
-					<node name="autoDetect" value="Aŭtomata detekto de lingvo kaj kodado" />
-					<node name="defaultLanguage" value="Defaŭlta lingvo" />
-					<node name="defaultEncodingSet" value="Defaŭlta kodaro" />
-					<node name="defaultEncoding" value="Baza kodado" />
-					<node name="useWindows1252Hack" value="Uzi windows-1252 anstataŭ iso-8859-1" />
+					<node name="autoDetect" value="Aŭtomata detekto de lingvo kaj kodado"/>
+					<node name="defaultLanguage" value="Defaŭlta lingvo"/>
+					<node name="defaultEncodingSet" value="Defaŭlta kodaro"/>
+					<node name="defaultEncoding" value="Baza kodado"/>
+					<node name="useWindows1252Hack" value="Uzi windows-1252 anstataŭ iso-8859-1"/>
 				</node>
 				<node name="Config" value="Agordoj">
-					<node name="autoSave" value="Aŭtomata konservado" />
-					<node name="timeout" value="Intervalo inter unuopaj konservoj en sekundoj" />
+					<node name="autoSave" value="Aŭtomata konservado"/>
+					<node name="timeout" value="Intervalo inter unuopaj konservoj en sekundoj"/>
 				</node>
 				<node name="Dictionary" value="Vortaro">
-					<node name="enableIntegration" value="Ŝalti integradon kun %s" />
-					<node name="defaultText" value="Ŝalti integradon kun vortaro" />
-					<node name="choice" value="Integrado kun" />
-					<node name="singleClickOpen" value="Malfermi per unu klako" />
+					<node name="enableIntegration" value="Ŝalti integradon kun %s"/>
+					<node name="defaultText" value="Ŝalti integradon kun vortaro"/>
+					<node name="choice" value="Integrado kun"/>
+					<node name="singleClickOpen" value="Malfermi per unu klako"/>
 				</node>
 				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Reagi pri malpremo de klavo, ne pri premo de klavo" />
-					<node name="minStylusPressure" value="Minimuma grifelpremo" />
-					<node name="maxStylusPressure" value="Maksimuma grifelpremo" />
+					<node name="keyActionOnRelease" value="Reagi pri malpremo de klavo, ne pri premo de klavo"/>
+					<node name="minStylusPressure" value="Minimuma grifelpremo"/>
+					<node name="maxStylusPressure" value="Maksimuma grifelpremo"/>
 				</node>
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options"/>
 			<node name="tab">
 				<node name="Scrolling" value="Rulumado de teksto">
-					<node name="keyScrollDelay" value="Malfruiĝo de rulumado en milisekundoj" />
-					<node name="keyLinesToScroll" value="Nombro de rulumotaj linioj ĉe rulumado laŭ linioj" />
-					<node name="keyLinesToKeep" value="Nombro de la linioj, kiuj ne estos surkovritaj" />
-					<node name="enableTapScrolling" value="Rulumado per tuŝekrano" />
-					<node name="fingerOnly" value="Rulumado nur per tuŝekrano" />
+					<node name="keyScrollDelay" value="Malfruiĝo de rulumado en milisekundoj"/>
+					<node name="keyLinesToScroll" value="Nombro de rulumotaj linioj ĉe rulumado laŭ linioj"/>
+					<node name="keyLinesToKeep" value="Nombro de la linioj, kiuj ne estos surkovritaj"/>
+					<node name="enableTapScrolling" value="Rulumado per tuŝekrano"/>
+					<node name="fingerOnly" value="Rulumado nur per tuŝekrano"/>
 				</node>
 				<node name="Selection" value="Elektado">
-					<node name="enableSelection" value="Permesi elektadon de teksto" />
+					<node name="enableSelection" value="Permesi elektadon de teksto"/>
 				</node>
 				<node name="Indicator" value="Indikilo">
 					<node name="type" value="Aperigu kiel">
-						<node name="osScrollbar" value="Rulumskalo OS" />
-						<node name="fbIndicator" value="Indikilo en malnova stilo" />
-						<node name="none" value="Ne aperigi" />
+						<node name="osScrollbar" value="Rulumskalo OS"/>
+						<node name="fbIndicator" value="Indikilo en malnova stilo"/>
+						<node name="none" value="Ne aperigi"/>
 					</node>
-					<node name="height" value="Alto de indikilo" />
-					<node name="offset" value="Deŝovo de teksto" />
-					<node name="pageNumber" value="Aperigi la pozicion en formo de numeroj" />
-					<node name="time" value="Aperigi tempon" />
-					<node name="fontSize" value="Tipara grando" />
-					<node name="tocMarks" value="Aperigi la markojn TOC" />
-					<node name="navigation" value="Permesi navigadon" />
+					<node name="height" value="Alto de indikilo"/>
+					<node name="offset" value="Deŝovo de teksto"/>
+					<node name="pageNumber" value="Aperigi la pozicion en formo de numeroj"/>
+					<node name="time" value="Aperigi tempon"/>
+					<node name="fontSize" value="Tipara grando"/>
+					<node name="tocMarks" value="Aperigi la markojn TOC"/>
+					<node name="navigation" value="Permesi navigadon"/>
 				</node>
 				<node name="Rotation" value="Rotacio">
 					<node name="direction" value="Direkto de rotacio">
-						<node name="disabled" value="Malŝaltita" />
-						<node name="clockwise" value="Je 90 gradoj laŭhorloĝe" />
-						<node name="counterclockwise" value="Je 90 gradoj nelaŭhorloĝe" />
-						<node name="180" value="Je 180 gradoj" />
-						<node name="cycle" value="Cikle alterni ĉiujn kvar direktojn" />
+						<node name="disabled" value="Malŝaltita"/>
+						<node name="clockwise" value="Je 90 gradoj laŭhorloĝe"/>
+						<node name="counterclockwise" value="Je 90 gradoj nelaŭhorloĝe"/>
+						<node name="180" value="Je 180 gradoj"/>
+						<node name="cycle" value="Cikle alterni ĉiujn kvar direktojn"/>
 					</node>
 				</node>
 				<node name="Keys" value="Fulmoklavoj">
-					<node name="grabSystemKeys" value="Kapti sistemajn fulmoklavojn" />
-					<node name="separate" value="Propraj fulmoklavoj, dependantaj de tekst-orientiĝo" />
+					<node name="grabSystemKeys" value="Kapti sistemajn fulmoklavojn"/>
+					<node name="separate" value="Propraj fulmoklavoj, dependantaj de tekst-orientiĝo"/>
 					<node name="orientation" value="Orientiĝo">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+						<node name="degrees0" toBeTranslated="true" value="0 Degrees"/>
+						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise"/>
+						<node name="degrees180" toBeTranslated="true" value="180 Degrees"/>
+						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise"/>
 					</node>
 					<node name="action">
-						<node name="none" value="Neniu" />
-						<node name="showLibrary" value="Aperigi librejon" />
-						<node name="showNetLibrary" toBeTranslated="true" value="Aperigu retan librejon" />
-						<node name="showRecent" value="Aperigu lastatempe malfermitajn librojn" />
-						<node name="previousBook" value="Malfermi la antaŭan libron" />
-						<node name="toc" value="Aperigi enhavon" />
-						<node name="gotoHome" value="Iri al komenco de teksto" />
-						<node name="gotoSectionStart" value="Iri al komenco de sekcio" />
-						<node name="gotoSectionEnd" value="Iri al fino de sekcio" />
-						<node name="nextTOCSection" value="Iri al sekva TOC-sekcio" />
-						<node name="previousTOCSection" value="Iri al antaŭa TOC-sekcio" />
-						<node name="pageForward" value="Rulumo je unu paĝo antaŭen" />
-						<node name="pageBackward" value="Rulumo je unu paĝo malantaŭen" />
-						<node name="lineForward" value="Rulumo je unu linio antaŭen" />
-						<node name="lineBackward" value="Rulumo je unu linio malantaŭen" />
-						<node name="undo" value="Reen" />
-						<node name="redo" value="Denove" />
-						<node name="copyToClipboard" value="Kopii la tekston" />
-						<node name="openInDictionary" value="Malfermi la elektitan tekston en vortaro" />
-						<node name="clearSelection" value="Malplenigi elekton" />
-						<node name="search" value="Serĉi" />
-						<node name="findPrevious" value="Trovi antaŭan" />
-						<node name="findNext" value="Trovi sekvan" />
-						<node name="increaseFont" value="Pligrandigi tiparon" />
-						<node name="decreaseFont" value="Malpligrandigi tiparon" />
-						<node name="toggleIndicator" value="Aperigi indikilon" />
-						<node name="toggleFullscreen" value="Tutekrana reĝimo" />
-						<node name="rotate" value="Turni ekranon" />
-						<node name="addBook" value="Aldoni libron" />
-						<node name="cancel" value="Rezigni" />
-						<node name="quit" value="Fermi" />
-						<node name="bookInfo" value="Informoj pri libro" />
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
+						<node name="none" value="Neniu"/>
+						<node name="showLibrary" value="Aperigi librejon"/>
+						<node name="showNetLibrary" toBeTranslated="true" value="Aperigu retan librejon"/>
+						<node name="showRecent" value="Aperigu lastatempe malfermitajn librojn"/>
+						<node name="previousBook" value="Malfermi la antaŭan libron"/>
+						<node name="toc" value="Aperigi enhavon"/>
+						<node name="gotoHome" value="Iri al komenco de teksto"/>
+						<node name="gotoSectionStart" value="Iri al komenco de sekcio"/>
+						<node name="gotoSectionEnd" value="Iri al fino de sekcio"/>
+						<node name="nextTOCSection" value="Iri al sekva TOC-sekcio"/>
+						<node name="previousTOCSection" value="Iri al antaŭa TOC-sekcio"/>
+						<node name="pageForward" value="Rulumo je unu paĝo antaŭen"/>
+						<node name="pageBackward" value="Rulumo je unu paĝo malantaŭen"/>
+						<node name="lineForward" value="Rulumo je unu linio antaŭen"/>
+						<node name="lineBackward" value="Rulumo je unu linio malantaŭen"/>
+						<node name="undo" value="Reen"/>
+						<node name="redo" value="Denove"/>
+						<node name="copyToClipboard" value="Kopii la tekston"/>
+						<node name="openInDictionary" value="Malfermi la elektitan tekston en vortaro"/>
+						<node name="clearSelection" value="Malplenigi elekton"/>
+						<node name="search" value="Serĉi"/>
+						<node name="findPrevious" value="Trovi antaŭan"/>
+						<node name="findNext" value="Trovi sekvan"/>
+						<node name="increaseFont" value="Pligrandigi tiparon"/>
+						<node name="decreaseFont" value="Malpligrandigi tiparon"/>
+						<node name="toggleIndicator" value="Aperigi indikilon"/>
+						<node name="toggleFullscreen" value="Tutekrana reĝimo"/>
+						<node name="rotate" value="Turni ekranon"/>
+						<node name="addBook" value="Aldoni libron"/>
+						<node name="cancel" value="Rezigni"/>
+						<node name="quit" value="Fermi"/>
+						<node name="bookInfo" value="Informoj pri libro"/>
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog"/>
 					</node>
-					<node name="quitOnCancel" value="Fermi" />
-					<node name="keyDelay" value="Malfruiĝo de klavpremo" />
+					<node name="quitOnCancel" value="Fermi"/>
+					<node name="keyDelay" value="Malfruiĝo de klavpremo"/>
 				</node>
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options"/>
 			<node name="tab">
 				<node name="CSS" value="CSS">
-					<node name="overrideSpecifiedFonts" value="Ĉiam uzi tiparojn de uzanto" />
+					<node name="overrideSpecifiedFonts" value="Ĉiam uzi tiparojn de uzanto"/>
 				</node>
 				<node name="Margins" value="Marĝenoj">
-					<node name="left" value="Maldekstra marĝeno" />
-					<node name="right" value="Dekstra marĝeno" />
-					<node name="top" value="Supra marĝeno" />
-					<node name="bottom" value="Malsupra marĝeno" />
+					<node name="left" value="Maldekstra marĝeno"/>
+					<node name="right" value="Dekstra marĝeno"/>
+					<node name="top" value="Supra marĝeno"/>
+					<node name="bottom" value="Malsupra marĝeno"/>
 				</node>
 				<node name="Format" value="Formato">
-					<node name="optionsFor" value="Agordoj de formato" />
+					<node name="optionsFor" value="Agordoj de formato"/>
 					<node name="lineSpacing" value="Interlinia distanco">
-						<node name="unchanged" value="&lt;sen ŝanĝoj&gt;" />
+						<node name="unchanged" value="&lt;sen ŝanĝoj&gt;"/>
 					</node>
-					<node name="firstLineIndent" value="Krommarĝeno de la unua linio" />
+					<node name="firstLineIndent" value="Krommarĝeno de la unua linio"/>
 					<node name="alignment" value="Ĝisrandigo">
-						<node name="left" value="Maldekstrigi" />
-						<node name="right" value="Dekstrigi" />
-						<node name="center" value="Centrigi" />
-						<node name="justify" value="En blokon" />
-						<node name="unchanged" value="&lt;sen ŝanĝoj&gt;" />
+						<node name="left" value="Maldekstrigi"/>
+						<node name="right" value="Dekstrigi"/>
+						<node name="center" value="Centrigi"/>
+						<node name="justify" value="En blokon"/>
+						<node name="unchanged" value="&lt;sen ŝanĝoj&gt;"/>
 					</node>
-					<node name="spaceBefore" value="Spaco antaŭ" />
-					<node name="spaceAfter" value="Spaco post" />
-					<node name="startIndent" value="Komenco de krommarĝeno" />
-					<node name="endIndent" value="Fino de krommarĝeno" />
+					<node name="spaceBefore" value="Spaco antaŭ"/>
+					<node name="spaceAfter" value="Spaco post"/>
+					<node name="startIndent" value="Komenco de krommarĝeno"/>
+					<node name="endIndent" value="Fino de krommarĝeno"/>
 				</node>
 				<node name="Styles" value="Stiloj">
-					<node name="optionsFor" value="Agordoj de stiloj" />
+					<node name="optionsFor" value="Agordoj de stiloj"/>
 					<node name="fontFamily" value="Tipara familio">
-						<node name="unchanged" value="&lt;sen ŝanĝoj&gt;" />
+						<node name="unchanged" value="&lt;sen ŝanĝoj&gt;"/>
 					</node>
-					<node name="fontSize" value="Tipara grando" />
-					<node name="fontSizeDifference" value="Diferenco en grando" />
-					<node name="bold" value="Dika" />
-					<node name="italic" value="Kursiva" />
-					<node name="allowHyphenations" value="Permesi vortdividon" />
-					<node name="autoHyphenations" value="Aŭtomata vortdivido" />
+					<node name="fontSize" value="Tipara grando"/>
+					<node name="fontSizeDifference" value="Diferenco en grando"/>
+					<node name="bold" value="Dika"/>
+					<node name="italic" value="Kursiva"/>
+					<node name="allowHyphenations" value="Permesi vortdividon"/>
+					<node name="autoHyphenations" value="Aŭtomata vortdivido"/>
 				</node>
 				<node name="Colors" value="Koloroj">
 					<node name="colorFor" value="Koloro de">
-						<node name="background" value="Fono" />
-						<node name="selectionBackground" value="Elekto de fono" />
-						<node name="text" value="Ordinara teksto" />
-						<node name="internalLink" value="Interna ligilo" />
-						<node name="externalLink" value="Ekstera ligilo" />
-						<node name="bookLink" value="Ligilo al alia libro" />
-						<node name="highlighted" value="Markita teksto" />
-						<node name="treeLines" value="Arbo" />
-						<node name="indicator" value="Indikilo" />
+						<node name="background" value="Fono"/>
+						<node name="selectionBackground" value="Elekto de fono"/>
+						<node name="text" value="Ordinara teksto"/>
+						<node name="internalLink" value="Interna ligilo"/>
+						<node name="externalLink" value="Ekstera ligilo"/>
+						<node name="bookLink" value="Ligilo al alia libro"/>
+						<node name="highlighted" value="Markita teksto"/>
+						<node name="treeLines" value="Arbo"/>
+						<node name="indicator" value="Indikilo"/>
 					</node>
 				</node>
 			</node>
 		</node>
 		<node name="InfoDialog">
-			<node name="title" value="FBReader - Informoj pri libro" />
+			<node name="title" value="FBReader - Informoj pri libro"/>
 			<node name="tab">
 				<node name="Common" value="Bazaj informoj">
-					<node name="file" value="Dosiero" />
-					<node name="title" value="Titolo" />
-					<node name="language" value="Lingvo" />
-					<node name="encodingSet" value="Tipo de kodaro" />
-					<node name="encoding" value="Kodado" />
+					<node name="file" value="Dosiero"/>
+					<node name="title" value="Titolo"/>
+					<node name="language" value="Lingvo"/>
+					<node name="encodingSet" value="Tipo de kodaro"/>
+					<node name="encoding" value="Kodado"/>
 				</node>
 				<node name="Authors" value="Aŭtoroj">
-					<node name="authorDisplayName" value="Nomo de aŭtoro" />
+					<node name="authorDisplayName" value="Nomo de aŭtoro"/>
 				</node>
 				<node name="Series" value="Serio">
-					<node name="seriesTitle" value="Titolo de serio" />
-					<node name="bookIndex" value="Numero de libro" />
+					<node name="seriesTitle" value="Titolo de serio"/>
+					<node name="bookIndex" value="Numero de libro"/>
 				</node>
 				<node name="Tags" value="Kategorioj">
-					<node name="tags" value="Listo de kategorioj" />
+					<node name="tags" value="Listo de kategorioj"/>
 				</node>
 				<node name="Text" value="Teksto">
-					<node name="breakType" value="Nova alineo post" />
-					<node name="ignoreIndent" value="Ignori la krommarĝenon malpli grandan ol" />
-					<node name="buildTOC" value="Krei kapon" />
-					<node name="emptyLines" value="Malplenigi alineojn antaŭ nova sekcio" />
+					<node name="breakType" value="Nova alineo post"/>
+					<node name="ignoreIndent" value="Ignori la krommarĝenon malpli grandan ol"/>
+					<node name="buildTOC" value="Krei kapon"/>
+					<node name="emptyLines" value="Malplenigi alineojn antaŭ nova sekcio"/>
 				</node>
 				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
-					<node name="breakType" value="Nova alineo post" />
-					<node name="ignoreIndent" value="Ignori la krommarĝenon malpli grandan ol" />
-					<node name="buildTOC" value="Krei kapon" />
-					<node name="emptyLines" value="Malplenigi alineojn antaŭ nova sekcio" />
+					<node name="breakType" value="Nova alineo post"/>
+					<node name="ignoreIndent" value="Ignori la krommarĝenon malpli grandan ol"/>
+					<node name="buildTOC" value="Krei kapon"/>
+					<node name="emptyLines" value="Malplenigi alineojn antaŭ nova sekcio"/>
 				</node>
 			</node>
 		</node>
 		<node name="AuthorInfoDialog">
-			<node name="title" value="FBReader - Informoj pri aŭtoro" />
-			<node name="name" value="Nomo de aŭtoro" />
-			<node name="sortKey" value="Ordiga ŝlosilo de aŭtoro" />
+			<node name="title" value="FBReader - Informoj pri aŭtoro"/>
+			<node name="name" value="Nomo de aŭtoro"/>
+			<node name="sortKey" value="Ordiga ŝlosilo de aŭtoro"/>
 		</node>
 		<node name="addFileDialog">
-			<node name="title" value="FBReader - Aldoni libron en librejon" />
+			<node name="title" value="FBReader - Aldoni libron en librejon"/>
 		</node>
 		<node name="textSearchDialog">
-			<node name="title" value="Serĉi tekston" />
-			<node name="text" value="Teksto" />
-			<node name="ignoreCase" value="&amp;Ignori usklecon" />
-			<node name="wholeText" value="&amp;En la tuta teksto" />
-			<node name="backward" value="&amp;Reen" />
-			<node name="currentSection" value="&amp;Nur ĉi tiu sekcio" />
+			<node name="title" value="Serĉi tekston"/>
+			<node name="text" value="Teksto"/>
+			<node name="ignoreCase" value="&amp;Ignori usklecon"/>
+			<node name="wholeText" value="&amp;En la tuta teksto"/>
+			<node name="backward" value="&amp;Reen"/>
+			<node name="currentSection" value="&amp;Nur ĉi tiu sekcio"/>
 		</node>
 		<node name="networkSearchDialog">
-			<node name="title" value="Reta serĉado" />
-			<node name="titleAndSeries" value="Titolo de libro / serio" />
-			<node name="author" value="Aŭtoro" />
-			<node name="category" value="Kategorio" />
-			<node name="description" value="Priskribo" />
-			<node name="annotation" value="Serĉrezultoj por: %s" />
+			<node name="title" value="Reta serĉado"/>
+			<node name="titleAndSeries" value="Titolo de libro / serio"/>
+			<node name="author" value="Aŭtoro"/>
+			<node name="category" value="Kategorio"/>
+			<node name="description" value="Priskribo"/>
+			<node name="annotation" value="Serĉrezultoj por: %s"/>
 		</node>
 		<node name="gotoPageDialog">
-			<node name="title" value="Iri al la paĝo" />
-			<node name="pageNumber" value="Iri al la paĝo n-ro" />
+			<node name="title" value="Iri al la paĝo"/>
+			<node name="pageNumber" value="Iri al la paĝo n-ro"/>
 		</node>
 		<node name="editTagDialog">
-			<node name="title" value="Redakti / kopii kategorion" />
-			<node name="name" value="Nomo" />
-			<node name="includeSubtags" value="Inkluzive de subkategorioj" />
+			<node name="title" value="Redakti / kopii kategorion"/>
+			<node name="name" value="Nomo"/>
+			<node name="includeSubtags" value="Inkluzive de subkategorioj"/>
 		</node>
 		<node name="cloneTagDialog">
-			<node name="title" value="Kopii kategorion" />
-			<node name="name" value="Nomo" />
-			<node name="includeSubtags" value="Inkluzive de subkategorioj" />
+			<node name="title" value="Kopii kategorion"/>
+			<node name="name" value="Nomo"/>
+			<node name="includeSubtags" value="Inkluzive de subkategorioj"/>
 		</node>
 		<node name="removeBookBox">
-			<node name="title" value="Forigi libron" />
-			<node name="message" value="Ĉu forigi la libron &#10;“%s”&#10; el librejo?" />
-			<node name="deleteFile" value="Ĉu vi certas, ke vi vere deziras forigi la dosieron&#10;“%s”&#10;el via disko?" />
+			<node name="title" value="Forigi libron"/>
+			<node name="message" value="Ĉu forigi la libron &#10;“%s”&#10; el librejo?"/>
+			<node name="deleteFile" value="Ĉu vi certas, ke vi vere deziras forigi la dosieron&#10;“%s”&#10;el via disko?"/>
 		</node>
 		<node name="removeTagBox">
-			<node name="title" value="Forigi kategorion" />
-			<node name="message" value="Ĉu forigi la kategorion “%s”?" />
+			<node name="title" value="Forigi kategorion"/>
+			<node name="message" value="Ĉu forigi la kategorion “%s”?"/>
 		</node>
 		<node name="openBookErrorBox">
-			<node name="title" value="Eraro" />
-			<node name="message" value="Ne eblas malfermi:&#10;%s" />
+			<node name="title" value="Eraro"/>
+			<node name="message" value="Ne eblas malfermi:&#10;%s"/>
 		</node>
 		<node name="removeFileErrorBox">
-			<node name="title" value="Eraro" />
-			<node name="message" value="Ne eblas forigi la dosieron&#10;%s" />
+			<node name="title" value="Eraro"/>
+			<node name="message" value="Ne eblas forigi la dosieron&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
-			<node name="title" value="Eraro" />
-			<node name="message" value="Pardonu, helpdosiero ne estis trovita" />
+			<node name="title" value="Eraro"/>
+			<node name="message" value="Pardonu, helpdosiero ne estis trovita"/>
 		</node>
 		<node name="networkError">
-			<node name="emptyLibrariesList" value="Listo de librejoj estas malplena" />
-			<node name="authenticationFailed" value="Ensaluto malsukcesis" />
-			<node name="internalError" value="Eraro de ervilo" />
-			<node name="purchaseNotEnoughMoney" value="Mono ne sufiĉas" />
-			<node name="purchaseMissingBook" value="Mankas libro" />
-			<node name="purchaseAlreadyPurchased" value="Pagita" />
-			<node name="bookNotPurchased" value="Pago por la libro ne okazis" />
-			<node name="downloadLimitExceeded" value="Transpasita elŝut-limigo" />
-			<node name="unsupportedOperation" value="Nesubtenata ago" />
-			<node name="loginAlreadyTaken" value="Ĉi tiu salutnomo estas jam okupita" />
-			<node name="loginNotSpecified" value="Bonvolu enmeti alian salutnomon" />
-			<node name="passwordNotSpecified" value="Bonvolu enmeti pasvorton" />
-			<node name="emailNotSpecified" value="Bonvolu enmeti retpoŝt-adreson" />
-			<node name="invalidEMail" value="Malĝusta retpoŝt-adreso" />
-			<node name="tooManyRegistrations" value="Tro multe da registriĝoj por IP;&#10;provu denove post kelkaj minutoj" />
-			<node name="noUserEmail" value="La uzanto ne estis registrita kun ĉi tiu retpoŝt-adreso" />
+			<node name="emptyLibrariesList" value="Listo de librejoj estas malplena"/>
+			<node name="authenticationFailed" value="Ensaluto malsukcesis"/>
+			<node name="internalError" value="Eraro de ervilo"/>
+			<node name="purchaseNotEnoughMoney" value="Mono ne sufiĉas"/>
+			<node name="purchaseMissingBook" value="Mankas libro"/>
+			<node name="purchaseAlreadyPurchased" value="Pagita"/>
+			<node name="bookNotPurchased" value="Pago por la libro ne okazis"/>
+			<node name="downloadLimitExceeded" value="Transpasita elŝut-limigo"/>
+			<node name="unsupportedOperation" value="Nesubtenata ago"/>
+			<node name="loginAlreadyTaken" value="Ĉi tiu salutnomo estas jam okupita"/>
+			<node name="loginNotSpecified" value="Bonvolu enmeti alian salutnomon"/>
+			<node name="passwordNotSpecified" value="Bonvolu enmeti pasvorton"/>
+			<node name="emailNotSpecified" value="Bonvolu enmeti retpoŝt-adreson"/>
+			<node name="invalidEMail" value="Malĝusta retpoŝt-adreso"/>
+			<node name="tooManyRegistrations" value="Tro multe da registriĝoj por IP;&#10;provu denove post kelkaj minutoj"/>
+			<node name="noUserEmail" value="La uzanto ne estis registrita kun ĉi tiu retpoŝt-adreso"/>
 			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
-			<node name="title" value="Eraro ĉe elŝutado" />
-			<node name="message" value="Ne eblas nun elŝuti la libron" />
+			<node name="title" value="Eraro ĉe elŝutado"/>
+			<node name="message" value="Ne eblas nun elŝuti la libron"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Mi ŝargas libron. Bonvolu atendi..." />
-			<node name="loadingBookList" value="Mi ŝargas liston de libroj. Bonvolu atendi..." />
-			<node name="migrate" value="Okazas trairo al nova versio. Bonvolu atendi..." />
-			<node name="downloadBookList" value="Mi elŝutas liston de libroj. Bonvolu atendi..." />
-			<node name="downloadBook" value="Mi elŝutas libron. Bonvolu atendi..." />
-			<node name="downloadImages" value="Mi elŝutas bildojn. Bonvolu atendi..." />
-			<node name="authentication" value="Okazas ensaluto. Bonvolu atendi..." />
-			<node name="purchaseBook" value="Okazas pago por libro. Bonvolu atendi..." />
-			<node name="initializeAuthenticationManager" value="Mi elŝutas kontajn informojn. Bonvolu atendi..." />
-			<node name="loadSubCatalog" value="Mi importas katalogon. Bonvolu atendi..." />
-			<node name="registerUser" value="Okazas registrado de nova konto. Bonvolu atendi..." />
-			<node name="passwordRecovery" value="Okazas renovigo de pasvorto. Bonvolu atendi..." />
-			<node name="authenticationCheck" toBeTranslated="true" value="Okazas validigo de konto. Bonvolu atendi..." />
-			<node name="signOut" toBeTranslated="true" value="Okazas elsaluto. Bonvolu atendi..." />
+			<node name="loadingBook" value="Mi ŝargas libron. Bonvolu atendi..."/>
+			<node name="loadingBookList" value="Mi ŝargas liston de libroj. Bonvolu atendi..."/>
+			<node name="migrate" value="Okazas trairo al nova versio. Bonvolu atendi..."/>
+			<node name="downloadBookList" value="Mi elŝutas liston de libroj. Bonvolu atendi..."/>
+			<node name="downloadBook" value="Mi elŝutas libron. Bonvolu atendi..."/>
+			<node name="downloadImages" value="Mi elŝutas bildojn. Bonvolu atendi..."/>
+			<node name="authentication" value="Okazas ensaluto. Bonvolu atendi..."/>
+			<node name="purchaseBook" value="Okazas pago por libro. Bonvolu atendi..."/>
+			<node name="initializeAuthenticationManager" value="Mi elŝutas kontajn informojn. Bonvolu atendi..."/>
+			<node name="loadSubCatalog" value="Mi importas katalogon. Bonvolu atendi..."/>
+			<node name="registerUser" value="Okazas registrado de nova konto. Bonvolu atendi..."/>
+			<node name="passwordRecovery" value="Okazas renovigo de pasvorto. Bonvolu atendi..."/>
+			<node name="authenticationCheck" toBeTranslated="true" value="Okazas validigo de konto. Bonvolu atendi..."/>
+			<node name="signOut" toBeTranslated="true" value="Okazas elsaluto. Bonvolu atendi..."/>
 			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
-			<node name="title" value="Pagi libron" />
-			<node name="message" value="Ĉu vi deziras pagi la libron&#10;“%s”&#10;?" />
+			<node name="title" value="Pagi libron"/>
+			<node name="message" value="Ĉu vi deziras pagi la libron&#10;“%s”&#10;?"/>
 		</node>
 		<node name="AuthenticationDialog">
-			<node name="title" value="Ensaluto" />
-			<node name="login" value="Salutnomo" />
-			<node name="password" value="Pasvorto" />
-			<node name="skipIP" value="Ne eblas konektiĝi kun la IP-adreso" />
-			<node name="loginIsEmpty" value="Mankas ensalutaj datumoj" />
+			<node name="title" value="Ensaluto"/>
+			<node name="login" value="Salutnomo"/>
+			<node name="password" value="Pasvorto"/>
+			<node name="skipIP" value="Ne eblas konektiĝi kun la IP-adreso"/>
+			<node name="loginIsEmpty" value="Mankas ensalutaj datumoj"/>
 		</node>
 		<node name="emptyCatalogBox">
-			<node name="title" value="Informoj" />
-			<node name="message" value="Malplena katalogo." />
+			<node name="title" value="Informoj"/>
+			<node name="message" value="Malplena katalogo."/>
 		</node>
 		<node name="dontShowConfirmBox">
-			<node name="title" value="Malpermesi katalogon" />
-			<node name="message" value="Ĉu vi vere deziras malpermesi la katalogon&#10;“%s” ?&#10;&#10;Vi povas denove permesi ĝin en Agordoj, en la folio&#10;“Reta serĉado”." />
+			<node name="title" value="Malpermesi katalogon"/>
+			<node name="message" value="Ĉu vi vere deziras malpermesi la katalogon&#10;“%s” ?&#10;&#10;Vi povas denove permesi ĝin en Agordoj, en la folio&#10;“Reta serĉado”."/>
 		</node>
 		<node name="deleteLocalCopyBox">
-			<node name="title" value="Forigi libron" />
-			<node name="message" value="Ĉu vi konsentas&#10;kun vera forigo de la libro&#10;“%s” k&#10;el via disko?" />
+			<node name="title" value="Forigi libron"/>
+			<node name="message" value="Ĉu vi konsentas&#10;kun vera forigo de la libro&#10;“%s” k&#10;el via disko?"/>
 		</node>
 		<node name="RegisterUserDialog">
-			<node name="title" value="Registriĝo de uzanto" />
-			<node name="login" value="Salutnomo" />
-			<node name="password" value="Pasvorto" />
-			<node name="confirmPassword" value="Konfirmu pasvorton" />
-			<node name="email" value="Retpoŝto" />
-			<node name="differentPasswords" value="Pasvorto kaj ĝia konfirmo devas kongrui." />
+			<node name="title" value="Registriĝo de uzanto"/>
+			<node name="login" value="Salutnomo"/>
+			<node name="password" value="Pasvorto"/>
+			<node name="confirmPassword" value="Konfirmu pasvorton"/>
+			<node name="email" value="Retpoŝto"/>
+			<node name="differentPasswords" value="Pasvorto kaj ĝia konfirmo devas kongrui."/>
 		</node>
 		<node name="PasswordRecoveryDialog">
-			<node name="title" value="Renovigi pasvorton" />
-			<node name="email" value="Retpoŝto" />
+			<node name="title" value="Renovigi pasvorton"/>
+			<node name="email" value="Retpoŝto"/>
 		</node>
 		<node name="recoverySuccessfulBox">
-			<node name="title" value="La pasvorto estas renovigita." />
-			<node name="message" value="Mesaĝoj al sekvaj instrukcioj&#10;estas senditaj al&#10;%s" />
+			<node name="title" value="La pasvorto estas renovigita."/>
+			<node name="message" value="Mesaĝoj al sekvaj instrukcioj&#10;estas senditaj al&#10;%s"/>
 		</node>
 		<node name="cantOpenDownloadedFile">
-			<node name="title" value="Eraro ĉe elŝutado" />
-			<node name="message" value="Ne eblas malfermi la elŝutitan dosieron&#10;%s." />
+			<node name="title" value="Eraro ĉe elŝutado"/>
+			<node name="message" value="Ne eblas malfermi la elŝutitan dosieron&#10;%s."/>
 		</node>
 	</node>
 	<node name="style">
-		<node name="Base" value="Elira teksto" />
-		<node name="Regular Paragraph" value="Ordinara alineo" />
-		<node name="Title" value="Titolo" />
-		<node name="Section Title" value="Nomo de sekcio" />
-		<node name="Poem Title" value="Titolo de poemo" />
-		<node name="Subtitle" value="Subtitolo" />
-		<node name="Annotation" value="Notacio" />
-		<node name="Epigraph" value="Moto" />
-		<node name="Stanza" value="Strofo" />
-		<node name="Verse" value="Verso" />
-		<node name="Preformatted text" value="Antaŭformatita teksto" />
-		<node name="Image" value="Bildo" />
-		<node name="Cite" value="Citaĵo" />
-		<node name="Author" value="Aŭtoro" />
-		<node name="Date" value="Dato" />
-		<node name="Internal Hyperlink" value="Interna ligilo" />
-		<node name="Footnote" value="Piednoto" />
-		<node name="Emphasis" value="Emfazo" />
-		<node name="Strong" value="Forta" />
-		<node name="Subscript" value="Suba indico" />
-		<node name="Superscript" value="Supra indico" />
-		<node name="Code" value="Kodo" />
-		<node name="StrikeThrough" value="Trastrekita" />
-		<node name="Contents Table" value="Enhavo de tabelo" />
-		<node name="Library Entry" value="Ero de librejo" />
-		<node name="Recent Book List" value="Listo de lastatempe malfermitaj libroj" />
-		<node name="Italic" value="Kursiva" />
-		<node name="Bold" value="Dika" />
-		<node name="Definition" value="Priskribo" />
-		<node name="Definition Description" value="Priskribo de difino" />
-		<node name="Header 1" value="Kapo 1" />
-		<node name="Header 2" value="Kapo 2" />
-		<node name="Header 3" value="Kapo 3" />
-		<node name="Header 4" value="Kapo 4" />
-		<node name="Header 5" value="Kapo 5" />
-		<node name="Header 6" value="Kapo 6" />
-		<node name="External Hyperlink" value="Ekstera ligilo" />
-		<node name="Link to Another Book" value="Ligilo al alia libro" />
+		<node name="Base" value="Elira teksto"/>
+		<node name="Regular Paragraph" value="Ordinara alineo"/>
+		<node name="Title" value="Titolo"/>
+		<node name="Section Title" value="Nomo de sekcio"/>
+		<node name="Poem Title" value="Titolo de poemo"/>
+		<node name="Subtitle" value="Subtitolo"/>
+		<node name="Annotation" value="Notacio"/>
+		<node name="Epigraph" value="Moto"/>
+		<node name="Stanza" value="Strofo"/>
+		<node name="Verse" value="Verso"/>
+		<node name="Preformatted text" value="Antaŭformatita teksto"/>
+		<node name="Image" value="Bildo"/>
+		<node name="Cite" value="Citaĵo"/>
+		<node name="Author" value="Aŭtoro"/>
+		<node name="Date" value="Dato"/>
+		<node name="Internal Hyperlink" value="Interna ligilo"/>
+		<node name="Footnote" value="Piednoto"/>
+		<node name="Emphasis" value="Emfazo"/>
+		<node name="Strong" value="Forta"/>
+		<node name="Subscript" value="Suba indico"/>
+		<node name="Superscript" value="Supra indico"/>
+		<node name="Code" value="Kodo"/>
+		<node name="StrikeThrough" value="Trastrekita"/>
+		<node name="Contents Table" value="Enhavo de tabelo"/>
+		<node name="Library Entry" value="Ero de librejo"/>
+		<node name="Recent Book List" value="Listo de lastatempe malfermitaj libroj"/>
+		<node name="Italic" value="Kursiva"/>
+		<node name="Bold" value="Dika"/>
+		<node name="Definition" value="Priskribo"/>
+		<node name="Definition Description" value="Priskribo de difino"/>
+		<node name="Header 1" value="Kapo 1"/>
+		<node name="Header 2" value="Kapo 2"/>
+		<node name="Header 3" value="Kapo 3"/>
+		<node name="Header 4" value="Kapo 4"/>
+		<node name="Header 5" value="Kapo 5"/>
+		<node name="Header 6" value="Kapo 6"/>
+		<node name="External Hyperlink" value="Ekstera ligilo"/>
+		<node name="Link to Another Book" value="Ligilo al alia libro"/>
 	</node>
 	<node name="external">
-		<node name="browser" value="Retfoliumilo" />
-		<node name="defaultBrowser" value="Defaŭlta retfoliumilo" />
+		<node name="browser" value="Retfoliumilo"/>
+		<node name="defaultBrowser" value="Defaŭlta retfoliumilo"/>
 	</node>
 	<node name="mobipocketPlugin">
-		<node name="unknown" value="Nekonata eraro" />
-		<node name="unsupportedCompressionMethod" value="Nesubtenata metodo de densigo" />
-		<node name="encryptedFile" value="La dosiero estas protektita per DRM" />
+		<node name="unknown" value="Nekonata eraro"/>
+		<node name="unsupportedCompressionMethod" value="Nesubtenata metodo de densigo"/>
+		<node name="encryptedFile" value="La dosiero estas protektita per DRM"/>
 	</node>
 	<node name="networkLibrary">
-		<node name="caption" value="Reta librejo" />
+		<node name="caption" value="Reta librejo"/>
 	</node>
 	<node name="library">
-		<node name="caption" value="Librejo" />
+		<node name="caption" value="Librejo"/>
 	</node>
 </resources>

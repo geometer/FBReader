@@ -3,669 +3,669 @@
 <resources>
 	<node name="libraryView">
 		<node name="authorNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
-			<node name="edit" toBeTranslated="true" value="Edit information" />
-			<node name="unknownAuthor" toBeTranslated="true" value="Unknown Author" />
+			<node name="expandTree" toBeTranslated="true" value="Show books"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide books"/>
+			<node name="edit" toBeTranslated="true" value="Edit information"/>
+			<node name="unknownAuthor" toBeTranslated="true" value="Unknown Author"/>
 		</node>
 		<node name="tagNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
-			<node name="edit" toBeTranslated="true" value="Edit tag" />
-			<node name="clone" toBeTranslated="true" value="Clone tag" />
-			<node name="delete" toBeTranslated="true" value="Remove tag" />
-			<node name="noTags" toBeTranslated="true" value="Books with no tags" />
+			<node name="expandTree" toBeTranslated="true" value="Show books"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide books"/>
+			<node name="edit" toBeTranslated="true" value="Edit tag"/>
+			<node name="clone" toBeTranslated="true" value="Clone tag"/>
+			<node name="delete" toBeTranslated="true" value="Remove tag"/>
+			<node name="noTags" toBeTranslated="true" value="Books with no tags"/>
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" toBeTranslated="true" value="Show books"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide books"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Read book" />
-			<node name="edit" toBeTranslated="true" value="Edit information" />
-			<node name="delete" toBeTranslated="true" value="Remove book" />
+			<node name="read" toBeTranslated="true" value="Read book"/>
+			<node name="edit" toBeTranslated="true" value="Edit information"/>
+			<node name="delete" toBeTranslated="true" value="Remove book"/>
 		</node>
 	</node>
 	<node name="networkView">
 		<node name="libraryItemNode">
-			<node name="expandTree" toBeTranslated="true" value="Expand" />
-			<node name="collapseTree" toBeTranslated="true" value="Collapse" />
-			<node name="reload" toBeTranslated="true" value="Reload" />
-			<node name="openInBrowser" toBeTranslated="true" value="Open in browser" />
+			<node name="expandTree" toBeTranslated="true" value="Expand"/>
+			<node name="collapseTree" toBeTranslated="true" value="Collapse"/>
+			<node name="reload" toBeTranslated="true" value="Reload"/>
+			<node name="openInBrowser" toBeTranslated="true" value="Open in browser"/>
 		</node>
 		<node name="libraryItemRootNode">
-			<node name="expandTree" toBeTranslated="true" value="Open catalog" />
-			<node name="collapseTree" toBeTranslated="true" value="Close catalog" />
-			<node name="login" toBeTranslated="true" value="Sign in" />
-			<node name="logout" toBeTranslated="true" value="Sign out (%s)" />
-			<node name="reload" toBeTranslated="true" value="Reload" />
-			<node name="dontShow" toBeTranslated="true" value="Don&apos;t show this catalog" />
-			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)" />
-			<node name="register" toBeTranslated="true" value="Sign up" />
-			<node name="passwordRecovery" toBeTranslated="true" value="Recover password" />
+			<node name="expandTree" toBeTranslated="true" value="Open catalog"/>
+			<node name="collapseTree" toBeTranslated="true" value="Close catalog"/>
+			<node name="login" toBeTranslated="true" value="Sign in"/>
+			<node name="logout" toBeTranslated="true" value="Sign out (%s)"/>
+			<node name="reload" toBeTranslated="true" value="Reload"/>
+			<node name="dontShow" toBeTranslated="true" value="Don't show this catalog"/>
+			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)"/>
+			<node name="register" toBeTranslated="true" value="Sign up"/>
+			<node name="passwordRecovery" toBeTranslated="true" value="Recover password"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="title" toBeTranslated="true" value="Search results" />
-			<node name="expandTree" toBeTranslated="true" value="Show results" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide results" />
+			<node name="title" toBeTranslated="true" value="Search results"/>
+			<node name="expandTree" toBeTranslated="true" value="Show results"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide results"/>
 		</node>
 		<node name="authorNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" toBeTranslated="true" value="Show books"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide books"/>
 		</node>
 		<node name="seriesNode">
-			<node name="expandTree" toBeTranslated="true" value="Show books" />
-			<node name="collapseTree" toBeTranslated="true" value="Hide books" />
+			<node name="expandTree" toBeTranslated="true" value="Show books"/>
+			<node name="collapseTree" toBeTranslated="true" value="Hide books"/>
 		</node>
 		<node name="bookNode">
-			<node name="read" toBeTranslated="true" value="Read local copy" />
-			<node name="delete" toBeTranslated="true" value="Delete local copy" />
-			<node name="download" toBeTranslated="true" value="Download" />
-			<node name="readDemo" toBeTranslated="true" value="Read sample" />
-			<node name="downloadDemo" toBeTranslated="true" value="Download sample" />
-			<node name="demo" toBeTranslated="true" value="demo" />
-			<node name="buy" toBeTranslated="true" value="Buy (%s)" />
+			<node name="read" toBeTranslated="true" value="Read local copy"/>
+			<node name="delete" toBeTranslated="true" value="Delete local copy"/>
+			<node name="download" toBeTranslated="true" value="Download"/>
+			<node name="readDemo" toBeTranslated="true" value="Read sample"/>
+			<node name="downloadDemo" toBeTranslated="true" value="Download sample"/>
+			<node name="demo" toBeTranslated="true" value="demo"/>
+			<node name="buy" toBeTranslated="true" value="Buy (%s)"/>
 		</node>
 	</node>
 	<node name="menu">
-		<node name="bookInfo" value="Bokinformation..." />
-		<node name="toc" value="Innehållsförteckning" />
-		<node name="showLibrary" toBeTranslated="true" value="Open library" />
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library" />
-		<node name="addBook" toBeTranslated="true" value="Open file..." />
-		<node name="showRecent" toBeTranslated="true" value="Recent books" />
+		<node name="bookInfo" value="Bokinformation..."/>
+		<node name="toc" value="Innehållsförteckning"/>
+		<node name="showLibrary" toBeTranslated="true" value="Open library"/>
+		<node name="showNetLibrary" toBeTranslated="true" value="Network library"/>
+		<node name="addBook" toBeTranslated="true" value="Open file..."/>
+		<node name="showRecent" toBeTranslated="true" value="Recent books"/>
 		<node name="library" value="Bibliotek">
-			<node name="showLibrary" value="Öppna" />
-			<node name="previousBook" value="Föregående bok" />
-			<node name="showRecent" value="Tidigare" />
-			<node name="addBook" value="Lägg till bok..." />
-			<node name="showHelp" value="Om FBReader" />
+			<node name="showLibrary" value="Öppna"/>
+			<node name="previousBook" value="Föregående bok"/>
+			<node name="showRecent" value="Tidigare"/>
+			<node name="addBook" value="Lägg till bok..."/>
+			<node name="showHelp" value="Om FBReader"/>
 		</node>
-		<node name="gotoHome" value="Gå till början av dokumentet" />
-		<node name="gotoPageNumber" toBeTranslated="true" value="Go to Page..." />
-		<node name="gotoSectionStart" value="Gå till början av textavsnitt" />
-		<node name="gotoSectionEnd" value="Gå till slutet av textavsnitt" />
-		<node name="nextTOCSection" value="Gå till nästa post i innehållsförteckning" />
-		<node name="previousTOCSection" value="Gå till föregående post i innehållsförteckning" />
+		<node name="gotoHome" value="Gå till början av dokumentet"/>
+		<node name="gotoPageNumber" toBeTranslated="true" value="Go to Page..."/>
+		<node name="gotoSectionStart" value="Gå till början av textavsnitt"/>
+		<node name="gotoSectionEnd" value="Gå till slutet av textavsnitt"/>
+		<node name="nextTOCSection" value="Gå till nästa post i innehållsförteckning"/>
+		<node name="previousTOCSection" value="Gå till föregående post i innehållsförteckning"/>
 		<node name="navigate" value="Navigation">
-			<node name="gotoHome" value="Gå till början av dokumentet" />
-			<node name="gotoPageNumber" toBeTranslated="true" value="Go to Page..." />
-			<node name="gotoSectionStart" value="Gå till början av textavsnitt" />
-			<node name="gotoSectionEnd" value="Gå till slutet av textavsnitt" />
-			<node name="nextTOCSection" value="Gå till nästa post i innehållsförteckning" />
-			<node name="previousTOCSection" value="Gå till föregående post i innehållsförteckning" />
-			<node name="undo" value="Gå bakåt" />
-			<node name="redo" value="Gå framåt" />
+			<node name="gotoHome" value="Gå till början av dokumentet"/>
+			<node name="gotoPageNumber" toBeTranslated="true" value="Go to Page..."/>
+			<node name="gotoSectionStart" value="Gå till början av textavsnitt"/>
+			<node name="gotoSectionEnd" value="Gå till slutet av textavsnitt"/>
+			<node name="nextTOCSection" value="Gå till nästa post i innehållsförteckning"/>
+			<node name="previousTOCSection" value="Gå till föregående post i innehållsförteckning"/>
+			<node name="undo" value="Gå bakåt"/>
+			<node name="redo" value="Gå framåt"/>
 		</node>
 		<node name="selection" value="Markering">
-			<node name="copyToClipboard" value="Kopiera till urklipp" />
-			<node name="openInDictionary" value="Öppna i ordbok" />
-			<node name="clearSelection" value="Töm" />
+			<node name="copyToClipboard" value="Kopiera till urklipp"/>
+			<node name="openInDictionary" value="Öppna i ordbok"/>
+			<node name="clearSelection" value="Töm"/>
 		</node>
 		<node name="search" value="Sök">
-			<node name="search" value="Sök text..." />
-			<node name="findNext" value="Sök nästa" />
-			<node name="findPrevious" value="Sök föregående" />
+			<node name="search" value="Sök text..."/>
+			<node name="findNext" value="Sök nästa"/>
+			<node name="findPrevious" value="Sök föregående"/>
 		</node>
 		<node name="view" value="Visa">
-			<node name="rotate" value="Rotera skärm" />
-			<node name="toggleFullscreen" value="Helskärm" />
-			<node name="toggleIndicator" value="Växla indikator" />
+			<node name="rotate" value="Rotera skärm"/>
+			<node name="toggleFullscreen" value="Helskärm"/>
+			<node name="toggleIndicator" value="Växla indikator"/>
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..." />
-		<node name="quit" value="Stäng" />
+		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..."/>
+		<node name="quit" value="Stäng"/>
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
-			<node name="label" toBeTranslated="true" value="Read Book" />
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Mode" />
+			<node name="label" toBeTranslated="true" value="Read Book"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Mode"/>
 		</node>
 		<node name="showLibrary">
-			<node name="label" toBeTranslated="true" value="Library" />
-			<node name="tooltip" value="Visa biblioteksträd" />
-			<node name="popup" toBeTranslated="true" value="Show Recent Books List" />
+			<node name="label" toBeTranslated="true" value="Library"/>
+			<node name="tooltip" value="Visa biblioteksträd"/>
+			<node name="popup" toBeTranslated="true" value="Show Recent Books List"/>
 		</node>
 		<node name="showRecent">
-			<node name="label" toBeTranslated="true" value="Recent Books" />
-			<node name="tooltip" value="Visa tidigare bokhistorik" />
+			<node name="label" toBeTranslated="true" value="Recent Books"/>
+			<node name="tooltip" value="Visa tidigare bokhistorik"/>
 		</node>
 		<node name="byAuthor">
-			<node name="label" toBeTranslated="true" value="By Author" />
-			<node name="tooltip" toBeTranslated="true" value="Organize Books by Author" />
+			<node name="label" toBeTranslated="true" value="By Author"/>
+			<node name="tooltip" toBeTranslated="true" value="Organize Books by Author"/>
 		</node>
 		<node name="byTag">
-			<node name="label" toBeTranslated="true" value="By Tag" />
-			<node name="tooltip" toBeTranslated="true" value="Organize Books by Tag" />
+			<node name="label" toBeTranslated="true" value="By Tag"/>
+			<node name="tooltip" toBeTranslated="true" value="Organize Books by Tag"/>
 		</node>
 		<node name="addBook">
-			<node name="label" toBeTranslated="true" value="Add File" />
-			<node name="tooltip" value="Lägg till fil till bibliotek" />
+			<node name="label" toBeTranslated="true" value="Add File"/>
+			<node name="tooltip" value="Lägg till fil till bibliotek"/>
 		</node>
 		<node name="showNetLibrary">
-			<node name="label" toBeTranslated="true" value="Network" />
-			<node name="tooltip" toBeTranslated="true" value="Search in Network Libraries" />
+			<node name="label" toBeTranslated="true" value="Network"/>
+			<node name="tooltip" toBeTranslated="true" value="Search in Network Libraries"/>
 		</node>
 		<node name="searchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Simple Search" />
-			<node name="tooltip" toBeTranslated="true" value="Network Search" />
+			<node name="label" toBeTranslated="true" value="Simple Search"/>
+			<node name="tooltip" toBeTranslated="true" value="Network Search"/>
 		</node>
 		<node name="advancedSearchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Search" />
-			<node name="tooltip" toBeTranslated="true" value="Advanced Network Search" />
+			<node name="label" toBeTranslated="true" value="Search"/>
+			<node name="tooltip" toBeTranslated="true" value="Advanced Network Search"/>
 		</node>
 		<node name="gotoHome">
-			<node name="label" toBeTranslated="true" value="Go to Start" />
-			<node name="tooltip" value="Gå till början av text" />
+			<node name="label" toBeTranslated="true" value="Go to Start"/>
+			<node name="tooltip" value="Gå till början av text"/>
 		</node>
 		<node name="undo">
-			<node name="label" toBeTranslated="true" value="Go Back" />
-			<node name="tooltip" value="Gå bakåt" />
+			<node name="label" toBeTranslated="true" value="Go Back"/>
+			<node name="tooltip" value="Gå bakåt"/>
 		</node>
 		<node name="redo">
-			<node name="label" toBeTranslated="true" value="Go Forward" />
-			<node name="tooltip" value="Gå framåt" />
+			<node name="label" toBeTranslated="true" value="Go Forward"/>
+			<node name="tooltip" value="Gå framåt"/>
 		</node>
 		<node name="gotoPageNumberWithParameter">
-			<node name="label" toBeTranslated="true" value="Go to Page" />
-			<node name="tooltip" toBeTranslated="true" value="Go to Page" />
+			<node name="label" toBeTranslated="true" value="Go to Page"/>
+			<node name="tooltip" toBeTranslated="true" value="Go to Page"/>
 		</node>
 		<node name="toc">
-			<node name="label" toBeTranslated="true" value="TOC" />
-			<node name="tooltip" value="Innehållsförteckning" />
+			<node name="label" toBeTranslated="true" value="TOC"/>
+			<node name="tooltip" value="Innehållsförteckning"/>
 		</node>
 		<node name="search">
-			<node name="label" toBeTranslated="true" value="Search" />
-			<node name="tooltip" value="Textsökning" />
+			<node name="label" toBeTranslated="true" value="Search"/>
+			<node name="tooltip" value="Textsökning"/>
 		</node>
 		<node name="findNext">
-			<node name="label" toBeTranslated="true" value="Next" />
-			<node name="tooltip" value="Sök nästa" />
+			<node name="label" toBeTranslated="true" value="Next"/>
+			<node name="tooltip" value="Sök nästa"/>
 		</node>
 		<node name="findPrevious">
-			<node name="label" toBeTranslated="true" value="Previous" />
-			<node name="tooltip" value="Sök föregående" />
+			<node name="label" toBeTranslated="true" value="Previous"/>
+			<node name="tooltip" value="Sök föregående"/>
 		</node>
 		<node name="rotate">
-			<node name="label" toBeTranslated="true" value="Rotate" />
-			<node name="tooltip" value="Rotera text" />
+			<node name="label" toBeTranslated="true" value="Rotate"/>
+			<node name="tooltip" value="Rotera text"/>
 		</node>
 		<node name="showHelp">
-			<node name="label" toBeTranslated="true" value="About" />
-			<node name="tooltip" value="Om FBReader" />
+			<node name="label" toBeTranslated="true" value="About"/>
+			<node name="tooltip" value="Om FBReader"/>
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter" />
-			<node name="tooltip" toBeTranslated="true" value="Filter" />
+			<node name="label" toBeTranslated="true" value="Filter"/>
+			<node name="tooltip" toBeTranslated="true" value="Filter"/>
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog" />
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Last Preferences Dialog"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog"/>
 		</node>
 		<node name="bookInfo">
-			<node name="label" toBeTranslated="true" value="Book Info" />
-			<node name="tooltip" value="Visa bokinformation" />
+			<node name="label" toBeTranslated="true" value="Book Info"/>
+			<node name="tooltip" value="Visa bokinformation"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences" />
-			<node name="tooltip" toBeTranslated="true"  value="Show Library Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Library Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Network Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="System Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Reading Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences" />
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog" />
+			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences"/>
+			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog"/>
 		</node>
 	</node>
 	<node name="dialog">
 		<node name="button">
-			<node name="go" value="&amp;Gå!" />
-			<node name="thisOnly" toBeTranslated="true" value="This only" />
-			<node name="withSubtags" toBeTranslated="true" value="With subtags" />
-			<node name="removeLink" toBeTranslated="true" value="Remove from library" />
-			<node name="removeFile" toBeTranslated="true" value="Remove from disk" />
-			<node name="yesToAll" toBeTranslated="true" value="Yes to &amp;all" />
-			<node name="buy" toBeTranslated="true" value="&amp;Buy" />
-			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download" />
+			<node name="go" value="&amp;Gå!"/>
+			<node name="thisOnly" toBeTranslated="true" value="This only"/>
+			<node name="withSubtags" toBeTranslated="true" value="With subtags"/>
+			<node name="removeLink" toBeTranslated="true" value="Remove from library"/>
+			<node name="removeFile" toBeTranslated="true" value="Remove from disk"/>
+			<node name="yesToAll" toBeTranslated="true" value="Yes to &amp;all"/>
+			<node name="buy" toBeTranslated="true" value="&amp;Buy"/>
+			<node name="buyAndDownload" toBeTranslated="true" value="Buy and &amp;download"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Library Options"/>
 			<node name="tab">
 				<node name="Library" value="Bibliotek">
-					<node name="bookPath" value="Boksökväg" />
-					<node name="lookInSubdirectories" value="Leta efter böcker i underkataloger" />
-					<node name="collectBooksWithoutMetaInfo" toBeTranslated="true" value="Collect Books without MetaInfo" />
-					<node name="downloadDirectory" toBeTranslated="true" value="Directory for Downloaded Books" />
+					<node name="bookPath" value="Boksökväg"/>
+					<node name="lookInSubdirectories" value="Leta efter böcker i underkataloger"/>
+					<node name="collectBooksWithoutMetaInfo" toBeTranslated="true" value="Collect Books without MetaInfo"/>
+					<node name="downloadDirectory" toBeTranslated="true" value="Directory for Downloaded Books"/>
 				</node>
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Network Options"/>
 			<node name="tab">
 				<node name="NetworkLibrary" toBeTranslated="true" value="Network Search">
 				</node>
 				<node name="Connection" value="Connection">
-					<node name="useProxy" toBeTranslated="true" value="Use Proxy" />
-					<node name="proxyHost" toBeTranslated="true" value="Proxy Host" />
-					<node name="proxyPort" toBeTranslated="true" value="Proxy Port" />
-					<node name="timeout" toBeTranslated="true" value="Network Operations Timeout, seconds" />
+					<node name="useProxy" toBeTranslated="true" value="Use Proxy"/>
+					<node name="proxyHost" toBeTranslated="true" value="Proxy Host"/>
+					<node name="proxyPort" toBeTranslated="true" value="Proxy Port"/>
+					<node name="timeout" toBeTranslated="true" value="Network Operations Timeout, seconds"/>
 				</node>
 				<node name="Web" value="Webb">
-					<node name="enableIntegration" value="Öppna externa länkar med %s" />
-					<node name="defaultText" value="Öppna externa länkar i webbläsare" />
-					<node name="choice" value="Använd webbläsare" />
-					<node name="command" value="Kommando att köra" />
+					<node name="enableIntegration" value="Öppna externa länkar med %s"/>
+					<node name="defaultText" value="Öppna externa länkar i webbläsare"/>
+					<node name="choice" value="Använd webbläsare"/>
+					<node name="command" value="Kommando att köra"/>
 				</node>
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - System Options"/>
 			<node name="tab">
 				<node name="Language" value="Språk">
-					<node name="autoDetect" value="Upptäck automatiskt språk och kodning" />
-					<node name="defaultLanguage" value="Standardspråk" />
-					<node name="defaultEncodingSet" value="Standardteckenuppsättning" />
-					<node name="defaultEncoding" value="Standardkodning" />
-					<node name="useWindows1252Hack" value="Använd windows-1252 istället för iso-8859-1" />
+					<node name="autoDetect" value="Upptäck automatiskt språk och kodning"/>
+					<node name="defaultLanguage" value="Standardspråk"/>
+					<node name="defaultEncodingSet" value="Standardteckenuppsättning"/>
+					<node name="defaultEncoding" value="Standardkodning"/>
+					<node name="useWindows1252Hack" value="Använd windows-1252 istället för iso-8859-1"/>
 				</node>
 				<node name="Config" value="Konfiguration">
-					<node name="autoSave" value="Spara tillstånd automatiskt" />
-					<node name="timeout" value="Tidsgräns mellan sparningar, sekunder" />
+					<node name="autoSave" value="Spara tillstånd automatiskt"/>
+					<node name="timeout" value="Tidsgräns mellan sparningar, sekunder"/>
 				</node>
 				<node name="Dictionary" value="Ordbok">
-					<node name="enableIntegration" value="Aktivera integration med %s" />
-					<node name="defaultText" value="Aktivera integration med ordbok" />
-					<node name="choice" value="Integrera med" />
-					<node name="singleClickOpen" value="Öppna med ett klick" />
+					<node name="enableIntegration" value="Aktivera integration med %s"/>
+					<node name="defaultText" value="Aktivera integration med ordbok"/>
+					<node name="choice" value="Integrera med"/>
+					<node name="singleClickOpen" value="Öppna med ett klick"/>
 				</node>
 				<node name="Maemo" value="Maemo">
-					<node name="keyActionOnRelease" value="Åtgärd vid tangentsläpp, inte tangenttryck" />
-					<node name="minStylusPressure" value="Minimalt pentryck" />
-					<node name="maxStylusPressure" value="Maximalt pentryck" />
+					<node name="keyActionOnRelease" value="Åtgärd vid tangentsläpp, inte tangenttryck"/>
+					<node name="minStylusPressure" value="Minimalt pentryck"/>
+					<node name="maxStylusPressure" value="Maximalt pentryck"/>
 				</node>
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Reading Options"/>
 			<node name="tab">
 				<node name="Scrolling" value="Rullning">
-					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs" />
-					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling" />
-					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling" />
-					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling" />
-					<node name="fingerOnly" toBeTranslated="true" value="Scroll on Finger Tap Only" />
+					<node name="keyScrollDelay" toBeTranslated="true" value="Delay between Key Scrollings, msecs"/>
+					<node name="keyLinesToScroll" toBeTranslated="true" value="Lines to Scroll per Line Scrolling"/>
+					<node name="keyLinesToKeep" toBeTranslated="true" value="Lines to Keep per Page Scrolling"/>
+					<node name="enableTapScrolling" toBeTranslated="true" value="Enable Tap Scrolling"/>
+					<node name="fingerOnly" toBeTranslated="true" value="Scroll on Finger Tap Only"/>
 				</node>
 				<node name="Selection" value="Markering">
-					<node name="enableSelection" value="Aktivera textmarkering" />
+					<node name="enableSelection" value="Aktivera textmarkering"/>
 				</node>
 				<node name="Indicator" value="Indikator">
 					<node name="type" toBeTranslated="true" value="Show as">
-						<node name="osScrollbar" toBeTranslated="true" value="OS Scrollbar" />
-						<node name="fbIndicator" toBeTranslated="true" value="Old Style Indicator" />
-						<node name="none" toBeTranslated="true" value="Don&apos;t Show" />
+						<node name="osScrollbar" toBeTranslated="true" value="OS Scrollbar"/>
+						<node name="fbIndicator" toBeTranslated="true" value="Old Style Indicator"/>
+						<node name="none" toBeTranslated="true" value="Don't Show"/>
 					</node>
-					<node name="height" value="Indikatorns höjd" />
-					<node name="offset" value="Offset från text" />
-					<node name="pageNumber" value="Visa position som siffror" />
-					<node name="time" value="Visa tid" />
-					<node name="fontSize" value="Typsnittsstorlek" />
-					<node name="tocMarks" value="Visa förteckningsmarkeringar" />
-					<node name="navigation" value="Aktivera navigering" />
+					<node name="height" value="Indikatorns höjd"/>
+					<node name="offset" value="Offset från text"/>
+					<node name="pageNumber" value="Visa position som siffror"/>
+					<node name="time" value="Visa tid"/>
+					<node name="fontSize" value="Typsnittsstorlek"/>
+					<node name="tocMarks" value="Visa förteckningsmarkeringar"/>
+					<node name="navigation" value="Aktivera navigering"/>
 				</node>
 				<node name="Rotation" value="Rotering">
 					<node name="direction" value="Roteringstyp">
-						<node name="disabled" value="Inaktiverad" />
-						<node name="clockwise" value="90 grader medsols" />
-						<node name="counterclockwise" value="90 grader motsols" />
-						<node name="180" value="180 grader" />
-						<node name="cycle" value="Växla genom alla fyra riktningar" />
+						<node name="disabled" value="Inaktiverad"/>
+						<node name="clockwise" value="90 grader medsols"/>
+						<node name="counterclockwise" value="90 grader motsols"/>
+						<node name="180" value="180 grader"/>
+						<node name="cycle" value="Växla genom alla fyra riktningar"/>
 					</node>
 				</node>
 				<node name="Keys" value="Tangenter">
-					<node name="grabSystemKeys" value="Fånga systemtangenter" />
-					<node name="separate" value="Tangentbindningar beroende av orientering" />
+					<node name="grabSystemKeys" value="Fånga systemtangenter"/>
+					<node name="separate" value="Tangentbindningar beroende av orientering"/>
 					<node name="orientation" value="Orientering">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees" />
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise" />
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees" />
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise" />
+						<node name="degrees0" toBeTranslated="true" value="0 Degrees"/>
+						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise"/>
+						<node name="degrees180" toBeTranslated="true" value="180 Degrees"/>
+						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise"/>
 					</node>
 					<node name="action">
-						<node name="none" value="Ingen" />
-						<node name="showLibrary" value="Visa bibliotek" />
-						<node name="showNetLibrary" toBeTranslated="true" value="Show network library" />
-						<node name="showRecent" value="Visa tidigare böcker" />
-						<node name="previousBook" value="Öppna föregående bok" />
-						<node name="toc" value="Visa innehållsförteckning" />
-						<node name="gotoHome" value="Gå hem" />
-						<node name="gotoSectionStart" value="Gå till början av avsnitt" />
-						<node name="gotoSectionEnd" value="Gå till slutet av avsnitt" />
-						<node name="nextTOCSection" value="Gå till nästa avsnitt i förteckning" />
-						<node name="previousTOCSection" value="Gå till föregående avsnitt i förteckning" />
-						<node name="pageForward" toBeTranslated="true" value="Scroll page forward" />
-						<node name="pageBackward" toBeTranslated="true" value="Scroll page backward" />
-						<node name="lineForward" toBeTranslated="true" value="Scroll line forward" />
-						<node name="lineBackward" toBeTranslated="true" value="Scroll line backward" />
-						<node name="undo" value="Ångra" />
-						<node name="redo" value="Gör om" />
-						<node name="copyToClipboard" value="Kopiera markerad text till urklipp" />
-						<node name="openInDictionary" value="Öppna markerad text i ordbok" />
-						<node name="clearSelection" value="Töm markering" />
-						<node name="search" value="Sök" />
-						<node name="findPrevious" value="Sök föregående" />
-						<node name="findNext" value="Sök nästa" />
-						<node name="increaseFont" value="Öka typsnittsstorlek" />
-						<node name="decreaseFont" value="Minska typsnittsstorlek" />
-						<node name="toggleIndicator" value="Växla positionsindikator" />
-						<node name="toggleFullscreen" value="Växla helskärmsläge" />
-						<node name="rotate" value="Rotera skärm" />
-						<node name="addBook" value="Lägg till bok" />
-						<node name="cancel" value="Avbryt" />
-						<node name="quit" value="Avsluta" />
-						<node name="bookInfo" value="Visa bokinformation" />
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog" />
+						<node name="none" value="Ingen"/>
+						<node name="showLibrary" value="Visa bibliotek"/>
+						<node name="showNetLibrary" toBeTranslated="true" value="Show network library"/>
+						<node name="showRecent" value="Visa tidigare böcker"/>
+						<node name="previousBook" value="Öppna föregående bok"/>
+						<node name="toc" value="Visa innehållsförteckning"/>
+						<node name="gotoHome" value="Gå hem"/>
+						<node name="gotoSectionStart" value="Gå till början av avsnitt"/>
+						<node name="gotoSectionEnd" value="Gå till slutet av avsnitt"/>
+						<node name="nextTOCSection" value="Gå till nästa avsnitt i förteckning"/>
+						<node name="previousTOCSection" value="Gå till föregående avsnitt i förteckning"/>
+						<node name="pageForward" toBeTranslated="true" value="Scroll page forward"/>
+						<node name="pageBackward" toBeTranslated="true" value="Scroll page backward"/>
+						<node name="lineForward" toBeTranslated="true" value="Scroll line forward"/>
+						<node name="lineBackward" toBeTranslated="true" value="Scroll line backward"/>
+						<node name="undo" value="Ångra"/>
+						<node name="redo" value="Gör om"/>
+						<node name="copyToClipboard" value="Kopiera markerad text till urklipp"/>
+						<node name="openInDictionary" value="Öppna markerad text i ordbok"/>
+						<node name="clearSelection" value="Töm markering"/>
+						<node name="search" value="Sök"/>
+						<node name="findPrevious" value="Sök föregående"/>
+						<node name="findNext" value="Sök nästa"/>
+						<node name="increaseFont" value="Öka typsnittsstorlek"/>
+						<node name="decreaseFont" value="Minska typsnittsstorlek"/>
+						<node name="toggleIndicator" value="Växla positionsindikator"/>
+						<node name="toggleFullscreen" value="Växla helskärmsläge"/>
+						<node name="rotate" value="Rotera skärm"/>
+						<node name="addBook" value="Lägg till bok"/>
+						<node name="cancel" value="Avbryt"/>
+						<node name="quit" value="Avsluta"/>
+						<node name="bookInfo" value="Visa bokinformation"/>
+						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog"/>
 					</node>
-					<node name="quitOnCancel" value="Avsluta programmet vid avbryt" />
-					<node name="keyDelay" toBeTranslated="true" value="Delay Between Accepted Key Pressings" />
+					<node name="quitOnCancel" value="Avsluta programmet vid avbryt"/>
+					<node name="keyDelay" toBeTranslated="true" value="Delay Between Accepted Key Pressings"/>
 				</node>
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options" />
+			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options"/>
 			<node name="tab">
 				<node name="CSS" toBeTranslated="true" value="CSS">
-					<node name="overrideSpecifiedFonts" toBeTranslated="true" value="Always Use My Own Fonts" />
+					<node name="overrideSpecifiedFonts" toBeTranslated="true" value="Always Use My Own Fonts"/>
 				</node>
 				<node name="Margins" value="Marginaler">
-					<node name="left" value="Vänstermarginal" />
-					<node name="right" value="Högermarginal" />
-					<node name="top" value="Övermarginal" />
-					<node name="bottom" value="Nedermarginal" />
+					<node name="left" value="Vänstermarginal"/>
+					<node name="right" value="Högermarginal"/>
+					<node name="top" value="Övermarginal"/>
+					<node name="bottom" value="Nedermarginal"/>
 				</node>
 				<node name="Format" value="Formatering">
-					<node name="optionsFor" value="Alternativ för" />
+					<node name="optionsFor" value="Alternativ för"/>
 					<node name="lineSpacing" value="Radmellanrum">
-						<node name="unchanged" value="&lt;oförändrad&gt;" />
+						<node name="unchanged" value="&lt;oförändrad&gt;"/>
 					</node>
-					<node name="firstLineIndent" value="Indentera första raden" />
+					<node name="firstLineIndent" value="Indentera första raden"/>
 					<node name="alignment" value="Justering">
-						<node name="left" value="Vänster" />
-						<node name="right" value="Höger" />
-						<node name="center" value="Centrera" />
-						<node name="justify" value="Justera" />
-						<node name="unchanged" value="&lt;oförändrad&gt;" />
+						<node name="left" value="Vänster"/>
+						<node name="right" value="Höger"/>
+						<node name="center" value="Centrera"/>
+						<node name="justify" value="Justera"/>
+						<node name="unchanged" value="&lt;oförändrad&gt;"/>
 					</node>
-					<node name="spaceBefore" value="Blanksteg före" />
-					<node name="spaceAfter" value="Blanksteg efter" />
-					<node name="startIndent" toBeTranslated="true" value="Line Start Indent" />
-					<node name="endIndent" toBeTranslated="true" value="Line End Indent" />
+					<node name="spaceBefore" value="Blanksteg före"/>
+					<node name="spaceAfter" value="Blanksteg efter"/>
+					<node name="startIndent" toBeTranslated="true" value="Line Start Indent"/>
+					<node name="endIndent" toBeTranslated="true" value="Line End Indent"/>
 				</node>
 				<node name="Styles" value="Stilar">
-					<node name="optionsFor" value="Alternativ för" />
+					<node name="optionsFor" value="Alternativ för"/>
 					<node name="fontFamily" value="Familj">
-						<node name="unchanged" value="&lt;oförändrad&gt;" />
+						<node name="unchanged" value="&lt;oförändrad&gt;"/>
 					</node>
-					<node name="fontSize" value="Storlek" />
-					<node name="fontSizeDifference" value="Storleksskillnad" />
-					<node name="bold" value="Fet" />
-					<node name="italic" value="Kursiv" />
-					<node name="allowHyphenations" value="Tillåt avstavningar" />
-					<node name="autoHyphenations" value="Automatiska avstavningar" />
+					<node name="fontSize" value="Storlek"/>
+					<node name="fontSizeDifference" value="Storleksskillnad"/>
+					<node name="bold" value="Fet"/>
+					<node name="italic" value="Kursiv"/>
+					<node name="allowHyphenations" value="Tillåt avstavningar"/>
+					<node name="autoHyphenations" value="Automatiska avstavningar"/>
 				</node>
 				<node name="Colors" value="Färger">
 					<node name="colorFor" value="Färg för">
-						<node name="background" value="Bakgrund" />
-						<node name="selectionBackground" value="Markeringsbakgrund" />
-						<node name="text" value="Vanlig text" />
-						<node name="internalLink" value="Text för intern hyperlänk" />
-						<node name="externalLink" value="Text för extern hyperlänk" />
-						<node name="bookLink" toBeTranslated="true" value="Link to Another Book" />
-						<node name="highlighted" value="Färgmarkerad text" />
-						<node name="treeLines" value="Trädrader" />
-						<node name="indicator" value="Positionsindikator" />
+						<node name="background" value="Bakgrund"/>
+						<node name="selectionBackground" value="Markeringsbakgrund"/>
+						<node name="text" value="Vanlig text"/>
+						<node name="internalLink" value="Text för intern hyperlänk"/>
+						<node name="externalLink" value="Text för extern hyperlänk"/>
+						<node name="bookLink" toBeTranslated="true" value="Link to Another Book"/>
+						<node name="highlighted" value="Färgmarkerad text"/>
+						<node name="treeLines" value="Trädrader"/>
+						<node name="indicator" value="Positionsindikator"/>
 					</node>
 				</node>
 			</node>
 		</node>
 		<node name="InfoDialog">
-			<node name="title" value="FBReader - Bokinformation" />
+			<node name="title" value="FBReader - Bokinformation"/>
 			<node name="tab">
 				<node name="Common" value="Allmänt">
-					<node name="file" value="Fil" />
-					<node name="title" value="Titel" />
-					<node name="language" value="Språk" />
-					<node name="encodingSet" value="Teckenuppsättning" />
-					<node name="encoding" value="Kodning" />
+					<node name="file" value="Fil"/>
+					<node name="title" value="Titel"/>
+					<node name="language" value="Språk"/>
+					<node name="encodingSet" value="Teckenuppsättning"/>
+					<node name="encoding" value="Kodning"/>
 				</node>
 				<node name="Authors" toBeTranslated="true" value="Authors">
-					<node name="authorDisplayName" toBeTranslated="true" value="Author Name" />
+					<node name="authorDisplayName" toBeTranslated="true" value="Author Name"/>
 				</node>
 				<node name="Series" value="Serier">
-					<node name="seriesTitle" value="Serietitel" />
-					<node name="bookIndex" value="Boknummer" />
+					<node name="seriesTitle" value="Serietitel"/>
+					<node name="bookIndex" value="Boknummer"/>
 				</node>
 				<node name="Tags" toBeTranslated="true" value="Tags">
-					<node name="tags" toBeTranslated="true" value="Tag Name" />
+					<node name="tags" toBeTranslated="true" value="Tag Name"/>
 				</node>
 				<node name="Text" value="Text">
-					<node name="breakType" value="Bryt stycke vid" />
-					<node name="ignoreIndent" value="Ignorera indentering mindre än" />
-					<node name="buildTOC" value="Bygg innehållsförteckning" />
-					<node name="emptyLines" value="Tomma rader innan nytt avsnitt" />
+					<node name="breakType" value="Bryt stycke vid"/>
+					<node name="ignoreIndent" value="Ignorera indentering mindre än"/>
+					<node name="buildTOC" value="Bygg innehållsförteckning"/>
+					<node name="emptyLines" value="Tomma rader innan nytt avsnitt"/>
 				</node>
 				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
-					<node name="breakType" value="Bryt stycke vid" />
-					<node name="ignoreIndent" value="Ignorera indentering mindre än" />
-					<node name="buildTOC" value="Bygg innehållsförteckning" />
-					<node name="emptyLines" value="Tomma rader innan nytt avsnitt" />
+					<node name="breakType" value="Bryt stycke vid"/>
+					<node name="ignoreIndent" value="Ignorera indentering mindre än"/>
+					<node name="buildTOC" value="Bygg innehållsförteckning"/>
+					<node name="emptyLines" value="Tomma rader innan nytt avsnitt"/>
 				</node>
 			</node>
 		</node>
 		<node name="AuthorInfoDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Author Info" />
-			<node name="name" toBeTranslated="true" value="Author Name" />
-			<node name="sortKey" toBeTranslated="true" value="Author Sort Key" />
+			<node name="title" toBeTranslated="true" value="FBReader - Author Info"/>
+			<node name="name" toBeTranslated="true" value="Author Name"/>
+			<node name="sortKey" toBeTranslated="true" value="Author Sort Key"/>
 		</node>
 		<node name="addFileDialog">
-			<node name="title" value="FBReader - Lägg till bok till biblioteket" />
+			<node name="title" value="FBReader - Lägg till bok till biblioteket"/>
 		</node>
 		<node name="textSearchDialog">
-			<node name="title" value="Textsökning" />
-			<node name="text" value="" />
-			<node name="ignoreCase" value="&amp;Ignorera skiftläge" />
-			<node name="wholeText" value="I h&amp;ela texten" />
-			<node name="backward" value="&amp;Bakåt" />
-			<node name="currentSection" value="Endast i &amp;detta avsnitt" />
+			<node name="title" value="Textsökning"/>
+			<node name="text" value=""/>
+			<node name="ignoreCase" value="&amp;Ignorera skiftläge"/>
+			<node name="wholeText" value="I h&amp;ela texten"/>
+			<node name="backward" value="&amp;Bakåt"/>
+			<node name="currentSection" value="Endast i &amp;detta avsnitt"/>
 		</node>
 		<node name="networkSearchDialog">
-			<node name="title" toBeTranslated="true" value="Network Search" />
-			<node name="titleAndSeries" toBeTranslated="true" value="Title/Series" />
-			<node name="author" toBeTranslated="true" value="Author" />
-			<node name="category" toBeTranslated="true" value="Category" />
-			<node name="description" toBeTranslated="true" value="Description" />
-			<node name="annotation" toBeTranslated="true" value="Search results for: %s" />
+			<node name="title" toBeTranslated="true" value="Network Search"/>
+			<node name="titleAndSeries" toBeTranslated="true" value="Title/Series"/>
+			<node name="author" toBeTranslated="true" value="Author"/>
+			<node name="category" toBeTranslated="true" value="Category"/>
+			<node name="description" toBeTranslated="true" value="Description"/>
+			<node name="annotation" toBeTranslated="true" value="Search results for: %s"/>
 		</node>
 		<node name="gotoPageDialog">
-			<node name="title" toBeTranslated="true" value="Go To Page" />
-			<node name="pageNumber" toBeTranslated="true" value="Go to Page Number" />
+			<node name="title" toBeTranslated="true" value="Go To Page"/>
+			<node name="pageNumber" toBeTranslated="true" value="Go to Page Number"/>
 		</node>
 		<node name="editTagDialog">
-			<node name="title" toBeTranslated="true" value="Edit Tag" />
-			<node name="name" toBeTranslated="true" value="Tag Name" />
-			<node name="includeSubtags" toBeTranslated="true" value="Include Subtags" />
+			<node name="title" toBeTranslated="true" value="Edit Tag"/>
+			<node name="name" toBeTranslated="true" value="Tag Name"/>
+			<node name="includeSubtags" toBeTranslated="true" value="Include Subtags"/>
 		</node>
 		<node name="cloneTagDialog">
-			<node name="title" toBeTranslated="true" value="Clone Tag" />
-			<node name="name" toBeTranslated="true" value="Tag Name" />
-			<node name="includeSubtags" toBeTranslated="true" value="Include Subtags" />
+			<node name="title" toBeTranslated="true" value="Clone Tag"/>
+			<node name="name" toBeTranslated="true" value="Tag Name"/>
+			<node name="includeSubtags" toBeTranslated="true" value="Include Subtags"/>
 		</node>
 		<node name="removeBookBox">
-			<node name="title" value="Ta bort bok" />
-			<node name="message" value="Ta bort boken&#10;&quot;%s&quot;&#10;från biblioteket?" />
-			<node name="deleteFile" toBeTranslated="true" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?" />
+			<node name="title" value="Ta bort bok"/>
+			<node name="message" value="Ta bort boken&#10;&quot;%s&quot;&#10;från biblioteket?"/>
+			<node name="deleteFile" toBeTranslated="true" value="Are you sure you want to&#10;remove file&#10;“%s”&#10;from the disk?"/>
 		</node>
 		<node name="removeTagBox">
-			<node name="title" toBeTranslated="true" value="Remove Tag" />
-			<node name="message" toBeTranslated="true" value="Remove Tag “%s”?" />
+			<node name="title" toBeTranslated="true" value="Remove Tag"/>
+			<node name="message" toBeTranslated="true" value="Remove Tag “%s”?"/>
 		</node>
 		<node name="openBookErrorBox">
-			<node name="title" value="Fel" />
-			<node name="message" value="Kunde inte öppna:&#10;%s" />
+			<node name="title" value="Fel"/>
+			<node name="message" value="Kunde inte öppna:&#10;%s"/>
 		</node>
 		<node name="removeFileErrorBox">
-			<node name="title" toBeTranslated="true" value="Error" />
-			<node name="message" toBeTranslated="true" value="Couldn&apos;t remove file&#10;%s" />
+			<node name="title" toBeTranslated="true" value="Error"/>
+			<node name="message" toBeTranslated="true" value="Couldn't remove file&#10;%s"/>
 		</node>
 		<node name="noHelpBox">
-			<node name="title" value="Fel" />
-			<node name="message" value="Tyvärr, hjälpfilen hittades inte" />
+			<node name="title" value="Fel"/>
+			<node name="message" value="Tyvärr, hjälpfilen hittades inte"/>
 		</node>
 		<node name="networkError">
-			<node name="emptyLibrariesList" toBeTranslated="true" value="Empty libraries list" />
-			<node name="authenticationFailed" toBeTranslated="true" value="Authentication failed" />
-			<node name="internalError" toBeTranslated="true" value="Internal server error" />
-			<node name="purchaseNotEnoughMoney" toBeTranslated="true" value="Not enough money" />
-			<node name="purchaseMissingBook" toBeTranslated="true" value="Missing book" />
-			<node name="purchaseAlreadyPurchased" toBeTranslated="true" value="Already purchased" />
-			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased" />
-			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded" />
-			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation" />
-			<node name="loginAlreadyTaken" toBeTranslated="true" value="Username is already in use" />
-			<node name="loginNotSpecified" toBeTranslated="true" value="Please, enter a username" />
-			<node name="passwordNotSpecified" toBeTranslated="true" value="Please, enter a non-empty password" />
-			<node name="emailNotSpecified" toBeTranslated="true" value="Please, enter an e-mail address" />
-			<node name="invalidEMail" toBeTranslated="true" value="Invalid e-mail address" />
-			<node name="tooManyRegistrations" toBeTranslated="true" value="Too many registrations from your IP;&#10;try again in a few minutes" />
-			<node name="noUserEmail" toBeTranslated="true" value="No user was registered&#10;with specified e-mail address" />
+			<node name="emptyLibrariesList" toBeTranslated="true" value="Empty libraries list"/>
+			<node name="authenticationFailed" toBeTranslated="true" value="Authentication failed"/>
+			<node name="internalError" toBeTranslated="true" value="Internal server error"/>
+			<node name="purchaseNotEnoughMoney" toBeTranslated="true" value="Not enough money"/>
+			<node name="purchaseMissingBook" toBeTranslated="true" value="Missing book"/>
+			<node name="purchaseAlreadyPurchased" toBeTranslated="true" value="Already purchased"/>
+			<node name="bookNotPurchased" toBeTranslated="true" value="Book was not purchased"/>
+			<node name="downloadLimitExceeded" toBeTranslated="true" value="Download limit exceeded"/>
+			<node name="unsupportedOperation" toBeTranslated="true" value="Unsupported operation"/>
+			<node name="loginAlreadyTaken" toBeTranslated="true" value="Username is already in use"/>
+			<node name="loginNotSpecified" toBeTranslated="true" value="Please, enter a username"/>
+			<node name="passwordNotSpecified" toBeTranslated="true" value="Please, enter a non-empty password"/>
+			<node name="emailNotSpecified" toBeTranslated="true" value="Please, enter an e-mail address"/>
+			<node name="invalidEMail" toBeTranslated="true" value="Invalid e-mail address"/>
+			<node name="tooManyRegistrations" toBeTranslated="true" value="Too many registrations from your IP;&#10;try again in a few minutes"/>
+			<node name="noUserEmail" toBeTranslated="true" value="No user was registered&#10;with specified e-mail address"/>
 			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
 		</node>
 		<node name="downloadError">
-			<node name="title" toBeTranslated="true" value="Error while downloading" />
-			<node name="message" toBeTranslated="true" value="Can&apos;t download this book at the moment" />
+			<node name="title" toBeTranslated="true" value="Error while downloading"/>
+			<node name="message" toBeTranslated="true" value="Can't download this book at the moment"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Läser in bok. Var god vänta..." />
-			<node name="loadingBookList" value="Läser in boklista. Var god vänta..." />
-			<node name="migrate" toBeTranslated="true" value="Upgrading to the new version. Please, wait..." />
-			<node name="downloadBookList" toBeTranslated="true" value="Downloading book list. Please, wait..." />
-			<node name="downloadBook" toBeTranslated="true" value="Downloading book. Please, wait..." />
-			<node name="downloadImages" toBeTranslated="true" value="Downloading images. Please, wait..." />
-			<node name="authentication" toBeTranslated="true" value="Authentication. Please, wait..." />
-			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..." />
-			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..." />
-			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..." />
-			<node name="registerUser" toBeTranslated="true" value="Registering new account. Please, wait..." />
-			<node name="passwordRecovery" toBeTranslated="true" value="Recovering password. Please, wait..." />
-			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..." />
-			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..." />
+			<node name="loadingBook" value="Läser in bok. Var god vänta..."/>
+			<node name="loadingBookList" value="Läser in boklista. Var god vänta..."/>
+			<node name="migrate" toBeTranslated="true" value="Upgrading to the new version. Please, wait..."/>
+			<node name="downloadBookList" toBeTranslated="true" value="Downloading book list. Please, wait..."/>
+			<node name="downloadBook" toBeTranslated="true" value="Downloading book. Please, wait..."/>
+			<node name="downloadImages" toBeTranslated="true" value="Downloading images. Please, wait..."/>
+			<node name="authentication" toBeTranslated="true" value="Authentication. Please, wait..."/>
+			<node name="purchaseBook" toBeTranslated="true" value="Purchase book. Please, wait..."/>
+			<node name="initializeAuthenticationManager" toBeTranslated="true" value="Downloading account information. Please, wait..."/>
+			<node name="loadSubCatalog" toBeTranslated="true" value="Loading catalog. Please, wait..."/>
+			<node name="registerUser" toBeTranslated="true" value="Registering new account. Please, wait..."/>
+			<node name="passwordRecovery" toBeTranslated="true" value="Recovering password. Please, wait..."/>
+			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..."/>
+			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..."/>
 			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
-			<node name="title" toBeTranslated="true" value="Purchase book" />
-			<node name="message" toBeTranslated="true" value="Are you sure you want to buy&#10;“%s”&#10;book?" />
+			<node name="title" toBeTranslated="true" value="Purchase book"/>
+			<node name="message" toBeTranslated="true" value="Are you sure you want to buy&#10;“%s”&#10;book?"/>
 		</node>
 		<node name="AuthenticationDialog">
-			<node name="title" toBeTranslated="true" value="Authentication" />
-			<node name="login" toBeTranslated="true" value="Username" />
-			<node name="password" toBeTranslated="true" value="Password" />
-			<node name="skipIP" toBeTranslated="true" value="Don&apos;t bound to ip-address" />
-			<node name="loginIsEmpty" toBeTranslated="true" value="Username should be non-empty" />
+			<node name="title" toBeTranslated="true" value="Authentication"/>
+			<node name="login" toBeTranslated="true" value="Username"/>
+			<node name="password" toBeTranslated="true" value="Password"/>
+			<node name="skipIP" toBeTranslated="true" value="Don't bound to ip-address"/>
+			<node name="loginIsEmpty" toBeTranslated="true" value="Username should be non-empty"/>
 		</node>
 		<node name="emptyCatalogBox">
-			<node name="title" toBeTranslated="true" value="Information" />
-			<node name="message" toBeTranslated="true" value="Catalog is empty." />
+			<node name="title" toBeTranslated="true" value="Information"/>
+			<node name="message" toBeTranslated="true" value="Catalog is empty."/>
 		</node>
 		<node name="dontShowConfirmBox">
-			<node name="title" toBeTranslated="true" value="Disable catalog" />
-			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;You can enable it in the future at&#10;“Network Search” tab in the Options dialog." />
+			<node name="title" toBeTranslated="true" value="Disable catalog"/>
+			<node name="message" toBeTranslated="true" value="Are you sure you want to disable&#10;“%s” catalog?&#10;&#10;You can enable it in the future at&#10;“Network Search” tab in the Options dialog."/>
 		</node>
 		<node name="deleteLocalCopyBox">
-			<node name="title" toBeTranslated="true" value="Delete Book" />
-			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;“%s” book&#10;from the disk?" />
+			<node name="title" toBeTranslated="true" value="Delete Book"/>
+			<node name="message" toBeTranslated="true" value="Are you sure&#10;you want to remove&#10;“%s” book&#10;from the disk?"/>
 		</node>
 		<node name="RegisterUserDialog">
-			<node name="title" toBeTranslated="true" value="Register User" />
-			<node name="login" toBeTranslated="true" value="Username" />
-			<node name="password" toBeTranslated="true" value="Password" />
-			<node name="confirmPassword" toBeTranslated="true" value="Password confirmation" />
-			<node name="email" toBeTranslated="true" value="E-mail" />
-			<node name="differentPasswords" toBeTranslated="true" value="Password and password confirmation must be the same." />
+			<node name="title" toBeTranslated="true" value="Register User"/>
+			<node name="login" toBeTranslated="true" value="Username"/>
+			<node name="password" toBeTranslated="true" value="Password"/>
+			<node name="confirmPassword" toBeTranslated="true" value="Password confirmation"/>
+			<node name="email" toBeTranslated="true" value="E-mail"/>
+			<node name="differentPasswords" toBeTranslated="true" value="Password and password confirmation must be the same."/>
 		</node>
 		<node name="PasswordRecoveryDialog">
-			<node name="title" toBeTranslated="true" value="Password Recovery" />
-			<node name="email" toBeTranslated="true" value="E-mail" />
+			<node name="title" toBeTranslated="true" value="Password Recovery"/>
+			<node name="email" toBeTranslated="true" value="E-mail"/>
 		</node>
 		<node name="recoverySuccessfulBox">
-			<node name="title" toBeTranslated="true" value="Password Recovery" />
-			<node name="message" toBeTranslated="true" value="A message with further instructions&#10;has been sent to&#10;%s" />
+			<node name="title" toBeTranslated="true" value="Password Recovery"/>
+			<node name="message" toBeTranslated="true" value="A message with further instructions&#10;has been sent to&#10;%s"/>
 		</node>
 		<node name="cantOpenDownloadedFile">
-			<node name="title" toBeTranslated="true" value="Download Error" />
-			<node name="message" toBeTranslated="true" value="Can&apos;t open downloaded file&#10;%s." />
+			<node name="title" toBeTranslated="true" value="Download Error"/>
+			<node name="message" toBeTranslated="true" value="Can't open downloaded file&#10;%s."/>
 		</node>
 	</node>
 	<node name="style">
-		<node name="Base" value="Bas" />
-		<node name="Regular Paragraph" value="Vanligt stycke" />
-		<node name="Title" value="Titel" />
-		<node name="Section Title" value="Avsnittstitel" />
-		<node name="Poem Title" value="Poem Title" />
-		<node name="Subtitle" value="Undertext" />
-		<node name="Annotation" value="Notation" />
-		<node name="Epigraph" value="Epigram" />
-		<node name="Stanza" value="Strof" />
-		<node name="Verse" value="Vers" />
-		<node name="Preformatted text" value="Förformaterad text" />
-		<node name="Image" value="Bild" />
-		<node name="Cite" value="Citat" />
-		<node name="Author" value="Författare" />
-		<node name="Date" value="Datum" />
-		<node name="Internal Hyperlink" value="Intern hyperlänk" />
-		<node name="Footnote" value="Fotnot" />
-		<node name="Emphasis" value="Betoning" />
-		<node name="Strong" value="Stark" />
-		<node name="Subscript" value="Nedsänkt" />
-		<node name="Superscript" value="Upphöjt" />
-		<node name="Code" value="Kod" />
-		<node name="StrikeThrough" value="Genomstruket" />
-		<node name="Contents Table" value="Innehållstabell" />
-		<node name="Library Entry" toBeTranslated="true" value="Library Entry" />
-		<node name="Recent Book List" value="Lista över tidigare böcker" />
-		<node name="Italic" value="Kursiv" />
-		<node name="Bold" value="Fet" />
-		<node name="Definition" value="Definition" />
-		<node name="Definition Description" value="Definitionsbeskrivning" />
-		<node name="Header 1" value="Rubrik 1" />
-		<node name="Header 2" value="Rubrik 2" />
-		<node name="Header 3" value="Rubrik 3" />
-		<node name="Header 4" value="Rubrik 4" />
-		<node name="Header 5" value="Rubrik 5" />
-		<node name="Header 6" value="Rubrik 6" />
-		<node name="External Hyperlink" value="Extern hyperlänk" />
-		<node name="Link to Another Book" toBeTranslated="true" value="Link to Another Book" />
+		<node name="Base" value="Bas"/>
+		<node name="Regular Paragraph" value="Vanligt stycke"/>
+		<node name="Title" value="Titel"/>
+		<node name="Section Title" value="Avsnittstitel"/>
+		<node name="Poem Title" value="Poem Title"/>
+		<node name="Subtitle" value="Undertext"/>
+		<node name="Annotation" value="Notation"/>
+		<node name="Epigraph" value="Epigram"/>
+		<node name="Stanza" value="Strof"/>
+		<node name="Verse" value="Vers"/>
+		<node name="Preformatted text" value="Förformaterad text"/>
+		<node name="Image" value="Bild"/>
+		<node name="Cite" value="Citat"/>
+		<node name="Author" value="Författare"/>
+		<node name="Date" value="Datum"/>
+		<node name="Internal Hyperlink" value="Intern hyperlänk"/>
+		<node name="Footnote" value="Fotnot"/>
+		<node name="Emphasis" value="Betoning"/>
+		<node name="Strong" value="Stark"/>
+		<node name="Subscript" value="Nedsänkt"/>
+		<node name="Superscript" value="Upphöjt"/>
+		<node name="Code" value="Kod"/>
+		<node name="StrikeThrough" value="Genomstruket"/>
+		<node name="Contents Table" value="Innehållstabell"/>
+		<node name="Library Entry" toBeTranslated="true" value="Library Entry"/>
+		<node name="Recent Book List" value="Lista över tidigare böcker"/>
+		<node name="Italic" value="Kursiv"/>
+		<node name="Bold" value="Fet"/>
+		<node name="Definition" value="Definition"/>
+		<node name="Definition Description" value="Definitionsbeskrivning"/>
+		<node name="Header 1" value="Rubrik 1"/>
+		<node name="Header 2" value="Rubrik 2"/>
+		<node name="Header 3" value="Rubrik 3"/>
+		<node name="Header 4" value="Rubrik 4"/>
+		<node name="Header 5" value="Rubrik 5"/>
+		<node name="Header 6" value="Rubrik 6"/>
+		<node name="External Hyperlink" value="Extern hyperlänk"/>
+		<node name="Link to Another Book" toBeTranslated="true" value="Link to Another Book"/>
 	</node>
 	<node name="external">
-		<node name="browser" value="Webbläsare" />
-		<node name="defaultBrowser" value="Standardwebbläsare" />
+		<node name="browser" value="Webbläsare"/>
+		<node name="defaultBrowser" value="Standardwebbläsare"/>
 	</node>
 	<node name="mobipocketPlugin">
-		<node name="unknown" value="Okänt fel" />
-		<node name="unsupportedCompressionMethod" value="Komprimeringsmetoden stöds inte" />
-		<node name="encryptedFile" value="DRM-skyddad fil" />
+		<node name="unknown" value="Okänt fel"/>
+		<node name="unsupportedCompressionMethod" value="Komprimeringsmetoden stöds inte"/>
+		<node name="encryptedFile" value="DRM-skyddad fil"/>
 	</node>
 	<node name="networkLibrary">
-		<node name="caption" toBeTranslated="true" value="Network Library" />
+		<node name="caption" toBeTranslated="true" value="Network Library"/>
 	</node>
 	<node name="library">
-		<node name="caption" value="Bibliotek" />
+		<node name="caption" value="Bibliotek"/>
 	</node>
 </resources>
