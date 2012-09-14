@@ -29,15 +29,15 @@ ZLFSArchiverTar::ZLFSArchiverTar() {
 }
 
 ZLFile::ArchiveType ZLFSArchiverTar::prepareFile(ZLFile &file, std::string &nameWithoutExt) {
-    std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
+	std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
 	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tar")) {
-        return signature();
+		return signature();
 	}
 
-    if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tgz")	|| ZLStringUtil::stringEndsWith(lowerCaseName, ".ipk")) {
-        //nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 4);
+	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".tgz")	|| ZLStringUtil::stringEndsWith(lowerCaseName, ".ipk")) {
+		//nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 4);
 		// Note, that 'tgz' and 'ipk' files are also compressed
-        setCompressed(file, true);
+		setCompressed(file, true);
 		return "tar.gz";
 	}
 
@@ -49,17 +49,17 @@ const std::string ZLFSArchiverTar::signature() const {
 }
 
 shared_ptr<ZLDir> ZLFSArchiverTar::createDirectory(const ZLFile &file, const std::string &path) {
-    if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
-        return new ZLTarDir(path);
-    }
-    return 0;
+	if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
+		return new ZLTarDir(path);
+	}
+	return 0;
 }
 
 shared_ptr<ZLInputStream> ZLFSArchiverTar::archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath) {
-    if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
-        return new ZLTarInputStream(base, subpath);
+	if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
+		return new ZLTarInputStream(base, subpath);
 	}
-    return 0;
+	return 0;
 }
 
 

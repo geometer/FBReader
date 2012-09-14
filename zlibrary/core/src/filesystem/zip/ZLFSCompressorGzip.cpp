@@ -30,8 +30,8 @@ ZLFSCompressorGzip::ZLFSCompressorGzip() {
 }
 
 ZLFile::ArchiveType ZLFSCompressorGzip::prepareFile(ZLFile &file, std::string &nameWithoutExt) {
-    (void)file;
-    std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
+	(void)file;
+	std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
 	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".gz")) {
 		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 3);
 		return signature();
@@ -46,7 +46,7 @@ const std::string ZLFSCompressorGzip::signature() const {
 shared_ptr<ZLInputStream> ZLFSCompressorGzip::envelope(ZLFile::ArchiveType &type, shared_ptr<ZLInputStream> base) {
 	ZLFile::ArchiveType lastType = ZLFSPluginManager::getLastArchiver(type);
 	if (lastType == signature()) {
-        type = ZLFSPluginManager::stripLastArchiver(type);
+		type = ZLFSPluginManager::stripLastArchiver(type);
 		return new ZLGzipInputStream(base);
 	}
 	return base;

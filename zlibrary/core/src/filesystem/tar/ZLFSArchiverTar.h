@@ -27,10 +27,10 @@ class ZLFSArchiverTar : public ZLFSArchiver {
 
 public:
 	ZLFSArchiverTar();
-    virtual const std::string signature() const;
-    virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string &nameWithoutExt);
-    virtual shared_ptr<ZLDir> createDirectory(const ZLFile &file, const std::string &path);
-    virtual shared_ptr<ZLInputStream> archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath);
+	virtual const std::string signature() const;
+	virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string &nameWithoutExt);
+	virtual shared_ptr<ZLDir> createDirectory(const ZLFile &file, const std::string &path);
+	virtual shared_ptr<ZLInputStream> archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath);
 	virtual ~ZLFSArchiverTar();
 };
 

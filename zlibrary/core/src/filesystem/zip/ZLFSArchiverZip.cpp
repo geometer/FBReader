@@ -29,8 +29,8 @@ ZLFSArchiverZip::ZLFSArchiverZip() {
 }
 
 ZLFile::ArchiveType ZLFSArchiverZip::prepareFile(ZLFile &file, std::string &nameWithoutExt) {
-    (void)file;
-    std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
+	(void)file;
+	std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
 	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".zip")) {
 		return signature();
 	}
@@ -42,17 +42,17 @@ const std::string ZLFSArchiverZip::signature() const {
 }
 
 shared_ptr<ZLDir> ZLFSArchiverZip::createDirectory(const ZLFile &file, const std::string &path) {
-    if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
-        return new ZLZipDir(path);
-    }
-    return 0;
+	if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
+		return new ZLZipDir(path);
+	}
+	return 0;
 }
 
 shared_ptr<ZLInputStream> ZLFSArchiverZip::archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath) {
-    if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
-        return new ZLZipInputStream(base, file.physicalFilePath(), subpath);
+	if (ZLStringUtil::stringStartsWith(file.archiveType(), signature())) {
+		return new ZLZipInputStream(base, file.physicalFilePath(), subpath);
 	}
-    return 0;
+	return 0;
 }
 
 ZLFSArchiverZip::~ZLFSArchiverZip() {

@@ -58,7 +58,7 @@ ZLFile::ZLFile(const std::string &path, shared_ptr<ZLMimeType> mimeType) : myPat
 		myArchiveType = it->second;
 	} else {
 		myArchiveType.clear();
-        myArchiveType = ZLFSManager::Instance().Plugins().prepareFile(*this, myNameWithoutExtension);
+		myArchiveType = ZLFSManager::Instance().Plugins().prepareFile(*this, myNameWithoutExtension);
 	}
 
 	int index = myNameWithoutExtension.rfind('.');
@@ -70,7 +70,7 @@ ZLFile::ZLFile(const std::string &path, shared_ptr<ZLMimeType> mimeType) : myPat
 
 shared_ptr<ZLInputStream> ZLFile::envelopeCompressedStream(shared_ptr<ZLInputStream> &base) const {
 	if (base != 0) {
-        return ZLFSManager::Instance().Plugins().envelope(*this, base);
+		return ZLFSManager::Instance().Plugins().envelope(*this, base);
 	}
 	return base;
 }
@@ -94,7 +94,7 @@ shared_ptr<ZLInputStream> ZLFile::inputStream() const {
 		const ZLFile baseFile(baseName);
 		shared_ptr<ZLInputStream> base = baseFile.inputStream();
 		if (!base.isNull()) {
-            stream = ZLFSManager::Instance().Plugins().archiveInputStream(baseFile, base, myPath.substr(index + 1));
+			stream = ZLFSManager::Instance().Plugins().archiveInputStream(baseFile, base, myPath.substr(index + 1));
 		}
 		stream = envelopeCompressedStream(stream);
 	}
@@ -117,7 +117,7 @@ shared_ptr<ZLDir> ZLFile::directory(bool createUnexisting) const {
 		if (isDirectory()) {
 			return ZLFSManager::Instance().createPlainDirectory(myPath);
 		} else {
-            return ZLFSManager::Instance().Plugins().createDirectory(*this, myPath);
+			return ZLFSManager::Instance().Plugins().createDirectory(*this, myPath);
 		}
 	} else if (createUnexisting) {
 		myInfoIsFilled = false;

@@ -30,8 +30,8 @@ ZLFSCompressorBzip2::ZLFSCompressorBzip2() {
 }
 
 ZLFile::ArchiveType ZLFSCompressorBzip2::prepareFile(ZLFile &file, std::string &nameWithoutExt) {
-    (void)file;
-    std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
+	(void)file;
+	std::string lowerCaseName = ZLUnicodeUtil::toLower(nameWithoutExt);
 	if (ZLStringUtil::stringEndsWith(lowerCaseName, ".bz2")) {
 		nameWithoutExt = nameWithoutExt.substr(0, nameWithoutExt.length() - 4);
 		return signature();
@@ -46,7 +46,7 @@ const std::string ZLFSCompressorBzip2::signature() const {
 shared_ptr<ZLInputStream> ZLFSCompressorBzip2::envelope(ZLFile::ArchiveType &type, shared_ptr<ZLInputStream> base) {
 	ZLFile::ArchiveType lastType = ZLFSPluginManager::getLastArchiver(type);
 	if (lastType == signature()) {
-        type = ZLFSPluginManager::stripLastArchiver(type);
+		type = ZLFSPluginManager::stripLastArchiver(type);
 		return new ZLBzip2InputStream(base);
 	}
 	return base;

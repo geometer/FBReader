@@ -40,7 +40,7 @@ public:
 
 protected:
 	static ZLFSManager *ourInstance;
-    ZLFSPluginManager *myPluginManager;
+	ZLFSPluginManager *myPluginManager;
 
 public:
 	ZLFSPluginManager &Plugins();
@@ -48,7 +48,7 @@ public:
 protected:
 	ZLFSManager();
 	virtual ~ZLFSManager();
-	
+
 public:
 	void normalize(std::string &path) const;
 	virtual std::string resolveSymlink(const std::string &path) const = 0;

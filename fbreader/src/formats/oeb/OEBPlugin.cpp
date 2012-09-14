@@ -93,7 +93,7 @@ ZLFile OEBPlugin::opfFile(const ZLFile &oebFile) {
 
 	ZLLogger::Instance().println("epub", "Looking for opf file in " + oebFile.path());
 
-    shared_ptr<ZLDir> oebDir = oebFile.directory();
+	shared_ptr<ZLDir> oebDir = oebFile.directory();
 	if (!oebDir.isNull()) {
 		const ZLFile containerInfoFile(oebDir->itemPath("META-INF/container.xml"));
 		if (containerInfoFile.exists()) {

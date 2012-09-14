@@ -47,7 +47,7 @@ bool DocBookReader::readBook() {
 	if (stream.isNull()) {
 		return false;
 	}
-    return readDocument(stream);
+	return readDocument(stream);
 }
 
 bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream) {
@@ -62,7 +62,7 @@ bool DocBookReader::readDocument(shared_ptr<ZLInputStream> inputStream) {
 
 	shared_ptr<OleStorage> storage = new OleStorage;
 
-    if (!storage->init(inputStream, inputStream->sizeOfOpened())) {
+	if (!storage->init(inputStream, inputStream->sizeOfOpened())) {
 		ZLLogger::Instance().println("DocBookReader", "Broken OLE file!");
 		return false;
 	}

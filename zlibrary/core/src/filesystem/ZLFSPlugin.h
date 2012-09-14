@@ -1,7 +1,7 @@
 /*
  * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
- * Contributed by Serge Osnach <serge.osnach@gmail.com> 
- * 
+ * Contributed by Serge Osnach <serge.osnach@gmail.com>
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -29,13 +29,13 @@
 class ZLFSCompressor {
 
 public:
-    ZLFSCompressor();
-    virtual ~ZLFSCompressor();
+	ZLFSCompressor();
+	virtual ~ZLFSCompressor();
 
 public:
-    virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string &nameWithoutExt) = 0;
-    virtual const std::string signature() const = 0;
-    virtual shared_ptr<ZLInputStream> envelope(ZLFile::ArchiveType &type, shared_ptr<ZLInputStream> base) = 0;
+	virtual ZLFile::ArchiveType prepareFile(ZLFile &file, std::string &nameWithoutExt) = 0;
+	virtual const std::string signature() const = 0;
+	virtual shared_ptr<ZLInputStream> envelope(ZLFile::ArchiveType &type, shared_ptr<ZLInputStream> base) = 0;
 };
 
 inline ZLFSCompressor::ZLFSCompressor() {}
@@ -44,17 +44,17 @@ inline ZLFSCompressor::~ZLFSCompressor() {}
 class ZLFSArchiver {
 
 public:
-    ZLFSArchiver();
-    virtual ~ZLFSArchiver();
+	ZLFSArchiver();
+	virtual ~ZLFSArchiver();
 
 public:
-    virtual ZLFile::ArchiveType prepareFile(ZLFile &file,	std::string &nameWithoutExt) = 0;
-    virtual shared_ptr<ZLDir> createDirectory(const ZLFile &file, const std::string &path ) = 0;
-    virtual shared_ptr<ZLInputStream> archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath) = 0;
-    virtual const std::string signature() const = 0;
+	virtual ZLFile::ArchiveType prepareFile(ZLFile &file,	std::string &nameWithoutExt) = 0;
+	virtual shared_ptr<ZLDir> createDirectory(const ZLFile &file, const std::string &path ) = 0;
+	virtual shared_ptr<ZLInputStream> archiveInputStream(const ZLFile &file, shared_ptr<ZLInputStream> base, const std::string &subpath) = 0;
+	virtual const std::string signature() const = 0;
 
 protected:
-    void setCompressed(ZLFile &file, bool compressed);
+	void setCompressed(ZLFile &file, bool compressed);
 };
 
 inline ZLFSArchiver::ZLFSArchiver() {}

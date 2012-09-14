@@ -49,13 +49,13 @@ public:
 	static std::string replaceIllegalCharacters(const std::string &fileName, char replaceWith);
 
 public:
-    static const std::string ZIP; // = "zip"
-    typedef std::string ArchiveType; //ArchiveType is a string like "tag.gz", that describes sequence of compressors/archivers need to be used
+	static const std::string ZIP; // = "zip"
+	 typedef std::string ArchiveType; //ArchiveType is a string like "tag.gz", that describes sequence of compressors/archivers need to be used
 	ArchiveType archiveType() const;
 private:
 	void setArchiveType(const ArchiveType type);
-    void setCompressed(bool compressed);
-    void setArchived(bool archived);
+	void setCompressed(bool compressed);
+	void setArchived(bool archived);
 private:
 	ZLFile();
 
@@ -104,8 +104,8 @@ private:
 	mutable shared_ptr<ZLMimeType> myMimeType;
 	mutable bool myMimeTypeIsUpToDate;
 	mutable ArchiveType myArchiveType;
-    bool myIsCompressed;
-    bool myIsArchive;
+	bool myIsCompressed;
+	bool myIsArchive;
 	mutable ZLFileInfo myInfo;
 	mutable bool myInfoIsFilled;
 };

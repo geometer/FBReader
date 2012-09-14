@@ -57,10 +57,10 @@ void ZLFSManager::normalize(std::string &path) const {
 }
 
 ZLFSManager::ZLFSManager() {
-    myPluginManager = new ZLFSPluginManager();
+	myPluginManager = new ZLFSPluginManager();
 }
 
 ZLFSManager::~ZLFSManager() {
-    delete myPluginManager;
+	 delete myPluginManager;
 }
 
