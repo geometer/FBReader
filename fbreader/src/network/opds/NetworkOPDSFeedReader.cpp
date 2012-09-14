@@ -285,7 +285,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 					(coverURL.empty() && rel == OPDSConstants::REL_COVER)) {
 				coverURL = href;
 			}
-		} else if (*type == *ZLMimeType::APPLICATION_ATOM_XML) {
+		} else if (type == ZLMimeType::APPLICATION_ATOM_XML) {
 			if (rel == ATOMConstants::REL_ALTERNATE) {
 				if (url.empty()) {
 					url = href;
@@ -298,13 +298,13 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 					catalogType = NetworkCatalogItem::BY_AUTHORS;
 				}
 			}
-		} else if (*type == *ZLMimeType::TEXT_HTML) {
+		} else if (type == ZLMimeType::TEXT_HTML) {
 			if (rel == OPDSConstants::REL_ACQUISITION ||
 					rel == ATOMConstants::REL_ALTERNATE ||
 					rel.empty()) {
 				htmlURL = href;
 			}
-		} else if (*type == *ZLMimeType::APPLICATION_LITRES_XML) {
+		} else if (type == ZLMimeType::APPLICATION_LITRES_XML) {
 			if (rel == OPDSConstants::REL_BOOKSHELF) {
 				litresCatalogue = true;
 				url = href;

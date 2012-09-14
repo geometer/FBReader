@@ -266,7 +266,7 @@ bool RtfReader::parseDocument() {
 							dataStart = ptr + 1;
 
 							if (imageStartOffset >= 0) {
-								if (*ZLMimeType::EMPTY != *myNextImageMimeType) {
+								if (ZLMimeType::EMPTY != myNextImageMimeType) {
 									const int imageSize = myStream->offset() + (ptr - end) - imageStartOffset;
 									insertImage(myNextImageMimeType, myFileName, imageStartOffset, imageSize);
 								}
