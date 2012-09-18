@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,22 +17,28 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LITRESUTIL_H__
-#define __LITRESUTIL_H__
+#ifndef __LITRESCATALOGITEM_H__
+#define __LITRESCATALOGITEM_H__
 
-#include <string>
+#include "../../NetworkItems.h"
 
-class NetworkLink;
-
-class LitResUtil {
+class LitResCatalogItem : public NetworkCatalogItem {
 
 public:
-	static std::string url(const std::string &path);
-	static std::string url(const NetworkLink &link, const std::string &path);
-	static std::string generateTrialUrl(std::string bookId);
+	LitResCatalogItem(
+		const NetworkLink &link,
+		const std::string &title,
+		const std::string &summary,
+		const std::map<URLType,std::string> &urlByType,
+		VisibilityType visibility = Always
+	);
 
 private:
-	 LitResUtil();
+	void onDisplayItem();
+	std::string loadChildren(NetworkItem::List &children);
+
+private:
+	 //bool myForceReload;
 };
 
-#endif /* __LITRESUTIL_H__ */
+#endif /* __LITRESCATALOGITEM_H__ */

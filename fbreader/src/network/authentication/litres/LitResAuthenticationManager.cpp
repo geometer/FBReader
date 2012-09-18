@@ -228,6 +228,8 @@ std::string LitResAuthenticationManager::initialize() {
 	std::string dummy1;
 
 	ZLExecutionData::Vector dataList;
+
+	//TODO implement retrieving information about account from purchased books query
 	dataList.push_back(loadPurchasedBooks(myPurchasedBooksIds, myPurchasedBooksList));
 	dataList.push_back(loadAccount(dummy1));
 

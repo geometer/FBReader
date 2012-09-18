@@ -157,6 +157,7 @@ ZLColor NetworkView::backgroundColor() const {
 	return FBOptions::Instance().BackgroundColorOption.value();
 }
 
+
 void NetworkView::makeUpToDate() {
 	NetworkLinkCollection &collection = NetworkLinkCollection::Instance();
 

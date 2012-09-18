@@ -23,6 +23,7 @@
 
 #include "LitResDataParser.h"
 #include "LitResGenre.h"
+#include "LitResUtil.h"
 #include "../../NetworkLink.h"
 
 static const std::string TAG_CATALOG = "catalit-fb2-books";
@@ -49,9 +50,9 @@ std::string LitResDataParser::stringAttributeValue(const char **attributes, cons
 	return value != 0 ? value : std::string();
 }
 
-LitResDataParser::LitResDataParser(const NetworkLink &link, NetworkItem::List &books) : 
+LitResDataParser::LitResDataParser(const NetworkLink &link, NetworkItem::List &books) :
 	myLink(link),
-	myBooks(books), 
+	myBooks(books),
 	myIndex(0) {
 	myState = START;
 }
@@ -75,9 +76,9 @@ void LitResDataParser::characterDataHandler(const char *data, size_t len) {
 
 void LitResDataParser::processState(const std::string &tag, bool closed, const char **attributes) {
 	switch(myState) {
-	case START: 
+	case START:
 		break;
-	case CATALOG: 
+	case CATALOG:
 		if (!closed && TAG_BOOK == tag) {
 			myBookId = stringAttributeValue(attributes, "hub_id");
 			myURLByType[NetworkItem::URL_COVER] =
@@ -89,6 +90,24 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				myURLByType[NetworkItem::URL_HTML_PAGE] = url;
 			}
 
+			//TODO check if buying book is working right
+			std::string price = BuyBookReference::price(stringAttributeValue(attributes, "price"), "RUB");
+			myReferences.push_back(new BuyBookReference(
+				"https://robot.litres.ru/pages/purchase_book/?art=" + myBookId,
+				BookReference::FB2_ZIP,
+				BookReference::BUY,
+				price
+			));
+
+			std::string hasTrial = stringAttributeValue(attributes, "has_trial");
+			if (!hasTrial.empty() && hasTrial != "0") {
+				myReferences.push_back(new BookReference(
+					LitResUtil::generateTrialUrl(myBookId),
+					BookReference::FB2_ZIP,
+					BookReference::DOWNLOAD_DEMO
+				));
+			}
+
 			myReferences.push_back(new BookReference(
 				"https://robot.litres.ru/pages/catalit_download_book/?art=" + myBookId,
 				BookReference::FB2_ZIP,
@@ -96,7 +115,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			));
 		}
 		break;
-	case BOOK: 
+	case BOOK:
 		if (closed && TAG_BOOK == tag) {
 			myBooks.push_back(new NetworkBookItem(
 				myLink,
@@ -126,11 +145,11 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			myReferences.clear();
 		}
 		break;
-	case BOOK_DESCRIPTION: 
+	case BOOK_DESCRIPTION:
 		break;
-	case HIDDEN: 
+	case HIDDEN:
 		break;
-	case TITLE_INFO: 
+	case TITLE_INFO:
 		if (!closed) {
 			if (TAG_AUTHOR == tag) {
 				myAuthorFirstName.clear();
@@ -143,9 +162,9 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 					myIndexInSeries = indexInSeries != 0 ? atoi(indexInSeries) : 0;
 				}
 			}
-		} 
+		}
 		break;
-	case AUTHOR: 
+	case AUTHOR:
 		if (closed && TAG_AUTHOR == tag) {
 			NetworkBookItem::AuthorData data;
 			if (!myAuthorFirstName.empty()) {
@@ -167,25 +186,25 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			myAuthors.push_back(data);
 		}
 		break;
-	case FIRST_NAME: 
+	case FIRST_NAME:
 		if (closed && TAG_FIRST_NAME == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
 			myAuthorFirstName = myBuffer;
 		}
 		break;
-	case MIDDLE_NAME: 
+	case MIDDLE_NAME:
 		if (closed && TAG_MIDDLE_NAME == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
 			myAuthorMiddleName = myBuffer;
 		}
 		break;
-	case LAST_NAME: 
+	case LAST_NAME:
 		if (closed && TAG_LAST_NAME == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
 			myAuthorLastName = myBuffer;
 		}
 		break;
-	case GENRE: 
+	case GENRE:
 		if (closed && TAG_GENRE == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
 
@@ -203,13 +222,13 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			}
 		}
 		break;
-	case BOOK_TITLE: 
+	case BOOK_TITLE:
 		if (closed && TAG_BOOK_TITLE == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
 			myTitle = myBuffer;
 		}
 		break;
-	case ANNOTATION: 
+	case ANNOTATION:
 		if (!closed) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
 			if (!myBuffer.empty()) {
@@ -254,56 +273,56 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 
 LitResDataParser::State LitResDataParser::getNextState(const std::string &tag, bool closed) {
 	switch(myState) {
-	case START: 
+	case START:
 		if (!closed && TAG_CATALOG == tag) {
 			return CATALOG;
 		}
 		break;
-	case CATALOG: 
+	case CATALOG:
 		if (!closed) {
 			if (TAG_BOOK == tag) {
 				return BOOK;
-			} 
+			}
 		} else {
 			if (TAG_CATALOG == tag) {
 				return START;
-			} 
+			}
 		}
 		break;
-	case BOOK: 
+	case BOOK:
 		if (!closed) {
 			if (TAG_TEXT_DESCRIPTION == tag) {
 				return BOOK_DESCRIPTION;
-			} 
+			}
 		} else {
 			if (TAG_BOOK == tag) {
 				return CATALOG;
-			} 
+			}
 		}
 		break;
-	case BOOK_DESCRIPTION: 
+	case BOOK_DESCRIPTION:
 		if (!closed) {
 			if (TAG_HIDDEN == tag) {
 				return HIDDEN;
-			} 
+			}
 		} else {
 			if (TAG_TEXT_DESCRIPTION == tag) {
 				return BOOK;
-			} 
+			}
 		}
 		break;
-	case HIDDEN: 
+	case HIDDEN:
 		if (!closed) {
 			if (TAG_TITLE_INFO == tag) {
 				return TITLE_INFO;
-			} 
+			}
 		} else {
 			if (TAG_HIDDEN == tag) {
 				return BOOK_DESCRIPTION;
-			} 
+			}
 		}
 		break;
-	case TITLE_INFO: 
+	case TITLE_INFO:
 		if (!closed) {
 			if (TAG_GENRE == tag) {
 				return GENRE;
@@ -318,15 +337,15 @@ LitResDataParser::State LitResDataParser::getNextState(const std::string &tag, b
 			} else if (TAG_LANGUAGE == tag) {
 				return LANGUAGE;
 			} /*else if (TAG_SEQUENCE == tag) {
-				return SEQUENCE; // handled without state through attributes 
-			}*/ 
+				return SEQUENCE; // handled without state through attributes
+			}*/
 		} else {
 			if (TAG_TITLE_INFO == tag) {
 				return HIDDEN;
-			} 
+			}
 		}
 		break;
-	case AUTHOR: 
+	case AUTHOR:
 		if (!closed) {
 			if (TAG_FIRST_NAME == tag) {
 				return FIRST_NAME;
@@ -338,35 +357,35 @@ LitResDataParser::State LitResDataParser::getNextState(const std::string &tag, b
 		} else {
 			if (TAG_AUTHOR == tag) {
 				return TITLE_INFO;
-			} 
+			}
 		}
 		break;
-	case FIRST_NAME: 
+	case FIRST_NAME:
 		if (closed && TAG_FIRST_NAME == tag) {
 			return AUTHOR;
 		}
 		break;
-	case MIDDLE_NAME: 
+	case MIDDLE_NAME:
 		if (closed && TAG_MIDDLE_NAME == tag) {
 			return AUTHOR;
 		}
 		break;
-	case LAST_NAME: 
+	case LAST_NAME:
 		if (closed && TAG_LAST_NAME == tag) {
 			return AUTHOR;
 		}
 		break;
-	case GENRE: 
+	case GENRE:
 		if (closed && TAG_GENRE == tag) {
 			return TITLE_INFO;
 		}
 		break;
-	case BOOK_TITLE: 
+	case BOOK_TITLE:
 		if (closed && TAG_BOOK_TITLE == tag) {
 			return TITLE_INFO;
 		}
 		break;
-	case ANNOTATION: 
+	case ANNOTATION:
 		if (closed && TAG_ANNOTATION == tag) {
 			return TITLE_INFO;
 		}

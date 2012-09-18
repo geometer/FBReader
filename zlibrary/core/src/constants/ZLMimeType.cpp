@@ -33,6 +33,7 @@ const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_OR_XML = ZLMimeType::get("a
 
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_ATOM_XML = ZLMimeType::get("application/atom+xml");
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_LITRES_XML = ZLMimeType::get("application/litres+xml");
+const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_LITRES = ZLMimeType::get("application/litres");
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_OPENSEARCH_XML = ZLMimeType::get("application/opensearchdescription+xml");
 
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_GZIP = ZLMimeType::get("application/x-gzip");

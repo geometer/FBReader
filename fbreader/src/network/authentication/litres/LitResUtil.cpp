@@ -39,3 +39,17 @@ std::string LitResUtil::url(const NetworkLink &link, const std::string &path) {
 	link.rewriteUrl(urlString);
 	return urlString;
 }
+
+std::string LitResUtil::generateTrialUrl(std::string bookId) {
+	size_t len = bookId.length();
+	if (len < 8) {
+		bookId = std::string(8 - len, '0') + bookId;
+	}
+	std::string url = "http://robot.litres.ru/static/trials/";
+	static const std::string DELIMETER = "/";
+	url += bookId.substr(0, 2) + DELIMETER;
+	url += bookId.substr(2, 2) + DELIMETER;
+	url += bookId.substr(4, 2) + DELIMETER;
+	url += bookId + ".fb2.zip";
+	return url;
+}

@@ -21,6 +21,7 @@
 
 // Feed level
 const std::string OPDSConstants::REL_BOOKSHELF     = "http://data.fbreader.org/rel/bookshelf";
+const std::string OPDSConstants::REL_BOOKLIST     = "http://data.fbreader.org/rel/booklist";
 //const std::string OPDSConstants::REL_SUBSCRIPTIONS = "http://opds-spec.org/subscriptions";
 
 const std::string OPDSConstants::REL_CATALOG_AUTHOR = "http://data.fbreader.org/catalog/author";

@@ -1,3 +1,17 @@
+* реализовать постраничную подгрузку данных (сейчас из OPDS скачивается все сразу)
+* реализовать подгрузку данных из OPDS каталога по rel="alternate" ссылке (Full Entry)
+
+* перейти на API от LitRes
+	* релизовать постраничную подгрузку данных (используя параметр limit)
+	* заменить метод получения текущего счета (при инициализации)
+	* добавить классификацию в LitresBookShelfItem
+	* добавить поддержку пункта "Рекомендации"
+	* реализовать simple & advanced search через API от LitRes
+	* реализовать поддержку пункта "По жанрам" 
+	* реализовать поддержку пунтка "Популярные авторы"
+	* реализовать поддержку пунтка "Авторы по буквам"
+	
+
 0.99.1:
 	DONE do not freeze program for an undeterminate time on start
 	DONE use program icon from android version; we have this icon in SVG format; generate all files we need

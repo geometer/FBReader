@@ -32,6 +32,7 @@
 #include "../NetworkItems.h"
 #include "../BookReference.h"
 #include "../authentication/litres/LitResBookshelfItem.h"
+#include "../authentication/litres/LitResCatalogItem.h"
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	const OPDSLink &link,
@@ -273,7 +274,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	std::string url;
 	bool urlIsAlternate = false;
 	std::string htmlURL;
-	bool litresCatalogue = false;
+	std::string litresRel;
 	NetworkCatalogItem::CatalogType catalogType = NetworkCatalogItem::OTHER;
 	for (size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
@@ -306,9 +307,19 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 			}
 		} else if (type == ZLMimeType::APPLICATION_LITRES_XML) {
 			if (rel == OPDSConstants::REL_BOOKSHELF) {
-				litresCatalogue = true;
+				litresRel = rel;
 				url = href;
 			}
+		} else if (type == ZLMimeType::APPLICATION_LITRES) {
+			url = href;
+			litresRel = OPDSConstants::REL_BOOKLIST; //TODO maybe use other name of relation?
+
+			//also, I think, there's a good way to handle that:
+			//1. use one type (litres+xml), not litres
+			//2. use rel like BOOKSHELF, AUTHORS_LIST, BOOK_LIST or smth,
+			//   for defining what kind of specific item should be created
+			//3. if litres+xml link here, delegate entry to LitRes class for creating Item
+			//   (this will be helpful when we will use more that 1 non-opds catalog
 		}
 	}
 
@@ -333,14 +344,27 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	urlMap[NetworkItem::URL_COVER] = coverURL;
 	urlMap[NetworkItem::URL_CATALOG] = ZLNetworkUtil::url(myBaseURL, url);
 	urlMap[NetworkItem::URL_HTML_PAGE] = ZLNetworkUtil::url(myBaseURL, htmlURL);
-	if (litresCatalogue) {
-		return new LitResBookshelfItem(
-			(OPDSLink&)myData.Link,
-			entry.title(),
-			annotation,
-			urlMap,
-			dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
-		);
+
+	if (!litresRel.empty()) {
+		if (litresRel == OPDSConstants::REL_BOOKSHELF) {
+			return new LitResBookshelfItem(
+				(OPDSLink&)myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
+			);
+		} else if (litresRel == OPDSConstants::REL_BOOKLIST) {
+			return new LitResCatalogItem(
+				(OPDSLink&)myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				NetworkCatalogItem::Always
+			);
+		} else {
+			return 0;
+		}
 	} else {
 		return new OPDSCatalogItem(
 			(OPDSLink&)myData.Link,

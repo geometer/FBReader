@@ -138,6 +138,8 @@ void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequ
 		reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
 	}
 
+	 qDebug() << "loading" << networkRequest.url().toString();
+
 	scope.replies->push_back(reply);
 
 	QObject::connect(reply, SIGNAL(sslErrors(QList<QSslError>)),this, SLOT(onSslErrors(QList<QSslError>)));
