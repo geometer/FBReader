@@ -108,6 +108,9 @@ public:
 public:
 	const VisibilityType Visibility;
 	const CatalogType Type;
+
+protected:
+	virtual std::string getCatalogUrl();
 };
 
 class NetworkBookItem : public NetworkItem {

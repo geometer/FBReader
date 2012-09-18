@@ -17,46 +17,35 @@
  * 02110-1301, USA.
  */
 
-#include <ZLNetworkManager.h>
+#include <ZLStringUtil.h>
+#include <ZLNetworkUtil.h>
 
 #include "../../NetworkLink.h"
-#include "../../NetworkComparators.h"
-#include "../../NetworkErrors.h"
-#include "../../NetworkItems.h"
+#include "LitResAuthenticationManager.h"
 
-#include "LitResUtil.h"
-#include "LitResDataParser.h"
+#include "LitResRecommendationsItem.h"
 
-#include "LitResCatalogItem.h"
-
-LitResCatalogItem::LitResCatalogItem(
-	const NetworkLink &link,
+LitResRecommendationsItem::LitResRecommendationsItem(
+	const OPDSLink &link,
 	const std::string &title,
 	const std::string &summary,
 	const std::map<URLType,std::string> &urlByType,
 	VisibilityType visibility
-) : NetworkCatalogItem(
+) : OPDSCatalogItem(
 	link,
 	title,
 	summary,
 	urlByType,
 	visibility
-) {
-	//myForceReload = false;
-}
+) { }
 
-void LitResCatalogItem::onDisplayItem() {
-	//myForceReload = false;
-}
-
-std::string LitResCatalogItem::loadChildren(NetworkItem::List &children) {
-	//TODO maybe add sid parameter if possible
-	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
-	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createXMLParserRequest(
-		getCatalogUrl(),
-		new LitResDataParser(Link, children)
-	);
-
-	std::string error = ZLNetworkManager::Instance().perform(data);
-	return error;
+std::string LitResRecommendationsItem::getCatalogUrl() {
+	LitResAuthenticationManager &mgr = (LitResAuthenticationManager&)*Link.authenticationManager();
+	std::string catalogUrl = OPDSCatalogItem::getCatalogUrl();
+	if (mgr.isAuthorised().Status == B3_FALSE) {
+		return catalogUrl;
+	}
+	std::string query = ZLStringUtil::join(mgr.getPurchasedIds(), ",");
+	ZLNetworkUtil::appendParameter(catalogUrl, "ids", query);
+	return catalogUrl;
 }

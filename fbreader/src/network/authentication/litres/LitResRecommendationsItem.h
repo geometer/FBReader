@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,31 +17,24 @@
  * 02110-1301, USA.
  */
 
-#include "NetworkItems.h"
+#ifndef __LITRESRECOMMENDATIONSITEM_H__
+#define __LITRESRECOMMENDATIONSITEM_H__
 
-const ZLTypeId NetworkCatalogItem::TYPE_ID(NetworkItem::TYPE_ID);
+#include "../../opds/OPDSCatalogItem.h"
 
-NetworkCatalogItem::NetworkCatalogItem(
-	const NetworkLink &link,
-	const std::string &title,
-	const std::string &summary,
-	const std::map<URLType,std::string> &urlByType,
-	VisibilityType visibility,
-	CatalogType catalogType
-) :
-	NetworkItem(link, title, summary, urlByType),
-	Visibility(visibility),
-	Type(catalogType)
-	{
-}
+class LitResRecommendationsItem : public OPDSCatalogItem {
 
-const ZLTypeId &NetworkCatalogItem::typeId() const {
-	return TYPE_ID;
-}
+public:
+	LitResRecommendationsItem(
+		const OPDSLink &link,
+		const std::string &title,
+		const std::string &summary,
+		const std::map<URLType,std::string> &urlByType,
+		VisibilityType visibility = Always
+	);
 
-void NetworkCatalogItem::onDisplayItem() {
-}
+private:
+	std::string getCatalogUrl();
+};
 
-std::string NetworkCatalogItem::getCatalogUrl() {
-	return URLByType[URL_CATALOG];
-}
+#endif /* __LITRESRECOMMENDATIONSITEM_H__ */

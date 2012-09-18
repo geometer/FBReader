@@ -33,6 +33,7 @@
 #include "../BookReference.h"
 #include "../authentication/litres/LitResBookshelfItem.h"
 #include "../authentication/litres/LitResCatalogItem.h"
+#include "../authentication/litres/LitResRecommendationsItem.h"
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	const OPDSLink &link,
@@ -306,10 +307,8 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				htmlURL = href;
 			}
 		} else if (type == ZLMimeType::APPLICATION_LITRES_XML) {
-			if (rel == OPDSConstants::REL_BOOKSHELF) {
-				litresRel = rel;
-				url = href;
-			}
+			url = href;
+			litresRel = rel;
 		} else if (type == ZLMimeType::APPLICATION_LITRES) {
 			url = href;
 			litresRel = OPDSConstants::REL_BOOKLIST; //TODO maybe use other name of relation?
@@ -348,19 +347,27 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	if (!litresRel.empty()) {
 		if (litresRel == OPDSConstants::REL_BOOKSHELF) {
 			return new LitResBookshelfItem(
+				myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				NetworkCatalogItem::LoggedUsers
+			);
+		} else if (litresRel == OPDSConstants::REL_RECOMMENDATIONS) {
+			return new LitResRecommendationsItem(
 				(OPDSLink&)myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				NetworkCatalogItem::LoggedUsers
+			);
+		} else if (litresRel == OPDSConstants::REL_BOOKLIST) {
+			return new LitResCatalogItem(
+				myData.Link,
 				entry.title(),
 				annotation,
 				urlMap,
 				dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
-			);
-		} else if (litresRel == OPDSConstants::REL_BOOKLIST) {
-			return new LitResCatalogItem(
-				(OPDSLink&)myData.Link,
-				entry.title(),
-				annotation,
-				urlMap,
-				NetworkCatalogItem::Always
 			);
 		} else {
 			return 0;

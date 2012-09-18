@@ -40,7 +40,7 @@ OPDSCatalogItem::OPDSCatalogItem(
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {
 	NetworkOperationData data(Link);
 
-	shared_ptr<ZLExecutionData> networkData = ((OPDSLink&)Link).createNetworkData(URLByType[URL_CATALOG], data);
+	shared_ptr<ZLExecutionData> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), data);
 
 	while (!networkData.isNull()) {
 		std::string error = ZLNetworkManager::Instance().perform(networkData);

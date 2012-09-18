@@ -43,6 +43,35 @@ public:
 	static std::string doubleToString(double value);
 	static double stringToDouble(const std::string &value, double defaultValue);
 	static int stringToInteger(const std::string &str, int defaultValue);
+
+	template <typename T, typename F>
+	static std::string join(T iterable, F functor, std::string separator);
+	template <typename T>
+	static std::string join(T iterable, std::string separator);
+
+	template <typename T>
+	struct self {
+		inline T operator()(const T &t) {
+			return t;
+		}
+	};
 };
+
+template <typename T, typename F>
+std::string ZLStringUtil::join(T iterable, F functor, std::string separator) {
+	std::string result;
+	for (typename T::const_iterator it=iterable.begin(); it != iterable.end(); ++it) {
+		if (it != iterable.begin()) {
+			result += separator;
+		}
+		result += functor(*it);
+	}
+	return result;
+}
+
+template <typename T>
+std::string ZLStringUtil::join(T iterable, std::string separator) {
+	return join(iterable, ZLStringUtil::self<typename T::value_type>(), separator);
+}
 
 #endif /* __ZLSTRINGUTIL_H__ */

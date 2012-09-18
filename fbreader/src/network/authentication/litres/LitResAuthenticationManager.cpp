@@ -192,6 +192,10 @@ void LitResAuthenticationManager::collectPurchasedBooks(NetworkItem::List &list)
 	list.assign(myPurchasedBooksList.begin(), myPurchasedBooksList.end());
 }
 
+const std::set<std::string> &LitResAuthenticationManager::getPurchasedIds() const {
+	return myPurchasedBooksIds;
+}
+
 std::string LitResAuthenticationManager::refillAccountLink() {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
