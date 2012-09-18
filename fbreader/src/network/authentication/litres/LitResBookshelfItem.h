@@ -20,9 +20,62 @@
 #ifndef __LITRESBOOKSHELFITEM_H__
 #define __LITRESBOOKSHELFITEM_H__
 
+#include <ZLResource.h>
+
+#include "../../NetworkComparators.h"
 #include "../../NetworkItems.h"
 
 class NetworkLink;
+
+class SortedCatalogItem : public NetworkCatalogItem {
+
+public:
+	template <class T>
+	SortedCatalogItem(const NetworkCatalogItem &parent, const ZLResource &resource, const NetworkItem::List &children,
+					  T comparator, CatalogType type = OTHER);
+	template <class T, class F>
+	SortedCatalogItem(const NetworkCatalogItem &parent, const ZLResource &resource, const NetworkItem::List &children,
+					  T comparator, CatalogType type, F filter);
+	SortedCatalogItem(const NetworkCatalogItem &parent, const ZLResource &resource,  const NetworkItem::List &children,
+					  CatalogType type = OTHER);
+
+public:
+	std::string loadChildren(NetworkItem::List &children);
+	bool isEmpty() const;
+	 //TODO following method should be in class NetworkLibrary or smth like that
+	static const ZLResource &resource(const std::string &resourceKey);
+
+protected:
+	bool accepts(NetworkItem* item) const;
+
+private:
+	void addChildren(const NetworkItem::List &children);
+
+protected:
+	NetworkItem::List myChildren;
+};
+
+//TODO does it necessary to create so many templates?
+template <class T>
+SortedCatalogItem::SortedCatalogItem(const NetworkCatalogItem &parent, const ZLResource &resource,
+									 const NetworkItem::List &children, T comparator, CatalogType type)
+	: NetworkCatalogItem(parent.Link, resource.value(), resource["summary"].value(), parent.URLByType, Always, type) {
+	addChildren(children);
+	std::sort(myChildren.begin(), myChildren.end(), comparator);
+}
+
+template <class T, class F>
+SortedCatalogItem::SortedCatalogItem(const NetworkCatalogItem &parent, const ZLResource &resource, const NetworkItem::List &children,
+									 T comparator, CatalogType type, F filter)
+	: NetworkCatalogItem(parent.Link, resource.value(), resource["summary"].value(), parent.URLByType, Always, type) {
+	for (size_t i = 0; i < children.size(); ++i) {
+		shared_ptr<NetworkItem> child = children.at(i);
+		if (filter.accepts(&(*child))) {
+			myChildren.push_back(child);
+		}
+	}
+	std::sort(myChildren.begin(), myChildren.end(), comparator);
+}
 
 class LitResBookshelfItem : public NetworkCatalogItem {
 

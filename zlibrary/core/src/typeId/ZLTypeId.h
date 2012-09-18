@@ -33,7 +33,7 @@ public:
 	bool isSubtypeOf(const ZLTypeId &type) const;
 
 private:
-	const ZLTypeId *myBase;	
+	const ZLTypeId *myBase;
 
 friend class ZLObjectWithRTTI;
 };
@@ -50,6 +50,20 @@ public:
 protected:
 	virtual const ZLTypeId &typeId() const = 0;
 };
+
+template <typename T>
+T zlobject_cast(ZLObjectWithRTTI *object) {
+	if (!object || !object->isInstanceOf(reinterpret_cast<T>(0)->TYPE_ID))
+		return 0;
+	return static_cast<T>(object);
+}
+
+template <typename T>
+T zlobject_cast(const ZLObjectWithRTTI *object) {
+	if (!object || !object->isInstanceOf(reinterpret_cast<T>(0)->TYPE_ID))
+		return 0;
+	return static_cast<T>(object);
+}
 
 inline bool ZLTypeId::operator == (const ZLTypeId &type) const {
 	return this == &type;

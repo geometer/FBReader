@@ -65,6 +65,18 @@
 			<node name="demo" value="sample"/>
 			<node name="buy" value="Buy (%s)"/>
 		</node>
+		<node name="byAuthor" value="By author">
+			<node name="summary" value="Books sorted by author"/>
+		</node>
+		<node name="byTitle" value="By title">
+			<node name="summary" value="Books sorted by title"/>
+		</node>
+		<node name="byDate" value="By date">
+			<node name="summary" value="Books sorted by date of purchasing"/>
+		</node>
+		<node name="bySeries" value="By series">
+			<node name="summary" value="Books sorted by series"/>
+		</node>
 	</node>
 	<node name="menu">
 		<node name="bookInfo" value="Book Info..."/>
