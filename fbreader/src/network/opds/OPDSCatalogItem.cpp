@@ -33,8 +33,8 @@ OPDSCatalogItem::OPDSCatalogItem(
 	const std::string &summary,
 	const std::map<URLType,std::string> &urlByType,
 	VisibilityType visibility,
-	CatalogType catalogType
-) : NetworkCatalogItem(link, title, summary, urlByType, visibility, catalogType) {
+	int flags
+) : NetworkCatalogItem(link, title, summary, urlByType, visibility, flags) {
 }
 
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {

@@ -28,6 +28,14 @@ bool NetworkBookItem::AuthorData::operator < (const AuthorData &data) const {
 	return (sComp < 0) || (sComp == 0 && DisplayName < data.DisplayName);
 }
 
+bool NetworkBookItem::AuthorData::operator != (const NetworkBookItem::AuthorData &data) const {
+	return DisplayName != data.DisplayName || SortKey != data.SortKey;
+}
+
+bool NetworkBookItem::AuthorData::operator == (const NetworkBookItem::AuthorData &data) const {
+	return DisplayName == data.DisplayName && SortKey == data.SortKey;
+}
+
 NetworkBookItem::NetworkBookItem(
 	const NetworkLink &link,
 	const std::string &id,
@@ -42,7 +50,7 @@ NetworkBookItem::NetworkBookItem(
 	unsigned int indexInSeries,
 	const std::map<URLType,std::string> &urlByType,
 	const std::vector<shared_ptr<BookReference> > references
-) : 
+) :
 	NetworkItem(link, title, summary, urlByType),
 	Index(index),
 	Id(id),
@@ -56,12 +64,12 @@ NetworkBookItem::NetworkBookItem(
 }
 
 NetworkBookItem::NetworkBookItem(const NetworkBookItem &book, unsigned int index) :
-	NetworkItem(book.Link, book.Title, book.Summary, book.URLByType), 
-	Index(index), 
-	Id(book.Id), 
-	Language(book.Language), 
-	Date(book.Date), 
-	Authors(book.Authors), 
+	NetworkItem(book.Link, book.Title, book.Summary, book.URLByType),
+	Index(index),
+	Id(book.Id),
+	Language(book.Language),
+	Date(book.Date),
+	Authors(book.Authors),
 	Tags(book.Tags),
 	SeriesTitle(book.SeriesTitle),
 	IndexInSeries(book.IndexInSeries) {

@@ -28,46 +28,7 @@
 #include "../../NetworkComparators.h"
 #include "../../NetworkErrors.h"
 
-SortedCatalogItem::SortedCatalogItem(const NetworkCatalogItem &parent, const ZLResource &resource,
-									 const NetworkItem::List &children, CatalogType type)
-	: NetworkCatalogItem(parent.Link, resource.value(), resource["summary"].value(), parent.URLByType, Always, type) {
-	addChildren(children);
-}
-
-bool SortedCatalogItem::accepts(NetworkItem* item) const {
-	return zlobject_cast<NetworkBookItem*>(item) != 0;
-}
-
-void SortedCatalogItem::addChildren(const NetworkItem::List &children) {
-	for (size_t i = 0; i < children.size(); ++i) {
-		shared_ptr<NetworkItem> child = children.at(i);
-		if (accepts(&(*child))) {
-			myChildren.push_back(child);
-		}
-	}
-}
-
-std::string SortedCatalogItem::loadChildren(NetworkItem::List &children) {
-	children.assign(myChildren.begin(), myChildren.end());
-	return std::string();
-}
-
-bool SortedCatalogItem::isEmpty() const {
-	return myChildren.empty();
-}
-
-const ZLResource &SortedCatalogItem::resource(const std::string &resourceKey) {
-	return ZLResource::resource("networkView")[resourceKey];
-}
-
-class BySeriesFilter {
-
-public:
-	bool accepts(NetworkItem* item) const {
-		NetworkBookItem* bookItem = zlobject_cast<NetworkBookItem*>(item);
-		return bookItem != 0 && !bookItem->SeriesTitle.empty();
-	}
-};
+#include "SortedCatalogItem.h"
 
 LitResBookshelfItem::LitResBookshelfItem(
 	const NetworkLink &link,
@@ -108,13 +69,12 @@ std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children) {
 		children.assign(tmpChildren.begin(), tmpChildren.end());
 		std::sort(children.begin(), children.end(), NetworkBookItemComparator());
 	} else {
-		children.push_back(new SortedCatalogItem(*this, SortedCatalogItem::resource("byDate"), tmpChildren));
-		children.push_back(new SortedCatalogItem(*this, SortedCatalogItem::resource("byAuthor"), tmpChildren,
-												 NetworkBookItemComparator()));
-		children.push_back(new SortedCatalogItem(*this, SortedCatalogItem::resource("byTitle"), tmpChildren,
-												 NetworkBookItemByTitleComparator()));
-		SortedCatalogItem* bySeries = new SortedCatalogItem(*this, SortedCatalogItem::resource("bySeries"), tmpChildren,
-															NetworkBookItemBySeriesComparator(), OTHER, BySeriesFilter());
+		children.push_back(SortedCatalogItem::create(*this, "byDate",   tmpChildren, FLAG_SHOW_AUTHOR));
+		children.push_back(SortedCatalogItem::create(*this, "byAuthor", tmpChildren, FLAG_GROUP_BY_AUTHOR, NetworkBookItemComparator()));
+		children.push_back(SortedCatalogItem::create(*this, "byTitle",  tmpChildren, FLAG_SHOW_AUTHOR, NetworkBookItemByTitleComparator()));
+		SortedCatalogItem* bySeries = SortedCatalogItem::create(*this, "bySeries", tmpChildren, FLAG_SHOW_AUTHOR | FLAG_GROUP_BY_SERIES,
+																NetworkBookItemBySeriesComparator(), SortedCatalogItem::BySeriesFilter());
+
 		if (!bySeries->isEmpty()) {
 			children.push_back(bySeries);
 		} else {

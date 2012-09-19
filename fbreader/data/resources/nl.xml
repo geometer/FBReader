@@ -27,6 +27,18 @@
 		</node>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="Auteurs">
+			<node name="summary" value="Boeken gesorteerd op auteur"/>
+		</node>
+		<node name="byTitle" value="Titel">
+			<node name="summary" value="Boeken gesorteerd op titel"/>
+		</node>
+		<node name="byDate" value="Datum">
+			<node name="summary" value="Boeken gesorteerd op aankoopdatum"/>
+		</node>
+		<node name="bySeries" value="Series">
+			<node name="summary" value="Boeken gesorteerd op series"/>
+		</node>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Vergroten"/>
 			<node name="collapseTree" value="Verkleinen"/>

@@ -33,7 +33,7 @@ public:
 		const std::string &summary,
 		const std::map<URLType,std::string> &urlByType,
 		VisibilityType visibility = Always,
-		CatalogType catalogType = OTHER
+		int flags = FLAGS_DEFAULT
 	);
 
 private:

@@ -276,7 +276,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	bool urlIsAlternate = false;
 	std::string htmlURL;
 	std::string litresRel;
-	NetworkCatalogItem::CatalogType catalogType = NetworkCatalogItem::OTHER;
+	int catalogFlags = NetworkCatalogItem::FLAGS_DEFAULT;
 	for (size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
 		const std::string &href = link.href();
@@ -297,7 +297,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				url = href;
 				urlIsAlternate = false;
 				if (rel == OPDSConstants::REL_CATALOG_AUTHOR) {
-					catalogType = NetworkCatalogItem::BY_AUTHORS;
+					catalogFlags &= !NetworkCatalogItem::FLAG_SHOW_AUTHOR;
 				}
 			}
 		} else if (type == ZLMimeType::TEXT_HTML) {
@@ -379,7 +379,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 			annotation,
 			urlMap,
 			dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always,
-			catalogType
+			catalogFlags
 		);
 	}
 }

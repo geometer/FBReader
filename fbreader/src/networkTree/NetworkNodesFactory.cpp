@@ -38,7 +38,7 @@ void NetworkNodesFactory::createSubnodes(SearchResultNode *parent, NetworkBookCo
 	const NetworkAuthorBooksMap &map = books.authorBooksMap();
 	for (NetworkAuthorBooksMap::const_iterator it = map.begin(); it != map.end(); ++it) {
 		fillAuthorNode(
-			new NetworkAuthorNode(parent, it->first), 
+			new NetworkAuthorNode(parent, it->first),
 			it->second
 		);
 	}
@@ -46,11 +46,16 @@ void NetworkNodesFactory::createSubnodes(SearchResultNode *parent, NetworkBookCo
 
 void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const NetworkItem::List &books) {
 	NetworkSeriesNode *seriesNode = 0;
+	NetworkAuthorNode *authorNode = 0;
 
+	int flags = NetworkCatalogItem::FLAGS_DEFAULT;
+	if (NetworkCatalogNode* catalogNode = zlobject_cast<NetworkCatalogNode*>(parent)) {
+		flags = catalogNode->item().getFlags();
+	}
 	NetworkSeriesNode::SummaryType seriesSummaryType = NetworkSeriesNode::AUTHORS;
 	NetworkBookNode::SummaryType booksSummaryType = NetworkBookNode::AUTHORS;
 	if ((parent->isInstanceOf(NetworkCatalogNode::TYPE_ID) &&
-			((NetworkCatalogNode*)parent)->item().Type == NetworkCatalogItem::BY_AUTHORS) ||
+			(flags & NetworkCatalogItem::FLAG_SHOW_AUTHOR) == 0) ||
 			 parent->isInstanceOf(NetworkAuthorNode::TYPE_ID)) {
 		seriesSummaryType = NetworkSeriesNode::BOOKS;
 		booksSummaryType = NetworkBookNode::NONE;
@@ -61,31 +66,63 @@ void NetworkNodesFactory::fillAuthorNode(NetworkContainerNode *parent, const Net
 			continue;
 		}
 		const NetworkBookItem &book = (const NetworkBookItem &) **it;
-		std::string seriesTitle = book.SeriesTitle;
 
-		if (!seriesTitle.empty() && (seriesNode == 0 || seriesNode->title() != seriesTitle)) {
-			NetworkItem::List::const_iterator jt = it + 1;
-			while (jt != books.end() && !(*jt)->isInstanceOf(NetworkBookItem::TYPE_ID)) {
-				++jt;
-			}
-			if (jt == books.end()) {
-				seriesTitle.clear();
-			} else {
-				const NetworkBookItem &next = (const NetworkBookItem&)**jt;
-				if (next.SeriesTitle != seriesTitle) {
-					seriesTitle.clear();
+		//TODO split this method on smaller parts
+		switch (flags & NetworkCatalogItem::FLAGS_GROUP) {
+			case NetworkCatalogItem::FLAG_GROUP_BY_SERIES:
+				if (book.SeriesTitle.empty()) {
+					new NetworkBookNode(parent, *it, booksSummaryType);
+				} else {
+					if (seriesNode == 0 || seriesNode->title() != book.SeriesTitle) {
+						seriesNode = new NetworkSeriesNode(parent, book.SeriesTitle, seriesSummaryType);
+					}
+					new NetworkBookNode(seriesNode, *it, booksSummaryType);
 				}
-			}
+				break;
+			case NetworkCatalogItem::FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES:
+				{
+					std::string seriesTitle = book.SeriesTitle;
+					if (!seriesTitle.empty() && (seriesNode == 0 || seriesNode->title() != seriesTitle)) {
+						NetworkItem::List::const_iterator jt = it + 1;
+						while (jt != books.end() && !(*jt)->isInstanceOf(NetworkBookItem::TYPE_ID)) {
+							++jt;
+						}
+						if (jt == books.end()) {
+							seriesTitle.clear();
+						} else {
+							const NetworkBookItem &next = (const NetworkBookItem&)**jt;
+							if (next.SeriesTitle != seriesTitle) {
+								seriesTitle.clear();
+							}
+						}
+					}
+					if (seriesTitle.empty()) {
+						seriesNode = 0;
+						new NetworkBookNode(parent, *it, booksSummaryType);
+					} else {
+						if (seriesNode == 0 || seriesNode->title() != seriesTitle) {
+							seriesNode = new NetworkSeriesNode(parent, seriesTitle, seriesSummaryType);
+						}
+						new NetworkBookNode(seriesNode, *it, booksSummaryType);
+					}
+				}
+				break;
+			case NetworkCatalogItem::FLAG_GROUP_BY_AUTHOR:
+				if (book.Authors.empty()) {
+					new NetworkBookNode(parent, *it, booksSummaryType);
+				} else {
+					const NetworkBookItem::AuthorData &author = book.Authors.front();
+					if (authorNode == 0 || authorNode->author() != author) {
+						authorNode = new NetworkAuthorNode(parent, author);
+					}
+					new NetworkBookNode(authorNode, *it, booksSummaryType);
+				}
+				break;
+			default:
+				new NetworkBookNode(parent, *it, booksSummaryType);
+				break;
 		}
 
-		if (seriesTitle.empty()) {
-			seriesNode = 0;
-			new NetworkBookNode(parent, *it, booksSummaryType);
-		} else {
-			if (seriesNode == 0 || seriesNode->title() != seriesTitle) {
-				seriesNode = new NetworkSeriesNode(parent, seriesTitle, seriesSummaryType);
-			}
-			new NetworkBookNode(seriesNode, *it, booksSummaryType);
-		}
-	}	
+
+	}
 }

@@ -26,6 +26,18 @@
 		</node>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="По авторам">
+			<node name="summary" value="Книги, разложенные по авторам"/>
+		</node>
+		<node name="byTitle" value="По названиям">
+			<node name="summary" value="Книги, отсортированные по названиям"/>
+		</node>
+		<node name="byDate" value="По дате">
+			<node name="summary" value="Книги, отсортированные по дате покупки"/>
+		</node>
+		<node name="bySeries" value="По сериям">
+			<node name="summary" value="Книги, разложенные по сериям"/>
+		</node>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Развернуть"/>
 			<node name="collapseTree" value="Свернуть"/>
@@ -64,18 +76,6 @@
 			<node name="downloadDemo" value="Скачать фрагмент"/>
 			<node name="demo" value="фрагмент"/>
 			<node name="buy" value="Купить (%s)"/>
-		</node>
-		<node name="byAuthor" value="По авторам">
-			<node name="summary" value="Книги, разложенные по авторам"/>
-		</node>
-		<node name="byTitle" value="По названиям">
-			<node name="summary" value="Книги, отсортированные по названиям"/>
-		</node>
-		<node name="byDate" value="По дате">
-			<node name="summary" value="Книги, отсортированные по дате покупки"/>
-		</node>
-		<node name="bySeries" value="По сериям">
-			<node name="summary" value="Книги, разложенные по сериям"/>
 		</node>
 	</node>
 	<node name="menu">

@@ -27,6 +27,18 @@
 		</node>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="Podle autora">
+			<node name="summary" value="Knihy seřazeny podle autora"/>
+		</node>
+		<node name="byTitle" value="Podle názvu">
+			<node name="summary" value="Knihy seřazeny podle názvu"/>
+		</node>
+		<node name="byDate" value="Podle data">
+			<node name="summary" value="Knihy seřazeny podle data zakoupení"/>
+		</node>
+		<node name="bySeries" value="Podle série">
+			<node name="summary" value="Knihy seřazeny podle série"/>
+		</node>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Rozbalit"/>
 			<node name="collapseTree" value="Skrýt"/>

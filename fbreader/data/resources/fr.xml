@@ -27,6 +27,18 @@
 		</node>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="Par auteur">
+			<node name="summary" value="Livres triés par auteur"/>
+		</node>
+		<node name="byTitle" value="Par titre">
+			<node name="summary" value="Livres triés par titre"/>
+		</node>
+		<node name="byDate" value="Par date">
+			<node name="summary" value="Livres triés par date d'achat"/>
+		</node>
+		<node name="bySeries" value="Par série">
+			<node name="summary" value="Livres triés par série"/>
+		</node>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Ouvrir"/>
 			<node name="collapseTree" value="Refermer"/>

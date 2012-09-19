@@ -27,11 +27,11 @@ NetworkCatalogItem::NetworkCatalogItem(
 	const std::string &summary,
 	const std::map<URLType,std::string> &urlByType,
 	VisibilityType visibility,
-	CatalogType catalogType
+	int flags
 ) :
 	NetworkItem(link, title, summary, urlByType),
-	Visibility(visibility),
-	Type(catalogType)
+	myVisibility(visibility),
+	myFlags(flags)
 	{
 }
 
@@ -44,4 +44,12 @@ void NetworkCatalogItem::onDisplayItem() {
 
 std::string NetworkCatalogItem::getCatalogUrl() {
 	return URLByType[URL_CATALOG];
+}
+
+int NetworkCatalogItem::getFlags() const {
+	return myFlags;
+}
+
+NetworkCatalogItem::VisibilityType NetworkCatalogItem::getVisibility() const {
+	return myVisibility;
 }
