@@ -42,11 +42,10 @@ LitResCatalogItem::LitResCatalogItem(
 	urlByType,
 	visibility
 ) {
-	//myForceReload = false;
 }
 
 void LitResCatalogItem::onDisplayItem() {
-	//myForceReload = false;
+
 }
 
 std::string LitResCatalogItem::loadChildren(NetworkItem::List &children) {

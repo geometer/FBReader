@@ -36,9 +36,6 @@ public:
 private:
 	void onDisplayItem();
 	std::string loadChildren(NetworkItem::List &children);
-
-private:
-	 //bool myForceReload;
 };
 
 #endif /* __LITRESCATALOGITEM_H__ */

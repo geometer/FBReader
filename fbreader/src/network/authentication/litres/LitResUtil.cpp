@@ -53,3 +53,11 @@ std::string LitResUtil::generateTrialUrl(std::string bookId) {
 	url += bookId + ".fb2.zip";
 	return url;
 }
+
+std::string LitResUtil::generatePurchaseUrl(const std::string &bookId) {
+	return "https://robot.litres.ru/pages/purchase_book/?art=" + bookId;
+}
+
+std::string LitResUtil::generateDownloadUrl(const std::string &bookId) {
+	return "https://robot.litres.ru/pages/catalit_download_book/?art=" + bookId;
+}

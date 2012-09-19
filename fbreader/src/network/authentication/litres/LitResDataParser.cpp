@@ -90,10 +90,10 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 				myURLByType[NetworkItem::URL_HTML_PAGE] = url;
 			}
 
-			//TODO check if buying book is working right
+			//TODO check if buying book works right
 			std::string price = BuyBookReference::price(stringAttributeValue(attributes, "price"), "RUB");
 			myReferences.push_back(new BuyBookReference(
-				"https://robot.litres.ru/pages/purchase_book/?art=" + myBookId,
+				LitResUtil::generatePurchaseUrl(myBookId),
 				BookReference::FB2_ZIP,
 				BookReference::BUY,
 				price
@@ -109,7 +109,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			}
 
 			myReferences.push_back(new BookReference(
-				"https://robot.litres.ru/pages/catalit_download_book/?art=" + myBookId,
+				LitResUtil::generateDownloadUrl(myBookId),
 				BookReference::FB2_ZIP,
 				BookReference::DOWNLOAD_FULL_CONDITIONAL
 			));
