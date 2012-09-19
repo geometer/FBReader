@@ -32,6 +32,7 @@ public:
 	static std::string generateTrialUrl(std::string bookId);
 	static std::string generatePurchaseUrl(const std::string &bookId);
 	static std::string generateDownloadUrl(const std::string &bookId);
+	static std::string generateBooksByGenreUrl(const std::string &genreId);
 
 private:
 	 LitResUtil();

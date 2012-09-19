@@ -84,8 +84,9 @@ public:
 	};
 
 	enum CatalogFlags {
+		FLAG_NONE                              = 0,
 		FLAG_SHOW_AUTHOR                       = 1 << 0,
-		FLAG_GROUP_BY_AUTHOR                     = 1 << 1,
+		FLAG_GROUP_BY_AUTHOR                   = 1 << 1,
 		FLAG_GROUP_BY_SERIES                   = 1 << 2,
 		FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES  = 1 << 3,
 		FLAGS_DEFAULT =

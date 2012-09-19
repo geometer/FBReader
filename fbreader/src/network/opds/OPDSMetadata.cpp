@@ -23,6 +23,7 @@
 const std::string OPDSConstants::REL_BOOKSHELF     = "http://data.fbreader.org/rel/bookshelf";
 const std::string OPDSConstants::REL_RECOMMENDATIONS = "http://data.fbreader.org/rel/recommendations";
 const std::string OPDSConstants::REL_BOOKLIST     = "http://data.fbreader.org/rel/booklist";
+const std::string OPDSConstants::REL_LITRESGENRES     = "http://data.fbreader.org/rel/litresgenres";
 
 //const std::string OPDSConstants::REL_SUBSCRIPTIONS = "http://opds-spec.org/subscriptions";
 

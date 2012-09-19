@@ -38,6 +38,7 @@ public:
 	static const std::string REL_BOOKSHELF;
 	static const std::string REL_RECOMMENDATIONS;
 	static const std::string REL_BOOKLIST;
+	static const std::string REL_LITRESGENRES;
 	//static const std::string REL_SUBSCRIPTIONS;
 
 	// Entry level / catalog types

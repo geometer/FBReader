@@ -34,6 +34,7 @@
 #include "../authentication/litres/LitResBookshelfItem.h"
 #include "../authentication/litres/LitResCatalogItem.h"
 #include "../authentication/litres/LitResRecommendationsItem.h"
+#include "../authentication/litres/LitResByGenresItem.h"
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	const OPDSLink &link,
@@ -368,6 +369,16 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				annotation,
 				urlMap,
 				dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
+			);
+		} else if (litresRel == OPDSConstants::REL_LITRESGENRES) {
+			return new LitResByGenresItem(
+				LitResGenreMap::Instance().genresTree(),
+				myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				NetworkCatalogItem::Always,
+				NetworkCatalogItem::FLAG_SHOW_AUTHOR
 			);
 		} else {
 			return 0;
