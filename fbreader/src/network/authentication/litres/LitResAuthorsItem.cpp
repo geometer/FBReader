@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <algorithm>
-
 #include <ZLNetworkManager.h>
 
 #include "../../NetworkLink.h"
@@ -27,12 +25,11 @@
 #include "../../NetworkItems.h"
 
 #include "LitResUtil.h"
-#include "LitResDataParser.h"
+#include "LitResAuthorsParser.h"
 
-#include "LitResCatalogItem.h"
+#include "LitResAuthorsItem.h"
 
-LitResCatalogItem::LitResCatalogItem(
-	bool shouldSort,
+LitResAuthorsItem::LitResAuthorsItem(
 	const NetworkLink &link,
 	const std::string &title,
 	const std::string &summary,
@@ -46,22 +43,17 @@ LitResCatalogItem::LitResCatalogItem(
 	urlByType,
 	visibility,
 	flags
-), myShouldSort(shouldSort) {
+) {
 }
 
-void LitResCatalogItem::onDisplayItem() {
-}
-
-std::string LitResCatalogItem::loadChildren(NetworkItem::List &children) {
+std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children) {
 	//TODO maybe add sid parameter if possible
 	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
 	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createXMLParserRequest(
 		getCatalogUrl(),
-		new LitResDataParser(Link, children)
+		new LitResAuthorsParser(Link, URLByType, children)
 	);
+
 	std::string error = ZLNetworkManager::Instance().perform(data);
-	if (myShouldSort) {
-		std::sort(children.begin(), children.end(), NetworkBookItemComparator());
-	}
 	return error;
 }

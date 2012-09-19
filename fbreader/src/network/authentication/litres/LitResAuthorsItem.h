@@ -17,30 +17,25 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LITRESCATALOGITEM_H__
-#define __LITRESCATALOGITEM_H__
+#ifndef __LITRESAUTHORSITEM_H__
+#define __LITRESAUTHORSITEM_H__
 
 #include "../../NetworkItems.h"
 
-class LitResCatalogItem : public NetworkCatalogItem {
+class LitResAuthorsItem : public NetworkCatalogItem {
 
 public:
-	LitResCatalogItem(
-		bool shouldSort,
+	LitResAuthorsItem(
 		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
 		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility = Always,
+		VisibilityType visibility,
 		int flags = FLAGS_DEFAULT
 	);
 
 private:
-	void onDisplayItem();
 	std::string loadChildren(NetworkItem::List &children);
-
-private:
-	bool myShouldSort;
 };
 
-#endif /* __LITRESCATALOGITEM_H__ */
+#endif /* __LITRESAUTHORSITEM_H__ */

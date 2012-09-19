@@ -65,3 +65,7 @@ std::string LitResUtil::generateDownloadUrl(const std::string &bookId) {
 std::string LitResUtil::generateBooksByGenreUrl(const std::string &genreId) {
 	return "http://robot.litres.ru/pages/catalit_browser/?checkpoint=2000-01-01&genre=" + genreId;
 }
+
+std::string LitResUtil::generateBooksByAuthorUrl(const std::string &authorId) {
+	return "http://robot.litres.ru/pages/catalit_browser/?checkpoint=2000-01-01&person=" + authorId;
+}

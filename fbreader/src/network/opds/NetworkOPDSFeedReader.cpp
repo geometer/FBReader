@@ -35,6 +35,7 @@
 #include "../authentication/litres/LitResCatalogItem.h"
 #include "../authentication/litres/LitResRecommendationsItem.h"
 #include "../authentication/litres/LitResByGenresItem.h"
+#include "../authentication/litres/LitResAuthorsItem.h"
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	const OPDSLink &link,
@@ -364,13 +365,14 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 			);
 		} else if (litresRel == OPDSConstants::REL_BOOKLIST) {
 			return new LitResCatalogItem(
+				false,
 				myData.Link,
 				entry.title(),
 				annotation,
 				urlMap,
 				dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
 			);
-		} else if (litresRel == OPDSConstants::REL_LITRESGENRES) {
+		} else if (litresRel == OPDSConstants::REL_LITRES_GENRES) {
 			return new LitResByGenresItem(
 				LitResGenreMap::Instance().genresTree(),
 				myData.Link,
@@ -379,6 +381,14 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				urlMap,
 				NetworkCatalogItem::Always,
 				NetworkCatalogItem::FLAG_SHOW_AUTHOR
+			);
+		} else if (litresRel == OPDSConstants::REL_LITRES_AUTHORS) {
+			return new LitResAuthorsItem(
+				myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				NetworkCatalogItem::Always
 			);
 		} else {
 			return 0;
