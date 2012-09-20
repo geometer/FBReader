@@ -88,9 +88,9 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
 	ZLNetworkUtil::appendParameter(url, "login", UserNameOption.value());
 	ZLNetworkUtil::appendParameter(url, "pwd", pwd);
-	if (SkipIPOption.value()) {
+//	if (SkipIPOption.value()) {
 		ZLNetworkUtil::appendParameter(url, "skip_ip", "1");
-	}
+//	}
 
 	shared_ptr<ZLExecutionData> networkData =
 		ZLNetworkManager::Instance().createXMLParserRequest(

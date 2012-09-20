@@ -1,4 +1,4 @@
-* удалить "Bound to IP" в диалоге входа Литрес, считать, что флаг всегда стоит
+DONE удалить "Bound to IP" в диалоге входа Литрес, считать, что флаг всегда стоит
 * при использовании API убрать "лишние" сортировки
 
 * new network library UI (in a separate window, with asynchronous calls)

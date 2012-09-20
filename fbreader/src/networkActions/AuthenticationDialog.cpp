@@ -43,7 +43,7 @@ private:
 	ZLStringOption &myUserNameOption;
 };
 
-UserNamesEntry::UserNamesEntry(UserList &userList, ZLStringOption &userNameOption) : 
+UserNamesEntry::UserNamesEntry(UserList &userList, ZLStringOption &userNameOption) :
 	ZLComboOptionEntry(true), myUserList(userList), myUserNameOption(userNameOption) {
 }
 
@@ -95,9 +95,9 @@ AuthenticationDialog::AuthenticationDialog(NetworkAuthenticationManager &mgr, Us
 
 	myDialog->addOption(ZLResourceKey("login"), new UserNamesEntry(myUserList, mgr.UserNameOption));
 	myDialog->addOption(ZLResourceKey("password"), new PasswordOptionEntry(password));
-	if (mgr.skipIPSupported()) {
-		myDialog->addOption(ZLResourceKey("skipIP"), mgr.SkipIPOption);
-	}
+//	if (mgr.skipIPSupported()) {
+//		myDialog->addOption(ZLResourceKey("skipIP"), mgr.SkipIPOption);
+//	}
 
 	myDialog->addButton(ZLDialogManager::OK_BUTTON, true);
 	myDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
