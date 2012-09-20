@@ -44,6 +44,8 @@ public:
 	static double stringToDouble(const std::string &value, double defaultValue);
 	static int stringToInteger(const std::string &str, int defaultValue);
 
+	static std::string replaceAll(const std::string &str, const std::string& what, const std::string &to);
+
 	template <typename T, typename F>
 	static std::string join(T iterable, F functor, std::string separator);
 	template <typename T>

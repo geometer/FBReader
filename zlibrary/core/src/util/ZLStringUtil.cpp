@@ -143,3 +143,12 @@ int ZLStringUtil::stringToInteger(const std::string &str, int defaultValue) {
 
 	return atoi(str.c_str());
 }
+
+std::string ZLStringUtil::replaceAll(const std::string &str, const std::string &what, const std::string &to) {
+	std::string result = str;
+	size_t where = 0;
+	while ((where = result.find(what)) != std::string::npos) {
+		result = result.replace(where, what.size(), to);
+	}
+	return result;
+}

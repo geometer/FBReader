@@ -17,17 +17,18 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LITRESAUTHORSITEM_H__
-#define __LITRESAUTHORSITEM_H__
+#ifndef __LITRESAUTHORSBYLETTERITEM_H__
+#define __LITRESAUTHORSBYLETTERITEM_H__
+
+#include <map>
 
 #include "../../NetworkItems.h"
+#include "LitResAuthorsItem.h"
 
-#include "LitResAuthorsParser.h"
-
-class LitResAuthorsItem : public NetworkCatalogItem {
+class LitResAuthorsByLetterItem : public LitResAuthorsItem {
 
 public:
-	LitResAuthorsItem(
+	LitResAuthorsByLetterItem(
 		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
@@ -35,32 +36,26 @@ public:
 		VisibilityType visibility,
 		int flags = FLAGS_DEFAULT
 	);
-
-protected:
-	void fillChildrenWithAuthors(NetworkItem::List &children, const LitResAuthorsParser::AuthorsList &authors);
-	std::string loadChildren(NetworkItem::List &children);
-
-	static std::string getSubtitle(const LitResAuthorsParser::LitresAuthorData &author);
-};
-
-class LitResAuthorsByTwoLetterItem : public LitResAuthorsItem {
-
-public:
-	LitResAuthorsByTwoLetterItem(
-		const LitResAuthorsParser::AuthorsList &authors,
-		const NetworkLink &link,
-		const std::string &title,
-		const std::string &summary,
-		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility,
-		int flags = FLAGS_DEFAULT
-	);
-
-protected:
-	std::string loadChildren(NetworkItem::List &children);
 
 private:
-	LitResAuthorsParser::AuthorsList myAuthors;
+	std::string loadChildren(NetworkItem::List &children);
+	void addSubCatalog(std::string start, std::string end, unsigned int sum, NetworkItem::List &children, const LitResAuthorsParser::AuthorsList &authors);
+
+private:
+	static std::map<std::string, int> getLetterCounter(const LitResAuthorsParser::AuthorsList &authors);
+
+private:
+//	class AuthorsComparator {
+
+//	public:
+//		bool operator () (const LitResAuthorsParser::LitresAuthorData &author1,
+//						  const LitResAuthorsParser::LitresAuthorData &author2) const;
+//	};
 };
 
-#endif /* __LITRESAUTHORSITEM_H__ */
+//inline bool LitResAuthorsByLetterItem::AuthorsComparator::operator ()(const LitResAuthorsParser::LitresAuthorData &author1,
+//															   const LitResAuthorsParser::LitresAuthorData &author2) const {
+//	return author1.LastName.compare(author2.LastName) < 0;
+//}
+
+#endif /* __LITRESAUTHORSBYLETTERITEM_H__ */

@@ -24,8 +24,6 @@
 #include "../../NetworkLink.h"
 #include "LitResGenre.h"
 #include "LitResUtil.h"
-#include "LitResCatalogItem.h"
-
 
 #include "LitResAuthorsParser.h"
 
@@ -45,13 +43,7 @@ std::string LitResAuthorsParser::stringAttributeValue(const char **attributes, c
 	return value != 0 ? value : std::string();
 }
 
-LitResAuthorsParser::LitResAuthorsParser(
-	const NetworkLink &link,
-	const std::map<NetworkItem::URLType,std::string> &urlByType,
-	NetworkItem::List &authors) :
-	myLink(link),
-	myUrlByType(urlByType),
-	myAuthors(authors) {
+LitResAuthorsParser::LitResAuthorsParser(AuthorsList &authors) : myAuthors(authors) {
 	myState = START;
 }
 
@@ -83,19 +75,14 @@ void LitResAuthorsParser::processState(const std::string &tag, bool closed, cons
 		break;
 	case SUBJECT:
 		if (closed && TAG_SUBJECT == tag) {
-			std::map<NetworkItem::URLType,std::string> urlByType = myUrlByType;
-			urlByType[NetworkItem::URL_CATALOG] = LitResUtil::generateBooksByAuthorUrl(myAuthorId);
-			//TODO add icon change for one author here
-			//urlByType[NetworkItem::URL_COVER] =
-			myAuthors.push_back(new LitResCatalogItem(
-				true,
-				myLink,
-				myAuthorDisplayName,
-				getSubtitle(),
-				urlByType,
-				NetworkCatalogItem::Always,
-				NetworkCatalogItem::FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES
-			));
+			LitresAuthorData litresAuthor;
+			litresAuthor.Id = myAuthorId;
+			litresAuthor.DisplayName = myAuthorDisplayName;
+			litresAuthor.FirstName = myAuthorFirstName;
+			litresAuthor.MiddleName = myAuthorMiddleName;
+			litresAuthor.LastName = myAuthorLastName;
+			litresAuthor.SortKey = ZLStringUtil::replaceAll(myAuthorLastName, "ё", "е"); //TODO change to unicode values
+			myAuthors.push_back(litresAuthor);
 
 			myAuthorId.clear();
 			myAuthorDisplayName.clear();
@@ -195,22 +182,4 @@ LitResAuthorsParser::State LitResAuthorsParser::getNextState(const std::string &
 		break;
 	}
 	return myState;
-}
-
-std::string LitResAuthorsParser::getSubtitle() const {
-	static const std::string SPACE = " ";
-	std::string subtitle = myAuthorFirstName;
-	if (!myAuthorMiddleName.empty()) {
-		if (!subtitle.empty()) {
-			subtitle += SPACE;
-		}
-		subtitle += myAuthorMiddleName;
-	}
-	if (!myAuthorLastName.empty()) {
-		if (!subtitle.empty()) {
-			subtitle += SPACE;
-		}
-		subtitle += myAuthorLastName;
-	}
-	return subtitle;
 }

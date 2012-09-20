@@ -34,7 +34,20 @@ class NetworkAuthenticationManager;
 class LitResAuthorsParser : public ZLXMLReader {
 
 public:
-	LitResAuthorsParser(const NetworkLink &link, const std::map<NetworkItem::URLType,std::string> &urlByType, NetworkItem::List &authors);
+	struct LitresAuthorData {
+		std::string Id;
+		std::string DisplayName;
+		std::string FirstName;
+		std::string MiddleName;
+		std::string LastName;
+		std::string SortKey;
+
+		bool operator< (const LitresAuthorData &authorData) const;
+	};
+	typedef std::vector<LitresAuthorData> AuthorsList;
+
+public:
+	LitResAuthorsParser(AuthorsList &authors);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
@@ -50,15 +63,10 @@ private:
 	void processState(const std::string &tag, bool closed, const char **attributes);
 	State getNextState(const std::string &tag, bool closed);
 
-	std::string getSubtitle() const;
-
 private:
-	const NetworkLink &myLink;
-	const std::map<NetworkItem::URLType,std::string> myUrlByType;
+	AuthorsList &myAuthors;
 
-	NetworkItem::List &myAuthors;
 	std::string myBuffer;
-
 	State myState;
 
 	std::string myAuthorId;
@@ -67,5 +75,9 @@ private:
 	std::string myAuthorMiddleName;
 	std::string myAuthorLastName;
 };
+
+inline bool LitResAuthorsParser::LitresAuthorData::operator< (const LitresAuthorData &authorData) const {
+	return SortKey.compare(authorData.SortKey) < 0;
+}
 
 #endif /* __LITRESAUTHORSPARSER_H__ */
