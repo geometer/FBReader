@@ -93,7 +93,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 			//TODO check if buying book works right
 			std::string price = BuyBookReference::price(stringAttributeValue(attributes, "price"), "RUB");
 			myReferences.push_back(new BuyBookReference(
-				LitResUtil::generatePurchaseUrl(myBookId),
+				LitResUtil::generatePurchaseUrl(myLink, myBookId),
 				BookReference::FB2_ZIP,
 				BookReference::BUY,
 				price
