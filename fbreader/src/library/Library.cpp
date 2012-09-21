@@ -50,7 +50,7 @@ static const std::string OPTIONS = "Options";
 
 Library::Library() :
 	PathOption(ZLCategoryKey::CONFIG, OPTIONS, "BookPath", ""),
-	ScanSubdirsOption(ZLCategoryKey::CONFIG, OPTIONS, "ScanSubdirs", false),
+	ScanSubdirsOption(ZLCategoryKey::CONFIG, OPTIONS, "ScanSubdirs", true),
 	CollectAllBooksOption(ZLCategoryKey::CONFIG, OPTIONS, "CollectAllBooks", false),
 	myBuildMode(BUILD_ALL),
 	myRevision(0) {
