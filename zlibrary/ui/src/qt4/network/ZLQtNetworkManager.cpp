@@ -17,10 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <ZLStringUtil.h>
-#include <ZLLogger.h>
-#include <ZLResource.h>
-#include "ZLQtNetworkManager.h"
 #include <QtCore/QVector>
 #include <QtCore/QStringList>
 #include <QtCore/QFile>
@@ -37,6 +33,12 @@
 #include <QtNetwork/QAuthenticator>
 
 #include <QtCore/QDebug>
+
+#include <ZLStringUtil.h>
+#include <ZLLogger.h>
+#include <ZLResource.h>
+
+#include "ZLQtNetworkManager.h"
 
 static QString fixPath(const QString &path) {
 	if (path.startsWith('~')) {
@@ -84,10 +86,12 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 	QEventLoop eventLoop;
 
 	foreach (const shared_ptr<ZLExecutionData> &data, dataList) {
-		if (data.isNull() || !data->isInstanceOf(ZLNetworkRequest::TYPE_ID))
+		if (data.isNull() || !data->isInstanceOf(ZLNetworkRequest::TYPE_ID)) {
 			continue;
+    }
 		ZLNetworkRequest &request = static_cast<ZLNetworkRequest&>(*data);
 		QNetworkRequest networkRequest;
+    ZLLogger::Instance().println("network", "requesting " + request.url());
 		networkRequest.setUrl(QUrl::fromUserInput(QString::fromStdString(request.url())));
 
 		if (!request.doBefore()) {
@@ -115,10 +119,6 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		eventLoop.exec(QEventLoop::AllEvents);
 	}
 
-//	if (!errors.empty()) {
-//		qDebug() << "ERRORS: " << errors;
-//	}
-
 	return errors.join(QLatin1String("\n")).toStdString();
 }
 
@@ -138,8 +138,6 @@ void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequ
 		reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
 	}
 
-	 qDebug() << "loading" << networkRequest.url().toString();
-
 	scope.replies->push_back(reply);
 
 	QObject::connect(reply, SIGNAL(sslErrors(QList<QSslError>)),this, SLOT(onSslErrors(QList<QSslError>)));
@@ -154,7 +152,6 @@ void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequ
 
 
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
-	//qDebug() << Q_FUNC_INFO << reply->url();
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	reply->deleteLater();
 	scope.replies->removeOne(reply);
@@ -199,14 +196,12 @@ bool ZLQtNetworkManager::handleRedirect(QNetworkReply *reply) {
 }
 
 void ZLQtNetworkManager::onReplyReadyRead() {
-	//qDebug() << Q_FUNC_INFO;
 	QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	scope.timeoutTimer->start(timeoutValue());
 }
 
 void ZLQtNetworkManager::onTimeOut() {
-	//qDebug() << Q_FUNC_INFO;
 	QTimer *timer = qobject_cast<QTimer*>(sender());
 	QNetworkReply* reply = timer->property("reply").value<QNetworkReply*>();
 	timer->stop();
@@ -216,7 +211,6 @@ void ZLQtNetworkManager::onTimeOut() {
 
 void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	//qDebug() << Q_FUNC_INFO << QString::fromStdString(scope.request->userName()) << QString::fromStdString(scope.request->password());
 	if (scope.authAskedAlready) {
 		return;
 	}
@@ -227,7 +221,6 @@ void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthent
 }
 
 void ZLQtNetworkManager::onSslErrors(const QList<QSslError> &errors) {
-	//qDebug() << Q_FUNC_INFO << errors;
 	QNetworkReply *reply = qobject_cast<QNetworkReply*>(sender());
 	reply->ignoreSslErrors(errors);
 }

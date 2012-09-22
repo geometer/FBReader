@@ -22,9 +22,6 @@
 // Feed level
 const std::string OPDSConstants::REL_BOOKSHELF = "http://data.fbreader.org/rel/bookshelf";
 const std::string OPDSConstants::REL_RECOMMENDATIONS = "http://data.fbreader.org/rel/recommendations";
-const std::string OPDSConstants::REL_BOOKLIST = "http://data.fbreader.org/rel/booklist";
-const std::string OPDSConstants::REL_LITRES_GENRES = "http://data.fbreader.org/rel/litres-genres";
-const std::string OPDSConstants::REL_LITRES_AUTHORS = "http://data.fbreader.org/rel/litres-authors";
 
 //const std::string OPDSConstants::REL_SUBSCRIPTIONS = "http://opds-spec.org/subscriptions";
 

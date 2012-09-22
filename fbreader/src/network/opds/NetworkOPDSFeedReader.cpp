@@ -278,6 +278,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	bool urlIsAlternate = false;
 	std::string htmlURL;
 	std::string litresRel;
+	std::string litresType;
 	int catalogFlags = NetworkCatalogItem::FLAGS_DEFAULT;
 	for (size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
@@ -308,19 +309,10 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 					rel.empty()) {
 				htmlURL = href;
 			}
-		} else if (type == ZLMimeType::APPLICATION_LITRES_XML) {
+		} else if (type->weakEquals(*ZLMimeType::APPLICATION_LITRES_XML)) {
 			url = href;
 			litresRel = rel;
-		} else if (type == ZLMimeType::APPLICATION_LITRES) {
-			url = href;
-			litresRel = OPDSConstants::REL_BOOKLIST; //TODO maybe use other name of relation?
-
-			//also, I think, there's a good way to handle that:
-			//1. use one type (litres+xml), not litres
-			//2. use rel like BOOKSHELF, AUTHORS_LIST, BOOK_LIST or smth,
-			//   for defining what kind of specific item should be created
-			//3. if litres+xml link here, delegate entry to LitRes class for creating Item
-			//   (this will be helpful when we will use more that 1 non-opds catalog
+			litresType = type->getParameter("type");
 		}
 	}
 
@@ -346,7 +338,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	urlMap[NetworkItem::URL_CATALOG] = ZLNetworkUtil::url(myBaseURL, url);
 	urlMap[NetworkItem::URL_HTML_PAGE] = ZLNetworkUtil::url(myBaseURL, htmlURL);
 
-	if (!litresRel.empty()) {
+	if (!litresType.empty()) {
 		if (litresRel == OPDSConstants::REL_BOOKSHELF) {
 			return new LitResBookshelfItem(
 				myData.Link,
@@ -363,7 +355,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				urlMap,
 				NetworkCatalogItem::LoggedUsers
 			);
-		} else if (litresRel == OPDSConstants::REL_BOOKLIST) {
+		} else if (litresType == "books") {
 			return new LitResCatalogItem(
 				false,
 				myData.Link,
@@ -372,7 +364,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				urlMap,
 				dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
 			);
-		} else if (litresRel == OPDSConstants::REL_LITRES_GENRES) {
+		} else if (litresType == "genres") {
 			return new LitResByGenresItem(
 				LitResGenreMap::Instance().genresTree(),
 				myData.Link,
@@ -382,7 +374,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				NetworkCatalogItem::Always,
 				NetworkCatalogItem::FLAG_SHOW_AUTHOR
 			);
-		} else if (litresRel == OPDSConstants::REL_LITRES_AUTHORS) {
+		} else if (litresType == "authors") {
 			return new LitResAuthorsItem(
 				myData.Link,
 				entry.title(),

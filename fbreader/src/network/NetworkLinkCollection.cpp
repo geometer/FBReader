@@ -209,7 +209,7 @@ void NetworkLinkCollection::synchronize() {
 	//commented to not download from DB, because should have only links from generic.xml
 	NetworkDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
-	updateLinks("http://data.fbreader.org/catalogs/generic-1.8.xml");
+	updateLinks("http://data.fbreader.org/catalogs/generic-1.9.xml");
 }
 
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {

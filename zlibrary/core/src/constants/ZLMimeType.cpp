@@ -33,7 +33,9 @@ const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_OR_XML = ZLMimeType::get("a
 
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_ATOM_XML = ZLMimeType::get("application/atom+xml");
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_LITRES_XML = ZLMimeType::get("application/litres+xml");
-const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_LITRES = ZLMimeType::get("application/litres");
+const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_LITRES_XML_BOOKS = ZLMimeType::get("application/litres+xml;type=books");
+const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_LITRES_XML_AUTHORS = ZLMimeType::get("application/litres+xml;type=authors");
+const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_LITRES_XML_GENRES = ZLMimeType::get("application/litres+xml;type=genres");
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_OPENSEARCH_XML = ZLMimeType::get("application/opensearchdescription+xml");
 
 const shared_ptr<ZLMimeType> ZLMimeType::APPLICATION_GZIP = ZLMimeType::get("application/x-gzip");
@@ -105,6 +107,10 @@ shared_ptr<ZLMimeType> ZLMimeType::get(std::string text) {
 	return new ZLMimeType(name, parameters);
 }
 
+bool ZLMimeType::weakEquals(const ZLMimeType& t) const {
+	return myName == t.myName;
+}
+
 bool ZLMimeType::operator ==(const ZLMimeType& t) const {
 	return myName == t.myName;
 }
@@ -118,4 +124,10 @@ ZLMimeType::ZLMimeType(std::string& name, std::map<std::string,std::string>& par
 
 const std::string& ZLMimeType::getName() const {
 	return myName;
+}
+
+const std::string& ZLMimeType::getParameter(const std::string &key) const {
+  static const std::string EMPTY_STRING;
+  const std::map<std::string,std::string>::const_iterator it = myParameters.find(key);
+  return it != myParameters.end() ? it->second : EMPTY_STRING;
 }
