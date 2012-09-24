@@ -68,7 +68,7 @@
 		<node name="it" value="Italia"/>
 		<node name="lt" value="Lituavi"/>
 		<node name="nl" value="Belanda"/>
-		<node name="no" value="Norwegia"/>
+		<node name="nb" value="Norwegia"/>
 		<node name="pl" toBeTranslated="true" value="Polish"/>
 		<node name="pt" value="Portugis"/>
 		<node name="ru" value="Rusia"/>

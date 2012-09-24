@@ -68,7 +68,7 @@
 		<node name="it" value="Италиански"/>
 		<node name="lt" value="Литовски"/>
 		<node name="nl" value="Холандски"/>
-		<node name="no" value="Норвежки"/>
+		<node name="nb" value="Норвежки"/>
 		<node name="pl" toBeTranslated="true" value="Polish"/>
 		<node name="pt" value="Португалски"/>
 		<node name="ru" value="Руски"/>

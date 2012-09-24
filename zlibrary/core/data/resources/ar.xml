@@ -68,7 +68,7 @@
 		<node name="it" value="الإيطالية"/>
 		<node name="lt" value="لتوانية"/>
 		<node name="nl" value="الهولندية"/>
-		<node name="no" value="النرويجية"/>
+		<node name="nb" value="النرويجية"/>
 		<node name="pl" toBeTranslated="true" value="Polish"/>
 		<node name="pt" value="البرتغالية"/>
 		<node name="ru" value="الروسية"/>

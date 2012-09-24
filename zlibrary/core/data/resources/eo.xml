@@ -68,7 +68,7 @@
 		<node name="it" value="La itala"/>
 		<node name="lt" value="La litova"/>
 		<node name="nl" toBeTranslated="true" value="Dutch"/>
-		<node name="no" value="La noverga"/>
+		<node name="nb" value="La noverga"/>
 		<node name="pl" toBeTranslated="true" value="Polish"/>
 		<node name="pt" value="La portugala"/>
 		<node name="ru" value="La rusa"/>

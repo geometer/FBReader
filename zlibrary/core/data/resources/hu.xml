@@ -68,7 +68,7 @@
 		<node name="it" value="Olasz"/>
 		<node name="lt" value="Litván"/>
 		<node name="nl" value="Holland"/>
-		<node name="no" value="Norvég"/>
+		<node name="nb" value="Norvég"/>
 		<node name="pl" toBeTranslated="true" value="Polish"/>
 		<node name="pt" value="Portugugál"/>
 		<node name="ru" value="Orosz"/>

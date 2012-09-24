@@ -68,7 +68,7 @@
 		<node name="it" value="Italiaans"/>
 		<node name="lt" value="Litouws"/>
 		<node name="nl" value="Nederlands"/>
-		<node name="no" value="Noors"/>
+		<node name="nb" value="Noors"/>
 		<node name="pl" toBeTranslated="true" value="Polish"/>
 		<node name="pt" value="Portugees"/>
 		<node name="ru" value="Russisch"/>

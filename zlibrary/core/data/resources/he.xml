@@ -68,7 +68,7 @@
 		<node name="it" value="איטלקית"/>
 		<node name="lt" value="ליטאית"/>
 		<node name="nl" value="הולנדית"/>
-		<node name="no" value="נורבגית"/>
+		<node name="nb" value="נורבגית"/>
 		<node name="pl" value="פולנית"/>
 		<node name="pt" value="פורטוגזית"/>
 		<node name="ru" value="רוסית"/>
