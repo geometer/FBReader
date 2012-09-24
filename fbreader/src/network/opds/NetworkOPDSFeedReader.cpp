@@ -338,7 +338,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	urlMap[NetworkItem::URL_CATALOG] = ZLNetworkUtil::url(myBaseURL, url);
 	urlMap[NetworkItem::URL_HTML_PAGE] = ZLNetworkUtil::url(myBaseURL, htmlURL);
 
-	if (!litresType.empty()) {
+	if (!litresType.empty() || !litresRel.empty()) {
 		if (litresRel == OPDSConstants::REL_BOOKSHELF) {
 			return new LitResBookshelfItem(
 				myData.Link,
@@ -355,6 +355,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				urlMap,
 				NetworkCatalogItem::LoggedUsers
 			);
+		//TODO maybe we should use ZLMimeType::APPLICATION_LITRES_XML_BOOKS here?
 		} else if (litresType == "books") {
 			return new LitResCatalogItem(
 				false,
