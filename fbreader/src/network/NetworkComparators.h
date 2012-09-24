@@ -25,13 +25,23 @@
 
 #include "NetworkItems.h"
 
-
 class NetworkBookItemComparator {
 
 public:
 	bool operator () (const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1) const;
 };
 
+class NetworkBookItemByTitleComparator {
+
+public:
+	bool operator () (const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1) const;
+};
+
+class NetworkBookItemBySeriesComparator {
+
+public:
+	bool operator () (const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1) const;
+};
 
 class NetworkAuthorComparator {
 
@@ -43,6 +53,5 @@ public:
 private:
 	const std::map<NetworkBookItem::AuthorData, unsigned int> &myRates;
 };
-
 
 #endif /* __NETWORKCOMPARATORS_H__ */

@@ -32,6 +32,10 @@
 #include "../NetworkItems.h"
 #include "../BookReference.h"
 #include "../authentication/litres/LitResBookshelfItem.h"
+#include "../authentication/litres/LitResCatalogItem.h"
+#include "../authentication/litres/LitResRecommendationsItem.h"
+#include "../authentication/litres/LitResByGenresItem.h"
+#include "../authentication/litres/LitResAuthorsItem.h"
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	const OPDSLink &link,
@@ -273,8 +277,9 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	std::string url;
 	bool urlIsAlternate = false;
 	std::string htmlURL;
-	bool litresCatalogue = false;
-	NetworkCatalogItem::CatalogType catalogType = NetworkCatalogItem::OTHER;
+	std::string litresRel;
+	std::string litresType;
+	int catalogFlags = NetworkCatalogItem::FLAGS_DEFAULT;
 	for (size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
 		const std::string &href = link.href();
@@ -285,7 +290,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 					(coverURL.empty() && rel == OPDSConstants::REL_COVER)) {
 				coverURL = href;
 			}
-		} else if (*type == *ZLMimeType::APPLICATION_ATOM_XML) {
+		} else if (type == ZLMimeType::APPLICATION_ATOM_XML) {
 			if (rel == ATOMConstants::REL_ALTERNATE) {
 				if (url.empty()) {
 					url = href;
@@ -295,20 +300,19 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 				url = href;
 				urlIsAlternate = false;
 				if (rel == OPDSConstants::REL_CATALOG_AUTHOR) {
-					catalogType = NetworkCatalogItem::BY_AUTHORS;
+					catalogFlags &= !NetworkCatalogItem::FLAG_SHOW_AUTHOR;
 				}
 			}
-		} else if (*type == *ZLMimeType::TEXT_HTML) {
+		} else if (type == ZLMimeType::TEXT_HTML) {
 			if (rel == OPDSConstants::REL_ACQUISITION ||
 					rel == ATOMConstants::REL_ALTERNATE ||
 					rel.empty()) {
 				htmlURL = href;
 			}
-		} else if (*type == *ZLMimeType::APPLICATION_LITRES_XML) {
-			if (rel == OPDSConstants::REL_BOOKSHELF) {
-				litresCatalogue = true;
-				url = href;
-			}
+		} else if (type->weakEquals(*ZLMimeType::APPLICATION_LITRES_XML)) {
+			url = href;
+			litresRel = rel;
+			litresType = type->getParameter("type");
 		}
 	}
 
@@ -333,14 +337,55 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	urlMap[NetworkItem::URL_COVER] = coverURL;
 	urlMap[NetworkItem::URL_CATALOG] = ZLNetworkUtil::url(myBaseURL, url);
 	urlMap[NetworkItem::URL_HTML_PAGE] = ZLNetworkUtil::url(myBaseURL, htmlURL);
-	if (litresCatalogue) {
-		return new LitResBookshelfItem(
-			(OPDSLink&)myData.Link,
-			entry.title(),
-			annotation,
-			urlMap,
-			dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
-		);
+
+	if (!litresType.empty() || !litresRel.empty()) {
+		if (litresRel == OPDSConstants::REL_BOOKSHELF) {
+			return new LitResBookshelfItem(
+				myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				NetworkCatalogItem::LoggedUsers
+			);
+		} else if (litresRel == OPDSConstants::REL_RECOMMENDATIONS) {
+			return new LitResRecommendationsItem(
+				(OPDSLink&)myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				NetworkCatalogItem::LoggedUsers
+			);
+		//TODO maybe we should use ZLMimeType::APPLICATION_LITRES_XML_BOOKS here?
+		} else if (litresType == "books") {
+			return new LitResCatalogItem(
+				false,
+				myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
+			);
+		} else if (litresType == "genres") {
+			return new LitResByGenresItem(
+				LitResGenreMap::Instance().genresTree(),
+				myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				NetworkCatalogItem::Always,
+				NetworkCatalogItem::FLAG_SHOW_AUTHOR
+			);
+		} else if (litresType == "authors") {
+			return new LitResAuthorsItem(
+				myData.Link,
+				entry.title(),
+				annotation,
+				urlMap,
+				NetworkCatalogItem::Always
+			);
+		} else {
+			return 0;
+		}
 	} else {
 		return new OPDSCatalogItem(
 			(OPDSLink&)myData.Link,
@@ -348,7 +393,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 			annotation,
 			urlMap,
 			dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always,
-			catalogType
+			catalogFlags
 		);
 	}
 }

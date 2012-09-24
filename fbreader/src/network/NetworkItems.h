@@ -83,9 +83,19 @@ public:
 		LoggedUsers
 	};
 
-	enum CatalogType {
-		OTHER,
-		BY_AUTHORS,
+	enum CatalogFlags {
+		FLAG_NONE                              = 0,
+		FLAG_SHOW_AUTHOR                       = 1 << 0,
+		FLAG_GROUP_BY_AUTHOR                   = 1 << 1,
+		FLAG_GROUP_BY_SERIES                   = 1 << 2,
+		FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES  = 1 << 3,
+		FLAGS_DEFAULT =
+			FLAG_SHOW_AUTHOR |
+			FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES,
+		FLAGS_GROUP =
+			FLAG_GROUP_BY_AUTHOR |
+			FLAG_GROUP_BY_SERIES |
+			FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES,
 	};
 
 public:
@@ -95,7 +105,7 @@ public:
 		const std::string &summary,
 		const std::map<URLType,std::string> &urlByType,
 		VisibilityType visibility = Always,
-		CatalogType type = OTHER
+		int flags = FLAGS_DEFAULT
 	);
 
 	const ZLTypeId &typeId() const;
@@ -105,9 +115,16 @@ public:
 	// returns error message
 	virtual std::string loadChildren(List &children) = 0;
 
-public:
-	const VisibilityType Visibility;
-	const CatalogType Type;
+	int getFlags() const;
+	VisibilityType getVisibility() const;
+
+
+protected:
+	virtual std::string getCatalogUrl();
+
+private:
+	const VisibilityType myVisibility;
+	const int myFlags;
 };
 
 class NetworkBookItem : public NetworkItem {
@@ -118,6 +135,8 @@ public:
 		std::string SortKey;
 
 		bool operator < (const AuthorData &data) const;
+		bool operator != (const AuthorData &data) const;
+		bool operator == (const AuthorData &data) const;
 	};
 
 public:

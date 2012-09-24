@@ -18,13 +18,16 @@
  */
 
 #include <ZLNetworkUtil.h>
+#include <ZLStringUtil.h>
 
 #include "LitResUtil.h"
 
 #include "../../NetworkLink.h"
 
+static std::string LITRES_API_URL = "://robot.litres.ru/";
+
 std::string LitResUtil::url(const std::string &path) {
-	std::string url = "://robot.litres.ru/" + path;
+	std::string url = LITRES_API_URL + path;
 	if (ZLNetworkUtil::hasParameter(url, "sid") ||
 			ZLNetworkUtil::hasParameter(url, "pwd")) {
 		url = "https" + url;
@@ -38,4 +41,59 @@ std::string LitResUtil::url(const NetworkLink &link, const std::string &path) {
 	std::string urlString = url(path);
 	link.rewriteUrl(urlString);
 	return urlString;
+}
+
+std::string LitResUtil::url(bool secure, const std::string &path) {
+	std::string url = LITRES_API_URL + path;
+	if (secure) {
+		url = "https" + url;
+	} else {
+		url = "http" + url;
+	}
+	return url;
+}
+
+std::string LitResUtil::url(const NetworkLink &link, bool secure, const std::string &path) {
+	std::string urlString = url(secure, path);
+	link.rewriteUrl(urlString, true);
+	return urlString;
+}
+
+std::string LitResUtil::generateTrialUrl(std::string bookId) {
+	size_t len = bookId.length();
+	if (len < 8) {
+		bookId = std::string(8 - len, '0') + bookId;
+	}
+	std::string query = "static/trials/%s/%s/%s/%s.fb2.zip";
+	query = ZLStringUtil::printf(query, bookId.substr(0,2));
+	query = ZLStringUtil::printf(query, bookId.substr(2,2));
+	query = ZLStringUtil::printf(query, bookId.substr(4,2));
+	query = ZLStringUtil::printf(query, bookId);
+	return url(false, query);
+}
+
+std::string LitResUtil::generatePurchaseUrl(const NetworkLink &link, const std::string &bookId) {
+	std::string query;
+	ZLNetworkUtil::appendParameter(query, "art", bookId);
+	return url(link, true, "pages/purchase_book/" + query);
+}
+
+std::string LitResUtil::generateDownloadUrl(const std::string &bookId) {
+	std::string query;
+	ZLNetworkUtil::appendParameter(query, "art", bookId);
+	return url(true, "pages/catalit_download_book/" + query);
+}
+
+std::string LitResUtil::generateBooksByGenreUrl(const std::string &genreId) {
+	std::string query;
+	ZLNetworkUtil::appendParameter(query, "checkpoint", "2000-01-01");
+	ZLNetworkUtil::appendParameter(query, "genre", genreId);
+	return url(false, "pages/catalit_browser/" + query);
+}
+
+std::string LitResUtil::generateBooksByAuthorUrl(const std::string &authorId) {
+	std::string query;
+	ZLNetworkUtil::appendParameter(query, "checkpoint", "2000-01-01");
+	ZLNetworkUtil::appendParameter(query, "person", authorId);
+	return url(false, "pages/catalit_browser/" + query);
 }

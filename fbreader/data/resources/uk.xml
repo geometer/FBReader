@@ -27,6 +27,18 @@
 		</node>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="За автором">
+			<node name="summary" value="Книги відсортовані за автором"/>
+		</node>
+		<node name="byTitle" value="За назвою">
+			<node name="summary" value="Книги відсортовані за назвою"/>
+		</node>
+		<node name="byDate" value="За датою">
+			<node name="summary" value="Книги відсортовані за датою придбання"/>
+		</node>
+		<node name="bySeries" value="За серією">
+			<node name="summary" value="Книги відсортовані за серією"/>
+		</node>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Розгорнути"/>
 			<node name="collapseTree" value="Сгорнути"/>

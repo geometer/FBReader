@@ -88,9 +88,9 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
 	ZLNetworkUtil::appendParameter(url, "login", UserNameOption.value());
 	ZLNetworkUtil::appendParameter(url, "pwd", pwd);
-	if (SkipIPOption.value()) {
+//	if (SkipIPOption.value()) {
 		ZLNetworkUtil::appendParameter(url, "skip_ip", "1");
-	}
+//	}
 
 	shared_ptr<ZLExecutionData> networkData =
 		ZLNetworkManager::Instance().createXMLParserRequest(
@@ -192,6 +192,10 @@ void LitResAuthenticationManager::collectPurchasedBooks(NetworkItem::List &list)
 	list.assign(myPurchasedBooksList.begin(), myPurchasedBooksList.end());
 }
 
+const std::set<std::string> &LitResAuthenticationManager::getPurchasedIds() const {
+	return myPurchasedBooksIds;
+}
+
 std::string LitResAuthenticationManager::refillAccountLink() {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
@@ -228,6 +232,8 @@ std::string LitResAuthenticationManager::initialize() {
 	std::string dummy1;
 
 	ZLExecutionData::Vector dataList;
+
+	//TODO implement retrieving information about account from purchased books query
 	dataList.push_back(loadPurchasedBooks(myPurchasedBooksIds, myPurchasedBooksList));
 	dataList.push_back(loadAccount(dummy1));
 

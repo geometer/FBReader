@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,30 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OPDSCATALOGITEM_H__
-#define __OPDSCATALOGITEM_H__
+#ifndef __LITRESAUTHORSITEM_H__
+#define __LITRESAUTHORSITEM_H__
 
-#include "../NetworkItems.h"
+#include "../../NetworkItems.h"
 
-class OPDSLink;
+#include "LitResAuthorsParser.h"
 
-class OPDSCatalogItem : public NetworkCatalogItem {
+class LitResAuthorsItem : public NetworkCatalogItem {
 
 public:
-	OPDSCatalogItem(
-		const OPDSLink &link,
+	LitResAuthorsItem(
+		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
 		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility = Always,
+		VisibilityType visibility,
 		int flags = FLAGS_DEFAULT
 	);
 
-private:
+protected:
+	void fillChildrenWithAuthors(NetworkItem::List &children, const LitResAuthorsParser::AuthorsList &authors);
 	std::string loadChildren(NetworkItem::List &children);
+
+	static std::string getSubtitle(const LitResAuthorsParser::LitresAuthorData &author);
 };
 
-#endif /* __OPDSCATALOGITEM_H__ */
+#endif /* __LITRESAUTHORSITEM_H__ */

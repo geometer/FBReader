@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,27 +17,44 @@
  * 02110-1301, USA.
  */
 
-#ifndef __OPDSCATALOGITEM_H__
-#define __OPDSCATALOGITEM_H__
+#ifndef __LITRESBYGENRESITEM_H__
+#define __LITRESBYGENRESITEM_H__
 
-#include "../NetworkItems.h"
+#include "../../NetworkItems.h"
 
-class OPDSLink;
+#include "LitResGenre.h"
 
-class OPDSCatalogItem : public NetworkCatalogItem {
+class LitResByGenresItem : public NetworkCatalogItem {
 
 public:
-	OPDSCatalogItem(
-		const OPDSLink &link,
+	LitResByGenresItem(
+		const std::vector<shared_ptr<LitResGenre> > &genreTree,
+		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
 		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility = Always,
-		int flags = FLAGS_DEFAULT
+		VisibilityType visibility,
+		int flags
 	);
 
 private:
 	std::string loadChildren(NetworkItem::List &children);
+
+private:
+	const std::vector<shared_ptr<LitResGenre> > &myGenreTree;
 };
 
-#endif /* __OPDSCATALOGITEM_H__ */
+class LitResBooksForGenreItem : public NetworkCatalogItem {
+
+public:
+	LitResBooksForGenreItem(const NetworkCatalogItem &parent, shared_ptr<LitResGenre> litresGenre);
+
+private:
+	std::string loadChildren(NetworkItem::List &children);
+
+private:
+	shared_ptr<LitResGenre> myLitresGenre;
+};
+
+
+#endif /* __LITRESBYGENRESITEM_H__ */

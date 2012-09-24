@@ -27,6 +27,18 @@
 		</node>
 	</node>
 	<node name="networkView">
+		<node name="byAuthor" value="Szerző">
+			<node name="summary" value="Könyvek szerző szerint"/>
+		</node>
+		<node name="byTitle" value="Cím">
+			<node name="summary" value="Könyvek cím szerint"/>
+		</node>
+		<node name="byDate" value="Dátum">
+			<node name="summary" value="Könyvek letöltés dátuma szerint"/>
+		</node>
+		<node name="bySeries" value="Sorozat">
+			<node name="summary" value="Könyvek sorozat szerint"/>
+		</node>
 		<node name="libraryItemNode">
 			<node name="expandTree" value="Kibontva"/>
 			<node name="collapseTree" value="Összecsukva"/>

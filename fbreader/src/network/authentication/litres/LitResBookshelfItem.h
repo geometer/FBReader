@@ -20,6 +20,9 @@
 #ifndef __LITRESBOOKSHELFITEM_H__
 #define __LITRESBOOKSHELFITEM_H__
 
+#include <ZLResource.h>
+
+#include "../../NetworkComparators.h"
 #include "../../NetworkItems.h"
 
 class NetworkLink;

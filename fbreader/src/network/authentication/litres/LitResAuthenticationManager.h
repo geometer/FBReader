@@ -22,6 +22,7 @@
 
 #include <set>
 
+#include <ZLExecutionData.h>
 #include <ZLNetworkSSLCertificate.h>
 
 #include "../NetworkAuthenticationManager.h"
@@ -50,6 +51,7 @@ public:
 
 	std::string reloadPurchasedBooks();
 	void collectPurchasedBooks(NetworkItem::List &list);
+	const std::set<std::string> &getPurchasedIds() const;
 
 private:
 	shared_ptr<ZLExecutionData> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);

@@ -99,3 +99,22 @@ bool NetworkAuthorComparator::operator () (const NetworkBookItem::AuthorData &au
 	return author0 < author1;
 }
 
+bool NetworkBookItemByTitleComparator::operator ()(const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1) const {
+	return bookPtr0->Title < bookPtr1->Title;
+}
+
+bool NetworkBookItemBySeriesComparator::operator ()(const shared_ptr<NetworkItem> &bookPtr0, const shared_ptr<NetworkItem> &bookPtr1) const {
+	const NetworkBookItem &book0 = static_cast<const NetworkBookItem&>(*bookPtr0);
+	const NetworkBookItem &book1 = static_cast<const NetworkBookItem&>(*bookPtr1);
+	if (book0.SeriesTitle != book1.SeriesTitle) {
+		return book0.SeriesTitle < book1.SeriesTitle;
+	}
+	const int diff = book0.IndexInSeries - book1.IndexInSeries;
+	if (diff != 0) {
+		return diff < 0 ? true : false;
+	}
+	return book0.Title < book1.Title;
+}
+
+
+

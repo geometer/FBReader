@@ -2,6 +2,8 @@
 
 * Code is compilable for MacOS X (10.5+) with Qt library
 * Added ability to read books from archives like ".tar", ".tar.gz" and ".tar.bz2" (original code by Serge Osnach)
+* Added 'Recommend' item for LitRes network catalog
+* Added convenient classification (by date, by author, by title, by series) for 'My Books' in LitRes network catalog
 
 ===== 0.99.2 (September 7, 2012) =====
 

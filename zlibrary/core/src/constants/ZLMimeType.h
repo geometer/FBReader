@@ -47,7 +47,9 @@ private:
 public:
 
 	const std::string& getName() const;
+	const std::string& getParameter(const std::string &key) const;
 
+	bool weakEquals(const ZLMimeType& t) const;
 	bool operator ==(const ZLMimeType& t) const;
 	bool operator !=(const ZLMimeType& t) const;
 
@@ -61,6 +63,9 @@ public:
 	static const shared_ptr<ZLMimeType> APPLICATION_PALM_DB;
 	static const shared_ptr<ZLMimeType> APPLICATION_ATOM_XML;
 	static const shared_ptr<ZLMimeType> APPLICATION_LITRES_XML;
+	static const shared_ptr<ZLMimeType> APPLICATION_LITRES_XML_BOOKS;
+	static const shared_ptr<ZLMimeType> APPLICATION_LITRES_XML_AUTHORS;
+	static const shared_ptr<ZLMimeType> APPLICATION_LITRES_XML_GENRES;
 	static const shared_ptr<ZLMimeType> APPLICATION_OPENSEARCH_XML;
 	static const shared_ptr<ZLMimeType> APPLICATION_OR_XML;
 

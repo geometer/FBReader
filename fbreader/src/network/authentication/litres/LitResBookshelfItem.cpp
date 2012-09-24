@@ -28,6 +28,8 @@
 #include "../../NetworkComparators.h"
 #include "../../NetworkErrors.h"
 
+#include "SortedCatalogItem.h"
+
 LitResBookshelfItem::LitResBookshelfItem(
 	const NetworkLink &link,
 	const std::string &title,
@@ -59,7 +61,25 @@ std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children) {
 		error = mgr.reloadPurchasedBooks();
 	}
 	myForceReload = true;
-	mgr.collectPurchasedBooks(children);
-	std::sort(children.begin(), children.end(), NetworkBookItemComparator());
+
+	NetworkItem::List tmpChildren;
+	mgr.collectPurchasedBooks(tmpChildren);
+
+	if (tmpChildren.size() <= 5) {
+		children.assign(tmpChildren.begin(), tmpChildren.end());
+		std::sort(children.begin(), children.end(), NetworkBookItemComparator());
+	} else {
+		children.push_back(SortedCatalogItem::create(*this, "byDate",   tmpChildren, FLAG_SHOW_AUTHOR));
+		children.push_back(SortedCatalogItem::create(*this, "byAuthor", tmpChildren, FLAG_GROUP_BY_AUTHOR, NetworkBookItemComparator()));
+		children.push_back(SortedCatalogItem::create(*this, "byTitle",  tmpChildren, FLAG_SHOW_AUTHOR, NetworkBookItemByTitleComparator()));
+		SortedCatalogItem* bySeries = SortedCatalogItem::create(*this, "bySeries", tmpChildren, FLAG_SHOW_AUTHOR | FLAG_GROUP_BY_SERIES,
+																NetworkBookItemBySeriesComparator(), SortedCatalogItem::BySeriesFilter());
+
+		if (!bySeries->isEmpty()) {
+			children.push_back(bySeries);
+		} else {
+			delete bySeries;
+		}
+	}
 	return error;
 }

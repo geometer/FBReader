@@ -36,6 +36,8 @@ public:
 
 	// Feed level
 	static const std::string REL_BOOKSHELF;
+	static const std::string REL_RECOMMENDATIONS;
+
 	//static const std::string REL_SUBSCRIPTIONS;
 
 	// Entry level / catalog types

@@ -29,9 +29,17 @@ class LitResUtil {
 public:
 	static std::string url(const std::string &path);
 	static std::string url(const NetworkLink &link, const std::string &path);
+	static std::string url(const NetworkLink &link,  bool secure, const std::string &path);
+	static std::string url(bool secure, const std::string &path);
+
+	static std::string generateTrialUrl(std::string bookId);
+	static std::string generatePurchaseUrl(const NetworkLink &link, const std::string &bookId);
+	static std::string generateDownloadUrl(const std::string &bookId);
+	static std::string generateBooksByGenreUrl(const std::string &genreId);
+	static std::string generateBooksByAuthorUrl(const std::string &authorId);
 
 private:
-	LitResUtil();
+	 LitResUtil();
 };
 
 #endif /* __LITRESUTIL_H__ */
