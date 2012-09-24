@@ -40,7 +40,6 @@ public:
 	static const std::string REL_BOOKLIST;
 	static const std::string REL_LITRES_GENRES;
 	static const std::string REL_LITRES_AUTHORS;
-	static const std::string REL_LITRES_AUTHORS_BY_LETTER;
 
 	//static const std::string REL_SUBSCRIPTIONS;
 

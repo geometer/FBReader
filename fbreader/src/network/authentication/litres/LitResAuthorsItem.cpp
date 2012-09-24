@@ -99,27 +99,3 @@ std::string LitResAuthorsItem::getSubtitle(const LitResAuthorsParser::LitresAuth
 	}
 	return subtitle;
 }
-
-LitResAuthorsByTwoLetterItem::LitResAuthorsByTwoLetterItem(
-	const LitResAuthorsParser::AuthorsList &authors,
-	const NetworkLink &link,
-	const std::string &title,
-	const std::string &summary,
-	const std::map<URLType,std::string> &urlByType,
-	VisibilityType visibility,
-	int flags
-) : LitResAuthorsItem(
-	link,
-	title,
-	summary,
-	urlByType,
-	visibility,
-	flags
-), myAuthors(authors) {
-}
-
-std::string LitResAuthorsByTwoLetterItem::loadChildren(NetworkItem::List &children) {
-	fillChildrenWithAuthors(children, myAuthors);
-	return std::string();
-}
-

@@ -43,24 +43,4 @@ protected:
 	static std::string getSubtitle(const LitResAuthorsParser::LitresAuthorData &author);
 };
 
-class LitResAuthorsByTwoLetterItem : public LitResAuthorsItem {
-
-public:
-	LitResAuthorsByTwoLetterItem(
-		const LitResAuthorsParser::AuthorsList &authors,
-		const NetworkLink &link,
-		const std::string &title,
-		const std::string &summary,
-		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility,
-		int flags = FLAGS_DEFAULT
-	);
-
-protected:
-	std::string loadChildren(NetworkItem::List &children);
-
-private:
-	LitResAuthorsParser::AuthorsList myAuthors;
-};
-
 #endif /* __LITRESAUTHORSITEM_H__ */

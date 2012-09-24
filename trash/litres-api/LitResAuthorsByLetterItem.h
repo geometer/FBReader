@@ -43,19 +43,26 @@ private:
 
 private:
 	static std::map<std::string, int> getLetterCounter(const LitResAuthorsParser::AuthorsList &authors);
-
-private:
-//	class AuthorsComparator {
-
-//	public:
-//		bool operator () (const LitResAuthorsParser::LitresAuthorData &author1,
-//						  const LitResAuthorsParser::LitresAuthorData &author2) const;
-//	};
 };
 
-//inline bool LitResAuthorsByLetterItem::AuthorsComparator::operator ()(const LitResAuthorsParser::LitresAuthorData &author1,
-//															   const LitResAuthorsParser::LitresAuthorData &author2) const {
-//	return author1.LastName.compare(author2.LastName) < 0;
-//}
+class LitResAuthorsByTwoLetterItem : public LitResAuthorsItem {
+
+public:
+	LitResAuthorsByTwoLetterItem(
+		const LitResAuthorsParser::AuthorsList &authors,
+		const NetworkLink &link,
+		const std::string &title,
+		const std::string &summary,
+		const std::map<URLType,std::string> &urlByType,
+		VisibilityType visibility,
+		int flags = FLAGS_DEFAULT
+	);
+
+protected:
+	std::string loadChildren(NetworkItem::List &children);
+
+private:
+	LitResAuthorsParser::AuthorsList myAuthors;
+};
 
 #endif /* __LITRESAUTHORSBYLETTERITEM_H__ */

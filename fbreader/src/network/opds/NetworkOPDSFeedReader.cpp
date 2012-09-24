@@ -36,7 +36,6 @@
 #include "../authentication/litres/LitResRecommendationsItem.h"
 #include "../authentication/litres/LitResByGenresItem.h"
 #include "../authentication/litres/LitResAuthorsItem.h"
-#include "../authentication/litres/LitResAuthorsByLetterItem.h"
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	const OPDSLink &link,
@@ -385,14 +384,6 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 			);
 		} else if (litresRel == OPDSConstants::REL_LITRES_AUTHORS) {
 			return new LitResAuthorsItem(
-				myData.Link,
-				entry.title(),
-				annotation,
-				urlMap,
-				NetworkCatalogItem::Always
-			);
-		} else if (litresRel == OPDSConstants::REL_LITRES_AUTHORS_BY_LETTER) {
-			return new LitResAuthorsByLetterItem(
 				myData.Link,
 				entry.title(),
 				annotation,

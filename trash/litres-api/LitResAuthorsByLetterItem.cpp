@@ -167,3 +167,25 @@ void LitResAuthorsByLetterItem::addSubCatalog(std::string start, std::string end
 	children.push_back(new LitResAuthorsByTwoLetterItem(filteredAuthors, Link, title, subtitle, URLByType, Always));
 }
 
+LitResAuthorsByTwoLetterItem::LitResAuthorsByTwoLetterItem(
+	const LitResAuthorsParser::AuthorsList &authors,
+	const NetworkLink &link,
+	const std::string &title,
+	const std::string &summary,
+	const std::map<URLType,std::string> &urlByType,
+	VisibilityType visibility,
+	int flags
+) : LitResAuthorsItem(
+	link,
+	title,
+	summary,
+	urlByType,
+	visibility,
+	flags
+), myAuthors(authors) {
+}
+
+std::string LitResAuthorsByTwoLetterItem::loadChildren(NetworkItem::List &children) {
+	fillChildrenWithAuthors(children, myAuthors);
+	return std::string();
+}
