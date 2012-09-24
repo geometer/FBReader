@@ -17,24 +17,24 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LITRESDATAPARSER_H__
-#define __LITRESDATAPARSER_H__
+#ifndef __LITRESBOOKSFEEDPARSER_H__
+#define __LITRESBOOKSFEEDPARSER_H__
 
 #include <vector>
 #include <map>
 
 #include <ZLXMLReader.h>
 
-#include "../../NetworkItems.h"
+#include "../NetworkItems.h"
 
 class NetworkLink;
 struct LitResGenre;
 class NetworkAuthenticationManager;
 
-class LitResDataParser : public ZLXMLReader {
+class LitResBooksFeedParser : public ZLXMLReader {
 
 public:
-	LitResDataParser(const NetworkLink &link, NetworkItem::List &books);
+	LitResBooksFeedParser(const NetworkLink &link, NetworkItem::List &books);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
@@ -76,8 +76,8 @@ private:
 	std::vector<NetworkBookItem::AuthorData> myAuthors;
 
 	std::vector<std::string> myTags;
-	std::map<NetworkItem::URLType,std::string> myURLByType;
+	NetworkItem::UrlInfoCollection myURLByType;
 	std::vector<shared_ptr<BookReference> > myReferences;
 };
 
-#endif /* __LITRESDATAPARSER_H__ */
+#endif /* __LITRESBOOKSFEEDPARSER_H__ */

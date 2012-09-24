@@ -31,11 +31,9 @@
 #include "../NetworkOperationData.h"
 #include "../NetworkItems.h"
 #include "../BookReference.h"
-#include "../authentication/litres/LitResBookshelfItem.h"
-#include "../authentication/litres/LitResCatalogItem.h"
-#include "../authentication/litres/LitResRecommendationsItem.h"
-#include "../authentication/litres/LitResByGenresItem.h"
-#include "../authentication/litres/LitResAuthorsItem.h"
+
+#include "../litres/LitResUtil.h"
+
 
 NetworkOPDSFeedReader::NetworkOPDSFeedReader(
 	const OPDSLink &link,
@@ -159,7 +157,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		tags.push_back(category.term());
 	}
 
-	std::map<NetworkItem::URLType,std::string> urlMap;
+	NetworkItem::UrlInfoCollection urlMap;
 	std::vector<shared_ptr<BookReference> > references;
 	for (size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
@@ -333,59 +331,13 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	std::string annotation = entry.summary();
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x09), annotation.end());
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x0A), annotation.end());
-	std::map<NetworkItem::URLType,std::string> urlMap;
+	NetworkItem::UrlInfoCollection urlMap;
 	urlMap[NetworkItem::URL_COVER] = coverURL;
 	urlMap[NetworkItem::URL_CATALOG] = ZLNetworkUtil::url(myBaseURL, url);
 	urlMap[NetworkItem::URL_HTML_PAGE] = ZLNetworkUtil::url(myBaseURL, htmlURL);
 
 	if (!litresType.empty() || !litresRel.empty()) {
-		if (litresRel == OPDSConstants::REL_BOOKSHELF) {
-			return new LitResBookshelfItem(
-				myData.Link,
-				entry.title(),
-				annotation,
-				urlMap,
-				NetworkCatalogItem::LoggedUsers
-			);
-		} else if (litresRel == OPDSConstants::REL_RECOMMENDATIONS) {
-			return new LitResRecommendationsItem(
-				(OPDSLink&)myData.Link,
-				entry.title(),
-				annotation,
-				urlMap,
-				NetworkCatalogItem::LoggedUsers
-			);
-		//TODO maybe we should use ZLMimeType::APPLICATION_LITRES_XML_BOOKS here?
-		} else if (litresType == "books") {
-			return new LitResCatalogItem(
-				false,
-				myData.Link,
-				entry.title(),
-				annotation,
-				urlMap,
-				dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
-			);
-		} else if (litresType == "genres") {
-			return new LitResByGenresItem(
-				LitResGenreMap::Instance().genresTree(),
-				myData.Link,
-				entry.title(),
-				annotation,
-				urlMap,
-				NetworkCatalogItem::Always,
-				NetworkCatalogItem::FLAG_SHOW_AUTHOR
-			);
-		} else if (litresType == "authors") {
-			return new LitResAuthorsItem(
-				myData.Link,
-				entry.title(),
-				annotation,
-				urlMap,
-				NetworkCatalogItem::Always
-			);
-		} else {
-			return 0;
-		}
+		return LitResUtil::createLitResNode(litresType, litresRel, myData.Link, entry.title(), annotation, urlMap, dependsOnAccount);
 	} else {
 		return new OPDSCatalogItem(
 			(OPDSLink&)myData.Link,

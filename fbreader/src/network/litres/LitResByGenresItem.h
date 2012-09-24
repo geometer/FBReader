@@ -17,30 +17,44 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LITRESCATALOGITEM_H__
-#define __LITRESCATALOGITEM_H__
+#ifndef __LITRESBYGENRESITEM_H__
+#define __LITRESBYGENRESITEM_H__
 
-#include "../../NetworkItems.h"
+#include "../NetworkItems.h"
 
-class LitResCatalogItem : public NetworkCatalogItem {
+#include "LitResGenre.h"
+
+class LitResByGenresItem : public NetworkCatalogItem {
 
 public:
-	LitResCatalogItem(
-		bool shouldSort,
+	LitResByGenresItem(
+		const std::vector<shared_ptr<LitResGenre> > &genreTree,
 		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
-		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility = Always,
-		int flags = FLAGS_DEFAULT
+		const UrlInfoCollection &urlByType,
+		VisibilityType visibility,
+		int flags
 	);
 
 private:
-	void onDisplayItem();
 	std::string loadChildren(NetworkItem::List &children);
 
 private:
-	bool myShouldSort;
+	const std::vector<shared_ptr<LitResGenre> > &myGenreTree;
 };
 
-#endif /* __LITRESCATALOGITEM_H__ */
+class LitResBooksForGenreItem : public NetworkCatalogItem {
+
+public:
+	LitResBooksForGenreItem(const NetworkCatalogItem &parent, shared_ptr<LitResGenre> litresGenre);
+
+private:
+	std::string loadChildren(NetworkItem::List &children);
+
+private:
+	shared_ptr<LitResGenre> myLitresGenre;
+};
+
+
+#endif /* __LITRESBYGENRESITEM_H__ */

@@ -123,7 +123,7 @@ OPDSLink::~OPDSLink() {
 }
 
 shared_ptr<NetworkItem> OPDSLink::libraryItem() const {
-	std::map<NetworkItem::URLType,std::string> urlMap;
+	NetworkItem::UrlInfoCollection urlMap;
 	urlMap[NetworkItem::URL_COVER] = getIcon();
 	urlMap[NetworkItem::URL_CATALOG] = url(URL_MAIN);
 	return new OPDSCatalogItem(*this, getTitle(), getSummary(), urlMap);

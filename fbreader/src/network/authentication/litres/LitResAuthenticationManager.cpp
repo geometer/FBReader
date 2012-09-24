@@ -20,10 +20,10 @@
 #include <ZLNetworkUtil.h>
 #include <ZLNetworkManager.h>
 
+#include "../../litres/LitResBooksFeedParser.h"
+#include "../../litres/LitResUtil.h"
 #include "LitResAuthenticationManager.h"
-#include "LitResDataParser.h"
 #include "LitResAuthenticationDataParser.h"
-#include "LitResUtil.h"
 
 #include "../../NetworkErrors.h"
 #include "../../NetworkLink.h"
@@ -262,7 +262,7 @@ shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std:
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::url(Link, "pages/catalit_browser/" + query),
 		certificate(),
-		new LitResDataParser(Link, purchasedBooksList)
+		new LitResBooksFeedParser(Link, purchasedBooksList)
 	);
 }
 

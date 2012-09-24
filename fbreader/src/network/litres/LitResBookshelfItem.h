@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,24 +17,33 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LITRESRECOMMENDATIONSITEM_H__
-#define __LITRESRECOMMENDATIONSITEM_H__
+#ifndef __LITRESBOOKSHELFITEM_H__
+#define __LITRESBOOKSHELFITEM_H__
 
-#include "../../opds/OPDSCatalogItem.h"
+#include <ZLResource.h>
 
-class LitResRecommendationsItem : public OPDSCatalogItem {
+#include "../NetworkComparators.h"
+#include "../NetworkItems.h"
+
+class NetworkLink;
+
+class LitResBookshelfItem : public NetworkCatalogItem {
 
 public:
-	LitResRecommendationsItem(
-		const OPDSLink &link,
+	LitResBookshelfItem(
+		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
-		const std::map<URLType,std::string> &urlByType,
+		const UrlInfoCollection &urlByType,
 		VisibilityType visibility = Always
 	);
 
 private:
-	std::string getCatalogUrl();
+	void onDisplayItem();
+	std::string loadChildren(NetworkItem::List &children);
+
+private:
+	bool myForceReload;
 };
 
-#endif /* __LITRESRECOMMENDATIONSITEM_H__ */
+#endif /* __LITRESBOOKSHELFITEM_H__ */

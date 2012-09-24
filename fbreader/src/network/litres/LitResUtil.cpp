@@ -20,9 +20,17 @@
 #include <ZLNetworkUtil.h>
 #include <ZLStringUtil.h>
 
+#include "../NetworkLink.h"
+#include "../opds/OPDSMetadata.h"
+
+#include "LitResBookshelfItem.h"
+#include "LitResBooksFeedItem.h"
+#include "LitResRecommendationsItem.h"
+#include "LitResByGenresItem.h"
+#include "LitResAuthorsItem.h"
+
 #include "LitResUtil.h"
 
-#include "../../NetworkLink.h"
 
 static std::string LITRES_API_URL = "://robot.litres.ru/";
 
@@ -96,4 +104,57 @@ std::string LitResUtil::generateBooksByAuthorUrl(const std::string &authorId) {
 	ZLNetworkUtil::appendParameter(query, "checkpoint", "2000-01-01");
 	ZLNetworkUtil::appendParameter(query, "person", authorId);
 	return url(false, "pages/catalit_browser/" + query);
+}
+
+shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::string rel, const NetworkLink &link, std::string title,
+	std::string annotation, std::map<NetworkItem::URLType,std::string> urlMap,	bool dependsOnAccount) {
+
+	static const std::string TYPE = "type";
+
+	if (rel == OPDSConstants::REL_BOOKSHELF) {
+		return new LitResBookshelfItem(
+			link,
+			title,
+			annotation,
+			urlMap,
+			NetworkCatalogItem::LoggedUsers
+		);
+	} else if (rel == OPDSConstants::REL_RECOMMENDATIONS) {
+		return new LitResRecommendationsItem(
+			(OPDSLink&)link,
+			title,
+			annotation,
+			urlMap,
+			NetworkCatalogItem::LoggedUsers
+		);
+	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_BOOKS->getParameter(TYPE)) {
+		return new LitResBooksFeedItem(
+			false,
+			link,
+			title,
+			annotation,
+			urlMap,
+			dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
+		);
+	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_GENRES->getParameter(TYPE)) {
+		return new LitResByGenresItem(
+			LitResGenreMap::Instance().genresTree(),
+			link,
+			title,
+			annotation,
+			urlMap,
+			NetworkCatalogItem::Always,
+			NetworkCatalogItem::FLAG_SHOW_AUTHOR
+		);
+	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_AUTHORS->getParameter(TYPE)) {
+		return new LitResAuthorsItem(
+			link,
+			title,
+			annotation,
+			urlMap,
+			NetworkCatalogItem::Always
+		);
+	} else {
+		return 0;
+	}
 }

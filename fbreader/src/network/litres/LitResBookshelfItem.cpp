@@ -22,11 +22,11 @@
 #include <ZLExecutionData.h>
 
 #include "LitResBookshelfItem.h"
-#include "LitResAuthenticationManager.h"
+#include "../authentication/litres/LitResAuthenticationManager.h"
 
-#include "../../NetworkLink.h"
-#include "../../NetworkComparators.h"
-#include "../../NetworkErrors.h"
+#include "../NetworkLink.h"
+#include "../NetworkComparators.h"
+#include "../NetworkErrors.h"
 
 #include "SortedCatalogItem.h"
 
@@ -34,7 +34,7 @@ LitResBookshelfItem::LitResBookshelfItem(
 	const NetworkLink &link,
 	const std::string &title,
 	const std::string &summary,
-	const std::map<URLType,std::string> &urlByType,
+	const UrlInfoCollection &urlByType,
 	VisibilityType visibility
 ) : NetworkCatalogItem(
 	link,

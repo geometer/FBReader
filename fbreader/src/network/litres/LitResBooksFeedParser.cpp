@@ -21,10 +21,10 @@
 
 #include <ZLStringUtil.h>
 
-#include "LitResDataParser.h"
+#include "LitResBooksFeedParser.h"
 #include "LitResGenre.h"
 #include "LitResUtil.h"
-#include "../../NetworkLink.h"
+#include "../NetworkLink.h"
 
 static const std::string TAG_CATALOG = "catalit-fb2-books";
 static const std::string TAG_BOOK = "fb2-book";
@@ -42,7 +42,7 @@ static const std::string TAG_DATE = "date";
 static const std::string TAG_SEQUENCE = "sequence";
 static const std::string TAG_LANGUAGE = "lang";
 
-std::string LitResDataParser::stringAttributeValue(const char **attributes, const char *name) {
+std::string LitResBooksFeedParser::stringAttributeValue(const char **attributes, const char *name) {
 	if (attributes == 0) {
 		return std::string();
 	}
@@ -50,7 +50,7 @@ std::string LitResDataParser::stringAttributeValue(const char **attributes, cons
 	return value != 0 ? value : std::string();
 }
 
-LitResDataParser::LitResDataParser(const NetworkLink &link, NetworkItem::List &books) :
+LitResBooksFeedParser::LitResBooksFeedParser(const NetworkLink &link, NetworkItem::List &books) :
 	myLink(link),
 	myBooks(books),
 	myIndex(0) {
@@ -58,23 +58,23 @@ LitResDataParser::LitResDataParser(const NetworkLink &link, NetworkItem::List &b
 }
 
 
-void LitResDataParser::startElementHandler(const char *tag, const char **attributes) {
+void LitResBooksFeedParser::startElementHandler(const char *tag, const char **attributes) {
 	processState(tag, false, attributes);
 	myState = getNextState(tag, false);
 	myBuffer.clear();
 }
 
-void LitResDataParser::endElementHandler(const char *tag) {
+void LitResBooksFeedParser::endElementHandler(const char *tag) {
 	processState(tag, true, 0);
 	myState = getNextState(tag, true);
 	myBuffer.clear();
 }
 
-void LitResDataParser::characterDataHandler(const char *data, size_t len) {
+void LitResBooksFeedParser::characterDataHandler(const char *data, size_t len) {
 	myBuffer.append(data, len);
 }
 
-void LitResDataParser::processState(const std::string &tag, bool closed, const char **attributes) {
+void LitResBooksFeedParser::processState(const std::string &tag, bool closed, const char **attributes) {
 	switch(myState) {
 	case START:
 		break;
@@ -271,7 +271,7 @@ void LitResDataParser::processState(const std::string &tag, bool closed, const c
 	}
 }
 
-LitResDataParser::State LitResDataParser::getNextState(const std::string &tag, bool closed) {
+LitResBooksFeedParser::State LitResBooksFeedParser::getNextState(const std::string &tag, bool closed) {
 	switch(myState) {
 	case START:
 		if (!closed && TAG_CATALOG == tag) {

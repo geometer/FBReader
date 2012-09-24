@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2010 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,22 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LITRESBOOKSHELFITEM_H__
-#define __LITRESBOOKSHELFITEM_H__
+#ifndef __LITRESBOOKFEEDITEM_H__
+#define __LITRESBOOKFEEDITEM_H__
 
-#include <ZLResource.h>
+#include "../NetworkItems.h"
 
-#include "../../NetworkComparators.h"
-#include "../../NetworkItems.h"
-
-class NetworkLink;
-
-class LitResBookshelfItem : public NetworkCatalogItem {
+class LitResBooksFeedItem : public NetworkCatalogItem {
 
 public:
-	LitResBookshelfItem(
+	LitResBooksFeedItem(
+		bool shouldSort,
 		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
-		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility = Always
+		const UrlInfoCollection &urlByType,
+		VisibilityType visibility = Always,
+		int flags = FLAGS_DEFAULT
 	);
 
 private:
@@ -43,7 +40,7 @@ private:
 	std::string loadChildren(NetworkItem::List &children);
 
 private:
-	bool myForceReload;
+	bool myShouldSort;
 };
 
-#endif /* __LITRESBOOKSHELFITEM_H__ */
+#endif /* __LITRESBOOKFEEDITEM_H__ */

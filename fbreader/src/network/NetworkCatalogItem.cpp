@@ -25,7 +25,7 @@ NetworkCatalogItem::NetworkCatalogItem(
 	const NetworkLink &link,
 	const std::string &title,
 	const std::string &summary,
-	const std::map<URLType,std::string> &urlByType,
+	const UrlInfoCollection &urlByType,
 	VisibilityType visibility,
 	int flags
 ) :

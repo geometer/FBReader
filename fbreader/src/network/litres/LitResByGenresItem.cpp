@@ -21,13 +21,13 @@
 
 #include <ZLNetworkManager.h>
 
-#include "../../NetworkLink.h"
-#include "../../NetworkComparators.h"
-#include "../../NetworkErrors.h"
-#include "../../NetworkItems.h"
+#include "../NetworkLink.h"
+#include "../NetworkComparators.h"
+#include "../NetworkErrors.h"
+#include "../NetworkItems.h"
 
 #include "LitResUtil.h"
-#include "LitResDataParser.h"
+#include "LitResBooksFeedParser.h"
 
 #include "LitResByGenresItem.h"
 
@@ -38,7 +38,7 @@ LitResByGenresItem::LitResByGenresItem(
 	const NetworkLink &link,
 	const std::string &title,
 	const std::string &summary,
-	const std::map<URLType,std::string> &urlByType,
+	const UrlInfoCollection &urlByType,
 	VisibilityType visibility,
 	int flags
 ) : NetworkCatalogItem(
@@ -72,7 +72,7 @@ std::string LitResBooksForGenreItem::loadChildren(NetworkItem::List &children) {
 	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
 	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::generateBooksByGenreUrl(myLitresGenre->Id),
-		new LitResDataParser(Link, children)
+		new LitResBooksFeedParser(Link, children)
 	);
 	std::string error = ZLNetworkManager::Instance().perform(data);
 	std::sort(children.begin(), children.end(), NetworkBookItemComparator());

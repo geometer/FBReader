@@ -17,44 +17,24 @@
  * 02110-1301, USA.
  */
 
-#ifndef __LITRESBYGENRESITEM_H__
-#define __LITRESBYGENRESITEM_H__
+#ifndef __LITRESRECOMMENDATIONSITEM_H__
+#define __LITRESRECOMMENDATIONSITEM_H__
 
-#include "../../NetworkItems.h"
+#include "../opds/OPDSCatalogItem.h"
 
-#include "LitResGenre.h"
-
-class LitResByGenresItem : public NetworkCatalogItem {
+class LitResRecommendationsItem : public OPDSCatalogItem {
 
 public:
-	LitResByGenresItem(
-		const std::vector<shared_ptr<LitResGenre> > &genreTree,
-		const NetworkLink &link,
+	LitResRecommendationsItem(
+		const OPDSLink &link,
 		const std::string &title,
 		const std::string &summary,
-		const std::map<URLType,std::string> &urlByType,
-		VisibilityType visibility,
-		int flags
+		const UrlInfoCollection &urlByType,
+		VisibilityType visibility = Always
 	);
 
 private:
-	std::string loadChildren(NetworkItem::List &children);
-
-private:
-	const std::vector<shared_ptr<LitResGenre> > &myGenreTree;
+	std::string getCatalogUrl();
 };
 
-class LitResBooksForGenreItem : public NetworkCatalogItem {
-
-public:
-	LitResBooksForGenreItem(const NetworkCatalogItem &parent, shared_ptr<LitResGenre> litresGenre);
-
-private:
-	std::string loadChildren(NetworkItem::List &children);
-
-private:
-	shared_ptr<LitResGenre> myLitresGenre;
-};
-
-
-#endif /* __LITRESBYGENRESITEM_H__ */
+#endif /* __LITRESRECOMMENDATIONSITEM_H__ */

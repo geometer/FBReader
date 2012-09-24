@@ -20,8 +20,8 @@
 #include <ZLStringUtil.h>
 #include <ZLNetworkUtil.h>
 
-#include "../../NetworkLink.h"
-#include "LitResAuthenticationManager.h"
+#include "../NetworkLink.h"
+#include "../authentication/litres/LitResAuthenticationManager.h"
 
 #include "LitResRecommendationsItem.h"
 
@@ -29,7 +29,7 @@ LitResRecommendationsItem::LitResRecommendationsItem(
 	const OPDSLink &link,
 	const std::string &title,
 	const std::string &summary,
-	const std::map<URLType,std::string> &urlByType,
+	const UrlInfoCollection &urlByType,
 	VisibilityType visibility
 ) : OPDSCatalogItem(
 	link,

@@ -48,7 +48,7 @@ NetworkBookItem::NetworkBookItem(
 	const std::vector<std::string> &tags,
 	const std::string &seriesTitle,
 	unsigned int indexInSeries,
-	const std::map<URLType,std::string> &urlByType,
+	const UrlInfoCollection &urlByType,
 	const std::vector<shared_ptr<BookReference> > references
 ) :
 	NetworkItem(link, title, summary, urlByType),

@@ -24,8 +24,8 @@
 
 #include <ZLResource.h>
 
-#include "../../NetworkComparators.h"
-#include "../../NetworkItems.h"
+#include "../NetworkComparators.h"
+#include "../NetworkItems.h"
 
 class SortedCatalogItem : public NetworkCatalogItem {
 

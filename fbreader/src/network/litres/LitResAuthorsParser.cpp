@@ -21,7 +21,7 @@
 
 #include <ZLStringUtil.h>
 
-#include "../../NetworkLink.h"
+#include "../NetworkLink.h"
 #include "LitResGenre.h"
 #include "LitResUtil.h"
 

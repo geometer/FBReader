@@ -46,6 +46,8 @@ public:
 		URL_COVER
 	};
 
+	typedef std::map<URLType,std::string> UrlInfoCollection;
+
 protected:
 	static const ZLTypeId TYPE_ID;
 
@@ -54,7 +56,7 @@ protected:
 		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
-		const std::map<URLType,std::string> &urlByType
+		const UrlInfoCollection &urlByType
 	);
 
 public:
@@ -66,7 +68,7 @@ public:
 	const NetworkLink &Link;
 	const std::string Title;
 	const std::string Summary;
-	/*const*/ std::map<URLType,std::string> URLByType;
+	/*const*/ UrlInfoCollection URLByType;
 
 private: // disable copying
 	NetworkItem(const NetworkItem &item);
@@ -103,7 +105,7 @@ public:
 		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
-		const std::map<URLType,std::string> &urlByType,
+		const UrlInfoCollection &urlByType,
 		VisibilityType visibility = Always,
 		int flags = FLAGS_DEFAULT
 	);
@@ -155,7 +157,7 @@ public:
 		const std::vector<std::string> &tags,
 		const std::string &seriesTitle,
 		unsigned int indexInSeries,
-		const std::map<URLType,std::string> &urlByType,
+		const UrlInfoCollection &urlByType,
 		const std::vector<shared_ptr<BookReference> > references
 	);
 	NetworkBookItem(const NetworkBookItem &book, unsigned int index);

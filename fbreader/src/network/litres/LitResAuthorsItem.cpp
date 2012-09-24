@@ -19,14 +19,14 @@
 
 #include <ZLNetworkManager.h>
 
-#include "../../NetworkLink.h"
-#include "../../NetworkComparators.h"
-#include "../../NetworkErrors.h"
-#include "../../NetworkItems.h"
+#include "../NetworkLink.h"
+#include "../NetworkComparators.h"
+#include "../NetworkErrors.h"
+#include "../NetworkItems.h"
 
 #include "LitResUtil.h"
 #include "LitResAuthorsParser.h"
-#include "LitResCatalogItem.h"
+#include "LitResBooksFeedItem.h"
 
 #include "LitResAuthorsItem.h"
 
@@ -34,7 +34,7 @@ LitResAuthorsItem::LitResAuthorsItem(
 	const NetworkLink &link,
 	const std::string &title,
 	const std::string &summary,
-	const std::map<URLType,std::string> &urlByType,
+	const UrlInfoCollection &urlByType,
 	VisibilityType visibility,
 	int flags
 ) : NetworkCatalogItem(
@@ -66,11 +66,11 @@ void LitResAuthorsItem::fillChildrenWithAuthors(NetworkItem::List &children, con
 	for (size_t i = 0; i < authors.size(); ++i) {
 		const LitResAuthorsParser::LitresAuthorData &author = authors.at(i);
 
-		std::map<NetworkItem::URLType,std::string> urlByType = URLByType;
+		UrlInfoCollection urlByType = URLByType;
 		urlByType[NetworkItem::URL_CATALOG] = LitResUtil::generateBooksByAuthorUrl(author.Id);
 		//TODO add icon change for one author here
 		//urlByType[NetworkItem::URL_COVER] =
-		children.push_back(new LitResCatalogItem(
+		children.push_back(new LitResBooksFeedItem(
 			true,
 			Link,
 			author.DisplayName,

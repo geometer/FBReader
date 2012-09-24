@@ -20,7 +20,7 @@
 #ifndef __LITRESAUTHORSITEM_H__
 #define __LITRESAUTHORSITEM_H__
 
-#include "../../NetworkItems.h"
+#include "../NetworkItems.h"
 
 #include "LitResAuthorsParser.h"
 
@@ -31,7 +31,7 @@ public:
 		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
-		const std::map<URLType,std::string> &urlByType,
+		const UrlInfoCollection &urlByType,
 		VisibilityType visibility,
 		int flags = FLAGS_DEFAULT
 	);
