@@ -31,6 +31,7 @@ class ActionCode {
 public:
 	static const std::string SHOW_READING;
 	static const std::string SHOW_LIBRARY;
+	static const std::string SHOW_NET_LIBRARY;
 	static const std::string SHOW_NETWORK_LIBRARY;
 	static const std::string SHOW_TOC;
 	static const std::string SHOW_HELP;
@@ -161,6 +162,15 @@ class ShowNetworkLibraryAction : public SetModeAction {
 public:
 	ShowNetworkLibraryAction();
 	bool isVisible() const;
+
+protected:
+	void run();
+};
+
+class ShowNetworkTreeLibraryAction : public ZLApplication::Action {
+
+public:
+	ShowNetworkTreeLibraryAction();
 
 protected:
 	void run();

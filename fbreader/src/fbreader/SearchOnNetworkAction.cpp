@@ -31,6 +31,7 @@
 #include "../network/SearchResult.h"
 #include "../network/authentication/NetworkAuthenticationManager.h"
 #include "../networkActions/NetworkOperationRunnable.h"
+#include "../network/tree/NetworkLibrary.h"
 
 static const std::string SEARCH_PARAMETER_ID = "networkSearchPattern";
 
@@ -45,6 +46,12 @@ void ShowNetworkLibraryAction::run() {
 
 bool ShowNetworkLibraryAction::isVisible() const {
 	return SetModeAction::isVisible();
+}
+
+ShowNetworkTreeLibraryAction::ShowNetworkTreeLibraryAction()  { }
+
+void ShowNetworkTreeLibraryAction::run() {
+	NetworkLibrary::Instance().showDialog();
 }
 
 SearchOnNetworkAction::SearchOnNetworkAction() : ModeDependentAction(FBReader::NETWORK_LIBRARY_MODE) {

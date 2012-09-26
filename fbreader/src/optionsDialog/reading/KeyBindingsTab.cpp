@@ -106,7 +106,7 @@ MultiKeyOptionEntry::MultiKeyOptionEntry(const ZLResource &resource) :
 
 	// switch view
 	addAction(ActionCode::SHOW_LIBRARY);
-	addAction(ActionCode::SHOW_NETWORK_LIBRARY);
+	addAction(ActionCode::SHOW_NET_LIBRARY);
 	addAction(ActionCode::OPEN_PREVIOUS_BOOK);
 	addAction(ActionCode::SHOW_TOC);
 

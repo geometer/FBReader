@@ -1,0 +1,172 @@
+/*
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ */
+
+#ifndef __NETWORKTREENODES_H__
+#define __NETWORKTREENODES_H__
+
+#include "../NetworkLink.h"
+#include "../../tree/FBTree.h"
+
+#include <ZLTreeNode.h>
+
+class RootTree : public ZLTreeNode {
+
+public:
+	static const ZLTypeId TYPE_ID;
+private:
+	const ZLTypeId &typeId() const;
+
+public:
+	RootTree();
+};
+
+class NetworkTree : public FBTree {
+
+public:
+	static const ZLTypeId TYPE_ID;
+private:
+	const ZLTypeId &typeId() const;
+
+public:
+	NetworkTree(RootTree *parent, size_t position);
+	NetworkTree(NetworkTree *parent, size_t position = (size_t)-1);
+
+
+};
+
+class NetworkCatalogTree : public NetworkTree {
+
+public:
+	static const ZLTypeId TYPE_ID;
+private:
+	const ZLTypeId &typeId() const;
+
+public:
+	NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position);
+	NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t atPosition);
+
+	std::string title() const;
+	std::string subtitle() const;
+	shared_ptr<const ZLImage> image() const;
+	std::string imageUrl() const;
+	void requestChildren(shared_ptr<ZLExecutionData::Listener> listener);
+
+public:
+//	virtual shared_ptr<const ZLImage> lastResortCoverImage() const;
+	NetworkCatalogItem &item();
+
+private:
+	shared_ptr<NetworkItem> myItem;
+	NetworkItem::List myChildrenItems;
+};
+
+class NetworkCatalogRootTree : public NetworkCatalogTree {
+
+public:
+	static const ZLTypeId TYPE_ID;
+private:
+	const ZLTypeId &typeId() const;
+
+public:
+	NetworkCatalogRootTree(RootTree *parent, NetworkLink &link, size_t position);
+
+private:
+	NetworkLink &myLink;
+};
+
+class NetworkAuthorTree : public NetworkTree {
+
+public:
+	static const ZLTypeId TYPE_ID;
+
+protected:
+	NetworkAuthorTree(NetworkTree *parent, const NetworkBookItem::AuthorData &author);
+
+friend class NetworkTreeFactory;
+
+public:
+	const NetworkBookItem::AuthorData &author();
+
+private:
+	void init();
+	const ZLResource &resource() const;
+	const ZLTypeId &typeId() const;
+	shared_ptr<const ZLImage> image() const;
+	std::string title() const;
+
+private:
+	NetworkBookItem::AuthorData myAuthor;
+};
+
+class NetworkSeriesTree : public NetworkTree {
+
+public:
+	static const ZLTypeId TYPE_ID;
+
+	enum SummaryType { AUTHORS, BOOKS };
+
+protected:
+	NetworkSeriesTree(NetworkTree *parent, const std::string &seriesTitle, SummaryType summaryType);
+
+friend class NetworkTreeFactory;
+
+private:
+	void init();
+	const ZLResource &resource() const;
+	const ZLTypeId &typeId() const;
+	shared_ptr<const ZLImage> image() const;
+	std::string title() const;
+	std::string subtitle() const;
+
+private:
+	std::string mySeriesTitle;
+	SummaryType mySummaryType;
+	mutable std::string mySummary;
+};
+
+class NetworkBookTree : public FBTree {
+
+public:
+	static const ZLTypeId TYPE_ID;
+
+	enum SummaryType { AUTHORS, NONE };
+
+private:
+	NetworkBookTree(NetworkTree *parent, shared_ptr<NetworkItem> book, SummaryType summaryType);
+	void init();
+
+friend class NetworkTreeFactory;
+
+public:
+	const NetworkBookItem &book() const;
+
+private:
+	const ZLResource &resource() const;
+	const ZLTypeId &typeId() const;
+	shared_ptr<const ZLImage> image() const;
+	std::string title() const;
+	std::string subtitle() const;
+
+private:
+	shared_ptr<NetworkItem> myBook;
+	SummaryType mySummaryType;
+};
+
+
+#endif /* __NETWORKTREENODES_H__ */
