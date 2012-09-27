@@ -27,4 +27,28 @@ const ZLTypeId &NetworkCatalogRootTree::typeId() const {
 
 NetworkCatalogRootTree::NetworkCatalogRootTree(RootTree *parent, NetworkLink &link, size_t position) :
 	NetworkCatalogTree(parent, link.libraryItem(), position), myLink(link) {
+	init(); //at old version, init is called when node should be painted (and if initialized yet)
+}
+
+void NetworkCatalogRootTree::init() {
+	//shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
+	registerAction(new ExpandCatalogAction(*this));
+	registerAction(new ReloadAction(*this));
+//	if (!mgr.isNull()) {
+//		registerAction(new LoginAction(*mgr));
+//		registerAction(new LogoutAction(*mgr));
+//		if (!mgr->refillAccountLink().empty()) {
+//			registerAction(new RefillAccountAction(*mgr));
+//		}
+//		if (mgr->registrationSupported()) {
+//			registerAction(new RegisterUserAction(*mgr), true);
+//		}
+//		if (mgr->passwordRecoverySupported()) {
+//			registerAction(new PasswordRecoveryAction(*mgr), true);
+//		}
+	//	}
+}
+
+const ZLResource &NetworkCatalogRootTree::resource() const {
+	   return ZLResource::resource("networkView")["libraryItemRootNode"];
 }

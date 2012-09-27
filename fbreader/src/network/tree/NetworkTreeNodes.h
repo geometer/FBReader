@@ -20,6 +20,8 @@
 #ifndef __NETWORKTREENODES_H__
 #define __NETWORKTREENODES_H__
 
+#include <ZLResource.h>
+
 #include "../NetworkLink.h"
 #include "../../tree/FBTree.h"
 
@@ -57,9 +59,35 @@ public:
 private:
 	const ZLTypeId &typeId() const;
 
+protected:
+	class ExpandCatalogAction : public ZLTreeAction {
+
+	public:
+		ExpandCatalogAction(NetworkCatalogTree &node);
+		ZLResourceKey key() const;
+		void run();
+
+	private:
+		NetworkCatalogTree &myTree;
+	};
+
+	class ReloadAction : public ZLTreeAction {
+
+	public:
+		ReloadAction(NetworkCatalogTree &node);
+		ZLResourceKey key() const;
+		bool makesSense() const;
+		void run();
+
+	private:
+		NetworkCatalogTree &myTree;
+	};
+
 public:
 	NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position);
 	NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t atPosition);
+
+	void init();
 
 	std::string title() const;
 	std::string subtitle() const;
@@ -70,6 +98,9 @@ public:
 public:
 //	virtual shared_ptr<const ZLImage> lastResortCoverImage() const;
 	NetworkCatalogItem &item();
+
+private:
+	const ZLResource &resource() const;
 
 private:
 	shared_ptr<NetworkItem> myItem;
@@ -85,6 +116,10 @@ private:
 
 public:
 	NetworkCatalogRootTree(RootTree *parent, NetworkLink &link, size_t position);
+	void init();
+
+private:
+	const ZLResource &resource() const;
 
 private:
 	NetworkLink &myLink;

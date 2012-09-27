@@ -19,6 +19,7 @@
 
 #include <ZLDialogManager.h>
 
+#include "../authentication/NetworkAuthenticationManager.h"
 #include "../../networkTree/NetworkCatalogUtil.h"
 #include "../../networkActions/NetworkOperationRunnable.h"
 #include "NetworkTreeFactory.h"
@@ -36,6 +37,19 @@ NetworkCatalogTree::NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem>
 
 NetworkCatalogTree::NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position) :
 	NetworkTree(parent, position), myItem(item) {
+	init();
+}
+
+void NetworkCatalogTree::init() {
+	if (!item().URLByType[NetworkItem::URL_CATALOG].empty()) {
+		registerAction(new ExpandCatalogAction(*this));
+	}
+//	const std::string htmlUrl =
+//		item().URLByType[NetworkItem::URL_HTML_PAGE];
+//	if (!htmlUrl.empty()) {
+//		registerAction(new OpenInBrowserAction(htmlUrl));
+//	}
+	registerAction(new ReloadAction(*this));
 }
 
 std::string NetworkCatalogTree::title() const {
@@ -112,6 +126,69 @@ NetworkCatalogItem &NetworkCatalogTree::item() {
 	return (NetworkCatalogItem&)*myItem;
 }
 
+const ZLResource &NetworkCatalogTree::resource() const {
+	return ZLResource::resource("networkView")["libraryItemNode"];
+}
+
 //shared_ptr<const ZLImage> NetworkCatalogTree::lastResortCoverImage() const {
 //	return ((FBTree*)parent())->coverImage();
 //}
+
+NetworkCatalogTree::ExpandCatalogAction::ExpandCatalogAction(NetworkCatalogTree &tree) : myTree(tree) {
+}
+
+ZLResourceKey NetworkCatalogTree::ExpandCatalogAction::key() const {
+	return ZLResourceKey(/*myNode.isOpen() ? "collapseTree" :*/ "expandTree");
+}
+
+void NetworkCatalogTree::ExpandCatalogAction::run() {
+	if (!NetworkOperationRunnable::tryConnect()) {
+		return;
+	}
+
+	const NetworkLink &link = myTree.item().Link;
+	if (!link.authenticationManager().isNull()) {
+		NetworkAuthenticationManager &mgr = *link.authenticationManager();
+		IsAuthorisedRunnable checker(mgr);
+		checker.executeWithUI();
+		if (checker.hasErrors()) {
+			checker.showErrorMessage();
+			return;
+		}
+		if (checker.result() == B3_TRUE && mgr.needsInitialization()) {
+			InitializeAuthenticationManagerRunnable initializer(mgr);
+			initializer.executeWithUI();
+			if (initializer.hasErrors()) {
+				LogOutRunnable logout(mgr);
+				logout.executeWithUI();
+			}
+		}
+	}
+
+//	if (myNode.myChildrenItems.empty()) {
+//		myNode.requestChildren(); //who should request his children? dialog or node himself?
+//	}
+//	myNode.expandOrCollapseSubtree();
+//	FBReader::Instance().refreshWindow();
+}
+
+NetworkCatalogTree::ReloadAction::ReloadAction(NetworkCatalogTree &tree) : myTree(tree) {
+}
+
+ZLResourceKey NetworkCatalogTree::ReloadAction::key() const {
+	return ZLResourceKey("reload");
+}
+
+bool NetworkCatalogTree::ReloadAction::makesSense() const {
+	return true;//myTree.isOpen();
+}
+
+void NetworkCatalogTree::ReloadAction::run() {
+	if (!NetworkOperationRunnable::tryConnect()) {
+		return;
+	}
+
+//	myTree.updateChildren();
+//	myTree.expandOrCollapseSubtree();
+//	FBReader::Instance().refreshWindow();
+}

@@ -67,7 +67,8 @@ void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 void ZLQtTreeDialog::onNodeEntered(const ZLTreeNode *node) {
 	myHistoryStack.push(node);
 	if (node->children().empty()) {
-		const_cast<ZLTreeNode*>(node)->requestChildren(); //TODO fix this const-hack
+		const_cast<ZLTreeNode*>(node)->requestChildren(); //TODO fix this const-hack;
+		//also, maybe node should opened by himself? (by ExpandAction)
 	}
 	myListWidget->fillNodes(myHistoryStack.top());
 

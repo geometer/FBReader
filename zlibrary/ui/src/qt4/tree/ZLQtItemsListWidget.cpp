@@ -35,7 +35,7 @@ ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QWidget(parent) {
 	QVBoxLayout *listLayout = new QVBoxLayout;
 	listLayout->setSizeConstraint(QLayout::SetMinimumSize);
 	setLayout(listLayout);
-	setFixedWidth(500);
+	setFixedWidth(600);
 	setFixedHeight(98*6); //TODO make rubber design
 }
 
@@ -63,6 +63,7 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWidget(parent), myNode(node) {
 	QHBoxLayout *mainLayout = new QHBoxLayout;
 	QVBoxLayout *titlesLayout = new QVBoxLayout;
+	QHBoxLayout *actionsLayout = new QHBoxLayout;
 
 	QLabel *icon = new QLabel;
 	QLabel *title = new QLabel(QString::fromStdString(node->title()));
@@ -70,6 +71,24 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 
 	titlesLayout->addWidget(title);
 	titlesLayout->addWidget(subtitle);
+
+
+	foreach(shared_ptr<ZLTreeAction> action, node->actions()) {
+		QLabel *actionLabel = new QLabel;
+		QString text = QString::fromStdString(node->actionText(action));
+		actionLabel->setText(QString("<u>%1</u>").arg(text));
+
+		QPalette palette = actionLabel->palette();
+		palette.setColor(QPalette::WindowText, QColor(33, 96, 180)); //blue color
+		actionLabel->setPalette(palette);
+		actionLabel->setCursor(Qt::PointingHandCursor);
+		actionsLayout->addWidget(actionLabel);
+	}
+
+	actionsLayout->addStretch();
+
+
+	titlesLayout->addLayout(actionsLayout);
 	shared_ptr<const ZLImage> image = node->image();
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
@@ -82,7 +101,7 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	mainLayout->addStretch();
 	setLayout(mainLayout);
 
-	setFixedWidth(500);
+	setFixedWidth(600);
 	setFixedHeight(98);  //TODO make rubber design
 }
 
