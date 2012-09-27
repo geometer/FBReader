@@ -1,6 +1,5 @@
 * can not open feedbooks catalog item: it said 'Catalog is empty'
-* синхронизировать код ePub из FBReaderJ/native
-
+DONE синхронизировать код ePub из FBReaderJ/native
 DONE удалить "Bound to IP" в диалоге входа Литрес, считать, что флаг всегда стоит
 DONE при использовании API убрать "лишние" сортировки
 
