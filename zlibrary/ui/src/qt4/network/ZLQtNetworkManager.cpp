@@ -88,10 +88,10 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 	foreach (const shared_ptr<ZLExecutionData> &data, dataList) {
 		if (data.isNull() || !data->isInstanceOf(ZLNetworkRequest::TYPE_ID)) {
 			continue;
-    }
+		}
 		ZLNetworkRequest &request = static_cast<ZLNetworkRequest&>(*data);
 		QNetworkRequest networkRequest;
-    ZLLogger::Instance().println("network", "requesting " + request.url());
+		ZLLogger::Instance().println("network", "requesting " + request.url());
 		networkRequest.setUrl(QUrl::fromUserInput(QString::fromStdString(request.url())));
 
 		if (!request.doBefore()) {

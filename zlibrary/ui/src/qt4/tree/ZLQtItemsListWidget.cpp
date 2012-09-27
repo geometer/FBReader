@@ -24,6 +24,7 @@
 
 #include <QtCore/QDebug>
 
+#include <ZLNetworkManager.h>
 #include <ZLTreeTitledNode.h>
 
 #include "../image/ZLQtImageUtils.h"
@@ -35,7 +36,7 @@ ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QWidget(parent) {
 	listLayout->setSizeConstraint(QLayout::SetMinimumSize);
 	setLayout(listLayout);
 	setFixedWidth(500);
-	setFixedHeight(60*10); //TODO make rubber design
+	setFixedHeight(98*6); //TODO make rubber design
 }
 
 void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
@@ -47,7 +48,7 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 
 	foreach(ZLTreeNode* node, expandNode->children()) {
 		if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
-			qDebug() << QString::fromStdString(titledNode->title());
+			//qDebug() << QString::fromStdString(titledNode->title());
 			ZLQtTreeItem *item = new ZLQtTreeItem(titledNode);
 			connect(item, SIGNAL(clicked(const ZLTreeNode*)), this, SIGNAL(nodeEntered(const ZLTreeNode*)));
 			myItems.push_back(item);
@@ -71,8 +72,9 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	titlesLayout->addWidget(subtitle);
 	shared_ptr<const ZLImage> image = node->image();
 	if (!image.isNull()) {
-		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image, QSize(30,30), Qt::SmoothTransformation);
-		qDebug() << pixmap.isNull();
+		ZLNetworkManager::Instance().perform(image->synchronizationData());
+		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmapWithSize(image, QSize(77,77), Qt::SmoothTransformation);
+		//qDebug() << pixmap.isNull();
 		icon->setPixmap(pixmap);
 	}
 	mainLayout->addWidget(icon);
@@ -81,7 +83,7 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	setLayout(mainLayout);
 
 	setFixedWidth(500);
-	setFixedHeight(60);  //TODO make rubber design
+	setFixedHeight(98);  //TODO make rubber design
 }
 
 void ZLQtTreeItem::mousePressEvent(QMouseEvent *event) {

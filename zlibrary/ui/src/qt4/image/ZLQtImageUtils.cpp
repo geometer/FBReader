@@ -5,22 +5,27 @@
 
 #include "ZLQtImageUtils.h"
 
-QPixmap ZLQtImageUtils::ZLImageToQPixmap(shared_ptr<const ZLImage> image, const QSize &requestedSize, Qt::TransformationMode mode) {
-    if (image.isNull()) {
-       return QPixmap();
-    }
-    shared_ptr<ZLImageData> imageData = ZLImageManager::Instance().imageData(*image);
-    if (imageData.isNull()) {
-		//qDebug() << "image data is null";
-        return QPixmap();
-    }
-    const QImage *qImage = static_cast<ZLQtImageData&>(*imageData).image();
-	if (!qImage) {
-		//qDebug() << "!qImage";
+QPixmap ZLQtImageUtils::ZLImageToQPixmapWithSize(shared_ptr<const ZLImage> image, const QSize &requestedSize, Qt::TransformationMode mode) {
+	QPixmap pixmap = ZLImageToQPixmap(image);
+	if (!pixmap.isNull()) {
+		pixmap = centerPixmap(scalePixmap(pixmap, requestedSize, true, mode), requestedSize);
+	}
+	return pixmap;
+}
+
+QPixmap ZLQtImageUtils::ZLImageToQPixmap(shared_ptr<const ZLImage> image) {
+	if (image.isNull()) {
+	   return QPixmap();
+	}
+	shared_ptr<ZLImageData> imageData = ZLImageManager::Instance().imageData(*image);
+	if (imageData.isNull()) {
 		return QPixmap();
 	}
-	QImage finalImage = *qImage;
-	return centerPixmap(scalePixmap(QPixmap::fromImage(finalImage), requestedSize, true, mode), requestedSize);
+	const QImage *qImage = static_cast<ZLQtImageData&>(*imageData).image();
+	if (!qImage) {
+		return QPixmap();
+	}
+	return QPixmap::fromImage(*qImage);
 }
 
 QPixmap ZLQtImageUtils::fileUrlToQPixmap(QUrl url, QSize *size, const QSize &requestedSize,  Qt::TransformationMode mode) {

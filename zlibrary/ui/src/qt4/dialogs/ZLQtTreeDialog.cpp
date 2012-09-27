@@ -49,7 +49,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	this->setLayout(mainLayout);
 
 	QPalette palette = myScrollArea->palette();
-	palette.setBrush(QPalette::All, QPalette::Window, Qt::white);
+	palette.setBrush(QPalette::All, QPalette::Window, QColor(242,242,242)); //gray
 	myScrollArea->setPalette(palette);
 
 	connect(myListWidget, SIGNAL(nodeEntered(const ZLTreeNode*)), this, SLOT(onNodeEntered(const ZLTreeNode*)));
