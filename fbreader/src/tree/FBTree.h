@@ -30,9 +30,15 @@ public:
 private:
 	const ZLTypeId &typeId() const;
 
+private:
+	class ExpandTreeAction;
+
 public:
 	static shared_ptr<const ZLImage> defaultCoverImage(const std::string &id);
 	static std::string defaultImageUrl(const std::string &id);
+
+public: //TODO make protected
+	void expand();
 
 private:
 	static std::map<std::string,shared_ptr<const ZLImage> > ourDefaultCovers;
@@ -42,6 +48,9 @@ public:
 	FBTree(ZLTreeNode *parent, size_t position = (size_t)-1);
 //	shared_ptr<const ZLImage> coverImage() const;
 	std::string subtitle() const;
+
+protected:
+	void registerExpandTreeAction();
 
 private:
 //	mutable bool myCoverImageIsStored;

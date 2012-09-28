@@ -19,6 +19,8 @@
 
 #include <ZLibrary.h>
 #include <ZLFileImage.h>
+#include <ZLResource.h>
+#include <ZLTreeListener.h>
 
 #include "FBTree.h"
 
@@ -55,6 +57,32 @@ static std::string percent_encoding(const std::string &str) {
 	return result;
 }
 
+//TODO maybe use just one expand action?
+class FBTree::ExpandTreeAction : public ZLTreeAction {
+
+public:
+	ExpandTreeAction(FBTree &node);
+	void run();
+	ZLResourceKey key() const;
+
+private:
+	FBTree &myNode;
+};
+
+FBTree::ExpandTreeAction::ExpandTreeAction(FBTree &node) : myNode(node) {
+}
+
+#include <iostream>
+
+void FBTree::ExpandTreeAction::run() {
+	std::cout << "expand!" << std::endl;
+	myNode.expand();
+}
+
+ZLResourceKey FBTree::ExpandTreeAction::key() const {
+	return ZLResourceKey("expandTree");
+}
+
 shared_ptr<const ZLImage> FBTree::defaultCoverImage(const std::string &id) {
 	shared_ptr<const ZLImage> cover = ourDefaultCovers[id];
 	if (cover.isNull()) {
@@ -77,6 +105,12 @@ std::string FBTree::defaultImageUrl(const std::string &id) {
 	return url;
 }
 
+void FBTree::expand() {
+   if (ZLTreeListener *handler = listener()) {
+	   handler->onExpandRequest(this);
+   }
+}
+
 FBTree::FBTree(ZLTreeNode *parent, size_t position) : ZLTreeTitledNode(parent, position)/*, myCoverImageIsStored(false)*/ { }
 
 std::string FBTree::subtitle() const {
@@ -96,6 +130,10 @@ std::string FBTree::subtitle() const {
 	return result;
 }
 
+void FBTree::registerExpandTreeAction() {
+	registerAction(new ExpandTreeAction(*this));
+}
+
 //shared_ptr<const ZLImage> FBTree::coverImage() const {
 //	if (!myCoverImageIsStored) {
 //		myCoverImageIsStored = true;
@@ -103,4 +141,5 @@ std::string FBTree::subtitle() const {
 //	}
 //	return myStoredCoverImage;
 //}
+
 

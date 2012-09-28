@@ -25,7 +25,7 @@
 
 #include "../../networkActions/NetworkActions.h"
 
-const ZLTypeId NetworkBookTree::TYPE_ID(FBTree::TYPE_ID);
+const ZLTypeId NetworkBookTree::TYPE_ID(ZLTreePageNode::TYPE_ID);
 
 const ZLTypeId &NetworkBookTree::typeId() const {
 	return TYPE_ID;
@@ -35,7 +35,7 @@ const ZLResource &NetworkBookTree::resource() const {
 	return ZLResource::resource("networkView")["bookNode"];
 }
 
-NetworkBookTree::NetworkBookTree(NetworkTree *parent, shared_ptr<NetworkItem> book, SummaryType summaryType) : FBTree(parent), myBook(book), mySummaryType(summaryType) {
+NetworkBookTree::NetworkBookTree(NetworkTree *parent, shared_ptr<NetworkItem> book, SummaryType summaryType) : ZLTreePageNode(parent), myBook(book), mySummaryType(summaryType) {
 	init();
 }
 
@@ -81,7 +81,7 @@ std::string NetworkBookTree::subtitle() const {
 
 shared_ptr<const ZLImage> NetworkBookTree::image() const {
 	shared_ptr<const ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
-	return !image.isNull() ? image : defaultCoverImage("booktree-book.png");
+	return !image.isNull() ? image : FBTree::defaultCoverImage("booktree-book.png");
 }
 
 const NetworkBookItem &NetworkBookTree::book() const {

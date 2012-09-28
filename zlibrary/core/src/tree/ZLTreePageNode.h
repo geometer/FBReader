@@ -26,17 +26,18 @@
 class ZLTreePageNode : public ZLTreeTitledNode {
 
 public:
+	ZLTreePageNode(ZLTreeNode *parent = 0, size_t position = -1);
 	static const ZLTypeId TYPE_ID;
 	const ZLTypeId &typeId() const;
 	
-	shared_ptr<ZLDialogContent> content() const;
+	//shared_ptr<ZLDialogContent> content() const;
 	
 protected:
-	virtual void fillContent(ZLDialogContent &content) const = 0;
-	virtual ZLResourceKey contentKey() const = 0;
+	//virtual void fillContent(ZLDialogContent &content) const = 0;
+	//virtual ZLResourceKey contentKey() const = 0;
 	
 private:
-        mutable shared_ptr<ZLDialogContent> myContent;
+	//mutable shared_ptr<ZLDialogContent> myContent;
 };
 
 #endif // ZLTREEPAGENODE_H

@@ -70,7 +70,7 @@ ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QWidget(parent) {
 
 void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 	foreach(ZLQtTreeItem *item, myItems) {
-		layout()->removeWidget(item);
+		layout()->removeWidget(item); //TODO what delete is correct one?
 		delete item;
 	}
 	myItems.clear();
@@ -79,7 +79,7 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 		if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
 			//qDebug() << QString::fromStdString(titledNode->title());
 			ZLQtTreeItem *item = new ZLQtTreeItem(titledNode);
-			//connect(item, SIGNAL(clicked(const ZLTreeNode*)), this, SIGNAL(nodeEntered(const ZLTreeNode*))); //action ExpandAction used instead
+			connect(item, SIGNAL(clicked(const ZLTreeNode*)), this, SIGNAL(nodeClicked(const ZLTreeNode*))); //action ExpandAction used instead
 			myItems.push_back(item);
 		}
 	}
@@ -141,8 +141,7 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	setFixedHeight(ITEM_HEIGHT);  //TODO make rubber design
 }
 
-void ZLQtTreeItem::mousePressEvent(QMouseEvent *event) {
-	Q_UNUSED(event);
+void ZLQtTreeItem::mousePressEvent(QMouseEvent *) {
 	emit clicked(myNode);
 }
 

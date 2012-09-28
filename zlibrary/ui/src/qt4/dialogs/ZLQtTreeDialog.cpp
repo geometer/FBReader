@@ -21,6 +21,8 @@
 #include <QtGui/QHBoxLayout>
 #include <QtCore/QDebug>
 
+#include <ZLTreePageNode.h>
+
 #include "ZLQtTreeDialog.h"
 
 ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog(parent), ZLTreeDialog(res) {
@@ -52,7 +54,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	palette.setBrush(QPalette::All, QPalette::Window, QColor(242,242,242)); //gray
 	myScrollArea->setPalette(palette);
 
-//	connect(myListWidget, SIGNAL(nodeEntered(const ZLTreeNode*)), this, SLOT(onNodeEntered(const ZLTreeNode*)));
+	connect(myListWidget, SIGNAL(nodeClicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
 
 }
@@ -85,16 +87,14 @@ void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode */*node*/) {}
 
 void ZLQtTreeDialog::updateBackButton() {
 	myBackButton->setEnabled(myHistoryStack.size() > 1);
+	myPreviewWidget->clear();
 }
 
-//void ZLQtTreeDialog::onNodeEntered(const ZLTreeNode *node) {
-//	myHistoryStack.push(node);
-//	if (node->children().empty()) {
-//		const_cast<ZLTreeNode*>(node)->requestChildren(); //TODO fix this const-hack;
-//		//also, maybe node should opened by himself? (by ExpandAction)
-//	}
-//	myListWidget->fillNodes(myHistoryStack.top());
-//}
+void ZLQtTreeDialog::onNodeClicked(const ZLTreeNode *node) {
+	if (const ZLTreePageNode *pageNode = zlobject_cast<const ZLTreePageNode*>(node)) {
+		myPreviewWidget->fill(pageNode);
+	}
+}
 
 void ZLQtTreeDialog::onBackButton() {
 	if (myHistoryStack.size() <= 1) {

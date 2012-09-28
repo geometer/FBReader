@@ -27,6 +27,7 @@
 
 #include <ZLTreeNode.h>
 #include <ZLTreeDialog.h>
+#include <ZLTreePageNode.h>
 
 //maybe RootTree should be nested class for NetworkLibrary?
 class RootTree : public ZLTreeNode {
@@ -93,8 +94,6 @@ public:
 	shared_ptr<const ZLImage> image() const;
 	std::string imageUrl() const;
 	void requestChildren(shared_ptr<ZLExecutionData::Listener> listener);
-
-	void expand();
 
 private:
 //	virtual shared_ptr<const ZLImage> lastResortCoverImage() const;
@@ -192,7 +191,7 @@ private:
 	mutable std::string mySummary;
 };
 
-class NetworkBookTree : public FBTree {
+class NetworkBookTree : public ZLTreePageNode {
 
 public:
 	static const ZLTypeId TYPE_ID;

@@ -122,12 +122,6 @@ void NetworkCatalogTree::requestChildren(shared_ptr<ZLExecutionData::Listener> /
 	}
 }
 
-void NetworkCatalogTree::expand() {
-	if (ZLTreeListener *handler = listener()) {
-		handler->onExpandRequest(this);
-	}
-}
-
 NetworkCatalogItem &NetworkCatalogTree::item() {
 	return (NetworkCatalogItem&)*myItem;
 }

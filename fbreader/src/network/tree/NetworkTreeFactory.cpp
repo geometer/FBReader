@@ -26,7 +26,7 @@
 NetworkTreeFactory::NetworkTreeFactory() {
 }
 
-FBTree *NetworkTreeFactory::createNetworkTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position) {
+ZLTreeTitledNode *NetworkTreeFactory::createNetworkTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position) {
 	if (item->isInstanceOf(NetworkCatalogItem::TYPE_ID)) {
 		NetworkCatalogItem *catalogItem = (NetworkCatalogItem*)(&*item);
 		if (catalogItem->getVisibility() == B3_FALSE) {

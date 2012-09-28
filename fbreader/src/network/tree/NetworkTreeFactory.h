@@ -26,6 +26,7 @@ class NetworkBookCollection;
 class FBTree;
 class NetworkCatalogTree;
 class NetworkTree;
+class ZLTreeTitledNode;
 
 
 class NetworkTreeFactory {
@@ -34,7 +35,7 @@ private:
 	NetworkTreeFactory();
 
 public:
-	static FBTree *createNetworkTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
+	static ZLTreeTitledNode *createNetworkTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
 	static void fillAuthorTree(NetworkTree *parent, const NetworkItem::List &books);
 };
 

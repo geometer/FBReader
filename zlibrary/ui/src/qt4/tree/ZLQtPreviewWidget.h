@@ -24,14 +24,32 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
 
+#include <ZLTreePageNode.h>
+
 class ZLQtPreviewWidget : public QWidget {
 
 public:
 	ZLQtPreviewWidget(QWidget *parent = 0);
+	void fill(const ZLTreePageNode *node);
+	void clear();
 
 private:
-	QPushButton *myButton;
 	QLabel *myPicLabel;
+	QLabel *myTitleLabel;
+	QWidget *myActionsWidget;
+	QList<QPushButton*> myButtons;
+};
+
+class ZLQtButtonAction : public QPushButton {
+	Q_OBJECT
+public:
+	ZLQtButtonAction(shared_ptr<ZLTreeAction> action, QWidget *parent=0);
+
+private Q_SLOTS:
+	void onClicked();
+
+private:
+	shared_ptr<ZLTreeAction> myAction;
 };
 
 #endif /* __ZLQTPREVIEWWIDGET_H__ */

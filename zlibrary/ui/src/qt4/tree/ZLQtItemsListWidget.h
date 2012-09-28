@@ -35,7 +35,7 @@ public:
 	void fillNodes(const ZLTreeNode *rootNode);
 
 Q_SIGNALS:
-	void nodeEntered(const ZLTreeNode *node);
+	void nodeClicked(const ZLTreeNode *node);
 
 private:
 	QList<ZLQtTreeItem*> myItems;
