@@ -41,8 +41,17 @@ public:
 public:
 	void run(ZLTreeNode *rootNode);
 
+public: //listener methods
+	void onExpandRequest(ZLTreeNode *node);
+	void onCloseRequest();
+	void onNodeBeginInsert(ZLTreeNode *parent, size_t index);
+	void onNodeEndInsert();
+	void onNodeBeginRemove(ZLTreeNode *parent, size_t index);
+	void onNodeEndRemove();
+	void onNodeUpdated(ZLTreeNode *node);
+
 private Q_SLOTS:
-	void onNodeEntered(const ZLTreeNode* node);
+	//void onNodeEntered(const ZLTreeNode* node);
 	void onBackButton();
 
 

@@ -30,7 +30,7 @@ bool SortedCatalogItem::BySeriesFilter::accepts(NetworkItem* item) const {
 
 SortedCatalogItem::SortedCatalogItem(const NetworkCatalogItem &parent, const ZLResource &resource,
 									 const NetworkItem::List &children, int flags)
-	: NetworkCatalogItem(parent.Link, resource.value(), resource["summary"].value(), parent.URLByType, Always, flags) {
+	: NetworkCatalogItem(parent.Link, resource.value(), resource["summary"].value(), parent.URLByType, AlWAYS, flags) {
 	myChildren = children;
 }
 

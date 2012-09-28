@@ -117,7 +117,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			title,
 			annotation,
 			urlMap,
-			NetworkCatalogItem::LoggedUsers
+			NetworkCatalogItem::SIGNED_IN
 		);
 	} else if (rel == OPDSConstants::REL_RECOMMENDATIONS) {
 		return new LitResRecommendationsItem(
@@ -125,7 +125,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			title,
 			annotation,
 			urlMap,
-			NetworkCatalogItem::LoggedUsers
+			NetworkCatalogItem::SIGNED_IN
 		);
 	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_BOOKS->getParameter(TYPE)) {
 		return new LitResBooksFeedItem(
@@ -134,7 +134,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			title,
 			annotation,
 			urlMap,
-			dependsOnAccount ? NetworkCatalogItem::LoggedUsers : NetworkCatalogItem::Always
+			dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::AlWAYS
 		);
 	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_GENRES->getParameter(TYPE)) {
 		return new LitResByGenresItem(
@@ -143,7 +143,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			title,
 			annotation,
 			urlMap,
-			NetworkCatalogItem::Always,
+			NetworkCatalogItem::AlWAYS,
 			NetworkCatalogItem::FLAG_SHOW_AUTHOR
 		);
 	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_AUTHORS->getParameter(TYPE)) {
@@ -152,7 +152,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			title,
 			annotation,
 			urlMap,
-			NetworkCatalogItem::Always
+			NetworkCatalogItem::AlWAYS
 		);
 	} else {
 		return 0;

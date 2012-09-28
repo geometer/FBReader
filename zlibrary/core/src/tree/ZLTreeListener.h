@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2009-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,22 +22,16 @@
 
 #include "ZLTreeNode.h"
 
+//ZLTreeListener is used to get ability to node to notificate Tree Dialog about any changes
+
 class ZLTreeListener {
 
-protected:
-	ZLTreeListener();
-	virtual ~ZLTreeListener();
-
-protected:
-	void clear();
-
 public:
-	
+	virtual void onExpandRequest(ZLTreeNode *node) = 0;
 	virtual void onCloseRequest() = 0;
-	// Parent has new child at index
+	// Parent has new or remove child at index
 	virtual void onNodeBeginInsert(ZLTreeNode *parent, size_t index) = 0;
 	virtual void onNodeEndInsert() = 0;
-	// This is also easy to understand
 	virtual void onNodeBeginRemove(ZLTreeNode *parent, size_t index) = 0;
 	virtual void onNodeEndRemove() = 0;
 	// This method should be called at every node state change except of adding/removing of children

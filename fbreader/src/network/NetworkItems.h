@@ -28,6 +28,7 @@
 
 #include <ZLFile.h>
 #include <ZLTypeId.h>
+#include <ZLBoolean3.h>
 
 #include "BookReference.h"
 
@@ -80,9 +81,9 @@ class NetworkCatalogItem : public NetworkItem {
 public:
 	static const ZLTypeId TYPE_ID;
 
-	enum VisibilityType {
-		Always,
-		LoggedUsers
+	enum AccessibilityType {
+		AlWAYS,
+		SIGNED_IN
 	};
 
 	enum CatalogFlags {
@@ -106,7 +107,7 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const UrlInfoCollection &urlByType,
-		VisibilityType visibility = Always,
+		AccessibilityType accessibility = AlWAYS,
 		int flags = FLAGS_DEFAULT
 	);
 
@@ -118,14 +119,15 @@ public:
 	virtual std::string loadChildren(List &children) = 0;
 
 	int getFlags() const;
-	VisibilityType getVisibility() const;
+	AccessibilityType getAccessibility() const;
+	ZLBoolean3 getVisibility() const;
 
 
 protected:
 	virtual std::string getCatalogUrl();
 
 private:
-	const VisibilityType myVisibility;
+	const AccessibilityType myAccessibility;
 	const int myFlags;
 };
 

@@ -29,3 +29,14 @@ const ZLTypeId &RootTree::typeId() const {
 RootTree::RootTree()  {
 
 }
+
+void RootTree::setDialog(shared_ptr<ZLTreeDialog> dialog) {
+	myListener = dialog;
+}
+
+ZLTreeListener *RootTree::listener() const {
+	if (myListener.isNull()) {
+		return 0;
+	}
+	return &(*myListener);
+}

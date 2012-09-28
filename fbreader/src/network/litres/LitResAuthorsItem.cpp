@@ -35,14 +35,14 @@ LitResAuthorsItem::LitResAuthorsItem(
 	const std::string &title,
 	const std::string &summary,
 	const UrlInfoCollection &urlByType,
-	VisibilityType visibility,
+	AccessibilityType accessibility,
 	int flags
 ) : NetworkCatalogItem(
 	link,
 	title,
 	summary,
 	urlByType,
-	visibility,
+	accessibility,
 	flags
 ) {
 }
@@ -76,7 +76,7 @@ void LitResAuthorsItem::fillChildrenWithAuthors(NetworkItem::List &children, con
 			author.DisplayName,
 			getSubtitle(author),
 			urlByType,
-			NetworkCatalogItem::Always,
+			NetworkCatalogItem::AlWAYS,
 			NetworkCatalogItem::FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES
 		));
 	}

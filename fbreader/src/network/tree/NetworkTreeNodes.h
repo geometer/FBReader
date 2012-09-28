@@ -26,22 +26,34 @@
 #include "../../tree/FBTree.h"
 
 #include <ZLTreeNode.h>
+#include <ZLTreeDialog.h>
 
+//maybe RootTree should be nested class for NetworkLibrary?
 class RootTree : public ZLTreeNode {
 
 public:
 	static const ZLTypeId TYPE_ID;
+
 private:
 	const ZLTypeId &typeId() const;
 
 public:
 	RootTree();
+	void setDialog(shared_ptr<ZLTreeDialog> dialog);
+
+
+protected:
+	ZLTreeListener *listener() const;
+
+private:
+	shared_ptr<ZLTreeDialog> myListener;
 };
 
 class NetworkTree : public FBTree {
 
 public:
 	static const ZLTypeId TYPE_ID;
+
 private:
 	const ZLTypeId &typeId() const;
 
@@ -56,6 +68,7 @@ class NetworkCatalogTree : public NetworkTree {
 
 public:
 	static const ZLTypeId TYPE_ID;
+
 private:
 	const ZLTypeId &typeId() const;
 
@@ -71,23 +84,9 @@ protected:
 		NetworkCatalogTree &myTree;
 	};
 
-	class ReloadAction : public ZLTreeAction {
-
-	public:
-		ReloadAction(NetworkCatalogTree &node);
-		ZLResourceKey key() const;
-		bool makesSense() const;
-		void run();
-
-	private:
-		NetworkCatalogTree &myTree;
-	};
-
 public:
 	NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position);
 	NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t atPosition);
-
-	void init();
 
 	std::string title() const;
 	std::string subtitle() const;
@@ -95,8 +94,11 @@ public:
 	std::string imageUrl() const;
 	void requestChildren(shared_ptr<ZLExecutionData::Listener> listener);
 
-public:
+	void expand();
+
+private:
 //	virtual shared_ptr<const ZLImage> lastResortCoverImage() const;
+	void init();
 	NetworkCatalogItem &item();
 
 private:
@@ -105,14 +107,24 @@ private:
 private:
 	shared_ptr<NetworkItem> myItem;
 	NetworkItem::List myChildrenItems;
+
+friend class NetworkTreeFactory;
 };
 
 class NetworkCatalogRootTree : public NetworkCatalogTree {
 
 public:
 	static const ZLTypeId TYPE_ID;
+
 private:
 	const ZLTypeId &typeId() const;
+
+private:
+	class LoginAction;
+	class LogoutAction;
+	class RefillAccountAction;
+	class PasswordRecoveryAction;
+	class RegisterUserAction;
 
 public:
 	NetworkCatalogRootTree(RootTree *parent, NetworkLink &link, size_t position);
@@ -130,6 +142,9 @@ class NetworkAuthorTree : public NetworkTree {
 public:
 	static const ZLTypeId TYPE_ID;
 
+private:
+	const ZLTypeId &typeId() const;
+
 protected:
 	NetworkAuthorTree(NetworkTree *parent, const NetworkBookItem::AuthorData &author);
 
@@ -141,7 +156,6 @@ public:
 private:
 	void init();
 	const ZLResource &resource() const;
-	const ZLTypeId &typeId() const;
 	shared_ptr<const ZLImage> image() const;
 	std::string title() const;
 
@@ -154,6 +168,10 @@ class NetworkSeriesTree : public NetworkTree {
 public:
 	static const ZLTypeId TYPE_ID;
 
+private:
+	const ZLTypeId &typeId() const;
+
+public:
 	enum SummaryType { AUTHORS, BOOKS };
 
 protected:
@@ -164,7 +182,6 @@ friend class NetworkTreeFactory;
 private:
 	void init();
 	const ZLResource &resource() const;
-	const ZLTypeId &typeId() const;
 	shared_ptr<const ZLImage> image() const;
 	std::string title() const;
 	std::string subtitle() const;
@@ -180,6 +197,10 @@ class NetworkBookTree : public FBTree {
 public:
 	static const ZLTypeId TYPE_ID;
 
+private:
+	const ZLTypeId &typeId() const;
+
+public:
 	enum SummaryType { AUTHORS, NONE };
 
 private:
@@ -193,7 +214,6 @@ public:
 
 private:
 	const ZLResource &resource() const;
-	const ZLTypeId &typeId() const;
 	shared_ptr<const ZLImage> image() const;
 	std::string title() const;
 	std::string subtitle() const;

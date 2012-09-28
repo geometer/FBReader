@@ -52,7 +52,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	palette.setBrush(QPalette::All, QPalette::Window, QColor(242,242,242)); //gray
 	myScrollArea->setPalette(palette);
 
-	connect(myListWidget, SIGNAL(nodeEntered(const ZLTreeNode*)), this, SLOT(onNodeEntered(const ZLTreeNode*)));
+//	connect(myListWidget, SIGNAL(nodeEntered(const ZLTreeNode*)), this, SLOT(onNodeEntered(const ZLTreeNode*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
 
 }
@@ -64,15 +64,31 @@ void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 	show();
 }
 
-void ZLQtTreeDialog::onNodeEntered(const ZLTreeNode *node) {
+void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 	myHistoryStack.push(node);
-	if (node->children().empty()) {
-		const_cast<ZLTreeNode*>(node)->requestChildren(); //TODO fix this const-hack;
-		//also, maybe node should opened by himself? (by ExpandAction)
-	}
 	myListWidget->fillNodes(myHistoryStack.top());
-
 }
+
+void ZLQtTreeDialog::onCloseRequest() {}
+
+void ZLQtTreeDialog::onNodeBeginInsert(ZLTreeNode */*parent*/, size_t /*index*/) {}
+
+void ZLQtTreeDialog::onNodeEndInsert() {}
+
+void ZLQtTreeDialog::onNodeBeginRemove(ZLTreeNode */*parent*/, size_t /*index*/) {}
+
+void ZLQtTreeDialog::onNodeEndRemove() {}
+
+void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode */*node*/) {}
+
+//void ZLQtTreeDialog::onNodeEntered(const ZLTreeNode *node) {
+//	myHistoryStack.push(node);
+//	if (node->children().empty()) {
+//		const_cast<ZLTreeNode*>(node)->requestChildren(); //TODO fix this const-hack;
+//		//also, maybe node should opened by himself? (by ExpandAction)
+//	}
+//	myListWidget->fillNodes(myHistoryStack.top());
+//}
 
 void ZLQtTreeDialog::onBackButton() {
 	if (myHistoryStack.size() <= 1) {

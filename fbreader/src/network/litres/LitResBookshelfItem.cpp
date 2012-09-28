@@ -35,13 +35,13 @@ LitResBookshelfItem::LitResBookshelfItem(
 	const std::string &title,
 	const std::string &summary,
 	const UrlInfoCollection &urlByType,
-	VisibilityType visibility
+	AccessibilityType accessibility
 ) : NetworkCatalogItem(
 	link,
 	title,
 	summary,
 	urlByType,
-	visibility
+	accessibility
 ) {
 	myForceReload = false;
 }

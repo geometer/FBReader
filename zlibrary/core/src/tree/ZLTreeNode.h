@@ -98,7 +98,7 @@ public:
 protected:
 	size_t level() const;
 
-	ZLTreeListener *listener() const;
+	virtual ZLTreeListener *listener() const;
 
 private:
 	ZLTreeNode *myParent;

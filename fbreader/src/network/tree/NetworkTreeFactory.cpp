@@ -28,6 +28,10 @@ NetworkTreeFactory::NetworkTreeFactory() {
 
 FBTree *NetworkTreeFactory::createNetworkTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position) {
 	if (item->isInstanceOf(NetworkCatalogItem::TYPE_ID)) {
+		NetworkCatalogItem *catalogItem = (NetworkCatalogItem*)(&*item);
+		if (catalogItem->getVisibility() == B3_FALSE) {
+			return 0;
+		}
 		NetworkCatalogTree *ptr = new NetworkCatalogTree(parent, item, position);
 		ptr->item().onDisplayItem();
 		return ptr;

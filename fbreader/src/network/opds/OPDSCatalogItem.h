@@ -32,7 +32,7 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const UrlInfoCollection &urlByType,
-		VisibilityType visibility = Always,
+		AccessibilityType accessibility = AlWAYS,
 		int flags = FLAGS_DEFAULT
 	);
 

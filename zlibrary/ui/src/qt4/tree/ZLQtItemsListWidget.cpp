@@ -31,12 +31,41 @@
 
 #include "ZLQtItemsListWidget.h"
 
+static const int ITEM_WIDTH = 600;
+static const int ITEM_HEIGHT = 98;
+static const int ITEM_COUNT = 6;
+static const int ITEM_SIZE = 77;
+
+class ZLQtLabelAction : public QLabel {
+
+public:
+	ZLQtLabelAction(shared_ptr<ZLTreeAction> action, QWidget *parent=0, Qt::WindowFlags f=0);
+
+protected:
+	 void mousePressEvent(QMouseEvent *ev);
+
+private:
+	shared_ptr<ZLTreeAction> myAction;
+};
+
+ZLQtLabelAction::ZLQtLabelAction(shared_ptr<ZLTreeAction> action,QWidget *parent, Qt::WindowFlags f) :
+	QLabel(parent, f), myAction(action) {
+}
+
+void ZLQtLabelAction::mousePressEvent(QMouseEvent *) {
+	if (myAction.isNull() || !myAction->makesSense()) {
+		return;
+	}
+	myAction->run();
+}
+
+
 ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QWidget(parent) {
 	QVBoxLayout *listLayout = new QVBoxLayout;
 	listLayout->setSizeConstraint(QLayout::SetMinimumSize);
 	setLayout(listLayout);
-	setFixedWidth(600);
-	setFixedHeight(98*6); //TODO make rubber design
+	setFixedWidth(ITEM_WIDTH);
+	setFixedHeight(ITEM_HEIGHT*ITEM_COUNT); //TODO make rubber design
 }
 
 void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
@@ -50,7 +79,7 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 		if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
 			//qDebug() << QString::fromStdString(titledNode->title());
 			ZLQtTreeItem *item = new ZLQtTreeItem(titledNode);
-			connect(item, SIGNAL(clicked(const ZLTreeNode*)), this, SIGNAL(nodeEntered(const ZLTreeNode*)));
+			//connect(item, SIGNAL(clicked(const ZLTreeNode*)), this, SIGNAL(nodeEntered(const ZLTreeNode*))); //action ExpandAction used instead
 			myItems.push_back(item);
 		}
 	}
@@ -66,17 +95,22 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	QHBoxLayout *actionsLayout = new QHBoxLayout;
 
 	QLabel *icon = new QLabel;
-	QLabel *title = new QLabel(QString::fromStdString(node->title()));
+	QLabel *title = new QLabel(QString("<b>%1</b>").arg(QString::fromStdString(node->title())));
 	QLabel *subtitle = new QLabel(QString::fromStdString(node->subtitle()));
+	title->setWordWrap(true);
+	subtitle->setWordWrap(true);
 
 	titlesLayout->addWidget(title);
 	titlesLayout->addWidget(subtitle);
 
 
 	foreach(shared_ptr<ZLTreeAction> action, node->actions()) {
-		QLabel *actionLabel = new QLabel;
+		if (!action->makesSense()) {
+			continue;
+		}
+		QLabel *actionLabel = new ZLQtLabelAction(action);
 		QString text = QString::fromStdString(node->actionText(action));
-		actionLabel->setText(QString("<u>%1</u>").arg(text));
+		actionLabel->setText(QString("<small><u>%1</u></small>").arg(text));
 
 		QPalette palette = actionLabel->palette();
 		palette.setColor(QPalette::WindowText, QColor(33, 96, 180)); //blue color
@@ -92,7 +126,7 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	shared_ptr<const ZLImage> image = node->image();
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
-		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmapWithSize(image, QSize(77,77), Qt::SmoothTransformation);
+		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmapWithSize(image, QSize(ITEM_SIZE,ITEM_SIZE), Qt::SmoothTransformation);
 		//qDebug() << pixmap.isNull();
 		icon->setPixmap(pixmap);
 	}
@@ -101,14 +135,13 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	mainLayout->addStretch();
 	setLayout(mainLayout);
 
-	setFixedWidth(600);
-	setFixedHeight(98);  //TODO make rubber design
+	setFixedWidth(ITEM_WIDTH);
+	setFixedHeight(ITEM_HEIGHT);  //TODO make rubber design
 }
 
 void ZLQtTreeItem::mousePressEvent(QMouseEvent *event) {
 	Q_UNUSED(event);
 	emit clicked(myNode);
 }
-
 
 

@@ -37,14 +37,14 @@ LitResBooksFeedItem::LitResBooksFeedItem(
 	const std::string &title,
 	const std::string &summary,
 	const UrlInfoCollection &urlByType,
-	VisibilityType visibility,
+	AccessibilityType accessibility,
 	int flags
 ) : NetworkCatalogItem(
 	link,
 	title,
 	summary,
 	urlByType,
-	visibility,
+	accessibility,
 	flags
 ), myShouldSort(shouldSort) {
 }

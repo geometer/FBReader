@@ -39,14 +39,14 @@ LitResByGenresItem::LitResByGenresItem(
 	const std::string &title,
 	const std::string &summary,
 	const UrlInfoCollection &urlByType,
-	VisibilityType visibility,
+	AccessibilityType accessibility,
 	int flags
 ) : NetworkCatalogItem(
 	link,
 	title,
 	summary,
 	urlByType,
-	visibility,
+	accessibility,
 	flags
 ), myGenreTree(genreTree) {
 }
@@ -57,14 +57,14 @@ std::string LitResByGenresItem::loadChildren(NetworkItem::List &children) {
 		if (genre->Children.empty()) {
 			children.push_back(new LitResBooksForGenreItem(*this, genre));
 		} else {
-			children.push_back(new LitResByGenresItem(genre->Children, Link, genre->Title, EMPTY_STRING, URLByType, Always, FLAG_NONE));
+			children.push_back(new LitResByGenresItem(genre->Children, Link, genre->Title, EMPTY_STRING, URLByType, AlWAYS, FLAG_NONE));
 		}
 	}
 	return std::string();
 }
 
 LitResBooksForGenreItem::LitResBooksForGenreItem(const NetworkCatalogItem &parent, shared_ptr<LitResGenre> litresGenre)
-	: NetworkCatalogItem(parent.Link, litresGenre->Title, EMPTY_STRING, parent.URLByType, Always), myLitresGenre(litresGenre) {
+	: NetworkCatalogItem(parent.Link, litresGenre->Title, EMPTY_STRING, parent.URLByType, AlWAYS), myLitresGenre(litresGenre) {
 }
 
 std::string LitResBooksForGenreItem::loadChildren(NetworkItem::List &children) {

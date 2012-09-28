@@ -17,6 +17,9 @@
  * 02110-1301, USA.
  */
 
+#include "authentication/NetworkAuthenticationManager.h"
+#include "NetworkLink.h"
+
 #include "NetworkItems.h"
 
 const ZLTypeId NetworkCatalogItem::TYPE_ID(NetworkItem::TYPE_ID);
@@ -26,11 +29,11 @@ NetworkCatalogItem::NetworkCatalogItem(
 	const std::string &title,
 	const std::string &summary,
 	const UrlInfoCollection &urlByType,
-	VisibilityType visibility,
+	AccessibilityType accessibility,
 	int flags
 ) :
 	NetworkItem(link, title, summary, urlByType),
-	myVisibility(visibility),
+	myAccessibility(accessibility),
 	myFlags(flags)
 	{
 }
@@ -50,6 +53,20 @@ int NetworkCatalogItem::getFlags() const {
 	return myFlags;
 }
 
-NetworkCatalogItem::VisibilityType NetworkCatalogItem::getVisibility() const {
-	return myVisibility;
+NetworkCatalogItem::AccessibilityType NetworkCatalogItem::getAccessibility() const {
+	return myAccessibility;
+}
+
+ZLBoolean3 NetworkCatalogItem::getVisibility() const {
+	shared_ptr<NetworkAuthenticationManager> mgr = Link.authenticationManager();
+	switch (myAccessibility) {
+		case AlWAYS:
+			return B3_TRUE;
+		case SIGNED_IN:
+			if (mgr.isNull()) {
+				return B3_FALSE;
+			}
+			return mgr->isAuthorised(false).Status;
+	}
+	return B3_FALSE;
 }

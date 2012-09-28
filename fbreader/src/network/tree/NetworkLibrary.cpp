@@ -46,6 +46,7 @@ NetworkLibrary &NetworkLibrary::Instance() {
 NetworkLibrary::NetworkLibrary() {
 	//TODO maybe it should be created in showDialog method?
 	myDialog = ZLDialogManager::Instance().createTreeDialog(ZLResource::resource("networkView"));
+	myRootTree.setDialog(myDialog);
 }
 
 void NetworkLibrary::showDialog() {

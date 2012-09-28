@@ -49,7 +49,7 @@ void NetworkCatalogTree::init() {
 //	if (!htmlUrl.empty()) {
 //		registerAction(new OpenInBrowserAction(htmlUrl));
 //	}
-	registerAction(new ReloadAction(*this));
+	//registerAction(new ReloadAction(*this));
 }
 
 std::string NetworkCatalogTree::title() const {
@@ -93,7 +93,7 @@ std::string NetworkCatalogTree::imageUrl() const {
 	return url;
 }
 
-void NetworkCatalogTree::requestChildren(shared_ptr<ZLExecutionData::Listener> listener) {
+void NetworkCatalogTree::requestChildren(shared_ptr<ZLExecutionData::Listener> /*listener*/) {
 	myChildrenItems.clear();
 	LoadSubCatalogRunnable loader(item(), myChildrenItems);
 	loader.executeWithUI();
@@ -119,6 +119,12 @@ void NetworkCatalogTree::requestChildren(shared_ptr<ZLExecutionData::Listener> l
 		}
 	} else {
 		NetworkTreeFactory::fillAuthorTree(this, myChildrenItems);
+	}
+}
+
+void NetworkCatalogTree::expand() {
+	if (ZLTreeListener *handler = listener()) {
+		handler->onExpandRequest(this);
 	}
 }
 
@@ -165,30 +171,10 @@ void NetworkCatalogTree::ExpandCatalogAction::run() {
 		}
 	}
 
-//	if (myNode.myChildrenItems.empty()) {
-//		myNode.requestChildren(); //who should request his children? dialog or node himself?
-//	}
-//	myNode.expandOrCollapseSubtree();
-//	FBReader::Instance().refreshWindow();
-}
-
-NetworkCatalogTree::ReloadAction::ReloadAction(NetworkCatalogTree &tree) : myTree(tree) {
-}
-
-ZLResourceKey NetworkCatalogTree::ReloadAction::key() const {
-	return ZLResourceKey("reload");
-}
-
-bool NetworkCatalogTree::ReloadAction::makesSense() const {
-	return true;//myTree.isOpen();
-}
-
-void NetworkCatalogTree::ReloadAction::run() {
-	if (!NetworkOperationRunnable::tryConnect()) {
-		return;
+	if (myTree.myChildrenItems.empty()) {
+		myTree.requestChildren(0); //who should request his children? dialog or node himself?
 	}
-
-//	myTree.updateChildren();
-//	myTree.expandOrCollapseSubtree();
-//	FBReader::Instance().refreshWindow();
+	if (!myTree.children().empty()) {
+		myTree.expand();
+	}
 }

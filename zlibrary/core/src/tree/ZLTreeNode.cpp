@@ -148,8 +148,9 @@ std::string ZLTreeNode::actionText(const shared_ptr<ZLTreeAction> &action) const
 }
 
 void ZLTreeNode::close() {
-	if (ZLTreeListener *treeListener = listener())
+	if (ZLTreeListener *treeListener = listener()) {
 		treeListener->onCloseRequest();
+	}
 }
 
 void ZLTreeNode::insert(ZLTreeNode *node, size_t index) {

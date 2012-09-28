@@ -32,9 +32,9 @@ OPDSCatalogItem::OPDSCatalogItem(
 	const std::string &title,
 	const std::string &summary,
 	const UrlInfoCollection &urlByType,
-	VisibilityType visibility,
+	AccessibilityType accessibility,
 	int flags
-) : NetworkCatalogItem(link, title, summary, urlByType, visibility, flags) {
+) : NetworkCatalogItem(link, title, summary, urlByType, accessibility, flags) {
 }
 
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {

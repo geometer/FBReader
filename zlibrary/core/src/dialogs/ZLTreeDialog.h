@@ -23,26 +23,23 @@
 #include <ZLTreeListener.h>
 #include <ZLResource.h>
 
-// This object should be pure successor of ZLTreeListener
-// or be merged with it.
-class ZLTreeDialog/* : public ZLTreeListener*/ {
+class ZLTreeDialog : public ZLTreeListener {
 
 protected:
 	ZLTreeDialog(const ZLResource &resource);
 
 public:
-	virtual ~ZLTreeDialog();
-
 	//TODO maybe run() should return an integer?
 	virtual void run(ZLTreeNode *rootNode) = 0;
 
-	// Parent has new child at index
-//	virtual void onNodeBeginInsert(ZLTreeNode *parent, size_t index) = 0;
-//	virtual void onNodeEndInsert() = 0;
-//	virtual void onNodeBeginRemove(ZLTreeNode *parent, size_t index) = 0;
-//	virtual void onNodeEndRemove() = 0;
-	// This method should be called at every node state change except of adding/removing of children
-	//virtual void onNodeUpdated(ZLTreeNode *node) = 0;
+public:
+	void onExpandRequest(ZLTreeNode *node) = 0;
+	void onCloseRequest() = 0;
+	void onNodeBeginInsert(ZLTreeNode *parent, size_t index) = 0;
+	void onNodeEndInsert() = 0;
+	void onNodeBeginRemove(ZLTreeNode *parent, size_t index) = 0;
+	void onNodeEndRemove() = 0;
+	void onNodeUpdated(ZLTreeNode *node) = 0;
 
 protected:
 	const ZLResource &resource() const;

@@ -17,7 +17,77 @@
  * 02110-1301, USA.
  */
 
+#include <ZLStringUtil.h>
+
+#include "../../fbreader/FBReader.h"
+
+#include "../authentication/NetworkAuthenticationManager.h"
+#include "../../networkActions/NetworkOperationRunnable.h"
+#include "../../networkActions/AuthenticationDialog.h"
+#include "../../networkActions/PasswordRecoveryDialog.h"
+#include "../../networkActions/RegisterUserDialog.h"
+
 #include "NetworkTreeNodes.h"
+
+class NetworkTreeCatalogAuthAction : public ZLTreeAction {
+
+protected:
+	NetworkTreeCatalogAuthAction(NetworkAuthenticationManager &mgr, bool forLoggedUsers);
+
+protected:
+	bool makesSense() const;
+
+protected:
+	NetworkAuthenticationManager &myManager;
+
+private:
+	const bool myForLoggedUsers;
+};
+
+class NetworkCatalogRootTree::LoginAction : public NetworkTreeCatalogAuthAction {
+
+public:
+	LoginAction(NetworkAuthenticationManager &mgr);
+	void run();
+	ZLResourceKey key() const;
+};
+
+class NetworkCatalogRootTree::LogoutAction : public NetworkTreeCatalogAuthAction {
+
+public:
+	LogoutAction(NetworkAuthenticationManager &mgr);
+	void run();
+	ZLResourceKey key() const;
+	std::string text(const ZLResource &resource) const;
+};
+
+class NetworkCatalogRootTree::RefillAccountAction : public NetworkTreeCatalogAuthAction {
+
+public:
+	RefillAccountAction(NetworkAuthenticationManager &mgr);
+
+private:
+	void run();
+	ZLResourceKey key() const;
+	std::string text(const ZLResource &resource) const;
+	bool makesSense() const;
+};
+
+class NetworkCatalogRootTree::PasswordRecoveryAction : public NetworkTreeCatalogAuthAction {
+
+public:
+	PasswordRecoveryAction(NetworkAuthenticationManager &mgr);
+	void run();
+	ZLResourceKey key() const;
+};
+
+class NetworkCatalogRootTree::RegisterUserAction : public NetworkTreeCatalogAuthAction {
+
+public:
+	RegisterUserAction(NetworkAuthenticationManager &mgr);
+	void run();
+	ZLResourceKey key() const;
+};
 
 const ZLTypeId NetworkCatalogRootTree::TYPE_ID(NetworkCatalogTree::TYPE_ID);
 
@@ -31,24 +101,128 @@ NetworkCatalogRootTree::NetworkCatalogRootTree(RootTree *parent, NetworkLink &li
 }
 
 void NetworkCatalogRootTree::init() {
-	//shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
+	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
 	registerAction(new ExpandCatalogAction(*this));
-	registerAction(new ReloadAction(*this));
-//	if (!mgr.isNull()) {
-//		registerAction(new LoginAction(*mgr));
-//		registerAction(new LogoutAction(*mgr));
-//		if (!mgr->refillAccountLink().empty()) {
-//			registerAction(new RefillAccountAction(*mgr));
-//		}
-//		if (mgr->registrationSupported()) {
-//			registerAction(new RegisterUserAction(*mgr), true);
-//		}
-//		if (mgr->passwordRecoverySupported()) {
-//			registerAction(new PasswordRecoveryAction(*mgr), true);
-//		}
-	//	}
+	//registerAction(new ReloadAction(*this));
+	if (!mgr.isNull()) {
+		registerAction(new LoginAction(*mgr));
+		registerAction(new LogoutAction(*mgr));
+		if (!mgr->refillAccountLink().empty()) {
+			registerAction(new RefillAccountAction(*mgr));
+		}
+		if (mgr->registrationSupported()) {
+			registerAction(new RegisterUserAction(*mgr));
+		}
+		if (mgr->passwordRecoverySupported()) {
+			registerAction(new PasswordRecoveryAction(*mgr));
+		}
+	}
 }
 
 const ZLResource &NetworkCatalogRootTree::resource() const {
 	   return ZLResource::resource("networkView")["libraryItemRootNode"];
+}
+
+NetworkTreeCatalogAuthAction::NetworkTreeCatalogAuthAction(NetworkAuthenticationManager &mgr, bool forLoggedUsers) : myManager(mgr), myForLoggedUsers(forLoggedUsers) {
+}
+
+bool NetworkTreeCatalogAuthAction::makesSense() const {
+	return (myManager.isAuthorised(false).Status == B3_FALSE) != myForLoggedUsers;
+}
+
+NetworkCatalogRootTree::LoginAction::LoginAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, false) {
+}
+
+ZLResourceKey NetworkCatalogRootTree::LoginAction::key() const {
+	return ZLResourceKey("login");
+}
+
+void NetworkCatalogRootTree::LoginAction::run() {
+	if (!NetworkOperationRunnable::tryConnect()) {
+		return;
+	}
+
+	AuthenticationDialog::run(myManager);
+	FBReader::Instance().invalidateAccountDependents();
+	FBReader::Instance().refreshWindow();
+}
+
+NetworkCatalogRootTree::LogoutAction::LogoutAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, true) {
+}
+
+ZLResourceKey NetworkCatalogRootTree::LogoutAction::key() const {
+	return ZLResourceKey("logout");
+}
+
+std::string NetworkCatalogRootTree::LogoutAction::text(const ZLResource &resource) const {
+	const std::string text = ZLTreeAction::text(resource);
+	return ZLStringUtil::printf(text, myManager.currentUserName());
+}
+
+void NetworkCatalogRootTree::LogoutAction::run() {
+	LogOutRunnable logout(myManager);
+	logout.executeWithUI();
+//	FBReader::Instance().invalidateAccountDependents();
+//	FBReader::Instance().refreshWindow();
+}
+
+
+NetworkCatalogRootTree::RefillAccountAction::RefillAccountAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, true) {
+}
+
+ZLResourceKey NetworkCatalogRootTree::RefillAccountAction::key() const {
+	return ZLResourceKey("refillAccount");
+}
+
+std::string NetworkCatalogRootTree::RefillAccountAction::text(const ZLResource &resource) const {
+	const std::string text = ZLTreeAction::text(resource);
+	std::string account = myManager.currentAccount();
+	if (!account.empty() && !myManager.refillAccountLink().empty()) {
+		return ZLStringUtil::printf(text, account);
+	}
+	return text;
+}
+
+void NetworkCatalogRootTree::RefillAccountAction::run() {
+	FBReader::Instance().openLinkInBrowser(myManager.refillAccountLink());
+}
+
+bool NetworkCatalogRootTree::RefillAccountAction::makesSense() const {
+	return
+		NetworkTreeCatalogAuthAction::makesSense() &&
+		!myManager.currentAccount().empty();
+}
+
+NetworkCatalogRootTree::PasswordRecoveryAction::PasswordRecoveryAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, false) {
+}
+
+ZLResourceKey NetworkCatalogRootTree::PasswordRecoveryAction::key() const {
+	return ZLResourceKey("passwordRecovery");
+}
+
+void NetworkCatalogRootTree::PasswordRecoveryAction::run() {
+	if (!NetworkOperationRunnable::tryConnect()) {
+		return;
+	}
+
+	PasswordRecoveryDialog::run(myManager);
+	FBReader::Instance().invalidateAccountDependents();
+	FBReader::Instance().refreshWindow();
+}
+
+NetworkCatalogRootTree::RegisterUserAction::RegisterUserAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, false) {
+}
+
+ZLResourceKey NetworkCatalogRootTree::RegisterUserAction::key() const {
+	return ZLResourceKey("register");
+}
+
+void NetworkCatalogRootTree::RegisterUserAction::run() {
+	if (!NetworkOperationRunnable::tryConnect()) {
+		return;
+	}
+
+	RegisterUserDialog::run(myManager);
+	FBReader::Instance().invalidateAccountDependents();
+	FBReader::Instance().refreshWindow();
 }

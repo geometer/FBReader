@@ -30,13 +30,13 @@ LitResRecommendationsItem::LitResRecommendationsItem(
 	const std::string &title,
 	const std::string &summary,
 	const UrlInfoCollection &urlByType,
-	VisibilityType visibility
+	AccessibilityType accessibility
 ) : OPDSCatalogItem(
 	link,
 	title,
 	summary,
 	urlByType,
-	visibility
+	accessibility
 ) { }
 
 std::string LitResRecommendationsItem::getCatalogUrl() {
