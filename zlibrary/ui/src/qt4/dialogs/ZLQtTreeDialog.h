@@ -50,6 +50,9 @@ public: //listener methods
 	void onNodeEndRemove();
 	void onNodeUpdated(ZLTreeNode *node);
 
+private:
+	void updateBackButton();
+
 private Q_SLOTS:
 	//void onNodeEntered(const ZLTreeNode* node);
 	void onBackButton();

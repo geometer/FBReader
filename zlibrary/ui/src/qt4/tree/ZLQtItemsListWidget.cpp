@@ -99,6 +99,8 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	QLabel *subtitle = new QLabel(QString::fromStdString(node->subtitle()));
 	title->setWordWrap(true);
 	subtitle->setWordWrap(true);
+	title->setMinimumWidth(ITEM_WIDTH-100);
+	subtitle->setMinimumWidth(ITEM_WIDTH-100);
 
 	titlesLayout->addWidget(title);
 	titlesLayout->addWidget(subtitle);

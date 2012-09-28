@@ -61,12 +61,14 @@ void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 	myRootNode = rootNode;
 	myHistoryStack.push(myRootNode);
 	myListWidget->fillNodes(myHistoryStack.top());
+	updateBackButton();
 	show();
 }
 
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 	myHistoryStack.push(node);
 	myListWidget->fillNodes(myHistoryStack.top());
+	updateBackButton();
 }
 
 void ZLQtTreeDialog::onCloseRequest() {}
@@ -80,6 +82,10 @@ void ZLQtTreeDialog::onNodeBeginRemove(ZLTreeNode */*parent*/, size_t /*index*/)
 void ZLQtTreeDialog::onNodeEndRemove() {}
 
 void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode */*node*/) {}
+
+void ZLQtTreeDialog::updateBackButton() {
+	myBackButton->setEnabled(myHistoryStack.size() > 1);
+}
 
 //void ZLQtTreeDialog::onNodeEntered(const ZLTreeNode *node) {
 //	myHistoryStack.push(node);
@@ -96,6 +102,7 @@ void ZLQtTreeDialog::onBackButton() {
 	}
 	myHistoryStack.pop();
 	myListWidget->fillNodes(myHistoryStack.top());
+	updateBackButton();
 }
 
 
