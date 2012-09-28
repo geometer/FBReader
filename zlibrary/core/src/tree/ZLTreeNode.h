@@ -43,20 +43,22 @@
 
 class ZLTreeListener;
 
-class ZLTreeAction : public ZLExecutionData {
-public:
-	static const ZLTypeId TYPE_ID;
+//class ZLTreeAction : public ZLExecutionData { //using ZLRunnableWithKey instead
+//public:
+//	static const ZLTypeId TYPE_ID;
 	
-	ZLTreeAction();
-	~ZLTreeAction();
+//	ZLTreeAction();
+//	~ZLTreeAction();
 	
-	const ZLTypeId &typeId() const;
+//	const ZLTypeId &typeId() const;
 
-	virtual void run() = 0;
-	virtual ZLResourceKey key() const = 0;
-	virtual std::string text(const ZLResource &resource) const;
-	virtual bool makesSense() const;
-};
+//	virtual void run() = 0;
+//	virtual ZLResourceKey key() const = 0;
+//	virtual std::string text(const ZLResource &resource) const;
+//	virtual bool makesSense() const;
+//};
+
+typedef ZLRunnableWithKey ZLTreeAction;
 
 class ZLTreeNode : public ZLObjectWithRTTI {
 

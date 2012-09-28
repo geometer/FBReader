@@ -36,25 +36,26 @@ const ZLResource &NetworkBookTree::resource() const {
 }
 
 NetworkBookTree::NetworkBookTree(NetworkTree *parent, shared_ptr<NetworkItem> book, SummaryType summaryType) : FBTree(parent), myBook(book), mySummaryType(summaryType) {
+	init();
 }
 
 void NetworkBookTree::init() {
-//	const NetworkBookItem &book = this->book();
-//	if (!book.reference(BookReference::DOWNLOAD_FULL).isNull() ||
-//			!book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL).isNull()) {
-//		registerAction(new NetworkBookReadAction(book, false));
-//		registerAction(new NetworkBookDownloadAction(book, false));
-//		registerAction(new NetworkBookDeleteAction(book));
-//	}
-//	if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
-//		registerAction(new NetworkBookReadAction(book, true));
-//		registerAction(new NetworkBookDownloadAction(book, true, resource()["demo"].value()));
-//	}
-//	if (!book.reference(BookReference::BUY).isNull()) {
-//		registerAction(new NetworkBookBuyDirectlyAction(book));
-//	} else if (!book.reference(BookReference::BUY_IN_BROWSER).isNull()) {
-//		registerAction(new NetworkBookBuyInBrowserAction(book));
-//	}
+	const NetworkBookItem &book = this->book();
+	if (!book.reference(BookReference::DOWNLOAD_FULL).isNull() ||
+			!book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL).isNull()) {
+		registerAction(new NetworkBookReadAction(book, false));
+		registerAction(new NetworkBookDownloadAction(book, false));
+		registerAction(new NetworkBookDeleteAction(book));
+	}
+	if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
+		registerAction(new NetworkBookReadAction(book, true));
+		registerAction(new NetworkBookDownloadAction(book, true, resource()["demo"].value()));
+	}
+	if (!book.reference(BookReference::BUY).isNull()) {
+		registerAction(new NetworkBookBuyDirectlyAction(book));
+	} else if (!book.reference(BookReference::BUY_IN_BROWSER).isNull()) {
+		registerAction(new NetworkBookBuyInBrowserAction(book));
+	}
 }
 
 std::string NetworkBookTree::title() const {

@@ -23,25 +23,19 @@
 #include "../resources/ZLResource.h"
 
 
-const ZLTypeId ZLTreeAction::TYPE_ID(ZLExecutionData::TYPE_ID);
+//const ZLTypeId ZLTreeAction::TYPE_ID(ZLExecutionData::TYPE_ID);
 
-ZLTreeAction::ZLTreeAction() {
-}
+//const ZLTypeId &ZLTreeAction::typeId() const {
+//	return TYPE_ID;
+//}
 
-ZLTreeAction::~ZLTreeAction() {
-}
+//std::string ZLTreeAction::text(const ZLResource &resource) const {
+//	return resource[key()].value();
+//}
 
-const ZLTypeId &ZLTreeAction::typeId() const {
-	return TYPE_ID;
-}
-
-std::string ZLTreeAction::text(const ZLResource &resource) const {
-	return resource[key()].value();
-}
-
-bool ZLTreeAction::makesSense() const {
-	return true;
-}
+//bool ZLTreeAction::makesSense() const {
+//	return true;
+//}
 
 const ZLTypeId ZLTreeNode::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
@@ -51,8 +45,7 @@ ZLTreeNode::ZLTreeNode(ZLTreeNode *parent, size_t position) {
 		myChildIndex = -1;
 		return;
 	}
-	//TODO remove comparing signed/unsigned
-	if (position == -1 || position > parent->children().size()) {
+	if (position == (size_t)-1 || position > parent->children().size()) {
 		position = parent->children().size();
 	}
 	parent->insert(this, position);
