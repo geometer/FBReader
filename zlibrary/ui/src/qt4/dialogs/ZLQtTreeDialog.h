@@ -59,7 +59,7 @@ private Q_SLOTS:
 
 
 private:
-	const ZLTreeNode *myRootNode;
+	ZLTreeNode *myRootNode;
 
 private:
 	QPushButton *myBackButton;

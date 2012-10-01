@@ -19,6 +19,7 @@
 
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QScrollBar>
 #include <QtCore/QDebug>
 
 #include <ZLTreePageNode.h>
@@ -61,15 +62,14 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 
 void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 	myRootNode = rootNode;
-	myHistoryStack.push(myRootNode);
-	myListWidget->fillNodes(myHistoryStack.top());
-	updateBackButton();
+	onExpandRequest(myRootNode);
 	show();
 }
 
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 	myHistoryStack.push(node);
 	myListWidget->fillNodes(myHistoryStack.top());
+	myScrollArea->verticalScrollBar()->setValue(myScrollArea->verticalScrollBar()->minimum()); //to the top
 	updateBackButton();
 }
 

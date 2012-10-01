@@ -23,6 +23,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
+#include <QtGui/QVBoxLayout>
 
 #include <ZLTreeTitledNode.h>
 
@@ -38,7 +39,7 @@ Q_SIGNALS:
 	void nodeClicked(const ZLTreeNode *node);
 
 private:
-	QList<ZLQtTreeItem*> myItems;
+	QVBoxLayout *myLayout;
 };
 
 class ZLQtTreeItem : public QWidget {
