@@ -31,6 +31,7 @@
 #include "../NetworkOperationData.h"
 #include "../NetworkItems.h"
 #include "../BookReference.h"
+#include "OPDSBookItem.h"
 
 #include "../litres/LitResUtil.h"
 
@@ -78,35 +79,6 @@ void NetworkOPDSFeedReader::processFeedEnd() {
 	}
 }
 
-
-static BookReference::Format formatByZLMimeType(const std::string &mimeType) {
-	shared_ptr<ZLMimeType> type = ZLMimeType::get(mimeType);
-	if (type == ZLMimeType::APPLICATION_FB2_ZIP) {
-		return BookReference::FB2_ZIP;
-	} else if (type == ZLMimeType::APPLICATION_EPUB_ZIP) {
-		return BookReference::EPUB;
-	} else if (type == ZLMimeType::APPLICATION_MOBIPOCKET_EBOOK) {
-		return BookReference::MOBIPOCKET;
-	}
-	return BookReference::NONE;
-}
-
-static BookReference::Type typeByRelation(const std::string &rel) {
-	if (rel == OPDSConstants::REL_ACQUISITION || rel == OPDSConstants::REL_ACQUISITION_OPEN || rel.empty()) {
-		return BookReference::DOWNLOAD_FULL;
-	} else if (rel == OPDSConstants::REL_ACQUISITION_SAMPLE) {
-		return BookReference::DOWNLOAD_DEMO;
-	} else if (rel == OPDSConstants::REL_ACQUISITION_CONDITIONAL) {
-		return BookReference::DOWNLOAD_FULL_CONDITIONAL;
-	} else if (rel == OPDSConstants::REL_ACQUISITION_SAMPLE_OR_FULL) {
-		return BookReference::DOWNLOAD_FULL_OR_DEMO;
-	} else if (rel == OPDSConstants::REL_ACQUISITION_BUY) {
-		return BookReference::BUY;
-	} else {
-		return BookReference::UNKNOWN;
-	}
-}
-
 void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 	if (entry.isNull()) {
 		return;
@@ -128,7 +100,7 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 				rel == OPDSConstants::REL_ACQUISITION_BUY ||
 				rel == OPDSConstants::REL_ACQUISITION_CONDITIONAL ||
 				rel == OPDSConstants::REL_ACQUISITION_SAMPLE_OR_FULL ||
-				(rel.empty() && formatByZLMimeType(type) != BookReference::NONE)) {
+				(rel.empty() && OPDSBookItem::formatByZLMimeType(type) != BookReference::NONE)) {
 			hasBookLink = true;
 			break;
 		}
@@ -136,138 +108,13 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 
 	shared_ptr<NetworkItem> item;
 	if (hasBookLink) {
-		item = readBookItem(e);
+		item = new OPDSBookItem(myLink, e, myBaseURL, myIndex++);
 	} else {
 		item = readCatalogItem(e);
 	}
 	if (!item.isNull()) {
 		myData.Items.push_back(item);
 	}
-}
-
-shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
-	std::string date;
-	if (!entry.dcIssued().isNull()) {
-		date = entry.dcIssued()->getDateTime(true);
-	}
-
-	std::vector<std::string> tags;
-	for (size_t i = 0; i < entry.categories().size(); ++i) {
-		ATOMCategory &category = *(entry.categories()[i]);
-		tags.push_back(category.term());
-	}
-
-	NetworkItem::UrlInfoCollection urlMap;
-	std::vector<shared_ptr<BookReference> > references;
-	for (size_t i = 0; i < entry.links().size(); ++i) {
-		ATOMLink &link = *(entry.links()[i]);
-		const std::string &href = link.href();
-		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
-		const std::string &rel = myLink.relation(link.rel(), link.type());
-		const BookReference::Type referenceType = typeByRelation(rel);
-		if (rel == OPDSConstants::REL_COVER) {
-			if (urlMap[NetworkItem::URL_COVER].empty() && ZLMimeType::isImage(type)) {
-				urlMap[NetworkItem::URL_COVER] = href;
-			}
-		} else if (rel == OPDSConstants::REL_THUMBNAIL) {
-			if (ZLMimeType::isImage(type)) {
-				urlMap[NetworkItem::URL_COVER] = href;
-			}
-		} else if (referenceType == BookReference::BUY) {
-			std::string price = BuyBookReference::price(
-				link.userData(OPDSXMLParser::KEY_PRICE),
-				link.userData(OPDSXMLParser::KEY_CURRENCY)
-			);
-			if (price.empty()) {
-				price = BuyBookReference::price(
-					entry.userData(OPDSXMLParser::KEY_PRICE),
-					entry.userData(OPDSXMLParser::KEY_CURRENCY)
-				);
-			}
-			if (type == ZLMimeType::TEXT_HTML) {
-				references.push_back(new BuyBookReference(
-					href, BookReference::NONE, BookReference::BUY_IN_BROWSER, price
-				));
-			} else {
-				BookReference::Format format = formatByZLMimeType(link.userData(OPDSXMLParser::KEY_FORMAT));
-				if (format != BookReference::NONE) {
-					references.push_back(new BuyBookReference(
-						href, format, BookReference::BUY, price
-					));
-				}
-			}
-		} else if (referenceType != BookReference::UNKNOWN) {
-			BookReference::Format format = formatByZLMimeType(link.type());
-			if (format != BookReference::NONE) {
-				references.push_back(new BookReference(href, format, referenceType));
-			}
-		}
-	}
-
-	std::vector<NetworkBookItem::AuthorData> authors;
-	for (size_t i = 0; i < entry.authors().size(); ++i) {
-		ATOMAuthor &author = *(entry.authors()[i]);
-		NetworkBookItem::AuthorData authorData;
-		std::string name = author.name();
-		std::string lowerCased = ZLUnicodeUtil::toLower(name);
-		static const std::string authorPrefix = "author:";
-		size_t index = lowerCased.find(authorPrefix);
-		if (index != std::string::npos) {
-			name = name.substr(index + authorPrefix.size());
-		} else {
-			static const std::string authorsPrefix = "authors:";
-			index = lowerCased.find(authorsPrefix);
-			if (index != std::string::npos) {
-				name = name.substr(index + authorsPrefix.size());
-			}
-		}
-		index = name.find(',');
-		if (index != std::string::npos) {
-			std::string before = name.substr(0, index);
-			std::string after = name.substr(index + 1);
-			ZLStringUtil::stripWhiteSpaces(before);
-			ZLStringUtil::stripWhiteSpaces(after);
-			authorData.SortKey = before;
-			authorData.DisplayName = after + ' ' + before;
-		} else {
-			ZLStringUtil::stripWhiteSpaces(name);
-			index = name.rfind(' ');
-			authorData.SortKey = name.substr(index + 1);
-			authorData.DisplayName = name;
-		}
-		authors.push_back(authorData);
-	}
-
-	//entry.dcPublisher();
-	//entry.updated();
-	//entry.published();
-	/*for (size_t i = 0; i < entry.contributors().size(); ++i) {
-		ATOMContributor &contributor = *(entry.contributors()[i]);
-		std::cerr << "\t\t<contributor>" << std::endl;
-		std::cerr << "\t\t\t<name>"  << contributor.name()  << "</name>"  << std::endl;
-		if (!contributor.uri().empty())   std::cerr << "\t\t\t<uri>"   << contributor.uri()   << "</uri>"   << std::endl;
-		if (!contributor.email().empty()) std::cerr << "\t\t\t<email>" << contributor.email() << "</email>" << std::endl;
-		std::cerr << "\t\t</contributor>" << std::endl;
-	}*/
-	//entry.rights();
-
-	NetworkBookItem *book = new NetworkBookItem(
-		myData.Link,
-		entry.id()->uri(),
-		myIndex++,
-		entry.title(),
-		entry.summary(),
-		entry.dcLanguage(),
-		date,
-		authors,
-		tags,
-		entry.seriesTitle(),
-		entry.seriesIndex(),
-		urlMap,
-		references
-	);
-
-	return book;
 }
 
 shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry) {

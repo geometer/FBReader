@@ -44,7 +44,8 @@ public:
 		URL_NONE,
 		URL_CATALOG,
 		URL_HTML_PAGE,
-		URL_COVER
+		URL_COVER,
+		URL_SINGLE_ENTRY
 	};
 
 	typedef std::map<URLType,std::string> UrlInfoCollection;

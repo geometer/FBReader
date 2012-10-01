@@ -46,7 +46,6 @@ public:
 	void processFeedEnd();
 
 private:
-	shared_ptr<NetworkItem> readBookItem(OPDSEntry &entry);
 	shared_ptr<NetworkItem> readCatalogItem(OPDSEntry &entry);
 
 private:

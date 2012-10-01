@@ -107,6 +107,9 @@ void ZLQtPreviewWidget::fill(const ZLTreePageNode *node) {
 void ZLQtPreviewWidget::clear() {
 	myPicLabel->setPixmap(QPixmap());
 	myTitleLabel->clear();
+	myAuthorLabel->clear();
+	myCategoriesLabel->clear();
+	mySummaryLabel->clear();
 	foreach(QPushButton *button, myButtons) {
 		delete button;
 	}
