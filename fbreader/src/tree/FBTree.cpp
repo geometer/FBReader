@@ -72,10 +72,9 @@ private:
 FBTree::ExpandTreeAction::ExpandTreeAction(FBTree &node) : myNode(node) {
 }
 
-#include <iostream>
+
 
 void FBTree::ExpandTreeAction::run() {
-	std::cout << "expand!" << std::endl;
 	myNode.expand();
 }
 

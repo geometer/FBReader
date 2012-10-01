@@ -34,6 +34,7 @@ const ZLResource &NetworkSeriesTree::resource() const {
 
 NetworkSeriesTree::NetworkSeriesTree(NetworkTree *parent, const std::string &seriesTitle, SummaryType summaryType) :
 	NetworkTree(parent), mySeriesTitle(seriesTitle), mySummaryType(summaryType) {
+	init();
 }
 
 void NetworkSeriesTree::init() {

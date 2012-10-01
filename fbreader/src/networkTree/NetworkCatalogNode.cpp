@@ -96,8 +96,6 @@ std::string NetworkCatalogNode::summary() const {
 	return ((const NetworkCatalogItem&)*myItem).Summary;
 }
 
-#include <iostream>
-
 shared_ptr<const ZLImage> NetworkCatalogNode::extractCoverImage() const {
 	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
 

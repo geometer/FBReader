@@ -33,6 +33,7 @@ const ZLResource &NetworkAuthorTree::resource() const {
 }
 
 NetworkAuthorTree::NetworkAuthorTree(NetworkTree *parent, const NetworkBookItem::AuthorData &author) : NetworkTree(parent), myAuthor(author) {
+	init();
 }
 
 void NetworkAuthorTree::init() {
