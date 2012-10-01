@@ -157,3 +157,10 @@ void NetworkBookItem::removeLocalFiles() const {
 		}
 	}
 }
+
+bool NetworkBookItem::isFullyLoaded() const {
+	return true;
+}
+
+void NetworkBookItem::loadFullInformation() {
+}

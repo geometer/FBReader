@@ -172,6 +172,9 @@ public:
 	std::string localCopyFileName() const;
 	void removeLocalFiles() const;
 
+	bool isFullyLoaded() const;
+	void loadFullInformation();
+
 public:
 	/*const*/ unsigned int Index;
 	const std::string Id;

@@ -79,6 +79,11 @@ std::string NetworkBookTree::subtitle() const {
 	return authorsString;
 }
 
+shared_ptr<ZLTreePageInfo> NetworkBookTree::getPageInfo() const {
+	//WARNING: using this, we have a potenital problems with controlling NetworkBookTree object's life time in memory
+	return new BookItemWrapper(*this, myBook);
+}
+
 shared_ptr<const ZLImage> NetworkBookTree::image() const {
 	shared_ptr<const ZLImage> image = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_COVER]);
 	return !image.isNull() ? image : FBTree::defaultCoverImage("booktree-book.png");
@@ -86,4 +91,53 @@ shared_ptr<const ZLImage> NetworkBookTree::image() const {
 
 const NetworkBookItem &NetworkBookTree::book() const {
 	return (const NetworkBookItem&)*myBook;
+}
+
+
+NetworkBookTree::BookItemWrapper::BookItemWrapper(const NetworkBookTree &tree, shared_ptr<NetworkItem> bookItem) : myTree(tree), myBookItem(bookItem), myIsInitialized(false) {
+}
+
+std::string NetworkBookTree::BookItemWrapper::title() const {
+	initialize();
+	return book().Title;
+}
+
+std::vector<std::string> NetworkBookTree::BookItemWrapper::authors() const {
+	initialize();
+	const NetworkBookItem &bookItem = book();
+	std::vector<std::string> authors;
+	for (size_t i = 0; i < bookItem.Authors.size(); ++i) {
+		authors.push_back(bookItem.Authors.at(i).DisplayName);
+	}
+	return authors;
+}
+
+std::vector<std::string> NetworkBookTree::BookItemWrapper::tags() const {
+	initialize();
+	return book().Tags;
+}
+
+std::string NetworkBookTree::BookItemWrapper::summary() const {
+	initialize();
+	return book().Summary;
+}
+
+shared_ptr<const ZLImage> NetworkBookTree::BookItemWrapper::image() const {
+	initialize();
+	return myTree.image();
+}
+
+void NetworkBookTree::BookItemWrapper::initialize() const {
+	if (myIsInitialized) {
+		return;
+	}
+	NetworkBookItem &bookItem = book();
+	if (!bookItem.isFullyLoaded()) {
+		bookItem.loadFullInformation();
+	}
+	myIsInitialized = true;
+}
+
+NetworkBookItem &NetworkBookTree::BookItemWrapper::book() const {
+   return (NetworkBookItem&)*myBookItem;
 }

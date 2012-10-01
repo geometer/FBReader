@@ -23,6 +23,7 @@
 #include <QtCore/QDebug>
 
 #include <ZLNetworkManager.h>
+#include <ZLStringUtil.h>
 
 #include "../image/ZLQtImageUtils.h"
 
@@ -47,6 +48,9 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
 	myPicLabel->setMinimumSize(77,77);
 
 	myTitleLabel = new QLabel;
+	myAuthorLabel = new QLabel;
+	myCategoriesLabel = new QLabel;
+	mySummaryLabel = new QLabel;
 
 	myActionsWidget = new QWidget;
 
@@ -57,6 +61,10 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
 
 	previewLayout->addWidget(myPicLabel);
 	previewLayout->addWidget(myTitleLabel);
+	previewLayout->addWidget(myAuthorLabel);
+	previewLayout->addWidget(myCategoriesLabel);
+	previewLayout->addWidget(mySummaryLabel);
+	previewLayout->addStretch();
 	previewLayout->addWidget(myActionsWidget);
 	setLayout(previewLayout);
 }
@@ -65,15 +73,23 @@ void ZLQtPreviewWidget::fill(const ZLTreePageNode *node) {
 	qDebug() << Q_FUNC_INFO;
 	clear();
 
-	shared_ptr<const ZLImage> image = node->image();
+	shared_ptr<ZLTreePageInfo> info = node->getPageInfo();
+
+	shared_ptr<const ZLImage> image = info->image();
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
 		myPicLabel->setPixmap(pixmap);
 	}
 
-	myTitleLabel->setText(QString::fromStdString(node->title()));
+	//TODO add to resources and set up titles for each label here
+	myTitleLabel->setText(QString::fromStdString(info->title()));
+	myAuthorLabel->setText(QString::fromStdString(ZLStringUtil::join(info->authors(), ", ")));
+	myCategoriesLabel->setText(QString::fromStdString(ZLStringUtil::join(info->tags(), ", ")));
+	mySummaryLabel->setText(QString::fromStdString(info->summary()));
+
 	myTitleLabel->setWordWrap(true);
+	mySummaryLabel->setWordWrap(true);
 
 	foreach(shared_ptr<ZLTreeAction> action, node->actions()) {
 		if (!action->makesSense()) {

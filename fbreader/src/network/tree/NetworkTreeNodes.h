@@ -217,10 +217,36 @@ private:
 	std::string title() const;
 	std::string subtitle() const;
 
+	shared_ptr<ZLTreePageInfo> getPageInfo() const;
+
+private:
+	class BookItemWrapper : public ZLTreePageInfo {
+
+	public:
+		BookItemWrapper(const NetworkBookTree &tree, shared_ptr<NetworkItem> bookItem);
+
+	public:
+		std::string title() const;
+		std::vector<std::string> authors() const;
+		std::vector<std::string> tags() const;
+		std::string summary() const;
+		shared_ptr<const ZLImage> image() const;
+
+	private:
+		void initialize() const;
+		NetworkBookItem &book() const;
+
+	private:
+		const NetworkBookTree &myTree;
+		shared_ptr<NetworkItem> myBookItem;
+		mutable bool myIsInitialized;
+	};
+
 private:
 	shared_ptr<NetworkItem> myBook;
 	SummaryType mySummaryType;
 };
+
 
 
 #endif /* __NETWORKTREENODES_H__ */

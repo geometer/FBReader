@@ -36,6 +36,9 @@ public:
 private:
 	QLabel *myPicLabel;
 	QLabel *myTitleLabel;
+	QLabel *myAuthorLabel;
+	QLabel *myCategoriesLabel;
+	QLabel *mySummaryLabel;
 	QWidget *myActionsWidget;
 	QList<QPushButton*> myButtons;
 };
