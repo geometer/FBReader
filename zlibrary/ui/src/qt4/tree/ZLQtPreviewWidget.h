@@ -30,7 +30,7 @@ class ZLQtPreviewWidget : public QWidget {
 
 public:
 	ZLQtPreviewWidget(QWidget *parent = 0);
-	void fill(const ZLTreePageNode *node);
+	void fill(const ZLTreePageInfo &info);
 	void clear();
 
 private:

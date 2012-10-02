@@ -30,6 +30,9 @@ public:
 	virtual std::vector<std::string> tags() const = 0;
 	virtual std::string summary() const = 0;
 	virtual shared_ptr<const ZLImage> image() const = 0;
+
+	virtual const std::vector<shared_ptr<ZLTreeAction> > &actions() const = 0;
+	virtual std::string actionText(const shared_ptr<ZLTreeAction> &action) const = 0;
 };
 
 class ZLTreePageNode : public ZLTreeTitledNode {

@@ -211,7 +211,7 @@ friend class NetworkTreeFactory;
 public:
 	const NetworkBookItem &book() const;
 
-private:
+public:
 	const ZLResource &resource() const;
 	shared_ptr<const ZLImage> image() const;
 	std::string title() const;
@@ -232,6 +232,10 @@ private:
 		std::string summary() const;
 		shared_ptr<const ZLImage> image() const;
 
+		//TODO maybe store actions in other place?
+		const std::vector<shared_ptr<ZLTreeAction> > &actions() const;
+		std::string actionText(const shared_ptr<ZLTreeAction> &action) const;
+
 	private:
 		void initialize() const;
 		NetworkBookItem &book() const;
@@ -240,6 +244,8 @@ private:
 		const NetworkBookTree &myTree;
 		shared_ptr<NetworkItem> myBookItem;
 		mutable bool myIsInitialized;
+
+		mutable std::vector<shared_ptr<ZLTreeAction> > myActions;
 	};
 
 private:

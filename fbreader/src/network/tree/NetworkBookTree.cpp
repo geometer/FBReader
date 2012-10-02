@@ -39,22 +39,31 @@ NetworkBookTree::NetworkBookTree(NetworkTree *parent, shared_ptr<NetworkItem> bo
 	init();
 }
 
-void NetworkBookTree::init() {
-	const NetworkBookItem &book = this->book();
+static std::vector<shared_ptr<ZLTreeAction> > getBookActions(const NetworkBookTree &tree) {
+	std::vector<shared_ptr<ZLTreeAction> > actions;
+	const NetworkBookItem &book = tree.book();
 	if (!book.reference(BookReference::DOWNLOAD_FULL).isNull() ||
 			!book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL).isNull()) {
-		registerAction(new NetworkBookReadAction(book, false));
-		registerAction(new NetworkBookDownloadAction(book, false));
-		registerAction(new NetworkBookDeleteAction(book));
+		actions.push_back(new NetworkBookReadAction(book, false));
+		actions.push_back(new NetworkBookDownloadAction(book, false));
+		actions.push_back(new NetworkBookDeleteAction(book));
 	}
 	if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
-		registerAction(new NetworkBookReadAction(book, true));
-		registerAction(new NetworkBookDownloadAction(book, true, resource()["demo"].value()));
+		actions.push_back(new NetworkBookReadAction(book, true));
+		actions.push_back(new NetworkBookDownloadAction(book, true, tree.resource()["demo"].value()));
 	}
 	if (!book.reference(BookReference::BUY).isNull()) {
-		registerAction(new NetworkBookBuyDirectlyAction(book));
+		actions.push_back(new NetworkBookBuyDirectlyAction(book));
 	} else if (!book.reference(BookReference::BUY_IN_BROWSER).isNull()) {
-		registerAction(new NetworkBookBuyInBrowserAction(book));
+		actions.push_back(new NetworkBookBuyInBrowserAction(book));
+	}
+	return actions;
+}
+
+void NetworkBookTree::init() {
+	std::vector<shared_ptr<ZLTreeAction> > actions = getBookActions(*this);
+	for (size_t i = 0; i < actions.size(); ++i) {
+		registerAction(actions.at(i));
 	}
 }
 
@@ -127,6 +136,14 @@ shared_ptr<const ZLImage> NetworkBookTree::BookItemWrapper::image() const {
 	return myTree.image();
 }
 
+const std::vector<shared_ptr<ZLTreeAction> > &NetworkBookTree::BookItemWrapper::actions() const {
+	return myActions;
+}
+
+std::string NetworkBookTree::BookItemWrapper::actionText(const shared_ptr<ZLTreeAction> &action) const {
+	return myTree.actionText(action);
+}
+
 void NetworkBookTree::BookItemWrapper::initialize() const {
 	if (myIsInitialized) {
 		return;
@@ -135,6 +152,8 @@ void NetworkBookTree::BookItemWrapper::initialize() const {
 	if (!bookItem.isFullyLoaded()) {
 		bookItem.loadFullInformation();
 	}
+
+	myActions = getBookActions(myTree);
 	myIsInitialized = true;
 }
 

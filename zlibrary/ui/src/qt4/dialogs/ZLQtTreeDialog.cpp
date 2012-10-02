@@ -92,7 +92,10 @@ void ZLQtTreeDialog::updateBackButton() {
 
 void ZLQtTreeDialog::onNodeClicked(const ZLTreeNode *node) {
 	if (const ZLTreePageNode *pageNode = zlobject_cast<const ZLTreePageNode*>(node)) {
-		myPreviewWidget->fill(pageNode);
+		shared_ptr<ZLTreePageInfo> info = pageNode->getPageInfo();
+		if (!info.isNull()) {
+			myPreviewWidget->fill(*info);
+		}
 	}
 }
 

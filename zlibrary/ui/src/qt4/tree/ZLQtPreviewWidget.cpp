@@ -69,13 +69,10 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
 	setLayout(previewLayout);
 }
 
-void ZLQtPreviewWidget::fill(const ZLTreePageNode *node) {
-	qDebug() << Q_FUNC_INFO;
+void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 	clear();
 
-	shared_ptr<ZLTreePageInfo> info = node->getPageInfo();
-
-	shared_ptr<const ZLImage> image = info->image();
+	shared_ptr<const ZLImage> image = info.image();
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
@@ -83,20 +80,20 @@ void ZLQtPreviewWidget::fill(const ZLTreePageNode *node) {
 	}
 
 	//TODO add to resources and set up titles for each label here
-	myTitleLabel->setText(QString::fromStdString(info->title()));
-	myAuthorLabel->setText(QString::fromStdString(ZLStringUtil::join(info->authors(), ", ")));
-	myCategoriesLabel->setText(QString::fromStdString(ZLStringUtil::join(info->tags(), ", ")));
-	mySummaryLabel->setText(QString::fromStdString(info->summary()));
+	myTitleLabel->setText(QString::fromStdString(info.title()));
+	myAuthorLabel->setText(QString::fromStdString(ZLStringUtil::join(info.authors(), ", ")));
+	myCategoriesLabel->setText(QString::fromStdString(ZLStringUtil::join(info.tags(), ", ")));
+	mySummaryLabel->setText(QString::fromStdString(info.summary()));
 
 	myTitleLabel->setWordWrap(true);
 	mySummaryLabel->setWordWrap(true);
 
-	foreach(shared_ptr<ZLTreeAction> action, node->actions()) {
+	foreach(shared_ptr<ZLTreeAction> action, info.actions()) {
 		if (!action->makesSense()) {
 			continue;
 		}
 		QPushButton *actionButton = new ZLQtButtonAction(action);
-		QString text = QString::fromStdString(node->actionText(action));
+		QString text = QString::fromStdString(info.actionText(action));
 		actionButton->setText(text);
 		myButtons.push_back(actionButton);
 		myActionsWidget->layout()->addWidget(actionButton);
