@@ -34,7 +34,7 @@ public:
 	static const std::string KEY_FORMAT;
 
 public:
-	OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader);
+	OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader, bool readEntryNotFeed = false);
 
 protected:
 	void startElementHandler(const char *tag, const char **attributes);

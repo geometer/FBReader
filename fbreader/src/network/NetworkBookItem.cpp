@@ -164,3 +164,23 @@ bool NetworkBookItem::isFullyLoaded() const {
 
 void NetworkBookItem::loadFullInformation() {
 }
+
+void NetworkBookItem::updateReferences(const std::vector<shared_ptr<BookReference> > &references) {
+	//TODO implement using one UrlInfoCollection instead of vector of references and urlByType
+	for (size_t i = 0; i < references.size(); ++i) {
+		bool found = false;
+		const shared_ptr<BookReference> newRef = references.at(i);
+		for (size_t j = 0; j < myReferences.size(); ++j) {
+			shared_ptr<BookReference> ref = myReferences.at(j);
+			if (ref->ReferenceType == newRef->ReferenceType && ref->BookFormat == ref->BookFormat) {
+				//TODO maybe implement a supporting of new urls with same book format & reference type:
+				//ref->URL = newRef->URL;
+				found = true;
+				break;
+			}
+		}
+		if (!found) {
+			myReferences.push_back(newRef);
+		}
+	}
+}

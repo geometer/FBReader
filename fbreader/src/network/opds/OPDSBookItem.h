@@ -22,6 +22,7 @@
 
 #include "OPDSLink.h"
 #include "OPDSMetadata.h"
+#include "OPDSFeedReader.h"
 
 class OPDSBookItem : public NetworkBookItem {
 
@@ -29,15 +30,41 @@ public:
 	OPDSBookItem(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl, unsigned int index);
 
 public:
+	bool isFullyLoaded() const;
+	void loadFullInformation();
+
+public:
 	static BookReference::Format formatByZLMimeType(const std::string &mimeType);
 	static BookReference::Type typeByRelation(const std::string &rel);
 
 protected:
+	static std::string getAnnotation(OPDSEntry &entry);
 	static std::string getDate(OPDSEntry &entry);
 	static std::vector<AuthorData> getAuthors(OPDSEntry &entry);
 	static std::vector<std::string> getTags(OPDSEntry &entry);
 	static UrlInfoCollection getUrls(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl);
 	static std::vector<shared_ptr<BookReference> > getReferences(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl);
+
+private:
+	class FullEntryReader : public OPDSFeedReader {
+
+		public:
+			FullEntryReader(OPDSBookItem &item, const OPDSLink &link, std::string url);
+
+		public:
+			void processFeedEntry(shared_ptr<OPDSEntry> entry);
+			void processFeedStart();
+			void processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed);
+			void processFeedEnd();
+
+		private:
+			OPDSBookItem &myItem;
+			const OPDSLink &myLink;
+			std::string myUrl;
+		};
+
+private:
+	bool myInformationIsFull;
 };
 
 #endif /* __OPDSBOOKITEM_H__ */

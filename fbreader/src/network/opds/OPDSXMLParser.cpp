@@ -65,8 +65,8 @@ static const std::string TAG_AUTHENTICATION = "fbreader:authentication";
 static const std::string TAG_URL_REWRITING_RULES = "fbreader:urlRewritingRule";
 static const std::string TAG_RELATION_ALIASES = "fbreader:relationAlias";
 
-OPDSXMLParser::OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader) : myFeedReader(feedReader) {
-	myState = START;
+OPDSXMLParser::OPDSXMLParser(shared_ptr<OPDSFeedReader> feedReader, bool readEntryNotFeed) : myFeedReader(feedReader) {
+	myState = readEntryNotFeed ? FEED : START;
 }
 
 bool OPDSXMLParser::processNamespaces() const {

@@ -69,7 +69,7 @@ public:
 public:
 	const NetworkLink &Link;
 	const std::string Title;
-	const std::string Summary;
+	/*const*/ std::string Summary;
 	/*const*/ UrlInfoCollection URLByType;
 
 private: // disable copying
@@ -173,8 +173,10 @@ public:
 	std::string localCopyFileName() const;
 	void removeLocalFiles() const;
 
-	bool isFullyLoaded() const;
-	void loadFullInformation();
+	virtual bool isFullyLoaded() const;
+	virtual void loadFullInformation();
+
+	void updateReferences(const std::vector<shared_ptr<BookReference> > &references);
 
 public:
 	/*const*/ unsigned int Index;

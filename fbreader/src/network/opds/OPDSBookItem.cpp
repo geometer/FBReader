@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <ZLNetworkManager.h>
 #include <ZLNetworkUtil.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
@@ -26,14 +27,13 @@
 
 #include "OPDSBookItem.h"
 
-
 OPDSBookItem::OPDSBookItem(const OPDSLink &link, OPDSEntry &entry, std::string baseUrl, unsigned int index) :
 	NetworkBookItem(
 		link,
 		entry.id()->uri(),
 		index,
 		entry.title(),
-		entry.summary(),
+		getAnnotation(entry),
 		entry.dcLanguage(),
 		getDate(entry),
 		getAuthors(entry),
@@ -43,6 +43,39 @@ OPDSBookItem::OPDSBookItem(const OPDSLink &link, OPDSEntry &entry, std::string b
 		getUrls(link, entry, baseUrl),
 		getReferences(link, entry, baseUrl)
 		) {
+	myInformationIsFull = false;
+}
+
+bool OPDSBookItem::isFullyLoaded() const {
+	return myInformationIsFull || URLByType.find(URL_SINGLE_ENTRY) == URLByType.end();
+}
+
+void OPDSBookItem::loadFullInformation() {
+	if (myInformationIsFull) {
+			return;
+	}
+
+	if (URLByType.find(URL_SINGLE_ENTRY) == URLByType.end()) {
+		myInformationIsFull = true;
+		return;
+	}
+
+	std::string url = URLByType[URL_SINGLE_ENTRY];
+
+	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createXMLParserRequest(
+				url, new OPDSXMLParser(new FullEntryReader(*this, (const OPDSLink&)Link, url), true)
+	);
+	//TODO show wait message here
+	std::string error = ZLNetworkManager::Instance().perform(data);
+	if (error.empty()) {
+		myInformationIsFull = true;
+	}
+	//TODO maybe insert error message showing
+}
+
+std::string OPDSBookItem::getAnnotation(OPDSEntry &entry) {
+	//TODO implement ATOMContent support (and return content)
+	return entry.summary();
 }
 
 std::string OPDSBookItem::getDate(OPDSEntry &entry) {
@@ -192,6 +225,32 @@ BookReference::Type OPDSBookItem::typeByRelation(const std::string &rel) {
 	} else {
 		return BookReference::UNKNOWN;
 	}
+}
+
+OPDSBookItem::FullEntryReader::FullEntryReader(OPDSBookItem &item, const OPDSLink &link, std::string url) :
+	myItem(item), myLink(link), myUrl(url) {
+}
+
+void OPDSBookItem::FullEntryReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
+	NetworkItem::UrlInfoCollection urlMap = OPDSBookItem::getUrls(myLink, *entry, myUrl);
+	std::vector<shared_ptr<BookReference> > references = OPDSBookItem::getReferences(myLink, *entry, myUrl);
+	for (NetworkItem::UrlInfoCollection::iterator it = urlMap.begin(); it != urlMap.end(); ++it) {
+		myItem.URLByType[(*it).first] = (*it).second;
+	}
+	myItem.updateReferences(references);
+	std::string summary = OPDSBookItem::getAnnotation(*entry);
+	if (!summary.empty()) {
+		myItem.Summary = summary;
+	}
+}
+
+void OPDSBookItem::FullEntryReader::processFeedStart() {
+}
+
+void OPDSBookItem::FullEntryReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> /*feed*/) {
+}
+
+void OPDSBookItem::FullEntryReader::processFeedEnd() {
 }
 
 
