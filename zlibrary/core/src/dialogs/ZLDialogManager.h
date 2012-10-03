@@ -86,7 +86,8 @@ public:
 	virtual int questionBox(const ZLResourceKey &key, const std::string &message, const ZLResourceKey &button0, const ZLResourceKey &button1, const ZLResourceKey &button2 = ZLResourceKey()) const = 0;
 
 	virtual shared_ptr<ZLProgressDialog> createProgressDialog(const ZLResourceKey &key, bool network) const = 0;
-	void wait(const ZLResourceKey &key, ZLRunnable &runnable, bool network = false) const;
+
+	void wait(const ZLResourceKey &key, ZLRunnable &runnable) const;
 
 	enum ClipboardType {
 		CLIPBOARD_MAIN,
