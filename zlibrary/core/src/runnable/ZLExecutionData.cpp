@@ -59,10 +59,24 @@ void ZLExecutionData::setListener(shared_ptr<Listener> listener) {
 	}
 }
 
+bool ZLExecutionData::hasListener() const {
+	return !myListener.isNull();
+}
+
 void ZLExecutionData::setPercent(int ready, int full) {
 	if (!myListener.isNull()) {
 		myListener->showPercent(ready, full);
 	}
+}
+
+void ZLExecutionData::finished(const std::string &error) {
+	if (!myListener.isNull()) {
+		myListener->finished(error);
+	}
+}
+
+shared_ptr<ZLExecutionData::Listener> ZLExecutionData::listener() const {
+	return myListener;
 }
 
 void ZLExecutionData::onCancel() {

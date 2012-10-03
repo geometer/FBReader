@@ -60,6 +60,7 @@ public:
 
 		void cancelProcess();
 		virtual void showPercent(int ready, int full) = 0;
+		virtual void finished(const std::string &error = std::string()) = 0;
 
 	private:
 		ZLExecutionData *myProcess;
@@ -79,10 +80,15 @@ protected:
 
 public:
 	virtual ~ZLExecutionData();
-
+	
+	bool hasListener() const;
 	void setListener(shared_ptr<Listener> listener);
 	virtual void onCancel();
 	void setPercent(int ready, int full);
+	
+protected:
+	void finished(const std::string &error);
+	shared_ptr<Listener> listener() const;
 
 private:
 	shared_ptr<Listener> myListener;

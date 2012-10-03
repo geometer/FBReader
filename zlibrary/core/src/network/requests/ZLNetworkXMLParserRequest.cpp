@@ -30,7 +30,6 @@
 
 static const std::string CONTENT_ENCODING = "content-encoding:";
 
-
 ZLNetworkXMLParserRequest::ZLNetworkXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader) :
 	ZLNetworkGetRequest(url, sslCertificate),
 	myReader(reader) {
@@ -47,7 +46,11 @@ bool ZLNetworkXMLParserRequest::doBefore() {
 	return true;
 }
 
-bool ZLNetworkXMLParserRequest::doAfter(bool) {
+bool ZLNetworkXMLParserRequest::doAfter(const std::string &error) {
+	if (error.empty())
+		finished(myReader->errorMessage());
+	else
+		finished(error);
 	return true;
 }
 

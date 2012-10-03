@@ -30,7 +30,7 @@ public:
 
 private:
 	bool doBefore();
-	bool doAfter(bool success);
+	bool doAfter(const std::string &error);
 
 	bool handleContent(void *ptr, size_t size);
 };

@@ -33,7 +33,7 @@ private:
 	bool handleContent(void *ptr, size_t size);
 
 	bool doBefore();
-	bool doAfter(bool success);
+	bool doAfter(const std::string &error);
 
 private:
 	std::string &myBuffer;

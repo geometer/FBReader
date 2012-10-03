@@ -35,6 +35,7 @@ public:
 
 private:
 	void showPercent(int ready, int full);
+	void finished(const std::string &error);
 
 private:
 	ZLProgressDialog &myDialog;
@@ -55,7 +56,10 @@ void ZLProgressDialog::ProgressListener::showPercent(int ready, int full) {
 		return;
 	}
 
-	myDialog.setMessage(myDialog.messageText(std::min(100, (int)(ready * 100. / full))));  
+	myDialog.setMessage(myDialog.messageText(std::min(100, (int)(ready * 100. / full))));
+}
+
+void ZLProgressDialog::ProgressListener::finished(const std::string &/*error*/) {
 }
 
 ZLProgressDialog::ProgressListener::ProgressListener(ZLProgressDialog &dialog) : myDialog(dialog) {

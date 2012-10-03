@@ -35,11 +35,12 @@ class QEventLoop;
 
 struct ZLQtNetworkReplyScope {
 	ZLNetworkRequest *request;
-	QList<QNetworkReply*> *replies;
-	QStringList *errors;
-	QEventLoop *eventLoop;
 	QTimer* timeoutTimer;
 	bool authAskedAlready; //to avoid infinite asking about user & password if they're incorrect
+	//following are used only for synchronous network operations
+	QList<QNetworkReply*> *replies; //common replies list
+	QStringList *errors; //common errors list
+	QEventLoop *eventLoop; //common event loop
 };
 
 class ZLQtNetworkManager : public QObject, public ZLNetworkManager {
@@ -67,7 +68,7 @@ protected:
 	bool handleRedirect(QNetworkReply *reply);
 	void handleHeaders(QNetworkReply *reply) const;
 	void handleContent(QNetworkReply *reply) const;
-	void handleErrors(QNetworkReply *reply) const;
+	QString handleErrors(QNetworkReply *reply) const;
 
 	int timeoutValue() const;
 	void prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequest networkRequest) const;

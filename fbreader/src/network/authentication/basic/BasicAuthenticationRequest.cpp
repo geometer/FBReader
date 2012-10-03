@@ -81,19 +81,26 @@ bool BasicAuthenticationRequest::doBefore() {
 	return true;
 }
 
-bool BasicAuthenticationRequest::doAfter(bool success) {
-	if (!success) {
+bool BasicAuthenticationRequest::doAfter(const std::string &error) {
+	if (!error.empty()) {
+		finished(error);
 		return true;
 	}
 	if (myStatusCode.size() != 3) {
+		setErrorMessage(NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG));
+		finished(errorMessage());
 		return false;
 	}
 	if (myStatusCode == "401") {
 		setErrorMessage(NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED));
+		finished(errorMessage());
 		return false;
 	}
 	if (myStatusCode[0] == '4' || myStatusCode[0] == '5') {
+		setErrorMessage(NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG));
+		finished(errorMessage());
 		return false;
 	}
+	finished(error);
 	return true;
 }

@@ -54,8 +54,6 @@ bool ZLNetworkRequest::handleHeader(void *, size_t) {
 	return true;
 }
 
-
-
 ZLNetworkGetRequest::ZLNetworkGetRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) :
 	ZLNetworkRequest(url, sslCertificate) {
 }

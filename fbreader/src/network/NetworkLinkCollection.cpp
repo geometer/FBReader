@@ -420,7 +420,7 @@ bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::st
 	if (ZLFile(fileName).exists()) {
 		ZLFile(fileName).remove();
 	}
-	myErrorMessage = ZLNetworkManager::Instance().downloadFile(nURL, sslCertificate, fileName, listener);
+	myErrorMessage = ZLNetworkManager::Instance().downloadFile(nURL, sslCertificate, fileName/*, listener*/);
 	if (!myErrorMessage.empty()) {
 		return false;
 	}

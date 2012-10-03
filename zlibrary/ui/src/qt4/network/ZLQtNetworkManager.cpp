@@ -95,12 +95,14 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		networkRequest.setUrl(QUrl::fromUserInput(QString::fromStdString(request.url())));
 
 		if (!request.doBefore()) {
-			std::string error = request.errorMessage();
-			if (error.empty()) {
-				const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
-				error = ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), networkRequest.url().host().toStdString());
+			if (!request.hasListener()) { //TODO maybe remove this; or add listener notification about error
+				std::string error = request.errorMessage();
+				if (error.empty()) {
+					const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
+					error = ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), networkRequest.url().host().toStdString());
+				}
+				errors << QString::fromStdString(error);
 			}
-			errors << QString::fromStdString(error);
 			continue;
 		}
 
@@ -112,10 +114,17 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		networkRequest.setSslConfiguration(configuration);
 
 		QTimer* timeoutTimer = new QTimer;
-		ZLQtNetworkReplyScope scope = { &request, &replies, &errors, &eventLoop, timeoutTimer, false };
+		ZLQtNetworkReplyScope scope = {&request, timeoutTimer, false, &replies, &errors, &eventLoop};
+		if (request.hasListener()) {
+			qDebug() << "add request with listener";
+			scope.replies = 0;
+			scope.errors = 0;
+			scope.eventLoop = 0;
+		}
 		prepareReply(scope, networkRequest);
 	}
 	if (!replies.isEmpty()) {
+		qDebug() << "running eventloop";
 		eventLoop.exec(QEventLoop::AllEvents);
 	}
 
@@ -138,7 +147,10 @@ void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequ
 		reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
 	}
 
-	scope.replies->push_back(reply);
+	if (!scope.request->hasListener()) {
+		qDebug() << "add request to replies list" << scope.request;
+		scope.replies->push_back(reply);
+	}
 
 	QObject::connect(reply, SIGNAL(sslErrors(QList<QSslError>)),this, SLOT(onSslErrors(QList<QSslError>)));
 	QObject::connect(reply, SIGNAL(readyRead()), this, SLOT(onReplyReadyRead()));
@@ -149,12 +161,14 @@ void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequ
 	scope.timeoutTimer->start(timeoutValue());
 }
 
-
-
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	reply->deleteLater();
-	scope.replies->removeOne(reply);
+
+	if (!scope.request->hasListener()) {
+		qDebug() << "removing request from replies list" << scope.request;
+		scope.replies->removeOne(reply);
+	}
 	scope.timeoutTimer->stop();
 
 	if (!scope.timeoutTimer->property("expired").isValid()) {
@@ -164,15 +178,25 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 		handleHeaders(reply);
 		handleContent(reply);
 	}
-	handleErrors(reply);
-
 	scope.timeoutTimer->deleteLater();
 
-	if (!scope.request->doAfter(reply->error() == QNetworkReply::NoError)) {
-		scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
+	QString error = handleErrors(reply);
+
+	if (scope.request->hasListener()) {
+		scope.request->doAfter(error.toStdString());
+		return;
 	}
 
+	if (!error.isEmpty()) {
+		scope.errors->append(error);
+	}
+	if (!scope.request->doAfter(error.toStdString())) {
+		//TODO maybe fix it: adding second error message
+		scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
+	}
 	if (scope.replies->isEmpty()) {
+		qDebug() << "quitting eventloop";
+		qDebug() << "";
 		scope.eventLoop->quit();
 	}
 }
@@ -255,9 +279,9 @@ void ZLQtNetworkManager::handleContent(QNetworkReply *reply) const {
 	}
 }
 
-void ZLQtNetworkManager::handleErrors(QNetworkReply *reply) const {
+QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) const {
 	if (reply->error() == QNetworkReply::NoError) {
-		return;
+		return QString();
 	}
 	std::string error;
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
@@ -307,8 +331,7 @@ void ZLQtNetworkManager::handleErrors(QNetworkReply *reply) const {
 			error = reply->errorString().toStdString();
 			break;
 	}
-	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	scope.errors->append(QString::fromStdString(error));
+	return QString::fromStdString(error);
 }
 
 int ZLQtNetworkManager::timeoutValue() const {
