@@ -55,7 +55,7 @@ public:
 	SortedCatalogItem(const NetworkCatalogItem &parent, const ZLResource &resource, const NetworkItem::List &children, int flags);
 
 public:
-	std::string loadChildren(NetworkItem::List &children);
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
 	bool isEmpty() const;
 	 //TODO following method should be in class NetworkLibrary or smth like that
 	static const ZLResource &resource(const std::string &resourceKey);

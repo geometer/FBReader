@@ -20,7 +20,10 @@
 #ifndef __OPDSCATALOGITEM_H__
 #define __OPDSCATALOGITEM_H__
 
+#include <ZLExecutionUtil.h>
+
 #include "../NetworkItems.h"
+#include "../NetworkOperationData.h"
 
 class OPDSLink;
 
@@ -36,8 +39,12 @@ public:
 		int flags = FLAGS_DEFAULT
 	);
 
+public:
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
+	void onLoadedChildren(ZLExecutionScope &scope, std::string error);
+
 private:
-	std::string loadChildren(NetworkItem::List &children);
+	NetworkOperationData myData;
 };
 
 #endif /* __OPDSCATALOGITEM_H__ */

@@ -52,7 +52,7 @@ LitResBooksFeedItem::LitResBooksFeedItem(
 void LitResBooksFeedItem::onDisplayItem() {
 }
 
-std::string LitResBooksFeedItem::loadChildren(NetworkItem::List &children) {
+std::string LitResBooksFeedItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> /*listener*/) {
 	//TODO maybe add sid parameter if possible
 	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
 	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createXMLParserRequest(

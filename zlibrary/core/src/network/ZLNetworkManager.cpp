@@ -146,8 +146,6 @@ std::string ZLNetworkManager::downloadFile(const std::string &url, const ZLNetwo
 	return perform(data);
 }
 
-
-
 shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, const std::string &fileName) const {
 	return new ZLNetworkDownloadRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, fileName);
 }

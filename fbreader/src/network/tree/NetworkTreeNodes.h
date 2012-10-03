@@ -21,6 +21,7 @@
 #define __NETWORKTREENODES_H__
 
 #include <ZLResource.h>
+#include <ZLExecutionUtil.h>
 
 #include "../NetworkLink.h"
 #include "../../tree/FBTree.h"
@@ -61,8 +62,6 @@ private:
 public:
 	NetworkTree(RootTree *parent, size_t position);
 	NetworkTree(NetworkTree *parent, size_t position = (size_t)-1);
-
-
 };
 
 class NetworkCatalogTree : public NetworkTree {
@@ -81,6 +80,9 @@ protected:
 		ZLResourceKey key() const;
 		void run();
 
+	public:
+		void onChildrenRequested(ZLExecutionScope &scope, const std::string &error);
+
 	private:
 		NetworkCatalogTree &myTree;
 	};
@@ -94,6 +96,7 @@ public:
 	shared_ptr<const ZLImage> image() const;
 	std::string imageUrl() const;
 	void requestChildren(shared_ptr<ZLExecutionData::Listener> listener);
+	void onChildrenReceived(ZLExecutionScope &scope, const std::string &error);
 
 private:
 //	virtual shared_ptr<const ZLImage> lastResortCoverImage() const;

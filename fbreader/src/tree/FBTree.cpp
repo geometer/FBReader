@@ -72,8 +72,6 @@ private:
 FBTree::ExpandTreeAction::ExpandTreeAction(FBTree &node) : myNode(node) {
 }
 
-
-
 void FBTree::ExpandTreeAction::run() {
 	myNode.expand();
 }

@@ -47,7 +47,7 @@ LitResAuthorsItem::LitResAuthorsItem(
 ) {
 }
 
-std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children) {
+std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> /*listener*/) {
 	//TODO maybe add sid parameter if possible
 	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
 	LitResAuthorsParser::AuthorsList authors;

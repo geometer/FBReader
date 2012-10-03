@@ -116,7 +116,7 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		QTimer* timeoutTimer = new QTimer;
 		ZLQtNetworkReplyScope scope = {&request, timeoutTimer, false, &replies, &errors, &eventLoop};
 		if (request.hasListener()) {
-			qDebug() << "add request with listener";
+			qDebug() << "add request with listener" << &request;
 			scope.replies = 0;
 			scope.errors = 0;
 			scope.eventLoop = 0;
@@ -171,11 +171,12 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	}
 	scope.timeoutTimer->stop();
 
+	//TODO maybe timeout is working incorrect?
 	if (!scope.timeoutTimer->property("expired").isValid()) {
 		if (handleRedirect(reply)) {
 			return;
 		}
-		handleHeaders(reply);
+		//handleHeaders(reply);
 		handleContent(reply);
 	}
 	scope.timeoutTimer->deleteLater();

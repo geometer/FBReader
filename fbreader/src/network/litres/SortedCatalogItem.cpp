@@ -34,7 +34,7 @@ SortedCatalogItem::SortedCatalogItem(const NetworkCatalogItem &parent, const ZLR
 	myChildren = children;
 }
 
-std::string SortedCatalogItem::loadChildren(NetworkItem::List &children) {
+std::string SortedCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> /*listener*/) {
 	children.assign(myChildren.begin(), myChildren.end());
 	return std::string();
 }

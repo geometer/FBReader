@@ -50,7 +50,7 @@ void LitResBookshelfItem::onDisplayItem() {
 	myForceReload = false;
 }
 
-std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children) {
+std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> /*listener*/) {
 	LitResAuthenticationManager &mgr =
 		(LitResAuthenticationManager&)*Link.authenticationManager();
 	if (mgr.isAuthorised().Status == B3_FALSE) {
