@@ -176,7 +176,7 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 		if (handleRedirect(reply)) {
 			return;
 		}
-		//handleHeaders(reply);
+		handleHeaders(reply);
 		handleContent(reply);
 	}
 	scope.timeoutTimer->deleteLater();
