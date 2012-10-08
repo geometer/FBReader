@@ -18,6 +18,7 @@
  */
 
 #include <ZLNetworkUtil.h>
+#include <ZLStringUtil.h>
 #include <ZLMimeType.h>
 #include <ZLExecutionData.h>
 #include <ZLNetworkManager.h>
@@ -52,6 +53,7 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 		ATOMLink &link = *(entry->links()[i]);
 		const std::string &href = link.href();
 		const std::string &rel = link.rel();
+		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		if (rel == NetworkLink::URL_SEARCH) {
 			links[rel] = OpenSearchXMLReader::convertOpenSearchURL(href);
 		} else if (rel == "") {
@@ -66,8 +68,14 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 			links[NetworkLink::URL_REFILL_ACCOUNT] = href;
 		} else if (rel == OPDSConstants::REL_LINK_RECOVER_PASSWORD) {
 			links[NetworkLink::URL_RECOVER_PASSWORD] = href;
-		} else if (rel == OPDSConstants::REL_THUMBNAIL) {
-			iconURL = href;
+		} else if (rel == OPDSConstants::REL_THUMBNAIL || rel == OPDSConstants::REL_IMAGE_THUMBNAIL) {
+			if (ZLMimeType::isImage(type)) {
+				iconURL = href;
+			}
+		} else if (iconURL.empty() && (rel == OPDSConstants::REL_COVER || ZLStringUtil::stringStartsWith(rel, OPDSConstants::REL_IMAGE_PREFIX))) {
+			if (ZLMimeType::isImage(type)) {
+				iconURL = href;
+			}
 		} else {
 			links[rel] = href;
 		}

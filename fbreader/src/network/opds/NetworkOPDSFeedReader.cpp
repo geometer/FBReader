@@ -165,11 +165,11 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readBookItem(OPDSEntry &entry) {
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = myLink.relation(link.rel(), link.type());
 		const BookReference::Type referenceType = typeByRelation(rel);
-		if (rel == OPDSConstants::REL_COVER) {
+		if (ZLStringUtil::stringStartsWith(rel, OPDSConstants::REL_IMAGE_PREFIX) || rel == OPDSConstants::REL_COVER) {
 			if (urlMap[NetworkItem::URL_COVER].empty() && ZLMimeType::isImage(type)) {
 				urlMap[NetworkItem::URL_COVER] = href;
 			}
-		} else if (rel == OPDSConstants::REL_THUMBNAIL) {
+		} else if (rel == OPDSConstants::REL_THUMBNAIL || rel == OPDSConstants::REL_IMAGE_THUMBNAIL) {
 			if (ZLMimeType::isImage(type)) {
 				urlMap[NetworkItem::URL_COVER] = href;
 			}
@@ -284,8 +284,9 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = myLink.relation(link.rel(), link.type());
 		if (ZLMimeType::isImage(type)) {
-			if (rel == OPDSConstants::REL_THUMBNAIL ||
-					(coverURL.empty() && rel == OPDSConstants::REL_COVER)) {
+			if (rel == OPDSConstants::REL_THUMBNAIL || rel == OPDSConstants::REL_IMAGE_THUMBNAIL) {
+				coverURL = href;
+			} else if (coverURL.empty() && (rel == OPDSConstants::REL_COVER || ZLStringUtil::stringStartsWith(rel, OPDSConstants::REL_IMAGE_PREFIX))) {
 				coverURL = href;
 			}
 		} else if (type->weakEquals(*ZLMimeType::APPLICATION_ATOM_XML)) {
