@@ -59,9 +59,9 @@ const shared_ptr<ZLMimeType> ZLMimeType::EMPTY = ZLMimeType::get("empty");
 
 bool ZLMimeType::isImage(shared_ptr<ZLMimeType> mimeType) {
 	return
-		*mimeType == *IMAGE_PNG ||
-		*mimeType == *IMAGE_JPEG ||
-		*mimeType == *IMAGE_SVG;
+		mimeType->weakEquals(*IMAGE_PNG) ||
+		mimeType->weakEquals(*IMAGE_JPEG) ||
+		mimeType->weakEquals(*IMAGE_SVG);
 }
 
 shared_ptr<ZLMimeType> ZLMimeType::get(const char *text) {

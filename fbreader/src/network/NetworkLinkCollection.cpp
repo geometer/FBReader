@@ -49,7 +49,6 @@
 #include "opds/OPDSLink.h"
 #include "opds/OPDSLink_GenericXMLParser.h"
 #include "opds/OPDSLink_GenericFeedReader.h"
-#include "opds/OPDSLink_FeedReader.h"
 #include "opds/OPDSXMLParser.h"
 
 #include "opds/URLRewritingRule.h"
