@@ -56,7 +56,7 @@ void NetworkOPDSFeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> fee
 		const std::string &href = link.href();
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = myLink.relation(link.rel(), link.type());
-		if (type == ZLMimeType::APPLICATION_ATOM_XML) {
+		if (type->weakEquals(*ZLMimeType::APPLICATION_ATOM_XML)) {
 			if (rel == "self") {
 			} else if (rel == "next") {
 				myData.ResumeURI = href;
@@ -288,7 +288,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 					(coverURL.empty() && rel == OPDSConstants::REL_COVER)) {
 				coverURL = href;
 			}
-		} else if (type == ZLMimeType::APPLICATION_ATOM_XML) {
+		} else if (type->weakEquals(*ZLMimeType::APPLICATION_ATOM_XML)) {
 			if (rel == ATOMConstants::REL_ALTERNATE) {
 				if (url.empty()) {
 					url = href;
@@ -301,7 +301,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 					catalogFlags &= !NetworkCatalogItem::FLAG_SHOW_AUTHOR;
 				}
 			}
-		} else if (type == ZLMimeType::TEXT_HTML) {
+		} else if (type->weakEquals(*ZLMimeType::TEXT_HTML)) {
 			if (rel == OPDSConstants::REL_ACQUISITION ||
 					rel == ATOMConstants::REL_ALTERNATE ||
 					rel.empty()) {
