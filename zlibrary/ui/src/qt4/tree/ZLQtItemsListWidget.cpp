@@ -29,6 +29,8 @@
 
 #include "../image/ZLQtImageUtils.h"
 
+#include "ZLQtPreviewWidget.h"
+
 #include "ZLQtItemsListWidget.h"
 
 static const int ITEM_WIDTH = 600;
@@ -36,28 +38,28 @@ static const int ITEM_HEIGHT = 98;
 static const int ITEM_COUNT = 6;
 static const int ITEM_SIZE = 77;
 
-class ZLQtLabelAction : public QLabel {
+//class ZLQtLabelAction : public QLabel {
 
-public:
-	ZLQtLabelAction(shared_ptr<ZLTreeAction> action, QWidget *parent=0, Qt::WindowFlags f=0);
+//public:
+//	ZLQtLabelAction(shared_ptr<ZLTreeAction> action, QWidget *parent=0, Qt::WindowFlags f=0);
 
-protected:
-	 void mousePressEvent(QMouseEvent *ev);
+//protected:
+//	 void mousePressEvent(QMouseEvent *ev);
 
-private:
-	shared_ptr<ZLTreeAction> myAction;
-};
+//private:
+//	shared_ptr<ZLTreeAction> myAction;
+//};
 
-ZLQtLabelAction::ZLQtLabelAction(shared_ptr<ZLTreeAction> action,QWidget *parent, Qt::WindowFlags f) :
-	QLabel(parent, f), myAction(action) {
-}
+//ZLQtLabelAction::ZLQtLabelAction(shared_ptr<ZLTreeAction> action,QWidget *parent, Qt::WindowFlags f) :
+//	QLabel(parent, f), myAction(action) {
+//}
 
-void ZLQtLabelAction::mousePressEvent(QMouseEvent *) {
-	if (myAction.isNull() || !myAction->makesSense()) {
-		return;
-	}
-	myAction->run();
-}
+//void ZLQtLabelAction::mousePressEvent(QMouseEvent *) {
+//	if (myAction.isNull() || !myAction->makesSense()) {
+//		return;
+//	}
+//	myAction->run();
+//}
 
 
 ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QWidget(parent), myLayout(0) {
@@ -107,15 +109,11 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 		if (!action->makesSense()) {
 			continue;
 		}
-		QLabel *actionLabel = new ZLQtLabelAction(action);
+		QPushButton *actionButton = new ZLQtButtonAction(action);
 		QString text = QString::fromStdString(node->actionText(action));
-		actionLabel->setText(QString("<small><u>%1</u></small>").arg(text));
-
-		QPalette palette = actionLabel->palette();
-		palette.setColor(QPalette::WindowText, QColor(33, 96, 180)); //blue color
-		actionLabel->setPalette(palette);
-		actionLabel->setCursor(Qt::PointingHandCursor);
-		actionsLayout->addWidget(actionLabel);
+		actionButton->setText(text);
+		//actionButton->setCursor(Qt::PointingHandCursor);
+		actionsLayout->addWidget(actionButton);
 	}
 
 	actionsLayout->addStretch();

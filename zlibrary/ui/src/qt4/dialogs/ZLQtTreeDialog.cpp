@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <QtGui/QSplitter>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QScrollBar>
@@ -41,14 +42,17 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	QHBoxLayout *panelLayout = new QHBoxLayout;
-	QHBoxLayout *layout = new QHBoxLayout;
-	layout->addWidget(myScrollArea);
-	layout->addWidget(myPreviewWidget);
+	//QHBoxLayout *layout = new QHBoxLayout;
+
+	QSplitter *splitter = new QSplitter;
+	splitter->addWidget(myScrollArea);
+	splitter->addWidget(myPreviewWidget);
+	//layout->addWidget(splitter);
 	panelLayout->addWidget(myBackButton);
 	panelLayout->addWidget(mySearchField);
 	//panelLayout->addStretch();
 	mainLayout->addLayout(panelLayout);
-	mainLayout->addLayout(layout);
+	mainLayout->addWidget(splitter);
 	this->setLayout(mainLayout);
 
 	QPalette palette = myScrollArea->palette();
