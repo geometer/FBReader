@@ -78,6 +78,34 @@
 			<node name="buy" value="Купить (%s)"/>
 		</node>
 	</node>
+	<node name="bookInfo">
+		<node name="bookInfo" value="Информация о книге"/>
+		<node name="fileInfo" value="Информация о файле"/>
+		<node name="description" value="Описание"/>
+		<node name="noDescription" value="Описание отсутствует."/>
+		<node name="annotation" value="Аннотация"/>
+		<node name="title" value="Название:"/>
+		<node name="authors" value="Авторы:">
+			<node name="value 1" value="Автор:"/>
+		</node>
+		<node name="series" value="Серия:"/>
+		<node name="indexInSeries" value="Номер в серии:"/>
+		<node name="tags" value="Категории:">
+			<node name="value 1" value="Категория:"/>
+		</node>
+		<node name="language" value="Язык:"/>
+		<node name="name" value="Название:"/>
+		<node name="type" value="Тип:"/>
+		<node name="size" value="Размер:"/>
+		<node name="time" value="Последнее изменение:"/>
+		<node name="sizeInBytes" value="%s байт">
+			<node name="modrange 11 19 100" value="%0 байт"/>
+			<node name="modrange 2 4 10" value="%0 байта"/>
+		</node>
+		<node name="sizeInKiloBytes" value="%s кБ"/>
+		<node name="catalog" value="Каталог:"/>
+		<node name="extraLinks" value="Ссылки"/>
+	</node>
 	<node name="menu">
 		<node name="bookInfo" value="Информация о книге..."/>
 		<node name="toc" value="Содержание"/>

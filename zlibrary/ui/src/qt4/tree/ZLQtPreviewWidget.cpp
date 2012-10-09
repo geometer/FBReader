@@ -80,7 +80,7 @@ void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 	}
 
 	//TODO scrolling for annotation
-	//TODO implement 'condition' attribute support for ZLResource
+	//TODO implement 'condition'-like attributes support for ZLResource
 	//TODO maybe add labels here, not at constructor
 	static const ZLResource &resource = ZLResource::resource("bookInfo");
 	static std::string VALUE_1 = "value 1";
