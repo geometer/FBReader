@@ -79,13 +79,40 @@ void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 		myPicLabel->setPixmap(pixmap);
 	}
 
-	//TODO add to resources and set up titles for each label here
-	myTitleLabel->setText(QString::fromStdString(info.title()));
-	myAuthorLabel->setText(QString::fromStdString(ZLStringUtil::join(info.authors(), ", ")));
-	myCategoriesLabel->setText(QString::fromStdString(ZLStringUtil::join(info.tags(), ", ")));
-	mySummaryLabel->setText(QString::fromStdString(info.summary()));
+	//TODO scrolling for annotation
+	//TODO implement 'condition' attribute support for ZLResource
+	//TODO maybe add labels here, not at constructor
+	static const ZLResource &resource = ZLResource::resource("bookInfo");
+	static std::string VALUE_1 = "value 1";
+	static QString colon = "<b>%1</b> %2";
+
+	if (!info.title().empty()) {
+		static QString title = QString::fromStdString(resource["title"].value());
+		myTitleLabel->setText(colon.arg(title, QString::fromStdString(info.title())));
+	}
+
+	if (info.authors().size() > 0) {
+		static QString authors = QString::fromStdString(resource["authors"].value());
+		static QString author = QString::fromStdString(resource["authors"][VALUE_1].value());
+		QString labelText = info.authors().size() == 1 ? author : authors;
+		myAuthorLabel->setText(colon.arg(labelText, QString::fromStdString(ZLStringUtil::join(info.authors(), ", "))));
+	}
+
+	if (info.tags().size() > 0) {
+		static QString tags = QString::fromStdString(resource["tags"].value());
+		static QString tag = QString::fromStdString(resource["tags"][VALUE_1].value());
+		QString labelText = info.tags().size() == 1 ? tag : tags;
+		myCategoriesLabel->setText(colon.arg(labelText, QString::fromStdString(ZLStringUtil::join(info.tags(), ", "))));
+	}
+
+	if (!info.summary().empty()) {
+		static QString annotation = QString::fromStdString(resource["annotation"].value());
+		mySummaryLabel->setText(colon.arg(annotation, QString::fromStdString(info.summary())));
+	}
 
 	myTitleLabel->setWordWrap(true);
+	myAuthorLabel->setWordWrap(true);
+	myCategoriesLabel->setWordWrap(true);
 	mySummaryLabel->setWordWrap(true);
 
 	foreach(shared_ptr<ZLTreeAction> action, info.actions()) {
