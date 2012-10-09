@@ -29,6 +29,8 @@
 
 #include "ZLQtPreviewWidget.h"
 
+static const int PREVIEW_WIDTH = 300;
+
 
 ZLQtButtonAction::ZLQtButtonAction(shared_ptr<ZLTreeAction> action,QWidget *parent) :
 	QPushButton(parent), myAction(action) {
@@ -43,6 +45,9 @@ void ZLQtButtonAction::onClicked() {
 }
 
 ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
+	setMinimumWidth(PREVIEW_WIDTH);
+	setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+
 	myPicLabel = new QLabel;
 	myPicLabel->setMaximumSize(300,300);
 	myPicLabel->setMinimumSize(77,77);

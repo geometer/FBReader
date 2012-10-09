@@ -63,8 +63,11 @@ static const int ITEM_SIZE = 77;
 
 
 ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QWidget(parent), myLayout(0) {
-	setFixedWidth(ITEM_WIDTH);
-	setFixedHeight(ITEM_HEIGHT*ITEM_COUNT); //TODO make rubber design
+//	setFixedWidth(ITEM_WIDTH);
+//	setFixedHeight(ITEM_HEIGHT * ITEM_COUNT); //TODO make rubber design
+
+	setMinimumSize(ITEM_WIDTH, ITEM_HEIGHT * ITEM_COUNT);
+	setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 }
 
 void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
@@ -98,6 +101,7 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	QLabel *subtitle = new QLabel(QString::fromStdString(node->subtitle()));
 	title->setWordWrap(true);
 	subtitle->setWordWrap(true);
+
 	title->setMinimumWidth(ITEM_WIDTH-100);
 	subtitle->setMinimumWidth(ITEM_WIDTH-100);
 
@@ -118,7 +122,6 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 
 	actionsLayout->addStretch();
 
-
 	titlesLayout->addLayout(actionsLayout);
 	shared_ptr<const ZLImage> image = node->image();
 	if (!image.isNull()) {
@@ -132,8 +135,7 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	mainLayout->addStretch();
 	setLayout(mainLayout);
 
-	setFixedWidth(ITEM_WIDTH);
-	setFixedHeight(ITEM_HEIGHT);  //TODO make rubber design
+	setMinimumSize(ITEM_WIDTH, ITEM_HEIGHT); //TODO make rubber design
 }
 
 void ZLQtTreeItem::mousePressEvent(QMouseEvent *) {

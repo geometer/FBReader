@@ -42,12 +42,18 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	QHBoxLayout *panelLayout = new QHBoxLayout;
-	//QHBoxLayout *layout = new QHBoxLayout;
 
 	QSplitter *splitter = new QSplitter;
 	splitter->addWidget(myScrollArea);
 	splitter->addWidget(myPreviewWidget);
-	//layout->addWidget(splitter);
+	splitter->setStretchFactor(0, 2);
+	splitter->setStretchFactor(1, 1);
+
+	mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
+
+	myScrollArea->setMinimumSize(myListWidget->minimumSize());
+	myScrollArea->setSizePolicy(myListWidget->sizePolicy());
+
 	panelLayout->addWidget(myBackButton);
 	panelLayout->addWidget(mySearchField);
 	//panelLayout->addStretch();
