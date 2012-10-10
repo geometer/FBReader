@@ -77,6 +77,7 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 		delete myLayout;
 		qDeleteAll(this->children());
 	}
+	myItems.clear();
 	myLayout = new QVBoxLayout;
 	myLayout->setContentsMargins(0,0,0,0);
 	myLayout->setSpacing(0);
@@ -87,15 +88,24 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 		if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
 			//qDebug() << QString::fromStdString(titledNode->title());
 			ZLQtTreeItem *item = new ZLQtTreeItem(titledNode);
-			connect(item, SIGNAL(clicked(const ZLTreeNode*)), this, SIGNAL(nodeClicked(const ZLTreeNode*))); //action ExpandAction used instead
+			connect(item, SIGNAL(clicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*))); //action ExpandAction used instead
 			myLayout->addWidget(item);
+			myItems.push_back(item);
 		}
 	}
 
 	myLayout->addStretch();
 }
 
-ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWidget(parent), myNode(node) {
+void ZLQtItemsListWidget::onNodeClicked(const ZLTreeNode *node) {
+	foreach(ZLQtTreeItem *item, myItems) {
+			item->setActive(item->getNode() == node);
+	}
+	emit nodeClicked(node);
+}
+
+
+ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWidget(parent), myNode(node), isActive(false) {
 	QHBoxLayout *mainLayout = new QHBoxLayout;
 	QVBoxLayout *titlesLayout = new QVBoxLayout;
 	QHBoxLayout *actionsLayout = new QHBoxLayout;
@@ -142,6 +152,15 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	setMinimumSize(ITEM_WIDTH, ITEM_HEIGHT); //TODO make rubber design
 }
 
+void ZLQtTreeItem::setActive(bool active) {
+	isActive = active;
+	update();
+}
+
+const ZLTreeTitledNode *ZLQtTreeItem::getNode() const {
+	return myNode;
+}
+
 void ZLQtTreeItem::mousePressEvent(QMouseEvent *) {
 	emit clicked(myNode);
 }
@@ -149,17 +168,17 @@ void ZLQtTreeItem::mousePressEvent(QMouseEvent *) {
 void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
 	//qDebug() << Q_FUNC_INFO << event->rect();
 	QWidget::paintEvent(event);
-	static int h = 0;
-	static int s = 0;
-	static int v = 242;
-	QColor mainColor = QColor::fromHsv(h,s,v);
-	QColor shadowColor1 = QColor::fromHsv(h,s,v-23); //these numbers are getted from experiments with Photoshop
-	QColor shadowColor2 = QColor::fromHsv(h,s,v-43);
-	QColor shadowColor3 = QColor::fromHsv(h,s,v-71);
-	QColor shadowColor4 = QColor::fromHsv(h,s,v-117);
-	QColor shadowColor5 = QColor::fromHsv(h,s,v-155);
+	QColor mainColor = isActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
+	int h = mainColor.hue();
+	int s = mainColor.saturation();
+	int v = mainColor.value();
+	QColor shadowColor1 = QColor::fromHsv(h,s,v - 23); //these numbers are getted from experiments with Photoshop
+	QColor shadowColor2 = QColor::fromHsv(h,s,v - 43);
+	QColor shadowColor3 = QColor::fromHsv(h,s,v - 71);
+	QColor shadowColor4 = QColor::fromHsv(h,s,v - 117);
+	QColor shadowColor5 = QColor::fromHsv(h,s,v - 155);
 
-	QColor shadowUpColor = QColor::fromHsv(h,s,v-114);
+	QColor shadowUpColor = QColor::fromHsv(h,s,v - 114);
 
 
 
@@ -197,5 +216,3 @@ void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
 	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
 
 }
-
-

@@ -62,9 +62,9 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	mainLayout->addWidget(splitter);
 	this->setLayout(mainLayout);
 
-	QPalette palette = myScrollArea->palette();
-	palette.setBrush(QPalette::All, QPalette::Window, QColor(242,242,242)); //gray
-	myScrollArea->setPalette(palette);
+//	QPalette palette = myScrollArea->palette();
+//	palette.setBrush(QPalette::All, QPalette::Window, QColor(242,242,242)); //gray
+//	myScrollArea->setPalette(palette);
 
 	connect(myListWidget, SIGNAL(nodeClicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
