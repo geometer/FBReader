@@ -19,6 +19,7 @@
 
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QScrollBar>
 
 #include <QtCore/QDebug>
 
@@ -55,22 +56,34 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
 	myTitleLabel = new QLabel;
 	myAuthorLabel = new QLabel;
 	myCategoriesLabel = new QLabel;
+	mySummaryTitleLabel = new QLabel;
 	mySummaryLabel = new QLabel;
 
-	myActionsWidget = new QWidget;
+	mySummaryScrollArea = new QScrollArea;
+	mySummaryScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	mySummaryScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	mySummaryScrollArea->setWidgetResizable(true);
+	mySummaryScrollArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+	mySummaryScrollArea->setWidget(mySummaryLabel);
+	mySummaryLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+	mySummaryLabel->setMargin(3);
 
+	myActionsWidget = new QWidget;
 
 	QVBoxLayout *previewLayout = new QVBoxLayout;
 	QHBoxLayout *actionsLayout = new QHBoxLayout;
 	myActionsWidget->setLayout(actionsLayout);
+	previewLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
 	previewLayout->addWidget(myPicLabel);
 	previewLayout->addWidget(myTitleLabel);
 	previewLayout->addWidget(myAuthorLabel);
 	previewLayout->addWidget(myCategoriesLabel);
-	previewLayout->addWidget(mySummaryLabel);
-	previewLayout->addStretch();
+	previewLayout->addWidget(mySummaryTitleLabel);
+	previewLayout->addWidget(mySummaryScrollArea);
+	//previewLayout->addStretch();
 	previewLayout->addWidget(myActionsWidget);
+
 	setLayout(previewLayout);
 }
 
@@ -84,9 +97,8 @@ void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 		myPicLabel->setPixmap(pixmap);
 	}
 
-	//TODO scrolling for annotation
 	//TODO implement 'condition'-like attributes support for ZLResource
-	//TODO maybe add labels here, not at constructor
+	//TODO fix it: if element is absent, there's a empty space instead it. Looks bad.
 	static const ZLResource &resource = ZLResource::resource("bookInfo");
 	static std::string VALUE_1 = "value 1";
 	static QString colon = "<b>%1</b> %2";
@@ -112,7 +124,9 @@ void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 
 	if (!info.summary().empty()) {
 		static QString annotation = QString::fromStdString(resource["annotation"].value());
-		mySummaryLabel->setText(colon.arg(annotation, QString::fromStdString(info.summary())));
+		mySummaryLabel->setText(QString::fromStdString(info.summary()));
+		mySummaryTitleLabel->setText(QString("<b>%1</b>").arg(annotation));
+		mySummaryScrollArea->show();
 	}
 
 	myTitleLabel->setWordWrap(true);
@@ -139,6 +153,8 @@ void ZLQtPreviewWidget::clear() {
 	myAuthorLabel->clear();
 	myCategoriesLabel->clear();
 	mySummaryLabel->clear();
+	mySummaryTitleLabel->clear();
+	mySummaryScrollArea->hide();
 	foreach(QPushButton *button, myButtons) {
 		delete button;
 	}

@@ -23,6 +23,7 @@
 #include <QtGui/QWidget>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
+#include <QtGui/QScrollArea>
 
 #include <ZLTreePageNode.h>
 
@@ -38,8 +39,10 @@ private:
 	QLabel *myTitleLabel;
 	QLabel *myAuthorLabel;
 	QLabel *myCategoriesLabel;
+	QLabel *mySummaryTitleLabel;
 	QLabel *mySummaryLabel;
 	QWidget *myActionsWidget;
+	QScrollArea *mySummaryScrollArea;
 	QList<QPushButton*> myButtons;
 };
 
