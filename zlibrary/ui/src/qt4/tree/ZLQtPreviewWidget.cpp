@@ -46,10 +46,46 @@ void ZLQtButtonAction::onClicked() {
 	myAction->run();
 }
 
-ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
+ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent), myWidget(0) {
 	setMinimumWidth(PREVIEW_WIDTH);
 	setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
+	QHBoxLayout *layout = new QHBoxLayout;
+	layout->setSizeConstraint(QLayout::SetMinimumSize);
+	layout->setContentsMargins(0,0,0,0);
+	setLayout(layout);
+}
+
+void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
+	clear();
+	myWidget = new ZLQtPageWidget(info);
+	myWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+	layout()->addWidget(myWidget);
+}
+
+void ZLQtPreviewWidget::fillCatalog(const ZLTreeTitledNode *node) {
+	clear();
+	myWidget = new ZLQtCatalogPageWidget(node);
+	myWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+	layout()->addWidget(myWidget);
+}
+
+void ZLQtPreviewWidget::clear() {
+	if (myWidget) {
+		delete myWidget;
+		myWidget = 0;
+//		delete myLayout;
+//		qDeleteAll(this->children());
+	}
+}
+
+ZLQtPageWidget::ZLQtPageWidget(const ZLTreePageInfo &info, QWidget *parent) : QWidget(parent) {
+	//TODO fix it: if element is absent, there's a empty space instead it. Looks bad.
+	createElements();
+	setInfo(info);
+}
+
+void ZLQtPageWidget::createElements() {
 	myPicLabel = new QLabel;
 
 	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
@@ -69,10 +105,12 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
 	mySummaryScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	mySummaryScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	mySummaryScrollArea->setWidgetResizable(true);
-	mySummaryScrollArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+	mySummaryScrollArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 	mySummaryScrollArea->setWidget(mySummaryLabel);
 	mySummaryLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 	mySummaryLabel->setMargin(3);
+	//mySummaryLabel->setMaximumHeight(200);
+	mySummaryLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
 	//mySummaryLabel->setIndent(3);
 
 	myActionsWidget = new QWidget;
@@ -93,15 +131,15 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
 	previewLayout->addWidget(myCategoriesLabel);
 	previewLayout->addWidget(mySummaryTitleLabel);
 	previewLayout->addWidget(mySummaryScrollArea);
-	//previewLayout->addStretch();
 	previewLayout->addWidget(myActionsWidget);
+	previewLayout->addStretch();
 
 	setLayout(previewLayout);
+
+	mySummaryScrollArea->hide();
 }
 
-void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
-	clear();
-
+void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 	shared_ptr<const ZLImage> image = info.image();
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
@@ -109,12 +147,10 @@ void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 		if (pixmap.height() > PREVIEW_WIDTH || pixmap.width() > PREVIEW_WIDTH) {
 			pixmap = pixmap.scaled(PREVIEW_WIDTH, PREVIEW_WIDTH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 		}
-		//TODO center
 		myPicLabel->setPixmap(pixmap);
 	}
 
 	//TODO implement 'condition'-like attributes support for ZLResource
-	//TODO fix it: if element is absent, there's a empty space instead it. Looks bad.
 	static const ZLResource &resource = ZLResource::resource("bookInfo");
 	static std::string VALUE_1 = "value 1";
 	static QString colon = "<b>%1</b> %2";
@@ -160,19 +196,68 @@ void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 		myButtons.push_back(actionButton);
 		myActionsWidget->layout()->addWidget(actionButton);
 	}
-
 }
 
-void ZLQtPreviewWidget::clear() {
-	myPicLabel->setPixmap(QPixmap());
-	myTitleLabel->clear();
-	myAuthorLabel->clear();
-	myCategoriesLabel->clear();
-	mySummaryLabel->clear();
-	mySummaryTitleLabel->clear();
-	mySummaryScrollArea->hide();
-	foreach(QPushButton *button, myButtons) {
-		delete button;
+ZLQtCatalogPageWidget::ZLQtCatalogPageWidget(const ZLTreeTitledNode *node, QWidget *parent) : QWidget(parent) {
+	createElements();
+	setInfo(node);
+}
+
+void ZLQtCatalogPageWidget::createElements() {
+	myPicLabel = new QLabel;
+	myTitleLabel = new QLabel;
+	mySubtitleLabel = new QLabel;
+
+	mySubtitleLabel->setWordWrap(true);
+	myTitleLabel->setAlignment(Qt::AlignCenter);
+	mySubtitleLabel->setAlignment(Qt::AlignCenter);
+
+	QVBoxLayout *previewLayout = new QVBoxLayout;
+
+	QHBoxLayout *picLayout = new QHBoxLayout;
+	picLayout->addStretch();
+	picLayout->addWidget(myPicLabel);
+	picLayout->addStretch();
+
+	previewLayout->addStretch();
+	previewLayout->addLayout(picLayout);
+	previewLayout->addWidget(myTitleLabel);
+	previewLayout->addWidget(mySubtitleLabel);
+	previewLayout->addStretch();
+
+	setLayout(previewLayout);
+}
+
+void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
+	shared_ptr<const ZLImage> image = node->image();
+	if (!image.isNull()) {
+		ZLNetworkManager::Instance().perform(image->synchronizationData());
+		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
+		if (pixmap.height() > PREVIEW_WIDTH || pixmap.width() > PREVIEW_WIDTH) {
+			pixmap = pixmap.scaled(PREVIEW_WIDTH, PREVIEW_WIDTH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+		}
+		myPicLabel->setPixmap(pixmap);
 	}
-	myButtons.clear();
+
+	if (!node->title().empty()) {
+		myTitleLabel->setText(QString("<b>%1</b>").arg(QString::fromStdString(node->title())));
+	}
+	if (!node->subtitle().empty()) {
+		mySubtitleLabel->setText(QString::fromStdString(node->subtitle()));
+	}
+
 }
+
+//void ZLQtPreviewWidget::clear() {
+//	myPicLabel->setPixmap(QPixmap());
+//	myTitleLabel->clear();
+//	myAuthorLabel->clear();
+//	myCategoriesLabel->clear();
+//	mySummaryLabel->clear();
+//	mySummaryTitleLabel->clear();
+//	mySummaryScrollArea->hide();
+//	foreach(QPushButton *button, myButtons) {
+//		delete button;
+//	}
+//	myButtons.clear();
+//}

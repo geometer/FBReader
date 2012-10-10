@@ -37,7 +37,7 @@
 
 static const int ITEM_WIDTH = 500;
 static const int ITEM_HEIGHT = 98;
-static const int ITEM_COUNT = 5;
+static const int ITEM_COUNT = 6;
 static const int ITEM_SIZE = 77;
 
 //class ZLQtLabelAction : public QLabel {
@@ -99,7 +99,7 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 
 void ZLQtItemsListWidget::onNodeClicked(const ZLTreeNode *node) {
 	foreach(ZLQtTreeItem *item, myItems) {
-			item->setActive(item->getNode() == node);
+		item->setActive(item->getNode() == node);
 	}
 	emit nodeClicked(node);
 }

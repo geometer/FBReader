@@ -36,7 +36,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	myBackButton = new QPushButton("Back"); //TODO add to resources;
 	mySearchField = new QLineEdit("type to search..."); // TODO add to resources;
 
-	myScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	myScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	myScrollArea->setWidget(myListWidget);
 	myScrollArea->setFrameShape(QFrame::NoFrame);
@@ -107,6 +107,8 @@ void ZLQtTreeDialog::onNodeClicked(const ZLTreeNode *node) {
 		if (!info.isNull()) {
 			myPreviewWidget->fill(*info);
 		}
+	} else if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
+		myPreviewWidget->fillCatalog(titledNode);
 	}
 }
 
