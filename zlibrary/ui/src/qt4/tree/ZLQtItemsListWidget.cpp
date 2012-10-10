@@ -35,9 +35,9 @@
 
 #include "ZLQtItemsListWidget.h"
 
-static const int ITEM_WIDTH = 600;
+static const int ITEM_WIDTH = 500;
 static const int ITEM_HEIGHT = 98;
-static const int ITEM_COUNT = 6;
+static const int ITEM_COUNT = 5;
 static const int ITEM_SIZE = 77;
 
 //class ZLQtLabelAction : public QLabel {

@@ -20,6 +20,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QScrollBar>
+#include <QtGui/QGraphicsDropShadowEffect>
 
 #include <QtCore/QDebug>
 
@@ -50,8 +51,13 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
 	setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
 	myPicLabel = new QLabel;
-	myPicLabel->setMaximumSize(300,300);
-	myPicLabel->setMinimumSize(77,77);
+
+	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
+	effect->setBlurRadius(12);
+	effect->setOffset(3);
+	myPicLabel->setGraphicsEffect(effect);
+//	myPicLabel->setMaximumSize(300,300);
+//	myPicLabel->setMinimumSize(77,77);
 
 	myTitleLabel = new QLabel;
 	myAuthorLabel = new QLabel;
@@ -76,7 +82,12 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
 	myActionsWidget->setLayout(actionsLayout);
 	previewLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
-	previewLayout->addWidget(myPicLabel);
+	QHBoxLayout *picLayout = new QHBoxLayout;
+	picLayout->addStretch();
+	picLayout->addWidget(myPicLabel);
+	picLayout->addStretch();
+
+	previewLayout->addLayout(picLayout);
 	previewLayout->addWidget(myTitleLabel);
 	previewLayout->addWidget(myAuthorLabel);
 	previewLayout->addWidget(myCategoriesLabel);
@@ -95,6 +106,10 @@ void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
+		if (pixmap.height() > PREVIEW_WIDTH || pixmap.width() > PREVIEW_WIDTH) {
+			pixmap = pixmap.scaled(PREVIEW_WIDTH, PREVIEW_WIDTH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+		}
+		//TODO center
 		myPicLabel->setPixmap(pixmap);
 	}
 

@@ -83,6 +83,8 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 			myBookId = stringAttributeValue(attributes, "hub_id");
 			myURLByType[NetworkItem::URL_COVER] =
 				stringAttributeValue(attributes, "cover_preview");
+			myURLByType[NetworkItem::URL_FULL_COVER] =
+				stringAttributeValue(attributes, "cover");
 
 			std::string url = stringAttributeValue(attributes, "url");
 			if (!url.empty()) {
