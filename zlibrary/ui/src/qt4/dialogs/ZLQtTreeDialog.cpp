@@ -39,6 +39,10 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	myScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	myScrollArea->setWidget(myListWidget);
+	myScrollArea->setFrameShape(QFrame::NoFrame);
+	myScrollArea->setWidgetResizable(true);
+	myScrollArea->setMinimumSize(myListWidget->minimumSize() + QSize(myScrollArea->verticalScrollBar()->width(), 0));
+	myScrollArea->setSizePolicy(myListWidget->sizePolicy());
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	QHBoxLayout *panelLayout = new QHBoxLayout;
@@ -46,13 +50,10 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	QSplitter *splitter = new QSplitter;
 	splitter->addWidget(myScrollArea);
 	splitter->addWidget(myPreviewWidget);
-	splitter->setStretchFactor(0, 2);
+//	splitter->setStretchFactor(0, 2);
 	splitter->setStretchFactor(1, 1);
 
-	mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
-
-	myScrollArea->setMinimumSize(myListWidget->minimumSize());
-	myScrollArea->setSizePolicy(myListWidget->sizePolicy());
+//	mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
 	panelLayout->addWidget(myBackButton);
 	panelLayout->addWidget(mySearchField);

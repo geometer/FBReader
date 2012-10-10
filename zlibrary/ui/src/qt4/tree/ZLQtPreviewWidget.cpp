@@ -67,6 +67,7 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent) {
 	mySummaryScrollArea->setWidget(mySummaryLabel);
 	mySummaryLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 	mySummaryLabel->setMargin(3);
+	//mySummaryLabel->setIndent(3);
 
 	myActionsWidget = new QWidget;
 

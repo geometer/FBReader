@@ -51,8 +51,10 @@ public:
 Q_SIGNALS:
 	void clicked(const ZLTreeNode *node);
 
+
 protected:
 	 void mousePressEvent(QMouseEvent *event);
+	 void paintEvent(QPaintEvent *event);
 private:
 	 const ZLTreeTitledNode *myNode;
 };
