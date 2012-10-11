@@ -35,6 +35,10 @@ const std::string OPDSConstants::REL_ACQUISITION_SAMPLE = "http://opds-spec.org/
 const std::string OPDSConstants::REL_ACQUISITION_CONDITIONAL = "http://data.fbreader.org/acquisition/conditional";
 const std::string OPDSConstants::REL_ACQUISITION_SAMPLE_OR_FULL = "http://data.fbreader.org/acquisition/sampleOrFull";
 
+// Entry level / other
+const std::string OPDSConstants::REL_IMAGE_PREFIX = "http://opds-spec.org/image";
+//const std::string OPDSConstants::REL_IMAGE = "http://opds-spec.org/image";
+const std::string OPDSConstants::REL_IMAGE_THUMBNAIL = "http://opds-spec.org/image/thumbnail";
 // FIXME: This relations have been removed from OPDS-1.0 standard. Use RelationAlias instead???
 const std::string OPDSConstants::REL_COVER = "http://opds-spec.org/cover";
 const std::string OPDSConstants::REL_THUMBNAIL = "http://opds-spec.org/thumbnail";

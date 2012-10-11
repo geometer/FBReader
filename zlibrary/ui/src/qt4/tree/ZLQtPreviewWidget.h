@@ -23,6 +23,8 @@
 #include <QtGui/QWidget>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
+#include <QtGui/QScrollArea>
+#include <QtGui/QVBoxLayout>
 
 #include <ZLTreePageNode.h>
 
@@ -31,16 +33,49 @@ class ZLQtPreviewWidget : public QWidget {
 public:
 	ZLQtPreviewWidget(QWidget *parent = 0);
 	void fill(const ZLTreePageInfo &info);
+	void fillCatalog(const ZLTreeTitledNode *node);
 	void clear();
+
+private:
+	//QHBoxLayout *myLayout;
+	QWidget *myWidget;
+};
+
+class ZLQtPageWidget : public QWidget {
+
+public:
+	ZLQtPageWidget(const ZLTreePageInfo &info, QWidget *parent = 0);
+
+private:
+	void createElements();
+	void setInfo(const ZLTreePageInfo &info);
 
 private:
 	QLabel *myPicLabel;
 	QLabel *myTitleLabel;
 	QLabel *myAuthorLabel;
 	QLabel *myCategoriesLabel;
+	QLabel *mySummaryTitleLabel;
 	QLabel *mySummaryLabel;
 	QWidget *myActionsWidget;
+	QScrollArea *mySummaryScrollArea;
 	QList<QPushButton*> myButtons;
+};
+
+
+class ZLQtCatalogPageWidget : public QWidget {
+
+public:
+	ZLQtCatalogPageWidget(const ZLTreeTitledNode *node, QWidget *parent = 0);
+
+private:
+	void createElements();
+	void setInfo(const ZLTreeTitledNode *);
+
+private:
+	QLabel *myPicLabel;
+	QLabel *myTitleLabel;
+	QLabel *mySubtitleLabel;
 };
 
 class ZLQtButtonAction : public QPushButton {

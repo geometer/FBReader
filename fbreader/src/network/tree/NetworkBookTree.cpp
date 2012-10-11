@@ -98,6 +98,14 @@ shared_ptr<const ZLImage> NetworkBookTree::image() const {
 	return !image.isNull() ? image : FBTree::defaultCoverImage("booktree-book.png");
 }
 
+shared_ptr<const ZLImage> NetworkBookTree::fullImage() const {
+	if (myBook->URLByType.find(NetworkItem::URL_FULL_COVER) == myBook->URLByType.end()) {
+		return 0;
+	}
+	shared_ptr<const ZLImage> fullImage = NetworkCatalogUtil::getImageByUrl(myBook->URLByType[NetworkItem::URL_FULL_COVER]);
+	return !fullImage.isNull() ? fullImage : 0;
+}
+
 const NetworkBookItem &NetworkBookTree::book() const {
 	return (const NetworkBookItem&)*myBook;
 }
@@ -133,6 +141,10 @@ std::string NetworkBookTree::BookItemWrapper::summary() const {
 
 shared_ptr<const ZLImage> NetworkBookTree::BookItemWrapper::image() const {
 	initialize();
+	shared_ptr<const ZLImage> fullImage = myTree.fullImage();
+	if (!fullImage.isNull()) {
+		return fullImage;
+	}
 	return myTree.image();
 }
 

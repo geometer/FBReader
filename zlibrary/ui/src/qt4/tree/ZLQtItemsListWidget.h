@@ -38,8 +38,12 @@ public:
 Q_SIGNALS:
 	void nodeClicked(const ZLTreeNode *node);
 
+public Q_SLOTS:
+	void onNodeClicked(const ZLTreeNode *node);
+
 private:
 	QVBoxLayout *myLayout;
+	QList<ZLQtTreeItem*> myItems;
 };
 
 class ZLQtTreeItem : public QWidget {
@@ -47,14 +51,18 @@ class ZLQtTreeItem : public QWidget {
 
 public:
 	ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent = 0);
+	void setActive(bool active);
+	const ZLTreeTitledNode *getNode() const;
 
 Q_SIGNALS:
 	void clicked(const ZLTreeNode *node);
 
 protected:
 	 void mousePressEvent(QMouseEvent *event);
+	 void paintEvent(QPaintEvent *event);
 private:
 	 const ZLTreeTitledNode *myNode;
+	 bool isActive;
 };
 
 
