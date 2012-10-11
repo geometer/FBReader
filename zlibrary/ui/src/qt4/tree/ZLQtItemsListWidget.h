@@ -21,6 +21,7 @@
 #define __ZLQTITEMSLISTWIDGET_H__
 
 #include <QtGui/QWidget>
+#include <QtGui/QFrame>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
@@ -46,7 +47,7 @@ private:
 	QList<ZLQtTreeItem*> myItems;
 };
 
-class ZLQtTreeItem : public QWidget {
+class ZLQtTreeItem : public QFrame {
 	Q_OBJECT
 
 public:

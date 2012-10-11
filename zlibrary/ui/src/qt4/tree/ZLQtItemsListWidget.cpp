@@ -105,7 +105,10 @@ void ZLQtItemsListWidget::onNodeClicked(const ZLTreeNode *node) {
 }
 
 
-ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWidget(parent), myNode(node), isActive(false) {
+ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QFrame(parent), myNode(node) {
+	setAutoFillBackground(true);
+	setActive(false);
+
 	QHBoxLayout *mainLayout = new QHBoxLayout;
 	QVBoxLayout *titlesLayout = new QVBoxLayout;
 	QHBoxLayout *actionsLayout = new QHBoxLayout;
@@ -154,6 +157,17 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 
 void ZLQtTreeItem::setActive(bool active) {
 	isActive = active;
+
+	//TODO due to different themes on OS, take a color from existed palette
+	QColor mainColor = isActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
+
+	setFrameStyle(QFrame::Panel | QFrame::Raised);
+	setLineWidth(2);
+
+	QPalette p = palette();
+	p.setColor(QPalette::Window, mainColor);
+	setPalette(p);
+
 	update();
 }
 
@@ -167,52 +181,53 @@ void ZLQtTreeItem::mousePressEvent(QMouseEvent *) {
 
 void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
 	//qDebug() << Q_FUNC_INFO << event->rect();
-	QWidget::paintEvent(event);
-	QColor mainColor = isActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
-	int h = mainColor.hue();
-	int s = mainColor.saturation();
-	int v = mainColor.value();
-	QColor shadowColor1 = QColor::fromHsv(h,s,v - 23); //these numbers are getted from experiments with Photoshop
-	QColor shadowColor2 = QColor::fromHsv(h,s,v - 43);
-	QColor shadowColor3 = QColor::fromHsv(h,s,v - 71);
-	QColor shadowColor4 = QColor::fromHsv(h,s,v - 117);
-	QColor shadowColor5 = QColor::fromHsv(h,s,v - 155);
+	QFrame::paintEvent(event);
+	return;
+//	QColor mainColor = isActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
+//	int h = mainColor.hue();
+//	int s = mainColor.saturation();
+//	int v = mainColor.value();
+//	QColor shadowColor1 = QColor::fromHsv(h,s,v - 23); //these numbers are getted from experiments with Photoshop
+//	QColor shadowColor2 = QColor::fromHsv(h,s,v - 43);
+//	QColor shadowColor3 = QColor::fromHsv(h,s,v - 71);
+//	QColor shadowColor4 = QColor::fromHsv(h,s,v - 117);
+//	QColor shadowColor5 = QColor::fromHsv(h,s,v - 155);
 
-	QColor shadowUpColor = QColor::fromHsv(h,s,v - 114);
+//	QColor shadowUpColor = QColor::fromHsv(h,s,v - 114);
 
 
 
-	//QColor shadow(196,193,189); //TODO not hardcode the color automatically
+//	//QColor shadow(196,193,189); //TODO not hardcode the color automatically
 
-	QPainter painter(this);
-	QRect rect = this->rect();
+//	QPainter painter(this);
+//	QRect rect = this->rect();
 
-	//painter.setBrush(mainColor);
-	painter.fillRect(rect, mainColor);
+//	//painter.setBrush(mainColor);
+//	painter.fillRect(rect, mainColor);
 
-	painter.setPen(shadowColor5);
-	painter.drawLine(rect.left() + 2, rect.bottom(), rect.right(), rect.bottom());
+//	painter.setPen(shadowColor5);
+//	painter.drawLine(rect.left() + 2, rect.bottom(), rect.right(), rect.bottom());
 
-	painter.setPen(shadowColor4);
-	//painter.drawLine(rect.left() + 2, rect.top() + 1, rect.right() - 2, rect.top() + 1);
+//	painter.setPen(shadowColor4);
+//	//painter.drawLine(rect.left() + 2, rect.top() + 1, rect.right() - 2, rect.top() + 1);
 
-	painter.setPen(shadowColor3);
-	painter.drawLine(rect.left() + 4, rect.bottom() - 1, rect.right(), rect.bottom() - 1);
+//	painter.setPen(shadowColor3);
+//	painter.drawLine(rect.left() + 4, rect.bottom() - 1, rect.right(), rect.bottom() - 1);
 
-	//painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
+//	//painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
 
-	painter.drawLine(rect.right(), rect.top() + 2, rect.right(), rect.bottom() - 1);
-	painter.drawLine(rect.left() + 1, rect.top(), rect.left() + 1, rect.bottom() - 1);
+//	painter.drawLine(rect.right(), rect.top() + 2, rect.right(), rect.bottom() - 1);
+//	painter.drawLine(rect.left() + 1, rect.top(), rect.left() + 1, rect.bottom() - 1);
 
-	painter.setPen(shadowColor2);
-	painter.drawLine(rect.left(), rect.top() + 1, rect.left(), rect.bottom() - 2);
-	painter.drawLine(rect.right() - 1, rect.top() + 2, rect.right() - 1, rect.bottom() - 2);
+//	painter.setPen(shadowColor2);
+//	painter.drawLine(rect.left(), rect.top() + 1, rect.left(), rect.bottom() - 2);
+//	painter.drawLine(rect.right() - 1, rect.top() + 2, rect.right() - 1, rect.bottom() - 2);
 
-	painter.setPen(shadowColor1);
-	painter.drawLine(rect.left() + 5, rect.bottom() - 2, rect.right() - 2, rect.bottom() - 2);
-	painter.drawLine(rect.right() - 2, rect.top() + 2, rect.right() - 2, rect.bottom() - 2);
+//	painter.setPen(shadowColor1);
+//	painter.drawLine(rect.left() + 5, rect.bottom() - 2, rect.right() - 2, rect.bottom() - 2);
+//	painter.drawLine(rect.right() - 2, rect.top() + 2, rect.right() - 2, rect.bottom() - 2);
 
-	painter.setPen(shadowUpColor);
-	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
+//	painter.setPen(shadowUpColor);
+//	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
 
 }

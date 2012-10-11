@@ -3,13 +3,13 @@
   ** fix crash when book info window opens
   ** review async-network-ui branch
 * ...
-  ** merge 'sensible-browser' patch into the mainstream
+  DONE merge 'sensible-browser' patch into the mainstream
 * doc plugin
   ** review "doc" branch
   ** check if word inserts "left" alignment mark in each file
   ** in doc subdirectory, add "based on catdoc, wvware & antiword code" comment, with links to projects
 * network library window UI
-  ** for items, use standard frame border for "3d" view
+  DONE for items, use standard frame border for "3d" view
   ** by default, window should be vertically splitted into 50:50 parts
   ** min horizontal size for each part (catalogs list & book info) should be 1/3 of full window width
   ** if I resize window, "parts" should be resized proportionally
