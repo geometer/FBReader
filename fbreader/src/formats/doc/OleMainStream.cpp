@@ -38,7 +38,7 @@ OleMainStream::Style::Style() :
 	LeftIndent(0),
 	FirstLineIndent(0),
 	RightIndent(0),
-	Alignment(ALIGNMENT_LEFT) {
+	Alignment(ALIGNMENT_JUSTIFY) {
 }
 
 OleMainStream::CharInfo::CharInfo() : FontStyle(FONT_REGULAR), FontSize(20) {
