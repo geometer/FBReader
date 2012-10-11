@@ -217,6 +217,7 @@ public:
 public:
 	const ZLResource &resource() const;
 	shared_ptr<const ZLImage> image() const;
+	shared_ptr<const ZLImage> fullImage() const;
 	std::string title() const;
 	std::string subtitle() const;
 

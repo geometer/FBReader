@@ -1,3 +1,27 @@
+* NP
+  ** run browser correctly on mac
+  ** fix crash when book info window opens
+  ** review async-network-ui branch
+* ...
+  ** merge 'sensible-browser' patch into the mainstream
+* doc plugin
+  ** review "doc" branch
+  ** check if word inserts "left" alignment mark in each file
+  ** in doc subdirectory, add "based on catdoc, wvware & antiword code" comment, with links to projects
+* network library window UI
+  ** for items, use standard frame border for "3d" view
+  ** by default, window should be vertically splitted into 50:50 parts
+  ** min horizontal size for each part (catalogs list & book info) should be 1/3 of full window width
+  ** if I resize window, "parts" should be resized proportionally
+  ** double click on list item should expand the catalog
+  ** in book info view, one scroller for all items should be used
+  ** move all buttons except 'open catalog/expand' to right panel
+  ** add better icon for books with no covers
+  ** in book info window show "related links" section
+    *** implement related links in litres
+    *** implement related links support for OPDS
+
+
 DONE can not open feedbooks catalog item: it said 'Catalog is empty'
 DONE синхронизировать код ePub из FBReaderJ/native
 DONE удалить "Bound to IP" в диалоге входа Литрес, считать, что флаг всегда стоит
@@ -11,10 +35,27 @@ DONE при использовании API убрать "лишние" сорт�
 		* подстраничка подгрузка данных
 		* загрузка книги
 	* UI
+		DONE добавить splitter
+		DONE отделение items друг от друга
+		DONE splitter - соотношение виджетов по умолчанию должно быть примерно 2:1
+		DONE list widget -- selectable items
+		* preview widget -- добавить прокрутку как в андроиде
+		* list widget - не увеличивать маленькие обложки, а просто центрировать
+		DONE preview widget - всегда какая-то информация справа
+		* preview widget - для BookItem поменять размер для обложки
+		* BUG: preview widget - если поле отсутсвует, вместо него просто пустое пространство
+		* BUG: list widget - при загрузке элементов, они растягиваются по всему доступному месту.	
+		? добавить сохранение геометрии окна
+		* закрывать окно библиотеки при нажатии кнопки "скачать"/"открыть книгу"
+		DONE preview widget - для BookItem добавить обозначения "название", "авторы" и т.п.
+		* preview widget - добавить перевод для полей в book info для всех языков, кроме русского
+		DONE preview widget - скрывать пустые поля
+		* preview widget - добавить возможность прокрутки
+		DONE itemlist wiget - ссылки -> кнопки
+		* показ waiting icon на плашке при загрузке, до тех пор, пока не загрузится
 		* внешний вид плашек (тут нужно поэкспериментировать)
 		* прогрессбар на плашке с книгой при ее загрузке
 			* что будет происходить, если гружу две книги -- какую открыть?
-		* загрузка подэлементов каталога с wait icon на плашке
 		* обработка особенных ситуаций:
 			* что происходит, когда нажимаем кнопку "Сетевая библиотека" несколько раз подряд?
 			* что происходит, если запросить requestChildren дважды подряд?

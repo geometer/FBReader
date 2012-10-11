@@ -140,11 +140,11 @@ NetworkItem::UrlInfoCollection OPDSBookItem::getUrls(const OPDSLink &networkLink
 		const std::string href = ZLNetworkUtil::url(baseUrl, link.href());
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = networkLink.relation(link.rel(), link.type());
-		if (rel == OPDSConstants::REL_COVER) {
+		if (ZLStringUtil::stringStartsWith(rel, OPDSConstants::REL_IMAGE_PREFIX) || rel == OPDSConstants::REL_COVER) {
 			if (urlMap[NetworkItem::URL_COVER].empty() && ZLMimeType::isImage(type)) {
 				urlMap[NetworkItem::URL_COVER] = href;
 			}
-		} else if (rel == OPDSConstants::REL_THUMBNAIL) {
+		} else if (rel == OPDSConstants::REL_THUMBNAIL || rel == OPDSConstants::REL_IMAGE_THUMBNAIL) {
 			if (ZLMimeType::isImage(type)) {
 				urlMap[NetworkItem::URL_COVER] = href;
 			}

@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <QtGui/QSplitter>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QScrollBar>
@@ -35,25 +36,35 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	myBackButton = new QPushButton("Back"); //TODO add to resources;
 	mySearchField = new QLineEdit("type to search..."); // TODO add to resources;
 
-	myScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	myScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	myScrollArea->setWidget(myListWidget);
+	myScrollArea->setFrameShape(QFrame::NoFrame);
+	myScrollArea->setWidgetResizable(true);
+	myScrollArea->setMinimumSize(myListWidget->minimumSize() + QSize(myScrollArea->verticalScrollBar()->width(), 0));
+	myScrollArea->setSizePolicy(myListWidget->sizePolicy());
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	QHBoxLayout *panelLayout = new QHBoxLayout;
-	QHBoxLayout *layout = new QHBoxLayout;
-	layout->addWidget(myScrollArea);
-	layout->addWidget(myPreviewWidget);
+
+	QSplitter *splitter = new QSplitter;
+	splitter->addWidget(myScrollArea);
+	splitter->addWidget(myPreviewWidget);
+//	splitter->setStretchFactor(0, 2);
+	splitter->setStretchFactor(1, 1);
+
+//	mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
+
 	panelLayout->addWidget(myBackButton);
 	panelLayout->addWidget(mySearchField);
 	//panelLayout->addStretch();
 	mainLayout->addLayout(panelLayout);
-	mainLayout->addLayout(layout);
+	mainLayout->addWidget(splitter);
 	this->setLayout(mainLayout);
 
-	QPalette palette = myScrollArea->palette();
-	palette.setBrush(QPalette::All, QPalette::Window, QColor(242,242,242)); //gray
-	myScrollArea->setPalette(palette);
+//	QPalette palette = myScrollArea->palette();
+//	palette.setBrush(QPalette::All, QPalette::Window, QColor(242,242,242)); //gray
+//	myScrollArea->setPalette(palette);
 
 	connect(myListWidget, SIGNAL(nodeClicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
@@ -96,6 +107,8 @@ void ZLQtTreeDialog::onNodeClicked(const ZLTreeNode *node) {
 		if (!info.isNull()) {
 			myPreviewWidget->fill(*info);
 		}
+	} else if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
+		myPreviewWidget->fillCatalog(titledNode);
 	}
 }
 
