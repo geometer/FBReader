@@ -277,6 +277,8 @@ void DocBookReader::handleParagraphStyle(const OleMainStream::Style &styleInfo) 
 	shared_ptr<ZLTextStyleEntry> entry = new ZLTextStyleEntry();
 
 	switch (styleInfo.Alignment) {
+		default: // in that case, use default alignment type
+			break;
 		case OleMainStream::Style::ALIGNMENT_LEFT:
 			entry->setAlignmentType(ALIGN_LEFT);
 			break;

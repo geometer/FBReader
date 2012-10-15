@@ -71,11 +71,12 @@ public:
 			ALIGNMENT_LEFT     = 0x00,
 			ALIGNMENT_CENTER   = 0x01,
 			ALIGNMENT_RIGHT    = 0x02,
-			ALIGNMENT_JUSTIFY  = 0x03
+			ALIGNMENT_JUSTIFY  = 0x03,
+			ALIGNMENT_DEFAULT // for case if alignment is not setted by word
 		};
 
-		//style Ids:
-		//(this is not full list of possible style ids, enum is used for using in switch-case)
+		// style Ids:
+		// (this is not full list of possible style ids, enum is used for using in switch-case)
 		enum StyleID {
 			STYLE_H1       = 0x1,
 			STYLE_H2       = 0x2,
