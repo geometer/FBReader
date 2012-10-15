@@ -445,13 +445,13 @@ bool OleMainStream::readStylesheet(const char *headerBuffer, const OleEntry &tab
 
 			const unsigned int styleAndBaseType = OleUtil::getU2Bytes(buffer, offset + 4);
 			const unsigned int styleType = styleAndBaseType % 16;
-			const Style::StyleID baseStyle = (Style::StyleID)(styleAndBaseType / 16);
-			if (baseStyle == Style::STYLE_NIL || baseStyle == Style::STYLE_USER) {
-				//if based on nil or user style, left defaukt
+			const unsigned int baseStyleId = styleAndBaseType / 16;
+			if (baseStyleId == Style::STYLE_NIL || baseStyleId == Style::STYLE_USER) {
+				//if based on nil or user style, left default
 			} else {
-				int baseStyleIndex = getStyleIndex(baseStyle, isFilled, myStyleSheet);
+				int baseStyleIndex = getStyleIndex(baseStyleId, isFilled, myStyleSheet);
 				if (baseStyleIndex < 0) {
-					//this base style is not filled yet, sp pass it at some time
+					//this base style is not filled yet, so pass it at some time
 					continue;
 				}
 				styleInfo = myStyleSheet.at(baseStyleIndex);
@@ -461,7 +461,7 @@ bool OleMainStream::readStylesheet(const char *headerBuffer, const OleEntry &tab
 			// parse STD structure
 			unsigned int tmp = OleUtil::getU2Bytes(buffer, offset + 6);
 			unsigned int upxCount = tmp % 16;
-			styleInfo.StyleIdNext = (Style::StyleID)(tmp / 16);
+			styleInfo.StyleIdNext = tmp / 16;
 
 			//adding current style
 			myStyleSheet[index] = styleInfo;
@@ -486,7 +486,7 @@ bool OleMainStream::readStylesheet(const char *headerBuffer, const OleEntry &tab
 			//for style info styleType must be equal 1
 			if (styleType == 1 && upxCount >= 1) {
 				if (upxLen >= 2) {
-					styleInfo.StyleIdCurrent = (Style::StyleID)OleUtil::getU2Bytes(buffer, offset + pos + 2);
+					styleInfo.StyleIdCurrent = OleUtil::getU2Bytes(buffer, offset + pos + 2);
 					getStyleInfo(0, buffer + offset + pos + 4, upxLen - 2, styleInfo);
 					myStyleSheet[index] = styleInfo;
 				}
@@ -549,7 +549,7 @@ bool OleMainStream::readCharInfoTable(const char *headerBuffer, const OleEntry &
 			if (!offsetToCharPos(offset, charPos, myPieces)) {
 				continue;
 			}
-			Style::StyleID styleId = (Style::StyleID)getIstdByCharPos(charPos, myStyleInfoList);
+			unsigned int styleId = getStyleIdByCharPos(charPos, myStyleInfoList);
 
 			CharInfo charInfo = getStyleFromStylesheet(styleId, myStyleSheet).CurrentCharInfo;
 			if (chpxOffset != 0) {
@@ -664,7 +664,7 @@ bool OleMainStream::readParagraphStyleTable(const char *headerBuffer, const OleE
 				len = OleUtil::getU1Byte(formatPageBuffer, papxOffset) * 2;
 			}
 
-			const Style::StyleID styleId = (Style::StyleID)OleUtil::getU2Bytes(formatPageBuffer, papxOffset + 1);
+			const unsigned int styleId = OleUtil::getU2Bytes(formatPageBuffer, papxOffset + 1);
 			Style styleInfo = getStyleFromStylesheet(styleId, myStyleSheet);
 
 			if (len >= 3) {
@@ -811,7 +811,7 @@ void OleMainStream::getStyleInfo(unsigned int papxOffset, const char *grpprlBuff
 
 }
 
-void OleMainStream::getCharInfo(unsigned int chpxOffset, Style::StyleID /*styleId*/, const char *grpprlBuffer, unsigned int bytes, CharInfo &charInfo) {
+void OleMainStream::getCharInfo(unsigned int chpxOffset, unsigned int /*styleId*/, const char *grpprlBuffer, unsigned int bytes, CharInfo &charInfo) {
 	unsigned int sprm = 0; //single propery modifier
 	unsigned int offset = 0;
 	while (bytes >= offset + 2) {
@@ -912,7 +912,7 @@ bool OleMainStream::getInlineImageInfo(unsigned int chpxOffset, const char *grpp
 	return isFound;
 }
 
-OleMainStream::Style OleMainStream::getStyleFromStylesheet(Style::StyleID styleId, const StyleSheet &stylesheet) {
+OleMainStream::Style OleMainStream::getStyleFromStylesheet(unsigned int styleId, const StyleSheet &stylesheet) {
 	//TODO optimize it: StyleSheet can be map structure with styleId key
 	Style style;
 	if (styleId != Style::STYLE_INVALID && styleId != Style::STYLE_NIL && styleId != Style::STYLE_USER) {
@@ -926,7 +926,7 @@ OleMainStream::Style OleMainStream::getStyleFromStylesheet(Style::StyleID styleI
 	return style;
 }
 
-int OleMainStream::getStyleIndex(Style::StyleID styleId, const std::vector<bool> &isFilled, const StyleSheet &stylesheet) {
+int OleMainStream::getStyleIndex(unsigned int styleId, const std::vector<bool> &isFilled, const StyleSheet &stylesheet) {
 	//TODO optimize it: StyleSheet can be map structure with styleId key
 	//in that case, this method will be excess
 	if (styleId == Style::STYLE_INVALID) {
@@ -940,7 +940,7 @@ int OleMainStream::getStyleIndex(Style::StyleID styleId, const std::vector<bool>
 	return -1;
 }
 
-unsigned int OleMainStream::getIstdByCharPos(unsigned int charPos, const StyleInfoList &styleInfoList) {
+unsigned int OleMainStream::getStyleIdByCharPos(unsigned int charPos, const StyleInfoList &styleInfoList) {
 	unsigned int styleId = Style::STYLE_INVALID;
 	for (size_t i = 0; i < styleInfoList.size(); ++i) {
 		const Style &info = styleInfoList.at(i).second;

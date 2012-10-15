@@ -74,6 +74,8 @@ public:
 			ALIGNMENT_JUSTIFY  = 0x03
 		};
 
+		//style Ids:
+		//(this is not full list of possible style ids, enum is used for using in switch-case)
 		enum StyleID {
 			STYLE_H1       = 0x1,
 			STYLE_H2       = 0x2,
@@ -83,8 +85,8 @@ public:
 			STYLE_INVALID  = 0xFFFF
 		};
 
-		StyleID StyleIdCurrent;
-		StyleID StyleIdNext;        // Next style unless overruled
+		unsigned int StyleIdCurrent;
+		unsigned int StyleIdNext;        // Next style unless overruled
 
 		bool HasPageBreakBefore;
 		unsigned int BeforeParagraphIndent;  // Vertical indent before paragraph, pixels
@@ -173,14 +175,14 @@ private: //readPieceTable helpers methods
 
 private: //formatting reader helpers methods
 	static unsigned int getPrlLength(const char *grpprlBuffer, unsigned int byteNumber);
-	static void getCharInfo(unsigned int chpxOffset, Style::StyleID styleId, const char *grpprlBuffer, unsigned int bytes, CharInfo &charInfo);
+	static void getCharInfo(unsigned int chpxOffset, unsigned int styleId, const char *grpprlBuffer, unsigned int bytes, CharInfo &charInfo);
 	static void getStyleInfo(unsigned int papxOffset, const char *grpprlBuffer, unsigned int bytes, Style &styleInfo);
 	static void getSectionInfo(const char *grpprlBuffer, size_t bytes, SectionInfo &sectionInfo);
 	static bool getInlineImageInfo(unsigned int chpxOffset, const char *grpprlBuffer, unsigned int bytes, InlineImageInfo &pictureInfo);
 
-	static Style getStyleFromStylesheet(Style::StyleID styleId, const StyleSheet &stylesheet);
-	static int getStyleIndex(Style::StyleID styleId, const std::vector<bool> &isFilled, const StyleSheet &stylesheet);
-	static unsigned int getIstdByCharPos(unsigned int offset, const StyleInfoList &styleInfoList);
+	static Style getStyleFromStylesheet(unsigned int styleId, const StyleSheet &stylesheet);
+	static int getStyleIndex(unsigned int styleId, const std::vector<bool> &isFilled, const StyleSheet &stylesheet);
+	static unsigned int getStyleIdByCharPos(unsigned int offset, const StyleInfoList &styleInfoList);
 
 	static bool offsetToCharPos(unsigned int offset, unsigned int &charPos, const Pieces &pieces);
 	static bool readToBuffer(std::string &result, unsigned int offset, size_t length, OleStream &stream);

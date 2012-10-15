@@ -310,7 +310,7 @@ void DocBookReader::handleParagraphStyle(const OleMainStream::Style &styleInfo) 
 	myModelReader.addStyleEntry(*myCurrentStyleEntry);
 
 	// we should have the same font style, as for the previous paragraph,
-  // if it has the same StyleIdCurrent
+	// if it has the same StyleIdCurrent
 	if (myCurrentStyleInfo.StyleIdCurrent != OleMainStream::Style::STYLE_INVALID &&
 		  myCurrentStyleInfo.StyleIdCurrent == styleInfo.StyleIdCurrent) {
 		for (size_t i = 0; i < myKindStack.size(); ++i) {
@@ -318,7 +318,7 @@ void DocBookReader::handleParagraphStyle(const OleMainStream::Style &styleInfo) 
 		}
 	} else {
 		myKindStack.clear();
-    // fill by the fontstyle, that was got from Stylesheet
+		// fill by the fontstyle, that was got from Stylesheet
 		handleFontStyle(styleInfo.CurrentCharInfo.FontStyle);
 	}
 	myCurrentStyleInfo = styleInfo;
