@@ -193,7 +193,6 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 		QPushButton *actionButton = new ZLQtButtonAction(action);
 		QString text = QString::fromStdString(info.actionText(action));
 		actionButton->setText(text);
-		myButtons.push_back(actionButton);
 		myActionsWidget->layout()->addWidget(actionButton);
 	}
 }
@@ -212,7 +211,12 @@ void ZLQtCatalogPageWidget::createElements() {
 	myTitleLabel->setAlignment(Qt::AlignCenter);
 	mySubtitleLabel->setAlignment(Qt::AlignCenter);
 
+	myActionsWidget = new QWidget;
+
 	QVBoxLayout *previewLayout = new QVBoxLayout;
+
+	QVBoxLayout *actionsLayout = new QVBoxLayout;
+	myActionsWidget->setLayout(actionsLayout);
 
 	QHBoxLayout *picLayout = new QHBoxLayout;
 	picLayout->addStretch();
@@ -223,6 +227,7 @@ void ZLQtCatalogPageWidget::createElements() {
 	previewLayout->addLayout(picLayout);
 	previewLayout->addWidget(myTitleLabel);
 	previewLayout->addWidget(mySubtitleLabel);
+	previewLayout->addWidget(myActionsWidget);
 	previewLayout->addStretch();
 
 	setLayout(previewLayout);
@@ -244,6 +249,16 @@ void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 	}
 	if (!node->subtitle().empty()) {
 		mySubtitleLabel->setText(QString::fromStdString(node->subtitle()));
+	}
+
+	foreach(shared_ptr<ZLTreeAction> action, node->actions()) {
+		if (!action->makesSense()) {
+			continue;
+		}
+		QPushButton *actionButton = new ZLQtButtonAction(action);
+		QString text = QString::fromStdString(node->actionText(action));
+		actionButton->setText(text);
+		myActionsWidget->layout()->addWidget(actionButton);
 	}
 
 }

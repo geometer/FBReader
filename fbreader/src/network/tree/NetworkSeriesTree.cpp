@@ -38,7 +38,7 @@ NetworkSeriesTree::NetworkSeriesTree(NetworkTree *parent, const std::string &ser
 }
 
 void NetworkSeriesTree::init() {
-	registerExpandTreeAction();
+	//registerExpandTreeAction();
 }
 
 std::string NetworkSeriesTree::title() const {

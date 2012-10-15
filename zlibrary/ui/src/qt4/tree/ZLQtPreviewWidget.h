@@ -59,7 +59,6 @@ private:
 	QLabel *mySummaryLabel;
 	QWidget *myActionsWidget;
 	QScrollArea *mySummaryScrollArea;
-	QList<QPushButton*> myButtons;
 };
 
 
@@ -76,6 +75,7 @@ private:
 	QLabel *myPicLabel;
 	QLabel *myTitleLabel;
 	QLabel *mySubtitleLabel;
+	QWidget *myActionsWidget;
 };
 
 class ZLQtButtonAction : public QPushButton {

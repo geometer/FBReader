@@ -112,7 +112,6 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QFra
 
 	QHBoxLayout *mainLayout = new QHBoxLayout;
 	QVBoxLayout *titlesLayout = new QVBoxLayout;
-	QHBoxLayout *actionsLayout = new QHBoxLayout;
 
 	QLabel *icon = new QLabel;
 	QLabel *title = new QLabel(QString("<b>%1</b>").arg(QString::fromStdString(node->title())));
@@ -126,21 +125,6 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QFra
 	titlesLayout->addWidget(title);
 	titlesLayout->addWidget(subtitle);
 
-
-	foreach(shared_ptr<ZLTreeAction> action, node->actions()) {
-		if (!action->makesSense()) {
-			continue;
-		}
-		QPushButton *actionButton = new ZLQtButtonAction(action);
-		QString text = QString::fromStdString(node->actionText(action));
-		actionButton->setText(text);
-		//actionButton->setCursor(Qt::PointingHandCursor);
-		actionsLayout->addWidget(actionButton);
-	}
-
-	actionsLayout->addStretch();
-
-	titlesLayout->addLayout(actionsLayout);
 	shared_ptr<const ZLImage> image = node->image();
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());

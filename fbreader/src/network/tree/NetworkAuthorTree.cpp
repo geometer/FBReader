@@ -37,7 +37,7 @@ NetworkAuthorTree::NetworkAuthorTree(NetworkTree *parent, const NetworkBookItem:
 }
 
 void NetworkAuthorTree::init() {
-	registerExpandTreeAction();
+	//registerExpandTreeAction();
 }
 
 std::string NetworkAuthorTree::title() const {

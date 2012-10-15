@@ -15,7 +15,7 @@ DONE doc plugin
   ** if I resize window, "parts" should be resized proportionally
   DONE double click on list item should expand the catalog
   ** in book info view, one scroller for all items should be used
-  ** move all buttons except 'open catalog/expand' to right panel
+  DONE move all buttons except 'open catalog/expand' to right panel
   ** add better icon for books with no covers
   ** in book info window show "related links" section
     *** implement related links in litres

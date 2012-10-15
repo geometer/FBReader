@@ -102,7 +102,7 @@ NetworkCatalogRootTree::NetworkCatalogRootTree(RootTree *parent, NetworkLink &li
 
 void NetworkCatalogRootTree::init() {
 	shared_ptr<NetworkAuthenticationManager> mgr = myLink.authenticationManager();
-	registerAction(new ExpandCatalogAction(*this));
+	//registerAction(new ExpandCatalogAction(*this));
 	//registerAction(new ReloadAction(*this));
 	if (!mgr.isNull()) {
 		registerAction(new LoginAction(*mgr));
