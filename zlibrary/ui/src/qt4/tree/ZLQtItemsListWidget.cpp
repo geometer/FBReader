@@ -89,6 +89,7 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 			//qDebug() << QString::fromStdString(titledNode->title());
 			ZLQtTreeItem *item = new ZLQtTreeItem(titledNode);
 			connect(item, SIGNAL(clicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*))); //action ExpandAction used instead
+			connect(item, SIGNAL(doubleClicked(const ZLTreeNode*)), this, SIGNAL(nodeDoubleClicked(const ZLTreeNode*)));
 			myLayout->addWidget(item);
 			myItems.push_back(item);
 		}
@@ -179,6 +180,10 @@ void ZLQtTreeItem::mousePressEvent(QMouseEvent *) {
 	emit clicked(myNode);
 }
 
+void ZLQtTreeItem::mouseDoubleClickEvent(QMouseEvent *) {
+	emit doubleClicked(myNode);
+}
+
 void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
 	//qDebug() << Q_FUNC_INFO << event->rect();
 	QFrame::paintEvent(event);
@@ -228,6 +233,6 @@ void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
 //	painter.drawLine(rect.right() - 2, rect.top() + 2, rect.right() - 2, rect.bottom() - 2);
 
 //	painter.setPen(shadowUpColor);
-//	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
+	//	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
 
 }

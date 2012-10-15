@@ -38,6 +38,7 @@ public:
 
 Q_SIGNALS:
 	void nodeClicked(const ZLTreeNode *node);
+	void nodeDoubleClicked(const ZLTreeNode *node);
 
 public Q_SLOTS:
 	void onNodeClicked(const ZLTreeNode *node);
@@ -57,9 +58,11 @@ public:
 
 Q_SIGNALS:
 	void clicked(const ZLTreeNode *node);
+	void doubleClicked(const ZLTreeNode *node);
 
 protected:
 	 void mousePressEvent(QMouseEvent *event);
+	 void mouseDoubleClickEvent(QMouseEvent *event);
 	 void paintEvent(QPaintEvent *event);
 private:
 	 const ZLTreeTitledNode *myNode;

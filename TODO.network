@@ -4,16 +4,16 @@
   ** review async-network-ui branch
 * ...
   DONE merge 'sensible-browser' patch into the mainstream
-* doc plugin
-  ** review "doc" branch
-  ** check if word inserts "left" alignment mark in each file
-  ** in doc subdirectory, add "based on catdoc, wvware & antiword code" comment, with links to projects
+DONE doc plugin
+  DONE review "doc" branch
+  DONE check if word inserts "left" alignment mark in each file
+
 * network library window UI
   DONE for items, use standard frame border for "3d" view
   ** by default, window should be vertically splitted into 50:50 parts
   ** min horizontal size for each part (catalogs list & book info) should be 1/3 of full window width
   ** if I resize window, "parts" should be resized proportionally
-  ** double click on list item should expand the catalog
+  DONE double click on list item should expand the catalog
   ** in book info view, one scroller for all items should be used
   ** move all buttons except 'open catalog/expand' to right panel
   ** add better icon for books with no covers

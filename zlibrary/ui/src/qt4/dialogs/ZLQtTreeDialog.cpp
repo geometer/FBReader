@@ -67,6 +67,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 //	myScrollArea->setPalette(palette);
 
 	connect(myListWidget, SIGNAL(nodeClicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*)));
+	connect(myListWidget, SIGNAL(nodeDoubleClicked(const ZLTreeNode*)), this, SLOT(onNodeDoubleClicked(const ZLTreeNode*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
 
 }
@@ -109,6 +110,23 @@ void ZLQtTreeDialog::onNodeClicked(const ZLTreeNode *node) {
 		}
 	} else if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
 		myPreviewWidget->fillCatalog(titledNode);
+	}
+}
+
+void ZLQtTreeDialog::onNodeDoubleClicked(const ZLTreeNode *node) {
+	if (const ZLTreePageNode *pageNode = zlobject_cast<const ZLTreePageNode*>(node)) {
+		(void)pageNode;
+		//TODO maybe use different kind of check
+		//isExpandable method for i.e.
+		return;
+	}
+	//TODO fix this hack
+	ZLTreeNode *clickedNode = const_cast<ZLTreeNode*>(node);
+	if (clickedNode->children().empty()) {
+		clickedNode->requestChildren(0); //TODO set listener here
+	}
+	if (!clickedNode->children().empty()) {
+		onExpandRequest(clickedNode);
 	}
 }
 

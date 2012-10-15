@@ -55,6 +55,7 @@ private:
 
 private Q_SLOTS:
 	void onNodeClicked(const ZLTreeNode* node);
+	void onNodeDoubleClicked(const ZLTreeNode* node);
 	void onBackButton();
 
 
