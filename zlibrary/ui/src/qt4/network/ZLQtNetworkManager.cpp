@@ -116,7 +116,7 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 		prepareReply(scope, networkRequest);
 	}
 	if (!replies.isEmpty()) {
-		eventLoop.exec(QEventLoop::AllEvents);
+		eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
 	}
 
 	return errors.join(QLatin1String("\n")).toStdString();
