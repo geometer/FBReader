@@ -14,7 +14,7 @@ DONE doc plugin
   ** min horizontal size for each part (catalogs list & book info) should be 1/3 of full window width
   ** if I resize window, "parts" should be resized proportionally
   DONE double click on list item should expand the catalog
-  ** in book info view, one scroller for all items should be used
+  DONE in book info view, one scroller for all items should be used
   DONE move all buttons except 'open catalog/expand' to right panel
   ** add better icon for books with no covers
   ** in book info window show "related links" section
@@ -50,7 +50,6 @@ DONE при использовании API убрать "лишние" сорт�
 		DONE preview widget - для BookItem добавить обозначения "название", "авторы" и т.п.
 		* preview widget - добавить перевод для полей в book info для всех языков, кроме русского
 		DONE preview widget - скрывать пустые поля
-		* preview widget - добавить возможность прокрутки
 		DONE itemlist wiget - ссылки -> кнопки
 		* показ waiting icon на плашке при загрузке, до тех пор, пока не загрузится
 		* внешний вид плашек (тут нужно поэкспериментировать)

@@ -48,7 +48,7 @@ void ZLQtButtonAction::onClicked() {
 
 ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent), myWidget(0) {
 	setMinimumWidth(PREVIEW_WIDTH);
-	setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+	setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 
 	QHBoxLayout *layout = new QHBoxLayout;
 	layout->setSizeConstraint(QLayout::SetMinimumSize);
@@ -59,14 +59,14 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent), myWidge
 void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 	clear();
 	myWidget = new ZLQtPageWidget(info);
-	myWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+	myWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 	layout()->addWidget(myWidget);
 }
 
 void ZLQtPreviewWidget::fillCatalog(const ZLTreeTitledNode *node) {
 	clear();
 	myWidget = new ZLQtCatalogPageWidget(node);
-	myWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+	myWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
 	layout()->addWidget(myWidget);
 }
 
@@ -101,24 +101,29 @@ void ZLQtPageWidget::createElements() {
 	mySummaryTitleLabel = new QLabel;
 	mySummaryLabel = new QLabel;
 
-	mySummaryScrollArea = new QScrollArea;
-	mySummaryScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	mySummaryScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	mySummaryScrollArea->setWidgetResizable(true);
-	mySummaryScrollArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
-	mySummaryScrollArea->setWidget(mySummaryLabel);
+	myScrollArea = new QScrollArea;
+	myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	myScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	myScrollArea->setWidgetResizable(true);
+	myScrollArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+
 	mySummaryLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 	mySummaryLabel->setMargin(3);
 	//mySummaryLabel->setMaximumHeight(200);
-	mySummaryLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+	mySummaryLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
 	//mySummaryLabel->setIndent(3);
 
 	myActionsWidget = new QWidget;
+
+	QVBoxLayout *layout = new QVBoxLayout;
+	QWidget *containerWidget = new QWidget;
 
 	QVBoxLayout *previewLayout = new QVBoxLayout;
 	QHBoxLayout *actionsLayout = new QHBoxLayout;
 	myActionsWidget->setLayout(actionsLayout);
 	previewLayout->setSizeConstraint(QLayout::SetMinimumSize);
+
+	layout->setSizeConstraint(QLayout::SetMinimumSize);
 
 	QHBoxLayout *picLayout = new QHBoxLayout;
 	picLayout->addStretch();
@@ -130,13 +135,17 @@ void ZLQtPageWidget::createElements() {
 	previewLayout->addWidget(myAuthorLabel);
 	previewLayout->addWidget(myCategoriesLabel);
 	previewLayout->addWidget(mySummaryTitleLabel);
-	previewLayout->addWidget(mySummaryScrollArea);
-	previewLayout->addWidget(myActionsWidget);
-	previewLayout->addStretch();
+	previewLayout->addWidget(mySummaryLabel);
+	//previewLayout->addStretch();
 
-	setLayout(previewLayout);
+	containerWidget->setLayout(previewLayout);
+	myScrollArea->setWidget(containerWidget);
 
-	mySummaryScrollArea->hide();
+	layout->setContentsMargins(0,0,0,0);
+
+	layout->addWidget(myScrollArea);
+	layout->addWidget(myActionsWidget);
+	setLayout(layout);
 }
 
 void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
@@ -178,7 +187,7 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 		static QString annotation = QString::fromStdString(resource["annotation"].value());
 		mySummaryLabel->setText(QString::fromStdString(info.summary()));
 		mySummaryTitleLabel->setText(QString("<b>%1</b>").arg(annotation));
-		mySummaryScrollArea->show();
+//		mySummaryScrollArea->show();
 	}
 
 	myTitleLabel->setWordWrap(true);

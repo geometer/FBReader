@@ -51,6 +51,8 @@ private:
 	void setInfo(const ZLTreePageInfo &info);
 
 private:
+	QScrollArea *myScrollArea;
+
 	QLabel *myPicLabel;
 	QLabel *myTitleLabel;
 	QLabel *myAuthorLabel;
@@ -58,7 +60,6 @@ private:
 	QLabel *mySummaryTitleLabel;
 	QLabel *mySummaryLabel;
 	QWidget *myActionsWidget;
-	QScrollArea *mySummaryScrollArea;
 };
 
 
