@@ -37,13 +37,17 @@ public:
 		const std::string &seriesTitle,
 		unsigned int indexInSeries,
 		const UrlInfoCollection &urlByType,
-		const std::vector<shared_ptr<BookReference> > references
+		const std::vector<shared_ptr<BookReference> > references,
+		const std::vector<std::string> authorIds
 	);
 
 	std::vector<shared_ptr<NetworkItem> > getRelatedCatalogsItems() const;
 
 protected:
 	const ZLResource &resource(const std::string &resourceKey) const;
+
+private:
+	std::vector<std::string> myAuthorIds;
 };
 
 #endif /* __LITRESBOOKITEM_H__ */

@@ -37,6 +37,7 @@ static const std::string TAG_AUTHOR = "author";
 static const std::string TAG_FIRST_NAME = "first-name";
 static const std::string TAG_MIDDLE_NAME = "middle-name";
 static const std::string TAG_LAST_NAME = "last-name";
+static const std::string TAG_AUTHOR_ID = "id";
 static const std::string TAG_BOOK_TITLE = "book-title";
 static const std::string TAG_ANNOTATION = "annotation";
 static const std::string TAG_DATE = "date";
@@ -133,7 +134,8 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 				mySeriesTitle,
 				myIndexInSeries,
 				myURLByType,
-				myReferences
+				myReferences,
+				myAuthorsIds
 			));
 
 			myTitle.erase();
@@ -143,6 +145,7 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 			mySeriesTitle.erase();
 			myIndexInSeries = 0;
 			myAuthors.clear();
+			myAuthorsIds.clear();
 			myTags.clear();
 			myURLByType.clear();
 			myReferences.clear();
@@ -187,6 +190,7 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 			}
 			data.SortKey = myAuthorLastName;
 			myAuthors.push_back(data);
+			myAuthorsIds.push_back(myAuthorId);
 		}
 		break;
 	case FIRST_NAME:
@@ -205,6 +209,12 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 		if (closed && TAG_LAST_NAME == tag) {
 			ZLStringUtil::stripWhiteSpaces(myBuffer);
 			myAuthorLastName = myBuffer;
+		}
+		break;
+	case AUTHOR_ID:
+		if (closed && TAG_AUTHOR_ID == tag) {
+			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			myAuthorId = myBuffer;
 		}
 		break;
 	case GENRE:
@@ -356,6 +366,8 @@ LitResBooksFeedParser::State LitResBooksFeedParser::getNextState(const std::stri
 				return MIDDLE_NAME;
 			} else if (TAG_LAST_NAME == tag) {
 				return LAST_NAME;
+			} else if (TAG_AUTHOR_ID == tag) {
+				return AUTHOR_ID;
 			}
 		} else {
 			if (TAG_AUTHOR == tag) {
@@ -375,6 +387,11 @@ LitResBooksFeedParser::State LitResBooksFeedParser::getNextState(const std::stri
 		break;
 	case LAST_NAME:
 		if (closed && TAG_LAST_NAME == tag) {
+			return AUTHOR;
+		}
+		break;
+	case AUTHOR_ID:
+		if (closed && TAG_AUTHOR_ID == tag) {
 			return AUTHOR;
 		}
 		break;

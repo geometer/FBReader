@@ -18,6 +18,7 @@
  */
 
 #include <ZLResource.h>
+#include <ZLStringUtil.h>
 
 #include "LitResBooksFeedItem.h"
 #include "LitResUtil.h"
@@ -37,11 +38,13 @@ LitResBookItem::LitResBookItem(
 	const std::string &seriesTitle,
 	unsigned int indexInSeries,
 	const UrlInfoCollection &urlByType,
-	const std::vector<shared_ptr<BookReference> > references
+	const std::vector<shared_ptr<BookReference> > references,
+	const std::vector<std::string> authorIds
 ) :
 	NetworkBookItem(link, id, index, title, summary, language, date, authors,
-					tags, seriesTitle, indexInSeries, urlByType, references) {
-
+					tags, seriesTitle, indexInSeries, urlByType, references),
+	myAuthorIds(authorIds)
+{
 
 }
 
@@ -49,10 +52,16 @@ std::vector<shared_ptr<NetworkItem> > LitResBookItem::getRelatedCatalogsItems() 
 	std::vector<shared_ptr<NetworkItem> > items;
 
 	UrlInfoCollection urlByType = URLByType;
-	urlByType[URL_CATALOG] = LitResUtil::generateAlsoReadUrl(Id);
 
-	LitResBooksFeedItem *item = new LitResBooksFeedItem(false, Link, resource("alsoRead").value(), std::string(), urlByType);
-	items.push_back(item);
+	urlByType[URL_CATALOG] = LitResUtil::generateAlsoReadUrl(Id);
+	items.push_back(new LitResBooksFeedItem(false, Link, resource("alsoRead").value(), std::string(), urlByType));
+
+	for (size_t i = 0; i < myAuthorIds.size(); ++i) {
+		urlByType[URL_CATALOG] = LitResUtil::generateBooksByAuthorUrl(myAuthorIds.at(i));
+		std::string title = ZLStringUtil::printf(resource("sameAuthor").value(), Authors.at(i).DisplayName);
+		items.push_back(new LitResBooksFeedItem(false, Link, title, std::string(), urlByType));
+	}
+
 	return items;
 }
 

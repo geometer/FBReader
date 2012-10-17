@@ -22,7 +22,7 @@ DONE doc plugin
   DONE move all buttons except 'open catalog/expand' to right panel
   ** add better icon for books with no covers
   ** in book info window show "related links" section
-    *** implement related links in litres
+    DONE implement related links in litres
     DONE implement related links support for OPDS
 	*** refactoring: new UrlInfoCollection class
 	*** implement ability to open related links in browser
