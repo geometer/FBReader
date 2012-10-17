@@ -83,7 +83,6 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 }
 
 QSize ZLQtItemsListWidget::sizeHint() const {
-	qDebug() << Q_FUNC_INFO;
 	return QSize(0, ITEM_HEIGHT * ITEM_COUNT);
 }
 

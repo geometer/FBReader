@@ -232,8 +232,11 @@ void ZLQtCatalogPageWidget::createElements() {
 	QVBoxLayout *previewLayout = new QVBoxLayout;
 	previewLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
-	QVBoxLayout *actionsLayout = new QVBoxLayout;
-	myActionsWidget->setLayout(actionsLayout);
+	QHBoxLayout *strechActionsLayout = new QHBoxLayout;
+	strechActionsLayout->addStretch();
+	strechActionsLayout->addWidget(myActionsWidget);
+	strechActionsLayout->addStretch();
+	QVBoxLayout *actionsLayout = new QVBoxLayout; myActionsWidget->setLayout(actionsLayout);
 
 	QHBoxLayout *picLayout = new QHBoxLayout;
 	picLayout->addStretch();
@@ -244,7 +247,7 @@ void ZLQtCatalogPageWidget::createElements() {
 	previewLayout->addLayout(picLayout);
 	previewLayout->addWidget(myTitleLabel);
 	previewLayout->addWidget(mySubtitleLabel);
-	previewLayout->addWidget(myActionsWidget);
+	previewLayout->addLayout(strechActionsLayout);
 	previewLayout->addStretch();
 
 	setLayout(previewLayout);
