@@ -92,6 +92,13 @@ std::string LitResUtil::generateDownloadUrl(const std::string &bookId) {
 	return url(true, "pages/catalit_download_book/" + query);
 }
 
+std::string LitResUtil::generateAlsoReadUrl(const std::string &bookId) {
+	std::string query;
+	ZLNetworkUtil::appendParameter(query, "rating", "with");
+	ZLNetworkUtil::appendParameter(query, "art", bookId);
+	return url(false, "pages/catalit_browser/" + query);
+}
+
 std::string LitResUtil::generateBooksByGenreUrl(const std::string &genreId) {
 	std::string query;
 	ZLNetworkUtil::appendParameter(query, "checkpoint", "2000-01-01");

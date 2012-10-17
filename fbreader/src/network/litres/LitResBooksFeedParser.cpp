@@ -22,6 +22,7 @@
 #include <ZLStringUtil.h>
 
 #include "LitResBooksFeedParser.h"
+#include "LitResBookItem.h"
 #include "LitResGenre.h"
 #include "LitResUtil.h"
 #include "../NetworkLink.h"
@@ -119,7 +120,7 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 		break;
 	case BOOK:
 		if (closed && TAG_BOOK == tag) {
-			myBooks.push_back(new NetworkBookItem(
+			myBooks.push_back(new LitResBookItem(
 				myLink,
 				myBookId,
 				myIndex++,

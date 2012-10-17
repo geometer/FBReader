@@ -26,6 +26,8 @@ DONE doc plugin
     DONE implement related links support for OPDS
 	*** refactoring: new UrlInfoCollection class
 	*** implement ability to open related links in browser
+	*** 'Also read with this book' -- is correct phrase?
+	** m.b. add to other resources phrases 'also read' and etc
 
 DONE can not open feedbooks catalog item: it said 'Catalog is empty'
 DONE синхронизировать код ePub из FBReaderJ/native
