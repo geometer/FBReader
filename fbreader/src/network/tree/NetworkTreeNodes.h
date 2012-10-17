@@ -86,8 +86,8 @@ protected:
 	};
 
 public:
-	NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position);
-	NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t atPosition);
+	NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
+	NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
 
 	std::string title() const;
 	std::string subtitle() const;
@@ -236,6 +236,7 @@ private:
 		//TODO maybe store actions in other place?
 		const std::vector<shared_ptr<ZLTreeAction> > &actions() const;
 		std::string actionText(const shared_ptr<ZLTreeAction> &action) const;
+		const std::vector<shared_ptr<ZLTreeAction> > relatedActions() const;
 
 	private:
 		void initialize() const;
@@ -247,6 +248,7 @@ private:
 		mutable bool myIsInitialized;
 
 		mutable std::vector<shared_ptr<ZLTreeAction> > myActions;
+		mutable std::vector<shared_ptr<ZLTreeAction> > myRelatedActions;
 	};
 
 private:

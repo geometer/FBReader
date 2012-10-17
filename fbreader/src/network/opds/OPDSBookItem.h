@@ -32,6 +32,7 @@ public:
 public:
 	bool isFullyLoaded() const;
 	void loadFullInformation();
+	std::vector<shared_ptr<NetworkItem> > getRelatedCatalogsItems() const;
 
 public:
 	static BookReference::Format formatByZLMimeType(const std::string &mimeType);
@@ -43,6 +44,7 @@ protected:
 	static std::vector<AuthorData> getAuthors(OPDSEntry &entry);
 	static std::vector<std::string> getTags(OPDSEntry &entry);
 	static UrlInfoCollection getUrls(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl);
+	//TODO implement one UrlInfoCollection to not duplicate similar methods
 	static std::vector<shared_ptr<BookReference> > getReferences(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl);
 
 private:
@@ -63,8 +65,22 @@ private:
 			std::string myUrl;
 		};
 
+	class RelatedUrlInfo {
+	public:
+		RelatedUrlInfo(const std::string& title, shared_ptr<ZLMimeType> mimeType, const std::string url);
+
+		std::string Title;
+		shared_ptr<ZLMimeType> MimeType;
+		std::string Url;
+	};
+
+	typedef std::vector<shared_ptr<RelatedUrlInfo> > RelatedUrlsList;
+	RelatedUrlsList myRelatedInfos;
+protected:
+	static RelatedUrlsList getRelatedUrls(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl);
 private:
 	bool myInformationIsFull;
+
 };
 
 #endif /* __OPDSBOOKITEM_H__ */

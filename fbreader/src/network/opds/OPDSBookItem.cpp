@@ -26,6 +26,9 @@
 #include "OPDSXMLParser.h"
 
 #include "OPDSBookItem.h"
+#include "OPDSCatalogItem.h"
+
+#include "../tree/NetworkTreeFactory.h"
 
 OPDSBookItem::OPDSBookItem(const OPDSLink &link, OPDSEntry &entry, std::string baseUrl, unsigned int index) :
 	NetworkBookItem(
@@ -43,6 +46,7 @@ OPDSBookItem::OPDSBookItem(const OPDSLink &link, OPDSEntry &entry, std::string b
 		getUrls(link, entry, baseUrl),
 		getReferences(link, entry, baseUrl)
 		) {
+	myRelatedInfos = getRelatedUrls(link, entry, baseUrl);
 	myInformationIsFull = false;
 }
 
@@ -71,6 +75,22 @@ void OPDSBookItem::loadFullInformation() {
 		myInformationIsFull = true;
 	}
 	//TODO maybe insert error message showing
+}
+
+std::vector<shared_ptr<NetworkItem> > OPDSBookItem::getRelatedCatalogsItems() const {
+	std::vector<shared_ptr<NetworkItem> > items;
+	for (size_t i = 0; i < myRelatedInfos.size(); ++i) {
+		shared_ptr<RelatedUrlInfo> urlInfo = myRelatedInfos.at(i);
+		if (!urlInfo->MimeType->weakEquals(*ZLMimeType::APPLICATION_ATOM_XML)) {
+			continue;
+			//TODO implement items for loading link in browser
+		}
+		UrlInfoCollection urlByType = URLByType;
+		urlByType[URL_CATALOG] = urlInfo->Url;
+		OPDSCatalogItem *item = new OPDSCatalogItem(static_cast<const OPDSLink&>(Link), urlInfo->Title, std::string(), urlByType);
+		items.push_back(item);
+	}
+	return items;
 }
 
 std::string OPDSBookItem::getAnnotation(OPDSEntry &entry) {
@@ -155,6 +175,20 @@ NetworkItem::UrlInfoCollection OPDSBookItem::getUrls(const OPDSLink &networkLink
 		}
 	}
 	return urlMap;
+}
+
+OPDSBookItem::RelatedUrlsList OPDSBookItem::getRelatedUrls(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl) {
+	OPDSBookItem::RelatedUrlsList relatedUrlList;
+	for (size_t i = 0; i < entry.links().size(); ++i) {
+		ATOMLink &link = *(entry.links()[i]);
+		const std::string href = ZLNetworkUtil::url(baseUrl, link.href());
+		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
+		const std::string &rel = networkLink.relation(link.rel(), link.type());
+		if (rel == ATOMConstants::REL_RELATED) {
+			relatedUrlList.push_back(new RelatedUrlInfo(link.title(), type, href));
+		}
+	}
+	return relatedUrlList;
 }
 
 std::vector<shared_ptr<BookReference> >  OPDSBookItem::getReferences(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl) {
@@ -242,6 +276,7 @@ void OPDSBookItem::FullEntryReader::processFeedEntry(shared_ptr<OPDSEntry> entry
 	if (!summary.empty()) {
 		myItem.Summary = summary;
 	}
+	myItem.myRelatedInfos = OPDSBookItem::getRelatedUrls(myLink, *entry, myUrl);
 }
 
 void OPDSBookItem::FullEntryReader::processFeedStart() {
@@ -252,5 +287,8 @@ void OPDSBookItem::FullEntryReader::processFeedMetadata(shared_ptr<OPDSFeedMetad
 
 void OPDSBookItem::FullEntryReader::processFeedEnd() {
 }
+
+OPDSBookItem::RelatedUrlInfo::RelatedUrlInfo(const std::string &title, shared_ptr<ZLMimeType> mimeType, const std::string url) :
+	Title(title), MimeType(mimeType), Url(url) { }
 
 

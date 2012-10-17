@@ -30,6 +30,8 @@
 #include <ZLTypeId.h>
 #include <ZLBoolean3.h>
 
+#include <ZLTreeNode.h>
+
 #include "BookReference.h"
 
 class NetworkAuthenticationManager;
@@ -176,6 +178,7 @@ public:
 
 	virtual bool isFullyLoaded() const;
 	virtual void loadFullInformation();
+	virtual std::vector<shared_ptr<NetworkItem> > getRelatedCatalogsItems() const;
 
 	void updateReferences(const std::vector<shared_ptr<BookReference> > &references);
 

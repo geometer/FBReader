@@ -34,6 +34,7 @@ private:
 
 public:
 	void showDialog();
+	RootTree &getFakeCatalogTree();
 
 private:
     NetworkLibrary();
@@ -42,6 +43,7 @@ private:
 private:
 	shared_ptr<ZLTreeDialog> myDialog;
 	RootTree myRootTree;
+	RootTree myFakeRootTree;
 };
 
 #endif /* __NETWORKLIBRARY_H__ */
