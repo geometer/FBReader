@@ -23,8 +23,9 @@ DONE doc plugin
   ** add better icon for books with no covers
   ** in book info window show "related links" section
     *** implement related links in litres
-    *** implement related links support for OPDS
-
+    DONE implement related links support for OPDS
+	*** refactoring: new UrlInfoCollection class
+	*** implement ability to open related links in browser
 
 DONE can not open feedbooks catalog item: it said 'Catalog is empty'
 DONE синхронизировать код ePub из FBReaderJ/native

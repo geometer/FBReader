@@ -31,6 +31,34 @@
 
 #include "ZLQtPreviewWidget.h"
 
+class ZLQtLabelAction : public QLabel {
+
+public:
+	ZLQtLabelAction(shared_ptr<ZLTreeAction> action, QWidget *parent=0, Qt::WindowFlags f=0);
+
+protected:
+	 void mousePressEvent(QMouseEvent *ev);
+
+private:
+	shared_ptr<ZLTreeAction> myAction;
+};
+
+ZLQtLabelAction::ZLQtLabelAction(shared_ptr<ZLTreeAction> action,QWidget *parent, Qt::WindowFlags f) :
+	QLabel(parent, f), myAction(action) {
+	setCursor(Qt::PointingHandCursor);
+	QPalette p = palette();
+	p.setColor(QPalette::WindowText, QColor(33, 96, 180)); //blue color
+	setPalette(p);
+}
+
+void ZLQtLabelAction::mousePressEvent(QMouseEvent *) {
+	if (myAction.isNull() || !myAction->makesSense()) {
+		return;
+	}
+	myAction->run();
+}
+
+
 ZLQtButtonAction::ZLQtButtonAction(shared_ptr<ZLTreeAction> action,QWidget *parent) :
 	QPushButton(parent), myAction(action) {
 	connect(this, SIGNAL(clicked()), this, SLOT(onClicked()));
@@ -118,6 +146,8 @@ void ZLQtPageWidget::createElements() {
 	mySummaryLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
 	//mySummaryLabel->setIndent(3);
 
+	myRelatedWidget = new QWidget;
+
 	myActionsWidget = new QWidget;
 
 	QVBoxLayout *layout = new QVBoxLayout;
@@ -125,6 +155,7 @@ void ZLQtPageWidget::createElements() {
 
 	QVBoxLayout *previewLayout = new QVBoxLayout;
 	QHBoxLayout *actionsLayout = new QHBoxLayout;
+	QVBoxLayout *relatedLayout = new QVBoxLayout;
 	myActionsWidget->setLayout(actionsLayout);
 	previewLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
@@ -141,8 +172,10 @@ void ZLQtPageWidget::createElements() {
 	previewLayout->addWidget(myCategoriesLabel);
 	previewLayout->addWidget(mySummaryTitleLabel);
 	previewLayout->addWidget(mySummaryLabel);
+	previewLayout->addWidget(myRelatedWidget);
 	//previewLayout->addStretch();
 
+	myRelatedWidget->setLayout(relatedLayout);
 	containerWidget->setLayout(previewLayout);
 	myScrollArea->setWidget(containerWidget);
 
@@ -210,6 +243,17 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 		QString text = QString::fromStdString(info.actionText(action));
 		actionButton->setText(text);
 		myActionsWidget->layout()->addWidget(actionButton);
+	}
+
+	foreach(shared_ptr<ZLTreeAction> action, info.relatedActions()) {
+		if (!action->makesSense()) {
+			continue;
+		}
+		QLabel *actionLabel = new ZLQtLabelAction(action);
+		QString text = QString::fromStdString(info.actionText(action));
+		actionLabel->setText(QString("<big><u>%1</u></big>").arg(text));
+		actionLabel->setWordWrap(true);
+		myRelatedWidget->layout()->addWidget(actionLabel);
 	}
 }
 

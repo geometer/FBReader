@@ -87,6 +87,13 @@ void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
 }
 
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
+	if (node->children().empty()) {
+		node->requestChildren(0); //TODO set listener here
+	}
+	if (node->children().empty()) {
+		return;
+	}
+
 	myHistoryStack.push(node);
 	myListWidget->fillNodes(myHistoryStack.top());
 	myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
@@ -130,18 +137,14 @@ void ZLQtTreeDialog::onNodeDoubleClicked(const ZLTreeNode *node) {
 	}
 	//TODO fix this hack
 	ZLTreeNode *clickedNode = const_cast<ZLTreeNode*>(node);
-	if (clickedNode->children().empty()) {
-		clickedNode->requestChildren(0); //TODO set listener here
-	}
-	if (!clickedNode->children().empty()) {
-		onExpandRequest(clickedNode);
-	}
+	onExpandRequest(clickedNode);
 }
 
 void ZLQtTreeDialog::onBackButton() {
 	if (myHistoryStack.size() <= 1) {
 		return;
 	}
+	//qDebug() << Q_FUNC_INFO;
 	myHistoryStack.pop();
 	myListWidget->fillNodes(myHistoryStack.top());
 	updateBackButton();

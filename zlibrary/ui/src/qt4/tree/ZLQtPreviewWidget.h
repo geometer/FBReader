@@ -62,6 +62,7 @@ private:
 	QLabel *myCategoriesLabel;
 	QLabel *mySummaryTitleLabel;
 	QLabel *mySummaryLabel;
+	QWidget *myRelatedWidget;
 	QWidget *myActionsWidget;
 };
 
