@@ -31,9 +31,6 @@
 
 #include "ZLQtPreviewWidget.h"
 
-static const int PREVIEW_WIDTH = 300;
-
-
 ZLQtButtonAction::ZLQtButtonAction(shared_ptr<ZLTreeAction> action,QWidget *parent) :
 	QPushButton(parent), myAction(action) {
 	connect(this, SIGNAL(clicked()), this, SLOT(onClicked()));
@@ -47,26 +44,28 @@ void ZLQtButtonAction::onClicked() {
 }
 
 ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent), myWidget(0) {
-	setMinimumWidth(PREVIEW_WIDTH);
-	setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
+	QSizePolicy policy = QSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+	//policy.setHorizontalStretch(2);
+	setSizePolicy(policy);
 
 	QHBoxLayout *layout = new QHBoxLayout;
 	layout->setSizeConstraint(QLayout::SetMinimumSize);
 	layout->setContentsMargins(0,0,0,0);
+
 	setLayout(layout);
 }
 
 void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 	clear();
 	myWidget = new ZLQtPageWidget(info);
-	myWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
+	myWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 	layout()->addWidget(myWidget);
 }
 
 void ZLQtPreviewWidget::fillCatalog(const ZLTreeTitledNode *node) {
 	clear();
 	myWidget = new ZLQtCatalogPageWidget(node);
-	myWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::MinimumExpanding);
+	myWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 	layout()->addWidget(myWidget);
 }
 
@@ -77,6 +76,12 @@ void ZLQtPreviewWidget::clear() {
 //		delete myLayout;
 //		qDeleteAll(this->children());
 	}
+}
+
+QSize ZLQtPreviewWidget::sizeHint() const {
+	QSize hint = QWidget::sizeHint();
+//	qDebug() << Q_FUNC_INFO << hint << minimumSize();
+	return hint;
 }
 
 ZLQtPageWidget::ZLQtPageWidget(const ZLTreePageInfo &info, QWidget *parent) : QWidget(parent) {
@@ -153,8 +158,10 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
-		if (pixmap.height() > PREVIEW_WIDTH || pixmap.width() > PREVIEW_WIDTH) {
-			pixmap = pixmap.scaled(PREVIEW_WIDTH, PREVIEW_WIDTH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+		//TODO implement resizable pixmap widget
+		const int maxPreviewWidth = 300;
+		if (pixmap.height() > maxPreviewWidth || pixmap.width() > maxPreviewWidth) {
+			pixmap = pixmap.scaled(maxPreviewWidth, maxPreviewWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 		}
 		myPicLabel->setPixmap(pixmap);
 	}
@@ -223,6 +230,7 @@ void ZLQtCatalogPageWidget::createElements() {
 	myActionsWidget = new QWidget;
 
 	QVBoxLayout *previewLayout = new QVBoxLayout;
+	previewLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
 	QVBoxLayout *actionsLayout = new QVBoxLayout;
 	myActionsWidget->setLayout(actionsLayout);
@@ -247,8 +255,10 @@ void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
-		if (pixmap.height() > PREVIEW_WIDTH || pixmap.width() > PREVIEW_WIDTH) {
-			pixmap = pixmap.scaled(PREVIEW_WIDTH, PREVIEW_WIDTH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+		//TODO implement resizable pixmap widget
+		const int maxPreviewWidth = 300;
+		if (pixmap.height() > maxPreviewWidth || pixmap.width() > maxPreviewWidth) {
+			pixmap = pixmap.scaled(maxPreviewWidth, maxPreviewWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 		}
 		myPicLabel->setPixmap(pixmap);
 	}
@@ -268,6 +278,9 @@ void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 		QString text = QString::fromStdString(node->actionText(action));
 		actionButton->setText(text);
 		myActionsWidget->layout()->addWidget(actionButton);
+		//TODO maybe buttons should not be too big
+		//actionButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+
 	}
 
 }

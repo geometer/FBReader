@@ -36,9 +36,12 @@ public:
 	void fillCatalog(const ZLTreeTitledNode *node);
 	void clear();
 
+	QSize sizeHint() const;
+
 private:
 	//QHBoxLayout *myLayout;
 	QWidget *myWidget;
+	QWidget *myMinSizeWidget;
 };
 
 class ZLQtPageWidget : public QWidget {

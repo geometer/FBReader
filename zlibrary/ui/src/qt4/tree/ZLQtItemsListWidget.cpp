@@ -23,11 +23,14 @@
 #include <QtGui/QPalette>
 #include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
+#include <QtGui/QScrollBar>
 
 #include <QtCore/QDebug>
 
 #include <ZLNetworkManager.h>
 #include <ZLTreeTitledNode.h>
+
+#include "../dialogs/ZLQtDialogManager.h"
 
 #include "../image/ZLQtImageUtils.h"
 
@@ -35,54 +38,35 @@
 
 #include "ZLQtItemsListWidget.h"
 
-static const int ITEM_WIDTH = 500;
 static const int ITEM_HEIGHT = 98;
-static const int ITEM_COUNT = 6;
+static const int ITEM_COUNT = 5;
 static const int ITEM_SIZE = 77;
 
-//class ZLQtLabelAction : public QLabel {
+ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent), myLayout(0) {
 
-//public:
-//	ZLQtLabelAction(shared_ptr<ZLTreeAction> action, QWidget *parent=0, Qt::WindowFlags f=0);
+	myContainerWidget = new QWidget;
+	myContainerWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
-//protected:
-//	 void mousePressEvent(QMouseEvent *ev);
+	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	setWidget(myContainerWidget);
+	setFrameShape(QFrame::NoFrame);
+	setWidgetResizable(true);
+	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
-//private:
-//	shared_ptr<ZLTreeAction> myAction;
-//};
-
-//ZLQtLabelAction::ZLQtLabelAction(shared_ptr<ZLTreeAction> action,QWidget *parent, Qt::WindowFlags f) :
-//	QLabel(parent, f), myAction(action) {
-//}
-
-//void ZLQtLabelAction::mousePressEvent(QMouseEvent *) {
-//	if (myAction.isNull() || !myAction->makesSense()) {
-//		return;
-//	}
-//	myAction->run();
-//}
-
-
-ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QWidget(parent), myLayout(0) {
-//	setFixedWidth(ITEM_WIDTH);
-//	setFixedHeight(ITEM_HEIGHT * ITEM_COUNT); //TODO make rubber design
-
-	setMinimumSize(ITEM_WIDTH, ITEM_HEIGHT * ITEM_COUNT);
-	setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
 }
 
 void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 	if (myLayout != 0) {
 		delete myLayout;
-		qDeleteAll(this->children());
+		qDeleteAll(myContainerWidget->children());
 	}
 	myItems.clear();
 	myLayout = new QVBoxLayout;
 	myLayout->setContentsMargins(0,0,0,0);
 	myLayout->setSpacing(0);
-	myLayout->setSizeConstraint(QLayout::SetMinimumSize);
-	setLayout(myLayout);
+	myLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+	myContainerWidget->setLayout(myLayout);
 
 	foreach(ZLTreeNode* node, expandNode->children()) {
 		if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
@@ -96,6 +80,16 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 	}
 
 	myLayout->addStretch();
+}
+
+QSize ZLQtItemsListWidget::sizeHint() const {
+	qDebug() << Q_FUNC_INFO;
+	return QSize(0, ITEM_HEIGHT * ITEM_COUNT);
+}
+
+void ZLQtItemsListWidget::setMinimumWidth(int w) {
+	myContainerWidget->setMinimumWidth(w - verticalScrollBar()->width());
+	QScrollArea::setMinimumWidth(w);
 }
 
 void ZLQtItemsListWidget::onNodeClicked(const ZLTreeNode *node) {
@@ -119,8 +113,10 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QFra
 	title->setWordWrap(true);
 	subtitle->setWordWrap(true);
 
-	title->setMinimumWidth(ITEM_WIDTH-100);
-	subtitle->setMinimumWidth(ITEM_WIDTH-100);
+	QSizePolicy policy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+	policy.setHorizontalStretch(1);
+	title->setSizePolicy(policy);
+	subtitle->setSizePolicy(policy);
 
 	titlesLayout->addWidget(title);
 	titlesLayout->addWidget(subtitle);
@@ -137,7 +133,8 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QFra
 	mainLayout->addStretch();
 	setLayout(mainLayout);
 
-	setMinimumSize(ITEM_WIDTH, ITEM_HEIGHT); //TODO make rubber design
+	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+	setFixedHeight(ITEM_HEIGHT);
 }
 
 void ZLQtTreeItem::setActive(bool active) {
