@@ -1,6 +1,6 @@
 * NP
   ** run browser correctly on mac
-  ** fix crash when book info window opens
+  DONE fix crash when book info window opens
   ** review async-network-ui branch
 * ...
   DONE merge 'sensible-browser' patch into the mainstream

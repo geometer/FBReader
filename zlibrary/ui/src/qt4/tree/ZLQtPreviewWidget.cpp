@@ -121,10 +121,14 @@ ZLQtPageWidget::ZLQtPageWidget(const ZLTreePageInfo &info, QWidget *parent) : QW
 void ZLQtPageWidget::createElements() {
 	myPicLabel = new QLabel;
 
+  // the code inside #ifndef does crash on MacOS,
+  // see https://bugreports.qt-project.org/browse/QTBUG-24792
+#ifndef Q_OS_MAC
 	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
 	effect->setBlurRadius(12);
 	effect->setOffset(3);
 	myPicLabel->setGraphicsEffect(effect);
+#endif
 //	myPicLabel->setMaximumSize(300,300);
 //	myPicLabel->setMinimumSize(77,77);
 
