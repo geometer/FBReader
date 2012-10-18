@@ -17,43 +17,43 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <QtGui/QSplitter>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QScrollBar>
+#include <QtGui/QResizeEvent>
 #include <QtCore/QDebug>
 
 #include <ZLTreePageNode.h>
 
+#include "../tree/ZLQtItemsListWidget.h"
+#include "../tree/ZLQtPreviewWidget.h"
+
 #include "ZLQtTreeDialog.h"
+
+static const int DIALOG_WIDTH_HINT = 840;
 
 ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog(parent), ZLTreeDialog(res) {
 	setWindowTitle(QString::fromStdString(resource().value())); //TODO maybe user resources by other way
+	setMinimumSize(400, 260); //minimum sensible size
 
-	myScrollArea = new QScrollArea;
 	myListWidget = new ZLQtItemsListWidget;
 	myPreviewWidget = new ZLQtPreviewWidget;
 	myBackButton = new QPushButton("Back"); //TODO add to resources;
 	mySearchField = new QLineEdit("type to search..."); // TODO add to resources;
 
-	myScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-	myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	myScrollArea->setWidget(myListWidget);
-	myScrollArea->setFrameShape(QFrame::NoFrame);
-	myScrollArea->setWidgetResizable(true);
-	myScrollArea->setMinimumSize(myListWidget->minimumSize() + QSize(myScrollArea->verticalScrollBar()->width(), 0));
-	myScrollArea->setSizePolicy(myListWidget->sizePolicy());
-
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	QHBoxLayout *panelLayout = new QHBoxLayout;
 
 	QSplitter *splitter = new QSplitter;
-	splitter->addWidget(myScrollArea);
+	splitter->setChildrenCollapsible(false);
+	splitter->addWidget(myListWidget);
 	splitter->addWidget(myPreviewWidget);
-//	splitter->setStretchFactor(0, 2);
-	splitter->setStretchFactor(1, 1);
+	splitter->setSizes(QList<int>() << DIALOG_WIDTH_HINT / 2 + myListWidget->verticalScrollBar()->width() << DIALOG_WIDTH_HINT / 2); //50/50 default size
 
-//	mainLayout->setSizeConstraint(QLayout::SetMinimumSize);
+	mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
 	panelLayout->addWidget(myBackButton);
 	panelLayout->addWidget(mySearchField);
@@ -62,11 +62,8 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	mainLayout->addWidget(splitter);
 	this->setLayout(mainLayout);
 
-//	QPalette palette = myScrollArea->palette();
-//	palette.setBrush(QPalette::All, QPalette::Window, QColor(242,242,242)); //gray
-//	myScrollArea->setPalette(palette);
-
 	connect(myListWidget, SIGNAL(nodeClicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*)));
+	connect(myListWidget, SIGNAL(nodeDoubleClicked(const ZLTreeNode*)), this, SLOT(onNodeDoubleClicked(const ZLTreeNode*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
 
 }
@@ -77,10 +74,29 @@ void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 	show();
 }
 
+QSize ZLQtTreeDialog::sizeHint() const {
+	return QSize(DIALOG_WIDTH_HINT + myListWidget->verticalScrollBar()->width(), 0);
+}
+
+void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
+	int width = event->size().width();
+	int listWidth = width / 3;
+	int previewWidth = width / 3;
+	myListWidget->setMinimumWidth(listWidth);
+	myPreviewWidget->setMinimumWidth(previewWidth);
+}
+
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
+	if (node->children().empty()) {
+		node->requestChildren(0); //TODO set listener here
+	}
+	if (node->children().empty()) {
+		return;
+	}
+
 	myHistoryStack.push(node);
 	myListWidget->fillNodes(myHistoryStack.top());
-	myScrollArea->verticalScrollBar()->setValue(myScrollArea->verticalScrollBar()->minimum()); //to the top
+	myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
 	updateBackButton();
 }
 
@@ -112,15 +128,24 @@ void ZLQtTreeDialog::onNodeClicked(const ZLTreeNode *node) {
 	}
 }
 
+void ZLQtTreeDialog::onNodeDoubleClicked(const ZLTreeNode *node) {
+	if (const ZLTreePageNode *pageNode = zlobject_cast<const ZLTreePageNode*>(node)) {
+		(void)pageNode;
+		//TODO maybe use different kind of check
+		//isExpandable method for i.e.
+		return;
+	}
+	//TODO fix this hack
+	ZLTreeNode *clickedNode = const_cast<ZLTreeNode*>(node);
+	onExpandRequest(clickedNode);
+}
+
 void ZLQtTreeDialog::onBackButton() {
 	if (myHistoryStack.size() <= 1) {
 		return;
 	}
+	//qDebug() << Q_FUNC_INFO;
 	myHistoryStack.pop();
 	myListWidget->fillNodes(myHistoryStack.top());
 	updateBackButton();
 }
-
-
-
-

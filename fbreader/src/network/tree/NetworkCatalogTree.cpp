@@ -42,9 +42,9 @@ NetworkCatalogTree::NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<Ne
 }
 
 void NetworkCatalogTree::init() {
-	if (!item().URLByType[NetworkItem::URL_CATALOG].empty()) {
-		registerAction(new ExpandCatalogAction(*this));
-	}
+//	if (!item().URLByType[NetworkItem::URL_CATALOG].empty()) {
+//		registerAction(new ExpandCatalogAction(*this));
+//	}
 //	const std::string htmlUrl =
 //		item().URLByType[NetworkItem::URL_HTML_PAGE];
 //	if (!htmlUrl.empty()) {

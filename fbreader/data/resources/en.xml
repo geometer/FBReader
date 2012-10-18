@@ -76,6 +76,8 @@
 			<node name="downloadDemo" value="Download sample"/>
 			<node name="demo" value="sample"/>
 			<node name="buy" value="Buy (%s)"/>
+			<node name="alsoRead" value="Also read with this book"/>
+			<node name="sameAuthor" value="All books of %s"/>
 		</node>
 	</node>
 	<node name="bookInfo">

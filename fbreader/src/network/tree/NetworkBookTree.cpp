@@ -21,6 +21,8 @@
 #include <ZLImage.h>
 
 #include "NetworkTreeNodes.h"
+#include "NetworkTreeFactory.h"
+#include "NetworkLibrary.h"
 #include "../../networkTree/NetworkCatalogUtil.h"
 
 #include "../../networkActions/NetworkActions.h"
@@ -154,6 +156,39 @@ const std::vector<shared_ptr<ZLTreeAction> > &NetworkBookTree::BookItemWrapper::
 
 std::string NetworkBookTree::BookItemWrapper::actionText(const shared_ptr<ZLTreeAction> &action) const {
 	return myTree.actionText(action);
+}
+
+class RelatedAction : public ZLTreeAction {
+public:
+	RelatedAction(shared_ptr<NetworkItem> item) : myTitle(item->Title) {
+		myNode = new NetworkCatalogTree(&NetworkLibrary::Instance().getFakeCatalogTree(), item);
+		//myNode = NetworkTreeFactory::createNetworkTree(0, item);
+	}
+	ZLResourceKey key() const { return ZLResourceKey(""); }
+	std::string text(const ZLResource &/*resource*/) const {
+		return myTitle;
+	}
+	void run() {
+		if (NetworkCatalogTree *tree = zlobject_cast<NetworkCatalogTree*>(&*myNode)){
+			tree->expand();
+		}
+	}
+
+private:
+	shared_ptr<ZLTreeTitledNode> myNode;
+	std::string myTitle;
+};
+
+const std::vector<shared_ptr<ZLTreeAction> > NetworkBookTree::BookItemWrapper::relatedActions() const {
+	if (!myRelatedActions.empty()) {
+		return myRelatedActions;
+	}
+	std::vector<shared_ptr<NetworkItem> > catalogItems =  static_cast<NetworkBookItem&>(*myBookItem).getRelatedCatalogsItems();
+	for (size_t i = 0; i < catalogItems.size(); ++i) {
+		shared_ptr<NetworkItem> item = catalogItems.at(i);
+		myRelatedActions.push_back(new RelatedAction(item));
+	}
+	return myRelatedActions;
 }
 
 void NetworkBookTree::BookItemWrapper::initialize() const {

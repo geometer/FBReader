@@ -76,6 +76,8 @@
 			<node name="downloadDemo" value="Скачать фрагмент"/>
 			<node name="demo" value="фрагмент"/>
 			<node name="buy" value="Купить (%s)"/>
+			<node name="alsoRead" value="Вместе с этой книгой читают"/>
+			<node name="sameAuthor" value="Все книги автора %s"/>
 		</node>
 	</node>
 	<node name="bookInfo">

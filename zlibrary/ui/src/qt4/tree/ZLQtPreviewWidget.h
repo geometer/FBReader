@@ -36,9 +36,12 @@ public:
 	void fillCatalog(const ZLTreeTitledNode *node);
 	void clear();
 
+	QSize sizeHint() const;
+
 private:
 	//QHBoxLayout *myLayout;
 	QWidget *myWidget;
+	QWidget *myMinSizeWidget;
 };
 
 class ZLQtPageWidget : public QWidget {
@@ -51,15 +54,16 @@ private:
 	void setInfo(const ZLTreePageInfo &info);
 
 private:
+	QScrollArea *myScrollArea;
+
 	QLabel *myPicLabel;
 	QLabel *myTitleLabel;
 	QLabel *myAuthorLabel;
 	QLabel *myCategoriesLabel;
 	QLabel *mySummaryTitleLabel;
 	QLabel *mySummaryLabel;
+	QWidget *myRelatedWidget;
 	QWidget *myActionsWidget;
-	QScrollArea *mySummaryScrollArea;
-	QList<QPushButton*> myButtons;
 };
 
 
@@ -76,6 +80,7 @@ private:
 	QLabel *myPicLabel;
 	QLabel *myTitleLabel;
 	QLabel *mySubtitleLabel;
+	QWidget *myActionsWidget;
 };
 
 class ZLQtButtonAction : public QPushButton {

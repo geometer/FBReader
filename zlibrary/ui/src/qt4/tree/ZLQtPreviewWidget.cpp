@@ -31,7 +31,32 @@
 
 #include "ZLQtPreviewWidget.h"
 
-static const int PREVIEW_WIDTH = 300;
+class ZLQtLabelAction : public QLabel {
+
+public:
+	ZLQtLabelAction(shared_ptr<ZLTreeAction> action, QWidget *parent=0, Qt::WindowFlags f=0);
+
+protected:
+	 void mousePressEvent(QMouseEvent *ev);
+
+private:
+	shared_ptr<ZLTreeAction> myAction;
+};
+
+ZLQtLabelAction::ZLQtLabelAction(shared_ptr<ZLTreeAction> action,QWidget *parent, Qt::WindowFlags f) :
+	QLabel(parent, f), myAction(action) {
+	setCursor(Qt::PointingHandCursor);
+	QPalette p = palette();
+	p.setColor(QPalette::WindowText, QColor(33, 96, 180)); //blue color
+	setPalette(p);
+}
+
+void ZLQtLabelAction::mousePressEvent(QMouseEvent *) {
+	if (myAction.isNull() || !myAction->makesSense()) {
+		return;
+	}
+	myAction->run();
+}
 
 
 ZLQtButtonAction::ZLQtButtonAction(shared_ptr<ZLTreeAction> action,QWidget *parent) :
@@ -47,26 +72,28 @@ void ZLQtButtonAction::onClicked() {
 }
 
 ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent), myWidget(0) {
-	setMinimumWidth(PREVIEW_WIDTH);
-	setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+	QSizePolicy policy = QSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+	//policy.setHorizontalStretch(2);
+	setSizePolicy(policy);
 
 	QHBoxLayout *layout = new QHBoxLayout;
 	layout->setSizeConstraint(QLayout::SetMinimumSize);
 	layout->setContentsMargins(0,0,0,0);
+
 	setLayout(layout);
 }
 
 void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 	clear();
 	myWidget = new ZLQtPageWidget(info);
-	myWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+	myWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 	layout()->addWidget(myWidget);
 }
 
 void ZLQtPreviewWidget::fillCatalog(const ZLTreeTitledNode *node) {
 	clear();
 	myWidget = new ZLQtCatalogPageWidget(node);
-	myWidget->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+	myWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 	layout()->addWidget(myWidget);
 }
 
@@ -79,6 +106,12 @@ void ZLQtPreviewWidget::clear() {
 	}
 }
 
+QSize ZLQtPreviewWidget::sizeHint() const {
+	QSize hint = QWidget::sizeHint();
+//	qDebug() << Q_FUNC_INFO << hint << minimumSize();
+	return hint;
+}
+
 ZLQtPageWidget::ZLQtPageWidget(const ZLTreePageInfo &info, QWidget *parent) : QWidget(parent) {
 	//TODO fix it: if element is absent, there's a empty space instead it. Looks bad.
 	createElements();
@@ -88,10 +121,14 @@ ZLQtPageWidget::ZLQtPageWidget(const ZLTreePageInfo &info, QWidget *parent) : QW
 void ZLQtPageWidget::createElements() {
 	myPicLabel = new QLabel;
 
+  // the code inside #ifndef does crash on MacOS,
+  // see https://bugreports.qt-project.org/browse/QTBUG-24792
+#ifndef Q_OS_MAC
 	QGraphicsDropShadowEffect* effect = new QGraphicsDropShadowEffect;
 	effect->setBlurRadius(12);
 	effect->setOffset(3);
 	myPicLabel->setGraphicsEffect(effect);
+#endif
 //	myPicLabel->setMaximumSize(300,300);
 //	myPicLabel->setMinimumSize(77,77);
 
@@ -101,24 +138,32 @@ void ZLQtPageWidget::createElements() {
 	mySummaryTitleLabel = new QLabel;
 	mySummaryLabel = new QLabel;
 
-	mySummaryScrollArea = new QScrollArea;
-	mySummaryScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	mySummaryScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	mySummaryScrollArea->setWidgetResizable(true);
-	mySummaryScrollArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
-	mySummaryScrollArea->setWidget(mySummaryLabel);
+	myScrollArea = new QScrollArea;
+	myScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	myScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+	myScrollArea->setWidgetResizable(true);
+	myScrollArea->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
+
 	mySummaryLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
 	mySummaryLabel->setMargin(3);
 	//mySummaryLabel->setMaximumHeight(200);
-	mySummaryLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Maximum);
+	mySummaryLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
 	//mySummaryLabel->setIndent(3);
+
+	myRelatedWidget = new QWidget;
 
 	myActionsWidget = new QWidget;
 
+	QVBoxLayout *layout = new QVBoxLayout;
+	QWidget *containerWidget = new QWidget;
+
 	QVBoxLayout *previewLayout = new QVBoxLayout;
 	QHBoxLayout *actionsLayout = new QHBoxLayout;
+	QVBoxLayout *relatedLayout = new QVBoxLayout;
 	myActionsWidget->setLayout(actionsLayout);
 	previewLayout->setSizeConstraint(QLayout::SetMinimumSize);
+
+	layout->setSizeConstraint(QLayout::SetMinimumSize);
 
 	QHBoxLayout *picLayout = new QHBoxLayout;
 	picLayout->addStretch();
@@ -130,13 +175,19 @@ void ZLQtPageWidget::createElements() {
 	previewLayout->addWidget(myAuthorLabel);
 	previewLayout->addWidget(myCategoriesLabel);
 	previewLayout->addWidget(mySummaryTitleLabel);
-	previewLayout->addWidget(mySummaryScrollArea);
-	previewLayout->addWidget(myActionsWidget);
-	previewLayout->addStretch();
+	previewLayout->addWidget(mySummaryLabel);
+	previewLayout->addWidget(myRelatedWidget);
+	//previewLayout->addStretch();
 
-	setLayout(previewLayout);
+	myRelatedWidget->setLayout(relatedLayout);
+	containerWidget->setLayout(previewLayout);
+	myScrollArea->setWidget(containerWidget);
 
-	mySummaryScrollArea->hide();
+	layout->setContentsMargins(0,0,0,0);
+
+	layout->addWidget(myScrollArea);
+	layout->addWidget(myActionsWidget);
+	setLayout(layout);
 }
 
 void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
@@ -144,8 +195,10 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
-		if (pixmap.height() > PREVIEW_WIDTH || pixmap.width() > PREVIEW_WIDTH) {
-			pixmap = pixmap.scaled(PREVIEW_WIDTH, PREVIEW_WIDTH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+		//TODO implement resizable pixmap widget
+		const int maxPreviewWidth = 300;
+		if (pixmap.height() > maxPreviewWidth || pixmap.width() > maxPreviewWidth) {
+			pixmap = pixmap.scaled(maxPreviewWidth, maxPreviewWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 		}
 		myPicLabel->setPixmap(pixmap);
 	}
@@ -178,7 +231,7 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 		static QString annotation = QString::fromStdString(resource["annotation"].value());
 		mySummaryLabel->setText(QString::fromStdString(info.summary()));
 		mySummaryTitleLabel->setText(QString("<b>%1</b>").arg(annotation));
-		mySummaryScrollArea->show();
+//		mySummaryScrollArea->show();
 	}
 
 	myTitleLabel->setWordWrap(true);
@@ -193,8 +246,18 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 		QPushButton *actionButton = new ZLQtButtonAction(action);
 		QString text = QString::fromStdString(info.actionText(action));
 		actionButton->setText(text);
-		myButtons.push_back(actionButton);
 		myActionsWidget->layout()->addWidget(actionButton);
+	}
+
+	foreach(shared_ptr<ZLTreeAction> action, info.relatedActions()) {
+		if (!action->makesSense()) {
+			continue;
+		}
+		QLabel *actionLabel = new ZLQtLabelAction(action);
+		QString text = QString::fromStdString(info.actionText(action));
+		actionLabel->setText(QString("<big><u>%1</u></big>").arg(text));
+		actionLabel->setWordWrap(true);
+		myRelatedWidget->layout()->addWidget(actionLabel);
 	}
 }
 
@@ -212,7 +275,16 @@ void ZLQtCatalogPageWidget::createElements() {
 	myTitleLabel->setAlignment(Qt::AlignCenter);
 	mySubtitleLabel->setAlignment(Qt::AlignCenter);
 
+	myActionsWidget = new QWidget;
+
 	QVBoxLayout *previewLayout = new QVBoxLayout;
+	previewLayout->setSizeConstraint(QLayout::SetMinimumSize);
+
+	QHBoxLayout *strechActionsLayout = new QHBoxLayout;
+	strechActionsLayout->addStretch();
+	strechActionsLayout->addWidget(myActionsWidget);
+	strechActionsLayout->addStretch();
+	QVBoxLayout *actionsLayout = new QVBoxLayout; myActionsWidget->setLayout(actionsLayout);
 
 	QHBoxLayout *picLayout = new QHBoxLayout;
 	picLayout->addStretch();
@@ -223,6 +295,7 @@ void ZLQtCatalogPageWidget::createElements() {
 	previewLayout->addLayout(picLayout);
 	previewLayout->addWidget(myTitleLabel);
 	previewLayout->addWidget(mySubtitleLabel);
+	previewLayout->addLayout(strechActionsLayout);
 	previewLayout->addStretch();
 
 	setLayout(previewLayout);
@@ -233,8 +306,10 @@ void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
-		if (pixmap.height() > PREVIEW_WIDTH || pixmap.width() > PREVIEW_WIDTH) {
-			pixmap = pixmap.scaled(PREVIEW_WIDTH, PREVIEW_WIDTH, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+		//TODO implement resizable pixmap widget
+		const int maxPreviewWidth = 300;
+		if (pixmap.height() > maxPreviewWidth || pixmap.width() > maxPreviewWidth) {
+			pixmap = pixmap.scaled(maxPreviewWidth, maxPreviewWidth, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 		}
 		myPicLabel->setPixmap(pixmap);
 	}
@@ -244,6 +319,19 @@ void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 	}
 	if (!node->subtitle().empty()) {
 		mySubtitleLabel->setText(QString::fromStdString(node->subtitle()));
+	}
+
+	foreach(shared_ptr<ZLTreeAction> action, node->actions()) {
+		if (!action->makesSense()) {
+			continue;
+		}
+		QPushButton *actionButton = new ZLQtButtonAction(action);
+		QString text = QString::fromStdString(node->actionText(action));
+		actionButton->setText(text);
+		myActionsWidget->layout()->addWidget(actionButton);
+		//TODO maybe buttons should not be too big
+		//actionButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+
 	}
 
 }

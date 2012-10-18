@@ -125,7 +125,7 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 	}
 	if (!replies.isEmpty()) {
 		qDebug() << "running eventloop";
-		eventLoop.exec(QEventLoop::AllEvents);
+		eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
 	}
 
 	return errors.join(QLatin1String("\n")).toStdString();

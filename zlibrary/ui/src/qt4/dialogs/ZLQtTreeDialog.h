@@ -27,11 +27,12 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
+#include <QtGui/QWidget>
+
+#include <ZLTreeDialog.h>
 
 #include "../tree/ZLQtItemsListWidget.h"
 #include "../tree/ZLQtPreviewWidget.h"
-
-#include <ZLTreeDialog.h>
 
 class ZLQtTreeDialog : public QDialog, public ZLTreeDialog {
 	Q_OBJECT
@@ -40,6 +41,10 @@ public:
 
 public:
 	void run(ZLTreeNode *rootNode);
+
+protected:
+	QSize sizeHint() const;
+	void resizeEvent(QResizeEvent *event);
 
 public: //listener methods
 	void onExpandRequest(ZLTreeNode *node);
@@ -55,6 +60,7 @@ private:
 
 private Q_SLOTS:
 	void onNodeClicked(const ZLTreeNode* node);
+	void onNodeDoubleClicked(const ZLTreeNode* node);
 	void onBackButton();
 
 
@@ -64,16 +70,12 @@ private:
 private:
 	QPushButton *myBackButton;
 	QLineEdit *mySearchField;
-	QScrollArea *myScrollArea;
+//	QScrollArea *myScrollArea;
 	ZLQtItemsListWidget *myListWidget;
 	ZLQtPreviewWidget *myPreviewWidget;
 
 	QStack<const ZLTreeNode*> myHistoryStack;
 
 };
-
-
-
-
 
 #endif /* __ZLQTTREEDIALOG_H__ */

@@ -33,6 +33,7 @@ public:
 
 	virtual const std::vector<shared_ptr<ZLTreeAction> > &actions() const = 0;
 	virtual std::string actionText(const shared_ptr<ZLTreeAction> &action) const = 0;
+	virtual const std::vector<shared_ptr<ZLTreeAction> > relatedActions() const = 0;
 };
 
 class ZLTreePageNode : public ZLTreeTitledNode {

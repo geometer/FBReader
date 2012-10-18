@@ -1,26 +1,33 @@
 * NP
   ** run browser correctly on mac
-  ** fix crash when book info window opens
+  DONE fix crash when book info window opens
   ** review async-network-ui branch
 * ...
-  ** merge 'sensible-browser' patch into the mainstream
-* doc plugin
-  ** review "doc" branch
-  ** check if word inserts "left" alignment mark in each file
-  ** in doc subdirectory, add "based on catdoc, wvware & antiword code" comment, with links to projects
+  DONE merge 'sensible-browser' patch into the mainstream
+DONE doc plugin
+  DONE review "doc" branch
+  DONE check if word inserts "left" alignment mark in each file
+
 * network library window UI
-  ** for items, use standard frame border for "3d" view
-  ** by default, window should be vertically splitted into 50:50 parts
-  ** min horizontal size for each part (catalogs list & book info) should be 1/3 of full window width
-  ** if I resize window, "parts" should be resized proportionally
-  ** double click on list item should expand the catalog
-  ** in book info view, one scroller for all items should be used
-  ** move all buttons except 'open catalog/expand' to right panel
+  DONE for items, use standard frame border for "3d" view
+
+  DONE by default, window should be vertically splitted into 50:50 parts
+  DONE min horizontal size for each part (catalogs list & book info) should be 1/3 of full window width
+  DONE if I resize window, "parts" should be resized proportionally
+  ** set sensible minimum sizes for both panels
+
+  DONE BUG: if click for book items too quicky, there's several previews appeared
+  DONE double click on list item should expand the catalog
+  DONE in book info view, one scroller for all items should be used
+  DONE move all buttons except 'open catalog/expand' to right panel
   ** add better icon for books with no covers
   ** in book info window show "related links" section
-    *** implement related links in litres
-    *** implement related links support for OPDS
-
+    DONE implement related links in litres
+    DONE implement related links support for OPDS
+	*** refactoring: new UrlInfoCollection class
+	*** implement ability to open related links in browser
+	*** 'Also read with this book' -- is correct phrase?
+	** m.b. add to other resources phrases 'also read' and etc
 
 DONE can not open feedbooks catalog item: it said 'Catalog is empty'
 DONE синхронизировать код ePub из FBReaderJ/native
@@ -50,7 +57,6 @@ DONE при использовании API убрать "лишние" сорт�
 		DONE preview widget - для BookItem добавить обозначения "название", "авторы" и т.п.
 		* preview widget - добавить перевод для полей в book info для всех языков, кроме русского
 		DONE preview widget - скрывать пустые поля
-		* preview widget - добавить возможность прокрутки
 		DONE itemlist wiget - ссылки -> кнопки
 		* показ waiting icon на плашке при загрузке, до тех пор, пока не загрузится
 		* внешний вид плашек (тут нужно поэкспериментировать)

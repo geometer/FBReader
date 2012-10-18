@@ -165,6 +165,10 @@ bool NetworkBookItem::isFullyLoaded() const {
 void NetworkBookItem::loadFullInformation() {
 }
 
+std::vector<shared_ptr<NetworkItem> > NetworkBookItem::getRelatedCatalogsItems() const {
+	return std::vector<shared_ptr<NetworkItem> >();
+}
+
 void NetworkBookItem::updateReferences(const std::vector<shared_ptr<BookReference> > &references) {
 	//TODO implement using one UrlInfoCollection instead of vector of references and urlByType
 	for (size_t i = 0; i < references.size(); ++i) {

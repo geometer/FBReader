@@ -44,7 +44,7 @@ private:
 private:
 	enum State {
 		START, CATALOG, BOOK, BOOK_DESCRIPTION, HIDDEN, TITLE_INFO, 
-		GENRE, AUTHOR, FIRST_NAME, MIDDLE_NAME, LAST_NAME, BOOK_TITLE, 
+		GENRE, AUTHOR, FIRST_NAME, MIDDLE_NAME, LAST_NAME, AUTHOR_ID, BOOK_TITLE,
 		ANNOTATION, DATE, LANGUAGE,
 	};
 
@@ -73,7 +73,9 @@ private:
 	std::string myAuthorFirstName;
 	std::string myAuthorMiddleName;
 	std::string myAuthorLastName;
+	std::string myAuthorId;
 	std::vector<NetworkBookItem::AuthorData> myAuthors;
+	std::vector<std::string> myAuthorsIds;
 
 	std::vector<std::string> myTags;
 	NetworkItem::UrlInfoCollection myURLByType;

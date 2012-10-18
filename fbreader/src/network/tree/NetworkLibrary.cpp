@@ -47,6 +47,7 @@ NetworkLibrary::NetworkLibrary() {
 	//TODO maybe it should be created in showDialog method?
 	myDialog = ZLDialogManager::Instance().createTreeDialog(ZLResource::resource("networkView"));
 	myRootTree.setDialog(myDialog);
+	myFakeRootTree.setDialog(myDialog);
 }
 
 void NetworkLibrary::showDialog() {
@@ -62,4 +63,8 @@ void NetworkLibrary::makeUpToDate() {
 		NetworkLink &link = collection.link(i);
 		new NetworkCatalogRootTree(&myRootTree, link, i);
 	}
+}
+
+RootTree &NetworkLibrary::getFakeCatalogTree() {
+	return myFakeRootTree;
 }

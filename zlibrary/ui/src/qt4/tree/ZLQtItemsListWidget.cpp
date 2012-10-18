@@ -23,11 +23,14 @@
 #include <QtGui/QPalette>
 #include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
+#include <QtGui/QScrollBar>
 
 #include <QtCore/QDebug>
 
 #include <ZLNetworkManager.h>
 #include <ZLTreeTitledNode.h>
+
+#include "../dialogs/ZLQtDialogManager.h"
 
 #include "../image/ZLQtImageUtils.h"
 
@@ -35,66 +38,57 @@
 
 #include "ZLQtItemsListWidget.h"
 
-static const int ITEM_WIDTH = 500;
 static const int ITEM_HEIGHT = 98;
-static const int ITEM_COUNT = 6;
+static const int ITEM_COUNT = 5;
 static const int ITEM_SIZE = 77;
 
-//class ZLQtLabelAction : public QLabel {
+ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent), myLayout(0) {
 
-//public:
-//	ZLQtLabelAction(shared_ptr<ZLTreeAction> action, QWidget *parent=0, Qt::WindowFlags f=0);
+	myContainerWidget = new QWidget;
+	myContainerWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
-//protected:
-//	 void mousePressEvent(QMouseEvent *ev);
+	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+	setWidget(myContainerWidget);
+	setFrameShape(QFrame::NoFrame);
+	setWidgetResizable(true);
+	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
-//private:
-//	shared_ptr<ZLTreeAction> myAction;
-//};
-
-//ZLQtLabelAction::ZLQtLabelAction(shared_ptr<ZLTreeAction> action,QWidget *parent, Qt::WindowFlags f) :
-//	QLabel(parent, f), myAction(action) {
-//}
-
-//void ZLQtLabelAction::mousePressEvent(QMouseEvent *) {
-//	if (myAction.isNull() || !myAction->makesSense()) {
-//		return;
-//	}
-//	myAction->run();
-//}
-
-
-ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QWidget(parent), myLayout(0) {
-//	setFixedWidth(ITEM_WIDTH);
-//	setFixedHeight(ITEM_HEIGHT * ITEM_COUNT); //TODO make rubber design
-
-	setMinimumSize(ITEM_WIDTH, ITEM_HEIGHT * ITEM_COUNT);
-	setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Maximum);
 }
 
 void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 	if (myLayout != 0) {
 		delete myLayout;
-		qDeleteAll(this->children());
+		qDeleteAll(myContainerWidget->children());
 	}
 	myItems.clear();
 	myLayout = new QVBoxLayout;
 	myLayout->setContentsMargins(0,0,0,0);
 	myLayout->setSpacing(0);
-	myLayout->setSizeConstraint(QLayout::SetMinimumSize);
-	setLayout(myLayout);
+	myLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+	myContainerWidget->setLayout(myLayout);
 
 	foreach(ZLTreeNode* node, expandNode->children()) {
 		if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
 			//qDebug() << QString::fromStdString(titledNode->title());
 			ZLQtTreeItem *item = new ZLQtTreeItem(titledNode);
 			connect(item, SIGNAL(clicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*))); //action ExpandAction used instead
+			connect(item, SIGNAL(doubleClicked(const ZLTreeNode*)), this, SIGNAL(nodeDoubleClicked(const ZLTreeNode*)));
 			myLayout->addWidget(item);
 			myItems.push_back(item);
 		}
 	}
 
 	myLayout->addStretch();
+}
+
+QSize ZLQtItemsListWidget::sizeHint() const {
+	return QSize(0, ITEM_HEIGHT * ITEM_COUNT);
+}
+
+void ZLQtItemsListWidget::setMinimumWidth(int w) {
+	myContainerWidget->setMinimumWidth(w - verticalScrollBar()->width());
+	QScrollArea::setMinimumWidth(w);
 }
 
 void ZLQtItemsListWidget::onNodeClicked(const ZLTreeNode *node) {
@@ -105,10 +99,12 @@ void ZLQtItemsListWidget::onNodeClicked(const ZLTreeNode *node) {
 }
 
 
-ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWidget(parent), myNode(node), isActive(false) {
+ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QFrame(parent), myNode(node) {
+	setAutoFillBackground(true);
+	setActive(false);
+
 	QHBoxLayout *mainLayout = new QHBoxLayout;
 	QVBoxLayout *titlesLayout = new QVBoxLayout;
-	QHBoxLayout *actionsLayout = new QHBoxLayout;
 
 	QLabel *icon = new QLabel;
 	QLabel *title = new QLabel(QString("<b>%1</b>").arg(QString::fromStdString(node->title())));
@@ -116,27 +112,14 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	title->setWordWrap(true);
 	subtitle->setWordWrap(true);
 
-	title->setMinimumWidth(ITEM_WIDTH-100);
-	subtitle->setMinimumWidth(ITEM_WIDTH-100);
+	QSizePolicy policy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
+	policy.setHorizontalStretch(1);
+	title->setSizePolicy(policy);
+	subtitle->setSizePolicy(policy);
 
 	titlesLayout->addWidget(title);
 	titlesLayout->addWidget(subtitle);
 
-
-	foreach(shared_ptr<ZLTreeAction> action, node->actions()) {
-		if (!action->makesSense()) {
-			continue;
-		}
-		QPushButton *actionButton = new ZLQtButtonAction(action);
-		QString text = QString::fromStdString(node->actionText(action));
-		actionButton->setText(text);
-		//actionButton->setCursor(Qt::PointingHandCursor);
-		actionsLayout->addWidget(actionButton);
-	}
-
-	actionsLayout->addStretch();
-
-	titlesLayout->addLayout(actionsLayout);
 	shared_ptr<const ZLImage> image = node->image();
 	if (!image.isNull()) {
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
@@ -149,11 +132,23 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QWid
 	mainLayout->addStretch();
 	setLayout(mainLayout);
 
-	setMinimumSize(ITEM_WIDTH, ITEM_HEIGHT); //TODO make rubber design
+	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+	setFixedHeight(ITEM_HEIGHT);
 }
 
 void ZLQtTreeItem::setActive(bool active) {
 	isActive = active;
+
+	//TODO due to different themes on OS, take a color from existed palette
+	QColor mainColor = isActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
+
+	setFrameStyle(QFrame::Panel | QFrame::Raised);
+	setLineWidth(2);
+
+	QPalette p = palette();
+	p.setColor(QPalette::Window, mainColor);
+	setPalette(p);
+
 	update();
 }
 
@@ -165,54 +160,59 @@ void ZLQtTreeItem::mousePressEvent(QMouseEvent *) {
 	emit clicked(myNode);
 }
 
+void ZLQtTreeItem::mouseDoubleClickEvent(QMouseEvent *) {
+	emit doubleClicked(myNode);
+}
+
 void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
 	//qDebug() << Q_FUNC_INFO << event->rect();
-	QWidget::paintEvent(event);
-	QColor mainColor = isActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
-	int h = mainColor.hue();
-	int s = mainColor.saturation();
-	int v = mainColor.value();
-	QColor shadowColor1 = QColor::fromHsv(h,s,v - 23); //these numbers are getted from experiments with Photoshop
-	QColor shadowColor2 = QColor::fromHsv(h,s,v - 43);
-	QColor shadowColor3 = QColor::fromHsv(h,s,v - 71);
-	QColor shadowColor4 = QColor::fromHsv(h,s,v - 117);
-	QColor shadowColor5 = QColor::fromHsv(h,s,v - 155);
+	QFrame::paintEvent(event);
+	return;
+//	QColor mainColor = isActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
+//	int h = mainColor.hue();
+//	int s = mainColor.saturation();
+//	int v = mainColor.value();
+//	QColor shadowColor1 = QColor::fromHsv(h,s,v - 23); //these numbers are getted from experiments with Photoshop
+//	QColor shadowColor2 = QColor::fromHsv(h,s,v - 43);
+//	QColor shadowColor3 = QColor::fromHsv(h,s,v - 71);
+//	QColor shadowColor4 = QColor::fromHsv(h,s,v - 117);
+//	QColor shadowColor5 = QColor::fromHsv(h,s,v - 155);
 
-	QColor shadowUpColor = QColor::fromHsv(h,s,v - 114);
+//	QColor shadowUpColor = QColor::fromHsv(h,s,v - 114);
 
 
 
-	//QColor shadow(196,193,189); //TODO not hardcode the color automatically
+//	//QColor shadow(196,193,189); //TODO not hardcode the color automatically
 
-	QPainter painter(this);
-	QRect rect = this->rect();
+//	QPainter painter(this);
+//	QRect rect = this->rect();
 
-	//painter.setBrush(mainColor);
-	painter.fillRect(rect, mainColor);
+//	//painter.setBrush(mainColor);
+//	painter.fillRect(rect, mainColor);
 
-	painter.setPen(shadowColor5);
-	painter.drawLine(rect.left() + 2, rect.bottom(), rect.right(), rect.bottom());
+//	painter.setPen(shadowColor5);
+//	painter.drawLine(rect.left() + 2, rect.bottom(), rect.right(), rect.bottom());
 
-	painter.setPen(shadowColor4);
-	//painter.drawLine(rect.left() + 2, rect.top() + 1, rect.right() - 2, rect.top() + 1);
+//	painter.setPen(shadowColor4);
+//	//painter.drawLine(rect.left() + 2, rect.top() + 1, rect.right() - 2, rect.top() + 1);
 
-	painter.setPen(shadowColor3);
-	painter.drawLine(rect.left() + 4, rect.bottom() - 1, rect.right(), rect.bottom() - 1);
+//	painter.setPen(shadowColor3);
+//	painter.drawLine(rect.left() + 4, rect.bottom() - 1, rect.right(), rect.bottom() - 1);
 
-	//painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
+//	//painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
 
-	painter.drawLine(rect.right(), rect.top() + 2, rect.right(), rect.bottom() - 1);
-	painter.drawLine(rect.left() + 1, rect.top(), rect.left() + 1, rect.bottom() - 1);
+//	painter.drawLine(rect.right(), rect.top() + 2, rect.right(), rect.bottom() - 1);
+//	painter.drawLine(rect.left() + 1, rect.top(), rect.left() + 1, rect.bottom() - 1);
 
-	painter.setPen(shadowColor2);
-	painter.drawLine(rect.left(), rect.top() + 1, rect.left(), rect.bottom() - 2);
-	painter.drawLine(rect.right() - 1, rect.top() + 2, rect.right() - 1, rect.bottom() - 2);
+//	painter.setPen(shadowColor2);
+//	painter.drawLine(rect.left(), rect.top() + 1, rect.left(), rect.bottom() - 2);
+//	painter.drawLine(rect.right() - 1, rect.top() + 2, rect.right() - 1, rect.bottom() - 2);
 
-	painter.setPen(shadowColor1);
-	painter.drawLine(rect.left() + 5, rect.bottom() - 2, rect.right() - 2, rect.bottom() - 2);
-	painter.drawLine(rect.right() - 2, rect.top() + 2, rect.right() - 2, rect.bottom() - 2);
+//	painter.setPen(shadowColor1);
+//	painter.drawLine(rect.left() + 5, rect.bottom() - 2, rect.right() - 2, rect.bottom() - 2);
+//	painter.drawLine(rect.right() - 2, rect.top() + 2, rect.right() - 2, rect.bottom() - 2);
 
-	painter.setPen(shadowUpColor);
-	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
+//	painter.setPen(shadowUpColor);
+	//	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
 
 }

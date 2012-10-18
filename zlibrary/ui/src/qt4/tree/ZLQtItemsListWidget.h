@@ -21,32 +21,38 @@
 #define __ZLQTITEMSLISTWIDGET_H__
 
 #include <QtGui/QWidget>
+#include <QtGui/QFrame>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
+#include <QtGui/QScrollArea>
 
 #include <ZLTreeTitledNode.h>
 
 class ZLQtTreeItem;
 
-class ZLQtItemsListWidget : public QWidget {
+class ZLQtItemsListWidget : public QScrollArea {
 	Q_OBJECT
 public:
 	ZLQtItemsListWidget(QWidget *parent = 0);
 	void fillNodes(const ZLTreeNode *rootNode);
+	QSize sizeHint() const;
+	void setMinimumWidth(int w);
 
 Q_SIGNALS:
 	void nodeClicked(const ZLTreeNode *node);
+	void nodeDoubleClicked(const ZLTreeNode *node);
 
 public Q_SLOTS:
 	void onNodeClicked(const ZLTreeNode *node);
 
 private:
+	QWidget *myContainerWidget;
 	QVBoxLayout *myLayout;
 	QList<ZLQtTreeItem*> myItems;
 };
 
-class ZLQtTreeItem : public QWidget {
+class ZLQtTreeItem : public QFrame {
 	Q_OBJECT
 
 public:
@@ -56,9 +62,11 @@ public:
 
 Q_SIGNALS:
 	void clicked(const ZLTreeNode *node);
+	void doubleClicked(const ZLTreeNode *node);
 
 protected:
 	 void mousePressEvent(QMouseEvent *event);
+	 void mouseDoubleClickEvent(QMouseEvent *event);
 	 void paintEvent(QPaintEvent *event);
 private:
 	 const ZLTreeTitledNode *myNode;
