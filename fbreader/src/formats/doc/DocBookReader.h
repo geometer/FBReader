@@ -87,8 +87,8 @@ private:
 
 	//formatting
 	std::vector<FBTextKind> myKindStack;
-	shared_ptr<ZLTextStyleEntry> myCurStyleEntry;
-	OleMainStream::Style myCurStyleInfo;
+	shared_ptr<ZLTextStyleEntry> myCurrentStyleEntry;
+	OleMainStream::Style myCurrentStyleInfo;
 	unsigned int myPictureCounter;
 };
 
