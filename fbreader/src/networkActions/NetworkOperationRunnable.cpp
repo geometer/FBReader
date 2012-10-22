@@ -213,3 +213,16 @@ LoadSubCatalogRunnable::LoadSubCatalogRunnable(NetworkCatalogItem &item, Network
 void LoadSubCatalogRunnable::run() {
 	myErrorMessage = myItem.loadChildren(myChildren);
 }
+
+DownloadBookRunnableAsync::DownloadBookRunnableAsync(shared_ptr<BookReference> reference, shared_ptr<NetworkAuthenticationManager> authManager) {
+	myReference = reference;
+	myAuthManager = authManager;
+}
+
+void DownloadBookRunnableAsync::run() {
+}
+
+void DownloadBookRunnableAsync::showPercent(int /*ready*/, int /*full*/) {}
+
+void DownloadBookRunnableAsync::finished(const std::string &error) {
+}

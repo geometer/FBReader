@@ -106,7 +106,7 @@ std::string ZLQtNetworkManager::perform(const ZLNetworkRequest::Vector &requests
 
 		setHeadersAndSsl(networkRequest, request->sslCertificate().DoVerify);
 		QTimer* timeoutTimer = new QTimer;
-		ZLQtNetworkReplyScope scope = { &(*request), timeoutTimer, false, &replies, &errors, &eventLoop};
+		ZLQtNetworkReplyScope scope = { request, timeoutTimer, false, &replies, &errors, &eventLoop};
 		prepareReply(scope, networkRequest);
 	}
 	if (!replies.isEmpty()) {
@@ -137,7 +137,7 @@ std::string ZLQtNetworkManager::performAsync(const ZLNetworkRequest::Vector &req
 
 		setHeadersAndSsl(networkRequest, request->sslCertificate().DoVerify);
 		QTimer* timeoutTimer = new QTimer;
-		ZLQtNetworkReplyScope scope = {&(*request), timeoutTimer, false, 0, 0, 0};
+		ZLQtNetworkReplyScope scope = { request, timeoutTimer, false, 0, 0, 0};
 		prepareReply(scope, networkRequest);
 	}
 	return std::string();

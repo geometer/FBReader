@@ -119,6 +119,12 @@ std::string ZLNetworkManager::perform(shared_ptr<ZLNetworkRequest> request) cons
 	return perform(requestVector);
 }
 
+std::string ZLNetworkManager::performAsync(shared_ptr<ZLNetworkRequest> request) const {
+	ZLNetworkRequest::Vector requestVector;
+	requestVector.push_back(request);
+	return performAsync(requestVector);
+}
+
 bool ZLNetworkManager::connect() const {
 	return true;
 }
@@ -148,8 +154,11 @@ std::string ZLNetworkManager::downloadFile(const std::string &url, const std::st
 
 std::string ZLNetworkManager::downloadFile(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener) const {
 	shared_ptr<ZLNetworkRequest> data = createDownloadRequest(url, sslCertificate, fileName);
+	if (listener.isNull()) {
+		return perform(data);
+	}
 	data->setListener(listener);
-	return perform(data);
+	return performAsync(data);
 }
 
 shared_ptr<ZLNetworkRequest> ZLNetworkManager::createDownloadRequest(const std::string &url, const std::string &fileName) const {

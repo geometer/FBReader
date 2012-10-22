@@ -21,7 +21,9 @@
 #include <ZLFile.h>
 #include <ZLStringUtil.h>
 #include <ZLDialogManager.h>
+#include <ZLNetworkRequest.h>
 
+#include "../network/NetworkLinkCollection.h"
 #include "NetworkActions.h"
 #include "AuthenticationDialog.h"
 #include "NetworkOperationRunnable.h"
@@ -100,6 +102,61 @@ bool NetworkBookDownloadAction::makesSense() const {
 	}
 }
 
+//void NetworkBookDownloadAction::run() {
+//	if (!NetworkOperationRunnable::tryConnect()) {
+//		return;
+//	}
+
+//	shared_ptr<BookReference> reference = myBook.reference(
+//		myDemo ? BookReference::DOWNLOAD_DEMO : BookReference::DOWNLOAD_FULL
+//	);
+//	if (reference.isNull()) {
+//		return;
+//	}
+
+//	DownloadBookRunnable downloader(reference, myBook.Link.authenticationManager());
+//	downloader.executeWithUI();
+//	if (downloader.hasErrors()) {
+//		downloader.showErrorMessage();
+//		return;
+//	}
+
+//	FBReader &fbreader = FBReader::Instance();
+//	shared_ptr<Book> downloaderBook;
+//	const std::string fileName = downloader.fileName();
+//	fbreader.createBook(ZLFile(fileName), downloaderBook);
+//	if (downloaderBook.isNull()) {
+//		ZLFile(fileName).remove();
+//		ZLResourceKey boxKey("cantOpenDownloadedFile");
+//		const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myBook.Title);
+//		ZLDialogManager::Instance().errorBox(boxKey, message);
+//		fbreader.refreshWindow();
+//		return;
+//	}
+
+//	downloaderBook->removeAllAuthors();
+//	for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = myBook.Authors.begin(); it != myBook.Authors.end(); ++it) {
+//		downloaderBook->addAuthor(it->DisplayName, it->SortKey);
+//	}
+//	std::string bookTitle = myBook.Title;
+//	if (!myTag.empty()) {
+//		bookTitle += " (" + myTag + ")";
+//	}
+//	downloaderBook->setTitle(bookTitle);
+//	downloaderBook->setLanguage(myBook.Language);
+//	for (std::vector<std::string>::const_iterator it = myBook.Tags.begin(); it != myBook.Tags.end(); ++it) {
+//		downloaderBook->addTag(*it);
+//	}
+//	if (!myTag.empty()) {
+//		downloaderBook->addTag(myTag);
+//	}
+//	Library::Instance().addBook(downloaderBook);
+
+//	fbreader.openBook(downloaderBook);
+//	fbreader.setMode(FBReader::BOOK_TEXT_MODE);
+//	fbreader.refreshWindow();
+//}
+
 void NetworkBookDownloadAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
 		return;
@@ -111,20 +168,22 @@ void NetworkBookDownloadAction::run() {
 	if (reference.isNull()) {
 		return;
 	}
-
-	DownloadBookRunnable downloader(reference, myBook.Link.authenticationManager());
-	downloader.executeWithUI();
-	if (downloader.hasErrors()) {
-		downloader.showErrorMessage();
-		return;
+	shared_ptr<NetworkAuthenticationManager> manager = myBook.Link.authenticationManager();
+	bool result = NetworkLinkCollection::Instance().downloadBook(*reference, myFileName, manager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : manager->certificate(), this);
+	if (!result) {
+		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), NetworkLinkCollection::Instance().errorMessage());
 	}
+}
 
+void NetworkBookDownloadAction::finished(const std::string &error) {
+	if (!error.empty()) {
+		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), error);
+	}
 	FBReader &fbreader = FBReader::Instance();
 	shared_ptr<Book> downloaderBook;
-	const std::string fileName = downloader.fileName();
-	fbreader.createBook(ZLFile(fileName), downloaderBook);
+	fbreader.createBook(ZLFile(myFileName), downloaderBook);
 	if (downloaderBook.isNull()) {
-		ZLFile(fileName).remove();
+		ZLFile(myFileName).remove();
 		ZLResourceKey boxKey("cantOpenDownloadedFile");
 		const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myBook.Title);
 		ZLDialogManager::Instance().errorBox(boxKey, message);

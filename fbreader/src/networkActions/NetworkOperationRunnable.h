@@ -70,6 +70,21 @@ private:
 	std::string myFileName;
 };
 
+class DownloadBookRunnableAsync : public ZLNetworkRequest::Listener {
+
+public:
+	DownloadBookRunnableAsync(shared_ptr<BookReference> reference, shared_ptr<NetworkAuthenticationManager> authManager);
+	void run();
+
+	void showPercent(int ready, int full);
+	void finished(const std::string &error);
+
+private:
+	shared_ptr<BookReference> myReference;
+	shared_ptr<NetworkAuthenticationManager> myAuthManager;
+	std::string myFileName;
+};
+
 class IsAuthorisedRunnable : public NetworkOperationRunnable {
 
 public:

@@ -34,7 +34,7 @@ class QNetworkReply;
 class QEventLoop;
 
 struct ZLQtNetworkReplyScope {
-	ZLNetworkRequest *request;
+	shared_ptr<ZLNetworkRequest> request;
 	QTimer* timeoutTimer;
 	bool authAskedAlready; //to avoid infinite asking about user & password if they're incorrect
 	//following are used only for synchronous network operations

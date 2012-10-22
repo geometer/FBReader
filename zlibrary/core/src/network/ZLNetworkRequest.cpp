@@ -78,3 +78,5 @@ ZLNetworkRequest::Listener::Listener() {
 
 ZLNetworkRequest::Listener::~Listener() {
 }
+
+void ZLNetworkRequest::Listener::showPercent(int /*ready*/, int /*full*/){}

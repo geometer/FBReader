@@ -355,19 +355,19 @@ void FBReader::tryShowFootnoteView(const std::string &id, ZLHyperlinkType type) 
 			}
 		}
 	} else if (type == HYPERLINK_BOOK) {
-		DownloadBookRunnable downloader(id);
-		downloader.executeWithUI();
-		if (downloader.hasErrors()) {
-			downloader.showErrorMessage();
-		} else {
-			shared_ptr<Book> book;
-			createBook(ZLFile(downloader.fileName()), book);
-			if (!book.isNull()) {
-				Library::Instance().addBook(book);
-				openBook(book);
-				refreshWindow();
-			}
-		}
+//		DownloadBookRunnable downloader(id);
+//		downloader.executeWithUI();
+//		if (downloader.hasErrors()) {
+//			downloader.showErrorMessage();
+//		} else {
+//			shared_ptr<Book> book;
+//			createBook(ZLFile(downloader.fileName()), book);
+//			if (!book.isNull()) {
+//				Library::Instance().addBook(book);
+//				openBook(book);
+//				refreshWindow();
+//			}
+//		}
 	}
 }
 

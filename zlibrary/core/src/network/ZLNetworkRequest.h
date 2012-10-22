@@ -42,7 +42,7 @@ public:
 	public:
 		virtual ~Listener();
 		virtual void finished(const std::string &error = std::string()) = 0;
-		virtual void showPercent(int ready, int full) = 0;
+		virtual void showPercent(int ready, int full);
 
 	friend class ZLNetworkRequest;
 	};

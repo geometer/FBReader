@@ -21,10 +21,11 @@
 #define __NETWORKACTIONS_H__
 
 #include <ZLRunnable.h>
+#include <ZLNetworkRequest.h>
 
 class NetworkBookItem;
 
-class NetworkBookDownloadAction : public ZLRunnableWithKey {
+class NetworkBookDownloadAction : public ZLRunnableWithKey, public ZLNetworkRequest::Listener {
 
 public:
 	NetworkBookDownloadAction(const NetworkBookItem &book, bool demo, const std::string &tag = std::string());
@@ -32,10 +33,13 @@ public:
 	bool makesSense() const;
 	void run();
 
+	void finished(const std::string &error);
+
 private:
 	const NetworkBookItem &myBook;
 	const bool myDemo;
 	const std::string myTag;
+	std::string myFileName;
 };
 
 class NetworkBookReadAction : public ZLRunnableWithKey {

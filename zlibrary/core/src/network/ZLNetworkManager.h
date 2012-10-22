@@ -58,7 +58,9 @@ protected:
 
 public:
 	virtual std::string perform(const ZLNetworkRequest::Vector &requests) const = 0;
+	virtual std::string performAsync(const ZLNetworkRequest::Vector &requests) const = 0;
 	std::string perform(shared_ptr<ZLNetworkRequest> request) const;
+	std::string performAsync(shared_ptr<ZLNetworkRequest> request) const;
 
 public:
 	virtual bool connect() const;
