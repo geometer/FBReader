@@ -93,7 +93,7 @@ std::string NetworkCatalogTree::imageUrl() const {
 	return url;
 }
 
-void NetworkCatalogTree::requestChildren(shared_ptr<ZLExecutionData::Listener> /*listener*/) {
+void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> /*listener*/) {
 	myChildrenItems.clear();
 	LoadSubCatalogRunnable loader(item(), myChildrenItems);
 	loader.executeWithUI();

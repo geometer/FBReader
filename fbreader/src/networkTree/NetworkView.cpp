@@ -19,7 +19,8 @@
 
 #include <ZLResource.h>
 #include <ZLImage.h>
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
+#include <ZLNetworkManager.h>
 #include <ZLTimeManager.h>
 
 #include "NetworkView.h"
@@ -58,14 +59,14 @@ private:
 public:
 	~CoverUpdater();
 
-	void addTask(shared_ptr<ZLExecutionData> data);
+	void addTask(shared_ptr<ZLNetworkRequest> data);
 	bool hasTasks() const;
 
 private:
 	void run();
 
 private:
-	ZLExecutionData::Vector myDataVector;
+	ZLNetworkRequest::Vector myRequests;
 };
 
 class NetworkView::CoverUpdaterRunner : public ZLRunnable {
@@ -94,18 +95,18 @@ NetworkView::CoverUpdater::~CoverUpdater() {
 	--Counter;
 }
 
-void NetworkView::CoverUpdater::addTask(shared_ptr<ZLExecutionData> data) {
+void NetworkView::CoverUpdater::addTask(shared_ptr<ZLNetworkRequest> data) {
 	if (!data.isNull()) {
-		myDataVector.push_back(data);
+		myRequests.push_back(data);
 	}
 }
 
 bool NetworkView::CoverUpdater::hasTasks() const {
-	return !myDataVector.empty();
+	return !myRequests.empty();
 }
 
 void NetworkView::CoverUpdater::run() {
-	ZLExecutionData::perform(myDataVector);
+	ZLNetworkManager::Instance().perform(myRequests);
 }
 
 NetworkView::CoverUpdaterRunner::CoverUpdaterRunner(shared_ptr<CoverUpdater> updater) : myUpdater(updater) {

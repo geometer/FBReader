@@ -28,7 +28,7 @@ ZLProgressDialog::ZLProgressDialog(const ZLResourceKey &key) : myMessage(ZLDialo
 ZLProgressDialog::~ZLProgressDialog() {
 }
 
-class ZLProgressDialog::ProgressListener : public ZLExecutionData::Listener {
+class ZLProgressDialog::ProgressListener : public ZLNetworkRequest::Listener {
 
 public:
 	ProgressListener(ZLProgressDialog &dialog);
@@ -61,6 +61,6 @@ void ZLProgressDialog::ProgressListener::showPercent(int ready, int full) {
 ZLProgressDialog::ProgressListener::ProgressListener(ZLProgressDialog &dialog) : myDialog(dialog) {
 }
 
-shared_ptr<ZLExecutionData::Listener> ZLProgressDialog::listener() {
+shared_ptr<ZLNetworkRequest::Listener> ZLProgressDialog::listener() {
 	return new ProgressListener(*this);
 }

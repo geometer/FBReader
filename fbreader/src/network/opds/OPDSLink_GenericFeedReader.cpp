@@ -20,7 +20,7 @@
 #include <ZLNetworkUtil.h>
 #include <ZLStringUtil.h>
 #include <ZLMimeType.h>
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 #include <ZLNetworkManager.h>
 
 #include "../authentication/basic/BasicAuthenticationManager.h"

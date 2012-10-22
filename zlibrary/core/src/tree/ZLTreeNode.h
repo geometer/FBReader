@@ -28,7 +28,7 @@
 #include <ZLTypeId.h>
 #include <ZLRunnable.h>
 #include <ZLPaintContext.h>
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 
 // Nowadays I see hierarchy in this way:
 //
@@ -43,7 +43,7 @@
 
 class ZLTreeListener;
 
-//class ZLTreeAction : public ZLExecutionData { //using ZLRunnableWithKey instead
+//class ZLTreeAction : public ZLNetworkRequest { //using ZLRunnableWithKey instead
 //public:
 //	static const ZLTypeId TYPE_ID;
 	
@@ -83,7 +83,7 @@ public:
 	const List &children() const;
 	size_t childIndex() const;
 	// Children should be requested from network only if we need them
-	virtual void requestChildren(shared_ptr<ZLExecutionData::Listener> listener = 0);
+	virtual void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener = 0);
 	
 	virtual const ZLResource &resource() const;
 	void registerAction(shared_ptr<ZLTreeAction> action);

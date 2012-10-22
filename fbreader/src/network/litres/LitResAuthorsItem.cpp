@@ -51,7 +51,7 @@ std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children) {
 	//TODO maybe add sid parameter if possible
 	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
 	LitResAuthorsParser::AuthorsList authors;
-	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createXMLParserRequest(
 		getCatalogUrl(),
 		new LitResAuthorsParser(authors)
 	);

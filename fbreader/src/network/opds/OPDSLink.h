@@ -67,18 +67,18 @@ public:
 private:
 	const std::string searchURL(const std::string &pattern) const;
 
-	shared_ptr<ZLExecutionData> createNetworkData(const std::string &url, NetworkOperationData &result) const;
+	shared_ptr<ZLNetworkRequest> createNetworkData(const std::string &url, NetworkOperationData &result) const;
 
-	shared_ptr<ZLExecutionData> simpleSearchData(
+	shared_ptr<ZLNetworkRequest> simpleSearchData(
 		NetworkOperationData &result,
 		const std::string &pattern) const;
-	shared_ptr<ZLExecutionData> advancedSearchData(
+	shared_ptr<ZLNetworkRequest> advancedSearchData(
 		NetworkOperationData &result,
 		const std::string &titleAndSeries,
 		const std::string &author,
 		const std::string &tag,
 		const std::string &annotation) const;
-	shared_ptr<ZLExecutionData> resume(NetworkOperationData &result) const;
+	shared_ptr<ZLNetworkRequest> resume(NetworkOperationData &result) const;
 
 	shared_ptr<NetworkItem> libraryItem() const;
 	shared_ptr<NetworkAuthenticationManager> authenticationManager() const;

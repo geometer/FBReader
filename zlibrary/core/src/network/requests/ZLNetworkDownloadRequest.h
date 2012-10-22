@@ -25,7 +25,7 @@
 
 class ZLOutputStream;
 
-class ZLNetworkDownloadRequest : public ZLNetworkGetRequest {
+class ZLNetworkDownloadRequest : public ZLNetworkRequest {
 
 public:
 	ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName);

@@ -31,7 +31,7 @@
 
 ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate,
 		const std::string &fileName) :
-	ZLNetworkGetRequest(url, sslCertificate),
+	ZLNetworkRequest(url, sslCertificate),
 	myFileName(fileName),
 	myFileSize(-1),
 	myDownloadedSize(0) {
@@ -39,7 +39,7 @@ ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, const
 
 ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate,
 		shared_ptr<ZLOutputStream> stream) :
-	ZLNetworkGetRequest(url, sslCertificate),
+	ZLNetworkRequest(url, sslCertificate),
 	myFileSize(-1),
 	myDownloadedSize(0),
 	myOutputStream(stream) {

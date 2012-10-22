@@ -30,7 +30,7 @@
 #include "NetworkItems.h"
 #include "atom/ATOMMetadata.h"
 
-class ZLExecutionData;
+class ZLNetworkRequest;
 
 class NetworkOperationData;
 class NetworkAuthenticationManager;
@@ -81,9 +81,9 @@ public:
 	void loadSummaryFrom(const NetworkLink & link);
 
 public:
-	virtual shared_ptr<ZLExecutionData> simpleSearchData(NetworkOperationData &data, const std::string &pattern) const = 0;
-	virtual shared_ptr<ZLExecutionData> advancedSearchData(NetworkOperationData &data, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) const = 0;
-	virtual shared_ptr<ZLExecutionData> resume(NetworkOperationData &data) const;
+	virtual shared_ptr<ZLNetworkRequest> simpleSearchData(NetworkOperationData &data, const std::string &pattern) const = 0;
+	virtual shared_ptr<ZLNetworkRequest> advancedSearchData(NetworkOperationData &data, const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) const = 0;
+	virtual shared_ptr<ZLNetworkRequest> resume(NetworkOperationData &data) const;
 
 	virtual shared_ptr<NetworkAuthenticationManager> authenticationManager() const = 0;
 	virtual shared_ptr<NetworkItem> libraryItem() const = 0;

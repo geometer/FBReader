@@ -23,7 +23,7 @@
 #include "../ZLNetworkRequest.h"
 
 
-class ZLNetworkNoActionRequest : public ZLNetworkGetRequest {
+class ZLNetworkNoActionRequest : public ZLNetworkRequest {
 
 public:
 	ZLNetworkNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);

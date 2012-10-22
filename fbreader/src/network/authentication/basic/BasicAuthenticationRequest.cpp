@@ -61,7 +61,7 @@ bool parseHTTPStatusLine(const std::string &line, std::string &httpVersion, std:
 	return true;
 }
 
-BasicAuthenticationRequest::BasicAuthenticationRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) : ZLNetworkGetRequest(url, sslCertificate) {
+BasicAuthenticationRequest::BasicAuthenticationRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) : ZLNetworkRequest(url, sslCertificate) {
 }
 
 bool BasicAuthenticationRequest::handleHeader(void *ptr, size_t size) {

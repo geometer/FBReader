@@ -47,7 +47,7 @@ NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::i
 		return AuthenticationStatus(false);
 	}
 
-	shared_ptr<ZLExecutionData> data = new BasicAuthenticationRequest(
+	shared_ptr<ZLNetworkRequest> data = new BasicAuthenticationRequest(
 		Link.url(NetworkLink::URL_SIGN_IN),
 		certificate()
 	);
@@ -70,7 +70,7 @@ NetworkAuthenticationManager::AuthenticationStatus BasicAuthenticationManager::i
 }
 
 std::string BasicAuthenticationManager::authorise(const std::string &pwd) {
-	shared_ptr<ZLExecutionData> data = new BasicAuthenticationRequest(
+	shared_ptr<ZLNetworkRequest> data = new BasicAuthenticationRequest(
 		Link.url(NetworkLink::URL_SIGN_IN),
 		certificate()
 	);
@@ -97,7 +97,7 @@ void BasicAuthenticationManager::logOut() {
 	const std::string signOutUrl = Link.url(NetworkLink::URL_SIGN_OUT);
 	if (!signOutUrl.empty()) {
 		// TODO: is it so necessary to clean up cookies???
-		shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createNoActionRequest(
+		shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createNoActionRequest(
 			signOutUrl,
 			certificate()
 		);

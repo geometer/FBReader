@@ -65,7 +65,7 @@ ZLNetworkImage::ZLNetworkImage(shared_ptr<ZLMimeType> mimeType, const std::strin
 	}
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkImage::synchronizationData() const {
+shared_ptr<ZLNetworkRequest> ZLNetworkImage::synchronizationData() const {
 	if (myIsSynchronized) {
 		return 0;
 	}

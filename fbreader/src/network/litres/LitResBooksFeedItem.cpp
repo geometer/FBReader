@@ -55,7 +55,7 @@ void LitResBooksFeedItem::onDisplayItem() {
 std::string LitResBooksFeedItem::loadChildren(NetworkItem::List &children) {
 	//TODO maybe add sid parameter if possible
 	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
-	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createXMLParserRequest(
 		getCatalogUrl(),
 		new LitResBooksFeedParser(Link, children)
 	);

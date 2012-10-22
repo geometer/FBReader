@@ -22,7 +22,7 @@
 
 #include <set>
 
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 #include <ZLNetworkSSLCertificate.h>
 
 #include "../NetworkAuthenticationManager.h"
@@ -54,11 +54,11 @@ public:
 	const std::set<std::string> &getPurchasedIds() const;
 
 private:
-	shared_ptr<ZLExecutionData> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
+	shared_ptr<ZLNetworkRequest> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
 	void loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
 	void loadPurchasedBooksOnSuccess(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
 
-	shared_ptr<ZLExecutionData> loadAccount(std::string &dummy1);
+	shared_ptr<ZLNetworkRequest> loadAccount(std::string &dummy1);
 	void loadAccountOnError();
 	void loadAccountOnSuccess();
 
