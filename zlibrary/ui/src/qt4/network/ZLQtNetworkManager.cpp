@@ -95,40 +95,52 @@ std::string ZLQtNetworkManager::perform(const ZLNetworkRequest::Vector &requests
 		networkRequest.setUrl(QUrl::fromUserInput(QString::fromStdString(request->url())));
 
 		if (!request->doBefore()) {
-			if (!request->hasListener()) { //TODO maybe remove this; or add listener notification about error
-				std::string error = request->errorMessage();
-				if (error.empty()) {
-					const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
-					error = ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), networkRequest.url().host().toStdString());
-				}
-				errors << QString::fromStdString(error);
+			std::string error = request->errorMessage();
+			if (error.empty()) {
+				const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
+				error = ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), networkRequest.url().host().toStdString());
 			}
+			errors << QString::fromStdString(error);
 			continue;
 		}
 
-		networkRequest.setRawHeader("User-Agent", userAgent().c_str());
-		QSslConfiguration configuration = QSslConfiguration::defaultConfiguration();
-		if (!request->sslCertificate().DoVerify) {
-			configuration.setPeerVerifyMode(QSslSocket::VerifyNone);
-		}
-		networkRequest.setSslConfiguration(configuration);
-
+		setHeadersAndSsl(networkRequest, request->sslCertificate().DoVerify);
 		QTimer* timeoutTimer = new QTimer;
-		ZLQtNetworkReplyScope scope = {&(*request), timeoutTimer, false, &replies, &errors, &eventLoop};
-		if (request->hasListener()) {
-			qDebug() << "add request with listener" << &request;
-			scope.replies = 0;
-			scope.errors = 0;
-			scope.eventLoop = 0;
-		}
+		ZLQtNetworkReplyScope scope = { &(*request), timeoutTimer, false, &replies, &errors, &eventLoop};
 		prepareReply(scope, networkRequest);
 	}
 	if (!replies.isEmpty()) {
-		qDebug() << "running eventloop";
 		eventLoop.exec(QEventLoop::ExcludeUserInputEvents);
 	}
 
 	return errors.join(QLatin1String("\n")).toStdString();
+}
+
+std::string ZLQtNetworkManager::performAsync(const ZLNetworkRequest::Vector &requestsList) const {
+	if (useProxy()) {
+		QString host = QString::fromStdString(proxyHost());
+		QNetworkProxy proxy(QNetworkProxy::HttpProxy, host, atoi(proxyPort().c_str()));
+		const_cast<QNetworkAccessManager&>(myManager).setProxy(proxy);
+	}
+
+	foreach (const shared_ptr<ZLNetworkRequest> &request, requestsList) {
+		if (request.isNull()) {
+			continue;
+		}
+		QNetworkRequest networkRequest;
+		ZLLogger::Instance().println("network", "async requesting " + request->url());
+		networkRequest.setUrl(QUrl::fromUserInput(QString::fromStdString(request->url())));
+
+		if (!request->doBefore()) {
+			continue;
+		}
+
+		setHeadersAndSsl(networkRequest, request->sslCertificate().DoVerify);
+		QTimer* timeoutTimer = new QTimer;
+		ZLQtNetworkReplyScope scope = {&(*request), timeoutTimer, false, 0, 0, 0};
+		prepareReply(scope, networkRequest);
+	}
+	return std::string();
 }
 
 void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequest networkRequest) const {
@@ -146,8 +158,7 @@ void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequ
 		reply = const_cast<QNetworkAccessManager&>(myManager).get(networkRequest);
 	}
 
-	if (!scope.request->hasListener()) {
-		qDebug() << "add request to replies list" << scope.request;
+	if (scope.replies) {
 		scope.replies->push_back(reply);
 	}
 
@@ -162,12 +173,43 @@ void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequ
 
 void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	reply->deleteLater();
 
-	if (!scope.request->hasListener()) {
-		qDebug() << "removing request from replies list" << scope.request;
-		scope.replies->removeOne(reply);
+	if (!scope.eventLoop) {
+		onFinishedAsync(reply);
+		return;
 	}
+
+	reply->deleteLater();
+	scope.replies->removeOne(reply);
+	scope.timeoutTimer->stop();
+
+	if (!scope.timeoutTimer->property("expired").isValid()) {
+		if (handleRedirect(reply)) {
+			return;
+		}
+		handleHeaders(reply);
+		handleContent(reply);
+	}
+
+	QString error = handleErrors(reply);
+	if (!error.isEmpty()) {
+		scope.errors->push_back(error);
+	}
+
+	scope.timeoutTimer->deleteLater();
+
+	if (!scope.request->doAfter(error.toStdString())) {
+		scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
+	}
+	if (scope.replies->isEmpty()) {
+		scope.eventLoop->quit();
+	}
+}
+
+void ZLQtNetworkManager::onFinishedAsync(QNetworkReply *reply) {
+	qDebug() << Q_FUNC_INFO << reply->url();
+	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	reply->deleteLater();
 	scope.timeoutTimer->stop();
 
 	//TODO maybe timeout is working incorrect?
@@ -179,26 +221,9 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 		handleContent(reply);
 	}
 	scope.timeoutTimer->deleteLater();
-
 	QString error = handleErrors(reply);
-
-	if (scope.request->hasListener()) {
-		scope.request->doAfter(error.toStdString());
-		return;
-	}
-
-	if (!error.isEmpty()) {
-		scope.errors->append(error);
-	}
-	if (!scope.request->doAfter(error.toStdString())) {
-		//TODO maybe fix it: adding second error message
-		scope.errors->append(QString::fromStdString(scope.request->errorMessage()));
-	}
-	if (scope.replies->isEmpty()) {
-		qDebug() << "quitting eventloop";
-		qDebug() << "";
-		scope.eventLoop->quit();
-	}
+	scope.request->doAfter(error.toStdString());
+	return;
 }
 
 bool ZLQtNetworkManager::handleRedirect(QNetworkReply *reply) {
@@ -279,7 +304,7 @@ void ZLQtNetworkManager::handleContent(QNetworkReply *reply) const {
 	}
 }
 
-QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) const {
+QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) {
 	if (reply->error() == QNetworkReply::NoError) {
 		return QString();
 	}
@@ -332,6 +357,15 @@ QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) const {
 			break;
 	}
 	return QString::fromStdString(error);
+}
+
+void ZLQtNetworkManager::setHeadersAndSsl(QNetworkRequest &networkRequest, bool doVerify) const {
+	networkRequest.setRawHeader("User-Agent", userAgent().c_str());
+	QSslConfiguration configuration = QSslConfiguration::defaultConfiguration();
+	if (!doVerify) {
+		configuration.setPeerVerifyMode(QSslSocket::VerifyNone);
+	}
+	networkRequest.setSslConfiguration(configuration);
 }
 
 int ZLQtNetworkManager::timeoutValue() const {

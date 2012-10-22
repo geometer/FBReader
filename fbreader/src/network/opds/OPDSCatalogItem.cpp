@@ -34,60 +34,29 @@ OPDSCatalogItem::OPDSCatalogItem(
 	const UrlInfoCollection &urlByType,
 	AccessibilityType accessibility,
 	int flags
-) : NetworkCatalogItem(link, title, summary, urlByType, accessibility, flags), myData(Link) {
+) : NetworkCatalogItem(link, title, summary, urlByType, accessibility, flags) {
 }
 
-class OPDSCatalogItemScope : public ZLExecutionScope {
-public:
-	shared_ptr<ZLNetworkRequest> networkData;
-	shared_ptr<ZLNetworkRequest::Listener> listener;
-};
+//class OPDSCatalogItemScope : public ZLExecutionScope {
+//public:
+//	shared_ptr<ZLNetworkRequest> networkData;
+//	shared_ptr<ZLNetworkRequest::Listener> listener;
+//};
 
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
+	NetworkOperationData data(Link);
 
-//	NetworkOperationData data(Link);
+	shared_ptr<ZLNetworkRequest> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), data);
 
-//	shared_ptr<ZLNetworkRequest> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), data);
+	while (!networkData.isNull()) {
+		std::string error = ZLNetworkManager::Instance().perform(networkData);
+		if (!error.empty()) {
+			return error;
+		}
 
-//	while (!networkData.isNull()) {
-//		networkData->setListener(listener);
-//		std::string error = ZLNetworkManager::Instance().perform(networkData);
-//		if (!error.empty()) {
-//			return error;
-//		}
-
-//		children.insert(children.end(), data.Items.begin(), data.Items.end());
-//		networkData = data.resume();
-//	}
-
-
-	shared_ptr<ZLNetworkRequest> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), myData);
-
-	OPDSCatalogItemScope *scope = new OPDSCatalogItemScope;
-	scope->networkData = networkData;
-	scope->listener = listener;
-
-	if(!networkData.isNull()) {
-		networkData->setListener(ZLExecutionUtil::createListener(scope, this, &OPDSCatalogItem::onLoadedChildren));
-		ZLNetworkManager::Instance().perform(networkData);
+		children.insert(children.end(), data.Items.begin(), data.Items.end());
+		networkData = data.resume();
 	}
+
 	return "";
-}
-
-void OPDSCatalogItem::onLoadedChildren(ZLExecutionScope &s, std::string error) {
-	OPDSCatalogItemScope &scope = static_cast<OPDSCatalogItemScope&>(s);
-	if (!error.empty()) {
-		myData.clear();
-		scope.listener->finished(error);
-		return;
-	}
-
-	scope.networkData = myData.resume();
-	if (!scope.networkData.isNull()) {
-		scope.networkData->setListener(ZLExecutionUtil::createListener(&scope, this, &OPDSCatalogItem::onLoadedChildren));
-		ZLNetworkManager::Instance().perform(scope.networkData);
-	} else {
-		myData.clear();
-		scope.listener->finished();
-	}
 }

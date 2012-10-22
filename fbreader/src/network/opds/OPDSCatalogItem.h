@@ -40,11 +40,9 @@ public:
 	);
 
 public:
-	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener = 0);
 	void onLoadedChildren(ZLExecutionScope &scope, std::string error);
 
-private:
-	NetworkOperationData myData;
 };
 
 #endif /* __OPDSCATALOGITEM_H__ */

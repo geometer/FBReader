@@ -54,6 +54,10 @@ public:
 	void initPaths();
 
 	std::string perform(const ZLNetworkRequest::Vector &requestsList) const;
+	std::string performAsync(const ZLNetworkRequest::Vector &requestsList) const;
+
+protected:
+	void onFinishedAsync(QNetworkReply *reply);
 
 protected Q_SLOTS:
 	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);
@@ -68,7 +72,8 @@ protected:
 	bool handleRedirect(QNetworkReply *reply);
 	void handleHeaders(QNetworkReply *reply) const;
 	void handleContent(QNetworkReply *reply) const;
-	QString handleErrors(QNetworkReply *reply) const;
+	static QString handleErrors(QNetworkReply *reply);
+	void setHeadersAndSsl(QNetworkRequest &request, bool doVerify) const;
 
 	int timeoutValue() const;
 	void prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequest networkRequest) const;

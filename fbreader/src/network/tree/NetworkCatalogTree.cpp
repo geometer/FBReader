@@ -18,7 +18,6 @@
  */
 
 #include <ZLDialogManager.h>
-#include <ZLExecutionUtil.h>
 
 #include "../authentication/NetworkAuthenticationManager.h"
 #include "../../networkTree/NetworkCatalogUtil.h"
@@ -94,22 +93,15 @@ std::string NetworkCatalogTree::imageUrl() const {
 	return url;
 }
 
-void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
+void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> /*listener*/) {
 	myChildrenItems.clear();
-	item().loadChildren(myChildrenItems, ZLExecutionUtil::createListener(listener, this, &NetworkCatalogTree::onChildrenReceived));
-}
+	LoadSubCatalogRunnable loader(item(), myChildrenItems);
+	loader.executeWithUI();
 
-void NetworkCatalogTree::onChildrenReceived(ZLExecutionScope &scope, const std::string &error) {
-	shared_ptr<ZLNetworkRequest::Listener> listener = static_cast<ZLExecutionListenerScope&>(scope).listener;
-	if (!error.empty()) {
-		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"),	error); //TODO make method showErrorMessage
+	if (loader.hasErrors()) {
+		loader.showErrorMessage();
 	} else if (myChildrenItems.empty()) {
 		ZLDialogManager::Instance().informationBox(ZLResourceKey("emptyCatalogBox"));
-	}
-
-	if (!error.empty()) {
-		listener->finished(error);
-		return;
 	}
 
 	bool hasSubcatalogs = false;
@@ -128,8 +120,6 @@ void NetworkCatalogTree::onChildrenReceived(ZLExecutionScope &scope, const std::
 	} else {
 		NetworkTreeFactory::fillAuthorTree(this, myChildrenItems);
 	}
-
-	listener->finished();
 }
 
 NetworkCatalogItem &NetworkCatalogTree::item() {
@@ -156,7 +146,6 @@ void NetworkCatalogTree::ExpandCatalogAction::run() {
 		return;
 	}
 
-	//TODO following auth operations is not async!
 	const NetworkLink &link = myTree.item().Link;
 	if (!link.authenticationManager().isNull()) {
 		NetworkAuthenticationManager &mgr = *link.authenticationManager();
@@ -177,13 +166,7 @@ void NetworkCatalogTree::ExpandCatalogAction::run() {
 	}
 
 	if (myTree.myChildrenItems.empty()) {
-		myTree.requestChildren(ZLExecutionUtil::createListener(this, &NetworkCatalogTree::ExpandCatalogAction::onChildrenRequested));
-	}
-}
-
-void NetworkCatalogTree::ExpandCatalogAction::onChildrenRequested(ZLExecutionScope &/*scope*/, const std::string &error){
-	if (!error.empty()) {
-		return;
+		myTree.requestChildren(0); //who should request his children? dialog or node himself?
 	}
 	if (!myTree.children().empty()) {
 		myTree.expand();
