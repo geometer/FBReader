@@ -97,12 +97,13 @@ public:
 	std::string imageUrl() const;
 
 	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
-	void onChildrenReceived(ZLExecutionScope &scope, const std::string &error);
+	void onChildrenReceived(shared_ptr<ZLNetworkRequest::Listener> uiListener, const std::string &error);
+
+	NetworkCatalogItem &item();
 
 private:
 //	virtual shared_ptr<const ZLImage> lastResortCoverImage() const;
 	void init();
-	NetworkCatalogItem &item();
 
 private:
 	const ZLResource &resource() const;

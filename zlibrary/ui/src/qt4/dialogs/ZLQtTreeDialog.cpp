@@ -88,12 +88,17 @@ void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
 
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 	if (node->children().empty()) {
-		node->requestChildren(0); //TODO set listener here
+		node->requestChildren(new ChildrenRequestListener(this, node));
+	} else {
+		onChildrenLoaded(node);
 	}
+
+}
+
+void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node) {
 	if (node->children().empty()) {
 		return;
 	}
-
 	myHistoryStack.push(node);
 	myListWidget->fillNodes(myHistoryStack.top());
 	myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
@@ -111,6 +116,9 @@ void ZLQtTreeDialog::onNodeBeginRemove(ZLTreeNode */*parent*/, size_t /*index*/)
 void ZLQtTreeDialog::onNodeEndRemove() {}
 
 void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode */*node*/) {}
+
+
+
 
 void ZLQtTreeDialog::updateBackButton() {
 	myBackButton->setEnabled(myHistoryStack.size() > 1);
@@ -148,4 +156,15 @@ void ZLQtTreeDialog::onBackButton() {
 	myHistoryStack.pop();
 	myListWidget->fillNodes(myHistoryStack.top());
 	updateBackButton();
+}
+
+ZLQtTreeDialog::ChildrenRequestListener::ChildrenRequestListener(ZLQtTreeDialog *dialog, ZLTreeNode *node) : myTreeDialog(dialog), myNode(node) {
+}
+
+void ZLQtTreeDialog::ChildrenRequestListener::finished(const std::string &error) {
+	if (!error.empty()) {
+		//TODO show error message?
+		return;
+	}
+	myTreeDialog->onChildrenLoaded(myNode);
 }

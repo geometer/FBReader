@@ -93,15 +93,42 @@ std::string NetworkCatalogTree::imageUrl() const {
 	return url;
 }
 
-void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> /*listener*/) {
-	myChildrenItems.clear();
-	LoadSubCatalogRunnable loader(item(), myChildrenItems);
-	loader.executeWithUI();
+class AsyncLoadSubCatalogRunnable : public ZLNetworkRequest::Listener {
 
-	if (loader.hasErrors()) {
-		loader.showErrorMessage();
-	} else if (myChildrenItems.empty()) {
+public:
+	AsyncLoadSubCatalogRunnable(NetworkCatalogTree *tree, NetworkItem::List &childrens, shared_ptr<ZLNetworkRequest::Listener> uiListener) :
+		myTree(tree), myChildrens(childrens), myUIListener(uiListener) {
+		myTree->item().loadChildren(myChildrens, this);
+	}
+
+	void finished(const std::string &error) {
+		myTree->onChildrenReceived(myUIListener, error);
+		//TODO implement self destroing
+	}
+
+private:
+	NetworkCatalogTree *myTree;
+	NetworkItem::List &myChildrens;
+	shared_ptr<ZLNetworkRequest::Listener> myUIListener;
+
+};
+
+void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
+	myChildrenItems.clear();
+	new AsyncLoadSubCatalogRunnable(this, myChildrenItems, listener);
+}
+
+void NetworkCatalogTree::onChildrenReceived(shared_ptr<ZLNetworkRequest::Listener> uiListener, const std::string &error) {
+	if (!error.empty()) {
+		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), error);
+		uiListener->finished(error);
+		return;
+	}
+
+	if (myChildrenItems.empty()) {
 		ZLDialogManager::Instance().informationBox(ZLResourceKey("emptyCatalogBox"));
+		uiListener->finished(error);
+		return;
 	}
 
 	bool hasSubcatalogs = false;
@@ -119,6 +146,10 @@ void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> 
 		}
 	} else {
 		NetworkTreeFactory::fillAuthorTree(this, myChildrenItems);
+	}
+
+	if (!uiListener.isNull()) {
+		uiListener->finished(error);
 	}
 }
 

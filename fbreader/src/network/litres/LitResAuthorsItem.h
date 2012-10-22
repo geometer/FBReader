@@ -41,6 +41,11 @@ protected:
 	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
 
 	static std::string getSubtitle(const LitResAuthorsParser::LitresAuthorData &author);
+
+private:
+	LitResAuthorsParser::AuthorsList myAuthorsList;
+
+friend class LitResAuthorsItemRunnable;
 };
 
 #endif /* __LITRESAUTHORSITEM_H__ */

@@ -67,15 +67,25 @@ LitResBooksForGenreItem::LitResBooksForGenreItem(const NetworkCatalogItem &paren
 	: NetworkCatalogItem(parent.Link, litresGenre->Title, EMPTY_STRING, parent.URLByType, AlWAYS), myLitresGenre(litresGenre) {
 }
 
-std::string LitResBooksForGenreItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> /*listener*/) {
+class LitResBooksForGenreItemRunnable : public ZLRunnable {
+public:
+	LitResBooksForGenreItemRunnable(NetworkItem::List &children) : myChildren(children) { }
+	void run() {
+			std::sort(myChildren.begin(), myChildren.end(), NetworkBookItemComparator());
+	}
+private:
+	NetworkItem::List &myChildren;
+};
+
+std::string LitResBooksForGenreItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	//TODO maybe add sid parameter if possible
 	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
 	shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::generateBooksByGenreUrl(myLitresGenre->Id),
-		new LitResBooksFeedParser(Link, children)
+		new LitResBooksFeedParser(Link, children),
+		new LitResBooksForGenreItemRunnable(children)
 	);
-	std::string error = ZLNetworkManager::Instance().perform(data);
-	std::sort(children.begin(), children.end(), NetworkBookItemComparator());
-	return error;
+	data->setListener(listener);
+	return ZLNetworkManager::Instance().performAsync(data);
 }
 

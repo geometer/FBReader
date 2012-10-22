@@ -47,19 +47,29 @@ LitResAuthorsItem::LitResAuthorsItem(
 ) {
 }
 
-std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> /*listener*/) {
+class LitResAuthorsItemRunnable : public ZLRunnable {
+public:
+	LitResAuthorsItemRunnable(LitResAuthorsItem *item, NetworkItem::List &children) : myItem(item), myChildren(children) { }
+	void run() {
+		myItem->fillChildrenWithAuthors(myChildren, myItem->myAuthorsList);
+	}
+private:
+	LitResAuthorsItem *myItem;
+	NetworkItem::List &myChildren;
+};
+
+std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	//TODO maybe add sid parameter if possible
 	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
-	LitResAuthorsParser::AuthorsList authors;
+
+	myAuthorsList.clear();
 	shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createXMLParserRequest(
 		getCatalogUrl(),
-		new LitResAuthorsParser(authors)
+		new LitResAuthorsParser(myAuthorsList),
+		new LitResAuthorsItemRunnable(this, children)
 	);
-	std::string error = ZLNetworkManager::Instance().perform(data);
-	if (error.empty()) {
-		fillChildrenWithAuthors(children, authors);
-	}
-	return error;
+	data->setListener(listener);
+	return ZLNetworkManager::Instance().performAsync(data);
 }
 
 void LitResAuthorsItem::fillChildrenWithAuthors(NetworkItem::List &children, const LitResAuthorsParser::AuthorsList &authors) {

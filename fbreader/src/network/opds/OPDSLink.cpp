@@ -102,7 +102,7 @@ std::string OPDSLink::AdvancedSearch::query(
 //	return reader.link();
 //}
 
-shared_ptr<ZLNetworkRequest> OPDSLink::createNetworkData(const std::string &url, NetworkOperationData &result) const {
+shared_ptr<ZLNetworkRequest> OPDSLink::createNetworkData(const std::string &url, NetworkOperationData &result, shared_ptr<ZLRunnable> runnable = 0) const {
 	if (url.empty()) {
 		return 0;
 	}
@@ -110,7 +110,8 @@ shared_ptr<ZLNetworkRequest> OPDSLink::createNetworkData(const std::string &url,
 	rewriteUrl(modifiedUrl);
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		modifiedUrl,
-		new OPDSXMLParser(new NetworkOPDSFeedReader(*this, url, result))
+		new OPDSXMLParser(new NetworkOPDSFeedReader(*this, url, result)),
+		runnable
 	);
 }
 

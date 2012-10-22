@@ -34,7 +34,7 @@ OPDSCatalogItem::OPDSCatalogItem(
 	const UrlInfoCollection &urlByType,
 	AccessibilityType accessibility,
 	int flags
-) : NetworkCatalogItem(link, title, summary, urlByType, accessibility, flags) {
+		) : NetworkCatalogItem(link, title, summary, urlByType, accessibility, flags), myData(Link) {
 }
 
 //class OPDSCatalogItemScope : public ZLExecutionScope {
@@ -43,20 +43,23 @@ OPDSCatalogItem::OPDSCatalogItem(
 //	shared_ptr<ZLNetworkRequest::Listener> listener;
 //};
 
-std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
-	NetworkOperationData data(Link);
-
-	shared_ptr<ZLNetworkRequest> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), data);
-
-	while (!networkData.isNull()) {
-		std::string error = ZLNetworkManager::Instance().perform(networkData);
-		if (!error.empty()) {
-			return error;
-		}
-
-		children.insert(children.end(), data.Items.begin(), data.Items.end());
-		networkData = data.resume();
+class OPDSCatalogItemRunnable : public ZLRunnable {
+public:
+	OPDSCatalogItemRunnable(NetworkItem::List &children, NetworkOperationData &data) : myChildren(children), myData(data) {}
+	void run() {
+		myChildren.insert(myChildren.end(), myData.Items.begin(), myData.Items.end());
 	}
+private:
+	NetworkItem::List &myChildren;
+	NetworkOperationData &myData;
+};
 
-	return "";
+std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
+
+	//TODO implement partial catalogs loading
+	myData.clear();
+
+	shared_ptr<ZLNetworkRequest> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), myData, new OPDSCatalogItemRunnable(children, myData));
+	networkData->setListener(listener);
+	return ZLNetworkManager::Instance().performAsync(networkData);
 }

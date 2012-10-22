@@ -41,6 +41,8 @@ private:
 
 private:
 	bool myShouldSort;
+
+friend class LitResBooksFeedItemRunnable;
 };
 
 #endif /* __LITRESBOOKFEEDITEM_H__ */

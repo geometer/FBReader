@@ -67,7 +67,7 @@ public:
 private:
 	const std::string searchURL(const std::string &pattern) const;
 
-	shared_ptr<ZLNetworkRequest> createNetworkData(const std::string &url, NetworkOperationData &result) const;
+	shared_ptr<ZLNetworkRequest> createNetworkData(const std::string &url, NetworkOperationData &result, shared_ptr<ZLRunnable> runnable) const;
 
 	shared_ptr<ZLNetworkRequest> simpleSearchData(
 		NetworkOperationData &result,

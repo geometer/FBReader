@@ -55,6 +55,8 @@ public: //listener methods
 	void onNodeEndRemove();
 	void onNodeUpdated(ZLTreeNode *node);
 
+	void onChildrenLoaded(ZLTreeNode *node);
+
 private:
 	void updateBackButton();
 
@@ -76,6 +78,19 @@ private:
 
 	QStack<const ZLTreeNode*> myHistoryStack;
 
+private:
+
+	class ChildrenRequestListener : public ZLNetworkRequest::Listener {
+		public:
+			ChildrenRequestListener(ZLQtTreeDialog *dialog, ZLTreeNode *node);
+			void finished(const std::string &error);
+		private:
+			ZLQtTreeDialog *myTreeDialog;
+			ZLTreeNode *myNode;
+	};
+
+	//TODO implement destroing of listeners
+	///QList<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
 };
 
 #endif /* __ZLQTTREEDIALOG_H__ */

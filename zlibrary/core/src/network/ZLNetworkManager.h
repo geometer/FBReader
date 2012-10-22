@@ -26,6 +26,7 @@
 #include <ZLOptions.h>
 
 #include <ZLNetworkRequest.h>
+#include <ZLRunnable.h>
 
 class ZLNetworkData;
 class ZLOutputStream;
@@ -90,8 +91,8 @@ public:
 	shared_ptr<ZLNetworkRequest> createReadToStringRequest(const std::string &url, std::string &buffer) const;
 	shared_ptr<ZLNetworkRequest> createReadToStringRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, std::string &buffer) const;
 
-	shared_ptr<ZLNetworkRequest> createXMLParserRequest(const std::string &url, shared_ptr<ZLXMLReader> reader) const;
-	shared_ptr<ZLNetworkRequest> createXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader) const;
+	shared_ptr<ZLNetworkRequest> createXMLParserRequest(const std::string &url, shared_ptr<ZLXMLReader> reader, shared_ptr<ZLRunnable> runnable = 0) const;
+	shared_ptr<ZLNetworkRequest> createXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader, shared_ptr<ZLRunnable> runnable = 0) const;
 
 public:
 	void setUserAgent(const std::string &userAgent);

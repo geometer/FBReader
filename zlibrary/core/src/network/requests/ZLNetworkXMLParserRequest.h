@@ -20,8 +20,9 @@
 #ifndef __ZLNETWORKXMLPARSERREQUEST_H__
 #define __ZLNETWORKXMLPARSERREQUEST_H__
 
-#include "../ZLNetworkRequest.h"
+#include <ZLRunnable.h>
 
+#include "../ZLNetworkRequest.h"
 
 class ZLXMLReader;
 class ZLAsynchronousInputStream;
@@ -29,7 +30,7 @@ class ZLAsynchronousInputStream;
 class ZLNetworkXMLParserRequest : public ZLNetworkRequest {
 
 public:
-	ZLNetworkXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader);
+	ZLNetworkXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader, shared_ptr<ZLRunnable> runnable = 0);
 	~ZLNetworkXMLParserRequest();
 
 private:
@@ -43,6 +44,7 @@ private:
 	shared_ptr<ZLXMLReader> myReader;
 	shared_ptr<ZLAsynchronousInputStream> myInputStream;
 	std::string myHttpEncoding;
+	shared_ptr<ZLRunnable> myRunnableAfter;
 };
 
 #endif /* __ZLNETWORKXMLPARSERREQUEST_H__ */
