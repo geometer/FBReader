@@ -23,7 +23,7 @@
 #include "../resources/ZLResource.h"
 
 
-//const ZLTypeId ZLTreeAction::TYPE_ID(ZLExecutionData::TYPE_ID);
+//const ZLTypeId ZLTreeAction::TYPE_ID(ZLNetworkRequest::TYPE_ID);
 
 //const ZLTypeId &ZLTreeAction::typeId() const {
 //	return TYPE_ID;
@@ -115,7 +115,7 @@ size_t ZLTreeNode::childIndex() const {
 	return myChildIndex;
 }
 
-void ZLTreeNode::requestChildren(shared_ptr<ZLExecutionData::Listener> listener) {
+void ZLTreeNode::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
 		if (!listener.isNull()) {
 		 //   listener->finished();
 		}

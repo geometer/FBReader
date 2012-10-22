@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 #include <ZLNetworkManager.h>
 
 #include "OPDSCatalogItem.h"
@@ -39,16 +39,15 @@ OPDSCatalogItem::OPDSCatalogItem(
 
 class OPDSCatalogItemScope : public ZLExecutionScope {
 public:
-	shared_ptr<ZLExecutionData> networkData;
-	shared_ptr<ZLExecutionData::Listener> listener;
+	shared_ptr<ZLNetworkRequest> networkData;
+	shared_ptr<ZLNetworkRequest::Listener> listener;
 };
 
-
-std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener) {
+std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
 
 //	NetworkOperationData data(Link);
 
-//	shared_ptr<ZLExecutionData> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), data);
+//	shared_ptr<ZLNetworkRequest> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), data);
 
 //	while (!networkData.isNull()) {
 //		networkData->setListener(listener);
@@ -62,7 +61,7 @@ std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_pt
 //	}
 
 
-	shared_ptr<ZLExecutionData> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), myData);
+	shared_ptr<ZLNetworkRequest> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), myData);
 
 	OPDSCatalogItemScope *scope = new OPDSCatalogItemScope;
 	scope->networkData = networkData;

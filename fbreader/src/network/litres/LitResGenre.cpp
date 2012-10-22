@@ -120,7 +120,7 @@ bool LitResGenreMap::loadGenres() const {
 	myGenresTitles.clear();
 
 	if (dir.isNull()) {
-		shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
+		shared_ptr<ZLNetworkRequest> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 			url,
 			new LitResGenresParser(myGenresTree, myGenresMap)
 		);

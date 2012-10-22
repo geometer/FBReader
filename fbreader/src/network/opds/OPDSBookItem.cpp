@@ -66,7 +66,7 @@ void OPDSBookItem::loadFullInformation() {
 
 	std::string url = URLByType[URL_SINGLE_ENTRY];
 
-	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createXMLParserRequest(
 				url, new OPDSXMLParser(new FullEntryReader(*this, (const OPDSLink&)Link, url), true)
 	);
 	//TODO show wait message here

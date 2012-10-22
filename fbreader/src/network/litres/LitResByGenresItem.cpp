@@ -51,7 +51,7 @@ LitResByGenresItem::LitResByGenresItem(
 ), myGenreTree(genreTree) {
 }
 
-std::string LitResByGenresItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> /*listener*/) {
+std::string LitResByGenresItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> /*listener*/) {
 	for (size_t i = 0; i < myGenreTree.size(); ++i) {
 		shared_ptr<LitResGenre> genre = myGenreTree.at(i);
 		if (genre->Children.empty()) {
@@ -67,10 +67,10 @@ LitResBooksForGenreItem::LitResBooksForGenreItem(const NetworkCatalogItem &paren
 	: NetworkCatalogItem(parent.Link, litresGenre->Title, EMPTY_STRING, parent.URLByType, AlWAYS), myLitresGenre(litresGenre) {
 }
 
-std::string LitResBooksForGenreItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> /*listener*/) {
+std::string LitResBooksForGenreItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> /*listener*/) {
 	//TODO maybe add sid parameter if possible
 	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
-	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::generateBooksByGenreUrl(myLitresGenre->Id),
 		new LitResBooksFeedParser(Link, children)
 	);

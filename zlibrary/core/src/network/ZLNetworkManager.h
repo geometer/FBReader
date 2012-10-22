@@ -25,7 +25,7 @@
 #include <shared_ptr.h>
 #include <ZLOptions.h>
 
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 
 class ZLNetworkData;
 class ZLOutputStream;
@@ -33,7 +33,7 @@ class ZLXMLReader;
 
 class ZLNetworkSSLCertificate;
 
-class ZLNetworkManager : public ZLExecutionData::Runner {
+class ZLNetworkManager {
 
 public:
 	static void deleteInstance();
@@ -57,6 +57,10 @@ protected:
 	virtual ~ZLNetworkManager();
 
 public:
+	virtual std::string perform(const ZLNetworkRequest::Vector &requests) const = 0;
+	std::string perform(shared_ptr<ZLNetworkRequest> request) const;
+
+public:
 	virtual bool connect() const;
 	virtual void release() const;
 
@@ -69,23 +73,23 @@ protected:
 
 public:
 	// returns error message
-	std::string downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLExecutionData::Listener> listener = 0) const;
-	std::string downloadFile(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLExecutionData::Listener> listener = 0) const;
+	std::string downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener = 0) const;
+	std::string downloadFile(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener = 0) const;
 
 public: 
-	shared_ptr<ZLExecutionData> createDownloadRequest(const std::string &url, const std::string &fileName) const;
-	shared_ptr<ZLExecutionData> createDownloadRequest(const std::string &url, shared_ptr<ZLOutputStream> stream) const;
-	shared_ptr<ZLExecutionData> createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName) const;
-	shared_ptr<ZLExecutionData> createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLOutputStream> stream) const;
+	shared_ptr<ZLNetworkRequest> createDownloadRequest(const std::string &url, const std::string &fileName) const;
+	shared_ptr<ZLNetworkRequest> createDownloadRequest(const std::string &url, shared_ptr<ZLOutputStream> stream) const;
+	shared_ptr<ZLNetworkRequest> createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName) const;
+	shared_ptr<ZLNetworkRequest> createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLOutputStream> stream) const;
 
-	shared_ptr<ZLExecutionData> createNoActionRequest(const std::string &url) const;
-	shared_ptr<ZLExecutionData> createNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) const;
+	shared_ptr<ZLNetworkRequest> createNoActionRequest(const std::string &url) const;
+	shared_ptr<ZLNetworkRequest> createNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) const;
 
-	shared_ptr<ZLExecutionData> createReadToStringRequest(const std::string &url, std::string &buffer) const;
-	shared_ptr<ZLExecutionData> createReadToStringRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, std::string &buffer) const;
+	shared_ptr<ZLNetworkRequest> createReadToStringRequest(const std::string &url, std::string &buffer) const;
+	shared_ptr<ZLNetworkRequest> createReadToStringRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, std::string &buffer) const;
 
-	shared_ptr<ZLExecutionData> createXMLParserRequest(const std::string &url, shared_ptr<ZLXMLReader> reader) const;
-	shared_ptr<ZLExecutionData> createXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader) const;
+	shared_ptr<ZLNetworkRequest> createXMLParserRequest(const std::string &url, shared_ptr<ZLXMLReader> reader) const;
+	shared_ptr<ZLNetworkRequest> createXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader) const;
 
 public:
 	void setUserAgent(const std::string &userAgent);

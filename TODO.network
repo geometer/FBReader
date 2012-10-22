@@ -1,7 +1,20 @@
+* New
+  DONE remove ZLExecutionData; remove RTTI info & checks in ZLNetworkRequest usages
+  ** Show correct tag names for books from feedbooks feed
+  ** partial catalogs loading (first 20 books only)
+  ** additional links for books from feedbooks feed (fix OPDS parser?)
+  ** back/forward buttons (with arrows)
+  ** "standard search look" for search field
+  ** sign in into protected parts of catalogs (feedbooks, wolne lectury)
+  DONE merge doc branch into the mainstream & into FBReader/Android
+  ** icons for feedbooks subcatalog
+
 * NP
   ** run browser correctly on mac
   DONE fix crash when book info window opens
   ** review async-network-ui branch
+  ** better icon for books with no covers
+
 * ...
   DONE merge 'sensible-browser' patch into the mainstream
 DONE doc plugin

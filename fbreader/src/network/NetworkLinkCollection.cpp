@@ -156,7 +156,7 @@ public:
 
 private:
 	void run() {
-		shared_ptr<ZLExecutionData> loadingRequest = ZLNetworkManager::Instance().createDownloadRequest(myGenericUrl, myTmpFile.physicalFilePath());
+		shared_ptr<ZLNetworkRequest> loadingRequest = ZLNetworkManager::Instance().createDownloadRequest(myGenericUrl, myTmpFile.physicalFilePath());
 		myErrorMessage = ZLNetworkManager::Instance().perform(loadingRequest);
 	}
 
@@ -390,7 +390,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 }
 
 
-bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLExecutionData::Listener> listener) {
+bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	std::string nURL = ::normalize(reference.URL);
 	rewriteUrl(nURL);
 	const std::string nNetworkBookId = ::normalize(reference.cleanURL());
@@ -427,7 +427,7 @@ bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::st
 }
 
 shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std::string &pattern) {
-	ZLExecutionData::Vector dataList;
+	ZLNetworkRequest::Vector dataList;
 	std::vector<shared_ptr<NetworkOperationData> > opDataVector;
 	shared_ptr<NetworkBookCollection> result;
 
@@ -438,7 +438,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std:
 		if (link.isEnabled()) {
 			shared_ptr<NetworkOperationData> opData = new NetworkOperationData(link);
 			opDataVector.push_back(opData);
-			shared_ptr<ZLExecutionData> data = link.simpleSearchData(*opData, pattern);
+			shared_ptr<ZLNetworkRequest> data = link.simpleSearchData(*opData, pattern);
 			if (!data.isNull()) {
 				dataList.push_back(data);
 			}
@@ -461,7 +461,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std:
 		dataList.clear();
 
 		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = opDataVector.begin(); jt != opDataVector.end(); ++jt) {
-			shared_ptr<ZLExecutionData> data = (*jt)->resume();
+			shared_ptr<ZLNetworkRequest> data = (*jt)->resume();
 			if (!data.isNull()) {
 				dataList.push_back(data);
 			}
@@ -472,7 +472,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::simpleSearch(const std:
 }
 
 shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation) {
-	ZLExecutionData::Vector dataList;
+	ZLNetworkRequest::Vector dataList;
 	std::vector<shared_ptr<NetworkOperationData> > opDataVector;
 	shared_ptr<NetworkBookCollection> result;
 
@@ -483,7 +483,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 		if (link.isEnabled()) {
 			shared_ptr<NetworkOperationData> opData = new NetworkOperationData(link);
 			opDataVector.push_back(opData);
-			shared_ptr<ZLExecutionData> data = link.advancedSearchData(*opData, titleAndSeries, author, tag, annotation);
+			shared_ptr<ZLNetworkRequest> data = link.advancedSearchData(*opData, titleAndSeries, author, tag, annotation);
 			if (!data.isNull()) {
 				dataList.push_back(data);
 			}
@@ -506,7 +506,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 		dataList.clear();
 
 		for (std::vector<shared_ptr<NetworkOperationData> >::const_iterator jt = opDataVector.begin(); jt != opDataVector.end(); ++jt) {
-			shared_ptr<ZLExecutionData> data = (*jt)->resume();
+			shared_ptr<ZLNetworkRequest> data = (*jt)->resume();
 			if (!data.isNull()) {
 				dataList.push_back(data);
 			}

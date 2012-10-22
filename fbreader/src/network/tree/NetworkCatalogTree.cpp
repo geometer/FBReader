@@ -94,13 +94,13 @@ std::string NetworkCatalogTree::imageUrl() const {
 	return url;
 }
 
-void NetworkCatalogTree::requestChildren(shared_ptr<ZLExecutionData::Listener> listener) {
+void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
 	myChildrenItems.clear();
 	item().loadChildren(myChildrenItems, ZLExecutionUtil::createListener(listener, this, &NetworkCatalogTree::onChildrenReceived));
 }
 
 void NetworkCatalogTree::onChildrenReceived(ZLExecutionScope &scope, const std::string &error) {
-	shared_ptr<ZLExecutionData::Listener> listener = static_cast<ZLExecutionListenerScope&>(scope).listener;
+	shared_ptr<ZLNetworkRequest::Listener> listener = static_cast<ZLExecutionListenerScope&>(scope).listener;
 	if (!error.empty()) {
 		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"),	error); //TODO make method showErrorMessage
 	} else if (myChildrenItems.empty()) {

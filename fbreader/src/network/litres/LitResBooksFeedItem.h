@@ -37,7 +37,7 @@ public:
 
 private:
 	void onDisplayItem();
-	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
 
 private:
 	bool myShouldSort;

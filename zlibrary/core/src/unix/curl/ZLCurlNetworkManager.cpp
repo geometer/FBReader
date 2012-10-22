@@ -133,7 +133,7 @@ std::string ZLCurlNetworkManager::doBeforePostRequest(ZLNetworkPostRequest &requ
 	shared_ptr<ZLUserData> postDataPtr = new PostData;
 	PostData &postData = (PostData&)*postDataPtr;
 
-	const std::vector<std::pair<std::string, std::string> > &data = request.postData();
+	const std::vector<std::pair<std::string, std::string> > &data = request.postParameters();
 	for (size_t i = 0; i < data.size(); ++i) {
 		if (!postData.addItem(data[i].first, data[i].second)) {
 			return "Invalid form data for " + ZLNetworkUtil::hostFromUrl(request.url()); // TODO: localize

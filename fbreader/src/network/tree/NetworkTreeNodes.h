@@ -95,7 +95,8 @@ public:
 	std::string subtitle() const;
 	shared_ptr<const ZLImage> image() const;
 	std::string imageUrl() const;
-	void requestChildren(shared_ptr<ZLExecutionData::Listener> listener);
+
+	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
 	void onChildrenReceived(ZLExecutionScope &scope, const std::string &error);
 
 private:

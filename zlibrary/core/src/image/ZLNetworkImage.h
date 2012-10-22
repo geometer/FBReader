@@ -31,7 +31,7 @@ public:
 	const shared_ptr<std::string> stringData() const;
 
 private:
-	shared_ptr<ZLExecutionData> synchronizationData() const;
+	shared_ptr<ZLNetworkRequest> synchronizationData() const;
 
 private:
 	const std::string myURL;

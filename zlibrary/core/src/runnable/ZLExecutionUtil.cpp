@@ -21,7 +21,7 @@
 
 std::string ZLExecutionUtil::ourHandlerId = "_zl_handler";
 
-class ZLExecutionHandler : public ZLExecutionData::Listener {
+class ZLExecutionHandler : public ZLNetworkRequest::Listener {
 public:
 	ZLExecutionHandler(shared_ptr<ZLUserDataHolder> data, ZLExecutionUtil::Handler handler)
 		: myData(data), myHandler(handler) {
@@ -41,7 +41,7 @@ private:
 	ZLExecutionUtil::Handler myHandler;
 };
 
-shared_ptr<ZLExecutionData::Listener> ZLExecutionUtil::createListener(shared_ptr<ZLUserDataHolder> data) {
+shared_ptr<ZLNetworkRequest::Listener> ZLExecutionUtil::createListener(shared_ptr<ZLUserDataHolder> data) {
 	return new ZLExecutionHandler(data, handleHelper);
 }
 

@@ -40,7 +40,7 @@ public:
 	);
 
 public:
-	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
 	void onLoadedChildren(ZLExecutionScope &scope, std::string error);
 
 private:

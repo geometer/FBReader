@@ -61,7 +61,7 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
 	ZLNetworkUtil::appendParameter(url, "sid", mySidOption.value());
 
-	shared_ptr<ZLExecutionData> networkData =
+	shared_ptr<ZLNetworkRequest> networkData =
 		ZLNetworkManager::Instance().createXMLParserRequest(
 			url, certificate(), xmlReader
 		);
@@ -92,7 +92,7 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 		ZLNetworkUtil::appendParameter(url, "skip_ip", "1");
 //	}
 
-	shared_ptr<ZLExecutionData> networkData =
+	shared_ptr<ZLNetworkRequest> networkData =
 		ZLNetworkManager::Instance().createXMLParserRequest(
 			url,
 			certificate(),
@@ -146,7 +146,7 @@ std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &boo
 	std::string account, bookId;
 	shared_ptr<ZLXMLReader> xmlReader = new LitResPurchaseDataParser(account, bookId);
 
-	shared_ptr<ZLExecutionData> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLNetworkRequest> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
 		query, certificate(), xmlReader
 	);
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
@@ -231,7 +231,7 @@ std::string LitResAuthenticationManager::initialize() {
 
 	std::string dummy1;
 
-	ZLExecutionData::Vector dataList;
+	ZLNetworkRequest::Vector dataList;
 
 	//TODO implement retrieving information about account from purchased books query
 	dataList.push_back(loadPurchasedBooks(myPurchasedBooksIds, myPurchasedBooksList));
@@ -250,7 +250,7 @@ std::string LitResAuthenticationManager::initialize() {
 	return "";
 }
 
-shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList) {
+shared_ptr<ZLNetworkRequest> LitResAuthenticationManager::loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList) {
 	const std::string &sid = mySidOption.value();
 	purchasedBooksIds.clear();
 	purchasedBooksList.clear();
@@ -279,7 +279,7 @@ void LitResAuthenticationManager::loadPurchasedBooksOnSuccess(std::set<std::stri
 	}
 }
 
-shared_ptr<ZLExecutionData> LitResAuthenticationManager::loadAccount(std::string &dummy1) {
+shared_ptr<ZLNetworkRequest> LitResAuthenticationManager::loadAccount(std::string &dummy1) {
 	const std::string &sid = mySidOption.value();
 
 	myAccount.clear();
@@ -320,7 +320,7 @@ std::string LitResAuthenticationManager::registerUser(const std::string &login, 
 	ZLNetworkUtil::appendParameter(url, "new_pwd1", password);
 	ZLNetworkUtil::appendParameter(url, "mail", email);
 
-	shared_ptr<ZLExecutionData> networkData =
+	shared_ptr<ZLNetworkRequest> networkData =
 		ZLNetworkManager::Instance().createXMLParserRequest(
 			url, certificate(), xmlReader
 		);
@@ -345,7 +345,7 @@ std::string LitResAuthenticationManager::recoverPassword(const std::string &emai
 	std::string url = Link.url(NetworkLink::URL_RECOVER_PASSWORD);
 	ZLNetworkUtil::appendParameter(url, "mail", email);
 
-	shared_ptr<ZLExecutionData> networkData =
+	shared_ptr<ZLNetworkRequest> networkData =
 		ZLNetworkManager::Instance().createXMLParserRequest(
 			url, certificate(), new LitResPasswordRecoveryDataParser()
 		);
@@ -367,7 +367,7 @@ std::string LitResAuthenticationManager::reloadPurchasedBooks() {
 	std::set<std::string> purchasedBooksIds;
 	NetworkItem::List purchasedBooksList;
 
-	shared_ptr<ZLExecutionData> networkData = loadPurchasedBooks(purchasedBooksIds, purchasedBooksList);
+	shared_ptr<ZLNetworkRequest> networkData = loadPurchasedBooks(purchasedBooksIds, purchasedBooksList);
 
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 	if (!error.empty()) {

@@ -19,7 +19,7 @@
 
 #include <algorithm>
 
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 
 #include "LitResBookshelfItem.h"
 #include "../authentication/litres/LitResAuthenticationManager.h"
@@ -50,7 +50,7 @@ void LitResBookshelfItem::onDisplayItem() {
 	myForceReload = false;
 }
 
-std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> /*listener*/) {
+std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> /*listener*/) {
 	LitResAuthenticationManager &mgr =
 		(LitResAuthenticationManager&)*Link.authenticationManager();
 	if (mgr.isAuthorised().Status == B3_FALSE) {

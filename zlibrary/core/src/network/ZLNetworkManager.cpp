@@ -113,6 +113,12 @@ ZLStringOption &ZLNetworkManager::ProxyPortOption() const {
 ZLNetworkManager::~ZLNetworkManager() {
 }
 
+std::string ZLNetworkManager::perform(shared_ptr<ZLNetworkRequest> request) const {
+	ZLNetworkRequest::Vector requestVector;
+	requestVector.push_back(request);
+	return perform(requestVector);
+}
+
 bool ZLNetworkManager::connect() const {
 	return true;
 }
@@ -136,52 +142,52 @@ std::string ZLNetworkManager::proxyPort() const {
 	return ProxyPortOption().value();
 }
 
-std::string ZLNetworkManager::downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLExecutionData::Listener> listener) const {
+std::string ZLNetworkManager::downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener) const {
 	return downloadFile(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, fileName, listener);
 }
 
-std::string ZLNetworkManager::downloadFile(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLExecutionData::Listener> listener) const {
-	shared_ptr<ZLExecutionData> data = createDownloadRequest(url, sslCertificate, fileName);
+std::string ZLNetworkManager::downloadFile(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener) const {
+	shared_ptr<ZLNetworkRequest> data = createDownloadRequest(url, sslCertificate, fileName);
 	data->setListener(listener);
 	return perform(data);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, const std::string &fileName) const {
+shared_ptr<ZLNetworkRequest> ZLNetworkManager::createDownloadRequest(const std::string &url, const std::string &fileName) const {
 	return new ZLNetworkDownloadRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, fileName);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, shared_ptr<ZLOutputStream> stream) const {
+shared_ptr<ZLNetworkRequest> ZLNetworkManager::createDownloadRequest(const std::string &url, shared_ptr<ZLOutputStream> stream) const {
 	return new ZLNetworkDownloadRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, stream);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName) const {
+shared_ptr<ZLNetworkRequest> ZLNetworkManager::createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName) const {
 	return new ZLNetworkDownloadRequest(url, sslCertificate, fileName);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLOutputStream> stream) const {
+shared_ptr<ZLNetworkRequest> ZLNetworkManager::createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLOutputStream> stream) const {
 	return new ZLNetworkDownloadRequest(url, sslCertificate, stream);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createNoActionRequest(const std::string &url) const {
+shared_ptr<ZLNetworkRequest> ZLNetworkManager::createNoActionRequest(const std::string &url) const {
 	return new ZLNetworkNoActionRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) const {
+shared_ptr<ZLNetworkRequest> ZLNetworkManager::createNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) const {
 	return new ZLNetworkNoActionRequest(url, sslCertificate);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createReadToStringRequest(const std::string &url, std::string &buffer) const {
+shared_ptr<ZLNetworkRequest> ZLNetworkManager::createReadToStringRequest(const std::string &url, std::string &buffer) const {
 	return new ZLNetworkReadToStringRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, buffer);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createReadToStringRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, std::string &buffer) const {
+shared_ptr<ZLNetworkRequest> ZLNetworkManager::createReadToStringRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, std::string &buffer) const {
 	return new ZLNetworkReadToStringRequest(url, sslCertificate, buffer);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createXMLParserRequest(const std::string &url, shared_ptr<ZLXMLReader> reader) const {
+shared_ptr<ZLNetworkRequest> ZLNetworkManager::createXMLParserRequest(const std::string &url, shared_ptr<ZLXMLReader> reader) const {
 	return new ZLNetworkXMLParserRequest(url, ZLNetworkSSLCertificate::NULL_CERTIFICATE, reader);
 }
 
-shared_ptr<ZLExecutionData> ZLNetworkManager::createXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader) const {
+shared_ptr<ZLNetworkRequest> ZLNetworkManager::createXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader) const {
 	return new ZLNetworkXMLParserRequest(url, sslCertificate, reader);
 }

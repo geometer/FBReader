@@ -53,7 +53,7 @@ public:
 
 	void initPaths();
 
-	std::string perform(const ZLExecutionData::Vector &dataList) const;
+	std::string perform(const ZLNetworkRequest::Vector &requestsList) const;
 
 protected Q_SLOTS:
 	void onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator);

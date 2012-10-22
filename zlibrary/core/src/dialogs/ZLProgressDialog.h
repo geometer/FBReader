@@ -21,7 +21,7 @@
 #define __ZLPROGRESSDIALOG_H__
 
 #include <ZLResource.h>
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 #include <ZLRunnable.h>
 
 class ZLProgressDialog {
@@ -35,7 +35,7 @@ protected:
 public:
 	virtual ~ZLProgressDialog();
 
-	shared_ptr<ZLExecutionData::Listener> listener();
+	shared_ptr<ZLNetworkRequest::Listener> listener();
 	virtual void run(ZLRunnable &runnable) = 0;
 	virtual void setMessage(const std::string &message) = 0;
 

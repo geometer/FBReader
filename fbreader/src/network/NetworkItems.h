@@ -29,7 +29,7 @@
 #include <ZLFile.h>
 #include <ZLTypeId.h>
 #include <ZLBoolean3.h>
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 
 #include <ZLTreeNode.h>
 
@@ -121,7 +121,7 @@ public:
 	// method is called each time the View Node is created for the Item.
 	virtual void onDisplayItem();
 	// returns error message
-	virtual std::string loadChildren(List &children, shared_ptr<ZLExecutionData::Listener> listener = 0) = 0;
+	virtual std::string loadChildren(List &children, shared_ptr<ZLNetworkRequest::Listener> listener = 0) = 0;
 
 	int getFlags() const;
 	AccessibilityType getAccessibility() const;

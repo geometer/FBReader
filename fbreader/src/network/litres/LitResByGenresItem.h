@@ -38,7 +38,7 @@ public:
 	);
 
 private:
-	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
 
 private:
 	const std::vector<shared_ptr<LitResGenre> > &myGenreTree;
@@ -50,7 +50,7 @@ public:
 	LitResBooksForGenreItem(const NetworkCatalogItem &parent, shared_ptr<LitResGenre> litresGenre);
 
 private:
-	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
 
 private:
 	shared_ptr<LitResGenre> myLitresGenre;

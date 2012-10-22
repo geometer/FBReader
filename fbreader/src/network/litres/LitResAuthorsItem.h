@@ -38,7 +38,7 @@ public:
 
 protected:
 	void fillChildrenWithAuthors(NetworkItem::List &children, const LitResAuthorsParser::AuthorsList &authors);
-	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLExecutionData::Listener> listener);
+	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
 
 	static std::string getSubtitle(const LitResAuthorsParser::LitresAuthorData &author);
 };

@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 
 #include "NetworkLink.h"
 #include "NetworkOperationData.h"
@@ -30,7 +30,7 @@ void NetworkOperationData::clear() {
 	ResumeURI.clear();
 }
 
-shared_ptr<ZLExecutionData> NetworkOperationData::resume() {
+shared_ptr<ZLNetworkRequest> NetworkOperationData::resume() {
 	if (++myResumeCount >= 10) {
 		return 0;
 	}

@@ -75,7 +75,7 @@ void ZLQtNetworkManager::initPaths() {
 }
 
 
-std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList) const {
+std::string ZLQtNetworkManager::perform(const ZLNetworkRequest::Vector &requestsList) const {
 	if (useProxy()) {
 		QString host = QString::fromStdString(proxyHost());
 		QNetworkProxy proxy(QNetworkProxy::HttpProxy, host, atoi(proxyPort().c_str()));
@@ -85,18 +85,18 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 	QStringList errors;
 	QEventLoop eventLoop;
 
-	foreach (const shared_ptr<ZLExecutionData> &data, dataList) {
-		if (data.isNull() || !data->isInstanceOf(ZLNetworkRequest::TYPE_ID)) {
+	foreach (const shared_ptr<ZLNetworkRequest> &request, requestsList) {
+		if (request.isNull()) {
 			continue;
 		}
-		ZLNetworkRequest &request = static_cast<ZLNetworkRequest&>(*data);
+		//ZLNetworkRequest &request = static_cast<ZLNetworkRequest&>(*requestPtr);
 		QNetworkRequest networkRequest;
-		ZLLogger::Instance().println("network", "requesting " + request.url());
-		networkRequest.setUrl(QUrl::fromUserInput(QString::fromStdString(request.url())));
+		ZLLogger::Instance().println("network", "requesting " + request->url());
+		networkRequest.setUrl(QUrl::fromUserInput(QString::fromStdString(request->url())));
 
-		if (!request.doBefore()) {
-			if (!request.hasListener()) { //TODO maybe remove this; or add listener notification about error
-				std::string error = request.errorMessage();
+		if (!request->doBefore()) {
+			if (!request->hasListener()) { //TODO maybe remove this; or add listener notification about error
+				std::string error = request->errorMessage();
 				if (error.empty()) {
 					const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 					error = ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), networkRequest.url().host().toStdString());
@@ -108,14 +108,14 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 
 		networkRequest.setRawHeader("User-Agent", userAgent().c_str());
 		QSslConfiguration configuration = QSslConfiguration::defaultConfiguration();
-		if (!request.sslCertificate().DoVerify) {
+		if (!request->sslCertificate().DoVerify) {
 			configuration.setPeerVerifyMode(QSslSocket::VerifyNone);
 		}
 		networkRequest.setSslConfiguration(configuration);
 
 		QTimer* timeoutTimer = new QTimer;
-		ZLQtNetworkReplyScope scope = {&request, timeoutTimer, false, &replies, &errors, &eventLoop};
-		if (request.hasListener()) {
+		ZLQtNetworkReplyScope scope = {&(*request), timeoutTimer, false, &replies, &errors, &eventLoop};
+		if (request->hasListener()) {
 			qDebug() << "add request with listener" << &request;
 			scope.replies = 0;
 			scope.errors = 0;
@@ -133,12 +133,11 @@ std::string ZLQtNetworkManager::perform(const ZLExecutionData::Vector &dataList)
 
 void ZLQtNetworkManager::prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequest networkRequest) const {
 	QNetworkReply *reply = NULL;
-	if (scope.request->isInstanceOf(ZLNetworkPostRequest::TYPE_ID)) {
+	if (!scope.request->postParameters().empty()) {
 		QByteArray data;
-		ZLNetworkPostRequest &postRequest = static_cast<ZLNetworkPostRequest&>(*scope.request);
 		QUrl tmp;
 		typedef std::pair<std::string, std::string> string_pair;
-		foreach (const string_pair &pair, postRequest.postData()) {
+		foreach (const string_pair &pair, scope.request->postParameters()) {
 			tmp.addQueryItem(QString::fromStdString(pair.first), QString::fromStdString(pair.second));
 		}
 		data = tmp.encodedQuery();

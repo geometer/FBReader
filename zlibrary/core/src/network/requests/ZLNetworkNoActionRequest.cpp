@@ -21,7 +21,7 @@
 
 
 ZLNetworkNoActionRequest::ZLNetworkNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) :
-	ZLNetworkGetRequest(url, sslCertificate) {
+	ZLNetworkRequest(url, sslCertificate) {
 }
 
 bool ZLNetworkNoActionRequest::doBefore() {

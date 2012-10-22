@@ -20,7 +20,8 @@
 #ifndef __ZLEXECUTIONUTIL_H__
 #define __ZLEXECUTIONUTIL_H__
 
-#include "ZLExecutionData.h"
+#include <ZLUserData.h>
+#include "ZLNetworkRequest.h"
 
 class ZLExecutionScope : public ZLUserData {
 
@@ -28,21 +29,21 @@ class ZLExecutionScope : public ZLUserData {
 
 class ZLExecutionListenerScope : public ZLExecutionScope {
 public:
-	shared_ptr<ZLExecutionData::Listener> listener;
+	shared_ptr<ZLNetworkRequest::Listener> listener;
 };
 
 class ZLExecutionUtil {
 	//code for convenient async syntax createListener method:
 	public:
 		template <typename T, typename Method>
-		static shared_ptr<ZLExecutionData::Listener> createListener(shared_ptr<ZLExecutionData::Listener> listener, T object, Method method) {
+		static shared_ptr<ZLNetworkRequest::Listener> createListener(shared_ptr<ZLNetworkRequest::Listener> listener, T object, Method method) {
 			ZLExecutionListenerScope *scope = new ZLExecutionListenerScope;
 			scope->listener = listener;
 			return createListener(scope, object, method);
 		}
 
 		template <typename T, typename Method>
-		static shared_ptr<ZLExecutionData::Listener> createListener(ZLExecutionScope *scope, T object, Method method) {
+		static shared_ptr<ZLNetworkRequest::Listener> createListener(ZLExecutionScope *scope, T object, Method method) {
 			shared_ptr<ZLUserDataHolder> data = new ZLUserDataHolder;
 			if (scope == 0) {
 				scope = new ZLExecutionScope;
@@ -53,7 +54,7 @@ class ZLExecutionUtil {
 		}
 
 		template <typename T, typename Method>
-		static shared_ptr<ZLExecutionData::Listener> createListener(T object, Method method) {
+		static shared_ptr<ZLNetworkRequest::Listener> createListener(T object, Method method) {
 			return createListener(0, object, method);
 		}
 
@@ -81,7 +82,7 @@ class ZLExecutionUtil {
 			Method myMethod;
 		};
 		static void handleHelper(ZLUserDataHolder &data, const std::string &error);
-		static shared_ptr<ZLExecutionData::Listener> createListener(shared_ptr<ZLUserDataHolder> data);
+		static shared_ptr<ZLNetworkRequest::Listener> createListener(shared_ptr<ZLUserDataHolder> data);
 
 		static std::string ourHandlerId;
 

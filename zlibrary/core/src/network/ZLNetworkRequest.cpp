@@ -21,11 +21,6 @@
 
 #include "ZLNetworkRequest.h"
 
-const ZLTypeId ZLNetworkRequest::TYPE_ID(ZLExecutionData::TYPE_ID);
-const ZLTypeId ZLNetworkGetRequest::TYPE_ID(ZLNetworkRequest::TYPE_ID);
-const ZLTypeId ZLNetworkPostRequest::TYPE_ID(ZLNetworkRequest::TYPE_ID);
-
-
 ZLNetworkRequest::ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) :
 	myURL(url),
 	mySSLCertificate(sslCertificate),
@@ -54,26 +49,32 @@ bool ZLNetworkRequest::handleHeader(void *, size_t) {
 	return true;
 }
 
-ZLNetworkGetRequest::ZLNetworkGetRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) :
-	ZLNetworkRequest(url, sslCertificate) {
+void ZLNetworkRequest::setPostParameters(const std::vector<std::pair<std::string, std::string> > &parameters) {
+	myPostParameters = parameters;
 }
 
-const ZLTypeId &ZLNetworkGetRequest::typeId() const {
-	return TYPE_ID;
+bool ZLNetworkRequest::hasListener() const {
+	return !myListener.isNull();
 }
 
-
-
-ZLNetworkPostRequest::ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
-		const std::vector<std::pair<std::string, std::string> > &postData) :
-	ZLNetworkRequest(url, sslCertificate),
-	myData(postData) {
+void ZLNetworkRequest::setListener(shared_ptr<Listener> listener) {
+	myListener = listener;
 }
 
-const ZLTypeId &ZLNetworkPostRequest::typeId() const {
-	return TYPE_ID;
+void ZLNetworkRequest::setPercent(int ready, int full) {
+	if (!myListener.isNull()) {
+		myListener->showPercent(ready, full);
+	}
 }
 
-const std::vector<std::pair<std::string, std::string> > &ZLNetworkPostRequest::postData() const {
-	return myData;
+void ZLNetworkRequest::finished(const std::string &error){
+	if (!myListener.isNull()) {
+		myListener->finished(error);
+	}
+}
+
+ZLNetworkRequest::Listener::Listener() {
+}
+
+ZLNetworkRequest::Listener::~Listener() {
 }

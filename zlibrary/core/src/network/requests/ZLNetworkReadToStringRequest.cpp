@@ -26,7 +26,7 @@
 
 
 ZLNetworkReadToStringRequest::ZLNetworkReadToStringRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, std::string &buffer) :
-	ZLNetworkGetRequest(url, sslCertificate),
+	ZLNetworkRequest(url, sslCertificate),
 	myBuffer(buffer),
 	myDataSize(0) {
 }

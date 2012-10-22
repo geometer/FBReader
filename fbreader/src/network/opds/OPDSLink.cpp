@@ -102,7 +102,7 @@ std::string OPDSLink::AdvancedSearch::query(
 //	return reader.link();
 //}
 
-shared_ptr<ZLExecutionData> OPDSLink::createNetworkData(const std::string &url, NetworkOperationData &result) const {
+shared_ptr<ZLNetworkRequest> OPDSLink::createNetworkData(const std::string &url, NetworkOperationData &result) const {
 	if (url.empty()) {
 		return 0;
 	}
@@ -133,14 +133,14 @@ const std::string OPDSLink::searchURL(const std::string &query) const {
 	return ZLStringUtil::printf(url(URL_SEARCH), query);
 }
 
-shared_ptr<ZLExecutionData> OPDSLink::simpleSearchData(NetworkOperationData &result, const std::string &pattern) const {
+shared_ptr<ZLNetworkRequest> OPDSLink::simpleSearchData(NetworkOperationData &result, const std::string &pattern) const {
 	return createNetworkData(
 		searchURL(ZLNetworkUtil::htmlEncode(pattern)),
 		result
 	);
 }
 
-shared_ptr<ZLExecutionData> OPDSLink::advancedSearchData(
+shared_ptr<ZLNetworkRequest> OPDSLink::advancedSearchData(
 	NetworkOperationData &result,
 	const std::string &titleAndSeries,
 	const std::string &author,
@@ -156,7 +156,7 @@ shared_ptr<ZLExecutionData> OPDSLink::advancedSearchData(
 	return query.empty() ? 0 : createNetworkData(searchURL(query), result);
 }
 
-shared_ptr<ZLExecutionData> OPDSLink::resume(NetworkOperationData &data) const {
+shared_ptr<ZLNetworkRequest> OPDSLink::resume(NetworkOperationData &data) const {
 	const std::string url = data.ResumeURI;
 	data.clear();
 	return createNetworkData(url, data);
