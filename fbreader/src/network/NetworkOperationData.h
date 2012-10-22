@@ -24,7 +24,7 @@
 
 #include "NetworkItems.h"
 
-class ZLExecutionData;
+class ZLNetworkRequest;
 
 class NetworkLink;
 
@@ -34,7 +34,7 @@ public:
 	NetworkOperationData(const NetworkLink &link);
 
 	void clear();
-	shared_ptr<ZLExecutionData> resume();
+	shared_ptr<ZLNetworkRequest> resume();
 
 public:
 	const NetworkLink &Link;

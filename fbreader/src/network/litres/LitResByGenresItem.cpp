@@ -70,7 +70,7 @@ LitResBooksForGenreItem::LitResBooksForGenreItem(const NetworkCatalogItem &paren
 std::string LitResBooksForGenreItem::loadChildren(NetworkItem::List &children) {
 	//TODO maybe add sid parameter if possible
 	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
-	shared_ptr<ZLExecutionData> data = ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::generateBooksByGenreUrl(myLitresGenre->Id),
 		new LitResBooksFeedParser(Link, children)
 	);

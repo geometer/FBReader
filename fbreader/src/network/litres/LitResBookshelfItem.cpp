@@ -19,7 +19,7 @@
 
 #include <algorithm>
 
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 
 #include "LitResBookshelfItem.h"
 #include "../authentication/litres/LitResAuthenticationManager.h"

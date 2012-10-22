@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 
 #include <ZLibrary.h>
 #include <ZLFile.h>
@@ -50,7 +50,7 @@ std::string NetworkLink::url(const std::string &urlId) const {
 	return (it != myLinks.end()) ? it->second : std::string();
 }
 
-shared_ptr<ZLExecutionData> NetworkLink::resume(NetworkOperationData &result) const {
+shared_ptr<ZLNetworkRequest> NetworkLink::resume(NetworkOperationData &result) const {
 	result.clear();
 	return 0;
 }

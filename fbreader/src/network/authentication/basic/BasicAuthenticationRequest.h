@@ -22,7 +22,7 @@
 
 #include <ZLNetworkRequest.h>
 
-class BasicAuthenticationRequest : public ZLNetworkGetRequest {
+class BasicAuthenticationRequest : public ZLNetworkRequest {
 
 public:
 	BasicAuthenticationRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);

@@ -21,15 +21,30 @@
 #define __ZLNETWORKREQUEST_H__
 
 #include <string>
+#include <vector>
 
-#include <ZLExecutionData.h>
+#include <shared_ptr.h>
+
 #include <ZLNetworkSSLCertificate.h>
 
 
-class ZLNetworkRequest : public ZLExecutionData {
+class ZLNetworkRequest {
 
 public:
-	static const ZLTypeId TYPE_ID;
+	typedef std::vector<shared_ptr<ZLNetworkRequest> > Vector;
+
+public:
+	class Listener {
+
+	protected:
+		Listener();
+
+	public:
+		virtual ~Listener();
+		virtual void showPercent(int ready, int full) = 0;
+
+	friend class ZLNetworkRequest;
+	};
 
 protected:
 	ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
@@ -64,6 +79,12 @@ public: // HTTP parameters
 	void setRedirectionSupported(bool supported);
 	bool isRedirectionSupported() const;
 
+	const std::vector<std::pair<std::string, std::string> > &postParameters() const;
+	void setPostParameters(const std::vector<std::pair<std::string, std::string> > &parameters);
+
+	void setListener(shared_ptr<Listener> listener);
+	void setPercent(int ready, int full);
+
 private:
 	const std::string myURL;
 	const ZLNetworkSSLCertificate &mySSLCertificate;
@@ -74,6 +95,10 @@ private:
 	AuthenticationMethod myAuthenticationMethod;
 
 	bool myRedirectionSupported;
+
+	std::vector<std::pair<std::string, std::string> > myPostParameters;
+
+	shared_ptr<Listener> myListener;
 
 private: // disable copying
 	ZLNetworkRequest(const ZLNetworkRequest &);
@@ -90,37 +115,6 @@ inline const std::string &ZLNetworkRequest::password() const { return myPassword
 inline ZLNetworkRequest::AuthenticationMethod ZLNetworkRequest::authenticationMethod() const { return myAuthenticationMethod; }
 inline void ZLNetworkRequest::setRedirectionSupported(bool supported) { myRedirectionSupported = supported; }
 inline bool ZLNetworkRequest::isRedirectionSupported() const { return myRedirectionSupported; }
-
-
-class ZLNetworkGetRequest : public ZLNetworkRequest {
-
-public:
-	static const ZLTypeId TYPE_ID;
-
-public:
-	ZLNetworkGetRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
-
-private:
-	const ZLTypeId &typeId() const;
-};
-
-
-class ZLNetworkPostRequest : public ZLNetworkRequest {
-
-public:
-	static const ZLTypeId TYPE_ID;
-
-public:
-	ZLNetworkPostRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, 
-		const std::vector<std::pair<std::string, std::string> > &postData);
-
-	const std::vector<std::pair<std::string, std::string> > &postData() const;
-
-private:
-	const ZLTypeId &typeId() const;
-
-private:
-	std::vector<std::pair<std::string, std::string> > myData;
-};
+inline const std::vector<std::pair<std::string, std::string> > &ZLNetworkRequest::postParameters() const { return myPostParameters; }
 
 #endif /* __ZLNETWORKREQUEST_H__ */

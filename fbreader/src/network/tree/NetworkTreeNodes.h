@@ -93,7 +93,7 @@ public:
 	std::string subtitle() const;
 	shared_ptr<const ZLImage> image() const;
 	std::string imageUrl() const;
-	void requestChildren(shared_ptr<ZLExecutionData::Listener> listener);
+	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
 
 private:
 //	virtual shared_ptr<const ZLImage> lastResortCoverImage() const;

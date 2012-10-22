@@ -26,7 +26,7 @@
 
 #include <ZLMimeType.h>
 
-class ZLExecutionData;
+class ZLNetworkRequest;
 
 class ZLImage {
 
@@ -36,7 +36,7 @@ protected:
 public:
 	virtual ~ZLImage();
 	virtual bool isSingle() const = 0;
-	virtual shared_ptr<ZLExecutionData> synchronizationData() const;
+	virtual shared_ptr<ZLNetworkRequest> synchronizationData() const;
 	virtual bool good() const = 0;
 };
 

@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 #include <ZLNetworkManager.h>
 
 #include "OPDSCatalogItem.h"
@@ -40,7 +40,7 @@ OPDSCatalogItem::OPDSCatalogItem(
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children) {
 	NetworkOperationData data(Link);
 
-	shared_ptr<ZLExecutionData> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), data);
+	shared_ptr<ZLNetworkRequest> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), data);
 
 	while (!networkData.isNull()) {
 		std::string error = ZLNetworkManager::Instance().perform(networkData);

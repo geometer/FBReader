@@ -1,12 +1,12 @@
 * New
-  ** remove ZLExecutionData; remove RTTI info & checks in ZLNetworkRequest usages
+  DONE remove ZLExecutionData; remove RTTI info & checks in ZLNetworkRequest usages
   ** Show correct tag names for books from feedbooks feed
   ** partial catalogs loading (first 20 books only)
   ** additional links for books from feedbooks feed (fix OPDS parser?)
   ** back/forward buttons (with arrows)
   ** "standard search look" for search field
   ** sign in into protected parts of catalogs (feedbooks, wolne lectury)
-  ** merge doc branch into the mainstream & into FBReader/Android
+  DONE merge doc branch into the mainstream & into FBReader/Android
   ** icons for feedbooks subcatalog
 
 * NP

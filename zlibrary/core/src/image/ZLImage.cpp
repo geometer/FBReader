@@ -19,13 +19,13 @@
 
 #include <vector>
 
-#include <ZLExecutionData.h>
+#include <ZLNetworkRequest.h>
 
 #include "ZLImage.h"
 
 #include "ZLImageManager.h"
 
-shared_ptr<ZLExecutionData> ZLImage::synchronizationData() const {
+shared_ptr<ZLNetworkRequest> ZLImage::synchronizationData() const {
 	return 0;
 }
 
