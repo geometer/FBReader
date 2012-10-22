@@ -140,7 +140,7 @@ std::string ZLTreeNode::actionText(const shared_ptr<ZLTreeAction> &action) const
 	return action.isNull() ? std::string() : action->text(resource());
 }
 
-void ZLTreeNode::close() {
+void ZLTreeNode::close() const {
 	if (ZLTreeListener *treeListener = listener()) {
 		treeListener->onCloseRequest();
 	}

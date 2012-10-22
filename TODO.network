@@ -9,6 +9,10 @@
   DONE merge doc branch into the mainstream & into FBReader/Android
   ** icons for feedbooks subcatalog
 
+  ** problems with loading books in ManyBook catalog
+  ** implement waiting icon for catalog items
+  ** async covers loading
+
 * NP
   ** run browser correctly on mac
   DONE fix crash when book info window opens

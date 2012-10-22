@@ -41,17 +41,29 @@ NetworkBookTree::NetworkBookTree(NetworkTree *parent, shared_ptr<NetworkItem> bo
 	init();
 }
 
+class NetworkTreeBookReadAction : public NetworkBookReadAction {
+public:
+	NetworkTreeBookReadAction(const NetworkBookTree &tree, const NetworkBookItem &book, bool demo) : NetworkBookReadAction(book, demo), myTree(tree) {}
+	void run() {
+		NetworkBookReadAction::run();
+		myTree.close();
+	}
+
+private:
+	const NetworkBookTree &myTree;
+};
+
 static std::vector<shared_ptr<ZLTreeAction> > getBookActions(const NetworkBookTree &tree) {
 	std::vector<shared_ptr<ZLTreeAction> > actions;
 	const NetworkBookItem &book = tree.book();
 	if (!book.reference(BookReference::DOWNLOAD_FULL).isNull() ||
 			!book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL).isNull()) {
-		actions.push_back(new NetworkBookReadAction(book, false));
+		actions.push_back(new NetworkTreeBookReadAction(tree, book, false));
 		actions.push_back(new NetworkBookDownloadAction(book, false));
 		actions.push_back(new NetworkBookDeleteAction(book));
 	}
 	if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
-		actions.push_back(new NetworkBookReadAction(book, true));
+		actions.push_back(new NetworkTreeBookReadAction(tree, book, true));
 		actions.push_back(new NetworkBookDownloadAction(book, true, tree.resource()["demo"].value()));
 	}
 	if (!book.reference(BookReference::BUY).isNull()) {

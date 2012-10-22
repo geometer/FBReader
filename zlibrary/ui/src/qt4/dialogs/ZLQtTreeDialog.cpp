@@ -65,13 +65,16 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	connect(myListWidget, SIGNAL(nodeClicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*)));
 	connect(myListWidget, SIGNAL(nodeDoubleClicked(const ZLTreeNode*)), this, SLOT(onNodeDoubleClicked(const ZLTreeNode*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
-
 }
 
 void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 	myRootNode = rootNode;
 	onExpandRequest(myRootNode);
 	show();
+}
+
+void ZLQtTreeDialog::onCloseRequest() {
+	hide();
 }
 
 QSize ZLQtTreeDialog::sizeHint() const {
@@ -92,7 +95,6 @@ void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 	} else {
 		onChildrenLoaded(node);
 	}
-
 }
 
 void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node) {
@@ -104,8 +106,6 @@ void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node) {
 	myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
 	updateBackButton();
 }
-
-void ZLQtTreeDialog::onCloseRequest() {}
 
 void ZLQtTreeDialog::onNodeBeginInsert(ZLTreeNode */*parent*/, size_t /*index*/) {}
 
