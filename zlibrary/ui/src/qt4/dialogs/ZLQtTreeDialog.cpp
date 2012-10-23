@@ -26,6 +26,8 @@
 #include <QtGui/QResizeEvent>
 #include <QtCore/QDebug>
 
+#include <ZLibrary.h>
+
 #include <ZLTreePageNode.h>
 
 #include "../tree/ZLQtItemsListWidget.h"
@@ -62,14 +64,14 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	mainLayout->addWidget(splitter);
 	this->setLayout(mainLayout);
 
-	connect(myListWidget, SIGNAL(nodeClicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*)));
-	connect(myListWidget, SIGNAL(nodeDoubleClicked(const ZLTreeNode*)), this, SLOT(onNodeDoubleClicked(const ZLTreeNode*)));
+	connect(myListWidget, SIGNAL(nodeClicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*)));
+	connect(myListWidget, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)), this, SLOT(onNodeDoubleClicked(ZLQtTreeItem*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
 }
 
 void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 	myRootNode = rootNode;
-	onExpandRequest(myRootNode);
+	onChildrenLoaded(myRootNode); //TODO make generic async loading
 	show();
 }
 
@@ -91,13 +93,25 @@ void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
 
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 	if (node->children().empty()) {
+		//expand request is used for RelatedAction, so we don't use waiting icon here
 		node->requestChildren(new ChildrenRequestListener(this, node));
 	} else {
 		onChildrenLoaded(node);
 	}
 }
 
-void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node) {
+void ZLQtTreeDialog::expandItem(ZLQtTreeItem *item) {
+	const ZLTreeNode *node = item->getNode();
+	if (node->children().empty()) {
+			ZLQtWaitingIcon *waitingIcon = item->getWaitingIcon();
+			waitingIcon->start();
+			const_cast<ZLTreeNode*>(node)->requestChildren(new ChildrenRequestListener(this, node, waitingIcon));
+	} else {
+		onChildrenLoaded(node);
+	}
+}
+
+void ZLQtTreeDialog::onChildrenLoaded(const ZLTreeNode *node) {
 	if (node->children().empty()) {
 		return;
 	}
@@ -125,7 +139,8 @@ void ZLQtTreeDialog::updateBackButton() {
 	myPreviewWidget->clear();
 }
 
-void ZLQtTreeDialog::onNodeClicked(const ZLTreeNode *node) {
+void ZLQtTreeDialog::onNodeClicked(ZLQtTreeItem* item) {
+	const ZLTreeNode* node = item->getNode();
 	if (const ZLTreePageNode *pageNode = zlobject_cast<const ZLTreePageNode*>(node)) {
 		shared_ptr<ZLTreePageInfo> info = pageNode->getPageInfo();
 		if (!info.isNull()) {
@@ -136,16 +151,15 @@ void ZLQtTreeDialog::onNodeClicked(const ZLTreeNode *node) {
 	}
 }
 
-void ZLQtTreeDialog::onNodeDoubleClicked(const ZLTreeNode *node) {
+void ZLQtTreeDialog::onNodeDoubleClicked(ZLQtTreeItem* item) {
+	const ZLTreeNode* node = item->getNode();
 	if (const ZLTreePageNode *pageNode = zlobject_cast<const ZLTreePageNode*>(node)) {
 		(void)pageNode;
 		//TODO maybe use different kind of check
 		//isExpandable method for i.e.
 		return;
 	}
-	//TODO fix this hack
-	ZLTreeNode *clickedNode = const_cast<ZLTreeNode*>(node);
-	onExpandRequest(clickedNode);
+	expandItem(item);
 }
 
 void ZLQtTreeDialog::onBackButton() {
@@ -158,10 +172,14 @@ void ZLQtTreeDialog::onBackButton() {
 	updateBackButton();
 }
 
-ZLQtTreeDialog::ChildrenRequestListener::ChildrenRequestListener(ZLQtTreeDialog *dialog, ZLTreeNode *node) : myTreeDialog(dialog), myNode(node) {
+ZLQtTreeDialog::ChildrenRequestListener::ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node, ZLQtWaitingIcon *icon) :
+	myTreeDialog(dialog), myNode(node), myWaitingIcon(icon) {
 }
 
 void ZLQtTreeDialog::ChildrenRequestListener::finished(const std::string &error) {
+	if (myWaitingIcon) {
+		myWaitingIcon->finish();
+	}
 	if (!error.empty()) {
 		//TODO show error message?
 		return;

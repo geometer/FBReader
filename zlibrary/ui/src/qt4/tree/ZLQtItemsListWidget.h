@@ -38,13 +38,15 @@ public:
 	void fillNodes(const ZLTreeNode *rootNode);
 	QSize sizeHint() const;
 	void setMinimumWidth(int w);
+	QList<ZLQtTreeItem*> getItems() const;
+
 
 Q_SIGNALS:
-	void nodeClicked(const ZLTreeNode *node);
-	void nodeDoubleClicked(const ZLTreeNode *node);
+	void nodeClicked(ZLQtTreeItem* item);
+	void nodeDoubleClicked(ZLQtTreeItem* item);
 
 public Q_SLOTS:
-	void onNodeClicked(const ZLTreeNode *node);
+	void onNodeClicked(ZLQtTreeItem* item);
 
 private:
 	QWidget *myContainerWidget;
@@ -52,17 +54,22 @@ private:
 	QList<ZLQtTreeItem*> myItems;
 };
 
+class ZLQtWaitingIcon;
+
 class ZLQtTreeItem : public QFrame {
 	Q_OBJECT
 
 public:
 	ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent = 0);
 	void setActive(bool active);
+
+public:
 	const ZLTreeTitledNode *getNode() const;
+	ZLQtWaitingIcon *getWaitingIcon() const;
 
 Q_SIGNALS:
-	void clicked(const ZLTreeNode *node);
-	void doubleClicked(const ZLTreeNode *node);
+	void clicked(ZLQtTreeItem* item);
+	void doubleClicked(ZLQtTreeItem* item);
 
 protected:
 	 void mousePressEvent(QMouseEvent *event);
@@ -70,7 +77,27 @@ protected:
 	 void paintEvent(QPaintEvent *event);
 private:
 	 const ZLTreeTitledNode *myNode;
+	 ZLQtWaitingIcon *myWaitingIcon;
 	 bool isActive;
+};
+
+class ZLQtWaitingIcon : public QLabel {
+	Q_OBJECT
+
+public:
+	ZLQtWaitingIcon(QWidget* parent=0);
+
+public Q_SLOTS:
+	void start();
+	void finish();
+
+private Q_SLOTS:
+	void rotate();
+
+private:
+	int myAngle;
+	QPixmap myPixmap;
+	QTimer* myTimer;
 };
 
 

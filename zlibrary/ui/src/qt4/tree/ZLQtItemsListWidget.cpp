@@ -24,9 +24,11 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QScrollBar>
+#include <QtCore/QTimer>
 
 #include <QtCore/QDebug>
 
+#include <ZLibrary.h>
 #include <ZLNetworkManager.h>
 #include <ZLTreeTitledNode.h>
 
@@ -72,8 +74,8 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 		if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
 			//qDebug() << QString::fromStdString(titledNode->title());
 			ZLQtTreeItem *item = new ZLQtTreeItem(titledNode);
-			connect(item, SIGNAL(clicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*))); //action ExpandAction used instead
-			connect(item, SIGNAL(doubleClicked(const ZLTreeNode*)), this, SIGNAL(nodeDoubleClicked(const ZLTreeNode*)));
+			connect(item, SIGNAL(clicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*))); //action ExpandAction used instead
+			connect(item, SIGNAL(doubleClicked(ZLQtTreeItem*)), this, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)));
 			myLayout->addWidget(item);
 			myItems.push_back(item);
 		}
@@ -91,11 +93,15 @@ void ZLQtItemsListWidget::setMinimumWidth(int w) {
 	QScrollArea::setMinimumWidth(w);
 }
 
-void ZLQtItemsListWidget::onNodeClicked(const ZLTreeNode *node) {
+QList<ZLQtTreeItem *> ZLQtItemsListWidget::getItems() const {
+	return myItems;
+}
+
+void ZLQtItemsListWidget::onNodeClicked(ZLQtTreeItem* itemClicked) {
 	foreach(ZLQtTreeItem *item, myItems) {
-		item->setActive(item->getNode() == node);
+		item->setActive(item == itemClicked);
 	}
-	emit nodeClicked(node);
+	emit nodeClicked(itemClicked);
 }
 
 
@@ -109,6 +115,9 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QFra
 	QLabel *icon = new QLabel;
 	QLabel *title = new QLabel(QString("<b>%1</b>").arg(QString::fromStdString(node->title())));
 	QLabel *subtitle = new QLabel(QString::fromStdString(node->subtitle()));
+
+	myWaitingIcon = new ZLQtWaitingIcon;
+
 	title->setWordWrap(true);
 	subtitle->setWordWrap(true);
 
@@ -128,8 +137,9 @@ ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QFra
 		icon->setPixmap(pixmap);
 	}
 	mainLayout->addWidget(icon);
-	mainLayout->addLayout(titlesLayout);
+	mainLayout->addLayout(titlesLayout, 1);
 	mainLayout->addStretch();
+	mainLayout->addWidget(myWaitingIcon, 1);
 	setLayout(mainLayout);
 
 	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
@@ -156,12 +166,16 @@ const ZLTreeTitledNode *ZLQtTreeItem::getNode() const {
 	return myNode;
 }
 
+ZLQtWaitingIcon *ZLQtTreeItem::getWaitingIcon() const {
+	return myWaitingIcon;
+}
+
 void ZLQtTreeItem::mousePressEvent(QMouseEvent *) {
-	emit clicked(myNode);
+	emit clicked(this);
 }
 
 void ZLQtTreeItem::mouseDoubleClickEvent(QMouseEvent *) {
-	emit doubleClicked(myNode);
+	emit doubleClicked(this);
 }
 
 void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
@@ -215,4 +229,68 @@ void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
 //	painter.setPen(shadowUpColor);
 	//	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
 
+}
+
+
+
+
+ZLQtWaitingIcon::ZLQtWaitingIcon(QWidget* parent) : QLabel(parent), myAngle(0) {
+	//TODO maybe replace to QMovie class using
+	const int ICON_WIDTH = 35;
+	const int ICON_HEIGHT = ICON_WIDTH;
+	static const QString iconName = "refresh-icon.svg"; //
+	QString iconFile = QString::fromStdString(ZLibrary::ApplicationImageDirectory()) +
+					   QString::fromStdString(ZLibrary::FileNameDelimiter) +
+					   iconName;
+
+	//qDebug() << "LoadingIcon" << iconFile;
+	myTimer = new QTimer(this);
+	//TODO make pixmap as static
+	myPixmap = QPixmap(iconFile);
+	myPixmap = myPixmap.scaled(QSize(ICON_WIDTH, ICON_HEIGHT), Qt::KeepAspectRatio, Qt::FastTransformation);
+	this->setFixedSize(myPixmap.size());
+	connect(myTimer,SIGNAL(timeout()), this, SLOT(rotate()));
+	this->hide();
+}
+
+//class ZLQtWaitingIconListener : public ZLNetworkRequest::Listener {
+//public:
+//	ZLQtWaitingIconListener(ZLQtWaitingIcon *waitingIcon) : myWaitingIcon(waitingIcon) {}
+//	void finished(const std::string &/*error*/) {
+//		myWaitingIcon->finish();
+//	}
+//private:
+//	ZLQtWaitingIcon *myWaitingIcon;
+//};
+
+void ZLQtWaitingIcon::start() {
+	this->show();
+	const int REFRESH_TIME = 100;
+	myTimer->start(REFRESH_TIME);
+}
+
+void ZLQtWaitingIcon::finish() {
+	//qDebug() << Q_FUNC_INFO;
+	myTimer->stop();
+	this->hide();
+}
+
+void ZLQtWaitingIcon::rotate() {
+	//qDebug() << this->size();
+	const int ANGLE_SPEED = 360/10;
+	myAngle += ANGLE_SPEED;
+	if (myAngle >= 360) {
+		myAngle -= 360;
+	}
+	QPixmap tmpPixmap(myPixmap.size());
+	tmpPixmap.fill(Qt::transparent);
+	QPainter painter(&tmpPixmap);
+	painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
+	painter.translate(myPixmap.width()/2,myPixmap.height()/2);
+	painter.rotate(qreal(myAngle));
+	painter.translate(-myPixmap.width()/2,-myPixmap.height()/2);
+	painter.drawPixmap(0,0,myPixmap);
+	painter.end();
+	this->setPixmap(tmpPixmap);
+	QWidget::raise();
 }

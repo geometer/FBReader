@@ -1,57 +1,53 @@
-* New
-  DONE remove ZLExecutionData; remove RTTI info & checks in ZLNetworkRequest usages
-  ** Show correct tag names for books from feedbooks feed
-  ** partial catalogs loading (first 20 books only)
-  ** additional links for books from feedbooks feed (fix OPDS parser?)
-  ** back/forward buttons (with arrows)
-  ** "standard search look" for search field
-  ** sign in into protected parts of catalogs (feedbooks, wolne lectury)
-  DONE merge doc branch into the mainstream & into FBReader/Android
-  ** icons for feedbooks subcatalog
-
-  ** problems with loading books in ManyBook catalog
-  ** implement waiting icon for catalog items
-  ** async covers loading
-
 * NP
   ** run browser correctly on mac
   DONE fix crash when book info window opens
   ** review async-network-ui branch
   ** better icon for books with no covers
 
-* ...
-  DONE merge 'sensible-browser' patch into the mainstream
-DONE doc plugin
-  DONE review "doc" branch
-  DONE check if word inserts "left" alignment mark in each file
-
-* network library window UI
-  DONE for items, use standard frame border for "3d" view
-
-  DONE by default, window should be vertically splitted into 50:50 parts
-  DONE min horizontal size for each part (catalogs list & book info) should be 1/3 of full window width
-  DONE if I resize window, "parts" should be resized proportionally
-  ** set sensible minimum sizes for both panels
-
-  DONE BUG: if click for book items too quicky, there's several previews appeared
-  DONE double click on list item should expand the catalog
-  DONE in book info view, one scroller for all items should be used
-  DONE move all buttons except 'open catalog/expand' to right panel
-  ** add better icon for books with no covers
-  ** in book info window show "related links" section
-    DONE implement related links in litres
-    DONE implement related links support for OPDS
-	*** refactoring: new UrlInfoCollection class
-	*** implement ability to open related links in browser
-	*** 'Also read with this book' -- is correct phrase?
-	** m.b. add to other resources phrases 'also read' and etc
-
-DONE can not open feedbooks catalog item: it said 'Catalog is empty'
-DONE синхронизировать код ePub из FBReaderJ/native
-DONE удалить "Bound to IP" в диалоге входа Литрес, считать, что флаг всегда стоит
-DONE при использовании API убрать "лишние" сортировки
-
 * new network library UI (in a separate window, with asynchronous calls)
+
+	DONE can not open feedbooks catalog item: it said 'Catalog is empty'
+	DONE синхронизировать код ePub из FBReaderJ/native
+	DONE удалить "Bound to IP" в диалоге входа Литрес, считать, что флаг всегда стоит
+	DONE при использовании API убрать "лишние" сортировки
+	DONE for items, use standard frame border for "3d" view
+	DONE by default, window should be vertically splitted into 50:50 parts
+	DONE min horizontal size for each part (catalogs list & book info) should be 1/3 of full window width
+	DONE if I resize window, "parts" should be resized proportionally
+	DONE BUG: if click for book items too quicky, there's several previews appeared
+	DONE double click on list item should expand the catalog
+	DONE in book info view, one scroller for all items should be used
+	DONE move all buttons except 'open catalog/expand' to right panel
+
+	** set sensible default height with ability to shrink it
+	** add better icon for books with no covers
+	** in book info window show "related links" section
+		DONE implement related links in litres
+		DONE implement related links support for OPDS
+		*** refactoring: new UrlInfoCollection class
+		*** implement ability to open related links in browser
+		*** 'Also read with this book' -- is correct phrase?
+		*** m.b. add to other resources phrases 'also read' and etc
+
+	DONE remove ZLExecutionData; remove RTTI info & checks in ZLNetworkRequest usages
+
+	** implement waiting icon for catalog items
+		*** what if we loading two items at the same time, last should be opened
+	** implement waiting icon for related action items
+	** implement progress showing for book downloading
+	** implement actions reloading after some actions pushed
+	** async covers loading
+	** generic.xml async loading
+
+	** Show correct tag names for books from feedbooks feed
+	** partial catalogs loading (first 20 books only)
+	** additional links for books from feedbooks feed (fix OPDS parser?)
+	** back/forward buttons (with arrows)
+	** "standard search look" for search field
+	** sign in into protected parts of catalogs (feedbooks, wolne lectury)
+	** icons for feedbooks subcatalog
+	** problems with loading books in ManyBooks catalog
+
 	* асинхронная работа с сетью:
 		* загрузка списка библиотек с сервера
 		* загрузка картинок

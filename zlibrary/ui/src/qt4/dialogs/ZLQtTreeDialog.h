@@ -46,6 +46,9 @@ protected:
 	QSize sizeHint() const;
 	void resizeEvent(QResizeEvent *event);
 
+protected:
+	void expandItem(ZLQtTreeItem* item);
+
 public: //listener methods
 	void onExpandRequest(ZLTreeNode *node);
 	void onCloseRequest();
@@ -55,14 +58,14 @@ public: //listener methods
 	void onNodeEndRemove();
 	void onNodeUpdated(ZLTreeNode *node);
 
-	void onChildrenLoaded(ZLTreeNode *node);
+	void onChildrenLoaded(const ZLTreeNode *node);
 
 private:
 	void updateBackButton();
 
 private Q_SLOTS:
-	void onNodeClicked(const ZLTreeNode* node);
-	void onNodeDoubleClicked(const ZLTreeNode* node);
+	void onNodeClicked(ZLQtTreeItem* item);
+	void onNodeDoubleClicked(ZLQtTreeItem* item);
 	void onBackButton();
 
 
@@ -82,11 +85,12 @@ private:
 
 	class ChildrenRequestListener : public ZLNetworkRequest::Listener {
 		public:
-			ChildrenRequestListener(ZLQtTreeDialog *dialog, ZLTreeNode *node);
+			ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node, ZLQtWaitingIcon *icon = 0);
 			void finished(const std::string &error);
 		private:
 			ZLQtTreeDialog *myTreeDialog;
-			ZLTreeNode *myNode;
+			const ZLTreeNode *myNode;
+			ZLQtWaitingIcon *myWaitingIcon;
 	};
 
 	//TODO implement destroing of listeners
