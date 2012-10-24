@@ -32,16 +32,22 @@ class ZLQtPreviewWidget : public QWidget {
 
 public:
 	ZLQtPreviewWidget(QWidget *parent = 0);
-	void fill(const ZLTreePageInfo &info);
-	void fillCatalog(const ZLTreeTitledNode *node);
+	void show(ZLTreeNode *node);
+	void refresh();
 	void clear();
 
 	QSize sizeHint() const;
+
+protected:
+	void fill(const ZLTreePageInfo &info);
+	void fillCatalog(const ZLTreeTitledNode *node);
 
 private:
 	//QHBoxLayout *myLayout;
 	QWidget *myWidget;
 	QWidget *myMinSizeWidget;
+
+	ZLTreeNode *myCurrentNode;
 };
 
 class ZLQtPageWidget : public QWidget {

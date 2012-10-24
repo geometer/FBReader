@@ -33,8 +33,10 @@
 	** implement async full information loading
 	** back/forward buttons (with arrows)
 
-	** implement actions reloading after some actions pushed
+	DONE implement actions reloading after some actions pushed
 
+
+	** BUG: when pressing buy&download, app crashes
 	?? implement progress showing for book downloading like a progress bar
 	** implement async buying of book
 	** BUG: at litres "popular books" there's no waiting icon! (looks like this widget doesn't appears because of too long title)
@@ -78,8 +80,6 @@
 					* что происходит, когда нажимаем кнопку "Сетевая библиотека" несколько раз подряд?
 					* что происходит, если запросить requestChildren дважды подряд?
 		? реализовать кнопку "Обновление тек. пункта"
-		* реализовать обновление списка пунктов каталога после sign in / sign out
-		* bug: actions должны обновляться после sign in / sign out
 		* algorithms
 				* реализовать постраничную подгрузку данных (сейчас из OPDS скачивается все сразу)
 				* реализовать постепенную загрузку обложек

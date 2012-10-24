@@ -27,6 +27,8 @@
 #include "../../networkActions/PasswordRecoveryDialog.h"
 #include "../../networkActions/RegisterUserDialog.h"
 
+#include "NetworkLibrary.h"
+
 #include "NetworkTreeNodes.h"
 
 class NetworkTreeCatalogAuthAction : public ZLTreeAction {
@@ -145,6 +147,7 @@ void NetworkCatalogRootTree::LoginAction::run() {
 	AuthenticationDialog::run(myManager);
 	FBReader::Instance().invalidateAccountDependents();
 	FBReader::Instance().refreshWindow();
+	NetworkLibrary::Instance().refresh();
 }
 
 NetworkCatalogRootTree::LogoutAction::LogoutAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, true) {
@@ -164,6 +167,7 @@ void NetworkCatalogRootTree::LogoutAction::run() {
 	logout.executeWithUI();
 //	FBReader::Instance().invalidateAccountDependents();
 //	FBReader::Instance().refreshWindow();
+	NetworkLibrary::Instance().refresh();
 }
 
 
@@ -208,6 +212,7 @@ void NetworkCatalogRootTree::PasswordRecoveryAction::run() {
 	PasswordRecoveryDialog::run(myManager);
 	FBReader::Instance().invalidateAccountDependents();
 	FBReader::Instance().refreshWindow();
+	NetworkLibrary::Instance().refresh();
 }
 
 NetworkCatalogRootTree::RegisterUserAction::RegisterUserAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, false) {
@@ -225,4 +230,5 @@ void NetworkCatalogRootTree::RegisterUserAction::run() {
 	RegisterUserDialog::run(myManager);
 	FBReader::Instance().invalidateAccountDependents();
 	FBReader::Instance().refreshWindow();
+	NetworkLibrary::Instance().refresh();
 }

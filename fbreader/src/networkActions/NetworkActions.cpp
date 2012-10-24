@@ -75,6 +75,7 @@ void NetworkBookReadAction::run() {
 			fbreader.openBook(bookPtr);
 			fbreader.setMode(FBReader::BOOK_TEXT_MODE);
 			fbreader.refreshWindow();
+			NetworkLibrary::Instance().refresh();
 		}
 	}
 }
@@ -188,6 +189,7 @@ void NetworkBookDownloadAction::finished(const std::string &error) {
 		const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myBook.Title);
 		ZLDialogManager::Instance().errorBox(boxKey, message);
 		fbreader.refreshWindow();
+		NetworkLibrary::Instance().refresh();
 		return;
 	}
 
@@ -212,6 +214,7 @@ void NetworkBookDownloadAction::finished(const std::string &error) {
 	fbreader.openBook(downloaderBook);
 	fbreader.setMode(FBReader::BOOK_TEXT_MODE);
 	fbreader.refreshWindow();
+	NetworkLibrary::Instance().refresh();
 }
 
 NetworkBookBuyDirectlyAction::NetworkBookBuyDirectlyAction(const NetworkBookItem &book) : myBook(book) {
@@ -252,6 +255,7 @@ void NetworkBookBuyDirectlyAction::run() {
 		}
 		fbreader.invalidateAccountDependents();
 		fbreader.refreshWindow();
+		NetworkLibrary::Instance().refresh();
 		if (!mgr.needPurchase(myBook)) {
 			return;
 		}
@@ -278,6 +282,7 @@ void NetworkBookBuyDirectlyAction::run() {
 		fbreader.invalidateAccountDependents();
 	}
 	fbreader.refreshWindow();
+	NetworkLibrary::Instance().refresh();
 }
 
 NetworkBookBuyInBrowserAction::NetworkBookBuyInBrowserAction(const NetworkBookItem &book) : myBook(book) {
@@ -331,4 +336,5 @@ void NetworkBookDeleteAction::run() {
 
 	myBook.removeLocalFiles();
 	FBReader::Instance().refreshWindow();
+	NetworkLibrary::Instance().refresh();
 }

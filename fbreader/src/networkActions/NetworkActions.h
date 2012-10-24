@@ -22,6 +22,7 @@
 
 #include <ZLRunnable.h>
 #include <ZLNetworkRequest.h>
+#include "../network/tree/NetworkLibrary.h"
 
 class NetworkBookItem;
 

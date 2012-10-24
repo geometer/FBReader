@@ -166,6 +166,11 @@ void ZLQtTreeDialog::onDownloadingStopped(ZLTreeNode *node) {
 	updateWaitingIcons();
 }
 
+void ZLQtTreeDialog::onRefresh() {
+	myPreviewWidget->refresh();
+	//TODO maybe add other refreshes? (list widget, for i.e.)
+}
+
 void ZLQtTreeDialog::updateBackButton() {
 	myBackButton->setEnabled(myHistoryStack.size() > 1);
 	myPreviewWidget->clear();
@@ -173,14 +178,7 @@ void ZLQtTreeDialog::updateBackButton() {
 
 void ZLQtTreeDialog::onNodeClicked(ZLQtTreeItem* item) {
 	ZLTreeNode* node = item->getNode();
-	if (ZLTreePageNode *pageNode = zlobject_cast<ZLTreePageNode*>(node)) {
-		shared_ptr<ZLTreePageInfo> info = pageNode->getPageInfo();
-		if (!info.isNull()) {
-			myPreviewWidget->fill(*info);
-		}
-	} else if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
-		myPreviewWidget->fillCatalog(titledNode);
-	}
+	myPreviewWidget->show(node);
 }
 
 void ZLQtTreeDialog::onNodeDoubleClicked(ZLQtTreeItem* item) {

@@ -55,6 +55,10 @@ void NetworkLibrary::showDialog() {
 	myDialog->run(&myRootTree);
 }
 
+void NetworkLibrary::refresh() {
+	myDialog->onRefresh();
+}
+
 void NetworkLibrary::makeUpToDate() {
 	//TODO rewrite this method
 	NetworkLinkCollection::Instance().initialize();

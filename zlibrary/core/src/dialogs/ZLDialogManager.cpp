@@ -88,7 +88,7 @@ int ZLDialogManager::questionBox(const ZLResourceKey &key, const ZLResourceKey &
 	return questionBox(key, dialogMessage(key), button0, button1, button2);
 }
 
-shared_ptr<ZLProgressDialog> ZLDialogManager::createProgressDialog(const ZLResourceKey &key, bool network) const {
+shared_ptr<ZLProgressDialog> ZLDialogManager::createProgressDialog(const ZLResourceKey &key, bool /*network*/) const {
 	return 0;
 }
 

@@ -71,7 +71,7 @@ void ZLQtButtonAction::onClicked() {
 	myAction->run();
 }
 
-ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent), myWidget(0) {
+ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent), myWidget(0), myCurrentNode(0) {
 	QSizePolicy policy = QSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
 	//policy.setHorizontalStretch(2);
 	setSizePolicy(policy);
@@ -83,21 +83,39 @@ ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent), myWidge
 	setLayout(layout);
 }
 
-void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
+void ZLQtPreviewWidget::show(ZLTreeNode *node) {
 	clear();
+	myCurrentNode = node;
+	if (ZLTreePageNode *pageNode = zlobject_cast<ZLTreePageNode*>(node)) {
+		shared_ptr<ZLTreePageInfo> info = pageNode->getPageInfo();
+		if (!info.isNull()) {
+			fill(*info);
+		}
+	} else if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
+		fillCatalog(titledNode);
+	}
+}
+
+void ZLQtPreviewWidget::refresh() {
+	if (myCurrentNode) {
+		show(myCurrentNode);
+	}
+}
+
+void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
 	myWidget = new ZLQtPageWidget(info);
 	myWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 	layout()->addWidget(myWidget);
 }
 
 void ZLQtPreviewWidget::fillCatalog(const ZLTreeTitledNode *node) {
-	clear();
 	myWidget = new ZLQtCatalogPageWidget(node);
 	myWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
 	layout()->addWidget(myWidget);
 }
 
 void ZLQtPreviewWidget::clear() {
+	myCurrentNode = 0;
 	if (myWidget) {
 		delete myWidget;
 		myWidget = 0;

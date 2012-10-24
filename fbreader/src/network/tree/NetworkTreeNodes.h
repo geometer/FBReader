@@ -23,12 +23,12 @@
 #include <ZLResource.h>
 #include <ZLExecutionUtil.h>
 
-#include "../NetworkLink.h"
-#include "../../tree/FBTree.h"
-
 #include <ZLTreeNode.h>
 #include <ZLTreeDialog.h>
 #include <ZLTreePageNode.h>
+
+#include "../NetworkLink.h"
+#include "../../tree/FBTree.h"
 
 //maybe RootTree should be nested class for NetworkLibrary?
 class RootTree : public ZLTreeNode {

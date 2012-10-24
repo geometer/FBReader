@@ -59,6 +59,8 @@ public: //listener methods
 	void onDownloadingStarted(ZLTreeNode *node);
 	void onDownloadingStopped(ZLTreeNode *node);
 
+	void onRefresh();
+
 public:
 	void onChildrenLoaded(const ZLTreeNode *node, bool checkLast, bool success);
 
