@@ -18,6 +18,7 @@
  */
 
 #include <ZLStringUtil.h>
+#include <ZLNetworkManager.h>
 
 #include <ZLBase64EncodedImage.h>
 #include <ZLNetworkImage.h>
@@ -68,4 +69,27 @@ shared_ptr<const ZLImage> NetworkCatalogUtil::getImageByUrl(const std::string &u
 	}
 
 	return 0;
+}
+
+class NetworkImageDownloadListener : public ZLNetworkRequest::Listener {
+public:
+	NetworkImageDownloadListener(ZLTreeNode *node) : myNode(node) {}
+	void finished(const std::string &error) {
+		if (error.empty()) {
+			myNode->updated();
+		}
+	}
+private:
+	ZLTreeNode *myNode;
+};
+
+shared_ptr<const ZLImage> NetworkCatalogUtil::getAndDownloadImageByUrl(const std::string &url, const ZLTreeNode *node) {
+	shared_ptr<const ZLImage> image = getImageByUrl(url);
+
+	shared_ptr<ZLNetworkRequest> downloadRequest = image->synchronizationData();
+	if (!downloadRequest.isNull()) {
+		downloadRequest->setListener(new NetworkImageDownloadListener(const_cast<ZLTreeNode*>(node)));
+		ZLNetworkManager::Instance().performAsync(downloadRequest);
+	}
+	return image;
 }

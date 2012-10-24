@@ -24,12 +24,15 @@
 
 #include <shared_ptr.h>
 
+#include <ZLTreeNode.h>
+
 class ZLImage;
 
 class NetworkCatalogUtil {
 
 public:
 	static shared_ptr<const ZLImage> getImageByUrl(const std::string &url);
+	static shared_ptr<const ZLImage> getAndDownloadImageByUrl(const std::string &url, const ZLTreeNode *node);
 
 private:
 	static shared_ptr<const ZLImage> getImageByNetworkUrl(const std::string &url, const std::string &prefix);

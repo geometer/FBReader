@@ -144,7 +144,17 @@ void ZLQtTreeDialog::onNodeBeginRemove(ZLTreeNode */*parent*/, size_t /*index*/)
 
 void ZLQtTreeDialog::onNodeEndRemove() {}
 
-void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode */*node*/) {}
+void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode *node) {
+	foreach(ZLQtTreeItem *item, myListWidget->getItems()) {
+		if (node == item->getNode()) {
+			if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node)) {
+				item->fill(titledNode);
+				updateAll();
+				break;
+			}
+		}
+	}
+}
 
 void ZLQtTreeDialog::onDownloadingStarted(ZLTreeNode *node) {
 	myDownloadingNodes.insert(node);

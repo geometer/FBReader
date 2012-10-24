@@ -68,7 +68,7 @@ shared_ptr<const ZLImage> NetworkCatalogTree::image() const {
 			return node->image();
 		}
 	}
-	shared_ptr<const ZLImage> image = NetworkCatalogUtil::getImageByUrl(url);
+	shared_ptr<const ZLImage> image = NetworkCatalogUtil::getAndDownloadImageByUrl(url, this);
 	if (!image.isNull()) {
 		return image;
 	}

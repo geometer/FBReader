@@ -60,7 +60,8 @@ class ZLQtTreeItem : public QFrame {
 	Q_OBJECT
 
 public:
-	ZLQtTreeItem(ZLTreeTitledNode *node, QWidget *parent = 0);
+	ZLQtTreeItem(QWidget *parent = 0);
+	void fill(ZLTreeTitledNode *node);
 	void setActive(bool active);
 
 public:
@@ -75,9 +76,17 @@ protected:
 	 void mousePressEvent(QMouseEvent *event);
 	 void mouseDoubleClickEvent(QMouseEvent *event);
 	 void paintEvent(QPaintEvent *event);
+
+	 void clear();
+
 private:
 	 ZLTreeTitledNode *myNode;
+
+	 QLabel *myIcon;
+	 QLabel *myTitle;
+	 QLabel *mySubtitle;
 	 ZLQtWaitingIcon *myWaitingIcon;
+
 	 bool isActive;
 };
 

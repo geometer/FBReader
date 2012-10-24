@@ -73,7 +73,8 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 	foreach(ZLTreeNode* node, expandNode->children()) {
 		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node)) {
 			//qDebug() << QString::fromStdString(titledNode->title());
-			ZLQtTreeItem *item = new ZLQtTreeItem(titledNode);
+			ZLQtTreeItem *item = new ZLQtTreeItem;
+			item->fill(titledNode); //TODO maybe do deffered filling
 			connect(item, SIGNAL(clicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*))); //action ExpandAction used instead
 			connect(item, SIGNAL(doubleClicked(ZLQtTreeItem*)), this, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)));
 			myLayout->addWidget(item);
@@ -105,39 +106,32 @@ void ZLQtItemsListWidget::onNodeClicked(ZLQtTreeItem* itemClicked) {
 }
 
 
-ZLQtTreeItem::ZLQtTreeItem(ZLTreeTitledNode *node, QWidget *parent) : QFrame(parent), myNode(node) {
+ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0) {
 	setAutoFillBackground(true);
 	setActive(false);
 
 	QHBoxLayout *mainLayout = new QHBoxLayout;
 	QVBoxLayout *titlesLayout = new QVBoxLayout;
 
-	QLabel *icon = new QLabel;
-	QLabel *title = new QLabel(QString("<b>%1</b>").arg(QString::fromStdString(node->title())));
-	QLabel *subtitle = new QLabel(QString::fromStdString(node->subtitle()));
+	myIcon = new QLabel;
+	myTitle = new QLabel;
+	mySubtitle = new QLabel;
 
 	myWaitingIcon = new ZLQtWaitingIcon;
 	myWaitingIcon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
-	title->setWordWrap(true);
-	subtitle->setWordWrap(true);
+	myTitle->setWordWrap(true);
+	mySubtitle->setWordWrap(true);
 
 	QSizePolicy policy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
 	//policy.setHorizontalStretch(1);
-	title->setSizePolicy(policy);
-	subtitle->setSizePolicy(policy);
+	myTitle->setSizePolicy(policy);
+	mySubtitle->setSizePolicy(policy);
 
-	titlesLayout->addWidget(title);
-	titlesLayout->addWidget(subtitle);
+	titlesLayout->addWidget(myTitle);
+	titlesLayout->addWidget(mySubtitle);
 
-	shared_ptr<const ZLImage> image = node->image();
-	if (!image.isNull()) {
-		ZLNetworkManager::Instance().perform(image->synchronizationData());
-		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmapWithSize(image, QSize(ITEM_SIZE,ITEM_SIZE), Qt::SmoothTransformation);
-		//qDebug() << pixmap.isNull();
-		icon->setPixmap(pixmap);
-	}
-	mainLayout->addWidget(icon);
+	mainLayout->addWidget(myIcon);
 	mainLayout->addLayout(titlesLayout);
 	mainLayout->addStretch();
 	mainLayout->addWidget(myWaitingIcon, 1);
@@ -145,8 +139,36 @@ ZLQtTreeItem::ZLQtTreeItem(ZLTreeTitledNode *node, QWidget *parent) : QFrame(par
 
 	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 	setFixedHeight(ITEM_HEIGHT);
+
+	clear();
 }
 
+void ZLQtTreeItem::fill(ZLTreeTitledNode *node) {
+	clear();
+	myNode = node;
+	myTitle->setText(QString("<b>%1</b>").arg(QString::fromStdString(node->title())));
+	mySubtitle->setText(QString::fromStdString(node->subtitle()));
+	shared_ptr<const ZLImage> image = node->image();
+	if (!image.isNull()) {
+		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmapWithSize(image, QSize(ITEM_SIZE,ITEM_SIZE), Qt::SmoothTransformation);
+		if (!pixmap.isNull()) {
+			myIcon->setPixmap(pixmap);
+		}
+	}
+}
+
+void ZLQtTreeItem::clear() {
+	myNode = 0;
+	myTitle->clear();
+	mySubtitle->clear();
+
+	QPixmap pixmap(ITEM_SIZE, ITEM_SIZE);
+	pixmap.fill(Qt::transparent);
+	myIcon->setPixmap(pixmap);
+
+	myWaitingIcon->finish();
+
+}
 void ZLQtTreeItem::setActive(bool active) {
 	isActive = active;
 
@@ -231,9 +253,6 @@ void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
 	//	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
 
 }
-
-
-
 
 ZLQtWaitingIcon::ZLQtWaitingIcon(QWidget* parent) : QLabel(parent), myAngle(0) {
 	//TODO maybe replace to QMovie class using

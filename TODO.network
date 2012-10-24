@@ -29,15 +29,14 @@
 	DONE Show correct tag names for books from feedbooks feed
 	DONE implement progress showing for book downloading
 
-	** async covers loading
+	DONE async covers loading
 	** implement async full information loading
 	** back/forward buttons (with arrows)
 
-	** implement async buying of book
 	** implement actions reloading after some actions pushed
 
 	?? implement progress showing for book downloading like a progress bar
-
+	** implement async buying of book
 	** BUG: at litres "popular books" there's no waiting icon! (looks like this widget doesn't appears because of too long title)
 	** block action-button when pushed (downloading, buying, etc)
 	** partial catalogs loading (first 20 books only)
