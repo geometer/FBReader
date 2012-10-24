@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <ZLStringUtil.h>
+
 #include "ZLMimeType.h"
 
 std::map<std::string,shared_ptr<ZLMimeType> > ZLMimeType::ourSimpleTypesMap;
@@ -72,28 +74,26 @@ shared_ptr<ZLMimeType> ZLMimeType::get(const char *text) {
 }
 
 shared_ptr<ZLMimeType> ZLMimeType::get(std::string text) {
-	if (text == "") {
+	if (text.empty()) {
 		return EMPTY;
 	}
-	std::string name = text.substr(0, text.find(';'));
-	if (name == "") {
+
+	std::vector<std::string> items = ZLStringUtil::split(text, ";");
+	if (items.empty()) {
 		return EMPTY;
 	}
+
+	std::string name = items.at(0);
 	std::map<std::string,std::string> parameters;
-	bool final = (text.find(';') == std::string::npos);
-	if (!final) {
-		std::string rest = text.substr(text.find(';') + 1);
-		while (!final) {
-			if (rest.find('=') == std::string::npos) {
-				return EMPTY;
-			}
-			std::string key = rest.substr(0, rest.find('='));
-			std::string value = rest.substr(rest.find('=') + 1, rest.find(';'));
+	for (size_t i = 1; i < items.size(); ++i) {
+		std::vector<std::string> pair = ZLStringUtil::split(items.at(i), "=");
+		if (pair.size() == 2) {
+			std::string key = pair.at(0);
+			std::string value = pair.at(1);
 			parameters[key] = value;
-			final = (rest.find(';') == std::string::npos);
-			rest = rest.substr(rest.find(';') + 1);
 		}
 	}
+
 	if (parameters.empty()) {
 		for (std::map<std::string,shared_ptr<ZLMimeType> >::iterator it = ourSimpleTypesMap.begin(); it != ourSimpleTypesMap.end(); ++it) {
 			if (it->second->myName == name) {
