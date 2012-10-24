@@ -37,7 +37,7 @@
 
 static const int DIALOG_WIDTH_HINT = 840;
 
-ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog(parent), ZLTreeDialog(res) {
+ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog(parent), ZLTreeDialog(res), myLastClickedNode(0) {
 	setWindowTitle(QString::fromStdString(resource().value())); //TODO maybe user resources by other way
 	setMinimumSize(400, 260); //minimum sensible size
 
@@ -71,7 +71,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 
 void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 	myRootNode = rootNode;
-	onChildrenLoaded(myRootNode); //TODO make generic async loading
+	onChildrenLoaded(myRootNode, false, true); //TODO make generic async loading
 	show();
 }
 
@@ -92,33 +92,69 @@ void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
 }
 
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
+	myLastClickedNode = node;
 	if (node->children().empty()) {
+		//check if we try to download it yet
+		foreach(shared_ptr<ZLNetworkRequest::Listener> listener, myListeners) {
+			ChildrenRequestListener *l = static_cast<ChildrenRequestListener*>(&*listener);
+			if (l->getNode() == node) {
+				qDebug() << "avoid double loading";
+				return;
+			}
+		}
+
 		//expand request is used for RelatedAction, so we don't use waiting icon here
-		node->requestChildren(new ChildrenRequestListener(this, node));
+		shared_ptr<ZLNetworkRequest::Listener> listener = new ChildrenRequestListener(this, node);
+		myListeners.push_back(listener);
+		node->requestChildren(listener);
+		updateWaitingIcons();
 	} else {
-		onChildrenLoaded(node);
+		onChildrenLoaded(node, false, true);
 	}
 }
 
 void ZLQtTreeDialog::expandItem(ZLQtTreeItem *item) {
+	//TODO maybe remove this excess method?
 	const ZLTreeNode *node = item->getNode();
-	if (node->children().empty()) {
-			ZLQtWaitingIcon *waitingIcon = item->getWaitingIcon();
-			waitingIcon->start();
-			const_cast<ZLTreeNode*>(node)->requestChildren(new ChildrenRequestListener(this, node, waitingIcon));
-	} else {
-		onChildrenLoaded(node);
-	}
+	onExpandRequest(const_cast<ZLTreeNode*>(node));
 }
 
-void ZLQtTreeDialog::onChildrenLoaded(const ZLTreeNode *node) {
+void ZLQtTreeDialog::onChildrenLoaded(const ZLTreeNode *node, bool checkLast, bool success) {
+	updateWaitingIcons();
+	if (!success) {
+		return;
+	}
 	if (node->children().empty()) {
 		return;
+	}
+	if (checkLast && myLastClickedNode != 0) {
+		if (node != myLastClickedNode) { //load just last clicked item
+			return;
+		}
 	}
 	myHistoryStack.push(node);
 	myListWidget->fillNodes(myHistoryStack.top());
 	myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
 	updateBackButton();
+	updateWaitingIcons();
+}
+
+void ZLQtTreeDialog::updateWaitingIcons() {
+	foreach(ZLQtTreeItem *item, myListWidget->getItems()) {
+		const ZLTreeNode *node = item->getNode();
+		bool started = false;
+		foreach(shared_ptr<ZLNetworkRequest::Listener> listener, myListeners) { //TODO this code can be optimized
+			ChildrenRequestListener *l = static_cast<ChildrenRequestListener*>(&*listener);
+			if (node == l->getNode()) {
+				item->getWaitingIcon()->start();
+				started = true;
+				break;
+			}
+		}
+		if (!started) {
+			item->getWaitingIcon()->finish();
+		}
+	}
 }
 
 void ZLQtTreeDialog::onNodeBeginInsert(ZLTreeNode */*parent*/, size_t /*index*/) {}
@@ -170,19 +206,30 @@ void ZLQtTreeDialog::onBackButton() {
 	myHistoryStack.pop();
 	myListWidget->fillNodes(myHistoryStack.top());
 	updateBackButton();
+	updateWaitingIcons();
 }
 
-ZLQtTreeDialog::ChildrenRequestListener::ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node, ZLQtWaitingIcon *icon) :
-	myTreeDialog(dialog), myNode(node), myWaitingIcon(icon) {
+ZLQtTreeDialog::ChildrenRequestListener::ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node) :
+	myTreeDialog(dialog), myNode(node) {
 }
 
 void ZLQtTreeDialog::ChildrenRequestListener::finished(const std::string &error) {
-	if (myWaitingIcon) {
-		myWaitingIcon->finish();
-	}
+	removeMyself();
 	if (!error.empty()) {
 		//TODO show error message?
-		return;
 	}
-	myTreeDialog->onChildrenLoaded(myNode);
+	myTreeDialog->onChildrenLoaded(myNode, true, error.empty());
+}
+
+const ZLTreeNode *ZLQtTreeDialog::ChildrenRequestListener::getNode() const {
+	return myNode;
+}
+
+void ZLQtTreeDialog::ChildrenRequestListener::removeMyself() {
+	foreach(shared_ptr<ZLNetworkRequest::Listener> listener, myTreeDialog->myListeners) {
+		if (&*listener == this) {
+			myTreeDialog->myListeners.removeOne(listener);
+			break;
+		}
+	}
 }

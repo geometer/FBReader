@@ -58,9 +58,11 @@ public: //listener methods
 	void onNodeEndRemove();
 	void onNodeUpdated(ZLTreeNode *node);
 
-	void onChildrenLoaded(const ZLTreeNode *node);
+public:
+	void onChildrenLoaded(const ZLTreeNode *node, bool checkLast, bool success);
 
 private:
+	void updateWaitingIcons();
 	void updateBackButton();
 
 private Q_SLOTS:
@@ -85,16 +87,21 @@ private:
 
 	class ChildrenRequestListener : public ZLNetworkRequest::Listener {
 		public:
-			ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node, ZLQtWaitingIcon *icon = 0);
+			ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node);
 			void finished(const std::string &error);
+			const ZLTreeNode *getNode() const;
+
+		private:
+			void removeMyself();
 		private:
 			ZLQtTreeDialog *myTreeDialog;
 			const ZLTreeNode *myNode;
-			ZLQtWaitingIcon *myWaitingIcon;
 	};
 
-	//TODO implement destroing of listeners
-	///QList<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
+	QList<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
+	const ZLTreeNode *myLastClickedNode; //used to 'last clicked item shows first after downloading'
+
+friend class ChildrenRequestListener;
 };
 
 #endif /* __ZLQTTREEDIALOG_H__ */

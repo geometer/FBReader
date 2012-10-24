@@ -31,18 +31,21 @@
 
 	DONE remove ZLExecutionData; remove RTTI info & checks in ZLNetworkRequest usages
 
-	** implement waiting icon for catalog items
-		*** what if we loading two items at the same time, last should be opened
+	DONE implement waiting icon for catalog items
+		DONE what if we loading two items at the same time, last should be opened
+		DONE what if try to load element several times
+	** error (for i.e. timeout) message showing
+	** async covers loading
+	** generic.xml async loading
 	** implement waiting icon for related action items
 	** implement progress showing for book downloading
 	** implement actions reloading after some actions pushed
-	** async covers loading
-	** generic.xml async loading
 
 	** Show correct tag names for books from feedbooks feed
-	** partial catalogs loading (first 20 books only)
+	** partial catalogs loading (first 20 books only) !!!
 	** additional links for books from feedbooks feed (fix OPDS parser?)
 	** back/forward buttons (with arrows)
+
 	** "standard search look" for search field
 	** sign in into protected parts of catalogs (feedbooks, wolne lectury)
 	** icons for feedbooks subcatalog
