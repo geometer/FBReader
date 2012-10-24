@@ -51,7 +51,7 @@ LitResByGenresItem::LitResByGenresItem(
 ), myGenreTree(genreTree) {
 }
 
-std::string LitResByGenresItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> /*listener*/) {
+std::string LitResByGenresItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	for (size_t i = 0; i < myGenreTree.size(); ++i) {
 		shared_ptr<LitResGenre> genre = myGenreTree.at(i);
 		if (genre->Children.empty()) {
@@ -60,6 +60,7 @@ std::string LitResByGenresItem::loadChildren(NetworkItem::List &children, shared
 			children.push_back(new LitResByGenresItem(genre->Children, Link, genre->Title, EMPTY_STRING, URLByType, AlWAYS, FLAG_NONE));
 		}
 	}
+	listener->finished();
 	return std::string();
 }
 

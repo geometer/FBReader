@@ -27,16 +27,17 @@
 	DONE icons for feedbooks subcatalog
 	DONE loading icons with relative link (prestigio catalog use it)
 	DONE Show correct tag names for books from feedbooks feed
+	DONE implement progress showing for book downloading
 
 	** async covers loading
-	DONE implement progress showing for book downloading
-	?? implement progress showing for book downloading like a progress bar
-
+	** implement async full information loading
 	** back/forward buttons (with arrows)
+
+	** implement async buying of book
 	** implement actions reloading after some actions pushed
 
-	** add stretching for items (for too long titles)
-	** implement async full information loading
+	?? implement progress showing for book downloading like a progress bar
+
 	** BUG: at litres "popular books" there's no waiting icon! (looks like this widget doesn't appears because of too long title)
 	** block action-button when pushed (downloading, buying, etc)
 	** partial catalogs loading (first 20 books only)
@@ -63,6 +64,7 @@
 		DONE загрузка подэлементов пункта
 		* подстраничка подгрузки данных
 		DONE загрузка книги
+		* покупка книги
 
 	* UI
 		* list widget - не увеличивать маленькие обложки, а просто центрировать
