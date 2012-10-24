@@ -37,7 +37,7 @@
 
 	DONE additional links for books from feedbooks feed (fix OPDS parser?)
 	** icons for feedbooks subcatalog
-	** Show correct tag names for books from feedbooks feed
+	DONE Show correct tag names for books from feedbooks feed
 
 	** async covers loading !!
 	** back/forward buttons (with arrows)
@@ -50,6 +50,7 @@
 	** generic.xml async loading
 	** error (for i.e. timeout) message showing
 	** sign in into protected parts of catalogs (feedbooks, wolne lectury)
+	** ask manybooks.net to change their OPDS (incorrect using of full entries)
 
 
 	* асинхронная работа с сетью:
