@@ -34,6 +34,8 @@
 #include "../tree/ZLQtItemsListWidget.h"
 #include "../tree/ZLQtPreviewWidget.h"
 
+class ZLQtIconButton;
+
 class ZLQtTreeDialog : public QDialog, public ZLTreeDialog {
 	Q_OBJECT
 public:
@@ -70,8 +72,8 @@ private:
 	ZLTreeNode *myRootNode;
 
 private:
-	QPushButton *myBackButton;
-	QPushButton *myForwardButton;
+	ZLQtIconButton *myBackButton;
+	ZLQtIconButton *myForwardButton;
 	QLineEdit *mySearchField;
 //	QScrollArea *myScrollArea;
 	ZLQtItemsListWidget *myListWidget;
@@ -80,6 +82,16 @@ private:
 	QStack<const ZLTreeNode*> myBackHistory;
 	QStack<const ZLTreeNode*> myForwardHistory;
 
+};
+
+class ZLQtIconButton : public QPushButton {
+
+public:
+	ZLQtIconButton(QString iconEnabled, QString iconDisabled, QWidget *parent = 0);
+	void setEnabled(bool enabled);
+private:
+	QPixmap myEnabled;
+	QPixmap myDisabled;
 };
 
 #endif /* __ZLQTTREEDIALOG_H__ */

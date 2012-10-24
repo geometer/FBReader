@@ -59,6 +59,7 @@ do_install:
 	@install -m 0644 $(wildcard data/icons/toolbar/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
 	@install -m 0644 $(wildcard data/icons/filetree/$(VARIANT)/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
 	@install -m 0644 $(wildcard data/icons/booktree/new/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
+	@install -m 0644 $(wildcard data/icons/*.*) $(DESTDIR)$(APPIMAGEDIR_REAL)
 	@$(MAKE) -C $(TARGET_ARCH) RESOLUTION=$(RESOLUTION) install
 
 clean:

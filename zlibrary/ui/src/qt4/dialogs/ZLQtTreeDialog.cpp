@@ -26,6 +26,7 @@
 #include <QtGui/QResizeEvent>
 #include <QtCore/QDebug>
 
+#include <ZLibrary.h>
 #include <ZLTreePageNode.h>
 
 #include "../tree/ZLQtItemsListWidget.h"
@@ -41,9 +42,13 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 
 	myListWidget = new ZLQtItemsListWidget;
 	myPreviewWidget = new ZLQtPreviewWidget;
-	myBackButton = new QPushButton("Back"); //TODO add to resources;
-	myForwardButton = new QPushButton("Forward");
-	mySearchField = new QLineEdit("type to search..."); // TODO add to resources;
+	myBackButton = new ZLQtIconButton("back_button.png", "back_button_disabled.png");
+	myForwardButton = new ZLQtIconButton("forward_button.png", "forward_button_disabled.png");
+	mySearchField = new QLineEdit;
+
+	mySearchField->setPlaceholderText("type to search..."); // TODO add to resources;
+	//mySearchField->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
+	mySearchField->setFixedWidth(150);
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	QHBoxLayout *panelLayout = new QHBoxLayout;
@@ -56,8 +61,11 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 
 	mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
+	panelLayout->setSpacing(0);
 	panelLayout->addWidget(myBackButton);
 	panelLayout->addWidget(myForwardButton);
+	//panelLayout->addSpacing(10);
+	panelLayout->addStretch();
 	panelLayout->addWidget(mySearchField);
 	//panelLayout->addStretch();
 	mainLayout->addLayout(panelLayout);
@@ -72,8 +80,11 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 
 void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 	myRootNode = rootNode;
+	myBackHistory.clear();
+	myForwardHistory.clear();
 	onExpandRequest(myRootNode);
 	show();
+	myListWidget->setFocus();
 }
 
 QSize ZLQtTreeDialog::sizeHint() const {
@@ -164,5 +175,19 @@ void ZLQtTreeDialog::onForwardButton() {
 	myBackHistory.push(myForwardHistory.pop());
 	myListWidget->fillNodes(myBackHistory.top());
 	updateAll();
+}
+
+ZLQtIconButton::ZLQtIconButton(QString iconEnabled, QString iconDisabled, QWidget *parent) : QPushButton(parent) {
+	QString path = QString::fromStdString(ZLibrary::ApplicationImageDirectory()) +
+		QString::fromStdString(ZLibrary::FileNameDelimiter);
+	myEnabled = QPixmap(path + iconEnabled);
+	myDisabled = QPixmap(path + iconDisabled);
+	setIconSize(myEnabled.size());
+	setFixedSize(28, 22);
+}
+
+void ZLQtIconButton::setEnabled(bool enabled) {
+	setIcon(enabled ? myEnabled : myDisabled);
+	QPushButton::setEnabled(enabled);
 }
 
