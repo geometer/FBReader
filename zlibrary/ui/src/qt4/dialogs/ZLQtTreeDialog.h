@@ -56,12 +56,14 @@ public: //listener methods
 	void onNodeUpdated(ZLTreeNode *node);
 
 private:
-	void updateBackButton();
+	void updateAll();
+	void updateNavigationButtons();
 
 private Q_SLOTS:
 	void onNodeClicked(const ZLTreeNode* node);
 	void onNodeDoubleClicked(const ZLTreeNode* node);
 	void onBackButton();
+	void onForwardButton();
 
 
 private:
@@ -69,12 +71,14 @@ private:
 
 private:
 	QPushButton *myBackButton;
+	QPushButton *myForwardButton;
 	QLineEdit *mySearchField;
 //	QScrollArea *myScrollArea;
 	ZLQtItemsListWidget *myListWidget;
 	ZLQtPreviewWidget *myPreviewWidget;
 
-	QStack<const ZLTreeNode*> myHistoryStack;
+	QStack<const ZLTreeNode*> myBackHistory;
+	QStack<const ZLTreeNode*> myForwardHistory;
 
 };
 

@@ -42,6 +42,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	myListWidget = new ZLQtItemsListWidget;
 	myPreviewWidget = new ZLQtPreviewWidget;
 	myBackButton = new QPushButton("Back"); //TODO add to resources;
+	myForwardButton = new QPushButton("Forward");
 	mySearchField = new QLineEdit("type to search..."); // TODO add to resources;
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -56,6 +57,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
 	panelLayout->addWidget(myBackButton);
+	panelLayout->addWidget(myForwardButton);
 	panelLayout->addWidget(mySearchField);
 	//panelLayout->addStretch();
 	mainLayout->addLayout(panelLayout);
@@ -65,7 +67,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	connect(myListWidget, SIGNAL(nodeClicked(const ZLTreeNode*)), this, SLOT(onNodeClicked(const ZLTreeNode*)));
 	connect(myListWidget, SIGNAL(nodeDoubleClicked(const ZLTreeNode*)), this, SLOT(onNodeDoubleClicked(const ZLTreeNode*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
-
+	connect(myForwardButton, SIGNAL(clicked()), this, SLOT(onForwardButton()));
 }
 
 void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
@@ -94,10 +96,15 @@ void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 		return;
 	}
 
-	myHistoryStack.push(node);
-	myListWidget->fillNodes(myHistoryStack.top());
+	myBackHistory.push(node);
+	myForwardHistory.clear();
+	myListWidget->fillNodes(myBackHistory.top());
 	myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
-	updateBackButton();
+	updateAll();
+}
+
+void ZLQtTreeDialog::updateAll() {
+	updateNavigationButtons();
 }
 
 void ZLQtTreeDialog::onCloseRequest() {}
@@ -112,8 +119,9 @@ void ZLQtTreeDialog::onNodeEndRemove() {}
 
 void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode */*node*/) {}
 
-void ZLQtTreeDialog::updateBackButton() {
-	myBackButton->setEnabled(myHistoryStack.size() > 1);
+void ZLQtTreeDialog::updateNavigationButtons() {
+	myBackButton->setEnabled(myBackHistory.size() > 1);
+	myForwardButton->setEnabled(!myForwardHistory.empty());
 	myPreviewWidget->clear();
 }
 
@@ -141,11 +149,20 @@ void ZLQtTreeDialog::onNodeDoubleClicked(const ZLTreeNode *node) {
 }
 
 void ZLQtTreeDialog::onBackButton() {
-	if (myHistoryStack.size() <= 1) {
+	if (myBackHistory.size() <= 1) {
 		return;
 	}
-	//qDebug() << Q_FUNC_INFO;
-	myHistoryStack.pop();
-	myListWidget->fillNodes(myHistoryStack.top());
-	updateBackButton();
+	myForwardHistory.push(myBackHistory.pop());
+	myListWidget->fillNodes(myBackHistory.top());
+	updateAll();
 }
+
+void ZLQtTreeDialog::onForwardButton() {
+	if (myForwardHistory.empty()) {
+		return;
+	}
+	myBackHistory.push(myForwardHistory.pop());
+	myListWidget->fillNodes(myBackHistory.top());
+	updateAll();
+}
+
