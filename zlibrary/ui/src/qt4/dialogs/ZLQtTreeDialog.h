@@ -35,6 +35,8 @@
 #include "../tree/ZLQtItemsListWidget.h"
 #include "../tree/ZLQtPreviewWidget.h"
 
+class ZLQtIconButton;
+
 class ZLQtTreeDialog : public QDialog, public ZLTreeDialog {
 	Q_OBJECT
 public:
@@ -67,28 +69,30 @@ public:
 private:
 	void updateAll();
 	void updateWaitingIcons();
-	void updateBackButton();
+	void updateNavigationButtons();
 
 private Q_SLOTS:
 	void onNodeClicked(ZLQtTreeItem* item);
 	void onNodeDoubleClicked(ZLQtTreeItem* item);
 	void onBackButton();
+	void onForwardButton();
 
 
 private:
 	ZLTreeNode *myRootNode;
 
 private:
-	QPushButton *myBackButton;
+	ZLQtIconButton *myBackButton;
+	ZLQtIconButton *myForwardButton;
 	QLineEdit *mySearchField;
 //	QScrollArea *myScrollArea;
 	ZLQtItemsListWidget *myListWidget;
 	ZLQtPreviewWidget *myPreviewWidget;
 
-	QStack<const ZLTreeNode*> myHistoryStack;
+	QStack<const ZLTreeNode*> myBackHistory;
+	QStack<const ZLTreeNode*> myForwardHistory;
 
 private:
-
 	class ChildrenRequestListener : public ZLNetworkRequest::Listener {
 		public:
 			ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node);
@@ -105,6 +109,17 @@ private:
 	const ZLTreeNode *myLastClickedNode; //used to 'last clicked item shows first after downloading'
 
 friend class ChildrenRequestListener;
+
+};
+
+class ZLQtIconButton : public QPushButton {
+
+public:
+	ZLQtIconButton(QString iconEnabled, QString iconDisabled, QWidget *parent = 0);
+	void setEnabled(bool enabled);
+private:
+	QPixmap myEnabled;
+	QPixmap myDisabled;
 };
 
 #endif /* __ZLQTTREEDIALOG_H__ */

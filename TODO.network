@@ -31,7 +31,10 @@
 
 	DONE async covers loading
 	** implement async full information loading
-	** back/forward buttons (with arrows)
+	DONE ability to move forward by history
+	DONE icon for back/forward buttons (with arrows)
+
+	?? add selected item to history
 
 	DONE implement actions reloading after some actions pushed
 
