@@ -93,38 +93,40 @@ std::string NetworkCatalogTree::imageUrl() const {
 class AsyncLoadSubCatalogRunnable : public ZLNetworkRequest::Listener {
 
 public:
-	AsyncLoadSubCatalogRunnable(NetworkCatalogTree *tree, NetworkItem::List &childrens, shared_ptr<ZLNetworkRequest::Listener> uiListener) :
-		myTree(tree), myChildrens(childrens), myUIListener(uiListener) {
+	AsyncLoadSubCatalogRunnable(NetworkCatalogTree *tree, NetworkItem::List &childrens) :
+		myTree(tree), myChildrens(childrens) {
+		myTree->notifyDownloadStarted();
 		myTree->item().loadChildren(myChildrens, this);
 	}
 
 	void finished(const std::string &error) {
-		myTree->onChildrenReceived(myUIListener, error);
-		//TODO implement self destroing
+		myTree->notifyDownloadStopped();
+		myTree->onChildrenReceived(error);
 	}
 
 private:
 	NetworkCatalogTree *myTree;
 	NetworkItem::List &myChildrens;
-	shared_ptr<ZLNetworkRequest::Listener> myUIListener;
-
 };
 
 void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
 	myChildrenItems.clear();
-	new AsyncLoadSubCatalogRunnable(this, myChildrenItems, listener);
+	myListeners.push_back(listener);
+	if (myListeners.size() == 1) {
+		new AsyncLoadSubCatalogRunnable(this, myChildrenItems);
+	}
 }
 
-void NetworkCatalogTree::onChildrenReceived(shared_ptr<ZLNetworkRequest::Listener> uiListener, const std::string &error) {
+void NetworkCatalogTree::onChildrenReceived(const std::string &error) {
 	if (!error.empty()) {
 		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), error);
-		uiListener->finished(error);
+		notifyListeners(error);
 		return;
 	}
 
 	if (myChildrenItems.empty()) {
 		ZLDialogManager::Instance().informationBox(ZLResourceKey("emptyCatalogBox"));
-		uiListener->finished(error);
+		notifyListeners(error);
 		return;
 	}
 
@@ -145,9 +147,15 @@ void NetworkCatalogTree::onChildrenReceived(shared_ptr<ZLNetworkRequest::Listene
 		NetworkTreeFactory::fillAuthorTree(this, myChildrenItems);
 	}
 
-	if (!uiListener.isNull()) {
-		uiListener->finished(error);
+	notifyListeners(error);
+}
+
+void NetworkCatalogTree::notifyListeners(const std::string &error) {
+	for (int i = 0; i < myListeners.size(); ++i) {
+		if (!myListeners.at(i).isNull())
+			myListeners.at(i)->finished(error);
 	}
+	myListeners.clear();
 }
 
 NetworkCatalogItem &NetworkCatalogTree::item() {

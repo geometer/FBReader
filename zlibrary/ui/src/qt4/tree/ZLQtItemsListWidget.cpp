@@ -117,12 +117,13 @@ ZLQtTreeItem::ZLQtTreeItem(ZLTreeTitledNode *node, QWidget *parent) : QFrame(par
 	QLabel *subtitle = new QLabel(QString::fromStdString(node->subtitle()));
 
 	myWaitingIcon = new ZLQtWaitingIcon;
+	myWaitingIcon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
 	title->setWordWrap(true);
 	subtitle->setWordWrap(true);
 
 	QSizePolicy policy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
-	policy.setHorizontalStretch(1);
+	//policy.setHorizontalStretch(1);
 	title->setSizePolicy(policy);
 	subtitle->setSizePolicy(policy);
 
@@ -137,7 +138,7 @@ ZLQtTreeItem::ZLQtTreeItem(ZLTreeTitledNode *node, QWidget *parent) : QFrame(par
 		icon->setPixmap(pixmap);
 	}
 	mainLayout->addWidget(icon);
-	mainLayout->addLayout(titlesLayout, 1);
+	mainLayout->addLayout(titlesLayout);
 	mainLayout->addStretch();
 	mainLayout->addWidget(myWaitingIcon, 1);
 	setLayout(mainLayout);

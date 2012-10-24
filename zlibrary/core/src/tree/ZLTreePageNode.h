@@ -43,7 +43,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 	const ZLTypeId &typeId() const;
 
-	virtual shared_ptr<ZLTreePageInfo> getPageInfo() const = 0;
+	virtual shared_ptr<ZLTreePageInfo> getPageInfo() = 0;
 };
 
 #endif // ZLTREEPAGENODE_H

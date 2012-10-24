@@ -196,3 +196,15 @@ void ZLTreeNode::updated() {
 		handler->onNodeUpdated(this);
 	}
 }
+
+void ZLTreeNode::notifyDownloadStarted() {
+	if (ZLTreeListener *handler = listener()) {
+		handler->onDownloadingStarted(this);
+	}
+}
+
+void ZLTreeNode::notifyDownloadStopped() {
+	if (ZLTreeListener *handler = listener()) {
+		handler->onDownloadingStopped(this);
+	}
+}

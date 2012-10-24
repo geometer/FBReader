@@ -36,6 +36,9 @@ public:
 	virtual void onNodeEndRemove() = 0;
 	// This method should be called at every node state change except of adding/removing of children
 	virtual void onNodeUpdated(ZLTreeNode *node) = 0;
+
+	virtual void onDownloadingStarted(ZLTreeNode *node) = 0;
+	virtual void onDownloadingStopped(ZLTreeNode *node) = 0;
 };
 
 #endif /* __ZLTREELISTENER_H__ */

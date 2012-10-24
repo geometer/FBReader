@@ -53,18 +53,37 @@ private:
 	const NetworkBookTree &myTree;
 };
 
-static std::vector<shared_ptr<ZLTreeAction> > getBookActions(const NetworkBookTree &tree) {
+class NetworkTreeBookDownloadAction : public NetworkBookDownloadAction {
+public:
+	NetworkTreeBookDownloadAction(NetworkBookTree &tree, const NetworkBookItem &book, bool demo, const std::string &tag = std::string()) :
+		NetworkBookDownloadAction(book, demo, tag), myTree(tree) {}
+
+	void run() {
+		myTree.notifyDownloadStarted();
+		NetworkBookDownloadAction::run();
+	}
+
+	void finished(const std::string &error) {
+		myTree.notifyDownloadStopped();
+		NetworkBookDownloadAction::finished(error);
+	}
+
+private:
+	NetworkBookTree &myTree;
+};
+
+static std::vector<shared_ptr<ZLTreeAction> > getBookActions(NetworkBookTree &tree) {
 	std::vector<shared_ptr<ZLTreeAction> > actions;
 	const NetworkBookItem &book = tree.book();
 	if (!book.reference(BookReference::DOWNLOAD_FULL).isNull() ||
 			!book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL).isNull()) {
 		actions.push_back(new NetworkTreeBookReadAction(tree, book, false));
-		actions.push_back(new NetworkBookDownloadAction(book, false));
+		actions.push_back(new NetworkTreeBookDownloadAction(tree, book, false));
 		actions.push_back(new NetworkBookDeleteAction(book));
 	}
 	if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
 		actions.push_back(new NetworkTreeBookReadAction(tree, book, true));
-		actions.push_back(new NetworkBookDownloadAction(book, true, tree.resource()["demo"].value()));
+		actions.push_back(new NetworkTreeBookDownloadAction(tree, book, true, tree.resource()["demo"].value()));
 	}
 	if (!book.reference(BookReference::BUY).isNull()) {
 		actions.push_back(new NetworkBookBuyDirectlyAction(book));
@@ -102,7 +121,7 @@ std::string NetworkBookTree::subtitle() const {
 	return authorsString;
 }
 
-shared_ptr<ZLTreePageInfo> NetworkBookTree::getPageInfo() const {
+shared_ptr<ZLTreePageInfo> NetworkBookTree::getPageInfo() /*const*/ {
 	//WARNING: using this, we have a potenital problems with controlling NetworkBookTree object's life time in memory
 	return new BookItemWrapper(*this, myBook);
 }
@@ -125,7 +144,7 @@ const NetworkBookItem &NetworkBookTree::book() const {
 }
 
 
-NetworkBookTree::BookItemWrapper::BookItemWrapper(const NetworkBookTree &tree, shared_ptr<NetworkItem> bookItem) : myTree(tree), myBookItem(bookItem), myIsInitialized(false) {
+NetworkBookTree::BookItemWrapper::BookItemWrapper(NetworkBookTree &tree, shared_ptr<NetworkItem> bookItem) : myTree(tree), myBookItem(bookItem), myIsInitialized(false) {
 }
 
 std::string NetworkBookTree::BookItemWrapper::title() const {

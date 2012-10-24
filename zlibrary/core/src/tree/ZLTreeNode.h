@@ -97,6 +97,9 @@ public:
 	void remove(size_t index);
 	void updated();
 
+	void notifyDownloadStarted();
+	void notifyDownloadStopped();
+
 protected:
 	size_t level() const;
 

@@ -97,13 +97,14 @@ public:
 	std::string imageUrl() const;
 
 	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
-	void onChildrenReceived(shared_ptr<ZLNetworkRequest::Listener> uiListener, const std::string &error);
+	void onChildrenReceived(const std::string &error);
 
 	NetworkCatalogItem &item();
 
 private:
 //	virtual shared_ptr<const ZLImage> lastResortCoverImage() const;
 	void init();
+	void notifyListeners(const std::string &error);
 
 private:
 	const ZLResource &resource() const;
@@ -111,6 +112,8 @@ private:
 private:
 	shared_ptr<NetworkItem> myItem;
 	NetworkItem::List myChildrenItems;
+
+	std::vector<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
 
 friend class NetworkTreeFactory;
 };
@@ -223,13 +226,13 @@ public:
 	std::string title() const;
 	std::string subtitle() const;
 
-	shared_ptr<ZLTreePageInfo> getPageInfo() const;
+	shared_ptr<ZLTreePageInfo> getPageInfo();
 
 private:
 	class BookItemWrapper : public ZLTreePageInfo {
 
 	public:
-		BookItemWrapper(const NetworkBookTree &tree, shared_ptr<NetworkItem> bookItem);
+		BookItemWrapper(NetworkBookTree &tree, shared_ptr<NetworkItem> bookItem);
 
 	public:
 		std::string title() const;
@@ -248,7 +251,7 @@ private:
 		NetworkBookItem &book() const;
 
 	private:
-		const NetworkBookTree &myTree;
+		NetworkBookTree &myTree;
 		shared_ptr<NetworkItem> myBookItem;
 		mutable bool myIsInitialized;
 

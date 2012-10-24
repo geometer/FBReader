@@ -21,6 +21,7 @@
 #define __ZLQTTREEDIALOG_H__
 
 #include <QtCore/QStack>
+#include <QtCore/QSet>
 
 #include <QtGui/QDialog>
 #include <QtGui/QScrollArea>
@@ -46,9 +47,6 @@ protected:
 	QSize sizeHint() const;
 	void resizeEvent(QResizeEvent *event);
 
-protected:
-	void expandItem(ZLQtTreeItem* item);
-
 public: //listener methods
 	void onExpandRequest(ZLTreeNode *node);
 	void onCloseRequest();
@@ -58,10 +56,14 @@ public: //listener methods
 	void onNodeEndRemove();
 	void onNodeUpdated(ZLTreeNode *node);
 
+	void onDownloadingStarted(ZLTreeNode *node);
+	void onDownloadingStopped(ZLTreeNode *node);
+
 public:
 	void onChildrenLoaded(const ZLTreeNode *node, bool checkLast, bool success);
 
 private:
+	void updateAll();
 	void updateWaitingIcons();
 	void updateBackButton();
 
@@ -89,16 +91,15 @@ private:
 		public:
 			ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node);
 			void finished(const std::string &error);
-			const ZLTreeNode *getNode() const;
+//			const ZLTreeNode *getNode() const;
 
-		private:
-			void removeMyself();
 		private:
 			ZLQtTreeDialog *myTreeDialog;
 			const ZLTreeNode *myNode;
 	};
 
-	QList<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
+//	QList<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
+	QSet<ZLTreeNode *> myDownloadingNodes;
 	const ZLTreeNode *myLastClickedNode; //used to 'last clicked item shows first after downloading'
 
 friend class ChildrenRequestListener;
