@@ -77,6 +77,8 @@ protected:
 	 void mouseDoubleClickEvent(QMouseEvent *event);
 	 void paintEvent(QPaintEvent *event);
 
+protected:
+	 void fillImage();
 	 void clear();
 
 private:
@@ -86,6 +88,7 @@ private:
 	 QLabel *myTitle;
 	 QLabel *mySubtitle;
 	 ZLQtWaitingIcon *myWaitingIcon;
+	 bool myImageRequested;
 
 	 bool isActive;
 };

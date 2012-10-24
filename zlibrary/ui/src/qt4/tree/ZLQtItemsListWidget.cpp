@@ -74,7 +74,7 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node)) {
 			//qDebug() << QString::fromStdString(titledNode->title());
 			ZLQtTreeItem *item = new ZLQtTreeItem;
-			item->fill(titledNode); //TODO maybe do deffered filling
+			item->fill(titledNode);
 			connect(item, SIGNAL(clicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*))); //action ExpandAction used instead
 			connect(item, SIGNAL(doubleClicked(ZLQtTreeItem*)), this, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)));
 			myLayout->addWidget(item);
@@ -106,7 +106,7 @@ void ZLQtItemsListWidget::onNodeClicked(ZLQtTreeItem* itemClicked) {
 }
 
 
-ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0) {
+ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImageRequested(false) {
 	setAutoFillBackground(true);
 	setActive(false);
 
@@ -148,7 +148,16 @@ void ZLQtTreeItem::fill(ZLTreeTitledNode *node) {
 	myNode = node;
 	myTitle->setText(QString("<b>%1</b>").arg(QString::fromStdString(node->title())));
 	mySubtitle->setText(QString::fromStdString(node->subtitle()));
-	shared_ptr<const ZLImage> image = node->image();
+	fillImage();
+}
+
+void ZLQtTreeItem::fillImage() {
+	//separated method for deferred loding of cover (good for slow connections)
+	//TODO as it starts loading on paintEvent, it works bad while scrolling
+	if (!myImageRequested) {
+		return;
+	}
+	shared_ptr<const ZLImage> image = myNode->image();
 	if (!image.isNull()) {
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmapWithSize(image, QSize(ITEM_SIZE,ITEM_SIZE), Qt::SmoothTransformation);
 		if (!pixmap.isNull()) {
@@ -159,6 +168,7 @@ void ZLQtTreeItem::fill(ZLTreeTitledNode *node) {
 
 void ZLQtTreeItem::clear() {
 	myNode = 0;
+	myImageRequested = false;
 	myTitle->clear();
 	mySubtitle->clear();
 
@@ -202,14 +212,21 @@ void ZLQtTreeItem::mouseDoubleClickEvent(QMouseEvent *) {
 }
 
 void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
-	//qDebug() << Q_FUNC_INFO << event->rect();
+//	QString title = myNode ? QString::fromStdString(myNode->title()) : "not filled";
+//	qDebug() << Q_FUNC_INFO<< title;
+	if (myNode && !myImageRequested) {
+		//deferred loading of cover, asking on paint event
+		myNode->image();
+		myImageRequested = true;
+		fillImage();
+	}
 	QFrame::paintEvent(event);
 	return;
 //	QColor mainColor = isActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
 //	int h = mainColor.hue();
 //	int s = mainColor.saturation();
 //	int v = mainColor.value();
-//	QColor shadowColor1 = QColor::fromHsv(h,s,v - 23); //these numbers are getted from experiments with Photoshop
+//	QColor shadowColor1 = QColor::fromHsv(h,s,v - 23); //these numbers are getted from experiments with Photo editor
 //	QColor shadowColor2 = QColor::fromHsv(h,s,v - 43);
 //	QColor shadowColor3 = QColor::fromHsv(h,s,v - 71);
 //	QColor shadowColor4 = QColor::fromHsv(h,s,v - 117);
