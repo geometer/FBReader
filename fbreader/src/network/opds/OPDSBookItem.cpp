@@ -147,7 +147,7 @@ std::vector<std::string> OPDSBookItem::getTags(OPDSEntry &entry) {
 	std::vector<std::string> tags;
 	for (size_t i = 0; i < entry.categories().size(); ++i) {
 		ATOMCategory &category = *(entry.categories()[i]);
-		tags.push_back(category.term());
+		tags.push_back(category.label());
 	}
 	return tags;
 }

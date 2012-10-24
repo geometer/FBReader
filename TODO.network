@@ -34,79 +34,86 @@
 	DONE implement waiting icon for catalog items
 		DONE what if we loading two items at the same time, last should be opened
 		DONE what if try to load element several times
-	** error (for i.e. timeout) message showing
-	** async covers loading
-	** generic.xml async loading
-	** implement waiting icon for related action items
-	** implement progress showing for book downloading
-	** implement actions reloading after some actions pushed
 
-	** Show correct tag names for books from feedbooks feed
-	** partial catalogs loading (first 20 books only) !!!
-	** additional links for books from feedbooks feed (fix OPDS parser?)
+	DONE additional links for books from feedbooks feed (fix OPDS parser?)
+	DONE icons for feedbooks subcatalog
+	DONE loading icons with relative link (prestigio catalog use it)
+	DONE Show correct tag names for books from feedbooks feed
+
+	** async covers loading !!
 	** back/forward buttons (with arrows)
+	** implement progress showing for book downloading !!
 
+	** implement actions reloading after some actions pushed
+	** partial catalogs loading (first 20 books only) !!!
 	** "standard search look" for search field
+	** implement waiting icon for related action items
+	** generic.xml async loading
+	** error (for i.e. timeout) message showing
 	** sign in into protected parts of catalogs (feedbooks, wolne lectury)
-	** icons for feedbooks subcatalog
-	** problems with loading books in ManyBooks catalog
+	** ask manybooks.net to change their OPDS (incorrect using of full entries)
+
 
 	* асинхронная работа с сетью:
 		* загрузка списка библиотек с сервера
 		* загрузка картинок
-		* загрузка подэлементов пункта
-		* подстраничка подгрузка данных
-		* загрузка книги
+		DONE загрузка подэлементов пункта
+		* подстраничка подгрузки данных
+		DONE загрузка книги
+
 	* UI
+		* list widget - не увеличивать маленькие обложки, а просто центрировать
+		* BUG: preview widget - если поле отсутсвует, вместо него просто пустое пространство
+		* BUG: list widget - при загрузке элементов, они растягиваются по всему доступному месту.	
+		? добавить сохранение геометрии окна
+		* закрывать окно библиотеки при нажатии кнопки "скачать"
+		* preview widget - добавить перевод для полей в book info для всех языков, кроме русского
+		* прогрессбар на плашке с книгой при ее загрузке
+					* что будет происходить, если гружу две книги -- какую открыть?
+				* обработка особенных ситуаций:
+					* что происходит, когда нажимаем кнопку "Сетевая библиотека" несколько раз подряд?
+					* что происходит, если запросить requestChildren дважды подряд?
+		? реализовать кнопку "Обновление тек. пункта"
+		* реализовать обновление списка пунктов каталога после sign in / sign out
+		* bug: actions должны обновляться после sign in / sign out
+		* algorithms
+				* реализовать постраничную подгрузку данных (сейчас из OPDS скачивается все сразу)
+				* реализовать постепенную загрузку обложек
+					* только тех, что на экране (отложенная загрузка)
+					* м.б. + 1 экран вперед?
+			* функциональность
+				* реализовать поиск
+				* поддержка rel="related" ссылок из full entry
+					* приводить preview обложку к удобному размеру
+				* related для litres:
+					** поддержка "книги этой серии"
+					DONE поддержка "также читают"
+					DONE поддержка "все книги этого автора"		
+			? реализовать фильтр сетевых каталогов по языку (как в FBReaderJ)
+			* возможность "прятать" отдельные каталоги
+
 		DONE добавить splitter
 		DONE отделение items друг от друга
 		DONE splitter - соотношение виджетов по умолчанию должно быть примерно 2:1
 		DONE list widget -- selectable items
-		* preview widget -- добавить прокрутку как в андроиде
-		* list widget - не увеличивать маленькие обложки, а просто центрировать
+		DONE preview widget -- добавить прокрутку как в андроиде
 		DONE preview widget - всегда какая-то информация справа
-		* preview widget - для BookItem поменять размер для обложки
-		* BUG: preview widget - если поле отсутсвует, вместо него просто пустое пространство
-		* BUG: list widget - при загрузке элементов, они растягиваются по всему доступному месту.	
-		? добавить сохранение геометрии окна
-		* закрывать окно библиотеки при нажатии кнопки "скачать"/"открыть книгу"
+		DONE preview widget - для BookItem поменять размер для обложки
+		DONE закрывать окно библиотеки при нажатии кнопки "открыть книгу"
 		DONE preview widget - для BookItem добавить обозначения "название", "авторы" и т.п.
-		* preview widget - добавить перевод для полей в book info для всех языков, кроме русского
 		DONE preview widget - скрывать пустые поля
 		DONE itemlist wiget - ссылки -> кнопки
-		* показ waiting icon на плашке при загрузке, до тех пор, пока не загрузится
-		* внешний вид плашек (тут нужно поэкспериментировать)
-		* прогрессбар на плашке с книгой при ее загрузке
-			* что будет происходить, если гружу две книги -- какую открыть?
-		* обработка особенных ситуаций:
-			* что происходит, когда нажимаем кнопку "Сетевая библиотека" несколько раз подряд?
-			* что происходит, если запросить requestChildren дважды подряд?
+		DONE показ waiting icon на плашке при загрузке, до тех пор, пока не загрузится
 		DONE показывать action как ссылки на плашках
-		* реализовать кнопку "Обновление"
-		* реализовать обновление списка пунктов каталога после sign in / sign out
-		* bug: actions должны обновляться после sign in / sign out
 		DONE bug: при переходе в др. каталог, нужно "перематывать" список наверх
 		DONE bug: если в поддереве мало элементов, то они показываются "посередине"
-		* bug: размер места под пункты меню может быть гораздо больше, чем самих пунктов
-		* для NetworkBookTree показывать preview
+		DONE bug: размер места под пункты меню может быть гораздо больше, чем самих пунктов
+		DONE для NetworkBookTree показывать preview
 			DONE actionы в этом случае показываются в виде кнопок снизу
 			DONE реализовать подгрузку данных из OPDS каталога по rel="alternate" ссылке (Full Entry)
 			DONE выводить: название, автор, категории и описание
-	* algorithms
-		* реализовать постраничную подгрузку данных (сейчас из OPDS скачивается все сразу)
-		* реализовать постепенную загрузку обложек
-			* только тех, что на экране (отложенная загрузка)
-			* м.б. + 1 экран вперед?
-	* функциональность
-		* реализовать поиск
-		* поддержка rel="related" ссылок из full entry
-			* приводить preview обложку к удобному размеру
-			* поддержка "книги этой	 серии"
-			* поддержка "также читают"
-			* поддержка "все книги этого автора"		
+	
 
-? реализовать фильтр сетевых каталогов по языку (как в FBReaderJ)
-* возможность "прятать" отдельные каталоги
 * добавить каталог ParkReader с его собственным API
 
 * перейти на API от LitRes

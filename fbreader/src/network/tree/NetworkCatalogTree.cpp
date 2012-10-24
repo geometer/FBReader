@@ -63,21 +63,18 @@ std::string NetworkCatalogTree::subtitle() const {
 
 shared_ptr<const ZLImage> NetworkCatalogTree::image() const {
 	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
-
 	if (url.empty()) {
-		//return lastResortCoverImage();
-		return 0;
+		if (ZLTreeTitledNode* node = zlobject_cast<ZLTreeTitledNode*>(parent())) {
+			return node->image();
+		}
 	}
-
 	shared_ptr<const ZLImage> image = NetworkCatalogUtil::getImageByUrl(url);
 	if (!image.isNull()) {
 		return image;
 	}
-
 	if (url.find(':') == std::string::npos) {
 		return defaultCoverImage(url);
 	}
-
 	return 0;
 }
 

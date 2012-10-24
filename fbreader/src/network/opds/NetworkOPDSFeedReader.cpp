@@ -180,7 +180,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x09), annotation.end());
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x0A), annotation.end());
 	NetworkItem::UrlInfoCollection urlMap;
-	urlMap[NetworkItem::URL_COVER] = coverURL;
+	urlMap[NetworkItem::URL_COVER] = ZLNetworkUtil::url(myBaseURL, coverURL);
 	urlMap[NetworkItem::URL_CATALOG] = ZLNetworkUtil::url(myBaseURL, url);
 	urlMap[NetworkItem::URL_HTML_PAGE] = ZLNetworkUtil::url(myBaseURL, htmlURL);
 
