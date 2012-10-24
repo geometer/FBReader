@@ -37,7 +37,7 @@
 
 	DONE additional links for books from feedbooks feed (fix OPDS parser?)
 	DONE icons for feedbooks subcatalog
-	** loading icons with relative link (prestigio catalog use it)
+	DONE loading icons with relative link (prestigio catalog use it)
 	DONE Show correct tag names for books from feedbooks feed
 
 	** async covers loading !!
