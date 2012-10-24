@@ -91,6 +91,9 @@ std::string NetworkCatalogTree::imageUrl() const {
 }
 
 void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> /*listener*/) {
+	if (!initAuth()) {
+		return;
+	}
 	myChildrenItems.clear();
 	LoadSubCatalogRunnable loader(item(), myChildrenItems);
 	loader.executeWithUI();
@@ -123,34 +126,19 @@ NetworkCatalogItem &NetworkCatalogTree::item() {
 	return (NetworkCatalogItem&)*myItem;
 }
 
-const ZLResource &NetworkCatalogTree::resource() const {
-	return ZLResource::resource("networkView")["libraryItemNode"];
-}
-
-//shared_ptr<const ZLImage> NetworkCatalogTree::lastResortCoverImage() const {
-//	return ((FBTree*)parent())->coverImage();
-//}
-
-NetworkCatalogTree::ExpandCatalogAction::ExpandCatalogAction(NetworkCatalogTree &tree) : myTree(tree) {
-}
-
-ZLResourceKey NetworkCatalogTree::ExpandCatalogAction::key() const {
-	return ZLResourceKey(/*myNode.isOpen() ? "collapseTree" :*/ "expandTree");
-}
-
-void NetworkCatalogTree::ExpandCatalogAction::run() {
+bool NetworkCatalogTree::initAuth() {
 	if (!NetworkOperationRunnable::tryConnect()) {
-		return;
+		return false;
 	}
 
-	const NetworkLink &link = myTree.item().Link;
+	const NetworkLink &link = item().Link;
 	if (!link.authenticationManager().isNull()) {
 		NetworkAuthenticationManager &mgr = *link.authenticationManager();
 		IsAuthorisedRunnable checker(mgr);
 		checker.executeWithUI();
 		if (checker.hasErrors()) {
 			checker.showErrorMessage();
-			return;
+			return false;
 		}
 		if (checker.result() == B3_TRUE && mgr.needsInitialization()) {
 			InitializeAuthenticationManagerRunnable initializer(mgr);
@@ -161,11 +149,9 @@ void NetworkCatalogTree::ExpandCatalogAction::run() {
 			}
 		}
 	}
+	return true;
+}
 
-	if (myTree.myChildrenItems.empty()) {
-		myTree.requestChildren(0); //who should request his children? dialog or node himself?
-	}
-	if (!myTree.children().empty()) {
-		myTree.expand();
-	}
+const ZLResource &NetworkCatalogTree::resource() const {
+	return ZLResource::resource("networkView")["libraryItemNode"];
 }
