@@ -115,8 +115,7 @@ void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 
 void ZLQtTreeDialog::expandItem(ZLQtTreeItem *item) {
 	//TODO maybe remove this excess method?
-	const ZLTreeNode *node = item->getNode();
-	onExpandRequest(const_cast<ZLTreeNode*>(node));
+	onExpandRequest(item->getNode());
 }
 
 void ZLQtTreeDialog::onChildrenLoaded(const ZLTreeNode *node, bool checkLast, bool success) {

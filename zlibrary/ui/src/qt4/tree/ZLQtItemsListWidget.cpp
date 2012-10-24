@@ -71,7 +71,7 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 	myContainerWidget->setLayout(myLayout);
 
 	foreach(ZLTreeNode* node, expandNode->children()) {
-		if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
+		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node)) {
 			//qDebug() << QString::fromStdString(titledNode->title());
 			ZLQtTreeItem *item = new ZLQtTreeItem(titledNode);
 			connect(item, SIGNAL(clicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*))); //action ExpandAction used instead
@@ -105,7 +105,7 @@ void ZLQtItemsListWidget::onNodeClicked(ZLQtTreeItem* itemClicked) {
 }
 
 
-ZLQtTreeItem::ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent) : QFrame(parent), myNode(node) {
+ZLQtTreeItem::ZLQtTreeItem(ZLTreeTitledNode *node, QWidget *parent) : QFrame(parent), myNode(node) {
 	setAutoFillBackground(true);
 	setActive(false);
 
@@ -162,7 +162,7 @@ void ZLQtTreeItem::setActive(bool active) {
 	update();
 }
 
-const ZLTreeTitledNode *ZLQtTreeItem::getNode() const {
+ZLTreeTitledNode *ZLQtTreeItem::getNode() const {
 	return myNode;
 }
 

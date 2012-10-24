@@ -60,11 +60,11 @@ class ZLQtTreeItem : public QFrame {
 	Q_OBJECT
 
 public:
-	ZLQtTreeItem(const ZLTreeTitledNode *node, QWidget *parent = 0);
+	ZLQtTreeItem(ZLTreeTitledNode *node, QWidget *parent = 0);
 	void setActive(bool active);
 
 public:
-	const ZLTreeTitledNode *getNode() const;
+	ZLTreeTitledNode *getNode() const;
 	ZLQtWaitingIcon *getWaitingIcon() const;
 
 Q_SIGNALS:
@@ -76,7 +76,7 @@ protected:
 	 void mouseDoubleClickEvent(QMouseEvent *event);
 	 void paintEvent(QPaintEvent *event);
 private:
-	 const ZLTreeTitledNode *myNode;
+	 ZLTreeTitledNode *myNode;
 	 ZLQtWaitingIcon *myWaitingIcon;
 	 bool isActive;
 };
