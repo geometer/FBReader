@@ -72,21 +72,6 @@ public:
 private:
 	const ZLTypeId &typeId() const;
 
-protected:
-	class ExpandCatalogAction : public ZLTreeAction {
-
-	public:
-		ExpandCatalogAction(NetworkCatalogTree &node);
-		ZLResourceKey key() const;
-		void run();
-
-	public:
-		void onChildrenRequested(ZLExecutionScope &scope, const std::string &error);
-
-	private:
-		NetworkCatalogTree &myTree;
-	};
-
 public:
 	NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
 	NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
@@ -102,8 +87,8 @@ public:
 	NetworkCatalogItem &item();
 
 private:
-//	virtual shared_ptr<const ZLImage> lastResortCoverImage() const;
 	void init();
+	bool initAuth();
 	void notifyListeners(const std::string &error);
 
 private:
