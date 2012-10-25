@@ -31,6 +31,7 @@
 #include <ZLibrary.h>
 #include <ZLNetworkManager.h>
 #include <ZLTreeTitledNode.h>
+#include <ZLFile.h>
 
 #include "../dialogs/ZLQtDialogManager.h"
 
@@ -275,15 +276,11 @@ ZLQtWaitingIcon::ZLQtWaitingIcon(QWidget* parent) : QLabel(parent), myAngle(0) {
 	//TODO maybe replace to QMovie class using
 	const int ICON_WIDTH = 35;
 	const int ICON_HEIGHT = ICON_WIDTH;
-	static const QString iconName = "refresh-icon.svg"; //
-	QString iconFile = QString::fromStdString(ZLibrary::ApplicationImageDirectory()) +
-					   QString::fromStdString(ZLibrary::FileNameDelimiter) +
-					   iconName;
-
+	static std::string iconPath = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + "refresh-icon.svg";
 	//qDebug() << "LoadingIcon" << iconFile;
 	myTimer = new QTimer(this);
 	//TODO make pixmap as static
-	myPixmap = QPixmap(iconFile);
+	myPixmap = QPixmap(ZLFile(iconPath).path().c_str());
 	myPixmap = myPixmap.scaled(QSize(ICON_WIDTH, ICON_HEIGHT), Qt::KeepAspectRatio, Qt::FastTransformation);
 	this->setFixedSize(myPixmap.size());
 	connect(myTimer,SIGNAL(timeout()), this, SLOT(rotate()));
