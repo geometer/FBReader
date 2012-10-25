@@ -4,9 +4,13 @@
   ** review async-network-ui branch
   ** better icon for books with no covers
   ** find waiting icon in .svg 
+	** extra Qt debug messages during network loading
 
 * new network library UI (in a separate window, with asynchronous calls)
 
+  ** avoid multiple loadings of the same icon
+  ** back/forward buttons overlaps on Mac
+  ** while covers (or catalog icons) are not loaded, show a placeholder
 	DONE can not open feedbooks catalog item: it said 'Catalog is empty'
 	DONE синхронизировать код ePub из FBReaderJ/native
 	DONE удалить "Bound to IP" в диалоге входа Литрес, считать, что флаг всегда стоит
