@@ -87,7 +87,7 @@ private:
 class ZLQtIconButton : public QPushButton {
 
 public:
-	ZLQtIconButton(QString iconEnabled, QString iconDisabled, QWidget *parent = 0);
+	ZLQtIconButton(const std::string &iconEnabled, const std::string &iconDisabled, QWidget *parent = 0);
 	void setEnabled(bool enabled);
 private:
 	QPixmap myEnabled;

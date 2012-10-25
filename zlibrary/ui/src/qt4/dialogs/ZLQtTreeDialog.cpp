@@ -26,6 +26,7 @@
 #include <QtGui/QResizeEvent>
 #include <QtCore/QDebug>
 
+#include <ZLFile.h>
 #include <ZLibrary.h>
 #include <ZLTreePageNode.h>
 
@@ -177,11 +178,10 @@ void ZLQtTreeDialog::onForwardButton() {
 	updateAll();
 }
 
-ZLQtIconButton::ZLQtIconButton(QString iconEnabled, QString iconDisabled, QWidget *parent) : QPushButton(parent) {
-	QString path = QString::fromStdString(ZLibrary::ApplicationImageDirectory()) +
-		QString::fromStdString(ZLibrary::FileNameDelimiter);
-	myEnabled = QPixmap(path + iconEnabled);
-	myDisabled = QPixmap(path + iconDisabled);
+ZLQtIconButton::ZLQtIconButton(const std::string &iconEnabled, const std::string &iconDisabled, QWidget *parent) : QPushButton(parent) {
+	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
+	myEnabled = QPixmap(ZLFile(imagePrefix + iconEnabled).path().c_str());
+	myDisabled = QPixmap(ZLFile(imagePrefix + iconDisabled).path().c_str());
 	setIconSize(myEnabled.size());
 	setFixedSize(28, 22);
 }
