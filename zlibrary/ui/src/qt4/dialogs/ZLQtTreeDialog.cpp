@@ -26,6 +26,7 @@
 #include <QtGui/QResizeEvent>
 #include <QtCore/QDebug>
 
+#include <ZLFile.h>
 #include <ZLibrary.h>
 #include <ZLTreePageNode.h>
 #include <ZLFile.h>
@@ -65,10 +66,9 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	panelLayout->setSpacing(0);
 	panelLayout->addWidget(myBackButton);
 	panelLayout->addWidget(myForwardButton);
-	//panelLayout->addSpacing(10);
 	panelLayout->addStretch();
 	panelLayout->addWidget(mySearchField);
-	//panelLayout->addStretch();
+
 	mainLayout->addLayout(panelLayout);
 	mainLayout->addWidget(splitter);
 	this->setLayout(mainLayout);
@@ -245,6 +245,10 @@ ZLQtIconButton::ZLQtIconButton(const std::string &iconEnabled, const std::string
 	myDisabled = QPixmap(ZLFile(imagePrefix + iconDisabled).path().c_str());
 	setIconSize(myEnabled.size());
 	setFixedSize(28, 22);
+
+	//setAttribute is needed to workaround a bug on MacOS with size for QPushButton-derived subclasses
+	//see https://bugreports.qt-project.org/browse/QTBUG-14591
+	setAttribute(Qt::WA_LayoutUsesWidgetRect);
 }
 
 void ZLQtIconButton::setEnabled(bool enabled) {
