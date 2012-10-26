@@ -44,7 +44,7 @@ std::string ZLNetworkUtil::url(const std::string &baseUrl, const std::string &re
 	}
 
 	size_t index = relativePath.find("://");
-	if (index != std::string::npos) {
+	if (index != std::string::npos || isNonRelativeUrl(relativePath)) {
 		return relativePath;
 	}
 
@@ -57,6 +57,25 @@ std::string ZLNetworkUtil::url(const std::string &baseUrl, const std::string &re
 	index = baseUrl.rfind('/');
 	return baseUrl.substr(0, index + 1) + relativePath;
 }
+
+bool ZLNetworkUtil::isNonRelativeUrl(const std::string &url) {
+	//check for matching Non-relative URI; see rfc3986
+	//TODO use regexp "(?s)^[a-zA-Z][a-zA-Z0-9+-.]*:.*$" for this
+	size_t index = url.find(":");
+	if (index == std::string::npos) {
+		return false;
+	}
+	std::string before = url.substr(0, index);
+	std::string after = url.substr(index + 1);
+	if (before.empty() || after.empty()) {
+		return false;
+	}
+	if (!ZLStringUtil::isLatinLetter(before.at(0))) {
+		return false;
+	}
+	return true;
+}
+
 
 std::string ZLNetworkUtil::htmlEncode(const std::string &stringToEncode) {
 	std::string encodedString;

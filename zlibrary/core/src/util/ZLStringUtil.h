@@ -32,6 +32,9 @@ public:
 	static bool stringStartsWith(const std::string &str, const std::string &start);
 	static bool stringEndsWith(const std::string &str, const std::string &end);
 
+	static bool isDigit(char c);
+	static bool isLatinLetter(char c);
+
 	static void appendNumber(std::string &str, unsigned int n);
 	static void append(std::string &str, const std::vector<std::string> &buffer);
 	static void stripWhiteSpaces(std::string &str);
