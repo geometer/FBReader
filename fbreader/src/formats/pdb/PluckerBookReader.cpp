@@ -223,7 +223,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 		case 0x22:
 			if (!myParagraphStarted) {
 				if (myForcedEntry == 0) {
-					myForcedEntry = new ZLTextStyleEntry();
+					myForcedEntry = new ZLTextStyleEntry(ZLTextStyleEntry::STYLE_OTHER_ENTRY);
 				}
 				myForcedEntry->setLength(
 					ZLTextStyleEntry::LENGTH_LEFT_INDENT,
@@ -238,7 +238,7 @@ void PluckerBookReader::processTextFunction(char *ptr) {
 		case 0x29:
 			if (!myParagraphStarted) {
 				if (myForcedEntry == 0) {
-					myForcedEntry = new ZLTextStyleEntry();
+					myForcedEntry = new ZLTextStyleEntry(ZLTextStyleEntry::STYLE_OTHER_ENTRY);
 				}
 				switch (*(ptr + 1)) {
 					case 0: myForcedEntry->setAlignmentType(ALIGN_LEFT); break;

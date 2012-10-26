@@ -164,13 +164,13 @@ void PmlBookReader::newParagraph() {
 }
 
 void PmlBookReader::setAlignment() {
-	ZLTextStyleEntry entry;
+	ZLTextStyleEntry entry(ZLTextStyleEntry::STYLE_OTHER_ENTRY);
 	entry.setAlignmentType(myState.Alignment);
 	myBookReader.addStyleEntry(entry);
 }
 
 void PmlBookReader::setIndent() {
-	ZLTextStyleEntry entry;
+	ZLTextStyleEntry entry(ZLTextStyleEntry::STYLE_OTHER_ENTRY);
 	entry.setLength(ZLTextStyleEntry::LENGTH_FIRST_LINE_INDENT_DELTA, 0, ZLTextStyleEntry::SIZE_UNIT_PERCENT);
 	entry.setLength(ZLTextStyleEntry::LENGTH_LEFT_INDENT, (short)myState.Indent, ZLTextStyleEntry::SIZE_UNIT_PERCENT);
 	myBookReader.addStyleEntry(entry);
@@ -180,7 +180,7 @@ void PmlBookReader::setFontSize() {
 	if (!myBookReader.paragraphIsOpen()) {
 		myBookReader.beginParagraph();
 	}
-	ZLTextStyleEntry entry;
+	ZLTextStyleEntry entry(ZLTextStyleEntry::STYLE_OTHER_ENTRY);
 	switch(myState.FontSize) {
 		case SMALLER:
 			entry.setFontModifier(ZLTextStyleEntry::FONT_MODIFIER_SMALLER, true);

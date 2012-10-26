@@ -78,7 +78,8 @@ void ZLTextParagraphCursor::Builder::fill() {
 
 	for (ZLTextParagraph::Iterator it = myParagraph; !it.isEnd(); it.next()) {
 		switch (it.entryKind()) {
-			case ZLTextParagraphEntry::STYLE_ENTRY:
+			case ZLTextParagraphEntry::STYLE_CSS_ENTRY:
+			case ZLTextParagraphEntry::STYLE_OTHER_ENTRY:
 				myElements.push_back(new ZLTextStyleElement(it.entry()));
 				break;
 			case ZLTextParagraphEntry::FIXED_HSPACE_ENTRY:

@@ -221,7 +221,7 @@ void ZLTextModel::addStyleEntry(const ZLTextStyleEntry &entry) {
 	}
 	myLastEntryStart = myAllocator.allocate(len);
 	char *address = myLastEntryStart;
-	*address++ = ZLTextParagraphEntry::STYLE_ENTRY;
+	*address++ = entry.entryKind();
 	memcpy(address, &entry.myFeatureMask, sizeof(unsigned short));
 	address += sizeof(unsigned short);
 	for (int i = 0; i < ZLTextStyleEntry::NUMBER_OF_LENGTHS; ++i) {

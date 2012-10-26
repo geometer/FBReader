@@ -63,7 +63,7 @@ short ZLTextStyleEntry::length(Feature featureId, const Metrics &metrics) const 
 	}
 }
 
-ZLTextStyleEntry::ZLTextStyleEntry(char *address) {
+ZLTextStyleEntry::ZLTextStyleEntry(unsigned char entryKind, char *address) : myEntryKind(entryKind) {
 	memcpy(&myFeatureMask, address, sizeof(unsigned short));
 	address += sizeof(unsigned short);
 	for (int i = 0; i < NUMBER_OF_LENGTHS; ++i) {
@@ -103,8 +103,9 @@ const shared_ptr<ZLTextParagraphEntry> ZLTextParagraph::Iterator::entry() const 
 				myEntry = new ImageEntry(myPointer + sizeof(const ZLImageMap*) + sizeof(short) + 1, imageMap, vOffset);
 				break;
 			}
-			case ZLTextParagraphEntry::STYLE_ENTRY:
-				myEntry = new ZLTextStyleEntry(myPointer + 1);
+			case ZLTextParagraphEntry::STYLE_CSS_ENTRY:
+			case ZLTextParagraphEntry::STYLE_OTHER_ENTRY:
+				myEntry = new ZLTextStyleEntry(*myPointer, myPointer + 1);
 				break;
 			case ZLTextParagraphEntry::FIXED_HSPACE_ENTRY:
 				myEntry = new ZLTextFixedHSpaceEntry((unsigned char)*(myPointer + 1));
@@ -146,7 +147,8 @@ void ZLTextParagraph::Iterator::next() {
 				}
 				++myPointer;
 				break;
-			case ZLTextParagraphEntry::STYLE_ENTRY:
+			case ZLTextParagraphEntry::STYLE_CSS_ENTRY:
+			case ZLTextParagraphEntry::STYLE_OTHER_ENTRY:
 			{
 				unsigned short mask;
 				memcpy(&mask, myPointer + 1, sizeof(unsigned short));
