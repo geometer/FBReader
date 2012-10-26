@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <ZLFile.h>
 #include <ZLInputStream.h>
 #include <ZLLogger.h>
@@ -27,6 +25,7 @@
 #include "DocPlugin.h"
 #include "DocMetaInfoReader.h"
 #include "DocBookReader.h"
+#include "DocReaderStream.h"
 #include "../../bookmodel/BookModel.h"
 #include "../../library/Book.h"
 
@@ -49,7 +48,16 @@ bool DocPlugin::acceptsFile(const ZLFile &file) const {
 }
 
 bool DocPlugin::readMetaInfo(Book &book) const {
-	return DocMetaInfoReader(book).readMetaInfo();
+	if (!DocMetaInfoReader(book).readMetaInfo()) {
+		return false;
+	}
+
+	shared_ptr<ZLInputStream> stream = new DocReaderStream(book.file(), 50000);
+	if (!stream.isNull()) {
+		detectEncodingAndLanguage(book, *stream);
+	}
+
+	return true;
 }
 
 bool DocPlugin::readLanguageAndEncoding(Book &/*book*/) const {
