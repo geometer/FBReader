@@ -37,8 +37,9 @@
 	DONE icon for back/forward buttons (with arrows)
 	DONE while covers (or catalog icons) are not loaded, show a placeholder
 	DONE implement actions reloading after some actions pushed
+  	DONE avoid multiple loadings of the same icon
 
-  	** avoid multiple loadings of the same icon
+	** fix problem with base64 url cover loading
 
 	?? add selected item to history
 

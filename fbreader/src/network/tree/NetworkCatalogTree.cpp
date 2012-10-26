@@ -68,8 +68,10 @@ shared_ptr<const ZLImage> NetworkCatalogTree::image() const {
 			return node->image();
 		}
 	}
-	shared_ptr<const ZLImage> image = NetworkCatalogUtil::getAndDownloadImageByUrl(url, this);
-	return !image.isNull() ? image : FBTree::defaultCoverImage("booktree-catalog.png");
+	if (myImage.isNull()) {
+		myImage = NetworkCatalogUtil::getAndDownloadImageByUrl(url, this);
+	}
+	return (!myImage.isNull() && myImage->good()) ? myImage : FBTree::defaultCoverImage("booktree-catalog.png");
 }
 
 class AsyncLoadSubCatalogRunnable : public ZLNetworkRequest::Listener {

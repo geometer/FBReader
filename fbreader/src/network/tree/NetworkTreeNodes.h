@@ -98,6 +98,7 @@ private:
 	NetworkItem::List myChildrenItems;
 
 	std::vector<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
+	mutable shared_ptr<const ZLImage> myImage;
 
 friend class NetworkTreeFactory;
 };
@@ -246,6 +247,7 @@ private:
 private:
 	shared_ptr<NetworkItem> myBook;
 	SummaryType mySummaryType;
+	mutable shared_ptr<const ZLImage> myImage;
 };
 
 

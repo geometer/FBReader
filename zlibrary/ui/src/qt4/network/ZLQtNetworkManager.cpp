@@ -207,8 +207,8 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 }
 
 void ZLQtNetworkManager::onFinishedAsync(QNetworkReply *reply) {
-	qDebug() << Q_FUNC_INFO << reply->url();
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	ZLLogger::Instance().println("network", "[FINISHED] async request " + scope.request->url());
 	reply->deleteLater();
 	scope.timeoutTimer->stop();
 
