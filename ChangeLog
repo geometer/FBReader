@@ -5,6 +5,7 @@
 * Added 'Recommend' item for LitRes network catalog
 * Added convenient classification (by date, by author, by title, by series) for 'My Books' in LitRes network catalog
 * Fixed crash on some ePubs from Project Gutenberg
+* Encoding detection for doc (ms word) files
 
 ===== 0.99.2 (September 7, 2012) =====
 
