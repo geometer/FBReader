@@ -1,4 +1,4 @@
-===== 0.99.3 (September ??, 2012) =====
+===== 0.99.3 (November ??, 2012) =====
 
 * Code is compilable for MacOS X (10.5+) with Qt library
 * Added ability to read books from archives like ".tar", ".tar.gz" and ".tar.bz2" (original code by Serge Osnach)
