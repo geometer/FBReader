@@ -127,7 +127,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	int catalogFlags = NetworkCatalogItem::FLAGS_DEFAULT;
 	for (size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
-		const std::string &href = link.href();
+		const std::string &href = ZLNetworkUtil::url(myBaseURL, link.href());
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = myLink.relation(link.rel(), link.type());
 		if (ZLMimeType::isImage(type)) {
@@ -180,9 +180,9 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x09), annotation.end());
 	annotation.erase(std::remove(annotation.begin(), annotation.end(), 0x0A), annotation.end());
 	NetworkItem::UrlInfoCollection urlMap;
-	urlMap[NetworkItem::URL_COVER] = ZLNetworkUtil::url(myBaseURL, coverURL);
-	urlMap[NetworkItem::URL_CATALOG] = ZLNetworkUtil::url(myBaseURL, url);
-	urlMap[NetworkItem::URL_HTML_PAGE] = ZLNetworkUtil::url(myBaseURL, htmlURL);
+	urlMap[NetworkItem::URL_COVER] = coverURL;
+	urlMap[NetworkItem::URL_CATALOG] = url;
+	urlMap[NetworkItem::URL_HTML_PAGE] = htmlURL;
 
 	if (!litresType.empty() || !litresRel.empty()) {
 		return LitResUtil::createLitResNode(litresType, litresRel, myData.Link, entry.title(), annotation, urlMap, dependsOnAccount);
