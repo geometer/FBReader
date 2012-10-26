@@ -276,7 +276,7 @@ ZLQtWaitingIcon::ZLQtWaitingIcon(QWidget* parent) : QLabel(parent), myAngle(0) {
 	//TODO maybe replace to QMovie class using
 	const int ICON_WIDTH = 35;
 	const int ICON_HEIGHT = ICON_WIDTH;
-	static std::string iconPath = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + "refresh-icon.svg";
+	static std::string iconPath = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + "refresh-icon-2.png";
 	//qDebug() << "LoadingIcon" << iconFile;
 	myTimer = new QTimer(this);
 	//TODO make pixmap as static

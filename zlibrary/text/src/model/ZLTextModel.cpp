@@ -152,7 +152,7 @@ void ZLTextPlainModel::createParagraph(ZLTextParagraph::Kind kind) {
 
 void ZLTextModel::addText(const std::string &text) {
 	size_t len = text.length();
-	if ((myLastEntryStart != 0) && (*myLastEntryStart == ZLTextParagraphEntry::TEXT_ENTRY)) {
+	if (myLastEntryStart != 0 && *myLastEntryStart == ZLTextParagraphEntry::TEXT_ENTRY) {
 		size_t oldLen = 0;
 		memcpy(&oldLen, myLastEntryStart + 1, sizeof(size_t));
 		size_t newLen = oldLen + len;
@@ -176,7 +176,7 @@ void ZLTextModel::addText(const std::vector<std::string> &text) {
 	for (std::vector<std::string>::const_iterator it = text.begin(); it != text.end(); ++it) {
 		len += it->length();
 	}
-	if ((myLastEntryStart != 0) && (*myLastEntryStart == ZLTextParagraphEntry::TEXT_ENTRY)) {
+	if (myLastEntryStart != 0 && *myLastEntryStart == ZLTextParagraphEntry::TEXT_ENTRY) {
 		size_t oldLen = 0;
 		memcpy(&oldLen, myLastEntryStart + 1, sizeof(size_t));
 		size_t newLen = oldLen + len;
