@@ -32,23 +32,10 @@ public:
 	size_t readSize() const;
 
 private:
+	bool readStream(OleMainStream &stream);
 	void dataHandler(const char *buffer, size_t len);
-
-	void handleChar(ZLUnicodeUtil::Ucs2Char ucs2char);
-	void handleHardLinebreak();
-	void handleParagraphEnd();
-	void handlePageBreak();
-	void handleTableSeparator();
-	void handleTableEndRow();
-	void handleFootNoteMark();
-	void handleStartField();
-	void handleSeparatorField();
-	void handleEndField();
-	void handleImage(const ZLFileImage::Blocks &blocks);
-	void handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char);
-	void handleFontStyle(unsigned int fontStyle);
-	void handleParagraphStyle(const OleMainStream::Style &styleInfo);
-	void handleBookmark(const std::string &name);
+	void ansiSymbolHandler(ZLUnicodeUtil::Ucs2Char symbol);
+	void footnoteHandler();
 
 private:
 	char *myBuffer;
@@ -56,66 +43,29 @@ private:
 	size_t myActualSize;
 };
 
-DocTextOnlyReader::DocTextOnlyReader(char *buffer, size_t maxSize) : OleStreamReader(std::string()), myBuffer(buffer), myMaxSize(maxSize), myActualSize(0) {
+DocTextOnlyReader::DocTextOnlyReader(char *buffer, size_t maxSize) : myBuffer(buffer), myMaxSize(maxSize), myActualSize(0) {
 }
 
 DocTextOnlyReader::~DocTextOnlyReader() {
 }
 
+bool DocTextOnlyReader::readStream(OleMainStream &stream) {
+	while (myActualSize < myMaxSize && readNextPiece(stream)) {
+	}
+}
+
 void DocTextOnlyReader::dataHandler(const char *buffer, size_t dataLength) {
-	if (myActualSize >= myMaxSize) {
-		// break stream reading
-	} else {
+	if (myActualSize < myMaxSize) {
 		const size_t len = std::min(dataLength, myMaxSize - myActualSize);
 		strncpy(myBuffer + myActualSize, buffer, len);
 		myActualSize += len;
 	}
-	OleStreamReader::dataHandler(buffer, dataLength);
 }
 
-void DocTextOnlyReader::handleChar(ZLUnicodeUtil::Ucs2Char ucs2char) {
+void DocTextOnlyReader::ansiSymbolHandler(ZLUnicodeUtil::Ucs2Char) {
 }
 
-void DocTextOnlyReader::handleHardLinebreak() {
-}
-
-void DocTextOnlyReader::handleParagraphEnd() {
-}
-
-void DocTextOnlyReader::handlePageBreak() {
-}
-
-void DocTextOnlyReader::handleTableSeparator() {
-}
-
-void DocTextOnlyReader::handleTableEndRow() {
-}
-
-void DocTextOnlyReader::handleFootNoteMark() {
-}
-
-void DocTextOnlyReader::handleStartField() {
-}
-
-void DocTextOnlyReader::handleSeparatorField() {
-}
-
-void DocTextOnlyReader::handleEndField() {
-}
-
-void DocTextOnlyReader::handleImage(const ZLFileImage::Blocks &blocks) {
-}
-
-void DocTextOnlyReader::handleOtherControlChar(ZLUnicodeUtil::Ucs2Char ucs2char) {
-}
-
-void DocTextOnlyReader::handleFontStyle(unsigned int fontStyle) {
-}
-
-void DocTextOnlyReader::handleParagraphStyle(const OleMainStream::Style &styleInfo) {
-}
-
-void DocTextOnlyReader::handleBookmark(const std::string &name) {
+void DocTextOnlyReader::footnoteHandler() {
 }
 
 size_t DocTextOnlyReader::readSize() const {

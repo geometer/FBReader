@@ -34,9 +34,9 @@
 #include "OleMainStream.h"
 
 DocBookReader::DocBookReader(BookModel &model, const std::string &encoding) :
-	OleStreamReader(encoding),
 	myModelReader(model),
-	myPictureCounter(0) {
+	myPictureCounter(0),
+	myEncoding(encoding) {
 	myReadState = READ_TEXT;
 }
 
@@ -354,4 +354,24 @@ std::string DocBookReader::parseLink(ZLUnicodeUtil::Ucs2String s, bool urlencode
 	std::string utf8String;
 	ZLUnicodeUtil::ucs2ToUtf8(utf8String, link);
 	return utf8String;
+}
+
+void DocBookReader::footnoteHandler() {
+	handlePageBreak();
+}
+
+void DocBookReader::dataHandler(const char *buffer, size_t len) {
+	if (myConverter.isNull()) {
+		// lazy converter initialization
+		ZLEncodingCollection &collection = ZLEncodingCollection::Instance();
+		ZLEncodingConverterInfoPtr info = collection.info(myEncoding);
+		myConverter = info.isNull() ? collection.defaultConverter() : info->createConverter();
+	}
+	std::string utf8String;
+	myConverter->convert(utf8String, buffer, buffer + len);
+	ZLUnicodeUtil::utf8ToUcs2(myBuffer, utf8String);
+}
+
+void DocBookReader::ansiSymbolHandler(ZLUnicodeUtil::Ucs2Char symbol) {
+	myBuffer.push_back(symbol);
 }
