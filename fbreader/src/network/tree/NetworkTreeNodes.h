@@ -79,7 +79,6 @@ public:
 	std::string title() const;
 	std::string subtitle() const;
 	shared_ptr<const ZLImage> image() const;
-	std::string imageUrl() const;
 
 	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
 	void onChildrenReceived(const std::string &error);

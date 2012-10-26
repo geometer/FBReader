@@ -69,25 +69,7 @@ shared_ptr<const ZLImage> NetworkCatalogTree::image() const {
 		}
 	}
 	shared_ptr<const ZLImage> image = NetworkCatalogUtil::getAndDownloadImageByUrl(url, this);
-	if (!image.isNull()) {
-		return image;
-	}
-	if (url.find(':') == std::string::npos) {
-		return defaultCoverImage(url);
-	}
-	return 0;
-}
-
-std::string NetworkCatalogTree::imageUrl() const {
-	const std::string &url = myItem->URLByType[NetworkItem::URL_COVER];
-	if (url.empty()) {
-		if (ZLTreeTitledNode *node = zlobject_cast<ZLTreeTitledNode*>(parent())) {
-			return node->imageUrl();
-		}
-	} else if (url.find(':') == std::string::npos) {
-		return FBTree::defaultImageUrl(url);
-	}
-	return url;
+	return !image.isNull() ? image : FBTree::defaultCoverImage("booktree-catalog.png");
 }
 
 class AsyncLoadSubCatalogRunnable : public ZLNetworkRequest::Listener {
@@ -154,7 +136,7 @@ void NetworkCatalogTree::onChildrenReceived(const std::string &error) {
 }
 
 void NetworkCatalogTree::notifyListeners(const std::string &error) {
-	for (int i = 0; i < myListeners.size(); ++i) {
+	for (size_t i = 0; i < myListeners.size(); ++i) {
 		if (!myListeners.at(i).isNull())
 			myListeners.at(i)->finished(error);
 	}

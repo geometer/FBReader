@@ -41,7 +41,7 @@ public:
 	virtual std::string subtitle() const;
 
 	// Url to image
-	virtual std::string imageUrl() const;
+	//virtual std::string imageUrl() const;
 	// Or the image if there is no url
 	virtual shared_ptr<const ZLImage> image() const;
 };

@@ -90,6 +90,7 @@ shared_ptr<const ZLImage> NetworkCatalogUtil::getAndDownloadImageByUrl(const std
 	if (!downloadRequest.isNull()) {
 		downloadRequest->setListener(new NetworkImageDownloadListener(const_cast<ZLTreeNode*>(node)));
 		ZLNetworkManager::Instance().performAsync(downloadRequest);
+		return 0;
 	}
 	return image;
 }
