@@ -25,12 +25,14 @@
 
 #include "../library/Book.h"
 
-void FormatPlugin::detectEncodingAndLanguage(Book &book, ZLInputStream &stream) {
+bool FormatPlugin::detectEncodingAndLanguage(Book &book, ZLInputStream &stream, bool force) {
 	std::string language = book.language();
 	std::string encoding = book.encoding();
-	if (!encoding.empty() && !language.empty()) {
-		return;
+	if (!force && !encoding.empty() && !language.empty()) {
+		return true;
 	}
+
+	bool detected = false;
 
 	PluginCollection &collection = PluginCollection::Instance();
 	if (language.empty()) {
@@ -48,24 +50,28 @@ void FormatPlugin::detectEncodingAndLanguage(Book &book, ZLInputStream &stream) 
 			ZLLanguageDetector().findInfo(buffer, size);
 		delete[] buffer;
 		if (!info.isNull()) {
+			detected = true;
 			if (!info->Language.empty()) {
 				language = info->Language;
 			}
 			encoding = info->Encoding;
-			if ((encoding == "US-ASCII") || (encoding == "ISO-8859-1")) {
+			if (encoding == "US-ASCII" || encoding == "ISO-8859-1") {
 				encoding = "windows-1252";
 			}
 		}
 	}
 	book.setEncoding(encoding);
 	book.setLanguage(language);
+	return detected;
 }
 
-void FormatPlugin::detectLanguage(Book &book, ZLInputStream &stream) {
+bool FormatPlugin::detectLanguage(Book &book, ZLInputStream &stream, const std::string &encoding, bool force) {
 	std::string language = book.language();
-	if (!language.empty()) {
-		return;
+	if (!force && !language.empty()) {
+		return true;
 	}
+
+	bool detected	= false;
 
 	PluginCollection &collection = PluginCollection::Instance();
 	if (language.empty()) {
@@ -77,15 +83,17 @@ void FormatPlugin::detectLanguage(Book &book, ZLInputStream &stream) {
 		const size_t size = stream.read(buffer, BUFSIZE);
 		stream.close();
 		shared_ptr<ZLLanguageDetector::LanguageInfo> info =
-			ZLLanguageDetector().findInfoForEncoding(book.encoding(), buffer, size, -20000);
+			ZLLanguageDetector().findInfoForEncoding(encoding, buffer, size, -20000);
 		delete[] buffer;
 		if (!info.isNull()) {
 			if (!info->Language.empty()) {
+				detected = true;
 				language = info->Language;
 			}
 		}
 	}
 	book.setLanguage(language);
+	return detected;
 }
 
 const std::string &FormatPlugin::tryOpen(const ZLFile&) const {

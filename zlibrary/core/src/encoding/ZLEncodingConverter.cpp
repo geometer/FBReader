@@ -20,6 +20,8 @@
 #include "ZLEncodingConverter.h"
 #include "ZLEncodingConverterProvider.h"
 
+const std::string ZLEncodingConverter::ASCII = "US-ASCII";
+const std::string ZLEncodingConverter::UTF8 = "UTF-8";
 const std::string ZLEncodingConverter::UTF16 = "UTF-16";
 const std::string ZLEncodingConverter::UTF16BE = "UTF-16BE";
 
