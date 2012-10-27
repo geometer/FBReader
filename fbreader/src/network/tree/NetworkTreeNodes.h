@@ -79,7 +79,6 @@ public:
 	std::string title() const;
 	std::string subtitle() const;
 	shared_ptr<const ZLImage> image() const;
-	std::string imageUrl() const;
 
 	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
 	void onChildrenReceived(const std::string &error);
@@ -99,6 +98,7 @@ private:
 	NetworkItem::List myChildrenItems;
 
 	std::vector<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
+	mutable shared_ptr<const ZLImage> myImage;
 
 friend class NetworkTreeFactory;
 };
@@ -247,6 +247,7 @@ private:
 private:
 	shared_ptr<NetworkItem> myBook;
 	SummaryType mySummaryType;
+	mutable shared_ptr<const ZLImage> myImage;
 };
 
 

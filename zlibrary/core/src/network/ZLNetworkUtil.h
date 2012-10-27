@@ -33,6 +33,9 @@ public:
 	static bool hasParameter(const std::string &url, const std::string &name);
 
 private:
+	static bool isNonRelativeUrl(const std::string &url);
+
+private:
 	ZLNetworkUtil();
 };
 

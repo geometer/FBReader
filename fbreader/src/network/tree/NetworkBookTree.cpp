@@ -126,9 +126,12 @@ shared_ptr<ZLTreePageInfo> NetworkBookTree::getPageInfo() /*const*/ {
 	return new BookItemWrapper(*this, myBook);
 }
 
+
 shared_ptr<const ZLImage> NetworkBookTree::image() const {
-	shared_ptr<const ZLImage> image = NetworkCatalogUtil::getAndDownloadImageByUrl(myBook->URLByType[NetworkItem::URL_COVER], this);
-	return !image.isNull() ? image : FBTree::defaultCoverImage("booktree-book.png");
+	if (myImage.isNull()) {
+		myImage = NetworkCatalogUtil::getAndDownloadImageByUrl(myBook->URLByType[NetworkItem::URL_COVER], this);
+	}
+	return (!myImage.isNull() && myImage->good()) ? myImage : FBTree::defaultCoverImage("booktree-book.png");
 }
 
 shared_ptr<const ZLImage> NetworkBookTree::fullImage() const {

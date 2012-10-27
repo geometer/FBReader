@@ -91,16 +91,16 @@ shared_ptr<const ZLImage> FBTree::defaultCoverImage(const std::string &id) {
 	return cover;
 }
 
-std::string FBTree::defaultImageUrl(const std::string &id) {
-	std::string &url = ourDefaultUrls[id];
-	if (url.empty()) {
-		url = ZLibrary::ApplicationImageDirectory();
-		url += "/";
-		url += id;
-		url = LOCALFILE_SCHEME + SCHEME_POSTFIX + percent_encoding(url);
-	}
-	return url;
-}
+//std::string FBTree::defaultImageUrl(const std::string &id) {
+//	std::string &url = ourDefaultUrls[id];
+//	if (url.empty()) {
+//		url = ZLibrary::ApplicationImageDirectory();
+//		url += "/";
+//		url += id;
+//		url = LOCALFILE_SCHEME + SCHEME_POSTFIX + percent_encoding(url);
+//	}
+//	return url;
+//}
 
 void FBTree::expand() {
    if (ZLTreeListener *handler = listener()) {

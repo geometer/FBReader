@@ -39,10 +39,6 @@ std::string ZLTreeTitledNode::subtitle() const {
 	return std::string();
 }
 
-std::string ZLTreeTitledNode::imageUrl() const {
-	return std::string();
-}
-
 shared_ptr<const ZLImage> ZLTreeTitledNode::image() const {
 	return 0;
 }

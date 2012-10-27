@@ -81,10 +81,9 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 
 void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
 	myRootNode = rootNode;
-	onChildrenLoaded(myRootNode, false, true); //TODO make generic async loading
 	myBackHistory.clear();
 	myForwardHistory.clear();
-	onExpandRequest(myRootNode);
+	onExpandRequest(myRootNode); //TODO make generic async loading
 	show();
 	myListWidget->setFocus();
 }

@@ -35,7 +35,7 @@ private:
 
 public:
 	static shared_ptr<const ZLImage> defaultCoverImage(const std::string &id);
-	static std::string defaultImageUrl(const std::string &id);
+	//static std::string defaultImageUrl(const std::string &id);
 
 public: //TODO make protected
 	void expand();
