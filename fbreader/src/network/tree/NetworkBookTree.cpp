@@ -63,9 +63,9 @@ public:
 		NetworkBookDownloadAction::run();
 	}
 
-	void finished(const std::string &error) {
+	void onBookDownloaded(const std::string &error) {
 		myTree.notifyDownloadStopped();
-		NetworkBookDownloadAction::finished(error);
+		NetworkBookDownloadAction::onBookDownloaded(error);
 	}
 
 private:

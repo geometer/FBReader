@@ -267,6 +267,7 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 		myActionsWidget->layout()->addWidget(actionButton);
 	}
 
+	//TODO check case if I will load all links at the same time
 	foreach(shared_ptr<ZLTreeAction> action, info.relatedActions()) {
 		if (!action->makesSense()) {
 			continue;

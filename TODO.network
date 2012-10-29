@@ -39,72 +39,6 @@
 	DONE implement actions reloading after some actions pushed
   	DONE avoid multiple loadings of the same icon
 	DONE fix problem with base64 url cover loading
-
-	?? add selected item to history
-
-	** implement async full information loading
-
-	** generic.xml async loading
-	** BUG: when pressing buy&download, app crashes
-	?? implement progress showing for book downloading like a progress bar
-	** implement async buying of book
-	** BUG: at litres "popular books" there's no waiting icon! (looks like this widget doesn't appears because of too long title)
-	** block action-button when pushed (downloading, buying, etc)
-	** partial catalogs loading (first 20 books only)
-	** "standard search look" for search field
-	** implement waiting icon for related action items
-
-	** error (for i.e. timeout) message showing
-	** sign in into protected parts of catalogs (feedbooks, wolne lectury)
-	** ask manybooks.net to change their OPDS (incorrect using of full entries)
-
-	** set sensible default height with ability to shrink it
-	** add better icon for books with no covers
-	** in book info window show "related links" section
-		DONE implement related links in litres
-		DONE implement related links support for OPDS
-		*** refactoring: new UrlInfoCollection class
-		*** implement ability to open related links in browser
-		*** 'Also read with this book' -- is correct phrase?
-		*** m.b. add to other resources phrases 'also read' and etc
-
-	* асинхронная работа с сетью:
-		* загрузка списка библиотек с сервера
-		* загрузка картинок
-		DONE загрузка подэлементов пункта
-		* подстраничка подгрузки данных
-		DONE загрузка книги
-		* покупка книги
-
-	* UI
-		* list widget - не увеличивать маленькие обложки, а просто центрировать
-		* BUG: preview widget - если поле отсутсвует, вместо него просто пустое пространство
-		* BUG: list widget - при загрузке элементов, они растягиваются по всему доступному месту.	
-		? добавить сохранение геометрии окна
-		* закрывать окно библиотеки при нажатии кнопки "скачать"
-		* preview widget - добавить перевод для полей в book info для всех языков, кроме русского
-		* прогрессбар на плашке с книгой при ее загрузке
-					* что будет происходить, если гружу две книги -- какую открыть?
-				* обработка особенных ситуаций:
-					* что происходит, когда нажимаем кнопку "Сетевая библиотека" несколько раз подряд?
-					* что происходит, если запросить requestChildren дважды подряд?
-		? реализовать кнопку "Обновление тек. пункта"
-		* algorithms
-				* реализовать постраничную подгрузку данных (сейчас из OPDS скачивается все сразу)
-				* реализовать постепенную загрузку обложек
-					* только тех, что на экране (отложенная загрузка)
-					* м.б. + 1 экран вперед?
-			* функциональность
-				* реализовать поиск
-				* поддержка rel="related" ссылок из full entry
-					* приводить preview обложку к удобному размеру
-				* related для litres:
-					** поддержка "книги этой серии"
-					DONE поддержка "также читают"
-					DONE поддержка "все книги этого автора"		
-			? реализовать фильтр сетевых каталогов по языку (как в FBReaderJ)
-			* возможность "прятать" отдельные каталоги
-
 		DONE добавить splitter
 		DONE отделение items друг от друга
 		DONE splitter - соотношение виджетов по умолчанию должно быть примерно 2:1
@@ -125,7 +59,70 @@
 			DONE actionы в этом случае показываются в виде кнопок снизу
 			DONE реализовать подгрузку данных из OPDS каталога по rel="alternate" ссылке (Full Entry)
 			DONE выводить: название, автор, категории и описание
-	
+
+
+	* асинхронная работа с сетью:
+		* загрузка списка библиотек с сервера
+		* загрузка картинок
+		DONE загрузка подэлементов пункта
+		* подстраничка подгрузки данных
+		DONE загрузка книги
+		* покупка книги
+
+	** block action-button when pushed (downloading, buying, etc)
+	** remove certificates using at all
+	** sign in into protected parts of catalogs (feedbooks, wolne lectury)
+
+	** implement async sign in/out operations
+	** implement async buying of book
+	** generic.xml async loading
+	** implement async simple search
+
+	** implement async full information loading
+	** partial catalogs loading (first 20 books only)
+
+	?? add selected item to history
+	** BUG: when pressing buy&download, app crashes
+	?? implement progress showing for book downloading like a progress bar
+	** BUG: at litres "popular books" there's no waiting icon! (looks like this widget doesn't appears because of too long title)
+	** "standard search look" for search field
+	** implement waiting icon for related action items
+	** error (for i.e. timeout) message showing
+	** ask manybooks.net to change their OPDS (incorrect using of full entries on their side)
+	** set sensible default height (for network libraries window) with ability to shrink it
+	** in book info window show "related links" section
+		DONE implement related links in litres
+		DONE implement related links support for OPDS
+		*** refactoring: new UrlInfoCollection class
+		*** implement ability to open related links in browser
+		*** 'Also read with this book' -- is correct phrase?
+		*** m.b. add to other resources phrases 'also read' and etc
+	* list widget - не увеличивать маленькие обложки, а просто центрировать
+	* BUG: preview widget - если поле отсутсвует, вместо него просто пустое пространство
+	* BUG: list widget - при загрузке элементов, они растягиваются по всему доступному месту.	
+	? добавить сохранение геометрии окна
+	* закрывать окно библиотеки при нажатии кнопки "скачать"
+	* preview widget - добавить перевод для полей в book info для всех языков, кроме русского
+	* прогрессбар на плашке с книгой при ее загрузке
+		* что будет происходить, если гружу две книги -- какую открыть?
+	* обработка особенных ситуаций:
+		* что происходит, когда нажимаем кнопку "Сетевая библиотека" несколько раз подряд?
+		* что происходит, если запросить requestChildren дважды подряд?
+	? реализовать кнопку "Обновление тек. пункта"
+	* algorithms
+		* реализовать постраничную подгрузку данных (сейчас из OPDS скачивается все сразу)
+		* реализовать постепенную загрузку обложек
+			* только тех, что на экране (отложенная загрузка)
+			* м.б. + 1 экран вперед?
+	* реализовать advanced search
+	DONE поддержка rel="related" ссылок из full entry
+	* приводить preview обложку к удобному размеру
+	* related для litres:
+		** поддержка "книги этой серии"
+		DONE поддержка "также читают"
+		DONE поддержка "все книги этого автора"		
+	? реализовать фильтр сетевых каталогов по языку (как в FBReaderJ)
+	* реализовать возможность "прятать" отдельные каталоги	
 
 * добавить каталог ParkReader с его собственным API
 
