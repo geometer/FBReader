@@ -105,7 +105,7 @@ std::string ZLQtNetworkManager::perform(const ZLNetworkRequest::Vector &requests
 			continue;
 		}
 
-		setHeadersAndSsl(networkRequest, request->sslCertificate().DoVerify);
+		setHeadersAndSsl(networkRequest);
 		QTimer* timeoutTimer = new QTimer;
 		ZLQtNetworkReplyScope scope = { request, timeoutTimer, false, &replies, &errors, &eventLoop};
 		prepareReply(scope, networkRequest);
@@ -136,7 +136,7 @@ std::string ZLQtNetworkManager::performAsync(const ZLNetworkRequest::Vector &req
 			continue;
 		}
 
-		setHeadersAndSsl(networkRequest, request->sslCertificate().DoVerify);
+		setHeadersAndSsl(networkRequest);
 		QTimer* timeoutTimer = new QTimer;
 		ZLQtNetworkReplyScope scope = { request, timeoutTimer, false, 0, 0, 0};
 		prepareReply(scope, networkRequest);
@@ -369,12 +369,9 @@ QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) {
 	return QString::fromStdString(error);
 }
 
-void ZLQtNetworkManager::setHeadersAndSsl(QNetworkRequest &networkRequest, bool doVerify) const {
+void ZLQtNetworkManager::setHeadersAndSsl(QNetworkRequest &networkRequest) const {
 	networkRequest.setRawHeader("User-Agent", userAgent().c_str());
 	QSslConfiguration configuration = QSslConfiguration::defaultConfiguration();
-	if (!doVerify) {
-		configuration.setPeerVerifyMode(QSslSocket::VerifyNone);
-	}
 	networkRequest.setSslConfiguration(configuration);
 }
 

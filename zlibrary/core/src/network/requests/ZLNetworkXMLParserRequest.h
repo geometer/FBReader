@@ -30,7 +30,7 @@ class ZLAsynchronousInputStream;
 class ZLNetworkXMLParserRequest : public ZLNetworkRequest {
 
 public:
-	ZLNetworkXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader, shared_ptr<ZLRunnable> runnable = 0);
+	ZLNetworkXMLParserRequest(const std::string &url, shared_ptr<ZLXMLReader> reader, shared_ptr<ZLRunnable> runnable = 0);
 	~ZLNetworkXMLParserRequest();
 
 private:

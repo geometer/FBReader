@@ -26,7 +26,7 @@
 class ZLNetworkReadToStringRequest : public ZLNetworkRequest {
 
 public:
-	ZLNetworkReadToStringRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, std::string &buffer);
+	ZLNetworkReadToStringRequest(const std::string &url, std::string &buffer);
 
 private:
 	bool handleHeader(void *ptr, size_t size);

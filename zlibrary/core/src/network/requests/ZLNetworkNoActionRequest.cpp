@@ -20,8 +20,8 @@
 #include "ZLNetworkNoActionRequest.h"
 
 
-ZLNetworkNoActionRequest::ZLNetworkNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) :
-	ZLNetworkRequest(url, sslCertificate) {
+ZLNetworkNoActionRequest::ZLNetworkNoActionRequest(const std::string &url) :
+	ZLNetworkRequest(url) {
 }
 
 bool ZLNetworkNoActionRequest::doBefore() {

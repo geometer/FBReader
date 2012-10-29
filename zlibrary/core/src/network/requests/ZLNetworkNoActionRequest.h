@@ -26,7 +26,7 @@
 class ZLNetworkNoActionRequest : public ZLNetworkRequest {
 
 public:
-	ZLNetworkNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
+	ZLNetworkNoActionRequest(const std::string &url);
 
 private:
 	bool doBefore();

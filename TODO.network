@@ -59,7 +59,10 @@
 			DONE actionы в этом случае показываются в виде кнопок снизу
 			DONE реализовать подгрузку данных из OPDS каталога по rel="alternate" ссылке (Full Entry)
 			DONE выводить: название, автор, категории и описание
-
+	DONE block action-button when pushed (downloading, buying, etc)
+	DONE sign in into protected parts of catalogs (feedbooks, wolne lectury)
+	DONE don't make cover in list widget item bigger, if it less than 77/77 px size
+	DONE remove certificates using at all
 
 	* асинхронная работа с сетью:
 		* загрузка списка библиотек с сервера
@@ -68,11 +71,6 @@
 		* подстраничка подгрузки данных
 		DONE загрузка книги
 		* покупка книги
-
-	DONE block action-button when pushed (downloading, buying, etc)
-	DONE sign in into protected parts of catalogs (feedbooks, wolne lectury)
-	DONE don't make cover in list widget item bigger, if it less than 77/77 px size
-	** remove certificates using at all
 
 	** implement async sign in/out operations
 	** implement async buying of book

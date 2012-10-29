@@ -25,9 +25,6 @@
 
 #include <shared_ptr.h>
 
-#include <ZLNetworkSSLCertificate.h>
-
-
 class ZLNetworkRequest {
 
 public:
@@ -48,7 +45,7 @@ public:
 	};
 
 protected:
-	ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
+	ZLNetworkRequest(const std::string &url);
 
 public:
 	virtual bool handleHeader(void *ptr, size_t size);
@@ -66,7 +63,6 @@ public:
 	const std::string &errorMessage() const;
 
 	const std::string &url() const;
-	const ZLNetworkSSLCertificate &sslCertificate() const;
 
 public: // HTTP parameters
 	void setupAuthentication(const std::string &userName, const std::string &password);
@@ -91,7 +87,6 @@ protected:
 
 private:
 	const std::string myURL;
-	const ZLNetworkSSLCertificate &mySSLCertificate;
 	std::string myErrorMessage;
 
 	std::string myUserName;

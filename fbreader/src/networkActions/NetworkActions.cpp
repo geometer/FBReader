@@ -180,8 +180,7 @@ void NetworkBookDownloadAction::run() {
 	if (reference.isNull()) {
 		return;
 	}
-	shared_ptr<NetworkAuthenticationManager> manager = myBook.Link.authenticationManager();
-	bool result = NetworkLinkCollection::Instance().downloadBook(*reference, myFileName, manager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : manager->certificate(), new NetworkBookDownloadActionListener(this));
+	bool result = NetworkLinkCollection::Instance().downloadBook(*reference, myFileName, new NetworkBookDownloadActionListener(this));
 	if (!result) {
 		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), NetworkLinkCollection::Instance().errorMessage());
 	}

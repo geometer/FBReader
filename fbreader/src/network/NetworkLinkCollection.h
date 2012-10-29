@@ -34,8 +34,6 @@ class NetworkLink;
 class NetworkBookCollection;
 class BookReference;
 
-class ZLNetworkSSLCertificate;
-
 class NetworkLinkCollection {
 
 private:
@@ -60,7 +58,7 @@ public:
 
 	std::string bookFileName(const BookReference &reference);
 
-	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLNetworkRequest::Listener> listener);
+	bool downloadBook(const BookReference &reference, std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener);
 
 	shared_ptr<NetworkBookCollection> simpleSearch(const std::string &pattern);
 	shared_ptr<NetworkBookCollection> advancedSearch(const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation);

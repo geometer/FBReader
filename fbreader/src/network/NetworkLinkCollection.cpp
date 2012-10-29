@@ -390,7 +390,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 }
 
 
-bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLNetworkRequest::Listener> listener) {
+bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	std::string nURL = ::normalize(reference.URL);
 	rewriteUrl(nURL);
 	const std::string nNetworkBookId = ::normalize(reference.cleanURL());
@@ -419,7 +419,7 @@ bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::st
 	if (ZLFile(fileName).exists()) {
 		ZLFile(fileName).remove();
 	}
-	ZLNetworkManager::Instance().downloadFile(nURL, sslCertificate, fileName, listener);
+	ZLNetworkManager::Instance().downloadFile(nURL, fileName, listener);
 	return true;
 }
 

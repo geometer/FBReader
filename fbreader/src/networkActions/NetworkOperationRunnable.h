@@ -24,7 +24,6 @@
 
 #include <ZLRunnable.h>
 #include <ZLBoolean3.h>
-#include <ZLNetworkSSLCertificate.h>
 
 #include "../network/NetworkItems.h"
 #include "../network/NetworkBookCollection.h"

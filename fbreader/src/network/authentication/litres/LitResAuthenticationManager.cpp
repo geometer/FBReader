@@ -33,13 +33,8 @@ LitResAuthenticationManager::LitResAuthenticationManager(const NetworkLink &link
 	NetworkAuthenticationManager(link),
 	mySidChecked(false),
 	mySidUserNameOption(ZLCategoryKey::NETWORK, link.getSiteName(), "sidUserName", ""),
-	mySidOption(ZLCategoryKey::NETWORK, link.getSiteName(), "sid", ""),
-	//don't use own certificate, retrieve it automatically
-	myCertificate(ZLNetworkSSLCertificate::NULL_CERTIFICATE) {
-}
-
-const ZLNetworkSSLCertificate &LitResAuthenticationManager::certificate() {
-	return myCertificate;
+	mySidOption(ZLCategoryKey::NETWORK, link.getSiteName(), "sid", "")
+{
 }
 
 NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::isAuthorised(bool useNetwork) {
@@ -63,7 +58,7 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 
 	shared_ptr<ZLNetworkRequest> networkData =
 		ZLNetworkManager::Instance().createXMLParserRequest(
-			url, certificate(), xmlReader
+			url, xmlReader
 		);
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
@@ -95,7 +90,6 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
 	shared_ptr<ZLNetworkRequest> networkData =
 		ZLNetworkManager::Instance().createXMLParserRequest(
 			url,
-			certificate(),
 			xmlReader
 		);
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
@@ -147,7 +141,7 @@ std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &boo
 	shared_ptr<ZLXMLReader> xmlReader = new LitResPurchaseDataParser(account, bookId);
 
 	shared_ptr<ZLNetworkRequest> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		query, certificate(), xmlReader
+		query, xmlReader
 	);
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
@@ -261,7 +255,6 @@ shared_ptr<ZLNetworkRequest> LitResAuthenticationManager::loadPurchasedBooks(std
 
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::url(Link, "pages/catalit_browser/" + query),
-		certificate(),
 		new LitResBooksFeedParser(Link, purchasedBooksList)
 	);
 }
@@ -290,7 +283,6 @@ shared_ptr<ZLNetworkRequest> LitResAuthenticationManager::loadAccount(std::strin
 
 	return ZLNetworkManager::Instance().createXMLParserRequest(
 		LitResUtil::url(Link, "pages/purchase_book/" + query),
-		certificate(),
 		new LitResPurchaseDataParser(myAccount, dummy1)
 	);
 }
@@ -322,7 +314,7 @@ std::string LitResAuthenticationManager::registerUser(const std::string &login, 
 
 	shared_ptr<ZLNetworkRequest> networkData =
 		ZLNetworkManager::Instance().createXMLParserRequest(
-			url, certificate(), xmlReader
+			url, xmlReader
 		);
 	std::string error = ZLNetworkManager::Instance().perform(networkData);
 
@@ -347,7 +339,7 @@ std::string LitResAuthenticationManager::recoverPassword(const std::string &emai
 
 	shared_ptr<ZLNetworkRequest> networkData =
 		ZLNetworkManager::Instance().createXMLParserRequest(
-			url, certificate(), new LitResPasswordRecoveryDataParser()
+			url, new LitResPasswordRecoveryDataParser()
 		);
 	return ZLNetworkManager::Instance().perform(networkData);
 }
