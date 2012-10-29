@@ -85,7 +85,7 @@ void PasswordOptionEntry::onAccept(const std::string &value) {
 	myPassword = value;
 }
 
-AuthenticationDialog::AuthenticationDialog(NetworkAuthenticationManager &mgr, UserList &userList, const std::string &errorMessage, std::string &password) :
+AuthenticationDialog::AuthenticationDialog(ZLStringOption &userNameOption, UserList &userList, const std::string &errorMessage, std::string &password) :
 	myUserList(userList) {
 	myDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("AuthenticationDialog"));
 
@@ -93,7 +93,7 @@ AuthenticationDialog::AuthenticationDialog(NetworkAuthenticationManager &mgr, Us
 		myDialog->addOption("", "", new ZLSimpleStaticTextOptionEntry(errorMessage));
 	}
 
-	myDialog->addOption(ZLResourceKey("login"), new UserNamesEntry(myUserList, mgr.UserNameOption));
+	myDialog->addOption(ZLResourceKey("login"), new UserNamesEntry(myUserList, userNameOption));
 	myDialog->addOption(ZLResourceKey("password"), new PasswordOptionEntry(password));
 //	if (mgr.skipIPSupported()) {
 //		myDialog->addOption(ZLResourceKey("skipIP"), mgr.SkipIPOption);
@@ -103,8 +103,8 @@ AuthenticationDialog::AuthenticationDialog(NetworkAuthenticationManager &mgr, Us
 	myDialog->addButton(ZLDialogManager::CANCEL_BUTTON, false);
 }
 
-bool AuthenticationDialog::runDialog(NetworkAuthenticationManager &mgr, UserList &userList, const std::string &errorMessage, std::string &password) {
-	AuthenticationDialog dlg(mgr, userList, errorMessage, password);
+bool AuthenticationDialog::runDialog(ZLStringOption &userNameOption, UserList &userList, const std::string &errorMessage, std::string &password) {
+	AuthenticationDialog dlg(userNameOption, userList, errorMessage, password);
 	if (dlg.dialog().run()) {
 		dlg.dialog().acceptValues();
 		return true;
@@ -117,7 +117,7 @@ bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr) {
 	UserList userList;
 	while (true) {
 		std::string password;
-		if (!runDialog(mgr, userList, errorMessage, password)) {
+		if (!runDialog(mgr.UserNameOption, userList, errorMessage, password)) {
 			LogOutRunnable logout(mgr);
 			logout.executeWithUI();
 			return false;
@@ -150,4 +150,15 @@ bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr) {
 		userList.saveUser(mgr.currentUserName());
 		return true;
 	}
+}
+
+bool AuthenticationDialog::run(std::string &userName, std::string &password, const std::string &message) {
+	UserList userList;
+	//TODO fix it: using unexisted string option, just for dialog showing
+	ZLStringOption userNameOption(ZLCategoryKey::NETWORK, "", "userName", userName);
+	userNameOption.setValue(std::string());
+	bool result = runDialog(userNameOption, userList, message, password);
+	userName = userNameOption.value();
+	userNameOption.clearGroup("");
+	return result;
 }

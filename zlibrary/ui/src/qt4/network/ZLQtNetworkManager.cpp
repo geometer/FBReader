@@ -34,6 +34,7 @@
 
 #include <QtCore/QDebug>
 
+#include <ZLApplication.h>
 #include <ZLStringUtil.h>
 #include <ZLLogger.h>
 #include <ZLResource.h>
@@ -210,9 +211,18 @@ void ZLQtNetworkManager::onTimeOut() {
 
 void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	if (scope.authAskedAlready) {
-		return;
+	scope.timeoutTimer->stop();
+	//TODO maybe implement saving old values for userName & password
+	std::string userName;
+	std::string password;
+	bool result = ZLApplication::Instance().showAuthDialog(userName, password, scope.authAskedAlready ? ZLResourceKey("authenticationFailed") : ZLResourceKey());
+	if (result) {
+		scope.request->setupAuthentication(userName, password);
+	} else {
+		return; //message 'auth fail error' will be showed
 	}
+
+	scope.timeoutTimer->start(timeoutValue());
 	authenticator->setUser(QString::fromStdString(scope.request->userName()));
 	authenticator->setPassword(QString::fromStdString(scope.request->password()));
 	scope.authAskedAlready = true;
