@@ -50,7 +50,19 @@ private:
 	ZLTreeNode *myCurrentNode;
 };
 
-class ZLQtPageWidget : public QWidget {
+class ZLQtAbstractPageWidget : public QWidget {
+	Q_OBJECT
+public:
+	ZLQtAbstractPageWidget(QWidget *parent = 0);
+
+public Q_SLOTS:
+	void onActionActivated();
+
+protected:
+	QList<QPushButton*> myButtonActions;
+};
+
+class ZLQtPageWidget : public ZLQtAbstractPageWidget {
 
 public:
 	ZLQtPageWidget(const ZLTreePageInfo &info, QWidget *parent = 0);
@@ -73,7 +85,7 @@ private:
 };
 
 
-class ZLQtCatalogPageWidget : public QWidget {
+class ZLQtCatalogPageWidget : public ZLQtAbstractPageWidget {
 
 public:
 	ZLQtCatalogPageWidget(const ZLTreeTitledNode *node, QWidget *parent = 0);

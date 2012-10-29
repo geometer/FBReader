@@ -69,7 +69,7 @@
 		DONE загрузка книги
 		* покупка книги
 
-	** block action-button when pushed (downloading, buying, etc)
+	DONE block action-button when pushed (downloading, buying, etc)
 	** remove certificates using at all
 	** sign in into protected parts of catalogs (feedbooks, wolne lectury)
 
