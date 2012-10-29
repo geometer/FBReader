@@ -23,7 +23,6 @@
 #include <ZLNetworkRequest.h>
 #include <ZLNetworkManager.h>
 
-#include "../authentication/basic/BasicAuthenticationManager.h"
 #include "../authentication/litres/LitResAuthenticationManager.h"
 
 #include "OPDSLink_GenericFeedReader.h"
@@ -105,12 +104,8 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 		opdsLink.setAdvancedSearch(myAdvancedSearch);
 	}
 	opdsLink.setRelationAliases(myRelationAliases);
-	if (links.find(NetworkLink::URL_SIGN_IN) != links.end()) {
-		if (myAuthenticationType == "litres") {
+	if (myAuthenticationType == "litres") {
 			opdsLink.setAuthenticationManager(new LitResAuthenticationManager(*link));
-		} else {
-			opdsLink.setAuthenticationManager(new BasicAuthenticationManager(*link));
-		}
 	}
 	myLinks.push_back(link);
 }

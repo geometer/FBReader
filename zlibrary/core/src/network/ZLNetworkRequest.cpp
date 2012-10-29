@@ -24,7 +24,6 @@
 ZLNetworkRequest::ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) :
 	myURL(url),
 	mySSLCertificate(sslCertificate),
-	myAuthenticationMethod(NO_AUTH),
 	myRedirectionSupported(true) {
 	ZLLogger::Instance().println("URL", url);
 }

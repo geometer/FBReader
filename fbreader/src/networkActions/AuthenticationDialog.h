@@ -22,6 +22,8 @@
 
 #include <string>
 
+#include <ZLOptionEntry.h>
+
 #include "../network/UserList.h"
 
 class ZLDialog;
@@ -30,14 +32,15 @@ class NetworkAuthenticationManager;
 class AuthenticationDialog {
 
 private:
-	AuthenticationDialog(NetworkAuthenticationManager &mgr, UserList &userList, const std::string &errorMessage, std::string &password);
+	AuthenticationDialog(ZLStringOption &userNameOption, UserList &userList, const std::string &errorMessage, std::string &password);
 
 	ZLDialog &dialog();
 
-	static bool runDialog(NetworkAuthenticationManager &mgr, UserList &userList, const std::string &errorMessage, std::string &password);
+	static bool runDialog(ZLStringOption &userNameOption, UserList &userList, const std::string &errorMessage, std::string &password);
 
 public:
 	static bool run(NetworkAuthenticationManager &mgr);
+	static bool run(std::string &username, std::string &password, const std::string &message);
 
 private:
 	shared_ptr<ZLDialog> myDialog;

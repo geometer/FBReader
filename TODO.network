@@ -70,8 +70,9 @@
 		* покупка книги
 
 	DONE block action-button when pushed (downloading, buying, etc)
+	DONE sign in into protected parts of catalogs (feedbooks, wolne lectury)
 	** remove certificates using at all
-	** sign in into protected parts of catalogs (feedbooks, wolne lectury)
+	** don't make cover in list widget item bigger, if it less than 77/77 px size
 
 	** implement async sign in/out operations
 	** implement async buying of book
