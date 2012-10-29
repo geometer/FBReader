@@ -160,7 +160,7 @@ void ZLQtTreeItem::fillImage() {
 	}
 	shared_ptr<const ZLImage> image = myNode->image();
 	if (!image.isNull()) {
-		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmapWithSize(image, QSize(ITEM_SIZE,ITEM_SIZE), Qt::SmoothTransformation);
+		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmapWithSize(image, QSize(ITEM_SIZE,ITEM_SIZE), false, Qt::SmoothTransformation);
 		if (!pixmap.isNull()) {
 			myIcon->setPixmap(pixmap);
 		}
