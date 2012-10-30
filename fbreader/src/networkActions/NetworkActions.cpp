@@ -24,6 +24,7 @@
 #include <ZLNetworkRequest.h>
 
 #include "../network/NetworkLinkCollection.h"
+#include "../network/NetworkErrors.h"
 #include "NetworkActions.h"
 #include "AuthenticationDialog.h"
 #include "NetworkOperationRunnable.h"
@@ -182,13 +183,13 @@ void NetworkBookDownloadAction::run() {
 	}
 	bool result = NetworkLinkCollection::Instance().downloadBook(*reference, myFileName, new NetworkBookDownloadActionListener(this));
 	if (!result) {
-		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), NetworkLinkCollection::Instance().errorMessage());
+		NetworkErrors::showErrorMessage(NetworkLinkCollection::Instance().errorMessage());
 	}
 }
 
 void NetworkBookDownloadAction::onBookDownloaded(const std::string &error) {
 	if (!error.empty()) {
-		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), error);
+		NetworkErrors::showErrorMessage(error);
 	}
 	FBReader &fbreader = FBReader::Instance();
 	shared_ptr<Book> downloaderBook;

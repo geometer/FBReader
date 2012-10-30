@@ -82,6 +82,7 @@
 	** partial catalogs loading (first 20 books only)
 
 	?? add selected item to history
+	** implement a way to show network items as they're loading from the network (until others are not loaded yet)
 	** BUG: when pressing buy&download, app crashes
 	?? implement progress showing for book downloading like a progress bar
 	** BUG: at litres "popular books" there's no waiting icon! (looks like this widget doesn't appears because of too long title)

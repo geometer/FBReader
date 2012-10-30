@@ -50,6 +50,7 @@ class AllCatalogsSearchItem : public NetworkCatalogItem {
 public:
 	AllCatalogsSearchItem(const NetworkLink &link, const std::string &pattern);
 	std::string loadChildren(List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
+	void onChildrenLoaded(List &children, shared_ptr<NetworkBookCollection> collection, shared_ptr<ZLNetworkRequest::Listener> listener);
 
 private:
 	std::string myPattern;

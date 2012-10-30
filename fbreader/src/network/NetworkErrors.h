@@ -52,6 +52,7 @@ public:
 public:
 	static std::string errorMessage(const std::string &error);
 	static std::string errorMessage(const std::string &error, const std::string &arg0);
+	static void showErrorMessage(const std::string &error);
 };
 
 #endif /* __NETWORKERRORS_H__ */

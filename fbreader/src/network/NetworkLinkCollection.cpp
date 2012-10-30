@@ -214,7 +214,7 @@ void NetworkLinkCollection::synchronize() {
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {
 	shared_ptr<ZLFile> genericFile = getGenericFile(genericUrl);
 	if (genericFile.isNull()) {
-		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"),	NetworkErrors::errorMessage(NetworkErrors::ERROR_CANT_DOWNLOAD_LIBRARIES_LIST));
+		NetworkErrors::showErrorMessage(NetworkErrors::errorMessage(NetworkErrors::ERROR_CANT_DOWNLOAD_LIBRARIES_LIST));
 		return;
 	}
 

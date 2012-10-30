@@ -286,6 +286,7 @@ void ZLQtNetworkManager::onSslErrors(const QList<QSslError> &errors) {
 
 void ZLQtNetworkManager::handleHeaders(QNetworkReply *reply) const {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	//TODO set HTTP header not with predefined information (like line below)
 	QByteArray data = "HTTP/1.1 ";
 	data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
 	data += " ";
@@ -318,6 +319,7 @@ QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) {
 	if (reply->error() == QNetworkReply::NoError) {
 		return QString();
 	}
+	ZLLogger::Instance().println("network", QString("handleErrors: %1. Qt code: %2, url: %3").arg(reply->errorString()).arg(reply->error()).arg(reply->url().toString()).toStdString());
 	std::string error;
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 	switch (reply->error()) {
@@ -339,6 +341,8 @@ QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) {
 			error = ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), reply->url().toString().toStdString());
 			break;
 		case QNetworkReply::UnknownNetworkError:
+			error = QString("%1: %2").arg(reply->url().host()).arg(reply->errorString()).toStdString(); //TODO maybe host information is excess
+			break;
 		case QNetworkReply::UnknownProxyError:
 		case QNetworkReply::UnknownContentError:
 		case QNetworkReply::ProtocolUnknownError:
