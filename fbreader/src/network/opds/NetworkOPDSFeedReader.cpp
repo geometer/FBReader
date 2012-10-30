@@ -54,7 +54,7 @@ void NetworkOPDSFeedReader::processFeedStart() {
 void NetworkOPDSFeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed) {
 	for (size_t i = 0; i < feed->links().size(); ++i) {
 		ATOMLink &link = *(feed->links()[i]);
-		const std::string &href = link.href();
+		const std::string &href = ZLNetworkUtil::url(myBaseURL, link.href());
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
 		const std::string &rel = myLink.relation(link.rel(), link.type());
 		if (type->weakEquals(*ZLMimeType::APPLICATION_ATOM_XML)) {
