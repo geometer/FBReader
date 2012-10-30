@@ -76,6 +76,7 @@ private Q_SLOTS:
 	void onNodeDoubleClicked(ZLQtTreeItem* item);
 	void onBackButton();
 	void onForwardButton();
+	void onSearchField();
 
 
 private:

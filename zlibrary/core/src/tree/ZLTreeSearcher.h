@@ -17,33 +17,14 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLTREEDIALOG_H__
-#define __ZLTREEDIALOG_H__
+#ifndef __ZLTREESEARCHER_H__
+#define __ZLTREESEARCHER_H__
 
-#include <ZLTreeListener.h>
-#include <ZLResource.h>
-#include <ZLTreeSearcher.h>
+#include <string>
 
-class ZLTreeDialog : public ZLTreeListener {
-
-protected:
-	ZLTreeDialog(const ZLResource &resource);
-
+class ZLTreeSearcher {
 public:
-	//TODO maybe run() should return an integer?
-	virtual void run(ZLTreeNode *rootNode) = 0;
-
-public:
-	void setSearcher(shared_ptr<ZLTreeSearcher> searcher);
-
-protected:
-	const ZLResource &resource() const;
-
-protected:
-	shared_ptr<ZLTreeSearcher> mySearcher;
-
-private:
-	const ZLResource &myResource;
+	virtual void simpleSearch(const std::string &pattern) = 0;
 };
 
-#endif /* __ZLTREEDIALOG_H__ */
+#endif /* __ZLTREESEARCHER_H__ */

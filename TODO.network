@@ -72,10 +72,11 @@
 		DONE загрузка книги
 		* покупка книги
 
+	DONE implement async simple search by all catalogs
 	** implement async sign in/out operations
 	** implement async buying of book
 	** generic.xml async loading
-	** implement async simple search
+	** implement async simple search by one catalog
 
 	** implement async full information loading
 	** partial catalogs loading (first 20 books only)
