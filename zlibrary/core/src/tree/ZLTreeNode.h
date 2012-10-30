@@ -100,6 +100,9 @@ public:
 	void notifyDownloadStarted();
 	void notifyDownloadStopped();
 
+	void notifySearchStarted();
+	void notifySearchStopped();
+
 protected:
 	size_t level() const;
 

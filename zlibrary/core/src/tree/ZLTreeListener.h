@@ -40,6 +40,9 @@ public:
 	virtual void onDownloadingStarted(ZLTreeNode *node) = 0;
 	virtual void onDownloadingStopped(ZLTreeNode *node) = 0;
 
+	virtual void onSearchStarted(ZLTreeNode *node) = 0;
+	virtual void onSearchStopped(ZLTreeNode *node) = 0;
+
 	virtual void onRefresh() = 0;
 };
 

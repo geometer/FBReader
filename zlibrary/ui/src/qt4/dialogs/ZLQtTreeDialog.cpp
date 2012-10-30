@@ -46,14 +46,10 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	myPreviewWidget = new ZLQtPreviewWidget;
 	myBackButton = new ZLQtIconButton("back_button.png", "back_button_disabled.png");
 	myForwardButton = new ZLQtIconButton("forward_button.png", "forward_button_disabled.png");
-	mySearchField = new QLineEdit;
+	mySearchField = new ZLQtSearchField;
 
 	myBackButton->setAutoDefault(false);
 	myForwardButton->setAutoDefault(false);
-
-	mySearchField->setPlaceholderText("type to search..."); // TODO add to resources;
-	//mySearchField->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-	mySearchField->setFixedWidth(150);
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	QHBoxLayout *panelLayout = new QHBoxLayout;
@@ -182,6 +178,15 @@ void ZLQtTreeDialog::onDownloadingStarted(ZLTreeNode *node) {
 void ZLQtTreeDialog::onDownloadingStopped(ZLTreeNode *node) {
 	myDownloadingNodes.remove(node);
 	updateWaitingIcons();
+}
+
+void ZLQtTreeDialog::onSearchStarted(ZLTreeNode */*node*/) {
+	//TODO what in case if different searches started or stopped?
+	mySearchField->getWaitingIcon()->start();
+}
+
+void ZLQtTreeDialog::onSearchStopped(ZLTreeNode */*node*/) {
+	mySearchField->getWaitingIcon()->finish();
 }
 
 void ZLQtTreeDialog::onRefresh() {

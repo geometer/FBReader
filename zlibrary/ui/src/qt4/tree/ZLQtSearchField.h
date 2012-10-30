@@ -17,25 +17,27 @@
  * 02110-1301, USA.
  */
 
-#include "NetworkTreeNodes.h"
+#ifndef __ZLQTSEARCHFIELD_H__
+#define __ZLQTSEARCHFIELD_H__
 
-const ZLTypeId SearchCatalogTree::TYPE_ID(NetworkCatalogTree::TYPE_ID);
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
 
-const ZLTypeId &SearchCatalogTree::typeId() const {
-	return TYPE_ID;
-}
+#include "ZLQtItemsListWidget.h"
 
-SearchCatalogTree::SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position) :
-	NetworkCatalogTree(parent, item, position) {
-	//TODO maybe remove this class
-}
+class ZLQtSearchField : public QLineEdit {
 
-void SearchCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
-	notifySearchStarted();
-	NetworkCatalogTree::requestChildren(listener);
-}
+public:	
+	ZLQtSearchField(QWidget *parent = 0);
+	ZLQtWaitingIcon *getWaitingIcon();
 
-void SearchCatalogTree::onChildrenReceived(const std::string &error) {
-	notifySearchStopped();
-	NetworkCatalogTree::onChildrenReceived(error);
-}
+protected:
+	void resizeEvent(QResizeEvent *ev);
+
+private:
+	QLabel *mySearchIcon;
+	ZLQtWaitingIcon *myWaitingIcon;
+
+};
+
+#endif /* __ZLQTSEARCHFIELD_H__ */

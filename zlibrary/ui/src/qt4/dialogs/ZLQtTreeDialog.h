@@ -34,6 +34,7 @@
 
 #include "../tree/ZLQtItemsListWidget.h"
 #include "../tree/ZLQtPreviewWidget.h"
+#include "../tree/ZLQtSearchField.h"
 
 class ZLQtIconButton;
 
@@ -61,6 +62,9 @@ public: //listener methods
 	void onDownloadingStarted(ZLTreeNode *node);
 	void onDownloadingStopped(ZLTreeNode *node);
 
+	void onSearchStarted(ZLTreeNode *node);
+	void onSearchStopped(ZLTreeNode *node);
+
 	void onRefresh();
 
 public:
@@ -85,7 +89,7 @@ private:
 private:
 	ZLQtIconButton *myBackButton;
 	ZLQtIconButton *myForwardButton;
-	QLineEdit *mySearchField;
+	ZLQtSearchField *mySearchField;
 //	QScrollArea *myScrollArea;
 	ZLQtItemsListWidget *myListWidget;
 	ZLQtPreviewWidget *myPreviewWidget;

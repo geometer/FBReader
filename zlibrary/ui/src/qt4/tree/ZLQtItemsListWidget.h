@@ -97,7 +97,7 @@ class ZLQtWaitingIcon : public QLabel {
 	Q_OBJECT
 
 public:
-	ZLQtWaitingIcon(QWidget* parent=0);
+	ZLQtWaitingIcon(QSize iconSize = QSize(35,35), QWidget* parent=0);
 
 public Q_SLOTS:
 	void start();

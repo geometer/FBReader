@@ -272,16 +272,16 @@ void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
 
 }
 
-ZLQtWaitingIcon::ZLQtWaitingIcon(QWidget* parent) : QLabel(parent), myAngle(0) {
+ZLQtWaitingIcon::ZLQtWaitingIcon(QSize iconSize, QWidget* parent) : QLabel(parent), myAngle(0) {
 	//TODO maybe replace to QMovie class using
-	const int ICON_WIDTH = 35;
-	const int ICON_HEIGHT = ICON_WIDTH;
+	const int iconWidth = iconSize.width();
+	const int iconHeight = iconSize.height();
 	static std::string iconPath = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + "refresh-icon.svg";
 	//qDebug() << "LoadingIcon" << iconFile;
 	myTimer = new QTimer(this);
 	//TODO make pixmap as static
 	myPixmap = QPixmap(ZLFile(iconPath).path().c_str());
-	myPixmap = myPixmap.scaled(QSize(ICON_WIDTH, ICON_HEIGHT), Qt::KeepAspectRatio, Qt::FastTransformation);
+	myPixmap = myPixmap.scaled(QSize(iconWidth, iconHeight), Qt::KeepAspectRatio, Qt::FastTransformation);
 	this->setFixedSize(myPixmap.size());
 	connect(myTimer,SIGNAL(timeout()), this, SLOT(rotate()));
 	this->hide();
