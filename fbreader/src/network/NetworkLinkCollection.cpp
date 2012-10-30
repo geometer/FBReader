@@ -513,6 +513,17 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 	return result;
 }
 
+NetworkLinkCollection::LinkVector NetworkLinkCollection::activeLinks() const {
+	LinkVector filteredList;
+	for (size_t i = 0; i < myLinks.size(); ++i) {
+		shared_ptr<NetworkLink> link = myLinks.at(i);
+		if (link->isEnabled()) {
+			filteredList.push_back(link);
+		}
+	}
+	return filteredList;
+}
+
 size_t NetworkLinkCollection::size() const {
 	return myLinks.size();
 }

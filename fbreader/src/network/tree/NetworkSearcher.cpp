@@ -17,10 +17,13 @@
  * 02110-1301, USA.
  */
 
+#include <ZLNetworkManager.h>
+
 #include "../authentication/NetworkAuthenticationManager.h"
 #include "../../networkActions/NetworkOperationRunnable.h"
 #include "../NetworkLinkCollection.h"
 #include "../NetworkLink.h"
+#include "../NetworkOperationData.h"
 #include "NetworkTreeNodes.h"
 #include "NetworkLibrary.h"
 #include "NetworkSearcher.h"
@@ -41,11 +44,45 @@ AllCatalogsSearchItem::AllCatalogsSearchItem(const NetworkLink &link, const std:
 }
 
 std::string AllCatalogsSearchItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
-	shared_ptr<NetworkBookCollection> result = NetworkLinkCollection::Instance().simpleSearch(myPattern);
-	//TODO implement NetworkLinkCollection::Instance().errorMessage() handling
+	shared_ptr<NetworkBookCollection> collection = new NetworkBookCollection; //TODO maybe remove this class using
+
+	ZLNetworkRequest::Vector requestList;
+	std::vector<shared_ptr<NetworkOperationData> > dataList;
+
+	const NetworkLinkCollection::LinkVector &links = NetworkLinkCollection::Instance().activeLinks();
+	for (size_t i = 0; i < links.size(); ++i) {
+		const NetworkLink &link = *links.at(i);
+		shared_ptr<NetworkOperationData> data = new NetworkOperationData(link);
+
+		shared_ptr<ZLNetworkRequest> request = link.simpleSearchData(*data, myPattern);
+		if (!request.isNull()) {
+			dataList.push_back(data);
+			requestList.push_back(request);
+		}
+	}
+
+	std::string errorMessage;
+	while (errorMessage.empty() && !requestList.empty()) {
+		//TODO reimplement resume() using
+		errorMessage = ZLNetworkManager::Instance().perform(requestList);
+		requestList.clear();
+		for (size_t i = 0; i < dataList.size(); ++i) {
+			shared_ptr<NetworkOperationData> data = dataList.at(i);
+			for (size_t j = 0; j < data->Items.size(); ++j) {
+				collection->addBook(data->Items.at(j));
+			}
+
+			shared_ptr<ZLNetworkRequest> request = data->resume();
+			if (!request.isNull()) {
+				requestList.push_back(request);
+			}
+		}
+	}
+
+	//TODO implement errorMessage handling
 	//TODO implement UI showing of loading
-	if (!result.isNull()) {
-		const NetworkItem::List &books = result->books();
+	if (!collection.isNull()) {
+		const NetworkItem::List &books = collection->books();
 		children.assign(books.begin(), books.end());
 	}
 	listener->finished(); //TODO implement real async behaviour
