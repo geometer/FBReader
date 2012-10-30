@@ -45,12 +45,14 @@ private:
 	const FakeNetworkLink myFakeLink;
 };
 
-class SearchItem : public NetworkCatalogItem {
+class AllCatalogsSearchItem : public NetworkCatalogItem {
+
 public:
-	SearchItem(const NetworkLink &link, shared_ptr<NetworkBookCollection> collection);
+	AllCatalogsSearchItem(const NetworkLink &link, const std::string &pattern);
 	std::string loadChildren(List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
+
 private:
-	shared_ptr<NetworkBookCollection> myCollection;
+	std::string myPattern;
 };
 
 #endif /* __NETWORKSEARCHER_H__ */

@@ -129,6 +129,18 @@ private:
 	NetworkLink &myLink;
 };
 
+class SearchCatalogTree : public NetworkCatalogTree {
+
+public:
+	static const ZLTypeId TYPE_ID;
+
+private:
+	const ZLTypeId &typeId() const;
+
+public:
+	SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
+};
+
 class NetworkAuthorTree : public NetworkTree {
 
 public:
@@ -249,7 +261,5 @@ private:
 	SummaryType mySummaryType;
 	mutable shared_ptr<const ZLImage> myImage;
 };
-
-
 
 #endif /* __NETWORKTREENODES_H__ */

@@ -31,26 +31,24 @@ NetworkSearcher::NetworkSearcher() { }
 
 void NetworkSearcher::simpleSearch(const std::string &pattern) {
 	//TODO maybe move code for simple search from NetworkLinkCollection to here
-
-	SimpleSearchRunnable runnable(pattern);
-	runnable.executeWithUI();
-	runnable.showErrorMessage();
-	shared_ptr<NetworkBookCollection> result = runnable.result();
-	if (!result.isNull()) {
-		NetworkCatalogTree *tree = new NetworkCatalogTree(&NetworkLibrary::Instance().getFakeCatalogTree(), new SearchItem(myFakeLink, result));
-		tree->expand();
-	}
+	NetworkCatalogTree *tree = new SearchCatalogTree(&NetworkLibrary::Instance().getFakeCatalogTree(), new AllCatalogsSearchItem(myFakeLink, pattern));
+	tree->expand();
 }
 
-SearchItem::SearchItem(const NetworkLink &link, shared_ptr<NetworkBookCollection> collection) :
+AllCatalogsSearchItem::AllCatalogsSearchItem(const NetworkLink &link, const std::string &pattern) :
 	NetworkCatalogItem(link, std::string(), std::string(), UrlInfoCollection()),
-	myCollection(collection) {
+	myPattern(pattern) {
 }
 
-std::string SearchItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
-	const NetworkItem::List &books = myCollection->books();
-	children.assign(books.begin(), books.end());
-	listener->finished();
+std::string AllCatalogsSearchItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
+	shared_ptr<NetworkBookCollection> result = NetworkLinkCollection::Instance().simpleSearch(myPattern);
+	//TODO implement NetworkLinkCollection::Instance().errorMessage() handling
+	//TODO implement UI showing of loading
+	if (!result.isNull()) {
+		const NetworkItem::List &books = result->books();
+		children.assign(books.begin(), books.end());
+	}
+	listener->finished(); //TODO implement real async behaviour
 	return std::string();
 }
 
