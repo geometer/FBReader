@@ -47,6 +47,9 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	myForwardButton = new ZLQtIconButton("forward_button.png", "forward_button_disabled.png");
 	mySearchField = new QLineEdit;
 
+	myBackButton->setAutoDefault(false);
+	myForwardButton->setAutoDefault(false);
+
 	mySearchField->setPlaceholderText("type to search..."); // TODO add to resources;
 	//mySearchField->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
 	mySearchField->setFixedWidth(150);
@@ -76,6 +79,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	connect(myListWidget, SIGNAL(nodeDoubleClicked(const ZLTreeNode*)), this, SLOT(onNodeDoubleClicked(const ZLTreeNode*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
 	connect(myForwardButton, SIGNAL(clicked()), this, SLOT(onForwardButton()));
+	connect(mySearchField, SIGNAL(returnPressed()), this, SLOT(onSearchField()));
 }
 
 void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
@@ -175,6 +179,16 @@ void ZLQtTreeDialog::onForwardButton() {
 	myBackHistory.push(myForwardHistory.pop());
 	myListWidget->fillNodes(myBackHistory.top());
 	updateAll();
+}
+
+void ZLQtTreeDialog::onSearchField() {
+	if (mySearcher.isNull()) {
+		return;
+	}
+	if (mySearchField->text().isEmpty()) {
+		return;
+	}
+	mySearcher->simpleSearch(mySearchField->text().toStdString());
 }
 
 ZLQtIconButton::ZLQtIconButton(const std::string &iconEnabled, const std::string &iconDisabled, QWidget *parent) : QPushButton(parent) {

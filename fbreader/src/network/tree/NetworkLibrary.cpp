@@ -29,7 +29,7 @@
 #include "../SearchResult.h"
 #include "../authentication/NetworkAuthenticationManager.h"
 #include "../../networkActions/NetworkOperationRunnable.h"
-
+#include "NetworkSearcher.h"
 #include "NetworkTreeNodes.h"
 
 #include "NetworkLibrary.h"
@@ -53,6 +53,7 @@ NetworkLibrary::NetworkLibrary() {
 void NetworkLibrary::showDialog() {
 	makeUpToDate();
 	myDialog->run(&myRootTree);
+	myDialog->setSearcher(new NetworkSearcher);
 }
 
 void NetworkLibrary::makeUpToDate() {
