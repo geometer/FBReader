@@ -31,25 +31,25 @@ NetworkSearcher::NetworkSearcher() { }
 
 void NetworkSearcher::simpleSearch(const std::string &pattern) {
 	//TODO maybe move code for simple search from NetworkLinkCollection to here
+	NetworkCatalogTree *tree = new SearchCatalogTree(&NetworkLibrary::Instance().getFakeCatalogTree(), new AllCatalogsSearchItem(myFakeLink, pattern));
+	tree->expand();
+}
 
-	SimpleSearchRunnable runnable(pattern);
+AllCatalogsSearchItem::AllCatalogsSearchItem(const NetworkLink &link, const std::string &pattern) :
+	NetworkCatalogItem(link, std::string(), std::string(), UrlInfoCollection()),
+	myPattern(pattern) {
+}
+
+std::string AllCatalogsSearchItem::loadChildren(NetworkItem::List &children) {
+	SimpleSearchRunnable runnable(myPattern);
 	runnable.executeWithUI();
 	runnable.showErrorMessage();
+
 	shared_ptr<NetworkBookCollection> result = runnable.result();
 	if (!result.isNull()) {
-		NetworkCatalogTree *tree = new NetworkCatalogTree(&NetworkLibrary::Instance().getFakeCatalogTree(), new SearchItem(myFakeLink, result));
-		tree->expand();
+		const NetworkItem::List &books = result->books();
+		children.assign(books.begin(), books.end());
 	}
-}
-
-SearchItem::SearchItem(const NetworkLink &link, shared_ptr<NetworkBookCollection> collection) :
-	NetworkCatalogItem(link, std::string(), std::string(), UrlInfoCollection()),
-	myCollection(collection) {
-}
-
-std::string SearchItem::loadChildren(NetworkItem::List &children) {
-	const NetworkItem::List &books = myCollection->books();
-	children.assign(books.begin(), books.end());
 	return std::string();
 }
 
