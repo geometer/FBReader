@@ -66,7 +66,7 @@
 	DONE implement async simple search by all catalogs
 
 	** "standard search look" for search field
-		*** use external css file
+		DONE use external css file
 		*** use native highlighting
 		*** move magnifier icon at right position
 		*** better wait icon (maybe spinner.gif?)
@@ -77,11 +77,13 @@
 		*** for OPDS
 		*** for litres
 
-	** implement waiting icon for related action items
-	** use gif or set of pngs for Waiting Icon instead of vector svg icon
 	** implement async sign in/out operations
 	** implement async buying of book
 	** generic.xml async loading
+	
+
+	** implement waiting icon for related action items
+	** use gif or set of pngs for Waiting Icon instead of vector svg icon
 	** implement async simple search by one catalog
 
 	?? add selected item to history

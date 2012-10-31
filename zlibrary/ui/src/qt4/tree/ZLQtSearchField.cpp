@@ -28,6 +28,8 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 	//TODO somehow make it feathered
 	//TODO set active and non-active color by default of system
 
+	setObjectName("search-field");
+
 	myWaitingIcon = new ZLQtWaitingIcon(QSize(22,22), this);
 
 	mySearchIcon = new QLabel(this);
@@ -42,9 +44,8 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 
 	int frameWidth = 2;
 
-	//TODO make external css file
-	setStyleSheet(QString("QLineEdit:focus { border-style: solid; border-width: 2px; border-radius: 12px; border-color: #6F9FCF} ") +
-				  QString("QLineEdit { border-style: solid; border-width: 1px; border-radius: 12px; border-color: #8D8D8D}") +
+	setStyleSheet(QString("QLineEdit:focus { border-color: #6F9FCF } ") +
+				  QString("QLineEdit { border-color: #8D8D8D}") +
 				  QString("QLineEdit { padding-left: %1px; } ").arg(mySearchIcon->sizeHint().width() + frameWidth + 1));
 
 }

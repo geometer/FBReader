@@ -1,0 +1,12 @@
+QLineEdit:focus#search-field { 
+	border-style: solid;
+	border-width: 2px; 
+	border-radius: 12px; 
+}
+
+QLineEdit#search-field { 
+	border-style: solid; 
+	border-width: 1px; 
+	border-radius: 12px; 
+}
+

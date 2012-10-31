@@ -19,6 +19,7 @@
 
 #include <QtGui/QApplication>
 #include <QtCore/QTextCodec>
+#include <QtCore/QFile>
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
@@ -41,6 +42,7 @@ class ZLQtLibraryImplementation : public ZLibraryImplementation {
 
 private:
 	void init(int &argc, char **&argv);
+	void setStylesheet(const std::string &filename);
 	ZLPaintContext *createContext();
 	void run(ZLApplication *application);
 };
@@ -65,7 +67,16 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 	ZLEncodingCollection::Instance().registerProvider(new IConvEncodingConverterProvider());
 	ZLQtNetworkManager::createInstance();
 
+	setStylesheet("style.qss");
 	ZLKeyUtil::setKeyNamesFileName("keynames-qt4.xml");
+}
+
+void ZLQtLibraryImplementation::setStylesheet(const std::string &filename) {
+	static const std::string stylesheetPath = ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + filename;
+	QFile file(QString::fromStdString(ZLFile(stylesheetPath).path()));
+	file.open(QFile::ReadOnly);
+	QString styleSheet = QLatin1String(file.readAll());
+	qApp->setStyleSheet(styleSheet);
 }
 
 ZLPaintContext *ZLQtLibraryImplementation::createContext() {
