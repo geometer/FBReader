@@ -18,6 +18,7 @@
  */
 
 #include <QtCore/QDebug>
+#include <QtGui/QStyle>
 
 #include <ZLibrary.h>
 #include <ZLFile.h>
@@ -38,13 +39,13 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 	mySearchIcon->setPixmap(searchIcon);
 	mySearchIcon->setFixedSize(searchIcon.size());
 
-	setFixedHeight(25);
-	setFixedWidth(155);
+	setFixedSize(155,25);
+
 	setPlaceholderText("type to search..."); // TODO add to resources;
 
-	int frameWidth = 2;
+	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
 
-	setStyleSheet(QString("QLineEdit { padding-left: %1px; } ").arg(mySearchIcon->sizeHint().width() + frameWidth + 1));
+	setStyleSheet(QString("QLineEdit { padding-left: %1px; } ").arg(mySearchIcon->sizeHint().width() + frameWidth));
 
 }
 
@@ -53,10 +54,10 @@ ZLQtWaitingIcon *ZLQtSearchField::getWaitingIcon() {
 }
 
 void ZLQtSearchField::resizeEvent(QResizeEvent *ev) {
-	int frameWidth = 2;
-	mySearchIcon->move(rect().left() + frameWidth + 3, (rect().bottom() - mySearchIcon->sizeHint().height())/2 + 3);
+	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
+	mySearchIcon->move(rect().left() + frameWidth + 4, (rect().bottom() - mySearchIcon->sizeHint().height())/2 + 2);
 
-	QSize sz = myWaitingIcon->sizeHint();
-	myWaitingIcon->move(rect().right() - frameWidth - sz.width() - 2, (rect().bottom() + 1 - sz.height())/2);
+	QSize waitingIconSize = myWaitingIcon->size();
+	myWaitingIcon->move(rect().right() - frameWidth - waitingIconSize.width() - 2, (rect().bottom() + 1 - waitingIconSize.height())/2);
 	QLineEdit::resizeEvent(ev);
 }
