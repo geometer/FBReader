@@ -31,7 +31,7 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 
 	setObjectName("search-field");
 
-	myWaitingIcon = new ZLQtWaitingIcon(QSize(22,22), this);
+	myWaitingIcon = new ZLQtWaitingIconGif("spinner.gif", QSize(16,16), this);
 
 	mySearchIcon = new QLabel(this);
 	static std::string iconPath = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + "search_icon.png";

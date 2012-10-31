@@ -17,28 +17,53 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLQTSEARCHFIELD_H__
-#define __ZLQTSEARCHFIELD_H__
+#ifndef __ZLQTWAITINGICONS_H__
+#define __ZLQTWAITINGICONS_H__
 
+#include <QtCore/QTimer>
 #include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
+#include <QtGui/QMovie>
 
-#include "ZLQtWaitingIcons.h"
-#include "ZLQtItemsListWidget.h"
+class ZLQtWaitingIcon : public QLabel {
 
-class ZLQtSearchField : public QLineEdit {
+public:
+	ZLQtWaitingIcon(QWidget* parent = 0);
 
-public:	
-	ZLQtSearchField(QWidget *parent = 0);
-	ZLQtWaitingIcon *getWaitingIcon();
-
-protected:
-	void resizeEvent(QResizeEvent *ev);
-
-private:
-	QLabel *mySearchIcon;
-	ZLQtWaitingIcon *myWaitingIcon;
-
+public:
+	virtual void start() = 0;
+	virtual void finish() = 0;
 };
 
-#endif /* __ZLQTSEARCHFIELD_H__ */
+class ZLQtWaitingIconSelfRotating : public ZLQtWaitingIcon {
+	Q_OBJECT
+
+public:
+	ZLQtWaitingIconSelfRotating(QSize iconSize = QSize(35,35), QWidget* parent = 0);
+
+public Q_SLOTS:
+	void start();
+	void finish();
+
+private Q_SLOTS:
+	void rotate();
+
+private:
+	int myAngle;
+	QPixmap myPixmap;
+	QTimer* myTimer;
+};
+
+class ZLQtWaitingIconGif : public ZLQtWaitingIcon {
+	Q_OBJECT
+
+public:
+	ZLQtWaitingIconGif(std::string filename, QSize iconSize, QWidget* parent = 0);
+
+public Q_SLOTS:
+	void start();
+	void finish();
+
+private:
+	QMovie* myMovie;
+};
+#endif /* __ZLQTWAITINGICONS_H__ */

@@ -72,7 +72,7 @@ void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
 }
 
 void ZLQtLibraryImplementation::setStylesheet(const std::string &filename) {
-	static const std::string stylesheetPath = ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + filename;
+	const std::string stylesheetPath = ZLibrary::ZLibraryDirectory() + ZLibrary::FileNameDelimiter + filename;
 	QFile file(QString::fromStdString(ZLFile(stylesheetPath).path()));
 	file.open(QFile::ReadOnly);
 	QString styleSheet = QLatin1String(file.readAll());

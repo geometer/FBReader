@@ -118,7 +118,7 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 	myTitle = new QLabel;
 	mySubtitle = new QLabel;
 
-	myWaitingIcon = new ZLQtWaitingIcon;
+	myWaitingIcon = new ZLQtWaitingIconSelfRotating;
 	myWaitingIcon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
 	myTitle->setWordWrap(true);
@@ -270,61 +270,4 @@ void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
 //	painter.setPen(shadowUpColor);
 	//	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
 
-}
-
-ZLQtWaitingIcon::ZLQtWaitingIcon(QSize iconSize, QWidget* parent) : QLabel(parent), myAngle(0) {
-	//TODO maybe replace to QMovie class using
-	const int iconWidth = iconSize.width();
-	const int iconHeight = iconSize.height();
-	static std::string iconPath = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + "refresh-icon.svg";
-	//qDebug() << "LoadingIcon" << iconFile;
-	myTimer = new QTimer(this);
-	//TODO make pixmap as static
-	myPixmap = QPixmap(ZLFile(iconPath).path().c_str());
-	myPixmap = myPixmap.scaled(QSize(iconWidth, iconHeight), Qt::KeepAspectRatio, Qt::FastTransformation);
-	this->setFixedSize(myPixmap.size());
-	connect(myTimer,SIGNAL(timeout()), this, SLOT(rotate()));
-	this->hide();
-}
-
-//class ZLQtWaitingIconListener : public ZLNetworkRequest::Listener {
-//public:
-//	ZLQtWaitingIconListener(ZLQtWaitingIcon *waitingIcon) : myWaitingIcon(waitingIcon) {}
-//	void finished(const std::string &/*error*/) {
-//		myWaitingIcon->finish();
-//	}
-//private:
-//	ZLQtWaitingIcon *myWaitingIcon;
-//};
-
-void ZLQtWaitingIcon::start() {
-	this->show();
-	const int REFRESH_TIME = 100;
-	myTimer->start(REFRESH_TIME);
-}
-
-void ZLQtWaitingIcon::finish() {
-	//qDebug() << Q_FUNC_INFO;
-	myTimer->stop();
-	this->hide();
-}
-
-void ZLQtWaitingIcon::rotate() {
-	//qDebug() << this->size();
-	const int ANGLE_SPEED = 360/10;
-	myAngle += ANGLE_SPEED;
-	if (myAngle >= 360) {
-		myAngle -= 360;
-	}
-	QPixmap tmpPixmap(myPixmap.size());
-	tmpPixmap.fill(Qt::transparent);
-	QPainter painter(&tmpPixmap);
-	painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
-	painter.translate(myPixmap.width()/2,myPixmap.height()/2);
-	painter.rotate(qreal(myAngle));
-	painter.translate(-myPixmap.width()/2,-myPixmap.height()/2);
-	painter.drawPixmap(0,0,myPixmap);
-	painter.end();
-	this->setPixmap(tmpPixmap);
-	QWidget::raise();
 }
