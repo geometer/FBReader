@@ -325,6 +325,7 @@ void NetworkBookBuyInBrowserAction::run() {
 	if (!reference.isNull()) {
 		FBReader::Instance().openLinkInBrowser(reference->URL);
 	}
+	NetworkLibrary::Instance().refresh();
 }
 
 NetworkBookDeleteAction::NetworkBookDeleteAction(const NetworkBookItem &book) : myBook(book) {

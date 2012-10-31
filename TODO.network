@@ -65,28 +65,29 @@
 	DONE remove certificates using at all
 	DONE implement async simple search by all catalogs
 
-	* асинхронная работа с сетью:
-		* загрузка списка библиотек с сервера
-		* загрузка картинок
-		DONE загрузка подэлементов пункта
-		* подстраничка подгрузки данных
-		DONE загрузка книги
-		* покупка книги
-
 	** "standard search look" for search field
-	** implement waiting icon for related action items
-	** use gif or set of pngs for Waiting Icon
+		*** use external css file
+		*** use native highlighting
+		*** move magnifier icon at right position
+		*** better wait icon (maybe spinner.gif?)
+		*** how to do a search cancel? what will be if another text will be entered during search?
 
+	** implement async full information loading
+	** partial catalogs loading (first 20 books only)
+		*** for OPDS
+		*** for litres
+
+	** implement waiting icon for related action items
+	** use gif or set of pngs for Waiting Icon instead of vector svg icon
 	** implement async sign in/out operations
 	** implement async buying of book
 	** generic.xml async loading
 	** implement async simple search by one catalog
-	** implement async full information loading
-	** partial catalogs loading (first 20 books only)
 
 	?? add selected item to history
 	** implement a way to show network items as they're loading from the network (until others are not loaded yet)
 	** BUG: when pressing buy&download, app crashes
+	** BUG: when loading a book after search, no waiting icon for showing downloading progress
 	?? implement progress showing for book downloading like a progress bar
 	** BUG: at litres "popular books" there's no waiting icon! (looks like this widget doesn't appears because of too long title)
 	** error (for i.e. timeout) message showing
