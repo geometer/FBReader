@@ -67,7 +67,7 @@
 
 	** "standard search look" for search field
 		DONE use external css file
-		*** use native highlighting
+		*** use native highlighting with rounded css corners (how to retrieve native highlating?)
 		*** move magnifier icon at right position
 		*** better wait icon (maybe spinner.gif?)
 		*** how to do a search cancel? what will be if another text will be entered during search?

@@ -44,9 +44,7 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 
 	int frameWidth = 2;
 
-	setStyleSheet(QString("QLineEdit:focus { border-color: #6F9FCF } ") +
-				  QString("QLineEdit { border-color: #8D8D8D}") +
-				  QString("QLineEdit { padding-left: %1px; } ").arg(mySearchIcon->sizeHint().width() + frameWidth + 1));
+	setStyleSheet(QString("QLineEdit { padding-left: %1px; } ").arg(mySearchIcon->sizeHint().width() + frameWidth + 1));
 
 }
 
