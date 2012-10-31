@@ -70,7 +70,11 @@
 		*** use native highlighting with rounded css corners (how to retrieve native highlating?)
 		DONE move magnifier icon at right position
 		DONE better wait icon (maybe spinner.gif?)
-		*** how to do a search cancel? what will be if another text will be entered during search?
+		*** how to do a search cancel? 
+		DONE what will be if another text will be entered during search? (showing rotating icon only for last search request)
+		*** maybe save search results by search pattern
+	
+	** implement a way to stop request that doesn't need
 
 	** implement async full information loading
 	** partial catalogs loading (first 20 books only)

@@ -38,7 +38,8 @@
 
 static const int DIALOG_WIDTH_HINT = 840;
 
-ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog(parent), ZLTreeDialog(res), myLastClickedNode(0) {
+ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
+	QDialog(parent), ZLTreeDialog(res), myLastClickedNode(0), myLastClickedSearchNode(0) {
 	setWindowTitle(QString::fromStdString(resource().value())); //TODO maybe user resources by other way
 	setMinimumSize(400, 260); //minimum sensible size
 
@@ -180,13 +181,17 @@ void ZLQtTreeDialog::onDownloadingStopped(ZLTreeNode *node) {
 	updateWaitingIcons();
 }
 
-void ZLQtTreeDialog::onSearchStarted(ZLTreeNode */*node*/) {
+void ZLQtTreeDialog::onSearchStarted(ZLTreeNode *node) {
 	//TODO what in case if different searches started or stopped?
+	myLastClickedSearchNode = node;
 	mySearchField->getWaitingIcon()->start();
 }
 
-void ZLQtTreeDialog::onSearchStopped(ZLTreeNode */*node*/) {
-	mySearchField->getWaitingIcon()->finish();
+void ZLQtTreeDialog::onSearchStopped(ZLTreeNode *node) {
+	if (node == myLastClickedSearchNode) {
+		myLastClickedSearchNode = 0;
+		mySearchField->getWaitingIcon()->finish();
+	}
 }
 
 void ZLQtTreeDialog::onRefresh() {

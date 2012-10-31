@@ -112,6 +112,7 @@ private:
 //	QList<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
 	QSet<ZLTreeNode *> myDownloadingNodes;
 	const ZLTreeNode *myLastClickedNode; //used to 'last clicked item shows first after downloading'
+	const ZLTreeNode *myLastClickedSearchNode; //used to 'last clicked item shows first after downloading'
 
 friend class ChildrenRequestListener;
 
