@@ -57,7 +57,7 @@ bool OleStreamReader::readNextPiece(OleMainStream &stream) {
 	const OleMainStream::Piece &piece = pieces.at(myNextPieceNumber);
 
 	if (piece.Type == OleMainStream::Piece::PIECE_FOOTNOTE) {
-		footnoteHandler();
+		footnotesStartHandler();
 	} else if (piece.Type == OleMainStream::Piece::PIECE_OTHER) {
 		return false;
 	}
@@ -74,10 +74,10 @@ bool OleStreamReader::readNextPiece(OleMainStream &stream) {
 
 	if (!piece.IsANSI) {
 		for (size_t i = 0; i < readBytes; i += 2) {
-			ansiSymbolHandler(OleUtil::getU2Bytes(textBuffer, i));
+			ucs2SymbolHandler(OleUtil::getU2Bytes(textBuffer, i));
 		}
 	} else {
-		dataHandler(textBuffer, readBytes);
+		ansiDataHandler(textBuffer, readBytes);
 	}
 	++myNextPieceNumber;
 	delete[] textBuffer;

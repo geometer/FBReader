@@ -356,11 +356,11 @@ std::string DocBookReader::parseLink(ZLUnicodeUtil::Ucs2String s, bool urlencode
 	return utf8String;
 }
 
-void DocBookReader::footnoteHandler() {
+void DocBookReader::footnotesStartHandler() {
 	handlePageBreak();
 }
 
-void DocBookReader::dataHandler(const char *buffer, size_t len) {
+void DocBookReader::ansiDataHandler(const char *buffer, size_t len) {
 	if (myConverter.isNull()) {
 		// lazy converter initialization
 		ZLEncodingCollection &collection = ZLEncodingCollection::Instance();
@@ -372,6 +372,6 @@ void DocBookReader::dataHandler(const char *buffer, size_t len) {
 	ZLUnicodeUtil::utf8ToUcs2(myBuffer, utf8String);
 }
 
-void DocBookReader::ansiSymbolHandler(ZLUnicodeUtil::Ucs2Char symbol) {
+void DocBookReader::ucs2SymbolHandler(ZLUnicodeUtil::Ucs2Char symbol) {
 	myBuffer.push_back(symbol);
 }

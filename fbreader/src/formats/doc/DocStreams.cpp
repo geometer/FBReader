@@ -33,24 +33,14 @@ public:
 
 private:
 	bool readStream(OleMainStream &stream);
-	void dataHandler(const char *buffer, size_t len);
-	void ansiSymbolHandler(ZLUnicodeUtil::Ucs2Char symbol);
-	void footnoteHandler();
+	void ansiDataHandler(const char *buffer, size_t len);
+	void ucs2SymbolHandler(ZLUnicodeUtil::Ucs2Char symbol);
+	void footnotesStartHandler();
 
 protected:
 	char *myBuffer;
 	const size_t myMaxSize;
 	size_t myActualSize;
-};
-
-class DocCharReader : public DocReader {
-
-public:
-	DocCharReader(char *buffer, size_t maxSize);
-	~DocCharReader();
-
-private:
-	void dataHandler(const char *buffer, size_t len);
 };
 
 class DocAnsiReader : public DocReader {
@@ -60,7 +50,17 @@ public:
 	~DocAnsiReader();
 
 private:
-	void ansiSymbolHandler(ZLUnicodeUtil::Ucs2Char symbol);
+	void ansiDataHandler(const char *buffer, size_t len);
+};
+
+class DocUtf8Reader : public DocReader {
+
+public:
+	DocUtf8Reader(char *buffer, size_t maxSize);
+	~DocUtf8Reader();
+
+private:
+	void ucs2SymbolHandler(ZLUnicodeUtil::Ucs2Char symbol);
 };
 
 DocReader::DocReader(char *buffer, size_t maxSize) : myBuffer(buffer), myMaxSize(maxSize), myActualSize(0) {
@@ -70,6 +70,11 @@ DocReader::~DocReader() {
 }
 
 bool DocReader::readStream(OleMainStream &stream) {
+	//TODO here could be done 2 optmizations:
+	//	1) If another piece is too big, reading of next piece can be stopped if some size parameter will be specified
+	//		(it can be transfered as a parameter (with default 0 value, that means no need to use it) to readNextPiece method)
+	//	2) We can specify as a parameter for readNextPiece, what kind of piece should be read next (ANSI or not ANSI).
+	//		As type of piece is known already, there's no necessary to read other pieces.
 	while (myActualSize < myMaxSize) {
 		if (!readNextPiece(stream)) {
 			break;
@@ -78,31 +83,17 @@ bool DocReader::readStream(OleMainStream &stream) {
 	return true;
 }
 
-void DocReader::dataHandler(const char*, size_t) {
+void DocReader::ansiDataHandler(const char*, size_t) {
 }
 
-void DocReader::ansiSymbolHandler(ZLUnicodeUtil::Ucs2Char) {
+void DocReader::ucs2SymbolHandler(ZLUnicodeUtil::Ucs2Char) {
 }
 
-void DocReader::footnoteHandler() {
+void DocReader::footnotesStartHandler() {
 }
 
 size_t DocReader::readSize() const {
 	return myActualSize;
-}
-
-DocCharReader::DocCharReader(char *buffer, size_t maxSize) : DocReader(buffer, maxSize) {
-}
-
-DocCharReader::~DocCharReader() {
-}
-
-void DocCharReader::dataHandler(const char *buffer, size_t dataLength) {
-	if (myActualSize < myMaxSize) {
-		const size_t len = std::min(dataLength, myMaxSize - myActualSize);
-		strncpy(myBuffer + myActualSize, buffer, len);
-		myActualSize += len;
-	}
 }
 
 DocAnsiReader::DocAnsiReader(char *buffer, size_t maxSize) : DocReader(buffer, maxSize) {
@@ -111,7 +102,21 @@ DocAnsiReader::DocAnsiReader(char *buffer, size_t maxSize) : DocReader(buffer, m
 DocAnsiReader::~DocAnsiReader() {
 }
 
-void DocAnsiReader::ansiSymbolHandler(ZLUnicodeUtil::Ucs2Char symbol) {
+void DocAnsiReader::ansiDataHandler(const char *buffer, size_t dataLength) {
+	if (myActualSize < myMaxSize) {
+		const size_t len = std::min(dataLength, myMaxSize - myActualSize);
+		strncpy(myBuffer + myActualSize, buffer, len);
+		myActualSize += len;
+	}
+}
+
+DocUtf8Reader::DocUtf8Reader(char *buffer, size_t maxSize) : DocReader(buffer, maxSize) {
+}
+
+DocUtf8Reader::~DocUtf8Reader() {
+}
+
+void DocUtf8Reader::ucs2SymbolHandler(ZLUnicodeUtil::Ucs2Char symbol) {
 	if (myActualSize < myMaxSize) {
 		char buffer[4];
 		const size_t dataLength = ZLUnicodeUtil::ucs2ToUtf8(buffer, symbol);
@@ -176,16 +181,6 @@ size_t DocStream::sizeOfOpened() {
 	return mySize;
 }
 
-DocCharStream::DocCharStream(const ZLFile& file, size_t maxSize) : DocStream(file, maxSize) {
-}
-
-DocCharStream::~DocCharStream() {
-}
-
-shared_ptr<DocReader> DocCharStream::createReader(char *buffer, size_t maxSize) {
-	return new DocCharReader(buffer, maxSize);
-}
-
 DocAnsiStream::DocAnsiStream(const ZLFile& file, size_t maxSize) : DocStream(file, maxSize) {
 }
 
@@ -194,4 +189,14 @@ DocAnsiStream::~DocAnsiStream() {
 
 shared_ptr<DocReader> DocAnsiStream::createReader(char *buffer, size_t maxSize) {
 	return new DocAnsiReader(buffer, maxSize);
+}
+
+DocUtf8Stream::DocUtf8Stream(const ZLFile& file, size_t maxSize) : DocStream(file, maxSize) {
+}
+
+DocUtf8Stream::~DocUtf8Stream() {
+}
+
+shared_ptr<DocReader> DocUtf8Stream::createReader(char *buffer, size_t maxSize) {
+	return new DocUtf8Reader(buffer, maxSize);
 }

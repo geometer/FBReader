@@ -35,9 +35,9 @@ protected:
 
 	bool readNextPiece(OleMainStream &stream);
 
-	virtual void dataHandler(const char *buffer, size_t len) = 0;
-	virtual void ansiSymbolHandler(ZLUnicodeUtil::Ucs2Char symbol) = 0;
-	virtual void footnoteHandler() = 0;
+	virtual void ansiDataHandler(const char *buffer, size_t len) = 0;
+	virtual void ucs2SymbolHandler(ZLUnicodeUtil::Ucs2Char symbol) = 0;
+	virtual void footnotesStartHandler() = 0;
 
 private:
 	size_t myNextPieceNumber;

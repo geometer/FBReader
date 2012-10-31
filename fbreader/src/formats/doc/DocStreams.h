@@ -50,21 +50,21 @@ private:
 	size_t myOffset;
 };
 
-class DocCharStream : public DocStream {
-
-public:
-	DocCharStream(const ZLFile& file, size_t maxSize);
-	~DocCharStream();
-
-private:
-	shared_ptr<DocReader> createReader(char *buffer, size_t maxSize);
-};
-
 class DocAnsiStream : public DocStream {
 
 public:
 	DocAnsiStream(const ZLFile& file, size_t maxSize);
 	~DocAnsiStream();
+
+private:
+	shared_ptr<DocReader> createReader(char *buffer, size_t maxSize);
+};
+
+class DocUtf8Stream : public DocStream {
+
+public:
+	DocUtf8Stream(const ZLFile& file, size_t maxSize);
+	~DocUtf8Stream();
 
 private:
 	shared_ptr<DocReader> createReader(char *buffer, size_t maxSize);
