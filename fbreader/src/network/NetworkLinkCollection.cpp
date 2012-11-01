@@ -196,16 +196,25 @@ NetworkLinkCollection::NetworkLinkCollection() :
 	myIsInitialized(false) {
 }
 
+class NetworkLinkCollectionSynchronizer : public DBRunnable {
+public:
+	NetworkLinkCollectionSynchronizer(NetworkLinkCollection &collection) : myCollection(collection) {}
+	bool run() {
+		myCollection.synchronize();
+	}
+private:
+	NetworkLinkCollection &myCollection;
+};
+
 void NetworkLinkCollection::initialize() {
 	if (myIsInitialized) {
 		return;
 	}
-	synchronize();
+	NetworkLinkCollectionSynchronizer runnable(*this);
+	NetworkDB::Instance().executeAsTransaction(runnable);
 }
 
-
 void NetworkLinkCollection::synchronize() {
-	//commented to not download from DB, because should have only links from generic.xml
 	NetworkDB::Instance().loadNetworkLinks(myLinks);
 	std::sort(myLinks.begin(), myLinks.end(), Comparator());
 	updateLinks("http://data.fbreader.org/catalogs/generic-1.9.xml");
