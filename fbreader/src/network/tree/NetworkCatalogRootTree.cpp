@@ -189,6 +189,7 @@ std::string NetworkCatalogRootTree::RefillAccountAction::text(const ZLResource &
 
 void NetworkCatalogRootTree::RefillAccountAction::run() {
 	FBReader::Instance().openLinkInBrowser(myManager.refillAccountLink());
+	NetworkLibrary::Instance().refresh();
 }
 
 bool NetworkCatalogRootTree::RefillAccountAction::makesSense() const {

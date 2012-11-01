@@ -67,7 +67,7 @@
 
 	** "standard search look" for search field
 		DONE use external css file
-		*** use native highlighting with rounded css corners (how to retrieve native highlating?)
+		*** use native highlighting with rounded css corners (how to retrieve native highlighting?)
 		DONE move magnifier icon at right position
 		DONE better wait icon (maybe spinner.gif?)
 		*** how to do a search cancel? 
@@ -81,15 +81,19 @@
 		*** for OPDS
 		*** for litres
 
-	** implement async sign in/out operations
-	** implement async buying of book
-	** generic.xml async loading
-	
+	** implement async sign in operation
+	** implement async sign out operation
+	** implement async sign up operation
+	** implement async password recovery operation	
+	** implement async buying of book operation
+	** implement async buying & download operation
 
+	** make litres initialize at network library start up (for retrieving account and showing refill account button)
+
+	?? generic.xml async loading
 	** implement waiting icon for related action items
 	** use gif or set of pngs for Waiting Icon instead of vector svg icon
 	** implement async simple search by one catalog
-
 	?? add selected item to history
 	** implement a way to show network items as they're loading from the network (until others are not loaded yet)
 	** BUG: when pressing buy&download, app crashes
