@@ -10,6 +10,35 @@
 
 * new network library UI (in a separate window, with asynchronous calls)
 
+CURRENT RELEASE:
+  * merge async-network-ui branch into 0.99; kill 4 branches
+  * in search field show previous searches as suggestions
+  * load first page only on catalog opening; load more items when list is scrolled up
+  * do not show 'timed out' message if some catalogs failed the search
+  * during search, show found items immediately, do not wait for the search end
+  * show 'wait' icon for book info loading (HUGE icon in the right pane)
+  * hide vertical scrollbar in catalog part of the network dialog if it make no sense
+  * hide "loading" animation while authentication dialog is shown
+  * do not show 'authentication failed' dialog after pressing 'Cancel' button in authentication dialog
+  * reload litres catalog after login/logout
+  * show 'my books' and other items in litres catalog even if user is logged out; show authentication dialog if such item is double-clicked
+  * use independent logins list for each catalog
+  * search logic (current release):
+     ** if we are on the top level, search in all catalogs
+     ** if we are inside a catalog (or if a catalog is selected), then
+       ** if this catalog supports search, search in the catalog only
+       ** otherwise, disable search field
+  * show 'found books' item at top level and in each catalog where the search was performed
+
+FUTURE RELEASES:
+  * search logic (future):
+     ** if we are on the top level and there is no selected catalog, search in all catalogs
+     ** if we are inside a catalog or if a catalog is selected, then
+       ** if this catalog supports search, show choice items: all catalogs or '<catalog name>'
+         ** in future, add choice items for different search types
+       ** otherwise, show choice items as described above, but disable '<catalog name>' item
+  * show info about catalogs search failures (where?)
+
 	DONE back/forward buttons overlaps on Mac
 	DONE can not open feedbooks catalog item: it said 'Catalog is empty'
 	DONE синхронизировать код ePub из FBReaderJ/native
