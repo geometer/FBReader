@@ -24,10 +24,10 @@
 
 #include "ZLQtImageUtils.h"
 
-QPixmap ZLQtImageUtils::ZLImageToQPixmapWithSize(shared_ptr<const ZLImage> image, const QSize &requestedSize, Qt::TransformationMode mode) {
+QPixmap ZLQtImageUtils::ZLImageToQPixmapWithSize(shared_ptr<const ZLImage> image, const QSize &requestedSize, bool scaleIfLess, Qt::TransformationMode mode) {
 	QPixmap pixmap = ZLImageToQPixmap(image);
 	if (!pixmap.isNull()) {
-		pixmap = centerPixmap(scalePixmap(pixmap, requestedSize, true, mode), requestedSize);
+		pixmap = centerPixmap(scalePixmap(pixmap, requestedSize, scaleIfLess, mode), requestedSize);
 	}
 	return pixmap;
 }

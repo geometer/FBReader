@@ -61,7 +61,8 @@ void ZLQtLabelAction::mousePressEvent(QMouseEvent *) {
 
 ZLQtButtonAction::ZLQtButtonAction(shared_ptr<ZLTreeAction> action,QWidget *parent) :
 	QPushButton(parent), myAction(action) {
-	connect(this, SIGNAL(clicked()), this, SLOT(onClicked()));
+	connect(this, SIGNAL(clicked()), this, SLOT(onClicked()), Qt::QueuedConnection); //for sending clicked() signal for UI at first
+	setAttribute(Qt::WA_LayoutUsesWidgetRect);
 }
 
 void ZLQtButtonAction::onClicked() {
@@ -130,7 +131,15 @@ QSize ZLQtPreviewWidget::sizeHint() const {
 	return hint;
 }
 
-ZLQtPageWidget::ZLQtPageWidget(const ZLTreePageInfo &info, QWidget *parent) : QWidget(parent) {
+ZLQtAbstractPageWidget::ZLQtAbstractPageWidget(QWidget *parent) : QWidget(parent) { }
+
+void ZLQtAbstractPageWidget::onActionActivated() {
+	foreach(QPushButton* button, myButtonActions) {
+		button->setEnabled(false);
+	}
+}
+
+ZLQtPageWidget::ZLQtPageWidget(const ZLTreePageInfo &info, QWidget *parent) : ZLQtAbstractPageWidget(parent) {
 	//TODO fix it: if element is absent, there's a empty space instead it. Looks bad.
 	createElements();
 	setInfo(info);
@@ -265,8 +274,11 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 		QString text = QString::fromStdString(info.actionText(action));
 		actionButton->setText(text);
 		myActionsWidget->layout()->addWidget(actionButton);
+		connect(actionButton, SIGNAL(clicked()), this, SLOT(onActionActivated()));
+		myButtonActions.push_back(actionButton);
 	}
 
+	//TODO check case if I will load all links at the same time
 	foreach(shared_ptr<ZLTreeAction> action, info.relatedActions()) {
 		if (!action->makesSense()) {
 			continue;
@@ -279,7 +291,7 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 	}
 }
 
-ZLQtCatalogPageWidget::ZLQtCatalogPageWidget(const ZLTreeTitledNode *node, QWidget *parent) : QWidget(parent) {
+ZLQtCatalogPageWidget::ZLQtCatalogPageWidget(const ZLTreeTitledNode *node, QWidget *parent) : ZLQtAbstractPageWidget(parent) {
 	createElements();
 	setInfo(node);
 }
@@ -347,6 +359,8 @@ void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 		QString text = QString::fromStdString(node->actionText(action));
 		actionButton->setText(text);
 		myActionsWidget->layout()->addWidget(actionButton);
+		connect(actionButton, SIGNAL(clicked()), this, SLOT(onActionActivated()));
+		myButtonActions.push_back(actionButton);
 		//TODO maybe buttons should not be too big
 		//actionButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
 

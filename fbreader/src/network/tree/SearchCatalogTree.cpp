@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,25 +17,25 @@
  * 02110-1301, USA.
  */
 
-#ifndef __BASICAUTHENTICATIONREQUEST_H__
-#define __BASICAUTHENTICATIONREQUEST_H__
+#include "NetworkTreeNodes.h"
 
-#include <ZLNetworkRequest.h>
+const ZLTypeId SearchCatalogTree::TYPE_ID(NetworkCatalogTree::TYPE_ID);
 
-class BasicAuthenticationRequest : public ZLNetworkRequest {
+const ZLTypeId &SearchCatalogTree::typeId() const {
+	return TYPE_ID;
+}
 
-public:
-	BasicAuthenticationRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
+SearchCatalogTree::SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position) :
+	NetworkCatalogTree(parent, item, position) {
+	//TODO maybe remove this class
+}
 
-public:
-	bool handleHeader(void *ptr, size_t size);
-	bool handleContent(void *ptr, size_t size);
+void SearchCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
+	notifySearchStarted();
+	NetworkCatalogTree::requestChildren(listener);
+}
 
-	bool doBefore();
-	bool doAfter(const std::string &error);
-
-private:
-	std::string myStatusCode;
-};
-
-#endif /* __BASICAUTHENTICATIONREQUEST_H__ */
+void SearchCatalogTree::onChildrenReceived(const std::string &error) {
+	notifySearchStopped();
+	NetworkCatalogTree::onChildrenReceived(error);
+}

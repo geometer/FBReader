@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,13 +17,28 @@
  * 02110-1301, USA.
  */
 
-#include "ZLNetworkSSLCertificate.h"
+#ifndef __ZLQTSEARCHFIELD_H__
+#define __ZLQTSEARCHFIELD_H__
 
-const ZLNetworkSSLCertificate ZLNetworkSSLCertificate::NULL_CERTIFICATE(true);
-const ZLNetworkSSLCertificate ZLNetworkSSLCertificate::DONT_VERIFY_CERTIFICATE(false);
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
 
-ZLNetworkSSLCertificate::ZLNetworkSSLCertificate(bool doVerify) : DoVerify(doVerify) {
-}
+#include "ZLQtWaitingIcons.h"
+#include "ZLQtItemsListWidget.h"
 
-ZLNetworkSSLCertificate::ZLNetworkSSLCertificate(const std::string &path) : Path(path), DoVerify(true) {
-}
+class ZLQtSearchField : public QLineEdit {
+
+public:	
+	ZLQtSearchField(QWidget *parent = 0);
+	ZLQtWaitingIcon *getWaitingIcon();
+
+protected:
+	void resizeEvent(QResizeEvent *ev);
+
+private:
+	QLabel *mySearchIcon;
+	ZLQtWaitingIcon *myWaitingIcon;
+
+};
+
+#endif /* __ZLQTSEARCHFIELD_H__ */

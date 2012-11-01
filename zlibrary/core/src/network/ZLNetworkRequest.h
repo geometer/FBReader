@@ -25,9 +25,6 @@
 
 #include <shared_ptr.h>
 
-#include <ZLNetworkSSLCertificate.h>
-
-
 class ZLNetworkRequest {
 
 public:
@@ -48,7 +45,7 @@ public:
 	};
 
 protected:
-	ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate);
+	ZLNetworkRequest(const std::string &url);
 
 public:
 	virtual bool handleHeader(void *ptr, size_t size);
@@ -66,16 +63,11 @@ public:
 	const std::string &errorMessage() const;
 
 	const std::string &url() const;
-	const ZLNetworkSSLCertificate &sslCertificate() const;
 
 public: // HTTP parameters
-	enum AuthenticationMethod {
-		NO_AUTH, BASIC
-	};
-	void setupAuthentication(AuthenticationMethod method, const std::string &userName, const std::string &password);
+	void setupAuthentication(const std::string &userName, const std::string &password);
 	const std::string &userName() const;
 	const std::string &password() const;
-	AuthenticationMethod authenticationMethod() const;
 
 	void setRedirectionSupported(bool supported);
 	bool isRedirectionSupported() const;
@@ -95,12 +87,10 @@ protected:
 
 private:
 	const std::string myURL;
-	const ZLNetworkSSLCertificate &mySSLCertificate;
 	std::string myErrorMessage;
 
 	std::string myUserName;
 	std::string myPassword;
-	AuthenticationMethod myAuthenticationMethod;
 
 	bool myRedirectionSupported;
 
@@ -113,14 +103,12 @@ private: // disable copying
 	const ZLNetworkRequest &operator = (const ZLNetworkRequest &);
 };
 
-inline void ZLNetworkRequest::setupAuthentication(AuthenticationMethod method, const std::string &userName, const std::string &password) {
-	myAuthenticationMethod = method;
+inline void ZLNetworkRequest::setupAuthentication(const std::string &userName, const std::string &password) {
 	myUserName = userName;
 	myPassword = password;
 }
 inline const std::string &ZLNetworkRequest::userName() const { return myUserName; }
 inline const std::string &ZLNetworkRequest::password() const { return myPassword; }
-inline ZLNetworkRequest::AuthenticationMethod ZLNetworkRequest::authenticationMethod() const { return myAuthenticationMethod; }
 inline void ZLNetworkRequest::setRedirectionSupported(bool supported) { myRedirectionSupported = supported; }
 inline bool ZLNetworkRequest::isRedirectionSupported() const { return myRedirectionSupported; }
 inline const std::vector<std::pair<std::string, std::string> > &ZLNetworkRequest::postParameters() const { return myPostParameters; }

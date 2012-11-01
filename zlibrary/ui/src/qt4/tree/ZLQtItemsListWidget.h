@@ -29,6 +29,8 @@
 
 #include <ZLTreeTitledNode.h>
 
+#include "ZLQtWaitingIcons.h"
+
 class ZLQtTreeItem;
 
 class ZLQtItemsListWidget : public QScrollArea {
@@ -92,25 +94,5 @@ private:
 
 	 bool isActive;
 };
-
-class ZLQtWaitingIcon : public QLabel {
-	Q_OBJECT
-
-public:
-	ZLQtWaitingIcon(QWidget* parent=0);
-
-public Q_SLOTS:
-	void start();
-	void finish();
-
-private Q_SLOTS:
-	void rotate();
-
-private:
-	int myAngle;
-	QPixmap myPixmap;
-	QTimer* myTimer;
-};
-
 
 #endif /* __ZLQTITEMSLISTWIDGET_H__ */

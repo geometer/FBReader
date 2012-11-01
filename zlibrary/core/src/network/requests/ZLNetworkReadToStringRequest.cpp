@@ -25,8 +25,8 @@
 #include "ZLNetworkReadToStringRequest.h"
 
 
-ZLNetworkReadToStringRequest::ZLNetworkReadToStringRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, std::string &buffer) :
-	ZLNetworkRequest(url, sslCertificate),
+ZLNetworkReadToStringRequest::ZLNetworkReadToStringRequest(const std::string &url, std::string &buffer) :
+	ZLNetworkRequest(url),
 	myBuffer(buffer),
 	myDataSize(0) {
 }

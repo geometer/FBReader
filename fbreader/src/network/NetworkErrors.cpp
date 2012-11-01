@@ -19,6 +19,7 @@
 
 #include <ZLResource.h>
 #include <ZLStringUtil.h>
+#include <ZLDialogManager.h>
 
 #include "NetworkErrors.h"
 
@@ -59,5 +60,9 @@ std::string NetworkErrors::errorMessage(const std::string &error, const std::str
 	}
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 	return ZLStringUtil::printf(errorResource[error].value(), arg0);
+}
+
+void NetworkErrors::showErrorMessage(const std::string &error) {
+	ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"),	error);
 }
 

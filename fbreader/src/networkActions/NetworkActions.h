@@ -26,7 +26,7 @@
 
 class NetworkBookItem;
 
-class NetworkBookDownloadAction : public ZLRunnableWithKey, public ZLNetworkRequest::Listener {
+class NetworkBookDownloadAction : public ZLRunnableWithKey {
 
 public:
 	NetworkBookDownloadAction(const NetworkBookItem &book, bool demo, const std::string &tag = std::string());
@@ -34,7 +34,7 @@ public:
 	bool makesSense() const;
 	void run();
 
-	void finished(const std::string &error);
+	virtual void onBookDownloaded(const std::string &error); //virtual for using redefined in NetworkTreeBookDownloadAction
 
 private:
 	const NetworkBookItem &myBook;

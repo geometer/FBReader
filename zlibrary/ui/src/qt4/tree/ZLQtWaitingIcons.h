@@ -17,33 +17,53 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLTREEDIALOG_H__
-#define __ZLTREEDIALOG_H__
+#ifndef __ZLQTWAITINGICONS_H__
+#define __ZLQTWAITINGICONS_H__
 
-#include <ZLTreeListener.h>
-#include <ZLResource.h>
-#include <ZLTreeSearcher.h>
+#include <QtCore/QTimer>
+#include <QtGui/QLabel>
+#include <QtGui/QMovie>
 
-class ZLTreeDialog : public ZLTreeListener {
-
-protected:
-	ZLTreeDialog(const ZLResource &resource);
+class ZLQtWaitingIcon : public QLabel {
 
 public:
-	//TODO maybe run() should return an integer?
-	virtual void run(ZLTreeNode *rootNode) = 0;
+	ZLQtWaitingIcon(QWidget* parent = 0);
 
 public:
-	void setSearcher(shared_ptr<ZLTreeSearcher> searcher);
-
-protected:
-	const ZLResource &resource() const;
-
-protected:
-	shared_ptr<ZLTreeSearcher> mySearcher;
-
-private:
-	const ZLResource &myResource;
+	virtual void start() = 0;
+	virtual void finish() = 0;
 };
 
-#endif /* __ZLTREEDIALOG_H__ */
+class ZLQtWaitingIconSelfRotating : public ZLQtWaitingIcon {
+	Q_OBJECT
+
+public:
+	ZLQtWaitingIconSelfRotating(QSize iconSize = QSize(35,35), QWidget* parent = 0);
+
+public Q_SLOTS:
+	void start();
+	void finish();
+
+private Q_SLOTS:
+	void rotate();
+
+private:
+	int myAngle;
+	QPixmap myPixmap;
+	QTimer* myTimer;
+};
+
+class ZLQtWaitingIconGif : public ZLQtWaitingIcon {
+	Q_OBJECT
+
+public:
+	ZLQtWaitingIconGif(std::string filename, QSize iconSize, QWidget* parent = 0);
+
+public Q_SLOTS:
+	void start();
+	void finish();
+
+private:
+	QMovie* myMovie;
+};
+#endif /* __ZLQTWAITINGICONS_H__ */

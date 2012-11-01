@@ -31,7 +31,6 @@
 
 #include "../NetworkOperationData.h"
 #include "../authentication/NetworkAuthenticationManager.h"
-#include "../authentication/basic/BasicAuthenticationManager.h"
 #include "../authentication/litres/LitResAuthenticationManager.h"
 
 #include "URLRewritingRule.h"

@@ -34,6 +34,7 @@
 
 #include <QtCore/QDebug>
 
+#include <ZLApplication.h>
 #include <ZLStringUtil.h>
 #include <ZLLogger.h>
 #include <ZLResource.h>
@@ -104,7 +105,7 @@ std::string ZLQtNetworkManager::perform(const ZLNetworkRequest::Vector &requests
 			continue;
 		}
 
-		setHeadersAndSsl(networkRequest, request->sslCertificate().DoVerify);
+		setHeadersAndSsl(networkRequest);
 		QTimer* timeoutTimer = new QTimer;
 		ZLQtNetworkReplyScope scope = { request, timeoutTimer, false, &replies, &errors, &eventLoop};
 		prepareReply(scope, networkRequest);
@@ -135,7 +136,7 @@ std::string ZLQtNetworkManager::performAsync(const ZLNetworkRequest::Vector &req
 			continue;
 		}
 
-		setHeadersAndSsl(networkRequest, request->sslCertificate().DoVerify);
+		setHeadersAndSsl(networkRequest);
 		QTimer* timeoutTimer = new QTimer;
 		ZLQtNetworkReplyScope scope = { request, timeoutTimer, false, 0, 0, 0};
 		prepareReply(scope, networkRequest);
@@ -260,9 +261,18 @@ void ZLQtNetworkManager::onTimeOut() {
 
 void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
-	if (scope.authAskedAlready) {
-		return;
+	scope.timeoutTimer->stop();
+	//TODO maybe implement saving old values for userName & password
+	std::string userName;
+	std::string password;
+	bool result = ZLApplication::Instance().showAuthDialog(userName, password, scope.authAskedAlready ? ZLResourceKey("authenticationFailed") : ZLResourceKey());
+	if (result) {
+		scope.request->setupAuthentication(userName, password);
+	} else {
+		return; //message 'auth fail error' will be showed
 	}
+
+	scope.timeoutTimer->start(timeoutValue());
 	authenticator->setUser(QString::fromStdString(scope.request->userName()));
 	authenticator->setPassword(QString::fromStdString(scope.request->password()));
 	scope.authAskedAlready = true;
@@ -276,6 +286,7 @@ void ZLQtNetworkManager::onSslErrors(const QList<QSslError> &errors) {
 
 void ZLQtNetworkManager::handleHeaders(QNetworkReply *reply) const {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	//TODO set HTTP header not with predefined information (like line below)
 	QByteArray data = "HTTP/1.1 ";
 	data += reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toByteArray();
 	data += " ";
@@ -308,6 +319,7 @@ QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) {
 	if (reply->error() == QNetworkReply::NoError) {
 		return QString();
 	}
+	ZLLogger::Instance().println("network", QString("handleErrors: %1. Qt code: %2, url: %3").arg(reply->errorString()).arg(reply->error()).arg(reply->url().toString()).toStdString());
 	std::string error;
 	const ZLResource &errorResource = ZLResource::resource("dialog")["networkError"];
 	switch (reply->error()) {
@@ -329,6 +341,8 @@ QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) {
 			error = ZLStringUtil::printf(errorResource["somethingWrongMessage"].value(), reply->url().toString().toStdString());
 			break;
 		case QNetworkReply::UnknownNetworkError:
+			error = QString("%1: %2").arg(reply->url().host()).arg(reply->errorString()).toStdString(); //TODO maybe host information is excess
+			break;
 		case QNetworkReply::UnknownProxyError:
 		case QNetworkReply::UnknownContentError:
 		case QNetworkReply::ProtocolUnknownError:
@@ -359,12 +373,9 @@ QString ZLQtNetworkManager::handleErrors(QNetworkReply *reply) {
 	return QString::fromStdString(error);
 }
 
-void ZLQtNetworkManager::setHeadersAndSsl(QNetworkRequest &networkRequest, bool doVerify) const {
+void ZLQtNetworkManager::setHeadersAndSsl(QNetworkRequest &networkRequest) const {
 	networkRequest.setRawHeader("User-Agent", userAgent().c_str());
 	QSslConfiguration configuration = QSslConfiguration::defaultConfiguration();
-	if (!doVerify) {
-		configuration.setPeerVerifyMode(QSslSocket::VerifyNone);
-	}
 	networkRequest.setSslConfiguration(configuration);
 }
 

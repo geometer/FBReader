@@ -34,6 +34,7 @@
 
 #include "../tree/ZLQtItemsListWidget.h"
 #include "../tree/ZLQtPreviewWidget.h"
+#include "../tree/ZLQtSearchField.h"
 
 class ZLQtIconButton;
 
@@ -61,6 +62,9 @@ public: //listener methods
 	void onDownloadingStarted(ZLTreeNode *node);
 	void onDownloadingStopped(ZLTreeNode *node);
 
+	void onSearchStarted(ZLTreeNode *node);
+	void onSearchStopped(ZLTreeNode *node);
+
 	void onRefresh();
 
 public:
@@ -76,6 +80,7 @@ private Q_SLOTS:
 	void onNodeDoubleClicked(ZLQtTreeItem* item);
 	void onBackButton();
 	void onForwardButton();
+	void onSearchField();
 
 
 private:
@@ -84,7 +89,7 @@ private:
 private:
 	ZLQtIconButton *myBackButton;
 	ZLQtIconButton *myForwardButton;
-	QLineEdit *mySearchField;
+	ZLQtSearchField *mySearchField;
 //	QScrollArea *myScrollArea;
 	ZLQtItemsListWidget *myListWidget;
 	ZLQtPreviewWidget *myPreviewWidget;
@@ -107,6 +112,7 @@ private:
 //	QList<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
 	QSet<ZLTreeNode *> myDownloadingNodes;
 	const ZLTreeNode *myLastClickedNode; //used to 'last clicked item shows first after downloading'
+	const ZLTreeNode *myLastClickedSearchNode; //used to 'last clicked item shows first after downloading'
 
 friend class ChildrenRequestListener;
 

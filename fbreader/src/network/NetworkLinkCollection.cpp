@@ -214,7 +214,7 @@ void NetworkLinkCollection::synchronize() {
 void NetworkLinkCollection::updateLinks(std::string genericUrl) {
 	shared_ptr<ZLFile> genericFile = getGenericFile(genericUrl);
 	if (genericFile.isNull()) {
-		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"),	NetworkErrors::errorMessage(NetworkErrors::ERROR_CANT_DOWNLOAD_LIBRARIES_LIST));
+		NetworkErrors::showErrorMessage(NetworkErrors::errorMessage(NetworkErrors::ERROR_CANT_DOWNLOAD_LIBRARIES_LIST));
 		return;
 	}
 
@@ -390,7 +390,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 }
 
 
-bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLNetworkRequest::Listener> listener) {
+bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	std::string nURL = ::normalize(reference.URL);
 	rewriteUrl(nURL);
 	const std::string nNetworkBookId = ::normalize(reference.cleanURL());
@@ -419,7 +419,7 @@ bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::st
 	if (ZLFile(fileName).exists()) {
 		ZLFile(fileName).remove();
 	}
-	ZLNetworkManager::Instance().downloadFile(nURL, sslCertificate, fileName, listener);
+	ZLNetworkManager::Instance().downloadFile(nURL, fileName, listener);
 	return true;
 }
 
@@ -511,6 +511,17 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 	}
 
 	return result;
+}
+
+NetworkLinkCollection::LinkVector NetworkLinkCollection::activeLinks() const {
+	LinkVector filteredList;
+	for (size_t i = 0; i < myLinks.size(); ++i) {
+		shared_ptr<NetworkLink> link = myLinks.at(i);
+		if (link->isEnabled()) {
+			filteredList.push_back(link);
+		}
+	}
+	return filteredList;
 }
 
 size_t NetworkLinkCollection::size() const {

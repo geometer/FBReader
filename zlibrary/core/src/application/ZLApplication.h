@@ -167,6 +167,9 @@ public:
 	void setParameterValueList(const std::string &id, const std::vector<std::string> &values);
 	const std::string &visualParameter(const std::string &id);
 
+public:
+	virtual bool showAuthDialog(std::string &userName, std::string &password, const ZLResourceKey &errorKey) = 0;
+
 private:
 	void createToolbar(int index);
 

@@ -38,7 +38,8 @@
 
 static const int DIALOG_WIDTH_HINT = 840;
 
-ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog(parent), ZLTreeDialog(res), myLastClickedNode(0) {
+ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
+	QDialog(parent), ZLTreeDialog(res), myLastClickedNode(0), myLastClickedSearchNode(0) {
 	setWindowTitle(QString::fromStdString(resource().value())); //TODO maybe user resources by other way
 	setMinimumSize(400, 260); //minimum sensible size
 
@@ -46,11 +47,10 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	myPreviewWidget = new ZLQtPreviewWidget;
 	myBackButton = new ZLQtIconButton("back_button.png", "back_button_disabled.png");
 	myForwardButton = new ZLQtIconButton("forward_button.png", "forward_button_disabled.png");
-	mySearchField = new QLineEdit;
+	mySearchField = new ZLQtSearchField;
 
-	mySearchField->setPlaceholderText("type to search..."); // TODO add to resources;
-	//mySearchField->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
-	mySearchField->setFixedWidth(150);
+	myBackButton->setAutoDefault(false);
+	myForwardButton->setAutoDefault(false);
 
 	QVBoxLayout *mainLayout = new QVBoxLayout;
 	QHBoxLayout *panelLayout = new QHBoxLayout;
@@ -77,6 +77,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) : QDialog
 	connect(myListWidget, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)), this, SLOT(onNodeDoubleClicked(ZLQtTreeItem*)));
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
 	connect(myForwardButton, SIGNAL(clicked()), this, SLOT(onForwardButton()));
+	connect(mySearchField, SIGNAL(returnPressed()), this, SLOT(onSearchField()));
 }
 
 void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
@@ -180,6 +181,19 @@ void ZLQtTreeDialog::onDownloadingStopped(ZLTreeNode *node) {
 	updateWaitingIcons();
 }
 
+void ZLQtTreeDialog::onSearchStarted(ZLTreeNode *node) {
+	//TODO what in case if different searches started or stopped?
+	myLastClickedSearchNode = node;
+	mySearchField->getWaitingIcon()->start();
+}
+
+void ZLQtTreeDialog::onSearchStopped(ZLTreeNode *node) {
+	if (node == myLastClickedSearchNode) {
+		myLastClickedSearchNode = 0;
+		mySearchField->getWaitingIcon()->finish();
+	}
+}
+
 void ZLQtTreeDialog::onRefresh() {
 	myPreviewWidget->refresh();
 	//TODO maybe add other refreshes? (list widget, for i.e.)
@@ -225,6 +239,16 @@ void ZLQtTreeDialog::onForwardButton() {
 	myBackHistory.push(myForwardHistory.pop());
 	myListWidget->fillNodes(myBackHistory.top());
 	updateAll();
+}
+
+void ZLQtTreeDialog::onSearchField() {
+	if (mySearcher.isNull()) {
+		return;
+	}
+	if (mySearchField->text().isEmpty()) {
+		return;
+	}
+	mySearcher->simpleSearch(mySearchField->text().toStdString());
 }
 
 ZLQtTreeDialog::ChildrenRequestListener::ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node) :

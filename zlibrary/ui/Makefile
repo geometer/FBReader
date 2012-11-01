@@ -140,6 +140,7 @@ do_install:
 		install -m 0644 data/messages.$(TARGET_ARCH).xml $(SHARE_ZLIBRARY)/messages.xml; \
 	fi
 	@install -m 0644 data/keynames.$(TARGET_ARCH)-$(UI_TYPE).xml $(SHARE_ZLIBRARY)/$(KEYNAMES)
+	@install -m 0644 data/style.$(TARGET_ARCH).qss $(SHARE_ZLIBRARY)/style.qss
 ifeq "$(ZLSHARED)" "yes"
 	@install -d $(DESTDIR)$(LIBDIR)
 	@install $(TARGET) $(DESTDIR)$(LIBDIR)

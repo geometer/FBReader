@@ -208,3 +208,15 @@ void ZLTreeNode::notifyDownloadStopped() {
 		handler->onDownloadingStopped(this);
 	}
 }
+
+void ZLTreeNode::notifySearchStarted() {
+	if (ZLTreeListener *handler = listener()) {
+		handler->onSearchStarted(this);
+	}
+}
+
+void ZLTreeNode::notifySearchStopped() {
+	if (ZLTreeListener *handler = listener()) {
+		handler->onSearchStopped(this);
+	}
+}

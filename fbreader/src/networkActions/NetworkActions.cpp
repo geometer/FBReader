@@ -24,6 +24,7 @@
 #include <ZLNetworkRequest.h>
 
 #include "../network/NetworkLinkCollection.h"
+#include "../network/NetworkErrors.h"
 #include "NetworkActions.h"
 #include "AuthenticationDialog.h"
 #include "NetworkOperationRunnable.h"
@@ -158,6 +159,17 @@ bool NetworkBookDownloadAction::makesSense() const {
 //	fbreader.refreshWindow();
 //}
 
+class NetworkBookDownloadActionListener : public ZLNetworkRequest::Listener {
+public:
+	NetworkBookDownloadActionListener(NetworkBookDownloadAction *action) : myAction(action) {}
+	void finished(const std::string &error) {
+		myAction->onBookDownloaded(error);
+	}
+
+private:
+	NetworkBookDownloadAction *myAction;
+};
+
 void NetworkBookDownloadAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
 		return;
@@ -169,16 +181,15 @@ void NetworkBookDownloadAction::run() {
 	if (reference.isNull()) {
 		return;
 	}
-	shared_ptr<NetworkAuthenticationManager> manager = myBook.Link.authenticationManager();
-	bool result = NetworkLinkCollection::Instance().downloadBook(*reference, myFileName, manager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : manager->certificate(), this);
+	bool result = NetworkLinkCollection::Instance().downloadBook(*reference, myFileName, new NetworkBookDownloadActionListener(this));
 	if (!result) {
-		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), NetworkLinkCollection::Instance().errorMessage());
+		NetworkErrors::showErrorMessage(NetworkLinkCollection::Instance().errorMessage());
 	}
 }
 
-void NetworkBookDownloadAction::finished(const std::string &error) {
+void NetworkBookDownloadAction::onBookDownloaded(const std::string &error) {
 	if (!error.empty()) {
-		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), error);
+		NetworkErrors::showErrorMessage(error);
 	}
 	FBReader &fbreader = FBReader::Instance();
 	shared_ptr<Book> downloaderBook;
@@ -314,6 +325,7 @@ void NetworkBookBuyInBrowserAction::run() {
 	if (!reference.isNull()) {
 		FBReader::Instance().openLinkInBrowser(reference->URL);
 	}
+	NetworkLibrary::Instance().refresh();
 }
 
 NetworkBookDeleteAction::NetworkBookDeleteAction(const NetworkBookItem &book) : myBook(book) {

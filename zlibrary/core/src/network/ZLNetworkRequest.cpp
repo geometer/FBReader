@@ -21,10 +21,8 @@
 
 #include "ZLNetworkRequest.h"
 
-ZLNetworkRequest::ZLNetworkRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) :
+ZLNetworkRequest::ZLNetworkRequest(const std::string &url) :
 	myURL(url),
-	mySSLCertificate(sslCertificate),
-	myAuthenticationMethod(NO_AUTH),
 	myRedirectionSupported(true) {
 	ZLLogger::Instance().println("URL", url);
 }
@@ -35,10 +33,6 @@ const std::string &ZLNetworkRequest::errorMessage() const {
 
 const std::string &ZLNetworkRequest::url() const {
 	return myURL;
-}
-
-const ZLNetworkSSLCertificate &ZLNetworkRequest::sslCertificate() const {
-	return mySSLCertificate;
 }
 
 void ZLNetworkRequest::setErrorMessage(const std::string &message) {

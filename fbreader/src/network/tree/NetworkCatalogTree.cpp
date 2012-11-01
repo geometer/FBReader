@@ -22,6 +22,7 @@
 #include "../authentication/NetworkAuthenticationManager.h"
 #include "../../networkTree/NetworkCatalogUtil.h"
 #include "../../networkActions/NetworkOperationRunnable.h"
+#include "../NetworkErrors.h"
 #include "NetworkTreeFactory.h"
 #include "NetworkTreeNodes.h"
 
@@ -106,7 +107,7 @@ void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> 
 
 void NetworkCatalogTree::onChildrenReceived(const std::string &error) {
 	if (!error.empty()) {
-		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), error);
+		NetworkErrors::showErrorMessage(error);
 		notifyListeners(error);
 		return;
 	}

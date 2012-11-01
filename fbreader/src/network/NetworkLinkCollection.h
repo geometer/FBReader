@@ -34,9 +34,10 @@ class NetworkLink;
 class NetworkBookCollection;
 class BookReference;
 
-class ZLNetworkSSLCertificate;
-
 class NetworkLinkCollection {
+
+public:
+	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 
 private:
 	class Comparator;
@@ -60,11 +61,12 @@ public:
 
 	std::string bookFileName(const BookReference &reference);
 
-	bool downloadBook(const BookReference &reference, std::string &fileName, const ZLNetworkSSLCertificate &sslSertificate, shared_ptr<ZLNetworkRequest::Listener> listener);
+	bool downloadBook(const BookReference &reference, std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener);
 
 	shared_ptr<NetworkBookCollection> simpleSearch(const std::string &pattern);
 	shared_ptr<NetworkBookCollection> advancedSearch(const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation);
 
+	LinkVector activeLinks() const;
 	size_t size() const;
 	size_t numberOfEnabledLinks() const;
 	NetworkLink &link(size_t index) const;
@@ -86,7 +88,6 @@ private:
 	void addOrUpdateLink(shared_ptr<NetworkLink> link);
 
 private:
-	typedef std::vector<shared_ptr<NetworkLink> > LinkVector;
 	LinkVector myLinks;
 	std::string myErrorMessage;
 	bool myIsInitialized;

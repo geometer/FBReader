@@ -32,8 +32,6 @@ class ZLNetworkData;
 class ZLOutputStream;
 class ZLXMLReader;
 
-class ZLNetworkSSLCertificate;
-
 class ZLNetworkManager {
 
 public:
@@ -77,22 +75,13 @@ protected:
 public:
 	// returns error message
 	std::string downloadFile(const std::string &url, const std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener = 0) const;
-	std::string downloadFile(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName, shared_ptr<ZLNetworkRequest::Listener> listener = 0) const;
 
 public: 
 	shared_ptr<ZLNetworkRequest> createDownloadRequest(const std::string &url, const std::string &fileName) const;
 	shared_ptr<ZLNetworkRequest> createDownloadRequest(const std::string &url, shared_ptr<ZLOutputStream> stream) const;
-	shared_ptr<ZLNetworkRequest> createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, const std::string &fileName) const;
-	shared_ptr<ZLNetworkRequest> createDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLOutputStream> stream) const;
-
 	shared_ptr<ZLNetworkRequest> createNoActionRequest(const std::string &url) const;
-	shared_ptr<ZLNetworkRequest> createNoActionRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate) const;
-
 	shared_ptr<ZLNetworkRequest> createReadToStringRequest(const std::string &url, std::string &buffer) const;
-	shared_ptr<ZLNetworkRequest> createReadToStringRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, std::string &buffer) const;
-
 	shared_ptr<ZLNetworkRequest> createXMLParserRequest(const std::string &url, shared_ptr<ZLXMLReader> reader, shared_ptr<ZLRunnable> runnable = 0) const;
-	shared_ptr<ZLNetworkRequest> createXMLParserRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate, shared_ptr<ZLXMLReader> reader, shared_ptr<ZLRunnable> runnable = 0) const;
 
 public:
 	void setUserAgent(const std::string &userAgent);

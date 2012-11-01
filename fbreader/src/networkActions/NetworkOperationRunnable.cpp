@@ -88,7 +88,6 @@ DownloadBookRunnable::~DownloadBookRunnable() {
 void DownloadBookRunnable::run() {
 	NetworkLinkCollection::Instance().downloadBook(
 		*myReference, myFileName,
-		myAuthManager.isNull() ? ZLNetworkSSLCertificate::NULL_CERTIFICATE : myAuthManager->certificate(),
 		myDialog->listener()
 	);
 	myErrorMessage = NetworkLinkCollection::Instance().errorMessage();

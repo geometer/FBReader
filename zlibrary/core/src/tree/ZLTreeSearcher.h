@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2012 Geometer Plus <contact@geometerplus.com>
+ * Copyright (C) 2004-2012 Geometer Plus <contact@geometerplus.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,30 +17,14 @@
  * 02110-1301, USA.
  */
 
-#ifndef __ZLNETWORKSSLCERTIFICATE_H__
-#define __ZLNETWORKSSLCERTIFICATE_H__
+#ifndef __ZLTREESEARCHER_H__
+#define __ZLTREESEARCHER_H__
 
 #include <string>
 
-class ZLNetworkSSLCertificate {
-
+class ZLTreeSearcher {
 public:
-	static const ZLNetworkSSLCertificate NULL_CERTIFICATE;
-	static const ZLNetworkSSLCertificate DONT_VERIFY_CERTIFICATE;
-
-public:
-	const std::string Path;
-	const bool DoVerify;
-
-public:
-	ZLNetworkSSLCertificate(const std::string &path);
-
-private:
-	ZLNetworkSSLCertificate(bool doVerify);
-
-private:
-	ZLNetworkSSLCertificate(const ZLNetworkSSLCertificate&);
-	const ZLNetworkSSLCertificate &operator = (const ZLNetworkSSLCertificate&);
+	virtual void simpleSearch(const std::string &pattern) = 0;
 };
 
-#endif /* __ZLNETWORKSSLCERTIFICATE_H__ */
+#endif /* __ZLTREESEARCHER_H__ */

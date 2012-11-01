@@ -59,6 +59,8 @@
 #include "../database/booksdb/BooksDB.h"
 #include "../database/booksdb/BooksDBUtil.h"
 #include "../library/Book.h"
+#include "../networkActions/AuthenticationDialog.h"
+#include "../network/NetworkErrors.h"
 
 static const std::string OPTIONS = "Options";
 
@@ -553,4 +555,9 @@ void FBReader::invalidateNetworkView() {
 
 void FBReader::invalidateAccountDependents() {
 	((NetworkView &) *myNetworkLibraryView).invalidateAccountDependents();
+}
+
+bool FBReader::showAuthDialog(std::string &userName, std::string &password, const ZLResourceKey &errorKey) {
+	std::string message = errorKey.Name.empty() ? std::string() : NetworkErrors::errorMessage(errorKey.Name);
+	return AuthenticationDialog::run(userName, password, message);
 }

@@ -81,7 +81,7 @@ public:
 	shared_ptr<const ZLImage> image() const;
 
 	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
-	void onChildrenReceived(const std::string &error);
+	virtual void onChildrenReceived(const std::string &error);
 
 	NetworkCatalogItem &item();
 
@@ -127,6 +127,21 @@ private:
 
 private:
 	NetworkLink &myLink;
+};
+
+class SearchCatalogTree : public NetworkCatalogTree {
+
+public:
+	static const ZLTypeId TYPE_ID;
+
+private:
+	const ZLTypeId &typeId() const;
+
+public:
+	SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
+
+	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
+	void onChildrenReceived(const std::string &error);
 };
 
 class NetworkAuthorTree : public NetworkTree {
@@ -249,7 +264,5 @@ private:
 	SummaryType mySummaryType;
 	mutable shared_ptr<const ZLImage> myImage;
 };
-
-
 
 #endif /* __NETWORKTREENODES_H__ */

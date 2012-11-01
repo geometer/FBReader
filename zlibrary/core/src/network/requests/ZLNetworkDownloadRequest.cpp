@@ -29,17 +29,15 @@
 #include "ZLNetworkDownloadRequest.h"
 
 
-ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate,
-		const std::string &fileName) :
-	ZLNetworkRequest(url, sslCertificate),
+ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, const std::string &fileName) :
+	ZLNetworkRequest(url),
 	myFileName(fileName),
 	myFileSize(-1),
 	myDownloadedSize(0) {
 }
 
-ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, const ZLNetworkSSLCertificate &sslCertificate,
-		shared_ptr<ZLOutputStream> stream) :
-	ZLNetworkRequest(url, sslCertificate),
+ZLNetworkDownloadRequest::ZLNetworkDownloadRequest(const std::string &url, shared_ptr<ZLOutputStream> stream) :
+	ZLNetworkRequest(url),
 	myFileSize(-1),
 	myDownloadedSize(0),
 	myOutputStream(stream) {

@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <ZLNetworkSSLCertificate.h>
-
 #include "NetworkAuthenticationManager.h"
 
 #include "../NetworkLink.h"
