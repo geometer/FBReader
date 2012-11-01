@@ -92,6 +92,7 @@ private:
 	bool myIsInitialized;
 
 friend class NetworkLinksUpdater;
+friend class NetworkLinkCollectionSynchronizer;
 };
 
 inline const std::string &NetworkLinkCollection::errorMessage() const { return myErrorMessage; }
