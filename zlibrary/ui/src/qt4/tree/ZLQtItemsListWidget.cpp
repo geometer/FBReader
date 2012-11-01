@@ -44,6 +44,7 @@
 static const int ITEM_HEIGHT = 98;
 static const int ITEM_COUNT = 5;
 static const int ITEM_SIZE = 77;
+static const int WAITING_SIZE = 35;
 
 ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent), myLayout(0) {
 
@@ -118,19 +119,20 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 	myTitle = new QLabel;
 	mySubtitle = new QLabel;
 
-	myWaitingIcon = new ZLQtWaitingIconSelfRotating;
+	myWaitingIcon = new ZLQtWaitingIconSelfRotating(QSize(WAITING_SIZE,WAITING_SIZE));
 	myWaitingIcon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
 	myTitle->setWordWrap(true);
 	mySubtitle->setWordWrap(true);
 
-	QSizePolicy policy(QSizePolicy::MinimumExpanding, QSizePolicy::Maximum);
-	//policy.setHorizontalStretch(1);
-	myTitle->setSizePolicy(policy);
-	mySubtitle->setSizePolicy(policy);
+//	QSizePolicy policy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+//	//policy.setHorizontalStretch(1);
+//	myTitle->setSizePolicy(policy);
+//	mySubtitle->setSizePolicy(policy);
 
 	titlesLayout->addWidget(myTitle);
 	titlesLayout->addWidget(mySubtitle);
+	titlesLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
 	mainLayout->addWidget(myIcon);
 	mainLayout->addLayout(titlesLayout);
@@ -142,6 +144,13 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 	setFixedHeight(ITEM_HEIGHT);
 
 	clear();
+}
+
+void ZLQtTreeItem::resizeEvent(QResizeEvent *ev) {
+	int width = ev->size().width();
+	int maxWidth = width - WAITING_SIZE - ITEM_SIZE - 30;
+	myTitle->setMaximumWidth(maxWidth);
+	mySubtitle->setMaximumWidth(maxWidth);
 }
 
 void ZLQtTreeItem::fill(ZLTreeTitledNode *node) {

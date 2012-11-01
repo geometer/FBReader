@@ -59,7 +59,9 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
 	splitter->setChildrenCollapsible(false);
 	splitter->addWidget(myListWidget);
 	splitter->addWidget(myPreviewWidget);
-	splitter->setSizes(QList<int>() << DIALOG_WIDTH_HINT / 2 + myListWidget->verticalScrollBar()->width() << DIALOG_WIDTH_HINT / 2); //50/50 default size
+
+	const int scrollbarWidth = myListWidget->verticalScrollBar()->width() * 2;
+	splitter->setSizes(QList<int>() << DIALOG_WIDTH_HINT / 2 + scrollbarWidth << DIALOG_WIDTH_HINT / 2 - scrollbarWidth); //50/50 default size
 
 	mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 

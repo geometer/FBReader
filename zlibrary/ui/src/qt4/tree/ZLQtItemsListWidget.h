@@ -70,6 +70,9 @@ public:
 	ZLTreeTitledNode *getNode() const;
 	ZLQtWaitingIcon *getWaitingIcon() const;
 
+protected:
+	void resizeEvent(QResizeEvent *);
+
 Q_SIGNALS:
 	void clicked(ZLQtTreeItem* item);
 	void doubleClicked(ZLQtTreeItem* item);

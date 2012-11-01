@@ -38,7 +38,7 @@ class ZLQtWaitingIconSelfRotating : public ZLQtWaitingIcon {
 	Q_OBJECT
 
 public:
-	ZLQtWaitingIconSelfRotating(QSize iconSize = QSize(35,35), QWidget* parent = 0);
+	ZLQtWaitingIconSelfRotating(QSize iconSize, QWidget* parent = 0);
 
 public Q_SLOTS:
 	void start();
