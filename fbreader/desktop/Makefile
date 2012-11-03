@@ -4,8 +4,10 @@ include $(ROOTDIR)/makefiles/config.mk
 TARGET = FBReader
 
 SHARE_FBREADER = $(DESTDIR)$(SHAREDIR)/FBReader
+BINARY = $(DESTDIR)$(BINDIR)/FBReader
 
 install:
+	@strip $(BINARY)
 	@install -d $(DESTDIR)/usr/share/applications
 	@install -m 0644 desktop $(DESTDIR)/usr/share/applications/$(TARGET).desktop
 	@install -d $(DESTDIR)$(IMAGEDIR)
