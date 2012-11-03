@@ -34,6 +34,7 @@ class QLineEdit;
 class ZLPopupData;
 
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
+#include "../../../../core/src/application/ZLMenu.h"
 
 class ZLQtApplicationWindow : public QMainWindow, public ZLDesktopApplicationWindow {
 	Q_OBJECT
@@ -45,6 +46,23 @@ public:
 	void setFocusToMainWidget();
 
 private:
+	class MenuBuilder : public ZLMenuVisitor {
+
+	public:
+		MenuBuilder(ZLQtApplicationWindow &window);
+
+	private:
+		void processSubmenuBeforeItems(ZLMenubar::Submenu &submenu);
+		void processSubmenuAfterItems(ZLMenubar::Submenu &submenu);
+		void processItem(ZLMenubar::PlainItem &item);
+		void processSepartor(ZLMenubar::Separator &separator);
+
+	private:
+		ZLQtApplicationWindow &myWindow;
+	};
+
+	void initMenu();
+
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void init();

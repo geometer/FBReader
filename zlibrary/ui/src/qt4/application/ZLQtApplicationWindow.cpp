@@ -28,6 +28,7 @@
 #include <QtGui/QLayout>
 #include <QtGui/QWheelEvent>
 #include <QtGui/QDockWidget>
+#include <QtGui/QPopupMenu>
 #include <QtCore/QObjectList>
 
 #include <ZLibrary.h>
@@ -96,6 +97,10 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 	menuBar()->hide();
 	show();
+}
+
+void ZLQtApplicationWindow::initMenu() {
+	MenuBuilder(*this).processMenu(application());
 }
 
 void ZLQtApplicationWindow::init() {
@@ -328,4 +333,23 @@ void ZLQtApplicationWindow::setHyperlinkCursor(bool hyperlink) {
 
 void ZLQtApplicationWindow::setFocusToMainWidget() {
 	centralWidget()->setFocus();
+}
+
+ZLQtApplicationWindow::MenuBuilder::MenuBuilder(ZLQtApplicationWindow &window) : myWindow(window) {
+}
+
+void ZLQtApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLMenubar::Submenu &submenu) {
+	if (!myWindow.menuBar()->isVisible()) {
+		myWindow.menuBar()->show();
+	}
+	myWindow.menuBar()->addMenu(new QMenu(QString::fromUtf8(submenu.menuName().c_str())));
+}
+
+void ZLQtApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLMenubar::Submenu &submenu) {
+}
+
+void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
+}
+
+void ZLQtApplicationWindow::MenuBuilder::processSepartor(ZLMenubar::Separator &separator) {
 }

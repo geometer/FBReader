@@ -12,6 +12,7 @@ case "$1" in
 		;;
 	macosx)
 		toolbar_file=data/default/toolbar.macosx.xml
+		menubar_file=data/default/menubar.macosx.xml
 		;;
 	maemo)
 		case "$2" in

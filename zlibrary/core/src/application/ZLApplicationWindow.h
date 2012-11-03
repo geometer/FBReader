@@ -57,7 +57,7 @@ private:
 
 protected:
 	// TODO: change to pure virtual
-	virtual void initMenu() {};
+	virtual void initMenu() = 0;
 
 	ToolbarType type(const ZLToolbar::Item &item) const;
 	bool hasFullscreenToolbar() const;
