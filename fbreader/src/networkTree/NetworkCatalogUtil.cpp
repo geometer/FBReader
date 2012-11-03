@@ -63,12 +63,7 @@ shared_ptr<const ZLImage> NetworkCatalogUtil::getImageByUrl(const std::string &u
 		return image;
 	}
 
-	image = getImageByDataUrl(url);
-	if (!image.isNull()) {
-		return image;
-	}
-
-	return 0;
+	return getImageByDataUrl(url);
 }
 
 class NetworkImageDownloadListener : public ZLNetworkRequest::Listener {
@@ -86,10 +81,12 @@ private:
 shared_ptr<const ZLImage> NetworkCatalogUtil::getAndDownloadImageByUrl(const std::string &url, const ZLTreeNode *node) {
 	shared_ptr<const ZLImage> image = getImageByUrl(url);
 
-	shared_ptr<ZLNetworkRequest> downloadRequest = image->synchronizationData();
-	if (!downloadRequest.isNull()) {
-		downloadRequest->setListener(new NetworkImageDownloadListener(const_cast<ZLTreeNode*>(node)));
-		ZLNetworkManager::Instance().performAsync(downloadRequest);
+	if (!image.isNull()) {
+		shared_ptr<ZLNetworkRequest> downloadRequest = image->synchronizationData();
+		if (!downloadRequest.isNull()) {
+			downloadRequest->setListener(new NetworkImageDownloadListener(const_cast<ZLTreeNode*>(node)));
+			ZLNetworkManager::Instance().performAsync(downloadRequest);
+		}
 	}
 	return image;
 }
