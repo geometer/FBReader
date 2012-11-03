@@ -6,7 +6,6 @@
   ** better icon as placeholder for covers, that's not loaded, for books and catalogs 
 	** now we use 77/77 px resizing for all covers
   ** find waiting icon in .svg 
-  ** extra Qt debug messages during network loading
 
 * new network library UI (in a separate window, with asynchronous calls)
 
