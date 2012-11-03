@@ -12,6 +12,8 @@ if [ "$1" == "-dmg" ]; then
 	IMAGEFILE="$VOLUMENAME.dmg"
 
 	rm -rf $MACFOLDER "$IMAGEFILE" $IMAGEFILE_RW
+  hdiutil detach "/Volumes/$VOLUMENAME"
+
 	mkdir -p $MACFOLDER
 	DESTDIR=$MACFOLDER INSTALLDIR="/FBReader.app" make install
   cp $MACFOLDER/FBReader.app/Contents/Resources/FBReader.icns $MACFOLDER/.VolumeIcon.icns
@@ -42,7 +44,7 @@ if [ "$1" == "-dmg" ]; then
       end tell
     end tell
   " | osascript
-  hdiutil convert $IMAGEFILE_RW -format UDZO -o "$IMAGEFILE"
+  hdiutil convert $IMAGEFILE_RW -format UDZO -o "$IMAGEFILE" -imagekey zlib-level=9
   rm -rf $MACFOLDER $IMAGEFILE_RW
 else
 	rm -rf FBReader.app
