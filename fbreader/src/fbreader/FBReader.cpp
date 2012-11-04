@@ -338,25 +338,28 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 }
 
 void FBReader::tryShowFootnoteView(const std::string &id, ZLHyperlinkType type) {
-	if (type == HYPERLINK_EXTERNAL) {
-		openLinkInBrowser(id);
-	} else if (type == HYPERLINK_INTERNAL) {
-		if (myMode == BOOK_TEXT_MODE && !myModel.isNull()) {
-			BookModel::Label label = myModel->label(id);
-			if (!label.Model.isNull()) {
-				if (label.Model == myModel->bookTextModel()) {
-					bookTextView().gotoParagraph(label.ParagraphNumber);
-				} else {
-					FootnoteView &view = ((FootnoteView&)*myFootnoteView);
-					view.setModel(label.Model);
-					setMode(FOOTNOTE_MODE);
-					view.gotoParagraph(label.ParagraphNumber);
+	switch (type) {
+		case HYPERLINK_EXTERNAL:
+			openLinkInBrowser(id);
+			break;
+		case HYPERLINK_INTERNAL:
+			if (myMode == BOOK_TEXT_MODE && !myModel.isNull()) {
+				BookModel::Label label = myModel->label(id);
+				if (!label.Model.isNull()) {
+					if (label.Model == myModel->bookTextModel()) {
+						bookTextView().gotoParagraph(label.ParagraphNumber);
+					} else {
+						FootnoteView &view = ((FootnoteView&)*myFootnoteView);
+						view.setModel(label.Model);
+						setMode(FOOTNOTE_MODE);
+						view.gotoParagraph(label.ParagraphNumber);
+					}
+					setHyperlinkCursor(false);
+					refreshWindow();
 				}
-				setHyperlinkCursor(false);
-				refreshWindow();
 			}
-		}
-	} else if (type == HYPERLINK_BOOK) {
+			break;
+		case HYPERLINK_BOOK:
 //		DownloadBookRunnable downloader(id);
 //		downloader.executeWithUI();
 //		if (downloader.hasErrors()) {
@@ -370,6 +373,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, ZLHyperlinkType type) 
 //				refreshWindow();
 //			}
 //		}
+			break;
 	}
 }
 
