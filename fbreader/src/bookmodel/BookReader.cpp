@@ -30,7 +30,6 @@ BookReader::BookReader(BookModel &model) : myModel(model) {
 	myCurrentTextModel = 0;
 	myLastTOCParagraphIsEmpty = false;
 
-	myTextParagraphExists = false;
 	myContentsParagraphExists = false;
 
 	myInsideTitle = false;
@@ -54,8 +53,20 @@ void BookReader::setFootnoteTextModel(const std::string &id) {
 	}
 }
 
+bool BookReader::paragraphIsOpen() const {
+	if (myCurrentTextModel.isNull()) {
+		return false;
+	}
+	for (std::list<shared_ptr<ZLTextModel> >::const_iterator it = myModelsWithOpenParagraphs.begin(); it != myModelsWithOpenParagraphs.end(); ++it) {
+		if (*it == myCurrentTextModel) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void BookReader::unsetTextModel() {
-	myCurrentTextModel = 0;
+	myCurrentTextModel.reset();
 }
 
 void BookReader::pushKind(FBTextKind kind) {
@@ -84,19 +95,19 @@ void BookReader::beginParagraph(ZLTextParagraph::Kind kind) {
 		if (!myHyperlinkReference.empty()) {
 			myCurrentTextModel->addHyperlinkControl(myHyperlinkKind, myHyperlinkType, myHyperlinkReference);
 		}
-		myTextParagraphExists = true;
+		myModelsWithOpenParagraphs.push_back(myCurrentTextModel);
 	}
 }
 
 void BookReader::endParagraph() {
-	if (myTextParagraphExists) {
+	if (paragraphIsOpen()) {
 		flushTextBufferToParagraph();
-		myTextParagraphExists = false;
+		myModelsWithOpenParagraphs.remove(myCurrentTextModel);
 	}
 }
 
 void BookReader::addControl(FBTextKind kind, bool start) {
-	if (myTextParagraphExists) {
+	if (paragraphIsOpen()) {
 		flushTextBufferToParagraph();
 		myCurrentTextModel->addControl(kind, start);
 	}
@@ -106,7 +117,7 @@ void BookReader::addControl(FBTextKind kind, bool start) {
 }
 
 void BookReader::addStyleEntry(const ZLTextStyleEntry &entry) {
-	if (myTextParagraphExists) {
+	if (paragraphIsOpen()) {
 		flushTextBufferToParagraph();
 		myCurrentTextModel->addStyleEntry(entry);
 	}
@@ -115,14 +126,14 @@ void BookReader::addStyleEntry(const ZLTextStyleEntry &entry) {
 void BookReader::addStyleCloseEntry() {
 	addControl(REGULAR, false); //used instead in XHTMLReader
 	//TODO implement ZLTextModel::addStyleCloseEntry()
-//	if (myTextParagraphExists) {
+//	if (paragraphIsOpen()) {
 //		flushTextBufferToParagraph();
 //		myCurrentTextModel->addStyleCloseEntry();
 //	}
 }
 
 void BookReader::addFixedHSpace(unsigned char length) {
-	if (myTextParagraphExists) {
+	if (paragraphIsOpen()) {
 		myCurrentTextModel->addFixedHSpace(length);
 	}
 }
@@ -152,7 +163,7 @@ void BookReader::addHyperlinkControl(FBTextKind kind, const std::string &label) 
 		"hyperlink",
 		" + control (" + type + "): " + label
 	);
-	if (myTextParagraphExists) {
+	if (paragraphIsOpen()) {
 		flushTextBufferToParagraph();
 		myCurrentTextModel->addHyperlinkControl(kind, myHyperlinkType, label);
 	}
@@ -162,7 +173,7 @@ void BookReader::addHyperlinkControl(FBTextKind kind, const std::string &label) 
 void BookReader::addHyperlinkLabel(const std::string &label) {
 	if (!myCurrentTextModel.isNull()) {
 		int paragraphNumber = myCurrentTextModel->paragraphsNumber();
-		if (myTextParagraphExists) {
+		if (paragraphIsOpen()) {
 			--paragraphNumber;
 		}
 		addHyperlinkLabel(label, paragraphNumber);
@@ -180,7 +191,7 @@ void BookReader::addHyperlinkLabel(const std::string &label, int paragraphNumber
 }
 
 void BookReader::addData(const std::string &data) {
-	if (!data.empty() && myTextParagraphExists) {
+	if (!data.empty() && paragraphIsOpen()) {
 		if (!myInsideTitle) {
 			mySectionContainsRegularContents = true;
 		}
@@ -224,7 +235,7 @@ void BookReader::insertEndOfTextParagraph() {
 void BookReader::addImageReference(const std::string &id, short vOffset) {
 	if (myCurrentTextModel != 0) {
 		mySectionContainsRegularContents = true;
-		if (myTextParagraphExists) {
+		if (paragraphIsOpen()) {
 			flushTextBufferToParagraph();
 			myCurrentTextModel->addImage(id, myModel.imageMap(), vOffset);
 		} else {

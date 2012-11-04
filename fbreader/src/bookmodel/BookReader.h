@@ -21,6 +21,7 @@
 #define __BOOKREADER_H__
 
 #include <vector>
+#include <list>
 #include <stack>
 #include <string>
 
@@ -87,10 +88,10 @@ private:
 private:
 	BookModel &myModel;
 	shared_ptr<ZLTextModel> myCurrentTextModel;
+	std::list<shared_ptr<ZLTextModel> > myModelsWithOpenParagraphs;
 
 	std::vector<FBTextKind> myKindStack;
 
-	bool myTextParagraphExists;
 	bool myContentsParagraphExists;
 	std::stack<ZLTextTreeParagraph*> myTOCStack;
 	bool myLastTOCParagraphIsEmpty;
@@ -105,10 +106,6 @@ private:
 	FBHyperlinkType myHyperlinkType;
 	FBTextKind myHyperlinkKind;
 };
-
-inline bool BookReader::paragraphIsOpen() const {
-	return myTextParagraphExists;
-}
 
 inline bool BookReader::contentsParagraphIsOpen() const {
 	return myContentsParagraphExists;
