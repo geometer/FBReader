@@ -30,6 +30,7 @@ class QDockWidget;
 class QToolBar;
 class QToolButton;
 class QLineEdit;
+class QMenu;
 
 class ZLPopupData;
 
@@ -59,6 +60,7 @@ private:
 
 	private:
 		ZLQtApplicationWindow &myWindow;
+		QMenu *myCurrentMenu;
 	};
 
 	void initMenu();

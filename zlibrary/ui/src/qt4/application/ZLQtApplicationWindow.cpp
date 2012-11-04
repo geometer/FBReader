@@ -335,21 +335,26 @@ void ZLQtApplicationWindow::setFocusToMainWidget() {
 	centralWidget()->setFocus();
 }
 
-ZLQtApplicationWindow::MenuBuilder::MenuBuilder(ZLQtApplicationWindow &window) : myWindow(window) {
+ZLQtApplicationWindow::MenuBuilder::MenuBuilder(ZLQtApplicationWindow &window) : myWindow(window), myCurrentMenu(0) {
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLMenubar::Submenu &submenu) {
 	if (!myWindow.menuBar()->isVisible()) {
 		myWindow.menuBar()->show();
 	}
-	myWindow.menuBar()->addMenu(new QMenu(QString::fromUtf8(submenu.menuName().c_str())));
+	myCurrentMenu = new QMenu(QString::fromUtf8(submenu.menuName().c_str()));
+	myWindow.menuBar()->addMenu(myCurrentMenu);
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLMenubar::Submenu &submenu) {
+	myCurrentMenu = 0;
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
+	QAction *action = new QAction(QString::fromUtf8(item.name().c_str()), myCurrentMenu);
+	myCurrentMenu->addAction(action);
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processSepartor(ZLMenubar::Separator &separator) {
+	myCurrentMenu->addSeparator();
 }

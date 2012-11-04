@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menubar>
-	<item id="bookInfo"/>
-	<item id="toc"/>
-	<submenu id="library">
+	<submenu id="books">
 		<item id="showLibrary"/>
+		<item id="networkLibrary"/>
 		<item id="previousBook"/>
 		<item id="showRecent"/>
 		<item id="addBook"/>
 		<item id="showHelp"/>
 	</submenu>
-	<submenu id="navigate">
+	<submenu id="view">
+		<item id="toggleFullscreen"/>
+		<item id="toggleIndicator"/>
+		<item id="clearSelection"/>
+		<separator/>
+		<item id="search"/>
+		<item id="findPrevious"/>
+		<item id="findNext"/>
+	</submenu>
+	<submenu id="navigation">
 		<item id="gotoHome"/>
 		<item id="gotoPageNumber"/>
 		<item id="gotoSectionStart"/>
@@ -18,22 +26,6 @@
 		<item id="previousTOCSection"/>
 		<item id="undo"/>
 		<item id="redo"/>
+		<item id="toc"/>
 	</submenu>
-	<submenu id="selection">
-		<item id="copyToClipboard"/>
-		<item id="openInDictionary"/>
-		<item id="clearSelection"/>
-	</submenu>
-	<submenu id="search">
-		<item id="search"/>
-		<item id="findPrevious"/>
-		<item id="findNext"/>
-	</submenu>
-	<submenu id="view">
-		<item id="rotate"/>
-		<item id="toggleFullscreen"/>
-		<item id="toggleIndicator"/>
-	</submenu>
-	<item id="preferences"/>
-	<item id="quit"/>
 </menubar>

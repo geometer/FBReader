@@ -108,6 +108,13 @@
 		<node name="extraLinks" value="Related links"/>
 	</node>
 	<node name="menu">
+		<node name="books" value="Books">
+			<node name="showLibrary" value="Local library"/>
+			<node name="networkLibrary" value="Network catalogs"/>
+		</node>
+		<node name="navigation" value="Navigation">
+			<node name="toc" value="Table of Contents"/>
+		</node>
 		<node name="bookInfo" value="Book Info..."/>
 		<node name="toc" value="Table of Contents"/>
 		<node name="showLibrary" value="Open library"/>
