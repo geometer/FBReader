@@ -1,0 +1,1 @@
+SRCMOC = ZLQApplication.moc.cpp
