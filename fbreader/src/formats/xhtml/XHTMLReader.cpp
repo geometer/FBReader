@@ -26,8 +26,8 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
 #include <ZLXMLNamespace.h>
-#include <ZLLogger.h>
 #include <ZLInputStream.h>
+#include <ZLLogger.h>
 
 #include "XHTMLReader.h"
 #include "../util/EntityFilesCollector.h"
@@ -290,7 +290,8 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 	}
 
 	const std::string fullfileName = pathPrefix(reader) + MiscUtil::decodeHtmlURL(fileName);
-	if (!ZLFile(fullfileName).exists()) {
+	ZLFile imageFile(fullfileName);
+	if (!imageFile.exists()) {
 		return;
 	}
 
@@ -643,20 +644,20 @@ void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 			break;
 		case READ_BODY:
 			if (myPreformatted) {
-				if ((*text == '\r') || (*text == '\n')) {
+				if (*text == '\r' || *text == '\n') {
 					myModelReader.addControl(CODE, false);
 					endParagraph();
 					beginParagraph();
 					myModelReader.addControl(CODE, true);
 				}
 				size_t spaceCounter = 0;
-				while ((spaceCounter < len) && isspace((unsigned char)*(text + spaceCounter))) {
+				while (spaceCounter < len && isspace((unsigned char)*(text + spaceCounter))) {
 					++spaceCounter;
 				}
 				myModelReader.addFixedHSpace(spaceCounter);
 				text += spaceCounter;
 				len -= spaceCounter;
-			} else if ((myNewParagraphInProgress) || !myModelReader.paragraphIsOpen()) {
+			} else if (myNewParagraphInProgress || !myModelReader.paragraphIsOpen()) {
 				while (isspace((unsigned char)*text)) {
 					++text;
 					if (--len == 0) {
