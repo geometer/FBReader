@@ -19,6 +19,8 @@
 
 #include <ZLNetworkUtil.h>
 #include <ZLNetworkManager.h>
+#include <ZLUserData.h>
+#include <ZLExecutionUtil.h>
 
 #include "../../litres/LitResBooksFeedParser.h"
 #include "../../litres/LitResUtil.h"
@@ -123,30 +125,54 @@ bool LitResAuthenticationManager::needPurchase(const NetworkBookItem &book) {
 	return myPurchasedBooksIds.count(book.Id) == 0;
 }
 
-std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &book) {
+class LitResPurchaseBookScope : public ZLUserData {
+public:
+	std::string account;
+	std::string bookId;
+	const NetworkBookItem *book;
+	shared_ptr<ZLNetworkRequest::Listener> listener;
+};
+
+std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &book, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	const std::string &sid = mySidOption.value();
+	std::string error;
 	if (sid.empty()) {
-		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+		error = NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+		listener->finished(error);
+		return error;
 	}
 
 	shared_ptr<BookReference> reference = book.reference(BookReference::BUY);
 	if (reference.isNull()) {
 		// TODO: add correct error message
-		return "Oh, that's impossible";
+		error = "Oh, that's impossible";
+		listener->finished(error);
+		return error;
 	}
 	std::string query = reference->URL;
 	ZLNetworkUtil::appendParameter(query, "sid", sid);
 
-	std::string account, bookId;
-	shared_ptr<ZLXMLReader> xmlReader = new LitResPurchaseDataParser(account, bookId);
+	LitResPurchaseBookScope *scope = new LitResPurchaseBookScope;
+	scope->book = &book;
+	scope->listener = listener;
+	shared_ptr<ZLXMLReader> xmlReader = new LitResPurchaseDataParser(scope->account, scope->bookId);
 
-	shared_ptr<ZLNetworkRequest> networkData = ZLNetworkManager::Instance().createXMLParserRequest(
-		query, xmlReader
-	);
-	std::string error = ZLNetworkManager::Instance().perform(networkData);
+	shared_ptr<ZLNetworkRequest> networkData = ZLNetworkManager::Instance().createXMLParserRequest(query, xmlReader);
 
-	if (!account.empty()) {
-		myAccount = BuyBookReference::price(account, "RUB");
+	shared_ptr<ZLUserDataHolder> scopeData = new ZLUserDataHolder;
+	scopeData->addUserData("scope", scope);
+
+	networkData->setListener(ZLExecutionUtil::createListener(scopeData, this, &LitResAuthenticationManager::onBookPurchased));
+
+
+	return ZLNetworkManager::Instance().performAsync(networkData);
+}
+
+void LitResAuthenticationManager::onBookPurchased(ZLUserDataHolder &data, const std::string &error) {
+	LitResPurchaseBookScope &scope = static_cast<LitResPurchaseBookScope&>(*data.getUserData("scope"));
+	shared_ptr<ZLNetworkRequest::Listener> listener = scope.listener;
+	if (!scope.account.empty()) {
+		myAccount = BuyBookReference::price(scope.account, "RUB");
 	}
 	if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
 		mySidChecked = true;
@@ -156,15 +182,17 @@ std::string LitResAuthenticationManager::purchaseBook(const NetworkBookItem &boo
 	const std::string alreadyPurchasedError = NetworkErrors::errorMessage(NetworkErrors::ERROR_PURCHASE_ALREADY_PURCHASED);
 	if (error != alreadyPurchasedError) {
 		if (!error.empty()) {
-			return error;
+			listener->finished(error);
+			return;
 		}
-		if (bookId != book.Id) {
-			return NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, Link.getSiteName());
+		if (scope.bookId != scope.book->Id) {
+			listener->finished(NetworkErrors::errorMessage(NetworkErrors::ERROR_SOMETHING_WRONG, Link.getSiteName()));
+			return;
 		}
 	}
-	myPurchasedBooksIds.insert(book.Id);
-	myPurchasedBooksList.push_back(new NetworkBookItem(book, 0));
-	return error;
+	myPurchasedBooksIds.insert(scope.book->Id);
+	myPurchasedBooksList.push_back(new NetworkBookItem(*scope.book, 0));
+	listener->finished(error);
 }
 
 shared_ptr<BookReference> LitResAuthenticationManager::downloadReference(const NetworkBookItem &book) {

@@ -128,17 +128,6 @@ private:
 	NetworkAuthenticationManager &myManager;
 };
 
-class PurchaseBookRunnable : public NetworkOperationRunnable {
-
-public:
-	PurchaseBookRunnable(NetworkAuthenticationManager &mgr, const NetworkBookItem &book);
-	void run();
-
-private:
-	NetworkAuthenticationManager &myManager;
-	const NetworkBookItem &myBook;
-};
-
 class PasswordRecoveryRunnable : public NetworkOperationRunnable {
 
 public:

@@ -41,6 +41,7 @@ NetworkBookTree::NetworkBookTree(NetworkTree *parent, shared_ptr<NetworkItem> bo
 	init();
 }
 
+//TODO we don't need a actions wrappers since we don't use old network library
 class NetworkTreeBookReadAction : public NetworkBookReadAction {
 public:
 	NetworkTreeBookReadAction(const NetworkBookTree &tree, const NetworkBookItem &book, bool demo) : NetworkBookReadAction(book, demo), myTree(tree) {}
@@ -53,40 +54,21 @@ private:
 	const NetworkBookTree &myTree;
 };
 
-class NetworkTreeBookDownloadAction : public NetworkBookDownloadAction {
-public:
-	NetworkTreeBookDownloadAction(NetworkBookTree &tree, const NetworkBookItem &book, bool demo, const std::string &tag = std::string()) :
-		NetworkBookDownloadAction(book, demo, tag), myTree(tree) {}
-
-	void run() {
-		myTree.notifyDownloadStarted();
-		NetworkBookDownloadAction::run();
-	}
-
-	void onBookDownloaded(const std::string &error) {
-		myTree.notifyDownloadStopped();
-		NetworkBookDownloadAction::onBookDownloaded(error);
-	}
-
-private:
-	NetworkBookTree &myTree;
-};
-
 static std::vector<shared_ptr<ZLTreeAction> > getBookActions(NetworkBookTree &tree) {
 	std::vector<shared_ptr<ZLTreeAction> > actions;
 	const NetworkBookItem &book = tree.book();
 	if (!book.reference(BookReference::DOWNLOAD_FULL).isNull() ||
 			!book.reference(BookReference::DOWNLOAD_FULL_CONDITIONAL).isNull()) {
 		actions.push_back(new NetworkTreeBookReadAction(tree, book, false));
-		actions.push_back(new NetworkTreeBookDownloadAction(tree, book, false));
+		actions.push_back(new NetworkBookDownloadAction(tree, book, false));
 		actions.push_back(new NetworkBookDeleteAction(book));
 	}
 	if (!book.reference(BookReference::DOWNLOAD_DEMO).isNull()) {
 		actions.push_back(new NetworkTreeBookReadAction(tree, book, true));
-		actions.push_back(new NetworkTreeBookDownloadAction(tree, book, true, tree.resource()["demo"].value()));
+		actions.push_back(new NetworkBookDownloadAction(tree, book, true, tree.resource()["demo"].value()));
 	}
 	if (!book.reference(BookReference::BUY).isNull()) {
-		actions.push_back(new NetworkBookBuyDirectlyAction(book));
+		actions.push_back(new NetworkBookBuyDirectlyAction(tree, book));
 	} else if (!book.reference(BookReference::BUY_IN_BROWSER).isNull()) {
 		actions.push_back(new NetworkBookBuyInBrowserAction(book));
 	}

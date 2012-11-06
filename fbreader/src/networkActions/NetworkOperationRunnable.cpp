@@ -147,17 +147,6 @@ void LogOutRunnable::run() {
 	}
 }
 
-
-PurchaseBookRunnable::PurchaseBookRunnable(NetworkAuthenticationManager &mgr, const NetworkBookItem &book) :
-	NetworkOperationRunnable("purchaseBook"),
-	myManager(mgr),
-	myBook(book) {
-}
-
-void PurchaseBookRunnable::run() {
-	myErrorMessage = myManager.purchaseBook(myBook);
-}
-
 PasswordRecoveryRunnable::PasswordRecoveryRunnable(NetworkAuthenticationManager &mgr, const std::string &email) :
 	NetworkOperationRunnable("passwordRecovery"),
 	myManager(mgr),

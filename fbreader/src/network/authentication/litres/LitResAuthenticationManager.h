@@ -23,6 +23,7 @@
 #include <set>
 
 #include <ZLNetworkRequest.h>
+#include <ZLUserData.h>
 
 #include "../NetworkAuthenticationManager.h"
 #include "../../NetworkItems.h"
@@ -42,7 +43,7 @@ public:
 	bool needsInitialization();
 	std::string initialize();
 	bool needPurchase(const NetworkBookItem &book);
-	std::string purchaseBook(const NetworkBookItem &book);
+	std::string purchaseBook(const NetworkBookItem &, shared_ptr<ZLNetworkRequest::Listener> listener);
 	shared_ptr<BookReference> downloadReference(const NetworkBookItem &book);
 
 	std::string refillAccountLink();
@@ -51,6 +52,9 @@ public:
 	std::string reloadPurchasedBooks();
 	void collectPurchasedBooks(NetworkItem::List &list);
 	const std::set<std::string> &getPurchasedIds() const;
+
+private:
+	void onBookPurchased(ZLUserDataHolder &data, const std::string &error);
 
 private:
 	shared_ptr<ZLNetworkRequest> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);

@@ -62,7 +62,7 @@ public: // Account specific methods (can be called only if authorised!!!)
 	virtual bool needsInitialization();
 	virtual std::string initialize(); // returns error message
 	virtual bool needPurchase(const NetworkBookItem &book); // returns true if link must be purchased before downloading
-	virtual std::string purchaseBook(const NetworkBookItem &book); // returns error message
+	virtual std::string purchaseBook(const NetworkBookItem &, shared_ptr<ZLNetworkRequest::Listener> listener); // returns error message
 
 	virtual std::string refillAccountLink();
 	virtual std::string currentAccount();

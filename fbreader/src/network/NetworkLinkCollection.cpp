@@ -201,6 +201,7 @@ public:
 	NetworkLinkCollectionSynchronizer(NetworkLinkCollection &collection) : myCollection(collection) {}
 	bool run() {
 		myCollection.synchronize();
+		return true;
 	}
 private:
 	NetworkLinkCollection &myCollection;

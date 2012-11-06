@@ -23,39 +23,17 @@
 #include <ZLUserData.h>
 #include "ZLNetworkRequest.h"
 
-class ZLExecutionScope : public ZLUserData {
-
-};
-
-class ZLExecutionListenerScope : public ZLExecutionScope {
-public:
-	shared_ptr<ZLNetworkRequest::Listener> listener;
-};
-
 class ZLExecutionUtil {
 	//code for convenient async syntax createListener method:
 	public:
 		template <typename T, typename Method>
-		static shared_ptr<ZLNetworkRequest::Listener> createListener(shared_ptr<ZLNetworkRequest::Listener> listener, T object, Method method) {
-			ZLExecutionListenerScope *scope = new ZLExecutionListenerScope;
-			scope->listener = listener;
-			return createListener(scope, object, method);
-		}
-
-		template <typename T, typename Method>
-		static shared_ptr<ZLNetworkRequest::Listener> createListener(ZLExecutionScope *scope, T object, Method method) {
-			shared_ptr<ZLUserDataHolder> data = new ZLUserDataHolder;
-			if (scope == 0) {
-				scope = new ZLExecutionScope;
-			}
-			data->addUserData("scope", scope);
+		static shared_ptr<ZLNetworkRequest::Listener> createListener(shared_ptr<ZLUserDataHolder> data, T object, Method method) {
 			data->addUserData(ourHandlerId, new HandlerHelper<T, Method>(object, method));
 			return createListener(data);
 		}
-
 		template <typename T, typename Method>
 		static shared_ptr<ZLNetworkRequest::Listener> createListener(T object, Method method) {
-			return createListener(0, object, method);
+			return createListener(new ZLUserDataHolder, object, method);
 		}
 
 	private:
@@ -73,8 +51,7 @@ class ZLExecutionUtil {
 			}
 
 			void handle(ZLUserDataHolder &data, const std::string &error) {
-				shared_ptr<ZLUserData> scope = data.getUserData("scope");
-				(myObject->*myMethod)(static_cast<ZLExecutionScope&>(*scope), error);
+				(myObject->*myMethod)(data, error);
 			}
 
 		private:
@@ -88,5 +65,7 @@ class ZLExecutionUtil {
 
 friend class ZLExecutionHandler;
 };
+
+
 
 #endif /* __ZLEXECUTIONUTIL_H__ */

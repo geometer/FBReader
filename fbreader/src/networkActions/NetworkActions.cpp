@@ -22,6 +22,7 @@
 #include <ZLStringUtil.h>
 #include <ZLDialogManager.h>
 #include <ZLNetworkRequest.h>
+#include <ZLExecutionUtil.h>
 
 #include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkErrors.h"
@@ -81,7 +82,7 @@ void NetworkBookReadAction::run() {
 	}
 }
 
-NetworkBookDownloadAction::NetworkBookDownloadAction(const NetworkBookItem &book, bool demo, const std::string &tag) : myBook(book), myDemo(demo), myTag(tag) {
+NetworkBookDownloadAction::NetworkBookDownloadAction(NetworkBookTree &tree, const NetworkBookItem &book, bool demo, const std::string &tag) : myTree(tree), myBook(book), myDemo(demo), myTag(tag) {
 }
 
 ZLResourceKey NetworkBookDownloadAction::key() const {
@@ -171,6 +172,9 @@ private:
 };
 
 void NetworkBookDownloadAction::run() {
+
+	myTree.notifyDownloadStarted();
+
 	if (!NetworkOperationRunnable::tryConnect()) {
 		return;
 	}
@@ -188,6 +192,9 @@ void NetworkBookDownloadAction::run() {
 }
 
 void NetworkBookDownloadAction::onBookDownloaded(const std::string &error) {
+
+	myTree.notifyDownloadStopped();
+
 	if (!error.empty()) {
 		NetworkErrors::showErrorMessage(error);
 	}
@@ -228,7 +235,7 @@ void NetworkBookDownloadAction::onBookDownloaded(const std::string &error) {
 	NetworkLibrary::Instance().refresh();
 }
 
-NetworkBookBuyDirectlyAction::NetworkBookBuyDirectlyAction(const NetworkBookItem &book) : myBook(book) {
+NetworkBookBuyDirectlyAction::NetworkBookBuyDirectlyAction(NetworkBookTree &tree, const NetworkBookItem &book) :NetworkBookDownloadAction(tree, book, false) {
 }
 
 ZLResourceKey NetworkBookBuyDirectlyAction::key() const {
@@ -252,48 +259,84 @@ std::string NetworkBookBuyDirectlyAction::text(const ZLResource &resource) const
 }
 
 void NetworkBookBuyDirectlyAction::run() {
-	FBReader &fbreader = FBReader::Instance();
 	if (myBook.Link.authenticationManager().isNull()) {
+		finished(std::string());
 		return;
 	}
 	if (!NetworkOperationRunnable::tryConnect()) {
+		finished(std::string());
+		return;
+	}
+
+	NetworkAuthenticationManager &mgr = *myBook.Link.authenticationManager();
+	shared_ptr<ZLUserDataHolder> data = new ZLUserDataHolder;
+
+	//mgr.isAuthorised(ZLExecutionUtil::createListener(data, this, &NetworkBookBuyDirectlyAction::onAuthorisationCheck));
+	NetworkAuthenticationManager::AuthenticationStatus status = mgr.isAuthorised(true);
+	onAuthorisationCheck(*data, status.Status == B3_TRUE ? std::string() : std::string("not auth"));
+}
+
+void NetworkBookBuyDirectlyAction::onAuthorisationCheck(ZLUserDataHolder &data, const std::string &error) {
+	if (error.empty()) {
+		onAuthorised(data, error);
+	} else {
+		ZLUserDataHolder *copyData = new ZLUserDataHolder(data);
+
+		//AuthenticationDialog::run(*myBook.Link.authenticationManager(), ZLExecutionUtil::createListener(copyData, this, &NetworkBookBuyDirectlyAction::onAuthorised));
+		bool result = AuthenticationDialog::run(*myBook.Link.authenticationManager());
+		onAuthorised(*copyData, result ? std::string() : std::string("not auth"));
+	}
+}
+
+void NetworkBookBuyDirectlyAction::onAuthorised(ZLUserDataHolder &data, const std::string &error) {
+	(void) data;
+	if (!error.empty()) {
+		finished(error);
 		return;
 	}
 	NetworkAuthenticationManager &mgr = *myBook.Link.authenticationManager();
-	if (mgr.isAuthorised().Status != B3_TRUE) {
-		if (!AuthenticationDialog::run(mgr)) {
-			return;
-		}
-		fbreader.invalidateAccountDependents();
-		fbreader.refreshWindow();
-		NetworkLibrary::Instance().refresh();
-		if (!mgr.needPurchase(myBook)) {
-			return;
-		}
+	if (!mgr.needPurchase(myBook)) {
+		finished(std::string());
+		return;
 	}
 	ZLResourceKey boxKey("purchaseConfirmBox");
 	const std::string message = ZLStringUtil::printf(ZLDialogManager::dialogMessage(boxKey), myBook.Title);
 	const int code = ZLDialogManager::Instance().questionBox(boxKey, message, ZLResourceKey("buy"), ZLResourceKey("buyAndDownload"), ZLDialogManager::CANCEL_BUTTON);
 	if (code == 2) {
+		finished(std::string());
 		return;
 	}
 	bool downloadBook = code == 1;
 	if (mgr.needPurchase(myBook)) {
-		PurchaseBookRunnable purchaser(mgr, myBook);
-		purchaser.executeWithUI();
-		if (purchaser.hasErrors()) {
-			purchaser.showErrorMessage();
-			downloadBook = false;
+		ZLUserDataHolder *bookData = new ZLUserDataHolder;
+		if (downloadBook) {
+			bookData->addUserData("downloadBook", new ZLUserData);
 		}
+		myTree.notifyDownloadStarted();
+		mgr.purchaseBook(myBook, ZLExecutionUtil::createListener(bookData, this, &NetworkBookBuyDirectlyAction::onPurchased));
+	} else if (downloadBook) {
+		NetworkBookDownloadAction::run();
 	}
-	if (downloadBook) {
-		NetworkBookDownloadAction(myBook, false).run();
+}
+
+void NetworkBookBuyDirectlyAction::onPurchased(ZLUserDataHolder &data, const std::string &error) {
+	if (!error.empty()) {
+		finished(error);
+		return;
 	}
-	if (mgr.isAuthorised().Status == B3_FALSE) {
-		fbreader.invalidateAccountDependents();
+	if (data.getUserData("downloadBook").isNull()) {
+		finished(std::string());
+	} else {
+		NetworkBookDownloadAction::run();
 	}
-	fbreader.refreshWindow();
+}
+
+void NetworkBookBuyDirectlyAction::finished(const std::string &error) {
+	myTree.notifyDownloadStopped();
 	NetworkLibrary::Instance().refresh();
+	if (!error.empty()) {
+		ZLDialogManager::Instance().errorBox(ZLResourceKey("networkError"), error);
+	}
 }
 
 NetworkBookBuyInBrowserAction::NetworkBookBuyInBrowserAction(const NetworkBookItem &book) : myBook(book) {

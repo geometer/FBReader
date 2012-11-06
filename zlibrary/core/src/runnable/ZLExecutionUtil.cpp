@@ -19,6 +19,8 @@
 
 #include "ZLExecutionUtil.h"
 
+//TODO maybe simplify these methods
+
 std::string ZLExecutionUtil::ourHandlerId = "_zl_handler";
 
 class ZLExecutionHandler : public ZLNetworkRequest::Listener {

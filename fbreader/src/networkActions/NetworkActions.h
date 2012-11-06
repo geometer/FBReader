@@ -29,14 +29,15 @@ class NetworkBookItem;
 class NetworkBookDownloadAction : public ZLRunnableWithKey {
 
 public:
-	NetworkBookDownloadAction(const NetworkBookItem &book, bool demo, const std::string &tag = std::string());
+	NetworkBookDownloadAction(NetworkBookTree &tree, const NetworkBookItem &book, bool demo, const std::string &tag = std::string());
 	ZLResourceKey key() const;
 	bool makesSense() const;
 	void run();
 
 	virtual void onBookDownloaded(const std::string &error); //virtual for using redefined in NetworkTreeBookDownloadAction
 
-private:
+protected:
+	NetworkBookTree &myTree;
 	const NetworkBookItem &myBook;
 	const bool myDemo;
 	const std::string myTag;
@@ -56,17 +57,20 @@ private:
 	const bool myDemo;
 };
 
-class NetworkBookBuyDirectlyAction : public ZLRunnableWithKey {
+class NetworkBookBuyDirectlyAction : public NetworkBookDownloadAction {
 
 public:
-	NetworkBookBuyDirectlyAction(const NetworkBookItem &book);
+	NetworkBookBuyDirectlyAction(NetworkBookTree &tree, const NetworkBookItem &book);
 	ZLResourceKey key() const;
 	bool makesSense() const;
 	std::string text(const ZLResource &resource) const;
 	void run();
 
 private:
-	const NetworkBookItem &myBook;
+	void onAuthorisationCheck(ZLUserDataHolder &data, const std::string &error);
+	void onAuthorised(ZLUserDataHolder &data, const std::string &error);
+	void onPurchased(ZLUserDataHolder &data, const std::string &error);
+	void finished(const std::string &error);
 };
 
 class NetworkBookBuyInBrowserAction : public ZLRunnableWithKey {

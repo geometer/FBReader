@@ -38,8 +38,9 @@ CURRENT RELEASE:
   * show 'found books' item at top level and in each catalog where the search was performed
   * refactoring: remove code for old network library
 
-
-
+	** partial catalogs loading (first 20 books only)
+		*** for OPDS
+		*** for litres
 
 	** "standard search look" for search field
 		DONE use external css file
@@ -50,19 +51,13 @@ CURRENT RELEASE:
 		DONE what will be if another text will be entered during search? (showing rotating icon only for last search request)
 		*** maybe save search results by search pattern
 	
-	** implement a way to stop request that doesn't need
+	** implement a way to stop network request that doesn't need anymore
 
 	** implement async full information loading
-	** partial catalogs loading (first 20 books only)
-		*** for OPDS
-		*** for litres
-
 	** implement async sign in operation
 	** implement async sign out operation
 	** implement async sign up operation
 	** implement async password recovery operation	
-	** implement async buying of book operation
-	** implement async buying & download operation
 
 	** make litres initialize at network library start up (for retrieving account and showing refill account button)
 
@@ -72,7 +67,6 @@ CURRENT RELEASE:
 	** implement async simple search by one catalog
 	?? add selected item to history
 	** implement a way to show network items as they're loading from the network (until others are not loaded yet)
-	** BUG: when pressing buy&download, app crashes
 	** BUG: when loading a book after search, no waiting icon for showing downloading progress
 	?? implement progress showing for book downloading like a progress bar
 	** BUG: at litres "popular books" there's no waiting icon! (looks like this widget doesn't appears because of too long title)
@@ -113,7 +107,11 @@ CURRENT RELEASE:
 	? реализовать фильтр сетевых каталогов по языку (как в FBReaderJ)
 	* реализовать возможность "прятать" отдельные каталоги	
 
-
+	DONE implement async buying of book operation (directly buying)
+		DONE refresh after book is bougth yet
+		DONE refresh icon showing for buying
+		DONE implement async buying & download operation
+		DONE BUG: when pressing buy&download, app crashes
 	DONE back/forward buttons overlaps on Mac
 	DONE can not open feedbooks catalog item: it said 'Catalog is empty'
 	DONE синхронизировать код ePub из FBReaderJ/native
