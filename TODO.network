@@ -7,10 +7,18 @@
 	** now we use 77/77 px resizing for all covers
   ** find waiting icon in .svg 
 
-* new network library UI (in a separate window, with asynchronous calls)
+FUTURE RELEASES:
+  * search logic (future):
+     ** if we are on the top level and there is no selected catalog, search in all catalogs
+     ** if we are inside a catalog or if a catalog is selected, then
+       ** if this catalog supports search, show choice items: all catalogs or '<catalog name>'
+         ** in future, add choice items for different search types
+       ** otherwise, show choice items as described above, but disable '<catalog name>' item
+  * show info about catalogs search failures (where?)
+
 
 CURRENT RELEASE:
-  * merge async-network-ui branch into 0.99; kill 4 branches
+  DONE merge async-network-ui branch into 0.99; kill 4 branches
   * in search field show previous searches as suggestions
   * load first page only on catalog opening; load more items when list is scrolled up
   * do not show 'timed out' message if some catalogs failed the search
@@ -29,69 +37,8 @@ CURRENT RELEASE:
        ** otherwise, disable search field
   * show 'found books' item at top level and in each catalog where the search was performed
 
-FUTURE RELEASES:
-  * search logic (future):
-     ** if we are on the top level and there is no selected catalog, search in all catalogs
-     ** if we are inside a catalog or if a catalog is selected, then
-       ** if this catalog supports search, show choice items: all catalogs or '<catalog name>'
-         ** in future, add choice items for different search types
-       ** otherwise, show choice items as described above, but disable '<catalog name>' item
-  * show info about catalogs search failures (where?)
 
-	DONE back/forward buttons overlaps on Mac
-	DONE can not open feedbooks catalog item: it said 'Catalog is empty'
-	DONE синхронизировать код ePub из FBReaderJ/native
-	DONE удалить "Bound to IP" в диалоге входа Литрес, считать, что флаг всегда стоит
-	DONE при использовании API убрать "лишние" сортировки
-	DONE for items, use standard frame border for "3d" view
-	DONE by default, window should be vertically splitted into 50:50 parts
-	DONE min horizontal size for each part (catalogs list & book info) should be 1/3 of full window width
-	DONE if I resize window, "parts" should be resized proportionally
-	DONE BUG: if click for book items too quicky, there's several previews appeared
-	DONE double click on list item should expand the catalog
-	DONE in book info view, one scroller for all items should be used
-	DONE move all buttons except 'open catalog/expand' to right panel
-	DONE remove ZLExecutionData; remove RTTI info & checks in ZLNetworkRequest usages
-	DONE implement waiting icon for catalog items
-		DONE what if we loading two items at the same time, last should be opened
-		DONE what if try to load element several times
-	DONE additional links for books from feedbooks feed (fix OPDS parser?)
-	DONE icons for feedbooks subcatalog
-	DONE loading icons with relative link (prestigio catalog use it)
-	DONE Show correct tag names for books from feedbooks feed
-	DONE implement progress showing for book downloading
-	DONE async covers loading
-	DONE ability to move forward by history
-	DONE icon for back/forward buttons (with arrows)
-	DONE while covers (or catalog icons) are not loaded, show a placeholder
-	DONE implement actions reloading after some actions pushed
-  	DONE avoid multiple loadings of the same icon
-	DONE fix problem with base64 url cover loading
-		DONE добавить splitter
-		DONE отделение items друг от друга
-		DONE splitter - соотношение виджетов по умолчанию должно быть примерно 2:1
-		DONE list widget -- selectable items
-		DONE preview widget -- добавить прокрутку как в андроиде
-		DONE preview widget - всегда какая-то информация справа
-		DONE preview widget - для BookItem поменять размер для обложки
-		DONE закрывать окно библиотеки при нажатии кнопки "открыть книгу"
-		DONE preview widget - для BookItem добавить обозначения "название", "авторы" и т.п.
-		DONE preview widget - скрывать пустые поля
-		DONE itemlist wiget - ссылки -> кнопки
-		DONE показ waiting icon на плашке при загрузке, до тех пор, пока не загрузится
-		DONE показывать action как ссылки на плашках
-		DONE bug: при переходе в др. каталог, нужно "перематывать" список наверх
-		DONE bug: если в поддереве мало элементов, то они показываются "посередине"
-		DONE bug: размер места под пункты меню может быть гораздо больше, чем самих пунктов
-		DONE для NetworkBookTree показывать preview
-			DONE actionы в этом случае показываются в виде кнопок снизу
-			DONE реализовать подгрузку данных из OPDS каталога по rel="alternate" ссылке (Full Entry)
-			DONE выводить: название, автор, категории и описание
-	DONE block action-button when pushed (downloading, buying, etc)
-	DONE sign in into protected parts of catalogs (feedbooks, wolne lectury)
-	DONE don't make cover in list widget item bigger, if it less than 77/77 px size
-	DONE remove certificates using at all
-	DONE implement async simple search by all catalogs
+
 
 	** "standard search look" for search field
 		DONE use external css file
@@ -164,6 +111,64 @@ FUTURE RELEASES:
 		DONE поддержка "все книги этого автора"		
 	? реализовать фильтр сетевых каталогов по языку (как в FBReaderJ)
 	* реализовать возможность "прятать" отдельные каталоги	
+
+
+	DONE back/forward buttons overlaps on Mac
+	DONE can not open feedbooks catalog item: it said 'Catalog is empty'
+	DONE синхронизировать код ePub из FBReaderJ/native
+	DONE удалить "Bound to IP" в диалоге входа Литрес, считать, что флаг всегда стоит
+	DONE при использовании API убрать "лишние" сортировки
+	DONE for items, use standard frame border for "3d" view
+	DONE by default, window should be vertically splitted into 50:50 parts
+	DONE min horizontal size for each part (catalogs list & book info) should be 1/3 of full window width
+	DONE if I resize window, "parts" should be resized proportionally
+	DONE BUG: if click for book items too quicky, there's several previews appeared
+	DONE double click on list item should expand the catalog
+	DONE in book info view, one scroller for all items should be used
+	DONE move all buttons except 'open catalog/expand' to right panel
+	DONE remove ZLExecutionData; remove RTTI info & checks in ZLNetworkRequest usages
+	DONE implement waiting icon for catalog items
+		DONE what if we loading two items at the same time, last should be opened
+		DONE what if try to load element several times
+	DONE additional links for books from feedbooks feed (fix OPDS parser?)
+	DONE icons for feedbooks subcatalog
+	DONE loading icons with relative link (prestigio catalog use it)
+	DONE Show correct tag names for books from feedbooks feed
+	DONE implement progress showing for book downloading
+	DONE async covers loading
+	DONE ability to move forward by history
+	DONE icon for back/forward buttons (with arrows)
+	DONE while covers (or catalog icons) are not loaded, show a placeholder
+	DONE implement actions reloading after some actions pushed
+  	DONE avoid multiple loadings of the same icon
+	DONE fix problem with base64 url cover loading
+		DONE добавить splitter
+		DONE отделение items друг от друга
+		DONE splitter - соотношение виджетов по умолчанию должно быть примерно 2:1
+		DONE list widget -- selectable items
+		DONE preview widget -- добавить прокрутку как в андроиде
+		DONE preview widget - всегда какая-то информация справа
+		DONE preview widget - для BookItem поменять размер для обложки
+		DONE закрывать окно библиотеки при нажатии кнопки "открыть книгу"
+		DONE preview widget - для BookItem добавить обозначения "название", "авторы" и т.п.
+		DONE preview widget - скрывать пустые поля
+		DONE itemlist wiget - ссылки -> кнопки
+		DONE показ waiting icon на плашке при загрузке, до тех пор, пока не загрузится
+		DONE показывать action как ссылки на плашках
+		DONE bug: при переходе в др. каталог, нужно "перематывать" список наверх
+		DONE bug: если в поддереве мало элементов, то они показываются "посередине"
+		DONE bug: размер места под пункты меню может быть гораздо больше, чем самих пунктов
+		DONE для NetworkBookTree показывать preview
+			DONE actionы в этом случае показываются в виде кнопок снизу
+			DONE реализовать подгрузку данных из OPDS каталога по rel="alternate" ссылке (Full Entry)
+			DONE выводить: название, автор, категории и описание
+	DONE block action-button when pushed (downloading, buying, etc)
+	DONE sign in into protected parts of catalogs (feedbooks, wolne lectury)
+	DONE don't make cover in list widget item bigger, if it less than 77/77 px size
+	DONE remove certificates using at all
+	DONE implement async simple search by all catalogs
+
+
 
 * добавить каталог ParkReader с его собственным API
 
