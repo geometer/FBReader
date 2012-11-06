@@ -36,6 +36,7 @@ CURRENT RELEASE:
        ** if this catalog supports search, search in the catalog only
        ** otherwise, disable search field
   * show 'found books' item at top level and in each catalog where the search was performed
+  * refactoring: remove code for old network library
 
 
 
