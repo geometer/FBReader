@@ -134,6 +134,7 @@ void BookReader::addStyleCloseEntry() {
 
 void BookReader::addFixedHSpace(unsigned char length) {
 	if (paragraphIsOpen()) {
+		flushTextBufferToParagraph();
 		myCurrentTextModel->addFixedHSpace(length);
 	}
 }
