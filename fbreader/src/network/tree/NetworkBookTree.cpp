@@ -19,6 +19,8 @@
 
 #include <ZLResource.h>
 #include <ZLImage.h>
+#include <ZLExecutionUtil.h>
+#include <ZLNetworkManager.h>
 
 #include "NetworkTreeNodes.h"
 #include "NetworkTreeFactory.h"
@@ -104,8 +106,10 @@ std::string NetworkBookTree::subtitle() const {
 }
 
 shared_ptr<ZLTreePageInfo> NetworkBookTree::getPageInfo() /*const*/ {
-	//WARNING: using this, we have a potenital problems with controlling NetworkBookTree object's life time in memory
-	return new BookItemWrapper(*this, myBook);
+	if (myPageInfo.isNull()) {
+		myPageInfo = new BookItemWrapper(*this, myBook);
+	}
+	return myPageInfo;
 }
 
 
@@ -129,16 +133,65 @@ const NetworkBookItem &NetworkBookTree::book() const {
 }
 
 
-NetworkBookTree::BookItemWrapper::BookItemWrapper(NetworkBookTree &tree, shared_ptr<NetworkItem> bookItem) : myTree(tree), myBookItem(bookItem), myIsInitialized(false) {
+NetworkBookTree::BookItemWrapper::BookItemWrapper(NetworkBookTree &tree, shared_ptr<NetworkItem> bookItem) :
+	myTree(tree), myBookItem(bookItem), myIsInitialized(false) {
+}
+
+bool NetworkBookTree::BookItemWrapper::isPageInfoLoaded() {
+	return myIsInitialized;
+}
+
+class BookItemWrapperScope : public ZLUserData {
+public:
+	shared_ptr<ZLNetworkRequest::Listener> listener;
+};
+
+void NetworkBookTree::BookItemWrapper::loadAll(shared_ptr<ZLNetworkRequest::Listener> listener) {
+	if (myIsInitialized) {
+		listener->finished();
+		return;
+	}
+
+	NetworkBookItem &bookItem = book();
+
+	BookItemWrapperScope *scope = new BookItemWrapperScope;
+	scope->listener = listener;
+	shared_ptr<ZLUserDataHolder> scopeData = new ZLUserDataHolder;
+	scopeData->addUserData("scope", scope);
+
+	if (bookItem.isFullyLoaded()) {
+		onInformationLoaded(*scopeData, std::string());
+		return;
+	}
+	bookItem.loadFullInformation(ZLExecutionUtil::createListener(scopeData, this, &NetworkBookTree::BookItemWrapper::onInformationLoaded));
+}
+
+void NetworkBookTree::BookItemWrapper::onInformationLoaded(ZLUserDataHolder &data, const std::string &error){
+	shared_ptr<const ZLImage> cover = image();
+	if (!cover.isNull()) {
+		shared_ptr<ZLNetworkRequest> request = cover->synchronizationData();
+		if (!request.isNull()) {
+			request->setListener(ZLExecutionUtil::createListener(new ZLUserDataHolder(data), this, &NetworkBookTree::BookItemWrapper::onCoverLoaded));
+			ZLNetworkManager::Instance().performAsync(request);
+			return;
+		}
+	}
+	onCoverLoaded(data, error); //if image is loaded already
+}
+
+void NetworkBookTree::BookItemWrapper::onCoverLoaded(ZLUserDataHolder &data, const std::string &error) {
+	BookItemWrapperScope &scope = static_cast<BookItemWrapperScope&>(*data.getUserData("scope"));
+	if (error.empty()) {
+		myIsInitialized = true;
+	}
+	scope.listener->finished(error);
 }
 
 std::string NetworkBookTree::BookItemWrapper::title() const {
-	initialize();
 	return book().Title;
 }
 
 std::vector<std::string> NetworkBookTree::BookItemWrapper::authors() const {
-	initialize();
 	const NetworkBookItem &bookItem = book();
 	std::vector<std::string> authors;
 	for (size_t i = 0; i < bookItem.Authors.size(); ++i) {
@@ -148,17 +201,14 @@ std::vector<std::string> NetworkBookTree::BookItemWrapper::authors() const {
 }
 
 std::vector<std::string> NetworkBookTree::BookItemWrapper::tags() const {
-	initialize();
 	return book().Tags;
 }
 
 std::string NetworkBookTree::BookItemWrapper::summary() const {
-	initialize();
 	return book().Summary;
 }
 
 shared_ptr<const ZLImage> NetworkBookTree::BookItemWrapper::image() const {
-	initialize();
 	shared_ptr<const ZLImage> fullImage = myTree.fullImage();
 	if (!fullImage.isNull()) {
 		return fullImage;
@@ -167,7 +217,7 @@ shared_ptr<const ZLImage> NetworkBookTree::BookItemWrapper::image() const {
 }
 
 const std::vector<shared_ptr<ZLTreeAction> > &NetworkBookTree::BookItemWrapper::actions() const {
-	return myActions;
+	return myTree.actions();
 }
 
 std::string NetworkBookTree::BookItemWrapper::actionText(const shared_ptr<ZLTreeAction> &action) const {
@@ -205,19 +255,6 @@ const std::vector<shared_ptr<ZLTreeAction> > NetworkBookTree::BookItemWrapper::r
 		myRelatedActions.push_back(new RelatedAction(item));
 	}
 	return myRelatedActions;
-}
-
-void NetworkBookTree::BookItemWrapper::initialize() const {
-	if (myIsInitialized) {
-		return;
-	}
-	NetworkBookItem &bookItem = book();
-	if (!bookItem.isFullyLoaded()) {
-		bookItem.loadFullInformation();
-	}
-
-	myActions = getBookActions(myTree);
-	myIsInitialized = true;
 }
 
 NetworkBookItem &NetworkBookTree::BookItemWrapper::book() const {

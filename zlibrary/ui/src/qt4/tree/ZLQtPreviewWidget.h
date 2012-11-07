@@ -25,6 +25,7 @@
 #include <QtGui/QLabel>
 #include <QtGui/QScrollArea>
 #include <QtGui/QVBoxLayout>
+#include <QtCore/QSet>
 
 #include <ZLTreePageNode.h>
 
@@ -39,15 +40,17 @@ public:
 	QSize sizeHint() const;
 
 protected:
-	void fill(const ZLTreePageInfo &info);
+	void setBasicLayout();
+	void fillWaitingIcon();
+	void fillPageInfo(ZLTreePageNode *node);
 	void fillCatalog(const ZLTreeTitledNode *node);
 
 private:
-	//QHBoxLayout *myLayout;
-	QWidget *myWidget;
-	QWidget *myMinSizeWidget;
-
 	ZLTreeNode *myCurrentNode;
+
+	QSet<ZLTreePageNode *> myDownloadingNodes;
+
+friend class PageInfoLoaderListener;
 };
 
 class ZLQtAbstractPageWidget : public QWidget {

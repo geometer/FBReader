@@ -31,7 +31,7 @@ public:
 
 public:
 	bool isFullyLoaded() const;
-	void loadFullInformation();
+	void loadFullInformation(shared_ptr<ZLNetworkRequest::Listener> listener);
 	std::vector<shared_ptr<NetworkItem> > getRelatedCatalogsItems() const;
 
 public:
@@ -80,6 +80,8 @@ protected:
 	static RelatedUrlsList getRelatedUrls(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl);
 private:
 	bool myInformationIsFull;
+
+friend class OPDSBookItemFullInfoLoader;
 
 };
 

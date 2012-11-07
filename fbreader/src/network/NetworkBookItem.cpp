@@ -162,7 +162,8 @@ bool NetworkBookItem::isFullyLoaded() const {
 	return true;
 }
 
-void NetworkBookItem::loadFullInformation() {
+void NetworkBookItem::loadFullInformation(shared_ptr<ZLNetworkRequest::Listener> listener) {
+	listener->finished();
 }
 
 std::vector<shared_ptr<NetworkItem> > NetworkBookItem::getRelatedCatalogsItems() const {

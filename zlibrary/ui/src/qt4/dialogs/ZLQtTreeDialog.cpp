@@ -213,7 +213,6 @@ void ZLQtTreeDialog::onRefresh() {
 void ZLQtTreeDialog::updateNavigationButtons() {
 	myBackButton->setEnabled(myBackHistory.size() > 1);
 	myForwardButton->setEnabled(!myForwardHistory.empty());
-	myPreviewWidget->clear();
 }
 
 void ZLQtTreeDialog::onNodeClicked(ZLQtTreeItem* item) {
@@ -240,6 +239,7 @@ void ZLQtTreeDialog::onBackButton() {
 	myForwardHistory.push(myBackHistory.pop());
 	myListWidget->fillNodes(myBackHistory.top());
 	updateAll();
+	myPreviewWidget->clear(); //TODO implement a way to store what should be previewed on each page
 }
 
 void ZLQtTreeDialog::onForwardButton() {
@@ -250,6 +250,7 @@ void ZLQtTreeDialog::onForwardButton() {
 	myBackHistory.push(myForwardHistory.pop());
 	myListWidget->fillNodes(myBackHistory.top());
 	updateAll();
+	myPreviewWidget->clear(); //TODO implement a way to store what should be previewed on each page
 }
 
 void ZLQtTreeDialog::onSearchField() {

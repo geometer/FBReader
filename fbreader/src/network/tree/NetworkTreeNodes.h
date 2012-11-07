@@ -235,6 +235,11 @@ private:
 	public:
 		BookItemWrapper(NetworkBookTree &tree, shared_ptr<NetworkItem> bookItem);
 
+		bool isPageInfoLoaded();
+		void loadAll(shared_ptr<ZLNetworkRequest::Listener> listener);
+		void onInformationLoaded(ZLUserDataHolder &data, const std::string &error);
+		void onCoverLoaded(ZLUserDataHolder &data, const std::string &error);
+
 	public:
 		std::string title() const;
 		std::vector<std::string> authors() const;
@@ -248,7 +253,6 @@ private:
 		const std::vector<shared_ptr<ZLTreeAction> > relatedActions() const;
 
 	private:
-		void initialize() const;
 		NetworkBookItem &book() const;
 
 	private:
@@ -256,7 +260,6 @@ private:
 		shared_ptr<NetworkItem> myBookItem;
 		mutable bool myIsInitialized;
 
-		mutable std::vector<shared_ptr<ZLTreeAction> > myActions;
 		mutable std::vector<shared_ptr<ZLTreeAction> > myRelatedActions;
 	};
 
@@ -264,6 +267,7 @@ private:
 	shared_ptr<NetworkItem> myBook;
 	SummaryType mySummaryType;
 	mutable shared_ptr<const ZLImage> myImage;
+	shared_ptr<ZLTreePageInfo> myPageInfo;
 };
 
 #endif /* __NETWORKTREENODES_H__ */

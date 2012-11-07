@@ -179,7 +179,7 @@ public:
 	void removeLocalFiles() const;
 
 	virtual bool isFullyLoaded() const;
-	virtual void loadFullInformation();
+	virtual void loadFullInformation(shared_ptr<ZLNetworkRequest::Listener> listener);
 	virtual std::vector<shared_ptr<NetworkItem> > getRelatedCatalogsItems() const;
 
 	void updateReferences(const std::vector<shared_ptr<BookReference> > &references);
