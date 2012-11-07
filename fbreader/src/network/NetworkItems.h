@@ -122,11 +122,12 @@ public:
 	virtual void onDisplayItem();
 	// returns error message
 	virtual std::string loadChildren(List &children, shared_ptr<ZLNetworkRequest::Listener> listener = 0) = 0;
+	virtual bool supportsResumeLoading();
+	virtual std::string resumeLoading(List &children, shared_ptr<ZLNetworkRequest::Listener> listener = 0);
 
 	int getFlags() const;
 	AccessibilityType getAccessibility() const;
 	ZLBoolean3 getVisibility() const;
-
 
 protected:
 	virtual std::string getCatalogUrl();

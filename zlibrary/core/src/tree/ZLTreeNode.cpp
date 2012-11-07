@@ -121,6 +121,12 @@ void ZLTreeNode::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener
 		}
 }
 
+void ZLTreeNode::requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
+	if (!listener.isNull()) {
+		listener->finished();
+	}
+}
+
 const ZLResource &ZLTreeNode::resource() const {
 	static const ZLResource &emptyResource = ZLResource::resource(std::string());
 	return emptyResource;

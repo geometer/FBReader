@@ -41,9 +41,11 @@ public:
 
 public:
 	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener = 0);
+	bool supportsResumeLoading();
+	std::string resumeLoading(List &children, shared_ptr<ZLNetworkRequest::Listener> listener = 0);
 
 private:
-	NetworkOperationData myData;
+	NetworkOperationData myLoadingState;
 };
 
 #endif /* __OPDSCATALOGITEM_H__ */

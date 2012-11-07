@@ -35,7 +35,7 @@ void SearchCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> l
 	NetworkCatalogTree::requestChildren(listener);
 }
 
-void SearchCatalogTree::onChildrenReceived(const std::string &error) {
+void SearchCatalogTree::onChildrenReceived(NetworkItem::List &childrens, const std::string &error) {
 	notifySearchStopped();
-	NetworkCatalogTree::onChildrenReceived(error);
+	NetworkCatalogTree::onChildrenReceived(childrens, error);
 }

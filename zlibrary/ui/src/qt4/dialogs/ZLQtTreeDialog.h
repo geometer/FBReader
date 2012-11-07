@@ -53,10 +53,6 @@ protected:
 public: //listener methods
 	void onExpandRequest(ZLTreeNode *node);
 	void onCloseRequest();
-	void onNodeBeginInsert(ZLTreeNode *parent, size_t index);
-	void onNodeEndInsert();
-	void onNodeBeginRemove(ZLTreeNode *parent, size_t index);
-	void onNodeEndRemove();
 	void onNodeUpdated(ZLTreeNode *node);
 
 	void onDownloadingStarted(ZLTreeNode *node);
@@ -67,8 +63,11 @@ public: //listener methods
 
 	void onRefresh();
 
+	void onMoreChildrenRequest(ZLTreeNode *node);
+
 public:
-	void onChildrenLoaded(const ZLTreeNode *node, bool checkLast, bool success);
+	void onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool success);
+	void onMoreChildrenLoaded(ZLTreeNode *node, bool checkLast, bool success);
 
 private:
 	void updateAll();
@@ -81,6 +80,7 @@ private Q_SLOTS:
 	void onBackButton();
 	void onForwardButton();
 	void onSearchField();
+	void onMoreChildren();
 
 
 private:
@@ -94,19 +94,20 @@ private:
 	ZLQtItemsListWidget *myListWidget;
 	ZLQtPreviewWidget *myPreviewWidget;
 
-	QStack<const ZLTreeNode*> myBackHistory;
-	QStack<const ZLTreeNode*> myForwardHistory;
+	QStack<ZLTreeNode*> myBackHistory;
+	QStack<ZLTreeNode*> myForwardHistory;
 
 private:
 	class ChildrenRequestListener : public ZLNetworkRequest::Listener {
 		public:
-			ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node);
+			ChildrenRequestListener(ZLQtTreeDialog *dialog, ZLTreeNode *node, bool moreMode);
 			void finished(const std::string &error);
 //			const ZLTreeNode *getNode() const;
 
 		private:
 			ZLQtTreeDialog *myTreeDialog;
-			const ZLTreeNode *myNode;
+			ZLTreeNode *myNode;
+			bool myMoreMode;
 	};
 
 //	QList<shared_ptr<ZLNetworkRequest::Listener> > myListeners;
