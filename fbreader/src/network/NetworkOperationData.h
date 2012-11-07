@@ -40,9 +40,6 @@ public:
 	const NetworkLink &Link;
 	NetworkItem::List Items;
 	std::string ResumeURI;
-
-private:
-	size_t myResumeCount;
 };
 
 #endif /* __NETWORKOPERATIONDATA_H__ */

@@ -78,39 +78,59 @@ shared_ptr<const ZLImage> NetworkCatalogTree::image() const {
 class AsyncLoadSubCatalogRunnable : public ZLNetworkRequest::Listener {
 
 public:
-	AsyncLoadSubCatalogRunnable(NetworkCatalogTree *tree, NetworkItem::List &childrens) :
-		myTree(tree), myChildrens(childrens) {
+	AsyncLoadSubCatalogRunnable(NetworkCatalogTree *tree, bool resumeMode) :
+		myTree(tree), myResumeMode(resumeMode) {
 		myTree->notifyDownloadStarted();
-		myTree->item().loadChildren(myChildrens, this);
+		if (myResumeMode) {
+			myTree->item().resumeLoading(myChildrens, this);
+		} else {
+			myTree->item().loadChildren(myChildrens, this);
+		}
 	}
 
 	void finished(const std::string &error) {
 		myTree->notifyDownloadStopped();
-		myTree->onChildrenReceived(error);
+		myTree->onChildrenReceived(myChildrens, error);
 	}
 
 private:
 	NetworkCatalogTree *myTree;
-	NetworkItem::List &myChildrens;
+	NetworkItem::List myChildrens;
+	bool myResumeMode;
 };
 
 void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
 	if (!initAuth()) {
+		listener->finished();
 		return;
 	}
 	myChildrenItems.clear();
 	myListeners.push_back(listener);
 	if (myListeners.size() == 1) {
-		new AsyncLoadSubCatalogRunnable(this, myChildrenItems);
+		new AsyncLoadSubCatalogRunnable(this, false);
 	}
 }
 
-void NetworkCatalogTree::onChildrenReceived(const std::string &error) {
+void NetworkCatalogTree::requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
+	//TODO does double requesting is processed correct?
+	if (!item().supportsResumeLoading()) {
+		listener->finished();
+		return;
+	}
+	myListeners.push_back(listener);
+	if (myListeners.size() == 1) {
+		new AsyncLoadSubCatalogRunnable(this, true);
+	}
+}
+
+void NetworkCatalogTree::onChildrenReceived(NetworkItem::List &childrens, const std::string &error) {
 	if (!error.empty()) {
 		NetworkErrors::showErrorMessage(error);
 		notifyListeners(error);
 		return;
 	}
+
+	myChildrenItems.insert(myChildrenItems.end(), childrens.begin(), childrens.end());
 
 	if (myChildrenItems.empty()) {
 		ZLDialogManager::Instance().informationBox(ZLResourceKey("emptyCatalogBox"));
@@ -128,11 +148,11 @@ void NetworkCatalogTree::onChildrenReceived(const std::string &error) {
 
 	//TODO rewrite this method
 	if (hasSubcatalogs) {
-		for (NetworkItem::List::iterator it = myChildrenItems.begin(); it != myChildrenItems.end(); ++it) {
+		for (NetworkItem::List::iterator it = childrens.begin(); it != childrens.end(); ++it) {
 			NetworkTreeFactory::createNetworkTree(this, *it);
 		}
 	} else {
-		NetworkTreeFactory::fillAuthorTree(this, myChildrenItems);
+		NetworkTreeFactory::fillAuthorTree(this, childrens);
 	}
 
 	notifyListeners(error);

@@ -34,32 +34,45 @@ OPDSCatalogItem::OPDSCatalogItem(
 	const UrlInfoCollection &urlByType,
 	AccessibilityType accessibility,
 	int flags
-		) : NetworkCatalogItem(link, title, summary, urlByType, accessibility, flags), myData(Link) {
+		) : NetworkCatalogItem(link, title, summary, urlByType, accessibility, flags), myLoadingState(Link) {
 }
 
-//class OPDSCatalogItemScope : public ZLExecutionScope {
-//public:
-//	shared_ptr<ZLNetworkRequest> networkData;
-//	shared_ptr<ZLNetworkRequest::Listener> listener;
-//};
-
-class OPDSCatalogItemRunnable : public ZLRunnable {
+class OPDSCatalogItemRunnable : public ZLNetworkRequest::Listener {
 public:
-	OPDSCatalogItemRunnable(NetworkItem::List &children, NetworkOperationData &data) : myChildren(children), myData(data) {}
-	void run() {
-		myChildren.insert(myChildren.end(), myData.Items.begin(), myData.Items.end());
+	OPDSCatalogItemRunnable(shared_ptr<ZLNetworkRequest> request, NetworkItem::List &children, NetworkOperationData &data, shared_ptr<ZLNetworkRequest::Listener> listener) :
+		myChildren(children), myLoadingData(data), myListener(listener) {
+		request->setListener(this);
+		ZLNetworkManager::Instance().performAsync(request);
+	}
+	void finished(const std::string &error) {
+		myChildren.insert(myChildren.end(), myLoadingData.Items.begin(), myLoadingData.Items.end());
+		myListener->finished(error);
 	}
 private:
 	NetworkItem::List &myChildren;
-	NetworkOperationData &myData;
+	NetworkOperationData &myLoadingData;
+	shared_ptr<ZLNetworkRequest::Listener> myListener;
 };
 
+
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
-
 	//TODO implement partial catalogs loading
-	myData.clear();
+	myLoadingState.clear();
+	shared_ptr<ZLNetworkRequest> request = ((OPDSLink&)Link).createNetworkRequest(getCatalogUrl(), myLoadingState);
+	new OPDSCatalogItemRunnable(request, children, myLoadingState, listener);
+	return std::string();
+}
 
-	shared_ptr<ZLNetworkRequest> networkData = ((OPDSLink&)Link).createNetworkData(getCatalogUrl(), myData, new OPDSCatalogItemRunnable(children, myData));
-	networkData->setListener(listener);
-	return ZLNetworkManager::Instance().performAsync(networkData);
+bool OPDSCatalogItem::supportsResumeLoading() {
+	return true;
+}
+
+std::string OPDSCatalogItem::resumeLoading(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
+	shared_ptr<ZLNetworkRequest> request = myLoadingState.resume();
+	if (request.isNull()) {
+		listener->finished();
+		return std::string();
+	}
+	new OPDSCatalogItemRunnable(request, children, myLoadingState, listener);
+	return std::string();
 }

@@ -45,6 +45,15 @@ const ZLTypeId &NetworkCatalogItem::typeId() const {
 void NetworkCatalogItem::onDisplayItem() {
 }
 
+bool NetworkCatalogItem::supportsResumeLoading() {
+	return false;
+}
+
+std::string NetworkCatalogItem::resumeLoading(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
+	listener->finished();
+	return std::string();
+}
+
 std::string NetworkCatalogItem::getCatalogUrl() {
 	return URLByType[URL_CATALOG];
 }

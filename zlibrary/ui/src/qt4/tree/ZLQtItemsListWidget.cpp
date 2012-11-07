@@ -51,6 +51,9 @@ ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent),
 	myContainerWidget = new QWidget;
 	myContainerWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
+	verticalScrollBar()->setTracking(false);
+	connect(verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(onSliderMoved(int)));
+
 	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setWidget(myContainerWidget);
@@ -60,31 +63,56 @@ ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent),
 
 }
 
-void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
+void ZLQtItemsListWidget::clear() {
 	if (myLayout != 0) {
 		delete myLayout;
 		qDeleteAll(myContainerWidget->children());
 	}
-	myItems.clear();
 	myLayout = new QVBoxLayout;
 	myLayout->setContentsMargins(0,0,0,0);
 	myLayout->setSpacing(0);
 	myLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 	myContainerWidget->setLayout(myLayout);
 
+
+	myItems.clear();
+
+}
+
+void ZLQtItemsListWidget::addNode(ZLTreeTitledNode *titledNode) {
+	//qDebug() << QString::fromStdString(titledNode->title());
+	ZLQtTreeItem *item = new ZLQtTreeItem;
+	item->fill(titledNode);
+	connect(item, SIGNAL(clicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*))); //action ExpandAction used instead
+	connect(item, SIGNAL(doubleClicked(ZLQtTreeItem*)), this, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)));
+	myLayout->addWidget(item);
+	myItems.push_back(item);
+}
+
+void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
+	clear();
+
 	foreach(ZLTreeNode* node, expandNode->children()) {
 		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node)) {
-			//qDebug() << QString::fromStdString(titledNode->title());
-			ZLQtTreeItem *item = new ZLQtTreeItem;
-			item->fill(titledNode);
-			connect(item, SIGNAL(clicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*))); //action ExpandAction used instead
-			connect(item, SIGNAL(doubleClicked(ZLQtTreeItem*)), this, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)));
-			myLayout->addWidget(item);
-			myItems.push_back(item);
+			addNode(titledNode);
 		}
 	}
+}
 
-	myLayout->addStretch();
+void ZLQtItemsListWidget::fillNewNodes(const ZLTreeNode *rootNode) {
+	if (myLayout == 0) {
+		return;
+	}
+
+	size_t oldSize = (size_t)myItems.size();
+
+	//qDebug() << Q_FUNC_INFO << oldSize << rootNode->children().size();
+
+	for (size_t i = oldSize; i < rootNode->children().size(); ++i) {
+		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(rootNode->children().at(i))) {
+			addNode(titledNode);
+		}
+	}
 }
 
 QSize ZLQtItemsListWidget::sizeHint() const {
@@ -107,6 +135,13 @@ void ZLQtItemsListWidget::onNodeClicked(ZLQtTreeItem* itemClicked) {
 	emit nodeClicked(itemClicked);
 }
 
+void ZLQtItemsListWidget::onSliderMoved(int value) {
+	qDebug() << Q_FUNC_INFO << value << verticalScrollBar()->minimum()  << verticalScrollBar()->maximum();
+	int maximum = verticalScrollBar()->maximum();
+	if ((double)maximum / (double)value < 1.3) {
+		emit wantMoreChildren();
+	}
+}
 
 ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImageRequested(false) {
 	setAutoFillBackground(true);
