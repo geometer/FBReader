@@ -136,9 +136,9 @@ void ZLQtItemsListWidget::onNodeClicked(ZLQtTreeItem* itemClicked) {
 }
 
 void ZLQtItemsListWidget::onSliderMoved(int value) {
-	qDebug() << Q_FUNC_INFO << value << verticalScrollBar()->minimum()  << verticalScrollBar()->maximum();
+	//qDebug() << Q_FUNC_INFO << value << verticalScrollBar()->minimum()  << verticalScrollBar()->maximum();
 	int maximum = verticalScrollBar()->maximum();
-	if ((double)maximum / (double)value < 1.3) {
+	if ((double)value > (double)max * 0.8) {
 		emit wantMoreChildren();
 	}
 }

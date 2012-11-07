@@ -38,9 +38,9 @@ CURRENT RELEASE:
   * show 'found books' item at top level and in each catalog where the search was performed
   * refactoring: remove code for old network library
 
-	** partial catalogs loading (first 20 books only)
-		*** for OPDS
-		*** for litres
+	DONE partial catalogs loading (first 20 books only)
+		DONE for OPDS
+		DONE for litres
 
 	** "standard search look" for search field
 		DONE use external css file

@@ -28,6 +28,7 @@
 
 #include "LitResUtil.h"
 #include "LitResBooksFeedParser.h"
+#include "LitResBooksFeedItem.h"
 
 #include "LitResByGenresItem.h"
 
@@ -55,38 +56,16 @@ std::string LitResByGenresItem::loadChildren(NetworkItem::List &children, shared
 	for (size_t i = 0; i < myGenreTree.size(); ++i) {
 		shared_ptr<LitResGenre> genre = myGenreTree.at(i);
 		if (genre->Children.empty()) {
-			children.push_back(new LitResBooksForGenreItem(*this, genre));
+			UrlInfoCollection urlByType = URLByType;
+			urlByType[NetworkItem::URL_CATALOG] = LitResUtil::generateBooksByGenreUrl(genre->Id);
+			//TODO add icon change for one genre here
+			//urlByType[NetworkItem::URL_COVER] =
+			children.push_back(new LitResBooksFeedItem(true, Link, genre->Title, EMPTY_STRING, urlByType, ALWAYS));
 		} else {
 			children.push_back(new LitResByGenresItem(genre->Children, Link, genre->Title, EMPTY_STRING, URLByType, ALWAYS, FLAG_NONE));
 		}
 	}
 	listener->finished();
 	return std::string();
-}
-
-LitResBooksForGenreItem::LitResBooksForGenreItem(const NetworkCatalogItem &parent, shared_ptr<LitResGenre> litresGenre)
-	: NetworkCatalogItem(parent.Link, litresGenre->Title, EMPTY_STRING, parent.URLByType, ALWAYS), myLitresGenre(litresGenre) {
-}
-
-class LitResBooksForGenreItemRunnable : public ZLRunnable {
-public:
-	LitResBooksForGenreItemRunnable(NetworkItem::List &children) : myChildren(children) { }
-	void run() {
-			std::sort(myChildren.begin(), myChildren.end(), NetworkBookItemComparator());
-	}
-private:
-	NetworkItem::List &myChildren;
-};
-
-std::string LitResBooksForGenreItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
-	//TODO maybe add sid parameter if possible
-	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
-	shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createXMLParserRequest(
-		LitResUtil::generateBooksByGenreUrl(myLitresGenre->Id),
-		new LitResBooksFeedParser(Link, children),
-		new LitResBooksForGenreItemRunnable(children)
-	);
-	data->setListener(listener);
-	return ZLNetworkManager::Instance().performAsync(data);
 }
 

@@ -56,7 +56,6 @@ private:
 
 
 std::string OPDSCatalogItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
-	//TODO implement partial catalogs loading
 	myLoadingState.clear();
 	shared_ptr<ZLNetworkRequest> request = ((OPDSLink&)Link).createNetworkRequest(getCatalogUrl(), myLoadingState);
 	new OPDSCatalogItemRunnable(request, children, myLoadingState, listener);
