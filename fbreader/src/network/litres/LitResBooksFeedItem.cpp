@@ -20,6 +20,8 @@
 #include <algorithm>
 
 #include <ZLNetworkManager.h>
+#include <ZLNetworkUtil.h>
+#include <ZLStringUtil.h>
 
 #include "../NetworkLink.h"
 #include "../NetworkComparators.h"
@@ -47,32 +49,80 @@ LitResBooksFeedItem::LitResBooksFeedItem(
 	accessibility,
 	flags
 ), myShouldSort(shouldSort) {
+
 }
 
 void LitResBooksFeedItem::onDisplayItem() {
 }
 
-class LitResBooksFeedItemRunnable : public ZLRunnable {
+class LitResBooksFeedItemRunnable : public ZLNetworkRequest::Listener {
 public:
-	LitResBooksFeedItemRunnable(LitResBooksFeedItem *item, NetworkItem::List &children) : myItem(item), myChildren(children) { }
-	void run() {
-		if (myItem->myShouldSort) {
-			std::sort(myChildren.begin(), myChildren.end(), NetworkBookItemComparator());
+	LitResBooksFeedItemRunnable(LitResBooksFeedItem &item, shared_ptr<ZLNetworkRequest> request, NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) :
+		myItem(item), myChildren(children), myListener(listener) {
+		request->setListener(this);
+		ZLNetworkManager::Instance().performAsync(request);
+	}
+
+	void finished(const std::string &error) {
+		if (error.empty()) {
+			++myItem.myLoadingState.CurrentPage;
+			if (myItem.myShouldSort) {
+				std::sort(myChildren.begin(), myChildren.end(), NetworkBookItemComparator());
+			}
 		}
+		myListener->finished(error);
 	}
 private:
-	LitResBooksFeedItem *myItem;
+	LitResBooksFeedItem &myItem;
 	NetworkItem::List &myChildren;
+	shared_ptr<ZLNetworkRequest::Listener> myListener;
 };
 
+
 std::string LitResBooksFeedItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
-	//TODO maybe add sid parameter if possible
-	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
-	shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createXMLParserRequest(
-		getCatalogUrl(),
-		new LitResBooksFeedParser(Link, children),
-		new LitResBooksFeedItemRunnable(this, children)
-	);
-	data->setListener(listener);
-	return ZLNetworkManager::Instance().performAsync(data);
+//	//TODO maybe add sid parameter if possible
+//	//(at LitRes API documentation it said that's adding sid _always_ is a good practice)
+
+	myLoadingState.CurrentPage = 0;
+	myLoadingState.AllPagesCount = 1;
+
+	shared_ptr<ZLNetworkRequest> request = getRequest(children);
+	new LitResBooksFeedItemRunnable(*this, request, children, listener);
+	return std::string();
 }
+
+bool LitResBooksFeedItem::supportsResumeLoading() {
+	return true;
+}
+
+std::string LitResBooksFeedItem::resumeLoading(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
+	shared_ptr<ZLNetworkRequest> request = getRequest(children);
+	if (request.isNull()) {
+		listener->finished();
+		return std::string();
+	}
+	new LitResBooksFeedItemRunnable(*this, request, children, listener);
+	return std::string();
+}
+
+shared_ptr<ZLNetworkRequest> LitResBooksFeedItem::getRequest(NetworkItem::List &children) {
+	if (myLoadingState.CurrentPage >= myLoadingState.AllPagesCount) {
+		return 0;
+	}
+	return ZLNetworkManager::Instance().createXMLParserRequest(
+		withLimitParameters(getCatalogUrl(), myLoadingState),
+		new LitResBooksFeedParser(Link, children, &myLoadingState)
+	);
+}
+
+std::string LitResBooksFeedItem::withLimitParameters(std::string query, const LoadingState &state) {
+	static const unsigned int ITEMS_PER_PAGE = 20;
+	unsigned int startItemNumber = (unsigned int)state.CurrentPage * ITEMS_PER_PAGE;
+	std::string params;
+	ZLStringUtil::appendNumber(params, startItemNumber);
+	params += ",";
+	ZLStringUtil::appendNumber(params, ITEMS_PER_PAGE);
+	ZLNetworkUtil::appendParameter(query, "limit", params);
+	return query;
+}
+

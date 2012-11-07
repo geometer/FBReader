@@ -119,8 +119,8 @@ void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 }
 
 void ZLQtTreeDialog::onMoreChildrenRequest(ZLTreeNode *node) {
-	myLastClickedNode = node;
-	qDebug() << Q_FUNC_INFO << node << node->children().size();
+	//TODO implement the way to not sending new request for more children
+	//qDebug() << Q_FUNC_INFO << node << node->children().size();
 	//TODO don't ask many times
 	node->requestMoreChildren(new ChildrenRequestListener(this, node, true));
 }
@@ -146,11 +146,10 @@ void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool suc
 }
 
 void ZLQtTreeDialog::onMoreChildrenLoaded(ZLTreeNode *node, bool /*checkLast*/, bool successLoaded) {
-	qDebug() << Q_FUNC_INFO << node << node->children().size();
+	//qDebug() << Q_FUNC_INFO << node << node->children().size();
 	if (!successLoaded) {
 		return;
 	}
-	myLastClickedNode = 0; //for case if item has been requested for several times
 	myListWidget->fillNewNodes(myBackHistory.top());
 	updateAll();
 }

@@ -25,19 +25,31 @@
 class LitResBooksFeedItem : public NetworkCatalogItem {
 
 public:
+	struct LoadingState {
+		int CurrentPage;
+		int AllPagesCount;
+	} myLoadingState;
+
+public:
 	LitResBooksFeedItem(
 		bool shouldSort,
 		const NetworkLink &link,
 		const std::string &title,
 		const std::string &summary,
 		const UrlInfoCollection &urlByType,
-		AccessibilityType accessibility = AlWAYS,
+		AccessibilityType accessibility = ALWAYS,
 		int flags = FLAGS_DEFAULT
 	);
 
 private:
 	void onDisplayItem();
 	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
+	bool supportsResumeLoading();
+	std::string resumeLoading(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
+
+private:
+	shared_ptr<ZLNetworkRequest> getRequest(NetworkItem::List &children);
+	static std::string withLimitParameters(std::string url, const LoadingState &state);
 
 private:
 	bool myShouldSort;
