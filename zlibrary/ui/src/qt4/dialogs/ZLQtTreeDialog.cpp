@@ -224,7 +224,7 @@ void ZLQtTreeDialog::saveShowParameters() {
 	}
 	ShowParameter parameter;
 	parameter.sliderPosition = myListWidget->verticalScrollBar()->value();
-	parameter.activeItemNumber = -1;
+	parameter.activeItemNumber = -1;	
 	for (int i = 0; i < myListWidget->getItems().size(); ++i) {
 		if (myListWidget->getItems().at(i)->isActive()) {
 			parameter.activeItemNumber = i;
@@ -246,6 +246,8 @@ void ZLQtTreeDialog::setupShowParameters() {
 	ShowParameter parameter = myShowParameters.value(myBackHistory.top());
 	if (parameter.activeItemNumber != -1 && myListWidget->getItems().size() >= parameter.activeItemNumber) {
 		myListWidget->onNodeClicked(myListWidget->getItems().at(parameter.activeItemNumber));
+	} else {
+		myPreviewWidget->clear();
 	}
 }
 
