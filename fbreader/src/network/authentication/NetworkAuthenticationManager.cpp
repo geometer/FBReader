@@ -35,7 +35,8 @@ bool NetworkAuthenticationManager::needsInitialization() {
 	return false;
 }
 
-std::string NetworkAuthenticationManager::initialize() {
+std::string NetworkAuthenticationManager::initialize(shared_ptr<ZLNetworkRequest::Listener> listener) {
+	listener->finished();
 	return NetworkErrors::errorMessage(NetworkErrors::ERROR_UNSUPPORTED_OPERATION);
 }
 

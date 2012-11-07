@@ -75,7 +75,7 @@ ZLBoolean3 NetworkCatalogItem::getVisibility() const {
 			if (mgr.isNull()) {
 				return B3_FALSE;
 			}
-			return mgr->isAuthorised(false).Status;
+			return mgr->isAuthorised().Status;
 	}
 	return B3_FALSE;
 }
