@@ -643,7 +643,7 @@ void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 			break;
 		case READ_BODY:
 			if (myPreformatted) {
-				while (*text == '\r' || *text == '\n') {
+				if (*text == '\r' || *text == '\n') {
 					endParagraph();
 					text += 1;
 					len -= 1;
