@@ -87,7 +87,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 	enum AccessibilityType {
-		AlWAYS,
+		ALWAYS,
 		SIGNED_IN
 	};
 
@@ -112,7 +112,7 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const UrlInfoCollection &urlByType,
-		AccessibilityType accessibility = AlWAYS,
+		AccessibilityType accessibility = ALWAYS,
 		int flags = FLAGS_DEFAULT
 	);
 
@@ -122,11 +122,12 @@ public:
 	virtual void onDisplayItem();
 	// returns error message
 	virtual std::string loadChildren(List &children, shared_ptr<ZLNetworkRequest::Listener> listener = 0) = 0;
+	virtual bool supportsResumeLoading();
+	virtual std::string resumeLoading(List &children, shared_ptr<ZLNetworkRequest::Listener> listener = 0);
 
 	int getFlags() const;
 	AccessibilityType getAccessibility() const;
 	ZLBoolean3 getVisibility() const;
-
 
 protected:
 	virtual std::string getCatalogUrl();
@@ -178,7 +179,7 @@ public:
 	void removeLocalFiles() const;
 
 	virtual bool isFullyLoaded() const;
-	virtual void loadFullInformation();
+	virtual void loadFullInformation(shared_ptr<ZLNetworkRequest::Listener> listener);
 	virtual std::vector<shared_ptr<NetworkItem> > getRelatedCatalogsItems() const;
 
 	void updateReferences(const std::vector<shared_ptr<BookReference> > &references);

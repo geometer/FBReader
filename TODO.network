@@ -23,8 +23,9 @@ CURRENT RELEASE:
   * load first page only on catalog opening; load more items when list is scrolled up
   * do not show 'timed out' message if some catalogs failed the search
   * during search, show found items immediately, do not wait for the search end
-  * show 'wait' icon for book info loading (HUGE icon in the right pane)
-  * hide vertical scrollbar in catalog part of the network dialog if it make no sense
+  DONE show 'wait' icon for book info loading (HUGE icon in the right pane)
+  * find a good HUGE icon for book info loading
+  DONE hide vertical scrollbar in catalog part of the network dialog if it make no sense
   * hide "loading" animation while authentication dialog is shown
   * do not show 'authentication failed' dialog after pressing 'Cancel' button in authentication dialog
   * reload litres catalog after login/logout
@@ -38,9 +39,9 @@ CURRENT RELEASE:
   * show 'found books' item at top level and in each catalog where the search was performed
   * refactoring: remove code for old network library
 
-	** partial catalogs loading (first 20 books only)
-		*** for OPDS
-		*** for litres
+	DONE partial catalogs loading (first 20 books only)
+		DONE for OPDS
+		DONE for litres
 
 	** "standard search look" for search field
 		DONE use external css file
@@ -53,7 +54,8 @@ CURRENT RELEASE:
 	
 	** implement a way to stop network request that doesn't need anymore
 
-	** implement async full information loading
+	DONE implement async full information loading
+
 	** implement async sign in operation
 	** implement async sign out operation
 	** implement async sign up operation

@@ -84,6 +84,7 @@ public:
 	size_t childIndex() const;
 	// Children should be requested from network only if we need them
 	virtual void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener = 0);
+	virtual void requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener = 0);
 	
 	virtual const ZLResource &resource() const;
 	void registerAction(shared_ptr<ZLTreeAction> action);

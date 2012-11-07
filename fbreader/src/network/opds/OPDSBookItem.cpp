@@ -54,27 +54,43 @@ bool OPDSBookItem::isFullyLoaded() const {
 	return myInformationIsFull || URLByType.find(URL_SINGLE_ENTRY) == URLByType.end();
 }
 
-void OPDSBookItem::loadFullInformation() {
+class OPDSBookItemFullInfoLoader : public ZLNetworkRequest::Listener {
+public:
+	OPDSBookItemFullInfoLoader(OPDSBookItem &item, shared_ptr<ZLNetworkRequest> request, shared_ptr<ZLNetworkRequest::Listener> listener) :
+		myItem(item), myListener(listener) {
+		request->setListener(this);
+		ZLNetworkManager::Instance().performAsync(request);
+	}
+
+	void finished(const std::string &error) {
+		if (error.empty()) {
+			myItem.myInformationIsFull = true;
+		}
+		myListener->finished(error);
+	}
+private:
+	OPDSBookItem &myItem;
+	shared_ptr<ZLNetworkRequest::Listener> myListener;
+};
+
+void OPDSBookItem::loadFullInformation(shared_ptr<ZLNetworkRequest::Listener> listener) {
 	if (myInformationIsFull) {
-			return;
+		listener->finished();
+		return;
 	}
 
 	if (URLByType.find(URL_SINGLE_ENTRY) == URLByType.end()) {
 		myInformationIsFull = true;
+		listener->finished();
 		return;
 	}
 
 	std::string url = URLByType[URL_SINGLE_ENTRY];
-
-	shared_ptr<ZLNetworkRequest> data = ZLNetworkManager::Instance().createXMLParserRequest(
+	shared_ptr<ZLNetworkRequest> request = ZLNetworkManager::Instance().createXMLParserRequest(
 				url, new OPDSXMLParser(new FullEntryReader(*this, (const OPDSLink&)Link, url), true)
 	);
-	//TODO show wait message here
-	std::string error = ZLNetworkManager::Instance().perform(data);
-	if (error.empty()) {
-		myInformationIsFull = true;
-	}
-	//TODO maybe insert error message showing
+
+	new OPDSBookItemFullInfoLoader(*this, request, listener);
 }
 
 std::vector<shared_ptr<NetworkItem> > OPDSBookItem::getRelatedCatalogsItems() const {

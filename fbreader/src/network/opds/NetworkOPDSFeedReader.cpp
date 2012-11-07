@@ -192,7 +192,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 			entry.title(),
 			annotation,
 			urlMap,
-			dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::AlWAYS,
+			dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::ALWAYS,
 			catalogFlags
 		);
 	}

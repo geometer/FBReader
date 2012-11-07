@@ -34,6 +34,8 @@ public:
 	virtual void finish() = 0;
 };
 
+//TODO implement waiting icon based on *.png series (as a frames)
+
 class ZLQtWaitingIconSelfRotating : public ZLQtWaitingIcon {
 	Q_OBJECT
 

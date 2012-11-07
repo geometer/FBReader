@@ -45,6 +45,15 @@ const ZLTypeId &NetworkCatalogItem::typeId() const {
 void NetworkCatalogItem::onDisplayItem() {
 }
 
+bool NetworkCatalogItem::supportsResumeLoading() {
+	return false;
+}
+
+std::string NetworkCatalogItem::resumeLoading(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
+	listener->finished();
+	return std::string();
+}
+
 std::string NetworkCatalogItem::getCatalogUrl() {
 	return URLByType[URL_CATALOG];
 }
@@ -60,7 +69,7 @@ NetworkCatalogItem::AccessibilityType NetworkCatalogItem::getAccessibility() con
 ZLBoolean3 NetworkCatalogItem::getVisibility() const {
 	shared_ptr<NetworkAuthenticationManager> mgr = Link.authenticationManager();
 	switch (myAccessibility) {
-		case AlWAYS:
+		case ALWAYS:
 			return B3_TRUE;
 		case SIGNED_IN:
 			if (mgr.isNull()) {

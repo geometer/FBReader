@@ -27,6 +27,8 @@
 
 #include "../NetworkItems.h"
 
+#include "LitResBooksFeedItem.h"
+
 class NetworkLink;
 struct LitResGenre;
 class NetworkAuthenticationManager;
@@ -34,7 +36,7 @@ class NetworkAuthenticationManager;
 class LitResBooksFeedParser : public ZLXMLReader {
 
 public:
-	LitResBooksFeedParser(const NetworkLink &link, NetworkItem::List &books);
+	LitResBooksFeedParser(const NetworkLink &link, NetworkItem::List &books, LitResBooksFeedItem::LoadingState *state = 0);
 
 private:
 	void startElementHandler(const char *tag, const char **attributes);
@@ -80,6 +82,8 @@ private:
 	std::vector<std::string> myTags;
 	NetworkItem::UrlInfoCollection myURLByType;
 	std::vector<shared_ptr<BookReference> > myReferences;
+
+	LitResBooksFeedItem::LoadingState *myLoadingState;
 };
 
 #endif /* __LITRESBOOKSFEEDPARSER_H__ */

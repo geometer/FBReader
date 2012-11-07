@@ -25,6 +25,10 @@
 
 class ZLTreePageInfo {
 public:
+
+	virtual bool isPageInfoLoaded() = 0;
+	virtual void loadAll(shared_ptr<ZLNetworkRequest::Listener> listener) = 0;
+
 	virtual std::string title() const = 0;
 	virtual std::vector<std::string> authors() const = 0;
 	virtual std::vector<std::string> tags() const = 0;
