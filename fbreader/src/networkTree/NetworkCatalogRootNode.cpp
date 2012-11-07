@@ -155,7 +155,7 @@ NetworkCatalogAuthAction::NetworkCatalogAuthAction(NetworkAuthenticationManager 
 }
 
 bool NetworkCatalogAuthAction::makesSense() const {
-	return (myManager.isAuthorised(false).Status == B3_FALSE) != myForLoggedUsers;
+	return (myManager.isAuthorised().Status == B3_FALSE) != myForLoggedUsers;
 }
 
 NetworkCatalogRootNode::LoginAction::LoginAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, false) {

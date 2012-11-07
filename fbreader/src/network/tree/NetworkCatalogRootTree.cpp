@@ -129,7 +129,7 @@ NetworkTreeCatalogAuthAction::NetworkTreeCatalogAuthAction(NetworkAuthentication
 }
 
 bool NetworkTreeCatalogAuthAction::makesSense() const {
-	return (myManager.isAuthorised(false).Status == B3_FALSE) != myForLoggedUsers;
+	return (myManager.isAuthorised().Status == B3_FALSE) != myForLoggedUsers;
 }
 
 NetworkCatalogRootTree::LoginAction::LoginAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, false) {

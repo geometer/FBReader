@@ -99,16 +99,55 @@ private:
 	bool myResumeMode;
 };
 
+//class NetworkCatalogTreeAuthScope : public ZLUserData {
+//public:
+//	shared_ptr<ZLNetworkRequest::Listener> listener;
+//};
+
 void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
-	if (!initAuth()) {
-		listener->finished();
+	myListeners.push_back(listener);
+	if (myListeners.size() > 1) {
 		return;
 	}
 	myChildrenItems.clear();
-	myListeners.push_back(listener);
-	if (myListeners.size() == 1) {
-		new AsyncLoadSubCatalogRunnable(this, false);
+
+	shared_ptr<ZLUserDataHolder> scopeData = new ZLUserDataHolder;
+
+	notifyDownloadStarted();
+
+	const NetworkLink &link = item().Link;
+	shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
+	if (!manager.isNull()) {
+//		NetworkCatalogTreeAuthScope *scope = new NetworkCatalogTreeAuthScope;
+//		scope->listener = listener;
+		manager->isAuthorised(ZLExecutionUtil::createListener(scopeData, this, &NetworkCatalogTree::onAuthCheck));
+		return;
 	}
+
+	onInitialization(*scopeData, std::string());
+}
+
+void NetworkCatalogTree::onAuthCheck(ZLUserDataHolder &data, const std::string &error) {
+	if (error.empty()) {
+		const NetworkLink &link = item().Link;
+		shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
+		if (!manager.isNull() && manager->needsInitialization()) {
+			manager->initialize(ZLExecutionUtil::createListener(new ZLUserDataHolder(data), this, &NetworkCatalogTree::onInitialization));
+		}
+		return;
+	}
+	onInitialization(data, error);
+}
+
+void NetworkCatalogTree::onInitialization(ZLUserDataHolder &data, const std::string &error) {
+	if (!error.empty()) {
+		const NetworkLink &link = item().Link;
+		shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
+		if (!manager.isNull()) {
+			manager->logOut();
+		}
+	}
+	new AsyncLoadSubCatalogRunnable(this, false);
 }
 
 void NetworkCatalogTree::requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
@@ -168,32 +207,6 @@ void NetworkCatalogTree::notifyListeners(const std::string &error) {
 
 NetworkCatalogItem &NetworkCatalogTree::item() {
 	return (NetworkCatalogItem&)*myItem;
-}
-
-bool NetworkCatalogTree::initAuth() {
-	if (!NetworkOperationRunnable::tryConnect()) {
-		return false;
-	}
-
-	const NetworkLink &link = item().Link;
-	if (!link.authenticationManager().isNull()) {
-		NetworkAuthenticationManager &mgr = *link.authenticationManager();
-		IsAuthorisedRunnable checker(mgr);
-		checker.executeWithUI();
-		if (checker.hasErrors()) {
-			checker.showErrorMessage();
-			return false;
-		}
-		if (checker.result() == B3_TRUE && mgr.needsInitialization()) {
-			InitializeAuthenticationManagerRunnable initializer(mgr);
-			initializer.executeWithUI();
-			if (initializer.hasErrors()) {
-				LogOutRunnable logout(mgr);
-				logout.executeWithUI();
-			}
-		}
-	}
-	return true;
 }
 
 const ZLResource &NetworkCatalogTree::resource() const {
