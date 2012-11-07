@@ -72,6 +72,7 @@ public:
 	ZLQtTreeItem(QWidget *parent = 0);
 	void fill(ZLTreeTitledNode *node);
 	void setActive(bool active);
+	bool isActive() const;
 
 public:
 	ZLTreeTitledNode *getNode() const;
@@ -102,7 +103,7 @@ private:
 	 ZLQtWaitingIcon *myWaitingIcon;
 	 bool myImageRequested;
 
-	 bool isActive;
+	 bool myIsActive;
 };
 
 #endif /* __ZLQTITEMSLISTWIDGET_H__ */
