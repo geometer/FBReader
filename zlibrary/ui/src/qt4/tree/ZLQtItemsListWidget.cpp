@@ -54,7 +54,7 @@ ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent),
 	verticalScrollBar()->setTracking(false);
 	connect(verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(onSliderMoved(int)));
 
-	setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+	setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
 	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 	setWidget(myContainerWidget);
 	setFrameShape(QFrame::NoFrame);
