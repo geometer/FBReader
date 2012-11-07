@@ -69,7 +69,7 @@ NetworkCatalogItem::AccessibilityType NetworkCatalogItem::getAccessibility() con
 ZLBoolean3 NetworkCatalogItem::getVisibility() const {
 	shared_ptr<NetworkAuthenticationManager> mgr = Link.authenticationManager();
 	switch (myAccessibility) {
-		case AlWAYS:
+		case ALWAYS:
 			return B3_TRUE;
 		case SIGNED_IN:
 			if (mgr.isNull()) {

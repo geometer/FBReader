@@ -320,7 +320,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 }
 
 bool NetworkView::processAccountDependent(NetworkCatalogItem &item) {
-	if (item.getAccessibility() == NetworkCatalogItem::AlWAYS) {
+	if (item.getAccessibility() == NetworkCatalogItem::ALWAYS) {
 		return true;
 	}
 	const NetworkLink &link = item.Link;

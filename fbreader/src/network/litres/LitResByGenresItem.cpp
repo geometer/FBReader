@@ -57,7 +57,7 @@ std::string LitResByGenresItem::loadChildren(NetworkItem::List &children, shared
 		if (genre->Children.empty()) {
 			children.push_back(new LitResBooksForGenreItem(*this, genre));
 		} else {
-			children.push_back(new LitResByGenresItem(genre->Children, Link, genre->Title, EMPTY_STRING, URLByType, AlWAYS, FLAG_NONE));
+			children.push_back(new LitResByGenresItem(genre->Children, Link, genre->Title, EMPTY_STRING, URLByType, ALWAYS, FLAG_NONE));
 		}
 	}
 	listener->finished();
@@ -65,7 +65,7 @@ std::string LitResByGenresItem::loadChildren(NetworkItem::List &children, shared
 }
 
 LitResBooksForGenreItem::LitResBooksForGenreItem(const NetworkCatalogItem &parent, shared_ptr<LitResGenre> litresGenre)
-	: NetworkCatalogItem(parent.Link, litresGenre->Title, EMPTY_STRING, parent.URLByType, AlWAYS), myLitresGenre(litresGenre) {
+	: NetworkCatalogItem(parent.Link, litresGenre->Title, EMPTY_STRING, parent.URLByType, ALWAYS), myLitresGenre(litresGenre) {
 }
 
 class LitResBooksForGenreItemRunnable : public ZLRunnable {
