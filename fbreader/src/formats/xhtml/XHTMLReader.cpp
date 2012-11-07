@@ -380,7 +380,7 @@ XHTMLTagParagraphWithControlAction::XHTMLTagParagraphWithControlAction(FBTextKin
 }
 
 void XHTMLTagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const char**) {
-	if ((myControl == TITLE) && (bookReader(reader).model().bookTextModel()->paragraphsNumber() > 1)) {
+	if (myControl == TITLE && bookReader(reader).model().bookTextModel()->paragraphsNumber() > 1) {
 		bookReader(reader).insertEndOfSectionParagraph();
 	}
 	bookReader(reader).pushKind(myControl);
@@ -395,11 +395,10 @@ void XHTMLTagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
 void XHTMLTagPreAction::doAtStart(XHTMLReader &reader, const char**) {
 	reader.myPreformatted = true;
 	beginParagraph(reader);
-	bookReader(reader).addControl(CODE, true);
+	bookReader(reader).addControl(PREFORMATTED, true);
 }
 
 void XHTMLTagPreAction::doAtEnd(XHTMLReader &reader) {
-	bookReader(reader).addControl(CODE, false);
 	endParagraph(reader);
 	reader.myPreformatted = false;
 }
@@ -644,11 +643,12 @@ void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 			break;
 		case READ_BODY:
 			if (myPreformatted) {
-				if (*text == '\r' || *text == '\n') {
-					myModelReader.addControl(CODE, false);
+				while (*text == '\r' || *text == '\n') {
 					endParagraph();
+					text += 1;
+					len -= 1;
 					beginParagraph();
-					myModelReader.addControl(CODE, true);
+					myModelReader.addControl(PREFORMATTED, true);
 				}
 				size_t spaceCounter = 0;
 				while (spaceCounter < len && isspace((unsigned char)*(text + spaceCounter))) {
