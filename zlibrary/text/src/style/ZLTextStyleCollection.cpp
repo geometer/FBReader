@@ -83,7 +83,7 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 	if (STYLE == tag) {
 		const char *idString = attributeValue(attributes, "id");
 		const char *name = attributeValue(attributes, "name");
-		if ((idString != 0) && (name != 0)) {
+		if (idString != 0 && name != 0) {
 			ZLTextKind id = (ZLTextKind)atoi(idString);
 			ZLTextStyleDecoration *decoration;
 
