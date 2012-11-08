@@ -269,11 +269,7 @@ void NetworkBookBuyDirectlyAction::run() {
 	}
 
 	NetworkAuthenticationManager &mgr = *myBook.Link.authenticationManager();
-	shared_ptr<ZLUserDataHolder> data = new ZLUserDataHolder;
-
-	//mgr.isAuthorised(ZLExecutionUtil::createListener(data, this, &NetworkBookBuyDirectlyAction::onAuthorisationCheck));
-	NetworkAuthenticationManager::AuthenticationStatus status = mgr.isAuthorised(true);
-	onAuthorisationCheck(*data, status.Status == B3_TRUE ? std::string() : std::string("not auth"));
+	mgr.isAuthorised(ZLExecutionUtil::createListener(this, &NetworkBookBuyDirectlyAction::onAuthorisationCheck));
 }
 
 void NetworkBookBuyDirectlyAction::onAuthorisationCheck(ZLUserDataHolder &data, const std::string &error) {

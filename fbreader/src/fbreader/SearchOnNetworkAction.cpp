@@ -45,27 +45,27 @@ SearchOnNetworkAction::SearchOnNetworkAction() : ModeDependentAction(FBReader::N
 }
 
 void SearchOnNetworkAction::run() {
-	NetworkLinkCollection &collection = NetworkLinkCollection::Instance();
-	for (size_t i = 0; i < collection.size(); ++i) {
-		NetworkLink &link = collection.link(i);
-		if (link.isEnabled()) {
-			shared_ptr<NetworkAuthenticationManager> mgr = link.authenticationManager();
-			if (!mgr.isNull()) {
-				IsAuthorisedRunnable checker(*mgr);
-				checker.executeWithUI();
-				if (checker.result() == B3_TRUE && mgr->needsInitialization()) {
-					InitializeAuthenticationManagerRunnable initializer(*mgr);
-					initializer.executeWithUI();
-					if (initializer.hasErrors()) {
-						LogOutRunnable logout(*mgr);
-						logout.executeWithUI();
-					}
-				}
-			}
-		}
-	}
+//	NetworkLinkCollection &collection = NetworkLinkCollection::Instance();
+//	for (size_t i = 0; i < collection.size(); ++i) {
+//		NetworkLink &link = collection.link(i);
+//		if (link.isEnabled()) {
+//			shared_ptr<NetworkAuthenticationManager> mgr = link.authenticationManager();
+//			if (!mgr.isNull()) {
+//				IsAuthorisedRunnable checker(*mgr);
+//				checker.executeWithUI();
+//				if (checker.result() == B3_TRUE && mgr->needsInitialization()) {
+//					InitializeAuthenticationManagerRunnable initializer(*mgr);
+//					initializer.executeWithUI();
+//					if (initializer.hasErrors()) {
+//						LogOutRunnable logout(*mgr);
+//						logout.executeWithUI();
+//					}
+//				}
+//			}
+//		}
+//	}
 
-	doSearch();
+//	doSearch();
 }
 
 

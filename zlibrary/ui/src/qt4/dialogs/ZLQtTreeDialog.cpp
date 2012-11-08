@@ -61,7 +61,6 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
 	splitter->addWidget(myPreviewWidget);
 
 	const int scrollbarWidth = 30; //myListWidget->verticalScrollBar()->width() * 2; //commented because with Qt::ScrollBarAsNeeded policy the size is too big
-	qDebug() << Q_FUNC_INFO << scrollbarWidth;
 	splitter->setSizes(QList<int>() << DIALOG_WIDTH_HINT / 2 + scrollbarWidth << DIALOG_WIDTH_HINT / 2 - scrollbarWidth); //50/50 default size
 
 	mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
@@ -138,12 +137,15 @@ void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool suc
 			return;
 		}
 	}
+	saveShowParameters();
 	myLastClickedNode = 0; //for case if item has been requested for several times
 	myBackHistory.push(node);
 	myForwardHistory.clear();
 	myListWidget->fillNodes(myBackHistory.top());
-	myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
+	//myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
+	setupShowParameters();
 	updateAll();
+
 }
 
 void ZLQtTreeDialog::onMoreChildrenLoaded(ZLTreeNode *node, bool /*checkLast*/, bool successLoaded) {
@@ -216,6 +218,39 @@ void ZLQtTreeDialog::updateNavigationButtons() {
 	myForwardButton->setEnabled(!myForwardHistory.empty());
 }
 
+void ZLQtTreeDialog::saveShowParameters() {
+	if (myBackHistory.empty()) {
+		return;
+	}
+	ShowParameter parameter;
+	parameter.sliderPosition = myListWidget->verticalScrollBar()->value();
+	parameter.activeItemNumber = -1;	
+	for (int i = 0; i < myListWidget->getItems().size(); ++i) {
+		if (myListWidget->getItems().at(i)->isActive()) {
+			parameter.activeItemNumber = i;
+			break;
+		}
+	}
+	myShowParameters.insert(myBackHistory.top(), parameter);
+}
+
+void ZLQtTreeDialog::setupShowParameters() {
+	if (myBackHistory.empty()) {
+		return;
+	}
+	if (!myShowParameters.contains(myBackHistory.top())) {
+		myPreviewWidget->clear();
+		return;
+	}
+	//TODO implement setting a slider position
+	ShowParameter parameter = myShowParameters.value(myBackHistory.top());
+	if (parameter.activeItemNumber != -1 && myListWidget->getItems().size() >= parameter.activeItemNumber) {
+		myListWidget->onNodeClicked(myListWidget->getItems().at(parameter.activeItemNumber));
+	} else {
+		myPreviewWidget->clear();
+	}
+}
+
 void ZLQtTreeDialog::onNodeClicked(ZLQtTreeItem* item) {
 	ZLTreeNode* node = item->getNode();
 	myPreviewWidget->show(node);
@@ -236,22 +271,24 @@ void ZLQtTreeDialog::onBackButton() {
 	if (myBackHistory.size() <= 1) {
 		return;
 	}
+	saveShowParameters();
 	myLastClickedNode = 0;
 	myForwardHistory.push(myBackHistory.pop());
 	myListWidget->fillNodes(myBackHistory.top());
 	updateAll();
-	myPreviewWidget->clear(); //TODO implement a way to store what should be previewed on each page
+	setupShowParameters();
 }
 
 void ZLQtTreeDialog::onForwardButton() {
 	if (myForwardHistory.empty()) {
 		return;
 	}
+	saveShowParameters();
 	myLastClickedNode = 0;
 	myBackHistory.push(myForwardHistory.pop());
 	myListWidget->fillNodes(myBackHistory.top());
 	updateAll();
-	myPreviewWidget->clear(); //TODO implement a way to store what should be previewed on each page
+	setupShowParameters();
 }
 
 void ZLQtTreeDialog::onSearchField() {

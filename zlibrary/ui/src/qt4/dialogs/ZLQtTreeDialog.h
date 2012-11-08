@@ -22,6 +22,7 @@
 
 #include <QtCore/QStack>
 #include <QtCore/QSet>
+#include <QtCore/QMap>
 
 #include <QtGui/QDialog>
 #include <QtGui/QScrollArea>
@@ -74,6 +75,10 @@ private:
 	void updateWaitingIcons();
 	void updateNavigationButtons();
 
+private: //TODO maybe these functions can be used as a typical updateAll()
+	void saveShowParameters();
+	void setupShowParameters();
+
 private Q_SLOTS:
 	void onNodeClicked(ZLQtTreeItem* item);
 	void onNodeDoubleClicked(ZLQtTreeItem* item);
@@ -81,7 +86,6 @@ private Q_SLOTS:
 	void onForwardButton();
 	void onSearchField();
 	void onMoreChildren();
-
 
 private:
 	ZLTreeNode *myRootNode;
@@ -96,6 +100,13 @@ private:
 
 	QStack<ZLTreeNode*> myBackHistory;
 	QStack<ZLTreeNode*> myForwardHistory;
+
+	struct ShowParameter {
+		int sliderPosition;
+		int activeItemNumber;
+	};
+
+	QMap<ZLTreeNode*, ShowParameter> myShowParameters;
 
 private:
 	class ChildrenRequestListener : public ZLNetworkRequest::Listener {

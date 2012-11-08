@@ -166,6 +166,10 @@ void ZLQtPreviewWidget::clear() {
 
 }
 
+ZLTreeNode *ZLQtPreviewWidget::getCurrentNode() const {
+	return myCurrentNode;
+}
+
 QSize ZLQtPreviewWidget::sizeHint() const {
 	QSize hint = QWidget::sizeHint();
 //	qDebug() << Q_FUNC_INFO << hint << minimumSize();
