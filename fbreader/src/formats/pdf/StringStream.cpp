@@ -29,8 +29,8 @@ bool StringStream::open() {
 	return true;
 }
 
-size_t StringStream::read(char *buffer, size_t maxSize) {
-	size_t size = std::min(maxSize, myData.length() - myOffset);
+std::size_t StringStream::read(char *buffer, std::size_t maxSize) {
+	std::size_t size = std::min(maxSize, myData.length() - myOffset);
 	memcpy(buffer, myData.data() + myOffset, size);
 	myOffset += size;
 	return size;
@@ -43,13 +43,13 @@ void StringStream::seek(int offset, bool absoluteOffset) {
 	if (!absoluteOffset) {
 		offset += myOffset;
 	}
-	myOffset = std::min((size_t)std::max(0, offset), myData.length());
+	myOffset = std::min((std::size_t)std::max(0, offset), myData.length());
 }
 
-size_t StringStream::offset() const {
+std::size_t StringStream::offset() const {
 	return myOffset;
 }
 
-size_t StringStream::sizeOfOpened() {
+std::size_t StringStream::sizeOfOpened() {
 	return myData.length();
 }

@@ -324,7 +324,7 @@ bool GotoNextTOCSectionAction::isEnabled() const {
 void GotoNextTOCSectionAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	ContentsView &contentsView = (ContentsView&)*fbreader.myContentsView;
-	size_t current = contentsView.currentTextViewParagraph();
+	std::size_t current = contentsView.currentTextViewParagraph();
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.textArea().model();
 	int reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current + 1]));
 	if (reference != -1) {
@@ -373,7 +373,7 @@ bool GotoPreviousTOCSectionAction::isEnabled() const {
 void GotoPreviousTOCSectionAction::run() {
 	FBReader &fbreader = FBReader::Instance();
 	ContentsView &contentsView = (ContentsView&)*fbreader.myContentsView;
-	size_t current = contentsView.currentTextViewParagraph(false);
+	std::size_t current = contentsView.currentTextViewParagraph(false);
 	const ContentsModel &contentsModel = (const ContentsModel&)*contentsView.textArea().model();
 
 	int reference = contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[current]));
@@ -420,7 +420,7 @@ void GotoPageNumberAction::run() {
 		if (value.empty()) {
 			return;
 		}
-		pageIndex = atoi(value.c_str());
+		pageIndex = std::atoi(value.c_str());
 	} else {
 		shared_ptr<ZLDialog> gotoPageDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("gotoPageDialog"));
 

@@ -63,7 +63,7 @@ static bool fill(std::vector<unsigned char> &data, std::vector<unsigned char>::i
 	return true;
 }
 
-bool LZXDecompressor::readLengths(HuffmanDecoder &decoder, size_t from, size_t size) {
+bool LZXDecompressor::readLengths(HuffmanDecoder &decoder, std::size_t from, std::size_t size) {
 	HuffmanDecoder preTree;
 	preTree.CodeLengths.reserve(20);
 	for (int i = 0; i < 20; i++) {
@@ -114,7 +114,7 @@ static const unsigned int basePosition[51] = {
 	1835008, 1966080, 2097152
 };
 
-bool LZXDecompressor::decodeBytes(DecodingState &state, size_t bytesToDecode) {
+bool LZXDecompressor::decodeBytes(DecodingState &state, std::size_t bytesToDecode) {
 	if (myCurrentBlockType == UNCOMPRESSED) {
 		if (!myBitStream.getBytesDirect(&*state.WindowIterator, bytesToDecode)) {
 			return false;
@@ -131,7 +131,7 @@ bool LZXDecompressor::decodeBytes(DecodingState &state, size_t bytesToDecode) {
 			continue;
 		}
 
-		size_t length = symbol % 8;
+		std::size_t length = symbol % 8;
 		if (length == 7) {
 			length += myLengthTree.getSymbol(myBitStream);
 		}
@@ -140,7 +140,7 @@ bool LZXDecompressor::decodeBytes(DecodingState &state, size_t bytesToDecode) {
 			return false;
 		}
 
-		size_t offset = (symbol - 256) / 8;
+		std::size_t offset = (symbol - 256) / 8;
 		switch (offset) {
 			case 0:
 				offset = state.R0;
@@ -191,7 +191,7 @@ bool LZXDecompressor::decodeBytes(DecodingState &state, size_t bytesToDecode) {
 			}
 		}
 		std::vector<unsigned char>::iterator srcIt = state.WindowIterator + (myWindow.size() - offset);
-		for (size_t i = 0; i < length; ++i) {
+		for (std::size_t i = 0; i < length; ++i) {
 			if (srcIt == myWindow.end()) {
 				srcIt -= myWindow.size();
 			}
@@ -202,7 +202,7 @@ bool LZXDecompressor::decodeBytes(DecodingState &state, size_t bytesToDecode) {
 	return true;
 }
 
-bool LZXDecompressor::decompress(const std::string &data, unsigned char *outBuffer, const size_t outSize) {
+bool LZXDecompressor::decompress(const std::string &data, unsigned char *outBuffer, const std::size_t outSize) {
 	myBitStream.setData(data);
 
 	if (myReadHeader) {
@@ -214,7 +214,7 @@ bool LZXDecompressor::decompress(const std::string &data, unsigned char *outBuff
 
 	DecodingState state = myState;
 
-	for (size_t bytesToWrite = outSize; bytesToWrite > 0; ) {
+	for (std::size_t bytesToWrite = outSize; bytesToWrite > 0; ) {
 		if (myBlockBytesLeft == 0) {
 			if (myCurrentBlockType == UNCOMPRESSED) {
 				if (myBlockSize & 1) {
@@ -261,7 +261,7 @@ bool LZXDecompressor::decompress(const std::string &data, unsigned char *outBuff
 		}
 
 		while ((myBlockBytesLeft > 0) && (bytesToWrite > 0)) {
-			size_t bytesToDecode = std::min(myBlockBytesLeft, bytesToWrite);
+			std::size_t bytesToDecode = std::min(myBlockBytesLeft, bytesToWrite);
 			if (state.WindowIterator + bytesToDecode > myWindow.end()) {
 				return false;
 			}
@@ -277,7 +277,7 @@ bool LZXDecompressor::decompress(const std::string &data, unsigned char *outBuff
 
 	std::vector<unsigned char>::iterator jt =
 		(state.WindowIterator != myWindow.begin()) ? state.WindowIterator : myWindow.end();
-	memcpy(outBuffer, &*(jt - outSize), outSize);
+	std::memcpy(outBuffer, &*(jt - outSize), outSize);
 
 	myState = state;
 

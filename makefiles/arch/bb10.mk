@@ -21,8 +21,9 @@ LD = $(BB10_SDK_BIN_FOLDER)/qcc
 MOC = $(BB10_SDK_BIN_FOLDER)/moc
 
 ARCH_FLAGS = -Vgcc_ntoarmv7le
-CFLAGS = $(ARCH_FLAGS) -Wall -Wno-ctor-dtor-privacy -W
+CFLAGS = $(ARCH_FLAGS) -Wall -Wno-ctor-dtor-privacy -W -I $(ROOTDIR)/libs/bb10/include
 LDFLAGS = $(ARCH_FLAGS)
+QTINCLUDE = -I /Applications/bbndk/target_10_0_9_386/qnx6/usr/include/qt4
 #
 #EXTERNAL_LIBS = -liconv
 #

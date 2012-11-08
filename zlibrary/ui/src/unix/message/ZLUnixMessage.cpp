@@ -84,9 +84,9 @@ void ZLUnixExecMessageSender::sendStringMessage(const std::string &message) {
 		if (index >= 0) {
 			command = command.substr(0, index) + escapedMessage + command.substr(index + 2);
 		}
-		if (system(command.c_str()) == -1) {
-			exit(-1);
+		if (std::system(command.c_str()) == -1) {
+			std::exit(-1);
 		}
-		exit(0);
+		std::exit(0);
 	}
 }

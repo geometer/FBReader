@@ -45,7 +45,7 @@ private:
 	static std::map<std::string,std::string> ourDefaultUrls;
 
 public:
-	FBTree(ZLTreeNode *parent, size_t position = (size_t)-1);
+	FBTree(ZLTreeNode *parent, std::size_t position = (std::size_t)-1);
 //	shared_ptr<const ZLImage> coverImage() const;
 	std::string subtitle() const;
 

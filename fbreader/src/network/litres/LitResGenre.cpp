@@ -151,9 +151,9 @@ bool LitResGenreMap::loadGenres() const {
 
 	if (!cacheName.empty()) {
 		std::string cacheDate = cacheName.substr(GENRES_CACHE_PREFIX.size(), 8);
-		int cacheYear = atoi(cacheDate.substr(0, 4).c_str());
-		int cacheMonth = atoi(cacheDate.substr(4, 2).c_str());
-		int cacheDay = atoi(cacheDate.substr(6, 2).c_str());
+		int cacheYear = std::atoi(cacheDate.substr(0, 4).c_str());
+		int cacheMonth = std::atoi(cacheDate.substr(4, 2).c_str());
+		int cacheDay = std::atoi(cacheDate.substr(6, 2).c_str());
 		int daysDiff = (now.year() - cacheYear) * 365 + (now.month() - cacheMonth) * 31 + (now.dayOfMonth() - cacheDay);
 		if (daysDiff < 30) {
 			cacheValid = true;

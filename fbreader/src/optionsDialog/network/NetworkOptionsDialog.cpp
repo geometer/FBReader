@@ -86,9 +86,9 @@ NetworkOptionsDialog::NetworkOptionsDialog() : AbstractOptionsDialog(ZLResourceK
 //	ZLDialogContent &libraryTab = dialog().createTab(ZLResourceKey("NetworkLibrary"));
 
 //	NetworkLinkCollection &linkCollection = NetworkLinkCollection::Instance();
-//	const size_t linkCollectionSize = linkCollection.size();
-//	const size_t linkCollectionSizeMinusOne = linkCollectionSize - 1;
-//	for (size_t i = 0; i < linkCollectionSize; ++i) {
+//	const std::size_t linkCollectionSize = linkCollection.size();
+//	const std::size_t linkCollectionSizeMinusOne = linkCollectionSize - 1;
+//	for (std::size_t i = 0; i < linkCollectionSize; ++i) {
 //		NetworkLink &link = linkCollection.link(i);
 //		if (i < linkCollectionSizeMinusOne) {
 //			NetworkLink &link2 = linkCollection.link(++i);

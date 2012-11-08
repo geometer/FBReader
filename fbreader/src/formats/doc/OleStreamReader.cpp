@@ -67,13 +67,13 @@ bool OleStreamReader::readNextPiece(OleMainStream &stream) {
 		return false;
 	}
 	char *textBuffer = new char[piece.Length];
-	size_t readBytes = stream.read(textBuffer, piece.Length);
-	if (readBytes != (size_t)piece.Length) {
+	std::size_t readBytes = stream.read(textBuffer, piece.Length);
+	if (readBytes != (std::size_t)piece.Length) {
 		ZLLogger::Instance().println("OleStreamReader", "not all bytes have been read from piece");
 	}
 
 	if (!piece.IsANSI) {
-		for (size_t i = 0; i < readBytes; i += 2) {
+		for (std::size_t i = 0; i < readBytes; i += 2) {
 			ucs2SymbolHandler(OleUtil::getU2Bytes(textBuffer, i));
 		}
 	} else {

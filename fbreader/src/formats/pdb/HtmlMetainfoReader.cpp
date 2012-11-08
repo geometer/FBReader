@@ -45,7 +45,7 @@ bool HtmlMetainfoReader::tagHandler(const HtmlReader::HtmlTag &tag) {
 	} else if (((myReadType & AUTHOR) == AUTHOR) && (tag.Name == "DC:CREATOR")) {
 		if (tag.Start) {
 			bool flag = false;
-			for (size_t i = 0; i < tag.Attributes.size(); ++i) {
+			for (std::size_t i = 0; i < tag.Attributes.size(); ++i) {
 				if (tag.Attributes[i].Name == "ROLE") {
 					flag = ZLUnicodeUtil::toUpper(tag.Attributes[i].Value) == "AUT";
 					break;
@@ -77,7 +77,7 @@ void HtmlMetainfoReader::startDocumentHandler() {
 void HtmlMetainfoReader::endDocumentHandler() {
 }
 
-bool HtmlMetainfoReader::characterDataHandler(const char *text, size_t len, bool convert) {
+bool HtmlMetainfoReader::characterDataHandler(const char *text, std::size_t len, bool convert) {
 	if (myReadTitle || myReadAuthor || myReadTags) {
 		if (convert) {
 			myConverter->convert(myBuffer, text, text + len);

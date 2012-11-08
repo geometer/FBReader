@@ -42,7 +42,7 @@ static unsigned char TOKEN_CODE[256] = {
 	2, 2, 2, 2,		2, 2, 2, 2,		2, 2, 2, 2,		2, 2, 2, 2,
 };
 
-size_t DocDecompressor::decompress(ZLInputStream &stream, char *targetBuffer, size_t compressedSize, size_t maxUncompressedSize) {
+std::size_t DocDecompressor::decompress(ZLInputStream &stream, char *targetBuffer, std::size_t compressedSize, std::size_t maxUncompressedSize) {
 	const unsigned char *sourceBuffer = new unsigned char[compressedSize];
 	const unsigned char *sourceBufferEnd = sourceBuffer + compressedSize;
 	const unsigned char *sourcePtr = sourceBuffer;
@@ -65,7 +65,7 @@ size_t DocDecompressor::decompress(ZLInputStream &stream, char *targetBuffer, si
 					if ((sourcePtr + token > sourceBufferEnd) || (targetPtr + token > targetBufferEnd)) {
 						goto endOfLoop;
 					}
-					memcpy(targetPtr, sourcePtr, token);
+					std::memcpy(targetPtr, sourcePtr, token);
 					sourcePtr += token;
 					targetPtr += token;
 					break;

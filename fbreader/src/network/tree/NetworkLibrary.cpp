@@ -64,7 +64,7 @@ void NetworkLibrary::makeUpToDate() {
 	//TODO rewrite this method
 	NetworkLinkCollection::Instance().initialize();
 	NetworkLinkCollection &collection = NetworkLinkCollection::Instance();
-	for (size_t i = 0; i < collection.size(); ++i) {
+	for (std::size_t i = 0; i < collection.size(); ++i) {
 		NetworkLink &link = collection.link(i);
 		new NetworkCatalogRootTree(&myRootTree, link, i);
 	}

@@ -108,7 +108,7 @@ void IndicatorTypeEntry::addDependentEntry(ZLOptionEntry *entry) {
 }
 
 void IndicatorTypeEntry::onAccept(const std::string &value) {
-	for (size_t index = 0; index != myValues.size(); ++index) {
+	for (std::size_t index = 0; index != myValues.size(); ++index) {
 		if (myValues[index] == value) {
 			myOption.setValue(index);
 			break;

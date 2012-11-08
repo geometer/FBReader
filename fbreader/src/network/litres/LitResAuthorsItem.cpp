@@ -73,7 +73,7 @@ std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children, shared_
 }
 
 void LitResAuthorsItem::fillChildrenWithAuthors(NetworkItem::List &children, const LitResAuthorsParser::AuthorsList &authors) {
-	for (size_t i = 0; i < authors.size(); ++i) {
+	for (std::size_t i = 0; i < authors.size(); ++i) {
 		const LitResAuthorsParser::LitresAuthorData &author = authors.at(i);
 
 		UrlInfoCollection urlByType = URLByType;

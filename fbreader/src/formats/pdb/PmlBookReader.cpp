@@ -40,7 +40,7 @@ bool PmlBookReader::readDocument(ZLInputStream& stream) {
 	return code;
 }
 
-void PmlBookReader::addCharData(const char *data, size_t len, bool convert) {
+void PmlBookReader::addCharData(const char *data, std::size_t len, bool convert) {
 	if (!myBookReader.paragraphIsOpen()) {
 		myBookReader.beginParagraph();
 	}

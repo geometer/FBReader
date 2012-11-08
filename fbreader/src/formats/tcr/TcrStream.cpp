@@ -39,7 +39,7 @@ bool TcrStream::open() {
 	}
 
 	char header[9];
-	if ((myBase->read(header, 9) != 9) || (strncmp(header, "!!8-Bit!!", 9) != 0)) {
+	if (myBase->read(header, 9) != 9 || std::strncmp(header, "!!8-Bit!!", 9) != 0) {
 		myBase->close();
 		return false;
 	}
@@ -47,8 +47,8 @@ bool TcrStream::open() {
 	unsigned char entryLength;
 	char entryBuffer[255];
 	for (int i = 0; i < 256; ++i) {
-		if ((myBase->read((char*)&entryLength, 1) != 1) ||
-				((entryLength > 0) && (myBase->read(entryBuffer, entryLength) != entryLength))) {
+		if (myBase->read((char*)&entryLength, 1) != 1 ||
+				(entryLength > 0 && myBase->read(entryBuffer, entryLength) != entryLength)) {
 			myBase->close();
 			return false;
 		}
@@ -70,12 +70,12 @@ void TcrStream::close() {
 	myBuffer.erase();
 }
 
-size_t TcrStream::read(char *buffer, size_t maxSize) {
-	size_t size = 0;
+std::size_t TcrStream::read(char *buffer, std::size_t maxSize) {
+	std::size_t size = 0;
 	if (myBuffer.length() > 0) {
 		size += std::min(maxSize, myBuffer.length());
 		if (buffer != 0) {
-			strncpy(buffer, myBuffer.data(), size);
+			std::strncpy(buffer, myBuffer.data(), size);
 		}
 		myBuffer.erase(0, size);
 	}
@@ -84,11 +84,11 @@ size_t TcrStream::read(char *buffer, size_t maxSize) {
 		if (myBase->read((char*)&index, 1) != 1) {
 			break;
 		}
-		size_t len = myDictionary[index].length();
+		std::size_t len = myDictionary[index].length();
 		if (len > 0) {
-			size_t freeSize = maxSize - size;
+			std::size_t freeSize = maxSize - size;
 			if (buffer != 0) {
-				strncpy(buffer + size, myDictionary[index].data(), std::min(len, freeSize));
+				std::strncpy(buffer + size, myDictionary[index].data(), std::min(len, freeSize));
 			}
 			size += std::min(len, freeSize);
 			if (len > freeSize) {
@@ -115,11 +115,11 @@ void TcrStream::seek(int offset, bool absoluteOffset) {
 	}
 }
 
-size_t TcrStream::offset() const {
+std::size_t TcrStream::offset() const {
 	return myOffset;
 }
 
-size_t TcrStream::sizeOfOpened() {
+std::size_t TcrStream::sizeOfOpened() {
 	// TODO: implement
 	return 0;
 }

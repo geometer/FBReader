@@ -51,8 +51,8 @@ bool SQLiteConnection::open() {
 }
 
 void SQLiteConnection::finalizeOpenedStatements() {
-	size_t size = myStatements.size();
-	for (size_t i = 0; i < size; ++i) {
+	std::size_t size = myStatements.size();
+	for (std::size_t i = 0; i < size; ++i) {
 		const int res = sqlite3_finalize(myStatements[i]);
 		if (res != SQLITE_OK) {
 			dumpError();

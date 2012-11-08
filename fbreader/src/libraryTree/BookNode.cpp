@@ -46,7 +46,7 @@ BookNode::BookNode(AuthorNode *parent, shared_ptr<Book> book) : FBReaderNode(par
 BookNode::BookNode(SeriesNode *parent, shared_ptr<Book> book) : FBReaderNode(parent), myBook(book) {
 }
 
-BookNode::BookNode(TagNode *parent, size_t atPosition, shared_ptr<Book> book) : FBReaderNode(parent, atPosition), myBook(book) {
+BookNode::BookNode(TagNode *parent, std::size_t atPosition, shared_ptr<Book> book) : FBReaderNode(parent, atPosition), myBook(book) {
 }
 
 void BookNode::init() {

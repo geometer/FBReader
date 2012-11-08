@@ -68,7 +68,7 @@ std::string LitResUtil::url(const NetworkLink &link, bool secure, const std::str
 }
 
 std::string LitResUtil::generateTrialUrl(std::string bookId) {
-	size_t len = bookId.length();
+	std::size_t len = bookId.length();
 	if (len < 8) {
 		bookId = std::string(8 - len, '0') + bookId;
 	}

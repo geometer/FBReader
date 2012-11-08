@@ -56,7 +56,7 @@ void DocFloatImageReader::readAll() {
 ZLFileImage::Blocks DocFloatImageReader::getBlocksForShapeId(unsigned int shapeId) const {
 	FSPContainer container;
 	bool found = false;
-	for (size_t i = 0; !found && i < myItem.FSPs.size(); ++i) {
+	for (std::size_t i = 0; !found && i < myItem.FSPs.size(); ++i) {
 		if (myItem.FSPs.at(i).fsp.shapeId == shapeId) {
 			found = true;
 			container = myItem.FSPs.at(i);
@@ -67,7 +67,7 @@ ZLFileImage::Blocks DocFloatImageReader::getBlocksForShapeId(unsigned int shapeI
 		return ZLFileImage::Blocks();
 	}
 
-	for (size_t i = 0; i < container.fopte.size(); ++i) {
+	for (std::size_t i = 0; i < container.fopte.size(); ++i) {
 		const FOPTE &fopte = container.fopte.at(i);
 		if (fopte.pId == 0x0104 && !fopte.isComplex) { //0x0104 specifies the BLIP, see p.420 [MS-ODRAW]
 			if (fopte.value <= myItem.blips.size() && fopte.value > 0) {
@@ -330,7 +330,7 @@ unsigned int DocFloatImageReader::readArrayFOPTE(std::vector<FOPTE> &fopteArray,
 		count += readFOPTE(fopte, stream);
 		fopteArray.push_back(fopte);
 	}
-	for (size_t i = 0; i < fopteArray.size(); ++i) {
+	for (std::size_t i = 0; i < fopteArray.size(); ++i) {
 		if (fopteArray.at(i).isComplex) {
 			stream->seek(fopteArray.at(i).value, false);
 			count += fopteArray.at(i).value;

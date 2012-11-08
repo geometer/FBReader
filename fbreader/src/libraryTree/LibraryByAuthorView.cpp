@@ -27,7 +27,7 @@
 LibraryByAuthorView::LibraryByAuthorView(ZLPaintContext &context) : LibraryView(context) {
 }
 
-void LibraryByAuthorView::addAuthorSubtree(shared_ptr<Author> author, size_t atPosition) {
+void LibraryByAuthorView::addAuthorSubtree(shared_ptr<Author> author, std::size_t atPosition) {
 	static const std::set<shared_ptr<Book> > emptySet;
 	fillAuthorSubtree(new AuthorNode(&rootNode(), atPosition, author), emptySet);
 }
@@ -125,7 +125,7 @@ void LibraryByAuthorView::makeUpToDate() {
 	AuthorComparator comparator;
 
 	ZLBlockTreeNode::List::iterator nodeIt = rootChildren.begin();
-	size_t nodeCount = 0;
+	std::size_t nodeCount = 0;
 	for (AuthorList::const_iterator it = authors.begin(); it != authors.end(); ++it) {
 		bool processed = false;
 		while (nodeIt != rootChildren.end()) {

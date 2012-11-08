@@ -96,12 +96,12 @@ bool HHCReader::tagHandler(const HtmlTag &tag) {
 	return true;
 }
 
-bool HHCReader::characterDataHandler(const char*, size_t, bool) {
+bool HHCReader::characterDataHandler(const char*, std::size_t, bool) {
 	return true;
 }
 
 void HHCReader::setReferences() {
-	for (size_t i = 0; i < myReferenceVector.size(); ++i) {
+	for (std::size_t i = 0; i < myReferenceVector.size(); ++i) {
 		myBookReader.setReference(i, myBookReader.model().label(myReferenceVector[i]).ParagraphNumber);
 	}
 }

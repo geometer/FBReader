@@ -236,7 +236,7 @@ bool RtfReader::parseDocument() {
 		while (ptr != end) {
 			switch (parserState) {
 				case READ_END_OF_FILE:
-					if (*ptr != '}' && !isspace(*ptr)) {
+					if (*ptr != '}' && !std::isspace(*ptr)) {
 						return false;
 					}
 					break;
@@ -332,7 +332,7 @@ bool RtfReader::parseDocument() {
 				case READ_HEX_SYMBOL:
 					hexString += *ptr;
 					if (hexString.size() == 2) {
-						char ch = strtol(hexString.c_str(), 0, 16);
+						char ch = std::strtol(hexString.c_str(), 0, 16);
 						hexString.erase();
 						processCharData(&ch, 1);
 						parserState = READ_NORMAL_DATA;
@@ -340,7 +340,7 @@ bool RtfReader::parseDocument() {
 					}
 					break;
 				case READ_KEYWORD:
-					if (!isalpha(*ptr)) {
+					if (!std::isalpha(*ptr)) {
 						if ((ptr == dataStart) && (keyword.empty())) {
 							if (*ptr == '\'') {
 								parserState = READ_HEX_SYMBOL;
@@ -352,7 +352,7 @@ bool RtfReader::parseDocument() {
 							dataStart = ptr + 1;
 						} else {
 							keyword.append(dataStart, ptr - dataStart);
-							if ((*ptr == '-') || isdigit(*ptr)) {
+							if (*ptr == '-' || std::isdigit(*ptr)) {
 								dataStart = ptr;
 								parserState = READ_KEYWORD_PARAMETER;
 							} else {
@@ -365,9 +365,9 @@ bool RtfReader::parseDocument() {
 					}
 					break;
 				case READ_KEYWORD_PARAMETER:
-					if (!isdigit(*ptr)) {
+					if (!std::isdigit(*ptr)) {
 						parameterString.append(dataStart, ptr - dataStart);
-						int parameter = atoi(parameterString.c_str());
+						int parameter = std::atoi(parameterString.c_str());
 						parameterString.erase();
 						readNextChar = *ptr == ' ';
 						if ((keyword == "bin") && (parameter > 0)) {
@@ -425,7 +425,7 @@ void RtfReader::processKeyword(const std::string &keyword, int *parameter) {
 	it->second->run(*this, parameter);
 }
 
-void RtfReader::processCharData(const char *data, size_t len, bool convert) {
+void RtfReader::processCharData(const char *data, std::size_t len, bool convert) {
 	if (myState.Destination != RtfReader::DESTINATION_SKIP) {
 		addCharData(data, len, convert);
 	}

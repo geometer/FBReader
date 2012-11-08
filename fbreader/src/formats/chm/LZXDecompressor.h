@@ -32,7 +32,7 @@ public:
 	LZXDecompressor(int windowSizeIndex);
 	void reset();
 
-	bool decompress(const std::string &data, unsigned char *outBuffer, const size_t outSize);
+	bool decompress(const std::string &data, unsigned char *outBuffer, const std::size_t outSize);
 
 private:
 	struct DecodingState {
@@ -42,8 +42,8 @@ private:
 		unsigned int R2;
 	};
 
-	bool readLengths(HuffmanDecoder &decoder, size_t from, size_t size);
-	bool decodeBytes(DecodingState &state, size_t bytesToDecode);
+	bool readLengths(HuffmanDecoder &decoder, std::size_t from, std::size_t size);
+	bool decodeBytes(DecodingState &state, std::size_t bytesToDecode);
 
 private:
 	enum BlockType {
@@ -60,8 +60,8 @@ private:
 
 	DecodingState myState;
 
-	size_t myBlockSize;
-	size_t myBlockBytesLeft;
+	std::size_t myBlockSize;
+	std::size_t myBlockBytesLeft;
 
 	const unsigned int mySlotNumber;
 	HuffmanDecoder myMainTree;
@@ -74,7 +74,7 @@ private:
 
 	public:
 		void reset(unsigned int fileSize);
-		void decode(unsigned char *buffer, const size_t size);
+		void decode(unsigned char *buffer, const std::size_t size);
 
 	private:
 		unsigned int myFramesCounter;

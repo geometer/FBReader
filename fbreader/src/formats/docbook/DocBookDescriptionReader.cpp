@@ -35,7 +35,7 @@ DocBookDescriptionReader::DocBookDescriptionReader(Book &book) : myBook(book) {
 	myDepth = 0;
 }
 
-void DocBookDescriptionReader::characterDataHandler(const char *text, size_t len) {
+void DocBookDescriptionReader::characterDataHandler(const char *text, std::size_t len) {
 	if (myReadTitle) {
 		myBook.setTitle(myBook.title() + std::string(text, len));
 	} else {

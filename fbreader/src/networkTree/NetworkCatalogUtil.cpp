@@ -40,7 +40,7 @@ shared_ptr<const ZLImage> NetworkCatalogUtil::getImageByDataUrl(const std::strin
 		return 0;
 	}
 
-	size_t index = url.find(',');
+	std::size_t index = url.find(',');
 	if (index == std::string::npos) {
 		return 0;
 	}

@@ -184,7 +184,7 @@ bool FBView::onStylusRelease(int x, int y) {
 
 	FBReader &fbreader = FBReader::Instance();
 	myIsReleasedWithoutMotion =
-		myIsReleasedWithoutMotion && (abs(x - pressedX()) <= 5) && (abs(y - pressedY()) <= 5);
+		myIsReleasedWithoutMotion && std::abs(x - pressedX()) <= 5 && std::abs(y - pressedY()) <= 5;
 	if (!hadSelection && isReleasedWithoutMotion() &&
 			fbreader.EnableTapScrollingOption.value() &&
 			(!ZLBooleanOption(ZLCategoryKey::EMPTY, ZLOption::PLATFORM_GROUP, ZLOption::FINGER_TAP_DETECTABLE, false).value() ||
@@ -219,7 +219,7 @@ bool FBView::_onStylusMove(int, int) {
 
 bool FBView::onStylusMovePressed(int x, int y) {
 	if (myIsReleasedWithoutMotion) {
-		if ((abs(x - pressedX()) > 5) || (abs(y - pressedY()) > 5)) {
+		if (std::abs(x - pressedX()) > 5 || std::abs(y - pressedY()) > 5) {
 			myIsReleasedWithoutMotion = false;
 			activateSelection(pressedX(), pressedY());
 		}

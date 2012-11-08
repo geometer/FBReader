@@ -78,7 +78,7 @@ std::string NetworkLinkCollection::Comparator::removeLeadingNonAscii(const std::
 	std::string str = title;
 	std::string::iterator it = str.begin();
 	for (; it != str.end(); ++it) {
-		if (((*it & 0x80) == 0) && isalnum(*it)) {
+		if ((*it & 0x80) == 0 && std::isalnum(*it)) {
 			break;
 		}
 	}
@@ -118,7 +118,7 @@ void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 	bool found = false;
 	bool updated = false;
 
-	for (size_t i = 0; i < myLinks.size(); ++i) {
+	for (std::size_t i = 0; i < myLinks.size(); ++i) {
 		shared_ptr<NetworkLink> curLink = myLinks.at(i);
 		if (curLink->getPredefinedId() == link->getPredefinedId()) {
 			//if (*(link->getUpdated()) > *(curLink->getUpdated())) {
@@ -263,7 +263,7 @@ shared_ptr<ZLFile> NetworkLinkCollection::getGenericFile(std::string genericUrl)
 		return 0;
 	}
 	char buffer[2048];
-	size_t readed = 0;
+	std::size_t readed = 0;
 	do {
 		readed = inputStream->read(buffer, 2048);
 		outputStream->write(buffer, readed);
@@ -297,7 +297,7 @@ std::string NetworkLinkCollection::bookFileName(const BookReference &reference) 
 }
 
 static bool parseUrl(const std::string &url, std::string &hostAndPath, std::string &query) {
-	size_t hostBegin = url.find("://");
+	std::size_t hostBegin = url.find("://");
 	if (hostBegin == std::string::npos) {
 		return false;
 	}
@@ -305,7 +305,7 @@ static bool parseUrl(const std::string &url, std::string &hostAndPath, std::stri
 	if (!url.compare(hostBegin, 4, "www.")) {
 		hostBegin += 4;
 	}
-	size_t pathEnd = url.find('?', hostBegin);
+	std::size_t pathEnd = url.find('?', hostBegin);
 	hostAndPath = url.substr(hostBegin, pathEnd - hostBegin);
 	if (pathEnd != std::string::npos) {
 		query = url.substr(pathEnd + 1);
@@ -330,7 +330,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 		fileName += "Demos" + ZLibrary::FileNameDelimiter;
 	}
 
-	for (size_t i = 0; i < path.size(); ++i) {
+	for (std::size_t i = 0; i < path.size(); ++i) {
 		char ch = path[i];
 		if (escapeChars.find(ch) != std::string::npos) {
 			path[i] = '_';
@@ -340,7 +340,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 		}
 	}
 
-	const size_t nameIndex = path.find_last_of(ZLibrary::FileNameDelimiter);
+	const std::size_t nameIndex = path.find_last_of(ZLibrary::FileNameDelimiter);
 	if (nameIndex + 1 == path.length()) {
 		path.resize(path.length() - 1); //removing ending / if exists
 	}
@@ -360,7 +360,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 			break;
 	}
 	if (ext.empty()) {
-		size_t tmp = path.find('.', nameIndex); // using not find_last_of to preserve extensions like `.fb2.zip`
+		std::size_t tmp = path.find('.', nameIndex); // using not find_last_of to preserve extensions like `.fb2.zip`
 		if (tmp == std::string::npos) {
 			return std::string();
 		}
@@ -371,9 +371,9 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 	}
 
 	if (!query.empty()) {
-		size_t index = 0;
+		std::size_t index = 0;
 		while (index < query.size()) {
-			size_t j = query.find('&', index);
+			std::size_t j = query.find('&', index);
 			if (j == std::string::npos) {
 				j = query.size();
 			}
@@ -381,7 +381,7 @@ std::string NetworkLinkCollection::bookFileName(const std::string &url, BookRefe
 			if (!ZLStringUtil::stringStartsWith(param, "username=")
 					&& !ZLStringUtil::stringStartsWith(param, "password=")
 					&& !ZLStringUtil::stringEndsWith(param, "=")) {
-				size_t k = path.size();
+				std::size_t k = path.size();
 				path.append("_").append(param);
 				while (k < path.size()) {
 					char ch = path[k];
@@ -414,7 +414,7 @@ bool NetworkLinkCollection::downloadBook(const BookReference &reference, std::st
 	fileName = bookFileName(nNetworkBookId, reference.BookFormat, reference.ReferenceType);
 
 	//creating directory if not existed
-	const size_t directoryIndex = fileName.find_last_of(ZLibrary::FileNameDelimiter);
+	const std::size_t directoryIndex = fileName.find_last_of(ZLibrary::FileNameDelimiter);
 	ZLFile(fileName.substr(0, directoryIndex)).directory(true);
 
 	if (ZLFile(fileName).exists()) {
@@ -525,7 +525,7 @@ shared_ptr<NetworkBookCollection> NetworkLinkCollection::advancedSearch(const st
 
 NetworkLinkCollection::LinkVector NetworkLinkCollection::activeLinks() const {
 	LinkVector filteredList;
-	for (size_t i = 0; i < myLinks.size(); ++i) {
+	for (std::size_t i = 0; i < myLinks.size(); ++i) {
 		shared_ptr<NetworkLink> link = myLinks.at(i);
 		if (link->isEnabled()) {
 			filteredList.push_back(link);
@@ -534,16 +534,16 @@ NetworkLinkCollection::LinkVector NetworkLinkCollection::activeLinks() const {
 	return filteredList;
 }
 
-size_t NetworkLinkCollection::size() const {
+std::size_t NetworkLinkCollection::size() const {
 	return myLinks.size();
 }
 
-NetworkLink &NetworkLinkCollection::link(size_t index) const {
+NetworkLink &NetworkLinkCollection::link(std::size_t index) const {
 	return *myLinks[index];
 }
 
-size_t NetworkLinkCollection::numberOfEnabledLinks() const {
-	size_t count = 0;
+std::size_t NetworkLinkCollection::numberOfEnabledLinks() const {
+	std::size_t count = 0;
 	for (std::vector<shared_ptr<NetworkLink> >::const_iterator it = myLinks.begin(); it != myLinks.end(); ++it) {
 		if ((*it)->isEnabled()) {
 			++count;

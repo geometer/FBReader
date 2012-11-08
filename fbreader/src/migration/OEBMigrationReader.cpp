@@ -29,7 +29,7 @@ OEBMigrationReader::OEBMigrationReader(BookInfo &info) : myInfo(info) {
 static const std::string METADATA = "metadata";
 static const std::string DC_METADATA = "dc-metadata";
 
-void OEBMigrationReader::characterDataHandler(const char *text, size_t len) {
+void OEBMigrationReader::characterDataHandler(const char *text, std::size_t len) {
 	if (myReadSubject) {
 		myBuffer.append(text, len);
 	}

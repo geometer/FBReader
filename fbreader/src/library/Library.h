@@ -41,7 +41,7 @@ public:
 
 private:
 	static shared_ptr<Library> ourInstance;
-	static const size_t MaxRecentListSize;
+	static const std::size_t MaxRecentListSize;
 
 public:
 	ZLStringOption PathOption;
@@ -69,7 +69,7 @@ public:
 
 	void collectSeriesTitles(shared_ptr<Author> author, std::set<std::string> &titles) const;
 
-	size_t revision() const;
+	std::size_t revision() const;
 
 	void addBook(shared_ptr<Book> book);
 	void removeBook(shared_ptr<Book> book);
@@ -117,7 +117,7 @@ private:
 		BUILD_ALL = 0x03
 	};
 	mutable BuildMode myBuildMode;
-	mutable size_t myRevision;
+	mutable std::size_t myRevision;
 
 friend class LibrarySynchronizer;
 friend class LibrarySynchronizerWrapper;

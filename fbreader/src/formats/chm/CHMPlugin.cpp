@@ -53,7 +53,7 @@ private:
 	CHMFileInfo &myCHMFile;
 	shared_ptr<ZLInputStream> myBase;
 	std::vector<std::string> myEntryNames;
-	size_t myIndex;
+	std::size_t myIndex;
 };
 
 CHMTextStream::CHMTextStream(CHMFileInfo &chmFile, shared_ptr<ZLInputStream> base) : myCHMFile(chmFile), myBase(base) {
@@ -157,7 +157,7 @@ BookModel::Label CHMHyperlinkMatcher::match(const std::map<std::string,BookModel
 	if (it != lMap.end()) {
 		return it->second;
 	}
-	size_t index = id.find('#');
+	std::size_t index = id.find('#');
 	if (index != std::string::npos) {
 		it = lMap.find(id.substr(0, index));
 	}

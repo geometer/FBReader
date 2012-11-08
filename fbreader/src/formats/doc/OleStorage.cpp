@@ -24,7 +24,7 @@
 
 #include <cstring>
 
-const size_t OleStorage::BBD_BLOCK_SIZE = 512;
+const std::size_t OleStorage::BBD_BLOCK_SIZE = 512;
 
 OleStorage::OleStorage() {
 	clear();
@@ -46,7 +46,7 @@ void OleStorage::clear() {
 
 
 
-bool OleStorage::init(shared_ptr<ZLInputStream> stream, size_t streamSize) {
+bool OleStorage::init(shared_ptr<ZLInputStream> stream, std::size_t streamSize) {
 	clear();
 
 	myInputStream = stream;
@@ -54,13 +54,13 @@ bool OleStorage::init(shared_ptr<ZLInputStream> stream, size_t streamSize) {
 	myInputStream->seek(0, true);
 
 	char oleBuf[BBD_BLOCK_SIZE];
-	size_t ret = myInputStream->read(oleBuf, BBD_BLOCK_SIZE);
+	std::size_t ret = myInputStream->read(oleBuf, BBD_BLOCK_SIZE);
 	if (ret != BBD_BLOCK_SIZE) {
 		clear();
 		return false;
 	}
 	static const char OLE_SIGN[] = {0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1, 0};
-	if (strncmp(oleBuf, OLE_SIGN, 8) != 0) {
+	if (std::strncmp(oleBuf, OLE_SIGN, 8) != 0) {
 		clear();
 		return false;
 	}
@@ -185,7 +185,7 @@ bool OleStorage::readProperties(char *oleBuf) {
 		for (unsigned int j = 0; j < mySectorSize; j += 128) {
 			myProperties.push_back(std::string(buffer + j, 128));
 		}
-		if (propCur < 0 || (size_t)propCur >= myBBD.size()) {
+		if (propCur < 0 || (std::size_t)propCur >= myBBD.size()) {
 			break;
 		}
 		propCur = myBBD.at(propCur);
@@ -248,9 +248,9 @@ bool OleStorage::readOleEntry(int propNumber, OleEntry &e) {
 		//filling blocks with chains
 		do {
 			e.blocks.push_back((unsigned int)chainCur);
-			if (e.isBigBlock && (size_t)chainCur < myBBD.size()) {
+			if (e.isBigBlock && (std::size_t)chainCur < myBBD.size()) {
 				chainCur = myBBD.at(chainCur);
-			} else if (!mySBD.empty() && (size_t)chainCur < mySBD.size()) {
+			} else if (!mySBD.empty() && (std::size_t)chainCur < mySBD.size()) {
 				chainCur = mySBD.at(chainCur);
 			} else {
 				chainCur = -1;
@@ -277,7 +277,7 @@ unsigned int OleStorage::getFileOffsetOfBlock(const OleEntry &e, unsigned int bl
 }
 
 bool OleStorage::getEntryByName(std::string name, OleEntry &returnEntry) const {
-	for (size_t i = 0; i < myEntries.size(); ++i) {
+	for (std::size_t i = 0; i < myEntries.size(); ++i) {
 		const OleEntry &entry = myEntries.at(i);
 		if (entry.name == name) {
 			returnEntry = entry;

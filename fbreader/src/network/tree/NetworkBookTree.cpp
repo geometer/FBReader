@@ -79,7 +79,7 @@ static std::vector<shared_ptr<ZLTreeAction> > getBookActions(NetworkBookTree &tr
 
 void NetworkBookTree::init() {
 	std::vector<shared_ptr<ZLTreeAction> > actions = getBookActions(*this);
-	for (size_t i = 0; i < actions.size(); ++i) {
+	for (std::size_t i = 0; i < actions.size(); ++i) {
 		registerAction(actions.at(i));
 	}
 }
@@ -194,7 +194,7 @@ std::string NetworkBookTree::BookItemWrapper::title() const {
 std::vector<std::string> NetworkBookTree::BookItemWrapper::authors() const {
 	const NetworkBookItem &bookItem = book();
 	std::vector<std::string> authors;
-	for (size_t i = 0; i < bookItem.Authors.size(); ++i) {
+	for (std::size_t i = 0; i < bookItem.Authors.size(); ++i) {
 		authors.push_back(bookItem.Authors.at(i).DisplayName);
 	}
 	return authors;
@@ -250,7 +250,7 @@ const std::vector<shared_ptr<ZLTreeAction> > NetworkBookTree::BookItemWrapper::r
 		return myRelatedActions;
 	}
 	std::vector<shared_ptr<NetworkItem> > catalogItems =  static_cast<NetworkBookItem&>(*myBookItem).getRelatedCatalogsItems();
-	for (size_t i = 0; i < catalogItems.size(); ++i) {
+	for (std::size_t i = 0; i < catalogItems.size(); ++i) {
 		shared_ptr<NetworkItem> item = catalogItems.at(i);
 		myRelatedActions.push_back(new RelatedAction(item));
 	}

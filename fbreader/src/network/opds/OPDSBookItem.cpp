@@ -95,7 +95,7 @@ void OPDSBookItem::loadFullInformation(shared_ptr<ZLNetworkRequest::Listener> li
 
 std::vector<shared_ptr<NetworkItem> > OPDSBookItem::getRelatedCatalogsItems() const {
 	std::vector<shared_ptr<NetworkItem> > items;
-	for (size_t i = 0; i < myRelatedInfos.size(); ++i) {
+	for (std::size_t i = 0; i < myRelatedInfos.size(); ++i) {
 		shared_ptr<RelatedUrlInfo> urlInfo = myRelatedInfos.at(i);
 		if (!urlInfo->MimeType->weakEquals(*ZLMimeType::APPLICATION_ATOM_XML)) {
 			continue;
@@ -124,13 +124,13 @@ std::string OPDSBookItem::getDate(OPDSEntry &entry) {
 
 std::vector<NetworkBookItem::AuthorData> OPDSBookItem::getAuthors(OPDSEntry &entry) {
 	std::vector<NetworkBookItem::AuthorData> authors;
-	for (size_t i = 0; i < entry.authors().size(); ++i) {
+	for (std::size_t i = 0; i < entry.authors().size(); ++i) {
 		ATOMAuthor &author = *(entry.authors()[i]);
 		NetworkBookItem::AuthorData authorData;
 		std::string name = author.name();
 		std::string lowerCased = ZLUnicodeUtil::toLower(name);
 		static const std::string authorPrefix = "author:";
-		size_t index = lowerCased.find(authorPrefix);
+		std::size_t index = lowerCased.find(authorPrefix);
 		if (index != std::string::npos) {
 			name = name.substr(index + authorPrefix.size());
 		} else {
@@ -161,7 +161,7 @@ std::vector<NetworkBookItem::AuthorData> OPDSBookItem::getAuthors(OPDSEntry &ent
 
 std::vector<std::string> OPDSBookItem::getTags(OPDSEntry &entry) {
 	std::vector<std::string> tags;
-	for (size_t i = 0; i < entry.categories().size(); ++i) {
+	for (std::size_t i = 0; i < entry.categories().size(); ++i) {
 		ATOMCategory &category = *(entry.categories()[i]);
 		tags.push_back(category.label());
 	}
@@ -171,7 +171,7 @@ std::vector<std::string> OPDSBookItem::getTags(OPDSEntry &entry) {
 NetworkItem::UrlInfoCollection OPDSBookItem::getUrls(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl) {
 	//TODO split urls and references in UrlInfoCollection, like it's implemented in FBReaderJ
 	NetworkItem::UrlInfoCollection urlMap;
-	for (size_t i = 0; i < entry.links().size(); ++i) {
+	for (std::size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
 		const std::string href = ZLNetworkUtil::url(baseUrl, link.href());
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
@@ -195,7 +195,7 @@ NetworkItem::UrlInfoCollection OPDSBookItem::getUrls(const OPDSLink &networkLink
 
 OPDSBookItem::RelatedUrlsList OPDSBookItem::getRelatedUrls(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl) {
 	OPDSBookItem::RelatedUrlsList relatedUrlList;
-	for (size_t i = 0; i < entry.links().size(); ++i) {
+	for (std::size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
 		const std::string href = ZLNetworkUtil::url(baseUrl, link.href());
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
@@ -210,7 +210,7 @@ OPDSBookItem::RelatedUrlsList OPDSBookItem::getRelatedUrls(const OPDSLink &netwo
 std::vector<shared_ptr<BookReference> >  OPDSBookItem::getReferences(const OPDSLink &networkLink, OPDSEntry &entry, std::string baseUrl) {
 	//TODO split urls and references in UrlInfoCollection, like it's implemented in FBReaderJ
 	std::vector<shared_ptr<BookReference> > references;
-	for (size_t i = 0; i < entry.links().size(); ++i) {
+	for (std::size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
 		const std::string href = ZLNetworkUtil::url(baseUrl, link.href());
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());

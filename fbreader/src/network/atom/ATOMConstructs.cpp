@@ -241,7 +241,7 @@ bool ATOMDateConstruct::parse(const std::string &str, ATOMDateConstruct &dateTim
 	end = 4; start = 0; log = 0;
 	while (start < len) {
 		ch = str[start++];
-		if (!isdigit(ch)) {
+		if (!std::isdigit(ch)) {
 			return false;
 		}
 		num = 10 * num + ((int) (ch - '0'));
@@ -293,7 +293,7 @@ bool ATOMDateConstruct::parse(const std::string &str, ATOMDateConstruct &dateTim
 				ch = str[start++];
 				if (ch == '.') {
 					end = start;
-					while (isdigit(str[++end])) /* NOP */;
+					while (std::isdigit(str[++end])) /* NOP */;
 				} else if (ch == '+' || ch == '-') {
 					sign = (ch == '-') ? -1 : 1;
 					log += 1;

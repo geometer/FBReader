@@ -380,16 +380,16 @@ void BookTextView::PositionIndicatorWithLabels::draw() {
 		if (!contentsModelPtr.isNull()) {
 			ContentsModel &contentsModel = (ContentsModel&)*contentsModelPtr;
 			const int marksNumber = contentsModel.paragraphsNumber();
-			const size_t startIndex = startTextIndex();
-			const size_t endIndex = endTextIndex();
-			const std::vector<size_t> &textSizeVector = textSize();
+			const std::size_t startIndex = startTextIndex();
+			const std::size_t endIndex = endTextIndex();
+			const std::vector<std::size_t> &textSizeVector = textSize();
 			const int fullWidth = right() - left() - 1;
-			const size_t startPosition = textSizeVector[startIndex];
-			const size_t fullTextSize = textSizeVector[endIndex] - startPosition;
+			const std::size_t startPosition = textSizeVector[startIndex];
+			const std::size_t fullTextSize = textSizeVector[endIndex] - startPosition;
 			const int bottom = this->bottom();
 			const int top = this->top();
 			for (int i = 0; i < marksNumber; ++i) {
-				size_t reference = contentsModel.reference((ZLTextTreeParagraph*)contentsModel[i]);
+				std::size_t reference = contentsModel.reference((ZLTextTreeParagraph*)contentsModel[i]);
 				if ((startIndex < reference) && (reference < endIndex)) {
 					int position = left() + 2 + (int)
 						(1.0 * fullWidth * (textSizeVector[reference] - startPosition) / fullTextSize);

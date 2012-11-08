@@ -60,7 +60,7 @@ void LitResAuthorsParser::endElementHandler(const char *tag) {
 	myBuffer.clear();
 }
 
-void LitResAuthorsParser::characterDataHandler(const char *data, size_t len) {
+void LitResAuthorsParser::characterDataHandler(const char *data, std::size_t len) {
 	myBuffer.append(data, len);
 }
 

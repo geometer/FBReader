@@ -200,9 +200,9 @@ shared_ptr<Book> Book::loadFromBookInfo(const ZLFile &file) {
 
 	const std::string &tagList = info.TagsOption.value();
 	if (!tagList.empty()) {
-		size_t index = 0;
+		std::size_t index = 0;
 		do {
-			size_t newIndex = tagList.find(',', index);
+			std::size_t newIndex = tagList.find(',', index);
 			book->addTag(Tag::getTagByFullName(tagList.substr(index, newIndex - index)));
 			index = newIndex + 1;
 		} while (index != 0);
@@ -210,9 +210,9 @@ shared_ptr<Book> Book::loadFromBookInfo(const ZLFile &file) {
 
 	const std::string &authorList = info.AuthorDisplayNameOption.value();
 	if (!authorList.empty()) {
-		size_t index = 0;
+		std::size_t index = 0;
 		do {
-			size_t newIndex = authorList.find(',', index);
+			std::size_t newIndex = authorList.find(',', index);
 			book->addAuthor(authorList.substr(index, newIndex - index));
 			index = newIndex + 1;
 		} while (index != 0);

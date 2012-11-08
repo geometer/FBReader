@@ -29,25 +29,25 @@
 class ZCompressedFileImage : public ZLSingleImage {
 
 public:
-	ZCompressedFileImage(const ZLFile &file, size_t offset, size_t size);
+	ZCompressedFileImage(const ZLFile &file, std::size_t offset, std::size_t size);
 	const shared_ptr<std::string> stringData() const;
 
 private:
 	const ZLFile myFile;
-	const size_t myOffset;
-	const size_t myCompressedSize;
+	const std::size_t myOffset;
+	const std::size_t myCompressedSize;
 };
 
 class DocCompressedFileImage : public ZLSingleImage {
 
 public:
-	DocCompressedFileImage(const ZLFile &file, size_t offset, size_t compressedSize);
+	DocCompressedFileImage(const ZLFile &file, std::size_t offset, std::size_t compressedSize);
 	const shared_ptr<std::string> stringData() const;
 
 private:
 	const ZLFile myFile;
-	const size_t myOffset;
-	const size_t myCompressedSize;
+	const std::size_t myOffset;
+	const std::size_t myCompressedSize;
 };
 
 class PluckerMultiImage : public ZLMultiImage {
@@ -67,9 +67,9 @@ private:
 	std::vector<std::string> myIds;
 };
 
-inline ZCompressedFileImage::ZCompressedFileImage(const ZLFile &file, size_t offset, size_t compressedSize) : ZLSingleImage(file.mimeType()), myFile(file), myOffset(offset), myCompressedSize(compressedSize) {}
+inline ZCompressedFileImage::ZCompressedFileImage(const ZLFile &file, std::size_t offset, std::size_t compressedSize) : ZLSingleImage(file.mimeType()), myFile(file), myOffset(offset), myCompressedSize(compressedSize) {}
 
-inline DocCompressedFileImage::DocCompressedFileImage(const ZLFile &file, size_t offset, size_t compressedSize) : ZLSingleImage(file.mimeType()), myFile(file), myOffset(offset), myCompressedSize(compressedSize) {}
+inline DocCompressedFileImage::DocCompressedFileImage(const ZLFile &file, std::size_t offset, std::size_t compressedSize) : ZLSingleImage(file.mimeType()), myFile(file), myOffset(offset), myCompressedSize(compressedSize) {}
 
 inline PluckerMultiImage::PluckerMultiImage(unsigned int rows, unsigned int columns, const ZLImageMap &imageMap) : myRows(rows), myColumns(columns), myImageMap(imageMap) {}
 inline void PluckerMultiImage::addId(const std::string &id) { myIds.push_back(id); }

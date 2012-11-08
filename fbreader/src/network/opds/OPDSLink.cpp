@@ -50,7 +50,7 @@ void OPDSLink::AdvancedSearch::addSubQuery(std::string &query, const std::string
 	}
 
 	if (myType == "separateWords") {
-		size_t start = 0, end;
+		std::size_t start = 0, end;
 		do {
 			end = value.find(' ', start);
 			std::string ss = value.substr(start, end - start);

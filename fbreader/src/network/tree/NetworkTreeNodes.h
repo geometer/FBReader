@@ -60,8 +60,8 @@ private:
 	const ZLTypeId &typeId() const;
 
 public:
-	NetworkTree(RootTree *parent, size_t position);
-	NetworkTree(NetworkTree *parent, size_t position = (size_t)-1);
+	NetworkTree(RootTree *parent, std::size_t position);
+	NetworkTree(NetworkTree *parent, std::size_t position = (std::size_t)-1);
 };
 
 class NetworkCatalogTree : public NetworkTree {
@@ -73,8 +73,8 @@ private:
 	const ZLTypeId &typeId() const;
 
 public:
-	NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
-	NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
+	NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, std::size_t position = (std::size_t)-1);
+	NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, std::size_t position = (std::size_t)-1);
 
 	std::string title() const;
 	std::string subtitle() const;
@@ -123,7 +123,7 @@ private:
 	class RegisterUserAction;
 
 public:
-	NetworkCatalogRootTree(RootTree *parent, NetworkLink &link, size_t position);
+	NetworkCatalogRootTree(RootTree *parent, NetworkLink &link, std::size_t position);
 	void init();
 
 private:
@@ -142,7 +142,7 @@ private:
 	const ZLTypeId &typeId() const;
 
 public:
-	SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
+	SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, std::size_t position = (std::size_t)-1);
 
 	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
 	void onChildrenReceived(NetworkItem::List &childrens, const std::string &error);

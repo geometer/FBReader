@@ -73,7 +73,7 @@ bool ContentsView::isEmpty() const {
 	return model.isNull() || model->paragraphsNumber() == 0;
 }
 
-size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
+std::size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
 	const ZLTextWordCursor &cursor = FBReader::Instance().bookTextView().textArea().startCursor();
 	if (!cursor.isNull()) {
 		long reference = cursor.paragraphCursor().index();
@@ -83,9 +83,9 @@ size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
 			startOfParagraph = true;
 		}
 		shared_ptr<ZLTextModel> model = textArea().model();
-		size_t length = model->paragraphsNumber();
+		std::size_t length = model->paragraphsNumber();
 		const ContentsModel &contentsModel = (const ContentsModel&)*model;
-		for (size_t i = 1; i < length; ++i) {
+		for (std::size_t i = 1; i < length; ++i) {
 			long contentsReference =
 				contentsModel.reference(((const ZLTextTreeParagraph*)contentsModel[i]));
 			if ((contentsReference > reference) ||
@@ -95,12 +95,12 @@ size_t ContentsView::currentTextViewParagraph(bool includeStart) const {
 		}
 		return length - 1;
 	}
-	return (size_t)-1;
+	return (std::size_t)-1;
 }
 
 void ContentsView::gotoReference() {
 	textArea().model()->removeAllMarks();
-	const size_t selected = currentTextViewParagraph();
+	const std::size_t selected = currentTextViewParagraph();
 	highlightParagraph(selected);
 	preparePaintInfo();
 	gotoParagraph(selected);

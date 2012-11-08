@@ -34,14 +34,14 @@ std::string SQLiteCommand::packCommand(const std::string &command) {
 	std::string stripped = command;
 	ZLStringUtil::stripWhiteSpaces(stripped);
 	
-	size_t pos = 0;
+	std::size_t pos = 0;
 	while (true) {
 		pos = stripped.find_first_of(_spaces, pos);
 		if (pos == std::string::npos) {
 			break;
 		}
 		stripped[pos++] = ' ';
-		const size_t next = stripped.find_first_not_of(_spaces, pos);
+		const std::size_t next = stripped.find_first_not_of(_spaces, pos);
 		if (pos != std::string::npos && next > pos) {
 			stripped.erase(pos, next - pos);
 		}
@@ -150,9 +150,9 @@ bool SQLiteCommand::prepareStatements(SQLiteConnection &conn) {
 		return false;
 	}
 	if (myStatements.size() != 0) {
-		const size_t size = myStatements.size();
+		const std::size_t size = myStatements.size();
 		int res = SQLITE_OK;
-		for (size_t i = 0; i < size && res == SQLITE_OK; ++i) {
+		for (std::size_t i = 0; i < size && res == SQLITE_OK; ++i) {
 			res = sqlite3_reset(myStatements[i]);
 		}
 		if (res == SQLITE_OK) {
@@ -191,9 +191,9 @@ void SQLiteCommand::prepareBindContext() {
 		return;
 	}
 
-	size_t number = 0;
+	std::size_t number = 0;
 
-	for (size_t i = 0; i < myStatements.size(); ++i) {
+	for (std::size_t i = 0; i < myStatements.size(); ++i) {
 		sqlite3_stmt *statement = myStatements[i];
 		const int count = sqlite3_bind_parameter_count(statement);
 		for (int j = 1; j <= count; ++j) {
@@ -218,8 +218,8 @@ bool SQLiteCommand::bindParameters() {
 	std::vector<DBCommandParameter> &params = parameters();
 
 	bool res = true;
-	const size_t size = params.size();
-	for (size_t i = 0; i < size; ++i) {
+	const std::size_t size = params.size();
+	for (std::size_t i = 0; i < size; ++i) {
 		DBCommandParameter &p = params[i];
 		if (p.hasName()) {
 			const std::string &name = p.name();
@@ -246,10 +246,10 @@ bool SQLiteCommand::bindParameters() {
 
 
 bool SQLiteCommand::bindParameterByName(const std::string &name, shared_ptr<DBValue> value) {
-	const size_t size = myStatements.size();
+	const std::size_t size = myStatements.size();
 	bool res = true;
 	bool binded = false;
-	for (size_t i = 0; i < size; ++i) {
+	for (std::size_t i = 0; i < size; ++i) {
 		sqlite3_stmt *statement = myStatements[i];
 		const int index = sqlite3_bind_parameter_index(statement, name.c_str());
 		if (index == 0) {
@@ -266,13 +266,13 @@ bool SQLiteCommand::bindParameterByName(const std::string &name, shared_ptr<DBVa
 	return res;
 }
 
-bool SQLiteCommand::bindParameterByIndex(size_t index, shared_ptr<DBValue> value) {
+bool SQLiteCommand::bindParameterByIndex(std::size_t index, shared_ptr<DBValue> value) {
 	if (index == 0) {
 		return true;
 	}
-	const size_t size = myStatements.size();
+	const std::size_t size = myStatements.size();
 	int number = index;
-	for (size_t i = 0; i < size; ++i) {
+	for (std::size_t i = 0; i < size; ++i) {
 		sqlite3_stmt *statement = myStatements[i];
 		const int count = sqlite3_bind_parameter_count(statement);
 		if (number > count) {
@@ -312,8 +312,8 @@ bool SQLiteCommand::bindParameter(sqlite3_stmt *statement, int number, shared_pt
 
 void SQLiteCommand::finalizeStatements() {
 	SQLiteConnection &con = (SQLiteConnection &) connection();
-	const size_t size = myStatements.size();
-	for (size_t i = 0; i < size; ++i) {
+	const std::size_t size = myStatements.size();
+	for (std::size_t i = 0; i < size; ++i) {
 		sqlite3_stmt *statement = myStatements[i];
 		con.removeStatement(statement);
 		const int res = sqlite3_finalize(statement);
@@ -326,7 +326,7 @@ void SQLiteCommand::finalizeStatements() {
 
 
 void SQLiteCommand::dumpError() const { 
-	static const size_t cmdlimit = 114;
+	static const std::size_t cmdlimit = 114;
 	((SQLiteConnection &) connection()).dumpError(); 
 	const std::string &cmd = commandString();
 	if (cmd.length() > cmdlimit) {
@@ -337,7 +337,7 @@ void SQLiteCommand::dumpError() const {
 }
 
 void SQLiteCommand::dumpError(const std::string &msg) const {
-	static const size_t cmdlimit = 129;
+	static const std::size_t cmdlimit = 129;
 	std::cerr << "SQLITE ERROR: " << msg << std::endl;
 	const std::string &cmd = commandString();
 	if (cmd.length() > cmdlimit) {
@@ -351,9 +351,9 @@ bool SQLiteCommand::resetStatements() {
 	if (myStatements.size() == 0) {
 		return true;
 	}
-	const size_t size = myStatements.size();
+	const std::size_t size = myStatements.size();
 	int res = SQLITE_OK;
-	for (size_t i = 0; i < size && res == SQLITE_OK; ++i) {
+	for (std::size_t i = 0; i < size && res == SQLITE_OK; ++i) {
 		res = sqlite3_reset(myStatements[i]);
 	}
 	if (res == SQLITE_OK) {

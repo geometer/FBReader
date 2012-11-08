@@ -32,16 +32,16 @@ public:
 	bool open();
 	virtual void close();
 
-	size_t read(char *buffer, size_t maxSize);
+	std::size_t read(char *buffer, std::size_t maxSize);
 	void seek(int offset, bool absoluteOffset);
-	size_t offset() const;
-	size_t sizeOfOpened();
+	std::size_t offset() const;
+	std::size_t sizeOfOpened();
 
 protected:
 	std::string myDictionary[256];
 	std::string myBuffer;
 	shared_ptr<ZLInputStream> myBase;
-	size_t myOffset;
+	std::size_t myOffset;
 };
 
 #endif /* __TCRSTREAM_H__ */

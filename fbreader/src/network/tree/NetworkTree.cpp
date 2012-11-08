@@ -26,6 +26,6 @@ const ZLTypeId &NetworkTree::typeId() const {
 }
 
 
-NetworkTree::NetworkTree(RootTree *parent, size_t position) : FBTree(parent, position) { }
+NetworkTree::NetworkTree(RootTree *parent, std::size_t position) : FBTree(parent, position) { }
 
-NetworkTree::NetworkTree(NetworkTree *parent, size_t position) : FBTree(parent, position) { }
+NetworkTree::NetworkTree(NetworkTree *parent, std::size_t position) : FBTree(parent, position) { }

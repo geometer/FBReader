@@ -32,7 +32,7 @@ LibraryView::LibraryView(ZLPaintContext &context) : ZLBlockTreeView(context), my
 }
 
 void LibraryView::paint() {
-	const size_t revision = Library::Instance().revision();
+	const std::size_t revision = Library::Instance().revision();
 	if (myCollectionRevision < revision) {
 		myCollectionRevision = revision;
 		makeUpToDate();

@@ -46,7 +46,7 @@ SearchOnNetworkAction::SearchOnNetworkAction() : ModeDependentAction(FBReader::N
 
 void SearchOnNetworkAction::run() {
 //	NetworkLinkCollection &collection = NetworkLinkCollection::Instance();
-//	for (size_t i = 0; i < collection.size(); ++i) {
+//	for (std::size_t i = 0; i < collection.size(); ++i) {
 //		NetworkLink &link = collection.link(i);
 //		if (link.isEnabled()) {
 //			shared_ptr<NetworkAuthenticationManager> mgr = link.authenticationManager();

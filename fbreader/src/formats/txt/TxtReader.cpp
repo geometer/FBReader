@@ -94,10 +94,10 @@ TxtReaderCoreUtf16::TxtReaderCoreUtf16(TxtReader &reader) : TxtReaderCore(reader
 }
 
 void TxtReaderCore::readDocument(ZLInputStream &stream) {
-	const size_t BUFSIZE = 2048;
+	const std::size_t BUFSIZE = 2048;
 	char *buffer = new char[BUFSIZE];
 	std::string str;
-	size_t length;
+	std::size_t length;
 	do {
 		length = stream.read(buffer, BUFSIZE);
 		char *start = buffer;
@@ -119,7 +119,7 @@ void TxtReaderCore::readDocument(ZLInputStream &stream) {
 				}
 				start = ptr + 1;
 				myReader.newLineHandler();
-			} else if (isspace((unsigned char)*ptr)) {
+			} else if (std::isspace((unsigned char)*ptr)) {
 				if (*ptr != '\t') {
 					*ptr = ' ';
 				}
@@ -136,10 +136,10 @@ void TxtReaderCore::readDocument(ZLInputStream &stream) {
 }
 
 void TxtReaderCoreUtf16::readDocument(ZLInputStream &stream) {
-	const size_t BUFSIZE = 2048;
+	const std::size_t BUFSIZE = 2048;
 	char *buffer = new char[BUFSIZE];
 	std::string str;
-	size_t length;
+	std::size_t length;
 	do {
 		length = stream.read(buffer, BUFSIZE);
 		char *start = buffer;
@@ -162,7 +162,7 @@ void TxtReaderCoreUtf16::readDocument(ZLInputStream &stream) {
 				}
 				start = ptr + 2;
 				myReader.newLineHandler();
-			} else if (chr != 0 && isspace(chr)) {
+			} else if (chr != 0 && std::isspace(chr)) {
 				if (chr != '\t') {
 					setAscii(ptr, ' ');
 				}

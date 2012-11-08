@@ -68,7 +68,7 @@ template <class T, class F>
 SortedCatalogItem* SortedCatalogItem::create(const NetworkCatalogItem &parent, const std::string &resourceKey,
 				   const NetworkItem::List &children, int flags, T comparator, F filter) {
 	NetworkItem::List tmpChildren;
-	for (size_t i = 0; i < children.size(); ++i) {
+	for (std::size_t i = 0; i < children.size(); ++i) {
 		shared_ptr<NetworkItem> child = children.at(i);
 		if (filter.accepts(&(*child))) {
 			tmpChildren.push_back(child);
@@ -88,7 +88,7 @@ inline SortedCatalogItem* SortedCatalogItem::create(const NetworkCatalogItem &pa
 				   const NetworkItem::List &children, int flags) {
 	BookItemFilter filter;
 	NetworkItem::List tmpChildren;
-	for (size_t i = 0; i < children.size(); ++i) {
+	for (std::size_t i = 0; i < children.size(); ++i) {
 		shared_ptr<NetworkItem> child = children.at(i);
 		if (filter.accepts(&(*child))) {
 			tmpChildren.push_back(child);

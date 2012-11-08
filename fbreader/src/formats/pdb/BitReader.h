@@ -23,17 +23,17 @@
 class BitReader {
 
 public:
-	BitReader(const unsigned char* data, size_t size);
+	BitReader(const unsigned char* data, std::size_t size);
 	~BitReader();
 
-	unsigned long long peek(size_t n);
-	bool eat(size_t n);
-	size_t left() const;
+	unsigned long long peek(std::size_t n);
+	bool eat(std::size_t n);
+	std::size_t left() const;
 
 private:
 	unsigned char* myData;
-	size_t myOffset;
-	size_t myLength;
+	std::size_t myOffset;
+	std::size_t myLength;
 };
 
 #endif //__BITREADER_H__

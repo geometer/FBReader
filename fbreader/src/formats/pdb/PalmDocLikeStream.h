@@ -44,8 +44,8 @@ private:
 
 protected: 
 	unsigned short myMaxRecordSize;
-	size_t myRecordIndex;
-	size_t myMaxRecordIndex;
+	std::size_t myRecordIndex;
+	std::size_t myMaxRecordIndex;
 
 	enum {
 		ERROR_NONE,

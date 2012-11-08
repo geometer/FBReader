@@ -63,7 +63,7 @@ public:
 	}
 
 	void performRequests(ZLNetworkRequest::Vector requestList) {
-		for (size_t i = 0; i < requestList.size(); ++i) {
+		for (std::size_t i = 0; i < requestList.size(); ++i) {
 			shared_ptr<ZLNetworkRequest> request = requestList.at(i);
 			request->setListener(myHolder);
 			++myCounter;
@@ -82,9 +82,9 @@ public:
 
 		ZLNetworkRequest::Vector requestList;
 
-		for (size_t i = 0; i < myDataList.size(); ++i) {
+		for (std::size_t i = 0; i < myDataList.size(); ++i) {
 			shared_ptr<NetworkOperationData> data = myDataList.at(i);
-			for (size_t j = 0; j < data->Items.size(); ++j) {
+			for (std::size_t j = 0; j < data->Items.size(); ++j) {
 				myCollection->addBook(data->Items.at(j));
 			}
 
@@ -124,7 +124,7 @@ std::string AllCatalogsSearchItem::loadChildren(NetworkItem::List &children, sha
 	std::vector<shared_ptr<NetworkOperationData> > dataList;
 
 	const NetworkLinkCollection::LinkVector &links = NetworkLinkCollection::Instance().activeLinks();
-	for (size_t i = 0; i < links.size(); ++i) {
+	for (std::size_t i = 0; i < links.size(); ++i) {
 		const NetworkLink &link = *links.at(i);
 		shared_ptr<NetworkOperationData> data = new NetworkOperationData(link);
 
@@ -142,9 +142,9 @@ std::string AllCatalogsSearchItem::loadChildren(NetworkItem::List &children, sha
 //		//TODO reimplement resume() using
 //		errorMessage = ZLNetworkManager::Instance().perform(requestList);
 //		requestList.clear();
-//		for (size_t i = 0; i < dataList.size(); ++i) {
+//		for (std::size_t i = 0; i < dataList.size(); ++i) {
 //			shared_ptr<NetworkOperationData> data = dataList.at(i);
-//			for (size_t j = 0; j < data->Items.size(); ++j) {
+//			for (std::size_t j = 0; j < data->Items.size(); ++j) {
 //				collection->addBook(data->Items.at(j));
 //			}
 

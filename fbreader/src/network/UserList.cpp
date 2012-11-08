@@ -47,7 +47,7 @@ UserList::UserList(const std::string &siteName) : myGroupName(USER_LIST + siteNa
 
 UserList::~UserList() {
 	unsigned int i = 0;
-	for (size_t k = 0; k < myUserNames.size() && i < MAX_USER_NAMES; ++k) {
+	for (std::size_t k = 0; k < myUserNames.size() && i < MAX_USER_NAMES; ++k) {
 		const std::string &name = myUserNames[k];
 		if (mySavedNames.find(name) != mySavedNames.end()) {
 			std::string userOptionName(USER);

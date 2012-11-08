@@ -67,9 +67,9 @@ public:
 	void clearCaches();
 	void forceScrollbarUpdate();
 
-	void gotoPage(size_t index);
-	size_t pageIndex();
-	size_t pageNumber() const;
+	void gotoPage(std::size_t index);
+	std::size_t pageIndex();
+	std::size_t pageNumber() const;
 
 	void scrollPage(bool forward, ZLTextAreaController::ScrollingMode mode, unsigned int value);
 	void scrollToStartOfText();
@@ -98,7 +98,7 @@ protected:
 	virtual bool onStylusClick(int x, int y, int count);
 	virtual int doubleClickDelay() const = 0;
 
-	void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
+	void onScrollbarMoved(Direction direction, std::size_t full, std::size_t from, std::size_t to);
 	void onScrollbarStep(Direction direction, int steps);
 	void onScrollbarPageStep(Direction direction, int steps);
 	void activateSelection(int x, int y);
@@ -117,11 +117,11 @@ protected:
 private:
 	void clear();
 
-	std::vector<size_t>::const_iterator nextBreakIterator() const;
+	std::vector<std::size_t>::const_iterator nextBreakIterator() const;
 
 	shared_ptr<ZLTextView::PositionIndicator> positionIndicator();
 
-	void gotoCharIndex(size_t charIndex);
+	void gotoCharIndex(std::size_t charIndex);
 
 	void startSelectionScrolling(bool forward);
 	void stopSelectionScrolling();
@@ -129,8 +129,8 @@ private:
 private:
 	ZLTextAreaController myTextAreaController;
 
-	std::vector<size_t> myTextSize;
-	std::vector<size_t> myTextBreaks;
+	std::vector<std::size_t> myTextSize;
+	std::vector<std::size_t> myTextBreaks;
 
 	shared_ptr<ZLRunnable> mySelectionScroller;
 

@@ -33,11 +33,11 @@ const ZLTypeId &NetworkCatalogTree::typeId() const {
 	return TYPE_ID;
 }
 
-NetworkCatalogTree::NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position) :
+NetworkCatalogTree::NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, std::size_t position) :
 	NetworkTree(parent, position), myItem(item) {
 }
 
-NetworkCatalogTree::NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position) :
+NetworkCatalogTree::NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, std::size_t position) :
 	NetworkTree(parent, position), myItem(item) {
 	init();
 }
@@ -219,7 +219,7 @@ void NetworkCatalogTree::onChildrenReceived(NetworkItem::List &childrens, const 
 }
 
 void NetworkCatalogTree::notifyListeners(const std::string &error) {
-	for (size_t i = 0; i < myListeners.size(); ++i) {
+	for (std::size_t i = 0; i < myListeners.size(); ++i) {
 		if (!myListeners.at(i).isNull())
 			myListeners.at(i)->finished(error);
 	}

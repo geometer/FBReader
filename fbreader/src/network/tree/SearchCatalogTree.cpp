@@ -25,7 +25,7 @@ const ZLTypeId &SearchCatalogTree::typeId() const {
 	return TYPE_ID;
 }
 
-SearchCatalogTree::SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position) :
+SearchCatalogTree::SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, std::size_t position) :
 	NetworkCatalogTree(parent, item, position) {
 	//TODO maybe remove this class
 }

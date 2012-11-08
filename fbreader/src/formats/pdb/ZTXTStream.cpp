@@ -56,7 +56,7 @@ bool ZTXTStream::fillBuffer() {
 			return false;
 		}
 		++myRecordIndex;
-		size_t currentOffset = recordOffset(myRecordIndex);
+		std::size_t currentOffset = recordOffset(myRecordIndex);
 		// Hmm, this works on examples from manybooks.net,
 		// but I don't understand what this code means :((
 		if (myRecordIndex == 1) {
@@ -66,7 +66,7 @@ bool ZTXTStream::fillBuffer() {
 			return false;
 		}
 		myBase->seek(currentOffset, true);
-		const size_t nextOffset = recordOffset(myRecordIndex + 1);
+		const std::size_t nextOffset = recordOffset(myRecordIndex + 1);
 		if (nextOffset < currentOffset) {
 			return false;
 		}

@@ -35,7 +35,7 @@ private:
 	NetworkTreeFactory();
 
 public:
-	static ZLTreeTitledNode *createNetworkTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
+	static ZLTreeTitledNode *createNetworkTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, std::size_t position = (std::size_t)-1);
 	static void fillAuthorTree(NetworkTree *parent, const NetworkItem::List &books);
 };
 

@@ -46,7 +46,7 @@ void PdbUtil::readUnsignedLongLE(ZLInputStream &stream, unsigned long &N) {
 }
 
 bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {
-	const size_t startOffset = stream->offset();
+	const std::size_t startOffset = stream->offset();
 	DocName.erase();
 	DocName.append(32, '\0');
 	stream->read((char*)DocName.data(), 32); 			// stream offset: +32
@@ -75,7 +75,7 @@ bool PdbHeader::read(shared_ptr<ZLInputStream> stream) {
 }
 
 /*bool PdbRecord0::read(shared_ptr<ZLInputStream> stream) {
-	size_t startOffset = stream->offset();
+	std::size_t startOffset = stream->offset();
 	
 	PdbUtil::readUnsignedShort(*stream, CompressionType);    
 	PdbUtil::readUnsignedShort(*stream, Spare);          

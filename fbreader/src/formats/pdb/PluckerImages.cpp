@@ -34,11 +34,11 @@ const shared_ptr<std::string> ZCompressedFileImage::stringData() const {
 		stream->seek(myOffset, false);
 		ZLZDecompressor decompressor(myCompressedSize);
 
-		static const size_t charBufferSize = 2048;
+		static const std::size_t charBufferSize = 2048;
 		char *charBuffer = new char[charBufferSize];
 		std::vector<std::string> buffer;
 
-		size_t s;
+		std::size_t s;
 		do {
 			s = decompressor.decompress(*stream, charBuffer, charBufferSize);
 			if (s != 0) {
@@ -62,7 +62,7 @@ const shared_ptr<std::string> DocCompressedFileImage::stringData() const {
 	if (!stream.isNull() && stream->open()) {
 		stream->seek(myOffset, false);
 		char *buffer = new char[65535];
-		size_t uncompressedSize = DocDecompressor().decompress(*stream, buffer, myCompressedSize, 65535);
+		std::size_t uncompressedSize = DocDecompressor().decompress(*stream, buffer, myCompressedSize, 65535);
 		imageData->append(buffer, uncompressedSize);
 		delete[] buffer;
 	}

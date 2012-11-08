@@ -73,7 +73,7 @@ void LitResBooksFeedParser::endElementHandler(const char *tag) {
 	myBuffer.clear();
 }
 
-void LitResBooksFeedParser::characterDataHandler(const char *data, size_t len) {
+void LitResBooksFeedParser::characterDataHandler(const char *data, std::size_t len) {
 	myBuffer.append(data, len);
 }
 
@@ -171,7 +171,7 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 				mySeriesTitle = stringAttributeValue(attributes, "name");
 				if (!mySeriesTitle.empty()) {
 					const char *indexInSeries = attributeValue(attributes, "number");
-					myIndexInSeries = indexInSeries != 0 ? atoi(indexInSeries) : 0;
+					myIndexInSeries = indexInSeries != 0 ? std::atoi(indexInSeries) : 0;
 				}
 			}
 		}

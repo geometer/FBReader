@@ -61,7 +61,7 @@ protected:
 	};
 
 
-	virtual void addCharData(const char *data, size_t len, bool convert) = 0;
+	virtual void addCharData(const char *data, std::size_t len, bool convert) = 0;
     virtual void addLink(FBTextKind kind, const std::string &id, bool on) = 0;
 	virtual void addLinkLabel(const std::string &label) = 0;
 	virtual void addImageReference(const std::string &id) = 0;
@@ -76,14 +76,14 @@ protected:
 private:
 	bool parseDocument(ZLInputStream &stream);
 	void processTag(std::string &tagName, const std::string &parameter = ourDefaultParameter);
-	void processCharData(const char* data, size_t len, bool convert = true);
+	void processCharData(const char* data, std::size_t len, bool convert = true);
     void processFontProperty(FontProperty property);
     void processAlignment(ZLTextAlignmentType alignment);
     void processFontSize(FontSizeType sizeType);
     void processIndent(const std::string &parameter =ourDefaultParameter);
     void processLink(FBTextKind kind, const std::string &parameter);
 	
-	static size_t findTagLength(const char* ptr);
+	static std::size_t findTagLength(const char* ptr);
 
 protected:
     struct PmlReaderState {

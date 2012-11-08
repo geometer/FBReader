@@ -36,7 +36,7 @@ const ZLTypeId &AuthorNode::typeId() const {
 	return TYPE_ID;
 }
 
-AuthorNode::AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author) : FBReaderNode(parent, atPosition), myAuthor(author) {
+AuthorNode::AuthorNode(ZLBlockTreeView::RootNode *parent, std::size_t atPosition, shared_ptr<Author> author) : FBReaderNode(parent, atPosition), myAuthor(author) {
 }
 
 void AuthorNode::init() {

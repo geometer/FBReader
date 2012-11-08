@@ -46,11 +46,11 @@ struct OleEntry {
 class OleStorage {
 
 public:
-	static const size_t BBD_BLOCK_SIZE;
+	static const std::size_t BBD_BLOCK_SIZE;
 
 public:
 	OleStorage();
-	bool init(shared_ptr<ZLInputStream>, size_t streamSize);
+	bool init(shared_ptr<ZLInputStream>, std::size_t streamSize);
 	void clear();
 	const std::vector<OleEntry> &getEntries() const;
 	bool getEntryByName(std::string name, OleEntry &entry) const;
@@ -75,7 +75,7 @@ private:
 	shared_ptr<ZLInputStream> myInputStream;
 	unsigned int mySectorSize, myShortSectorSize;
 
-	size_t myStreamSize;
+	std::size_t myStreamSize;
 	std::vector<int> myDIFAT; //double-indirect file allocation table
 	std::vector<int> myBBD; //Big Block Depot
 	std::vector<int> mySBD; //Small Block Depot

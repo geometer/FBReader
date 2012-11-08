@@ -52,13 +52,13 @@ void Number::setValue(const std::string &value) {
 }
 
 bool Number::operator <(const Number &number) const {
-	int index = strtol(myNumber.c_str(), 0, 10);
-	int otherIndex = strtol(number.value().c_str(), 0, 10);
+	int index = std::strtol(myNumber.c_str(), 0, 10);
+	int otherIndex = std::strtol(number.value().c_str(), 0, 10);
 	return index < otherIndex;
 }
 
 bool Number::operator ==(const Number &number) const {
-	int index = strtol(myNumber.c_str(), 0, 10);
-	int otherIndex = strtol(number.value().c_str(), 0, 10);
+	int index = std::strtol(myNumber.c_str(), 0, 10);
+	int otherIndex = std::strtol(number.value().c_str(), 0, 10);
 	return index == otherIndex;
 }

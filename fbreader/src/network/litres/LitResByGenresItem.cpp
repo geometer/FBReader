@@ -53,7 +53,7 @@ LitResByGenresItem::LitResByGenresItem(
 }
 
 std::string LitResByGenresItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
-	for (size_t i = 0; i < myGenreTree.size(); ++i) {
+	for (std::size_t i = 0; i < myGenreTree.size(); ++i) {
 		shared_ptr<LitResGenre> genre = myGenreTree.at(i);
 		if (genre->Children.empty()) {
 			UrlInfoCollection urlByType = URLByType;

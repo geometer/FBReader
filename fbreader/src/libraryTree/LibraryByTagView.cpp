@@ -53,7 +53,7 @@ void LibraryByTagView::updateBookList(TagNode *tagNode) {
 		}
 	}
 
-	size_t index = jt - books.begin();
+	std::size_t index = jt - books.begin();
 	while (tagNode->children().size() > index) {
 		ZLBlockTreeNode *bookNode = tagNode->children()[index];
 		if (!bookNode->isInstanceOf(BookNode::TYPE_ID)) {

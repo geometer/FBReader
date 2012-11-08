@@ -52,8 +52,8 @@ private:
 		FT_SUP = 11
 	};
 
-	void readRecord(size_t recordSize);
-	void processTextRecord(size_t size, const std::vector<int> &pars);
+	void readRecord(std::size_t recordSize);
+	void processTextRecord(std::size_t size, const std::vector<int> &pars);
 	void processTextParagraph(char *start, char *end);
 	void processTextFunction(char *ptr);
 	void setFont(FontType font, bool start);

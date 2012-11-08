@@ -76,6 +76,6 @@ void LitResGenresParser::endElementHandler(const char *tag) {
 	}
 }
 
-void LitResGenresParser::characterDataHandler(const char *, size_t) {
+void LitResGenresParser::characterDataHandler(const char *, std::size_t) {
 }
 

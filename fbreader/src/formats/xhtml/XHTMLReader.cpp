@@ -299,7 +299,7 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 	if (flag) {
 		endParagraph(reader);
 	}
-	if ((strlen(fileName) > 2) && strncmp(fileName, "./", 2) == 0) {
+	if (std::strlen(fileName) > 2 && std::strncmp(fileName, "./", 2) == 0) {
 		fileName +=2;
 	}
 	bookReader(reader).addImageReference(fullfileName);
@@ -632,7 +632,7 @@ void XHTMLReader::endParagraph() {
 	myModelReader.endParagraph();
 }
 
-void XHTMLReader::characterDataHandler(const char *text, size_t len) {
+void XHTMLReader::characterDataHandler(const char *text, std::size_t len) {
 	switch (myReadState) {
 		case READ_NOTHING:
 			break;
@@ -650,15 +650,15 @@ void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 					beginParagraph();
 					myModelReader.addControl(PREFORMATTED, true);
 				}
-				size_t spaceCounter = 0;
-				while (spaceCounter < len && isspace((unsigned char)*(text + spaceCounter))) {
+				std::size_t spaceCounter = 0;
+				while (spaceCounter < len && std::isspace((unsigned char)*(text + spaceCounter))) {
 					++spaceCounter;
 				}
 				myModelReader.addFixedHSpace(spaceCounter);
 				text += spaceCounter;
 				len -= spaceCounter;
 			} else if (myNewParagraphInProgress || !myModelReader.paragraphIsOpen()) {
-				while (isspace((unsigned char)*text)) {
+				while (std::isspace((unsigned char)*text)) {
 					++text;
 					if (--len == 0) {
 						break;
@@ -686,7 +686,7 @@ bool XHTMLReader::processNamespaces() const {
 }
 
 const std::string XHTMLReader::normalizedReference(const std::string &reference) const {
-	const size_t index = reference.find('#');
+	const std::size_t index = reference.find('#');
 	if (index == std::string::npos) {
 		return fileAlias(reference);
 	} else {

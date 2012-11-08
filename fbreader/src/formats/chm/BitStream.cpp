@@ -38,7 +38,7 @@ bool BitStream::getBytesDirect(unsigned char *buffer, unsigned int length) {
 	if (myByteStream + length > myByteStreamEnd) {
 		return false;
 	}
-	memcpy(buffer, myByteStream, length);
+	std::memcpy(buffer, myByteStream, length);
 	myByteStream += length;
 	return true;
 }

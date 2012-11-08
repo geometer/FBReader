@@ -33,8 +33,8 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	NetworkContainerNode(ZLBlockTreeView::RootNode *parent, size_t atPosition = (size_t)-1);
-	NetworkContainerNode(NetworkContainerNode *parent, size_t atPosition = (size_t)-1);
+	NetworkContainerNode(ZLBlockTreeView::RootNode *parent, std::size_t atPosition = (std::size_t)-1);
+	NetworkContainerNode(NetworkContainerNode *parent, std::size_t atPosition = (std::size_t)-1);
 
 private:
 	void drawCover(ZLPaintContext &context, int vOffset);
@@ -73,8 +73,8 @@ protected:
 	class OpenInBrowserAction;
 
 protected:
-	NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
-	NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
+	NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, std::size_t atPosition = (std::size_t)-1);
+	NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, std::size_t atPosition = (std::size_t)-1);
 
 private:
 	void init();
@@ -114,7 +114,7 @@ private:
 	class RegisterUserAction;
 
 public:
-	NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, size_t atPosition = (size_t)-1);
+	NetworkCatalogRootNode(ZLBlockTreeView::RootNode *parent, NetworkLink &link, std::size_t atPosition = (std::size_t)-1);
 
 	const NetworkLink &link() const;
 
@@ -135,7 +135,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, size_t atPosition = (size_t)-1);
+	SearchResultNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkBookCollection> searchResult, const std::string &summary, std::size_t atPosition = (std::size_t)-1);
 
 	shared_ptr<NetworkBookCollection> searchResult();
 
