@@ -45,7 +45,7 @@ bool ZLWin32FileInputStream::open() {
 	return myFile != 0;
 }
 
-size_t ZLWin32FileInputStream::read(char *buffer, size_t maxSize) {
+std::size_t ZLWin32FileInputStream::read(char *buffer, std::size_t maxSize) {
 	if (buffer != 0) {
 		if (myNeedRepositionToStart) {
 			myOffset = SetFilePointer(myFile, 0, 0, FILE_BEGIN);
@@ -61,7 +61,7 @@ size_t ZLWin32FileInputStream::read(char *buffer, size_t maxSize) {
 			myNeedRepositionToStart = false;
 			return myOffset;
 		} else {
-			size_t oldOffset = myOffset;
+			std::size_t oldOffset = myOffset;
 			myOffset = SetFilePointer(myFile, maxSize, 0, FILE_CURRENT);
 			return myOffset - oldOffset;
 		}
@@ -75,7 +75,7 @@ void ZLWin32FileInputStream::close() {
 	//}
 }
 
-size_t ZLWin32FileInputStream::sizeOfOpened() {
+std::size_t ZLWin32FileInputStream::sizeOfOpened() {
 	if (myFile == 0) {
 		return 0;
 	}
@@ -90,6 +90,6 @@ void ZLWin32FileInputStream::seek(int offset, bool absoluteOffset) {
 	myOffset = SetFilePointer(myFile, offset, 0, absoluteOffset ? FILE_BEGIN : FILE_CURRENT);
 }
 
-size_t ZLWin32FileInputStream::offset() const {
+std::size_t ZLWin32FileInputStream::offset() const {
 	return myNeedRepositionToStart ? 0 : myOffset;
 }

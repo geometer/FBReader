@@ -21,7 +21,7 @@
 
 #include "ZLBase64EncodedImage.h"
 
-void ZLBase64EncodedImage::addData(const std::string &text, size_t offset, size_t len) {
+void ZLBase64EncodedImage::addData(const std::string &text, std::size_t offset, std::size_t len) {
 	myEncodedData.append(text, offset, len);
 }
 
@@ -34,11 +34,11 @@ void ZLBase64EncodedImage::decode() const {
 		return;
 	}
 
-	size_t dataLength = myEncodedData.length();
+	std::size_t dataLength = myEncodedData.length();
 
 	myData = new std::string();
 	myData->reserve(dataLength / 4 * 3);
-	for (size_t pos = 0, dataPos = 0; pos < dataLength; dataPos += 3) {
+	for (std::size_t pos = 0, dataPos = 0; pos < dataLength; dataPos += 3) {
 		unsigned int sum = 0;
 		for (int i = 0; (i < 4) && (pos < dataLength); ++pos) {
 			char encodedByte = myEncodedData[pos];

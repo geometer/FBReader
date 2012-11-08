@@ -159,7 +159,7 @@ MyOneByteEncodingConverter::~MyOneByteEncodingConverter() {
 }
 
 void MyOneByteEncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	size_t oldLength = dst.length();
+	std::size_t oldLength = dst.length();
 	dst.append(3 * (srcEnd - srcStart), '\0');
 	char *dstStartPtr = (char*)dst.data() + oldLength;
 	char *dstPtr = dstStartPtr;

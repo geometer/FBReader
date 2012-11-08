@@ -58,7 +58,7 @@ bool ZLNetworkXMLParserRequest::doAfter(const std::string &error) {
 	return true;
 }
 
-bool ZLNetworkXMLParserRequest::handleHeader(void *ptr, size_t size) {
+bool ZLNetworkXMLParserRequest::handleHeader(void *ptr, std::size_t size) {
 	std::string header = ZLUnicodeUtil::toLower(std::string((const char *) ptr, size));
 
 	if (ZLStringUtil::stringStartsWith(header, CONTENT_ENCODING)) {
@@ -70,7 +70,7 @@ bool ZLNetworkXMLParserRequest::handleHeader(void *ptr, size_t size) {
 	return true;
 }
 
-bool ZLNetworkXMLParserRequest::handleContent(void *ptr, size_t size) {
+bool ZLNetworkXMLParserRequest::handleContent(void *ptr, std::size_t size) {
 	if (myInputStream.isNull()) {
 		if (myHttpEncoding == "gzip") {
 			myInputStream = new ZLGzipAsynchronousInputStream();

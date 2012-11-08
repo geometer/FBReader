@@ -25,9 +25,9 @@
 
 struct ZLTarHeader {
 	std::string Name;
-	size_t Size;
+	std::size_t Size;
 	bool IsRegularFile;
-	size_t DataOffset;
+	std::size_t DataOffset;
 
 	bool read(ZLInputStream &stream);
 	void erase();
@@ -85,7 +85,7 @@ const ZLTarHeaderCache &ZLTarHeaderCache::cache(ZLInputStream &baseStream) {
 }
 
 bool ZLTarHeader::read(ZLInputStream &stream) {
-	size_t startOffset = stream.offset();
+	std::size_t startOffset = stream.offset();
 
 	char fileName[101];
 	stream.read(fileName, 100);
@@ -103,7 +103,7 @@ bool ZLTarHeader::read(ZLInputStream &stream) {
 	stream.read(fileSizeString, 12);
 	Size = 0;
 	for (int i = 0; i < 12; ++i) {
-		if (!isdigit(fileSizeString[i])) {
+		if (!std::isdigit(fileSizeString[i])) {
 			break;
 		}
 		Size *= 8;
@@ -163,9 +163,9 @@ bool ZLTarInputStream::open() {
 	return true;
 }
 
-size_t ZLTarInputStream::read(char *buffer, size_t maxSize) {
-	maxSize = std::min(maxSize, (size_t)(myCompressedFileSize - myOffset));
-	size_t size = myBaseStream->read(buffer, maxSize);
+std::size_t ZLTarInputStream::read(char *buffer, std::size_t maxSize) {
+	maxSize = std::min(maxSize, (std::size_t)(myCompressedFileSize - myOffset));
+	std::size_t size = myBaseStream->read(buffer, maxSize);
 	myOffset += size;
 	return size;
 }
@@ -183,11 +183,11 @@ void ZLTarInputStream::seek(int offset, bool absoluteOffset) {
 	myOffset += offset;
 }
 
-size_t ZLTarInputStream::offset() const {
+std::size_t ZLTarInputStream::offset() const {
 	return myOffset;
 }
 
-size_t ZLTarInputStream::sizeOfOpened() {
+std::size_t ZLTarInputStream::sizeOfOpened() {
 	return myCompressedFileSize;
 }
 

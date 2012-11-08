@@ -34,8 +34,8 @@ public:
 	~ZLNetworkXMLParserRequest();
 
 private:
-	bool handleHeader(void *ptr, size_t size);
-	bool handleContent(void *ptr, size_t size);
+	bool handleHeader(void *ptr, std::size_t size);
+	bool handleContent(void *ptr, std::size_t size);
 
 	bool doBefore();
 	bool doAfter(const std::string &error);

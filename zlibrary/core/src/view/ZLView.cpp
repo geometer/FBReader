@@ -74,7 +74,7 @@ void ZLView::setScrollbarEnabled(Direction direction, bool enabled) {
 	updateScrollbarState();
 }
 
-void ZLView::setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to) {
+void ZLView::setScrollbarParameters(Direction direction, std::size_t full, std::size_t from, std::size_t to) {
 	ScrollBarInfo &info = (direction == VERTICAL) ? myVerticalScrollbarInfo : myHorizontalScrollbarInfo;
 	info.Full = full;
 	info.From = from;
@@ -196,12 +196,12 @@ void ZLViewWidget::correctDirection(ZLView::Direction &direction, bool &invert) 
 	}
 }
 
-void ZLViewWidget::onScrollbarMoved(ZLView::Direction direction, size_t full, size_t from, size_t to) {
+void ZLViewWidget::onScrollbarMoved(ZLView::Direction direction, std::size_t full, std::size_t from, std::size_t to) {
 	if (!myView.isNull()) {
 		bool invert = false;
 		correctDirection(direction, invert);
 		if (invert) {
-			size_t tmp = full - from;
+			std::size_t tmp = full - from;
 			from = full - to;
 			to = tmp;
 		}
@@ -225,7 +225,7 @@ void ZLViewWidget::onScrollbarPageStep(ZLView::Direction direction, int steps) {
 	}
 }
 
-void ZLView::onScrollbarMoved(Direction, size_t, size_t, size_t) {
+void ZLView::onScrollbarMoved(Direction, std::size_t, std::size_t, std::size_t) {
 }
 
 void ZLView::onScrollbarStep(Direction, int) {

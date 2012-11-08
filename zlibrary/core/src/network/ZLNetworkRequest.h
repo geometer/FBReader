@@ -48,8 +48,8 @@ protected:
 	ZLNetworkRequest(const std::string &url);
 
 public:
-	virtual bool handleHeader(void *ptr, size_t size);
-	virtual bool handleContent(void *ptr, size_t size) = 0;
+	virtual bool handleHeader(void *ptr, std::size_t size);
+	virtual bool handleContent(void *ptr, std::size_t size) = 0;
 
 	virtual bool doBefore() = 0;
 

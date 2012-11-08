@@ -85,7 +85,7 @@ shared_ptr<ZLMimeType> ZLMimeType::get(std::string text) {
 
 	std::string name = items.at(0);
 	std::map<std::string,std::string> parameters;
-	for (size_t i = 1; i < items.size(); ++i) {
+	for (std::size_t i = 1; i < items.size(); ++i) {
 		std::vector<std::string> pair = ZLStringUtil::split(items.at(i), "=");
 		if (pair.size() == 2) {
 			std::string key = pair.at(0);

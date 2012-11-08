@@ -22,7 +22,7 @@
 
 const ZLTypeId ZLTreePageNode::TYPE_ID(ZLTreeTitledNode::TYPE_ID);
 
-ZLTreePageNode::ZLTreePageNode(ZLTreeNode *parent, size_t position) : ZLTreeTitledNode(parent, position) {
+ZLTreePageNode::ZLTreePageNode(ZLTreeNode *parent, std::size_t position) : ZLTreeTitledNode(parent, position) {
 }
 
 const ZLTypeId &ZLTreePageNode::typeId() const {

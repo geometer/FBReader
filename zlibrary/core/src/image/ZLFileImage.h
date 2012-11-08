@@ -43,7 +43,7 @@ public:
 	static const std::string ENCODING_BASE64;
 
 public:
-	ZLFileImage(const ZLFile &file, size_t offset, size_t size = 0, const std::string &encoding = ZLFileImage::ENCODING_NONE);
+	ZLFileImage(const ZLFile &file, std::size_t offset, std::size_t size = 0, const std::string &encoding = ZLFileImage::ENCODING_NONE);
 	ZLFileImage(const ZLFile &file, const Blocks &blocks, const std::string &encoding = ZLFileImage::ENCODING_NONE);
 	const shared_ptr<std::string> stringData() const;
 

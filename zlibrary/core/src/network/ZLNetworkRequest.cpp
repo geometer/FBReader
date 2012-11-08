@@ -39,7 +39,7 @@ void ZLNetworkRequest::setErrorMessage(const std::string &message) {
 	myErrorMessage = message;
 }
 
-bool ZLNetworkRequest::handleHeader(void *, size_t) {
+bool ZLNetworkRequest::handleHeader(void *, std::size_t) {
 	return true;
 }
 

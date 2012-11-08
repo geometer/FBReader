@@ -29,7 +29,7 @@ class ZLBase64EncodedImage : public ZLSingleImage {
 public:
 	ZLBase64EncodedImage(shared_ptr<ZLMimeType> mimeType);
 	~ZLBase64EncodedImage();
-	void addData(const std::string &text, size_t offset, size_t len);
+	void addData(const std::string &text, std::size_t offset, std::size_t len);
 	void addData(const std::vector<std::string> &text);
 	const shared_ptr<std::string> stringData() const;
 

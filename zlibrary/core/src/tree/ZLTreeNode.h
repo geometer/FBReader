@@ -70,7 +70,7 @@ public:
 	const ZLTypeId &typeId() const;
 
 protected:
-	ZLTreeNode(ZLTreeNode *parent = 0, size_t position = -1);
+	ZLTreeNode(ZLTreeNode *parent = 0, std::size_t position = -1);
 
 public:
 	virtual ~ZLTreeNode();
@@ -81,7 +81,7 @@ public:
 	ZLTreeNode *previous() const;
 	ZLTreeNode *next() const;
 	const List &children() const;
-	size_t childIndex() const;
+	std::size_t childIndex() const;
 	// Children should be requested from network only if we need them
 	virtual void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener = 0);
 	virtual void requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener = 0);
@@ -92,10 +92,10 @@ public:
 	std::string actionText(const shared_ptr<ZLTreeAction> &action) const;
 	
 	void close() const;
-	void insert(ZLTreeNode *node, size_t index);
+	void insert(ZLTreeNode *node, std::size_t index);
 	void append(ZLTreeNode *node);
 	void remove(ZLTreeNode *node);
-	void remove(size_t index);
+	void remove(std::size_t index);
 	void updated();
 
 	void notifyDownloadStarted();
@@ -105,13 +105,13 @@ public:
 	void notifySearchStopped();
 
 protected:
-	size_t level() const;
+	std::size_t level() const;
 
 	virtual ZLTreeListener *listener() const;
 
 private:
 	ZLTreeNode *myParent;
-	size_t myChildIndex;
+	std::size_t myChildIndex;
 
 	List myChildren;
 	// Looks like we should also handle actions for menu on "Tap and hold"

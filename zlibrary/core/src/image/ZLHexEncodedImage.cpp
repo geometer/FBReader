@@ -48,7 +48,7 @@ void ZLHexEncodedImage::read() const {
 		return;
 	}
 	myData = new std::string();
-	const size_t length = myEncodedData->length();
+	const std::size_t length = myEncodedData->length();
 	myData->reserve(length / 2);
 
 	int first = -1;

@@ -40,11 +40,11 @@ bool ZLNetworkReadToStringRequest::doAfter(const std::string &error) {
 	return true;
 }
 
-bool ZLNetworkReadToStringRequest::handleHeader(void *ptr, size_t size) {
+bool ZLNetworkReadToStringRequest::handleHeader(void *ptr, std::size_t size) {
 	static const std::string prefix = "Content-Length: ";
 	std::string headerData((const char *) ptr, size);
 	if (ZLStringUtil::stringStartsWith(headerData, prefix)) {
-		int len = atoi(headerData.c_str() + prefix.length());
+		int len = std::atoi(headerData.c_str() + prefix.length());
 		if (len > 0) {
 			myDataSize = len;
 		}
@@ -53,7 +53,7 @@ bool ZLNetworkReadToStringRequest::handleHeader(void *ptr, size_t size) {
 	return true;
 }
 
-bool ZLNetworkReadToStringRequest::handleContent(void *ptr, size_t size) {
+bool ZLNetworkReadToStringRequest::handleContent(void *ptr, std::size_t size) {
 	myBuffer.append((const char *) ptr, size);
 	// TODO: call setPercent(...)
 	return true;

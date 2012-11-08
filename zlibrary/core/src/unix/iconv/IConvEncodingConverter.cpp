@@ -68,7 +68,7 @@ void IConvEncodingConverter::convert(std::string &dst, const char *srcStart, con
 		return;
 	}
 
-	size_t inSize;
+	std::size_t inSize;
 	char *in;
 	if (myBuffer.empty()) {
 		inSize = srcEnd - srcStart;
@@ -79,9 +79,9 @@ void IConvEncodingConverter::convert(std::string &dst, const char *srcStart, con
 		in = (char*)myBuffer.data();
 	}
 
-	size_t outSize = 3 * inSize;
-	const size_t startOutSize = outSize;
-	size_t oldLength = dst.length();
+	std::size_t outSize = 3 * inSize;
+	const std::size_t startOutSize = outSize;
+	std::size_t oldLength = dst.length();
 	dst.append(outSize, '\0');
 	char *out = (char*)dst.data() + oldLength;
 
@@ -122,7 +122,7 @@ bool IConvEncodingConverter::fillTable(int *map) {
 	char inBuffer[1];
 	char outBuffer[3];
 	char *in, *out;
-	size_t inSize, outSize;
+	std::size_t inSize, outSize;
 	for (int i = 0; i < 256; ++i) {
 		in = inBuffer;
 		out = outBuffer;

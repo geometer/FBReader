@@ -29,12 +29,12 @@ public:
 
 	bool open();
 	int read();
-	size_t read(char *buffer, size_t maxSize);
+	std::size_t read(char *buffer, std::size_t maxSize);
 	void close();
 
 	void seek(int offset, bool absoluteOffset);
-	size_t offset() const;
-	size_t sizeOfOpened();
+	std::size_t offset() const;
+	std::size_t sizeOfOpened();
 
 private:
 	void fillDecodedBuffer();

@@ -66,11 +66,11 @@ bool ZLNetworkDownloadRequest::doAfter(const std::string &error) {
 	return true;
 }
 
-bool ZLNetworkDownloadRequest::handleHeader(void *ptr, size_t size) {
+bool ZLNetworkDownloadRequest::handleHeader(void *ptr, std::size_t size) {
 	static const std::string prefix = "Content-Length: ";
 	std::string headerData((const char *) ptr, size);
 	if (ZLStringUtil::stringStartsWith(headerData, prefix)) {
-		int len = atoi(headerData.c_str() + prefix.length());
+		int len = std::atoi(headerData.c_str() + prefix.length());
 		if (len > 0) {
 			myFileSize = len;
 		}
@@ -79,7 +79,7 @@ bool ZLNetworkDownloadRequest::handleHeader(void *ptr, size_t size) {
 	return true;
 }
 
-bool ZLNetworkDownloadRequest::handleContent(void *ptr, size_t size) {
+bool ZLNetworkDownloadRequest::handleContent(void *ptr, std::size_t size) {
 	myOutputStream->write((const char *) ptr, size);
 	myDownloadedSize += size;
 	setPercent(myDownloadedSize, myFileSize);

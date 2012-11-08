@@ -22,7 +22,7 @@
 
 #include <vector>
 
-template<size_t ObjectSize, size_t PoolSize> class Allocator {
+template<std::size_t ObjectSize, std::size_t PoolSize> class Allocator {
 	
 public:
 	Allocator();
@@ -40,30 +40,30 @@ private:
 	void *myLastUnused;
 };
 
-template<size_t ObjectSize, size_t PoolSize> 
+template<std::size_t ObjectSize, std::size_t PoolSize> 
 inline Allocator<ObjectSize,PoolSize>::Allocator() {
 	addPool();
 }
 
-template<size_t ObjectSize, size_t PoolSize> 
+template<std::size_t ObjectSize, std::size_t PoolSize> 
 inline Allocator<ObjectSize,PoolSize>::~Allocator() {
 	for (std::vector<void*>::const_iterator it = myPools.begin(); it != myPools.end(); ++it) {
 		delete[] (char*)*it;
 	}
 }
 
-template<size_t ObjectSize, size_t PoolSize> 
+template<std::size_t ObjectSize, std::size_t PoolSize> 
 inline void Allocator<ObjectSize,PoolSize>::addPool() {
 	char *pool = new char[ObjectSize * PoolSize];
 	myFirstUnused = (void*)pool;
 	myLastUnused = (void*)(pool + ObjectSize * (PoolSize - 1));
-	for (size_t i = 0; i < PoolSize - 1; ++i) {
+	for (std::size_t i = 0; i < PoolSize - 1; ++i) {
 		*(void**)(pool + ObjectSize * i) = pool + ObjectSize * (i + 1);
 	}
 	myPools.push_back(myFirstUnused);
 }
 
-template<size_t ObjectSize, size_t PoolSize> 
+template<std::size_t ObjectSize, std::size_t PoolSize> 
 void *Allocator<ObjectSize,PoolSize>::allocate() {
 	void *ptr = myFirstUnused;
 	if (myFirstUnused == myLastUnused) {
@@ -74,7 +74,7 @@ void *Allocator<ObjectSize,PoolSize>::allocate() {
 	return ptr;
 }
 
-template<size_t ObjectSize, size_t PoolSize> 
+template<std::size_t ObjectSize, std::size_t PoolSize> 
 void Allocator<ObjectSize,PoolSize>::free(void *ptr) {
 	*(void**)myLastUnused = ptr;
 	myLastUnused = ptr;

@@ -64,7 +64,7 @@ public:
 	~ZLFile();
 
 	bool exists() const;
-	size_t size() const;
+	std::size_t size() const;
 
 	void forceArchiveType(const std::string & type) const;
 

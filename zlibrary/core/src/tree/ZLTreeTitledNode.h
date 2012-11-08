@@ -34,7 +34,7 @@ public:
 	static const std::string SCHEME_POSTFIX;
 
 public:
-	ZLTreeTitledNode(ZLTreeNode *parent = 0, size_t position = -1);
+	ZLTreeTitledNode(ZLTreeNode *parent = 0, std::size_t position = -1);
 	virtual ~ZLTreeTitledNode();
 
 	virtual std::string title() const = 0;

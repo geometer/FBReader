@@ -75,13 +75,13 @@ inline const curl_httppost *PostData::postItem() const {
 
 
 
-static size_t handleHeader(void *ptr, size_t size, size_t nmemb, ZLNetworkRequest *request) {
-	const size_t dataSize = size * nmemb;
+static std::size_t handleHeader(void *ptr, std::size_t size, std::size_t nmemb, ZLNetworkRequest *request) {
+	const std::size_t dataSize = size * nmemb;
 	return (request->handleHeader(ptr, dataSize)) ? dataSize : 0;
 }
 
-static size_t handleContent(void *ptr, size_t size, size_t nmemb, ZLNetworkRequest *request) {
-	const size_t dataSize = size * nmemb;
+static std::size_t handleContent(void *ptr, std::size_t size, std::size_t nmemb, ZLNetworkRequest *request) {
+	const std::size_t dataSize = size * nmemb;
 	return (request->handleContent(ptr, dataSize)) ? dataSize : 0;
 }
 
@@ -134,7 +134,7 @@ std::string ZLCurlNetworkManager::doBeforePostRequest(ZLNetworkPostRequest &requ
 	PostData &postData = (PostData&)*postDataPtr;
 
 	const std::vector<std::pair<std::string, std::string> > &data = request.postParameters();
-	for (size_t i = 0; i < data.size(); ++i) {
+	for (std::size_t i = 0; i < data.size(); ++i) {
 		if (!postData.addItem(data[i].first, data[i].second)) {
 			return "Invalid form data for " + ZLNetworkUtil::hostFromUrl(request.url()); // TODO: localize
 		}

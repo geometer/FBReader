@@ -43,7 +43,7 @@ public:
 class ZLTreePageNode : public ZLTreeTitledNode {
 
 public:
-	ZLTreePageNode(ZLTreeNode *parent = 0, size_t position = -1);
+	ZLTreePageNode(ZLTreeNode *parent = 0, std::size_t position = -1);
 	static const ZLTypeId TYPE_ID;
 	const ZLTypeId &typeId() const;
 

@@ -116,7 +116,7 @@ static Color PalmImage8bitColormap[256] = {
 	{   0,   0,   0 }, {   0,   0,   0 }, {   0,   0,   0 }, {   0,   0,   0 }
 };
 
-inline static unsigned short uShort(const std::string &imageString, size_t offset) {
+inline static unsigned short uShort(const std::string &imageString, std::size_t offset) {
 	return 256 * (unsigned char)imageString[offset] + (unsigned char)imageString[offset + 1];
 }
 
@@ -143,7 +143,7 @@ bool ZLImageManager::convertFromPalmImageFormat(const std::string &imageString, 
 				//std::cerr << "packbits encoded images are not supported yet\n";
 				break;
 			case 0xFF: // none
-				if (imageString.length() >= (size_t)header.BytesPerRow * header.Height + 16) {
+				if (imageString.length() >= (std::size_t)header.BytesPerRow * header.Height + 16) {
 					if ((header.BitsPerPixel != 1) &&
 							(header.BitsPerPixel != 2) &&
 							(header.BitsPerPixel != 4) &&

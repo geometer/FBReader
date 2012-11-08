@@ -23,7 +23,7 @@
 #include "ZLGzipAsynchronousInputStream.h"
 
 
-static const size_t OUT_BUFFER_SIZE = 32768;
+static const std::size_t OUT_BUFFER_SIZE = 32768;
 
 
 ZLGzipAsynchronousInputStream::ZLGzipAsynchronousInputStream(const char *encoding) : ZLAsynchronousInputStream(encoding), 
@@ -92,7 +92,7 @@ bool ZLGzipAsynchronousInputStream::processInputInternal(Handler &handler) {
 }
 
 
-bool ZLGzipAsynchronousInputStream::skipHeader(const char *data, size_t /*len*/) {
+bool ZLGzipAsynchronousInputStream::skipHeader(const char *data, std::size_t /*len*/) {
 	static const unsigned char FHCRC = 1 << 1;
 	static const unsigned char FEXTRA = 1 << 2;
 	static const unsigned char FNAME = 1 << 3;

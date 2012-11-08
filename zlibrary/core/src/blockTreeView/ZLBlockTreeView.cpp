@@ -42,10 +42,10 @@ void ZLBlockTreeView::paint() {
 	int vOffset = 0 - myNodePartToSkip;
 	const int maxY = context.height();
 
-	size_t before = myNodePartToSkip;
+	std::size_t before = myNodePartToSkip;
 
 	for (ZLBlockTreeNode *node = &myRootNode; node != 0; node = node->next()) {
-		size_t h = node->height(context);
+		std::size_t h = node->height(context);
 		if (!firstNodeFound) {
 			if (node == myFirstVisibleNode) {
 				firstNodeFound = true;
@@ -72,7 +72,7 @@ void ZLBlockTreeView::paint() {
 		return;
 	}
 
-	const size_t after = (vOffset <= maxY) ? 0 : vOffset - maxY;
+	const std::size_t after = (vOffset <= maxY) ? 0 : vOffset - maxY;
 
 	const bool showScrollbar = before > 0 || after > 0;
 	myCanScrollForward = after > 0;
@@ -122,7 +122,7 @@ void ZLBlockTreeView::clear() {
 	myNodePartToSkip = 0;
 }
 
-void ZLBlockTreeView::onScrollbarMoved(Direction direction, size_t full, size_t from, size_t) {
+void ZLBlockTreeView::onScrollbarMoved(Direction direction, std::size_t full, std::size_t from, std::size_t) {
 	if (direction != VERTICAL) {
 		return;
 	}
@@ -130,7 +130,7 @@ void ZLBlockTreeView::onScrollbarMoved(Direction direction, size_t full, size_t 
 	from = std::min(from, full - context().height());
 
 	for (ZLBlockTreeNode *node = &myRootNode; node != 0; node = node->next()) {
-		size_t h = node->height(context());
+		std::size_t h = node->height(context());
 		if (from < h) {
 			myFirstVisibleNode = node;
 			myNodePartToSkip = from;

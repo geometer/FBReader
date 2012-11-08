@@ -48,7 +48,7 @@ private:
 	ZLSearchUtil();
 
 public:
-	static int find(const char *text, size_t length, const ZLSearchPattern &pattern, int pos = 0);
+	static int find(const char *text, std::size_t length, const ZLSearchPattern &pattern, int pos = 0);
 };
 
 inline ZLSearchPattern::~ZLSearchPattern() {}

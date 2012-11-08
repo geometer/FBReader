@@ -80,7 +80,7 @@ private:
 	bool onStylusPress(int x, int y);
 	bool onStylusMove(int x, int y);
 
-	void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
+	void onScrollbarMoved(Direction direction, std::size_t full, std::size_t from, std::size_t to);
 	void onScrollbarStep(Direction direction, int steps);
 	void onScrollbarPageStep(Direction direction, int steps);
 
@@ -90,7 +90,7 @@ private:
 private:
 	RootNode myRootNode;
 	ZLBlockTreeNode *myFirstVisibleNode;
-	size_t myNodePartToSkip;
+	std::size_t myNodePartToSkip;
 	bool myCanScrollForward;
 };
 

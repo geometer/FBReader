@@ -24,20 +24,20 @@
 
 class ZLSliceInputStream : public ZLInputStream {
 public:
-	ZLSliceInputStream(shared_ptr<ZLInputStream> base, size_t start, size_t length);
+	ZLSliceInputStream(shared_ptr<ZLInputStream> base, std::size_t start, std::size_t length);
 
 	bool open();
-	size_t read(char *buffer, size_t maxSize);
+	std::size_t read(char *buffer, std::size_t maxSize);
 	void close();
 
 	void seek(int offset, bool absoluteOffset);
-	size_t offset() const;
-	size_t sizeOfOpened();
+	std::size_t offset() const;
+	std::size_t sizeOfOpened();
 
 private:
 	shared_ptr<ZLInputStream> myBaseStream;
-	size_t myStart;
-	size_t myLength;
+	std::size_t myStart;
+	std::size_t myLength;
 };
 
 #endif /* __ZLSLICEINPUTSTREAM_H__ */

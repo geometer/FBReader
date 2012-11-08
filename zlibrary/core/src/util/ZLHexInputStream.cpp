@@ -19,7 +19,7 @@
 
 #include "ZLHexInputStream.h"
 
-static const size_t BUFFER_SIZE = 32768;
+static const std::size_t BUFFER_SIZE = 32768;
 
 ZLHexInputStream::ZLHexInputStream(shared_ptr<ZLInputStream> base) :
 	myBaseStream(base) {
@@ -54,11 +54,11 @@ int ZLHexInputStream::read() {
 	return -1;
 }
 
-size_t ZLHexInputStream::read(char *buffer, size_t maxSize) {
+std::size_t ZLHexInputStream::read(char *buffer, std::size_t maxSize) {
 	int offset = myBufferOffset;
 	int available = myBufferLength;
 	int first = -1;
-	for (size_t ready = 0; ready < maxSize;) {
+	for (std::size_t ready = 0; ready < maxSize;) {
 		while (ready < maxSize && available-- > 0) {
 			const int digit = decode(myBuffer[offset++]);
 			if (digit != -1) {
@@ -91,11 +91,11 @@ void ZLHexInputStream::seek(int offset, bool absoluteOffset) {
 	myBaseStream->seek(offset, absoluteOffset);
 }
 
-size_t ZLHexInputStream::offset() const {
+std::size_t ZLHexInputStream::offset() const {
 	return myBaseStream->offset();
 }
 
-size_t ZLHexInputStream::sizeOfOpened() {
+std::size_t ZLHexInputStream::sizeOfOpened() {
 	return myBaseStream->sizeOfOpened();
 }
 
