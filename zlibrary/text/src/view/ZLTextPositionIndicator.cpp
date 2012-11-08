@@ -27,26 +27,26 @@
 
 /*
  * Calculates m0 * m1 / d
- *   We assume m0 <= d or m1 <= d so result is small enough for size_t
+ *   We assume m0 <= d or m1 <= d so result is small enough for std::size_t
  */
-static size_t muldiv(size_t m0, size_t m1, size_t d) {
-	static const size_t HALF = 1 << sizeof(size_t) / 2;
+static std::size_t muldiv(std::size_t m0, std::size_t m1, std::size_t d) {
+	static const std::size_t HALF = 1 << sizeof(std::size_t) / 2;
 	if ((m0 < HALF) && (m1 < HALF)) {
 		return m0 * m1 / d;
 	}
 
 	if (m0 > d) {
-		size_t swap = m0;
+		std::size_t swap = m0;
 		m0 = m1;
 		m1 = swap;
 	}
 
-	size_t result = 0;
-	size_t remainder = 0;
+	std::size_t result = 0;
+	std::size_t remainder = 0;
 
 	while ((m0 != 0) && (m1 != 0) && ((m0 >= HALF) || (m1 >= HALF))) {
-		const size_t mul = (d - 1) / m0 + 1;
-		const size_t rem = m0 * (m1 % mul);
+		const std::size_t mul = (d - 1) / m0 + 1;
+		const std::size_t rem = m0 * (m1 % mul);
 		if (remainder + rem < remainder) {
 			++result;
 		}
@@ -55,7 +55,7 @@ static size_t muldiv(size_t m0, size_t m1, size_t d) {
 		result += m1;
 		m0 = m0 * mul - d;
 	}
-	const size_t product = m0 * m1;
+	const std::size_t product = m0 * m1;
 	result += product / d;
 	if (remainder + product % d < remainder) {
 		++result;
@@ -99,17 +99,17 @@ int ZLTextView::PositionIndicator::right() const {
 	return myTextView.textArea().hOffset() + myTextView.textArea().width() - myExtraWidth - 1;
 }
 
-const std::vector<size_t> &ZLTextView::PositionIndicator::textSize() const {
+const std::vector<std::size_t> &ZLTextView::PositionIndicator::textSize() const {
 	return myTextView.myTextSize;
 }
 
-size_t ZLTextView::PositionIndicator::startTextIndex() const {
-	std::vector<size_t>::const_iterator i = myTextView.nextBreakIterator();
+std::size_t ZLTextView::PositionIndicator::startTextIndex() const {
+	std::vector<std::size_t>::const_iterator i = myTextView.nextBreakIterator();
 	return (i != myTextView.myTextBreaks.begin()) ? *(i - 1) + 1 : 0;
 }
 
-size_t ZLTextView::PositionIndicator::endTextIndex() const {
-	std::vector<size_t>::const_iterator i = myTextView.nextBreakIterator();
+std::size_t ZLTextView::PositionIndicator::endTextIndex() const {
+	std::vector<std::size_t>::const_iterator i = myTextView.nextBreakIterator();
 	return (i != myTextView.myTextBreaks.end()) ? *i : myTextView.textArea().model()->paragraphsNumber();
 }
 
@@ -122,7 +122,7 @@ void ZLTextView::PositionIndicator::drawExtraText(const std::string &text) {
 	myExtraWidth += text.length() * context().stringWidth("0", 1, false) + context().spaceWidth();
 }
 
-size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraphIndex) const {
+std::size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(std::size_t paragraphIndex) const {
 	if (myTextView.textArea().model()->kind() == ZLTextModel::TREE_MODEL) {
 		ZLTextWordCursor cursor = myTextView.textArea().startCursor();
 		if (cursor.isNull()) {
@@ -130,8 +130,8 @@ size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraph
 		}
 		if (!cursor.isNull()) {
 			const ZLTextTreeModel &treeModel = (const ZLTextTreeModel&)*myTextView.textArea().model();
-			size_t sum = 0;
-			for (size_t i = 0; i < paragraphIndex; ++i) {
+			std::size_t sum = 0;
+			for (std::size_t i = 0; i < paragraphIndex; ++i) {
 				const ZLTextTreeParagraph *para = (const ZLTextTreeParagraph*)treeModel[i];
 				if (para->parent()->isOpen()) {
 					sum += sizeOfParagraph(i);
@@ -143,13 +143,13 @@ size_t ZLTextView::PositionIndicator::sizeOfTextBeforeParagraph(size_t paragraph
 	return myTextView.myTextSize[paragraphIndex] - myTextView.myTextSize[startTextIndex()];
 }
 
-size_t ZLTextView::PositionIndicator::sizeOfParagraph(size_t paragraphIndex) const {
+std::size_t ZLTextView::PositionIndicator::sizeOfParagraph(std::size_t paragraphIndex) const {
 	return myTextView.myTextSize[paragraphIndex + 1] - myTextView.myTextSize[paragraphIndex];
 }
 
-size_t ZLTextView::PositionIndicator::sizeOfTextBeforeCursor(const ZLTextWordCursor &cursor) const {
-	const size_t paragraphIndex = cursor.paragraphCursor().index();
-	const size_t paragraphLength = cursor.paragraphCursor().paragraphLength();
+std::size_t ZLTextView::PositionIndicator::sizeOfTextBeforeCursor(const ZLTextWordCursor &cursor) const {
+	const std::size_t paragraphIndex = cursor.paragraphCursor().index();
+	const std::size_t paragraphLength = cursor.paragraphCursor().paragraphLength();
 
 	if (paragraphLength == 0) {
 		return sizeOfTextBeforeParagraph(paragraphIndex);
@@ -171,8 +171,8 @@ std::string ZLTextView::PositionIndicator::textPositionString() const {
 	/*
 	std::string buffer;
 
-	const std::vector<size_t> &textSizeVector = myTextView.myTextSize;
-	const size_t fullTextSize = textSizeVector[endTextIndex()] - textSizeVector[startTextIndex()];
+	const std::vector<std::size_t> &textSizeVector = myTextView.myTextSize;
+	const std::size_t fullTextSize = textSizeVector[endTextIndex()] - textSizeVector[startTextIndex()];
 	ZLStringUtil::appendNumber(buffer, 100 * sizeOfTextBeforeCursor(myTextView.textArea().endCursor()) / fullTextSize);
 
 	return buffer + '%';
@@ -221,7 +221,7 @@ void ZLTextView::PositionIndicator::draw() {
 		return;
 	}
 
-	size_t fillWidth = right - left - 1;
+	std::size_t fillWidth = right - left - 1;
 
 	if (!isEndOfText) {
 		fillWidth =
@@ -254,7 +254,7 @@ bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 		return false;
 	}
 
-	const std::vector<size_t> &textSizeVector = myTextView.myTextSize;
+	const std::vector<std::size_t> &textSizeVector = myTextView.myTextSize;
 	if (textSizeVector.size() <= 1) {
 		return true;
 	}
@@ -262,8 +262,8 @@ bool ZLTextView::PositionIndicator::onStylusPress(int x, int y) {
 	if (myTextView.textArea().endCursor().isNull()) {
 		return false;
 	}
-	size_t fullTextSize = sizeOfTextBeforeParagraph(endTextIndex());
-	size_t textSize = muldiv(fullTextSize, x - left + 1, right - left + 1);
+	std::size_t fullTextSize = sizeOfTextBeforeParagraph(endTextIndex());
+	std::size_t textSize = muldiv(fullTextSize, x - left + 1, right - left + 1);
 
 	myTextView.gotoCharIndex(textSize);
 

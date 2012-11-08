@@ -50,7 +50,7 @@ public:
 	};
 
 private:
-	ZLTextWord(const char *data, unsigned short size, size_t paragraphOffset, unsigned char bidiLevel);
+	ZLTextWord(const char *data, unsigned short size, std::size_t paragraphOffset, unsigned char bidiLevel);
 	~ZLTextWord();
 
 public:
@@ -66,7 +66,7 @@ public:
 	const unsigned short Size;
 	/* number of characters */
 	const unsigned short Length;
-	const size_t ParagraphOffset;
+	const std::size_t ParagraphOffset;
 	const unsigned char BidiLevel;
 
 private:

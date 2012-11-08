@@ -57,7 +57,7 @@ ifeq "$(ZLSHARED)" "yes"
 else
 	@$(AR) $(TARGET) $(patsubst %, %/*.o, $(SUBDIRS))
 endif
-	@echo ' OK'
+	echo ' OK'
 
 SHARE_ZLIBRARY = $(DESTDIR)$(SHAREDIR)/zlibrary
 

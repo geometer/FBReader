@@ -44,9 +44,9 @@ void ZLTextView::paint() {
 
 	if (myDoUpdateScrollbar && !indicatorInfo.isNull()) {
 		myDoUpdateScrollbar = false;
-		const size_t full = positionIndicator()->sizeOfTextBeforeParagraph(positionIndicator()->endTextIndex());
-		const size_t from = positionIndicator()->sizeOfTextBeforeCursor(textArea().startCursor());
-		const size_t to = positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor());
+		const std::size_t full = positionIndicator()->sizeOfTextBeforeParagraph(positionIndicator()->endTextIndex());
+		const std::size_t from = positionIndicator()->sizeOfTextBeforeCursor(textArea().startCursor());
+		const std::size_t to = positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor());
 
 		bool showScrollbar =
 			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::OS_SCROLLBAR) &&

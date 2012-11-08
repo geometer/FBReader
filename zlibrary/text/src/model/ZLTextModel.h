@@ -43,7 +43,7 @@ public:
 	};
 
 protected:
-	ZLTextModel(const std::string &language, const size_t rowSize);
+	ZLTextModel(const std::string &language, const std::size_t rowSize);
 
 public:
 	virtual ~ZLTextModel();
@@ -52,13 +52,13 @@ public:
 	const std::string &language() const;
 	bool isRtl() const;
 
-	size_t paragraphsNumber() const;
-	ZLTextParagraph *operator [] (size_t index);
-	const ZLTextParagraph *operator [] (size_t index) const;
+	std::size_t paragraphsNumber() const;
+	ZLTextParagraph *operator [] (std::size_t index);
+	const ZLTextParagraph *operator [] (std::size_t index) const;
 	const std::vector<ZLTextMark> &marks() const;
 
-	virtual void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const;
-	virtual void selectParagraph(size_t index) const;
+	virtual void search(const std::string &text, std::size_t startIndex, std::size_t endIndex, bool ignoreCase) const;
+	virtual void selectParagraph(std::size_t index) const;
 	void removeAllMarks();
 
 	ZLTextMark firstMark() const;
@@ -95,7 +95,7 @@ private:
 class ZLTextPlainModel : public ZLTextModel {
 
 public:
-	ZLTextPlainModel(const std::string &language, const size_t rowSize);
+	ZLTextPlainModel(const std::string &language, const std::size_t rowSize);
 	Kind kind() const;
 	void createParagraph(ZLTextParagraph::Kind kind);
 };
@@ -109,22 +109,22 @@ public:
 
 	ZLTextTreeParagraph *createParagraph(ZLTextTreeParagraph *parent = 0);
 
-	void search(const std::string &text, size_t startIndex, size_t endIndex, bool ignoreCase) const;
-	void selectParagraph(size_t index) const;
+	void search(const std::string &text, std::size_t startIndex, std::size_t endIndex, bool ignoreCase) const;
+	void selectParagraph(std::size_t index) const;
 
 private:
 	ZLTextTreeParagraph *myRoot;
 };
 
-inline size_t ZLTextModel::paragraphsNumber() const { return myParagraphs.size(); }
+inline std::size_t ZLTextModel::paragraphsNumber() const { return myParagraphs.size(); }
 inline const std::vector<ZLTextMark> &ZLTextModel::marks() const { return myMarks; }
 inline void ZLTextModel::removeAllMarks() { myMarks.clear(); }
 
-inline ZLTextParagraph *ZLTextModel::operator [] (size_t index) {
+inline ZLTextParagraph *ZLTextModel::operator [] (std::size_t index) {
 	return myParagraphs[std::min(myParagraphs.size() - 1, index)];
 }
 
-inline const ZLTextParagraph *ZLTextModel::operator [] (size_t index) const {
+inline const ZLTextParagraph *ZLTextModel::operator [] (std::size_t index) const {
 	return myParagraphs[std::min(myParagraphs.size() - 1, index)];
 }
 

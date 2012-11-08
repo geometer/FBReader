@@ -77,7 +77,7 @@ ZLTextElementPool::~ZLTextElementPool() {
 	delete EndReversedSequenceElement;
 }
 
-ZLTextParagraphCursorPtr ZLTextParagraphCursor::cursor(const ZLTextModel &model, size_t index) {
+ZLTextParagraphCursorPtr ZLTextParagraphCursor::cursor(const ZLTextModel &model, std::size_t index) {
 	ZLTextParagraphCursorPtr result = ZLTextParagraphCursorCache::get(model[index]);
 	if (result.isNull()) {
 		if (model.kind() == ZLTextModel::TREE_MODEL) {
@@ -90,7 +90,7 @@ ZLTextParagraphCursorPtr ZLTextParagraphCursor::cursor(const ZLTextModel &model,
 	return result;
 }
 
-ZLTextParagraphCursor::ZLTextParagraphCursor(const ZLTextModel &model, size_t index) : myModel(model) {
+ZLTextParagraphCursor::ZLTextParagraphCursor(const ZLTextModel &model, std::size_t index) : myModel(model) {
 	myIndex = std::min(index, myModel.paragraphsNumber() - 1);
 	fill();
 }
@@ -108,7 +108,7 @@ ZLTextParagraphCursorPtr ZLTextTreeParagraphCursor::previous() const {
 	}
 	const ZLTextTreeParagraph *oldTreeParagraph = (const ZLTextTreeParagraph*)myModel[myIndex];
 	const ZLTextTreeParagraph *parent = oldTreeParagraph->parent();
-	size_t index = myIndex - 1;
+	std::size_t index = myIndex - 1;
 	const ZLTextTreeParagraph *newTreeParagraph = (ZLTextTreeParagraph*)myModel[index];
 	if (newTreeParagraph != parent) {
 		const ZLTextTreeParagraph *lastNotOpen = newTreeParagraph;
@@ -143,7 +143,7 @@ ZLTextParagraphCursorPtr ZLTextTreeParagraphCursor::next() const {
 		parent = current->parent();
 	}
 	if (parent != 0) {
-		size_t index = myIndex + 1;
+		std::size_t index = myIndex + 1;
 		while (((const ZLTextTreeParagraph*)myModel[index])->parent() != parent) {
 			++index;
 		}
@@ -194,7 +194,7 @@ ZLTextMark ZLTextWordCursor::position() const {
 		return ZLTextMark();
 	}
 	const ZLTextParagraphCursor &paragraph = *myParagraphCursor;
-	size_t paragraphLength = paragraph.paragraphLength();
+	std::size_t paragraphLength = paragraph.paragraphLength();
 	unsigned int elementIndex = myElementIndex;
 	while ((elementIndex != paragraphLength) && (paragraph[elementIndex].kind() != ZLTextElement::WORD_ELEMENT)) {
 		++elementIndex;
@@ -294,8 +294,8 @@ void ZLTextWordCursor::moveTo(int elementIndex, int charIndex) {
 			myCharIndex = 0;
 		} else {
 			elementIndex = std::max(0, elementIndex);
-			size_t size = myParagraphCursor->paragraphLength();
-			if ((size_t)elementIndex > size) {
+			std::size_t size = myParagraphCursor->paragraphLength();
+			if ((std::size_t)elementIndex > size) {
 				myElementIndex = size;
 				myCharIndex = 0;
 			} else {

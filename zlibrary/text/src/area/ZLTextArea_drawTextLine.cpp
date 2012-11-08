@@ -82,7 +82,7 @@ static RangeVector::const_iterator strongFindRange(const RangeVector &ranges, co
 	return ranges.end();
 }
 
-void ZLTextArea::drawTextLine(Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to) {
+void ZLTextArea::drawTextLine(Style &style, const ZLTextLineInfo &info, int y, std::size_t from, std::size_t to) {
 	const ZLTextParagraphCursor &paragraph = info.RealStart.paragraphCursor();
 
 	const ZLTextElementIterator fromIt = myTextElementMap.begin() + from;
@@ -158,7 +158,7 @@ void ZLTextArea::drawTextLine(Style &style, const ZLTextLineInfo &info, int y, s
 				}
 			}
 			if (rt != ranges.end()) {
-				if ((paragraph.index() < (size_t)rt->second.ParagraphIndex) &&
+				if ((paragraph.index() < (std::size_t)rt->second.ParagraphIndex) &&
 						strongContains(*rt, info.End)) {
 					right = width() - 1;
 				}
@@ -245,7 +245,7 @@ void ZLTextArea::drawSequence(Style &style, const ZLTextParagraphCursor &paragra
 	if (wordIterators.empty()) {
 		return;
 	}
-	size_t size = 0;
+	std::size_t size = 0;
 	for (std::vector<ZLTextElementIterator>::const_iterator it = wordIterators.begin(); it != wordIterators.end(); ++it) {
 		const ZLTextWord &word = (const ZLTextWord&)paragraph[(*it)->ElementIndex];
 		size += word.Size;

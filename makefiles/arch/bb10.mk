@@ -16,7 +16,7 @@ ZLSHARED = no
 
 CCACHE = $(shell if which ccache > /dev/null; then echo "ccache"; fi) #if ccache is not installed, do not use it
 CC = $(CCACHE) $(BB10_SDK_BIN_FOLDER)/qcc
-AR = $(BB10_SDK_BIN_FOLDER)/ar rsu
+AR = $(BB10_SDK_BIN_FOLDER)/ntoarmv7-ar rsu
 LD = $(BB10_SDK_BIN_FOLDER)/qcc
 MOC = $(BB10_SDK_BIN_FOLDER)/moc
 
@@ -33,5 +33,5 @@ LDFLAGS = $(ARCH_FLAGS)
 #  UILIBS = -F $(QTBASEDIR)/lib -framework QtCore -framework QtGui -framework QtNetwork
 #endif
 #
-#RM = rm -rvf
-#RM_QUIET = rm -rf
+RM = rm -rvf
+RM_QUIET = rm -rf

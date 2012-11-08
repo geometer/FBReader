@@ -115,7 +115,7 @@ void ZLTextParagraphCursor::Builder::fill() {
 }
 
 void ZLTextParagraphCursor::Builder::processTextEntry(const ZLTextEntry &textEntry) {
-	const size_t dataLength = textEntry.dataLength();
+	const std::size_t dataLength = textEntry.dataLength();
 	if (dataLength == 0) {
 		return;
 	}

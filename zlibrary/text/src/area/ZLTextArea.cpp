@@ -165,7 +165,7 @@ void ZLTextArea::paint() {
 	myTextElementMap.clear();
 	myTreeNodeMap.clear();
 
-	std::vector<size_t> labels;
+	std::vector<std::size_t> labels;
 	labels.reserve(myLineInfos.size() + 1);
 	labels.push_back(0);
 

@@ -58,12 +58,12 @@ public:
 
 public:
 	ZLPaintContext &context() const;
-	void setOffsets(size_t hOffset, size_t vOffset);
-	void setSize(size_t width, size_t height);
-	size_t hOffset() const;
-	size_t vOffset() const;
-	size_t width() const;
-	size_t height() const;
+	void setOffsets(std::size_t hOffset, std::size_t vOffset);
+	void setSize(std::size_t width, std::size_t height);
+	std::size_t hOffset() const;
+	std::size_t vOffset() const;
+	std::size_t width() const;
+	std::size_t height() const;
 
 	void setModel(shared_ptr<ZLTextModel> model);
 	shared_ptr<ZLTextModel> model() const;
@@ -89,7 +89,7 @@ private:
 
 	void prepareTextLine(Style &style, const ZLTextLineInfo &info, int y);
 
-	void drawTextLine(Style &style, const ZLTextLineInfo &info, int y, size_t from, size_t to);
+	void drawTextLine(Style &style, const ZLTextLineInfo &info, int y, std::size_t from, std::size_t to);
 	void drawSequence(Style &style, const ZLTextParagraphCursor &paragraph, std::vector<ZLTextElementIterator> &wordIterators);
 	void drawWord(Style &style, int x, int y, const ZLTextWord &word, int start, int length, bool addHyphenationSign);
 	void drawString(Style &style, int x, int y, const char *str, int len, const ZLTextWord::Mark *mark, int shift, bool rtl);
@@ -104,10 +104,10 @@ private:
 	ZLPaintContext &myContext;
 	const Properties &myProperties;
 	shared_ptr<ZLMirroredPaintContext> myMirroredContext;
-	size_t myHOffset;
-	size_t myVOffset;
-	size_t myWidth;
-	size_t myHeight;
+	std::size_t myHOffset;
+	std::size_t myVOffset;
+	std::size_t myWidth;
+	std::size_t myHeight;
 
 	shared_ptr<ZLTextModel> myModel;
 
@@ -132,12 +132,12 @@ friend class ZLTextSelectionModel;
 inline ZLTextArea::Properties::~Properties() {}
 
 inline ZLPaintContext &ZLTextArea::context() const { return myMirroredContext.isNull() ? myContext : (ZLPaintContext&)*myMirroredContext; }
-inline void ZLTextArea::setSize(size_t width, size_t height) { myWidth = width; myHeight = height; }
-inline size_t ZLTextArea::width() const { return myWidth; }
-inline size_t ZLTextArea::height() const { return myHeight; }
-inline void ZLTextArea::setOffsets(size_t hOffset, size_t vOffset) { myHOffset = hOffset; myVOffset = vOffset; }
-inline size_t ZLTextArea::hOffset() const { return myHOffset; }
-inline size_t ZLTextArea::vOffset() const { return myVOffset; }
+inline void ZLTextArea::setSize(std::size_t width, std::size_t height) { myWidth = width; myHeight = height; }
+inline std::size_t ZLTextArea::width() const { return myWidth; }
+inline std::size_t ZLTextArea::height() const { return myHeight; }
+inline void ZLTextArea::setOffsets(std::size_t hOffset, std::size_t vOffset) { myHOffset = hOffset; myVOffset = vOffset; }
+inline std::size_t ZLTextArea::hOffset() const { return myHOffset; }
+inline std::size_t ZLTextArea::vOffset() const { return myVOffset; }
 
 inline shared_ptr<ZLTextModel> ZLTextArea::model() const { return myModel; }
 inline bool ZLTextArea::isRtl() const { return !myMirroredContext.isNull(); }

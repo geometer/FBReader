@@ -55,7 +55,7 @@ shared_ptr<ZLTextStyle> ZLTextFullStyleDecoration::createDecoratedStyle(const sh
 
 const std::string &ZLTextPartialDecoratedStyle::fontFamily() const {
 	const std::string &family = myDecoration.FontFamilyOption.value();
-	return (!family.empty()) ? family : base()->fontFamily();
+	return !family.empty() ? family : base()->fontFamily();
 }
 
 int ZLTextPartialDecoratedStyle::fontSize() const {
@@ -84,7 +84,7 @@ short ZLTextFullDecoratedStyle::firstLineIndentDelta(const ZLTextStyleEntry::Met
 
 const std::string &ZLTextFullDecoratedStyle::fontFamily() const {
 	const std::string &family = myDecoration.FontFamilyOption.value();
-	return (!family.empty()) ? family : base()->fontFamily();
+	return !family.empty() ? family : base()->fontFamily();
 }
 
 int ZLTextFullDecoratedStyle::fontSize() const {
@@ -191,9 +191,12 @@ int ZLTextForcedStyle::fontSize() const {
 }
 
 const std::string &ZLTextForcedStyle::fontFamily() const {
+  return base()->fontFamily();
+  /*
 	return (!ZLTextStyleCollection::Instance().OverrideSpecifiedFontsOption.value() &&
 					myEntry.isFeatureSupported(ZLTextStyleEntry::FONT_FAMILY)) ?
 						myEntry.fontFamily() : base()->fontFamily();
+  */
 }
 
 const std::string &ZLTextStyleDecoration::colorStyle() const {

@@ -38,7 +38,7 @@ void ZLTextArea::addRectangleToTextMap(Style &style, const ZLTextElementRectangl
 
 void ZLTextArea::flushRevertedElements(unsigned char bidiLevel) {
 	const int index = (int)bidiLevel - (isRtl() ? 1 : 0);
-	if ((index < 0) || (myTextElementsToRevert.size() <= (size_t)index)) {
+	if ((index < 0) || (myTextElementsToRevert.size() <= (std::size_t)index)) {
 		return;
 	}
 	ZLTextElementMap &from = myTextElementsToRevert[index];
