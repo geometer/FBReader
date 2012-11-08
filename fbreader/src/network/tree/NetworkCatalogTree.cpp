@@ -133,8 +133,8 @@ void NetworkCatalogTree::onAuthCheck(ZLUserDataHolder &data, const std::string &
 		shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
 		if (!manager.isNull() && manager->needsInitialization()) {
 			manager->initialize(ZLExecutionUtil::createListener(new ZLUserDataHolder(data), this, &NetworkCatalogTree::onInitialization));
+			return;
 		}
-		return;
 	}
 	onInitialization(data, error);
 }

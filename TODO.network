@@ -61,9 +61,14 @@ CURRENT RELEASE:
 		** save slider position for list widget
 
 	** implement async sign in operation
-	** implement async sign out operation
-	** implement async sign up operation
-	** implement async password recovery operation	
+		** BUG: SIGN IN, затем зашел в каталог, он стал грузить список купленных книг, operantion cancelled, и как будто вышли из каталога -- то есть с точки зрения пользователя, что-то странное, вроде и зашел, а "моих книг" нет. А обновиться можно, только если перезагрузить приложение
+		?? должна быть инициализация каталога при sign in/sign out
+		DONE BUG: "Мои книги" не открываются
+
+
+	?? implement async sign out operation
+	?? implement async sign up operation
+	?? implement async password recovery operation	
 
 	** make litres initialize at network library start up (for retrieving account and showing refill account button)
 
