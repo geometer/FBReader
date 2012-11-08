@@ -64,22 +64,21 @@ int ZLTextPartialDecoratedStyle::fontSize() const {
 
 bool ZLTextPartialDecoratedStyle::bold() const {
 	ZLBoolean3 b = myDecoration.BoldOption.value();
-	return (b == B3_UNDEFINED) ? base()->bold() : (b == B3_TRUE);
+	return b == B3_UNDEFINED ? base()->bold() : (b == B3_TRUE);
 }
 
 bool ZLTextPartialDecoratedStyle::italic() const {
 	ZLBoolean3 i = myDecoration.ItalicOption.value();
-	return (i == B3_UNDEFINED) ? base()->italic() : (i == B3_TRUE);
+	return i == B3_UNDEFINED ? base()->italic() : (i == B3_TRUE);
 }
 
 bool ZLTextPartialDecoratedStyle::allowHyphenations() const {
 	ZLBoolean3 a = myDecoration.AllowHyphenationsOption.value();
-	return (a == B3_UNDEFINED) ? base()->allowHyphenations() : (a == B3_TRUE);
-	return true;
+	return a == B3_UNDEFINED ? base()->allowHyphenations() : (a == B3_TRUE);
 }
 
 short ZLTextFullDecoratedStyle::firstLineIndentDelta(const ZLTextStyleEntry::Metrics &metrics) const {
-	return (alignment() == ALIGN_CENTER) ? 0 : base()->firstLineIndentDelta(metrics) + myDecoration.FirstLineIndentDeltaOption.value();
+	return alignment() == ALIGN_CENTER ? 0 : base()->firstLineIndentDelta(metrics) + myDecoration.FirstLineIndentDeltaOption.value();
 }
 
 const std::string &ZLTextFullDecoratedStyle::fontFamily() const {
@@ -93,23 +92,22 @@ int ZLTextFullDecoratedStyle::fontSize() const {
 
 bool ZLTextFullDecoratedStyle::bold() const {
 	ZLBoolean3 b = myDecoration.BoldOption.value();
-	return (b == B3_UNDEFINED) ? base()->bold() : (b == B3_TRUE);
+	return b == B3_UNDEFINED ? base()->bold() : (b == B3_TRUE);
 }
 
 bool ZLTextFullDecoratedStyle::italic() const {
 	ZLBoolean3 i = myDecoration.ItalicOption.value();
-	return (i == B3_UNDEFINED) ? base()->italic() : (i == B3_TRUE);
+	return i == B3_UNDEFINED ? base()->italic() : (i == B3_TRUE);
 }
 
 ZLTextAlignmentType ZLTextFullDecoratedStyle::alignment() const {
 	ZLTextAlignmentType a = (ZLTextAlignmentType)myDecoration.AlignmentOption.value();
-	return (a == ALIGN_UNDEFINED) ? base()->alignment() : a;
+	return a == ALIGN_UNDEFINED ? base()->alignment() : a;
 }
 
 bool ZLTextFullDecoratedStyle::allowHyphenations() const {
 	ZLBoolean3 a = myDecoration.AllowHyphenationsOption.value();
-	return (a == B3_UNDEFINED) ? base()->allowHyphenations() : (a == B3_TRUE);
-	return true;
+	return a == B3_UNDEFINED ? base()->allowHyphenations() : (a == B3_TRUE);
 }
 
 const std::string &ZLTextPartialDecoratedStyle::colorStyle() const {
