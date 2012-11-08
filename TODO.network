@@ -1,4 +1,5 @@
 * NP
+  ** better font family support for CSS-defined properties
   ** run browser correctly on mac
   DONE fix crash when book info window opens
   ** review async-network-ui branch

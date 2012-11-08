@@ -189,12 +189,9 @@ int ZLTextForcedStyle::fontSize() const {
 }
 
 const std::string &ZLTextForcedStyle::fontFamily() const {
-  return base()->fontFamily();
-  /*
 	return (!ZLTextStyleCollection::Instance().OverrideSpecifiedFontsOption.value() &&
 					myEntry.isFeatureSupported(ZLTextStyleEntry::FONT_FAMILY)) ?
 						myEntry.fontFamily() : base()->fontFamily();
-  */
 }
 
 const std::string &ZLTextStyleDecoration::colorStyle() const {
