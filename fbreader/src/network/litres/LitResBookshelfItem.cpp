@@ -53,6 +53,7 @@ void LitResBookshelfItem::onDisplayItem() {
 std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	LitResAuthenticationManager &mgr = (LitResAuthenticationManager&)*Link.authenticationManager();
 	if (mgr.isAuthorised().Status == B3_FALSE) {
+		listener->finished(NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED));
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
 	std::string error;

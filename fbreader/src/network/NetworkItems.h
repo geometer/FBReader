@@ -89,6 +89,7 @@ public:
 	enum AccessibilityType {
 		ALWAYS,
 		SIGNED_IN
+		//TODO implement HAS_BOOKS type
 	};
 
 	enum CatalogFlags {

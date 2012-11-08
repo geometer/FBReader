@@ -24,6 +24,7 @@
 #include "../../networkActions/NetworkOperationRunnable.h"
 #include "../NetworkErrors.h"
 #include "NetworkTreeFactory.h"
+#include "../../networkActions/AuthenticationDialog.h"
 #include "NetworkTreeNodes.h"
 
 const ZLTypeId NetworkCatalogTree::TYPE_ID(NetworkTree::TYPE_ID);
@@ -109,14 +110,22 @@ void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> 
 	if (myListeners.size() > 1) {
 		return;
 	}
+
 	myChildrenItems.clear();
-
-	shared_ptr<ZLUserDataHolder> scopeData = new ZLUserDataHolder;
-
-	notifyDownloadStarted();
 
 	const NetworkLink &link = item().Link;
 	shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
+
+	if (item().getVisibility() == B3_UNDEFINED && !manager.isNull()) {
+		bool result = AuthenticationDialog::run(*manager);
+		if (!result) {
+			notifyListeners(std::string());
+			return;
+		}
+	}
+
+	notifyDownloadStarted();
+	shared_ptr<ZLUserDataHolder> scopeData = new ZLUserDataHolder;
 	if (!manager.isNull()) {
 //		NetworkCatalogTreeAuthScope *scope = new NetworkCatalogTreeAuthScope;
 //		scope->listener = listener;
