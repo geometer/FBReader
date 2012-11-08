@@ -173,7 +173,11 @@ void NetworkCatalogTree::requestMoreChildren(shared_ptr<ZLNetworkRequest::Listen
 
 void NetworkCatalogTree::onChildrenReceived(NetworkItem::List &childrens, const std::string &error) {
 	if (!error.empty()) {
-		NetworkErrors::showErrorMessage(error);
+		//special case for authenticationFailed after 'cancel' button pressed in AuthDialog?
+		//TODO maybe it'll be work wrong at some cases? maybe we should have another error this case?
+		if (error != NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
+			NetworkErrors::showErrorMessage(error);
+		}
 		notifyListeners(error);
 		return;
 	}

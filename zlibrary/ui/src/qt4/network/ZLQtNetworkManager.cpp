@@ -279,7 +279,7 @@ void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthent
 	if (result) {
 		scope.request->setupAuthentication(userName, password);
 	} else {
-		return; //message 'auth fail error' will be showed -- TODO don't show it
+		return;
 	}
 
 	scope.timeoutTimer->start(timeoutValue());

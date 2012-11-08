@@ -22,7 +22,7 @@ CURRENT RELEASE:
 	** during search, show found items immediately, do not wait for the search end
 	DONE do not show 'timed out' message if some catalogs failed the search
 
-	** do not show 'authentication failed' dialog after pressing 'Cancel' button in authentication dialog
+	DONE do not show 'authentication failed' dialog after pressing 'Cancel' button in authentication dialog
 	** hide "loading" animation while authentication dialog is shown
 
 	** reload litres catalog after login/logout
