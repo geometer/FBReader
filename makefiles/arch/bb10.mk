@@ -22,11 +22,13 @@ MOC = $(BB10_SDK_BIN_FOLDER)/moc
 
 ARCH_FLAGS = -Vgcc_ntoarmv7le
 CFLAGS = $(ARCH_FLAGS) -Wall -Wno-ctor-dtor-privacy -W -I $(ROOTDIR)/libs/bb10/include
-LDFLAGS = $(ARCH_FLAGS)
+LDFLAGS = $(ARCH_FLAGS) -L $(ROOTDIR)/libs/bb10/lib
+
+EXTERNAL_LIBS = -lcpp-ne -liconv
+
 QTINCLUDE = -I /Applications/bbndk/target_10_0_9_386/qnx6/usr/include/qt4
-#
-#EXTERNAL_LIBS = -liconv
-#
+UILIBS = -L /Applications/bbndk/target_10_0_9_386/qnx6/armle-v7/usr/lib/qt4/lib -lQtCore -lQtGui -lQtNetwork
+
 #ifeq "$(UI_TYPE)" "qt4"
 #  QTBASEDIR = ~/QtSDK/Desktop/Qt/4.8.1/gcc
 #  QTINCLUDE = -I $(QTBASEDIR)/include
