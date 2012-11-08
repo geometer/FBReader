@@ -168,7 +168,8 @@ public:
 	const std::string &visualParameter(const std::string &id);
 
 public:
-	virtual bool showAuthDialog(std::string &userName, std::string &password, const ZLResourceKey &errorKey) = 0;
+	virtual bool showAuthDialog(const std::string &siteName, std::string &userName, std::string &password, const ZLResourceKey &errorKey) = 0;
+	virtual void saveUserName(const std::string &siteName, std::string &userName) = 0;
 
 private:
 	void createToolbar(int index);

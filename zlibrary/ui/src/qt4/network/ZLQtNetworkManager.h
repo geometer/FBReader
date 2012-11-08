@@ -74,6 +74,7 @@ protected:
 	void handleContent(QNetworkReply *reply) const;
 	static QString handleErrors(QNetworkReply *reply);
 	void setHeadersAndSsl(QNetworkRequest &request) const;
+	void saveUserName(QNetworkReply *reply) const;
 
 	int timeoutValue() const;
 	void prepareReply(ZLQtNetworkReplyScope &scope, QNetworkRequest networkRequest) const;

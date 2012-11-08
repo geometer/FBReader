@@ -28,7 +28,7 @@
 class UserList {
 
 public:
-	UserList();
+	UserList(const std::string &siteName);
 	~UserList();
 
 	const std::vector<std::string> &users() const;
@@ -36,6 +36,7 @@ public:
 	void saveUser(const std::string &user);
 
 private:
+	std::string myGroupName;
 	std::vector<std::string> myUserNames;
 	std::set<std::string> mySavedNames;
 };

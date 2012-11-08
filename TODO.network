@@ -21,11 +21,18 @@ CURRENT RELEASE:
 
 	** during search, show found items immediately, do not wait for the search end
 	DONE do not show 'timed out' message if some catalogs failed the search
+
 	** do not show 'authentication failed' dialog after pressing 'Cancel' button in authentication dialog
+	** hide "loading" animation while authentication dialog is shown
 
 	** reload litres catalog after login/logout
+	** что происходит, когда нажимаем кнопку "Сетевая библиотека" несколько раз подряд?
 	DONE show 'my books' and other items in litres catalog even if user is logged out; show authentication dialog if such item is double-clicked
-	** use independent logins list for each catalog
+	DONE use independent logins list for each catalog
+
+	** implement a way to sign out from catalogs like Feedbooks and Wolne Lektury
+	** что будет, если во время загрузки litres item нажать на sign out?
+		** блокировать actions при взаимодействии с каталогом?
 
 	** implement waiting icon for related action items
 	** in search field show previous searches as suggestions
@@ -34,8 +41,7 @@ CURRENT RELEASE:
 	DONE load first page only on catalog opening; load more items when list is scrolled up
 	DONE show 'wait' icon for book info loading (HUGE icon in the right pane)
 	DONE hide vertical scrollbar in catalog part of the network dialog if it make no sense
-	** hide "loading" animation while authentication dialog is shown
-		** how to reproduce?
+	
 	** search logic (current release):
 	   	** if we are on the top level, search in all catalogs
 	   	** if we are inside a catalog (or if a catalog is selected), then
@@ -69,9 +75,6 @@ CURRENT RELEASE:
 
 	* BUG: preview widget - если поле отсутсвует, вместо него просто пустое пространство
 	?? закрывать окно библиотеки при нажатии кнопки "скачать"
-	** обработка особенных ситуаций:
-		** что происходит, когда нажимаем кнопку "Сетевая библиотека" несколько раз подряд?
-		DONE что происходит, если запросить requestChildren дважды подряд?
 	** use gif or set of pngs for Waiting Icon instead of vector svg icon
 
 	?? generic.xml async loading
