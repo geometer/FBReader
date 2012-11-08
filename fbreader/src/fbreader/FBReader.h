@@ -125,7 +125,8 @@ public:
 	void invalidateNetworkView();
 	void invalidateAccountDependents();
 
-	bool showAuthDialog(std::string &userName, std::string &password, const ZLResourceKey &errorKey);
+	bool showAuthDialog(const std::string &siteName, std::string &userName, std::string &password, const ZLResourceKey &errorKey);
+	void saveUserName(const std::string &siteName, std::string &userName);
 
 private:
 	shared_ptr<ProgramCollection> dictionaryCollection() const;

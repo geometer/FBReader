@@ -49,7 +49,7 @@ bool NetworkCatalogItem::supportsResumeLoading() {
 	return false;
 }
 
-std::string NetworkCatalogItem::resumeLoading(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
+std::string NetworkCatalogItem::resumeLoading(NetworkItem::List &/*children*/, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	listener->finished();
 	return std::string();
 }
@@ -75,7 +75,7 @@ ZLBoolean3 NetworkCatalogItem::getVisibility() const {
 			if (mgr.isNull()) {
 				return B3_FALSE;
 			}
-			return mgr->isAuthorised().Status;
+			return mgr->isAuthorised().Status == B3_TRUE ? B3_TRUE : B3_UNDEFINED;
 	}
 	return B3_FALSE;
 }

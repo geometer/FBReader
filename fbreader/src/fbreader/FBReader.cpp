@@ -561,7 +561,12 @@ void FBReader::invalidateAccountDependents() {
 	((NetworkView &) *myNetworkLibraryView).invalidateAccountDependents();
 }
 
-bool FBReader::showAuthDialog(std::string &userName, std::string &password, const ZLResourceKey &errorKey) {
+bool FBReader::showAuthDialog(const std::string &siteName, std::string &userName, std::string &password, const ZLResourceKey &errorKey) {
 	std::string message = errorKey.Name.empty() ? std::string() : NetworkErrors::errorMessage(errorKey.Name);
-	return AuthenticationDialog::run(userName, password, message);
+	return AuthenticationDialog::run(siteName, userName, password, message);
+}
+
+void FBReader::saveUserName(const std::string &siteName, std::string &userName) {
+	UserList userList(siteName);
+	userList.saveUser(userName);
 }

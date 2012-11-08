@@ -132,7 +132,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			title,
 			annotation,
 			urlMap,
-			NetworkCatalogItem::SIGNED_IN
+			NetworkCatalogItem::ALWAYS
 		);
 	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_BOOKS->getParameter(TYPE)) {
 		return new LitResBooksFeedItem(
