@@ -56,6 +56,10 @@ CURRENT RELEASE:
 
 	DONE implement async full information loading
 
+	** UI: implement support for recording each node's show parameters
+		DONE save current node for preview widget
+		** save slider position for list widget
+
 	** implement async sign in operation
 	** implement async sign out operation
 	** implement async sign up operation

@@ -136,7 +136,6 @@ void ZLQtItemsListWidget::onNodeClicked(ZLQtTreeItem* itemClicked) {
 }
 
 void ZLQtItemsListWidget::onSliderMoved(int value) {
-	//qDebug() << Q_FUNC_INFO << value << verticalScrollBar()->minimum()  << verticalScrollBar()->maximum();
 	int maximum = verticalScrollBar()->maximum();
 	if ((double)value > (double)maximum * 0.8) {
 		emit wantMoreChildren();
@@ -225,10 +224,10 @@ void ZLQtTreeItem::clear() {
 
 }
 void ZLQtTreeItem::setActive(bool active) {
-	isActive = active;
+	myIsActive = active;
 
 	//TODO due to different themes on OS, take a color from existed palette
-	QColor mainColor = isActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
+	QColor mainColor = myIsActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
 
 	setFrameStyle(QFrame::Panel | QFrame::Raised);
 	setLineWidth(2);
@@ -238,6 +237,10 @@ void ZLQtTreeItem::setActive(bool active) {
 	setPalette(p);
 
 	update();
+}
+
+bool ZLQtTreeItem::isActive() const {
+	return myIsActive;
 }
 
 ZLTreeTitledNode *ZLQtTreeItem::getNode() const {

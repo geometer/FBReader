@@ -88,8 +88,11 @@ public:
 
 private:
 	void init();
-	bool initAuth();
 	void notifyListeners(const std::string &error);
+
+private:
+	void onAuthCheck(ZLUserDataHolder &data, const std::string &error);
+	void onInitialization(ZLUserDataHolder &data, const std::string &error);
 
 private:
 	const ZLResource &resource() const;

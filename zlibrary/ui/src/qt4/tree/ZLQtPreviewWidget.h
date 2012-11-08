@@ -37,6 +37,8 @@ public:
 	void refresh();
 	void clear();
 
+	ZLTreeNode* getCurrentNode() const;
+
 	QSize sizeHint() const;
 
 protected:

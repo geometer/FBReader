@@ -35,6 +35,12 @@ class ZLExecutionUtil {
 		static shared_ptr<ZLNetworkRequest::Listener> createListener(T object, Method method) {
 			return createListener(new ZLUserDataHolder, object, method);
 		}
+		template <typename T, typename Method>
+		static shared_ptr<ZLNetworkRequest::Listener> createListener(ZLUserData *scope, T object, Method method) {
+			shared_ptr<ZLUserDataHolder> scopeData = new ZLUserDataHolder;
+			scopeData->addUserData("scope", scope);
+			return createListener(scopeData, object, method);
+		}
 
 	private:
 		typedef void (*Handler)(ZLUserDataHolder &data, const std::string &error);

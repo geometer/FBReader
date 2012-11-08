@@ -133,16 +133,16 @@ bool RegisterUserDialog::run(NetworkAuthenticationManager &mgr) {
 			continue;
 		}
 
-		if (mgr.isAuthorised().Status != B3_FALSE && mgr.needsInitialization()) {
-			InitializeAuthenticationManagerRunnable initializer(mgr);
-			initializer.executeWithUI();
-			if (initializer.hasErrors()) {
-				initializer.showErrorMessage();
-				LogOutRunnable logout(mgr);
-				logout.executeWithUI();
-				return false;
-			}
-		}
+//		if (mgr.isAuthorised().Status != B3_FALSE && mgr.needsInitialization()) {
+//			InitializeAuthenticationManagerRunnable initializer(mgr);
+//			initializer.executeWithUI();
+//			if (initializer.hasErrors()) {
+//				initializer.showErrorMessage();
+//				LogOutRunnable logout(mgr);
+//				logout.executeWithUI();
+//				return false;
+//			}
+//		}
 		return true;
 	}
 }
