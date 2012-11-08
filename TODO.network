@@ -20,8 +20,9 @@ FUTURE RELEASES:
 CURRENT RELEASE:
 
 	** during search, show found items immediately, do not wait for the search end
-	** do not show 'timed out' message if some catalogs failed the search
+	DONE do not show 'timed out' message if some catalogs failed the search
 	** do not show 'authentication failed' dialog after pressing 'Cancel' button in authentication dialog
+
 	** reload litres catalog after login/logout
 	** show 'my books' and other items in litres catalog even if user is logged out; show authentication dialog if such item is double-clicked
 	** use independent logins list for each catalog

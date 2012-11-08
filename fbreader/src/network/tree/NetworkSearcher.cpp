@@ -100,9 +100,9 @@ public:
 			return;
 		}
 
-		if (!myErrorMessage.empty()) {
-			NetworkErrors::showErrorMessage(myErrorMessage); //TODO maybe be silent about errors?
-		}
+//		if (!myErrorMessage.empty()) {
+//			NetworkErrors::showErrorMessage(myErrorMessage); //TODO maybe be silent about errors?
+//		}
 		myItem.onChildrenLoaded(myChildren, myCollection, myListener);
 		myHolder.reset(); //destroy itself
 	}
