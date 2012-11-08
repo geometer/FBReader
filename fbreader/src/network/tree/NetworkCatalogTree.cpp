@@ -94,6 +94,14 @@ public:
 		myTree->onChildrenReceived(myChildrens, error);
 	}
 
+	void setUIStatus(bool enabled) {
+		if (enabled) {
+			myTree->notifyDownloadStarted();
+		} else {
+			myTree->notifyDownloadStopped();
+		}
+	}
+
 private:
 	NetworkCatalogTree *myTree;
 	NetworkItem::List myChildrens;

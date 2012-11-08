@@ -271,11 +271,13 @@ void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthent
 	scope.timeoutTimer->stop();
 	std::string userName;
 	std::string password;
+	scope.request->setUIStatus(false);
 	bool result = ZLApplication::Instance().showAuthDialog(
 		ZLNetworkUtil::hostFromUrl(reply->url().toString().toStdString()),
 		userName,
 		password,
 		scope.authAskedAlready ? ZLResourceKey("authenticationFailed") : ZLResourceKey());
+	scope.request->setUIStatus(true);
 	if (result) {
 		scope.request->setupAuthentication(userName, password);
 	} else {

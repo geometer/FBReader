@@ -20,27 +20,14 @@ FUTURE RELEASES:
 CURRENT RELEASE:
 
 	** during search, show found items immediately, do not wait for the search end
-	DONE do not show 'timed out' message if some catalogs failed the search
-
-	DONE do not show 'authentication failed' dialog after pressing 'Cancel' button in authentication dialog
-	** hide "loading" animation while authentication dialog is shown
-
 	** reload litres catalog after login/logout
-	** что происходит, когда нажимаем кнопку "Сетевая библиотека" несколько раз подряд?
-	DONE show 'my books' and other items in litres catalog even if user is logged out; show authentication dialog if such item is double-clicked
-	DONE use independent logins list for each catalog
-
+		** also, what's with reloading after running network dialog again?
 	** implement a way to sign out from catalogs like Feedbooks and Wolne Lektury
 	** что будет, если во время загрузки litres item нажать на sign out?
 		** блокировать actions при взаимодействии с каталогом?
-
 	** implement waiting icon for related action items
 	** in search field show previous searches as suggestions
 	** find a good HUGE icon for book info loading
-	DONE merge async-network-ui branch into 0.99; kill 4 branches
-	DONE load first page only on catalog opening; load more items when list is scrolled up
-	DONE show 'wait' icon for book info loading (HUGE icon in the right pane)
-	DONE hide vertical scrollbar in catalog part of the network dialog if it make no sense
 	
 	** search logic (current release):
 	   	** if we are on the top level, search in all catalogs
@@ -102,6 +89,15 @@ CURRENT RELEASE:
 	? реализовать фильтр сетевых каталогов по языку (как в FBReaderJ)
 	* реализовать возможность "прятать" отдельные каталоги	
 
+	DONE hide "loading" animation while authentication dialog is shown
+	DONE merge async-network-ui branch into 0.99; kill 4 branches
+	DONE load first page only on catalog opening; load more items when list is scrolled up
+	DONE show 'wait' icon for book info loading (HUGE icon in the right pane)
+	DONE hide vertical scrollbar in catalog part of the network dialog if it make no sense
+	DONE show 'my books' and other items in litres catalog even if user is logged out; show authentication dialog if such item is double-clicked
+	DONE use independent logins list for each catalog
+	DONE do not show 'timed out' message if some catalogs failed the search
+	DONE do not show 'authentication failed' dialog after pressing 'Cancel' button in authentication dialog
 	DONE related items для litres:
 		DONE поддержка "также читают"
 		DONE поддержка "все книги этого автора"		

@@ -48,6 +48,10 @@ public:
 		myChildren.insert(myChildren.end(), myLoadingData.Items.begin(), myLoadingData.Items.end());
 		myListener->finished(error);
 	}
+	void setUIStatus(bool enabled) {
+		myListener->setUIStatus(enabled); //to hide refreshing while authentication dialog
+	}
+
 private:
 	NetworkItem::List &myChildren;
 	NetworkOperationData &myLoadingData;
