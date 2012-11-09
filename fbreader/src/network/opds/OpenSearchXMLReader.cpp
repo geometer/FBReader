@@ -23,7 +23,7 @@
 static const std::string TAG_URL = "Url";
 
 std::string OpenSearchXMLReader::convertOpenSearchURL(const std::string& raws) { //TODO
-	size_t pos = raws.find('{');
+	std::size_t pos = raws.find('{');
 	return raws.substr(0, pos) + "%s";
 }
 
@@ -43,7 +43,7 @@ void OpenSearchXMLReader::endElementHandler(const char *tag) {
 	(void)tag;
 }
 
-void OpenSearchXMLReader::characterDataHandler(const char *text, size_t len) {
+void OpenSearchXMLReader::characterDataHandler(const char *text, std::size_t len) {
 	(void)text;
 	(void)len;
 }

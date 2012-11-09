@@ -41,21 +41,21 @@ private:
 public:
 	~ZLBzip2InputStream();
 	bool open();
-	size_t read(char *buffer, size_t maxSize);
+	std::size_t read(char *buffer, std::size_t maxSize);
 	void close();
 
 	void seek(int offset, bool absoluteOffset);
-	size_t offset() const;
-	size_t sizeOfOpened();
+	std::size_t offset() const;
+	std::size_t sizeOfOpened();
 
 private:
 	shared_ptr<ZLInputStream> myBaseStream;
-	size_t myOffset;
+	std::size_t myOffset;
 
 	bz_stream myBzStream;
 	char *myBaseBuffer;
 	char *myTrashBuffer;
-	size_t myBaseAvailableSize;
+	std::size_t myBaseAvailableSize;
 
 friend class ZLFSCompressorBzip2;
 };

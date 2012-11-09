@@ -25,7 +25,7 @@ void LZXDecompressor::E8Decoder::reset(unsigned int fileSize) {
 	myPosition = 0;
 }
 
-void LZXDecompressor::E8Decoder::decode(unsigned char *buffer, const size_t size) {
+void LZXDecompressor::E8Decoder::decode(unsigned char *buffer, const std::size_t size) {
 	if (myFramesCounter >= 32768) {
 		return;
 	}

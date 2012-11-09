@@ -30,7 +30,7 @@ DocBookBookReader::DocBookBookReader(BookModel &model) : BookReader(model) {
 	myReadText = false;
 }
 
-void DocBookBookReader::characterDataHandler(const char *text, size_t len) {
+void DocBookBookReader::characterDataHandler(const char *text, std::size_t len) {
 	addDataToBuffer(text, len);
 }
 	

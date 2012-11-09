@@ -30,9 +30,9 @@ public:
 	virtual void onExpandRequest(ZLTreeNode *node) = 0;
 	virtual void onCloseRequest() = 0;
 	// Parent has new or remove child at index
-	virtual void onNodeBeginInsert(ZLTreeNode *parent, size_t index) = 0;
+	virtual void onNodeBeginInsert(ZLTreeNode *parent, std::size_t index) = 0;
 	virtual void onNodeEndInsert() = 0;
-	virtual void onNodeBeginRemove(ZLTreeNode *parent, size_t index) = 0;
+	virtual void onNodeBeginRemove(ZLTreeNode *parent, std::size_t index) = 0;
 	virtual void onNodeEndRemove() = 0;
 	// This method should be called at every node state change except of adding/removing of children
 	virtual void onNodeUpdated(ZLTreeNode *node) = 0;

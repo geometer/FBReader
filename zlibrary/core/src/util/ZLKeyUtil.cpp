@@ -76,7 +76,7 @@ std::string ZLKeyUtil::keyName(int unicode, int key, int modifiersMask) {
 	}
 
 	if (ourUseAutoNames && name.empty()) {
-		if (((unicode < 128) && isprint(unicode) && !isspace(unicode)) || ZLUnicodeUtil::isLetter(unicode)) {
+		if (((unicode < 128) && std::isprint(unicode) && !std::isspace(unicode)) || ZLUnicodeUtil::isLetter(unicode)) {
 			name += '<';
 			char buf[5];
 			name.append(buf, ZLUnicodeUtil::ucs4ToUtf8(buf, ZLUnicodeUtil::toUpper(unicode)));

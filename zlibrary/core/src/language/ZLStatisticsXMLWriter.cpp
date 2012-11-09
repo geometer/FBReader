@@ -53,7 +53,7 @@ void ZLStatisticsXMLWriter::writeStatistics(const ZLMapBasedStatistics &statisti
     closeTag();
 }
 
-void ZLStatisticsXMLWriter::writeSequence(const std::string &key, size_t frequency) {
+void ZLStatisticsXMLWriter::writeSequence(const std::string &key, std::size_t frequency) {
     addTag("item", true);
     addAttribute("sequence", key);
     std::string frequencyString;

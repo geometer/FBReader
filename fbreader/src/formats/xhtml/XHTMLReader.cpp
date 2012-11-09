@@ -26,8 +26,8 @@
 #include <ZLUnicodeUtil.h>
 #include <ZLStringUtil.h>
 #include <ZLXMLNamespace.h>
-#include <ZLLogger.h>
 #include <ZLInputStream.h>
+#include <ZLLogger.h>
 
 #include "XHTMLReader.h"
 #include "../util/EntityFilesCollector.h"
@@ -290,7 +290,8 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 	}
 
 	const std::string fullfileName = pathPrefix(reader) + MiscUtil::decodeHtmlURL(fileName);
-	if (!ZLFile(fullfileName).exists()) {
+	ZLFile imageFile(fullfileName);
+	if (!imageFile.exists()) {
 		return;
 	}
 
@@ -298,7 +299,7 @@ void XHTMLTagImageAction::doAtStart(XHTMLReader &reader, const char **xmlattribu
 	if (flag) {
 		endParagraph(reader);
 	}
-	if ((strlen(fileName) > 2) && strncmp(fileName, "./", 2) == 0) {
+	if (std::strlen(fileName) > 2 && std::strncmp(fileName, "./", 2) == 0) {
 		fileName +=2;
 	}
 	bookReader(reader).addImageReference(fullfileName);
@@ -379,7 +380,7 @@ XHTMLTagParagraphWithControlAction::XHTMLTagParagraphWithControlAction(FBTextKin
 }
 
 void XHTMLTagParagraphWithControlAction::doAtStart(XHTMLReader &reader, const char**) {
-	if ((myControl == TITLE) && (bookReader(reader).model().bookTextModel()->paragraphsNumber() > 1)) {
+	if (myControl == TITLE && bookReader(reader).model().bookTextModel()->paragraphsNumber() > 1) {
 		bookReader(reader).insertEndOfSectionParagraph();
 	}
 	bookReader(reader).pushKind(myControl);
@@ -394,11 +395,10 @@ void XHTMLTagParagraphWithControlAction::doAtEnd(XHTMLReader &reader) {
 void XHTMLTagPreAction::doAtStart(XHTMLReader &reader, const char**) {
 	reader.myPreformatted = true;
 	beginParagraph(reader);
-	bookReader(reader).addControl(CODE, true);
+	bookReader(reader).addControl(PREFORMATTED, true);
 }
 
 void XHTMLTagPreAction::doAtEnd(XHTMLReader &reader) {
-	bookReader(reader).addControl(CODE, false);
 	endParagraph(reader);
 	reader.myPreformatted = false;
 }
@@ -632,7 +632,7 @@ void XHTMLReader::endParagraph() {
 	myModelReader.endParagraph();
 }
 
-void XHTMLReader::characterDataHandler(const char *text, size_t len) {
+void XHTMLReader::characterDataHandler(const char *text, std::size_t len) {
 	switch (myReadState) {
 		case READ_NOTHING:
 			break;
@@ -643,21 +643,22 @@ void XHTMLReader::characterDataHandler(const char *text, size_t len) {
 			break;
 		case READ_BODY:
 			if (myPreformatted) {
-				if ((*text == '\r') || (*text == '\n')) {
-					myModelReader.addControl(CODE, false);
+				if (*text == '\r' || *text == '\n') {
 					endParagraph();
+					text += 1;
+					len -= 1;
 					beginParagraph();
-					myModelReader.addControl(CODE, true);
+					myModelReader.addControl(PREFORMATTED, true);
 				}
-				size_t spaceCounter = 0;
-				while ((spaceCounter < len) && isspace((unsigned char)*(text + spaceCounter))) {
+				std::size_t spaceCounter = 0;
+				while (spaceCounter < len && std::isspace((unsigned char)*(text + spaceCounter))) {
 					++spaceCounter;
 				}
 				myModelReader.addFixedHSpace(spaceCounter);
 				text += spaceCounter;
 				len -= spaceCounter;
-			} else if ((myNewParagraphInProgress) || !myModelReader.paragraphIsOpen()) {
-				while (isspace((unsigned char)*text)) {
+			} else if (myNewParagraphInProgress || !myModelReader.paragraphIsOpen()) {
+				while (std::isspace((unsigned char)*text)) {
 					++text;
 					if (--len == 0) {
 						break;
@@ -685,7 +686,7 @@ bool XHTMLReader::processNamespaces() const {
 }
 
 const std::string XHTMLReader::normalizedReference(const std::string &reference) const {
-	const size_t index = reference.find('#');
+	const std::size_t index = reference.find('#');
 	if (index == std::string::npos) {
 		return fileAlias(reference);
 	} else {

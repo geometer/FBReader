@@ -97,7 +97,7 @@ const ZLTypeId &NetworkCatalogRootTree::typeId() const {
 	return TYPE_ID;
 }
 
-NetworkCatalogRootTree::NetworkCatalogRootTree(RootTree *parent, NetworkLink &link, size_t position) :
+NetworkCatalogRootTree::NetworkCatalogRootTree(RootTree *parent, NetworkLink &link, std::size_t position) :
 	NetworkCatalogTree(parent, link.libraryItem(), position), myLink(link) {
 	init(); //at old version, init is called when node should be painted (and if initialized yet)
 }
@@ -129,7 +129,7 @@ NetworkTreeCatalogAuthAction::NetworkTreeCatalogAuthAction(NetworkAuthentication
 }
 
 bool NetworkTreeCatalogAuthAction::makesSense() const {
-	return (myManager.isAuthorised(false).Status == B3_FALSE) != myForLoggedUsers;
+	return (myManager.isAuthorised().Status == B3_FALSE) != myForLoggedUsers;
 }
 
 NetworkCatalogRootTree::LoginAction::LoginAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, false) {

@@ -39,7 +39,7 @@ void ZLNetworkRequest::setErrorMessage(const std::string &message) {
 	myErrorMessage = message;
 }
 
-bool ZLNetworkRequest::handleHeader(void *, size_t) {
+bool ZLNetworkRequest::handleHeader(void *, std::size_t) {
 	return true;
 }
 
@@ -61,6 +61,12 @@ void ZLNetworkRequest::setPercent(int ready, int full) {
 	}
 }
 
+void ZLNetworkRequest::setUIStatus(bool enabled) {
+	if (!myListener.isNull()) {
+		myListener->setUIStatus(enabled);
+	}
+}
+
 void ZLNetworkRequest::finished(const std::string &error){
 	if (!myListener.isNull()) {
 		myListener->finished(error);
@@ -74,3 +80,6 @@ ZLNetworkRequest::Listener::~Listener() {
 }
 
 void ZLNetworkRequest::Listener::showPercent(int /*ready*/, int /*full*/){}
+
+void ZLNetworkRequest::Listener::setUIStatus(bool /*enabled*/) {
+}

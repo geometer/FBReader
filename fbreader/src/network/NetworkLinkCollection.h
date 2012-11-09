@@ -67,9 +67,9 @@ public:
 	shared_ptr<NetworkBookCollection> advancedSearch(const std::string &titleAndSeries, const std::string &author, const std::string &tag, const std::string &annotation);
 
 	LinkVector activeLinks() const;
-	size_t size() const;
-	size_t numberOfEnabledLinks() const;
-	NetworkLink &link(size_t index) const;
+	std::size_t size() const;
+	std::size_t numberOfEnabledLinks() const;
+	NetworkLink &link(std::size_t index) const;
 
 	const std::string &errorMessage() const;
 

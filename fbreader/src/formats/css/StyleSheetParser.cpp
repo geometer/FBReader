@@ -48,7 +48,7 @@ void StyleSheetTableParser::storeData(const std::string &selector, const StyleSh
 		std::string id = *it;
 		ZLStringUtil::stripWhiteSpaces(id);
 		if (!id.empty()) {
-			const size_t index = id.find('.');
+			const std::size_t index = id.find('.');
 			if (index == std::string::npos) {
 				myTable.addMap(id, std::string(), map);
 			} else {
@@ -66,7 +66,7 @@ void StyleSheetTableParser::processAtRule(const std::string &name, const StyleSh
 
 shared_ptr<ZLTextStyleEntry> StyleSheetSingleStyleParser::parseString(const char *text) {
 	myReadState = WAITING_FOR_ATTRIBUTE;
-	parse(text, strlen(text), true);
+	parse(text, std::strlen(text), true);
 	shared_ptr<ZLTextStyleEntry> control = StyleSheetTable::createControl(myMap);
 	reset();
 	return control;
@@ -107,7 +107,7 @@ void StyleSheetParser::parse(const char *text, int len, bool final) {
 	const char *start = text;
 	const char *end = text + len;
 	for (const char *ptr = start; ptr != end; ++ptr) {
-		if (isspace(*ptr)) {
+		if (std::isspace(*ptr)) {
 			if (start != ptr) {
 				myWord.append(start, ptr - start);
 			}
@@ -232,7 +232,7 @@ void StyleSheetParser::processWordWithoutComments(const std::string &word) {
 			break;
 		case ATTRIBUTE_VALUE:
 		{
-			const size_t l = word.length();
+			const std::size_t l = word.length();
 			if (l >= 2 && (word[0] == '"' || word[0] == '\'') && word[0] == word[l - 1]) {
 				myMap[myAttributeName].push_back(word.substr(1, l - 2));
 			} else {

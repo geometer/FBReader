@@ -55,12 +55,12 @@ bool PluckerTextStream::fillBuffer() {
 			return false;
 		}
 		++myRecordIndex;
-		const size_t currentOffset = recordOffset(myRecordIndex);
+		const std::size_t currentOffset = recordOffset(myRecordIndex);
 		if (currentOffset < myBase->offset()) {
 			return false;
 		}
 		myBase->seek(currentOffset, true);
-		const size_t nextOffset = recordOffset(myRecordIndex + 1);
+		const std::size_t nextOffset = recordOffset(myRecordIndex + 1);
 		if (nextOffset < currentOffset) {
 			return false;
 		}
@@ -77,7 +77,7 @@ void PluckerTextStream::close() {
 	PdbStream::close();
 }
 
-void PluckerTextStream::processRecord(size_t recordSize) {
+void PluckerTextStream::processRecord(std::size_t recordSize) {
 	myBase->seek(2, false);
 
 	unsigned short paragraphs;
@@ -138,7 +138,7 @@ void PluckerTextStream::processTextParagraph(char *start, char *end) {
 		if (*ptr == 0) {
 			functionFlag = true;
 			if (ptr != textStart) {
-				memcpy(myBuffer + myBufferLength, textStart, ptr - textStart);
+				std::memcpy(myBuffer + myBufferLength, textStart, ptr - textStart);
 				myBufferLength += ptr - textStart;
 			}
 		} else if (functionFlag) {
@@ -153,7 +153,7 @@ void PluckerTextStream::processTextParagraph(char *start, char *end) {
 		}
 	}
 	if (end != textStart) {
-		memcpy(myBuffer + myBufferLength, textStart, end - textStart);
+		std::memcpy(myBuffer + myBufferLength, textStart, end - textStart);
 		myBufferLength += end - textStart;
 	}
 }

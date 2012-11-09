@@ -25,17 +25,17 @@
 class ZLTextRowMemoryAllocator {
 
 public:
-	ZLTextRowMemoryAllocator(const size_t rowSize);
+	ZLTextRowMemoryAllocator(const std::size_t rowSize);
 	~ZLTextRowMemoryAllocator();
 
-	char *allocate(size_t size);
-	char *reallocateLast(char *ptr, size_t newSize);
+	char *allocate(std::size_t size);
+	char *reallocateLast(char *ptr, std::size_t newSize);
 
 private:
-	const size_t myRowSize;
-	size_t myCurrentRowSize;
+	const std::size_t myRowSize;
+	std::size_t myCurrentRowSize;
 	std::vector<char*> myPool;
-	size_t myOffset;
+	std::size_t myOffset;
 
 private: // disable copying
 	ZLTextRowMemoryAllocator(const ZLTextRowMemoryAllocator&);

@@ -52,7 +52,7 @@ void NetworkOPDSFeedReader::processFeedStart() {
 }
 
 void NetworkOPDSFeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> feed) {
-	for (size_t i = 0; i < feed->links().size(); ++i) {
+	for (std::size_t i = 0; i < feed->links().size(); ++i) {
 		ATOMLink &link = *(feed->links()[i]);
 		const std::string &href = ZLNetworkUtil::url(myBaseURL, link.href());
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
@@ -69,7 +69,7 @@ void NetworkOPDSFeedReader::processFeedMetadata(shared_ptr<OPDSFeedMetadata> fee
 
 
 void NetworkOPDSFeedReader::processFeedEnd() {
-	for (size_t i = 0; i < myData.Items.size(); ++i) {
+	for (std::size_t i = 0; i < myData.Items.size(); ++i) {
 		NetworkItem &item = *myData.Items[i];
 		if (!item.isInstanceOf(NetworkBookItem::TYPE_ID)) {
 			continue;
@@ -90,7 +90,7 @@ void NetworkOPDSFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 	}
 	OPDSEntry &e = *entry;
 	bool hasBookLink = false;
-	for (size_t i = 0; i < e.links().size(); ++i) {
+	for (std::size_t i = 0; i < e.links().size(); ++i) {
 		ATOMLink &link = *(e.links()[i]);
 		const std::string &type = link.type();
 		const std::string &rel = myLink.relation(link.rel(), type);
@@ -125,7 +125,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	std::string litresRel;
 	std::string litresType;
 	int catalogFlags = NetworkCatalogItem::FLAGS_DEFAULT;
-	for (size_t i = 0; i < entry.links().size(); ++i) {
+	for (std::size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
 		const std::string &href = ZLNetworkUtil::url(myBaseURL, link.href());
 		shared_ptr<ZLMimeType> type = ZLMimeType::get(link.type());
@@ -192,7 +192,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 			entry.title(),
 			annotation,
 			urlMap,
-			dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::AlWAYS,
+			dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::ALWAYS,
 			catalogFlags
 		);
 	}

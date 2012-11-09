@@ -35,7 +35,7 @@ public:
 	bool readDocument(ZLInputStream &stream);
 
 protected:
-	void addCharData(const char *data, size_t len, bool convert);
+	void addCharData(const char *data, std::size_t len, bool convert);
 	void addLink(FBTextKind kind, const std::string &id, bool on);
 	void addLinkLabel(const std::string &label);
 	void addImageReference(const std::string &id);

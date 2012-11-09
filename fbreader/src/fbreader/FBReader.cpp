@@ -116,10 +116,9 @@ FBReader::FBReader(const std::string &bookToOpen) :
 
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
-	addAction(ActionCode::SHOW_NET_LIBRARY, new ShowNetworkLibraryAction());
 	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkTreeLibraryAction());
-	addAction(ActionCode::SEARCH_ON_NETWORK, new SimpleSearchOnNetworkAction());
-	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction());
+//	addAction(ActionCode::SEARCH_ON_NETWORK, new SimpleSearchOnNetworkAction());
+//	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction());
 	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
 	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
 	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
@@ -338,25 +337,28 @@ void FBReader::openLinkInBrowser(const std::string &url) const {
 }
 
 void FBReader::tryShowFootnoteView(const std::string &id, ZLHyperlinkType type) {
-	if (type == HYPERLINK_EXTERNAL) {
-		openLinkInBrowser(id);
-	} else if (type == HYPERLINK_INTERNAL) {
-		if (myMode == BOOK_TEXT_MODE && !myModel.isNull()) {
-			BookModel::Label label = myModel->label(id);
-			if (!label.Model.isNull()) {
-				if (label.Model == myModel->bookTextModel()) {
-					bookTextView().gotoParagraph(label.ParagraphNumber);
-				} else {
-					FootnoteView &view = ((FootnoteView&)*myFootnoteView);
-					view.setModel(label.Model);
-					setMode(FOOTNOTE_MODE);
-					view.gotoParagraph(label.ParagraphNumber);
+	switch (type) {
+		case HYPERLINK_EXTERNAL:
+			openLinkInBrowser(id);
+			break;
+		case HYPERLINK_INTERNAL:
+			if (myMode == BOOK_TEXT_MODE && !myModel.isNull()) {
+				BookModel::Label label = myModel->label(id);
+				if (!label.Model.isNull()) {
+					if (label.Model == myModel->bookTextModel()) {
+						bookTextView().gotoParagraph(label.ParagraphNumber);
+					} else {
+						FootnoteView &view = ((FootnoteView&)*myFootnoteView);
+						view.setModel(label.Model);
+						setMode(FOOTNOTE_MODE);
+						view.gotoParagraph(label.ParagraphNumber);
+					}
+					setHyperlinkCursor(false);
+					refreshWindow();
 				}
-				setHyperlinkCursor(false);
-				refreshWindow();
 			}
-		}
-	} else if (type == HYPERLINK_BOOK) {
+			break;
+		case HYPERLINK_BOOK:
 //		DownloadBookRunnable downloader(id);
 //		downloader.executeWithUI();
 //		if (downloader.hasErrors()) {
@@ -370,6 +372,7 @@ void FBReader::tryShowFootnoteView(const std::string &id, ZLHyperlinkType type) 
 //				refreshWindow();
 //			}
 //		}
+			break;
 	}
 }
 
@@ -390,6 +393,7 @@ void FBReader::showLibraryView() {
 }
 
 void FBReader::setMode(ViewMode mode) {
+	//TODO remove code for old network library view
 	if (mode == myMode) {
 		return;
 	}
@@ -557,7 +561,12 @@ void FBReader::invalidateAccountDependents() {
 	((NetworkView &) *myNetworkLibraryView).invalidateAccountDependents();
 }
 
-bool FBReader::showAuthDialog(std::string &userName, std::string &password, const ZLResourceKey &errorKey) {
+bool FBReader::showAuthDialog(const std::string &siteName, std::string &userName, std::string &password, const ZLResourceKey &errorKey) {
 	std::string message = errorKey.Name.empty() ? std::string() : NetworkErrors::errorMessage(errorKey.Name);
-	return AuthenticationDialog::run(userName, password, message);
+	return AuthenticationDialog::run(siteName, userName, password, message);
+}
+
+void FBReader::saveUserName(const std::string &siteName, std::string &userName) {
+	UserList userList(siteName);
+	userList.saveUser(userName);
 }

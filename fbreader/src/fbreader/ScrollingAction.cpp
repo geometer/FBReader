@@ -67,7 +67,7 @@ int LineScrollingAction::scrollingDelay() const {
 	return FBReader::Instance().KeyScrollingDelayOption.value();
 }
 
-size_t LineScrollingAction::textOptionValue() const {
+std::size_t LineScrollingAction::textOptionValue() const {
 	return FBReader::Instance().LinesToScrollOption.value();
 }
 
@@ -78,21 +78,21 @@ int PageScrollingAction::scrollingDelay() const {
 	return FBReader::Instance().KeyScrollingDelayOption.value();
 }
 
-size_t PageScrollingAction::textOptionValue() const {
+std::size_t PageScrollingAction::textOptionValue() const {
 	return FBReader::Instance().LinesToKeepOption.value();
 }
 
 MouseWheelScrollingAction::MouseWheelScrollingAction(bool forward) : ScrollingAction(ZLTextAreaController::SCROLL_LINES, ZLBlockTreeView::ITEM, forward) {
 }
 
-size_t MouseWheelScrollingAction::textOptionValue() const {
+std::size_t MouseWheelScrollingAction::textOptionValue() const {
 	return 1;
 }
 
 TapScrollingAction::TapScrollingAction(bool forward) : ScrollingAction(ZLTextAreaController::KEEP_LINES, ZLBlockTreeView::NONE, forward) {
 }
 
-size_t TapScrollingAction::textOptionValue() const {
+std::size_t TapScrollingAction::textOptionValue() const {
 	return FBReader::Instance().LinesToKeepOption.value();
 }
 

@@ -23,7 +23,7 @@
 #include "PPLBookReader.h"
 #include <ZLInputStream.h>
 
-static const size_t BUFFER_SIZE = 2048;
+static const std::size_t BUFFER_SIZE = 2048;
 
 PPLBookReader::PPLBookReader(BookModel &model, const std::string &encoding) : EncodedTextReader(encoding), myModelReader(model) {
 	myBuffer = new char[BUFFER_SIZE + 1];
@@ -37,7 +37,7 @@ bool PPLBookReader::currentParagraphIsEmpty() const {
 	const char *ptr = myCurrentParagraph.data();
 	const char *end = ptr + myCurrentParagraph.length();
 	for (; ptr < end; ++ptr) {
-		if (!isspace((unsigned char)*ptr)) {
+		if (!std::isspace((unsigned char)*ptr)) {
 			return false;
 		}
 	}
@@ -97,7 +97,7 @@ bool PPLBookReader::readDocument(ZLInputStream &stream) {
 	// "PPL\r\n"
 	stream.seek(5, false);
 
-	size_t size;
+	std::size_t size;
 	do {
 		size = stream.read(myBuffer, BUFFER_SIZE);
 		myBuffer[size] = '\0';
@@ -106,7 +106,7 @@ bool PPLBookReader::readDocument(ZLInputStream &stream) {
 		const char *end = myBuffer + size;
 		const char *eol;
 		do {
-			eol = strchr(start, '\n');
+			eol = std::strchr(start, '\n');
 			if (eol != 0) {
 				if (start < eol) {
 					myConverter->convert(myCurrentParagraph, start, eol);

@@ -25,7 +25,7 @@ const ZLTypeId &SearchCatalogTree::typeId() const {
 	return TYPE_ID;
 }
 
-SearchCatalogTree::SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position) :
+SearchCatalogTree::SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, std::size_t position) :
 	NetworkCatalogTree(parent, item, position) {
 	//TODO maybe remove this class
 }
@@ -35,7 +35,7 @@ void SearchCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> l
 	NetworkCatalogTree::requestChildren(listener);
 }
 
-void SearchCatalogTree::onChildrenReceived(const std::string &error) {
+void SearchCatalogTree::onChildrenReceived(NetworkItem::List &childrens, const std::string &error) {
 	notifySearchStopped();
-	NetworkCatalogTree::onChildrenReceived(error);
+	NetworkCatalogTree::onChildrenReceived(childrens, error);
 }

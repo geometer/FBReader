@@ -31,7 +31,7 @@ ZLBzip2InputStream::~ZLBzip2InputStream() {
 	close();
 }
 
-const size_t BUFFER_SIZE = 2048;
+const std::size_t BUFFER_SIZE = 2048;
 
 bool ZLBzip2InputStream::open() {
 	close();
@@ -55,7 +55,7 @@ bool ZLBzip2InputStream::open() {
 	return true;
 }
 
-size_t ZLBzip2InputStream::read(char *buffer, size_t maxSize) {
+std::size_t ZLBzip2InputStream::read(char *buffer, std::size_t maxSize) {
 	myBzStream.avail_out = maxSize;
 	myBzStream.next_out = buffer;
 
@@ -72,7 +72,7 @@ size_t ZLBzip2InputStream::read(char *buffer, size_t maxSize) {
 			break;
 		}
 	}
-	size_t realSize = maxSize - myBzStream.avail_out;
+	std::size_t realSize = maxSize - myBzStream.avail_out;
 	myOffset += realSize;
 	return realSize;
 }
@@ -98,20 +98,20 @@ void ZLBzip2InputStream::seek(int offset, bool absoluteOffset) {
 	}
 	if (offset > 0) {
 		while (offset != 0) {
-			size_t rSize = read(myTrashBuffer, std::min(BUFFER_SIZE, (size_t)offset));
+			std::size_t rSize = read(myTrashBuffer, std::min(BUFFER_SIZE, (std::size_t)offset));
 			if (rSize == 0) {
 				break;
 			}
-			offset -= std::min(rSize, (size_t)offset);
+			offset -= std::min(rSize, (std::size_t)offset);
 		}
 	}
 }
 
-size_t ZLBzip2InputStream::offset() const {
+std::size_t ZLBzip2InputStream::offset() const {
 	return myOffset;
 }
 
-size_t ZLBzip2InputStream::sizeOfOpened() {
+std::size_t ZLBzip2InputStream::sizeOfOpened() {
 	// TODO: implement
 	return 0;
 }

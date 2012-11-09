@@ -36,7 +36,7 @@ if [ "$1" == "-dmg" ]; then
         set arrangement of theViewOptions to not arranged
         set icon size of theViewOptions to 128
         make new alias file at container window to POSIX file \"/Applications\" with properties {name:\"Applications\"}
-        set position of item \"FBReader.app\" of container window to {128, 128}
+        set position of item \"FBReader\" of container window to {128, 128}
         set position of item \"Applications\" of container window to {384, 128}
         update without registering applications
         delay 5

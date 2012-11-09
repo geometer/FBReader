@@ -401,10 +401,10 @@ HtmlBookReader::HtmlBookReader(const std::string &baseDirectoryPath, BookModel &
 HtmlBookReader::~HtmlBookReader() {
 }
 
-void HtmlBookReader::addConvertedDataToBuffer(const char *text, size_t len, bool convert) {
+void HtmlBookReader::addConvertedDataToBuffer(const char *text, std::size_t len, bool convert) {
 	if (len > 0) {
 		if (myDontBreakParagraph) {
-			while ((len > 0) && isspace(*text)) {
+			while (len > 0 && std::isspace(*text)) {
 				--len;
 				++text;
 			}
@@ -445,7 +445,7 @@ bool HtmlBookReader::tagHandler(const HtmlTag &tag) {
 	return true;
 }
 
-void HtmlBookReader::preformattedCharacterDataHandler(const char *text, size_t len, bool convert) {
+void HtmlBookReader::preformattedCharacterDataHandler(const char *text, std::size_t len, bool convert) {
 	const char *start = text;
 	const char *end = text + len;
 
@@ -464,7 +464,7 @@ void HtmlBookReader::preformattedCharacterDataHandler(const char *text, size_t l
 				myBookReader.beginParagraph();
 				start = ptr + 1;
 			} else if (mySpaceCounter >= 0) {
-				if (isspace((unsigned char)*ptr)) {
+				if (std::isspace((unsigned char)*ptr)) {
 					++mySpaceCounter;
 				} else {
 					myBookReader.addFixedHSpace(mySpaceCounter);
@@ -475,7 +475,7 @@ void HtmlBookReader::preformattedCharacterDataHandler(const char *text, size_t l
 		addConvertedDataToBuffer(start, end - start, convert);
 	} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_LINE_WITH_INDENT) {
 		for (const char *ptr = text; ptr != end; ++ptr) {
-			if (isspace((unsigned char)*ptr)) {
+			if (std::isspace((unsigned char)*ptr)) {
 				if (*ptr == '\n') {
 					mySpaceCounter = 0;
 				} else if (mySpaceCounter >= 0) {
@@ -499,7 +499,7 @@ void HtmlBookReader::preformattedCharacterDataHandler(const char *text, size_t l
 		}
 	} else if (breakType & PlainTextFormat::BREAK_PARAGRAPH_AT_EMPTY_LINE) {
 		for (const char *ptr = start; ptr != end; ++ptr) {
-			if (isspace((unsigned char)*ptr)) {
+			if (std::isspace((unsigned char)*ptr)) {
 				if (*ptr == '\n') {
 					++myBreakCounter;
 				}
@@ -517,7 +517,7 @@ void HtmlBookReader::preformattedCharacterDataHandler(const char *text, size_t l
 	}
 }
 
-bool HtmlBookReader::characterDataHandler(const char *text, size_t len, bool convert) {
+bool HtmlBookReader::characterDataHandler(const char *text, std::size_t len, bool convert) {
 	if (!myStyleSheetParser.isNull()) {
 		myStyleSheetParser->parse(text, len);
 		return true;
@@ -536,7 +536,7 @@ bool HtmlBookReader::characterDataHandler(const char *text, size_t len, bool con
 	const char *end = text + len;
 	if (!myIsStarted) {
 		for (; ptr != end; ++ptr) {
-			if (!isspace((unsigned char)*ptr)) {
+			if (!std::isspace((unsigned char)*ptr)) {
 				myIsStarted = true;
 				break;
 			}

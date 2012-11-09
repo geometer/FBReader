@@ -23,7 +23,7 @@
 
 #include "../network/NetworkBookCollection.h"
 
-FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) {
+FBReaderNode *NetworkNodesFactory::createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, std::size_t atPosition) {
 	if (item->isInstanceOf(NetworkCatalogItem::TYPE_ID)) {
 		NetworkCatalogNode *ptr = new NetworkCatalogNode(parent, item, atPosition);
 		ptr->item().onDisplayItem();

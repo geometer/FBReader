@@ -29,15 +29,15 @@ public:
 	ZLNetworkReadToStringRequest(const std::string &url, std::string &buffer);
 
 private:
-	bool handleHeader(void *ptr, size_t size);
-	bool handleContent(void *ptr, size_t size);
+	bool handleHeader(void *ptr, std::size_t size);
+	bool handleContent(void *ptr, std::size_t size);
 
 	bool doBefore();
 	bool doAfter(const std::string &error);
 
 private:
 	std::string &myBuffer;
-	size_t myDataSize;
+	std::size_t myDataSize;
 };
 
 #endif /* __ZLNETWORKREADTOSTRINGREQUEST_H__ */

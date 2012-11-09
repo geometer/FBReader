@@ -64,17 +64,17 @@ static const std::string TRUE_STRING = "true";
 
 inline int ZLTextStyleReader::intValue(const char **attributes, const char *name, int defaultValue) {
 	const char *stringValue = attributeValue(attributes, name);
-	return (stringValue == 0) ? defaultValue : atoi(stringValue);
+	return stringValue == 0 ? defaultValue : std::atoi(stringValue);
 }
 
 inline bool ZLTextStyleReader::booleanValue(const char **attributes, const char *name) {
 	const char *stringValue = attributeValue(attributes, name);
-	return (stringValue != 0) && (TRUE_STRING == stringValue);
+	return stringValue != 0 && TRUE_STRING == stringValue;
 }
 
 inline ZLBoolean3 ZLTextStyleReader::b3Value(const char **attributes, const char *name) {
 	const char *stringValue = attributeValue(attributes, name);
-	return (stringValue == 0) ? B3_UNDEFINED : ((TRUE_STRING == stringValue) ? B3_TRUE : B3_FALSE);
+	return stringValue == 0 ? B3_UNDEFINED : (TRUE_STRING == stringValue ? B3_TRUE : B3_FALSE);
 }
 
 void ZLTextStyleReader::startElementHandler(const char *tag, const char **attributes) {
@@ -83,8 +83,8 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 	if (STYLE == tag) {
 		const char *idString = attributeValue(attributes, "id");
 		const char *name = attributeValue(attributes, "name");
-		if ((idString != 0) && (name != 0)) {
-			ZLTextKind id = (ZLTextKind)atoi(idString);
+		if (idString != 0 && name != 0) {
+			ZLTextKind id = (ZLTextKind)std::atoi(idString);
 			ZLTextStyleDecoration *decoration;
 
 			int fontSizeDelta = intValue(attributes, "fontSizeDelta");
@@ -105,20 +105,20 @@ void ZLTextStyleReader::startElementHandler(const char *tag, const char **attrib
 				ZLTextAlignmentType alignment = ALIGN_UNDEFINED;
 				const char *alignmentString = attributeValue(attributes, "alignment");
 				if (alignmentString != 0) {
-					if (strcmp(alignmentString, "left") == 0) {
+					if (std::strcmp(alignmentString, "left") == 0) {
 						alignment = ALIGN_LEFT;
-					} else if (strcmp(alignmentString, "rigth") == 0) {
+					} else if (std::strcmp(alignmentString, "rigth") == 0) {
 						alignment = ALIGN_RIGHT;
-					} else if (strcmp(alignmentString, "center") == 0) {
+					} else if (std::strcmp(alignmentString, "center") == 0) {
 						alignment = ALIGN_CENTER;
-					} else if (strcmp(alignmentString, "justify") == 0) {
+					} else if (std::strcmp(alignmentString, "justify") == 0) {
 						alignment = ALIGN_JUSTIFY;
-					} else if (strcmp(alignmentString, "linestart") == 0) {
+					} else if (std::strcmp(alignmentString, "linestart") == 0) {
 						alignment = ALIGN_LINESTART;
 					}
 				}
 				const int lineSpacingPercent = intValue(attributes, "lineSpacingPercent", -1);
-				const double lineSpace = (lineSpacingPercent == -1) ? 0.0 : (lineSpacingPercent / 100.0);
+				const double lineSpace = lineSpacingPercent == -1 ? 0.0 : lineSpacingPercent / 100.0;
 
 				decoration = new ZLTextFullStyleDecoration(name, fontSizeDelta, bold, italic, spaceBefore, spaceAfter, leftIndent, rightIndent, firstLineIndentDelta, verticalShift, alignment, lineSpace, allowHyphenations);
 			}

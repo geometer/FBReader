@@ -26,10 +26,10 @@ const ZLTypeId &NetworkContainerNode::typeId() const {
 	return TYPE_ID;
 }
 
-NetworkContainerNode::NetworkContainerNode(ZLBlockTreeView::RootNode *parent, size_t atPosition) : FBReaderNode(parent, atPosition) {
+NetworkContainerNode::NetworkContainerNode(ZLBlockTreeView::RootNode *parent, std::size_t atPosition) : FBReaderNode(parent, atPosition) {
 }
 
-NetworkContainerNode::NetworkContainerNode(NetworkContainerNode *parent, size_t atPosition) : FBReaderNode(parent, atPosition) {
+NetworkContainerNode::NetworkContainerNode(NetworkContainerNode *parent, std::size_t atPosition) : FBReaderNode(parent, atPosition) {
 }
 
 void NetworkContainerNode::drawCover(ZLPaintContext&, int vOffset) {

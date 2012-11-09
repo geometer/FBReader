@@ -36,18 +36,18 @@ private:
 	bool processInputInternal(Handler &handler);
 
 private:
-	bool skipHeader(const char *data, size_t len);
+	bool skipHeader(const char *data, std::size_t len);
 
 private:
 	// GZip method data
 	z_stream *myZStream;
 	char *myOutBuffer;
-	const size_t myOutBufferSize;
+	const std::size_t myOutBufferSize;
 	bool myEndOfStream;
 
 	// Skip header data	
 	int myStreamState;
-	size_t myOffset;
+	std::size_t myOffset;
 	unsigned char myFlag;
 	unsigned char myByte;
 };

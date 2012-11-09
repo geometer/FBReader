@@ -29,7 +29,7 @@
 class SQLiteDataReader : public DBDataReader {
 
 public:
-	static shared_ptr<DBValue> makeDBValue(sqlite3_stmt *statement, size_t column);
+	static shared_ptr<DBValue> makeDBValue(sqlite3_stmt *statement, std::size_t column);
 
 public:
 	SQLiteDataReader(SQLiteCommand &command);
@@ -39,22 +39,22 @@ public:
 	bool reset();
 	void close();
 
-	size_t columnsNumber() const;
+	std::size_t columnsNumber() const;
 
-	DBValue::ValueType type(size_t column) const;
+	DBValue::ValueType type(std::size_t column) const;
 
-	shared_ptr<DBValue> value(size_t column) const;
+	shared_ptr<DBValue> value(std::size_t column) const;
 
-	int intValue(size_t column) const;
-	double realValue(size_t column) const;
-	std::string textValue(size_t column, const std::string &defaultValue) const;
+	int intValue(std::size_t column) const;
+	double realValue(std::size_t column) const;
+	std::string textValue(std::size_t column, const std::string &defaultValue) const;
 
 private:
 	sqlite3_stmt *currentStatement() const;
 
 private:
 	SQLiteCommand &myCommand;
-	size_t myCurrentStatement;
+	std::size_t myCurrentStatement;
 	bool myLocked;
 };
 

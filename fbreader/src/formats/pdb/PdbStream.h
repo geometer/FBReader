@@ -37,24 +37,24 @@ protected:
 	virtual void close();
 
 private:
-	size_t read(char *buffer, size_t maxSize);
+	std::size_t read(char *buffer, std::size_t maxSize);
 
 	void seek(int offset, bool absoluteOffset);
-	size_t offset() const;
-	size_t sizeOfOpened();
+	std::size_t offset() const;
+	std::size_t sizeOfOpened();
 
 protected:
 	virtual bool fillBuffer() = 0;
 
 protected:
-	size_t recordOffset(size_t index) const;
+	std::size_t recordOffset(std::size_t index) const;
 
 public:
 	const PdbHeader &header() const;
 
 protected:
 	shared_ptr<ZLInputStream> myBase;
-	size_t myOffset;
+	std::size_t myOffset;
 
 private:
 	PdbHeader myHeader;

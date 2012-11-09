@@ -38,7 +38,7 @@ bool ZLWin32FileOutputStream::open() {
 	return myFile != 0;
 }
 
-void ZLWin32FileOutputStream::write(const char *data, size_t len) {
+void ZLWin32FileOutputStream::write(const char *data, std::size_t len) {
 	DWORD size;
 	myHasErrors |= !WriteFile(myFile, data, len, &size, 0);
 }

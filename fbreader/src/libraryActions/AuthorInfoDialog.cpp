@@ -31,7 +31,7 @@
 class AuthorNameEntry : public ZLComboOptionEntry {
 
 public:
-	AuthorNameEntry(AuthorInfoDialog &dialog, size_t index);
+	AuthorNameEntry(AuthorInfoDialog &dialog, std::size_t index);
 
 	const std::string &initialValue() const;
 	const std::vector<std::string> &values() const;
@@ -39,7 +39,7 @@ public:
 	void onValueSelected(int index);
 
 public:
-	size_t Index;
+	std::size_t Index;
 
 private:
 	AuthorInfoDialog &myInfoDialog;
@@ -58,7 +58,7 @@ private:
 	AuthorInfoDialog &myInfoDialog;
 };
 
-AuthorNameEntry::AuthorNameEntry(AuthorInfoDialog &dialog, size_t index) : ZLComboOptionEntry(true), Index(index), myInfoDialog(dialog) {
+AuthorNameEntry::AuthorNameEntry(AuthorInfoDialog &dialog, std::size_t index) : ZLComboOptionEntry(true), Index(index), myInfoDialog(dialog) {
 }
 
 const std::string &AuthorNameEntry::initialValue() const {
@@ -89,7 +89,7 @@ AuthorSortKeyEntry::AuthorSortKeyEntry(AuthorInfoDialog &dialog) : myInfoDialog(
 
 const std::string &AuthorSortKeyEntry::initialValue() const {
 	const AuthorList &authors = myInfoDialog.authors();
-	size_t index = std::min(myInfoDialog.nameEntry().Index, authors.size() - 1);
+	std::size_t index = std::min(myInfoDialog.nameEntry().Index, authors.size() - 1);
 	return authors[index]->sortKey();
 }
 

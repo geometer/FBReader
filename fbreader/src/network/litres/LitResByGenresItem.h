@@ -44,17 +44,4 @@ private:
 	const std::vector<shared_ptr<LitResGenre> > &myGenreTree;
 };
 
-class LitResBooksForGenreItem : public NetworkCatalogItem {
-
-public:
-	LitResBooksForGenreItem(const NetworkCatalogItem &parent, shared_ptr<LitResGenre> litresGenre);
-
-private:
-	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
-
-private:
-	shared_ptr<LitResGenre> myLitresGenre;
-};
-
-
 #endif /* __LITRESBYGENRESITEM_H__ */

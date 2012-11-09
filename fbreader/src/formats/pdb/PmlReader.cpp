@@ -75,12 +75,12 @@ bool PmlReader::parseDocument(ZLInputStream &stream) {
 		READ_TAG_PARAMETER,
 	} parserState = READ_NORMAL_DATA;
 
-	size_t tagNameLength = 0;
+	std::size_t tagNameLength = 0;
 	std::string tagName;
 	std::string parameterString;
 	
 	bool startParameterReading = false;
-	size_t tagCounter = 0;
+	std::size_t tagCounter = 0;
 	static bool FLAG = true;
 
 	while (!myIsInterrupted) {
@@ -101,7 +101,7 @@ bool PmlReader::parseDocument(ZLInputStream &stream) {
 						newLine();
 						FLAG = true;
 						dataStart = ptr + 1;
-					} else if (FLAG && isspace(*ptr)) {
+					} else if (FLAG && std::isspace(*ptr)) {
 					} else {
 						FLAG = false;
 						if (*ptr == '\\') {
@@ -189,7 +189,7 @@ bool PmlReader::parseDocument(ZLInputStream &stream) {
 	return myIsInterrupted;
 }
 
-size_t PmlReader::findTagLength(const char* ptr) {
+std::size_t PmlReader::findTagLength(const char* ptr) {
 	switch(*ptr) {		// tag action description			| close	| support	|
 		case 'p':		// new page							|	-	|	+		|	
 		case 'x':		// new chapter and new page			|	+	|	+		|
@@ -316,7 +316,7 @@ void PmlReader::processTag(std::string &tagName, const std::string &parameter) {
 	}
 }
 
-void PmlReader::processCharData(const char* data, size_t len, bool convert) {
+void PmlReader::processCharData(const char* data, std::size_t len, bool convert) {
 	if(!myState.InvisibleText) {
 		addCharData(data, len, convert);
 	}
@@ -371,12 +371,12 @@ void PmlReader::processIndent(const std::string& parameter) {
 		const int index = parameter.find('%');
         if (index != -1) {
         	const std::string indentValueStr = parameter.substr(0, index);
-			indentPercentSize = atoi(indentValueStr.data());
+			indentPercentSize = std::atoi(indentValueStr.data());
 		} else {
 			indentPercentSize = 5;
 		}
 	}
-	if(!myState.IndentBlockOn) {
+	if (!myState.IndentBlockOn) {
 		myState.Indent = indentPercentSize;
 	} else {
 		myState.Indent = 0;

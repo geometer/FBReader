@@ -71,8 +71,8 @@ protected:
 	virtual ZLColor backgroundColor() const = 0;
 
 	void setScrollbarEnabled(Direction direction, bool enabled);
-	void setScrollbarParameters(Direction direction, size_t full, size_t from, size_t to);
-	virtual void onScrollbarMoved(Direction direction, size_t full, size_t from, size_t to);
+	void setScrollbarParameters(Direction direction, std::size_t full, std::size_t from, std::size_t to);
+	virtual void onScrollbarMoved(Direction direction, std::size_t full, std::size_t from, std::size_t to);
 	virtual void onScrollbarStep(Direction direction, int steps);
 	virtual void onScrollbarPageStep(Direction direction, int steps);
 
@@ -82,9 +82,9 @@ private:
 
 		bool Enabled;
 		bool StandardLocation;
-		size_t Full;
-		size_t From;
-		size_t To;
+		std::size_t Full;
+		std::size_t From;
+		std::size_t To;
 	};
 
 	void updateScrollbarState();

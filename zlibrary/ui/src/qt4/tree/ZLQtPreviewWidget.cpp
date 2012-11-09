@@ -27,6 +27,7 @@
 #include <ZLNetworkManager.h>
 #include <ZLStringUtil.h>
 
+#include "ZLQtWaitingIcons.h"
 #include "../image/ZLQtImageUtils.h"
 
 #include "ZLQtPreviewWidget.h"
@@ -61,7 +62,7 @@ void ZLQtLabelAction::mousePressEvent(QMouseEvent *) {
 
 ZLQtButtonAction::ZLQtButtonAction(shared_ptr<ZLTreeAction> action,QWidget *parent) :
 	QPushButton(parent), myAction(action) {
-	connect(this, SIGNAL(clicked()), this, SLOT(onClicked()), Qt::QueuedConnection); //for sending clicked() signal for UI at first
+	connect(this, SIGNAL(clicked()), this, SLOT(onClicked()), Qt::QueuedConnection); //QueuedConnection used for sending clicked() signal for UI at first
 	setAttribute(Qt::WA_LayoutUsesWidgetRect);
 }
 
@@ -72,26 +73,21 @@ void ZLQtButtonAction::onClicked() {
 	myAction->run();
 }
 
-ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent), myWidget(0), myCurrentNode(0) {
+ZLQtPreviewWidget::ZLQtPreviewWidget(QWidget *parent) : QWidget(parent), myCurrentNode(0) {
 	QSizePolicy policy = QSizePolicy(QSizePolicy::Preferred, QSizePolicy::MinimumExpanding);
 	//policy.setHorizontalStretch(2);
 	setSizePolicy(policy);
-
-	QHBoxLayout *layout = new QHBoxLayout;
-	layout->setSizeConstraint(QLayout::SetMinimumSize);
-	layout->setContentsMargins(0,0,0,0);
-
-	setLayout(layout);
 }
 
 void ZLQtPreviewWidget::show(ZLTreeNode *node) {
 	clear();
 	myCurrentNode = node;
 	if (ZLTreePageNode *pageNode = zlobject_cast<ZLTreePageNode*>(node)) {
-		shared_ptr<ZLTreePageInfo> info = pageNode->getPageInfo();
-		if (!info.isNull()) {
-			fill(*info);
+		if (myDownloadingNodes.contains(pageNode)) {
+			fillWaitingIcon();
+			return;
 		}
+		fillPageInfo(pageNode);
 	} else if (const ZLTreeTitledNode *titledNode = zlobject_cast<const ZLTreeTitledNode*>(node)) {
 		fillCatalog(titledNode);
 	}
@@ -103,26 +99,75 @@ void ZLQtPreviewWidget::refresh() {
 	}
 }
 
-void ZLQtPreviewWidget::fill(const ZLTreePageInfo &info) {
-	myWidget = new ZLQtPageWidget(info);
-	myWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
-	layout()->addWidget(myWidget);
+class PageInfoLoaderListener : public ZLNetworkRequest::Listener {
+	public:
+		PageInfoLoaderListener(ZLQtPreviewWidget &previewWidget, ZLTreePageNode *node) :
+			myPreviewWidget(previewWidget), myNode(node) {
+			myPreviewWidget.myDownloadingNodes.insert(node);
+		}
+		void finished(const std::string &error) {
+			myPreviewWidget.myDownloadingNodes.remove(myNode);
+			if (myPreviewWidget.myCurrentNode == myNode) {
+				myPreviewWidget.refresh();
+			}
+		}
+	private:
+		ZLQtPreviewWidget &myPreviewWidget;
+		ZLTreePageNode *myNode;
+};
+
+void ZLQtPreviewWidget::fillPageInfo(ZLTreePageNode *node) {
+	if (myDownloadingNodes.contains(node)) {
+		fillWaitingIcon();
+		return;
+	}
+	shared_ptr<ZLTreePageInfo> info = node->getPageInfo();
+	if (info.isNull()) {
+		return;
+	}
+	if (!info->isPageInfoLoaded()) {
+		fillWaitingIcon();
+		info->loadAll(new PageInfoLoaderListener(*this, node));
+		return;
+	}
+	setBasicLayout();
+	QWidget *widget = new ZLQtPageWidget(*info);
+	widget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+	layout()->addWidget(widget);
 }
 
-void ZLQtPreviewWidget::fillCatalog(const ZLTreeTitledNode *node) {
-	myWidget = new ZLQtCatalogPageWidget(node);
-	myWidget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
-	layout()->addWidget(myWidget);
+
+void ZLQtPreviewWidget::setBasicLayout() {
+	QHBoxLayout *layout = new QHBoxLayout;
+	layout->setSizeConstraint(QLayout::SetMinimumSize);
+	layout->setContentsMargins(0,0,0,0);
+	setLayout(layout);
 }
+
+
+void ZLQtPreviewWidget::fillCatalog(const ZLTreeTitledNode *node) {
+	setBasicLayout();
+	QWidget *widget = new ZLQtCatalogPageWidget(node);
+	widget->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::MinimumExpanding);
+	layout()->addWidget(widget);
+}
+
+void ZLQtPreviewWidget::fillWaitingIcon() {
+	setBasicLayout();
+	ZLQtWaitingIcon *icon = new ZLQtWaitingIconSelfRotating(QSize(120,120));
+	icon->start();
+	layout()->addWidget(icon);
+}
+
 
 void ZLQtPreviewWidget::clear() {
 	myCurrentNode = 0;
-	if (myWidget) {
-		delete myWidget;
-		myWidget = 0;
-//		delete myLayout;
-//		qDeleteAll(this->children());
-	}
+	qDeleteAll(children());
+
+}
+
+ZLTreeNode *ZLQtPreviewWidget::getCurrentNode() const {
+	return myCurrentNode;
 }
 
 QSize ZLQtPreviewWidget::sizeHint() const {
@@ -220,7 +265,6 @@ void ZLQtPageWidget::createElements() {
 void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 	shared_ptr<const ZLImage> image = info.image();
 	if (!image.isNull()) {
-		ZLNetworkManager::Instance().perform(image->synchronizationData());
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
 		//TODO implement resizable pixmap widget
 		const int maxPreviewWidth = 300;
@@ -334,6 +378,9 @@ void ZLQtCatalogPageWidget::createElements() {
 void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 	shared_ptr<const ZLImage> image = node->image();
 	if (!image.isNull()) {
+
+		//TODO make async image downloading
+
 		ZLNetworkManager::Instance().perform(image->synchronizationData());
 		QPixmap pixmap = ZLQtImageUtils::ZLImageToQPixmap(image);
 		//TODO implement resizable pixmap widget
@@ -367,17 +414,3 @@ void ZLQtCatalogPageWidget::setInfo(const ZLTreeTitledNode *node) {
 	}
 
 }
-
-//void ZLQtPreviewWidget::clear() {
-//	myPicLabel->setPixmap(QPixmap());
-//	myTitleLabel->clear();
-//	myAuthorLabel->clear();
-//	myCategoriesLabel->clear();
-//	mySummaryLabel->clear();
-//	mySummaryTitleLabel->clear();
-//	mySummaryScrollArea->hide();
-//	foreach(QPushButton *button, myButtons) {
-//		delete button;
-//	}
-//	myButtons.clear();
-//}

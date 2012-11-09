@@ -513,13 +513,13 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			break;
 		case FE_CALIBRE_SERIES_INDEX:
 			if (testTag(ZLXMLNamespace::CalibreMetadata, CALIBRE_TAG_SERIES_INDEX, tag)) {
-				myEntry->setSeriesIndex(atoi(myBuffer.c_str()));
+				myEntry->setSeriesIndex(std::atoi(myBuffer.c_str()));
 				myState = F_ENTRY;
 			}
 			break;
 		case OPENSEARCH_TOTALRESULTS:
 			if (testTag(ZLXMLNamespace::OpenSearch, OPENSEARCH_TAG_TOTALRESULTS, tag)) {
-				int number = atoi(myBuffer.c_str());
+				int number = std::atoi(myBuffer.c_str());
 				if (!myFeed.isNull()) {
 					myFeed->setOpensearchTotalResults(number);
 				}
@@ -528,7 +528,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			break;
 		case OPENSEARCH_ITEMSPERPAGE:
 			if (testTag(ZLXMLNamespace::OpenSearch, OPENSEARCH_TAG_ITEMSPERPAGE, tag)) {
-				int number = atoi(myBuffer.c_str());
+				int number = std::atoi(myBuffer.c_str());
 				if (!myFeed.isNull()) {
 					myFeed->setOpensearchItemsPerPage(number);
 				}
@@ -537,7 +537,7 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 			break;
 		case OPENSEARCH_STARTINDEX:
 			if (testTag(ZLXMLNamespace::OpenSearch, OPENSEARCH_TAG_STARTINDEX, tag)) {
-				int number = atoi(myBuffer.c_str());
+				int number = std::atoi(myBuffer.c_str());
 				if (!myFeed.isNull()) {
 					myFeed->setOpensearchStartIndex(number);
 				}
@@ -549,6 +549,6 @@ void OPDSXMLParser::endElementHandler(const char *tag) {
 	myBuffer.clear();
 }
 
-void OPDSXMLParser::characterDataHandler(const char *data, size_t len) {
+void OPDSXMLParser::characterDataHandler(const char *data, std::size_t len) {
 	myBuffer.append(data, len);
 }

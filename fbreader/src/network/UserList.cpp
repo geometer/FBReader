@@ -27,14 +27,14 @@
 
 static const unsigned int MAX_USER_NAMES = 10;
 
-static const std::string USER_LIST = "userList";
+static const std::string USER_LIST = "userList-";
 static const std::string USER = "user";
 
-UserList::UserList() {
+UserList::UserList(const std::string &siteName) : myGroupName(USER_LIST + siteName) {
 	for (unsigned int i = 0; i < MAX_USER_NAMES; ++i) {
 		std::string userOptionName(USER);
 		ZLStringUtil::appendNumber(userOptionName, i);
-		std::string userName = ZLStringOption(ZLCategoryKey::NETWORK, USER_LIST, userOptionName, "").value();
+		std::string userName = ZLStringOption(ZLCategoryKey::NETWORK, myGroupName, userOptionName, "").value();
 		if (!userName.empty()) {
 			myUserNames.push_back(userName);
 			mySavedNames.insert(userName);
@@ -47,19 +47,19 @@ UserList::UserList() {
 
 UserList::~UserList() {
 	unsigned int i = 0;
-	for (size_t k = 0; k < myUserNames.size() && i < MAX_USER_NAMES; ++k) {
+	for (std::size_t k = 0; k < myUserNames.size() && i < MAX_USER_NAMES; ++k) {
 		const std::string &name = myUserNames[k];
 		if (mySavedNames.find(name) != mySavedNames.end()) {
 			std::string userOptionName(USER);
 			ZLStringUtil::appendNumber(userOptionName, i++);
-			ZLStringOption userOption(ZLCategoryKey::NETWORK, USER_LIST, userOptionName, "");
+			ZLStringOption userOption(ZLCategoryKey::NETWORK, myGroupName, userOptionName, "");
 			userOption.setValue(name);
 		}
 	}
 	while (i < MAX_USER_NAMES) {
 		std::string userOptionName(USER);
 		ZLStringUtil::appendNumber(userOptionName, i++);
-		ZLStringOption userOption(ZLCategoryKey::NETWORK, USER_LIST, userOptionName, "");
+		ZLStringOption userOption(ZLCategoryKey::NETWORK, myGroupName, userOptionName, "");
 		userOption.setValue("");
 	}
 }

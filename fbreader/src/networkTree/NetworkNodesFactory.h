@@ -38,7 +38,7 @@ private:
 	NetworkNodesFactory();
 
 public:
-	static FBReaderNode *createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition = (size_t)-1);
+	static FBReaderNode *createNetworkNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, std::size_t atPosition = (std::size_t)-1);
 	static void createSubnodes(SearchResultNode *parent, NetworkBookCollection &books);
 	static void fillAuthorNode(NetworkContainerNode *parent, const NetworkItem::List &books);
 };

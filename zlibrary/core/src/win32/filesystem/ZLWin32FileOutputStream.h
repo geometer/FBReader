@@ -30,7 +30,7 @@ public:
 	ZLWin32FileOutputStream(const std::string &name);
 	~ZLWin32FileOutputStream();
 	bool open();
-	void write(const char *data, size_t len);
+	void write(const char *data, std::size_t len);
 	void write(const std::string &str);
 	void close();
 

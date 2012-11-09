@@ -70,12 +70,12 @@ bool EReaderStream::fillBuffer() {
 }
 
 bool EReaderStream::processRecord() {
-	const size_t currentOffset = recordOffset(myRecordIndex);
+	const std::size_t currentOffset = recordOffset(myRecordIndex);
 	if (currentOffset < myBase->offset()) {
 		return false;
 	}
 	myBase->seek(currentOffset, true);
-	const size_t nextOffset = recordOffset(myRecordIndex + 1);
+	const std::size_t nextOffset = recordOffset(myRecordIndex + 1);
 	if (nextOffset < currentOffset) {
 		return false;
 	}
@@ -186,9 +186,9 @@ void EReaderStream::clearBuffer(unsigned char symbol) {
 bool EReaderStream::processFootnoteIdsRecord() {
 	char* footnoteIdBuffer = new char[myMaxRecordSize];
 	myBase->seek(header().Offsets[myFootnoteOffset], true);
-	const size_t currentOffset = recordOffset(myFootnoteOffset);
-	const size_t nextOffset = recordOffset(myFootnoteOffset + 1);
-	const size_t length = nextOffset - currentOffset;
+	const std::size_t currentOffset = recordOffset(myFootnoteOffset);
+	const std::size_t nextOffset = recordOffset(myFootnoteOffset + 1);
+	const std::size_t length = nextOffset - currentOffset;
 	myBase->read(footnoteIdBuffer, length);
 	std::string footnoteIdStr(footnoteIdBuffer, length);
 	unsigned short footnoteIndex = myFootnoteOffset + 1;
@@ -206,19 +206,19 @@ bool EReaderStream::processFootnoteIdsRecord() {
 std::string EReaderStream::findFootnoteId(std::string &footnoteIdStr) const {
 	std::string resultStr;
 	if (!footnoteIdStr.empty()) {
-		size_t counter = 0;
+		std::size_t counter = 0;
 		for (; counter < footnoteIdStr.length(); ++counter) {
-			if (isalnum(footnoteIdStr[counter])) {
+			if (std::isalnum(footnoteIdStr[counter])) {
 				break;
 			}
 		}
-		const size_t startIdIndex = counter;
+		const std::size_t startIdIndex = counter;
 		for (; counter < footnoteIdStr.length(); ++counter) {
 			if (footnoteIdStr[counter] == '\0') {
 				break;
 			}
 		}
-		const size_t endIdIndex = counter;
+		const std::size_t endIdIndex = counter;
 		resultStr = footnoteIdStr.substr(startIdIndex, endIdIndex - startIdIndex);
 		footnoteIdStr = footnoteIdStr.substr(endIdIndex);
 	}
@@ -241,11 +241,11 @@ bool EReaderStream::processImageHeaders() {
 }
 
 bool EReaderStream::addImageInfo(const unsigned short recordIndex) {
-	const size_t bufferLength = 128;
+	const std::size_t bufferLength = 128;
 	char *buffer = new char[bufferLength]; //TODO may be it's needed here more bytes
 	ImageInfo image;
-	const size_t currentOffset = recordOffset(recordIndex);
-	const size_t nextOffset = recordOffset(recordIndex + 1);
+	const std::size_t currentOffset = recordOffset(recordIndex);
+	const std::size_t nextOffset = recordOffset(recordIndex + 1);
 
 	myBase->read(buffer, bufferLength);
 	std::string header(buffer, bufferLength);

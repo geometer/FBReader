@@ -29,13 +29,13 @@ public:
 	void updateId();
 
 private:
-	size_t id() const;
-	size_t count() const;
-	const std::string text(size_t index);
-	void run(size_t index);
+	std::size_t id() const;
+	std::size_t count() const;
+	const std::string text(std::size_t index);
+	void run(std::size_t index);
 
 private:
-	size_t myId;
+	std::size_t myId;
 };
 
 #endif /* __RECENTBOOKSPOPUPDATA_H__ */

@@ -63,11 +63,11 @@ public:
 private:
 
 	struct BindParameter {
-		size_t Position;
+		std::size_t Position;
 		std::string Name;
 
-		BindParameter(size_t pos) : Position(pos), Name("") {}
-		BindParameter(size_t pos, const std::string &name) : Position(pos), Name(name) {}
+		BindParameter(std::size_t pos) : Position(pos), Name("") {}
+		BindParameter(std::size_t pos, const std::string &name) : Position(pos), Name(name) {}
 
 		bool hasName() const;
 	};
@@ -85,7 +85,7 @@ private:
 	void prepareBindContext();
 	bool bindParameters();
 	bool bindParameterByName(const std::string &name, shared_ptr<DBValue> value);
-	bool bindParameterByIndex(size_t index, shared_ptr<DBValue> value);
+	bool bindParameterByIndex(std::size_t index, shared_ptr<DBValue> value);
 	bool bindParameter(sqlite3_stmt *statement, int number, shared_ptr<DBValue> value);
 	bool prepareStatements(SQLiteConnection &conn);
 

@@ -68,7 +68,7 @@ std::string LitResUtil::url(const NetworkLink &link, bool secure, const std::str
 }
 
 std::string LitResUtil::generateTrialUrl(std::string bookId) {
-	size_t len = bookId.length();
+	std::size_t len = bookId.length();
 	if (len < 8) {
 		bookId = std::string(8 - len, '0') + bookId;
 	}
@@ -132,7 +132,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			title,
 			annotation,
 			urlMap,
-			NetworkCatalogItem::SIGNED_IN
+			NetworkCatalogItem::ALWAYS
 		);
 	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_BOOKS->getParameter(TYPE)) {
 		return new LitResBooksFeedItem(
@@ -141,7 +141,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			title,
 			annotation,
 			urlMap,
-			dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::AlWAYS
+			dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::ALWAYS
 		);
 	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_GENRES->getParameter(TYPE)) {
 		return new LitResByGenresItem(
@@ -150,7 +150,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			title,
 			annotation,
 			urlMap,
-			NetworkCatalogItem::AlWAYS,
+			NetworkCatalogItem::ALWAYS,
 			NetworkCatalogItem::FLAG_SHOW_AUTHOR
 		);
 	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_AUTHORS->getParameter(TYPE)) {
@@ -159,7 +159,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			title,
 			annotation,
 			urlMap,
-			NetworkCatalogItem::AlWAYS
+			NetworkCatalogItem::ALWAYS
 		);
 	} else {
 		return 0;

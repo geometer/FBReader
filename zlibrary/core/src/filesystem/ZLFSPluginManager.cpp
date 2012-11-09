@@ -45,7 +45,7 @@ void ZLFSPluginManager::registerPlugin(shared_ptr<ZLFSArchiver> plugin) {
 }
 
 std::string ZLFSPluginManager::stripLastArchiver(const std::string &archiveType) {
-	size_t lastDotIndex = archiveType.rfind(ARCHIVERS_SEPARATOR);
+	std::size_t lastDotIndex = archiveType.rfind(ARCHIVERS_SEPARATOR);
 	if (lastDotIndex != std::string::npos) {
 		return std::string(archiveType.begin(), archiveType.begin() + lastDotIndex);
 	}
@@ -54,7 +54,7 @@ std::string ZLFSPluginManager::stripLastArchiver(const std::string &archiveType)
 
 std::string ZLFSPluginManager::getLastArchiver(const std::string &archiveType) {
 	std::string lastArchiver;
-	size_t lastDotIndex = archiveType.rfind(ARCHIVERS_SEPARATOR);
+	std::size_t lastDotIndex = archiveType.rfind(ARCHIVERS_SEPARATOR);
 	if (lastDotIndex != std::string::npos) {
 		lastArchiver = std::string(archiveType.begin() + lastDotIndex + 1, archiveType.end());
 	} else {

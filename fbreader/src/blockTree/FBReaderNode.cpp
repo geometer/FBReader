@@ -42,7 +42,7 @@ private:
 
 std::map<std::string,shared_ptr<const ZLImage> > FBReaderNode::ourDefaultCovers;
 
-FBReaderNode::FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition) : ZLBlockTreeNode(parent, atPosition), myCoverImageIsStored(false), myIsInitialized(false) {
+FBReaderNode::FBReaderNode(ZLBlockTreeNode *parent, std::size_t atPosition) : ZLBlockTreeNode(parent, atPosition), myCoverImageIsStored(false), myIsInitialized(false) {
 }
 
 void FBReaderNode::init() {

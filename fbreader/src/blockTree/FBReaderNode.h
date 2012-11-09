@@ -44,7 +44,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 protected:
-	FBReaderNode(ZLBlockTreeNode *parent, size_t atPosition = (size_t)-1);
+	FBReaderNode(ZLBlockTreeNode *parent, std::size_t atPosition = (std::size_t)-1);
 	virtual void init();
 	virtual const ZLResource &resource() const = 0;
 	virtual bool highlighted() const;

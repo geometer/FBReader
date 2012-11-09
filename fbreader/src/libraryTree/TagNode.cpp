@@ -35,7 +35,7 @@ const ZLResource &TagNode::resource() const {
 	return ZLResource::resource("libraryView")["tagNode"];
 }
 
-size_t TagNode::positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag) {
+std::size_t TagNode::positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag) {
 	const ZLBlockTreeNode::List &children = parent->children();
 	ZLBlockTreeNode::List::const_reverse_iterator it = children.rbegin();
 	for (; it != children.rend(); ++it) {

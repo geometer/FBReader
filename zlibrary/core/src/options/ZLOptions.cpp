@@ -70,16 +70,16 @@ static std::string booleanToString(bool value) {
 	return value ? "true" : "false";
 }
 static bool stringToBoolean(const std::string &value, bool defaultValue) {
-	return (value.empty()) ? defaultValue : (value == "true");
+	return value.empty() ? defaultValue : (value == "true");
 }
 
 static std::string integerToString(long value) {
 	char buf[100];
-	sprintf(buf, "%ld", value);
+	std::sprintf(buf, "%ld", value);
 	return buf;
 }
 static long stringToInteger(const std::string &value, long defaultValue) {
-	return (!value.empty()) ? atoi(value.c_str()) : defaultValue;
+	return !value.empty() ? std::atoi(value.c_str()) : defaultValue;
 }
 static long stringToInteger(const std::string &value, long defaultValue, long minValue, long maxValue) {
 	return std::max(minValue, std::min(maxValue, stringToInteger(value, defaultValue)));

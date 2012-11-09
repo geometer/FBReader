@@ -28,17 +28,17 @@
 class ZLStreamImage : public ZLSingleImage {
 
 public:
-	ZLStreamImage(shared_ptr<ZLMimeType> mimeType, size_t offset, size_t size = 0);
+	ZLStreamImage(shared_ptr<ZLMimeType> mimeType, std::size_t offset, std::size_t size = 0);
 	const shared_ptr<std::string> stringData() const;
 
 private:
 	virtual shared_ptr<ZLInputStream> inputStream() const = 0;
 
 private:
-	size_t myOffset;
-	mutable size_t mySize;
+	std::size_t myOffset;
+	mutable std::size_t mySize;
 };
 
-inline ZLStreamImage::ZLStreamImage(shared_ptr<ZLMimeType> mimeType, size_t offset, size_t size) : ZLSingleImage(mimeType), myOffset(offset), mySize(size) {}
+inline ZLStreamImage::ZLStreamImage(shared_ptr<ZLMimeType> mimeType, std::size_t offset, std::size_t size) : ZLSingleImage(mimeType), myOffset(offset), mySize(size) {}
 
 #endif /* __ZLSTREAMIMAGE_H__ */

@@ -27,7 +27,7 @@
 
 std::string ZLNetworkUtil::hostFromUrl(const std::string &url) {
 	std::string host = url;
-	size_t index = host.find("://");
+	std::size_t index = host.find("://");
 	if (index != std::string::npos) {
 		host.erase(0, index + 3);
 	}
@@ -43,7 +43,7 @@ std::string ZLNetworkUtil::url(const std::string &baseUrl, const std::string &re
 		return relativePath;
 	}
 
-	size_t index = relativePath.find("://");
+	std::size_t index = relativePath.find("://");
 	if (index != std::string::npos || isNonRelativeUrl(relativePath)) {
 		return relativePath;
 	}
@@ -61,7 +61,7 @@ std::string ZLNetworkUtil::url(const std::string &baseUrl, const std::string &re
 bool ZLNetworkUtil::isNonRelativeUrl(const std::string &url) {
 	//check for matching Non-relative URI; see rfc3986
 	//TODO use regexp "(?s)^[a-zA-Z][a-zA-Z0-9+-.]*:.*$" for this
-	size_t index = url.find(":");
+	std::size_t index = url.find(":");
 	if (index == std::string::npos) {
 		return false;
 	}
@@ -110,11 +110,11 @@ std::string &ZLNetworkUtil::appendParameter(std::string &url, const std::string 
 		return url;
 	}
 	htmlEncode(realValue);
-	size_t index = url.find('?', url.rfind('/') + 1);
+	std::size_t index = url.find('?', url.rfind('/') + 1);
 	const std::string delimiter = (index == std::string::npos) ? "?" : "&";
 	while (index != std::string::npos) {
-		size_t start = index + 1;
-		size_t eqIndex = url.find('=', start);
+		std::size_t start = index + 1;
+		std::size_t eqIndex = url.find('=', start);
 		index = url.find('&', start);
 		if (url.substr(start, eqIndex - start) == name) {
 			if (url.substr(eqIndex + 1, index - eqIndex - 1) == realValue) {
@@ -128,10 +128,10 @@ std::string &ZLNetworkUtil::appendParameter(std::string &url, const std::string 
 }
 
 bool ZLNetworkUtil::hasParameter(const std::string &url, const std::string &name) {
-	size_t index = url.find('?', url.rfind('/') + 1);
+	std::size_t index = url.find('?', url.rfind('/') + 1);
 	while (index != std::string::npos) {
-		size_t start = index + 1;
-		size_t eqIndex = url.find('=', start);
+		std::size_t start = index + 1;
+		std::size_t eqIndex = url.find('=', start);
 		index = url.find('&', start);
 		if (url.substr(start, eqIndex - start) == name) {
 			return true;

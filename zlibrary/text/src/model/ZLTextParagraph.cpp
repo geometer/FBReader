@@ -29,9 +29,9 @@
 
 const shared_ptr<ZLTextParagraphEntry> ResetBidiEntry::Instance = new ResetBidiEntry();
 
-size_t ZLTextEntry::dataLength() const {
-	size_t len;
-	memcpy(&len, myAddress, sizeof(size_t));
+std::size_t ZLTextEntry::dataLength() const {
+	std::size_t len;
+	memcpy(&len, myAddress, sizeof(std::size_t));
 	return len;
 }
 
@@ -125,9 +125,9 @@ void ZLTextParagraph::Iterator::next() {
 		switch (*myPointer) {
 			case ZLTextParagraphEntry::TEXT_ENTRY:
 			{
-				size_t len;
-				memcpy(&len, myPointer + 1, sizeof(size_t));
-				myPointer += len + sizeof(size_t) + 1;
+				std::size_t len;
+				memcpy(&len, myPointer + 1, sizeof(std::size_t));
+				myPointer += len + sizeof(std::size_t) + 1;
 				break;
 			}
 			case ZLTextParagraphEntry::CONTROL_ENTRY:
@@ -188,8 +188,8 @@ shared_ptr<ZLTextParagraphEntry> ZLTextControlEntryPool::controlEntry(ZLTextKind
 	return entry;
 }
 
-size_t ZLTextParagraph::textDataLength() const {
-	size_t len = 0;
+std::size_t ZLTextParagraph::textDataLength() const {
+	std::size_t len = 0;
 	for (Iterator it = *this; !it.isEnd(); it.next()) {
 		if (it.entryKind() == ZLTextParagraphEntry::TEXT_ENTRY) {
 			len += ((ZLTextEntry&)*it.entry()).dataLength();
@@ -198,8 +198,8 @@ size_t ZLTextParagraph::textDataLength() const {
 	return len;
 }
 
-size_t ZLTextParagraph::characterNumber() const {
-	size_t len = 0;
+std::size_t ZLTextParagraph::characterNumber() const {
+	std::size_t len = 0;
 	for (Iterator it = *this; !it.isEnd(); it.next()) {
 		switch (it.entryKind()) {
 			case ZLTextParagraphEntry::TEXT_ENTRY:

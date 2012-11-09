@@ -76,7 +76,7 @@ struct PdbRecord0 {
 
 	bool read(shared_ptr<ZLInputStream> stream);
 //private:
-//	static bool readNumberBE(unsigned char* buffer, size_t offset, size_t size); 
+//	static bool readNumberBE(unsigned char* buffer, std::size_t offset, std::size_t size); 
 };
 
 #endif /* __PDBREADER_H__ */

@@ -26,6 +26,18 @@ void ZLTreeDialog::setSearcher(shared_ptr<ZLTreeSearcher> searcher) {
 	mySearcher = searcher;
 }
 
+void ZLTreeDialog::onNodeBeginInsert(ZLTreeNode */*parent*/, std::size_t /*index*/) {
+}
+
+void ZLTreeDialog::onNodeEndInsert(){
+}
+
+void ZLTreeDialog::onNodeBeginRemove(ZLTreeNode */*parent*/, std::size_t /*index*/) {
+}
+
+void ZLTreeDialog::onNodeEndRemove() {
+}
+
 const ZLResource &ZLTreeDialog::resource() const {
 	return myResource;
 }

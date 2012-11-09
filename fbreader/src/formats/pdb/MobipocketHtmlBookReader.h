@@ -33,7 +33,7 @@ public:
 private:
 	void startDocumentHandler();
 	bool tagHandler(const HtmlTag &tag);
-	bool characterDataHandler(const char *text, size_t len, bool convert);
+	bool characterDataHandler(const char *text, std::size_t len, bool convert);
 	shared_ptr<HtmlTagAction> createAction(const std::string &tag);
 
 public:
@@ -43,29 +43,29 @@ public:
 		TOCReader(MobipocketHtmlBookReader &reader);
 		void reset();
 
-		void addReference(size_t position, const std::string &text);
+		void addReference(std::size_t position, const std::string &text);
 
-		void setStartOffset(size_t position);
-		void setEndOffset(size_t position);
+		void setStartOffset(std::size_t position);
+		void setEndOffset(std::size_t position);
 
-		bool rangeContainsPosition(size_t position);
+		bool rangeContainsPosition(std::size_t position);
 
-		void startReadEntry(size_t position);
+		void startReadEntry(std::size_t position);
 		void endReadEntry();
-		void appendText(const char *text, size_t len);
+		void appendText(const char *text, std::size_t len);
 
-		const std::map<size_t,std::string> &entries() const;
+		const std::map<std::size_t,std::string> &entries() const;
 
 	private:	
 		MobipocketHtmlBookReader &myReader;
 
-		std::map<size_t,std::string> myEntries;
+		std::map<std::size_t,std::string> myEntries;
 
 		bool myIsActive;
-		size_t myStartOffset;
-		size_t myEndOffset;
+		std::size_t myStartOffset;
+		std::size_t myEndOffset;
 
-		size_t myCurrentReference;
+		std::size_t myCurrentReference;
 		std::string myCurrentEntryText;
 	};
 
@@ -73,8 +73,8 @@ private:
 	int myImageCounter;
 	const std::string myFileName;
 
-	std::vector<std::pair<size_t,size_t> > myPositionToParagraphMap;
-	std::set<size_t> myFileposReferences;
+	std::vector<std::pair<std::size_t,std::size_t> > myPositionToParagraphMap;
+	std::set<std::size_t> myFileposReferences;
 	bool myInsideGuide;
 	TOCReader myTocReader;
 

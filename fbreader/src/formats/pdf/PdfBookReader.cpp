@@ -162,14 +162,14 @@ bool PdfBookReader::readBook(shared_ptr<ZLInputStream> stream) {
 	std::string version = myBuffer.substr(5);
 	std::cerr << "version = " << version << "\n";
 
-	size_t eofOffset = stream->sizeOfOpened();
+	std::size_t eofOffset = stream->sizeOfOpened();
 	if (eofOffset < 100) {
 		return false;
 	}
 
 	stream->seek(eofOffset - 100, true);
 	bool readXrefOffset = false;
-	size_t xrefOffset = (size_t)-1;
+	std::size_t xrefOffset = (std::size_t)-1;
 	while (true) {
 		readLine(*stream, myBuffer);
 		if (myBuffer.empty()) {
@@ -220,8 +220,8 @@ bool PdfBookReader::readBook(shared_ptr<ZLInputStream> stream) {
 		return false;
 	}
 	const PdfArrayObject& pagesArray = (const PdfArrayObject&)*pages;
-	const size_t pageNumber = pagesArray.size();
-	for (size_t i = 0; i < pageNumber; ++i) {
+	const std::size_t pageNumber = pagesArray.size();
+	for (std::size_t i = 0; i < pageNumber; ++i) {
 		processPage(pagesArray[i], *stream);
 	}
 
@@ -251,8 +251,8 @@ void PdfBookReader::processPage(shared_ptr<PdfObject> pageObject, ZLInputStream 
 		case PdfObject::ARRAY:
 		{
 			const PdfArrayObject &array = (const PdfArrayObject&)*contents;
-			const size_t len = array.size();
-			for (size_t i = 0; i < len; ++i) {
+			const std::size_t len = array.size();
+			for (std::size_t i = 0; i < len; ++i) {
 				processContents(array[i], stream);
 			}
 			break;

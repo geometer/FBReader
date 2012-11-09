@@ -84,19 +84,6 @@ private:
 	std::string myFileName;
 };
 
-class IsAuthorisedRunnable : public NetworkOperationRunnable {
-
-public:
-	IsAuthorisedRunnable(NetworkAuthenticationManager &mgr);
-	void run();
-
-	ZLBoolean3 result();
-
-private:
-	NetworkAuthenticationManager &myManager;
-	ZLBoolean3 myResult;
-};
-
 class AuthoriseRunnable : public NetworkOperationRunnable {
 
 public:
@@ -108,16 +95,6 @@ private:
 	const std::string &myPassword;
 };
 
-class InitializeAuthenticationManagerRunnable : public NetworkOperationRunnable {
-
-public:
-	InitializeAuthenticationManagerRunnable(NetworkAuthenticationManager &mgr);
-	void run();
-
-private:
-	NetworkAuthenticationManager &myManager;
-};
-
 class LogOutRunnable : public NetworkOperationRunnable {
 
 public:
@@ -126,17 +103,6 @@ public:
 
 private:
 	NetworkAuthenticationManager &myManager;
-};
-
-class PurchaseBookRunnable : public NetworkOperationRunnable {
-
-public:
-	PurchaseBookRunnable(NetworkAuthenticationManager &mgr, const NetworkBookItem &book);
-	void run();
-
-private:
-	NetworkAuthenticationManager &myManager;
-	const NetworkBookItem &myBook;
 };
 
 class PasswordRecoveryRunnable : public NetworkOperationRunnable {

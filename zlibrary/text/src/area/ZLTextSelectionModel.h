@@ -40,7 +40,7 @@ public:
 		bool Exists;
 		int ParagraphIndex;
 		int ElementIndex;
-		size_t CharIndex;
+		std::size_t CharIndex;
 
 		bool operator == (const BoundElement &element) const;
 		bool operator != (const BoundElement &element) const;

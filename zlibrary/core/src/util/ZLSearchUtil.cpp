@@ -30,7 +30,7 @@ ZLSearchPattern::ZLSearchPattern(const std::string &pattern, bool ignoreCase) {
 	}
 }
 
-int ZLSearchUtil::find(const char *text, size_t length, const ZLSearchPattern &pattern, int pos) {
+int ZLSearchUtil::find(const char *text, std::size_t length, const ZLSearchPattern &pattern, int pos) {
 	if (pattern.ignoreCase()) {
 		if (pos < 0) {
 			pos = 0;

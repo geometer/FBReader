@@ -24,6 +24,7 @@
 
 #include <optionEntries/ZLSimpleOptionEntry.h>
 
+#include "../network/NetworkLink.h"
 #include "AuthenticationDialog.h"
 #include "NetworkOperationRunnable.h"
 #include "../network/UserList.h"
@@ -114,7 +115,7 @@ bool AuthenticationDialog::runDialog(ZLStringOption &userNameOption, UserList &u
 
 bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr) {
 	std::string errorMessage;
-	UserList userList;
+	UserList userList(mgr.Link.getSiteName());
 	while (true) {
 		std::string password;
 		if (!runDialog(mgr.UserNameOption, userList, errorMessage, password)) {
@@ -137,23 +138,23 @@ bool AuthenticationDialog::run(NetworkAuthenticationManager &mgr) {
 			logout.executeWithUI();
 			continue;
 		}
-		if (mgr.needsInitialization()) {
-			InitializeAuthenticationManagerRunnable initializer(mgr);
-			initializer.executeWithUI();
-			if (initializer.hasErrors()) {
-				errorMessage = initializer.errorMessage();
-				LogOutRunnable logout(mgr);
-				logout.executeWithUI();
-				continue;
-			}
-		}
+//		if (mgr.needsInitialization()) {
+//			InitializeAuthenticationManagerRunnable initializer(mgr);
+//			initializer.executeWithUI();
+//			if (initializer.hasErrors()) {
+//				errorMessage = initializer.errorMessage();
+//				LogOutRunnable logout(mgr);
+//				logout.executeWithUI();
+//				continue;
+//			}
+//		}
 		userList.saveUser(mgr.currentUserName());
 		return true;
 	}
 }
 
-bool AuthenticationDialog::run(std::string &userName, std::string &password, const std::string &message) {
-	UserList userList;
+bool AuthenticationDialog::run(const std::string &siteName, std::string &userName, std::string &password, const std::string &message) {
+	UserList userList(siteName);
 	//TODO fix it: using unexisted string option, just for dialog showing
 	ZLStringOption userNameOption(ZLCategoryKey::NETWORK, "", "userName", userName);
 	userNameOption.setValue(std::string());

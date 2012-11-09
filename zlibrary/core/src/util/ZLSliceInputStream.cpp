@@ -21,7 +21,7 @@
 
 #include "ZLSliceInputStream.h"
 
-ZLSliceInputStream::ZLSliceInputStream(shared_ptr<ZLInputStream> base, size_t start, size_t length) :
+ZLSliceInputStream::ZLSliceInputStream(shared_ptr<ZLInputStream> base, std::size_t start, std::size_t length) :
 	myBaseStream(base),
 	myStart(start),
 	myLength(length) {
@@ -41,12 +41,12 @@ bool ZLSliceInputStream::open() {
 	return true;
 }
 
-size_t ZLSliceInputStream::read(char *buffer, size_t maxSize) {
+std::size_t ZLSliceInputStream::read(char *buffer, std::size_t maxSize) {
 	const int maxbytes = myLength - offset();
 	if (maxbytes <= 0) {
 		return 0;
 	}
-	size_t res = myBaseStream->read(buffer, std::min(maxSize, (size_t)maxbytes));
+	std::size_t res = myBaseStream->read(buffer, std::min(maxSize, (std::size_t)maxbytes));
 	return res;
 }
 
@@ -62,10 +62,10 @@ void ZLSliceInputStream::seek(int off, bool absoluteOffset) {
 	}
 }
 
-size_t ZLSliceInputStream::offset() const {
+std::size_t ZLSliceInputStream::offset() const {
 	return myBaseStream->offset() - myStart;
 }
 
-size_t ZLSliceInputStream::sizeOfOpened() {
+std::size_t ZLSliceInputStream::sizeOfOpened() {
 	return myBaseStream->sizeOfOpened();
 }

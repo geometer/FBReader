@@ -34,7 +34,7 @@ private:
 
 public:
 	~ZLTextHyphenationInfo() {}
-	bool isHyphenationPossible(size_t position);
+	bool isHyphenationPossible(std::size_t position);
 	
 private:
 	std::vector<unsigned char> myMask;
@@ -70,7 +70,7 @@ protected:
 inline ZLTextHyphenationInfo::ZLTextHyphenationInfo(int length) : myMask(length - 1, false) {
 }
 
-inline bool ZLTextHyphenationInfo::isHyphenationPossible(size_t position) {
+inline bool ZLTextHyphenationInfo::isHyphenationPossible(std::size_t position) {
 	return (position < myMask.size()) && myMask[position];
 }
 

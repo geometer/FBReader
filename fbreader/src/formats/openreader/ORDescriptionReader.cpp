@@ -35,7 +35,7 @@ static const std::string TITLE = "dc:title";
 static const std::string AUTHOR_TAG = "dc:creator";
 static const std::string AUTHOR_ROLE = "aut";
 
-void ORDescriptionReader::characterDataHandler(const char *text, size_t len) {
+void ORDescriptionReader::characterDataHandler(const char *text, std::size_t len) {
 	switch (myReadState) {
 		case READ_NONE:
 			break;

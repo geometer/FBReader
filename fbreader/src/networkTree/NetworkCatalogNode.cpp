@@ -50,12 +50,12 @@ private:
 
 const ZLTypeId NetworkCatalogNode::TYPE_ID(NetworkContainerNode::TYPE_ID);
 
-NetworkCatalogNode::NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) :
+NetworkCatalogNode::NetworkCatalogNode(ZLBlockTreeView::RootNode *parent, shared_ptr<NetworkItem> item, std::size_t atPosition) :
 	NetworkContainerNode(parent, atPosition),
 	myItem(item) {
 }
 
-NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, size_t atPosition) :
+NetworkCatalogNode::NetworkCatalogNode(NetworkCatalogNode *parent, shared_ptr<NetworkItem> item, std::size_t atPosition) :
 	NetworkContainerNode(parent, atPosition),
 	myItem(item) {
 }
@@ -161,34 +161,34 @@ ZLResourceKey NetworkCatalogNode::ExpandCatalogAction::key() const {
 }
 
 void NetworkCatalogNode::ExpandCatalogAction::run() {
-	if (!NetworkOperationRunnable::tryConnect()) {
-		return;
-	}
+//	if (!NetworkOperationRunnable::tryConnect()) {
+//		return;
+//	}
 
-	const NetworkLink &link = myNode.item().Link;
-	if (!link.authenticationManager().isNull()) {
-		NetworkAuthenticationManager &mgr = *link.authenticationManager();
-		IsAuthorisedRunnable checker(mgr);
-		checker.executeWithUI();
-		if (checker.hasErrors()) {
-			checker.showErrorMessage();
-			return;
-		}
-		if (checker.result() == B3_TRUE && mgr.needsInitialization()) {
-			InitializeAuthenticationManagerRunnable initializer(mgr);
-			initializer.executeWithUI();
-			if (initializer.hasErrors()) {
-				LogOutRunnable logout(mgr);
-				logout.executeWithUI();
-			}
-		}
-	}
+//	const NetworkLink &link = myNode.item().Link;
+//	if (!link.authenticationManager().isNull()) {
+//		NetworkAuthenticationManager &mgr = *link.authenticationManager();
+//		IsAuthorisedRunnable checker(mgr);
+//		checker.executeWithUI();
+//		if (checker.hasErrors()) {
+//			checker.showErrorMessage();
+//			return;
+//		}
+//		if (checker.result() == B3_TRUE && mgr.needsInitialization()) {
+//			InitializeAuthenticationManagerRunnable initializer(mgr);
+//			initializer.executeWithUI();
+//			if (initializer.hasErrors()) {
+//				LogOutRunnable logout(mgr);
+//				logout.executeWithUI();
+//			}
+//		}
+//	}
 
-	if (myNode.myChildrenItems.empty()) {
-		myNode.updateChildren();
-	}
-	myNode.expandOrCollapseSubtree();
-	FBReader::Instance().refreshWindow();
+//	if (myNode.myChildrenItems.empty()) {
+//		myNode.updateChildren();
+//	}
+//	myNode.expandOrCollapseSubtree();
+//	FBReader::Instance().refreshWindow();
 }
 
 NetworkCatalogNode::OpenInBrowserAction::OpenInBrowserAction(const std::string &url) : myURL(url) {

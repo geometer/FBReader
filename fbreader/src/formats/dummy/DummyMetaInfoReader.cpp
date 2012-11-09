@@ -25,7 +25,7 @@ DummyMetaInfoReader::DummyMetaInfoReader(Book &book) : myBook(book) {
 }
 
 /*
-void DummyMetaInfoReader::characterDataHandler(const char *text, size_t len) {
+void DummyMetaInfoReader::characterDataHandler(const char *text, std::size_t len) {
 }
 
 void DummyMetaInfoReader::startElementHandler(int tag, const char **) {

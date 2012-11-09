@@ -37,7 +37,7 @@ public:
 private:
 	void startElementHandler(const char *tag, const char **attributes);
 	void endElementHandler(const char *tag);
-	void characterDataHandler(const char *text, size_t len);
+	void characterDataHandler(const char *text, std::size_t len);
 
 	void saveGenre(shared_ptr<LitResGenre> genre, const std::string &token);
 

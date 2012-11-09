@@ -32,8 +32,8 @@ public:
 	ZLNetworkDownloadRequest(const std::string &url, shared_ptr<ZLOutputStream> stream);
 
 protected:
-	bool handleHeader(void *ptr, size_t size);
-	bool handleContent(void *ptr, size_t size);
+	bool handleHeader(void *ptr, std::size_t size);
+	bool handleContent(void *ptr, std::size_t size);
 
 	bool doBefore();
 	bool doAfter(const std::string &error);

@@ -60,8 +60,8 @@ private:
 	const ZLTypeId &typeId() const;
 
 public:
-	NetworkTree(RootTree *parent, size_t position);
-	NetworkTree(NetworkTree *parent, size_t position = (size_t)-1);
+	NetworkTree(RootTree *parent, std::size_t position);
+	NetworkTree(NetworkTree *parent, std::size_t position = (std::size_t)-1);
 };
 
 class NetworkCatalogTree : public NetworkTree {
@@ -73,22 +73,26 @@ private:
 	const ZLTypeId &typeId() const;
 
 public:
-	NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
-	NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
+	NetworkCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, std::size_t position = (std::size_t)-1);
+	NetworkCatalogTree(NetworkCatalogTree *parent, shared_ptr<NetworkItem> item, std::size_t position = (std::size_t)-1);
 
 	std::string title() const;
 	std::string subtitle() const;
 	shared_ptr<const ZLImage> image() const;
 
 	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
-	virtual void onChildrenReceived(const std::string &error);
+	void requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
+	virtual void onChildrenReceived(NetworkItem::List &childrens, const std::string &error);
 
 	NetworkCatalogItem &item();
 
 private:
 	void init();
-	bool initAuth();
 	void notifyListeners(const std::string &error);
+
+private:
+	void onAuthCheck(ZLUserDataHolder &data, const std::string &error);
+	void onInitialization(ZLUserDataHolder &data, const std::string &error);
 
 private:
 	const ZLResource &resource() const;
@@ -119,7 +123,7 @@ private:
 	class RegisterUserAction;
 
 public:
-	NetworkCatalogRootTree(RootTree *parent, NetworkLink &link, size_t position);
+	NetworkCatalogRootTree(RootTree *parent, NetworkLink &link, std::size_t position);
 	void init();
 
 private:
@@ -138,10 +142,10 @@ private:
 	const ZLTypeId &typeId() const;
 
 public:
-	SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, size_t position = (size_t)-1);
+	SearchCatalogTree(RootTree *parent, shared_ptr<NetworkItem> item, std::size_t position = (std::size_t)-1);
 
 	void requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener);
-	void onChildrenReceived(const std::string &error);
+	void onChildrenReceived(NetworkItem::List &childrens, const std::string &error);
 };
 
 class NetworkAuthorTree : public NetworkTree {
@@ -234,6 +238,11 @@ private:
 	public:
 		BookItemWrapper(NetworkBookTree &tree, shared_ptr<NetworkItem> bookItem);
 
+		bool isPageInfoLoaded();
+		void loadAll(shared_ptr<ZLNetworkRequest::Listener> listener);
+		void onInformationLoaded(ZLUserDataHolder &data, const std::string &error);
+		void onCoverLoaded(ZLUserDataHolder &data, const std::string &error);
+
 	public:
 		std::string title() const;
 		std::vector<std::string> authors() const;
@@ -247,7 +256,6 @@ private:
 		const std::vector<shared_ptr<ZLTreeAction> > relatedActions() const;
 
 	private:
-		void initialize() const;
 		NetworkBookItem &book() const;
 
 	private:
@@ -255,7 +263,6 @@ private:
 		shared_ptr<NetworkItem> myBookItem;
 		mutable bool myIsInitialized;
 
-		mutable std::vector<shared_ptr<ZLTreeAction> > myActions;
 		mutable std::vector<shared_ptr<ZLTreeAction> > myRelatedActions;
 	};
 
@@ -263,6 +270,7 @@ private:
 	shared_ptr<NetworkItem> myBook;
 	SummaryType mySummaryType;
 	mutable shared_ptr<const ZLImage> myImage;
+	shared_ptr<ZLTreePageInfo> myPageInfo;
 };
 
 #endif /* __NETWORKTREENODES_H__ */

@@ -42,11 +42,11 @@ static char hex_helper(int c) {
 
 static std::string percent_encoding(const std::string &str) {
 	std::string result;
-	for (size_t i = 0; i < str.size(); ++i) {
+	for (std::size_t i = 0; i < str.size(); ++i) {
 		const char c = str[i];
 		if (str[i] == '\\' || str[i] == '/') {
 			result += '/';
-		} else if (isalpha(c) || isdigit(c) || c == '.' || c == '-' || c == '_' || c == '~') {
+		} else if (std::isalpha(c) || std::isdigit(c) || c == '.' || c == '-' || c == '_' || c == '~') {
 			result += str[i];
 		} else {
 			result += "%";
@@ -108,7 +108,7 @@ void FBTree::expand() {
    }
 }
 
-FBTree::FBTree(ZLTreeNode *parent, size_t position) : ZLTreeTitledNode(parent, position)/*, myCoverImageIsStored(false)*/ { }
+FBTree::FBTree(ZLTreeNode *parent, std::size_t position) : ZLTreeTitledNode(parent, position)/*, myCoverImageIsStored(false)*/ { }
 
 std::string FBTree::subtitle() const {
 	std::string result;

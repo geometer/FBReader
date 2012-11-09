@@ -37,7 +37,7 @@
 #include "../database/booksdb/BooksDB.h"
 
 shared_ptr<Library> Library::ourInstance;
-const size_t Library::MaxRecentListSize = 10;
+const std::size_t Library::MaxRecentListSize = 10;
 
 Library &Library::Instance() {
 	if (ourInstance.isNull()) {
@@ -135,7 +135,7 @@ void Library::rebuildBookSet() const {
 	}
 }
 
-size_t Library::revision() const {
+std::size_t Library::revision() const {
 	if (myBuildMode == BUILD_NOTHING &&
 			(myScanSubdirs != ScanSubdirsOption.value() ||
 			 myPath != PathOption.value())) {

@@ -48,7 +48,7 @@ bool RtfDescriptionReader::readDocument(const ZLFile &file) {
 	return code;
 }
 
-void RtfDescriptionReader::addCharData(const char *data, size_t len, bool convert) {
+void RtfDescriptionReader::addCharData(const char *data, std::size_t len, bool convert) {
 	if (myDoRead && len > 0) {
 		if (convert) {
 			myConverter->convert(myBuffer, data, data + len);
@@ -87,7 +87,7 @@ void RtfDescriptionReader::switchDestination(DestinationType destination, bool o
 	}
 }
 
-void RtfDescriptionReader::insertImage(shared_ptr<ZLMimeType>, const std::string&, size_t, size_t) {
+void RtfDescriptionReader::insertImage(shared_ptr<ZLMimeType>, const std::string&, std::size_t, std::size_t) {
 }
 
 void RtfDescriptionReader::setFontProperty(FontProperty) {

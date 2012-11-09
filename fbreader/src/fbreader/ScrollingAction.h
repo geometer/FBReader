@@ -34,7 +34,7 @@ protected:
 	);
 
 public:
-	virtual size_t textOptionValue() const = 0;
+	virtual std::size_t textOptionValue() const = 0;
 	virtual int scrollingDelay() const;
 	bool isEnabled() const;
 	bool useKeyDelay() const;
@@ -53,7 +53,7 @@ public:
 
 private:
 	int scrollingDelay() const;
-	size_t textOptionValue() const;
+	std::size_t textOptionValue() const;
 };
 
 class PageScrollingAction : public ScrollingAction {
@@ -63,7 +63,7 @@ public:
 
 private:
 	int scrollingDelay() const;
-	size_t textOptionValue() const;
+	std::size_t textOptionValue() const;
 };
 
 class MouseWheelScrollingAction : public ScrollingAction {
@@ -72,7 +72,7 @@ public:
 	MouseWheelScrollingAction(bool forward);
 
 private:
-	size_t textOptionValue() const;
+	std::size_t textOptionValue() const;
 };
 
 class TapScrollingAction : public ScrollingAction {
@@ -81,7 +81,7 @@ public:
 	TapScrollingAction(bool forward);
 
 private:
-	size_t textOptionValue() const;
+	std::size_t textOptionValue() const;
 	bool isEnabled() const;
 };
 

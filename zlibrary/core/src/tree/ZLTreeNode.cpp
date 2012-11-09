@@ -39,13 +39,13 @@
 
 const ZLTypeId ZLTreeNode::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 
-ZLTreeNode::ZLTreeNode(ZLTreeNode *parent, size_t position) {
+ZLTreeNode::ZLTreeNode(ZLTreeNode *parent, std::size_t position) {
 	if (parent == 0) {
 		myParent = 0;
 		myChildIndex = -1;
 		return;
 	}
-	if (position == (size_t)-1 || position > parent->children().size()) {
+	if (position == (std::size_t)-1 || position > parent->children().size()) {
 		position = parent->children().size();
 	}
 	parent->insert(this, position);
@@ -75,8 +75,8 @@ void ZLTreeNode::clear() {
 	}
 }
 
-size_t ZLTreeNode::level() const {
-	size_t l = 0;
+std::size_t ZLTreeNode::level() const {
+	std::size_t l = 0;
 	for (ZLTreeNode *parent = myParent; parent; parent = parent->myParent) {
 		++l;
 	}
@@ -111,7 +111,7 @@ const ZLTreeNode::List &ZLTreeNode::children() const {
 	return myChildren;
 }
 
-size_t ZLTreeNode::childIndex() const {
+std::size_t ZLTreeNode::childIndex() const {
 	return myChildIndex;
 }
 
@@ -119,6 +119,12 @@ void ZLTreeNode::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener
 		if (!listener.isNull()) {
 		 //   listener->finished();
 		}
+}
+
+void ZLTreeNode::requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
+	if (!listener.isNull()) {
+		listener->finished();
+	}
 }
 
 const ZLResource &ZLTreeNode::resource() const {
@@ -146,7 +152,7 @@ void ZLTreeNode::close() const {
 	}
 }
 
-void ZLTreeNode::insert(ZLTreeNode *node, size_t index) {
+void ZLTreeNode::insert(ZLTreeNode *node, std::size_t index) {
 	if (myChildren.end() != std::find(myChildren.begin(), myChildren.end(), node))
 		return;
 	index = std::min(index, myChildren.size());
@@ -175,7 +181,7 @@ void ZLTreeNode::remove(ZLTreeNode *node) {
 		remove(node->childIndex());
 }
 
-void ZLTreeNode::remove(size_t index) {
+void ZLTreeNode::remove(std::size_t index) {
 	if (index >= myChildren.size())
 		return;
 	ZLTreeListener * const handler = listener();

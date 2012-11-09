@@ -20,7 +20,7 @@
 #include "ZLTextHyphenationReader.h"
 #include "ZLTextTeXHyphenator.h"
 
-void ZLTextHyphenationReader::characterDataHandler(const char *text, size_t len) {
+void ZLTextHyphenationReader::characterDataHandler(const char *text, std::size_t len) {
 	if (myReadPattern) {
 		myBuffer.append(text, len);
 	}

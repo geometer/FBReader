@@ -48,7 +48,7 @@ void OPDSLink::GenericFeedReader::processFeedEnd() {
 void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) {
 	std::map<std::string,std::string> links;
 	std::string iconURL;
-	for (size_t i = 0; i < entry->links().size(); ++i) {
+	for (std::size_t i = 0; i < entry->links().size(); ++i) {
 		ATOMLink &link = *(entry->links()[i]);
 		const std::string &href = link.href();
 		const std::string &rel = link.rel();

@@ -29,7 +29,7 @@ public:
 	~ContentsView();
 
 	bool isEmpty() const;
-	size_t currentTextViewParagraph(bool includeStart = true) const;
+	std::size_t currentTextViewParagraph(bool includeStart = true) const;
 	void gotoReference();
 
 private:

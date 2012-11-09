@@ -52,10 +52,11 @@ std::string LitResBooksFeedParser::stringAttributeValue(const char **attributes,
 	return value != 0 ? value : std::string();
 }
 
-LitResBooksFeedParser::LitResBooksFeedParser(const NetworkLink &link, NetworkItem::List &books) :
+LitResBooksFeedParser::LitResBooksFeedParser(const NetworkLink &link, NetworkItem::List &books, LitResBooksFeedItem::LoadingState *loadingState) :
 	myLink(link),
 	myBooks(books),
-	myIndex(0) {
+	myIndex(0),
+	myLoadingState(loadingState) {
 	myState = START;
 }
 
@@ -72,13 +73,18 @@ void LitResBooksFeedParser::endElementHandler(const char *tag) {
 	myBuffer.clear();
 }
 
-void LitResBooksFeedParser::characterDataHandler(const char *data, size_t len) {
+void LitResBooksFeedParser::characterDataHandler(const char *data, std::size_t len) {
 	myBuffer.append(data, len);
 }
 
 void LitResBooksFeedParser::processState(const std::string &tag, bool closed, const char **attributes) {
 	switch(myState) {
 	case START:
+		if (!closed && TAG_CATALOG == tag) {
+			if (myLoadingState) {
+				myLoadingState->AllPagesCount = ZLStringUtil::stringToInteger(stringAttributeValue(attributes, "pages"), 1);
+			}
+		}
 		break;
 	case CATALOG:
 		if (!closed && TAG_BOOK == tag) {
@@ -165,7 +171,7 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 				mySeriesTitle = stringAttributeValue(attributes, "name");
 				if (!mySeriesTitle.empty()) {
 					const char *indexInSeries = attributeValue(attributes, "number");
-					myIndexInSeries = indexInSeries != 0 ? atoi(indexInSeries) : 0;
+					myIndexInSeries = indexInSeries != 0 ? std::atoi(indexInSeries) : 0;
 				}
 			}
 		}

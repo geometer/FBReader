@@ -40,6 +40,7 @@ public:
 		virtual ~Listener();
 		virtual void finished(const std::string &error = std::string()) = 0;
 		virtual void showPercent(int ready, int full);
+		virtual void setUIStatus(bool enabled);
 
 	friend class ZLNetworkRequest;
 	};
@@ -48,8 +49,8 @@ protected:
 	ZLNetworkRequest(const std::string &url);
 
 public:
-	virtual bool handleHeader(void *ptr, size_t size);
-	virtual bool handleContent(void *ptr, size_t size) = 0;
+	virtual bool handleHeader(void *ptr, std::size_t size);
+	virtual bool handleContent(void *ptr, std::size_t size) = 0;
 
 	virtual bool doBefore() = 0;
 
@@ -80,6 +81,7 @@ public: //listeners methods
 	bool hasListener() const;
 	void setListener(shared_ptr<Listener> listener);
 	void setPercent(int ready, int full);
+	void setUIStatus(bool enabled);
 
 protected:
 	void finished(const std::string &error);

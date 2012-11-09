@@ -37,9 +37,9 @@ private:
 	bool fillBuffer();
 
 private:
-	size_t myMaxRecordIndex;
+	std::size_t myMaxRecordIndex;
 	unsigned short myMaxRecordSize;
-	size_t myRecordIndex;
+	std::size_t myRecordIndex;
 };
 
 #endif /* __ZTXTSTREAM_H__ */

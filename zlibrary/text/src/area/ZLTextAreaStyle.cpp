@@ -102,7 +102,7 @@ int ZLTextArea::Style::elementWidth(const ZLTextElement &element, unsigned int c
 		case ZLTextElement::BEFORE_PARAGRAPH_ELEMENT:
 		case ZLTextElement::AFTER_PARAGRAPH_ELEMENT:
 		case ZLTextElement::EMPTY_LINE_ELEMENT:
-			return metrics.FullWidth + abs(textStyle()->lineStartIndent(metrics, false)) + abs(textStyle()->lineEndIndent(metrics, false)) + abs(textStyle()->firstLineIndentDelta(metrics)) + 1;
+			return metrics.FullWidth + std::abs(textStyle()->lineStartIndent(metrics, false)) + std::abs(textStyle()->lineEndIndent(metrics, false)) + std::abs(textStyle()->firstLineIndentDelta(metrics)) + 1;
 		case ZLTextElement::FORCED_CONTROL_ELEMENT:
 		case ZLTextElement::CONTROL_ELEMENT:
 		case ZLTextElement::START_REVERSED_SEQUENCE_ELEMENT:

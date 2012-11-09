@@ -60,7 +60,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
 	splitter->addWidget(myListWidget);
 	splitter->addWidget(myPreviewWidget);
 
-	const int scrollbarWidth = myListWidget->verticalScrollBar()->width() * 2;
+	const int scrollbarWidth = 30; //myListWidget->verticalScrollBar()->width() * 2; //commented because with Qt::ScrollBarAsNeeded policy the size is too big
 	splitter->setSizes(QList<int>() << DIALOG_WIDTH_HINT / 2 + scrollbarWidth << DIALOG_WIDTH_HINT / 2 - scrollbarWidth); //50/50 default size
 
 	mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
@@ -80,6 +80,7 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
 	connect(myBackButton, SIGNAL(clicked()), this, SLOT(onBackButton()));
 	connect(myForwardButton, SIGNAL(clicked()), this, SLOT(onForwardButton()));
 	connect(mySearchField, SIGNAL(returnPressed()), this, SLOT(onSearchField()));
+	connect(myListWidget, SIGNAL(wantMoreChildren()), this, SLOT(onMoreChildren()));
 }
 
 void ZLQtTreeDialog::run(ZLTreeNode *rootNode) {
@@ -111,13 +112,20 @@ void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 	myLastClickedNode = node;
 	if (node->children().empty()) {
 		//expand request is used for RelatedAction, so we don't use waiting icon here
-		node->requestChildren(new ChildrenRequestListener(this, node));
+		node->requestChildren(new ChildrenRequestListener(this, node, false));
 	} else {
 		onChildrenLoaded(node, false, true);
 	}
 }
 
-void ZLQtTreeDialog::onChildrenLoaded(const ZLTreeNode *node, bool checkLast, bool successLoaded) {
+void ZLQtTreeDialog::onMoreChildrenRequest(ZLTreeNode *node) {
+	//TODO implement the way to not sending new request for more children
+	//qDebug() << Q_FUNC_INFO << node << node->children().size();
+	//TODO don't ask many times
+	node->requestMoreChildren(new ChildrenRequestListener(this, node, true));
+}
+
+void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool successLoaded) {
 	if (!successLoaded) {
 		return;
 	}
@@ -129,11 +137,23 @@ void ZLQtTreeDialog::onChildrenLoaded(const ZLTreeNode *node, bool checkLast, bo
 			return;
 		}
 	}
+	saveShowParameters();
 	myLastClickedNode = 0; //for case if item has been requested for several times
 	myBackHistory.push(node);
 	myForwardHistory.clear();
 	myListWidget->fillNodes(myBackHistory.top());
-	myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
+	//myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
+	setupShowParameters();
+	updateAll();
+
+}
+
+void ZLQtTreeDialog::onMoreChildrenLoaded(ZLTreeNode *node, bool /*checkLast*/, bool successLoaded) {
+	//qDebug() << Q_FUNC_INFO << node << node->children().size();
+	if (!successLoaded) {
+		return;
+	}
+	myListWidget->fillNewNodes(myBackHistory.top());
 	updateAll();
 }
 
@@ -152,14 +172,6 @@ void ZLQtTreeDialog::updateWaitingIcons() {
 		}
 	}
 }
-
-void ZLQtTreeDialog::onNodeBeginInsert(ZLTreeNode */*parent*/, size_t /*index*/) {}
-
-void ZLQtTreeDialog::onNodeEndInsert() {}
-
-void ZLQtTreeDialog::onNodeBeginRemove(ZLTreeNode */*parent*/, size_t /*index*/) {}
-
-void ZLQtTreeDialog::onNodeEndRemove() {}
 
 void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode *node) {
 	foreach(ZLQtTreeItem *item, myListWidget->getItems()) {
@@ -204,7 +216,39 @@ void ZLQtTreeDialog::onRefresh() {
 void ZLQtTreeDialog::updateNavigationButtons() {
 	myBackButton->setEnabled(myBackHistory.size() > 1);
 	myForwardButton->setEnabled(!myForwardHistory.empty());
-	myPreviewWidget->clear();
+}
+
+void ZLQtTreeDialog::saveShowParameters() {
+	if (myBackHistory.empty()) {
+		return;
+	}
+	ShowParameter parameter;
+	parameter.sliderPosition = myListWidget->verticalScrollBar()->value();
+	parameter.activeItemNumber = -1;	
+	for (int i = 0; i < myListWidget->getItems().size(); ++i) {
+		if (myListWidget->getItems().at(i)->isActive()) {
+			parameter.activeItemNumber = i;
+			break;
+		}
+	}
+	myShowParameters.insert(myBackHistory.top(), parameter);
+}
+
+void ZLQtTreeDialog::setupShowParameters() {
+	if (myBackHistory.empty()) {
+		return;
+	}
+	if (!myShowParameters.contains(myBackHistory.top())) {
+		myPreviewWidget->clear();
+		return;
+	}
+	//TODO implement setting a slider position
+	ShowParameter parameter = myShowParameters.value(myBackHistory.top());
+	if (parameter.activeItemNumber != -1 && myListWidget->getItems().size() >= parameter.activeItemNumber) {
+		myListWidget->onNodeClicked(myListWidget->getItems().at(parameter.activeItemNumber));
+	} else {
+		myPreviewWidget->clear();
+	}
 }
 
 void ZLQtTreeDialog::onNodeClicked(ZLQtTreeItem* item) {
@@ -227,20 +271,24 @@ void ZLQtTreeDialog::onBackButton() {
 	if (myBackHistory.size() <= 1) {
 		return;
 	}
+	saveShowParameters();
 	myLastClickedNode = 0;
 	myForwardHistory.push(myBackHistory.pop());
 	myListWidget->fillNodes(myBackHistory.top());
 	updateAll();
+	setupShowParameters();
 }
 
 void ZLQtTreeDialog::onForwardButton() {
 	if (myForwardHistory.empty()) {
 		return;
 	}
+	saveShowParameters();
 	myLastClickedNode = 0;
 	myBackHistory.push(myForwardHistory.pop());
 	myListWidget->fillNodes(myBackHistory.top());
 	updateAll();
+	setupShowParameters();
 }
 
 void ZLQtTreeDialog::onSearchField() {
@@ -253,15 +301,24 @@ void ZLQtTreeDialog::onSearchField() {
 	mySearcher->simpleSearch(mySearchField->text().toStdString());
 }
 
-ZLQtTreeDialog::ChildrenRequestListener::ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node) :
-	myTreeDialog(dialog), myNode(node) {
+void ZLQtTreeDialog::onMoreChildren() {
+	onMoreChildrenRequest(myBackHistory.top());
+}
+
+ZLQtTreeDialog::ChildrenRequestListener::ChildrenRequestListener(ZLQtTreeDialog *dialog, ZLTreeNode *node, bool moreMode) :
+	myTreeDialog(dialog), myNode(node), myMoreMode(moreMode) {
 }
 
 void ZLQtTreeDialog::ChildrenRequestListener::finished(const std::string &error) {
 	if (!error.empty()) {
 		//TODO show error message?
 	}
-	myTreeDialog->onChildrenLoaded(myNode, true, error.empty());
+	if (!myMoreMode) {
+		myTreeDialog->onChildrenLoaded(myNode, true, error.empty());
+	} else {
+		myTreeDialog->onMoreChildrenLoaded(myNode, true, error.empty());
+	}
+
 }
 
 ZLQtIconButton::ZLQtIconButton(const std::string &iconEnabled, const std::string &iconDisabled, QWidget *parent) : QPushButton(parent) {

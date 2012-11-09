@@ -44,26 +44,26 @@ HuffDecompressor::HuffDecompressor(ZLInputStream& stream,
 
 	myCacheTable = new unsigned long[256];
 	stream.seek(huffHeaderOffset + cacheTableOffset, true);
-	for (size_t i = 0; i < 256; ++i) {
+	for (std::size_t i = 0; i < 256; ++i) {
 		PdbUtil::readUnsignedLongLE(stream, myCacheTable[i]); //LE
 	}
 	
 	myBaseTable = new unsigned long[64]; 
 	stream.seek(huffHeaderOffset + baseTableOffset, true);
-	for (size_t i = 0; i < 64; ++i) {
+	for (std::size_t i = 0; i < 64; ++i) {
 		PdbUtil::readUnsignedLongLE(stream, myBaseTable[i]); //LE
 	}
 	
 	stream.seek(huffDataOffset + 12, true);
 	PdbUtil::readUnsignedLongBE(stream, myEntryBits);	
 	
-	size_t huffDataSize = endHuffDataOffset - huffDataOffset;
+	std::size_t huffDataSize = endHuffDataOffset - huffDataOffset;
 	myData = new unsigned char[huffDataSize];
 	stream.seek(huffDataOffset, true);
 	if (huffDataSize == stream.read((char*)myData, huffDataSize)) {	
 		myDicts = new unsigned char* [huffRecordsNumber - 1];
-		for(size_t i = 0; i < huffRecordsNumber - 1;  ++i) {	
-			size_t shift = *(beginIt + i + 1) - huffDataOffset;
+		for(std::size_t i = 0; i < huffRecordsNumber - 1;  ++i) {	
+			std::size_t shift = *(beginIt + i + 1) - huffDataOffset;
 			myDicts[i] = myData + shift;
 		}
 	} else {
@@ -86,7 +86,7 @@ bool HuffDecompressor::error() const {
 	return myErrorCode == ERROR_CORRUPTED_FILE;
 }
 
-size_t HuffDecompressor::decompress(ZLInputStream &stream, char *targetBuffer, size_t compressedSize, size_t maxUncompressedSize) {
+std::size_t HuffDecompressor::decompress(ZLInputStream &stream, char *targetBuffer, std::size_t compressedSize, std::size_t maxUncompressedSize) {
 	if ((compressedSize == 0) || (myErrorCode == ERROR_CORRUPTED_FILE)) {
 		return 0;
 	}
@@ -96,7 +96,7 @@ size_t HuffDecompressor::decompress(ZLInputStream &stream, char *targetBuffer, s
 		myTargetBufferEnd = targetBuffer + maxUncompressedSize;
     	myTargetBufferPtr = targetBuffer;
 		if (stream.read((char*)sourceBuffer, compressedSize) == compressedSize) {
-			size_t trailSize = sizeOfTrailingEntries(sourceBuffer, compressedSize); 
+			std::size_t trailSize = sizeOfTrailingEntries(sourceBuffer, compressedSize); 
         	if (trailSize < compressedSize) { 
 				bitsDecompress(BitReader(sourceBuffer, compressedSize - trailSize));
 			} else {
@@ -113,7 +113,7 @@ size_t HuffDecompressor::decompress(ZLInputStream &stream, char *targetBuffer, s
 	return myTargetBufferPtr - myTargetBuffer;
 }
 
-void HuffDecompressor::bitsDecompress(BitReader bits, size_t depth) {
+void HuffDecompressor::bitsDecompress(BitReader bits, std::size_t depth) {
 	if (depth > 32) {
 		myErrorCode = ERROR_CORRUPTED_FILE;
 		return;
@@ -151,7 +151,7 @@ void HuffDecompressor::bitsDecompress(BitReader bits, size_t depth) {
 		const unsigned long sliceSize = blen & 0x7fff;
     	if (blen & 0x8000) {
         	if (myTargetBufferPtr + sliceSize < myTargetBufferEnd) {
-        		memcpy(myTargetBufferPtr, slice, sliceSize);
+        		std::memcpy(myTargetBufferPtr, slice, sliceSize);
         		myTargetBufferPtr += sliceSize;
         	} else {
         		return;
@@ -162,9 +162,9 @@ void HuffDecompressor::bitsDecompress(BitReader bits, size_t depth) {
 	}
 }
 
-size_t HuffDecompressor::sizeOfTrailingEntries(unsigned char* data, size_t size) const {
-	size_t num = 0;
-	size_t flags = myExtraFlags >> 1;
+std::size_t HuffDecompressor::sizeOfTrailingEntries(unsigned char* data, std::size_t size) const {
+	std::size_t num = 0;
+	std::size_t flags = myExtraFlags >> 1;
 	while (flags) {
     	if (flags & 1) {
 			if (num < size) {
@@ -177,9 +177,9 @@ size_t HuffDecompressor::sizeOfTrailingEntries(unsigned char* data, size_t size)
 }
 
 
-size_t HuffDecompressor::readVariableWidthIntegerBE(unsigned char* ptr, size_t psize) const {
+std::size_t HuffDecompressor::readVariableWidthIntegerBE(unsigned char* ptr, std::size_t psize) const {
     unsigned char bitsSaved = 0;
-	size_t result = 0;
+	std::size_t result = 0;
     while (true) {
         const unsigned char oneByte = ptr[psize - 1];
         result |= (oneByte & 0x7F) << bitsSaved;

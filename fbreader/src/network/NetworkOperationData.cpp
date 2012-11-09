@@ -22,7 +22,7 @@
 #include "NetworkLink.h"
 #include "NetworkOperationData.h"
 
-NetworkOperationData::NetworkOperationData(const NetworkLink &link) : Link(link), myResumeCount(0) {
+NetworkOperationData::NetworkOperationData(const NetworkLink &link) : Link(link) {
 }
 
 void NetworkOperationData::clear() {
@@ -31,8 +31,7 @@ void NetworkOperationData::clear() {
 }
 
 shared_ptr<ZLNetworkRequest> NetworkOperationData::resume() {
-	if (++myResumeCount >= 10) {
-		return 0;
-	}
-	return Link.resume(*this);
+	shared_ptr<ZLNetworkRequest> request = Link.resume(*this);
+	clear();
+	return request;
 }

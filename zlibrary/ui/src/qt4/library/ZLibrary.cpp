@@ -17,14 +17,16 @@
  * 02110-1301, USA.
  */
 
-#include <QtGui/QApplication>
 #include <QtCore/QTextCodec>
 #include <QtCore/QFile>
+#include <QtGui/QApplication>
+#include <QtGui/QFileOpenEvent>
 
 #include <ZLApplication.h>
 #include <ZLibrary.h>
 #include <ZLLanguageUtil.h>
 
+#include "ZLQApplication.h"
 #include "../../../../core/src/unix/library/ZLibraryImplementation.h"
 
 #include "../filesystem/ZLQtFSManager.h"
@@ -51,8 +53,24 @@ void initLibrary() {
 	new ZLQtLibraryImplementation();
 }
 
+ZLQApplication::ZLQApplication(int &argc, char **argv) : QApplication(argc, argv) {
+}
+
+bool ZLQApplication::event(QEvent *e) {
+	switch (e->type()) {
+		case QEvent::FileOpen:
+		{
+			ZLFile file((const char*)static_cast<QFileOpenEvent*>(e)->file().toUtf8(), 0);
+			ZLApplication::Instance().openFile(file);
+			return true;
+		}
+		default:
+			return QApplication::event(e);
+	}
+}
+
 void ZLQtLibraryImplementation::init(int &argc, char **&argv) {
-	new QApplication(argc, argv);
+	new ZLQApplication(argc, argv);
 
 	QTextCodec::setCodecForCStrings(QTextCodec::codecForName("utf-8"));
 

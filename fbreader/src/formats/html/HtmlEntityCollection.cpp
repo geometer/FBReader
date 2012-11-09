@@ -47,7 +47,7 @@ int HtmlEntityCollection::symbolNumber(const std::string &name) {
 		));
 	}
 	std::map<std::string,int>::const_iterator it = ourCollection.find(name);
-	return (it == ourCollection.end()) ? 0 : it->second;
+	return it == ourCollection.end() ? 0 : it->second;
 }
 
 CollectionReader::CollectionReader(std::map<std::string,int> &collection) : myCollection(collection) {
@@ -64,8 +64,8 @@ void CollectionReader::startElementHandler(const char *tag, const char **attribu
 		}
 		static const std::string _name = "name";
 		static const std::string _number = "number";
-		if ((_name == attributes[0]) && (_number == attributes[2])) {
-			myCollection[attributes[1]] = atoi(attributes[3]);
+		if (_name == attributes[0] && _number == attributes[2]) {
+			myCollection[attributes[1]] = std::atoi(attributes[3]);
 		}
 	}
 }

@@ -37,24 +37,24 @@ bool TextFormatDetector::isHtml(ZLInputStream &stream) const {
 		return false;
 	}
 
-	const size_t bufferSize = 1024;
+	const std::size_t bufferSize = 1024;
 	char *buffer = new char[bufferSize];
 	std::string sixBytes; 
 	int valuableBytesCounter = 0;
 	bool skipFlag = true;
 	while (valuableBytesCounter < 6) {
-		size_t size = stream.read(buffer, bufferSize);
+		std::size_t size = stream.read(buffer, bufferSize);
 		if (size == 0) {
 			break;
 		}
-		size_t index;
+		std::size_t index;
 		for (index = 0; skipFlag && (index < size); ++index) {
-			if (!isspace((unsigned char)buffer[index])) {
+			if (!std::isspace((unsigned char)buffer[index])) {
 				skipFlag = false;
 				break;
 			}
 		}
-		if (!skipFlag && (index < size)) {
+		if (!skipFlag && index < size) {
 			int bytes = std::min(6 - valuableBytesCounter, (int)(size - index));
 			sixBytes = std::string(buffer + index, bytes);
 			valuableBytesCounter += bytes;
@@ -71,7 +71,7 @@ bool TextFormatDetector::isPPL(ZLInputStream &stream) const {
 	}
 
 	char buffer[5]; 
-	bool result = (stream.read(buffer, 5) == 5) && (strncmp(buffer, "PPL\r\n", 5) == 0);
+	bool result = stream.read(buffer, 5) == 5 && std::strncmp(buffer, "PPL\r\n", 5) == 0;
 	stream.close();
 	return result;
 }

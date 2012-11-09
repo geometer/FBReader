@@ -35,16 +35,17 @@ public:
 		const std::string &title,
 		const std::string &summary,
 		const UrlInfoCollection &urlByType,
-		AccessibilityType accessibility = AlWAYS,
+		AccessibilityType accessibility = ALWAYS,
 		int flags = FLAGS_DEFAULT
 	);
 
 public:
 	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener = 0);
-	void onLoadedChildren(ZLExecutionScope &scope, std::string error);
+	bool supportsResumeLoading();
+	std::string resumeLoading(List &children, shared_ptr<ZLNetworkRequest::Listener> listener = 0);
 
 private:
-	NetworkOperationData myData;
+	NetworkOperationData myLoadingState;
 };
 
 #endif /* __OPDSCATALOGITEM_H__ */

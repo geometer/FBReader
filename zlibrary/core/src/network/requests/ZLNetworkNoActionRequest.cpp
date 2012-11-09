@@ -33,6 +33,6 @@ bool ZLNetworkNoActionRequest::doAfter(const std::string &error) {
 	return true;
 }
 
-bool ZLNetworkNoActionRequest::handleContent(void *, size_t) {
+bool ZLNetworkNoActionRequest::handleContent(void *, std::size_t) {
 	return true;
 }

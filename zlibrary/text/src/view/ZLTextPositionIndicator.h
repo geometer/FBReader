@@ -40,17 +40,17 @@ protected:
 	int left() const;
 	int right() const;
 
-	const std::vector<size_t> &textSize() const;
-	size_t startTextIndex() const;
-	size_t endTextIndex() const;
+	const std::vector<std::size_t> &textSize() const;
+	std::size_t startTextIndex() const;
+	std::size_t endTextIndex() const;
 
 private:
 	void drawExtraText(const std::string &text);
 	std::string textPositionString() const;
 	std::string timeString() const;
-	size_t sizeOfParagraph(size_t paragraphNumber) const;
-	size_t sizeOfTextBeforeParagraph(size_t paragraphNumber) const;
-	size_t sizeOfTextBeforeCursor(const ZLTextWordCursor &cursor) const;
+	std::size_t sizeOfParagraph(std::size_t paragraphNumber) const;
+	std::size_t sizeOfTextBeforeParagraph(std::size_t paragraphNumber) const;
+	std::size_t sizeOfTextBeforeCursor(const ZLTextWordCursor &cursor) const;
 
 private:
 	ZLTextView &myTextView;

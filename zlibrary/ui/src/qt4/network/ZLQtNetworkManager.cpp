@@ -38,6 +38,7 @@
 #include <ZLStringUtil.h>
 #include <ZLLogger.h>
 #include <ZLResource.h>
+#include <ZLNetworkUtil.h>
 
 #include "ZLQtNetworkManager.h"
 
@@ -196,6 +197,9 @@ void ZLQtNetworkManager::onFinished(QNetworkReply *reply) {
 	if (!error.isEmpty()) {
 		scope.errors->push_back(error);
 	}
+	if (error.isEmpty()) {
+		saveUserName(reply);
+	}
 
 	scope.timeoutTimer->deleteLater();
 
@@ -223,6 +227,9 @@ void ZLQtNetworkManager::onFinishedAsync(QNetworkReply *reply) {
 	}
 	scope.timeoutTimer->deleteLater();
 	QString error = handleErrors(reply);
+	if (error.isEmpty()) {
+		saveUserName(reply);
+	}
 	scope.request->doAfter(error.toStdString());
 	return;
 }
@@ -262,14 +269,19 @@ void ZLQtNetworkManager::onTimeOut() {
 void ZLQtNetworkManager::onAuthenticationRequired(QNetworkReply *reply, QAuthenticator *authenticator) {
 	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
 	scope.timeoutTimer->stop();
-	//TODO maybe implement saving old values for userName & password
 	std::string userName;
 	std::string password;
-	bool result = ZLApplication::Instance().showAuthDialog(userName, password, scope.authAskedAlready ? ZLResourceKey("authenticationFailed") : ZLResourceKey());
+	scope.request->setUIStatus(false);
+	bool result = ZLApplication::Instance().showAuthDialog(
+		ZLNetworkUtil::hostFromUrl(reply->url().toString().toStdString()),
+		userName,
+		password,
+		scope.authAskedAlready ? ZLResourceKey("authenticationFailed") : ZLResourceKey());
+	scope.request->setUIStatus(true);
 	if (result) {
 		scope.request->setupAuthentication(userName, password);
 	} else {
-		return; //message 'auth fail error' will be showed
+		return;
 	}
 
 	scope.timeoutTimer->start(timeoutValue());
@@ -377,6 +389,16 @@ void ZLQtNetworkManager::setHeadersAndSsl(QNetworkRequest &networkRequest) const
 	networkRequest.setRawHeader("User-Agent", userAgent().c_str());
 	QSslConfiguration configuration = QSslConfiguration::defaultConfiguration();
 	networkRequest.setSslConfiguration(configuration);
+}
+
+void ZLQtNetworkManager::saveUserName(QNetworkReply *reply) const {
+	ZLQtNetworkReplyScope scope = reply->property("scope").value<ZLQtNetworkReplyScope>();
+	std::string userName = scope.request->userName();
+	if (userName.empty()) {
+		return;
+	}
+	std::string siteName = ZLNetworkUtil::hostFromUrl(reply->url().toString().toStdString());
+	ZLApplication::Instance().saveUserName(siteName, userName);
 }
 
 int ZLQtNetworkManager::timeoutValue() const {

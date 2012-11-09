@@ -49,7 +49,7 @@ bool FindFileIdRunnable::run() {
 	DBIntValue &addParent = (DBIntValue &) *myAddFile->parameter("@parent_id").value();
 	((DBIntValue &) *myAddFile->parameter("@size").value()) = 0;
 
-	size_t index = dirName.length() + 1;
+	std::size_t index = dirName.length() + 1;
 	findName = dirName;
 	findParent = 0;
 	while (true) {
@@ -69,7 +69,7 @@ bool FindFileIdRunnable::run() {
 			myFileId = ((DBIntValue &) *physId).value();
 			return true;
 		}
-		size_t index2 = resolvedPath.find(BooksDBQuery::ArchiveEntryDelimiter, index);
+		std::size_t index2 = resolvedPath.find(BooksDBQuery::ArchiveEntryDelimiter, index);
 		findName = resolvedPath.substr(index, index2 - index);
 		index = index2 + 1;
 		findParent = ((DBIntValue &) *physId).value();

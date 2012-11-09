@@ -34,12 +34,12 @@ public:
 						const unsigned long endHuffDataOffset, const unsigned long extraFlags);
 	~HuffDecompressor();
 
-	size_t decompress(ZLInputStream &stream, char *buffer, size_t compressedSize, size_t maxUncompressedSize);
+	std::size_t decompress(ZLInputStream &stream, char *buffer, std::size_t compressedSize, std::size_t maxUncompressedSize);
 	bool error() const;
 private:
-	size_t sizeOfTrailingEntries(unsigned char* data, size_t size) const;
-	size_t readVariableWidthIntegerBE(unsigned char* ptr, size_t psize) const;
-	void bitsDecompress(BitReader bits, size_t depth = 0);
+	std::size_t sizeOfTrailingEntries(unsigned char* data, std::size_t size) const;
+	std::size_t readVariableWidthIntegerBE(unsigned char* ptr, std::size_t psize) const;
+	void bitsDecompress(BitReader bits, std::size_t depth = 0);
 
 private:
 	unsigned long myEntryBits;

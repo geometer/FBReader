@@ -34,7 +34,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 public:
-	AuthorNode(ZLBlockTreeView::RootNode *parent, size_t atPosition, shared_ptr<Author> author);
+	AuthorNode(ZLBlockTreeView::RootNode *parent, std::size_t atPosition, shared_ptr<Author> author);
 	void init();
 
 	shared_ptr<Author> author() const;
@@ -73,7 +73,7 @@ public:
 	static const ZLTypeId TYPE_ID;
 
 private:
-	static size_t positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag);
+	static std::size_t positionToInsert(ZLBlockTreeNode *parent, shared_ptr<Tag> tag);
 
 public:
 	TagNode(ZLBlockTreeView::RootNode *parent, shared_ptr<Tag> tag);
@@ -100,7 +100,7 @@ public:
 public:
 	BookNode(AuthorNode *parent, shared_ptr<Book> book);
 	BookNode(SeriesNode *parent, shared_ptr<Book> book);
-	BookNode(TagNode *parent, size_t atPosition, shared_ptr<Book> book);
+	BookNode(TagNode *parent, std::size_t atPosition, shared_ptr<Book> book);
 
 	shared_ptr<Book> book() const;
 

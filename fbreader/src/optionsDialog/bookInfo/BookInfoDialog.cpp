@@ -38,8 +38,8 @@
 #include "../../library/Tag.h"
 #include "../../library/Author.h"
 
-static const size_t AUTHOR_ENTRIES_POOL_SIZE = 64;
-static const size_t TAG_ENTRIES_POOL_SIZE = 64;
+static const std::size_t AUTHOR_ENTRIES_POOL_SIZE = 64;
+static const std::size_t TAG_ENTRIES_POOL_SIZE = 64;
 
 class AuthorDisplayNameEntry : public ZLComboOptionEntry {
 
@@ -170,7 +170,7 @@ void AuthorDisplayNameEntry::onValueEdited(const std::string &value) {
 
 void AuthorDisplayNameEntry::onValueSelected(int index) {
 	const AuthorList &authors = Library::Instance().authors();
-	myCurrentAuthor = (((size_t)index) < authors.size()) ? authors[index] : 0;
+	myCurrentAuthor = (((std::size_t)index) < authors.size()) ? authors[index] : 0;
 	myInfoDialog.mySeriesTitleEntry->resetView();
 	onValueChanged(myValues[index]);
 }
@@ -182,14 +182,14 @@ void AuthorDisplayNameEntry::onValueChanged(const std::string &value) {
 
 	myEmpty = value.empty();
 	if (myEmpty) {
-		for (size_t i = 0; i < myInfoDialog.myAuthorEntries.size(); ++i) {
+		for (std::size_t i = 0; i < myInfoDialog.myAuthorEntries.size(); ++i) {
 			AuthorDisplayNameEntry &entry = *myInfoDialog.myAuthorEntries[i];
 			if (entry.myEmpty && entry.isVisible() && this != &entry) {
 				entry.setVisible(false);
 			}
 		}
 	} else {
-		size_t i, lastvisible = (size_t) -1;
+		std::size_t i, lastvisible = (std::size_t) -1;
 		for (i = 0; i < myInfoDialog.myAuthorEntries.size(); ++i) {
 			AuthorDisplayNameEntry &entry = *myInfoDialog.myAuthorEntries[i];
 			if (entry.isVisible()) {
@@ -421,14 +421,14 @@ void BookTagEntry::onValueChanged(const std::string &value) {
 
 	myEmpty = value.empty();
 	if (myEmpty) {
-		for (size_t i = 0; i < myInfoDialog.myTagEntries.size(); ++i) {
+		for (std::size_t i = 0; i < myInfoDialog.myTagEntries.size(); ++i) {
 			BookTagEntry &entry = *myInfoDialog.myTagEntries[i];
 			if (entry.myEmpty && entry.isVisible() && this != &entry) {
 				entry.setVisible(false);
 			}
 		}
 	} else {
-		size_t i, lastvisible = (size_t) -1;
+		std::size_t i, lastvisible = (std::size_t) -1;
 		for (i = 0; i < myInfoDialog.myTagEntries.size(); ++i) {
 			BookTagEntry &entry = *myInfoDialog.myTagEntries[i];
 			if (entry.isVisible()) {
@@ -463,7 +463,7 @@ void BookInfoApplyAction::run() {
 	Book &book = *myInfoDialog.myBook;
 
 	AuthorList authors;
-	for (size_t i = 0; i < myInfoDialog.myAuthorEntries.size(); ++i) {
+	for (std::size_t i = 0; i < myInfoDialog.myAuthorEntries.size(); ++i) {
 		shared_ptr<Author> a = myInfoDialog.myAuthorEntries[i]->myCurrentAuthor;
 		if (!a.isNull() &&
 				std::find(authors.begin(), authors.end(), a) == authors.end()) {
@@ -477,7 +477,7 @@ void BookInfoApplyAction::run() {
 	}
 
 	book.removeAllTags();
-	for (size_t i = 0; i < myInfoDialog.myNewTags.size(); ++i) {
+	for (std::size_t i = 0; i < myInfoDialog.myNewTags.size(); ++i) {
 		book.addTag(myInfoDialog.myNewTags[i]);
 	}
 
@@ -539,7 +539,7 @@ void BookInfoDialog::initTagEntries() {
 	const TagList &tags = myBook->tags();
 	myTagsDone = false;
 	myTagsTab = &myDialog->createTab(ZLResourceKey("Tags"));
-	for (size_t i = 0; i < TAG_ENTRIES_POOL_SIZE; ++i) {
+	for (std::size_t i = 0; i < TAG_ENTRIES_POOL_SIZE; ++i) {
 		std::string tag = (i < tags.size()) ? tags[i]->fullName() : "";
 		BookTagEntry *entry = new BookTagEntry(*this, tag, visible);
 		myTagEntries.push_back(entry);
@@ -553,7 +553,7 @@ void BookInfoDialog::initAuthorEntries() {
 	const AuthorList &authors = myBook->authors();
 	myAuthorsDone = false;
 	myAuthorsTab = &myDialog->createTab(ZLResourceKey("Authors"));
-	for (size_t i = 0; i < AUTHOR_ENTRIES_POOL_SIZE; ++i) {
+	for (std::size_t i = 0; i < AUTHOR_ENTRIES_POOL_SIZE; ++i) {
 		shared_ptr<Author> author = (i < authors.size()) ? authors[i] : 0;
 		AuthorDisplayNameEntry *entry = new AuthorDisplayNameEntry(*this, author, visible);
 		myAuthorEntries.push_back(entry);

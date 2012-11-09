@@ -26,7 +26,7 @@ DummyBookReader::DummyBookReader(BookModel &model) : myModelReader(model) {
 }
 
 /*
-void DummyBookReader::characterDataHandler(const char *text, size_t len) {
+void DummyBookReader::characterDataHandler(const char *text, std::size_t len) {
 }
 
 void DummyBookReader::startElementHandler(int tag, const char **xmlattributes) {

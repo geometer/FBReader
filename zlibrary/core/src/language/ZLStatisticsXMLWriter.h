@@ -33,7 +33,7 @@ public:
     
     void writeStatistics(const ZLMapBasedStatistics &statistics);
 private:
-    void writeSequence(const std::string &key, size_t frequency);
+    void writeSequence(const std::string &key, std::size_t frequency);
 private:
 	static void appendLongNumber(std::string &str, unsigned long long n); 
 };

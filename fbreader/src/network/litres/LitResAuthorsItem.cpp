@@ -73,7 +73,7 @@ std::string LitResAuthorsItem::loadChildren(NetworkItem::List &children, shared_
 }
 
 void LitResAuthorsItem::fillChildrenWithAuthors(NetworkItem::List &children, const LitResAuthorsParser::AuthorsList &authors) {
-	for (size_t i = 0; i < authors.size(); ++i) {
+	for (std::size_t i = 0; i < authors.size(); ++i) {
 		const LitResAuthorsParser::LitresAuthorData &author = authors.at(i);
 
 		UrlInfoCollection urlByType = URLByType;
@@ -86,7 +86,7 @@ void LitResAuthorsItem::fillChildrenWithAuthors(NetworkItem::List &children, con
 			author.DisplayName,
 			getSubtitle(author),
 			urlByType,
-			NetworkCatalogItem::AlWAYS,
+			NetworkCatalogItem::ALWAYS,
 			NetworkCatalogItem::FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES
 		));
 	}

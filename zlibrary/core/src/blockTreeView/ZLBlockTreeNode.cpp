@@ -28,7 +28,7 @@ const ZLTypeId ZLBlockTreeNode::TYPE_ID(ZLObjectWithRTTI::TYPE_ID);
 ZLBlockTreeNode::ZLBlockTreeNode(ZLBlockTreeView &view) : myView(view), myParent(0), myChildIndex(0), myIsOpen(true) {
 }
 
-ZLBlockTreeNode::ZLBlockTreeNode(ZLBlockTreeNode *parent, size_t atPosition) : myView(parent->myView), myParent(parent), myIsOpen(false) {
+ZLBlockTreeNode::ZLBlockTreeNode(ZLBlockTreeNode *parent, std::size_t atPosition) : myView(parent->myView), myParent(parent), myIsOpen(false) {
 	if (atPosition >= parent->myChildren.size()) {
 		myChildIndex = parent->myChildren.size();
 		parent->myChildren.push_back(this);
@@ -72,15 +72,15 @@ void ZLBlockTreeNode::open(bool openNotClose) {
 	myIsOpen = openNotClose;
 }
 
-size_t ZLBlockTreeNode::level() const {
-	size_t l = 0;
+std::size_t ZLBlockTreeNode::level() const {
+	std::size_t l = 0;
 	for (ZLBlockTreeNode *parent = myParent; parent != 0; parent = parent->myParent) {
 		++l;
 	}
 	return l;
 }
 
-void ZLBlockTreeNode::addHyperlink(size_t left, size_t top, size_t right, size_t bottom, shared_ptr<ZLRunnableWithKey> action) {
+void ZLBlockTreeNode::addHyperlink(std::size_t left, std::size_t top, std::size_t right, std::size_t bottom, shared_ptr<ZLRunnableWithKey> action) {
 	myHyperlinks[Rectangle(left, top, right, bottom)] = action;
 }
 
@@ -88,7 +88,7 @@ void ZLBlockTreeNode::removeAllHyperlinks() {
 	myHyperlinks.clear();
 }
 
-bool ZLBlockTreeNode::isOverHyperlink(size_t x, size_t y) {
+bool ZLBlockTreeNode::isOverHyperlink(std::size_t x, std::size_t y) {
 	for (LinkMap::const_iterator it = myHyperlinks.begin(); it != myHyperlinks.end(); ++it) {
 		if (it->first.contains(x, y)) {
 			return true;
@@ -97,7 +97,7 @@ bool ZLBlockTreeNode::isOverHyperlink(size_t x, size_t y) {
 	return false;
 }
 
-void ZLBlockTreeNode::onStylusPress(size_t x, size_t y) {
+void ZLBlockTreeNode::onStylusPress(std::size_t x, std::size_t y) {
 	for (LinkMap::const_iterator it = myHyperlinks.begin(); it != myHyperlinks.end(); ++it) {
 		if (it->first.contains(x, y)) {
 			if (!it->second.isNull()) {
@@ -112,14 +112,14 @@ ZLBlockTreeView &ZLBlockTreeNode::view() {
 	return myView;
 }
 
-ZLBlockTreeNode::Rectangle::Rectangle(size_t left, size_t top, size_t right, size_t bottom) :
+ZLBlockTreeNode::Rectangle::Rectangle(std::size_t left, std::size_t top, std::size_t right, std::size_t bottom) :
 	Left(std::min(left, right)),
 	Top(std::min(top, bottom)),
 	Right(std::max(left, right)),
 	Bottom(std::max(top, bottom)) {
 }
 
-bool ZLBlockTreeNode::Rectangle::contains(size_t x, size_t y) const {
+bool ZLBlockTreeNode::Rectangle::contains(std::size_t x, std::size_t y) const {
 	return Left <= x && x <= Right && Top <= y && y <= Bottom;
 }
 
@@ -155,7 +155,7 @@ ZLBlockTreeNode *ZLBlockTreeNode::next() const {
 
 	const ZLBlockTreeNode *current = this;
 	while (current->myParent != 0) {
-		const size_t index = current->myChildIndex + 1;
+		const std::size_t index = current->myChildIndex + 1;
 		current = current->myParent;
 		if (index < current->myChildren.size()) {
 			return current->myChildren[index];

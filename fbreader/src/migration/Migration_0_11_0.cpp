@@ -47,7 +47,7 @@ static const std::string CURRENT_STATE_GROUP = "State";
 
 static const std::string RECENT_BOOKS_GROUP = "LastOpenedBooks";
 static const std::string BOOK = "Book";
-static const size_t MaxXmlListSize = 10;
+static const std::size_t MaxXmlListSize = 10;
 
 static const std::string PARAGRAPH_OPTION_NAME = "Paragraph";
 static const std::string WORD_OPTION_NAME = "Word";
@@ -330,14 +330,14 @@ std::string Migration_0_11_0_Runnable::tags2string(const TagList &tags) {
 }
 
 bool Migration_0_11_0_Runnable::stringEquals(const std::string &tags1, const std::string &tags2) {
-	size_t i1 = 0;
-	size_t i2 = 0;
+	std::size_t i1 = 0;
+	std::size_t i2 = 0;
 	while (i1 < tags1.size() && i2 < tags2.size()) {
-		if (isspace(tags1[i1])) {
+		if (std::isspace(tags1[i1])) {
 			++i1;
 			continue;
 		}
-		if (isspace(tags2[i2])) {
+		if (std::isspace(tags2[i2])) {
 			++i2;
 			continue;
 		}
@@ -347,7 +347,7 @@ bool Migration_0_11_0_Runnable::stringEquals(const std::string &tags1, const std
 	}
 	if (i1 == tags1.size() && i2 < tags2.size()) {
 		while (i2 < tags2.size()) {
-			if (!isspace(tags2[i2++])) {
+			if (!std::isspace(tags2[i2++])) {
 				return false;
 			}
 		}
@@ -355,7 +355,7 @@ bool Migration_0_11_0_Runnable::stringEquals(const std::string &tags1, const std
 	}
 	if (i1 < tags1.size() && i2 == tags2.size()) {
 		while (i1 < tags1.size()) {
-			if (!isspace(tags1[i1++])) {
+			if (!std::isspace(tags1[i1++])) {
 				return false;
 			}
 		}
@@ -405,7 +405,7 @@ bool Migration_0_11_0_Runnable::migrateState() {
 
 bool Migration_0_11_0_Runnable::migrateRecentBooks() {
 	BookList books;
-	for (size_t i = 0; i < MaxXmlListSize; ++i) {
+	for (std::size_t i = 0; i < MaxXmlListSize; ++i) {
 		std::string num = BOOK;
 		ZLStringUtil::appendNumber(num, i);
 		std::string name = ZLStringOption(ZLCategoryKey::STATE, RECENT_BOOKS_GROUP, num, "").value();

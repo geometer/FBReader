@@ -33,7 +33,7 @@
 ORBookReader::ORBookReader(BookModel &model) : myModelReader(model) {
 }
 
-void ORBookReader::characterDataHandler(const char *data, size_t len) {
+void ORBookReader::characterDataHandler(const char *data, std::size_t len) {
 	if (myState == READ_TOCTITLE) {
 		myTOCTitle.append(data, len);
 	}
@@ -80,7 +80,7 @@ void ORBookReader::startElementHandler(const char *tag, const char **xmlattribut
 			const char *residrefs = attributeValue(xmlattributes, "residrefs");
 			if (residrefs != 0) {
 				while (1) {
-					const char *nextSpace = strchr(residrefs, ' ');
+					const char *nextSpace = std::strchr(residrefs, ' ');
 					if (nextSpace == 0) {
 						if (*residrefs != '\0') {
 							myHtmlFilesOrder.push_back(residrefs);
@@ -99,28 +99,28 @@ void ORBookReader::startElementHandler(const char *tag, const char **xmlattribut
 				myCoverReference = residrefs;
 			}
 		}
-	} else if ((myState == READ_NAVIGATION) && (TAG_POINTER == tagString)) {
+	} else if (myState == READ_NAVIGATION && TAG_POINTER == tagString) {
 		const char *ref = attributeValue(xmlattributes, "elemrefs");
 		const char *level = attributeValue(xmlattributes, "level");
-		if ((ref != 0) && (level != 0)) {
+		if (ref != 0 && level != 0) {
 			myTOCReference = ref;
-			myTOCLevel = atoi(level);
+			myTOCLevel = std::atoi(level);
 			myState = READ_POINTER;
 		}
-	} else if ((myState == READ_POINTER) && (TAG_TITLE == tagString)) {
+	} else if (myState == READ_POINTER && TAG_TITLE == tagString) {
 		myState = READ_TOCTITLE;
 	}
 }
 
 void ORBookReader::endElementHandler(const char *tag) {
 	const std::string tagString = ZLUnicodeUtil::toLower(tag);
-	if ((TAG_RESOURCES == tagString) || (TAG_USERSET == tagString)) {
+	if (TAG_RESOURCES == tagString || TAG_USERSET == tagString) {
 		myState = READ_NONE;
-	} else if ((myState == READ_NAVIGATION) && (TAG_NAVIGATION == tagString)) {
+	} else if (myState == READ_NAVIGATION && TAG_NAVIGATION == tagString) {
 		myState = READ_USERSET;
-	} else if ((myState == READ_POINTER) && (TAG_POINTER == tagString)) {
+	} else if (myState == READ_POINTER && TAG_POINTER == tagString) {
 		myState = READ_NAVIGATION;
-	} else if ((myState == READ_TOCTITLE) && (TAG_TITLE == tagString)) {
+	} else if (myState == READ_TOCTITLE && TAG_TITLE == tagString) {
 		myTOC.push_back(TOCItem(myTOCReference, myTOCTitle, myTOCLevel));
 		myTOCTitle.erase();
 		myState = READ_POINTER;

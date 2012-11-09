@@ -36,6 +36,11 @@ public:
 public:
 	void setSearcher(shared_ptr<ZLTreeSearcher> searcher);
 
+	void onNodeBeginInsert(ZLTreeNode *parent, std::size_t index);
+	void onNodeEndInsert();
+	void onNodeBeginRemove(ZLTreeNode *parent, std::size_t index);
+	void onNodeEndRemove();
+
 protected:
 	const ZLResource &resource() const;
 

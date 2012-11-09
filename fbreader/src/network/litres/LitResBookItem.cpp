@@ -56,7 +56,7 @@ std::vector<shared_ptr<NetworkItem> > LitResBookItem::getRelatedCatalogsItems() 
 	urlByType[URL_CATALOG] = LitResUtil::generateAlsoReadUrl(Id);
 	items.push_back(new LitResBooksFeedItem(false, Link, resource("alsoRead").value(), std::string(), urlByType));
 
-	for (size_t i = 0; i < myAuthorIds.size(); ++i) {
+	for (std::size_t i = 0; i < myAuthorIds.size(); ++i) {
 		urlByType[URL_CATALOG] = LitResUtil::generateBooksByAuthorUrl(myAuthorIds.at(i));
 		std::string title = ZLStringUtil::printf(resource("sameAuthor").value(), Authors.at(i).DisplayName);
 		items.push_back(new LitResBooksFeedItem(false, Link, title, std::string(), urlByType));

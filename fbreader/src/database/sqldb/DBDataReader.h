@@ -33,26 +33,26 @@ public: // to implement:
 	virtual bool reset() = 0;
 	virtual void close() = 0;
 
-	virtual size_t columnsNumber() const = 0;
+	virtual std::size_t columnsNumber() const = 0;
 	
-	virtual DBValue::ValueType type(size_t column) const = 0;
-	virtual shared_ptr<DBValue> value(size_t column) const = 0;
+	virtual DBValue::ValueType type(std::size_t column) const = 0;
+	virtual shared_ptr<DBValue> value(std::size_t column) const = 0;
 
-	virtual int intValue(size_t column) const = 0;
-	virtual double realValue(size_t column) const = 0;
-	virtual std::string textValue(size_t column, const std::string &defaultValue) const = 0;
+	virtual int intValue(std::size_t column) const = 0;
+	virtual double realValue(std::size_t column) const = 0;
+	virtual std::string textValue(std::size_t column, const std::string &defaultValue) const = 0;
 
 public:
-	bool isDBNull(size_t column) const;
-	bool isInt(size_t column) const;
-	bool isReal(size_t column) const;
-	bool isText(size_t column) const;
+	bool isDBNull(std::size_t column) const;
+	bool isInt(std::size_t column) const;
+	bool isReal(std::size_t column) const;
+	bool isText(std::size_t column) const;
 };
 
-inline bool DBDataReader::isDBNull(size_t column) const { return type(column) == DBValue::DBNULL; }
-inline bool DBDataReader::isInt(size_t column) const { return type(column) == DBValue::DBINT; }
-inline bool DBDataReader::isReal(size_t column) const { return type(column) == DBValue::DBREAL; }
-inline bool DBDataReader::isText(size_t column) const { return type(column) == DBValue::DBTEXT; }
+inline bool DBDataReader::isDBNull(std::size_t column) const { return type(column) == DBValue::DBNULL; }
+inline bool DBDataReader::isInt(std::size_t column) const { return type(column) == DBValue::DBINT; }
+inline bool DBDataReader::isReal(std::size_t column) const { return type(column) == DBValue::DBREAL; }
+inline bool DBDataReader::isText(std::size_t column) const { return type(column) == DBValue::DBTEXT; }
 
 #endif /* __DBDATAREADER_H__ */
 

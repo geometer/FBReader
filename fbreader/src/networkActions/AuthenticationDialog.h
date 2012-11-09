@@ -40,7 +40,7 @@ private:
 
 public:
 	static bool run(NetworkAuthenticationManager &mgr);
-	static bool run(std::string &username, std::string &password, const std::string &message);
+	static bool run(const std::string &siteName, std::string &username, std::string &password, const std::string &message);
 
 private:
 	shared_ptr<ZLDialog> myDialog;

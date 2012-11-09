@@ -90,14 +90,14 @@ bool EReaderPlugin::readMetaInfo(Book &book) const {
 	if (metaInfoOffset == 0 || metaInfoOffset >= header.Offsets.size()) {
 		return false;
 	}
-	size_t currentOffset = header.Offsets[metaInfoOffset];
-	size_t nextOffset =
+	std::size_t currentOffset = header.Offsets[metaInfoOffset];
+	std::size_t nextOffset =
 		(metaInfoOffset + 1 < (unsigned short)header.Offsets.size()) ?
 			header.Offsets[metaInfoOffset + 1] : stream->sizeOfOpened();
 	if (nextOffset <= currentOffset) {
 		return false;
 	}
-	size_t length = nextOffset - currentOffset;
+	std::size_t length = nextOffset - currentOffset;
 
 	char* metaInfoBuffer = new char[length];
 	stream->seek(currentOffset, true);
@@ -106,8 +106,8 @@ bool EReaderPlugin::readMetaInfo(Book &book) const {
 	delete[] metaInfoBuffer;
 
 	std::string metaInfoData[5]; // Title; Author; Rights; Publisher; isbn;
-	for (size_t i = 0; i < 5; ++i) { 
-		const size_t index = metaInfoStr.find('\0');
+	for (std::size_t i = 0; i < 5; ++i) { 
+		const std::size_t index = metaInfoStr.find('\0');
 		metaInfoData[i] = metaInfoStr.substr(0,index);
 		metaInfoStr = metaInfoStr.substr(index + 1);
 	}

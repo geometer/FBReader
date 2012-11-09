@@ -36,13 +36,13 @@ private:
 	bool fillBuffer();
 
 private:
-	void processRecord(size_t recordSize);
+	void processRecord(std::size_t recordSize);
 	void processTextParagraph(char *start, char *end);
 
 private:
 	unsigned short myCompressionVersion;
 	char *myFullBuffer;
-	size_t myRecordIndex;
+	std::size_t myRecordIndex;
 };
 
 #endif /* __PLUCKERTEXTSTREAM_H__ */

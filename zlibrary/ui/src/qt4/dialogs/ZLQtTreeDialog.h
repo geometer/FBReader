@@ -22,6 +22,7 @@
 
 #include <QtCore/QStack>
 #include <QtCore/QSet>
+#include <QtCore/QMap>
 
 #include <QtGui/QDialog>
 #include <QtGui/QScrollArea>
@@ -53,10 +54,6 @@ protected:
 public: //listener methods
 	void onExpandRequest(ZLTreeNode *node);
 	void onCloseRequest();
-	void onNodeBeginInsert(ZLTreeNode *parent, size_t index);
-	void onNodeEndInsert();
-	void onNodeBeginRemove(ZLTreeNode *parent, size_t index);
-	void onNodeEndRemove();
 	void onNodeUpdated(ZLTreeNode *node);
 
 	void onDownloadingStarted(ZLTreeNode *node);
@@ -67,13 +64,20 @@ public: //listener methods
 
 	void onRefresh();
 
+	void onMoreChildrenRequest(ZLTreeNode *node);
+
 public:
-	void onChildrenLoaded(const ZLTreeNode *node, bool checkLast, bool success);
+	void onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool success);
+	void onMoreChildrenLoaded(ZLTreeNode *node, bool checkLast, bool success);
 
 private:
 	void updateAll();
 	void updateWaitingIcons();
 	void updateNavigationButtons();
+
+private: //TODO maybe these functions can be used as a typical updateAll()
+	void saveShowParameters();
+	void setupShowParameters();
 
 private Q_SLOTS:
 	void onNodeClicked(ZLQtTreeItem* item);
@@ -81,7 +85,7 @@ private Q_SLOTS:
 	void onBackButton();
 	void onForwardButton();
 	void onSearchField();
-
+	void onMoreChildren();
 
 private:
 	ZLTreeNode *myRootNode;
@@ -94,19 +98,27 @@ private:
 	ZLQtItemsListWidget *myListWidget;
 	ZLQtPreviewWidget *myPreviewWidget;
 
-	QStack<const ZLTreeNode*> myBackHistory;
-	QStack<const ZLTreeNode*> myForwardHistory;
+	QStack<ZLTreeNode*> myBackHistory;
+	QStack<ZLTreeNode*> myForwardHistory;
+
+	struct ShowParameter {
+		int sliderPosition;
+		int activeItemNumber;
+	};
+
+	QMap<ZLTreeNode*, ShowParameter> myShowParameters;
 
 private:
 	class ChildrenRequestListener : public ZLNetworkRequest::Listener {
 		public:
-			ChildrenRequestListener(ZLQtTreeDialog *dialog, const ZLTreeNode *node);
+			ChildrenRequestListener(ZLQtTreeDialog *dialog, ZLTreeNode *node, bool moreMode);
 			void finished(const std::string &error);
 //			const ZLTreeNode *getNode() const;
 
 		private:
 			ZLQtTreeDialog *myTreeDialog;
-			const ZLTreeNode *myNode;
+			ZLTreeNode *myNode;
+			bool myMoreMode;
 	};
 
 //	QList<shared_ptr<ZLNetworkRequest::Listener> > myListeners;

@@ -57,7 +57,7 @@ bool PasswordRecoveryDialog::runDialog(std::string &email, std::string &errorMes
 				errorMessage = NetworkErrors::errorMessage(NetworkErrors::ERROR_EMAIL_WAS_NOT_SPECIFIED);
 				continue;
 			}
-			size_t atPos = email.find('@');
+			std::size_t atPos = email.find('@');
 			if (atPos >= (email.size() - 1) || email.find('.', atPos) == std::string::npos) {
 				errorMessage = NetworkErrors::errorMessage(NetworkErrors::ERROR_INVALID_EMAIL);
 				continue;

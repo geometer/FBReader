@@ -54,7 +54,7 @@ protected:
 	virtual void makeUpToDate() = 0;
 
 private:
-	size_t myCollectionRevision;
+	std::size_t myCollectionRevision;
 };
 
 class LibraryByAuthorView : public LibraryView {
@@ -65,7 +65,7 @@ public:
 private:
 	void makeUpToDate();
 
-	void addAuthorSubtree(shared_ptr<Author> author, size_t atPosition);
+	void addAuthorSubtree(shared_ptr<Author> author, std::size_t atPosition);
 	void fillAuthorSubtree(AuthorNode *node, const std::set<shared_ptr<Book> > &visibleBooks);
 	bool isSubtreeUpToDate(AuthorNode *node);
 	void updateAuthorSubtree(AuthorNode *node);

@@ -54,15 +54,15 @@ Migration::~Migration() {
 }
 
 int Migration::extractVersionInformation(const std::string &name) {
-	int major = atoi(name.c_str());
+	int major = std::atoi(name.c_str());
 	int minor = 0;
 	int point = 0;
 	int index = name.find('.');
 	if (index > 0) {
-		minor = atoi(name.c_str() + index + 1);
+		minor = std::atoi(name.c_str() + index + 1);
 		index = name.find('.', index + 1);
 		if (index > 0) {
-			point = atoi(name.c_str() + index + 1);
+			point = std::atoi(name.c_str() + index + 1);
 		}
 	}
 	return 10000 * major + 100 * minor + point;

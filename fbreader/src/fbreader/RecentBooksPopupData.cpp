@@ -30,15 +30,15 @@ void RecentBooksPopupData::updateId() {
 	++myId;
 }
 
-size_t RecentBooksPopupData::id() const {
+std::size_t RecentBooksPopupData::id() const {
 	return myId;
 }
 
-size_t RecentBooksPopupData::count() const {
+std::size_t RecentBooksPopupData::count() const {
 	return Library::Instance().recentBooks().size();
 }
 
-const std::string RecentBooksPopupData::text(size_t index) {
+const std::string RecentBooksPopupData::text(std::size_t index) {
 	const BookList &books = Library::Instance().recentBooks();
 	if (index >= books.size()) {
 		return "";
@@ -52,7 +52,7 @@ const std::string RecentBooksPopupData::text(size_t index) {
 	}
 }
 
-void RecentBooksPopupData::run(size_t index) {
+void RecentBooksPopupData::run(std::size_t index) {
 	FBReader &fbreader = FBReader::Instance();
 	const BookList &books = Library::Instance().recentBooks();
 	if (index >= books.size()) {

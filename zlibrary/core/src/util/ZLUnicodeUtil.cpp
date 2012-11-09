@@ -59,7 +59,7 @@ void ZLUnicodeTableReader::startElementHandler(const char *tag, const char **att
 
 	if (SYMBOL_TAG == tag) {
 		const char *codeS = attributeValue(attributes, "code");
-		const ZLUnicodeUtil::Ucs4Char code = strtol(codeS, 0, 16);
+		const ZLUnicodeUtil::Ucs4Char code = std::strtol(codeS, 0, 16);
 		const char *typeS = attributeValue(attributes, "type");
 		ZLUnicodeData::SymbolType type = ZLUnicodeData::UNKNOWN;
 		if (LETTER_LOWERCASE_TYPE == typeS) {
@@ -70,9 +70,9 @@ void ZLUnicodeTableReader::startElementHandler(const char *tag, const char **att
 			type = ZLUnicodeData::LETTER_OTHER;
 		}
 		const char *lowerS = attributeValue(attributes, "lower");
-		const ZLUnicodeUtil::Ucs4Char lower = (lowerS != 0) ? strtol(lowerS, 0, 16) : code;
+		const ZLUnicodeUtil::Ucs4Char lower = lowerS != 0 ? std::strtol(lowerS, 0, 16) : code;
 		const char *upperS = attributeValue(attributes, "upper");
-		const ZLUnicodeUtil::Ucs4Char upper = (upperS != 0) ? strtol(upperS, 0, 16) : code;
+		const ZLUnicodeUtil::Ucs4Char upper = upperS != 0 ? std::strtol(upperS, 0, 16) : code;
 		UNICODE_TABLE.insert(std::make_pair(code, ZLUnicodeData(type, lower, upper)));
 	}
 }

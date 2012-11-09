@@ -36,12 +36,12 @@ PalmDocStream::~PalmDocStream() {
 }
 
 bool PalmDocStream::processRecord() {
-	const size_t currentOffset = recordOffset(myRecordIndex);
+	const std::size_t currentOffset = recordOffset(myRecordIndex);
 	if (currentOffset < myBase->offset()) {
 	    return false;
 	}
 	myBase->seek(currentOffset, true);
-	const size_t nextOffset = recordOffset(myRecordIndex + 1);
+	const std::size_t nextOffset = recordOffset(myRecordIndex + 1);
 	if (nextOffset < currentOffset) {
 	    return false;
 	}
@@ -190,9 +190,9 @@ int PalmDocStream::firstImageLocationIndex(const std::string &fileName) {
 		if (firstImageLocation.second > 4) {
 			fileStream->read(bu, 4);
 			static const char jpegStart[2] = { (char)0xFF, (char)0xd8 };
-			if ((strncmp(bu, "BM", 2) == 0) ||
-					(strncmp(bu, "GIF8", 4) == 0) ||
-					(strncmp(bu, jpegStart, 2) == 0)) {
+			if (std::strncmp(bu, "BM", 2) == 0 ||
+					std::strncmp(bu, "GIF8", 4) == 0 ||
+					std::strncmp(bu, jpegStart, 2) == 0) {
 				found = true;
 				break;
 			}

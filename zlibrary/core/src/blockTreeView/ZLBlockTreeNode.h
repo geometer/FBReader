@@ -38,14 +38,14 @@ public:
 
 protected:
 	struct Rectangle {
-		const size_t Left;
-		const size_t Top;
-		const size_t Right;
-		const size_t Bottom;
+		const std::size_t Left;
+		const std::size_t Top;
+		const std::size_t Right;
+		const std::size_t Bottom;
 
-		Rectangle(size_t left, size_t vOffset, size_t right, size_t bottom);
+		Rectangle(std::size_t left, std::size_t vOffset, std::size_t right, std::size_t bottom);
 
-		bool contains(size_t x, size_t y) const;
+		bool contains(std::size_t x, std::size_t y) const;
 		bool operator < (const Rectangle &r) const;
 	};
 
@@ -54,7 +54,7 @@ public:
 
 protected:
 	ZLBlockTreeNode(ZLBlockTreeView &view);
-	ZLBlockTreeNode(ZLBlockTreeNode *parent, size_t atPosition = -1);
+	ZLBlockTreeNode(ZLBlockTreeNode *parent, std::size_t atPosition = -1);
 
 public:
 	virtual ~ZLBlockTreeNode();
@@ -70,7 +70,7 @@ public:
 	bool isOpen() const;
 
 protected:
-	size_t level() const;
+	std::size_t level() const;
 
 	ZLBlockTreeView &view();
 
@@ -78,17 +78,17 @@ public:
 	virtual void paint(ZLPaintContext &context, int vOffset) = 0;
 	virtual int height(ZLPaintContext &context) const = 0;
 
-	void onStylusPress(size_t x, size_t y);
-	bool isOverHyperlink(size_t x, size_t y);
+	void onStylusPress(std::size_t x, std::size_t y);
+	bool isOverHyperlink(std::size_t x, std::size_t y);
 
 protected:
-	void addHyperlink(size_t left, size_t top, size_t right, size_t bottom, shared_ptr<ZLRunnableWithKey> action);
+	void addHyperlink(std::size_t left, std::size_t top, std::size_t right, std::size_t bottom, shared_ptr<ZLRunnableWithKey> action);
 	void removeAllHyperlinks();
 
 private:
 	ZLBlockTreeView &myView;
 	ZLBlockTreeNode *myParent;
-	size_t myChildIndex;
+	std::size_t myChildIndex;
 
 	List myChildren;
 	bool myIsOpen;

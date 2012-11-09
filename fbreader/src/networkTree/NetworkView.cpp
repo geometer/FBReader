@@ -166,8 +166,8 @@ void NetworkView::makeUpToDate() {
 	ZLBlockTreeNode::List rootChildren = rootNode().children();
 
 	ZLBlockTreeNode::List::iterator nodeIt = rootChildren.begin();
-	size_t nodeCount = 0;
-	for (size_t i = 0; i < collection.size(); ++i) {
+	std::size_t nodeCount = 0;
+	for (std::size_t i = 0; i < collection.size(); ++i) {
 		NetworkLink &link = collection.link(i);
 //		if (!link.isEnabled()) { //why it's commented?
 //			continue;
@@ -183,7 +183,7 @@ void NetworkView::makeUpToDate() {
 				break;
 			} else {
 				bool found = false;
-				for (size_t j = i + 1; j < collection.size(); ++j) {
+				for (std::size_t j = i + 1; j < collection.size(); ++j) {
 					if (&nodeLink == &collection.link(j)) {
 						found = true;
 						break;
@@ -258,8 +258,8 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 	ZLBlockTreeNode::List nodeChildren = node.children();
 	ZLBlockTreeNode::List::iterator nodeIt = nodeChildren.begin();
 
-	size_t nodeCount = 0;
-	for (size_t i = 0; i < nodeItems.size(); ++i) {
+	std::size_t nodeCount = 0;
+	for (std::size_t i = 0; i < nodeItems.size(); ++i) {
 		shared_ptr<NetworkItem> currentItemPtr = nodeItems[i];
 		NetworkItem &currentItem = *currentItemPtr;
 
@@ -288,7 +288,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 				break;
 			} else {
 				bool found = false;
-				for (size_t j = i + 1; j < nodeItems.size(); ++j) {
+				for (std::size_t j = i + 1; j < nodeItems.size(); ++j) {
 					if (&childItem == &*nodeItems[j]) {
 						found = true;
 						break;
@@ -320,7 +320,7 @@ void NetworkView::updateAccountDependents(NetworkCatalogNode &node) {
 }
 
 bool NetworkView::processAccountDependent(NetworkCatalogItem &item) {
-	if (item.getAccessibility() == NetworkCatalogItem::AlWAYS) {
+	if (item.getAccessibility() == NetworkCatalogItem::ALWAYS) {
 		return true;
 	}
 	const NetworkLink &link = item.Link;

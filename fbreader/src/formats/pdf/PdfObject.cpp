@@ -179,7 +179,7 @@ PdfStreamObject::PdfStreamObject(const PdfDictionaryObject &dictionary, ZLInputS
 				ZLZDecompressor decompressor(value - 2);
 				char buffer[2048];
 				while (true) {
-					size_t size = decompressor.decompress(dataStream, buffer, 2048);
+					std::size_t size = decompressor.decompress(dataStream, buffer, 2048);
 					if (size == 0) {
 						break;
 					}

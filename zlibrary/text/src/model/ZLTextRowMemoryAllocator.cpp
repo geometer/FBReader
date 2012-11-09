@@ -23,7 +23,7 @@
 
 #include "ZLTextRowMemoryAllocator.h"
 
-ZLTextRowMemoryAllocator::ZLTextRowMemoryAllocator(const size_t rowSize) : myRowSize(rowSize), myOffset(0) {
+ZLTextRowMemoryAllocator::ZLTextRowMemoryAllocator(const std::size_t rowSize) : myRowSize(rowSize), myOffset(0) {
 }
 
 ZLTextRowMemoryAllocator::~ZLTextRowMemoryAllocator() {
@@ -32,7 +32,7 @@ ZLTextRowMemoryAllocator::~ZLTextRowMemoryAllocator() {
 	}
 }
 
-char *ZLTextRowMemoryAllocator::allocate(size_t size) {
+char *ZLTextRowMemoryAllocator::allocate(std::size_t size) {
 	if (myPool.empty()) {
 		myCurrentRowSize = std::max(myRowSize, size + 1 + sizeof(char*));
 		myPool.push_back(new char[myCurrentRowSize]);
@@ -49,7 +49,7 @@ char *ZLTextRowMemoryAllocator::allocate(size_t size) {
 	return ptr;
 }
 
-char *ZLTextRowMemoryAllocator::reallocateLast(char *ptr, size_t newSize) {
+char *ZLTextRowMemoryAllocator::reallocateLast(char *ptr, std::size_t newSize) {
 	if (ptr + newSize + 1 + sizeof(char*) <= myPool.back() + myCurrentRowSize) {
 		myOffset = ptr - myPool.back() + newSize;
 		return ptr;

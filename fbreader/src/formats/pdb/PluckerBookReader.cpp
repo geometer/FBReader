@@ -338,7 +338,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 			if ((unsigned char)*ptr == 0xA0) {
 				*ptr = 0x20;
 			}
-			if (!myParagraphStarted && (textStart == ptr) && isspace((unsigned char)*ptr)) {
+			if (!myParagraphStarted && textStart == ptr && std::isspace((unsigned char)*ptr)) {
 				++textStart;
 			}
 		}
@@ -358,7 +358,7 @@ void PluckerBookReader::processTextParagraph(char *start, char *end) {
 	myDelayedControls.clear();
 }
 
-void PluckerBookReader::processTextRecord(size_t size, const std::vector<int> &pars) {
+void PluckerBookReader::processTextRecord(std::size_t size, const std::vector<int> &pars) {
 	char *start = myCharBuffer;
 	char *end = myCharBuffer;
 
@@ -376,7 +376,7 @@ void PluckerBookReader::processTextRecord(size_t size, const std::vector<int> &p
 	}
 }
 
-void PluckerBookReader::readRecord(size_t recordSize) {
+void PluckerBookReader::readRecord(std::size_t recordSize) {
 	unsigned short uid;
 	PdbUtil::readUnsignedShort(*myStream, uid);
 	if (uid == 1) {
@@ -498,7 +498,7 @@ bool PluckerBookReader::readDocument() {
 	myFont = FT_REGULAR;
 
 	for (std::vector<unsigned long>::const_iterator it = header.Offsets.begin(); it != header.Offsets.end(); ++it) {
-		size_t currentOffset = myStream->offset();
+		std::size_t currentOffset = myStream->offset();
 		if (currentOffset > *it) {
 			break;
 		}
@@ -506,7 +506,7 @@ bool PluckerBookReader::readDocument() {
 		if (myStream->offset() != *it) {
 			break;
 		}
-		size_t recordSize = ((it != header.Offsets.end() - 1) ? *(it + 1) : myStream->sizeOfOpened()) - *it;
+		std::size_t recordSize = ((it != header.Offsets.end() - 1) ? *(it + 1) : myStream->sizeOfOpened()) - *it;
 		readRecord(recordSize);
 	}
 	myStream->close();

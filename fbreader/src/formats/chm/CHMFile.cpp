@@ -29,7 +29,7 @@
 
 #include "LZXDecompressor.h"
 
-static std::string readString(ZLInputStream &stream, size_t length) {
+static std::string readString(ZLInputStream &stream, std::size_t length) {
 	std::string string(length, ' ');
 	stream.read(const_cast<char*>(string.data()), length);
 	return string;
@@ -67,7 +67,7 @@ static unsigned long long readEncodedInteger(ZLInputStream &stream) {
 	return result;
 }
 
-CHMInputStream::CHMInputStream(shared_ptr<ZLInputStream> base, const CHMFileInfo::SectionInfo &sectionInfo, size_t offset, size_t size) : myBase(base), mySectionInfo(sectionInfo), mySize(size) {
+CHMInputStream::CHMInputStream(shared_ptr<ZLInputStream> base, const CHMFileInfo::SectionInfo &sectionInfo, std::size_t offset, std::size_t size) : myBase(base), mySectionInfo(sectionInfo), mySize(size) {
 	myBaseStartIndex = offset / 0x8000;
 	myBaseStartIndex -= myBaseStartIndex % sectionInfo.ResetInterval;
 	myBytesToSkip = offset - myBaseStartIndex * 0x8000;
@@ -93,26 +93,26 @@ bool CHMInputStream::open() {
 	return true;
 }
 
-size_t CHMInputStream::read(char *buffer, size_t maxSize) {
+std::size_t CHMInputStream::read(char *buffer, std::size_t maxSize) {
 	if (myDoSkip) {
 		do_read(0, myBytesToSkip);
 		myDoSkip = false;
 	}
-	size_t realSize = do_read(buffer, std::min(maxSize, mySize - myOffset));
+	std::size_t realSize = do_read(buffer, std::min(maxSize, mySize - myOffset));
 	myOffset += realSize;
 	return realSize;
 }
 
-size_t CHMInputStream::do_read(char *buffer, size_t maxSize) {
-	size_t realSize = 0;
+std::size_t CHMInputStream::do_read(char *buffer, std::size_t maxSize) {
+	std::size_t realSize = 0;
 	do {
 		if (myOutDataLength == 0) {
 			if (myBaseIndex >= mySectionInfo.ResetTable.size()) {
 				break;
 			}
 			const bool isTail = myBaseIndex + 1 == mySectionInfo.ResetTable.size();
-			const size_t start = mySectionInfo.ResetTable[myBaseIndex];
-			const size_t end = isTail ? mySectionInfo.CompressedSize : mySectionInfo.ResetTable[myBaseIndex + 1];
+			const std::size_t start = mySectionInfo.ResetTable[myBaseIndex];
+			const std::size_t end = isTail ? mySectionInfo.CompressedSize : mySectionInfo.ResetTable[myBaseIndex + 1];
 			myOutDataLength = isTail ? mySectionInfo.UncompressedSize % 0x8000 : 0x8000;
 			myOutDataOffset = 0;
 
@@ -129,9 +129,9 @@ size_t CHMInputStream::do_read(char *buffer, size_t maxSize) {
 				break;
 			}
 		}
-		const size_t partSize = std::min(myOutDataLength, maxSize);
+		const std::size_t partSize = std::min(myOutDataLength, maxSize);
 		if (buffer != 0) {
-			memcpy(buffer + realSize, myOutData + myOutDataOffset, partSize);
+			std::memcpy(buffer + realSize, myOutData + myOutDataOffset, partSize);
 		}
 		maxSize -= partSize;
 		realSize += partSize;
@@ -157,11 +157,11 @@ void CHMInputStream::seek(int offset, bool absoluteOffset) {
 	}
 }
 
-size_t CHMInputStream::offset() const {
+std::size_t CHMInputStream::offset() const {
 	return myOffset;
 }
 
-size_t CHMInputStream::sizeOfOpened() {
+std::size_t CHMInputStream::sizeOfOpened() {
 	return mySize;
 }
 
@@ -263,15 +263,15 @@ bool CHMFileInfo::init(ZLInputStream &stream) {
 		stream.seek(36, false);
 		// header section 1 end
 
-		size_t nextOffset = stream.offset();
+		std::size_t nextOffset = stream.offset();
 		for (unsigned long i = 0; i < dirChunkNumber; ++i) {
 			nextOffset += 4096;
 			std::string header = readString(stream, 4);
 			if (header == "PMGL") {
 				unsigned long quickRefAreaSize = readUnsignedDWord(stream) % 4096;
 				stream.seek(12, false);
-				size_t startOffset = stream.offset();
-				size_t oldOffset = startOffset;
+				std::size_t startOffset = stream.offset();
+				std::size_t oldOffset = startOffset;
 				while (startOffset < nextOffset - quickRefAreaSize) {
 					int nameLength = readEncodedInteger(stream);
 					std::string name = readString(stream, nameLength);
@@ -295,8 +295,8 @@ bool CHMFileInfo::init(ZLInputStream &stream) {
 				}
 			} else if (header == "PMGI") {
 				unsigned long quickRefAreaSize = readUnsignedDWord(stream);
-				size_t startOffset = stream.offset();
-				size_t oldOffset = startOffset;
+				std::size_t startOffset = stream.offset();
+				std::size_t oldOffset = startOffset;
 				while (startOffset < nextOffset - quickRefAreaSize) {
 					int nameLength = readEncodedInteger(stream);
 					std::string name = readString(stream, nameLength);
@@ -381,7 +381,7 @@ bool CHMFileInfo::init(ZLInputStream &stream) {
 				return false;
 			}
 			stream.seek(4, false);
-			const size_t entriesNumber = readUnsignedDWord(stream);
+			const std::size_t entriesNumber = readUnsignedDWord(stream);
 			if (entriesNumber == 0) {
 				return false;
 			}
@@ -397,9 +397,9 @@ bool CHMFileInfo::init(ZLInputStream &stream) {
 			}
 			info.CompressedSize = readUnsignedQWord(stream);
 			stream.seek(8, false);
-			size_t previous = 0;
-			for (size_t j = 0; j < entriesNumber; ++j) {
-				size_t value = readUnsignedQWord(stream);
+			std::size_t previous = 0;
+			for (std::size_t j = 0; j < entriesNumber; ++j) {
+				std::size_t value = readUnsignedQWord(stream);
 				if ((j > 0) == (value <= previous)) {
 					return false;
 				}
@@ -453,7 +453,7 @@ CHMFileInfo::FileNames CHMFileInfo::sectionNames(shared_ptr<ZLInputStream> base)
 			}
 			fileNames.push_back(argument);
 		}
-		size_t startIndex = std::max(3, std::max(tocIndex, indexIndex) + 1);
+		std::size_t startIndex = std::max(3, std::max(tocIndex, indexIndex) + 1);
 		if (startIndex < 11) {
 			if (startIndex < fileNames.size()) {
 				names.Start = fileNames[startIndex];
