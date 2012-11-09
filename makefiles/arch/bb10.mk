@@ -21,8 +21,8 @@ LD = $(BB10_SDK_BIN_FOLDER)/qcc
 MOC = $(BB10_SDK_BIN_FOLDER)/moc
 
 ARCH_FLAGS = -Vgcc_ntoarmv7le
-CFLAGS = $(ARCH_FLAGS) -Wall -Wno-ctor-dtor-privacy -W -I $(ROOTDIR)/libs/bb10/include
-LDFLAGS = $(ARCH_FLAGS) -L $(ROOTDIR)/libs/bb10/lib
+CFLAGS = $(ARCH_FLAGS) -Wall -Wno-ctor-dtor-privacy -W
+LDFLAGS = $(ARCH_FLAGS)
 
 EXTERNAL_LIBS = -lcpp-ne -liconv
 

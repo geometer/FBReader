@@ -23,7 +23,7 @@ SUBDIRS_ALL = src/library src/typeId src/util src/constants src/logger src/files
 
 SUBDIRS = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/unix/time src/runnable src/network src/network/requests src/blockTreeView src/tree
 
-ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pepperpad3> <macosx>)"
+ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pepperpad3> <macosx> <bb10>)"
   SUBDIRS += src/desktop/application src/desktop/dialogs
 endif
 
