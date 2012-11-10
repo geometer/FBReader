@@ -1,6 +1,8 @@
 include $(ROOTDIR)/makefiles/arch/unix.mk
 
-BB10_SDK_BIN_FOLDER=/Applications/bbndk/host_10_0_9_52/darwin/x86/usr/bin
+QNX_HOST = /Applications/bbndk/host_10_0_9_52/darwin/x86
+QNX_TARGET = /Applications/bbndk/target_10_0_9_386/qnx6
+BB10_SDK_BIN_FOLDER = $(QNX_HOST)/usr/bin
 
 #BINDIR = $(INSTALLDIR)/Contents/MacOS
 #SHAREDIR = $(INSTALLDIR)/Contents/Resources
@@ -15,9 +17,9 @@ BB10_SDK_BIN_FOLDER=/Applications/bbndk/host_10_0_9_52/darwin/x86/usr/bin
 ZLSHARED = no
 
 CCACHE = $(shell if which ccache > /dev/null; then echo "ccache"; fi) #if ccache is not installed, do not use it
-CC = $(CCACHE) $(BB10_SDK_BIN_FOLDER)/qcc
+CC = QNX_HOST=$(QNX_HOST) QNX_TARGET=$(QNX_TARGET) $(CCACHE) $(BB10_SDK_BIN_FOLDER)/qcc
 AR = $(BB10_SDK_BIN_FOLDER)/ntoarmv7-ar rsu
-LD = $(BB10_SDK_BIN_FOLDER)/qcc
+LD = QNX_HOST=$(QNX_HOST) QNX_TARGET=$(QNX_TARGET) $(BB10_SDK_BIN_FOLDER)/qcc
 MOC = $(BB10_SDK_BIN_FOLDER)/moc
 
 ARCH_FLAGS = -Vgcc_ntoarmv7le
@@ -26,8 +28,8 @@ LDFLAGS = $(ARCH_FLAGS)
 
 EXTERNAL_LIBS = -lcpp-ne -liconv
 
-QTINCLUDE = -I /Applications/bbndk/target_10_0_9_386/qnx6/usr/include/qt4
-UILIBS = -L /Applications/bbndk/target_10_0_9_386/qnx6/armle-v7/usr/lib/qt4/lib -lQtCore -lQtGui -lQtNetwork
+QTINCLUDE = -I $(QNX_TARGET)/usr/include/qt4
+UILIBS = -L $(QNX_TARGET)/armle-v7/usr/lib/qt4/lib -lQtCore -lQtGui -lQtNetwork
 
 #ifeq "$(UI_TYPE)" "qt4"
 #  QTBASEDIR = ~/QtSDK/Desktop/Qt/4.8.1/gcc
