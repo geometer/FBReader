@@ -26,7 +26,7 @@
 OleStreamReader::OleStreamReader() : myNextPieceNumber(0) {
 }
 
-bool OleStreamReader::readDocument(shared_ptr<ZLInputStream> inputStream) {
+bool OleStreamReader::readDocument(shared_ptr<ZLInputStream> inputStream, bool readFormattingData) {
 	static const std::string WORD_DOCUMENT = "WordDocument";
 
 	shared_ptr<OleStorage> storage = new OleStorage;
@@ -42,7 +42,7 @@ bool OleStreamReader::readDocument(shared_ptr<ZLInputStream> inputStream) {
 	}
 
 	OleMainStream oleStream(storage, wordDocumentEntry, inputStream);
-	if (!oleStream.open()) {
+	if (!oleStream.open(readFormattingData)) {
 		ZLLogger::Instance().println("DocPlugin", "Cannot open OleMainStream");
 		return false;
 	}

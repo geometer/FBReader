@@ -56,7 +56,7 @@ OleMainStream::FloatImageInfo::FloatImageInfo() : ShapeId(0) {
 OleMainStream::OleMainStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream) : OleStream(storage, oleEntry, stream) {
 }
 
-bool OleMainStream::open() {
+bool OleMainStream::open(bool readFormattingData) {
 	if (OleStream::open() == false) {
 		return false;
 	}
@@ -95,6 +95,10 @@ bool OleMainStream::open() {
 	if (!result) {
 		ZLLogger::Instance().println("DocPlugin", "error during reading piece table");
 		return false;
+	}
+
+	if (!readFormattingData) {
+		return true;
 	}
 
 	OleEntry dataEntry;

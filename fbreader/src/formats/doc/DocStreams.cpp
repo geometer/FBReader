@@ -142,7 +142,7 @@ bool DocStream::open() {
 	if (stream.isNull() || !stream->open()) {
 		return false;
 	}
-	if (!reader->readDocument(stream)) {
+	if (!reader->readDocument(stream, false)) {
 		return false;
 	}
 	mySize = reader->readSize();

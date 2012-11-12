@@ -150,7 +150,7 @@ public:
 	OleMainStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream);
 
 public:
-	bool open();
+	bool open(bool readFormattingData);
 	const Pieces &getPieces() const;
 	const CharInfoList &getCharInfoList() const;
 	const StyleInfoList &getStyleInfoList() const;

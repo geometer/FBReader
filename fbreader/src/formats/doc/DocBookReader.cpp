@@ -50,7 +50,7 @@ bool DocBookReader::readBook() {
 	myModelReader.pushKind(REGULAR);
 	myModelReader.beginParagraph();
 
-	if (!readDocument(stream)) {
+	if (!readDocument(stream, true)) {
 		return false;
 	}
 
