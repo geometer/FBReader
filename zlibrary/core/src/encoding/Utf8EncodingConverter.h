@@ -17,13 +17,17 @@
  * 02110-1301, USA.
  */
 
-#include "EncodedTextReader.h"
+#ifndef __UTF8ENCODINGCONVERTER_H__
+#define __UTF8ENCODINGCONVERTER_H__
 
-EncodedTextReader::EncodedTextReader(const std::string &encoding) {
-	ZLEncodingCollection &collection = ZLEncodingCollection::Instance();
-	ZLEncodingConverterInfoPtr info = collection.info(encoding);
-	myConverter = !info.isNull() ? info->createConverter() : collection.defaultConverter();
-}
+#include "ZLEncodingConverter.h"
+#include "ZLEncodingConverterProvider.h"
 
-EncodedTextReader::~EncodedTextReader() {
-}
+class Utf8EncodingConverterProvider : public ZLEncodingConverterProvider {
+
+public:
+	bool providesConverter(const std::string &encoding);
+	shared_ptr<ZLEncodingConverter> createConverter(const std::string &encoding);
+};
+
+#endif /* __UTF8ENCODINGCONVERTER_H__ */

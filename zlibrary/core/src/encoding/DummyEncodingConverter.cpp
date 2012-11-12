@@ -36,16 +36,11 @@ friend class DummyEncodingConverterProvider;
 };
 
 bool DummyEncodingConverterProvider::providesConverter(const std::string &encoding) {
-	const std::string lowerCasedEncoding = ZLUnicodeUtil::toLower(encoding);
-	return (lowerCasedEncoding == "utf-8") || (lowerCasedEncoding == "us-ascii");
-}
-
-shared_ptr<ZLEncodingConverter> DummyEncodingConverterProvider::createConverter() {
-	return new DummyEncodingConverter();
+	return ZLUnicodeUtil::toUpper(encoding) == ZLEncodingConverter::ASCII;
 }
 
 shared_ptr<ZLEncodingConverter> DummyEncodingConverterProvider::createConverter(const std::string&) {
-	return createConverter();
+	return new DummyEncodingConverter();
 }
 
 DummyEncodingConverter::DummyEncodingConverter() {
