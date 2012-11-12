@@ -277,12 +277,16 @@ unsigned int OleStorage::getFileOffsetOfBlock(const OleEntry &e, unsigned int bl
 }
 
 bool OleStorage::getEntryByName(std::string name, OleEntry &returnEntry) const {
+	//TODO fix the workaround for duplicates streams: now it takes a stream with max length
+	unsigned int maxLength = 0;
 	for (std::size_t i = 0; i < myEntries.size(); ++i) {
 		const OleEntry &entry = myEntries.at(i);
-		if (entry.name == name) {
+		if (entry.name == name && entry.length >= maxLength) {
 			returnEntry = entry;
-			return true;
+			maxLength = entry.length;
 		}
 	}
-	return false;
+	return maxLength > 0;
 }
+
+
