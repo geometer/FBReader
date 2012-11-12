@@ -275,6 +275,10 @@ bool OleMainStream::readPieceTable(const char *headerBuffer, const OleEntry &tab
 	std::vector<int> cp; //array of character positions for pieces
 	unsigned int j = 0;
 	for (j = 0; ; j += 4) {
+		if (piecesTableBuffer.size() < j + 4) {
+			ZLLogger::Instance().println("OleMainStream", "invalid piece table, cp ends not with a lastcp");
+			break;
+		}
 		int curCP = OleUtil::get4Bytes(piecesTableBuffer.c_str(), j);
 		cp.push_back(curCP);
 		if (curCP == lastCP) {
@@ -282,15 +286,31 @@ bool OleMainStream::readPieceTable(const char *headerBuffer, const OleEntry &tab
 		}
 	}
 
+	if (cp.size() < 2) {
+		ZLLogger::Instance().println("OleMainStream", "invalid piece table, < 2 pieces");
+		return false;
+	}
+
 	std::vector<std::string> descriptors;
 	for (std::size_t k = 0; k < cp.size() - 1; ++k) {
 		//j + 4, because it should be taken after CP in PiecesTable Buffer
 		//k * 8, because it should be taken 8 byte for each descriptor
-		descriptors.push_back(piecesTableBuffer.substr(j + 4 + k * 8, 8));
+		std::size_t substrFrom = j + 4 + k * 8;
+		if (piecesTableBuffer.size() < substrFrom + 8) {
+			ZLLogger::Instance().println("OleMainStream", "invalid piece table, problems with descriptors reading");
+			break;
+		}
+		descriptors.push_back(piecesTableBuffer.substr(substrFrom, 8));
 	}
 
 	//filling the Pieces vector
-	for (std::size_t i = 0; i < descriptors.size(); ++i) {
+	std::size_t minValidSize = std::min(cp.size() - 1, descriptors.size());
+	if (minValidSize == 0) {
+		ZLLogger::Instance().println("OleMainStream", "invalid piece table, there are no pieces");
+		return false;
+	}
+
+	for (std::size_t i = 0; i < minValidSize; ++i) {
 		//4byte integer with offset and ANSI flag
 		int fcValue = OleUtil::get4Bytes(descriptors.at(i).c_str(), 0x2); //offset for piece structure
 		Piece piece;
