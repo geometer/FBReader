@@ -267,17 +267,25 @@ bool OleStorage::readOleEntry(int propNumber, OleEntry &e) {
 	return true;
 }
 
-unsigned int OleStorage::getFileOffsetOfBlock(const OleEntry &e, unsigned int blockNumber) const {
-	unsigned int res;
+bool OleStorage::countFileOffsetOfBlock(const OleEntry &e, unsigned int blockNumber, unsigned int &result) const {
+	//TODO maybe better syntax can be used?
+	if (e.blocks.size() <= (std::size_t)blockNumber) {
+		ZLLogger::Instance().println("DocPlugin", "countFileOffsetOfBlock can't be done, blockNumber is invalid");
+		return false;
+	}
 	if (e.isBigBlock) {
-		res = BBD_BLOCK_SIZE + e.blocks.at(blockNumber) * mySectorSize;
+		result = BBD_BLOCK_SIZE + e.blocks.at(blockNumber) * mySectorSize;
 	} else {
 		unsigned int sbdPerSector = mySectorSize / myShortSectorSize;
 		unsigned int sbdSectorNumber = e.blocks.at(blockNumber) / sbdPerSector;
 		unsigned int sbdSectorMod = e.blocks.at(blockNumber) % sbdPerSector;
-		res = BBD_BLOCK_SIZE + myEntries.at(myRootEntryIndex).blocks.at(sbdSectorNumber) * mySectorSize + sbdSectorMod * myShortSectorSize;
+		if (myEntries.at(myRootEntryIndex).blocks.size() <= (std::size_t)sbdSectorNumber) {
+			ZLLogger::Instance().println("DocPlugin", "countFileOffsetOfBlock can't be done, invalid sbd data");
+			return false;
+		}
+		result = BBD_BLOCK_SIZE + myEntries.at(myRootEntryIndex).blocks.at(sbdSectorNumber) * mySectorSize + sbdSectorMod * myShortSectorSize;
 	}
-	return res;
+	return true;
 }
 
 bool OleStorage::getEntryByName(std::string name, OleEntry &returnEntry) const {

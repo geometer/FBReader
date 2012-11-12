@@ -59,7 +59,7 @@ public:
 	unsigned int getShortSectorSize() const;
 
 public: //TODO make private
-	unsigned int getFileOffsetOfBlock(const OleEntry &e, unsigned int blockNumber) const;
+	bool countFileOffsetOfBlock(const OleEntry &e, unsigned int blockNumber, unsigned int &result) const;
 
 private:
 	bool readDIFAT(char *oleBuf);
