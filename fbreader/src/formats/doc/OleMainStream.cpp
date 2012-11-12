@@ -83,7 +83,8 @@ bool OleMainStream::open() {
 
 	if (!result) {
 		// cant't find table stream (that can be only in case if file format is below Word 7/8), so building simple table stream
-    // TODO: CHECK may be not all old documents have ANSI
+		// TODO: CHECK may be not all old documents have ANSI
+		ZLLogger::Instance().println("DocPlugin", "cant't find table stream, building own simple piece table, that includes all charachters");
 		Piece piece = {myStartOfText, myEndOfText - myStartOfText, true, Piece::PIECE_TEXT, 0};
 		myPieces.push_back(piece);
 		return true;
@@ -92,7 +93,7 @@ bool OleMainStream::open() {
 	result = readPieceTable(headerBuffer, tableEntry);
 
 	if (!result) {
-		ZLLogger::Instance().println("OleMainStream", "error during reading piece table");
+		ZLLogger::Instance().println("DocPlugin", "error during reading piece table");
 		return false;
 	}
 
@@ -155,27 +156,27 @@ bool OleMainStream::readFIB(const char *headerBuffer) {
 	int flags = OleUtil::getU2Bytes(headerBuffer, 0xA); //offset for flags
 
 	if (flags & 0x0004) { //flag for complex format
-		ZLLogger::Instance().println("OleMainStream", "This was fast-saved. Some information is lost");
+		ZLLogger::Instance().println("DocPlugin", "This was fast-saved. Some information is lost");
 		//lostInfo = (flags & 0xF0) >> 4);
 	}
 
 	if (flags & 0x1000) { //flag for using extending charset
-		ZLLogger::Instance().println("OleMainStream", "File uses extended character set (get_word8_char)");
+		ZLLogger::Instance().println("DocPlugin", "File uses extended character set (get_word8_char)");
 	} else {
-		ZLLogger::Instance().println("OleMainStream", "File uses get_8bit_char character set");
+		ZLLogger::Instance().println("DocPlugin", "File uses get_8bit_char character set");
 	}
 
 	if (flags & 0x100) { //flag for encrypted files
-		ZLLogger::Instance().println("OleMainStream", "File is encrypted");
+		ZLLogger::Instance().println("DocPlugin", "File is encrypted");
 		// Encryption key = %08lx ; NumUtil::get4Bytes(header, 14)
 		return false;
 	}
 
 	unsigned int charset = OleUtil::getU2Bytes(headerBuffer, 0x14); //offset for charset number
 	if (charset && charset != 0x100) { //0x100 = default charset
-		ZLLogger::Instance().println("OleMainStream", "Using not default character set %d");
+		ZLLogger::Instance().println("DocPlugin", "Using not default character set %d");
 	} else {
-		ZLLogger::Instance().println("OleMainStream", "Using default character set");
+		ZLLogger::Instance().println("DocPlugin", "Using default character set");
 	}
 
 	myStartOfText = OleUtil::get4Bytes(headerBuffer, 0x18); //offset for start of text value
@@ -229,8 +230,14 @@ std::string OleMainStream::getPiecesTableBuffer(const char *headerBuffer, OleStr
 
 	//1 step : loading CLX table from table stream
 	char *clxBuffer = new char[clxLength];
-	tableStream.seek(clxOffset, true);
-	tableStream.read(clxBuffer, clxLength);
+	if (!tableStream.seek(clxOffset, true)) {
+		ZLLogger::Instance().println("DocPlugin", "getPiecesTableBuffer -- error for seeking to CLX structure");
+		return std::string();
+	}
+	if (tableStream.read(clxBuffer, clxLength) != clxLength) {
+		ZLLogger::Instance().println("DocPlugin", "getPiecesTableBuffer -- CLX structure length is invalid");
+		return std::string();
+	}
 	std::string clx(clxBuffer, clxLength);
 	delete[] clxBuffer;
 
@@ -240,6 +247,10 @@ std::string OleMainStream::getPiecesTableBuffer(const char *headerBuffer, OleStr
 	std::size_t i;
 	std::string pieceTableBuffer;
 	while ((i = clx.find_first_of(0x02, from)) != std::string::npos) {
+		if (clx.size() < i + 1 + 4) {
+			ZLLogger::Instance().println("DocPlugin", "getPiecesTableBuffer -- CLX structure has invalid format");
+			return std::string();
+		}
 		unsigned int pieceTableLength = OleUtil::getU4Bytes(clx.c_str(), i + 1);
 		pieceTableBuffer = std::string(clx, i + 1 + 4);
 		if (pieceTableBuffer.length() != pieceTableLength) {
@@ -255,6 +266,10 @@ std::string OleMainStream::getPiecesTableBuffer(const char *headerBuffer, OleStr
 bool OleMainStream::readPieceTable(const char *headerBuffer, const OleEntry &tableEntry) {
 	OleStream tableStream(myStorage, tableEntry, myBaseStream);
 	std::string piecesTableBuffer = getPiecesTableBuffer(headerBuffer, tableStream);
+
+	if (piecesTableBuffer.empty()) {
+		return false;
+	}
 
 	//getting count of Character Positions for different types of subdocuments in Main Stream
 	int ccpText = OleUtil::get4Bytes(headerBuffer, 0x004C); //text
@@ -276,7 +291,7 @@ bool OleMainStream::readPieceTable(const char *headerBuffer, const OleEntry &tab
 	unsigned int j = 0;
 	for (j = 0; ; j += 4) {
 		if (piecesTableBuffer.size() < j + 4) {
-			ZLLogger::Instance().println("OleMainStream", "invalid piece table, cp ends not with a lastcp");
+			ZLLogger::Instance().println("DocPlugin", "invalid piece table, cp ends not with a lastcp");
 			break;
 		}
 		int curCP = OleUtil::get4Bytes(piecesTableBuffer.c_str(), j);
@@ -287,7 +302,7 @@ bool OleMainStream::readPieceTable(const char *headerBuffer, const OleEntry &tab
 	}
 
 	if (cp.size() < 2) {
-		ZLLogger::Instance().println("OleMainStream", "invalid piece table, < 2 pieces");
+		ZLLogger::Instance().println("DocPlugin", "invalid piece table, < 2 pieces");
 		return false;
 	}
 
@@ -297,7 +312,7 @@ bool OleMainStream::readPieceTable(const char *headerBuffer, const OleEntry &tab
 		//k * 8, because it should be taken 8 byte for each descriptor
 		std::size_t substrFrom = j + 4 + k * 8;
 		if (piecesTableBuffer.size() < substrFrom + 8) {
-			ZLLogger::Instance().println("OleMainStream", "invalid piece table, problems with descriptors reading");
+			ZLLogger::Instance().println("DocPlugin", "invalid piece table, problems with descriptors reading");
 			break;
 		}
 		descriptors.push_back(piecesTableBuffer.substr(substrFrom, 8));
@@ -306,7 +321,7 @@ bool OleMainStream::readPieceTable(const char *headerBuffer, const OleEntry &tab
 	//filling the Pieces vector
 	std::size_t minValidSize = std::min(cp.size() - 1, descriptors.size());
 	if (minValidSize == 0) {
-		ZLLogger::Instance().println("OleMainStream", "invalid piece table, there are no pieces");
+		ZLLogger::Instance().println("DocPlugin", "invalid piece table, there are no pieces");
 		return false;
 	}
 
@@ -380,7 +395,11 @@ bool OleMainStream::readBookmarks(const char *headerBuffer, const OleEntry &tabl
 	std::vector<std::string> names;
 	unsigned int offset = 0x6; //initial offset
 	for (unsigned int i = 0; i < recordsNumber; ++i) {
-		unsigned int length = OleUtil::getU2Bytes(buffer.c_str(), offset) * 2; //legnth of string in bytes
+		if (buffer.size() < offset + 2) {
+			ZLLogger::Instance().println("DocPlugin", "problmes with reading bookmarks names");
+			break;
+		}
+		unsigned int length = OleUtil::getU2Bytes(buffer.c_str(), offset) * 2; //length of string in bytes
 		ZLUnicodeUtil::Ucs2String name;
 		for (unsigned int j = 0; j < length; j+=2) {
 			char ch1 = buffer.at(offset + 2 + j);
@@ -433,8 +452,12 @@ bool OleMainStream::readStylesheet(const char *headerBuffer, const OleEntry &tab
 
 	OleStream tableStream(myStorage, tableEntry, myBaseStream);
 	char *buffer = new char[stshInfoLength];
-	tableStream.seek(beginStshInfo, true);
+	if (!tableStream.seek(beginStshInfo, true)) {
+		ZLLogger::Instance().println("DocPlugin", "problems with reading STSH structure");
+		return false;
+	}
 	if (tableStream.read(buffer, stshInfoLength) != stshInfoLength) {
+		ZLLogger::Instance().println("DocPlugin", "problems with reading STSH structure, invalid length");
 		return false;
 	}
 
@@ -606,7 +629,6 @@ bool OleMainStream::readFloatingImages(const char *headerBuffer, const OleEntry 
 	if (!readToBuffer(buffer, beginPicturesInfo, picturesInfoLength, tableStream)) {
 		return false;
 	}
-
 
 	static const unsigned int SPA_SIZE = 26;
 	std::size_t size = calcCountOfPLC(picturesInfoLength, SPA_SIZE);
