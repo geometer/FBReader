@@ -17,7 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
 #include <algorithm>
 
 #include <ZLUnicodeUtil.h>
@@ -56,7 +55,6 @@ Utf8EncodingConverter::~Utf8EncodingConverter() {
 }
 
 void Utf8EncodingConverter::convert(std::string &dst, const char *srcStart, const char *srcEnd) {
-	std::cerr << "src = " << std::string(srcStart, srcEnd - srcStart) << "\n";
 	if (myBuffer.size() > 0) {
 		const size_t len = ZLUnicodeUtil::length(myBuffer, 1);
 		if (len < myBuffer.size()) {
@@ -80,7 +78,6 @@ void Utf8EncodingConverter::convert(std::string &dst, const char *srcStart, cons
 		}
 	}
 	dst.append(srcStart, srcEnd - srcStart);
-	std::cerr << "dst = " << dst << "\n";
 }
 
 void Utf8EncodingConverter::reset() {
