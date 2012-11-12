@@ -53,11 +53,11 @@ private:
 	void ansiDataHandler(const char *buffer, std::size_t len);
 };
 
-class DocUtf8Reader : public DocReader {
+class DocUcs2Reader : public DocReader {
 
 public:
-	DocUtf8Reader(char *buffer, std::size_t maxSize);
-	~DocUtf8Reader();
+	DocUcs2Reader(char *buffer, std::size_t maxSize);
+	~DocUcs2Reader();
 
 private:
 	void ucs2SymbolHandler(ZLUnicodeUtil::Ucs2Char symbol);
@@ -110,13 +110,13 @@ void DocAnsiReader::ansiDataHandler(const char *buffer, std::size_t dataLength) 
 	}
 }
 
-DocUtf8Reader::DocUtf8Reader(char *buffer, std::size_t maxSize) : DocReader(buffer, maxSize) {
+DocUcs2Reader::DocUcs2Reader(char *buffer, std::size_t maxSize) : DocReader(buffer, maxSize) {
 }
 
-DocUtf8Reader::~DocUtf8Reader() {
+DocUcs2Reader::~DocUcs2Reader() {
 }
 
-void DocUtf8Reader::ucs2SymbolHandler(ZLUnicodeUtil::Ucs2Char symbol) {
+void DocUcs2Reader::ucs2SymbolHandler(ZLUnicodeUtil::Ucs2Char symbol) {
 	if (myActualSize < myMaxSize) {
 		char buffer[4];
 		const std::size_t dataLength = ZLUnicodeUtil::ucs2ToUtf8(buffer, symbol);
@@ -191,12 +191,12 @@ shared_ptr<DocReader> DocAnsiStream::createReader(char *buffer, std::size_t maxS
 	return new DocAnsiReader(buffer, maxSize);
 }
 
-DocUtf8Stream::DocUtf8Stream(const ZLFile& file, std::size_t maxSize) : DocStream(file, maxSize) {
+DocUcs2Stream::DocUcs2Stream(const ZLFile& file, std::size_t maxSize) : DocStream(file, maxSize) {
 }
 
-DocUtf8Stream::~DocUtf8Stream() {
+DocUcs2Stream::~DocUcs2Stream() {
 }
 
-shared_ptr<DocReader> DocUtf8Stream::createReader(char *buffer, std::size_t maxSize) {
-	return new DocUtf8Reader(buffer, maxSize);
+shared_ptr<DocReader> DocUcs2Stream::createReader(char *buffer, std::size_t maxSize) {
+	return new DocUcs2Reader(buffer, maxSize);
 }
