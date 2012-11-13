@@ -201,6 +201,7 @@ private:
 	std::string mySeriesTitle;
 	SummaryType mySummaryType;
 	mutable std::string mySummary;
+	mutable std::vector<shared_ptr<const ZLImage> > myImages;
 };
 
 class NetworkBookTree : public ZLTreePageNode {

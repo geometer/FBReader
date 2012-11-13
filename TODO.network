@@ -18,23 +18,31 @@ FUTURE RELEASES:
 	** show info about catalogs search failures (where?)
 
 RELEASE 0.99.3:
-	** during search, show found items immediately, do not wait for the search end
-  ** litres: do not store any user info after logout
-	** reload litres catalog after login/logout
-		** also, what's with reloading after running network dialog again?
+ DONE litres: do not store any user info after logout
+  ** reload litres catalog after login/logout
+     ** also, what's with reloading after running network dialog again?
+
   ** litres 'top 50 by popularity' -- do not group books by series
+		** add type="application/litres+xml;type=books;group=no"/> or smth like this to determine it
   ** litres 'top 50 by popularity' -- book duplicates?
-  ** mark series cleanly
-  ** use other waiting icons
-  ** litres -> authors list -> A -> Сергей Тимофеевич (show full name)
+
   ** for 'Series' items, show a batch of icons (of books in this series)
-	** find a good HUGE icon for book info loading (and small/tiny icons too, in the same style)
-	** implement async sign in operation
-		** BUG: SIGN IN, затем зашел в каталог, он стал грузить список купленных книг, operantion cancelled, 
+  ** use other waiting icons
+
+  ** UI: implement support for recording each node's show parameters
+	DONE save current node for preview widget
+	** save slider position for list widget
+
+  ** during search, show found items immediately, do not wait for the search end
+  ** mark series cleanly
+  ** litres -> authors list -> A -> АК -> Сергей Тимофеевич (show full name)
+  ** find a good HUGE icon for book info loading (and small/tiny icons too, in the same style)
+  ** implement async sign in operation
+	** BUG: SIGN IN, затем зашел в каталог, он стал грузить список купленных книг, operantion cancelled, 
 				и как будто вышли из каталога -- то есть с точки зрения пользователя, что-то странное, вроде и зашел, а "моих книг" нет. 
 				А обновиться можно, только если перезагрузить приложение
-		?? должна быть инициализация каталога при sign in/sign out
-		DONE BUG: "Мои книги" не открываются
+    ?? должна быть инициализация каталога при sign in/sign out
+	DONE BUG: "Мои книги" не открываются
 
 RELEASE 0.99.4:
   ** for 'partial loading':
@@ -68,9 +76,6 @@ RELEASE 0.99.4:
 		*** maybe save search results by search pattern
 	** implement a way to stop network request that doesn't need anymore
 	DONE implement async full information loading
-	** UI: implement support for recording each node's show parameters
-		DONE save current node for preview widget
-		** save slider position for list widget
 	** implement async sign out operation
 	** implement async sign up operation
 	** implement async password recovery operation	
