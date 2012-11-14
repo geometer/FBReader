@@ -70,7 +70,7 @@ DocReader::~DocReader() {
 }
 
 bool DocReader::readStream(OleMainStream &stream) {
-	//TODO here could be done 2 optmizations:
+	// TODO make 2 optmizations:
 	//	1) If another piece is too big, reading of next piece can be stopped if some size parameter will be specified
 	//		(it can be transfered as a parameter (with default 0 value, that means no need to use it) to readNextPiece method)
 	//	2) We can specify as a parameter for readNextPiece, what kind of piece should be read next (ANSI or not ANSI).

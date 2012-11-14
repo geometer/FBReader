@@ -56,7 +56,7 @@ OleMainStream::FloatImageInfo::FloatImageInfo() : ShapeId(0) {
 OleMainStream::OleMainStream(shared_ptr<OleStorage> storage, OleEntry oleEntry, shared_ptr<ZLInputStream> stream) : OleStream(storage, oleEntry, stream) {
 }
 
-bool OleMainStream::open(bool readFormattingData) {
+bool OleMainStream::open(bool doReadFormattingData) {
 	if (OleStream::open() == false) {
 		return false;
 	}
@@ -97,7 +97,7 @@ bool OleMainStream::open(bool readFormattingData) {
 		return false;
 	}
 
-	if (!readFormattingData) {
+	if (!doReadFormattingData) {
 		return true;
 	}
 

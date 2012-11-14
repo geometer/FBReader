@@ -149,7 +149,7 @@ unsigned int DocFloatImageReader::skipRecord(const RecordHeader &header, shared_
 unsigned int DocFloatImageReader::readBStoreContainerFileBlock(Blip &blip, shared_ptr<OleStream> stream, shared_ptr<OleStream> mainStream) {
 	//OfficeArtBStoreContainerFileBlock structure is described at p.59 [MS-ODRAW]
 	unsigned int count = readFBSE(blip.storeEntry, stream);
-	if( blip.storeEntry.offsetInDelay != (unsigned int)(-1)) {
+	if (blip.storeEntry.offsetInDelay != (unsigned int)-1) {
 		if (mainStream->seek(blip.storeEntry.offsetInDelay, true)) { //see p.70 [MS-ODRAW]
 			//TODO maybe we should stop reading float images here
 			ZLLogger::Instance().println("DocPlugin", "DocFloatImageReader: problems with seeking for offset");
@@ -355,7 +355,7 @@ unsigned int DocFloatImageReader::readFOPTE(FOPTE &fopte, shared_ptr<OleStream> 
 	fopte.pId = (dtemp & 0x3fff);
 	fopte.isBlipId = ((dtemp & 0x4000) >> 14) == 0x1;
 	fopte.isComplex = ((dtemp & 0x8000) >> 15) == 0x1;
-	fopte.value = read4Bytes (stream);
+	fopte.value = read4Bytes(stream);
 	return 6;
 }
 
@@ -382,4 +382,3 @@ unsigned int DocFloatImageReader::read4Bytes(shared_ptr<OleStream> stream) {
 	}
 	return OleUtil::getU4Bytes(b, 0);
 }
-
