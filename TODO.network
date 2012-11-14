@@ -17,22 +17,27 @@ FUTURE RELEASES:
 	** show info about catalogs search failures (where?)
 
 RELEASE 0.99.3:
- * * litres: do not store any user info after logout
+  ** litres: sort books as in server catalog
+  ** litres: do not store any user info after logout
   ** reload litres catalog after login/logout
      ** also, what's with reloading after running network dialog again?
 
   ** litres 'top 50 by popularity' -- do not group books by series
-		** add type="application/litres+xml;type=books;group=no"/> or smth like this to determine it
+		** add type="application/litres+xml;type=books;groupSeries=no"/> or smth like this to determine it
   ** litres 'top 50 by popularity' -- book duplicates?
 
   ** for 'Series' items, show a batch of icons (of books in this series)
+  ** series icon: show no more than 6 books in batch
+  ** for spaces, use percent of size instead of pixels
+  ** for covers of different sizes, resize to the same height
+	** if number of books < 6, increase spaces
+  ** series icon: use 'opposite' color instead of white
   DONE use other waiting icons
   DONE find a good HUGE icon for book info loading (and small/tiny icons too, in the same style)
   ** UI: implement support for recording each node's show parameters
 	DONE save current node for preview widget
 	** save slider position for list widget
   ** during search, show found items immediately, do not wait for the search end
-  ** mark series cleanly
   ** litres -> authors list -> A -> АК -> Сергей Тимофеевич (show full name)
   ** implement async sign in operation
 	** BUG: SIGN IN, затем зашел в каталог, он стал грузить список купленных книг, operantion cancelled, 
@@ -42,6 +47,10 @@ RELEASE 0.99.3:
 	DONE BUG: "Мои книги" не открываются
 
 RELEASE 0.99.4:
+  ** move waiting icons to a separate component
+  ** litres: for books by author, do not show book author
+  ** mark series cleanly
+  	** for series groups: show number of books in the second string
   ** for 'partial loading':
     ** show waiting item (in a separate item)
     ** in case of network error: show in the same item a message like 'download failed, click to retry'
