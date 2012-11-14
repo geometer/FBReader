@@ -6,7 +6,6 @@
   ** better icon for books with no covers
   ** better icon as placeholder for covers, that's not loaded, for books and catalogs 
 	** now we use 77/77 px resizing for all covers
-	** find waiting icon in .svg 
 
 FUTURE RELEASES:
 	** search logic (future):
@@ -18,7 +17,7 @@ FUTURE RELEASES:
 	** show info about catalogs search failures (where?)
 
 RELEASE 0.99.3:
- DONE litres: do not store any user info after logout
+ * * litres: do not store any user info after logout
   ** reload litres catalog after login/logout
      ** also, what's with reloading after running network dialog again?
 
@@ -27,16 +26,14 @@ RELEASE 0.99.3:
   ** litres 'top 50 by popularity' -- book duplicates?
 
   ** for 'Series' items, show a batch of icons (of books in this series)
-  ** use other waiting icons
-
+  DONE use other waiting icons
+  DONE find a good HUGE icon for book info loading (and small/tiny icons too, in the same style)
   ** UI: implement support for recording each node's show parameters
 	DONE save current node for preview widget
 	** save slider position for list widget
-
   ** during search, show found items immediately, do not wait for the search end
   ** mark series cleanly
   ** litres -> authors list -> A -> АК -> Сергей Тимофеевич (show full name)
-  ** find a good HUGE icon for book info loading (and small/tiny icons too, in the same style)
   ** implement async sign in operation
 	** BUG: SIGN IN, затем зашел в каталог, он стал грузить список купленных книг, operantion cancelled, 
 				и как будто вышли из каталога -- то есть с точки зрения пользователя, что-то странное, вроде и зашел, а "моих книг" нет. 

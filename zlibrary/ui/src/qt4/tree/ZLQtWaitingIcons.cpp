@@ -17,6 +17,9 @@
  * 02110-1301, USA.
  */
 
+#include <cmath>
+#include <algorithm>
+
 #include <QtGui/QPainter>
 
 #include <ZLibrary.h>
@@ -101,4 +104,149 @@ void ZLQtWaitingIconGif::start() {
 void ZLQtWaitingIconGif::finish() {
 	myMovie->stop();
 	this->hide();
+}
+
+ZLQtWaitingSpinner::ZLQtWaitingSpinner(int lines, int length, int width, int radius, QWidget *parent) : ZLQtWaitingIcon(parent),
+	myLines(lines),
+	myLength(length + width),
+	myWidth(width),
+	myRadius(radius),
+	myRoundness(70.0),
+	myColor(Qt::black),
+	mySpeed(1),
+	myTrail(70),
+	myOpacity(15)
+{
+	myCurrentCounter = 0;
+	myTimer = new QTimer(this);
+	connect(myTimer,SIGNAL(timeout()), this, SLOT(rotate()));
+	updateSize();
+	updateTimer();
+	this->hide();
+}
+
+void ZLQtWaitingSpinner::paintEvent(QPaintEvent */*ev*/) {
+	QPainter painter(this);
+	painter.fillRect(this->rect(), Qt::transparent);
+	painter.setRenderHint(QPainter::Antialiasing, true);
+
+	if (myCurrentCounter >= myLines) {
+		myCurrentCounter = 0;
+	}
+	painter.setPen(Qt::NoPen);
+	for (int i = 0; i < myLines; ++i) {
+		painter.save();
+		painter.translate(myRadius + myLength, myRadius + myLength);
+		qreal rotateAngle = (qreal)360 * qreal(i) / qreal(myLines);
+		painter.rotate(rotateAngle);
+		painter.translate(myRadius, 0);
+		int distance = lineDistance(i, myCurrentCounter, myLines);
+		QColor color = countTrailColor(distance, myLines, myTrail, myOpacity, myColor);
+		painter.setBrush(color);
+		//painter.fillRect(QRect(0, -myWidth/2, myLength, myWidth), color);
+		//TODO make rect with circles
+		painter.drawRoundedRect(QRect(0, -myWidth/2, myLength, myWidth), myRoundness, myRoundness, Qt::RelativeSize);
+		painter.restore();
+	}
+}
+
+void ZLQtWaitingSpinner::start() {
+	this->show();
+	myTimer->start();
+	myCurrentCounter = 0;
+}
+
+void ZLQtWaitingSpinner::finish() {
+	myTimer->stop();
+	myCurrentCounter = 0;
+	this->hide();
+}
+
+void ZLQtWaitingSpinner::setLines(int lines) {
+	myLines = lines;
+	myCurrentCounter = 0;
+	updateTimer();
+}
+
+void ZLQtWaitingSpinner::setLength(int length){
+	myLength = length;
+	updateSize();
+}
+
+void ZLQtWaitingSpinner::setWidth(int width) {
+	myWidth = width;
+	updateSize();
+}
+
+void ZLQtWaitingSpinner::setRadius(int radius) {
+	myRadius = radius;
+	updateSize();
+}
+
+void ZLQtWaitingSpinner::setRoundness(qreal roundness) {
+	myRoundness = std::max(0.0, std::min(100.0, roundness));
+}
+
+void ZLQtWaitingSpinner::setColor(QColor color) {
+	myColor = color;
+}
+
+void ZLQtWaitingSpinner::setSpeed(qreal speed) {
+	mySpeed = speed;
+	updateTimer();
+}
+
+void ZLQtWaitingSpinner::setTrail(int trail) {
+	myTrail = trail;
+}
+
+void ZLQtWaitingSpinner::setOpacity(int minOpacity) {
+	myOpacity = minOpacity;
+}
+
+void ZLQtWaitingSpinner::rotate() {
+	++myCurrentCounter;
+	if (myCurrentCounter >= myLines) {
+		myCurrentCounter = 0;
+	}
+	update();
+}
+
+void ZLQtWaitingSpinner::updateSize() {
+	int size = (myRadius + myLength) * 2;
+	setFixedSize(size, size);
+}
+
+void ZLQtWaitingSpinner::updateTimer() {
+	myTimer->setInterval(countTimeout(myLines, mySpeed));
+}
+
+int ZLQtWaitingSpinner::countTimeout(int lines, qreal speed) {
+	return 1000 / (lines * speed);
+}
+
+int ZLQtWaitingSpinner::lineDistance(int from, int to, int lines) {
+	int result = to - from;
+	if (result < 0) {
+		result += lines;
+	}
+	return result;
+}
+
+QColor ZLQtWaitingSpinner::countTrailColor(int distance, int lines, int trail, int minOpacity, QColor color) {
+	if (distance == 0) {
+		return color;
+	}
+	const qreal minAlphaF = (qreal)minOpacity / 100;
+	int distanceThreshold = ceil( (lines - 1) * (qreal)trail / 100);
+	if (distance > distanceThreshold) {
+		color.setAlphaF(minAlphaF);
+		return color;
+	}
+	qreal alphaDiff = color.alphaF() - (qreal)minAlphaF;
+	qreal gradation = alphaDiff / (qreal)(distanceThreshold + 1);
+	qreal resultAlpha = color.alphaF() - gradation * distance;
+	resultAlpha = std::min(1.0, std::max(0.0, resultAlpha)); //if alpha is out of bound, force it to bounds
+	color.setAlphaF(resultAlpha);
+	return color;
 }

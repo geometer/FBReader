@@ -44,7 +44,7 @@
 static const int ITEM_HEIGHT = 98;
 static const int ITEM_COUNT = 5;
 static const int ITEM_SIZE = 77;
-static const int WAITING_SIZE = 35;
+static const int WAITING_SIZE = 40;
 
 ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent), myLayout(0) {
 
@@ -153,7 +153,9 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 	myTitle = new QLabel;
 	mySubtitle = new QLabel;
 
-	myWaitingIcon = new ZLQtWaitingIconSelfRotating(QSize(WAITING_SIZE,WAITING_SIZE));
+	//myWaitingIcon = new ZLQtWaitingIconSelfRotating(QSize(WAITING_SIZE,WAITING_SIZE));
+	myWaitingIcon = new ZLQtWaitingSpinner(12, 6, 4, 10);
+
 	myWaitingIcon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
 	myTitle->setWordWrap(true);
