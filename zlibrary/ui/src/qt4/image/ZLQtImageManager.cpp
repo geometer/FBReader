@@ -17,10 +17,13 @@
  * 02110-1301, USA.
  */
 
+#include <QtCore/QDebug>
+
 #include <QtGui/QPainter>
 
 #include <ZLImage.h>
 
+#include "ZLQtImageUtils.h"
 #include "ZLQtImageManager.h"
 
 ZLQtImageData::ZLQtImageData() : myImage(0), myX(0), myY(0) {
@@ -79,4 +82,37 @@ shared_ptr<ZLImageData> ZLQtImageManager::createData() const {
 bool ZLQtImageManager::convertImageDirect(const std::string &stringData, ZLImageData &data) const {
 	((ZLQtImageData&)data).init(0, 0);
 	return ((ZLQtImageData&)data).myImage->loadFromData((const unsigned char*)stringData.data(), stringData.length());
+}
+
+shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<shared_ptr<const ZLImage> > &images, shared_ptr<const ZLImage> defaultImage) const {
+	static const int DX = 11;
+	static const int DY = 11;
+
+	QPixmap defaultPixmap = ZLQtImageUtils::ZLImageToQPixmap(defaultImage);
+	QList<QPixmap> pixmaps;
+	foreach(shared_ptr<const ZLImage> image, images) {
+		if (!image.isNull() && image->good()) {
+			pixmaps.push_back(ZLQtImageUtils::addBorder(ZLQtImageUtils::ZLImageToQPixmap(image), Qt::white, 1));
+		} else {
+			pixmaps.push_back(defaultPixmap);
+		}
+	}
+
+	QSize maxSize(0,0);
+	foreach(QPixmap p, pixmaps) {
+		maxSize = maxSize.expandedTo(p.size());
+	}
+	maxSize += QSize(DX * (pixmaps.size() - 1), DY * (pixmaps.size() - 1));
+
+	QPixmap batch(maxSize);
+	batch.fill(Qt::transparent);
+	QPainter painter(&batch);
+
+	QPoint drawPoint(0,0);
+	foreach(QPixmap p, pixmaps) {
+		painter.drawPixmap(drawPoint, p);
+		drawPoint += QPoint(DX, DY);
+	}
+
+	return ZLQtImageUtils::QPixmapToZLImage(batch);
 }

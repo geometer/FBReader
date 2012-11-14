@@ -65,6 +65,8 @@ protected:
 	~ZLQtImageManager() {}
 	shared_ptr<ZLImageData> createData() const;
 	bool convertImageDirect(const std::string &stringData, ZLImageData &imageData) const;
+
+	shared_ptr<const ZLImage> makeBatchImage(const std::vector<shared_ptr<const ZLImage> > &images, shared_ptr<const ZLImage> defaultImage) const;
 };
 
 #endif /* __ZLQTIMAGEMANAGER_H__ */

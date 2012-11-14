@@ -22,6 +22,7 @@
 #include <ZLResource.h>
 #include <ZLImage.h>
 
+#include "../../networkTree/NetworkCatalogUtil.h"
 #include "NetworkTreeNodes.h"
 
 const ZLTypeId NetworkSeriesTree::TYPE_ID(NetworkTree::TYPE_ID);
@@ -74,13 +75,16 @@ std::string NetworkSeriesTree::subtitle() const {
 }
 
 shared_ptr<const ZLImage> NetworkSeriesTree::image() const {
-	//TODO reimplement
-//	const ZLTreeNode::List &books = children();
-//	for (const ZLTreeNode::List::const_iterator it = books.begin(); it != books.end(); ++it) {
-//		shared_ptr<const ZLImage> bookCover = ((FBTree*)*it)->coverImage();
-//		if (!bookCover.isNull()) {
-//			return bookCover;
-//		}
-//	}
-	return defaultCoverImage("booktree-book.png");
+	if (myImages.empty()) {
+		for (size_t i = 0; i < children().size(); ++i) {
+			NetworkBookTree *bookTree = zlobject_cast<NetworkBookTree*>(children().at(i));
+			if (!bookTree) {
+				continue;
+			}
+			NetworkItem::UrlInfoCollection urlByType = bookTree->book().URLByType;
+			std::string url = urlByType[NetworkItem::URL_COVER];
+			myImages.push_back(NetworkCatalogUtil::getAndDownloadImageByUrl(url, this));
+		}
+	}
+	return ZLImageManager::Instance().makeBatchImage(myImages, FBTree::defaultCoverImage("booktree-book.png"));
 }

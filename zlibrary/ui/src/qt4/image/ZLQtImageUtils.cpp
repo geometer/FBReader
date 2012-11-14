@@ -17,6 +17,7 @@
  * 02110-1301, USA.
  */
 
+#include <QtCore/QBuffer>
 #include <QtCore/QDebug>
 #include <QtGui/QPainter>
 
@@ -24,12 +25,44 @@
 
 #include "ZLQtImageUtils.h"
 
+class ZLQtPixmapImage : public ZLSingleImage {
+
+public:
+	ZLQtPixmapImage(QPixmap pixmap) : ZLSingleImage(ZLMimeType::EMPTY) {
+		QImage image = pixmap.toImage();
+		QByteArray rawData;
+		QBuffer buffer(&rawData);
+		buffer.open(QIODevice::WriteOnly);
+		image.save(&buffer, "PNG");
+		myStringData = new std::string(rawData.constData(), rawData.size());
+	}
+
+	const shared_ptr<std::string> stringData() const {
+		return myStringData;
+	}
+
+private:
+	shared_ptr<std::string> myStringData;
+};
+
+shared_ptr<const ZLImage> ZLQtImageUtils::QPixmapToZLImage(QPixmap pixmap) {
+	return new ZLQtPixmapImage(pixmap);
+}
+
 QPixmap ZLQtImageUtils::ZLImageToQPixmapWithSize(shared_ptr<const ZLImage> image, const QSize &requestedSize, bool scaleIfLess, Qt::TransformationMode mode) {
 	QPixmap pixmap = ZLImageToQPixmap(image);
 	if (!pixmap.isNull()) {
 		pixmap = centerPixmap(scalePixmap(pixmap, requestedSize, scaleIfLess, mode), requestedSize);
 	}
 	return pixmap;
+}
+
+QPixmap ZLQtImageUtils::addBorder(const QPixmap &image, QColor color, int borderSize) {
+	   QPixmap pixmap(image.width() + borderSize * 2, image.height() + borderSize * 2);
+	   pixmap.fill(color);
+	   QPainter painter(&pixmap);
+	   painter.drawPixmap(borderSize, borderSize ,image);
+	   return pixmap;
 }
 
 QPixmap ZLQtImageUtils::ZLImageToQPixmap(shared_ptr<const ZLImage> image) {
