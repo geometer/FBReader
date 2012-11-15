@@ -21,11 +21,11 @@ RELEASE 0.99.3:
   DONE during search, show found items immediately, do not wait for the search end
 
   DONE litres: do not store any user info after logout
-  ** reload litres catalog after login/logout
+  DONE reload litres catalog after login/logout
 	  DONE updating visibility and reloading of items after login/logout
 	  DONE makeUpToDate only if childrens are invalid
-	  ** auth check & initialization each time for litres catalog
-	  ** BUG: SIGN IN, затем зашел в каталог, он стал грузить список купленных книг, operantion cancelled, 
+	  DONE auth check & initialization each time for catalog nodes
+  ** BUG: SIGN IN, затем зашел в каталог, он стал грузить список купленных книг, operantion cancelled, 
  и как будто вышли из каталога -- то есть с точки зрения пользователя, что-то странное, вроде и зашел, а "моих книг" нет. (А обновиться можно, только если перезагрузить приложение)
 
   ** litres 'top 50 by popularity' -- book duplicates?

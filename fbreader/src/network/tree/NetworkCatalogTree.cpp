@@ -121,8 +121,6 @@ void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> 
 		return;
 	}
 
-	myChildrenItems.clear();
-
 	const NetworkLink &link = item().Link;
 	shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
 
@@ -158,13 +156,19 @@ void NetworkCatalogTree::onAuthCheck(ZLUserDataHolder &data, const std::string &
 	onInitialization(data, error);
 }
 
-void NetworkCatalogTree::onInitialization(ZLUserDataHolder &data, const std::string &error) {
+
+void NetworkCatalogTree::onInitialization(ZLUserDataHolder &/*data*/, const std::string &error) {
 	if (!error.empty()) {
 		const NetworkLink &link = item().Link;
 		shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
 		if (!manager.isNull()) {
 			manager->logOut();
 		}
+	}
+	if (!myChildrenItems.empty()) {
+		notifyDownloadStopped();
+		notifyListeners(std::string()); //TODO maybe not be silent about auth error here
+		return;
 	}
 	new AsyncLoadSubCatalogRunnable(this, false);
 }

@@ -110,12 +110,7 @@ void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
 
 void ZLQtTreeDialog::onExpandRequest(ZLTreeNode *node) {
 	myLastClickedNode = node;
-	if (node->children().empty()) {
-		//expand request is used for RelatedAction, so we don't use waiting icon here
-		node->requestChildren(new ChildrenRequestListener(this, node, false));
-	} else {
-		onChildrenLoaded(node, false, true);
-	}
+	node->requestChildren(new ChildrenRequestListener(this, node, false));
 }
 
 void ZLQtTreeDialog::onMoreChildrenRequest(ZLTreeNode *node) {
@@ -141,7 +136,9 @@ void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool suc
 	myLastClickedNode = 0; //for case if item has been requested for several times
 	myBackHistory.push(node);
 	myForwardHistory.clear();
-	myListWidget->fillNodes(myBackHistory.top());
+	if (!myBackHistory.empty()) {
+		myListWidget->fillNodes(myBackHistory.top());
+	}
 	//myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
 	setupShowParameters();
 	updateAll();
@@ -152,7 +149,9 @@ void ZLQtTreeDialog::onMoreChildrenLoaded(bool successLoaded) {
 	if (!successLoaded) {
 		return;
 	}
-	myListWidget->fillNewNodes(myBackHistory.top());
+	if (!myBackHistory.empty()) {
+		myListWidget->fillNewNodes(myBackHistory.top());
+	}
 	updateAll();
 }
 
@@ -290,7 +289,9 @@ void ZLQtTreeDialog::onForwardButton() {
 	saveShowParameters();
 	myLastClickedNode = 0;
 	myBackHistory.push(myForwardHistory.pop());
-	myListWidget->fillNodes(myBackHistory.top());
+	if (!myBackHistory.empty()) {
+		myListWidget->fillNodes(myBackHistory.top());
+	}
 	updateAll();
 	setupShowParameters();
 }
@@ -306,7 +307,9 @@ void ZLQtTreeDialog::onSearchField() {
 }
 
 void ZLQtTreeDialog::onMoreChildren() {
-	onMoreChildrenRequest(myBackHistory.top());
+	if (!myBackHistory.empty()) {
+		onMoreChildrenRequest(myBackHistory.top());
+	}
 }
 
 ZLQtTreeDialog::ChildrenRequestListener::ChildrenRequestListener(ZLQtTreeDialog *dialog, ZLTreeNode *node, bool moreMode) :
