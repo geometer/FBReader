@@ -22,6 +22,8 @@
 #include <ZLUserData.h>
 #include <ZLExecutionUtil.h>
 
+#include "../../tree/NetworkLibrary.h"
+
 #include "../../litres/LitResBooksFeedParser.h"
 #include "../../litres/LitResUtil.h"
 #include "LitResAuthenticationManager.h"
@@ -232,6 +234,10 @@ const std::set<std::string> &LitResAuthenticationManager::getPurchasedIds() cons
 	return myPurchasedBooksIds;
 }
 
+const NetworkItem::List &LitResAuthenticationManager::purchasedBooks() const {
+	return myPurchasedBooksList;
+}
+
 std::string LitResAuthenticationManager::refillAccountLink() {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
@@ -336,6 +342,10 @@ void LitResAuthenticationManager::loadPurchasedBooksOnSuccess(std::set<std::stri
 		book.Index = 0;
 		purchasedBooksIds.insert(book.Id);
 	}
+
+	NetworkLibrary::Instance().invalidateVisibility();
+	NetworkLibrary::Instance().synchronize();
+	NetworkLibrary::Instance().refresh();
 }
 
 shared_ptr<ZLNetworkRequest> LitResAuthenticationManager::loadAccount(std::string &dummy1) {

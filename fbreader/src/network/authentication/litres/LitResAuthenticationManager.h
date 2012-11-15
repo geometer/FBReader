@@ -52,6 +52,7 @@ public:
 	std::string reloadPurchasedBooks(); //TODO make async
 	void collectPurchasedBooks(NetworkItem::List &list);
 	const std::set<std::string> &getPurchasedIds() const;
+	const NetworkItem::List &purchasedBooks() const;
 
 private:
 	void onAuthorised(ZLUserDataHolder &data, const std::string &error);

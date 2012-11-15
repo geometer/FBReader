@@ -88,8 +88,8 @@ public:
 
 	enum AccessibilityType {
 		ALWAYS,
-		SIGNED_IN
-		//TODO implement HAS_BOOKS type
+		SIGNED_IN,
+		HAS_BOOKS
 	};
 
 	enum CatalogFlags {

@@ -134,7 +134,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(shared_ptr<ZLMimeType> type
 			title,
 			annotation,
 			urlMap,
-			NetworkCatalogItem::ALWAYS
+			NetworkCatalogItem::HAS_BOOKS
 		);
 	} else if (litresType == ZLMimeType::APPLICATION_LITRES_XML_BOOKS->getParameter(TYPE)) {
 		int flags = NetworkCatalogItem::FLAGS_DEFAULT;
