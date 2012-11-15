@@ -20,9 +20,12 @@ RELEASE 0.99.3:
 
   DONE during search, show found items immediately, do not wait for the search end
 
-  ** litres: do not store any user info after logout
+  DONE litres: do not store any user info after logout
   ** reload litres catalog after login/logout
-     ** also, what's with reloading after running network dialog again? 
+      ** also, what's with reloading after running network dialog again? 
+	  ** NetworkCatalogItem: make right recommend item (it should be appeared after auth has done)
+	  ** recomendations seems to not refresh, like bookshelf
+	  ** implement a way to be safe about deleted nodes (async undefined behaviour)
 
   ** litres 'top 50 by popularity' -- book duplicates?
 

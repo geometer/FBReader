@@ -130,6 +130,11 @@ void LitResAuthenticationManager::logOut() {
 	mySidChecked = true;
 	mySidUserNameOption.setValue("");
 	mySidOption.setValue("");
+
+	myInitializedDataSid.clear();
+	myPurchasedBooksIds.clear();
+	myPurchasedBooksList.clear();
+	myAccount.clear();
 }
 
 const std::string &LitResAuthenticationManager::currentUserName() {
