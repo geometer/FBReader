@@ -57,6 +57,7 @@ public:
 		myListener(listener),
 		myDataList(dataList),
 		myHolder(this) {
+		myItemFound = false;
 		myCollection = new NetworkBookCollection;
 		myCounter = 0;
 		performRequests(requestList);
@@ -73,12 +74,6 @@ public:
 
 	void finished(const std::string &error) {
 		--myCounter;
-		if (myErrorMessage.empty()) {
-			myErrorMessage = error;
-		}
-		if (myCounter > 0) {
-			return;
-		}
 
 		ZLNetworkRequest::Vector requestList;
 
@@ -88,23 +83,29 @@ public:
 				myCollection->addBook(data->Items.at(j));
 			}
 
-			shared_ptr<ZLNetworkRequest> request = data->resume();
-			if (!request.isNull()) {
-				request->setListener(myHolder);
-				requestList.push_back(request);
+			if (!data->Items.empty()) {
+				shared_ptr<ZLNetworkRequest> request = data->resume();
+				if (!request.isNull()) {
+					request->setListener(myHolder);
+					requestList.push_back(request);
+				}
 			}
 		}
 
-		if (myErrorMessage.empty() && !requestList.empty()) { //TODO maybe not need to stop if errorMessage happened?
-			performRequests(requestList);
-			return;
+
+		if (!myCollection->books().empty()) {
+			myItem.onChildrenLoaded(myChildren, myCollection, myListener);
+			myChildren.clear();
+			myCollection->clear();
 		}
 
-//		if (!myErrorMessage.empty()) {
-//			NetworkErrors::showErrorMessage(myErrorMessage); //TODO maybe be silent about errors?
-//		}
-		myItem.onChildrenLoaded(myChildren, myCollection, myListener);
-		myHolder.reset(); //destroy itself
+		if (!requestList.empty()) {
+			performRequests(requestList);
+		}
+
+		if (myCounter == 0) {
+			myHolder.reset(); //destroy itself
+		}
 	}
 
 private:
@@ -113,9 +114,11 @@ private:
 	shared_ptr<ZLNetworkRequest::Listener> myListener;
 	shared_ptr<NetworkBookCollection> myCollection; //TODO maybe remove this class using
 
+	bool myItemFound;
+
 	std::vector<shared_ptr<NetworkOperationData> > myDataList;
 	int myCounter;
-	std::string myErrorMessage;
+//	std::string myErrorMessage;
 	shared_ptr<ZLNetworkRequest::Listener> myHolder; //for keeping this instance alive
 };
 
@@ -137,26 +140,6 @@ std::string AllCatalogsSearchItem::loadChildren(NetworkItem::List &children, sha
 
 	new AllCatalogsSearchItemListener(*this, children, listener, requestList, dataList);
 
-//	std::string errorMessage;
-//	while (errorMessage.empty() && !requestList.empty()) {
-//		//TODO reimplement resume() using
-//		errorMessage = ZLNetworkManager::Instance().perform(requestList);
-//		requestList.clear();
-//		for (std::size_t i = 0; i < dataList.size(); ++i) {
-//			shared_ptr<NetworkOperationData> data = dataList.at(i);
-//			for (std::size_t j = 0; j < data->Items.size(); ++j) {
-//				collection->addBook(data->Items.at(j));
-//			}
-
-//			shared_ptr<ZLNetworkRequest> request = data->resume();
-//			if (!request.isNull()) {
-//				requestList.push_back(request);
-//			}
-//		}
-//	}
-
-	//TODO implement errorMessage handling
-	//TODO implement UI showing of loading
 	return std::string();
 }
 

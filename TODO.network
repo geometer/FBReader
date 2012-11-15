@@ -18,7 +18,7 @@ FUTURE RELEASES:
 
 RELEASE 0.99.3:
 
-  ** during search, show found items immediately, do not wait for the search end
+  DONE during search, show found items immediately, do not wait for the search end
 
   ** litres: do not store any user info after logout
   ** reload litres catalog after login/logout

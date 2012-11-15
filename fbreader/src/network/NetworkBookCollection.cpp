@@ -28,6 +28,12 @@ NetworkBookCollection::NetworkBookCollection() {
 	myAuthorComparator = new NetworkAuthorComparator(myAuthorRates);
 }
 
+void NetworkBookCollection::clear() {
+	myBookList.clear();
+	myAuthorRates.clear();
+	myAuthorBooksMap.reset();
+}
+
 void NetworkBookCollection::addBook(shared_ptr<NetworkItem> bookPtr) {
 	if (bookPtr.isNull() || bookPtr->typeId() != NetworkBookItem::TYPE_ID) {
 		return;
