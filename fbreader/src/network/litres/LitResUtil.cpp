@@ -113,10 +113,12 @@ std::string LitResUtil::generateBooksByAuthorUrl(const std::string &authorId) {
 	return url(false, "pages/catalit_browser/" + query);
 }
 
-shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::string rel, const NetworkLink &link, std::string title,
+shared_ptr<NetworkItem> LitResUtil::createLitResNode(shared_ptr<ZLMimeType> type, std::string rel, const NetworkLink &link, std::string title,
 	std::string annotation, std::map<NetworkItem::URLType,std::string> urlMap,	bool dependsOnAccount) {
-
 	static const std::string TYPE = "type";
+	static const std::string GROUP_SERIES = "groupSeries";
+
+	std::string litresType = type->getParameter(TYPE);
 
 	if (rel == OPDSConstants::REL_BOOKSHELF) {
 		return new LitResBookshelfItem(
@@ -134,16 +136,21 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			urlMap,
 			NetworkCatalogItem::ALWAYS
 		);
-	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_BOOKS->getParameter(TYPE)) {
+	} else if (litresType == ZLMimeType::APPLICATION_LITRES_XML_BOOKS->getParameter(TYPE)) {
+		int flags = NetworkCatalogItem::FLAGS_DEFAULT;
+		if (type->getParameter(GROUP_SERIES) == "no") {
+			flags &= ~NetworkCatalogItem::FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES;
+		}
 		return new LitResBooksFeedItem(
 			false,
 			link,
 			title,
 			annotation,
 			urlMap,
-			dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::ALWAYS
+			dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::ALWAYS,
+			flags
 		);
-	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_GENRES->getParameter(TYPE)) {
+	} else if (litresType == ZLMimeType::APPLICATION_LITRES_XML_GENRES->getParameter(TYPE)) {
 		return new LitResByGenresItem(
 			LitResGenreMap::Instance().genresTree(),
 			link,
@@ -153,7 +160,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(std::string type, std::stri
 			NetworkCatalogItem::ALWAYS,
 			NetworkCatalogItem::FLAG_SHOW_AUTHOR
 		);
-	} else if (type == ZLMimeType::APPLICATION_LITRES_XML_AUTHORS->getParameter(TYPE)) {
+	} else if (litresType == ZLMimeType::APPLICATION_LITRES_XML_AUTHORS->getParameter(TYPE)) {
 		return new LitResAuthorsItem(
 			link,
 			title,

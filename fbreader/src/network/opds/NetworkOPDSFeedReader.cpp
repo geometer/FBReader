@@ -123,7 +123,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	bool urlIsAlternate = false;
 	std::string htmlURL;
 	std::string litresRel;
-	std::string litresType;
+	shared_ptr<ZLMimeType> litresMimeType;
 	int catalogFlags = NetworkCatalogItem::FLAGS_DEFAULT;
 	for (std::size_t i = 0; i < entry.links().size(); ++i) {
 		ATOMLink &link = *(entry.links()[i]);
@@ -158,7 +158,7 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 		} else if (type->weakEquals(*ZLMimeType::APPLICATION_LITRES_XML)) {
 			url = href;
 			litresRel = rel;
-			litresType = type->getParameter("type");
+			litresMimeType = type;
 		}
 	}
 
@@ -184,16 +184,15 @@ shared_ptr<NetworkItem> NetworkOPDSFeedReader::readCatalogItem(OPDSEntry &entry)
 	urlMap[NetworkItem::URL_CATALOG] = url;
 	urlMap[NetworkItem::URL_HTML_PAGE] = htmlURL;
 
-	if (!litresType.empty() || !litresRel.empty()) {
-		return LitResUtil::createLitResNode(litresType, litresRel, myData.Link, entry.title(), annotation, urlMap, dependsOnAccount);
-	} else {
-		return new OPDSCatalogItem(
-			(OPDSLink&)myData.Link,
-			entry.title(),
-			annotation,
-			urlMap,
-			dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::ALWAYS,
-			catalogFlags
-		);
+	if (!litresMimeType.isNull()) {
+		return LitResUtil::createLitResNode(litresMimeType, litresRel, myData.Link, entry.title(), annotation, urlMap, dependsOnAccount);
 	}
+	return new OPDSCatalogItem(
+		(OPDSLink&)myData.Link,
+		entry.title(),
+		annotation,
+		urlMap,
+		dependsOnAccount ? NetworkCatalogItem::SIGNED_IN : NetworkCatalogItem::ALWAYS,
+		catalogFlags
+	);
 }

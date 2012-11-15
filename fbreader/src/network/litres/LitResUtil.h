@@ -42,7 +42,7 @@ public:
 	static std::string generateBooksByAuthorUrl(const std::string &authorId);
 
 public:
-	static shared_ptr<NetworkItem> createLitResNode(std::string type, std::string rel,
+	static shared_ptr<NetworkItem> createLitResNode(shared_ptr<ZLMimeType> type, std::string rel,
 													const NetworkLink &link, std::string title,
 													std::string annotation, std::map<NetworkItem::URLType,std::string> urlMap,
 													bool dependsOnAccount);
