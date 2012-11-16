@@ -89,7 +89,7 @@ shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<sha
 	QList<QPixmap> pixmaps;
 	foreach(shared_ptr<const ZLImage> image, images) {
 		if (!image.isNull() && image->good()) {
-			pixmaps.push_back(ZLQtImageUtils::addOppositeBorder(ZLQtImageUtils::ZLImageToQPixmap(image), 1));
+			pixmaps.push_back(ZLQtImageUtils::addOppositeBorder(ZLQtImageUtils::ZLImageToQPixmap(image), 2));
 		}
 	}
 
@@ -103,12 +103,8 @@ shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<sha
 	}
 
 	QSize maxSize = countMaxSize(pixmaps);
-
-	static const int WIDTH_PERCENT = 12;
-	static const int HEIGHT_PERCENT = 9;
-	const int DX = maxSize.width() * WIDTH_PERCENT / 100;
-	const int DY = maxSize.height() * HEIGHT_PERCENT / 100;
-	maxSize += QSize(DX * (pixmaps.size() - 1), DY * (pixmaps.size() - 1));
+	QSize offset = calcOffset(pixmaps.size(), maxSize);
+	maxSize += QSize(offset.width() * (pixmaps.size() - 1), offset.height() * (pixmaps.size() - 1));
 
 	QPixmap batch(maxSize);
 	batch.fill(Qt::transparent);
@@ -117,10 +113,24 @@ shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<sha
 	QPoint drawPoint(0,0);
 	foreach(QPixmap p, pixmaps) {
 		painter.drawPixmap(drawPoint, p);
-		drawPoint += QPoint(DX, DY);
+		drawPoint += QPoint(offset.width(), offset.height());
 	}
 
 	return ZLQtImageUtils::QPixmapToZLImage(batch);
+}
+
+QSize ZLQtImageManager::calcOffset(int coversNumber, QSize forSize) {
+	//offset percents are arithmetic progressions
+	static const int widthStart = 37;
+	static const double widthDiff = -5;
+	static const double heightStart = 15.6;
+	static const double heightDiff = -1.3;
+
+	const int WIDTH_PERCENT = widthStart + (coversNumber - 1) * widthDiff;
+	const int HEIGHT_PERCENT = heightStart + (coversNumber - 1) * heightDiff;
+	const int DX = forSize.width() * WIDTH_PERCENT / 100;
+	const int DY = forSize.height() * HEIGHT_PERCENT / 100;
+	return QSize(DX, DY);
 }
 
 QSize ZLQtImageManager::countMaxSize(const QList<QPixmap> &pixmaps) {

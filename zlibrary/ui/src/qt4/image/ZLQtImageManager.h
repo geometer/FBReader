@@ -72,6 +72,7 @@ protected:
 
 	shared_ptr<const ZLImage> makeBatchImage(const std::vector<shared_ptr<const ZLImage> > &images, shared_ptr<const ZLImage> defaultImage) const;
 
+	static QSize calcOffset(int coversNumber, QSize forSize);
 	static QSize countMaxSize(const QList<QPixmap> &pixmaps);
 	static QSize countMinSize(const QList<QPixmap> &pixmaps);
 };

@@ -32,13 +32,12 @@ RELEASE 0.99.3:
   DONE litres -> authors list -> A -> АК -> Сергей Тимофеевич (show full name)
 
   ** Series
-	  ** for 'Series' items, show a batch of icons (of books in this series)
+	  DONE for 'Series' items, show a batch of icons (of books in this series)
 		  DONE series icon: show no more than 6 books in batch
 	  	  DONE for spaces, use percent of size instead of pixels
-	  	    ** if number of books < 6, increase spaces
+	  	  DONE if number of books < 6, increase spaces
 		  DONE for covers of different sizes, resize to the same height
 		  DONE series icon: use 'opposite' color instead of white
-	  ** litres: sort books as in server catalog
 	
   DONE use other waiting icons
   DONE find a good HUGE icon for book info loading (and small/tiny icons too, in the same style)
@@ -47,6 +46,8 @@ RELEASE 0.99.3:
   DONE BUG: "Мои книги" не открываются
 
 RELEASE 0.99.4:
+
+ ** litres series: sort books as in server catalog
 
   ** litres 'top 50 by popularity' -- book duplicates?
 	** can't reproduce it since we don't use grouping by series, looks like it's a books on a edge of 20 books limit
