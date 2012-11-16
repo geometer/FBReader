@@ -92,7 +92,7 @@ shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<sha
 	QList<QPixmap> pixmaps;
 	foreach(shared_ptr<const ZLImage> image, images) {
 		if (!image.isNull() && image->good()) {
-			pixmaps.push_back(ZLQtImageUtils::addBorder(ZLQtImageUtils::ZLImageToQPixmap(image), Qt::white, 1));
+			pixmaps.push_back(ZLQtImageUtils::addOppositeBorder(ZLQtImageUtils::ZLImageToQPixmap(image), 1));
 		} else {
 			pixmaps.push_back(defaultPixmap);
 		}

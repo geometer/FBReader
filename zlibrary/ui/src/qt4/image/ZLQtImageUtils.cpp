@@ -20,6 +20,7 @@
 #include <QtCore/QBuffer>
 #include <QtCore/QDebug>
 #include <QtGui/QPainter>
+#include <QtGui/QColor>
 
 #include "../image/ZLQtImageManager.h"
 
@@ -63,6 +64,23 @@ QPixmap ZLQtImageUtils::addBorder(const QPixmap &image, QColor color, int border
 	   QPainter painter(&pixmap);
 	   painter.drawPixmap(borderSize, borderSize ,image);
 	   return pixmap;
+}
+
+QPixmap ZLQtImageUtils::addOppositeBorder(const QPixmap &image, int borderSize) {
+	QImage img = image.toImage();
+	QPoint brPoint = img.rect().bottomRight();
+	QColor leftTop(img.pixel(0,0));
+	QColor rightTop(img.pixel(brPoint.x(), 0));
+	QColor leftBottom(img.pixel(0,brPoint.y()));
+	QColor rightBottom(img.pixel(brPoint));
+	QColor mixedColor(
+		(leftTop.red() + rightTop.red() + leftBottom.red() + rightBottom.red()) / 4,
+		(leftTop.green() + rightTop.green() + leftBottom.green() + rightBottom.green()) / 4,
+		(leftTop.blue() + rightTop.blue() + leftBottom.blue() + rightBottom.blue()) / 4,
+		(leftTop.alpha() + rightTop.alpha() + leftBottom.alpha() + rightBottom.alpha()) / 4
+	);
+	QColor oppositeColor(255 - mixedColor.red(), 255 - mixedColor.green(), 255 - mixedColor.blue(), mixedColor.alpha());
+	return addBorder(QPixmap::fromImage(img), oppositeColor, borderSize);
 }
 
 QPixmap ZLQtImageUtils::ZLImageToQPixmap(shared_ptr<const ZLImage> image) {
