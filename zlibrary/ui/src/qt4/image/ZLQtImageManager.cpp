@@ -85,9 +85,6 @@ bool ZLQtImageManager::convertImageDirect(const std::string &stringData, ZLImage
 }
 
 shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<shared_ptr<const ZLImage> > &images, shared_ptr<const ZLImage> defaultImage) const {
-	static const int DX = 11;
-	static const int DY = 11;
-
 	QPixmap defaultPixmap = ZLQtImageUtils::ZLImageToQPixmap(defaultImage);
 	QList<QPixmap> pixmaps;
 	foreach(shared_ptr<const ZLImage> image, images) {
@@ -100,13 +97,17 @@ shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<sha
 		pixmaps.push_front(defaultPixmap);
 	}
 
-	int maxHeight = countMinSize(pixmaps).height();
-	qDebug() << Q_FUNC_INFO << maxHeight;
+	int minHeight = countMinSize(pixmaps).height();
 	for (int i = 0; i < pixmaps.size(); ++i) {
-		pixmaps.replace(i, pixmaps.at(i).scaledToHeight(maxHeight, Qt::FastTransformation));
+		pixmaps.replace(i, pixmaps.at(i).scaledToHeight(minHeight, Qt::FastTransformation));
 	}
 
 	QSize maxSize = countMaxSize(pixmaps);
+
+	static const int WIDTH_PERCENT = 12;
+	static const int HEIGHT_PERCENT = 9;
+	const int DX = maxSize.width() * WIDTH_PERCENT / 100;
+	const int DY = maxSize.height() * HEIGHT_PERCENT / 100;
 	maxSize += QSize(DX * (pixmaps.size() - 1), DY * (pixmaps.size() - 1));
 
 	QPixmap batch(maxSize);
