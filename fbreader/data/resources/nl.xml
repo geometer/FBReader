@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="Wachtwoord herstellen"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="Zoekresultaten"/>
 			<node name="expandTree" value="Resultaten tonen"/>
 			<node name="collapseTree" value="Resultaten verbergen"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Boek Info..."/>
+		<node name="bookInfo" value="Boek Info…"/>
 		<node name="toc" value="Inhoudsopgave"/>
 		<node name="showLibrary" value="Open bibliotheek"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Bibliotheek">
 			<node name="showLibrary" value="Open"/>
 			<node name="previousBook" value="Vorig boek"/>
 			<node name="showRecent" value="Recent"/>
-			<node name="addBook" value="Boek toevoegen..."/>
+			<node name="addBook" value="Boek toevoegen…"/>
 			<node name="showHelp" value="Over FBReader"/>
 		</node>
 		<node name="gotoHome" value="Ga naar het begin van het document"/>
-		<node name="gotoPageNumber" value="Ga naar pagina..."/>
+		<node name="gotoPageNumber" value="Ga naar pagina…"/>
 		<node name="gotoSectionStart" value="Ga naar het begin van deze sectie"/>
 		<node name="gotoSectionEnd" value="Ga naar het einde van deze sectie"/>
 		<node name="nextTOCSection" value="Ga naar het volgende hoofdstuk"/>
 		<node name="previousTOCSection" value="Ga naar het vorige hoofdstuk"/>
 		<node name="navigate" value="Navigatie">
 			<node name="gotoHome" value="Ga naar het begin van het document"/>
-			<node name="gotoPageNumber" value="Ga naar pagina..."/>
+			<node name="gotoPageNumber" value="Ga naar pagina…"/>
 			<node name="gotoSectionStart" value="Ga naar het begin van deze sectie"/>
 			<node name="gotoSectionEnd" value="Ga naar het einde van deze sectie"/>
 			<node name="nextTOCSection" value="Ga naar het volgende hoofdstuk"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="Wissen"/>
 		</node>
 		<node name="search" value="Zoeken">
-			<node name="search" value="Zoek Tekst..."/>
+			<node name="search" value="Zoek Tekst…"/>
 			<node name="findNext" value="Zoek Volgende"/>
 			<node name="findPrevious" value="Zoek Vorige"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="Beeldvullend"/>
 			<node name="toggleIndicator" value="Indicator Aan/Uit"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="Sluiten"/>
 	</node>
 	<node name="toolbar">
@@ -598,21 +598,21 @@
 			<node name="message" value="Kan het boek op dit moment niet downloaden"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Boek wordt geopend..."/>
-			<node name="loadingBookList" value="Bibliotheek wordt geopend..."/>
-			<node name="migrate" value="Nieuwe versie gevonden, moment a.u.b..."/>
-			<node name="downloadBookList" value="Boekenlijst wordt geopend..."/>
-			<node name="downloadBook" value="Boek wordt gedownload..."/>
+			<node name="loadingBook" value="Boek wordt geopend…"/>
+			<node name="loadingBookList" value="Bibliotheek wordt geopend…"/>
+			<node name="migrate" value="Nieuwe versie gevonden, moment a.u.b…"/>
+			<node name="downloadBookList" value="Boekenlijst wordt geopend…"/>
+			<node name="downloadBook" value="Boek wordt gedownload…"/>
 			<node name="downloadImages" value="Beelden worden gedownload…"/>
-			<node name="authentication" value="Aanmelden..."/>
+			<node name="authentication" value="Aanmelden…"/>
 			<node name="purchaseBook" value="Boek wordt gekocht…"/>
-			<node name="initializeAuthenticationManager" value="Account informatie wordt opgehaald..."/>
-			<node name="loadSubCatalog" value="Catalogus wordt geladen..."/>
-			<node name="registerUser" value="Nieuwe account wordt aangemaakt..."/>
-			<node name="passwordRecovery" value="Het wachtwoord wordt hersteld..."/>
-			<node name="authenticationCheck" value="Account wordt gecontroleerd..."/>
-			<node name="signOut" value="Signing out. Please, wait..." toBeTranslated="true"/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="initializeAuthenticationManager" value="Account informatie wordt opgehaald…"/>
+			<node name="loadSubCatalog" value="Catalogus wordt geladen…"/>
+			<node name="registerUser" value="Nieuwe account wordt aangemaakt…"/>
+			<node name="passwordRecovery" value="Het wachtwoord wordt hersteld…"/>
+			<node name="authenticationCheck" value="Account wordt gecontroleerd…"/>
+			<node name="signOut" value="Signing out. Please, wait…" toBeTranslated="true"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Koop Boek"/>

@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="Renovigi pasvorton"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="Serĉi"/>
 			<node name="expandTree" value="Elpaki serĉrezultojn"/>
 			<node name="collapseTree" value="Paki serĉrezultojn"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Informoj pri la libro..."/>
+		<node name="bookInfo" value="Informoj pri la libro…"/>
 		<node name="toc" value="Enhavo"/>
 		<node name="showLibrary" value="Malfermi librejon"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Knihovna">
 			<node name="showLibrary" value="Malfermi"/>
 			<node name="previousBook" value="Antaŭa libro"/>
 			<node name="showRecent" value="Lastatempe malfermitaj"/>
-			<node name="addBook" value="Aldoni libron..."/>
+			<node name="addBook" value="Aldoni libron…"/>
 			<node name="showHelp" value="Pri la programo FBReader"/>
 		</node>
 		<node name="gotoHome" value="Al komenco de dokumento"/>
-		<node name="gotoPageNumber" value="Al la paĝo..."/>
+		<node name="gotoPageNumber" value="Al la paĝo…"/>
 		<node name="gotoSectionStart" value="Al komenco de sekcio"/>
 		<node name="gotoSectionEnd" value="Al fino de sekcio"/>
 		<node name="nextTOCSection" value="Al sekva ero de enhavo"/>
 		<node name="previousTOCSection" value="Al antaŭa ero de enhavo"/>
 		<node name="navigate" value="Navigi">
 			<node name="gotoHome" value="Al komenco de dokumento"/>
-			<node name="gotoPageNumber" value="Al la paĝo..."/>
+			<node name="gotoPageNumber" value="Al la paĝo…"/>
 			<node name="gotoSectionStart" value="Al komenco de sekcio"/>
 			<node name="gotoSectionEnd" value="Al fino de sekcio"/>
 			<node name="nextTOCSection" value="Al sekva ero de enhavo"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="Malplenigi elekton"/>
 		</node>
 		<node name="search" value="Serĉi">
-			<node name="search" value="Serĉi la tekston..."/>
+			<node name="search" value="Serĉi la tekston…"/>
 			<node name="findNext" value="Trovi sekvan"/>
 			<node name="findPrevious" value="Trovi antaŭan"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="Tutekrana reĝimo"/>
 			<node name="toggleIndicator" value="Baskuligo de ekrano"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="Fermi"/>
 	</node>
 	<node name="toolbar">
@@ -598,21 +598,21 @@
 			<node name="message" value="Ne eblas nun elŝuti la libron"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Mi ŝargas libron. Bonvolu atendi..."/>
-			<node name="loadingBookList" value="Mi ŝargas liston de libroj. Bonvolu atendi..."/>
-			<node name="migrate" value="Okazas trairo al nova versio. Bonvolu atendi..."/>
-			<node name="downloadBookList" value="Mi elŝutas liston de libroj. Bonvolu atendi..."/>
-			<node name="downloadBook" value="Mi elŝutas libron. Bonvolu atendi..."/>
-			<node name="downloadImages" value="Mi elŝutas bildojn. Bonvolu atendi..."/>
-			<node name="authentication" value="Okazas ensaluto. Bonvolu atendi..."/>
-			<node name="purchaseBook" value="Okazas pago por libro. Bonvolu atendi..."/>
-			<node name="initializeAuthenticationManager" value="Mi elŝutas kontajn informojn. Bonvolu atendi..."/>
-			<node name="loadSubCatalog" value="Mi importas katalogon. Bonvolu atendi..."/>
-			<node name="registerUser" value="Okazas registrado de nova konto. Bonvolu atendi..."/>
-			<node name="passwordRecovery" value="Okazas renovigo de pasvorto. Bonvolu atendi..."/>
-			<node name="authenticationCheck" value="Okazas validigo de konto. Bonvolu atendi..." toBeTranslated="true"/>
-			<node name="signOut" value="Okazas elsaluto. Bonvolu atendi..." toBeTranslated="true"/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="Mi ŝargas libron. Bonvolu atendi…"/>
+			<node name="loadingBookList" value="Mi ŝargas liston de libroj. Bonvolu atendi…"/>
+			<node name="migrate" value="Okazas trairo al nova versio. Bonvolu atendi…"/>
+			<node name="downloadBookList" value="Mi elŝutas liston de libroj. Bonvolu atendi…"/>
+			<node name="downloadBook" value="Mi elŝutas libron. Bonvolu atendi…"/>
+			<node name="downloadImages" value="Mi elŝutas bildojn. Bonvolu atendi…"/>
+			<node name="authentication" value="Okazas ensaluto. Bonvolu atendi…"/>
+			<node name="purchaseBook" value="Okazas pago por libro. Bonvolu atendi…"/>
+			<node name="initializeAuthenticationManager" value="Mi elŝutas kontajn informojn. Bonvolu atendi…"/>
+			<node name="loadSubCatalog" value="Mi importas katalogon. Bonvolu atendi…"/>
+			<node name="registerUser" value="Okazas registrado de nova konto. Bonvolu atendi…"/>
+			<node name="passwordRecovery" value="Okazas renovigo de pasvorto. Bonvolu atendi…"/>
+			<node name="authenticationCheck" value="Okazas validigo de konto. Bonvolu atendi…" toBeTranslated="true"/>
+			<node name="signOut" value="Okazas elsaluto. Bonvolu atendi…" toBeTranslated="true"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Pagi libron"/>

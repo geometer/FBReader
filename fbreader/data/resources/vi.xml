@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="Phục hồi mật khẩu"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="Kết quả tìm kiếm"/>
 			<node name="expandTree" value="Hiện kết quả"/>
 			<node name="collapseTree" value="Ẩn kết quả"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Thông tin sách..."/>
+		<node name="bookInfo" value="Thông tin sách…"/>
 		<node name="toc" value="Mục lục"/>
 		<node name="showLibrary" value="Mở Thư viện"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Thư viện">
 			<node name="showLibrary" value="Mở"/>
 			<node name="previousBook" value="Quyển trước"/>
 			<node name="showRecent" value="Vừa xem"/>
-			<node name="addBook" value="Thêm sách..."/>
+			<node name="addBook" value="Thêm sách…"/>
 			<node name="showHelp" value="Nói về FBreader"/>
 		</node>
 		<node name="gotoHome" value="Đến vị trí đầu của Tài liệu"/>
-		<node name="gotoPageNumber" value="Đến trang..."/>
+		<node name="gotoPageNumber" value="Đến trang…"/>
 		<node name="gotoSectionStart" value="Đến đầu của một Tiết đoạn"/>
 		<node name="gotoSectionEnd" value="Đến cuối của một Tiết đoạn "/>
 		<node name="nextTOCSection" value="Đến khoản ML Tiếp theo"/>
 		<node name="previousTOCSection" value="Đến khoản ML Trước"/>
 		<node name="navigate" value="Navigate">
 			<node name="gotoHome" value="Đến vị trí đầu của Tài liệu"/>
-			<node name="gotoPageNumber" value="Đến trang..."/>
+			<node name="gotoPageNumber" value="Đến trang…"/>
 			<node name="gotoSectionStart" value="Đến đầu của một Tiết đoạn"/>
 			<node name="gotoSectionEnd" value="Đến cuối của một Tiết đoạn"/>
 			<node name="nextTOCSection" value="Đến mục ML Tiếp theo"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="Xóa"/>
 		</node>
 		<node name="search" value="Tìm kiếm">
-			<node name="search" value="Tìm chữ..."/>
+			<node name="search" value="Tìm chữ…"/>
 			<node name="findNext" value="Tìm tiếp phía sau"/>
 			<node name="findPrevious" value="Tìm về phía trước"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="Toàn Màn hình"/>
 			<node name="toggleIndicator" value="Đảo chiều Thanh định hướng"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="Đóng"/>
 	</node>
 	<node name="toolbar">
@@ -598,21 +598,21 @@
 			<node name="message" value="Không thể tải về cuốn sách này ngay bây giờ"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Đang tải sách. Vui lòng đợi..."/>
-			<node name="loadingBookList" value="Đang tải thu viện. Vui lòng đợi..."/>
-			<node name="migrate" value="Đang nâng cấp lên phiên bản mới. Vui lòng đợi..."/>
-			<node name="downloadBookList" value="Đang tải về danh sách các cuốn sách. Vui lòng đợi..."/>
-			<node name="downloadBook" value="Đang tải sách về. Vui lòng đợi..."/>
-			<node name="downloadImages" value="Đang tải về hình ảnh. Vui lòng đợi..."/>
-			<node name="authentication" value="Xác thực. Vui lòng đợi..."/>
-			<node name="purchaseBook" value="Mua sách. Vui lòng đợi..."/>
-			<node name="initializeAuthenticationManager" value="Đang tải về thông tin tài khoản. Vui lòng đợi..."/>
-			<node name="loadSubCatalog" value="Đang tải catalô. Vui lòng đợi..."/>
-			<node name="registerUser" value="Đang đăng ký tài khoản mới. Vui lòng đợi..."/>
-			<node name="passwordRecovery" value="Đang khôi phục mật khẩu. Vui lòng đợi..."/>
-			<node name="authenticationCheck" value="Tài khoản hợp lệ. Vui lòng đợi..."/>
-			<node name="signOut" value="Đang đăng xuất. Vui lòng đợi..."/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="Đang tải sách. Vui lòng đợi…"/>
+			<node name="loadingBookList" value="Đang tải thu viện. Vui lòng đợi…"/>
+			<node name="migrate" value="Đang nâng cấp lên phiên bản mới. Vui lòng đợi…"/>
+			<node name="downloadBookList" value="Đang tải về danh sách các cuốn sách. Vui lòng đợi…"/>
+			<node name="downloadBook" value="Đang tải sách về. Vui lòng đợi…"/>
+			<node name="downloadImages" value="Đang tải về hình ảnh. Vui lòng đợi…"/>
+			<node name="authentication" value="Xác thực. Vui lòng đợi…"/>
+			<node name="purchaseBook" value="Mua sách. Vui lòng đợi…"/>
+			<node name="initializeAuthenticationManager" value="Đang tải về thông tin tài khoản. Vui lòng đợi…"/>
+			<node name="loadSubCatalog" value="Đang tải catalô. Vui lòng đợi…"/>
+			<node name="registerUser" value="Đang đăng ký tài khoản mới. Vui lòng đợi…"/>
+			<node name="passwordRecovery" value="Đang khôi phục mật khẩu. Vui lòng đợi…"/>
+			<node name="authenticationCheck" value="Tài khoản hợp lệ. Vui lòng đợi…"/>
+			<node name="signOut" value="Đang đăng xuất. Vui lòng đợi…"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Mua sách"/>

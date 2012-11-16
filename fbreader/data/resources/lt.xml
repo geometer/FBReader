@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="Atstatyti slaptažodį"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="Ieškoti tarp rezultatų"/>
 			<node name="expandTree" value="Rodyti rezultatus"/>
 			<node name="collapseTree" value="Paslėpti rezultatus"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Apie knygą..."/>
+		<node name="bookInfo" value="Apie knygą…"/>
 		<node name="toc" value="Turinys"/>
 		<node name="showLibrary" value="Atidaryti biblioteką"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Biblioteka">
 			<node name="showLibrary" value="Atidaryti"/>
 			<node name="previousBook" value="Ankstesnė knyga"/>
 			<node name="showRecent" value="Paskutinės žiūrėtos"/>
-			<node name="addBook" value="Pridėti knygą..."/>
+			<node name="addBook" value="Pridėti knygą…"/>
 			<node name="showHelp" value="Apie FBReader"/>
 		</node>
 		<node name="gotoHome" value="Eiti į pradžią"/>
-		<node name="gotoPageNumber" value="Atversti puslapį Nr..."/>
+		<node name="gotoPageNumber" value="Atversti puslapį Nr…"/>
 		<node name="gotoSectionStart" value="Eiti į skirsnio pradžią"/>
 		<node name="gotoSectionEnd" value="Eiti į skirsnio galą"/>
 		<node name="nextTOCSection" value="Eiti prie sekančio turinio elemento"/>
 		<node name="previousTOCSection" value="Eiti prie ankstesnio turinio elemento"/>
 		<node name="navigate" value="Navigacija">
 			<node name="gotoHome" value="Eiti į pradžią"/>
-			<node name="gotoPageNumber" value="Atversti puslapį Nr..."/>
+			<node name="gotoPageNumber" value="Atversti puslapį Nr…"/>
 			<node name="gotoSectionStart" value="Eiti į skirsnio pradžią"/>
 			<node name="gotoSectionEnd" value="Eiti į skirsnio galą"/>
 			<node name="nextTOCSection" value="Eiti prie sekančio turinio elemento"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="Nuimti pažymėjimą"/>
 		</node>
 		<node name="search" value="Surasti">
-			<node name="search" value="Surasti tekstą..."/>
+			<node name="search" value="Surasti tekstą…"/>
 			<node name="findNext" value="Rasti sekantį"/>
 			<node name="findPrevious" value="Rasti buvusį"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="Užpildyti ekraną"/>
 			<node name="toggleIndicator" value="Įjungti indikatorių"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="Uždaryti"/>
 	</node>
 	<node name="toolbar">
@@ -598,21 +598,21 @@
 			<node name="message" value="Šiuo metu nepavyksta atsisiųsti šios knygos"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Palaukite, knyga įkraunoma..."/>
-			<node name="loadingBookList" value="Palaukite, biblioteka įkraunoma..."/>
-			<node name="migrate" value="Versijos atnaujinimas. Palaukite..."/>
-			<node name="downloadBookList" value="Atsisiunčiam knygų sąrašą. Palaukite..."/>
-			<node name="downloadBook" value="Atsisiunčiam knygą. Palaukite..."/>
-			<node name="downloadImages" value="Atsisiunčiam vaizdus. Palaukite..."/>
-			<node name="authentication" value="Tapatybės nustatymas. Palaukite..."/>
-			<node name="purchaseBook" value="Perkame knygą. Palaukite..."/>
-			<node name="initializeAuthenticationManager" value="Atsisiunčiam paskyros (account) informaciją. Palaukite..."/>
-			<node name="loadSubCatalog" value="Įkrauname katalogą. Palaukite..."/>
-			<node name="registerUser" value="Registruojame naujo vartotojo įrašą. Palaukite..."/>
-			<node name="passwordRecovery" value="Atstatome slaptažodį. Palaukite..."/>
-			<node name="authenticationCheck" value="Paskyros patvirtinimas. Palaukite..."/>
-			<node name="signOut" value="Atjungiame. Palaukite..."/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="Palaukite, knyga įkraunoma…"/>
+			<node name="loadingBookList" value="Palaukite, biblioteka įkraunoma…"/>
+			<node name="migrate" value="Versijos atnaujinimas. Palaukite…"/>
+			<node name="downloadBookList" value="Atsisiunčiam knygų sąrašą. Palaukite…"/>
+			<node name="downloadBook" value="Atsisiunčiam knygą. Palaukite…"/>
+			<node name="downloadImages" value="Atsisiunčiam vaizdus. Palaukite…"/>
+			<node name="authentication" value="Tapatybės nustatymas. Palaukite…"/>
+			<node name="purchaseBook" value="Perkame knygą. Palaukite…"/>
+			<node name="initializeAuthenticationManager" value="Atsisiunčiam paskyros (account) informaciją. Palaukite…"/>
+			<node name="loadSubCatalog" value="Įkrauname katalogą. Palaukite…"/>
+			<node name="registerUser" value="Registruojame naujo vartotojo įrašą. Palaukite…"/>
+			<node name="passwordRecovery" value="Atstatome slaptažodį. Palaukite…"/>
+			<node name="authenticationCheck" value="Paskyros patvirtinimas. Palaukite…"/>
+			<node name="signOut" value="Atjungiame. Palaukite…"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Pirkti knygą"/>

@@ -56,7 +56,7 @@
 			<node name="passwordRecovery" value="Recover password"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..."/>			
+			<node name="searchfield" value="Type to search…"/>			
 			<node name="title" value="Search results"/>
 			<node name="expandTree" value="Show results"/>
 			<node name="collapseTree" value="Hide results"/>
@@ -113,33 +113,33 @@
 			<node name="showRecent" value="Recent books"/>
 			<node name="showLibrary" value="Library"/>
 			<node name="showNetworkLibrary" value="Network library"/>
-			<node name="addBook" value="Open file..."/>
+			<node name="addBook" value="Open file…"/>
 		</node>
 		<node name="navigation" value="Navigation">
 			<node name="toc" value="Table of Contents"/>
 		</node>
-		<node name="bookInfo" value="Book Info..."/>
+		<node name="bookInfo" value="Book Info…"/>
 		<node name="toc" value="Table of Contents"/>
 		<node name="showLibrary" value="Open library"/>
 		<node name="showNetLibrary" value="Network library"/>
-		<node name="addBook" value="Open file..."/>
+		<node name="addBook" value="Open file…"/>
 		<node name="showRecent" value="Recent books"/>
 		<node name="library" value="Library">
 			<node name="showLibrary" value="Open"/>
 			<node name="previousBook" value="Previous Book"/>
 			<node name="showRecent" value="Recent"/>
-			<node name="addBook" value="Add Book..."/>
+			<node name="addBook" value="Add Book…"/>
 			<node name="showHelp" value="About FBReader"/>
 		</node>
 		<node name="gotoHome" value="Go to Start of Document"/>
-		<node name="gotoPageNumber" value="Go to Page..."/>
+		<node name="gotoPageNumber" value="Go to Page…"/>
 		<node name="gotoSectionStart" value="Go to Start of Text Section"/>
 		<node name="gotoSectionEnd" value="Go to End of Text Section"/>
 		<node name="nextTOCSection" value="Go to Next TOC Item"/>
 		<node name="previousTOCSection" value="Go to Previous TOC Item"/>
 		<node name="navigate" value="Navigate">
 			<node name="gotoHome" value="Go to Start of Document"/>
-			<node name="gotoPageNumber" value="Go to Page..."/>
+			<node name="gotoPageNumber" value="Go to Page…"/>
 			<node name="gotoSectionStart" value="Go to Start of Text Section"/>
 			<node name="gotoSectionEnd" value="Go to End of Text Section"/>
 			<node name="nextTOCSection" value="Go to Next TOC Item"/>
@@ -153,7 +153,7 @@
 			<node name="clearSelection" value="Clear"/>
 		</node>
 		<node name="search" value="Find">
-			<node name="search" value="Find Text..."/>
+			<node name="search" value="Find Text…"/>
 			<node name="findNext" value="Find Next"/>
 			<node name="findPrevious" value="Find Previous"/>
 		</node>
@@ -162,7 +162,7 @@
 			<node name="toggleFullscreen" value="Full Screen"/>
 			<node name="toggleIndicator" value="Toggle Indicator"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..."/>
+		<node name="preferences" value="Last Preferences Dialog…"/>
 		<node name="quit" value="Close"/>
 	</node>
 	<node name="toolbar">
@@ -603,21 +603,21 @@
 			<node name="message" value="Can't download this book at the moment"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Loading book. Please, wait..."/>
-			<node name="loadingBookList" value="Loading library. Please, wait..."/>
-			<node name="migrate" value="Upgrading to the new version. Please, wait..."/>
-			<node name="downloadBookList" value="Downloading book list. Please, wait..."/>
-			<node name="downloadBook" value="Downloading book. Please, wait..."/>
-			<node name="downloadImages" value="Downloading images. Please, wait..."/>
-			<node name="authentication" value="Authentication. Please, wait..."/>
-			<node name="purchaseBook" value="Purchase book. Please, wait..."/>
-			<node name="initializeAuthenticationManager" value="Downloading account information. Please, wait..."/>
-			<node name="loadSubCatalog" value="Loading catalog. Please, wait..."/>
-			<node name="registerUser" value="Registering new account. Please, wait..."/>
-			<node name="passwordRecovery" value="Recovering password. Please, wait..."/>
-			<node name="authenticationCheck" value="Account validation. Please, wait..."/>
-			<node name="signOut" value="Signing out. Please, wait..."/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..."/>
+			<node name="loadingBook" value="Loading book. Please, wait…"/>
+			<node name="loadingBookList" value="Loading library. Please, wait…"/>
+			<node name="migrate" value="Upgrading to the new version. Please, wait…"/>
+			<node name="downloadBookList" value="Downloading book list. Please, wait…"/>
+			<node name="downloadBook" value="Downloading book. Please, wait…"/>
+			<node name="downloadImages" value="Downloading images. Please, wait…"/>
+			<node name="authentication" value="Authentication. Please, wait…"/>
+			<node name="purchaseBook" value="Purchase book. Please, wait…"/>
+			<node name="initializeAuthenticationManager" value="Downloading account information. Please, wait…"/>
+			<node name="loadSubCatalog" value="Loading catalog. Please, wait…"/>
+			<node name="registerUser" value="Registering new account. Please, wait…"/>
+			<node name="passwordRecovery" value="Recovering password. Please, wait…"/>
+			<node name="authenticationCheck" value="Account validation. Please, wait…"/>
+			<node name="signOut" value="Signing out. Please, wait…"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Purchase book"/>

@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="Elfelejtett jelszó"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="Keresés"/>
 			<node name="expandTree" value="Találatok"/>
 			<node name="collapseTree" value="Találatok elrejtése"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Könyv adatai..."/>
+		<node name="bookInfo" value="Könyv adatai…"/>
 		<node name="toc" value="Tartalomjegyzék"/>
 		<node name="showLibrary" value="Könyvtár megnyitása"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Könyvtár">
 			<node name="showLibrary" value="Megnyitás"/>
 			<node name="previousBook" value="Előző kötet"/>
 			<node name="showRecent" value="Legutóbbi"/>
-			<node name="addBook" value="Könyv hozzáadása..."/>
+			<node name="addBook" value="Könyv hozzáadása…"/>
 			<node name="showHelp" value="FBReader névjegye"/>
 		</node>
 		<node name="gotoHome" value="A kötet elejére"/>
-		<node name="gotoPageNumber" value="Ugrás egy oldalra..."/>
+		<node name="gotoPageNumber" value="Ugrás egy oldalra…"/>
 		<node name="gotoSectionStart" value="Ugrás a szakasz elejére"/>
 		<node name="gotoSectionEnd" value="Ugrás a szakasz végére"/>
 		<node name="nextTOCSection" value="Ugrás a következő fejezethez"/>
 		<node name="previousTOCSection" value="Ugrás az előző fejezethez"/>
 		<node name="navigate" value="Pozícionálás">
 			<node name="gotoHome" value="A kötet eljére"/>
-			<node name="gotoPageNumber" value="Ugrás egy oldalra..."/>
+			<node name="gotoPageNumber" value="Ugrás egy oldalra…"/>
 			<node name="gotoSectionStart" value="Ugrás a szakasz elejére"/>
 			<node name="gotoSectionEnd" value="Ugrás a szakasz végére"/>
 			<node name="nextTOCSection" value="Ugrás a következő fejezethez"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="Törlés"/>
 		</node>
 		<node name="search" value="Find">
-			<node name="search" value="Új keresés..."/>
+			<node name="search" value="Új keresés…"/>
 			<node name="findNext" value="Következő keresése"/>
 			<node name="findPrevious" value="Előző keresése"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="Teljes képernyő"/>
 			<node name="toggleIndicator" value="Helyzet jelző átkapcsolása"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="Bezár"/>
 	</node>
 	<node name="toolbar">
@@ -568,7 +568,7 @@
 		</node>
 		<node name="removeFileErrorBox">
 			<node name="title" value="Hiba"/>
-			<node name="message" value="A &#10;%s&#10;nem törölhető..."/>
+			<node name="message" value="A &#10;%s&#10;nem törölhető…"/>
 		</node>
 		<node name="noHelpBox">
 			<node name="title" value="Hiba"/>
@@ -598,21 +598,21 @@
 			<node name="message" value="A kötet jelenleg nem letölthető"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Türelem, töltöm a kötetet..."/>
-			<node name="loadingBookList" value="Türelem, töltöm a könyvtárat..."/>
-			<node name="migrate" value="Türelem, új verzióra frissítek..."/>
-			<node name="downloadBookList" value="Türelem, töltöm a könyvek listáját..."/>
-			<node name="downloadBook" value="Türelem, letöltöm a kötetet..."/>
-			<node name="downloadImages" value="Türelem, ltöltöm a képeket..."/>
-			<node name="authentication" value="Azonosítás, várj egy kicsit..."/>
-			<node name="purchaseBook" value="Megvesszük a kötetet, várj egy kicsit..."/>
-			<node name="initializeAuthenticationManager" value="Letöltöm a felhasználói adatokat, türelem..."/>
-			<node name="loadSubCatalog" value="Töltöm a katalógust..."/>
-			<node name="registerUser" value="Új felhasználó regisztrálás, várj egy kicsit..."/>
-			<node name="passwordRecovery" value="Jelszó visszaszerzése, türelem..."/>
-			<node name="authenticationCheck" value="Adatok ellenörzése, várj egy kicsit..."/>
-			<node name="signOut" value="Kijelentkezés. Türelem..."/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="Türelem, töltöm a kötetet…"/>
+			<node name="loadingBookList" value="Türelem, töltöm a könyvtárat…"/>
+			<node name="migrate" value="Türelem, új verzióra frissítek…"/>
+			<node name="downloadBookList" value="Türelem, töltöm a könyvek listáját…"/>
+			<node name="downloadBook" value="Türelem, letöltöm a kötetet…"/>
+			<node name="downloadImages" value="Türelem, ltöltöm a képeket…"/>
+			<node name="authentication" value="Azonosítás, várj egy kicsit…"/>
+			<node name="purchaseBook" value="Megvesszük a kötetet, várj egy kicsit…"/>
+			<node name="initializeAuthenticationManager" value="Letöltöm a felhasználói adatokat, türelem…"/>
+			<node name="loadSubCatalog" value="Töltöm a katalógust…"/>
+			<node name="registerUser" value="Új felhasználó regisztrálás, várj egy kicsit…"/>
+			<node name="passwordRecovery" value="Jelszó visszaszerzése, türelem…"/>
+			<node name="authenticationCheck" value="Adatok ellenörzése, várj egy kicsit…"/>
+			<node name="signOut" value="Kijelentkezés. Türelem…"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Kötet megvásárlása"/>
@@ -622,7 +622,7 @@
 			<node name="title" value="Azonosítás"/>
 			<node name="login" value="Felhasználói név"/>
 			<node name="password" value="Jelszó"/>
-			<node name="skipIP" value="Nem tudom az IP címhez kötni..."/>
+			<node name="skipIP" value="Nem tudom az IP címhez kötni…"/>
 			<node name="loginIsEmpty" value="Üres felhasználói név nem használható"/>
 		</node>
 		<node name="emptyCatalogBox">

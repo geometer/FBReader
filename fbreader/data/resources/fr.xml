@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="Récupérer le mot de passe"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="Résultats de la recherche"/>
 			<node name="expandTree" value="Afficher les résultats"/>
 			<node name="collapseTree" value="Masquer les résultats"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Informations sur le livre..."/>
+		<node name="bookInfo" value="Informations sur le livre…"/>
 		<node name="toc" value="Table des matières"/>
 		<node name="showLibrary" value="Ouvrir la bibliothèque"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Bibliothèque">
 			<node name="showLibrary" value="Ouvrir"/>
 			<node name="previousBook" value="Livre précédent"/>
 			<node name="showRecent" value="Récents"/>
-			<node name="addBook" value="Ajouter un livre..."/>
+			<node name="addBook" value="Ajouter un livre…"/>
 			<node name="showHelp" value="À propos de FBReader"/>
 		</node>
 		<node name="gotoHome" value="Aller au début du document"/>
-		<node name="gotoPageNumber" value="Aller page..."/>
+		<node name="gotoPageNumber" value="Aller page…"/>
 		<node name="gotoSectionStart" value="Aller au début de la section"/>
 		<node name="gotoSectionEnd" value="Aller à la fin de la section"/>
 		<node name="nextTOCSection" value="Aller à l'entrée suivante de la TDM"/>
 		<node name="previousTOCSection" value="Aller à l'entrée précédente de la TDM"/>
 		<node name="navigate" value="Navigation">
 			<node name="gotoHome" value="Aller au début du document"/>
-			<node name="gotoPageNumber" value="Aller page..."/>
+			<node name="gotoPageNumber" value="Aller page…"/>
 			<node name="gotoSectionStart" value="Aller au début de la section"/>
 			<node name="gotoSectionEnd" value="Aller à la fin de la section"/>
 			<node name="nextTOCSection" value="Aller à l'entrée suivante de la TDM"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="Effacer"/>
 		</node>
 		<node name="search" value="Recherche">
-			<node name="search" value="Rechercher le texte..."/>
+			<node name="search" value="Rechercher le texte…"/>
 			<node name="findNext" value="Rechercher suivant"/>
 			<node name="findPrevious" value="Rechercher précédent"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="Plein écran"/>
 			<node name="toggleIndicator" value="Afficher/Masquer l'indicateur"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="Fermer"/>
 	</node>
 	<node name="toolbar">
@@ -598,21 +598,21 @@
 			<node name="message" value="Impossible de télécharger ce livre en ce moment"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Chargement du livre. Veuillez patienter..."/>
-			<node name="loadingBookList" value="Chargement de la liste des livres. Veuillez patienter..."/>
-			<node name="migrate" value="Mise à jour en cours. Veuillez patienter..."/>
-			<node name="downloadBookList" value="Téléchargement de la liste de livres en cours. Veuillez patienter..."/>
-			<node name="downloadBook" value="Téléchargement du livre. Veuillez patienter..."/>
-			<node name="downloadImages" value="Téléchargement des images. Veuillez patienter..."/>
-			<node name="authentication" value="Authentification. Veuillez patienter..."/>
-			<node name="purchaseBook" value="Achat du livre. Veuillez patienter..."/>
-			<node name="initializeAuthenticationManager" value="Téléchargement des informations du compte. Veuillez patienter..."/>
-			<node name="loadSubCatalog" value="Chargement du catalogue. Veuillez patienter..."/>
-			<node name="registerUser" value="Inscription en cours. Veuillez patienter..."/>
-			<node name="passwordRecovery" value="Récupération du mot de passe. Veuillez patienter..."/>
-			<node name="authenticationCheck" value="Account validation. Please, wait..." toBeTranslated="true"/>
-			<node name="signOut" value="Signing out. Please, wait..." toBeTranslated="true"/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="Chargement du livre. Veuillez patienter…"/>
+			<node name="loadingBookList" value="Chargement de la liste des livres. Veuillez patienter…"/>
+			<node name="migrate" value="Mise à jour en cours. Veuillez patienter…"/>
+			<node name="downloadBookList" value="Téléchargement de la liste de livres en cours. Veuillez patienter…"/>
+			<node name="downloadBook" value="Téléchargement du livre. Veuillez patienter…"/>
+			<node name="downloadImages" value="Téléchargement des images. Veuillez patienter…"/>
+			<node name="authentication" value="Authentification. Veuillez patienter…"/>
+			<node name="purchaseBook" value="Achat du livre. Veuillez patienter…"/>
+			<node name="initializeAuthenticationManager" value="Téléchargement des informations du compte. Veuillez patienter…"/>
+			<node name="loadSubCatalog" value="Chargement du catalogue. Veuillez patienter…"/>
+			<node name="registerUser" value="Inscription en cours. Veuillez patienter…"/>
+			<node name="passwordRecovery" value="Récupération du mot de passe. Veuillez patienter…"/>
+			<node name="authenticationCheck" value="Account validation. Please, wait…" toBeTranslated="true"/>
+			<node name="signOut" value="Signing out. Please, wait…" toBeTranslated="true"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Achat du livre"/>

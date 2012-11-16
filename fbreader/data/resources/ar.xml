@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="استعد كلمة السر"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="نتائج البحث"/>
 			<node name="expandTree" value="أظهر النتائج"/>
 			<node name="collapseTree" value="أخف النتائج"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="معلومات الكتاب..."/>
+		<node name="bookInfo" value="معلومات الكتاب…"/>
 		<node name="toc" value="جدول المحتويات"/>
 		<node name="showLibrary" value="افتح المكتبة"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="المكتبة">
 			<node name="showLibrary" value="افتح"/>
 			<node name="previousBook" value="الكتاب السابق"/>
 			<node name="showRecent" value="الأخيرة"/>
-			<node name="addBook" value="أضف كتابا..."/>
+			<node name="addBook" value="أضف كتابا…"/>
 			<node name="showHelp" value="عن إف.بي.ريدر"/>
 		</node>
 		<node name="gotoHome" value="اذهب إلى بداية المستند"/>
-		<node name="gotoPageNumber" value="اذهب إلى صفحة..."/>
+		<node name="gotoPageNumber" value="اذهب إلى صفحة…"/>
 		<node name="gotoSectionStart" value="اذهب إلى بداية الجزء النصي"/>
 		<node name="gotoSectionEnd" value="اذهب إلى نهاية الجزء النصي"/>
 		<node name="nextTOCSection" value="اذهب إلى العنصر التالي في جدول المحتويات"/>
 		<node name="previousTOCSection" value="اذهب إلى العنصر السابق في جدول المحتويات"/>
 		<node name="navigate" value="تصفّح">
 			<node name="gotoHome" value="اذهب إلى بداية المستند"/>
-			<node name="gotoPageNumber" value="اذهب إلى صفحة..."/>
+			<node name="gotoPageNumber" value="اذهب إلى صفحة…"/>
 			<node name="gotoSectionStart" value="اذهب إلى بداية الجزء النصي"/>
 			<node name="gotoSectionEnd" value="اذهب إلى نهاية الجزء النصي"/>
 			<node name="nextTOCSection" value="اذهب إلى العنصر التالي في جدول المحتويات"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="امسح"/>
 		</node>
 		<node name="search" value="بحث">
-			<node name="search" value="ابحث عن نص..."/>
+			<node name="search" value="ابحث عن نص…"/>
 			<node name="findNext" value="ابحث عن التالي"/>
 			<node name="findPrevious" value="ابحث عن السابق"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="املأ الشاشة"/>
 			<node name="toggleIndicator" value="بدّل الموضّح"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="أغلق"/>
 	</node>
 	<node name="toolbar">
@@ -598,21 +598,21 @@
 			<node name="message" value="لا يمكن حاليا تنزيل هذا الكتاب"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="يُحمل الكتاب، انتظر رجاء..."/>
-			<node name="loadingBookList" value="يُحمل قائمة الكتب، انتظر رجاء..."/>
-			<node name="migrate" value="يُرقي لإصدارة جديدة، انتظر رجاء..."/>
-			<node name="downloadBookList" value="يُنزّل قائمة الكتب، انتظر رجاء..."/>
-			<node name="downloadBook" value="يُنزّل الكتاب، انتظر رجاء..."/>
-			<node name="downloadImages" value="يُنزّل الصور، انتظر رجاء..."/>
-			<node name="authentication" value="يستوثق، انتظر رجاء..."/>
-			<node name="purchaseBook" value="يشتر الكتاب، انتظر رجاء..."/>
-			<node name="initializeAuthenticationManager" value="يُنزّل معلومات الحساب، انتظر رجاء..."/>
-			<node name="loadSubCatalog" value="يُحمّل الفهرس، انتظر رجاء..."/>
-			<node name="registerUser" value="يسجل حسابا جديدا، انتظر رجاء..."/>
-			<node name="passwordRecovery" value="يسترجع كلمة السر، انتظر رجاء..."/>
-			<node name="authenticationCheck" value="يتحقق من الحساب، انتظر رجاء..."/>
-			<node name="signOut" value="Signing out. Please, wait..." toBeTranslated="true"/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="يُحمل الكتاب، انتظر رجاء…"/>
+			<node name="loadingBookList" value="يُحمل قائمة الكتب، انتظر رجاء…"/>
+			<node name="migrate" value="يُرقي لإصدارة جديدة، انتظر رجاء…"/>
+			<node name="downloadBookList" value="يُنزّل قائمة الكتب، انتظر رجاء…"/>
+			<node name="downloadBook" value="يُنزّل الكتاب، انتظر رجاء…"/>
+			<node name="downloadImages" value="يُنزّل الصور، انتظر رجاء…"/>
+			<node name="authentication" value="يستوثق، انتظر رجاء…"/>
+			<node name="purchaseBook" value="يشتر الكتاب، انتظر رجاء…"/>
+			<node name="initializeAuthenticationManager" value="يُنزّل معلومات الحساب، انتظر رجاء…"/>
+			<node name="loadSubCatalog" value="يُحمّل الفهرس، انتظر رجاء…"/>
+			<node name="registerUser" value="يسجل حسابا جديدا، انتظر رجاء…"/>
+			<node name="passwordRecovery" value="يسترجع كلمة السر، انتظر رجاء…"/>
+			<node name="authenticationCheck" value="يتحقق من الحساب، انتظر رجاء…"/>
+			<node name="signOut" value="Signing out. Please, wait…" toBeTranslated="true"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="شراء الكتاب"/>

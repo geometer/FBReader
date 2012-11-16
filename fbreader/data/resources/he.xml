@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="שכחת סיסמא?"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="תוצאות חיפוש"/>
 			<node name="expandTree" value="הצג תוצאות"/>
 			<node name="collapseTree" value="הסתר תוצאות"/>
@@ -108,7 +108,7 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
@@ -598,21 +598,21 @@
 			<node name="message" value="הורדת ספר לא הצליחה"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="טוען ספר. אנא המתן..."/>
-			<node name="loadingBookList" value="טעינת רשימת ספרים. אנא המתן..."/>
-			<node name="migrate" value="מעדכן גרסה. אנא המתן..."/>
-			<node name="downloadBookList" value="הורדת רשימת ספרים. אנא המתן..."/>
-			<node name="downloadBook" value="מוריד ספר. אנא המתן..."/>
-			<node name="downloadImages" value="טעינת איורים. אנא המתן..."/>
-			<node name="authentication" value="אימות פרטים. אנא המתן...."/>
-			<node name="purchaseBook" value="מתבצעת קניית ספר. אנא נמתן..."/>
-			<node name="initializeAuthenticationManager" value="טעינת פרטי משתמש. אנא המתן..."/>
-			<node name="loadSubCatalog" value="טעינת קטלוג. אנא המתן..."/>
-			<node name="registerUser" value="הרשמת משתמש. אנא המתן..."/>
-			<node name="passwordRecovery" value="בקשה לשחזור סיסמא מתבצעת. אנא המתן..."/>
-			<node name="authenticationCheck" value="אימות פרטים. אנא המתן..."/>
-			<node name="signOut" value="התנתקות ממערכת, אנא המתן..."/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="טוען ספר. אנא המתן…"/>
+			<node name="loadingBookList" value="טעינת רשימת ספרים. אנא המתן…"/>
+			<node name="migrate" value="מעדכן גרסה. אנא המתן…"/>
+			<node name="downloadBookList" value="הורדת רשימת ספרים. אנא המתן…"/>
+			<node name="downloadBook" value="מוריד ספר. אנא המתן…"/>
+			<node name="downloadImages" value="טעינת איורים. אנא המתן…"/>
+			<node name="authentication" value="אימות פרטים. אנא המתן…."/>
+			<node name="purchaseBook" value="מתבצעת קניית ספר. אנא נמתן…"/>
+			<node name="initializeAuthenticationManager" value="טעינת פרטי משתמש. אנא המתן…"/>
+			<node name="loadSubCatalog" value="טעינת קטלוג. אנא המתן…"/>
+			<node name="registerUser" value="הרשמת משתמש. אנא המתן…"/>
+			<node name="passwordRecovery" value="בקשה לשחזור סיסמא מתבצעת. אנא המתן…"/>
+			<node name="authenticationCheck" value="אימות פרטים. אנא המתן…"/>
+			<node name="signOut" value="התנתקות ממערכת, אנא המתן…"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="קניית ספר"/>

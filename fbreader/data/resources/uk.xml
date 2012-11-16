@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="Recover password"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="Результати пошуку"/>
 			<node name="expandTree" value="Показати результати пошуку"/>
 			<node name="collapseTree" value="Скрити результати пошуку"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Інформація про книгу..."/>
+		<node name="bookInfo" value="Інформація про книгу…"/>
 		<node name="toc" value="Зміст"/>
 		<node name="showLibrary" value="Відкрити бібліотеку"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Бібліотека">
 			<node name="showLibrary" value="Відкрити бібліотеку"/>
 			<node name="previousBook" value="Попередня книга"/>
 			<node name="showRecent" value="Прочитані книги"/>
-			<node name="addBook" value="Додати файл..."/>
+			<node name="addBook" value="Додати файл…"/>
 			<node name="showHelp" value="Про програму FBReader"/>
 		</node>
 		<node name="gotoHome" value="На початок книги"/>
-		<node name="gotoPageNumber" value="До сторінки..."/>
+		<node name="gotoPageNumber" value="До сторінки…"/>
 		<node name="gotoSectionStart" value="На початок розділу"/>
 		<node name="gotoSectionEnd" value="В кінець розділу"/>
 		<node name="nextTOCSection" value="До наступної глави"/>
 		<node name="previousTOCSection" value="До попередньої глави"/>
 		<node name="navigate" value="Навігація">
 			<node name="gotoHome" value="На початок книги"/>
-			<node name="gotoPageNumber" value="До сторінки ..."/>
+			<node name="gotoPageNumber" value="До сторінки …"/>
 			<node name="gotoSectionStart" value="На початок розділу"/>
 			<node name="gotoSectionEnd" value="В кінець розділу"/>
 			<node name="nextTOCSection" value="До наступної глави"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="Зняти помітку"/>
 		</node>
 		<node name="search" value="Пошук">
-			<node name="search" value="Шукати..."/>
+			<node name="search" value="Шукати…"/>
 			<node name="findNext" value="Шукати далі"/>
 			<node name="findPrevious" value="Шукати раніше"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="На весь екран"/>
 			<node name="toggleIndicator" value="Індикатор позиції"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="Закрити"/>
 	</node>
 	<node name="toolbar">
@@ -598,21 +598,21 @@
 			<node name="message" value="Неможливо завантажити цю книгу в даний момент"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Завантаження книги. Зачекайте..."/>
-			<node name="loadingBookList" value="Завантаження списку книг. Зачекайте..."/>
-			<node name="migrate" value="Перехід на нову версію. Зачекайте, будь ласка..."/>
-			<node name="downloadBookList" value="Завантаження списку книг. Будь ласка, зачекайте ..."/>
-			<node name="downloadBook" value="Завантаження книги. Будь ласка, зачекайте ..."/>
-			<node name="downloadImages" value="Завантаження зображень. Будь ласка, зачекайте ..."/>
-			<node name="authentication" value="Авторізація. Будь ласка, зачекайте ..."/>
-			<node name="purchaseBook" value="Покупка книги. Будь ласка, зачекайте ..."/>
-			<node name="initializeAuthenticationManager" value="Завантаження інформації користувача. Будь ласка, зачекайте ..."/>
-			<node name="loadSubCatalog" value="Завантаження каталогу. Будь ласка, зачекайте..."/>
-			<node name="registerUser" value="Реєстрація нового користувача. Будь ласка, зачекайте..."/>
-			<node name="passwordRecovery" value="Відновлення пароля. Будь ласка, зачекайте ..."/>
-			<node name="authenticationCheck" value="Account validation. Please, wait..." toBeTranslated="true"/>
-			<node name="signOut" value="Signing out. Please, wait..." toBeTranslated="true"/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="Завантаження книги. Зачекайте…"/>
+			<node name="loadingBookList" value="Завантаження списку книг. Зачекайте…"/>
+			<node name="migrate" value="Перехід на нову версію. Зачекайте, будь ласка…"/>
+			<node name="downloadBookList" value="Завантаження списку книг. Будь ласка, зачекайте …"/>
+			<node name="downloadBook" value="Завантаження книги. Будь ласка, зачекайте …"/>
+			<node name="downloadImages" value="Завантаження зображень. Будь ласка, зачекайте …"/>
+			<node name="authentication" value="Авторізація. Будь ласка, зачекайте …"/>
+			<node name="purchaseBook" value="Покупка книги. Будь ласка, зачекайте …"/>
+			<node name="initializeAuthenticationManager" value="Завантаження інформації користувача. Будь ласка, зачекайте …"/>
+			<node name="loadSubCatalog" value="Завантаження каталогу. Будь ласка, зачекайте…"/>
+			<node name="registerUser" value="Реєстрація нового користувача. Будь ласка, зачекайте…"/>
+			<node name="passwordRecovery" value="Відновлення пароля. Будь ласка, зачекайте …"/>
+			<node name="authenticationCheck" value="Account validation. Please, wait…" toBeTranslated="true"/>
+			<node name="signOut" value="Signing out. Please, wait…" toBeTranslated="true"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Купити книгу"/>

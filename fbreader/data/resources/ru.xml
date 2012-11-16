@@ -56,7 +56,7 @@
 			<node name="passwordRecovery" value="Забыли пароль?"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Введите запрос..."/>
+			<node name="searchfield" value="Введите запрос…"/>
 			<node name="title" value="Результаты поиска"/>
 			<node name="expandTree" value="Показать результаты"/>
 			<node name="collapseTree" value="Скрыть результаты"/>
@@ -114,33 +114,33 @@
 			<node name="showRecent" value="Недавние"/>
 			<node name="showLibrary" value="Библиотека"/>
 			<node name="showNetworkLibrary" value="Сетевая библиотека"/>
-			<node name="addBook" value="Открыть файл..."/>
+			<node name="addBook" value="Открыть файл…"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Информация о книге..."/>
+		<node name="bookInfo" value="Информация о книге…"/>
 		<node name="toc" value="Содержание"/>
 		<node name="showLibrary" value="Открыть библиотеку"/>
 		<node name="showNetLibrary" value="Сетевая библиотека"/>
-		<node name="addBook" value="Открыть файл..."/>
+		<node name="addBook" value="Открыть файл…"/>
 		<node name="showRecent" value="Недавние книги"/>
 		<node name="library" value="Библиотека">
 			<node name="showLibrary" value="Открыть"/>
 			<node name="previousBook" value="Предыдущая книга"/>
 			<node name="showRecent" value="Прочитанные книги"/>
-			<node name="addBook" value="Добавить файл..."/>
+			<node name="addBook" value="Добавить файл…"/>
 			<node name="showHelp" value="О программе FBReader"/>
 		</node>
 		<node name="gotoHome" value="В начало книги"/>
-		<node name="gotoPageNumber" value="На страницу..."/>
+		<node name="gotoPageNumber" value="На страницу…"/>
 		<node name="gotoSectionStart" value="В начало раздела"/>
 		<node name="gotoSectionEnd" value="В конец раздела"/>
 		<node name="nextTOCSection" value="К следующей главе"/>
 		<node name="previousTOCSection" value="К предыдущей главе"/>
 		<node name="navigate" value="Переход">
 			<node name="gotoHome" value="В начало книги"/>
-			<node name="gotoPageNumber" value="На страницу..."/>
+			<node name="gotoPageNumber" value="На страницу…"/>
 			<node name="gotoSectionStart" value="В начало раздела"/>
 			<node name="gotoSectionEnd" value="В конец раздела"/>
 			<node name="nextTOCSection" value="К следующей главе"/>
@@ -154,7 +154,7 @@
 			<node name="clearSelection" value="Убрать пометку"/>
 		</node>
 		<node name="search" value="Поиск">
-			<node name="search" value="Искать..."/>
+			<node name="search" value="Искать…"/>
 			<node name="findNext" value="Искать дальше"/>
 			<node name="findPrevious" value="Искать раньше"/>
 		</node>
@@ -163,7 +163,7 @@
 			<node name="toggleFullscreen" value="На весь экран"/>
 			<node name="toggleIndicator" value="Индикатор позиции"/>
 		</node>
-		<node name="preferences" value="Последние настройки..."/>
+		<node name="preferences" value="Последние настройки…"/>
 		<node name="quit" value="Закрыть"/>
 	</node>
 	<node name="toolbar">
@@ -604,21 +604,21 @@
 			<node name="message" value="Не удалось загрузить книгу из сети"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Загрузка книги. Подождите, пожалуйста..."/>
-			<node name="loadingBookList" value="Загрузка списка книг. Подождите, пожалуйста..."/>
-			<node name="migrate" value="Переход на новую версию. Подождите, пожалуйста..."/>
-			<node name="downloadBookList" value="Загрузка списка книг. Подождите, пожалуйста..."/>
-			<node name="downloadBook" value="Загрузка книги. Подождите, пожалуйста..."/>
-			<node name="downloadImages" value="Загрузка изображений. Подождите, пожалуйста..."/>
-			<node name="authentication" value="Идет авторизация. Подождите, пожалуйста..."/>
-			<node name="purchaseBook" value="Идет покупка книги. Подождите, пожалуйста..."/>
-			<node name="initializeAuthenticationManager" value="Загрузка пользовательской информации. Подождите, пожалуйста..."/>
-			<node name="loadSubCatalog" value="Загрузка каталога. Подождите, пожалуйста..."/>
-			<node name="registerUser" value="Регистрируем пользователя. Подождите, пожалуйста..."/>
-			<node name="passwordRecovery" value="Просим восстановить пароль. Подождите, пожалуйста..."/>
-			<node name="authenticationCheck" value="Проверка учетной записи. Подождите, пожалуйста..."/>
-			<node name="signOut" value="Выход из системы. Подождите, пожалуйста..."/>
-			<node name="loadingNetworkLibraryList" value="Загрузка списка сетевых библиотек. Подождите, пожалуйста..."/>
+			<node name="loadingBook" value="Загрузка книги. Подождите, пожалуйста…"/>
+			<node name="loadingBookList" value="Загрузка списка книг. Подождите, пожалуйста…"/>
+			<node name="migrate" value="Переход на новую версию. Подождите, пожалуйста…"/>
+			<node name="downloadBookList" value="Загрузка списка книг. Подождите, пожалуйста…"/>
+			<node name="downloadBook" value="Загрузка книги. Подождите, пожалуйста…"/>
+			<node name="downloadImages" value="Загрузка изображений. Подождите, пожалуйста…"/>
+			<node name="authentication" value="Идет авторизация. Подождите, пожалуйста…"/>
+			<node name="purchaseBook" value="Идет покупка книги. Подождите, пожалуйста…"/>
+			<node name="initializeAuthenticationManager" value="Загрузка пользовательской информации. Подождите, пожалуйста…"/>
+			<node name="loadSubCatalog" value="Загрузка каталога. Подождите, пожалуйста…"/>
+			<node name="registerUser" value="Регистрируем пользователя. Подождите, пожалуйста…"/>
+			<node name="passwordRecovery" value="Просим восстановить пароль. Подождите, пожалуйста…"/>
+			<node name="authenticationCheck" value="Проверка учетной записи. Подождите, пожалуйста…"/>
+			<node name="signOut" value="Выход из системы. Подождите, пожалуйста…"/>
+			<node name="loadingNetworkLibraryList" value="Загрузка списка сетевых библиотек. Подождите, пожалуйста…"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Покупка книги"/>

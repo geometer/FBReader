@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="Recover password" toBeTranslated="true"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="Search results" toBeTranslated="true"/>
 			<node name="expandTree" value="Show results" toBeTranslated="true"/>
 			<node name="collapseTree" value="Hide results" toBeTranslated="true"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Bokinformation..."/>
+		<node name="bookInfo" value="Bokinformation…"/>
 		<node name="toc" value="Innehållsförteckning"/>
 		<node name="showLibrary" value="Open library" toBeTranslated="true"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Bibliotek">
 			<node name="showLibrary" value="Öppna"/>
 			<node name="previousBook" value="Föregående bok"/>
 			<node name="showRecent" value="Tidigare"/>
-			<node name="addBook" value="Lägg till bok..."/>
+			<node name="addBook" value="Lägg till bok…"/>
 			<node name="showHelp" value="Om FBReader"/>
 		</node>
 		<node name="gotoHome" value="Gå till början av dokumentet"/>
-		<node name="gotoPageNumber" value="Go to Page..." toBeTranslated="true"/>
+		<node name="gotoPageNumber" value="Go to Page…" toBeTranslated="true"/>
 		<node name="gotoSectionStart" value="Gå till början av textavsnitt"/>
 		<node name="gotoSectionEnd" value="Gå till slutet av textavsnitt"/>
 		<node name="nextTOCSection" value="Gå till nästa post i innehållsförteckning"/>
 		<node name="previousTOCSection" value="Gå till föregående post i innehållsförteckning"/>
 		<node name="navigate" value="Navigation">
 			<node name="gotoHome" value="Gå till början av dokumentet"/>
-			<node name="gotoPageNumber" value="Go to Page..." toBeTranslated="true"/>
+			<node name="gotoPageNumber" value="Go to Page…" toBeTranslated="true"/>
 			<node name="gotoSectionStart" value="Gå till början av textavsnitt"/>
 			<node name="gotoSectionEnd" value="Gå till slutet av textavsnitt"/>
 			<node name="nextTOCSection" value="Gå till nästa post i innehållsförteckning"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="Töm"/>
 		</node>
 		<node name="search" value="Sök">
-			<node name="search" value="Sök text..."/>
+			<node name="search" value="Sök text…"/>
 			<node name="findNext" value="Sök nästa"/>
 			<node name="findPrevious" value="Sök föregående"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="Helskärm"/>
 			<node name="toggleIndicator" value="Växla indikator"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="Stäng"/>
 	</node>
 	<node name="toolbar">
@@ -598,21 +598,21 @@
 			<node name="message" value="Can't download this book at the moment" toBeTranslated="true"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Läser in bok. Var god vänta..."/>
-			<node name="loadingBookList" value="Läser in boklista. Var god vänta..."/>
-			<node name="migrate" value="Upgrading to the new version. Please, wait..." toBeTranslated="true"/>
-			<node name="downloadBookList" value="Downloading book list. Please, wait..." toBeTranslated="true"/>
-			<node name="downloadBook" value="Downloading book. Please, wait..." toBeTranslated="true"/>
-			<node name="downloadImages" value="Downloading images. Please, wait..." toBeTranslated="true"/>
-			<node name="authentication" value="Authentication. Please, wait..." toBeTranslated="true"/>
-			<node name="purchaseBook" value="Purchase book. Please, wait..." toBeTranslated="true"/>
-			<node name="initializeAuthenticationManager" value="Downloading account information. Please, wait..." toBeTranslated="true"/>
-			<node name="loadSubCatalog" value="Loading catalog. Please, wait..." toBeTranslated="true"/>
-			<node name="registerUser" value="Registering new account. Please, wait..." toBeTranslated="true"/>
-			<node name="passwordRecovery" value="Recovering password. Please, wait..." toBeTranslated="true"/>
-			<node name="authenticationCheck" value="Account validation. Please, wait..." toBeTranslated="true"/>
-			<node name="signOut" value="Signing out. Please, wait..." toBeTranslated="true"/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="Läser in bok. Var god vänta…"/>
+			<node name="loadingBookList" value="Läser in boklista. Var god vänta…"/>
+			<node name="migrate" value="Upgrading to the new version. Please, wait…" toBeTranslated="true"/>
+			<node name="downloadBookList" value="Downloading book list. Please, wait…" toBeTranslated="true"/>
+			<node name="downloadBook" value="Downloading book. Please, wait…" toBeTranslated="true"/>
+			<node name="downloadImages" value="Downloading images. Please, wait…" toBeTranslated="true"/>
+			<node name="authentication" value="Authentication. Please, wait…" toBeTranslated="true"/>
+			<node name="purchaseBook" value="Purchase book. Please, wait…" toBeTranslated="true"/>
+			<node name="initializeAuthenticationManager" value="Downloading account information. Please, wait…" toBeTranslated="true"/>
+			<node name="loadSubCatalog" value="Loading catalog. Please, wait…" toBeTranslated="true"/>
+			<node name="registerUser" value="Registering new account. Please, wait…" toBeTranslated="true"/>
+			<node name="passwordRecovery" value="Recovering password. Please, wait…" toBeTranslated="true"/>
+			<node name="authenticationCheck" value="Account validation. Please, wait…" toBeTranslated="true"/>
+			<node name="signOut" value="Signing out. Please, wait…" toBeTranslated="true"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Purchase book" toBeTranslated="true"/>

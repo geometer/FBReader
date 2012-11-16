@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="Palauta salasana"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="Hakutulokset"/>
 			<node name="expandTree" value="Näytä tulokset"/>
 			<node name="collapseTree" value="Piilota tulokset"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Kirjan tiedot..."/>
+		<node name="bookInfo" value="Kirjan tiedot…"/>
 		<node name="toc" value="Sisällysluettelo"/>
 		<node name="showLibrary" value="Avaa kirjasto"/>
 		<node name="showNetLibrary" value="Verkkokirjasto"/>
-		<node name="addBook" value="Avaa tiedosto..."/>
+		<node name="addBook" value="Avaa tiedosto…"/>
 		<node name="showRecent" value="Viimeisimmät kirjat"/>
 		<node name="library" value="Kirjasto">
 			<node name="showLibrary" value="Avaa kirjasto"/>
 			<node name="previousBook" value="Edellinen kirja"/>
 			<node name="showRecent" value="Viimeisimmät kirjat"/>
-			<node name="addBook" value="Lisää kirja..."/>
+			<node name="addBook" value="Lisää kirja…"/>
 			<node name="showHelp" value="Tietoja FBReaderista"/>
 		</node>
 		<node name="gotoHome" value="Siirry dokumentin alkuun"/>
-		<node name="gotoPageNumber" value="Siirry sivulle..."/>
+		<node name="gotoPageNumber" value="Siirry sivulle…"/>
 		<node name="gotoSectionStart" value="Siirry tekstiosion alkuun"/>
 		<node name="gotoSectionEnd" value="Siirry tekstiosion loppuun"/>
 		<node name="nextTOCSection" value="Sisällysluettelon seuraavaan kohtaan"/>
 		<node name="previousTOCSection" value="Sisällysluettelon edelliseen kohtaan"/>
 		<node name="navigate" value="Navigoi">
 			<node name="gotoHome" value="Siirry dokumentin alkuun"/>
-			<node name="gotoPageNumber" value="Siirry sivulle..."/>
+			<node name="gotoPageNumber" value="Siirry sivulle…"/>
 			<node name="gotoSectionStart" value="Siirry tekstiosion alkuun"/>
 			<node name="gotoSectionEnd" value="Siirry tekstiosion loppuun"/>
 			<node name="nextTOCSection" value="Sisällysluettelon seuraavaan kohtaan"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="Tyhjennä"/>
 		</node>
 		<node name="search" value="Etsi">
-			<node name="search" value="Etsi teksti..."/>
+			<node name="search" value="Etsi teksti…"/>
 			<node name="findNext" value="Etsi seuraava"/>
 			<node name="findPrevious" value="Etsi edellinen"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="Koko näyttö"/>
 			<node name="toggleIndicator" value="Sijainninilmaisin"/>
 		</node>
-		<node name="preferences" value="Asetusvalikko..."/>
+		<node name="preferences" value="Asetusvalikko…"/>
 		<node name="quit" value="Sulje"/>
 	</node>
 	<node name="toolbar">
@@ -598,21 +598,21 @@
 			<node name="message" value="Kirjaa ei voida ladata tällähekellä"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Avataan kirjaa..."/>
-			<node name="loadingBookList" value="Avataan kirjalistaa..."/>
-			<node name="migrate" value="Päivitetään uuteen versioon. Ole hyvä ja odota..."/>
-			<node name="downloadBookList" value="Ladataan kirjalistaa. Ole hyvä ja odota..."/>
-			<node name="downloadBook" value="Ladataan kirjaa. Ole hyvä ja odota..."/>
-			<node name="downloadImages" value="Ladataan kuvia. Ole hyvä ja odota..."/>
-			<node name="authentication" value="Tunnistaudutaan. Ole hyvä ja odota..."/>
-			<node name="purchaseBook" value="Ostetaan kirjaa. Ole hyvä ja odota..."/>
-			<node name="initializeAuthenticationManager" value="Ladataan tilin tietoja. Ole hyvä ja odota..."/>
-			<node name="loadSubCatalog" value="Ladataan luetteloa. Ole hyvä ja odota..."/>
-			<node name="registerUser" value="Rekisteröidään uutta tiliä. Ole hyvä ja odota..."/>
-			<node name="passwordRecovery" value="Palautetaan salasanaa. Ole hyvä ja odota..."/>
-			<node name="authenticationCheck" value="Tilin varmistus. Ole hyvä ja odota..."/>
-			<node name="signOut" value="Kirjaudutaan ulos. Ole hyvä ja odota..."/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="Avataan kirjaa…"/>
+			<node name="loadingBookList" value="Avataan kirjalistaa…"/>
+			<node name="migrate" value="Päivitetään uuteen versioon. Ole hyvä ja odota…"/>
+			<node name="downloadBookList" value="Ladataan kirjalistaa. Ole hyvä ja odota…"/>
+			<node name="downloadBook" value="Ladataan kirjaa. Ole hyvä ja odota…"/>
+			<node name="downloadImages" value="Ladataan kuvia. Ole hyvä ja odota…"/>
+			<node name="authentication" value="Tunnistaudutaan. Ole hyvä ja odota…"/>
+			<node name="purchaseBook" value="Ostetaan kirjaa. Ole hyvä ja odota…"/>
+			<node name="initializeAuthenticationManager" value="Ladataan tilin tietoja. Ole hyvä ja odota…"/>
+			<node name="loadSubCatalog" value="Ladataan luetteloa. Ole hyvä ja odota…"/>
+			<node name="registerUser" value="Rekisteröidään uutta tiliä. Ole hyvä ja odota…"/>
+			<node name="passwordRecovery" value="Palautetaan salasanaa. Ole hyvä ja odota…"/>
+			<node name="authenticationCheck" value="Tilin varmistus. Ole hyvä ja odota…"/>
+			<node name="signOut" value="Kirjaudutaan ulos. Ole hyvä ja odota…"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Osta kirja"/>

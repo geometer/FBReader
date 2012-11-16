@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="找回密码"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="搜索结果"/>
 			<node name="expandTree" value="显示结果"/>
 			<node name="collapseTree" value="隐藏结果"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="书籍信息..."/>
+		<node name="bookInfo" value="书籍信息…"/>
 		<node name="toc" value="目录"/>
 		<node name="showLibrary" value="打开书库"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="书库">
 			<node name="showLibrary" value="打开"/>
 			<node name="previousBook" value="上一本书"/>
 			<node name="showRecent" value="最近阅读"/>
-			<node name="addBook" value="添加书籍..."/>
+			<node name="addBook" value="添加书籍…"/>
 			<node name="showHelp" value="关于 FBReader"/>
 		</node>
 		<node name="gotoHome" value="跳转到文档开始"/>
-		<node name="gotoPageNumber" value="跳转到某页..."/>
+		<node name="gotoPageNumber" value="跳转到某页…"/>
 		<node name="gotoSectionStart" value="跳转到文章开始"/>
 		<node name="gotoSectionEnd" value="跳转到文章结束"/>
 		<node name="nextTOCSection" value="跳转到下一个目录"/>
 		<node name="previousTOCSection" value="跳转到上一个目录"/>
 		<node name="navigate" value="导航">
 			<node name="gotoHome" value="跳转到文档开始"/>
-			<node name="gotoPageNumber" value="跳转到某页..."/>
+			<node name="gotoPageNumber" value="跳转到某页…"/>
 			<node name="gotoSectionStart" value="跳转到章节开始"/>
 			<node name="gotoSectionEnd" value="跳转到章节结束"/>
 			<node name="nextTOCSection" value="跳转到下一个目录项 "/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="清除"/>
 		</node>
 		<node name="search" value="查找">
-			<node name="search" value="查找内容..."/>
+			<node name="search" value="查找内容…"/>
 			<node name="findNext" value="查找下一个"/>
 			<node name="findPrevious" value="查找上一个"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="全屏"/>
 			<node name="toggleIndicator" value="切换指示"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="关闭"/>
 	</node>
 	<node name="toolbar">
@@ -503,13 +503,13 @@
 				</node>
 				<node name="Text" value="正文">
 					<node name="breakType" value="分段"/>
-					<node name="ignoreIndent" value="忽略缩进小于..."/>
+					<node name="ignoreIndent" value="忽略缩进小于…"/>
 					<node name="buildTOC" value="创建目录"/>
 					<node name="emptyLines" value="新章节前的空行"/>
 				</node>
 				<node name="&lt;PRE&gt;" value="&lt;PRE&gt;">
 					<node name="breakType" value="分段落"/>
-					<node name="ignoreIndent" value="忽略缩进小于..."/>
+					<node name="ignoreIndent" value="忽略缩进小于…"/>
 					<node name="buildTOC" value="创建目录"/>
 					<node name="emptyLines" value="新章节前的空行"/>
 				</node>
@@ -598,21 +598,21 @@
 			<node name="message" value="现在无法下载此书"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="书籍加载中，请等待..."/>
-			<node name="loadingBookList" value="书籍列表加载中，请等待..."/>
-			<node name="migrate" value="正在升级到新版本，请等待..."/>
-			<node name="downloadBookList" value="下载书籍列表，请等待..."/>
-			<node name="downloadBook" value="书籍下载中，请等待..."/>
-			<node name="downloadImages" value="图像下载中，请等待..."/>
-			<node name="authentication" value="验证中.请等待..."/>
-			<node name="purchaseBook" value="书籍购买中. 请等待..."/>
-			<node name="initializeAuthenticationManager" value="账户信息下载中，请等待..."/>
-			<node name="loadSubCatalog" value="目录传载中，请等待..."/>
-			<node name="registerUser" value="正在注册新账号，请稍等..."/>
-			<node name="passwordRecovery" value="请求找回密码中，请稍等..."/>
-			<node name="authenticationCheck" value="帐号验证中,请稍等..."/>
-			<node name="signOut" value="退出. 正在处理,请稍等..."/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="书籍加载中，请等待…"/>
+			<node name="loadingBookList" value="书籍列表加载中，请等待…"/>
+			<node name="migrate" value="正在升级到新版本，请等待…"/>
+			<node name="downloadBookList" value="下载书籍列表，请等待…"/>
+			<node name="downloadBook" value="书籍下载中，请等待…"/>
+			<node name="downloadImages" value="图像下载中，请等待…"/>
+			<node name="authentication" value="验证中.请等待…"/>
+			<node name="purchaseBook" value="书籍购买中. 请等待…"/>
+			<node name="initializeAuthenticationManager" value="账户信息下载中，请等待…"/>
+			<node name="loadSubCatalog" value="目录传载中，请等待…"/>
+			<node name="registerUser" value="正在注册新账号，请稍等…"/>
+			<node name="passwordRecovery" value="请求找回密码中，请稍等…"/>
+			<node name="authenticationCheck" value="帐号验证中,请稍等…"/>
+			<node name="signOut" value="退出. 正在处理,请稍等…"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="购买书籍"/>

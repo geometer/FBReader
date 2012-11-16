@@ -57,7 +57,7 @@
 			<node name="passwordRecovery" value="Obnovit heslo"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
+			<node name="searchfield" value="Type to search…" toBeTranslated="true"/>
 			<node name="title" value="Hledat"/>
 			<node name="expandTree" value="Zobrazit výsledky"/>
 			<node name="collapseTree" value="Skrýt výsledky"/>
@@ -108,33 +108,33 @@
 			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
-			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
 			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
 		</node>
-		<node name="bookInfo" value="Informace o knize..."/>
+		<node name="bookInfo" value="Informace o knize…"/>
 		<node name="toc" value="Obsah"/>
 		<node name="showLibrary" value="Otevřít knihovnu"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
-		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Knihovna">
 			<node name="showLibrary" value="Otevřít"/>
 			<node name="previousBook" value="Předchozí kniha"/>
 			<node name="showRecent" value="Nedávné"/>
-			<node name="addBook" value="Přidat knihu..."/>
+			<node name="addBook" value="Přidat knihu…"/>
 			<node name="showHelp" value="O programu FBReader"/>
 		</node>
 		<node name="gotoHome" value="Na začátek dokumentu"/>
-		<node name="gotoPageNumber" value="Na stránku..."/>
+		<node name="gotoPageNumber" value="Na stránku…"/>
 		<node name="gotoSectionStart" value="Na začátek oddílu"/>
 		<node name="gotoSectionEnd" value="Na konec oddílu"/>
 		<node name="nextTOCSection" value="Na další položku obsahu"/>
 		<node name="previousTOCSection" value="Na předchozí položku obsahu"/>
 		<node name="navigate" value="Navigovat">
 			<node name="gotoHome" value="Na začátek dokumentu"/>
-			<node name="gotoPageNumber" value="Na stránku..."/>
+			<node name="gotoPageNumber" value="Na stránku…"/>
 			<node name="gotoSectionStart" value="Na začátek oddílu"/>
 			<node name="gotoSectionEnd" value="Na konec oddílu"/>
 			<node name="nextTOCSection" value="Na další položku obsahu"/>
@@ -148,7 +148,7 @@
 			<node name="clearSelection" value="Vyčistit výběr"/>
 		</node>
 		<node name="search" value="Najít">
-			<node name="search" value="Najít text..."/>
+			<node name="search" value="Najít text…"/>
 			<node name="findNext" value="Najít další"/>
 			<node name="findPrevious" value="Najít předchozí"/>
 		</node>
@@ -157,7 +157,7 @@
 			<node name="toggleFullscreen" value="Celá obrazovka"/>
 			<node name="toggleIndicator" value="Natočení obrazovky"/>
 		</node>
-		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
+		<node name="preferences" value="Last Preferences Dialog…" toBeTranslated="true"/>
 		<node name="quit" value="Ukončit"/>
 	</node>
 	<node name="toolbar">
@@ -598,21 +598,21 @@
 			<node name="message" value="Knihu teď není možné stáhnout"/>
 		</node>
 		<node name="waitMessage">
-			<node name="loadingBook" value="Zavádím knihu. Čekejte prosím..."/>
-			<node name="loadingBookList" value="Zavádím seznam knih. Čekejte prosím..."/>
-			<node name="migrate" value="Probihá upgrade na novou verzi. Čekejte prosím..."/>
-			<node name="downloadBookList" value="Probíhá stahování seznamu knih. Čekejte prosím..."/>
-			<node name="downloadBook" value="Stahování knihy. Čekejte prosím..."/>
-			<node name="downloadImages" value="Stahuji obrázky. Čekelte prosím..."/>
-			<node name="authentication" value="Přihlašování probíhá. Čekejte prosím..."/>
-			<node name="purchaseBook" value="Platba knihy probíhá. Čekejte prosím..."/>
-			<node name="initializeAuthenticationManager" value="Stahování informace o účtu. Čekejte prosím..."/>
-			<node name="loadSubCatalog" value="Importuji katalog. Čekejte prosím..."/>
-			<node name="registerUser" value="Registrace nového účtu. Čekejte prosím..."/>
-			<node name="passwordRecovery" value="Obnovení hesla. Čekejte prosím..."/>
-			<node name="authenticationCheck" value="Account validation. Please, wait..." toBeTranslated="true"/>
-			<node name="signOut" value="Signing out. Please, wait..." toBeTranslated="true"/>
-			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
+			<node name="loadingBook" value="Zavádím knihu. Čekejte prosím…"/>
+			<node name="loadingBookList" value="Zavádím seznam knih. Čekejte prosím…"/>
+			<node name="migrate" value="Probihá upgrade na novou verzi. Čekejte prosím…"/>
+			<node name="downloadBookList" value="Probíhá stahování seznamu knih. Čekejte prosím…"/>
+			<node name="downloadBook" value="Stahování knihy. Čekejte prosím…"/>
+			<node name="downloadImages" value="Stahuji obrázky. Čekelte prosím…"/>
+			<node name="authentication" value="Přihlašování probíhá. Čekejte prosím…"/>
+			<node name="purchaseBook" value="Platba knihy probíhá. Čekejte prosím…"/>
+			<node name="initializeAuthenticationManager" value="Stahování informace o účtu. Čekejte prosím…"/>
+			<node name="loadSubCatalog" value="Importuji katalog. Čekejte prosím…"/>
+			<node name="registerUser" value="Registrace nového účtu. Čekejte prosím…"/>
+			<node name="passwordRecovery" value="Obnovení hesla. Čekejte prosím…"/>
+			<node name="authenticationCheck" value="Account validation. Please, wait…" toBeTranslated="true"/>
+			<node name="signOut" value="Signing out. Please, wait…" toBeTranslated="true"/>
+			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait…" toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
 			<node name="title" value="Zaplatit knihu"/>
