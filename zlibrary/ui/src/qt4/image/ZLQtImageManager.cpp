@@ -98,10 +98,12 @@ shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<sha
 		}
 	}
 
-	QSize maxSize(0,0);
-	foreach(QPixmap p, pixmaps) {
-		maxSize = maxSize.expandedTo(p.size());
+	int maxHeight = countMaxSize(pixmaps).height();
+	for (int i = 0; i < pixmaps.size(); ++i) {
+		pixmaps.replace(i, pixmaps.at(i).scaledToHeight(maxHeight, Qt::FastTransformation));
 	}
+
+	QSize maxSize = countMaxSize(pixmaps);
 	maxSize += QSize(DX * (pixmaps.size() - 1), DY * (pixmaps.size() - 1));
 
 	QPixmap batch(maxSize);
@@ -115,4 +117,12 @@ shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<sha
 	}
 
 	return ZLQtImageUtils::QPixmapToZLImage(batch);
+}
+
+QSize ZLQtImageManager::countMaxSize(const QList<QPixmap> &pixmaps) {
+	QSize maxSize(0,0);
+	foreach(QPixmap p, pixmaps) {
+		maxSize = maxSize.expandedTo(p.size());
+	}
+	return maxSize;
 }
