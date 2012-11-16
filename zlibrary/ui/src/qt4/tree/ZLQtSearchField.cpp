@@ -22,6 +22,7 @@
 
 #include <ZLibrary.h>
 #include <ZLFile.h>
+#include <ZLResource.h>
 
 #include "ZLQtSearchField.h"
 
@@ -30,7 +31,6 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 	//TODO set active and non-active color by default of system
 
 	setObjectName("search-field");
-
 
 	ZLQtWaitingSpinner *spinner = new ZLQtWaitingSpinner(12, 3, 2, 3, this);
 	spinner->setSpeed(2);
@@ -45,7 +45,7 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 
 	setFixedSize(155,25);
 
-	setPlaceholderText("type to search..."); // TODO add to resources;
+	setPlaceholderText(QString::fromStdString(ZLResource::resource("networkView")["searchResultNode"]["searchfield"].value()));
 
 	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
 

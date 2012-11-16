@@ -56,6 +56,7 @@
 			<node name="passwordRecovery" value="Recover password"/>
 		</node>
 		<node name="searchResultNode">
+			<node name="searchfield" value="Type to search..."/>			
 			<node name="title" value="Search results"/>
 			<node name="expandTree" value="Show results"/>
 			<node name="collapseTree" value="Hide results"/>
