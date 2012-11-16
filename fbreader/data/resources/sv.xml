@@ -52,7 +52,7 @@
 			<node name="logout" toBeTranslated="true" value="Sign out (%s)"/>
 			<node name="reload" toBeTranslated="true" value="Reload"/>
 			<node name="dontShow" toBeTranslated="true" value="Don't show this catalog"/>
-			<node name="refillAccount" toBeTranslated="true" value="Refill account (currently: %s)"/>
+			<node name="topupAccount" toBeTranslated="true" value="Top up account (currently: %s)"/>
 			<node name="register" toBeTranslated="true" value="Sign up"/>
 			<node name="passwordRecovery" toBeTranslated="true" value="Recover password"/>
 		</node>

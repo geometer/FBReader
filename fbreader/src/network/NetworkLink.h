@@ -43,7 +43,7 @@ public:
 	static const std::string URL_SIGN_IN;
 	static const std::string URL_SIGN_OUT;
 	static const std::string URL_SIGN_UP;
-	static const std::string URL_REFILL_ACCOUNT;
+	static const std::string URL_TOPUP;
 	static const std::string URL_RECOVER_PASSWORD;
 
 protected:

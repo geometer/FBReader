@@ -52,7 +52,7 @@
 			<node name="logout" value="Afmelden (%s)"/>
 			<node name="reload" value="Opnieuw laden"/>
 			<node name="dontShow" value="Deze catalogus niet tonen"/>
-			<node name="refillAccount" value="Account opladen (nu: %s)"/>
+			<node name="topupAccount" value="Account opladen (nu: %s)"/>
 			<node name="register" value="Registreren"/>
 			<node name="passwordRecovery" value="Wachtwoord herstellen"/>
 		</node>

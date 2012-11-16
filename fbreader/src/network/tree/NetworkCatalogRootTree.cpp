@@ -63,10 +63,10 @@ public:
 	std::string text(const ZLResource &resource) const;
 };
 
-class NetworkCatalogRootTree::RefillAccountAction : public NetworkTreeCatalogAuthAction {
+class NetworkCatalogRootTree::TopupAccountAction : public NetworkTreeCatalogAuthAction {
 
 public:
-	RefillAccountAction(NetworkAuthenticationManager &mgr);
+	TopupAccountAction(NetworkAuthenticationManager &mgr);
 
 private:
 	void run();
@@ -109,8 +109,8 @@ void NetworkCatalogRootTree::init() {
 	if (!mgr.isNull()) {
 		registerAction(new LoginAction(*mgr));
 		registerAction(new LogoutAction(*mgr));
-		if (!mgr->refillAccountLink().empty()) {
-			registerAction(new RefillAccountAction(*mgr));
+		if (!mgr->topupAccountLink().empty()) {
+			registerAction(new TopupAccountAction(*mgr));
 		}
 		if (mgr->registrationSupported()) {
 			registerAction(new RegisterUserAction(*mgr));
@@ -171,28 +171,28 @@ void NetworkCatalogRootTree::LogoutAction::run() {
 }
 
 
-NetworkCatalogRootTree::RefillAccountAction::RefillAccountAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, true) {
+NetworkCatalogRootTree::TopupAccountAction::TopupAccountAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, true) {
 }
 
-ZLResourceKey NetworkCatalogRootTree::RefillAccountAction::key() const {
-	return ZLResourceKey("refillAccount");
+ZLResourceKey NetworkCatalogRootTree::TopupAccountAction::key() const {
+	return ZLResourceKey("topupAccount");
 }
 
-std::string NetworkCatalogRootTree::RefillAccountAction::text(const ZLResource &resource) const {
+std::string NetworkCatalogRootTree::TopupAccountAction::text(const ZLResource &resource) const {
 	const std::string text = ZLTreeAction::text(resource);
 	std::string account = myManager.currentAccount();
-	if (!account.empty() && !myManager.refillAccountLink().empty()) {
+	if (!account.empty() && !myManager.topupAccountLink().empty()) {
 		return ZLStringUtil::printf(text, account);
 	}
 	return text;
 }
 
-void NetworkCatalogRootTree::RefillAccountAction::run() {
-	FBReader::Instance().openLinkInBrowser(myManager.refillAccountLink());
+void NetworkCatalogRootTree::TopupAccountAction::run() {
+	FBReader::Instance().openLinkInBrowser(myManager.topupAccountLink());
 	NetworkLibrary::Instance().refresh();
 }
 
-bool NetworkCatalogRootTree::RefillAccountAction::makesSense() const {
+bool NetworkCatalogRootTree::TopupAccountAction::makesSense() const {
 	return
 		NetworkTreeCatalogAuthAction::makesSense() &&
 		!myManager.currentAccount().empty();

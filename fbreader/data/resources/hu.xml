@@ -52,7 +52,7 @@
 			<node name="logout" value="Kijelentkezés (%s)"/>
 			<node name="reload" value="Újratöltés"/>
 			<node name="dontShow" value="Ezt a katalógust ne mutassa"/>
-			<node name="refillAccount" value="Fiók újratöltése (jelenleg: %s)"/>
+			<node name="topupAccount" value="Fiók újratöltése (jelenleg: %s)"/>
 			<node name="register" value="Regisztráció"/>
 			<node name="passwordRecovery" value="Elfelejtett jelszó"/>
 		</node>

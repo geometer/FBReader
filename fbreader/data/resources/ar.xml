@@ -52,7 +52,7 @@
 			<node name="logout" value="اخرج (%s)"/>
 			<node name="reload" value="أعد التحميل"/>
 			<node name="dontShow" value="لا تُظهر هذا الفهرس"/>
-			<node name="refillAccount" value="أعد ملء المحتويات (حاليا: %s)"/>
+			<node name="topupAccount" value="أعد ملء المحتويات (حاليا: %s)"/>
 			<node name="register" value="سجّل"/>
 			<node name="passwordRecovery" value="استعد كلمة السر"/>
 		</node>

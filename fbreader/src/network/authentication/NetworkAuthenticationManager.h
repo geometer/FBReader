@@ -64,7 +64,7 @@ public: // Account specific methods (can be called only if authorised!!!)
 	virtual bool needPurchase(const NetworkBookItem &book); // returns true if link must be purchased before downloading
 	virtual std::string purchaseBook(const NetworkBookItem &, shared_ptr<ZLNetworkRequest::Listener> listener); // returns error message
 
-	virtual std::string refillAccountLink();
+	virtual std::string topupAccountLink();
 	virtual std::string currentAccount();
 
 	virtual const NetworkItem::List &purchasedBooks() const = 0;

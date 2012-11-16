@@ -29,11 +29,10 @@ RELEASE 0.99.3:
  и как будто вышли из каталога -- то есть с точки зрения пользователя, что-то странное, вроде и зашел, а "моих книг" нет. (А обновиться можно, только если перезагрузить приложение)
 
   ** litres 'top 50 by popularity' -- book duplicates?
-
   ** translates of resources into other languages
 	** "type to search..."
-
   ** litres -> authors list -> A -> АК -> Сергей Тимофеевич (show full name)
+
   ** Series
 	  ** litres: sort books as in server catalog
 	  ** for 'Series' items, show a batch of icons (of books in this series)
@@ -102,7 +101,7 @@ RELEASE 0.99.4:
 	** implement async sign out operation
 	** implement async sign up operation
 	** implement async password recovery operation	
-	** make litres initialize at network library start up (for retrieving account and showing refill account button)
+	** make litres initialize at network library start up (for retrieving account and showing topup account button)
 
 	* BUG: preview widget - если поле отсутсвует, вместо него просто пустое пространство
 	?? закрывать окно библиотеки при нажатии кнопки "скачать"

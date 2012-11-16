@@ -52,7 +52,7 @@
 			<node name="logout" value="退出 (%s)"/>
 			<node name="reload" value="重新加载"/>
 			<node name="dontShow" value="不显示该目录"/>
-			<node name="refillAccount" value="重新输入账号(目前: %s)"/>
+			<node name="topupAccount" value="重新输入账号(目前: %s)"/>
 			<node name="register" value="注册"/>
 			<node name="passwordRecovery" value="找回密码"/>
 		</node>

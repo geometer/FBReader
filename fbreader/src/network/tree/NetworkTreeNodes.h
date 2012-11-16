@@ -121,7 +121,7 @@ private:
 private:
 	class LoginAction;
 	class LogoutAction;
-	class RefillAccountAction;
+	class TopupAccountAction;
 	class PasswordRecoveryAction;
 	class RegisterUserAction;
 

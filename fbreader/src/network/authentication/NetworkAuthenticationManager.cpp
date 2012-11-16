@@ -51,7 +51,7 @@ std::string NetworkAuthenticationManager::purchaseBook(const NetworkBookItem &, 
 }
 
 
-std::string NetworkAuthenticationManager::refillAccountLink() {
+std::string NetworkAuthenticationManager::topupAccountLink() {
 	return "";
 }
 

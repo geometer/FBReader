@@ -52,7 +52,7 @@
 			<node name="logout" value="Salir (%s)"/>
 			<node name="reload" value="Recargar"/>
 			<node name="dontShow" value="No volver a mostrar este catálogo"/>
-			<node name="refillAccount" value="Recargar cuenta (actualizar: %s)"/>
+			<node name="topupAccount" value="Recargar cuenta (actualizar: %s)"/>
 			<node name="register" value="Ingresar"/>
 			<node name="passwordRecovery" value="Recuperar contraseña"/>
 		</node>

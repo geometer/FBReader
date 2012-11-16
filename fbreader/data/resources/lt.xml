@@ -52,7 +52,7 @@
 			<node name="logout" value="Atsijungti (%s)"/>
 			<node name="reload" value="Įkrauti iš naujo"/>
 			<node name="dontShow" value="Nerodyti šio katalogo"/>
-			<node name="refillAccount" value="Papildyti sąskaitą (dabar: %s)"/>
+			<node name="topupAccount" value="Papildyti sąskaitą (dabar: %s)"/>
 			<node name="register" value="Registruotis"/>
 			<node name="passwordRecovery" value="Atstatyti slaptažodį"/>
 		</node>
