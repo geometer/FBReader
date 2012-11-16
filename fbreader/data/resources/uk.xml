@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Ukrainian FBReader resources, by Valentina Kanevska -->
 <resources>
 	<node name="libraryView">
@@ -57,6 +57,7 @@
 			<node name="passwordRecovery" value="Recover password"/>
 		</node>
 		<node name="searchResultNode">
+			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
 			<node name="title" value="Результати пошуку"/>
 			<node name="expandTree" value="Показати результати пошуку"/>
 			<node name="collapseTree" value="Скрити результати пошуку"/>
@@ -77,15 +78,47 @@
 			<node name="downloadDemo" value="Завантажити фрагмент"/>
 			<node name="demo" value="фрагмент"/>
 			<node name="buy" value="Buy (%s)"/>
+			<node name="alsoRead" value="Also read with this book" toBeTranslated="true"/>
+			<node name="sameAuthor" value="All books of %s" toBeTranslated="true"/>
 		</node>
 	</node>
+	<node name="bookInfo">
+		<node name="bookInfo" value="Book Info" toBeTranslated="true"/>
+		<node name="fileInfo" value="File Info" toBeTranslated="true"/>
+		<node name="description" value="Description" toBeTranslated="true"/>
+		<node name="noDescription" value="No description available." toBeTranslated="true"/>
+		<node name="annotation" value="Annotation" toBeTranslated="true"/>
+		<node name="title" value="Title:" toBeTranslated="true"/>
+		<node name="authors" value="Authors:" toBeTranslated="true"/>
+		<node name="series" value="Series:" toBeTranslated="true"/>
+		<node name="indexInSeries" value="Index in series:" toBeTranslated="true"/>
+		<node name="tags" value="Tags:" toBeTranslated="true"/>
+		<node name="language" value="Language:" toBeTranslated="true"/>
+		<node name="name" value="Name:" toBeTranslated="true"/>
+		<node name="type" value="Type:" toBeTranslated="true"/>
+		<node name="size" value="Size:" toBeTranslated="true"/>
+		<node name="time" value="Last modified:" toBeTranslated="true"/>
+		<node name="sizeInBytes" value="%s bytes" toBeTranslated="true"/>
+		<node name="sizeInKiloBytes" value="%s kB" toBeTranslated="true"/>
+		<node name="catalog" value="Catalog:" toBeTranslated="true"/>
+		<node name="extraLinks" value="Related links" toBeTranslated="true"/>
+	</node>
 	<node name="menu">
+		<node name="books" value="Books" toBeTranslated="true">
+			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
+			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		</node>
+		<node name="navigation" value="Navigation" toBeTranslated="true">
+			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
+		</node>
 		<node name="bookInfo" value="Інформація про книгу..."/>
 		<node name="toc" value="Зміст"/>
 		<node name="showLibrary" value="Відкрити бібліотеку"/>
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library"/>
-		<node name="addBook" toBeTranslated="true" value="Open file..."/>
-		<node name="showRecent" toBeTranslated="true" value="Recent books"/>
+		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
+		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Бібліотека">
 			<node name="showLibrary" value="Відкрити бібліотеку"/>
 			<node name="previousBook" value="Попередня книга"/>
@@ -124,7 +157,7 @@
 			<node name="toggleFullscreen" value="На весь екран"/>
 			<node name="toggleIndicator" value="Індикатор позиції"/>
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..."/>
+		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
 		<node name="quit" value="Закрити"/>
 	</node>
 	<node name="toolbar">
@@ -206,36 +239,36 @@
 			<node name="tooltip" value="Про програму"/>
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter"/>
-			<node name="tooltip" toBeTranslated="true" value="Filter"/>
+			<node name="label" value="Filter" toBeTranslated="true"/>
+			<node name="tooltip" value="Filter" toBeTranslated="true"/>
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog"/>
+			<node name="label" value="Last Preferences Dialog" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Last Opened Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="bookInfo">
 			<node name="label" value="Про книгу"/>
 			<node name="tooltip" value="Інформацiя про книгу"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog"/>
+			<node name="label" value="Library Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Library Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog"/>
+			<node name="label" value="Network Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Network Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog"/>
+			<node name="label" value="System Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show System Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog"/>
+			<node name="label" value="Reading Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Reading Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog"/>
+			<node name="label" value="Look &amp; Feel Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Look &amp; Feel Preferences Dialog" toBeTranslated="true"/>
 		</node>
 	</node>
 	<node name="dialog">
@@ -250,7 +283,7 @@
 			<node name="buyAndDownload" value="Купити та &amp;завантажити"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options"/>
+			<node name="title" value="FBReader - Library Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Library" value="Бібліотека">
 					<node name="bookPath" value="Каталоги з книгами"/>
@@ -261,7 +294,7 @@
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options"/>
+			<node name="title" value="FBReader - Network Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="NetworkLibrary" value="Пошук у мережі">
 				</node>
@@ -280,7 +313,7 @@
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options"/>
+			<node name="title" value="FBReader - System Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Language" value="Мова">
 					<node name="autoDetect" value="Визначити мову та кодувати автоматично"/>
@@ -307,7 +340,7 @@
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options"/>
+			<node name="title" value="FBReader - Reading Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Scrolling" value="Перегортання">
 					<node name="keyScrollDelay" value="Затримка між перегортання клавішами, мілісекунди"/>
@@ -346,10 +379,10 @@
 					<node name="grabSystemKeys" value="Перехоплювати системні клавиші"/>
 					<node name="separate" value="Свої налаштування для кожної орієнтації тексту"/>
 					<node name="orientation" value="Орієнтація">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees"/>
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise"/>
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees"/>
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise"/>
+						<node name="degrees0" value="0 Degrees" toBeTranslated="true"/>
+						<node name="degrees90ccw" value="90 Degrees Counterclockwise" toBeTranslated="true"/>
+						<node name="degrees180" value="180 Degrees" toBeTranslated="true"/>
+						<node name="degrees90cw" value="90 Degrees Clockwise" toBeTranslated="true"/>
 					</node>
 					<node name="action">
 						<node name="none" value="Ніяких дій"/>
@@ -384,7 +417,7 @@
 						<node name="cancel" value="Відмінити поточний режим"/>
 						<node name="quit" value="Вийти з програми"/>
 						<node name="bookInfo" value="Показати інформацію про книгу"/>
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog"/>
+						<node name="preferences" value="Show last opened preferences dialog" toBeTranslated="true"/>
 					</node>
 					<node name="quitOnCancel" value="Вийти з програми"/>
 					<node name="keyDelay" value="Затримка між натисканням на клавіші"/>
@@ -392,7 +425,7 @@
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options"/>
+			<node name="title" value="FBReader - Look &amp; Feel Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="CSS" value="CSS">
 					<node name="overrideSpecifiedFonts" value="Завжди використовувати власні шрифти"/>
@@ -558,7 +591,7 @@
 			<node name="invalidEMail" value="Невірна адреса електронної пошти"/>
 			<node name="tooManyRegistrations" value="Занадто багато реєстрацій з вашого IP; спробуйте ще раз через пару хвилин"/>
 			<node name="noUserEmail" value="Немає користувача з такою адресою електронної пошти"/>
-			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
+			<node name="librariesListDownloadingFailed" toBeTranslated="false" value="Downloading list of network libraries failed"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Помилка при завантаженні"/>
@@ -577,8 +610,8 @@
 			<node name="loadSubCatalog" value="Завантаження каталогу. Будь ласка, зачекайте..."/>
 			<node name="registerUser" value="Реєстрація нового користувача. Будь ласка, зачекайте..."/>
 			<node name="passwordRecovery" value="Відновлення пароля. Будь ласка, зачекайте ..."/>
-			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..."/>
-			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..."/>
+			<node name="authenticationCheck" value="Account validation. Please, wait..." toBeTranslated="true"/>
+			<node name="signOut" value="Signing out. Please, wait..." toBeTranslated="true"/>
 			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">

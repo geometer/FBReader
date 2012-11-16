@@ -57,6 +57,7 @@
 			<node name="passwordRecovery" value="Obnovit heslo"/>
 		</node>
 		<node name="searchResultNode">
+			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
 			<node name="title" value="Hledat"/>
 			<node name="expandTree" value="Zobrazit výsledky"/>
 			<node name="collapseTree" value="Skrýt výsledky"/>
@@ -75,17 +76,49 @@
 			<node name="download" value="Stáhnout"/>
 			<node name="readDemo" value="Číst ukázku"/>
 			<node name="downloadDemo" value="Stáhnout ukázku"/>
-			<node name="demo" toBeTranslated="true" value="sample"/>
+			<node name="demo" value="sample" toBeTranslated="true"/>
 			<node name="buy" value="Zaplatit (%s)"/>
+			<node name="alsoRead" value="Also read with this book" toBeTranslated="true"/>
+			<node name="sameAuthor" value="All books of %s" toBeTranslated="true"/>
 		</node>
 	</node>
+	<node name="bookInfo">
+		<node name="bookInfo" value="Book Info" toBeTranslated="true"/>
+		<node name="fileInfo" value="File Info" toBeTranslated="true"/>
+		<node name="description" value="Description" toBeTranslated="true"/>
+		<node name="noDescription" value="No description available." toBeTranslated="true"/>
+		<node name="annotation" value="Annotation" toBeTranslated="true"/>
+		<node name="title" value="Title:" toBeTranslated="true"/>
+		<node name="authors" value="Authors:" toBeTranslated="true"/>
+		<node name="series" value="Series:" toBeTranslated="true"/>
+		<node name="indexInSeries" value="Index in series:" toBeTranslated="true"/>
+		<node name="tags" value="Tags:" toBeTranslated="true"/>
+		<node name="language" value="Language:" toBeTranslated="true"/>
+		<node name="name" value="Name:" toBeTranslated="true"/>
+		<node name="type" value="Type:" toBeTranslated="true"/>
+		<node name="size" value="Size:" toBeTranslated="true"/>
+		<node name="time" value="Last modified:" toBeTranslated="true"/>
+		<node name="sizeInBytes" value="%s bytes" toBeTranslated="true"/>
+		<node name="sizeInKiloBytes" value="%s kB" toBeTranslated="true"/>
+		<node name="catalog" value="Catalog:" toBeTranslated="true"/>
+		<node name="extraLinks" value="Related links" toBeTranslated="true"/>
+	</node>
 	<node name="menu">
+		<node name="books" value="Books" toBeTranslated="true">
+			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
+			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		</node>
+		<node name="navigation" value="Navigation" toBeTranslated="true">
+			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
+		</node>
 		<node name="bookInfo" value="Informace o knize..."/>
 		<node name="toc" value="Obsah"/>
 		<node name="showLibrary" value="Otevřít knihovnu"/>
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library"/>
-		<node name="addBook" toBeTranslated="true" value="Open file..."/>
-		<node name="showRecent" toBeTranslated="true" value="Recent books"/>
+		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
+		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Knihovna">
 			<node name="showLibrary" value="Otevřít"/>
 			<node name="previousBook" value="Předchozí kniha"/>
@@ -124,118 +157,118 @@
 			<node name="toggleFullscreen" value="Celá obrazovka"/>
 			<node name="toggleIndicator" value="Natočení obrazovky"/>
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..."/>
+		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
 		<node name="quit" value="Ukončit"/>
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
-			<node name="label" toBeTranslated="true" value="Read Book"/>
+			<node name="label" value="Read Book" toBeTranslated="true"/>
 			<node name="tooltip" value="Čtecí režim"/>
 		</node>
 		<node name="showLibrary">
-			<node name="label" toBeTranslated="true" value="Library"/>
+			<node name="label" value="Library" toBeTranslated="true"/>
 			<node name="tooltip" value="Knihovna - stromový pohled"/>
 			<node name="popup" value="Nedávno otevřené knihy"/>
 		</node>
 		<node name="showRecent">
-			<node name="label" toBeTranslated="true" value="Recent Books"/>
+			<node name="label" value="Recent Books" toBeTranslated="true"/>
 			<node name="tooltip" value="Seznam nedávno otevřených knih"/>
 		</node>
 		<node name="byAuthor">
-			<node name="label" toBeTranslated="true" value="By Author"/>
+			<node name="label" value="By Author" toBeTranslated="true"/>
 			<node name="tooltip" value="Seřadit knihy dle autorů"/>
 		</node>
 		<node name="byTag">
-			<node name="label" toBeTranslated="true" value="By Tag"/>
+			<node name="label" value="By Tag" toBeTranslated="true"/>
 			<node name="tooltip" value="Seřadit knihy dle klíčových slov"/>
 		</node>
 		<node name="addBook">
-			<node name="label" toBeTranslated="true" value="Add File"/>
+			<node name="label" value="Add File" toBeTranslated="true"/>
 			<node name="tooltip" value="Vložit do knihovny"/>
 		</node>
 		<node name="showNetLibrary">
-			<node name="label" toBeTranslated="true" value="Network"/>
+			<node name="label" value="Network" toBeTranslated="true"/>
 			<node name="tooltip" value="Hledat v knihovně na síti"/>
 		</node>
 		<node name="searchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Simple Search"/>
+			<node name="label" value="Simple Search" toBeTranslated="true"/>
 			<node name="tooltip" value="Hledat na síti"/>
 		</node>
 		<node name="advancedSearchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Search"/>
+			<node name="label" value="Search" toBeTranslated="true"/>
 			<node name="tooltip" value="Rozšířené hledání na síti"/>
 		</node>
 		<node name="gotoHome">
-			<node name="label" toBeTranslated="true" value="Go to Start"/>
+			<node name="label" value="Go to Start" toBeTranslated="true"/>
 			<node name="tooltip" value="Návrat na začátek textu"/>
 		</node>
 		<node name="undo">
-			<node name="label" toBeTranslated="true" value="Go Back"/>
+			<node name="label" value="Go Back" toBeTranslated="true"/>
 			<node name="tooltip" value="Zpět"/>
 		</node>
 		<node name="redo">
-			<node name="label" toBeTranslated="true" value="Go Forward"/>
+			<node name="label" value="Go Forward" toBeTranslated="true"/>
 			<node name="tooltip" value="Znovu"/>
 		</node>
 		<node name="gotoPageNumberWithParameter">
-			<node name="label" toBeTranslated="true" value="Go to Page"/>
+			<node name="label" value="Go to Page" toBeTranslated="true"/>
 			<node name="tooltip" value="Přejít na stránku"/>
 		</node>
 		<node name="toc">
-			<node name="label" toBeTranslated="true" value="TOC"/>
+			<node name="label" value="TOC" toBeTranslated="true"/>
 			<node name="tooltip" value="Obsah"/>
 		</node>
 		<node name="search">
-			<node name="label" toBeTranslated="true" value="Search"/>
+			<node name="label" value="Search" toBeTranslated="true"/>
 			<node name="tooltip" value="Hledat text"/>
 		</node>
 		<node name="findNext">
-			<node name="label" toBeTranslated="true" value="Next"/>
+			<node name="label" value="Next" toBeTranslated="true"/>
 			<node name="tooltip" value="Najít další"/>
 		</node>
 		<node name="findPrevious">
-			<node name="label" toBeTranslated="true" value="Previous"/>
+			<node name="label" value="Previous" toBeTranslated="true"/>
 			<node name="tooltip" value="Najít předchozí"/>
 		</node>
 		<node name="rotate">
-			<node name="label" toBeTranslated="true" value="Rotate"/>
+			<node name="label" value="Rotate" toBeTranslated="true"/>
 			<node name="tooltip" value="Změna směru textu"/>
 		</node>
 		<node name="showHelp">
-			<node name="label" toBeTranslated="true" value="About"/>
+			<node name="label" value="About" toBeTranslated="true"/>
 			<node name="tooltip" value="O programu FBReader"/>
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter"/>
-			<node name="tooltip" toBeTranslated="true" value="Filter"/>
+			<node name="label" value="Filter" toBeTranslated="true"/>
+			<node name="tooltip" value="Filter" toBeTranslated="true"/>
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog"/>
+			<node name="label" value="Last Preferences Dialog" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Last Opened Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="bookInfo">
-			<node name="label" toBeTranslated="true" value="Book Info"/>
+			<node name="label" value="Book Info" toBeTranslated="true"/>
 			<node name="tooltip" value="Informace o knize"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog"/>
+			<node name="label" value="Library Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Library Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog"/>
+			<node name="label" value="Network Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Network Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog"/>
+			<node name="label" value="System Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show System Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog"/>
+			<node name="label" value="Reading Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Reading Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog"/>
+			<node name="label" value="Look &amp; Feel Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Look &amp; Feel Preferences Dialog" toBeTranslated="true"/>
 		</node>
 	</node>
 	<node name="dialog">
@@ -250,7 +283,7 @@
 			<node name="buyAndDownload" value="Zaplatit a &amp;stáhnout"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options"/>
+			<node name="title" value="FBReader - Library Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Library" value="Knihovna">
 					<node name="bookPath" value="Složka s knihami"/>
@@ -261,7 +294,7 @@
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options"/>
+			<node name="title" value="FBReader - Network Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="NetworkLibrary" value="Hledání knih na síti">
 				</node>
@@ -280,7 +313,7 @@
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options"/>
+			<node name="title" value="FBReader - System Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Language" value="Jazyk">
 					<node name="autoDetect" value="Automatická detekce jazyka o kódování znaků"/>
@@ -307,7 +340,7 @@
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options"/>
+			<node name="title" value="FBReader - Reading Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Scrolling" value="Posuv textu">
 					<node name="keyScrollDelay" value="Zpoždění mezi stiskem kláves posuvu v msec"/>
@@ -346,10 +379,10 @@
 					<node name="grabSystemKeys" value="Převzít systémové zkratky"/>
 					<node name="separate" value="Vlastní zkratky zavislé na orientaci textu"/>
 					<node name="orientation" value="Orientace">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees"/>
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise"/>
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees"/>
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise"/>
+						<node name="degrees0" value="0 Degrees" toBeTranslated="true"/>
+						<node name="degrees90ccw" value="90 Degrees Counterclockwise" toBeTranslated="true"/>
+						<node name="degrees180" value="180 Degrees" toBeTranslated="true"/>
+						<node name="degrees90cw" value="90 Degrees Clockwise" toBeTranslated="true"/>
 					</node>
 					<node name="action">
 						<node name="none" value="Žádné"/>
@@ -384,7 +417,7 @@
 						<node name="cancel" value="Zrušit"/>
 						<node name="quit" value="Ukončit"/>
 						<node name="bookInfo" value="Informace o knize"/>
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog"/>
+						<node name="preferences" value="Show last opened preferences dialog" toBeTranslated="true"/>
 					</node>
 					<node name="quitOnCancel" value="Ukončit program"/>
 					<node name="keyDelay" value="Zpoždění stisku kláves"/>
@@ -392,7 +425,7 @@
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options"/>
+			<node name="title" value="FBReader - Look &amp; Feel Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="CSS" value="CSS">
 					<node name="overrideSpecifiedFonts" value="Vždy použít uživatelské fonty"/>
@@ -558,7 +591,7 @@
 			<node name="invalidEMail" value="Nesprávná adresa e-mailu"/>
 			<node name="tooManyRegistrations" value="Příliš mnoho registrací pro IP;&#10;zkuste to za několik minut znovu"/>
 			<node name="noUserEmail" value="Uživatel nebyl registrován&#10; s udanou e-mailovou adresou"/>
-			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
+			<node name="librariesListDownloadingFailed" toBeTranslated="false" value="Downloading list of network libraries failed"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Chyba při stahování"/>
@@ -577,8 +610,8 @@
 			<node name="loadSubCatalog" value="Importuji katalog. Čekejte prosím..."/>
 			<node name="registerUser" value="Registrace nového účtu. Čekejte prosím..."/>
 			<node name="passwordRecovery" value="Obnovení hesla. Čekejte prosím..."/>
-			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..."/>
-			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..."/>
+			<node name="authenticationCheck" value="Account validation. Please, wait..." toBeTranslated="true"/>
+			<node name="signOut" value="Signing out. Please, wait..." toBeTranslated="true"/>
 			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">

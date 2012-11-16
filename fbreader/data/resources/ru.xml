@@ -56,7 +56,7 @@
 			<node name="passwordRecovery" value="Забыли пароль?"/>
 		</node>
 		<node name="searchResultNode">
-			<node name="searchfield" value="Введите запрос..."/>			
+			<node name="searchfield" value="Введите запрос..."/>
 			<node name="title" value="Результаты поиска"/>
 			<node name="expandTree" value="Показать результаты"/>
 			<node name="collapseTree" value="Скрыть результаты"/>
@@ -110,6 +110,15 @@
 		<node name="extraLinks" value="Ссылки"/>
 	</node>
 	<node name="menu">
+		<node name="books" value="Книги">
+			<node name="showRecent" value="Недавние"/>
+			<node name="showLibrary" value="Библиотека"/>
+			<node name="showNetworkLibrary" value="Сетевая библиотека"/>
+			<node name="addBook" value="Открыть файл..."/>
+		</node>
+		<node name="navigation" value="Navigation" toBeTranslated="true">
+			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
+		</node>
 		<node name="bookInfo" value="Информация о книге..."/>
 		<node name="toc" value="Содержание"/>
 		<node name="showLibrary" value="Открыть библиотеку"/>

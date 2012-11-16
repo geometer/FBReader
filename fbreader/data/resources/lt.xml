@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Lithuanian FBReader resources, by Stanislovas Zacharovas -->
 <resources>
 	<node name="libraryView">
@@ -57,6 +57,7 @@
 			<node name="passwordRecovery" value="Atstatyti slaptažodį"/>
 		</node>
 		<node name="searchResultNode">
+			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
 			<node name="title" value="Ieškoti tarp rezultatų"/>
 			<node name="expandTree" value="Rodyti rezultatus"/>
 			<node name="collapseTree" value="Paslėpti rezultatus"/>
@@ -77,15 +78,47 @@
 			<node name="downloadDemo" value="Atsisiųsti ištrauką"/>
 			<node name="demo" value="ištrauką"/>
 			<node name="buy" value="Pirkti (%s)"/>
+			<node name="alsoRead" value="Also read with this book" toBeTranslated="true"/>
+			<node name="sameAuthor" value="All books of %s" toBeTranslated="true"/>
 		</node>
 	</node>
+	<node name="bookInfo">
+		<node name="bookInfo" value="Book Info" toBeTranslated="true"/>
+		<node name="fileInfo" value="File Info" toBeTranslated="true"/>
+		<node name="description" value="Description" toBeTranslated="true"/>
+		<node name="noDescription" value="No description available." toBeTranslated="true"/>
+		<node name="annotation" value="Annotation" toBeTranslated="true"/>
+		<node name="title" value="Title:" toBeTranslated="true"/>
+		<node name="authors" value="Authors:" toBeTranslated="true"/>
+		<node name="series" value="Series:" toBeTranslated="true"/>
+		<node name="indexInSeries" value="Index in series:" toBeTranslated="true"/>
+		<node name="tags" value="Tags:" toBeTranslated="true"/>
+		<node name="language" value="Language:" toBeTranslated="true"/>
+		<node name="name" value="Name:" toBeTranslated="true"/>
+		<node name="type" value="Type:" toBeTranslated="true"/>
+		<node name="size" value="Size:" toBeTranslated="true"/>
+		<node name="time" value="Last modified:" toBeTranslated="true"/>
+		<node name="sizeInBytes" value="%s bytes" toBeTranslated="true"/>
+		<node name="sizeInKiloBytes" value="%s kB" toBeTranslated="true"/>
+		<node name="catalog" value="Catalog:" toBeTranslated="true"/>
+		<node name="extraLinks" value="Related links" toBeTranslated="true"/>
+	</node>
 	<node name="menu">
+		<node name="books" value="Books" toBeTranslated="true">
+			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
+			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		</node>
+		<node name="navigation" value="Navigation" toBeTranslated="true">
+			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
+		</node>
 		<node name="bookInfo" value="Apie knygą..."/>
 		<node name="toc" value="Turinys"/>
 		<node name="showLibrary" value="Atidaryti biblioteką"/>
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library"/>
-		<node name="addBook" toBeTranslated="true" value="Open file..."/>
-		<node name="showRecent" toBeTranslated="true" value="Recent books"/>
+		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
+		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Biblioteka">
 			<node name="showLibrary" value="Atidaryti"/>
 			<node name="previousBook" value="Ankstesnė knyga"/>
@@ -124,7 +157,7 @@
 			<node name="toggleFullscreen" value="Užpildyti ekraną"/>
 			<node name="toggleIndicator" value="Įjungti indikatorių"/>
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..."/>
+		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
 		<node name="quit" value="Uždaryti"/>
 	</node>
 	<node name="toolbar">
@@ -210,32 +243,32 @@
 			<node name="tooltip" value="Filtruoti pagal __"/>
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog"/>
+			<node name="label" value="Last Preferences Dialog" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Last Opened Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="bookInfo">
 			<node name="label" value="Informacija"/>
 			<node name="tooltip" value="Informacija apie knygą"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog"/>
+			<node name="label" value="Library Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Library Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog"/>
+			<node name="label" value="Network Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Network Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog"/>
+			<node name="label" value="System Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show System Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog"/>
+			<node name="label" value="Reading Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Reading Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog"/>
+			<node name="label" value="Look &amp; Feel Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Look &amp; Feel Preferences Dialog" toBeTranslated="true"/>
 		</node>
 	</node>
 	<node name="dialog">
@@ -250,7 +283,7 @@
 			<node name="buyAndDownload" value="Pirkti ir &amp;nusikrauti"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options"/>
+			<node name="title" value="FBReader - Library Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Library" value="Biblioteka">
 					<node name="bookPath" value="Kelias prie knygos (knygų)"/>
@@ -261,7 +294,7 @@
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options"/>
+			<node name="title" value="FBReader - Network Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="NetworkLibrary" value="Interneto bibliotekos">
 				</node>
@@ -280,7 +313,7 @@
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options"/>
+			<node name="title" value="FBReader - System Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Language" value="Kalba">
 					<node name="autoDetect" value="Automatinis kalbos ir koduotės atpažinimas"/>
@@ -307,7 +340,7 @@
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options"/>
+			<node name="title" value="FBReader - Reading Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Scrolling" value="Puslapio keitimas">
 					<node name="keyScrollDelay" value="Puslapio keitimo užlaikymas, msec."/>
@@ -346,10 +379,10 @@
 					<node name="grabSystemKeys" value="Įsiminti mygtuką"/>
 					<node name="separate" value="Mygtukų priskyrimas priklauso nuo pasukimo"/>
 					<node name="orientation" value="Pasukimas">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees"/>
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise"/>
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees"/>
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise"/>
+						<node name="degrees0" value="0 Degrees" toBeTranslated="true"/>
+						<node name="degrees90ccw" value="90 Degrees Counterclockwise" toBeTranslated="true"/>
+						<node name="degrees180" value="180 Degrees" toBeTranslated="true"/>
+						<node name="degrees90cw" value="90 Degrees Clockwise" toBeTranslated="true"/>
 					</node>
 					<node name="action">
 						<node name="none" value="Nieko"/>
@@ -384,7 +417,7 @@
 						<node name="cancel" value="Atšaukti"/>
 						<node name="quit" value="Išeiti"/>
 						<node name="bookInfo" value="Parodyti knygos informaciją"/>
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog"/>
+						<node name="preferences" value="Show last opened preferences dialog" toBeTranslated="true"/>
 					</node>
 					<node name="quitOnCancel" value="Išeiti iš programos pasirinkus Atšaukti"/>
 					<node name="keyDelay" value="Užlaikymas tarp mygtuko paspaudimo ir vykdymo"/>
@@ -392,7 +425,7 @@
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options"/>
+			<node name="title" value="FBReader - Look &amp; Feel Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="CSS" value="CSS">
 					<node name="overrideSpecifiedFonts" value="Visada naudoti mano šriftą"/>
@@ -556,9 +589,9 @@
 			<node name="passwordNotSpecified" value="Prašome įvesti bent jau kelių ženklų slapatažodį "/>
 			<node name="emailNotSpecified" value="Prašome įvesti el. pašto adresą"/>
 			<node name="invalidEMail" value="Neteisingas el. pašto adresas"/>
-			<node name="tooManyRegistrations" value="Per daug registruotasi iš jusų IP;&#13;&#10;bandykite vėl po kelių minučių"/>
-			<node name="noUserEmail" value="Neturime registruoto vartotojo&#13;&#10;su nurodytu el. pašto adresu"/>
-			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
+			<node name="tooManyRegistrations" value="Per daug registruotasi iš jusų IP; &#10;bandykite vėl po kelių minučių"/>
+			<node name="noUserEmail" value="Neturime registruoto vartotojo &#10;su nurodytu el. pašto adresu"/>
+			<node name="librariesListDownloadingFailed" toBeTranslated="false" value="Downloading list of network libraries failed"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Siuntimosi klaida"/>
@@ -618,11 +651,11 @@
 		</node>
 		<node name="recoverySuccessfulBox">
 			<node name="title" value="Slaptažodžio atstatymas"/>
-			<node name="message" value="El. laiškas su tolesniais nurodymais&#13;&#10;išsiųstas į&#13;&#10;%s"/>
+			<node name="message" value="El. laiškas su tolesniais nurodymais &#10;išsiųstas į &#10;%s"/>
 		</node>
 		<node name="cantOpenDownloadedFile">
 			<node name="title" value="Įkrovimo klaida"/>
-			<node name="message" value="Nepavyksta atidaryti failo&#13;&#10;%s."/>
+			<node name="message" value="Nepavyksta atidaryti failo &#10;%s."/>
 		</node>
 	</node>
 	<node name="style">

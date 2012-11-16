@@ -57,6 +57,7 @@
 			<node name="passwordRecovery" value="שכחת סיסמא?"/>
 		</node>
 		<node name="searchResultNode">
+			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
 			<node name="title" value="תוצאות חיפוש"/>
 			<node name="expandTree" value="הצג תוצאות"/>
 			<node name="collapseTree" value="הסתר תוצאות"/>
@@ -77,9 +78,41 @@
 			<node name="downloadDemo" value="הורדת קטע"/>
 			<node name="demo" value="קטע"/>
 			<node name="buy" value="קניית (%s)"/>
+			<node name="alsoRead" value="Also read with this book" toBeTranslated="true"/>
+			<node name="sameAuthor" value="All books of %s" toBeTranslated="true"/>
 		</node>
 	</node>
+	<node name="bookInfo">
+		<node name="bookInfo" value="Book Info" toBeTranslated="true"/>
+		<node name="fileInfo" value="File Info" toBeTranslated="true"/>
+		<node name="description" value="Description" toBeTranslated="true"/>
+		<node name="noDescription" value="No description available." toBeTranslated="true"/>
+		<node name="annotation" value="Annotation" toBeTranslated="true"/>
+		<node name="title" value="Title:" toBeTranslated="true"/>
+		<node name="authors" value="Authors:" toBeTranslated="true"/>
+		<node name="series" value="Series:" toBeTranslated="true"/>
+		<node name="indexInSeries" value="Index in series:" toBeTranslated="true"/>
+		<node name="tags" value="Tags:" toBeTranslated="true"/>
+		<node name="language" value="Language:" toBeTranslated="true"/>
+		<node name="name" value="Name:" toBeTranslated="true"/>
+		<node name="type" value="Type:" toBeTranslated="true"/>
+		<node name="size" value="Size:" toBeTranslated="true"/>
+		<node name="time" value="Last modified:" toBeTranslated="true"/>
+		<node name="sizeInBytes" value="%s bytes" toBeTranslated="true"/>
+		<node name="sizeInKiloBytes" value="%s kB" toBeTranslated="true"/>
+		<node name="catalog" value="Catalog:" toBeTranslated="true"/>
+		<node name="extraLinks" value="Related links" toBeTranslated="true"/>
+	</node>
 	<node name="menu">
+		<node name="books" value="Books" toBeTranslated="true">
+			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
+			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		</node>
+		<node name="navigation" value="Navigation" toBeTranslated="true">
+			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
+		</node>
 		<node name="bookInfo" value="אודות הספר"/>
 		<node name="toc" value="תוכן הענינים"/>
 		<node name="showLibrary" value="פתח ספריה"/>
@@ -558,7 +591,7 @@
 			<node name="invalidEMail" value="כתובת לא תקינה"/>
 			<node name="tooManyRegistrations" value="נסיונות הרשמה רבים מדי מכתובת ה-IP שלך;&#10;נסה שוב בעוד כמה דקות"/>
 			<node name="noUserEmail" value="משתמש עם כתובת דוא''ל שצויינה לא קיים"/>
-			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
+			<node name="librariesListDownloadingFailed" toBeTranslated="false" value="Downloading list of network libraries failed"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="שגיאה בעת הורדה"/>

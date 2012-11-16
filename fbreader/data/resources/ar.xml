@@ -57,6 +57,7 @@
 			<node name="passwordRecovery" value="استعد كلمة السر"/>
 		</node>
 		<node name="searchResultNode">
+			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
 			<node name="title" value="نتائج البحث"/>
 			<node name="expandTree" value="أظهر النتائج"/>
 			<node name="collapseTree" value="أخف النتائج"/>
@@ -75,17 +76,49 @@
 			<node name="download" value="نزّل"/>
 			<node name="readDemo" value="اقرأ نسخة العرض"/>
 			<node name="downloadDemo" value="نزّل نسخة العرض"/>
-			<node name="demo" toBeTranslated="true" value="sample"/>
+			<node name="demo" value="sample" toBeTranslated="true"/>
 			<node name="buy" value="اشترِ (%s)"/>
+			<node name="alsoRead" value="Also read with this book" toBeTranslated="true"/>
+			<node name="sameAuthor" value="All books of %s" toBeTranslated="true"/>
 		</node>
 	</node>
+	<node name="bookInfo">
+		<node name="bookInfo" value="Book Info" toBeTranslated="true"/>
+		<node name="fileInfo" value="File Info" toBeTranslated="true"/>
+		<node name="description" value="Description" toBeTranslated="true"/>
+		<node name="noDescription" value="No description available." toBeTranslated="true"/>
+		<node name="annotation" value="Annotation" toBeTranslated="true"/>
+		<node name="title" value="Title:" toBeTranslated="true"/>
+		<node name="authors" value="Authors:" toBeTranslated="true"/>
+		<node name="series" value="Series:" toBeTranslated="true"/>
+		<node name="indexInSeries" value="Index in series:" toBeTranslated="true"/>
+		<node name="tags" value="Tags:" toBeTranslated="true"/>
+		<node name="language" value="Language:" toBeTranslated="true"/>
+		<node name="name" value="Name:" toBeTranslated="true"/>
+		<node name="type" value="Type:" toBeTranslated="true"/>
+		<node name="size" value="Size:" toBeTranslated="true"/>
+		<node name="time" value="Last modified:" toBeTranslated="true"/>
+		<node name="sizeInBytes" value="%s bytes" toBeTranslated="true"/>
+		<node name="sizeInKiloBytes" value="%s kB" toBeTranslated="true"/>
+		<node name="catalog" value="Catalog:" toBeTranslated="true"/>
+		<node name="extraLinks" value="Related links" toBeTranslated="true"/>
+	</node>
 	<node name="menu">
+		<node name="books" value="Books" toBeTranslated="true">
+			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
+			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		</node>
+		<node name="navigation" value="Navigation" toBeTranslated="true">
+			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
+		</node>
 		<node name="bookInfo" value="معلومات الكتاب..."/>
 		<node name="toc" value="جدول المحتويات"/>
 		<node name="showLibrary" value="افتح المكتبة"/>
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library"/>
-		<node name="addBook" toBeTranslated="true" value="Open file..."/>
-		<node name="showRecent" toBeTranslated="true" value="Recent books"/>
+		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
+		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="المكتبة">
 			<node name="showLibrary" value="افتح"/>
 			<node name="previousBook" value="الكتاب السابق"/>
@@ -124,7 +157,7 @@
 			<node name="toggleFullscreen" value="املأ الشاشة"/>
 			<node name="toggleIndicator" value="بدّل الموضّح"/>
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..."/>
+		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
 		<node name="quit" value="أغلق"/>
 	</node>
 	<node name="toolbar">
@@ -206,36 +239,36 @@
 			<node name="tooltip" value="عن إف.بي.ريدر"/>
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter"/>
-			<node name="tooltip" toBeTranslated="true" value="Filter"/>
+			<node name="label" value="Filter" toBeTranslated="true"/>
+			<node name="tooltip" value="Filter" toBeTranslated="true"/>
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog"/>
+			<node name="label" value="Last Preferences Dialog" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Last Opened Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="bookInfo">
 			<node name="label" value="معلومات الكتاب"/>
 			<node name="tooltip" value="أظهر حوار معلومات الكتاب"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog"/>
+			<node name="label" value="Library Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Library Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog"/>
+			<node name="label" value="Network Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Network Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog"/>
+			<node name="label" value="System Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show System Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog"/>
+			<node name="label" value="Reading Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Reading Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog"/>
+			<node name="label" value="Look &amp; Feel Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Look &amp; Feel Preferences Dialog" toBeTranslated="true"/>
 		</node>
 	</node>
 	<node name="dialog">
@@ -250,7 +283,7 @@
 			<node name="buyAndDownload" value="اصشتر و &amp;نزّل"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options"/>
+			<node name="title" value="FBReader - Library Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Library" value="المكتبة">
 					<node name="bookPath" value="مسار الكتب"/>
@@ -261,7 +294,7 @@
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options"/>
+			<node name="title" value="FBReader - Network Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="NetworkLibrary" value="بحث الشبكة">
 				</node>
@@ -280,7 +313,7 @@
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options"/>
+			<node name="title" value="FBReader - System Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Language" value="اللغة">
 					<node name="autoDetect" value="تعرّف على اللغة والترميز آليا"/>
@@ -307,7 +340,7 @@
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options"/>
+			<node name="title" value="FBReader - Reading Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Scrolling" value="التقليب">
 					<node name="keyScrollDelay" value="التأخير بين التقليب بالفاتيح، بالملي ثانية"/>
@@ -346,10 +379,10 @@
 					<node name="grabSystemKeys" value="التقط مفاتيح النظام"/>
 					<node name="separate" value="ارتباطات المفاتيح تعتمد على الوضع"/>
 					<node name="orientation" value="الوضع">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees"/>
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise"/>
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees"/>
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise"/>
+						<node name="degrees0" value="0 Degrees" toBeTranslated="true"/>
+						<node name="degrees90ccw" value="90 Degrees Counterclockwise" toBeTranslated="true"/>
+						<node name="degrees180" value="180 Degrees" toBeTranslated="true"/>
+						<node name="degrees90cw" value="90 Degrees Clockwise" toBeTranslated="true"/>
 					</node>
 					<node name="action">
 						<node name="none" value="لا شيء"/>
@@ -384,7 +417,7 @@
 						<node name="cancel" value="ألغ"/>
 						<node name="quit" value="اخرج"/>
 						<node name="bookInfo" value="Show Book Info Dialog"/>
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog"/>
+						<node name="preferences" value="Show last opened preferences dialog" toBeTranslated="true"/>
 					</node>
 					<node name="quitOnCancel" value="Quit Application on Cancel"/>
 					<node name="keyDelay" value="Delay Between Accepted Key Pressings"/>
@@ -392,7 +425,7 @@
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options"/>
+			<node name="title" value="FBReader - Look &amp; Feel Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="CSS" value="الطرز المتراصة">
 					<node name="overrideSpecifiedFonts" value="استخدم دائما خطوطي الخاصة"/>
@@ -558,7 +591,7 @@
 			<node name="invalidEMail" value="عنوان بريد إلكتروني خطأ"/>
 			<node name="tooManyRegistrations" value="الكثير جدا من التسجيلات من رقمك على الإنترنت (IP);&#10;أعد المحاولة بعد عدة دقائق"/>
 			<node name="noUserEmail" value="لم يُسجل أي مستخدم&#10;بالبريد الإلكترني المحدد"/>
-			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
+			<node name="librariesListDownloadingFailed" toBeTranslated="false" value="Downloading list of network libraries failed"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="خطأ أثناء التنزيل"/>
@@ -578,7 +611,7 @@
 			<node name="registerUser" value="يسجل حسابا جديدا، انتظر رجاء..."/>
 			<node name="passwordRecovery" value="يسترجع كلمة السر، انتظر رجاء..."/>
 			<node name="authenticationCheck" value="يتحقق من الحساب، انتظر رجاء..."/>
-			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..."/>
+			<node name="signOut" value="Signing out. Please, wait..." toBeTranslated="true"/>
 			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">

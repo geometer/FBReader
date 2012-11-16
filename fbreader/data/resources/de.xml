@@ -57,6 +57,7 @@
 			<node name="passwordRecovery" value="Passwort wiederherstellen"/>
 		</node>
 		<node name="searchResultNode">
+			<node name="searchfield" value="Type to search..." toBeTranslated="true"/>
 			<node name="title" value="Suchergebnisse"/>
 			<node name="expandTree" value="Ergebnisse anzeigen"/>
 			<node name="collapseTree" value="Ergebnisse verbergen"/>
@@ -77,15 +78,47 @@
 			<node name="downloadDemo" value="Download Demo"/>
 			<node name="demo" value="demo"/>
 			<node name="buy" value="Kaufen (%s)"/>
+			<node name="alsoRead" value="Also read with this book" toBeTranslated="true"/>
+			<node name="sameAuthor" value="All books of %s" toBeTranslated="true"/>
 		</node>
 	</node>
+	<node name="bookInfo">
+		<node name="bookInfo" value="Book Info" toBeTranslated="true"/>
+		<node name="fileInfo" value="File Info" toBeTranslated="true"/>
+		<node name="description" value="Description" toBeTranslated="true"/>
+		<node name="noDescription" value="No description available." toBeTranslated="true"/>
+		<node name="annotation" value="Annotation" toBeTranslated="true"/>
+		<node name="title" value="Title:" toBeTranslated="true"/>
+		<node name="authors" value="Authors:" toBeTranslated="true"/>
+		<node name="series" value="Series:" toBeTranslated="true"/>
+		<node name="indexInSeries" value="Index in series:" toBeTranslated="true"/>
+		<node name="tags" value="Tags:" toBeTranslated="true"/>
+		<node name="language" value="Language:" toBeTranslated="true"/>
+		<node name="name" value="Name:" toBeTranslated="true"/>
+		<node name="type" value="Type:" toBeTranslated="true"/>
+		<node name="size" value="Size:" toBeTranslated="true"/>
+		<node name="time" value="Last modified:" toBeTranslated="true"/>
+		<node name="sizeInBytes" value="%s bytes" toBeTranslated="true"/>
+		<node name="sizeInKiloBytes" value="%s kB" toBeTranslated="true"/>
+		<node name="catalog" value="Catalog:" toBeTranslated="true"/>
+		<node name="extraLinks" value="Related links" toBeTranslated="true"/>
+	</node>
 	<node name="menu">
+		<node name="books" value="Books" toBeTranslated="true">
+			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
+			<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		</node>
+		<node name="navigation" value="Navigation" toBeTranslated="true">
+			<node name="toc" value="Table of Contents" toBeTranslated="true"/>
+		</node>
 		<node name="bookInfo" value="E-Book Info..."/>
 		<node name="toc" value="Inhaltsverzeichnis"/>
 		<node name="showLibrary" value="Bibliothek öffnen"/>
-		<node name="showNetLibrary" toBeTranslated="true" value="Network library"/>
-		<node name="addBook" toBeTranslated="true" value="Open file..."/>
-		<node name="showRecent" toBeTranslated="true" value="Recent books"/>
+		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
+		<node name="addBook" value="Open file..." toBeTranslated="true"/>
+		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Bibliothek">
 			<node name="showLibrary" value="Öffnen"/>
 			<node name="previousBook" value="Vorheriges E-Book"/>
@@ -124,118 +157,118 @@
 			<node name="toggleFullscreen" value="Vollbild"/>
 			<node name="toggleIndicator" value="Bildlauf umschalten"/>
 		</node>
-		<node name="preferences" toBeTranslated="true" value="Last Preferences Dialog..."/>
+		<node name="preferences" value="Last Preferences Dialog..." toBeTranslated="true"/>
 		<node name="quit" value="Schließen"/>
 	</node>
 	<node name="toolbar">
 		<node name="showReading">
-			<node name="label" toBeTranslated="true" value="Read Book"/>
+			<node name="label" value="Read Book" toBeTranslated="true"/>
 			<node name="tooltip" value="Lese-Modus anzeigen"/>
 		</node>
 		<node name="showLibrary">
-			<node name="label" toBeTranslated="true" value="Library"/>
+			<node name="label" value="Library" toBeTranslated="true"/>
 			<node name="tooltip" value="Baumansicht der Bibliothek anzeigen"/>
 			<node name="popup" value="Aktuelle Liste der E-Books anzeigen"/>
 		</node>
 		<node name="showRecent">
-			<node name="label" toBeTranslated="true" value="Recent Books"/>
+			<node name="label" value="Recent Books" toBeTranslated="true"/>
 			<node name="tooltip" value="Aktuelle Liste der E-Books anzeigen"/>
 		</node>
 		<node name="byAuthor">
-			<node name="label" toBeTranslated="true" value="By Author"/>
+			<node name="label" value="By Author" toBeTranslated="true"/>
 			<node name="tooltip" value="E-Books nach Autoren ordnen"/>
 		</node>
 		<node name="byTag">
-			<node name="label" toBeTranslated="true" value="By Tag"/>
+			<node name="label" value="By Tag" toBeTranslated="true"/>
 			<node name="tooltip" value="E-Books nach Schlagwörtern ordnen"/>
 		</node>
 		<node name="addBook">
-			<node name="label" toBeTranslated="true" value="Add File"/>
+			<node name="label" value="Add File" toBeTranslated="true"/>
 			<node name="tooltip" value="Datei zur Bibliothek hinzufügen"/>
 		</node>
 		<node name="showNetLibrary">
-			<node name="label" toBeTranslated="true" value="Network"/>
+			<node name="label" value="Network" toBeTranslated="true"/>
 			<node name="tooltip" value="In Netzwerk-Bibliotheken suchen"/>
 		</node>
 		<node name="searchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Simple Search"/>
+			<node name="label" value="Simple Search" toBeTranslated="true"/>
 			<node name="tooltip" value="Suche im Netzwerk"/>
 		</node>
 		<node name="advancedSearchOnNetwork">
-			<node name="label" toBeTranslated="true" value="Search"/>
+			<node name="label" value="Search" toBeTranslated="true"/>
 			<node name="tooltip" value="Erweiterte Suche im Netzwerk"/>
 		</node>
 		<node name="gotoHome">
-			<node name="label" toBeTranslated="true" value="Go to Start"/>
+			<node name="label" value="Go to Start" toBeTranslated="true"/>
 			<node name="tooltip" value="Gehe zum Textanfang"/>
 		</node>
 		<node name="undo">
-			<node name="label" toBeTranslated="true" value="Go Back"/>
+			<node name="label" value="Go Back" toBeTranslated="true"/>
 			<node name="tooltip" value="Gehe zurück"/>
 		</node>
 		<node name="redo">
-			<node name="label" toBeTranslated="true" value="Go Forward"/>
+			<node name="label" value="Go Forward" toBeTranslated="true"/>
 			<node name="tooltip" value="Gehe vorwärts"/>
 		</node>
 		<node name="gotoPageNumberWithParameter">
-			<node name="label" toBeTranslated="true" value="Go to Page"/>
+			<node name="label" value="Go to Page" toBeTranslated="true"/>
 			<node name="tooltip" value="Gehe zur Seite"/>
 		</node>
 		<node name="toc">
-			<node name="label" toBeTranslated="true" value="TOC"/>
+			<node name="label" value="TOC" toBeTranslated="true"/>
 			<node name="tooltip" value="Inhaltsverzeichnis"/>
 		</node>
 		<node name="search">
-			<node name="label" toBeTranslated="true" value="Search"/>
+			<node name="label" value="Search" toBeTranslated="true"/>
 			<node name="tooltip" value="Text-Suche"/>
 		</node>
 		<node name="findNext">
-			<node name="label" toBeTranslated="true" value="Next"/>
+			<node name="label" value="Next" toBeTranslated="true"/>
 			<node name="tooltip" value="Weitersuchen"/>
 		</node>
 		<node name="findPrevious">
-			<node name="label" toBeTranslated="true" value="Previous"/>
+			<node name="label" value="Previous" toBeTranslated="true"/>
 			<node name="tooltip" value="Vorherige suchen"/>
 		</node>
 		<node name="rotate">
-			<node name="label" toBeTranslated="true" value="Rotate"/>
+			<node name="label" value="Rotate" toBeTranslated="true"/>
 			<node name="tooltip" value="Text drehen"/>
 		</node>
 		<node name="showHelp">
-			<node name="label" toBeTranslated="true" value="About"/>
+			<node name="label" value="About" toBeTranslated="true"/>
 			<node name="tooltip" value="Über FBReader"/>
 		</node>
 		<node name="filterLibrary">
-			<node name="label" toBeTranslated="true" value="Filter"/>
-			<node name="tooltip" toBeTranslated="true" value="Filter"/>
+			<node name="label" value="Filter" toBeTranslated="true"/>
+			<node name="tooltip" value="Filter" toBeTranslated="true"/>
 		</node>
 		<node name="preferences">
-			<node name="label" toBeTranslated="true" value="Last Preferences Dialog"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Last Opened Preferences Dialog"/>
+			<node name="label" value="Last Preferences Dialog" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Last Opened Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="bookInfo">
-			<node name="label" toBeTranslated="true" value="Book Info"/>
+			<node name="label" value="Book Info" toBeTranslated="true"/>
 			<node name="tooltip" value="E-Book Infos anzeigen"/>
 		</node>
 		<node name="libraryOptions">
-			<node name="label" toBeTranslated="true" value="Library Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Library Preferences Dialog"/>
+			<node name="label" value="Library Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Library Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="networkOptions">
-			<node name="label" toBeTranslated="true" value="Network Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Network Preferences Dialog"/>
+			<node name="label" value="Network Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Network Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="systemOptions">
-			<node name="label" toBeTranslated="true" value="System Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show System Preferences Dialog"/>
+			<node name="label" value="System Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show System Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="readingOptions">
-			<node name="label" toBeTranslated="true" value="Reading Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Reading Preferences Dialog"/>
+			<node name="label" value="Reading Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Reading Preferences Dialog" toBeTranslated="true"/>
 		</node>
 		<node name="lookAndFeelOptions">
-			<node name="label" toBeTranslated="true" value="Look &amp; Feel Preferences"/>
-			<node name="tooltip" toBeTranslated="true" value="Show Look &amp; Feel Preferences Dialog"/>
+			<node name="label" value="Look &amp; Feel Preferences" toBeTranslated="true"/>
+			<node name="tooltip" value="Show Look &amp; Feel Preferences Dialog" toBeTranslated="true"/>
 		</node>
 	</node>
 	<node name="dialog">
@@ -250,7 +283,7 @@
 			<node name="buyAndDownload" value="Kaufen und &amp;Download"/>
 		</node>
 		<node name="LibraryOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Library Options"/>
+			<node name="title" value="FBReader - Library Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Library" value="Bibliothek">
 					<node name="bookPath" value="E-Book Verzeichnis"/>
@@ -261,7 +294,7 @@
 			</node>
 		</node>
 		<node name="NetworkOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Network Options"/>
+			<node name="title" value="FBReader - Network Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="NetworkLibrary" value="Suche im Netzwerk">
 				</node>
@@ -280,7 +313,7 @@
 			</node>
 		</node>
 		<node name="SystemOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - System Options"/>
+			<node name="title" value="FBReader - System Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Language" value="Sprache">
 					<node name="autoDetect" value="Automatisch Sprache und Codierung erkennen"/>
@@ -307,7 +340,7 @@
 			</node>
 		</node>
 		<node name="ReadingOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Reading Options"/>
+			<node name="title" value="FBReader - Reading Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="Scrolling" value="Bildlauf">
 					<node name="keyScrollDelay" value="Verzögerung beim Tasten-Bildlauf, ms"/>
@@ -346,10 +379,10 @@
 					<node name="grabSystemKeys" value="Systemtasten übernehmen"/>
 					<node name="separate" value="Tasten abhängig von der Orientierung"/>
 					<node name="orientation" value="Orientierung">
-						<node name="degrees0" toBeTranslated="true" value="0 Degrees"/>
-						<node name="degrees90ccw" toBeTranslated="true" value="90 Degrees Counterclockwise"/>
-						<node name="degrees180" toBeTranslated="true" value="180 Degrees"/>
-						<node name="degrees90cw" toBeTranslated="true" value="90 Degrees Clockwise"/>
+						<node name="degrees0" value="0 Degrees" toBeTranslated="true"/>
+						<node name="degrees90ccw" value="90 Degrees Counterclockwise" toBeTranslated="true"/>
+						<node name="degrees180" value="180 Degrees" toBeTranslated="true"/>
+						<node name="degrees90cw" value="90 Degrees Clockwise" toBeTranslated="true"/>
 					</node>
 					<node name="action">
 						<node name="none" value="Keine"/>
@@ -384,7 +417,7 @@
 						<node name="cancel" value="Abbruch"/>
 						<node name="quit" value="Schließen"/>
 						<node name="bookInfo" value="E-Book Infos anzeigen"/>
-						<node name="preferences" toBeTranslated="true" value="Show last opened preferences dialog"/>
+						<node name="preferences" value="Show last opened preferences dialog" toBeTranslated="true"/>
 					</node>
 					<node name="quitOnCancel" value="Bei Abbruch Anwendung schließen"/>
 					<node name="keyDelay" value="Verzögerung zwischen erkannten Tastendrücken"/>
@@ -392,7 +425,7 @@
 			</node>
 		</node>
 		<node name="LookAndFeelOptionsDialog">
-			<node name="title" toBeTranslated="true" value="FBReader - Look &amp; Feel Options"/>
+			<node name="title" value="FBReader - Look &amp; Feel Options" toBeTranslated="true"/>
 			<node name="tab">
 				<node name="CSS" value="CSS">
 					<node name="overrideSpecifiedFonts" value="Immer eigene Schriftarten benützen"/>
@@ -558,7 +591,7 @@
 			<node name="invalidEMail" value="Ungültige Email-Adresse"/>
 			<node name="tooManyRegistrations" value="Zu viele Registrierungen von Ihrer IP;&#10;bitte in einigen Minuten noch einmal probieren"/>
 			<node name="noUserEmail" value="Es gibt keinen registrierten Nutzer mit dieser Email-Adresse"/>
-			<node name="librariesListDownloadingFailed" value="Downloading list of network libraries failed" toBeTranslated="false"/>
+			<node name="librariesListDownloadingFailed" toBeTranslated="false" value="Downloading list of network libraries failed"/>
 		</node>
 		<node name="downloadError">
 			<node name="title" value="Fehler beim Herunterladen"/>
@@ -577,8 +610,8 @@
 			<node name="loadSubCatalog" value="Katalog wird geladen. Bitte warten..."/>
 			<node name="registerUser" value="Neuer Account wird registriert. Bitte warten..."/>
 			<node name="passwordRecovery" value="Passwort wird wiederhergestellt. Bitte warten..."/>
-			<node name="authenticationCheck" toBeTranslated="true" value="Account validation. Please, wait..."/>
-			<node name="signOut" toBeTranslated="true" value="Signing out. Please, wait..."/>
+			<node name="authenticationCheck" value="Account validation. Please, wait..." toBeTranslated="true"/>
+			<node name="signOut" value="Signing out. Please, wait..." toBeTranslated="true"/>
 			<node name="loadingNetworkLibraryList" value="Loading list of network libraries. Please, wait..." toBeTranslated="true"/>
 		</node>
 		<node name="purchaseConfirmBox">
