@@ -162,14 +162,14 @@ bool ZLApplication::isActionVisible(const std::string &actionId) const {
 }
 
 bool ZLApplication::isActionEnabled(const std::string &actionId) const {
-	shared_ptr<Action> _action = action(actionId);
-	return !_action.isNull() && _action->isEnabled();
+	shared_ptr<Action> a = action(actionId);
+	return !a.isNull() && a->isEnabled();
 }
 
 void ZLApplication::doAction(const std::string &actionId) {
-	shared_ptr<Action> _action = action(actionId);
-	if (!_action.isNull()) {
-		_action->checkAndRun();
+	shared_ptr<Action> a = action(actionId);
+	if (!a.isNull()) {
+		a->checkAndRun();
 	}
 }
 

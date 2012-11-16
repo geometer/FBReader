@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menubar>
 	<submenu id="books">
+		<item id="showRecent"/>
 		<item id="showLibrary"/>
-		<item id="networkLibrary"/>
+		<item id="showNetworkLibrary"/>
+		<separator/>
 		<item id="previousBook"/>
 		<item id="showRecent"/>
 		<item id="addBook"/>

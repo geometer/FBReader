@@ -110,8 +110,9 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books">
-			<node name="showLibrary" value="Local library"/>
-			<node name="networkLibrary" value="Network catalogs"/>
+			<node name="showRecent" value="Recent books"/>
+			<node name="showLibrary" value="Library"/>
+			<node name="showNetworkLibrary" value="Network library"/>
 		</node>
 		<node name="navigation" value="Navigation">
 			<node name="toc" value="Table of Contents"/>

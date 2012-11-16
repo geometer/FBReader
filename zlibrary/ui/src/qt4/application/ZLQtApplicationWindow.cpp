@@ -28,7 +28,6 @@
 #include <QtGui/QLayout>
 #include <QtGui/QWheelEvent>
 #include <QtGui/QDockWidget>
-#include <QtGui/QPopupMenu>
 #include <QtCore/QObjectList>
 
 #include <ZLibrary.h>
@@ -350,8 +349,23 @@ void ZLQtApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLMenubar::Sub
 	myCurrentMenu = 0;
 }
 
+ZLQtAction::ZLQtAction(ZLApplication &application, const std::string &id, const std::string &title, QObject *parent) : QAction(QString::fromUtf8(title.c_str()), parent), myApplication(application), myId(id) {
+	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
+}
+
+void ZLQtAction::onActivated() {
+	myApplication.doAction(myId);
+}
+
+
 void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
-	QAction *action = new QAction(QString::fromUtf8(item.name().c_str()), myCurrentMenu);
+	QAction *action = new ZLQtAction(myWindow.application(), item.actionId(), item.name(), myCurrentMenu);
+	if (item.actionId() == "showLibrary") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
+	}
+	if (item.actionId() == "showNetworkLibrary") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_L));
+	}
 	myCurrentMenu->addAction(action);
 }
 

@@ -130,6 +130,20 @@ private:
 friend class ZLQtLineEdit;
 };
 
+class ZLQtAction : public QAction {
+	Q_OBJECT
+
+public:
+	ZLQtAction(ZLApplication &application, const std::string &id, const std::string &title, QObject *parent);
+
+private Q_SLOTS:
+	void onActivated();
+
+private:
+	ZLApplication &myApplication;
+	const std::string myId;
+};
+
 class ZLQtToolBarAction : public QAction {
 	Q_OBJECT
 
