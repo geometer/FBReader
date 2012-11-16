@@ -93,12 +93,15 @@ shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<sha
 	foreach(shared_ptr<const ZLImage> image, images) {
 		if (!image.isNull() && image->good()) {
 			pixmaps.push_back(ZLQtImageUtils::addOppositeBorder(ZLQtImageUtils::ZLImageToQPixmap(image), 1));
-		} else {
-			pixmaps.push_back(defaultPixmap);
 		}
 	}
 
-	int maxHeight = countMaxSize(pixmaps).height();
+	for (size_t i = (std::size_t)pixmaps.size(); i < images.size(); ++i) {
+		pixmaps.push_front(defaultPixmap);
+	}
+
+	int maxHeight = countMinSize(pixmaps).height();
+	qDebug() << Q_FUNC_INFO << maxHeight;
 	for (int i = 0; i < pixmaps.size(); ++i) {
 		pixmaps.replace(i, pixmaps.at(i).scaledToHeight(maxHeight, Qt::FastTransformation));
 	}
@@ -125,4 +128,15 @@ QSize ZLQtImageManager::countMaxSize(const QList<QPixmap> &pixmaps) {
 		maxSize = maxSize.expandedTo(p.size());
 	}
 	return maxSize;
+}
+
+QSize ZLQtImageManager::countMinSize(const QList<QPixmap> &pixmaps) {
+	if (pixmaps.empty()) {
+		return QSize(0,0);
+	}
+	QSize minSize = pixmaps.at(0).size();
+	foreach(QPixmap p, pixmaps) {
+		minSize = minSize.boundedTo(p.size());
+	}
+	return minSize;
 }

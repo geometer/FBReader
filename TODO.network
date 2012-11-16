@@ -35,9 +35,9 @@ RELEASE 0.99.3:
 	  ** for 'Series' items, show a batch of icons (of books in this series)
 		  DONE series icon: show no more than 6 books in batch
 	  	  ** for spaces, use percent of size instead of pixels
+	  	    ** if number of books < 6, increase spaces
 			** should be tested with "Урожайкины, всегда с урожаем" series. 9px fails here.
-		  ** for covers of different sizes, resize to the same height
-		  ** if number of books < 6, increase spaces
+		  DONE for covers of different sizes, resize to the same height
 		  DONE series icon: use 'opposite' color instead of white
 	  ** litres: sort books as in server catalog
 	
