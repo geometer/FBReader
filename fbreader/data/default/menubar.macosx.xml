@@ -5,10 +5,7 @@
 		<item id="showLibrary"/>
 		<item id="showNetworkLibrary"/>
 		<separator/>
-		<item id="previousBook"/>
-		<item id="showRecent"/>
 		<item id="addBook"/>
-		<item id="showHelp"/>
 	</submenu>
 	<submenu id="view">
 		<item id="toggleFullscreen"/>

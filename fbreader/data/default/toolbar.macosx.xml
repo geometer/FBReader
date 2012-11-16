@@ -6,11 +6,6 @@
 	<toggleButton id="byTag" group="booksOrder"/>
 	<separator/>
 	<menuButton id="showLibrary"/>
-	<button id="addBook"/>
-	<button id="showNetworkLibrary"/>
-	<separator/>
-	<button id="advancedSearchOnNetwork"/>
-	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>
 	<separator/>
 	<button id="gotoHome"/>
 	<button id="undo"/>
