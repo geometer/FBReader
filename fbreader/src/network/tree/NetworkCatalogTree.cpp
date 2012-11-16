@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <algorithm>
+
 #include <ZLDialogManager.h>
 
 #include "../authentication/NetworkAuthenticationManager.h"
@@ -119,8 +121,6 @@ void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> 
 		return;
 	}
 
-	myChildrenItems.clear();
-
 	const NetworkLink &link = item().Link;
 	shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
 
@@ -156,13 +156,19 @@ void NetworkCatalogTree::onAuthCheck(ZLUserDataHolder &data, const std::string &
 	onInitialization(data, error);
 }
 
-void NetworkCatalogTree::onInitialization(ZLUserDataHolder &data, const std::string &error) {
+
+void NetworkCatalogTree::onInitialization(ZLUserDataHolder &/*data*/, const std::string &error) {
 	if (!error.empty()) {
 		const NetworkLink &link = item().Link;
 		shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
 		if (!manager.isNull()) {
 			manager->logOut();
 		}
+	}
+	if (!myChildrenItems.empty()) {
+		notifyDownloadStopped();
+		notifyListeners(std::string()); //TODO maybe not be silent about auth error here
+		return;
 	}
 	new AsyncLoadSubCatalogRunnable(this, false);
 }
@@ -229,6 +235,57 @@ void NetworkCatalogTree::notifyListeners(const std::string &error) {
 
 NetworkCatalogItem &NetworkCatalogTree::item() {
 	return (NetworkCatalogItem&)*myItem;
+}
+
+void NetworkCatalogTree::updateVisibility() {
+	//adding to remove list and clearing all existed nodes
+	List toRemove;
+	NetworkItem::List itemsWithNodes; //used in loop for creating new nodes (for these items new nodes won't be created)
+	for (size_t i = 0; i < children().size(); ++i) {
+		ZLTreeNode* tree = children().at(i);
+		if (!tree->isInstanceOf(NetworkCatalogTree::TYPE_ID)) {
+			continue;
+		}
+		NetworkCatalogTree *child = (NetworkCatalogTree*)tree;
+		itemsWithNodes.push_back(child->myItem);
+		switch (child->item().getVisibility()) {
+			case B3_TRUE:
+				child->updateVisibility();
+				break;
+			case B3_FALSE:
+				toRemove.push_back(child);
+				break;
+			case B3_UNDEFINED:
+				child->clearCatalog();
+				break;
+		}
+	}
+
+	//creating new nodes (if necessary)
+	for (size_t i = 0; i < myChildrenItems.size(); ++i) {
+		shared_ptr<NetworkItem> item = myChildrenItems.at(i);
+		if (!item->isInstanceOf(NetworkCatalogItem::TYPE_ID)) {
+			continue;
+		}
+		if (std::find(itemsWithNodes.begin(), itemsWithNodes.end(), item) != itemsWithNodes.end()) {
+			continue;
+		}
+		NetworkCatalogItem *catalogItem = (NetworkCatalogItem*)(&*item);
+		if (catalogItem->getVisibility() != B3_FALSE) {
+			NetworkTreeFactory::createNetworkTree(this, item, i);
+		}
+	}
+
+	for (size_t i = 0; i < toRemove.size(); ++i) {
+		ZLTreeNode* tree = toRemove.at(i);
+		remove(tree);
+	}
+
+}
+
+void NetworkCatalogTree::clearCatalog() {
+	myChildrenItems.clear();
+	clear();
 }
 
 const ZLResource &NetworkCatalogTree::resource() const {

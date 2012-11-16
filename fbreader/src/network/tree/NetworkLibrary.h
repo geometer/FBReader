@@ -37,14 +37,21 @@ public:
 	void refresh();
 	RootTree &getFakeCatalogTree();
 
+	void synchronize();
+	void invalidateVisibility();
+
 private:
     NetworkLibrary();
 	void makeUpToDate();
+
+	void updateVisibility();
 
 private:
 	shared_ptr<ZLTreeDialog> myDialog;
 	RootTree myRootTree;
 	RootTree myFakeRootTree;
+	bool myUpdateVisibility;
+	bool myChildrenAreInvalid;
 };
 
 #endif /* __NETWORKLIBRARY_H__ */

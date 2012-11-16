@@ -67,6 +67,8 @@ public: // Account specific methods (can be called only if authorised!!!)
 	virtual std::string topupAccountLink();
 	virtual std::string currentAccount();
 
+	virtual const NetworkItem::List &purchasedBooks() const = 0;
+
 public: // new User Registration
 	virtual bool registrationSupported();
 	virtual std::string registerUser(const std::string &login, const std::string &password, const std::string &email);

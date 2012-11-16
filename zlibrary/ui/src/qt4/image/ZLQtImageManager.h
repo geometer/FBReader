@@ -21,7 +21,11 @@
 #define __ZLQTIMAGEMANAGER_H__
 
 #include <map>
+
+#include <QtCore/QList>
+#include <QtCore/QSize>
 #include <QtGui/QImage>
+#include <QtGui/QPixmap>
 
 #include <ZLImageManager.h>
 
@@ -67,6 +71,10 @@ protected:
 	bool convertImageDirect(const std::string &stringData, ZLImageData &imageData) const;
 
 	shared_ptr<const ZLImage> makeBatchImage(const std::vector<shared_ptr<const ZLImage> > &images, shared_ptr<const ZLImage> defaultImage) const;
+
+	static QSize calcOffset(int coversNumber, QSize forSize);
+	static QSize countMaxSize(const QList<QPixmap> &pixmaps);
+	static QSize countMinSize(const QList<QPixmap> &pixmaps);
 };
 
 #endif /* __ZLQTIMAGEMANAGER_H__ */

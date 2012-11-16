@@ -145,8 +145,8 @@ void NetworkCatalogRootTree::LoginAction::run() {
 	}
 
 	AuthenticationDialog::run(myManager);
-	FBReader::Instance().invalidateAccountDependents();
-	FBReader::Instance().refreshWindow();
+	NetworkLibrary::Instance().invalidateVisibility();
+	NetworkLibrary::Instance().synchronize();
 	NetworkLibrary::Instance().refresh();
 }
 
@@ -165,8 +165,8 @@ std::string NetworkCatalogRootTree::LogoutAction::text(const ZLResource &resourc
 void NetworkCatalogRootTree::LogoutAction::run() {
 	LogOutRunnable logout(myManager);
 	logout.executeWithUI();
-//	FBReader::Instance().invalidateAccountDependents();
-//	FBReader::Instance().refreshWindow();
+	NetworkLibrary::Instance().invalidateVisibility();
+	NetworkLibrary::Instance().synchronize();
 	NetworkLibrary::Instance().refresh();
 }
 

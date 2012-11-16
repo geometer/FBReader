@@ -76,6 +76,16 @@ ZLBoolean3 NetworkCatalogItem::getVisibility() const {
 				return B3_FALSE;
 			}
 			return mgr->isAuthorised().Status == B3_TRUE ? B3_TRUE : B3_UNDEFINED;
+		case HAS_BOOKS:
+			if (mgr.isNull()) {
+				return B3_FALSE;
+			} else {
+				if (mgr->purchasedBooks().size() > 0) {
+					return B3_TRUE;
+				} else {
+					return B3_FALSE;
+				}
+			}
 	}
 	return B3_FALSE;
 }

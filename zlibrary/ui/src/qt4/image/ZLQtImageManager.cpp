@@ -85,24 +85,26 @@ bool ZLQtImageManager::convertImageDirect(const std::string &stringData, ZLImage
 }
 
 shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<shared_ptr<const ZLImage> > &images, shared_ptr<const ZLImage> defaultImage) const {
-	static const int DX = 11;
-	static const int DY = 11;
-
 	QPixmap defaultPixmap = ZLQtImageUtils::ZLImageToQPixmap(defaultImage);
 	QList<QPixmap> pixmaps;
 	foreach(shared_ptr<const ZLImage> image, images) {
 		if (!image.isNull() && image->good()) {
-			pixmaps.push_back(ZLQtImageUtils::addBorder(ZLQtImageUtils::ZLImageToQPixmap(image), Qt::white, 1));
-		} else {
-			pixmaps.push_back(defaultPixmap);
+			pixmaps.push_back(ZLQtImageUtils::addOppositeBorder(ZLQtImageUtils::ZLImageToQPixmap(image), 2));
 		}
 	}
 
-	QSize maxSize(0,0);
-	foreach(QPixmap p, pixmaps) {
-		maxSize = maxSize.expandedTo(p.size());
+	for (size_t i = (std::size_t)pixmaps.size(); i < images.size(); ++i) {
+		pixmaps.push_front(defaultPixmap);
 	}
-	maxSize += QSize(DX * (pixmaps.size() - 1), DY * (pixmaps.size() - 1));
+
+	int minHeight = countMinSize(pixmaps).height();
+	for (int i = 0; i < pixmaps.size(); ++i) {
+		pixmaps.replace(i, pixmaps.at(i).scaledToHeight(minHeight, Qt::FastTransformation));
+	}
+
+	QSize maxSize = countMaxSize(pixmaps);
+	QSize offset = calcOffset(pixmaps.size(), maxSize);
+	maxSize += QSize(offset.width() * (pixmaps.size() - 1), offset.height() * (pixmaps.size() - 1));
 
 	QPixmap batch(maxSize);
 	batch.fill(Qt::transparent);
@@ -111,8 +113,41 @@ shared_ptr<const ZLImage> ZLQtImageManager::makeBatchImage(const std::vector<sha
 	QPoint drawPoint(0,0);
 	foreach(QPixmap p, pixmaps) {
 		painter.drawPixmap(drawPoint, p);
-		drawPoint += QPoint(DX, DY);
+		drawPoint += QPoint(offset.width(), offset.height());
 	}
 
 	return ZLQtImageUtils::QPixmapToZLImage(batch);
+}
+
+QSize ZLQtImageManager::calcOffset(int coversNumber, QSize forSize) {
+	//offset percents are arithmetic progressions
+	static const int widthStart = 37;
+	static const double widthDiff = -5;
+	static const double heightStart = 15.6;
+	static const double heightDiff = -1.3;
+
+	const int WIDTH_PERCENT = widthStart + (coversNumber - 1) * widthDiff;
+	const int HEIGHT_PERCENT = heightStart + (coversNumber - 1) * heightDiff;
+	const int DX = forSize.width() * WIDTH_PERCENT / 100;
+	const int DY = forSize.height() * HEIGHT_PERCENT / 100;
+	return QSize(DX, DY);
+}
+
+QSize ZLQtImageManager::countMaxSize(const QList<QPixmap> &pixmaps) {
+	QSize maxSize(0,0);
+	foreach(QPixmap p, pixmaps) {
+		maxSize = maxSize.expandedTo(p.size());
+	}
+	return maxSize;
+}
+
+QSize ZLQtImageManager::countMinSize(const QList<QPixmap> &pixmaps) {
+	if (pixmaps.empty()) {
+		return QSize(0,0);
+	}
+	QSize minSize = pixmaps.at(0).size();
+	foreach(QPixmap p, pixmaps) {
+		minSize = minSize.boundedTo(p.size());
+	}
+	return minSize;
 }

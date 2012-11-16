@@ -48,10 +48,12 @@ NetworkLibrary::NetworkLibrary() {
 	myDialog = ZLDialogManager::Instance().createTreeDialog(ZLResource::resource("networkView"));
 	myRootTree.setDialog(myDialog);
 	myFakeRootTree.setDialog(myDialog);
+	myUpdateVisibility = false;
+	myChildrenAreInvalid = true;
 }
 
 void NetworkLibrary::showDialog() {
-	makeUpToDate();
+	synchronize();
 	myDialog->run(&myRootTree);
 	myDialog->setSearcher(new NetworkSearcher);
 }
@@ -70,6 +72,30 @@ void NetworkLibrary::makeUpToDate() {
 	}
 }
 
+void NetworkLibrary::updateVisibility() {
+	for (size_t i = 0; i < myRootTree.children().size(); ++i) {
+		ZLTreeNode* tree = myRootTree.children().at(i);
+		if (NetworkCatalogTree* catalogTree = zlobject_cast<NetworkCatalogTree*>(tree)) {
+			catalogTree->updateVisibility();
+		}
+	}
+}
+
 RootTree &NetworkLibrary::getFakeCatalogTree() {
 	return myFakeRootTree;
+}
+
+void NetworkLibrary::synchronize() {
+	if (myChildrenAreInvalid) {
+		myChildrenAreInvalid = false;
+		makeUpToDate();
+	}
+	if (myUpdateVisibility) {
+		myUpdateVisibility = false;
+		updateVisibility();
+	}
+}
+
+void NetworkLibrary::invalidateVisibility() {
+	myUpdateVisibility = true;
 }

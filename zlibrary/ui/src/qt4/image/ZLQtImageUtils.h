@@ -35,6 +35,7 @@ public:
     static QPixmap scaleAndCenterPixmap(const QPixmap& image, const QSize& requestedSize, bool scaleIfLess, Qt::TransformationMode mode=Qt::FastTransformation);
 	static QPixmap ZLImageToQPixmapWithSize(shared_ptr<const ZLImage> image, const QSize &requestedSize, bool scaleIfLess, Qt::TransformationMode mode=Qt::FastTransformation);
 	static QPixmap addBorder(const QPixmap& image, QColor color, int borderSize);
+	static QPixmap addOppositeBorder(const QPixmap& image, int borderSize);
 };
 
 #endif /* __ZLQTIMAGEUTILS_H__ */

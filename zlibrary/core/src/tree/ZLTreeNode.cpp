@@ -116,9 +116,9 @@ std::size_t ZLTreeNode::childIndex() const {
 }
 
 void ZLTreeNode::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
-		if (!listener.isNull()) {
-		 //   listener->finished();
-		}
+	if (!listener.isNull()) {
+		listener->finished();
+	}
 }
 
 void ZLTreeNode::requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {

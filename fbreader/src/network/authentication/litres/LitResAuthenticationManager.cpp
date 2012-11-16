@@ -22,6 +22,8 @@
 #include <ZLUserData.h>
 #include <ZLExecutionUtil.h>
 
+#include "../../tree/NetworkLibrary.h"
+
 #include "../../litres/LitResBooksFeedParser.h"
 #include "../../litres/LitResUtil.h"
 #include "LitResAuthenticationManager.h"
@@ -130,6 +132,11 @@ void LitResAuthenticationManager::logOut() {
 	mySidChecked = true;
 	mySidUserNameOption.setValue("");
 	mySidOption.setValue("");
+
+	myInitializedDataSid.clear();
+	myPurchasedBooksIds.clear();
+	myPurchasedBooksList.clear();
+	myAccount.clear();
 }
 
 const std::string &LitResAuthenticationManager::currentUserName() {
@@ -225,6 +232,10 @@ void LitResAuthenticationManager::collectPurchasedBooks(NetworkItem::List &list)
 
 const std::set<std::string> &LitResAuthenticationManager::getPurchasedIds() const {
 	return myPurchasedBooksIds;
+}
+
+const NetworkItem::List &LitResAuthenticationManager::purchasedBooks() const {
+	return myPurchasedBooksList;
 }
 
 std::string LitResAuthenticationManager::topupAccountLink() {
@@ -331,6 +342,10 @@ void LitResAuthenticationManager::loadPurchasedBooksOnSuccess(std::set<std::stri
 		book.Index = 0;
 		purchasedBooksIds.insert(book.Id);
 	}
+
+	NetworkLibrary::Instance().invalidateVisibility();
+	NetworkLibrary::Instance().synchronize();
+	NetworkLibrary::Instance().refresh();
 }
 
 shared_ptr<ZLNetworkRequest> LitResAuthenticationManager::loadAccount(std::string &dummy1) {

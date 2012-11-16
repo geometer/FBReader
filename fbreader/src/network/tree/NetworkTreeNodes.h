@@ -86,6 +86,9 @@ public:
 
 	NetworkCatalogItem &item();
 
+	void updateVisibility();
+	void clearCatalog();
+
 private:
 	void init();
 	void notifyListeners(const std::string &error);
