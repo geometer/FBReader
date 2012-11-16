@@ -183,10 +183,12 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 }
 
 void ZLQtTreeItem::resizeEvent(QResizeEvent *ev) {
-	int width = ev->size().width();
-	int maxWidth = width - WAITING_SIZE - ITEM_SIZE - 30;
-	myTitle->setMaximumWidth(maxWidth);
-	mySubtitle->setMaximumWidth(maxWidth);
+	int maxWidth = ev->size().width() - WAITING_SIZE - ITEM_SIZE - 40;
+	if (maxWidth <= 0) {
+		return;
+	}
+	myTitle->setFixedWidth(maxWidth);
+	mySubtitle->setFixedWidth(maxWidth);
 }
 
 void ZLQtTreeItem::fill(ZLTreeTitledNode *node) {
