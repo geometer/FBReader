@@ -202,8 +202,11 @@ ZLResourceTreeReader::ZLResourceTreeReader(shared_ptr<ZLTreeResource> root) {
 static const std::string NODE = "node";
 
 void ZLResourceTreeReader::startElementHandler(const char *tag, const char **attributes) {
-	if (!myStack.empty() && (NODE == tag)) {
+	if (!myStack.empty() && NODE == tag) {
 		const char *name = attributeValue(attributes, "name");
+		if (name == 0) {
+			name = attributeValue(attributes, "condition");
+		}
 		if (name != 0) {
 			const std::string sName = name;
 			const char *value = attributeValue(attributes, "value");
@@ -226,7 +229,7 @@ void ZLResourceTreeReader::startElementHandler(const char *tag, const char **att
 }
 
 void ZLResourceTreeReader::endElementHandler(const char *tag) {
-	if (!myStack.empty() && (NODE == tag)) {
+	if (!myStack.empty() && NODE == tag) {
 		myStack.pop();
 	}
 }
