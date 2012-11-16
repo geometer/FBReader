@@ -8,6 +8,7 @@
 * Encoding detection for doc (ms word) files
 * RTF: fixed footnotes support
 * ePub: fixed <pre>formatted text support
+* Implemented new network library view
 
 ===== 0.99.2 (September 7, 2012) =====
 
