@@ -52,7 +52,7 @@
 			<node name="logout" value="Elsaluto (%s)"/>
 			<node name="reload" value="Reŝargi"/>
 			<node name="dontShow" value="'Ne aperigi ĉi tiun katalogon"/>
-			<node name="refillAccount" value="Replenigi konton (aktuale: %s)"/>
+			<node name="topupAccount" value="Replenigi konton (aktuale: %s)"/>
 			<node name="register" value="Registriĝi"/>
 			<node name="passwordRecovery" value="Renovigi pasvorton"/>
 		</node>

@@ -52,7 +52,7 @@
 			<node name="logout" value="Abmelden (%s)"/>
 			<node name="reload" value="Neu laden"/>
 			<node name="dontShow" value="Diesen Katalog nicht anzeigen"/>
-			<node name="refillAccount" value="Account aufladen (derzeit: %s)"/>
+			<node name="topupAccount" value="Account aufladen (derzeit: %s)"/>
 			<node name="register" value="Anmelden"/>
 			<node name="passwordRecovery" value="Passwort wiederherstellen"/>
 		</node>

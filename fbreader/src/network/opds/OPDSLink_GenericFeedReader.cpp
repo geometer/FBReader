@@ -64,7 +64,7 @@ void OPDSLink::GenericFeedReader::processFeedEntry(shared_ptr<OPDSEntry> entry) 
 		} else if (rel == OPDSConstants::REL_LINK_SIGN_UP) {
 			links[NetworkLink::URL_SIGN_UP] = href;
 		} else if (rel == OPDSConstants::REL_LINK_TOPUP) {
-			links[NetworkLink::URL_REFILL_ACCOUNT] = href;
+			links[NetworkLink::URL_TOPUP] = href;
 		} else if (rel == OPDSConstants::REL_LINK_RECOVER_PASSWORD) {
 			links[NetworkLink::URL_RECOVER_PASSWORD] = href;
 		} else if (rel == OPDSConstants::REL_THUMBNAIL || rel == OPDSConstants::REL_IMAGE_THUMBNAIL) {

@@ -52,7 +52,7 @@
 			<node name="logout" value="Kirjaudu ulos (%s)"/>
 			<node name="reload" value="Lataa uudelleen"/>
 			<node name="dontShow" value="Älä näytä tätä luetteloa"/>
-			<node name="refillAccount" value="Muuta tili (Nyt: %s)"/>
+			<node name="topupAccount" value="Muuta tili (Nyt: %s)"/>
 			<node name="register" value="Rekisteröidy"/>
 			<node name="passwordRecovery" value="Palauta salasana"/>
 		</node>

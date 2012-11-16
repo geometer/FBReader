@@ -68,10 +68,10 @@ public:
 	std::string text(const ZLResource &resource) const;
 };
 
-class NetworkCatalogRootNode::RefillAccountAction : public NetworkCatalogAuthAction {
+class NetworkCatalogRootNode::TopupAccountAction : public NetworkCatalogAuthAction {
 
 public:
-	RefillAccountAction(NetworkAuthenticationManager &mgr);
+	TopupAccountAction(NetworkAuthenticationManager &mgr);
 
 private:
 	void run();
@@ -122,8 +122,8 @@ void NetworkCatalogRootNode::init() {
 	if (!mgr.isNull()) {
 		registerAction(new LoginAction(*mgr));
 		registerAction(new LogoutAction(*mgr));
-		if (!mgr->refillAccountLink().empty()) {
-			registerAction(new RefillAccountAction(*mgr));
+		if (!mgr->topupAccountLink().empty()) {
+			registerAction(new TopupAccountAction(*mgr));
 		}
 		if (mgr->registrationSupported()) {
 			registerAction(new RegisterUserAction(*mgr), true);
@@ -216,27 +216,27 @@ bool NetworkCatalogRootNode::DontShowAction::makesSense() const {
 	return NetworkLinkCollection::Instance().numberOfEnabledLinks() > 1;
 }
 
-NetworkCatalogRootNode::RefillAccountAction::RefillAccountAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, true) {
+NetworkCatalogRootNode::TopupAccountAction::TopupAccountAction(NetworkAuthenticationManager &mgr) : NetworkCatalogAuthAction(mgr, true) {
 }
 
-ZLResourceKey NetworkCatalogRootNode::RefillAccountAction::key() const {
-	return ZLResourceKey("refillAccount");
+ZLResourceKey NetworkCatalogRootNode::TopupAccountAction::key() const {
+	return ZLResourceKey("topupAccount");
 }
 
-std::string NetworkCatalogRootNode::RefillAccountAction::text(const ZLResource &resource) const {
+std::string NetworkCatalogRootNode::TopupAccountAction::text(const ZLResource &resource) const {
 	const std::string text = ZLRunnableWithKey::text(resource);
 	std::string account = myManager.currentAccount();
-	if (!account.empty() && !myManager.refillAccountLink().empty()) {
+	if (!account.empty() && !myManager.topupAccountLink().empty()) {
 		return ZLStringUtil::printf(text, account);
 	}
 	return text;
 }
 
-void NetworkCatalogRootNode::RefillAccountAction::run() {
-	FBReader::Instance().openLinkInBrowser(myManager.refillAccountLink());
+void NetworkCatalogRootNode::TopupAccountAction::run() {
+	FBReader::Instance().openLinkInBrowser(myManager.topupAccountLink());
 }
 
-bool NetworkCatalogRootNode::RefillAccountAction::makesSense() const {
+bool NetworkCatalogRootNode::TopupAccountAction::makesSense() const {
 	return
 		NetworkCatalogAuthAction::makesSense() &&
 		!myManager.currentAccount().empty();

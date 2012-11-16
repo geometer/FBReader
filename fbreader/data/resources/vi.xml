@@ -52,7 +52,7 @@
 			<node name="logout" value="Đăng xuấtt (%s)"/>
 			<node name="reload" value="Tải lại"/>
 			<node name="dontShow" value="Không hiện catalô này"/>
-			<node name="refillAccount" value="Làm đầy tài khoản (hiện tại: %s)"/>
+			<node name="topupAccount" value="Làm đầy tài khoản (hiện tại: %s)"/>
 			<node name="register" value="Đăng kí"/>
 			<node name="passwordRecovery" value="Phục hồi mật khẩu"/>
 		</node>

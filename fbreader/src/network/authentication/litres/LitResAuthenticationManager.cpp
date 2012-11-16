@@ -227,12 +227,12 @@ const std::set<std::string> &LitResAuthenticationManager::getPurchasedIds() cons
 	return myPurchasedBooksIds;
 }
 
-std::string LitResAuthenticationManager::refillAccountLink() {
+std::string LitResAuthenticationManager::topupAccountLink() {
 	const std::string &sid = mySidOption.value();
 	if (sid.empty()) {
 		return std::string();
 	}
-	std::string url = Link.url(NetworkLink::URL_REFILL_ACCOUNT);
+	std::string url = Link.url(NetworkLink::URL_TOPUP);
 	ZLNetworkUtil::appendParameter(url, "sid", sid);
 	return url;
 }
