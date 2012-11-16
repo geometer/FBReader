@@ -47,6 +47,12 @@ RELEASE 0.99.3:
 
 RELEASE 0.99.4:
 
+ ** litres: 'buy' button in book pane does not work
+ ** book pane:
+  ** renew cover image if loaded
+ ** catalog pane:
+  ** indicate if more catalog items loading is in progress (show 'progress' item)
+
  ** litres series: sort books as in server catalog
 
   ** litres 'top 50 by popularity' -- book duplicates?
