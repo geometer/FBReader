@@ -89,12 +89,12 @@
 		<node name="annotation" value="Annotation"/>
 		<node name="title" value="Title:"/>
 		<node name="authors" value="Authors:">
-			<node name="value 1" value="Author:"/>
+			<node condition="value 1" value="Author:"/>
 		</node>
 		<node name="series" value="Series:"/>
 		<node name="indexInSeries" value="Index in series:"/>
 		<node name="tags" value="Tags:">
-			<node name="value 1" value="Tag:"/>
+			<node condition="value 1" value="Tag:"/>
 		</node>
 		<node name="language" value="Language:"/>
 		<node name="name" value="Name:"/>
@@ -102,7 +102,7 @@
 		<node name="size" value="Size:"/>
 		<node name="time" value="Last modified:"/>
 		<node name="sizeInBytes" value="%s bytes">
-			<node name="value 1" value="%s byte"/>
+			<node condition="value 1" value="%s byte"/>
 		</node>
 		<node name="sizeInKiloBytes" value="%s kB"/>
 		<node name="catalog" value="Catalog:"/>
@@ -129,6 +129,7 @@
 			<node name="previousBook" value="Previous Book"/>
 			<node name="showRecent" value="Recent"/>
 			<node name="addBook" value="Add Book..."/>
+			<node name="showHelp" value="About FBReader"/>
 		</node>
 		<node name="gotoHome" value="Go to Start of Document"/>
 		<node name="gotoPageNumber" value="Go to Page..."/>
