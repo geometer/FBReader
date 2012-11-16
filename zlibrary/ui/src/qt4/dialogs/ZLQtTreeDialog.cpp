@@ -247,7 +247,7 @@ void ZLQtTreeDialog::setupShowParameters() {
 	}
 	//TODO implement setting a slider position
 	ShowParameter parameter = myShowParameters.value(myBackHistory.top());
-	if (parameter.activeItemNumber != -1 && myListWidget->getItems().size() >= parameter.activeItemNumber) {
+	if (parameter.activeItemNumber != -1 && myListWidget->getItems().size() > parameter.activeItemNumber) {
 		myListWidget->onNodeClicked(myListWidget->getItems().at(parameter.activeItemNumber));
 	} else {
 		myPreviewWidget->clear();
