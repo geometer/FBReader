@@ -33,7 +33,7 @@ RELEASE 0.99.3:
 
   ** Series
 	  ** for 'Series' items, show a batch of icons (of books in this series)
-		  ** series icon: show no more than 6 books in batch
+		  DONE series icon: show no more than 6 books in batch
 	  	  ** for spaces, use percent of size instead of pixels
 			** should be tested with "Урожайкины, всегда с урожаем" series. 9px fails here.
 		  ** for covers of different sizes, resize to the same height

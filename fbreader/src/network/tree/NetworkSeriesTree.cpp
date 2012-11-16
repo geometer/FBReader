@@ -18,6 +18,7 @@
  */
 
 #include <set>
+#include <algorithm>
 
 #include <ZLResource.h>
 #include <ZLImage.h>
@@ -74,9 +75,11 @@ std::string NetworkSeriesTree::subtitle() const {
 	return mySummary;
 }
 
+static const size_t MAX_BATCH_SIZE = 6;
+
 shared_ptr<const ZLImage> NetworkSeriesTree::image() const {
 	if (myImages.empty()) {
-		for (size_t i = 0; i < children().size(); ++i) {
+		for (size_t i = 0; i < std::min(children().size(), MAX_BATCH_SIZE); ++i) {
 			NetworkBookTree *bookTree = zlobject_cast<NetworkBookTree*>(children().at(i));
 			if (!bookTree) {
 				continue;
