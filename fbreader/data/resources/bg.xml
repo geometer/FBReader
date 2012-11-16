@@ -52,7 +52,7 @@
 			<node name="logout" value="Излизане (%s)"/>
 			<node name="reload" value="Презареждане"/>
 			<node name="dontShow" value="Скриване на този каталог"/>
-			<node name="refillAccount" value="Зареждане на сметка (в момента: %s)"/>
+			<node name="topupAccount" value="Зареждане на сметка (в момента: %s)"/>
 			<node name="register" value="Регистрация"/>
 			<node name="passwordRecovery" value="Забравена парола?"/>
 		</node>

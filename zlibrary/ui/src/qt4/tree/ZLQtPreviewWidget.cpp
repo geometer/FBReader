@@ -154,7 +154,8 @@ void ZLQtPreviewWidget::fillCatalog(const ZLTreeTitledNode *node) {
 
 void ZLQtPreviewWidget::fillWaitingIcon() {
 	setBasicLayout();
-	ZLQtWaitingIcon *icon = new ZLQtWaitingIconSelfRotating(QSize(120,120));
+	ZLQtWaitingIcon *icon = new ZLQtWaitingSpinner(12, 26, 8, 36);
+	//ZLQtWaitingIcon *icon = new ZLQtWaitingIconSelfRotating(QSize(120,120));
 	icon->start();
 	layout()->addWidget(icon);
 }

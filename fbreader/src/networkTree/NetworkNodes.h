@@ -108,7 +108,7 @@ public:
 private:
 	class LoginAction;
 	class LogoutAction;
-	class RefillAccountAction;
+	class TopupAccountAction;
 	class DontShowAction;
 	class PasswordRecoveryAction;
 	class RegisterUserAction;

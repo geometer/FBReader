@@ -39,6 +39,8 @@ public:
 	const NetworkItem::List &books() const;
 	bool empty() const;
 
+	void clear();
+
 	const NetworkAuthorBooksMap &authorBooksMap();
 
 private:

@@ -26,13 +26,13 @@
 OleStreamReader::OleStreamReader() : myNextPieceNumber(0) {
 }
 
-bool OleStreamReader::readDocument(shared_ptr<ZLInputStream> inputStream) {
+bool OleStreamReader::readDocument(shared_ptr<ZLInputStream> inputStream, bool doReadFormattingData) {
 	static const std::string WORD_DOCUMENT = "WordDocument";
 
 	shared_ptr<OleStorage> storage = new OleStorage;
 
 	if (!storage->init(inputStream, inputStream->sizeOfOpened())) {
-		ZLLogger::Instance().println("OleStreamReader", "Broken OLE file");
+		ZLLogger::Instance().println("DocPlugin", "Broken OLE file");
 		return false;
 	}
 
@@ -42,8 +42,8 @@ bool OleStreamReader::readDocument(shared_ptr<ZLInputStream> inputStream) {
 	}
 
 	OleMainStream oleStream(storage, wordDocumentEntry, inputStream);
-	if (!oleStream.open()) {
-		ZLLogger::Instance().println("OleStreamReader", "Cannot open OleMainStream");
+	if (!oleStream.open(doReadFormattingData)) {
+		ZLLogger::Instance().println("DocPlugin", "Cannot open OleMainStream");
 		return false;
 	}
 	return readStream(oleStream);
@@ -69,7 +69,7 @@ bool OleStreamReader::readNextPiece(OleMainStream &stream) {
 	char *textBuffer = new char[piece.Length];
 	std::size_t readBytes = stream.read(textBuffer, piece.Length);
 	if (readBytes != (std::size_t)piece.Length) {
-		ZLLogger::Instance().println("OleStreamReader", "not all bytes have been read from piece");
+		ZLLogger::Instance().println("DocPlugin", "not all bytes have been read from piece");
 	}
 
 	if (!piece.IsANSI) {

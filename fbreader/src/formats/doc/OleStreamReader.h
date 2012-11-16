@@ -28,7 +28,7 @@ class OleStreamReader {
 
 public:
 	OleStreamReader();
-	bool readDocument(shared_ptr<ZLInputStream> stream);
+	bool readDocument(shared_ptr<ZLInputStream> stream, bool doReadFormattingData);
 
 protected:
 	virtual bool readStream(OleMainStream &stream) = 0;

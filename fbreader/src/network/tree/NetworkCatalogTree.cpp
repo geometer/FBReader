@@ -214,8 +214,9 @@ void NetworkCatalogTree::onChildrenReceived(NetworkItem::List &childrens, const 
 	} else {
 		NetworkTreeFactory::fillAuthorTree(this, childrens);
 	}
-
 	notifyListeners(error);
+
+	this->updated();
 }
 
 void NetworkCatalogTree::notifyListeners(const std::string &error) {

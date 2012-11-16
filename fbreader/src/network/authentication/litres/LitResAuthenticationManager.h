@@ -46,7 +46,7 @@ public:
 	std::string purchaseBook(const NetworkBookItem &, shared_ptr<ZLNetworkRequest::Listener> listener);
 	shared_ptr<BookReference> downloadReference(const NetworkBookItem &book);
 
-	std::string refillAccountLink();
+	std::string topupAccountLink();
 	std::string currentAccount();
 
 	std::string reloadPurchasedBooks(); //TODO make async

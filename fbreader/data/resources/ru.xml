@@ -51,7 +51,7 @@
 			<node name="logout" value="Выйти (%s)"/>
 			<node name="reload" value="Обновить"/>
 			<node name="dontShow" value="Скрыть этот каталог"/>
-			<node name="refillAccount" value="Пополнить счёт (текущий счёт: %s)"/>
+			<node name="topupAccount" value="Пополнить счёт (текущий счёт: %s)"/>
 			<node name="register" value="Зарегистрироваться"/>
 			<node name="passwordRecovery" value="Забыли пароль?"/>
 		</node>

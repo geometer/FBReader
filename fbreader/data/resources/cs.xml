@@ -52,7 +52,7 @@
 			<node name="logout" value="Odhlášení (%s)"/>
 			<node name="reload" value="Obnovit"/>
 			<node name="dontShow" value="'Nezobrazovat tento katalog"/>
-			<node name="refillAccount" value="Refill account (currently: %s)"/>
+			<node name="topupAccount" value="Top up account (currently: %s)"/>
 			<node name="register" value="Přihlášení"/>
 			<node name="passwordRecovery" value="Obnovit heslo"/>
 		</node>

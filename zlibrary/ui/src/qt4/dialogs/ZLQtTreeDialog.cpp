@@ -148,8 +148,7 @@ void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool suc
 
 }
 
-void ZLQtTreeDialog::onMoreChildrenLoaded(ZLTreeNode *node, bool /*checkLast*/, bool successLoaded) {
-	//qDebug() << Q_FUNC_INFO << node << node->children().size();
+void ZLQtTreeDialog::onMoreChildrenLoaded(bool successLoaded) {
 	if (!successLoaded) {
 		return;
 	}
@@ -174,6 +173,11 @@ void ZLQtTreeDialog::updateWaitingIcons() {
 }
 
 void ZLQtTreeDialog::onNodeUpdated(ZLTreeNode *node) {
+	if (!myBackHistory.empty() && myBackHistory.top() == node) {
+		onMoreChildrenLoaded(true);
+		return;
+	}
+
 	foreach(ZLQtTreeItem *item, myListWidget->getItems()) {
 		if (node == item->getNode()) {
 			if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(node)) {
@@ -316,7 +320,7 @@ void ZLQtTreeDialog::ChildrenRequestListener::finished(const std::string &error)
 	if (!myMoreMode) {
 		myTreeDialog->onChildrenLoaded(myNode, true, error.empty());
 	} else {
-		myTreeDialog->onMoreChildrenLoaded(myNode, true, error.empty());
+		myTreeDialog->onMoreChildrenLoaded(error.empty());
 	}
 
 }

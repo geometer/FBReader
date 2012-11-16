@@ -21,6 +21,7 @@
 #define __ZLIMAGEMANAGER_H__
 
 #include <string>
+#include <vector>
 
 #include <shared_ptr.h>
 
@@ -59,6 +60,9 @@ protected:
 	
 public:
 	shared_ptr<ZLImageData> imageData(const ZLImage &image) const;
+
+public:
+	virtual shared_ptr<const ZLImage> makeBatchImage(const std::vector<shared_ptr<const ZLImage> > &images, shared_ptr<const ZLImage> defaultImage) const = 0;
 
 protected:
 	ZLImageManager() {}

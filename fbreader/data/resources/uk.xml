@@ -52,7 +52,7 @@
 			<node name="logout" value="Вийти (%s)"/>
 			<node name="reload" value="Відновити"/>
 			<node name="dontShow" value="Не показувати каталог"/>
-			<node name="refillAccount" value="Поповнити рахунок (currently: %s)"/>
+			<node name="topupAccount" value="Поповнити рахунок (currently: %s)"/>
 			<node name="register" value="Увійти"/>
 			<node name="passwordRecovery" value="Recover password"/>
 		</node>

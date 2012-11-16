@@ -68,7 +68,7 @@ public: //listener methods
 
 public:
 	void onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool success);
-	void onMoreChildrenLoaded(ZLTreeNode *node, bool checkLast, bool success);
+	void onMoreChildrenLoaded(bool success);
 
 private:
 	void updateAll();

@@ -55,7 +55,7 @@ bool DocPlugin::readMetaInfo(Book &book) const {
 
 	shared_ptr<ZLInputStream> stream = new DocAnsiStream(book.file(), 50000);
 	if (!detectEncodingAndLanguage(book, *stream)) {
-		stream = new DocUtf8Stream(book.file(), 50000);
+		stream = new DocUcs2Stream(book.file(), 50000);
 		detectLanguage(book, *stream, ZLEncodingConverter::UTF8, true);
 	}
 

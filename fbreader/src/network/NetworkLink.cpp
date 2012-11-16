@@ -31,7 +31,7 @@ const std::string NetworkLink::URL_SEARCH = "search";
 const std::string NetworkLink::URL_SIGN_IN = "signIn";
 const std::string NetworkLink::URL_SIGN_OUT = "signOut";
 const std::string NetworkLink::URL_SIGN_UP = "signUp";
-const std::string NetworkLink::URL_REFILL_ACCOUNT = "refillAccount";
+const std::string NetworkLink::URL_TOPUP = "topup";
 const std::string NetworkLink::URL_RECOVER_PASSWORD = "recoverPassword";
 
 NetworkLink::NetworkLink(

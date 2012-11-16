@@ -26,6 +26,7 @@
 #include "../options/ZLConfig.h"
 #include "ZLEncodingConverter.h"
 #include "DummyEncodingConverter.h"
+#include "Utf8EncodingConverter.h"
 #include "MyEncodingConverter.h"
 #include "EncodingCollectionReader.h"
 
@@ -44,6 +45,7 @@ std::string ZLEncodingCollection::encodingDescriptionPath() {
 
 ZLEncodingCollection::ZLEncodingCollection() {
 	registerProvider(new DummyEncodingConverterProvider());
+	registerProvider(new Utf8EncodingConverterProvider());
 	registerProvider(new MyEncodingConverterProvider());
 }
 
@@ -81,7 +83,7 @@ ZLEncodingConverterInfoPtr ZLEncodingCollection::info(const std::string &name) {
 }
 
 shared_ptr<ZLEncodingConverter> ZLEncodingCollection::defaultConverter() {
-	return DummyEncodingConverterProvider().createConverter();
+	return Utf8EncodingConverterProvider().createConverter(ZLEncodingConverter::UTF8);
 }
 
 ZLEncodingConverterInfoPtr ZLEncodingCollection::info(int code) {

@@ -60,11 +60,11 @@ private:
 	shared_ptr<DocReader> createReader(char *buffer, std::size_t maxSize);
 };
 
-class DocUtf8Stream : public DocStream {
+class DocUcs2Stream : public DocStream {
 
 public:
-	DocUtf8Stream(const ZLFile& file, std::size_t maxSize);
-	~DocUtf8Stream();
+	DocUcs2Stream(const ZLFile& file, std::size_t maxSize);
+	~DocUcs2Stream();
 
 private:
 	shared_ptr<DocReader> createReader(char *buffer, std::size_t maxSize);

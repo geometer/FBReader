@@ -52,7 +52,7 @@
 			<node name="logout" value="Esci (%s)"/>
 			<node name="reload" value="Ricarica"/>
 			<node name="dontShow" value="Non mostrare questo catalogo"/>
-			<node name="refillAccount" value="Fai una ricarica (attualmente: %s)"/>
+			<node name="topupAccount" value="Fai una ricarica (attualmente: %s)"/>
 			<node name="register" value="Registrati"/>
 			<node name="passwordRecovery" value="Recupera password"/>
 		</node>

@@ -52,7 +52,7 @@
 			<node name="logout" value="יציאה (%s)"/>
 			<node name="reload" value="רענון"/>
 			<node name="dontShow" value="הסתר קטלוג"/>
-			<node name="refillAccount" value="הפקדת כסף (חשבון נוכחי: %s)"/>
+			<node name="topupAccount" value="הפקדת כסף (חשבון נוכחי: %s)"/>
 			<node name="register" value="הרשמה"/>
 			<node name="passwordRecovery" value="שכחת סיסמא?"/>
 		</node>
