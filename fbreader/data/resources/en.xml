@@ -5,7 +5,7 @@
 			<node name="expandTree" value="Show books"/>
 			<node name="collapseTree" value="Hide books"/>
 			<node name="edit" value="Edit information"/>
-			<node name="unknownAuthor" value="Unknown Author"/>
+			<node name="unknownAuthor" value="Unknown author"/>
 		</node>
 		<node name="tagNode">
 			<node name="expandTree" value="Show books"/>
@@ -25,7 +25,7 @@
 			<node name="delete" value="Remove book"/>
 		</node>
 	</node>
-	<node name="networkView" value="Network Library">
+	<node name="networkView" value="Network library">
 		<node name="byAuthor" value="By author">
 			<node name="summary" value="Books sorted by author"/>
 		</node>
