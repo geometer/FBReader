@@ -152,15 +152,15 @@
 			<node name="openInDictionary" value="Open in Dictionary"/>
 			<node name="clearSelection" value="Clear"/>
 		</node>
-		<node name="search" value="Find">
-			<node name="search" value="Find Text…"/>
-			<node name="findNext" value="Find Next"/>
-			<node name="findPrevious" value="Find Previous"/>
-		</node>
 		<node name="view" value="View">
-			<node name="rotate" value="Rotate Screen"/>
-			<node name="toggleFullscreen" value="Full Screen"/>
-			<node name="toggleIndicator" value="Toggle Indicator"/>
+			<node name="rotate" value="Rotate screen"/>
+			<node name="toggleFullscreen" value="Toggle full screen"/>
+			<node name="clearSelection" value="Clear selection"/>
+			<node name="zoomIn" value="Zoom in"/>
+			<node name="zoomOut" value="Zoom out"/>
+			<node name="search" value="Find…"/>
+			<node name="findNext" value="Find next"/>
+			<node name="findPrevious" value="Find previous"/>
 		</node>
 		<node name="preferences" value="Last Preferences Dialog…"/>
 		<node name="quit" value="Close"/>

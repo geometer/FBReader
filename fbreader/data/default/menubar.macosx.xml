@@ -9,12 +9,15 @@
 	</submenu>
 	<submenu id="view">
 		<item id="toggleFullscreen"/>
-		<item id="toggleIndicator"/>
+		<separator/>
 		<item id="clearSelection"/>
 		<separator/>
+		<item id="zoomIn"/>
+		<item id="zoomOut"/>
+		<separator/>
 		<item id="search"/>
-		<item id="findPrevious"/>
 		<item id="findNext"/>
+		<item id="findPrevious"/>
 	</submenu>
 	<submenu id="navigation">
 		<item id="gotoHome"/>

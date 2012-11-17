@@ -369,6 +369,12 @@ void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item)
 	if (item.actionId() == "addBook") {
 		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
 	}
+	if (item.actionId() == "search") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
+	}
+	if (item.actionId() == "toggleFullscreen") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F));
+	}
 	myCurrentMenu->addAction(action);
 }
 
