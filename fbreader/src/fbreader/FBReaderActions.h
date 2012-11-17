@@ -43,9 +43,12 @@ public:
 	static const std::string SHOW_LOOKANDFEEL_OPTIONS_DIALOG;
 	static const std::string UNDO;
 	static const std::string REDO;
+
 	static const std::string SEARCH;
 	static const std::string FIND_PREVIOUS;
 	static const std::string FIND_NEXT;
+	static const std::string CLEAR_SEARCH_RESULTS;
+
 	static const std::string PAGE_SCROLL_FORWARD;
 	static const std::string PAGE_SCROLL_BACKWARD;
 	static const std::string LINE_SCROLL_FORWARD;
@@ -58,8 +61,10 @@ public:
 	static const std::string SCROLL_TO_START_OF_TEXT;
 	static const std::string SCROLL_TO_END_OF_TEXT;
 	static const std::string CANCEL;
+
 	static const std::string INCREASE_FONT;
 	static const std::string DECREASE_FONT;
+
 	static const std::string SHOW_HIDE_POSITION_INDICATOR;
 	static const std::string TOGGLE_FULLSCREEN;
 	static const std::string FULLSCREEN_ON;
@@ -256,6 +261,13 @@ public:
 };
 
 class FindPreviousAction : public SearchAction {
+
+public:
+	bool isEnabled() const;
+	void run();
+};
+
+class ClearSearchResultsAction : public SearchAction {
 
 public:
 	bool isEnabled() const;

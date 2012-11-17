@@ -33,9 +33,12 @@ const std::string ActionCode::SHOW_READING_OPTIONS_DIALOG = "readingOptions";
 const std::string ActionCode::SHOW_LOOKANDFEEL_OPTIONS_DIALOG = "lookAndFeelOptions";
 const std::string ActionCode::UNDO = "undo";
 const std::string ActionCode::REDO = "redo";
+
 const std::string ActionCode::SEARCH = "search";
 const std::string ActionCode::FIND_PREVIOUS = "findPrevious";
 const std::string ActionCode::FIND_NEXT = "findNext";
+const std::string ActionCode::CLEAR_SEARCH_RESULTS = "clearSearchResults";
+
 const std::string ActionCode::PAGE_SCROLL_FORWARD = "pageForward";
 const std::string ActionCode::PAGE_SCROLL_BACKWARD = "pageBackward";
 const std::string ActionCode::LINE_SCROLL_FORWARD = "lineForward";
@@ -48,8 +51,10 @@ const std::string ActionCode::SCROLL_TO_HOME = "gotoHome";
 const std::string ActionCode::SCROLL_TO_START_OF_TEXT = "gotoSectionStart";
 const std::string ActionCode::SCROLL_TO_END_OF_TEXT = "gotoSectionEnd";
 const std::string ActionCode::CANCEL = "cancel";
+
 const std::string ActionCode::INCREASE_FONT = "increaseFont";
 const std::string ActionCode::DECREASE_FONT = "decreaseFont";
+
 const std::string ActionCode::SHOW_HIDE_POSITION_INDICATOR = "toggleIndicator";
 const std::string ActionCode::TOGGLE_FULLSCREEN = "toggleFullscreen";
 const std::string ActionCode::FULLSCREEN_ON = "onFullscreen";

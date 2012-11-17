@@ -268,6 +268,19 @@ void ZLTextView::search(const std::string &text, bool ignoreCase, bool wholeText
 	}
 }
 
+bool ZLTextView::hasSearchResults() const {
+	return !textArea().endCursor().isNull() && (textArea().model()->firstMark().ParagraphIndex > -1);
+}
+
+void ZLTextView::clearSearchResults() {
+	shared_ptr<ZLTextModel> model = textArea().model();
+	if (!model.isNull()) {
+		model->removeAllMarks();
+		myTextAreaController.rebuildPaintInfo(true);
+		ZLApplication::Instance().refreshWindow();
+	}
+}
+
 bool ZLTextView::canFindNext() const {
 	return !textArea().endCursor().isNull() && (textArea().model()->nextMark(textArea().endCursor().position()).ParagraphIndex > -1);
 }

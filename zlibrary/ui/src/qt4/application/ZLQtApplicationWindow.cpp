@@ -300,13 +300,16 @@ void ZLQtApplicationWindow::close() {
 	QMainWindow::close();
 }
 
-
-
 void ZLQtApplicationWindow::refresh() {
 	QMetaObject::invokeMethod(this, "onRefresh", Qt::AutoConnection);
 }
 
 void ZLQtApplicationWindow::onRefresh() {
+	for (std::list<ZLQtAction*>::const_iterator it = myMenuActions.begin(); it != myMenuActions.end(); ++it) {
+		ZLQtAction *action = *it;
+		action->setVisible(application().isActionVisible(action->Id));
+		action->setEnabled(application().isActionEnabled(action->Id));
+	}
 	ZLApplicationWindow::refresh();
 }
 
@@ -349,17 +352,17 @@ void ZLQtApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLMenubar::Sub
 	myCurrentMenu = 0;
 }
 
-ZLQtAction::ZLQtAction(ZLApplication &application, const std::string &id, const std::string &title, QObject *parent) : QAction(QString::fromUtf8(title.c_str()), parent), myApplication(application), myId(id) {
+ZLQtAction::ZLQtAction(ZLApplication &application, const std::string &id, const std::string &title, QObject *parent) : QAction(QString::fromUtf8(title.c_str()), parent), myApplication(application), Id(id) {
 	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
 }
 
 void ZLQtAction::onActivated() {
-	myApplication.doAction(myId);
+	myApplication.doAction(Id);
 }
 
 
 void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
-	QAction *action = new ZLQtAction(myWindow.application(), item.actionId(), item.name(), myCurrentMenu);
+	ZLQtAction *action = new ZLQtAction(myWindow.application(), item.actionId(), item.name(), myCurrentMenu);
 	if (item.actionId() == "showLibrary") {
 		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
 	}
@@ -372,10 +375,27 @@ void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item)
 	if (item.actionId() == "search") {
 		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
 	}
+	if (item.actionId() == "findNext") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Right));
+	}
+	if (item.actionId() == "findPrevious") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Left));
+	}
 	if (item.actionId() == "toggleFullscreen") {
 		action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F));
 	}
+	if (item.actionId() == "increaseFont") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Plus));
+	}
+	if (item.actionId() == "decreaseFont") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Minus));
+	}
 	myCurrentMenu->addAction(action);
+	myWindow.addAction(action);
+}
+
+void ZLQtApplicationWindow::addAction(ZLQtAction *action) {
+	myMenuActions.push_back(action);
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processSepartor(ZLMenubar::Separator &separator) {

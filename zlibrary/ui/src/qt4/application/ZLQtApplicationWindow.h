@@ -33,6 +33,7 @@ class QLineEdit;
 class QMenu;
 
 class ZLPopupData;
+class ZLQtAction;
 
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 #include "../../../../core/src/application/ZLMenu.h"
@@ -67,6 +68,7 @@ private:
 
 	ZLViewWidget *createViewWidget();
 	void addToolbarItem(ZLToolbar::ItemPtr item);
+	void addAction(ZLQtAction *action);
 	void init();
 	void processAllEvents();
 	void close();
@@ -102,6 +104,7 @@ friend class ZLQtToolBarAction;
 	std::map<const ZLToolbar::Item*,QAction*> myActions;
 	std::map<const ZLToolbar::MenuButtonItem*,QToolButton*> myMenuButtons;
 	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
+	std::list<ZLQtAction*> myMenuActions;
 
 	bool myFullScreen;
 	bool myWasMaximized;
@@ -139,9 +142,11 @@ public:
 private Q_SLOTS:
 	void onActivated();
 
+public:
+	const std::string Id;
+
 private:
 	ZLApplication &myApplication;
-	const std::string myId;
 };
 
 class ZLQtToolBarAction : public QAction {

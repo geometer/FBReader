@@ -134,6 +134,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::SEARCH, new SearchPatternAction());
 	addAction(ActionCode::FIND_NEXT, new FindNextAction());
 	addAction(ActionCode::FIND_PREVIOUS, new FindPreviousAction());
+	addAction(ActionCode::CLEAR_SEARCH_RESULTS, new ClearSearchResultsAction());
 	addAction(ActionCode::SCROLL_TO_HOME, new ScrollToHomeAction());
 	addAction(ActionCode::SCROLL_TO_START_OF_TEXT, new ScrollToStartOfTextAction());
 	addAction(ActionCode::SCROLL_TO_END_OF_TEXT, new ScrollToEndOfTextAction());

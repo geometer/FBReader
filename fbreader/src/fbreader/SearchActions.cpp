@@ -153,3 +153,15 @@ bool FindPreviousAction::isEnabled() const {
 void FindPreviousAction::run() {
 	((ZLTextView&)*FBReader::Instance().currentView()).findPrevious();
 }
+
+bool ClearSearchResultsAction::isEnabled() const {
+	shared_ptr<ZLView> view = FBReader::Instance().currentView();
+	return
+		!view.isNull() && 
+		view->isInstanceOf(ZLTextView::TYPE_ID) &&
+		((ZLTextView&)*view).hasSearchResults();
+}
+
+void ClearSearchResultsAction::run() {
+	((ZLTextView&)*FBReader::Instance().currentView()).clearSearchResults();
+}

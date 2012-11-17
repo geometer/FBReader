@@ -12,12 +12,13 @@
 		<separator/>
 		<item id="clearSelection"/>
 		<separator/>
-		<item id="zoomIn"/>
-		<item id="zoomOut"/>
+		<item id="increaseFont"/>
+		<item id="decreaseFont"/>
 		<separator/>
 		<item id="search"/>
 		<item id="findNext"/>
 		<item id="findPrevious"/>
+		<item id="clearSearchResults"/>
 	</submenu>
 	<submenu id="navigation">
 		<item id="gotoHome"/>

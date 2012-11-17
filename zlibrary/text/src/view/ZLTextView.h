@@ -83,6 +83,8 @@ public:
 
 	bool hasMultiSectionModel() const;
 	void search(const std::string &text, bool ignoreCase, bool wholeText, bool backward, bool thisSectionOnly);
+	bool hasSearchResults() const;
+	void clearSearchResults();
 	bool canFindNext() const;
 	void findNext();
 	bool canFindPrevious() const;

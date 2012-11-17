@@ -14,13 +14,7 @@
 	<separator/>
 	<button id="toc"/>
 	<separator/>
-	<button id="search"/>
-	<button id="findPrevious"/>
-	<button id="findNext"/>
-	<separator/>
 	<menuButton id="preferences"/>
-	<separator/>
-	<button id="rotate"/>
 	<separator/>
 	<button id="showHelp"/>
 	<!--
