@@ -25,7 +25,7 @@
 			<node name="delete" value="Удалить"/>
 		</node>
 	</node>
-	<node name="networkView">
+	<node name="networkView" value="Сетевая библиотека">
 		<node name="byAuthor" value="По авторам">
 			<node name="summary" value="Книги, разложенные по авторам"/>
 		</node>
@@ -158,7 +158,7 @@
 			<node name="findNext" value="Искать дальше"/>
 			<node name="findPrevious" value="Искать раньше"/>
 		</node>
-		<node name="view" value="Изображение">
+		<node name="view" value="Внешний вид">
 			<node name="rotate" value="Повернуть"/>
 			<node name="toggleFullscreen" value="На весь экран"/>
 			<node name="toggleIndicator" value="Индикатор позиции"/>
