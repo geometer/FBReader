@@ -8,91 +8,56 @@
   ** better icon as placeholder for covers, that's not loaded, for books and catalogs 
 	** now we use 77/77 px resizing for all covers
 
-FUTURE RELEASES:
-	** search logic (future):
-		*** if we are on the top level and there is no selected catalog, search in all catalogs
-		*** if we are inside a catalog or if a catalog is selected, then
-			*** if this catalog supports search, show choice items: all catalogs or '<catalog name>'
-				*** in future, add choice items for different search types
-			*** otherwise, show choice items as described above, but disable '<catalog name>' item
-	** show info about catalogs search failures (where?)
-
-RELEASE 0.99.3:
-
-  DONE during search, show found items immediately, do not wait for the search end
-
-  DONE litres: do not store any user info after logout
-  DONE reload litres catalog after login/logout
-	  DONE updating visibility and reloading of items after login/logout
-	  DONE makeUpToDate only if childrens are invalid
-	  DONE auth check & initialization each time for catalog nodes
-  DONE BUG: SIGN IN, затем зашел в каталог, он стал грузить список купленных книг, operantion cancelled, 
- и как будто вышли из каталога -- то есть с точки зрения пользователя, что-то странное, вроде и зашел, а "моих книг" нет. (А обновиться можно, только если перезагрузить приложение)
-
-  DONE Add "type to search..." to resource, translate to russian
-  DONE litres -> authors list -> A -> АК -> Сергей Тимофеевич (show full name)
-
-  ** Series
-	  DONE for 'Series' items, show a batch of icons (of books in this series)
-		  DONE series icon: show no more than 6 books in batch
-	  	  DONE for spaces, use percent of size instead of pixels
-	  	  DONE if number of books < 6, increase spaces
-		  DONE for covers of different sizes, resize to the same height
-		  DONE series icon: use 'opposite' color instead of white
-	
-  DONE use other waiting icons
-  DONE find a good HUGE icon for book info loading (and small/tiny icons too, in the same style)
-  DONE litres 'top 50 by popularity' -- do not group books by series
-		DONE add type="application/litres+xml;type=books;groupSeries=no"/> or smth like this to determine it
-  DONE BUG: "Мои книги" не открываются
-
-RELEASE 0.99.4:
-
- ** litres: 'buy' button in book pane does not work
- ** book pane:
-  ** renew cover image if loaded
- ** catalog pane:
-  ** 'reload' button
-  ** indicate if more catalog items loading is in progress (show 'progress' item)
-  ** incorrect layout change for long 'second strings' after displaying of spinner icon 
-
- ** litres series: sort books as in server catalog
-
+RELEASE 0.99.4 (expected at 23 November):
+  ** litres: 'buy' button in book pane does not work
+    ** I couldn't reproduce it
   ** litres 'top 50 by popularity' -- book duplicates?
-	** can't reproduce it since we don't use grouping by series, looks like it's a books on a edge of 20 books limit
-
- ** translates of resources into all other languages
-	** "type to search..."
-
-  ** implement a way to be safe about deleted nodes (async undefined behaviour)
-	** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
-	** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
-
-  ** implement async sign in operation
-  ** implement async loadPurchasedBooks 
-  ** UI: implement support for recording each node's show parameters
-	DONE save current node for preview widget
-	** save slider position for list widget
-
-  ** immediate refresh of current catalog's item (not only for next re-enter)
-
-  ** move waiting icons to a separate component
+    ** can't reproduce it since we don't use grouping by series, looks like it's a books on a edge of 20 books limit
+  ** litres series: sort books as in server catalog
   ** litres: for books by author, do not show book author
-  ** mark series cleanly
-  	** for series groups: show number of books in the second string
-  ** for 'partial loading':
-    ** show waiting item (in a separate item)
-    ** in case of network error: show in the same item a message like 'download failed, click to retry'
-  ** replace error dialogs (with what?)
-	** implement a way to sign out from catalogs like Feedbooks and Wolne Lektury
 	** что будет, если во время загрузки litres item нажать на sign out?
 		** блокировать actions при взаимодействии с каталогом?
       ** нет, но продумать все возможные ответы сервера
+
+  ** mark series cleanly
+  	** for series groups: show number of books in the second string
+
+	** in search field show previous searches as suggestions
+
+  ** book pane:
+      ** renew cover image if loaded
+        ** in what cases this is necessary? Looks like it's done already?
+      ** catalog pane:'reload' button
+      ** catalog pane: indicate if more catalog items loading is in progress (show 'progress' item)
+      ** catalog pane: incorrect layout change for long 'second strings' after displaying of spinner icon 
+    ** for 'partial loading':
+      ** show waiting item (in a separate item)
+      ** in case of network error: show in the same item a message like 'download failed, click to retry'
+
+  ** move waiting icons to a separate component
+    ** implement a way to be safe about deleted nodes (async undefined behaviour)
+    	** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
+    	** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
+
+FUTURE RELEASES:
+  ** replace error dialogs (with what?)
+
+	** implement a way to sign out from catalogs like Feedbooks and Wolne Lektury
 	** implement waiting icon for related action items
     ** do not hide book
     ** show icon in 'catalogs' pane
     ** move book pane to left
-	** in search field show previous searches as suggestions
+
+ ** translates of resources into all other languages
+	** "type to search..."
+
+  ** implement async sign in operation
+  ** implement async loadPurchasedBooks 
+  ** UI: implement support for recording each node's show parameters
+	  DONE save current node for preview widget
+	  ** save slider position for list widget
+
+  ** immediate refresh of current catalog's item (not only for next re-enter)
 	
 	** search logic (current release):
 	   	** if we are on the top level, search in all catalogs
@@ -118,8 +83,6 @@ RELEASE 0.99.4:
 
 	* BUG: preview widget - если поле отсутсвует, вместо него просто пустое пространство
 	?? закрывать окно библиотеки при нажатии кнопки "скачать"
-	** use gif or set of pngs for Waiting Icon instead of vector svg icon
-
 	?? generic.xml async loading
 	** implement a way to show network items as they're loading from the network (until others are not loaded yet)
 	** BUG: when loading a book after search, no waiting icon for showing downloading progress
@@ -144,6 +107,43 @@ RELEASE 0.99.4:
 	* реализовать advanced search
 	? реализовать фильтр сетевых каталогов по языку (как в FBReaderJ)
 	* реализовать возможность "прятать" отдельные каталоги	
+
+	** search logic (in future releases):
+		*** if we are on the top level and there is no selected catalog, search in all catalogs
+		*** if we are inside a catalog or if a catalog is selected, then
+			*** if this catalog supports search, show choice items: all catalogs or '<catalog name>'
+				*** in future, add choice items for different search types
+			*** otherwise, show choice items as described above, but disable '<catalog name>' item
+	** show info about catalogs search failures (where?)
+
+RELEASE 0.99.3:
+
+  DONE during search, show found items immediately, do not wait for the search end
+
+  DONE litres: do not store any user info after logout
+  DONE reload litres catalog after login/logout
+	  DONE updating visibility and reloading of items after login/logout
+	  DONE makeUpToDate only if childrens are invalid
+	  DONE auth check & initialization each time for catalog nodes
+  DONE BUG: SIGN IN, затем зашел в каталог, он стал грузить список купленных книг, operantion cancelled, 
+ и как будто вышли из каталога -- то есть с точки зрения пользователя, что-то странное, вроде и зашел, а "моих книг" нет. (А обновиться можно, только если перезагрузить приложение)
+
+  DONE Add "type to search..." to resource, translate to russian
+  DONE litres -> authors list -> A -> АК -> Сергей Тимофеевич (show full name)
+
+  DONE Series
+	  DONE for 'Series' items, show a batch of icons (of books in this series)
+		  DONE series icon: show no more than 6 books in batch
+	  	  DONE for spaces, use percent of size instead of pixels
+	  	  DONE if number of books < 6, increase spaces
+		  DONE for covers of different sizes, resize to the same height
+		  DONE series icon: use 'opposite' color instead of white
+	
+  DONE use other waiting icons
+  DONE find a good HUGE icon for book info loading (and small/tiny icons too, in the same style)
+  DONE litres 'top 50 by popularity' -- do not group books by series
+		DONE add type="application/litres+xml;type=books;groupSeries=no"/> or smth like this to determine it
+  DONE BUG: "Мои книги" не открываются
 
 	DONE hide "loading" animation while authentication dialog is shown
 	DONE merge async-network-ui branch into 0.99; kill 4 branches
@@ -227,25 +227,23 @@ RELEASE 0.99.4:
 
 * перейти на API от LitRes
 	* maybe реализовать доступ к API через POST запросы (так написано в документации к LitRes API)
+	* реализовать simple & advanced search через API от LitRes
+	* сделать поддержку иконки одного жанра для пункта "По жанрам" и одного автора в "Популярные авторы"
 	* на сервере: 
-		* поправить неправильные ссылки в generic-1.8
 		* поправить неправильные ссылки (на litres2) в litres3/index.php5 и др.
-		* поправить дату xml файла, для корректного обновления в программе
+		* поправить дату/generic-1.9.xml файла, для корректного обновления в программе
 		* ошибка в скрипте litres3/topAuthors.php5
 	DONE bug: добавить передачу параметра lfrom при покупке книги (и при др. действиях тоже?)
-	* релизовать постраничную подгрузку данных (используя параметр limit)
-	* maybe заменить метод получения текущего счета (при инициализации)
+	DONE релизовать постраничную подгрузку данных (используя параметр limit)
 	DONE добавить поддержку пункта "Рекомендации"
 	DONE добавить классификацию в LitresBookShelfItem
 		DONE добавить перевод надписей в bookshelf в файлы ресурсов (кроме ru и en)
 		DONE реализовать возможность группировки по автору, серии (как в FBReaderJ)
-	* реализовать simple & advanced search через API от LitRes
 	DONE реализовать поддержку пункта "По жанрам" 
 	DONE реализовать поддержку пунтка "Популярные авторы"
 		DONE парсер для списка авторов
-	* сделать поддержку иконки одного жанра для пункта "По жанрам" и одного автора в "Популярные авторы"
 	DONE реализовать поддержку пунтка "Авторы по буквам"
-	* bug: залогинились, загрузили мои книги, перелогинились -- книге те же (+ похоже, что при заходе под др. пользователям, даже sid остается тот же)
+	DONE bug: залогинились, загрузили мои книги, перелогинились -- книге те же (+ похоже, что при заходе под др. пользователям, даже sid остается тот же)
 	DONE код для создания LitRes API Items перенести из NetworkOPDSFeedReader в др. место
 	
 
