@@ -104,6 +104,9 @@ void ZLQtApplicationWindow::initMenu() {
 
 void ZLQtApplicationWindow::init() {
 	ZLDesktopApplicationWindow::init();
+	if (application().toolbar(WINDOW_TOOLBAR).items().empty()) {
+		myWindowToolBar->hide();
+	}
 	switch (myWindowStateOption.value()) {
 		case NORMAL:
 			break;
@@ -162,7 +165,9 @@ void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
 			myDocWidget->setMaximumSize(myDocWidget->size());
 		}
 	} else {
-		myWindowToolBar->show();
+		if (!application().toolbar(WINDOW_TOOLBAR).items().empty()) {
+			myWindowToolBar->show();
+		}
 		showNormal();
 		if (myWasMaximized) {
 			showMaximized();

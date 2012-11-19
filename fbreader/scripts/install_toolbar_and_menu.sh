@@ -9,6 +9,7 @@ case "$1" in
 	desktop|win32)
 		toolbar_file=data/default/toolbar.desktop.xml
 		fullscreen_toolbar_file=data/default/fullscreen_toolbar.desktop.xml
+		menubar_file=data/default/menubar.macosx.xml
 		;;
 	macosx)
 		toolbar_file=data/default/toolbar.macosx.xml

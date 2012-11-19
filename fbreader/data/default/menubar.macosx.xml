@@ -22,13 +22,15 @@
 	</submenu>
 	<submenu id="navigation">
 		<item id="gotoHome"/>
-		<item id="gotoPageNumber"/>
 		<item id="gotoSectionStart"/>
 		<item id="gotoSectionEnd"/>
+		<item id="gotoPageNumber"/>
+		<separator/>
+		<item id="toc"/>
 		<item id="nextTOCSection"/>
 		<item id="previousTOCSection"/>
+		<separator/>
 		<item id="undo"/>
 		<item id="redo"/>
-		<item id="toc"/>
 	</submenu>
 </menubar>

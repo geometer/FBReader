@@ -7,18 +7,7 @@
 	<separator/>
 	<menuButton id="showLibrary"/>
 	<separator/>
-	<button id="gotoHome"/>
-	<button id="undo"/>
-	<button id="redo"/>
-	<textField id="gotoPageNumberWithParameter" parameterId="pageIndex" maxWidth="5" symbols="digits"/>
-	<separator/>
-	<button id="toc"/>
-	<separator/>
 	<menuButton id="preferences"/>
 	<separator/>
 	<button id="showHelp"/>
-	<!--
-	<fillSeparator/>
-	<searchField id="filterLibrary" parameterId="libraryFilter" maxWidth="15"/>
-	-->
 </toolbar>

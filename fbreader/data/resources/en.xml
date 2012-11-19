@@ -116,7 +116,15 @@
 			<node name="addBook" value="Open file…"/>
 		</node>
 		<node name="navigation" value="Navigation">
+			<node name="gotoHome" value="Start of document"/>
+			<node name="gotoPageNumber" value="Page number…"/>
+			<node name="gotoSectionStart" value="Start of text section"/>
+			<node name="gotoSectionEnd" value="End of text section"/>
 			<node name="toc" value="Table of Contents"/>
+			<node name="nextTOCSection" value="Next ToC item"/>
+			<node name="previousTOCSection" value="Previous ToC item"/>
+			<node name="undo" value="Back"/>
+			<node name="redo" value="Forward"/>
 		</node>
 		<node name="bookInfo" value="Book Info…"/>
 		<node name="toc" value="Table of Contents"/>
@@ -138,14 +146,6 @@
 		<node name="nextTOCSection" value="Go to Next TOC Item"/>
 		<node name="previousTOCSection" value="Go to Previous TOC Item"/>
 		<node name="navigate" value="Navigate">
-			<node name="gotoHome" value="Go to Start of Document"/>
-			<node name="gotoPageNumber" value="Go to Page…"/>
-			<node name="gotoSectionStart" value="Go to Start of Text Section"/>
-			<node name="gotoSectionEnd" value="Go to End of Text Section"/>
-			<node name="nextTOCSection" value="Go to Next TOC Item"/>
-			<node name="previousTOCSection" value="Go to Previous TOC Item"/>
-			<node name="undo" value="Go Back"/>
-			<node name="redo" value="Go Forward"/>
 		</node>
 		<node name="selection" value="Selection">
 			<node name="copyToClipboard" value="Copy to Clipboard"/>
