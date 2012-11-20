@@ -68,6 +68,11 @@
 		<node name="seriesNode">
 			<node name="expandTree" value="Показать книги"/>
 			<node name="collapseTree" value="Скрыть книги"/>
+			<node name="booksCount" value="%s книг">
+				<node condition="modrange 11 19 100" value="%s книг"/>
+				<node condition="mod 1 10" value="%s книгa"/>
+				<node condition="modrange 2 4 10" value="%s книги"/>
+			</node>
 		</node>
 		<node name="bookNode">
 			<node name="read" value="Читать локальную копию"/>

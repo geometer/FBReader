@@ -22,6 +22,7 @@
 
 #include <ZLResource.h>
 #include <ZLImage.h>
+#include <ZLStringUtil.h>
 
 #include "../../networkTree/NetworkCatalogUtil.h"
 #include "NetworkTreeNodes.h"
@@ -36,8 +37,8 @@ const ZLResource &NetworkSeriesTree::resource() const {
 	return ZLResource::resource("networkView")["seriesNode"];
 }
 
-NetworkSeriesTree::NetworkSeriesTree(NetworkTree *parent, const std::string &seriesTitle, SummaryType summaryType) :
-	NetworkTree(parent), mySeriesTitle(seriesTitle), mySummaryType(summaryType) {
+NetworkSeriesTree::NetworkSeriesTree(NetworkTree *parent, const std::string &seriesTitle) :
+	NetworkTree(parent), mySeriesTitle(seriesTitle) {
 	init();
 }
 
@@ -50,29 +51,7 @@ std::string NetworkSeriesTree::title() const {
 }
 
 std::string NetworkSeriesTree::subtitle() const {
-	if (mySummary.empty()) {
-		if (mySummaryType == BOOKS) {
-			mySummary = FBTree::subtitle();
-		} else {
-			std::set<NetworkBookItem::AuthorData> authorSet;
-			const ZLTreeNode::List &books = children();
-			for (ZLTreeNode::List::const_iterator it = books.begin(); it != books.end(); ++it) {
-				const NetworkBookItem &book = ((NetworkBookTree*)*it)->book();
-				const std::vector<NetworkBookItem::AuthorData> &authors = book.Authors;
-				for (std::vector<NetworkBookItem::AuthorData>::const_iterator it = authors.begin(); it != authors.end(); ++it) {
-					if (authorSet.find(*it) == authorSet.end()) {
-						authorSet.insert(*it);
-						if (!mySummary.empty()) {
-							mySummary += ", ";
-						}
-						mySummary += it->DisplayName;
-					}
-				}
-			}
-		}
-	}
-
-	return mySummary;
+	return ZLStringUtil::printf(resource()["booksCount"].value((int)children().size()), (unsigned int)children().size());
 }
 
 static const size_t MAX_BATCH_SIZE = 6;

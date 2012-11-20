@@ -23,7 +23,7 @@ RELEASE 0.99.4 (expected at 23 November):
       ** нет, но продумать все возможные ответы сервера
 
   ** mark series cleanly
-  	** for series groups: show number of books in the second string
+  	DONE for series groups: show number of books in the second string
 
 	** in search field show previous searches as suggestions
 
@@ -53,6 +53,8 @@ FUTURE RELEASES:
 
  ** translates of resources into all other languages
 	** "type to search..."
+  ** books conditional count
+		** where to put these resource?
 
   ** implement async sign in operation
   ** implement async loadPurchasedBooks 

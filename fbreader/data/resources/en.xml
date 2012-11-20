@@ -68,6 +68,9 @@
 		<node name="seriesNode">
 			<node name="expandTree" value="Show books"/>
 			<node name="collapseTree" value="Hide books"/>
+			<node name="booksCount" value="%s books">
+				<node condition="value 1" value="%s book"/>
+			</node>
 		</node>
 		<node name="bookNode">
 			<node name="read" value="Read local copy"/>

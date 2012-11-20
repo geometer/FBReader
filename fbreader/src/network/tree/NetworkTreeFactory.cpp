@@ -49,12 +49,10 @@ void NetworkTreeFactory::fillAuthorTree(NetworkTree *parent, const NetworkItem::
 	if (NetworkCatalogTree* catalogTree = zlobject_cast<NetworkCatalogTree*>(parent)) {
 		flags = catalogTree->item().getFlags();
 	}
-	NetworkSeriesTree::SummaryType seriesSummaryType = NetworkSeriesTree::AUTHORS;
 	NetworkBookTree::SummaryType booksSummaryType = NetworkBookTree::AUTHORS;
 	if ((parent->isInstanceOf(NetworkCatalogTree::TYPE_ID) &&
 			(flags & NetworkCatalogItem::FLAG_SHOW_AUTHOR) == 0) ||
 			 parent->isInstanceOf(NetworkAuthorTree::TYPE_ID)) {
-		seriesSummaryType = NetworkSeriesTree::BOOKS;
 		booksSummaryType = NetworkBookTree::NONE;
 	}
 
@@ -71,7 +69,7 @@ void NetworkTreeFactory::fillAuthorTree(NetworkTree *parent, const NetworkItem::
 					new NetworkBookTree(parent, *it, booksSummaryType);
 				} else {
 					if (seriesTree == 0 || seriesTree->title() != book.SeriesTitle) {
-						seriesTree = new NetworkSeriesTree(parent, book.SeriesTitle, seriesSummaryType);
+						seriesTree = new NetworkSeriesTree(parent, book.SeriesTitle);
 					}
 					new NetworkBookTree(seriesTree, *it, booksSummaryType);
 				}
@@ -98,7 +96,7 @@ void NetworkTreeFactory::fillAuthorTree(NetworkTree *parent, const NetworkItem::
 						new NetworkBookTree(parent, *it, booksSummaryType);
 					} else {
 						if (seriesTree == 0 || seriesTree->title() != seriesTitle) {
-							seriesTree = new NetworkSeriesTree(parent, seriesTitle, seriesSummaryType);
+							seriesTree = new NetworkSeriesTree(parent, seriesTitle);
 						}
 						new NetworkBookTree(seriesTree, *it, booksSummaryType);
 					}
