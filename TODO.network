@@ -15,6 +15,9 @@ RELEASE 0.99.4 (expected at 23 November):
     ** can't reproduce it since we don't use grouping by series, looks like it's a books on a edge of 20 books limit
   ** litres series: sort books as in server catalog
   ** litres: for books by author, do not show book author
+    DONE add support showAuthor=no in code
+    ** change links at authorsBy.php5?firstLetter=AA&from=BB&to=CC:
+      <type="application/litres+xml;type=books"/> -> " type="application/litres+xml;type=books;showAuthor=no"/>
 	** что будет, если во время загрузки litres item нажать на sign out?
 		** блокировать actions при взаимодействии с каталогом?
       ** нет, но продумать все возможные ответы сервера
@@ -35,9 +38,9 @@ RELEASE 0.99.4 (expected at 23 November):
       ** in case of network error: show in the same item a message like 'download failed, click to retry'
 
   ** move waiting icons to a separate component
-    ** implement a way to be safe about deleted nodes (async undefined behaviour)
-    	** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
-    	** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
+  ** implement a way to be safe about deleted nodes (async undefined behaviour)
+  	** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
+  	** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
 
 FUTURE RELEASES:
   ** replace error dialogs (with what?)

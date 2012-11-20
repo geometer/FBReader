@@ -117,6 +117,8 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(shared_ptr<ZLMimeType> type
 	std::string annotation, std::map<NetworkItem::URLType,std::string> urlMap,	bool dependsOnAccount) {
 	static const std::string TYPE = "type";
 	static const std::string GROUP_SERIES = "groupSeries";
+	static const std::string SHOW_AUTHOR = "showAuthor";
+	static const std::string NO = "no";
 
 	std::string litresType = type->getParameter(TYPE);
 
@@ -138,8 +140,11 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(shared_ptr<ZLMimeType> type
 		);
 	} else if (litresType == ZLMimeType::APPLICATION_LITRES_XML_BOOKS->getParameter(TYPE)) {
 		int flags = NetworkCatalogItem::FLAGS_DEFAULT;
-		if (type->getParameter(GROUP_SERIES) == "no") {
+		if (type->getParameter(GROUP_SERIES) == NO) {
 			flags &= ~NetworkCatalogItem::FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES;
+		}
+		if (type->getParameter(SHOW_AUTHOR) == NO) {
+			flags &= ~NetworkCatalogItem::FLAG_SHOW_AUTHOR;
 		}
 		return new LitResBooksFeedItem(
 			false,
