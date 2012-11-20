@@ -43,6 +43,7 @@ public:
 	const std::string &name() const;
 	virtual bool hasValue() const = 0;
 	virtual const std::string &value() const = 0;
+	virtual const std::string &value(int number) const = 0;
 	virtual const ZLResource &operator [] (const std::string &key) const = 0;
 	const ZLResource &operator [] (const ZLResourceKey &key) const;
 

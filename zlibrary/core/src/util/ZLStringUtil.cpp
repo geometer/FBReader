@@ -24,6 +24,8 @@
 
 #include "ZLStringUtil.h"
 
+const std::string ZLStringUtil::SPACE = " ";
+
 bool ZLStringUtil::stringEndsWith(const std::string &str, const std::string &end) {
 	return
 		(end.length() <= str.length()) &&
@@ -120,6 +122,12 @@ std::string ZLStringUtil::printf(const std::string &format, const std::string &a
 		return format;
 	}
 	return format.substr(0, index) + arg0 + format.substr(index + 2);
+}
+
+std::string ZLStringUtil::printf(const std::string &format, unsigned int n) {
+	std::string string;
+	ZLStringUtil::appendNumber(string, n);
+	return printf(format, string);
 }
 
 std::string ZLStringUtil::doubleToString(double value) {
