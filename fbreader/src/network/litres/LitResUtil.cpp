@@ -143,7 +143,7 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(shared_ptr<ZLMimeType> type
 		if (type->getParameter(GROUP_SERIES) == NO) {
 			flags &= ~NetworkCatalogItem::FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES;
 		}
-		if (type->getParameter(SHOW_AUTHOR) == NO) {
+		if (type->getParameter(SHOW_AUTHOR) == "false") {
 			flags &= ~NetworkCatalogItem::FLAG_SHOW_AUTHOR;
 		}
 		return new LitResBooksFeedItem(
