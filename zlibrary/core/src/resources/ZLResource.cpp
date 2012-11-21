@@ -25,12 +25,61 @@
 #include <ZLFile.h>
 #include <ZLXMLReader.h>
 #include <ZLibrary.h>
+#include <ZLStringUtil.h>
 
 #include "ZLResource.h"
 
 class ZLTreeResourcePtr;
 
 class ZLTreeResource : public ZLResource {
+
+private:
+	class Condition {
+	public:
+		virtual bool accepts(int number) = 0;
+	};
+
+	class ValueCondition : public Condition {
+	public:
+		ValueCondition(int value);
+		bool accepts(int number);
+
+	private:
+		const int myValue;
+	};
+
+	class RangeCondition : public Condition {
+	public:
+		RangeCondition(int min, int max);
+		bool accepts(int number);
+
+	private:
+		const int myMin;
+		const int myMax;
+	};
+
+	class ModRangeCondition : public Condition {
+	public:
+		ModRangeCondition(int min, int max, int base);
+		bool accepts(int number);
+
+	private:
+		const int myMin;
+		const int myMax;
+		const int myBase;
+	};
+
+	class ModCondition : public Condition {
+	public:
+		ModCondition(int mod, int base);
+		bool accepts(int number);
+
+	private:
+		const int myMod;
+		const int myBase;
+	};
+
+	static shared_ptr<Condition> parseCondition(std::string description);
 
 public:
 	static shared_ptr<ZLTreeResource> ourRoot;
@@ -45,6 +94,7 @@ private:
 	void setValue(const std::string &value);
 	bool hasValue() const;
 	const std::string &value() const;
+	const std::string &value(int number) const;
 
 public:
 	const ZLResource &operator [] (const std::string &key) const;
@@ -53,6 +103,9 @@ private:
 	bool myHasValue;
 	std::string myValue;
 	std::map<std::string,shared_ptr<ZLTreeResource> > myChildren;
+
+	typedef std::map<shared_ptr<Condition>,std::string> Conditionals;
+	Conditionals myConditionalValues;
 
 friend class ZLResourceTreeReader;
 };
@@ -87,6 +140,7 @@ public:
 private:
 	bool hasValue() const;
 	const std::string &value() const;
+	const std::string &value(int number) const;
 	const ZLMissingResource &operator [] (const std::string &key) const;
 };
 
@@ -130,6 +184,28 @@ void ZLTreeResource::loadData(const std::string &language) {
 	));
 }
 
+shared_ptr<ZLTreeResource::Condition> ZLTreeResource::parseCondition(std::string description) {
+	std::vector<std::string> parts = ZLStringUtil::split(description, ZLStringUtil::SPACE);
+	if (parts.empty()) {
+		return 0;
+	}
+	std::string condition = parts.at(0);
+	if (condition == "range" && parts.size() == 3) {
+		return new RangeCondition(ZLStringUtil::stringToInteger(parts.at(1)), ZLStringUtil::stringToInteger(parts.at(2)));
+	} else if (condition == "mod" && parts.size() == 3) {
+		return new ModCondition(ZLStringUtil::stringToInteger(parts.at(1)), ZLStringUtil::stringToInteger(parts.at(2)));
+	} else if (condition == "modrange" && parts.size() == 4) {
+		return new ModRangeCondition(
+			ZLStringUtil::stringToInteger(parts.at(1)),
+			ZLStringUtil::stringToInteger(parts.at(2)),
+			ZLStringUtil::stringToInteger(parts.at(3))
+		);
+	} else if (condition == "value" && parts.size() == 2) {
+		return new ValueCondition(ZLStringUtil::stringToInteger(parts.at(1)));
+	}
+	return 0;
+}
+
 void ZLTreeResource::buildTree() {
 	if (ourRoot.isNull()) {
 		ourRoot = new ZLTreeResource(std::string());
@@ -164,6 +240,17 @@ const std::string &ZLTreeResource::value() const {
 	return myHasValue ? myValue : ZLMissingResource::ourValue;
 }
 
+const std::string &ZLTreeResource::value(int number) const {
+	if (!myConditionalValues.empty()) {
+		for (Conditionals::const_iterator it = myConditionalValues.begin(); it != myConditionalValues.end(); ++it) {
+			if ((*it).first->accepts(number)) {
+				return (*it).second;
+			}
+		}
+	}
+	return myHasValue ? myValue : ZLMissingResource::ourValue;
+}
+
 const ZLResource &ZLTreeResource::operator [] (const std::string &key) const {
 	std::map<std::string,shared_ptr<ZLTreeResource> >::const_iterator it = myChildren.find(key);
 	if (it != myChildren.end()) {
@@ -191,6 +278,10 @@ const std::string &ZLMissingResource::value() const {
 	return ourValue;
 }
 
+const std::string &ZLMissingResource::value(int /*number*/) const {
+	return ourValue;
+}
+
 const ZLMissingResource &ZLMissingResource::operator [] (const std::string&) const {
 	return *this;
 }
@@ -204,26 +295,32 @@ static const std::string NODE = "node";
 void ZLResourceTreeReader::startElementHandler(const char *tag, const char **attributes) {
 	if (!myStack.empty() && NODE == tag) {
 		const char *name = attributeValue(attributes, "name");
-		if (name == 0) {
-			name = attributeValue(attributes, "condition");
-		}
+		const char *condition = attributeValue(attributes, "condition");
+		const char *value = attributeValue(attributes, "value");
+		shared_ptr<ZLTreeResource> peek = myStack.top();
 		if (name != 0) {
 			const std::string sName = name;
-			const char *value = attributeValue(attributes, "value");
-			shared_ptr<ZLTreeResource> node = myStack.top()->myChildren[sName];
+			shared_ptr<ZLTreeResource> node = peek->myChildren[sName];
 			if (node.isNull()) {
 				if (value != 0) {
 					node = new ZLTreeResource(sName, value);
 				} else {
 					node = new ZLTreeResource(sName);
 				}
-				myStack.top()->myChildren[sName] = node;
+				peek->myChildren[sName] = node;
 			} else {
 				if (value != 0) {
 					node->setValue(value);
+					node->myConditionalValues.clear();
 				}
 			}
 			myStack.push(node);
+		} else if (condition != 0 && value != 0) {
+			shared_ptr<ZLTreeResource::Condition> compiled = ZLTreeResource::parseCondition(condition);
+			if (!compiled.isNull()) {
+				peek->myConditionalValues[compiled] = value;
+			}
+			myStack.push(peek);
 		}
 	}
 }
@@ -232,4 +329,29 @@ void ZLResourceTreeReader::endElementHandler(const char *tag) {
 	if (!myStack.empty() && NODE == tag) {
 		myStack.pop();
 	}
+}
+
+ZLTreeResource::ValueCondition::ValueCondition(int value) : myValue(value) {}
+
+bool ZLTreeResource::ValueCondition::accepts(int number) {
+	return myValue == number;
+}
+
+ZLTreeResource::RangeCondition::RangeCondition(int min, int max) : myMin(min), myMax(max) {}
+
+bool ZLTreeResource::RangeCondition::accepts(int number) {
+	return myMin <= number && number <= myMax;
+}
+
+ZLTreeResource::ModRangeCondition::ModRangeCondition(int min, int max, int base) : myMin(min), myMax(max), myBase(base) {}
+
+bool ZLTreeResource::ModRangeCondition::accepts(int number) {
+	number = number % myBase;
+	return myMin <= number && number <= myMax;
+}
+
+ZLTreeResource::ModCondition::ModCondition(int mod, int base) : myMod(mod), myBase(base) {}
+
+bool ZLTreeResource::ModCondition::accepts(int number) {
+	return number % myBase == myMod;
 }

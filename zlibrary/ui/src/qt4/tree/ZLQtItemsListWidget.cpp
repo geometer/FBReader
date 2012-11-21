@@ -153,9 +153,7 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 	myTitle = new QLabel;
 	mySubtitle = new QLabel;
 
-	//myWaitingIcon = new ZLQtWaitingIconSelfRotating(QSize(WAITING_SIZE,WAITING_SIZE));
-	myWaitingIcon = new ZLQtWaitingSpinner(12, 6, 4, 10);
-
+	myWaitingIcon = new QtWaitingSpinner(12, 6, 4, 10);
 	myWaitingIcon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
 	myTitle->setWordWrap(true);
@@ -251,7 +249,7 @@ ZLTreeTitledNode *ZLQtTreeItem::getNode() const {
 	return myNode;
 }
 
-ZLQtWaitingIcon *ZLQtTreeItem::getWaitingIcon() const {
+QtWaitingSpinner *ZLQtTreeItem::getWaitingIcon() const {
 	return myWaitingIcon;
 }
 

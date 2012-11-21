@@ -19,10 +19,14 @@
 
 #include <QtCore/QDebug>
 #include <QtGui/QStyle>
+#include <QtGui/QCompleter>
+#include <QtGui/QStringListModel>
 
 #include <ZLibrary.h>
 #include <ZLFile.h>
 #include <ZLResource.h>
+#include <ZLOptions.h>
+#include <ZLStringUtil.h>
 
 #include "ZLQtSearchField.h"
 
@@ -32,10 +36,8 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 
 	setObjectName("search-field");
 
-	ZLQtWaitingSpinner *spinner = new ZLQtWaitingSpinner(12, 3, 2, 3, this);
-	spinner->setSpeed(2);
-	myWaitingIcon = spinner;
-	//myWaitingIcon = new ZLQtWaitingIconGif("spinner.gif", QSize(16,16), this);
+	myWaitingIcon = new QtWaitingSpinner(12, 3, 2, 3, this);
+	myWaitingIcon->setSpeed(2);
 
 	mySearchIcon = new QLabel(this);
 	static std::string iconPath = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter + "search_icon.png";
@@ -51,10 +53,66 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 
 	setStyleSheet(QString("QLineEdit { padding-left: %1px; } ").arg(mySearchIcon->sizeHint().width() + frameWidth));
 
+	QCompleter *completer = new QCompleter(this);
+	completer->setCaseSensitivity(Qt::CaseInsensitive);
+	completer->setCompletionMode(QCompleter::PopupCompletion);
+	this->setCompleter(completer);
+
+	loadSuggestions();
+	connect(this, SIGNAL(returnPressed()), this, SLOT(onReturnPressed()));
 }
 
-ZLQtWaitingIcon *ZLQtSearchField::getWaitingIcon() {
+QtWaitingSpinner *ZLQtSearchField::getWaitingIcon() {
 	return myWaitingIcon;
+}
+
+void ZLQtSearchField::onReturnPressed() {
+	if (text().isEmpty()) {
+		return;
+	}
+	if (mySuggestions.contains(text())) {
+		return;
+	}
+	mySuggestions.insert(text());
+	saveSuggestions();
+}
+
+void ZLQtSearchField::updateSuggestions() {
+	QStringListModel *model = new QStringListModel(mySuggestions.toList(), this);
+	this->completer()->setModel(model);
+}
+
+static const std::string SUGGESTION = "suggestion";
+static const std::string SUGGESTIONS = "suggestions";
+
+void ZLQtSearchField::loadSuggestions() {
+	mySuggestions.clear();
+	bool finished = false;
+	for (unsigned int i = 0; !finished; ++i) {
+		std::string suggestOptionName(SUGGESTION);
+		ZLStringUtil::appendNumber(suggestOptionName, i);
+		std::string suggestion = ZLStringOption(ZLCategoryKey::NETWORK, SUGGESTIONS, suggestOptionName, "").value();
+		if (suggestion.empty()) {
+			finished = true;
+		} else {
+			mySuggestions.insert(QString::fromStdString(suggestion));
+		}
+	}
+	updateSuggestions();
+}
+
+void ZLQtSearchField::saveSuggestions() {
+	QList<QString> suggestions = mySuggestions.values();
+	for (int i = 0; i < suggestions.size(); ++i) {
+		if (suggestions.at(i).isEmpty()) {
+			continue;
+		}
+		std::string suggestOptionName(SUGGESTION);
+		ZLStringUtil::appendNumber(suggestOptionName, (unsigned int)i);
+		ZLStringOption suggestion(ZLCategoryKey::NETWORK, SUGGESTIONS, suggestOptionName, "");
+		suggestion.setValue(suggestions.at(i).toStdString());
+	}
+	updateSuggestions();
 }
 
 void ZLQtSearchField::resizeEvent(QResizeEvent *ev) {

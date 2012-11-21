@@ -185,11 +185,8 @@ public:
 private:
 	const ZLTypeId &typeId() const;
 
-public:
-	enum SummaryType { AUTHORS, BOOKS };
-
 protected:
-	NetworkSeriesTree(NetworkTree *parent, const std::string &seriesTitle, SummaryType summaryType);
+	NetworkSeriesTree(NetworkTree *parent, const std::string &seriesTitle);
 
 friend class NetworkTreeFactory;
 
@@ -202,8 +199,6 @@ private:
 
 private:
 	std::string mySeriesTitle;
-	SummaryType mySummaryType;
-	mutable std::string mySummary;
 	mutable std::vector<shared_ptr<const ZLImage> > myImages;
 };
 
