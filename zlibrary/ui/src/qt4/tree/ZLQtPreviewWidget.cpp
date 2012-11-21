@@ -27,7 +27,7 @@
 #include <ZLNetworkManager.h>
 #include <ZLStringUtil.h>
 
-#include "ZLQtWaitingIcons.h"
+#include "QtWaitingSpinner.h"
 #include "../image/ZLQtImageUtils.h"
 
 #include "ZLQtPreviewWidget.h"
@@ -154,8 +154,7 @@ void ZLQtPreviewWidget::fillCatalog(const ZLTreeTitledNode *node) {
 
 void ZLQtPreviewWidget::fillWaitingIcon() {
 	setBasicLayout();
-	ZLQtWaitingIcon *icon = new ZLQtWaitingSpinner(12, 26, 8, 36);
-	//ZLQtWaitingIcon *icon = new ZLQtWaitingIconSelfRotating(QSize(120,120));
+	QtWaitingSpinner *icon = new QtWaitingSpinner(12, 26, 8, 36);
 	icon->start();
 	layout()->addWidget(icon);
 }

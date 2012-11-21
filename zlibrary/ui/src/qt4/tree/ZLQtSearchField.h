@@ -24,14 +24,14 @@
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 
-#include "ZLQtWaitingIcons.h"
+#include "QtWaitingSpinner.h"
 #include "ZLQtItemsListWidget.h"
 
 class ZLQtSearchField : public QLineEdit {
 	Q_OBJECT;
 public:	
 	ZLQtSearchField(QWidget *parent = 0);
-	ZLQtWaitingIcon *getWaitingIcon();
+	QtWaitingSpinner *getWaitingIcon();
 
 protected Q_SLOTS:
 	void onReturnPressed();
@@ -46,7 +46,7 @@ protected:
 
 private:
 	QLabel *mySearchIcon;
-	ZLQtWaitingIcon *myWaitingIcon;
+	QtWaitingSpinner *myWaitingIcon;
 	QSet<QString> mySuggestions;
 
 };

@@ -29,7 +29,7 @@
 
 #include <ZLTreeTitledNode.h>
 
-#include "ZLQtWaitingIcons.h"
+#include "QtWaitingSpinner.h"
 
 class ZLQtTreeItem;
 
@@ -63,7 +63,7 @@ private:
 	QList<ZLQtTreeItem*> myItems;
 };
 
-class ZLQtWaitingIcon;
+class QtWaitingSpinner;
 
 class ZLQtTreeItem : public QFrame {
 	Q_OBJECT
@@ -76,7 +76,7 @@ public:
 
 public:
 	ZLTreeTitledNode *getNode() const;
-	ZLQtWaitingIcon *getWaitingIcon() const;
+	QtWaitingSpinner *getWaitingIcon() const;
 
 protected:
 	void resizeEvent(QResizeEvent *);
@@ -100,7 +100,7 @@ private:
 	 QLabel *myIcon;
 	 QLabel *myTitle;
 	 QLabel *mySubtitle;
-	 ZLQtWaitingIcon *myWaitingIcon;
+	 QtWaitingSpinner *myWaitingIcon;
 	 bool myImageRequested;
 
 	 bool myIsActive;

@@ -37,7 +37,7 @@ RELEASE 0.99.4 (expected at 23 November):
       ** show waiting item (in a separate item)
       ** in case of network error: show in the same item a message like 'download failed, click to retry'
 
-  ** move waiting icons to a separate component
+  DONE move waiting icons to a separate component
   ** implement a way to be safe about deleted nodes (async undefined behaviour)
   	** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
   	** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
