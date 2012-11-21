@@ -20,6 +20,7 @@
 #ifndef __ZLQTSEARCHFIELD_H__
 #define __ZLQTSEARCHFIELD_H__
 
+#include <QtCore/QSet>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 
@@ -27,10 +28,18 @@
 #include "ZLQtItemsListWidget.h"
 
 class ZLQtSearchField : public QLineEdit {
-
+	Q_OBJECT;
 public:	
 	ZLQtSearchField(QWidget *parent = 0);
 	ZLQtWaitingIcon *getWaitingIcon();
+
+protected Q_SLOTS:
+	void onReturnPressed();
+
+protected:
+	void updateSuggestions();
+	void loadSuggestions();
+	void saveSuggestions();
 
 protected:
 	void resizeEvent(QResizeEvent *ev);
@@ -38,6 +47,7 @@ protected:
 private:
 	QLabel *mySearchIcon;
 	ZLQtWaitingIcon *myWaitingIcon;
+	QSet<QString> mySuggestions;
 
 };
 

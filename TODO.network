@@ -14,9 +14,9 @@ RELEASE 0.99.4 (expected at 23 November):
   ** litres 'top 50 by popularity' -- book duplicates?
     ** can't reproduce it since we don't use grouping by series, looks like it's a books on a edge of 20 books limit
   ** litres series: sort books as in server catalog
-  ** litres: for books by author, do not show book author
+  DONE litres: for books by author, do not show book author
     DONE add support showAuthor=no in code
-    ** change links at authorsBy.php5?firstLetter=AA&from=BB&to=CC:
+    DONE change links at authorsBy.php5?firstLetter=AA&from=BB&to=CC:
       <type="application/litres+xml;type=books"/> -> " type="application/litres+xml;type=books;showAuthor=no"/>
 	** что будет, если во время загрузки litres item нажать на sign out?
 		** блокировать actions при взаимодействии с каталогом?
@@ -25,7 +25,7 @@ RELEASE 0.99.4 (expected at 23 November):
   ** mark series cleanly
   	DONE for series groups: show number of books in the second string
 
-	** in search field show previous searches as suggestions
+	DONE in search field show previous searches as suggestions
 
   ** book pane:
       ** renew cover image if loaded
