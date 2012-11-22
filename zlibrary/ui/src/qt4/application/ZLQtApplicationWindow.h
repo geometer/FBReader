@@ -157,6 +157,9 @@ public:
 private Q_SLOTS:
 	void onActivated();
 
+public:
+	const std::string Id;
+
 private:
 	ZLToolbar::AbstractButtonItem &myItem;
 };

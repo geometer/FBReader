@@ -43,7 +43,7 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 	myApplicationWindow = new ZLQtApplicationWindow(application);
 }
 
-ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), myItem(item) {
+ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), Id(item.actionId()), myItem(item) {
 	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	const QString path = QString::fromUtf8(ZLFile(imagePrefix + myItem.iconName() + ".png").path().c_str());
 	QPixmap icon(path);

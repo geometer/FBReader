@@ -8,6 +8,4 @@
 	<menuButton id="showLibrary"/>
 	<separator/>
 	<menuButton id="preferences"/>
-	<separator/>
-	<button id="showHelp"/>
 </toolbar>
