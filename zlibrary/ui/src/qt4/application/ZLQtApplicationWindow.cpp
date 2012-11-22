@@ -63,7 +63,7 @@ void ZLQtToolBarAction::onActivated() {
 }
 
 void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
-	myActions[&button]->setChecked(button.isPressed());
+	myActions[button.actionId()]->setChecked(button.isPressed());
 }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
@@ -136,7 +136,7 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 		myWidthOption.setValue(width());
 		myHeightOption.setValue(height());
 	}
-	for (std::map<const ZLToolbar::Item*,QAction*>::iterator it = myActions.begin(); it != myActions.end(); ++it) {
+	for (std::map<std::string,QAction*>::iterator it = myActions.begin(); it != myActions.end(); ++it) {
 		if (it->second != 0) {
 			delete it->second;
 		}
@@ -246,7 +246,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	}
 
 	if (action != 0) {
-		myActions[&*item] = action;
+		myActions[item->actionId()] = action;
 	}
 }
 
@@ -263,7 +263,7 @@ void ZLQtRunPopupAction::onActivated() {
 }
 
 void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	QAction *action = myActions[&*item];
+	QAction *action = myActions[item->actionId()];
 	if (action != 0) {
 		action->setEnabled(enabled);
 		action->setVisible(visible);
@@ -290,10 +290,6 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool vi
 	}
 }
 
-void ZLQtApplicationWindow::processAllEvents() {
-	qApp->processEvents();
-}
-
 ZLViewWidget *ZLQtApplicationWindow::createViewWidget() {
 	ZLQtViewWidget *viewWidget = new ZLQtViewWidget(this, &application());
 	setCentralWidget(viewWidget->widget());
@@ -315,7 +311,9 @@ void ZLQtApplicationWindow::onRefresh() {
 		action->setVisible(application().isActionVisible(action->Id));
 		action->setEnabled(application().isActionEnabled(action->Id));
 	}
-	ZLApplicationWindow::refresh();
+	refreshToolbar(WINDOW_TOOLBAR);
+	refreshToolbar(FULLSCREEN_TOOLBAR);
+	qApp->processEvents();
 }
 
 void ZLQtApplicationWindow::grabAllKeys(bool) {

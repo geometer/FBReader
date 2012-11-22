@@ -67,13 +67,11 @@ protected:
 	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {};
 	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
 
-	virtual void refresh();
-	virtual void processAllEvents() = 0;
-
-private:
-	void refreshToolbar(ToolbarType type);
+	virtual void refresh() = 0;
 
 protected:
+	void refreshToolbar(ToolbarType type);
+
 	// TODO: change to pure virtual
 	virtual void present() {}
 

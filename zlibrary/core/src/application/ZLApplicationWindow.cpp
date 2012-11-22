@@ -47,12 +47,6 @@ void ZLApplicationWindow::initToolbar(ToolbarType type) {
 	}
 }
 
-void ZLApplicationWindow::refresh() {
-	refreshToolbar(WINDOW_TOOLBAR);
-	refreshToolbar(FULLSCREEN_TOOLBAR);
-	processAllEvents();
-}
-
 void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 	const ZLToolbar::ItemVector &items = application().toolbar(type).items();
 	bool canAddSeparator = false;

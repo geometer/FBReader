@@ -261,11 +261,21 @@ const std::string &ZLToolbar::ButtonGroup::defaultAction() const {
 ZLToolbar::SeparatorItem::SeparatorItem(ZLToolbar &toolbar, Type type) : Item(toolbar, type) {
 }
 
+const std::string &ZLToolbar::SeparatorItem::actionId() const {
+  static const std::string EMPTY;
+	return EMPTY;
+}
+
 ZLToolbar::ParameterItem::ParameterItem(ZLToolbar &toolbar, Type type, const std::string &actionId, const std::string &parameterId, int maxWidth) :
 	ActionItem(toolbar, type, actionId),
 	myParameterId(parameterId),
 	myMaxWidth(maxWidth),
 	mySymbolSet(SET_ANY) {
+}
+
+const std::string &ZLToolbar::ParameterItem::actionId() const {
+  static const std::string EMPTY;
+	return EMPTY;
 }
 
 const std::string &ZLToolbar::ParameterItem::parameterId() const {

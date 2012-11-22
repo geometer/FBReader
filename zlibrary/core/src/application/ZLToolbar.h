@@ -54,6 +54,7 @@ public:
 
 		Type type() const;
 		const ZLToolbar &toolbar() const;
+		virtual const std::string &actionId() const = 0;
 
 	private:
 		const ZLToolbar &myToolbar;
@@ -139,6 +140,7 @@ public:
 
 	public:
 		SeparatorItem(ZLToolbar &toolbar, Type type);
+		const std::string &actionId() const;
 	};
 
 	class ParameterItem : public ActionItem {
@@ -151,6 +153,7 @@ public:
 
 	public:
 		ParameterItem(ZLToolbar &toolbar, Type type, const std::string &actionId, const std::string &parameterId, int maxWidth);
+		const std::string &actionId() const;
 		const std::string &parameterId() const;
 		int maxWidth() const;
 

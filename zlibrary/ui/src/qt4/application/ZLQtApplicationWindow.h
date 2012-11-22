@@ -70,7 +70,6 @@ private:
 	void addToolbarItem(ZLToolbar::ItemPtr item);
 	void addAction(ZLQtAction *action);
 	void init();
-	void processAllEvents();
 	void close();
 
 	void refresh();
@@ -101,7 +100,7 @@ private:
 	QToolBar *toolbar(ToolbarType type) { return (type == WINDOW_TOOLBAR) ? myWindowToolBar : myFullscreenToolBar; }
 
 friend class ZLQtToolBarAction;
-	std::map<const ZLToolbar::Item*,QAction*> myActions;
+	std::map<std::string,QAction*> myActions;
 	std::map<const ZLToolbar::MenuButtonItem*,QToolButton*> myMenuButtons;
 	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
 	std::list<ZLQtAction*> myMenuActions;
