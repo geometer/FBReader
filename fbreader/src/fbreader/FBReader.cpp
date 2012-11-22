@@ -47,7 +47,6 @@
 #include "../libraryTree/LibraryView.h"
 #include "../network/NetworkLinkCollection.h"
 #include "../networkActions/NetworkOperationRunnable.h"
-#include "../networkTree/NetworkView.h"
 
 #include "../migration/migrate.h"
 
@@ -105,7 +104,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBookTextView = new BookTextView(*context());
 	myFootnoteView = new FootnoteView(*context());
 	myContentsView = new ContentsView(*context());
-	myNetworkLibraryView = new NetworkView(*context());
 	myLibraryByAuthorView = new LibraryByAuthorView(*context());
 	myLibraryByTagView = new LibraryByTagView(*context());
 	myRecentBooksPopupData = new RecentBooksPopupData();
@@ -429,9 +427,6 @@ void FBReader::setMode(ViewMode mode) {
 		}
 		case BOOKMARKS_MODE:
 			break;
-		case NETWORK_LIBRARY_MODE:
-			setView(myNetworkLibraryView);
-			break;
 		case UNDEFINED_MODE:
 		case ALL_MODES:
 			break;
@@ -552,14 +547,6 @@ shared_ptr<ProgramCollection> FBReader::webBrowserCollection() const {
 
 shared_ptr<Book> FBReader::currentBook() const {
 	return myModel->book();
-}
-
-void FBReader::invalidateNetworkView() {
-	((NetworkView &) *myNetworkLibraryView).invalidate();
-}
-
-void FBReader::invalidateAccountDependents() {
-	((NetworkView &) *myNetworkLibraryView).invalidateAccountDependents();
 }
 
 bool FBReader::showAuthDialog(const std::string &siteName, std::string &userName, std::string &password, const ZLResourceKey &errorKey) {

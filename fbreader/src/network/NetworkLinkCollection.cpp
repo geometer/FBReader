@@ -137,7 +137,7 @@ void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 	}
 	if (updated) {
 		NetworkDB::Instance().saveNetworkLink(link);
-		FBReader::Instance().invalidateNetworkView();
+		//FBReader::Instance().invalidateNetworkView();
 		//FBReader::Instance().sendRefresh();
 	}
 }

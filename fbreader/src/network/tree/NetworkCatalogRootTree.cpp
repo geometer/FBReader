@@ -211,7 +211,7 @@ void NetworkCatalogRootTree::PasswordRecoveryAction::run() {
 	}
 
 	PasswordRecoveryDialog::run(myManager);
-	FBReader::Instance().invalidateAccountDependents();
+	//FBReader::Instance().invalidateAccountDependents();
 	FBReader::Instance().refreshWindow();
 	NetworkLibrary::Instance().refresh();
 }
@@ -229,7 +229,7 @@ void NetworkCatalogRootTree::RegisterUserAction::run() {
 	}
 
 	RegisterUserDialog::run(myManager);
-	FBReader::Instance().invalidateAccountDependents();
+	//FBReader::Instance().invalidateAccountDependents();
 	FBReader::Instance().refreshWindow();
 	NetworkLibrary::Instance().refresh();
 }

@@ -41,6 +41,7 @@ void ShowNetworkTreeLibraryAction::run() {
 	NetworkLibrary::Instance().showDialog();
 }
 
+/*
 SearchOnNetworkAction::SearchOnNetworkAction() : ModeDependentAction(FBReader::NETWORK_LIBRARY_MODE) {
 }
 
@@ -176,3 +177,4 @@ void AdvancedSearchOnNetworkAction::appendQueryValue(std::string &query, const s
 	}
 	query.append(name).append("=\"").append(value).append("\"");
 }
+*/

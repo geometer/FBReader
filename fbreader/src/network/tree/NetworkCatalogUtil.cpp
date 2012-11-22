@@ -25,7 +25,7 @@
 
 #include "NetworkCatalogUtil.h"
 
-#include "../network/NetworkLinkCollection.h"
+#include "../NetworkLinkCollection.h"
 
 shared_ptr<const ZLImage> NetworkCatalogUtil::getImageByNetworkUrl(const std::string &url, const std::string &prefix) {
 	if (!ZLStringUtil::stringStartsWith(url, prefix)) {

@@ -22,7 +22,7 @@
 #include <ZLDialogManager.h>
 
 #include "../authentication/NetworkAuthenticationManager.h"
-#include "../../networkTree/NetworkCatalogUtil.h"
+#include "NetworkCatalogUtil.h"
 #include "../../networkActions/NetworkOperationRunnable.h"
 #include "../NetworkErrors.h"
 #include "NetworkTreeFactory.h"

@@ -25,7 +25,7 @@
 #include "NetworkTreeNodes.h"
 #include "NetworkTreeFactory.h"
 #include "NetworkLibrary.h"
-#include "../../networkTree/NetworkCatalogUtil.h"
+#include "NetworkCatalogUtil.h"
 
 #include "../../networkActions/NetworkActions.h"
 
