@@ -9,7 +9,6 @@
 	** now we use 77/77 px resizing for all covers
 
 RELEASE 0.99.4 (expected late November 2012):
-  ** bug: looks like litres login is broken
   ** bug: spinner icon
     between commits a6693fc41366e2559a9a605410578cc45cc30bd6 f035b2665a0812a2c706a502d344a10535b6b672
   ** bug: litres -> buy book -> authentication dialog -> cancel -> "no auth" message :(
@@ -28,6 +27,12 @@ RELEASE 0.99.4 (expected late November 2012):
 	** что будет, если во время загрузки litres item нажать на sign out?
 		** блокировать actions при взаимодействии с каталогом?
       ** нет, но продумать все возможные ответы сервера
+  ** implement async sign in operation
+  ** implement async loadPurchasedBooks 
+  ** implement a way to be safe about deleted nodes (async undefined behaviour)
+  	** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
+  	** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
+	** make litres initialize at network library start up (for retrieving account and showing topup account button)
 
   ** mark series cleanly
   	DONE for series groups: show number of books in the second string
@@ -45,9 +50,6 @@ RELEASE 0.99.4 (expected late November 2012):
       ** in case of network error: show in the same item a message like 'download failed, click to retry'
 
   DONE move waiting icons to a separate component
-  ** implement a way to be safe about deleted nodes (async undefined behaviour)
-  	** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
-  	** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
 
 FUTURE RELEASES:
   ** replace error dialogs (with what?)
@@ -63,8 +65,6 @@ FUTURE RELEASES:
   ** books conditional count
 		** where to put these resource?
 
-  ** implement async sign in operation
-  ** implement async loadPurchasedBooks 
   ** UI: implement support for recording each node's show parameters
 	  DONE save current node for preview widget
 	  ** save slider position for list widget
@@ -91,7 +91,6 @@ FUTURE RELEASES:
 	** implement async sign out operation
 	** implement async sign up operation
 	** implement async password recovery operation	
-	** make litres initialize at network library start up (for retrieving account and showing topup account button)
 
 	* BUG: preview widget - если поле отсутсвует, вместо него просто пустое пространство
 	?? закрывать окно библиотеки при нажатии кнопки "скачать"
