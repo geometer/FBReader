@@ -50,14 +50,18 @@ void QtWaitingSpinner::paintEvent(QPaintEvent */*ev*/) {
 
 void QtWaitingSpinner::start() {
 	this->show();
-	myTimer->start();
-	myCurrentCounter = 0;
+	if (!myTimer->isActive()) {
+		myTimer->start();
+		myCurrentCounter = 0;
+	}
 }
 
 void QtWaitingSpinner::finish() {
-	myTimer->stop();
-	myCurrentCounter = 0;
 	this->hide();
+	if (myTimer->isActive()) {
+		myTimer->stop();
+		myCurrentCounter = 0;
+	}
 }
 
 void QtWaitingSpinner::setLinesNumber(int linesNumber) {
