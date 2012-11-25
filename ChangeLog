@@ -1,3 +1,7 @@
+===== 0.99.4 (??, 2012) =====
+
+* Bulgarian hyphenation patterns, converted by Kaloyan Raev
+
 ===== 0.99.3 (November 18, 2012) =====
 
 * Code is compilable for MacOS X (10.5+) with Qt library
