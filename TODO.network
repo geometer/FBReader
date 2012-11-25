@@ -9,7 +9,7 @@
 	** now we use 77/77 px resizing for all covers
 
 RELEASE 0.99.4 (expected late November 2012):
-  ** bug: spinner icon
+  DONE bug: spinner icon
     between commits a6693fc41366e2559a9a605410578cc45cc30bd6 f035b2665a0812a2c706a502d344a10535b6b672
   ** bug: litres -> buy book -> authentication dialog -> cancel -> "no auth" message :(
   ** bug: litres -> authors -> Горький -> название книги "О культура%%%%"

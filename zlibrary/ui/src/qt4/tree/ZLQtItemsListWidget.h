@@ -78,10 +78,7 @@ public:
 	ZLTreeTitledNode *getNode() const;
 	QtWaitingSpinner *getWaitingIcon() const;
 
-protected:
-	void resizeEvent(QResizeEvent *);
-
-Q_SIGNALS:
+protected Q_SIGNALS:
 	void clicked(ZLQtTreeItem* item);
 	void doubleClicked(ZLQtTreeItem* item);
 
