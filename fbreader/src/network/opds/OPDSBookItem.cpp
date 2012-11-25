@@ -144,12 +144,12 @@ std::vector<NetworkBookItem::AuthorData> OPDSBookItem::getAuthors(OPDSEntry &ent
 		if (index != std::string::npos) {
 			std::string before = name.substr(0, index);
 			std::string after = name.substr(index + 1);
-			ZLStringUtil::stripWhiteSpaces(before);
-			ZLStringUtil::stripWhiteSpaces(after);
+			ZLUnicodeUtil::utf8Trim(before);
+			ZLUnicodeUtil::utf8Trim(after);
 			authorData.SortKey = before;
 			authorData.DisplayName = after + ' ' + before;
 		} else {
-			ZLStringUtil::stripWhiteSpaces(name);
+			ZLUnicodeUtil::utf8Trim(name);
 			index = name.rfind(' ');
 			authorData.SortKey = name.substr(index + 1);
 			authorData.DisplayName = name;

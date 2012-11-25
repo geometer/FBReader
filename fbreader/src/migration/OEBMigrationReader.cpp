@@ -17,7 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <ZLStringUtil.h>
 #include <ZLUnicodeUtil.h>
 #include <ZLXMLNamespace.h>
 
@@ -58,7 +57,7 @@ void OEBMigrationReader::endElementHandler(const char *tag) {
 	if (myDCMetadataTag == tagString) {
 		interrupt();
 	} else if (myReadSubject) {
-		ZLStringUtil::stripWhiteSpaces(myBuffer);
+		ZLUnicodeUtil::utf8Trim(myBuffer);
 		if (!myBuffer.empty()) {
 			if (!myTagList.empty()) {
 				myTagList += ',';

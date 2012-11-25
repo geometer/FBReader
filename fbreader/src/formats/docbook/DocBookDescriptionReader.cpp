@@ -18,7 +18,7 @@
  */
 
 #include <ZLInputStream.h>
-#include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "DocBookDescriptionReader.h"
 
@@ -92,9 +92,9 @@ void DocBookDescriptionReader::endElementHandler(int tag) {
 			myReadTitle = false;
 			break;
 		case _AUTHOR: {
-				ZLStringUtil::stripWhiteSpaces(myAuthorNames[0]);
-				ZLStringUtil::stripWhiteSpaces(myAuthorNames[1]);
-				ZLStringUtil::stripWhiteSpaces(myAuthorNames[2]);
+				ZLUnicodeUtil::utf8Trim(myAuthorNames[0]);
+				ZLUnicodeUtil::utf8Trim(myAuthorNames[1]);
+				ZLUnicodeUtil::utf8Trim(myAuthorNames[2]);
 				std::string fullName = myAuthorNames[0];
 				if (!fullName.empty() && !myAuthorNames[1].empty()) {
 					fullName += ' ';

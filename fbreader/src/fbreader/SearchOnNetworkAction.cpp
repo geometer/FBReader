@@ -18,6 +18,7 @@
  */
 
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLDialogManager.h>
 #include <ZLDialog.h>
 #include <ZLNetworkManager.h>
@@ -114,15 +115,15 @@ void AdvancedSearchOnNetworkAction::doSearch() {
 		searchDialog->acceptValues();
 		searchDialog.reset();
 		std::string titleAndSeriesPattern = titleAndSeriesOption.value();
-		ZLStringUtil::stripWhiteSpaces(titleAndSeriesPattern);
+		ZLUnicodeUtil::utf8Trim(titleAndSeriesPattern);
 		std::string authorPattern = authorOption.value();
-		ZLStringUtil::stripWhiteSpaces(authorPattern);
+		ZLUnicodeUtil::utf8Trim(authorPattern);
 		//std::string seriesPattern = seriesOption.value();
-		//ZLStringUtil::stripWhiteSpaces(seriesPattern);
+		//ZLUnicodeUtil::utf8Trim(seriesPattern);
 		std::string categoryPattern = categoryOption.value();
-		ZLStringUtil::stripWhiteSpaces(categoryPattern);
+		ZLUnicodeUtil::utf8Trim(categoryPattern);
 		std::string descriptionPattern = descriptionOption.value();
-		ZLStringUtil::stripWhiteSpaces(descriptionPattern);
+		ZLUnicodeUtil::utf8Trim(descriptionPattern);
 
 		if (!titleAndSeriesPattern.empty() ||
 				!authorPattern.empty() ||

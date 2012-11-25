@@ -20,6 +20,7 @@
 #include <cstdlib>
 
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "LitResBooksFeedParser.h"
 #include "LitResBookItem.h"
@@ -201,31 +202,31 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 		break;
 	case FIRST_NAME:
 		if (closed && TAG_FIRST_NAME == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myAuthorFirstName = myBuffer;
 		}
 		break;
 	case MIDDLE_NAME:
 		if (closed && TAG_MIDDLE_NAME == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myAuthorMiddleName = myBuffer;
 		}
 		break;
 	case LAST_NAME:
 		if (closed && TAG_LAST_NAME == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myAuthorLastName = myBuffer;
 		}
 		break;
 	case AUTHOR_ID:
 		if (closed && TAG_AUTHOR_ID == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myAuthorId = myBuffer;
 		}
 		break;
 	case GENRE:
 		if (closed && TAG_GENRE == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 
 			const std::map<std::string,shared_ptr<LitResGenre> > &genresMap =
 				LitResGenreMap::Instance().genresMap();
@@ -243,19 +244,19 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 		break;
 	case BOOK_TITLE:
 		if (closed && TAG_BOOK_TITLE == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myTitle = myBuffer;
 		}
 		break;
 	case ANNOTATION:
 		if (!closed) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			if (!myBuffer.empty()) {
 				mySummary.append(myBuffer);
 				mySummary.append(" ");
 			}
 		} else {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			mySummary.append(myBuffer);
 			int size = mySummary.size();
 			if (size > 0) {
@@ -277,13 +278,13 @@ void LitResBooksFeedParser::processState(const std::string &tag, bool closed, co
 		break;
 	case DATE:
 		if (closed && TAG_DATE == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myDate = myBuffer;
 		}
 		break;
 	case LANGUAGE:
 		if (closed && TAG_LANGUAGE == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myLanguage = myBuffer;
 		}
 		break;
