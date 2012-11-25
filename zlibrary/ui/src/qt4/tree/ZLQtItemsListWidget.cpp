@@ -159,23 +159,15 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 	myTitle->setWordWrap(true);
 	mySubtitle->setWordWrap(true);
 
-//	QSizePolicy policy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-//	//policy.setHorizontalStretch(1);
-//	myTitle->setSizePolicy(policy);
-//	mySubtitle->setSizePolicy(policy);
-
 	titlesLayout->addWidget(myTitle);
 	titlesLayout->addWidget(mySubtitle);
-	//titlesLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
 	infoLayout->addWidget(myIcon, 0);
 	infoLayout->addLayout(titlesLayout, 1);
 	mainLayout->addLayout(infoLayout, 1);
-	//mainLayout->addStretch();
 	mainLayout->addWidget(myWaitingIcon, 0, Qt::AlignRight);
 	setLayout(mainLayout);
 
-	//setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 	setFixedHeight(ITEM_HEIGHT);
 
 	clear();
