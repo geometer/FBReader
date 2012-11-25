@@ -47,13 +47,13 @@ bool ZLStringUtil::stringStartsWith(const std::string &str, const std::string &s
 }
 
 bool ZLStringUtil::isDigit(char c) {
-	return (c >= '0') && (c <= '9');
+	return c >= '0' && c <= '9';
 }
 
-bool ZLStringUtil::isLatinLetter(char c){
+bool ZLStringUtil::isLatinLetter(char c) {
 	return
-		((c >= 'A') && (c <= 'Z')) ||
-		((c >= 'a') && (c <= 'z'));
+		(c >= 'A' && c <= 'Z') ||
+		(c >= 'a' && c <= 'z');
 }
 
 
