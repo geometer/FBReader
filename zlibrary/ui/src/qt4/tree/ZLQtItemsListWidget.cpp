@@ -47,7 +47,6 @@ static const int ITEM_SIZE = 77;
 static const int WAITING_SIZE = 40;
 
 ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent), myLayout(0) {
-
 	myContainerWidget = new QWidget;
 	myContainerWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 
@@ -60,7 +59,6 @@ ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent),
 	setFrameShape(QFrame::NoFrame);
 	setWidgetResizable(true);
 	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
-
 }
 
 void ZLQtItemsListWidget::clear() {
@@ -147,6 +145,8 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 	setActive(false);
 
 	QHBoxLayout *mainLayout = new QHBoxLayout;
+	QHBoxLayout *infoLayout = new QHBoxLayout;
+	infoLayout->setAlignment(Qt::AlignLeft);
 	QVBoxLayout *titlesLayout = new QVBoxLayout;
 
 	myIcon = new QLabel;
@@ -166,27 +166,19 @@ ZLQtTreeItem::ZLQtTreeItem(QWidget *parent) : QFrame(parent), myNode(0), myImage
 
 	titlesLayout->addWidget(myTitle);
 	titlesLayout->addWidget(mySubtitle);
-	titlesLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+	//titlesLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 
-	mainLayout->addWidget(myIcon);
-	mainLayout->addLayout(titlesLayout);
-	mainLayout->addStretch();
-	mainLayout->addWidget(myWaitingIcon, 1);
+	infoLayout->addWidget(myIcon, 0);
+	infoLayout->addLayout(titlesLayout, 1);
+	mainLayout->addLayout(infoLayout, 1);
+	//mainLayout->addStretch();
+	mainLayout->addWidget(myWaitingIcon, 0, Qt::AlignRight);
 	setLayout(mainLayout);
 
-	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
+	//setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Fixed);
 	setFixedHeight(ITEM_HEIGHT);
 
 	clear();
-}
-
-void ZLQtTreeItem::resizeEvent(QResizeEvent *ev) {
-	int maxWidth = ev->size().width() - WAITING_SIZE - ITEM_SIZE - 40;
-	if (maxWidth <= 0) {
-		return;
-	}
-	myTitle->setFixedWidth(maxWidth);
-	mySubtitle->setFixedWidth(maxWidth);
 }
 
 void ZLQtTreeItem::fill(ZLTreeTitledNode *node) {
@@ -223,8 +215,8 @@ void ZLQtTreeItem::clear() {
 	myIcon->setPixmap(pixmap);
 
 	myWaitingIcon->finish();
-
 }
+
 void ZLQtTreeItem::setActive(bool active) {
 	myIsActive = active;
 
@@ -262,61 +254,10 @@ void ZLQtTreeItem::mouseDoubleClickEvent(QMouseEvent *) {
 }
 
 void ZLQtTreeItem::paintEvent(QPaintEvent *event) {
-//	QString title = myNode ? QString::fromStdString(myNode->title()) : "not filled";
-//	qDebug() << Q_FUNC_INFO<< title;
 	if (myNode && !myImageRequested) {
-		//deferred loading of cover, asking on paint event
 		myNode->image();
 		myImageRequested = true;
 		fillImage();
 	}
 	QFrame::paintEvent(event);
-	return;
-//	QColor mainColor = isActive ? QColor::fromHsv(0, 0, 0.75 * 255) : QColor::fromHsv(0, 0, 0.95 * 255);
-//	int h = mainColor.hue();
-//	int s = mainColor.saturation();
-//	int v = mainColor.value();
-//	QColor shadowColor1 = QColor::fromHsv(h,s,v - 23); //these numbers are getted from experiments with Photo editor
-//	QColor shadowColor2 = QColor::fromHsv(h,s,v - 43);
-//	QColor shadowColor3 = QColor::fromHsv(h,s,v - 71);
-//	QColor shadowColor4 = QColor::fromHsv(h,s,v - 117);
-//	QColor shadowColor5 = QColor::fromHsv(h,s,v - 155);
-
-//	QColor shadowUpColor = QColor::fromHsv(h,s,v - 114);
-
-
-
-//	//QColor shadow(196,193,189); //TODO not hardcode the color automatically
-
-//	QPainter painter(this);
-//	QRect rect = this->rect();
-
-//	//painter.setBrush(mainColor);
-//	painter.fillRect(rect, mainColor);
-
-//	painter.setPen(shadowColor5);
-//	painter.drawLine(rect.left() + 2, rect.bottom(), rect.right(), rect.bottom());
-
-//	painter.setPen(shadowColor4);
-//	//painter.drawLine(rect.left() + 2, rect.top() + 1, rect.right() - 2, rect.top() + 1);
-
-//	painter.setPen(shadowColor3);
-//	painter.drawLine(rect.left() + 4, rect.bottom() - 1, rect.right(), rect.bottom() - 1);
-
-//	//painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
-
-//	painter.drawLine(rect.right(), rect.top() + 2, rect.right(), rect.bottom() - 1);
-//	painter.drawLine(rect.left() + 1, rect.top(), rect.left() + 1, rect.bottom() - 1);
-
-//	painter.setPen(shadowColor2);
-//	painter.drawLine(rect.left(), rect.top() + 1, rect.left(), rect.bottom() - 2);
-//	painter.drawLine(rect.right() - 1, rect.top() + 2, rect.right() - 1, rect.bottom() - 2);
-
-//	painter.setPen(shadowColor1);
-//	painter.drawLine(rect.left() + 5, rect.bottom() - 2, rect.right() - 2, rect.bottom() - 2);
-//	painter.drawLine(rect.right() - 2, rect.top() + 2, rect.right() - 2, rect.bottom() - 2);
-
-//	painter.setPen(shadowUpColor);
-	//	painter.drawLine(rect.left() + 2, rect.top(), rect.right() - 2, rect.top());
-
 }
