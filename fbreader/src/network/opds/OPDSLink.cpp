@@ -20,6 +20,7 @@
 #include <algorithm>
 
 #include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLNetworkUtil.h>
 #include <ZLNetworkManager.h>
 
@@ -54,7 +55,7 @@ void OPDSLink::AdvancedSearch::addSubQuery(std::string &query, const std::string
 		do {
 			end = value.find(' ', start);
 			std::string ss = value.substr(start, end - start);
-			ZLStringUtil::stripWhiteSpaces(ss);
+			ZLUnicodeUtil::utf8Trim(ss);
 			if (!ss.empty()) {
 				if (!query.empty()) {
 					query.append("+");
@@ -66,7 +67,7 @@ void OPDSLink::AdvancedSearch::addSubQuery(std::string &query, const std::string
 		} while (end != std::string::npos);
 	} else if (myType == "quoted") {
 		std::string encodedValue = value;
-		ZLStringUtil::stripWhiteSpaces(encodedValue);
+		ZLUnicodeUtil::utf8Trim(encodedValue);
 
 		if (encodedValue.empty()) {
 			return;

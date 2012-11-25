@@ -86,7 +86,7 @@ void LitResGenreMap::fillGenreIds(const std::string &tag, std::vector<std::strin
 	do {
 		int index2 = tag.find(' ', index);
 		std::string word = tag.substr(index, index2 - index);
-		ZLStringUtil::stripWhiteSpaces(word);
+		ZLUnicodeUtil::utf8Trim(word);
 		if (!word.empty()) {
 			words.push_back(ZLUnicodeUtil::toLower(word));
 		}

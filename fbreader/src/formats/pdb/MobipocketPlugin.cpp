@@ -20,7 +20,7 @@
 #include <ZLFile.h>
 #include <ZLInputStream.h>
 #include <ZLEncodingConverter.h>
-#include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLLanguageUtil.h>
 #include <ZLImage.h>
 #include <ZLFileImage.h>
@@ -110,11 +110,11 @@ bool MobipocketPlugin::readMetaInfo(Book &book) const {
 							if (index != -1) {
 								std::string part0 = value.substr(0, index);
 								std::string part1 = value.substr(index + 1);
-								ZLStringUtil::stripWhiteSpaces(part0);
-								ZLStringUtil::stripWhiteSpaces(part1);
+								ZLUnicodeUtil::utf8Trim(part0);
+								ZLUnicodeUtil::utf8Trim(part1);
 								value = part1 + ' ' + part0;
 							} else {
-								ZLStringUtil::stripWhiteSpaces(value);
+								ZLUnicodeUtil::utf8Trim(value);
 							}
 							book.addAuthor(value);
 							break;

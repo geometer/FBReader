@@ -19,7 +19,7 @@
 
 #include <cstdlib>
 
-#include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 #include <ZLXMLNamespace.h>
 
 #include "OPDSXMLParser.h"
@@ -228,7 +228,7 @@ void OPDSXMLParser::startElementHandler(const char *tag, const char **attributes
 }
 
 void OPDSXMLParser::endElementHandler(const char *tag) {
-	ZLStringUtil::stripWhiteSpaces(myBuffer);
+	ZLUnicodeUtil::utf8Trim(myBuffer);
 
 	switch (myState) {
 		case START:

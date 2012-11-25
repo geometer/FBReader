@@ -78,7 +78,7 @@ public:
 	ZLTreeTitledNode *getNode() const;
 	QtWaitingSpinner *getWaitingIcon() const;
 
-protected Q_SIGNALS:
+Q_SIGNALS:
 	void clicked(ZLQtTreeItem* item);
 	void doubleClicked(ZLQtTreeItem* item);
 

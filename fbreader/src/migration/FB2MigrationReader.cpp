@@ -20,7 +20,7 @@
 #include <cstdlib>
 
 #include <ZLInputStream.h>
-#include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "FB2MigrationReader.h"
 #include "../formats/fb2/FB2TagManager.h"
@@ -52,7 +52,7 @@ void FB2MigrationReader::startElementHandler(int tag, const char **attributes) {
 				const char *name = attributeValue(attributes, "name");
 				if (name != 0) {
 					std::string seriesTitle = name;
-					ZLStringUtil::stripWhiteSpaces(seriesTitle);
+					ZLUnicodeUtil::utf8Trim(seriesTitle);
 					myInfo.SeriesTitleOption.setValue(seriesTitle);
 					const char *number = attributeValue(attributes, "number");
 					myInfo.IndexInSeriesOption.setValue((number != 0) ? std::string(number) : std::string());
@@ -71,7 +71,7 @@ void FB2MigrationReader::endElementHandler(int tag) {
 			break;
 		case _GENRE:
 			if (myReadState == READ_GENRE) {
-				ZLStringUtil::stripWhiteSpaces(myGenreBuffer);
+				ZLUnicodeUtil::utf8Trim(myGenreBuffer);
 				if (!myGenreBuffer.empty()) {
 					const std::vector<std::string> &tags =
 						FB2TagManager::Instance().humanReadableTags(myGenreBuffer);

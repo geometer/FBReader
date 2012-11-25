@@ -19,7 +19,7 @@
 
 #include <cstdlib>
 
-#include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "../NetworkLink.h"
 #include "LitResGenre.h"
@@ -81,9 +81,9 @@ void LitResAuthorsParser::processState(const std::string &tag, bool closed, cons
 			litresAuthor.FirstName = myAuthorFirstName;
 			litresAuthor.MiddleName = myAuthorMiddleName;
 			litresAuthor.LastName = myAuthorLastName;
-			litresAuthor.SortKey = ZLStringUtil::replaceAll(myAuthorLastName, "ё", "е"); //TODO change to unicode values
-			myAuthors.push_back(litresAuthor);
+			litresAuthor.SortKey = ZLUnicodeUtil::toLower(myAuthorLastName);
 
+			myAuthors.push_back(litresAuthor);
 			myAuthorId.clear();
 			myAuthorDisplayName.clear();
 			myAuthorFirstName.clear();
@@ -95,25 +95,25 @@ void LitResAuthorsParser::processState(const std::string &tag, bool closed, cons
 		break;
 	case MAIN:
 		if (closed && TAG_MAIN == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myAuthorDisplayName = myBuffer;
 		}
 		break;
 	case FIRST_NAME:
 		if (closed && TAG_FIRST_NAME == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myAuthorFirstName = myBuffer;
 		}
 		break;
 	case MIDDLE_NAME:
 		if (closed && TAG_MIDDLE_NAME == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myAuthorMiddleName = myBuffer;
 		}
 		break;
 	case LAST_NAME:
 		if (closed && TAG_LAST_NAME == tag) {
-			ZLStringUtil::stripWhiteSpaces(myBuffer);
+			ZLUnicodeUtil::utf8Trim(myBuffer);
 			myAuthorLastName = myBuffer;
 		}
 		break;

@@ -20,7 +20,7 @@
 #include <set>
 #include <algorithm>
 
-#include <ZLStringUtil.h>
+#include <ZLUnicodeUtil.h>
 
 #include "Tag.h"
 
@@ -49,13 +49,13 @@ shared_ptr<Tag> Tag::getTag(const std::string &name, shared_ptr<Tag> parent, int
 
 shared_ptr<Tag> Tag::getTagByFullName(const std::string &fullName) {
 	std::string tag = fullName;
-	ZLStringUtil::stripWhiteSpaces(tag);
+	ZLUnicodeUtil::utf8Trim(tag);
 	std::size_t index = tag.rfind(DELIMITER);
 	if (index == std::string::npos) {
 		return getTag(tag);
 	} else {
 		std::string lastName = tag.substr(index + 1);
-		ZLStringUtil::stripWhiteSpaces(lastName);
+		ZLUnicodeUtil::utf8Trim(lastName);
 		return getTag(lastName, getTagByFullName(tag.substr(0, index)));
 	}
 }
