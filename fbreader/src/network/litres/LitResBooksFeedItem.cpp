@@ -116,7 +116,7 @@ shared_ptr<ZLNetworkRequest> LitResBooksFeedItem::getRequest(NetworkItem::List &
 }
 
 std::string LitResBooksFeedItem::withLimitParameters(std::string query, const LoadingState &state) {
-	static const unsigned int ITEMS_PER_PAGE = 20;
+	static const unsigned int ITEMS_PER_PAGE = 40;
 	unsigned int startItemNumber = (unsigned int)state.CurrentPage * ITEMS_PER_PAGE;
 	std::string params;
 	ZLStringUtil::appendNumber(params, startItemNumber);

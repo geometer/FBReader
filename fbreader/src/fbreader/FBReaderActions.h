@@ -80,8 +80,6 @@ public:
 	static const std::string OPEN_SELECTED_TEXT_IN_DICTIONARY;
 	static const std::string GOTO_PAGE_NUMBER;
 	static const std::string GOTO_PAGE_NUMBER_WITH_PARAMETER;
-	static const std::string SEARCH_ON_NETWORK;
-	static const std::string ADVANCED_SEARCH_ON_NETWORK;
 	static const std::string ORGANIZE_BOOKS_BY_AUTHOR;
 	static const std::string ORGANIZE_BOOKS_BY_TAG;
 	static const std::string FILTER_LIBRARY;
@@ -375,7 +373,7 @@ public:
 	void run();
 };
 
-class SearchOnNetworkAction : public ModeDependentAction {
+class SearchOnNetworkAction : ZLApplication::Action {
 
 public:
 	SearchOnNetworkAction();

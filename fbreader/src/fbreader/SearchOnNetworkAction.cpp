@@ -43,7 +43,7 @@ void ShowNetworkTreeLibraryAction::run() {
 }
 
 /*
-SearchOnNetworkAction::SearchOnNetworkAction() : ModeDependentAction(FBReader::NETWORK_LIBRARY_MODE) {
+SearchOnNetworkAction::SearchOnNetworkAction() {
 }
 
 void SearchOnNetworkAction::run() {
@@ -92,7 +92,6 @@ void SimpleSearchOnNetworkAction::doSearch() {
 		SearchResult::setLastSearchResult(summary, result);
 	}
 
-	fbreader.invalidateNetworkView();
 	fbreader.refreshWindow();
 }
 
@@ -146,7 +145,6 @@ void AdvancedSearchOnNetworkAction::doSearch() {
 				SearchResult::setLastSearchResult(summary, result);
 			}
 
-			FBReader::Instance().invalidateNetworkView();
 			FBReader::Instance().refreshWindow();
 		}
 	}
