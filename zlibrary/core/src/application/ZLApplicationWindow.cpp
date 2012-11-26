@@ -35,20 +35,19 @@ ZLApplicationWindow::ZLApplicationWindow(ZLApplication *application) : myApplica
 void ZLApplicationWindow::init() {
 	myApplication->myViewWidget = createViewWidget();
 
-	initToolbar(WINDOW_TOOLBAR);
-	initToolbar(FULLSCREEN_TOOLBAR);
+	initToolbar();
 	initMenu();
 }
 
-void ZLApplicationWindow::initToolbar(ToolbarType type) {
-	const ZLToolbar::ItemVector &toolbarItems = myApplication->toolbar(type).items();
+void ZLApplicationWindow::initToolbar() {
+	const ZLToolbar::ItemVector &toolbarItems = myApplication->toolbar().items();
 	for (ZLToolbar::ItemVector::const_iterator it = toolbarItems.begin(); it != toolbarItems.end(); ++it) {
 		addToolbarItem(*it);
 	}
 }
 
-void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
-	const ZLToolbar::ItemVector &items = application().toolbar(type).items();
+void ZLApplicationWindow::refreshToolbar() {
+	const ZLToolbar::ItemVector &items = application().toolbar().items();
 	bool canAddSeparator = false;
 	ZLToolbar::ItemPtr lastSeparator = 0;
 	for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
@@ -85,16 +84,6 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 	if (!lastSeparator.isNull()) {
 		setToolbarItemState(lastSeparator, false, true);
 	}
-}
-
-ZLApplicationWindow::ToolbarType ZLApplicationWindow::type(const ZLToolbar::Item &item) const {
-	return
-		(&item.toolbar() == &application().toolbar(WINDOW_TOOLBAR)) ?
-			WINDOW_TOOLBAR : FULLSCREEN_TOOLBAR;
-}
-
-bool ZLApplicationWindow::hasFullscreenToolbar() const {
-	return !application().toolbar(FULLSCREEN_TOOLBAR).items().empty();
 }
 
 void ZLApplicationWindow::onButtonPress(const ZLToolbar::AbstractButtonItem &button) {

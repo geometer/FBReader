@@ -47,20 +47,13 @@ protected:
 
 	virtual void init();
 
-	enum ToolbarType {
-		WINDOW_TOOLBAR,
-		FULLSCREEN_TOOLBAR
-	};
-
 private:
-	void initToolbar(ToolbarType type);
+	void initToolbar();
 
 protected:
 	// TODO: change to pure virtual
 	virtual void initMenu() = 0;
 
-	ToolbarType type(const ZLToolbar::Item &item) const;
-	bool hasFullscreenToolbar() const;
 	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);
 	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
 	// TODO: change to pure virtual
@@ -69,7 +62,7 @@ protected:
 	virtual void refresh() = 0;
 
 protected:
-	void refreshToolbar(ToolbarType type);
+	void refreshToolbar();
 
 	// TODO: change to pure virtual
 	virtual void present() {}

@@ -40,30 +40,21 @@ private:
 	ZLToolbar &myToolbar;
 };
 
-void ZLApplication::createToolbar(int index) {
-	toolbar(index);
-	std::string fileName = ZLibrary::DefaultFilesPathPrefix();
-	const bool isWindowToolbar = index == ZLApplicationWindow::WINDOW_TOOLBAR;
-	fileName += isWindowToolbar ? "toolbar.xml" : "fullscreen_toolbar.xml";
-	ZLToolbarCreator(isWindowToolbar ? *myToolbar : *myFullscreenToolbar).readDocument(ZLFile(fileName));
+void ZLApplication::createToolbar() {
+	toolbar();
+	std::string fileName = ZLibrary::DefaultFilesPathPrefix() + "toolbar.xml";
+	ZLToolbarCreator(*myToolbar).readDocument(ZLFile(fileName));
 }
 
-const ZLToolbar &ZLApplication::toolbar(int index) const {
-	if (index == ZLApplicationWindow::WINDOW_TOOLBAR) {
-		if (myToolbar.isNull()) {
-			myToolbar = new ZLToolbar();
-		}
-		return *myToolbar;
-	} else {
-		if (myFullscreenToolbar.isNull()) {
-			myFullscreenToolbar = new ZLToolbar();
-		}
-		return *myFullscreenToolbar;
+const ZLToolbar &ZLApplication::toolbar() const {
+	if (myToolbar.isNull()) {
+		myToolbar = new ZLToolbar();
 	}
+	return *myToolbar;
 }
 
 void ZLApplication::registerPopupData(const std::string &actionId, shared_ptr<ZLPopupData> popupData) {
-	toolbar(ZLApplicationWindow::WINDOW_TOOLBAR);
+	toolbar();
 	myToolbar->registerPopupData(actionId, popupData);
 }
 

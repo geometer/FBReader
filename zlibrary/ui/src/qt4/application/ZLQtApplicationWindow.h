@@ -93,10 +93,8 @@ private Q_SLOTS:
 	void onRefresh();
 
 private:
-	QToolBar *myWindowToolBar;
-	QToolBar *myFullscreenToolBar;
+	QToolBar *myToolBar;
 	QDockWidget *myDocWidget;
-	QToolBar *toolbar(ToolbarType type) { return (type == WINDOW_TOOLBAR) ? myWindowToolBar : myFullscreenToolBar; }
 
 friend class ZLQtToolBarAction;
 	std::map<std::string,QAction*> myActions;

@@ -61,7 +61,6 @@ void ZLQtToolBarAction::onActivated() {
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	ZLDesktopApplicationWindow(application),
-	myFullscreenToolBar(0),
 	myDocWidget(0),
 	myFullScreen(false),
 	myWasMaximized(false),
@@ -71,18 +70,12 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	QPixmap icon(iconFileName.c_str());
 	setWindowIcon(icon);
 
-	myWindowToolBar = new QToolBar(this);
-	myWindowToolBar->setFocusPolicy(Qt::NoFocus);
-	myWindowToolBar->setMovable(false);
-	addToolBar(myWindowToolBar);
-	myWindowToolBar->setIconSize(QSize(32, 32));
-
-	if (hasFullscreenToolbar()) {
-		myFullscreenToolBar = new QToolBar();
-		myFullscreenToolBar->setMovable(false);
-		myFullscreenToolBar->setIconSize(QSize(32, 32));
-		myFullscreenToolBar->hide();
-	}
+	setUnifiedTitleAndToolBarOnMac(true);
+	myToolBar = new QToolBar(this);
+	myToolBar->setFocusPolicy(Qt::NoFocus);
+	myToolBar->setMovable(false);
+	addToolBar(myToolBar);
+	myToolBar->setIconSize(QSize(32, 32));
 
 	resize(myWidthOption.value(), myHeightOption.value());
 	move(myXOption.value(), myYOption.value());
@@ -97,8 +90,8 @@ void ZLQtApplicationWindow::initMenu() {
 
 void ZLQtApplicationWindow::init() {
 	ZLDesktopApplicationWindow::init();
-	if (application().toolbar(WINDOW_TOOLBAR).items().empty()) {
-		myWindowToolBar->hide();
+	if (application().toolbar().items().empty()) {
+		myToolBar->hide();
 	}
 	switch (myWindowStateOption.value()) {
 		case NORMAL:
@@ -143,30 +136,17 @@ void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
 	myFullScreen = fullscreen;
 	if (myFullScreen) {
 		myWasMaximized = isMaximized();
-		myWindowToolBar->hide();
+		myToolBar->hide();
 		showFullScreen();
-		if (myFullscreenToolBar != 0) {
-			if (myDocWidget == 0) {
-				myDocWidget = new QDockWidget(this);
-				myDocWidget->setWidget(myFullscreenToolBar);
-				myDocWidget->setFloating(true);
-				myDocWidget->setAllowedAreas(Qt::NoDockWidgetArea);
-			}
-			myDocWidget->show();
-			myFullscreenToolBar->show();
-			myDocWidget->setMinimumSize(myDocWidget->size());
-			myDocWidget->setMaximumSize(myDocWidget->size());
-		}
 	} else {
-		if (!application().toolbar(WINDOW_TOOLBAR).items().empty()) {
-			myWindowToolBar->show();
+		if (!application().toolbar().items().empty()) {
+			myToolBar->show();
 		}
 		showNormal();
 		if (myWasMaximized) {
 			showMaximized();
 		}
 		if (myDocWidget != 0) {
-			//myFullscreenToolBar->hide();
 			myDocWidget->hide();
 		}
 	}
@@ -199,23 +179,22 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 }
 
 void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
-	QToolBar *tb = toolbar(type(*item));
 	QAction *action = 0;
 
 	switch (item->type()) {
 		case ZLToolbar::Item::PLAIN_BUTTON:
 			action = new ZLQtToolBarAction(this, (ZLToolbar::AbstractButtonItem&)*item);
-			tb->addAction(action);
+			myToolBar->addAction(action);
 			break;
 		case ZLToolbar::Item::MENU_BUTTON:
 		{
 			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
-			QToolButton *button = new QToolButton(tb);
+			QToolButton *button = new QToolButton(myToolBar);
 			button->setFocusPolicy(Qt::NoFocus);
 			button->setDefaultAction(new ZLQtToolBarAction(this, buttonItem));
 			button->setMenu(new QMenu(button));
 			button->setPopupMode(QToolButton::MenuButtonPopup);
-			action = tb->addWidget(button);
+			action = myToolBar->addWidget(button);
 			myMenuButtons[&buttonItem] = button;
 			shared_ptr<ZLPopupData> popupData = buttonItem.popupData();
 			myPopupIdMap[&buttonItem] =
@@ -223,7 +202,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			break;
 		}
 		case ZLToolbar::Item::SEPARATOR:
-			action = tb->addSeparator();
+			action = myToolBar->addSeparator();
 			break;
 	}
 
@@ -293,8 +272,7 @@ void ZLQtApplicationWindow::onRefresh() {
 		action->setVisible(application().isActionVisible(action->Id));
 		action->setEnabled(application().isActionEnabled(action->Id));
 	}
-	refreshToolbar(WINDOW_TOOLBAR);
-	refreshToolbar(FULLSCREEN_TOOLBAR);
+	refreshToolbar();
 	qApp->processEvents();
 }
 
