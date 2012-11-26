@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <toolbar>
 	<button id="showReading"/>
-	<separator/>
-	<toggleButton id="byAuthor" group="booksOrder" default="yes"/>
-	<toggleButton id="byTag" group="booksOrder"/>
-	<separator/>
 	<menuButton id="showLibrary"/>
-	<separator/>
 	<menuButton id="preferences"/>
 </toolbar>

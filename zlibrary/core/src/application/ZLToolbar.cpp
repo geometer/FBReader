@@ -77,7 +77,6 @@ ZLToolbarCreator::ZLToolbarCreator(ZLToolbar &toolbar) : myToolbar(toolbar) {
 void ZLToolbarCreator::startElementHandler(const char *tag, const char **attributes) {
 	static const std::string BUTTON = "button";
 	static const std::string MENU_BUTTON = "menuButton";
-	static const std::string TOGGLE_BUTTON = "toggleButton";
 	static const std::string TEXT_FIELD = "textField";
 	static const std::string COMBO_BOX = "comboBox";
 	static const std::string SEARCH_FIELD = "searchField";
@@ -96,19 +95,6 @@ void ZLToolbarCreator::startElementHandler(const char *tag, const char **attribu
 		new ZLToolbar::PlainButtonItem(myToolbar, id);
 	} else if (MENU_BUTTON == tag) {
 		new ZLToolbar::MenuButtonItem(myToolbar, id);
-	} else if (TOGGLE_BUTTON == tag) {
-		const char *groupId = attributeValue(attributes, "group");
-		const char *isDefault = attributeValue(attributes, "default");
-		if (groupId != 0) {
-			ZLToolbar::ButtonGroup &group = myToolbar.getButtonGroup(groupId);
-			ZLToolbar::ToggleButtonItem *button = new ZLToolbar::ToggleButtonItem(myToolbar, id, group);
-			if (isDefault != 0) {
-				group.setDefaultAction(id);
-			}
-			if (group.defaultAction() == id) {
-				button->press();
-			}
-		}
 	} else if (TEXT_FIELD == tag || COMBO_BOX == tag || SEARCH_FIELD == tag) {
 		const char *parameterId = attributeValue(attributes, "parameterId");
 		const char *maxWidth = attributeValue(attributes, "maxWidth");
@@ -208,54 +194,11 @@ shared_ptr<ZLPopupData> ZLToolbar::MenuButtonItem::popupData() const {
 	return (it == toolbar().myPopupDataMap.end()) ? 0 : it->second;
 }
 
-ZLToolbar::ToggleButtonItem::ToggleButtonItem(ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group) : AbstractButtonItem(toolbar, TOGGLE_BUTTON, actionId), myGroup(group) {
-	myGroup.myItems.insert(this);
-}
-
 const std::string &ZLToolbar::AbstractButtonItem::iconName() const {
 	return actionId();
 }
 
-ZLToolbar::ButtonGroup &ZLToolbar::ToggleButtonItem::buttonGroup() {
-	return myGroup;
-}
-
-void ZLToolbar::ToggleButtonItem::press() {
-	myGroup.press(this);
-}
-
-bool ZLToolbar::ToggleButtonItem::isPressed() const {
-	return this == myGroup.myPressedItem;
-}
-
-ZLToolbar::ButtonGroup &ZLToolbar::getButtonGroup(const std::string &id) {
-	shared_ptr<ButtonGroup> group = myButtonGroups[id];
-	if (group.isNull()) {
-		group = new ButtonGroup(id);
-		myButtonGroups[id] = group;
-	}
-	return *group;
-}
-
 ZLToolbar::ZLToolbar() {
-}
-
-ZLToolbar::ButtonGroup::ButtonGroup(const std::string &groupId) : myPressedItem(0), myDefaultButtonOption(ZLCategoryKey::LOOK_AND_FEEL, "ToggleButtonGroup", groupId, "") {
-}
-
-void ZLToolbar::ButtonGroup::press(const ToggleButtonItem *item) {
-	myPressedItem = item;
-	myDefaultButtonOption.setValue(item->actionId());
-}
-
-void ZLToolbar::ButtonGroup::setDefaultAction(const std::string &actionId) {
-	if (myDefaultButtonOption.value().empty()) {
-		myDefaultButtonOption.setValue(actionId);
-	}
-}
-
-const std::string &ZLToolbar::ButtonGroup::defaultAction() const {
-	return myDefaultButtonOption.value();
 }
 
 ZLToolbar::SeparatorItem::SeparatorItem(ZLToolbar &toolbar, Type type) : Item(toolbar, type) {

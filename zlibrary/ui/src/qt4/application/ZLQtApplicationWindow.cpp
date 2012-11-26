@@ -49,9 +49,6 @@ ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::A
 	QPixmap icon(path);
 	setIcon(QIcon(icon));
 	QSize size = icon.size();
-	if (item.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
-		setCheckable(true);
-	}
 	QString text = QString::fromUtf8(myItem.tooltip().c_str());
 	setText(text);
 	setToolTip(text);
@@ -60,10 +57,6 @@ ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::A
 
 void ZLQtToolBarAction::onActivated() {
 	((ZLQtApplicationWindow*)parent())->onButtonPress(myItem);
-}
-
-void ZLQtApplicationWindow::setToggleButtonState(const ZLToolbar::ToggleButtonItem &button) {
-	myActions[button.actionId()]->setChecked(button.isPressed());
 }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
@@ -211,7 +204,6 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 
 	switch (item->type()) {
 		case ZLToolbar::Item::PLAIN_BUTTON:
-		case ZLToolbar::Item::TOGGLE_BUTTON:
 			action = new ZLQtToolBarAction(this, (ZLToolbar::AbstractButtonItem&)*item);
 			tb->addAction(action);
 			break;

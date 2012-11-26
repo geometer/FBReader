@@ -83,7 +83,6 @@ private:
 	bool isFullscreen() const;
 	void setFullscreen(bool fullscreen);
 
-	void setToggleButtonState(const ZLToolbar::ToggleButtonItem &button);
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 	void closeEvent(QCloseEvent *event);

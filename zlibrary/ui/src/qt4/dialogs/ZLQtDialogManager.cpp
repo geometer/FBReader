@@ -40,8 +40,7 @@ void ZLQtDialogManager::showSearchBox() const {
 	QWidget *main = myApplicationWindow->centralWidget();
 	QLineEdit *box = new QLineEdit(main);
 	box->setAttribute(Qt::WA_MacShowFocusRect, false);
-	//box->setStyleSheet("QLineEdit {border: 1px solid gray; border-radius: 5px;}");
-	box->setStyleSheet("QLineEdit {border: 2px solid gray;}");
+	box->setStyleSheet("QLineEdit {border: 2px solid gray; border-radius: 5px;}");
 	box->show();
 	const std::size_t delta = box->height() / 4;
 	box->move(main->width() - box->width() - delta, main->height() - box->height() - delta);

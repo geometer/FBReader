@@ -24,9 +24,6 @@
 #include <QtGui/QPainter>
 #include <QtGui/QPaintEvent>
 #include <QtGui/QScrollBar>
-#include <QtCore/QTimer>
-
-#include <QtCore/QDebug>
 
 #include <ZLibrary.h>
 #include <ZLNetworkManager.h>
@@ -78,7 +75,6 @@ void ZLQtItemsListWidget::clear() {
 }
 
 void ZLQtItemsListWidget::addNode(ZLTreeTitledNode *titledNode) {
-	//qDebug() << QString::fromStdString(titledNode->title());
 	ZLQtTreeItem *item = new ZLQtTreeItem;
 	item->fill(titledNode);
 	connect(item, SIGNAL(clicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*))); //action ExpandAction used instead
@@ -103,8 +99,6 @@ void ZLQtItemsListWidget::fillNewNodes(const ZLTreeNode *rootNode) {
 	}
 
 	size_t oldSize = (size_t)myItems.size();
-
-	//qDebug() << Q_FUNC_INFO << oldSize << rootNode->children().size();
 
 	for (size_t i = oldSize; i < rootNode->children().size(); ++i) {
 		if (ZLTreeTitledNode *titledNode = zlobject_cast<ZLTreeTitledNode*>(rootNode->children().at(i))) {

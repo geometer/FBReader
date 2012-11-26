@@ -40,7 +40,6 @@ public:
 		enum Type {
 			PLAIN_BUTTON,
 			MENU_BUTTON,
-			TOGGLE_BUTTON,
 			TEXT_FIELD,
 			COMBO_BOX,
 			SEARCH_FIELD,
@@ -98,44 +97,6 @@ public:
 		shared_ptr<ZLPopupData> popupData() const;
 	};
 
-	class ButtonGroup;
-
-	class ToggleButtonItem : public AbstractButtonItem {
-
-	public:
-		ToggleButtonItem(ZLToolbar &toolbar, const std::string &actionId, ButtonGroup &group);
-
-		ButtonGroup &buttonGroup();
-		void press();
-		bool isPressed() const;
-
-	private:
-		ButtonGroup &myGroup;
-	};
-
-	class ButtonGroup {
-
-	private:
-		ButtonGroup(const std::string &groupId);
-		void press(const ToggleButtonItem *item);
-
-	public:
-		const std::string &defaultAction() const;
-		void setDefaultAction(const std::string &actionId);
-
-	private:
-		typedef std::set<const ToggleButtonItem*> ItemSet;
-
-		ItemSet myItems;
-		const ToggleButtonItem *myPressedItem;
-
-		ZLStringOption myDefaultButtonOption;
-
-	friend class ToggleButtonItem;
-	friend class ZLToolbar;
-	friend class ZLApplicationWindow;
-	};
-
 	class SeparatorItem : public Item {
 
 	public:
@@ -178,12 +139,8 @@ public:
 	void registerPopupData(const std::string &actionId, shared_ptr<ZLPopupData> popupData);
 
 private:
-	ButtonGroup &getButtonGroup(const std::string &id);
-
-private:
 	ItemVector myItems;
 	std::map<std::string, shared_ptr<ZLPopupData> > myPopupDataMap;
-	std::map<std::string, shared_ptr<ButtonGroup> > myButtonGroups;
 
 friend class MenuButtonItem;
 friend class ZLApplication;

@@ -65,7 +65,6 @@ protected:
 	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
 	// TODO: change to pure virtual
 	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {};
-	virtual void setToggleButtonState(const ZLToolbar::ToggleButtonItem &toggleButton) = 0;
 
 	virtual void refresh() = 0;
 
@@ -115,7 +114,6 @@ protected:
 
 private:
 	ZLApplication *myApplication;
-	bool myToggleButtonLock;
 	std::map<std::string,shared_ptr<VisualParameter> > myParameterMap;
 
 friend class ZLApplication;

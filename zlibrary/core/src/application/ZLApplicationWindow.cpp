@@ -27,7 +27,7 @@ ZLApplicationWindow &ZLApplicationWindow::Instance() {
 	return *ourInstance;
 }
 
-ZLApplicationWindow::ZLApplicationWindow(ZLApplication *application) : myApplication(application), myToggleButtonLock(false) {
+ZLApplicationWindow::ZLApplicationWindow(ZLApplication *application) : myApplication(application) {
 	ourInstance = this;
 	myApplication->myWindow = this;
 }
@@ -75,34 +75,6 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 					setToolbarItemState(*it, visible, enabled);
 				}
 				break;
-			case ZLToolbar::Item::TOGGLE_BUTTON:
-				{
-					ZLToolbar::ToggleButtonItem &button = (ZLToolbar::ToggleButtonItem&)**it;
-					const std::string &id = button.actionId();
-
-					const bool visible = application().isActionVisible(id);
-					const bool enabled = application().isActionEnabled(id);
-
-					if (visible) {
-						if (!lastSeparator.isNull()) {
-							setToolbarItemState(lastSeparator, true, true);
-							lastSeparator = 0;
-						}
-						canAddSeparator = true;
-					}
-					/*
-					if (!enabled && button.isPressed()) {
-						button.buttonGroup().press(0);
-						//application().doAction(group->UnselectAllButtonsActionId);
-						myToggleButtonLock = true;
-						setToggleButtonState(button);
-						myToggleButtonLock = false;
-					}
-					*/
-					setToolbarItemState(*it, visible, enabled);
-					setToggleButtonState(button);
-				}
-				break;
 			case ZLToolbar::Item::SEPARATOR:
 				if (canAddSeparator) {
 					lastSeparator = *it;
@@ -140,25 +112,6 @@ bool ZLApplicationWindow::hasFullscreenToolbar() const {
 }
 
 void ZLApplicationWindow::onButtonPress(const ZLToolbar::AbstractButtonItem &button) {
-	if (myToggleButtonLock) {
-		return;
-	}
-	if (button.type() == ZLToolbar::Item::TOGGLE_BUTTON) {
-		ZLToolbar::ToggleButtonItem &toggleButton = (ZLToolbar::ToggleButtonItem&)button;
-		myToggleButtonLock = true;
-		if (toggleButton.isPressed()) {
-			setToggleButtonState(toggleButton);
-			myToggleButtonLock = false;
-			return;
-		} else {
-			toggleButton.press();
-			const ZLToolbar::ButtonGroup::ItemSet &items = toggleButton.buttonGroup().myItems;
-			for (ZLToolbar::ButtonGroup::ItemSet::const_iterator it = items.begin(); it != items.end(); ++it) {
-				setToggleButtonState(**it);
-			}
-		}
-		myToggleButtonLock = false;
-	}
 	application().doAction(button.actionId());
 }
 
