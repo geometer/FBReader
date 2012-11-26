@@ -11,31 +11,38 @@
 RELEASE 0.99.4 (expected late November 2012):
   DONE bug: spinner icon
     between commits a6693fc41366e2559a9a605410578cc45cc30bd6 f035b2665a0812a2c706a502d344a10535b6b672
-  ** bug: litres -> buy book -> authentication dialog -> cancel -> "no auth" message :(
-  DONE bug: litres -> authors -> Горький -> название книги "О культура%%%%"
-  ** bug: litres account state is not shown (button 'topup account')
-  ** bug: litres login: sometimes program goes to the strange status, shows "sign out" button in right pane but requests authorization after double click on "My books" item
-  ** litres: 'buy' button in book pane does not work
-    ** I couldn't reproduce it
-  ** litres 'top 50 by popularity' -- book duplicates?
-    ** can't reproduce it since we don't use grouping by series, looks like it's a books on a edge of 20 books limit
-  ** litres series: sort books as in server catalog
-  DONE litres: for books by author, do not show book author
-    DONE add support showAuthor=no in code
-    DONE change links at authorsBy.php5?firstLetter=AA&from=BB&to=CC:
-      <type="application/litres+xml;type=books"/> -> " type="application/litres+xml;type=books;showAuthor=no"/>
-	** что будет, если во время загрузки litres item нажать на sign out?
-		** блокировать actions при взаимодействии с каталогом?
-      ** нет, но продумать все возможные ответы сервера
-  ** implement async sign in operation
-  ** implement async loadPurchasedBooks 
-  ** implement a way to be safe about deleted nodes (async undefined behaviour)
-  	** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
-  	** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
-	** make litres initialize at network library start up (for retrieving account and showing topup account button)
+
+	** litres:
+	  ** bug: litres -> buy book -> authentication dialog -> cancel -> "no auth" message :(
+	  ** bug: litres account state is not shown (button 'topup account')
+			?? make litres initialize at network library start up (for retrieving account and showing topup account button)
+	  ** bug: litres login: sometimes program goes to the strange status, shows "sign out" button in right pane but requests authorization after double click on "My books" item
+		** что будет, если во время загрузки litres item нажать на sign out?
+			** блокировать actions при взаимодействии с каталогом?
+  	    ** нет, но продумать все возможные ответы сервера
+
+  	** litres: 'buy' button in book pane does not work
+  	  ** I couldn't reproduce it
+  	DONE litres 'top 50 by popularity' -- book duplicates?
+  	  DONE can't reproduce it since we don't use grouping by series, looks like it's a books on a edge of 20 books limit
+  	DONE litres series: sort books as in server catalog
+
+		** implement async sign in operation
+		** implement async loadPurchasedBooks 
+		** implement a way to be safe about deleted nodes (async undefined behaviour)
+			** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
+			** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
+
+		DONE litres: for books by author, do not show book author
+			  DONE add support showAuthor=no in code
+			  DONE change links at authorsBy.php5?firstLetter=AA&from=BB&to=CC :
+			    <type="application/litres+xml;type=books"/> -> " type="application/litres+xml;type=books;showAuthor=no"/>
+		DONE bug: litres -> authors -> Горький -> название книги "О культура%%%%"
 
   ** mark series cleanly
   	DONE for series groups: show number of books in the second string
+
+
 
 	DONE in search field show previous searches as suggestions
 
@@ -52,6 +59,8 @@ RELEASE 0.99.4 (expected late November 2012):
   DONE move waiting icons to a separate component
 
 FUTURE RELEASES:
+	** refactoring: remove code for old network library
+
   ** replace error dialogs (with what?)
 
 	** implement a way to sign out from catalogs like Feedbooks and Wolne Lektury
@@ -61,13 +70,13 @@ FUTURE RELEASES:
     ** move book pane to left
 
  ** translates of resources into all other languages
-	** "type to search..."
-  ** books conditional count
-		** where to put these resource?
+		** "type to search..."
+		** books conditional count
+			** where to put these resource?
 
   ** UI: implement support for recording each node's show parameters
 	  DONE save current node for preview widget
-	  ** save slider position for list widget
+	  ** save slider position for list widget (when we push back or forward button, slider should take position as it was stayed on this page)
 
   ** immediate refresh of current catalog's item (not only for next re-enter)
 	
@@ -77,7 +86,7 @@ FUTURE RELEASES:
 			*** if this catalog supports search, search in the catalog only
 			*** otherwise, disable search field
 	** show 'found books' item at top level and in each catalog where the search was performed
-	** refactoring: remove code for old network library
+
 	** "standard search look" for search field
 		DONE use external css file
 		*** use native highlighting with rounded css corners (how to retrieve native highlighting?)
@@ -242,8 +251,7 @@ RELEASE 0.99.3:
 	* сделать поддержку иконки одного жанра для пункта "По жанрам" и одного автора в "Популярные авторы"
 	* на сервере: 
 		* поправить неправильные ссылки (на litres2) в litres3/index.php5 и др.
-		* поправить дату/generic-1.9.xml файла, для корректного обновления в программе
-		* ошибка в скрипте litres3/topAuthors.php5
+		* поправить дату generic-1.9.xml файла, для корректного обновления в программе
 	DONE bug: добавить передачу параметра lfrom при покупке книги (и при др. действиях тоже?)
 	DONE релизовать постраничную подгрузку данных (используя параметр limit)
 	DONE добавить поддержку пункта "Рекомендации"

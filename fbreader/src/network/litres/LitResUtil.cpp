@@ -116,8 +116,6 @@ std::string LitResUtil::generateBooksByAuthorUrl(const std::string &authorId) {
 shared_ptr<NetworkItem> LitResUtil::createLitResNode(shared_ptr<ZLMimeType> type, std::string rel, const NetworkLink &link, std::string title,
 	std::string annotation, std::map<NetworkItem::URLType,std::string> urlMap,	bool dependsOnAccount) {
 	static const std::string TYPE = "type";
-	static const std::string GROUP_SERIES = "groupSeries";
-	static const std::string SHOW_AUTHOR = "showAuthor";
 	static const std::string NO = "no";
 
 	std::string litresType = type->getParameter(TYPE);
@@ -140,14 +138,15 @@ shared_ptr<NetworkItem> LitResUtil::createLitResNode(shared_ptr<ZLMimeType> type
 		);
 	} else if (litresType == ZLMimeType::APPLICATION_LITRES_XML_BOOKS->getParameter(TYPE)) {
 		int flags = NetworkCatalogItem::FLAGS_DEFAULT;
-		if (type->getParameter(GROUP_SERIES) == NO) {
+		if (type->getParameter("groupSeries") == NO) {
 			flags &= ~NetworkCatalogItem::FLAG_GROUP_MORE_THAN_1_BOOK_BY_SERIES;
 		}
-		if (type->getParameter(SHOW_AUTHOR) == "false") {
+		if (type->getParameter("showAuthor") == "false") {
 			flags &= ~NetworkCatalogItem::FLAG_SHOW_AUTHOR;
 		}
+		bool sort = type->getParameter("sort") != NO;
 		return new LitResBooksFeedItem(
-			false,
+			sort,
 			link,
 			title,
 			annotation,
