@@ -140,7 +140,7 @@ private:
 	shared_ptr<ZLView> myFootnoteView;
 	shared_ptr<ZLView> myBookTextView;
 	shared_ptr<ZLView> myContentsView;
-	//shared_ptr<ZLView> myNetworkLibraryView;
+
 	shared_ptr<ZLView> myLibraryByAuthorView;
 	shared_ptr<ZLView> myLibraryByTagView;
 	shared_ptr<ZLPopupData> myRecentBooksPopupData;
@@ -199,8 +199,6 @@ friend class GotoNextTOCSectionAction;
 friend class GotoPreviousTOCSectionAction;
 //friend class GotoPageNumber;
 friend class SelectionAction;
-friend class SearchOnNetworkAction;
-friend class AdvancedSearchOnNetworkAction;
 friend class FBFullscreenAction;
 friend class BooksOrderAction;
 friend class LogOutAction;
