@@ -40,11 +40,7 @@ public:
 		enum Type {
 			PLAIN_BUTTON,
 			MENU_BUTTON,
-			TEXT_FIELD,
-			COMBO_BOX,
-			SEARCH_FIELD,
-			SEPARATOR,
-			FILL_SEPARATOR
+			SEPARATOR
 		};
 
 	public:
@@ -102,29 +98,6 @@ public:
 	public:
 		SeparatorItem(ZLToolbar &toolbar, Type type);
 		const std::string &actionId() const;
-	};
-
-	class ParameterItem : public ActionItem {
-
-	public:
-		enum SymbolSet {
-			SET_DIGITS,
-			SET_ANY
-		};
-
-	public:
-		ParameterItem(ZLToolbar &toolbar, Type type, const std::string &actionId, const std::string &parameterId, int maxWidth);
-		const std::string &actionId() const;
-		const std::string &parameterId() const;
-		int maxWidth() const;
-
-		void setSymbolSet(SymbolSet symbolSet);
-		SymbolSet symbolSet() const;
-
-	private:
-		const std::string myParameterId;
-		const int myMaxWidth;
-		SymbolSet mySymbolSet;
 	};
 
 public:

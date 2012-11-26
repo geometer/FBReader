@@ -53,9 +53,6 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 	ZLToolbar::ItemPtr lastSeparator = 0;
 	for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		switch ((*it)->type()) {
-			case ZLToolbar::Item::TEXT_FIELD:
-			case ZLToolbar::Item::COMBO_BOX:
-			case ZLToolbar::Item::SEARCH_FIELD:
 			case ZLToolbar::Item::PLAIN_BUTTON:
 			case ZLToolbar::Item::MENU_BUTTON:
 				{
@@ -79,17 +76,6 @@ void ZLApplicationWindow::refreshToolbar(ToolbarType type) {
 				if (canAddSeparator) {
 					lastSeparator = *it;
 					canAddSeparator = false;
-				} else {
-					setToolbarItemState(*it, false, true);
-				}
-				break;
-			case ZLToolbar::Item::FILL_SEPARATOR:
-				if (canAddSeparator) {
-					lastSeparator = *it;
-					canAddSeparator = false;
-				} else if (lastSeparator != 0) {
-					setToolbarItemState(lastSeparator, false, true);
-					lastSeparator = *it;
 				} else {
 					setToolbarItemState(*it, false, true);
 				}

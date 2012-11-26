@@ -109,26 +109,6 @@ friend class ZLQtToolBarAction;
 
 	bool myCursorIsHyperlink;
 	QCursor myStoredCursor;
-
-private:
-	class LineEditParameter : public VisualParameter {
-
-	public:
-		LineEditParameter(QToolBar *toolbar, ZLQtApplicationWindow &window, const ZLToolbar::ParameterItem &textFieldItem);
-		QAction *action() const;
-		void restoreOldValue();
-
-	private:
-		std::string internalValue() const;
-		void internalSetValue(const std::string &value);
-		void setValueList(const std::vector<std::string> &values) {}
-
-	private:
-		QLineEdit *myEdit;
-		QAction *myAction;
-	};
-
-friend class ZLQtLineEdit;
 };
 
 class ZLQtAction : public QAction {

@@ -222,16 +222,6 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 				popupData.isNull() ? (size_t)-1 : (popupData->id() - 1);
 			break;
 		}
-		case ZLToolbar::Item::TEXT_FIELD:
-		case ZLToolbar::Item::SEARCH_FIELD:
-		{
-			ZLToolbar::ParameterItem &textFieldItem =
-				(ZLToolbar::ParameterItem&)*item;
-			LineEditParameter *para = new LineEditParameter(tb, *this, textFieldItem);
-			addVisualParameter(textFieldItem.parameterId(), para);
-			action = para->action();
-			break;
-		}
 		case ZLToolbar::Item::SEPARATOR:
 			action = tb->addSeparator();
 			break;

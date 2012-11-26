@@ -77,45 +77,18 @@ ZLToolbarCreator::ZLToolbarCreator(ZLToolbar &toolbar) : myToolbar(toolbar) {
 void ZLToolbarCreator::startElementHandler(const char *tag, const char **attributes) {
 	static const std::string BUTTON = "button";
 	static const std::string MENU_BUTTON = "menuButton";
-	static const std::string TEXT_FIELD = "textField";
-	static const std::string COMBO_BOX = "comboBox";
-	static const std::string SEARCH_FIELD = "searchField";
 	static const std::string SEPARATOR = "separator";
-	static const std::string FILL_SEPARATOR = "fillSeparator";
 
 	const char *id = attributeValue(attributes, "id");
 
 	if (SEPARATOR == tag) {
 		new ZLToolbar::SeparatorItem(myToolbar, ZLToolbar::Item::SEPARATOR);
-	} else if (FILL_SEPARATOR == tag) {
-		new ZLToolbar::SeparatorItem(myToolbar, ZLToolbar::Item::FILL_SEPARATOR);
 	} else if (id == 0) {
 		return;
 	} else if (BUTTON == tag) {
 		new ZLToolbar::PlainButtonItem(myToolbar, id);
 	} else if (MENU_BUTTON == tag) {
 		new ZLToolbar::MenuButtonItem(myToolbar, id);
-	} else if (TEXT_FIELD == tag || COMBO_BOX == tag || SEARCH_FIELD == tag) {
-		const char *parameterId = attributeValue(attributes, "parameterId");
-		const char *maxWidth = attributeValue(attributes, "maxWidth");
-		if (parameterId != 0 && maxWidth != 0) {
-			int nMaxWidth = atoi(maxWidth);
-			if (nMaxWidth > 0) {
-				ZLToolbar::Item::Type type = ZLToolbar::Item::TEXT_FIELD;
-				if (COMBO_BOX == tag) {
-					type = ZLToolbar::Item::COMBO_BOX;
-				} else if (SEARCH_FIELD == tag) {
-					type = ZLToolbar::Item::SEARCH_FIELD;
-				}
-				ZLToolbar::ParameterItem *item = new ZLToolbar::ParameterItem(
-					myToolbar, type, id, parameterId, nMaxWidth
-				);
-				const char *symbolSet = attributeValue(attributes, "symbols");
-				if (symbolSet != 0 && std::string(symbolSet) == "digits") {
-					item->setSymbolSet(ZLToolbar::ParameterItem::SET_DIGITS);
-				}
-			}
-		}
 	}
 }
 
@@ -207,34 +180,6 @@ ZLToolbar::SeparatorItem::SeparatorItem(ZLToolbar &toolbar, Type type) : Item(to
 const std::string &ZLToolbar::SeparatorItem::actionId() const {
   static const std::string EMPTY;
 	return EMPTY;
-}
-
-ZLToolbar::ParameterItem::ParameterItem(ZLToolbar &toolbar, Type type, const std::string &actionId, const std::string &parameterId, int maxWidth) :
-	ActionItem(toolbar, type, actionId),
-	myParameterId(parameterId),
-	myMaxWidth(maxWidth),
-	mySymbolSet(SET_ANY) {
-}
-
-const std::string &ZLToolbar::ParameterItem::actionId() const {
-  static const std::string EMPTY;
-	return EMPTY;
-}
-
-const std::string &ZLToolbar::ParameterItem::parameterId() const {
-	return myParameterId;
-}
-
-int ZLToolbar::ParameterItem::maxWidth() const {
-	return myMaxWidth;
-}
-
-ZLToolbar::ParameterItem::SymbolSet ZLToolbar::ParameterItem::symbolSet() const {
-	return mySymbolSet;
-}
-
-void ZLToolbar::ParameterItem::setSymbolSet(SymbolSet symbolSet) {
-	mySymbolSet = symbolSet;
 }
 
 const ZLResource &ZLPopupData::resource(const std::string &actionId) {
