@@ -39,6 +39,8 @@ RELEASE 0.99.4 (expected late November 2012):
 			    <type="application/litres+xml;type=books"/> -> " type="application/litres+xml;type=books;showAuthor=no"/>
 		DONE bug: litres -> authors -> Горький -> название книги "О культура%%%%"
 
+	DONE refactoring: remove code for old network library
+
   ** mark series cleanly
   	DONE for series groups: show number of books in the second string
 
@@ -59,8 +61,6 @@ RELEASE 0.99.4 (expected late November 2012):
   DONE move waiting icons to a separate component
 
 FUTURE RELEASES:
-	** refactoring: remove code for old network library
-
   ** replace error dialogs (with what?)
 
 	** implement a way to sign out from catalogs like Feedbooks and Wolne Lektury

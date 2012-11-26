@@ -47,7 +47,6 @@
 #include "../libraryTree/LibraryView.h"
 #include "../network/NetworkLinkCollection.h"
 #include "../networkActions/NetworkOperationRunnable.h"
-#include "../networkTree/NetworkView.h"
 
 #include "../migration/migrate.h"
 
@@ -105,7 +104,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBookTextView = new BookTextView(*context());
 	myFootnoteView = new FootnoteView(*context());
 	myContentsView = new ContentsView(*context());
-	myNetworkLibraryView = new NetworkView(*context());
+
 	myLibraryByAuthorView = new LibraryByAuthorView(*context());
 	myLibraryByTagView = new LibraryByTagView(*context());
 	myRecentBooksPopupData = new RecentBooksPopupData();
@@ -117,8 +116,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkTreeLibraryAction());
-//	addAction(ActionCode::SEARCH_ON_NETWORK, new SimpleSearchOnNetworkAction());
-//	addAction(ActionCode::ADVANCED_SEARCH_ON_NETWORK, new AdvancedSearchOnNetworkAction());
 	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
 	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
 	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
@@ -428,9 +425,6 @@ void FBReader::setMode(ViewMode mode) {
 		}
 		case BOOKMARKS_MODE:
 			break;
-		case NETWORK_LIBRARY_MODE:
-			setView(myNetworkLibraryView);
-			break;
 		case UNDEFINED_MODE:
 		case ALL_MODES:
 			break;
@@ -551,14 +545,6 @@ shared_ptr<ProgramCollection> FBReader::webBrowserCollection() const {
 
 shared_ptr<Book> FBReader::currentBook() const {
 	return myModel->book();
-}
-
-void FBReader::invalidateNetworkView() {
-	((NetworkView &) *myNetworkLibraryView).invalidate();
-}
-
-void FBReader::invalidateAccountDependents() {
-	((NetworkView &) *myNetworkLibraryView).invalidateAccountDependents();
 }
 
 bool FBReader::showAuthDialog(const std::string &siteName, std::string &userName, std::string &password, const ZLResourceKey &errorKey) {

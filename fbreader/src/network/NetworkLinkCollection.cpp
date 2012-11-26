@@ -105,7 +105,6 @@ bool NetworkLinkCollection::Comparator::operator() (
 //			break;
 //		}
 //	}
-//	FBReader::Instance().invalidateNetworkView();
 //	FBReader::Instance().refreshWindow();
 //}
 
@@ -137,7 +136,6 @@ void NetworkLinkCollection::addOrUpdateLink(shared_ptr<NetworkLink> link) {
 	}
 	if (updated) {
 		NetworkDB::Instance().saveNetworkLink(link);
-		FBReader::Instance().invalidateNetworkView();
 		//FBReader::Instance().sendRefresh();
 	}
 }

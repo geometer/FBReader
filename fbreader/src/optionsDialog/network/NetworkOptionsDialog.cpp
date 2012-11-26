@@ -58,7 +58,7 @@ void NetworkLinkBooleanOptionEntry::onAccept(bool state) {
 	bool oldState = myOption.value();
 	myOption.setValue(state);
 	if (state != oldState) {
-		FBReader::Instance().invalidateNetworkView();
+//		FBReader::Instance().invalidateNetworkView();
 	}
 }
 

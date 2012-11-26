@@ -59,7 +59,6 @@ public:
 		CONTENTS_MODE = 1 << 2,
 		BOOKMARKS_MODE = 1 << 3,
 		LIBRARY_MODE = 1 << 4,
-		NETWORK_LIBRARY_MODE = 1 << 5,
 		ALL_MODES = 0xFF
 	};
 
@@ -122,9 +121,6 @@ public:
 	void showBookTextView();
 	void openBook(shared_ptr<Book> book);
 
-	void invalidateNetworkView();
-	void invalidateAccountDependents();
-
 	bool showAuthDialog(const std::string &siteName, std::string &userName, std::string &password, const ZLResourceKey &errorKey);
 	void saveUserName(const std::string &siteName, std::string &userName);
 
@@ -144,7 +140,7 @@ private:
 	shared_ptr<ZLView> myFootnoteView;
 	shared_ptr<ZLView> myBookTextView;
 	shared_ptr<ZLView> myContentsView;
-	shared_ptr<ZLView> myNetworkLibraryView;
+
 	shared_ptr<ZLView> myLibraryByAuthorView;
 	shared_ptr<ZLView> myLibraryByTagView;
 	shared_ptr<ZLPopupData> myRecentBooksPopupData;
@@ -203,8 +199,6 @@ friend class GotoNextTOCSectionAction;
 friend class GotoPreviousTOCSectionAction;
 //friend class GotoPageNumber;
 friend class SelectionAction;
-friend class SearchOnNetworkAction;
-friend class AdvancedSearchOnNetworkAction;
 friend class FBFullscreenAction;
 friend class BooksOrderAction;
 friend class LogOutAction;

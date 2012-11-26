@@ -24,7 +24,7 @@
 #include <ZLImage.h>
 #include <ZLStringUtil.h>
 
-#include "../../networkTree/NetworkCatalogUtil.h"
+#include "NetworkCatalogUtil.h"
 #include "NetworkTreeNodes.h"
 
 const ZLTypeId NetworkSeriesTree::TYPE_ID(NetworkTree::TYPE_ID);
