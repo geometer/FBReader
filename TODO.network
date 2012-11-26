@@ -13,7 +13,7 @@ RELEASE 0.99.4 (expected late November 2012):
     between commits a6693fc41366e2559a9a605410578cc45cc30bd6 f035b2665a0812a2c706a502d344a10535b6b672
 
 	** litres:
-	  ** bug: litres -> buy book -> authentication dialog -> cancel -> "no auth" message :(
+	  DONE bug: litres -> buy book -> authentication dialog -> cancel -> "no auth" message :(
 	  ** bug: litres account state is not shown (button 'topup account')
 			?? make litres initialize at network library start up (for retrieving account and showing topup account button)
 	  ** bug: litres login: sometimes program goes to the strange status, shows "sign out" button in right pane but requests authorization after double click on "My books" item
