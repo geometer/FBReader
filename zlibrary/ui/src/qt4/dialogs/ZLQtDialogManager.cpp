@@ -18,10 +18,12 @@
  */
 
 #include <QtGui/QApplication>
+#include <QtGui/QMainWindow>
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
 #include <QtGui/QClipboard>
 #include <QtGui/QDesktopWidget>
+#include <QtGui/QLineEdit>
 
 #include "ZLQtDialogManager.h"
 #include "ZLQtDialog.h"
@@ -33,6 +35,18 @@
 #include "ZLQtUtil.h"
 
 #include "../image/ZLQtImageManager.h"
+
+void ZLQtDialogManager::showSearchBox() const {
+	QWidget *main = myApplicationWindow->centralWidget();
+	QLineEdit *box = new QLineEdit(main);
+	box->setAttribute(Qt::WA_MacShowFocusRect, false);
+	//box->setStyleSheet("QLineEdit {border: 1px solid gray; border-radius: 5px;}");
+	box->setStyleSheet("QLineEdit {border: 2px solid gray;}");
+	box->show();
+	const std::size_t delta = box->height() / 4;
+	box->move(main->width() - box->width() - delta, main->height() - box->height() - delta);
+	box->setFocus();
+}
 
 shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
 	myStoredWindow = qApp->activeWindow();

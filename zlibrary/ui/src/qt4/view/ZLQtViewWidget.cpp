@@ -41,12 +41,12 @@ private:
 	void mouseMoveEvent(QMouseEvent *event) {
 		if (orientation() == Qt::Vertical) {
 			const int y = event->y();
-			if ((y <= 0) || (y >= height())) {
+			if (y <= 0 || y >= height()) {
 				return;
 			}
 		} else {
 			const int x = event->x();
-			if ((x <= 0) || (x >= width())) {
+			if (x <= 0 || x >= width()) {
 				return;
 			}
 		}

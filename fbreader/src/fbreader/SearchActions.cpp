@@ -103,6 +103,9 @@ SearchPatternAction::SearchPatternAction() :
 }
 
 void SearchPatternAction::run() {
+	ZLDialogManager::Instance().showSearchBox();
+	return;
+
 	ZLTextView &textView = (ZLTextView&)*FBReader::Instance().currentView();
 
 	shared_ptr<ZLDialog> searchDialog = ZLDialogManager::Instance().createDialog(ZLResourceKey("textSearchDialog"));

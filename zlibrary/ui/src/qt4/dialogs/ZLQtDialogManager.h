@@ -23,6 +23,7 @@
 #include <ZLDialogManager.h>
 
 class QWidget;
+class QMainWindow;
 
 class ZLQtDialogManager : public ZLDialogManager {
 
@@ -34,6 +35,8 @@ private:
 
 public:
 	void createApplicationWindow(ZLApplication *application) const;
+
+	void showSearchBox() const;
 
 	shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const;
 	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
@@ -54,7 +57,7 @@ public:
 
 private:
 	mutable QWidget *myStoredWindow;
-	mutable QWidget* myApplicationWindow;
+	mutable QMainWindow* myApplicationWindow;
 };
 
 #endif /* __ZLQTDIALOGMANAGER_H__ */
