@@ -241,11 +241,9 @@ const std::string &ZLTreeResource::value() const {
 }
 
 const std::string &ZLTreeResource::value(int number) const {
-	if (!myConditionalValues.empty()) {
-		for (Conditionals::const_iterator it = myConditionalValues.begin(); it != myConditionalValues.end(); ++it) {
-			if ((*it).first->accepts(number)) {
-				return (*it).second;
-			}
+	for (Conditionals::const_iterator it = myConditionalValues.begin(); it != myConditionalValues.end(); ++it) {
+		if ((*it).first->accepts(number)) {
+			return (*it).second;
 		}
 	}
 	return myHasValue ? myValue : ZLMissingResource::ourValue;
@@ -293,7 +291,7 @@ ZLResourceTreeReader::ZLResourceTreeReader(shared_ptr<ZLTreeResource> root) {
 static const std::string NODE = "node";
 
 void ZLResourceTreeReader::startElementHandler(const char *tag, const char **attributes) {
-	if (!myStack.empty() && (NODE == tag)) {
+	if (!myStack.empty() && NODE == tag) {
 		const char *name = attributeValue(attributes, "name");
 		const char *condition = attributeValue(attributes, "condition");
 		const char *value = attributeValue(attributes, "value");
