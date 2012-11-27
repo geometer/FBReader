@@ -36,6 +36,8 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 
 	setObjectName("search-field");
 
+	setAttribute(Qt::WA_MacShowFocusRect, false);
+
 	myWaitingIcon = new QtWaitingSpinner(12, 3, 2, 3, this);
 	myWaitingIcon->setSpeed(2);
 
@@ -51,7 +53,7 @@ ZLQtSearchField::ZLQtSearchField(QWidget *parent) : QLineEdit(parent) {
 
 	int frameWidth = style()->pixelMetric(QStyle::PM_DefaultFrameWidth);
 
-	setStyleSheet(QString("QLineEdit { padding-left: %1px; } ").arg(mySearchIcon->sizeHint().width() + frameWidth));
+	setStyleSheet(QString("QLineEdit { padding-left: %1px; } ").arg(mySearchIcon->sizeHint().width() + frameWidth + 3));
 
 	QCompleter *completer = new QCompleter(this);
 	completer->setCaseSensitivity(Qt::CaseInsensitive);

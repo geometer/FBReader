@@ -48,7 +48,6 @@ private:
 	QLabel *mySearchIcon;
 	QtWaitingSpinner *myWaitingIcon;
 	QSet<QString> mySuggestions;
-
 };
 
 #endif /* __ZLQTSEARCHFIELD_H__ */

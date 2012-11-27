@@ -20,11 +20,9 @@
 #include <algorithm>
 
 #include <QtGui/QSplitter>
-#include <QtGui/QVBoxLayout>
-#include <QtGui/QHBoxLayout>
 #include <QtGui/QScrollBar>
 #include <QtGui/QResizeEvent>
-#include <QtCore/QDebug>
+#include <QtGui/QToolBar>
 
 #include <ZLFile.h>
 #include <ZLibrary.h>
@@ -39,9 +37,15 @@
 static const int DIALOG_WIDTH_HINT = 840;
 
 ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
-	QDialog(parent), ZLTreeDialog(res), myLastClickedNode(0), myLastClickedSearchNode(0) {
+	QMainWindow(parent), ZLTreeDialog(res), myLastClickedNode(0), myLastClickedSearchNode(0) {
 	setWindowTitle(QString::fromStdString(resource().value())); //TODO maybe user resources by other way
 	setMinimumSize(400, 260); //minimum sensible size
+
+	setUnifiedTitleAndToolBarOnMac(true);
+	QToolBar *toolbar = new QToolBar(this);
+	toolbar->setFocusPolicy(Qt::NoFocus);
+	toolbar->setMovable(false);
+	addToolBar(toolbar);
 
 	myListWidget = new ZLQtItemsListWidget;
 	myPreviewWidget = new ZLQtPreviewWidget;
@@ -52,9 +56,6 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
 	myBackButton->setAutoDefault(false);
 	myForwardButton->setAutoDefault(false);
 
-	QVBoxLayout *mainLayout = new QVBoxLayout;
-	QHBoxLayout *panelLayout = new QHBoxLayout;
-
 	QSplitter *splitter = new QSplitter;
 	splitter->setChildrenCollapsible(false);
 	splitter->addWidget(myListWidget);
@@ -63,17 +64,14 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
 	const int scrollbarWidth = 30; //myListWidget->verticalScrollBar()->width() * 2; //commented because with Qt::ScrollBarAsNeeded policy the size is too big
 	splitter->setSizes(QList<int>() << DIALOG_WIDTH_HINT / 2 + scrollbarWidth << DIALOG_WIDTH_HINT / 2 - scrollbarWidth); //50/50 default size
 
-	mainLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
+	toolbar->addWidget(myBackButton);
+	toolbar->addWidget(myForwardButton);
+	QWidget* spacer = new QWidget();
+	spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	myToolbar->addWidget(spacer);
+	myToolbar->addWidget(mySearchField);
 
-	panelLayout->setSpacing(0);
-	panelLayout->addWidget(myBackButton);
-	panelLayout->addWidget(myForwardButton);
-	panelLayout->addStretch();
-	panelLayout->addWidget(mySearchField);
-
-	mainLayout->addLayout(panelLayout);
-	mainLayout->addWidget(splitter);
-	this->setLayout(mainLayout);
+	setCentralWidget(splitter);
 
 	connect(myListWidget, SIGNAL(nodeClicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*)));
 	connect(myListWidget, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)), this, SLOT(onNodeDoubleClicked(ZLQtTreeItem*)));

@@ -24,7 +24,7 @@
 #include <QtCore/QSet>
 #include <QtCore/QMap>
 
-#include <QtGui/QDialog>
+#include <QtGui/QMainWindow>
 #include <QtGui/QScrollArea>
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
@@ -39,7 +39,7 @@
 
 class ZLQtIconButton;
 
-class ZLQtTreeDialog : public QDialog, public ZLTreeDialog {
+class ZLQtTreeDialog : public QMainWindow, public ZLTreeDialog {
 	Q_OBJECT
 public:
 	ZLQtTreeDialog(const ZLResource &resource, QWidget *parent = 0);
