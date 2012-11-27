@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <algorithm>
-
 #include <QtGui/QSplitter>
 #include <QtGui/QScrollBar>
 #include <QtGui/QResizeEvent>
