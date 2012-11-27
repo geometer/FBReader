@@ -276,7 +276,6 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 
 	//TODO implement 'condition'-like attributes support for ZLResource
 	static const ZLResource &resource = ZLResource::resource("bookInfo");
-	static std::string VALUE_1 = "value 1";
 	static QString colon = "<b>%1</b> %2";
 
 	if (!info.title().empty()) {
@@ -285,17 +284,13 @@ void ZLQtPageWidget::setInfo(const ZLTreePageInfo &info) {
 	}
 
 	if (info.authors().size() > 0) {
-		static QString authors = QString::fromStdString(resource["authors"].value());
-		static QString author = QString::fromStdString(resource["authors"][VALUE_1].value());
-		QString labelText = info.authors().size() == 1 ? author : authors;
-		myAuthorLabel->setText(colon.arg(labelText, QString::fromStdString(ZLStringUtil::join(info.authors(), ", "))));
+		static QString label = QString::fromStdString(resource["authors"].value(info.authors().size()));
+		myAuthorLabel->setText(colon.arg(label, QString::fromStdString(ZLStringUtil::join(info.authors(), ", "))));
 	}
 
 	if (info.tags().size() > 0) {
-		static QString tags = QString::fromStdString(resource["tags"].value());
-		static QString tag = QString::fromStdString(resource["tags"][VALUE_1].value());
-		QString labelText = info.tags().size() == 1 ? tag : tags;
-		myCategoriesLabel->setText(colon.arg(labelText, QString::fromStdString(ZLStringUtil::join(info.tags(), ", "))));
+		static QString label = QString::fromStdString(resource["tags"].value(info.tags().size()));
+		myCategoriesLabel->setText(colon.arg(label, QString::fromStdString(ZLStringUtil::join(info.tags(), ", "))));
 	}
 
 	if (!info.summary().empty()) {

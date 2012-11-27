@@ -241,11 +241,9 @@ const std::string &ZLTreeResource::value() const {
 }
 
 const std::string &ZLTreeResource::value(int number) const {
-	if (!myConditionalValues.empty()) {
-		for (Conditionals::const_iterator it = myConditionalValues.begin(); it != myConditionalValues.end(); ++it) {
-			if ((*it).first->accepts(number)) {
-				return (*it).second;
-			}
+	for (Conditionals::const_iterator it = myConditionalValues.begin(); it != myConditionalValues.end(); ++it) {
+		if ((*it).first->accepts(number)) {
+			return (*it).second;
 		}
 	}
 	return myHasValue ? myValue : ZLMissingResource::ourValue;
