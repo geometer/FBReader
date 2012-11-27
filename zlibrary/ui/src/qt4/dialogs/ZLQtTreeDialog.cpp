@@ -68,8 +68,8 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
 	toolbar->addWidget(myForwardButton);
 	QWidget* spacer = new QWidget();
 	spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	myToolbar->addWidget(spacer);
-	myToolbar->addWidget(mySearchField);
+	toolbar->addWidget(spacer);
+	toolbar->addWidget(mySearchField);
 
 	setCentralWidget(splitter);
 
