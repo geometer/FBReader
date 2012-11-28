@@ -79,6 +79,26 @@ NetworkAuthenticationManager::AuthenticationStatus LitResAuthenticationManager::
 	return AuthenticationStatus(std::string());
 }
 
+std::string LitResAuthenticationManager::authorise(const std::string &pwd, shared_ptr<ZLNetworkRequest::Listener> listener) {
+	LitResAuthorisationScope *scope = new LitResAuthorisationScope;
+	scope->listener = listener;
+	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(scope->firstName, scope->lastName, scope->newSid);
+
+	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
+	ZLNetworkUtil::appendParameter(url, "login", UserNameOption.value());
+	ZLNetworkUtil::appendParameter(url, "pwd", pwd);
+	ZLNetworkUtil::appendParameter(url, "skip_ip", "1");
+
+	shared_ptr<ZLNetworkRequest> networkData =
+		ZLNetworkManager::Instance().createXMLParserRequest(
+			url,
+			xmlReader
+		);
+
+	networkData->setListener(ZLExecutionUtil::createListener(scope, this, &LitResAuthenticationManager::onAuthorised));
+	return ZLNetworkManager::Instance().performAsync(networkData);
+}
+
 void LitResAuthenticationManager::onAuthorised(ZLUserDataHolder &data, const std::string &error) {
 	LitResAuthorisationScope &scope = static_cast<LitResAuthorisationScope&>(*data.getUserData("scope"));
 	mySidChecked = true;
@@ -93,42 +113,8 @@ void LitResAuthenticationManager::onAuthorised(ZLUserDataHolder &data, const std
 	scope.listener->finished(error);
 }
 
-std::string LitResAuthenticationManager::authorise(const std::string &pwd) {
-	//TODO make async
-	std::string firstName, lastName, newSid;
-	shared_ptr<ZLXMLReader> xmlReader = new LitResLoginDataParser(firstName, lastName, newSid);
-
-	std::string url = Link.url(NetworkLink::URL_SIGN_IN);
-	ZLNetworkUtil::appendParameter(url, "login", UserNameOption.value());
-	ZLNetworkUtil::appendParameter(url, "pwd", pwd);
-//	if (SkipIPOption.value()) {
-		ZLNetworkUtil::appendParameter(url, "skip_ip", "1");
-//	}
-
-	shared_ptr<ZLNetworkRequest> networkData =
-		ZLNetworkManager::Instance().createXMLParserRequest(
-			url,
-			xmlReader
-		);
-	std::string error = ZLNetworkManager::Instance().perform(networkData);
-
-	if (error.empty() && !xmlReader->errorMessage().empty()) {
-		error = xmlReader->errorMessage();
-	}
-
-	mySidChecked = true;
-	if (!error.empty()) {
-		mySidUserNameOption.setValue("");
-		mySidOption.setValue("");
-		return error;
-	}
-	mySidOption.setValue(newSid);
-	mySidUserNameOption.setValue(UserNameOption.value());
-	return "";
-}
 
 void LitResAuthenticationManager::logOut() {
-	//TODO make async?
 	mySidChecked = true;
 	mySidUserNameOption.setValue("");
 	mySidOption.setValue("");
@@ -251,8 +237,6 @@ std::string LitResAuthenticationManager::topupAccountLink() {
 std::string LitResAuthenticationManager::currentAccount() {
 	return myAccount;
 }
-
-
 
 bool LitResAuthenticationManager::needsInitialization() {
 	const std::string &sid = mySidOption.value();

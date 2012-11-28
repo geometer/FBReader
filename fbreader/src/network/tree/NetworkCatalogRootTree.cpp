@@ -18,12 +18,13 @@
  */
 
 #include <ZLStringUtil.h>
+#include <ZLExecutionUtil.h>
 
 #include "../../fbreader/FBReader.h"
 
 #include "../authentication/NetworkAuthenticationManager.h"
 #include "../../networkActions/NetworkOperationRunnable.h"
-#include "../../networkActions/AuthenticationDialog.h"
+#include "../../networkActions/AuthenticationDialogManager.h"
 #include "../../networkActions/PasswordRecoveryDialog.h"
 #include "../../networkActions/RegisterUserDialog.h"
 
@@ -49,9 +50,17 @@ private:
 class NetworkCatalogRootTree::LoginAction : public NetworkTreeCatalogAuthAction {
 
 public:
-	LoginAction(NetworkAuthenticationManager &mgr);
+	LoginAction(NetworkAuthenticationManager &mgr, ZLTreeNode *node);
 	void run();
 	ZLResourceKey key() const;
+
+private:
+	void onAuthorised(const std::string &error);
+
+private:
+	ZLTreeNode *myNode;
+
+friend class LoginActionListener;
 };
 
 class NetworkCatalogRootTree::LogoutAction : public NetworkTreeCatalogAuthAction {
@@ -107,7 +116,7 @@ void NetworkCatalogRootTree::init() {
 	//registerAction(new ExpandCatalogAction(*this));
 	//registerAction(new ReloadAction(*this));
 	if (!mgr.isNull()) {
-		registerAction(new LoginAction(*mgr));
+		registerAction(new LoginAction(*mgr, this));
 		registerAction(new LogoutAction(*mgr));
 		if (!mgr->topupAccountLink().empty()) {
 			registerAction(new TopupAccountAction(*mgr));
@@ -132,19 +141,48 @@ bool NetworkTreeCatalogAuthAction::makesSense() const {
 	return (myManager.isAuthorised().Status == B3_FALSE) != myForLoggedUsers;
 }
 
-NetworkCatalogRootTree::LoginAction::LoginAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, false) {
+NetworkCatalogRootTree::LoginAction::LoginAction(NetworkAuthenticationManager &mgr, ZLTreeNode *node) :
+	NetworkTreeCatalogAuthAction(mgr, false), myNode(node) {
 }
 
 ZLResourceKey NetworkCatalogRootTree::LoginAction::key() const {
 	return ZLResourceKey("login");
 }
 
+class LoginActionListener : public ZLNetworkRequest::Listener {
+public:
+	LoginActionListener(NetworkCatalogRootTree::LoginAction &action) : myAction(action) {}
+
+	virtual void finished(const std::string &error) {
+		myAction.onAuthorised(error);
+	}
+
+	virtual void setUIStatus(bool enabled) {
+		if (enabled) {
+			myAction.myNode->notifyDownloadStarted();
+		} else {
+			myAction.myNode->notifyDownloadStopped();
+		}
+	}
+
+private:
+	NetworkCatalogRootTree::LoginAction &myAction;
+};
+
 void NetworkCatalogRootTree::LoginAction::run() {
 	if (!NetworkOperationRunnable::tryConnect()) {
 		return;
 	}
+	AuthenticationDialogManager::authAndInitAsync(
+		myManager,
+		new LoginActionListener(*this)
+	);
+}
+#include <iostream>
 
-	AuthenticationDialog::run(myManager);
+void NetworkCatalogRootTree::LoginAction::onAuthorised(const std::string &/*error*/) {
+	std::cout << "LoginAction::onAuthorised" << std::endl;
+	myNode->notifyDownloadStopped();
 	NetworkLibrary::Instance().invalidateVisibility();
 	NetworkLibrary::Instance().synchronize();
 	NetworkLibrary::Instance().refresh();
@@ -163,8 +201,7 @@ std::string NetworkCatalogRootTree::LogoutAction::text(const ZLResource &resourc
 }
 
 void NetworkCatalogRootTree::LogoutAction::run() {
-	LogOutRunnable logout(myManager);
-	logout.executeWithUI();
+	myManager.logOut();
 	NetworkLibrary::Instance().invalidateVisibility();
 	NetworkLibrary::Instance().synchronize();
 	NetworkLibrary::Instance().refresh();

@@ -84,26 +84,26 @@ private:
 	std::string myFileName;
 };
 
-class AuthoriseRunnable : public NetworkOperationRunnable {
+//class AuthoriseRunnable : public NetworkOperationRunnable {
 
-public:
-	AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password);
-	void run();
+//public:
+//	AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password);
+//	void run();
 
-private:
-	NetworkAuthenticationManager &myManager;
-	const std::string &myPassword;
-};
+//private:
+//	NetworkAuthenticationManager &myManager;
+//	const std::string &myPassword;
+//};
 
-class LogOutRunnable : public NetworkOperationRunnable {
+//class LogOutRunnable : public NetworkOperationRunnable {
 
-public:
-	LogOutRunnable(NetworkAuthenticationManager &mgr);
-	void run();
+//public:
+//	LogOutRunnable(NetworkAuthenticationManager &mgr);
+//	void run();
 
-private:
-	NetworkAuthenticationManager &myManager;
-};
+//private:
+//	NetworkAuthenticationManager &myManager;
+//};
 
 class PasswordRecoveryRunnable : public NetworkOperationRunnable {
 

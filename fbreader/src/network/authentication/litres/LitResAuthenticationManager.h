@@ -35,8 +35,8 @@ public:
 
 public:
 	AuthenticationStatus isAuthorised(shared_ptr<ZLNetworkRequest::Listener> listener = 0);
-	std::string authorise(const std::string &pwd); //TODO make async
-	void logOut(); //TODO make async
+	std::string authorise(const std::string &pwd, shared_ptr<ZLNetworkRequest::Listener> listener);
+	void logOut();
 	bool skipIPSupported();
 
 	const std::string &currentUserName();
@@ -60,6 +60,11 @@ private:
 	void onBooksLoaded(ZLUserDataHolder &data, const std::string &error);
 	void onAccountReceived(ZLUserDataHolder &data, const std::string &error);
 
+//	void onBooksReloaded(ZLUserDataHolder &data, const std::string &error);
+//	void onUserRegistered(ZLUserDataHolder &data, const std::string &error);
+//	void onPasswordRecovered(ZLUserDataHolder &data, const std::string &error);
+
+
 private:
 	shared_ptr<ZLNetworkRequest> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
 	void loadPurchasedBooksOnError(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
@@ -71,11 +76,11 @@ private:
 
 public: // new User Registration
 	bool registrationSupported();
-	std::string registerUser(const std::string &login, const std::string &password, const std::string &email);
+	std::string registerUser(const std::string &login, const std::string &password, const std::string &email); //TODO make async
 
 public: // Password Recovery
 	bool passwordRecoverySupported();
-	std::string recoverPassword(const std::string &email);
+	std::string recoverPassword(const std::string &email); //TODO make async
 
 private:
 	bool mySidChecked;

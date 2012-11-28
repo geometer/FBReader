@@ -17,34 +17,21 @@
  * 02110-1301, USA.
  */
 
-#ifndef __AUTHENTICATIONDIALOG_H__
-#define __AUTHENTICATIONDIALOG_H__
+#ifndef __AUTHENTICATIONDIALOGMANAGER_H__
+#define __AUTHENTICATIONDIALOGMANAGER_H__
 
-#include <string>
+#include <ZLNetworkRequest.h>
 
-#include <ZLOptionEntry.h>
+#include "../network/authentication/NetworkAuthenticationManager.h"
 
-#include "../network/UserList.h"
-
-class ZLDialog;
-class NetworkAuthenticationManager;
-
-class AuthenticationDialog {
+class AuthenticationDialogManager {
 
 public:
-	static bool run(ZLStringOption &userNameOption, UserList &userList, const std::string &errorMessage, std::string &password);
-	static bool run(const std::string &siteName, std::string &username, std::string &password, const std::string &message);
+	static std::string authAndInitAsync(NetworkAuthenticationManager &manager, shared_ptr<ZLNetworkRequest::Listener> listener);
+	static std::string athoriseIfCan(NetworkAuthenticationManager &manager, shared_ptr<ZLNetworkRequest::Listener> listener);
 
 private:
-	AuthenticationDialog(ZLStringOption &userNameOption, UserList &userList, const std::string &errorMessage, std::string &password);
-
-	ZLDialog &dialog();
-
-private:
-	shared_ptr<ZLDialog> myDialog;
-	UserList &myUserList;
+	AuthenticationDialogManager() {}
 };
 
-inline ZLDialog &AuthenticationDialog::dialog() { return *myDialog; }
-
-#endif /* __AUTHENTICATIONDIALOG_H__ */
+#endif /* __AUTHENTICATIONDIALOGMANAGER_H__ */

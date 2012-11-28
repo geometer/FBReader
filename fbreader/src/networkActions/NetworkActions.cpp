@@ -27,7 +27,7 @@
 #include "../network/NetworkLinkCollection.h"
 #include "../network/NetworkErrors.h"
 #include "NetworkActions.h"
-#include "AuthenticationDialog.h"
+#include "AuthenticationDialogManager.h"
 #include "NetworkOperationRunnable.h"
 
 #include "../network/NetworkItems.h"
@@ -222,10 +222,10 @@ void NetworkBookBuyDirectlyAction::onAuthorisationCheck(ZLUserDataHolder &data, 
 		onAuthorised(data, error);
 	} else {
 		ZLUserDataHolder *copyData = new ZLUserDataHolder(data);
-
-		//AuthenticationDialog::run(*myBook.Link.authenticationManager(), ZLExecutionUtil::createListener(copyData, this, &NetworkBookBuyDirectlyAction::onAuthorised));
-		bool result = AuthenticationDialog::run(*myBook.Link.authenticationManager());
-		onAuthorised(*copyData, result ? std::string() : std::string("not auth"));
+		AuthenticationDialogManager::authAndInitAsync(
+			*myBook.Link.authenticationManager(),
+			ZLExecutionUtil::createListener(copyData, this, &NetworkBookBuyDirectlyAction::onAuthorised)
+		);
 	}
 }
 
