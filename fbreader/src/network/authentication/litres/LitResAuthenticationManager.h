@@ -49,7 +49,7 @@ public:
 	std::string topupAccountLink();
 	std::string currentAccount();
 
-	std::string reloadPurchasedBooks(); //TODO make async
+	std::string reloadPurchasedBooks(shared_ptr<ZLNetworkRequest::Listener> listener);
 	void collectPurchasedBooks(NetworkItem::List &list);
 	const std::set<std::string> &getPurchasedIds() const;
 	const NetworkItem::List &purchasedBooks() const;
@@ -59,11 +59,7 @@ private:
 	void onBookPurchased(ZLUserDataHolder &data, const std::string &error);
 	void onBooksLoaded(ZLUserDataHolder &data, const std::string &error);
 	void onAccountReceived(ZLUserDataHolder &data, const std::string &error);
-
-//	void onBooksReloaded(ZLUserDataHolder &data, const std::string &error);
-//	void onUserRegistered(ZLUserDataHolder &data, const std::string &error);
-//	void onPasswordRecovered(ZLUserDataHolder &data, const std::string &error);
-
+	void onBooksReloaded(ZLUserDataHolder &data, const std::string &error);
 
 private:
 	shared_ptr<ZLNetworkRequest> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);
@@ -76,11 +72,11 @@ private:
 
 public: // new User Registration
 	bool registrationSupported();
-	std::string registerUser(const std::string &login, const std::string &password, const std::string &email); //TODO make async
+	std::string registerUser(const std::string &login, const std::string &password, const std::string &email);
 
 public: // Password Recovery
 	bool passwordRecoverySupported();
-	std::string recoverPassword(const std::string &email); //TODO make async
+	std::string recoverPassword(const std::string &email);
 
 private:
 	bool mySidChecked;

@@ -19,7 +19,7 @@ RELEASE 0.99.4 (expected late November 2012):
 					** maybe block entering in catalog if it have listeners? (for 
 				** /myHolder.reset(); bug
 				DONE right showing of spinner
-			** reloadPurchasedBooks 	
+			DONE reloadPurchasedBooks 	
 
 		** make litres initialize at network library start up (for retrieving account and showing topup account button)
 			** top up text button
@@ -27,6 +27,8 @@ RELEASE 0.99.4 (expected late November 2012):
 		** продумать все возможные ответы сервера, если во время загрузки litres item нажать на sign out?
 
 	  ** bug: litres login: sometimes program goes to the strange status, shows "sign out" button in right pane but requests authorization after double click on "My books" item
+			** looks like it was because it was thought we're authorized, but it wasn't true
+				** or error with checking on isAuthorised, so, we should re-asked it
 
 		** implement a way to be safe about deleted nodes (async undefined behaviour)
 			** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)

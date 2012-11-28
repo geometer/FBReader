@@ -404,36 +404,51 @@ std::string LitResAuthenticationManager::recoverPassword(const std::string &emai
 	return ZLNetworkManager::Instance().perform(networkData);
 }
 
-std::string LitResAuthenticationManager::reloadPurchasedBooks() {
-	//TODO make async
+class LitResReloadPurchasedBooksScope : public ZLUserData {
+public:
+	std::set<std::string> purchasedBooksIds;
+	NetworkItem::List purchasedBooksList;
+	shared_ptr<ZLNetworkRequest::Listener> Listener;
+};
+
+std::string LitResAuthenticationManager::reloadPurchasedBooks(shared_ptr<ZLNetworkRequest::Listener> listener) {
 	const std::string &sid = mySidOption.value();
+	std::string error;
 	if (sid.empty()) {
-		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+		error = NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+		listener->finished(error);
+		return error;
 	}
 	if (sid != myInitializedDataSid) {
 		mySidChecked = true;
 		mySidUserNameOption.setValue("");
 		mySidOption.setValue("");
-		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
-	}
-
-	std::set<std::string> purchasedBooksIds;
-	NetworkItem::List purchasedBooksList;
-
-	shared_ptr<ZLNetworkRequest> networkData = loadPurchasedBooks(purchasedBooksIds, purchasedBooksList);
-
-	std::string error = ZLNetworkManager::Instance().perform(networkData);
-	if (!error.empty()) {
-		//loadPurchasedBooksOnError(purchasedBooksIds, purchasedBooksList);
-		if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
-			mySidChecked = true;
-			mySidUserNameOption.setValue("");
-			mySidOption.setValue("");
-		}
+		error = NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
+		listener->finished(error);
 		return error;
 	}
-	loadPurchasedBooksOnSuccess(purchasedBooksIds, purchasedBooksList);
-	myPurchasedBooksIds = purchasedBooksIds;
-	myPurchasedBooksList = purchasedBooksList;
-	return "";
+
+	LitResReloadPurchasedBooksScope *scope = new LitResReloadPurchasedBooksScope;
+	shared_ptr<ZLNetworkRequest> networkData = loadPurchasedBooks(scope->purchasedBooksIds, scope->purchasedBooksList);
+	scope->Listener = listener;
+
+	networkData->setListener(ZLExecutionUtil::createListener(scope, this, &LitResAuthenticationManager::onBooksReloaded));
+	return ZLNetworkManager::Instance().performAsync(networkData);
 }
+
+void LitResAuthenticationManager::onBooksReloaded(ZLUserDataHolder &data, const std::string &error) {
+	LitResReloadPurchasedBooksScope &scope = static_cast<LitResReloadPurchasedBooksScope&>(*data.getUserData("scope"));
+	shared_ptr<ZLNetworkRequest::Listener> listener = scope.Listener;
+	if (!error.empty()) {
+		if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED)) {
+			logOut(); //should it logOut in this case?
+		}
+		listener->finished(error);
+		return;
+	}
+	loadPurchasedBooksOnSuccess(scope.purchasedBooksIds, scope.purchasedBooksList);
+	myPurchasedBooksIds = scope.purchasedBooksIds;
+	myPurchasedBooksList = scope.purchasedBooksList;
+	listener->finished(std::string());
+}
+
