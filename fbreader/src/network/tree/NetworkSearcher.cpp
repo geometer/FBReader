@@ -19,6 +19,7 @@
 
 #include <ZLNetworkManager.h>
 #include <ZLDialogManager.h>
+#include <ZLTimeManager.h>
 
 #include "../authentication/NetworkAuthenticationManager.h"
 #include "../../networkActions/NetworkOperationRunnable.h"
@@ -104,6 +105,7 @@ public:
 		}
 
 		if (myCounter == 0) {
+			ZLTimeManager::deleteLater(myHolder);
 			myHolder.reset(); //destroy itself
 		}
 	}

@@ -47,7 +47,7 @@ public:
 	virtual void addTask(shared_ptr<ZLRunnable> task, int interval) = 0;
 	void addAutoRemovableTask(shared_ptr<ZLRunnable> task, int delay = 0);
 	void removeTask(shared_ptr<ZLRunnable> task);
-	
+
 protected:
 	virtual void removeTaskInternal(shared_ptr<ZLRunnable> task) = 0;
 
@@ -58,6 +58,32 @@ protected:
 	virtual short yearBySeconds(long seconds) const = 0;
 	virtual short monthBySeconds(long seconds) const = 0;
 	virtual short dayOfMonthBySeconds(long seconds) const = 0;
+
+protected:
+	typedef void (*DeleteFunc)(void*);
+	template <typename T> struct DeleteHelper {
+		static void func(T *object) { delete object; }
+	};
+
+	class DeleteTask : public ZLRunnable {
+
+	public:
+		DeleteTask(void *object, DeleteFunc func) : myObject(object), myFunc(func) {}
+	private:
+		void run() { myFunc(myObject); }
+
+		void *myObject;
+		DeleteFunc myFunc;
+	};
+
+public:
+	template <typename T> static void deleteLater(shared_ptr<T> object, int delay = 0) {
+		deleteLater(new shared_ptr<T>(object), delay);
+	}
+	template <typename T> static void deleteLater(T *object, int delay = 0) {
+		DeleteFunc func = reinterpret_cast<DeleteFunc>(&DeleteHelper<T>::func);
+		ZLTimeManager::Instance().addAutoRemovableTask(new DeleteTask(object, func), delay);
+	}
 
 private:
 	std::map<shared_ptr<ZLRunnable>,shared_ptr<ZLRunnable> > myAutoRemovableTasks;

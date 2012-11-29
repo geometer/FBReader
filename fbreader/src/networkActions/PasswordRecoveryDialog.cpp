@@ -73,8 +73,7 @@ bool PasswordRecoveryDialog::run(NetworkAuthenticationManager &mgr) {
 	std::string email;
 	while (true) {
 		if (!runDialog(email, errorMessage)) {
-			LogOutRunnable logout(mgr);
-			logout.executeWithUI();
+			mgr.logOut();
 			return false;
 		}
 
@@ -82,8 +81,7 @@ bool PasswordRecoveryDialog::run(NetworkAuthenticationManager &mgr) {
 		recovery.executeWithUI();
 		if (recovery.hasErrors()) {
 			errorMessage = recovery.errorMessage();
-			LogOutRunnable logout(mgr);
-			logout.executeWithUI();
+			mgr.logOut();
 			continue;
 		}
 

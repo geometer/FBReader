@@ -50,7 +50,7 @@ public:
 	};
 
 	virtual AuthenticationStatus isAuthorised(shared_ptr<ZLNetworkRequest::Listener> listener = 0) = 0;
-	virtual std::string authorise(const std::string &pwd) = 0; // returns error message
+	virtual std::string authorise(const std::string &pwd, shared_ptr<ZLNetworkRequest::Listener> listener) = 0; // returns error message
 	virtual void logOut() = 0;
 
 	virtual bool skipIPSupported();

@@ -52,6 +52,7 @@
 			<node name="reload" value="Обновить"/>
 			<node name="dontShow" value="Скрыть этот каталог"/>
 			<node name="topupAccount" value="Пополнить счёт (текущий счёт: %s)"/>
+			<node name="topupAccountUndefined" value="Пополнить счёт"/>
 			<node name="register" value="Зарегистрироваться"/>
 			<node name="passwordRecovery" value="Забыли пароль?"/>
 		</node>

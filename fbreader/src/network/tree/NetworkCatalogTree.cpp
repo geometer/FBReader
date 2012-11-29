@@ -26,7 +26,7 @@
 #include "../../networkActions/NetworkOperationRunnable.h"
 #include "../NetworkErrors.h"
 #include "NetworkTreeFactory.h"
-#include "../../networkActions/AuthenticationDialog.h"
+#include "../../networkActions/AuthenticationDialogManager.h"
 #include "NetworkTreeNodes.h"
 
 const ZLTypeId NetworkCatalogTree::TYPE_ID(NetworkTree::TYPE_ID);
@@ -115,6 +115,27 @@ private:
 //	shared_ptr<ZLNetworkRequest::Listener> listener;
 //};
 
+class NetworkCatalogTreeAuthListener : public ZLNetworkRequest::Listener {
+public:
+	NetworkCatalogTreeAuthListener(NetworkCatalogTree *tree) : myTree(tree) {
+	}
+
+	void finished(const std::string &error) {
+		myTree->onAuthCheck(error);
+	}
+
+	void setUIStatus(bool enabled) {
+		if (enabled) {
+			myTree->notifyDownloadStarted();
+		} else {
+			myTree->notifyDownloadStopped();
+		}
+	}
+
+private:
+	NetworkCatalogTree *myTree;
+};
+
 void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
 	myListeners.push_back(listener);
 	if (myListeners.size() > 1) {
@@ -125,52 +146,30 @@ void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> 
 	shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
 
 	if (item().getVisibility() == B3_UNDEFINED && !manager.isNull()) {
-		bool result = AuthenticationDialog::run(*manager);
-		if (!result) {
-			notifyListeners(std::string());
-			return;
-		}
-	}
-
-	notifyDownloadStarted();
-	shared_ptr<ZLUserDataHolder> scopeData = new ZLUserDataHolder;
-	if (!manager.isNull()) {
-//		NetworkCatalogTreeAuthScope *scope = new NetworkCatalogTreeAuthScope;
-//		scope->listener = listener;
-		manager->isAuthorised(ZLExecutionUtil::createListener(scopeData, this, &NetworkCatalogTree::onAuthCheck));
+		AuthenticationDialogManager::authAndInitAsync(*manager, new NetworkCatalogTreeAuthListener(this));
 		return;
 	}
 
-	onInitialization(*scopeData, std::string());
-}
-
-void NetworkCatalogTree::onAuthCheck(ZLUserDataHolder &data, const std::string &error) {
-	if (error.empty()) {
-		const NetworkLink &link = item().Link;
-		shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
-		if (!manager.isNull() && manager->needsInitialization()) {
-			manager->initialize(ZLExecutionUtil::createListener(new ZLUserDataHolder(data), this, &NetworkCatalogTree::onInitialization));
-			return;
-		}
+	if (!manager.isNull() && manager->isAuthorised(0).Status == B3_TRUE) {
+		AuthenticationDialogManager::athoriseIfCan(*manager, new NetworkCatalogTreeAuthListener(this));
+		return;
 	}
-	onInitialization(data, error);
+	onAuthCheck(std::string());
 }
 
-
-void NetworkCatalogTree::onInitialization(ZLUserDataHolder &/*data*/, const std::string &error) {
+void NetworkCatalogTree::onAuthCheck(const std::string &error) {
 	if (!error.empty()) {
-		const NetworkLink &link = item().Link;
-		shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
-		if (!manager.isNull()) {
-			manager->logOut();
-		}
+		notifyListeners(error);
+		return;
 	}
+
 	if (!myChildrenItems.empty()) {
 		notifyDownloadStopped();
 		notifyListeners(std::string()); //TODO maybe not be silent about auth error here
 		return;
 	}
 	new AsyncLoadSubCatalogRunnable(this, false);
+
 }
 
 void NetworkCatalogTree::requestMoreChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {

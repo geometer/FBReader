@@ -94,8 +94,7 @@ private:
 	void notifyListeners(const std::string &error);
 
 private:
-	void onAuthCheck(ZLUserDataHolder &data, const std::string &error);
-	void onInitialization(ZLUserDataHolder &data, const std::string &error);
+	void onAuthCheck(const std::string &error);
 
 private:
 	const ZLResource &resource() const;
@@ -108,6 +107,7 @@ private:
 	mutable shared_ptr<const ZLImage> myImage;
 
 friend class NetworkTreeFactory;
+friend class NetworkCatalogTreeAuthListener;
 };
 
 class NetworkCatalogRootTree : public NetworkCatalogTree {
@@ -118,7 +118,7 @@ public:
 private:
 	const ZLTypeId &typeId() const;
 
-private:
+public:
 	class LoginAction;
 	class LogoutAction;
 	class TopupAccountAction;

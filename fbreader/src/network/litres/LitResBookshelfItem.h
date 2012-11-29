@@ -21,6 +21,7 @@
 #define __LITRESBOOKSHELFITEM_H__
 
 #include <ZLResource.h>
+#include <ZLExecutionUtil.h>
 
 #include "../NetworkComparators.h"
 #include "../NetworkItems.h"
@@ -41,6 +42,7 @@ public:
 private:
 	void onDisplayItem();
 	std::string loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener);
+	void onReloaded(ZLUserDataHolder &data, const std::string &error);
 
 private:
 	bool myForceReload;

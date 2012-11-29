@@ -97,26 +97,26 @@ const std::string &DownloadBookRunnable::fileName() const {
 	return myFileName;
 }
 
-AuthoriseRunnable::AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password) :
-	NetworkOperationRunnable("authentication"),
-	myManager(mgr),
-	myPassword(password) {
-}
+//AuthoriseRunnable::AuthoriseRunnable(NetworkAuthenticationManager &mgr, const std::string &password) :
+//	NetworkOperationRunnable("authentication"),
+//	myManager(mgr),
+//	myPassword(password) {
+//}
 
-void AuthoriseRunnable::run() {
-	myErrorMessage = myManager.authorise(myPassword);
-}
+//void AuthoriseRunnable::run() {
+//	myErrorMessage = myManager.authorise(myPassword);
+//}
 
-LogOutRunnable::LogOutRunnable(NetworkAuthenticationManager &mgr) :
-	NetworkOperationRunnable("signOut"),
-	myManager(mgr) {
-}
+//LogOutRunnable::LogOutRunnable(NetworkAuthenticationManager &mgr) :
+//	NetworkOperationRunnable("signOut"),
+//	myManager(mgr) {
+//}
 
-void LogOutRunnable::run() {
-	if (myManager.isAuthorised().Status != B3_FALSE) {
-		myManager.logOut();
-	}
-}
+//void LogOutRunnable::run() {
+//	if (myManager.isAuthorised().Status != B3_FALSE) {
+//		myManager.logOut();
+//	}
+//}
 
 PasswordRecoveryRunnable::PasswordRecoveryRunnable(NetworkAuthenticationManager &mgr, const std::string &email) :
 	NetworkOperationRunnable("passwordRecovery"),
