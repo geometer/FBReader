@@ -119,8 +119,7 @@ bool RegisterUserDialog::run(NetworkAuthenticationManager &mgr) {
 	std::string email;
 	while (true) {
 		if (!runDialog(login, password, email, errorMessage)) {
-			LogOutRunnable logout(mgr);
-			logout.executeWithUI();
+			mgr.logOut();
 			return false;
 		}
 
@@ -128,8 +127,7 @@ bool RegisterUserDialog::run(NetworkAuthenticationManager &mgr) {
 		registration.executeWithUI();
 		if (registration.hasErrors()) {
 			errorMessage = registration.errorMessage();
-			LogOutRunnable logout(mgr);
-			logout.executeWithUI();
+			mgr.logOut();
 			continue;
 		}
 

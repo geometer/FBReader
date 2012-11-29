@@ -49,6 +49,8 @@ public:
 	static const std::string ERROR_UNSUPPORTED_OPERATION;
 	static const std::string ERROR_CANT_DOWNLOAD_LIBRARIES_LIST;
 
+	static const std::string ERROR_TIMEOUT_EXPIRED;
+
 public:
 	static std::string errorMessage(const std::string &error);
 	static std::string errorMessage(const std::string &error, const std::string &arg0);

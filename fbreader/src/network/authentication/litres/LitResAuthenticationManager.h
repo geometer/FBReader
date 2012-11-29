@@ -35,8 +35,8 @@ public:
 
 public:
 	AuthenticationStatus isAuthorised(shared_ptr<ZLNetworkRequest::Listener> listener = 0);
-	std::string authorise(const std::string &pwd); //TODO make async
-	void logOut(); //TODO make async
+	std::string authorise(const std::string &pwd, shared_ptr<ZLNetworkRequest::Listener> listener);
+	void logOut();
 	bool skipIPSupported();
 
 	const std::string &currentUserName();
@@ -49,7 +49,7 @@ public:
 	std::string topupAccountLink();
 	std::string currentAccount();
 
-	std::string reloadPurchasedBooks(); //TODO make async
+	std::string reloadPurchasedBooks(shared_ptr<ZLNetworkRequest::Listener> listener);
 	void collectPurchasedBooks(NetworkItem::List &list);
 	const std::set<std::string> &getPurchasedIds() const;
 	const NetworkItem::List &purchasedBooks() const;
@@ -59,6 +59,7 @@ private:
 	void onBookPurchased(ZLUserDataHolder &data, const std::string &error);
 	void onBooksLoaded(ZLUserDataHolder &data, const std::string &error);
 	void onAccountReceived(ZLUserDataHolder &data, const std::string &error);
+	void onBooksReloaded(ZLUserDataHolder &data, const std::string &error);
 
 private:
 	shared_ptr<ZLNetworkRequest> loadPurchasedBooks(std::set<std::string> &purchasedBooksIds, NetworkItem::List &purchasedBooksList);

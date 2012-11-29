@@ -52,6 +52,7 @@
 			<node name="reload" value="Reload"/>
 			<node name="dontShow" value="Don't show this catalog"/>
 			<node name="topupAccount" value="Top up account (currently: %s)"/>
+			<node name="topupAccountUndefined" value="Top up account"/>
 			<node name="register" value="Sign up"/>
 			<node name="passwordRecovery" value="Recover password"/>
 		</node>

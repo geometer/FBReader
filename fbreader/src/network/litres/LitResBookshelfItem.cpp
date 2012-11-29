@@ -20,6 +20,7 @@
 #include <algorithm>
 
 #include <ZLNetworkRequest.h>
+#include <ZLExecutionUtil.h>
 
 #include "LitResBookshelfItem.h"
 #include "../authentication/litres/LitResAuthenticationManager.h"
@@ -50,20 +51,44 @@ void LitResBookshelfItem::onDisplayItem() {
 	myForceReload = false;
 }
 
+class LitResBookshelfItemLoaderScope : public ZLUserData {
+public:
+	LitResBookshelfItemLoaderScope(NetworkItem::List &children) : Children(children) {}
+	NetworkItem::List &Children;
+	shared_ptr<ZLNetworkRequest::Listener> listener;
+};
+
+
 std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, shared_ptr<ZLNetworkRequest::Listener> listener) {
 	LitResAuthenticationManager &mgr = (LitResAuthenticationManager&)*Link.authenticationManager();
 	if (mgr.isAuthorised().Status == B3_FALSE) {
 		listener->finished(NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED));
 		return NetworkErrors::errorMessage(NetworkErrors::ERROR_AUTHENTICATION_FAILED);
 	}
-	std::string error;
-	if (myForceReload) {
-		error = mgr.reloadPurchasedBooks();
-	}
-	myForceReload = true;
 
+	LitResBookshelfItemLoaderScope *scope = new LitResBookshelfItemLoaderScope(children);
+	scope->listener = listener;
+
+	shared_ptr<ZLUserDataHolder> scopeData = new ZLUserDataHolder;
+	scopeData->addUserData("scope", scope);
+	if (myForceReload) {
+		mgr.reloadPurchasedBooks(ZLExecutionUtil::createListener(scopeData, this, &LitResBookshelfItem::onReloaded));
+		return std::string();
+	}
+	onReloaded(*scopeData, std::string());
+	return std::string();
+}
+
+void LitResBookshelfItem::onReloaded(ZLUserDataHolder &data, const std::string &error) {
+	LitResBookshelfItemLoaderScope &scope = static_cast<LitResBookshelfItemLoaderScope&>(*data.getUserData("scope"));
+	LitResAuthenticationManager &mgr = static_cast<LitResAuthenticationManager&>(*Link.authenticationManager());
+	myForceReload = true;
 	NetworkItem::List tmpChildren;
 	mgr.collectPurchasedBooks(tmpChildren);
+	std::sort(tmpChildren.begin(), tmpChildren.end(), NetworkBookItemComparator());
+
+
+	NetworkItem::List &children = scope.Children;
 
 	if (tmpChildren.size() <= 5) {
 		children.assign(tmpChildren.begin(), tmpChildren.end());
@@ -82,7 +107,5 @@ std::string LitResBookshelfItem::loadChildren(NetworkItem::List &children, share
 		}
 	}
 
-	listener->finished(error);
-
-	return error;
+	scope.listener->finished(error);
 }
