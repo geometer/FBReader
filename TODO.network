@@ -17,14 +17,16 @@ RELEASE 0.99.4 (expected late November 2012):
 			DONE authorise
 				** showing spinner for differenct amount of actions
 					** maybe block entering in catalog if it have listeners? (for 
-				** /myHolder.reset(); bug
+				** myHolder.reset(); bug
 				DONE right showing of spinner
-			DONE reloadPurchasedBooks 	
+			DONE reloadPurchasedBooks
+
+		DONE top up text button (if account is not retrieved yet)
+
+		** продумать все возможные ответы сервера, если во время загрузки litres item нажать на sign out?
 
 		** make litres initialize at network library start up (for retrieving account and showing topup account button)
-			** top up text button
 			** collision: if we have not initiliazed everything yet?
-		** продумать все возможные ответы сервера, если во время загрузки litres item нажать на sign out?
 
 	  ** bug: litres login: sometimes program goes to the strange status, shows "sign out" button in right pane but requests authorization after double click on "My books" item
 			** looks like it was because it was thought we're authorized, but it wasn't true
@@ -75,6 +77,7 @@ FUTURE RELEASES:
 		** "type to search..."
 		** books conditional count
 			** where to put these resource?
+  	** add topupAccountUndefined to all resources
 
   ** UI: implement support for recording each node's show parameters
 	  DONE save current node for preview widget

@@ -118,9 +118,8 @@ void NetworkCatalogRootTree::init() {
 	if (!mgr.isNull()) {
 		registerAction(new LoginAction(*mgr, this));
 		registerAction(new LogoutAction(*mgr));
-		if (!mgr->topupAccountLink().empty()) {
-			registerAction(new TopupAccountAction(*mgr));
-		}
+		registerAction(new TopupAccountAction(*mgr));
+
 		if (mgr->registrationSupported()) {
 			registerAction(new RegisterUserAction(*mgr));
 		}
@@ -212,7 +211,7 @@ NetworkCatalogRootTree::TopupAccountAction::TopupAccountAction(NetworkAuthentica
 }
 
 ZLResourceKey NetworkCatalogRootTree::TopupAccountAction::key() const {
-	return ZLResourceKey("topupAccount");
+	return !myManager.currentAccount().empty() ? ZLResourceKey("topupAccount") : ZLResourceKey("topupAccountUndefined");
 }
 
 std::string NetworkCatalogRootTree::TopupAccountAction::text(const ZLResource &resource) const {
@@ -230,9 +229,7 @@ void NetworkCatalogRootTree::TopupAccountAction::run() {
 }
 
 bool NetworkCatalogRootTree::TopupAccountAction::makesSense() const {
-	return
-		NetworkTreeCatalogAuthAction::makesSense() &&
-		!myManager.currentAccount().empty();
+	return	NetworkTreeCatalogAuthAction::makesSense();
 }
 
 NetworkCatalogRootTree::PasswordRecoveryAction::PasswordRecoveryAction(NetworkAuthenticationManager &mgr) : NetworkTreeCatalogAuthAction(mgr, false) {
