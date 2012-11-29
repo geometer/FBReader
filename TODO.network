@@ -15,7 +15,7 @@ RELEASE 0.99.4 (expected late November 2012):
 	** litres: 
 		** implement async 
 			DONE authorise
-				** myHolder.reset(); bug
+				DONE myHolder.reset(); bug
 				DONE right showing of spinner
 			DONE reloadPurchasedBooks
 

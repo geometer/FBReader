@@ -177,10 +177,8 @@ void NetworkCatalogRootTree::LoginAction::run() {
 		new LoginActionListener(*this)
 	);
 }
-#include <iostream>
 
 void NetworkCatalogRootTree::LoginAction::onAuthorised(const std::string &/*error*/) {
-	std::cout << "LoginAction::onAuthorised" << std::endl;
 	myNode->notifyDownloadStopped();
 	NetworkLibrary::Instance().invalidateVisibility();
 	NetworkLibrary::Instance().synchronize();

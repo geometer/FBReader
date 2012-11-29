@@ -136,8 +136,6 @@ private:
 	NetworkCatalogTree *myTree;
 };
 
-#include <iostream>
-
 void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> listener) {
 	myListeners.push_back(listener);
 	if (myListeners.size() > 1) {
@@ -148,13 +146,11 @@ void NetworkCatalogTree::requestChildren(shared_ptr<ZLNetworkRequest::Listener> 
 	shared_ptr<NetworkAuthenticationManager> manager = link.authenticationManager();
 
 	if (item().getVisibility() == B3_UNDEFINED && !manager.isNull()) {
-		std::cout << "call authAndInitAsync" << std::endl;
 		AuthenticationDialogManager::authAndInitAsync(*manager, new NetworkCatalogTreeAuthListener(this));
 		return;
 	}
 
 	if (!manager.isNull() && manager->isAuthorised(0).Status == B3_TRUE) {
-		std::cout << "call athoriseIfCan" << std::endl;
 		AuthenticationDialogManager::athoriseIfCan(*manager, new NetworkCatalogTreeAuthListener(this));
 		return;
 	}

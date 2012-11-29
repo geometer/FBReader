@@ -19,6 +19,7 @@
 
 #include <ZLExecutionUtil.h>
 #include <ZLResource.h>
+#include <ZLTimeManager.h>
 
 #include "../network/NetworkErrors.h"
 #include "../network/NetworkLink.h"
@@ -54,16 +55,15 @@ AuthenticationDialogListener::AuthenticationDialogListener(NetworkAuthentication
 	finished(std::string()); //start state machine from LogOut state
 }
 
-#include <iostream>
 void AuthenticationDialogListener::returnAnswer(bool result) {
 	if (result) {
 		myUserList.saveUser(myManager.currentUserName());
 	}
 	// TODO: Return notable error
 	myListener->setUIStatus(false);
-	std::cout << "AuthenticationDialogListener :: finished with " << result << "result" << std::endl;
 	myListener->finished(result ? std::string() : "Some error");
-	//myHolder.reset();
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
 }
 
 
@@ -74,7 +74,6 @@ void AuthenticationDialogListener::finished(const std::string &error) {
 	switch (myState) {
 		case LogOut:
 			if (!AuthenticationDialog::run(myManager.UserNameOption, myUserList, myError, myPassword)) {
-				std::cout << "cancel pressed" << std::endl;
 				myManager.logOut();
 				returnAnswer(false);
 				return;
@@ -145,7 +144,8 @@ AuthoriseIfCanListener::AuthoriseIfCanListener(NetworkAuthenticationManager &mgr
 void AuthoriseIfCanListener::returnAnswer(std::string answer) {
 	myListener->setUIStatus(false);
 	myListener->finished(answer);
-	//myHolder.reset();
+	ZLTimeManager::deleteLater(myHolder);
+	myHolder.reset();
 }
 
 void AuthoriseIfCanListener::finished(const std::string &error) {
