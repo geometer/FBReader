@@ -99,8 +99,14 @@ std::string LitResAuthenticationManager::authorise(const std::string &pwd, share
 	return ZLNetworkManager::Instance().performAsync(networkData);
 }
 
-void LitResAuthenticationManager::onAuthorised(ZLUserDataHolder &data, const std::string &error) {
+void LitResAuthenticationManager::onAuthorised(ZLUserDataHolder &data, const std::string &error) {	
 	LitResAuthorisationScope &scope = static_cast<LitResAuthorisationScope&>(*data.getUserData("scope"));
+
+	if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_TIMEOUT_EXPIRED)) {
+		scope.listener->finished(error);
+		return;
+	}
+
 	mySidChecked = true;
 	if (!error.empty()) {
 		mySidUserNameOption.setValue("");
@@ -274,6 +280,12 @@ std::string LitResAuthenticationManager::initialize(shared_ptr<ZLNetworkRequest:
 
 void LitResAuthenticationManager::onBooksLoaded(ZLUserDataHolder &data, const std::string &error) {
 	LitResInitializationScope &scope = static_cast<LitResInitializationScope&>(*data.getUserData("scope"));
+
+	if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_TIMEOUT_EXPIRED)) {
+		scope.listener->finished(error);
+		return;
+	}
+
 	scope.error = error;
 	shared_ptr<ZLNetworkRequest> request = loadAccount(scope.dummy);
 	request->setListener(ZLExecutionUtil::createListener(new ZLUserDataHolder(data), this, &LitResAuthenticationManager::onAccountReceived));
@@ -282,6 +294,12 @@ void LitResAuthenticationManager::onBooksLoaded(ZLUserDataHolder &data, const st
 
 void LitResAuthenticationManager::onAccountReceived(ZLUserDataHolder &data, const std::string &error) {
 	LitResInitializationScope &scope = static_cast<LitResInitializationScope&>(*data.getUserData("scope"));
+
+	if (error == NetworkErrors::errorMessage(NetworkErrors::ERROR_TIMEOUT_EXPIRED)) {
+		scope.listener->finished(error);
+		return;
+	}
+
 	if (!error.empty() && !scope.error.empty()) {
 		scope.error.append("\n").append(error);
 	} else if (!error.empty()) {

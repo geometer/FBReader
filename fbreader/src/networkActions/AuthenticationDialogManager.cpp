@@ -20,6 +20,7 @@
 #include <ZLExecutionUtil.h>
 #include <ZLResource.h>
 
+#include "../network/NetworkErrors.h"
 #include "../network/NetworkLink.h"
 #include "AuthenticationDialog.h"
 #include "NetworkOperationRunnable.h"
@@ -54,17 +55,18 @@ AuthenticationDialogListener::AuthenticationDialogListener(NetworkAuthentication
 }
 
 #include <iostream>
-
 void AuthenticationDialogListener::returnAnswer(bool result) {
 	if (result) {
 		myUserList.saveUser(myManager.currentUserName());
 	}
 	// TODO: Return notable error
-	std::cout << "calling finished()" << std::endl;
 	myListener->setUIStatus(false);
+	std::cout << "AuthenticationDialogListener :: finished with " << result << "result" << std::endl;
 	myListener->finished(result ? std::string() : "Some error");
 	//myHolder.reset();
 }
+
+
 
 void AuthenticationDialogListener::finished(const std::string &error) {
 	myError = error;
@@ -72,6 +74,7 @@ void AuthenticationDialogListener::finished(const std::string &error) {
 	switch (myState) {
 		case LogOut:
 			if (!AuthenticationDialog::run(myManager.UserNameOption, myUserList, myError, myPassword)) {
+				std::cout << "cancel pressed" << std::endl;
 				myManager.logOut();
 				returnAnswer(false);
 				return;
@@ -121,11 +124,11 @@ class AuthoriseIfCanListener : public ZLNetworkRequest::Listener {
 public:
 	AuthoriseIfCanListener(NetworkAuthenticationManager &mgr, shared_ptr<ZLNetworkRequest::Listener> listener);
 
-	void returnAnswer();
+	void returnAnswer(std::string answer = std::string());
 	virtual void finished(const std::string &error = std::string());
 
 private:
-	enum State { Init, AuthorisationCheck, Initialization, LogOut};
+	enum State { Init, AuthorisationCheck, Initialization};
 
 	shared_ptr<ZLNetworkRequest::Listener> myHolder;
 
@@ -139,12 +142,9 @@ AuthoriseIfCanListener::AuthoriseIfCanListener(NetworkAuthenticationManager &mgr
 	finished(std::string()); //start state machine from Init state
 }
 
-#include <iostream>
-
-void AuthoriseIfCanListener::returnAnswer() {
-	std::cout << "calling finished() of auth if can" << std::endl;
+void AuthoriseIfCanListener::returnAnswer(std::string answer) {
 	myListener->setUIStatus(false);
-	myListener->finished(std::string());
+	myListener->finished(answer);
 	//myHolder.reset();
 }
 
@@ -158,8 +158,8 @@ void AuthoriseIfCanListener::finished(const std::string &error) {
 			break;
 		case AuthorisationCheck:
 			if (!error.empty()) {
-				myState = LogOut;
-				finished(error);
+				NetworkErrors::showErrorMessage(error);
+				returnAnswer(error);
 				return;
 			}
 			if (myManager.needsInitialization()) {
@@ -172,14 +172,10 @@ void AuthoriseIfCanListener::finished(const std::string &error) {
 			break;
 		case Initialization:
 			if (!error.empty()) {
-				myState = LogOut;
-				finished(error);
+				NetworkErrors::showErrorMessage(error);
+				returnAnswer(error);
 				return;
 			}
-			returnAnswer();
-			break;
-		case LogOut:
-			myManager.logOut();
 			returnAnswer();
 			break;
 	}

@@ -15,15 +15,11 @@ RELEASE 0.99.4 (expected late November 2012):
 	** litres: 
 		** implement async 
 			DONE authorise
-				** showing spinner for differenct amount of actions
-					** maybe block entering in catalog if it have listeners? (for 
 				** myHolder.reset(); bug
 				DONE right showing of spinner
 			DONE reloadPurchasedBooks
 
 		DONE top up text button (if account is not retrieved yet)
-
-		** продумать все возможные ответы сервера, если во время загрузки litres item нажать на sign out?
 
 		** make litres initialize at network library start up (for retrieving account and showing topup account button)
 			** collision: if we have not initiliazed everything yet?
