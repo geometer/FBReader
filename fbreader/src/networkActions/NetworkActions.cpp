@@ -214,23 +214,44 @@ void NetworkBookBuyDirectlyAction::run() {
 	}
 
 	NetworkAuthenticationManager &mgr = *myBook.Link.authenticationManager();
+	myTree.notifyDownloadStarted();
 	mgr.isAuthorised(ZLExecutionUtil::createListener(this, &NetworkBookBuyDirectlyAction::onAuthorisationCheck));
 }
 
-void NetworkBookBuyDirectlyAction::onAuthorisationCheck(ZLUserDataHolder &data, const std::string &error) {
+class BuyActionAuthListener : public ZLNetworkRequest::Listener {
+public:
+	BuyActionAuthListener(NetworkBookBuyDirectlyAction &action) : myAction(action) {
+	}
+
+	void finished(const std::string &error) {
+		myAction.onAuthorised(error);
+	}
+
+	void setUIStatus(bool enabled) {
+		if (enabled) {
+			myAction.myTree.notifyDownloadStarted();
+		} else {
+			myAction.myTree.notifyDownloadStopped();
+		}
+	}
+
+private:
+	NetworkBookBuyDirectlyAction &myAction;
+};
+
+void NetworkBookBuyDirectlyAction::onAuthorisationCheck(ZLUserDataHolder &/*data*/, const std::string &error) {
+	myTree.notifyDownloadStopped();
 	if (error.empty()) {
-		onAuthorised(data, error);
+		onAuthorised(error);
 	} else {
-		ZLUserDataHolder *copyData = new ZLUserDataHolder(data);
 		AuthenticationDialogManager::authAndInitAsync(
 			*myBook.Link.authenticationManager(),
-			ZLExecutionUtil::createListener(copyData, this, &NetworkBookBuyDirectlyAction::onAuthorised)
+			new BuyActionAuthListener(*this)
 		);
 	}
 }
 
-void NetworkBookBuyDirectlyAction::onAuthorised(ZLUserDataHolder &data, const std::string &error) {
-	(void) data;
+void NetworkBookBuyDirectlyAction::onAuthorised(const std::string &error) {
 	if (!error.empty()) {
 		finished(std::string()); //ignore error message
 		return;
