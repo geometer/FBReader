@@ -1,7 +1,10 @@
-===== 0.99.4 (??, 2012) =====
+===== 0.99.4 (November 30, 2012) =====
 
 * Bulgarian hyphenation patterns, converted by Kaloyan Raev
 * Network catalogs: fixed Cyryllic names rendering
+* Showing suggestions in search field
+* Fixed bug with duplicates series items in LitRes catalog
+* Fixed different network bugs in Network Library
 
 ===== 0.99.3 (November 18, 2012) =====
 

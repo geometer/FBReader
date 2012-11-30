@@ -9,30 +9,15 @@
 	** now we use 77/77 px resizing for all covers
 
 RELEASE 0.99.4 (expected late November 2012):
-  DONE bug: spinner icon
-    between commits a6693fc41366e2559a9a605410578cc45cc30bd6 f035b2665a0812a2c706a502d344a10535b6b672
-
-	** litres: 
-		** implement async 
+  DONE bug: spinner icon (between commits a6693fc41366e2559a9a605410578cc45cc30bd6 f035b2665a0812a2c706a502d344a10535b6b672
+	DONE litres: 
+		DONE implement async 
 			DONE authorise
 				DONE myHolder.reset(); bug
 				DONE right showing of spinner
 			DONE reloadPurchasedBooks
-
 		DONE top up text button (if account is not retrieved yet)
-
-		** make litres initialize at network library start up (for retrieving account and showing topup account button)
-			** collision: if we have not initiliazed everything yet?
-
-	  ** bug: litres login: sometimes program goes to the strange status, shows "sign out" button in right pane but requests authorization after double click on "My books" item
-			** looks like it was because it was thought we're authorized, but it wasn't true
-				** or error with checking on isAuthorised, so, we should re-asked it
-
-		** implement a way to be safe about deleted nodes (async undefined behaviour)
-			** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
-			** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
-
-  	** litres: 'buy' button in book pane does not work (I couldn't reproduce it)
+	  DONE bug: litres login: sometimes program goes to the strange status, shows "sign out" button in right pane but requests authorization after double click on "My books" item
 		DONE bug: litres -> buy book -> authentication dialog -> cancel -> "no auth" message :(
 	  DONE bug: litres account state is not shown (button 'topup account')
   	DONE litres 'top 50 by popularity' -- book duplicates?
@@ -62,6 +47,12 @@ FUTURE RELEASES:
       ** in case of network error: show in the same item a message like 'download failed, click to retry'
 
   ** replace error dialogs (with what?)
+
+	** make litres initialize at network library start up (for retrieving account and showing topup account button)
+		** collision: if we have not initiliazed everything yet?
+	** implement a way to be safe about deleted nodes (async undefined behaviour)
+		** how to reproduce: sign out -> my books (in loading) -> signout (before loaded)
+		** how to reproduce: sign out -> recommends (in loading) -> signout (before loaded)
 
 	** implement a way to sign out from catalogs like Feedbooks and Wolne Lektury
 	** implement waiting icon for related action items
