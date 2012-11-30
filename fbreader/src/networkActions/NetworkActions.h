@@ -68,9 +68,11 @@ public:
 
 private:
 	void onAuthorisationCheck(ZLUserDataHolder &data, const std::string &error);
-	void onAuthorised(ZLUserDataHolder &data, const std::string &error);
+	void onAuthorised(const std::string &error);
 	void onPurchased(ZLUserDataHolder &data, const std::string &error);
 	void finished(const std::string &error);
+
+friend class BuyActionAuthListener;
 };
 
 class NetworkBookBuyInBrowserAction : public ZLRunnableWithKey {
