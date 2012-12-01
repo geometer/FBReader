@@ -51,33 +51,28 @@ void ZLApplicationWindow::refreshToolbar() {
 	bool canAddSeparator = false;
 	ZLToolbar::ItemPtr lastSeparator = 0;
 	for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
-		switch ((*it)->type()) {
-			case ZLToolbar::Item::PLAIN_BUTTON:
-			{
-				ZLToolbar::ActionItem &button = (ZLToolbar::ActionItem&)**it;
-				const std::string &id = button.actionId();
-
-				const bool visible = application().isActionVisible(id);
-				const bool enabled = application().isActionEnabled(id);
-
-				if (visible) {
-					if (!lastSeparator.isNull()) {
-						setToolbarItemState(lastSeparator, true, true);
-						lastSeparator = 0;
-					}
-					canAddSeparator = true;
-				}
-				setToolbarItemState(*it, visible, enabled);
-				break;
+		if ((*it)->isSeparator()) {
+			if (canAddSeparator) {
+				lastSeparator = *it;
+				canAddSeparator = false;
+			} else {
+				setToolbarItemState(*it, false, true);
 			}
-			case ZLToolbar::Item::SEPARATOR:
-				if (canAddSeparator) {
-					lastSeparator = *it;
-					canAddSeparator = false;
-				} else {
-					setToolbarItemState(*it, false, true);
+		} else {
+			ZLToolbar::ButtonItem &button = (ZLToolbar::ButtonItem&)**it;
+			const std::string &id = button.actionId();
+
+			const bool visible = application().isActionVisible(id);
+			const bool enabled = application().isActionEnabled(id);
+
+			if (visible) {
+				if (!lastSeparator.isNull()) {
+					setToolbarItemState(lastSeparator, true, true);
+					lastSeparator = 0;
 				}
-				break;
+				canAddSeparator = true;
+			}
+			setToolbarItemState(*it, visible, enabled);
 		}
 	}
 	if (!lastSeparator.isNull()) {

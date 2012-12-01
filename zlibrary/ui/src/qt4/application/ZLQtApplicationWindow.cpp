@@ -42,7 +42,7 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 	myApplicationWindow = new ZLQtApplicationWindow(application);
 }
 
-ZLQtToolBarAction::ZLQtToolBarAction(ZLApplication &application, QObject *parent, ZLToolbar::AbstractButtonItem &item) : ZLQtAction(application, item.actionId(), parent) {
+ZLQtToolBarAction::ZLQtToolBarAction(ZLApplication &application, QObject *parent, ZLToolbar::ButtonItem &item) : ZLQtAction(application, item.actionId(), parent) {
 	//static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	//const QString path = QString::fromUtf8(ZLFile(imagePrefix + item.iconName() + ".png").path().c_str());
 	//QPixmap icon(path);
@@ -66,7 +66,6 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	myToolBar->setFocusPolicy(Qt::NoFocus);
 	myToolBar->setMovable(false);
 	addToolBar(myToolBar);
-	myToolBar->setIconSize(QSize(32, 32));
 
 	resize(myWidthOption.value(), myHeightOption.value());
 	move(myXOption.value(), myYOption.value());
@@ -112,11 +111,6 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 		}
 		myWidthOption.setValue(width());
 		myHeightOption.setValue(height());
-	}
-	for (std::map<std::string,QAction*>::iterator it = myActions.begin(); it != myActions.end(); ++it) {
-		if (it->second != 0) {
-			delete it->second;
-		}
 	}
 }
 
@@ -167,20 +161,13 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 }
 
 void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
-	QAction *action = 0;
-
-	switch (item->type()) {
-		case ZLToolbar::Item::PLAIN_BUTTON:
-			action = new ZLQtToolBarAction(application(), myToolBar, (ZLToolbar::AbstractButtonItem&)*item);
-			myToolBar->addAction(action);
-			break;
-		case ZLToolbar::Item::SEPARATOR:
-			action = myToolBar->addSeparator();
-			break;
-	}
-
-	if (action != 0) {
-		myActions[item->actionId()] = action;
+	if (item->isSeparator()) {
+		myToolbarActions[item] = myToolBar->addSeparator();
+	} else {
+		ZLToolbar::ButtonItem& buttonItem = (ZLToolbar::ButtonItem&)*item;
+		QAction *action = new ZLQtToolBarAction(application(), myToolBar, buttonItem);
+		myToolBar->addAction(action);
+		myToolbarActions[item] = action;
 	}
 }
 
@@ -197,7 +184,7 @@ void ZLQtRunPopupAction::onActivated() {
 }
 
 void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
-	QAction *action = myActions[item->actionId()];
+	QAction *action = myToolbarActions[item];
 	if (action != 0) {
 		action->setEnabled(enabled);
 		action->setVisible(visible);

@@ -65,11 +65,11 @@ void ZLToolbarCreator::startElementHandler(const char *tag, const char **attribu
 	static const std::string SEPARATOR = "separator";
 
 	if (SEPARATOR == tag) {
-		new ZLToolbar::SeparatorItem(myToolbar, ZLToolbar::Item::SEPARATOR);
+		new ZLToolbar::SeparatorItem(myToolbar);
 	} else if (BUTTON == tag) {
 		const char *id = attributeValue(attributes, "id");
 		if (id != 0) {
-			new ZLToolbar::PlainButtonItem(myToolbar, id);
+			new ZLToolbar::ButtonItem(myToolbar, id);
 		}
 	}
 }
@@ -82,30 +82,21 @@ const ZLResource &ZLToolbar::resource(const std::string &id) {
 	return ZLResource::resource("toolbar")[id];
 }
 
-ZLToolbar::Item::Item(ZLToolbar &toolbar, Type type) : myToolbar(toolbar), myType(type) {
+ZLToolbar::Item::Item(ZLToolbar &toolbar) {
 	toolbar.myItems.push_back(this);
 }
 
 ZLToolbar::Item::~Item() {
 }
 
-const ZLToolbar &ZLToolbar::Item::toolbar() const {
-	return myToolbar;
+ZLToolbar::ButtonItem::ButtonItem(ZLToolbar &toolbar, const std::string &actionId) : Item(toolbar), myResource(toolbar.resource(actionId)), myActionId(actionId) {
 }
 
-ZLToolbar::Item::Type ZLToolbar::Item::type() const {
-	return myType;
-}
-
-ZLToolbar::ActionItem::ActionItem(ZLToolbar &toolbar, Type type, const std::string &actionId) :
-	Item(toolbar, type), myActionId(actionId), myResource(toolbar.resource(actionId)) {
-}
-
-const std::string &ZLToolbar::ActionItem::actionId() const {
+const std::string &ZLToolbar::ButtonItem::actionId() const {
 	return myActionId;
 }
 
-const std::string &ZLToolbar::ActionItem::label() const {
+const std::string &ZLToolbar::ButtonItem::label() const {
 	const ZLResource &labelResource = myResource["label"];
 	if (!labelResource.hasValue()) {
 		static const std::string EMPTY;
@@ -114,7 +105,7 @@ const std::string &ZLToolbar::ActionItem::label() const {
 	return labelResource.value();
 }
 
-const std::string &ZLToolbar::ActionItem::tooltip() const {
+const std::string &ZLToolbar::ButtonItem::tooltip() const {
 	const ZLResource &tooltipResource = myResource["tooltip"];
 	if (!tooltipResource.hasValue()) {
 		static const std::string EMPTY;
@@ -123,11 +114,12 @@ const std::string &ZLToolbar::ActionItem::tooltip() const {
 	return tooltipResource.value();
 }
 
-ZLToolbar::AbstractButtonItem::AbstractButtonItem(ZLToolbar &toolbar, Type type, const std::string &actionId) : ActionItem(toolbar, type, actionId) {
+const std::string &ZLToolbar::ButtonItem::iconName() const {
+	return actionId();
 }
 
-ZLToolbar::PlainButtonItem::PlainButtonItem(ZLToolbar &toolbar, const std::string &actionId) :
-	AbstractButtonItem(toolbar, PLAIN_BUTTON, actionId) {
+bool ZLToolbar::ButtonItem::isSeparator() const {
+	return false;
 }
 
 shared_ptr<ZLPopupData> ZLApplication::popupData(const std::string &actionId) const {
@@ -135,19 +127,14 @@ shared_ptr<ZLPopupData> ZLApplication::popupData(const std::string &actionId) co
 	return it == myPopupDataMap.end() ? 0 : it->second;
 }
 
-const std::string &ZLToolbar::AbstractButtonItem::iconName() const {
-	return actionId();
-}
-
 ZLToolbar::ZLToolbar(const ZLApplication &application) : myApplication(application) {
 }
 
-ZLToolbar::SeparatorItem::SeparatorItem(ZLToolbar &toolbar, Type type) : Item(toolbar, type) {
+ZLToolbar::SeparatorItem::SeparatorItem(ZLToolbar &toolbar) : Item(toolbar) {
 }
 
-const std::string &ZLToolbar::SeparatorItem::actionId() const {
-  static const std::string EMPTY;
-	return EMPTY;
+bool ZLToolbar::SeparatorItem::isSeparator() const {
+	return true;
 }
 
 const ZLResource &ZLPopupData::resource(const std::string &actionId) {

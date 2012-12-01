@@ -37,57 +37,34 @@ public:
 	class Item {
 
 	public:
-		enum Type {
-			PLAIN_BUTTON,
-			SEPARATOR
-		};
-
-	public:
-		Item(ZLToolbar &toolbar, Type type);
+		Item(ZLToolbar &toolbar);
 		virtual ~Item();
 
-		Type type() const;
-		const ZLToolbar &toolbar() const;
-		virtual const std::string &actionId() const = 0;
-
-	private:
-		const ZLToolbar &myToolbar;
-		const Type myType;
+		virtual bool isSeparator() const = 0;
 	};
 
-	class ActionItem : public Item {
+	class ButtonItem : public Item {
 
 	public:
-		ActionItem(ZLToolbar &toolbar, Type type, const std::string &actionId);
+		ButtonItem(ZLToolbar &toolbar, const std::string &actionId);
+
+		bool isSeparator() const;
+
 		const std::string &actionId() const;
 		const std::string &label() const;
 		const std::string &tooltip() const;
+		const std::string &iconName() const;
 
 	private:
-		const std::string myActionId;
-
-	protected:
 		const ZLResource &myResource;
-	};
-
-	class AbstractButtonItem : public ActionItem {
-
-	public:
-		AbstractButtonItem(ZLToolbar &toolbar, Type type, const std::string &actionId);
-		const std::string &iconName() const;
-	};
-
-	class PlainButtonItem : public AbstractButtonItem {
-
-	public:
-		PlainButtonItem(ZLToolbar &toolbar, const std::string &actionId);
+		const std::string myActionId;
 	};
 
 	class SeparatorItem : public Item {
 
 	public:
-		SeparatorItem(ZLToolbar &toolbar, Type type);
-		const std::string &actionId() const;
+		SeparatorItem(ZLToolbar &toolbar);
+		bool isSeparator() const;
 	};
 
 public:

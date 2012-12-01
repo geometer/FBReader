@@ -97,7 +97,7 @@ private Q_SLOTS:
 private:
 	QToolBar *myToolBar;
 
-	std::map<std::string,QAction*> myActions;
+	std::map<ZLToolbar::ItemPtr,QAction*> myToolbarActions;
 	std::list<ZLQtAction*> myMenuActions;
 	std::list<ZLQtMenu*> mySubmenuList;
 
@@ -137,7 +137,7 @@ public:
 class ZLQtToolBarAction : public ZLQtAction {
 
 public:
-	ZLQtToolBarAction(ZLApplication &application, QObject *parent, ZLToolbar::AbstractButtonItem &item);
+	ZLQtToolBarAction(ZLApplication &application, QObject *parent, ZLToolbar::ButtonItem &item);
 };
 
 class ZLQtRunPopupAction : public QAction {
