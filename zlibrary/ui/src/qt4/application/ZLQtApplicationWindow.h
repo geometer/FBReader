@@ -118,27 +118,27 @@ public:
 private Q_SLOTS:
 	void onActivated();
 
-public:
-	const std::string Id;
-
 private:
 	ZLApplication &myApplication;
+
+public:
+	const std::string Id;
 };
 
 class ZLQtToolBarAction : public QAction {
 	Q_OBJECT
 
 public:
-	ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item);
+	ZLQtToolBarAction(ZLApplication &application, ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item);
 
 private Q_SLOTS:
 	void onActivated();
 
+private:
+	ZLApplication &myApplication;
+
 public:
 	const std::string Id;
-
-private:
-	ZLToolbar::AbstractButtonItem &myItem;
 };
 
 class ZLQtRunPopupAction : public QAction {

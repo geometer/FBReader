@@ -54,7 +54,6 @@ protected:
 	// TODO: change to pure virtual
 	virtual void initMenu() = 0;
 
-	void onButtonPress(const ZLToolbar::AbstractButtonItem &button);
 	virtual void addToolbarItem(ZLToolbar::ItemPtr item) = 0;
 	// TODO: change to pure virtual
 	virtual void setToolbarItemState(ZLToolbar::ItemPtr /*item*/, bool /*visible*/, bool /*enabled*/) {};

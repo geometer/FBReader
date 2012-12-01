@@ -86,10 +86,6 @@ void ZLApplicationWindow::refreshToolbar() {
 	}
 }
 
-void ZLApplicationWindow::onButtonPress(const ZLToolbar::AbstractButtonItem &button) {
-	application().doAction(button.actionId());
-}
-
 void ZLApplicationWindow::setVisualParameter(const std::string &id, const std::string &value) {
 	std::map<std::string,shared_ptr<VisualParameter> >::iterator it = myParameterMap.find(id);
 	if (it != myParameterMap.end()) {

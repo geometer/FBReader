@@ -43,21 +43,22 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 	myApplicationWindow = new ZLQtApplicationWindow(application);
 }
 
-ZLQtToolBarAction::ZLQtToolBarAction(ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), Id(item.actionId()), myItem(item) {
+ZLQtToolBarAction::ZLQtToolBarAction(ZLApplication &application, ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), myApplication(application), Id(item.actionId()) {
 	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-	const QString path = QString::fromUtf8(ZLFile(imagePrefix + myItem.iconName() + ".png").path().c_str());
+	const QString path = QString::fromUtf8(ZLFile(imagePrefix + item.iconName() + ".png").path().c_str());
 	QPixmap icon(path);
 	setIcon(QIcon(icon));
 	QSize size = icon.size();
-	QString text = QString::fromUtf8(myItem.tooltip().c_str());
+	QString text = QString::fromUtf8(item.tooltip().c_str());
 	setText(text);
 	setToolTip(text);
 	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
 }
 
 void ZLQtToolBarAction::onActivated() {
-	((ZLQtApplicationWindow*)parent())->onButtonPress(myItem);
+	myApplication.doAction(Id);
 }
+
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	ZLDesktopApplicationWindow(application),
@@ -183,7 +184,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 
 	switch (item->type()) {
 		case ZLToolbar::Item::PLAIN_BUTTON:
-			action = new ZLQtToolBarAction(this, (ZLToolbar::AbstractButtonItem&)*item);
+			action = new ZLQtToolBarAction(application(), this, (ZLToolbar::AbstractButtonItem&)*item);
 			myToolBar->addAction(action);
 			break;
 		case ZLToolbar::Item::MENU_BUTTON:
@@ -191,7 +192,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
 			QToolButton *button = new QToolButton(myToolBar);
 			button->setFocusPolicy(Qt::NoFocus);
-			button->setDefaultAction(new ZLQtToolBarAction(this, buttonItem));
+			button->setDefaultAction(new ZLQtToolBarAction(application(), this, buttonItem));
 			button->setMenu(new QMenu(button));
 			button->setPopupMode(QToolButton::MenuButtonPopup);
 			action = myToolBar->addWidget(button);
