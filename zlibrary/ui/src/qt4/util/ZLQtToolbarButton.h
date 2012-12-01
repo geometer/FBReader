@@ -28,7 +28,7 @@ class QWidget;
 class ZLQtToolbarButton : public QPushButton {
 
 public:
-	ZLQtToolbarButton(const std::string &iconFileName, QWidget *parent = 0);
+	ZLQtToolbarButton(const std::string &iconName, QWidget *parent = 0);
 
 private:
 	QPixmap myIcon;

@@ -98,6 +98,7 @@ private:
 	QToolBar *myToolBar;
 
 	std::map<ZLToolbar::ItemPtr,QAction*> myToolbarActions;
+	std::map<ZLToolbar::ItemPtr,QWidget*> myToolbarButtons;
 	std::list<ZLQtAction*> myMenuActions;
 	std::list<ZLQtMenu*> mySubmenuList;
 

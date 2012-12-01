@@ -48,8 +48,8 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
 
 	myListWidget = new ZLQtItemsListWidget;
 	myPreviewWidget = new ZLQtPreviewWidget;
-	myBackButton = new ZLQtToolbarButton("back_button.png");
-	myForwardButton = new ZLQtToolbarButton("forward_button.png");
+	myBackButton = new ZLQtToolbarButton("back_button");
+	myForwardButton = new ZLQtToolbarButton("forward_button");
 	mySearchField = new ZLQtSearchField;
 
 	QSplitter *splitter = new QSplitter;
@@ -136,7 +136,6 @@ void ZLQtTreeDialog::onChildrenLoaded(ZLTreeNode *node, bool checkLast, bool suc
 	//myListWidget->verticalScrollBar()->setValue(myListWidget->verticalScrollBar()->minimum()); //to the top
 	setupShowParameters();
 	updateAll();
-
 }
 
 void ZLQtTreeDialog::onMoreChildrenLoaded(bool successLoaded) {

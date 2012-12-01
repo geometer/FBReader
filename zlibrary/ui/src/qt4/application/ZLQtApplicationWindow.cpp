@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <QtGui/QApplication>
 #include <QtGui/QPixmap>
 #include <QtGui/QIcon>
@@ -33,6 +35,7 @@
 #include "../dialogs/ZLQtDialogManager.h"
 #include "../view/ZLQtViewWidget.h"
 #include "../util/ZLQtKeyUtil.h"
+#include "../util/ZLQtToolbarButton.h"
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myApplicationWindow = new ZLQtApplicationWindow(application);
@@ -153,16 +156,12 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	} else {
 		ZLToolbar::ButtonItem& buttonItem = (ZLToolbar::ButtonItem&)*item;
 		QAction *action = new ZLQtAction(application(), buttonItem.actionId(), myToolBar);
-		static std::string imagePrefix =
-			ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-		const QString path =
-			QString::fromUtf8(ZLFile(imagePrefix + buttonItem.iconName() + ".png").path().c_str());
-		QPixmap icon(path);
-		action->setIcon(QIcon(icon));
-		action->setText(QString::fromUtf8(buttonItem.label().c_str()));
-		action->setToolTip(QString::fromUtf8(buttonItem.tooltip().c_str()));
-		myToolBar->addAction(action);
+		ZLQtToolbarButton *button = new ZLQtToolbarButton(buttonItem.iconName(), myToolBar);
+		button->setToolTip(QString::fromUtf8(buttonItem.tooltip().c_str()));
+		connect(button, SIGNAL(clicked()), action, SLOT(onActivated()));
+		myToolBar->addWidget(button);
 		myToolbarActions[item] = action;
+		myToolbarButtons[item] = button;
 	}
 }
 
@@ -171,6 +170,12 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool vi
 	if (action != 0) {
 		action->setEnabled(enabled);
 		action->setVisible(visible);
+	}
+	QWidget *button = myToolbarButtons[item];
+	if (button != 0) {
+		std::cerr << "set state for " << (const char*)((ZLQtToolbarButton*)button)->text().toUtf8() << " to " << visible << ":" << enabled << "\n";
+		button->setEnabled(enabled);
+		button->setVisible(visible);
 	}
 }
 

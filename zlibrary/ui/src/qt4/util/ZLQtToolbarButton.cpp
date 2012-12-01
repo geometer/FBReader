@@ -22,10 +22,13 @@
 
 #include "ZLQtToolbarButton.h"
 
-ZLQtToolbarButton::ZLQtToolbarButton(const std::string &iconFileName, QWidget *parent) : QPushButton(parent) {
+ZLQtToolbarButton::ZLQtToolbarButton(const std::string &iconName, QWidget *parent) : QPushButton(parent) {
 	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-	myIcon = QPixmap(ZLFile(imagePrefix + iconFileName).path().c_str());
+	myIcon = QPixmap(ZLFile(imagePrefix + iconName + ".png").path().c_str());
 	setIconSize(myIcon.size());
 	setIcon(myIcon);
 	setAutoDefault(false);
+	setFocusPolicy(Qt::NoFocus);
+	// see https://bugreports.qt-project.org/browse/QTBUG-14591
+  setAttribute(Qt::WA_LayoutUsesWidgetRect);
 }
