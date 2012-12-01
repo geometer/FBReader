@@ -21,6 +21,7 @@
 
 const std::string ActionCode::SHOW_READING = "showReading";
 const std::string ActionCode::SHOW_LIBRARY = "showLibrary";
+const std::string ActionCode::RECENT_BOOKS = "recent";
 const std::string ActionCode::SHOW_NETWORK_LIBRARY = "showNetworkLibrary";
 const std::string ActionCode::SHOW_TOC = "toc";
 const std::string ActionCode::SHOW_HELP = "showHelp";

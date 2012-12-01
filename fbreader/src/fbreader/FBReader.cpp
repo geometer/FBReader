@@ -116,7 +116,6 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::SHOW_READING, new UndoAction(FBReader::ALL_MODES & ~FBReader::BOOK_TEXT_MODE));
 	addAction(ActionCode::SHOW_LIBRARY, new SetModeAction(FBReader::LIBRARY_MODE, FBReader::BOOK_TEXT_MODE | FBReader::CONTENTS_MODE));
 	addAction(ActionCode::SHOW_NETWORK_LIBRARY, new ShowNetworkTreeLibraryAction());
-	registerPopupData(ActionCode::SHOW_LIBRARY, myRecentBooksPopupData);
 	addAction(ActionCode::SHOW_OPTIONS_DIALOG, new ShowOptionsDialogAction());
 	addAction(ActionCode::SHOW_TOC, new ShowContentsAction());
 	addAction(ActionCode::SHOW_BOOK_INFO_DIALOG, new ShowBookInfoAction());
@@ -166,6 +165,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::ORGANIZE_BOOKS_BY_TAG, booksOrderAction);
 	addAction(ActionCode::FILTER_LIBRARY, new FilterLibraryAction());
 
+	registerPopupData(ActionCode::RECENT_BOOKS, myRecentBooksPopupData);
 	registerPopupData(ActionCode::SHOW_OPTIONS_DIALOG, myPreferencesPopupData);
 
 	myOpenFileHandler = new OpenFileHandler();
@@ -211,12 +211,6 @@ void FBReader::initWindow() {
 	refreshWindow();
 
 	ZLTimeManager::Instance().addTask(new TimeUpdater(), 1000);
-}
-
-void FBReader::refreshWindow() {
-	ZLApplication::refreshWindow();
-	((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
-	((PreferencesPopupData&)*myPreferencesPopupData).updateId();
 }
 
 bool FBReader::createBook(const ZLFile &bookFile, shared_ptr<Book> &book) {
@@ -312,7 +306,7 @@ void FBReader::openBookInternal(shared_ptr<Book> book) {
 
 		Library::Instance().addBook(book);
 		Library::Instance().addBookToRecentList(book);
-		((RecentBooksPopupData&)*myRecentBooksPopupData).updateId();
+		((RecentBooksPopupData&)*myRecentBooksPopupData).updateGeneration();
 	}
 }
 

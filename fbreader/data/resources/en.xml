@@ -118,6 +118,7 @@
 			<node name="showLibrary" value="Library"/>
 			<node name="showNetworkLibrary" value="Network library"/>
 			<node name="addBook" value="Open file…"/>
+			<node name="preferences" value="Preferences"/>
 		</node>
 		<node name="navigation" value="Navigation">
 			<node name="gotoHome" value="Start of document"/>

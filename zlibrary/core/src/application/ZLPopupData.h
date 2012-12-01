@@ -29,7 +29,7 @@ class ZLPopupData {
 public:
 	virtual ~ZLPopupData();
 
-	virtual std::size_t id() const = 0;
+	virtual std::size_t generation() const = 0;
 	virtual std::size_t count() const = 0;
 	virtual const std::string text(std::size_t index) = 0;
 	virtual void run(std::size_t index) = 0;

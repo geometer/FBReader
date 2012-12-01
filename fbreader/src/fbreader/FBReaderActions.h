@@ -31,6 +31,7 @@ class ActionCode {
 public:
 	static const std::string SHOW_READING;
 	static const std::string SHOW_LIBRARY;
+	static const std::string RECENT_BOOKS;
 	static const std::string SHOW_NETWORK_LIBRARY;
 	static const std::string SHOW_TOC;
 	static const std::string SHOW_HELP;

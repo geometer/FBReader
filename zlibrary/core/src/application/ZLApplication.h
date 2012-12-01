@@ -145,6 +145,7 @@ public:
 	bool isActionVisible(const std::string &actionId) const;
 	bool isActionEnabled(const std::string &actionId) const;
 	void doAction(const std::string &actionId);
+	shared_ptr<ZLPopupData> popupData(const std::string &actionId) const;
 
 	virtual shared_ptr<ZLKeyBindings> keyBindings();	
 	void doActionByKey(const std::string &key);
@@ -192,6 +193,7 @@ private:
 	shared_ptr <ZLApplicationWindow> myWindow;
 	ZLTime myLastKeyActionTime;
 	shared_ptr<ZLMessageHandler> myPresentWindowHandler;
+	std::map<std::string, shared_ptr<ZLPopupData> > myPopupDataMap;
 
 friend class ZLApplicationWindow;
 friend class ZLMenuVisitor;

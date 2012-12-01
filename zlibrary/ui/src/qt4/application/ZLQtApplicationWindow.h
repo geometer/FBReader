@@ -25,16 +25,18 @@
 
 #include <QtGui/QMainWindow>
 #include <QtGui/QAction>
+#include <QtGui/QMenu>
 #include <QtGui/QCursor>
 
 class QDockWidget;
 class QToolBar;
 class QToolButton;
 class QLineEdit;
-class QMenu;
 
 class ZLPopupData;
+
 class ZLQtAction;
+class ZLQtMenu;
 
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 #include "../../../../core/src/application/ZLMenu.h"
@@ -101,6 +103,7 @@ private:
 	std::map<const ZLToolbar::MenuButtonItem*,QToolButton*> myMenuButtons;
 	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
 	std::list<ZLQtAction*> myMenuActions;
+	std::list<ZLQtMenu*> mySubmenuList;
 
 	bool myFullScreen;
 	bool myWasMaximized;
@@ -123,6 +126,16 @@ private:
 
 public:
 	const std::string Id;
+};
+
+class ZLQtMenu : public QMenu {
+
+public:
+	ZLQtMenu(const std::string &id, const std::string &title);
+
+public:
+	const std::string Id;
+	size_t Generation;
 };
 
 class ZLQtToolBarAction : public ZLQtAction {

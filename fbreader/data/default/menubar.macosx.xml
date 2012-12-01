@@ -2,10 +2,13 @@
 <menubar>
 	<submenu id="books">
 		<submenu id="recent"/>
+		<separator/>
 		<item id="showLibrary"/>
 		<item id="showNetworkLibrary"/>
 		<separator/>
 		<item id="addBook"/>
+		<separator/>
+		<submenu id="preferences"/>
 	</submenu>
 	<submenu id="view">
 		<item id="toggleFullscreen"/>

@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <QtGui/QApplication>
 #include <QtGui/QPixmap>
 #include <QtGui/QImage>
@@ -44,13 +46,12 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 }
 
 ZLQtToolBarAction::ZLQtToolBarAction(ZLApplication &application, QObject *parent, ZLToolbar::AbstractButtonItem &item) : ZLQtAction(application, item.actionId(), parent) {
-	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-	const QString path = QString::fromUtf8(ZLFile(imagePrefix + item.iconName() + ".png").path().c_str());
-	QPixmap icon(path);
-	setIcon(QIcon(icon));
-	QString text = QString::fromUtf8(item.tooltip().c_str());
-	setText(text);
-	setToolTip(text);
+	//static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
+	//const QString path = QString::fromUtf8(ZLFile(imagePrefix + item.iconName() + ".png").path().c_str());
+	//QPixmap icon(path);
+	//setIcon(QIcon(icon));
+	setText(QString::fromUtf8(item.label().c_str()));
+	setToolTip(QString::fromUtf8(item.tooltip().c_str()));
 }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
@@ -192,7 +193,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			myMenuButtons[&buttonItem] = button;
 			shared_ptr<ZLPopupData> popupData = buttonItem.popupData();
 			myPopupIdMap[&buttonItem] =
-				popupData.isNull() ? (size_t)-1 : (popupData->id() - 1);
+				popupData.isNull() ? (size_t)-1 : (popupData->generation() - 1);
 			break;
 		}
 		case ZLToolbar::Item::SEPARATOR:
@@ -230,8 +231,8 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool vi
 		{
 			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
 			shared_ptr<ZLPopupData> data = buttonItem.popupData();
-			if (!data.isNull() && (data->id() != myPopupIdMap[&buttonItem])) {
-				myPopupIdMap[&buttonItem] = data->id();
+			if (!data.isNull() && (data->generation() != myPopupIdMap[&buttonItem])) {
+				myPopupIdMap[&buttonItem] = data->generation();
 				QToolButton *button = myMenuButtons[&buttonItem];
 				QMenu *menu = button->menu();
 				menu->clear();
@@ -266,6 +267,20 @@ void ZLQtApplicationWindow::onRefresh() {
 		action->setVisible(application().isActionVisible(action->Id));
 		action->setEnabled(application().isActionEnabled(action->Id));
 	}
+	for (std::list<ZLQtMenu*>::const_iterator it = mySubmenuList.begin(); it != mySubmenuList.end(); ++it) {
+		ZLQtMenu *menu = *it;
+		shared_ptr<ZLPopupData> data = application().popupData(menu->Id);
+		if (data.isNull() || data->generation() == menu->Generation) {
+			continue;
+		}
+		menu->Generation = data->generation();
+		menu->clear();
+		std::cerr << "do clear menu for " << menu->Id << " :: " << menu->Generation << "\n";
+		const size_t count = data->count();
+		for (size_t i = 0; i < count; ++i) {
+			menu->addAction(new ZLQtRunPopupAction(menu, data, i));
+		}
+	}
 	refreshToolbar();
 	qApp->processEvents();
 }
@@ -297,8 +312,11 @@ void ZLQtApplicationWindow::setFocusToMainWidget() {
 ZLQtApplicationWindow::MenuBuilder::MenuBuilder(ZLQtApplicationWindow &window) : myWindow(window) {
 }
 
+ZLQtMenu::ZLQtMenu(const std::string &id, const std::string &title) : QMenu(QString::fromUtf8(title.c_str())), Id(id), Generation(size_t(-1)) {
+}
+
 void ZLQtApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLMenubar::Submenu &submenu) {
-	QMenu *menu = new QMenu(QString::fromUtf8(submenu.menuName().c_str()));
+	ZLQtMenu *menu = new ZLQtMenu(submenu.id(), submenu.menuName());
 	if (myMenuStack.empty()) {
 		if (!myWindow.menuBar()->isVisible()) {
 			myWindow.menuBar()->show();
@@ -306,6 +324,7 @@ void ZLQtApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLMenubar::Su
 		myWindow.menuBar()->addMenu(menu);
 	} else {
 		myMenuStack.back()->addMenu(menu);
+		myWindow.mySubmenuList.push_back(menu);
 	}
 	myMenuStack.push_back(menu);
 }

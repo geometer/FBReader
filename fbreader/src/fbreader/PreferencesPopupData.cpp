@@ -32,42 +32,23 @@ PreferencesPopupData::PreferencesPopupData() {
 	myActionIds.push_back(ActionCode::SHOW_SYSTEM_OPTIONS_DIALOG);
 }
 
-std::size_t PreferencesPopupData::id() const {
-	return myId;
-}
-
-void PreferencesPopupData::updateId() {
-	++myId;
-	myInvalidated = true;
+std::size_t PreferencesPopupData::generation() const {
+	return 0;
 }
 
 std::size_t PreferencesPopupData::count() const {
-	if (myInvalidated) {
-		myInvalidated = false;
-		myVisibleActionIds.clear();
-		const FBReader& fbreader = FBReader::Instance();
-		const std::size_t size = myActionIds.size();
-		for (std::size_t i = 0; i < size; ++i) {
-			const std::string &actionId = myActionIds[i];
-			if (fbreader.action(actionId)->isVisible()) {
-				myVisibleActionIds.push_back(actionId);
-			}
-		}
-	}
-	return myVisibleActionIds.size();
+	return myActionIds.size();
 }
 
 const std::string PreferencesPopupData::text(std::size_t index) {
-	if (index >= myVisibleActionIds.size()) {
+	if (index >= myActionIds.size()) {
 		return "";
 	}
-	const std::string &actionId = myVisibleActionIds[index];
-	return resource(actionId)["label"].value();
+	return resource(myActionIds[index])["label"].value();
 }
 
 void PreferencesPopupData::run(std::size_t index) {
-	if (index >= myVisibleActionIds.size()) {
-		return;
+	if (index < myActionIds.size()) {
+		FBReader::Instance().doAction(myActionIds[index]);
 	}
-	FBReader::Instance().doAction(myVisibleActionIds[index]);
 }

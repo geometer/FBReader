@@ -104,16 +104,14 @@ public:
 	typedef shared_ptr<Item> ItemPtr;
 	typedef std::vector<ItemPtr> ItemVector;
 
-	ZLToolbar();
+	ZLToolbar(const ZLApplication &application);
 
 	const ItemVector &items() const;
 	static const ZLResource &resource(const std::string &id);
 
-	void registerPopupData(const std::string &actionId, shared_ptr<ZLPopupData> popupData);
-
 private:
+	const ZLApplication &myApplication;
 	ItemVector myItems;
-	std::map<std::string, shared_ptr<ZLPopupData> > myPopupDataMap;
 
 friend class MenuButtonItem;
 friend class ZLApplication;

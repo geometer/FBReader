@@ -48,17 +48,12 @@ void ZLApplication::createToolbar() {
 
 const ZLToolbar &ZLApplication::toolbar() const {
 	if (myToolbar.isNull()) {
-		myToolbar = new ZLToolbar();
+		myToolbar = new ZLToolbar(*this);
 	}
 	return *myToolbar;
 }
 
 void ZLApplication::registerPopupData(const std::string &actionId, shared_ptr<ZLPopupData> popupData) {
-	toolbar();
-	myToolbar->registerPopupData(actionId, popupData);
-}
-
-void ZLToolbar::registerPopupData(const std::string &actionId, shared_ptr<ZLPopupData> popupData) {
 	myPopupDataMap[actionId] = popupData;
 }
 
@@ -152,17 +147,20 @@ const std::string &ZLToolbar::MenuButtonItem::popupTooltip() const {
 	return popupResource.value();
 }
 
+shared_ptr<ZLPopupData> ZLApplication::popupData(const std::string &actionId) const {
+	std::map<std::string,shared_ptr<ZLPopupData> >::const_iterator it = myPopupDataMap.find(actionId);
+	return it == myPopupDataMap.end() ? 0 : it->second;
+}
+
 shared_ptr<ZLPopupData> ZLToolbar::MenuButtonItem::popupData() const {
-	std::map<std::string,shared_ptr<ZLPopupData> >::const_iterator it =
-		toolbar().myPopupDataMap.find(actionId());
-	return (it == toolbar().myPopupDataMap.end()) ? 0 : it->second;
+	return toolbar().myApplication.popupData(actionId());
 }
 
 const std::string &ZLToolbar::AbstractButtonItem::iconName() const {
 	return actionId();
 }
 
-ZLToolbar::ZLToolbar() {
+ZLToolbar::ZLToolbar(const ZLApplication &application) : myApplication(application) {
 }
 
 ZLToolbar::SeparatorItem::SeparatorItem(ZLToolbar &toolbar, Type type) : Item(toolbar, type) {

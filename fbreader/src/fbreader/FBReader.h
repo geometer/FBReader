@@ -86,8 +86,6 @@ public:
 
 	shared_ptr<Book> currentBook() const;
 
-	void refreshWindow();
-
 private:
 	void initWindow();
 

@@ -23,15 +23,15 @@
 #include "../library/Book.h"
 #include "../library/Author.h"
 
-RecentBooksPopupData::RecentBooksPopupData() : myId(0) {
+RecentBooksPopupData::RecentBooksPopupData() : myGeneration(0) {
 }
 
-void RecentBooksPopupData::updateId() {
-	++myId;
+void RecentBooksPopupData::updateGeneration() {
+	++myGeneration;
 }
 
-std::size_t RecentBooksPopupData::id() const {
-	return myId;
+std::size_t RecentBooksPopupData::generation() const {
+	return myGeneration;
 }
 
 std::size_t RecentBooksPopupData::count() const {

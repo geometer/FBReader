@@ -26,16 +26,16 @@ class RecentBooksPopupData : public ZLPopupData {
 
 public:
 	RecentBooksPopupData();
-	void updateId();
+	void updateGeneration();
 
 private:
-	std::size_t id() const;
+	std::size_t generation() const;
 	std::size_t count() const;
 	const std::string text(std::size_t index);
 	void run(std::size_t index);
 
 private:
-	std::size_t myId;
+	std::size_t myGeneration;
 };
 
 #endif /* __RECENTBOOKSPOPUPDATA_H__ */

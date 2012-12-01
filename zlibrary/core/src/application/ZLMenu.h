@@ -52,9 +52,9 @@ public:
 	typedef shared_ptr<Item> ItemPtr;
 	typedef std::vector<ItemPtr> ItemVector;
 
-	void addItem(const std::string &actionId, const ZLResourceKey &key);
+	void addItem(const std::string &actionId);
 	void addSeparator();
-	ItemPtr addSubmenu(const ZLResourceKey &key);
+	ItemPtr addSubmenu(const std::string &id);
 
 	const ItemVector &items() const;
 
@@ -91,9 +91,13 @@ public:
 	class Submenu : public ZLMenu::Item, public ZLMenu {
 
 	public:
-		Submenu(const ZLResource &resource);
+		Submenu(const ZLResource &resource, const std::string &id);
 
+		const std::string &id() const;
 		const std::string &menuName() const;
+
+	private:
+		const std::string myId;
 	};
 
 	class Separator : public ZLMenu::Item {
