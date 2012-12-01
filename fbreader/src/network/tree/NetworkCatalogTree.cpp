@@ -240,7 +240,7 @@ void NetworkCatalogTree::updateVisibility() {
 	//adding to remove list and clearing all existed nodes
 	List toRemove;
 	NetworkItem::List itemsWithNodes; //used in loop for creating new nodes (for these items new nodes won't be created)
-	for (size_t i = 0; i < children().size(); ++i) {
+	for (std::size_t i = 0; i < children().size(); ++i) {
 		ZLTreeNode* tree = children().at(i);
 		if (!tree->isInstanceOf(NetworkCatalogTree::TYPE_ID)) {
 			continue;
@@ -261,7 +261,7 @@ void NetworkCatalogTree::updateVisibility() {
 	}
 
 	//creating new nodes (if necessary)
-	for (size_t i = 0; i < myChildrenItems.size(); ++i) {
+	for (std::size_t i = 0; i < myChildrenItems.size(); ++i) {
 		shared_ptr<NetworkItem> item = myChildrenItems.at(i);
 		if (!item->isInstanceOf(NetworkCatalogItem::TYPE_ID)) {
 			continue;
@@ -275,7 +275,7 @@ void NetworkCatalogTree::updateVisibility() {
 		}
 	}
 
-	for (size_t i = 0; i < toRemove.size(); ++i) {
+	for (std::size_t i = 0; i < toRemove.size(); ++i) {
 		ZLTreeNode* tree = toRemove.at(i);
 		remove(tree);
 	}

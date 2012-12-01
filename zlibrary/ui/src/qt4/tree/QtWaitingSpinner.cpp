@@ -86,7 +86,7 @@ void QtWaitingSpinner::setRadius(int radius) {
 }
 
 void QtWaitingSpinner::setRoundness(qreal roundness) {
-	myRoundness = std::max(0.0, std::min(100.0, roundness));
+	myRoundness = std::max((qreal)0.0, std::min((qreal)100.0, roundness));
 }
 
 void QtWaitingSpinner::setColor(QColor color) {
@@ -140,7 +140,7 @@ QColor QtWaitingSpinner::countTrailColor(int distance, int lines, int trail, int
 		return color;
 	}
 	const qreal minAlphaF = (qreal)minOpacity / 100;
-	int distanceThreshold = ceil( (lines - 1) * (qreal)trail / 100);
+	int distanceThreshold = std::ceil( (lines - 1) * (qreal)trail / 100);
 	if (distance > distanceThreshold) {
 		color.setAlphaF(minAlphaF);
 		return color;
@@ -148,7 +148,8 @@ QColor QtWaitingSpinner::countTrailColor(int distance, int lines, int trail, int
 	qreal alphaDiff = color.alphaF() - (qreal)minAlphaF;
 	qreal gradation = alphaDiff / (qreal)(distanceThreshold + 1);
 	qreal resultAlpha = color.alphaF() - gradation * distance;
-	resultAlpha = std::min(1.0, std::max(0.0, resultAlpha)); //if alpha is out of bound, force it to bounds
+	//if alpha is out of bound, force it to bounds
+	resultAlpha = std::min((qreal)1.0, std::max((qreal)0.0, resultAlpha));
 	color.setAlphaF(resultAlpha);
 	return color;
 }

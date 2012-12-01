@@ -54,11 +54,11 @@ std::string NetworkSeriesTree::subtitle() const {
 	return ZLStringUtil::printf(resource()["booksCount"].value((int)children().size()), (unsigned int)children().size());
 }
 
-static const size_t MAX_BATCH_SIZE = 6;
+static const std::size_t MAX_BATCH_SIZE = 6;
 
 shared_ptr<const ZLImage> NetworkSeriesTree::image() const {
 	if (myImages.empty()) {
-		for (size_t i = 0; i < std::min(children().size(), MAX_BATCH_SIZE); ++i) {
+		for (std::size_t i = 0; i < std::min(children().size(), MAX_BATCH_SIZE); ++i) {
 			NetworkBookTree *bookTree = zlobject_cast<NetworkBookTree*>(children().at(i));
 			if (!bookTree) {
 				continue;

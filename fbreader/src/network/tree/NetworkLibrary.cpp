@@ -73,7 +73,7 @@ void NetworkLibrary::makeUpToDate() {
 }
 
 void NetworkLibrary::updateVisibility() {
-	for (size_t i = 0; i < myRootTree.children().size(); ++i) {
+	for (std::size_t i = 0; i < myRootTree.children().size(); ++i) {
 		ZLTreeNode* tree = myRootTree.children().at(i);
 		if (NetworkCatalogTree* catalogTree = zlobject_cast<NetworkCatalogTree*>(tree)) {
 			catalogTree->updateVisibility();
