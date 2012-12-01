@@ -134,12 +134,6 @@ public:
 	size_t Generation;
 };
 
-class ZLQtToolBarAction : public ZLQtAction {
-
-public:
-	ZLQtToolBarAction(ZLApplication &application, QObject *parent, ZLToolbar::ButtonItem &item);
-};
-
 class ZLQtRunPopupAction : public QAction {
 	Q_OBJECT
 

@@ -340,4 +340,3 @@ void ZLQtIconButton::setEnabled(bool enabled) {
 	setIcon(enabled ? myEnabled : myDisabled);
 	QPushButton::setEnabled(enabled);
 }
-

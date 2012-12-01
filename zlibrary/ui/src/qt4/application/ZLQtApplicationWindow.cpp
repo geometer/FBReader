@@ -24,7 +24,6 @@
 #include <QtGui/QToolBar>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMenu>
-#include <QtGui/QToolButton>
 #include <QtGui/QLayout>
 #include <QtGui/QWheelEvent>
 #include <QtCore/QObjectList>
@@ -40,15 +39,6 @@
 
 void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
 	myApplicationWindow = new ZLQtApplicationWindow(application);
-}
-
-ZLQtToolBarAction::ZLQtToolBarAction(ZLApplication &application, QObject *parent, ZLToolbar::ButtonItem &item) : ZLQtAction(application, item.actionId(), parent) {
-	//static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-	//const QString path = QString::fromUtf8(ZLFile(imagePrefix + item.iconName() + ".png").path().c_str());
-	//QPixmap icon(path);
-	//setIcon(QIcon(icon));
-	setText(QString::fromUtf8(item.label().c_str()));
-	setToolTip(QString::fromUtf8(item.tooltip().c_str()));
 }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
@@ -165,7 +155,15 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		myToolbarActions[item] = myToolBar->addSeparator();
 	} else {
 		ZLToolbar::ButtonItem& buttonItem = (ZLToolbar::ButtonItem&)*item;
-		QAction *action = new ZLQtToolBarAction(application(), myToolBar, buttonItem);
+		QAction *action = new ZLQtAction(application(), buttonItem.actionId(), myToolBar);
+		static std::string imagePrefix =
+			ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
+		const QString path =
+			QString::fromUtf8(ZLFile(imagePrefix + buttonItem.iconName() + ".png").path().c_str());
+		QPixmap icon(path);
+		action->setIcon(QIcon(icon));
+		action->setText(QString::fromUtf8(buttonItem.label().c_str()));
+		action->setToolTip(QString::fromUtf8(buttonItem.tooltip().c_str()));
 		myToolBar->addAction(action);
 		myToolbarActions[item] = action;
 	}
