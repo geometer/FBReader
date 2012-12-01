@@ -138,14 +138,15 @@ class ZLQtRunPopupAction : public QAction {
 	Q_OBJECT
 
 public:
-	ZLQtRunPopupAction(QObject *parent, shared_ptr<ZLPopupData> data, size_t index);
+	ZLQtRunPopupAction(ZLApplication &application, const std::string &actionId, size_t index, QObject *parent);
 	~ZLQtRunPopupAction();
 
 private Q_SLOTS:
 	void onActivated();
 
 private:
-	shared_ptr<ZLPopupData> myData;
+	ZLApplication &myApplication;
+	const std::string myActionId;
 	const size_t myIndex;
 };
 
