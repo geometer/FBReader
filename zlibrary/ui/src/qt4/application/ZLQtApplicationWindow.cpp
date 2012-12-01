@@ -43,22 +43,15 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 	myApplicationWindow = new ZLQtApplicationWindow(application);
 }
 
-ZLQtToolBarAction::ZLQtToolBarAction(ZLApplication &application, ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item) : QAction(parent), myApplication(application), Id(item.actionId()) {
+ZLQtToolBarAction::ZLQtToolBarAction(ZLApplication &application, QObject *parent, ZLToolbar::AbstractButtonItem &item) : ZLQtAction(application, item.actionId(), parent) {
 	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
 	const QString path = QString::fromUtf8(ZLFile(imagePrefix + item.iconName() + ".png").path().c_str());
 	QPixmap icon(path);
 	setIcon(QIcon(icon));
-	QSize size = icon.size();
 	QString text = QString::fromUtf8(item.tooltip().c_str());
 	setText(text);
 	setToolTip(text);
-	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
 }
-
-void ZLQtToolBarAction::onActivated() {
-	myApplication.doAction(Id);
-}
-
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	ZLDesktopApplicationWindow(application),
@@ -316,7 +309,7 @@ void ZLQtApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLMenubar::Sub
 	myCurrentMenu = 0;
 }
 
-ZLQtAction::ZLQtAction(ZLApplication &application, const std::string &id, const std::string &title, QObject *parent) : QAction(QString::fromUtf8(title.c_str()), parent), myApplication(application), Id(id) {
+ZLQtAction::ZLQtAction(ZLApplication &application, const std::string &id, QObject *parent) : QAction(parent), myApplication(application), Id(id) {
 	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
 }
 
@@ -326,7 +319,8 @@ void ZLQtAction::onActivated() {
 
 
 void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
-	ZLQtAction *action = new ZLQtAction(myWindow.application(), item.actionId(), item.name(), myCurrentMenu);
+	ZLQtAction *action = new ZLQtAction(myWindow.application(), item.actionId(), myCurrentMenu);
+	action->setText(QString::fromUtf8(item.name().c_str()));
 	if (item.actionId() == "showLibrary") {
 		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
 	}

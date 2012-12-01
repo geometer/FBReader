@@ -96,7 +96,6 @@ private:
 	QToolBar *myToolBar;
 	QDockWidget *myDocWidget;
 
-friend class ZLQtToolBarAction;
 	std::map<std::string,QAction*> myActions;
 	std::map<const ZLToolbar::MenuButtonItem*,QToolButton*> myMenuButtons;
 	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
@@ -113,7 +112,7 @@ class ZLQtAction : public QAction {
 	Q_OBJECT
 
 public:
-	ZLQtAction(ZLApplication &application, const std::string &id, const std::string &title, QObject *parent);
+	ZLQtAction(ZLApplication &application, const std::string &id, QObject *parent);
 
 private Q_SLOTS:
 	void onActivated();
@@ -125,20 +124,10 @@ public:
 	const std::string Id;
 };
 
-class ZLQtToolBarAction : public QAction {
-	Q_OBJECT
+class ZLQtToolBarAction : public ZLQtAction {
 
 public:
-	ZLQtToolBarAction(ZLApplication &application, ZLQtApplicationWindow *parent, ZLToolbar::AbstractButtonItem &item);
-
-private Q_SLOTS:
-	void onActivated();
-
-private:
-	ZLApplication &myApplication;
-
-public:
-	const std::string Id;
+	ZLQtToolBarAction(ZLApplication &application, QObject *parent, ZLToolbar::AbstractButtonItem &item);
 };
 
 class ZLQtRunPopupAction : public QAction {
