@@ -116,7 +116,7 @@
 		<node name="books" value="Books">
 			<node name="recent" value="Recent"/>
 			<node name="library" value="Library"/>
-			<node name="showNetworkLibrary" value="Network library"/>
+			<node name="networkLibrary" value="Network library"/>
 			<node name="addBook" value="Open file…"/>
 			<node name="preferences" value="Preferences"/>
 		</node>

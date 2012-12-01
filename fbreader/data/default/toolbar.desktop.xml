@@ -5,9 +5,9 @@
 	<toggleButton id="byAuthor" group="booksOrder" default="yes"/>
 	<toggleButton id="byTag" group="booksOrder"/>
 	<separator/>
-	<menuButton id="library"/>
+	<button id="library"/>
 	<button id="addBook"/>
-	<button id="showNetworkLibrary"/>
+	<button id="networkLibrary"/>
 	<separator/>
 	<button id="advancedSearchOnNetwork"/>
 	<textField id="searchOnNetwork" parameterId="networkSearchPattern" maxWidth="25"/>

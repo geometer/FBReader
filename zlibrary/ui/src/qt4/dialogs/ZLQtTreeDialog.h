@@ -26,7 +26,6 @@
 
 #include <QtGui/QMainWindow>
 #include <QtGui/QScrollArea>
-#include <QtGui/QPushButton>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
 #include <QtGui/QWidget>
@@ -37,7 +36,7 @@
 #include "../tree/ZLQtPreviewWidget.h"
 #include "../tree/ZLQtSearchField.h"
 
-class ZLQtIconButton;
+class ZLQtToolbarButton;
 
 class ZLQtTreeDialog : public QMainWindow, public ZLTreeDialog {
 	Q_OBJECT
@@ -91,8 +90,8 @@ private:
 	ZLTreeNode *myRootNode;
 
 private:
-	ZLQtIconButton *myBackButton;
-	ZLQtIconButton *myForwardButton;
+	ZLQtToolbarButton *myBackButton;
+	ZLQtToolbarButton *myForwardButton;
 	ZLQtSearchField *mySearchField;
 //	QScrollArea *myScrollArea;
 	ZLQtItemsListWidget *myListWidget;
@@ -128,16 +127,6 @@ private:
 
 friend class ChildrenRequestListener;
 
-};
-
-class ZLQtIconButton : public QPushButton {
-
-public:
-	ZLQtIconButton(const std::string &iconEnabled, const std::string &iconDisabled, QWidget *parent = 0);
-	void setEnabled(bool enabled);
-private:
-	QPixmap myEnabled;
-	QPixmap myDisabled;
 };
 
 #endif /* __ZLQTTREEDIALOG_H__ */

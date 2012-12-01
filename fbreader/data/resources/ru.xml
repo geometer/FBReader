@@ -119,7 +119,7 @@
 		<node name="books" value="Книги">
 			<node name="recent" value="Недавние"/>
 			<node name="library" value="Библиотека"/>
-			<node name="showNetworkLibrary" value="Сетевая библиотека"/>
+			<node name="networkLibrary" value="Сетевая библиотека"/>
 			<node name="addBook" value="Открыть файл…"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">

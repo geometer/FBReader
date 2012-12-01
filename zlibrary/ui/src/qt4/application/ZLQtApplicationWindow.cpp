@@ -281,7 +281,7 @@ void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item)
 	if (item.actionId() == "library") {
 		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
 	}
-	if (item.actionId() == "showNetworkLibrary") {
+	if (item.actionId() == "networkLibrary") {
 		action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_L));
 	}
 	if (item.actionId() == "addBook") {

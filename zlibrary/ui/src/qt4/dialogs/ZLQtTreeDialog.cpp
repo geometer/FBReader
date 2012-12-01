@@ -29,6 +29,7 @@
 
 #include "../tree/ZLQtItemsListWidget.h"
 #include "../tree/ZLQtPreviewWidget.h"
+#include "../util/ZLQtToolbarButton.h"
 
 #include "ZLQtTreeDialog.h"
 
@@ -47,12 +48,9 @@ ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
 
 	myListWidget = new ZLQtItemsListWidget;
 	myPreviewWidget = new ZLQtPreviewWidget;
-	myBackButton = new ZLQtIconButton("back_button.png", "back_button_disabled.png");
-	myForwardButton = new ZLQtIconButton("forward_button.png", "forward_button_disabled.png");
+	myBackButton = new ZLQtToolbarButton("back_button.png");
+	myForwardButton = new ZLQtToolbarButton("forward_button.png");
 	mySearchField = new ZLQtSearchField;
-
-	myBackButton->setAutoDefault(false);
-	myForwardButton->setAutoDefault(false);
 
 	QSplitter *splitter = new QSplitter;
 	splitter->setChildrenCollapsible(false);
@@ -321,22 +319,4 @@ void ZLQtTreeDialog::ChildrenRequestListener::finished(const std::string &error)
 	} else {
 		myTreeDialog->onMoreChildrenLoaded(error.empty());
 	}
-
-}
-
-ZLQtIconButton::ZLQtIconButton(const std::string &iconEnabled, const std::string &iconDisabled, QWidget *parent) : QPushButton(parent) {
-	static std::string imagePrefix = ZLibrary::ApplicationImageDirectory() + ZLibrary::FileNameDelimiter;
-	myEnabled = QPixmap(ZLFile(imagePrefix + iconEnabled).path().c_str());
-	myDisabled = QPixmap(ZLFile(imagePrefix + iconDisabled).path().c_str());
-	setIconSize(myEnabled.size());
-	setFixedSize(28, 22);
-
-	//setAttribute is needed to workaround a bug on MacOS with size for QPushButton-derived subclasses
-	//see https://bugreports.qt-project.org/browse/QTBUG-14591
-	setAttribute(Qt::WA_LayoutUsesWidgetRect);
-}
-
-void ZLQtIconButton::setEnabled(bool enabled) {
-	setIcon(enabled ? myEnabled : myDisabled);
-	QPushButton::setEnabled(enabled);
 }

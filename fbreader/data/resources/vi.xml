@@ -107,7 +107,7 @@
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="library" value="Library" toBeTranslated="true"/>
-			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
+			<node name="networkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
 		<node name="navigation" value="Navigation" toBeTranslated="true">
