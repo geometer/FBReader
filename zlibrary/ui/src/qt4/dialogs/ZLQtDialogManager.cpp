@@ -24,6 +24,7 @@
 #include <QtGui/QClipboard>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QLineEdit>
+#include <QtGui/QToolBar>
 
 #include "ZLQtDialogManager.h"
 #include "ZLQtDialog.h"
@@ -34,16 +35,23 @@
 #include "ZLQtTreeDialog.h"
 #include "ZLQtUtil.h"
 
+#include "../application/ZLQtApplicationWindow.h"
 #include "../image/ZLQtImageManager.h"
 
 void ZLQtDialogManager::showSearchBox() const {
-	QWidget *main = myApplicationWindow->centralWidget();
-	QLineEdit *box = new QLineEdit(main);
+	QToolBar *toolbar = myApplicationWindow->toolbar();
+
+	QWidget* spacer = new QWidget();
+	spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	toolbar->addWidget(spacer);
+
+	QLineEdit *box = new QLineEdit(toolbar);
 	box->setAttribute(Qt::WA_MacShowFocusRect, false);
-	box->setStyleSheet("QLineEdit {border: 2px solid gray; border-radius: 5px;}");
+	box->setStyleSheet("QLineEdit {border: 1px solid gray; border-radius: 5px;}");
 	box->show();
-	const std::size_t delta = box->height() / 4;
-	box->move(main->width() - box->width() - delta, main->height() - box->height() - delta);
+	toolbar->addWidget(box);
+	//const std::size_t delta = box->height() / 4;
+	//box->move(main->width() - box->width() - delta, main->height() - box->height() - delta);
 	box->setFocus();
 }
 

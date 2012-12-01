@@ -64,6 +64,10 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	show();
 }
 
+QToolBar *ZLQtApplicationWindow::toolbar() {
+	return myToolBar;
+}
+
 void ZLQtApplicationWindow::initMenu() {
 	MenuBuilder(*this).processMenu(application());
 }

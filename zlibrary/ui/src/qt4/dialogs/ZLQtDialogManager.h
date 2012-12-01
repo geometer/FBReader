@@ -23,7 +23,8 @@
 #include <ZLDialogManager.h>
 
 class QWidget;
-class QMainWindow;
+
+class ZLQtApplicationWindow;
 
 class ZLQtDialogManager : public ZLDialogManager {
 
@@ -57,7 +58,7 @@ public:
 
 private:
 	mutable QWidget *myStoredWindow;
-	mutable QMainWindow* myApplicationWindow;
+	mutable ZLQtApplicationWindow* myApplicationWindow;
 };
 
 #endif /* __ZLQTDIALOGMANAGER_H__ */

@@ -48,6 +48,7 @@ public:
 	~ZLQtApplicationWindow();
 
 	void setFocusToMainWidget();
+	QToolBar *toolbar();
 
 private:
 	class MenuBuilder : public ZLMenuVisitor {
