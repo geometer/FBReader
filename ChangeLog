@@ -1,4 +1,9 @@
-===== 0.99.4 (November 30, 2012) =====
+===== 0.99.5 (Dec ??, 2012) =====
+
+* First public release for MacOS
+* Introduced application menu
+
+===== 0.99.4 (Nov 30, 2012) =====
 
 * Bulgarian hyphenation patterns, converted by Kaloyan Raev
 * Network catalogs: fixed Cyryllic names rendering
@@ -6,7 +11,7 @@
 * Fixed bug with duplicates series items in LitRes catalog
 * Fixed different network bugs in Network Library
 
-===== 0.99.3 (November 18, 2012) =====
+===== 0.99.3 (Nov 18, 2012) =====
 
 * Code is compilable for MacOS X (10.5+) with Qt library
 * Added ability to read books from archives like ".tar", ".tar.gz" and ".tar.bz2" (original code by Serge Osnach)
@@ -19,21 +24,21 @@
 * Implemented new network library view
 * Fixed crash after library scanning or book opening on some *.doc files
 
-===== 0.99.2 (September 7, 2012) =====
+===== 0.99.2 (Sep 7, 2012) =====
 
 * Added "My Books" (purchased books) section for LitRes catalog
 * Hebrew localization (by David Kachan)
 * Updated Finnish localization (by Marko Vertainen)
 * Misc build & installation fixes (by kensington)
 
-===== 0.99.1 (July 26, 2012) =====
+===== 0.99.1 (Jul 26, 2012) =====
 
 * Fixed bug with freezing at start
 * List of network libraries is updated now from fbreader.org
 * Fixed working with secured connections (now authentification and books buying on LitRes.ru catalog works)
 * Image support for Ms-Word doc format
 
-===== 0.99.0 (July 5, 2012) =====
+===== 0.99.0 (Jul 5, 2012) =====
 
 * Esperanto interface localization has been added (by Katarína Nosková)
 * Hyphenation patterns for Polish (by Tomasz Długosz)
@@ -46,7 +51,7 @@
 * Encoding & language recognizing has been improved
 * As from version 0.99.0 FBReader for Linux supports qt4 interface only
 
-===== 0.14.20100422 (April 22, 2010) =====
+===== 0.14.20100422 (Apr 22, 2010) =====
 
 * Chinese text drawing optimization (thanks to You Sheng (SmartDevices) for
   idea)
@@ -62,18 +67,18 @@
   partially implemented (in Gtk+ version only)
 * Polish interface localization has been added (by Rafał Bakuła)
 
-===== 0.12.10 (April 1, 2010) =====
+===== 0.12.10 (Apr 1, 2010) =====
 
 * Processing of external hyperlinks in epubs has been fixed
 
-===== 0.12.9 (March 25, 2010) =====
+===== 0.12.9 (Mar 25, 2010) =====
 
 * Processing of epub local hyperlinks of form "../dir/file.html" has been
   fixed
 * Code is now compilable with gcc 4.4.* (missing include directives have been
   added)
 
-===== 0.12.8 (March 22, 2010) =====
+===== 0.12.8 (Mar 22, 2010) =====
 
 * Smashwords library support has been improved: purchase links have been added
 * LitRes library support has been updated: since this version FBReader uses an
@@ -87,12 +92,12 @@
 * Parsing of decimal point in CSS files has been fixed (it doesn't depend on
 the current locale now)
 
-===== 0.12.7 (March 5, 2010) =====
+===== 0.12.7 (Mar 5, 2010) =====
 
 * Vietnamese localization has been added
 * LitRes catalog browsing broken in 0.12.6 has been fixed
 
-===== 0.12.6 (March 3, 2010) =====
+===== 0.12.6 (Mar 3, 2010) =====
 
 * A processing of ePub files with incorrect CRC/entry size information
   has been fixed. Such files are available e.g. from the FictionWise site.
