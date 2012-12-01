@@ -19,14 +19,11 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QPixmap>
-#include <QtGui/QImage>
 #include <QtGui/QIcon>
 #include <QtGui/QToolBar>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMenu>
-#include <QtGui/QLayout>
 #include <QtGui/QWheelEvent>
-#include <QtCore/QObjectList>
 
 #include <ZLibrary.h>
 #include <ZLFile.h>
@@ -281,7 +278,7 @@ void ZLQtAction::onActivated() {
 void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
 	ZLQtAction *action = new ZLQtAction(myWindow.application(), item.actionId(), myMenuStack.back());
 	action->setText(QString::fromUtf8(item.name().c_str()));
-	if (item.actionId() == "showLibrary") {
+	if (item.actionId() == "library") {
 		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
 	}
 	if (item.actionId() == "showNetworkLibrary") {
