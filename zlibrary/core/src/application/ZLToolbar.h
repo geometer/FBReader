@@ -22,8 +22,6 @@
 
 #include <string>
 #include <vector>
-#include <map>
-#include <set>
 
 #include <shared_ptr.h>
 #include <ZLOptions.h>
