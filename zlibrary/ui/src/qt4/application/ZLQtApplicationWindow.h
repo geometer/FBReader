@@ -28,7 +28,6 @@
 #include <QtGui/QMenu>
 #include <QtGui/QCursor>
 
-class QDockWidget;
 class QToolBar;
 class QToolButton;
 class QLineEdit;
@@ -97,11 +96,8 @@ private Q_SLOTS:
 
 private:
 	QToolBar *myToolBar;
-	QDockWidget *myDocWidget;
 
 	std::map<std::string,QAction*> myActions;
-	std::map<const ZLToolbar::MenuButtonItem*,QToolButton*> myMenuButtons;
-	std::map<const ZLToolbar::MenuButtonItem*,size_t> myPopupIdMap;
 	std::list<ZLQtAction*> myMenuActions;
 	std::list<ZLQtMenu*> mySubmenuList;
 

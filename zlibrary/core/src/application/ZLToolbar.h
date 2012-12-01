@@ -39,7 +39,6 @@ public:
 	public:
 		enum Type {
 			PLAIN_BUTTON,
-			MENU_BUTTON,
 			SEPARATOR
 		};
 
@@ -84,15 +83,6 @@ public:
 		PlainButtonItem(ZLToolbar &toolbar, const std::string &actionId);
 	};
 
-	class MenuButtonItem : public AbstractButtonItem {
-
-	public:
-		MenuButtonItem(ZLToolbar &toolbar, const std::string &actionId);
-
-		const std::string &popupTooltip() const;
-		shared_ptr<ZLPopupData> popupData() const;
-	};
-
 	class SeparatorItem : public Item {
 
 	public:
@@ -113,7 +103,6 @@ private:
 	const ZLApplication &myApplication;
 	ItemVector myItems;
 
-friend class MenuButtonItem;
 friend class ZLApplication;
 friend class ZLToolbarCreator;
 };

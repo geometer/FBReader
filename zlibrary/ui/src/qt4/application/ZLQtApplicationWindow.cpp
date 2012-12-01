@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <QtGui/QApplication>
 #include <QtGui/QPixmap>
 #include <QtGui/QImage>
@@ -29,7 +27,6 @@
 #include <QtGui/QToolButton>
 #include <QtGui/QLayout>
 #include <QtGui/QWheelEvent>
-#include <QtGui/QDockWidget>
 #include <QtCore/QObjectList>
 
 #include <ZLibrary.h>
@@ -56,7 +53,6 @@ ZLQtToolBarAction::ZLQtToolBarAction(ZLApplication &application, QObject *parent
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	ZLDesktopApplicationWindow(application),
-	myDocWidget(0),
 	myFullScreen(false),
 	myWasMaximized(false),
 	myCursorIsHyperlink(false) {
@@ -141,9 +137,6 @@ void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
 		if (myWasMaximized) {
 			showMaximized();
 		}
-		if (myDocWidget != 0) {
-			myDocWidget->hide();
-		}
 	}
 }
 
@@ -181,21 +174,6 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			action = new ZLQtToolBarAction(application(), myToolBar, (ZLToolbar::AbstractButtonItem&)*item);
 			myToolBar->addAction(action);
 			break;
-		case ZLToolbar::Item::MENU_BUTTON:
-		{
-			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
-			QToolButton *button = new QToolButton(myToolBar);
-			button->setFocusPolicy(Qt::NoFocus);
-			button->setDefaultAction(new ZLQtToolBarAction(application(), myToolBar, buttonItem));
-			button->setMenu(new QMenu(button));
-			button->setPopupMode(QToolButton::MenuButtonPopup);
-			action = myToolBar->addWidget(button);
-			myMenuButtons[&buttonItem] = button;
-			shared_ptr<ZLPopupData> popupData = buttonItem.popupData();
-			myPopupIdMap[&buttonItem] =
-				popupData.isNull() ? (size_t)-1 : (popupData->generation() - 1);
-			break;
-		}
 		case ZLToolbar::Item::SEPARATOR:
 			action = myToolBar->addSeparator();
 			break;
@@ -223,26 +201,6 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool vi
 	if (action != 0) {
 		action->setEnabled(enabled);
 		action->setVisible(visible);
-	}
-	switch (item->type()) {
-		default:
-			break;
-		case ZLToolbar::Item::MENU_BUTTON:
-		{
-			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
-			shared_ptr<ZLPopupData> data = buttonItem.popupData();
-			if (!data.isNull() && (data->generation() != myPopupIdMap[&buttonItem])) {
-				myPopupIdMap[&buttonItem] = data->generation();
-				QToolButton *button = myMenuButtons[&buttonItem];
-				QMenu *menu = button->menu();
-				menu->clear();
-				const size_t count = data->count();
-				for (size_t i = 0; i < count; ++i) {
-					menu->addAction(new ZLQtRunPopupAction(menu, data, i));
-				}
-			}
-			break;
-		}
 	}
 }
 
@@ -275,7 +233,6 @@ void ZLQtApplicationWindow::onRefresh() {
 		}
 		menu->Generation = data->generation();
 		menu->clear();
-		std::cerr << "do clear menu for " << menu->Id << " :: " << menu->Generation << "\n";
 		const size_t count = data->count();
 		for (size_t i = 0; i < count; ++i) {
 			menu->addAction(new ZLQtRunPopupAction(menu, data, i));

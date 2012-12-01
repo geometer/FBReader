@@ -53,24 +53,23 @@ void ZLApplicationWindow::refreshToolbar() {
 	for (ZLToolbar::ItemVector::const_iterator it = items.begin(); it != items.end(); ++it) {
 		switch ((*it)->type()) {
 			case ZLToolbar::Item::PLAIN_BUTTON:
-			case ZLToolbar::Item::MENU_BUTTON:
-				{
-					ZLToolbar::ActionItem &button = (ZLToolbar::ActionItem&)**it;
-					const std::string &id = button.actionId();
+			{
+				ZLToolbar::ActionItem &button = (ZLToolbar::ActionItem&)**it;
+				const std::string &id = button.actionId();
 
-					const bool visible = application().isActionVisible(id);
-					const bool enabled = application().isActionEnabled(id);
+				const bool visible = application().isActionVisible(id);
+				const bool enabled = application().isActionEnabled(id);
 
-					if (visible) {
-						if (!lastSeparator.isNull()) {
-							setToolbarItemState(lastSeparator, true, true);
-							lastSeparator = 0;
-						}
-						canAddSeparator = true;
+				if (visible) {
+					if (!lastSeparator.isNull()) {
+						setToolbarItemState(lastSeparator, true, true);
+						lastSeparator = 0;
 					}
-					setToolbarItemState(*it, visible, enabled);
+					canAddSeparator = true;
 				}
+				setToolbarItemState(*it, visible, enabled);
 				break;
+			}
 			case ZLToolbar::Item::SEPARATOR:
 				if (canAddSeparator) {
 					lastSeparator = *it;
