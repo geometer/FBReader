@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="Könyv adatai…"/>
 		<node name="toc" value="Tartalomjegyzék"/>
-		<node name="showLibrary" value="Könyvtár megnyitása"/>
+		<node name="library" value="Könyvtár megnyitása"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Könyvtár">
-			<node name="showLibrary" value="Megnyitás"/>
+			<node name="library" value="Megnyitás"/>
 			<node name="previousBook" value="Előző kötet"/>
 			<node name="recent" value="Legutóbbi"/>
 			<node name="addBook" value="Könyv hozzáadása…"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="Kötet olvasása"/>
 			<node name="tooltip" value="Olvasó ablak"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Könyvtár"/>
 			<node name="tooltip" value="Könyvtár"/>
 			<node name="popup" value="Legutóbbi kötetek listája"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Nem"/>
-						<node name="showLibrary" value="Könyvtár mutatása"/>
+						<node name="library" value="Könyvtár mutatása"/>
 						<node name="showNetLibrary" value="Internetes könyvtár mutatása"/>
 						<node name="recent" value="Legutóbbi kötetek"/>
 						<node name="previousBook" value="Előző kötet megnyitása"/>

@@ -3,7 +3,7 @@
 	<submenu id="books">
 		<submenu id="recent"/>
 		<separator/>
-		<item id="showLibrary"/>
+		<item id="library"/>
 		<item id="showNetworkLibrary"/>
 		<separator/>
 		<item id="addBook"/>

@@ -3,7 +3,7 @@
 	<item id="bookInfo"/>
 	<item id="toc"/>
 	<submenu id="library">
-		<item id="showLibrary"/>
+		<item id="library"/>
 		<item id="previousBook"/>
 		<item id="recent"/>
 		<item id="addBook"/>

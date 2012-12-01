@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="Bokinformation…"/>
 		<node name="toc" value="Innehållsförteckning"/>
-		<node name="showLibrary" value="Open library" toBeTranslated="true"/>
+		<node name="library" value="Open library" toBeTranslated="true"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Bibliotek">
-			<node name="showLibrary" value="Öppna"/>
+			<node name="library" value="Öppna"/>
 			<node name="previousBook" value="Föregående bok"/>
 			<node name="recent" value="Tidigare"/>
 			<node name="addBook" value="Lägg till bok…"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="Read Book" toBeTranslated="true"/>
 			<node name="tooltip" value="Show Reading Mode" toBeTranslated="true"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Library" toBeTranslated="true"/>
 			<node name="tooltip" value="Visa biblioteksträd"/>
 			<node name="popup" value="Show Recent Books List" toBeTranslated="true"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Ingen"/>
-						<node name="showLibrary" value="Visa bibliotek"/>
+						<node name="library" value="Visa bibliotek"/>
 						<node name="showNetLibrary" value="Show network library" toBeTranslated="true"/>
 						<node name="recent" value="Visa tidigare böcker"/>
 						<node name="previousBook" value="Öppna föregående bok"/>

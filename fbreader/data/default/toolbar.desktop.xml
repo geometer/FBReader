@@ -5,7 +5,7 @@
 	<toggleButton id="byAuthor" group="booksOrder" default="yes"/>
 	<toggleButton id="byTag" group="booksOrder"/>
 	<separator/>
-	<menuButton id="showLibrary"/>
+	<menuButton id="library"/>
 	<button id="addBook"/>
 	<button id="showNetworkLibrary"/>
 	<separator/>

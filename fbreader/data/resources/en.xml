@@ -115,7 +115,7 @@
 	<node name="menu">
 		<node name="books" value="Books">
 			<node name="recent" value="Recent"/>
-			<node name="showLibrary" value="Library"/>
+			<node name="library" value="Library"/>
 			<node name="showNetworkLibrary" value="Network library"/>
 			<node name="addBook" value="Open file…"/>
 			<node name="preferences" value="Preferences"/>
@@ -133,12 +133,12 @@
 		</node>
 		<node name="bookInfo" value="Book Info…"/>
 		<node name="toc" value="Table of Contents"/>
-		<node name="showLibrary" value="Open library"/>
+		<node name="library" value="Open library"/>
 		<node name="showNetLibrary" value="Network library"/>
 		<node name="addBook" value="Open file…"/>
 		<node name="recent" value="Recent books"/>
 		<node name="library" value="Library">
-			<node name="showLibrary" value="Open"/>
+			<node name="library" value="Open"/>
 			<node name="previousBook" value="Previous Book"/>
 			<node name="recent" value="Recent"/>
 			<node name="addBook" value="Add Book…"/>
@@ -176,7 +176,7 @@
 			<node name="label" value="Read Book"/>
 			<node name="tooltip" value="Show Reading Mode"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Library"/>
 			<node name="tooltip" value="Show Library Tree"/>
 			<node name="popup" value="Show Recent Books List"/>
@@ -397,7 +397,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="None"/>
-						<node name="showLibrary" value="Show library"/>
+						<node name="library" value="Show library"/>
 						<node name="showNetLibrary" value="Show network library"/>
 						<node name="recent" value="Show recent books"/>
 						<node name="previousBook" value="Open previous book"/>

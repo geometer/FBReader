@@ -2,7 +2,7 @@
 <toolbar>
 	<button id="showReading"/>
 	<separator/>
-	<button id="showLibrary"/>
+	<button id="library"/>
 	<button id="recent"/>
 	<button id="addBook"/>
 	<separator/>

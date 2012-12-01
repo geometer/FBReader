@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="Informasi Buku…"/>
 		<node name="toc" value="Daftar Isi"/>
-		<node name="showLibrary" value="Open library" toBeTranslated="true"/>
+		<node name="library" value="Open library" toBeTranslated="true"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Pustaka">
-			<node name="showLibrary" value="Buka"/>
+			<node name="library" value="Buka"/>
 			<node name="previousBook" value="Buku Sebelumnya"/>
 			<node name="recent" value="Buku-buku Sebelumnya"/>
 			<node name="addBook" value="Tambah Buku…"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="Read Book" toBeTranslated="true"/>
 			<node name="tooltip" value="Tampilkan Mode Baca"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Library" toBeTranslated="true"/>
 			<node name="tooltip" value="Tampilkan Daftar Pustaka"/>
 			<node name="popup" value="Tampilkan Daftar Buku-buku Sebelumnya"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Tidak Terpakai"/>
-						<node name="showLibrary" value="Tampilkan Pustaka"/>
+						<node name="library" value="Tampilkan Pustaka"/>
 						<node name="showNetLibrary" value="Tampilkan Pustaka Jaringan"/>
 						<node name="recent" value="Tampilkan Buku-buku Sebelumnya"/>
 						<node name="previousBook" value="Buka Buku Sebelumnya"/>

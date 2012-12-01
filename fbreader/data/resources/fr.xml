@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="Informations sur le livre…"/>
 		<node name="toc" value="Table des matières"/>
-		<node name="showLibrary" value="Ouvrir la bibliothèque"/>
+		<node name="library" value="Ouvrir la bibliothèque"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Bibliothèque">
-			<node name="showLibrary" value="Ouvrir"/>
+			<node name="library" value="Ouvrir"/>
 			<node name="previousBook" value="Livre précédent"/>
 			<node name="recent" value="Récents"/>
 			<node name="addBook" value="Ajouter un livre…"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="Read Book" toBeTranslated="true"/>
 			<node name="tooltip" value="Afficher le mode de lecture"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Library" toBeTranslated="true"/>
 			<node name="tooltip" value="Afficher l'arbre de la bibliothèque"/>
 			<node name="popup" value="Afficher la liste des livres récents"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Aucune"/>
-						<node name="showLibrary" value="Afficher la bibliothèque"/>
+						<node name="library" value="Afficher la bibliothèque"/>
 						<node name="showNetLibrary" value="Afficher la bibliothèque réseau"/>
 						<node name="recent" value="Afficher les livres récents"/>
 						<node name="previousBook" value="Ouvrir le livre précédent"/>

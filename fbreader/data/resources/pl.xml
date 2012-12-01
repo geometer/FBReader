@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="Informacje o książce…"/>
 		<node name="toc" value="Spis zawartości"/>
-		<node name="showLibrary" value="Otwórz bibliotekę"/>
+		<node name="library" value="Otwórz bibliotekę"/>
 		<node name="showNetLibrary" value="Biblioteka sieciowa"/>
 		<node name="addBook" value="Otwórz plik…"/>
 		<node name="recent" value="Ostatnio czytane"/>
 		<node name="library" value="Biblioteka">
-			<node name="showLibrary" value="Otwórz"/>
+			<node name="library" value="Otwórz"/>
 			<node name="previousBook" value="Poprzednia książka"/>
 			<node name="recent" value="Poprzednia"/>
 			<node name="addBook" value="Dodaj książkę…"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="Czytaj książkę"/>
 			<node name="tooltip" value="Czytaj"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Biblioteka"/>
 			<node name="tooltip" value="Pokaż książki"/>
 			<node name="popup" value="Pokaż ostatnio otwierane książki"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Nic"/>
-						<node name="showLibrary" value="Pokaż bibliotekę"/>
+						<node name="library" value="Pokaż bibliotekę"/>
 						<node name="showNetLibrary" value="Pokaż bibliotekę sieciową"/>
 						<node name="recent" value="Pokaż ostatnie książki"/>
 						<node name="previousBook" value="Otwórz poprzednią książkę"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <menubar>
-	<item id="showLibrary"/>
+	<item id="library"/>
 	<item id="showNetLibrary"/>
 	<item id="recent"/>
 	<item id="addBook"/>

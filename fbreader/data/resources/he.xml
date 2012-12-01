@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="אודות הספר"/>
 		<node name="toc" value="תוכן הענינים"/>
-		<node name="showLibrary" value="פתח ספריה"/>
+		<node name="library" value="פתח ספריה"/>
 		<node name="showNetLibrary" value="הצג ספריית רשת"/>
 		<node name="addBook" value="פתח קובץ"/>
 		<node name="recent" value="ספרים קודמים"/>
 		<node name="library" value="ספריה">
-			<node name="showLibrary" value="פתיחה"/>
+			<node name="library" value="פתיחה"/>
 			<node name="previousBook" value="ספר קודם"/>
 			<node name="recent" value="ספרים שנקראו"/>
 			<node name="addBook" value="הוספת ספר"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="קריאת ספר"/>
 			<node name="tooltip" value="חזור לספר"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="ספריה"/>
 			<node name="tooltip" value="ספריה"/>
 			<node name="popup" value="הצג ספרים בספריה"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="אין פעולה"/>
-						<node name="showLibrary" value="הצג ספריה"/>
+						<node name="library" value="הצג ספריה"/>
 						<node name="showNetLibrary" value="ספריות רשת"/>
 						<node name="recent" value="הצג ספרים שנקראו"/>
 						<node name="previousBook" value="פתיחת ספר קודם"/>

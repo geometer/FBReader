@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="Apie knygą…"/>
 		<node name="toc" value="Turinys"/>
-		<node name="showLibrary" value="Atidaryti biblioteką"/>
+		<node name="library" value="Atidaryti biblioteką"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Biblioteka">
-			<node name="showLibrary" value="Atidaryti"/>
+			<node name="library" value="Atidaryti"/>
 			<node name="previousBook" value="Ankstesnė knyga"/>
 			<node name="recent" value="Paskutinės žiūrėtos"/>
 			<node name="addBook" value="Pridėti knygą…"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="Skaityti knygą"/>
 			<node name="tooltip" value="Skaityti pasirinktą knygą"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Biblioteka"/>
 			<node name="tooltip" value="Rodyti bibliotekos struktūrą"/>
 			<node name="popup" value="Rodyti neseniai skaitytas knygas"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Nieko"/>
-						<node name="showLibrary" value="Rodyti biblioteką"/>
+						<node name="library" value="Rodyti biblioteką"/>
 						<node name="showNetLibrary" value="Rodyti Interneto biblioteką"/>
 						<node name="recent" value="Rodyti neseniai žiūrėtas knygas"/>
 						<node name="previousBook" value="Atidaryti ankstesnę knygą"/>

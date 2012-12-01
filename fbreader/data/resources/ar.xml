@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="معلومات الكتاب…"/>
 		<node name="toc" value="جدول المحتويات"/>
-		<node name="showLibrary" value="افتح المكتبة"/>
+		<node name="library" value="افتح المكتبة"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="المكتبة">
-			<node name="showLibrary" value="افتح"/>
+			<node name="library" value="افتح"/>
 			<node name="previousBook" value="الكتاب السابق"/>
 			<node name="recent" value="الأخيرة"/>
 			<node name="addBook" value="أضف كتابا…"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="اقرأ الكتاب"/>
 			<node name="tooltip" value="أظهر وضع القراءة"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="مكتبة"/>
 			<node name="tooltip" value="أظهر شجرة المكتبة"/>
 			<node name="popup" value="أظهر قائمة الكتب الحديثة"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="لا شيء"/>
-						<node name="showLibrary" value="أظهر المكتبة"/>
+						<node name="library" value="أظهر المكتبة"/>
 						<node name="showNetLibrary" value="أظهر مكتبة الشبكة"/>
 						<node name="recent" value="أظهر الكتب الأخيرة"/>
 						<node name="previousBook" value="افتح الكتاب السابق"/>

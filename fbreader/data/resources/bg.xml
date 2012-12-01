@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="Информация за книгата…"/>
 		<node name="toc" value="Съдържание"/>
-		<node name="showLibrary" value="Отваряне на библиотека"/>
+		<node name="library" value="Отваряне на библиотека"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Библиотека">
-			<node name="showLibrary" value="Отваряне"/>
+			<node name="library" value="Отваряне"/>
 			<node name="previousBook" value="Предишна книга"/>
 			<node name="recent" value="Последна"/>
 			<node name="addBook" value="Добавяне на книга…"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="Четене на книгата"/>
 			<node name="tooltip" value="Връщане към четенето"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Библиотека"/>
 			<node name="tooltip" value="Библиотека"/>
 			<node name="popup" value="Показване на списък с наскоро прочетените книги"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Няма"/>
-						<node name="showLibrary" value="Показване на библиотеката"/>
+						<node name="library" value="Показване на библиотеката"/>
 						<node name="showNetLibrary" value="Показване на интернет библиотеки"/>
 						<node name="recent" value="Показване на последните книги"/>
 						<node name="previousBook" value="Отваряне на предишната книга"/>

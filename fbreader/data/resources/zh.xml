@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="书籍信息…"/>
 		<node name="toc" value="目录"/>
-		<node name="showLibrary" value="打开书库"/>
+		<node name="library" value="打开书库"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="书库">
-			<node name="showLibrary" value="打开"/>
+			<node name="library" value="打开"/>
 			<node name="previousBook" value="上一本书"/>
 			<node name="recent" value="最近阅读"/>
 			<node name="addBook" value="添加书籍…"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="显示阅读模式"/>
 			<node name="tooltip" value="显示阅读模式"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="显示书库目录"/>
 			<node name="tooltip" value="显示书库目录"/>
 			<node name="popup" value="显示最新书籍列表"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="没有"/>
-						<node name="showLibrary" value="显示书库"/>
+						<node name="library" value="显示书库"/>
 						<node name="showNetLibrary" value="显示网络书库"/>
 						<node name="recent" value="显示最新书籍"/>
 						<node name="previousBook" value="打开上一本书"/>

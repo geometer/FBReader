@@ -106,7 +106,7 @@
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
 			<node name="recent" value="Recent books" toBeTranslated="true"/>
-			<node name="showLibrary" value="Library" toBeTranslated="true"/>
+			<node name="library" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		</node>
@@ -115,12 +115,12 @@
 		</node>
 		<node name="bookInfo" value="Informace o knize…"/>
 		<node name="toc" value="Obsah"/>
-		<node name="showLibrary" value="Otevřít knihovnu"/>
+		<node name="library" value="Otevřít knihovnu"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
 		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Knihovna">
-			<node name="showLibrary" value="Otevřít"/>
+			<node name="library" value="Otevřít"/>
 			<node name="previousBook" value="Předchozí kniha"/>
 			<node name="recent" value="Nedávné"/>
 			<node name="addBook" value="Přidat knihu…"/>
@@ -165,7 +165,7 @@
 			<node name="label" value="Read Book" toBeTranslated="true"/>
 			<node name="tooltip" value="Čtecí režim"/>
 		</node>
-		<node name="showLibrary">
+		<node name="library">
 			<node name="label" value="Library" toBeTranslated="true"/>
 			<node name="tooltip" value="Knihovna - stromový pohled"/>
 			<node name="popup" value="Nedávno otevřené knihy"/>
@@ -386,7 +386,7 @@
 					</node>
 					<node name="action">
 						<node name="none" value="Žádné"/>
-						<node name="showLibrary" value="Zobrazit knihovnu"/>
+						<node name="library" value="Zobrazit knihovnu"/>
 						<node name="showNetLibrary" value="Zobrazit knihovnu na síti"/>
 						<node name="recent" value="Zobrazit nedávné"/>
 						<node name="previousBook" value="Otevřít předchozí knihu"/>
