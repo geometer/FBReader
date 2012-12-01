@@ -283,7 +283,6 @@ void ZLQtAction::onActivated() {
 	myApplication.doAction(Id);
 }
 
-
 void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
 	ZLQtAction *action = new ZLQtAction(myWindow.application(), item.actionId(), myMenuStack.back());
 	action->setText(QString::fromUtf8(item.name().c_str()));
