@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Otevřít knihovnu"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Knihovna">
 			<node name="showLibrary" value="Otevřít"/>
 			<node name="previousBook" value="Předchozí kniha"/>
-			<node name="showRecent" value="Nedávné"/>
+			<node name="recent" value="Nedávné"/>
 			<node name="addBook" value="Přidat knihu…"/>
 			<node name="showHelp" value="O programu FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Knihovna - stromový pohled"/>
 			<node name="popup" value="Nedávno otevřené knihy"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Recent Books" toBeTranslated="true"/>
 			<node name="tooltip" value="Seznam nedávno otevřených knih"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Žádné"/>
 						<node name="showLibrary" value="Zobrazit knihovnu"/>
 						<node name="showNetLibrary" value="Zobrazit knihovnu na síti"/>
-						<node name="showRecent" value="Zobrazit nedávné"/>
+						<node name="recent" value="Zobrazit nedávné"/>
 						<node name="previousBook" value="Otevřít předchozí knihu"/>
 						<node name="toc" value="Zobrazit obsah"/>
 						<node name="gotoHome" value="Přejít na začátek textu"/>

@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="פתח ספריה"/>
 		<node name="showNetLibrary" value="הצג ספריית רשת"/>
 		<node name="addBook" value="פתח קובץ"/>
-		<node name="showRecent" value="ספרים קודמים"/>
+		<node name="recent" value="ספרים קודמים"/>
 		<node name="library" value="ספריה">
 			<node name="showLibrary" value="פתיחה"/>
 			<node name="previousBook" value="ספר קודם"/>
-			<node name="showRecent" value="ספרים שנקראו"/>
+			<node name="recent" value="ספרים שנקראו"/>
 			<node name="addBook" value="הוספת ספר"/>
 			<node name="showHelp" value="אודות FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="ספריה"/>
 			<node name="popup" value="הצג ספרים בספריה"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="היסטוריה"/>
 			<node name="tooltip" value="ספרים שנקראו לאחרונה"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="אין פעולה"/>
 						<node name="showLibrary" value="הצג ספריה"/>
 						<node name="showNetLibrary" value="ספריות רשת"/>
-						<node name="showRecent" value="הצג ספרים שנקראו"/>
+						<node name="recent" value="הצג ספרים שנקראו"/>
 						<node name="previousBook" value="פתיחת ספר קודם"/>
 						<node name="toc" value="תוכן הענינים"/>
 						<node name="gotoHome" value="מעבר להתחלה"/>

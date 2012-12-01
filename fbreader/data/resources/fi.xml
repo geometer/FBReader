@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Avaa kirjasto"/>
 		<node name="showNetLibrary" value="Verkkokirjasto"/>
 		<node name="addBook" value="Avaa tiedosto…"/>
-		<node name="showRecent" value="Viimeisimmät kirjat"/>
+		<node name="recent" value="Viimeisimmät kirjat"/>
 		<node name="library" value="Kirjasto">
 			<node name="showLibrary" value="Avaa kirjasto"/>
 			<node name="previousBook" value="Edellinen kirja"/>
-			<node name="showRecent" value="Viimeisimmät kirjat"/>
+			<node name="recent" value="Viimeisimmät kirjat"/>
 			<node name="addBook" value="Lisää kirja…"/>
 			<node name="showHelp" value="Tietoja FBReaderista"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Näytä kirjastopuu"/>
 			<node name="popup" value="Näytä viimeisimmät kirjat lista"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Viimeisimmät kirjat"/>
 			<node name="tooltip" value="Näytä viimeisimmät kirjat"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Ei mitään"/>
 						<node name="showLibrary" value="Näytä kirjasto"/>
 						<node name="showNetLibrary" value="Näytä verkkokirjasto"/>
-						<node name="showRecent" value="Näytä viimeisimmät kirjat"/>
+						<node name="recent" value="Näytä viimeisimmät kirjat"/>
 						<node name="previousBook" value="Avaa edellinen kirja"/>
 						<node name="toc" value="Näytä sisällysluettelo"/>
 						<node name="gotoHome" value="Siirry alkuun"/>

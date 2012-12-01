@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Atidaryti biblioteką"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Biblioteka">
 			<node name="showLibrary" value="Atidaryti"/>
 			<node name="previousBook" value="Ankstesnė knyga"/>
-			<node name="showRecent" value="Paskutinės žiūrėtos"/>
+			<node name="recent" value="Paskutinės žiūrėtos"/>
 			<node name="addBook" value="Pridėti knygą…"/>
 			<node name="showHelp" value="Apie FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Rodyti bibliotekos struktūrą"/>
 			<node name="popup" value="Rodyti neseniai skaitytas knygas"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Neseniai skaitytos knygos"/>
 			<node name="tooltip" value="Rodyti neseniai skaitytų knygų sąrašą"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Nieko"/>
 						<node name="showLibrary" value="Rodyti biblioteką"/>
 						<node name="showNetLibrary" value="Rodyti Interneto biblioteką"/>
-						<node name="showRecent" value="Rodyti neseniai žiūrėtas knygas"/>
+						<node name="recent" value="Rodyti neseniai žiūrėtas knygas"/>
 						<node name="previousBook" value="Atidaryti ankstesnę knygą"/>
 						<node name="toc" value="Rodyti turinį"/>
 						<node name="gotoHome" value="Eiti į pradžią"/>

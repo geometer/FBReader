@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Отваряне на библиотека"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Библиотека">
 			<node name="showLibrary" value="Отваряне"/>
 			<node name="previousBook" value="Предишна книга"/>
-			<node name="showRecent" value="Последна"/>
+			<node name="recent" value="Последна"/>
 			<node name="addBook" value="Добавяне на книга…"/>
 			<node name="showHelp" value="За програмата FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Библиотека"/>
 			<node name="popup" value="Показване на списък с наскоро прочетените книги"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="История"/>
 			<node name="tooltip" value="Показване на списък с наскоро прочетените книги"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Няма"/>
 						<node name="showLibrary" value="Показване на библиотеката"/>
 						<node name="showNetLibrary" value="Показване на интернет библиотеки"/>
-						<node name="showRecent" value="Показване на последните книги"/>
+						<node name="recent" value="Показване на последните книги"/>
 						<node name="previousBook" value="Отваряне на предишната книга"/>
 						<node name="toc" value="Показване на съдържанието"/>
 						<node name="gotoHome" value="Отиване на началната страница"/>

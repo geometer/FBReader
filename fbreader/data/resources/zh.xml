@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="打开书库"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="书库">
 			<node name="showLibrary" value="打开"/>
 			<node name="previousBook" value="上一本书"/>
-			<node name="showRecent" value="最近阅读"/>
+			<node name="recent" value="最近阅读"/>
 			<node name="addBook" value="添加书籍…"/>
 			<node name="showHelp" value="关于 FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="显示书库目录"/>
 			<node name="popup" value="显示最新书籍列表"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="显示最新的书籍列表"/>
 			<node name="tooltip" value="显示最新的书籍列表"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="没有"/>
 						<node name="showLibrary" value="显示书库"/>
 						<node name="showNetLibrary" value="显示网络书库"/>
-						<node name="showRecent" value="显示最新书籍"/>
+						<node name="recent" value="显示最新书籍"/>
 						<node name="previousBook" value="打开上一本书"/>
 						<node name="toc" value="显示目录"/>
 						<node name="gotoHome" value="返回书籍起始"/>

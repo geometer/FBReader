@@ -117,7 +117,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Книги">
-			<node name="showRecent" value="Недавние"/>
+			<node name="recent" value="Недавние"/>
 			<node name="showLibrary" value="Библиотека"/>
 			<node name="showNetworkLibrary" value="Сетевая библиотека"/>
 			<node name="addBook" value="Открыть файл…"/>
@@ -130,11 +130,11 @@
 		<node name="showLibrary" value="Открыть библиотеку"/>
 		<node name="showNetLibrary" value="Сетевая библиотека"/>
 		<node name="addBook" value="Открыть файл…"/>
-		<node name="showRecent" value="Недавние книги"/>
+		<node name="recent" value="Недавние книги"/>
 		<node name="library" value="Библиотека">
 			<node name="showLibrary" value="Открыть"/>
 			<node name="previousBook" value="Предыдущая книга"/>
-			<node name="showRecent" value="Прочитанные книги"/>
+			<node name="recent" value="Прочитанные книги"/>
 			<node name="addBook" value="Добавить файл…"/>
 			<node name="showHelp" value="О программе FBReader"/>
 		</node>
@@ -182,7 +182,7 @@
 			<node name="tooltip" value="Библиотека"/>
 			<node name="popup" value="Недавно прочитанные книги"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="История"/>
 			<node name="tooltip" value="Недавно прочитанные книги"/>
 		</node>
@@ -400,7 +400,7 @@
 						<node name="none" value="Никакого действия"/>
 						<node name="showLibrary" value="Показать библиотеку"/>
 						<node name="showNetLibrary" value="Сетевые библиотеки"/>
-						<node name="showRecent" value="Показать прочитанные книги"/>
+						<node name="recent" value="Показать прочитанные книги"/>
 						<node name="previousBook" value="Открыть предыдущую книгу"/>
 						<node name="toc" value="Показать оглавление"/>
 						<node name="gotoHome" value="Перейти в начало текста"/>

@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Bibliothek öffnen"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Bibliothek">
 			<node name="showLibrary" value="Öffnen"/>
 			<node name="previousBook" value="Vorheriges E-Book"/>
-			<node name="showRecent" value="Aktuell"/>
+			<node name="recent" value="Aktuell"/>
 			<node name="addBook" value="E-Book hinzufügen…"/>
 			<node name="showHelp" value="Über FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Baumansicht der Bibliothek anzeigen"/>
 			<node name="popup" value="Aktuelle Liste der E-Books anzeigen"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Recent Books" toBeTranslated="true"/>
 			<node name="tooltip" value="Aktuelle Liste der E-Books anzeigen"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Keine"/>
 						<node name="showLibrary" value="Bibliothek zeigen"/>
 						<node name="showNetLibrary" value="Netzwerk Bibliothek zeigen"/>
-						<node name="showRecent" value="Aktuelle E-Books zeigen"/>
+						<node name="recent" value="Aktuelle E-Books zeigen"/>
 						<node name="previousBook" value="Vorheriges E-Book zeigen"/>
 						<node name="toc" value="Inhaltsverzeichnis zeigen"/>
 						<node name="gotoHome" value="Zum Anfang gehen"/>

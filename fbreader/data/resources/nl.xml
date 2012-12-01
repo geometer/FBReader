@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Open bibliotheek"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Bibliotheek">
 			<node name="showLibrary" value="Open"/>
 			<node name="previousBook" value="Vorig boek"/>
-			<node name="showRecent" value="Recent"/>
+			<node name="recent" value="Recent"/>
 			<node name="addBook" value="Boek toevoegen…"/>
 			<node name="showHelp" value="Over FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Bibliotheek tonen"/>
 			<node name="popup" value="Recente boekenlijst tonen"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Recente Boeken"/>
 			<node name="tooltip" value="Recente boeken tonen"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Geen"/>
 						<node name="showLibrary" value="Toon bibliotheek"/>
 						<node name="showNetLibrary" value="Toon netwerk bibliotheek"/>
-						<node name="showRecent" value="Toon recente boeken"/>
+						<node name="recent" value="Toon recente boeken"/>
 						<node name="previousBook" value="Toon vorig boek"/>
 						<node name="toc" value="Toon inhoudsopgave"/>
 						<node name="gotoHome" value="Ga naar begin"/>

@@ -29,7 +29,7 @@
 	<binding key="&lt;A&gt;" action="addBook"/>
 	<binding key="&lt;I&gt;" action="bookInfo"/>
 	<binding key="&lt;R&gt;" action="rotate"/>
-	<binding key="&lt;Z&gt;" action="showRecent"/>
+	<binding key="&lt;Z&gt;" action="recent"/>
 	<binding key="&lt;Ctrl&gt;+&lt;DownArrow&gt;" action="nextTOCSection"/>
 	<binding key="&lt;Ctrl&gt;+&lt;UpArrow&gt;" action="previousTOCSection"/>
 	<binding key="&lt;Ctrl&gt;+&lt;C&gt;" action="copyToClipboard"/>

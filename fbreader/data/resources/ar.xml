@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="افتح المكتبة"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="المكتبة">
 			<node name="showLibrary" value="افتح"/>
 			<node name="previousBook" value="الكتاب السابق"/>
-			<node name="showRecent" value="الأخيرة"/>
+			<node name="recent" value="الأخيرة"/>
 			<node name="addBook" value="أضف كتابا…"/>
 			<node name="showHelp" value="عن إف.بي.ريدر"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="أظهر شجرة المكتبة"/>
 			<node name="popup" value="أظهر قائمة الكتب الحديثة"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="الكتب الحديثة"/>
 			<node name="tooltip" value="أظهر قائمة آخر الكتب"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="لا شيء"/>
 						<node name="showLibrary" value="أظهر المكتبة"/>
 						<node name="showNetLibrary" value="أظهر مكتبة الشبكة"/>
-						<node name="showRecent" value="أظهر الكتب الأخيرة"/>
+						<node name="recent" value="أظهر الكتب الأخيرة"/>
 						<node name="previousBook" value="افتح الكتاب السابق"/>
 						<node name="toc" value="أظهر جدول المحتويات"/>
 						<node name="gotoHome" value="اذهب إلى المنزل"/>

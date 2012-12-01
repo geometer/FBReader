@@ -5,7 +5,7 @@
 	<submenu id="library">
 		<item id="showLibrary"/>
 		<item id="previousBook"/>
-		<item id="showRecent"/>
+		<item id="recent"/>
 		<item id="addBook"/>
 		<item id="showHelp"/>
 	</submenu>

@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Відкрити бібліотеку"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Бібліотека">
 			<node name="showLibrary" value="Відкрити бібліотеку"/>
 			<node name="previousBook" value="Попередня книга"/>
-			<node name="showRecent" value="Прочитані книги"/>
+			<node name="recent" value="Прочитані книги"/>
 			<node name="addBook" value="Додати файл…"/>
 			<node name="showHelp" value="Про програму FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Бібліотека"/>
 			<node name="popup" value="Прочитані книги"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Прочитані книги"/>
 			<node name="tooltip" value="Прочитані книги"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Ніяких дій"/>
 						<node name="showLibrary" value="Показати бібліотеку"/>
 						<node name="showNetLibrary" value="Показати електронну бібліотеку"/>
-						<node name="showRecent" value="Показати прочитані книги"/>
+						<node name="recent" value="Показати прочитані книги"/>
 						<node name="previousBook" value="Відкрити попередню книгу"/>
 						<node name="toc" value="Показати зміст"/>
 						<node name="gotoHome" value="Перейти до початку тексту"/>

@@ -2,7 +2,7 @@
 <menubar>
 	<item id="showLibrary"/>
 	<item id="showNetLibrary"/>
-	<item id="showRecent"/>
+	<item id="recent"/>
 	<item id="addBook"/>
 	<item id="toc"/>
 	<item id="preferences"/>

@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Open library" toBeTranslated="true"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Pustaka">
 			<node name="showLibrary" value="Buka"/>
 			<node name="previousBook" value="Buku Sebelumnya"/>
-			<node name="showRecent" value="Buku-buku Sebelumnya"/>
+			<node name="recent" value="Buku-buku Sebelumnya"/>
 			<node name="addBook" value="Tambah Buku…"/>
 			<node name="showHelp" value="Mengenai FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Tampilkan Daftar Pustaka"/>
 			<node name="popup" value="Tampilkan Daftar Buku-buku Sebelumnya"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Recent Books" toBeTranslated="true"/>
 			<node name="tooltip" value="Tampilkan Daftar Buku-buku Sebelumnya"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Tidak Terpakai"/>
 						<node name="showLibrary" value="Tampilkan Pustaka"/>
 						<node name="showNetLibrary" value="Tampilkan Pustaka Jaringan"/>
-						<node name="showRecent" value="Tampilkan Buku-buku Sebelumnya"/>
+						<node name="recent" value="Tampilkan Buku-buku Sebelumnya"/>
 						<node name="previousBook" value="Buka Buku Sebelumnya"/>
 						<node name="toc" value="Tampilkan Daftar Isi"/>
 						<node name="gotoHome" value="Ke Awal Dokumen"/>

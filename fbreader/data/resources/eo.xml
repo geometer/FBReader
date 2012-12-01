@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Malfermi librejon"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Knihovna">
 			<node name="showLibrary" value="Malfermi"/>
 			<node name="previousBook" value="Antaŭa libro"/>
-			<node name="showRecent" value="Lastatempe malfermitaj"/>
+			<node name="recent" value="Lastatempe malfermitaj"/>
 			<node name="addBook" value="Aldoni libron…"/>
 			<node name="showHelp" value="Pri la programo FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Librejo - la tuta arbo"/>
 			<node name="popup" value="Lastatempe malfermitaj libroj"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Recent Books" toBeTranslated="true"/>
 			<node name="tooltip" value="Listo de lastatempe malfermitaj libroj"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Neniu"/>
 						<node name="showLibrary" value="Aperigi librejon"/>
 						<node name="showNetLibrary" value="Aperigu retan librejon" toBeTranslated="true"/>
-						<node name="showRecent" value="Aperigu lastatempe malfermitajn librojn"/>
+						<node name="recent" value="Aperigu lastatempe malfermitajn librojn"/>
 						<node name="previousBook" value="Malfermi la antaŭan libron"/>
 						<node name="toc" value="Aperigi enhavon"/>
 						<node name="gotoHome" value="Iri al komenco de teksto"/>

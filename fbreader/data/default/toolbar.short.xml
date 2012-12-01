@@ -3,7 +3,7 @@
 	<button id="showReading"/>
 	<separator/>
 	<button id="showLibrary"/>
-	<button id="showRecent"/>
+	<button id="recent"/>
 	<button id="addBook"/>
 	<separator/>
 	<button id="gotoHome"/>

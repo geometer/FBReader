@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Apri biblioteca"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Biblioteca">
 			<node name="showLibrary" value="Apri"/>
 			<node name="previousBook" value="Libro Precedente"/>
-			<node name="showRecent" value="Recenti"/>
+			<node name="recent" value="Recenti"/>
 			<node name="addBook" value="Aggiungi Libro…"/>
 			<node name="showHelp" value="Informazioni su FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Mostra Albero Biblioteca"/>
 			<node name="popup" value="Mostra Elenco Libri Recenti"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Recent Books" toBeTranslated="true"/>
 			<node name="tooltip" value="Mostra Elenco Libri Recenti"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Nessuno"/>
 						<node name="showLibrary" value="Mostra Biblioteca"/>
 						<node name="showNetLibrary" value="Mostra biblioteca in rete"/>
-						<node name="showRecent" value="Mostra Libri Recenti"/>
+						<node name="recent" value="Mostra Libri Recenti"/>
 						<node name="previousBook" value="Apri Libro Precedente"/>
 						<node name="toc" value="Mostra Indice"/>
 						<node name="gotoHome" value="Vai alla Pagina Principale"/>

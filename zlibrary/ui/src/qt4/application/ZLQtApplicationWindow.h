@@ -21,6 +21,7 @@
 #define __ZLQTAPPLICATIONWINDOW_H__
 
 #include <map>
+#include <list>
 
 #include <QtGui/QMainWindow>
 #include <QtGui/QAction>
@@ -61,7 +62,7 @@ private:
 
 	private:
 		ZLQtApplicationWindow &myWindow;
-		QMenu *myCurrentMenu;
+		std::list<QMenu*> myMenuStack;
 	};
 
 	void initMenu();

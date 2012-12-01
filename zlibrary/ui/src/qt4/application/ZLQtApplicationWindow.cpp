@@ -177,7 +177,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 
 	switch (item->type()) {
 		case ZLToolbar::Item::PLAIN_BUTTON:
-			action = new ZLQtToolBarAction(application(), this, (ZLToolbar::AbstractButtonItem&)*item);
+			action = new ZLQtToolBarAction(application(), myToolBar, (ZLToolbar::AbstractButtonItem&)*item);
 			myToolBar->addAction(action);
 			break;
 		case ZLToolbar::Item::MENU_BUTTON:
@@ -185,7 +185,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 			ZLToolbar::MenuButtonItem &buttonItem = (ZLToolbar::MenuButtonItem&)*item;
 			QToolButton *button = new QToolButton(myToolBar);
 			button->setFocusPolicy(Qt::NoFocus);
-			button->setDefaultAction(new ZLQtToolBarAction(application(), this, buttonItem));
+			button->setDefaultAction(new ZLQtToolBarAction(application(), myToolBar, buttonItem));
 			button->setMenu(new QMenu(button));
 			button->setPopupMode(QToolButton::MenuButtonPopup);
 			action = myToolBar->addWidget(button);
@@ -294,19 +294,24 @@ void ZLQtApplicationWindow::setFocusToMainWidget() {
 	centralWidget()->setFocus();
 }
 
-ZLQtApplicationWindow::MenuBuilder::MenuBuilder(ZLQtApplicationWindow &window) : myWindow(window), myCurrentMenu(0) {
+ZLQtApplicationWindow::MenuBuilder::MenuBuilder(ZLQtApplicationWindow &window) : myWindow(window) {
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processSubmenuBeforeItems(ZLMenubar::Submenu &submenu) {
-	if (!myWindow.menuBar()->isVisible()) {
-		myWindow.menuBar()->show();
+	QMenu *menu = new QMenu(QString::fromUtf8(submenu.menuName().c_str()));
+	if (myMenuStack.empty()) {
+		if (!myWindow.menuBar()->isVisible()) {
+			myWindow.menuBar()->show();
+		}
+		myWindow.menuBar()->addMenu(menu);
+	} else {
+		myMenuStack.back()->addMenu(menu);
 	}
-	myCurrentMenu = new QMenu(QString::fromUtf8(submenu.menuName().c_str()));
-	myWindow.menuBar()->addMenu(myCurrentMenu);
+	myMenuStack.push_back(menu);
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processSubmenuAfterItems(ZLMenubar::Submenu &submenu) {
-	myCurrentMenu = 0;
+	myMenuStack.pop_back();
 }
 
 ZLQtAction::ZLQtAction(ZLApplication &application, const std::string &id, QObject *parent) : QAction(parent), myApplication(application), Id(id) {
@@ -319,7 +324,7 @@ void ZLQtAction::onActivated() {
 
 
 void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
-	ZLQtAction *action = new ZLQtAction(myWindow.application(), item.actionId(), myCurrentMenu);
+	ZLQtAction *action = new ZLQtAction(myWindow.application(), item.actionId(), myMenuStack.back());
 	action->setText(QString::fromUtf8(item.name().c_str()));
 	if (item.actionId() == "showLibrary") {
 		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
@@ -348,7 +353,7 @@ void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item)
 	if (item.actionId() == "decreaseFont") {
 		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Minus));
 	}
-	myCurrentMenu->addAction(action);
+	myMenuStack.back()->addAction(action);
 	myWindow.addAction(action);
 }
 
@@ -357,5 +362,5 @@ void ZLQtApplicationWindow::addAction(ZLQtAction *action) {
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processSepartor(ZLMenubar::Separator &separator) {
-	myCurrentMenu->addSeparator();
+	myMenuStack.back()->addSeparator();
 }

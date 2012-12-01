@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Mở Thư viện"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Thư viện">
 			<node name="showLibrary" value="Mở"/>
 			<node name="previousBook" value="Quyển trước"/>
-			<node name="showRecent" value="Vừa xem"/>
+			<node name="recent" value="Vừa xem"/>
 			<node name="addBook" value="Thêm sách…"/>
 			<node name="showHelp" value="Nói về FBreader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Xem Cây tổ chức Thư viện"/>
 			<node name="popup" value="Xem danh sách vừa đọc"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Sách vừa đọc"/>
 			<node name="tooltip" value="Xem danh sách vừa đọc"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Không"/>
 						<node name="showLibrary" value="Hiện thư viện"/>
 						<node name="showNetLibrary" value="Hiện thư viện mạng"/>
-						<node name="showRecent" value="Hiện những cuốn vừa đọc"/>
+						<node name="recent" value="Hiện những cuốn vừa đọc"/>
 						<node name="previousBook" value="Mở Cuốn trước "/>
 						<node name="toc" value="Hiện mục lục"/>
 						<node name="gotoHome" value="Đến trang chủ"/>

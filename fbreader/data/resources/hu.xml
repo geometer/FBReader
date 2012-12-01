@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Könyvtár megnyitása"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Könyvtár">
 			<node name="showLibrary" value="Megnyitás"/>
 			<node name="previousBook" value="Előző kötet"/>
-			<node name="showRecent" value="Legutóbbi"/>
+			<node name="recent" value="Legutóbbi"/>
 			<node name="addBook" value="Könyv hozzáadása…"/>
 			<node name="showHelp" value="FBReader névjegye"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Könyvtár"/>
 			<node name="popup" value="Legutóbbi kötetek listája"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Legutóbbi kötetek"/>
 			<node name="tooltip" value="Legutóbbi kötetek listája"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Nem"/>
 						<node name="showLibrary" value="Könyvtár mutatása"/>
 						<node name="showNetLibrary" value="Internetes könyvtár mutatása"/>
-						<node name="showRecent" value="Legutóbbi kötetek"/>
+						<node name="recent" value="Legutóbbi kötetek"/>
 						<node name="previousBook" value="Előző kötet megnyitása"/>
 						<node name="toc" value="Tartalomjegyzék"/>
 						<node name="gotoHome" value="Kezdőlap"/>

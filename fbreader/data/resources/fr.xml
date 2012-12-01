@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Ouvrir la bibliothèque"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Bibliothèque">
 			<node name="showLibrary" value="Ouvrir"/>
 			<node name="previousBook" value="Livre précédent"/>
-			<node name="showRecent" value="Récents"/>
+			<node name="recent" value="Récents"/>
 			<node name="addBook" value="Ajouter un livre…"/>
 			<node name="showHelp" value="À propos de FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Afficher l'arbre de la bibliothèque"/>
 			<node name="popup" value="Afficher la liste des livres récents"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Recent Books" toBeTranslated="true"/>
 			<node name="tooltip" value="Afficher la liste des livres récents"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Aucune"/>
 						<node name="showLibrary" value="Afficher la bibliothèque"/>
 						<node name="showNetLibrary" value="Afficher la bibliothèque réseau"/>
-						<node name="showRecent" value="Afficher les livres récents"/>
+						<node name="recent" value="Afficher les livres récents"/>
 						<node name="previousBook" value="Ouvrir le livre précédent"/>
 						<node name="toc" value="Afficher la table des matières"/>
 						<node name="gotoHome" value="Aller au début"/>

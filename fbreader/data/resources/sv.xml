@@ -105,7 +105,7 @@
 	</node>
 	<node name="menu">
 		<node name="books" value="Books" toBeTranslated="true">
-			<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+			<node name="recent" value="Recent books" toBeTranslated="true"/>
 			<node name="showLibrary" value="Library" toBeTranslated="true"/>
 			<node name="showNetworkLibrary" value="Network library" toBeTranslated="true"/>
 			<node name="addBook" value="Open file…" toBeTranslated="true"/>
@@ -118,11 +118,11 @@
 		<node name="showLibrary" value="Open library" toBeTranslated="true"/>
 		<node name="showNetLibrary" value="Network library" toBeTranslated="true"/>
 		<node name="addBook" value="Open file…" toBeTranslated="true"/>
-		<node name="showRecent" value="Recent books" toBeTranslated="true"/>
+		<node name="recent" value="Recent books" toBeTranslated="true"/>
 		<node name="library" value="Bibliotek">
 			<node name="showLibrary" value="Öppna"/>
 			<node name="previousBook" value="Föregående bok"/>
-			<node name="showRecent" value="Tidigare"/>
+			<node name="recent" value="Tidigare"/>
 			<node name="addBook" value="Lägg till bok…"/>
 			<node name="showHelp" value="Om FBReader"/>
 		</node>
@@ -170,7 +170,7 @@
 			<node name="tooltip" value="Visa biblioteksträd"/>
 			<node name="popup" value="Show Recent Books List" toBeTranslated="true"/>
 		</node>
-		<node name="showRecent">
+		<node name="recent">
 			<node name="label" value="Recent Books" toBeTranslated="true"/>
 			<node name="tooltip" value="Visa tidigare bokhistorik"/>
 		</node>
@@ -388,7 +388,7 @@
 						<node name="none" value="Ingen"/>
 						<node name="showLibrary" value="Visa bibliotek"/>
 						<node name="showNetLibrary" value="Show network library" toBeTranslated="true"/>
-						<node name="showRecent" value="Visa tidigare böcker"/>
+						<node name="recent" value="Visa tidigare böcker"/>
 						<node name="previousBook" value="Öppna föregående bok"/>
 						<node name="toc" value="Visa innehållsförteckning"/>
 						<node name="gotoHome" value="Gå hem"/>
