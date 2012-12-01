@@ -113,6 +113,7 @@ class ZLQtAction : public QAction {
 
 public:
 	ZLQtAction(ZLApplication &application, const std::string &id, QObject *parent);
+	void setActionIndex(std::size_t index);
 
 private Q_SLOTS:
 	void onActivated();
@@ -122,6 +123,9 @@ private:
 
 public:
 	const std::string Id;
+
+private:
+	std::size_t myActionIndex;
 };
 
 class ZLQtMenu : public QMenu {
@@ -132,22 +136,6 @@ public:
 public:
 	const std::string Id;
 	size_t Generation;
-};
-
-class ZLQtRunPopupAction : public QAction {
-	Q_OBJECT
-
-public:
-	ZLQtRunPopupAction(ZLApplication &application, const std::string &actionId, size_t index, QObject *parent);
-	~ZLQtRunPopupAction();
-
-private Q_SLOTS:
-	void onActivated();
-
-private:
-	ZLApplication &myApplication;
-	const std::string myActionId;
-	const size_t myIndex;
 };
 
 #endif /* __ZLQTAPPLICATIONWINDOW_H__ */

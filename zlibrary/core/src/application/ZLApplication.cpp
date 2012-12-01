@@ -165,7 +165,15 @@ bool ZLApplication::isActionEnabled(const std::string &actionId) const {
 	return !a.isNull() && a->isEnabled();
 }
 
-void ZLApplication::doAction(const std::string &actionId) {
+void ZLApplication::doAction(const std::string &actionId, std::size_t index) {
+	if (index != (std::size_t)-1) {
+		shared_ptr<ZLPopupData> data = popupData(actionId);
+		if (!data.isNull()) {
+			data->run(index);
+			return;
+		}
+	}
+
 	shared_ptr<Action> a = action(actionId);
 	if (!a.isNull()) {
 		a->checkAndRun();

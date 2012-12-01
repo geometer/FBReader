@@ -144,7 +144,7 @@ public:
 	shared_ptr<Action> action(const std::string &actionId) const;
 	bool isActionVisible(const std::string &actionId) const;
 	bool isActionEnabled(const std::string &actionId) const;
-	void doAction(const std::string &actionId);
+	void doAction(const std::string &actionId, std::size_t index = (std::size_t)-1);
 	shared_ptr<ZLPopupData> popupData(const std::string &actionId) const;
 
 	virtual shared_ptr<ZLKeyBindings> keyBindings();	

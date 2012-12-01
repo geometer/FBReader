@@ -169,17 +169,6 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	}
 }
 
-ZLQtRunPopupAction::ZLQtRunPopupAction(ZLApplication &application, const std::string &actionId, size_t index, QObject *parent) : QAction(parent), myApplication(application), myActionId(actionId), myIndex(index) {
-	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
-}
-
-ZLQtRunPopupAction::~ZLQtRunPopupAction() {
-}
-
-void ZLQtRunPopupAction::onActivated() {
-	myApplication.popupData(myActionId)->run(myIndex);
-}
-
 void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled) {
 	QAction *action = myToolbarActions[item];
 	if (action != 0) {
@@ -219,7 +208,8 @@ void ZLQtApplicationWindow::onRefresh() {
 		menu->clear();
 		const size_t count = data->count();
 		for (size_t i = 0; i < count; ++i) {
-			QAction *action = new ZLQtRunPopupAction(application(), menu->Id, i, menu);
+			ZLQtAction *action = new ZLQtAction(application(), menu->Id, menu);
+			action->setActionIndex(i);
 			action->setText(QString::fromUtf8(data->text(i).c_str()));
 			menu->addAction(action);
 		}
@@ -280,8 +270,12 @@ ZLQtAction::ZLQtAction(ZLApplication &application, const std::string &id, QObjec
 	connect(this, SIGNAL(triggered()), this, SLOT(onActivated()));
 }
 
+void ZLQtAction::setActionIndex(std::size_t index) {
+	myActionIndex = index;
+}
+
 void ZLQtAction::onActivated() {
-	myApplication.doAction(Id);
+	myApplication.doAction(Id, myActionIndex);
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
