@@ -63,7 +63,6 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	move(myXOption.value(), myYOption.value());
 
 	menuBar()->hide();
-	show();
 
 	ourInstance = this;
 }

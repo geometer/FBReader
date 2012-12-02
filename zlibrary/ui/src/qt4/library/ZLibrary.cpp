@@ -109,7 +109,8 @@ void ZLQtLibraryImplementation::run(ZLApplication *application) {
 	static_cast<ZLQtNetworkManager&>(ZLNetworkManager::Instance()).initPaths();
 	ZLQtApplicationWindow *window = new ZLQtApplicationWindow(application);
 	application->initWindow();
+	window->show();
 	qApp->exec();
-	delete window;
+	//delete window;
 	delete application;
 }
