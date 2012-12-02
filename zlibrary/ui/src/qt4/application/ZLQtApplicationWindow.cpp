@@ -31,7 +31,6 @@
 #include <ZLPopupData.h>
 
 #include "ZLQtApplicationWindow.h"
-#include "../dialogs/ZLQtDialogManager.h"
 #include "../view/ZLQtViewWidget.h"
 #include "../util/ZLQtKeyUtil.h"
 #include "../util/ZLQtToolbarButton.h"
