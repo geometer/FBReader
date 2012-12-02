@@ -48,7 +48,9 @@ public:
 	~ZLQtApplicationWindow();
 
 	void setFocusToMainWidget();
-	QToolBar *toolbar();
+
+	QLineEdit *searchBox();
+	void hideSearchBox();
 
 private:
 	class MenuBuilder : public ZLMenuVisitor {
@@ -97,9 +99,10 @@ private Q_SLOTS:
 
 private:
 	QToolBar *myToolBar;
+	QLineEdit *mySearchBox;
+	QAction *mySearchBoxAction;
 
 	std::map<ZLToolbar::ItemPtr,QAction*> myToolbarActions;
-	std::map<ZLToolbar::ItemPtr,QWidget*> myToolbarButtons;
 	std::list<ZLQtAction*> myMenuActions;
 	std::list<ZLQtMenu*> mySubmenuList;
 

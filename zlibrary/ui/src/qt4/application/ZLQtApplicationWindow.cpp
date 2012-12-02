@@ -17,14 +17,13 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <QtGui/QApplication>
 #include <QtGui/QPixmap>
 #include <QtGui/QIcon>
 #include <QtGui/QToolBar>
 #include <QtGui/QMenuBar>
 #include <QtGui/QMenu>
+#include <QtGui/QLineEdit>
 #include <QtGui/QWheelEvent>
 
 #include <ZLibrary.h>
@@ -43,6 +42,8 @@ void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) cons
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	ZLDesktopApplicationWindow(application),
+	mySearchBox(0),
+	mySearchBoxAction(0),
 	myFullScreen(false),
 	myWasMaximized(false),
 	myCursorIsHyperlink(false) {
@@ -64,8 +65,22 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	show();
 }
 
-QToolBar *ZLQtApplicationWindow::toolbar() {
-	return myToolBar;
+QLineEdit *ZLQtApplicationWindow::searchBox() {
+	if (mySearchBox == 0) {
+		mySearchBox = new QLineEdit(myToolBar);
+		mySearchBox->setAttribute(Qt::WA_MacShowFocusRect, false);
+		mySearchBox->setStyleSheet("QLineEdit { height:19px; border: 1px solid gray; border-radius: 10px; padding-left: 10px; padding-right:10px }");
+		mySearchBoxAction = myToolBar->addWidget(mySearchBox);
+	}
+	return mySearchBox;
+}
+
+void ZLQtApplicationWindow::hideSearchBox() {
+	if (mySearchBoxAction != 0) {
+		myToolBar->removeAction(mySearchBoxAction);
+		mySearchBoxAction = 0;
+		mySearchBox = 0;
+	}
 }
 
 void ZLQtApplicationWindow::initMenu() {
@@ -87,6 +102,10 @@ void ZLQtApplicationWindow::init() {
 			showMaximized();
 			break;
 	}
+
+	QWidget* spacer = new QWidget(myToolBar);
+	spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	myToolBar->addWidget(spacer);
 }
 
 ZLQtApplicationWindow::~ZLQtApplicationWindow() {
@@ -163,9 +182,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		ZLQtToolbarButton *button = new ZLQtToolbarButton(buttonItem.iconName(), myToolBar);
 		button->setToolTip(QString::fromUtf8(buttonItem.tooltip().c_str()));
 		connect(button, SIGNAL(clicked()), action, SLOT(onActivated()));
-		myToolBar->addWidget(button);
-		myToolbarActions[item] = action;
-		myToolbarButtons[item] = button;
+		myToolbarActions[item] = myToolBar->addWidget(button);
 	}
 }
 
@@ -174,12 +191,6 @@ void ZLQtApplicationWindow::setToolbarItemState(ZLToolbar::ItemPtr item, bool vi
 	if (action != 0) {
 		action->setEnabled(enabled);
 		action->setVisible(visible);
-	}
-	QWidget *button = myToolbarButtons[item];
-	if (button != 0) {
-		std::cerr << "set state for " << (const char*)((ZLQtToolbarButton*)button)->text().toUtf8() << " to " << visible << ":" << enabled << "\n";
-		button->setEnabled(enabled);
-		button->setVisible(visible);
 	}
 }
 

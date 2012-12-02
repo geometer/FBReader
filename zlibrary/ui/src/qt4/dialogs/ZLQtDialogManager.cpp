@@ -39,20 +39,8 @@
 #include "../image/ZLQtImageManager.h"
 
 void ZLQtDialogManager::showSearchBox() const {
-	QToolBar *toolbar = myApplicationWindow->toolbar();
-
-	QWidget* spacer = new QWidget();
-	spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	toolbar->addWidget(spacer);
-
-	QLineEdit *box = new QLineEdit(toolbar);
-	box->setAttribute(Qt::WA_MacShowFocusRect, false);
-	box->setStyleSheet("QLineEdit {border: 1px solid gray; border-radius: 5px;}");
-	box->show();
-	toolbar->addWidget(box);
-	//const std::size_t delta = box->height() / 4;
-	//box->move(main->width() - box->width() - delta, main->height() - box->height() - delta);
-	box->setFocus();
+	QLineEdit *searchBox = myApplicationWindow->searchBox();
+	searchBox->setFocus();
 }
 
 shared_ptr<ZLDialog> ZLQtDialogManager::createDialog(const ZLResourceKey &key) const {
