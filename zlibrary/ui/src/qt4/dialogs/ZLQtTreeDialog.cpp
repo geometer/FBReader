@@ -30,13 +30,15 @@
 #include "../tree/ZLQtItemsListWidget.h"
 #include "../tree/ZLQtPreviewWidget.h"
 #include "../util/ZLQtToolbarButton.h"
+#include "../application/ZLQtApplicationWindow.h"
 
 #include "ZLQtTreeDialog.h"
 
 static const int DIALOG_WIDTH_HINT = 840;
 
-ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res, QWidget *parent) :
-	QMainWindow(parent), ZLTreeDialog(res), myLastClickedNode(0), myLastClickedSearchNode(0) {
+ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res) :
+	QMainWindow(ZLQtApplicationWindow::Instance()),
+  ZLTreeDialog(res), myLastClickedNode(0), myLastClickedSearchNode(0) {
 	setWindowTitle(QString::fromStdString(resource().value())); //TODO maybe user resources by other way
 	setMinimumSize(400, 260); //minimum sensible size
 

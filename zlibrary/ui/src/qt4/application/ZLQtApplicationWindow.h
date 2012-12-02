@@ -44,6 +44,12 @@ class ZLQtApplicationWindow : public QMainWindow, public ZLDesktopApplicationWin
 	Q_OBJECT
 
 public:
+	static ZLQtApplicationWindow *Instance();
+
+private:
+	static ZLQtApplicationWindow *ourInstance;
+
+public:
 	ZLQtApplicationWindow(ZLApplication *application);
 	~ZLQtApplicationWindow();
 

@@ -26,15 +26,16 @@
 #include <QtGui/QLayout>
 #include <QtCore/QThreadPool>
 
-#include "../dialogs/ZLQtDialogManager.h"
+#include "ZLQtDialogManager.h"
 #include "ZLQtProgressDialog.h"
 #include "ZLQtUtil.h"
+#include "../application/ZLQtApplicationWindow.h"
 
 ZLQtProgressDialog::ZLQtProgressDialog(const ZLResourceKey &key, bool network) : ZLProgressDialog(key), myIsNetworkRunnable(network), myActiveWindow(0) {
 }
 
 void ZLQtProgressDialog::run(ZLRunnable &runnable) {
-		myActiveWindow = static_cast<ZLQtDialogManager&>(ZLDialogManager::Instance()).getApplicationWindow();
+		myActiveWindow = ZLQtApplicationWindow::Instance();
 		if (myActiveWindow != 0) {
 			myActiveWindow->setCursor(Qt::WaitCursor);
 		}

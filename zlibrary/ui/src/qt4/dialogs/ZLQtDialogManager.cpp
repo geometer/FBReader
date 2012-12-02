@@ -39,7 +39,7 @@
 #include "../image/ZLQtImageManager.h"
 
 void ZLQtDialogManager::showSearchBox() const {
-	QLineEdit *searchBox = myApplicationWindow->searchBox();
+	QLineEdit *searchBox = ZLQtApplicationWindow::Instance()->searchBox();
 	searchBox->setFocus();
 }
 
@@ -58,7 +58,7 @@ shared_ptr<ZLOpenFileDialog> ZLQtDialogManager::createOpenFileDialog(const ZLRes
 }
 
 shared_ptr<ZLTreeDialog> ZLQtDialogManager::createTreeDialog(const ZLResource &resource) const {
-	return new ZLQtTreeDialog(resource, myApplicationWindow);
+	return new ZLQtTreeDialog(resource);
 }
 
 void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {
@@ -106,13 +106,5 @@ void ZLQtDialogManager::setClipboardImage(const ZLImageData &imageData, Clipboar
 	qApp->clipboard()->setImage(
 		*((ZLQtImageData&)imageData).image(),
 		(type == CLIPBOARD_MAIN) ? QClipboard::Clipboard : QClipboard::Selection
-								   );
-}
-
-QWidget *ZLQtDialogManager::getApplicationWindow() const {
-	return myApplicationWindow;
-}
-
-void ZLQtDialogManager::notifyApplicationWindowDeleted() {
-	myApplicationWindow = 0;
+	);
 }

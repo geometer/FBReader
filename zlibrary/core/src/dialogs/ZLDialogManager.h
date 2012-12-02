@@ -68,8 +68,6 @@ protected:
 	virtual ~ZLDialogManager();
 
 public:
-	virtual void createApplicationWindow(ZLApplication *application) const = 0;
-
 	virtual void showSearchBox() const = 0;
 
 	virtual shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const = 0;

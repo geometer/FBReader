@@ -36,8 +36,10 @@
 #include "../util/ZLQtKeyUtil.h"
 #include "../util/ZLQtToolbarButton.h"
 
-void ZLQtDialogManager::createApplicationWindow(ZLApplication *application) const {
-	myApplicationWindow = new ZLQtApplicationWindow(application);
+ZLQtApplicationWindow *ZLQtApplicationWindow::ourInstance = 0;
+
+ZLQtApplicationWindow *ZLQtApplicationWindow::Instance() {
+	return ourInstance;
 }
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
@@ -63,6 +65,8 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 	menuBar()->hide();
 	show();
+
+	ourInstance = this;
 }
 
 QLineEdit *ZLQtApplicationWindow::searchBox() {
@@ -109,6 +113,8 @@ void ZLQtApplicationWindow::init() {
 }
 
 ZLQtApplicationWindow::~ZLQtApplicationWindow() {
+	ourInstance = 0;
+
 	if (isFullscreen()) {
 		myWindowStateOption.setValue(FULLSCREEN);
 	} else if (isMaximized()) {

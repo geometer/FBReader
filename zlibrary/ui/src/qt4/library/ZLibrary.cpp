@@ -35,6 +35,7 @@
 #include "../image/ZLQtImageManager.h"
 #include "../view/ZLQtPaintContext.h"
 #include "../network/ZLQtNetworkManager.h"
+#include "../application/ZLQtApplicationWindow.h"
 #include "../../unix/message/ZLUnixMessage.h"
 #include "../../../../core/src/util/ZLKeyUtil.h"
 #include "../../../../core/src/unix/xmlconfig/XMLConfig.h"
@@ -106,9 +107,9 @@ void ZLQtLibraryImplementation::run(ZLApplication *application) {
 		qApp->setLayoutDirection(Qt::RightToLeft);
 	}
 	static_cast<ZLQtNetworkManager&>(ZLNetworkManager::Instance()).initPaths();
-	ZLDialogManager::Instance().createApplicationWindow(application);
+	ZLQtApplicationWindow *window = new ZLQtApplicationWindow(application);
 	application->initWindow();
 	qApp->exec();
-	static_cast<ZLQtDialogManager&>(ZLDialogManager::Instance()).notifyApplicationWindowDeleted();
+	delete window;
 	delete application;
 }

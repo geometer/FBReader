@@ -41,7 +41,7 @@ class ZLQtToolbarButton;
 class ZLQtTreeDialog : public QMainWindow, public ZLTreeDialog {
 	Q_OBJECT
 public:
-	ZLQtTreeDialog(const ZLResource &resource, QWidget *parent = 0);
+	ZLQtTreeDialog(const ZLResource &resource);
 
 public:
 	void run(ZLTreeNode *rootNode);
