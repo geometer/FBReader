@@ -109,7 +109,18 @@ void ZLQtLibraryImplementation::run(ZLApplication *application) {
 	static_cast<ZLQtNetworkManager&>(ZLNetworkManager::Instance()).initPaths();
 	ZLQtApplicationWindow *window = new ZLQtApplicationWindow(application);
 	application->initWindow();
-	window->show();
+	switch (window->windowSizeState()) {
+		default:
+		case ZLQtApplicationWindow::NORMAL:
+			window->show();
+			break;
+		case ZLQtApplicationWindow::FULLSCREEN:
+			window->setFullscreen(true);
+			break;
+		case ZLQtApplicationWindow::MAXIMIZED:
+			window->showMaximized();
+			break;
+	}
 	qApp->exec();
 	//delete window;
 	delete application;

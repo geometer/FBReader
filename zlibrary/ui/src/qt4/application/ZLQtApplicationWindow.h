@@ -58,6 +58,8 @@ public:
 	QLineEdit *searchBox();
 	void hideSearchBox();
 
+	void setFullscreen(bool fullscreen);
+
 private:
 	class MenuBuilder : public ZLMenuVisitor {
 
@@ -92,7 +94,6 @@ private:
 	void setHyperlinkCursor(bool hyperlink);
 
 	bool isFullscreen() const;
-	void setFullscreen(bool fullscreen);
 
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 

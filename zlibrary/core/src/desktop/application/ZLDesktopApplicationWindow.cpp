@@ -27,5 +27,13 @@ ZLDesktopApplicationWindow::ZLDesktopApplicationWindow(ZLApplication *applicatio
 	myYOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "YPosition", 0, 2000, 10),
 	myWidthOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Width", 10, 2000, 800),
 	myHeightOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Height", 10, 2000, 600),
-	myWindowStateOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "WindowState", NORMAL) {
+	myWindowSizeStateOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "WindowSizeState", NORMAL) {
+}
+
+ZLDesktopApplicationWindow::WindowSizeState ZLDesktopApplicationWindow::windowSizeState() const {
+	return (WindowSizeState)myWindowSizeStateOption.value();
+}
+
+void ZLDesktopApplicationWindow::setWindowSizeState(WindowSizeState state) {
+	myWindowSizeStateOption.setValue(state);
 }

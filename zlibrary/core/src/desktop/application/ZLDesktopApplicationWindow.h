@@ -29,18 +29,23 @@ class ZLDesktopApplicationWindow : public ZLApplicationWindow {
 public:
 	ZLDesktopApplicationWindow(ZLApplication *application);
 
-protected:
-	enum WindowState {
+	enum WindowSizeState {
 		NORMAL,
 		MAXIMIZED,
 		FULLSCREEN
 	};
 
+	WindowSizeState windowSizeState() const;
+	void setWindowSizeState(WindowSizeState state);
+
+protected:
 	ZLIntegerRangeOption myXOption;
 	ZLIntegerRangeOption myYOption;
 	ZLIntegerRangeOption myWidthOption;
 	ZLIntegerRangeOption myHeightOption;
-	ZLIntegerOption myWindowStateOption;
+
+private:
+	ZLIntegerOption myWindowSizeStateOption;
 };
 
 #endif /* __ZLDESKTOPAPPLICATIONWINDOW_H__ */

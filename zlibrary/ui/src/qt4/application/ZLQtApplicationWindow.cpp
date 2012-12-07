@@ -94,16 +94,6 @@ void ZLQtApplicationWindow::init() {
 	if (application().toolbar().items().empty()) {
 		myToolBar->hide();
 	}
-	switch (myWindowStateOption.value()) {
-		case NORMAL:
-			break;
-		case FULLSCREEN:
-			setFullscreen(true);
-			break;
-		case MAXIMIZED:
-			showMaximized();
-			break;
-	}
 
 	QWidget* spacer = new QWidget(myToolBar);
 	spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -114,11 +104,11 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 	ourInstance = 0;
 
 	if (isFullscreen()) {
-		myWindowStateOption.setValue(FULLSCREEN);
+		setWindowSizeState(FULLSCREEN);
 	} else if (isMaximized()) {
-		myWindowStateOption.setValue(MAXIMIZED);
+		setWindowSizeState(MAXIMIZED);
 	} else {
-		myWindowStateOption.setValue(NORMAL);
+		setWindowSizeState(NORMAL);
 		QPoint position = pos();
 		if (position.x() != -1) {
 			myXOption.setValue(position.x());
