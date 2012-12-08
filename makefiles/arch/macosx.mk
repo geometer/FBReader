@@ -24,10 +24,9 @@ LDFLAGS = $(ARCH_FLAGS)
 EXTERNAL_LIBS = -liconv
 
 ifeq "$(UI_TYPE)" "qt4"
-  QTBASEDIR = ~/QtSDK/Desktop/Qt/4.8.1/gcc
-  QTINCLUDE = -I $(QTBASEDIR)/include
-  MOC = $(QTBASEDIR)/bin/moc
-  UILIBS = -F $(QTBASEDIR)/lib -framework QtCore -framework QtGui -framework QtNetwork
+  QTINCLUDE =
+  MOC = moc
+  UILIBS = -framework QtCore -framework QtGui -framework QtNetwork
 endif
 
 RM = rm -rvf

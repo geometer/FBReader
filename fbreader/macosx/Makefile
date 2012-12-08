@@ -11,7 +11,7 @@ install:
 	@install -m 0644 ../data/default/config.macosx.xml $(SHARE_FBREADER)/default/config.xml
 	@install -m 0644 ../data/default/keymap.macosx.xml $(SHARE_FBREADER)/default/keymap.xml
 	@install -m 0644 ../data/default/styles.desktop.xml $(SHARE_FBREADER)/default/styles.xml
-	@$(QTBASEDIR)/bin/macdeployqt $(DESTDIR)$(INSTALLDIR)
+	@macdeployqt $(DESTDIR)$(INSTALLDIR)
 	@for fw in QtDeclarative QtScript QtSql QtSvg QtXmlPatterns; do \
 		rm -rf $(DESTDIR)$(INSTALLDIR)/Contents/Frameworks/$$fw.framework; \
 	done
