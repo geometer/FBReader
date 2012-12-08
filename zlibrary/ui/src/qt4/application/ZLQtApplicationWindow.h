@@ -28,6 +28,8 @@
 #include <QtGui/QMenu>
 #include <QtGui/QCursor>
 
+#include <ZLOptions.h>
+
 class QToolBar;
 class QToolButton;
 class QLineEdit;
@@ -105,6 +107,11 @@ private Q_SLOTS:
 	void onRefresh();
 
 private:
+	ZLIntegerRangeOption myXOption;
+	ZLIntegerRangeOption myYOption;
+	ZLIntegerRangeOption myWidthOption;
+	ZLIntegerRangeOption myHeightOption;
+
 	QToolBar *myToolBar;
 	QLineEdit *mySearchBox;
 	QAction *mySearchBoxAction;

@@ -38,12 +38,6 @@ public:
 	WindowSizeState windowSizeState() const;
 	void setWindowSizeState(WindowSizeState state);
 
-protected:
-	ZLIntegerRangeOption myXOption;
-	ZLIntegerRangeOption myYOption;
-	ZLIntegerRangeOption myWidthOption;
-	ZLIntegerRangeOption myHeightOption;
-
 private:
 	ZLIntegerOption myWindowSizeStateOption;
 };

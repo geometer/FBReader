@@ -18,6 +18,7 @@
  */
 
 #include <QtGui/QApplication>
+#include <QtGui/QDesktopWidget>
 #include <QtGui/QPixmap>
 #include <QtGui/QIcon>
 #include <QtGui/QToolBar>
@@ -41,8 +42,14 @@ ZLQtApplicationWindow *ZLQtApplicationWindow::Instance() {
 	return ourInstance;
 }
 
+static const std::string OPTIONS = "Options";
+
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	ZLDesktopApplicationWindow(application),
+	myXOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "XPosition", 0, 2000, 10),
+	myYOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "YPosition", 0, 2000, 10),
+	myWidthOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Width", 10, QApplication::desktop()->width(), QApplication::desktop()->width() / 2),
+	myHeightOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Height", 10, QApplication::desktop()->height(), QApplication::desktop()->height() / 2),
 	mySearchBox(0),
 	mySearchBoxAction(0),
 	myFullScreen(false),
