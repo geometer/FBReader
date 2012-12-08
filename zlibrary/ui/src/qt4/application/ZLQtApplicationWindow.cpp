@@ -59,8 +59,11 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	myToolBar->setMovable(false);
 	addToolBar(myToolBar);
 
-	resize(myWidthOption.value(), myHeightOption.value());
 	move(myXOption.value(), myYOption.value());
+	resize(myWidthOption.value(), myHeightOption.value());
+	const int deltaX = myWidthOption.value() - width();
+	const int deltaY = myHeightOption.value() - height();
+	resize(myWidthOption.value() + deltaX, myHeightOption.value() + deltaY);
 
 	menuBar()->hide();
 
