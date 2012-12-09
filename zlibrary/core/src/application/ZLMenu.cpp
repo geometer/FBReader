@@ -164,7 +164,7 @@ void ZLMenuVisitor::processMenu(ZLMenu &menu) {
 				break;
 			}
 			case ZLMenu::Item::SEPARATOR:
-				processSepartor((ZLMenubar::Separator&)**it);
+				processSeparator((ZLMenubar::Separator&)**it);
 				break;
 		}							
 	}

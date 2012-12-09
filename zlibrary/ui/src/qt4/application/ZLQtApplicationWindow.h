@@ -72,7 +72,7 @@ private:
 		void processSubmenuBeforeItems(ZLMenubar::Submenu &submenu);
 		void processSubmenuAfterItems(ZLMenubar::Submenu &submenu);
 		void processItem(ZLMenubar::PlainItem &item);
-		void processSepartor(ZLMenubar::Separator &separator);
+		void processSeparator(ZLMenubar::Separator &separator);
 
 	private:
 		ZLQtApplicationWindow &myWindow;

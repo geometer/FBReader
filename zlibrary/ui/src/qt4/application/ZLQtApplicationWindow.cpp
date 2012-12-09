@@ -285,7 +285,7 @@ void ZLQtApplicationWindow::addMenuAction(ZLQtAction *action) {
 	myMenuActions.push_back(action);
 }
 
-void ZLQtApplicationWindow::MenuBuilder::processSepartor(ZLMenubar::Separator &separator) {
+void ZLQtApplicationWindow::MenuBuilder::processSeparator(ZLMenubar::Separator &separator) {
 	myMenuStack.back()->addSeparator();
 }
 

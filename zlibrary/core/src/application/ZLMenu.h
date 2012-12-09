@@ -125,7 +125,7 @@ protected:
 	virtual void processSubmenuBeforeItems(ZLMenubar::Submenu &submenu) = 0;
 	virtual void processSubmenuAfterItems(ZLMenubar::Submenu &submenu) = 0;
 	virtual void processItem(ZLMenubar::PlainItem &item) = 0;
-	virtual void processSepartor(ZLMenubar::Separator &separator) = 0;
+	virtual void processSeparator(ZLMenubar::Separator &separator) = 0;
 };
 
 #endif /* __ZLMENU_H__ */
