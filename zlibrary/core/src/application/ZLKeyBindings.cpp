@@ -127,7 +127,11 @@ void ZLKeyBindings::bindKey(const std::string &key, const std::string &code) {
 	myIsChanged = true;
 }
 
-const std::string &ZLKeyBindings::getBinding(const std::string &key) {
+const std::map<std::string,std::string> &ZLKeyBindings::bindings() const {
+	return myBindingsMap;
+}
+
+const std::string &ZLKeyBindings::actionId(const std::string &key) const {
 	std::map<std::string,std::string>::const_iterator it = myBindingsMap.find(key);
 	return (it != myBindingsMap.end()) ? it->second : ZLApplication::NoAction;
 }

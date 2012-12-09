@@ -150,6 +150,10 @@ void ZLApplication::Action::checkAndRun() {
 	}
 }
 
+const std::map<std::string,shared_ptr<ZLApplication::Action> > &ZLApplication::actions() const {
+	return myActionMap;
+}
+
 shared_ptr<ZLApplication::Action> ZLApplication::action(const std::string &actionId) const {
 	std::map<std::string,shared_ptr<Action> >::const_iterator it = myActionMap.find(actionId);
 	return (it != myActionMap.end()) ? it->second : 0;
@@ -216,7 +220,7 @@ void ZLApplication::doActionByKey(const std::string &key) {
 	if (bindings.isNull()) {
 		return;
 	}
-	shared_ptr<Action> a = action(bindings->getBinding(key));
+	shared_ptr<Action> a = action(bindings->actionId(key));
 	if (!a.isNull() &&
 			(!a->useKeyDelay() ||
 			 (myLastKeyActionTime.millisecondsTo(ZLTime()) >= KeyDelayOption.value()))) {

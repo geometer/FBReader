@@ -140,6 +140,7 @@ public:
 	void resetWindowCaption();
 	void setHyperlinkCursor(bool hyperlink);
 
+	const std::map<std::string,shared_ptr<Action> > &actions() const;
 	shared_ptr<Action> action(const std::string &actionId) const;
 	bool isActionVisible(const std::string &actionId) const;
 	bool isActionEnabled(const std::string &actionId) const;

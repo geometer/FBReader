@@ -30,7 +30,8 @@ public:
 	~ZLKeyBindings();
 
 	void bindKey(const std::string &key, const std::string &code);
-	const std::string &getBinding(const std::string &key);
+	const std::map<std::string,std::string> &bindings() const;
+	const std::string &actionId(const std::string &key) const;
 
 private:
 	void loadDefaultBindings();

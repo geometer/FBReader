@@ -51,7 +51,7 @@ void ZLSimpleKeyOptionEntry::onAccept() {
 
 int ZLSimpleKeyOptionEntry::actionIndex(const std::string &key) {
 	std::map<std::string,std::string>::const_iterator it = myChangedCodes.find(key);
-	return codeIndexBimap().indexByCode((it != myChangedCodes.end()) ? it->second : myBindings.getBinding(key));
+	return codeIndexBimap().indexByCode(it != myChangedCodes.end() ? it->second : myBindings.actionId(key));
 }
 
 void ZLSimpleKeyOptionEntry::onValueChanged(const std::string &key, int index) {

@@ -17,6 +17,8 @@
  * 02110-1301, USA.
  */
 
+#include <iostream>
+
 #include <QtGui/QApplication>
 #include <QtGui/QPixmap>
 #include <QtGui/QIcon>
@@ -29,6 +31,7 @@
 #include <ZLibrary.h>
 #include <ZLFile.h>
 #include <ZLPopupData.h>
+#include <ZLKeyBindings.h>
 
 #include "ZLQtApplicationWindow.h"
 #include "../view/ZLQtViewWidget.h"
@@ -82,6 +85,17 @@ void ZLQtApplicationWindow::initMenu() {
 }
 
 void ZLQtApplicationWindow::init() {
+	typedef std::map<std::string,shared_ptr<ZLApplication::Action> > ActionMap;
+	const ActionMap &actions = application().actions();
+	for (ActionMap::const_iterator it = actions.begin(); it != actions.end(); ++it) {
+		getAction(it->first);
+	}
+	typedef std::map<std::string,std::string> BindingMap;
+	const BindingMap &bindings = application().keyBindings()->bindings();
+	for (BindingMap::const_iterator it = bindings.begin(); it != bindings.end(); ++it) {
+		getAction(it->second)->setShortcut(QKeySequence(QString::fromStdString(it->first)));
+	}
+
 	ZLApplicationWindow::init();
 
 	QWidget* spacer = new QWidget(myToolbar);
@@ -91,10 +105,6 @@ void ZLQtApplicationWindow::init() {
 
 ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 	ourInstance = 0;
-}
-
-void ZLQtApplicationWindow::keyPressEvent(QKeyEvent *event) {
-	application().doActionByKey(ZLQtKeyUtil::keyName(event));
 }
 
 void ZLQtApplicationWindow::wheelEvent(QWheelEvent *event) {
@@ -250,33 +260,6 @@ ZLQtAction *ZLQtApplicationWindow::getAction(const std::string &actionId) {
 		return it->second;
 	}
 	ZLQtAction *action = new ZLQtAction(application(), actionId);
-	if (actionId == "library") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
-	}
-	if (actionId == "networkLibrary") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_L));
-	}
-	if (actionId == "addBook") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
-	}
-	if (actionId == "search") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
-	}
-	if (actionId == "findNext") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Right));
-	}
-	if (actionId == "findPrevious") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Left));
-	}
-	if (actionId == "toggleFullscreen") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F));
-	}
-	if (actionId == "increaseFont") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Plus));
-	}
-	if (actionId == "decreaseFont") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Minus));
-	}
 	myActions[actionId] = action;
 	return action;
 }
