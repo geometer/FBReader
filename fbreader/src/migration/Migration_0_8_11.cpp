@@ -65,7 +65,6 @@ static void changeActionNames() {
 	oldToNewNames["20"] = ActionCode::DECREASE_FONT;
 	oldToNewNames["21"] = ActionCode::SHOW_HIDE_POSITION_INDICATOR;
 	oldToNewNames["22"] = ActionCode::TOGGLE_FULLSCREEN;
-	oldToNewNames["23"] = ActionCode::FULLSCREEN_ON;
 	oldToNewNames["27"] = ActionCode::ROTATE_SCREEN;
 	oldToNewNames["2"] = ActionCode::SHOW_OPTIONS_DIALOG;
 	oldToNewNames["25"] = ActionCode::SHOW_BOOK_INFO_DIALOG;

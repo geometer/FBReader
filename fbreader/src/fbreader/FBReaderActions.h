@@ -68,7 +68,6 @@ public:
 
 	static const std::string SHOW_HIDE_POSITION_INDICATOR;
 	static const std::string TOGGLE_FULLSCREEN;
-	static const std::string FULLSCREEN_ON;
 	static const std::string ADD_BOOK;
 	static const std::string ROTATE_SCREEN;
 	static const std::string QUIT;
@@ -397,12 +396,6 @@ private:
 	void doSearch();
 	std::string makeSummary(const std::string &titleAndSeries, const std::string &author, const std::string &category, const std::string &description);
 	void appendQueryValue(std::string &query, const std::string &name, const std::string &value);
-};
-
-class FBFullscreenAction : public ZLApplication::FullscreenAction {
-
-public:
-	void run();
 };
 
 class BooksOrderAction : public ModeDependentAction {

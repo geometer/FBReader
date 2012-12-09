@@ -39,11 +39,11 @@ class ZLPopupData;
 class ZLQtAction;
 class ZLQtMenu;
 
-#include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
+#include "../../../../core/src/application/ZLApplicationWindow.h"
 #include "../../../../core/src/application/ZLMenu.h"
 #include "../util/ZLQtMainWindow.h"
 
-class ZLQtApplicationWindow : public ZLQtMainWindow, public ZLDesktopApplicationWindow {
+class ZLQtApplicationWindow : public ZLQtMainWindow, public ZLApplicationWindow {
 	Q_OBJECT
 
 public:
@@ -58,10 +58,10 @@ public:
 
 	void setFocusToMainWidget();
 
+	void toggleFullscreen();
+
 	QLineEdit *searchBox();
 	void hideSearchBox();
-
-	void setFullscreen(bool fullscreen);
 
 private:
 	class MenuBuilder : public ZLMenuVisitor {
@@ -96,8 +96,6 @@ private:
 
 	void setHyperlinkCursor(bool hyperlink);
 
-	bool isFullscreen() const;
-
 	void setToolbarItemState(ZLToolbar::ItemPtr item, bool visible, bool enabled);
 
 	void closeEvent(QCloseEvent *event);
@@ -115,9 +113,6 @@ private:
 	std::map<ZLToolbar::ItemPtr,QAction*> myToolbarActions;
 	std::list<ZLQtAction*> myMenuActions;
 	std::list<ZLQtMenu*> mySubmenuList;
-
-	bool myFullScreen;
-	bool myWasMaximized;
 
 	bool myCursorIsHyperlink;
 	QCursor myStoredCursor;

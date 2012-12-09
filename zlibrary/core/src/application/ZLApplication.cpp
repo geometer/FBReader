@@ -237,13 +237,9 @@ void ZLApplication::setHyperlinkCursor(bool hyperlink) {
 	}
 }
 
-bool ZLApplication::isFullscreen() const {
-	return !myWindow.isNull() && myWindow->isFullscreen();
-}
-
-void ZLApplication::setFullscreen(bool fullscreen) {
+void ZLApplication::toggleFullscreen() {
 	if (!myWindow.isNull()) {
-		myWindow->setFullscreen(fullscreen);
+		myWindow->toggleFullscreen();
 	}
 }
 

@@ -19,12 +19,12 @@ else
   TARGET = libzlcore.a
 endif
 
-SUBDIRS_ALL = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/runnable src/network src/network/requests src/blockTreeView src/tree src/desktop/application src/desktop/dialogs src/unix/time src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library src/unix/curl src/win32/encoding src/win32/filesystem src/win32/config
+SUBDIRS_ALL = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/runnable src/network src/network/requests src/blockTreeView src/tree src/desktop/dialogs src/unix/time src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library src/unix/curl src/win32/encoding src/win32/filesystem src/win32/config
 
 SUBDIRS = src/library src/typeId src/util src/constants src/logger src/filesystem src/filesystem/zip src/filesystem/bzip2 src/filesystem/tar src/dialogs src/optionEntries src/application src/view src/encoding src/options src/message src/resources src/time src/xml src/xml/expat src/image src/language src/unix/time src/runnable src/network src/network/requests src/blockTreeView src/tree
 
 ifeq "<$(TARGET_ARCH)>" "$(findstring <$(TARGET_ARCH)>, <desktop> <pepperpad3> <macosx> <bb10>)"
-  SUBDIRS += src/desktop/application src/desktop/dialogs
+  SUBDIRS += src/desktop/dialogs
 endif
 
 ifeq "$(TARGET_ARCH)" "pdaxrom"
@@ -32,7 +32,7 @@ ifeq "$(TARGET_ARCH)" "pdaxrom"
 endif
 
 ifeq "$(TARGET_ARCH)" "win32"
-  SUBDIRS += src/desktop/application src/desktop/dialogs src/win32/encoding src/win32/filesystem src/win32/config
+  SUBDIRS += src/desktop/dialogs src/win32/encoding src/win32/filesystem src/win32/config
 else
   SUBDIRS += src/unix/xmlconfig src/unix/filesystem src/unix/iconv src/unix/library
 endif

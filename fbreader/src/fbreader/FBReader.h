@@ -160,11 +160,6 @@ private:
 
 	shared_ptr<ZLMessageHandler> myOpenFileHandler;
 
-	enum {
-		RETURN_TO_TEXT_MODE,
-		UNFULLSCREEN
-	} myActionOnCancel;
-
 friend class OpenFileHandler;
 
 friend class OptionsDialog;

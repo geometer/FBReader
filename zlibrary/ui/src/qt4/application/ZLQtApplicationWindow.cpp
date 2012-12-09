@@ -45,11 +45,9 @@ static const std::string OPTIONS = "Options";
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	ZLQtMainWindow(0, std::string()),
-	ZLDesktopApplicationWindow(application),
+	ZLApplicationWindow(application),
 	mySearchBox(0),
 	mySearchBoxAction(0),
-	myFullScreen(false),
-	myWasMaximized(false),
 	myCursorIsHyperlink(false) {
 
 	const std::string iconFileName = ZLibrary::ImageDirectory() + ZLibrary::FileNameDelimiter + ZLibrary::ApplicationName() + ".png";
@@ -90,7 +88,7 @@ void ZLQtApplicationWindow::initMenu() {
 }
 
 void ZLQtApplicationWindow::init() {
-	ZLDesktopApplicationWindow::init();
+	ZLApplicationWindow::init();
 	if (application().toolbar().items().empty()) {
 		myToolBar->hide();
 	}
@@ -102,38 +100,6 @@ void ZLQtApplicationWindow::init() {
 
 ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 	ourInstance = 0;
-
-	if (isFullscreen()) {
-		setWindowSizeState(FULLSCREEN);
-	} else if (isMaximized()) {
-		setWindowSizeState(MAXIMIZED);
-	} else {
-		setWindowSizeState(NORMAL);
-	}
-}
-
-void ZLQtApplicationWindow::setFullscreen(bool fullscreen) {
-	if (fullscreen == myFullScreen) {
-		return;
-	}
-	myFullScreen = fullscreen;
-	if (myFullScreen) {
-		myWasMaximized = isMaximized();
-		myToolBar->hide();
-		showFullScreen();
-	} else {
-		if (!application().toolbar().items().empty()) {
-			myToolBar->show();
-		}
-		showNormal();
-		if (myWasMaximized) {
-			showMaximized();
-		}
-	}
-}
-
-bool ZLQtApplicationWindow::isFullscreen() const {
-	return myFullScreen;
 }
 
 void ZLQtApplicationWindow::keyPressEvent(QKeyEvent *event) {
@@ -320,4 +286,14 @@ void ZLQtApplicationWindow::addAction(ZLQtAction *action) {
 
 void ZLQtApplicationWindow::MenuBuilder::processSepartor(ZLMenubar::Separator &separator) {
 	myMenuStack.back()->addSeparator();
+}
+
+void ZLQtApplicationWindow::toggleFullscreen() {
+	if (isFullScreen()) {
+		showNormal();
+		myToolBar->show();
+	} else {
+		myToolBar->hide();
+		showFullScreen();
+	}
 }

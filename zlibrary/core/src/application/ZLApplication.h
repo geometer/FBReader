@@ -98,12 +98,12 @@ protected:
 	friend class RotationAction;
 	
 public:
-	class FullscreenAction : public Action {
+	class ToggleFullscreenAction : public Action {
 
 	public:
 		void run();
 	};
-	friend class FullscreenAction;
+	friend class ToggleFullscreenAction;
 	
 	class PresentWindowHandler : public ZLMessageHandler {
 
@@ -125,8 +125,7 @@ protected:
 	void setView(shared_ptr<ZLView> view);
 	ZLView::Angle rotation() const;
 
-	void setFullscreen(bool fullscreen);
-	bool isFullscreen() const;
+	void toggleFullscreen();
 
 public:
 	virtual ~ZLApplication();

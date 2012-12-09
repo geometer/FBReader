@@ -58,7 +58,6 @@ void ZLApplication::RotationAction::run() {
 	application.refreshWindow();
 }
 
-void ZLApplication::FullscreenAction::run() {
-	ZLApplication &application = ZLApplication::Instance();
-	application.setFullscreen(!application.isFullscreen());
+void ZLApplication::ToggleFullscreenAction::run() {
+	ZLApplication::Instance().toggleFullscreen();
 }

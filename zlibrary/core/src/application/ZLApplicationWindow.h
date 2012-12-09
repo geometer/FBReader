@@ -72,8 +72,7 @@ protected:
 
 	virtual void grabAllKeys(bool grab) = 0;
 
-	virtual void setFullscreen(bool fullscreen) = 0;
-	virtual bool isFullscreen() const = 0;
+	virtual void toggleFullscreen() = 0;
 
 	// TODO: change to pure virtual (?)
 	virtual void setHyperlinkCursor(bool) {}

@@ -36,12 +36,22 @@ protected:
 
 	void resizeEvent(QResizeEvent* event);
 
+public:
+	void showWithGeometry();
+
 private:
 	void saveWindowGeometry();
+
+	enum WindowSizeState {
+		NORMAL,
+		MAXIMIZED,
+		FULLSCREEN
+	};
 
 private:
 	const std::string myOptionPrefix;
 
+	ZLIntegerOption myWindowStateOption;
 	ZLIntegerRangeOption myXOption;
 	ZLIntegerRangeOption myYOption;
 	ZLIntegerRangeOption myWidthOption;

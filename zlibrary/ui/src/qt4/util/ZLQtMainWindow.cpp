@@ -27,6 +27,7 @@ static const std::string OPTIONS = "Options";
 ZLQtMainWindow::ZLQtMainWindow(QWidget *parent, const std::string &windowName) :
 	QMainWindow(parent),
 	myOptionPrefix(windowName.empty() ? windowName : windowName + "_"),
+	myWindowStateOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "WindowSizeState", NORMAL),
 	myXOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "XPosition", 0, QApplication::desktop()->width() - 10, 10),
 	myYOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "YPosition", 0, QApplication::desktop()->height() - 10, 10),
 	myWidthOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "Width", 10, QApplication::desktop()->width(), QApplication::desktop()->width() / 2),
@@ -50,17 +51,47 @@ void ZLQtMainWindow::resizeEvent(QResizeEvent* event) {
 	saveWindowGeometry();
 }
 
-void ZLQtMainWindow::saveWindowGeometry() {
-	if (isFullScreen() || isMaximized()) {
-		return;
+void ZLQtMainWindow::showWithGeometry() {
+	switch (myWindowStateOption.value()) {
+		default:
+		case NORMAL:
+			show();
+			break;
+		case FULLSCREEN:
+			showFullScreen();
+			break;
+		case MAXIMIZED:
+			showMaximized();
+			break;
 	}
-	QPoint position = pos();
-	if (position.x() != -1) {
-		myXOption.setValue(position.x());
-	}
-	if (position.y() != -1) {
-		myYOption.setValue(position.y());
-	}
-	myWidthOption.setValue(width());
-	myHeightOption.setValue(height());
 }
+
+void ZLQtMainWindow::saveWindowGeometry() {
+	if (isFullScreen()) {
+		myWindowStateOption.setValue(FULLSCREEN);
+	} else if (isMaximized()) {
+		myWindowStateOption.setValue(MAXIMIZED);
+	} else {
+		myWindowStateOption.setValue(NORMAL);
+
+		QPoint position = pos();
+		if (position.x() != -1) {
+			myXOption.setValue(position.x());
+		}
+		if (position.y() != -1) {
+			myYOption.setValue(position.y());
+		}
+		myWidthOption.setValue(width());
+		myHeightOption.setValue(height());
+	}
+}
+
+/*
+ZLDesktopApplicationWindow::WindowSizeState ZLDesktopApplicationWindow::windowSizeState() const {
+	return (WindowSizeState)myWindowSizeStateOption.value();
+}
+
+void ZLDesktopApplicationWindow::setWindowSizeState(WindowSizeState state) {
+	myWindowSizeStateOption.setValue(state);
+}
+*/

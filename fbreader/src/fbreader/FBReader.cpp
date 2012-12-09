@@ -98,8 +98,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	myBindings180(new ZLKeyBindings("Keys180")),
 	myBindings270(new ZLKeyBindings("Keys270")),
 	myBookToOpen(bookToOpen),
-	myBookAlreadyOpen(false),
-	myActionOnCancel(UNFULLSCREEN) {
+	myBookAlreadyOpen(false) {
 
 	myBookTextView = new BookTextView(*context());
 	myFootnoteView = new FootnoteView(*context());
@@ -145,8 +144,7 @@ FBReader::FBReader(const std::string &bookToOpen) :
 	addAction(ActionCode::INCREASE_FONT, new ChangeFontSizeAction(2));
 	addAction(ActionCode::DECREASE_FONT, new ChangeFontSizeAction(-2));
 	addAction(ActionCode::ROTATE_SCREEN, new RotationAction());
-	addAction(ActionCode::TOGGLE_FULLSCREEN, new FBFullscreenAction());
-	addAction(ActionCode::FULLSCREEN_ON, new FBFullscreenAction());
+	addAction(ActionCode::TOGGLE_FULLSCREEN, new ToggleFullscreenAction());
 	addAction(ActionCode::CANCEL, new CancelAction());
 	addAction(ActionCode::SHOW_HIDE_POSITION_INDICATOR, new ToggleIndicatorAction());
 	addAction(ActionCode::QUIT, new QuitAction());
@@ -388,10 +386,6 @@ void FBReader::setMode(ViewMode mode) {
 	//TODO remove code for old network library view
 	if (mode == myMode) {
 		return;
-	}
-
-	if (mode != BOOK_TEXT_MODE) {
-		myActionOnCancel = RETURN_TO_TEXT_MODE;
 	}
 
 	myPreviousMode = myMode;

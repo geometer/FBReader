@@ -245,25 +245,9 @@ void OpenPreviousBookAction::run() {
 
 void CancelAction::run() {
 	FBReader &fbreader = FBReader::Instance();
-	switch (fbreader.myActionOnCancel) {
-		case FBReader::UNFULLSCREEN:
-			if (fbreader.isFullscreen()) {
-				fbreader.setFullscreen(false);
-				return;
-			} else if (fbreader.mode() != FBReader::BOOK_TEXT_MODE) {
-				fbreader.restorePreviousMode();
-				return;
-			}
-			break;
-		case FBReader::RETURN_TO_TEXT_MODE:
-			if (fbreader.mode() != FBReader::BOOK_TEXT_MODE) {
-				fbreader.restorePreviousMode();
-				return;
-			} else if (fbreader.isFullscreen()) {
-				fbreader.setFullscreen(false);
-				return;
-			}
-			break;
+	if (fbreader.mode() != FBReader::BOOK_TEXT_MODE) {
+		fbreader.restorePreviousMode();
+		return;
 	}
 	if (fbreader.QuitOnCancelOption.value()) {
 		fbreader.quit();
@@ -476,14 +460,6 @@ void OpenSelectedTextInDictionaryAction::run() {
 void ClearSelectionAction::run() {
 	textView().selectionModel().clear();
 	FBReader::Instance().refreshWindow();
-}
-
-void FBFullscreenAction::run() {
-	FBReader &fbreader = FBReader::Instance();
-	if (!fbreader.isFullscreen()) {
-		fbreader.myActionOnCancel = FBReader::UNFULLSCREEN;
-	}
-	FullscreenAction::run();
 }
 
 FilterLibraryAction::FilterLibraryAction() : ModeDependentAction(FBReader::LIBRARY_MODE) {
