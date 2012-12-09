@@ -1,5 +1,5 @@
 * NP
-  ** run FBReader => go to fullscreen => exit; then start again => crash
+  DONE run FBReader => go to fullscreen => exit; then start again => crash
   ** better font family support for CSS-defined properties
   ** run browser correctly on mac
   DONE fix crash when book info window opens

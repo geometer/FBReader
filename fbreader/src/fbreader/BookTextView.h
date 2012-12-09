@@ -70,6 +70,9 @@ private:
 
 	void paint();
 
+	void paintHeader() const;
+	int headerHeight() const;
+
 private:
 	class PositionIndicatorWithLabels;
 

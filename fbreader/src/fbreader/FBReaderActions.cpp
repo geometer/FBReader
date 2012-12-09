@@ -273,7 +273,7 @@ void CancelAction::run() {
 bool ToggleIndicatorAction::isVisible() const {
 	ZLIntegerRangeOption &option = FBView::commonIndicatorInfo().TypeOption;
 	switch (option.value()) {
-		case FBIndicatorStyle::FB_INDICATOR:
+		case FBIndicatorStyle::PAGE_FOOTER:
 		case FBIndicatorStyle::NONE:
 			return true;
 	}
@@ -283,14 +283,14 @@ bool ToggleIndicatorAction::isVisible() const {
 void ToggleIndicatorAction::run() {
 	ZLIntegerRangeOption &option = FBView::commonIndicatorInfo().TypeOption;
 	switch (option.value()) {
-		case FBIndicatorStyle::OS_SCROLLBAR:
+		default:
 			break;
-		case FBIndicatorStyle::FB_INDICATOR:
+		case FBIndicatorStyle::PAGE_FOOTER:
 			option.setValue(FBIndicatorStyle::NONE);
 			FBReader::Instance().refreshWindow();
 			break;
 		case FBIndicatorStyle::NONE:
-			option.setValue(FBIndicatorStyle::FB_INDICATOR);
+			option.setValue(FBIndicatorStyle::PAGE_FOOTER);
 			FBReader::Instance().refreshWindow();
 			break;
 	}

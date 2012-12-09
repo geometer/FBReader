@@ -34,8 +34,9 @@ public:
 
 	enum Type {
 		OS_SCROLLBAR = 0,
-		FB_INDICATOR = 1,
-		NONE = 2
+		PAGE_FOOTER = 1,
+		PAGE_HEADER = 2,
+		NONE = 3
 	};
 
 	virtual Type type() const = 0;

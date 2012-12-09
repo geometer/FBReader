@@ -107,6 +107,9 @@ protected:
 
 	virtual void paint();
 
+	virtual void paintHeader() const;
+	virtual int headerHeight() const;
+
 	virtual void preparePaintInfo();
 
 	virtual shared_ptr<PositionIndicator> createPositionIndicator(const ZLTextPositionIndicatorInfo&);
@@ -115,6 +118,12 @@ protected:
 	virtual int rightMargin() const = 0;
 	virtual int topMargin() const = 0;
 	virtual int bottomMargin() const = 0;
+
+	std::size_t startTextIndex() const;
+	std::size_t endTextIndex() const;
+	std::size_t sizeOfParagraph(std::size_t paragraphNumber) const;
+	std::size_t sizeOfTextBeforeParagraph(std::size_t paragraphNumber) const;
+	std::size_t sizeOfTextBeforeCursor(const ZLTextWordCursor &cursor) const;
 
 private:
 	void clear();

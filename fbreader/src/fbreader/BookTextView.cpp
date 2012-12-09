@@ -380,8 +380,8 @@ void BookTextView::PositionIndicatorWithLabels::draw() {
 		if (!contentsModelPtr.isNull()) {
 			ContentsModel &contentsModel = (ContentsModel&)*contentsModelPtr;
 			const int marksNumber = contentsModel.paragraphsNumber();
-			const std::size_t startIndex = startTextIndex();
-			const std::size_t endIndex = endTextIndex();
+			const std::size_t startIndex = bookTextView.startTextIndex();
+			const std::size_t endIndex = bookTextView.endTextIndex();
 			const std::vector<std::size_t> &textSizeVector = textSize();
 			const int fullWidth = right() - left() - 1;
 			const std::size_t startPosition = textSizeVector[startIndex];
@@ -416,4 +416,38 @@ void BookTextView::paint() {
 	std::string pn;
 	ZLStringUtil::appendNumber(pn, pageIndex());
 	FBReader::Instance().setVisualParameter(FBReader::PageIndexParameter, pn);
+}
+
+int BookTextView::headerHeight() const {
+	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
+	if (!indicatorInfo.isNull()) {
+		switch (indicatorInfo->type()) {
+			default:
+				return 0;
+			case ZLTextPositionIndicatorInfo::PAGE_HEADER:
+				return baseStyle()->fontSize() / 4 * 5;
+		}
+	}
+	return 0;
+}
+
+void BookTextView::paintHeader() const {
+	const int unit = baseStyle()->fontSize() / 4;
+	const int left = leftMargin();
+	const int right = context().width() - rightMargin() - 1;
+	const int bottom = topMargin() + unit * 4;
+	context().setColor(color(ZLTextStyle::REGULAR_TEXT));
+	context().setFont(baseStyle()->fontFamily(), unit * 3, false, true);
+	context().drawLine(left, bottom, right, bottom);
+
+	// TODO: use chapter name instead
+	const std::string leftText = myBook->title();
+	context().drawString(left, bottom - unit, leftText.c_str(), leftText.length(), false);
+
+	std::string rightText;
+	ZLStringUtil::appendNumber(rightText, 1 + sizeOfTextBeforeCursor(textArea().endCursor()) / 2048);
+	rightText += '/';
+	ZLStringUtil::appendNumber(rightText, 1 + sizeOfTextBeforeParagraph(endTextIndex()) / 2048);
+	const size_t rightTextWidth = context().stringWidth(rightText.c_str(), rightText.length(), false);
+	context().drawString(right - rightTextWidth, bottom - unit, rightText.c_str(), rightText.length(), false);
 }

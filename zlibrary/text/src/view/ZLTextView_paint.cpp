@@ -19,14 +19,23 @@
 
 #include <algorithm>
 
+#include <ZLColor.h>
+
 #include "ZLTextView.h"
 #include "ZLTextPositionIndicator.h"
+
+int ZLTextView::headerHeight() const {
+	return 0;
+}
+
+void ZLTextView::paintHeader() const {
+}
 
 void ZLTextView::paint() {
 	context().clear(backgroundColor());
 
 	myTextAreaController.area().setOffsets(
-		textArea().isRtl() ? rightMargin() : leftMargin(), topMargin()
+		textArea().isRtl() ? rightMargin() : leftMargin(), topMargin() + headerHeight()
 	);
 
 	preparePaintInfo();
@@ -38,15 +47,24 @@ void ZLTextView::paint() {
 	myTextAreaController.area().paint();
 
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
-	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR)) {
-		positionIndicator()->draw();
+	if (!indicatorInfo.isNull()) {
+		switch (indicatorInfo->type()) {
+			default:
+				break;
+			case ZLTextPositionIndicatorInfo::PAGE_FOOTER:
+				positionIndicator()->draw();
+				break;
+			case ZLTextPositionIndicatorInfo::PAGE_HEADER:
+				paintHeader();
+				break;
+		}
 	}
 
 	if (myDoUpdateScrollbar && !indicatorInfo.isNull()) {
 		myDoUpdateScrollbar = false;
-		const std::size_t full = positionIndicator()->sizeOfTextBeforeParagraph(positionIndicator()->endTextIndex());
-		const std::size_t from = positionIndicator()->sizeOfTextBeforeCursor(textArea().startCursor());
-		const std::size_t to = positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor());
+		const std::size_t full = sizeOfTextBeforeParagraph(endTextIndex());
+		const std::size_t from = sizeOfTextBeforeCursor(textArea().startCursor());
+		const std::size_t to = sizeOfTextBeforeCursor(textArea().endCursor());
 
 		bool showScrollbar =
 			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::OS_SCROLLBAR) &&

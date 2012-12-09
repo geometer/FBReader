@@ -33,7 +33,7 @@
 static const std::string INDICATOR = "Indicator";
 
 FBIndicatorStyle::FBIndicatorStyle() :
-	TypeOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Type", 0, 2, ZLTextPositionIndicatorInfo::OS_SCROLLBAR),
+	TypeOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Type", 0, 3, ZLTextPositionIndicatorInfo::OS_SCROLLBAR),
 	IsSensitiveOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "TouchSensitive", true),
 	ShowTextPositionOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "PositionText", false),
 	ShowTimeOption(ZLCategoryKey::LOOK_AND_FEEL, INDICATOR, "Time", false),

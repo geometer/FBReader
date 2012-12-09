@@ -77,18 +77,20 @@ private:
 
 	const std::string &caption() const;
 
-	int leftMargin() const;
-	int rightMargin() const;
-	int topMargin() const;
-	int bottomMargin() const;
 	ZLColor backgroundColor() const;
-	ZLColor color(const std::string &colorStyle) const;
-	shared_ptr<ZLTextStyle> baseStyle() const;
 
 	bool isSelectionEnabled() const;
 	int doubleClickDelay() const;
 
 protected:
+	ZLColor color(const std::string &colorStyle) const;
+	shared_ptr<ZLTextStyle> baseStyle() const;
+
+	int leftMargin() const;
+	int rightMargin() const;
+	int topMargin() const;
+	int bottomMargin() const;
+
 	bool onStylusPress(int x, int y);
 	virtual bool _onStylusPress(int x, int y);
 	bool onStylusRelease(int x, int y);

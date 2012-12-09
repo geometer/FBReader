@@ -365,9 +365,10 @@
 				</node>
 				<node name="Indicator" value="Indicator">
 					<node name="type" value="Show as">
-						<node name="osScrollbar" value="OS Scrollbar"/>
-						<node name="fbIndicator" value="Old Style Indicator"/>
-						<node name="none" value="Don't Show"/>
+						<node name="osScrollbar" value="OS scrollbar"/>
+						<node name="pageFooter" value="Page footer"/>
+						<node name="pageHeader" value="Page header"/>
+						<node name="none" value="Don't show"/>
 					</node>
 					<node name="height" value="Indicator Height"/>
 					<node name="offset" value="Offset from Text"/>

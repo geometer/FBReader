@@ -91,7 +91,8 @@ private:
 
 IndicatorTypeEntry::IndicatorTypeEntry(const ZLResource &resource, ZLIntegerRangeOption &typeOption) : myOption(typeOption) {
 	myValues.push_back(resource["osScrollbar"].value());
-	myValues.push_back(resource["fbIndicator"].value());
+	myValues.push_back(resource["pageFooter"].value());
+	myValues.push_back(resource["pageHeader"].value());
 	myValues.push_back(resource["none"].value());
 }
 
@@ -118,7 +119,7 @@ void IndicatorTypeEntry::onAccept(const std::string &value) {
 
 void IndicatorTypeEntry::onValueSelected(int index) {
 	for (std::vector<ZLOptionEntry*>::iterator it = myDependentEntries.begin(); it != myDependentEntries.end(); ++it) {
-		(*it)->setVisible(index == FBIndicatorStyle::FB_INDICATOR);
+		(*it)->setVisible(index == FBIndicatorStyle::PAGE_FOOTER);
 	}
 }
 

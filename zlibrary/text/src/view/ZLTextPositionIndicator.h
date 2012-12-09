@@ -34,23 +34,17 @@ public:
 
 protected:
 	const ZLTextView &textView() const;
+	const std::vector<std::size_t> &textSize() const;
 	ZLPaintContext &context() const;
 	int top() const;
 	int bottom() const;
 	int left() const;
 	int right() const;
 
-	const std::vector<std::size_t> &textSize() const;
-	std::size_t startTextIndex() const;
-	std::size_t endTextIndex() const;
-
 private:
 	void drawExtraText(const std::string &text);
 	std::string textPositionString() const;
 	std::string timeString() const;
-	std::size_t sizeOfParagraph(std::size_t paragraphNumber) const;
-	std::size_t sizeOfTextBeforeParagraph(std::size_t paragraphNumber) const;
-	std::size_t sizeOfTextBeforeCursor(const ZLTextWordCursor &cursor) const;
 
 private:
 	ZLTextView &myTextView;

@@ -322,7 +322,7 @@ bool ZLTextView::onStylusPress(int x, int y) {
 
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() &&
-			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR) &&
+			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::PAGE_FOOTER) &&
 			indicatorInfo->isSensitive()) {
 		myTreeStateIsFrozen = true;
 		bool indicatorAnswer = positionIndicator()->onStylusPress(x, y);
@@ -447,7 +447,7 @@ bool ZLTextView::onStylusRelease(int x, int y) {
 
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
 	if (!indicatorInfo.isNull() &&
-			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR) &&
+			(indicatorInfo->type() == ZLTextPositionIndicatorInfo::PAGE_FOOTER) &&
 			indicatorInfo->isSensitive() &&
 			positionIndicator()->isResponsibleFor(x, y)) {
 		return true;
@@ -495,30 +495,30 @@ void ZLTextView::gotoCharIndex(std::size_t charIndex) {
 	gotoParagraph(paragraphIndex, false);
 	preparePaintInfo();
 	if (!positionIndicator().isNull()) {
-		std::size_t endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor());
+		std::size_t endCharIndex = sizeOfTextBeforeCursor(textArea().endCursor());
 		if (endCharIndex > charIndex) {
 			while (endCharIndex > charIndex) {
 				scrollPage(false, ZLTextAreaController::SCROLL_LINES, 1);
 				preparePaintInfo();
-				if (positionIndicator()->sizeOfTextBeforeCursor(textArea().startCursor()) <= myTextSize[startParagraphIndex]) {
+				if (sizeOfTextBeforeCursor(textArea().startCursor()) <= myTextSize[startParagraphIndex]) {
 					break;
 				}
-				endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor());
+				endCharIndex = sizeOfTextBeforeCursor(textArea().endCursor());
 			}
 			if (endCharIndex < charIndex) {
 				scrollPage(true, ZLTextAreaController::SCROLL_LINES, 1);
 			}
 		} else {
-			int startCharIndex = positionIndicator()->sizeOfTextBeforeCursor(textArea().startCursor());
+			int startCharIndex = sizeOfTextBeforeCursor(textArea().startCursor());
 			while (endCharIndex < charIndex) {
 				scrollPage(true, ZLTextAreaController::SCROLL_LINES, 1);
 				preparePaintInfo();
-				const int newStartCharIndex = positionIndicator()->sizeOfTextBeforeCursor(textArea().startCursor());
+				const int newStartCharIndex = sizeOfTextBeforeCursor(textArea().startCursor());
 				if (newStartCharIndex <= startCharIndex) {
 					break;
 				}
 				startCharIndex = newStartCharIndex;
-				endCharIndex = positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor());
+				endCharIndex = sizeOfTextBeforeCursor(textArea().endCursor());
 			}
 			if (endCharIndex > charIndex) {
 				scrollPage(false, ZLTextAreaController::SCROLL_LINES, 1);
@@ -547,7 +547,7 @@ std::size_t ZLTextView::pageIndex() {
 	if (textArea().isEmpty() || positionIndicator().isNull() || textArea().endCursor().isNull()) {
 		return 0;
 	}
-	return positionIndicator()->sizeOfTextBeforeCursor(textArea().endCursor()) / 2048 + 1;
+	return sizeOfTextBeforeCursor(textArea().endCursor()) / 2048 + 1;
 }
 
 std::size_t ZLTextView::pageNumber() const {
@@ -666,9 +666,9 @@ void ZLTextView::scrollPage(bool forward, ZLTextAreaController::ScrollingMode mo
 void ZLTextView::preparePaintInfo() {
 	std::size_t newWidth = 
 		std::max(context().width() - leftMargin() - rightMargin(), 1);
-	int viewHeight = context().height() - topMargin() - bottomMargin();
+	int viewHeight = context().height() - topMargin() - headerHeight() - bottomMargin();
 	shared_ptr<ZLTextPositionIndicatorInfo> indicatorInfo = this->indicatorInfo();
-	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::FB_INDICATOR)) {
+	if (!indicatorInfo.isNull() && (indicatorInfo->type() == ZLTextPositionIndicatorInfo::PAGE_FOOTER)) {
 		viewHeight -= indicatorInfo->height() + indicatorInfo->offset();
 	}
 	std::size_t newHeight = std::max(viewHeight, 1);
