@@ -120,7 +120,7 @@ void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 		myToolbarActions[item] = myToolbar->addSeparator();
 	} else {
 		ZLToolbar::ButtonItem& buttonItem = (ZLToolbar::ButtonItem&)*item;
-		QAction *action = new ZLQtAction(application(), buttonItem.actionId(), myToolbar);
+		QAction *action = getAction(buttonItem.actionId());
 		ZLQtToolbarButton *button = new ZLQtToolbarButton(buttonItem.iconName(), myToolbar);
 		button->setToolTip(QString::fromUtf8(buttonItem.tooltip().c_str()));
 		connect(button, SIGNAL(clicked()), action, SLOT(onActivated()));
@@ -238,40 +238,50 @@ void ZLQtAction::onActivated() {
 }
 
 void ZLQtApplicationWindow::MenuBuilder::processItem(ZLMenubar::PlainItem &item) {
-	ZLQtAction *action = new ZLQtAction(myWindow.application(), item.actionId(), myMenuStack.back());
+	ZLQtAction *action = myWindow.getAction(item.actionId());
 	action->setText(QString::fromUtf8(item.name().c_str()));
-	if (item.actionId() == "library") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
-	}
-	if (item.actionId() == "networkLibrary") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_L));
-	}
-	if (item.actionId() == "addBook") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
-	}
-	if (item.actionId() == "search") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
-	}
-	if (item.actionId() == "findNext") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Right));
-	}
-	if (item.actionId() == "findPrevious") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Left));
-	}
-	if (item.actionId() == "toggleFullscreen") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F));
-	}
-	if (item.actionId() == "increaseFont") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Plus));
-	}
-	if (item.actionId() == "decreaseFont") {
-		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Minus));
-	}
 	myMenuStack.back()->addAction(action);
-	myWindow.addAction(action);
+	myWindow.addMenuAction(action);
 }
 
-void ZLQtApplicationWindow::addAction(ZLQtAction *action) {
+ZLQtAction *ZLQtApplicationWindow::getAction(const std::string &actionId) {
+	std::map<std::string,ZLQtAction*>::const_iterator it = myActions.find(actionId);
+	if (it != myActions.end()) {
+		return it->second;
+	}
+	ZLQtAction *action = new ZLQtAction(application(), actionId);
+	if (actionId == "library") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_L));
+	}
+	if (actionId == "networkLibrary") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_L));
+	}
+	if (actionId == "addBook") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_O));
+	}
+	if (actionId == "search") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_F));
+	}
+	if (actionId == "findNext") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Right));
+	}
+	if (actionId == "findPrevious") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Left));
+	}
+	if (actionId == "toggleFullscreen") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_F));
+	}
+	if (actionId == "increaseFont") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Plus));
+	}
+	if (actionId == "decreaseFont") {
+		action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Minus));
+	}
+	myActions[actionId] = action;
+	return action;
+}
+
+void ZLQtApplicationWindow::addMenuAction(ZLQtAction *action) {
 	myMenuActions.push_back(action);
 }
 

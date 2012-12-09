@@ -82,8 +82,10 @@ private:
 	void initMenu();
 
 	ZLViewWidget *createViewWidget();
+	ZLQtAction *getAction(const std::string &actionId);
+
 	void addToolbarItem(ZLToolbar::ItemPtr item);
-	void addAction(ZLQtAction *action);
+	void addMenuAction(ZLQtAction *action);
 	void init();
 	void close();
 
@@ -108,6 +110,7 @@ private:
 	QLineEdit *mySearchBox;
 	QAction *mySearchBoxAction;
 
+	std::map<std::string,ZLQtAction*> myActions;
 	std::map<ZLToolbar::ItemPtr,QAction*> myToolbarActions;
 	std::list<ZLQtAction*> myMenuActions;
 	std::list<ZLQtMenu*> mySubmenuList;
@@ -120,7 +123,7 @@ class ZLQtAction : public QAction {
 	Q_OBJECT
 
 public:
-	ZLQtAction(ZLApplication &application, const std::string &id, QObject *parent);
+	ZLQtAction(ZLApplication &application, const std::string &id, QObject *parent = 0);
 	void setActionIndex(std::size_t index);
 
 private Q_SLOTS:
