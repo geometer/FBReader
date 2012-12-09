@@ -166,7 +166,7 @@
 			<node name="search" value="Find…"/>
 			<node name="findNext" value="Find next"/>
 			<node name="findPrevious" value="Find previous"/>
-			<node name="clearSearchResults" value="Clear results"/>
+			<node name="clearSearchResults" value="Clear search results"/>
 		</node>
 		<node name="preferences" value="Last Preferences Dialog…"/>
 		<node name="quit" value="Close"/>

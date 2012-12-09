@@ -9,6 +9,10 @@
 	<binding key="Ctrl+Shift+F" action="toggleFullscreen"/>
 	<binding key="Ctrl++" action="increaseFont"/>
 	<binding key="Ctrl+-" action="decreaseFont"/>
+	<binding key="Right" action="lineForward"/>
+	<binding key="Left" action="lineBackward"/>
+	<binding key="Down" action="pageForward"/>
+	<binding key="Up" action="pageBackward"/>
 <!--
 	<binding key="&lt;O&gt;" action="preferences"/>
 	<binding key="&lt;LeftArrow&gt;" action="undo"/>
@@ -16,10 +20,6 @@
 	<binding key="&lt;C&gt;" action="toc"/>
 	<binding key="&lt;Ctrl&gt;+&lt;F&gt;" action="search"/>
 	<binding key="&lt;N&gt;" action="findNext"/>
-	<binding key="&lt;PageDown&gt;" action="pageForward"/>
-	<binding key="&lt;PageUp&gt;" action="pageBackward"/>
-	<binding key="&lt;DownArrow&gt;" action="lineForward"/>
-	<binding key="&lt;UpArrow&gt;" action="lineBackward"/>
 	<binding key="&lt;MouseScrollDown&gt;" action="mouseScrollForward"/>
 	<binding key="&lt;MouseScrollUp&gt;" action="mouseScrollBackward"/>
 	<binding key="&lt;Ctrl&gt;+&lt;Home&gt;" action="gotoHome"/>

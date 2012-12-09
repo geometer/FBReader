@@ -17,8 +17,6 @@
  * 02110-1301, USA.
  */
 
-#include <iostream>
-
 #include <QtGui/QApplication>
 #include <QtGui/QPixmap>
 #include <QtGui/QIcon>
@@ -260,6 +258,7 @@ ZLQtAction *ZLQtApplicationWindow::getAction(const std::string &actionId) {
 		return it->second;
 	}
 	ZLQtAction *action = new ZLQtAction(application(), actionId);
+	addAction(action);
 	myActions[actionId] = action;
 	return action;
 }
