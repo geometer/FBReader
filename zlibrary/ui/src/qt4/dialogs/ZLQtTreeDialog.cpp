@@ -36,8 +36,8 @@
 
 static const int DIALOG_WIDTH_HINT = 840;
 
-ZLQtTreeDialog::ZLQtTreeDialog(const ZLResource &res) :
-	QMainWindow(ZLQtApplicationWindow::Instance()),
+ZLQtTreeDialog::ZLQtTreeDialog(const std::string &windowName, const ZLResource &res) :
+	ZLQtMainWindow(ZLQtApplicationWindow::Instance(), windowName),
   ZLTreeDialog(res), myLastClickedNode(0), myLastClickedSearchNode(0) {
 	setWindowTitle(QString::fromStdString(resource().value())); //TODO maybe user resources by other way
 	setMinimumSize(400, 260); //minimum sensible size

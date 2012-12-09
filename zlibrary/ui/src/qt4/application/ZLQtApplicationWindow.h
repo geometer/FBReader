@@ -41,8 +41,9 @@ class ZLQtMenu;
 
 #include "../../../../core/src/desktop/application/ZLDesktopApplicationWindow.h"
 #include "../../../../core/src/application/ZLMenu.h"
+#include "../util/ZLQtMainWindow.h"
 
-class ZLQtApplicationWindow : public QMainWindow, public ZLDesktopApplicationWindow {
+class ZLQtApplicationWindow : public ZLQtMainWindow, public ZLDesktopApplicationWindow {
 	Q_OBJECT
 
 public:
@@ -107,11 +108,6 @@ private Q_SLOTS:
 	void onRefresh();
 
 private:
-	ZLIntegerRangeOption myXOption;
-	ZLIntegerRangeOption myYOption;
-	ZLIntegerRangeOption myWidthOption;
-	ZLIntegerRangeOption myHeightOption;
-
 	QToolBar *myToolBar;
 	QLineEdit *mySearchBox;
 	QAction *mySearchBoxAction;

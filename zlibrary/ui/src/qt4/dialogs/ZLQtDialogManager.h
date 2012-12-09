@@ -38,7 +38,7 @@ public:
 	shared_ptr<ZLDialog> createDialog(const ZLResourceKey &key) const;
 	shared_ptr<ZLOptionsDialog> createOptionsDialog(const ZLResourceKey &key, shared_ptr<ZLRunnable> applyAction, bool showApplyButton) const;
 	shared_ptr<ZLOpenFileDialog> createOpenFileDialog(const ZLResourceKey &key, const std::string &directoryPath, const std::string &filePath, const ZLOpenFileDialog::Filter &filter) const;
-	shared_ptr<ZLTreeDialog> createTreeDialog(const ZLResource &resource) const;
+	shared_ptr<ZLTreeDialog> createTreeDialog(const std::string &windowName, const ZLResource &resource) const;
 
 	void informationBox(const std::string &title, const std::string &message) const;
 	void errorBox(const ZLResourceKey &key, const std::string &message) const;

@@ -57,8 +57,8 @@ shared_ptr<ZLOpenFileDialog> ZLQtDialogManager::createOpenFileDialog(const ZLRes
 	return new ZLQtOpenFileDialog(dialogTitle(key), directoryPath, filePath, filter);
 }
 
-shared_ptr<ZLTreeDialog> ZLQtDialogManager::createTreeDialog(const ZLResource &resource) const {
-	return new ZLQtTreeDialog(resource);
+shared_ptr<ZLTreeDialog> ZLQtDialogManager::createTreeDialog(const std::string &windowName, const ZLResource &resource) const {
+	return new ZLQtTreeDialog(windowName, resource);
 }
 
 void ZLQtDialogManager::informationBox(const std::string &title, const std::string &message) const {

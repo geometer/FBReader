@@ -24,7 +24,6 @@
 #include <QtCore/QSet>
 #include <QtCore/QMap>
 
-#include <QtGui/QMainWindow>
 #include <QtGui/QScrollArea>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -35,13 +34,15 @@
 #include "../tree/ZLQtItemsListWidget.h"
 #include "../tree/ZLQtPreviewWidget.h"
 #include "../tree/ZLQtSearchField.h"
+#include "../util/ZLQtMainWindow.h"
 
 class ZLQtToolbarButton;
 
-class ZLQtTreeDialog : public QMainWindow, public ZLTreeDialog {
+class ZLQtTreeDialog : public ZLQtMainWindow, public ZLTreeDialog {
 	Q_OBJECT
+
 public:
-	ZLQtTreeDialog(const ZLResource &resource);
+	ZLQtTreeDialog(const std::string &windowName, const ZLResource &resource);
 
 public:
 	void run(ZLTreeNode *rootNode);

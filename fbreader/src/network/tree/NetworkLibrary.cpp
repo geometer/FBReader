@@ -45,7 +45,7 @@ NetworkLibrary &NetworkLibrary::Instance() {
 
 NetworkLibrary::NetworkLibrary() {
 	//TODO maybe it should be created in showDialog method?
-	myDialog = ZLDialogManager::Instance().createTreeDialog(ZLResource::resource("networkView"));
+	myDialog = ZLDialogManager::Instance().createTreeDialog("networkLibrary", ZLResource::resource("networkView"));
 	myRootTree.setDialog(myDialog);
 	myFakeRootTree.setDialog(myDialog);
 	myUpdateVisibility = false;

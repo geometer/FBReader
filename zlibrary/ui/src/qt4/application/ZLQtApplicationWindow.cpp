@@ -18,7 +18,6 @@
  */
 
 #include <QtGui/QApplication>
-#include <QtGui/QDesktopWidget>
 #include <QtGui/QPixmap>
 #include <QtGui/QIcon>
 #include <QtGui/QToolBar>
@@ -45,11 +44,8 @@ ZLQtApplicationWindow *ZLQtApplicationWindow::Instance() {
 static const std::string OPTIONS = "Options";
 
 ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
+	ZLQtMainWindow(0, std::string()),
 	ZLDesktopApplicationWindow(application),
-	myXOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "XPosition", 0, 2000, 10),
-	myYOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "YPosition", 0, 2000, 10),
-	myWidthOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Width", 10, QApplication::desktop()->width(), QApplication::desktop()->width() / 2),
-	myHeightOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, "Height", 10, QApplication::desktop()->height(), QApplication::desktop()->height() / 2),
 	mySearchBox(0),
 	mySearchBoxAction(0),
 	myFullScreen(false),
@@ -65,14 +61,6 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	myToolBar->setFocusPolicy(Qt::NoFocus);
 	myToolBar->setMovable(false);
 	addToolBar(myToolBar);
-
-	setGeometry(myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value());
-	QPoint position = pos();
-	const int deltaX = myXOption.value() - pos().x();
-	const int deltaY = myYOption.value() - pos().y();
-	const int deltaW = myWidthOption.value() - width();
-	const int deltaH = myHeightOption.value() - height();
-	setGeometry(myXOption.value() + deltaX, myYOption.value() + deltaY, myWidthOption.value() + deltaW, myHeightOption.value() + deltaH);
 
 	menuBar()->hide();
 
@@ -121,15 +109,6 @@ ZLQtApplicationWindow::~ZLQtApplicationWindow() {
 		setWindowSizeState(MAXIMIZED);
 	} else {
 		setWindowSizeState(NORMAL);
-		QPoint position = pos();
-		if (position.x() != -1) {
-			myXOption.setValue(position.x());
-		}
-		if (position.y() != -1) {
-			myYOption.setValue(position.y());
-		}
-		myWidthOption.setValue(width());
-		myHeightOption.setValue(height());
 	}
 }
 
