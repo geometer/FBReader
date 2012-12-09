@@ -123,11 +123,11 @@
 		<node name="navigation" value="Navigation">
 			<node name="gotoHome" value="Start of document"/>
 			<node name="gotoPageNumber" value="Page number…"/>
-			<node name="gotoSectionStart" value="Start of text section"/>
-			<node name="gotoSectionEnd" value="End of text section"/>
+			<node name="gotoSectionStart" value="Start of section"/>
+			<node name="gotoSectionEnd" value="End of section"/>
 			<node name="toc" value="Table of Contents"/>
-			<node name="nextTOCSection" value="Next ToC item"/>
-			<node name="previousTOCSection" value="Previous ToC item"/>
+			<node name="nextTOCSection" value="Next chapter"/>
+			<node name="previousTOCSection" value="Previous chapter"/>
 			<node name="undo" value="Back"/>
 			<node name="redo" value="Forward"/>
 		</node>

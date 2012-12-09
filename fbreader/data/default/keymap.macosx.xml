@@ -4,8 +4,8 @@
 	<binding key="Ctrl+Shift+L" action="networkLibrary"/>
 	<binding key="Ctrl+O" action="addBook"/>
 	<binding key="Ctrl+F" action="search"/>
-	<binding key="Ctrl+Left" action="findPrevious"/>
-	<binding key="Ctrl+Right" action="findNext"/>
+	<binding key="Ctrl+Shift+G" action="findPrevious"/>
+	<binding key="Ctrl+G" action="findNext"/>
 	<binding key="Ctrl+Shift+F" action="toggleFullscreen"/>
 	<binding key="Ctrl++" action="increaseFont"/>
 	<binding key="Ctrl+-" action="decreaseFont"/>
@@ -16,21 +16,15 @@
 	<binding key="&lt;MouseScrollDown&gt;" action="mouseScrollForward"/>
 	<binding key="&lt;MouseScrollUp&gt;" action="mouseScrollBackward"/>
 	<binding key="Esc" action="cancel"/>
+	<binding key="Ctrl+C" action="copyToClipboard"/>
+	<binding key="Ctrl+Home" action="gotoHome"/>
+	<binding key="Ctrl+Right" action="nextTOCSection"/>
+	<binding key="Ctrl+Left" action="previousTOCSection"/>
+	<binding key="Ctrl+Z" action="undo"/>
+	<binding key="Ctrl+Shift+Z" action="redo"/>
 <!--
 	<binding key="&lt;O&gt;" action="preferences"/>
-	<binding key="&lt;LeftArrow&gt;" action="undo"/>
-	<binding key="&lt;RightArrow&gt;" action="redo"/>
 	<binding key="&lt;C&gt;" action="toc"/>
-	<binding key="&lt;Ctrl&gt;+&lt;Home&gt;" action="gotoHome"/>
-	<binding key="&lt;Home&gt;" action="gotoSectionStart"/>
-	<binding key="&lt;End&gt;" action="gotoSectionEnd"/>
-	<binding key="&lt;I&gt;" action="bookInfo"/>
-	<binding key="&lt;R&gt;" action="rotate"/>
-	<binding key="&lt;Ctrl&gt;+&lt;DownArrow&gt;" action="nextTOCSection"/>
-	<binding key="&lt;Ctrl&gt;+&lt;UpArrow&gt;" action="previousTOCSection"/>
-	<binding key="&lt;Command&gt;+&lt;Q&gt;" action="forceQuit"/>
-	<binding key="&lt;Command&gt;+&lt;W&gt;" action="quit"/>
-	<binding key="&lt;Command&gt;+&lt;C&gt;" action="copyToClipboard"/>
 	<binding key="&lt;G&gt;" action="gotoPageNumber"/>
 	<binding key="&lt;Z&gt;" action="debugNL"/>
 -->
