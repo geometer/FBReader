@@ -54,12 +54,6 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 	QPixmap icon(iconFileName.c_str());
 	setWindowIcon(icon);
 
-	setUnifiedTitleAndToolBarOnMac(true);
-	myToolBar = new QToolBar(this);
-	myToolBar->setFocusPolicy(Qt::NoFocus);
-	myToolBar->setMovable(false);
-	addToolBar(myToolBar);
-
 	menuBar()->hide();
 
 	ourInstance = this;
@@ -67,17 +61,17 @@ ZLQtApplicationWindow::ZLQtApplicationWindow(ZLApplication *application) :
 
 QLineEdit *ZLQtApplicationWindow::searchBox() {
 	if (mySearchBox == 0) {
-		mySearchBox = new QLineEdit(myToolBar);
+		mySearchBox = new QLineEdit(myToolbar);
 		mySearchBox->setAttribute(Qt::WA_MacShowFocusRect, false);
 		mySearchBox->setStyleSheet("QLineEdit { height:19px; border: 1px solid gray; border-radius: 10px; padding-left: 10px; padding-right:10px }");
-		mySearchBoxAction = myToolBar->addWidget(mySearchBox);
+		mySearchBoxAction = myToolbar->addWidget(mySearchBox);
 	}
 	return mySearchBox;
 }
 
 void ZLQtApplicationWindow::hideSearchBox() {
 	if (mySearchBoxAction != 0) {
-		myToolBar->removeAction(mySearchBoxAction);
+		myToolbar->removeAction(mySearchBoxAction);
 		mySearchBoxAction = 0;
 		mySearchBox = 0;
 	}
@@ -89,13 +83,10 @@ void ZLQtApplicationWindow::initMenu() {
 
 void ZLQtApplicationWindow::init() {
 	ZLApplicationWindow::init();
-	if (application().toolbar().items().empty()) {
-		myToolBar->hide();
-	}
 
-	QWidget* spacer = new QWidget(myToolBar);
+	QWidget* spacer = new QWidget(myToolbar);
 	spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	myToolBar->addWidget(spacer);
+	myToolbar->addWidget(spacer);
 }
 
 ZLQtApplicationWindow::~ZLQtApplicationWindow() {
@@ -126,14 +117,14 @@ void ZLQtApplicationWindow::closeEvent(QCloseEvent *event) {
 
 void ZLQtApplicationWindow::addToolbarItem(ZLToolbar::ItemPtr item) {
 	if (item->isSeparator()) {
-		myToolbarActions[item] = myToolBar->addSeparator();
+		myToolbarActions[item] = myToolbar->addSeparator();
 	} else {
 		ZLToolbar::ButtonItem& buttonItem = (ZLToolbar::ButtonItem&)*item;
-		QAction *action = new ZLQtAction(application(), buttonItem.actionId(), myToolBar);
-		ZLQtToolbarButton *button = new ZLQtToolbarButton(buttonItem.iconName(), myToolBar);
+		QAction *action = new ZLQtAction(application(), buttonItem.actionId(), myToolbar);
+		ZLQtToolbarButton *button = new ZLQtToolbarButton(buttonItem.iconName(), myToolbar);
 		button->setToolTip(QString::fromUtf8(buttonItem.tooltip().c_str()));
 		connect(button, SIGNAL(clicked()), action, SLOT(onActivated()));
-		myToolbarActions[item] = myToolBar->addWidget(button);
+		myToolbarActions[item] = myToolbar->addWidget(button);
 	}
 }
 
@@ -291,9 +282,7 @@ void ZLQtApplicationWindow::MenuBuilder::processSepartor(ZLMenubar::Separator &s
 void ZLQtApplicationWindow::toggleFullscreen() {
 	if (isFullScreen()) {
 		showNormal();
-		myToolBar->show();
 	} else {
-		myToolBar->hide();
 		showFullScreen();
 	}
 }

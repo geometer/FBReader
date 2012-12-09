@@ -42,12 +42,6 @@ ZLQtTreeDialog::ZLQtTreeDialog(const std::string &windowName, const ZLResource &
 	setWindowTitle(QString::fromStdString(resource().value())); //TODO maybe user resources by other way
 	setMinimumSize(400, 260); //minimum sensible size
 
-	setUnifiedTitleAndToolBarOnMac(true);
-	QToolBar *toolbar = new QToolBar(this);
-	toolbar->setFocusPolicy(Qt::NoFocus);
-	toolbar->setMovable(false);
-	addToolBar(toolbar);
-
 	myListWidget = new ZLQtItemsListWidget;
 	myPreviewWidget = new ZLQtPreviewWidget;
 	myBackButton = new ZLQtToolbarButton("back_button");
@@ -62,12 +56,12 @@ ZLQtTreeDialog::ZLQtTreeDialog(const std::string &windowName, const ZLResource &
 	const int scrollbarWidth = 30; //myListWidget->verticalScrollBar()->width() * 2; //commented because with Qt::ScrollBarAsNeeded policy the size is too big
 	splitter->setSizes(QList<int>() << DIALOG_WIDTH_HINT / 2 + scrollbarWidth << DIALOG_WIDTH_HINT / 2 - scrollbarWidth); //50/50 default size
 
-	toolbar->addWidget(myBackButton);
-	toolbar->addWidget(myForwardButton);
+	myToolbar->addWidget(myBackButton);
+	myToolbar->addWidget(myForwardButton);
 	QWidget* spacer = new QWidget();
 	spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-	toolbar->addWidget(spacer);
-	toolbar->addWidget(mySearchField);
+	myToolbar->addWidget(spacer);
+	myToolbar->addWidget(mySearchField);
 
 	setCentralWidget(splitter);
 

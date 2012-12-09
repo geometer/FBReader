@@ -19,6 +19,7 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
+#include <QtGui/QToolBar>
 
 #include "ZLQtMainWindow.h"
 
@@ -33,13 +34,23 @@ ZLQtMainWindow::ZLQtMainWindow(QWidget *parent, const std::string &windowName) :
 	myWidthOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "Width", 10, QApplication::desktop()->width(), QApplication::desktop()->width() / 2),
 	myHeightOption(ZLCategoryKey::LOOK_AND_FEEL, OPTIONS, myOptionPrefix + "Height", 10, QApplication::desktop()->height(), QApplication::desktop()->height() / 2)
 	{
-	setGeometry(myXOption.value(), myYOption.value(), myWidthOption.value(), myHeightOption.value());
+	setUnifiedTitleAndToolBarOnMac(true);
+	myToolbar = new QToolBar(this);
+	myToolbar->setFocusPolicy(Qt::NoFocus);
+	myToolbar->setMovable(false);
+	addToolBar(myToolbar);
+
+	const int x = myXOption.value();
+	const int y = myYOption.value();
+	const int w = myWidthOption.value();
+	const int h = myHeightOption.value();
+	setGeometry(x, y, w, h);
 	QPoint position = pos();
-	const int deltaX = myXOption.value() - pos().x();
-	const int deltaY = myYOption.value() - pos().y();
-	const int deltaW = myWidthOption.value() - width();
-	const int deltaH = myHeightOption.value() - height();
-	setGeometry(myXOption.value() + deltaX, myYOption.value() + deltaY, myWidthOption.value() + deltaW, myHeightOption.value() + deltaH);
+	const int deltaX = x - pos().x();
+	const int deltaY = y - pos().y();
+	const int deltaW = w - width();
+	const int deltaH = h - height();
+	setGeometry(x + deltaX, y + deltaY, w + deltaW, h + deltaH);
 }
 
 ZLQtMainWindow::~ZLQtMainWindow() {
@@ -48,6 +59,11 @@ ZLQtMainWindow::~ZLQtMainWindow() {
 
 void ZLQtMainWindow::resizeEvent(QResizeEvent* event) {
 	QMainWindow::resizeEvent(event);
+	if (isFullScreen()) {
+		myToolbar->hide();
+	} else {
+		myToolbar->show();
+	}
 	saveWindowGeometry();
 }
 
@@ -85,13 +101,3 @@ void ZLQtMainWindow::saveWindowGeometry() {
 		myHeightOption.setValue(height());
 	}
 }
-
-/*
-ZLDesktopApplicationWindow::WindowSizeState ZLDesktopApplicationWindow::windowSizeState() const {
-	return (WindowSizeState)myWindowSizeStateOption.value();
-}
-
-void ZLDesktopApplicationWindow::setWindowSizeState(WindowSizeState state) {
-	myWindowSizeStateOption.setValue(state);
-}
-*/

@@ -30,7 +30,6 @@
 
 #include <ZLOptions.h>
 
-class QToolBar;
 class QToolButton;
 class QLineEdit;
 
@@ -106,7 +105,6 @@ private Q_SLOTS:
 	void onRefresh();
 
 private:
-	QToolBar *myToolBar;
 	QLineEdit *mySearchBox;
 	QAction *mySearchBoxAction;
 

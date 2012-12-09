@@ -27,6 +27,7 @@
 #include <ZLOptions.h>
 
 class QWidget;
+class QToolBar;
 
 class ZLQtMainWindow : public QMainWindow {
 
@@ -47,6 +48,9 @@ private:
 		MAXIMIZED,
 		FULLSCREEN
 	};
+
+protected:
+	QToolBar *myToolbar;
 
 private:
 	const std::string myOptionPrefix;
