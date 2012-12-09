@@ -13,20 +13,17 @@
 	<binding key="Left" action="lineBackward"/>
 	<binding key="Down" action="pageForward"/>
 	<binding key="Up" action="pageBackward"/>
+	<binding key="&lt;MouseScrollDown&gt;" action="mouseScrollForward"/>
+	<binding key="&lt;MouseScrollUp&gt;" action="mouseScrollBackward"/>
+	<binding key="Esc" action="cancel"/>
 <!--
 	<binding key="&lt;O&gt;" action="preferences"/>
 	<binding key="&lt;LeftArrow&gt;" action="undo"/>
 	<binding key="&lt;RightArrow&gt;" action="redo"/>
 	<binding key="&lt;C&gt;" action="toc"/>
-	<binding key="&lt;Ctrl&gt;+&lt;F&gt;" action="search"/>
-	<binding key="&lt;N&gt;" action="findNext"/>
-	<binding key="&lt;MouseScrollDown&gt;" action="mouseScrollForward"/>
-	<binding key="&lt;MouseScrollUp&gt;" action="mouseScrollBackward"/>
 	<binding key="&lt;Ctrl&gt;+&lt;Home&gt;" action="gotoHome"/>
 	<binding key="&lt;Home&gt;" action="gotoSectionStart"/>
 	<binding key="&lt;End&gt;" action="gotoSectionEnd"/>
-	<binding key="&lt;Esc&gt;" action="cancel"/>
-	<binding key="&lt;D&gt;" action="toggleIndicator"/>
 	<binding key="&lt;I&gt;" action="bookInfo"/>
 	<binding key="&lt;R&gt;" action="rotate"/>
 	<binding key="&lt;Ctrl&gt;+&lt;DownArrow&gt;" action="nextTOCSection"/>
