@@ -43,7 +43,7 @@ void ZLQtProgressDialog::run(ZLRunnable &runnable) {
 		ZLQtWaitDialog* dialog = new ZLQtWaitDialog(messageText(), myActiveWindow);
 		dialog->setCursor(Qt::WaitCursor);
 
-		if (myIsNetworkRunnable) {
+		if (myIsNetworkRunnable || true) {
 			dialog->show();
 			runnable.run();
 			dialog->hide();
