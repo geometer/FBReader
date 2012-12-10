@@ -91,7 +91,10 @@ void ZLQtApplicationWindow::init() {
 	typedef std::map<std::string,std::string> BindingMap;
 	const BindingMap &bindings = application().keyBindings()->bindings();
 	for (BindingMap::const_iterator it = bindings.begin(); it != bindings.end(); ++it) {
-		getAction(it->second)->setShortcut(QKeySequence(QString::fromStdString(it->first)));
+		ZLQtAction *action = getAction(it->second);
+		QList<QKeySequence> shortcuts = action->shortcuts();
+		shortcuts.append(QKeySequence(QString::fromStdString(it->first)));
+		action->setShortcuts(shortcuts);
 	}
 
 	ZLApplicationWindow::init();

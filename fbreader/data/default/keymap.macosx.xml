@@ -13,6 +13,9 @@
 	<binding key="Left" action="lineBackward"/>
 	<binding key="Down" action="pageForward"/>
 	<binding key="Up" action="pageBackward"/>
+	<binding key="PgDown" action="pageForward"/>
+	<binding key="PgUp" action="pageBackward"/>
+	<binding key="Space" action="pageForward"/>
 	<binding key="&lt;MouseScrollDown&gt;" action="mouseScrollForward"/>
 	<binding key="&lt;MouseScrollUp&gt;" action="mouseScrollBackward"/>
 	<binding key="Esc" action="cancel"/>
