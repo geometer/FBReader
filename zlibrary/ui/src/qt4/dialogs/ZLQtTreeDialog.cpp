@@ -86,10 +86,6 @@ void ZLQtTreeDialog::onCloseRequest() {
 	hide();
 }
 
-QSize ZLQtTreeDialog::sizeHint() const {
-	return QSize(DIALOG_WIDTH_HINT + myListWidget->verticalScrollBar()->width(), 0);
-}
-
 void ZLQtTreeDialog::resizeEvent(QResizeEvent *event){
 	int width = event->size().width();
 	int listWidth = width / 3;

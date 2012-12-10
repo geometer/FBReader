@@ -48,7 +48,6 @@ public:
 	void run(ZLTreeNode *rootNode);
 
 protected:
-	QSize sizeHint() const;
 	void resizeEvent(QResizeEvent *event);
 
 public: //listener methods
