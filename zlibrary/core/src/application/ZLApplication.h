@@ -68,9 +68,6 @@ public:
 
 	ZLBooleanOption KeyboardControlOption;
 
-	ZLBooleanOption ConfigAutoSavingOption;
-	ZLIntegerRangeOption ConfigAutoSaveTimeoutOption;
-
 	ZLIntegerRangeOption KeyDelayOption;
 
 public:

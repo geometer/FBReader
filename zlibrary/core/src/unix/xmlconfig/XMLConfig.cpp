@@ -192,10 +192,6 @@ int XMLConfig::changesCounter() const {
 	return (myDelta != 0) ? myDelta->myChangesCounter : 0;
 }
 
-bool XMLConfig::isAutoSavingSupported() const {
-	return true;
-}
-
 void XMLConfig::startAutoSave(int seconds) {
 	ZLTimeManager::Instance().addTask(mySaver, 1000 * seconds);
 }

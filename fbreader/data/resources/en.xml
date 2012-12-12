@@ -333,10 +333,6 @@
 					<node name="defaultEncoding" value="Default Encoding"/>
 					<node name="useWindows1252Hack" value="Use windows-1252 instead of iso-8859-1"/>
 				</node>
-				<node name="Config" value="Config">
-					<node name="autoSave" value="Save State Automatically"/>
-					<node name="timeout" value="Timeout between Savings, seconds"/>
-				</node>
 				<node name="Dictionary" value="Dictionary">
 					<node name="enableIntegration" value="Enable Integration with %s"/>
 					<node name="defaultText" value="Enable Integration with Dictionary"/>

@@ -65,10 +65,11 @@ ZLQtOptionsDialog::ZLQtOptionsDialog(const ZLResource &resource, shared_ptr<ZLRu
 	QListWidget *categoryList = new QListWidget(this);
 	QPixmap pixmap = ZLQtImageUtil::pixmap("fbreader.png");
 	categoryList->setIconSize(pixmap.size());
-	for (int i = 0; i < 4; ++i) {
+	QString categories[] = { "Look & feel", "Library", "Current book" };
+	for (int i = 0; i < 3; ++i) {
 		QListWidgetItem *item = new QListWidgetItem(categoryList);
 		item->setIcon(QIcon(pixmap));
-		item->setText("Category");
+		item->setText(categories[i]);
 		categoryList->addItem(item);
 	}
 

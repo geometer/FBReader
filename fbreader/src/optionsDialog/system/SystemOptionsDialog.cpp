@@ -60,20 +60,6 @@ SystemOptionsDialog::SystemOptionsDialog() : AbstractOptionsDialog(ZLResourceKey
 	encodingTab.addOption(ZLResourceKey("defaultEncodingSet"), encodingSetEntry);
 	encodingTab.addOption(ZLResourceKey("defaultEncoding"), encodingEntry);
 
-	if (ZLOption::isAutoSavingSupported()) {
-		ZLDialogContent &configTab = dialog.createTab(ZLResourceKey("Config"));
-		FBReader &fbreader = FBReader::Instance();
-		ZLToggleBooleanOptionEntry *enableEntry =
-			new ZLToggleBooleanOptionEntry(fbreader.ConfigAutoSavingOption);
-		configTab.addOption(ZLResourceKey("autoSave"), enableEntry);
-
-		ZLOptionEntry *timeoutEntry = new TimeoutEntry(fbreader.ConfigAutoSaveTimeoutOption);
-		enableEntry->addDependentEntry(timeoutEntry);
-		configTab.addOption(ZLResourceKey("timeout"), timeoutEntry);
-
-		enableEntry->onStateChanged(enableEntry->initialState());
-	}
-
 	FBReader &fbreader = FBReader::Instance();
 
 	std::vector<std::pair<ZLResourceKey,ZLOptionEntry*> > additional;

@@ -77,7 +77,6 @@ public:
 	void setValue(const std::string &group, const std::string &name, const std::string &value, const std::string &category);
 	void unsetValue(const std::string &group, const std::string &name);
 
-	bool isAutoSavingSupported() const;
 	void startAutoSave(int seconds);
 
 private:

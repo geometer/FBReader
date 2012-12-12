@@ -59,14 +59,11 @@ ZLApplication::ZLApplication(const std::string &name) : ZLApplicationBase(name),
 	RotationAngleOption(ZLCategoryKey::CONFIG, ROTATION, ANGLE, ZLView::DEGREES90),
 	AngleStateOption(ZLCategoryKey::CONFIG, STATE, ANGLE, ZLView::DEGREES0),
 	KeyboardControlOption(ZLCategoryKey::CONFIG, KEYBOARD, FULL_CONTROL, false),
-	ConfigAutoSavingOption(ZLCategoryKey::CONFIG, CONFIG, AUTO_SAVE, true),
-	ConfigAutoSaveTimeoutOption(ZLCategoryKey::CONFIG, CONFIG, TIMEOUT, 1, 6000, 30),
 	KeyDelayOption(ZLCategoryKey::CONFIG, "Options", "KeyDelay", 0, 5000, 250) {
 	ourInstance = this;
 	myContext = ZLibrary::createContext();
-	if (ConfigAutoSavingOption.value()) {
-		ZLOption::startAutoSave(ConfigAutoSaveTimeoutOption.value());
-	}
+
+	ZLOption::startAutoSave(30);
 
 	myPresentWindowHandler = new PresentWindowHandler();
 	ZLCommunicationManager::Instance().registerHandler("present", myPresentWindowHandler);
