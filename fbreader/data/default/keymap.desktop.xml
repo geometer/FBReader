@@ -28,6 +28,7 @@
 	<binding key="Ctrl+Z" action="undo"/>
 	<binding key="Ctrl+Shift+Z" action="redo"/>
 	<binding key="Ctrl+," action="preferences"/>
+	<binding key="Ctrl+Q" action="quit"/>
 <!--
 	<binding key="&lt;C&gt;" action="toc"/>
 	<binding key="&lt;G&gt;" action="gotoPageNumber"/>
