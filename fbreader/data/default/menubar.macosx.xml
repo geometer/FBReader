@@ -9,6 +9,7 @@
 		<item id="addBook"/>
 		<separator/>
 		<item id="about"/>
+		<item id="visitHomeSite"/>
 		<item id="preferences"/>
 	</submenu>
 	<submenu id="view">

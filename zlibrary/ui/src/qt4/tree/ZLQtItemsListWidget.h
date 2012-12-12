@@ -25,7 +25,7 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
-#include <QtGui/QScrollArea>
+#include <QtGui/QListWidget>
 
 #include <ZLTreeTitledNode.h>
 
@@ -33,7 +33,7 @@
 
 class ZLQtTreeItem;
 
-class ZLQtItemsListWidget : public QScrollArea {
+class ZLQtItemsListWidget : public QListWidget {
 	Q_OBJECT
 public:
 	ZLQtItemsListWidget(QWidget *parent = 0);
@@ -42,7 +42,6 @@ public:
 	QSize sizeHint() const;
 	void setMinimumWidth(int w);
 	QList<ZLQtTreeItem*> getItems() const;
-
 
 Q_SIGNALS:
 	void nodeClicked(ZLQtTreeItem* item);
@@ -58,8 +57,6 @@ private:
 	void addNode(ZLTreeTitledNode *node);
 
 private:
-	QWidget *myContainerWidget;
-	QVBoxLayout *myLayout;
 	QList<ZLQtTreeItem*> myItems;
 };
 

@@ -43,22 +43,17 @@ static const int ITEM_COUNT = 5;
 static const int ITEM_SIZE = 77;
 static const int WAITING_SIZE = 40;
 
-ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QScrollArea(parent), myLayout(0) {
-	myContainerWidget = new QWidget;
-	myContainerWidget->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
+ZLQtItemsListWidget::ZLQtItemsListWidget(QWidget *parent) : QListWidget(parent) {
+	//connect(verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(onSliderMoved(int)));
 
-	verticalScrollBar()->setTracking(false);
-	connect(verticalScrollBar(), SIGNAL(valueChanged(int)), SLOT(onSliderMoved(int)));
-
-	setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
-	setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-	setWidget(myContainerWidget);
 	setFrameShape(QFrame::NoFrame);
-	setWidgetResizable(true);
+	//setWidgetResizable(true);
 	setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Minimum);
 }
 
 void ZLQtItemsListWidget::clear() {
+	QListWidget::clear();
+	/*
 	if (myLayout != 0) {
 		delete myLayout;
 		qDeleteAll(myContainerWidget->children());
@@ -68,10 +63,9 @@ void ZLQtItemsListWidget::clear() {
 	myLayout->setSpacing(0);
 	myLayout->setSizeConstraint(QLayout::SetMinAndMaxSize);
 	myContainerWidget->setLayout(myLayout);
-
+	*/
 
 	myItems.clear();
-
 }
 
 void ZLQtItemsListWidget::addNode(ZLTreeTitledNode *titledNode) {
@@ -79,7 +73,12 @@ void ZLQtItemsListWidget::addNode(ZLTreeTitledNode *titledNode) {
 	item->fill(titledNode);
 	connect(item, SIGNAL(clicked(ZLQtTreeItem*)), this, SLOT(onNodeClicked(ZLQtTreeItem*))); //action ExpandAction used instead
 	connect(item, SIGNAL(doubleClicked(ZLQtTreeItem*)), this, SIGNAL(nodeDoubleClicked(ZLQtTreeItem*)));
-	myLayout->addWidget(item);
+	//myLayout->addWidget(item);
+	QListWidgetItem *listItem = new QListWidgetItem(this);
+	//listItem->addWidget(item);
+	//listItem->setText(QString::fromStdString(item->getNode()->title()));
+	setItemWidget(listItem, item);
+	addItem(listItem);
 	myItems.push_back(item);
 }
 
@@ -94,10 +93,6 @@ void ZLQtItemsListWidget::fillNodes(const ZLTreeNode *expandNode) {
 }
 
 void ZLQtItemsListWidget::fillNewNodes(const ZLTreeNode *rootNode) {
-	if (myLayout == 0) {
-		return;
-	}
-
 	size_t oldSize = (size_t)myItems.size();
 
 	for (size_t i = oldSize; i < rootNode->children().size(); ++i) {
@@ -112,8 +107,8 @@ QSize ZLQtItemsListWidget::sizeHint() const {
 }
 
 void ZLQtItemsListWidget::setMinimumWidth(int w) {
-	myContainerWidget->setMinimumWidth(w - verticalScrollBar()->width());
-	QScrollArea::setMinimumWidth(w);
+	//myContainerWidget->setMinimumWidth(w - verticalScrollBar()->width());
+	QListWidget::setMinimumWidth(w);
 }
 
 QList<ZLQtTreeItem *> ZLQtItemsListWidget::getItems() const {

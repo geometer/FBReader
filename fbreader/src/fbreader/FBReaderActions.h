@@ -35,6 +35,7 @@ public:
 	static const std::string SHOW_NETWORK_LIBRARY;
 	static const std::string SHOW_TOC;
 	static const std::string ABOUT;
+	static const std::string VISIT_HOME_SITE;
 	static const std::string SHOW_PREFERENCES_DIALOG;
 	static const std::string UNDO;
 	static const std::string REDO;
@@ -105,6 +106,12 @@ private:
 };
 
 class ShowAboutDialogAction : public ZLApplication::Action {
+
+public:
+	void run();
+};
+
+class VisitHomeSiteAction : public ZLApplication::Action {
 
 public:
 	void run();

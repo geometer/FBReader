@@ -25,6 +25,7 @@ const std::string ActionCode::RECENT_BOOKS = "recent";
 const std::string ActionCode::SHOW_NETWORK_LIBRARY = "networkLibrary";
 const std::string ActionCode::SHOW_TOC = "toc";
 const std::string ActionCode::ABOUT = "about";
+const std::string ActionCode::VISIT_HOME_SITE = "visitHomeSite";
 const std::string ActionCode::SHOW_PREFERENCES_DIALOG = "preferences";
 const std::string ActionCode::UNDO = "undo";
 const std::string ActionCode::REDO = "redo";
