@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menubar>
+	<submenu id="FBReader">
+		<item id="about"/>
+		<item id="visitHomeSite"/>
+		<separator/>
+		<item id="preferences"/>
+		<separator/>
+		<item id="quit"/>
+	</submenu>
+	<submenu id="books">
+		<submenu id="recent"/>
+		<separator/>
+		<item id="library"/>
+		<item id="networkLibrary"/>
+		<separator/>
+		<item id="addBook"/>
+	</submenu>
+	<submenu id="view">
+		<item id="toggleFullscreen"/>
+		<separator/>
+		<item id="clearSelection"/>
+		<separator/>
+		<item id="increaseFont"/>
+		<item id="decreaseFont"/>
+		<separator/>
+		<item id="search"/>
+		<item id="findNext"/>
+		<item id="findPrevious"/>
+		<item id="clearSearchResults"/>
+	</submenu>
+	<submenu id="navigation">
+		<item id="gotoHome"/>
+		<item id="gotoPageNumber"/>
+		<separator/>
+		<item id="toc"/>
+		<item id="nextTOCSection"/>
+		<item id="previousTOCSection"/>
+		<separator/>
+		<item id="undo"/>
+		<item id="redo"/>
+	</submenu>
+</menubar>

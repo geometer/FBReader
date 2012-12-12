@@ -319,63 +319,50 @@
 		<node name="extraLinks" value="Related links"/>
 	</node>
 	<node name="menu">
-		<node name="books" value="Books">
-			<node name="recent" value="Recent"/>
-			<node name="library" value="Library"/>
-			<node name="networkLibrary" value="Network library…"/>
-			<node name="addBook" value="Open file…"/>
-			<node name="about" value="About FBReader"/>
-			<node name="preferences" value="Preferences…"/>
-		</node>
-		<node name="navigation" value="Navigation">
-			<node name="gotoHome" value="Start of document"/>
-			<node name="gotoPageNumber" value="Page number…"/>
-			<node name="gotoSectionStart" value="Start of section"/>
-			<node name="gotoSectionEnd" value="End of section"/>
-			<node name="toc" value="Table of Contents"/>
-			<node name="nextTOCSection" value="Next chapter"/>
-			<node name="previousTOCSection" value="Previous chapter"/>
-			<node name="undo" value="Back"/>
-			<node name="redo" value="Forward"/>
-		</node>
-		<node name="bookInfo" value="Book Info…"/>
-		<node name="toc" value="Table of Contents"/>
-		<node name="library" value="Open library"/>
-		<node name="showNetLibrary" value="Network library"/>
+		<node name="FBReader" value="FBReader"/>
+		<node name="about" value="About FBReader"/>
+		<node name="visitHomeSite" value="Visit fbreader.org…"/>
+		<node name="preferences" value="Preferences…"/>
+		<node name="books" value="Books"/>
+		<node name="recent" value="Recent"/>
+		<node name="library" value="Library"/>
+		<node name="networkLibrary" value="Network library…"/>
 		<node name="addBook" value="Open file…"/>
-		<node name="recent" value="Recent books"/>
+		<node name="navigation" value="Navigation"/>
+		<node name="gotoHome" value="Start of document"/>
+		<node name="gotoPageNumber" value="Page number…"/>
+		<node name="gotoSectionStart" value="Start of section"/>
+		<node name="gotoSectionEnd" value="End of section"/>
+		<node name="toc" value="Table of Contents"/>
+		<node name="nextTOCSection" value="Next chapter"/>
+		<node name="previousTOCSection" value="Previous chapter"/>
+		<node name="undo" value="Back"/>
+		<node name="redo" value="Forward"/>
+		<node name="view" value="View"/>
+		<node name="rotate" value="Rotate screen"/>
+		<node name="toggleFullscreen" value="Toggle full screen"/>
+		<node name="clearSelection" value="Clear selection"/>
+		<node name="increaseFont" value="Zoom in"/>
+		<node name="decreaseFont" value="Zoom out"/>
+		<node name="search" value="Find…"/>
+		<node name="findNext" value="Find next"/>
+		<node name="findPrevious" value="Find previous"/>
+		<node name="clearSearchResults" value="Clear search results"/>
+		<node name="quit" value="Quit"/>
+<!--
+		<node name="bookInfo" value="Book Info…"/>
 		<node name="library" value="Library">
 			<node name="library" value="Open"/>
 			<node name="previousBook" value="Previous Book"/>
 			<node name="recent" value="Recent"/>
 			<node name="addBook" value="Add Book…"/>
 		</node>
-		<node name="gotoHome" value="Go to Start of Document"/>
-		<node name="gotoPageNumber" value="Go to Page…"/>
-		<node name="gotoSectionStart" value="Go to Start of Text Section"/>
-		<node name="gotoSectionEnd" value="Go to End of Text Section"/>
-		<node name="nextTOCSection" value="Go to Next TOC Item"/>
-		<node name="previousTOCSection" value="Go to Previous TOC Item"/>
-		<node name="navigate" value="Navigate">
-		</node>
 		<node name="selection" value="Selection">
 			<node name="copyToClipboard" value="Copy to Clipboard"/>
 			<node name="openInDictionary" value="Open in Dictionary"/>
 			<node name="clearSelection" value="Clear"/>
 		</node>
-		<node name="view" value="View">
-			<node name="rotate" value="Rotate screen"/>
-			<node name="toggleFullscreen" value="Toggle full screen"/>
-			<node name="clearSelection" value="Clear selection"/>
-			<node name="increaseFont" value="Zoom in"/>
-			<node name="decreaseFont" value="Zoom out"/>
-			<node name="search" value="Find…"/>
-			<node name="findNext" value="Find next"/>
-			<node name="findPrevious" value="Find previous"/>
-			<node name="clearSearchResults" value="Clear search results"/>
-		</node>
-		<node name="preferences" value="Last Preferences Dialog…"/>
-		<node name="quit" value="Close"/>
+-->
 	</node>
 	<node name="toolbar">
 		<node name="showReading">

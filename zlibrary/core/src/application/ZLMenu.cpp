@@ -105,7 +105,7 @@ void ZLMenu::addSeparator() {
 }
 
 ZLMenu::ItemPtr ZLMenu::addSubmenu(const std::string &id) {
-	ItemPtr submenu = new ZLMenubar::Submenu(myResource[id], id);
+	ItemPtr submenu = new ZLMenubar::Submenu(myResource, id);
 	myItems.push_back(submenu);
 	return submenu;
 }
@@ -129,7 +129,7 @@ ZLMenubar::Submenu::Submenu(const ZLResource &resource, const std::string &id) :
 }
 
 const std::string &ZLMenubar::Submenu::menuName() const {
-	return myResource.value();
+	return myResource[myId].value();
 }
 
 const std::string &ZLMenubar::Submenu::id() const {
