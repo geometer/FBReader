@@ -62,10 +62,6 @@ void ShowAboutDialogAction::run() {
 	// TODO: implement
 }
 
-void VisitHomeSiteAction::run() {
-	// TODO: implement
-}
-
 ShowContentsAction::ShowContentsAction() : SetModeAction(FBReader::CONTENTS_MODE, FBReader::BOOK_TEXT_MODE) {
 }
 

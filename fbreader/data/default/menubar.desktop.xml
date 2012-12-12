@@ -2,7 +2,6 @@
 <menubar>
 	<submenu id="FBReader">
 		<item id="about"/>
-		<item id="visitHomeSite"/>
 		<separator/>
 		<item id="preferences"/>
 		<separator/>

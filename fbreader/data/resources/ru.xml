@@ -324,7 +324,6 @@
 	<node name="menu">
 		<node name="FBReader" value="FBReader"/>
 		<node name="about" value="О программе FBReader"/>
-		<node name="visitHomeSite" value="Посетить fbreader.org…"/>
 		<node name="preferences" value="Настройки…"/>
 		<node name="books" value="Книги"/>
 		<node name="recent" value="Недавние"/>

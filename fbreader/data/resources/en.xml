@@ -321,7 +321,6 @@
 	<node name="menu">
 		<node name="FBReader" value="FBReader"/>
 		<node name="about" value="About FBReader"/>
-		<node name="visitHomeSite" value="Visit fbreader.org…"/>
 		<node name="preferences" value="Preferences…"/>
 		<node name="books" value="Books"/>
 		<node name="recent" value="Recent"/>
