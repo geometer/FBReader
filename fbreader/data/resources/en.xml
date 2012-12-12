@@ -10,12 +10,12 @@
 			<node name="language" value="Language"/>
 			<node name="book" value="Current book"/>
 		</node>
-		<node name="Scrolling" value="Scrolling">
-			<node name="keyScrollDelay" value="Delay between Key Scrollings, msecs"/>
-			<node name="keyLinesToScroll" value="Lines to Scroll per Line Scrolling"/>
-			<node name="keyLinesToKeep" value="Lines to Keep per Page Scrolling"/>
-			<node name="enableTapScrolling" value="Enable Tap Scrolling"/>
-			<node name="fingerOnly" value="Scroll on Finger Tap Only"/>
+		<node name="scrolling" value="Scrolling">
+			<node name="keyScrollDelay" value="Delay between key scrollings, msecs"/>
+			<node name="keyLinesToScroll" value="Lines to scroll per line scrolling"/>
+			<node name="keyLinesToKeep" value="Lines to keep per page scrolling"/>
+			<node name="enableTapScrolling" value="Enable tap scrolling"/>
+			<node name="fingerOnly" value="Scroll on finger tap only"/>
 		</node>
 		<node name="Selection" value="Selection">
 			<node name="enableSelection" value="Enable Text Selection"/>
@@ -95,10 +95,10 @@
 			<node name="overrideSpecifiedFonts" value="Always Use My Own Fonts"/>
 		</node>
 		<node name="margins" value="Margins">
-			<node name="left" value="Left"/>
-			<node name="right" value="Right"/>
-			<node name="top" value="Top"/>
-			<node name="bottom" value="Bottom"/>
+			<node name="left" value="Left margin"/>
+			<node name="right" value="Right margin"/>
+			<node name="top" value="Top margin"/>
+			<node name="bottom" value="Bottom margin"/>
 		</node>
 		<node name="Format" value="Format">
 			<node name="optionsFor" value="Options for"/>

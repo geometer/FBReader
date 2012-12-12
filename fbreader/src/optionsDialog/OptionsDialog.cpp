@@ -210,7 +210,7 @@ OptionsDialog::OptionsDialog(shared_ptr<Book> book) : myBook(book) {
 	// ---- text properties page ----
 
 	// ++++ look & feel page ++++
-	ZLDialogContent &scrollingTab = myDialog->createTab(ZLResourceKey("lookAndFeel"), ZLResourceKey("Scrolling"));
+	ZLDialogContent &scrollingTab = myDialog->createTab(ZLResourceKey("lookAndFeel"), ZLResourceKey("scrolling"));
 	scrollingTab.addOption(ZLResourceKey("keyLinesToScroll"), new ZLSimpleSpinOptionEntry(fbreader.LinesToScrollOption, 1));
 	scrollingTab.addOption(ZLResourceKey("keyLinesToKeep"), new ZLSimpleSpinOptionEntry(fbreader.LinesToKeepOption, 1));
 	scrollingTab.addOption(ZLResourceKey("keyScrollDelay"), new ZLSimpleSpinOptionEntry(fbreader.KeyScrollingDelayOption, 50));
